@@ -372,7 +372,7 @@
 				<ComboBoxItem>1 Hour</ComboBoxItem>
 			</ComboBox>
 			<ToggleSwitch Header="Repeat" Width="90"
-								   IsOn="{x:Bind view:SettingsPage.raidRepeat, Mode=TwoWay}"
+								   IsOn="{x:Bind view:SettingsPage.wantRaidRepeat, Mode=TwoWay}"
 						  OnContent="Yes"
 						  OffContent="Once" />
 			<winui:NumberBox  x:Name="raidFraction"

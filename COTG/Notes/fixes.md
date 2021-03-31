@@ -51,4 +51,4 @@
  - **new** Support for the _delay between raids_ functionality
   - for some reason COTG does not natively support a delay of 10s, if this is desired I could add it, but it may not work with auto raid
  - **new** Accelerator keys F2, F3 and F4 toggle between view layouts
-  
+ - 

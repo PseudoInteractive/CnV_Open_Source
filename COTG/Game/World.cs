@@ -250,6 +250,8 @@ namespace COTG.Game
 		}
 		public static Microsoft.Xna.Framework.Color GetTint(int packedId)
 		{
+			if(!SettingsPage.tintCities)
+				return new Color(255, 255, 255, 255);
 			//	var packedId = GetPackedId(xy);
 			uint rv = raw[packedId];
 			switch (rv & typeMask)
@@ -386,58 +388,65 @@ namespace COTG.Game
 					var i = y * worldDim + x;
 					var d0 = prior[i];
 					var d1 = raw[i];
-					var dtype0 = d0 & typeMask;
-					var dtype1 = d1 & typeMask;
-					if (d0 == d1 || dtype0 == typeDungeon || dtype0 == typeBoss || dtype1 == typeDungeon || dtype1 == typeBoss)
-						continue;
-					uint color = WorldHelper.RGB16(0x40, 0x40, 0x40);
-					if (dtype0 == typeCity || dtype1 == typeCity)
+					if (d0 == 0)
 					{
-						var owner0 = d0 & playerMask;
-						var owner1 = d1 & playerMask;
-						var alliance0 = owner0 == 0 ? -1 : Player.Get((int)owner0).alliance;
-						var alliance1 = owner1 == 0 ? -1 : Player.Get((int)owner1).alliance;
-
-						if (alliance0 == alliance1)
-						{
-							var isCastle0 = d0 & typeCityFlagCastle;
-							var isCastle1 = d1 & typeCityFlagCastle;
-							// castle change or size change or handover  Dodo:  differentiate this two
-							color = WorldHelper.RGB16(0x0, 0x0, isCastle0 != isCastle1 ? 0xA0u : 0x60u);
-						}
-						else if (alliance0 == Alliance.myId)
-						{
-							// lost one
-							color = WorldHelper.RGB16(0xA0, 0, 0);
-						}
-						else if (alliance1 == Alliance.myId)
-						{
-							// gained one
-							color = WorldHelper.RGB16(0, 0xA0, 0);
-						}
-						// Todo: handle more cases
+						// no change
 					}
+					else
+					{
+						var dtype0 = d0 & typeMask;
+						var dtype1 = d1 & typeMask;
+						if (d0 == d1 || dtype0 == typeDungeon || dtype0 == typeBoss || dtype1 == typeDungeon || dtype1 == typeBoss)
+							continue;
+						uint color = WorldHelper.RGB16(0x40, 0x40, 0x40);
+						if (dtype0 == typeCity || dtype1 == typeCity)
+						{
+							var owner0 = d0 & playerMask;
+							var owner1 = d1 & playerMask;
+							var alliance0 = owner0 == 0 ? -1 : Player.Get((int)owner0).alliance;
+							var alliance1 = owner1 == 0 ? -1 : Player.Get((int)owner1).alliance;
 
-					pixels.SetColor(i, color, 0);
-					// change:  Todo, analysis
-					pixels[i * 8 + 4] = 3 | (2 << 2) | (2 << 4) | (3 << 6);
-					pixels[i * 8 + 5] = 2 | (0 << 2) | (0 << 4) | (2 << 6); // color index 0
-					pixels[i * 8 + 6] = 3 | (2 << 2) | (2 << 4) | (3 << 6); // color index 0
-					pixels[i * 8 + 7] = 1 | (3 << 2) | (3 << 4) | (1 << 6);
+							if (alliance0 == alliance1)
+							{
+								var isCastle0 = d0 & typeCityFlagCastle;
+								var isCastle1 = d1 & typeCityFlagCastle;
+								// castle change or size change or handover  Dodo:  differentiate this two
+								color = WorldHelper.RGB16(0x0, 0x0, isCastle0 != isCastle1 ? 0xA0u : 0x60u);
+							}
+							else if (alliance0 == Alliance.myId)
+							{
+								// lost one
+								color = WorldHelper.RGB16(0xA0, 0, 0);
+							}
+							else if (alliance1 == Alliance.myId)
+							{
+								// gained one
+								color = WorldHelper.RGB16(0, 0xA0, 0);
+							}
+							// Todo: handle more cases
+						}
 
+						pixels.SetColor(i, color, 0);
+						// change:  Todo, analysis
+						pixels[i * 8 + 4] = 1 | (3 << 2) | (2 << 4) | (1 << 6);
+						pixels[i * 8 + 5] = 2 | (0 << 2) | (0 << 4) | (3 << 6); // color index 0
+						pixels[i * 8 + 6] = 3 | (0 << 2) | (0 << 4) | (2 << 6); // color index 0
+						pixels[i * 8 + 7] = 1 | (2 << 2) | (3 << 4) | (1 << 6);
+					}
 				}
 			}
 			changePixels = pixels;
 			rawPrior = prior;
 		}
-		enum State
+
+		public enum State
 		{
 			none,
 			started,
 			partWay,
 			completed,
 		}
-		static State state = State.none;
+		public static State state = State.none;
 		public static bool initialized => state >= State.partWay;
 		public static bool completed => state >= State.completed;
 		public static async void Decode(JsonDocument jsd)

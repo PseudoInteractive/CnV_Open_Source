@@ -9,19 +9,30 @@ using Microsoft.Xna;
 
 namespace COTG.Draw
 {
+	public class Mesh
+	{
+		public int vertexCount;
+		public int triangleCount;
+		public VertexBuffer vb;
+		public IndexBuffer ib;
+	};
 	public class SpriteBatchItemList
 	{
 		public Material material;
 		public List<SpriteVertices> sprites;
+		public List<Mesh> meshes;
+
 		public SpriteBatchItemList(Material _material)
 		{
 			material = _material;
 			sprites = new List<SpriteVertices>();
+			meshes = new List<Mesh>();
 		}
 		public void Release()
 		{
 			freePool.AddRange(sprites);
 			sprites.Clear();
+			meshes.Clear();
 			material = null;
 		}
 		public static List<SpriteVertices> freePool = new List<SpriteVertices>();

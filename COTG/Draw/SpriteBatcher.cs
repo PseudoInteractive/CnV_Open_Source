@@ -80,6 +80,14 @@ namespace COTG.Draw
 		/// <returns></returns>
 		public SpriteVertices CreateBatchItem(int layer, Material material)
 		{
+			var list = CreateBatchItemList(layer, material);
+			var rv = SpriteBatchItemList.Alloc();
+			list.sprites.Add(rv);
+			return rv;
+		}
+		
+		public SpriteBatchItemList CreateBatchItemList(int layer, Material material)
+		{
 			if (!_batchItemList.TryGetValue(layer, out var batch))
 			{
 				batch = new Dictionary<int, Dictionary<int, SpriteBatchItemList>>();
@@ -90,17 +98,16 @@ namespace COTG.Draw
 				perEffect = new Dictionary<int, SpriteBatchItemList>();
 				batch.Add(material.effect._sortingKey, perEffect);
 			}
-			var textureKey = material.texture!=null ? material.texture._sortingKey : 0;
+			var textureKey = material.texture != null ? material.texture._sortingKey : 0;
 			if (!perEffect.TryGetValue(textureKey, out var list))
 			{
 				list = new SpriteBatchItemList(material);
 				perEffect.Add(textureKey, list);
 			}
-
-			var rv = SpriteBatchItemList.Alloc();
-			list.sprites.Add(rv);
-			return rv;
+			return list;
 		}
+
+
 
 		/// <summary>
 		/// Resize and recreate the missing indices for the index and vertex position color buffers.
@@ -202,11 +209,18 @@ namespace COTG.Draw
 								if (material.texture1 != null)
 									_device.Textures[1] = material.texture1;
 							}
-
-							_device.DrawUserSprites(
-									list.sprites,
-									VertexPositionColorTexture.VertexDeclaration);
-
+							if (list.sprites.Count>0)
+							{
+								_device.DrawUserSprites(
+										list.sprites,
+										VertexPositionColorTexture.VertexDeclaration);
+							}
+							foreach (var mesh in list.meshes)
+							{
+								_device.SetIndexBuffer(mesh.ib);
+								_device.SetVertexBuffer(mesh.vb);
+								_device.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, mesh.vertexCount,0, mesh.triangleCount);
+							}
 
 							list.Release();
 						}

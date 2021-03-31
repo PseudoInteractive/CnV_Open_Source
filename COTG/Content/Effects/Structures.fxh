@@ -15,7 +15,7 @@ struct VertexShaderInputPositionColor
 
 struct VertexShaderInputPositionTexture
 {
-    float4 Position : POSITION0;
+    float3 Position : POSITION0;
     float2 TextureCoordinate : TEXCOORD0;
 };
 
@@ -57,5 +57,11 @@ struct VertexShaderOutputLit
     float4 Color : COLOR0;
     float4 uv : TEXCOORD0;
 	float3 cameraC : TEXCOORD1;
+};
+
+struct VertexShaderOutputWorld
+{
+    float4 Position : SV_Position;
+    float2 uv : TEXCOORD0;
 };
 #endif

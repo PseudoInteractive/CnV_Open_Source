@@ -8,6 +8,7 @@ using Windows.Storage;
 using System.IO.Compression;
 using static COTG.Debug;
 using COTG.Game;
+using COTG.Views;
 
 namespace COTG.Services
 {
@@ -158,10 +159,10 @@ namespace COTG.Services
 						int counter = 0;
 						foreach (var entry in zip.Entries)
 						{
-							snapshots[counter] = $"{entry.LastWriteTime.ToUniversalTime().ToString("r")}: {(counter < count - 1 ? $"{lengths[counter] / 4} changes" : " current")} ";
+							snapshots[counter] = $"{entry.LastWriteTime.ToUniversalTime().ToString("G")}: {(counter < count - 1 ? $"{lengths[counter] / 4} changes" : " current")} ";
 							++counter;
 						}
-						COTG.Views.HeatmapDatePicker.items = snapshots;
+						HeatmapDatePicker.SetItems(snapshots);
 					}
 					
 				}
@@ -198,6 +199,7 @@ namespace COTG.Services
                 return;
 
             var data = World.raw.ToArray(); // clone it
+			var changeMask = new bool[World.worldDim * World.worldDim];
             var file = await folder.CreateFileAsync(fileName, CreationCollisionOption.OpenIfExists);
 			
 			using (var streamForZip = await file.OpenStreamForReadAsync())
@@ -223,9 +225,28 @@ namespace COTG.Services
                             historyBuffer[entries] = byteBuffer.ConvertToUints();
 
                         }
-                        ApplyDelta(data, historyBuffer[entries]);
-                    }
+						var delta = historyBuffer[entries];
 
+						ApplyDelta(data, delta);
+						if(items.Contains(entries) )
+						{
+							int count = delta.Length / 2;
+							for (int i = 0; i < count; ++i)
+							{
+								var off = delta[i * 2];
+								changeMask[off] = true;
+
+							}
+
+						}
+                    }
+					for(int i=0;i<World.worldDim*World.worldDim;++i)
+					{
+						if(changeMask[i] == false)
+						{
+							data[i] = World.raw[i];
+						}
+					}
                     World.CreateChangePixels(data);
                 }
             }

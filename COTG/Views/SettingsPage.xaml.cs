@@ -71,7 +71,7 @@ namespace COTG.Views
 		public static bool applyTags;
 		public static bool setHub;
 		public static bool useSuggested = true;
-		public static bool raidRepeat=true;
+		public static bool wantRaidRepeat=true;
 		public static bool clearRes;
 		public static float fontScale = 0.5f;
 		public static float musicVolume = 0.5f;

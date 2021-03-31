@@ -60,7 +60,7 @@ half4 PSLit(VertexShaderOutputLit input) : SV_Target0
 	half3 albedo = tex.rgb;
 	half3 positionInPixels = input.Position.xyz;
 	half3 Li = normalize(lightPosition.xyz - positionInPixels.xyz);
-	half3 Lo = normalize(cameraPosition - positionInPixels.xyz);
+	half3 Lo = normalize(cameraReferencePosition - positionInPixels.xyz);
 	half alpha = input.Color.a * tex.a;
 
 //	(zx, zy, 1)x(0, 1, 0) = 1,0,-zx

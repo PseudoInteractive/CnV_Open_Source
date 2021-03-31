@@ -1,4 +1,6 @@
-﻿using System;
+﻿using COTG.Helpers;
+
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -19,7 +21,7 @@ namespace COTG.Views
 {
     public sealed partial class HeatmapDatePicker : UserControl
     {
-		public static string [] items;
+		public static DumbCollection<string> items = new();
         public static HeatmapDatePicker Touch()
 		{
 			if (instance == null)
@@ -27,7 +29,11 @@ namespace COTG.Views
 			return instance;
 		}
 		public static HeatmapDatePicker instance;
-
+		public static void SetItems( string [] _items)
+		{
+			items.Set(_items);
+			items.NotifyReset();
+		}
         public HeatmapDatePicker()
         {
             this.InitializeComponent();
@@ -42,7 +48,7 @@ namespace COTG.Views
 		private void snapshots_SelectionChanged(object sender, SelectionChangedEventArgs e)
 		{
 			var lv = sender as ListView;
-			var sel = lv.SelectedItems.Select((a) => Array.IndexOf(items,(string)a)).OrderBy(a=>a).ToArray();
+			var sel = lv.SelectedItems.Select((a) => items.IndexOf((string)a)).OrderBy(a=>a).ToArray();
 
 
 			if (sel.Length > 0)

@@ -166,7 +166,7 @@ namespace COTG.Game
 
 				}
 				var trs = JsonSerializer.Serialize(tr);
-				var args = new sndRaidArgs() { rcid = d.cid, type = SettingsPage.raidRepeat ? 2 : 1, co = wantDelays ? 1 : r.reps, rt = 1, snd = 1, rut = 0, tr = trs, iv = SettingsPage.raidIntervals + 1 };
+				var args = new sndRaidArgs() { rcid = d.cid, type = SettingsPage.wantRaidRepeat ? 1 : 2, co = wantDelays ? 1 : r.reps, rt = 1, snd = 1, rut = 0, tr = trs, iv = SettingsPage.raidIntervals + 1 };
 				var snd = new COTG.Services.sndRaid(JsonSerializer.Serialize(args), city.cid);
 				Note.Show($"{city.cid.CidToStringMD()} raid {r.reps}x, %{(r.averageCarry * 100).RoundToInt()} carry to {d.cid.CidToStringMD()}");
 				if (!await snd.Post())

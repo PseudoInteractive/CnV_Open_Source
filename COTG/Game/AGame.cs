@@ -107,7 +107,6 @@ namespace COTG
 		public static AGame instance;
 		public static GraphicsDevice device => instance.GraphicsDevice;
 		public static GraphicsDeviceManager _graphics;
-		public static Draw.SpriteBatch spriteBatch;
 		const float detailsZoomThreshold = 36;
 		const float detailsZoomFade = 8;
 		public static Material worldBackground;
@@ -122,8 +121,9 @@ namespace COTG
 		public static EffectPass litEffect;
 		public static EffectPass unlitEffect;
 		public static EffectPass animatedSpriteEffect;
-		private EffectPass sdfEffect;
-		private EffectPass noTextureEffect;
+		private static EffectPass sdfEffect;
+		private static EffectPass noTextureEffect;
+		private static EffectPass worldSpaceEffect;
 		public static EffectParameter planetGainsParamater;
 		public static EffectParameter worldMatrixParameter;
 		public static EffectParameter lightPositionParameter;
@@ -131,7 +131,9 @@ namespace COTG
 		public static EffectParameter lightAmbientParameter;
 		public static EffectParameter lightColorParameter;
 		public static EffectParameter lightSpecularParameter;
-		public static EffectParameter cameraPositionParameter;
+		public static EffectParameter cameraReferencePositionParameter;
+		public static EffectParameter cameraCParameter;
+		public static EffectParameter pixelScaleParameter;
 		public static Material lineDraw;
 		public static Material quadTexture;
 		public static Material whiteMaterial;
@@ -141,6 +143,9 @@ namespace COTG
 		public static Material worldObjects;
 		public static Material worldOwners;
 
+		public static VertexBuffer tesselatedWorldVB;
+		public static IndexBuffer tesselatedWorldIB;
+		public static Mesh tesselatedWorld;
 		public static EffectPass GetTileEffect() => (SettingsPage.lighting != Lighting.none) ? litEffect : unlitEffect;
 
 		internal static void SetLighting(Lighting value)
@@ -461,7 +466,7 @@ namespace COTG
 				{
 					var pixels = World.changePixels;
 					ClearHeatmapImage();
-					worldChanges = CreateFromBytes(pixels, World.outSize, World.outSize, SurfaceFormat.Dxt1, alphaAddEffect);
+					worldChanges = CreateFromBytes(pixels, World.outSize, World.outSize, SurfaceFormat.Dxt1, worldSpaceEffect);
 
 				}
 				//if(JSClient.webViewBrush!=null)
@@ -676,6 +681,8 @@ namespace COTG
 				animatedSpriteEffect = EffectPass("SpriteAnim");
 				sdfEffect = EffectPass("SDF");
 				noTextureEffect = EffectPass("NoTexture");
+				worldSpaceEffect = EffectPass("WorldSpace");
+
 				readyToLoad = true;
 
 				using var srgb = new SRGBLoadScope();
@@ -689,8 +696,9 @@ namespace COTG
 				lightColorParameter = avaEffect.Parameters["lightColor"];
 				lightSpecularParameter = avaEffect.Parameters["lightSpecular"];
 				lightAmbientParameter = avaEffect.Parameters["lightAmbient"];
-				cameraPositionParameter = avaEffect.Parameters["cameraPosition"];
-
+				cameraReferencePositionParameter = avaEffect.Parameters["cameraReferencePosition"];
+				cameraCParameter = avaEffect.Parameters["cameraC"];
+				pixelScaleParameter = avaEffect.Parameters["pixelScale"];
 
 				fontMaterial = new Material(null, fontEffect);
 				fontTexture = Content.Load<Texture2D>("Fonts/tra_0"); // font is always set to register 7
@@ -707,6 +715,49 @@ namespace COTG
 
 					bfont.LoadXml(a);
 				}
+
+				tesselatedWorldVB = new VertexBuffer(device, VertexPositionTexture.VertexDeclaration,( (World.worldDim+1) * (World.worldDim + 1) ),BufferUsage.None );
+				{
+					var input = new VertexPositionTexture[(World.worldDim + 1) * (World.worldDim + 1)];
+					for (int x = 0; x < World.worldDim + 1; ++x)
+					{
+						for (int y = 0; y < World.worldDim + 1; ++y)
+						{
+							var i = new VertexPositionTexture();
+							i.Position = new Vector3(x, y, 0.0f);
+							i.TextureCoordinate.X = (float)(x+1) / (World.worldDim + 1);
+							i.TextureCoordinate.Y = (float)(y+1) / (World.worldDim + 1);
+							input[(World.worldDim + 1) * y + x] = i;
+						}
+					}
+					tesselatedWorldVB.SetData(input);
+				}
+				tesselatedWorldIB = new IndexBuffer(device,IndexElementSize.ThirtyTwoBits, 
+					(World.worldDim) * (World.worldDim)*6, BufferUsage.None);
+				{
+					var input = new int[(World.worldDim) * (World.worldDim) * 6];
+					for (int x = 0; x < World.worldDim ; ++x)
+					{
+						for (int y = 0; y < World.worldDim ; ++y)
+						{
+							input[(x + y * (World.worldDim)) * 6 + 0] = (int)(x   + y * (World.worldDim + 1));
+							input[(x + y * (World.worldDim)) * 6 + 1] = (int)(x+1 + y * (World.worldDim + 1));
+							input[(x + y * (World.worldDim)) * 6 + 2] = (int)(x+1  + (y+1) * (World.worldDim + 1));
+
+							input[(x + y * (World.worldDim)) * 6 + 3] = (int)(x + y * (World.worldDim + 1));
+							input[(x + y * (World.worldDim)) * 6 + 4] = (int)(x + 1 + (y+1) * (World.worldDim + 1));
+							input[(x + y * (World.worldDim)) * 6 + 5] = (int)(x  + (y + 1) * (World.worldDim + 1));
+						}
+					}
+					tesselatedWorldIB.SetData(input);
+				}
+				tesselatedWorld = new Mesh();
+				tesselatedWorld.vb = tesselatedWorldVB;
+				tesselatedWorld.ib = tesselatedWorldIB;
+				tesselatedWorld.vertexCount = (World.worldDim + 1) * (World.worldDim + 1);
+				tesselatedWorld.triangleCount = (World.worldDim ) * (World.worldDim )*2;
+
+
 
 				SpriteAnim.flagHome.Load();
 				SpriteAnim.flagSelected.Load();
@@ -1137,11 +1188,16 @@ namespace COTG
 						lightColorParameter.SetValue(new XVector4(1f, 1.0f, 1.0f, 1f) * 1.25f);
 						lightSpecularParameter.SetValue(new XVector4(1.0f, 1.0f, 1.0f, 1.0f) * 1.0f);
 					}
-					cameraPositionParameter.SetValue(new Microsoft.Xna.Framework.Vector3(halfSpan.X, halfSpan.Y, lightZ0));
+					cameraReferencePositionParameter.SetValue(new Microsoft.Xna.Framework.Vector3(halfSpan.X, halfSpan.Y, lightZ0));
 					//					defaultEffect.Parameters["DiffuseColor"].SetValue(new Microsoft.Xna.Framework.Vector4(1, 1, 1, 1));
 					var gain1 = bulgeInputGain * bulgeGain * bulgeSpan;
 					var planetGains = new XVector4(bulgeGain, -gain1, MathF.Sqrt(gain1) * 2.0f, 0);
 					planetGainsParamater.SetValue(planetGains);
+
+					cameraCParameter.SetValue(new Vector4(cameraCLag.X, cameraCLag.Y, 0, 1.0f));
+					pixelScaleParameter.SetValue(new Vector4(pixelScale, pixelScale, pixelScale, pixelScale));
+
+
 
 					draw.Begin();
 
@@ -1348,12 +1404,11 @@ namespace COTG
 					//    ds.Antialiasing = CanvasAntialiasing.Antialiased;
 					if (worldChanges != null && !focusOnCity)
 					{
-						var tOffset = new Vector2(0.0f, 0.0f);
 						var t2d = worldChanges.texture2d;
-						var scale = new Vector2(t2d.TexelWidth, t2d.TexelHeight);
-						draw.AddQuad(Layer.tileCity - 1, worldChanges,
-							destP0, destP1,
-							(srcP0 - tOffset) * scale, (srcP1 - tOffset) * scale, new Color(128, 128, 128, 0), ConstantDepth, zTerrain);
+						//var tOffset = new Vector2(0.0f, 0.0f);
+						//var t2d = worldChanges.texture2d;
+						//var scale = new Vector2(t2d.TexelWidth, t2d.TexelHeight);
+						draw.AddMesh(tesselatedWorld, Layer.tiles - 1, worldChanges);
 					}
 					if (worldOwners != null && !focusOnCity  )
 					{

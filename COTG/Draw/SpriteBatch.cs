@@ -172,18 +172,18 @@ namespace COTG.Draw
                 throw new InvalidOperationException("DrawString was called, but Begin has not yet been called. Begin must be called successfully before you can call DrawString.");
         }
 
-  //      /// <summary>
-  //      /// Submit a sprite for drawing in the current batch.
-  //      /// </summary>
-  //      /// <param name="texture">A texture.</param>
-  //      /// <param name="position">The drawing location on screen.</param>
-  //      /// <param name="sourceRectangle">An optional region on the texture which will be rendered. If null - draws full texture.</param>
-  //      /// <param name="color">A color mask.</param>
-  //      /// <param name="rotation">A rotation of this sprite.</param>
-  //      /// <param name="origin">Center of the rotation. 0,0 by default.</param>
-  //      /// <param name="scale">A scaling of this sprite.</param>
-  //      /// <param name="effects">Modificators for drawing. Can be combined.</param>
-  //      /// <param name="layerDepth">A depth of the layer of this sprite.</param>
+		//      /// <summary>
+		//      /// Submit a sprite for drawing in the current batch.
+		//      /// </summary>
+		//      /// <param name="texture">A texture.</param>
+		//      /// <param name="position">The drawing location on screen.</param>
+		//      /// <param name="sourceRectangle">An optional region on the texture which will be rendered. If null - draws full texture.</param>
+		//      /// <param name="color">A color mask.</param>
+		//      /// <param name="rotation">A rotation of this sprite.</param>
+		//      /// <param name="origin">Center of the rotation. 0,0 by default.</param>
+		//      /// <param name="scale">A scaling of this sprite.</param>
+		//      /// <param name="effects">Modificators for drawing. Can be combined.</param>
+		//      /// <param name="layerDepth">A depth of the layer of this sprite.</param>
 		//public void Draw (Texture2D texture,
 		//		Vector2 position,
 		//		System.Drawing.RectangleF? sourceRectangle,
@@ -192,92 +192,92 @@ namespace COTG.Draw
 		//		Vector2 origin,
 		//		Vector2 scale,
 		//		SpriteEffects effects,
-  //              int layerDepth)
+		//              int layerDepth)
 		//{
-  //          CheckValid(texture);
+		//          CheckValid(texture);
 
-  //          var item = _batcher.CreateBatchItem();
-  //          item.Texture = texture;
+		//          var item = _batcher.CreateBatchItem();
+		//          item.Texture = texture;
 
 		//	// set SortKey based on SpriteSortMode.
 		//	item.SortKey = Layer.SortKey(layerDepth, texture);
 
 		//	origin = origin * scale;
-            
-  //          float w, h;
-  //          if (sourceRectangle.HasValue)
-  //          {
-  //              var srcRect = sourceRectangle.GetValueOrDefault();
-  //              w = srcRect.Width * scale.X;
-  //              h = srcRect.Height * scale.Y;
-  //              _texCoordTL.X = srcRect.X * texture.TexelWidth;
-  //              _texCoordTL.Y = srcRect.Y * texture.TexelHeight;
-  //              _texCoordBR.X = (srcRect.X + srcRect.Width) * texture.TexelWidth;
-  //              _texCoordBR.Y = (srcRect.Y + srcRect.Height) * texture.TexelHeight;
-  //          }
-  //          else
-  //          {
-  //              w = texture.Width * scale.X;
-  //              h = texture.Height * scale.Y;
-  //              _texCoordTL = Vector2.Zero;
-  //              _texCoordBR = Vector2.One;
-  //          }
-            
-  //          if ((effects & SpriteEffects.FlipVertically) != 0)
-  //          {
-  //              var temp = _texCoordBR.Y;
+
+		//          float w, h;
+		//          if (sourceRectangle.HasValue)
+		//          {
+		//              var srcRect = sourceRectangle.GetValueOrDefault();
+		//              w = srcRect.Width * scale.X;
+		//              h = srcRect.Height * scale.Y;
+		//              _texCoordTL.X = srcRect.X * texture.TexelWidth;
+		//              _texCoordTL.Y = srcRect.Y * texture.TexelHeight;
+		//              _texCoordBR.X = (srcRect.X + srcRect.Width) * texture.TexelWidth;
+		//              _texCoordBR.Y = (srcRect.Y + srcRect.Height) * texture.TexelHeight;
+		//          }
+		//          else
+		//          {
+		//              w = texture.Width * scale.X;
+		//              h = texture.Height * scale.Y;
+		//              _texCoordTL = Vector2.Zero;
+		//              _texCoordBR = Vector2.One;
+		//          }
+
+		//          if ((effects & SpriteEffects.FlipVertically) != 0)
+		//          {
+		//              var temp = _texCoordBR.Y;
 		//		_texCoordBR.Y = _texCoordTL.Y;
 		//		_texCoordTL.Y = temp;
-  //          }
-  //          if ((effects & SpriteEffects.FlipHorizontally) != 0)
-  //          {
-  //              var temp = _texCoordBR.X;
+		//          }
+		//          if ((effects & SpriteEffects.FlipHorizontally) != 0)
+		//          {
+		//              var temp = _texCoordBR.X;
 		//		_texCoordBR.X = _texCoordTL.X;
 		//		_texCoordTL.X = temp;
-  //          }
-            
-  //          if (rotation == 0f)
-  //          {
-  //              item.Set(position.X - origin.X,
-  //                      position.Y - origin.Y,
-  //                      w,
-  //                      h,
-  //                      color,
-  //                      _texCoordTL,
-  //                      _texCoordBR,
-  //                      layerDepth);
-  //          }
-  //          else
-  //          {
-  //              item.Set(position.X,
-  //                      position.Y,
-  //                      -origin.X,
-  //                      -origin.Y,
-  //                      w,
-  //                      h,
-  //                      (float)Math.Sin(rotation),
-  //                      (float)Math.Cos(rotation),
-  //                      color,
-  //                      _texCoordTL,
-  //                      _texCoordBR,
-  //                      layerDepth);
-  //          }
-            
-  //          FlushIfNeeded();
+		//          }
+
+		//          if (rotation == 0f)
+		//          {
+		//              item.Set(position.X - origin.X,
+		//                      position.Y - origin.Y,
+		//                      w,
+		//                      h,
+		//                      color,
+		//                      _texCoordTL,
+		//                      _texCoordBR,
+		//                      layerDepth);
+		//          }
+		//          else
+		//          {
+		//              item.Set(position.X,
+		//                      position.Y,
+		//                      -origin.X,
+		//                      -origin.Y,
+		//                      w,
+		//                      h,
+		//                      (float)Math.Sin(rotation),
+		//                      (float)Math.Cos(rotation),
+		//                      color,
+		//                      _texCoordTL,
+		//                      _texCoordBR,
+		//                      layerDepth);
+		//          }
+
+		//          FlushIfNeeded();
 		//}
 
-  //      /// <summary>
-  //      /// Submit a sprite for drawing in the current batch.
-  //      /// </summary>
-  //      /// <param name="texture">A texture.</param>
-  //      /// <param name="position">The drawing location on screen.</param>
-  //      /// <param name="sourceRectangle">An optional region on the texture which will be rendered. If null - draws full texture.</param>
-  //      /// <param name="color">A color mask.</param>
-  //      /// <param name="rotation">A rotation of this sprite.</param>
-  //      /// <param name="origin">Center of the rotation. 0,0 by default.</param>
-  //      /// <param name="scale">A scaling of this sprite.</param>
-  //      /// <param name="effects">Modificators for drawing. Can be combined.</param>
-  //      /// <param name="layerDepth">A depth of the layer of this sprite.</param>
+		//      /// <summary>
+		//      /// Submit a sprite for drawing in the current batch.
+		//      /// </summary>
+		//      /// <param name="texture">A texture.</param>
+		//      /// <param name="position">The drawing location on screen.</param>
+		//      /// <param name="sourceRectangle">An optional region on the texture which will be rendered. If null - draws full texture.</param>
+		//      /// <param name="color">A color mask.</param>
+		//      /// <param name="rotation">A rotation of this sprite.</param>
+		//      /// <param name="origin">Center of the rotation. 0,0 by default.</param>
+		//      /// <param name="scale">A scaling of this sprite.</param>
+		//      /// <param name="effects">Modificators for drawing. Can be combined.</param>
+		//      /// <param name="layerDepth">A depth of the layer of this sprite.</param>
 		//public void Draw (Texture2D texture,
 		//		Vector2 position,
 		//		RectangleF? sourceRectangle,
@@ -286,23 +286,23 @@ namespace COTG.Draw
 		//		Vector2 origin,
 		//		float scale,
 		//		SpriteEffects effects,
-  //              int layerDepth)
+		//              int layerDepth)
 		//{
-  //          var scaleVec = new Vector2(scale, scale);
-  //          Draw(texture, position, sourceRectangle, color, rotation, origin, scaleVec, effects, layerDepth);
+		//          var scaleVec = new Vector2(scale, scale);
+		//          Draw(texture, position, sourceRectangle, color, rotation, origin, scaleVec, effects, layerDepth);
 		//}
 
-  //      /// <summary>
-  //      /// Submit a sprite for drawing in the current batch.
-  //      /// </summary>
-  //      /// <param name="texture">A texture.</param>
-  //      /// <param name="destinationRectangle">The drawing bounds on screen.</param>
-  //      /// <param name="sourceRectangle">An optional region on the texture which will be rendered. If null - draws full texture.</param>
-  //      /// <param name="color">A color mask.</param>
-  //      /// <param name="rotation">A rotation of this sprite.</param>
-  //      /// <param name="origin">Center of the rotation. 0,0 by default.</param>
-  //      /// <param name="effects">Modificators for drawing. Can be combined.</param>
-  //      /// <param name="layerDepth">A depth of the layer of this sprite.</param>
+		//      /// <summary>
+		//      /// Submit a sprite for drawing in the current batch.
+		//      /// </summary>
+		//      /// <param name="texture">A texture.</param>
+		//      /// <param name="destinationRectangle">The drawing bounds on screen.</param>
+		//      /// <param name="sourceRectangle">An optional region on the texture which will be rendered. If null - draws full texture.</param>
+		//      /// <param name="color">A color mask.</param>
+		//      /// <param name="rotation">A rotation of this sprite.</param>
+		//      /// <param name="origin">Center of the rotation. 0,0 by default.</param>
+		//      /// <param name="effects">Modificators for drawing. Can be combined.</param>
+		//      /// <param name="layerDepth">A depth of the layer of this sprite.</param>
 		//public void Draw (Texture2D texture,
 		//	RectangleF destinationRectangle,
 		//	RectangleF? sourceRectangle,
@@ -310,97 +310,97 @@ namespace COTG.Draw
 		//	float rotation,
 		//	Vector2 origin,
 		//	SpriteEffects effects,
-  //          int layerDepth)
+		//          int layerDepth)
 		//{
-  //          CheckValid(texture);
-            
-  //          var item = _batcher.CreateBatchItem();
-  //          item.Texture = texture;
+		//          CheckValid(texture);
+
+		//          var item = _batcher.CreateBatchItem();
+		//          item.Texture = texture;
 
 		//	item.SortKey = Layer.SortKey(layerDepth, texture);
 
 		//	if (sourceRectangle.HasValue)
-  //          {
-  //              var srcRect = sourceRectangle.GetValueOrDefault();
-  //              _texCoordTL.X = srcRect.X * texture.TexelWidth;
-  //              _texCoordTL.Y = srcRect.Y * texture.TexelHeight;
-  //              _texCoordBR.X = (srcRect.X + srcRect.Width) * texture.TexelWidth;
-  //              _texCoordBR.Y = (srcRect.Y + srcRect.Height) * texture.TexelHeight;
+		//          {
+		//              var srcRect = sourceRectangle.GetValueOrDefault();
+		//              _texCoordTL.X = srcRect.X * texture.TexelWidth;
+		//              _texCoordTL.Y = srcRect.Y * texture.TexelHeight;
+		//              _texCoordBR.X = (srcRect.X + srcRect.Width) * texture.TexelWidth;
+		//              _texCoordBR.Y = (srcRect.Y + srcRect.Height) * texture.TexelHeight;
 
-  //              if(srcRect.Width != 0)
-  //                  origin.X = origin.X * (float)destinationRectangle.Width / (float)srcRect.Width;
-  //              else
-  //                  origin.X = origin.X * (float)destinationRectangle.Width * texture.TexelWidth;
-  //              if(srcRect.Height != 0)
-  //                  origin.Y = origin.Y * (float)destinationRectangle.Height / (float)srcRect.Height; 
-  //              else
-  //                  origin.Y = origin.Y * (float)destinationRectangle.Height * texture.TexelHeight;
-  //          }
-  //          else
-  //          {
-  //              _texCoordTL = Vector2.Zero;
-  //              _texCoordBR = Vector2.One;
-                
-  //              origin.X = origin.X * (float)destinationRectangle.Width  * texture.TexelWidth;
-  //              origin.Y = origin.Y * (float)destinationRectangle.Height * texture.TexelHeight;
-  //          }
-            
+		//              if(srcRect.Width != 0)
+		//                  origin.X = origin.X * (float)destinationRectangle.Width / (float)srcRect.Width;
+		//              else
+		//                  origin.X = origin.X * (float)destinationRectangle.Width * texture.TexelWidth;
+		//              if(srcRect.Height != 0)
+		//                  origin.Y = origin.Y * (float)destinationRectangle.Height / (float)srcRect.Height; 
+		//              else
+		//                  origin.Y = origin.Y * (float)destinationRectangle.Height * texture.TexelHeight;
+		//          }
+		//          else
+		//          {
+		//              _texCoordTL = Vector2.Zero;
+		//              _texCoordBR = Vector2.One;
+
+		//              origin.X = origin.X * (float)destinationRectangle.Width  * texture.TexelWidth;
+		//              origin.Y = origin.Y * (float)destinationRectangle.Height * texture.TexelHeight;
+		//          }
+
 		//	if ((effects & SpriteEffects.FlipVertically) != 0)
-  //          {
-  //              var temp = _texCoordBR.Y;
+		//          {
+		//              var temp = _texCoordBR.Y;
 		//		_texCoordBR.Y = _texCoordTL.Y;
 		//		_texCoordTL.Y = temp;
 		//	}
 		//	if ((effects & SpriteEffects.FlipHorizontally) != 0)
-  //          {
-  //              var temp = _texCoordBR.X;
+		//          {
+		//              var temp = _texCoordBR.X;
 		//		_texCoordBR.X = _texCoordTL.X;
 		//		_texCoordTL.X = temp;
 		//	}
 
 		//    if (rotation == 0f)
 		//    {
-  //              item.Set(destinationRectangle.X - origin.X,
-  //                      destinationRectangle.Y - origin.Y,
-  //                      destinationRectangle.Width,
-  //                      destinationRectangle.Height,
-  //                      color,
-  //                      _texCoordTL,
-  //                      _texCoordBR,
-  //                      layerDepth);
-  //          }
-  //          else
+		//              item.Set(destinationRectangle.X - origin.X,
+		//                      destinationRectangle.Y - origin.Y,
+		//                      destinationRectangle.Width,
+		//                      destinationRectangle.Height,
+		//                      color,
+		//                      _texCoordTL,
+		//                      _texCoordBR,
+		//                      layerDepth);
+		//          }
+		//          else
 		//    {
-  //              item.Set(destinationRectangle.X,
-  //                      destinationRectangle.Y,
-  //                      -origin.X,
-  //                      -origin.Y,
-  //                      destinationRectangle.Width,
-  //                      destinationRectangle.Height,
-  //                      (float)Math.Sin(rotation),
-  //                      (float)Math.Cos(rotation),
-  //                      color,
-  //                      _texCoordTL,
-  //                      _texCoordBR,
-  //                      layerDepth);
-  //          }
+		//              item.Set(destinationRectangle.X,
+		//                      destinationRectangle.Y,
+		//                      -origin.X,
+		//                      -origin.Y,
+		//                      destinationRectangle.Width,
+		//                      destinationRectangle.Height,
+		//                      (float)Math.Sin(rotation),
+		//                      (float)Math.Cos(rotation),
+		//                      color,
+		//                      _texCoordTL,
+		//                      _texCoordBR,
+		//                      layerDepth);
+		//          }
 
 		//	FlushIfNeeded();
 		//}
 
 		// Mark the end of a draw operation for Immediate SpriteSortMode.
 
-        /// <summary>
-        /// Submit a sprite for drawing in the current batch.
-        /// </summary>
-        /// <param name="texture">A texture.</param>
-        /// <param name="position">The drawing location on screen.</param>
-        /// <param name="sourceRectangle">An optional region on the texture which will be rendered. If null - draws full texture.</param>
-        /// <param name="color">A color mask.</param>
+		/// <summary>
+		/// Submit a sprite for drawing in the current batch.
+		/// </summary>
+		/// <param name="texture">A texture.</param>
+		/// <param name="position">The drawing location on screen.</param>
+		/// <param name="sourceRectangle">An optional region on the texture which will be rendered. If null - draws full texture.</param>
+		/// <param name="color">A color mask.</param>
 		//public void Draw (Texture2D texture, Vector2 position, RectangleF? sourceRectangle, Color color)
 		//{
 		//	CheckValid(texture);
-            
+
 		//	var item = _batcher.CreateBatchItem();
 		//	item.Texture = texture;
 
@@ -409,45 +409,45 @@ namespace COTG.Draw
 
 		//	Vector2 size;
 
-  //          if (sourceRectangle.HasValue)
-  //          {
-  //              var srcRect = sourceRectangle.GetValueOrDefault();
-  //              size = new Vector2(srcRect.Width, srcRect.Height);
-  //              _texCoordTL.X = srcRect.X * texture.TexelWidth;
-  //              _texCoordTL.Y = srcRect.Y * texture.TexelHeight;
-  //              _texCoordBR.X = (srcRect.X + srcRect.Width)  * texture.TexelWidth;
-  //              _texCoordBR.Y = (srcRect.Y + srcRect.Height) * texture.TexelHeight;
-  //          }
-  //          else
-  //          {
-  //              size = new Vector2(texture.width, texture.height);
-  //              _texCoordTL = Vector2.Zero;
-  //              _texCoordBR = Vector2.One;
-  //          }
+		//          if (sourceRectangle.HasValue)
+		//          {
+		//              var srcRect = sourceRectangle.GetValueOrDefault();
+		//              size = new Vector2(srcRect.Width, srcRect.Height);
+		//              _texCoordTL.X = srcRect.X * texture.TexelWidth;
+		//              _texCoordTL.Y = srcRect.Y * texture.TexelHeight;
+		//              _texCoordBR.X = (srcRect.X + srcRect.Width)  * texture.TexelWidth;
+		//              _texCoordBR.Y = (srcRect.Y + srcRect.Height) * texture.TexelHeight;
+		//          }
+		//          else
+		//          {
+		//              size = new Vector2(texture.width, texture.height);
+		//              _texCoordTL = Vector2.Zero;
+		//              _texCoordBR = Vector2.One;
+		//          }
 
-  //          item.Set(position.X,
-  //                   position.Y,
-  //                   size.X,
-  //                   size.Y,
-  //                   color,
-  //                   _texCoordTL,
-  //                   _texCoordBR,
-  //                   0);
+		//          item.Set(position.X,
+		//                   position.Y,
+		//                   size.X,
+		//                   size.Y,
+		//                   color,
+		//                   _texCoordTL,
+		//                   _texCoordBR,
+		//                   0);
 
-  //          FlushIfNeeded();
+		//          FlushIfNeeded();
 		//}
 
-  //      /// <summary>
-  //      /// Submit a sprite for drawing in the current batch.
-  //      /// </summary>
-  //      /// <param name="texture">A texture.</param>
-  //      /// <param name="destinationRectangle">The drawing bounds on screen.</param>
-  //      /// <param name="sourceRectangle">An optional region on the texture which will be rendered. If null - draws full texture.</param>
-  //      /// <param name="color">A color mask.</param>
+		//      /// <summary>
+		//      /// Submit a sprite for drawing in the current batch.
+		//      /// </summary>
+		//      /// <param name="texture">A texture.</param>
+		//      /// <param name="destinationRectangle">The drawing bounds on screen.</param>
+		//      /// <param name="sourceRectangle">An optional region on the texture which will be rendered. If null - draws full texture.</param>
+		//      /// <param name="color">A color mask.</param>
 		//public void Draw (Texture2D texture, RectangleF destinationRectangle, RectangleF? sourceRectangle, Color color)
 		//{
-  //          CheckValid(texture);
-            
+		//          CheckValid(texture);
+
 		//	var item = _batcher.CreateBatchItem();
 		//	item.Texture = texture;
 
@@ -455,31 +455,38 @@ namespace COTG.Draw
 		//	item.SortKey = Layer.SortKey(Layer.effects, texture);
 
 		//	if (sourceRectangle.HasValue)
-  //          {
-  //              var srcRect = sourceRectangle.GetValueOrDefault();
-  //              _texCoordTL.X = srcRect.X * texture.TexelWidth;
-  //              _texCoordTL.Y = srcRect.Y * texture.TexelHeight;
-  //              _texCoordBR.X = (srcRect.X + srcRect.Width) * texture.TexelWidth;
-  //              _texCoordBR.Y = (srcRect.Y + srcRect.Height) * texture.TexelHeight;
-  //          }
-  //          else
-  //          {
-  //              _texCoordTL = Vector2.Zero;
-  //              _texCoordBR = Vector2.One;
-  //          }
+		//          {
+		//              var srcRect = sourceRectangle.GetValueOrDefault();
+		//              _texCoordTL.X = srcRect.X * texture.TexelWidth;
+		//              _texCoordTL.Y = srcRect.Y * texture.TexelHeight;
+		//              _texCoordBR.X = (srcRect.X + srcRect.Width) * texture.TexelWidth;
+		//              _texCoordBR.Y = (srcRect.Y + srcRect.Height) * texture.TexelHeight;
+		//          }
+		//          else
+		//          {
+		//              _texCoordTL = Vector2.Zero;
+		//              _texCoordBR = Vector2.One;
+		//          }
 
-  //          item.Set(destinationRectangle.X,
-  //                   destinationRectangle.Y,
-  //                   destinationRectangle.Width,
-  //                   destinationRectangle.Height,
-  //                   color,
-  //                   _texCoordTL,
-  //                   _texCoordBR,
-  //                   0);
-            
-  //          FlushIfNeeded();
+		//          item.Set(destinationRectangle.X,
+		//                   destinationRectangle.Y,
+		//                   destinationRectangle.Width,
+		//                   destinationRectangle.Height,
+		//                   color,
+		//                   _texCoordTL,
+		//                   _texCoordBR,
+		//                   0);
+
+		//          FlushIfNeeded();
 		//}
-		public void AddQuad(int layer, Material texture, Vector2 c0, Vector2 c1, Vector2 uv0, Vector2 uv1, Color color,DepthFunction depthFunction, float depth=0)
+
+	
+	public void AddMesh(Mesh m, int layer, Material material)
+	{
+		var list = _batcher.CreateBatchItemList(layer, material);
+		list.meshes.Add(m);
+	}
+	public void AddQuad(int layer, Material texture, Vector2 c0, Vector2 c1, Vector2 uv0, Vector2 uv1, Color color,DepthFunction depthFunction, float depth=0)
 		{
 
 			var item = _batcher.CreateBatchItem(layer,texture);

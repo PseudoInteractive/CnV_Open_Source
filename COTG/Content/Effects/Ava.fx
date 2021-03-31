@@ -7,6 +7,6 @@
 #include "darkFont.fxh"
 #include "sdf.fxh"
 #include "NoTexture.fxh"
-
+#include "WorldSpace.fxh"
 #include "AnimatedSprite.fxh"
 

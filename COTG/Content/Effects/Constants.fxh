@@ -7,13 +7,24 @@ cbuffer Parameters : register(b0) {
 float4x4 WorldViewProjection;
 
 	float3 lightPosition;
-	float3 cameraPosition;
+	float3 cameraReferencePosition;
 	float4 lightGains; // emissive, diffuse speciular
 	float4 planetGains; // emissive, diffuse speciular
 	float4 lightAmbient;
 	float4 lightColor;
 	float4 lightSpecular;
 
+	float4 cameraC;
+	float4 pixelScale;
+
+};
+
+cbuffer Transform : register(b1) { 
+
+	float4 transformC;
+	float4 transformA0;
+	float4 transformA1;
+	float4 transformA2;
 };
 
 DECLARE_TEXTURE(Texture, 0);
