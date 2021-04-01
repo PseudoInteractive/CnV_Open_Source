@@ -610,14 +610,14 @@ namespace COTG.Game
 
 				App.DispatchOnUIThreadSneaky(() =>
 				{
-					if (World.GetInfoFromCid(cid).isWater)
+				
 
 
 						// set is water var
 						str = $"{City.shareStringStart}{(World.GetInfoFromCid(cid).isWater ? ';' : ':')}{str.Substring(18)}";
 					App.CopyTextToClipboard(str);
 
-				//	Launcher.LaunchUriAsync(new Uri($"http://cotgopt.com/?map={str}"));
+					Launcher.LaunchUriAsync(new Uri($"http://cotgopt.com/?map={str}"));
 				});
 			}
 		}

@@ -428,10 +428,10 @@ namespace COTG.Game
 
 						pixels.SetColor(i, color, 0);
 						// change:  Todo, analysis
-						pixels[i * 8 + 4] = 1 | (2 << 2) | (2 << 4) | (1 << 6);
+						pixels[i * 8 + 4] = 2 | (3 << 2) | (3 << 4) | (2 << 6);
 						pixels[i * 8 + 5] = 3 | (0 << 2) | (0 << 4) | (3 << 6); // color index 0
 						pixels[i * 8 + 6] = 3 | (0 << 2) | (0 << 4) | (3 << 6); // color index 0
-						pixels[i * 8 + 7] = 1 | (2 << 2) | (2 << 4) | (1 << 6);
+						pixels[i * 8 + 7] = 2 | (3 << 2) | (3 << 4) | (2 << 6);
 					}
 				}
 			}

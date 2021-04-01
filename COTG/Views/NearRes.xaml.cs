@@ -368,7 +368,7 @@ namespace COTG.Views
 				Note.Show($"Something changed, please refresh and try again");
 			}
 			DoRefresh();
-			Analytics.TrackEvent("NearResSend");
+	//		Analytics.TrackEvent("NearResSend");
 
 		}
 
