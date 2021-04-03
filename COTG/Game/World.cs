@@ -25,6 +25,33 @@ namespace COTG.Game
 {
 	static class WorldHelper
 	{
+		public static int WorldToCid(this (int x, int y) a)
+		{
+			return a.x + (a.y << 16);
+		}
+
+		public static int Translate(this int cid, (int dx, int dy) d)
+		{
+			return cid + d.dx + d.dy * 65536;
+		}
+
+
+		public static Vector2 ToVector(this (int x, int y) a)
+		{
+			return new Vector2(a.x, a.y);
+		}
+		public static (int x, int y) CidToWorld(this int c)
+		{
+			return (c & 65535, c >> 16);
+		}
+		public static System.Numerics.Vector2 CidToWorldV(this int c)
+		{
+			var c2 = CidToWorld(c);
+			return new System.Numerics.Vector2((float)c2.x, (float)c2.y);
+		}
+		public static int WorldToContinent(this (int x, int y) c) => (c.y / 100) * 10 + (c.x / 100);
+		//        public static int CidToContinent(this int cid) => ((cid/65536)/100)*10 | (cid % 65536) / 100;
+		public static int CidToContinent(this int cid) => WorldToContinent(CidToWorld(cid));
 		public static int CidToPid(this int cid)
 		{
 			return World.GetInfo(CidToWorld(cid)).player;
@@ -87,31 +114,7 @@ namespace COTG.Game
 
 		}
 
-		public static int Translate(this int cid, (int dx, int dy) d)
-		{
-			return cid + d.dx + d.dy * 65536;
-		}
-		public static int WorldToCid(this (int x, int y) a)
-		{
-			return a.x + (a.y << 16);
-		}
-
-		public static Vector2 ToVector(this (int x, int y) a)
-		{
-			return new Vector2(a.x, a.y);
-		}
-		public static (int x, int y) CidToWorld(this int c)
-		{
-			return (c & 65535, c >> 16);
-		}
-		public static System.Numerics.Vector2 CidToWorldV(this int c)
-		{
-			var c2 = CidToWorld(c);
-			return new System.Numerics.Vector2((float)c2.x, (float)c2.y);
-		}
-		public static int WorldToContinent(this (int x, int y) c) => (c.y / 100) * 10 + (c.x / 100);
-		//        public static int CidToContinent(this int cid) => ((cid/65536)/100)*10 | (cid % 65536) / 100;
-		public static int CidToContinent(this int cid) => WorldToContinent(CidToWorld(cid));
+		
 
 	}
 	public struct Continent
@@ -452,8 +455,14 @@ namespace COTG.Game
 		public static async void Decode(JsonDocument jsd)
 		{
 			Assert(state == State.started);
-	///		Assert(state == State.none || state == State.completed);
-	//		state = State.started;
+			///		Assert(state == State.none || state == State.completed);
+			//		state = State.started;
+			// reset players	
+			foreach (var p in Player.all)
+			{
+				p.Value.cities.Clear();
+			}
+
 
 			var pixels = new byte[outSize / 4 * outSize / 4 * 8];
 			var ownerPixels = new byte[worldDim * worldDim * 8];
@@ -565,7 +574,7 @@ namespace COTG.Game
 
 					//  LogJS(b);
 					var index = (int)(x + y * worldDim);
-					if (caverns.isOn  && level >= cavernMinLevel && level <= cavernMaxLevel)
+					if (caverns.isOn && level >= cavernMinLevel && level <= cavernMaxLevel)
 					{
 						pixels.SetColor(index, 0x90, (byte)(0xD0 - level * 8), (byte)(0x40 + level * 7));
 						float t = (level - 1) / 9.0f;
@@ -664,10 +673,10 @@ namespace COTG.Game
 				var index = (int)(b.x + b.y * worldDim);
 				if (shrines.isOn)
 				{
-					
+
 					if (b.type == 255)
 					{
-						pixels.SetColor( index, shrines.color.R, shrines.color.G, shrines.color.B);
+						pixels.SetColor(index, shrines.color.R, shrines.color.G, shrines.color.B);
 					}
 					else
 					{
@@ -709,15 +718,15 @@ namespace COTG.Game
 				if (b.active)
 				{
 					isOn = activePortals.isOn;
-					pixels.SetColor(index, activePortals.color.R,activePortals.color.G,activePortals.color.B);
-	//				ownerPixels.SetColor(index, 0xaA, 0xFA, 0xFF);
+					pixels.SetColor(index, activePortals.color.R, activePortals.color.G, activePortals.color.B);
+					//				ownerPixels.SetColor(index, 0xaA, 0xFA, 0xFF);
 					pixels[index * 8 + 0] = 31;
 				}
 				else
 				{
 					isOn = inactivePortals.isOn;
 					pixels.SetColor(index, inactivePortals.color.R, inactivePortals.color.G, inactivePortals.color.B);
-	//				ownerPixels.SetColor(index, 0xBA, 0xBA, 0xA0);
+					//				ownerPixels.SetColor(index, 0xBA, 0xBA, 0xA0);
 				}
 				if (isOn)
 				{
@@ -792,6 +801,7 @@ namespace COTG.Game
 					//}
 					// cities.Add(c);
 					var index = (int)(x + y * worldDim);
+
 
 					var isBig = type >= 5 ? 1 : 0;
 					var isCastle = (type == 3 | type == 4 | type == 7 | type == 8) ? 1 : 0;
@@ -870,6 +880,7 @@ namespace COTG.Game
 					//    Log(_t);
 					//}
 					// cities.Add(c);
+
 					var index = (int)(x + y * worldDim);
 
 					var isBig = type >= 5 ? 1 : 0;
@@ -879,12 +890,12 @@ namespace COTG.Game
 					if (isTemple)
 						pixels[index * 8 + 0] = 31;  // temple.  Neutral color is blue
 					var isVisible = true;
-					
+
 					if (!isTemple && !citiesWithoutTemples)
 						isVisible = false;
-					if( isCastle==0 && !citiesWithoutCastles)
+					if (isCastle == 0 && !citiesWithoutCastles)
 						isVisible = false;
-					if (isWater==0 && !citiesWithoutWater)
+					if (isWater == 0 && !citiesWithoutWater)
 						isVisible = false;
 
 
@@ -892,13 +903,13 @@ namespace COTG.Game
 					if (pid == 0)
 					{
 						// lawless
-						pixels.SetColor(ownerPixels,index, lawless.color.R,lawless.color.G, lawless.color.B);
+						pixels.SetColor(ownerPixels, index, lawless.color.R, lawless.color.G, lawless.color.B);
 						if (!lawless.isOn)
 							isVisible = false;
 					}
 					else if (pid == Player.myId)
 					{
-						pixels.SetColor(ownerPixels,index, ownCities.color.R,ownCities.color.G, ownCities.color.B);
+						pixels.SetColor(ownerPixels, index, ownCities.color.R, ownCities.color.G, ownCities.color.B);
 						if (!ownCities.isOn)
 							isVisible = false;
 
@@ -908,7 +919,7 @@ namespace COTG.Game
 						if (!ownAlliance.isOn)
 							isVisible = false;
 
-						pixels.SetColor(ownerPixels,index, ownAlliance.color.R,ownAlliance.color.G, ownAlliance.color.B);
+						pixels.SetColor(ownerPixels, index, ownAlliance.color.R, ownAlliance.color.G, ownAlliance.color.B);
 					}
 					else
 					{
@@ -917,24 +928,24 @@ namespace COTG.Game
 							default:
 								if (!otherPlayers.isOn)
 									isVisible = false;
-								pixels.SetColor(ownerPixels,index, otherPlayers.color.R, otherPlayers.color.G, otherPlayers.color.B);
+								pixels.SetColor(ownerPixels, index, otherPlayers.color.R, otherPlayers.color.G, otherPlayers.color.B);
 								break;
 							case Diplomacy.allied:
 								if (!alliedAlliance.isOn)
 									isVisible = false;
-								pixels.SetColor(ownerPixels,index, alliedAlliance.color.R,alliedAlliance.color.G, alliedAlliance.color.B);
+								pixels.SetColor(ownerPixels, index, alliedAlliance.color.R, alliedAlliance.color.G, alliedAlliance.color.B);
 								break;
 							case Diplomacy.nap:
 								if (!napAlliance.isOn)
 									isVisible = false;
 
-								pixels.SetColor(ownerPixels,index, napAlliance.color.R, napAlliance.color.G, napAlliance.color.B);
+								pixels.SetColor(ownerPixels, index, napAlliance.color.R, napAlliance.color.G, napAlliance.color.B);
 								break;
 							case Diplomacy.enemy:
 								if (!enemyAlliance.isOn)
 									isVisible = false;
 
-								pixels.SetColor(ownerPixels,index, enemyAlliance.color.R,enemyAlliance.color.G,enemyAlliance.color.B);
+								pixels.SetColor(ownerPixels, index, enemyAlliance.color.R, enemyAlliance.color.G, enemyAlliance.color.B);
 								break;
 
 
@@ -943,7 +954,7 @@ namespace COTG.Game
 
 					if (allianceSettings.TryGetValue((int)alliance, out var allianceSetting) && allianceSetting.isOn)
 					{
-						pixels.SetColor(ownerPixels,index, allianceSetting.color.R, allianceSetting.color.G, allianceSetting.color.B);
+						pixels.SetColor(ownerPixels, index, allianceSetting.color.R, allianceSetting.color.G, allianceSetting.color.B);
 					}
 					if (playerSettings.TryGetValue((int)pid, out var playerSetting) && playerSetting.isOn)
 					{
@@ -1042,6 +1053,30 @@ namespace COTG.Game
 			Task.Run(() => WorldStorage.SaveWorldData(raw));
 			current = rv;
 			state = State.completed;
+
+			// delay this part
+			while (Player.all.Count == 0)
+			{
+				await Task.Delay(500);
+			}
+			for (int x = 0; x < worldDim; ++x)
+			{
+				for (int y = 0; y < worldDim; ++y)
+				{
+					var d = World.GetInfo((x, y));
+					if (d.type == typeCity)
+					{
+						if (Player.all.TryGetValue(d.player, out var p))
+						{
+							p.cities.Add((x,y).WorldToCid());
+						}
+						else
+						{
+							Trace($"missing player {d.player} city {x}:{y}");
+						}
+					}
+				}
+			}
 		}
 		public static async void LoadContinentHistory()
 		{

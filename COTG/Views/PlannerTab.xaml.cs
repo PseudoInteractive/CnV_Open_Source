@@ -256,6 +256,37 @@ namespace COTG.Views
 			GetBuild().FlipLayoutV();
 		}
 
+		ref struct AllowedToMove
+		{
+			public bool storage;
+			public bool academy;
+			public bool sorc;
+
+		}
+		static int CountResOverlaps( ref AllowedToMove allowed)
+		{
+			var build = City.GetBuild();
+			int rv = 0;
+			var bdc = City.buildingsCache;
+			var bds = build.buildings;
+			for(int i=0;i<citySpotCount;++i)
+			{
+				var des = bdc[i];
+				if (!des.isBuilding)
+					continue;
+				if (!bds[i].isRes)
+					continue;
+
+				var bdBid = bdc[i].bid;
+				// these ones can be arranged
+				if (bdBid == bidCastle || (bdBid == bidMage_tower && allowed.sorc) || (bdBid == bidAcademy && allowed.academy) || (bdBid == bidMarketplace) || (bdBid == bidStorehouse && allowed.storage))
+					continue;
+
+				++rv;
+			}
+			return rv;
+		}
+
 		private void SmartRearrange(object sender, RoutedEventArgs e)
 		{
 			var build = City.GetBuild();
@@ -281,6 +312,33 @@ namespace COTG.Views
 
 				}
 			}
+			var allowed = new AllowedToMove() { sorc = sorcTowers == 1, academy = academies == 1, storage = resHelpers == 0 };
+
+			// first try flips
+			var overlap0 = CountResOverlaps(ref allowed);
+			build.FlipLayoutH();
+			var overlap1 = CountResOverlaps(ref allowed);
+			build.FlipLayoutV();
+			var overlap2 = CountResOverlaps(ref allowed);
+			build.FlipLayoutH();
+			var overlap3 = CountResOverlaps(ref allowed);
+			if( overlap0 <= overlap1 && overlap0 <= overlap2 &&overlap0 <= overlap3)
+			{
+				build.FlipLayoutV(); // this one is best
+			}
+			else if( overlap1 <= overlap2 && overlap1 <= overlap3)
+			{
+				build.FlipLayoutV(); // this one is best
+				build.FlipLayoutH(); // this one is best
+			}
+			else if (overlap2 <= overlap3)
+			{
+				build.FlipLayoutH(); // this one is best
+			}
+			else 
+			{
+			}
+			Note.Show("Flipped layout to reduce overalps");
 
 			for (int x = span0; x <= span1; ++x)
 			{
@@ -293,7 +351,7 @@ namespace COTG.Views
 						continue;
 
 					var bdBid = bd.bid;
-					if (bdBid == bidCastle || (bdBid == bidMage_tower && sorcTowers == 1) || (bdBid == bidAcademy && academies == 1) || (bdBid == bidMarketplace) || (bdBid == bidStorehouse && resHelpers == 0))
+					if (bdBid == bidCastle || (bdBid == bidMage_tower && allowed.sorc) || (bdBid == bidAcademy && allowed.academy) || (bdBid == bidMarketplace) || (bdBid == bidStorehouse && allowed.storage))
 					{
 						bool foundOne = false;
 						// is there a building that we can re-use?
@@ -345,6 +403,7 @@ namespace COTG.Views
 					}
 				}
 			}
+			Note.Show($"Moved buildings to reduce overalps: { CountResOverlaps(ref allowed)} overlaps remain");
 			CityView.BuildingsOrQueueChanged();
 		}
 

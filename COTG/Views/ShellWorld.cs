@@ -919,7 +919,7 @@ namespace COTG.Views
 												var info = spot != null ?
 													$"{spot.cityName}\n{spot.points}\n"
 												 : "";
-												toolTip = $"{player.name}\n{Alliance.IdToName(player.alliance)}\n{info}{c.y / 100}{c.x / 100} ({c.x}:{c.y})\ncities:{player.cities}\npts:{player.pointsH * 100}";
+												toolTip = $"{player.name}\n{Alliance.IdToName(player.alliance)}\n{info}{c.y / 100}{c.x / 100} ({c.x}:{c.y})\ncities:{player.cities.Count}\npts:{player.pointsH * 100}";
 											}
 										}
 										if (spot != null && spot.incoming != null)

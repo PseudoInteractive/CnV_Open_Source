@@ -41,8 +41,9 @@ namespace COTG
 		}
 		public static SpriteAnim flagHome = new SpriteAnim("flagAnim0",12);
 		public static SpriteAnim flagSelected = new SpriteAnim("flagAnim4",12);
-		public static SpriteAnim flagPinned= new SpriteAnim("flagAnim3",12);
+		public static SpriteAnim flagPinned= new SpriteAnim("flagAnim1",12);
 		public static SpriteAnim flagRed = new SpriteAnim("flagAnim3",12 );
+		public static SpriteAnim flagGrey = new SpriteAnim("flagAnimGrey", 12);
 	}
 
 }

@@ -137,7 +137,7 @@ namespace COTG.JSON
                 split[41] = "0"; // use a different city for all sends
 
 
-                split[42] = reqHub.ToString();
+                split[42] = !isHub ? reqHub.ToString() : "0";
                 //                split[43] = sendHub.ToString();
 
                 split[45] = cartsAreForRequests ? "100" : "0"; // 45 is % carts reserved for requests

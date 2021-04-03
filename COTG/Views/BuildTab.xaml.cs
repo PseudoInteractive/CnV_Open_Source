@@ -143,6 +143,7 @@ namespace COTG.Views
 					if ((q.item.bspot == item.bspot) && // is this enough for a match?
 							(q.item.slvl == item.slvl))
 					{
+					    
 						view.queue.RemoveAt(id);
 						break;
 					}

@@ -15,7 +15,6 @@ namespace COTG.Game
         public string name;
         public ushort alliance;
         public ushort pointsH;// divided by 100
-        public ushort cities;
         public byte title;
         public static int myId;
 		public static int activeId;
@@ -24,7 +23,7 @@ namespace COTG.Game
 		public static int myTitle;
         public static int viewHover; // in the view menu
 		public static int moveSlots=100;
-
+		public HashSet<int> cities = new();
         public static bool isAvatar => myName=="Avatar";
 		public static bool isTest => myName == "KittyKat";
 		public static bool isAvatarOrTest => isAvatar||isTest;
@@ -65,9 +64,9 @@ namespace COTG.Game
                 _nameToId.Add(str, id);
             }
             // bonus!
-            var bonus = new string[] { "world" };
+            var bonus = new string[] { "lawless" };
             {
-                int counter = -1;
+                int counter = 0;
                 foreach (var i in bonus)
                 {
                     _all.Add(counter, new Player() { id = counter, name = i });

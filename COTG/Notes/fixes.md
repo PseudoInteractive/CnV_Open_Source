@@ -55,4 +55,7 @@
  - ** new ** Cities in region view are tinted by default based on your wold color settings
   - This can be changed in the settings page via "Tint"
  - ** update ** The heatmap allows you to view changes in a more fine grained manner
+### 2021/4/1
+ - ** new ** When your mouse is over a players city in region or wold view, all cities that belong to that player will draw a flag so that you can easily tell what belongs to who
+ - ** update ** Smart rearrange in the planner will flip layouts in an attenmpt to minimize resource overlaps
 

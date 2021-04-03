@@ -221,7 +221,7 @@ namespace COTG.Game
 									++counter;
 									var p = Player.all[pId];
 									p.alliance = (ushort)id;
-									p.cities = (byte)me.GetInt("c");
+								//	p.cities = (byte)me.GetInt("c");
 									p.pointsH = (ushort)(me.GetInt("s") / 100);
 
 								}

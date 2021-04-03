@@ -763,6 +763,7 @@ namespace COTG
 				SpriteAnim.flagSelected.Load();
 				SpriteAnim.flagRed.Load();
 				SpriteAnim.flagPinned.Load();
+				SpriteAnim.flagGrey.Load();
 
 				draw = new COTG.Draw.SpriteBatch(GraphicsDevice);
 				// worldBackgroundDark = new TintEffect() { BufferPrecision = CanvasBufferPrecision.Precision8UIntNormalizedSrgb, Source = worldBackground, Color = new Color() { A = 255, R = 128, G = 128, B = 128 } };
@@ -1783,6 +1784,7 @@ namespace COTG
 											// Todo: more accurate senator travel times
 											DrawAction((float)(sen.time - serverNow).TotalSeconds, dist * 60.0f, r, c, c1, senatorColor,
 												troopImages[ttSenator], false, null, 20);
+											DrawFlag(sen.target, SpriteAnim.flagGrey);
 										}
 									}
 									if (!IsCulledWC(wc))
@@ -1837,6 +1839,16 @@ namespace COTG
 							DrawAccent(cid, 1.25f, hoverColor);
 						}
 
+						if(Player.viewHover != 0)
+						{
+							if(Player.all.TryGetValue(Player.viewHover, out var p))
+								{
+								foreach (var cid in p.cities)
+								{
+									DrawFlag(cid, SpriteAnim.flagGrey);
+								}
+							}
+						}
 
 					}
 
