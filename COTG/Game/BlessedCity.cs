@@ -84,7 +84,7 @@ namespace COTG.Game
         }
         public void SendDonation(int woodToSend,int stoneToSend, int sendType)
         {
-			var pid = World.CidToPlayer(senderCity.cid);
+			var pid = World.CidToPlayerOrMe(senderCity.cid);
 
 			var secret = $"JJx452Tdd{pid}sRAssa";
             var reqF = $"{{\"a\":{woodToSend},\"b\":{stoneToSend},\"c\":0,\"d\":0,\"cid\":{senderCity.cid},\"rcid\":{cid},\"t\":\"{sendType}\"}}"; // t==1 is land, t==2 is water

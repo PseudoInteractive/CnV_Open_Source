@@ -644,7 +644,7 @@ namespace COTG.Views
 				GetWorldInfo.Send();
 			TileData.Ctor(true);
 		}
-		private void RefreshX(object sender, RightTappedRoutedEventArgs e)
+		public void RefreshX(object sender, RightTappedRoutedEventArgs e)
 		{
 			Note.Show("Refresh All");
 			RefreshWorldData();

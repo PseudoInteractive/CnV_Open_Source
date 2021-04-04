@@ -167,15 +167,15 @@ namespace COTG.Services
 					
 				}
             }
-			catch(InvalidDataException invalidData)
-			{
-				var file = await folder.CreateFileAsync(fileName, CreationCollisionOption.ReplaceExisting) ;
-				await file.DeleteAsync();
+			//catch(InvalidDataException invalidData)
+			//{
+			//	var file = await folder.CreateFileAsync(fileName, CreationCollisionOption.ReplaceExisting) ;
+			//	await file.DeleteAsync();
 
 
-				Log(invalidData);
+			//	Log(invalidData);
 
-			}
+			//}
 			catch (Exception e)
 			{
 				Log(e);

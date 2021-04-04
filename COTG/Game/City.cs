@@ -633,11 +633,15 @@ namespace COTG.Game
 
 			var sb = new StringBuilder(shareStringStart);
 			sb.Append(_isOnWater ? ';' : ':');
+			var anyValid = false;
 			foreach (var c in _layout)
 			{
 				var bid = c.bid;
 				if (bid != 0)
+				{
 					bid -= BuildingDef.sharestringOffset;
+					anyValid = true;
+				}
 				if (!BuildingDef.buildingsToSharestring.TryGetValue((byte)bid, out var o))
 				{
 					o = (byte)'-';
@@ -645,7 +649,7 @@ namespace COTG.Game
 				sb.Append((char)o);
 			}
 			sb.Append("[/ShareString]");
-			return sb.ToString();
+			return anyValid ?  sb.ToString() : string.Empty;
 		}
 		public const int shareStringStartOffset = 17+1;
 		public const int minShareStringLength = shareStringStartOffset +  City.citySpotCount;
@@ -655,7 +659,7 @@ namespace COTG.Game
 		{
 			Note.Show("Saved layout");
 			var post = $"cid={cid}&a=" + System.Web.HttpUtility.UrlEncode(shareString??string.Empty, Encoding.UTF8);
-				var rv = await Post.SendForOkay("/includes/pSs.php",post, World.CidToPlayer(cid));
+				var rv = await Post.SendForOkay("/includes/pSs.php",post, World.CidToPlayerOrMe(cid));
 			Assert(rv == true);
 		}
 
@@ -1328,6 +1332,7 @@ namespace COTG.Game
 	{
 		public string name { get; set; }
 		public int id { get; set; } // 0 is unassigned, others are pids
+		public bool isUnassigned => id == 0;
 		public HashSet<int> cities = new HashSet<int>(); // list of cities
 		public static bool IsNew(City city) => city._cityName == "*New City" && city.points <= 60;
 		public CityList(string _name) { name = _name; id = AMath.random.Next(65536) + 10000; }
@@ -1342,12 +1347,13 @@ namespace COTG.Game
 		public static CityList Find(string name)
 		{
 			foreach (var c in all)
-				if (c.name == name)
+			{
+				if (string.Equals(c.name, name, StringComparison.OrdinalIgnoreCase))
 					return c;
-
-			foreach (var c in all)
-				if (name.Contains(c.name,StringComparison.OrdinalIgnoreCase)|| c.name.Contains(name, StringComparison.OrdinalIgnoreCase))
-					return c;
+			}
+			//foreach (var c in all)
+			//	if (name.Contains(c.name,StringComparison.OrdinalIgnoreCase)|| c.name.Contains(name, StringComparison.OrdinalIgnoreCase))
+			//		return c;
 			return null;
 		}
 		public class GroupDef
@@ -1373,12 +1379,16 @@ namespace COTG.Game
 
 //		public static string[] perContinentTags = { "rt", "vanq", "priest", "prae","sorc","horse","druid","arb","scorp" };
 //        public static string[] globalTags = { "navy","warship", "shipp", "stinger","galley" };
-        public static CityList GetForContinent(int id) => GetOrAdd(id.ToString());
-        public static CityList GetForContinentAndTag(int id,string tag) => GetOrAdd($"{id.ToString()} {tag}");
+        public static CityList GetForContinent(int id, HashSet<CityList> processed) => GetOrAdd(id.ToString(), processed);
+        public static CityList GetForContinentAndTag(int id,string tag, HashSet<CityList> processed) => GetOrAdd($"{id.ToString()} {tag}", processed);
 
-        public static CityList GetOrAdd(string name)
+        public static CityList GetOrAdd(string name, HashSet<CityList> processed )
         {
-            var cl = CityList.Find(name);
+			var cl = CityList.Find(name);
+			if (cl != null && processed.Add(cl))
+			{
+				cl.cities.Clear();
+			}
             if (cl == null)
             {
               
@@ -1392,6 +1402,7 @@ namespace COTG.Game
 					AUtil.Swap(ref CityList.all[id], ref CityList.all[id - 1]);
 					--id;
 				}
+				processed.Add(cl); ;
             }
             return cl;
         }

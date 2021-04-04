@@ -43,7 +43,7 @@ namespace COTG.Views
 					{
 						// Todo
 					}
-					await CitySettings.SetCitySettings(cid, bestHub);
+					await CitySettings.SetCitySettings(cid, bestHub,true,true, true, true, true);
 					return true;
 				}
 			}

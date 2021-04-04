@@ -1057,7 +1057,7 @@ namespace COTG.Views
 
 					if (!isPlanner)
 					{
-						Services.Post.Send("includes/mBu.php", $"a={a}&b={b}&c={Spot.build}", World.CidToPlayer(City.build));
+						Services.Post.Send("includes/mBu.php", $"a={a}&b={b}&c={Spot.build}", World.CidToPlayerOrMe(City.build));
 						--Player.moveSlots;
 					}
 					ref var b1 = ref bds[a];
@@ -1092,9 +1092,9 @@ namespace COTG.Views
 					bds[a] = temp;
 					if (!isPlanner)
 					{
-						await Services.Post.Send("includes/mBu.php", $"a={a}&b={cityScratchSpot}&c={Spot.build}", World.CidToPlayer(City.build));
-						await Services.Post.Send("includes/mBu.php", $"a={b}&b={a}&c={Spot.build}", World.CidToPlayer(City.build));
-						await Services.Post.Send("includes/mBu.php", $"a={cityScratchSpot}&b={b}&c={Spot.build}", World.CidToPlayer(City.build));
+						await Services.Post.Send("includes/mBu.php", $"a={a}&b={cityScratchSpot}&c={Spot.build}", World.CidToPlayerOrMe(City.build));
+						await Services.Post.Send("includes/mBu.php", $"a={b}&b={a}&c={Spot.build}", World.CidToPlayerOrMe(City.build));
+						await Services.Post.Send("includes/mBu.php", $"a={cityScratchSpot}&b={b}&c={Spot.build}", World.CidToPlayerOrMe(City.build));
 						Player.moveSlots -= 3;
 					}
 					BuildingsOrQueueChanged();

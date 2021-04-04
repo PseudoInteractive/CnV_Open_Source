@@ -179,10 +179,22 @@ namespace COTG.Views
 			//supportGrid.ItemsSource = null;
 			if (target != null && target.isCityOrCastle)
 			{
-				while (target.tradeInfo == CityTradeInfo.invalid)
+				var ready = true;
+				do
 				{
-					await Task.Delay(500);
-				}
+					await Task.Delay(1000);
+					ready = true;
+					foreach (var city in City.gridCitySource)
+					{
+						if(city.tradeInfo == CityTradeInfo.invalid)
+						{
+							ready = false;
+							break;
+
+						}
+					}
+				} while (ready == false);
+
 
 				var r = des.Sub(target.tradeInfo.res.Add(target.tradeInfo.inc));
 				r.ClampToPositive();

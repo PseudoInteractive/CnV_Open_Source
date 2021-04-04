@@ -214,28 +214,28 @@ namespace COTG.Services
 		public static async void SaveBuildQueue(string data)
 		{
 
-			if (!await TouchT())
-				return;
+			//if (!await TouchT())
+			//	return;
 
-			var part = buildQueuePartition;
-			var key = buildQueueKey;
+			//var part = buildQueuePartition;
+			//var key = buildQueueKey;
 
-			await throttleT.WaitAsync();
-			try
-			{
+			//await throttleT.WaitAsync();
+			//try
+			//{
 
-				var i = new TableBuildQueue(part, key,data);
-				var r = await tableClient.UpsertEntityAsync(i, TableUpdateMode.Replace);
-				buildQueueExists = true;
-			}
-			catch (Exception e)
-			{
-				Log(e);
-			}
-			finally
-			{
-				throttleT.Release();
-			}
+			//	var i = new TableBuildQueue(part, key,data);
+			//	var r = await tableClient.UpsertEntityAsync(i, TableUpdateMode.Replace);
+			//	buildQueueExists = true;
+			//}
+			//catch (Exception e)
+			//{
+			//	Log(e);
+			//}
+			//finally
+			//{
+			//	throttleT.Release();
+			//}
 		}
 		public static async void ClearBuildQueue()
 		{
@@ -314,37 +314,39 @@ namespace COTG.Services
             //	await AddItemsToContainerAsync();
         }
 		
-		public static async Task PublishPlayerInfo(int pid,int cid, string token, string cookie)
+		public static Task PublishPlayerInfo(int pid,int cid, string token, string cookie)
 		{
-			// don't send for subs
-			if (JSClient.ppss != 0)
-				return;
-			if (!await Touch())
-				return;
+			return Task.CompletedTask;
+			//// don't send for subs
+			//if (JSClient.ppss != 0)
+			//	return;
+			//if (!await Touch())
+			//	return;
 
-			var lastSeen = SmallTime.Now();
-			await throttle.WaitAsync();
-			try
-			{
-				var pp = new PlayerPresenceDB() { id = pid.ToString(),cid=cid,t=lastSeen, ck = cookie, tk = token };
-				await presenceContainer.UpsertItemAsync<PlayerPresenceDB>(pp, new PartitionKey(false), itemRequesDefault);
+			//var lastSeen = SmallTime.Now();
+			//await throttle.WaitAsync();
+			//try
+			//{
+			//	var pp = new PlayerPresenceDB() { id = pid.ToString(),cid=cid,t=lastSeen, ck = cookie, tk = token };
+			//	await presenceContainer.UpsertItemAsync<PlayerPresenceDB>(pp, new PartitionKey(false), itemRequesDefault);
 			
-			}
-			catch(Exception ex)
-			{
-				Log(ex);
-			}
-			finally
-			{
-				throttle.Release();
-			}
+			//}
+			//catch(Exception ex)
+			//{
+			//	Log(ex);
+			//}
+			//finally
+			//{
+			//	throttle.Release();
+			//}
 		}
 
 		public static async Task< List<PlayerPresenceDB> > GetPlayersInfo()
 		{
 	
 			List<PlayerPresenceDB> rv = new List<PlayerPresenceDB>();
-			
+			return rv;
+/*
 			if (!await Touch())
 				return rv;
 			await throttle.WaitAsync();
@@ -371,7 +373,8 @@ namespace COTG.Services
 			finally
 			{
 				throttle.Release();
-			}
+			}*/
+
 		}
 
 	

@@ -174,7 +174,7 @@ namespace COTG
 		public const float maxZoom = 4096;
 		public const float cameraZoomWorldDefault = 16;
 		public const float cameraZoomRegionDefault = 64;
-		public const float cityZoomThreshold = 256f;
+		public const float cityZoomThreshold = 280f;
 		public const float cityZoomWorldThreshold = 32;
 		public const float cityZoomFocusThreshold = 512;
 		public const float cityZoomDefault = 1280;

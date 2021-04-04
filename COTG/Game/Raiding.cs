@@ -259,7 +259,7 @@ namespace COTG.Game
      
             if (cid != 0)
             {
-                await Post.SendEncrypted("includes/UrOA.php", "{\"a\":" + cid + ",\"c\":0,\"b\":1}", "Rx3x5DdAxxerx3", World.CidToPlayer(cid));
+                await Post.SendEncrypted("includes/UrOA.php", "{\"a\":" + cid + ",\"c\":0,\"b\":1}", "Rx3x5DdAxxerx3", World.CidToPlayerOrMe(cid));
                 if (updateUI)
                 {
                     // await JSClient.PollCity(cid);
@@ -276,7 +276,7 @@ namespace COTG.Game
             var json = $"{{\"a\":{cid},\"c\":\"{at.ToString(AUtil.raidDateTimeFormat)}\",\"b\":\"3\"}}";
             if (cid != 0)
             {
-                await Post.SendEncrypted("includes/UrOA.php", json, "Rx3x5DdAxxerx3", World.CidToPlayer(cid));
+                await Post.SendEncrypted("includes/UrOA.php", json, "Rx3x5DdAxxerx3", World.CidToPlayerOrMe(cid));
             }
         }
         public static async Task ReturnFast(int cid, bool updateUI)
@@ -284,7 +284,7 @@ namespace COTG.Game
             Note.Show($"{cid.CidToStringMD()} Home Please");
             if (cid != 0)
             {
-                await Post.Send("overview/rcallall.php", "a=" + cid, World.CidToPlayer(cid));
+                await Post.Send("overview/rcallall.php", "a=" + cid, World.CidToPlayerOrMe(cid));
                 if (updateUI)
                 {
                    // await JSClient.PollCity(cid);
@@ -312,7 +312,7 @@ namespace COTG.Game
                 if (cid != 0)
                 {
                     var json = "{\"a\":" + cid + ",\"c\":0,\"b\":1}";
-                    await Post.SendEncrypted("includes/UrOA.php", json, "Rx3x5DdAxxerx3", World.CidToPlayer(cid));
+                    await Post.SendEncrypted("includes/UrOA.php", json, "Rx3x5DdAxxerx3", World.CidToPlayerOrMe(cid));
                     ++counter;
                 }
             }
@@ -330,7 +330,7 @@ namespace COTG.Game
                 if (cid != 0)
                 {
                     ++counter;
-                    await Post.Send("overview/rcallall.php", "a=" + cid, World.CidToPlayer(cid));
+                    await Post.Send("overview/rcallall.php", "a=" + cid, World.CidToPlayerOrMe(cid));
                 //    await JSClient.PollCity(cid);
                 }
             }

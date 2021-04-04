@@ -759,16 +759,16 @@ namespace COTG.Views
 		}
 
 		static void DoZoom(float delta,bool skipPan)
-		{ 
+		{
 
-			
+
 			var dZoom = delta.SignOr0() * 0.0f + delta * (1.0f / 256);
 			var newZoom = (cameraZoom * MathF.Exp(dZoom)).Clamp(1, maxZoom);
 			var cBase = new Vector2(); ////GetCanvasPosition(pt.Position) - halfSpan;
 
 			var skipMove = skipPan;
 
-			if ( IsCityView()  )
+			if (IsCityView())
 			{
 				if (AutoSwitchCityView())
 				{
@@ -777,7 +777,7 @@ namespace COTG.Views
 						cBase = (City.build.CidToWorldV() - cameraC) * cameraZoom;
 						cameraC += 0.25f * (City.build.CidToWorldV() - cameraC); // nudge towards center
 					}
-				} 
+				}
 			}
 			else
 			{
@@ -792,16 +792,21 @@ namespace COTG.Views
 				var c1 = cBase / newZoom;
 				cameraC += c0 - c1;
 			}
-			var _viewMode =  newZoom >= cityZoomThreshold ? ViewMode.city: ViewMode.world;
-			if(_viewMode !=viewMode)
+
+
+			cameraZoom = newZoom;
+			AutoSwitchViewMode();
+			ClearHover();
+			//    ChatTab.L("CWheel " + wheel);
+		}
+
+		public static void AutoSwitchViewMode()
+		{
+			var _viewMode = cameraZoom >= cityZoomThreshold ? ViewMode.city : ViewMode.world;
+			if (_viewMode != viewMode)
 			{
 				ShellPage.SetViewMode(_viewMode);
 			}
-
-			cameraZoom = newZoom;
-			
-			ClearHover();
-			//    ChatTab.L("CWheel " + wheel);
 		}
 
 		private static void Canvas_PointerMoved(object sender, PointerEventArgs e)

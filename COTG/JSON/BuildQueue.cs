@@ -21,6 +21,7 @@ using Windows.UI.Xaml.Controls;
 using Microsoft.Toolkit;
 using static COTG.Debug;
 using static COTG.JSON.BuildQueue;
+using Windows.Storage;
 
 namespace COTG.JSON
 {
@@ -72,6 +73,7 @@ namespace COTG.JSON
 		public readonly byte elvl;
 		public readonly ushort bid; // building id
 		public readonly ushort bspot; // xy
+		
 
 		public BuildQueueItem(byte slvl, byte elvl, ushort bid, ushort bspot)
 		{
@@ -128,6 +130,8 @@ namespace COTG.JSON
 				   bid == other.bid &&
 				   bspot == other.bspot;
 		}
+
+
 
 		public override int GetHashCode()
 		{
@@ -625,6 +629,8 @@ namespace COTG.JSON
 		public static byte buildActionCounter; // needs to be saved to disc
 		public static void SaveNeeded() => buildActionCounter = 3;
 
+		public static StorageFolder folder => ApplicationData.Current.LocalFolder;
+		static string fileName => $"buildQueue{JSClient.world}_{Player.myName}.json";
 
 		public static bool initialized => saveTimer != null;
 		public static async void Enqueue(this int cid, byte slvl, byte elvl, ushort bid, ushort spot)
@@ -727,7 +733,9 @@ namespace COTG.JSON
 					{
 						var str = Serialize();
 						Log($"SaveQueue: {str}");
-						Cosmos.SaveBuildQueue(str);
+						
+					 SaveBuildQueue(str);
+
 					}
 					else
 					{
@@ -740,6 +748,47 @@ namespace COTG.JSON
 					SaveNeeded(); // something went wrong, try again later
 				}
 
+		}
+
+		private static async void SaveBuildQueue(string str)
+		{
+			if (JSClient.isSub)
+				return;
+
+			var file = await folder.CreateFileAsync(fileName, CreationCollisionOption.ReplaceExisting);
+			if(file!=null)
+			{
+				await FileIO.WriteTextAsync(file, str);
+			}
+		}
+		//private static async void SaveBuildQueue(string str)
+		//{
+		//	if (JSClient.isSub)
+		//		return;
+
+		//	var file = await folder.CreateFileAsync(fileName, CreationCollisionOption.ReplaceExisting);
+		//	if (file)
+		//	{
+		//		await FileIO.WriteTextAsync(file, str);
+		//	}
+		//}
+		private static async Task<string> LoadBuildQueue()
+		{
+			if (JSClient.isSub)
+				return string.Empty;
+
+			try 
+			{	
+				var file = await folder.CreateFileAsync(fileName, CreationCollisionOption.OpenIfExists);
+				if (file!=null)
+				{
+					return await FileIO.ReadTextAsync(file);
+				}
+			}
+			catch(Exception e)
+			{
+			}
+			return string.Empty;
 		}
 
 		/*
@@ -795,7 +844,7 @@ namespace COTG.JSON
 				Assert(false);
 				return;
 			}
-			var data = await Cosmos.LoadBuildQueue();
+			var data = await LoadBuildQueue();
 			if (!data.IsNullOrEmpty())
 			{
 				// Todo:  Ensure no building occurs yet
@@ -816,7 +865,7 @@ namespace COTG.JSON
 				}
 			}
 
-			saveTimer = ThreadPoolTimer.CreatePeriodicTimer(SaveTimer_Tick, TimeSpan.FromSeconds(120));
+			saveTimer = ThreadPoolTimer.CreatePeriodicTimer(SaveTimer_Tick, TimeSpan.FromSeconds(30));
 
 		}
 	}

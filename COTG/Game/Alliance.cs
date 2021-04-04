@@ -46,6 +46,7 @@ namespace COTG.Game
 
 		public static Dictionary<int, Alliance> all = new Dictionary<int, Alliance>();
 		public static Dictionary<string, int> nameToId = new Dictionary<string, int>();
+		public static int NameToId(string s) => nameToId.TryGetValue(s, out var rv) ? rv : 0;
 		public static bool diplomacyFetched;
 		public static bool PartNameToId(string name, out int id)
 		{
@@ -245,6 +246,9 @@ namespace COTG.Game
 			nameToId = _nameToId;
 			all = _all;
 			//  await Cosmos.GetSpotDB();
+
+			// start this off once the fetches are finished
+			Blobs.ProcessStats();
 
 		}
 

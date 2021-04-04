@@ -35,7 +35,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
     <DebugSymbols>true</DebugSymbols>
     <OutputPath>bin\x64\Debug\</OutputPath>
-    <DefineConstants>DEBUG;WINDOWS_UWP;DISABLE_XAML_GENERATED_MAIN;CODE_ANALYSIS</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;WINDOWS_UWP;DISABLE_XAML_GENERATED_MAIN;CODE_ANALYSIS;CODE_ANALYSIS</DefineConstants>
     <NoWarn>;2008</NoWarn>
     <DebugType>full</DebugType>
     <PlatformTarget>x64</PlatformTarget>
@@ -119,7 +119,7 @@
       <Version>2.6.0-prerelease.210315002</Version>
     </PackageReference>
     <PackageReference Include="MonoGame.Content.Builder.Task">
-      <Version>3.8.1.1916-develop</Version>
+      <Version>3.8.1.1930-develop</Version>
     </PackageReference>
     <PackageReference Include="NETStandard.Library">
       <Version>2.0.3</Version>
@@ -200,6 +200,7 @@
     <Compile Include="Game\Overview.cs" />
     <Compile Include="Game\Player.cs" />
     <Compile Include="Game\PlayerPresence.cs" />
+    <Compile Include="Game\PlayerStats.cs" />
     <Compile Include="Game\Playfab.cs" />
     <Compile Include="Game\Raiding.cs" />
     <Compile Include="Game\Reinforcement.cs" />

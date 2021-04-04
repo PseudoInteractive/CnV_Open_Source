@@ -777,7 +777,7 @@ namespace COTG
 
 			if (cid != 0)
 			{
-				await Post.SendEncrypted("includes/clearresque.php", "{\"a\":" + cid + ",\"b\":5}", "BBIdl1a11AEkem24c2", World.CidToPlayer(cid));
+				await Post.SendEncrypted("includes/clearresque.php", "{\"a\":" + cid + ",\"b\":5}", "BBIdl1a11AEkem24c2", World.CidToPlayerOrMe(cid));
 
 			}
 		}
@@ -1823,6 +1823,33 @@ namespace COTG
 												  ChatTab.world.Post(msg);
 											  }); // post on both
 										   }
+										   else if( id == 9)
+										   {
+											   // founded new city
+											   var cid = int.Parse(ss[1]);
+
+											   await Task.Delay(1000);
+											   App.DispatchOnUIThreadLow(async () =>
+											   {
+												   ShellPage.instance.RefreshX(null, null);
+												   var dialog = new ContentDialog()
+												   {
+													   Title = "New City",
+													   Content = "You have founded a city, would you like to run setup?",
+													   SecondaryButtonText = "No",
+													   PrimaryButtonText = "Setup"
+												   };
+												   var result = await dialog.ShowAsync2();
+
+												   if(result == ContentDialogResult.Primary)
+												   {
+													   ChangeCity(cid,false);
+													   await Task.Delay(1000);
+													   CityRename.RenameDialog(cid); 
+												   }
+											   });
+
+										   }
 									   }
 
 								   }
@@ -2113,7 +2140,7 @@ namespace COTG
 											   break;
 									   }
 									   City.build.BringCidIntoWorldView(false);
-
+									   ShellPage.AutoSwitchViewMode();
 								   }
 
 								   //   ShellPage.SetViewMode((ShellPage.ViewMode)jso.GetInt("v"));

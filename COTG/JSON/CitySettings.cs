@@ -66,10 +66,12 @@ namespace COTG.JSON
 		{
 			foreach (var _cid in Spot.GetSelectedForContextMenu(cid, false))
 			{
-				await CitySettings.SetCitySettings(_cid, CitySettings.FindBestHub(_cid));
+				await CitySettings.SetCitySettings(_cid, CitySettings.FindBestHub(_cid), false, false, false, true, true);
 			}
+
 		}
-			public static async Task SetCitySettings(int cid, int reqHub)
+
+		public static async Task SetCitySettings(int cid, int reqHub, bool setRecruit, bool setAutoBuild, bool setResources, bool setSourceHub, bool setTargetHub)
         {
             await UpdateMinisterOptions(cid, async (split) =>
             {
@@ -105,7 +107,7 @@ namespace COTG.JSON
                 //                      10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10]]";
                 //                var args = $"[1,{auto},{auto},{auto},{auto},{auto},{auto},{auto},0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,{reqWood},{reqStone},{reqIron},{reqFood},0,0,0,0,1,{reqHub},{reqHub},0,0,0,{maxWood},{maxStone},{maxIron},{maxFood},[1,{cottageLevel}],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10]]";
 
-                if(autoBuildOn.HasValue)
+                if(autoBuildOn.HasValue & setAutoBuild)
                 {
                     var autoVal = autoBuildOn.GetValueOrDefault();
                     var auto = autoVal ? "1" : "0";
@@ -120,39 +122,55 @@ namespace COTG.JSON
                     }
 
                 }
-                split[32] = "1"; // use the same city all requests
-                split[33] = reqWood.ToString();
-                split[34] = reqStone.ToString();
-                split[35] = reqIron.ToString();
-                split[36] = reqFood.ToString();
-
-				// hubs dont send by default
+				if (setSourceHub)
+				{
+					split[32] = "1"; // use the same city all requests
+					split[42] =  reqHub.ToString();
+				}
 				var isHub = spot.HasTag(Tags.Hub);
 
-				// send target
-				split[37] = sendWood&& !isHub ? reqHub.ToString() : "0"; // hub to use for this res
-                split[38] = sendStone && !isHub ? reqHub.ToString() : "0"; // hub to use for this res
-                split[39] = sendIron && !isHub ? reqHub.ToString() : "0"; // hub to use for this res
-                split[40] = sendFood && !isHub ? reqHub.ToString() : "0"; // hub to use for this res
-                split[41] = "0"; // use a different city for all sends
-
-
-                split[42] = !isHub ? reqHub.ToString() : "0";
-                //                split[43] = sendHub.ToString();
-
-                split[45] = cartsAreForRequests ? "100" : "0"; // 45 is % carts reserved for requests
+				if (setResources)
+				{
+					split[33] = reqWood.ToString();
+					split[34] = reqStone.ToString();
+					split[35] = reqIron.ToString();
+					split[36] = reqFood.ToString();
+				}
+				if (setTargetHub)
+				{
+					split[41] = "0"; // use a different city for all sends
+									 // hubs dont send by default
+									 // send target
+					split[37] = sendWood && !isHub ? reqHub.ToString() : "0"; // hub to use for this res
+					split[38] = sendStone && !isHub ? reqHub.ToString() : "0"; // hub to use for this res
+					split[39] = sendIron && !isHub ? reqHub.ToString() : "0"; // hub to use for this res
+					split[40] = sendFood && !isHub ? reqHub.ToString() : "0"; // hub to use for this res
+				}
 				
 
-				split[47] = maxWood.ToString();
-                split[48] = maxStone.ToString();
-                split[49] = maxIron.ToString();
-                split[50] = maxFood.ToString();
-                if(cottageLevel > 0)
+
+					
+				
+				//                split[43] = sendHub.ToString();
+
+				if (setTargetHub && setResources)
+				{
+					split[45] = cartsAreForRequests ? "100" : "0"; // 45 is % carts reserved for requests
+				}
+
+				if (setResources)
+				{
+					split[47] = maxWood.ToString();
+					split[48] = maxStone.ToString();
+					split[49] = maxIron.ToString();
+					split[50] = maxFood.ToString();
+				}
+                if(cottageLevel > 0 && setAutoBuild)
                     split[52] = cottageLevel.ToString() + ']';
                 
-				var str = SettingsPage.setRecruit ? SetRecruit(split, spot) : "";
+				var str = SettingsPage.setRecruit && setRecruit ? SetRecruit(split, spot) : "";
                 
-				Note.Show($"Set hub to {Spot.GetOrAdd(reqHub).cityName}{str}");
+				Note.Show($"Set {Spot.GetOrAdd(cid).nameAndRemarks}'s hub to {Spot.GetOrAdd(reqHub).nameAndRemarks}{str}");
                 return true;
             });
 
@@ -181,7 +199,7 @@ namespace COTG.JSON
                 if (await opts(split))
                 {
                     var args2 = string.Join(',', split);
-                    await Post.Send("includes/mnio.php", $"a={HttpUtility.UrlEncode(args2, Encoding.UTF8)}&b={cid}", World.CidToPlayer(cid));
+                    await Post.Send("includes/mnio.php", $"a={HttpUtility.UrlEncode(args2, Encoding.UTF8)}&b={cid}", World.CidToPlayerOrMe(cid));
                     // find closest hub
                     Note.Show($"Set hub settings",true);
                 }
@@ -288,10 +306,12 @@ namespace COTG.JSON
 
         public static async void SetTargetHub(int cid, int targetHub)
         {
+			var targets = Spot.GetSelectedForContextMenu(cid, false, targetHub);
+			
 			var dialog = new ContentDialog()
 			{
 				Title = $"Set Trade Settings",
-				Content = $"Set {Spot.GetOrAdd(cid).nameAndRemarks} to send resources to {Spot.GetOrAdd(targetHub).nameAndRemarks}?", 
+				Content = $"Set {Spot.GetOrAdd(cid).nameAndRemarks} to send resources to {Spot.GetOrAdd(targetHub).nameAndRemarks} ({targets.Count} cities selected)", 
 				PrimaryButtonText = "Yes",
 				SecondaryButtonText = "Cancel"
 			};
@@ -299,21 +319,33 @@ namespace COTG.JSON
 			{
 				return;
 			}
-
-			UpdateMinisterOptions(cid,async (split) =>
-            {
-                split[37] = sendWood? targetHub.ToString() : "0"; // hub to use for this res
-                split[38] = sendStone?targetHub.ToString() : "0"; // hub to use for this res
-                split[39] = sendIron?targetHub.ToString() : "0"; // hub to use for this res
-                split[40] = sendFood?targetHub.ToString() : "0"; // hub to use for this res
-                split[41] = "0"; // use a different city for all sends
-                split[45] = cartsAreForRequests ? "100" : "0"; // 45 is % carts reserved for requetestbmini
-                                                                   //         split[43] = targetHub.ToString();
-                return true;
-            });
+			foreach (var _cid in targets )
+			{
+				await CitySettings.SetCitySettings(_cid, targetHub, false, false, false, false, true);
+			}
         }
+		public static async void SetSourceHub(int cid, int targetHub)
+		{
+			var targets = Spot.GetSelectedForContextMenu(cid, false,targetHub);
 
-        public static async Task FixupReserve(int cid)
+			var dialog = new ContentDialog()
+			{
+				Title = $"Set Trade Settings",
+				Content = $"Set {Spot.GetOrAdd(cid).nameAndRemarks} to request resources from {Spot.GetOrAdd(targetHub).nameAndRemarks} ({targets.Count} cities selected)",
+				PrimaryButtonText = "Yes",
+				SecondaryButtonText = "Cancel"
+			};
+			if (await dialog.ShowAsync2() != ContentDialogResult.Primary)
+			{
+				return;
+			}
+			foreach (var _cid in targets)
+			{
+				await CitySettings.SetCitySettings(_cid, targetHub, false, false, false, true,false);
+			}
+		}
+
+		public static async Task FixupReserve(int cid)
         {
             await UpdateMinisterOptions(cid,async (split) =>
             {

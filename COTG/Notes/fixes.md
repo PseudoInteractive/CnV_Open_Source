@@ -58,4 +58,7 @@
 ### 2021/4/1
  - ** new ** When your mouse is over a players city in region or wold view, all cities that belong to that player will draw a flag so that you can easily tell what belongs to who
  - ** update ** Smart rearrange in the planner will flip layouts in an attenmpt to minimize resource overlaps
-
+ - ** fix ** Near res would only work if the target city was yours
+   - Kown issue:  The window seems to spontaneously refresh sometimes, recalcaulting resource send values
+   - Need to fix
+ - ** update ** When a new city is founded, a Refresh will automatically be triggered

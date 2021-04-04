@@ -605,7 +605,7 @@ namespace COTG.Game
 				//     var spot = Spot.GetOrAdd(cid);
 				//     GetCity.Post(cid, spot.pid, (js, city) => Log(js));
 
-				var str = await Post.SendForText("includes/gLay.php", $"cid={cid}", World.CidToPlayer(cid));
+				var str = await Post.SendForText("includes/gLay.php", $"cid={cid}", World.CidToPlayerOrMe(cid));
 				Log(str);
 
 				App.DispatchOnUIThreadSneaky(() =>
@@ -656,7 +656,7 @@ namespace COTG.Game
 				return new ClassificationExtended() { classification = classification };
 			}
 			classification = Classification.pending;
-			var str = await Post.SendForText("includes/gLay.php", $"cid={cid}", World.CidToPlayer(cid));
+			var str = await Post.SendForText("includes/gLay.php", $"cid={cid}", World.CidToPlayerOrMe(cid));
 			ClassificationExtended rv = new ClassificationExtended(); ;
 			try
 			{
@@ -919,7 +919,7 @@ namespace COTG.Game
 			return viewHover == cid;
 		}
 
-		public static List<int> GetSelectedForContextMenu(int cid, bool onlyIfShiftPressed = true)
+		public static List<int> GetSelectedForContextMenu(int cid, bool onlyIfShiftPressed = true, int ignoreCid=0)
 		{
 			var cids = new List<int>();
 			if (cid != 0)
@@ -929,7 +929,7 @@ namespace COTG.Game
 			{
 				foreach (var sel in Spot.selected.ToArray())
 				{
-					if (sel != cid)
+					if (sel != cid && sel != ignoreCid )
 						cids.Add(sel);
 				}
 			}
@@ -1255,8 +1255,8 @@ namespace COTG.Game
 
 		public async Task SuperRaid()
 		{
-			await Post.Send("overview/rcallall.php", "a=" + cid, World.CidToPlayer(cid));
-			await Post.SendEncrypted("includes/UrOA.php", "{\"a\":" + cid + ",\"c\":0,\"b\":2}", "Rx3x5DdAxxerx3", World.CidToPlayer(cid));
+			await Post.Send("overview/rcallall.php", "a=" + cid, World.CidToPlayerOrMe(cid));
+			await Post.SendEncrypted("includes/UrOA.php", "{\"a\":" + cid + ",\"c\":0,\"b\":2}", "Rx3x5DdAxxerx3", World.CidToPlayerOrMe(cid));
 		}
 
 		public void ReturnFastClick()
@@ -1409,7 +1409,7 @@ namespace COTG.Game
 
 					
 					aSetup.AddItem("Setup", Spot.InfoClick, cid);
-					aSetup.AddItem( "Set Hub", (_, _) => CitySettings.SetHub(cid));
+					aSetup.AddItem( "Find Hub", (_, _) => CitySettings.SetHub(cid));
 					aSetup.AddItem( "Set Recruit", (_, _) => CitySettings.SetRecruitFromTag(cid));
 
 					//   AApp.AddItem(flyout, "Clear Res", (_, _) => JSClient.ClearCenterRes(cid) );
@@ -1467,6 +1467,7 @@ namespace COTG.Game
 				if (cid != City.build)
 				{
 					aSetup.AddItem( "Set target hub", (_, _) => CitySettings.SetTargetHub(City.build, cid));
+					aSetup.AddItem("Set source hub", (_, _) => CitySettings.SetSourceHub(City.build, cid));
 					//if(Player.myName == "Avatar")
 					//    AApp.AddItem(flyout, "Set target hub I", (_, _) => CitySettings.SetOtherHubSettings(City.build, cid));
 				}
@@ -1482,7 +1483,7 @@ namespace COTG.Game
 
 
 				aWar.AddItem( "Send Defence", (_, _) => JSDefend(cid));
-				aWar.AddItem( "Return ReIn", (_, _) => Reinforcement.ShowReturnDialog(cid, uie));
+				aWar.AddItem( "Show Reinforcements", (_, _) => Reinforcement.ShowReturnDialog(cid, uie));
 				aExport.AddItem( "Defense Sheet", ExportToDefenseSheet);
 				AApp.AddItem(flyout, "Send Res", (_, _) => Spot.JSSendRes(cid));
 				AApp.AddItem(flyout, "Near Res", ShowNearRes);

@@ -57,21 +57,29 @@ namespace COTG.Views
         public virtual void XamlTreeChanged(TabPage newPage) { } // The tab was dragged somewhere else
         public bool isVisible;
         public bool isActive;
-        //User pressed F5 or refresh button
+		//User pressed F5 or refresh button
+
+		static DateTimeOffset nextCityRefresh = DateTimeOffset.UtcNow;
+
         public virtual void Refresh()
         {
             if (isVisible && isActive)
             {
-                VisibilityChanged(false);  // close enough default behaviour
-				if (JSClient.ppdtInitialized)
+				var t = DateTimeOffset.UtcNow;
+				if (t > nextCityRefresh)
 				{
-					Game.City.CitiesChanged();
-					JSClient.JSInvoke("cityRefresh", null);
+					nextCityRefresh = t + TimeSpan.FromSeconds(2);
+					VisibilityChanged(false);  // close enough default behaviour
+					if (JSClient.ppdtInitialized)
+					{
+						Game.City.CitiesChanged();
+						JSClient.JSInvoke("cityRefresh", null);
+					}
 				}
-
 				VisibilityChanged(true);  // close enough default behaviour
             }
         }
+
         public void SetPlus(bool set)
         {
             (var tp, var tvi) = GetViewItem();

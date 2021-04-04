@@ -244,7 +244,13 @@ namespace COTG.Game
 				rv);
 
 		}
-		public static int CidToPlayer( int _cid) => World.GetInfo(_cid.CidToWorld()).player;
+		public static int CidToPlayerOrMe(int _cid) 
+		{
+			var rv = World.GetInfo(_cid.CidToWorld()).player;
+			if (rv == 0)
+				rv = Player.myId;
+			return rv;
+		}
 		public static int GetPackedId((int x, int y) c)
 		{
 			var x = c.x;

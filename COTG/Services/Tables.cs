@@ -15,8 +15,8 @@ namespace COTG.Services
 {
 	class Tables
 	{
-		const string accountName = "avatab";
-
+			const string accountName = "avata";
+		// DefaultEndpointsProtocol=https;AccountName=avata;AccountKey=IWRPGlttorpK5DcHWin/GdA2VEcZKnHkr30lE0ZDvKLG0q1CjZONcAQYI2D26DENd7TIAxF8tPsE0mIk98BafA==;EndpointSuffix=core.windows.net
 		static TableServiceClient serviceClient;
 		static TableClient tableClient;
 		static bool TouchT()
@@ -25,7 +25,7 @@ namespace COTG.Services
 				return true;
 
 			string storageUri = $"https://{accountName}.table.core.windows.net/";
-			string storageAccountKey = "zLeBJT4uQpdbEFgcQHvlGNVX8xJctrL/qvByyZd+ujPLEf55awn9mGMVCW7UIHSJCnQ3xe3gbch88+eTjAqZng==";
+			string storageAccountKey = "IWRPGlttorpK5DcHWin/GdA2VEcZKnHkr30lE0ZDvKLG0q1CjZONcAQYI2D26DENd7TIAxF8tPsE0mIk98BafA==";
 			string tableName = "sharestring";
 
 			serviceClient = new TableServiceClient(

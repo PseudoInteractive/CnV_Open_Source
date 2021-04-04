@@ -334,7 +334,7 @@ namespace COTG.Services
     {
         public int cid;
         Action<JsonElement, City> action;
-        public GetCity(int _cid, Action<JsonElement, City> _action) : base("includes/gC.php", World.CidToPlayer(_cid))
+        public GetCity(int _cid, Action<JsonElement, City> _action) : base("includes/gC.php", World.CidToPlayerOrMe(_cid))
         {
             cid = _cid;
             action = _action;
@@ -372,7 +372,7 @@ namespace COTG.Services
     {
         public string json;
         public int cid;
-        public sndRaid(string _json, int _cid) : base("includes/sndRad.php", World.CidToPlayer(_cid))
+        public sndRaid(string _json, int _cid) : base("includes/sndRad.php", World.CidToPlayerOrMe(_cid))
         {
 			Log($"sndRaid:{_json}");
             cid = _cid;
@@ -380,7 +380,7 @@ namespace COTG.Services
         }
         public override string GetPostContent()
         {
-            var encoded = Aes.Encode(json, $"Sx23WW9921{World.CidToPlayer(cid)}Daa2dT123ol");
+            var encoded = Aes.Encode(json, $"Sx23WW9921{World.CidToPlayerOrMe(cid)}Daa2dT123ol");
 			//var encoded = Aes.Encode(json, $"XTR977sW{World.CidToPlayer(cid)}sss2x2");
 			var args = $"cid={cid}&a=" + HttpUtility.UrlEncode(encoded, Encoding.UTF8);
             return args;
@@ -399,7 +399,7 @@ namespace COTG.Services
 		bool autoRaid;
         //                       Xs4b22320360lme55s
         public static string secret=>JSClient.jsVars.raidSecret;// = "Xs4b2261f55dlme55s";
-        public ScanDungeons(int _cid, bool _autoRaid) : base("includes/fCv.php", World.CidToPlayer(_cid))
+        public ScanDungeons(int _cid, bool _autoRaid) : base("includes/fCv.php", World.CidToPlayerOrMe(_cid))
         {
 			
 			cid = _cid;
@@ -928,7 +928,7 @@ namespace COTG.Services
             {
                 tttv.Add(new tt_tv() { tt = t.type, tv = t.count/splits });
             }
-			var pid = World.CidToPlayer(cid);
+			var pid = World.CidToPlayerOrMe(cid);
 
 			var sr = new SndRein()
             {

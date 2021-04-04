@@ -22904,7 +22904,7 @@ function outer(){
 				.css(__s[t7y ^ 0], __s[x7y << 11820928]);
 		}
 
-		function H0F(e2n) {
+		function showErrorString(e2n) {
 			var a6n;
 			c0F = c0F + ("1" | 1);
 			var m6n = __s[3974] + c0F;
@@ -41030,12 +41030,13 @@ function outer(){
 				var I9n = 0;
 				$(__s[2167])
 					.click(function () {
-						E6k.R6();
-						w2();
-						$("#quickBuildMenu")
-							.show();
-						R1F();
-						I9n = 1;
+						showErrorString("For quick build, please right click in the city view");
+						//E6k.R6();
+						//w2();
+						//$("#quickBuildMenu")
+						//	.show();
+						//R1F();
+						//I9n = 1;
 					});
 				$(__s[5523])
 					.click(function () {
@@ -42702,7 +42703,7 @@ function outer(){
 						var i6T = artifacts[v6T]["n"];
 						var d6T = i6T + _s(
 							3598);
-						H0F(d6T);
+						showErrorString(d6T);
 					}
 				});
 			}
@@ -42761,7 +42762,7 @@ function outer(){
 				});
 		}
 
-		function y6F(W61) {
+		function Notify(W61) {
 			var i1m = "1105";
 			var R1m = '4701';
 			var E1m = '698';
@@ -43071,7 +43072,7 @@ function outer(){
 							__s[c64 ^ 0] + H61 + __s[E1m | 688] + u61 + __s[i1m ^ 0];
 						X8();
 					}
-					if (j61 == 8) {
+					else if (j61 == 8) {
 						var l61 = Q61[2];
 						var x61 = Q61[3];
 						var w61 = qam[E6k
@@ -43086,7 +43087,7 @@ function outer(){
 								0) + H61 + __s[E1m >> 700132960] + u61 + __s[i1m * 1];
 						X8();
 					}
-					if (j61 == +m2y) {
+					else if (j61 == +m2y) {
 						var l61 = Q61[2];
 						var x61 = Q61[3];
 						var w61 = qam["events"][j61][
@@ -43101,7 +43102,7 @@ function outer(){
 							K1m) + t61 + __s[+u1m] + w61 + __s[a1m & 2147483647] + u61 + __s[N1m ^ 0] + T61 + _s(+
 								c64) + H61 + __s[+E1m] + u61 + __s[i1m & 2147483647];
 					}
-					if (j61 == 12) {
+					else if (j61 == 12) {
 						var l61 =
 							Q61[2];
 						var x61 = Q61[3];
@@ -43116,7 +43117,7 @@ function outer(){
 							.o55(K1m * 1) + t61 + __s[+u1m] + w61 + __s[a1m >> 895284480] + u61 + __s[+N1m] + T61 + E6k
 								.S55(c64 << 273107392) + H61 + __s[E1m << 518974048] + u61 + __s[+i1m];
 					}
-					if (j61 == "99" -
+					else if (j61 == "99" -
 						0) {
 						var l61 = Q61["2" | 2];
 						if (l61 == 1) var d61 = __s[2725];
@@ -51192,11 +51193,11 @@ function outer(){
 				window.onbeforeunload = null;
 				window.location.replace(__s[6029]);
 			}
-			if (r1V.a == "91") H0F(_s("5796" -
+			if (r1V.a == "91") showErrorString(_s("5796" -
 				0));
 			else if (r1V.a == "92") {
 				var L1V = r1V.b;
-				H0F(L1V.d);
+				showErrorString(L1V.d);
 				var O1V = __s[+q0p] + d1V + __s[+V5R] + L1V.d + __s[+B0p];
 				var W1V = $(__s[+c2R])
 					.innerHeight() + $(__s[c2R * 1])
@@ -54496,7 +54497,7 @@ function outer(){
 		function Y6(u2n) {
 			var s2n;
 			s2n = errorsarr[__s[2534]][u2n];
-			H0F(s2n);
+			showErrorString(s2n);
 			X2(4);
 		}
 
@@ -58594,7 +58595,7 @@ function outer(){
 						if (n9(v71) == 1) 
 						{
 							wrapper.notify = v71;
-							y6F(v71);
+							Notify(v71);
 						}
 					}
 				 if(isBuildCity)
