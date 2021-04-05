@@ -30,10 +30,12 @@ namespace COTG.Services
 		}
 		static string containerName =>  $"s{JSClient.world}";
 
-		//const int timeBetweenSnapshots = 6*60;
-		//const int minTimeBetweenSnapshots = timeBetweenSnapshots - 30;
-		//const int maxTimeBetweenSnapshots = timeBetweenSnapshots + 30;
-
+		const int timeBetweenSnapshots = 6*60;
+		const int minTimeBetweenSnapshots = timeBetweenSnapshots - 30;
+		const int maxTimeBetweenSnapshots = timeBetweenSnapshots + 30;
+		//const int timeBetweenSnapshots = 5;
+		//const int minTimeBetweenSnapshots = timeBetweenSnapshots - 1;
+		//const int maxTimeBetweenSnapshots = timeBetweenSnapshots + 1;
 		public static async void ProcessStats()
 		{
 
@@ -48,22 +50,17 @@ namespace COTG.Services
 				var lastWritten = info.Value.LastModified;// + TimeSpan.FromHours(12) + TimeSpan.FromMinutes(AMath.random.Next(60)-30);
 				var currentT = DateTimeOffset.UtcNow;
 				var dt = currentT - lastWritten;
-				if (dt.TotalHours > minTimeBetweenSnapshots)
+				if (dt.TotalMinutes > minTimeBetweenSnapshots)
 				{
-					int blobId = 0;
-					if( info.Value.Metadata.TryGetValue("count", out var count))
-					{
-						blobId = int.Parse(count) + 1; ;
-					}
-
+					COTG.Debug.Trace("Snapshot");
 					// take a snapshot
 					var snap = await Snapshot.GetStats();
 					snap.dateTime = currentT;
 					using(var mem = new MemoryStream())
 					{
-						using (var deflate = new DeflateStream(mem, CompressionLevel.Optimal))
+						using (var deflate = new DeflateStream(mem, CompressionLevel.Optimal,true))
 						{
-							using (var writer = new BinaryWriter(deflate))
+							using (var writer = new BinaryWriter(deflate,Encoding.UTF8,true))
 							{
 								writer.Write(currentT.Ticks);
 								writer.Write(snap.playerStats.Count);
@@ -72,14 +69,20 @@ namespace COTG.Services
 									var ps = pss.Value;
 
 									writer.Write(ps.pid);
-									writer.Write(ps.cities);
-									writer.Write(ps.score);
 									writer.Write(ps.reputation);
 									writer.Write(ps.offensiveRep);
 									writer.Write(ps.defensiveRep);
 									writer.Write(ps.unitKills);
 									writer.Write(ps.alliance);
 									writer.Write(ps.raiding);
+									writer.Write(ps.perContinent.Count);
+									foreach(var c in ps.perContinent)
+									{
+										writer.Write(c.continent);
+										writer.Write(c.cities);
+										writer.Write(c.score);
+
+									}
 								}
 								writer.Write(snap.allianceStats.Count);
 								foreach (var pss in snap.allianceStats)
@@ -87,23 +90,28 @@ namespace COTG.Services
 									var ps = pss.Value;
 
 									writer.Write(ps.aid);
-									writer.Write(ps.cities);
-									writer.Write(ps.score);
 									writer.Write(ps.reputation);
-									writer.Write(ps.military);
+									foreach (var c in ps.perContinent)
+									{
+										writer.Write(c.continent);
+										writer.Write(c.cities);
+										writer.Write(c.score);
+										writer.Write(c.military);
+									}
 								}
 
 							}
 							try 
 							{
-								await container.UploadBlobAsync(blobId.ToString("D8"), mem);
-								await container.SetMetadataAsync(new Dictionary<string,string>(){ { "count", blobId.ToString() } } );
+								mem.Seek(0, SeekOrigin.Begin);
+								await container.UploadBlobAsync(currentT.ToString("o", System.Globalization.CultureInfo.InvariantCulture.DateTimeFormat), mem);
+							
 							}
 							catch(Exception ex)
 							{
 								Debug.Log(ex);
 							}
-
+							
 						}
 						
 					}

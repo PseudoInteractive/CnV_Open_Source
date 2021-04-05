@@ -1163,25 +1163,8 @@ namespace COTG.Game
 
 		public static (int max, int count, int townHallLevel) CountBuildings()
 		{
-			var count = 0;
-			var townHallLevel = 1;
-			foreach (var bi in CityBuild.postQueueBuildings)
-				{
-					if (bi.id == 0 || bi.bl == 0)
-						continue;
-					var bd = bi.def;
-					if (bd.isTower || bd.isWall)
-					{
-						continue;
-					}
-					if (bd.isTownHall)
-					{
-						townHallLevel = bi.bl;
-						continue;
-					}
-					++count;
-				}
-			return (townHallLevel*10, count, townHallLevel);
+			
+			return (CityBuild.postQueueTownHallLevel*10, CityBuild.postQueueBuildingCount, CityBuild.postQueueTownHallLevel);
 		}
 
 

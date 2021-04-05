@@ -679,7 +679,8 @@ namespace COTG.Views
 
 		}
 
-
+		public static int postQueueBuildingCount;
+		public static int postQueueTownHallLevel;
 		public static Building[] postQueueBuildings
 		{
 			get
@@ -714,6 +715,25 @@ namespace COTG.Views
 								b.id = BuildingDef.BidToId(q.bid);
 						});
 
+					}
+					// calculate counts
+					postQueueBuildingCount = 0;
+					postQueueTownHallLevel = 10;
+					foreach (var bi in postQueuebuildingsCache)
+					{
+						if (bi.id == 0 || bi.bl == 0)
+							continue;
+						var bd = bi.def;
+						if (bd.isTower || bd.isWall)
+						{
+							continue;
+						}
+						if (bd.isTownHall)
+						{
+							postQueueTownHallLevel = bi.bl;
+							continue;
+						}
+						++postQueueBuildingCount;
 					}
 					return postQueuebuildingsCache;
 				}
@@ -1045,7 +1065,7 @@ namespace COTG.Views
 			}
 			if (Player.moveSlots <= 0)
 			{
-				Status($"No move spots");
+				Status($"No move spots",dryRun);
 			}
 			else
 			{
@@ -1183,7 +1203,7 @@ namespace COTG.Views
 				}
 				else
 				{
-					Status($"Select building {b.def.Bn} at {hovered.bspotToString()}" );
+					Status($"Select building {b.def.Bn} at {hovered.bspotToString()}", dryRun );
 					if (!dryRun)
 					{
 						selected = hovered;
@@ -1507,7 +1527,7 @@ namespace COTG.Views
 
 								break;
 							}
-							Status("Please select a valid building");
+							Status("Please select a valid building", dryRun);
 						}
 						break;
 					}
@@ -1584,26 +1604,26 @@ namespace COTG.Views
 					{
 							if (IsBuildingSpot(hovered))
 							{
-								ShellPage.contToolTip = $"Left click to build something\nRight click to select a quick build tool";
+								Status($"Left click to build something\nRight click to select a quick build tool",dryRun);
 
 							}
 							else if (IsTowerSpot(hovered))
 							{
-								ShellPage.contToolTip = $"Left click to build tower\nRight click to select a quick build tool";
+								Status($"Left click to build tower\nRight click to select a quick build tool",dryRun);
 
 							}
 							else if (IsWallSpot(hovered))
 							{
-								ShellPage.contToolTip = $"Left click to build wall\nRight click to select a quick build tool";
+								Status($"Left click to build wall\nRight click to select a quick build tool",dryRun);
 							}
 							else
 							{
-								ShellPage.contToolTip = $"Please don't left click here\nRight click to select a quick build tool";
+								Status($"Please don't left click here\nRight click to select a quick build tool",dryRun);
 							}
 					}
 					else 
 					{
-						ShellPage.contToolTip = $"Left click modify {b.def.Bn}, Right click to select a quick build tool";
+						Status($"Left click modify {b.def.Bn}, Right click to select a quick build tool",dryRun);
 					}
 					
 					break;

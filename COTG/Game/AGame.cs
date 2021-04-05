@@ -1962,6 +1962,13 @@ namespace COTG
 						Vector2 c = new Vector2(20, 16).SToC();
 						DrawTextBox(_contTip, c, tipTextFormat, Color.White.Scale(alpha), (byte)(alpha * 192.0f).RoundToInt(), Layer.overlay, 11, 11, ConstantDepth, 0, 0.5f);
 					}
+					if (ShellPage.IsCityView())
+					{
+						var alpha = 255;
+						Vector2 c = new Vector2(clientSpan.X - 32, 16).SToC();
+						DrawTextBox($"{CityBuild.postQueueBuildingCount}/{CityBuild.postQueueTownHallLevel*10}", c, tipTextFormatRight, Color.White.Scale(alpha), (byte)(alpha * 192.0f).RoundToInt(), Layer.overlay, 11, 11, ConstantDepth, 0, 0.5f);
+
+					}
 					var _debugTip = ShellPage.debugTip;
 					if (_debugTip != null)
 					{
@@ -1969,6 +1976,7 @@ namespace COTG
 						Vector2 c = new Vector2(clientSpan.X-16, 16).SToC();
 						DrawTextBox(_debugTip, c, tipTextFormatRight, Color.White.Scale(alpha), (byte)(alpha * 192.0f).RoundToInt(), Layer.overlay, 11, 11, ConstantDepth, 0, 0.5f);
 					}
+					
 
 				}
 				if (popups.Length > 0)

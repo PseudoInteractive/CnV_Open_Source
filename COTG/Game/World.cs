@@ -130,13 +130,24 @@ namespace COTG.Game
 		public const int spanX = 6;
 		public const int spanY = 6;
 		public const int count = spanX * spanY + 1; // 56 is summary of the workd
+		public const int idAll = count - 1;
+
 		public static int GetPackedIdFromC((int x, int y) c) => GetPackedIdFromCont((c.x / 100, c.y / 100));
 		public static int GetPackedIdFromCont((int x, int y) c) => c.x.Clamp(0, 5) + c.y.Clamp(0, 5) * spanX;
+		public static (int x, int y) GetContIdFromPacked(int id) {
+			if (id == idAll)
+				return (5,6); // special aliase for "all"
+
+			var y = id / spanX;
+			var x = id- y * spanX;
+			return (x, y);
+		}
 		public static int GetPackedIdFromCont(int cont)
 		{
 			var y = cont / 10;
 			return GetPackedIdFromCont((cont - y*10,y));
 		}
+		public bool isOpen => cities > 0;
 		public static int GetPackedIdFromContUnpacked(int cont) => cont == 56 ? count - 1 : (GetPackedIdFromCont(cont));
 		public static Continent[] all = new Continent[count]; // 56 is a summary for world
 

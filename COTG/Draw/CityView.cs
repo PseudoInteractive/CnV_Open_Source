@@ -309,10 +309,10 @@ namespace COTG.Draw
 				}
 
 			}
-			if(isPlanner && !build.isLayoutValid)
-			{
-				ShellPage.debugTip = "Please set a layout.";
-			}
+			//if(isPlanner && !build.isLayoutValid)
+			//{
+			//	Status("Please set a layout.",dryRun);
+			//}
 
 
 			// if selected is 
