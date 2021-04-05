@@ -101,10 +101,12 @@ namespace COTG.Services
 								}
 
 							}
-							try 
+							try
 							{
 								mem.Seek(0, SeekOrigin.Begin);
-								await container.UploadBlobAsync(currentT.ToString("o", System.Globalization.CultureInfo.InvariantCulture.DateTimeFormat), mem);
+								var str = currentT.ToString("o", System.Globalization.CultureInfo.InvariantCulture.DateTimeFormat);
+								await container.UploadBlobAsync(str, mem);
+								await container.SetMetadataAsync(new Dictionary<string, string>() {{"last", str } });
 							
 							}
 							catch(Exception ex)

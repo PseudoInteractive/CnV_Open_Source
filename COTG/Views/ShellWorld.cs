@@ -21,6 +21,8 @@ using Microsoft.Xna.Framework.Input;
 using System.Collections.Concurrent;
 using Windows.System.Threading;
 using COTG.Draw;
+using static COTG.Helpers.AString;
+using Cysharp.Text;
 
 namespace COTG.Views
 {
@@ -879,77 +881,93 @@ namespace COTG.Views
 
 							lastCanvasC = cid;
 							var packedId = World.GetPackedId(c);
-							var data = World.GetInfoFromPackedId(packedId);
+							var data = World.GetInfoFromPackedId(World.rawPrior1!=null? World.rawPrior1 : World.raw, packedId);
 							switch (data.type)
 							{
 								case World.typeCity:
 									{
 										Spot.viewHover = cid;
-										Spot.TryGet(cid, out var spot);
-
-										if (data.player == 0)
+										var city = City.GetOrAddCity(cid);
+										if (city != null)
 										{
-											toolTip = $"Lawless\n{c.y / 100}{c.x / 100} ({c.x}:{c.y})";
-										}
-										else
-										{
-											Player.viewHover = data.player;
-
-											var player = Player.all.GetValueOrDefault(data.player, Player._default);
-											if (Player.IsFriend(data.player))
+											if (data.player == 0)
 											{
-												if (spot is City city)
-												{
-													var notes = city.remarks.IsNullOrEmpty() ? "" : city.remarks.Substring(0, city.remarks.Length.Min(40)) + "\n";
-													toolTip = $"{player.name}\n{city.cityName}\npts:{city.points:D0}\n{Alliance.IdToName(player.alliance)}\nTSh:{city.tsHome:D0}\nTSt:{city.tsTotal:D0}\n{notes}{c.y / 100}{c.x / 100} ({c.x}:{c.y})";
-													//     Raiding.UpdateTS();
-													if(city.senatorInfo.Length != 0)
-													{
-														toolTip = toolTip + city.GetSenatorInfo();
-													}
-													if(city.reinforcementsIn.Length > 0)
-													{
-														
-														foreach(var i in city.reinforcementsIn)
-														{
-															toolTip = i.troops.Format($"{toolTip}\nFrom {City.GetOrAddCity(i.sourceCid).nameAndRemarks}:", '\n', '\n');
-														}
-
-													}
-												}
-
+												toolTip = $"Lawless\n{c.y / 100}{c.x / 100} ({c.x}:{c.y})\nPoints {city.points}";
 											}
 											else
 											{
-												var info = spot != null ?
-													$"{spot.cityName}\n{spot.points}\n"
-												 : "";
-												toolTip = $"{player.name}\n{Alliance.IdToName(player.alliance)}\n{info}{c.y / 100}{c.x / 100} ({c.x}:{c.y})\ncities:{player.cities.Count}\npts:{player.pointsH * 100}";
-											}
-										}
-										if (spot != null && spot.incoming != null)
-										{
-											var inc = spot.incoming;
-											foreach (var i in inc)
-											{
-												if (i.isAttack)
-												{
-													toolTip = toolTip + '\n' + i.Format("\n");
-												}
-											}
-											var def = Array.Empty<TroopTypeCount>();
-											foreach (var i in inc)
-											{
-												if (!i.isAttack)
-												{
-													def = def.Sum(i.troops);
-												}
-											}
-											if (!def.IsNullOrEmpty())
-											{
-												toolTip += def.Format("\nDef:", '\n', '\n');
-											}
+												Player.viewHover = data.player;
 
+												var player = Player.all.GetValueOrDefault(data.player, Player._default);
+												//	if (Player.IsFriend(data.player))
+												{
+													//if (spot is City city)
+													{
+														using var sb = ZString.CreateUtf8StringBuilder();
+														var notes = city.remarks.IsNullOrEmpty() ? "" : city.remarks.Substring(0, city.remarks.Length.Min(40)) + "\n";
+														sb.AppendLine(player.name);
+														sb.AppendLine(city.cityName);
+														sb.AppendFormat("pts:{0:N0}\n", city.points);
+														if(player.alliance!= 0)
+															sb.AppendLine(Alliance.IdToName(player.alliance));
+														if (Player.IsFriend(data.player)) 
+															sb.AppendLine(city.GetTroopsString("\n"));
+
+														if (city.senatorInfo.Length != 0)
+														{
+															sb.AppendLine(city.GetSenatorInfo());
+														}
+														if (city.incoming.Any())
+														{
+
+															var incAttacks = 0;
+															var incTs = 0;
+															foreach (var i in city.incoming)
+															{
+																if (i.isAttack)
+																{
+																	++incAttacks;
+																	incTs += i.ts;
+																}
+															}
+															sb.AppendFormat("{0} incoming attacks", incAttacks);
+															if (incTs > 0)
+																sb.AppendFormat(" ({0} TS)\n", incTs);
+															else
+																sb.Append('\n');
+
+															if (city.claim != 0)
+																sb.AppendFormat("{0}% Claim\n", city.claim);
+
+															sb.AppendFormat("{0} total def\n", city.tsDefMax);
+														}
+														if (city.reinforcementsIn.Length > 0)
+														{
+
+															foreach (var i in city.reinforcementsIn)
+															{
+																toolTip = i.troops.Format($"{toolTip}\nFrom {City.GetOrAddCity(i.sourceCid).nameAndRemarks}:", '\n', '\n');
+															}
+
+														}
+														if (!city.remarks.IsNullOrEmpty())
+															sb.Append(city.remarks.AsSpan().Wrap(20));
+
+														sb.Append($"{c.y / 100}{c.x / 100} ({c.x}:{c.y})");
+														
+														toolTip = sb.ToString();
+
+													}
+
+												}
+												//else
+												//{
+												//	var info = spot != null ?
+												//		$"{spot.cityName}\n{spot.points}\n"
+												//	 : "";
+												//	toolTip = $"{player.name}\n{Alliance.IdToName(player.alliance)}\n{info}{c.y / 100}{c.x / 100} ({c.x}:{c.y})\ncities:{player.cities.Count}\npts:{player.pointsH * 100}";
+												//}
+											}
 										}
 										break;
 									}
@@ -967,7 +985,7 @@ namespace COTG.Views
 									break;
 							}
 
-							if (World.rawPrior != null)
+							if (World.rawPrior0 != null)
 							{
 								var pData = World.GetInfoPrior(packedId);
 								if (pData.data == data.data | pData.type == World.typeBoss | pData.type == World.typeDungeon)

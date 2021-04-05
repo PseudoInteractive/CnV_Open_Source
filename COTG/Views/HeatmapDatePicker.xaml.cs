@@ -1,4 +1,5 @@
-﻿using COTG.Helpers;
+﻿using COTG.Game;
+using COTG.Helpers;
 
 using System;
 using System.Collections.Generic;
@@ -43,7 +44,7 @@ namespace COTG.Views
         private void Now_Click(object sender, RoutedEventArgs e)
         {
             snapshots.SelectedItems.Clear();
-			AGame.ClearHeatmap();
+			World.ClearHeatmap();
         }
 
 		private void snapshots_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -58,7 +59,7 @@ namespace COTG.Views
             }
             else
             {
-				AGame.ClearHeatmap();
+				World.ClearHeatmap();
             }
         }
 

@@ -95,6 +95,7 @@
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     <PackageReference Include="PlayFabAllSDK" Version="1.90.210315" />
     <PackageReference Include="System.Numerics.Vectors" Version="4.5.0" />
+    <PackageReference Include="ZString" Version="2.3.1" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Cyotek.Drawing.BitmapFont">

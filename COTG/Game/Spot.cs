@@ -130,7 +130,17 @@ namespace COTG.Game
 		public int tsDefTotal => (troopsTotal.Any() ? troopsTotal.TSDef() : _tsTotal);
 
 		public int tsTotal => (troopsTotal.Any() ? troopsTotal.TS() : _tsTotal);
-		public int tsDefMax { get { var i = incomingDefTS; return (i > 0) ? i : (reinforcementsIn.TS() + (troopsHome.Any()?troopsHome.TSDef() :_tsHome)); } }
+		public int tsDefMax 
+		{ 
+			get 
+			{ 
+				if(incoming.Any())
+				{
+					return incomingDefTS;
+				}
+				return reinforcementsIn.TS() + (troopsHome.Any()?troopsHome.TSDef() :_tsHome); 
+			} 
+		}
 		public int tsOff { get { var i = incomingOffTS; return (i > 0) ? i : troopsHome.TSOff(); } }
 
 		public Reinforcement[] reinforcementsIn = Array.Empty<Reinforcement>();
@@ -854,24 +864,26 @@ namespace COTG.Game
 				return rv;
 			}
 		}
-		public string troopsString
+		public string troopsString => GetTroopsString();
+		public string GetTroopsString(string separator = ", ")
 		{
-			get
+			if (troopsTotal.IsNullOrEmpty())
 			{
-				if(troopsTotal.IsNullOrEmpty())
-					return classificationString;
+				if (isFriend)
+					return "No troops";
 
+				return classificationString;
+			}
 				string rv = string.Empty;
 				string sep = string.Empty;
 				foreach (var ttc in troopsTotal)
 				{
 					rv += $"{sep}{troopsHome.Count(ttc.type):N0}/{ttc.count:N0} {Enum.ttNameWithCaps[ttc.type]}";
-					sep = ", ";
+					sep = separator;
 				}
 				return rv;
-			}
+			
 		}
-		
 		public bool underSiege
 		{
 			get

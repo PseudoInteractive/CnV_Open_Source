@@ -185,20 +185,23 @@ namespace COTG.Services
 
         
         
-        public static async void SetHeatmapDates( int[] items)
+        public static async void SetHeatmapDates( int[] selectedItems)
         {
             if (World.changeMapInProgress)
                 return;
             
-			COTG.AGame.ClearHeatmap();
+			World.ClearHeatmap();
 			
-			Assert(items.Length > 0);
+			Assert(selectedItems.Length > 0);
 
 			World.changeMapInProgress = true;
             if (historyBuffer == null)
                 return;
 
-            var data = World.raw.ToArray(); // clone it
+			var selMin = selectedItems.Min();
+			var selMax = selectedItems.Max();
+			var data = World.raw.ToArray(); // clone it
+		    var data1 = World.raw;
 			var changeMask = new bool[World.worldDim * World.worldDim];
             var file = await folder.CreateFileAsync(fileName, CreationCollisionOption.OpenIfExists);
 			
@@ -206,29 +209,32 @@ namespace COTG.Services
             {
                 using (var zip = new ZipArchive(streamForZip, mode: ZipArchiveMode.Read))
                 {
-                    int entries = historyBuffer.Length;
-                    while(--entries >= items[0] )
+                    int entry = historyBuffer.Length;
+                    while(--entry >= selMin )
                     {
-                        var dName = ArchiveName(entries);
+						if (entry == selMax)
+							data1 = data.ToArray();
+
+                        var dName = ArchiveName(entry);
                         var prior = zip.GetEntry(dName);
                         if ( prior.LastWriteTime < date )
                             break;
 
                         //Log($"Delta {dName} {prior.Length} {prior.LastWriteTime}");
-                        if( historyBuffer[entries] == null )
+                        if( historyBuffer[entry] == null )
                         {
                             var byteBuffer = new byte[prior.Length];
                             using (var instream = prior.Open())
                             {
                                 instream.Read(byteBuffer, 0, byteBuffer.Length);
                             }
-                            historyBuffer[entries] = byteBuffer.ConvertToUints();
+                            historyBuffer[entry] = byteBuffer.ConvertToUints();
 
                         }
-						var delta = historyBuffer[entries];
+						var delta = historyBuffer[entry];
 
 						ApplyDelta(data, delta);
-						if(items.Contains(entries) )
+						if(entry >= selMin && entry <= selMax )
 						{
 							int count = delta.Length / 2;
 							for (int i = 0; i < count; ++i)
@@ -247,7 +253,7 @@ namespace COTG.Services
 							data[i] = World.raw[i];
 						}
 					}
-                    World.CreateChangePixels(data);
+                    World.CreateChangePixels(data,data1);
                 }
             }
         }

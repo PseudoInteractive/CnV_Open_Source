@@ -16,7 +16,7 @@
 			<RowDefinition Height="auto"/>
 		</Grid.RowDefinitions>
 		<TextBlock Text="World Snapshots:" VerticalAlignment="Center" HorizontalAlignment="Center" IsColorFontEnabled="False" FocusVisualPrimaryThickness="3,2,2,2" IsHitTestVisible="False"  />
-		<ListView x:Name="snapshots"  x:FieldModifier="public" Grid.Row="1" SelectionMode="Multiple" SelectionChanged="snapshots_SelectionChanged"  IsTabStop="True" TabFocusNavigation="Cycle" ItemsSource="{x:Bind local:HeatmapDatePicker.items,Mode=OneWay}" HorizontalAlignment="Center" VerticalAlignment="Center" 
+		<ListView x:Name="snapshots"  x:FieldModifier="public" Grid.Row="1" SelectionMode="Extended" SelectionChanged="snapshots_SelectionChanged"  IsTabStop="True" TabFocusNavigation="Cycle" ItemsSource="{x:Bind local:HeatmapDatePicker.items,Mode=OneWay}" HorizontalAlignment="Center" VerticalAlignment="Center" 
 				  ToolTipService.ToolTip="Changes will be shown that occured within a selected time window" AllowFocusOnInteraction="True" PointerEntered="snapshots_PointerEntered"
 				  />
 		<Button Click="Now_Click" Grid.Row="2" HorizontalAlignment="Center" VerticalAlignment="Center" >

@@ -40,25 +40,27 @@
 ### 2021/3/17
  - **new** Added "Smart Rearrange" to planner: 'Moves buildings whose positions don't matter to where existing corresponding buildings are located or to locations without res nodes'
 ### 2021/3/26
- - **new** Added "Near Res": For sending resources from near cities
+ - **New** Added "Near Res": For sending resources from near cities
 ### 2021/3/26
- - **fix** Near Res mis-calculated everything
- - **fix** Custom colors work in world view.  "Click" on the "World" tab to set them up
+ - **Fix** Near Res mis-calculated everything
+ - **Fix** Custom colors work in world view.  "Click" on the "World" tab to set them up
    - Known issue:  The color picker controls overlap the native view, so they cannot be readily clicked
    - The workaround is to press on the web button (left of the refresh button up top) which makes web controls clickable
  - **New** the "Share" button in city layout with publish city layouts for everyone to see and use.  (For people not on the client, you can copy the layout to the clipboard)
 ### 2021/3/26
- - **new** Support for the _delay between raids_ functionality
+ - **New** Support for the _delay between raids_ functionality
   - for some reason COTG does not natively support a delay of 10s, if this is desired I could add it, but it may not work with auto raid
- - **new** Accelerator keys F2, F3 and F4 toggle between view layouts
+ - **New** Accelerator keys F2, F3 and F4 toggle between view layouts
 ### 2021/3/30
- - ** new ** Cities in region view are tinted by default based on your wold color settings
+ - **New** Cities in region view are tinted by default based on your wold color settings
   - This can be changed in the settings page via "Tint"
- - ** update ** The heatmap allows you to view changes in a more fine grained manner
+ - **Update** The heatmap allows you to view changes in a more fine grained manner
 ### 2021/4/1
- - ** new ** When your mouse is over a players city in region or wold view, all cities that belong to that player will draw a flag so that you can easily tell what belongs to who
- - ** update ** Smart rearrange in the planner will flip layouts in an attenmpt to minimize resource overlaps
- - ** fix ** Near res would only work if the target city was yours
+ - **New** When your mouse is over a players city in region or wold view, all cities that belong to that player will draw a flag so that you can easily tell what belongs to who
+ - **Update** Smart rearrange in the planner will flip layouts in an attenmpt to minimize resource overlaps
+ - **Fix** Near res would only work if the target city was yours
    - Kown issue:  The window seems to spontaneously refresh sometimes, recalcaulting resource send values
    - Need to fix
- - ** update ** When a new city is founded, a Refresh will automatically be triggered
+ - **Update** When a new city is founded, a Refresh will automatically be triggered
+### 2021/4/4
+ - **Fix** Update City Groups function was misbehaving

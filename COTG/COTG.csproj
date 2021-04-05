@@ -200,7 +200,7 @@
     <Compile Include="Game\Overview.cs" />
     <Compile Include="Game\Player.cs" />
     <Compile Include="Game\PlayerPresence.cs" />
-    <Compile Include="Game\PlayerStats.cs" />
+    <Compile Include="Game\Stats.cs" />
     <Compile Include="Game\Playfab.cs" />
     <Compile Include="Game\Raiding.cs" />
     <Compile Include="Game\Reinforcement.cs" />
@@ -215,6 +215,7 @@
     <Compile Include="Helpers\AES.cs" />
     <Compile Include="Helpers\AMath.cs" />
     <Compile Include="Helpers\aParallelFor.cs" />
+    <Compile Include="Helpers\AString.cs" />
     <Compile Include="Helpers\AuthenticationHelper.cs" />
     <Compile Include="Helpers\AUtil.cs" />
     <Compile Include="Helpers\DArray.cs" />

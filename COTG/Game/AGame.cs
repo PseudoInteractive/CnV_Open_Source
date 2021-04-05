@@ -507,13 +507,9 @@ namespace COTG
 				w.texture.Dispose();
 			}
 			World.changeMapInProgress = false;// this is used to temporarily block the UI from issuing multiple changes at once
-
+			
 		}
-		public static void ClearHeatmap()
-		{
-			ClearHeatmapImage();
-			World.rawPrior = null;
-		}
+		
 		//public static void SetCanvasVisibility(bool visible)
 		//{
 		//    if (canvas.Visibility == Visibility.Visible)
@@ -1702,7 +1698,7 @@ namespace COTG
 											}
 											if (wantDetails || Spot.IsSelectedOrHovered(targetCid, noneIsAll))
 											{
-												DrawTextBox($"{incAttacks}`{city.claim.ToString("00")}%`{(incTs + 500) / 1000}k\n{ (city.tsDefMax.Max(city.tsHome) + 500) / 1000 }k",
+												DrawTextBox($"{incAttacks}`{city.claim.ToString("00")}%`{(incTs + 500) / 1000}k\n{ (city.tsDefMax + 500) / 1000 }k",
 														c1, tipTextFormatCentered, incAttacks != 0 ? Color.White : Color.Cyan, textBackgroundOpacity, Layer.tileText);
 											}
 										}
@@ -1841,12 +1837,20 @@ namespace COTG
 
 						if(Player.viewHover != 0)
 						{
-							if(Player.all.TryGetValue(Player.viewHover, out var p))
+							if (Player.all.TryGetValue(Player.viewHover, out var p))
+							{
+								try
 								{
-								foreach (var cid in p.cities)
-								{
-									DrawFlag(cid, SpriteAnim.flagGrey);
+									foreach (var cid in p.cities)
+									{
+										DrawFlag(cid, SpriteAnim.flagGrey);
+									}
 								}
+								catch(Exception ex)
+								{
+									Log(ex); // collection might change, if this happens just about this render, its 
+								}
+								
 							}
 						}
 

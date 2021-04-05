@@ -720,49 +720,25 @@ namespace COTG
 			SetUserAgent(GetUserAgent() + suffix);
 		}
 	}
+	
 	public static class AApp
 	{
-		static ContentDialog active;
+
+		public static SemaphoreSlim popupSema = new SemaphoreSlim(1);
 		public static async Task<ContentDialogResult> ShowAsync2(this ContentDialog dialog)
 		{
 			var escCounter = 0;
-			for (int i = 0; i < 30; ++i)
+			await popupSema.WaitAsync();
+			try
 			{
-				if (active == null)
-				{
-					active = dialog;
-					try
-					{
-						var result = await dialog.ShowAsync();
-						Assert(active == dialog);
-						if (active == dialog)
-							active = null;
-						return result;
-					}
-					catch (Exception e)
-					{
-						Log(e);
-						active = null;
-						break;
-					}
-				}
-				else
-				{
-					Log($"Rentry: {dialog.Title} {active.Title}");
-					if (CoreWindow.GetForCurrentThread().GetAsyncKeyState(VirtualKey.Escape).HasFlag(CoreVirtualKeyStates.Down))
-					{
-						++escCounter;
-						if (escCounter > 3)
-							break;
-					}
-					else
-					{
-						escCounter = 0;
-					}
-					await Task.Delay(500);
-				}
+				var result = await dialog.ShowAsync();
+				return result;
+
 			}
-			return ContentDialogResult.None;
+			finally
+			{
+				popupSema.Release();
+			}
 		}
 		public static void DispatchOnUIThreadLow(this CoreDispatcher d, DispatchedHandler action)
 		{

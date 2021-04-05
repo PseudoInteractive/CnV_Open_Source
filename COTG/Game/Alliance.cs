@@ -82,6 +82,7 @@ namespace COTG.Game
 				_ => Diplomacy.none,
 			};
 		}
+		public static bool alliancesFetched;
 		public static SortedList<byte, byte> diplomacy = new SortedList<byte, byte>(); // small Dictionary 
 		public static async void Ctor(JsonDocument _aldt)
 		{
@@ -246,7 +247,7 @@ namespace COTG.Game
 			nameToId = _nameToId;
 			all = _all;
 			//  await Cosmos.GetSpotDB();
-
+			alliancesFetched = true;
 			// start this off once the fetches are finished
 			Blobs.ProcessStats();
 
