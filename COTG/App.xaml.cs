@@ -392,6 +392,11 @@ namespace COTG
 		// with a delay
 		public static void QueueIdleTask(Action a, int intialDelayInmilisecons)
 		{
+			foreach (var i in idleTasks)
+			{
+				if (i == a)
+					return;
+			}
 
 			Task.Delay(intialDelayInmilisecons).ContinueWith((_) => QueueIdleTask(a));
 		}
@@ -402,10 +407,7 @@ namespace COTG
 			{
 				if (i == a)
 					return;
-
 			}
-
-
 			
 			idleTasks.Enqueue(a);
 				

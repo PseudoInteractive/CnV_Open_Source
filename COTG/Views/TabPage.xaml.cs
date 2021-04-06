@@ -36,6 +36,7 @@ namespace COTG.Views
                 new DonationTab(),
                 new DefenseHistoryTab(),
                 new BossTab(),
+				new HeatTab(),
                 new AttackTab(),
 				new PlannerTab(),
 				new BuildTab(),
@@ -296,7 +297,8 @@ namespace COTG.Views
             {  "NearDefense", "\uEA18" },            
             { "alliance", "\uE902" },
             { "Outgoing","\uE189" },
-            { "Hits","\uEA69" }
+            { "Hits","\uEA69" },
+			{ "Heat", "\uF738" },
         };
         private static Microsoft.UI.Xaml.Controls.IconSource GetIconForTab(UserTab tab)
         {

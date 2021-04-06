@@ -27,6 +27,8 @@ namespace COTG
 		public const string fullDateFormat = "yyyy/MM/dd H':'mm':'ss";
 		public const string raidDateTimeFormat = "MM/dd/yyyy H':'mm':'ss";
 
+		public static DateTimeOffset ToServerTime(this DateTimeOffset t) => t.ToUniversalTime() + JSClient.gameTOffset;
+		public static DateTimeOffset FromServerTime(this DateTimeOffset t) => t - JSClient.gameTOffset;
 
 		public static unsafe void UnsafeCopy<T>(in T[] source, in T[] target) where T : unmanaged
 		{

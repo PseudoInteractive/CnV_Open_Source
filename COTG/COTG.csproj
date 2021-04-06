@@ -343,8 +343,8 @@
     <Compile Include="Views\Fixes.xaml.cs">
       <DependentUpon>Fixes.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\HeatmapDatePicker.xaml.cs">
-      <DependentUpon>HeatmapDatePicker.xaml</DependentUpon>
+    <Compile Include="Views\HeatTab.xaml.cs">
+      <DependentUpon>HeatTab.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\HitTab.xaml.cs">
       <DependentUpon>HitTab.xaml</DependentUpon>
@@ -490,9 +490,9 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\HeatmapDatePicker.xaml">
-      <SubType>Designer</SubType>
+    <Page Include="Views\HeatTab.xaml">
       <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Views\HitTab.xaml">
       <SubType>Designer</SubType>

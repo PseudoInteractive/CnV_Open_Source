@@ -391,17 +391,17 @@ namespace COTG.Game
 		public static void CreateChangePixels(uint[] prior, uint[] prior1)
 		{
 			var pixels = new byte[outSize / 4 * outSize / 4 * 8];
-			for (int i = 0; i < outSize / 4 * outSize / 4; i++)
-			{
-				pixels[i * 8 + 0] = WorldHelper.RGB16B0(0x60, 0, 0);
-				pixels[i * 8 + 1] = WorldHelper.RGB16B1(0x60, 0, 0);
-				pixels[i * 8 + 2] = 0;
-				pixels[i * 8 + 3] = 0;
-				pixels[i * 8 + 4] = 0x55;
-				pixels[i * 8 + 5] = 0x55;
-				pixels[i * 8 + 6] = 0x55;
-				pixels[i * 8 + 7] = 0x55;
-			}
+			//for (int i = 0; i < outSize / 4 * outSize / 4; i++)
+			//{
+			//	pixels[i * 8 + 0] = WorldHelper.RGB16B0(0x60, 0, 0);
+			//	pixels[i * 8 + 1] = WorldHelper.RGB16B1(0x60, 0, 0);
+			//	pixels[i * 8 + 2] = 0;
+			//	pixels[i * 8 + 3] = 0;
+			//	pixels[i * 8 + 4] = 0x55;
+			//	pixels[i * 8 + 5] = 0x55;
+			//	pixels[i * 8 + 6] = 0x55;
+			//	pixels[i * 8 + 7] = 0x55;
+			//}
 			for (int y = 0; y < worldDim; ++y)
 			{
 				for (int x = 0; x < worldDim; ++x)
@@ -418,7 +418,17 @@ namespace COTG.Game
 						var dtype0 = d0 & typeMask;
 						var dtype1 = d1 & typeMask;
 						if (d0 == d1 || dtype0 == typeDungeon || dtype0 == typeBoss || dtype1 == typeDungeon || dtype1 == typeBoss)
+						{
+							pixels[i * 8 + 0] = WorldHelper.RGB16B0(0x60, 0, 0);
+							pixels[i * 8 + 1] = WorldHelper.RGB16B1(0x60, 0, 0);
+							pixels[i * 8 + 2] = 0;
+							pixels[i * 8 + 3] = 0;
+							pixels[i * 8 + 4] = 0x55;
+							pixels[i * 8 + 5] = 0x55;
+							pixels[i * 8 + 6] = 0x55;
+							pixels[i * 8 + 7] = 0x55;
 							continue;
+						}
 						uint color = WorldHelper.RGB16(0x40, 0x40, 0x40);
 						if (dtype0 == typeCity || dtype1 == typeCity)
 						{
@@ -468,7 +478,7 @@ namespace COTG.Game
 			rawPrior1 = null;
 			DrawPixels(raw);
 		}
-
+		static bool isDrawingHeatMap => rawPrior0 != null;
 
 		public enum State
 		{
@@ -731,7 +741,7 @@ namespace COTG.Game
 								isVisible = shrines.isOn;
 								if (shrines.isOn)
 								{
-									var type = d0 % 15;
+									var type = d0 & 255;
 									if (type == 255)
 									{
 										pixels.SetColor(i, shrines.color.R, shrines.color.G, shrines.color.B);
@@ -816,14 +826,7 @@ namespace COTG.Game
 		public static async void Decode(JsonDocument jsd)
 		{
 			Assert(state == State.started);
-			///		Assert(state == State.none || state == State.completed);
-			//		state = State.started;
-			// reset players	
-			foreach (var p in Player.all)
-			{
-				p.Value.cities.Clear();
-			}
-
+		
 
 		
 
@@ -1066,18 +1069,25 @@ namespace COTG.Game
 				}
 
 			}
-			SettingsPage.pinned = SettingsPage.pinned.ArrayRemoveDuplicates();
-			SpotTab.LoadFromPriorSession(SettingsPage.pinned);
+			
 			Task.Run(() => WorldStorage.SaveWorldData(raw));
 			current = rv;
-			state = State.completed;
 
 			// delay this part
 			while (Player.all.Count == 0)
 			{
 				await Task.Delay(500);
 			}
-			
+
+			///		Assert(state == State.none || state == State.completed);
+			//		state = State.started;
+			// reset players	
+			foreach (var p in Player.all)
+			{
+				p.Value.cities.Clear();
+			}
+
+
 			for (int x = 0; x < worldDim; ++x)
 			{
 				for (int y = 0; y < worldDim; ++y)
@@ -1100,9 +1110,22 @@ namespace COTG.Game
 			{
 				await Task.Delay(500);
 			}
-			DrawPixels(raw);
-			
+			if(!isDrawingHeatMap)
+				DrawPixels(raw);
+
+			state = State.completed;
+			// Queue up another one
+			App.QueueIdleTask(RefreshWorldDataIdleTask, 5 * 60 * 1000);  // 5 minutes - todo: change this to 30 minutes
+
 		}
+
+		static void RefreshWorldDataIdleTask()
+		{
+			Trace("World refresh");
+			if (World.completed)
+				GetWorldInfo.Send();
+		}
+
 		public static async void LoadContinentHistory()
 		{
 			ContinentsSnapshot.all = await ApplicationData.Current.LocalFolder.ReadAsync("continentHistory", ContinentsSnapshot.all);

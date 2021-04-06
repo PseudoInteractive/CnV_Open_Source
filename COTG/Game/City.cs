@@ -471,10 +471,10 @@ namespace COTG.Game
 					tradeInfo.inc[1] = ir[1].GetAsInt();
 					tradeInfo.inc[2] = ir[2].GetAsInt();
 					tradeInfo.inc[3] = ir[3].GetAsInt();
-					if (NearRes.IsVisible())
-					{
-						App.DispatchOnUIThreadSneaky( ()=> NearRes.instance.Refresh() );
-					}
+					//if (NearRes.IsVisible())
+					//{
+					//	App.DispatchOnUIThreadSneaky( ()=> NearRes.instance.Refresh() );
+					//}
 				}
 			}
 			if (cid == City.build && jse.TryGetProperty("bq", out var bq))

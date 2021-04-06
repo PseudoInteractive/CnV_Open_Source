@@ -1737,15 +1737,22 @@ namespace COTG
 									var ti = city.tradeInfo;
 									if (ti == null)
 										continue;
-									foreach(var toCid in ti.resSource)
+									try
 									{
-										var c1 = toCid.CidToWorld();
-										var t = (tick * city.cid.CidToRandom().Lerp(1.375f / 512.0f, 1.75f / 512f));
-										var r = t.Ramp();
+										foreach (var toCid in ti.resSource)
+										{
+											var c1 = toCid.CidToWorld();
+											var t = (tick * city.cid.CidToRandom().Lerp(1.375f / 512.0f, 1.75f / 512f));
+											var r = t.Ramp();
 
-										DrawAction(wc.WToC(), c1.WToC(), tradeColor);
+											DrawAction(wc.WToC(), c1.WToC(), tradeColor);
 
 
+										}
+									}
+									catch (Exception ex)
+									{
+										Log(ex);
 									}
 
 								}

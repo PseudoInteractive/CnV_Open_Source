@@ -181,17 +181,6 @@
 				</Button.Flyout>
 			</AppBarButton>
 			<AppBarSeparator/>
-			<AppBarButton Label="Heatmap"
-                          Style="{StaticResource AppBarButtonRevealStyle}"
-                               ToolTipService.ToolTip="View city changes on the world map">
-				<AppBarButton.Icon>
-					<FontIcon Glyph="&#xF738;"/>
-				</AppBarButton.Icon>
-				<Button.Flyout>
-					<Flyout x:Name="heatMapFlyout" AllowFocusOnInteraction="True" LightDismissOverlayMode="Off" ShowMode="Standard"  Opened="heatMapFlyout_Opened">
-					</Flyout>
-				</Button.Flyout>
-			</AppBarButton>
 			<AppBarButton Label="Time"
                               Icon="Shuffle"
                           Style="{StaticResource AppBarButtonRevealStyle}"

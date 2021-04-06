@@ -239,19 +239,23 @@ namespace COTG.Views
 				s = s.OrderBy(a => a.travel).ToList();
 				foreach (var sup in s)
 				{
-					var info = sup.info;
-					var shipping = viaWater ? info.shipsHome * 10000 : info.cartsHome * 1000;
-					var send = info.res.Min(r);
-					var sum = send.sum;
-					
-					if (shipping < sum)
+					if (!sup.initialized)
 					{
-						var ratio = shipping / (double)sum;
+						var info = sup.info;
+						var shipping = viaWater ? info.shipsHome * 10000 : info.cartsHome * 1000;
+						var send = info.res.Min(r);
+						var sum = send.sum;
 
-						send = send.Scale(ratio);
+						if (shipping < sum)
+						{
+							var ratio = shipping / (double)sum;
+
+							send = send.Scale(ratio);
+						}
+						sup.res = send;
+						sup.initialized = true;
 					}
-					sup.res = send;
-					r = r.Sub(send);
+					r = r.Sub(sup.res);
 					supporters.OnPropertyChanged(sup);
 					sup.OnPropertyChanged(string.Empty);
 
@@ -434,7 +438,7 @@ namespace COTG.Views
 
 		private void NumberBox_ValueChanged(Microsoft.UI.Xaml.Controls.NumberBox sender, Microsoft.UI.Xaml.Controls.NumberBoxValueChangedEventArgs args)
 		{
-			supporters.Clear();
+		//	supporters.Clear();
 
 			DoRefresh();
 			supporters.NotifyReset();
@@ -442,7 +446,7 @@ namespace COTG.Views
 
 		private void ToggleSwitch_IsEnabledChanged(object sender, DependencyPropertyChangedEventArgs e)
 		{
-			supporters.Clear();
+		//	supporters.Clear();
 			DoRefresh();
 			supporters.NotifyReset();
 		}

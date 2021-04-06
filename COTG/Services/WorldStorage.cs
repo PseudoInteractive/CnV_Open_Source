@@ -9,6 +9,7 @@ using System.IO.Compression;
 using static COTG.Debug;
 using COTG.Game;
 using COTG.Views;
+using Windows.Storage.Pickers;
 
 namespace COTG.Services
 {
@@ -72,101 +73,126 @@ namespace COTG.Services
         public static async void SaveWorldData(uint[] data)
         {
 			try
-            { 
-                var file = await folder.CreateFileAsync(fileName, CreationCollisionOption.OpenIfExists);
-				int[] lengths;
-				using (var streamForZip = await file.OpenStreamForReadAsync())
-				{
+            {
+				//App.DispatchOnUIThread( async () =>
+				//{
+				//	var file = await folder.CreateFileAsync(fileName, CreationCollisionOption.OpenIfExists);
+				//	FileSavePicker savePicker = new FileSavePicker();
+				//	savePicker.SuggestedStartLocation = PickerLocationId.DocumentsLibrary;
+				//	// Dropdown of file types the user can save the file as
+				//	savePicker.FileTypeChoices.Add("Zip", new List<string>() { ".zip" });
+				//	// Default file name if the user does not type one in or select a file to replace
+				//	savePicker.SuggestedFileName = fileName;
+				//	StorageFile outFile = await savePicker.PickSaveFileAsync();
+				//	await file.CopyAndReplaceAsync(outFile);
+				//});
+
+				//return;
+				//{
+					var file = await folder.CreateFileAsync(fileName, CreationCollisionOption.OpenIfExists);
+			
 				
-					using (var zip = new ZipArchive(streamForZip, mode: ZipArchiveMode.Read))
-					{
-						lengths = new int[zip.Entries.Count];
-						var counter = 0;
-						foreach (var entry in zip.Entries)
-						{
-							lengths[counter] = (int)entry.Length;
-							++counter;
-						}
-					}
-				}
 
-				using (var streamForZip = await file.OpenStreamForWriteAsync())
-                {
-
-
-					using (var zip = new ZipArchive(streamForZip, mode: ZipArchiveMode.Update))
+					using (var streamForZip = await file.OpenStreamForWriteAsync())
 					{
 
-						int entries = zip.Entries.Count;
-						var name = ArchiveName(entries);
-						var deltaIsSmall = false;
-						if (entries != 0)
-						{
-							// convert the last entry to a delta record
-							var priorEntry = entries - 1;
-							var priorName = ArchiveName(entries - 1);
-							var prior = zip.GetEntry(priorName);
-							var byteBuffer = new byte[data.Length * 4];
-							using (var instream = prior.Open())
-							{
-								instream.Read(byteBuffer, 0, byteBuffer.Length);
-							}
-							var lastData = byteBuffer.ConvertToUints();
-							var delta = ComputeDelta(lastData, data);
-							historyBuffer = new uint[entries][];
-							historyBuffer[priorEntry] = delta;
-							var outCount = delta.Length;
-							if (outCount < 32 || JSClient.subId != 0) // don't save file if playing a sub as there might be race conditions
-							{
-								deltaIsSmall = true;
-							}
-							else
-							{
-								prior.Delete(); // we want to replace it
-								prior = zip.CreateEntry(priorName);
-								prior.LastWriteTime = JSClient.ServerTime();
 
-								using (var outStream = prior.Open())
+						using (var zip = new ZipArchive(streamForZip, mode: ZipArchiveMode.Update))
+						{
+
+							int entries = zip.Entries.Count;
+							var name = ArchiveName(entries);
+							var deltaIsSmall = false;
+							if (entries != 0)
+							{
+								// convert the last entry to a delta record
+								var priorEntry = entries - 1;
+								var priorName = ArchiveName(entries - 1);
+								var prior = zip.GetEntry(priorName);
+								var byteBuffer = new byte[data.Length * 4];
+								using (var instream = prior.Open())
 								{
-									var bytes = new byte[outCount * 4];
-									for (int i = 0; i < outCount; ++i)
-									{
-										CopyBytes(delta[i], bytes, i);
-									}
+									instream.Read(byteBuffer, 0, byteBuffer.Length);
+								}
+								var lastData = byteBuffer.ConvertToUints();
+								var delta = ComputeDelta(lastData, data);
+								historyBuffer = new uint[entries][];
+								historyBuffer[priorEntry] = delta;
+								var outCount = delta.Length;
+								if (outCount < 2 || JSClient.subId != 0) // don't save file if playing a sub as there might be race conditions
+								{
+									deltaIsSmall = true;
+								}
+								else
+								{
+									prior.Delete(); // we want to replace it
+									prior = zip.CreateEntry(priorName);
+									prior.LastWriteTime = JSClient.ServerTime();
 
-									// overwrite with delta values
-									outStream.Write(bytes, 0, bytes.Length);
+									using (var outStream = prior.Open())
+									{
+										var bytes = new byte[outCount * 4];
+										for (int i = 0; i < outCount; ++i)
+										{
+											CopyBytes(delta[i], bytes, i);
+										}
+
+										// overwrite with delta values
+										outStream.Write(bytes, 0, bytes.Length);
+									}
+								}
+								//then fall through and add the full entry
+
+							}
+							// write a whole record.
+							if (!deltaIsSmall)
+							{
+								var entry = zip.CreateEntry(name);
+								entry.LastWriteTime = JSClient.ServerTime();
+								using (var outStream = entry.Open())
+								{
+									var byteData = data.ConvertToBytesWithoutDungeons();
+									outStream.Write(byteData, 0, byteData.Length);
 								}
 							}
-							//then fall through and add the full entry
 
+							
 						}
-						// write a whole record.
-						if (!deltaIsSmall)
-						{
-							var entry = zip.CreateEntry(name);
-							entry.LastWriteTime = JSClient.ServerTime();
-							using (var outStream = entry.Open())
-							{
-								var byteData = data.ConvertToBytesWithoutDungeons();
-								outStream.Write(byteData, 0, byteData.Length);
-							}
-						}
-
-						// report first time offset
-						var count = zip.Entries.Count;
-						var snapshots = new string[count];
-						int counter = 0;
-						foreach (var entry in zip.Entries)
-						{
-							snapshots[counter] = $"{entry.LastWriteTime.ToUniversalTime().ToString("G")}: {(counter < count - 1 ? $"{lengths[counter] / 4} changes" : " current")} ";
-							++counter;
-						}
-						App.DispatchOnUIThread( ()=> HeatmapDatePicker.SetItems(snapshots) );
 					}
-					
+				try
+				{
+					using (var streamForZip = await file.OpenStreamForReadAsync())
+					{
+
+						using (var zip = new ZipArchive(streamForZip, mode: ZipArchiveMode.Read))
+						{
+							
+
+							// report first time offset
+							const int dayCount = 1;
+							var count = zip.Entries.Count* dayCount;
+							var snapshots = new DateTimeOffset[count];
+							var lengths = new int[count];
+							int counter = 0;
+							for (int i = dayCount; --i >=0;)
+							{
+								foreach (var entry in zip.Entries)
+								{
+									snapshots[counter] = entry.LastWriteTime.ToServerTime() - TimeSpan.FromDays(i);// $"{entry.LastWriteTime.ToUniversalTime().ToString("u")}: {(counter < count - 1 ? $"{lengths[counter] / 4} changes" : " current")} ";
+									lengths[counter] = (int)entry.Length;
+									++counter;
+								}
+							}
+							App.DispatchOnUIThread(() => HeatTab.instance.SetItems(snapshots));
+						}
+					}
 				}
-            }
+				catch (Exception ex)
+				{
+					Log(ex);
+				}
+				//}
+			}
 			//catch(InvalidDataException invalidData)
 			//{
 			//	var file = await folder.CreateFileAsync(fileName, CreationCollisionOption.ReplaceExisting) ;
@@ -185,21 +211,19 @@ namespace COTG.Services
 
         
         
-        public static async void SetHeatmapDates( int[] selectedItems)
+        public static async void SetHeatmapDates( DateTimeOffset t0, DateTimeOffset t1)
         {
             if (World.changeMapInProgress)
                 return;
             
-			World.ClearHeatmap();
+		//	World.ClearHeatmap();
 			
-			Assert(selectedItems.Length > 0);
+			
 
 			World.changeMapInProgress = true;
             if (historyBuffer == null)
                 return;
 
-			var selMin = selectedItems.Min();
-			var selMax = selectedItems.Max();
 			var data = World.raw.ToArray(); // clone it
 		    var data1 = World.raw;
 			var changeMask = new bool[World.worldDim * World.worldDim];
@@ -210,18 +234,19 @@ namespace COTG.Services
                 using (var zip = new ZipArchive(streamForZip, mode: ZipArchiveMode.Read))
                 {
                     int entry = historyBuffer.Length;
-                    while(--entry >= selMin )
+                    while(--entry >= 0 )
                     {
-						if (entry == selMax)
-							data1 = data.ToArray();
+				
 
                         var dName = ArchiveName(entry);
                         var prior = zip.GetEntry(dName);
-                        if ( prior.LastWriteTime < date )
-                            break;
+                        if ( prior.LastWriteTime == t1 )
+							data1 = data.ToArray();
+						if (prior.LastWriteTime < t0)
+							break;;
 
-                        //Log($"Delta {dName} {prior.Length} {prior.LastWriteTime}");
-                        if( historyBuffer[entry] == null )
+						//Log($"Delta {dName} {prior.Length} {prior.LastWriteTime}");
+						if ( historyBuffer[entry] == null )
                         {
                             var byteBuffer = new byte[prior.Length];
                             using (var instream = prior.Open())
@@ -234,7 +259,7 @@ namespace COTG.Services
 						var delta = historyBuffer[entry];
 
 						ApplyDelta(data, delta);
-						if(entry >= selMin && entry <= selMax )
+						if(prior.LastWriteTime <= t1 )
 						{
 							int count = delta.Length / 2;
 							for (int i = 0; i < count; ++i)

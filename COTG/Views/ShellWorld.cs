@@ -946,7 +946,7 @@ namespace COTG.Views
 
 															foreach (var i in city.reinforcementsIn)
 															{
-																toolTip = i.troops.Format($"{toolTip}\nFrom {City.GetOrAddCity(i.sourceCid).nameAndRemarks}:", '\n', '\n');
+																sb.AppendLine( i.troops.Format($"From {City.GetOrAddCity(i.sourceCid).nameAndRemarks}:", '\n', '\n'));
 															}
 
 														}

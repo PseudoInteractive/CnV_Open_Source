@@ -179,13 +179,19 @@ namespace COTG.JSON
         public static async Task UpdateMinisterOptions(int cid, Func<string[],Task<bool>> opts)
         {
             string args = null;
-            await GetCity.Post(cid, (jse, city) =>
-                {
-                    if (jse.TryGetProperty("mo", out var p))
-                    {
-                        args = p.ToString();
-                    }
-                });
+			for (; ; )
+			{
+				await GetCity.Post(cid, (jse, city) =>
+					{
+						if (jse.TryGetProperty("mo", out var p))
+						{
+							args = p.ToString();
+						}
+					});
+				if (args != null)
+					break;
+				await Task.Delay(500);
+			}
 
               try
               {

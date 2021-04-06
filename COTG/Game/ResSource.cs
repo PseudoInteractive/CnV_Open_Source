@@ -87,6 +87,7 @@ namespace COTG.Game
 	{
 		public static ResSource dummy=new ResSource();
 		public City city;
+		public bool initialized;
 		public CityTradeInfo info;
 		public int cartsHome => info.cartsHome;
 		public int cartsTotal => info.cartsTotal;

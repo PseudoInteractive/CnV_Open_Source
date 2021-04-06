@@ -2220,7 +2220,10 @@ namespace COTG
 						//    {
 						App.DispatchOnUIThreadSneaky(ShowWhatsNew);
 					   AppCenter.SetUserId(Player.myName);
-					   
+					
+					   // 
+					   SettingsPage.pinned = SettingsPage.pinned.ArrayRemoveDuplicates();
+					   SpotTab.LoadFromPriorSession(SettingsPage.pinned);
 				   }
 			   }
 			   //}

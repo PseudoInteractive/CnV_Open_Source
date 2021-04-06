@@ -310,6 +310,7 @@ namespace COTG.Views
 					var tabPage = CreateTabPage(shellFrame);
 					TabPage.mainTabs = tabPage;
 					tabPage.AddTab(MainPage.instance, true);
+					tabPage.AddTab(HeatTab.instance, false);
 					tabPage.AddTab(BuildTab.instance, false);
 		
 					// gridTip=new TextBlock();
@@ -338,7 +339,7 @@ namespace COTG.Views
 			cityListBox.SelectedIndex = 0; // reset
 			cityListBox.SelectionChanged += CityListBox_SelectionChanged;
 			cityBox.SelectionChanged += CityBox_SelectionChanged;
-			heatMapFlyout.Content = new HeatmapDatePicker();
+		
 			SystemNavigationManager.GetForCurrentView().BackRequested += ShellPage_BackRequested;
 			//            PointerPressed+=  PointerPressedCB;
 			//   HomeButtonTip.IsOpen = true;
@@ -1247,9 +1248,6 @@ namespace COTG.Views
 			flyout.ShowAt(chatGrid, e.GetPosition(chatGrid));
 		}
 
-		private void heatMapFlyout_Opened(object sender, object e)
-		{
-			HeatmapDatePicker.instance.snapshots.Focus(FocusState.Programmatic);
-		}
+	
 	}
 }
