@@ -25,6 +25,7 @@ namespace COTG.JSON
 		public bool isMilitary => def.isMilitary;
 		public bool isBarracks => def.isBarracks;
 
+		public bool isTownHall => id == BuildingDef.idTownHall;
 
 		internal void SetBid(int bid, int bl)
 		{

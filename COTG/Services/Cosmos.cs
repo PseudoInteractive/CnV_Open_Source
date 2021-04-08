@@ -164,155 +164,155 @@ namespace COTG.Services
 
 		#region BuildQ
 
-		static bool buildQueueExists;
-		static string buildQueuePartition => $"{JSClient.world}_{Player.myName}";
-		const string buildQueueKey = "buildq";
-		public static async Task<string> LoadBuildQueue()
-		{
+		//static bool buildQueueExists;
+		//static string buildQueuePartition => $"{JSClient.world}_{Player.myName}";
+		//const string buildQueueKey = "buildq";
+		//public static async Task<string> LoadBuildQueue()
+		//{
 
-			if (!await TouchT())
-				return String.Empty;
+		//	if (!await TouchT())
+		//		return String.Empty;
 
-			var part = buildQueuePartition;
-			var key = buildQueueKey;
+		//	var part = buildQueuePartition;
+		//	var key = buildQueueKey;
 
-			await throttleT.WaitAsync();
-			try
-			{
-				var r = await tableClient.GetEntityAsync<TableBuildQueue>(part, key);
-				if (r != null)
-				{
-					buildQueueExists = true;
-					return r.Value.s;
-				}
-			}
-			catch (Azure.RequestFailedException e)
-			{
-				if( e.Status == 404)
-				{
-					// not found, don't log it, this is common
-				}
-				else
-				{
-					Log(e);
+		//	await throttleT.WaitAsync();
+		//	try
+		//	{
+		//		var r = await tableClient.GetEntityAsync<TableBuildQueue>(part, key);
+		//		if (r != null)
+		//		{
+		//			buildQueueExists = true;
+		//			return r.Value.s;
+		//		}
+		//	}
+		//	catch (Azure.RequestFailedException e)
+		//	{
+		//		if( e.Status == 404)
+		//		{
+		//			// not found, don't log it, this is common
+		//		}
+		//		else
+		//		{
+		//			Log(e);
 
-				}
+		//		}
 
-			}
-			catch (Exception e)
-			{
-				Log(e);
-			}
-			finally
-			{
-				throttleT.Release();
-			}
-			return string.Empty;
-		}
+		//	}
+		//	catch (Exception e)
+		//	{
+		//		Log(e);
+		//	}
+		//	finally
+		//	{
+		//		throttleT.Release();
+		//	}
+		//	return string.Empty;
+		//}
 
 
-		public static async void SaveBuildQueue(string data)
-		{
+		//public static async void SaveBuildQueue(string data)
+		//{
 
-			//if (!await TouchT())
-			//	return;
+		//	//if (!await TouchT())
+		//	//	return;
 
-			//var part = buildQueuePartition;
-			//var key = buildQueueKey;
+		//	//var part = buildQueuePartition;
+		//	//var key = buildQueueKey;
 
-			//await throttleT.WaitAsync();
-			//try
-			//{
+		//	//await throttleT.WaitAsync();
+		//	//try
+		//	//{
 
-			//	var i = new TableBuildQueue(part, key,data);
-			//	var r = await tableClient.UpsertEntityAsync(i, TableUpdateMode.Replace);
-			//	buildQueueExists = true;
-			//}
-			//catch (Exception e)
-			//{
-			//	Log(e);
-			//}
-			//finally
-			//{
-			//	throttleT.Release();
-			//}
-		}
-		public static async void ClearBuildQueue()
-		{
-			if (!buildQueueExists)
-				return;
-			if (!await TouchT())
-				return;
-			var part = buildQueuePartition;
-			var key = buildQueueKey;
+		//	//	var i = new TableBuildQueue(part, key,data);
+		//	//	var r = await tableClient.UpsertEntityAsync(i, TableUpdateMode.Replace);
+		//	//	buildQueueExists = true;
+		//	//}
+		//	//catch (Exception e)
+		//	//{
+		//	//	Log(e);
+		//	//}
+		//	//finally
+		//	//{
+		//	//	throttleT.Release();
+		//	//}
+		//}
+		//public static async void ClearBuildQueue()
+		//{
+		//	//if (!buildQueueExists)
+		//	//	return;
+		//	//if (!await TouchT())
+		//	//	return;
+		//	//var part = buildQueuePartition;
+		//	//var key = buildQueueKey;
 
-			await throttleT.WaitAsync();
-			try
-			{
-				var r = await tableClient.DeleteEntityAsync(part, key);
-				buildQueueExists = false;
-			}
-			catch (Exception e)
-			{
-				Log(e);  // ignore if it does not exist
-			}
-			finally
-			{
-				throttleT.Release();
-			}
-		}
+		//	//await throttleT.WaitAsync();
+		//	//try
+		//	//{
+		//	//	var r = await tableClient.DeleteEntityAsync(part, key);
+		//	//	buildQueueExists = false;
+		//	//}
+		//	//catch (Exception e)
+		//	//{
+		//	//	Log(e);  // ignore if it does not exist
+		//	//}
+		//	//finally
+		//	//{
+		//	//	throttleT.Release();
+		//	//}
+		//}
 		#endregion
 
-		static async ValueTask<bool> Touch()
-		{
-			Assert(JSClient.world != 0);
-			if (cosmosClient != null)
-				return database != null;
+	//	static async ValueTask<bool> Touch()
+	//	{
+	//		Assert(JSClient.world != 0);
+	//		if (cosmosClient != null)
+	//			return database != null;
 		
-			while(Alliance.diplomacyFetched==false)
-			{
-				await Task.Delay(300);
-			}
+	//		while(Alliance.diplomacyFetched==false)
+	//		{
+	//			await Task.Delay(300);
+	//		}
 
-			await throttle.WaitAsync();
-			try
-			{
-				if (cosmosClient != null)
-					return true;
+	//		await throttle.WaitAsync();
+	//		try
+	//		{
+	//			if (cosmosClient != null)
+	//				return true;
 
 
-				// Create a new instance of the Cosmos Client
-				//	clientOptions.Diagnostics.IsDistributedTracingEnabled = false;
-				//		clientOptions.Diagnostics.IsLoggingContentEnabled = false;
-				//		clientOptions.Diagnostics.IsTelemetryEnabled = false;
-				//		clientOptions.Diagnostics.IsLoggingEnabled = false;
+	//			// Create a new instance of the Cosmos Client
+	//			//	clientOptions.Diagnostics.IsDistributedTracingEnabled = false;
+	//			//		clientOptions.Diagnostics.IsLoggingContentEnabled = false;
+	//			//		clientOptions.Diagnostics.IsTelemetryEnabled = false;
+	//			//		clientOptions.Diagnostics.IsLoggingEnabled = false;
 
-					var _cosmosClient = new CosmosClient(EndpointUri, PrimaryKey);
-					database = _cosmosClient.GetDatabase(databaseId);
-					if (database != null)
-					{
-					//	container = await GetContainer(containerId);
-					//	ordersContainer = await GetContainer(ordersContainerId);
-	//					sessionContainer = await GetContainer(sessionContainerId);
-						presenceContainer = await GetContainer(presenceContainerId, "/p");
-					}
-					// write back 
-					cosmosClient = _cosmosClient;
-					return database != null;
-			}
-			catch(Exception e)
-			{
-				Log(e);
-				return false;
-			}
-			finally
-			{
-				throttle.Release();
-			}
+	//				var _cosmosClient = new CosmosClient(EndpointUri, PrimaryKey);
+	//				database = _cosmosClient.GetDatabase(databaseId);
+	//				if (database != null)
+	//				{
+	//				//	container = await GetContainer(containerId);
+	//				//	ordersContainer = await GetContainer(ordersContainerId);
+	////					sessionContainer = await GetContainer(sessionContainerId);
+	//					presenceContainer = await GetContainer(presenceContainerId, "/p");
+	//				}
+	//				// write back 
+	//				cosmosClient = _cosmosClient;
+	//				return database != null;
+	//		}
+	//		catch(Exception e)
+	//		{
+	//			Log(e);
+	//			return false;
+	//		}
+	//		finally
+	//		{
+	//			throttle.Release();
+	//		}
 
-            //            await ScaleContainerAsync();
-            //	await AddItemsToContainerAsync();
-        }
+ //           //            await ScaleContainerAsync();
+ //           //	await AddItemsToContainerAsync();
+ //       }
 		
 		public static Task PublishPlayerInfo(int pid,int cid, string token, string cookie)
 		{

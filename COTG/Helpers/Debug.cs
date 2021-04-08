@@ -75,7 +75,7 @@ namespace COTG
         [System.Runtime.CompilerServices.CallerFilePath] string sourceFilePath = "",
         [System.Runtime.CompilerServices.CallerLineNumber] int sourceLineNumber = 0)
 		{
-            System.Diagnostics.Debug.WriteLine( $"{sourceFilePath}({sourceLineNumber}): {timeStamp}: {memberName} {s}");
+            System.Diagnostics.Debug.WriteLine( $"{sourceFilePath}({sourceLineNumber}): {timeStamp}: {memberName}\n{s}");
 			DumpStack(new StackTrace(1, true));
 			//    System.Diagnostics.Debug.WriteLine(new StackTrace());
 
@@ -88,7 +88,7 @@ namespace COTG
         [System.Runtime.CompilerServices.CallerLineNumber] int sourceLineNumber = 0)
         {
 
-			string msg = $"{sourceFilePath}({sourceLineNumber}): {timeStamp}: {memberName} {s}";
+			string msg = $"{sourceFilePath}({sourceLineNumber}): {timeStamp}: {memberName}\n{s}";
 			Note.Show(s);
 			System.Diagnostics.Trace.WriteLine(msg);
 			DumpStack(new StackTrace(1, true));
@@ -104,7 +104,7 @@ namespace COTG
         [System.Runtime.CompilerServices.CallerLineNumber] int sourceLineNumber = 0)
         {
 
-			var str = $"{sourceFilePath}({sourceLineNumber}): {timeStamp}: {memberName} {s}";
+			var str = $"{sourceFilePath}({sourceLineNumber}): {timeStamp}: {memberName}\n{s}";
 
 			System.Diagnostics.Debug.WriteLine(str);
 			DumpStack(new StackTrace(1, true));
@@ -126,7 +126,7 @@ namespace COTG
 			//  System.Diagnostics.Debug.WriteLine(new StackTrace());
 
 		}
-		[Conditional("TRACE")]
+	//	[Conditional("TRACE")]
         public static void Log(Exception e,
         [System.Runtime.CompilerServices.CallerMemberName] string memberName = "",
         [System.Runtime.CompilerServices.CallerFilePath] string sourceFilePath = "",
@@ -140,20 +140,22 @@ namespace COTG
 #endif
 			Note.Show(e.Message);
 		}
-        [Conditional("TRACE")]
+      //  [Conditional("TRACE")]
         public  static void Exception(string s,
         [System.Runtime.CompilerServices.CallerMemberName] string memberName = "",
         [System.Runtime.CompilerServices.CallerFilePath] string sourceFilePath = "",
         [System.Runtime.CompilerServices.CallerLineNumber] int sourceLineNumber = 0)
         {
-            //
-            System.Diagnostics.Trace.WriteLine($"{sourceFilePath}({sourceLineNumber}): {timeStamp}: {memberName} : Exception: {s}");
+			//
+#if TRACE
+			System.Diagnostics.Trace.WriteLine($"{sourceFilePath}({sourceLineNumber}): {timeStamp}: {memberName} : Exception: {s}");
 			DumpStack(new StackTrace(1, true));
 			//            logger.ZLogError($"{s}\nCaller {memberName}, {sourceFilePath}:{sourceLineNumber}");
+#endif
 			Note.Show(s);
         }
 
-        [Conditional("TRACE")]
+
         public static void Assert(bool v,
             [System.Runtime.CompilerServices.CallerMemberName] string memberName = "",
        [System.Runtime.CompilerServices.CallerFilePath] string sourceFilePath = "",
@@ -162,11 +164,14 @@ namespace COTG
             if (v)
                 return;
 			var str = $"{sourceFilePath}({sourceLineNumber}): {timeStamp}: {memberName} : Assert";
-			ChatTab.L(str);
+			Note.Show(str);
+#if TRACE
+
 			System.Diagnostics.Trace.WriteLine(str);
 			DumpStack(new StackTrace(1, true));
 			System.Diagnostics.Trace.Assert(v);
-        }
+#endif
+		}
 		public static void Verify(bool v
 #if TRACE
 			,

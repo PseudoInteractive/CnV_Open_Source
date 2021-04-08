@@ -141,13 +141,12 @@ namespace COTG.Views
 
 				city.SetShareString(instance.GetShareStringWithJson());
 				city.SaveLayout();
-				if (instance.onComplete.IsOn != CityBuild.isPlanner)
+				if(SettingsPage.autoRearrangeShareStrings)
 				{
-					if (CityBuild.isPlanner)
-						PlannerTab.instance.Close();
-					else
-						PlannerTab.instance.Show();
+					CityBuild._isPlanner = true;
+					PlannerTab.SmartRearrange();
 				}
+				CityBuild._isPlanner = instance.onComplete.IsOn;
 				return true;
 			}
 			else

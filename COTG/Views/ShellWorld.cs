@@ -987,7 +987,7 @@ namespace COTG.Views
 
 							if (World.rawPrior0 != null)
 							{
-								var pData = World.GetInfoPrior(packedId);
+								var pData = World.GetInfoFromPackedId(World.rawPrior0 , packedId);
 								if (pData.data == data.data | pData.type == World.typeBoss | pData.type == World.typeDungeon)
 								{
 									// no change
@@ -1014,7 +1014,7 @@ namespace COTG.Views
 													else
 													{
 														var player = Player.all.GetValueOrDefault(pData.player, Player._default);
-														toolTip += $"\nWas owned by:\n{player.name}\n{player.allianceName}";
+														toolTip += $"\nWas captured from:\n{player.name}\n{player.allianceName}";
 													}
 												}
 												else
@@ -1030,9 +1030,13 @@ namespace COTG.Views
 													{
 														toolTip += "\nWas castled";
 													}
-													else
+													else if(data.isBig)
 													{
 														toolTip += "\nWas rennovated";
+													}
+													else
+													{
+														toolTip += "\nWas flattened";
 													}
 												}
 											}

@@ -70,7 +70,7 @@ namespace COTG.Views
 		public static bool IsShoreSpot(int spot) => City.GetBuild().isOnWater && shoreSpots.Contains((ushort)spot);
 
 		public static Regex shortKeyRegEx = new Regex(@"Shortkey: (.)", RegexOptions.CultureInvariant | RegexOptions.Compiled);
-
+		
 		public enum Action
 		{
 			none,
@@ -572,6 +572,7 @@ namespace COTG.Views
 						
 					}
 					BuildingsOrQueueChanged();
+					PlannerTab.instance.Show();
 				}
 				else
 				{
@@ -579,6 +580,8 @@ namespace COTG.Views
 					b.BuildingsCacheToShareString();
 					b.SaveLayout();
 					GetCity.Post(City.build);
+					if(PlannerTab.instance.isVisible)
+						PlannerTab.instance.Close();
 
 				}
 			}
@@ -591,7 +594,7 @@ namespace COTG.Views
 			JSClient.view.InvokeScriptAsync("cancelbuilds", Array.Empty<string>() );
 		}
 
-		public static void Enqueue( int slvl, int elvl, int bid, int spot)
+		public static Task Enqueue( int slvl, int elvl, int bid, int spot)
 		{
 			//if(slvl == 0 && elvl == 1)
 			//{
@@ -606,7 +609,8 @@ namespace COTG.Views
 			//}
 			//var maxBuildings = postQueueBuildings[bspotTownHall].bl * 10;
 
-			BuildQueue.Enqueue(City.build, (byte)slvl, (byte)elvl, (ushort)bid, (ushort)spot);
+			return BuildQueue.Enqueue(City.build, (byte)slvl, (byte)elvl, (ushort)bid, (ushort)spot);
+		
 		}
 		
 		//private void Upgrade_Click(object sender, RoutedEventArgs e)
@@ -859,7 +863,7 @@ namespace COTG.Views
 			return false;
 		}
 
-		public static async void Build(int id, int bid, bool dryRun)
+		public static async Task Build(int id, int bid, bool dryRun)
 		{
 			var sel = GetBuildingPostQueue(id);
 			if (bid != bidWall && !sel.isEmpty && !SettingsPage.deferredBuild) // special case, wall upgrade from level is allowed as a synonym for build
@@ -947,7 +951,16 @@ namespace COTG.Views
 					else
 					{
 						var counts = CountBuildings();
-						if ( ( counts.count == counts.max && counts.townHallLevel < 10 && !buildDef.isTower && bid!=bidWall ) || buildDef.Thl > counts.townHallLevel)
+						if(counts.townHallLevel == 10 && counts.count == 100)
+						{
+							if (SettingsPage.autoDemoCottages)
+							{
+								var cabin = FindCabinToDemo();
+								if(cabin!= -1)
+									Demolish(cabin, dryRun);
+							}
+						}
+						else if ( ( counts.count == counts.max && counts.townHallLevel < 10 && !buildDef.isTower && bid!=bidWall ) || buildDef.Thl > counts.townHallLevel)
 						{
 							if (!await UpgradeTownHallDialogue( ((counts.count)/10+1 ).Max(buildDef.Thl)))
 								return;
@@ -1369,30 +1382,13 @@ namespace COTG.Views
 									{
 										{
 											// Is there a cabin to remove?
-											
-											var bestSpot = -1;
-											int bestLevel = int.MaxValue;
-											for (int spot = 0; spot < citySpotCount; ++spot)
-											{
-												var bld = postQueueBuildings[spot];
-												if (bld.def.bid == bidCottage)
-												{
-													if (bld.bl < bestLevel)
-													{
-														// is it not being modified?
-														if (HasBuildOps(spot))
-															continue;
 
-														bestLevel = bld.bl;
-														bestSpot = spot;
-													}
-												}
-											}
-											if(bestSpot != -1)
+											int bestSpot = FindCabinToDemo();
+											if (bestSpot != -1)
 											{
 												Status("Will Demolish a Cottage to make room", dryRun);
-												
-												Demolish(bestSpot,dryRun);
+
+												Demolish(bestSpot, dryRun);
 												if (!dryRun)
 													await Task.Delay(400).ConfigureAwait(true);
 												//break;
@@ -1631,11 +1627,35 @@ namespace COTG.Views
 			}
 		}
 
+		private static int FindCabinToDemo()
+		{
+			var bestSpot = -1;
+			int bestLevel = int.MaxValue;
+			for (int spot = 0; spot < citySpotCount; ++spot)
+			{
+				var bld = postQueueBuildings[spot];
+				if (bld.isCabin)
+				{
+					if (bld.bl < bestLevel)
+					{
+						// is it not being modified?
+						if (HasBuildOps(spot))
+							continue;
+
+						bestLevel = bld.bl;
+						bestSpot = spot;
+					}
+				}
+			}
+
+			return bestSpot;
+		}
+
 		private static async Task TogglePlanner()
 		{
 			if (PlannerTab.instance.isVisible)
 			{
-				PlannerTab.instance.Close();
+				CityBuild._isPlanner = false;
 			}
 			else
 			{
@@ -1644,7 +1664,7 @@ namespace COTG.Views
 					if (!GetBuild().isLayoutValid)
 						await ShareString.Show();
 				}
-				PlannerTab.instance.Show();
+				CityBuild._isPlanner = true;
 
 			}
 		}

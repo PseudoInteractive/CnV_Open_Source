@@ -56,6 +56,9 @@ namespace COTG.Views
 		public static string hubCitylistName = "Hubs";
 		public static int reqWood = 160000;
 		public static int reqStone = 205000;
+		public static bool setShareString = true;
+		public static bool autoBuildCabins = true;
+		public static bool autoRearrangeShareStrings= true;
 		public static int reqIron = 200000;
 		public static int reqFood = 200000;
 		public static int maxWood = 250000;
@@ -73,6 +76,8 @@ namespace COTG.Views
 		public static bool useSuggested = true;
 		public static bool wantRaidRepeat=true;
 		public static bool clearRes;
+		public static bool autoDemoCottages=true;
+		public static int startCabinCount = 39;
 		public static float fontScale = 0.5f;
 		public static float musicVolume = 0.5f;
 

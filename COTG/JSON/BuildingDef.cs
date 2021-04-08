@@ -16,6 +16,7 @@ namespace COTG.JSON
 	public sealed class BuildingDef
 	{
 		public static byte idCabin;
+		public static byte idTownHall;
 		public static byte BidToId(int bid)
 		{
 			if (bid == 0)
@@ -65,6 +66,7 @@ namespace COTG.JSON
 					break;
 			}
 			idCabin = BidToId(City.bidCottage);
+			idTownHall = BidToId(City.bidTownHall);
 			//}
 			var ix = new byte[] {
 				 (byte)'-',(byte)(0),

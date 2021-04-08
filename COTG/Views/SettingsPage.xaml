@@ -320,6 +320,7 @@
 							  Margin="4"
 							  IsThreeState="True"
 							  IsChecked="{x:Bind views:SettingsPage.autoBuildOn, Mode=TwoWay}" />
+					
 				</StackPanel>
 			</StackPanel>
 			<StackPanel Style="{StaticResource StackPanelReveal}">

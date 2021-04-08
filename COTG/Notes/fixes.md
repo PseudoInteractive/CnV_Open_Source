@@ -63,4 +63,6 @@
    - Need to fix
  - **Update** When a new city is founded, a Refresh will automatically be triggered
 ### 2021/4/4
- - **Fix** Update City Groups function was misbehaving
+ - **Fix** The _Update City Groups_ function was misbehaving
+### 2021/4/7
+ - **New** Setup City sequence allows you to choose a layout (sharestring)

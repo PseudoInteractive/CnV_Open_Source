@@ -320,7 +320,9 @@ function Contains(a:string,b:string) {
 
 let updateTimeout=0;
 let lastSentBq=-1;
-let bqInFlight=0;
+let bqInFlight = 0;
+let buildingQueues = {};
+let isProcessingBuildQueue = false;
 let lastSentSts:string="";
 let  lastSentBD=0;
 	function compareSts() : boolean
@@ -361,7 +363,7 @@ function bqChecksum(bd:jsonT.Bq[] ) : number
 	}
 function compareBq() : boolean
 	{
-			if(bqInFlight > 0)
+	if (bqInFlight > 0 || isProcessingBuildQueue)
 				return false;
 			bqInFlight=0;
 

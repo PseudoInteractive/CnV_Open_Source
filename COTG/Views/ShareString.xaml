@@ -54,6 +54,9 @@
 				<Button Content="Clear" Click="ClearClick" Style="{StaticResource ButtonMedium}" />
 				<ToggleSwitch x:Name="onComplete" Header="Planner" OffContent="Return to build" OnContent="Go to planner" ToolTipService.ToolTip="This allows you to go to the planner on completion to edit the layout"  />
 
+				<ToggleSwitch Header="Rearrange" OffContent="Skip" OnContent="Smart" IsOn="{x:Bind views:SettingsPage.autoRearrangeShareStrings, Mode=OneWay}" ToolTipService.ToolTip="Moves buildings whose positions don't matter to where existing corresponding buildings are located or to locations without res nodes"  />
+
+				
 			</tk:WrapPanel>
 		</Border>
 		<Border Grid.Row="3" Style="{StaticResource BorderReveal}">

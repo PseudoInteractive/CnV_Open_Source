@@ -84,7 +84,9 @@
         <Setter Property="FontSize" Value="{StaticResource SmallFontSize}" />
         <Setter Property="IsTextScaleFactorEnabled" Value="False"/>
         <Setter Property="SpinButtonPlacementMode" Value="Compact"/>
-	    <Setter Property="BorderThickness" Value="1" />
+		<Setter Property="SmallChange" Value="1"/>
+		<Setter Property="LargeChange" Value="10"/>
+		<Setter Property="BorderThickness" Value="1" />
         <Setter Property="BorderBrush" Value="{ThemeResource SystemControlBackgroundBaseLowRevealBorderBrush}"/>
         <Setter Property="AcceptsExpression" Value="True" />
         <Setter Property="Margin" Value="4"/>

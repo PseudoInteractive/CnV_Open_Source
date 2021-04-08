@@ -86,6 +86,7 @@ namespace COTG
 			InitializeComponent();
 			instance = this;
 			UnhandledException += OnAppUnhandledException;
+			
 			FocusVisualKind = FocusVisualKind.Reveal;
 
 

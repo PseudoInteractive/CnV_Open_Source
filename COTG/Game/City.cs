@@ -19,6 +19,7 @@ using static COTG.Game.City;
 using Microsoft.Toolkit.HighPerformance;
 using Microsoft.Toolkit.HighPerformance.Enumerables;
 using COTG.Draw;
+using System.Threading;
 
 namespace COTG.Game
 {
@@ -112,7 +113,7 @@ namespace COTG.Game
 
 		public static DArray<BuildQueueItem> buildQueue = new DArray<BuildQueueItem>(128);// fixed size to improve threading behaviour and performance
 		public static bool buildQInSync;
-
+		public static ManualResetEventSlim buildQUpdated = new();
 		public const int buildQMax = 16; // this should depend on ministers
 		public static bool buildQueueFull => buildQueue.count >= buildQMax && !SettingsPage.deferredBuild;
 		public static bool wantBuildCommands => buildQueue.count < safeBuildQueueLength;
@@ -380,7 +381,20 @@ namespace COTG.Game
 			}
 			
 		}
-	
+
+		public int FirstBuildingInOverlay(int bid)
+		{
+			if (shareString.IsNullOrEmpty())
+				return 0;
+			for(int i=0;i<City.citySpotCount;++i)
+			{
+				var bO = BidFromOverlay(i);
+				if (bid == bO)
+					return i;
+			}
+			return 0;
+		}
+
 		public int BidFromOverlay((int x, int y) c) => BidFromOverlay(XYToId(c));
 
 		public (int bid, BuildingDef bd) BFromOverlay((int x, int y) c)
@@ -1288,6 +1302,82 @@ namespace COTG.Game
 					ShellPage.instance.cityBox.SelectedItem = _build;
 				}
 			});
+		}
+
+		public enum BuildStage
+		{
+			init,
+			buildingCabins,
+			initialBuildings,
+			teardown,
+			complete
+		}
+		public struct BuildingCount
+		{
+			public int storeHouses;
+			public int cabins;
+			public int townHallLevel;
+			public int total;
+
+		}
+		public BuildingCount GetBuildingCountPostQueue()
+		{
+			BuildingCount rv= new();
+
+			foreach (var bd in CityBuild.postQueueBuildings)
+			{
+				if (bd.isCabin)
+					++rv.cabins;
+				if (bd.bid == bidStorehouse)
+					++rv.storeHouses;
+				if (bd.isBuilding)
+					++rv.total;
+				if (bd.isTownHall)
+					rv.townHallLevel = bd.bl;
+
+			}
+			Log($"{rv.cabins} cabins, {rv.total} {rv.townHallLevel}");
+			return rv;
+		}
+
+		public static BuildStage buildingStage
+		{
+			get
+			{
+				bool hasIncompleteCabins = false;
+				int cabinCount = 0;
+				bool townHallfinished = false;
+				bool hasIncompleteBuildings = false;
+				int buildingCount = 0;
+				foreach (var bd in CityBuild.postQueueBuildings)
+				{
+					if (bd.isCabin)
+					{
+						++cabinCount;
+						if (bd.bl < SettingsPage.cottageLevel)
+							hasIncompleteCabins = true;
+					}
+					else if (bd.bid == bidTownHall)
+						townHallfinished = bd.bl >= 10;
+					else if (bd.isBuilding)
+					{
+						++buildingCount;
+						if (bd.bl < 10)
+							hasIncompleteBuildings = true;
+					}
+				}
+				if (buildingCount < 8)
+					return BuildStage.init;
+				if (cabinCount != 0 && hasIncompleteCabins)
+					return BuildStage.buildingCabins;
+				if (hasIncompleteBuildings && cabinCount == SettingsPage.startCabinCount)
+					return BuildStage.initialBuildings;
+				if (hasIncompleteBuildings || cabinCount > 0)
+					return BuildStage.teardown;
+				return BuildStage.complete;
+
+
+			}
 		}
 	}
 

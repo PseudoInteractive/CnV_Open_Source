@@ -46,7 +46,9 @@ namespace COTG.Views
 		{
 			try
 			{
+
 				var city = City.GetOrAddCity(cid);
+				 city.SetBuild(true);
 				var nameDialog = new CityRename();
 				bool isNew = IsNew(city);
 
@@ -141,14 +143,24 @@ namespace COTG.Views
 						await Post.Send("includes/sNte.php", $"a={HttpUtility.UrlEncode(tags, Encoding.UTF8)}&b={HttpUtility.UrlEncode(city.notes, Encoding.UTF8)}&cid={cid}", World.CidToPlayerOrMe(cid));
 					}
 					Note.Show($"Set name to {lastName}");
+					if (SettingsPage.setShareString)
+					{
+						await ShareString.Show();
+					}
 					if (SettingsPage.setHub)
 					{
 						await HubSettings.Show(cid);
+					}
+					if( SettingsPage.autoBuildCabins )
+					{
+						// are there any cabins here already?
+						BuildTab.Splat();
 					}
 					if (SettingsPage.clearRes)
 					{
 						JSClient.ClearCenter(cid);
 					}
+					
 				}
 
 			}

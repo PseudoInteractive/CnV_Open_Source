@@ -9,6 +9,8 @@ using COTG.Game;
 using COTG.Helpers;
 using System.IO;
 using System.IO.Compression;
+using COTG.Views;
+using Azure.Storage.Blobs.Models;
 
 namespace COTG.Services
 {
@@ -28,9 +30,10 @@ namespace COTG.Services
 				this.id = id;
 			}
 		}
-		static string containerName =>  $"s{JSClient.world}";
+		static string statsContainerName => $"s{JSClient.world}";
+		static string changesContainerName => $"c{JSClient.world}";
 
-		const int timeBetweenSnapshots = 6*60;
+		const int timeBetweenSnapshots = 6 * 60;
 		const int minTimeBetweenSnapshots = timeBetweenSnapshots - 30;
 		const int maxTimeBetweenSnapshots = timeBetweenSnapshots + 30;
 		//const int timeBetweenSnapshots = 5;
@@ -40,10 +43,10 @@ namespace COTG.Services
 		{
 
 
-			BlobContainerClient container = new BlobContainerClient(connectionString, containerName);
+			BlobContainerClient container = new BlobContainerClient(connectionString, statsContainerName);
 			await container.CreateIfNotExistsAsync();
 
-			for (; ;)
+			for (; ; )
 			{
 
 				var info = await container.GetPropertiesAsync();
@@ -56,15 +59,15 @@ namespace COTG.Services
 					// take a snapshot
 					var snap = await Snapshot.GetStats();
 					snap.dateTime = currentT;
-					using(var mem = new MemoryStream())
+					using (var mem = new MemoryStream())
 					{
-						using (var deflate = new DeflateStream(mem, CompressionLevel.Optimal,true))
+						using (var deflate = new DeflateStream(mem, CompressionLevel.Optimal, true))
 						{
-							using (var writer = new BinaryWriter(deflate,Encoding.UTF8,true))
+							using (var writer = new BinaryWriter(deflate, Encoding.UTF8, true))
 							{
 								writer.Write(currentT.Ticks);
 								writer.Write(snap.playerStats.Count);
-								foreach(var pss in snap.playerStats)
+								foreach (var pss in snap.playerStats)
 								{
 									var ps = pss.Value;
 
@@ -76,7 +79,7 @@ namespace COTG.Services
 									writer.Write(ps.alliance);
 									writer.Write(ps.raiding);
 									writer.Write(ps.perContinent.Count);
-									foreach(var c in ps.perContinent)
+									foreach (var c in ps.perContinent)
 									{
 										writer.Write(c.continent);
 										writer.Write(c.cities);
@@ -106,16 +109,16 @@ namespace COTG.Services
 								mem.Seek(0, SeekOrigin.Begin);
 								var str = currentT.ToString("o", System.Globalization.CultureInfo.InvariantCulture.DateTimeFormat);
 								await container.UploadBlobAsync(str, mem);
-								await container.SetMetadataAsync(new Dictionary<string, string>() {{"last", str } });
-							
+								await container.SetMetadataAsync(new Dictionary<string, string>() { { "last", str } });
+
 							}
-							catch(Exception ex)
+							catch (Exception ex)
 							{
 								Debug.Log(ex);
 							}
-							
+
 						}
-						
+
 					}
 
 
@@ -125,7 +128,7 @@ namespace COTG.Services
 				var nextSnapShot = lastWritten + TimeSpan.FromMinutes(AMath.random.Next(minTimeBetweenSnapshots, maxTimeBetweenSnapshots));
 
 
-				await Task.Delay( (nextSnapShot - currentT) );
+				await Task.Delay((nextSnapShot - currentT));
 
 
 
@@ -135,7 +138,7 @@ namespace COTG.Services
 
 		}
 
-		
+
 
 		//for (; ; )
 		//{
@@ -144,6 +147,57 @@ namespace COTG.Services
 		//	return client;
 
 		//}
+		public static async Task<bool> SaveDayChanges(DayChanges changes)
+		{
+
+
+			BlobContainerClient container = new BlobContainerClient(connectionString, changesContainerName);
+			await container.CreateIfNotExistsAsync();
+
+
+			COTG.Debug.Trace("Snapshot");
+			// take a snapshot
+			using (var mem = new MemoryStream())
+			{
+				using (var deflate = new DeflateStream(mem, CompressionLevel.Optimal, true))
+				{
+					using (var writer = new BinaryWriter(deflate, Encoding.UTF8, true))
+					{
+						changes.Save(writer);
+
+
+					}
+					try
+					{
+						mem.Seek(0, SeekOrigin.Begin);
+						var str = changes.dateStr;
+						var success = await container.GetBlobClient(str).UploadAsync(str, new BlobUploadOptions() { Conditions = new BlobRequestConditions() { IfMatch = changes.eTag } });
+						if (success.GetRawResponse().Status != 400)
+						{
+							return false;
+						}
+
+						changes.eTag = success.Value.ETag;
+
+						return true;
+					}
+					catch (Exception ex)
+					{
+						Debug.Log(ex);
+					}
+
+				}
+
+			}
+			return false;
+
+
+
+
+		}
+
+
+
 
 	}
 }

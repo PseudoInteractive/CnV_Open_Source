@@ -17,6 +17,7 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 
+using static COTG.Debug;
 // The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234236
 
 namespace COTG.Views
@@ -37,7 +38,7 @@ namespace COTG.Views
 			records.Clear();
 			foreach (var _i in _items)
 			{
-				var i = _i.ToServerTime();
+				var i = _i;
 				var d = i.Date;
 				WorldRecord rec = null;
 				foreach (var dayRec in records)
@@ -71,7 +72,7 @@ namespace COTG.Views
 
 		private void Now_Click(object sender, RoutedEventArgs e)
 		{
-			tree.SelectedNodes.Clear();
+			listView.SelectedItems.Clear();
 			World.ClearHeatmap();
 		}
 
@@ -80,7 +81,7 @@ namespace COTG.Views
 
 			if (visible)
 			{
-				tree.Focus(FocusState.Programmatic);
+				zoom.Focus(FocusState.Programmatic);
 				snapshots_SelectionChanged(null, null);
 			}
 			else
@@ -97,14 +98,14 @@ namespace COTG.Views
 			DateTimeOffset t1 = AUtil.dateTimeZero;
 			DateTimeOffset t0 = DateTimeOffset.UtcNow;
 
-			var sel = tree.SelectedNodes;
+			var sel = listView.SelectedItems;
 			
 
 			if (sel.Count > 0)
 			{
 				foreach(var i in sel)
 				{
-					var t= (i.Content as WorldRecord).t;
+					var t= (i as WorldRecord).t;
 					if (t < t0)
 						t0 = t;
 					if (t > t1)
@@ -120,7 +121,7 @@ namespace COTG.Views
 
 		private void snapshots_PointerEntered(object sender, PointerRoutedEventArgs e)
 		{
-//			tree.Focus(FocusState.Programmatic);
+		//	listView.Focus(FocusState.Programmatic);
 		}
 
 		private void List_GotFocus(object sender, RoutedEventArgs e)
@@ -137,11 +138,63 @@ namespace COTG.Views
 		{
 
 		}
+
+		private void TextBlock_Tapped(object sender, TappedRoutedEventArgs e)
+		{
+
+		}
+
+		private void listView_ItemClick(object sender, ItemClickEventArgs e)
+		{
+	//		snapshots_SelectionChanged(null, null);
+		}
 	}
+	public class DayChanges
+	{
+		public DateTimeOffset t; // server time, only the date format is non zero
+		public string dateStr => t.ToString("yyyy-MM-dd");
+		public Azure.ETag eTag;
+		
+		public uint[] state; // newest state recorded
+
+		public List<SnapshotChanges> snapshots { get; set; } = new();
+
+		public void Save(BinaryWriter o)
+		{
+			o.Write(t.Ticks);
+			Assert(t.Offset.Ticks == 0);
+			o.Write(snapshots.Count);
+			foreach(var s in snapshots)
+			{
+				s.Save(o);
+			}			
+		}
+	}
+
+	public class SnapshotChanges
+	{
+		public DateTimeOffset t; // server time
+		public string timeStr => t.ToString("HH':'mm':'ss");
+
+		public uint[] deltas;  // pairs of uints, first is offset, second is changed xor value
+
+		public void Save(BinaryWriter o)
+		{
+			o.Write(t.Ticks);
+			Assert(t.Offset.Ticks == 0);
+			
+			o.Write(deltas.Length/2);
+		//	o.Write7BitEncodedInt((byte*)deltas);
+			
+		}
+
+	}
+
 	public class WorldRecord
 	{
 		public DateTimeOffset t;
-		public string tStr => t.ToString();
+		public string dateStr => t.ToString("yyyy-MM-dd");
+		public string timeStr => t.ToString("HH':'mm':'ss");
 		public List<WorldRecord> children { get; set; } = new();
 	}
 

@@ -18,7 +18,7 @@ namespace COTG.Services
         static string fileName => $"gwrd{(JSClient.world==20?"":JSClient.world.ToString())}.zip";
         public static StorageFolder folder => ApplicationData.Current.LocalFolder;
 
-        const int deltasPerBatch = 16;
+        //const int deltasPerBatch = 16;
         // Todo:  Delta encode
         public static uint[] ComputeDelta(uint[] d0, uint[] d1)
         {
@@ -109,6 +109,7 @@ namespace COTG.Services
 								var priorEntry = entries - 1;
 								var priorName = ArchiveName(entries - 1);
 								var prior = zip.GetEntry(priorName);
+							Trace(GetLastWriteUTC(prior).ToString("r"));
 								var byteBuffer = new byte[data.Length * 4];
 								using (var instream = prior.Open())
 								{
@@ -119,7 +120,7 @@ namespace COTG.Services
 								historyBuffer = new uint[entries][];
 								historyBuffer[priorEntry] = delta;
 								var outCount = delta.Length;
-								if (outCount < 2 || JSClient.subId != 0) // don't save file if playing a sub as there might be race conditions
+								if (outCount < 24 || JSClient.subId != 0) // don't save file if playing a sub as there might be race conditions
 								{
 									deltaIsSmall = true;
 								}
@@ -127,7 +128,7 @@ namespace COTG.Services
 								{
 									prior.Delete(); // we want to replace it
 									prior = zip.CreateEntry(priorName);
-									prior.LastWriteTime = JSClient.ServerTime();
+									
 
 									using (var outStream = prior.Open())
 									{
@@ -140,6 +141,7 @@ namespace COTG.Services
 										// overwrite with delta values
 										outStream.Write(bytes, 0, bytes.Length);
 									}
+									prior.LastWriteTime = JSClient.ServerTime();
 								}
 								//then fall through and add the full entry
 
@@ -148,12 +150,13 @@ namespace COTG.Services
 							if (!deltaIsSmall)
 							{
 								var entry = zip.CreateEntry(name);
-								entry.LastWriteTime = JSClient.ServerTime();
+								
 								using (var outStream = entry.Open())
 								{
 									var byteData = data.ConvertToBytesWithoutDungeons();
 									outStream.Write(byteData, 0, byteData.Length);
 								}
+								entry.LastWriteTime = JSClient.ServerTime();
 							}
 
 							
@@ -178,7 +181,8 @@ namespace COTG.Services
 							{
 								foreach (var entry in zip.Entries)
 								{
-									snapshots[counter] = entry.LastWriteTime.ToServerTime() - TimeSpan.FromDays(i);// $"{entry.LastWriteTime.ToUniversalTime().ToString("u")}: {(counter < count - 1 ? $"{lengths[counter] / 4} changes" : " current")} ";
+									var t = GetLastWriteUTC(entry).ToServerTime();
+									snapshots[counter] = t;// $"{entry.LastWriteTime.ToUniversalTime().ToString("u")}: {(counter < count - 1 ? $"{lengths[counter] / 4} changes" : " current")} ";
 									lengths[counter] = (int)entry.Length;
 									++counter;
 								}
@@ -209,7 +213,10 @@ namespace COTG.Services
 
         }
 
-        
+        public static DateTimeOffset GetLastWriteUTC( ZipArchiveEntry e)
+		{
+			return new DateTimeOffset(e.LastWriteTime.Ticks, TimeSpan.Zero).FromServerTime();
+		}
         
         public static async void SetHeatmapDates( DateTimeOffset t0, DateTimeOffset t1)
         {
@@ -240,9 +247,9 @@ namespace COTG.Services
 
                         var dName = ArchiveName(entry);
                         var prior = zip.GetEntry(dName);
-                        if ( prior.LastWriteTime == t1 )
+                        if (GetLastWriteUTC(prior)  == t1 )
 							data1 = data.ToArray();
-						if (prior.LastWriteTime < t0)
+						if (GetLastWriteUTC(prior) < t0)
 							break;;
 
 						//Log($"Delta {dName} {prior.Length} {prior.LastWriteTime}");
@@ -259,7 +266,7 @@ namespace COTG.Services
 						var delta = historyBuffer[entry];
 
 						ApplyDelta(data, delta);
-						if(prior.LastWriteTime <= t1 )
+						if(GetLastWriteUTC(prior) <= t1 )
 						{
 							int count = delta.Length / 2;
 							for (int i = 0; i < count; ++i)
@@ -271,11 +278,12 @@ namespace COTG.Services
 
 						}
                     }
+					// "erase" changes not in the valid range
 					for(int i=0;i<World.worldDim*World.worldDim;++i)
 					{
 						if(changeMask[i] == false)
 						{
-							data[i] = World.raw[i];
+							data[i] = data1[i];
 						}
 					}
                     World.CreateChangePixels(data,data1);

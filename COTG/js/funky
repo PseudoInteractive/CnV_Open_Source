@@ -18059,6 +18059,7 @@ function outer() {
             if (cid == 0)
                 return;
             bqInFlight = 0;
+            isProcessingBuildQueue = false;
             lastSentBq = -1;
             lastSentBD = -1;
             ClearCity();
@@ -41512,7 +41513,7 @@ function outer() {
                         LogBuildQueueFull();
                     else
                         __log("Upgrade " + e5w);
-                    buildEx(__cid, iter + 1, queue);
+                    buildExDelayed(__cid, iter + 1, queue);
                     return;
                 });
             }
@@ -42678,7 +42679,7 @@ function outer() {
                     __log("Build Castle Failed");
                 }
                 if (queue != null) {
-                    buildEx(__cid, iter + 1, queue);
+                    buildExDelayed(__cid, iter + 1, queue);
                 }
                 return;
             });
@@ -42761,7 +42762,7 @@ function outer() {
                             city.bq = A6w;
                         X2('7' | 5);
                         if (queue != null)
-                            buildEx(__cid, iter + 1, queue);
+                            buildExDelayed(__cid, iter + 1, queue);
                     }
             });
         }
@@ -50302,14 +50303,19 @@ function outer() {
                 }
             }
         }
+        function buildExDelayed(__cid, iter, queue) {
+            buildEx(__cid, iter, queue);
+        }
         function buildEx(__cid, iter, queue) {
             if (iter >= queue.length) {
+                delete buildingQueues[__cid];
                 if (__cid === cid) {
                     sendBuildingData();
                     updateBuildQueue();
                     redrawCity();
                     ProcessBuuPoll();
                 }
+                processNextQueue();
                 return;
             }
             let bXY = queue[iter][0];
@@ -50476,7 +50482,7 @@ function outer() {
                                         else {
                                             __log("build " + s7w);
                                         }
-                                        buildEx(__cid, iter + 1, queue);
+                                        buildExDelayed(__cid, iter + 1, queue);
                                         return;
                                     });
                                 }
@@ -50515,7 +50521,7 @@ function outer() {
                                         else {
                                             __log("build " + s7w);
                                         }
-                                        buildEx(__cid, iter + 1, queue);
+                                        buildExDelayed(__cid, iter + 1, queue);
                                         return;
                                     });
                                 }
@@ -50556,7 +50562,7 @@ function outer() {
                                         else {
                                             __log("downgrade " + s7w);
                                         }
-                                        buildEx(__cid, iter + 1, queue);
+                                        buildExDelayed(__cid, iter + 1, queue);
                                         return;
                                     });
                                 }
@@ -50593,7 +50599,7 @@ function outer() {
                                     else {
                                         __log("demo " + s7w);
                                     }
-                                    buildEx(__cid, iter + 1, queue);
+                                    buildExDelayed(__cid, iter + 1, queue);
                                     return;
                                 });
                             }
@@ -50624,13 +50630,29 @@ function outer() {
                 DoPoll2(500);
             }
         };
+        function processNextQueue() {
+            let keys = Object.keys(buildingQueues);
+            if (keys.length > 0) {
+                let __cid = keys[0];
+                buildEx(Number(__cid), 0, buildingQueues[__cid]);
+            }
+            else {
+                isProcessingBuildQueue = false;
+            }
+        }
         window['buildex'] = function (__bop) {
             clearIdle();
             let bops = JSON.parse(__bop);
             for (let key in bops) {
                 let queue = bops[key];
                 let __cid = Number(key);
-                buildEx(__cid, 0, queue);
+                if (!buildingQueues.hasOwnProperty(key))
+                    buildingQueues[key] = [];
+                Array.prototype.push.apply(buildingQueues[key], queue);
+            }
+            if (!isProcessingBuildQueue) {
+                isProcessingBuildQueue = true;
+                processNextQueue();
             }
         };
         function h7V() { }
@@ -68576,6 +68598,8 @@ function Contains(a, b) {
 let updateTimeout = 0;
 let lastSentBq = -1;
 let bqInFlight = 0;
+let buildingQueues = {};
+let isProcessingBuildQueue = false;
 let lastSentSts = "";
 let lastSentBD = 0;
 function compareSts() {
@@ -68606,7 +68630,7 @@ function compareBD() {
     return b0 !== b1;
 }
 function compareBq() {
-    if (bqInFlight > 0)
+    if (bqInFlight > 0 || isProcessingBuildQueue)
         return false;
     bqInFlight = 0;
     let b0 = bqChecksum(city.bq);

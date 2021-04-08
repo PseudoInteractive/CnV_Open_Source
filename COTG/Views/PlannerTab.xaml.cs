@@ -19,12 +19,13 @@ namespace COTG.Views
 		{
 			if (visible)
 			{
-				CityBuild._isPlanner = true;
+//				CityBuild._isPlanner = true;
+				statsDirty = true;
 				BuildingsChanged();
 			}
 			else
 			{
-				CityBuild._isPlanner = false;
+//				CityBuild._isPlanner = false;
 
 			}
 		}
@@ -47,7 +48,7 @@ namespace COTG.Views
 		public static void UpdateStats()
 		{
 			if (statsDirty ==false || !IsVisible())
-				return;
+			  return;
 			statsDirty = false;
 			// recruit speeds
 			var city = City.GetBuild();
@@ -287,9 +288,13 @@ namespace COTG.Views
 			return rv;
 		}
 
-		private void SmartRearrange(object sender, RoutedEventArgs e)
+		void SmartRearrange(object _, RoutedEventArgs __)
 		{
-			var build = City.GetBuild();
+			SmartRearrange();
+		}
+		public static void SmartRearrange()
+		{
+				var build = City.GetBuild();
 
 			var bdc = City.buildingsCache;
 			var bds = build.buildings;
@@ -410,7 +415,7 @@ namespace COTG.Views
 		private void Done(object sender, RoutedEventArgs e)
 		{
 			CityBuild._isPlanner = false;
-			PlannerTab.instance.Close();
+		//	PlannerTab.instance.Close();
 		}
 	}
 }

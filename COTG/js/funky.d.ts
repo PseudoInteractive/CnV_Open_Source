@@ -712,6 +712,8 @@ declare function Contains(a: string, b: string): boolean;
 declare let updateTimeout: number;
 declare let lastSentBq: number;
 declare let bqInFlight: number;
+declare let buildingQueues: {};
+declare let isProcessingBuildQueue: boolean;
 declare let lastSentSts: string;
 declare let lastSentBD: number;
 declare function compareSts(): boolean;

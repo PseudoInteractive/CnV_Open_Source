@@ -408,7 +408,7 @@ namespace COTG.Game
 				{
 					var i = y * worldDim + x;
 					var d0 = prior[i];
-					var d1 = raw[i];
+					var d1 = prior1[i];
 					//if (d0 == 0)
 					//{
 					//	// no change
@@ -429,7 +429,7 @@ namespace COTG.Game
 							pixels[i * 8 + 7] = 0x55;
 							continue;
 						}
-						uint color = WorldHelper.RGB16(0x40, 0x40, 0x40);
+						uint color = WorldHelper.RGB16(0x80, 0x80, 0x80);
 						if (dtype0 == typeCity || dtype1 == typeCity)
 						{
 							var owner0 = d0 & playerMask;
@@ -453,6 +453,10 @@ namespace COTG.Game
 							{
 								// gained one
 								color = WorldHelper.RGB16(0, 0xA0, 0);
+							}
+							else
+							{
+								color = WorldHelper.RGB16(0x90, 0x90, 0);  // no change
 							}
 							// Todo: handle more cases
 						}
@@ -1115,7 +1119,7 @@ namespace COTG.Game
 
 			state = State.completed;
 			// Queue up another one
-			App.QueueIdleTask(RefreshWorldDataIdleTask, 5 * 60 * 1000);  // 5 minutes - todo: change this to 30 minutes
+			App.QueueIdleTask(RefreshWorldDataIdleTask, 30 * 60 * 1000);  // 5 minutes - todo: change this to 30 minutes
 
 		}
 

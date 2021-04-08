@@ -28,6 +28,8 @@ using COTG.JSON;
 using System.Collections.ObjectModel;
 using Microsoft.Toolkit.HighPerformance.Enumerables;
 using Windows.UI.Xaml.Media.Imaging;
+using static COTG.Game.City;
+using static COTG.Views.CityBuild;
 
 namespace COTG.Views
 {
@@ -50,7 +52,10 @@ namespace COTG.Views
 			instance = this;
 			this.InitializeComponent();
 		}
-		//private void ZoomedInGotFocus(object sender, RoutedEventArgs e)
+
+		public string buildingStage => City.buildingStage.ToString();
+			
+			//private void ZoomedInGotFocus(object sender, RoutedEventArgs e)
 		//{
 		//	Log("in focus");
 		//	zoom.StartBringIntoView();
@@ -290,9 +295,76 @@ namespace COTG.Views
 			}
 		}
 
-	
+		private void Splat(object sender, RoutedEventArgs e)
+		{
+			Splat();
+		}
 
-	
+		public static async void Splat()
+		{
+			var city = City.GetBuild();
+			
+			switch (City.buildingStage)
+			{
+				case City.BuildStage.init:
+					{
+						var bc = city.GetBuildingCountPostQueue();
+						if (bc.townHallLevel < 4)
+							await Enqueue(bc.townHallLevel, 4, bidTownHall, bspotTownHall);
+						if (bc.cabins < SettingsPage.startCabinCount)
+						{
+							// find a good spot for a cabin
+							for (var y = span0; y <= span1; ++y)
+							{
+								for (var x = span0; x <= span1; ++x)
+								{
+									var c = (x, y);// (int x, int y) c = RandCitySpot();
+									if (!IsBuildingSpot(c))
+										continue;
+									if (CityBuild.postQueueBuildings[City.XYToId(c)].isEmpty && (city.BidFromOverlay(c) == 0))
+									{
+										await CityBuild.Build(XYToId(c), bidCottage, false);
+										++bc.cabins;
+									}
+									if (bc.cabins >= SettingsPage.startCabinCount)
+										goto done;
+								}
+							}
+						done:;
+							if (bc.storeHouses == 0)
+							{
+								var storage = city.FirstBuildingInOverlay(bidStorehouse);
+								if (storage != 0)
+								{
+									await CityBuild.Build(storage, bidStorehouse, false);
+								}
+							}
+
+						}
+
+					}
+					break;
+				case City.BuildStage.buildingCabins:
+					Note.Show("Building cabins, please come back later");
+					break;
+				case City.BuildStage.initialBuildings:
+					{
+						//var c = RandomCitySpot();
+					}
+					break;
+				case City.BuildStage.teardown:
+					break;
+				case City.BuildStage.complete:
+					break;
+				default:
+					break;
+			}
+		}
+
+		private static (int x, int y) RandomCitySpot()
+		{
+			return (x: AMath.random.Next(City.citySpan), y: AMath.random.Next(City.citySpan));
+		}
 	}
 
 	public class BuildItemTemplateSelector : Windows.UI.Xaml.Controls.DataTemplateSelector

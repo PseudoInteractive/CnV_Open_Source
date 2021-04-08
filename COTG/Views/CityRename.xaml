@@ -5,9 +5,11 @@
     xmlns:local="using:COTG.Views"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-			   xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
-			   mc:Ignorable="d"
+	   xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
+		   mc:Ignorable="d"
+	 xmlns:views="using:COTG.Views"
     Title="Name (try to avoid '-')"
+	 xmlns:winui="using:Microsoft.UI.Xaml.Controls"
     PrimaryButtonText="Apply"
     CloseButtonText="Cancel"
     PrimaryButtonClick="ContentDialog_PrimaryButtonClick"
@@ -32,6 +34,9 @@
 		<ToggleSwitch Header="Tags" IsOn="{x:Bind local:SettingsPage.applyTags, Mode=TwoWay}" OnContent="Apply" OffContent="Leave"/>
 		<ToggleSwitch Header="Hub" IsOn="{x:Bind local:SettingsPage.setHub, Mode=TwoWay}" OnContent="Set" OffContent="Leave"/>
 		<ToggleSwitch Header="Res" IsOn="{x:Bind local:SettingsPage.clearRes, Mode=TwoWay}" OnContent="Clear" OffContent="Leave"/>
+		<ToggleSwitch Header="ShareString" IsOn="{x:Bind local:SettingsPage.setShareString, Mode=TwoWay}" OnContent="Set" OffContent="Skip" />
+		<ToggleSwitch Header="Build Cabins" IsOn="{x:Bind local:SettingsPage.autoBuildCabins, Mode=TwoWay}" OnContent="Build" OffContent="Skip" />
+		<winui:NumberBox Header="Cabins" Value="{x:Bind views:SettingsPage.startCabinCount}" Style="{StaticResource NumberBoxSmall}"/>
 		</controls:WrapPanel>
     </Grid>
 </ContentDialog>

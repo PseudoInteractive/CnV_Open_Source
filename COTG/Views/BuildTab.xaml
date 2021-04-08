@@ -6,9 +6,11 @@
                xmlns:game="using:COTG.Game"
                xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                xmlns:cotg="using:COTG"
-               xmlns:winui="using:Windows.UI.Xaml.Controls"
+			   xmlns:win="using:Windows.UI.Xaml.Controls"
+  			    xmlns:winui="using:Microsoft.UI.Xaml.Controls"
                xmlns:tk="using:Microsoft.Toolkit.Uwp.UI.Controls"
                xmlns:views="using:COTG.Views"
+
 			   xmlns:wuxdata="using:Windows.UI.Xaml.Data"
 			   TabNavigation="Once"
 			  IsTabStop="True"
@@ -16,12 +18,12 @@
 	<views:UserTab.Resources>
 	
 		<DataTemplate x:Key="BuildTabTemplate" x:DataType="views:BuildItemView">
-			<winui:TreeViewItem ItemsSource="{x:Bind queue}">
+			<win:TreeViewItem ItemsSource="{x:Bind queue}">
 			<StackPanel Orientation="Horizontal" Margin="4" MinWidth="200">
 				<Canvas Background="{x:Bind brush}" Width="32" Height="32" />
 				<TextBlock Text="{x:Bind text}" />
 			</StackPanel>
-			</winui:TreeViewItem>
+			</win:TreeViewItem>
 		</DataTemplate>
 
 
@@ -36,14 +38,18 @@
 			<RowDefinition Height="*"/>
 		</Grid.RowDefinitions>
 		<StackPanel Orientation="Horizontal" BorderThickness="2" >
+			<TextBlock Text="{x:Bind buildingStage,Mode=OneWay}" />
+			<Button Margin="4" Content="Do the stuff" Click="Splat" Style="{StaticResource ButtonSmall}" ToolTipService.ToolTip="Does all the things and all of the stuff" />
 			<Button Margin="4" Content="Clear Queue" Click="ClearQueue" Style="{StaticResource ButtonSmall}" />
 			<Button Margin="4" Content="Cancel Selected" Click="ClearSelected" Style="{StaticResource ButtonSmall}" />
+			<ToggleSwitch Header="Auto Cabins" IsOn="{x:Bind views:SettingsPage.autoDemoCottages,Mode=TwoWay}" OnContent="Demo" OffContent="Leave" ToolTipService.ToolTip="If On, cabins will be automatically destroyed when you place a building into a city with 100 buildings"  />
+		
 		</StackPanel>
-		<winui:TreeView Grid.Row="1" x:Name="zoom"  CanReorderItems="False"  SelectionMode="Multiple" IsTabStop="True" CanBeScrollAnchor="True" BorderThickness="1" BorderBrush="{ThemeResource SystemControlBackgroundBaseLowRevealBorderBrush}"
+		<win:TreeView Grid.Row="1" x:Name="zoom"  CanReorderItems="False"  SelectionMode="Multiple" IsTabStop="True" CanBeScrollAnchor="True" BorderThickness="1" BorderBrush="{ThemeResource SystemControlBackgroundBaseLowRevealBorderBrush}"
  TabNavigation="Once" CanDragItems="False" AllowDrop="False" ItemTemplate="{StaticResource BuildTabTemplate}" 
 						ItemsSource="{x:Bind cities}" ItemInvoked="zoom_ItemInvoked" VerticalAlignment="Top" 
 						>
-		</winui:TreeView>
+		</win:TreeView>
 
 	</Grid>
 </views:UserTab>

@@ -126,7 +126,10 @@ namespace COTG.Services
         {
             // TODO WTS: This is a sample to demonstrate how to add a UserActivity. Please adapt and move this method call to where you consider convenient in your app.
             // TODO restore       await UserActivityService.AddSampleUserActivity();
-            await ThemeSelectorService.SetRequestedThemeAsync();
+   //         Application.ThreadException += (sender, args) =>
+			//{
+			//	Crashes.TrackError(args.Exception);
+			//};
 			if (!AppCenter.Configured)
 			{
 				AppCenter.Start("0b4c4039-3680-41bf-b7d7-685eb68e21d2",
@@ -139,6 +142,7 @@ namespace COTG.Services
 					ErrorReport crashReport = await Crashes.GetLastSessionCrashReportAsync();
 				}
 			}
+			await ThemeSelectorService.SetRequestedThemeAsync();
 
 			// TODO WTS: Configure and enable Azure Notification Hub integration.
 			//  1. Go to the HubNotificationsService class, in the InitializeAsync() method, provide the Hub Name and DefaultListenSharedAccessSignature.

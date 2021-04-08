@@ -91,6 +91,9 @@ namespace COTG.JSON
 		public string buildingName => def.Bn;
 		public bool isBuild => slvl == 0 && elvl != 0;
 		public static BuildQueueItem nop = new BuildQueueItem(255, 255, 0, 0);
+		internal bool isBuilding => !isRes;
+
+		public string bn => def.Bn;
 		public bool isUpgrade => slvl < elvl && slvl !=0;
 		public BuildOp op => 
 			isDemo ? BuildOp.demo : 
@@ -166,7 +169,7 @@ namespace COTG.JSON
 			BuildTab.RemoveOp(queue[id], cid);
 			queue.RemoveAt(id);
 		}
-	     private static SemaphoreSlim throttle = new SemaphoreSlim(1);
+	     public static SemaphoreSlim throttle = new SemaphoreSlim(1);
 
 		public async void Process(int initialDelay=0)
 		{
@@ -204,15 +207,18 @@ namespace COTG.JSON
 
 						if (cid == City.build)
 						{
-							// every two seconds commands will only be queud on changes
+							// every 4 seconds commands will only be queud on changes
 							delay = 4000;
 							// process pending queue first if appropriate
 							//	ququeCount= City.buildQueue.count;
+						//	await City.buildQUpdated;
+
 							if (City.buildQInSync)
 							{
 								cotgQ = City.buildQueue;
 								cotgQLength = cotgQ.count;
 								queueValid = true;
+								Log(cotgQ.ToString());
 							}
 						}
 						else
@@ -337,7 +343,7 @@ namespace COTG.JSON
 												var demoPending = (cotgQ != null) && cotgQ.Any(a => a.isDemo && a.bspot == i.bspot);
 												if (!demoPending)
 												{
-													Trace($"Invalid build: {city.buildings[i.bspot].bid},{city.buildings[i.bspot].bl} => {i.bid}");
+													Trace($"Invalid build: {i.ToString()} <=> {city.buildings[i.bspot].bid} {city.buildings[i.bspot].name},{city.buildings[i.bspot].bl}");
 
 													// cancel this order
 													RemoveAt(offset);
@@ -409,8 +415,8 @@ namespace COTG.JSON
 
 									// issue this command
 									RemoveAt(offset);
-									if (cid == City.build)
-										City.buildQueue.Add(i);
+//									if (cid == City.build)
+//										City.buildQueue.Add(i);
 									if(cotgQ == null)
 										cotgQ = new DArray<BuildQueueItem>(128);
 									cotgQ.Add(i);
@@ -432,11 +438,14 @@ namespace COTG.JSON
 										while (tOffset < queue.count)
 										{
 											var i = queue.v[tOffset];
-											if ((i.isUpgrade && i.bspot == City.bspotTownHall) || (i.isDemo && !i.def.isTower))
+											if ((i.isUpgrade && i.bspot == City.bspotTownHall) || (i.isDemo && i.isBuilding && !i.def.isTower))
 											{
 												RemoveAt(tOffset);
-												if (cid == City.build)
-													City.buildQueue.Add(i);
+												//	if (cid == City.build)
+												//		City.buildQueue.Add(i);
+												cotgQ.Add(i);
+												++cotgQLength;
+
 												Serialize(ref sb, i, ref qFirst);
 												break;
 											}
@@ -474,7 +483,7 @@ namespace COTG.JSON
 
 							}
 
-							if (!queue.Any())
+							if (queueValid && !queue.Any())
 							{
 								all.TryRemove(cid, out _);
 								BuildTab.Clear(cid);
@@ -508,7 +517,8 @@ namespace COTG.JSON
 //				if(delay > 60*1000 )
 				if(city.cid!= City.build)
 					Trace($"iterate: Q {queue.count} delay {delay} city {city.nameAndRemarks}");
-				await Task.Delay(delay); // todo estimate this
+				
+				await Task.Delay(delay); 
 			}
 
 		}
@@ -538,7 +548,7 @@ namespace COTG.JSON
 						//}
 						if (cotgQLength > 0)
 						{
-							delay = delay.Max(JSClient.ServerTimeOffset(bq[cotgQLength - 1].GetAsInt64("de"))); // recover after 2 seconds
+							delay = delay.Max(JSClient.ServerTimeOffset(bq[(cotgQLength) / 2].GetAsInt64("de"))); // recover after 2 seconds
 							if (delay > 5 * 32 * 1000) /// never more than 5 minutes please
 							{
 								//	Assert(false);
@@ -546,7 +556,7 @@ namespace COTG.JSON
 								delay = 5 * 32 * 1000;
 							}
 
-							if ( (City.safeBuildQueueLength > cotgQLength))
+							if ((City.safeBuildQueueLength > cotgQLength))
 							{
 								cotgQ = new DArray<BuildQueueItem>(128);
 								foreach (var cmd in bq.EnumerateArray())
@@ -563,6 +573,11 @@ namespace COTG.JSON
 							}
 						}
 					}
+					else
+					{
+						Assert(false);
+
+					}
 				}
 
 			}
@@ -574,15 +589,25 @@ namespace COTG.JSON
 
 		}
 
-		public static CityBuildQueue Get(int cid)
+		public static async Task<CityBuildQueueLock> Get(int cid)
 		{
-			if (all.TryGetValue(cid, out var rv))
-				return (rv);
-			rv = new CityBuildQueue() { cid = cid };
-			if (all.TryAdd(cid, rv))
-				return (rv);
-			else
-				return (all[cid]); // someone else added
+			await throttle.WaitAsync();
+			try
+			{
+				if (all.TryGetValue(cid, out var rv))
+					return new CityBuildQueueLock(rv);
+				rv = new CityBuildQueue() { cid = cid };
+				if (all.TryAdd(cid, rv))
+					return new CityBuildQueueLock(rv);
+				else
+					return new CityBuildQueueLock(all[cid]); // someone else added
+			}catch(Exception e)
+			{
+				Log(e);
+			}
+			return new CityBuildQueueLock(null);
+
+
 		}
 
 
@@ -622,7 +647,20 @@ namespace COTG.JSON
 			}
 		}
 	}
+	public class CityBuildQueueLock : IDisposable
+	{
+		public CityBuildQueue cityBuildQueue;
 
+		public CityBuildQueueLock(CityBuildQueue cityBuildQueue)
+		{
+			this.cityBuildQueue = cityBuildQueue;
+		}
+
+		public void Dispose()
+		{
+			CityBuildQueue.throttle.Release();
+		}
+	}
 	public static class BuildQueue
 	{
 		static ThreadPoolTimer saveTimer;
@@ -633,7 +671,7 @@ namespace COTG.JSON
 		static string fileName => $"buildQueue{JSClient.world}_{Player.myName}.json";
 
 		public static bool initialized => saveTimer != null;
-		public static async void Enqueue(this int cid, byte slvl, byte elvl, ushort bid, ushort spot)
+		public static async Task Enqueue(this int cid, byte slvl, byte elvl, ushort bid, ushort spot)
 		{
 			Assert(initialized);
 			var op = new BuildQueueItem(slvl, elvl, bid, spot);
@@ -658,12 +696,14 @@ namespace COTG.JSON
 					return;
 				}
 			}
-			var pending = CityBuildQueue.Get(cid);
-			pending.Enqueue(op);
-			SaveNeeded();
-			
-			pending.Process();
-			
+			using (var pending = await CityBuildQueue.Get(cid))
+			{
+				pending.cityBuildQueue.Enqueue(op);
+
+				SaveNeeded();
+
+				pending.cityBuildQueue.Process();
+			}
 		}
 
 		public static void CancelBuildOp(int cid,in  BuildQueueItem i)
@@ -714,7 +754,7 @@ namespace COTG.JSON
 		{
 			SaveTimerGo(false);
 		}
-		static internal void SaveTimerGo(bool force)
+		static internal async Task SaveTimerGo(bool force)
 		{
 			if (buildActionCounter == 0)
 			{
@@ -729,17 +769,26 @@ namespace COTG.JSON
 			
 				try
 				{
+				string str;
 					if (CityBuildQueue.all.Any())
 					{
-						var str = Serialize();
-						Log($"SaveQueue: {str}");
+						await CityBuildQueue.throttle.WaitAsync();
+					try
+					{
+						 str = Serialize();
+					}
+					finally
+					{
+						CityBuildQueue.throttle.Release();
+					}
+					Log($"SaveQueue: {str}");
 						
 					 SaveBuildQueue(str);
 
 					}
 					else
 					{
-						Cosmos.ClearBuildQueue();
+					//	Cosmos.ClearBuildQueue();
 					}
 				}
 				catch (Exception ex)
@@ -787,6 +836,7 @@ namespace COTG.JSON
 			}
 			catch(Exception e)
 			{
+				Log(e);
 			}
 			return string.Empty;
 		}
@@ -847,21 +897,31 @@ namespace COTG.JSON
 			var data = await LoadBuildQueue();
 			if (!data.IsNullOrEmpty())
 			{
+			//	await CityBuildQueue.throttle.WaitAsync();
 				// Todo:  Ensure no building occurs yet
 				// Load from JSon, too bad we can't do UTF8
-				var js = JsonDocument.Parse(data);
-				foreach (var jsCity in js.RootElement.EnumerateObject())
+				try
 				{
-					var cid = int.Parse(jsCity.Name);
-					var cq = CityBuildQueue.Get(cid);
-					foreach (var d in jsCity.Value.EnumerateArray())
-					{
-						var op = new BuildQueueItem(d[2].GetByte(), d[3].GetByte(), d[1].GetUInt16(), d[0].GetUInt16());
-						cq.Enqueue(op);
-					}
-					Log($"{cid} {cq.queue.count}");
-					cq.Process(AMath.random.Next(1024, 3 * 1024)); // wait 1 - 3 seconds.
 
+					var js = JsonDocument.Parse(data);
+					foreach (var jsCity in js.RootElement.EnumerateObject())
+					{
+						var cid = int.Parse(jsCity.Name);
+						using (var cq = await CityBuildQueue.Get(cid))
+						{
+							foreach (var d in jsCity.Value.EnumerateArray())
+							{
+								var op = new BuildQueueItem(d[2].GetByte(), d[3].GetByte(), d[1].GetUInt16(), d[0].GetUInt16());
+								cq.cityBuildQueue.Enqueue(op);
+							}
+							Log($"{cid} {cq.cityBuildQueue.queue.count}");
+							cq.cityBuildQueue.Process(AMath.random.Next(1024, 3 * 1024)); // wait 1 - 3 seconds.
+						}
+					}
+				}
+				finally
+				{
+				//	CityBuildQueue.throttle.Release();
 				}
 			}
 

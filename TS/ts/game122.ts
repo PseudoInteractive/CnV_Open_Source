@@ -18653,6 +18653,7 @@ function outer(){
 	 return;
 
 	bqInFlight=0;
+	 isProcessingBuildQueue=false;
 	lastSentBq=-1;
 	lastSentBD=-1;
 	ClearCity();
@@ -44237,7 +44238,7 @@ function outer(){
 					else if (e5w == 4) LogBuildQueueFull();
 					else __log("Upgrade " +e5w );
 					
-					buildEx(__cid,iter+1, queue);		
+					buildExDelayed(__cid,iter+1, queue);
 					return;
 				});
 			}
@@ -45632,7 +45633,7 @@ function outer(){
 				if(queue!=null)
 	{
 
-				buildEx(__cid,iter+1, queue);
+					buildExDelayed(__cid,iter+1, queue);
 		}
 			return;
 
@@ -45708,7 +45709,7 @@ function outer(){
 							city.bq = A6w;
 						X2('7' | 5);
 						if(queue != null)
-							buildEx(__cid,iter+1,queue);
+							buildExDelayed(__cid,iter+1,queue);
 					}
 			});
 		}
@@ -53933,12 +53934,16 @@ function outer(){
 	}
  */
 
-
+	function buildExDelayed(__cid: number, iter: number, queue: [number[]]) {
+//		setTimeout(() => buildEx(__cid,iter,queue), 1000);
+		buildEx(__cid, iter, queue);
+	}
   // The only accepted options are 0, 2, 3
   	function buildEx(__cid:number, iter: number, queue : [number[]] )
    {
 		if(iter >= queue.length )
 		 {
+			delete	buildingQueues[__cid];
 			   if(__cid === cid)
 				{
 					sendBuildingData();
@@ -53947,10 +53952,14 @@ function outer(){
 					ProcessBuuPoll();
 				
 				}
+			processNextQueue();
 
 	//	   buildQTouch(__cid);
 			 return; // finished
 		}
+
+		
+
 		let bXY = queue[iter][0];
         let bId = queue[iter][1];
 		let startLevel = queue[iter][2];
@@ -54161,7 +54170,7 @@ function outer(){
 						LogBuildQueueFull(); 
 				} else { __log("build " + s7w); }
 
-												buildEx(__cid,iter+1, queue);
+												buildExDelayed(__cid,iter+1, queue);
 												return;
 
 											});
@@ -54196,10 +54205,10 @@ function outer(){
 													}
 												}
 												else if (s7w == 4) { 
-										LogBuildQueueFull(); }
-			else { __log("build " + s7w); }
+													LogBuildQueueFull(); }
+												else { __log("build " + s7w); }
 
-												buildEx(__cid,iter+1, queue);
+												buildExDelayed(__cid,iter+1, queue);
 												return;
 
 											});
@@ -54249,7 +54258,7 @@ function outer(){
 												{
 														__log("downgrade " + s7w); 
 												}
-												buildEx(__cid,iter+1, queue);
+											buildExDelayed(__cid,iter+1, queue);
 												return;
 
 										});
@@ -54291,7 +54300,7 @@ function outer(){
 											{
 														__log("demo " + s7w); 
 												}
-										buildEx(__cid,iter+1, queue);
+										buildExDelayed(__cid,iter+1, queue);
 										return;
 
 									});
@@ -54356,6 +54365,24 @@ function outer(){
 	 // buildEx(bId,bXY,city.bd[bXY].bl,0,cid);
   // }
 
+	
+
+  function processNextQueue()
+  {
+	  let keys = Object.keys(buildingQueues);
+		if(keys.length > 0)
+		{
+			
+			let __cid = keys[0];
+			buildEx(Number(__cid), 0, buildingQueues[__cid]);
+
+		}
+  else
+		{
+			isProcessingBuildQueue=false;
+		}
+  }
+
    window['buildex'] = function ( __bop : string)
    {
     clearIdle();
@@ -54364,8 +54391,19 @@ function outer(){
 	{
 		let queue = bops[key];
 		let __cid = Number(key);
-		buildEx(__cid,0,queue);
+		 if (!buildingQueues.hasOwnProperty(key))
+			 buildingQueues[key] =  [];
+		 Array.prototype.push.apply(buildingQueues[key], queue)
+		 
+		
+	 }
+	 if (!isProcessingBuildQueue)
+	{
+		 isProcessingBuildQueue = true;
+		 processNextQueue();
+		 
 	}
+
 	}
 
 	function h7V() { }
