@@ -118,10 +118,10 @@ namespace COTG.Helpers
 					{
 						JSClient.ChangeCity(cid, false);
 					}
-					if (cityView != COTG.Views.ShellPage.IsCityView())
-					{
-						JSClient.ChangeView(cityView);
-					}
+					//if (cityView != COTG.Views.ShellPage.IsCityView())
+					//{
+					//	JSClient.ChangeView(Views.ShellPage.ViewMode.city);
+					//}
 				}
 				else
 				{

@@ -6,8 +6,8 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:tk="using:Microsoft.Toolkit.Uwp.UI.Controls"
-	xmlns:winui="using:Windows.UI.Xaml.Controls"
-	xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
+	xmlns:win="using:Windows.UI.Xaml.Controls"
+	xmlns:winui="using:Microsoft.UI.Xaml.Controls"
     mc:Ignorable="d"
 	 xmlns:views="using:COTG.Views"
     Title="City Planner String"
@@ -59,11 +59,15 @@
 				
 			</tk:WrapPanel>
 		</Border>
+		
 		<Border Grid.Row="3" Style="{StaticResource BorderReveal}">
-			<tk:WrapPanel Grid.Row="3" x:Name="tagsPanel" x:FieldModifier="public">
-				<ToggleSwitch x:Name="applyTags" Header="Tags" OffContent="Leave" OnContent="Set" ToolTipService.ToolTip="If set, the city tags will be replaced with those defined in the layout"  />
+			<StackPanel>
+				<ToggleSwitch x:Name="applyTags" Header="Tags" OffContent="Leave" OnContent="Set" ToolTipService.ToolTip="If set, the city tags will be replaced with those defined in the layout" IsOn="{x:Bind views:SettingsPage.shareStringApplyTags}"  />
 
-			</tk:WrapPanel>
+				<tk:WrapPanel x:Name="tagsPanel" x:FieldModifier="public">
+
+				</tk:WrapPanel>
+			</StackPanel>
 		</Border>
 
 		<Border Grid.Row="4" Style="{StaticResource BorderReveal}">

@@ -46,16 +46,16 @@ namespace COTG.Game
 		public const short bidCityguardhouse = 504;
 		public const short bidBarracks = 445;
 		public const short bidMine = 465;
-		public const short bidTrainingground = 483;
+		public const short bidTrainingGround = 483;
 		public const short bidMarketplace = 449;
 		public const short bidTownhouse = 481;
 		public const short bidSawmill = 460;
 		public const short bidStable = 466;
 		public const short bidStonemason = 462;
-		public const short bidMage_tower = 500;
+		public const short bidSorcTower = 500;
 		public const short bidWindmill = 463;
 
-		
+
 
 		public const short bidAcademy = 482;
 		public const short bidSmelter = 477;
@@ -96,7 +96,7 @@ namespace COTG.Game
 		//static string[] buildingNames = { "forester", "cottage", "storehouse", "quarry", "hideaway", "farmhouse", "cityguardhouse", "barracks", "mine", "trainingground", "marketplace", "townhouse", "sawmill", "stable", "stonemason", "mage_tower", "windmill", "temple", "smelter", "blacksmith", "castle", "port", "port", "port", "shipyard", "shipyard", "shipyard", "townhall", "castle" };
 		//const short bidTownHall = 455;
 		//static short[] bidMap = new short[] { 448, 446, 464, 461, 479, 447, 504, 445, 465, 483, 449, 481, 460, 466, 462, 500, 463, 482, 477, 502, 467, 488, 489, 490, 491, 496, 498, bidTownHall, 467 };
-
+		public const int maxBuildings = 100;
 		public const int citySpan = 21;
 		public const int citySpotCount = citySpan * citySpan;
 		public const int cityScratchSpot = citySpotCount - 1;
@@ -118,7 +118,7 @@ namespace COTG.Game
 		public static bool buildQueueFull => buildQueue.count >= buildQMax && !SettingsPage.deferredBuild;
 		public static bool wantBuildCommands => buildQueue.count < safeBuildQueueLength;
 		public const int safeBuildQueueLength = 14; // leave space for autobuild
-		
+
 		public static IEnumerable<BuildQueueItem> IterateQueue()
 		{
 			foreach (var i in buildQueue)
@@ -135,6 +135,16 @@ namespace COTG.Game
 					yield return data[i];
 				}
 			}
+		}
+		public static int GetBuildQueueLength()
+		{
+			var rv = buildQueue.count;
+
+			if (CityBuildQueue.all.TryGetValue(City.build, out var q))
+			{
+				rv += q.queue.count;
+			}
+			return rv;
 		}
 		//public static Span<BuildQueueItem> Combine( Span<BuildQueueItem> q0,Span<BuildQueueItem> q)
 		//{
@@ -290,7 +300,8 @@ namespace COTG.Game
 
 		public int carryCapacity
 		{
-			get {
+			get
+			{
 				// Todo: water
 				var _carryCapacity = 0;
 				foreach (var tc in troopsHome)
@@ -342,7 +353,7 @@ namespace COTG.Game
 				if (raids[0].isReturning)
 					return dt.ToString("0.00");
 				else
-					return $"({(1.0f).Max( raids[0].GetOneWayTripTimeMinutes(this) - dt):N2})";
+					return $"({(1.0f).Max(raids[0].GetOneWayTripTimeMinutes(this) - dt):N2})";
 			}
 		}
 
@@ -354,7 +365,7 @@ namespace COTG.Game
 
 			}
 			if (!ShellPage.IsWorldView())
-				JSClient.ChangeView(false);// toggle between city/region view
+				JSClient.ChangeView(ShellPage.ViewMode.world);// toggle between city/region view
 
 			NavStack.Push(cid);
 
@@ -363,30 +374,31 @@ namespace COTG.Game
 		// Abusing invalid jsE by returning it when we want to return null
 		//  public JsonElement troopsHome => !jsE.IsValid() ? jsE : jsE.GetProperty("th");
 		//  public JsonElement troopsTotal => !jsE.IsValid() ? jsE : jsE.GetProperty("tc");
-		
+
 		public string shareString; // for building
 
-		public int BidFromOverlay(int id) {
+		public int BidFromOverlay(int id)
+		{
 			if (shareString.IsNullOrEmpty())
 				return 0;
 			var t = shareString[id + shareStringStartOffset];
-			if (BuildingDef.sharestringToBuldings.TryGetValue((byte)t, out var c) && c!=0)
+			if (BuildingDef.sharestringToBuldings.TryGetValue((byte)t, out var c) && c != 0)
 			{
-				
+
 				return (int)c + BuildingDef.sharestringOffset;
 			}
 			else
 			{
 				return 0;
 			}
-			
+
 		}
 
 		public int FirstBuildingInOverlay(int bid)
 		{
 			if (shareString.IsNullOrEmpty())
 				return 0;
-			for(int i=0;i<City.citySpotCount;++i)
+			for (int i = 0; i < City.citySpotCount; ++i)
 			{
 				var bO = BidFromOverlay(i);
 				if (bid == bO)
@@ -394,7 +406,6 @@ namespace COTG.Game
 			}
 			return 0;
 		}
-
 		public int BidFromOverlay((int x, int y) c) => BidFromOverlay(XYToId(c));
 
 		public (int bid, BuildingDef bd) BFromOverlay((int x, int y) c)
@@ -469,7 +480,7 @@ namespace COTG.Game
 				var s = sts.GetString();
 				Log(s);
 				s = s.Replace("&#34;", "\"");
-			//	Log(s);
+				//	Log(s);
 				if (!CityBuild.isPlanner)
 				{
 
@@ -477,9 +488,9 @@ namespace COTG.Game
 				}
 
 			}
-			if( tradeInfo!=CityTradeInfo.invalid)
+			if (tradeInfo != CityTradeInfo.invalid)
 			{
-				if(jse.TryGetProperty("incRes", out var ir))
+				if (jse.TryGetProperty("incRes", out var ir))
 				{
 					tradeInfo.inc[0] = ir[0].GetAsInt();
 					tradeInfo.inc[1] = ir[1].GetAsInt();
@@ -570,9 +581,10 @@ namespace COTG.Game
 
 			if (jse.TryGetProperty("th", out var th))
 			{
-				troopsHome = th.GetTroopTypeCount().ToArray(); ;
-
+				troopsHome = th.GetTroopTypeCount().ToArray();
 				_tsHome = troopsHome.TS();
+
+
 
 			}
 			if (jse.TryGetProperty("trintr", out var trintr))
@@ -621,7 +633,7 @@ namespace COTG.Game
 			{
 				// TODO:  What if we are in planner mode?
 				shareString = s;
-				
+
 			}
 			else
 			{
@@ -638,8 +650,8 @@ namespace COTG.Game
 				return city;
 			return null;
 		}
-		public const string shareStringStart= "[ShareString.1.3]";
-	
+		public const string shareStringStart = "[ShareString.1.3]";
+
 		public static string BuildingsToShareString(Building[] _layout, bool _isOnWater)
 		{
 			if (_layout == null)
@@ -663,27 +675,27 @@ namespace COTG.Game
 				sb.Append((char)o);
 			}
 			sb.Append("[/ShareString]");
-			return anyValid ?  sb.ToString() : string.Empty;
+			return anyValid ? sb.ToString() : string.Empty;
 		}
-		public const int shareStringStartOffset = 17+1;
-		public const int minShareStringLength = shareStringStartOffset +  City.citySpotCount;
-		
-		public (string ss,string json) splitShareString => ShareString.SplitShareString(shareString);
+		public const int shareStringStartOffset = 17 + 1;
+		public const int minShareStringLength = shareStringStartOffset + City.citySpotCount;
+
+		public (string ss, string json) splitShareString => ShareString.SplitShareString(shareString);
 		public async Task SaveLayout()
 		{
 			Note.Show("Saved layout");
-			var post = $"cid={cid}&a=" + System.Web.HttpUtility.UrlEncode(shareString??string.Empty, Encoding.UTF8);
-				var rv = await Post.SendForOkay("/includes/pSs.php",post, World.CidToPlayerOrMe(cid));
+			var post = $"cid={cid}&a=" + System.Web.HttpUtility.UrlEncode(shareString ?? string.Empty, Encoding.UTF8);
+			var rv = await Post.SendForOkay("/includes/pSs.php", post, World.CidToPlayerOrMe(cid));
 			Assert(rv == true);
 		}
 
 		public void BuildingsCacheToShareString()
 		{
-			
+
 			shareString = BuildingsToShareString(buildingsCache, isOnWater) + splitShareString.json;
 			//			await SaveLayout();
 		}
-	
+
 
 		public void ShareStringToBuildingsCache()
 		{
@@ -717,17 +729,17 @@ namespace COTG.Game
 				}
 			}
 			PlannerTab.BuildingsChanged();
-			
+
 		}
 		public void FlipLayoutH()
 		{
-		//	if (layout == null)
-		//		return;
+			//	if (layout == null)
+			//		return;
 			Assert(CityBuild.isPlanner);
-			for(int y=0;y< citySpan;++y)
-				for(int x=0;x< citySpan/2;++x)
+			for (int y = 0; y < citySpan; ++y)
+				for (int x = 0; x < citySpan / 2; ++x)
 				{
-					if(isOnWater)
+					if (isOnWater)
 					{
 						if (y > citySpan / 2)
 							continue;
@@ -761,75 +773,77 @@ namespace COTG.Game
 			///SaveLayout();
 		}
 
-	
-
-        //  static List<City> dummies = new List<City>();
 
 
-        public void NotifyChange(string member = "")
-        {
-            App.DispatchOnUIThreadSneakyLow(() =>
-       {
-           OnPropertyChanged(member);
-       });
-            if (NearDefenseTab.IsVisible())
-            {
-                foreach (var i in NearDefenseTab.supporters)
-                {
-                    if (i.city == this)
-                    {
-                        i.NotifyChange(member);
-                         break;
-                    }
-                }
+		//  static List<City> dummies = new List<City>();
 
-            }
-        }
-      
 
-        
-       
-   
-        public byte raidCarry { get; set; }
-        //public static City Factory(int cid)
-        //{
-        //    var rv = new City() { cid = cid, pid=Player.myId };
-        //    allSpots[cid]= rv;
-        //    return rv;
-        //}
+		public void NotifyChange(string member = "")
+		{
+			App.DispatchOnUIThreadSneakyLow(() =>
+	   {
+		   OnPropertyChanged(member);
+	   });
+			if (NearDefenseTab.IsVisible())
+			{
+				foreach (var i in NearDefenseTab.supporters)
+				{
+					if (i.city == this)
+					{
+						i.NotifyChange(member);
+						break;
+					}
+				}
 
-        public SenatorInfo[] senatorInfo = Array.Empty<SenatorInfo>();
-        public string senny
-        { get {
-                if (senatorInfo.Length == 0)
-                    return string.Empty;
-                string rv = string.Empty;
-                bool wantSpace = false;
-                //var summary = new SortedList<byte,byte>();
-                //foreach (var si in senatorInfo)
-                //{
-                //    var sv = summary.GetOrAdd((byte)si.type);
-                //}
-                foreach (var s in senatorInfo)
-                {
-                    if (wantSpace)
-                        rv += ",";
-                    wantSpace = true;
-                    var type = s.type switch
-                    {
-                        SenatorInfo.Type.idle => "zzz",
-                        SenatorInfo.Type.recruit=>"recr",
-                        SenatorInfo.Type.settle => "setl",
-                        SenatorInfo.Type.siege  => "seig",
-                        _ => "Error"
-                    };
-                    rv += $"{type}:{s.count}";
+			}
+		}
 
-                }
-                return rv;
 
-            }
-        }
+
+
+
+		public byte raidCarry { get; set; }
+		//public static City Factory(int cid)
+		//{
+		//    var rv = new City() { cid = cid, pid=Player.myId };
+		//    allSpots[cid]= rv;
+		//    return rv;
+		//}
+
+		public SenatorInfo[] senatorInfo = Array.Empty<SenatorInfo>();
+		public string senny
+		{
+			get
+			{
+				if (senatorInfo.Length == 0)
+					return string.Empty;
+				string rv = string.Empty;
+				bool wantSpace = false;
+				//var summary = new SortedList<byte,byte>();
+				//foreach (var si in senatorInfo)
+				//{
+				//    var sv = summary.GetOrAdd((byte)si.type);
+				//}
+				foreach (var s in senatorInfo)
+				{
+					if (wantSpace)
+						rv += ",";
+					wantSpace = true;
+					var type = s.type switch
+					{
+						SenatorInfo.Type.idle => "zzz",
+						SenatorInfo.Type.recruit => "recr",
+						SenatorInfo.Type.settle => "setl",
+						SenatorInfo.Type.siege => "seig",
+						_ => "Error"
+					};
+					rv += $"{type}:{s.count}";
+
+				}
+				return rv;
+
+			}
+		}
 		public string GetSenatorInfo()
 		{
 			StringBuilder sb = new StringBuilder();
@@ -837,67 +851,67 @@ namespace COTG.Game
 			var settle = 0;
 			var siege = 0;
 			var recruiting = 0;
-			
-				foreach (var sen in senatorInfo)
-				{
-					if (sen.type == SenatorInfo.Type.idle)
-						idle += sen.count;
-					else if (sen.type == SenatorInfo.Type.recruit)
-						recruiting += sen.count;
-					else if (sen.type == SenatorInfo.Type.settle)
-						settle += sen.count;
-					else if (sen.type == SenatorInfo.Type.siege)
-						siege += sen.count;
-					else
-						Assert(false);
-				}
-				if (idle > 0)
-						sb.Append($"\n{idle} idle senators");
-					if(settle > 0)
-						sb.Append($"\n{settle} senators settling");
-					if (siege > 0)
-						sb.Append($"\n{siege} senators sieging");
-					if (recruiting > 0)
-						sb.Append($"\n{recruiting} senators recruiting");
-					return sb.ToString();
-			
+
+			foreach (var sen in senatorInfo)
+			{
+				if (sen.type == SenatorInfo.Type.idle)
+					idle += sen.count;
+				else if (sen.type == SenatorInfo.Type.recruit)
+					recruiting += sen.count;
+				else if (sen.type == SenatorInfo.Type.settle)
+					settle += sen.count;
+				else if (sen.type == SenatorInfo.Type.siege)
+					siege += sen.count;
+				else
+					Assert(false);
+			}
+			if (idle > 0)
+				sb.Append($"\n{idle} idle senators");
+			if (settle > 0)
+				sb.Append($"\n{settle} senators settling");
+			if (siege > 0)
+				sb.Append($"\n{siege} senators sieging");
+			if (recruiting > 0)
+				sb.Append($"\n{recruiting} senators recruiting");
+			return sb.ToString();
+
 		}
 
-        //private void Set<T>(ref T storage, T value, [CallerMemberName] string propertyName = null)
-        //{
-        //    if (Equals(storage, value))
-        //    {
-        //        return;
-        //    }
-        //    storage = value;
-        //    OnPropertyChanged(propertyName);
-        //}
+		//private void Set<T>(ref T storage, T value, [CallerMemberName] string propertyName = null)
+		//{
+		//    if (Equals(storage, value))
+		//    {
+		//        return;
+		//    }
+		//    storage = value;
+		//    OnPropertyChanged(propertyName);
+		//}
 
-        //public void OnPropertyChanged(string propertyName) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        //public void OnPropertyChangedUI(string propertyName) => App.DispatchOnUIThreadLow(()=> PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName)));
+		//public void OnPropertyChanged(string propertyName) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+		//public void OnPropertyChangedUI(string propertyName) => App.DispatchOnUIThreadLow(()=> PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName)));
 
-        public override string ToString()
-        {
+		public override string ToString()
+		{
 			return nameAndRemarks;// $"{{{nameof(cityName)}={cityName}, {nameof(xy)}={xy}, {nameof(cid)}={cid},{nameof(tsTotal)}={tsTotal.ToString()}, {nameof(tsHome)}={tsHome.ToString()}}}";
-        }
-        public async static void UpdateSenatorInfo()
-        {
+		}
+		public async static void UpdateSenatorInfo()
+		{
 			// Todo:  Do overviews use secsessionid?
 
-            try
-            {
-                var a = await Post.SendForJson("overview/senfind.php", "a=0");
-                var empty = Array.Empty<SenatorInfo>();
-                var changed = new HashSet<City>();
-                foreach (var city in City.myCities)
-                {
-                    if (city.senatorInfo != empty)
-                    {
-                        city.senatorInfo = empty;
-                        changed.Add(city);
-                    }
+			try
+			{
+				var a = await Post.SendForJson("overview/senfind.php", "a=0");
+				var empty = Array.Empty<SenatorInfo>();
+				var changed = new HashSet<City>();
+				foreach (var city in City.myCities)
+				{
+					if (city.senatorInfo != empty)
+					{
+						city.senatorInfo = empty;
+						changed.Add(city);
+					}
 
-                }
+				}
 
 				if (a.RootElement.ValueKind == JsonValueKind.Object)
 				{
@@ -945,15 +959,15 @@ namespace COTG.Game
 
 					changed.NotifyChange(nameof(City.senny));
 				}
-            }
-            catch (Exception ex)
-            {
-                Log(ex);
-            }
+			}
+			catch (Exception ex)
+			{
+				Log(ex);
+			}
 
 
 
-        }
+		}
 
 		public override bool Equals(object obj)
 		{
@@ -977,77 +991,77 @@ namespace COTG.Game
 			return !(left == right);
 		}
 
-		
+
 		private string GetDebuggerDisplay()
-        {
-            return ToString();
-        }
-        public byte GetRaidTroopType()
-        {
-            byte best = 0; // if no raiding troops we return guards 
-            var bestTS = 0;
-            foreach (var ttc in troopsHome)
-            {
-                var type = ttc.type;
-                if (!IsRaider(type) || !SettingsPage.includeRaiders[type])
-                    continue;
-                var ts = ttc.ts;
-                if (ts > bestTS)
-                {
-                    bestTS = ts;
-                    best = (byte)type;
-                }
+		{
+			return ToString();
+		}
+		public byte GetRaidTroopType()
+		{
+			byte best = 0; // if no raiding troops we return guards 
+			var bestTS = 0;
+			foreach (var ttc in troopsHome)
+			{
+				var type = ttc.type;
+				if (!IsRaider(type) || !SettingsPage.includeRaiders[type])
+					continue;
+				var ts = ttc.ts;
+				if (ts > bestTS)
+				{
+					bestTS = ts;
+					best = (byte)type;
+				}
 
-            }
-            return best;
-        }
-        
+			}
+			return best;
+		}
 
-        public byte GetIdealDungeonType()
-        {
-            // todo:  handle water
-            byte best = 0;
-            var bestTS = 0;
-            foreach (var ttc in troopsHome)
-            {
-                var type = ttBestDungeonType[ttc.type];
-                if (type > (byte)DungeonType.water )
-                    continue;// todo: handle water
-                var ts = ttc.ts;
-                if (ts > bestTS)
-                {
-                    bestTS = ts;
-                    best = type;
-                }
 
-            }
-            return best;
-        }
-        /*
+		public byte GetIdealDungeonType()
+		{
+			// todo:  handle water
+			byte best = 0;
+			var bestTS = 0;
+			foreach (var ttc in troopsHome)
+			{
+				var type = ttBestDungeonType[ttc.type];
+				if (type > (byte)DungeonType.water)
+					continue;// todo: handle water
+				var ts = ttc.ts;
+				if (ts > bestTS)
+				{
+					bestTS = ts;
+					best = type;
+				}
+
+			}
+			return best;
+		}
+		/*
          * Resource and other details
         */
-        public ushort carts { get; set; }
-        public ushort cartsHome { get; set; }
-        public int wood { get; set; }
-        public int woodStorage { get; set; }
-        public int stone { get; set; }
-        public int stoneStorage { get; set; }
-        public int iron { get; set; }
-        public int ironStorage { get; set; }
-        public int food { get; set; }
-        public int foodStorage { get; set; }
-        public ushort ships { get; set; }
-        public ushort shipsHome { get; set; }
-        public bool academy { get; set; }
-        public bool sorcTower { get; set; }
+		public ushort carts { get; set; }
+		public ushort cartsHome { get; set; }
+		public int wood { get; set; }
+		public int woodStorage { get; set; }
+		public int stone { get; set; }
+		public int stoneStorage { get; set; }
+		public int iron { get; set; }
+		public int ironStorage { get; set; }
+		public int food { get; set; }
+		public int foodStorage { get; set; }
+		public ushort ships { get; set; }
+		public ushort shipsHome { get; set; }
+		public bool academy { get; set; }
+		public bool sorcTower { get; set; }
 
-        public static DumbCollection<City> gridCitySource = new DumbCollection<City>();
-        public static City[] emptyCitySource = Array.Empty<City>();
+		public static DumbCollection<City> gridCitySource = new DumbCollection<City>();
+		public static City[] emptyCitySource = Array.Empty<City>();
 		internal CityTradeInfo tradeInfo = CityTradeInfo.invalid;
 
 		internal bool isLayoutValid => shareString != null && shareString.Length >= minShareStringLength;
 
-		public bool ComputeCartTravelTime(int target,out TimeSpan t)
+		public bool ComputeCartTravelTime(int target, out TimeSpan t)
 		{
 			var onDifferentContinent = cont != target.CidToContinent();
 			t = TimeSpan.Zero;
@@ -1060,12 +1074,12 @@ namespace COTG.Game
 			else
 			{
 				var dist = cid.DistanceToCid(target);
-				t = TimeSpan.FromMinutes(dist * Enum.cartTravel );
+				t = TimeSpan.FromMinutes(dist * Enum.cartTravel);
 				return true;
 
 			}
 		}
-		public bool ComputeShipTravelTime(int target,  out TimeSpan t)
+		public bool ComputeShipTravelTime(int target, out TimeSpan t)
 		{
 			t = TimeSpan.Zero;
 
@@ -1073,40 +1087,40 @@ namespace COTG.Game
 			if (!targetC.isOnWater || !isOnWater)
 				return false;
 
-			
-				var dist = cid.DistanceToCid(target);
-				t = TimeSpan.FromMinutes(dist * Enum.shipTravel + 60);
 
-				return true;
-		
+			var dist = cid.DistanceToCid(target);
+			t = TimeSpan.FromMinutes(dist * Enum.shipTravel + 60);
+
+			return true;
+
 		}
 		public bool ComputeTravelTime(int target, bool onlyHome, out float hours, out bool onDifferentContinent)
-        {
-            hours = 0;
-            onDifferentContinent = cont != target.CidToContinent();
-            if (onDifferentContinent)
-            {
-                if(Spot.GetOrAdd(target).isOnWater && (onlyHome?troopsHome:troopsTotal).Any((t)=> t.type==ttGalley || t.type==ttStinger))
-                {
-                    var tt = ttGalley;
-                    var dist = cid.DistanceToCid(target);
-                    hours = dist * ttTravel[tt] / (60f * ttSpeedBonus[tt])+1;
-                    return true;
+		{
+			hours = 0;
+			onDifferentContinent = cont != target.CidToContinent();
+			if (onDifferentContinent)
+			{
+				if (Spot.GetOrAdd(target).isOnWater && (onlyHome ? troopsHome : troopsTotal).Any((t) => t.type == ttGalley || t.type == ttStinger))
+				{
+					var tt = ttGalley;
+					var dist = cid.DistanceToCid(target);
+					hours = dist * ttTravel[tt] / (60f * ttSpeedBonus[tt]) + 1;
+					return true;
 
-                }
-                return false;
+				}
+				return false;
 
-            }
-            else
-            {
-                var tt = GetPrimaryTroopType(onlyHome);
-                if (tt == 0)
-                    return false;
-                var dist = cid.DistanceToCid(target);
-                hours = dist * ttTravel[tt] / (60f * ttSpeedBonus[tt]);
-                return true;
-            }
-        }
+			}
+			else
+			{
+				var tt = GetPrimaryTroopType(onlyHome);
+				if (tt == 0)
+					return false;
+				var dist = cid.DistanceToCid(target);
+				hours = dist * ttTravel[tt] / (60f * ttSpeedBonus[tt]);
+				return true;
+			}
+		}
 		//static City lastDugeonScanCity;
 		public ResetableCollection<Dungeon> dungeons
 		{
@@ -1115,7 +1129,7 @@ namespace COTG.Game
 				return Dungeon.raidDungeons;
 			}
 		}
-		public string dungeonsToggle => MainPage.expandedCity==this ? "-" : "+";
+		public string dungeonsToggle => MainPage.expandedCity == this ? "-" : "+";
 
 
 		internal static void CitiesChanged()
@@ -1175,10 +1189,10 @@ namespace COTG.Game
 		}
 
 
-		public static (int max, int count, int townHallLevel) CountBuildings()
+		public static (int max, int count, int townHallLevel) GetBuildingCountAndTownHallLevel()
 		{
-			
-			return (CityBuild.postQueueTownHallLevel*10, CityBuild.postQueueBuildingCount, CityBuild.postQueueTownHallLevel);
+
+			return (CityBuild.postQueueTownHallLevel * 10, CityBuild.postQueueBuildingCount, CityBuild.postQueueTownHallLevel);
 		}
 
 
@@ -1202,10 +1216,10 @@ namespace COTG.Game
 			}
 			return rv;
 		}
-		public static void GetPostQueue(ref Building rv, int bspot,in BuildQueueItem [] q, int qSize)
+		public static void GetPostQueue(ref Building rv, int bspot, in BuildQueueItem[] q, int qSize)
 		{
-			for(int i=0;i<qSize;++i)
-			{ 
+			for (int i = 0; i < qSize; ++i)
+			{
 				if (q[i].bspot == bspot)
 				{
 					rv.bl = q[i].elvl;
@@ -1241,7 +1255,7 @@ namespace COTG.Game
 		}
 
 
-		
+
 		//	Span<BuildQueueItem> queue = stackalloc  BuildQueueItem[256];
 
 		//	return CountBuildings( City.build, queue)
@@ -1306,9 +1320,13 @@ namespace COTG.Game
 
 		public enum BuildStage
 		{
-			init,
+			_new,
+			noLayout,
+			setup,
 			buildingCabins,
+			cabinsComplete,
 			initialBuildings,
+			initialBuildingsComplete,
 			teardown,
 			complete
 		}
@@ -1317,90 +1335,185 @@ namespace COTG.Game
 			public int storeHouses;
 			public int cabins;
 			public int townHallLevel;
-			public int total;
+			public int buildings;
+			public int sorcTowers;
+			public int academies;
+			public int training;
+			public int stables;
 
+			public int sawMills;
+			public int stoneMasons;
+			public int windMills;
+			public int smelters;
+			public int barracks;
+			public int forums;
+			public int unfinishedBuildings;
+			public int unfinishedCabins;
+			public bool hasCastle;
 		}
-		public BuildingCount GetBuildingCountPostQueue()
-		{
-			BuildingCount rv= new();
+		public static BuildingCount GetBuildingCountPostQueue() => GetBuildingCounts(CityBuild.postQueueBuildings);
 
-			foreach (var bd in CityBuild.postQueueBuildings)
+		public static BuildingCount GetBuildingCounts(Building[] buildings)
+		{
+			BuildingCount rv = new();
+
+			foreach (var bd in buildings)
 			{
+				var bid = bd.bid;
+				if (bid == bidCastle)
+					rv.hasCastle = true;
 				if (bd.isCabin)
+				{
 					++rv.cabins;
+					if (bd.bl < SettingsPage.cottageLevel)
+						++rv.unfinishedCabins;
+					++rv.buildings;
+				}
+				else if (bd.isBuilding)
+				{
+					if (bd.bl < 10)
+						++rv.unfinishedBuildings;
+					++rv.buildings;
+				}
 				if (bd.bid == bidStorehouse)
 					++rv.storeHouses;
-				if (bd.isBuilding)
-					++rv.total;
 				if (bd.isTownHall)
 					rv.townHallLevel = bd.bl;
 
+				if (bid == bidSorcTower)
+					++rv.sorcTowers;
+				else if (bid == bidAcademy)
+					++rv.academies;
+				else if (bid == bidSawmill)
+					++rv.sawMills;
+				else if (bid == bidWindmill)
+					++rv.windMills;
+				else if (bid == bidStonemason)
+					++rv.stoneMasons;
+				else if (bid == bidSmelter)
+					++rv.smelters;
+				else if (bid == bidBarracks)
+					++rv.barracks;
+				else if (bid == bidMarketplace)
+					++rv.forums;
+				else if (bid == bidTrainingGround)
+					++rv.training;
+				else if (bid == bidStable)
+					++rv.stables;
 			}
-			Log($"{rv.cabins} cabins, {rv.total} {rv.townHallLevel}");
+
+			Log($"{rv.cabins} cabins, {rv.buildings} {rv.townHallLevel}");
 			return rv;
 		}
+		public static BuildingCount GetBuildingCountsPostQueue() => GetBuildingCounts(CityBuild.postQueueBuildings);
+		public BuildingCount GetBuildingCounts() => GetBuildingCounts(buildings);
 
-		public static BuildStage buildingStage
+		
+
+		public BuildStage GetBuildStage(BuildingCount bc)
 		{
-			get
+			if (CityRename.IsNew(this))
+				return BuildStage._new;
+			if (!isLayoutValid)
+				return BuildStage.noLayout;
+
+
+			if (bc.buildings < 8)
+				return BuildStage.setup;
+
+			if (bc.townHallLevel < 10)
+				return BuildStage.buildingCabins;
+			if (bc.cabins >= bc.buildings + 4)
 			{
-				bool hasIncompleteCabins = false;
-				int cabinCount = 0;
-				bool townHallfinished = false;
-				bool hasIncompleteBuildings = false;
-				int buildingCount = 0;
-				foreach (var bd in CityBuild.postQueueBuildings)
-				{
-					if (bd.isCabin)
-					{
-						++cabinCount;
-						if (bd.bl < SettingsPage.cottageLevel)
-							hasIncompleteCabins = true;
-					}
-					else if (bd.bid == bidTownHall)
-						townHallfinished = bd.bl >= 10;
-					else if (bd.isBuilding)
-					{
-						++buildingCount;
-						if (bd.bl < 10)
-							hasIncompleteBuildings = true;
-					}
-				}
-				if (buildingCount < 8)
-					return BuildStage.init;
-				if (cabinCount != 0 && hasIncompleteCabins)
-					return BuildStage.buildingCabins;
-				if (hasIncompleteBuildings && cabinCount == SettingsPage.startCabinCount)
-					return BuildStage.initialBuildings;
-				if (hasIncompleteBuildings || cabinCount > 0)
-					return BuildStage.teardown;
-				return BuildStage.complete;
-
-
+				return BuildStage.cabinsComplete;
 			}
+			if (bc.cabins >= SettingsPage.startCabinCount)
+			{
+				if (bc.unfinishedBuildings > 0)
+					return BuildStage.initialBuildings;
+				else
+					return BuildStage.initialBuildingsComplete;
+			}
+
+			if (bc.cabins > 0 || bc.buildings < 100)
+				return BuildStage.teardown;
+
+			return BuildStage.complete;
+
+
+
+		}
+		public async Task<BuildStage> GetBuildStage()
+		{
+			if (CityRename.IsNew(this))
+				return BuildStage._new;
+			await GetCity.Post(cid);
+			return GetBuildStage(GetBuildingCounts());
+
+		}
+		public static async Task<BuildStage> GetBuildBuildStage(BuildingCount bc)
+		{
+			var city = GetBuild();
+			if (CityRename.IsNew(city))
+				return BuildStage._new;
+			await GetCity.Post(City.build);
+
+			return city.GetBuildStage(bc);
+		}
+
+		public static async Task<BuildStage> GetBuildBuildStage()
+		{
+			var city = GetBuild();
+			if (CityRename.IsNew(city))
+				return BuildStage._new;
+			await GetCity.Post(City.build);
+
+			return city.GetBuildStage(GetBuildingCountPostQueue());
+
 		}
 	}
+	public static class CityHelpers
+	{
+		public static bool IsInCity(this (int x, int y) xy) => xy.x >= span0 && xy.x <= span1 && xy.y >= span0 && xy.y <= span1;
 
-    public class SenatorInfo
-    {
-        public enum Type : byte
-        {
-            recruit,
-            settle,
-            siege,
-            idle,
-        }
-        public Type type;
-        public byte count;
-        public int target; // only for seige and settle
-        public DateTimeOffset time;  // not for idle
-    }
-    public class BuildingCount
-    {
-        public Windows.UI.Xaml.Media.ImageBrush brush { get; set; }
-        public int count { get; set; }
+		public static ShellPage.ViewMode GetNext(this ShellPage.ViewMode mode)
+		{
+			return mode switch
+			{
+				ShellPage.ViewMode.city => ShellPage.ViewMode.region,
+				ShellPage.ViewMode.region => ShellPage.ViewMode.world,
+				_ => ShellPage.ViewMode.city
+			};
+		}
+		public static ShellPage.ViewMode GetNextUnowned(this ShellPage.ViewMode mode)
+		{
+			return mode switch
+			{
+				ShellPage.ViewMode.region => ShellPage.ViewMode.world,
+				_ => ShellPage.ViewMode.region
+			};
+		}
+	}
+	public class SenatorInfo
+	{
+		public enum Type : byte
+		{
+			recruit,
+			settle,
+			siege,
+			idle,
+		}
+		public Type type;
+		public byte count;
+		public int target; // only for seige and settle
+		public DateTimeOffset time;  // not for idle
+	}
+	public class BuildingCount
+	{
+		public Windows.UI.Xaml.Media.ImageBrush brush { get; set; }
+		public int count { get; set; }
 
-    }
+	}
 	public class CityList
 	{
 		public string name { get; set; }
@@ -1431,7 +1544,7 @@ namespace COTG.Game
 		}
 		public class GroupDef
 		{
-		
+
 			public string name;
 			public string[] tags; // OR tags
 
@@ -1443,32 +1556,32 @@ namespace COTG.Game
 		}
 
 		public static GroupDef gdHubs = new GroupDef("Hubs", new[] { "hub" });
-		public static GroupDef gdShipper = new GroupDef("Shipper", new[]{"shipping","shipper"} );
+		public static GroupDef gdShipper = new GroupDef("Shipper", new[] { "shipping", "shipper" });
 		public static GroupDef gdWarship = new GroupDef("Warships", new[] { "warship" });
 		public static GroupDef gdGalley = new GroupDef("Galleys", new[] { "galley" });
 		public static GroupDef gdStinger = new GroupDef("Stingers", new[] { "stinger" });
-		public static GroupDef gdOffense = new GroupDef("Offense", new[] { "vanq", "sorc", "horse","druid", "scorp","warship" });
-		public static GroupDef gdDefense = new GroupDef("Defense", new[] { "rt","r/t", "vt","v/t", "vrt","v/r/t", "ranger","triari","priest","prae","arb","ballista","stinger" });
+		public static GroupDef gdOffense = new GroupDef("Offense", new[] { "vanq", "sorc", "horse", "druid", "scorp", "warship" });
+		public static GroupDef gdDefense = new GroupDef("Defense", new[] { "rt", "r/t", "vt", "v/t", "vrt", "v/r/t", "ranger", "triari", "priest", "prae", "arb", "ballista", "stinger" });
 
-//		public static string[] perContinentTags = { "rt", "vanq", "priest", "prae","sorc","horse","druid","arb","scorp" };
-//        public static string[] globalTags = { "navy","warship", "shipp", "stinger","galley" };
-        public static CityList GetForContinent(int id, HashSet<CityList> processed) => GetOrAdd(id.ToString(), processed);
-        public static CityList GetForContinentAndTag(int id,string tag, HashSet<CityList> processed) => GetOrAdd($"{id.ToString()} {tag}", processed);
+		//		public static string[] perContinentTags = { "rt", "vanq", "priest", "prae","sorc","horse","druid","arb","scorp" };
+		//        public static string[] globalTags = { "navy","warship", "shipp", "stinger","galley" };
+		public static CityList GetForContinent(int id, HashSet<CityList> processed) => GetOrAdd(id.ToString(), processed);
+		public static CityList GetForContinentAndTag(int id, string tag, HashSet<CityList> processed) => GetOrAdd($"{id.ToString()} {tag}", processed);
 
-        public static CityList GetOrAdd(string name, HashSet<CityList> processed )
-        {
+		public static CityList GetOrAdd(string name, HashSet<CityList> processed)
+		{
 			var cl = CityList.Find(name);
 			if (cl != null && processed.Add(cl))
 			{
 				cl.cities.Clear();
 			}
-            if (cl == null)
-            {
-              
-                cl = new CityList(name);
+			if (cl == null)
+			{
+
+				cl = new CityList(name);
 				var id = CityList.all.Length;
 				CityList.all = CityList.all.ArrayAppend(cl);
-				while(id > 1)
+				while (id > 1)
 				{
 					if (CityList.all[id].name.CompareTo(CityList.all[id - 1].name) >= 0)
 						break;
@@ -1476,78 +1589,78 @@ namespace COTG.Game
 					--id;
 				}
 				processed.Add(cl); ;
-            }
-            return cl;
-        }
+			}
+			return cl;
+		}
 
 
-		public static CityList FindNewCities() => Find(sNewCities); 
+		public static CityList FindNewCities() => Find(sNewCities);
 
-        public static CityList allCities = new CityList() { id = -1, name = "All" }; // special item for ui selection
-        public static CityList[] all = Array.Empty<CityList>();
-        public static CityList [] selections = new [] { allCities }; // Similar to the above array, but a dummy "All" entry (id=-1) at the start for Combo Boxes
-        internal const string sNewCities = "NewCities";
+		public static CityList allCities = new CityList() { id = -1, name = "All" }; // special item for ui selection
+		public static CityList[] all = Array.Empty<CityList>();
+		public static CityList[] selections = new[] { allCities }; // Similar to the above array, but a dummy "All" entry (id=-1) at the start for Combo Boxes
+		internal const string sNewCities = "NewCities";
 		struct CityComparer : IComparer<City>
 		{
 			public int Compare(City x, City y)
 			{
-				var rv=string.Compare(x._cityName, y._cityName, true);
+				var rv = string.Compare(x._cityName, y._cityName, true);
 				if (rv != 0)
 					return rv;
-				var xHasRemarks = (x.remarks!=null);
-				var yHasRemarks = (y.remarks!=null);
+				var xHasRemarks = (x.remarks != null);
+				var yHasRemarks = (y.remarks != null);
 				if (!xHasRemarks && !yHasRemarks)
 					return 0;
-				else if  (!xHasRemarks)
-						return 1;
-				else if  (!yHasRemarks)
-						return -1;
-				else 
+				else if (!xHasRemarks)
+					return 1;
+				else if (!yHasRemarks)
+					return -1;
+				else
 					return string.Compare(x.remarks, y.remarks, true); ;
 			}
 		}
 
 		public static ComboBox box => ShellPage.instance.cityListBox;
-        public static void SelectedChange()
-        {
+		public static void SelectedChange()
+		{
 
-			App.DispatchOnUIThreadLow( () =>
-			{
+			App.DispatchOnUIThreadLow(() =>
+		   {
 				//               Log("CityListChange");
 
 				var selectedCityList = CityList.box.SelectedItem as CityList;
-				IEnumerable<City> l;
-				if (selectedCityList == null || selectedCityList.id == -1) // "all"
+			   IEnumerable<City> l;
+			   if (selectedCityList == null || selectedCityList.id == -1) // "all"
 				{
-					l = City.myCities;
-				}
-				else
-				{
-					var cityList = selectedCityList;// CityList.Find(selectedCityList);
+				   l = City.myCities;
+			   }
+			   else
+			   {
+				   var cityList = selectedCityList;// CityList.Find(selectedCityList);
 					var filtered = new List<City>();
-					foreach (var cid in cityList.cities)
-					{
-						if (City.TryGet(cid, out var c))
-						{
-							filtered.Add(c);
-						}
-					}
-					l = filtered;
-				}
-				l = l.OrderBy((a) => a, new CityComparer()).ToArray();
-				ShellPage.instance.cityBox.ItemsSource = l;
-				SyncCityBox();
-				var reserveCartsFilter = DonationTab.reserveCarts;
-				if (DonationTab.IsVisible())
-					DonationTab.instance.donationGrid.ItemsSource = l.Where((city) => city.cartsHome >= reserveCartsFilter)
-						.OrderByDescending(a => a.cartsHome).ToArray();
+				   foreach (var cid in cityList.cities)
+				   {
+					   if (City.TryGet(cid, out var c))
+					   {
+						   filtered.Add(c);
+					   }
+				   }
+				   l = filtered;
+			   }
+			   l = l.OrderBy((a) => a, new CityComparer()).ToArray();
+			   ShellPage.instance.cityBox.ItemsSource = l;
+			   SyncCityBox();
+			   var reserveCartsFilter = DonationTab.reserveCarts;
+			   if (DonationTab.IsVisible())
+				   DonationTab.instance.donationGrid.ItemsSource = l.Where((city) => city.cartsHome >= reserveCartsFilter)
+					   .OrderByDescending(a => a.cartsHome).ToArray();
 				//   if (MainPage.IsVisible())
 				City.gridCitySource.Set(l);
-				City.GetBuild().SelectInUI(true);
-			});
-        }
+			   City.GetBuild().SelectInUI(true);
+		   });
+		}
 
-		
+
 	}
 
 }

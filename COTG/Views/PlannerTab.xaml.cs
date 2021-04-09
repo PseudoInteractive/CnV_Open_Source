@@ -2,6 +2,8 @@
 using COTG.Game;
 using COTG.JSON;
 
+using System;
+
 using Windows.UI.Xaml;
 
 using static COTG.Debug;
@@ -70,7 +72,7 @@ namespace COTG.Views
 						case bidCastle:
 							tsMultipler = 4;
 							break;
-						case bidTrainingground:
+						case bidTrainingGround:
 							rsInf += AddMilBuilding(bdef, bd, bds, x, y);
 							break;
 						case bidAcademy:
@@ -79,7 +81,7 @@ namespace COTG.Views
 						case bidStable:
 							rsCav += AddMilBuilding(bdef, bd, bds, x, y);
 							break;
-						case bidMage_tower:
+						case bidSorcTower:
 							rsMagic += AddMilBuilding(bdef, bd, bds, x, y);
 							break;
 						case bidShipyard:
@@ -233,13 +235,13 @@ namespace COTG.Views
 		{
 			return (cc.x >= span0) && (cc.y>=span0) && (cc.x <= span1) && (cc.y <= span1);
 		}
+		public static Action PleaseRefresh =AUtil.DebounceUI(PlannerTab.UpdateStats,100);
+
 		internal static void BuildingsChanged()
 		{
-			if (statsDirty == true || !IsVisible() )
-				return;
 			CityView.BuildingsOrQueueChanged();
 			statsDirty = true;
-			App.DispatchOnUIThreadLow(UpdateStats);
+			PleaseRefresh();
 		}
 
 		private void ShareStringClick(object sender, RoutedEventArgs e)
@@ -280,7 +282,7 @@ namespace COTG.Views
 
 				var bdBid = bdc[i].bid;
 				// these ones can be arranged
-				if (bdBid == bidCastle || (bdBid == bidMage_tower && allowed.sorc) || (bdBid == bidAcademy && allowed.academy) || (bdBid == bidMarketplace) || (bdBid == bidStorehouse && allowed.storage))
+				if (bdBid == bidCastle || (bdBid == bidSorcTower && allowed.sorc) || (bdBid == bidAcademy && allowed.academy) || (bdBid == bidMarketplace) || (bdBid == bidStorehouse && allowed.storage))
 					continue;
 
 				++rv;
@@ -306,7 +308,7 @@ namespace COTG.Views
 				for (int id = 0; id < City.citySpotCount; ++id)
 				{
 					var bid = bdc[id].bid;
-					if (bid == bidMage_tower)
+					if (bid == bidSorcTower)
 						++sorcTowers;
 					else if (bid == bidAcademy)
 						++academies;
@@ -356,7 +358,7 @@ namespace COTG.Views
 						continue;
 
 					var bdBid = bd.bid;
-					if (bdBid == bidCastle || (bdBid == bidMage_tower && allowed.sorc) || (bdBid == bidAcademy && allowed.academy) || (bdBid == bidMarketplace) || (bdBid == bidStorehouse && allowed.storage))
+					if (bdBid == bidCastle || (bdBid == bidSorcTower && allowed.sorc) || (bdBid == bidAcademy && allowed.academy) || (bdBid == bidMarketplace) || (bdBid == bidStorehouse && allowed.storage))
 					{
 						bool foundOne = false;
 						// is there a building that we can re-use?

@@ -126,9 +126,14 @@ namespace COTG.JSON
                                         {
                                             army.sumDef = new[] { new TroopTypeCount(Game.Enum.ttGuard, defTS) };
                                             spot._tsHome = defTS;
-                                        }
-                                    //                            army.sumDef = Array.Empty<TroopTypeCount>();
-                                    spot.incoming = spot.incoming.ArrayAppend(army);
+										//	spot._tsHome = val.GetAsInt("8");
+
+											//Trace($"TS Home {spot._tsHome}");
+
+
+										}
+										//                            army.sumDef = Array.Empty<TroopTypeCount>();
+										spot.incoming = spot.incoming.ArrayAppend(army);
 										spot.QueueClassify();
 
 										defenders.Add(spot);

@@ -1,9 +1,24 @@
-﻿using System;
-using static COTG.Debug;
-
-using COTG.Core.Helpers;
+﻿using COTG.Game;
+using COTG.Helpers;
 using COTG.Services;
+using COTG.Views;
 
+using Microsoft.AppCenter.Crashes;
+//using ZLogger;
+
+//using Cysharp.Text;
+using Microsoft.Toolkit.Uwp.UI.Controls;
+
+using System;
+using System.Collections.Concurrent;
+using System.Diagnostics;
+using System.Numerics;
+using System.Runtime.InteropServices;
+using System.Text;
+using System.Text.RegularExpressions;
+using System.Threading;
+using System.Threading.Tasks;
+using System.Windows.Input;
 //using Microsoft.AppCenter;
 //using Microsoft.AppCenter.Analytics;
 //using Microsoft.AppCenter.Crashes;
@@ -14,47 +29,32 @@ using COTG.Services;
 
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
-using Windows.UI.Core;
-using Windows.UI.Xaml;
-using Microsoft.AppCenter;
-using Microsoft.AppCenter.Analytics;
-using Microsoft.AppCenter.Crashes;
-//using ZLogger;
-
-//using Cysharp.Text;
-using Microsoft.Toolkit.Uwp.UI.Controls;
-using COTG.Views;
-using System.Numerics;
 using Windows.ApplicationModel.Core;
-using System.Threading.Tasks;
-using Windows.Foundation;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Text.RegularExpressions;
-using Windows.System;
-using Windows.UI.Xaml.Controls;
-using COTG.Helpers;
-using COTG.Game;
-using System.Diagnostics;
-using Windows.Globalization.NumberFormatting;
-using Windows.Graphics.Display;
-using Windows.UI.ViewManagement;
-using System.Collections.Concurrent;
-using System.Windows.Input;
 using Windows.ApplicationModel.DataTransfer;
-using Windows.UI.Input;
 using Windows.Foundation.Collections;
-using System.Threading;
-using Microsoft.Toolkit.Uwp.Helpers;
+using Windows.Globalization.NumberFormatting;
+using Windows.System;
+using Windows.UI.Core;
+using Windows.UI.Core.Preview;
+using Windows.UI.Input;
+using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Data;
-using Windows.System.Threading;
+
+using static COTG.Debug;
 
 namespace COTG
 {
 	public sealed partial class App : Application
 	{
+		public enum State
+		{
+			init,
+			active,
+			closing,
+		}
+		public static State state;
 		private Lazy<ActivationService> _activationService;
 		public static bool isForeground;
 		public static bool processingTasksStarted;
@@ -85,8 +85,9 @@ namespace COTG
 
 			InitializeComponent();
 			instance = this;
+
 			UnhandledException += OnAppUnhandledException;
-			
+
 			FocusVisualKind = FocusVisualKind.Reveal;
 
 
@@ -95,7 +96,7 @@ namespace COTG
 			LeavingBackground += App_LeavingBackground;
 			Resuming += App_Resuming;
 			Suspending += App_Suspending;
-			
+
 			//AppCenter.Start("0b4c4039-3680-41bf-b7d7-685eb68e21d2",
 			//	   typeof(Analytics), typeof(Crashes));
 			// TODO WTS: Add your app in the app center and set your secret here. More at https://docs.microsoft.com/appcenter/sdk/getting-started/uwp
@@ -104,6 +105,12 @@ namespace COTG
 			_activationService = new Lazy<ActivationService>(CreateActivationService);
 			UserAgent.SetUserAgent(JSClient.userAgent);  // set webview useragent
 
+		}
+
+		public static async void App_CloseRequested(object sender, SystemNavigationCloseRequestedPreviewEventArgs e)
+		{
+			state = State.closing;
+			await TabPage.CloseAllTabWindows();
 		}
 
 		private void App_Suspending(object sender, SuspendingEventArgs e)
@@ -138,7 +145,7 @@ namespace COTG
 		}
 		public static bool IsKeyPressedShift()
 		{
-			return Microsoft.Xna.Framework.Input.Keys.LeftShift.IsKeyPressed()|
+			return Microsoft.Xna.Framework.Input.Keys.LeftShift.IsKeyPressed() |
 				   Microsoft.Xna.Framework.Input.Keys.RightShift.IsKeyPressed();// shiftPressed;
 		}
 		static void OnKeyUp(CoreWindow sender, KeyEventArgs args)
@@ -198,7 +205,7 @@ namespace COTG
 		private void OnAppUnhandledException(object sender, Windows.UI.Xaml.UnhandledExceptionEventArgs e)
 		{
 			System.Diagnostics.Debug.WriteLine($"Unhandled Exception: " + e.Message);
-			System.Diagnostics.Debug.WriteLine( e.Exception.StackTrace);
+			System.Diagnostics.Debug.WriteLine(e.Exception.StackTrace);
 			e.Handled = true;
 			Crashes.TrackError(e.Exception);
 		}
@@ -269,7 +276,7 @@ namespace COTG
 
 			var coreTitleBar = CoreApplication.GetCurrentView().TitleBar;
 			coreTitleBar.ExtendViewIntoTitleBar = false;
-			
+
 			//  UpdateTitleBarLayout(coreTitleBar);
 
 			// Set XAML element as a draggable region.
@@ -293,7 +300,7 @@ namespace COTG
 
 				window.KeyDown += OnKeyDown;
 				window.KeyUp += OnKeyUp;
-				
+
 			}
 		}
 		public static void OnPointerPressed(CoreWindow sender, PointerEventArgs e)
@@ -354,11 +361,11 @@ namespace COTG
 			return rv;
 		}
 
-		
+
 		private static void OnPointerMoved(CoreWindow sender, PointerEventArgs args)
 		{
 			// reset timer if active
-			InputRecieved(); 
+			InputRecieved();
 		}
 
 		private static async void ProcessIdleTasks()
@@ -387,7 +394,7 @@ namespace COTG
 				}
 				// not idle but no tasks
 				await Task.Delay(9 * 1000);
-			}	
+			}
 		}
 
 		// with a delay
@@ -409,10 +416,10 @@ namespace COTG
 				if (i == a)
 					return;
 			}
-			
+
 			idleTasks.Enqueue(a);
-				
-			
+
+
 		}
 
 		protected override async void OnActivated(IActivatedEventArgs args)
@@ -514,7 +521,7 @@ namespace COTG
 
 			//   if (ShellPage.canvas != null)
 			//      ShellPage.canvas.Paused = true;
-		//	SettingsPage.SaveAll();
+			//	SettingsPage.SaveAll();
 			JSON.BuildQueue.SaveIfNeeded();
 
 			//            var deferral = e.GetDeferral();
@@ -539,6 +546,95 @@ namespace COTG
 		{
 			await ActivationService.ActivateFromShareTargetAsync(args);
 		}
+
+		public static async Task<T>
+			DispatchOnUIThreadTask<T>(  Func<Task<T>> func, CoreDispatcherPriority priority = CoreDispatcherPriority.Low, bool useCurrentThreadIfPossible = true)
+		{
+			var d = GlobalDispatcher();
+			if (useCurrentThreadIfPossible && d.HasThreadAccess)
+			{
+				return await func();
+			}
+			else
+			{
+				var taskCompletionSource = new TaskCompletionSource<T>();
+				await d.RunAsync(priority, async () =>
+				{
+					try
+					{
+						taskCompletionSource.SetResult(await func());
+					}
+					catch (Exception ex)
+					{
+						Log(ex);
+						taskCompletionSource.SetResult(default);
+					}
+				});
+				return await taskCompletionSource.Task;
+			}
+		}
+
+		// There is no TaskCompletionSource<void> so we use a bool that we throw away.
+		public static async Task DispatchOnUIThreadTask(
+	  Func<Task> func, CoreDispatcherPriority priority = CoreDispatcherPriority.Low, bool useCurrentThreadIfPossible = true)
+		{
+			var d = GlobalDispatcher();
+			if (useCurrentThreadIfPossible && d.HasThreadAccess)
+			{
+				await func();
+			}
+			else
+			{
+				var taskCompletionSource = new TaskCompletionSource<bool>();
+				await d.RunAsync(priority, async () =>
+					{
+						try
+						{
+							await func();
+							taskCompletionSource.SetResult(true);
+						}
+						catch (Exception ex)
+						{
+							Log(ex);
+							taskCompletionSource.SetResult(false);
+						}
+					});
+				await taskCompletionSource.Task;
+			}
+		}
+		public static SemaphoreSlim uiSema = new SemaphoreSlim(1);
+
+		public static async Task<T>
+			DispatchOnUIThreadExclusive<T>(Func<Task<T>> func, CoreDispatcherPriority priority = CoreDispatcherPriority.Low)
+		{
+			await uiSema.WaitAsync();
+
+			try
+			{
+				return await DispatchOnUIThreadTask(func, priority);
+			}
+			finally
+			{
+				uiSema.Release();
+			}
+
+		}
+		public static async Task
+			DispatchOnUIThreadExclusive(Func<Task> func, CoreDispatcherPriority priority = CoreDispatcherPriority.Low)
+		{
+			await uiSema.WaitAsync();
+
+			try
+			{
+				await DispatchOnUIThreadTask(func, priority);
+			}
+			finally
+			{
+				uiSema.Release();
+			}
+
+		}
+
 		public static void DispatchOnUIThread(DispatchedHandler action)
 		{
 			GlobalDispatcher().RunAsync(CoreDispatcherPriority.Normal, action);
@@ -572,7 +668,7 @@ namespace COTG
 			if (d.HasThreadAccess && d.CurrentPriority <= CoreDispatcherPriority.Low)
 				action(null);
 			else
-				d.RunIdleAsync( action);
+				d.RunIdleAsync(action);
 		}
 
 
@@ -582,15 +678,7 @@ namespace COTG
 			d.RunIdleAsync(action);
 		}
 
-		public static async Task DispatchOnUIThreadSneakyTask(DispatchedHandler action)
-		{
-			var d = GlobalDispatcher();
-			// run it immediately if we can
-			if (d.HasThreadAccess)
-				action();
-			else
-				await d.RunAsync(CoreDispatcherPriority.Low, action);
-		}
+
 		// We only have 1 UI thread here
 		public static CoreDispatcher GlobalDispatcher() => ShellPage.instance?.Dispatcher;
 
@@ -640,7 +728,7 @@ namespace COTG
 				 //     dataPackage.SetApplicationLink(new Uri() )
 				 Clipboard.SetContent(dataPackage);
 			 }
-			 catch(Exception ex)
+			 catch (Exception ex)
 			 {
 				 Log(ex);
 			 }
@@ -664,6 +752,9 @@ namespace COTG
 		public static VirtualKeyModifiers canvasKeyModifiers;
 		// HTML control messs wit this
 		public static VirtualKeyModifiers keyModifiers => canvasKeyModifiers;
+
+		public static bool isShuttingDown => state == State.closing;
+
 		//{
 		//	get
 		//	{
@@ -676,12 +767,27 @@ namespace COTG
 		//	}
 		//}
 
-		public static CoreCursor cursorDefault = new(CoreCursorType.Arrow,0);
-		public static CoreCursor cursorQuickBuild = new(CoreCursorType.Cross,0);
-		public static CoreCursor cursorMove = new(CoreCursorType.SizeAll,0);
-		public static CoreCursor cursorLayout = new(CoreCursorType.Pin,0);
+		public static CoreCursor cursorDefault = new(CoreCursorType.Arrow, 0);
+		public static CoreCursor cursorQuickBuild = new(CoreCursorType.Cross, 0);
+		public static CoreCursor cursorMove = new(CoreCursorType.SizeAll, 0);
+		public static CoreCursor cursorLayout = new(CoreCursorType.Pin, 0);
 		public static CoreCursor cursorDestroy = new(CoreCursorType.UniversalNo, 0);
 
+		public async static Task<int> DoYesNoBox(string title, string text)
+		{
+			return await DispatchOnUIThreadTask(async () =>
+		   {
+			   var dialog = new ContentDialog()
+			   {
+				   Title = title,
+				   Content = text,
+				   PrimaryButtonText = "Yes",
+				   SecondaryButtonText = "No",
+				   CloseButtonText = "Cancel"
+			   };
+			   return (await dialog.ShowAsync2()) switch { ContentDialogResult.Primary => 1, ContentDialogResult.Secondary => 0, _ => -1 };
+		   });
+		}
 
 	}
 
@@ -722,15 +828,18 @@ namespace COTG
 		{
 			SetUserAgent(GetUserAgent() + suffix);
 		}
+
 	}
-	
+
 	public static class AApp
 	{
 
+
 		public static SemaphoreSlim popupSema = new SemaphoreSlim(1);
+
 		public static async Task<ContentDialogResult> ShowAsync2(this ContentDialog dialog)
 		{
-			var escCounter = 0;
+
 			await popupSema.WaitAsync();
 			try
 			{
@@ -743,6 +852,11 @@ namespace COTG
 				popupSema.Release();
 			}
 		}
+
+
+		
+
+
 		public static void DispatchOnUIThreadLow(this CoreDispatcher d, DispatchedHandler action)
 		{
 			//if (d.HasThreadAccess && d.CurrentPriority == CoreDispatcherPriority.Low)
@@ -762,8 +876,8 @@ namespace COTG
 		[Conditional("DEBUG")]
 		public static void UpdateKeyModifiers(this VirtualKeyModifiers mod)
 		{
-		//	App.shiftPressed = mod.IsShift();
-		//	App.controlPressed = mod.IsControl();
+			//	App.shiftPressed = mod.IsShift();
+			//	App.controlPressed = mod.IsControl();
 		}
 		public static string CidToStringMD(this int cid)
 		{
@@ -771,9 +885,9 @@ namespace COTG
 			return $"[{coord}](/c/{coord})";
 
 		}
-		public static string bspotToString(this (int x, int y) cc )
+		public static string bspotToString(this (int x, int y) cc)
 		{
-			var coord = $"{(cc.x):000}:{(cc.y ):000}"; ;
+			var coord = $"{(cc.x):000}:{(cc.y):000}"; ;
 			return coord;
 
 		}
@@ -855,9 +969,9 @@ namespace COTG
 		}
 		public static MenuFlyoutItem CreateMenuItem(string text, bool isChecked, Action<bool> command)
 		{
-			var rv = new ToggleMenuFlyoutItem() { Text = text, IsChecked= isChecked };
-		
-				rv.Click += (sender, _) => command((sender as ToggleMenuFlyoutItem).IsChecked);
+			var rv = new ToggleMenuFlyoutItem() { Text = text, IsChecked = isChecked };
+
+			rv.Click += (sender, _) => command((sender as ToggleMenuFlyoutItem).IsChecked);
 			return rv;
 		}
 		public static MenuFlyoutItem AddItem(this MenuFlyout menu, string text, RoutedEventHandler command, object context = null)
@@ -874,7 +988,7 @@ namespace COTG
 			menu.Items.Add(rv);
 			return rv;
 		}
-		public static MenuFlyoutItem AddItem(this MenuFlyoutSubItem menu, string text,bool isChecked, Action<bool> command)
+		public static MenuFlyoutItem AddItem(this MenuFlyoutSubItem menu, string text, bool isChecked, Action<bool> command)
 		{
 			var rv = CreateMenuItem(text, isChecked, command);
 
@@ -916,11 +1030,11 @@ namespace COTG
 			menu.Items.Add(rv);
 			return rv;
 		}
-		
+
 		public static void Set(this CoreCursor type)
 		{
 			// is this thread safe?
-			if(ShellPage.coreInputSource!=null)
+			if (ShellPage.coreInputSource != null)
 				ShellPage.coreInputSource.PointerCursor = type;
 		}
 
@@ -961,8 +1075,8 @@ namespace COTG
 					App.DispatchOnUIThreadSneaky(() =>
 					{
 						ShellPage.inAppNote.Closed += InAppNote_Closed;
-				//		ShellPage.instance.infoBar.CloseButtonClick += InfoBar_CloseButtonClick;
-				//		ShellPage.instance.infoMD.LinkClicked += MarkDownLinkClicked;
+						//		ShellPage.instance.infoBar.CloseButtonClick += InfoBar_CloseButtonClick;
+						//		ShellPage.instance.infoMD.LinkClicked += MarkDownLinkClicked;
 					});
 				}
 
@@ -1086,16 +1200,16 @@ namespace COTG
 				Log(ex);
 			}
 		}
-		public static  void Focus(this Telerik.UI.Xaml.Controls.Grid.RadDataGrid ob)
+		public static void Focus(this Telerik.UI.Xaml.Controls.Grid.RadDataGrid ob)
 		{
 			if (ob != null)
 			{
 				ShellPage.instance.commandBar.Focus(FocusState.Programmatic);
 
-				App.DispatchOnUIThreadLow( () => ob.Focus(FocusState.Programmatic) );
+				App.DispatchOnUIThreadLow(() => ob.Focus(FocusState.Programmatic));
 			}
 		}
-		public static void Focus(this Control  ob)
+		public static void Focus(this Control ob)
 		{
 			if (ob != null)
 			{

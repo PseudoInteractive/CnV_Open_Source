@@ -34,6 +34,7 @@ namespace COTG.Views
 			var bestHub = CitySettings.FindBestHub(cid);
 			if (bestHub != 0)
 			{
+				
 				var hubName = Spot.GetOrAdd(bestHub).nameAndRemarks;
 				instance.bestHub.Text = hubName;
 				if (await instance.ShowAsync2() == ContentDialogResult.Primary)

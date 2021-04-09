@@ -9,7 +9,10 @@
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
   Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
     >
-    <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+	<Page.Resources>
+		<ResourceDictionary Source="ms-appx:///Microsoft.UI.Xaml/DensityStyles/Compact.xaml" />
+	</Page.Resources>
+	<Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
         <muxc:TabView x:Name="Tabs" x:FieldModifier="public"
                       TabWidthMode="SizeToContent"
                       AllowFocusOnInteraction="True"

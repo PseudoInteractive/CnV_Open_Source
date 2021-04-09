@@ -450,6 +450,7 @@ namespace COTG.Game
 				var wantRaidScan = isFocus;
 				//                var needCityData = 
 				var wantSelect = true;
+				var wantClick = false;
 				switch (column)
 				{
 					case nameof(nameAndRemarks):
@@ -472,7 +473,7 @@ namespace COTG.Game
 							JSClient.ChangeCity(cid, false, true, false);
 							if (wasBuild)
 							{
-								JSClient.ChangeView(!ShellPage.IsCityView());
+								JSClient.ChangeView(ShellPage.viewMode.GetNext() );
 
 							}
 
@@ -496,6 +497,7 @@ namespace COTG.Game
 						{
 							Raiding.UpdateTS(true, true);
 						}
+
 						wantRaidScan = false;
 						break;
 					case nameof(tsHome):
@@ -589,13 +591,14 @@ namespace COTG.Game
 			{
 				if (City.IsBuild(cid))
 				{
-					JSClient.ChangeView(!ShellPage.IsCityView());// toggle between city/region view
+					JSClient.ChangeView(ShellPage.viewMode.GetNext() );// toggle between city/region view
 
-					cid.BringCidIntoWorldView(lazyMove);
+					cid.BringCidIntoWorldView(lazyMove, false);
 				}
 				else
 				{
-					JSClient.ChangeCity(cid, lazyMove, false, scrollIntoUI); // keep current view, switch to city
+					await JSClient.ChangeCity(cid, lazyMove, false, scrollIntoUI); // keep current view, switch to city
+					JSClient.ChangeView(ShellPage.viewMode.GetNextUnowned());// toggle between city/region view
 				}
 				NavStack.Push(cid);
 
@@ -869,7 +872,7 @@ namespace COTG.Game
 		{
 			if (troopsTotal.IsNullOrEmpty())
 			{
-				if (isFriend)
+				if (isFriend && _tsTotal==0)
 					return "No troops";
 
 				return classificationString;
@@ -1136,7 +1139,7 @@ namespace COTG.Game
 			ShellPage.instance.coords.Text = focus.CidToString();
 		}
 
-	public static void SetFocus(int cid, bool scrollintoView, bool select = true, bool bringIntoWorldView = true,bool lazyMove = true)
+	public static void SetFocus(int cid, bool scrollintoView, bool select = true, bool bringIntoView = true,bool lazyMove = true)
 		{
 			var changed = cid != focus;
 			var spot = Spot.GetOrAdd(cid);
@@ -1147,8 +1150,8 @@ namespace COTG.Game
 				focus = cid;
 				App.DispatchOnUIThreadSneakyLow(UpdateFocusText);
 			}
-			if (bringIntoWorldView)
-				cid.BringCidIntoWorldView(lazyMove);
+			if (bringIntoView)
+				cid.BringCidIntoWorldView(lazyMove,true);
 		}
 		public static int build; // city that has Build selection.  I.e. in city view, the city you are in
 
@@ -1158,7 +1161,7 @@ namespace COTG.Game
 			return build == cid;
 		}
 	
-		public bool SetBuild(bool scrollIntoView, bool select = true)
+		public bool SetBuildInternal(bool scrollIntoView, bool select = true)
 		{
 			var changed = cid != build;
 			if (changed)
@@ -1533,7 +1536,10 @@ namespace COTG.Game
 			var cids = MainPage.GetContextCids(sender);
 			foreach (var cid in cids)
 			{
-				await CityRename.RenameDialog(cid);
+				await App.DispatchOnUIThreadExclusive(async () =>
+				{
+					await CityRename.RenameDialog(cid,true);
+				});
 			}
 		}
 		public void DefendMe()

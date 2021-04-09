@@ -37,6 +37,7 @@ using Windows.Graphics.Display;
 using Microsoft.Toolkit.Uwp.UI;
 using System.Numerics;
 using Telerik.UI.Xaml.Controls.Primitives;
+using Windows.UI.Core.Preview;
 
 namespace COTG.Views
 {
@@ -203,6 +204,8 @@ namespace COTG.Views
 		public static bool canvasVisible;
 		private void OnLoaded(object sender, RoutedEventArgs e)
 		{
+			SystemNavigationManagerPreview.GetForCurrentView().CloseRequested += App.App_CloseRequested; ;
+
 			CityBuild.Initialize();
 		//	Grid.SetColumn(webView, 0);
 			Grid.SetRow(CityBuild.instance, 1);
@@ -1073,7 +1076,7 @@ namespace COTG.Views
 
 			if (Spot.focus == 0)
 				return;
-			if (Spot.focus.BringCidIntoWorldView(false) && City.IsBuild(Spot.focus)) // first just focus
+			if (Spot.focus.BringCidIntoWorldView(false, false) && City.IsBuild(Spot.focus)) // first just focus
 			{
 				return;
 			}

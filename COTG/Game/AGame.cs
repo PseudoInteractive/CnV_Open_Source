@@ -2041,7 +2041,7 @@ namespace COTG
 				return;
 
 			var c = wc.WToC();
-			var dv = AGame.pixelScale;
+			var dv = AGame.shapeSizeGain;
 			float z = zLabels;
 
 			// hover flags
@@ -2536,24 +2536,48 @@ namespace COTG
 			return (c.c0.CToDepth() + dz, new Vector2(c.c1.X, c.c0.Y).CToDepth() + dz,
 													new Vector2(c.c0.X, c.c1.Y).CToDepth() + dz, c.c1.CToDepth() + dz);
 		}
-		public static bool BringCidIntoWorldView(this int cid, bool lazy)
+		public static bool BringCidIntoWorldView(this int cid, bool lazy, bool allowZoomChange)
 		{
 			var v = cid.CidToWorldV();
 			var newC = v;
 			var dc = newC - AGame.cameraC;
 			//	if (ShellPage.IsCityView())
 			//		lazy = false;
-
 			// only move if needed, heuristic is if any part is off screen
 			if (!lazy ||
 				(dc.X.Abs() + 0.5f) * AGame.pixelScale >= AGame.halfSpan.X ||
 				(dc.Y.Abs() + 0.5f) * AGame.pixelScale >= AGame.halfSpan.Y)
 			{
+				var thresh = lazy ? 0.75f : 0.25f;
 				// only move if moving more than about 1 city span
-				if (Vector2.Distance(AGame.cameraC, newC) >= 0.75f)
+				if (Vector2.Distance(AGame.cameraC, newC) >= thresh)
 				{
+					// try region view
+					if (allowZoomChange )
+					{
+						if((dc.X.Abs() + 0.5f) * AGame.cameraZoomRegionDefault <= AGame.halfSpan.X &&
+							(dc.Y.Abs() + 0.5f) * AGame.cameraZoomRegionDefault <= AGame.halfSpan.Y)
+							{
+
+							ShellPage.SetViewModeRegion();
+							goto done;
+						}
+
+						ShellPage.SetViewModeWorld();
+
+						if ((dc.X.Abs() + 0.5f) * AGame.cameraZoomWorldDefault <= AGame.halfSpan.X &&
+						(dc.Y.Abs() + 0.5f) * AGame.cameraZoomWorldDefault <= AGame.halfSpan.Y)
+						{
+							goto done;
+						}
+
+					}
+					done:
 					AGame.cameraC = newC;
 					ShellPage.SetJSCamera();
+					if (allowZoomChange && ShellPage.IsCityView())
+						ShellPage.SetViewModeRegion();
+
 					return true;
 				}
 

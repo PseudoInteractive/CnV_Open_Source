@@ -95,8 +95,8 @@ namespace COTG
 		public static Task JSInvokeTask(string func, string[] args)
 		{
 			// this won't await the actually js call
-			return App.DispatchOnUIThreadSneakyTask(() =>
-		   JSClient.view.InvokeScriptAsync(func, args));
+			return App.DispatchOnUIThreadTask( async () =>
+		   await JSClient.view.InvokeScriptAsync(func, args));
 		}
 		public static HttpClient _genericClient;
 		public static HttpClient genericClient
@@ -695,7 +695,7 @@ namespace COTG
 		//    }
 		//}
 
-		public static void ChangeCity(int cityId, bool lazyMove, bool select = true, bool scrollIntoUI = true)
+		public static async Task ChangeCity(int cityId, bool lazyMove, bool select = true, bool scrollIntoUI = true)
 		{
 			try
 			{
@@ -703,24 +703,25 @@ namespace COTG
 				if (City.CanVisit(cityId))
 				{
 					if (!lazyMove)
-						cityId.BringCidIntoWorldView(lazyMove);
+						cityId.BringCidIntoWorldView(lazyMove, false);
 					var city = City.GetOrAddCity(cityId);
 					if (city.pid != Player.activeId)
 					{
 
 						// need to switch player
 						JSClient.SetPlayer(city.pid, cityId);
+						return;
 					}
 					else
 					{
-						city.SetBuild(scrollIntoUI);
-						App.DispatchOnUIThreadSneaky(() =>
-							view.InvokeScriptAsync("chcity", new string[] { (cityId).ToString() }));
+						if(city.SetBuildInternal(scrollIntoUI))				
+						await WaitOnCityData(cityId);
 					}
 				}
 				else
 				{
 					ShowCity(cityId, lazyMove, scrollIntoUI);
+					return ;
 				}
 
 			}
@@ -728,6 +729,7 @@ namespace COTG
 			{
 				Log(e);
 			}
+			return ;
 
 		}
 
@@ -735,11 +737,11 @@ namespace COTG
 		{
 			try
 			{
-				await App.DispatchOnUIThreadSneakyTask(() =>
+				await App.DispatchOnUIThreadTask( async () =>
 			   {
 
 
-				   view.InvokeScriptAsync("addtoattacksender", new string[] { (cityId).ToString() });
+				   await view.InvokeScriptAsync("addtoattacksender", new string[] { (cityId).ToString() });
 			   });
 
 			}
@@ -781,22 +783,18 @@ namespace COTG
 
 			}
 		}
-		public static void ChangeView(bool cityView)
+		public static void ChangeView(ShellPage.ViewMode viewMode)
 		{
 			try
 			{
-				if (cityView)
-					ShellPage.SetViewModeCity();
-				else
-					ShellPage.SetViewModeWorld();
-				App.DispatchOnUIThreadSneaky(() => view.InvokeScriptAsync("setviewmode", new string[] { cityView ? "c" : "w" }));
+				ShellPage.SetViewMode(viewMode);
+				App.DispatchOnUIThreadSneaky(() => view.InvokeScriptAsync("setviewmode", new string[] { viewMode== ShellPage.ViewMode.city ? "c" : "w" }));
 
 			}
 			catch (Exception e)
 			{
 				Log(e);
 			}
-
 		}
 
 		public static void SetJSCamera(Vector2 cameraC)
@@ -874,7 +872,7 @@ namespace COTG
 		{
 			try
 			{
-				ShellPage.SetViewModeWorld();
+//				ShellPage.SetViewModeWorld();
 
 				// if (City.IsMine(cityId))
 				{
@@ -882,7 +880,7 @@ namespace COTG
 				}
 
 				// if (JSClient.IsWorldView())
-				cityId.BringCidIntoWorldView(lazyMove);
+			//	cityId.BringCidIntoWorldView(lazyMove, false);
 
 				App.DispatchOnUIThreadSneaky(() =>
 				{
@@ -1304,7 +1302,12 @@ namespace COTG
 					}
 					city.type = City.typeCity;
 					city._tsTotal = jsCity.GetAsInt("8");
-					city._tsHome = jsCity.GetAsInt("17");
+					//city._tsHome = jsCity.GetAsInt("17");
+					city.troopsTotal = TroopTypeCount.empty;
+	//				city.troopsHome = TroopTypeCount.empty;
+
+		//			Trace($"TS Home {city._tsHome}");
+
 					//   city.tsRaid = city.tsHome;
 					city.isCastle = jsCity.GetAsInt("12") > 0;
 					city.points = (ushort)jsCity.GetAsInt("4");
@@ -1586,8 +1589,17 @@ namespace COTG
 		}
 
 		static DispatcherTimer presenceTimer;
-
+		static ConcurrentBag<TaskCompletionSource<bool> > waitingOnCityData = new();
+		static async Task WaitOnCityData(int cityId)
+		{
+			var i = new TaskCompletionSource<bool>();
+				waitingOnCityData.Add(i);
+			App.DispatchOnUIThreadSneaky(() =>
+							view.InvokeScriptAsync("chcity", new string[] { (cityId).ToString() }));
+			await i.Task;
+		}
 		static private void View_ScriptNotify(object sender, NotifyEventArgs __e)
+
 		{
 			var eValue = __e.Value;
 			var eCallingUri = __e.CallingUri;
@@ -1829,9 +1841,10 @@ namespace COTG
 											   var cid = int.Parse(ss[1]);
 
 											   await Task.Delay(1000);
-											   App.DispatchOnUIThreadLow(async () =>
+											   await App.DispatchOnUIThreadExclusive(async () =>
 											   {
 												   ShellPage.instance.RefreshX(null, null);
+												   
 												   var dialog = new ContentDialog()
 												   {
 													   Title = "New City",
@@ -1843,9 +1856,9 @@ namespace COTG
 
 												   if(result == ContentDialogResult.Primary)
 												   {
-													   ChangeCity(cid,false);
+													   await ChangeCity(cid,false);
 													   await Task.Delay(1000);
-													   CityRename.RenameDialog(cid); 
+													   await CityRename.RenameDialog(cid,true); 
 												   }
 											   });
 
@@ -1948,7 +1961,7 @@ namespace COTG
 									   city.isTemple = jso.GetAsInt("plvl") != 0;
 
 
-									   cid.BringCidIntoWorldView(true);
+									   cid.BringCidIntoWorldView(true,false);
 									   if (city._cityName != name)
 									   {
 										   city._cityName = name;
@@ -2004,6 +2017,12 @@ namespace COTG
 																							   //  }
 								   }
 								   NavStack.Push(cid);
+								   foreach(var i in waitingOnCityData)
+								   {
+									   i.SetResult(true);
+								   }
+								   waitingOnCityData.Clear();
+
 								   break;
 
 							   }
@@ -2139,7 +2158,7 @@ namespace COTG
 
 											   break;
 									   }
-									   City.build.BringCidIntoWorldView(false);
+									   City.build.BringCidIntoWorldView(false,false);
 									   ShellPage.AutoSwitchViewMode();
 								   }
 
@@ -2162,7 +2181,7 @@ namespace COTG
 									   if (cid != City.build)
 									   {
 										   var city = City.GetOrAddCity(cid);
-										   city.SetBuild(true);
+										   city.SetBuildInternal(true);
 									   }
 								   }
 								   break;
@@ -2224,6 +2243,7 @@ namespace COTG
 					   // 
 					   SettingsPage.pinned = SettingsPage.pinned.ArrayRemoveDuplicates();
 					   SpotTab.LoadFromPriorSession(SettingsPage.pinned);
+					   App.state = App.State.active;
 				   }
 			   }
 			   //}

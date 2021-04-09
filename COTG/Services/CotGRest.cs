@@ -533,6 +533,8 @@ namespace COTG.Services
 						v.troopsTotal = tsTotal.ToArray();
 						v._tsHome = v.troopsHome.TS();
 						v._tsTotal = v.troopsTotal.TS();
+					//	Trace($"TS Home {v._tsHome}");
+
 					}
 					else
 					{

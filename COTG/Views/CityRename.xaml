@@ -27,7 +27,7 @@
         <TextBox Grid.Row="0" x:Name="suggested" Header="Suggested" x:FieldModifier="public" />
         <TextBox Grid.Row="1" x:Name="name" Header="Current" x:FieldModifier="public"   />
 		<ToggleSwitch Grid.Row="2" IsOn="{x:Bind local:SettingsPage.useSuggested, Mode=TwoWay}" OnContent="Suggested" OffContent="Current"/>
-		<controls:WrapPanel Grid.Row="3" x:Name="tags" x:FieldModifier="public" >
+		<controls:WrapPanel Grid.Row="3" x:Name="tagsPanel" x:FieldModifier="public" >
 			
 		</controls:WrapPanel>
 		<controls:WrapPanel Grid.Row="4">

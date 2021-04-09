@@ -191,6 +191,9 @@ namespace COTG.JSON
 										  defenders.Add(spot);
 										  // set info if needed
 										  spot._tsHome = val.GetAsInt("8");
+										  spot.troopsHome = TroopTypeCount.empty;
+										  
+
 										  var name = val.GetAsString("0");
 										  spot.pid = Player.NameToId(name);
 

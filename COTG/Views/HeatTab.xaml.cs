@@ -10,7 +10,9 @@ using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
@@ -129,7 +131,7 @@ namespace COTG.Views
 			snapshots_SelectionChanged(null, null);
 		}
 
-		private void tree_ItemInvoked(TreeView sender, TreeViewItemInvokedEventArgs args)
+		private void tree_ItemInvoked(Microsoft.UI.Xaml.Controls.TreeView sender, Microsoft.UI.Xaml.Controls.TreeViewItemInvokedEventArgs args)
 		{
 			snapshots_SelectionChanged(null, null);
 		}

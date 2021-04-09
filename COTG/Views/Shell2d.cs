@@ -315,13 +315,13 @@ namespace COTG.Views
 																										   //	case Windows.System.VirtualKey.U  :  CityBuild.ShortBuild(City.bidCityguardhouse ); return; //  504;
 						case Windows.System.VirtualKey.B: CityBuild.ShortBuild(City.bidBarracks); return; //  445;
 						case Windows.System.VirtualKey.I: CityBuild.ShortBuild(City.bidMine); return; //  465;
-						case Windows.System.VirtualKey.T: CityBuild.ShortBuild(City.bidTrainingground); return; //  483;
+						case Windows.System.VirtualKey.T: CityBuild.ShortBuild(City.bidTrainingGround); return; //  483;
 						case Windows.System.VirtualKey.M: CityBuild.ShortBuild(City.bidMarketplace); return; //  449;
 						case Windows.System.VirtualKey.V: CityBuild.ShortBuild(City.bidTownhouse); return; //  481;
 						case Windows.System.VirtualKey.L: CityBuild.ShortBuild(City.bidSawmill); return; //  460;
 						case Windows.System.VirtualKey.E: CityBuild.ShortBuild(City.bidStable); return; //  466;
 						case Windows.System.VirtualKey.H: CityBuild.ShortBuild(City.bidStonemason); return; //  462;
-						case Windows.System.VirtualKey.W: CityBuild.ShortBuild(City.bidMage_tower); return; //  500;
+						case Windows.System.VirtualKey.W: CityBuild.ShortBuild(City.bidSorcTower); return; //  500;
 						case Windows.System.VirtualKey.G: CityBuild.ShortBuild(City.bidWindmill); return; //  463;
 						case Windows.System.VirtualKey.Y: CityBuild.ShortBuild(City.bidAcademy); return; //  482;
 						case Windows.System.VirtualKey.Z: CityBuild.ShortBuild(City.bidSmelter); return; //  477;
@@ -391,6 +391,11 @@ namespace COTG.Views
 						if (AGame.cameraZoom > AGame.cityZoomThreshold)
 							AGame.cameraZoom = AGame.cameraZoomRegionDefault;
 					}
+					else if (viewMode == ViewMode.region)
+					{
+						if (AGame.cameraZoom > AGame.cityZoomThreshold)
+							AGame.cameraZoom = AGame.cameraZoomRegionDefault;
+					}
 					else
 					{
 						if (AGame.cameraZoom < AGame.cityZoomThreshold)
@@ -427,6 +432,7 @@ namespace COTG.Views
 			SetViewMode(ViewMode.city, webviewHasFocus);
 		}
 		public static void SetViewModeWorld() => SetViewMode(ViewMode.world, webviewHasFocus);
+		public static void SetViewModeRegion() => SetViewMode(ViewMode.region, webviewHasFocus);
 
 
 		private void Canvas_CompositionScaleChanged(SwapChainPanel sender, object args)

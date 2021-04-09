@@ -126,7 +126,7 @@ namespace COTG.Views
 		public static bool tintCities= true;
 		public static bool raidSendExact;
 		public static int resetRaidsCarry = 90;
-		public static int resetRaidsIdle = 25;
+		public static int resetRaidsIdle = 10;
 		public static DateTimeOffset attackPlayerTime = AUtil.dateTimeZero;
 		public static int raidsVisible = -1;
 		public static bool cityListWarship=true;
@@ -135,7 +135,7 @@ namespace COTG.Views
 		public static bool cityListOffense = true;
 		public static bool cityListGalleys = true;
 		public static bool cityListStingers = true;
-
+		public static bool shareStringApplyTags = true;
 		int uiLighting
 		{
 			get => (int)lighting;

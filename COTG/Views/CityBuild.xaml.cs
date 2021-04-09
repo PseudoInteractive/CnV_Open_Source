@@ -237,8 +237,8 @@ namespace COTG.Views
 		static BuildMenuItem bmWindmill = CreateBuildMenuItem(bidWindmill); //  = 463;
 
 		static BuildMenuItem bmBarracks = CreateBuildMenuItem(bidBarracks); //  = 445;
-		static BuildMenuItem bmTrainingground = CreateBuildMenuItem(bidTrainingground); //  = 483;
-		static BuildMenuItem bmMage_tower = CreateBuildMenuItem(bidMage_tower); //  = 500;
+		static BuildMenuItem bmTrainingground = CreateBuildMenuItem(bidTrainingGround); //  = 483;
+		static BuildMenuItem bmMage_tower = CreateBuildMenuItem(bidSorcTower); //  = 500;
 		static BuildMenuItem bmStable = CreateBuildMenuItem(bidStable); //  = 466;
 
 		static BuildMenuItem bmAcademy = CreateBuildMenuItem(bidAcademy); //  = 482;
@@ -608,7 +608,7 @@ namespace COTG.Views
 
 			//}
 			//var maxBuildings = postQueueBuildings[bspotTownHall].bl * 10;
-
+			CityBuild.postQueueBuildings[spot].SetBid(elvl!=0 ? bid : 0, elvl);
 			return BuildQueue.Enqueue(City.build, (byte)slvl, (byte)elvl, (ushort)bid, (ushort)spot);
 		
 		}
@@ -672,9 +672,9 @@ namespace COTG.Views
 			}
 		}
 
-		public static void Demolish((int x, int y) building, bool dryRun)
+		public static Task Demolish((int x, int y) building, bool dryRun)
 		{
-			Demolish(XYToId(building), dryRun);
+			return Demolish(XYToId(building), dryRun);
 		}
 
 		public static Building GetBuildingPostQueue(int spot)
@@ -689,7 +689,7 @@ namespace COTG.Views
 		{
 			get
 			{
-				{
+				
 					if (!postQueueBuildingsDirty)
 						return postQueuebuildingsCache;
 					postQueueBuildingsDirty = false;
@@ -709,42 +709,63 @@ namespace COTG.Views
 						//
 						// Apply queue
 						//
-						IterateQueue((q) =>
 						{
-							ref var b = ref postQueuebuildingsCache.DangerousGetReferenceAt(q.bspot);
-							b.bl = q.elvl;
-							if (q.elvl == 0)
-								b.id = 0;
-							else
-								b.id = BuildingDef.BidToId(q.bid);
-						});
+							foreach (var q in buildQueue)
+							{
+								ref var b = ref postQueuebuildingsCache.DangerousGetReferenceAt(q.bspot);
+								b.bl = q.elvl;
+								if (q.elvl == 0)
+									b.id = 0;
+								else
+									b.id = BuildingDef.BidToId(q.bid);
+							}
 
-					}
-					// calculate counts
-					postQueueBuildingCount = 0;
-					postQueueTownHallLevel = 10;
-					foreach (var bi in postQueuebuildingsCache)
-					{
-						if (bi.id == 0 || bi.bl == 0)
-							continue;
-						var bd = bi.def;
-						if (bd.isTower || bd.isWall)
-						{
-							continue;
+							if (CityBuildQueue.all.TryGetValue(City.build, out var bq))
+							{
+								var count = bq.queue.count;
+								var data = bq.queue.v;
+
+								for (int i = 0; i < count; ++i)
+								{
+									ref var q = ref data[i];
+									ref var b = ref postQueuebuildingsCache.DangerousGetReferenceAt(q.bspot);
+									b.bl = q.elvl;
+									if (q.elvl == 0)
+										b.id = 0;
+									else
+										b.id = BuildingDef.BidToId(q.bid);
+								}
+							}
+
+
+
 						}
-						if (bd.isTownHall)
+						// calculate counts
+						postQueueBuildingCount = 0;
+						postQueueTownHallLevel = 10;
+						foreach (var bi in postQueuebuildingsCache)
 						{
-							postQueueTownHallLevel = bi.bl;
-							continue;
+							if (bi.id == 0 || bi.bl == 0)
+								continue;
+							var bd = bi.def;
+							if (bd.isTower || bd.isWall)
+							{
+								continue;
+							}
+							if (bd.isTownHall)
+							{
+								postQueueTownHallLevel = bi.bl;
+								continue;
+							}
+							++postQueueBuildingCount;
 						}
-						++postQueueBuildingCount;
 					}
-					return postQueuebuildingsCache;
-				}
+				return postQueuebuildingsCache;
+
 			}
 		}
 
-		public static void Demolish(int id, bool dryRun)
+		public static async Task Demolish(int id, bool dryRun)
 		{
 			var sel = GetBuildingPostQueue(id);
 			if (sel.isEmpty)
@@ -769,7 +790,7 @@ namespace COTG.Views
 					}
 					else
 					{
-						Enqueue(sel.bl, 0, sel.def.bid, id);
+						await Enqueue(sel.bl, 0, sel.def.bid, id);
 					}
 				}
 				else
@@ -778,14 +799,14 @@ namespace COTG.Views
 				}
 			}
 		}
-		public static void Downgrade((int x, int y) building, bool dryRun)
+		public static async Task Downgrade((int x, int y) building, bool dryRun)
 		{
 			var id = XYToId(building);
 			var sel = GetBuildingPostQueue(id);
 
 			if (sel.bl == 1)
 			{
-				Demolish(id, dryRun);
+				await Demolish(id, dryRun);
 			}
 			else if(sel.bl == 0)
 			{
@@ -805,7 +826,7 @@ namespace COTG.Views
 					}
 					else
 					{
-						Enqueue(sel.bl, sel.bl - 1, sel.def.bid, id);
+						await Enqueue(sel.bl, sel.bl - 1, sel.def.bid, id);
 					}
 				}
 			}
@@ -823,7 +844,7 @@ namespace COTG.Views
 			};
 			if (await dialog.ShowAsync2().ConfigureAwait(true) == ContentDialogResult.Primary)
 			{
-				Enqueue(0, 1, bidWall, bspotWall);
+				await Enqueue(0, 1, bidWall, bspotWall);
 				await Task.Delay(400).ConfigureAwait(true);
 
 				return true;
@@ -851,7 +872,7 @@ namespace COTG.Views
 			if (a == ContentDialogResult.Primary)
 			{
 				
-				Enqueue(currentLevel, toLevel, bidTownHall, bspotTownHall);
+				await Enqueue(currentLevel, toLevel, bidTownHall, bspotTownHall);
 				await Task.Delay(400).ConfigureAwait(true);
 				return true;
 			}
@@ -950,14 +971,14 @@ namespace COTG.Views
 					}
 					else
 					{
-						var counts = CountBuildings();
+						var counts = GetBuildingCountAndTownHallLevel();
 						if(counts.townHallLevel == 10 && counts.count == 100)
 						{
 							if (SettingsPage.autoDemoCottages)
 							{
 								var cabin = FindCabinToDemo();
 								if(cabin!= -1)
-									Demolish(cabin, dryRun);
+									await Demolish(cabin, dryRun);
 							}
 						}
 						else if ( ( counts.count == counts.max && counts.townHallLevel < 10 && !buildDef.isTower && bid!=bidWall ) || buildDef.Thl > counts.townHallLevel)
@@ -966,25 +987,26 @@ namespace COTG.Views
 								return;
 
 						}
-						Enqueue(0, 1, bid, id);
+						await Enqueue(0, 1, bid, id);
+						
 					}
 				}
 			}
 		}
-		public static void Build((int x, int y) cc, int bid, bool dryRun)
+		public  static Task Build((int x, int y) cc, int bid, bool dryRun)
 		{
-			Build(XYToId(cc), bid, dryRun);
+			return Build(XYToId(cc), bid, dryRun);
 		}
 
 
-		private void Downgrade_Click(object sender, RoutedEventArgs e)
+		private Task Downgrade_Click(object sender, RoutedEventArgs e)
 		{
-			Downgrade(selected,false);
+			return Downgrade(selected,false);
 		}
 
-		private void Destroy_Click(object sender, RoutedEventArgs e)
+		private Task Destroy_Click(object sender, RoutedEventArgs e)
 		{
-			Demolish(selected,false);
+			return Demolish(selected,false);
 		}
 
 		static int GetHash(string name, int x, int y, float scale)
@@ -1071,12 +1093,12 @@ namespace COTG.Views
 			// Todo:  Cannot be moved if queued
 			// Todo: Error checking
 			var build = City.GetBuild();
-			if(HasBuildOps(a))
+			if(HasBuildOps(a) && !isPlanner)
 			{
 				Status($"Cannot move a building that is being rennovated", dryRun);
 				return;
 			}
-			if (Player.moveSlots <= 0)
+			if (Player.moveSlots <= 0 && !isPlanner)
 			{
 				Status($"No move spots",dryRun);
 			}
@@ -1104,7 +1126,7 @@ namespace COTG.Views
 			}
 		}
 
-		public static async void SwapBuilding(int a, int b, bool dryRun)
+		public static async Task SwapBuilding(int a, int b, bool dryRun)
 		{
 			if (HasBuildOps(a) || HasBuildOps(b))
 			{
@@ -1287,206 +1309,7 @@ namespace COTG.Views
 						else
 						{
 
-							var desBid = build.BidFromOverlay(bspot);
-							var desName = BuildingDef.all[desBid].Bn;
-							if(BuildingDef.IsRes(desBid))
-							{
-								desBid = 0; // if it is a resource, ignore it
-							}
-							var curBid = b.def.bid;
-							var takeFrom = -1;
-							var takeScore = 0;
-							var putTo = -1;
-							var putScore = 0;
-							// See if there are spare buildings that we can take
-							for (int xy = 0; xy < City.citySpotCount; ++xy)
-							{
-								var overlayBid = build.BidFromOverlay(xy);
-								var xyBuilding = postQueueBuildings[xy].def.bid;
-
-								if (overlayBid != xyBuilding)
-								{
-									if (HasBuildOps(xy) )
-									{
-										// Cannot take a building that is being operated on
-										continue;
-									}
-
-									// do they have what we need?
-									if (xyBuilding == desBid)
-									{
-										// two points for ourbuilding is also needed there
-										var score = (overlayBid == curBid) ? 2 : 1;
-										if (score > takeScore)
-										{
-											takeScore = score;
-											takeFrom = xy;
-										}
-									}
-									//do they want what we have?
-									if (overlayBid == curBid)
-									{
-										var score = (xyBuilding == desBid) ? 4 : (xyBuilding == 0) ? 3 : postQueueBuildings[xy].isBuilding ? 2 : 1;
-										if (score > putScore)
-										{
-											putScore = score;
-											putTo = xy;
-
-										}
-
-									}
-								}
-							}
-							var counts = CountBuildings();
-
-							// case 1:  nothing here, or res. if res, demo first, then Add building
-							if (b.id == 0 || b.isRes)
-							{
-								
-								// Do we want a building here?
-								if (desBid != 0)
-								{
-									if (b.isRes)
-									{
-
-										Status($"Destorying {b.def.Bn} to make way for {desName}", dryRun);
-										
-
-										Demolish(cc, dryRun);
-										if (!dryRun)
-											await Task.Delay(400).ConfigureAwait(true);
-
-									}
-									else if (takeScore > 0)
-									{
-										Status($"Found an unneeded {desName}, will move it to the right spot for you", dryRun);
-									
-										MoveBuilding(takeFrom, bspot,dryRun);
-										break;
-									}
-									if (counts.townHallLevel < b.def.Thl || (counts.count == counts.max && counts.townHallLevel < 10))
-									{
-										var level = (counts.count/ 10+1).Max(b.def.Thl).Min(10);
-										if (dryRun)
-										{
-											Status($"Upgrade town hall to level {level}", dryRun);
-
-										}
-										else
-										{
-											if (!await UpgradeTownHallDialogue(level))
-												return;
-										}
-									}
-									else if (counts.count >= 100 )
-									{
-										{
-											// Is there a cabin to remove?
-
-											int bestSpot = FindCabinToDemo();
-											if (bestSpot != -1)
-											{
-												Status("Will Demolish a Cottage to make room", dryRun);
-
-												Demolish(bestSpot, dryRun);
-												if (!dryRun)
-													await Task.Delay(400).ConfigureAwait(true);
-												//break;
-
-											}
-										}
-
-
-									}
-									Build(cc, desBid == 0 ? bidCottage : desBid, dryRun);
-
-								}
-								else
-								{
-									// Nothing wanted here
-									if (b.isRes)
-									{
-										Status($"What a lovely {b.def.Bn}.", dryRun);
-
-									}
-									else
-									{
-										// nothing here
-								//		if (counts.count < counts.max ) // can we put a cabin here?
-										{
-											Status($"No building is wanted here, how about a cottage instead?", dryRun);
-											Build(cc, bidCottage, dryRun);
-										}
-									}
-								}
-							}
-							else
-							{
-								// building is here
-								// a building
-								// Try to move it to some place where one is needed
-								
-								if (desBid != curBid)
-								{
-									if (putScore > 0)
-									{
-										var name = b.def.Bn;
-										
-										switch (putScore)
-										{
-											case 4:
-												{
-													Status($"Swaping {b.def.Bn} and {desName} as they are mixed up ({Player.moveSlots} moves left)", dryRun);
-													{
-														SwapBuilding(bspot, putTo,dryRun);
-													}
-													// two way swap 
-													break;
-												}
-											case 3:
-												Status($"Move {name} to where it is wanted", dryRun);
-												MoveBuilding(bspot, putTo,dryRun);
-												break;
-											case 2:
-												Status($"{name} is wanted elsewhere but there is a building in the way", dryRun);
-												break;
-											case 1:
-												Status($"{name} is wanted elsewhere but there are reources in the way", dryRun);
-												break;
-
-
-										}
-
-
-									}
-									else
-									{
-										if (b.isCabin && counts.count < 100 )
-										{
-											Status($"A cabin is here, leaving it", dryRun);
-											// 
-										}
-										else
-										{
-											Status($"{b.def.Bn} is not wanted, destroying it", dryRun);
-											if (dryRun)
-												DrawSprite(hovered, decalBuildingInvalid, .31f);
-											else
-											{
-												Demolish(cc, dryRun);
-												// build the correct building
-												if(desBid!=0)
-													Build(cc, desBid, dryRun);
-											}
-										}
-									}
-								}
-								else
-								{
-									Status($"{desName} is in the right spot, no changed needed", dryRun);
-
-								}
-							}
+							await SmartBuild( build,cc, build.BidFromOverlay(bspot),true,dryRun);
 
 						}
 						break;
@@ -1519,7 +1342,7 @@ namespace COTG.Views
 
 							if (sel != 0)
 							{
-								Build(bspot, sel, dryRun);
+								await SmartBuild(City.GetBuild(),cc, sel, false, dryRun);
 
 								break;
 							}
@@ -1534,7 +1357,7 @@ namespace COTG.Views
 						//	Status("Build Queue full", dryRun);
 						//	break;
 						//}
-						Demolish(cc, dryRun);
+						await Demolish(cc, dryRun);
 
 						
 						break;
@@ -1546,7 +1369,7 @@ namespace COTG.Views
 					}
 				case Action.downgrade:
 					{
-						Downgrade(cc,dryRun);
+						await Downgrade(cc,dryRun);
 						break;
 					}
 				case Action.upgrade:
@@ -1625,6 +1448,221 @@ namespace COTG.Views
 					break;
 				}
 			}
+		}
+
+		public static async Task<int> SmartBuild(City build, (int x, int y) cc, int desBid,bool searchForSpare, bool dryRun=false)
+		{
+			int rv = 0;
+			var bspot = XYToId(cc);
+			var b = GetBuildingPostQueue(bspot);
+			var desName = BuildingDef.all[desBid].Bn;
+			if (BuildingDef.IsRes(desBid))
+			{
+				desBid = 0; // if it is a resource, ignore it
+			}
+			var curBid = b.def.bid;
+			var takeFrom = -1;
+			var takeScore = 0;
+			var putTo = -1;
+			var putScore = 0;
+			// See if there are spare buildings that we can take
+			for (int xy = 0; xy < City.citySpotCount; ++xy)
+			{
+				var overlayBid = build.BidFromOverlay(xy);
+				var xyBuilding = postQueueBuildings[xy].def.bid;
+
+				if (overlayBid != xyBuilding)
+				{
+					if (HasBuildOps(xy))
+					{
+						// Cannot take a building that is being operated on
+						continue;
+					}
+
+					// do they have what we need?
+					if (xyBuilding == desBid)
+					{
+						// two points for ourbuilding is also needed there
+						var score = (overlayBid == curBid) ? 2 : 1;
+						if (score > takeScore)
+						{
+							takeScore = score;
+							takeFrom = xy;
+						}
+					}
+					//do they want what we have?
+					if (overlayBid == curBid)
+					{
+						var score = (xyBuilding == desBid) ? 4 : (xyBuilding == 0) ? 3 : postQueueBuildings[xy].isBuilding ? 2 : 1;
+						if (score > putScore)
+						{
+							putScore = score;
+							putTo = xy;
+
+						}
+
+					}
+				}
+			}
+			var counts = GetBuildingCountAndTownHallLevel();
+
+			// case 1:  nothing here, or res. if res, demo first, then Add building
+			if (b.id == 0 || b.isRes)
+			{
+
+				// Do we want a building here?
+				if (desBid != 0)
+				{
+					if (b.isRes)
+					{
+
+						Status($"Destorying {b.def.Bn} to make way for {desName}", dryRun);
+
+
+						await Demolish(cc, dryRun);
+						++rv;
+						if (!dryRun)
+							await Task.Delay(400).ConfigureAwait(true);
+
+					}
+					else if (takeScore > 0 && searchForSpare)
+					{
+						Status($"Found an unneeded {desName}, will move it to the right spot for you", dryRun);
+
+						MoveBuilding(takeFrom, bspot, dryRun);
+						return rv;
+					}
+					if (counts.townHallLevel < b.def.Thl || (counts.count == counts.max && counts.townHallLevel < 10))
+					{
+						var level = (counts.count / 10 + 1).Max(b.def.Thl).Min(10);
+						if (dryRun)
+						{
+							Status($"Upgrade town hall to level {level}", dryRun);
+
+						}
+						else
+						{
+							if (!await UpgradeTownHallDialogue(level))
+								return rv;
+							++rv; // not exact
+ 						}
+					}
+					else if (counts.count >= 100)
+					{
+						{
+							// Is there a cabin to remove?
+
+							int bestSpot = FindCabinToDemo();
+							if (bestSpot != -1)
+							{
+								Status("Will Demolish a Cottage to make room", dryRun);
+
+								await Demolish(bestSpot, dryRun);
+								if (!dryRun)
+									await Task.Delay(400).ConfigureAwait(true);
+								//break;
+								++rv;
+
+							}
+						}
+
+
+					}
+					await Build(cc, desBid == 0 ? bidCottage : desBid, dryRun);
+
+				}
+				else
+				{
+					// Nothing wanted here
+					if (b.isRes)
+					{
+						Status($"What a lovely {b.def.Bn}.", dryRun);
+
+					}
+					else
+					{
+						// nothing here
+						//		if (counts.count < counts.max ) // can we put a cabin here?
+						{
+							Status($"No building is wanted here, how about a cottage instead?", dryRun);
+							await Build(cc, bidCottage, dryRun);
+							++rv;
+						}
+					}
+				}
+			}
+			else
+			{
+				// building is here
+				// a building
+				// Try to move it to some place where one is needed
+
+				if (desBid != curBid)
+				{
+					if (putScore > 0)
+					{
+						var name = b.def.Bn;
+
+						switch (putScore)
+						{
+							case 4:
+								{
+									Status($"Swaping {b.def.Bn} and {desName} as they are mixed up ({Player.moveSlots} moves left)", dryRun);
+									{
+										SwapBuilding(bspot, putTo, dryRun);
+									}
+									// two way swap 
+									break;
+								}
+							case 3:
+								Status($"Move {name} to where it is wanted", dryRun);
+								MoveBuilding(bspot, putTo, dryRun);
+								break;
+							case 2:
+								Status($"{name} is wanted elsewhere but there is a building in the way", dryRun);
+								break;
+							case 1:
+								Status($"{name} is wanted elsewhere but there are reources in the way", dryRun);
+								break;
+
+
+						}
+
+
+					}
+					else
+					{
+						if (b.isCabin && counts.count < 100)
+						{
+							Status($"A cabin is here, leaving it", dryRun);
+							// 
+						}
+						else
+						{
+							Status($"{b.def.Bn} is not wanted, destroying it", dryRun);
+							if (dryRun)
+								DrawSprite(hovered, decalBuildingInvalid, .31f);
+							else
+							{
+								++rv;
+								await Demolish(cc, dryRun);
+								// build the correct building
+								if (desBid != 0)
+								{
+									await Build(cc, desBid, dryRun);
+									++rv;
+								}
+							}
+						}
+					}
+				}
+				else
+				{
+					Status($"{desName} is in the right spot, no changed needed", dryRun);
+
+				}
+			}
+			return rv;
 		}
 
 		private static int FindCabinToDemo()

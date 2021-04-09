@@ -172,6 +172,9 @@ namespace COTG.Views
 		public static bool Close(UserTab tab)
 		{
 			bool rv = false;
+			if (App.isShuttingDown)
+				return false;
+
 			foreach (var tabPage in tabPages)
 			{
 				foreach (TabViewItem ti in tabPage.Tabs.TabItems)
@@ -226,7 +229,10 @@ namespace COTG.Views
         void RemoveTabsOnClose()
         {
             Tabs.TabItemsChanged -= Tabs_TabItemsChanged;
-            var _tab = Tabs;
+			if (App.isShuttingDown)
+				return;
+
+			var _tab = Tabs;
             while (_tab.TabItems.Count > 0)
             {
                 RemoveTab(_tab.TabItems[0] as TabViewItem);
@@ -579,7 +585,9 @@ namespace COTG.Views
 
             static void RemoveTab(TabView view, TabViewItem tab)
         {
-            var itab = tab.Content as UserTab;
+			if (App.isShuttingDown)
+				return;
+			var itab = tab.Content as UserTab;
             if (itab != null)
             {
                 itab.isVisible = false;
@@ -599,7 +607,7 @@ namespace COTG.Views
 		}
         private void Tabs_TabCloseRequested(TabView sender, TabViewTabCloseRequestedEventArgs args)
         {
-            RemoveTab(sender,args.Tab);
+		       RemoveTab(sender,args.Tab);
         }
 
         private void Tabs_SelectionChanged(object sender, SelectionChangedEventArgs e)
