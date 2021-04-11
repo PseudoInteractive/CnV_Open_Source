@@ -19,9 +19,10 @@ using COTG.JSON;
 using Microsoft.Graphics.Canvas;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.IO;
-using Windows.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Controls;
 using Windows.UI.Xaml;
-
+using ContentDialog = Windows.UI.Xaml.Controls.ContentDialog;
+using ContentDialogResult = Windows.UI.Xaml.Controls.ContentDialogResult;
 namespace COTG.Services
 {
     public class RestAPI
@@ -977,17 +978,21 @@ namespace COTG.Services
 							{
 								if (!arrival.IsZero())
 								{
-									var content = new ContentDialog()
+									var result = await App.DispatchOnUIThreadTask(async () =>
 									{
-										Title = "Not enought Troops home or troops cannot make scheduled time",
-										Content = "Send now or when they return from raiding?",
-										PrimaryButtonText = "Yes",
-										CloseButtonText = "Cancel"
-									};
-									//ElementSoundPlayer.Play(ElementSoundKind.Show);
+										var content = new ContentDialog()
+										{
+											Title = "Not enought Troops home or troops cannot make scheduled time",
+											Content = "Send now or when they return from raiding?",
+											PrimaryButtonText = "Yes",
+											CloseButtonText = "Cancel"
+										};
+										//ElementSoundPlayer.Play(ElementSoundKind.Show);
 
-									content.CopyXamlRoomFrom(uie);
-									if (await content.ShowAsync2() == ContentDialogResult.Primary)
+										content.CopyXamlRoomFrom(uie);
+										return await content.ShowAsync2();
+									});
+									if (result == ContentDialogResult.Primary)
 									{
 										SendRein(cid, rcid, tsSend, departAt, AUtil.dateTimeZero, travelTime, splits, uie);
 										return;

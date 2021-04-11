@@ -323,6 +323,11 @@ namespace COTG
 
     }
 
+	public class SemaFrame
+	{
+		SemaphoreSlim mySema;
+
+	}
 
     public class ConcurrentHashSet<T> : IDisposable
     {

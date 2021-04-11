@@ -48,7 +48,7 @@ namespace COTG.Views
 		public static Lighting lighting = Lighting.day;
 		//        private static UserData _user;
 		public static bool fetchFullHistory = true;
-		public static bool? autoBuildOn = null;
+		public static bool? autoBuildOn = true;
 		public static bool setRecruit = true;
 		public static bool deferredBuild;
 		public static float planet = 0.5f;
@@ -70,6 +70,7 @@ namespace COTG.Views
 		public static bool sendStone = true;
 		public static bool sendIron = true;
 		public static bool sendFood = true;
+		public static int tsForCastle = 22000;
 		public static bool showDungeonsInRegionView = false;
 		public static bool applyTags=true;
 		public static bool setHub = true;
@@ -80,6 +81,12 @@ namespace COTG.Views
 		public static int startCabinCount = 39;
 		public static float fontScale = 0.5f;
 		public static float musicVolume = 0.5f;
+		public static bool? autoBuildWalls=true;
+		
+		public static int autoWallLevel = 1;
+		public static int autoTowerLevel = 1;
+		public static int scoutpostCount=2;
+
 
 		public static bool[] includeRaiders = new[] {
 				false, false,true,true,
@@ -533,6 +540,7 @@ namespace COTG.Views
 				   if (SettingsPage.cityListWarship)
 					   global.Add(CityList.gdWarship);
 				   global.Add(CityList.gdHubs);
+				   global.Add(CityList.gdLeaveMe);
 
 				   Dictionary<int, List<CityList>  > priorCityLists = new();
 				   HashSet<CityList> processed = new();

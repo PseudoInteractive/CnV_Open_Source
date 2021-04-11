@@ -16,7 +16,7 @@ using System.Web;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
@@ -24,7 +24,8 @@ using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 using static COTG.Debug;
 // The Content Dialog item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
-
+using ContentDialog = Windows.UI.Xaml.Controls.ContentDialog;
+using ContentDialogResult = Windows.UI.Xaml.Controls.ContentDialogResult;
 namespace COTG.Views
     {
     public sealed partial class CityRename : ContentDialog
@@ -34,7 +35,7 @@ namespace COTG.Views
             this.InitializeComponent();
             }
 
-        private void ContentDialog_PrimaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
+        private void ContentDialog_PrimaryButtonClick(ContentDialog sender, Windows.UI.Xaml.Controls.ContentDialogButtonClickEventArgs args)
             {
             }
 
@@ -127,7 +128,7 @@ namespace COTG.Views
 					   else
 						   lastName = nameDialog.suggested.Text;
 					   city._cityName = lastName;
-					   Post.Send("includes/nnch.php", $"a={HttpUtility.UrlEncode(lastName, Encoding.UTF8)}&cid={cid}", World.CidToPlayerOrMe(cid));
+					   await Post.Send("includes/nnch.php", $"a={HttpUtility.UrlEncode(lastName, Encoding.UTF8)}&cid={cid}", World.CidToPlayerOrMe(cid));
 					   if (SettingsPage.applyTags)
 					   {
 						   await ApplyTags(cid, nameDialog.tagsPanel);

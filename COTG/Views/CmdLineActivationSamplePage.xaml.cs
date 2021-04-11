@@ -1,6 +1,6 @@
 ﻿using System;
 
-using Windows.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
 
 namespace COTG.Views
@@ -9,8 +9,8 @@ namespace COTG.Views
     // This page is an sample of how to launch a specific page in response to launching from the command line and passing arguments.
     // It is expected that you will delete this page once you have changed the handling of command line launch to meet
     // your needs and redirected to another of your pages.
-    public sealed partial class CmdLineActivationSamplePage : Page
-    {
+    public sealed partial class CmdLineActivationSamplePage : Windows.UI.Xaml.Controls.Page
+	{
         public CmdLineActivationSamplePage()
         {
             InitializeComponent();

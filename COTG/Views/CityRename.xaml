@@ -32,11 +32,16 @@
 		</controls:WrapPanel>
 		<controls:WrapPanel Grid.Row="4">
 		<ToggleSwitch Header="Tags" IsOn="{x:Bind local:SettingsPage.applyTags, Mode=TwoWay}" OnContent="Apply" OffContent="Leave"/>
-		<ToggleSwitch Header="Hub" IsOn="{x:Bind local:SettingsPage.setHub, Mode=TwoWay}" OnContent="Set" OffContent="Leave"/>
-		<ToggleSwitch Header="Res" IsOn="{x:Bind local:SettingsPage.clearRes, Mode=TwoWay}" OnContent="Clear" OffContent="Leave"/>
-		<ToggleSwitch Header="ShareString" IsOn="{x:Bind local:SettingsPage.setShareString, Mode=TwoWay}" OnContent="Set" OffContent="Skip" />
-		<ToggleSwitch Header="Build Cabins" IsOn="{x:Bind local:SettingsPage.autoBuildCabins, Mode=TwoWay}" OnContent="Build" OffContent="Skip" />
-		<winui:NumberBox Header="Cabins" Value="{x:Bind views:SettingsPage.startCabinCount}" Style="{StaticResource NumberBoxSmall}"/>
+			<ToggleSwitch Header="Hub" IsOn="{x:Bind local:SettingsPage.setHub, Mode=TwoWay}" OnContent="Set" OffContent="Leave" ToolTipService.ToolTip="If set, the source and target hub will bet set based on which hub is closest.  Choses from the 'Hubs' city group, or if you don't do city groups: the nearest city with 'Hub' in the remarks" />
+		<ToggleSwitch Header="Res" IsOn="{x:Bind local:SettingsPage.clearRes, Mode=TwoWay}" OnContent="Clear" OffContent="Leave" />
+			<ToggleSwitch Header="ShareString" IsOn="{x:Bind local:SettingsPage.setShareString, Mode=TwoWay}" OnContent="Set" OffContent="Skip" ToolTipService.ToolTip="If set, you will be able to set the sharestring when you are done here" />
+		<ToggleSwitch Header="Place Cabins" IsOn="{x:Bind local:SettingsPage.autoBuildCabins, Mode=TwoWay}" OnContent="Build" OffContent="Skip" ToolTipService.ToolTip="If set, cabins will be places when setup is complete" />
+		<winui:NumberBox Header="Cabins" Value="{x:Bind views:SettingsPage.startCabinCount}" Style="{StaticResource NumberBoxSmall}" ToolTipService.ToolTip="The number of cabins to place if PlaceCabins is set" />
+		<winui:NumberBox Header="WallLevel" Value="{x:Bind views:SettingsPage.autoWallLevel}" Style="{StaticResource NumberBoxSmall}"/>
+		<winui:NumberBox Header="TowerLevel" Value="{x:Bind views:SettingsPage.autoTowerLevel}" Style="{StaticResource NumberBoxSmall}" ToolTipService.ToolTip="How high to automatically build towers during 'do the stuff'.  Towers are placed right before the clastle.  If set to 10, autobuild is turned, on" />
+			<winui:NumberBox Header="Scout Towers" Value="{x:Bind views:SettingsPage.scoutpostCount}" Style="{StaticResource NumberBoxSmall}" ToolTipService.ToolTip="The number of scout towers to place.  They are placed with the castle  during 'do the stuff'" />
+
+			
 		</controls:WrapPanel>
     </Grid>
 </ContentDialog>

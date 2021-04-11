@@ -34,19 +34,26 @@ namespace COTG.Views
 			var bestHub = CitySettings.FindBestHub(cid);
 			if (bestHub != 0)
 			{
-				
-				var hubName = Spot.GetOrAdd(bestHub).nameAndRemarks;
-				instance.bestHub.Text = hubName;
-				if (await instance.ShowAsync2() == ContentDialogResult.Primary)
+				var result = await App.DispatchOnUIThreadTask(async () =>
 				{
-
-					if (!string.Equals(instance.bestHub.Text, hubName, StringComparison.OrdinalIgnoreCase))
+					var hubName = Spot.GetOrAdd(bestHub).nameAndRemarks;
+					instance.bestHub.Text = hubName;
+					if (await instance.ShowAsync2() == ContentDialogResult.Primary)
 					{
-						// Todo
+
+						if (!string.Equals(instance.bestHub.Text, hubName, StringComparison.OrdinalIgnoreCase))
+						{
+							// Todo
+						}
+						await CitySettings.SetCitySettings(cid, bestHub, true, true, true, true, true);
+						return true;
 					}
-					await CitySettings.SetCitySettings(cid, bestHub,true,true, true, true, true);
-					return true;
-				}
+					else
+					{
+						return false;
+					}
+				});
+				return result;
 			}
 			else
 			{

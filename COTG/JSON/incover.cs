@@ -877,7 +877,7 @@ namespace COTG.JSON
 									defenderPage.NotifyIncomingUpdated();
 							}
 							if (showNote)
-								Note.Show($"Complete: {reportsIncoming.Count + incCount} attacks, {fetched} fetched {Cosmos.battleRecordsUpserted}{killNote}");
+								Note.Show($"Complete: {reportsIncoming.Count + incCount} attacks, {fetched} fetched {killNote}");
 						}
 						catch (Exception _exception)
 						{

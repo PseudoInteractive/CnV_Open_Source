@@ -38,10 +38,15 @@ using Windows.UI.Core;
 using Windows.UI.Core.Preview;
 using Windows.UI.Input;
 using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
+//using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Input;
-
+using ContentDialog = Windows.UI.Xaml.Controls.ContentDialog;
+using ContentDialogResult = Windows.UI.Xaml.Controls.ContentDialogResult;
+using MenuFlyoutItem = Windows.UI.Xaml.Controls.MenuFlyoutItem;
+using MenuFlyout = Windows.UI.Xaml.Controls.MenuFlyout;
+using ToggleMenuFlyoutItem = Windows.UI.Xaml.Controls.ToggleMenuFlyoutItem;
+using MenuFlyoutSubItem = Windows.UI.Xaml.Controls.MenuFlyoutSubItem;
 using static COTG.Debug;
 
 namespace COTG
@@ -117,7 +122,7 @@ namespace COTG
 		{
 			Trace("Suspend");
 			isForeground = false;
-			JSON.BuildQueue.SaveIfNeeded();
+			JSON.BuildQueue.SaveIfNeeded().Wait();
 			SettingsPage.SaveAll();
 		}
 
@@ -522,7 +527,7 @@ namespace COTG
 			//   if (ShellPage.canvas != null)
 			//      ShellPage.canvas.Paused = true;
 			//	SettingsPage.SaveAll();
-			JSON.BuildQueue.SaveIfNeeded();
+			JSON.BuildQueue.SaveIfNeeded().Wait();
 
 			//            var deferral = e.GetDeferral();
 			//            await Singleton<SuspendAndResumeService>.Instance.SaveStateAsync();
@@ -603,6 +608,8 @@ namespace COTG
 			}
 		}
 		public static SemaphoreSlim uiSema = new SemaphoreSlim(1);
+
+		
 
 		public static async Task<T>
 			DispatchOnUIThreadExclusive<T>(Func<Task<T>> func, CoreDispatcherPriority priority = CoreDispatcherPriority.Low)
@@ -777,18 +784,25 @@ namespace COTG
 		{
 			return await DispatchOnUIThreadTask(async () =>
 		   {
-			   var dialog = new ContentDialog()
-			   {
-				   Title = title,
-				   Content = text,
-				   PrimaryButtonText = "Yes",
-				   SecondaryButtonText = "No",
-				   CloseButtonText = "Cancel"
-			   };
-			   return (await dialog.ShowAsync2()) switch { ContentDialogResult.Primary => 1, ContentDialogResult.Secondary => 0, _ => -1 };
+				 return await DoYesNoBoxUI(title, text);
 		   });
 		}
 
+		public async static Task<int> DoYesNoBoxUI(string title, string text)
+		{
+			Assert(App.uiSema.CurrentCount == 0);
+			Assert(App.IsOnUIThread());
+
+			var dialog = new ContentDialog()
+				{
+					Title = title,
+					Content = text,
+					PrimaryButtonText = "Yes",
+					SecondaryButtonText = "No",
+					CloseButtonText = "Cancel"
+				};
+				return (await dialog.ShowAsync2()) switch { ContentDialogResult.Primary => 1, ContentDialogResult.Secondary => 0, _ => -1 };
+		}
 	}
 
 
@@ -1209,7 +1223,7 @@ namespace COTG
 				App.DispatchOnUIThreadLow(() => ob.Focus(FocusState.Programmatic));
 			}
 		}
-		public static void Focus(this Control ob)
+		public static void Focus(this Windows.UI.Xaml.Controls.Control ob)
 		{
 			if (ob != null)
 			{

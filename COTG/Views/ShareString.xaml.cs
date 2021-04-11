@@ -18,6 +18,7 @@ using Windows.UI.Xaml.Controls.Primitives;
 using static COTG.Game.City;
 using static COTG.Debug;
 using COTG.Helpers;
+using COTG.JSON;
 
 namespace COTG.Views
 {
@@ -109,41 +110,53 @@ namespace COTG.Views
 		static public async Task ShowNoLock()
 		{
 
+			var rv = await App.DispatchOnUIThreadTask(async () =>
+			{
+				try
+				{
+					Assert(App.uiSema.CurrentCount == 0);
+
+					if (instance == null)
+					{
+						try
+						{
+							new ShareString();
+						}
+						catch (Exception ex)
+						{
+							Log(ex);
+						}
+						AddLayouts();
+						var shares = await Tables.ReadShares(Player.myName);
+						foreach (var s in shares)
+						{
+							new ShareStringItem(s.s);
+						}
+					}
+					instance.onComplete.IsOn = CityBuild.isPlanner;
+					instance.shareStrings.SelectedItem = null;
+					var city = City.GetBuild();
+					//	instance.PlannerTeachingTip.Show();
+					// todo: copy text 
+					if (CityBuild.isPlanner)
+						city.BuildingsCacheToShareString();
+					SetFromSS();
+					instance.Title = city.nameAndRemarks;
+					//SetTags(city.remarks);
+
+					return await instance.ShowAsync2();
+				}
+				catch (Exception ex)
+				{
+					Log(ex);
+				}
+				return ContentDialogResult.None;
+
+			});
+			// todo:  copy back sharestring
+
 			try
 			{
-				Assert(App.uiSema.CurrentCount == 0);
-
-				if (instance == null)
-				{
-					try
-					{
-						new ShareString();
-					}
-					catch (Exception ex)
-					{
-						Log(ex);
-					}
-					AddLayouts();
-					var shares = await Tables.ReadShares(Player.myName);
-					foreach (var s in shares)
-					{
-						new ShareStringItem(s.s);
-					}
-				}
-				instance.onComplete.IsOn = CityBuild.isPlanner;
-				var city = City.GetBuild();
-				//	instance.PlannerTeachingTip.Show();
-				// todo: copy text 
-				if (CityBuild.isPlanner)
-					city.BuildingsCacheToShareString();
-
-				instance.Title= city.nameAndRemarks;
-				SetTags(city.remarks);
-
-				var rv = await instance.ShowAsync2();
-
-				// todo:  copy back sharestring
-
 				if (rv == ContentDialogResult.Primary)
 				{
 
@@ -154,28 +167,36 @@ namespace COTG.Views
 					//	await Post.Send("includes/sNte.php", $"a={HttpUtility.UrlEncode(city.remarks, Encoding.UTF8)}&b={HttpUtility.UrlEncode(city.notes, Encoding.UTF8)}&cid={city.cid}", World.CidToPlayerOrMe(city.cid));
 					//}
 
+					if (SettingsPage.shareStringApplyTags)
+					{
+						await CityRename.ApplyTags(City.build, instance.tagsPanel);
+						await CitySettings.SetCitySettings(City.build, setRecruit: true);
+					}
+					var city = City.GetBuild();
 
 					city.SetShareString(instance.GetShareStringWithJson());
-					city.SaveLayout();
+					await city.SaveLayout();
 					if (SettingsPage.autoRearrangeShareStrings)
 					{
 						CityBuild._isPlanner = true;
 						PlannerTab.SmartRearrange();
 					}
 					CityBuild._isPlanner = instance.onComplete.IsOn;
-					
+
 				}
 				else
 				{
-					
+
 				}
-			
-	}
-		catch(Exception ex)
-			{ 
-			Log(ex);
-	}
+			}
+			catch (Exception ex)
+			{
+
+				Log(ex);
+			}
 		}
+			
+	
 
 		string GetShareStringWithJson()
 		{
@@ -218,22 +239,22 @@ namespace COTG.Views
 			}
 
 		}
-		//public static void SetFromSS(string shareString)
-		//{
-		//	var s = SplitShareString(shareString);
-		//	var meta = JsonSerializer.Deserialize<ShareStringMeta>(s.json);
-		//	var path = DecomposePath(meta.path);
-		//	instance.shareString.Text = s.ss ?? string.Empty;
-		//	var tags = meta.notes ?? string.Empty;
+		public static void SetFromSS(string shareString)
+		{
+			var s = SplitShareString(shareString);
+			var meta = JsonSerializer.Deserialize<ShareStringMeta>(s.json);
+			var path = DecomposePath(meta.path);
+			instance.shareString.Text = s.ss ?? string.Empty;
+			var tags = meta.notes ?? string.Empty;
 
-		//	instance.description.Text = meta.desc ?? string.Empty;
-		//	instance.title.Text = path.title;
-		//	instance.path.Text = CombinePath( path);
+			instance.description.Text = meta.desc ?? string.Empty;
+			instance.title.Text = path.title;
+			instance.path.Text = CombinePath(path);
 
-		//	SetTags(tags);
+			SetTags(tags);
 
-		//}
-		//public static void SetFromSS() => SetFromSS(City.GetBuild().shareString);
+		}
+		public static void SetFromSS() => SetFromSS(City.GetBuild().shareString);
 		public static (string ss, string json) SplitShareString(string shareString)
 		{
 				if (shareString == null)
@@ -279,11 +300,6 @@ namespace COTG.Views
 					instance.title.Text = i.label;
 					SetTags(i.tags);
 
-					if (SettingsPage.shareStringApplyTags)
-					{
-						await CityRename.ApplyTags(City.build, tagsPanel);
-
-					}
 				}
 			}
 		}

@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using COTG.Views;
-using Windows.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Controls;
 using Windows.UI.Xaml;
 using System.Text.RegularExpressions;
 using Windows.UI.Xaml.Media.Imaging;

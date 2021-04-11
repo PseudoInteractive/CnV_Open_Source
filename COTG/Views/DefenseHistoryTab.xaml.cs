@@ -5,7 +5,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
-using Windows.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Controls;
 using System.Diagnostics.Contracts;
 using System.Collections.Generic;
 using Telerik.UI.Xaml.Controls.Grid;
@@ -31,8 +31,8 @@ using static COTG.Game.Enum;
 
 namespace COTG.Views
 {
-    public class ReportKillStyleSelector : StyleSelector
-    {
+    public class ReportKillStyleSelector : Windows.UI.Xaml.Controls.StyleSelector
+	{
         public Style attackerWinStyle { get; set; }
 
         public Style defenderWinStyle { get; set; }
@@ -63,8 +63,8 @@ namespace COTG.Views
       
 
     }
-    public class ReportTypeStyleSelector : StyleSelector
-    {
+    public class ReportTypeStyleSelector : Windows.UI.Xaml.Controls.StyleSelector
+	{
         public Style pendingStyle { get; set; }
 
         public Style siegingStyle { get; set; }

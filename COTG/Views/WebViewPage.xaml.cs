@@ -6,7 +6,7 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
 using Windows.Web.Http;
-
+using WebView = Windows.UI.Xaml.Controls.WebView;
 using static COTG.Debug;
 
 namespace COTG.Views

@@ -103,7 +103,7 @@ namespace COTG.Game
 		public static Building[] Emptybuildings = new Building[citySpotCount];
 
 		public Building[] buildings = Emptybuildings;
-
+		public string ministerOptions;
 		public static Building[] buildingsCache;
 		public static Building[] postQueuebuildingsCache = new JSON.Building[citySpotCount];
 
@@ -444,6 +444,21 @@ namespace COTG.Game
 				return friendCitiesCache;
 			}
 		}
+		public async Task<int> GetAutobuildCabinLevel()
+		{
+			var split = await CitySettings.GetMinisterOptions(this);
+			if (int.TryParse(split[52].Trim(']'), out var rv))
+				return rv;
+			return SettingsPage.cottageLevel;
+		}
+
+		public int GetAutobuildCabinLevelNoFetch()
+		{
+			var split = CitySettings.GetMinisterOptionsNoFetch(this);
+			if (int.TryParse(split[52].Trim(']'), out var rv))
+				return rv;
+			return SettingsPage.cottageLevel;
+		}
 
 		public void LoadCityData(JsonElement jse)
 		{
@@ -469,6 +484,11 @@ namespace COTG.Game
 				else if (i == 0)
 					isOnWater = false;
 			}
+			if (jse.TryGetProperty("mo", out var p))
+			{
+				ministerOptions = p.ToString();
+			}
+
 			if (jse.TryGetProperty("cn", out var cn))
 			{
 				remarks = cn[0].GetAsString();
@@ -1340,7 +1360,7 @@ namespace COTG.Game
 			public int academies;
 			public int training;
 			public int stables;
-
+			public int shipyards;
 			public int sawMills;
 			public int stoneMasons;
 			public int windMills;
@@ -1350,30 +1370,54 @@ namespace COTG.Game
 			public int unfinishedBuildings;
 			public int unfinishedCabins;
 			public bool hasCastle;
+			public bool hasWall;
+			public int scoutpostCount;
+			internal int towerCount;
 		}
-		public static BuildingCount GetBuildingCountPostQueue() => GetBuildingCounts(CityBuild.postQueueBuildings);
+		public static BuildingCount GetBuildingCountPostQueue(int cabinLevel) => GetBuildingCounts(CityBuild.postQueueBuildings, cabinLevel);
 
-		public static BuildingCount GetBuildingCounts(Building[] buildings)
+		public static BuildingCount GetBuildingCounts(Building[] buildings, int cabinLevel)
 		{
 			BuildingCount rv = new();
 
 			foreach (var bd in buildings)
 			{
+				// not res or empty
+				if (!bd.isBuilding)
+					continue;
+
 				var bid = bd.bid;
 				if (bid == bidCastle)
 					rv.hasCastle = true;
-				if (bd.isCabin)
+				if (bd.isTownHall)
 				{
-					++rv.cabins;
-					if (bd.bl < SettingsPage.cottageLevel)
-						++rv.unfinishedCabins;
-					++rv.buildings;
+					rv.townHallLevel = bd.bl;
 				}
-				else if (bd.isBuilding)
+
+				else if (bd.isWall)
 				{
-					if (bd.bl < 10)
-						++rv.unfinishedBuildings;
+					rv.hasWall = true; ;
+				}
+				else if (bd.isTower )
+				{
+					++rv.towerCount;
+					if (bid == bidSentinelPost)
+						++rv.scoutpostCount;
+				}
+				else
+				{
 					++rv.buildings;
+					if (bd.isCabin)
+					{
+						++rv.cabins;
+						if (bd.bl < cabinLevel )
+							++rv.unfinishedCabins;
+					}
+					else
+					{
+						if (bd.bl < 10)
+							++rv.unfinishedBuildings;
+					}
 				}
 				if (bd.bid == bidStorehouse)
 					++rv.storeHouses;
@@ -1400,13 +1444,15 @@ namespace COTG.Game
 					++rv.training;
 				else if (bid == bidStable)
 					++rv.stables;
+				else if (bid == bidShipyard)
+					++rv.shipyards;
 			}
 
 			Log($"{rv.cabins} cabins, {rv.buildings} {rv.townHallLevel}");
 			return rv;
 		}
-		public static BuildingCount GetBuildingCountsPostQueue() => GetBuildingCounts(CityBuild.postQueueBuildings);
-		public BuildingCount GetBuildingCounts() => GetBuildingCounts(buildings);
+		public static BuildingCount GetBuildingCountsPostQueue(int cabinLevel) => GetBuildingCounts(CityBuild.postQueueBuildings, cabinLevel);
+		public BuildingCount GetBuildingCounts(int cabinLevel) => GetBuildingCounts(buildings, cabinLevel);
 
 		
 
@@ -1421,15 +1467,15 @@ namespace COTG.Game
 			if (bc.buildings < 8)
 				return BuildStage.setup;
 
-			if (bc.townHallLevel < 10)
+			if (bc.townHallLevel < 10 || bc.unfinishedCabins>0)
 				return BuildStage.buildingCabins;
 			if (bc.cabins >= bc.buildings + 4)
 			{
 				return BuildStage.cabinsComplete;
 			}
-			if (bc.cabins >= SettingsPage.startCabinCount)
+			if (bc.cabins >= SettingsPage.startCabinCount || bc.buildings < 99)
 			{
-				if (bc.unfinishedBuildings > 0)
+				if (bc.unfinishedBuildings > 0 || bc.buildings < 99)
 					return BuildStage.initialBuildings;
 				else
 					return BuildStage.initialBuildingsComplete;
@@ -1448,9 +1494,17 @@ namespace COTG.Game
 			if (CityRename.IsNew(this))
 				return BuildStage._new;
 			await GetCity.Post(cid);
-			return GetBuildStage(GetBuildingCounts());
+			var cabinLevel = await GetAutobuildCabinLevel();
+			return GetBuildStage(GetBuildingCounts(cabinLevel));
 
 		}
+		public static BuildStage GetBuildStageNoFetch()
+		{
+			if (CityRename.IsNew(City.GetBuild()))
+				return BuildStage._new;
+			return City.GetBuild().GetBuildStage(GetBuildingCountPostQueue(City.GetBuild().GetAutobuildCabinLevelNoFetch()));
+		}
+
 		public static async Task<BuildStage> GetBuildBuildStage(BuildingCount bc)
 		{
 			var city = GetBuild();
@@ -1467,8 +1521,16 @@ namespace COTG.Game
 			if (CityRename.IsNew(city))
 				return BuildStage._new;
 			await GetCity.Post(City.build);
+			var cabinLevel = await city.GetAutobuildCabinLevel();
+			return city.GetBuildStage(GetBuildingCountPostQueue(cabinLevel));
 
-			return city.GetBuildStage(GetBuildingCountPostQueue());
+		}
+		public static BuildStage GetBuildBuildStageNoRefresh()
+		{
+			var city = GetBuild();
+			if (CityRename.IsNew(city))
+				return BuildStage._new;
+			return city.GetBuildStage(GetBuildingCountPostQueue(city.GetAutobuildCabinLevelNoFetch()));
 
 		}
 	}
@@ -1555,6 +1617,7 @@ namespace COTG.Game
 			}
 		}
 
+		public static GroupDef gdLeaveMe = new GroupDef("LeaveME", new[] { "leaveme" });
 		public static GroupDef gdHubs = new GroupDef("Hubs", new[] { "hub" });
 		public static GroupDef gdShipper = new GroupDef("Shipper", new[] { "shipping", "shipper" });
 		public static GroupDef gdWarship = new GroupDef("Warships", new[] { "warship" });

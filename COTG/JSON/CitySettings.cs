@@ -10,7 +10,9 @@ using System.Threading.Tasks;
 using System.Web;
 
 using Windows.UI.Popups;
-using Windows.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Controls;
+using ContentDialog = Windows.UI.Xaml.Controls.ContentDialog;
+using ContentDialogResult = Windows.UI.Xaml.Controls.ContentDialogResult;
 
 using static COTG.Views.SettingsPage;
 namespace COTG.JSON
@@ -71,7 +73,9 @@ namespace COTG.JSON
 
 		}
 
-		public static async Task SetCitySettings(int cid, int reqHub, bool setRecruit, bool setAutoBuild, bool setResources, bool setSourceHub, bool setTargetHub)
+
+
+		public static async Task SetCitySettings(int cid, int reqHub=0, bool setRecruit=false, bool setAutoBuild=false, bool setResources=false, bool setSourceHub=false, bool setTargetHub=false)
         {
             await UpdateMinisterOptions(cid, async (split) =>
             {
@@ -168,7 +172,7 @@ namespace COTG.JSON
                 if(cottageLevel > 0 && setAutoBuild)
                     split[52] = cottageLevel.ToString() + ']';
                 
-				var str = SettingsPage.setRecruit && setRecruit ? SetRecruit(split, spot) : "";
+				var str = setRecruit ? SetRecruit(split, spot) : "";
                 
 				Note.Show($"Set {Spot.GetOrAdd(cid).nameAndRemarks}'s hub to {Spot.GetOrAdd(reqHub).nameAndRemarks}{str}");
                 return true;
@@ -176,33 +180,56 @@ namespace COTG.JSON
 
 
         }
-        public static async Task UpdateMinisterOptions(int cid, Func<string[],Task<bool>> opts)
-        {
-            string args = null;
-			for (; ; )
-			{
-				await GetCity.Post(cid, (jse, city) =>
+		public static async Task<string[]> GetMinisterOptions(City city)
+		{
+				if (city.ministerOptions == null)
+				{
+					for (; ; )
 					{
-						if (jse.TryGetProperty("mo", out var p))
-						{
-							args = p.ToString();
-						}
-					});
-				if (args != null)
-					break;
-				await Task.Delay(500);
+						await GetCity.Post(city.cid);
+						if (city.ministerOptions != null)
+							break;
+
+						await Task.Delay(500);
+					}
+				}
+				return GetMinisterOptionsNoFetch(city);
+			
+		}
+		public static string[] GetMinisterOptionsNoFetch(City city)
+		{
+			string[] rv = null;
+			try
+			{
+				if (city.ministerOptions != null)
+				{
+					rv = city.ministerOptions.Split(',', StringSplitOptions.RemoveEmptyEntries);
+				}
+			}
+			catch (Exception ex)
+			{
+				Debug.Log(ex);
+			}
+			if (rv == null || rv.Length != 99)
+			{
+				COTG.Debug.Log($"Invalid options");
+				const string defaults = "[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10]]";
+				rv = defaults.Split(',', StringSplitOptions.RemoveEmptyEntries);
+
 			}
 
-              try
-              {
-                var split = args.Split(',', StringSplitOptions.RemoveEmptyEntries);
-                if (split.Length != 99)
-                {
-                    COTG.Debug.Log($"Invalid options {split.Length}");
-                    var defaults = "[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10]]";
-                    split = defaults.Split(',', StringSplitOptions.RemoveEmptyEntries);
-                }
-                if (await opts(split))
+			return rv;
+
+		}
+
+		public static async Task UpdateMinisterOptions(int cid, Func<string[],Task<bool>> opts)
+        {
+			var city = City.GetOrAddCity(cid);
+            
+			try
+			{
+				var split = await GetMinisterOptions(city);
+			    if (await opts(split))
                 {
                     var args2 = string.Join(',', split);
                     await Post.Send("includes/mnio.php", $"a={HttpUtility.UrlEncode(args2, Encoding.UTF8)}&b={cid}", World.CidToPlayerOrMe(cid));
@@ -239,7 +266,10 @@ namespace COTG.JSON
         {
             var rem = spot.remarks.ToLower();
             var result = string.Empty;
-            if (rem.Contains("priest"))
+			for(int i = 11;i<26;++i)
+				split[i] = "0";
+
+			if (rem.Contains("priest"))
             {
                 split[13] = "343343";
                 result = "\nSet recruit priestess";
@@ -313,15 +343,18 @@ namespace COTG.JSON
         public static async void SetTargetHub(int cid, int targetHub)
         {
 			var targets = Spot.GetSelectedForContextMenu(cid, false, targetHub);
-			
-			var dialog = new ContentDialog()
+			var result = await App.DispatchOnUIThreadTask(async () =>
 			{
-				Title = $"Set Trade Settings",
-				Content = $"Set {Spot.GetOrAdd(cid).nameAndRemarks} to send resources to {Spot.GetOrAdd(targetHub).nameAndRemarks} ({targets.Count} cities selected)", 
-				PrimaryButtonText = "Yes",
-				SecondaryButtonText = "Cancel"
-			};
-			if (await dialog.ShowAsync2() != ContentDialogResult.Primary)
+				var dialog = new ContentDialog()
+				{
+					Title = $"Set Trade Settings",
+					Content = $"Set {Spot.GetOrAdd(cid).nameAndRemarks} to send resources to {Spot.GetOrAdd(targetHub).nameAndRemarks} ({targets.Count} cities selected)",
+					PrimaryButtonText = "Yes",
+					SecondaryButtonText = "Cancel"
+				};
+				return await dialog.ShowAsync2();
+			});
+			if (result != ContentDialogResult.Primary)
 			{
 				return;
 			}
@@ -333,15 +366,19 @@ namespace COTG.JSON
 		public static async void SetSourceHub(int cid, int targetHub)
 		{
 			var targets = Spot.GetSelectedForContextMenu(cid, false,targetHub);
-
-			var dialog = new ContentDialog()
+			var result = await App.DispatchOnUIThreadTask(async () =>
 			{
-				Title = $"Set Trade Settings",
-				Content = $"Set {Spot.GetOrAdd(cid).nameAndRemarks} to request resources from {Spot.GetOrAdd(targetHub).nameAndRemarks} ({targets.Count} cities selected)",
-				PrimaryButtonText = "Yes",
-				SecondaryButtonText = "Cancel"
-			};
-			if (await dialog.ShowAsync2() != ContentDialogResult.Primary)
+				var dialog = new ContentDialog()
+				{
+					Title = $"Set Trade Settings",
+					Content = $"Set {Spot.GetOrAdd(cid).nameAndRemarks} to request resources from {Spot.GetOrAdd(targetHub).nameAndRemarks} ({targets.Count} cities selected)",
+					PrimaryButtonText = "Yes",
+					SecondaryButtonText = "Cancel"
+				};
+			return await dialog.ShowAsync2();
+		});
+
+			if (result != ContentDialogResult.Primary)
 			{
 				return;
 			}

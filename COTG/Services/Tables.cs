@@ -13,6 +13,29 @@ using static COTG.Debug;
 
 namespace COTG.Services
 {
+	public class ShareStringDB : ITableEntity
+	{
+		public ShareStringDB()
+		{
+		}
+
+		public ShareStringDB(string partitionKey, string rowKey, string s)
+		{
+			this.PartitionKey = partitionKey;
+			this.RowKey = rowKey;
+			this.s = s;
+
+		}
+
+		public string PartitionKey { get; set; }
+		public string RowKey { get; set; }
+		public DateTimeOffset? Timestamp { get; set; }
+		public ETag ETag { get; set; }
+		public string s { get; set; }
+
+
+	}
+
 	class Tables
 	{
 			const string accountName = "avata";

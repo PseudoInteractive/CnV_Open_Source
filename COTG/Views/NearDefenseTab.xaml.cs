@@ -302,20 +302,28 @@ namespace COTG.Views
                 var canArriveAt = departAt+ TimeSpan.FromHours(supporter.travel );
                 if (_arriveAt > JSClient.ServerTime() && _arriveAt < canArriveAt)
                 {
-                    var msg = new ContentDialog()
-                    { Title="Home Too late to make arrival time",
-                    Content="Would you like to schedule as soon as they return?",
-                    PrimaryButtonText="Yes",
-                    CloseButtonText="Cancel"
-                    };
-                    msg.CopyXamlRoomFrom(text);
-					ElementSoundPlayer.Play(ElementSoundKind.Show);
+					var result = await App.DispatchOnUIThreadTask(async () =>
+					{
+						var msg = new ContentDialog()
+						{
+							Title = "Home Too late to make arrival time",
+							Content = "Would you like to schedule as soon as they return?",
+							PrimaryButtonText = "Yes",
+							CloseButtonText = "Cancel"
+						};
+						msg.CopyXamlRoomFrom(text);
+						ElementSoundPlayer.Play(ElementSoundKind.Show);
 
-					if ( await msg.ShowAsync2() != ContentDialogResult.Primary)
-                    {
-                        return;
-                    }
-                    _arriveAt = AUtil.dateTimeZero;
+						if (await msg.ShowAsync2() != ContentDialogResult.Primary)
+						{
+							return false;
+						}
+						_arriveAt = AUtil.dateTimeZero;
+						return true;
+					});
+					if (result == false)
+						return;
+
                 }
             }
 

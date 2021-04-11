@@ -54,7 +54,7 @@
 				<Button Content="Clear" Click="ClearClick" Style="{StaticResource ButtonMedium}" />
 				<ToggleSwitch x:Name="onComplete" Header="Planner" OffContent="Return to build" OnContent="Go to planner" ToolTipService.ToolTip="This allows you to go to the planner on completion to edit the layout"  />
 
-				<ToggleSwitch Header="Rearrange" OffContent="Skip" OnContent="Smart" IsOn="{x:Bind views:SettingsPage.autoRearrangeShareStrings, Mode=OneWay}" ToolTipService.ToolTip="Moves buildings whose positions don't matter to where existing corresponding buildings are located or to locations without res nodes"  />
+				<ToggleSwitch Header="Rearrange" OffContent="Skip" OnContent="Smart" IsOn="{x:Bind views:SettingsPage.autoRearrangeShareStrings, Mode=TwoWay}" ToolTipService.ToolTip="Moves buildings whose positions don't matter to where existing corresponding buildings are located or to locations without res nodes"  />
 
 				
 			</tk:WrapPanel>
@@ -71,9 +71,9 @@
 		</Border>
 
 		<Border Grid.Row="4" Style="{StaticResource BorderReveal}">
-			<winui:TreeView x:Name="zoom" SelectionMode="Single" IsTabStop="True" CanBeScrollAnchor="True" BorderThickness="1" 
+			<winui:TreeView x:Name="shareStrings" SelectionMode="Single" IsTabStop="True" BorderThickness="1" 
 							BorderBrush="{ThemeResource SystemControlBackgroundBaseLowRevealBorderBrush}"
-						TabNavigation="Once" CanDragItems="True" AllowDrop="True" ItemTemplate="{StaticResource ShareItemTemplate}"
+						TabNavigation="Once" CanDragItems="False" AllowDrop="False" ItemTemplate="{StaticResource ShareItemTemplate}"
 						ItemsSource="{x:Bind views:ShareStringItem.all}" ItemInvoked="ShareItemInvoked"
 						>
 			</winui:TreeView>

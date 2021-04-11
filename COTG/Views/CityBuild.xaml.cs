@@ -12,7 +12,7 @@ using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
@@ -35,10 +35,12 @@ using Microsoft.Toolkit.HighPerformance;
 using System.Text.RegularExpressions;
 using Windows.UI.Core;
 using static COTG.Game.City;
+using ContentDialog = Windows.UI.Xaml.Controls.ContentDialog;
+using ContentDialogResult = Windows.UI.Xaml.Controls.ContentDialogResult;
 
 namespace COTG.Views
 {
-	public sealed partial class CityBuild : UserControl
+	public sealed partial class CityBuild : Windows.UI.Xaml.Controls.UserControl
 	{
 		public static bool testFlag;
 		public static int quickBuildId;
@@ -434,16 +436,16 @@ namespace COTG.Views
 			instance.cvsGroups.Source = groups;
 		}
 
-		public static Flyout buildMenu;
+		public static Windows.UI.Xaml.Controls.Flyout buildMenu;
 
 		public static CityBuild Initialize()
 		{
 			instance = new CityBuild();
-			buildMenu = new Flyout() { LightDismissOverlayMode=LightDismissOverlayMode.Auto,ShowMode=FlyoutShowMode.Standard,AreOpenCloseAnimationsEnabled=true,
+			buildMenu = new Windows.UI.Xaml.Controls.Flyout() { LightDismissOverlayMode= Windows.UI.Xaml.Controls.LightDismissOverlayMode.Auto,ShowMode=FlyoutShowMode.Standard,AreOpenCloseAnimationsEnabled=true,
 				AllowFocusOnInteraction = true, Content = instance };
 
 			buildMenu.Closed += BuildMenu_Closed;
-			Style s = new Windows.UI.Xaml.Style { TargetType = typeof(FlyoutPresenter) };
+			Style s = new Windows.UI.Xaml.Style { TargetType = typeof(Windows.UI.Xaml.Controls.FlyoutPresenter) };
 			s.Setters.Add(new Setter(MinHeightProperty, "300"));
 			s.Setters.Add(new Setter(MinWidthProperty, "300"));
 			s.Setters.Add(new Setter(MaxWidthProperty, "600"));
@@ -689,29 +691,45 @@ namespace COTG.Views
 		{
 			get
 			{
-				
-					if (!postQueueBuildingsDirty)
-						return postQueuebuildingsCache;
-					postQueueBuildingsDirty = false;
-					if (!CityBuild.isPlanner)
-					{
-						buildingsCache = City.GetBuild().buildings;
-					}
+
+				if (!postQueueBuildingsDirty)
+					return postQueuebuildingsCache;
+				postQueueBuildingsDirty = false;
+				if (!CityBuild.isPlanner)
+				{
+					buildingsCache = City.GetBuild().buildings;
+				}
+				//
+				// copy current buildings
+				//
+				for (var i = 0; i < citySpotCount; ++i)
+				{
+					postQueuebuildingsCache.DangerousGetReferenceAt(i) = buildingsCache.DangerousGetReferenceAt(i);
+				}
+				if (!CityBuild.isPlanner)
+				{
 					//
-					// copy current buildings
+					// Apply queue
 					//
-					for (var i = 0; i < citySpotCount; ++i)
 					{
-						postQueuebuildingsCache.DangerousGetReferenceAt(i) = buildingsCache.DangerousGetReferenceAt(i);
-					}
-					if (!CityBuild.isPlanner)
-					{
-						//
-						// Apply queue
-						//
+						foreach (var q in buildQueue)
 						{
-							foreach (var q in buildQueue)
+							ref var b = ref postQueuebuildingsCache.DangerousGetReferenceAt(q.bspot);
+							b.bl = q.elvl;
+							if (q.elvl == 0)
+								b.id = 0;
+							else
+								b.id = BuildingDef.BidToId(q.bid);
+						}
+
+						if (CityBuildQueue.all.TryGetValue(City.build, out var bq))
+						{
+							var count = bq.queue.count;
+							var data = bq.queue.v;
+
+							for (int i = 0; i < count; ++i)
 							{
+								ref var q = ref data[i];
 								ref var b = ref postQueuebuildingsCache.DangerousGetReferenceAt(q.bspot);
 								b.bl = q.elvl;
 								if (q.elvl == 0)
@@ -719,51 +737,37 @@ namespace COTG.Views
 								else
 									b.id = BuildingDef.BidToId(q.bid);
 							}
-
-							if (CityBuildQueue.all.TryGetValue(City.build, out var bq))
-							{
-								var count = bq.queue.count;
-								var data = bq.queue.v;
-
-								for (int i = 0; i < count; ++i)
-								{
-									ref var q = ref data[i];
-									ref var b = ref postQueuebuildingsCache.DangerousGetReferenceAt(q.bspot);
-									b.bl = q.elvl;
-									if (q.elvl == 0)
-										b.id = 0;
-									else
-										b.id = BuildingDef.BidToId(q.bid);
-								}
-							}
-
-
-
 						}
-						// calculate counts
-						postQueueBuildingCount = 0;
-						postQueueTownHallLevel = 10;
-						foreach (var bi in postQueuebuildingsCache)
-						{
-							if (bi.id == 0 || bi.bl == 0)
-								continue;
-							var bd = bi.def;
-							if (bd.isTower || bd.isWall)
-							{
-								continue;
-							}
-							if (bd.isTownHall)
-							{
-								postQueueTownHallLevel = bi.bl;
-								continue;
-							}
-							++postQueueBuildingCount;
-						}
+
+
+
 					}
+				}
+				// calculate counts
+				postQueueBuildingCount = 0;
+				postQueueTownHallLevel = 10;
+				foreach (var bi in postQueuebuildingsCache)
+				{
+					if (bi.id == 0 || bi.bl == 0)
+						continue;
+					var bd = bi.def;
+					if (bd.isTower || bd.isWall)
+					{
+						continue;
+					}
+					if (bd.isTownHall)
+					{
+						postQueueTownHallLevel = bi.bl;
+						continue;
+					}
+					++postQueueBuildingCount;
+				}
 				return postQueuebuildingsCache;
-
 			}
+
+
 		}
+		
 
 		public static async Task Demolish(int id, bool dryRun)
 		{
@@ -835,17 +839,22 @@ namespace COTG.Views
 		}
 		static async Task<bool> BuildWallDialogue()
 		{
-			var dialog = new ContentDialog()
+			var result = await App.DispatchOnUIThreadTask(async () =>
 			{
-				Title = "Want a wall?",
-				Content = "Would you like to build a wall first?",
-				PrimaryButtonText = "Please",
-				SecondaryButtonText = "No"
-			};
-			if (await dialog.ShowAsync2().ConfigureAwait(true) == ContentDialogResult.Primary)
+
+				var dialog = new ContentDialog()
+				{
+					Title = "Want a wall?",
+					Content = "Would you like to build a wall first?",
+					PrimaryButtonText = "Please",
+					SecondaryButtonText = "No"
+				};
+				return await dialog.ShowAsync2();
+			});
+			if (result == ContentDialogResult.Primary)
 			{
 				await Enqueue(0, 1, bidWall, bspotWall);
-				await Task.Delay(400).ConfigureAwait(true);
+				await Task.Delay(400);
 
 				return true;
 			}
@@ -860,20 +869,22 @@ namespace COTG.Views
 			var currentLevel = postQueueBuildings[bspotTownHall].bl;
 			if (currentLevel >= toLevel)
 				return true;
-
-			var dialog = new ContentDialog()
+			var a = await App.DispatchOnUIThreadTask(async () =>
+			{
+				var dialog = new ContentDialog()
 			{
 				Title = "Upgrade TownHall?",
 				Content = $"Would you like to upgrade your Town Hall to level {toLevel} first?",
 				PrimaryButtonText = "Please",
 				SecondaryButtonText = "No"
 			};
-			var a = await dialog.ShowAsync2().ConfigureAwait(true);
+			return await dialog.ShowAsync2();
+		});
 			if (a == ContentDialogResult.Primary)
 			{
 				
 				await Enqueue(currentLevel, toLevel, bidTownHall, bspotTownHall);
-				await Task.Delay(400).ConfigureAwait(true);
+				await Task.Delay(400);
 				return true;
 			}
 			else if( a == ContentDialogResult.Secondary)
@@ -1088,7 +1099,7 @@ namespace COTG.Views
 
 		}
 
-		public static void MoveBuilding(int a, int b, bool dryRun)
+		public static async Task MoveBuilding(int a, int b, bool dryRun)
 		{
 			// Todo:  Cannot be moved if queued
 			// Todo: Error checking
@@ -1112,15 +1123,15 @@ namespace COTG.Views
 
 					if (!isPlanner)
 					{
-						Services.Post.Send("includes/mBu.php", $"a={a}&b={b}&c={Spot.build}", World.CidToPlayerOrMe(City.build));
+						await Services.Post.Send("includes/mBu.php", $"a={a}&b={b}&c={Spot.build}", World.CidToPlayerOrMe(City.build));
+						await Task.Delay(200);
+						
 						--Player.moveSlots;
 					}
-					ref var b1 = ref bds[a];
-					ref var b0 = ref bds[b];
 					// I hope that these operations are what I expect with references
-					var temp = b0;
-					b0 = b1;
-					b1 = temp;
+					var temp = bds[a];
+					bds[a] = bds[b];
+					bds[b] = temp;
 					BuildingsOrQueueChanged();
 				}
 			}
@@ -1128,7 +1139,7 @@ namespace COTG.Views
 
 		public static async Task SwapBuilding(int a, int b, bool dryRun)
 		{
-			if (HasBuildOps(a) || HasBuildOps(b))
+			if ( (HasBuildOps(a) || HasBuildOps(b)) && !isPlanner)
 			{
 				Status($"Cannot move a building that is being rennovated", dryRun);
 				return;
@@ -1150,6 +1161,7 @@ namespace COTG.Views
 						await Services.Post.Send("includes/mBu.php", $"a={a}&b={cityScratchSpot}&c={Spot.build}", World.CidToPlayerOrMe(City.build));
 						await Services.Post.Send("includes/mBu.php", $"a={b}&b={a}&c={Spot.build}", World.CidToPlayerOrMe(City.build));
 						await Services.Post.Send("includes/mBu.php", $"a={cityScratchSpot}&b={b}&c={Spot.build}", World.CidToPlayerOrMe(City.build));
+						await Task.Delay(200);
 						Player.moveSlots -= 3;
 					}
 					BuildingsOrQueueChanged();
@@ -1161,7 +1173,7 @@ namespace COTG.Views
 			}
 		}
 
-		internal static void MoveHovered(bool _isSingleAction, bool dryRun)
+		internal static async void MoveHovered(bool _isSingleAction, bool dryRun)
 		{
 			int bspot = XYToId(hovered);
 			var build = GetBuild();
@@ -1193,7 +1205,7 @@ namespace COTG.Views
 						Status("Cannot move between building and wall spots", dryRun);
 						return;
 					}
-					if(HasBuildOps(bspot) || HasBuildOps(source) )
+					if((HasBuildOps(bspot) || HasBuildOps(source))&&!isPlanner )
 					{
 						Status($"Cannot move a building that is being rennovated", dryRun);
 						return;
@@ -1214,11 +1226,11 @@ namespace COTG.Views
 							if(IsTowerSpot(selected))
 								Status("Cannot swap towers, please move them one at a time", dryRun);
 							else
-								SwapBuilding(source, bspot, dryRun);
+								await SwapBuilding(source, bspot, dryRun);
 						}
 						else
 						{
-							MoveBuilding(source, bspot, dryRun);
+							await MoveBuilding(source, bspot, dryRun);
 						}
 						if(!dryRun)
 							ClearSelectedBuilding();
@@ -1256,7 +1268,7 @@ namespace COTG.Views
 
 
 
-		private void quickBuild_SelectionChanged(object sender, SelectionChangedEventArgs e)
+		private void quickBuild_SelectionChanged(object sender, Windows.UI.Xaml.Controls.SelectionChangedEventArgs e)
 		{
 			//var sel = quickBuild.SelectedItem  as QuickBuildItem;
 			//if (sel != null )
@@ -1316,7 +1328,7 @@ namespace COTG.Views
 					}
 				case Action.build:
 					{
-						if (!b.isEmpty)
+						if (!b.isEmpty && !isPlanner)
 						{
 						//	if(dryRun)
 						//	{
@@ -1465,42 +1477,45 @@ namespace COTG.Views
 			var takeScore = 0;
 			var putTo = -1;
 			var putScore = 0;
-			// See if there are spare buildings that we can take
-			for (int xy = 0; xy < City.citySpotCount; ++xy)
+			if (searchForSpare && !isPlanner && build.isLayoutValid)
 			{
-				var overlayBid = build.BidFromOverlay(xy);
-				var xyBuilding = postQueueBuildings[xy].def.bid;
-
-				if (overlayBid != xyBuilding)
+				// See if there are spare buildings that we can take
+				for (int xy = 0; xy < City.citySpotCount; ++xy)
 				{
-					if (HasBuildOps(xy))
-					{
-						// Cannot take a building that is being operated on
-						continue;
-					}
+					var overlayBid = build.BidFromOverlay(xy);
+					var xyBuilding = postQueueBuildings[xy].def.bid;
 
-					// do they have what we need?
-					if (xyBuilding == desBid)
+					if (overlayBid != xyBuilding)
 					{
-						// two points for ourbuilding is also needed there
-						var score = (overlayBid == curBid) ? 2 : 1;
-						if (score > takeScore)
+						if (HasBuildOps(xy))
 						{
-							takeScore = score;
-							takeFrom = xy;
-						}
-					}
-					//do they want what we have?
-					if (overlayBid == curBid)
-					{
-						var score = (xyBuilding == desBid) ? 4 : (xyBuilding == 0) ? 3 : postQueueBuildings[xy].isBuilding ? 2 : 1;
-						if (score > putScore)
-						{
-							putScore = score;
-							putTo = xy;
-
+							// Cannot take a building that is being operated on
+							continue;
 						}
 
+						// do they have what we need?
+						if (xyBuilding == desBid)
+						{
+							// two points for ourbuilding is also needed there
+							var score = (overlayBid == curBid) ? 2 : 1;
+							if (score > takeScore)
+							{
+								takeScore = score;
+								takeFrom = xy;
+							}
+						}
+						//do they want what we have?
+						if (overlayBid == curBid)
+						{
+							var score = (xyBuilding == desBid) ? 4 : (xyBuilding == 0) ? 3 : postQueueBuildings[xy].isBuilding ? 2 : 1;
+							if (score > putScore)
+							{
+								putScore = score;
+								putTo = xy;
+
+							}
+
+						}
 					}
 				}
 			}
@@ -1529,7 +1544,7 @@ namespace COTG.Views
 					{
 						Status($"Found an unneeded {desName}, will move it to the right spot for you", dryRun);
 
-						MoveBuilding(takeFrom, bspot, dryRun);
+						await MoveBuilding(takeFrom, bspot, dryRun);
 						return rv;
 					}
 					if (counts.townHallLevel < b.def.Thl || (counts.count == counts.max && counts.townHallLevel < 10))
@@ -1573,6 +1588,7 @@ namespace COTG.Views
 				}
 				else
 				{
+					Assert(!isPlanner);
 					// Nothing wanted here
 					if (b.isRes)
 					{
@@ -1609,14 +1625,14 @@ namespace COTG.Views
 								{
 									Status($"Swaping {b.def.Bn} and {desName} as they are mixed up ({Player.moveSlots} moves left)", dryRun);
 									{
-										SwapBuilding(bspot, putTo, dryRun);
+										await SwapBuilding(bspot, putTo, dryRun);
 									}
 									// two way swap 
 									break;
 								}
 							case 3:
 								Status($"Move {name} to where it is wanted", dryRun);
-								MoveBuilding(bspot, putTo, dryRun);
+								await MoveBuilding(bspot, putTo, dryRun);
 								break;
 							case 2:
 								Status($"{name} is wanted elsewhere but there is a building in the way", dryRun);
@@ -1634,27 +1650,31 @@ namespace COTG.Views
 					{
 						if (b.isCabin && counts.count < 100)
 						{
-							Status($"A cabin is here, leaving it", dryRun);
-							// 
-						}
-						else
+							Status($"A cabin is here, but you have under 100 buildings.  To replace it, please demo it manually", dryRun);
+								var cb = FindAnySpotForCabin();
+							await MoveBuilding(bspot,cb, dryRun);
+
+
+							}
+							else
 						{
 							Status($"{b.def.Bn} is not wanted, destroying it", dryRun);
-							if (dryRun)
-								DrawSprite(hovered, decalBuildingInvalid, .31f);
-							else
-							{
-								++rv;
-								await Demolish(cc, dryRun);
+
+							++rv;
+							await Demolish(cc, dryRun);
+						}
 								// build the correct building
 								if (desBid != 0)
 								{
+									if (dryRun)
+										DrawSprite(hovered, decalBuildingInvalid, .31f);
+
 									await Build(cc, desBid, dryRun);
 									++rv;
 								}
 							}
-						}
-					}
+						
+					
 				}
 				else
 				{
@@ -1689,7 +1709,26 @@ namespace COTG.Views
 			return bestSpot;
 		}
 
-		private static async Task TogglePlanner()
+	private static int FindAnySpotForCabin()
+	{
+		var build = City.GetBuild();
+		for (int spot = 0; spot < citySpotCount; ++spot)
+		{
+			if (!IsBuildingSpot(spot))
+				continue;
+			var bld = postQueueBuildings[spot];
+			if (!bld.isEmpty)
+				continue;
+			if (build.BidFromOverlay(spot) != 0)
+				continue;
+			return spot;
+		}
+
+		Assert(false);
+		return 0; // error
+	}
+
+	private static async Task TogglePlanner()
 		{
 			if (PlannerTab.instance.isVisible)
 			{
@@ -1751,7 +1790,7 @@ namespace COTG.Views
 			int bspot = XYToId(cc);
 
 			// tempoararily switch to Select from quickbuild
-			if(!isRight && action == Action.build && !postQueueBuildings[bspot].isEmpty)
+			if(!isRight && action == Action.build && !postQueueBuildings[bspot].isEmpty && !isPlanner)
 			{
 				priorQuickAction = action;
 				action = Action.none;
@@ -1856,22 +1895,27 @@ namespace COTG.Views
 
 		private async void Abandon_Click(object sender, RoutedEventArgs e)
 		{
-			var dialog = new ContentDialog()
+			 await App.DispatchOnUIThreadTask(async () =>
+			{
+				var dialog = new ContentDialog()
 			{
 				Title = "Are you Sure?",
 				Content = "Abandon " + City.GetBuild().nameAndRemarks,
 				PrimaryButtonText = "Yes",
 				SecondaryButtonText = "Cancel"
 			};
-			if (await dialog.ShowAsync2().ConfigureAwait(true) == ContentDialogResult.Primary)
-			{
-				  await JSClient.view.InvokeScriptAsync("misccommand", new[] { "abandoncity", City.build.ToString() });
+				var rv= await dialog.ShowAsync2();
+				if (rv == ContentDialogResult.Primary)
+				{
+					await JSClient.view.InvokeScriptAsync("misccommand", new[] { "abandoncity", City.build.ToString() });
 
-				await Task.Delay(500);
-				NavStack.Back(true);
-			}
+					await Task.Delay(500);
+					NavStack.Back(true);
+				}
+
+			});
 		}
-		public async void ItemClick(object sender, ItemClickEventArgs e)
+		public async void ItemClick(object sender, Windows.UI.Xaml.Controls.ItemClickEventArgs e)
 		{
 			contextMenuResultSelected = true;
 			var bi = e.ClickedItem as BuildMenuItem;
@@ -2058,7 +2102,7 @@ namespace COTG.Views
 
 	//	}
 	//}
-	public class BuildingButton : Button
+	public class BuildingButton : Windows.UI.Xaml.Controls.Button
 	{
 		/// <summary>
 		/// Identifies the <see cref="Image id"/> dependency property.
@@ -2085,7 +2129,7 @@ namespace COTG.Views
 			Height = 64;
 		}
 	}
-	public class BuildingRect : Canvas
+	public class BuildingRect : Windows.UI.Xaml.Controls.Canvas
 	{
 		/// <summary>
 		/// Identifies the <see cref="Image bid"/> dependency property.

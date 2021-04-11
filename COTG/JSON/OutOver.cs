@@ -438,7 +438,7 @@ namespace COTG.JSON
 
                         OutgoingTab.NotifyOutgoingUpdated();
 
-                        Note.Show($"Complete: {reportsOutgoing.Count} attacks {fetched} fetched records {Cosmos.battleRecordsUpserted}{killNote}");
+                        Note.Show($"Complete: {reportsOutgoing.Count} attacks {fetched} fetched records {killNote}");
                     });
                 }
             }

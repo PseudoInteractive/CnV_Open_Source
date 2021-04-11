@@ -20,14 +20,19 @@ using System.ComponentModel;
 using System.Diagnostics;
 using Windows.UI.Xaml;
 using Windows.System;
-using Windows.UI.Xaml.Controls;
+//using Windows.UI.Xaml.Controls;
 using COTG.JSON;
 using System.Text.Json;
 using Windows.Web.Http;
 using static COTG.Game.Enum;
 using Windows.ApplicationModel.DataTransfer;
 using static COTG.Views.ShellPage;
-
+using ContentDialog = Windows.UI.Xaml.Controls.ContentDialog;
+using ContentDialogResult = Windows.UI.Xaml.Controls.ContentDialogResult;
+using MenuFlyoutItem = Windows.UI.Xaml.Controls.MenuFlyoutItem;
+using MenuFlyout = Windows.UI.Xaml.Controls.MenuFlyout;
+using ToggleMenuFlyoutItem = Windows.UI.Xaml.Controls.ToggleMenuFlyoutItem;
+using MenuFlyoutSubItem = Windows.UI.Xaml.Controls.MenuFlyoutSubItem;
 namespace COTG.Game
 {
 	//public interface IKeyedItem
@@ -1177,7 +1182,7 @@ namespace COTG.Game
 				}
 				City.build = cid;
 				Assert(pid == Player.activeId);
-				Cosmos.PublishPlayerInfo(JSClient.jsBase.pid, City.build, JSClient.jsBase.token, JSClient.jsBase.cookies); // broadcast change
+				//Cosmos.PublishPlayerInfo(JSClient.jsBase.pid, City.build, JSClient.jsBase.token, JSClient.jsBase.cookies); // broadcast change
 
 				foreach (var p in PlayerPresence.all)
 				{

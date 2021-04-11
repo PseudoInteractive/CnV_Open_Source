@@ -3,46 +3,33 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Windows.Web.Http;
-using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Input;
 using static COTG.Debug;
 using Windows.Web.Http.Filters;
-using Windows.Web.Http.Headers;
 using Windows.UI.Xaml;
-using System.Windows.Input;
-using System.Net.WebSockets;
 using Windows.System;
 using System.Text.Json;
 using COTG.Game;
 using System.Threading;
 using COTG.Helpers;
-using Windows.UI.Core;
-using Windows.ApplicationModel.Core;
 using Windows.UI.Xaml.Media.Imaging;
 using System.Collections.Concurrent;
 using Windows.Storage.Streams;
-using Windows.Storage;
 using COTG.Services;
-using System.Web;
 using COTG.Views;
 using System.Numerics;
-using Windows.UI.Xaml.Media;
 using COTG.JSON;
 using static COTG.Game.Enum;
-using Windows.ApplicationModel.DataTransfer;
 using Windows.UI.Input;
-using Windows.Foundation;
-using Windows.Graphics.Display;
-using Microsoft.Toolkit.Uwp.Helpers;
 using Microsoft.Graphics.Canvas;
 using Windows.Graphics.Imaging;
 using System.Text.Json.Serialization;
 using COTG.DB;
 using Microsoft.AppCenter;
-using Microsoft.AppCenter.Analytics;
+using WebView = Windows.UI.Xaml.Controls.WebView;
+using ContentDialog = Windows.UI.Xaml.Controls.ContentDialog;
+using ContentDialogResult = Windows.UI.Xaml.Controls.ContentDialogResult;
 
 namespace COTG
 {
@@ -333,12 +320,12 @@ namespace COTG
 		}
 
 
-		internal static WebView Initialize(Grid panel)
+		internal static WebView Initialize(Windows.UI.Xaml.Controls.Grid panel)
 		{
 
 			try
 			{
-				view = new WebView(WebViewExecutionMode.SeparateThread)
+				view = new WebView(Windows.UI.Xaml.Controls.WebViewExecutionMode.SeparateThread)
 				{
 					//HorizontalAlignment = HorizontalAlignment.Stretch,
 					//VerticalAlignment = VerticalAlignment.Stretch,
@@ -449,7 +436,7 @@ namespace COTG
 		//	Note.Show("Key " + e.Key + e.ToString());
 		//}
 
-		async private static void View_NewWindowRequested(WebView sender, WebViewNewWindowRequestedEventArgs args)
+		async private static void View_NewWindowRequested(WebView sender, Windows.UI.Xaml.Controls.WebViewNewWindowRequestedEventArgs args)
 		{
 			args.Handled = true;
 			//if (WebViewPage.instance != null)
@@ -484,7 +471,7 @@ namespace COTG
 
 		}
 
-		private static void View_WebResourceRequested1(WebView sender, WebViewWebResourceRequestedEventArgs args)
+		private static void View_WebResourceRequested1(WebView sender, Windows.UI.Xaml.Controls.WebViewWebResourceRequestedEventArgs args)
 		{
 			try
 			{
@@ -788,7 +775,7 @@ namespace COTG
 			try
 			{
 				ShellPage.SetViewMode(viewMode);
-				App.DispatchOnUIThreadSneaky(() => view.InvokeScriptAsync("setviewmode", new string[] { viewMode== ShellPage.ViewMode.city ? "c" : "w" }));
+				App.DispatchOnUIThreadSneaky(() => view.InvokeScriptAsync("setviewmode", new string[] { viewMode== ShellPage.ViewMode.city ? "c" : "r" }));
 
 			}
 			catch (Exception e)
@@ -1354,6 +1341,9 @@ namespace COTG
 
 		private static async void ShowCouncillorsMissingDialog()
 		{
+			 await App.DispatchOnUIThreadTask(async () =>
+			{
+
 				var msg = new ContentDialog()
 				{
 					IsPrimaryButtonEnabled = true,
@@ -1362,7 +1352,8 @@ namespace COTG
 					PrimaryButtonText = "Okay",
 					CloseButtonText = "Quit"
 				};
-				await msg.ShowAsync2();
+				return  await msg.ShowAsync2();
+			});
 		}
 
 		private static SortedList<int, int> GetIntArray(JsonElement cln)
@@ -1385,20 +1376,20 @@ namespace COTG
 			return rv;
 		}
 
-		static private void View_PermissionRequested(WebView sender, WebViewPermissionRequestedEventArgs args)
+		static private void View_PermissionRequested(WebView sender, Windows.UI.Xaml.Controls.WebViewPermissionRequestedEventArgs args)
 		{
 			var pr = args.PermissionRequest;
 			Log($"Permission {pr.Id} {pr.PermissionType} {pr.State} {pr.ToString()}");
 			pr.Allow();
 		}
 
-		static private void View_NavigationCompletedAsync(WebView sender, WebViewNavigationCompletedEventArgs args)
+		static private void View_NavigationCompletedAsync(WebView sender, Windows.UI.Xaml.Controls.WebViewNavigationCompletedEventArgs args)
 		{
 			Log($"Nav complete {args.Uri}");
 
 		}
 
-		static private void View_NavigationStarting(WebView sender, WebViewNavigationStartingEventArgs args)
+		static private void View_NavigationStarting(WebView sender, Windows.UI.Xaml.Controls.WebViewNavigationStartingEventArgs args)
 		{
 
 			try
@@ -1569,7 +1560,7 @@ namespace COTG
 		//	Log(args.ToString());
 		//}
 
-		static private void View_NavigationFailed(object sender, WebViewNavigationFailedEventArgs e)
+		static private void View_NavigationFailed(object sender, Windows.UI.Xaml.Controls.WebViewNavigationFailedEventArgs e)
 		{
 
 			Exception($"Internet failed, press any key to retry {e.Uri} {e.WebErrorStatus}");
@@ -1578,7 +1569,7 @@ namespace COTG
 				view.Refresh();
 		}
 
-		static private void View_DOMContentLoaded(WebView sender, WebViewDOMContentLoadedEventArgs args)
+		static private void View_DOMContentLoaded(WebView sender, Windows.UI.Xaml.Controls.WebViewDOMContentLoadedEventArgs args)
 		{
 			//Log($"Dom loaded {args.Uri}");
 			//if (urlMatch.IsMatch(args.Uri.Host))
@@ -1598,7 +1589,7 @@ namespace COTG
 							view.InvokeScriptAsync("chcity", new string[] { (cityId).ToString() }));
 			await i.Task;
 		}
-		static private void View_ScriptNotify(object sender, NotifyEventArgs __e)
+		static private void View_ScriptNotify(object sender, Windows.UI.Xaml.Controls.NotifyEventArgs __e)
 
 		{
 			var eValue = __e.Value;
@@ -2052,7 +2043,7 @@ namespace COTG
 								   Alliance.Ctor(jsDoc);
 								   
 								   // now we can update player info
-								   Cosmos.PublishPlayerInfo(jsBase.pid, City.build, jsBase.token, jsBase.cookies);
+								   //Cosmos.PublishPlayerInfo(jsBase.pid, City.build, jsBase.token, jsBase.cookies);
 
 								  
 								   break;
@@ -2275,13 +2266,14 @@ namespace COTG
 		{
 
 			var dialog = new WhatsNewDialog();
-			dialog.DefaultButton = ContentDialogButton.Primary;
+			dialog.DefaultButton = Windows.UI.Xaml.Controls.ContentDialogButton.Primary;
 			dialog.fixesText.Text = new StreamReader((typeof(Fixes).Assembly).GetManifestResourceStream($"COTG.Notes.fixes.md")).ReadToEnd();
 
 			var result = await dialog.ShowAsync2();
 		}
 		private static async void PresenceTimer_Tick(object sender, object e)
 		{
+			/*
 			var players = await Cosmos.GetPlayersInfo();
 			var changed = false;
 			int put = 0;
@@ -2328,7 +2320,7 @@ namespace COTG
 					}
 				}
 				presence[put++] = p;
-
+			
 			}
 			PlayerPresence.all = presence;
 
@@ -2354,10 +2346,10 @@ namespace COTG
 					ShellPage.instance.friendListBox.Visibility = PlayerPresence.all.Length > 1 ? Visibility.Visible : Visibility.Collapsed;
 				});
 			}
-
+			*/
 		}
 
-		static private async void View_UnviewableContentIdentified(WebView sender, WebViewUnviewableContentIdentifiedEventArgs args)
+		static private async void View_UnviewableContentIdentified(WebView sender, Windows.UI.Xaml.Controls.WebViewUnviewableContentIdentifiedEventArgs args)
 		{
 			if (await Windows.System.Launcher.LaunchUriAsync(args.Uri))
 			{
@@ -2369,7 +2361,7 @@ namespace COTG
 			}
 		}
 
-		static private void View_UnsupportedUriSchemeIdentified(WebView sender, WebViewUnsupportedUriSchemeIdentifiedEventArgs args)
+		static private void View_UnsupportedUriSchemeIdentified(WebView sender, Windows.UI.Xaml.Controls.WebViewUnsupportedUriSchemeIdentifiedEventArgs args)
 		{
 			Exception("UnsupportedUriScheme");
 		}

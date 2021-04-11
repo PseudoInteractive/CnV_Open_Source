@@ -26,6 +26,7 @@ namespace COTG.Game
 		Shipper= 1 << 21,
 		Shipping = 1 << 21,
 		Hub = 1 << 22,
+		LeaveMe = 1 << 23,
 	}
 	public struct TagInfo
 	{
@@ -34,6 +35,10 @@ namespace COTG.Game
 	}
 	public static class TagHelper
 	{
+		public static TagInfo Get(this Tags tag) => new TagInfo() { id = tag, s = tag.ToString() };
+		//public static TagInfo tagLeaveMe = Get(Tags.LeaveMe);
+		public static bool LeaveMe(this Spot spot) => spot.HasTag(Tags.LeaveMe); 
+
 		public static TagInfo[] tags;
 		static TagHelper()
 		{
@@ -43,9 +48,13 @@ namespace COTG.Game
 			{
 				tags[i].id = Tags.Parse<COTG.Game.Tags>(names[i]);
 				tags[i].s = names[i];
+	
 			}
 			
 		}
+
+
+
 		public static string SetTag(string src, string tag, bool isOn)
 		{
 			var exists = src.Contains(tag, StringComparison.OrdinalIgnoreCase);

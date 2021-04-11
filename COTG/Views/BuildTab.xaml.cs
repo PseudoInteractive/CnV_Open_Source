@@ -1,5 +1,6 @@
 ﻿using COTG.Game;
 using COTG.JSON;
+using COTG.Services;
 
 using System;
 using System.Collections.Generic;
@@ -8,8 +9,8 @@ using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
 
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Media;
+using Windows.UI.Xaml.Controls;
+//using Windows.UI.Xaml.Media;
 
 using static COTG.Debug;
 using static COTG.Game.City;
@@ -37,7 +38,7 @@ namespace COTG.Views
 			this.InitializeComponent();
 		}
 
-		public string buildingStage => $"Stage: {City.GetBuildBuildStage()}";
+		public string buildingStage => $"Stage: {City.GetBuildStageNoFetch().ToString()}";
 
 		//private void ZoomedInGotFocus(object sender, RoutedEventArgs e)
 		//{
@@ -147,11 +148,13 @@ namespace COTG.Views
 			});
 
 		}
-		public static void RebuildAll()
+		public static async void RebuildAll()
 		{
+			var stage = await City.GetBuildBuildStage();
 			App.DispatchOnUIThreadSneaky(() =>
 			{
 				instance.cities.Clear();
+				instance.stage.Text = $"Stage: {stage.ToString()}";
 				foreach (var city in CityBuildQueue.all.Values)
 				{
 					var view = BuildItemView.Rent().Ctor(city.cid);
@@ -188,7 +191,7 @@ namespace COTG.Views
 
 		//}
 
-		private void ClearQueue(object sender, RoutedEventArgs e)
+		private void ClearQueue(object sender, Windows.UI.Xaml.RoutedEventArgs e)
 		{
 			CityBuild.ClearQueue();
 
@@ -229,7 +232,7 @@ namespace COTG.Views
 
 		//}
 
-		private void ClearSelected(object sender, RoutedEventArgs e)
+		private void ClearSelected(object sender, Windows.UI.Xaml.RoutedEventArgs e)
 		{
 			var sel = zoom.SelectedNodes;
 			var removedCitites = new List<BuildItemView>();
@@ -268,7 +271,7 @@ namespace COTG.Views
 			}
 		}
 
-		private void zoom_ItemInvoked(Microsoft.UI.Xaml.Controls.TreeView sender, Microsoft.UI.Xaml.Controls.TreeViewItemInvokedEventArgs args)
+		private void zoom_ItemInvoked(TreeView sender, TreeViewItemInvokedEventArgs args)
 		{
 			var ob = args.InvokedItem;
 			if (ob is BuildItemView q)
@@ -281,26 +284,44 @@ namespace COTG.Views
 			}
 		}
 
-		private async void Splat(object sender, RoutedEventArgs e)
+		private async void Splat(object sender, Windows.UI.Xaml.RoutedEventArgs e)
 		{
 			await App.DispatchOnUIThreadExclusive( () =>
 			{
 				return Splat(City.GetBuild());
 			});
 		}
+
+
 		
 		public static async Task<bool> Splat(City city)
 		{
 			var cid = city.cid;
-			var bc = city.GetBuildingCounts();
-			var stage = city.GetBuildStage(bc);
+			Assert(App.uiSema.CurrentCount == 0);
+			Assert(App.IsOnUIThread());
+			await GetCity.Post(cid).ConfigureAwait(true);
+			if (city.LeaveMe())
+			{
+				Note.Show($"Skipping ${city.nameAndRemarks}, 'LeaveMe' tag is set");
+				return true;
+			}
+			var cabinLevel = city.GetAutobuildCabinLevelNoFetch();
+			var bc = city.GetBuildingCounts(cabinLevel);
+			var stage = await city.GetBuildStage().ConfigureAwait(true);
+			
 			if (stage == BuildStage._new)
 			{
+
+				if(!city.isBuild)
+					await JSClient.ChangeCity(city.cid, false).ConfigureAwait(true);
+
 				await CityRename.RenameDialog(city.cid,false).ConfigureAwait(true);
 				stage = city.GetBuildStage(bc);
 			}
 			if (stage == BuildStage.noLayout)
 			{
+				if (!city.isBuild)
+					await JSClient.ChangeCity(city.cid, false).ConfigureAwait(true);
 				await ShareString.Show().ConfigureAwait(true);
 				stage = city.GetBuildStage(bc);
 			}
@@ -317,13 +338,55 @@ namespace COTG.Views
 					return true ;
 				}
 			}
-			if (!bc.hasCastle && FindOverlayBuildingsOfType(city,bidCastle).Any() && city.tsTotal > 20000  )
+			if (!bc.hasCastle && FindOverlayBuildingsOfType(city,bidCastle).Any() && city.tsTotal > SettingsPage.tsForCastle  )
 			{
-				await CityBuild.Enqueue( 0, 1, bidCastle, XYToId(FindOverlayBuildingsOfType(city, bidCastle).First()));
+				if (!city.isBuild)
+					await JSClient.ChangeCity(city.cid, false).ConfigureAwait(true); ;
+				await CityBuild.Enqueue(0, 1, bidWall, bspotWall).ConfigureAwait(true);
+				await CityBuild.Enqueue( 0, 1, bidCastle, XYToId(FindOverlayBuildingsOfType(city, bidCastle).First())).ConfigureAwait(true);
+				bc.hasWall = true;
+				bc.hasCastle = true;
+			}
+			if (!bc.hasWall && bc.hasCastle)
+			{
+				await CityBuild.Enqueue(0, 1, bidWall, bspotWall).ConfigureAwait(true);
+				bc.hasWall = true;
+			}
+			if(bc.hasWall && bc.scoutpostCount < SettingsPage.scoutpostCount)
+			{
+				while(bc.scoutpostCount <  SettingsPage.scoutpostCount)
+				{
+					var spot = 0;
+					foreach(var _spot in innerTowerSpots)
+					{
+						if(CityBuild.postQueueBuildings[_spot].isEmpty)
+						{
+							spot = _spot;
+							goto added;
+						}
+
+					}
+					foreach (var _spot in outerTowerSpots)
+					{
+						if (CityBuild.postQueueBuildings[_spot].isEmpty)
+						{
+							spot = _spot;
+							goto added;
+						}
+
+					}
+
+				added:
+					if (spot == 0)
+						break;
+					await CityBuild.Enqueue(0, 1, bidSentinelPost, spot).ConfigureAwait(true);
+
+					++bc.scoutpostCount;
+				}
 			}
 			// todo: teardown
-			await JSClient.ChangeCity(city.cid,true);
-			bc = City.GetBuildingCountsPostQueue();
+			await JSClient.ChangeCity(city.cid,false).ConfigureAwait(true);;
+			bc = City.GetBuildingCountsPostQueue(cabinLevel);
 			stage = await City.GetBuildBuildStage(bc).ConfigureAwait(true);
 			switch (stage)
 			{
@@ -334,7 +397,7 @@ namespace COTG.Views
 					{
 						if (bc.cabins < SettingsPage.startCabinCount || (bc.storeHouses == 0))
 						{
-							switch( await App.DoYesNoBox("Add Cabins", $"Would you like to add cabins to {city.nameAndRemarks}?"))
+							switch (await App.DoYesNoBoxUI("Add Cabins", $"Would you like to add cabins to {city.nameAndRemarks}?"))
 							{
 								case -1: return false;
 								case 0: return true;
@@ -363,7 +426,7 @@ namespace COTG.Views
 
 										if (CityBuild.postQueueBuildings[City.XYToId(c)].isEmpty && (city.BidFromOverlay(c) == 0))
 										{
-											await CityBuild.Build(XYToId(c), bidCottage, false);
+											await CityBuild.Build(XYToId(c), bidCottage, false) ;
 											++bc.cabins;
 										}
 										if (bc.cabins >= SettingsPage.startCabinCount)
@@ -391,15 +454,16 @@ namespace COTG.Views
 						}
 					}
 					break;
+				case BuildStage.cabinsComplete:
 				case City.BuildStage.initialBuildings:
 					{
 						//var c = RandomCitySpot();
 						var message = string.Empty;
 						var buildingLimit = city.FirstBuildingInOverlay(bidCastle) == 0 ? 100 : 99;
-						
+
 						if (bc.buildings < buildingLimit)
 						{
-							switch (await App.DoYesNoBox("Initial Buildings", $"Would you like to place initial buildings for {city.nameAndRemarks}?"))
+							switch (await App.DoYesNoBoxUI("Building Placement", $"Would you like to place buildings for {city.nameAndRemarks}?"))
 							{
 								case -1: return false;
 								case 0: return true;
@@ -489,6 +553,22 @@ namespace COTG.Views
 								}
 							}
 							{
+								var bid = bidShipyard;
+								var bd = FindPendingOverlayBuildingsOfType(city, bid, (buildingLimit - bc.buildings));
+								{
+									message += $"Adding { bd.Count} shipyards";
+									foreach (var i in bd)
+									{
+										await CityBuild.SmartBuild(city, i, bid, true, false);
+
+										//										await CityBuild.Build(i, bidTrainingGround, false);
+										++bc.buildings;
+										++bc.shipyards;
+
+									}
+								}
+							}
+							{
 								var bid = bidBarracks;
 								var bd = FindPendingOverlayBuildingsOfType(city, bid, buildingLimit);  // find them all
 								int milBid;
@@ -503,7 +583,7 @@ namespace COTG.Views
 								else
 									milBid = bc.stables;
 
-								bd = bd.OrderByDescending((x) => CountSurroundingBuildingsOfType(x, milBid)).ToList() ;
+								bd = bd.OrderByDescending((x) => CountSurroundingBuildingsOfType(x, milBid)).ToList();
 								{
 									message += $"Adding Barracks";
 									foreach (var i in bd)
@@ -515,25 +595,43 @@ namespace COTG.Views
 										//										await CityBuild.Build(i, bidTrainingGround, false);
 										++bc.buildings;
 										++bc.barracks;
-										
+
 									}
 								}
+							}
+							if (bc.buildings < buildingLimit)
+							{
+								// do the rest
+								var todo = FindPendingOverlayBuildings(city);
+								while (todo.Any() && bc.buildings < buildingLimit)
+								{
+									var id = AMath.random.Next(todo.Count);
+									var c = todo[id];
+									todo.RemoveAt(id);
+
+									var bid = city.BidFromOverlay(c);
+									await CityBuild.SmartBuild(city, c, bid, true, false);
+
+
+								}
+
 							}
 
 						}
 
-						break;
+							break;
 					}
+				case City.BuildStage.initialBuildingsComplete:
 				case City.BuildStage.teardown:
 					{
 						const int maxCommands = 14;
-						int count = (maxCommands - GetBuildQueueLength()).Min(bc.cabins*2);
-						if( count < 2 || bc.unfinishedBuildings > 0)
+						int count = (maxCommands - GetBuildQueueLength()).Min(bc.cabins * 2);
+						if (count < 2 || bc.unfinishedBuildings > 0)
 						{
 							Note.Show("Already queud up Teardown");
 							break;
 						}
-						switch (await App.DoYesNoBox("Teardown", $"Would you like to swap cabins for buildings in {city.nameAndRemarks}?"))
+						switch (await App.DoYesNoBoxUI("Teardown", $"Would you like to swap cabins for buildings in {city.nameAndRemarks}?"))
 						{
 							case -1: return false;
 							case 0: return true;
@@ -553,11 +651,11 @@ namespace COTG.Views
 						else
 							milBid = bc.stables;
 
-						var barracks = FindPendingOverlayBuildingsOfType(city, bidBarracks,100).OrderByDescending( a => CountSurroundingBuildingsOfType(a,milBid) ).ToList();
-						
-						for(; ;)
+						var barracks = FindPendingOverlayBuildingsOfType(city, bidBarracks, 100).OrderByDescending(a => CountSurroundingBuildingsOfType(a, milBid)).ToList();
+
+						for (; ; )
 						{
-							 count = (maxCommands - GetBuildQueueLength()).Min(bc.cabins * 2);
+							count = (maxCommands - GetBuildQueueLength()).Min(bc.cabins * 2);
 							if (count < 2)
 								break;
 							var id = AMath.random.Next(todo.Count);
@@ -565,13 +663,13 @@ namespace COTG.Views
 							todo.RemoveAt(id);
 
 							var bid = city.BidFromOverlay(c);
-							if(bid == bidBarracks )
+							if (bid == bidBarracks)
 							{
 								c = barracks[0];
 								barracks.RemoveAt(0);
 							}
 							count -= await CityBuild.SmartBuild(city, c, bid, true, false);
-							
+
 
 						}
 
@@ -582,6 +680,7 @@ namespace COTG.Views
 					Note.Show("Complete :)");
 					break;
 				default:
+					Assert(false);
 					break;
 			}
 			return true;
@@ -674,15 +773,19 @@ namespace COTG.Views
 			return (x: AMath.random.Next(City.citySpan), y: AMath.random.Next(City.citySpan));
 		}
 
-		private async void SplatAll(object sender, RoutedEventArgs e)
+		private async void SplatAll(object sender, Windows.UI.Xaml.RoutedEventArgs e)
 		{
-
+			
 			try
 			{
 				foreach (var _city in City.friendCities)
 				{
+
 					var city = _city;
-					var rv = await Splat(city);
+					var rv = await App.DispatchOnUIThreadExclusive(async () =>
+					{
+						return await Splat(city);
+					});
 					if (rv == false)
 						break;
 				}
@@ -696,30 +799,30 @@ namespace COTG.Views
 		}
 	}
 
-	public class BuildItemTemplateSelector : Windows.UI.Xaml.Controls.DataTemplateSelector
+	//public class BuildItemTemplateSelector : Microsoft.UI.Xaml.Controls.DataTemplateSelector
 
-	{
-		public DataTemplate cityTemplate { get; set; }
-		public DataTemplate opTemplate { get; set; }
+	//{
+	//	public DataTemplate cityTemplate { get; set; }
+	//	public DataTemplate opTemplate { get; set; }
 
-		protected override DataTemplate SelectTemplateCore(object item)
-		{
-			if (item is BuildItemView city)
-			{
-				return cityTemplate;
-			}
-			else
-			{
-				return opTemplate;
-			}
-		}
-	}
+	//	protected override DataTemplate SelectTemplateCore(object item)
+	//	{
+	//		if (item is BuildItemView city)
+	//		{
+	//			return cityTemplate;
+	//		}
+	//		else
+	//		{
+	//			return opTemplate;
+	//		}
+	//	}
+	//}
 
 	public class BuildItemView
 	{
 		static readonly List<BuildItemView> pool = new();
 		public const int size = 32;
-		public ImageBrush brush { get; set; }
+		public Windows.UI.Xaml.Media.ImageBrush brush { get; set; }
 		public int cid; // owner
 		public BuildQueueItem item;
 		public string building { get; set; }

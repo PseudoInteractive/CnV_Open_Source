@@ -2,8 +2,9 @@
 
 using Windows.ApplicationModel.DataTransfer;
 using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media.Imaging;
+using Windows.UI.Xaml.Controls;
 
 namespace COTG.Services.DragAndDrop
 {
@@ -93,7 +94,7 @@ namespace COTG.Services.DragAndDrop
             };
         }
 
-        private static void ConfigureListView(ListViewBase listview, ListViewDropConfiguration configuration)
+        private static void ConfigureListView(Windows.UI.Xaml.Controls.ListViewBase listview, ListViewDropConfiguration configuration)
         {
             listview.DragItemsStarting += (sender, args) =>
             {

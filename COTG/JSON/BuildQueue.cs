@@ -17,11 +17,13 @@ using System.Web;
 
 using Windows.System.Threading;
 using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Controls;
 using Microsoft.Toolkit;
 using static COTG.Debug;
 using static COTG.JSON.BuildQueue;
 using Windows.Storage;
+using ContentDialog = Windows.UI.Xaml.Controls.ContentDialog;
+using ContentDialogResult = Windows.UI.Xaml.Controls.ContentDialogResult;
 
 namespace COTG.JSON
 {
@@ -506,7 +508,7 @@ namespace COTG.JSON
 					finally
 					{
 						if(pollPaused)
-						 JSClient.JSInvoke("resumepoll", null);
+						 await JSClient.JSInvokeTask("resumepoll", null);
 
 						throttle.Release();
 						if (cotgQ != null && cotgQ != City.buildQueue)
@@ -684,14 +686,20 @@ namespace COTG.JSON
 			if (bid == City.bidCastle && slvl == 0)
 			{
 				Assert(cid == City.build);
-				var dialog = new ContentDialog()
-				{
-					Title = $"Castle {City.GetOrAddCity(cid).nameAndRemarks}?",
-					Content = "Building a Castle allows you to plunder, scout, assault and siege other cities, but it also makes your own city vulnerable to attacks from other players. Building a Castle will exponentially increase the maximum army size of your city, and is an irreversible action.",
-					PrimaryButtonText = "Yes",
-					SecondaryButtonText = "Cancel"
-				};
-				if (await dialog.ShowAsync2().ConfigureAwait(true) != ContentDialogResult.Primary)
+				var result = await App.DispatchOnUIThreadTask(async () =>
+			   {
+
+				   var dialog = new ContentDialog()
+				   {
+					   Title = $"Castle {City.GetOrAddCity(cid).nameAndRemarks}?",
+					   Content = "Building a Castle allows you to plunder, scout, assault and siege other cities, but it also makes your own city vulnerable to attacks from other players. Building a Castle will exponentially increase the maximum army size of your city, and is an irreversible action.",
+					   PrimaryButtonText = "Yes",
+					   SecondaryButtonText = "Cancel"
+				   };
+				   return await dialog.ShowAsync2();
+			   });
+
+				if (result != ContentDialogResult.Primary)
 				{
 					return;
 				}
@@ -737,18 +745,20 @@ namespace COTG.JSON
 				CityView.BuildingsOrQueueChanged();
 			}
 		}
-		public static void SaveIfNeeded()
+		public static async Task SaveIfNeeded()
 		{
 			if (!initialized)
 				return;
-			SaveTimerGo(true);
+		  await SaveTimerGo(true);
 		}
-		static internal void ShutDown(object sender, Windows.ApplicationModel.SuspendingEventArgs e)
+
+		// Where should this go?
+		static internal async Task ShutDown(object sender, Windows.ApplicationModel.SuspendingEventArgs e)
 		{
 			if (!initialized)
 				return;
 			saveTimer.Cancel();
-			SaveTimerGo(true); // flush pending saves if any
+			await SaveTimerGo(true); // flush pending saves if any
 		}
 		static internal void SaveTimer_Tick(ThreadPoolTimer timer)
 		{
@@ -862,6 +872,7 @@ namespace COTG.JSON
 		{
 			StringBuilder sb = new StringBuilder("{");
 			bool isFirst = true;
+
 			foreach (var city in CityBuildQueue.all.Values)
 			{
 				if (isFirst)

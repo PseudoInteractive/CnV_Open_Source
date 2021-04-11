@@ -81,31 +81,35 @@ namespace COTG.Views
         // returns null on cancel
         public static async Task<string[]> ChooseNames(string title, string[] names)
         {
-            PlayerGroup pg = new PlayerGroup();
-            if (names != null)
-            {
-                foreach(var i in names)
-                   pg.names.Items.Add(i);
-            }
-            if(title!=null)
-                pg.Title = title;
-            var rv = await pg.ShowAsync2();
-			ElementSoundPlayer.Play(ElementSoundKind.Show);
+			return await App.DispatchOnUIThreadTask(async () =>
+			{
+				PlayerGroup pg = new PlayerGroup();
+				if (names != null)
+				{
+					foreach (var i in names)
+						pg.names.Items.Add(i);
+				}
+				if (title != null)
+					pg.Title = title;
+				var rv = await pg.ShowAsync2();
 
-			if (rv== ContentDialogResult.Primary)
-            {
-                names = new string[ pg.names.Items.Count];
-                int put = 0;
-                foreach(var name in pg.names.Items)
-                {
-                    names[put++] = name as string;
-                }
-                return names;
-            }
-            else
-            {
-                return null;
-            }
+				ElementSoundPlayer.Play(ElementSoundKind.Show);
+
+				if (rv == ContentDialogResult.Primary)
+				{
+					names = new string[pg.names.Items.Count];
+					int put = 0;
+					foreach (var name in pg.names.Items)
+					{
+						names[put++] = name as string;
+					}
+					return names;
+				}
+				else
+				{
+					return null;
+				}
+			});
         }
 
         

@@ -6,12 +6,13 @@ using System.Linq;
 using System.Threading.Tasks;
 
 using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
 
 using static COTG.Debug;
 // The Content Dialog item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
-
+using ContentDialog = Windows.UI.Xaml.Controls.ContentDialog;
+using ContentDialogResult = Windows.UI.Xaml.Controls.ContentDialogResult;
 namespace COTG.Views
 {
 	public sealed partial class DateTimePicker : ContentDialog, INotifyPropertyChanged
@@ -85,13 +86,17 @@ namespace COTG.Views
 
 		public static async Task<(DateTimeOffset t, bool yes)> ShowAsync(string title, DateTimeOffset? _time=null)
 		{
-			if (title != null)
-				instance.Title = title;
-			if (_time != null)
-				dateTime = _time.Value;
-			ElementSoundPlayer.Play(ElementSoundKind.Show);
+			var result = await App.DispatchOnUIThreadTask(async () =>
+			{
 
-			var result = await instance.ShowAsync2();
+				if (title != null)
+					instance.Title = title;
+				if (_time != null)
+					dateTime = _time.Value;
+				ElementSoundPlayer.Play(ElementSoundKind.Show);
+
+				return  await instance.ShowAsync2();
+			});
 			return (dateTime, result == ContentDialogResult.Primary);
 		}
 
@@ -101,7 +106,7 @@ namespace COTG.Views
 			TimeToUI();
 		}
 
-		private void ContentDialog_PrimaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
+		private void ContentDialog_PrimaryButtonClick(ContentDialog sender, Windows.UI.Xaml.Controls.ContentDialogButtonClickEventArgs args)
 		{
 			var s = dateTime.ToString(AUtil.fullDateFormat, DateTimeFormatInfo.InvariantInfo);
 
@@ -115,7 +120,7 @@ namespace COTG.Views
 		}
 
 
-		private void date_SelectedDatesChanged(CalendarView sender, CalendarViewSelectedDatesChangedEventArgs args)
+		private void date_SelectedDatesChanged(Windows.UI.Xaml.Controls.CalendarView sender, Windows.UI.Xaml.Controls.CalendarViewSelectedDatesChangedEventArgs args)
 		{
 			if (pauseChange == 0)
 			{
@@ -146,7 +151,7 @@ namespace COTG.Views
 			PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 		}
 
-		private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+		private void ComboBox_SelectionChanged(object sender, Windows.UI.Xaml.Controls.SelectionChangedEventArgs e)
 		{
 			if (e.AddedItems.Any())
 			{
