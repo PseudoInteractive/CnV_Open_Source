@@ -1410,7 +1410,7 @@ namespace COTG.Views
 				case Action.showShareString:
 					{
 						if(isSingleClickAction)
-							App.DispatchOnUIThreadSneaky( ()=> ShareString.Show() );
+							ShareString.Show();
 						break;
 					}
 				case Action.togglePlanner:

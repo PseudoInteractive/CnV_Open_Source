@@ -322,7 +322,7 @@ namespace COTG.Views
 			{
 				if (!city.isBuild)
 					await JSClient.ChangeCity(city.cid, false).ConfigureAwait(true);
-				await ShareString.Show().ConfigureAwait(true);
+				await ShareString.ShowNoLock().ConfigureAwait(true);
 				stage = city.GetBuildStage(bc);
 			}
 			if (stage == City.BuildStage.complete)
@@ -611,7 +611,7 @@ namespace COTG.Views
 
 									var bid = city.BidFromOverlay(c);
 									await CityBuild.SmartBuild(city, c, bid, true, false);
-
+									++bc.buildings;
 
 								}
 
@@ -656,7 +656,7 @@ namespace COTG.Views
 						for (; ; )
 						{
 							count = (maxCommands - GetBuildQueueLength()).Min(bc.cabins * 2);
-							if (count < 2)
+							if (count < 2 || todo.Count==0)
 								break;
 							var id = AMath.random.Next(todo.Count);
 							var c = todo[id];
@@ -775,7 +775,12 @@ namespace COTG.Views
 
 		private async void SplatAll(object sender, Windows.UI.Xaml.RoutedEventArgs e)
 		{
-			
+			if(App.uiSema.CurrentCount==0)
+			{
+				Log("Already running");
+				return;
+			}
+
 			try
 			{
 				foreach (var _city in City.friendCities)

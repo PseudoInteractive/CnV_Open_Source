@@ -614,6 +614,7 @@ namespace COTG
 		public static async Task<T>
 			DispatchOnUIThreadExclusive<T>(Func<Task<T>> func, CoreDispatcherPriority priority = CoreDispatcherPriority.Low)
 		{
+			Log($"Lock sema: {uiSema.CurrentCount}");
 			await uiSema.WaitAsync();
 
 			try
@@ -622,6 +623,8 @@ namespace COTG
 			}
 			finally
 			{
+				Log($"unLock sema: {uiSema.CurrentCount}");
+
 				uiSema.Release();
 			}
 
@@ -629,7 +632,9 @@ namespace COTG
 		public static async Task
 			DispatchOnUIThreadExclusive(Func<Task> func, CoreDispatcherPriority priority = CoreDispatcherPriority.Low)
 		{
+			Log($"Lock sema: {uiSema.CurrentCount}");
 			await uiSema.WaitAsync();
+			
 
 			try
 			{
@@ -637,6 +642,7 @@ namespace COTG
 			}
 			finally
 			{
+				Log($"unlock sema: {uiSema.CurrentCount}");
 				uiSema.Release();
 			}
 
