@@ -901,7 +901,19 @@ namespace COTG
 			App.DispatchOnUIThreadSneaky(() =>
 			{
 				var xy = cityId.ToWorldXY();
-				var str = $"[{ xy.X/25 + (xy.Y/25)*24}]";
+				(int x,int y) cc = (xy.X / 100,xy.Y/100);
+				var str = "[";
+				var sep = "";
+				for(int i=0;i<4;++i)
+				{
+					for (int j = 0; j < 4; ++j)
+					{
+						str = $"{str}{sep}{cc.x * 4 + i + (cc.y * 4 + j) * 24}";
+						sep = ",";
+					}
+				}
+				str += "]";
+				
 				view.InvokeScriptAsync("rmp",  new string[] { str });
 				view.InvokeScriptAsync("gStQueryCB", new string[] { (cityId).ToString(), hash.ToString() });
 			});
@@ -1881,7 +1893,7 @@ namespace COTG
 							   }
 						   case "gstcb":
 							   {
-								   Trace(jsp.ToString());
+								   Note.Show(jsp.ToString());
 								   var jso = jsp.Value;
 								   var tag = jso.GetAsInt("tag");
 								   if (gstCBs.TryGetValue(tag, out var cb))
@@ -1893,7 +1905,7 @@ namespace COTG
 							   }
 						   case "rmp":
 							   {
-								   Trace(jsp.ToString());
+									Note.Show(jsp.ToString());
 								   break;
 							   }
 

@@ -381,7 +381,7 @@ namespace COTG.Game
 
 		public int BidFromOverlay(int id)
 		{
-			if (shareString.IsNullOrEmpty())
+			if (shareString==null || shareString.Length <= shareStringStartOffset)
 				return 0;
 			var t = shareString[id + shareStringStartOffset];
 			if (BuildingDef.sharestringToBuldings.TryGetValue((byte)t, out var c) && c != 0)
@@ -1785,7 +1785,7 @@ namespace COTG.Game
 					   .OrderByDescending(a => a.cartsHome).ToArray();
 				//   if (MainPage.IsVisible())
 				City.gridCitySource.Set(l);
-			   City.GetBuild().SelectInUI(true);
+			   City.GetBuild().ScrollMeIntoView();
 		   });
 		}
 

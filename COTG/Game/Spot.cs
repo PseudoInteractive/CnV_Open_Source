@@ -33,6 +33,8 @@ using MenuFlyoutItem = Windows.UI.Xaml.Controls.MenuFlyoutItem;
 using MenuFlyout = Windows.UI.Xaml.Controls.MenuFlyout;
 using ToggleMenuFlyoutItem = Windows.UI.Xaml.Controls.ToggleMenuFlyoutItem;
 using MenuFlyoutSubItem = Windows.UI.Xaml.Controls.MenuFlyoutSubItem;
+using System.Collections.ObjectModel;
+
 namespace COTG.Game
 {
 	//public interface IKeyedItem
@@ -568,7 +570,12 @@ namespace COTG.Game
 			}
 			SpotTab.TouchSpot(cid, modifiers);
 		}
-
+		public static void CloseDungeons()
+		{
+			if (MainPage.expandedCity != null)
+				MainPage.CityGrid.HideRowDetailsForItem(MainPage.expandedCity);
+			MainPage.expandedCity = null;
+		}
 		public async void ToggleDungeons(RadDataGrid uie, bool forceClose = false, bool forceOpen = false)
 		{
 			if ((forceClose || MainPage.expandedCity == this) && !forceOpen)
@@ -600,8 +607,14 @@ namespace COTG.Game
 				if (City.IsBuild(cid))
 				{
 					JSClient.ChangeView(ShellPage.viewMode.GetNext() );// toggle between city/region view
-
-					cid.BringCidIntoWorldView(lazyMove, false);
+					if (scrollIntoUI)
+					{
+						Spot.SetFocus(cid, scrollIntoUI, true, true, lazyMove);
+					}
+					else
+					{
+						cid.BringCidIntoWorldView(lazyMove, false);
+					}
 				}
 				else
 				{
@@ -992,6 +1005,12 @@ namespace COTG.Game
 			}
 		}
 
+		public static RadDataGrid GetGrid()
+		{
+			return MainPage.IsVisible() ? MainPage.instance.cityGrid : BuildTab.instance.cityGrid;
+
+		}
+
 		public void ProcessSelection(VirtualKeyModifiers mod, bool forceSelect = false, bool scrollIntoView = true)
 		{
 			++SpotTab.silenceSelectionChanges;
@@ -1001,7 +1020,8 @@ namespace COTG.Game
 				try
 				{
 					var sel0 = SpotTab.instance.selectedGrid.SelectedItems;
-					var sel1 = MainPage.instance.cityGrid.SelectedItems;
+					var grid = GetGrid();
+					var sel1 = grid.SelectedItems;
 					var sel = selected;
 					var present = sel.Contains(cid);
 					var wantUISync = false;
@@ -1055,8 +1075,8 @@ namespace COTG.Game
 						}
 						//                   SpotTab.SelectOne(this);
 					}
-					if (wantUISync && scrollIntoView)
-						SelectInUI(true);
+					SyncUISelection(scrollIntoView, SpotTab.instance.selectedGrid,  wantUISync);
+					SyncUISelection(scrollIntoView, grid, wantUISync);
 				}
 				catch (Exception e)
 				{
@@ -1069,6 +1089,38 @@ namespace COTG.Game
 			});
 			//    SpotTab.SelectedToGrid();
 		}
+
+		public static void SyncUISelection(bool scrollIntoView, RadDataGrid grid, bool wantUISync)
+		{
+			var uiInSync = false;
+			var sel1 = grid.SelectedItems;
+			if (selected.Count == sel1.Count)
+			{
+				uiInSync = true;
+				foreach (var i in sel1)
+				{
+					if (!selected.Contains((i as City).cid))
+					{
+						uiInSync = false;
+						break;
+					}
+				}
+			}
+			if (!uiInSync)
+			{
+
+				wantUISync = true;
+				sel1.Clear();
+				foreach (var i in selected)
+				{
+					sel1.Add(City.GetOrAddCity(i));
+				}
+			}
+
+			if (wantUISync && scrollIntoView && sel1.Any())
+				grid.ScrollItemIntoView(sel1.First());
+		}
+
 		public static bool AreAnySelected()
 		{
 			return selected.Count != 0;// || viewHover != 0 || uiHover != 0;
@@ -1451,6 +1503,10 @@ namespace COTG.Game
 					{
 						count = MainPage.GetContextCidCount(cid);
 					}
+					else if (uie == BuildTab.CityGrid )
+					{
+						count = BuildTab.GetContextCidCount(cid);
+					}
 					if (count > 1)
 					{
 						aRaid.AddItem( $"End Raids x{count} selected", MainPage.ReturnSlowClick, cid);
@@ -1742,7 +1798,7 @@ namespace COTG.Game
 			Note.Show($"Copied {counter} castles to clipboard for sheets");
 		}
 
-		public async void SelectInUI(bool scrollIntoView)
+		public static void ScrollIntoView(int cid)
 		{
 			//         await Task.Delay(2000);
 			//          instance.Dispatcher.RunAsync(CoreDispatcherPriority.Low, () =>
@@ -1750,31 +1806,34 @@ namespace COTG.Game
 			//   await Task.Delay(200);
 			App.DispatchOnUIThreadSneakyLow(() =>
 			{
-				
-					if (scrollIntoView && MainPage.IsVisible())
-					{
-						/// MainPage.CityGrid.SelectedItem = this;
-						//                      MainPage.CityGrid.SetCurrentItem(this);
 
-						//     MainPage.CityGrid.SetCurrentItem(this,false);
-						MainPage.CityGrid.ScrollItemIntoView(this);
-						// await Task.Delay(200);
-						//MainPage.CityGrid.SelectItem(this);
-						//var id = gridCitySource.IndexOf(this);
-						//if (id != -1)
-						//{
-						//    MainPage.CityGrid.ScrollIndexIntoView(id);
+				{
+					/// MainPage.CityGrid.SelectedItem = this;
+					//                      MainPage.CityGrid.SetCurrentItem(this);
 
-						//}
-					}
-					// todo: donations page and boss hunting
-					
-				
+					//     MainPage.CityGrid.SetCurrentItem(this,false);
+					if (MainPage.IsVisible())
+						MainPage.CityGrid.ScrollItemIntoView(City.GetOrAdd(cid));
+					if (BuildTab.IsVisible())
+						BuildTab.CityGrid.ScrollItemIntoView(City.GetOrAdd(cid));
+					// await Task.Delay(200);
+					//MainPage.CityGrid.SelectItem(this);
+					//var id = gridCitySource.IndexOf(this);
+					//if (id != -1)
+					//{
+					//    MainPage.CityGrid.ScrollIndexIntoView(id);
+
+					//}
+				}
+				// todo: donations page and boss hunting
+
+
 				// ShellPage.instance.coords.Text = cid.CidToString();
 				//            });
 			});
 
 		}
+		public void ScrollMeIntoView() => ScrollIntoView(cid);
 		//public List<Dungeon> raidDungeons =>
 		//    {
 

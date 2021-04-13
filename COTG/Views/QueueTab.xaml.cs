@@ -347,10 +347,10 @@ namespace COTG.Views
 			{
 	//			if (!city.isBuild)
 	//				await JSClient.ChangeCity(city.cid, false); ;
-				if(!bc.hasWall)
-					await CityBuild.Enqueue(0, 1, bidWall, bspotWall);
+//				if(!bc.hasWall)
+//					await CityBuild.Enqueue(0, 1, bidWall, bspotWall);
 				await CityBuild.Enqueue( 0, 1, bidCastle, XYToId(FindOverlayBuildingsOfType(city, bidCastle).First()));
-				bc.wallLevel = 1;
+				//bc.wallLevel = 1;
 				bc.hasCastle = true;
 			}
 			Assert(city.isBuild);
@@ -432,7 +432,8 @@ namespace COTG.Views
 										{
 											continue;
 										}
-
+										if (bc.buildings >= 99)
+											goto done;
 										if (CityBuild.postQueueBuildings[City.XYToId(c)].isEmpty && (city.BidFromOverlay(c) == 0))
 										{
 											await CityBuild.Build(XYToId(c), bidCottage, false) ;
@@ -447,7 +448,7 @@ namespace COTG.Views
 							}
 						done:;
 							Assert(city.isBuild);
-							if (bc.storeHouses == 0)
+							if (bc.storeHouses == 0 && bc.buildings < 99)
 							{
 								var storage = city.FirstBuildingInOverlay(bidStorehouse);
 								if (storage != 0)

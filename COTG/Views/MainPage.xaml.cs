@@ -94,7 +94,10 @@ namespace COTG.Views
 		private void CityGrid_CurrentItemChanged(object sender, EventArgs e)
         {
             Log("Current item " + sender.ToString());
-        }
+			Spot.CloseDungeons();
+
+
+		}
 
 		public static City expandedCity; // city with dungeon list visible if any 
         private void ColumnHeaderTap()
@@ -411,8 +414,11 @@ namespace COTG.Views
         //        cityGrid.ItemsSource = null;
             }
             base.VisibilityChanged(visible);
-
-        }
+			if (visible)
+			{
+				Spot.SyncUISelection(true, cityGrid, true);
+			}
+		}
         //private void BuildCityContextFlyout(TabPage newPage)
         //{
         //    if(newPage!=null)
@@ -571,11 +577,17 @@ namespace COTG.Views
 
 					var sel = cityGrid.SelectedItems;
 					var newSel = new HashSet<int>();
+					bool raidVisible = false;
 					foreach (Spot s in sel)
 					{
 						newSel.Add(s.cid);
+						if (s == expandedCity)
+							raidVisible = true;
 
 					}
+					if(!raidVisible)
+						Spot.CloseDungeons();
+
 
 					//          Spot.selected.EnterWriteLock();
 

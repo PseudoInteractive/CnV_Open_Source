@@ -344,7 +344,10 @@ namespace COTG.Views
 				//        cityGrid.ItemsSource = null;
 			}
 			base.VisibilityChanged(visible);
-
+			if(visible)
+			{
+				Spot.SyncUISelection(true, cityGrid, true);
+			}
 		}
 		//private void BuildCityContextFlyout(TabPage newPage)
 		//{
