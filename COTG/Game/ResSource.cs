@@ -89,11 +89,11 @@ namespace COTG.Game
 		public City city;
 		public bool initialized;
 		public CityTradeInfo info;
-		public int cartsHome => info.cartsHome;
-		public int cartsTotal => info.cartsTotal;
+		public int cartsHome => city.cartsHome;
+		public int cartsTotal => city.carts;
 
-		public int shipsHome => info.shipsHome;
-		public int shipsTotal => info.shipsTotal;
+		public int shipsHome => city.shipsHome;
+		public int shipsTotal => city.ships;
 		public int totalRes => res.sum;
 
 		public string xy => city.xy;
@@ -138,7 +138,7 @@ namespace COTG.Game
 		}
 		public int ResMax(int type)
 		{
-			return info.res[type].Min(info.GetTransport(NearRes.instance.viaWater)); // TODO
+			return city.res[type].Min(city.GetTransport(NearRes.instance.viaWater)); // TODO
 		}
 
 	public DateTimeOffset eta { get => JSClient.ServerTime() + travel; set => _ = value; }

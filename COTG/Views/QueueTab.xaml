@@ -1,0 +1,57 @@
+﻿<views:UserTab x:Class="COTG.Views.QueueTab"
+               Tag="Queue"
+               xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+               xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+               xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+               xmlns:game="using:COTG.Game"
+               xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+               xmlns:cotg="using:COTG"
+			   xmlns:win="using:Windows.UI.Xaml.Controls"
+  			    xmlns:winui="using:Microsoft.UI.Xaml.Controls"
+               xmlns:tk="using:Microsoft.Toolkit.Uwp.UI.Controls"
+               xmlns:views="using:COTG.Views"
+
+			   xmlns:wuxdata="using:Windows.UI.Xaml.Data"
+			   TabNavigation="Once"
+			  IsTabStop="True"
+               mc:Ignorable="d">
+	<views:UserTab.Resources>
+	
+		<DataTemplate x:Key="BuildTabTemplate" x:DataType="views:BuildItemView">
+			<win:TreeViewItem ItemsSource="{x:Bind queue}">
+			<StackPanel Orientation="Horizontal" Margin="4" MinWidth="200">
+				<Canvas Background="{x:Bind brush}" Width="32" Height="32" />
+				<TextBlock Text="{x:Bind text}" />
+			</StackPanel>
+			</win:TreeViewItem>
+		</DataTemplate>
+
+
+
+	</views:UserTab.Resources>
+
+
+
+	<Grid >
+		<Grid.RowDefinitions>
+			<RowDefinition Height="auto"/>
+			<RowDefinition Height="*"/>
+		</Grid.RowDefinitions>
+		<StackPanel Orientation="Horizontal" BorderThickness="2" >
+			<TextBlock x:Name="stage"  />
+			<Button Margin="4" Content="Do the stuff" Click="Splat" Style="{StaticResource ButtonSmall}" ToolTipService.ToolTip="Does all the things and all of the stuff" />
+			<Button Margin="4" Content="Move Stuff" Click="MoveStuff" Style="{StaticResource ButtonSmall}" />
+			<Button Margin="4" Content="Do the places" Click="SplatAll" Style="{StaticResource ButtonSmall}" ToolTipService.ToolTip="Does all the things and all of the stuff in all of the places" />
+			<Button Margin="4" Content="Clear Queue" Click="ClearQueue" Style="{StaticResource ButtonSmall}" />
+			<Button Margin="4" Content="Cancel Selected" Click="ClearSelected" Style="{StaticResource ButtonSmall}" />
+			<ToggleSwitch Header="Auto Cabins" IsOn="{x:Bind views:SettingsPage.autoDemoCottages,Mode=TwoWay}" OnContent="Demo" OffContent="Leave" ToolTipService.ToolTip="If On, cabins will be automatically destroyed when you place a building into a city with 100 buildings"  />
+		
+		</StackPanel>
+		<win:TreeView Grid.Row="1" x:Name="zoom"  CanReorderItems="False"  SelectionMode="Multiple" IsTabStop="True"  BorderThickness="1" 
+ TabNavigation="Once" CanDragItems="False" AllowDrop="False" ItemTemplate="{StaticResource BuildTabTemplate}" 
+						ItemsSource="{x:Bind cities}" ItemInvoked="zoom_ItemInvoked" 
+						>
+		</win:TreeView>
+
+	</Grid>
+</views:UserTab>

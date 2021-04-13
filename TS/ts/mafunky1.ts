@@ -994,8 +994,8 @@ function setviewmode(mode: string) {
 
 	}
 	else {
-		$("#worldButton").click();
-		_viewModeCache = _viewMode = viewModeWorld; // 
+		$("#regionButton").click();
+		_viewModeCache = _viewMode = viewModeRegion; // 
 		callSyncViewMode();
 
 	}

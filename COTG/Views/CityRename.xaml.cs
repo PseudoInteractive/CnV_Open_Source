@@ -47,7 +47,7 @@ namespace COTG.Views
 		static string lastName = string.Empty;
 		public static async Task<bool> RenameDialog(int cid, bool allowSplat)
 		{
-		   {
+		   
 
 			   try
 			   {
@@ -116,54 +116,66 @@ namespace COTG.Views
 						   Log(ex);
 					   }
 				   }
-				   nameDialog.name.Text = city._cityName;
-				   nameDialog.suggested.Text = name;
-				   //	ElementSoundPlayer.Play(ElementSoundKind.Show);
-
-				   var result = await nameDialog.ShowAsync2();
-				   if (result == Windows.UI.Xaml.Controls.ContentDialogResult.Primary)
+					var result = await App.DispatchOnUIThreadTask(async () =>
 				   {
-					   if (!SettingsPage.useSuggested)
-						   lastName = nameDialog.name.Text;
-					   else
-						   lastName = nameDialog.suggested.Text;
-					   city._cityName = lastName;
-					   await Post.Send("includes/nnch.php", $"a={HttpUtility.UrlEncode(lastName, Encoding.UTF8)}&cid={cid}", World.CidToPlayerOrMe(cid));
-					   if (SettingsPage.applyTags)
-					   {
-						   await ApplyTags(cid, nameDialog.tagsPanel);
-					   }
-					   Note.Show($"Set name to {lastName}");
-					   if (SettingsPage.setShareString)
-					   {
-						   await ShareString.ShowNoLock();
-					   }
-					   if (SettingsPage.setHub)
-					   {
-						   await HubSettings.Show(cid);
-					   }
-					   if (SettingsPage.autoBuildCabins && allowSplat)
-					   {
-						   // are there any cabins here already?
-						   await BuildTab.Splat(city);
-					   }
-					   if (SettingsPage.clearRes)
-					   {
-						   JSClient.ClearCenter(cid);
-					   }
+					   nameDialog.name.Text = city._cityName;
+					   nameDialog.suggested.Text = name;
+					   //	ElementSoundPlayer.Play(ElementSoundKind.Show);
 
-				   }
+					   var result = await nameDialog.ShowAsync2();
+					   bool wantSplat = false;
+					   if (result == Windows.UI.Xaml.Controls.ContentDialogResult.Primary)
+					   {
+						   if (!SettingsPage.useSuggested)
+							   lastName = nameDialog.name.Text;
+						   else
+							   lastName = nameDialog.suggested.Text;
+						   city._cityName = lastName;
+						   city.BuildStageDirty();
+						   await Post.Send("includes/nnch.php", $"a={HttpUtility.UrlEncode(lastName, Encoding.UTF8)}&cid={cid}", World.CidToPlayerOrMe(cid));
+						   if (SettingsPage.applyTags)
+						   {
+							   await ApplyTags(cid, nameDialog.tagsPanel);
+						   }
+						   Note.Show($"Set name to {lastName}");
+						  
+					   }
+						   return result;
+				   
+				   });
+					if (result == ContentDialogResult.Primary)
+					{
+						if (SettingsPage.setShareString)
+						{
+							await ShareString.ShowNoLock();
+						}
+						if (SettingsPage.setHub)
+						{
+							await HubSettings.Show(cid);
+						}
+
+						if (SettingsPage.clearRes)
+						{
+							JSClient.ClearCenter(cid);
+						}
+						if (SettingsPage.autoBuildCabins && allowSplat)
+						{
+						// are there any cabins here already?
+							return await QueueTab.Splat(city); ;
+						}
+						return true;
+					}
 					return result != ContentDialogResult.Secondary;
-			   }
-			   catch (Exception e)
+				}
+				catch (Exception e)
 			   {
 				   Note.Show("Something went wrong");
 				   COTG.Debug.Log(e);
 			   }
 
-		   }
+		   
 
-			return true;
+			return false;
 
 		}
 

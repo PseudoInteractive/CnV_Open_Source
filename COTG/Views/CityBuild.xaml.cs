@@ -582,8 +582,11 @@ namespace COTG.Views
 					b.BuildingsCacheToShareString();
 					b.SaveLayout();
 					GetCity.Post(City.build);
-					if(PlannerTab.instance.isVisible)
+					if (PlannerTab.instance.isVisible)
+					{
 						PlannerTab.instance.Close();
+						BuildTab.instance.Show();
+					}
 
 				}
 			}
@@ -628,7 +631,7 @@ namespace COTG.Views
 		//		Enqueue(lvl,(lvl + 1),sel.def.bid,id);
 		
 		//}
-		public static void UpgradeToLevel(int level, (int x, int y) target, bool dryRun=false)
+		public static async Task UpgradeToLevel(int level, (int x, int y) target, bool dryRun=false)
 		{
 			//var target = hovered;
 			if (!target.IsValid())
@@ -650,7 +653,7 @@ namespace COTG.Views
 
 			if (lvl == 0)
 			{
-				Build(id, sel.def.bid, dryRun);
+				await Build(id, sel.def.bid, dryRun);
 				lvl = 1;
 			}
 			if (lvl < level)
@@ -664,7 +667,7 @@ namespace COTG.Views
 				}
 				else if (!dryRun)
 				{
-					Enqueue(lvl, level, sel.def.bid, id);
+					await Enqueue(lvl, level, sel.def.bid, id);
 				}
 			}
 			else
@@ -1099,23 +1102,24 @@ namespace COTG.Views
 
 		}
 
-		public static async Task MoveBuilding(int a, int b, bool dryRun)
+		public static async Task<bool> MoveBuilding(int a, int b, bool dryRun)
 		{
 			// Todo:  Cannot be moved if queued
 			// Todo: Error checking
 			var build = City.GetBuild();
-			if(HasBuildOps(a) && !isPlanner)
+			var bds = isPlanner ? buildingsCache : build.buildings;
+			if (HasBuildOps(a) && !isPlanner)
 			{
-				Status($"Cannot move a building that is being rennovated", dryRun);
-				return;
+				Status($"Cannot move a building that is being rennovated, please wait or cancel build ops on {bds[a].name} at {IdToXY(a).bspotToString()} for best results", dryRun);
+				return false;
 			}
 			if (Player.moveSlots <= 0 && !isPlanner)
 			{
 				Status($"No move spots",dryRun);
+				return false;
 			}
 			else
 			{
-				var bds = isPlanner ? buildingsCache: build.buildings;
 				Status($"Move {bds[a].name} to {IdToXY(b).bspotToString()} ", dryRun);
 
 				if (!dryRun)
@@ -1135,19 +1139,28 @@ namespace COTG.Views
 					BuildingsOrQueueChanged();
 				}
 			}
+			return true;
 		}
 
-		public static async Task SwapBuilding(int a, int b, bool dryRun)
+		public static async Task<bool> SwapBuilding(int a, int b, bool dryRun)
 		{
+			var build = City.GetBuild();
+			var bds = isPlanner ? buildingsCache : build.buildings;
 			if ( (HasBuildOps(a) || HasBuildOps(b)) && !isPlanner)
 			{
-				Status($"Cannot move a building that is being rennovated", dryRun);
-				return;
+				if(HasBuildOps(a))
+				{
+					Status($"Cannot move a building that is being rennovated, please wait or cancel build ops on {bds[a].name} at {IdToXY(a).bspotToString()} for best results", dryRun);
+				}
+				if (HasBuildOps(b))
+				{
+					Status($"Cannot move a building that is being rennovated, please wait or cancel build ops on {bds[b].name} at {IdToXY(b).bspotToString()} for best results", dryRun);
+				}
+
+				return false;
 			}
 			if (Player.moveSlots >= 3)
 			{
-				var build = City.GetBuild();
-				var bds = isPlanner ? buildingsCache : build.buildings;
 				// I hope that these operations are what I expect with references
 				Status($"Swap {bds[b].name} and {bds[a].name} ({Player.moveSlots} moves left) ", dryRun);
 				if (!dryRun)
@@ -1166,11 +1179,14 @@ namespace COTG.Views
 					}
 					BuildingsOrQueueChanged();
 				}
+				return true;
 			}
 			else
 			{
 				Status("Note enough move spots", dryRun);
+				return false;
 			}
+			
 		}
 
 		internal static async void MoveHovered(bool _isSingleAction, bool dryRun)
@@ -1410,7 +1426,7 @@ namespace COTG.Views
 				case Action.showShareString:
 					{
 						if(isSingleClickAction)
-							ShareString.Show();
+							await ShareString.Show();
 						break;
 					}
 				case Action.togglePlanner:
@@ -1461,6 +1477,26 @@ namespace COTG.Views
 				}
 			}
 		}
+		public static int FindSpare(int bid, bool dryRun)
+		{
+			var build = City.GetBuild();
+			for (int xy = 0; xy < City.citySpotCount; ++xy)
+			{
+				var overlayBid = build.BidFromOverlay(xy);
+				var xyBuilding = postQueueBuildings[xy].def.bid;
+
+				if (overlayBid == xyBuilding || xyBuilding != bid)
+					continue;
+				if (HasBuildOps(xy) && !isPlanner)
+				{
+					Status($"{postQueueBuildings[xy].name} at {IdToXY(xy).bspotToString()} is desired, but it is being rennovated, please wait or cancel build ops for best resuts", dryRun);
+					continue;
+				}
+				return xy;
+			}
+			return 0;
+		
+	}
 
 		public static async Task<int> SmartBuild(City build, (int x, int y) cc, int desBid,bool searchForSpare, bool dryRun=false)
 		{
@@ -1487,14 +1523,9 @@ namespace COTG.Views
 
 					if (overlayBid != xyBuilding)
 					{
-						if (HasBuildOps(xy))
-						{
-							// Cannot take a building that is being operated on
-							continue;
-						}
 
 						// do they have what we need?
-						if (xyBuilding == desBid)
+						if (xyBuilding == desBid && desBid !=0)
 						{
 							// two points for ourbuilding is also needed there
 							var score = (overlayBid == curBid) ? 2 : 1;
@@ -1504,8 +1535,9 @@ namespace COTG.Views
 								takeFrom = xy;
 							}
 						}
+
 						//do they want what we have?
-						if (overlayBid == curBid)
+						if (overlayBid == curBid && curBid != 0)
 						{
 							var score = (xyBuilding == desBid) ? 4 : (xyBuilding == 0) ? 3 : postQueueBuildings[xy].isBuilding ? 2 : 1;
 							if (score > putScore)
@@ -1538,7 +1570,11 @@ namespace COTG.Views
 						++rv;
 						if (!dryRun)
 							await Task.Delay(400).ConfigureAwait(true);
-
+						if (takeScore > 0 && searchForSpare)
+						{
+							// wait for demo
+							return rv;
+						}
 					}
 					else if (takeScore > 0 && searchForSpare)
 					{
@@ -1650,30 +1686,39 @@ namespace COTG.Views
 					{
 						if (b.isCabin && counts.count < 100)
 						{
-							Status($"A cabin is here, but you have under 100 buildings.  To replace it, please demo it manually", dryRun);
-								var cb = FindAnySpotForCabin();
-							await MoveBuilding(bspot,cb, dryRun);
+							var cb = FindAnyFreeSpot();
+							if (!await MoveBuilding(bspot, cb, dryRun))
+								return rv;
 
 
-							}
-							else
+						}
+						else if (takeScore == 0)
 						{
 							Status($"{b.def.Bn} is not wanted, destroying it", dryRun);
 
 							++rv;
 							await Demolish(cc, dryRun);
-						}
-								// build the correct building
-								if (desBid != 0)
-								{
-									if (dryRun)
-										DrawSprite(hovered, decalBuildingInvalid, .31f);
+							// build the correct building
+							if (desBid != 0)
+							{
+								if (dryRun)
+									DrawSprite(hovered, decalBuildingInvalid, .31f);
 
-									await Build(cc, desBid, dryRun);
-									++rv;
-								}
+								await Build(cc, desBid, dryRun);
+								++rv;
 							}
+						}
+						else
+						{
+
+							await MoveBuilding(bspot, FindAnyFreeSpot(), dryRun);
+
+							Status($"Found an unneeded {desName}, will move it to the right spot for you", dryRun);
+
+							await MoveBuilding(takeFrom, bspot, dryRun);
 						
+						}
+					}
 					
 				}
 				else
@@ -1709,7 +1754,7 @@ namespace COTG.Views
 			return bestSpot;
 		}
 
-	private static int FindAnySpotForCabin()
+	public static int FindAnyFreeSpot()
 	{
 		var build = City.GetBuild();
 		for (int spot = 0; spot < citySpotCount; ++spot)
@@ -1721,6 +1766,8 @@ namespace COTG.Views
 				continue;
 			if (build.BidFromOverlay(spot) != 0)
 				continue;
+				if (HasBuildOps(spot))
+					continue;
 			return spot;
 		}
 
@@ -1976,7 +2023,7 @@ namespace COTG.Views
 						}
 						else if(bi.action == Action.togglePlanner)
 						{
-							TogglePlanner();
+							await TogglePlanner();
 							
 
 						}

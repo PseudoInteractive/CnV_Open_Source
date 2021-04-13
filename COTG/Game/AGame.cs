@@ -1177,7 +1177,7 @@ namespace COTG
 					{
 						var x = (((int)cameraCLag.X) / 100) * 100 + 50;
 						var y = (((int)cameraCLag.Y) / 100) * 100 + 50;
-						var cc = new Vector2(x, y).WToC().CToS();
+						var cc = new Vector2(x, y).WToCamera().CameraToScreen();
 
 						lightPositionParameter.SetValue(new Microsoft.Xna.Framework.Vector3(cc.X, cc.Y, lightZDay * (pixelScale / 64.0f)));
 						lightGainsParameter.SetValue(new Microsoft.Xna.Framework.Vector4(0.25f, 1.20f, 0.4f, 1.1875f));
@@ -1347,7 +1347,7 @@ namespace COTG
 
 
 													var wc = new Vector2(cx, cy);
-													var cc = wc.WToC();
+													var cc = wc.WToCamera();
 													if (pass == 1)
 													{
 
@@ -1479,8 +1479,8 @@ namespace COTG
 											}
 											var targetCid = attack.targetCid;
 											var sourceCid = attack.sourceCid;
-											var c1 = targetCid.CidToC();
-											var c0 = sourceCid.CidToC();
+											var c1 = targetCid.CidToCamera();
+											var c0 = sourceCid.CidToCamera();
 											// cull (should do this pre-transform as that would be more efficient
 											if (IsCulled(c0, c1))
 												continue;
@@ -1532,7 +1532,7 @@ namespace COTG
 											var count = i.Value;
 											var wc = cid.CidToWorld();
 											if (!IsCulledWC(wc))
-												DrawTextBox($"{count.prior}`{count.incoming}", wc.WToC(), textformatLabel, Color.DarkOrange, textBackgroundOpacity, Layer.tileText);
+												DrawTextBox($"{count.prior}`{count.incoming}", wc.WToCamera(), textformatLabel, Color.DarkOrange, textBackgroundOpacity, Layer.tileText);
 
 
 										}
@@ -1563,26 +1563,26 @@ namespace COTG
 											}
 										}
 										{
-											var c0 = cluster.topLeft.WToC();
-											var c1 = cluster.bottomRight.WToC();
+											var c0 = cluster.topLeft.WToCamera();
+											var c1 = cluster.bottomRight.WToCamera();
 											DrawRect(Layer.effects, c0, c1, selected ? Color.Black : Color.Maroon);
 										}
 
 										if (selected)
 										{
 											var real = cluster.real;
-											var c0 = real.CidToC();
+											var c0 = real.CidToCamera();
 											foreach (var a in cluster.attacks)
 											{
 												var t = (tick * a.CidToRandom().Lerp(1.5f / 512.0f, 1.75f / 512f)) + 0.25f;
 												var r = t.Ramp();
-												var c1 = a.CidToC();
+												var c1 = a.CidToCamera();
 												var spot = Spot.GetOrAdd(a);
 												DrawAction(0.5f, 1.0f, r, c1, c0, Color.Red, troopImages[(int)spot.GetPrimaryTroopType(false)], false, null, 16);
 											}
 											foreach (var target in cluster.targets)
 											{
-												var c = target.CidToC();
+												var c = target.CidToCamera();
 												var rnd = target.CidToRandom();
 
 												var t = (tick * rnd.Lerp(1.5f / 512.0f, 1.75f / 512f)) + 0.25f;
@@ -1640,14 +1640,14 @@ namespace COTG
 										{
 
 											var targetCid = city.cid;
-											var c1 = targetCid.CidToC();
+											var c1 = targetCid.CidToCamera();
 											if (IsCulled(c1, cullSlopSpace))  // this is in pixel space - Should be normalized for screen resolution or world space (1 continent?)
 												continue;
 											var incAttacks = 0;
 											var incTs = 0;
 											foreach (var i in city.incoming)
 											{
-												var c0 = i.sourceCid.CidToC();
+												var c0 = i.sourceCid.CidToCamera();
 												if (IsCulled(c0, c1))
 													continue;
 												Color c;
@@ -1713,7 +1713,7 @@ namespace COTG
 										if (!city.incoming.Any())
 										{
 											var targetCid = city.cid;
-											var c1 = targetCid.CidToC();
+											var c1 = targetCid.CidToCamera();
 											if (IsCulled(c1, cullSlopSpace))  // this is in pixel space - Should be normalized for screen resolution or world space (1 continent?)
 												continue;
 											if (wantDetails || Spot.IsSelectedOrHovered(targetCid, true))
@@ -1745,7 +1745,7 @@ namespace COTG
 											var t = (tick * city.cid.CidToRandom().Lerp(1.375f / 512.0f, 1.75f / 512f));
 											var r = t.Ramp();
 
-											DrawAction(wc.WToC(), c1.WToC(), tradeColor);
+											DrawAction(wc.WToCamera(), c1.WToCamera(), tradeColor);
 
 
 										}
@@ -1765,7 +1765,7 @@ namespace COTG
 								// Todo: clip thi
 								if (city.senatorInfo.Length != 0 && !(IncomingTab.IsVisible() || NearDefenseTab.IsVisible()))
 								{
-									var c = wc.WToC();
+									var c = wc.WToCamera();
 									var idle = 0;
 									var active = 0;
 									var recruiting = 0;
@@ -1779,7 +1779,7 @@ namespace COTG
 											active += sen.count;
 										if (sen.target != 0)
 										{
-											var c1 = sen.target.CidToC();
+											var c1 = sen.target.CidToCamera();
 
 											var dist = city.cid.DistanceToCid(sen.target) * cartTravel; // todo: ship travel?
 											var t = (tick * city.cid.CidToRandom().Lerp(1.5f / 512.0f, 1.75f / 512f)) + 0.25f;
@@ -1805,13 +1805,13 @@ namespace COTG
 									{
 										if (IsCulledWC(wc, raidCullSlopSpace))
 											continue;
-										var c = wc.WToC();
+										var c = wc.WToCamera();
 										var t = (tick * city.cid.CidToRandom().Lerp(1.375f / 512.0f, 1.75f / 512f));
 										var r = t.Ramp();
 										//ds.DrawRoundedSquareWithShadow(c,r, raidBrush);
 										foreach (var raid in city.raids)
 										{
-											var ct = raid.target.CidToC();
+											var ct = raid.target.CidToCamera();
 											(var c0, var c1) = !raid.isReturning ? (c, ct) : (ct, c);
 											DrawAction((float)(raid.time - serverNow).TotalSeconds,
 												raid.GetOneWayTripTimeMinutes(city) * 60.0f,
@@ -1886,7 +1886,7 @@ namespace COTG
 											var span = pixelScale;
 											var cid = (cx, cy).WorldToCid();
 
-											var drawC = (new Vector2(cx, cy).WToC());
+											var drawC = (new Vector2(cx, cy).WToCamera());
 											drawC.Y += span * (isWinter ? 8.675f / 16.0f : 7.125f / 16.0f);
 											var z = zCities;
 											var scale = bmFontScale;
@@ -1920,7 +1920,7 @@ namespace COTG
 										}
 										if (spot != null && spot.isClassified && !focusOnCity)
 										{
-											var c1 = (cx, cy).WToC();
+											var c1 = (cx, cy).WToCamera();
 											var t = (tick * spot.cid.CidToRandom().Lerp(1.5f / 512.0f, 1.75f / 512f)) + 0.25f;
 											var r = t.Ramp();
 											var alpha = (t * 1.21f).Wave() * 0.75f + 0.25f;
@@ -1947,7 +1947,7 @@ namespace COTG
 							var wc = cid.CidToWorld();
 							if (!IsCulledWC(wc))
 							{
-								DrawTextBox($"~{Player.IdToName(pid)}~", wc.WToC(), tipTextFormatCentered, Color.Red, 255, Layer.tileText, 3, 3, null, -1, 0.75f * SettingsPage.fontScale);
+								DrawTextBox($"~{Player.IdToName(pid)}~", wc.WToCamera(), tipTextFormatCentered, Color.Red, 255, Layer.tileText, 3, 3, null, -1, 0.75f * SettingsPage.fontScale);
 							}
 						}
 					}
@@ -1970,13 +1970,13 @@ namespace COTG
 					{
 						var alpha = pixelScale.SmoothStep(cityZoomThreshold - 128, cityZoomThreshold + 128).
 							Max(pixelScale.SmoothStep(cityZoomWorldThreshold + 16, cityZoomWorldThreshold - 16));
-						Vector2 c = new Vector2(20, 16).SToC();
+						Vector2 c = new Vector2(20, 16).ScreenToCamera();
 						DrawTextBox(_contTip, c, tipTextFormat, Color.White.Scale(alpha), (byte)(alpha * 192.0f).RoundToInt(), Layer.overlay, 11, 11, ConstantDepth, 0, 0.5f);
 					}
 					if (ShellPage.IsCityView())
 					{
 						var alpha = 255;
-						Vector2 c = new Vector2(clientSpan.X - 32, 16).SToC();
+						Vector2 c = new Vector2(clientSpan.X - 32, 16).ScreenToCamera();
 						DrawTextBox($"{CityBuild.postQueueBuildingCount}/{CityBuild.postQueueTownHallLevel*10}", c, tipTextFormatRight, Color.White.Scale(alpha), (byte)(alpha * 192.0f).RoundToInt(), Layer.overlay, 11, 11, ConstantDepth, 0, 0.5f);
 
 					}
@@ -1984,7 +1984,7 @@ namespace COTG
 					if (_debugTip != null)
 					{
 						var alpha =  255;
-						Vector2 c = new Vector2(clientSpan.X-16, 16).SToC();
+						Vector2 c = new Vector2(clientSpan.X-16, 16).ScreenToCamera();
 						DrawTextBox(_debugTip, c, tipTextFormatRight, Color.White.Scale(alpha), (byte)(alpha * 192.0f).RoundToInt(), Layer.overlay, 11, 11, ConstantDepth, 0, 0.5f);
 					}
 					
@@ -1995,8 +1995,8 @@ namespace COTG
 					var color = isFocused ? new Color(135, 235, 255, 255) : new Color(255, 255, 255, 255);
 					foreach (var pop in popups)
 					{
-						Vector2 c0 = new Vector2(pop.c0.X, pop.c0.Y).SToC();
-						Vector2 c1 = new Vector2(pop.c1.X, pop.c1.Y).SToC();
+						Vector2 c0 = new Vector2(pop.c0.X, pop.c0.Y).ScreenToCamera();
+						Vector2 c1 = new Vector2(pop.c1.X, pop.c1.Y).ScreenToCamera();
 						draw.AddQuad(Layer.webView, quadTexture, c0, c1, color, ConstantDepth, 0);/// c0.CToDepth(),(c1.X,c0.Y).CToDepth(), (c0.X,c1.Y).CToDepth(), c1.CToDepth() );
 
 					}
@@ -2040,7 +2040,7 @@ namespace COTG
 			if (IsCulledWC(wc))
 				return;
 
-			var c = wc.WToC();
+			var c = wc.WToCamera();
 			var dv = AGame.shapeSizeGain;
 			float z = zLabels;
 
@@ -2292,7 +2292,7 @@ namespace COTG
 			if (IsCulledWC(wc))
 				return;
 
-			var c = wc.WToC();
+			var c = wc.WToCamera();
 
 			var rnd = cid.CidToRandom();
 
@@ -2463,11 +2463,11 @@ namespace COTG
 		//	return (c- AGame.cameraCLag)* paralaxGain*AGame.pixelScale;
 		//}
 		//	public static Vector2 WToCp(this (float x, float y) c, float dz) => WToCp(new Vector2(c.x, c.y), dz);
-		public static Vector2 SToC(this Vector2 s)
+		public static Vector2 ScreenToCamera(this Vector2 s)
 		{
 			return s - AGame.halfSpan;
 		}
-		public static Vector2 CToS(this Vector2 s)
+		public static Vector2 CameraToScreen(this Vector2 s)
 		{
 			return s + AGame.halfSpan;
 		}
@@ -2506,25 +2506,25 @@ namespace COTG
 
 		//}
 
-		public static Vector2 WToC(this Vector2 c)
+		public static Vector2 WToCamera(this Vector2 c)
 		{
 			return (c - AGame.cameraCLag) * AGame.pixelScale;
 		}
-		public static Vector2 WToC(this (int x, int y) c)
+		public static Vector2 WToCamera(this (int x, int y) c)
 		{
-			return new Vector2(c.x, c.y).WToC();
+			return new Vector2(c.x, c.y).WToCamera();
 		}
-		public static Vector2 WToC(this (float x, float y) c)
+		public static Vector2 WToCamera(this (float x, float y) c)
 		{
-			return new Vector2(c.x, c.y).WToC();
+			return new Vector2(c.x, c.y).WToCamera();
 		}
 		//	public static Vector2 WToCp(this (int x, int y) c, float z)
 		//{
 		//	return new Vector2(c.x, c.y).WToCp(z);
 		//}
-		public static Vector2 CidToC(this int c)
+		public static Vector2 CidToCamera(this int c)
 		{
-			return c.ToWorldC().WToC();
+			return c.ToWorldC().WToCamera();
 		}
 		//public static Vector2 CidToCp(this int c, float z)
 		//{

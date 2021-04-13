@@ -609,32 +609,30 @@ namespace COTG
 		}
 		public static SemaphoreSlim uiSema = new SemaphoreSlim(1);
 
-		
 
+		public static bool isUISemaLocked => uiSema.CurrentCount != 1;
 		public static async Task<T>
-			DispatchOnUIThreadExclusive<T>(Func<Task<T>> func, CoreDispatcherPriority priority = CoreDispatcherPriority.Low)
+			DispatchOnUIThreadExclusive<T>(int cid,Func<Task<T>> func, CoreDispatcherPriority priority = CoreDispatcherPriority.Low)
 		{
-			Log($"Lock sema: {uiSema.CurrentCount}");
-			await uiSema.WaitAsync();
-
+			if (!await LockUiSema(cid))
+				return default;
 			try
 			{
 				return await DispatchOnUIThreadTask(func, priority);
 			}
 			finally
 			{
-				Log($"unLock sema: {uiSema.CurrentCount}");
+				ReleaseUISema(cid);
 
-				uiSema.Release();
 			}
 
 		}
+		
 		public static async Task
-			DispatchOnUIThreadExclusive(Func<Task> func, CoreDispatcherPriority priority = CoreDispatcherPriority.Low)
+			DispatchOnUIThreadExclusive(int cid, Func<Task> func, CoreDispatcherPriority priority = CoreDispatcherPriority.Low)
 		{
-			Log($"Lock sema: {uiSema.CurrentCount}");
-			await uiSema.WaitAsync();
-			
+			if (!await LockUiSema(cid))
+				return ;
 
 			try
 			{
@@ -642,10 +640,45 @@ namespace COTG
 			}
 			finally
 			{
-				Log($"unlock sema: {uiSema.CurrentCount}");
-				uiSema.Release();
+				ReleaseUISema(cid);
 			}
 
+		}
+
+		public static void ReleaseUISema(int cid)
+		{
+			Log($"unlock sema: {uiSema.CurrentCount}");
+			Assert(City.lockedBuild == cid);
+			City.lockedBuild = 0;
+			uiSema.Release();
+		}
+
+		public static async Task<bool> LockUiSema(int cid)
+		{
+			Log($"Lock sema: {uiSema.CurrentCount}");
+			if (App.isUISemaLocked)
+			{
+				var i = await App.DoYesNoBox("Busy", "Wait for process to finish?");
+				if (i != 1)
+					return false;
+				await uiSema.WaitAsync();
+			}
+			else
+			{
+				await uiSema.WaitAsync();
+			}
+			try
+			{
+				await JSClient.ChangeCity(cid, false, true, true, true);
+				City.lockedBuild = cid;
+			}
+			catch(Exception ex)
+			{
+				Log(ex);
+				uiSema.Release();
+				return false;
+			}
+			return true;
 		}
 
 		public static void DispatchOnUIThread(DispatchedHandler action)
@@ -796,7 +829,7 @@ namespace COTG
 
 		public async static Task<int> DoYesNoBoxUI(string title, string text)
 		{
-			Assert(App.uiSema.CurrentCount == 0);
+		//	Assert(App.uiSema.CurrentCount == 0);
 			Assert(App.IsOnUIThread());
 
 			var dialog = new ContentDialog()
@@ -940,6 +973,13 @@ namespace COTG
 			var y = c >> 16;
 
 			return new Vector2(x, y);
+		}
+		public static (int X, int Y) ToWorldXY(this int c)
+		{
+			var x = c % 65536;
+			var y = c >> 16;
+
+			return (x, y);
 		}
 		public static bool IsShift(this VirtualKeyModifiers mod)
 		{

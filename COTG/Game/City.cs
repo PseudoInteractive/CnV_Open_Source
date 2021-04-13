@@ -102,11 +102,13 @@ namespace COTG.Game
 		public const int cityScratchSpot = citySpotCount - 1;
 		public static Building[] Emptybuildings = new Building[citySpotCount];
 
+		public bool buildingsLoaded => buildings != Emptybuildings;
 		public Building[] buildings = Emptybuildings;
 		public string ministerOptions;
 		public static Building[] buildingsCache;
 		public static Building[] postQueuebuildingsCache = new JSON.Building[citySpotCount];
 
+		public string buildStage => GetBuildStageNoFetch().ToString();
 
 		//public Building GetBuiding((int x, int y) xy) => buildings[XYToId(xy)];
 		//	public Building GetBuiding( int bspot) => buildings[bspot];
@@ -649,6 +651,7 @@ namespace COTG.Game
 
 		public void SetShareString(string s)
 		{
+			;
 			if (s != null && s.Length >= citySpotCount)
 			{
 				// TODO:  What if we are in planner mode?
@@ -864,6 +867,8 @@ namespace COTG.Game
 
 			}
 		}
+
+
 		public string GetSenatorInfo()
 		{
 			StringBuilder sb = new StringBuilder();
@@ -1060,25 +1065,41 @@ namespace COTG.Game
 		/*
          * Resource and other details
         */
-		public ushort carts { get; set; }
-		public ushort cartsHome { get; set; }
-		public int wood { get; set; }
+		public ushort carts;
+		public ushort Carts => carts;
+		public ushort cartsHome;
+		public ushort CartsHome => cartsHome;
+		public int wood;
+		public int Wood => wood;
 		public int woodStorage { get; set; }
-		public int stone { get; set; }
+		public int stone;
+		public int Stone => stone;
 		public int stoneStorage { get; set; }
-		public int iron { get; set; }
+		public int iron;
 		public int ironStorage { get; set; }
-		public int food { get; set; }
+		public int food;
 		public int foodStorage { get; set; }
-		public ushort ships { get; set; }
-		public ushort shipsHome { get; set; }
+		public ushort ships;
+		public ushort Ships => ships;
+		public ushort shipsHome;
+		public ushort ShipsHome => shipsHome;
 		public bool academy { get; set; }
 		public bool sorcTower { get; set; }
 
+		public int GetTransport(bool viaWater) => viaWater ? shipsHome * 10000 : cartsHome * 1000;
+
+		public Resources res => new Resources(wood, stone, iron, food);
 		public static DumbCollection<City> gridCitySource = new DumbCollection<City>();
 		public static City[] emptyCitySource = Array.Empty<City>();
 		internal CityTradeInfo tradeInfo = CityTradeInfo.invalid;
-
+		public CityTradeInfo GetTradeInfo()
+		{
+			if (tradeInfo == CityTradeInfo.invalid)
+			{
+				tradeInfo = new CityTradeInfo();
+			}
+			return tradeInfo;
+		}
 		internal bool isLayoutValid => shareString != null && shareString.Length >= minShareStringLength;
 
 		public bool ComputeCartTravelTime(int target, out TimeSpan t)
@@ -1151,6 +1172,7 @@ namespace COTG.Game
 		}
 		public string dungeonsToggle => MainPage.expandedCity == this ? "-" : "+";
 
+		public bool isBuilding { get; internal set; }
 
 		internal static void CitiesChanged()
 		{
@@ -1348,7 +1370,8 @@ namespace COTG.Game
 			initialBuildings,
 			initialBuildingsComplete,
 			teardown,
-			complete
+			complete,
+			pending,
 		}
 		public struct BuildingCount
 		{
@@ -1370,9 +1393,12 @@ namespace COTG.Game
 			public int unfinishedBuildings;
 			public int unfinishedCabins;
 			public bool hasCastle;
-			public bool hasWall;
+			public int wallLevel;
+			public bool hasWall=>wallLevel > 0;
 			public int scoutpostCount;
+			public int unfinishedTowerCount;
 			internal int towerCount;
+			public int maxBuildings => townHallLevel * 10;
 		}
 		public static BuildingCount GetBuildingCountPostQueue(int cabinLevel) => GetBuildingCounts(CityBuild.postQueueBuildings, cabinLevel);
 
@@ -1396,13 +1422,20 @@ namespace COTG.Game
 
 				else if (bd.isWall)
 				{
-					rv.hasWall = true; ;
+					rv.wallLevel = bd.bl;
 				}
 				else if (bd.isTower )
 				{
 					++rv.towerCount;
 					if (bid == bidSentinelPost)
+					{
 						++rv.scoutpostCount;
+
+					}
+					if (bd.bl < SettingsPage.autoTowerLevel && SettingsPage.autoTowerLevel != 10)
+					{
+						++rv.unfinishedTowerCount;
+					}
 				}
 				else
 				{
@@ -1448,13 +1481,33 @@ namespace COTG.Game
 					++rv.shipyards;
 			}
 
-			Log($"{rv.cabins} cabins, {rv.buildings} {rv.townHallLevel}");
+			//Log($"{rv.cabins} cabins, {rv.buildings} {rv.townHallLevel}");
 			return rv;
 		}
 		public static BuildingCount GetBuildingCountsPostQueue(int cabinLevel) => GetBuildingCounts(CityBuild.postQueueBuildings, cabinLevel);
 		public BuildingCount GetBuildingCounts(int cabinLevel) => GetBuildingCounts(buildings, cabinLevel);
+		public BuildingCount GetBuildingCountsNoFetch() => GetBuildingCounts(buildings, GetAutobuildCabinLevelNoFetch() );
 
-		
+		public string buildingStr
+		{
+			get
+			{
+				var bc = GetBuildingCountsNoFetch();
+				return $"{bc.buildings}/{bc.maxBuildings} c:{bc.cabins} a:{bc.academies!=0} s:{bc.sorcTowers!=0} u:{bc.unfinishedBuildings}";
+			}
+		}
+
+		public static void AllCityDataDirty()
+		{
+			App.DispatchOnUIThreadLow(() =>
+		   {
+			   foreach(var i in City.gridCitySource)
+			   {
+				   i.OnPropertyChanged(string.Empty);
+			   }
+			   City.gridCitySource.NotifyReset();
+		   });
+		}
 
 		public BuildStage GetBuildStage(BuildingCount bc)
 		{
@@ -1493,16 +1546,28 @@ namespace COTG.Game
 		{
 			if (CityRename.IsNew(this))
 				return BuildStage._new;
-			await GetCity.Post(cid);
+			//await GetCity.Post(cid);
 			var cabinLevel = await GetAutobuildCabinLevel();
 			return GetBuildStage(GetBuildingCounts(cabinLevel));
 
 		}
-		public static BuildStage GetBuildStageNoFetch()
+		public static BuildStage GetBuildBuildStageNoFetch()
 		{
 			if (CityRename.IsNew(City.GetBuild()))
 				return BuildStage._new;
 			return City.GetBuild().GetBuildStage(GetBuildingCountPostQueue(City.GetBuild().GetAutobuildCabinLevelNoFetch()));
+		}
+
+		public BuildStage GetBuildStageNoFetch()
+		{
+			if (CityRename.IsNew(this))
+				return BuildStage._new;
+			if(buildings==Emptybuildings)
+			{
+				//GetCity.Post(cid);
+				return BuildStage.pending;
+			}
+			return GetBuildStage(GetBuildingCounts(GetAutobuildCabinLevelNoFetch()));
 		}
 
 		public static async Task<BuildStage> GetBuildBuildStage(BuildingCount bc)

@@ -131,6 +131,13 @@ namespace COTG.JSON
 					split[32] = "1"; // use the same city all requests
 					split[42] =  reqHub.ToString();
 				}
+				if (setAutoBuild)
+				{
+					if (SettingsPage.autoWallLevel == 10)
+						split[26] = "1";
+					if (SettingsPage.autoTowerLevel == 10)
+						split[27] = "1";
+				}
 				var isHub = spot.HasTag(Tags.Hub);
 
 				if (setResources)

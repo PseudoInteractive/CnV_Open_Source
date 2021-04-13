@@ -44393,15 +44393,135 @@ function outer(){
 			return B0w;
 		}
 
-		let isInUpdateMP = 0;
+		
 
+	window['rmp'] = function(d76 : string)
+		{
+
+			let b76 = __s[1734];
+
+			let S76 = a6.ccazzx.encrypt(d76, b76, 256 & 2147483647);
+			let J76 = $.post("/includes/" + "rMp.php", { a: S76 }); // "rMp.php"
+			
+			J76.done(function (Y76) {
+				let r5m = '3023';
+						let j46;
+						let K76;
+						let g76;
+						let Z76;
+						let e46 =
+							new Object();
+						let H46;
+						let u46;
+						let s46;
+						let k46 = new Object();
+						console.log(Y76);
+						let U76 = JSON.parse(Y76);
+				let wrapper = {
+					rmp: U76
+				};
+				window['external']['notify'](JSON.stringify(wrapper));
+
+
+						for (let P76 in U76) {
+							//b = P76; // "block", regions is broken up into squares 
+							if (U76[P76]) {
+								let N76 = U76[P76];
+								console.log(P76);
+								if (N76)
+									for (var m76 in N76) {  // for each tile in array
+										let f76: string = U76[P76][m76];
+										if (f76 && f76 != "") {
+											let D76 = f76.indexOf("-", 0); // "1416`-`635422-KittyKat-35 1013",
+											let y76 = f76.indexOf("-", D76 + 1); // "1416-635422`-`KittyKat-35 1013",
+											let c76 = f76.indexOf("-", y76 + 1); // "1416-635422-KittyKat`-`35 1013",
+											let cnum = Number(f76.substring(0, D76)); // 1416
+											let p76 = f76.substring(D76 + 1, y76); // "635422",
+											let n76 = Number(p76.substring(0, 3)) - 100; // 535
+											let A76 = Number(p76.substring(3, 6)) - 100; // 322
+											console.log(cnum);
+											console.log(p76);
+											console.log(n76);
+											console.log(A76);
+
+
+										//	var a76 = tileMap.getTile(n76, A76, numbersLayer);
+											if (cnum >= 1411 && cnum <= 1426 ||
+												cnum >= 1576 && cnum <= 1656) {
+												//var q76 = tileMap.getTile(n76, A76, citiesLayer);
+												//var F76 = tileMap.getTile(n76, A76, labelsLayer);
+												let K76 = f76.substring(y76 + (1), c76);
+												let g76 = f76.substring(c76 + 1, f76.length);
+
+												console.log(K76);
+												console.log(g76);
+
+				
+												if ( K76 == H2 && ppdt[_s(	+i2p)][__s[805]] == 2) {
+													// tileMap.removeTile(labelsLayer.getTileX(n76 * (64 * 1)),
+													//	labelsLayer.getTileY(A76 * +64), labelsLayer);
+													if (g76.length >= 12) {
+														var V76 = E6k
+															.S55(r5m << 947418848);
+														var r76 = 1;
+														g76 = g76.substring(0, 10) + __s[Z14 | 2381];
+													} else if (g76.length >= '10' -
+														0) { var V76 = __s[r5m ^ 0]; var r76 = 2; } else if (g76.length > 7) {
+															var
+																V76 = __s[r5m - 0];
+															var r76 = 3;
+														} else if (g76.length <= 7) {
+															var
+																V76 = __s[r5m & 2147483647];
+															var r76 = 5;
+														} else {
+														var V76 = _s(r5m |
+															2572);
+														var r76 = 8;
+													}
+													
+			 
+												//	Z76.x = Math.floor(n76 * +64 + (h8y << 793999040) - Z76.width / 2);
+												//	Z76.y = Math.floor(A76 * (64 * 1) + s0R * 1);
+												} else {
+													if (K76 != H2) {
+														if (K76.length >=
+															12) {
+															var V76 = __s[r5m ^ 0];
+															var r76 = 1;
+															K76 = K76.substring(0, 10) + __s[+Z14];
+														} else if (K76.length >= +
+															'10') { var V76 = __s[+r5m]; var r76 = 2; } else if (K76.length > 7) {
+																var
+																	V76 = __s[r5m << 154551232];
+																var r76 = 3;
+															} else if (K76.length <= '7' *
+																1) { var V76 = __s[+r5m]; var r76 = 5; } else {
+															var V76 = _s(r5m *
+																1);
+															var r76 = 8;
+														}
+														
+											} else if (cnum >= 1567 && cnum <= 1576)
+		   {
+							console.log("numbers");
+	 		}
+			else if (!(cnum >= 1678 && cnum <= 1683 ))
+				{
+			
+			}
+   else
+													{
+
+													}
+			}	
+					
+	 }
+			}}}}});
+		}
 
 		function B1F(h76) {
-			//if (isInUpdateMP > 0) {
-			// --isInUpdateMP;
-			// return;
-			//}
-			//isInUpdateMP = 4;
+			
 			//let d76 = JSON.stringify(h76);
 			//console.log((new Date()).getTime() + " rMP 0 " + d76);
 			//E6k.y6();
@@ -44551,8 +44671,7 @@ function outer(){
 			//	  }
 			//  }
 			// console.log((new Date()).getTime() + " rMP done");
-			// isInUpdateMP -= 2;
-
+			
 			//});
 			//console.log((new Date()).getTime() + " rMP exit");
 		}
@@ -48588,6 +48707,7 @@ function outer(){
 					}
 				}
 
+
 			});
 		}
 
@@ -48620,14 +48740,54 @@ function outer(){
 						let h36 = B46
 							.substring(1, 2);
 
+						wrapper.gstcb.type = 4;
 						wrapper.gstcb.water = h36;
 						wrapper.gstcb.res = L36;
-
 					}
-				}
-				window['external']['notify'](JSON.stringify(wrapper));
+					else if (N46 == (9)) {
+						wrapper.gstcb.type = 9;
+					var G36 = Number(B46.substring(7, +
+						'8'));
+					var p46 = Number(B46.substring(8, 9));// is castle?
+					var W16 = Number(B46.substring(
+						9, p0y & 2147483647));
+						wrapper.gstcb.g = G36;
+						wrapper.gstcb.p = p46;
+						wrapper.gstcb.w = W16;
+	//				if (G36 == 1)
+	 {
+						
+						var m36 =
+							Number(B46.substring(p0y << 1905469920, +G8y)) * ("1000" | 840);
+						var F16 = Number(B46.substring(
+							p0y * 1, +G8y));
+						var P36 = new Date(m36);
+						var M16 = MDFormat(m36) + '   ' +
+							formatTimehrs(P36);
+						wrapper.gstcb.s = shrinesarr[Number(p46)];
+						wrapper.gstcb.t = P36;
+							wrapper.gstcb.m = M16;
 
-			});
+						var g36 = $.post("/includes/" + __s[3620], { a: rcid });
+						g36.done(function (a16) {
+						
+							wrapper.gstcb.k = JSON.parse(a16);
+
+
+							window['external']['notify'](JSON.stringify(wrapper));
+
+						});
+					
+
+						return;
+	 				}
+
+					window['external']['notify'](JSON.stringify(wrapper));
+
+				
+				
+
+			}}});
 		}
 
 

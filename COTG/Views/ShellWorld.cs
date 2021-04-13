@@ -442,7 +442,7 @@ namespace COTG.Views
 				return;
 
 			mousePosition = gestureResult.c;
-			mousePositionC = mousePosition.SToC();
+			mousePositionC = mousePosition.ScreenToCamera();
 			mousePositionW = mousePositionC.InverseProject();
 
 			var wasOverPopup = isOverPopup;
@@ -594,7 +594,7 @@ namespace COTG.Views
 			if (!gestureResponse.process)
 				return;
 			mousePosition = gestureResponse.c;
-			mousePositionC = mousePosition.SToC();
+			mousePositionC = mousePosition.ScreenToCamera();
 			mousePositionW = mousePositionC.InverseProject();
 
 			var prior = lastMousePressTime;
@@ -827,7 +827,7 @@ namespace COTG.Views
 
 			//			var windowsPosition = e.CurrentPoint.Position;
 			//			mousePosition = GetCanvasPosition(windowsPosition);
-			mousePositionC = mousePosition.SToC();
+			mousePositionC = mousePosition.ScreenToCamera();
 			mousePositionW = mousePositionC.InverseProject();
 			(var c,var cc) = ScreenToWorldAndCityC(mousePositionW);
 			//var point = e.CurrentPoint;
@@ -904,7 +904,7 @@ namespace COTG.Views
 													//if (spot is City city)
 													{
 														using var sb = ZString.CreateUtf8StringBuilder();
-														var notes = city.remarks.IsNullOrEmpty() ? "" : city.remarks.Substring(0, city.remarks.Length.Min(40)) + "\n";
+													//	var notes = city.remarks.IsNullOrEmpty() ? "" : city.remarks.Substring(0, city.remarks.Length.Min(40)) + "\n";
 														sb.AppendLine(player.name);
 														sb.AppendLine(city.cityName);
 														sb.AppendFormat("pts:{0:N0}\n", city.points);
@@ -951,7 +951,7 @@ namespace COTG.Views
 
 														}
 														if (!city.remarks.IsNullOrEmpty())
-															sb.Append(city.remarks.AsSpan().Wrap(20));
+															sb.AppendLine(city.remarks.AsSpan().Wrap(20));
 
 														sb.Append($"{c.y / 100}{c.x / 100} ({c.x}:{c.y})");
 														

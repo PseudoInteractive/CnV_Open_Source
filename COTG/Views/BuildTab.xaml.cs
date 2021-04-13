@@ -1,878 +1,463 @@
 ﻿using COTG.Game;
-using COTG.JSON;
-using COTG.Services;
-
+using COTG.Models;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Linq;
-using System.Threading.Tasks;
+using System.Runtime.CompilerServices;
 
 using Windows.UI.Xaml.Controls;
-//using Windows.UI.Xaml.Media;
-
+using System.Diagnostics.Contracts;
+using System.Collections.Generic;
+using Telerik.UI.Xaml.Controls.Grid;
 using static COTG.Debug;
-using static COTG.Game.City;
-using static COTG.Views.CityBuild;
+using Windows.ApplicationModel.Core;
+using Windows.UI.Core;
+using Windows.UI.Xaml;
+using Telerik.Core.Data;
+using Telerik.Data.Core;
+using Telerik.Data;
+using System.Collections.Specialized;
+using Windows.Foundation;
+using Microsoft.Toolkit.Uwp;
+using Windows.UI.Xaml.Input;
+using COTG.Services;
+using System.Collections;
+using Windows.UI.Input;
+using COTG.Helpers;
+using Windows.UI.Xaml.Navigation;
+using System.Linq;
+using System.Threading.Tasks;
+using static COTG.Game.Enum;
+using Microsoft.UI.Xaml.Controls;
+using Telerik.UI.Xaml.Controls.Grid.Commands;
+using System.Threading;
+using Telerik.UI.Xaml.Controls.Grid.Primitives;
 
 namespace COTG.Views
 {
 
 
+
 	public sealed partial class BuildTab : UserTab, INotifyPropertyChanged
 	{
-
 		public static BuildTab instance;
-		
+
+
+		//        public static City showingRowDetails;
+
+		//{
+		//    var rv = cityGrid.Resources["tsInfoDT"] as DataTemplate;
+		//    Assert(rv != null);
+		//    return rv;
+		//}
+		public static RadDataGrid CityGrid => instance.cityGrid;
+		//  static MenuFlyout cityMenuFlyout;
+		public BuildTab()
+		{
+			//            var a = Telerik.UI.Xaml.Controls.Grid.Primitives.For
+			Assert(instance == null);
+			instance = this;
+			InitializeComponent();
+			cityGrid.SelectionChanged += SelectionChanged;
+			cityGrid.OnKey = Spot.OnKeyDown;
+
+			cityGrid.CurrentItemChanged += CityGrid_CurrentItemChanged;
+
+		}
+
+		private void CityGrid_CurrentItemChanged(object sender, EventArgs e)
+		{
+			           Log("Current item " + sender.ToString());
+		}
+
+		private void ColumnHeaderTap()
+		{
+
+		}
+
+
+		static RadDataGrid GetGrid(PointerRoutedEventArgs e)
+		{
+			var a = e.OriginalSource as FrameworkElement;
+			while (a != null)
+			{
+				if (a is DataGridCellsPanel panel)
+					return panel.Owner;
+				if (a is DataGridRootPanel root)
+					return root.Owner;
+				a = a.Parent as FrameworkElement;
+			}
+			return null;
+		}
+		static bool IsFromDungeonGrid(PointerRoutedEventArgs e)
+		{
+			var a = GetGrid(e);
+			if (a == null)
+				return false;
+			return a.Tag as String == "Dungeons";
+		}
+		private void CityGrid_PointerPress(object sender, PointerRoutedEventArgs e)
+		{
+			if (IsFromDungeonGrid(e))
+				return;
+			Spot.ProcessPointerPress(this, sender, e);
+		}
+		private void cityGrid_PointerExited(object sender, PointerRoutedEventArgs e)
+		{
+			if (IsFromDungeonGrid(e))
+				return;
+			Spot.ProcessPointerExited();
+			//if (string.Empty!=lastTip)
+			//{
+			//    lastTip = string.Empty;
+			//    TabPage.mainTabs.tip.Text = string.Empty;
+			//}
+		}
+
+
+		public static List<int> GetContextCids(object sender)
+		{
+
+			var cid = (int)((sender as MenuFlyoutItem).DataContext);
+			return GetContextCids(cid);
+		}
+		public static List<int> GetContextCids(int cid)
+		{
+			var cids = new List<int>();
+
+			if (cid != 0)
+				cids.Add(cid);
+			if (BuildTab.IsVisible())
+			{
+				foreach (var sel in instance.cityGrid.SelectedItems)
+				{
+					if (sel is City city)
+					{
+						if (city.cid != cid)
+							cids.Add(city.cid);
+					}
+				}
+			}
+			NearDefenseTab.GetSelected(cids);
+			return cids;
+		}
+
+
+		public static int GetContextCidCount(int focusCid)
+		{
+			return GetContextCids(focusCid).Count;
+
+		}
+		public static void ReturnSlowClick(object sender, RoutedEventArgs e)
+		{
+			var cids = GetContextCids(sender);
+			if (cids.Count == 1)
+				Raiding.ReturnSlow(cids[0], true);
+			else
+				Raiding.ReturnSlowBatch(cids);
+		}
+
+
+
+		public static void ReturnFastClick(object sender, RoutedEventArgs e)
+		{
+			var cids = GetContextCids(sender);
+			if (cids.Count == 1)
+				Raiding.ReturnFast(cids[0], true);
+			else
+				Raiding.ReturnFastBatch(cids);
+		}
+
+
+
+
+		//public string dungeonInfo { get
+		//    {
+		//        var ci = dungeonGrid.HitTestService.CellInfoFromPoint(CoreWindow.GetForCurrentThread().PointerPosition);
+		//        if(ci == null)
+		//            return "Missed";
+		//        var i = ci.Item as COTG.Game.Dungeon;
+		//        return i.ToString();
+		//    }
+		//}
+
+		//private void OnCheckBoxClick(object sender, RoutedEventArgs e)
+		//{
+		//    var cb = (CheckBox)sender;
+		//    var _showing = showingRowDetails;
+		//    showingRowDetails = null;
+		//    if (_showing != null && cities.Contains(_showing) )
+		//        this.cityGrid.HideRowDetailsForItem(_showing);
+
+		//    var newCheckedItem = (City)cb.DataContext;
+
+		//    if (cb.IsChecked.HasValue && cb.IsChecked.Value)
+		//    {
+		//        showingRowDetails = newCheckedItem;
+		//        this.cityGrid.ShowRowDetailsForItem(newCheckedItem);
+		//    }
+
+		//}
+
+
+
+
+		//public static void CityListUpdateAll()
+		//{
+		//    if (instance == null)
+		//        return;
+		//    // Note.L("UpdateAll: ");
+		//    instance.Dispatcher.DispatchOnUIThreadLow(() =>
+		//    {
+		//        City.gridCitySource.NotifyReset();
+		//        City.GetBuild()?.SelectInUI(true);
+		//    });
+
+		//}
+
+		public static void UpdateDungeonList(IEnumerable<Dungeon> dungeons)
+		{
+			if (instance == null)
+				return;
+			if (dungeons == null)
+				Dungeon.raidDungeons.Clear();
+			//  Raiding.UpdateTS(); // not sychronous, the results will come in after the dungeon list is synced
+
+			Dungeon.raidDungeons.NotifyReset();
+			//    instance.dungeonGrid.ItemsSource = dungeons;
+
+		}
+		public static void UpdateRaidPlans()
+		{
+			//// instance.Dispatcher.DispatchOnUIThread(() =>
+			// {
+			//     // trick it
+			//     var temp = instance.dungeonGrid.ItemsSource;
+			//     instance.dungeonGrid.ItemsSource = null;
+			//     instance.dungeonGrid.ItemsSource = temp;
+			// }
+			// // tell UI that list data has changed
+			Dungeon.raidDungeons.NotifyReset();
+		}
+
+
 		public event PropertyChangedEventHandler PropertyChanged;
 		public void OnPropertyChanged(string propertyName) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 
-		public static bool IsVisible() => instance.isVisible;
-
-
-		public BuildTab()
+		private void Set<T>(ref T storage, T value, [CallerMemberName] string propertyName = null)
 		{
-			Assert(instance == null);
-			instance = this;
-			this.InitializeComponent();
-		}
-
-		public string buildingStage => $"Stage: {City.GetBuildStageNoFetch().ToString()}";
-
-		//private void ZoomedInGotFocus(object sender, RoutedEventArgs e)
-		//{
-		//	Log("in focus");
-		//	zoom.StartBringIntoView();
-		//	var groups = cvsGroups;
-		//	var cur = groups.View.CurrentItem;
-		//	Log(cur?.ToString());
-		//}
-		//private void ZoomedOutGotFocus(object sender, RoutedEventArgs e)
-		//{
-		//	Log("out focus");
-		//	zoom.StartBringIntoView();
-		//	var groups = cvsGroups;
-		//	var cur = groups.View.CurrentItem;
-		//	Log(cur?.ToString());
-		//}
-		public ObservableCollection<BuildItemView> cities { get; set; } = new ObservableCollection<BuildItemView>();
-
-
-		public static void AddOp(BuildQueueItem item, int cid)
-		{
-			if (!IsVisible())
+			if (Equals(storage, value))
 			{
 				return;
 			}
-
-			App.DispatchOnUIThreadSneakyLow(() =>
-			{
-				BuildItemView view = null;
-				foreach (var c in instance.cities)
-				{
-					if (c.cid == cid)
-					{
-						view = c;
-						break;
-					}
-				}
-				if (view == null)
-				{
-					view = BuildItemView.Rent().Ctor(cid);
-					instance.cities.Add(view);
-				}
-				view.queue.Add(BuildItemView.Rent().Ctor(item, cid));
-			});
-		}
-
-		public static void Clear(int cid)
-		{
-			App.DispatchOnUIThreadSneakyLow(() =>
-			{
-				foreach (var c in instance.cities)
-				{
-					if (c.cid == cid)
-					{
-
-						instance.cities.Remove(c);
-						c.queue.Clear();
-						break;
-					}
-				}
-			});
-
-
+			storage = value;
+			OnPropertyChanged(propertyName);
 		}
 
 
-		public static void RemoveOp(BuildQueueItem item, int cid)
+
+
+		static int getBuildState;
+		static public async void GetBuildInfo()
 		{
-			if (!IsVisible())
+			if(getBuildState == 1)
 			{
+				getBuildState = 2;
 				return;
 			}
-
-			App.DispatchOnUIThreadSneakyLow(() =>
+			if (getBuildState == 2)
+				return;
+			for (; ; )
 			{
-				BuildItemView view = null;
-				foreach (var c in instance.cities)
+				getBuildState = 1;
+				var js = await Post.SendForJson("overview/bcounc.php");
+				foreach (var ci in js.RootElement.EnumerateArray())
 				{
-					if (c.cid == cid)
+
+					var cid = ci[0].GetAsInt();
+					var city = City.GetOrAddCity(cid);
+					city.points = (ushort)ci[2].GetAsInt();
+					var isBuilding = (ci[4].GetAsFloat() + ci[3].GetAsFloat()) != 0;
+					if (isBuilding != city.isBuilding)
 					{
-						view = c;
-						break;
+						city.isBuilding = isBuilding;
+						city.OnPropertyChanged(nameof(city.isBuilding));
+					}
+
+					city.wood = ci[8].GetAsInt();
+					city.stone = ci[9].GetAsInt();
+					if (!city.buildingsLoaded)
+					{
+						GetCity.Post(cid);
 					}
 				}
-				if (view == null)
-				{
-					return; // missing
-				}
-
-				int id = 0;
-				foreach (var q in view.queue)
-				{
-					if ((q.item.bspot == item.bspot) && // is this enough for a match?
-							(q.item.slvl == item.slvl))
-					{
-
-						view.queue.RemoveAt(id);
-						break;
-					}
-					++id;
-				}
-				if (!view.queue.Any())
-				{
-					instance.cities.Remove(view);
-				}
-			});
-
+				if (getBuildState != 2)
+					break;
+			}
+			getBuildState = 0;
+					/*
+0:		 17236203,  // cid
+1:		"22+1001+-+Vanq",
+2:		8808, // score
+3:		0.00027777777777778,   ??
+4:		0.5, // queue length (hours)
+		0,
+		1,  // has buildings
+		0,  // has towers
+		460411, // stone
+		460549,
+		1,
+		1,
+		1,
+		1,
+		1,
+		0,
+		0
+				 */
+			//	City.AllCityDataDirty();
 		}
-		public static async void RebuildAll()
-		{
-			var stage = await City.GetBuildBuildStage();
-			App.DispatchOnUIThreadSneaky(() =>
-			{
-				instance.cities.Clear();
-				instance.stage.Text = $"Stage: {stage.ToString()}";
-				foreach (var city in CityBuildQueue.all.Values)
-				{
-					var view = BuildItemView.Rent().Ctor(city.cid);
-					instance.cities.Add(view);
-					foreach (var q in city.queue)
-					{
-						view.queue.Add(BuildItemView.Rent().Ctor(q, city.cid));
-					}
 
-				}
-			});
-		}
+
 		override public async void VisibilityChanged(bool visible)
 		{
 			//   Log("Vis change" + visible);
 
 			if (visible)
 			{
-				RebuildAll();
+
+				if (JSClient.ppdtInitialized)
+				{
+				//	await Raiding.UpdateTS(true, false);
+				//	await RaidOverview.Send();
+					if (City.build != 0)
+						await GetCity.Post(City.build);
+
+					City.gridCitySource.NotifyReset();
+				}
+
+				GetBuildInfo();
+				//  if (cityGrid.ItemsSource == App.emptyCityList )
+				//     cityGrid.ItemsSource = City.gridCitySource;
 			}
 			else
 			{
-				App.DispatchOnUIThreadSneaky(cities.Clear);
+				//        cityGrid.ItemsSource = null;
 			}
 			base.VisibilityChanged(visible);
 
 		}
-
-		//private void ItemClick(object sender, ItemClickEventArgs e)
+		//private void BuildCityContextFlyout(TabPage newPage)
 		//{
-		//	var i = (e.ClickedItem as BuildItemView);
-		//	BuildQueue.CancelBuildOp(i.cid, i.item);
-
+		//    if(newPage!=null)
+		//        cityGrid.DataContext = newPage;
+		//    cityContextFlyout = new MenuFlyout();
+		//    cityContextFlyout.Items.Add(App.CreateMenuItem("Home Whenever", ReturnSlowClick));
+		//    cityContextFlyout.Items.Add(App.CreateMenuItem("Home Please", ReturnFastClick));
+		//    if (newPage != null)
+		//        cityContextFlyout.XamlRoot = newPage.XamlRoot;
+		//    cityGrid.ContextFlyout = cityContextFlyout;
 
 		//}
+		//public override void XamlTreeChanged(TabPage newPage) {
+		//    //       cityGrid.ContextFlyout = null;
+		//    if (newPage == null)
+		//    {
+		//        cityGrid.ContextFlyout = null;
+		//        cityGrid.DataContext = null;
+		//     //   cityContextFlyout.XamlRoot = null;
+		//    }
+		//    else
+		//    {
+		//        //   cityContextFlyout.XamlRoot = null;
+		//        cityGrid.DataContext = newPage;
+		//        cityContextFlyout = new MenuFlyout();
+		//        cityContextFlyout.Items.Add(App.CreateMenuItem("Home Whenever", ReturnSlowClick));
+		//        cityContextFlyout.Items.Add(App.CreateMenuItem("Home Please", ReturnFastClick));
+		//        cityContextFlyout.XamlRoot = newPage.XamlRoot;
+		//        cityGrid.ContextFlyout = cityContextFlyout;
 
-		private void ClearQueue(object sender, Windows.UI.Xaml.RoutedEventArgs e)
+		//    }
+		//} // The tab was dragged somewhere else
+
+
+		public static bool IsVisible() => instance.isVisible;
+
+		private void SelectionChanged(object sender, DataGridSelectionChangedEventArgs e)
 		{
-			CityBuild.ClearQueue();
+			if (SpotTab.silenceSelectionChanges == 0)
+			{
+				try
+				{
+
+					var sel = cityGrid.SelectedItems;
+					var newSel = new HashSet<int>();
+					foreach (Spot s in sel)
+					{
+						newSel.Add(s.cid);
+
+					}
+
+					//          Spot.selected.EnterWriteLock();
+
+					Spot.selected = newSel;
+				}
+				catch (Exception ex)
+				{
+					Log(ex);
+				}
+				finally
+				{
+					//          Spot.selected.ExitWriteLock();
+				}
+			}
+		}
+
+		private void SelectAll(object sender, RoutedEventArgs e)
+		{
+			cityGrid.SelectAll();
 
 		}
 
-
-
-
-		//private void zoom_ViewChangeStarted(object sender, SemanticZoomViewChangedEventArgs e)
+		//      static Dungeon lastTooltip;
+		//private void DungeonPointerMoved(object sender, Windows.UI.Xaml.Input.PointerRoutedEventArgs e)
 		//{
-		//	var item = e.DestinationItem.Item as BuildItemView;
-		//	if(item!=null)
+		//          var physicalPoint = e.GetCurrentPoint(sender as RadDataGrid);
+		//          var point = new Point { X = physicalPoint.Position.X, Y = physicalPoint.Position.Y };
+		//          var row = (sender as RadDataGrid).HitTestService.RowItemFromPoint(point);
+		//          var cell = (sender as RadDataGrid).HitTestService.CellInfoFromPoint(point);
+		//          var hit = cell?.Item as Dungeon;
+		//          if(hit!=lastTooltip)
 		//	{
-		//		JSClient.ChangeCity(item.cid, false);
-		//		return;
+		//              lastTooltip = hit;
+		//              if (hit != null)
+		//                  ToolTipService.SetToolTip(tip, hit.ToString());
+		//              else
+		//                  ToolTipService.SetToolTip(tip,"None");
 		//	}
-		//	var op = e.DestinationItem.Item as BuildItemView;
-		//	if(op!=null)
-		//	{
-		//		JSClient.ChangeCity(op.cid, false);
-		//		return;
-
-		//	}
-
-		//	item = e.SourceItem.Item as BuildItemView;
-		//	if (item != null)
-		//	{
-		//		JSClient.ChangeCity(item.cid, false);
-		//		return;
-		//	}
-		//	op = e.SourceItem.Item as BuildItemView;
-		//	if (op != null)
-		//	{
-		//		JSClient.ChangeCity(op.cid, false);
-		//		return;
-
-		//	}
-
-		//}
-
-		private void ClearSelected(object sender, Windows.UI.Xaml.RoutedEventArgs e)
-		{
-			var sel = zoom.SelectedNodes;
-			var removedCitites = new List<BuildItemView>();
-			var removedOps = new List<BuildItemView>();
-
-			/// collect all cities
-			foreach (var i in sel)
-			{
-				if (i.Content is BuildItemView city && city.isCity)
-				{
-					removedCitites.Add(city);
-				}
-			}
-
-			// collect op not part of removed cities
-			foreach (var i in sel)
-			{
-				if (i.Content is BuildItemView op && op.isOp)
-				{
-					if (!removedCitites.Any(city => city.cid == op.cid))
-					{
-						removedOps.Add(op);
-					}
-				}
-			}
-
-			Note.Show($"Removed {removedOps.Count} build ops and {removedCitites.Count} city queues");
-			// now remove
-			foreach (var city in removedCitites)
-			{
-				BuildQueue.ClearQueue(city.cid);
-			}
-			foreach (var op in removedOps)
-			{
-				BuildQueue.CancelBuildOp(op.cid, op.item); ;
-			}
-		}
-
-		private void zoom_ItemInvoked(TreeView sender, TreeViewItemInvokedEventArgs args)
-		{
-			var ob = args.InvokedItem;
-			if (ob is BuildItemView q)
-			{
-				JSClient.ChangeCity(q.cid, false); // this is always true now
-			}
-			else if (ob is BuildItemView op)
-			{
-
-			}
-		}
-
-		private async void Splat(object sender, Windows.UI.Xaml.RoutedEventArgs e)
-		{
-			await App.DispatchOnUIThreadExclusive( () =>
-			{
-				return Splat(City.GetBuild());
-			});
-		}
-
-
-		
-		public static async Task<bool> Splat(City city)
-		{
-			var cid = city.cid;
-			Assert(App.uiSema.CurrentCount == 0);
-			Assert(App.IsOnUIThread());
-			await GetCity.Post(cid).ConfigureAwait(true);
-			if (city.LeaveMe())
-			{
-				Note.Show($"Skipping ${city.nameAndRemarks}, 'LeaveMe' tag is set");
-				return true;
-			}
-			var cabinLevel = city.GetAutobuildCabinLevelNoFetch();
-			var bc = city.GetBuildingCounts(cabinLevel);
-			var stage = await city.GetBuildStage().ConfigureAwait(true);
-			
-			if (stage == BuildStage._new)
-			{
-
-				if(!city.isBuild)
-					await JSClient.ChangeCity(city.cid, false).ConfigureAwait(true);
-
-				await CityRename.RenameDialog(city.cid,false).ConfigureAwait(true);
-				stage = city.GetBuildStage(bc);
-			}
-			if (stage == BuildStage.noLayout)
-			{
-				if (!city.isBuild)
-					await JSClient.ChangeCity(city.cid, false).ConfigureAwait(true);
-				await ShareString.ShowNoLock().ConfigureAwait(true);
-				stage = city.GetBuildStage(bc);
-			}
-			if (stage == City.BuildStage.complete)
-			{
-				Note.Show($"Complete: {city}");
-				return true;
-			}
-			if (stage == City.BuildStage.buildingCabins)
-			{
-				if(bc.cabins >= SettingsPage.startCabinCount)
-				{
-					Note.Show($"Building Cabins - {city}");
-					return true ;
-				}
-			}
-			if (!bc.hasCastle && FindOverlayBuildingsOfType(city,bidCastle).Any() && city.tsTotal > SettingsPage.tsForCastle  )
-			{
-				if (!city.isBuild)
-					await JSClient.ChangeCity(city.cid, false).ConfigureAwait(true); ;
-				await CityBuild.Enqueue(0, 1, bidWall, bspotWall).ConfigureAwait(true);
-				await CityBuild.Enqueue( 0, 1, bidCastle, XYToId(FindOverlayBuildingsOfType(city, bidCastle).First())).ConfigureAwait(true);
-				bc.hasWall = true;
-				bc.hasCastle = true;
-			}
-			if (!bc.hasWall && bc.hasCastle)
-			{
-				await CityBuild.Enqueue(0, 1, bidWall, bspotWall).ConfigureAwait(true);
-				bc.hasWall = true;
-			}
-			if(bc.hasWall && bc.scoutpostCount < SettingsPage.scoutpostCount)
-			{
-				while(bc.scoutpostCount <  SettingsPage.scoutpostCount)
-				{
-					var spot = 0;
-					foreach(var _spot in innerTowerSpots)
-					{
-						if(CityBuild.postQueueBuildings[_spot].isEmpty)
-						{
-							spot = _spot;
-							goto added;
-						}
-
-					}
-					foreach (var _spot in outerTowerSpots)
-					{
-						if (CityBuild.postQueueBuildings[_spot].isEmpty)
-						{
-							spot = _spot;
-							goto added;
-						}
-
-					}
-
-				added:
-					if (spot == 0)
-						break;
-					await CityBuild.Enqueue(0, 1, bidSentinelPost, spot).ConfigureAwait(true);
-
-					++bc.scoutpostCount;
-				}
-			}
-			// todo: teardown
-			await JSClient.ChangeCity(city.cid,false).ConfigureAwait(true);;
-			bc = City.GetBuildingCountsPostQueue(cabinLevel);
-			stage = await City.GetBuildBuildStage(bc).ConfigureAwait(true);
-			switch (stage)
-			{
-				case City.BuildStage.noLayout:
-				case City.BuildStage._new:
-				case City.BuildStage.setup:
-				case City.BuildStage.buildingCabins:
-					{
-						if (bc.cabins < SettingsPage.startCabinCount || (bc.storeHouses == 0))
-						{
-							switch (await App.DoYesNoBoxUI("Add Cabins", $"Would you like to add cabins to {city.nameAndRemarks}?"))
-							{
-								case -1: return false;
-								case 0: return true;
-							}
-
-							string message = "Cabins are building, please come back later";
-
-							if (bc.townHallLevel < 4)
-							{
-								await Enqueue(bc.townHallLevel, 4, bidTownHall, bspotTownHall);
-							}
-
-							if (bc.cabins < SettingsPage.startCabinCount)
-							{
-								message = $"Adding {SettingsPage.startCabinCount - bc.cabins}";
-								// find a good spot for a cabin
-								for (var y = span0; y <= span1; ++y)
-								{
-									for (var x = span0; x <= span1; ++x)
-									{
-										var c = (x, y);// (int x, int y) c = RandCitySpot();
-										if (!IsBuildingSpot(c))
-										{
-											continue;
-										}
-
-										if (CityBuild.postQueueBuildings[City.XYToId(c)].isEmpty && (city.BidFromOverlay(c) == 0))
-										{
-											await CityBuild.Build(XYToId(c), bidCottage, false) ;
-											++bc.cabins;
-										}
-										if (bc.cabins >= SettingsPage.startCabinCount)
-										{
-											goto done;
-										}
-									}
-								}
-							}
-						done:;
-							if (bc.storeHouses == 0)
-							{
-								var storage = city.FirstBuildingInOverlay(bidStorehouse);
-								if (storage != 0)
-								{
-									message += $"Adding Storehouse";
-									await CityBuild.Build(storage, bidStorehouse, false);
-								}
-							}
-							Note.Show(message);
-						}
-						else
-						{
-							Note.Show("Cabins are building, please come back later");
-						}
-					}
-					break;
-				case BuildStage.cabinsComplete:
-				case City.BuildStage.initialBuildings:
-					{
-						//var c = RandomCitySpot();
-						var message = string.Empty;
-						var buildingLimit = city.FirstBuildingInOverlay(bidCastle) == 0 ? 100 : 99;
-
-						if (bc.buildings < buildingLimit)
-						{
-							switch (await App.DoYesNoBoxUI("Building Placement", $"Would you like to place buildings for {city.nameAndRemarks}?"))
-							{
-								case -1: return false;
-								case 0: return true;
-							}
-
-							if (bc.storeHouses == 0)
-							{
-								var storage = FindPendingOverlayBuildingsOfType(city, bidStorehouse, 1);
-								if (storage.Any())
-								{
-									message += $"Adding Storehouse";
-									await CityBuild.SmartBuild(city, storage.First(), bidStorehouse, true, false);
-									++bc.buildings;
-									++bc.storeHouses;
-								}
-							}
-							if (bc.forums == 0 && bc.buildings < buildingLimit)
-							{
-								var bd = FindPendingOverlayBuildingsOfType(city, bidMarketplace, 1);
-								if (bd.Any())
-								{
-									message += $"Adding Forum";
-									await CityBuild.SmartBuild(city, bd.First(), bidMarketplace, true, false);
-									++bc.buildings;
-									++bc.forums;
-								}
-							}
-							{
-								var bid = bidSorcTower;
-								var bd = FindPendingOverlayBuildingsOfType(city, bid, buildingLimit - bc.buildings);
-								if (bc.sorcTowers < bd.Count && bc.buildings < buildingLimit)
-								{
-									message += $"Adding { bd.Count} Sorc tower";
-									foreach (var i in bd)
-									{
-										await CityBuild.SmartBuild(city, i, bid, true, false);
-										++bc.buildings;
-										++bc.sorcTowers;
-									}
-								}
-							}
-							{
-								var bid = bidAcademy;
-								var bds = FindPendingOverlayBuildingsOfType(city, bid, buildingLimit - bc.buildings);
-								if (bds.Count > 1 && bc.academies < bds.Count)
-								{
-									message += $"Adding { bds.Count} Academies";
-									foreach (var i in bds)
-									{
-										await CityBuild.SmartBuild(city, i, bid, true, false);
-
-										++bc.buildings;
-										++bc.academies;
-									}
-
-								}
-							}
-							{
-								var bid = bidTrainingGround;
-								var bd = FindPendingOverlayBuildingsOfType(city, bid, buildingLimit - bc.buildings);
-								{
-									message += $"Adding { bd.Count} trainng grouds";
-									foreach (var i in bd)
-									{
-										await CityBuild.SmartBuild(city, i, bid, true, false);
-
-										//										await CityBuild.Build(i, bidTrainingGround, false);
-										++bc.buildings;
-										++bc.training;
-									}
-								}
-							}
-							{
-								var bid = bidStable;
-								var bd = FindPendingOverlayBuildingsOfType(city, bid, (buildingLimit - bc.buildings));
-								{
-									message += $"Adding { bd.Count} stables";
-									foreach (var i in bd)
-									{
-										await CityBuild.SmartBuild(city, i, bid, true, false);
-
-										//										await CityBuild.Build(i, bidTrainingGround, false);
-										++bc.buildings;
-										++bc.stables;
-
-									}
-								}
-							}
-							{
-								var bid = bidShipyard;
-								var bd = FindPendingOverlayBuildingsOfType(city, bid, (buildingLimit - bc.buildings));
-								{
-									message += $"Adding { bd.Count} shipyards";
-									foreach (var i in bd)
-									{
-										await CityBuild.SmartBuild(city, i, bid, true, false);
-
-										//										await CityBuild.Build(i, bidTrainingGround, false);
-										++bc.buildings;
-										++bc.shipyards;
-
-									}
-								}
-							}
-							{
-								var bid = bidBarracks;
-								var bd = FindPendingOverlayBuildingsOfType(city, bid, buildingLimit);  // find them all
-								int milBid;
-								if (bc.training > bc.academies && bc.training > bc.sorcTowers && bc.training >= bc.stables)
-								{
-									milBid = bidTrainingGround;
-								}
-								else if (bc.academies > bc.sorcTowers && bc.academies >= bc.stables)
-									milBid = bidAcademy;
-								else if (bc.sorcTowers >= bc.stables)
-									milBid = bidSorcTower;
-								else
-									milBid = bc.stables;
-
-								bd = bd.OrderByDescending((x) => CountSurroundingBuildingsOfType(x, milBid)).ToList();
-								{
-									message += $"Adding Barracks";
-									foreach (var i in bd)
-									{
-										if (bc.buildings >= buildingLimit)
-											break;
-										await CityBuild.SmartBuild(city, i, bid, true, false);
-
-										//										await CityBuild.Build(i, bidTrainingGround, false);
-										++bc.buildings;
-										++bc.barracks;
-
-									}
-								}
-							}
-							if (bc.buildings < buildingLimit)
-							{
-								// do the rest
-								var todo = FindPendingOverlayBuildings(city);
-								while (todo.Any() && bc.buildings < buildingLimit)
-								{
-									var id = AMath.random.Next(todo.Count);
-									var c = todo[id];
-									todo.RemoveAt(id);
-
-									var bid = city.BidFromOverlay(c);
-									await CityBuild.SmartBuild(city, c, bid, true, false);
-									++bc.buildings;
-
-								}
-
-							}
-
-						}
-
-							break;
-					}
-				case City.BuildStage.initialBuildingsComplete:
-				case City.BuildStage.teardown:
-					{
-						const int maxCommands = 14;
-						int count = (maxCommands - GetBuildQueueLength()).Min(bc.cabins * 2);
-						if (count < 2 || bc.unfinishedBuildings > 0)
-						{
-							Note.Show("Already queud up Teardown");
-							break;
-						}
-						switch (await App.DoYesNoBoxUI("Teardown", $"Would you like to swap cabins for buildings in {city.nameAndRemarks}?"))
-						{
-							case -1: return false;
-							case 0: return true;
-						}
-
-
-						var todo = FindPendingOverlayBuildings(city);
-						int milBid;
-						if (bc.training > bc.academies && bc.training > bc.sorcTowers && bc.training >= bc.stables)
-						{
-							milBid = bidTrainingGround;
-						}
-						else if (bc.academies > bc.sorcTowers && bc.academies >= bc.stables)
-							milBid = bidAcademy;
-						else if (bc.sorcTowers >= bc.stables)
-							milBid = bidSorcTower;
-						else
-							milBid = bc.stables;
-
-						var barracks = FindPendingOverlayBuildingsOfType(city, bidBarracks, 100).OrderByDescending(a => CountSurroundingBuildingsOfType(a, milBid)).ToList();
-
-						for (; ; )
-						{
-							count = (maxCommands - GetBuildQueueLength()).Min(bc.cabins * 2);
-							if (count < 2 || todo.Count==0)
-								break;
-							var id = AMath.random.Next(todo.Count);
-							var c = todo[id];
-							todo.RemoveAt(id);
-
-							var bid = city.BidFromOverlay(c);
-							if (bid == bidBarracks)
-							{
-								c = barracks[0];
-								barracks.RemoveAt(0);
-							}
-							count -= await CityBuild.SmartBuild(city, c, bid, true, false);
-
-
-						}
-
-
-					}
-					break;
-				case City.BuildStage.complete:
-					Note.Show("Complete :)");
-					break;
-				default:
-					Assert(false);
-					break;
-			}
-			return true;
-		}
-		static int CountSurroundingBuildingsOfType( (int x, int y) c, int bid)
-		{
-			int rv = 0;
-			for (int y = -1; y <= 1; ++y)
-				for (int x = -1; x <= 1; ++x)
-				{
-					if (x == 0 && y == 0)
-						continue;
-					var c1 = (c.x + x, c.y + y);
-					if (c1.IsInCity())
-					{
-						if (CityBuild.postQueueBuildings[City.XYToId(c1)].bid == bid)
-							++rv;
-					}
-				}
-
-			return rv;
-		}
-		// starts ate center and searches outwards
-		static List<(int x, int y)> FindPendingOverlayBuildings(City city)
-		{
-			List<(int x, int y)> rv = new();
-			for (var cy = span0; cy <= span1; ++cy)
-			{
-				for (var cx = span0; cx <= span1; ++cx)
-				{
-					var c = (cx, cy);
-					var bid = city.BidFromOverlay(c);
-					if ((bid != 0) && (CityBuild.postQueueBuildings[City.XYToId(c)].bid != bid))
-					{
-						rv.Add(c);
-
-					}
-				}
-			}
-			return rv;
-		}
-		static List<(int x, int y)> FindOverlayBuildingsOfType(City city, int bid)
-		{
-			List<(int x, int y)> rv = new();
-			for (var cy = span0; cy <= span1; ++cy)
-			{
-				for (var cx = span0; cx <= span1; ++cx)
-				{
-					var c = (cx, cy);
-					if (bid == city.BidFromOverlay(c))
-					{
-						rv.Add(c);
-
-					}
-				}
-			}
-			return rv;
-		}
-
-		static List<(int x, int y)> FindPendingOverlayBuildingsOfType(City city, int bid, int count)
-		{
-			List<(int x, int y)> rv = new();
-
-			// search from center outwards
-			for (int r = 1; r <= City.citySpan; ++r)
-			{
-				for (var y = -r; y <= r; ++y)
-				{
-					for (var x = -r; x <= r; ++x)
-					{
-						if ((x == -r || x == r) || (y == -r || y == r))
-						{
-							var c = (x, y);// (int x, int y) c = RandCitySpot();
-							if ((city.BidFromOverlay(c) == bid) && (CityBuild.postQueueBuildings[City.XYToId(c)].bid!= bid) )
-							{
-								rv.Add( c);
-								if (rv.Count > count)
-									goto done;
-							}
-						}
-					}
-				}
-			}
-			done:
-			return rv;
-		}
-
-		private static (int x, int y) RandomCitySpot()
-		{
-			return (x: AMath.random.Next(City.citySpan), y: AMath.random.Next(City.citySpan));
-		}
-
-		private async void SplatAll(object sender, Windows.UI.Xaml.RoutedEventArgs e)
-		{
-			if(App.uiSema.CurrentCount==0)
-			{
-				Log("Already running");
-				return;
-			}
-
-			try
-			{
-				foreach (var _city in City.friendCities)
-				{
-
-					var city = _city;
-					var rv = await App.DispatchOnUIThreadExclusive(async () =>
-					{
-						return await Splat(city);
-					});
-					if (rv == false)
-						break;
-				}
-			}
-			catch (Exception ex)
-			{
-				Log(ex);
-				Note.Show("Did not complete all of the places, please try again");
-			}
-
-		}
+		//      }
 	}
 
-	//public class BuildItemTemplateSelector : Microsoft.UI.Xaml.Controls.DataTemplateSelector
-
-	//{
-	//	public DataTemplate cityTemplate { get; set; }
-	//	public DataTemplate opTemplate { get; set; }
-
-	//	protected override DataTemplate SelectTemplateCore(object item)
-	//	{
-	//		if (item is BuildItemView city)
-	//		{
-	//			return cityTemplate;
-	//		}
-	//		else
-	//		{
-	//			return opTemplate;
-	//		}
-	//	}
-	//}
-
-	public class BuildItemView
+	public class BuildCustomDataBindingCompleteCommand : DataGridCommand
 	{
-		static readonly List<BuildItemView> pool = new();
-		public const int size = 32;
-		public Windows.UI.Xaml.Media.ImageBrush brush { get; set; }
-		public int cid; // owner
-		public BuildQueueItem item;
-		public string building { get; set; }
-		public string text { get; set; }
-		public ObservableCollection<BuildItemView> queue { get; set; } = new ObservableCollection<BuildItemView>();
-		public bool isCity => item.isNop;
-		public bool isOp => !isCity;
+		public BuildCustomDataBindingCompleteCommand()
+		{
+			this.Id = CommandId.DataBindingComplete;
+		}
 
-		public BuildItemView Ctor(BuildQueueItem _item, int _cid)
+		public override bool CanExecute(object parameter)
 		{
-			cid = _cid;
-			item = _item;
-			brush = CityBuild.BuildingBrush(item.bid, size / 128.0f);
-			var op = item.elvl == 0 ? "Destroy" : item.slvl == 0 ? "Build" : item.slvl > item.elvl ? "Downgrade" : "Upgrade";
-			text = op + BuildingDef.all[item.bid].Bn;
-			return this;
+			var context = parameter as DataBindingCompleteEventArgs;
+			// put your custom logic here
+			return true;
 		}
-		public BuildItemView Ctor(int _cid)
+
+		static T TryGetValue<T>(object o) => o == null ? default : (T)o;
+		public override void Execute(object parameter)
 		{
-			var city = City.GetOrAdd(_cid);
-			cid = _cid;
-			brush = CityBuild.BrushFromImage(city.icon);
-			text = City.GetOrAdd(_cid).nameAndRemarks;
-			item = BuildQueueItem.nop;
-			return this;
-		}
-		public void Return()
-		{
-			text = null;
-			brush = null;
-			cid = 0;
-			queue.Clear();
-			pool.Add(this);
-		}
-		public static BuildItemView Rent()
-		{
-			if (pool.Any())
-			{
-				int i = pool.Count - 1;
-				var rv = pool[i];
-				pool.RemoveAt(i);
-				return rv;
-			}
-			return new BuildItemView();
+			var context = parameter as DataBindingCompleteEventArgs;
 
 		}
+
+
 	}
 }

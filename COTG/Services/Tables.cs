@@ -64,6 +64,7 @@ namespace COTG.Services
 		{
 			if (!TouchT())
 				return;
+			key = key.Replace('/', '+').Replace('\\', '+'); // these chars are illegal
 			try
 			{
 

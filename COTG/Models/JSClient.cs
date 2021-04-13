@@ -682,16 +682,19 @@ namespace COTG
 		//    }
 		//}
 
-		public static async Task ChangeCity(int cityId, bool lazyMove, bool select = true, bool scrollIntoUI = true)
+		public static async Task ChangeCity(int cityId, bool lazyMove, bool select = true, bool scrollIntoUI = true, bool isLocked=false)
 		{
 			try
 			{
 
-				if (City.CanVisit(cityId))
+				if (City.CanVisit(cityId)  )
 				{
+					var city = City.GetOrAddCity(cityId);
+					if (!await city.CheckSetBuild())
+						return;
+
 					if (!lazyMove)
 						cityId.BringCidIntoWorldView(lazyMove, false);
-					var city = City.GetOrAddCity(cityId);
 					if (city.pid != Player.activeId)
 					{
 
@@ -701,8 +704,9 @@ namespace COTG
 					}
 					else
 					{
-						if(city.SetBuildInternal(scrollIntoUI))				
-						await WaitOnCityData(cityId);
+						var changed = await city.SetBuildInternal(scrollIntoUI,true, isLocked);
+						if (changed)		
+							await WaitOnCityData(cityId);
 					}
 				}
 				else
@@ -896,6 +900,9 @@ namespace COTG
 			gstCBs.TryAdd(hash, cb);
 			App.DispatchOnUIThreadSneaky(() =>
 			{
+				var xy = cityId.ToWorldXY();
+				var str = $"[{ xy.X/25 + (xy.Y/25)*24}]";
+				view.InvokeScriptAsync("rmp",  new string[] { str });
 				view.InvokeScriptAsync("gStQueryCB", new string[] { (cityId).ToString(), hash.ToString() });
 			});
 
@@ -1832,7 +1839,7 @@ namespace COTG
 											   var cid = int.Parse(ss[1]);
 
 											   await Task.Delay(1000);
-											   await App.DispatchOnUIThreadExclusive(async () =>
+											   await App.DispatchOnUIThreadExclusive(cid,async () =>
 											   {
 												   ShellPage.instance.RefreshX(null, null);
 												   
@@ -1843,12 +1850,12 @@ namespace COTG
 													   SecondaryButtonText = "No",
 													   PrimaryButtonText = "Setup"
 												   };
-												   var result = await dialog.ShowAsync2();
+												   var result = await dialog.ShowAsync2().ConfigureAwait(true);
 
 												   if(result == ContentDialogResult.Primary)
 												   {
-													   await ChangeCity(cid,false);
-													   await Task.Delay(1000);
+													   await ChangeCity(cid,false).ConfigureAwait(true);
+													   await Task.Delay(1000).ConfigureAwait(true);
 													   await CityRename.RenameDialog(cid,true); 
 												   }
 											   });
@@ -1874,6 +1881,7 @@ namespace COTG
 							   }
 						   case "gstcb":
 							   {
+								   Trace(jsp.ToString());
 								   var jso = jsp.Value;
 								   var tag = jso.GetAsInt("tag");
 								   if (gstCBs.TryGetValue(tag, out var cb))
@@ -1881,6 +1889,11 @@ namespace COTG
 									   cb(jso);
 								   }
 
+								   break;
+							   }
+						   case "rmp":
+							   {
+								   Trace(jsp.ToString());
 								   break;
 							   }
 

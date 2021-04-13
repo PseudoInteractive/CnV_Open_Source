@@ -168,7 +168,7 @@ namespace COTG.JSON
 
 		void RemoveAt(int id)
 		{
-			BuildTab.RemoveOp(queue[id], cid);
+			QueueTab.RemoveOp(queue[id], cid);
 			queue.RemoveAt(id);
 		}
 	     public static SemaphoreSlim throttle = new SemaphoreSlim(1);
@@ -488,7 +488,7 @@ namespace COTG.JSON
 							if (queueValid && !queue.Any())
 							{
 								all.TryRemove(cid, out _);
-								BuildTab.Clear(cid);
+								QueueTab.Clear(cid);
 								Log("Queue Done!");
 								SaveNeeded();
 								Dispose();
@@ -594,20 +594,24 @@ namespace COTG.JSON
 		public static async Task<CityBuildQueueLock> Get(int cid)
 		{
 			await throttle.WaitAsync();
-			try
+			for (; ; )
 			{
-				if (all.TryGetValue(cid, out var rv))
-					return new CityBuildQueueLock(rv);
-				rv = new CityBuildQueue() { cid = cid };
-				if (all.TryAdd(cid, rv))
-					return new CityBuildQueueLock(rv);
-				else
-					return new CityBuildQueueLock(all[cid]); // someone else added
-			}catch(Exception e)
-			{
-				Log(e);
+				try
+				{
+					if (all.TryGetValue(cid, out var rv))
+						return new CityBuildQueueLock(rv);
+					rv = new CityBuildQueue() { cid = cid };
+					if (all.TryAdd(cid, rv))
+						return new CityBuildQueueLock(rv);
+					else
+						return new CityBuildQueueLock(all[cid]); // someone else added
+				}
+				catch (Exception e)
+				{
+					Log(e);
+				}
+				await Task.Delay(500);
 			}
-			return new CityBuildQueueLock(null);
 
 
 		}
@@ -637,7 +641,7 @@ namespace COTG.JSON
 			queue.Add(op);
 			if(cid==City.build)
 				CityView.BuildingsOrQueueChanged();
-			BuildTab.AddOp(op, cid);
+			QueueTab.AddOp(op, cid);
 		}
 
 		public void Dispose()
@@ -680,7 +684,7 @@ namespace COTG.JSON
 			if (bid == City.bidTemple && slvl == 0)
 			{
 				Assert(cid == City.build);
-				JSClient.JSInvoke("buildTemple", new[] {spot.ToString()});
+				await JSClient.JSInvokeTask("buildTemple", new[] {spot.ToString()});
 				return;
 			}
 			if (bid == City.bidCastle && slvl == 0)
@@ -703,15 +707,25 @@ namespace COTG.JSON
 				{
 					return;
 				}
+
 			}
 			using (var pending = await CityBuildQueue.Get(cid))
 			{
-				pending.cityBuildQueue.Enqueue(op);
+				if (pending.cityBuildQueue.queue.CanGrow())
+				{
+					pending.cityBuildQueue.Enqueue(op);
 
-				SaveNeeded();
+					SaveNeeded();
 
-				pending.cityBuildQueue.Process();
+					pending.cityBuildQueue.Process();
+					if (bid == City.bidCastle && slvl == 0)
+					{
+						await Task.Delay(200);
+					}
+				}
 			}
+
+			
 		}
 
 		public static void CancelBuildOp(int cid,in  BuildQueueItem i)
@@ -727,7 +741,7 @@ namespace COTG.JSON
 			
 				}
 			}
-			BuildTab.RemoveOp(i, cid);
+			QueueTab.RemoveOp(i, cid);
 			// if its empty it will be removed next iteration
 			CityView.BuildingsOrQueueChanged();
 		}
@@ -740,7 +754,7 @@ namespace COTG.JSON
 			if (CityBuildQueue.all.TryGetValue(cid, out var q))
 			{
 				q.queue.Clear();
-				BuildTab.Clear(cid);
+				QueueTab.Clear(cid);
 				SaveNeeded();
 				CityView.BuildingsOrQueueChanged();
 			}
@@ -814,11 +828,23 @@ namespace COTG.JSON
 			if (JSClient.isSub)
 				return;
 
-			var file = await folder.CreateFileAsync(fileName, CreationCollisionOption.ReplaceExisting);
-			if(file!=null)
-			{
-				await FileIO.WriteTextAsync(file, str);
-			}
+				try
+				{
+					var file = await folder.CreateFileAsync(fileName, CreationCollisionOption.ReplaceExisting);
+					if (file != null)
+					{
+						await FileIO.WriteTextAsync(file, str);
+					}
+					
+				}
+				catch(Exception ex)
+				{
+					Log(ex);
+					SaveNeeded();
+				}
+				
+			
+
 		}
 		//private static async void SaveBuildQueue(string str)
 		//{
@@ -922,8 +948,12 @@ namespace COTG.JSON
 						{
 							foreach (var d in jsCity.Value.EnumerateArray())
 							{
+							if (cq.cityBuildQueue.queue.CanGrow())
+							{
+
 								var op = new BuildQueueItem(d[2].GetByte(), d[3].GetByte(), d[1].GetUInt16(), d[0].GetUInt16());
 								cq.cityBuildQueue.Enqueue(op);
+							}
 							}
 							Log($"{cid} {cq.cityBuildQueue.queue.count}");
 							cq.cityBuildQueue.Process(AMath.random.Next(1024, 3 * 1024)); // wait 1 - 3 seconds.

@@ -1,56 +1,148 @@
-﻿<views:UserTab x:Class="COTG.Views.BuildTab"
-               Tag="Build"
-               xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-               xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-               xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-               xmlns:game="using:COTG.Game"
-               xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-               xmlns:cotg="using:COTG"
-			   xmlns:win="using:Windows.UI.Xaml.Controls"
-  			    xmlns:winui="using:Microsoft.UI.Xaml.Controls"
-               xmlns:tk="using:Microsoft.Toolkit.Uwp.UI.Controls"
-               xmlns:views="using:COTG.Views"
-
-			   xmlns:wuxdata="using:Windows.UI.Xaml.Data"
-			   TabNavigation="Once"
+﻿<view:UserTab x:Class="COTG.Views.BuildTab"
+			  xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+			  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+			  xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+			  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+			  xmlns:tg="using:Telerik.UI.Xaml.Controls.Grid"
+			  xmlns:tgCore="using:Telerik.Data.Core"
+			  xmlns:tk="using:Microsoft.Toolkit.Uwp.UI.Controls"
+			  xmlns:winui="using:Microsoft.UI.Xaml.Controls"
+			  xmlns:model="using:COTG.Models"
+			  xmlns:game="using:COTG.Game"
+			  xmlns:cotg="using:COTG"
+			  xmlns:view="using:COTG.Views"
+			  mc:Ignorable="d"
+			  Tag="Build"
+			  TabNavigation="Once"
 			  IsTabStop="True"
-               mc:Ignorable="d">
-	<views:UserTab.Resources>
-	
-		<DataTemplate x:Key="BuildTabTemplate" x:DataType="views:BuildItemView">
-			<win:TreeViewItem ItemsSource="{x:Bind queue}">
-			<StackPanel Orientation="Horizontal" Margin="4" MinWidth="200">
-				<Canvas Background="{x:Bind brush}" Width="32" Height="32" />
-				<TextBlock Text="{x:Bind text}" />
-			</StackPanel>
-			</win:TreeViewItem>
-		</DataTemplate>
+			  FontFamily="Tw Cen MT Condensed">
 
+	<Grid x:Name="cityBaseGrid">
 
-
-	</views:UserTab.Resources>
-
-
-
-	<Grid >
 		<Grid.RowDefinitions>
-			<RowDefinition Height="auto"/>
-			<RowDefinition Height="*"/>
+			<RowDefinition Height="auto" />
+			<RowDefinition Height="auto" />
+			<RowDefinition Height="auto" />
+			<RowDefinition Height="*" />
 		</Grid.RowDefinitions>
-		<StackPanel Orientation="Horizontal" BorderThickness="2" >
-			<TextBlock x:Name="stage"  />
-			<Button Margin="4" Content="Do the stuff" Click="Splat" Style="{StaticResource ButtonSmall}" ToolTipService.ToolTip="Does all the things and all of the stuff" />
-			<Button Margin="4" Content="Do the places" Click="SplatAll" Style="{StaticResource ButtonSmall}" ToolTipService.ToolTip="Does all the things and all of the stuff in all of the places" />
-			<Button Margin="4" Content="Clear Queue" Click="ClearQueue" Style="{StaticResource ButtonSmall}" />
-			<Button Margin="4" Content="Cancel Selected" Click="ClearSelected" Style="{StaticResource ButtonSmall}" />
-			<ToggleSwitch Header="Auto Cabins" IsOn="{x:Bind views:SettingsPage.autoDemoCottages,Mode=TwoWay}" OnContent="Demo" OffContent="Leave" ToolTipService.ToolTip="If On, cabins will be automatically destroyed when you place a building into a city with 100 buildings"  />
-		
-		</StackPanel>
-		<win:TreeView Grid.Row="1" x:Name="zoom"  CanReorderItems="False"  SelectionMode="Multiple" IsTabStop="True"  BorderThickness="1" 
- TabNavigation="Once" CanDragItems="False" AllowDrop="False" ItemTemplate="{StaticResource BuildTabTemplate}" 
-						ItemsSource="{x:Bind cities}" ItemInvoked="zoom_ItemInvoked" 
-						>
-		</win:TreeView>
+
+		<tg:RadDataGrid x:Name="cityGrid"
+							x:FieldModifier="public"
+							ColumnResizeHandleDisplayMode="OnColumnHeaderActionFlyoutOpen"
+							ColumnDataOperationsMode="Flyout"
+							Grid.Row="3"
+							IsTabStop="True"
+							TabFocusNavigation="Once"
+						AllowFocusOnInteraction="True"
+							UserGroupMode="Auto"
+							AlternationStep="2"
+							ItemsSource="{x:Bind game:City.gridCitySource, Mode=OneWay}"
+							AutoGenerateColumns="False"
+							SelectionMode="Extended"
+							CanUserChooseColumns="True"
+							RowHeight="{StaticResource GridRowHeight}"
+							UserFilterMode="Auto"
+							PointerPressed="CityGrid_PointerPress"
+							PointerExited="cityGrid_PointerExited"
+							FontSize="{StaticResource MediumFontSize}"
+							IsTextScaleFactorEnabled="False"
+							GroupPanelPosition="Bottom"
+							SelectionUnit="Row"
+							RowDetailsDisplayMode="Single"
+							Tag="Raid"
+							ScrollViewer.VerticalScrollMode="Enabled"
+							ScrollViewer.HorizontalScrollMode="Enabled"
+							ScrollViewer.HorizontalScrollBarVisibility="Visible"
+							ScrollViewer.VerticalScrollBarVisibility="Visible"
+							>
+	
+			<tg:RadDataGrid.Commands>
+				<view:BuildCustomDataBindingCompleteCommand />
+				<model:CityGridToggleColumnVisibilityCommand />
+			</tg:RadDataGrid.Commands>
+			
+
+			<tg:RadDataGrid.Columns>
+
+			
+				<tg:DataGridImageColumn PropertyName="icon"
+											Header="I"
+											SizeMode="Fixed"
+											Width="32"
+											HeaderTip="Click to switch to this city"
+											Tip="Click to switch to this city"
+											 />
+				<tg:DataGridTextColumn PropertyName="nameAndRemarks"
+										   Tip="Click to raid from this city without switching cities (fast)"
+										   Header="Name"
+										   CellContentStyle="{StaticResource LeftAlign}"
+										   SizeMode="Auto"
+										    />
+				<tg:DataGridTextColumn PropertyName="buildStage"
+										   HeaderTip="Building Stage"
+										   Tip="Click 'Do all the stuff'"
+										   CellContentStyle="{StaticResource CenterAlignLink}"
+										    />
+				<tg:DataGridTextColumn PropertyName="xy"
+										   HeaderTip="City Coordinates"
+										   Tip="Click to view this city"
+										   CellContentStyle="{StaticResource CenterAlignLink}"
+										    />
+				<tg:DataGridNumericalColumn PropertyName="cont"
+												
+												CellContentStyle="{StaticResource CenterAlign}"
+												SizeMode="Auto"
+												 />
+				
+
+				<tg:DataGridBooleanColumn PropertyName="isBuilding"
+										   HeaderTip="Building"
+										   Tip="Building if checked, stalled if not"
+										   CellContentStyle="{StaticResource CenterAlignLink}"
+										    />
+				<!--<tg:DataGridTextColumn PropertyName="buildingStr"
+										   HeaderTip="Buildings"
+										   Tip="Number of buildings"
+										   CellContentStyle="{StaticResource CenterAlignLink}"
+										    />-->
+
+				<tg:DataGridNumericalColumn PropertyName="points"
+												Tip="City score"
+												SizeMode="Auto"
+												CellContentStyle="{StaticResource RightAlign}"
+												CellContentFormat="{}{0,6:N0}"
+												 />
+
+				<tg:DataGridNumericalColumn PropertyName="tsTotal"
+												CellContentStyle="{StaticResource RightAlign}"
+												Tip="TS enlisted in city"
+												CellContentFormat="{}{0,7:N0}"
+												DefaultSortOrder="Descending"
+												SizeMode="Auto"
+												 />
+				
+				<tg:DataGridTextColumn PropertyName="remarks"
+										   CellContentStyle="{StaticResource LeftAlign}"
+										   SizeMode="Auto"
+										   IsVisible="False" />
+				<tg:DataGridTextColumn PropertyName="senny"
+										   CellContentStyle="{StaticResource LeftAlign}"
+										   SizeMode="Auto"
+										   IsVisible="False" />
+				<tg:DataGridBooleanColumn PropertyName="isCastle"
+											  IsVisible="False"
+											  SizeMode="Auto"
+											   />
+				<tg:DataGridBooleanColumn PropertyName="isOnWater"
+											  IsVisible="False"
+											  SizeMode="Auto"
+											   />
+				
+			</tg:RadDataGrid.Columns>
+
+		</tg:RadDataGrid>
+	
+
 
 	</Grid>
-</views:UserTab>
+</view:UserTab>

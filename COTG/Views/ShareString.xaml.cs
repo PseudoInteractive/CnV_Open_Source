@@ -99,7 +99,7 @@ namespace COTG.Views
 		}
 		static public async Task Show()
 		{
-			await App.DispatchOnUIThreadExclusive(async () =>
+			await App.DispatchOnUIThreadExclusive(City.build,async () =>
 
 
 
@@ -182,7 +182,7 @@ namespace COTG.Views
 						PlannerTab.SmartRearrange();
 					}
 					CityBuild._isPlanner = instance.onComplete.IsOn;
-
+					city.BuildStageDirty();
 				}
 				else
 				{
@@ -388,7 +388,7 @@ namespace COTG.Views
 		public string desc { get; set; }
 		public string tags { get; set; }
 		[JsonIgnore]
-		public List<ShareStringItem> children { get; set; } = new();
+		public DumbCollection<ShareStringItem> children { get; set; } = new();
 		// group items
 		public ShareStringItem(string _path, bool _isPath)
 		{
@@ -421,7 +421,7 @@ namespace COTG.Views
 			desc = _desc;
 			shareString = _share;
 			var dir = path.Split('~', StringSplitOptions.RemoveEmptyEntries);
-			List<ShareStringItem> myList = all;
+			var myList = all;
 			var pathSoFar = String.Empty;
 			for (int i = 0; i < dir.Length - 1; ++i)
 			{

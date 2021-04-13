@@ -467,6 +467,9 @@ namespace COTG.Game
 							wantRaidScan = false;
 						}
 						break;
+					case nameof(City.buildStage):
+						Splat();
+						break;
 					case nameof(xy):
 						ProcessCoordClick(cid, false, modifiers, false);
 						wantRaidScan = false;
@@ -1159,44 +1162,80 @@ namespace COTG.Game
 				cid.BringCidIntoWorldView(lazyMove,true);
 		}
 		public static int build; // city that has Build selection.  I.e. in city view, the city you are in
-
+		public static int lockedBuild; // 
 		public bool isBuild => cid == build;
 		public static bool IsBuild(int cid)
 		{
 			return build == cid;
 		}
-	
-		public bool SetBuildInternal(bool scrollIntoView, bool select = true)
+
+		public async Task<bool> CheckSetBuild()
 		{
 			var changed = cid != build;
 			if (changed)
 			{
-				var wasPlanner = CityBuild.isPlanner;
-			
-				if (wasPlanner)
+				if (lockedBuild != 0 && cid != lockedBuild)
 				{
-					var b = City.GetBuild();
-					b.BuildingsCacheToShareString();
-					b.SaveLayout();
-					CityBuild.isPlanner = false;
-				}
-				City.build = cid;
-				Assert(pid == Player.activeId);
-				//Cosmos.PublishPlayerInfo(JSClient.jsBase.pid, City.build, JSClient.jsBase.token, JSClient.jsBase.cookies); // broadcast change
-
-				foreach (var p in PlayerPresence.all)
-				{
-					if (p.pid != Player.myId && p.cid == cid)
+					Note.Show("Please wait for current operation to complete");
+					if (await App.DoYesNoBox("Busy", "Please wait for current operation to complete") != 1)
 					{
-						Note.Show($"You have joined {p.name } in {p.cid.CidToStringMD()}");
+						return false;
 					}
 				}
+			}
+			return true;
+		}
 
-				City.CitySwitched();
-				if(wasPlanner)
+		public async Task<bool> SetBuildInternal(bool scrollIntoView, bool select = true, bool isLocked=false)
+		{
+			var changed = cid != build ;
+			if (changed)
+			{
+				if (lockedBuild != 0 && cid != lockedBuild)
 				{
-					GetCity.Post( cid, (_,_)=>  CityBuild._isPlanner = true );
+					Note.Show("Please wait for current operation to complete");
+					if (await App.DoYesNoBox("Busy", "Please wait for current operation to complete") != 1)
+					{
+						throw new System.Exception("SetBuildOverlap");
+					}
 				}
+					if(!isLocked)
+						await App.uiSema.WaitAsync();
+					try
+					{
+
+						var wasPlanner = CityBuild.isPlanner;
+
+						if (wasPlanner)
+						{
+							var b = City.GetBuild();
+							b.BuildingsCacheToShareString();
+							b.SaveLayout();
+							CityBuild.isPlanner = false;
+						}
+						City.build = cid;
+						Assert(pid == Player.activeId);
+						//Cosmos.PublishPlayerInfo(JSClient.jsBase.pid, City.build, JSClient.jsBase.token, JSClient.jsBase.cookies); // broadcast change
+
+						foreach (var p in PlayerPresence.all)
+						{
+							if (p.pid != Player.myId && p.cid == cid)
+							{
+								Note.Show($"You have joined {p.name } in {p.cid.CidToStringMD()}");
+							}
+						}
+
+						City.CitySwitched();
+						if (wasPlanner)
+						{
+							GetCity.Post(cid, (_, _) => CityBuild._isPlanner = true);
+						}
+					}
+					finally
+					{
+					   if(!isLocked)
+						App.uiSema.Release();
+					}
 			}
 			SetFocus(scrollIntoView, select);
 			City.SyncCityBox();
@@ -1507,6 +1546,7 @@ namespace COTG.Game
 				aExport.AddItem( "Defense Sheet", ExportToDefenseSheet);
 				AApp.AddItem(flyout, "Send Res", (_, _) => Spot.JSSendRes(cid));
 				AApp.AddItem(flyout, "Near Res", ShowNearRes);
+				AApp.AddItem(flyout, "Do the stuff", (_, _) => Splat());
 			}
 			else if (this.isDungeon || this.isBoss)
 			{
@@ -1536,14 +1576,22 @@ namespace COTG.Game
 
 
 		}
+		public async Task Splat()
+		{
+			await App.DispatchOnUIThreadExclusive(cid,() =>
+			{
+				return QueueTab.Splat(this as City);
+			});
+		}
 		public static async void InfoClick(object sender, RoutedEventArgs e)
 		{
 			var cids = MainPage.GetContextCids(sender);
 			foreach (var cid in cids)
 			{
-				await App.DispatchOnUIThreadExclusive(async () =>
+				var _cid = cid;
+				await App.DispatchOnUIThreadExclusive(_cid,async () =>
 				{
-					await CityRename.RenameDialog(cid,true);
+					await CityRename.RenameDialog(_cid,true);
 				});
 			}
 		}
@@ -1578,6 +1626,10 @@ namespace COTG.Game
 				else
 					tab.Refresh();
 			}
+		}
+		public void BuildStageDirty()
+		{
+			App.DispatchOnUIThreadSneakyLow(() => OnPropertyChanged(nameof(City.buildStage)));
 		}
 		public async void ShowIncoming()
 		{

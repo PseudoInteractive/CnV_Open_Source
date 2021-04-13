@@ -49,7 +49,7 @@ namespace COTG.Views
 
 
 		public Resources des = new Resources() { wood = 1000000, stone = 1000000, food = 1000000, iron = 1000000 };
-		public Resources willHave => target.tradeInfo.res.Add(target.tradeInfo.inc);
+		public Resources willHave => target.res.Add(target.tradeInfo.inc);
 		
 
 		public ResSource selected = ResSource.dummy;
@@ -110,15 +110,15 @@ namespace COTG.Views
 				}
 
 				var cartStr = js.GetAsString("24").Split(@" / ", StringSplitOptions.RemoveEmptyEntries);
-				int.TryParse(cartStr[0], out ct.cartsHome);
-				int.TryParse(cartStr[1], out ct.cartsTotal);
+				ushort.TryParse(cartStr[0], out city.cartsHome);
+				ushort.TryParse(cartStr[1], out city.carts);
 				var shipStr = js.GetAsString("25").Split(@" / ", StringSplitOptions.RemoveEmptyEntries);
-				int.TryParse(shipStr[0], out ct.shipsHome);
-				int.TryParse(shipStr[1], out ct.shipsTotal);
-				ct.res.wood = js.GetAsInt("6");
-				ct.res.stone = js.GetAsInt("7");
-				ct.res.iron = js.GetAsInt("8");
-				ct.res.food = js.GetAsInt("9");
+				ushort.TryParse(shipStr[0], out city.shipsHome);
+				ushort.TryParse(shipStr[1], out city.ships);
+				city.wood = js.GetAsInt("6");
+				city.stone = js.GetAsInt("7");
+				city.iron = js.GetAsInt("8");
+				city.food = js.GetAsInt("9");
 				
 
 			}
@@ -196,7 +196,7 @@ namespace COTG.Views
 				} while (ready == false);
 
 
-				var r = des.Sub(target.tradeInfo.res.Add(target.tradeInfo.inc));
+				var r = des.Sub(target.res.Add(target.tradeInfo.inc));
 				r.ClampToPositive();
 				List<ResSource> s = new List<ResSource>();
 				//                supportGrid.ItemsSource = null;
@@ -208,12 +208,12 @@ namespace COTG.Views
 					var ti = city.tradeInfo;
 					if (viaWater)
 					{
-						if (!city.ComputeShipTravelTime(target.cid, out dt) || dt.TotalHours > filterTime || ti.shipsHome < filterShipsHome)
+						if (!city.ComputeShipTravelTime(target.cid, out dt) || dt.TotalHours > filterTime || city.ships < filterShipsHome)
 							continue;
 					}
 					else
 					{
-						if (!city.ComputeCartTravelTime(target.cid, out dt) || dt.TotalHours > filterTime || ti.cartsHome < filterCartsHome)
+						if (!city.ComputeCartTravelTime(target.cid, out dt) || dt.TotalHours > filterTime || city.carts < filterCartsHome)
 							continue;
 
 					}
@@ -242,8 +242,9 @@ namespace COTG.Views
 					if (!sup.initialized)
 					{
 						var info = sup.info;
-						var shipping = viaWater ? info.shipsHome * 10000 : info.cartsHome * 1000;
-						var send = info.res.Min(r);
+						var city = sup.city;
+						var shipping = viaWater ? city.shipsHome * 10000 : city.cartsHome * 1000;
+						var send = sup.city.res.Min(r);
 						var sum = send.sum;
 
 						if (shipping < sum)
@@ -340,18 +341,19 @@ namespace COTG.Views
 			AApp.AddItem(flyout, "Max", (_, _) =>
 			{
 				var info = supporter.info;
-				var res = info.res.sum;
+				var city = supporter.city;
+				var res = supporter.city.res.sum;
 				var viaWater = NearRes.instance.viaWater;
-				var shipping = viaWater ? info.shipsHome * 10000 : info.cartsHome * 1000;
+				var shipping = viaWater ? city.shipsHome * 10000 : city.cartsHome * 1000;
 				if (shipping > res)
 				{
-					supporter.res = info.res;  // we can send all of it
+					supporter.res = supporter.city.res;  // we can send all of it
 				}
 				else
 				{
 					var ratio = shipping / (float)res;
 
-					supporter.res = info.res.Scale(ratio);
+					supporter.res = supporter.city.res.Scale(ratio);
 
 				}
 
@@ -458,7 +460,7 @@ namespace COTG.Views
 			selected.res[id] = selected.ResMax(id);
 			var viaWater = NearRes.instance.viaWater;
 			var info = selected.info;
-			var transport = info.GetTransport(viaWater);
+			var transport = selected.city.GetTransport(viaWater);
 			if (viaWater)
 				transport -= (selected.res[id] + 9999) / 10000 * 10000;
 			else
@@ -539,17 +541,10 @@ namespace COTG.Views
 		public List<int> resSource = new List<int>();
 		public List<int> resDest = new List<int>();
 
-		public int cartsHome;
-		public int cartsTotal;
-
-		public int shipsHome;
-		public int shipsTotal;
-
-		public int GetTransport( bool viaWater ) => viaWater ? shipsHome*10000 : cartsHome*1000;
 		
-		public Resources res;
+		//public Resources res;
 		public Resources inc;
-		public int resTotal => res.sum;
+		//public int resTotal => res.sum;
 
 	}
 

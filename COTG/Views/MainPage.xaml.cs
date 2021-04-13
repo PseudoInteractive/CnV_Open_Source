@@ -84,7 +84,7 @@ namespace COTG.Views
 			//cityGrid.ContextFlyout = cityMenuFlyout;
 
 			//     cityGrid.SelectionChanged += CityGrid_SelectionChanged;
-			// cityGrid.CurrentItemChanged += CityGrid_CurrentItemChanged;
+			cityGrid.CurrentItemChanged += CityGrid_CurrentItemChanged;
 			cityGrid.ProcessTooltips();
 			//dungeonGrid.ProcessTooltips();
 			
@@ -93,7 +93,7 @@ namespace COTG.Views
 
 		private void CityGrid_CurrentItemChanged(object sender, EventArgs e)
         {
-//            Log("Current item " + sender.ToString());
+            Log("Current item " + sender.ToString());
         }
 
 		public static City expandedCity; // city with dungeon list visible if any 
