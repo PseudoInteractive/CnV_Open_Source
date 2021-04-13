@@ -27,6 +27,7 @@ namespace COTG.Game
 		Shipping = 1 << 21,
 		Hub = 1 << 22,
 		LeaveMe = 1 << 23,
+		Storage = 1<< 24,
 	}
 	public struct TagInfo
 	{

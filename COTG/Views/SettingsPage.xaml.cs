@@ -541,6 +541,7 @@ namespace COTG.Views
 					   global.Add(CityList.gdWarship);
 				   global.Add(CityList.gdHubs);
 				   global.Add(CityList.gdLeaveMe);
+				   perContinent.Add(CityList.gdStorage);
 
 				   Dictionary<int, List<CityList>  > priorCityLists = new();
 				   HashSet<CityList> processed = new();

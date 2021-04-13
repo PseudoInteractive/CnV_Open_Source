@@ -38,8 +38,8 @@
 		<ToggleSwitch Header="Place Cabins" IsOn="{x:Bind local:SettingsPage.autoBuildCabins, Mode=TwoWay}" OnContent="Build" OffContent="Skip" ToolTipService.ToolTip="If set, cabins will be places when setup is complete" />
 		<winui:NumberBox Header="Cabins" Value="{x:Bind views:SettingsPage.startCabinCount,Mode=TwoWay}" Style="{StaticResource NumberBoxSmall}" ToolTipService.ToolTip="The number of cabins to place if PlaceCabins is set" />
 			<winui:NumberBox Header="TS Castle" Value="{x:Bind views:SettingsPage.tsForCastle, Mode=TwoWay}" Style="{StaticResource NumberBoxSmall}" ToolTipService.ToolTip="When a city has this many TS or more, it will start its castle" />
-			<winui:NumberBox Header="WallLevel" Value="{x:Bind views:SettingsPage.autoWallLevel, Mode=TwoWay}" Style="{StaticResource NumberBoxSmall}"/>
-		<winui:NumberBox Header="TowerLevel" Value="{x:Bind views:SettingsPage.autoTowerLevel,Mode=TwoWay}" Style="{StaticResource NumberBoxSmall}" ToolTipService.ToolTip="How high to automatically build towers during 'do the stuff'.  Towers are placed right before the clastle.  If set to 10, autobuild is turned, on" />
+			<winui:NumberBox Header="WallLevel" Value="{x:Bind views:SettingsPage.autoWallLevel, Mode=TwoWay}" Style="{StaticResource NumberBoxSmall}" ToolTipService.ToolTip="How high to automatically build the wall during 'do the stuff'. The wall is built right before the clastle.  If set to 10, autobuild is turned on.  Values other than 1 or 10 are not guaranteed"/>
+		<winui:NumberBox Header="TowerLevel" Value="{x:Bind views:SettingsPage.autoTowerLevel,Mode=TwoWay}" Style="{StaticResource NumberBoxSmall}" ToolTipService.ToolTip="How high to automatically build towers during 'do the stuff'.  Towers are placed right before the clastle.  If set to 10, autobuild is turned on. Values other than 1 or 10 are not guaranteed" />
 			<winui:NumberBox Header="Scout Towers" Value="{x:Bind views:SettingsPage.scoutpostCount,Mode=TwoWay}" Style="{StaticResource NumberBoxSmall}" ToolTipService.ToolTip="The number of scout towers to place.  They are placed with the castle  during 'do the stuff'" />
 
 			

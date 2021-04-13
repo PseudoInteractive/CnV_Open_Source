@@ -256,7 +256,7 @@ namespace COTG.Draw
 			var city1 = buildCityOrigin + citySpan;
 			draw.AddQuad(Layer.tileCity - 2, city.isOnWater ? cityWallsWater : cityWallsLand, city0.WToCamera(), city1.WToCamera(), iAlpha.AlphaToAll(),  (0f,0f,0f,0f) );
 
-			if(build.isLayoutValid && !CityBuild.isPlanner)
+			if(build.isLayoutValid )
 			{
 				try
 				{
@@ -268,11 +268,32 @@ namespace COTG.Draw
 							if (!CityBuild.IsBuildingSpot(bspot) || (cx==0&&cy==0) || bspot==0 )
 								continue; // wall
 
-							(var bid,var bd) = build.BFromOverlay((cx, cy));
-							if (bd.isRes)
-								bid = 0;
+							int bid;
+							BuildingDef bd;
+							if (CityBuild.isPlanner)
+							{
+								var bs = city.buildings[bspot];
+								if(bs.isEmpty)
+								{
+									continue;
+								}
+								bid = bs.bid;
+								bd = bs.def;
+						
+							}
+							else
+							{
+								(bid,bd)=build.BFromOverlay((cx, cy));
+								if (bd.isRes)
+									bid = 0;
+							}
 							var current =  postBuildings[bspot];
-							var currentBid = current.isBuilding ? current.def.bid : 0;
+							var currentBid = current.def.bid;
+							if (!CityBuild.isPlanner)
+							{
+								if (!current.isBuilding)
+									currentBid = 0;
+							}
 							if (currentBid == bid)
 								continue;
 

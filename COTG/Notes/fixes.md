@@ -66,3 +66,7 @@
  - **Fix** The _Update City Groups_ function was misbehaving
 ### 2021/4/7
  - **New** Setup City sequence allows you to choose a layout (sharestring)
+### 2021/4/12
+ - **New** Build menu displays whether or not cities are currently building and their current stage
+  - if they are not building, you can right click on the city icon and select "Do the stuff" 
+  - Shortcut is to click on their build stage (hyperlink, i.e. 'cabins complete' )

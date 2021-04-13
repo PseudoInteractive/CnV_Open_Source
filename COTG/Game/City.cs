@@ -1365,10 +1365,10 @@ namespace COTG.Game
 			_new,
 			noLayout,
 			setup,
-			buildingCabins,
-			cabinsComplete,
-			initialBuildings,
-			initialBuildingsComplete,
+			cabins,
+			cabinsDone,
+			mainBuildings,
+			preTeardown,
 			teardown,
 			complete,
 			pending,
@@ -1521,17 +1521,17 @@ namespace COTG.Game
 				return BuildStage.setup;
 
 			if (bc.townHallLevel < 10 || bc.unfinishedCabins>0)
-				return BuildStage.buildingCabins;
+				return BuildStage.cabins;
 			if (bc.cabins >= bc.buildings + 4)
 			{
-				return BuildStage.cabinsComplete;
+				return BuildStage.cabinsDone;
 			}
 			if (bc.cabins >= SettingsPage.startCabinCount || bc.buildings < 99)
 			{
 				if (bc.unfinishedBuildings > 0 || bc.buildings < 99)
-					return BuildStage.initialBuildings;
+					return BuildStage.mainBuildings;
 				else
-					return BuildStage.initialBuildingsComplete;
+					return BuildStage.preTeardown;
 			}
 
 			if (bc.cabins > 0 || bc.buildings < 100)
@@ -1684,6 +1684,7 @@ namespace COTG.Game
 
 		public static GroupDef gdLeaveMe = new GroupDef("LeaveME", new[] { "leaveme" });
 		public static GroupDef gdHubs = new GroupDef("Hubs", new[] { "hub" });
+		public static GroupDef gdStorage = new GroupDef("Storage", new[] { "storage" });
 		public static GroupDef gdShipper = new GroupDef("Shipper", new[] { "shipping", "shipper" });
 		public static GroupDef gdWarship = new GroupDef("Warships", new[] { "warship" });
 		public static GroupDef gdGalley = new GroupDef("Galleys", new[] { "galley" });

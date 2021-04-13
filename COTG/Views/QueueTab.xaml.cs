@@ -334,7 +334,7 @@ namespace COTG.Views
 				return true;
 			}
 			Assert(city.isBuild);
-			if (stage == City.BuildStage.buildingCabins)
+			if (stage == City.BuildStage.cabins)
 			{
 				if(bc.cabins >= SettingsPage.startCabinCount)
 				{
@@ -402,7 +402,7 @@ namespace COTG.Views
 				case City.BuildStage.noLayout:
 				case City.BuildStage._new:
 				case City.BuildStage.setup:
-				case City.BuildStage.buildingCabins:
+				case City.BuildStage.cabins:
 					{
 						if (bc.cabins < SettingsPage.startCabinCount || (bc.storeHouses == 0))
 						{
@@ -464,8 +464,8 @@ namespace COTG.Views
 						}
 					}
 					break;
-				case BuildStage.cabinsComplete:
-				case City.BuildStage.initialBuildings:
+				case BuildStage.cabinsDone:
+				case City.BuildStage.mainBuildings:
 					{
 						//var c = RandomCitySpot();
 						var message = string.Empty;
@@ -629,7 +629,7 @@ namespace COTG.Views
 
 						break;
 					}
-				case City.BuildStage.initialBuildingsComplete:
+				case City.BuildStage.preTeardown:
 				case City.BuildStage.teardown:
 					{
 						const int maxCommands = 14;

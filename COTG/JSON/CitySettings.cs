@@ -138,7 +138,7 @@ namespace COTG.JSON
 					if (SettingsPage.autoTowerLevel == 10)
 						split[27] = "1";
 				}
-				var isHub = spot.HasTag(Tags.Hub);
+				var isHub = spot.HasTag(Tags.Hub) || spot.HasTag(Tags.Storage);
 
 				if (setResources)
 				{
@@ -147,7 +147,7 @@ namespace COTG.JSON
 					split[35] = reqIron.ToString();
 					split[36] = reqFood.ToString();
 				}
-				if (setTargetHub)
+				if (setTargetHub && !isHub)
 				{
 					split[41] = "0"; // use a different city for all sends
 									 // hubs dont send by default

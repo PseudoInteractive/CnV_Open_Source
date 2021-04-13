@@ -867,7 +867,7 @@ namespace COTG
 
 				// if (City.IsMine(cityId))
 				{
-					Spot.SetFocus(cityId, scrollToInUI, select);
+					Spot.SetFocus(cityId, scrollToInUI, select,true,lazyMove);
 				}
 
 				// if (JSClient.IsWorldView())
