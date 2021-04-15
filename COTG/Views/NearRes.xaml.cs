@@ -34,7 +34,13 @@ namespace COTG.Views
 	{
 		public static NearRes instance;
 		public static bool IsVisible() => instance.isVisible;
-		public bool viaWater { get; set; } = false;
+		bool _viaWater;
+		public bool viaWater { get =>_viaWater;
+			set {
+				_viaWater = value;
+				DoRefresh(true);
+			} }
+		
 		public City target;
 		public float filterTime = 6;
 		public float _filterTime { get => filterTime; set { filterTime = value; DoRefresh(); } }  // defenders outside of this window are not included
@@ -56,7 +62,11 @@ namespace COTG.Views
 
 		public Resources send;
 
+		public Resources reserve = new Resources(100000,100000,100000,100000);
+		public int reserveCarts { get; set; } = 100;
+		public int reserveShips { get; set; } = 0;
 
+		public int GetTransport(City city) => viaWater ? (city.shipsHome-reserveShips) * 10000 : (city.cartsHome-reserveCarts) * 1000;
 
 		public void RefreshSupportByRes()
 		{
@@ -69,8 +79,15 @@ namespace COTG.Views
 			}
 			else
 			{
+				selected = ResSource.dummy;
 				selectedCommands.Visibility = Visibility.Collapsed;
 			}
+			OnPropertyChanged(nameof(targetIcon));
+			OnPropertyChanged(nameof(sendWood));
+			OnPropertyChanged(nameof(sendStone));
+			OnPropertyChanged(nameof(sendIron));
+			OnPropertyChanged(nameof(sendFood));
+
 		}
 
 		public static void GetSelected(List<int> rv)
@@ -172,9 +189,11 @@ namespace COTG.Views
 
 		}
 
-		public async  Task DoRefresh()
+		public async  Task DoRefresh(bool resetValues=false)
 		{
 			await UpdateTradeStuff();
+			if (resetValues)
+				supporters.Clear();
 
 			//supportGrid.ItemsSource = null;
 			if (target != null && target.isCityOrCastle)
@@ -208,12 +227,12 @@ namespace COTG.Views
 					var ti = city.tradeInfo;
 					if (viaWater)
 					{
-						if (!city.ComputeShipTravelTime(target.cid, out dt) || dt.TotalHours > filterTime || city.ships < filterShipsHome)
+						if (!city.ComputeShipTravelTime(target.cid, out dt) || dt.TotalHours > filterTime || city.shipsHome < filterShipsHome+reserveShips || city.res.Sub(reserve).sum < filterResHome)
 							continue;
 					}
 					else
 					{
-						if (!city.ComputeCartTravelTime(target.cid, out dt) || dt.TotalHours > filterTime || city.carts < filterCartsHome)
+						if (!city.ComputeCartTravelTime(target.cid, out dt) || dt.TotalHours > filterTime || city.cartsHome < filterCartsHome+reserveCarts || city.res.Sub(reserve).sum < filterResHome)
 							continue;
 
 					}
@@ -243,8 +262,8 @@ namespace COTG.Views
 					{
 						var info = sup.info;
 						var city = sup.city;
-						var shipping = viaWater ? city.shipsHome * 10000 : city.cartsHome * 1000;
-						var send = sup.city.res.Min(r);
+						var shipping = viaWater ? (city.shipsHome-reserveShips) * 10000 : (city.cartsHome-reserveCarts) * 1000;
+						var send = sup.city.res.Sub(reserve).Min(r);
 						var sum = send.sum;
 
 						if (shipping < sum)
@@ -269,7 +288,7 @@ namespace COTG.Views
 			}
 			OnPropertyChanged(nameof(targetIcon));
 			OnPropertyChanged(nameof(targetName));
-
+			
 		}
 
 		public async override void VisibilityChanged(bool visible)
@@ -338,22 +357,27 @@ namespace COTG.Views
 				RefreshSupportByRes();
 				supporter.NotifyChange();
 			});
+			AApp.AddItem(flyout, "Recalc", (_, _) =>
+			{
+				supporter.initialized = false;
+				DoRefresh();
+			});
 			AApp.AddItem(flyout, "Max", (_, _) =>
 			{
 				var info = supporter.info;
 				var city = supporter.city;
-				var res = supporter.city.res.sum;
+				var res = supporter.city.res.Sub(reserve);
 				var viaWater = NearRes.instance.viaWater;
-				var shipping = viaWater ? city.shipsHome * 10000 : city.cartsHome * 1000;
-				if (shipping > res)
+				var shipping = viaWater ? (city.shipsHome-reserveShips) * 10000 : (city.cartsHome-reserveCarts) * 1000;
+				if (shipping > res.sum)
 				{
-					supporter.res = supporter.city.res;  // we can send all of it
+					supporter.res = res;  // we can send all of it
 				}
 				else
 				{
-					var ratio = shipping / (float)res;
+					var ratio = shipping / (float)res.sum;
 
-					supporter.res = supporter.city.res.Scale(ratio);
+					supporter.res = res.Scale(ratio);
 
 				}
 
@@ -385,6 +409,7 @@ namespace COTG.Views
 			{
 				Note.Show($"Something changed, please refresh and try again");
 			}
+			s.NotifyChange();
 			DoRefresh();
 	//		Analytics.TrackEvent("NearResSend");
 
@@ -438,20 +463,20 @@ namespace COTG.Views
 			}
 		}
 
-		private void NumberBox_ValueChanged(Microsoft.UI.Xaml.Controls.NumberBox sender, Microsoft.UI.Xaml.Controls.NumberBoxValueChangedEventArgs args)
+		private async void NumberBox_ValueChanged(Microsoft.UI.Xaml.Controls.NumberBox sender, Microsoft.UI.Xaml.Controls.NumberBoxValueChangedEventArgs args)
 		{
 		//	supporters.Clear();
 
-			DoRefresh();
+			await DoRefresh();
 			supporters.NotifyReset();
 		}
 
-		private void ToggleSwitch_IsEnabledChanged(object sender, DependencyPropertyChangedEventArgs e)
-		{
-		//	supporters.Clear();
-			DoRefresh();
-			supporters.NotifyReset();
-		}
+		//private async void ToggleSwitch_IsEnabledChanged(object sender, DependencyPropertyChangedEventArgs e)
+		//{
+		//	//	supporters.Clear();
+		//	await DoRefresh();
+		//	supporters.NotifyReset();
+		//}
 
 
 
@@ -460,7 +485,7 @@ namespace COTG.Views
 			selected.res[id] = selected.ResMax(id);
 			var viaWater = NearRes.instance.viaWater;
 			var info = selected.info;
-			var transport = selected.city.GetTransport(viaWater);
+			var transport = GetTransport(selected.city);
 			if (viaWater)
 				transport -= (selected.res[id] + 9999) / 10000 * 10000;
 			else
@@ -485,7 +510,42 @@ namespace COTG.Views
 			}
 			selected.NotifyChange();
 		}
-
+		int sendWood
+		{
+			get => selected.res[0];
+			set
+			{
+				selected.res[0] = value;
+				selected.NotifyChange();
+			}
+		}
+		int sendStone
+		{
+			get => selected.res[1];
+			set
+			{
+				selected.res[1] = value;
+				selected.NotifyChange();
+			}
+		}
+		int sendIron
+		{
+			get => selected.res[2];
+			set
+			{
+				selected.res[2] = value;
+				selected.NotifyChange();
+			}
+		}
+		int sendFood
+		{
+			get => selected.res[3];
+			set
+			{
+				selected.res[3] = value;
+				selected.NotifyChange();
+			}
+		}
 
 		private void MaxWoodClick(object sender, RoutedEventArgs e)
 		{

@@ -50,7 +50,7 @@ namespace COTG.Views
 		public static bool fetchFullHistory = true;
 		public static bool? autoBuildOn = true;
 		public static bool setRecruit = true;
-		public static bool deferredBuild;
+		public static bool extendedBuild=true;
 		public static float planet = 0.5f;
 		public static float parallax = 0.5f;
 		public static string hubCitylistName = "Hubs";
@@ -71,6 +71,7 @@ namespace COTG.Views
 		public static bool sendIron = true;
 		public static bool sendFood = true;
 		public static int tsForCastle = 22000;
+		public static int tsForSorcTower = 32000;
 		public static bool showDungeonsInRegionView = false;
 		public static bool applyTags=true;
 		public static bool setHub = true;
@@ -82,12 +83,12 @@ namespace COTG.Views
 		public static float fontScale = 0.5f;
 		public static float musicVolume = 0.5f;
 		public static bool? autoBuildWalls=true;
-		
+		public static float minDungeonProgress = 5;
 		public static int autoWallLevel = 1;
 		public static int autoTowerLevel = 1;
 		public static int scoutpostCount=2;
-
-
+		public static bool returnRaidsBeforeSend;
+		public static float[] raidSteps;
 		public static bool[] includeRaiders = new[] {
 				false, false,true,true,
 				true,true,true,false,
@@ -210,7 +211,9 @@ namespace COTG.Views
 			}
 
 		}
-		float raidCarry { get => Raiding.desiredCarry; set => Raiding.desiredCarry = value; }
+		public static float raidCarryMin = 115;
+		public static float raidCarryMax = 180;
+		public static int intialStorehouses=1;
 		public static bool IsThemeWinter()
 		{
 			return theme == Theme.louWinter;
@@ -223,6 +226,11 @@ namespace COTG.Views
 			//  hubCitylistName = st.Read(nameof(hubCitylistName), "Hubs");
 			var props = typeof(SettingsPage).GetFields(System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.DeclaredOnly);
 			var st = App.Settings();
+			if (!st.Values.ContainsKey("currentVersion") )
+			{
+				st.SaveString("currentVersion", "0");
+			}
+			
 			foreach (var p in props)
 			{
 				try
@@ -249,7 +257,6 @@ namespace COTG.Views
 				//sendStone = st.Read(nameof(sendWood), true);
 				//sendIron = st.Read(nameof(sendIron), true);
 				//sendFood = st.Read(nameof(sendFood), true);
-				Raiding.desiredCarry = st.Read(nameof(raidCarry), Raiding.desiredCarry);
 				//reserveCarts = st.Read(nameof(reserveCarts), reserveCarts);
 				DonationTab.reserveCarts = st.Read(nameof(DonationTab.reserveCarts), 800);
 				DonationTab.reserveCartsPCT = st.Read(nameof(DonationTab.reserveCartsPCT), 0.0625f);
@@ -267,8 +274,8 @@ namespace COTG.Views
 				SetSoundOn(soundOn);
 				ElementSoundPlayer.Volume = volume;
 				SetSpatialOn(spatialOn);
-				
 
+				DungeonView.Initialize();
 			}
 			catch (Exception e)
 			{
@@ -297,7 +304,7 @@ namespace COTG.Views
 					st.SaveT(p.Name, p.FieldType, p.GetValue(null));
 
 				}
-				st.Save(nameof(raidCarry), Raiding.desiredCarry);
+				//6st.Save(nameof(raidCarry), Raiding.desiredCarry);
 
 				//  st.Save(nameof(fetchFullHistory), fetchFullHistory);
 				////  st.Save(nameof(TipsSeen), TipsSeen.instance);
@@ -802,6 +809,13 @@ namespace COTG.Views
 		private void raidsVisibleMaybe(object sender, RoutedEventArgs e)
 		{
 			raidsVisible = -1;
+		}
+
+		
+		private void VersionTapped(object sender, RoutedEventArgs e)
+		{
+			instance.Hide();
+			JSClient.ShowWhatsNew();
 		}
 	}
 }

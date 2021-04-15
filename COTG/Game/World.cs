@@ -1120,6 +1120,9 @@ namespace COTG.Game
 			state = State.completed;
 			// Queue up another one
 			App.QueueIdleTask(RefreshWorldDataIdleTask, 30 * 60 * 1000);  // 5 minutes - todo: change this to 30 minutes
+			
+			
+			SpotTab.LoadFromPriorSession();
 
 		}
 

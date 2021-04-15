@@ -48,66 +48,13 @@
 							IsTextScaleFactorEnabled="False"
 							GroupPanelPosition="Bottom"
 							SelectionUnit="Row"
-							RowDetailsDisplayMode="Single"
 							Tag="Raid"
 							ScrollViewer.VerticalScrollMode="Enabled"
 							ScrollViewer.HorizontalScrollMode="Enabled"
 							ScrollViewer.HorizontalScrollBarVisibility="Visible"
 							ScrollViewer.VerticalScrollBarVisibility="Visible"
 							>
-<tg:RadDataGrid.RowDetailsTemplate>
-        <DataTemplate>
-            <tg:RadDataGrid ItemsSource="{Binding dungeons}"
-                              UserGroupMode="Disabled"
-							ColumnResizeHandleDisplayMode="Always"
-							ColumnDataOperationsMode="Inline"
-							IsTabStop="True"
-							CanUserChooseColumns="False"
-							UserFilterMode="Disabled"
-							IsTextScaleFactorEnabled="False"
-							SelectionUnit="Row"
-							AlternationStep="2"
-							Margin="4,4,8,16"
-							FontSize="{StaticResource MediumFontSize}"
-							RowHeight="{StaticResource GridRowHeight}"
-							Tag="Dungeons"
-                              AutoGenerateColumns="False">
-				<tg:RadDataGrid.Commands>
-					<model:DungeonTapCommand />
-				</tg:RadDataGrid.Commands>
-                <tg:RadDataGrid.Columns>
-							<tg:DataGridTextColumn PropertyName="dispatch"
-										   CellContentStyle="{StaticResource RightAlignLink}"
-											   SizeMode="Auto"
-										   Tip="Click here to send raids" />
 
-							<tg:DataGridTextColumn PropertyName="plan"
-										   CellContentStyle="{StaticResource RightAlignLink}"
-											   SizeMode="Auto"
-										   Tip="Click here to send raids" />
-					<tg:DataGridNumericalColumn PropertyName="dist"
-												CellContentStyle="{StaticResource RightAlign}"
-											   Width="36"
-											   SizeMode="Fixed"
-												Tip="Distance to dungeon" />
-					<tg:DataGridNumericalColumn PropertyName="level"
-												  SizeMode="Auto"
-												CellContentStyle="{StaticResource RightAlign}" />
-					<tg:DataGridNumericalColumn PropertyName="completion"
-												Tip="How worn out the dungeon is&#x0a;When this reaches 0 the dungeon disappears and troops stop raiding&#x0a;Prefering dungeons with lower completion is a way to prevent raid carry from falling too far, a form of auto reseting raids"
-												CellContentFormat="{}{0,6:N1}"
-												  SizeMode="Auto"
-												CellContentStyle="{StaticResource RightAlign}" />
-					<tg:DataGridTextColumn PropertyName="kind"
-										     SizeMode="Auto"
-										   CellContentStyle="{StaticResource RightAlign}" />
-					<tg:DataGridTextColumn PropertyName="xy"
-										     SizeMode="Auto"
-										   CellContentStyle="{StaticResource CenterAlignLink}" />
-                </tg:RadDataGrid.Columns>
-            </tg:RadDataGrid>
-        </DataTemplate>
-    </tg:RadDataGrid.RowDetailsTemplate>
 				<tg:RadDataGrid.Commands>
 					<view:CustomDataBindingCompleteCommand />
 					<model:CityGridToggleColumnVisibilityCommand />
@@ -331,70 +278,6 @@
 							   Margin="4"
 							   IsTextSelectionEnabled="True" />
 				</Border>
-
-			</tk:WrapPanel>
-		
-			<tk:WrapPanel x:Name="raidOptionBox"
-							Orientation="Horizontal"
-						  Grid.Row="2"
-						  VerticalAlignment="Center"
-						  TabFocusNavigation="Once">
-				<ComboBox x:Name="raidCarryBox"
-						  Header="Carry%"
-						  SelectionChanged="RaidCarrySelChanged"
-						  
-						  FontSize="{StaticResource MediumFontSize}"
-						  IsTextScaleFactorEnabled="False"
-						  IsEditable="True"
-						  TextSubmitted="RaidCarrySubmitted"
-						  Margin="6,2,6,2" />
-				<winui:DropDownButton x:Name="includeButton"
-									  Content="Include"
-									  Margin="6,18,6,2"
-									  FontSize="{StaticResource MediumFontSize}"
-									  IsTextScaleFactorEnabled="False"
-									  Click="IncludeButtonClick"
-									  Style="{ThemeResource DropDownButtonRevealStyle}"
-									  HorizontalContentAlignment="Center" />
-			<ComboBox x:Name="intervals"
-						  Header="Intervals"
-						  FontSize="{StaticResource MediumFontSize}"
-						  IsTextScaleFactorEnabled="False"
-							SelectedIndex="{x:Bind view:SettingsPage.raidIntervals,Mode=TwoWay}"
-						  Margin="6,2,6,2" >
-				<ComboBoxItem>No delay</ComboBoxItem>
-				<ComboBoxItem>5 Seconds</ComboBoxItem>
-				<ComboBoxItem>15 Seconds</ComboBoxItem>
-				<ComboBoxItem>1 Minute</ComboBoxItem>
-				<ComboBoxItem>15 Minutes</ComboBoxItem>
-				<ComboBoxItem>30 Minutes</ComboBoxItem>
-				<ComboBoxItem>45 Minutes</ComboBoxItem>
-				<ComboBoxItem>1 Hour</ComboBoxItem>
-			</ComboBox>
-			<ToggleSwitch Header="Repeat" Width="90"
-								   IsOn="{x:Bind view:SettingsPage.wantRaidRepeat, Mode=TwoWay}"
-						  OnContent="Yes"
-						  OffContent="Once" />
-			<winui:NumberBox  x:Name="raidFraction"
-								  Header="Use fraction"
-								  Margin="6,2,6,2"
-								  Value="{x:Bind game:Raiding.troopFraction,Mode=TwoWay}"
-								  NumberFormatter="{x:Bind cotg:App.formatter2Digit,Mode=OneTime}"
-								  ValueChanged="RaidFraction_ValueChanged"
-								  SmallChange=".0625"
-								  Style="{StaticResource NumberBoxSmall}" />
-				<ToggleSwitch     Header="Off dungeons" Width="90"
-								  FontSize="{StaticResource MediumFontSize}"
-								  IsOn="{x:Bind view:SettingsPage.raidOffDungeons,Mode=TwoWay}"
-								  OnContent="Include"
-								  OffContent="Exclude"
-								  Margin="6,2,6,2" />
-				<ToggleSwitch     Header="# to Send" Width="90"
-								  FontSize="{StaticResource MediumFontSize}"
-								  IsOn="{x:Bind view:SettingsPage.raidSendExact,Mode=TwoWay}"
-								  OnContent="Enough"
-								  OffContent="All"
-								  Margin="6,2,6,2" />
 
 			</tk:WrapPanel>
 		

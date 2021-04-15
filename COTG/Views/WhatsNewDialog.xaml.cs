@@ -13,5 +13,10 @@ namespace COTG.Views
         //    RequestedTheme = (Window.Current.Content as FrameworkElement).RequestedTheme;
             InitializeComponent();
         }
-    }
+
+		private void ContentDialog_Opened(ContentDialog sender, ContentDialogOpenedEventArgs args)
+		{
+			scrollView.ChangeView(null, scrollView.ScrollableHeight, null);
+		}
+	}
 }

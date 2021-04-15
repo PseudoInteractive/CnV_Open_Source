@@ -63,6 +63,9 @@ namespace COTG.Views
 
 			cityGrid.CurrentItemChanged += CityGrid_CurrentItemChanged;
 
+
+			cityGrid.SelectionChanged += SelectionChanged;
+			cityGrid.ProcessTooltips();
 		}
 
 		private void CityGrid_CurrentItemChanged(object sender, EventArgs e)

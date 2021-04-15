@@ -48,7 +48,7 @@
 							IsTextScaleFactorEnabled="False"
 							GroupPanelPosition="Bottom"
 							SelectionUnit="Row"
-							RowDetailsDisplayMode="Single"
+							
 							Tag="Raid"
 							ScrollViewer.VerticalScrollMode="Enabled"
 							ScrollViewer.HorizontalScrollMode="Enabled"

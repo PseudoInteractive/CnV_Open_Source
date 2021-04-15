@@ -205,7 +205,7 @@ namespace COTG.Views
 		private void OnLoaded(object sender, RoutedEventArgs e)
 		{
 			SystemNavigationManagerPreview.GetForCurrentView().CloseRequested += App.App_CloseRequested; ;
-
+			
 			CityBuild.Initialize();
 		//	Grid.SetColumn(webView, 0);
 			Grid.SetRow(CityBuild.instance, 1);

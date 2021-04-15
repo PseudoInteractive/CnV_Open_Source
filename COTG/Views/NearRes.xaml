@@ -29,27 +29,59 @@
 
 			<Border Style="{StaticResource BorderReveal}">
 				<StackPanel Orientation="Vertical">
-					<TextBlock Text="Desired" />
+					<TextBlock Text="Send" />
 					<tk:WrapPanel Orientation="Horizontal" HorizontalAlignment="Stretch" >
 
 						<my:NumberBox Value="{x:Bind des.wood,Mode=TwoWay}" Style="{StaticResource RightAlignNumberBox}"
 							ValidationMode="InvalidInputOverwritten"
                           ValueChanged="NumberBox_ValueChanged" AcceptsExpression="True"
-                          Header="Wood"  Margin="6,0,6,0" LargeChange="1000000" SmallChange="100000" SpinButtonPlacementMode="Inline" />
+                          Header="Wood"  Margin="6,0,6,0" LargeChange="100000" SmallChange="10000" SpinButtonPlacementMode="Inline" />
 						<my:NumberBox Value="{x:Bind des.stone,Mode=TwoWay}" 
                           ValidationMode="InvalidInputOverwritten"
 						  ValueChanged="NumberBox_ValueChanged"
-                          Header="Stone"  Margin="6,0,6,0" LargeChange="1000000" AcceptsExpression="True" SmallChange="100000" SpinButtonPlacementMode="Inline" />
+                          Header="Stone"  Margin="6,0,6,0" LargeChange="100000" AcceptsExpression="True" SmallChange="10000" SpinButtonPlacementMode="Inline" />
 						<my:NumberBox Value="{x:Bind des.iron,Mode=TwoWay}" Style="{StaticResource RightAlignNumberBox}"
 							ValidationMode="InvalidInputOverwritten"
 									  ValueChanged="NumberBox_ValueChanged"
-                          Header="Iron"  Margin="6,0,6,0"  LargeChange="1000000" AcceptsExpression="True" SmallChange="100000" SpinButtonPlacementMode="Inline" />
+                          Header="Iron"  Margin="6,0,6,0"  LargeChange="100000" AcceptsExpression="True" SmallChange="10000" SpinButtonPlacementMode="Inline" />
 						<my:NumberBox Value="{x:Bind des.food,Mode=TwoWay}" Style="{StaticResource RightAlignNumberBox}"
                           ValidationMode="InvalidInputOverwritten"
 							  ValueChanged="NumberBox_ValueChanged"
-                          Header="Food"  Margin="6,0,6,0"  LargeChange="1000000" AcceptsExpression="True" SmallChange="100000" SpinButtonPlacementMode="Inline" />
+                          Header="Food"  Margin="6,0,6,0"  LargeChange="100000" AcceptsExpression="True" SmallChange="10000" SpinButtonPlacementMode="Inline" />
+						<my:NumberBox Value="{x:Bind reserveCarts,Mode=TwoWay}" Style="{StaticResource RightAlignNumberBox}"
+                          ValidationMode="InvalidInputOverwritten"
+							  ValueChanged="NumberBox_ValueChanged"
+                          Header="Carts"  Margin="6,0,6,0"  LargeChange="1000" AcceptsExpression="True" SmallChange="100" SpinButtonPlacementMode="Inline" />
+						<my:NumberBox Value="{x:Bind reserveShips,Mode=TwoWay}" Style="{StaticResource RightAlignNumberBox}"
+                          ValidationMode="InvalidInputOverwritten"
+							  ValueChanged="NumberBox_ValueChanged"
+                          Header="Ships"  Margin="6,0,6,0"  LargeChange="100" AcceptsExpression="True" SmallChange="10" SpinButtonPlacementMode="Inline" />
 					</tk:WrapPanel >
 				</StackPanel>
+			</Border>
+			<Border Style="{StaticResource BorderReveal}">
+			<StackPanel Orientation="Vertical">
+				<TextBlock Text="Reserve" />
+				<tk:WrapPanel Orientation="Horizontal" HorizontalAlignment="Stretch" >
+
+					<my:NumberBox Value="{x:Bind reserve.wood,Mode=TwoWay}" Style="{StaticResource RightAlignNumberBox}"
+							ValidationMode="InvalidInputOverwritten"
+                          ValueChanged="NumberBox_ValueChanged" AcceptsExpression="True"
+                          Header="Wood"  Margin="6,0,6,0" LargeChange="1000000" SmallChange="100000" SpinButtonPlacementMode="Inline" />
+					<my:NumberBox Value="{x:Bind reserve.stone,Mode=TwoWay}" 
+                          ValidationMode="InvalidInputOverwritten"
+						  ValueChanged="NumberBox_ValueChanged"
+                          Header="Stone"  Margin="6,0,6,0" LargeChange="1000000" AcceptsExpression="True" SmallChange="100000" SpinButtonPlacementMode="Inline" />
+					<my:NumberBox Value="{x:Bind reserve.iron,Mode=TwoWay}" Style="{StaticResource RightAlignNumberBox}"
+							ValidationMode="InvalidInputOverwritten"
+									  ValueChanged="NumberBox_ValueChanged"
+                          Header="Iron"  Margin="6,0,6,0"  LargeChange="1000000" AcceptsExpression="True" SmallChange="100000" SpinButtonPlacementMode="Inline" />
+					<my:NumberBox Value="{x:Bind reserve.food,Mode=TwoWay}" Style="{StaticResource RightAlignNumberBox}"
+                          ValidationMode="InvalidInputOverwritten"
+							  ValueChanged="NumberBox_ValueChanged"
+                          Header="Food"  Margin="6,0,6,0"  LargeChange="1000000" AcceptsExpression="True" SmallChange="100000" SpinButtonPlacementMode="Inline" />
+				</tk:WrapPanel >
+			</StackPanel>
 			</Border>
 			<!--<Border Style="{StaticResource BorderReveal}">
 				<StackPanel Orientation="Vertical">
@@ -80,7 +112,7 @@
 				<tk:WrapPanel Orientation="Horizontal" HorizontalAlignment="Stretch" >
 
 					<ToggleSwitch Header="Send Via" IsOn="{x:Bind viaWater,Mode=TwoWay}" VerticalAlignment="Center" Margin="12"
-                          OffContent="Land" OnContent="Water"  HorizontalAlignment="Center" IsEnabledChanged="ToggleSwitch_IsEnabledChanged"
+                          OffContent="Land" OnContent="Water"  HorizontalAlignment="Center" 
                     />
 					<my:NumberBox Value="{x:Bind _filterTime,Mode=TwoWay}" Style="{StaticResource RightAlignNumberBox}" SpinButtonPlacementMode="Inline"
                           Header="Max Time (hrs)"  Margin="6,0,6,0" AcceptsExpression="True" SmallChange="0.5"
@@ -141,7 +173,7 @@
 				<tk:DataGridTemplateColumn Header="xy" CanUserSort="False">
 					<tk:DataGridTemplateColumn.CellTemplate>
 						<DataTemplate x:DataType="game:ResSource">
-							<HyperlinkButton Content="{x:Bind xy}" Tapped="Coord_Tapped" RightTapped="Image_RightTapped" HorizontalAlignment="Center" FontSize="14" HorizontalContentAlignment="Center"
+							<HyperlinkButton Content="{x:Bind xy, Mode=OneWay}" Tapped="Coord_Tapped" RightTapped="Image_RightTapped" HorizontalAlignment="Center" FontSize="14" HorizontalContentAlignment="Center"
                                                            ToolTipService.ToolTip="Selects support city, right click to bring troops home from raids"
                                              
                                              />
@@ -149,23 +181,23 @@
 					</tk:DataGridTemplateColumn.CellTemplate>
 				</tk:DataGridTemplateColumn>
 				<tk:DataGridTextColumn  Header="Travel" 
-                                        Binding="{Binding travel, Converter={StaticResource TimeConverter},Mode=OneTime}"
+                                        Binding="{Binding travel, Converter={StaticResource TimeConverter},Mode=OneWay}"
                                         IsReadOnly="True" Tag="travel"
                                             CellStyle="{StaticResource CellCenter}"
                                              />
 				<tk:DataGridTextColumn  Header="Carts" 
-                                        Binding="{Binding cartsHome, Converter={StaticResource IntConverter},Mode=OneTime}"
+                                        Binding="{Binding cartsHome, Converter={StaticResource IntConverter},Mode=OneWay}"
                                         IsReadOnly="True" Tag="carts"
                                             CellStyle="{StaticResource CellCenter}"
                                              />
 				<tk:DataGridTextColumn  Header="Ships" 
-                                        Binding="{Binding shipsHome, Converter={StaticResource IntConverter},Mode=OneTime}"
+                                        Binding="{Binding shipsHome, Converter={StaticResource IntConverter},Mode=OneWay}"
                                         IsReadOnly="True" Tag="ships"
                                             CellStyle="{StaticResource CellCenter}"
                                              />
 
 				<tk:DataGridTextColumn  Header="City Name"
-                                        Binding="{Binding name, Mode=OneTime }"
+                                        Binding="{Binding name, Mode=OneWay }"
                                         IsReadOnly="True"
                                             CellStyle="{StaticResource CellLeft}" />
 
@@ -173,7 +205,7 @@
                                        CellStyle="{StaticResource CellRight}" IsReadOnly="True"  Tag="resSend"
                                         />
 
-				<tk:DataGridTextColumn Header="Wood" Binding="{Binding wood,Converter={StaticResource IntConverter}, Mode=OneTime}"
+				<tk:DataGridTextColumn Header="Wood" Binding="{Binding wood,Converter={StaticResource IntConverter}, Mode=TwoWay}"
                                        CellStyle="{StaticResource CellRight}"   />
 				<tk:DataGridTextColumn Header="Stone" Binding="{Binding stone,Converter={StaticResource IntConverter}, Mode=TwoWay}"
                                        CellStyle="{StaticResource CellRight}"   />
@@ -187,7 +219,7 @@
                                        CellStyle="{StaticResource CellCenter}"
                                        IsReadOnly="False"
                                        ToolTipService.ToolTip="Time at which res will arrive"
-                                       Binding="{Binding eta,Converter={StaticResource DateTimeConverter},Mode=OneTime}"
+                                       Binding="{Binding eta,Converter={StaticResource DateTimeConverter},Mode=OneWay}"
                                        />
 
 			</tk:DataGrid.Columns>
@@ -197,11 +229,29 @@
 	
 
 		<Border Style="{StaticResource BorderReveal}" x:Name="selectedCommands" Visibility="Collapsed" Grid.Row="2">
-
+			<StackPanel Orientation="Vertical" >
 			<tk:WrapPanel Orientation="Horizontal" HorizontalAlignment="Stretch" >
 
+				<my:NumberBox Value="{x:Bind sendWood,Mode=TwoWay}" Style="{StaticResource RightAlignNumberBox}" SpinButtonPlacementMode="Inline"
+                          Header="Wood"  Margin="6,0,6,0" AcceptsExpression="True" SmallChange="100000" LargeChange="1000000"
+							ValueChanged="NumberBox_ValueChanged"
+                          />
+				<my:NumberBox Value="{x:Bind sendStone,Mode=TwoWay}" Style="{StaticResource RightAlignNumberBox}" SpinButtonPlacementMode="Inline"
+                          Header="Stone"  Margin="6,0,6,0" AcceptsExpression="True" SmallChange="100000" LargeChange="1000000"
+							ValueChanged="NumberBox_ValueChanged"
+                          />
+				<my:NumberBox Value="{x:Bind sendIron,Mode=TwoWay}" Style="{StaticResource RightAlignNumberBox}" SpinButtonPlacementMode="Inline"
+                          Header="Iron"  Margin="6,0,6,0" AcceptsExpression="True" SmallChange="100000" LargeChange="1000000"
+							ValueChanged="NumberBox_ValueChanged"
+                          />
+				<my:NumberBox Value="{x:Bind sendFood,Mode=TwoWay}" Style="{StaticResource RightAlignNumberBox}" SpinButtonPlacementMode="Inline"
+                          Header="Food"  Margin="6,0,6,0" AcceptsExpression="True" SmallChange="100000" LargeChange="1000000"
+							ValueChanged="NumberBox_ValueChanged"
+                          />
+				</tk:WrapPanel>
+				<tk:WrapPanel Orientation="Horizontal" HorizontalAlignment="Stretch" >
 
-				<Button Content="Max Wood" Click="MaxWoodClick"  Style="{StaticResource ButtonSmall}" />
+					<Button Content="Max Wood" Click="MaxWoodClick"  Style="{StaticResource ButtonSmall}" />
 				<Button Content="No Wood" Click="ZeroWoodClick"  Style="{StaticResource ButtonSmall}"  />
 
 				<Button Content="Max Stone" Click="MaxStoneClick"  Style="{StaticResource ButtonSmall}" />
@@ -216,6 +266,7 @@
 
 
 			</tk:WrapPanel>
+			</StackPanel>
 		</Border>
 	</Grid>
 </local:UserTab>

@@ -138,7 +138,7 @@ namespace COTG.Game
 		}
 		public int ResMax(int type)
 		{
-			return city.res[type].Min(city.GetTransport(NearRes.instance.viaWater)); // TODO
+			return (city.res[type]- NearRes.instance.reserve[type]).Min(NearRes.instance.GetTransport(city)); // TODO
 		}
 
 	public DateTimeOffset eta { get => JSClient.ServerTime() + travel; set => _ = value; }

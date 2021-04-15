@@ -70,3 +70,14 @@
  - **New** Build menu displays whether or not cities are currently building and their current stage
   - if they are not building, you can right click on the city icon and select "Do the stuff" 
   - Shortcut is to click on their build stage (hyperlink, i.e. 'cabins complete' )
+### 2021/4/13
+ - **Update** The raid dungeon lists misbehaved when they expanded so I moved them to a popup
+### 2021/4/13
+ - **Fix** "Do the stuff" did not work properly without extended build queues.  Extended build queues will be on by default
+### 2021/4/13
+ - **Fix** Building towers or walls in a full city would trigger a cabin demo
+### 2021/4/13
+ - **Fix** Build queues not saving
+### 2021/4/13
+ - **Fix** Switching cities right after using 'Do the stuff' would not behave as expected
+ 

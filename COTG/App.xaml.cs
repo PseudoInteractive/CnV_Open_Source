@@ -48,6 +48,7 @@ using MenuFlyout = Windows.UI.Xaml.Controls.MenuFlyout;
 using ToggleMenuFlyoutItem = Windows.UI.Xaml.Controls.ToggleMenuFlyoutItem;
 using MenuFlyoutSubItem = Windows.UI.Xaml.Controls.MenuFlyoutSubItem;
 using static COTG.Debug;
+using Microsoft.Toolkit.Uwp.Helpers;
 
 namespace COTG
 {
@@ -221,7 +222,7 @@ namespace COTG
 		private static ConcurrentQueue<Action> idleTasks = new ConcurrentQueue<Action>();
 		private static ConcurrentQueue<Func<Task>> throttledTasks = new ConcurrentQueue<Func<Task>>();
 
-
+		static DateTimeOffset activeStart = DateTimeOffset.UtcNow;
 		protected override async void OnLaunched(LaunchActivatedEventArgs args)
 		{
 			{
@@ -281,7 +282,7 @@ namespace COTG
 
 			var coreTitleBar = CoreApplication.GetCurrentView().TitleBar;
 			coreTitleBar.ExtendViewIntoTitleBar = false;
-
+			SystemInformation.Instance.TrackAppUse(args);
 			//  UpdateTitleBarLayout(coreTitleBar);
 
 			// Set XAML element as a draggable region.
@@ -518,7 +519,6 @@ namespace COTG
 		{
 			return new Views.ShellPage();
 		}
-
 		private void App_EnteredBackground(object sender, EnteredBackgroundEventArgs e)
 		{
 			Trace("Enter Background");
@@ -532,12 +532,18 @@ namespace COTG
 			//            var deferral = e.GetDeferral();
 			//            await Singleton<SuspendAndResumeService>.Instance.SaveStateAsync();
 			//           deferral.Complete();
+			var t = DateTimeOffset.UtcNow;
+			SystemInformation.Instance.AddToAppUptime(t - activeStart);
+			activeStart = t;
+			
+
 		}
 
 		private void App_Resuming(object sender, object e)
 		{
 			Trace("Resume");
 			isForeground = true;
+			activeStart = DateTimeOffset.UtcNow;
 
 			//         Singleton<SuspendAndResumeService>.Instance.ResumeApp();
 		}
@@ -815,7 +821,8 @@ namespace COTG
 
 		public static CoreCursor cursorDefault = new(CoreCursorType.Arrow, 0);
 		public static CoreCursor cursorQuickBuild = new(CoreCursorType.Cross, 0);
-		public static CoreCursor cursorMove = new(CoreCursorType.SizeAll, 0);
+		public static CoreCursor cursorMoveStart = new(CoreCursorType.SizeNortheastSouthwest, 0);
+		public static CoreCursor cursorMoveEnd = new(CoreCursorType.SizeNorthwestSoutheast, 0);
 		public static CoreCursor cursorLayout = new(CoreCursorType.Pin, 0);
 		public static CoreCursor cursorDestroy = new(CoreCursorType.UniversalNo, 0);
 
@@ -893,7 +900,7 @@ namespace COTG
 		public static async Task<ContentDialogResult> ShowAsync2(this ContentDialog dialog)
 		{
 
-			await popupSema.WaitAsync();
+			await popupSema.WaitAsync().ConfigureAwait(true);
 			try
 			{
 				var result = await dialog.ShowAsync();
@@ -1048,6 +1055,13 @@ namespace COTG
 			menu.Items.Add(rv);
 			return rv;
 		}
+		public static MenuFlyoutItem AddItem(this MenuFlyout menu, string text, bool isChecked, Action<bool> command)
+		{
+			var rv = CreateMenuItem(text, isChecked, command);
+
+			menu.Items.Add(rv);
+			return rv;
+		}
 		public static MenuFlyoutItem AddItem(this MenuFlyoutSubItem menu, string text, bool isChecked, Action<bool> command)
 		{
 			var rv = CreateMenuItem(text, isChecked, command);
@@ -1055,7 +1069,6 @@ namespace COTG
 			menu.Items.Add(rv);
 			return rv;
 		}
-
 		public static MenuFlyoutSubItem AddSubMenu(this MenuFlyout menu, string text)
 		{
 			var rv = new MenuFlyoutSubItem() { Text = text };

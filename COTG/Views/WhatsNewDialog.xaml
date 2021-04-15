@@ -6,6 +6,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 	xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
     Title="Whats New"
+	Opened="ContentDialog_Opened"
     PrimaryButtonText="Done"
 	Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
    BorderBrush="{ThemeResource SystemControlBackgroundBaseLowRevealBorderBrush}"
@@ -14,7 +15,7 @@
 		<x:String x:Key="RunText1" xml:space="preserve">	Build queues are virtually unlimited in length.  The first 16 build commands will be submitted as usual and further commands will be stored and submitted as space becomes available.  This allows you to (for example) lay out your cabins in a single pass without waiting.  The queued commands will continue to be processed when you switch cities, and when you go offline they will pause.  They will resume when you come back online.</x:String>
 	</ContentDialog.Resources>
    
-    <ScrollViewer>
+    <ScrollViewer x:Name="scrollView" x:FieldModifier="public" >
         <StackPanel>
 
 

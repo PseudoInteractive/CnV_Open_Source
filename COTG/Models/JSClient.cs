@@ -30,6 +30,7 @@ using Microsoft.AppCenter;
 using WebView = Windows.UI.Xaml.Controls.WebView;
 using ContentDialog = Windows.UI.Xaml.Controls.ContentDialog;
 using ContentDialogResult = Windows.UI.Xaml.Controls.ContentDialogResult;
+using Microsoft.Toolkit.Uwp.Helpers;
 
 namespace COTG
 {
@@ -2029,7 +2030,7 @@ namespace COTG
 								   {
 									   //   if (jse.TryGetProperty("ts", out _))
 									   //  {
-									   ScanDungeons.Post(cid, city.commandSlots == 0, false);  // if command slots is 0, something was not send correctly
+									   ScanDungeons.Post(cid, city.commandSlots == 0, false,false);  // if command slots is 0, something was not send correctly
 																							   //  }
 								   }
 								   NavStack.Push(cid);
@@ -2249,16 +2250,18 @@ namespace COTG
 					   // await RaidOverview.Send();
 					   App.QueueIdleTask(IncomingOverview.ProcessTask, 1000);
 					   SetStayAlive(SettingsPage.stayAlive);
-						//{
-						//    //var now = DateTime.UtcNow;
-						//    //if (now.Day <= 28 && now.Month==11)
-						//    {
-						App.DispatchOnUIThreadSneaky(ShowWhatsNew);
+					   //{
+					   //    //var now = DateTime.UtcNow;
+					   //    //if (now.Day <= 28 && now.Month==11)
+					   //    {
 					   AppCenter.SetUserId(Player.myName);
+					   if (SystemInformation.Instance.IsAppUpdated)
+					   {
+						   App.DispatchOnUIThreadSneaky(ShowWhatsNew);
+					   }
 					
 					   // 
-					   SettingsPage.pinned = SettingsPage.pinned.ArrayRemoveDuplicates();
-					   SpotTab.LoadFromPriorSession(SettingsPage.pinned);
+					   
 					   App.state = App.State.active;
 				   }
 			   }
@@ -2287,13 +2290,13 @@ namespace COTG
 		}
 		
 		
-		static async void ShowWhatsNew()
+		public static async void ShowWhatsNew()
 		{
 
 			var dialog = new WhatsNewDialog();
 			dialog.DefaultButton = Windows.UI.Xaml.Controls.ContentDialogButton.Primary;
 			dialog.fixesText.Text = new StreamReader((typeof(Fixes).Assembly).GetManifestResourceStream($"COTG.Notes.fixes.md")).ReadToEnd();
-
+			
 			var result = await dialog.ShowAsync2();
 		}
 		private static async void PresenceTimer_Tick(object sender, object e)

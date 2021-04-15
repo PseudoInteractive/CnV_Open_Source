@@ -40,7 +40,6 @@ namespace COTG.Views
 
     public sealed partial class MainPage : UserTab, INotifyPropertyChanged
     {
-        static float[] raidSteps;
         public static MainPage instance;
      
        
@@ -52,7 +51,7 @@ namespace COTG.Views
         //    return rv;
         //}
         public static RadDataGrid CityGrid => instance.cityGrid;
-        const int raidStepCount = 9;
+    
       //  static MenuFlyout cityMenuFlyout;
         public MainPage()
         {
@@ -60,14 +59,7 @@ namespace COTG.Views
             Assert(instance == null);
             instance = this;
             InitializeComponent();
-            raidSteps =  new float[raidStepCount];
-            for (int i=0;i<raidStepCount;++i)
-			{
-                raidSteps[i]=( ( (MathF.Exp((i - 4) * 1.0f / 16.0f) + (-0.032625f,0.032625f).Random())*100.0f).RoundToInt() );
-			}
-            raidSteps[4] = (Raiding.desiredCarry*100.0f).RoundToInt();
-            raidCarryBox.ItemsSource= raidSteps;
-            raidCarryBox.SelectedIndex = 4;
+           
 			cityGrid.SelectionChanged += SelectionChanged;
 			//        var rand = new Random();
 
@@ -94,12 +86,10 @@ namespace COTG.Views
 		private void CityGrid_CurrentItemChanged(object sender, EventArgs e)
         {
             Log("Current item " + sender.ToString());
-			Spot.CloseDungeons();
-
+		
 
 		}
 
-		public static City expandedCity; // city with dungeon list visible if any 
         private void ColumnHeaderTap()
         {
 
@@ -257,18 +247,7 @@ namespace COTG.Views
 			//    instance.dungeonGrid.ItemsSource = dungeons;
 
 		}
-        public static void UpdateRaidPlans()
-        {
-			//// instance.Dispatcher.DispatchOnUIThread(() =>
-			// {
-			//     // trick it
-			//     var temp = instance.dungeonGrid.ItemsSource;
-			//     instance.dungeonGrid.ItemsSource = null;
-			//     instance.dungeonGrid.ItemsSource = temp;
-			// }
-			// // tell UI that list data has changed
-			Dungeon.raidDungeons.NotifyReset();
-		}
+      
 
    
         public event PropertyChangedEventHandler PropertyChanged;
@@ -287,108 +266,11 @@ namespace COTG.Views
        
 
 
-
-        
-		private void RaidCarrySubmitted(ComboBox sender, ComboBoxTextSubmittedEventArgs args)
-		{
-       //     Log("Submit: " + args.Text);
-            if( float.TryParse(args.Text,System.Globalization.NumberStyles.Number,null, out float _raidCarry) )
-			{
-                
-                float bestError = float.MaxValue;
-                var bestId = 0;
-                for(int i=0;i<raidStepCount;++i)
-				{
-                    float d = (_raidCarry - raidSteps[i]).Abs();
-                    if(d < bestError)
-					{
-                        bestError = d;
-                        bestId = i;
-					}
-				}
-                raidSteps[bestId] = _raidCarry;
-                raidCarryBox.ItemsSource = raidSteps;
-  //              raidCarryBox.SelectedValue = _raidCarry;
-                raidCarryBox.SelectedIndex = bestId;
-                //raidSteps;
-                if(SetCarry(_raidCarry))
-                {
-                    //if(raidCity!=null)
-                    //    ScanDungeons.Post(raidCity.cid,false) ;
-                    UpdateRaidPlans();
-                }
-
-            }
-            else
-			{
-                args.Handled = true;
-                Assert(false);
-			}
-
-
-
-		}
-        private static bool SetCarry(float src)
-		{
-            var newVal = (src) * 0.01f;
-            if ((newVal - Raiding.desiredCarry).Abs() <= 1.0f / 256.0f)
-                return false;
-            Raiding.desiredCarry = newVal;
-            SettingsPage.SaveAll();
-            return true;
-        }
-        private void RaidCarrySelChanged(object sender, SelectionChangedEventArgs e)
-		{
-         //   Log("Sel update");
-            if (e.AddedItems != null && e.AddedItems.Count > 0)
-            {
-                if (SetCarry( (float)e.AddedItems[0] ) )
-                {
-                    UpdateRaidPlans(); //Log("Sel changed");
-                    //if (raidCity != null)
-                    //    ScanDungeons.Post(raidCity.cid,false);
-                }
-            }
-        }
-
-        private void IncludeButtonClick(object sender, RoutedEventArgs e)
-        {
-            var button = sender as Microsoft.UI.Xaml.Controls.DropDownButton;
-            var flyout = new MenuFlyout();
-            for (int i = 0; i < ttCount; ++i)
-            {
-                if (IsRaider(i))
-                {
-                    var but = new ToggleMenuFlyoutItem() { IsChecked = SettingsPage.includeRaiders[i], DataContext = (object)i, Text = ttNameWithCaps[i] };
-                    flyout.Items.Add(but);
-                }
-            }
-            flyout.CopyXamlRoomFrom(button);
-            flyout.Closing += Flyout_Closing;
-            flyout.ShowAt(button);
-        }
-
-		private void Flyout_Closing(Windows.UI.Xaml.Controls.Primitives.FlyoutBase sender, Windows.UI.Xaml.Controls.Primitives.FlyoutBaseClosingEventArgs args)
-        {
-            var menu = (sender as MenuFlyout);
-            int counter = 0;
-            for (int i = 0; i < ttCount; ++i)
-            {
-                if (IsRaider(i))
-                {
-                    var but = menu.Items[counter] as ToggleMenuFlyoutItem;
-					SettingsPage.includeRaiders[i] = but.IsChecked;
-                    ++counter;
-                }
-            }
-            Raiding.UpdateTS(true, true);
-        }
-
 		public static void ToggleInfoBoxes(bool on)
 		{
 			var vis = on ? Visibility.Visible : Visibility.Collapsed;
 			instance.raidInfoBox.Visibility = vis;
-			instance.raidOptionBox.Visibility = vis;
+		//	instance.raidOptionBox.Visibility = vis;
 			instance.incomeBox.Visibility = vis;
 		}
 		override public async void VisibilityChanged(bool visible)
@@ -515,14 +397,7 @@ namespace COTG.Views
         //}
 
 
-        private void RaidFraction_ValueChanged(Microsoft.UI.Xaml.Controls.NumberBox sender, Microsoft.UI.Xaml.Controls.NumberBoxValueChangedEventArgs args)
-		{
-			if(JSClient.ppdtInitialized)
-	            Raiding.UpdateTS(true,true);
-
-		}
-
-		
+       
 
         private async void ResetRaids(object sender, RoutedEventArgs e)
         {
@@ -560,7 +435,7 @@ namespace COTG.Views
 				Spot s = Spot.GetOrAdd(cid);
 				if (s is City city)
 				{
-					await ScanDungeons.Post(cid, city.commandSlots==0, true);
+					await ScanDungeons.Post(cid, city.commandSlots==0, true,false);
 				}
 	
 			}
@@ -581,13 +456,9 @@ namespace COTG.Views
 					foreach (Spot s in sel)
 					{
 						newSel.Add(s.cid);
-						if (s == expandedCity)
-							raidVisible = true;
-
+					
 					}
-					if(!raidVisible)
-						Spot.CloseDungeons();
-
+	
 
 					//          Spot.selected.EnterWriteLock();
 

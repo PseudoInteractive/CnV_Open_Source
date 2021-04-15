@@ -184,6 +184,8 @@ namespace COTG.JSON
 			[J("trrep")] public Dictionary<string, int> Trrep { get; set; }
 			[J("defbo")] public Dictionary<string, int> Defbo { get; set; }
 			[J("faith")] public Dictionary<string, int> Faith { get; set; }
+
+		public bool isScoutpost => Warnt != null;
 		}
 
 		public partial struct Bc

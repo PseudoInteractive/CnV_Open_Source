@@ -161,7 +161,7 @@ namespace COTG.Views
 						if (SettingsPage.autoBuildCabins && allowSplat)
 						{
 						// are there any cabins here already?
-							return await QueueTab.Splat(city); ;
+							return await QueueTab.DoTheStuff(city); ;
 						}
 						return true;
 					}

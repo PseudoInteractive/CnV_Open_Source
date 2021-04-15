@@ -121,7 +121,7 @@
       <Version>2.6.0-prerelease.210405001</Version>
     </PackageReference>
     <PackageReference Include="MonoGame.Content.Builder.Task">
-      <Version>3.8.1.1932-develop</Version>
+      <Version>3.8.1.1937-develop</Version>
     </PackageReference>
     <PackageReference Include="NETStandard.Library">
       <Version>2.0.3</Version>
@@ -675,10 +675,7 @@
     <Content Include="Assets\Wide310x150Logo.scale-100.png" />
     <Content Include="Assets\Wide310x150Logo.scale-125.png" />
     <Content Include="Assets\Wide310x150Logo.scale-150.png" />
-    <Content Include="Content\Art\Icons\barracks.png" />
-    <Content Include="Content\Art\Icons\blacksmith.png" />
     <Content Include="Content\Art\Icons\blessed.png" />
-    <Content Include="Content\Art\Icons\castle.png" />
     <Content Include="Content\Art\Icons\castle0.png" />
     <Content Include="Content\Art\Icons\castle0w.png" />
     <Content Include="Content\Art\Icons\castle1.png" />
@@ -691,12 +688,10 @@
     <Content Include="Content\Art\Icons\city1w.png" />
     <Content Include="Content\Art\Icons\city2.png" />
     <Content Include="Content\Art\Icons\city2w.png" />
-    <Content Include="Content\Art\Icons\cityguardhouse.png" />
     <Content Include="Content\Art\Icons\cityll0.png" />
     <Content Include="Content\Art\Icons\cityll1.png" />
     <Content Include="Content\Art\Icons\cityll2.png" />
     <None Include="Content\Art\lineDraw.dds" />
-    <Content Include="Content\Art\Icons\temple.png" />
     <Content Include="Content\Art\Icons\temple0.png" />
     <Content Include="Content\Art\Icons\temple0w.png" />
     <Content Include="Content\Art\Icons\temple1.png" />

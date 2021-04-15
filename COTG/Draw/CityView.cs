@@ -566,20 +566,46 @@ namespace COTG.Draw
 
 		public static void ClearSelectedBuilding()
 		{
-			if (selected.IsValid())
-			{
-				selected = invalidXY;
-				//App.DispatchOnUIThreadSneaky(() =>
-				//{
-				//	var i = Views.CityBuild.instance;
-				//	i.rect.Fill = null;
-				//	i.building.Text = string.Empty;
-				//	i.description.Text = string.Empty;
-				//	i.upgrade.IsEnabled = false;
-				//	i.downgrade.IsEnabled = false;
+			SetSelectedBuilding(invalidXY, isSingleClickAction);
+		}
 
-				//});
+		public static void SetSelectedBuilding( (int x, int y) xy, bool _isSingleClickAction)
+		{
+			if (xy.IsValid())
+			{
+				if (action == CityBuild.Action.moveEnd)
+				{ 
+					// stay here
+				}
+				else if (action == CityBuild.Action.moveStart)
+				{
+					if (_isSingleClickAction)
+					{
+
+						CityBuild.PushSingleAction(CityBuild.Action.moveEnd);
+
+					}
+					else
+					{
+						SetAction(CityBuild.Action.moveEnd);
+					}
+				}
 			}
+			else
+			{
+				if (action == CityBuild.Action.moveEnd)
+				{
+					if (_isSingleClickAction)
+					{
+						RevertToLastAction();
+					}
+					else
+					{
+						SetAction(CityBuild.Action.moveStart);
+					}
+				}
+			}
+			selected = xy;
 		}
 
 	}

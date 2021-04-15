@@ -470,7 +470,7 @@ namespace COTG.Game
 						}
 						break;
 					case nameof(City.buildStage):
-						Splat();
+						DoTheStuff();
 						break;
 					case nameof(xy):
 						ProcessCoordClick(cid, false, modifiers, false);
@@ -497,7 +497,7 @@ namespace COTG.Game
 						break;
 					case nameof(City.dungeonsToggle):
 						{
-							ToggleDungeons(uie as RadDataGrid, false, false);
+							ShowDungeons();
 							wantRaidScan = false;
 							wantSelect = false;
 							break;
@@ -570,27 +570,10 @@ namespace COTG.Game
 			}
 			SpotTab.TouchSpot(cid, modifiers);
 		}
-		public static void CloseDungeons()
+	
+		public async Task ShowDungeons()
 		{
-			if (MainPage.expandedCity != null)
-				MainPage.CityGrid.HideRowDetailsForItem(MainPage.expandedCity);
-			MainPage.expandedCity = null;
-		}
-		public async void ToggleDungeons(RadDataGrid uie, bool forceClose = false, bool forceOpen = false)
-		{
-			if ((forceClose || MainPage.expandedCity == this) && !forceOpen)
-			{
-				if (MainPage.expandedCity != null)
-					(uie).HideRowDetailsForItem(MainPage.expandedCity);
-				MainPage.expandedCity = null;
-			}
-			else
-			{
-				MainPage.expandedCity = this as City;
-				await ScanDungeons.Post(cid, true, false);
-				(uie).ShowRowDetailsForItem(this);
-
-			}
+			await ScanDungeons.Post(cid, true, false,true);
 		}
 
 		public string ToTsv()
@@ -1262,7 +1245,7 @@ namespace COTG.Game
 						{
 							var b = City.GetBuild();
 							b.BuildingsCacheToShareString();
-							b.SaveLayout();
+							await b.SaveLayout();
 							CityBuild.isPlanner = false;
 						}
 						City.build = cid;
@@ -1282,6 +1265,7 @@ namespace COTG.Game
 						{
 							GetCity.Post(cid, (_, _) => CityBuild._isPlanner = true);
 						}
+						CityBuildQueue.UnblockQueue(cid);
 					}
 					finally
 					{
@@ -1455,11 +1439,10 @@ namespace COTG.Game
 				case VirtualKey.Space:
 					{
 						if (spot.canVisit)
-							spot.ToggleDungeons(MainPage.CityGrid);
+							spot.ShowDungeons();
 						else
 							spot.SetFocus(false);
 						return true;
-						break;
 					}
 				
 				default:
@@ -1602,7 +1585,11 @@ namespace COTG.Game
 				aExport.AddItem( "Defense Sheet", ExportToDefenseSheet);
 				AApp.AddItem(flyout, "Send Res", (_, _) => Spot.JSSendRes(cid));
 				AApp.AddItem(flyout, "Near Res", ShowNearRes);
-				AApp.AddItem(flyout, "Do the stuff", (_, _) => Splat());
+				if (isFriend)
+				{
+					AApp.AddItem(flyout, "Do the stuff", (_, _) => DoTheStuff());
+					flyout.AddItem( "Ministers", (this as City).ministersOn,  (this as City).SetMinistersOn );
+				}
 			}
 			else if (this.isDungeon || this.isBoss)
 			{
@@ -1632,11 +1619,11 @@ namespace COTG.Game
 
 
 		}
-		public async Task Splat()
+		public async Task DoTheStuff()
 		{
-			await App.DispatchOnUIThreadExclusive(cid,() =>
+			await App.DispatchOnUIThreadExclusive(cid,async () =>
 			{
-				return QueueTab.Splat(this as City);
+				await QueueTab.DoTheStuff(this as City);
 			});
 		}
 		public static async void InfoClick(object sender, RoutedEventArgs e)

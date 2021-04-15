@@ -145,7 +145,7 @@ namespace COTG.Game
             if (city == null)
                 return true;
             var r = ComputeIdealReps(d,city);
-            if (r.reps <= 0 || r.averageCarry < 0.5f)
+            if (r.reps <= 0 || r.averageCarry < SettingsPage.raidCarryMin || r.averageCarry >= SettingsPage.raidCarryMax  || d.completion <= SettingsPage.minDungeonProgress)
                 return true;
 			var intervals = SettingsPage.raidIntervals;
 
@@ -177,11 +177,7 @@ namespace COTG.Game
 			}
 
              city.NotifyChange(nameof(city.tsRaid));
-			if (clearDungeonList)
-			{
-				if (MainPage.expandedCity!= null)
-					MainPage.expandedCity.ToggleDungeons(MainPage.instance.cityGrid,true,false);
-			}
+			
             if(Raid.test)
             {
                 await Task.Delay(1000);
@@ -238,8 +234,8 @@ namespace COTG.Game
                 nextAllowedTsHomeUpdate = nextAllowedTsUpdate; // stall this one too
                 await RestAPI.troopsOverview.Post();
 
-                if(updateRaids && MainPage.IsVisible() && City.CanVisit(Spot.focus))
-                   await ScanDungeons.Post(Spot.focus, true, false);
+                if(updateRaids && DungeonView.IsVisible() && City.CanVisit(Spot.focus))
+                   await ScanDungeons.Post(Spot.focus, true, false,false);
 
             }
         }

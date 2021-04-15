@@ -19916,7 +19916,7 @@ function outer(){
 
 		function M5V() {
 			E6k.R6();
-			if (ppdt[__s[+V9y]][1] * ("1000" | 448) >= currentTime()) {
+			if (true) {
 				$(_s(
 					v7p >> 2063435360))
 					.attr("disabled", ![]);
@@ -20878,7 +20878,7 @@ function outer(){
 		}
 
 		function z5V() {
-			if (ppdt[__s[V9y | 2336]][1] * ("1000" | 128) >= currentTime()) {
+			if (true) {
 				$(__s[+v7p])
 					.attr("disabled", ![]);
 				$(__s[+v7p])
@@ -21643,9 +21643,9 @@ function outer(){
 				.tu;
 			var I0D = city.tq.length;
 			var H0D = 0;
-			if (ppdt[__s[+V9y]][2] * (1000) >= currentTime()) var
-				j0D = 16;
-			else var j0D = 6;
+			//if (ppdt[__s[+V9y]][2] * (1000) >= currentTime()) var
+			var	j0D = 16;
+			//else var j0D = 6;
 			if (w0D < x0D) {
 				$(__s[492])
 					.css(__s[+S2y], __s[M6p - 0]);
@@ -23494,7 +23494,7 @@ function outer(){
 			i0F();
 			var I5Z = 0;
 			E6k.y6();
-			if (ppdt[__s[+V9y]][1] * ("1000" | 936) < currentTime()) {
+			if (false) {
 				var w5Z = __s[e2y * 1];
 				$(__s[4089])
 					.text(__s[+e2y]);
@@ -23506,7 +23506,7 @@ function outer(){
 				$(__s[4089])
 					.text(__s[2482] + j5Z);
 			}
-			if (ppdt[__s[+V9y]][2] * 1000 < currentTime()) {
+			if (false) {
 				var w5Z = _s(
 					e2y ^ 0);
 				$(__s[6177])
@@ -23519,7 +23519,7 @@ function outer(){
 				$(__s[6177])
 					.text(__s[2482] + j5Z);
 			}
-			if (ppdt[__s[+V9y]][3] * (1000) < currentTime()) {
+			if (false) {
 				var
 					w5Z = __s[e2y - 0];
 				$(__s[6558])
@@ -23532,7 +23532,7 @@ function outer(){
 				$(__s['6558' | 2184])
 					.text(__s[2482] + j5Z);
 			}
-			if (ppdt[__s[V9y << 1973988960]][4] * 1000 < currentTime()) {
+			if (false) {
 				var
 					w5Z = __s[e2y - 0];
 				$(__s[2386])
@@ -23549,9 +23549,7 @@ function outer(){
 				.prop(__s[286], !![]);
 			else $(__s[2341])
 				.prop(__s[286], !1);
-			if (city.mo !== undefined && (ppdt[__s[V9y * 1]][1] * (1000) >
-				currentTime() || ppdt[__s[+V9y]][2] * (1000) > currentTime() || ppdt[__s[+V9y]][+
-				'3'] * (1000) > currentTime() || ppdt[__s[V9y | 2068]][4] * 1000 > currentTime())) {
+			if (city.mo !== undefined && (true || true || true || true)) {
 				n7F();
 				O0F();
 				F2F();
@@ -23691,8 +23689,7 @@ function outer(){
 				.css("display", "none");
 			$(__s[U9y * 1])
 				.css("display", "none");
-			if (ppdt[__s[V9y * 1]][1] * (1000) >=
-				currentTime()) {
+			if (true) {
 				var t1U = "16" | 16;
 				$(__s[b04 - 0])
 					.attr("disabled", !!0);
@@ -23747,7 +23744,7 @@ function outer(){
 				var k6U = city.bq.length;
 				var e6U = y1U * 10;
 				if (
-					ppdt[__s[V9y & 2147483647]][1] * 1000 >= currentTime()) {
+					true) {
 					var t1U = 16;
 					$(__s[+b04])
 						.attr("disabled", !{});
@@ -24756,7 +24753,7 @@ function outer(){
 							var K3U =
 								city.bq.length;
 							var S3U = A3U * 10;
-							if (ppdt[__s[+V9y]][1] * 1000 >= currentTime()) {
+							if (true) {
 								var
 									X3U = 16;
 								$(__s[+h04])
@@ -24766,8 +24763,13 @@ function outer(){
 								$(__s[+h04])
 									.attr("disabled", !![]);
 							}
+							if (testFlag)
+		{
+  I3U = 0;
+  t3U = 0;
+  }
 							if (r3U <= X3U && (l3U <= S3U || t3U == 1) && i3U >= C3U &&
-								W3U >= z3U && I3U == 0) {
+								W3U >= z3U && (I3U == 0 || (testFlag)) ) {
 								$(__s[+k04])
 									.prop("disabled", !{});
 								$(__s[k04 ^ 0])
@@ -31305,7 +31307,7 @@ function outer(){
 					.show();
 			}
 			var W3w = city.tq.length;
-			if (ppdt[__s[+V9y]][2] * 1000 >= currentTime()) var
+			if (true) var
 				T3w = 16;
 			else var T3w = 6;
 			$(__s[6206])
@@ -39907,25 +39909,25 @@ function outer(){
 						e2();
 						$(__s[3362])
 							.toggle();
-						if (ppdt[__s[+V9y]][1] * 1000 < currentTime()) $(__s[t2m >> 122035200])
+						if (false) $(__s[t2m >> 122035200])
 							.closest(__s[+J2m])
 							.css("display", "none");
 						else $(__s[+t2m])
 							.closest(__s[+J2m])
 							.show();
-						if (ppdt[__s[+V9y]][2] * 1000 < currentTime()) $(__s[+T2m])
+						if (false) $(__s[+T2m])
 							.closest(__s[+J2m])
 							.css("display", "none");
 						else $(__s[+T2m])
 							.closest(__s[+J2m])
 							.show();
-						if (ppdt[__s[+V9y]][3] * 1000 < currentTime()) $(__s[I4y * 1])
+						if (false) $(__s[I4y * 1])
 							.closest(__s[+J2m])
 							.css("display", "none");
 						else $(__s[I4y ^ 0])
 							.closest(__s[J2m | 109])
 							.show();
-						if (ppdt[__s[V9y ^ 0]][4] * 1000 < currentTime()) $(__s[x2m * 1])
+						if (false ) $(__s[x2m * 1])
 							.closest(__s[J2m * 1])
 							.css("display", "none");
 						else $(__s[x2m * 1])
@@ -44849,8 +44851,7 @@ function outer(){
 					.attr("s", L6U);
 				$(__s[f24 >> 1255255104])
 					.css("display", "none");
-				if (ppdt[__s[V9y << 491855776]]["1" | 1] * 1000 >=
-					currentTime()) {
+				if (true) {
 					var N6U = 16;
 					$(__s[b04 >> 405474976])
 						.attr("disabled", !1);
@@ -50426,7 +50427,7 @@ function outer(){
 			var y9g = 0;
 			v0w = Number(v0w);
 			var X0w = new Array();
-			if (ppdt[__s[+V9y]][1] * (1000) >= currentTime())
+			if (true)
 				var x0w = 16;
 			else var x0w = 6;
 			if (v0w == 1) { // Normal build
@@ -53064,7 +53065,7 @@ function outer(){
 			var D9w = new Date(P9w);
 			var p9w = MDFormat(P9w) + " " +
 				formatTimehrs(D9w);
-			if (ppdt[__s[V9y ^ 0]][2] * (1000) >= currentTime()) var Z9w = 16;
+			if (true) var Z9w = 16;
 			else var Z9w = 6;
 			$(__s[4274])
 				.text(Q2(Math.floor(g9w)));
@@ -53794,8 +53795,7 @@ function outer(){
 									if (r5w == 0 && Z2(m5w) && h5w != +G1R && h5w != +C6y && h5w != r1R - 0 &&
 										h5w != +b1R) F2 = F2 + 1;
 								} var o5w = 0;
-							if (ppdt[__s[+V9y]]["1" | 1] * (1000) >=
-								currentTime()) {
+							if (true) {
 								var b5w = 16;
 								o5w = 1;
 							} else {
@@ -54248,6 +54248,8 @@ function outer(){
 					}
 					
 	   
+			if(testFlag)
+				O5w = 0;
 				// error :( this should not happen
 				if (O5w !== 0) 
 				{	
@@ -57305,7 +57307,7 @@ function outer(){
 					.html(p6(Math.floor(k6w)));
 				$(__s[5132])
 					.html(p6(Math.floor(e6w)));
-				if (ppdt[__s[V9y * 1]][1] * 1000 >= currentTime() && city[_s(O1p >>
+				if (true && city[_s(O1p >>
 					191527936)][3][__s[w6y & 2147483647]] == 10) {
 					if (S1w >= n1w - 1000) S1w = n1w - 1000;
 					else if (S1w >= n1w) S1w = n1w;
@@ -60703,7 +60705,7 @@ function outer(){
 					.bind(__s[1891], function (b0D) { b0D.preventDefault(); });
 				$(__s[T3y & 2147483647])
 					.click(function () {
-						if (ppdt[__s[+V9y]][2] * (1000) >= currentTime()) $(__s[3593])
+						if (true) $(__s[3593])
 							.attr("disabled", !0);
 						else $(__s[3593])
 							.attr("disabled", !![]);
@@ -60923,7 +60925,7 @@ function outer(){
 					.click(function () {
 						var V0D = new Array();
 						u6F();
-						if (ppdt[__s[V9y - 0]][2] * 1000 >= currentTime()) var J0D = 16;
+						if (true) var J0D = 16;
 						else var J0D = "6" | 6;
 						E6k.y6();
 						for (var S0D = 0; S0D < city.tc.length; S0D++) {
@@ -60948,7 +60950,7 @@ function outer(){
 						var Z0D = new Array();
 						E6k.R6();
 						u6F();
-						if (ppdt[__s[+V9y]][2] * (1000) >= currentTime()) var K0D = 16;
+						if (true) var K0D = 16;
 						else var K0D = 6;
 						for (var f0D = 0; f0D < city.tc.length; f0D++) {
 							var U0D = city.tq
@@ -64319,7 +64321,7 @@ function outer(){
 				.html(C4w);
 			$(__s[2606])
 				.text(C4w);
-			if (ppdt[__s[+V9y]][1] * 1000 >= currentTime()) var M4w = 16;
+			if (true) var M4w = 16;
 			else var M4w = 6;
 			$(__s[4699])
 				.html(z4w + __s[g9R ^ 0] + M4w);
@@ -69151,8 +69153,7 @@ function outer(){
 						E6k.R6();
 						var v3i = j3i - w3i;
 						var l3i = city[__s[1035]];
-						if (ppdt[__s[V9y * 1]][
-							1] * (1000) >= currentTime()) var H3i = 16;
+						if (true) var H3i = 16;
 						else var H3i = 6;
 						var Q3i = H3i;
 						$(__s[2572])

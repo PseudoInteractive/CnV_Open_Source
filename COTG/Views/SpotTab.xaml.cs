@@ -38,7 +38,7 @@ namespace COTG.Views
 
         public static DumbCollection<Spot> SpotMRU => instance.spotMRU;
         public static int disableSelection;
-
+		static bool loaded;
         public static SpotTab instance;
         public SpotTab()
         {
@@ -241,13 +241,19 @@ namespace COTG.Views
             }
 
         }
-        public static void LoadFromPriorSession( int[] mru)
+        public static void LoadFromPriorSession( )
         {
-            foreach(var m in mru)
-            {
-              var spot=  TouchSpot(m, VirtualKeyModifiers.None, false,true);
-            }
-        }
+			if(!loaded)
+			{
+				loaded = true;
+				SettingsPage.pinned = SettingsPage.pinned.ArrayRemoveDuplicates();
+
+				foreach (var m in SettingsPage.pinned)
+				{
+				  var spot=  TouchSpot(m, VirtualKeyModifiers.None, false,true);
+				}
+			}
+		}
 
 		private void Button_Click(object sender, RoutedEventArgs e)
 		{

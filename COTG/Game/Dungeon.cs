@@ -13,8 +13,12 @@ namespace COTG.Game
 {
     public class Dungeon 
     {
-		public static ResetableCollection<Dungeon> raidDungeons = new ResetableCollection<Dungeon>(); // for row details, global as there is only 1 row detail open at a time
+		public static ResetableCollection<Dungeon> raidDungeons; // for row details, global as there is only 1 row detail open at a time
 
+		public static void Initialize()
+		{
+			raidDungeons = new();
+		}
 		public City city; // city to raid this, where distance is calculated from 
         public int cid; // dungeon id
         public string xy => cid.CidToString();
@@ -62,7 +66,7 @@ namespace COTG.Game
                 rv += SettingsPage.penaltyForWrongDungeonType; // penalty of 4 spaces for wrong type
             return rv;
         }
-		public static async Task<bool> ShowDungeonList(City city, JsonElement jse, bool autoRaid)
+		public static async Task<bool> ShowDungeonList(City city, JsonElement jse, bool autoRaid, bool showPopup)
 		{
 			var rv = autoRaid ? new ResetableCollection<Dungeon>(): raidDungeons;
 			rv.Clear();
@@ -97,6 +101,8 @@ namespace COTG.Game
 					var success = false;
 					foreach (var _i in rv)
 					{
+						if (_i.completion < SettingsPage.minDungeonProgress)
+							continue;
 						var d = Raiding.ComputeIdealReps(_i, city);
 						if ((d.averageCarry - Raiding.desiredCarry).Abs() > 0.25f)
 							continue;
@@ -127,8 +133,8 @@ namespace COTG.Game
 			{
 				// dont wait on this 
 				//COTG.Views.MainPage.UpdateDungeonList(rv);
+				await DungeonView.Show(city);
 			}
-
 			return true;
 		}
 	}

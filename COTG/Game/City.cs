@@ -83,7 +83,7 @@ namespace COTG.Game
 		public const int bspotTownHall = span1 * citySpan + span1;
 
 		public static int XYToId((int x, int y) xy) => (xy.x.Clamp(span0, span1) - span0) + (xy.y.Clamp(span0, span1) - span0) * citySpan;
-
+	
 		public static (int x, int y) IdToXY(int id)
 		{
 			var y = id / citySpan;
@@ -117,7 +117,7 @@ namespace COTG.Game
 		public static bool buildQInSync;
 		public static ManualResetEventSlim buildQUpdated = new();
 		public const int buildQMax = 16; // this should depend on ministers
-		public static bool buildQueueFull => buildQueue.count >= buildQMax && !SettingsPage.deferredBuild;
+		public static bool buildQueueFull => buildQueue.count >= buildQMax && !SettingsPage.extendedBuild;
 		public static bool wantBuildCommands => buildQueue.count < safeBuildQueueLength;
 		public const int safeBuildQueueLength = 14; // leave space for autobuild
 
@@ -486,6 +486,10 @@ namespace COTG.Game
 				else if (i == 0)
 					isOnWater = false;
 			}
+			if(jse.TryGetProperty("coof", out var coof))
+			{
+				ministersOn = coof.GetAsInt() != 0;
+			}
 			if (jse.TryGetProperty("mo", out var p))
 			{
 				ministerOptions = p.ToString();
@@ -666,7 +670,11 @@ namespace COTG.Game
 				ShareStringToBuildingsCache();
 		}
 
-
+		public void SetMinistersOn(bool on)
+		{
+			ministersOn = on;
+			Post.Send("includes/coOO.php", $"a={cid}&b={(on ? 1 : 0)}");
+		}
 		internal static City GetBuild()
 		{
 			if (build != 0 && Spot.TryGet(build, out var city))
@@ -754,23 +762,26 @@ namespace COTG.Game
 			PlannerTab.BuildingsChanged();
 
 		}
+
 		public void FlipLayoutH()
 		{
 			//	if (layout == null)
 			//		return;
 			Assert(CityBuild.isPlanner);
-			for (int y = 0; y < citySpan; ++y)
-				for (int x = 0; x < citySpan / 2; ++x)
+			for (int y = span0; y <= span1; ++y)
+			{
+				for (int x = span0; x < 0; ++x)
 				{
 					if (isOnWater)
 					{
-						if (y > citySpan / 2)
+						if (y >= 0 && !(x, y).IsXYInCenter())
 							continue;
 					}
-					var x1 = citySpan - x - 1;
+					var x1 = -x;
 
-					AUtil.Swap(ref buildingsCache[x + y * citySpan], ref buildingsCache[x1 + y * citySpan]);
+					AUtil.Swap(ref buildingsCache[XYToId((x, y))], ref buildingsCache[XYToId((x1, y))]);
 				}
+			}
 			PlannerTab.BuildingsChanged();
 			// SaveLayout();
 		}
@@ -780,18 +791,20 @@ namespace COTG.Game
 			//if (layout == null)
 			//	return;
 			Assert(CityBuild.isPlanner);
-			for (int x = 0; x < citySpan; ++x)
-				for (int y = 0; y < citySpan / 2; ++y)
+			for (int y = span0; y <0; ++y)
+			{
+				for (int x = span0; x <= span1; ++x)
 				{
 					if (isOnWater)
 					{
-						if (x > citySpan / 2)
+						if (x >= 0 && !(x, y).IsXYInCenter())
 							continue;
 					}
-					var y1 = citySpan - y - 1;
+					var y1 = -y;
 
-					AUtil.Swap(ref buildingsCache[x + y * citySpan], ref buildingsCache[x + y1 * citySpan]);
+					AUtil.Swap(ref buildingsCache[XYToId((x, y))], ref buildingsCache[XYToId((x, y1))]);
 				}
+			}
 			PlannerTab.BuildingsChanged();
 			///SaveLayout();
 		}
@@ -1085,8 +1098,7 @@ namespace COTG.Game
 		public ushort ShipsHome => shipsHome;
 		public bool academy { get; set; }
 		public bool sorcTower { get; set; }
-
-		public int GetTransport(bool viaWater) => viaWater ? shipsHome * 10000 : cartsHome * 1000;
+		public bool ministersOn { get; set; }
 
 		public Resources res => new Resources(wood, stone, iron, food);
 		public static DumbCollection<City> gridCitySource = new DumbCollection<City>();
@@ -1101,6 +1113,40 @@ namespace COTG.Game
 			return tradeInfo;
 		}
 		internal bool isLayoutValid => shareString != null && shareString.Length >= minShareStringLength;
+		public bool hasCastleInLayout
+		{
+			get
+			{
+				if (!isLayoutValid)
+					return false;
+
+				for (int i = 0; i < citySpotCount; ++i)
+				{
+					if (BidFromOverlay(i) == bidCastle)
+						return true;
+				}
+				return false;
+			}
+		}
+		public (bool hasCastle,bool hasSorcTower) hasCastleOrSorcTowerInLayout
+		{
+			get
+			{
+				bool hasCastle = false;
+				bool hasSorcTower = false;
+				if (!isLayoutValid)
+					return (false,false);
+
+				for (int i = 0; i < citySpotCount; ++i)
+				{
+					if (BidFromOverlay(i) == bidCastle)
+						hasCastle=true;
+					else if (BidFromOverlay(i) == bidSorcTower)
+						sorcTower=true;
+				}
+				return (hasCastle,hasSorcTower);
+			}
+		}
 
 		public bool ComputeCartTravelTime(int target, out TimeSpan t)
 		{
@@ -1170,7 +1216,7 @@ namespace COTG.Game
 				return Dungeon.raidDungeons;
 			}
 		}
-		public string dungeonsToggle => MainPage.expandedCity == this ? "-" : "+";
+		public string dungeonsToggle =>  "+";
 
 		public bool isBuilding { get; internal set; }
 
@@ -1373,6 +1419,18 @@ namespace COTG.Game
 			complete,
 			pending,
 		}
+		public struct BuildInfo
+		{
+			public BuildStage stage;
+			public int buildingLimit;
+
+			public BuildInfo(BuildStage stage, int buildingLimit)
+			{
+				this.stage = stage;
+				this.buildingLimit = buildingLimit;
+			}
+		}
+
 		public struct BuildingCount
 		{
 			public int storeHouses;
@@ -1380,6 +1438,7 @@ namespace COTG.Game
 			public int townHallLevel;
 			public int buildings;
 			public int sorcTowers;
+			public int sorcTowerLevel;
 			public int academies;
 			public int training;
 			public int stables;
@@ -1402,6 +1461,28 @@ namespace COTG.Game
 		}
 		public static BuildingCount GetBuildingCountPostQueue(int cabinLevel) => GetBuildingCounts(CityBuild.postQueueBuildings, cabinLevel);
 
+		public static int GetBuildingLimit(BuildingCount bc, bool hasCastleInLayout, bool hasSorcTowerInLayout)
+		{
+			var rv = 100;
+			if (hasCastleInLayout && !bc.hasCastle)
+				rv -= 1;
+			if (bc.sorcTowers == 0 && hasSorcTowerInLayout)
+				rv -= 1;
+			return rv;
+
+		}
+		public  int GetBuildingLimit(BuildingCount bc)
+		{
+			(bool hasCastleInLayout, bool hasSorcTowerInLayout) = hasCastleOrSorcTowerInLayout;
+			var rv = 100;
+			if (hasCastleInLayout && !bc.hasCastle)
+				rv -= 1;
+			if (bc.sorcTowers == 0 && hasSorcTowerInLayout)
+				rv -= 1;
+			return rv;
+
+		}
+
 		public static BuildingCount GetBuildingCounts(Building[] buildings, int cabinLevel)
 		{
 			BuildingCount rv = new();
@@ -1411,23 +1492,23 @@ namespace COTG.Game
 				// not res or empty
 				if (!bd.isBuilding)
 					continue;
-
+				var bdef = bd.def;
 				var bid = bd.bid;
 				if (bid == bidCastle)
 					rv.hasCastle = true;
-				if (bd.isTownHall)
+				if (bdef.isTownHall)
 				{
 					rv.townHallLevel = bd.bl;
 				}
 
-				else if (bd.isWall)
+				else if (bdef.isWall)
 				{
 					rv.wallLevel = bd.bl;
 				}
-				else if (bd.isTower )
+				else if (bdef.isTower )
 				{
 					++rv.towerCount;
-					if (bid == bidSentinelPost)
+					if (bdef.isScoutpost)
 					{
 						++rv.scoutpostCount;
 
@@ -1440,7 +1521,7 @@ namespace COTG.Game
 				else
 				{
 					++rv.buildings;
-					if (bd.isCabin)
+					if (bdef.isCabin)
 					{
 						++rv.cabins;
 						if (bd.bl < cabinLevel )
@@ -1454,11 +1535,13 @@ namespace COTG.Game
 				}
 				if (bd.bid == bidStorehouse)
 					++rv.storeHouses;
-				if (bd.isTownHall)
-					rv.townHallLevel = bd.bl;
+
 
 				if (bid == bidSorcTower)
+				{
 					++rv.sorcTowers;
+					rv.sorcTowerLevel = bd.bl; /// any is fine
+				}
 				else if (bid == bidAcademy)
 					++rv.academies;
 				else if (bid == bidSawmill)
@@ -1509,98 +1592,97 @@ namespace COTG.Game
 		   });
 		}
 
-		public BuildStage GetBuildStage(BuildingCount bc)
+		public BuildInfo GetBuildStage(BuildingCount bc)
 		{
+			var buildingLimit = GetBuildingLimit(bc);
 			if (CityRename.IsNew(this))
-				return BuildStage._new;
+				return new BuildInfo(BuildStage._new,buildingLimit);
 			if (!isLayoutValid)
-				return BuildStage.noLayout;
+				return new BuildInfo(BuildStage.noLayout, buildingLimit);
 
 
 			if (bc.buildings < 8)
-				return BuildStage.setup;
+				return new BuildInfo(BuildStage.setup, buildingLimit);
 
-			if (bc.townHallLevel < 10 || bc.unfinishedCabins>0)
-				return BuildStage.cabins;
+			if (bc.townHallLevel < 10 || bc.unfinishedCabins > 0)
+				return new BuildInfo(BuildStage.cabins, buildingLimit);
 			if (bc.cabins >= bc.buildings + 4)
 			{
-				return BuildStage.cabinsDone;
+				return new BuildInfo(BuildStage.cabinsDone,buildingLimit);
 			}
-			if (bc.cabins >= SettingsPage.startCabinCount || bc.buildings < 99)
+
+
+			var underLimit = bc.buildings < buildingLimit;
+			if (bc.cabins >= SettingsPage.startCabinCount || underLimit )
 			{
-				if (bc.unfinishedBuildings > 0 || bc.buildings < 99)
-					return BuildStage.mainBuildings;
+				if (bc.unfinishedBuildings > 0 || underLimit)
+					return new BuildInfo(BuildStage.mainBuildings, buildingLimit);
 				else
-					return BuildStage.preTeardown;
+					return new BuildInfo(BuildStage.preTeardown, buildingLimit);
 			}
 
 			if (bc.cabins > 0 || bc.buildings < 100)
-				return BuildStage.teardown;
+				return new BuildInfo(BuildStage.teardown,buildingLimit);
 
-			return BuildStage.complete;
+			return new BuildInfo(BuildStage.complete,buildingLimit);
 
 
 
 		}
-		public async Task<BuildStage> GetBuildStage()
+		public async Task<BuildInfo> GetBuildStage()
 		{
 			if (CityRename.IsNew(this))
-				return BuildStage._new;
+				return new BuildInfo(BuildStage._new,100);
 			//await GetCity.Post(cid);
 			var cabinLevel = await GetAutobuildCabinLevel();
 			return GetBuildStage(GetBuildingCounts(cabinLevel));
 
 		}
-		public static BuildStage GetBuildBuildStageNoFetch()
+		public static BuildInfo GetBuildBuildStageNoFetch()
 		{
 			if (CityRename.IsNew(City.GetBuild()))
-				return BuildStage._new;
+				return new BuildInfo(BuildStage._new,100);
 			return City.GetBuild().GetBuildStage(GetBuildingCountPostQueue(City.GetBuild().GetAutobuildCabinLevelNoFetch()));
 		}
 
-		public BuildStage GetBuildStageNoFetch()
+		public BuildInfo GetBuildStageNoFetch()
 		{
 			if (CityRename.IsNew(this))
-				return BuildStage._new;
+				return new BuildInfo(BuildStage._new,100);
 			if(buildings==Emptybuildings)
 			{
 				//GetCity.Post(cid);
-				return BuildStage.pending;
+				return new BuildInfo(BuildStage.pending,100);
 			}
 			return GetBuildStage(GetBuildingCounts(GetAutobuildCabinLevelNoFetch()));
 		}
 
-		public static async Task<BuildStage> GetBuildBuildStage(BuildingCount bc)
+		public static async Task<BuildInfo> GetBuildBuildStage(BuildingCount bc)
 		{
 			var city = GetBuild();
 			if (CityRename.IsNew(city))
-				return BuildStage._new;
+				return new BuildInfo(BuildStage._new,100);
 			await GetCity.Post(City.build);
 
 			return city.GetBuildStage(bc);
 		}
 
-		public static async Task<BuildStage> GetBuildBuildStage()
+		public static async Task<BuildInfo> GetBuildBuildStage()
 		{
 			var city = GetBuild();
 			if (CityRename.IsNew(city))
-				return BuildStage._new;
+				return new BuildInfo(BuildStage._new, 100);
 			await GetCity.Post(City.build);
 			var cabinLevel = await city.GetAutobuildCabinLevel();
 			return city.GetBuildStage(GetBuildingCountPostQueue(cabinLevel));
 
 		}
-		public static BuildStage GetBuildBuildStageNoRefresh()
-		{
-			var city = GetBuild();
-			if (CityRename.IsNew(city))
-				return BuildStage._new;
-			return city.GetBuildStage(GetBuildingCountPostQueue(city.GetAutobuildCabinLevelNoFetch()));
 
-		}
 	}
 	public static class CityHelpers
 	{
+		public static bool IsXYInCenter(this (int x, int y) xy) => (xy.x.Abs() <= 4 && xy.y.Abs() <= 4 && (xy.x.Abs() + xy.y.Abs() < 7));
+
 		public static bool IsInCity(this (int x, int y) xy) => xy.x >= span0 && xy.x <= span1 && xy.y >= span0 && xy.y <= span1;
 
 		public static ShellPage.ViewMode GetNext(this ShellPage.ViewMode mode)

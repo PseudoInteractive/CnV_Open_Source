@@ -61,7 +61,7 @@ namespace COTG.Views
 		public static HashSet<ushort> waterSpots = new HashSet<ushort>(new ushort[] { 352, 353, 373, 374, 375, 395,396,397,
 																			417,418});
 
-		public static bool IsBuildingSpot(int spot) => !(outerTowerSpots.Contains((ushort)spot) | innerTowerSpots.Contains((ushort)spot) | wallSpots.Contains((ushort)spot));
+		public static bool IsBuildingSpot(int spot) => !(outerTowerSpots.Contains((ushort)spot) | innerTowerSpots.Contains((ushort)spot) | wallSpots.Contains((ushort)spot) | (spot==bspotWall) );
 		public static bool IsBuildingSpot((int x, int y) cc) => IsBuildingSpot(XYToId(cc));
 		public static bool IsTowerSpot(int spot) => outerTowerSpots.Contains((ushort)spot) | innerTowerSpots.Contains((ushort)spot);
 		public static bool IsTowerSpot((int x, int y) cc) => IsTowerSpot(XYToId(cc));
@@ -76,7 +76,8 @@ namespace COTG.Views
 		public enum Action
 		{
 			none,
-			move,
+			moveStart,
+			moveEnd,
 			destroy,
 			build,
 			layout,
@@ -121,8 +122,11 @@ namespace COTG.Views
 		   {
 			   switch (action)
 			   {
-				   case Action.move:
-					   App.cursorMove.Set();
+				   case Action.moveStart:
+					   App.cursorMoveStart.Set();
+					   break;
+				   case Action.moveEnd:
+					   App.cursorMoveEnd.Set();
 					   break;
 				   case Action.destroy:
 					   App.cursorDestroy.Set();
@@ -204,7 +208,7 @@ namespace COTG.Views
 		public static BuildingMRU[] buildingMru = new BuildingMRU[maxMRUSize];
 
 		static BuildMenuItem amSelect = new BuildMenuItem("Modify", Action.none, "City/decal_select_building.png", "Left click opens a menu");
-		static BuildMenuItem amMove = new BuildMenuItem("Move", Action.move, "City/decal_move_building.png", "In this mode you first click a building, then click empty space, then click the next buildin to move, etc.");
+		static BuildMenuItem amMove = new BuildMenuItem("Move", Action.moveStart, "City/decal_move_building.png", "In this mode you first click a building, then click empty space, then click the next buildin to move, etc.");
 		static BuildMenuItem amDemo = new BuildMenuItem("Demo", Action.destroy, "City/decal_building_invalid.png", "Destroy anything you click");
 		static BuildMenuItem amLayout = new BuildMenuItem("Layout", Action.layout, "City/decal_building_valid_multi.png", "Smart build based on city layouts");
 		static BuildMenuItem amNone = new BuildMenuItem();
@@ -901,7 +905,7 @@ namespace COTG.Views
 		public static async Task Build(int id, int bid, bool dryRun)
 		{
 			var sel = GetBuildingPostQueue(id);
-			if (bid != bidWall && !sel.isEmpty && !SettingsPage.deferredBuild) // special case, wall upgrade from level is allowed as a synonym for build
+			if (bid != bidWall && !sel.isEmpty && !SettingsPage.extendedBuild) // special case, wall upgrade from level is allowed as a synonym for build
 			{
 				Status("Spot is occupied",dryRun);
 			}
@@ -954,7 +958,7 @@ namespace COTG.Views
 					}
 					if(IsShoreSpot(id) )
 					{
-						if(!buildDef.isShoreBuilding)
+						if(!buildDef.isShoreBuilding && !CityBuild.testFlag)
 						{
 							Status("Ports and Shipyards go here", dryRun);
 							return;
@@ -962,7 +966,7 @@ namespace COTG.Views
 					}
 					else
 					{
-						if(buildDef.isShoreBuilding)
+						if(buildDef.isShoreBuilding && !CityBuild.testFlag)
 						{
 							Status("Please put this on the shore", dryRun);
 							return;
@@ -986,20 +990,21 @@ namespace COTG.Views
 					else
 					{
 						var counts = GetBuildingCountAndTownHallLevel();
-						if(counts.townHallLevel == 10 && counts.count == 100)
-						{
-							if (SettingsPage.autoDemoCottages)
-							{
-								var cabin = FindCabinToDemo();
-								if(cabin!= -1)
-									await Demolish(cabin, dryRun);
-							}
-						}
-						else if ( ( counts.count == counts.max && counts.townHallLevel < 10 && !buildDef.isTower && bid!=bidWall ) || buildDef.Thl > counts.townHallLevel)
+						var usesSpot = !buildDef.isTower && bid != bidWall;
+						if ( ( counts.count == counts.max && counts.townHallLevel < 10 && usesSpot ) || buildDef.Thl > counts.townHallLevel)
 						{
 							if (!await UpgradeTownHallDialogue( ((counts.count)/10+1 ).Max(buildDef.Thl)))
 								return;
 
+						}
+						else if (counts.townHallLevel == 10 && counts.count == 100 && usesSpot)
+						{
+							if (SettingsPage.autoDemoCottages)
+							{
+								var cabin = FindCabinToDemo();
+								if (cabin != -1)
+									await Demolish(cabin, dryRun);
+							}
 						}
 						await Enqueue(0, 1, bid, id);
 						
@@ -1113,6 +1118,11 @@ namespace COTG.Views
 				Status($"Cannot move a building that is being rennovated, please wait or cancel build ops on {bds[a].name} at {IdToXY(a).bspotToString()} for best results", dryRun);
 				return false;
 			}
+			if (HasBuildOps(b) && !isPlanner)
+			{
+				Status($"Cannot move a building to a spot that is being rennovated, please wait or cancel build ops on {bds[b].name} at {IdToXY(b).bspotToString()} for best results", dryRun);
+				return false;
+			}
 			if (Player.moveSlots <= 0 && !isPlanner)
 			{
 				Status($"No move spots",dryRun);
@@ -1189,16 +1199,49 @@ namespace COTG.Views
 			
 		}
 
-		internal static async void MoveHovered(bool _isSingleAction, bool dryRun)
+		internal static async void MoveHovered(bool _isSingleAction,bool isStart, bool dryRun)
 		{
-			int bspot = XYToId(hovered);
 			var build = GetBuild();
 
-			var b = isPlanner ? buildingsCache[bspot] : build.buildings[bspot];
 			Status($"Move slots left: {Player.moveSlots}", dryRun);
-
-			if (CanvasHelpers.IsValid(selected) )
+			if (!CanvasHelpers.IsValid(hovered) )
 			{
+				Status("Please select something in the city", dryRun);
+				return;
+			}
+			int bspot = XYToId(hovered);
+			var b = isPlanner ? buildingsCache[bspot] : build.buildings[bspot];
+
+			if (isStart)
+			{
+				if (b.isBuilding)
+				{
+
+					Status($"Move {b.def.Bn} at {hovered.bspotToString()} to ... ", dryRun);
+					if (!dryRun)
+					{
+						CityView.SetSelectedBuilding( hovered, _isSingleAction );
+						if (_isSingleAction)
+						{
+							PushSingleAction(Action.moveEnd);
+						}
+						else
+						{
+							SetAction(Action.moveEnd);
+						}
+
+					}
+				}
+				else
+				{
+					Status("Please select a building to move", dryRun);
+				}
+
+			}
+			else
+			{
+				Assert(CanvasHelpers.IsValid(selected));
+
 				if (b.isRes )
 				{
 					Status("Please select an empty spot", dryRun);
@@ -1206,7 +1249,6 @@ namespace COTG.Views
 				else
 				{
 					var source = XYToId(selected);
-
 
 					// Is this a valid transition
 					var bs1 = IsTowerSpot(bspot) ? 1 : IsWallSpot(bspot) && !testFlag ? 0 : 2;
@@ -1248,41 +1290,29 @@ namespace COTG.Views
 						{
 							await MoveBuilding(source, bspot, dryRun);
 						}
-						if(!dryRun)
+						if (!dryRun)
+						{
 							ClearSelectedBuilding();
-						if (_isSingleAction && !dryRun)
-						{
-							RevertToLastAction();
-						}
-					}
-				}
-			}
-			else
-			{
-			
-				if (b.bl <= 0)
-				{
-					Status("Please select a building", dryRun);
-				}
-				else
-				{
-					Status($"Select building {b.def.Bn} at {hovered.bspotToString()}", dryRun );
-					if (!dryRun)
-					{
-						selected = hovered;
-						if (_isSingleAction)
-						{
-							priorQuickAction = action;
-							SetAction(Action.move);
-							isSingleClickAction = true;
+							if (_isSingleAction)
+							{
+								RevertToLastAction();
+							}
+							else
+							{
+								SetAction(Action.moveStart);
+							}
 						}
 					}
 				}
 			}
 		}
 
-
-
+		public static void PushSingleAction(Action _action)
+		{
+			priorQuickAction = action;
+			SetAction(_action);
+			isSingleClickAction = true;
+		}
 
 		private void quickBuild_SelectionChanged(object sender, Windows.UI.Xaml.Controls.SelectionChangedEventArgs e)
 		{
@@ -1319,6 +1349,22 @@ namespace COTG.Views
 			int bspot = XYToId(cc);
 			var build = GetBuild();
 			var b = GetBuildingPostQueue(bspot);
+
+			if(action == Action.moveEnd)
+			{
+				// We lost our move source
+				if(!CanvasHelpers.IsValid(selected))
+				{
+					if(isSingleClickAction)
+					{
+						RevertToLastAction();
+					}
+					else
+					{
+						SetAction(Action.moveStart);
+					}
+				}
+			}
 
 			switch (action)
 			{
@@ -1390,9 +1436,10 @@ namespace COTG.Views
 						
 						break;
 					}
-				case Action.move:
+				case Action.moveStart:
+				case Action.moveEnd:
 					{
-						MoveHovered(isSingleClickAction, dryRun);
+						MoveHovered(isSingleClickAction, (action==Action.moveStart), dryRun);
 						break;
 					}
 				case Action.downgrade:
@@ -1498,22 +1545,30 @@ namespace COTG.Views
 		
 	}
 
-		public static async Task<int> SmartBuild(City build, (int x, int y) cc, int desBid,bool searchForSpare, bool dryRun=false)
+		public static async Task<int> SmartBuild(City build, (int x, int y) cc, int desBid, bool searchForSpare, bool dryRun = false)
 		{
 			int rv = 0;
 			var bspot = XYToId(cc);
 			var b = GetBuildingPostQueue(bspot);
-			var desName = BuildingDef.all[desBid].Bn;
+			var desB = BuildingDef.all[desBid];
+			var desName = desB.Bn;
 			if (BuildingDef.IsRes(desBid))
 			{
 				desBid = 0; // if it is a resource, ignore it
 			}
+			if (!IsBuildingSpot(bspot))
+			{
+				await Build(cc, desBid, dryRun); ;
+				return 1;
+			}
+			var usesSpot = IsBuildingSpot(bspot) && !desB.isTower && !desB.isTownHall && (bspot != bspotWall);
 			var curBid = b.def.bid;
 			var takeFrom = -1;
 			var takeScore = 0;
 			var putTo = -1;
 			var putScore = 0;
-			if (searchForSpare && !isPlanner && build.isLayoutValid)
+
+			if (searchForSpare && !isPlanner && build.isLayoutValid && usesSpot )
 			{
 				// See if there are spare buildings that we can take
 				for (int xy = 0; xy < City.citySpotCount; ++xy)
@@ -1528,7 +1583,9 @@ namespace COTG.Views
 						if (xyBuilding == desBid && desBid !=0)
 						{
 							// two points for ourbuilding is also needed there
-							var score = (overlayBid == curBid) ? 2 : 1;
+							var score = ((overlayBid == curBid) ? 2 : 1);
+							if (!HasBuildOps(xy))
+								score += 4;
 							if (score > takeScore)
 							{
 								takeScore = score;
@@ -1540,6 +1597,8 @@ namespace COTG.Views
 						if (overlayBid == curBid && curBid != 0)
 						{
 							var score = (xyBuilding == desBid) ? 4 : (xyBuilding == 0) ? 3 : postQueueBuildings[xy].isBuilding ? 2 : 1;
+							if (!HasBuildOps(xy))
+								score += 8;
 							if (score > putScore)
 							{
 								putScore = score;
@@ -1572,6 +1631,7 @@ namespace COTG.Views
 							await Task.Delay(400).ConfigureAwait(true);
 						if (takeScore > 0 && searchForSpare)
 						{
+							Status($"Waiting on demo, then spare {desName} can be moved into place", dryRun);
 							// wait for demo
 							return rv;
 						}
@@ -1583,7 +1643,7 @@ namespace COTG.Views
 						await MoveBuilding(takeFrom, bspot, dryRun);
 						return rv;
 					}
-					if (counts.townHallLevel < b.def.Thl || (counts.count == counts.max && counts.townHallLevel < 10))
+					if (counts.townHallLevel < desB.Thl || (counts.count == counts.max && counts.townHallLevel < 10))
 					{
 						var level = (counts.count / 10 + 1).Max(b.def.Thl).Min(10);
 						if (dryRun)
@@ -1600,6 +1660,7 @@ namespace COTG.Views
 					}
 					else if (counts.count >= 100)
 					{
+						if(!desB.isCabin)
 						{
 							// Is there a cabin to remove?
 
@@ -1684,7 +1745,7 @@ namespace COTG.Views
 					}
 					else
 					{
-						if (b.isCabin && counts.count < 100)
+						if (b.isCabin  && counts.count < 100)
 						{
 							var cb = FindAnyFreeSpot();
 							if (!await MoveBuilding(bspot, cb, dryRun))
@@ -1692,7 +1753,7 @@ namespace COTG.Views
 
 
 						}
-						else if (takeScore == 0)
+						else if (takeScore == 0 && desBid != bidCottage)
 						{
 							Status($"{b.def.Bn} is not wanted, destroying it", dryRun);
 
@@ -1708,7 +1769,7 @@ namespace COTG.Views
 								++rv;
 							}
 						}
-						else
+						else 
 						{
 
 							await MoveBuilding(bspot, FindAnyFreeSpot(), dryRun);
@@ -1847,13 +1908,14 @@ namespace COTG.Views
 			{
 				ElementSoundPlayer.Play(action == Action.destroy ? ElementSoundKind.GoBack: ElementSoundKind.Focus );
 				await PerformAction(action, cc, quickBuildId, false);
-				if(action != Action.move)
+				if(action != Action.moveStart && action != Action.moveEnd)
 					lastQuickBuildActionBSpot = bspot;
-				if (isSingleClickAction)
-				{
-					Assert(action == Action.move);
-					RevertToLastAction(); // this is only for move
-				}
+
+			//	Assert(!isSingleClickAction);
+//				{
+//					Assert(action == Action.moveEnd);
+//					RevertToLastAction(); // this is only for move
+//				}
 				//Assert(singleClickAction == Action.none);
 			}
 			else
@@ -1917,12 +1979,13 @@ namespace COTG.Views
 			if (d.bid != 0)
 				JSClient.view.InvokeScriptAsync("exBuildingInfo", new[] { d.bid.ToString(), b.bl.ToString(), bspot.ToString() });
 
-			selected = cc;
+			CityView.SetSelectedBuilding( cc, isSingleClickAction );
+
 			var type = isRight ? MenuType.quickBuild :
-				CityBuild.IsTowerSpot(bspot) ? MenuType.tower :
-				CityBuild.IsShoreSpot(bspot) ? MenuType.shore :
+				 
+				
 				bspot == 0 ? MenuType.buliding :
-				b.id == 0 ? MenuType.empty :
+				b.id == 0 ? (CityBuild.IsTowerSpot(bspot) ? MenuType.tower : CityBuild.IsShoreSpot(bspot) ? MenuType.shore : MenuType.empty ) :
 				b.bl == 0 ? MenuType.res :
 				d.bid == bidTownHall ? _isPlanner ? MenuType.townhallPlanner: MenuType.townhall :
 				MenuType.buliding;
@@ -2006,10 +2069,10 @@ namespace COTG.Views
 					{
 						if (isSingleClickAction)
 						{
-							if (bi.action == CityBuild.Action.move)
+							if (bi.action == CityBuild.Action.moveStart)
 							{
 
-								SetAction(CityBuild.Action.move);
+								SetAction(CityBuild.Action.moveEnd);
 								// leave action pending
 							}
 							else

@@ -288,7 +288,6 @@ namespace COTG.Views
 								CityView.hovered = (0, 0);
 							break;
 						
-							break;
 						case Windows.System.VirtualKey.Number1: UpgradeOrTower(1); break;
 						case Windows.System.VirtualKey.Number2: UpgradeOrTower(2); break;
 						case Windows.System.VirtualKey.Number3: UpgradeOrTower(3); break;
@@ -303,8 +302,18 @@ namespace COTG.Views
 						//			case Windows.System.VirtualKey.Q: CityBuild.ClearQueue(); break;
 						case Windows.System.VirtualKey.D: CityBuild.Demolish(CityView.hovered, false); break;
 						case Windows.System.VirtualKey.Escape: CityBuild.ClearAction(); break;
-						case (VirtualKey)192: CityBuild.MoveHovered(true, false); break; //  (City.XYToId(CityView.selected), City.XYToId(CityView.hovered)); break;
+						case (VirtualKey)192:
+							{
+								if (action == CityBuild.Action.moveEnd)
+									CityBuild.MoveHovered(true, false, false);
+								else
+								{
 
+									CityView.ClearSelectedBuilding();
+									CityBuild.MoveHovered(true, true, false);
+								}
+								break; //  (City.XYToId(CityView.selected), City.XYToId(CityView.hovered)); break;
+							}
 						// short keys
 						case Windows.System.VirtualKey.F: CityBuild.ShortBuild(City.bidForester); return; //  448;
 						case Windows.System.VirtualKey.C: CityBuild.ShortBuild(City.bidCottage); return; //  446;
