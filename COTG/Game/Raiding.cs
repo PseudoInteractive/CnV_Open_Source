@@ -102,7 +102,6 @@ namespace COTG.Game
             }
             return false;
         }
-        public static float desiredCarry = 1.125f;
         
         public static (int reps,float averageCarry, float fractionalReps) ComputeIdealReps(Dungeon d, City city)
         {
@@ -111,7 +110,7 @@ namespace COTG.Game
             if (carry <= 0)
                 return (0, 0,0);
 			//   Log($"{desiredCarry} {carry / (loot * desiredCarry)}");
-			var  idealf = (carry / (loot * desiredCarry) );
+			var  idealf = (carry / (loot * SettingsPage.raidCarryMin) );
 			int ideal = (int)(idealf);  // carry at least the ideal amount
 		    ideal = Math.Min(ideal, city.freeCommandSlots ).Max(1);
 			if (idealf < ideal || !SettingsPage.raidSendExact)
@@ -145,9 +144,11 @@ namespace COTG.Game
             if (city == null)
                 return true;
             var r = ComputeIdealReps(d,city);
-            if (r.reps <= 0 || r.averageCarry < SettingsPage.raidCarryMin || r.averageCarry >= SettingsPage.raidCarryMax  || d.completion <= SettingsPage.minDungeonProgress)
-                return true;
-			var intervals = SettingsPage.raidIntervals;
+			if(!clearDungeonList)
+			{
+				if (!d.isValid)
+					return true;
+			}
 
 			var wantDelays = false;// intervals != 0 && clearDungeonList;
 			for (int iter = 0; iter < (wantDelays ? r.reps : 1); ++iter)
@@ -168,7 +169,7 @@ namespace COTG.Game
 				var trs = JsonSerializer.Serialize(tr);
 				var args = new sndRaidArgs() { rcid = d.cid, type = SettingsPage.wantRaidRepeat ? 1 : 2, co = wantDelays ? 1 : r.reps, rt = 1, snd = 1, rut = 0, tr = trs, iv = SettingsPage.raidIntervals + 1 };
 				var snd = new COTG.Services.sndRaid(JsonSerializer.Serialize(args), city.cid);
-				Note.Show($"{city.cid.CidToStringMD()} raid {r.reps}x, %{(r.averageCarry * 100).RoundToInt()} carry to {d.cid.CidToStringMD()}");
+				Note.Show($"{city.cid.CidToStringMD()} {city.nameAndRemarks} raid {r.reps}x{(r.averageCarry * 100).RoundToInt()}% carry, cavern: {d.cid.CidToStringMD()}");
 				if (!await snd.Post())
 					return false;
 				//           await Task.Delay(500);
@@ -234,8 +235,8 @@ namespace COTG.Game
                 nextAllowedTsHomeUpdate = nextAllowedTsUpdate; // stall this one too
                 await RestAPI.troopsOverview.Post();
 
-                if(updateRaids && DungeonView.IsVisible() && City.CanVisit(Spot.focus))
-                   await ScanDungeons.Post(Spot.focus, true, false,false);
+                if(updateRaids && DungeonView.IsVisible() )
+                   await ScanDungeons.Post(DungeonView.openCity, true, false);
 
             }
         }

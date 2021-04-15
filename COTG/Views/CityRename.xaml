@@ -43,7 +43,8 @@
 		<winui:NumberBox Header="TowerLevel" Value="{x:Bind views:SettingsPage.autoTowerLevel,Mode=TwoWay}" Style="{StaticResource NumberBoxSmall}" ToolTipService.ToolTip="How high to automatically build towers during 'do the stuff'.  Towers are placed right before the clastle.  If set to 10, autobuild is turned on. Values other than 1 or 10 are not guaranteed" />
 			<winui:NumberBox Header="Scout Towers" Value="{x:Bind views:SettingsPage.scoutpostCount,Mode=TwoWay}" Style="{StaticResource NumberBoxSmall}" ToolTipService.ToolTip="The number of scout towers to place.  They are placed with the castle  during 'do the stuff'" />
 
-			
+			<winui:NumberBox Header="Storehouses" Value="{x:Bind views:SettingsPage.intialStorehouses,Mode=TwoWay}" Style="{StaticResource NumberBoxSmall}" ToolTipService.ToolTip="The number of storehouses to start a city with" />
+
 		</controls:WrapPanel>
     </Grid>
 </ContentDialog>

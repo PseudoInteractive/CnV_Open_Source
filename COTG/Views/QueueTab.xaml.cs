@@ -39,7 +39,8 @@ namespace COTG.Views
 			this.InitializeComponent();
 		}
 
-		public string buildingStage => $"Stage: {GetBuildBuildStageNoFetch().ToString()}";
+	
+
 
 		//private void ZoomedInGotFocus(object sender, RoutedEventArgs e)
 		//{
@@ -300,6 +301,7 @@ namespace COTG.Views
 			Assert(city.isBuild);
 			if (ShellPage.viewMode != ViewMode.city)
 				JSClient.ChangeView(ViewMode.city);
+			CityBuild._isPlanner = false;
 
 			Assert(App.uiSema.CurrentCount == 0);
 			Assert(App.IsOnUIThread());
@@ -357,7 +359,7 @@ namespace COTG.Views
 				//bc.wallLevel = 1;
 				bc.hasCastle = true;
 			}
-			if ( (bc.sorcTowers==0 || bc.sorcTowerLevel != 10 ) && city.tsTotal > SettingsPage.tsForSorcTower)
+			if ( (bc.sorcTowers==0 || bc.sorcTowerLevel != 10 ) && city.tsTotal > SettingsPage.tsForSorcTower && !FindOverlayBuildingOfType(city,bidSorcTower).Is00())
 			{
 				var c = FindBuildingOfType(city, bidSorcTower);
 
@@ -477,6 +479,7 @@ namespace COTG.Views
 								{
 									message += $"Adding Storehouse";
 									await CityBuild.SmartBuild(city, IdToXY(storage), bidStorehouse, true, false);
+									++bc.storeHouses;
 								}
 
 							}

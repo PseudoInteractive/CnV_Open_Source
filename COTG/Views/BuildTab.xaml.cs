@@ -32,6 +32,7 @@ using Microsoft.UI.Xaml.Controls;
 using Telerik.UI.Xaml.Controls.Grid.Commands;
 using System.Threading;
 using Telerik.UI.Xaml.Controls.Grid.Primitives;
+using static COTG.Game.City;
 
 namespace COTG.Views
 {
@@ -218,30 +219,8 @@ namespace COTG.Views
 
 		//}
 
-		public static void UpdateDungeonList(IEnumerable<Dungeon> dungeons)
-		{
-			if (instance == null)
-				return;
-			if (dungeons == null)
-				Dungeon.raidDungeons.Clear();
-			//  Raiding.UpdateTS(); // not sychronous, the results will come in after the dungeon list is synced
-
-			Dungeon.raidDungeons.NotifyReset();
-			//    instance.dungeonGrid.ItemsSource = dungeons;
-
-		}
-		public static void UpdateRaidPlans()
-		{
-			//// instance.Dispatcher.DispatchOnUIThread(() =>
-			// {
-			//     // trick it
-			//     var temp = instance.dungeonGrid.ItemsSource;
-			//     instance.dungeonGrid.ItemsSource = null;
-			//     instance.dungeonGrid.ItemsSource = temp;
-			// }
-			// // tell UI that list data has changed
-			Dungeon.raidDungeons.NotifyReset();
-		}
+	
+	
 
 
 		public event PropertyChangedEventHandler PropertyChanged;
@@ -280,7 +259,7 @@ namespace COTG.Views
 					var cid = ci[0].GetAsInt();
 					var city = City.GetOrAddCity(cid);
 					city.points = (ushort)ci[2].GetAsInt();
-					var isBuilding = (ci[4].GetAsFloat() + ci[3].GetAsFloat()) != 0;
+					var isBuilding = ((ci[4].GetAsFloat() + ci[3].GetAsFloat()) != 0)||(city.GetBuildStageNoFetch().stage==BuildStage.complete);
 					if (isBuilding != city.isBuilding)
 					{
 						city.isBuilding = isBuilding;

@@ -438,7 +438,8 @@ namespace COTG.Models
                     case nameof(Dungeon.xy):
                         Spot.ProcessCoordClick(cid,false, App.keyModifiers,false);
                         break;
-                    case nameof(Dungeon.plan):
+					case nameof(Dungeon.dispatch):
+					case nameof(Dungeon.plan):
                         Raiding.SendRaids(i,true);
 						DungeonView.Close();
 						return;

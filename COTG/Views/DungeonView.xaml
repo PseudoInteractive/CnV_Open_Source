@@ -13,36 +13,90 @@
 			  xmlns:winui="using:Microsoft.UI.Xaml.Controls"
 	 xmlns:game="using:COTG.Game"
 	xmlns:tg="using:Telerik.UI.Xaml.Controls.Grid"
-
+	DefaultButton="Close"
    xmlns:tgCore="using:Telerik.Data.Core"
     CloseButtonText="Cancel"
    >
 
-    <StackPanel>
+	<StackPanel TabFocusNavigation="Cycle" >
 
-		<tk:WrapPanel x:Name="raidOptionBox"
+		<tg:RadDataGrid x:Name="dungeonGrid" 
+						      UserGroupMode="Disabled"
+							ItemsSource="{x:Bind items}"
+							ColumnResizeHandleDisplayMode="Always"
+							ColumnDataOperationsMode="Inline"
+							IsTabStop="True"
+							CanUserChooseColumns="False"
+							UserFilterMode="Disabled"
+							TabFocusNavigation="Cycle"
+							IsTextScaleFactorEnabled="False"
+							SelectionUnit="Row"
+							AlternationStep="2"
+							Margin="4,4,8,16"
+							FontSize="{StaticResource MediumFontSize}"
+							RowHeight="{StaticResource GridRowHeight}"
+							Tag="Dungeons"
+                              AutoGenerateColumns="False">
+			<tg:RadDataGrid.Commands>
+				<model:DungeonTapCommand />
+			</tg:RadDataGrid.Commands>
+			<tg:RadDataGrid.Columns>
+				<tg:DataGridTextColumn PropertyName="dispatch"
+										   CellContentStyle="{StaticResource CenterAlignLink}"
+											   SizeMode="Auto"
+										   Tip="Click here to send raids" />
+
+				<tg:DataGridTextColumn PropertyName="plan"
+										   CellContentStyle="{StaticResource RightAlignLink}"
+											   SizeMode="Auto"
+										   Tip="Click here to send raids" />
+				<tg:DataGridNumericalColumn PropertyName="distance"
+												CellContentStyle="{StaticResource RightAlign}"
+												  SizeMode="Auto"
+												Tip="Distance to dungeon" />
+				<tg:DataGridNumericalColumn PropertyName="level"
+												  SizeMode="Auto"
+												CellContentStyle="{StaticResource RightAlign}" />
+				<tg:DataGridNumericalColumn PropertyName="completion"
+												Tip="How worn out the dungeon is&#x0a;When this reaches 0 the dungeon disappears and troops stop raiding&#x0a;Prefering dungeons with lower completion is a way to prevent raid carry from falling too far, a form of auto reseting raids"
+												CellContentFormat="{}{0,6:N1}"
+												  SizeMode="Auto"
+												CellContentStyle="{StaticResource RightAlign}" />
+				<tg:DataGridTextColumn PropertyName="kind"
+										     SizeMode="Auto"
+										   CellContentStyle="{StaticResource RightAlign}" />
+				<tg:DataGridTextColumn PropertyName="xy"
+										     SizeMode="Auto"
+										   CellContentStyle="{StaticResource CenterAlignLink}" />
+			</tg:RadDataGrid.Columns>
+		</tg:RadDataGrid>
+		
+		<tk:WrapPanel 
+			  
+			             x:Name="raidOptionBox"
 							Orientation="Horizontal"
 						  Grid.Row="2"
 						  VerticalAlignment="Center"
-						  TabFocusNavigation="Once">
+						  TabFocusNavigation="Cycle">
 			<ComboBox x:Name="raidCarryMinBox"
 						  Header="Min Carry%"
-						  SelectionChanged="RaidCarrySelChanged"
+						  DropDownClosed="RaidCarrySelChanged"
+							Width="80"
 						  
 						  FontSize="{StaticResource MediumFontSize}"
 						  IsTextScaleFactorEnabled="False"
 						  IsEditable="True"
 						  TextSubmitted="RaidCarrySubmitted"
-						  Margin="6,2,6,2" ToolTipService.ToolTip="Troops will be divided up into batches that will carry this amount or greater.  Dungeons that that require more troops than the city has at home will not be shown.  When raid carry % drops below 100% your raiding income is as high as it is at 100% but your raiding losses will be higher.  As the dungeon progresses the loot per raid goes up, along with the strength of the monsters, thereby resuling in progressively greater losses.  Establishing an upper bound on the resulting raid loses is that rationale behind setting a min carry above 100%" />
+						  Margin="4" ToolTipService.ToolTip="Troops will be divided up into batches that will carry this amount or greater.  Dungeons that that require more troops than the city has at home will not be shown.  When raid carry % drops below 100% your raiding income is as high as it is at 100% but your raiding losses will be higher.  As the dungeon progresses the loot per raid goes up, along with the strength of the monsters, thereby resuling in progressively greater losses.  Establishing an upper bound on the resulting raid loses is that rationale behind setting a min carry above 100%" />
 			<ComboBox x:Name="raidCarryMaxBox"
 						  Header="Max Carry%"
-						  SelectionChanged="RaidCarrySelChanged"
-						  
+						  DropDownClosed="RaidCarryMaxSelChanged"
+						  Width="80"
 						  FontSize="{StaticResource MediumFontSize}"
 						  IsTextScaleFactorEnabled="False"
 						  IsEditable="True"
 						  TextSubmitted="RaidCarryMaxSubmitted"
-						  Margin="6,2,6,2" ToolTipService.ToolTip="If the resulting raids computed via min Carry have a carry % that is greater than this number, the dungeon will be ignored.  Total raiding income goes down as carry % goes up (startong at 100%) and sometimes it is better to send to a farther dungeon if that dungeons carry % is closer to 100%.  A common case where a high % carry is required is when you attempt to raid a lower level dungeon and you run out of command slots" />
+						  Margin="4" ToolTipService.ToolTip="If the resulting raids computed via min Carry have a carry % that is greater than this number, the dungeon will be ignored.  Total raiding income goes down as carry % goes up (startong at 100%) and sometimes it is better to send to a farther dungeon if that dungeons carry % is closer to 100%.  A common case where a high % carry is required is when you attempt to raid a lower level dungeon and you run out of command slots" />
 						<winui:DropDownButton x:Name="includeButton"
 									  Content="Include"
 									  Margin="6,18,6,2"
@@ -107,55 +161,6 @@
 
 		</tk:WrapPanel>
 
-		<tg:RadDataGrid ItemsSource="{x:Bind game:Dungeon.raidDungeons, Mode=OneWay}"
-                              UserGroupMode="Disabled"
-						
-							ColumnResizeHandleDisplayMode="Always"
-							ColumnDataOperationsMode="Inline"
-							IsTabStop="True"
-							CanUserChooseColumns="False"
-							UserFilterMode="Disabled"
-							IsTextScaleFactorEnabled="False"
-							SelectionUnit="Row"
-							AlternationStep="2"
-							Margin="4,4,8,16"
-							FontSize="{StaticResource MediumFontSize}"
-							RowHeight="{StaticResource GridRowHeight}"
-							Tag="Dungeons"
-                              AutoGenerateColumns="False">
-			<tg:RadDataGrid.Commands>
-				<model:DungeonTapCommand />
-			</tg:RadDataGrid.Commands>
-			<tg:RadDataGrid.Columns>
-				<tg:DataGridTextColumn PropertyName="dispatch"
-										   CellContentStyle="{StaticResource RightAlignLink}"
-											   SizeMode="Auto"
-										   Tip="Click here to send raids" />
-
-				<tg:DataGridTextColumn PropertyName="plan"
-										   CellContentStyle="{StaticResource RightAlignLink}"
-											   SizeMode="Auto"
-										   Tip="Click here to send raids" />
-				<tg:DataGridNumericalColumn PropertyName="dist"
-												CellContentStyle="{StaticResource RightAlign}"
-											   Width="36"
-											   SizeMode="Fixed"
-												Tip="Distance to dungeon" />
-				<tg:DataGridNumericalColumn PropertyName="level"
-												  SizeMode="Auto"
-												CellContentStyle="{StaticResource RightAlign}" />
-				<tg:DataGridNumericalColumn PropertyName="completion"
-												Tip="How worn out the dungeon is&#x0a;When this reaches 0 the dungeon disappears and troops stop raiding&#x0a;Prefering dungeons with lower completion is a way to prevent raid carry from falling too far, a form of auto reseting raids"
-												CellContentFormat="{}{0,6:N1}"
-												  SizeMode="Auto"
-												CellContentStyle="{StaticResource RightAlign}" />
-				<tg:DataGridTextColumn PropertyName="kind"
-										     SizeMode="Auto"
-										   CellContentStyle="{StaticResource RightAlign}" />
-				<tg:DataGridTextColumn PropertyName="xy"
-										     SizeMode="Auto"
-										   CellContentStyle="{StaticResource CenterAlignLink}" />
-			</tg:RadDataGrid.Columns>
-		</tg:RadDataGrid>
+		
 	</StackPanel>
 </ContentDialog>

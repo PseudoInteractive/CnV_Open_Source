@@ -1416,7 +1416,10 @@ namespace COTG.Views
 
 							if (sel != 0)
 							{
-								await SmartBuild(City.GetBuild(),cc, sel, false, dryRun);
+								if(isPlanner)
+									await Build(cc, sel,  dryRun);
+								else
+									await SmartBuild(City.GetBuild(),cc, sel, false, dryRun);
 
 								break;
 							}

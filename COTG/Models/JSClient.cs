@@ -685,15 +685,18 @@ namespace COTG
 
 		public static async Task ChangeCity(int cityId, bool lazyMove, bool select = true, bool scrollIntoUI = true, bool isLocked=false)
 		{
-			try
+			// Make sure we don't ignore the exception
 			{
 
 				if (City.CanVisit(cityId)  )
 				{
+					if (!await City.CanChangeCity(cityId))
+					{
+						ShellPage.EnsureNotCityView();
+						throw new UIException("ChangeCityLocked");
+					}
 					var city = City.GetOrAddCity(cityId);
-					if (!await city.CheckSetBuild())
-						return;
-
+					
 					if (!lazyMove)
 						cityId.BringCidIntoWorldView(lazyMove, false);
 					if (city.pid != Player.activeId)
@@ -701,7 +704,6 @@ namespace COTG
 
 						// need to switch player
 						JSClient.SetPlayer(city.pid, cityId);
-						return;
 					}
 					else
 					{
@@ -713,15 +715,10 @@ namespace COTG
 				else
 				{
 					ShowCity(cityId, lazyMove, scrollIntoUI);
-					return ;
 				}
 
 			}
-			catch (Exception e)
-			{
-				Log(e);
-			}
-			return ;
+			
 
 		}
 
@@ -2026,11 +2023,11 @@ namespace COTG
 								//		if (cid != City.build)
 								//		   city.SetBuild(false);
 								   }
-								   if (isFromTs && cid == Spot.focus && MainPage.IsVisible())
+								   if (isFromTs && cid == DungeonView.openCity && DungeonView.IsVisible())
 								   {
 									   //   if (jse.TryGetProperty("ts", out _))
 									   //  {
-									   ScanDungeons.Post(cid, city.commandSlots == 0, false,false);  // if command slots is 0, something was not send correctly
+									   ScanDungeons.Post(cid, city.commandSlots == 0, false);  // if command slots is 0, something was not send correctly
 																							   //  }
 								   }
 								   NavStack.Push(cid);
@@ -2239,7 +2236,7 @@ namespace COTG
 					   ShellPage.canvasVisible = true;
 					   ShellPage.isHitTestVisible = true;
 					   ///                   await GetCitylistOverview();
-					   City.UpdateSenatorInfo();  // no async
+					   Task.Delay(3000).ContinueWith( (_)=> City.UpdateSenatorInfo() );  // no async
 					   Friend.LoadAll();
 					   TileData.Ctor(false);
 					   //if (TipsSeen.instance.refresh == false

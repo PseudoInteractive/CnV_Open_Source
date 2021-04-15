@@ -702,14 +702,17 @@ namespace COTG.Views
 		//    mouseButtons = 0;
 		//    Spot.viewHover = 0;
 		//}
-		private static bool AutoSwitchCityView()
+		
+		private static async Task<bool> AutoSwitchCityView()
 		{
+			if (cameraZoom <= cityZoomThreshold)
+				return false;
+
+				
 			var wc = cameraC.RoundToInt();
 			var target = wc;
 			float bestScore = float.MaxValue;
 			// Try a different city
-			
-			
 			
 				for (int x = 0; x <= 0; ++x)
 					for (int y = 0; y <= 0; ++y)
@@ -732,11 +735,29 @@ namespace COTG.Views
 				{
 					var cid = target.WorldToCid();
 					if (cid != City.build)
-						JSClient.ChangeCity(target.WorldToCid(), true);
+					{
+						try
+						{
+							await JSClient.ChangeCity(target.WorldToCid(), true);
+						}
+						catch(UIException ex)
+						{
+							Log(ex);
+							EnsureNotCityView();
+		
+							throw;
+						}
+					}
 					return true;
 				}
 				return false;
 		}
+		public static void EnsureNotCityView()
+		{
+			if (cameraZoom > cameraZoomRegionDefault)
+				cameraZoom = cameraZoomRegionDefault;
+		}
+
 
 		private static void Canvas_PointerWheelChanged(object sender, PointerEventArgs e)
 		{
@@ -760,7 +781,7 @@ namespace COTG.Views
 			DoZoom(pt.Properties.MouseWheelDelta,false);
 		}
 
-		static void DoZoom(float delta,bool skipPan)
+		static async void DoZoom(float delta,bool skipPan)
 		{
 
 
@@ -772,7 +793,7 @@ namespace COTG.Views
 
 			if (IsCityView())
 			{
-				if (AutoSwitchCityView())
+				if (await AutoSwitchCityView())
 				{
 					if (!skipPan)
 					{

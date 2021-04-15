@@ -126,6 +126,13 @@ namespace COTG.Helpers
 			if (CollectionChanged != null)
 				CollectionChanged(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
 		}
+		public void Set( IEnumerable<T> src)
+		{
+			Clear();
+			AddRange(src);
+			NotifyReset();
+		}
+
 	}
 	public static class DumbHelpers
     {

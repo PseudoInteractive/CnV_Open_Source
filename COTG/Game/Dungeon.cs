@@ -13,12 +13,11 @@ namespace COTG.Game
 {
     public class Dungeon 
     {
-		public static ResetableCollection<Dungeon> raidDungeons; // for row details, global as there is only 1 row detail open at a time
 
 		public static void Initialize()
 		{
-			raidDungeons = new();
 		}
+		public string dispatch => "Dispatch";
 		public City city; // city to raid this, where distance is calculated from 
         public int cid; // dungeon id
         public string xy => cid.CidToString();
@@ -49,51 +48,63 @@ namespace COTG.Game
 
 
         //    [JsonProperty("d")]
-        public float dist { get; set; }
+        public float distance { get; set; }
 
         public float loot => (type == (int)DungeonType.mountain ? mountainLoot[level - 1] : otherLoot[level - 1]) * (2 - completion * 0.01f);
         public string plan { get
             {
                 var r = Raiding.ComputeIdealReps(this,city);
-                return $"{r.reps}x {r.averageCarry:P1} carry";
+                return $"{r.reps}x{r.averageCarry:P1}% carry";
             }
         }
         public float GetScore( byte bestDungeonType)
         {
             // lower is better
-            var rv = dist;
+            var rv = distance;
             if (bestDungeonType != type)
                 rv += SettingsPage.penaltyForWrongDungeonType; // penalty of 4 spaces for wrong type
-            return rv;
+			if (!isValid)
+				rv += 100;
+			return rv;
+
         }
-		public static async Task<bool> ShowDungeonList(City city, JsonElement jse, bool autoRaid, bool showPopup)
+		public bool isValid;
+		public void ComputeIsValid()
 		{
-			var rv = autoRaid ? new ResetableCollection<Dungeon>(): raidDungeons;
-			rv.Clear();
+				var d = Raiding.ComputeIdealReps(this, city);
+			isValid=(d.reps != 0 && (d.averageCarry < SettingsPage.raidCarryMax) && d.averageCarry > SettingsPage.raidCarryMin && completion > SettingsPage.minDungeonProgress);
+
+		}
+		public static async Task<bool> ShowDungeonList(City city, JsonElement jse, bool autoRaid)
+		{
+			var rv = new List<Dungeon>();
+		//	rv.Clear();
 			var idealType = city.GetIdealDungeonType();
 			foreach (var dung in jse.EnumerateArray())
 			{
 				var type = dung.GetAsByte("t");
 				if (Views.SettingsPage.raidOffDungeons || (type == idealType))
 				{
-					rv.Add(new Dungeon()
+					var d = new Dungeon()
 					{
 						city = city,
 						cid = dung.GetAsInt("c"),
 						type = type,
 						level = dung.GetAsByte("l"),
 						completion = dung.GetAsFloat("p"),
-						dist = dung.GetAsFloat("d")
+						distance = dung.GetAsFloat("d")
 
-					}
-					);
+					};
+					d.ComputeIsValid();
+					if (d.isValid || !autoRaid)
+						rv.Add(d);
+				
+					
 				}
 			}
 
 			rv.Sort((a, b) => a.GetScore(idealType).CompareTo(b.GetScore(idealType)));
-			if(!autoRaid)
-				App.DispatchOnUIThreadSneakyLow( rv.NotifyReset);
-				
+			
 			if (autoRaid)
 			{
 				if(rv.Count>0)
@@ -101,10 +112,7 @@ namespace COTG.Game
 					var success = false;
 					foreach (var _i in rv)
 					{
-						if (_i.completion < SettingsPage.minDungeonProgress)
-							continue;
-						var d = Raiding.ComputeIdealReps(_i, city);
-						if ((d.averageCarry - Raiding.desiredCarry).Abs() > 0.25f)
+						if(!_i.isValid)
 							continue;
 						var i = _i;
 						int counter = 0;
@@ -131,9 +139,10 @@ namespace COTG.Game
 			}
 			else
 			{
+				
 				// dont wait on this 
 				//COTG.Views.MainPage.UpdateDungeonList(rv);
-				await DungeonView.Show(city);
+				await DungeonView.Show(city, rv);
 			}
 			return true;
 		}

@@ -9,6 +9,7 @@ using Microsoft.AppCenter.Crashes;
 using System;
 using System.Diagnostics;
 using System.Diagnostics.Contracts;
+using System.Runtime.Serialization;
 
 using Windows.UI.Popups;
 
@@ -193,4 +194,22 @@ namespace COTG
 #endif
 		}
     }
+	public class UIException : Exception
+	{
+		public UIException([System.Runtime.CompilerServices.CallerMemberName] string memberName = "",
+	   [System.Runtime.CompilerServices.CallerFilePath] string sourceFilePath = "",
+	   [System.Runtime.CompilerServices.CallerLineNumber] int sourceLineNumber = 0) : base($"{sourceFilePath}({sourceLineNumber}): {memberName}) Exception")
+		{
+
+		}
+
+		public UIException(string message) : base(message)
+		{
+		}
+
+		public UIException(string message, Exception innerException) : base(message, innerException)
+		{
+		}
+
+	}
 }

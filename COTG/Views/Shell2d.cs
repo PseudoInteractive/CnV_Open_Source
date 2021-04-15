@@ -397,12 +397,12 @@ namespace COTG.Views
 				{
 					if (viewMode == ViewMode.world)
 					{
-						if (AGame.cameraZoom > AGame.cityZoomThreshold)
-							AGame.cameraZoom = AGame.cameraZoomRegionDefault;
+						if (AGame.cameraZoom > AGame.cityZoomWorldThreshold )
+							AGame.cameraZoom = AGame.cameraZoomWorldDefault;
 					}
 					else if (viewMode == ViewMode.region)
 					{
-						if (AGame.cameraZoom > AGame.cityZoomThreshold)
+						if (AGame.cameraZoom > AGame.cityZoomThreshold || AGame.cameraZoom < AGame.cityZoomWorldThreshold )
 							AGame.cameraZoom = AGame.cameraZoomRegionDefault;
 					}
 					else

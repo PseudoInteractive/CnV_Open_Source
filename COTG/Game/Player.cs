@@ -26,7 +26,7 @@ namespace COTG.Game
 		public HashSet<int> cities = new();
         public static bool isAvatar => myName=="Avatar";
 		public static bool isTest => myName == "KittyKat";
-		public static bool isAvatarOrTest => isAvatar||isTest;
+		public static bool isAvatarOrTest => isAvatar||isTest || (myName=="BombaySapper" && JSClient.isSub);
 
 		public string allianceName => Alliance.IdToName(alliance);
 

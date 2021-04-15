@@ -20,14 +20,16 @@ using COTG.Services;
 using static COTG.Debug;
 using static COTG.Game.Enum;
 using static COTG.Views.SettingsPage;
+using COTG.Helpers;
 // The Content Dialog item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
 
 namespace COTG.Views
 {
 	public sealed partial class DungeonView : ContentDialog
 	{
-		const int raidStepCount = 12;
-		
+		const int raidStepCount = 15;
+
+		ResetableCollection<Dungeon> items = new();
 
 		public static int openCity;
 		public static DungeonView instance;
@@ -43,26 +45,30 @@ namespace COTG.Views
 		public DungeonView()
 		{
 			this.InitializeComponent();
-			if (raidSteps == null)
+			if (raidCarrySteps == null)
 			{
-				raidSteps = new float[raidStepCount];
-				for (int i = 0; i <= 4; ++i)
+				raidCarrySteps = new int[raidStepCount];
+				int put = 85;
+				for (int i = 0; i < raidStepCount/3; ++i)
 				{
-					raidSteps[i] = SettingsPage.raidCarryMin * (i * 0.25f).Lerp(0.5f, 1.0f);
+					raidCarrySteps[i] = put;
+					put += 5;
 				}
-				for (int i = 5; i <= 8; ++i)
+				for (int i = raidStepCount / 3; i< raidStepCount*2 / 3; ++i)
 				{
-					raidSteps[i] = ((i - 4) * 0.25f).Lerp(SettingsPage.raidCarryMin, SettingsPage.raidCarryMax);
+					raidCarrySteps[i] = put;
+					put += 15;
 				}
-				for (int i = 9; i < raidStepCount; ++i)
+				for (int i = 2*raidStepCount / 3; i < raidStepCount ; ++i)
 				{
-					raidSteps[i] = SettingsPage.raidCarryMax + (i - 9) * 15; ;
+					raidCarrySteps[i] = put;
+					put += 25;
 				}
 			}
-			raidCarryMinBox.ItemsSource = raidSteps;
-			raidCarryMinBox.SelectedIndex = 4;
-			raidCarryMaxBox.ItemsSource = raidSteps;
-			raidCarryMaxBox.SelectedIndex = 9;
+			raidCarryMinBox.ItemsSource = raidCarrySteps;
+			raidCarryMaxBox.ItemsSource = raidCarrySteps;
+			raidCarryMinBox.SelectedIndex = raidCarrySteps.IndexOfClosest( (raidCarryMin*100).RoundToInt() );
+			raidCarryMaxBox.SelectedIndex = raidCarrySteps.IndexOfClosest((raidCarryMax * 100).RoundToInt());
 		}
 
 		public static bool IsVisible() => openCity != 0;
@@ -71,22 +77,31 @@ namespace COTG.Views
 		{
 			instance.Hide();
 		}
-		public static void RefreshDungeonList(int cid=0)
+		static bool hasRunOnce;
+		public static async Task Show(City city, List<Dungeon> dungeons)
 		{
-			if(openCity!=0 && ((cid == openCity) || cid == 0 ) )
-				Dungeon.raidDungeons.NotifyReset();
-
-		}
-		public static async Task Show(City city)
-		{
+			if (openCity != 0)
+			{
+				if (city.cid == openCity)
+				{
+					App.DispatchOnUIThreadLow(() => instance.items.Set(dungeons));
+				}
+				return;
+			}
 			await AApp.popupSema.WaitAsync();
 			try
 			{
 				await App.DispatchOnUIThreadTask(async () =>
 			   {
+				   Log(city.nameAndRemarks);
 				   openCity = city.cid;
 				   instance.Title = city.nameAndRemarks;
-
+				   instance.items.Set( dungeons);
+				   if(!hasRunOnce)
+				   {
+					   hasRunOnce = true;
+					   Task.Delay(1000).ContinueWith( (_)=> App.DispatchOnUIThreadLow(instance.items.NotifyReset));
+				   }
 				   await instance.ShowAsync();
 			   });
 			}
@@ -99,42 +114,44 @@ namespace COTG.Views
 
 		private void RaidFraction_ValueChanged(Microsoft.UI.Xaml.Controls.NumberBox sender, Microsoft.UI.Xaml.Controls.NumberBoxValueChangedEventArgs args)
 		{
-			if (JSClient.ppdtInitialized)
-				Raiding.UpdateTS(true, true);
+			UpdateRaidPlans();
 
 		}
 
-		private static void AddRaidStep(float v )
+		private static void AddRaidStep(bool isMax )
 		{
-			float bestError = float.MaxValue;
-			var bestId = 0;
-			for (int i = 0; i < raidStepCount; ++i)
-			{
-				float d = (v - raidSteps[i]).Abs();
-				if (d < bestError)
-				{
-					bestError = d;
-					bestId = i;
-				}
-			}
-			raidSteps[bestId] = v;
+			var v = ((isMax ? raidCarryMax : raidCarryMin)*100).RoundToInt();
+			var bestId = raidCarrySteps.IndexOfClosest(v);
 
+			Log($"Add raid step {isMax}, {v}");
+
+			raidCarrySteps[bestId] = v;
+
+			instance.raidCarryMinBox.ItemsSource = raidCarrySteps;
+			instance.raidCarryMaxBox.ItemsSource = raidCarrySteps;
+			if (isMax)
+			{
+				raidCarryMax = (raidCarrySteps[bestId]*0.01f);
+				instance.raidCarryMaxBox.SelectedItem = bestId;
+			}
+			else
+			{
+				raidCarryMin = raidCarrySteps[bestId]*0.01f;
+				instance.raidCarryMinBox.SelectedItem = bestId;
+			}
 		}
 
 
 		private void RaidCarryMaxSubmitted(ComboBox sender, ComboBoxTextSubmittedEventArgs args)
 		{
 			//     Log("Submit: " + args.Text);
-			if (float.TryParse(args.Text, System.Globalization.NumberStyles.Number, null, out float _raidCarry))
+			if (int.TryParse(args.Text, System.Globalization.NumberStyles.Number, null, out var _raidCarry))
 			{
-				AddRaidStep(_raidCarry);
+
 				//raidSteps;
-				if (SetCarryMax(_raidCarry))
-				{
-					//if(raidCity!=null)
-					//    ScanDungeons.Post(raidCity.cid,false) ;
-					RefreshDungeonList();
-				}
+				SetCarryMax(_raidCarry);
+				Log(_raidCarry);
+				AddRaidStep(true);
 			}
 			else
 			{
@@ -147,17 +164,12 @@ namespace COTG.Views
 		private void RaidCarrySubmitted(ComboBox sender, ComboBoxTextSubmittedEventArgs args)
 		{
 			//     Log("Submit: " + args.Text);
-			if (float.TryParse(args.Text, System.Globalization.NumberStyles.Number, null, out float _raidCarry))
+			if (int.TryParse(args.Text, out var _raidCarry))
 			{
-				AddRaidStep(_raidCarry);
+				Log(_raidCarry);
 
-				//raidSteps;
-				if (SetCarry(_raidCarry))
-				{
-					//if(raidCity!=null)
-					//    ScanDungeons.Post(raidCity.cid,false) ;
-					RefreshDungeonList();
-				}
+				SetCarryMin(_raidCarry);
+				AddRaidStep(false);
 			}
 			else
 			{
@@ -168,45 +180,60 @@ namespace COTG.Views
 
 		public static void UpdateRaidPlans()
 		{
-			//// instance.Dispatcher.DispatchOnUIThread(() =>
-			// {
-			//     // trick it
-			//     var temp = instance.dungeonGrid.ItemsSource;
-			//     instance.dungeonGrid.ItemsSource = null;
-			//     instance.dungeonGrid.ItemsSource = temp;
-			// }
-			// // tell UI that list data has changed
-			Dungeon.raidDungeons.NotifyReset();
+			if(openCity!=0)
+			 City.GetOrAddCity(openCity).ShowDungeons();
+			// tell UI that list data has changed
 		}
-		private static bool SetCarry(float src)
+		private static bool SetCarryMin(int src)
 		{
 			var newVal = (src) * 0.01f;
 			if ((newVal - SettingsPage.raidCarryMin).Abs() <= 1.0f / 256.0f)
 				return false;
 			SettingsPage.raidCarryMin = newVal;
-			SettingsPage.SaveAll();
+			UpdateRaidPlans(); 
 			return true;
 		}
-		private static bool SetCarryMax(float src)
+		private static bool SetCarryMax(int src)
 		{
 			var newVal = (src) * 0.01f;
 			if ((newVal - SettingsPage.raidCarryMax).Abs() <= 1.0f / 256.0f)
 				return false;
 			SettingsPage.raidCarryMax = newVal;
-			SettingsPage.SaveAll();
+			UpdateRaidPlans(); 
 			return true;
 		}
-		private void RaidCarrySelChanged(object sender, SelectionChangedEventArgs e)
+		private void RaidCarrySelChanged(object sender, object _)
 		{
+			var box = raidCarryMinBox;
 			//   Log("Sel update");
-			if (e.AddedItems != null && e.AddedItems.Count > 0)
+			var sel = box.SelectedIndex;
+			if (sel != -1 )
 			{
-				if (SetCarry((float)e.AddedItems[0]))
-				{
-					UpdateRaidPlans(); //Log("Sel changed");
-									   //if (raidCity != null)
-									   //    ScanDungeons.Post(raidCity.cid,false);
-				}
+
+				SetCarryMin(raidCarrySteps[sel]);
+				
+
+			}
+			else
+			{
+				Trace("No selectected");
+			}
+		}
+		private void RaidCarryMaxSelChanged(object sender, object _)
+		{
+			var box = raidCarryMaxBox;
+			//   Log("Sel update");
+			var sel = box.SelectedIndex;
+			if (sel != -1)
+			{
+
+				SetCarryMax(raidCarrySteps[sel]);
+
+
+			}
+			else
+			{
+				Trace("No selectected");
 			}
 		}
 
@@ -222,6 +249,7 @@ namespace COTG.Views
 					flyout.Items.Add(but);
 				}
 			}
+
 			flyout.CopyXamlRoomFrom(button);
 			flyout.Closing += Flyout_Closing;
 			flyout.ShowAt(button);
@@ -242,5 +270,6 @@ namespace COTG.Views
 			}
 			Raiding.UpdateTS(true, true);
 		}
+
 	}
 }

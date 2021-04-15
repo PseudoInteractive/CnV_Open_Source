@@ -80,4 +80,10 @@
  - **Fix** Build queues not saving
 ### 2021/4/13
  - **Fix** Switching cities right after using 'Do the stuff' would not behave as expected
+### 2021/4/14
+ - **Request** You can now set your cities initial storehouse count (i.e. while building cabins)
+### 2021/4/14
+ - **New** Sorc towers will only be built when you ave more than tsForSorcTower (or it is a sorc city) and then it will be immediatey raidsed to level 10.
+### 2021/4/14
+ - **Known Issue** The first time you open the raid box, it will be empty, please close and re-open
  

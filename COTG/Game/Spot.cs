@@ -443,7 +443,7 @@ namespace COTG.Game
 		}
 
 
-		public void ProcessClick(string column, PointerPoint pt, UIElement uie, VirtualKeyModifiers modifiers)
+		public async void ProcessClick(string column, PointerPoint pt, UIElement uie, VirtualKeyModifiers modifiers)
 		{
 			modifiers.UpdateKeyModifiers();
 			//    Note.Show($"{this} {column} {pt.Position}");
@@ -479,7 +479,11 @@ namespace COTG.Game
 					case nameof(icon):
 						if (City.CanVisit(cid))
 						{
+							if (!await City.CanChangeCity(cid))
+								return;
+
 							var wasBuild = City.IsBuild(cid);
+							
 							JSClient.ChangeCity(cid, false, true, false);
 							if (wasBuild)
 							{
@@ -568,12 +572,16 @@ namespace COTG.Game
 				App.CopyTextToClipboard(text);
 				SetFocus(false);
 			}
+			else
+			{
+				// if shift or conntrol is pressed normal processing takes place
+			}
 			SpotTab.TouchSpot(cid, modifiers);
 		}
 	
 		public async Task ShowDungeons()
 		{
-			await ScanDungeons.Post(cid, true, false,true);
+			await ScanDungeons.Post(cid, true, false);
 		}
 
 		public string ToTsv()
@@ -1204,11 +1212,14 @@ namespace COTG.Game
 			return build == cid;
 		}
 
-		public async Task<bool> CheckSetBuild()
+		public static async Task<bool> CanChangeCity(int cid)
 		{
 			var changed = cid != build;
 			if (changed)
 			{
+				if (!City.CanVisit(cid))
+					return true;
+
 				if (lockedBuild != 0 && cid != lockedBuild)
 				{
 					Note.Show("Please wait for current operation to complete");

@@ -108,7 +108,7 @@ namespace COTG.Game
 		public static Building[] buildingsCache;
 		public static Building[] postQueuebuildingsCache = new JSON.Building[citySpotCount];
 
-		public string buildStage => GetBuildStageNoFetch().ToString();
+	//	public string buildStage => GetBuildStageNoFetch().ToString();
 
 		//public Building GetBuiding((int x, int y) xy) => buildings[XYToId(xy)];
 		//	public Building GetBuiding( int bspot) => buildings[bspot];
@@ -359,11 +359,11 @@ namespace COTG.Game
 			}
 		}
 
-		public void SelectInWorldView(bool lazyMove)
+		public async void SelectInWorldView(bool lazyMove)
 		{
 			if (!isBuild)
 			{
-				JSClient.ChangeCity(cid, lazyMove); // keep current view, switch to city
+				await JSClient.ChangeCity(cid, lazyMove); // keep current view, switch to city
 
 			}
 			if (!ShellPage.IsWorldView())
@@ -1209,13 +1209,7 @@ namespace COTG.Game
 			}
 		}
 		//static City lastDugeonScanCity;
-		public ResetableCollection<Dungeon> dungeons
-		{
-			get
-			{
-				return Dungeon.raidDungeons;
-			}
-		}
+		
 		public string dungeonsToggle =>  "+";
 
 		public bool isBuilding { get; internal set; }
@@ -1638,11 +1632,20 @@ namespace COTG.Game
 			return GetBuildStage(GetBuildingCounts(cabinLevel));
 
 		}
-		public static BuildInfo GetBuildBuildStageNoFetch()
+		public string buildStage
 		{
-			if (CityRename.IsNew(City.GetBuild()))
-				return new BuildInfo(BuildStage._new,100);
-			return City.GetBuild().GetBuildStage(GetBuildingCountPostQueue(City.GetBuild().GetAutobuildCabinLevelNoFetch()));
+			get
+			{
+				if (CityRename.IsNew(this))
+					return "New";
+				if (buildings == Emptybuildings)
+				{
+					//GetCity.Post(cid);
+					return "pending...";
+				}
+				var bc = GetBuildingCounts(GetAutobuildCabinLevelNoFetch());
+				return $"{GetBuildStage(bc).stage} ({bc.buildings})";
+			}
 		}
 
 		public BuildInfo GetBuildStageNoFetch()
@@ -1690,7 +1693,6 @@ namespace COTG.Game
 			return mode switch
 			{
 				ShellPage.ViewMode.city => ShellPage.ViewMode.region,
-				ShellPage.ViewMode.region => ShellPage.ViewMode.world,
 				_ => ShellPage.ViewMode.city
 			};
 		}

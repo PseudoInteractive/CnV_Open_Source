@@ -2103,6 +2103,8 @@ namespace COTG
 			}
 			if (scale == 0)
 				scale = bmFontScale;
+			if (scale == 0)
+				return;
 
 			TextLayout textLayout = GetTextLayout(text, format);
 			if (zBias == -1)
@@ -2575,8 +2577,8 @@ namespace COTG
 					done:
 					AGame.cameraC = newC;
 					ShellPage.SetJSCamera();
-					if (allowZoomChange && ShellPage.IsCityView())
-						ShellPage.SetViewModeRegion();
+					if (allowZoomChange && cid != City.build )
+						ShellPage.EnsureNotCityView();
 
 					return true;
 				}

@@ -235,18 +235,7 @@ namespace COTG.Views
             
         //}
 
-        public static void UpdateDungeonList(IEnumerable<Dungeon> dungeons)
-        {
-            if (instance == null)
-                return;
-			if(dungeons==null)
-				Dungeon.raidDungeons.Clear();
-			//  Raiding.UpdateTS(); // not sychronous, the results will come in after the dungeon list is synced
-
-			Dungeon.raidDungeons.NotifyReset();
-			//    instance.dungeonGrid.ItemsSource = dungeons;
-
-		}
+       
       
 
    
@@ -425,20 +414,21 @@ namespace COTG.Views
 			var sel = Spot.GetSelectedForContextMenu(0, false);
 			int counter = 0;
 			int max =sel.Count;
-			foreach(var cid in sel)
+			foreach (var cid in sel)
 			{
 				++counter;
-				if(counter%16==0)
+				if (counter % 16 == 0)
 				{
 					Note.ShowTip($"Auto Raid: {counter}/{max}..");
 				}
 				Spot s = Spot.GetOrAdd(cid);
 				if (s is City city)
 				{
-					await ScanDungeons.Post(cid, city.commandSlots==0, true,false);
+					await ScanDungeons.Post(cid, city.commandSlots == 0, true);
 				}
-	
-			}
+
+			};
+
 			Note.ShowTip($"Auto Raid: Completed: {max}");
 			Note.Show($"Finished Auto Raid with {max} selected");
 

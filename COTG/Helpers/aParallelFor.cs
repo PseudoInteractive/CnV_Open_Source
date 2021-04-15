@@ -37,8 +37,36 @@ namespace COTG.Helpers
 
             return Task.WhenAll(tasks);
         }
+		public static Task ParallelForAsync4<T>(this T[] source,  Func<T,int , Task> funcBody)
+		{
+			int lg = source.Length;
 
-        public static Task ParallelForEachAsync<T>(this IEnumerable<T> source, Func<T, Task> funcBody, int maxDoP = 4)
+			const int div0 = 0;
+			var div1 = lg / 4;
+			var div2 = lg / 2;
+			var div3 = lg * 3 / 4;
+			var div4 = lg;
+
+			async Task AwaitPartition(T[] source, int partition, int i0, int i1)
+			{
+				for (int i = i0; i < i1; ++i)
+				{
+					await funcBody(source[i],i);
+				}
+			}
+
+			var tasks = new Task[4];
+
+			tasks[0] = Task.Run(() => AwaitPartition(source, 0, div0, div1));
+			tasks[1] = Task.Run(() => AwaitPartition(source, 1, div1, div2));
+			tasks[2] = Task.Run(() => AwaitPartition(source, 2, div2, div3));
+			tasks[3] = Task.Run(() => AwaitPartition(source, 3, div3, div4));
+
+
+			return Task.WhenAll(tasks);
+		}
+
+		public static Task ParallelForEachAsync<T>(this IEnumerable<T> source, Func<T, Task> funcBody, int maxDoP = 4)
         {
             async Task AwaitPartition(IEnumerator<T> partition)
             {

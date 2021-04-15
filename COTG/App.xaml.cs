@@ -255,7 +255,7 @@ namespace COTG
 
 			OnLaunchedOrActivated(args);
 		}
-		private void OnLaunchedOrActivated(LaunchActivatedEventArgs args)
+		private void OnLaunchedOrActivated(IActivatedEventArgs args)
 		{
 			this.DebugSettings.FailFastOnErrors = false;
 #if TRACE || DEBUG
@@ -464,7 +464,7 @@ namespace COTG
 				return;
 			}
 			await ActivationService.ActivateAsync(args);
-			OnLaunchedOrActivated(args as LaunchActivatedEventArgs);
+			OnLaunchedOrActivated(args);
 
 
 

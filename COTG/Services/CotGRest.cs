@@ -398,17 +398,15 @@ namespace COTG.Services
     {
         int cid;
 		bool autoRaid;
-		bool showPopup;
         //                       Xs4b22320360lme55s
         public static string secret=>JSClient.jsVars.raidSecret;// = "Xs4b2261f55dlme55s";
-        public ScanDungeons(int _cid, bool _autoRaid, bool _showPopup) : base("includes/fCv.php", World.CidToPlayerOrMe(_cid))
+        public ScanDungeons(int _cid, bool _autoRaid) : base("includes/fCv.php", World.CidToPlayerOrMe(_cid))
         {
-			showPopup = _showPopup;
 			cid = _cid;
 			autoRaid = _autoRaid;
 
 		}
-        public static async Task<bool> Post(int _cid, bool getCityFirst, bool _autoRaid, bool showPopup)
+        public static async Task<bool> Post(int _cid, bool getCityFirst, bool _autoRaid)
         {
 
 			
@@ -433,7 +431,7 @@ namespace COTG.Services
 			if (secret == null)
 				return false;
             
-			return   await new ScanDungeons(_cid, _autoRaid,showPopup).Post();
+			return   await new ScanDungeons(_cid, _autoRaid).Post();
 
         }
         public override string GetPostContent()
@@ -469,7 +467,7 @@ namespace COTG.Services
                     var jse = json.RootElement;
                     jse = jse[0];
                     City.TryGet(cid, out var city);
-                    return await Dungeon.ShowDungeonList(city, jse,autoRaid,showPopup);
+                    return await Dungeon.ShowDungeonList(city, jse,autoRaid);
                 }
 				return true; // no dungeons?
             }

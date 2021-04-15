@@ -382,7 +382,51 @@ namespace COTG
         {
             return a == null || a.Length == 0;
         }
-        static public bool IsNullOrEmpty<T>(this IEnumerable<T> a)
+		public static bool Is00(this (int x, int y) c) => (c.x == 0) & (c.y == 0);
+		static public int IndexOfClosest(this IEnumerable<int> a,int b)
+		{
+			var bestScore = long.MaxValue;
+			int bestId = -1;
+			int counter = -1;
+			foreach(var i in a)
+			{
+				++counter;
+				var err = (long)(i - b);
+				err = err * err;
+
+				if(err < bestScore)
+				{
+					bestScore = err;
+					bestId = counter;
+				}
+
+			}
+			return bestId;
+		}
+
+		static public int IndexOfClosest(this IEnumerable<float> a, float b)
+		{
+			var bestScore = float.MaxValue;
+			int bestId = -1;
+			int counter = -1;
+			foreach (var i in a)
+			{
+				++counter;
+				var err = (i - b);
+				err = err * err;
+
+				if (err < bestScore)
+				{
+					bestScore = err;
+					bestId = counter;
+				}
+
+			}
+			return bestId;
+		}
+
+
+		static public bool IsNullOrEmpty<T>(this IEnumerable<T> a)
         {
             if (a == null)
                 return true;
