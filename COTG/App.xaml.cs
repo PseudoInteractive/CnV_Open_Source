@@ -408,7 +408,7 @@ namespace COTG
 		{
 			foreach (var i in idleTasks)
 			{
-				if (i == a)
+				if (i.IsEqual(a) )
 					return;
 			}
 
@@ -419,7 +419,7 @@ namespace COTG
 		{
 			foreach (var i in idleTasks)
 			{
-				if (i == a)
+				if (i.IsEqual(a) )
 					return;
 			}
 

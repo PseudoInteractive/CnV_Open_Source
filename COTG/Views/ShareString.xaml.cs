@@ -242,7 +242,7 @@ namespace COTG.Views
 		public static void SetFromSS(string shareString)
 		{
 			var s = SplitShareString(shareString);
-			var meta = JsonSerializer.Deserialize<ShareStringMeta>(s.json);
+			var meta = JsonSerializer.Deserialize<ShareStringMeta>(s.json, COTG.JSON.Json.jsonSerializerOptions);
 			var path = DecomposePath(meta.path);
 			instance.shareString.Text = s.ss ?? string.Empty;
 			var tags = meta.notes ?? string.Empty;
@@ -360,6 +360,15 @@ namespace COTG.Views
 		public string desc { get; set; }
 		public string notes { get; set; }
 
+		public int rWood { get; set; }
+		public int rStone { get; set; }
+		public int rIron { get; set; }
+		public int rFood { get; set; }
+		public int mWood { get; set; }
+		public int mStone { get; set; }
+		public int mIron { get; set; }
+		public int mFood { get; set; }
+
 	}
 	public class ShareStringItem
 	{
@@ -404,7 +413,7 @@ namespace COTG.Views
 		public ShareStringItem(string shareString)
 		{
 			var s = ShareString.SplitShareString(shareString);
-			var meta = JsonSerializer.Deserialize<ShareStringMeta>(s.json);
+			var meta = JsonSerializer.Deserialize<ShareStringMeta>(s.json, COTG.JSON.Json.jsonSerializerOptions);
 		//	var path = ShareString.DecomposePath(meta.path);
 			Ctor(meta.path, meta.notes ?? string.Empty, meta.desc ?? string.Empty, s.ss ?? string.Empty);
 		}

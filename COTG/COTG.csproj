@@ -252,6 +252,7 @@
     <Compile Include="JSON\Report.cs" />
     <Compile Include="JSON\SpotJson.cs" />
     <Compile Include="JSON\TileSet.cs" />
+    <Compile Include="JSON\TradeSettings.cs" />
     <Compile Include="JSON\TroopInfo.cs" />
     <Compile Include="Models\CityTapCommand.cs" />
     <Compile Include="Models\JsNative.cs" />

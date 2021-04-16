@@ -1,4 +1,6 @@
-﻿using System;
+﻿using COTG.Game;
+
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -36,6 +38,9 @@ namespace COTG
 					{
 						if (int.TryParse(s["s"], out int _s))
 							JSClient.subId = _s;
+						var n = s["p"];
+						if(n!=null)
+							Player.subOwner = n;
 						if (int.TryParse(s["w"], out int _w))
 							JSClient.world = _w;
 						if (int.TryParse(s["n"], out int _n)) // new instance

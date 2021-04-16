@@ -181,7 +181,7 @@ namespace COTG.JSON
                 
 				var str = setRecruit ? SetRecruit(split, spot) : "";
                 
-				Note.Show($"Set {Spot.GetOrAdd(cid).nameAndRemarks}'s hub to {Spot.GetOrAdd(reqHub).nameAndRemarks}{str}");
+				Note.Show($"Set {City.Get(cid).nameMarkdown}'s hub to {City.Get(reqHub).nameMarkdown}{str}");
                 return true;
             });
 

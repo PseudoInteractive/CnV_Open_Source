@@ -345,6 +345,8 @@ namespace COTG.Game
 			return _carryCapacity;
 		}
 
+		internal static City Get(int cid) => GetOrAddCity(cid);
+
 		public string raidReturn
 		{
 			get
@@ -408,6 +410,19 @@ namespace COTG.Game
 			}
 			return 0;
 		}
+		public int CountBuildingsInOverlay(int bid)
+		{
+			if (shareString.IsNullOrEmpty())
+				return 0;
+			int rv = 0;
+			for (int i = 0; i < City.citySpotCount; ++i)
+			{
+				var bO = BidFromOverlay(i);
+				if (bid == bO)
+					++rv;
+			}
+			return rv;
+		}
 		public int BidFromOverlay((int x, int y) c) => BidFromOverlay(XYToId(c));
 
 		public (int bid, BuildingDef bd) BFromOverlay((int x, int y) c)
@@ -415,7 +430,6 @@ namespace COTG.Game
 			var bid = BidFromOverlay(c);
 			return (bid, BuildingDef.all[bid]);
 		}
-
 
 		public static City[] myCitiesCache;
 		public static City[] friendCitiesCache;
@@ -1406,6 +1420,7 @@ namespace COTG.Game
 			noLayout,
 			setup,
 			cabins,
+			townHall,
 			cabinsDone,
 			mainBuildings,
 			preTeardown,
@@ -1534,7 +1549,8 @@ namespace COTG.Game
 				if (bid == bidSorcTower)
 				{
 					++rv.sorcTowers;
-					rv.sorcTowerLevel = bd.bl; /// any is fine
+					if( bd.bl > rv.sorcTowerLevel)
+						rv.sorcTowerLevel = bd.bl; /// any is fine
 				}
 				else if (bid == bidAcademy)
 					++rv.academies;
@@ -1598,9 +1614,13 @@ namespace COTG.Game
 			if (bc.buildings < 8)
 				return new BuildInfo(BuildStage.setup, buildingLimit);
 
-			if (bc.townHallLevel < 10 || bc.unfinishedCabins > 0)
+			if ( bc.unfinishedCabins > 0)
 				return new BuildInfo(BuildStage.cabins, buildingLimit);
-			if (bc.cabins >= bc.buildings + 4)
+			else if(bc.townHallLevel < 10)
+			{
+				return new BuildInfo(BuildStage.townHall, buildingLimit);
+			}
+			if (bc.cabins +4 >= bc.buildings )
 			{
 				return new BuildInfo(BuildStage.cabinsDone,buildingLimit);
 			}

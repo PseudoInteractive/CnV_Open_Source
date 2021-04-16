@@ -31,6 +31,8 @@ using WebView = Windows.UI.Xaml.Controls.WebView;
 using ContentDialog = Windows.UI.Xaml.Controls.ContentDialog;
 using ContentDialogResult = Windows.UI.Xaml.Controls.ContentDialogResult;
 using Microsoft.Toolkit.Uwp.Helpers;
+using System.Text;
+using System.Web;
 
 namespace COTG
 {
@@ -166,7 +168,7 @@ namespace COTG
 		public static string PlayerToken(int pid) => PlayerVars(pid).token;
 
 		public static int ppss;
-		public static bool isSub => ppss != 0;
+		public static bool isSub => subId != 0;
 
 		public static long GameTimeMs()
 		{
@@ -708,8 +710,13 @@ namespace COTG
 					else
 					{
 						var changed = await city.SetBuildInternal(scrollIntoUI,true, isLocked);
-						if (changed)		
-							await WaitOnCityData(cityId);
+						if (changed)
+						{
+							if (isLocked)
+								await ChangeCityJSWait(cityId);
+							else
+								ChangeCityJS(cityId);
+						}
 					}
 				}
 				else
@@ -764,7 +771,7 @@ namespace COTG
 		//}
 		public static async void ClearCenter(int cid)
 		{
-			Note.Show($"{cid.CidToStringMD()} Clear Center Res");
+			Note.Show($"{City.Get(cid).nameMarkdown} Clear Center Res");
 
 			if (cid != 0)
 			{
@@ -1032,6 +1039,13 @@ namespace COTG
 					bonusesUpdated = true;
 
 				}
+				if(jse.TryGetProperty("tcps", out var tcps))
+				{
+					TradeSettings.all = JsonSerializer.Deserialize<TradeSettings[]>(tcps.ToString(), COTG.JSON.Json.jsonSerializerOptions);
+					
+					App.DispatchOnUIThread( () => HubSettings.instance.tradeSettings.ItemsSource = TradeSettings.all );
+				}
+
 				if(jse.TryGetProperty("wmo", out var wo))
 				{
 					WorldViewSettings.ownCities.isOn = wo.GetAsInt("0")==1;
@@ -1597,14 +1611,40 @@ namespace COTG
 		}
 
 		static DispatcherTimer presenceTimer;
-		static ConcurrentBag<TaskCompletionSource<bool> > waitingOnCityData = new();
-		static async Task WaitOnCityData(int cityId)
+		class WaitOnCityDataData
 		{
-			var i = new TaskCompletionSource<bool>();
-				waitingOnCityData.Add(i);
+			public int cid;
+			public TaskCompletionSource<bool> t;
+
+			public WaitOnCityDataData(int cid)
+			{
+				this.cid = cid;
+				t=new TaskCompletionSource<bool>();
+			}
+
+			public void Done()
+			{
+				cid = 0;
+				var _t = t;
+				t = null;
+				_t.SetResult(true);
+			}
+			public bool isDone => t == null;
+		}
+
+		static ConcurrentBag<WaitOnCityDataData> waitingOnCityData = new();
+		static void ChangeCityJS(int cityId)
+		{
 			App.DispatchOnUIThreadSneaky(() =>
 							view.InvokeScriptAsync("chcity", new string[] { (cityId).ToString() }));
-			await i.Task;
+
+		}
+		static async Task ChangeCityJSWait(int cityId)
+		{
+			var i = new WaitOnCityDataData(cityId);
+			waitingOnCityData.Add(i);
+			ChangeCityJS(cityId);
+			await i.t.Task;
 		}
 		static private void View_ScriptNotify(object sender, Windows.UI.Xaml.Controls.NotifyEventArgs __e)
 
@@ -1679,6 +1719,8 @@ namespace COTG
 								   Log(ServerTime().ToString());
 								   ppss = jso.GetAsInt("ppss");
 								   Player.myName = jso.GetString("player");
+								   if (Player.subOwner == null)
+									   Player.subOwner = Player.myName;
 								   Player.activeId =Player.myId = jso.GetAsInt("pid"); ;
 								   Player.myIds.Add(Player.myId);
 								   var cid = jso.GetAsInt("cid");
@@ -1719,6 +1761,15 @@ namespace COTG
 
 								   ;
 							   }
+						   case "buildFail":
+							   {
+									var city =City.GetOrAddCity( jsp.Value.GetAsInt("cid") );
+									var e = jsp.Value.GetAsInt("e");
+									Trace($"Build Command: {city.nameMarkdown} {e}, {jsp.Value.ToString()}");
+									
+
+									break;
+							   }
 						   case "error":
 							   {
 								   var msg = jsp.Value.GetString();
@@ -1729,7 +1780,7 @@ namespace COTG
 						   case "sub":
 							   {
 								   var i = jsp.Value.GetAsInt();
-								   App.DispatchOnUIThread(() => Launcher.LaunchUriAsync(new Uri($"{App.appLink}:launch?w={world}&s={i}&n=1")));
+								   App.DispatchOnUIThread(() => Launcher.LaunchUriAsync(new Uri($"{App.appLink}:launch?w={world}&s={i}&n=1&p={HttpUtility.UrlEncode(Player.myName, Encoding.UTF8)}")));
 								   break;
 							   }
 						   case "shcit":
@@ -1864,8 +1915,8 @@ namespace COTG
 
 												   if(result == ContentDialogResult.Primary)
 												   {
-													   await ChangeCity(cid,false).ConfigureAwait(true);
-													   await Task.Delay(1000).ConfigureAwait(true);
+													  // await ChangeCity(cid,false).ConfigureAwait(true);
+													  // await Task.Delay(1000).ConfigureAwait(true);
 													   await CityRename.RenameDialog(cid,true); 
 												   }
 											   });
@@ -2031,12 +2082,19 @@ namespace COTG
 																							   //  }
 								   }
 								   NavStack.Push(cid);
-								   foreach(var i in waitingOnCityData)
+								   foreach (var i in waitingOnCityData)
 								   {
-									   i.SetResult(true);
+										   if(i.cid == cid)
+										   {
+											   i.Done();
+										   }
 								   }
-								   waitingOnCityData.Clear();
-
+								   if( !waitingOnCityData.Any(i=>i.isDone) )
+								   {
+									   waitingOnCityData.Clear();
+								   }
+								   
+								   
 								   break;
 
 							   }
@@ -2181,7 +2239,7 @@ namespace COTG
 								   {
 									   var str = pop.ToString();
 
-									   var popup = System.Text.Json.JsonSerializer.Deserialize<Models.JSPopupNode[]>(str);
+									   var popup = System.Text.Json.JsonSerializer.Deserialize<Models.JSPopupNode[]>(str, COTG.JSON.Json.jsonSerializerOptions);
 									   Log(popup.Length.ToString() );
 									   // App.DispatchOnUIThreadSneaky(() => Models.JSPopupNode.Show(popup));
 									   Models.JSPopupNode.Show(popup);

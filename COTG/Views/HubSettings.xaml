@@ -8,6 +8,7 @@
 			   xmlns:controls="using:Microsoft.UI.Xaml.Controls"
 			   xmlns:cotg="using:COTG"
 			   xmlns:game="using:COTG.Game"
+	xmlns:tk="using:Microsoft.Toolkit.Uwp.UI.Controls"
 			   mc:Ignorable="d"
     Title="Trade Settings Settings"
     PrimaryButtonText="Apply"
@@ -19,7 +20,7 @@
 				<TextBlock Text="Set Nearest Hub Settings"
 						   Style="{ThemeResource SubtitleTextBlockStyle}"
 						   Margin="4,4,4,4" />
-				<StackPanel Orientation="Horizontal"
+				<tk:WrapPanel Orientation="Horizontal"
 							Margin="4">
 					<controls:NumberBox Header="Req Wood"
 										Value="{x:Bind views:SettingsPage.reqWood, Mode=TwoWay}"
@@ -45,8 +46,8 @@
 										NumberFormatter="{x:Bind cotg:App.formatterInt,Mode=OneTime}"
 										Style="{StaticResource NumberBoxSmall}"
 										SmallChange="10000" />
-				</StackPanel>
-				<StackPanel Orientation="Horizontal"
+				</tk:WrapPanel>
+				<tk:WrapPanel Orientation="Horizontal"
 							Margin="4">
 					<controls:NumberBox Header="Max Wood"
 										Value="{x:Bind views:SettingsPage.maxWood, Mode=TwoWay}"
@@ -72,8 +73,8 @@
 										NumberFormatter="{x:Bind cotg:App.formatterInt,Mode=OneTime}"
 										Style="{StaticResource NumberBoxSmall}"
 										SmallChange="10000" />
-				</StackPanel>
-				<StackPanel Orientation="Horizontal"
+				</tk:WrapPanel>
+			<tk:WrapPanel Orientation="Horizontal"
 							Margin="4">
 					<ToggleSwitch  Header="Export Wood"
 								   IsOn="{x:Bind views:SettingsPage.sendWood, Mode=TwoWay}"
@@ -95,8 +96,8 @@
 								  IsOn="{x:Bind views:SettingsPage.cartsAreForRequests, Mode=TwoWay}"
 								  Margin="4"
 								  Width="120" />
-				</StackPanel>
-				<StackPanel Orientation="Horizontal">
+				</tk:WrapPanel>
+			<tk:WrapPanel Orientation="Horizontal">
 					<ComboBox x:Name="hubCityListBox"
 							  x:FieldModifier="public"
 							  Header="Hub City List"
@@ -118,7 +119,14 @@
 							  IsThreeState="True"
 							  IsChecked="{x:Bind views:SettingsPage.autoBuildOn, Mode=TwoWay}" />
 					<ToggleSwitch Header="Recruit" IsOn="{x:Bind views:SettingsPage.setRecruit,Mode=TwoWay}" OnContent="Set" OffContent="Leave"/>
-				</StackPanel>
+					<ComboBox x:Name="tradeSettings"
+							  x:FieldModifier="public"
+							  Header="Trade Settings"
+						     SelectedItem="{x:Bind tradeSettingsSel, Mode=TwoWay}"							
+							  DisplayMemberPath="N"
+							  ToolTipService.ToolTip="Trade setting configurations used"
+							  Margin="4" />
+			</tk:WrapPanel>
 			</StackPanel>
     </Grid>
 </ContentDialog>

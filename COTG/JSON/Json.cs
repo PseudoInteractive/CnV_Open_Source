@@ -9,7 +9,7 @@ namespace COTG.JSON
 {
 	public class Json
 	{
-		public static JsonSerializerOptions jsonSerializerOptions = new JsonSerializerOptions() { AllowTrailingCommas = true, IgnoreNullValues = true, NumberHandling = System.Text.Json.Serialization.JsonNumberHandling.AllowReadingFromString, ReadCommentHandling=JsonCommentHandling.Skip};
+		public static JsonSerializerOptions jsonSerializerOptions = new JsonSerializerOptions() { AllowTrailingCommas = true, DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull, NumberHandling = System.Text.Json.Serialization.JsonNumberHandling.AllowReadingFromString|System.Text.Json.Serialization.JsonNumberHandling.AllowNamedFloatingPointLiterals, ReadCommentHandling=JsonCommentHandling.Skip};
 		public static T FromResources<T>(string asm)
 		{
 			var str = new System.IO.StreamReader((typeof(JSClient).Assembly).GetManifestResourceStream($"COTG.JSON.{asm}.json")).ReadToEnd();

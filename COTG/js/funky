@@ -10622,6 +10622,7 @@ function truncateToken() {
     ppdt['opt'][67] = ppdt['opt'][67].substring(0, 10);
 }
 let __lastWMO = "";
+let lastTCPS = "";
 function ppdtChanged(__ppdt) {
     truncateToken();
     let wrapper = { ppdt: {} };
@@ -10645,6 +10646,14 @@ function ppdtChanged(__ppdt) {
         wrapper.ppdt['rs'] = __ppdt['rs'];
         wantUpdate = wantUpdate || wantRs;
         wantRs = false;
+    }
+    if (__ppdt.hasOwnProperty("tcps")) {
+        var str = JSON.stringify(__ppdt['tcps']);
+        if (str != lastTCPS) {
+            lastTCPS = str;
+            wrapper.ppdt['tcps'] = __ppdt['tcps'];
+            wantUpdate = true;
+        }
     }
     if (__ppdt.hasOwnProperty("mvb") && (Math.floor(__ppdt.mvb.l) != lastSendMoveSlots)) {
         wrapper.ppdt['mvb'] = __ppdt.mvb;
@@ -20417,6 +20426,10 @@ function outer() {
         }
         function LogBuildQueueFull() {
             const wrapper = { error: "Build queue full" };
+            window['external']['notify'](JSON.stringify(wrapper));
+        }
+        function __logBuild(err) {
+            const wrapper = { buildFail: err };
             window['external']['notify'](JSON.stringify(wrapper));
         }
         var i9 = __s['6163' | 3];
@@ -41504,14 +41517,17 @@ function outer() {
                     ProcessBuuPoll();
                     if (e5w == 0) {
                     }
-                    else if (e5w == 1)
-                        Y6(__s[6910]);
-                    else if (e5w == 2)
-                        Y6(__s[4507]);
-                    else if (e5w == 4)
-                        LogBuildQueueFull();
-                    else
-                        __log("Upgrade " + e5w);
+                    else {
+                        __logBuild({ e: e5w, u: a0w, cid: __cid });
+                        if (e5w == 1)
+                            Y6(__s[6910]);
+                        else if (e5w == 2)
+                            Y6(__s[4507]);
+                        else if (e5w == 4)
+                            LogBuildQueueFull();
+                        else
+                            __log("Upgrade " + e5w);
+                    }
                     buildExDelayed(__cid, iter + 1, queue);
                     return;
                 });
@@ -50609,6 +50625,8 @@ function outer() {
                                     F6();
                                     x5w.done(function (s7w) {
                                         --bqInFlight;
+                                        if ((s7w >= 0))
+                                            __logBuild({ e: s7w, o: T5w, cid: __cid });
                                         if (!(s7w >= 0)) {
                                             if (__cid === cid) {
                                                 city = JSON.parse(s7w);
@@ -50648,6 +50666,8 @@ function outer() {
                                     F6();
                                     x5w.done(function (s7w) {
                                         --bqInFlight;
+                                        if ((s7w >= 0))
+                                            __logBuild({ e: s7w, o: T5w, cid: __cid });
                                         if (!(s7w >= 0)) {
                                             if (__cid === cid) {
                                                 city = JSON.parse(s7w);
@@ -50690,6 +50710,8 @@ function outer() {
                                     x5w.done(function (s7w) {
                                         --bqInFlight;
                                         if (!(s7w >= 0)) {
+                                            if ((s7w >= 0))
+                                                __logBuild({ e: s7w, o: T5w, cid: __cid });
                                             if (__cid === cid) {
                                                 city = JSON.parse(s7w);
                                             }
@@ -50727,6 +50749,8 @@ function outer() {
                                 x5w.done(function (s7w) {
                                     --bqInFlight;
                                     if (!(s7w >= 0)) {
+                                        if ((s7w >= 0))
+                                            __logBuild({ e: s7w, o: T5w, cid: __cid });
                                         if (__cid === cid) {
                                             city = JSON.parse(s7w);
                                         }

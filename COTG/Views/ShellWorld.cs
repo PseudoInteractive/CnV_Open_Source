@@ -825,7 +825,7 @@ namespace COTG.Views
 
 		public static void AutoSwitchViewMode()
 		{
-			var _viewMode = cameraZoom >= cityZoomThreshold ? ViewMode.city : ViewMode.world;
+			var _viewMode = cameraZoom >= cityZoomThreshold ? ViewMode.city : cameraZoom > cityZoomWorldThreshold ? ViewMode.region : ViewMode.world;
 			if (_viewMode != viewMode)
 			{
 				ShellPage.SetViewMode(_viewMode);

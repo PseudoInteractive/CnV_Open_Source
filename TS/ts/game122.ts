@@ -9377,11 +9377,13 @@ function truncateToken()
 {
 	 ppdt['opt'][67] = ppdt['opt'][67].substring(0, 10);
 }
+
 let __lastWMO = "";
+let lastTCPS = "";
+
 function ppdtChanged(__ppdt) {
 	
 	truncateToken();
-	
 
 	let wrapper = { ppdt: {} };
 	let wantUpdate = false;
@@ -9405,6 +9407,16 @@ function ppdtChanged(__ppdt) {
 		wantUpdate = wantUpdate || wantRs;
 		wantRs = false;
 	}
+	if (__ppdt.hasOwnProperty("tcps")) {
+		var str = JSON.stringify( __ppdt['tcps'] );
+		if (str != lastTCPS)
+		{
+				lastTCPS = str;
+			wrapper.ppdt['tcps'] = __ppdt['tcps'];
+			wantUpdate = true;
+		}
+	}
+
 	if (__ppdt.hasOwnProperty("mvb") && (Math.floor(__ppdt.mvb.l)!=lastSendMoveSlots) ) {
 
 		wrapper.ppdt['mvb'] = __ppdt.mvb;
@@ -22928,6 +22940,12 @@ function outer(){
 		}
 		function LogBuildQueueFull() {
 			const wrapper = { error: "Build queue full" }
+			window['external']['notify'](JSON.stringify(wrapper));
+
+		}
+
+		function __logBuild( err ) {
+			const wrapper = { buildFail: err }
 			window['external']['notify'](JSON.stringify(wrapper));
 
 		}
@@ -44235,11 +44253,15 @@ function outer(){
 	 				if (e5w == 0) {
 						// success
 						
-					} else if (e5w == 1) Y6(__s[6910]);
+					} else
+	 {
+			
+							__logBuild({ e: e5w, u: a0w, cid: __cid });
+					if (e5w == 1) Y6(__s[6910]);
 					else if (e5w == 2) Y6(__s[4507]);
 					else if (e5w == 4) LogBuildQueueFull();
 					else __log("Upgrade " +e5w );
-					
+	}
 					buildExDelayed(__cid,iter+1, queue);
 					return;
 				});
@@ -54321,6 +54343,8 @@ function outer(){
 											var x5w = $.post("/includes/nBuu.php", { a: l5w, cid: __cid });
 											F6();
 											x5w.done(function (s7w) {--bqInFlight;
+												if ((s7w >= 0))
+													__logBuild({ e: s7w, o: T5w, cid:__cid });
 												if (!(s7w >= 0)) {
 													if(__cid === cid)
 													{
@@ -54360,6 +54384,9 @@ function outer(){
 											var x5w = $.post("/includes/nBuu.php", { a: l5w, cid: __cid });
 											F6();
 											x5w.done(function (s7w) {--bqInFlight;
+												if ((s7w >= 0))
+													__logBuild({ e: s7w, o: T5w, cid: __cid } );
+
 												if (!(s7w >= 0)) {
 													if(__cid === cid)
 													{
@@ -54406,6 +54433,9 @@ function outer(){
 										
 										x5w.done(function (s7w) {--bqInFlight;
 											  if (!(s7w >= 0)) {
+												  if ((s7w >= 0))
+													  __logBuild({ e: s7w, o: T5w, cid: __cid });
+
 													if(__cid === cid)
 													{
 														city = JSON.parse(s7w);
@@ -54448,6 +54478,9 @@ function outer(){
 									F6();
 									x5w.done(function (s7w) {--bqInFlight;
 											  if (!(s7w >= 0)) {
+												  if ((s7w >= 0))
+													  __logBuild({ e: s7w, o: T5w, cid: __cid });
+
 													if(__cid === cid)
 													{
 														city = JSON.parse(s7w);

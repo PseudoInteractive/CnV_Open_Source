@@ -27,6 +27,30 @@ namespace COTG
 		public const string fullDateFormat = "yyyy/MM/dd H':'mm':'ss";
 		public const string raidDateTimeFormat = "MM/dd/yyyy H':'mm':'ss";
 
+		// this will be false for lamda functions 
+		public static bool IsEqual(this Delegate a, Delegate b)
+		{
+				// ADDED THIS --------------
+				// remove delegate overhead
+				while (a.Target is Delegate)
+					a = a.Target as Delegate;
+				while (b.Target is Delegate)
+					b = b.Target as Delegate;
+
+				// standard equality
+				if (a == b)
+					return true;
+
+				// null
+				if (a == null || b == null)
+					return false;
+
+				// compiled method body
+				if (a.Target != b.Target)
+					return false;
+				return a.Method == b.Method;
+			}
+
 		public static DateTimeOffset ToServerTime(this DateTimeOffset t) => t.ToUniversalTime() + JSClient.gameTOffset;
 		public static DateTimeOffset FromServerTime(this DateTimeOffset t) => t - JSClient.gameTOffset;
 

@@ -7,13 +7,14 @@ using System.Text.Json;
 using static COTG.Debug;
 using System.Globalization;
 using System.Numerics;
+using COTG.JSON;
 
 namespace COTG.Helpers
 {
     public static class JSON
     {
-        public static string ToJson<T>(T a) => JsonSerializer.Serialize(a);
-        public static T FromJson<T>(string a) => JsonSerializer.Deserialize<T>(a);
+        public static string ToJson<T>(T a) => JsonSerializer.Serialize(a, Json.jsonSerializerOptions);
+        public static T FromJson<T>(string a) => JsonSerializer.Deserialize<T>(a, Json.jsonSerializerOptions);
 
         public static bool IsValid(this JsonElement j)
         {

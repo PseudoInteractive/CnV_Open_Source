@@ -20,13 +20,15 @@ namespace COTG.Game
 		public static int activeId;
 		public static HashSet<int> myIds = new HashSet<int>();
 		public static string myName;
+		public static string subOwner;
+
 		public static int myTitle;
         public static int viewHover; // in the view menu
 		public static int moveSlots=100;
 		public HashSet<int> cities = new();
-        public static bool isAvatar => myName=="Avatar";
-		public static bool isTest => myName == "KittyKat";
-		public static bool isAvatarOrTest => isAvatar||isTest || (myName=="BombaySapper" && JSClient.isSub);
+        public static bool isAvatar => subOwner == "Avatar";
+		public static bool isTest => subOwner == "KittyKat";
+		public static bool isAvatarOrTest => isAvatar||isTest;
 
 		public string allianceName => Alliance.IdToName(alliance);
 

@@ -1748,20 +1748,26 @@ namespace COTG.Views
 					}
 					else
 					{
-						if (b.isCabin  && counts.count < 100)
+
+						if (takeScore == 0 )
 						{
-							var cb = FindAnyFreeSpot();
-							if (!await MoveBuilding(bspot, cb, dryRun))
-								return rv;
+							if (b.isCabin && counts.count < 100)
+							{
+								var cb = FindAnyFreeSpot();
+								if (!await MoveBuilding(bspot, cb, dryRun))
+									return rv;
 
 
-						}
-						else if (takeScore == 0 && desBid != bidCottage)
-						{
-							Status($"{b.def.Bn} is not wanted, destroying it", dryRun);
+							}
+							else
+							{
 
-							++rv;
-							await Demolish(cc, dryRun);
+								Status($"{b.def.Bn} is not wanted, destroying it", dryRun);
+
+								++rv;
+								await Demolish(cc, dryRun);
+							}
+
 							// build the correct building
 							if (desBid != 0)
 							{

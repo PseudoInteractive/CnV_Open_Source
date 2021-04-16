@@ -48,7 +48,7 @@ namespace COTG.Helpers
 			if (fileContent.IsNullOrEmpty())
 				return _default;
 
-            return JsonSerializer.Deserialize<T>(fileContent);
+            return JsonSerializer.Deserialize<T>(fileContent, COTG.JSON.Json.jsonSerializerOptions);
         }
 
 
@@ -128,7 +128,7 @@ namespace COTG.Helpers
             if (settings.Values.TryGetValue(key, out var obj))
             {
                 if (obj is string && typeof(T) != typeof(string))
-                    obj = JsonSerializer.Deserialize<T>((string)obj);
+                    obj = JsonSerializer.Deserialize<T>((string)obj, COTG.JSON.Json.jsonSerializerOptions);
                 return (T)obj;
             }
 

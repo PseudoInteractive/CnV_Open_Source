@@ -156,7 +156,7 @@ namespace COTG.Views
 			App.DispatchOnUIThreadSneaky(() =>
 			{
 				instance.cities.Clear();
-				instance.stage.Text = $"Stage: {stage.ToString()}";
+				instance.stage.Text = $"Stage: {stage.stage}";
 				foreach (var city in CityBuildQueue.all.Values)
 				{
 					var view = BuildItemView.Rent().Ctor(city.cid);
@@ -340,14 +340,15 @@ namespace COTG.Views
 				return true;
 			}
 			Assert(city.isBuild);
-			if (stage.stage == City.BuildStage.cabins)
+			if (stage.stage == City.BuildStage.cabins || stage.stage == BuildStage.townHall)
 			{
-				if(bc.cabins >= SettingsPage.startCabinCount)
+				if(bc.cabins >= SettingsPage.startCabinCount || bc.buildings >= stage.buildingLimit-2 )
 				{
-					Note.Show($"Building Cabins - {city}");
+					Note.Show($"Building {stage.stage.ToString()} - {city}");
 					return true ;
 				}
 			}
+
 			Assert(city.isBuild);
 			if (!bc.hasCastle && city.hasCastleInLayout && city.tsTotal > SettingsPage.tsForCastle  )
 			{
@@ -361,11 +362,10 @@ namespace COTG.Views
 			}
 			if ( (bc.sorcTowers==0 || bc.sorcTowerLevel != 10 ) && city.tsTotal > SettingsPage.tsForSorcTower && !FindOverlayBuildingOfType(city,bidSorcTower).Is00())
 			{
-				var c = FindBuildingOfType(city, bidSorcTower);
+				var c = FindValidBuildingOfType(city, bidSorcTower);
 
-				if (c == (0, 0, 0))
+				if (c.bl == 0 )
 				{
-					(c.x, c.y) = FindOverlayBuildingOfType(city, bidSorcTower);
 					c.bl = 1;
 					await CityBuild.Enqueue(0, 1, bidSorcTower, XYToId((c.x,c.y)) );
 				}
@@ -424,6 +424,7 @@ namespace COTG.Views
 				case City.BuildStage.noLayout:
 				case City.BuildStage._new:
 				case City.BuildStage.setup:
+				case City.BuildStage.townHall:
 				case City.BuildStage.cabins:
 					{
 						if (bc.cabins < SettingsPage.startCabinCount || (bc.storeHouses == 0))
@@ -528,79 +529,22 @@ namespace COTG.Views
 								}
 							}
 							{
-								var bid = bidSorcTower;
-								var bd = FindPendingOverlayBuildingsOfType(city, bid, buildingLimit - bc.buildings);
+								var bd = FindPendingOverlayBuildingsOfType(city,  buildingLimit+4 - bc.buildings, bidSorcTower,bidAcademy,bidBlacksmith,bidShipyard,bidTrainingGround,bidStable);
 								if (bd.Any() )
 								{
-									message += $"Adding { bd.Count} Sorc tower";
+									message += $"Adding { bd.Count} Military buildings";
 									foreach (var i in bd)
 									{
+										if (bc.buildings >= buildingLimit)
+											break;
+										var bid = city.BidFromOverlay(i);
+										if( city.CountBuildingsInOverlay(bid)==1  )
+										{
+											continue;
+										}
 										await CityBuild.SmartBuild(city, i, bid, true, false);
+										bc = City.GetBuildingCountsPostQueue(cabinLevel);
 									}
-									bc = City.GetBuildingCountsPostQueue(cabinLevel);
-								}
-							}
-							{
-								var bid = bidAcademy;
-								var bds = FindPendingOverlayBuildingsOfType(city, bid, buildingLimit - bc.buildings);
-								if (bds.Count > 1 || (bds.Count==1 && bc.academies>0) )
-								{
-									message += $"Adding { bds.Count} Academies";
-									foreach (var i in bds)
-									{
-										await CityBuild.SmartBuild(city, i, bid, true, false);
-
-									}
-
-									bc = City.GetBuildingCountsPostQueue(cabinLevel);
-								}
-							}
-							{
-								var bid = bidTrainingGround;
-								var bd = FindPendingOverlayBuildingsOfType(city, bid, buildingLimit - bc.buildings);
-								if(bd.Any())
-								{
-									message += $"Adding { bd.Count} trainng grounds";
-									foreach (var i in bd)
-									{
-										await CityBuild.SmartBuild(city, i, bid, true, false);
-
-										//										await CityBuild.Build(i, bidTrainingGround, false);
-									}
-									bc = City.GetBuildingCountsPostQueue(cabinLevel);
-								}
-							}
-							{
-								var bid = bidStable;
-								var bd = FindPendingOverlayBuildingsOfType(city, bid, (buildingLimit - bc.buildings));
-								if(bd.Any())
-								{
-									message += $"Adding { bd.Count} stables";
-									foreach (var i in bd)
-									{
-										await CityBuild.SmartBuild(city, i, bid, true, false);
-
-										//										await CityBuild.Build(i, bidTrainingGround, false);
-
-									}
-									bc = City.GetBuildingCountsPostQueue(cabinLevel);
-
-								}
-							}
-							{
-								var bid = bidShipyard;
-								var bd = FindPendingOverlayBuildingsOfType(city, bid, (buildingLimit - bc.buildings));
-								if(bd.Any())
-								{
-									message += $"Adding { bd.Count} shipyards";
-									foreach (var i in bd)
-									{
-										await CityBuild.SmartBuild(city, i, bid, true, false);
-
-										//										await CityBuild.Build(i, bidTrainingGround, false);
-
-									}
-									bc = City.GetBuildingCountsPostQueue(cabinLevel);
 								}
 							}
 							{
@@ -896,27 +840,35 @@ namespace COTG.Views
 				return (0,0);
 			}
 
-		static (int x, int y, int bl) FindBuildingOfType(City city, int bid)
+		static (int x, int y, int bl) FindValidBuildingOfType(City city, int bid)
 		{
+			(int x, int y, int bl) rv = (0, 0, 0);
 			for (var cy = span0; cy <= span1; ++cy)
 			{
 				for (var cx = span0; cx <= span1; ++cx)
 				{
 					var c = (cx, cy);
 					var b = CityBuild.postQueueBuildings[XYToId(c)];
-					if (bid == city.BidFromOverlay(c))
+					if (b.bid == bid)
 					{
-						return (cx, cy, b.bl);
+						if(b.bl > rv.bl)
+							rv = (cx, cy, b.bl);
+					}
+					else if (rv.bl==0 &&  bid == city.BidFromOverlay(c))
+					{
+						rv = (cx, cy, 0);
 
 					}
 				}
 			}
-			return (0, 0, 0);
+			return rv;
 		}
 
 		static List<(int x, int y)> FindPendingOverlayBuildingsOfType(City city, int bid, int count)
 		{
 			List<(int x, int y)> rv = new();
+			if (count == 0)
+				goto done;
 
 			// search from center outwards
 			for (int r = 1; r <= City.citySpan; ++r)
@@ -939,6 +891,37 @@ namespace COTG.Views
 				}
 			}
 			done:
+			return rv;
+		}
+		static List<(int x, int y)> FindPendingOverlayBuildingsOfType(City city,int count, params int [] bids)
+		{
+			List<(int x, int y)> rv = new();
+			if (count == 0)
+				goto done;
+			// search from center outwards
+			for (int r = 1; r <= City.citySpan; ++r)
+			{
+				for (var y = -r; y <= r; ++y)
+				{
+					for (var x = -r; x <= r; ++x)
+					{
+						if ((x == -r || x == r) || (y == -r || y == r))
+						{
+							var c = (x, y);// (int x, int y) c = RandCitySpot();
+							var bid = city.BidFromOverlay(c);
+							if (bid == 0)
+								continue;
+							if (bids.Contains(bid) && (CityBuild.postQueueBuildings[City.XYToId(c)].bid != bid))
+							{
+								rv.Add(c);
+								if (rv.Count >= count)
+									goto done;
+							}
+						}
+					}
+				}
+			}
+		done:
 			return rv;
 		}
 		static List<(int x, int y)> FindAllUnfinishedTowers()

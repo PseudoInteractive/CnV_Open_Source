@@ -255,7 +255,7 @@ namespace COTG.Game
 			ttSenator,
 			ttWarship,
 			ttBallista,
-			ttPending,
+			
 			ttPending
 		};
 		public string classificationString => classifications[(int)classification];
@@ -610,7 +610,7 @@ namespace COTG.Game
 				else
 				{
 					await JSClient.ChangeCity(cid, lazyMove, false, scrollIntoUI); // keep current view, switch to city
-					JSClient.ChangeView(ShellPage.viewMode.GetNextUnowned());// toggle between city/region view
+				//	JSClient.ChangeView(ShellPage.viewMode.GetNextUnowned());// toggle between city/region view
 				}
 				NavStack.Push(cid);
 
@@ -1202,7 +1202,7 @@ namespace COTG.Game
 				App.DispatchOnUIThreadSneakyLow(UpdateFocusText);
 			}
 			if (bringIntoView)
-				cid.BringCidIntoWorldView(lazyMove,true);
+				cid.BringCidIntoWorldView(lazyMove,false);
 		}
 		public static int build; // city that has Build selection.  I.e. in city view, the city you are in
 		public static int lockedBuild; // 
@@ -1267,7 +1267,7 @@ namespace COTG.Game
 						{
 							if (p.pid != Player.myId && p.cid == cid)
 							{
-								Note.Show($"You have joined {p.name } in {p.cid.CidToStringMD()}");
+								Note.Show($"You have joined {p.name } in {City.Get(p.cid).nameMarkdown}");
 							}
 						}
 
@@ -1305,7 +1305,7 @@ namespace COTG.Game
 				return; // aborted
 
 			await Raiding.ReturnAt(cid, at);
-			Note.Show($"{cid.CidToStringMD()} end raids at {at.FormatDefault()}");
+			Note.Show($"{City.Get(cid).nameMarkdown} end raids at {at.FormatDefault()}");
 		}
 		public async void ReturnAtBatch(object sender, RoutedEventArgs e)
 		{
@@ -1427,6 +1427,9 @@ namespace COTG.Game
 			Note.Show(str, false, false, 20 * 1000);
 		}
 		public bool canVisit => isFriend;
+
+
+		public string nameMarkdown => $"[{nameAndRemarks}](/c/{cid.CidToString()})";
 		
 		public static bool OnKeyDown(object _spot, VirtualKey key)
 		{

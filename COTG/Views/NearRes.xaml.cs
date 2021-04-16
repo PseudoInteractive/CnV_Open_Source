@@ -127,11 +127,17 @@ namespace COTG.Views
 				}
 
 				var cartStr = js.GetAsString("24").Split(@" / ", StringSplitOptions.RemoveEmptyEntries);
-				ushort.TryParse(cartStr[0], out city.cartsHome);
-				ushort.TryParse(cartStr[1], out city.carts);
+				if (cartStr.Length == 2)
+				{
+					ushort.TryParse(cartStr[0], out city.cartsHome);
+					ushort.TryParse(cartStr[1], out city.carts);
+				}
 				var shipStr = js.GetAsString("25").Split(@" / ", StringSplitOptions.RemoveEmptyEntries);
-				ushort.TryParse(shipStr[0], out city.shipsHome);
-				ushort.TryParse(shipStr[1], out city.ships);
+				if (shipStr.Length == 2)
+				{
+					ushort.TryParse(shipStr[0], out city.shipsHome);
+					ushort.TryParse(shipStr[1], out city.ships);
+				}
 				city.wood = js.GetAsInt("6");
 				city.stone = js.GetAsInt("7");
 				city.iron = js.GetAsInt("8");

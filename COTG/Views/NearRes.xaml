@@ -48,14 +48,7 @@
                           ValidationMode="InvalidInputOverwritten"
 							  ValueChanged="NumberBox_ValueChanged"
                           Header="Food"  Margin="6,0,6,0"  LargeChange="100000" AcceptsExpression="True" SmallChange="10000" SpinButtonPlacementMode="Inline" />
-						<my:NumberBox Value="{x:Bind reserveCarts,Mode=TwoWay}" Style="{StaticResource RightAlignNumberBox}"
-                          ValidationMode="InvalidInputOverwritten"
-							  ValueChanged="NumberBox_ValueChanged"
-                          Header="Carts"  Margin="6,0,6,0"  LargeChange="1000" AcceptsExpression="True" SmallChange="100" SpinButtonPlacementMode="Inline" />
-						<my:NumberBox Value="{x:Bind reserveShips,Mode=TwoWay}" Style="{StaticResource RightAlignNumberBox}"
-                          ValidationMode="InvalidInputOverwritten"
-							  ValueChanged="NumberBox_ValueChanged"
-                          Header="Ships"  Margin="6,0,6,0"  LargeChange="100" AcceptsExpression="True" SmallChange="10" SpinButtonPlacementMode="Inline" />
+						
 					</tk:WrapPanel >
 				</StackPanel>
 			</Border>
@@ -80,7 +73,15 @@
                           ValidationMode="InvalidInputOverwritten"
 							  ValueChanged="NumberBox_ValueChanged"
                           Header="Food"  Margin="6,0,6,0"  LargeChange="1000000" AcceptsExpression="True" SmallChange="100000" SpinButtonPlacementMode="Inline" />
-				</tk:WrapPanel >
+						<my:NumberBox Value="{x:Bind reserveCarts,Mode=TwoWay}" Style="{StaticResource RightAlignNumberBox}"
+                          ValidationMode="InvalidInputOverwritten"
+							  ValueChanged="NumberBox_ValueChanged"
+                          Header="Carts"  Margin="6,0,6,0"  LargeChange="1000" AcceptsExpression="True" SmallChange="100" SpinButtonPlacementMode="Inline" />
+						<my:NumberBox Value="{x:Bind reserveShips,Mode=TwoWay}" Style="{StaticResource RightAlignNumberBox}"
+                          ValidationMode="InvalidInputOverwritten"
+							  ValueChanged="NumberBox_ValueChanged"
+                          Header="Ships"  Margin="6,0,6,0"  LargeChange="100" AcceptsExpression="True" SmallChange="10" SpinButtonPlacementMode="Inline" />
+					</tk:WrapPanel >
 			</StackPanel>
 			</Border>
 			<!--<Border Style="{StaticResource BorderReveal}">

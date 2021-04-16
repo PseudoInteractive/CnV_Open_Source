@@ -423,24 +423,24 @@ namespace COTG.Views
 		//    AppTitleBar.Height = coreTitleBar.Height;
 		//}
 
-		private void PointerPressedCB(object sender, PointerRoutedEventArgs e)
-		{
-			var prop = e.GetCurrentPoint(this).Properties;
-			switch (prop.PointerUpdateKind)
-			{
-				case PointerUpdateKind.XButton1Pressed:
-					NavStack.Back(true);
-					Log("XButton1");
-					e.Handled = true;
-					break;
-				case PointerUpdateKind.XButton2Pressed:
-					NavStack.Forward(true);
-					Log("XButton2");
-					e.Handled = true;
-					break;
-			}
+		//private void PointerPressedCB(object sender, PointerRoutedEventArgs e)
+		//{
+		//	var prop = e.GetCurrentPoint(this).Properties;
+		//	switch (prop.PointerUpdateKind)
+		//	{
+		//		case PointerUpdateKind.XButton1Pressed:
+		//			NavStack.Back(true);
+		//			Log("XButton1");
+		//			e.Handled = true;
+		//			break;
+		//		case PointerUpdateKind.XButton2Pressed:
+		//			NavStack.Forward(true);
+		//			Log("XButton2");
+		//			e.Handled = true;
+		//			break;
+		//	}
 
-		}
+		//}
 		private void ShellPage_BackRequested(object sender, BackRequestedEventArgs e)
 		{
 			Log("Back!!");

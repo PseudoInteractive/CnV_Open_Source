@@ -352,7 +352,7 @@ namespace COTG.JSON
 													var demoPending = (cotgQ != null) && cotgQ.Any(a => a.isDemo && a.bspot == i.bspot);
 													if (!demoPending)
 													{
-														Trace($"Invalid build: {i.ToString()} <=> {city.buildings[i.bspot].bid} {city.buildings[i.bspot].name},{city.buildings[i.bspot].bl}");
+														Trace($"Invalid build: {city.nameMarkdown} {i.ToString()} <=> {city.buildings[i.bspot].bid} {city.buildings[i.bspot].name},{city.buildings[i.bspot].bl}");
 
 														// cancel this order
 														RemoveAt(offset);

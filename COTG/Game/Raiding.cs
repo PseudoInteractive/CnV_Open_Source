@@ -252,7 +252,7 @@ namespace COTG.Game
         //}
         public static async void ReturnSlow(int cid, bool updateUI )
         {
-            Note.Show($"{cid.CidToStringMD()} End Raids");
+            Note.Show($"{City.Get(cid).nameMarkdown} End Raids");
      
             if (cid != 0)
             {
@@ -278,7 +278,7 @@ namespace COTG.Game
         }
         public static async Task ReturnFast(int cid, bool updateUI)
         {
-            Note.Show($"{cid.CidToStringMD()} Home Please");
+            Note.Show($"{City.Get(cid).nameMarkdown} Home Please");
             if (cid != 0)
             {
                 await Post.Send("overview/rcallall.php", "a=" + cid, World.CidToPlayerOrMe(cid));

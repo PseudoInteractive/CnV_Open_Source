@@ -49,12 +49,12 @@ namespace COTG.Views
 			{
 				raidCarrySteps = new int[raidStepCount];
 				int put = 85;
-				for (int i = 0; i < raidStepCount/3; ++i)
+				for (int i = 0; i < raidStepCount/3+2; ++i)
 				{
 					raidCarrySteps[i] = put;
 					put += 5;
 				}
-				for (int i = raidStepCount / 3; i< raidStepCount*2 / 3; ++i)
+				for (int i = raidStepCount / 3+2; i< raidStepCount*2 / 3; ++i)
 				{
 					raidCarrySteps[i] = put;
 					put += 15;
@@ -132,13 +132,13 @@ namespace COTG.Views
 			if (isMax)
 			{
 				raidCarryMax = (raidCarrySteps[bestId]*0.01f);
-				instance.raidCarryMaxBox.SelectedItem = bestId;
 			}
 			else
 			{
 				raidCarryMin = raidCarrySteps[bestId]*0.01f;
-				instance.raidCarryMinBox.SelectedItem = bestId;
 			}
+			instance.raidCarryMinBox.SelectedIndex = raidCarrySteps.IndexOfClosest((raidCarryMin * 100).RoundToInt());
+			instance.raidCarryMaxBox.SelectedIndex = raidCarrySteps.IndexOfClosest((raidCarryMax * 100).RoundToInt());
 		}
 
 

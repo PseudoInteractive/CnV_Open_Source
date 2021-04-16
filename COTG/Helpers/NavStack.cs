@@ -78,7 +78,7 @@ namespace COTG.Helpers
 
 		public static string GetSpotName(int delta)
 		{
-			var p = (position == -1 ? backStack.Count - 1 : position) + delta;
+			var p = (position == -1 ? backStack.Count  : position) + delta;
 			if (p >= 0 && p < backStack.Count)
 				return Spot.GetOrAdd(backStack[p].cid).nameAndRemarks;
 			return null;
