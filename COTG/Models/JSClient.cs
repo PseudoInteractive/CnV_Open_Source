@@ -769,7 +769,7 @@ namespace COTG
 		//	}
 
 		//}
-		public static async void ClearCenter(int cid)
+		public static async Task ClearCenter(int cid)
 		{
 			Note.Show($"{City.Get(cid).nameMarkdown} Clear Center Res");
 
@@ -864,29 +864,23 @@ namespace COTG
 		//    }
 		//}
 
+	
+		
 		public static async void ShowCity(int cityId, bool lazyMove, bool select = true, bool scrollToInUI = true)
 		{
 			try
 			{
-//				ShellPage.SetViewModeWorld();
+				//				ShellPage.SetViewModeWorld();
 
 				// if (City.IsMine(cityId))
 				{
-					Spot.SetFocus(cityId, scrollToInUI, select,true,lazyMove);
+					Spot.SetFocus(cityId, scrollToInUI, select, true, lazyMove);
 				}
 
 				// if (JSClient.IsWorldView())
-			//	cityId.BringCidIntoWorldView(lazyMove, false);
+				//	cityId.BringCidIntoWorldView(lazyMove, false);
 
-				App.DispatchOnUIThreadSneaky(() =>
-				{
-					view.InvokeScriptAsync("shCit", new string[] { (cityId).ToString() });
-					//int x = cityId%65536;
-					//int y = cityId/65536;
-					//var spotInfo = TileData.instance.GetSpotType(x, y);
-					//Note.Show($"{x}:{y},{spotInfo.x}:{spotInfo.y} {spotInfo.type}");
-
-				});
+				FetchCity(cityId);
 				//             if( City.IsMine(cityId)  )
 				//                 Raiding.UpdateTSHome();
 
@@ -900,6 +894,20 @@ namespace COTG
 
 
 		}
+
+		public static void FetchCity(int cityId)
+		{
+			App.DispatchOnUIThreadSneaky(() =>
+			{
+				view.InvokeScriptAsync("shCit", new string[] { (cityId).ToString() });
+				//int x = cityId%65536;
+				//int y = cityId/65536;
+				//var spotInfo = TileData.instance.GetSpotType(x, y);
+				//Note.Show($"{x}:{y},{spotInfo.x}:{spotInfo.y} {spotInfo.type}");
+
+			});
+		}
+
 		public static void gStCB(int cityId, Action<JsonElement> cb, int hash)
 		{
 			gstCBs.TryAdd(hash, cb);
@@ -1041,7 +1049,7 @@ namespace COTG
 				}
 				if(jse.TryGetProperty("tcps", out var tcps))
 				{
-					TradeSettings.all = JsonSerializer.Deserialize<TradeSettings[]>(tcps.ToString(), COTG.JSON.Json.jsonSerializerOptions);
+					TradeSettings.all = JsonSerializer.Deserialize<TradeSettings[]>(tcps.ToString(), Json.jsonSerializerOptions);
 					
 					App.DispatchOnUIThread( () => HubSettings.instance.tradeSettings.ItemsSource = TradeSettings.all );
 				}
@@ -1321,7 +1329,7 @@ namespace COTG
 					city.type = City.typeCity;
 					city._tsTotal = jsCity.GetAsInt("8");
 					//city._tsHome = jsCity.GetAsInt("17");
-					city.troopsTotal = TroopTypeCount.empty;
+		//			city.troopsTotal = TroopTypeCount.empty;
 	//				city.troopsHome = TroopTypeCount.empty;
 
 		//			Trace($"TS Home {city._tsHome}");
@@ -2026,7 +2034,7 @@ namespace COTG
 									   city.isTemple = jso.GetAsInt("plvl") != 0;
 
 
-									   cid.BringCidIntoWorldView(true,false);
+									 //  cid.BringCidIntoWorldView(true,false);
 									   if (city._cityName != name)
 									   {
 										   city._cityName = name;
@@ -2239,7 +2247,7 @@ namespace COTG
 								   {
 									   var str = pop.ToString();
 
-									   var popup = System.Text.Json.JsonSerializer.Deserialize<Models.JSPopupNode[]>(str, COTG.JSON.Json.jsonSerializerOptions);
+									   var popup = System.Text.Json.JsonSerializer.Deserialize<Models.JSPopupNode[]>(str, Json.jsonSerializerOptions);
 									   Log(popup.Length.ToString() );
 									   // App.DispatchOnUIThreadSneaky(() => Models.JSPopupNode.Show(popup));
 									   Models.JSPopupNode.Show(popup);

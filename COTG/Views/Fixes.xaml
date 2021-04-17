@@ -17,7 +17,7 @@
                   BorderBrush="{ThemeResource SystemControlBackgroundBaseLowRevealBorderBrush}"
                   BorderThickness="2"
                   HorizontalScrollBarVisibility="Disabled"
-		
+		ZoomMode="Enabled"
                   VerticalScrollBarVisibility="Visible">
 			<controls:MarkdownTextBlock x:Name="fixesText" x:FieldModifier="public" WrapCodeBlock="True"
                                   Margin="6" Background="{x:Null}" TextWrapping="WrapWholeWords"

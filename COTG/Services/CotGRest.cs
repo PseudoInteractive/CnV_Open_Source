@@ -23,9 +23,10 @@ using Microsoft.UI.Xaml.Controls;
 using Windows.UI.Xaml;
 using ContentDialog = Windows.UI.Xaml.Controls.ContentDialog;
 using ContentDialogResult = Windows.UI.Xaml.Controls.ContentDialogResult;
+
 namespace COTG.Services
 {
-    public class RestAPI
+	public class RestAPI
     {
         //   public static List<RestAPI> all = new List<RestAPI>();
         public string localPath;
@@ -420,7 +421,7 @@ namespace COTG.Services
 						break;
 					if(counter >= 8)
 					{
-						Note.Show($"Internet failed for {Spot.GetOrAdd(_cid).nameAndRemarks}, please run auto raids again in a few minutes");
+						Note.Show($"Internet failed for {Spot.GetOrAdd(_cid).nameMarkdown}, please run auto raids again in a few minutes");
 						return false;
 					}
 					await Task.Delay(500);				

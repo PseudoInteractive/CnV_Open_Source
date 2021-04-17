@@ -13,9 +13,9 @@ using System.Runtime.InteropServices.WindowsRuntime;
 
 namespace COTG.Helpers
 {
-    // Use these extension methods to store and retrieve local and roaming app data
-    // More details regarding storing and retrieving app data at https://docs.microsoft.com/windows/uwp/app-settings/store-and-retrieve-app-data
-    public static class SettingsStorageExtensions
+	// Use these extension methods to store and retrieve local and roaming app data
+	// More details regarding storing and retrieving app data at https://docs.microsoft.com/windows/uwp/app-settings/store-and-retrieve-app-data
+	public static class SettingsStorageExtensions
     {
         private const string FileExtension = ".json";
 
@@ -27,7 +27,7 @@ namespace COTG.Helpers
         public static async Task SaveAsync<T>(this StorageFolder folder, string name, T content)
         {
             var file = await folder.CreateFileAsync(GetFileName(name), CreationCollisionOption.ReplaceExisting);
-            var fileContent = JsonSerializer.Serialize(content);
+            var fileContent = JsonSerializer.Serialize(content, Json.jsonSerializerOptions);
 
             await FileIO.WriteTextAsync(file, fileContent);
         }
@@ -48,7 +48,7 @@ namespace COTG.Helpers
 			if (fileContent.IsNullOrEmpty())
 				return _default;
 
-            return JsonSerializer.Deserialize<T>(fileContent, COTG.JSON.Json.jsonSerializerOptions);
+            return JsonSerializer.Deserialize<T>(fileContent, Json.jsonSerializerOptions);
         }
 
 
@@ -81,7 +81,7 @@ namespace COTG.Helpers
                     Size a => a,
                     Rect a => a,
                     ApplicationDataCompositeValue a => a,
-                    _ => JsonSerializer.Serialize<T>(value)
+                    _ => JsonSerializer.Serialize<T>(value, Json.jsonSerializerOptions)
                 };
             }
         }
@@ -128,7 +128,7 @@ namespace COTG.Helpers
             if (settings.Values.TryGetValue(key, out var obj))
             {
                 if (obj is string && typeof(T) != typeof(string))
-                    obj = JsonSerializer.Deserialize<T>((string)obj, COTG.JSON.Json.jsonSerializerOptions);
+                    obj = JsonSerializer.Deserialize<T>((string)obj, Json.jsonSerializerOptions);
                 return (T)obj;
             }
 
@@ -216,8 +216,9 @@ namespace COTG.Helpers
         }
     }
 }
-namespace COTG { 
-    partial class App
+namespace COTG
+{
+	partial class App
 	{
         public static ApplicationDataContainer Settings()
         {

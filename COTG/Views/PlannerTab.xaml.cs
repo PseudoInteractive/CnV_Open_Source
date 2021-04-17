@@ -252,11 +252,11 @@ namespace COTG.Views
 
 		private void FlipHClick(object sender, RoutedEventArgs e)
 		{
-			GetBuild().FlipLayoutH();
+			GetBuild().FlipLayoutH(App.IsKeyPressedControl());
 		}
 		private void FlipVClick(object sender, RoutedEventArgs e)
 		{
-			GetBuild().FlipLayoutV();
+			GetBuild().FlipLayoutV(App.IsKeyPressedControl());
 		}
 
 		ref struct AllowedToMove
@@ -303,6 +303,7 @@ namespace COTG.Views
 
 			int sorcTowers = 0;
 			int academies = 0;
+			var hasInvalid = false;
 			int resHelpers = 0;
 			{
 				for (int id = 0; id < City.citySpotCount; ++id)
@@ -316,9 +317,19 @@ namespace COTG.Views
 					{
 						++resHelpers;
 					}
+					if(bid != 0)
+					{
+						if (CityBuild.IsWaterSpot(id))
+							hasInvalid = true;
+					}
 
 				}
 			}
+			if(hasInvalid&& build.isOnWater)
+			{
+				build.FlipLayoutH(true);
+			}
+
 			var allowed = new AllowedToMove() { sorc = sorcTowers == 1, academy = academies == 1, storage = resHelpers == 0 };
 
 			// first try flips

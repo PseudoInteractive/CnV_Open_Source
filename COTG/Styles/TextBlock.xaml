@@ -68,9 +68,20 @@
     <Style
 		x:Key="CellTextStyle"
 		TargetType="tk:DataGridCell">
-        <Setter Property="FontSize" Value="{StaticResource MediumFontSize}" />
+        <Setter Property="FontSize" Value="{StaticResource SmallFontSize}" />
+		<Setter Property="FontStretch" Value="{StaticResource fontStretch}" />
+		<Setter Property="IsTextScaleFactorEnabled" Value="False"/>
     </Style>
-    <Style
+	<Style
+		TargetType="tk:DataGridCell">
+		<Setter Property="FontSize" Value="{StaticResource SmallFontSize}" />
+		<Setter Property="FontStretch" Value="{StaticResource fontStretch}" />
+		<Setter Property="IsTextScaleFactorEnabled" Value="False"/>
+	</Style>
+	
+	
+
+	<Style
 		x:Key="CellButtonTextStyle"
         BasedOn="{StaticResource CellTextStyle}"
         TargetType="tk:DataGridCell">

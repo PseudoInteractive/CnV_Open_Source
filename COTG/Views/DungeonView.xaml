@@ -26,6 +26,7 @@
 							ColumnResizeHandleDisplayMode="Always"
 							ColumnDataOperationsMode="Inline"
 							IsTabStop="True"
+						MaxHeight="300"
 							CanUserChooseColumns="False"
 							UserFilterMode="Disabled"
 							TabFocusNavigation="Cycle"
@@ -71,18 +72,19 @@
 			</tg:RadDataGrid.Columns>
 		</tg:RadDataGrid>
 		
-		<tk:WrapPanel 
+		<tk:WrapPanel  
 			  
 			             x:Name="raidOptionBox"
 							Orientation="Horizontal"
-						  Grid.Row="2"
+						  
 						  VerticalAlignment="Center"
 						  TabFocusNavigation="Cycle">
 			<ComboBox x:Name="raidCarryMinBox"
 						  Header="Min Carry%"
 						  DropDownClosed="RaidCarrySelChanged"
 							Width="80"
-						  
+						  IsTabStop="True"
+					  TabFocusNavigation="Cycle"
 						  FontSize="{StaticResource MediumFontSize}"
 						  IsTextScaleFactorEnabled="False"
 						  IsEditable="True"

@@ -169,7 +169,7 @@ namespace COTG.Game
 				var trs = JsonSerializer.Serialize(tr);
 				var args = new sndRaidArgs() { rcid = d.cid, type = SettingsPage.wantRaidRepeat ? 1 : 2, co = wantDelays ? 1 : r.reps, rt = 1, snd = 1, rut = 0, tr = trs, iv = SettingsPage.raidIntervals + 1 };
 				var snd = new COTG.Services.sndRaid(JsonSerializer.Serialize(args), city.cid);
-				Note.Show($"{city.cid.CidToStringMD()} {city.nameAndRemarks} raid {r.reps}x{(r.averageCarry * 100).RoundToInt()}% carry, cavern: {d.cid.CidToStringMD()}");
+				Note.Show($"{city.nameMarkdown} raid {r.reps}x{(r.averageCarry * 100).RoundToInt()}% carry, cavern: {d.cid.CidToStringMD()}");
 				if (!await snd.Post())
 					return false;
 				//           await Task.Delay(500);

@@ -153,17 +153,17 @@ namespace COTG.Views
 						{
 							await HubSettings.Show(cid);
 						}
-
-						if (SettingsPage.clearRes)
-						{
-							JSClient.ClearCenter(cid);
-						}
-						if (SettingsPage.autoBuildCabins && allowSplat)
+						var rv = true;
+						if (SettingsPage.autoBuildCabins  && allowSplat)
 						{
 						// are there any cabins here already?
-							return await QueueTab.DoTheStuff(city); ;
+							rv=  await QueueTab.DoTheStuff(city,false,false);
 						}
-						return true;
+						if (SettingsPage.clearRes)
+						{
+							await City.ClearResUI();
+						}
+						return rv;
 					}
 					return result != ContentDialogResult.Secondary;
 				}

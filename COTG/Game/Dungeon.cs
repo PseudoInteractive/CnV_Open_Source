@@ -123,7 +123,7 @@ namespace COTG.Game
 								break;
 							if(++counter > 8)
 							{
-								Note.Show($"Giving up on {city.nameAndRemarks}, please try again in a few min");
+								Note.Show($"Giving up on {city.nameMarkdown}, please try again in a few min");
 								break;
 							}
 							await Task.Delay(500);	
@@ -133,7 +133,7 @@ namespace COTG.Game
 					}
 					if(!success)
 					{
-						Note.Show($"No appropriate dungeons for {city.nameAndRemarks}");
+						Note.Show($"No appropriate dungeons for {city.nameMarkdown}");
 					}
 				}
 			}

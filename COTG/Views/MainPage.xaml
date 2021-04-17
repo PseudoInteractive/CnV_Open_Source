@@ -49,6 +49,7 @@
 							GroupPanelPosition="Bottom"
 							SelectionUnit="Row"
 							Tag="Raid"
+							ScrollViewer.ZoomMode="Enabled"
 							ScrollViewer.VerticalScrollMode="Enabled"
 							ScrollViewer.HorizontalScrollMode="Enabled"
 							ScrollViewer.HorizontalScrollBarVisibility="Visible"

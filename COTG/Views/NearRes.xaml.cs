@@ -108,6 +108,7 @@ namespace COTG.Views
 		{
 
 			var data = await Post.SendForJson("overview/tcounc.php");
+		//	Trace(data.RootElement.ToString());
 			foreach (var js in data.RootElement[0].EnumerateArray())
 			{
 				

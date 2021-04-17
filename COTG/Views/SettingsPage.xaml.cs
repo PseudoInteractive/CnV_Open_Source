@@ -66,6 +66,7 @@ namespace COTG.Views
 		public static int maxIron = 300000;
 		public static int maxFood = 300000;
 		public static int cottageLevel = 7;
+		public static bool? troopsVisible;
 		public static bool sendWood = true;
 		public static bool sendStone = true;
 		public static bool sendIron = true;
@@ -78,6 +79,7 @@ namespace COTG.Views
 		public static bool useSuggested = true;
 		public static bool wantRaidRepeat=true;
 		public static bool clearRes;
+		public static bool embedTradeInShareStrings = true;
 		public static bool autoDemoCottages=true;
 		public static int startCabinCount = 39;
 		public static float fontScale = 0.5f;

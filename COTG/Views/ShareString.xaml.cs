@@ -112,34 +112,48 @@ namespace COTG.Views
 
 			var rv = await App.DispatchOnUIThreadTask(async () =>
 			{
-				try
-				{
-					Assert(App.uiSema.CurrentCount == 0);
+			try
+			{
+				Assert(App.uiSema.CurrentCount == 0);
 
-					if (instance == null)
+				if (instance == null)
+				{
+					try
 					{
-						try
-						{
-							new ShareString();
-						}
-						catch (Exception ex)
-						{
-							Log(ex);
-						}
-						AddLayouts();
-						var shares = await Tables.ReadShares(Player.myName);
-						foreach (var s in shares)
-						{
-							new ShareStringItem(s.s);
-						}
+						new ShareString();
 					}
-					instance.onComplete.IsOn = CityBuild.isPlanner;
-					instance.shareStrings.SelectedItem = null;
-					var city = City.GetBuild();
-					//	instance.PlannerTeachingTip.Show();
-					// todo: copy text 
-					if (CityBuild.isPlanner)
-						city.BuildingsCacheToShareString();
+					catch (Exception ex)
+					{
+						Log(ex);
+					}
+					AddLayouts();
+					var shares = await Tables.ReadShares(Player.myName);
+					foreach (var s in shares)
+					{
+						new ShareStringItem(s.s);
+					}
+				}
+				instance.onComplete.IsOn = CityBuild.isPlanner;
+				instance.shareStrings.SelectedItem = null;
+				var city = City.GetBuild();
+				//	instance.PlannerTeachingTip.Show();
+				// todo: copy text 
+				if (CityBuild.isPlanner)
+					city.BuildingsCacheToShareString();
+
+					var res = await CitySettings.GetTradeResourcesSettings(city.cid);
+
+					instance.reqWood.Value = res.req.wood > 0 ? res.req.wood : SettingsPage.reqWood;
+					instance.reqStone.Value = res.req.stone > 0 ? res.req.stone : SettingsPage.reqStone;
+					instance.reqIron.Value = res.req.iron > 0 ? res.req.iron : SettingsPage.reqIron;
+					instance.reqFood.Value = res.req.food > 0 ? res.req.food : SettingsPage.reqFood;
+
+					instance.maxWood.Value = res.max.wood > 0 ? res.max.wood : SettingsPage.maxWood;
+					instance.maxStone.Value = res.max.stone > 0 ? res.max.stone : SettingsPage.maxStone;
+					instance.maxIron.Value = res.max.iron > 0 ? res.max.iron : SettingsPage.maxIron;
+					instance.maxFood.Value = res.max.food > 0 ? res.max.food : SettingsPage.maxFood;
+
+
 					SetFromSS();
 					instance.Title = city.nameAndRemarks;
 					//SetTags(city.remarks);
@@ -173,7 +187,21 @@ namespace COTG.Views
 						await CitySettings.SetCitySettings(City.build, setRecruit: true);
 					}
 					var city = City.GetBuild();
+					var req = new Resources((int)instance.reqWood.Value, (int)instance.reqStone.Value, (int)instance.reqIron.Value, (int)instance.reqFood.Value);
+					var max = new Resources((int)instance.maxWood.Value, (int)instance.maxStone.Value, (int)instance.maxIron.Value, (int)instance.maxFood.Value);
+					SettingsPage.reqWood = req.wood;
+					SettingsPage.reqStone = req.stone;
+					SettingsPage.reqIron = req.iron;
+					SettingsPage.reqFood = req.food;
 
+					SettingsPage.maxWood = max.wood;
+					SettingsPage.maxStone = max.stone;
+					SettingsPage.maxIron = max.iron;
+					SettingsPage.maxFood = max.food;
+
+					await CitySettings.SetTradeResourcesSettings(city.cid,req,max);
+		
+					
 					city.SetShareString(instance.GetShareStringWithJson());
 					await city.SaveLayout();
 					if (SettingsPage.autoRearrangeShareStrings)
@@ -197,10 +225,34 @@ namespace COTG.Views
 		}
 			
 	
-
+		int ? GetSetting(NumberBox v)
+		{
+			var rv = (int)v.Value;
+			if (rv > 0)
+				return rv;
+			return null; ;
+		}
+		public ShareStringMeta GetMeta()
+		{
+			var meta = new ShareStringMeta() { notes = GetTags(string.Empty), desc = description.Text, path = path.Text };
+			if (SettingsPage.embedTradeInShareStrings)
+			{
+				meta.reqWood = GetSetting(reqWood);
+				meta.reqStone = GetSetting(reqStone);
+				meta.reqIron = GetSetting(reqIron);
+				meta.reqFood = GetSetting(reqFood);
+				meta.maxWood = GetSetting(maxWood);
+				meta.maxStone = GetSetting(maxStone);
+				meta.maxIron = GetSetting(maxIron);
+				meta.maxFood = GetSetting(maxFood);
+			}
+			return meta;
+		}
 		string GetShareStringWithJson()
 		{
-			return GetShareString() + JsonSerializer.Serialize(new ShareStringMeta() { notes=GetTags(string.Empty), desc=description.Text,path=  path.Text });
+
+
+			return GetShareString() + JsonSerializer.Serialize(GetMeta(), Json.jsonSerializerOptions);
 
 		}
 	
@@ -239,10 +291,16 @@ namespace COTG.Views
 			}
 
 		}
+		static void SetValue(NumberBox v, int ? source)
+		{
+			if (source.HasValue)
+				v.Value = source.Value;
+		}
+			
 		public static void SetFromSS(string shareString)
 		{
 			var s = SplitShareString(shareString);
-			var meta = JsonSerializer.Deserialize<ShareStringMeta>(s.json, COTG.JSON.Json.jsonSerializerOptions);
+			var meta = JsonSerializer.Deserialize<ShareStringMeta>(s.json, Json.jsonSerializerOptions);
 			var path = DecomposePath(meta.path);
 			instance.shareString.Text = s.ss ?? string.Empty;
 			var tags = meta.notes ?? string.Empty;
@@ -252,6 +310,15 @@ namespace COTG.Views
 			instance.path.Text = CombinePath(path);
 
 			SetTags(tags);
+			SetValue(instance.reqWood, meta.reqWood);
+			SetValue(instance.reqStone, meta.reqStone);
+			SetValue(instance.reqIron, meta.reqIron);
+			SetValue(instance.reqFood, meta.reqFood);
+
+			SetValue(instance.maxWood, meta.maxWood);
+			SetValue(instance.maxStone, meta.maxStone);
+			SetValue(instance.maxIron, meta.maxIron);
+			SetValue(instance.maxFood, meta.maxFood);
 
 		}
 		public static void SetFromSS() => SetFromSS(City.GetBuild().shareString);
@@ -294,12 +361,18 @@ namespace COTG.Views
 			{
 				if(i.shareString!= null)
 				{
-					instance.shareString.Text= i.shareString.Replace("\n", "", StringComparison.Ordinal).Replace("\r", "", StringComparison.Ordinal);
-					instance.description.Text = i.desc;
-					instance.path.Text = i.path;
-					instance.title.Text = i.label;
-					SetTags(i.tags);
-
+					if (i.shareStringWithJson != null)
+					{
+						SetFromSS(i.shareStringWithJson);
+					}
+					else
+					{
+						instance.shareString.Text = i.shareString.Replace("\n", "", StringComparison.Ordinal).Replace("\r", "", StringComparison.Ordinal);
+						instance.description.Text = i.desc;
+						instance.path.Text = i.path;
+						instance.title.Text = i.label;
+						SetTags(i.tags);
+					}
 				}
 			}
 		}
@@ -360,14 +433,14 @@ namespace COTG.Views
 		public string desc { get; set; }
 		public string notes { get; set; }
 
-		public int rWood { get; set; }
-		public int rStone { get; set; }
-		public int rIron { get; set; }
-		public int rFood { get; set; }
-		public int mWood { get; set; }
-		public int mStone { get; set; }
-		public int mIron { get; set; }
-		public int mFood { get; set; }
+		public int? reqWood { get; set; }
+		public int? reqStone { get; set; }
+		public int? reqIron { get; set; }
+		public int? reqFood { get; set; }
+		public int? maxWood { get; set; }
+		public int? maxStone { get; set; }
+		public int? maxIron { get; set; }
+		public int? maxFood { get; set; }
 
 	}
 	public class ShareStringItem
@@ -396,6 +469,8 @@ namespace COTG.Views
 		}
 		public string desc { get; set; }
 		public string tags { get; set; }
+
+		public string shareStringWithJson;
 		[JsonIgnore]
 		public DumbCollection<ShareStringItem> children { get; set; } = new();
 		// group items
@@ -408,24 +483,25 @@ namespace COTG.Views
 		//	path = $"{Player.myName}~tba";
 		//	title = "tba";
 		//}
-		public override string ToString() => JsonSerializer.Serialize(this);
+		public override string ToString() => JsonSerializer.Serialize(this, Json.jsonSerializerOptions);
 
 		public ShareStringItem(string shareString)
 		{
 			var s = ShareString.SplitShareString(shareString);
-			var meta = JsonSerializer.Deserialize<ShareStringMeta>(s.json, COTG.JSON.Json.jsonSerializerOptions);
+			var meta = JsonSerializer.Deserialize<ShareStringMeta>(s.json, Json.jsonSerializerOptions);
 		//	var path = ShareString.DecomposePath(meta.path);
-			Ctor(meta.path, meta.notes ?? string.Empty, meta.desc ?? string.Empty, s.ss ?? string.Empty);
+			Ctor(meta.path, meta.notes ?? string.Empty, meta.desc ?? string.Empty, s.ss ?? string.Empty,shareString);
 		}
 
 		public ShareStringItem(string path, string _tags, string _desc, string _share)
 		{
-			Ctor(path, _tags, _desc, _share);
+			Ctor(path, _tags, _desc, _share,null);
 		}
 
-		public void Ctor(string path, string _tags, string _desc, string _share)
+		public void Ctor(string path, string _tags, string _desc, string _share, string _shareStringWithJson)
 		{
 			this.path = path;
+			shareStringWithJson = _shareStringWithJson;
 			tags = _tags;
 			desc = _desc;
 			shareString = _share;

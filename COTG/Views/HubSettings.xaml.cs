@@ -3,6 +3,7 @@ using COTG.JSON;
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
@@ -10,6 +11,7 @@ using System.Threading.Tasks;
 
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.UI.Composition;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -36,8 +38,10 @@ namespace COTG.Views
 			{
 				var result = await App.DispatchOnUIThreadTask(async () =>
 				{
+
 					var hubName = Spot.GetOrAdd(bestHub).nameAndRemarks;
 					instance.bestHub.Text = hubName;
+					instance.Bindings.Update();
 					if (await instance.ShowAsync2() == ContentDialogResult.Primary)
 					{
 
@@ -45,7 +49,7 @@ namespace COTG.Views
 						{
 							// Todo
 						}
-						await CitySettings.SetCitySettings(cid, bestHub, true, true, true, true, true);
+						await CitySettings.SetCitySettings(cid, bestHub,bestHub,SettingsPage.setRecruit,true, true,null, true);
 						return true;
 					}
 					else
@@ -61,6 +65,9 @@ namespace COTG.Views
 			}
 			return false;
 		}
+
+	
+
 		public TradeSettings _TradeSettingsSel;
 		public TradeSettings tradeSettingsSel
 		{

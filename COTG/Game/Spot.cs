@@ -105,6 +105,7 @@ namespace COTG.Game
 				Spot.allSpots.TryAdd(cid, rv);
 				if (Player.IsFriend(info.player))
 					City.CitiesChanged();
+				
 			}
 			if (cityName != null)
 				rv._cityName = cityName;
@@ -196,7 +197,8 @@ namespace COTG.Game
 			rt,
 			sorcs,
 			druids,
-			academy,
+			praetor,
+			priestess,
 			horses,
 			arbs,
 			se,
@@ -219,6 +221,12 @@ namespace COTG.Game
 			public byte forums;
 			public bool castle;
 			static public explicit operator Classification(ClassificationExtended e) => e.classification;
+			static public explicit operator ClassificationExtended(Classification e)
+			{
+				var rv = new ClassificationExtended();
+				rv.classification = e;
+				return rv;
+			}
 		};
 		public Classification classification { get; set; }
 		public bool isNotClassified => classification == Classification.unknown; // does not include pending
@@ -231,7 +239,8 @@ namespace COTG.Game
 			"rt",
 			"sorcs",
 			"druids",
-			"academy",
+			"praetor",
+			"priestess",
 			"horses",
 			"arbs",
 			"scorps",
@@ -249,13 +258,15 @@ namespace COTG.Game
 			ttSorcerer,
 			ttDruid,
 			ttPraetor,
+			ttPriestess,
 			ttHorseman,
 			ttArbalist,
 			ttScorpion,
 			ttSenator,
 			ttWarship,
 			ttBallista,
-			
+
+			ttPending,
 			ttPending
 		};
 		public string classificationString => classifications[(int)classification];
@@ -666,6 +677,7 @@ namespace COTG.Game
 				return (await Classify()).classification;
 			}
 		}
+
 		internal void QueueClassify()
 		{
 			if (isNotClassified)
@@ -675,14 +687,48 @@ namespace COTG.Game
 		}
 		internal async ValueTask<ClassificationExtended> Classify()
 		{
+			if (isFriend)
+			{
+				if (HasTag(Tags.Vanq))
+					return (ClassificationExtended)Classification.vanqs;
+				else if (HasTag(Tags.Scorp))
+					return (ClassificationExtended)Classification.se;
+				else if (HasTag(Tags.Prae))
+					return (ClassificationExtended)Classification.praetor;
+				else if (HasTag(Tags.Priest))
+					return (ClassificationExtended)Classification.priestess;
+				else if (HasTag(Tags.RT) || HasTag(Tags.VT))
+					return (ClassificationExtended)Classification.rt;
+				else if (HasTag(Tags.Sorc))
+					return (ClassificationExtended)Classification.sorcs;
+				else if (HasTag(Tags.Druid))
+					return (ClassificationExtended)Classification.druids;
+				else if (HasTag(Tags.Horse))
+					return (ClassificationExtended)Classification.horses;
+				else if (HasTag(Tags.Arb))
+					return (ClassificationExtended)Classification.arbs;
+				else if (HasTag(Tags.Galley) || HasTag(Tags.Stinger) || HasTag(Tags.Warship))
+					return (ClassificationExtended)Classification.navy;
+				else if (HasTag(Tags.Hub))
+					return (ClassificationExtended)Classification.hub;
+				
+				foreach(var tt in troopsTotal)
+				{
+					var i = classificationTTs.FindIndex((byte)tt.type);
+					if (i != -1)
+					{
+						return (ClassificationExtended)(Classification)i;
+					}
+				}
+			}
+			ClassificationExtended rv = new ClassificationExtended(); ;
 			if (!Player.isAvatarOrTest)
 			{
-				classification = Classification.missing;
-				return new ClassificationExtended() { classification = classification };
+				rv.classification = Classification.missing;
+				return rv;
 			}
 			classification = Classification.pending;
 			var str = await Post.SendForText("includes/gLay.php", $"cid={cid}", World.CidToPlayerOrMe(cid));
-			ClassificationExtended rv = new ClassificationExtended(); ;
 			try
 			{
 				const int start = 14;
@@ -736,7 +782,7 @@ namespace COTG.Game
 				}
 				else if (mx == rv.academies)
 				{
-					classification = Classification.academy;
+					classification = Classification.praetor; // todo!
 				}
 				else if (mx == rv.se)
 				{
@@ -1000,6 +1046,21 @@ namespace COTG.Game
 		{
 			return MainPage.IsVisible() ? MainPage.instance.cityGrid : BuildTab.instance.cityGrid;
 
+		}
+		public static bool TryGetGrid(out RadDataGrid grid)
+		{
+
+			if (MainPage.IsVisible())
+				grid = MainPage.instance.cityGrid;
+			else if (BuildTab.IsVisible())
+				grid = BuildTab.instance.cityGrid;
+			else
+			{
+				grid = null;
+				return false;
+			}
+
+			return true;
 		}
 
 		public void ProcessSelection(VirtualKeyModifiers mod, bool forceSelect = false, bool scrollIntoView = true)
@@ -1307,6 +1368,9 @@ namespace COTG.Game
 			await Raiding.ReturnAt(cid, at);
 			Note.Show($"{City.Get(cid).nameMarkdown} end raids at {at.FormatDefault()}");
 		}
+
+		public bool isHubOrStorage => HasTag(Tags.Hub) || HasTag(Tags.Storage);
+		
 		public async void ReturnAtBatch(object sender, RoutedEventArgs e)
 		{
 			(var at, var okay) = await Views.DateTimePicker.ShowAsync("Return By:");
@@ -1496,13 +1560,9 @@ namespace COTG.Game
 					var aRaid = AApp.AddSubMenu(flyout, "Raid..");
 
 					int count = 1;
-					if (uie == MainPage.CityGrid || uie == NearDefenseTab.instance.supportGrid)
+					if (uie == MainPage.CityGrid || uie == BuildTab.CityGrid || uie == NearDefenseTab.instance.supportGrid)
 					{
 						count = MainPage.GetContextCidCount(cid);
-					}
-					else if (uie == BuildTab.CityGrid )
-					{
-						count = BuildTab.GetContextCidCount(cid);
 					}
 					if (count > 1)
 					{
@@ -1525,12 +1585,19 @@ namespace COTG.Game
 					aSetup.AddItem( "Set Recruit", (_, _) => CitySettings.SetRecruitFromTag(cid));
 
 					//   AApp.AddItem(flyout, "Clear Res", (_, _) => JSClient.ClearCenterRes(cid) );
-					aSetup.AddItem("Clear Center Res", (_, _) => JSClient.ClearCenter(cid));
+					aSetup.AddItem("Clear Center Res", (this as City).ClearRes );
 
 
 					aExport.AddItem("Troops to Sheets", CopyForSheets);
 				}
+				else
+				{
+					if( _cityName == null )
+					{
+						JSClient.FetchCity(cid);
+					}
 
+				}
 				{
 					var sel = Spot.GetSelectedForContextMenu(cid, false);
 					if (AttackTab.instance.isActive)
@@ -1637,7 +1704,7 @@ namespace COTG.Game
 		{
 			await App.DispatchOnUIThreadExclusive(cid,async () =>
 			{
-				await QueueTab.DoTheStuff(this as City);
+				await QueueTab.DoTheStuff(this as City, true, true);
 			});
 		}
 		public static async void InfoClick(object sender, RoutedEventArgs e)
@@ -1646,10 +1713,14 @@ namespace COTG.Game
 			foreach (var cid in cids)
 			{
 				var _cid = cid;
-				await App.DispatchOnUIThreadExclusive(_cid,async () =>
-				{
-					await CityRename.RenameDialog(_cid,true);
-				});
+				if(!await App.DispatchOnUIThreadExclusive(_cid, async () =>
+				 {
+				 return await CityRename.RenameDialog(_cid, true);
+						
+				}) )
+			{
+				break;
+			}
 			}
 		}
 		public void DefendMe()
@@ -1772,8 +1843,11 @@ namespace COTG.Game
 					case Classification.druids:
 						sb.Append("Druids\t");
 						break;
-					case Classification.academy:
+					case Classification.praetor:
 						sb.Append("prae\t");
+						break;
+					case Classification.priestess:
+						sb.Append("priest\t");
 						break;
 					case Classification.horses:
 					case Classification.arbs:

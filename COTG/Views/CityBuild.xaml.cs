@@ -621,19 +621,31 @@ namespace COTG.Views
 			return BuildQueue.Enqueue(City.build, (byte)slvl, (byte)elvl, (ushort)bid, (ushort)spot);
 		
 		}
-		
+		public static async Task<int> EnqueueUpgrade( int elvl, int spot)
+		{
+			int rv = 0;
+			var b = CityBuild.postQueueBuildings[spot];
+			var bid = b.bid;
+			for (var level = b.bl;level < elvl;++level)
+			{
+				++rv;
+				await BuildQueue.Enqueue(City.build, (byte)level, (byte)(level +1), (ushort)bid, (ushort)spot);
+			}
+			return rv;
+
+		}
 		//private void Upgrade_Click(object sender, RoutedEventArgs e)
 		//{
 
 		//	var id = XYToId(selected);
 		//	var sel = GetBuildingPostQueue(id);
 		//	var lvl = sel.bl;
-			
+
 		//	if(lvl == 0)// special case
 		//		Build(id,sel.def.bid,false);
 		//	else
 		//		Enqueue(lvl,(lvl + 1),sel.def.bid,id);
-		
+
 		//}
 		public static async Task UpgradeToLevel(int level, (int x, int y) target, bool dryRun=false)
 		{
@@ -671,7 +683,7 @@ namespace COTG.Views
 				}
 				else if (!dryRun)
 				{
-					await Enqueue(lvl, level, sel.def.bid, id);
+					await EnqueueUpgrade( level,  id);
 				}
 			}
 			else
@@ -890,7 +902,7 @@ namespace COTG.Views
 			if (a == ContentDialogResult.Primary)
 			{
 				
-				await Enqueue(currentLevel, toLevel, bidTownHall, bspotTownHall);
+				await EnqueueUpgrade( toLevel, bspotTownHall);
 				await Task.Delay(400);
 				return true;
 			}

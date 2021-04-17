@@ -28,12 +28,13 @@ using System.Numerics;
 using Microsoft.Toolkit;
 using System.Diagnostics.Contracts;
 using Windows.UI.Xaml.Controls;
+using COTG;
 // The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234236
 
 namespace COTG.Views
 {
 
-    public sealed partial class AttackTab : UserTab, INotifyPropertyChanged
+	public sealed partial class AttackTab : UserTab, INotifyPropertyChanged
     {
         
         public static StorageFolder folder => ApplicationData.Current.LocalFolder;
@@ -85,7 +86,7 @@ namespace COTG.Views
 				var time = SettingsPage.attackPlayerTime;
 
 				atk.time = new string[] { time.Hour.ToString("00"), time.Minute.ToString("00"), time.Second.ToString("00"), time.ToString("MM/dd/yyyy") };
-                scripts[clusterId++] = System.Text.Json.JsonSerializer.Serialize(atk);
+                scripts[clusterId++] = System.Text.Json.JsonSerializer.Serialize(atk, Json.jsonSerializerOptions);
             }
 
             StringBuilder sb = new StringBuilder();
@@ -720,7 +721,8 @@ namespace COTG.Views
 								case Spot.Classification.druids:
 									score += 2;
 									break;
-								case Spot.Classification.academy:
+								case Spot.Classification.praetor:
+								case Spot.Classification.priestess:
 									score += 8;
 									break;
 								case Spot.Classification.horses:
@@ -755,7 +757,8 @@ namespace COTG.Views
 								case Spot.Classification.druids:
 									score -= 2;
 									break;
-								case Spot.Classification.academy:
+								case Spot.Classification.praetor:
+								case Spot.Classification.priestess:
 									score -= 4;
 									break;
 								case Spot.Classification.horses:
@@ -791,8 +794,11 @@ namespace COTG.Views
 								case Spot.Classification.druids:
 									score -= 2;
 									break;
-								case Spot.Classification.academy:
+								case Spot.Classification.praetor:
 									score -= 6;
+									break;
+								case Spot.Classification.priestess:
+									score += 1;
 									break;
 								case Spot.Classification.horses:
 								case Spot.Classification.arbs:

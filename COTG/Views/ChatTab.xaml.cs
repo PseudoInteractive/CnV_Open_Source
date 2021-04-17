@@ -48,9 +48,9 @@ namespace COTG.Views
         public DateTimeOffset time;
         public string arrivedString => time.ToString("HH':'mm':'ss");
         public string text { get; set; } = string.Empty;
-
-        public ChatEntry(string _a, DateTimeOffset _time = default) { text = Note.TranslateCOTGChatToMarkdown(_a); time = _time; }
-        public ChatEntry(string _player, string _text, DateTimeOffset _time, byte _type) { text = _text; time = _time; type = _type; player = _player; }
+		const int maxMessageLength = 32 * 1024;
+        public ChatEntry(string _a, DateTimeOffset _time = default) { text = Note.TranslateCOTGChatToMarkdown(_a.Truncate(maxMessageLength) ); time = _time; }
+        public ChatEntry(string _player, string _text, DateTimeOffset _time, byte _type) { text = _text.Truncate(maxMessageLength); time = _time; type = _type; player = _player; }
         //  public ChatEntry() { }
 
     }

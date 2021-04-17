@@ -11,7 +11,7 @@ using static COTG.Debug;
 namespace COTG.JSON
 {
 	using J = System.Text.Json.Serialization.JsonPropertyNameAttribute;
-	
+
 
 	public sealed class BuildingDef
 	{
@@ -92,7 +92,7 @@ namespace COTG.JSON
 				 (byte)'P',(byte)(449 - sharestringOffset),
 				 (byte)'R',(byte)(488 - sharestringOffset),
 				 (byte)'S',(byte)(464 - sharestringOffset),
-				 (byte)'T',(byte)(455 - sharestringOffset),
+				 (byte)'T',(byte)(0),
 				 (byte)'U',(byte)(481 - sharestringOffset),
 				 (byte)'V',(byte)(491 - sharestringOffset),
 				 (byte)'X',(byte)(467 - sharestringOffset),

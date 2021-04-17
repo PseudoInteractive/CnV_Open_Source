@@ -15,10 +15,10 @@ using Windows.UI.Popups;
 
 namespace COTG
 {
-    /// <summary>
-    /// Outpots debug text
-    /// </summary>
-    public static class Debug
+	/// <summary>
+	/// Outpots debug text
+	/// </summary>
+	public static class Debug
     {
 		public static string timeStamp => DateTimeOffset.UtcNow.FormatTimePrecise();
         // {1D7815D0-4DCD-4655-8798-D18196D4DE0F}
@@ -122,7 +122,7 @@ namespace COTG
 		{
 
 			System.Diagnostics.Debug.WriteLine($"{sourceFilePath}({sourceLineNumber}): {timeStamp}: {memberName}");
-			System.Diagnostics.Debug.WriteLine(System.Text.Json.JsonSerializer.Serialize<T>(s));
+			System.Diagnostics.Debug.WriteLine(System.Text.Json.JsonSerializer.Serialize<T>(s, Json.jsonSerializerOptions));
 			DumpStack(new StackTrace(1, true));
 			//  System.Diagnostics.Debug.WriteLine(new StackTrace());
 

@@ -119,58 +119,8 @@ namespace COTG.Views
 		}
 
 
-		public static List<int> GetContextCids(object sender)
-		{
+	
 
-			var cid = (int)((sender as MenuFlyoutItem).DataContext);
-			return GetContextCids(cid);
-		}
-		public static List<int> GetContextCids(int cid)
-		{
-			var cids = new List<int>();
-
-			if (cid != 0)
-				cids.Add(cid);
-			if (BuildTab.IsVisible())
-			{
-				foreach (var sel in instance.cityGrid.SelectedItems)
-				{
-					if (sel is City city)
-					{
-						if (city.cid != cid)
-							cids.Add(city.cid);
-					}
-				}
-			}
-			NearDefenseTab.GetSelected(cids);
-			return cids;
-		}
-
-
-		public static int GetContextCidCount(int focusCid)
-		{
-			return GetContextCids(focusCid).Count;
-
-		}
-		public static void ReturnSlowClick(object sender, RoutedEventArgs e)
-		{
-			var cids = GetContextCids(sender);
-			if (cids.Count == 1)
-				Raiding.ReturnSlow(cids[0], true);
-			else
-				Raiding.ReturnSlowBatch(cids);
-		}
-
-
-
-		public static void ReturnFastClick(object sender, RoutedEventArgs e)
-		{
-			var cids = GetContextCids(sender);
-			if (cids.Count == 1)
-				Raiding.ReturnFast(cids[0], true);
-			else
-				Raiding.ReturnFastBatch(cids);
-		}
 
 
 

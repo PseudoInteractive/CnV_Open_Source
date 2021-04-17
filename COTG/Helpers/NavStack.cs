@@ -113,7 +113,7 @@ namespace COTG.Helpers
 			{
 				if (City.CanVisit(cid))
 				{
-					Note.Show($"Navigate to {City.GetOrAddCity(cid).nameAndRemarks} {position} {NavStack.backStack.Count}");
+					Note.Show($"Navigate to {City.GetOrAddCity(cid).nameMarkdown} {position} {NavStack.backStack.Count}");
 					if (!City.IsBuild(cid) || !City.IsFocus(cid))
 					{
 						JSClient.ChangeCity(cid, false);

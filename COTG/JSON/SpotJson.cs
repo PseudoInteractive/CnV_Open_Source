@@ -8,7 +8,7 @@ using System.Text;
 
 namespace COTG.DB
 {
-	
+
 	// JSON version
 	public sealed class PlayerPresenceDB
 	{
@@ -134,7 +134,7 @@ namespace COTG.DB
         }
         public override string ToString()
         {
-            return JsonSerializer.Serialize(this);
+            return JsonSerializer.Serialize(this, Json.jsonSerializerOptions);
         }
     }
 

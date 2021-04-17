@@ -31,7 +31,7 @@ namespace COTG.Game
 	//	// bd:  time to demo?
 	//}
 
-	public sealed class City : Spot
+	public sealed partial class City : Spot
 	{
 
 		public const short bidTownHall = 455;
@@ -119,7 +119,7 @@ namespace COTG.Game
 		public const int buildQMax = 16; // this should depend on ministers
 		public static bool buildQueueFull => buildQueue.count >= buildQMax && !SettingsPage.extendedBuild;
 		public static bool wantBuildCommands => buildQueue.count < safeBuildQueueLength;
-		public const int safeBuildQueueLength = 14; // leave space for autobuild
+		public const int safeBuildQueueLength = 15; // leave space for autobuild
 
 		public static IEnumerable<BuildQueueItem> IterateQueue()
 		{
@@ -251,7 +251,7 @@ namespace COTG.Game
 
 		public static City GetOrAddCity(int cid)
 		{
-			Assert(cid > 65536);
+			//Assert(cid > 65536);
 			return Spot.GetOrAdd(cid);
 		}
 
@@ -385,6 +385,8 @@ namespace COTG.Game
 		{
 			if (shareString==null || shareString.Length <= shareStringStartOffset)
 				return 0;
+			if (id == bspotTownHall)
+				return bidTownHall;
 			var t = shareString[id + shareStringStartOffset];
 			if (BuildingDef.sharestringToBuldings.TryGetValue((byte)t, out var c) && c != 0)
 			{
@@ -462,7 +464,7 @@ namespace COTG.Game
 		}
 		public async Task<int> GetAutobuildCabinLevel()
 		{
-			var split = await CitySettings.GetMinisterOptions(this);
+			var split = await CitySettings.GetMinisterOptions(this,false);
 			if (int.TryParse(split[52].Trim(']'), out var rv))
 				return rv;
 			return SettingsPage.cottageLevel;
@@ -705,19 +707,29 @@ namespace COTG.Game
 			var sb = new StringBuilder(shareStringStart);
 			sb.Append(_isOnWater ? ';' : ':');
 			var anyValid = false;
+			int id = 0;
 			foreach (var c in _layout)
 			{
-				var bid = c.bid;
-				if (bid != 0)
+				byte o;
+				if (id++ == bspotTownHall)
 				{
-					bid -= BuildingDef.sharestringOffset;
-					anyValid = true;
+					o = (byte)'T';
 				}
-				if (!BuildingDef.buildingsToSharestring.TryGetValue((byte)bid, out var o))
+				else
 				{
-					o = (byte)'-';
+					var bid = c.bid;
+					if (bid != 0)
+					{
+						bid -= BuildingDef.sharestringOffset;
+						anyValid = true;
+					}
+					if (!BuildingDef.buildingsToSharestring.TryGetValue((byte)bid, out  o))
+					{
+						o = (byte)'-';
+					}
 				}
 				sb.Append((char)o);
+				
 			}
 			sb.Append("[/ShareString]");
 			return anyValid ? sb.ToString() : string.Empty;
@@ -777,16 +789,17 @@ namespace COTG.Game
 
 		}
 
-		public void FlipLayoutH()
+		public void FlipLayoutH(bool ignoreWater=false)
 		{
 			//	if (layout == null)
 			//		return;
+			var water = isOnWater && !ignoreWater;
 			Assert(CityBuild.isPlanner);
 			for (int y = span0; y <= span1; ++y)
 			{
 				for (int x = span0; x < 0; ++x)
 				{
-					if (isOnWater)
+					if (water)
 					{
 						if (y >= 0 && !(x, y).IsXYInCenter())
 							continue;
@@ -800,16 +813,17 @@ namespace COTG.Game
 			// SaveLayout();
 		}
 
-		public void FlipLayoutV()
+		public void FlipLayoutV(bool ignoreWater=false)
 		{
 			//if (layout == null)
 			//	return;
 			Assert(CityBuild.isPlanner);
+			var water = isOnWater && !ignoreWater;
 			for (int y = span0; y <0; ++y)
 			{
 				for (int x = span0; x <= span1; ++x)
 				{
-					if (isOnWater)
+					if (water)
 					{
 						if (x >= 0 && !(x, y).IsXYInCenter())
 							continue;
@@ -1127,41 +1141,6 @@ namespace COTG.Game
 			return tradeInfo;
 		}
 		internal bool isLayoutValid => shareString != null && shareString.Length >= minShareStringLength;
-		public bool hasCastleInLayout
-		{
-			get
-			{
-				if (!isLayoutValid)
-					return false;
-
-				for (int i = 0; i < citySpotCount; ++i)
-				{
-					if (BidFromOverlay(i) == bidCastle)
-						return true;
-				}
-				return false;
-			}
-		}
-		public (bool hasCastle,bool hasSorcTower) hasCastleOrSorcTowerInLayout
-		{
-			get
-			{
-				bool hasCastle = false;
-				bool hasSorcTower = false;
-				if (!isLayoutValid)
-					return (false,false);
-
-				for (int i = 0; i < citySpotCount; ++i)
-				{
-					if (BidFromOverlay(i) == bidCastle)
-						hasCastle=true;
-					else if (BidFromOverlay(i) == bidSorcTower)
-						sorcTower=true;
-				}
-				return (hasCastle,hasSorcTower);
-			}
-		}
-
 		public bool ComputeCartTravelTime(int target, out TimeSpan t)
 		{
 			var onDifferentContinent = cont != target.CidToContinent();
@@ -1470,16 +1449,7 @@ namespace COTG.Game
 		}
 		public static BuildingCount GetBuildingCountPostQueue(int cabinLevel) => GetBuildingCounts(CityBuild.postQueueBuildings, cabinLevel);
 
-		public static int GetBuildingLimit(BuildingCount bc, bool hasCastleInLayout, bool hasSorcTowerInLayout)
-		{
-			var rv = 100;
-			if (hasCastleInLayout && !bc.hasCastle)
-				rv -= 1;
-			if (bc.sorcTowers == 0 && hasSorcTowerInLayout)
-				rv -= 1;
-			return rv;
-
-		}
+	
 		public  int GetBuildingLimit(BuildingCount bc)
 		{
 			(bool hasCastleInLayout, bool hasSorcTowerInLayout) = hasCastleOrSorcTowerInLayout;
@@ -1643,63 +1613,7 @@ namespace COTG.Game
 
 
 		}
-		public async Task<BuildInfo> GetBuildStage()
-		{
-			if (CityRename.IsNew(this))
-				return new BuildInfo(BuildStage._new,100);
-			//await GetCity.Post(cid);
-			var cabinLevel = await GetAutobuildCabinLevel();
-			return GetBuildStage(GetBuildingCounts(cabinLevel));
-
-		}
-		public string buildStage
-		{
-			get
-			{
-				if (CityRename.IsNew(this))
-					return "New";
-				if (buildings == Emptybuildings)
-				{
-					//GetCity.Post(cid);
-					return "pending...";
-				}
-				var bc = GetBuildingCounts(GetAutobuildCabinLevelNoFetch());
-				return $"{GetBuildStage(bc).stage} ({bc.buildings})";
-			}
-		}
-
-		public BuildInfo GetBuildStageNoFetch()
-		{
-			if (CityRename.IsNew(this))
-				return new BuildInfo(BuildStage._new,100);
-			if(buildings==Emptybuildings)
-			{
-				//GetCity.Post(cid);
-				return new BuildInfo(BuildStage.pending,100);
-			}
-			return GetBuildStage(GetBuildingCounts(GetAutobuildCabinLevelNoFetch()));
-		}
-
-		public static async Task<BuildInfo> GetBuildBuildStage(BuildingCount bc)
-		{
-			var city = GetBuild();
-			if (CityRename.IsNew(city))
-				return new BuildInfo(BuildStage._new,100);
-			await GetCity.Post(City.build);
-
-			return city.GetBuildStage(bc);
-		}
-
-		public static async Task<BuildInfo> GetBuildBuildStage()
-		{
-			var city = GetBuild();
-			if (CityRename.IsNew(city))
-				return new BuildInfo(BuildStage._new, 100);
-			await GetCity.Post(City.build);
-			var cabinLevel = await city.GetAutobuildCabinLevel();
-			return city.GetBuildStage(GetBuildingCountPostQueue(cabinLevel));
-
-		}
+	
 
 	}
 	public static class CityHelpers

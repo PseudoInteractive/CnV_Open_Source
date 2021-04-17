@@ -84,6 +84,18 @@
  - **Request** You can now set your cities initial storehouse count (i.e. while building cabins)
 ### 2021/4/14
  - **New** Sorc towers will only be built when you ave more than tsForSorcTower (or it is a sorc city) and then it will be immediatey raidsed to level 10.
-### 2021/4/14
- - **Known Issue** The first time you open the raid box, it will be empty, please close and re-open
+### 2021/4/16
+ - **New** Layouts can now have resource settings.  When you share a layout it will incllude resource settings, which will be applied when selecting a layout
+ - To export a layout without resource settings turn off the Trade Settings toggle
+### 2021/4/16
+ - **Known Issue** Options for tags appear twice during setup, the settings on the first page are only used if you do not set a layout
+### 2021/4/16
+ - **Known Issue** Options for trade resource settings appear twice during setup, the settings on final page will be copied from your layout if you selected one so you can safely ignore them
+### 2021/4/16
+ - **Update** Smart Rearrange will flip layouts if there are buildings floating in the moat
+### 2021/4/17
+ - **Fix** Trade settings not updating all the setup windows
+### 2021/4/17
+ - **New** You can draw troop overlays for your cities via 'troops visible' in settings
+ 
  

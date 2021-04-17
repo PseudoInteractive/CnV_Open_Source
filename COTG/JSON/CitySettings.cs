@@ -68,14 +68,15 @@ namespace COTG.JSON
 		{
 			foreach (var _cid in Spot.GetSelectedForContextMenu(cid, false))
 			{
-				await CitySettings.SetCitySettings(_cid, CitySettings.FindBestHub(_cid), false, false, false, true, true);
+				var hub = CitySettings.FindBestHub(_cid);
+				await CitySettings.SetCitySettings(_cid,hub,City.Get(cid).isHubOrStorage ? 0: hub);
 			}
 
 		}
 
 
 
-		public static async Task SetCitySettings(int cid, int reqHub=0, bool setRecruit=false, bool setAutoBuild=false, bool setResources=false, bool setSourceHub=false, bool setTargetHub=false)
+		public static async Task SetCitySettings(int cid, int ? reqHub=null,int ? targetHub=null, bool setRecruit=false, bool setAutoBuild=false, bool setResources=false, int ? cartReserve=null, bool filterSend=false)
         {
             await UpdateMinisterOptions(cid, async (split) =>
             {
@@ -126,7 +127,7 @@ namespace COTG.JSON
                     }
 
                 }
-				if (setSourceHub)
+				if (reqHub.HasValue )
 				{
 					split[32] = "1"; // use the same city all requests
 					split[42] =  reqHub.ToString();
@@ -138,7 +139,6 @@ namespace COTG.JSON
 					if (SettingsPage.autoTowerLevel == 10)
 						split[27] = "1";
 				}
-				var isHub = spot.HasTag(Tags.Hub) || spot.HasTag(Tags.Storage);
 
 				if (setResources)
 				{
@@ -147,27 +147,58 @@ namespace COTG.JSON
 					split[35] = reqIron.ToString();
 					split[36] = reqFood.ToString();
 				}
-				if (setTargetHub && !isHub)
+				if (targetHub.HasValue )
 				{
+					var cid = targetHub.ToString();
 					split[41] = "0"; // use a different city for all sends
 									 // hubs dont send by default
 									 // send target
-					split[37] = sendWood && !isHub ? reqHub.ToString() : "0"; // hub to use for this res
-					split[38] = sendStone && !isHub ? reqHub.ToString() : "0"; // hub to use for this res
-					split[39] = sendIron && !isHub ? reqHub.ToString() : "0"; // hub to use for this res
-					split[40] = sendFood && !isHub ? reqHub.ToString() : "0"; // hub to use for this res
+					split[37] = sendWood||   !filterSend ? cid : "0"; // hub to use for this res
+					split[38] = sendStone||  !filterSend ? cid : "0"; // hub to use for this res
+					split[39] = sendIron ||  !filterSend ? cid : "0"; // hub to use for this res
+					split[40] = sendFood ||  !filterSend ? cid : "0"; // hub to use for this res
+
 				}
-				
+				int resultSourceHub = 0;
+				if( split[32] == "1")
+				{
+					int.TryParse(split[42], out resultSourceHub);
 
+				}
+				else
+				{
 
-					
-				
+					for (int i = 28; i <= 31; ++i)
+					{
+						int.TryParse(split[i], out resultSourceHub);
+						if (resultSourceHub != 0)
+							break;
+					}
+				}
+
+				int resultTargetHub = 0;
+				if(split[41] == "1" )
+				{
+					int.TryParse(split[43], out resultTargetHub);
+				}
+				else
+				{
+					for(int i=37;i<=40;++i)
+					{
+						int.TryParse(split[i], out resultTargetHub);
+						if (resultTargetHub != 0)
+							break;
+					}
+
+				}
+
+				if ( cartReserve.HasValue )
+				{
+					split[45] = cartReserve.ToString();// 45 is % carts reserved for requests
+				}
+
 				//                split[43] = sendHub.ToString();
 
-				if (setTargetHub && setResources)
-				{
-					split[45] = cartsAreForRequests ? "100" : "0"; // 45 is % carts reserved for requests
-				}
 
 				if (setResources)
 				{
@@ -181,15 +212,15 @@ namespace COTG.JSON
                 
 				var str = setRecruit ? SetRecruit(split, spot) : "";
                 
-				Note.Show($"Set {City.Get(cid).nameMarkdown}'s hub to {City.Get(reqHub).nameMarkdown}{str}");
+				Note.Show($"Set {City.Get(cid).nameMarkdown}'s trade settings src:{City.Get(resultSourceHub).nameMarkdown} dest:{City.Get(resultTargetHub).nameMarkdown}");
                 return true;
             });
 
 
         }
-		public static async Task<string[]> GetMinisterOptions(City city)
+		public static async Task<string[]> GetMinisterOptions(City city, bool force)
 		{
-				if (city.ministerOptions == null)
+				if (city.ministerOptions == null || force)
 				{
 					for (; ; )
 					{
@@ -235,7 +266,7 @@ namespace COTG.JSON
             
 			try
 			{
-				var split = await GetMinisterOptions(city);
+				var split = await GetMinisterOptions(city,true);
 			    if (await opts(split))
                 {
                     var args2 = string.Join(',', split);
@@ -252,9 +283,60 @@ namespace COTG.JSON
 
 
         }
+		public static async Task<(Resources req,Resources max)> GetTradeResourcesSettings(int cid) 
+		{
+			var city = City.GetOrAddCity(cid);
+			var split = await GetMinisterOptions(city, true);
+	
+			Resources req = new Resources();
+			Resources max = new Resources();
+			for(int i=33;i<=36;++i)
+			{
+				if(split[i].TryParseInt( out var v))
+				{
+					req[i - 33] = v;
+				}
+			}
+			for (int i = 47; i <= 50; ++i)
+			{
+				if (split[i].TryParseInt(out var v))
+				{
+					max[i - 47] = v;
+				}
+			}
 
-//		Name Protocol    Method Result  Content type    Received Time    Initiator
-//https://w21.crownofthegods.com/includes/pSs.php	HTTP/1.0	POST	200	text/html		85.7 ms	XMLHttpRequest
+			return (req, max);
+
+		}
+		public static async Task SetTradeResourcesSettings(int cid, Resources req, Resources max )
+		{
+			var city = City.GetOrAddCity(cid);
+			await UpdateMinisterOptions(cid,async (split) =>
+			{
+
+
+				for (int i = 33; i <= 36; ++i)
+				{
+					var id = i - 33;
+					if(req[id] >= 0)
+					{
+						split[i] = req[id].ToString();
+					}
+				}
+				for (int i = 47; i <= 50; ++i)
+				{
+					var id = i - 47;
+					if (max[id] >= 0)
+					{
+						split[i] = max[id].ToString();
+					}
+				}
+				return true;
+			});
+
+		}
+		//		Name Protocol    Method Result  Content type    Received Time    Initiator
+		//https://w21.crownofthegods.com/includes/pSs.php	HTTP/1.0	POST	200	text/html		85.7 ms	XMLHttpRequest
 
 
 
@@ -326,7 +408,7 @@ namespace COTG.JSON
             if (rem.Contains("galley"))
             {
                 result += "\nSet recruit Gallys";
-                split[23] = "480";
+                split[23] = "440";
             }
 			if (rem.Contains("scorp"))
 			{
@@ -367,7 +449,7 @@ namespace COTG.JSON
 			}
 			foreach (var _cid in targets )
 			{
-				await CitySettings.SetCitySettings(_cid, targetHub, false, false, false, false, true);
+				await CitySettings.SetCitySettings(_cid,null, targetHub);
 			}
         }
 		public static async void SetSourceHub(int cid, int targetHub)
@@ -378,7 +460,7 @@ namespace COTG.JSON
 				var dialog = new ContentDialog()
 				{
 					Title = $"Set Trade Settings",
-					Content = $"Set {Spot.GetOrAdd(cid).nameAndRemarks} to request resources from {Spot.GetOrAdd(targetHub).nameAndRemarks} ({targets.Count} cities selected)",
+					Content = $"Set {Spot.GetOrAdd(cid).nameMarkdown} to request resources from {Spot.GetOrAdd(targetHub).nameMarkdown} ({targets.Count} cities selected)",
 					PrimaryButtonText = "Yes",
 					SecondaryButtonText = "Cancel"
 				};
@@ -391,51 +473,11 @@ namespace COTG.JSON
 			}
 			foreach (var _cid in targets)
 			{
-				await CitySettings.SetCitySettings(_cid, targetHub, false, false, false, true,false);
+				await CitySettings.SetCitySettings(_cid, targetHub);
 			}
 		}
 
-		public static async Task FixupReserve(int cid)
-        {
-            await UpdateMinisterOptions(cid,async (split) =>
-            {
-                {
-                    bool anyTroops = false;
-                    for (int i = 11; i < 24; ++i)
-                    {
-                        if (split[i] != "0")
-                            anyTroops = true;
-                    }
-                    if (!anyTroops)
-                    {
-                        var s = Spot.GetOrAdd(cid);
-                        if (!s.remarks.ToLower().Contains("hub") && !s.cityName.StartsWith("*"))
-                        {
-                            Note.Show($"No troops {s.nameAndRemarks} {s.cid.CidToStringMD()}");
-                            SpotTab.TouchSpot(s.cid, Windows.System.VirtualKeyModifiers.Shift);
-                        }
-                    }
-                }
-                if (split[45] == "100")
-                {
-                    COTG.Debug.Log(Spot.GetOrAdd(cid).nameAndRemarks);
-                    var messageDialog = new MessageDialog($"Fix {Spot.GetOrAdd(cid).nameAndRemarks}")
-                    { DefaultCommandIndex=0,CancelCommandIndex=1};
-                    messageDialog.Commands.Add(new UICommand( "Yes"));
-                    messageDialog.Commands.Add(new UICommand("No"));
-
-
-                    var i = await messageDialog.ShowAsync();
-                    if ((i?.Label == "Yes"))
-                    {
-                        split[45] = "0";
-                        return true;
-                    }
-                    return false;
-                }// 45 is % carts reserved for requests
-                return false;                                                 //         split[43] = targetHub.ToString();
-            });
-        }
+		
         //public static void SetOtherHubSettings(int cid, int sourceHub)
         //{
         //    UpdateMinisterOptions(sourceHub, (split) =>

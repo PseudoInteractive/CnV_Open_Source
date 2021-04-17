@@ -93,6 +93,8 @@ namespace COTG.JSON
 		public string buildingName => def.Bn;
 		public bool isBuild => slvl == 0 && elvl != 0;
 		public static BuildQueueItem nop = new BuildQueueItem(255, 255, 0, 0);
+		internal bool isValid => bid != City.bidTownHall || slvl != 0;
+
 		internal bool isBuilding => !isRes;
 
 		public string bn => def.Bn;
@@ -705,6 +707,11 @@ namespace COTG.JSON
 				return;
 			}
 
+			if(!op.isValid)
+			{
+				Note.Show("Please don't build a second town hall");
+				return;
+			}
 			CityView.animationOffsets[op.bspot] = AGame.animationT*CityView.animationRate; // start animation
 			queue.Add(op);
 			if(cid==City.build)

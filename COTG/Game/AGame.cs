@@ -102,6 +102,7 @@ namespace COTG
 		public static float zLabels => zLabelsBase * AGame.parallaxGain;
 		public static float zEffectShadow => zEffectShadowBase * 0.5f;
 
+		static Vector2 shadowOffset = new Vector2(4, 4);
 		public const float cameraZ = 1.0f;
 		public static SwapChainPanel canvas;
 		public static AGame instance;
@@ -200,6 +201,7 @@ namespace COTG
 		public static float bmFontScale = 0.125f;
 		public static Texture2D fontTexture;
 		static readonly Color attackColor = Color.White;
+		static Color ShadowColor(float alpha) => new Color(0, 0, 48, (int)(200*alpha) );
 		static readonly Color defenseColor = new Color(255, 20, 160, 160);
 		static readonly Color defenseArrivedColor = new Color(255, 20, 255, 160);
 		static readonly Color artColor = Color.DarkOrange;
@@ -1739,13 +1741,13 @@ namespace COTG
 										continue;
 									try
 									{
-										foreach (var toCid in ti.resSource)
+										foreach (var toCid in ti.resDest)
 										{
 											var c1 = toCid.CidToWorld();
 											var t = (tick * city.cid.CidToRandom().Lerp(1.375f / 512.0f, 1.75f / 512f));
 											var r = t.Ramp();
 
-											DrawAction(wc.WToCamera(), c1.WToCamera(), tradeColor);
+											DrawAction( c1.WToCamera(), wc.WToCamera(), tradeColor);
 
 
 										}
@@ -1918,16 +1920,50 @@ namespace COTG
 											//									, Layer.tileText, z,PlanetDepth);
 
 										}
-										if (spot != null && spot.isClassified && !focusOnCity)
+										if (spot != null && !focusOnCity && !(SettingsPage.troopsVisible.HasValue && SettingsPage.troopsVisible.Value==false) ) 
 										{
-											var c1 = (cx, cy).WToCamera();
-											var t = (tick * spot.cid.CidToRandom().Lerp(1.5f / 512.0f, 1.75f / 512f)) + 0.25f;
-											var r = t.Ramp();
-											var alpha = (t * 1.21f).Wave() * 0.75f + 0.25f;
-											var spriteSize = new Vector2(16);
-											var _c0 = c1 - spriteSize;
-											var _c1 = c1 + spriteSize;
-											draw.AddQuad(Layer.effects, troopImages[spot.classificationTT], _c0, _c1, HSLToRGB.ToRGBA(rectSpan, 0.3f, 0.825f, alpha, alpha + 0.125f), (_c0, _c1).RectDepth(zCities));
+											if (!spot.troopsTotal.Any() && spot.isNotClassified && spot.isFriend && SettingsPage.troopsVisible.GetValueOrDefault()  )
+												spot.Classify();
+											if (spot.troopsTotal.Any()|| spot.isClassified)
+											{
+												var c1 = (cx, cy).WToCamera();
+												var rand = spot.cid.CidToRandom();
+												var t = (tick * rand.Lerp(1.5f / 512.0f, 1.75f / 512f)) + 0.25f;
+
+												int type;
+												float typeBlend;
+												float alpha = 1;// (t * rand.Lerp(0.7f, 0.8f)).Wave() * 0.20f + 0.70f;
+
+												if ( spot.troopsTotal.Any())
+												{
+													var ta  = GetTroopBlend(t, spot.troopsTotal.Length);
+													alpha = ta.alpha;
+													
+													type = spot.troopsTotal[ta.iType].type;
+												}
+												else
+												{
+													type = spot.classificationTT;
+													typeBlend = 1;
+													switch( spot.classification)
+													{
+														case Spot.Classification.misc:
+														case Spot.Classification.unknown:
+														case Spot.Classification.pending:
+														case Spot.Classification.missing:
+															goto dontDraw;
+													}
+
+												}
+												var r = t.Ramp();
+												var spriteSize = new Vector2(20);
+												var _c0 = c1 - spriteSize;
+												var _c1 = c1 + spriteSize;
+
+												draw.AddQuadWithShadow(Layer.effects,Layer.effectShadow, troopImages[type], _c0, _c1, HSLToRGB.ToRGBA(rectSpan, 0.3f, 0.825f, alpha, alpha + 0.125f), ShadowColor(alpha),
+													(_c0, _c1).RectDepth(zCities), (_c0, _c1).RectDepth(zEffectShadow), shadowOffset);
+											}
+											dontDraw:;
 										}
 									}
 								}
@@ -2017,15 +2053,17 @@ namespace COTG
 				float alpha = 1;
 				if (nSprite > 1)
 				{
+					var fSprite = nSprite;
 					Assert(t > 0);
-					var rtype = t % nSprite;
-					iType = (int)rtype;
-					var frac = rtype - iType;
-					iType = iType.Min(nSprite - 1);
-					if (frac < 0.25f)
-						alpha = AMath.SCurve(frac * 4.0f);
-					else if (frac > 0.75f)
-						alpha = AMath.SCurve((1 - frac) * 4.0f);
+					t -=  MathF.Floor(t /fSprite)*fSprite;
+					var rType = MathF.Floor(t);
+					t -= rType;
+
+					iType = ((int)rType).Min(nSprite-1);
+					if (t < 0.25f)
+						alpha = AMath.SCurve(t * 4.0f);
+					else if (t > 0.75f)
+						alpha = AMath.SCurve( (1 - t) * 4.0f);
 
 				}
 				return (iType, alpha);
@@ -2198,7 +2236,7 @@ namespace COTG
 			if (timeToArrival < postAttackDisplayTime)
 				gain = 1.0f + (1.0f - timeToArrival / postAttackDisplayTime) * 0.25f;
 			var mid = progress.Lerp(c0, c1);
-			var shadowColor = color.GetShadowColor();
+			var shadowColor = ShadowColor(alpha);
 			if (army != null)
 			{
 				var d2 = Vector2.DistanceSquared(mid, ShellPage.mousePositionW);
@@ -2208,9 +2246,9 @@ namespace COTG
 					underMouse = army;
 				}
 			}
-			DrawLine(Layer.effectShadow, c0, c1, GetLineUs(c0, c1), shadowColor, zEffectShadow);
+			DrawLine(Layer.effectShadow, c0 + shadowOffset, c1 + shadowOffset, GetLineUs(c0, c1), shadowColor, zEffectShadow);
 			if (applyStopDistance)
-				DrawSquare(Layer.effectShadow, c0, shadowColor, zEffectShadow);
+				DrawSquare(Layer.effectShadow, c0+ shadowOffset, shadowColor, zEffectShadow);
 			DrawLine(Layer.action + 2, c0, mid, GetLineUs(c0, mid), color, zLabels);
 			if (applyStopDistance)
 				DrawSquare(Layer.action + 3, new Vector2(c0.X, c0.Y), color, zLabels);
@@ -2219,15 +2257,19 @@ namespace COTG
 			{
 				var _c0 = new Vector2(mid.X - spriteSize, mid.Y - spriteSize);
 				var _c1 = new Vector2(mid.X + spriteSize, mid.Y + spriteSize);
-				draw.AddQuad(Layer.action + 4, bitmap, _c0, _c1, HSLToRGB.ToRGBA(rectSpan, 0.3f, 0.825f, alpha, gain * 1.1875f), (_c0, _c1).RectDepth(zLabels));
+				draw.AddQuadWithShadow(Layer.action + 4,Layer.effectShadow, bitmap, _c0, _c1, HSLToRGB.ToRGBA(rectSpan, 0.3f, 0.825f, alpha, gain * 1.1875f),shadowColor, (_c0, _c1).RectDepth(zLabels), (_c0, _c1).RectDepth(zEffectShadow),shadowOffset);
 			}
 			//            ds.DrawRoundedSquare(midS, rectSpan, color, 2.0f);
 
 
 		}
+
 		private void DrawAction( Vector2 c0, Vector2 c1, Color color)
 		{
-			if (IsCulled(c0, c1))
+			DrawAction(0, 1.0f, 1, c0, c1, color, null, false, null, 1, 1);
+			
+
+/*			if (IsCulled(c0, c1))
 				return;
 
 			var dl = (c0 - c1);
@@ -2238,7 +2280,7 @@ namespace COTG
 			var cm = t0.Lerp(c0, c1);
 
 			DrawLine(Layer.effectShadow, cm, cm + dl*inverseL*drawActionLength, (0.0f,1.0f), color, zEffectShadow);
-
+*/
 		}
 		private static void DrawSquare(int layer, Vector2 c0, Color color, float zBias)
 		{
@@ -2284,7 +2326,7 @@ namespace COTG
 		public static void DrawAccent(Vector2 c, float radius, float angularSpeed, Color brush)
 		{
 			var angle = angularSpeed * AGame.animationT;
-			DrawAccentBase(c.X, c.Y, radius, angle, brush.GetShadowColorDark(), Layer.effectShadow, zEffectShadow);
+			DrawAccentBase(c.X+ shadowOffset.X, c.Y+shadowOffset.Y, radius, angle, brush.GetShadowColorDark(), Layer.effectShadow, zEffectShadow);
 			DrawAccentBase(c.X, c.Y, radius, angle, brush, Layer.overlay, zLabels);
 		}
 		public static void DrawAccent(int cid, float angularSpeedBase, Color brush)

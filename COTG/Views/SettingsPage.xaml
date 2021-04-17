@@ -20,7 +20,7 @@
 			   BorderBrush="{ThemeResource SystemControlBackgroundBaseLowRevealBorderBrush}"
 			   Background="Black"
 			   Margin="4">
-	<ScrollViewer>
+	<ScrollViewer ZoomMode="Enabled">
 		<StackPanel Orientation="Vertical" ScrollViewer.VerticalScrollMode="Enabled">
 			<HyperlinkButton    Content="{x:Bind appInfo}"
 					   FontSize="12" Click="VersionTapped" />
@@ -93,6 +93,11 @@
 						   Unchecked="raidsVisibleFalse"
 						   Indeterminate="raidsVisibleMaybe"
 							   ToolTipService.ToolTip="If checked, raids are always visible, if off, raids are never visible, if indeterminate raids are visible when the tab is open"
+							   />
+				<CheckBox  Content="Troops Visible" IsThreeState="True" IsChecked="{x:Bind views:SettingsPage.troopsVisible, Mode=TwoWay}" 
+							   Margin="4"
+						  
+							   ToolTipService.ToolTip="If checked, each city with trrops will draw a troop overlay in region view"
 							   />
 				<ToggleSwitch  Header="Stay Alive"
 							   IsOn="{x:Bind uiStayAlive, Mode=TwoWay}"

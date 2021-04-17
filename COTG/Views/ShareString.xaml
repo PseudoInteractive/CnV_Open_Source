@@ -9,6 +9,8 @@
 	xmlns:win="using:Windows.UI.Xaml.Controls"
 	xmlns:winui="using:Microsoft.UI.Xaml.Controls"
     mc:Ignorable="d"
+	 xmlns:cotg="using:COTG"
+   xmlns:game="using:COTG.Game"
 	 xmlns:views="using:COTG.Views"
     Title="City Planner String"
     PrimaryButtonText="Done"
@@ -29,54 +31,110 @@
 		
 
 	</ContentDialog.Resources>
-	<Grid>
-		<Grid.RowDefinitions>
-			<RowDefinition Height="*"/>
-			<RowDefinition Height="auto"/>
-			<RowDefinition Height="auto"/>
-			<RowDefinition Height="auto"/>
-			<RowDefinition Height="*"/>
-		</Grid.RowDefinitions>
-		<TextBox x:Name="shareString" Header="ShareString" TextWrapping="Wrap" AcceptsReturn="False" IsSpellCheckEnabled="False" MinWidth="500" />
-		<Border Grid.Row="1" Style="{StaticResource BorderReveal}">
-			<tk:WrapPanel  Orientation="Horizontal">
-				<TextBox x:Name="title" Header="Title" TextChanged="title_TextChanged"  />
-				<TextBox x:Name="path" Header="path"  />
-				<TextBox x:Name="description" Header="Description" TextWrapping="Wrap" AcceptsReturn="False" HorizontalAlignment="Stretch" />
-			</tk:WrapPanel>
-		</Border>
-		<Border Grid.Row="2" Style="{StaticResource BorderReveal}">
-			<tk:WrapPanel  Orientation="Horizontal">
-				<Button Content="Share" Click="ShareClick" Style="{StaticResource ButtonMedium}" />
-				<Button Content="Use buildings" Click="UseBuildingsClick" Style="{StaticResource ButtonMedium}" />
-				<Button Content="From Clipboard" Click="FromClipboardClick" Style="{StaticResource ButtonMedium}" />
-				<Button Content="To Clipboard" Click="ToClipboardClick" Style="{StaticResource ButtonMedium}" />
-				<Button Content="Clear" Click="ClearClick" Style="{StaticResource ButtonMedium}" />
-				<ToggleSwitch x:Name="onComplete" Header="Planner" OffContent="Return to build" OnContent="Go to planner" ToolTipService.ToolTip="This allows you to go to the planner on completion to edit the layout"  />
+	<ScrollViewer ZoomMode="Enabled">
+		<Grid>
+			<Grid.RowDefinitions>
+				<RowDefinition Height="*"/>
+				<RowDefinition Height="auto"/>
+				<RowDefinition Height="auto"/>
+				<RowDefinition Height="auto"/>
+				<RowDefinition Height="auto"/>
+				<RowDefinition Height="*"/>
+			</Grid.RowDefinitions>
+			<TextBox x:Name="shareString" Header="ShareString" TextWrapping="Wrap" AcceptsReturn="False" IsSpellCheckEnabled="False" MinWidth="500" />
+			<Border Grid.Row="1" Style="{StaticResource BorderReveal}">
+				<tk:WrapPanel  Orientation="Horizontal">
+					<TextBox x:Name="title" Header="Title" TextChanged="title_TextChanged"  />
+					<TextBox x:Name="path" Header="path"  />
+					<TextBox x:Name="description" Header="Description" TextWrapping="Wrap" AcceptsReturn="False" HorizontalAlignment="Stretch" />
+				</tk:WrapPanel>
+			</Border>
+			<Border Grid.Row="2" Style="{StaticResource BorderReveal}">
+				<tk:WrapPanel  Orientation="Horizontal">
+					<Button Content="Share" Click="ShareClick" Style="{StaticResource ButtonMedium}" />
+					<Button Content="Use buildings" Click="UseBuildingsClick" Style="{StaticResource ButtonMedium}" />
+					<Button Content="From Clipboard" Click="FromClipboardClick" Style="{StaticResource ButtonMedium}" />
+					<Button Content="To Clipboard" Click="ToClipboardClick" Style="{StaticResource ButtonMedium}" />
+					<Button Content="Clear" Click="ClearClick" Style="{StaticResource ButtonMedium}" />
+					<ToggleSwitch x:Name="onComplete" Header="Planner" OffContent="Return to build" OnContent="Go to planner" ToolTipService.ToolTip="This allows you to go to the planner on completion to edit the layout"  />
 
-				<ToggleSwitch Header="Rearrange" OffContent="Skip" OnContent="Smart" IsOn="{x:Bind views:SettingsPage.autoRearrangeShareStrings, Mode=TwoWay}" ToolTipService.ToolTip="Moves buildings whose positions don't matter to where existing corresponding buildings are located or to locations without res nodes"  />
-
-				
-			</tk:WrapPanel>
-		</Border>
-		
-		<Border Grid.Row="3" Style="{StaticResource BorderReveal}">
-			<StackPanel>
-				<ToggleSwitch x:Name="applyTags" Header="Tags" OffContent="Leave" OnContent="Set" ToolTipService.ToolTip="If set, the city tags will be replaced with those defined in the layout" IsOn="{x:Bind views:SettingsPage.shareStringApplyTags}"  />
-
-				<tk:WrapPanel x:Name="tagsPanel" x:FieldModifier="public">
+					<ToggleSwitch Header="Rearrange" OffContent="Skip" OnContent="Smart" IsOn="{x:Bind views:SettingsPage.autoRearrangeShareStrings, Mode=TwoWay}" ToolTipService.ToolTip="Moves buildings whose positions don't matter to where existing corresponding buildings are located or to locations without res nodes"  />
+					<ToggleSwitch Header="Trade Setings" OffContent="Skip" OnContent="Embed" IsOn="{x:Bind views:SettingsPage.embedTradeInShareStrings, Mode=TwoWay}" ToolTipService.ToolTip="If set, trade settings will embedded in the layout, shared with it and applied with it"  />
 
 				</tk:WrapPanel>
-			</StackPanel>
-		</Border>
+			</Border>
+			<Border Grid.Row="3" Style="{StaticResource BorderReveal}">
+				<StackPanel>
+					<tk:WrapPanel Orientation="Horizontal"
+							Margin="4">
+						<winui:NumberBox Header="Req Wood"
+										x:Name="reqWood"
+										NumberFormatter="{x:Bind cotg:App.formatterInt,Mode=OneTime}"
+										Width="120"
+										Style="{StaticResource NumberBoxSmall}"
+										SmallChange="10000" />
+						<winui:NumberBox Header="Req Stone"
+x:Name="reqStone"										Width="120"
+										NumberFormatter="{x:Bind cotg:App.formatterInt,Mode=OneTime}"
+										Style="{StaticResource NumberBoxSmall}"
+										SmallChange="10000" />
+						<winui:NumberBox Header="Req Iron"
+			x:Name="reqIron"			NumberFormatter="{x:Bind cotg:App.formatterInt,Mode=OneTime}"
+										Width="120"
+										Style="{StaticResource NumberBoxSmall}"
+										SmallChange="10000" />
+						<winui:NumberBox Header="Req Food"
+								x:Name="reqFood"		Width="120"
+										NumberFormatter="{x:Bind cotg:App.formatterInt,Mode=OneTime}"
+										Style="{StaticResource NumberBoxSmall}"
+										SmallChange="10000" />
+					</tk:WrapPanel>
+					<tk:WrapPanel  Orientation="Horizontal">
+						<winui:NumberBox Header="Max Wood"
+										x:Name="maxWood"
+										NumberFormatter="{x:Bind cotg:App.formatterInt,Mode=OneTime}"
+										Width="120"
+										Style="{StaticResource NumberBoxSmall}"
+										SmallChange="10000" />
+						<winui:NumberBox Header="Max Stone"
+										x:Name="maxStone"
+										Width="120"
+										NumberFormatter="{x:Bind cotg:App.formatterInt,Mode=OneTime}"
+										Style="{StaticResource NumberBoxSmall}"
+										SmallChange="10000" />
+						<winui:NumberBox Header="Max Iron"
+										x:Name="maxIron"
+										NumberFormatter="{x:Bind cotg:App.formatterInt,Mode=OneTime}"
+										Width="120"
+										Style="{StaticResource NumberBoxSmall}"
+										SmallChange="10000" />
+						<winui:NumberBox Header="Max Food"
+x:Name="maxFood"										Width="120"
+										NumberFormatter="{x:Bind cotg:App.formatterInt,Mode=OneTime}"
+										Style="{StaticResource NumberBoxSmall}"
+										SmallChange="10000" />
+					</tk:WrapPanel>
+				</StackPanel>
+			</Border>
 
-		<Border Grid.Row="4" Style="{StaticResource BorderReveal}">
-			<winui:TreeView x:Name="shareStrings" SelectionMode="Single" IsTabStop="True" BorderThickness="1" 
+			<Border Grid.Row="4" Style="{StaticResource BorderReveal}">
+				<StackPanel>
+					<ToggleSwitch x:Name="applyTags" Header="Tags" OffContent="Leave" OnContent="Set" ToolTipService.ToolTip="If set, the city tags will be replaced with those defined in the layout" IsOn="{x:Bind views:SettingsPage.shareStringApplyTags}"  />
+
+					<tk:WrapPanel x:Name="tagsPanel" x:FieldModifier="public">
+
+					</tk:WrapPanel>
+				</StackPanel>
+			</Border>
+
+			<Border Grid.Row="5" Style="{StaticResource BorderReveal}">
+				<winui:TreeView x:Name="shareStrings" SelectionMode="Single" IsTabStop="True" BorderThickness="1" 
 							BorderBrush="{ThemeResource SystemControlBackgroundBaseLowRevealBorderBrush}"
 						TabNavigation="Once" CanDragItems="False" AllowDrop="False" ItemTemplate="{StaticResource ShareItemTemplate}"
 						ItemsSource="{x:Bind views:ShareStringItem.all}" ItemInvoked="ShareItemInvoked"
 						>
-			</winui:TreeView>
-		</Border>
-	</Grid>
+				</winui:TreeView>
+			</Border>
+		</Grid>
+	</ScrollViewer>
 </ContentDialog>

@@ -184,7 +184,6 @@
 				<tk:DataGridTextColumn  Header="Travel" 
                                         Binding="{Binding travel, Converter={StaticResource TimeConverter},Mode=OneWay}"
                                         IsReadOnly="True" Tag="travel"
-                                            CellStyle="{StaticResource CellCenter}"
                                              />
 				<tk:DataGridTextColumn  Header="Carts" 
                                         Binding="{Binding cartsHome, Converter={StaticResource IntConverter},Mode=OneWay}"

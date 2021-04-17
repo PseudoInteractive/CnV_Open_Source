@@ -1,6 +1,7 @@
 ﻿using COTG.Game;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Numerics;
 using System.Runtime.CompilerServices;
@@ -26,6 +27,14 @@ namespace COTG
 			return Vector2.Dot(v0, v1);
 		}
 
+		public static bool TryParseInt(this string s, out int o)
+		{
+			return int.TryParse(s, System.Globalization.NumberStyles.Number, CultureInfo.InvariantCulture, out o);
+        }
+		public static bool TryParseFloat(this string s, out float o)
+		{
+			return float.TryParse(s, System.Globalization.NumberStyles.Number, CultureInfo.InvariantCulture, out o);
+		}
 		public static float SmoothStep(this float f, float v0, float v1, float pow=1)
 		{
 			var df = (f - v0) / (v1 - v0);

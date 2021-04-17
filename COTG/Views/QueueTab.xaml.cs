@@ -10,12 +10,14 @@ using System.Linq;
 using System.Threading.Tasks;
 
 using Windows.UI.Xaml.Controls;
+using COTG.Views;
 //using Windows.UI.Xaml.Media;
 
 using static COTG.Debug;
 using static COTG.Game.City;
 using static COTG.Views.CityBuild;
 using static COTG.Views.ShellPage;
+using static COTG.Views.QueueTab;
 
 namespace COTG.Views
 {
@@ -25,7 +27,7 @@ namespace COTG.Views
 	{
 
 		public static QueueTab instance;
-		
+
 		public event PropertyChangedEventHandler PropertyChanged;
 		public void OnPropertyChanged(string propertyName) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 
@@ -39,7 +41,7 @@ namespace COTG.Views
 			this.InitializeComponent();
 		}
 
-	
+
 
 
 		//private void ZoomedInGotFocus(object sender, RoutedEventArgs e)
@@ -289,13 +291,12 @@ namespace COTG.Views
 		private void DoTheStuff(object sender, Windows.UI.Xaml.RoutedEventArgs e)
 		{
 			City.GetBuild().DoTheStuff();
-			
+
 		}
 
+
 		
-
-
-		public static async Task<bool> DoTheStuff(City city)
+		public static async Task<bool> DoTheStuff(City city,bool allowRename, bool allowSetLayout)
 		{
 			var cid = city.cid;
 			Assert(city.isBuild);
@@ -308,30 +309,31 @@ namespace COTG.Views
 			await GetCity.Post(cid);
 			if (city.LeaveMe())
 			{
-				Note.Show($"Skipping ${city.nameAndRemarks}, 'LeaveMe' tag is set");
+				Note.Show($"Skipping ${city.nameMarkdown}, 'LeaveMe' tag is set");
 				return true;
 			}
 			var cabinLevel = city.GetAutobuildCabinLevelNoFetch();
 			var bc = City.GetBuildingCountPostQueue(cabinLevel);
-			var stage =  city.GetBuildStage(bc);
-			
-			if (stage.stage == BuildStage._new)
+			var stage = city.GetBuildStage(bc);
+
+			if (stage.stage == BuildStage._new && allowRename)
 			{
 
-//				if(!city.isBuild)
-//				//					await JSClient.ChangeCity(city.cid, false);
+				//				if(!city.isBuild)
+				//				//					await JSClient.ChangeCity(city.cid, false);
 
-				await CityRename.RenameDialog(city.cid,false);
 				stage = city.GetBuildStage(bc);
 			}
 			Assert(city.isBuild);
 
-			if (stage.stage == BuildStage.noLayout)
+			if (stage.stage == BuildStage.noLayout && allowSetLayout )
 			{
-//				if (!city.isBuild)
-	//				await JSClient.ChangeCity(city.cid, false);
+				//				if (!city.isBuild)
+				//				await JSClient.ChangeCity(city.cid, false);
 				await ShareString.ShowNoLock();
 				stage = city.GetBuildStage(bc);
+				if (stage.stage == BuildStage.noLayout)
+					return false;
 			}
 			Assert(city.isBuild);
 			if (stage.stage == City.BuildStage.complete)
@@ -342,37 +344,35 @@ namespace COTG.Views
 			Assert(city.isBuild);
 			if (stage.stage == City.BuildStage.cabins || stage.stage == BuildStage.townHall)
 			{
-				if(bc.cabins >= SettingsPage.startCabinCount || bc.buildings >= stage.buildingLimit-2 )
+				if (bc.cabins >= SettingsPage.startCabinCount || bc.buildings >= stage.buildingLimit - 2)
 				{
 					Note.Show($"Building {stage.stage.ToString()} - {city}");
-					return true ;
+					return true;
 				}
 			}
 
 			Assert(city.isBuild);
-			if (!bc.hasCastle && city.hasCastleInLayout && city.tsTotal > SettingsPage.tsForCastle  )
+			if (!bc.hasCastle  && city.tsTotal > SettingsPage.tsForCastle && city.hasCastleInLayout)
 			{
-	//			if (!city.isBuild)
-	//				await JSClient.ChangeCity(city.cid, false); ;
-//				if(!bc.hasWall)
-//					await CityBuild.Enqueue(0, 1, bidWall, bspotWall);
-				await CityBuild.Enqueue( 0, 1, bidCastle, XYToId(FindOverlayBuildingOfType(city, bidCastle)));
+				//			if (!city.isBuild)
+				//				await JSClient.ChangeCity(city.cid, false); ;
+				//				if(!bc.hasWall)
+				//					await CityBuild.Enqueue(0, 1, bidWall, bspotWall);
+				await CityBuild.Enqueue(0, 1, bidCastle, XYToId(city.FindOverlayBuildingOfType(bidCastle)));
 				//bc.wallLevel = 1;
 				bc.hasCastle = true;
 			}
-			if ( (bc.sorcTowers==0 || bc.sorcTowerLevel != 10 ) && city.tsTotal > SettingsPage.tsForSorcTower && !FindOverlayBuildingOfType(city,bidSorcTower).Is00())
+			if ((bc.sorcTowers == 0 || bc.sorcTowerLevel != 10) && city.tsTotal > SettingsPage.tsForSorcTower && city.HasOverlayBuildingOfType( bidSorcTower) )
 			{
 				var c = FindValidBuildingOfType(city, bidSorcTower);
 
-				if (c.bl == 0 )
+				if (c.bl == 0)
 				{
 					c.bl = 1;
-					await CityBuild.Enqueue(0, 1, bidSorcTower, XYToId((c.x,c.y)) );
+					await CityBuild.Enqueue(0, 1, bidSorcTower, XYToId((c.x, c.y)));
 				}
-				 // raise to level 10
-				await CityBuild.Enqueue(c.bl,10, bidSorcTower, XYToId((c.x, c.y)));
-				
-
+				// raise to level 10
+				await CityBuild.EnqueueUpgrade( 10, XYToId((c.x, c.y)));
 			}
 			Assert(city.isBuild);
 			if (!bc.hasWall && bc.hasCastle)
@@ -383,12 +383,12 @@ namespace COTG.Views
 			Assert(city.isBuild);
 			if (bc.hasWall && bc.scoutpostCount < SettingsPage.scoutpostCount)
 			{
-				while(bc.scoutpostCount <  SettingsPage.scoutpostCount)
+				while (bc.scoutpostCount < SettingsPage.scoutpostCount)
 				{
 					var spot = 0;
-					foreach(var _spot in innerTowerSpots)
+					foreach (var _spot in innerTowerSpots)
 					{
-						if(CityBuild.postQueueBuildings[_spot].isEmpty)
+						if (CityBuild.postQueueBuildings[_spot].isEmpty)
 						{
 							spot = _spot;
 							goto added;
@@ -413,10 +413,10 @@ namespace COTG.Views
 					++bc.scoutpostCount;
 				}
 			}
-			
-				// todo: teardown
-				//	await JSClient.ChangeCity(city.cid,false);
-				bc = City.GetBuildingCountsPostQueue(cabinLevel);
+
+			// todo: teardown
+			//	await JSClient.ChangeCity(city.cid,false);
+			bc = City.GetBuildingCountsPostQueue(cabinLevel);
 			stage = await City.GetBuildBuildStage(bc);
 
 			switch (stage.stage)
@@ -439,7 +439,7 @@ namespace COTG.Views
 
 							if (bc.townHallLevel < 4)
 							{
-								await Enqueue(bc.townHallLevel, 4, bidTownHall, bspotTownHall);
+								await EnqueueUpgrade(4, bspotTownHall);
 							}
 
 							if (bc.cabins < SettingsPage.startCabinCount)
@@ -455,11 +455,11 @@ namespace COTG.Views
 										{
 											continue;
 										}
-										if (bc.buildings >= 99)
+										if (bc.buildings >= stage.buildingLimit)
 											goto done;
 										if (CityBuild.postQueueBuildings[City.XYToId(c)].isEmpty && (city.BidFromOverlay(c) == 0))
 										{
-											await CityBuild.Build(XYToId(c), bidCottage, false) ;
+											await CityBuild.Build(XYToId(c), bidCottage, false);
 											++bc.cabins;
 										}
 										if (bc.cabins >= SettingsPage.startCabinCount)
@@ -471,9 +471,9 @@ namespace COTG.Views
 							}
 						done:;
 							Assert(city.isBuild);
-							var storeHouses = FindPendingOverlayBuildingsOfType(city,bidStorehouse, SettingsPage.intialStorehouses);
-							
-							while( bc.storeHouses < SettingsPage.intialStorehouses )
+							var storeHouses = FindPendingOverlayBuildingsOfType(city, bidStorehouse, SettingsPage.intialStorehouses);
+
+							while (bc.storeHouses < SettingsPage.intialStorehouses)
 							{
 								var storage = city.FirstBuildingInOverlay(bidStorehouse);
 								if (storage != 0)
@@ -498,7 +498,7 @@ namespace COTG.Views
 					{
 						//var c = RandomCitySpot();
 						var message = string.Empty;
-						var buildingLimit = !city.hasCastleInLayout ? 100 : bc.hasCastle ? 100: 99;
+						var buildingLimit = stage.buildingLimit;// !city.hasCastleInLayout ? 100 : bc.hasCastle ? 100 : 99;
 
 						if (bc.buildings < buildingLimit)
 						{
@@ -529,8 +529,8 @@ namespace COTG.Views
 								}
 							}
 							{
-								var bd = FindPendingOverlayBuildingsOfType(city,  buildingLimit+4 - bc.buildings, bidSorcTower,bidAcademy,bidBlacksmith,bidShipyard,bidTrainingGround,bidStable);
-								if (bd.Any() )
+								var bd = FindPendingOverlayBuildingsOfType(city, buildingLimit + 4 - bc.buildings, bidSorcTower, bidAcademy, bidBlacksmith, bidShipyard, bidTrainingGround, bidStable);
+								if (bd.Any())
 								{
 									message += $"Adding { bd.Count} Military buildings";
 									foreach (var i in bd)
@@ -538,7 +538,7 @@ namespace COTG.Views
 										if (bc.buildings >= buildingLimit)
 											break;
 										var bid = city.BidFromOverlay(i);
-										if( city.CountBuildingsInOverlay(bid)==1  )
+										if (city.CountBuildingsInOverlay(bid) == 1)
 										{
 											continue;
 										}
@@ -563,7 +563,7 @@ namespace COTG.Views
 									milBid = bc.stables;
 
 								bd = bd.OrderByDescending((x) => CountSurroundingBuildingsOfType(x, milBid)).ToList();
-								if(bd.Any())
+								if (bd.Any())
 								{
 									message += $"Adding Barracks";
 									foreach (var i in bd)
@@ -574,7 +574,7 @@ namespace COTG.Views
 
 										bc = City.GetBuildingCountsPostQueue(cabinLevel);
 									}
-									
+
 
 								}
 							}
@@ -636,7 +636,7 @@ namespace COTG.Views
 						for (; ; )
 						{
 							count = (maxCommands - GetBuildQueueLength());
-							if (count < 2 || todo.Count==0||bc.cabins==0)
+							if (count < 2 || todo.Count == 0 || bc.cabins == 0)
 								break;
 							var id = AMath.random.Next(todo.Count);
 							var c = todo[id];
@@ -663,23 +663,23 @@ namespace COTG.Views
 					Assert(false);
 					break;
 			}
-			if(bc.unfinishedTowerCount > 0)
+			if (bc.unfinishedTowerCount > 0)
 			{
 				foreach (var t in FindAllUnfinishedTowers())
 				{
-					await CityBuild.UpgradeToLevel( 1,t,false);
+					await CityBuild.UpgradeToLevel(SettingsPage.autoTowerLevel, t, false);
 				}
 			}
-			if(bc.hasWall && bc.wallLevel < SettingsPage.autoWallLevel && SettingsPage.autoWallLevel != 10)
+			if (bc.hasWall && bc.wallLevel < SettingsPage.autoWallLevel && SettingsPage.autoWallLevel != 10)
 			{
-				await CityBuild.UpgradeToLevel(1, IdToXY(bspotWall), false);
+				await CityBuild.UpgradeToLevel(SettingsPage.autoWallLevel, IdToXY(bspotWall), false);
 
 			}
 			city.NotifyChange();
 			BuildTab.GetBuildInfo();
 			return true;
 		}
-		static int CountSurroundingBuildingsOfType( (int x, int y) c, int bid)
+		static int CountSurroundingBuildingsOfType((int x, int y) c, int bid)
 		{
 			int rv = 0;
 			for (int y = -1; y <= 1; ++y)
@@ -711,7 +711,7 @@ namespace COTG.Views
 						continue;
 
 					var bid = city.BidFromOverlay(id);
-					if (  bid switch  { bidCottage or bidWall or bidTownHall or( >= bidResStart and <= bidResEnd) => true, _=> false })
+					if (bid switch { bidCottage or bidWall or bidTownHall or (>= bidResStart and <= bidResEnd) => true, _ => false })
 					{
 						continue;
 					}
@@ -726,7 +726,7 @@ namespace COTG.Views
 		}
 		private async void MoveStuff(object sender, Windows.UI.Xaml.RoutedEventArgs e)
 		{
-			
+
 			var cid = City.build;
 			var city = GetBuild();
 			Note.Show($"Move slots: {Player.moveSlots}");
@@ -761,10 +761,10 @@ namespace COTG.Views
 										var pbid = CityBuild.postQueueBuildings[id].bid;
 										if (pbid == bid)
 											continue;
-										if(pbid == 0)
+										if (pbid == 0)
 										{
-											var spare = FindSpare(bid,false);
-											if(spare!=0)
+											var spare = FindSpare(bid, false);
+											if (spare != 0)
 											{
 												await MoveBuilding(spare, id, false);
 												if (Player.moveSlots <= 10)
@@ -772,10 +772,10 @@ namespace COTG.Views
 												hasChanges = true;
 											}
 										}
-										else if( pass == 1)
+										else if (pass == 1)
 										{
 											var spare = CityBuild.FindAnyFreeSpot();
-											await MoveBuilding(id,spare,  false);
+											await MoveBuilding(id, spare, false);
 											if (Player.moveSlots <= 10)
 												goto done;
 
@@ -823,22 +823,6 @@ namespace COTG.Views
 			}
 			return rv;
 		}
-			static (int x, int y) FindOverlayBuildingOfType(City city, int bid)
-			{
-				for (var cy = span0; cy <= span1; ++cy)
-				{
-					for (var cx = span0; cx <= span1; ++cx)
-					{
-						var c = (cx, cy);
-						if (bid == city.BidFromOverlay(c))
-						{
-							return c;
-
-						}
-					}
-				}
-				return (0,0);
-			}
 
 		static (int x, int y, int bl) FindValidBuildingOfType(City city, int bid)
 		{
@@ -851,10 +835,10 @@ namespace COTG.Views
 					var b = CityBuild.postQueueBuildings[XYToId(c)];
 					if (b.bid == bid)
 					{
-						if(b.bl > rv.bl)
+						if (b.bl > rv.bl)
 							rv = (cx, cy, b.bl);
 					}
-					else if (rv.bl==0 &&  bid == city.BidFromOverlay(c))
+					else if (rv.bl == 0 && bid == city.BidFromOverlay(c))
 					{
 						rv = (cx, cy, 0);
 
@@ -880,9 +864,9 @@ namespace COTG.Views
 						if ((x == -r || x == r) || (y == -r || y == r))
 						{
 							var c = (x, y);// (int x, int y) c = RandCitySpot();
-							if ((city.BidFromOverlay(c) == bid) && (CityBuild.postQueueBuildings[City.XYToId(c)].bid!= bid) )
+							if ((city.BidFromOverlay(c) == bid) && (CityBuild.postQueueBuildings[City.XYToId(c)].bid != bid))
 							{
-								rv.Add( c);
+								rv.Add(c);
 								if (rv.Count > count)
 									goto done;
 							}
@@ -890,10 +874,10 @@ namespace COTG.Views
 					}
 				}
 			}
-			done:
+		done:
 			return rv;
 		}
-		static List<(int x, int y)> FindPendingOverlayBuildingsOfType(City city,int count, params int [] bids)
+		static List<(int x, int y)> FindPendingOverlayBuildingsOfType(City city, int count, params int[] bids)
 		{
 			List<(int x, int y)> rv = new();
 			if (count == 0)
@@ -935,7 +919,7 @@ namespace COTG.Views
 				{
 					var c = (cx, cy);// (int x, int y) c = RandCitySpot();
 					var b = CityBuild.postQueueBuildings[City.XYToId(c)];
-					if ( b.isTower && b.bl < SettingsPage.autoTowerLevel )
+					if (b.isTower && b.bl < SettingsPage.autoTowerLevel)
 					{
 						rv.Add(c);
 					}
@@ -948,60 +932,40 @@ namespace COTG.Views
 			return (x: AMath.random.Next(City.citySpan), y: AMath.random.Next(City.citySpan));
 		}
 
-		private async void SplatAll(object sender, Windows.UI.Xaml.RoutedEventArgs e)
-		{
-			if(App.uiSema.CurrentCount==0)
-			{
-				Log("Already running");
-				return;
-			}
+		//private async void SplatAll(object sender, Windows.UI.Xaml.RoutedEventArgs e)
+		//{
+		//	if (App.uiSema.CurrentCount == 0)
+		//	{
+		//		Log("Already running");
+		//		return;
+		//	}
 
-			try
-			{
-				foreach (var _city in City.friendCities)
-				{
+		//	try
+		//	{
+		//		foreach (var _city in City.friendCities)
+		//		{
 
-					var city = _city;
-					var rv = await App.DispatchOnUIThreadExclusive(city.cid,async () =>
-					{
-						return await DoTheStuff(city);
-					});
-					if (rv == false)
-						break;
-				}
-			}
-			catch (Exception ex)
-			{
-				Log(ex);
-				Note.Show("Did not complete all of the places, please try again");
-			}
+		//			var city = _city;
+		//			var rv = await App.DispatchOnUIThreadExclusive(city.cid, async () =>
+		//			 {
+		//				 return await DoTheStuff(city);
+		//			 });
+		//			if (rv == false)
+		//				break;
+		//		}
+		//	}
+		//	catch (Exception ex)
+		//	{
+		//		Log(ex);
+		//		Note.Show("Did not complete all of the places, please try again");
+		//	}
 
-		}
+		//}
 
-		
 
-		
+
+
 	}
-
-	//public class BuildItemTemplateSelector : Microsoft.UI.Xaml.Controls.DataTemplateSelector
-
-	//{
-	//	public DataTemplate cityTemplate { get; set; }
-	//	public DataTemplate opTemplate { get; set; }
-
-	//	protected override DataTemplate SelectTemplateCore(object item)
-	//	{
-	//		if (item is BuildItemView city)
-	//		{
-	//			return cityTemplate;
-	//		}
-	//		else
-	//		{
-	//			return opTemplate;
-	//		}
-	//	}
-	//}
-
 	public class BuildItemView
 	{
 		static readonly List<BuildItemView> pool = new();
@@ -1054,4 +1018,208 @@ namespace COTG.Views
 
 		}
 	}
+
+}
+namespace COTG.Game
+{
+
+	public partial class City
+	{
+		public async Task<BuildInfo> GetBuildStage()
+		{
+			if (CityRename.IsNew(this))
+				return new BuildInfo(BuildStage._new, 100);
+			//await GetCity.Post(cid);
+			var cabinLevel = await GetAutobuildCabinLevel();
+			return GetBuildStage(GetBuildingCounts(cabinLevel));
+
+		}
+		bool NeedsSorcTower(BuildingCount bc)
+		{
+			return ((bc.sorcTowers == 0 || bc.sorcTowerLevel != 10) && tsTotal > SettingsPage.tsForSorcTower && HasOverlayBuildingOfType(bidSorcTower));
+		}
+		bool NeedsCastle(BuildingCount bc)
+		{
+			return ((!bc.hasCastle) && tsTotal > SettingsPage.tsForCastle && HasOverlayBuildingOfType(bidCastle));
+		}
+
+		public string buildStage
+		{
+			get
+			{
+				if (CityRename.IsNew(this))
+					return "New";
+				if (buildings == Emptybuildings)
+				{
+					//GetCity.Post(cid);
+					return "pending...";
+				}
+				var bc = GetBuildingCounts(GetAutobuildCabinLevelNoFetch());
+				if (NeedsSorcTower(bc))
+					return $"WantSorc ({bc.buildings})";
+				if (NeedsCastle(bc))
+					return $"WantCastle ({bc.buildings})";
+
+				return $"{GetBuildStage(bc).stage} ({bc.buildings})";
+			}
+		}
+
+		public BuildInfo GetBuildStageNoFetch()
+		{
+			if (CityRename.IsNew(this))
+				return new BuildInfo(BuildStage._new, 100);
+			if (buildings == Emptybuildings)
+			{
+				//GetCity.Post(cid);
+				return new BuildInfo(BuildStage.pending, 100);
+			}
+			return GetBuildStage(GetBuildingCounts(GetAutobuildCabinLevelNoFetch()));
+		}
+
+		public static async Task<BuildInfo> GetBuildBuildStage(BuildingCount bc)
+		{
+			var city = GetBuild();
+			if (CityRename.IsNew(city))
+				return new BuildInfo(BuildStage._new, 100);
+		//	await GetCity.Post(City.build);
+
+			return city.GetBuildStage(bc);
+		}
+
+		public static async Task<BuildInfo> GetBuildBuildStage()
+		{
+			var city = GetBuild();
+			if (CityRename.IsNew(city))
+				return new BuildInfo(BuildStage._new, 100);
+			await GetCity.Post(City.build);
+			var cabinLevel = await city.GetAutobuildCabinLevel();
+			return city.GetBuildStage(GetBuildingCountPostQueue(cabinLevel));
+
+		}
+
+		public bool HasOverlayBuildingOfType(int bid)
+		{
+			if (!isLayoutValid)
+				return false;
+
+			for (var id = 0; id < City.citySpotCount; ++id)
+			{
+				if (bid == BidFromOverlay(id))
+					return true;
+
+			}
+			return false;
+		}
+		public  (int x, int y) FindOverlayBuildingOfType( int bid)
+		{
+			if (!isLayoutValid)
+				return (0,0);
+			
+			for (var id = 0;id<City.citySpotCount; ++id)
+			{
+					if (bid == BidFromOverlay(id))
+						return IdToXY(id);
+
+				}
+			return (0, 0);
+		}
+
+		public bool hasCastleInLayout
+		{
+			get
+			{
+				if (!isLayoutValid)
+					return false;
+
+				for (int i = 0; i < citySpotCount; ++i)
+				{
+					if (BidFromOverlay(i) == bidCastle)
+						return true;
+				}
+				return false;
+			}
+		}
+		public (bool hasCastle, bool hasSorcTower) hasCastleOrSorcTowerInLayout
+		{
+			get
+			{
+				bool hasCastle = false;
+				bool hasSorcTower = false;
+				if (!isLayoutValid)
+					return (false, false);
+
+				for (int i = 0; i < citySpotCount; ++i)
+				{
+					if (BidFromOverlay(i) == bidCastle)
+						hasCastle = true;
+					else if (BidFromOverlay(i) == bidSorcTower)
+						hasSorcTower = true;
+				}
+				return (hasCastle, hasSorcTower);
+			}
+		}
+
+		public void ClearRes()
+		{
+			App.DispatchOnUIThreadExclusive(cid,async () =>
+		   {
+			  await ClearResUI();
+		   });
+		}
+		public static async Task ClearResUI()
+		{
+			var city = GetBuild();
+
+			if(city.isLayoutValid)
+			{
+				for (int r = 1; r <= City.citySpan; ++r)
+				{
+					for (var y = -r; y <= r; ++y)
+					{
+						for (var x = -r; x <= r; ++x)
+						{
+							if ((x == -r || x == r) || (y == -r || y == r))
+							{
+								
+								var c = (x, y);// (int x, int y) c = RandCitySpot();
+								if (!c.IsXYInCenter())
+									continue;
+								if (city.BidFromOverlay(c) == 0)
+									continue;
+								
+								if (CityBuild.postQueueBuildings[City.XYToId(c)].isRes )
+								{
+									await Demolish(City.XYToId(c), false);
+								}
+							}
+						}
+					}
+				}
+			}
+			else
+			{
+				await JSClient.ClearCenter(city.cid);
+			}
+		}
+
+	}
+	//public class BuildItemTemplateSelector : Microsoft.UI.Xaml.Controls.DataTemplateSelector
+
+	//{
+	//	public DataTemplate cityTemplate { get; set; }
+	//	public DataTemplate opTemplate { get; set; }
+
+	//	protected override DataTemplate SelectTemplateCore(object item)
+	//	{
+	//		if (item is BuildItemView city)
+	//		{
+	//			return cityTemplate;
+	//		}
+	//		else
+	//		{
+	//			return opTemplate;
+	//		}
+	//	}
+	//}
+
 }
