@@ -2044,7 +2044,7 @@ namespace COTG
 									   //     city.SetFocus(true);
 									   if (city.classification == Spot.Classification.unknown)
 									   {
-										   if (App.IsKeyPressedControl() && Player.isAvatarOrTest)
+										   if (App.IsKeyPressedControl() && (Alliance.wantsIntel || Player.isAvatarOrTest) )
 										   {
 											   city.Classify();
 										   }
@@ -2318,6 +2318,11 @@ namespace COTG
 					   //    //if (now.Day <= 28 && now.Month==11)
 					   //    {
 					   AppCenter.SetUserId(Player.myName);
+					   {
+						   CustomProperties properties = new CustomProperties();
+						   properties.Set("alliance", Alliance.myId).Set("world", JSClient.world).Set("sub", JSClient.isSub );
+						   AppCenter.SetCustomProperties(properties);
+					   }
 					   if (SystemInformation.Instance.IsAppUpdated)
 					   {
 						   App.DispatchOnUIThreadSneaky(ShowWhatsNew);

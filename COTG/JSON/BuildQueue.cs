@@ -560,6 +560,9 @@ namespace COTG.JSON
 					await Task.Delay(delay, cancellationTokenSource.Token);
 
 				}
+				catch (TaskCanceledException tex)
+				{
+				}
 				catch (Exception ex)
 				{
 					Log(ex);

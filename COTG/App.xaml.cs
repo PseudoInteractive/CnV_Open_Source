@@ -49,6 +49,8 @@ using ToggleMenuFlyoutItem = Windows.UI.Xaml.Controls.ToggleMenuFlyoutItem;
 using MenuFlyoutSubItem = Windows.UI.Xaml.Controls.MenuFlyoutSubItem;
 using static COTG.Debug;
 using Microsoft.Toolkit.Uwp.Helpers;
+using Microsoft.AppCenter.Analytics;
+using System.Collections.Generic;
 
 namespace COTG
 {
@@ -210,10 +212,13 @@ namespace COTG
 
 		private void OnAppUnhandledException(object sender, Windows.UI.Xaml.UnhandledExceptionEventArgs e)
 		{
+#if TRACE
 			System.Diagnostics.Debug.WriteLine($"Unhandled Exception: " + e.Message);
 			System.Diagnostics.Debug.WriteLine(e.Exception.StackTrace);
+#endif
 			e.Handled = true;
 			Crashes.TrackError(e.Exception);
+			Analytics.TrackEvent("UnhandledException", new Dictionary<string, string> { {"message", e.Message } } );
 		}
 
 		static int lastInputTick;

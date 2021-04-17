@@ -213,8 +213,8 @@ namespace COTG.Views
 			}
 
 		}
-		public static float raidCarryMin = 115;
-		public static float raidCarryMax = 180;
+		public static float raidCarryMin = 1.15f;
+		public static float raidCarryMax = 1.80f;
 		public static int intialStorehouses=1;
 		public static bool IsThemeWinter()
 		{

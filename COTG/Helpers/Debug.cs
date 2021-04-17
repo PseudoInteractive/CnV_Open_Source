@@ -4,9 +4,11 @@
 using COTG.Helpers;
 using COTG.Views;
 
+using Microsoft.AppCenter.Analytics;
 using Microsoft.AppCenter.Crashes;
 
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.Contracts;
 using System.Runtime.Serialization;
@@ -139,6 +141,8 @@ namespace COTG
 			System.Diagnostics.Trace.WriteLine($"{sourceFilePath}({sourceLineNumber}): {timeStamp}: {memberName} : Exception: {e.Message} {e.StackTrace}");
 			DumpStack(new StackTrace(e, true));
 #endif
+			Analytics.TrackEvent("HandledException", new Dictionary<string, string> { { "message", e.Message } });
+
 			Note.Show(e.Message);
 		}
       //  [Conditional("TRACE")]

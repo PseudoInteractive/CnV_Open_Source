@@ -722,7 +722,7 @@ namespace COTG.Game
 				}
 			}
 			ClassificationExtended rv = new ClassificationExtended(); ;
-			if (!Player.isAvatarOrTest)
+			if (!Player.isAvatarOrTest && !Alliance.wantsIntel)
 			{
 				rv.classification = Classification.missing;
 				return rv;
@@ -758,7 +758,7 @@ namespace COTG.Game
 				}
 				else if (mx == rv.stables)
 				{
-					if (rv.se > 0 || rv.academies > 0 || (rv.stables != 25 && rv.stables == 22))
+					if (rv.se > 0 || rv.academies > 0 || (rv.stables != 25 && rv.stables == 22)||(rv.stables < 32) )
 						classification = Classification.horses;
 					else
 					{
@@ -774,7 +774,7 @@ namespace COTG.Game
 				}
 				else if (mx == rv.training)
 				{
-					if (rv.se > 0 || rv.academies > 0 || rv.training == 26 || rv.training == 27 || rv.training <= 18)
+					if (rv.se > 0 || rv.academies > 0 || (rv.training < 28 && rv.training != 22) )
 						classification = Classification.vanqs;
 					else
 						classification = Classification.rt;

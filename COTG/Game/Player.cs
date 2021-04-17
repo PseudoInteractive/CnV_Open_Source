@@ -30,6 +30,7 @@ namespace COTG.Game
 		public static bool isTest => subOwner == "KittyKat";
 		public static bool isAvatarOrTest => isAvatar||isTest;
 
+
 		public string allianceName => Alliance.IdToName(alliance);
 
 		public static object activePlayerName => IdToName(activeId);

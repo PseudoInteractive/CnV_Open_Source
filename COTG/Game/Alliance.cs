@@ -63,6 +63,7 @@ namespace COTG.Game
 			return false;
 		}
 
+		public static bool wantsIntel => ((myId == 19)||(myId==42)) && JSClient.world == 23;
 		public static string IdToName(int id)
 		{
 			if (all.TryGetValue(id, out var a))

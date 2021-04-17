@@ -471,17 +471,14 @@ namespace COTG.Views
 							}
 						done:;
 							Assert(city.isBuild);
-							var storeHouses = FindPendingOverlayBuildingsOfType(city, bidStorehouse, SettingsPage.intialStorehouses);
-
-							while (bc.storeHouses < SettingsPage.intialStorehouses)
+							var storeHouses = FindPendingOverlayBuildingsOfType(city, bidStorehouse, SettingsPage.intialStorehouses-bc.storeHouses);
+							foreach( var storage in storeHouses)
 							{
-								var storage = city.FirstBuildingInOverlay(bidStorehouse);
-								if (storage != 0)
-								{
+								
 									message += $"Adding Storehouse";
-									await CityBuild.SmartBuild(city, IdToXY(storage), bidStorehouse, true, false);
+									await CityBuild.SmartBuild(city, storage, bidStorehouse, true, false);
 									++bc.storeHouses;
-								}
+								
 
 							}
 
@@ -867,7 +864,7 @@ namespace COTG.Views
 							if ((city.BidFromOverlay(c) == bid) && (CityBuild.postQueueBuildings[City.XYToId(c)].bid != bid))
 							{
 								rv.Add(c);
-								if (rv.Count > count)
+								if (rv.Count >= count)
 									goto done;
 							}
 						}
