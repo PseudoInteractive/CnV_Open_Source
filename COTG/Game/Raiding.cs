@@ -113,9 +113,9 @@ namespace COTG.Game
 			var  idealf = (carry / (loot * SettingsPage.raidCarryMin) );
 			int ideal = (int)(idealf);  // carry at least the ideal amount
 		    ideal = Math.Min(ideal, city.freeCommandSlots ).Max(1);
-			if (idealf < ideal || !SettingsPage.raidSendExact)
+			if (idealf < ideal )//|| !SettingsPage.raidSendExact)
 				idealf = ideal;
-            return (ideal, carry /(idealf*loot),idealf );
+            return (ideal, carry /(ideal * loot),idealf );
         }
 
 
@@ -160,7 +160,7 @@ namespace COTG.Game
 						continue;
 					if (IsWaterRaider(ttc.type) == d.isWater)
 					{
-						var count = (int)(ttc.count * troopFraction / r.fractionalReps);
+						var count = (int)(ttc.count * troopFraction / (SettingsPage.raidSendExact? r.fractionalReps:r.reps) );
 						tr.Add(new sndRaidtr() { tt = ttc.type.ToString(), tv = count.ToString() });
 						ttc.count -= r.reps * count;
 					}

@@ -51,6 +51,8 @@ namespace COTG.JSON
 				{
 					if (cid == hub)
 						continue;
+					if (!hub.CanReach(cid))
+						continue;
 
 					var d = hub.DistanceToCid(cid);
 					if (d < bestDist)
@@ -69,12 +71,19 @@ namespace COTG.JSON
 			foreach (var _cid in Spot.GetSelectedForContextMenu(cid, false))
 			{
 				var hub = CitySettings.FindBestHub(_cid);
-				await CitySettings.SetCitySettings(_cid,hub,City.Get(cid).isHubOrStorage ? 0: hub);
+				await CitySettings.SetCitySettings(_cid,hub, FilterTargetHub(cid,hub) );
 			}
 
 		}
 
-
+		public static int? FilterTargetHub( City me, int hub)
+		{
+			return me.isHubOrStorage ? 0 : hub;
+		}
+		public static int? FilterTargetHub(int me, int hub)
+		{
+			return FilterTargetHub(City.Get(me), hub);
+		}
 
 		public static async Task SetCitySettings(int cid, int ? reqHub=null,int ? targetHub=null, bool setRecruit=false, bool setAutoBuild=false, bool setResources=false, int ? cartReserve=null, bool filterSend=false)
         {
@@ -228,6 +237,10 @@ namespace COTG.JSON
 						if (city.ministerOptions != null)
 							break;
 
+						if (!city.isCityOrCastle)
+						{
+							throw new UIException(city.nameAndRemarks);
+						}
 						await Task.Delay(500);
 					}
 				}
@@ -449,7 +462,23 @@ namespace COTG.JSON
 			}
 			foreach (var _cid in targets )
 			{
-				await CitySettings.SetCitySettings(_cid,null, targetHub);
+				if (targetHub != _cid)
+				{
+					var city = City.Get(_cid);
+					if(city.isHubOrStorage)
+					{
+						var i = await App.DoYesNoBox("Hub Target?", $"Set {city.nameAndRemarks}'s target to {City.Get(targetHub)}?");
+						if(i == 0)
+						{
+							continue;
+						}
+						if ( i == -1)
+						{
+							break;
+						}
+					}
+					await CitySettings.SetCitySettings(_cid, null, targetHub);
+				}
 			}
         }
 		public static async void SetSourceHub(int cid, int targetHub)
@@ -473,7 +502,8 @@ namespace COTG.JSON
 			}
 			foreach (var _cid in targets)
 			{
-				await CitySettings.SetCitySettings(_cid, targetHub);
+				if(_cid != targetHub)
+					await CitySettings.SetCitySettings(_cid, targetHub);
 			}
 		}
 

@@ -130,16 +130,18 @@
 								  Header="Use fraction"
 								  Margin="6,2,6,2"
 								  Value="{x:Bind game:Raiding.troopFraction,Mode=TwoWay}"
-								  NumberFormatter="{x:Bind cotg:App.formatter2Digit,Mode=OneTime}"
 								  ValueChanged="RaidFraction_ValueChanged"
-								  SmallChange=".0625"
-								  Style="{StaticResource NumberBoxSmall}" />
+							  NumberFormatter="{x:Bind cotg:App.percentFormatter}"
+								  Style="{StaticResource NumberBoxPercent}" />
 			<winui:NumberBox  
 						  Header="Min Progress"
 						  ValueChanged="RaidFraction_ValueChanged"
 						  Value="{x:Bind view:SettingsPage.minDungeonProgress,Mode=TwoWay}"
 						  FontSize="{StaticResource MediumFontSize}"
-						  IsTextScaleFactorEnabled="False"
+						 Style="{StaticResource RightAlignNumberBox}"
+						SmallChange="5"
+						LargeChange="25"
+				
 						  Margin="6,2,6,2" ToolTipService.ToolTip="If a dungeons progress is lower than this number, it will be ignored.  This helps you avoid cases where your dungeons finish and your troops come home and sit idle waiting for you to log in, with nothing to do but drink your wine and smoke your weed (or do whatever it is you do when you are offline)" />
 
 			<ToggleSwitch     Header="Off dungeons" Width="90"

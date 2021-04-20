@@ -41504,10 +41504,10 @@ function outer() {
         }
         function upgradeEx(__spot, __level, bId, __cid, iter, queue) {
             lastSentBq = -1;
-            {
+            try {
                 ++bqInFlight;
                 let proto = Number(bam["buildings"][Number(bId)]['proto']);
-                let a0w = { bspot: __spot, endlvl: Number(__level), slvl: city.bd[__spot].bl, cid: __cid, btype: proto, brep: city.bd[__spot].bid };
+                let a0w = { bspot: __spot, endlvl: Number(__level), slvl: city.bd[__spot].bl, cid: __cid, btype: proto, brep: bId };
                 let E0w = "X24s2x449" + P8 + "Jx1e2";
                 let q0w = a6.ccazzx.encrypt(JSON.stringify(a0w), E0w, +256);
                 let Y0w = $.post("/includes/" + "nBUu.php", { a: q0w, cid: __cid });
@@ -41531,6 +41531,10 @@ function outer() {
                     buildExDelayed(__cid, iter + 1, queue);
                     return;
                 });
+            }
+            catch (_a) {
+                buildExDelayed(__cid, iter + 1, queue);
+                return;
             }
         }
         function l2F() {
@@ -50481,7 +50485,7 @@ function outer() {
                     upgradeTemple(__cid, iter, queue);
                     return;
                 }
-                if (endLevel > startLevel + 1) {
+                if (endLevel > startLevel) {
                     upgradeEx(bXY, endLevel, bId, __cid, iter, queue);
                     return;
                 }
@@ -50709,9 +50713,9 @@ function outer() {
                                     var x5w = $.post("/includes/" + "nBuu.php", { a: l5w, cid: __cid });
                                     x5w.done(function (s7w) {
                                         --bqInFlight;
+                                        if ((s7w >= 0))
+                                            __logBuild({ e: s7w, o: T5w, cid: __cid });
                                         if (!(s7w >= 0)) {
-                                            if ((s7w >= 0))
-                                                __logBuild({ e: s7w, o: T5w, cid: __cid });
                                             if (__cid === cid) {
                                                 city = JSON.parse(s7w);
                                             }
@@ -50748,9 +50752,9 @@ function outer() {
                                 F6();
                                 x5w.done(function (s7w) {
                                     --bqInFlight;
+                                    if ((s7w >= 0))
+                                        __logBuild({ e: s7w, o: T5w, cid: __cid });
                                     if (!(s7w >= 0)) {
-                                        if ((s7w >= 0))
-                                            __logBuild({ e: s7w, o: T5w, cid: __cid });
                                         if (__cid === cid) {
                                             city = JSON.parse(s7w);
                                         }
@@ -50767,6 +50771,10 @@ function outer() {
                             }
                         }
                     }
+                }
+                else {
+                    __log(JSON.stringify(queue[iter]));
+                    buildExDelayed(__cid, iter + 1, queue);
                 }
             }
         }

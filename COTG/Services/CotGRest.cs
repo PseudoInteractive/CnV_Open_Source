@@ -816,7 +816,7 @@ namespace COTG.Services
 
 						raids = raids.ArrayAppend(raid);
 					}
-					city.raidCarry = (byte)minCarry;
+					city.raidCarry = (byte)minCarry.Min(255);
 					city.raids = raids;
 					// Log($"cid:{cid} carry: {minCarry}");
 

@@ -69,50 +69,36 @@
 							Margin="4">
 						<winui:NumberBox Header="Req Wood"
 										x:Name="reqWood"
-										NumberFormatter="{x:Bind cotg:App.formatterInt,Mode=OneTime}"
-										Width="120"
-										Style="{StaticResource NumberBoxSmall}"
+										Style="{StaticResource NumberBoxRes}"
 										SmallChange="10000" />
 						<winui:NumberBox Header="Req Stone"
-x:Name="reqStone"										Width="120"
-										NumberFormatter="{x:Bind cotg:App.formatterInt,Mode=OneTime}"
-										Style="{StaticResource NumberBoxSmall}"
-										SmallChange="10000" />
+						x:Name="reqStone"
+										Style="{StaticResource NumberBoxRes}"
+										 />
 						<winui:NumberBox Header="Req Iron"
-			x:Name="reqIron"			NumberFormatter="{x:Bind cotg:App.formatterInt,Mode=OneTime}"
-										Width="120"
-										Style="{StaticResource NumberBoxSmall}"
-										SmallChange="10000" />
+			x:Name="reqIron"			Style="{StaticResource NumberBoxRes}"
+										/>
 						<winui:NumberBox Header="Req Food"
-								x:Name="reqFood"		Width="120"
-										NumberFormatter="{x:Bind cotg:App.formatterInt,Mode=OneTime}"
-										Style="{StaticResource NumberBoxSmall}"
-										SmallChange="10000" />
+								x:Name="reqFood"	
+										Style="{StaticResource NumberBoxRes}"
+										 />
 					</tk:WrapPanel>
 					<tk:WrapPanel  Orientation="Horizontal">
 						<winui:NumberBox Header="Max Wood"
 										x:Name="maxWood"
-										NumberFormatter="{x:Bind cotg:App.formatterInt,Mode=OneTime}"
-										Width="120"
-										Style="{StaticResource NumberBoxSmall}"
-										SmallChange="10000" />
+										Style="{StaticResource NumberBoxRes}"
+										 />
 						<winui:NumberBox Header="Max Stone"
 										x:Name="maxStone"
-										Width="120"
-										NumberFormatter="{x:Bind cotg:App.formatterInt,Mode=OneTime}"
-										Style="{StaticResource NumberBoxSmall}"
-										SmallChange="10000" />
+										Style="{StaticResource NumberBoxRes}"
+										 />
 						<winui:NumberBox Header="Max Iron"
 										x:Name="maxIron"
-										NumberFormatter="{x:Bind cotg:App.formatterInt,Mode=OneTime}"
-										Width="120"
-										Style="{StaticResource NumberBoxSmall}"
-										SmallChange="10000" />
+										Style="{StaticResource NumberBoxRes}"
+										 />
 						<winui:NumberBox Header="Max Food"
-x:Name="maxFood"										Width="120"
-										NumberFormatter="{x:Bind cotg:App.formatterInt,Mode=OneTime}"
-										Style="{StaticResource NumberBoxSmall}"
-										SmallChange="10000" />
+x:Name="maxFood"						Style="{StaticResource NumberBoxRes}"
+										 />
 					</tk:WrapPanel>
 				</StackPanel>
 			</Border>

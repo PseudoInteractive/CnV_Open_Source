@@ -369,7 +369,18 @@ namespace COTG
         
 
         public static float DistanceToCid(this int a, int cid) => Distance(a.CidToWorld(), cid.CidToWorld());
-        public static float DistanceToCid(this (int x, int y) a, int cid) => Distance(a, cid.CidToWorld());
+		public static bool CanReach(this int cid0, int cid1)
+		{
+			if (cid0.CidToContinent() == cid1.CidToContinent())
+				return true;
+			if (!City.Get(cid1).isOnWater)
+				return false;
+			if (!City.Get(cid0).isOnWater)
+				return false;
+			return true;
+
+		}
+		public static float DistanceToCid(this (int x, int y) a, int cid) => Distance(a, cid.CidToWorld());
         public static uint ToCompactCid(this int c)
         {
             var x = c % 65536;
@@ -562,5 +573,62 @@ namespace COTG
 		public static Vector2 Normalized(this Vector2 me) => Vector2.Normalize(me);
 		public static Vector4 Normalized(this Vector4 me) => Vector4.Normalize(me);
 
-	}
+		/// <summary>
+		///     Encode a signed long into an ZigZag unsigned long.
+		/// </summary>
+		/// <param name="value"></param>
+		/// <returns></returns>
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
+			public static uint ZigZagEncode(this int value)
+			{
+				return (uint)((value << 1) ^ (value >> 63));
+			}
+
+			/// <summary>
+			///     Encode an array of signed longs into a ZigZag encoded array of unsigned longs.
+			/// </summary>
+			/// <param name="values"></param>
+			/// <returns></returns>
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
+			public static uint[] ZigZagEncode(this int[] values)
+			{
+				var output = new uint[values.Length];
+				for (var i = 0; i < values.Length; i++)
+				{
+					output[i] = ZigZagEncode(values[i]);
+				}
+
+				return output;
+			}
+
+			/// <summary>
+			///     Decode a ZigZag unsigned long back into a signed long.
+			/// </summary>
+			/// <param name="value"></param>
+			/// <returns></returns>
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
+			public static int ZigZagDecode(this uint value)
+			{
+				return (int)((value >> 1) ^ (~(value & 1) + 1));
+			}
+
+			/// <summary>
+			/// Decode an array of unsigned longs into a ZigZag encoded array of signed longs.
+			/// </summary>
+			/// <param name="values"></param>
+			/// <returns></returns>
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
+			public static int[] ZigZagDecode(this uint[] values)
+			{
+				var output = new int[values.Length];
+				for (var i = 0; i < values.Length; i++)
+				{
+					output[i] = ZigZagDecode(values[i]);
+				}
+
+				return output;
+			}
+		}
+
+	
 }

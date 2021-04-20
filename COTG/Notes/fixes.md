@@ -97,5 +97,16 @@
  - **Fix** Trade settings not updating all the setup windows
 ### 2021/4/17
  - **New** You can draw troop overlays for your cities via 'troops visible' in settings
- 
- 
+### 2021/4/19
+ - **Update** When the Near Res Tab is open, trade routes will be shown
+### 2021/4/19
+ - **Update** When you use "Find Hub" on a city that is a hub, it will clear its target hub (setting the target of a hub is a mistake I've made far too many times)
+### 2021/4/19
+ - **Tip** If you want to update the hubs of a cluster (say you added another hub)
+    - first make sure that city lists are updated
+	- Hold shift and click on the citys in the cluster
+	- Still holding shift, right click on any city and use "Setup - Find Hub"
+	- Alternatively right click on a hub (still holding shift) and select "Setup - Set Target Hub" to send to a specific hub
+	 - There will be a new interface for setting shipper targets, but until that is ready this is the easiest way to direct shippers to send somewhere
+	 - I.e. filter by City Group "Shippers", select all, shift click on the target and Setup Set Target Hub
+	- There is also "Setup Source Hub" to pull from a specific hub

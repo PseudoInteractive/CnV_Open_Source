@@ -136,8 +136,10 @@ namespace COTG.Game
 		public int tsHome => (troopsHome.Any() ? troopsHome.TS() : _tsHome);
 		public int tsDefHome => (troopsHome.Any() ? troopsHome.TSDef() : _tsHome);
 		public int tsDefTotal => (troopsTotal.Any() ? troopsTotal.TSDef() : _tsTotal);
+		public float tsRaidIdle => troopsHome.TSRaid()/ (float)troopsTotal.TSRaid().Max(1);
 
 		public int tsTotal => (troopsTotal.Any() ? troopsTotal.TS() : _tsTotal);
+		public int tsRaidTotal => (troopsTotal.Any() ? troopsTotal.TSRaid() : _tsTotal);
 		public int tsDefMax 
 		{ 
 			get 

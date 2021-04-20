@@ -831,15 +831,15 @@ namespace COTG
 		public static CoreCursor cursorLayout = new(CoreCursorType.Pin, 0);
 		public static CoreCursor cursorDestroy = new(CoreCursorType.UniversalNo, 0);
 
-		public async static Task<int> DoYesNoBox(string title, string text)
+		public async static Task<int> DoYesNoBox(string title, string text, string yes="Yes", string no = "No", string cancel ="Cancel" )
 		{
 			return await DispatchOnUIThreadTask(async () =>
 		   {
-				 return await DoYesNoBoxUI(title, text);
+				 return await DoYesNoBoxUI(title, text,yes,no,cancel);
 		   });
 		}
 
-		public async static Task<int> DoYesNoBoxUI(string title, string text)
+		public async static Task<int> DoYesNoBoxUI(string title, string text, string yes = "Yes", string no = "No", string cancel = "Cancel")
 		{
 		//	Assert(App.uiSema.CurrentCount == 0);
 			Assert(App.IsOnUIThread());
@@ -848,9 +848,9 @@ namespace COTG
 				{
 					Title = title,
 					Content = text,
-					PrimaryButtonText = "Yes",
-					SecondaryButtonText = "No",
-					CloseButtonText = "Cancel"
+					PrimaryButtonText = yes,
+					SecondaryButtonText = no,
+					CloseButtonText = cancel
 				};
 				return (await dialog.ShowAsync2()) switch { ContentDialogResult.Primary => 1, ContentDialogResult.Secondary => 0, _ => -1 };
 		}

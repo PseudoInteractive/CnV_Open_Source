@@ -626,6 +626,7 @@ namespace COTG.Views
 			int rv = 0;
 			var b = CityBuild.postQueueBuildings[spot];
 			var bid = b.bid;
+			Assert(bid != 0);
 			for (var level = b.bl;level < elvl;++level)
 			{
 				++rv;
@@ -1541,6 +1542,7 @@ namespace COTG.Views
 		}
 		public static int FindSpare(int bid, bool dryRun)
 		{
+			var rv = 0;
 			var build = City.GetBuild();
 			for (int xy = 0; xy < City.citySpotCount; ++xy)
 			{
@@ -1552,15 +1554,16 @@ namespace COTG.Views
 				if (HasBuildOps(xy) && !isPlanner)
 				{
 					Status($"{postQueueBuildings[xy].name} at {IdToXY(xy).bspotToString()} is desired, but it is being rennovated, please wait or cancel build ops for best resuts", dryRun);
+					rv = -1;
 					continue;
 				}
 				return xy;
 			}
-			return 0;
+			return rv;
 		
 	}
 
-		public static async Task<int> SmartBuild(City build, (int x, int y) cc, int desBid, bool searchForSpare, bool dryRun = false)
+		public static async Task<int> SmartBuild(City build, (int x, int y) cc, int desBid, bool searchForSpare, bool dryRun = false, bool demoExtraBuildings=false)
 		{
 			int rv = 0;
 			var bspot = XYToId(cc);
@@ -1678,15 +1681,14 @@ namespace COTG.Views
 						if(!desB.isCabin)
 						{
 							// Is there a cabin to remove?
-
-							int bestSpot = FindCabinToDemo();
+							int bestSpot = demoExtraBuildings ? QueueTab.FindUnusedBuilding() : -1;
+							if( bestSpot == -1)
+								bestSpot = FindCabinToDemo();
 							if (bestSpot != -1)
 							{
 								Status("Will Demolish a Cottage to make room", dryRun);
 
 								await Demolish(bestSpot, dryRun);
-								if (!dryRun)
-									await Task.Delay(400).ConfigureAwait(true);
 								//break;
 								++rv;
 
@@ -1761,28 +1763,58 @@ namespace COTG.Views
 					else
 					{
 
-						if (takeScore == 0 )
+						if (takeScore == 0)
 						{
-							if (b.isCabin && counts.count < 100)
+							if (desBid == 0)
 							{
+								Status($"{b.def.Bn} is not wanted, destroying it", dryRun);
+
+								++rv;
+								await Demolish(cc, dryRun);
+
+							}
+							else
+							{
+								if (counts.count >= 100)
+								{
+
+									if (demoExtraBuildings)
+									{
+										int bestSpot = QueueTab.FindUnusedBuilding();
+										if (bestSpot != -1)
+										{
+											await Demolish(bestSpot, dryRun);
+											--counts.count;
+											++rv;
+										}
+
+									}
+
+									if (counts.count >= 100)
+									{
+										var bestSpot = FindCabinToDemo();
+										if (bestSpot != -1)
+										{
+											Status("Will Demolish a Cottage to make room", dryRun);
+
+											await Demolish(bestSpot, dryRun);
+											//break;
+											--counts.count;
+
+											++rv;
+
+										}
+
+									}
+								}
+
+
 								var cb = FindAnyFreeSpot();
 								if (!await MoveBuilding(bspot, cb, dryRun))
 									return rv;
 
 
-							}
-							else
-							{
-
-								Status($"{b.def.Bn} is not wanted, destroying it", dryRun);
-
-								++rv;
-								await Demolish(cc, dryRun);
-							}
-
-							// build the correct building
-							if (desBid != 0)
-							{
+								// build the correct building
 								if (dryRun)
 									DrawSprite(hovered, decalBuildingInvalid, .31f);
 
@@ -1790,7 +1822,7 @@ namespace COTG.Views
 								++rv;
 							}
 						}
-						else 
+						else
 						{
 
 							await MoveBuilding(bspot, FindAnyFreeSpot(), dryRun);
@@ -1798,9 +1830,9 @@ namespace COTG.Views
 							Status($"Found an unneeded {desName}, will move it to the right spot for you", dryRun);
 
 							await MoveBuilding(takeFrom, bspot, dryRun);
-						
+
 						}
-					}
+					}		
 					
 				}
 				else

@@ -44236,10 +44236,12 @@ function outer(){
 
 	  function upgradeEx(__spot:number,__level:number,bId:number, __cid:number, iter: number, queue : [number[]]) {
   			lastSentBq = -1;
+		
+			try
 			{
 		   ++bqInFlight;
 			  let proto= Number(bam["buildings"][Number(bId)]['proto'])
-			  let a0w = { bspot: __spot, endlvl: Number(__level), slvl: city.bd[__spot].bl, cid: __cid,btype:proto, brep:city.bd[__spot].bid};
+			  let a0w = { bspot: __spot, endlvl: Number(__level), slvl: city.bd[__spot].bl, cid: __cid, btype: proto, brep: bId};
 			  let E0w = "X24s2x449" +P8 + "Jx1e2";
 			  let q0w = a6.ccazzx.encrypt(JSON.stringify(a0w), E0w, +256);
 				
@@ -44265,6 +44267,12 @@ function outer(){
 					buildExDelayed(__cid,iter+1, queue);
 					return;
 				});
+			}
+			
+			catch
+			{
+				buildExDelayed(__cid, iter + 1, queue);
+				return;
 			}
 		}
 
@@ -45746,7 +45754,6 @@ function outer(){
 
 		function buildCastle(__bspot,  __bt, __cid, iter:number, queue : [number[]]) {
 			
-	
 			 var V2w = $.post("/includes/nCb.php", { // "nCb.php"
 				type: bidCASTLE,
 				spot: __bspot,
@@ -45773,10 +45780,10 @@ function outer(){
 					__log("Build Castle Failed");
 				}
 				if(queue!=null)
-	{
+				{
 
 					buildExDelayed(__cid,iter+1, queue);
-		}
+				}
 			return;
 
 			});
@@ -54158,7 +54165,7 @@ function outer(){
 					return;
 				}
 				// Do upgrade
-				if( endLevel > startLevel+ 1)
+				if( endLevel > startLevel)
 				{
 					upgradeEx(bXY, endLevel,bId,__cid, iter,queue);
 				   return;
@@ -54432,9 +54439,10 @@ function outer(){
 										var x5w = $.post("/includes/" + "nBuu.php", { a: l5w, cid: __cid });
 										
 										x5w.done(function (s7w) {--bqInFlight;
+											if ((s7w >= 0))
+												__logBuild({ e: s7w, o: T5w, cid: __cid });
 											  if (!(s7w >= 0)) {
-												  if ((s7w >= 0))
-													  __logBuild({ e: s7w, o: T5w, cid: __cid });
+												 
 
 													if(__cid === cid)
 													{
@@ -54477,9 +54485,11 @@ function outer(){
 									var x5w = $.post("/includes/" + "nBuu.php", { a: l5w, cid: __cid });
 									F6();
 									x5w.done(function (s7w) {--bqInFlight;
+										if ((s7w >= 0))
+											__logBuild({ e: s7w, o: T5w, cid: __cid });
+
 											  if (!(s7w >= 0)) {
-												  if ((s7w >= 0))
-													  __logBuild({ e: s7w, o: T5w, cid: __cid });
+												
 
 													if(__cid === cid)
 													{
@@ -54503,7 +54513,13 @@ function outer(){
 							}
 						}
 					}
+				else {
+					__log( JSON.stringify(queue[iter]) );
+					buildExDelayed(__cid, iter + 1, queue);
 				}
+				}
+				
+
 		}
 
    window['buildop'] = function (bId, bXY, op) 

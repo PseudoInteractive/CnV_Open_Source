@@ -605,11 +605,11 @@ namespace COTG.JSON
 						if (cotgQLength > 0)
 						{
 							delay = delay.Max(JSClient.ServerTimeOffset(bq[(cotgQLength) / 2].GetAsInt64("de"))); // recover after 2 seconds
-							if (delay > 5 * 32 * 1000) /// never more than 5 minutes please
+							if (delay > 15 * 60 * 1000) /// never more than 5 minutes please
 							{
 								//	Assert(false);
 
-								delay = 5 * 32 * 1000;
+								delay = 15 * 60 * 1000;
 							}
 
 							if ((City.safeBuildQueueLength > cotgQLength))
@@ -716,6 +716,11 @@ namespace COTG.JSON
 				return;
 			}
 			CityView.animationOffsets[op.bspot] = AGame.animationT*CityView.animationRate; // start animation
+			if(op.bid == 0)
+			{
+				Trace($"Bad queueop {op}");
+				return;
+			}
 			queue.Add(op);
 			if(cid==City.build)
 				CityView.BuildingsOrQueueChanged();

@@ -178,6 +178,10 @@ namespace COTG
 		{
 			return (DateTimeOffset.UtcNow + gameTOffset);
 		}
+		public static int ServerTimeSeconds()
+		{
+			return (int)(DateTimeOffset.UtcNow.ToUnixTimeSeconds() + gameTOffsetSeconds);
+		}
 		public static DateTimeOffset AsJSTime(long t)
 		{
 			return new DateTimeOffset(1970, 1, 1, 0, 0, 0, TimeSpan.Zero) + TimeSpan.FromMilliseconds(t);
@@ -189,7 +193,7 @@ namespace COTG
 
 		public static DateTimeOffset ServerToLocal(DateTimeOffset t)
 		{
-			return t - gameTOffset;
+			return t.ToUniversalTime() - gameTOffset;
 		}
 			/// <summary>
 			/// Initializes a new instance of the <see cref="JSClient"/> class.
@@ -1275,7 +1279,7 @@ namespace COTG
 
 			catch (Exception E)
 			{
-				Log(E);
+			//	Log(E);
 				Log("City lists invalid, maybe you have none");
 			}
 
@@ -1717,7 +1721,8 @@ namespace COTG
 								   var timeOffset = jso.GetAsInt64("timeoffset");
 								   var timeOffsetRounded = Math.Round(timeOffset / (1000.0 * 60 * 30)) * 30.0f; // round to nearest half hour
 								   gameTOffset = TimeSpan.FromMinutes(timeOffsetRounded);
-								   gameTOffsetMs = (long)gameTOffset.TotalMilliseconds;
+								   gameTOffsetSeconds = (int)gameTOffset.TotalSeconds;
+									gameTOffsetMs = (long)gameTOffset.TotalMilliseconds;
 								   var str = timeOffsetRounded >= 0 ? " +" : " ";
 								   str += $"{gameTOffset.Hours:D2}:{gameTOffset.Minutes:D2}";
 								   Helpers.JSON.timeZoneString = str;
@@ -2469,6 +2474,7 @@ namespace COTG
 
 		public static TimeSpan gameTOffset;
 		public static long gameTOffsetMs;
+		public static int gameTOffsetSeconds;
 
 		//        public static async void TestGet()
 		//        {

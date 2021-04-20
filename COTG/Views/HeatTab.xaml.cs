@@ -151,46 +151,45 @@ namespace COTG.Views
 	//		snapshots_SelectionChanged(null, null);
 		}
 	}
-	public class DayChanges
-	{
-		public DateTimeOffset t; // server time, only the date format is non zero
-		public string dateStr => t.ToString("yyyy-MM-dd");
-		public Azure.ETag eTag;
+	//public class DayChanges
+	//{
+	//	public SmallTime t; // server time, only the date format is non zero
+	//	public string dateStr => t.ToString("yyyy-MM-dd");
+	//	public Azure.ETag eTag;
 		
-		public uint[] state; // newest state recorded
+	//	public uint[] state; // newest state recorded
 
-		public List<SnapshotChanges> snapshots { get; set; } = new();
+	//	public List<SnapshotChanges> snapshots { get; set; } = new();
 
-		public void Save(BinaryWriter o)
-		{
-			o.Write(t.Ticks);
-			Assert(t.Offset.Ticks == 0);
-			o.Write(snapshots.Count);
-			foreach(var s in snapshots)
-			{
-				s.Save(o);
-			}			
-		}
-	}
+	//	public void Save(BinaryWriter o)
+	//	{
+	//		o.Write(t.Ticks);
+	//		Assert(t.Offset.Ticks == 0);
+	//		o.Write(snapshots.Count);
+	//		foreach(var s in snapshots)
+	//		{
+	//			s.Save(o);
+	//		}			
+	//	}
+	//}
 
-	public class SnapshotChanges
-	{
-		public DateTimeOffset t; // server time
-		public string timeStr => t.ToString("HH':'mm':'ss");
+	//public class SnapshotChanges
+	//{
+	//	public SmallTime t; // server time
+	//	public string timeStr => t.ToString("HH':'mm':'ss");
 
-		public uint[] deltas;  // pairs of uints, first is offset, second is changed xor value
+	//	public uint[] deltas;  // pairs of uints, first is offset, second is changed xor value
 
-		public void Save(BinaryWriter o)
-		{
-			o.Write(t.Ticks);
-			Assert(t.Offset.Ticks == 0);
+	//	public void Save(BinaryWriter o)
+	//	{
+	//		o.Write(t.seconds);
 			
-			o.Write(deltas.Length/2);
-		//	o.Write7BitEncodedInt((byte*)deltas);
+	//		o.Write(deltas.Length/2);
+	//	//	o.Write7BitEncodedInt((byte*)deltas);
 			
-		}
+	//	}
 
-	}
+	//}
 
 	public class WorldRecord
 	{

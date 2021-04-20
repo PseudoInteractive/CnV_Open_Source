@@ -154,7 +154,7 @@
       <Version>6.0.0-preview.3.21201.4</Version>
     </PackageReference>
     <PackageReference Include="System.Runtime.WindowsRuntime.UI.Xaml">
-      <Version>5.0.0-preview.5.20278.1</Version>
+      <Version>5.0.0-preview.6.20279.7</Version>
     </PackageReference>
     <PackageReference Include="System.Text.Encodings.Web">
       <Version>6.0.0-preview.3.21201.4</Version>
@@ -237,6 +237,8 @@
     <Compile Include="Helpers\TeachingTips.cs" />
     <Compile Include="Helpers\Ticks.cs" />
     <Compile Include="Helpers\UMath.cs" />
+    <Compile Include="Helpers\UnsafeBinaryMemoryReader.cs" />
+    <Compile Include="Helpers\UnsafeBinaryMemoryWriter.cs" />
     <Compile Include="JSON\Building.cs" />
     <Compile Include="JSON\BuildingDef.cs" />
     <Compile Include="JSON\BuildQueue.cs" />

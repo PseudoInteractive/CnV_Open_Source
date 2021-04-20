@@ -115,7 +115,14 @@
 												DefaultSortOrder="Descending"
 												SizeMode="Auto"
 												Tip="TS of Troops at home that can raid" />
-					<tg:DataGridNumericalColumn PropertyName="tsHome"
+				<tg:DataGridNumericalColumn PropertyName="tsRaidIdle"
+										
+												CellContentStyle="{StaticResource RightAlign}"
+												CellContentFormat="{}{0,3:P1}"
+												DefaultSortOrder="Descending"
+												SizeMode="Auto"
+												Tip="% raiding troops idle" />
+				<tg:DataGridNumericalColumn PropertyName="tsHome"
 												CellContentStyle="{StaticResource RightAlign}"
 												DefaultSortOrder="Descending"
 												Tip="TS of Troops at home (including non raiding troops)"

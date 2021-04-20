@@ -28,7 +28,7 @@ namespace COTG.Views
     {
         public static DonationTab instance;
         public static int reserveCarts=800;
-        public static float reserveCartsPCT =0.06f;
+        public static float reserveCartsPCT =0.0625f;
         public static int reserveShips = 10;
         public static float reserveShipsPCT = 0.0f;
         public static float woodStoneRatio = -1;

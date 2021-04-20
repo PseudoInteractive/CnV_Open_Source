@@ -4,6 +4,7 @@
     xmlns:converter="using:COTG.Converters"
     xmlns:converterTK="using:Microsoft.Toolkit.Uwp.UI.Converters"
     xmlns:tk="using:Microsoft.Toolkit.Uwp.UI.Controls"
+	xmlns:cotg="using:COTG"
     xmlns:winui="using:Microsoft.UI.Xaml.Controls"
     xmlns:gridPrimitives="using:Telerik.UI.Xaml.Controls.Grid.Primitives"
     >
@@ -43,9 +44,11 @@
           <Setter Property="VerticalSpacing" Value="4"/>
 	</Style>
     <Style TargetType="winui:NumberBox">
+		<Setter Property="FontFamily" Value="Tw Cen MT Condensed"/>
         <Setter Property="FontSize" Value="{StaticResource MediumFontSize}" />
         <Setter Property="IsTextScaleFactorEnabled" Value="False"/>
 		<Setter Property="FontStretch" Value="Condensed"/>
+		<Setter Property="Margin" Value="4"/>
     </Style>
 	<Style TargetType="Border" x:Key="BorderReveal" >
         <Setter Property="BorderThickness" Value="1" />
@@ -89,20 +92,42 @@
 		<Setter Property="BorderThickness" Value="1" />
         <Setter Property="BorderBrush" Value="{ThemeResource SystemControlBackgroundBaseLowRevealBorderBrush}"/>
         <Setter Property="AcceptsExpression" Value="True" />
-        <Setter Property="Margin" Value="4"/>
+        
     </Style>
-    <Style  x:Key="RightAlignBox" BasedOn="{StaticResource TextBoxSmall}" TargetType="TextBox">
+	<Style  x:Key="RightAlignBox" BasedOn="{StaticResource TextBoxSmall}" TargetType="TextBox">
         <Setter Property="VerticalAlignment"
                         Value="Center" />
     	<Setter Property="TextAlignment" Value="Right" />
         <Setter Property="Margin" Value="0,0,4,0" />
     </Style>
     <Style  x:Key="RightAlignNumberBox" BasedOn="{StaticResource NumberBoxSmall}" TargetType="winui:NumberBox">
-		<Setter Property="HorizontalContentAlignment" Value="Right" />
+		<Setter Property="TextAlignment" Value="Right" />
 		<Setter Property="VerticalAlignment"
                         Value="Center" />
         <Setter Property="Margin" Value="0,0,4,0" />
     </Style>
+	<Style x:Key="NumberBoxRes" BasedOn="{StaticResource RightAlignNumberBox}" TargetType="winui:NumberBox">
+		<Setter Property="SmallChange" Value="25000"/>
+		<Setter Property="Width" Value="120"/>
+		<Setter Property="LargeChange" Value="100000"/>
+	</Style>
+	<Style x:Key="NumberBoxCarts" BasedOn="{StaticResource RightAlignNumberBox}" TargetType="winui:NumberBox">
+		<Setter Property="SmallChange" Value="100"/>
+		<Setter Property="Width" Value="100"/>
+		<Setter Property="LargeChange" Value="1000"/>
+	</Style>
+	<Style x:Key="NumberBoxShips" BasedOn="{StaticResource RightAlignNumberBox}" TargetType="winui:NumberBox">
+		<Setter Property="SmallChange" Value="10"/>
+		<Setter Property="Width" Value="100"/>
+		<Setter Property="LargeChange" Value="100"/>
+	</Style>
+	<Style x:Key="NumberBoxPercent" BasedOn="{StaticResource RightAlignNumberBox}" TargetType="winui:NumberBox">
+		<Setter Property="SmallChange" Value="0.03125"/>
+		<Setter Property="LargeChange" Value="0.125"/>
+		<Setter Property="Width" Value="100"/>
+	</Style>
+
+
 	<Style BasedOn="{StaticResource ToggleButtonRevealStyle}" TargetType="ToggleButton">
         <Setter Property="FontSize" Value="{StaticResource SmallFontSize}" />
         <Setter Property="IsTextScaleFactorEnabled" Value="False"/>
@@ -111,7 +136,7 @@
     <Style  x:Key="RightAlign" BasedOn="{StaticResource TextBlockSmall}" TargetType="TextBlock">
         <Setter Property="VerticalAlignment"
                         Value="Center" />
-        <Setter Property="HorizontalAlignment"
+        <Setter Property="TextAlignment"
                         Value="Right" />
         <Setter Property="Margin" Value="0,0,4,0" />
     </Style>

@@ -47,4 +47,20 @@ namespace COTG.Converters
             return default(float);
         }
     }
+	public class PercentConverter : IValueConverter
+	{
+		public object Convert(object value, Type targetType, object parameter, string language)
+		{
+			return $"{(((float)value)*100.0f):N3}%";
+		}
+
+		public object ConvertBack(object value, Type targetType, object parameter, string language)
+		{
+			var s = value.ToString().TrimEnd('%');
+
+			if (float.TryParse(s, System.Globalization.NumberStyles.Number, CultureInfo.InvariantCulture, out var v))
+				return v*(0.01f);
+			return default(float);
+		}
+	}
 }

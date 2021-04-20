@@ -480,7 +480,11 @@ namespace COTG.Game
 
 		public void LoadCityData(JsonElement jse)
 		{
-			Debug.Assert(cid == jse.GetInt("cid"));
+			if(cid != jse.GetInt("cid"))
+			{
+				Note.Show($"City bad? {nameMarkdown}");
+				return;
+			}
 			if (jse.TryGetProperty("citn", out var citn))
 				_cityName = citn.GetString();
 
@@ -1430,6 +1434,7 @@ namespace COTG.Game
 			public int academies;
 			public int training;
 			public int stables;
+			public int blacksmiths;
 			public int shipyards;
 			public int sawMills;
 			public int stoneMasons;
@@ -1446,6 +1451,22 @@ namespace COTG.Game
 			public int unfinishedTowerCount;
 			internal int towerCount;
 			public int maxBuildings => townHallLevel * 10;
+
+			public int GetMainMilitaryBid()
+			{
+				var max = training.Max(academies).Max(sorcTowers).Max(stables.Max(blacksmiths) );
+				if (max == training)
+					return  bidTrainingGround;
+				else if (max == academies)
+					return  bidAcademy;
+				else if (max == sorcTowers)
+					return  bidSorcTower;
+				else if (max == stables)
+					return  bidStable;
+				else // if(max == bc.blacksmiths)
+					return bidBlacksmith;
+
+			}
 		}
 		public static BuildingCount GetBuildingCountPostQueue(int cabinLevel) => GetBuildingCounts(CityBuild.postQueueBuildings, cabinLevel);
 
@@ -1542,6 +1563,8 @@ namespace COTG.Game
 					++rv.stables;
 				else if (bid == bidShipyard)
 					++rv.shipyards;
+				else if (bid == bidBlacksmith)
+					++rv.blacksmiths;
 			}
 
 			//Log($"{rv.cabins} cabins, {rv.buildings} {rv.townHallLevel}");
@@ -1605,7 +1628,7 @@ namespace COTG.Game
 					return new BuildInfo(BuildStage.preTeardown, buildingLimit);
 			}
 
-			if (bc.cabins > 0 || bc.buildings < 100)
+			if (bc.cabins > 0 || bc.buildings < 100 || !IsLayoutComplete() )
 				return new BuildInfo(BuildStage.teardown,buildingLimit);
 
 			return new BuildInfo(BuildStage.complete,buildingLimit);

@@ -24,55 +24,39 @@
 							Margin="4">
 					<controls:NumberBox Header="Req Wood"
 										Value="{x:Bind views:SettingsPage.reqWood, Mode=TwoWay}"
-										NumberFormatter="{x:Bind cotg:App.formatterInt,Mode=OneTime}"
-										Width="120"
-										Style="{StaticResource NumberBoxSmall}"
-										SmallChange="10000" />
+										Style="{StaticResource NumberBoxRes}"
+										 />
 					<controls:NumberBox Header="Req Stone"
 										Value="{x:Bind views:SettingsPage.reqStone, Mode=TwoWay}"
-										Width="120"
-										NumberFormatter="{x:Bind cotg:App.formatterInt,Mode=OneTime}"
-										Style="{StaticResource NumberBoxSmall}"
-										SmallChange="10000" />
+										Style="{StaticResource NumberBoxRes}"
+										 />
 					<controls:NumberBox Header="Req Iron"
 										Value="{x:Bind views:SettingsPage.reqIron, Mode=TwoWay}"
-										NumberFormatter="{x:Bind cotg:App.formatterInt,Mode=OneTime}"
-										Width="120"
-										Style="{StaticResource NumberBoxSmall}"
-										SmallChange="10000" />
+										Style="{StaticResource NumberBoxRes}"
+										 />
 					<controls:NumberBox Header="Req Food"
 										Value="{x:Bind views:SettingsPage.reqFood, Mode=TwoWay}"
-										Width="120"
-										NumberFormatter="{x:Bind cotg:App.formatterInt,Mode=OneTime}"
-										Style="{StaticResource NumberBoxSmall}"
-										SmallChange="10000" />
+										Style="{StaticResource NumberBoxRes}"
+										 />
 				</tk:WrapPanel>
 				<tk:WrapPanel Orientation="Horizontal"
 							Margin="4">
 					<controls:NumberBox Header="Max Wood"
 										Value="{x:Bind views:SettingsPage.maxWood, Mode=TwoWay}"
-										NumberFormatter="{x:Bind cotg:App.formatterInt,Mode=OneTime}"
-										Width="120"
-										Style="{StaticResource NumberBoxSmall}"
-										SmallChange="10000" />
+										Style="{StaticResource NumberBoxRes}"
+										 />
 					<controls:NumberBox Header="Max Stone"
 										Value="{x:Bind views:SettingsPage.maxStone, Mode=TwoWay}"
-										Width="120"
-										NumberFormatter="{x:Bind cotg:App.formatterInt,Mode=OneTime}"
-										Style="{StaticResource NumberBoxSmall}"
-										SmallChange="10000" />
+										Style="{StaticResource NumberBoxRes}"
+										 />
 					<controls:NumberBox Header="Max Iron"
 										Value="{x:Bind views:SettingsPage.maxIron, Mode=TwoWay}"
-										NumberFormatter="{x:Bind cotg:App.formatterInt,Mode=OneTime}"
-										Width="120"
-										Style="{StaticResource NumberBoxSmall}"
-										SmallChange="10000" />
+										Style="{StaticResource NumberBoxRes}"
+										/>
 					<controls:NumberBox Header="Max Food"
 										Value="{x:Bind views:SettingsPage.maxFood, Mode=TwoWay}"
-										Width="120"
-										NumberFormatter="{x:Bind cotg:App.formatterInt,Mode=OneTime}"
-										Style="{StaticResource NumberBoxSmall}"
-										SmallChange="10000" />
+										Style="{StaticResource NumberBoxRes}"
+										 />
 				</tk:WrapPanel>
 			<tk:WrapPanel Orientation="Horizontal"
 							Margin="4">
@@ -111,7 +95,7 @@
 					<TextBox x:Name="bestHub" Header="Best hub" Style="{StaticResource TextBoxReveal}" />
 					<controls:NumberBox Header="Cottage Level"
 										Value="{x:Bind views:SettingsPage.cottageLevel, Mode=TwoWay}"
-										Width="120"
+										Width="80"
 										Style="{StaticResource NumberBoxSmall}"
 										SmallChange="1" />
 					<CheckBox Content="Autobuild"

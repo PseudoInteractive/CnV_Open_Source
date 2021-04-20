@@ -597,7 +597,7 @@ namespace COTG.Game
 									if (isCastle) // 3,4 is on/off water
 									{
 
-										if (isBig)
+										if (!isBig)
 										{
 											pixels[i * 8 + 4] = 3 | (3 << 2) | (3 << 4) | (3 << 6);
 											pixels[i * 8 + 5] = (byte)(1 | ((isTemple ? 0 : 3) << 2) | (1 << 4) | (3 << 6)); // color index 0
@@ -614,7 +614,7 @@ namespace COTG.Game
 									}
 									else
 									{
-										if (isBig)
+										if (!isBig)
 										{
 											// City
 											pixels[i * 8 + 4] = 3 | (3 << 2) | (3 << 4) | (3 << 6);

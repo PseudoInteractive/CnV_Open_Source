@@ -20,52 +20,7 @@ namespace COTG.Services
 
         //const int deltasPerBatch = 16;
         // Todo:  Delta encode
-        public static uint[] ComputeDelta(uint[] d0, uint[] d1)
-        {
-            var rv = new List<uint>();
-            int count = d0.Length;
-            Assert(d1.Length == count);
-            for (int i = 0; i < count; ++i)
-            {
-                var c0 = d0[i];
-                var c1 = d1[i];
-                if (c0 == c1
-                    || ((c0 & World.typeMask) == World.typeBoss)
-                    || ((c0 & World.typeMask) == World.typeDungeon)
-                    || ((c1 & World.typeMask) == World.typeBoss)
-                    || ((c1 & World.typeMask) == World.typeDungeon))
-                {
-                    continue;
-                }
-                rv.Add((uint)i);
-                rv.Add(c0 ^ c1);
-
-            }
-            return rv.ToArray();
-            /*
-            var outCount = rv.Count;
-            if (outCount <= 64)
-                return null;
-            var bytes = new byte[outCount*4];
-            for (int i = 0; i < outCount; ++i)
-            {
-                CopyBytes(rv[i], bytes, i);
-            }
-            return bytes;*/
-
-        }
-        public static void ApplyDelta(uint[] d, uint[] delta)
-        {
-            int count = delta.Length/2;
-            for (int i = 0; i < count; ++i)
-            {
-                var off = delta[i*2];
-                var x = delta[i*2+1];
-                d[off] ^= x;
-
-            }
-        }
-
+      
         static uint[][] historyBuffer;
 		private static DateTimeOffset date;
 
@@ -116,7 +71,7 @@ namespace COTG.Services
 									instream.Read(byteBuffer, 0, byteBuffer.Length);
 								}
 								var lastData = byteBuffer.ConvertToUints();
-								var delta = ComputeDelta(lastData, data);
+								var delta = HeatMap.ComputeDelta(lastData, data);
 								historyBuffer = new uint[entries][];
 								historyBuffer[priorEntry] = delta;
 								var outCount = delta.Length;
@@ -153,7 +108,7 @@ namespace COTG.Services
 								
 								using (var outStream = entry.Open())
 								{
-									var byteData = data.ConvertToBytesWithoutDungeons();
+									var byteData = data.ConvertToBytesWithoutDungeonsOrBosses();
 									outStream.Write(byteData, 0, byteData.Length);
 								}
 								entry.LastWriteTime = JSClient.ServerTime();
@@ -265,7 +220,7 @@ namespace COTG.Services
                         }
 						var delta = historyBuffer[entry];
 
-						ApplyDelta(data, delta);
+						HeatMap.ApplyDelta(data, delta);
 						if(GetLastWriteUTC(prior) <= t1 )
 						{
 							int count = delta.Length / 2;
@@ -308,7 +263,7 @@ namespace COTG.Services
 
         }
 
-        public static byte[] ConvertToBytesWithoutDungeons( this uint [] data )
+        public static byte[] ConvertToBytesWithoutDungeonsOrBosses( this uint [] data )
         {
             int size4 = data.Length;
             var rv = new byte[size4 * 4];

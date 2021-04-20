@@ -234,24 +234,26 @@
 
 				<my:NumberBox Value="{x:Bind sendWood,Mode=TwoWay}" Style="{StaticResource RightAlignNumberBox}" SpinButtonPlacementMode="Inline"
                           Header="Wood"  Margin="6,0,6,0" AcceptsExpression="True" SmallChange="100000" LargeChange="1000000"
-							ValueChanged="NumberBox_ValueChanged"
+							ValueChanged="ItemValueChanged"
                           />
 				<my:NumberBox Value="{x:Bind sendStone,Mode=TwoWay}" Style="{StaticResource RightAlignNumberBox}" SpinButtonPlacementMode="Inline"
                           Header="Stone"  Margin="6,0,6,0" AcceptsExpression="True" SmallChange="100000" LargeChange="1000000"
-							ValueChanged="NumberBox_ValueChanged"
+							ValueChanged="ItemValueChanged"
                           />
 				<my:NumberBox Value="{x:Bind sendIron,Mode=TwoWay}" Style="{StaticResource RightAlignNumberBox}" SpinButtonPlacementMode="Inline"
                           Header="Iron"  Margin="6,0,6,0" AcceptsExpression="True" SmallChange="100000" LargeChange="1000000"
-							ValueChanged="NumberBox_ValueChanged"
+							ValueChanged="ItemValueChanged"
                           />
 				<my:NumberBox Value="{x:Bind sendFood,Mode=TwoWay}" Style="{StaticResource RightAlignNumberBox}" SpinButtonPlacementMode="Inline"
                           Header="Food"  Margin="6,0,6,0" AcceptsExpression="True" SmallChange="100000" LargeChange="1000000"
-							ValueChanged="NumberBox_ValueChanged"
+							ValueChanged="ItemValueChanged"
                           />
 				</tk:WrapPanel>
 				<tk:WrapPanel Orientation="Horizontal" HorizontalAlignment="Stretch" >
 
-					<Button Content="Max Wood" Click="MaxWoodClick"  Style="{StaticResource ButtonSmall}" />
+				<Button Content="Zero" Click="ZeroClick"  Style="{StaticResource ButtonSmall}" />
+				<Button Content="Recalc" Click="RecalcClick"  Style="{StaticResource ButtonSmall}" />
+				<Button Content="Max Wood" Click="MaxWoodClick"  Style="{StaticResource ButtonSmall}" />
 				<Button Content="No Wood" Click="ZeroWoodClick"  Style="{StaticResource ButtonSmall}"  />
 
 				<Button Content="Max Stone" Click="MaxStoneClick"  Style="{StaticResource ButtonSmall}" />

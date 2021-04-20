@@ -15,7 +15,7 @@
 
 	<Style x:Key="BodyTextStyle" TargetType="TextBlock">
        <Setter Property="FontSize" Value="{StaticResource MediumFontSize}" />
-		<Setter Property="FontStretch" Value="{StaticResource fontStretch}" />
+		<Setter Property="FontStretch" Value="Condensed" />
 		<Setter Property="TextTrimming" Value="CharacterEllipsis" />
 		<Setter Property="TextWrapping" Value="Wrap" />
         <Setter Property="IsTextScaleFactorEnabled" Value="False"/>
@@ -68,14 +68,16 @@
     <Style
 		x:Key="CellTextStyle"
 		TargetType="tk:DataGridCell">
-        <Setter Property="FontSize" Value="{StaticResource SmallFontSize}" />
-		<Setter Property="FontStretch" Value="{StaticResource fontStretch}" />
+		<Setter Property="FontFamily" Value="Tw Cen MT Condensed"/>
+		<Setter Property="FontSize" Value="{StaticResource SmallFontSize}" />
+		<Setter Property="FontStretch" Value="Condensed" />
 		<Setter Property="IsTextScaleFactorEnabled" Value="False"/>
     </Style>
 	<Style
 		TargetType="tk:DataGridCell">
+		<Setter Property="FontFamily" Value="Tw Cen MT Condensed"/>
 		<Setter Property="FontSize" Value="{StaticResource SmallFontSize}" />
-		<Setter Property="FontStretch" Value="{StaticResource fontStretch}" />
+		<Setter Property="FontStretch" Value="Condensed" />
 		<Setter Property="IsTextScaleFactorEnabled" Value="False"/>
 	</Style>
 	

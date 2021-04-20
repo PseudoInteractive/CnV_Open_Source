@@ -470,10 +470,14 @@ namespace COTG.Views
 			}
 		}
 
-		private async void NumberBox_ValueChanged(Microsoft.UI.Xaml.Controls.NumberBox sender, Microsoft.UI.Xaml.Controls.NumberBoxValueChangedEventArgs args)
+		private void NumberBox_ValueChanged(Microsoft.UI.Xaml.Controls.NumberBox sender, Microsoft.UI.Xaml.Controls.NumberBoxValueChangedEventArgs args)
 		{
-		//	supporters.Clear();
+			supporters.Clear();
+			ItemValueChanged(sender,args);
 
+		}
+		private async void ItemValueChanged(Microsoft.UI.Xaml.Controls.NumberBox sender, Microsoft.UI.Xaml.Controls.NumberBoxValueChangedEventArgs args)
+		{
 			await DoRefresh();
 			supporters.NotifyReset();
 		}
@@ -599,6 +603,18 @@ namespace COTG.Views
 		{
 			Spot.ProcessCoordClick(target.cid, false, App.keyModifiers, false);
 
+		}
+
+		private void ZeroClick(object sender, RoutedEventArgs e)
+		{
+			for(int i=0;i<4;++i)
+				selected.res[i] = 0;
+			selected.NotifyChange();
+		}
+		private void RecalcClick(object sender, RoutedEventArgs e)
+		{
+			selected.initialized = false;
+			DoRefresh();
 		}
 	}
 

@@ -106,6 +106,7 @@ namespace COTG.Services
 							}
 							try
 							{
+								mem.Flush();
 								mem.Seek(0, SeekOrigin.Begin);
 								var str = currentT.ToString("o", System.Globalization.CultureInfo.InvariantCulture.DateTimeFormat);
 								await container.UploadBlobAsync(str, mem);
@@ -147,57 +148,57 @@ namespace COTG.Services
 		//	return client;
 
 		//}
-		public static async Task<bool> SaveDayChanges(DayChanges changes)
+		//public static async Task<bool> SaveDayChanges(DayChanges changes)
+		//{
+		//	BlobContainerClient container = await GetChangesContainer();
+
+		//	COTG.Debug.Trace("Snapshot");
+		//	// take a snapshot
+		//	using (var mem = new MemoryStream())
+		//	{
+		//		using (var deflate = new DeflateStream(mem, CompressionLevel.Optimal, true))
+		//		{
+		//			using (var writer = new BinaryWriter(deflate, Encoding.UTF8, true))
+		//			{
+		//				changes.Save(writer);
+
+
+		//			}
+		//			try
+		//			{
+		//				mem.Flush();
+		//				mem.Seek(0, SeekOrigin.Begin);
+		//				var str = changes.dateStr;
+		//				var success = await container.GetBlobClient(str).UploadAsync(str, new BlobUploadOptions() { Conditions = new BlobRequestConditions() { IfMatch = changes.eTag } });
+		//				if (success.GetRawResponse().Status != 400)
+		//				{
+		//					return false;
+		//				}
+
+		//				changes.eTag = success.Value.ETag;
+
+		//				return true;
+		//			}
+		//			catch (Exception ex)
+		//			{
+		//				Debug.Log(ex);
+		//			}
+
+		//		}
+
+		//	}
+		//	return false;
+
+
+
+
+		//}
+
+		public static async Task<BlobContainerClient> GetChangesContainer()
 		{
-
-
 			BlobContainerClient container = new BlobContainerClient(connectionString, changesContainerName);
 			await container.CreateIfNotExistsAsync();
-
-
-			COTG.Debug.Trace("Snapshot");
-			// take a snapshot
-			using (var mem = new MemoryStream())
-			{
-				using (var deflate = new DeflateStream(mem, CompressionLevel.Optimal, true))
-				{
-					using (var writer = new BinaryWriter(deflate, Encoding.UTF8, true))
-					{
-						changes.Save(writer);
-
-
-					}
-					try
-					{
-						mem.Seek(0, SeekOrigin.Begin);
-						var str = changes.dateStr;
-						var success = await container.GetBlobClient(str).UploadAsync(str, new BlobUploadOptions() { Conditions = new BlobRequestConditions() { IfMatch = changes.eTag } });
-						if (success.GetRawResponse().Status != 400)
-						{
-							return false;
-						}
-
-						changes.eTag = success.Value.ETag;
-
-						return true;
-					}
-					catch (Exception ex)
-					{
-						Debug.Log(ex);
-					}
-
-				}
-
-			}
-			return false;
-
-
-
-
+			return container;
 		}
-
-
-
-
 	}
 }

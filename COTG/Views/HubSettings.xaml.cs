@@ -49,7 +49,7 @@ namespace COTG.Views
 						{
 							// Todo
 						}
-						await CitySettings.SetCitySettings(cid, bestHub,bestHub,SettingsPage.setRecruit,true, true,null, true);
+						await CitySettings.SetCitySettings(cid, bestHub,CitySettings.FilterTargetHub(cid,bestHub),SettingsPage.setRecruit,true, true,null, true);
 						return true;
 					}
 					else
@@ -87,6 +87,7 @@ namespace COTG.Views
 				SettingsPage.maxStone = value.sendStone;
 				SettingsPage.maxIron = value.sendIron;
 				SettingsPage.maxFood = value.sendFood;
+				instance.Bindings.Update();
 
 			}
 		}
