@@ -259,18 +259,15 @@ namespace COTG.JSON
 			}
 			catch (Exception ex)
 			{
-				Debug.Log(ex);
+				Debug.LogEx(ex);
 			}
 			if (rv == null || rv.Length != 99)
 			{
 				COTG.Debug.Log($"Invalid options");
 				const string defaults = "[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10]]";
 				rv = defaults.Split(',', StringSplitOptions.RemoveEmptyEntries);
-
 			}
-
 			return rv;
-
 		}
 
 		public static async Task UpdateMinisterOptions(int cid, Func<string[],Task<bool>> opts)
@@ -290,12 +287,11 @@ namespace COTG.JSON
             }
             catch (Exception e)
             {
-                COTG.Debug.Log(e);
+                COTG.Debug.LogEx(e);
                 Note.Show($"Set hub failed, restarting might fix it");
             }
-
-
         }
+
 		public static async Task<(Resources req,Resources max)> GetTradeResourcesSettings(int cid) 
 		{
 			var city = City.GetOrAddCity(cid);
@@ -319,8 +315,8 @@ namespace COTG.JSON
 			}
 
 			return (req, max);
-
 		}
+
 		public static async Task SetTradeResourcesSettings(int cid, Resources req, Resources max )
 		{
 			var city = City.GetOrAddCity(cid);

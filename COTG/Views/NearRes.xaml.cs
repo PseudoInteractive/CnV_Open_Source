@@ -361,7 +361,7 @@ namespace COTG.Views
 			AApp.AddItem(flyout, "Zero", (_, _) =>
 			{
 				supporter.res.Clear();
-				RefreshSupportByRes();
+				DoRefresh();
 				supporter.NotifyChange();
 			});
 			AApp.AddItem(flyout, "Recalc", (_, _) =>
@@ -371,30 +371,35 @@ namespace COTG.Views
 			});
 			AApp.AddItem(flyout, "Max", (_, _) =>
 			{
-				var info = supporter.info;
-				var city = supporter.city;
-				var res = supporter.city.res.Sub(reserve);
-				var viaWater = NearRes.instance.viaWater;
-				var shipping = viaWater ? (city.shipsHome-reserveShips) * 10000 : (city.cartsHome-reserveCarts) * 1000;
-				if (shipping > res.sum)
-				{
-					supporter.res = res;  // we can send all of it
-				}
-				else
-				{
-					var ratio = shipping / (float)res.sum;
-
-					supporter.res = res.Scale(ratio);
-
-				}
-
-				RefreshSupportByRes();
-
-				supporter.NotifyChange();
+				MaxClicked(supporter);
 			});
 			
 
 			flyout.ShowAt(text, e.GetPosition(text));
+		}
+
+		private void MaxClicked(ResSource supporter)
+		{
+			var info = supporter.info;
+			var city = supporter.city;
+			var res = supporter.city.res.Sub(reserve);
+			var viaWater = NearRes.instance.viaWater;
+			var shipping = viaWater ? (city.shipsHome - reserveShips) * 10000 : (city.cartsHome - reserveCarts) * 1000;
+			if (shipping > res.sum)
+			{
+				supporter.res = res;  // we can send all of it
+			}
+			else
+			{
+				var ratio = shipping / (float)res.sum;
+
+				supporter.res = res.Scale(ratio);
+
+			}
+
+
+			DoRefresh();
+			supporter.NotifyChange();
 		}
 
 		private async void SendClick(object sender, RoutedEventArgs e)
@@ -520,6 +525,7 @@ namespace COTG.Views
 
 			}
 			selected.NotifyChange();
+			RefreshSupportByRes();
 		}
 		int sendWood
 		{
@@ -566,6 +572,7 @@ namespace COTG.Views
 		{
 			selected.res[0] = 0;
 			selected.NotifyChange();
+			RefreshSupportByRes();
 		}
 		private void MaxStoneClick(object sender, RoutedEventArgs e)
 		{
@@ -575,6 +582,7 @@ namespace COTG.Views
 		{
 			selected.res[1] = 0;
 			selected.NotifyChange();
+			RefreshSupportByRes();
 		}
 
 		private void MaxIronClick(object sender, RoutedEventArgs e)
@@ -585,6 +593,7 @@ namespace COTG.Views
 		{
 			selected.res[2] = 0;
 			selected.NotifyChange();
+			RefreshSupportByRes();
 		}
 
 		private void MaxFoodClick(object sender, RoutedEventArgs e)
@@ -595,6 +604,7 @@ namespace COTG.Views
 		{
 			selected.res[3] = 0;
 			selected.NotifyChange();
+			RefreshSupportByRes();
 		}
 
 
@@ -610,11 +620,17 @@ namespace COTG.Views
 			for(int i=0;i<4;++i)
 				selected.res[i] = 0;
 			selected.NotifyChange();
+			RefreshSupportByRes();
 		}
 		private void RecalcClick(object sender, RoutedEventArgs e)
 		{
 			selected.initialized = false;
 			DoRefresh();
+		}
+
+		private void MaxClick(object sender, RoutedEventArgs e)
+		{
+			MaxClicked(selected);
 		}
 	}
 

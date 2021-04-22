@@ -235,10 +235,6 @@ namespace COTG.Views
         //    });
             
         //}
-
-       
-      
-
    
         public event PropertyChangedEventHandler PropertyChanged;
         public void OnPropertyChanged(string propertyName) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
@@ -253,15 +249,16 @@ namespace COTG.Views
             OnPropertyChanged(propertyName);
         }
 
-       
-
-
 		public static void ToggleInfoBoxes(bool on)
 		{
-			var vis = on ? Visibility.Visible : Visibility.Collapsed;
-			instance.raidInfoBox.Visibility = vis;
-		//	instance.raidOptionBox.Visibility = vis;
-			instance.incomeBox.Visibility = vis;
+			if (on)
+				TabPage.mainTabs.Visibility = Visibility.Visible;
+			else
+				TabPage.mainTabs.Visibility = Visibility.Collapsed;
+			//			var vis = on ? Visibility.Visible : Visibility.Collapsed;
+			//			instance.raidInfoBox.Visibility = vis;
+			//	instance.raidOptionBox.Visibility = vis;
+			//		instance.incomeBox.Visibility = vis;
 		}
 		override public async void VisibilityChanged(bool visible)
         {
@@ -337,9 +334,6 @@ namespace COTG.Views
 			nameof(instance.TipRaidReturn103),
 			nameof(instance.TipRaidReturn104),
 			nameof(instance.TipCarryCapacity101),
-
-
-
 		};
 
 		public static void CheckTipRaiding()
@@ -411,27 +405,40 @@ namespace COTG.Views
 		{
 			using var work = new ShellPage.WorkScope("Auto Raid..");
 
-			await Raiding.UpdateTS(true);
 			var sel = Spot.GetSelectedForContextMenu(0, false);
-			int counter = 0;
-			int max =sel.Count;
-			foreach (var cid in sel)
+			const float minRaidIdle = 0.0625f;
+			for (int pass=0;pass<8;++pass)
 			{
-				++counter;
-				if (counter % 16 == 0)
-				{
-					Note.ShowTip($"Auto Raid: {counter}/{max}..");
-				}
-				Spot s = Spot.GetOrAdd(cid);
-				if (s is City city)
-				{
-					await ScanDungeons.Post(cid, city.commandSlots == 0, true);
-				}
 
-			};
+				await Raiding.UpdateTS(true);
+				int counter = 0;
+				int processed = 0;
+				int max = sel.Count;
+				foreach (var cid in sel)
+				{
+					++counter;
+					if (counter % 16 == 0)
+					{
+						Note.ShowTip($"Auto Raid pass {pass}: {counter}/{max}..");
+					}
+					var c = City.Get(cid);
+					var city = Spot.GetOrAdd(cid);
+					if(city.raidIdle > minRaidIdle )
+					{
+						if( await ScanDungeons.Post(cid, city.commandSlots == 0, true) )
+						{
+							++processed;
+						}
+					}
 
-			Note.ShowTip($"Auto Raid: Completed: {max}");
-			Note.Show($"Finished Auto Raid with {max} selected");
+				}
+				if (processed == 0)
+					break;
+				Note.Show($"Pass {pass} sent {processed} cities to raid");
+
+			}
+			Note.ShowTip($"Auto Raid: Completed: {sel.Count}/{sel.Count}");
+			Note.Show($"Finished Auto Raid with {sel.Count} selected");
 
 		}
 		private void SelectionChanged(object sender, DataGridSelectionChangedEventArgs e)
@@ -457,7 +464,7 @@ namespace COTG.Views
 				}
 				catch (Exception ex)
 				{
-					Log(ex);
+					LogEx(ex);
 				}
 				finally
 				{

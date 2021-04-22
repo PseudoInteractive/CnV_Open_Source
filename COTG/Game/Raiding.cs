@@ -285,7 +285,7 @@ namespace COTG.Game
                 if (updateUI)
                 {
                    // await JSClient.PollCity(cid);
-                    JSClient.ChangeCity(cid,false);
+                    await JSClient.ChangeCity(cid,false);
                     NavStack.Push(cid);
                     //// await JSClient.PollCity(cid);
                     ////  await Task.Delay(300); // this might not be useful.
@@ -299,7 +299,7 @@ namespace COTG.Game
                 }
             }
         }
-        public static async void ReturnSlowBatch(IEnumerable<int>  cids)
+        public static async Task ReturnSlowBatch(IEnumerable<int>  cids)
         {
 			using var work = new ShellPage.WorkScope("Home Slow Please..");
 			int counter = 0;
@@ -315,9 +315,9 @@ namespace COTG.Game
             }
             Note.Show($"Issued End Raids on {counter} cities");
             ShellPage.ShowTipRefresh();
-            UpdateTS(true, true);
+            await UpdateTS(true, true);
         }
-        public static async void ReturnFastBatch(IEnumerable<int> cids)
+        public static async Task ReturnFastBatch(IEnumerable<int> cids)
         {
 			using var work = new ShellPage.WorkScope("Home Please..");
 
@@ -334,7 +334,7 @@ namespace COTG.Game
             Note.Show($"Issued Home Please on {counter} cities");
             ShellPage.ShowTipRefresh();
             await RaidOverview.Send();
-            UpdateTS(true,true);
+            await UpdateTS(true,true);
         }
     }
 }

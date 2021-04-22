@@ -74,7 +74,7 @@ namespace COTG.Views
                                     }
                 catch (Exception ex)
                 {
-                    Log(ex);
+                    LogEx(ex);
                 }
                 finally
                 {
@@ -93,7 +93,7 @@ namespace COTG.Views
             }
             catch (Exception ex)
             {
-                Log(ex);
+                LogEx(ex);
             }
             finally
             {

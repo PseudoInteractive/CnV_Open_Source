@@ -93,22 +93,22 @@ namespace COTG
 			}
 			catch (AggregateException ae)
 			{
-				Debug.Log(ae);
+				Debug.LogEx(ae);
 				foreach (var e in ae.InnerExceptions)
 				{
 					// Handle the custom exception.
-					Debug.Log(e);
+					Debug.LogEx(e);
 				}
 			}
 			catch(Exception ex)
 			{
-				Debug.Log(ex);
+				Debug.LogEx(ex);
 			}
 		}
 
 		private static void TaskScheduler_UnobservedTaskException(object sender, UnobservedTaskExceptionEventArgs e)
 		{
-			Debug.Log(e.Exception);
+			Debug.LogEx(e.Exception);
 		}
 	}
 }

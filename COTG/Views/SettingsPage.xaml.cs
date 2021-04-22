@@ -100,6 +100,13 @@ namespace COTG.Views
 				false,false,true,true,
 				true,false};
 
+
+		// rooms for 16 for now
+		public static bool[] includeBuildStages = new[] {true,true,true,true,
+			true,true,true,true,
+			true,true,true,true,
+			true,true,true,true };
+
 		public static int raidIntervals;
 
 		public float uiMusic
@@ -243,7 +250,7 @@ namespace COTG.Views
 				}
 				catch (Exception e)
 				{
-					Log(e);
+					LogEx(e);
 				}
 			}
 			try
@@ -278,12 +285,18 @@ namespace COTG.Views
 				SetSoundOn(soundOn);
 				ElementSoundPlayer.Volume = volume;
 				SetSpatialOn(spatialOn);
+				if (raidCarryMin > 90)
+					raidCarryMin = 1.15f; // error!
+				if (raidCarryMax > 90)
+					raidCarryMax = 1.75f; // error!
+				if (raidCarryMax <= raidCarryMin)
+					raidCarryMax = raidCarryMin*1.75f; // error!
 
 				DungeonView.Initialize();
 			}
 			catch (Exception e)
 			{
-				Log(e);
+				LogEx(e);
 			}
 		}
 		public static void SaveAll(object __ = null, Windows.ApplicationModel.SuspendingEventArgs _=null)
@@ -345,7 +358,7 @@ namespace COTG.Views
 			}
 			catch (Exception e)
 			{
-				Log(e);
+				LogEx(e);
 			}
 
 		}
@@ -745,7 +758,7 @@ namespace COTG.Views
 			catch (Exception ex)
 			{
 				Note.Show("Copy strings and coords to clipboard please");
-				COTG.Debug.Log(ex);
+				COTG.Debug.LogEx(ex);
 
 			}
 

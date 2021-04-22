@@ -127,7 +127,7 @@ namespace COTG.Views
 			}
 
 		}
-		public void Close()
+		public virtual void Close()
 		{
 			if (!isActive)
 				return;
@@ -146,7 +146,7 @@ namespace COTG.Views
 
 			this.InitializeComponent();
 			IsTabStop = true;
-			TabFocusNavigation = KeyboardNavigationMode.Once;
+			TabFocusNavigation = KeyboardNavigationMode.Cycle;
 			AllowFocusOnInteraction = true; tabPages.Add(this);
 			
         }
@@ -589,18 +589,19 @@ namespace COTG.Views
 			if (App.isShuttingDown)
 				return;
 			var itab = tab.Content as UserTab;
-            if (itab != null)
+			tab.Content = null; // remove it
+			view.TabItems.Remove(tab);
+			if (itab != null)
             {
                 itab.isVisible = false;
                 itab.isActive = false;
                 itab.VisibilityChanged(false);
+				itab.Close();
             }
             // var chatTab = tab.Content as ChatTab;
             // Log("FreeTab1 " + chatTab.Name);
             // Assert(chatTab.isActive);
            // chatTab.isActive = false;
-            tab.Content = null; // remove it
-            view.TabItems.Remove(tab);
         }
         void RemoveTab(TabViewItem tab)
 		{
@@ -635,69 +636,75 @@ namespace COTG.Views
             }
         }
 
-        //private void NewTabKeyboardAccelerator_Invoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
-        //{
-        //    var senderTabView = args.Element as TabView;
-        //    Tabs_AddTabButtonClick(senderTabView,args);
-        //    args.Handled = true;
-        //}
+		private void tip_Tapped(object sender, TappedRoutedEventArgs e)
+		{
+			if (TabPage.mainTabs.Visibility == Visibility.Collapsed)
+				TabPage.mainTabs.Visibility = Visibility.Visible;
+		}
 
-        //private void CloseSelectedTabKeyboardAccelerator_Invoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
-        //{
-        //    var InvokedTabView = (args.Element as TabView);
+		//private void NewTabKeyboardAccelerator_Invoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
+		//{
+		//    var senderTabView = args.Element as TabView;
+		//    Tabs_AddTabButtonClick(senderTabView,args);
+		//    args.Handled = true;
+		//}
 
-        //    // Only close the selected tab if it is closeable
-        //    if (((TabViewItem)InvokedTabView.SelectedItem).IsClosable)
-        //    {
-        //        InvokedTabView.TabItems.Remove(InvokedTabView.SelectedItem);
-        //    }
-        //    args.Handled = true;
-        //}
+		//private void CloseSelectedTabKeyboardAccelerator_Invoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
+		//{
+		//    var InvokedTabView = (args.Element as TabView);
 
-        //private void NavigateToNumberedTabKeyboardAccelerator_Invoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
-        //{
-        //    var InvokedTabView = (args.Element as TabView);
+		//    // Only close the selected tab if it is closeable
+		//    if (((TabViewItem)InvokedTabView.SelectedItem).IsClosable)
+		//    {
+		//        InvokedTabView.TabItems.Remove(InvokedTabView.SelectedItem);
+		//    }
+		//    args.Handled = true;
+		//}
 
-        //    int tabToSelect = 0;
+		//private void NavigateToNumberedTabKeyboardAccelerator_Invoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
+		//{
+		//    var InvokedTabView = (args.Element as TabView);
 
-        //    switch (sender.Key)
-        //    {
-        //        case Windows.System.VirtualKey.Number1:
-        //            tabToSelect = 0;
-        //            break;
-        //        case Windows.System.VirtualKey.Number2:
-        //            tabToSelect = 1;
-        //            break;
-        //        case Windows.System.VirtualKey.Number3:
-        //            tabToSelect = 2;
-        //            break;
-        //        case Windows.System.VirtualKey.Number4:
-        //            tabToSelect = 3;
-        //            break;
-        //        case Windows.System.VirtualKey.Number5:
-        //            tabToSelect = 4;
-        //            break;
-        //        case Windows.System.VirtualKey.Number6:
-        //            tabToSelect = 5;
-        //            break;
-        //        case Windows.System.VirtualKey.Number7:
-        //            tabToSelect = 6;
-        //            break;
-        //        case Windows.System.VirtualKey.Number8:
-        //            tabToSelect = 7;
-        //            break;
-        //        case Windows.System.VirtualKey.Number9:
-        //            // Select the last tab
-        //            tabToSelect = InvokedTabView.TabItems.Count - 1;
-        //            break;
-        //    }
+		//    int tabToSelect = 0;
 
-        //    // Only select the tab if it is in the list
-        //    if (tabToSelect < InvokedTabView.TabItems.Count)
-        //    {
-        //        InvokedTabView.SelectedIndex = tabToSelect;
-        //    }
-        //    args.Handled = true;
-        //}
-    }
+		//    switch (sender.Key)
+		//    {
+		//        case Windows.System.VirtualKey.Number1:
+		//            tabToSelect = 0;
+		//            break;
+		//        case Windows.System.VirtualKey.Number2:
+		//            tabToSelect = 1;
+		//            break;
+		//        case Windows.System.VirtualKey.Number3:
+		//            tabToSelect = 2;
+		//            break;
+		//        case Windows.System.VirtualKey.Number4:
+		//            tabToSelect = 3;
+		//            break;
+		//        case Windows.System.VirtualKey.Number5:
+		//            tabToSelect = 4;
+		//            break;
+		//        case Windows.System.VirtualKey.Number6:
+		//            tabToSelect = 5;
+		//            break;
+		//        case Windows.System.VirtualKey.Number7:
+		//            tabToSelect = 6;
+		//            break;
+		//        case Windows.System.VirtualKey.Number8:
+		//            tabToSelect = 7;
+		//            break;
+		//        case Windows.System.VirtualKey.Number9:
+		//            // Select the last tab
+		//            tabToSelect = InvokedTabView.TabItems.Count - 1;
+		//            break;
+		//    }
+
+		//    // Only select the tab if it is in the list
+		//    if (tabToSelect < InvokedTabView.TabItems.Count)
+		//    {
+		//        InvokedTabView.SelectedIndex = tabToSelect;
+		//    }
+		//    args.Handled = true;
+		//}
+	}
 }

@@ -17966,7 +17966,7 @@ function outer(){
 				setTimeout(function () {
 					E6k.y6();
 					j8F();
-				}, +B2p);
+				}, +3000);
 				h6F();
 				if (X5U < 0) $(__s[4934])
 					.attr("disabled", !![]);

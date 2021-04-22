@@ -33,7 +33,7 @@ namespace COTG.Views
             {
                 bossGrid.ItemsSource = null;
                 bossGrid.ItemsSource = Boss.all;
-                cityGrid.ItemsSource = City.myCities.Where(c => c.homeTroopsAttack > 50 * 10000.0f).
+                cityGrid.ItemsSource = City.myCities.Where(c => c.homeTroopsAttack > 50 * 1000.0f).
                     OrderBy((c) => -c.homeTroopsAttack). ToArray();
             }
             else
@@ -74,20 +74,30 @@ namespace COTG.Views
             {
                 newSel.SelectInWorldView(false);
                 var waterValid = false;
-
-                foreach (var i in newSel.troopsHome)
-                    waterValid |= i.count > 0 && IsWaterRaider(i.type);
-                if (waterValid)
-                    bosses.AddRange(Boss.all);
-                else
-                {
-                    var cont = newSel.cont;
-                    foreach (var b in Boss.all)
-                    {
-                        if (b.cont == cont)
-                            bosses.Add(b);
-                    }
-                }
+				var groundValid = false;
+				foreach (var i in newSel.troopsHome)
+				{
+					if (i.attack > 50 * 1000)
+					{
+						if (i.isWaterRaider)
+							waterValid = true;
+						else
+							groundValid = true;
+					}
+				}
+				if (waterValid)
+				{
+					bosses.AddRange(Boss.all);
+				}
+				else
+				{
+					var cont = newSel.cont;
+					foreach (var b in Boss.all)
+					{
+						if (b.cont == cont)
+							bosses.Add(b);
+					}
+				}
                 bosses.Sort((a, b) => a.dist.CompareTo(b.dist));
             }
             bossGrid.ItemsSource = bosses; // todo

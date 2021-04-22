@@ -11,7 +11,7 @@ namespace COTG.Game
 {
     public class Player
     {
-        public int id;
+		public int id;
         public string name;
         public ushort alliance;
         public ushort pointsH;// divided by 100
@@ -55,29 +55,39 @@ namespace COTG.Game
 		}
 		public static Player _default = new Player() { name = "!Zut!" };
         public static Player Get(int id) => all.GetValueOrDefault(id, _default);
-        public static void Ctor(JsonElement json)
+		public static Player GetOrAdd(int id)
+		{
+			Assert(id > 0);
+			if (all.TryGetValue(id, out var rv))
+				return rv;
+			rv = new();
+			all.Add(id, rv);
+			return rv;
+		}
+		public static void Ctor(JsonElement json)
         {
-            var _nameToId = new Dictionary<string, int>(1024);
-            var _all = new Dictionary<int, Player>(1024);
-            foreach (var entry in json.EnumerateObject())
-            {
-                var id = int.Parse(entry.Name);
-                var str = entry.Value.GetString();
-                _all.Add(id, new Player() { id = id, name = str });
-                _nameToId.Add(str, id);
-            }
-            // bonus!
-            var bonus = new string[] { "lawless" };
-            {
-                int counter = 0;
-                foreach (var i in bonus)
-                {
-                    _all.Add(counter, new Player() { id = counter, name = i });
-                    _nameToId.Add(i, counter);
-                    --counter;
+				var _nameToId = new Dictionary<string, int>(1000);
+				var _all = new Dictionary<int,Player>( 1000 );
+				foreach (var entry in json.EnumerateObject())
+				{
+					var id = int.Parse(entry.Name);
+					var str = entry.Value.GetString();
+					_all.Add(id, new Player() { id = id, name = str });
+					_nameToId.Add(str, id);
+				}
+				// bonus!
+				var bonus = new string[] { "lawless" };
+				{
+					int counter = 0;
+					foreach (var i in bonus)
+					{
+						_all.Add(counter, new Player() { id = counter, name = i });
+						_nameToId.Add(i, counter);
+						--counter;
 
-                }
-            }
+					}
+				}
+			
             all = _all;
             nameToId = _nameToId;
       //      Note.Show("Got Players");

@@ -201,12 +201,13 @@ namespace COTG
 		public static float bmFontScale = 0.125f;
 		public static Texture2D fontTexture;
 		static readonly Color attackColor = Color.White;
-		static Color ShadowColor(float alpha) => new Color(0, 0, 48, (int)(200*alpha) );
+		static Color ShadowColor(float alpha) => new Color(0, 0, 32, (int)(200*alpha) );
 		static readonly Color defenseColor = new Color(255, 20, 160, 160);
 		static readonly Color defenseArrivedColor = new Color(255, 20, 255, 160);
 		static readonly Color artColor = Color.DarkOrange;
 		static readonly Color senatorColor = Color.OrangeRed;
 		static readonly Color tradeColor = Color.DarkGreen;
+		static readonly Color tradeColorHover = Color.ForestGreen;
 		static readonly Color defaultAttackColor = Color.Maroon;// (0xFF8B008B);// Color.DarkMagenta;
 		static readonly Color raidColor = Color.Yellow;
 		//        static readonly Color shadowColor = new Color(128, 0, 0, 0);
@@ -483,12 +484,12 @@ namespace COTG
 			}
 			catch (SharpDX.SharpDXException sex)
 			{
-				COTG.Debug.Log(sex);
+				COTG.Debug.LogEx(sex);
 				COTG.Debug.Log($"{sex.ResultCode} {sex.Descriptor.ApiCode} {sex.Descriptor.Description} {sex.Descriptor.ToString()} ");
 			}
 			catch (Exception _exception)
 			{
-				COTG.Debug.Log(_exception);
+				COTG.Debug.LogEx(_exception);
 			}
 
 
@@ -714,37 +715,37 @@ namespace COTG
 					bfont.LoadXml(a);
 				}
 
-				tesselatedWorldVB = new VertexBuffer(device, VertexPositionTexture.VertexDeclaration,( (World.worldDim+1) * (World.worldDim + 1) ),BufferUsage.None );
+				tesselatedWorldVB = new VertexBuffer(device, VertexPositionTexture.VertexDeclaration,( (World.span+1) * (World.span + 1) ),BufferUsage.None );
 				{
-					var input = new VertexPositionTexture[(World.worldDim + 1) * (World.worldDim + 1)];
-					for (int x = 0; x < World.worldDim + 1; ++x)
+					var input = new VertexPositionTexture[(World.span + 1) * (World.span + 1)];
+					for (int x = 0; x < World.span + 1; ++x)
 					{
-						for (int y = 0; y < World.worldDim + 1; ++y)
+						for (int y = 0; y < World.span + 1; ++y)
 						{
 							var i = new VertexPositionTexture();
 							i.Position = new Vector3(x, y, 0.0f);
-							i.TextureCoordinate.X = (float)(x+1) / (World.worldDim + 1);
-							i.TextureCoordinate.Y = (float)(y+1) / (World.worldDim + 1);
-							input[(World.worldDim + 1) * y + x] = i;
+							i.TextureCoordinate.X = (float)(x+1) / (World.span + 1);
+							i.TextureCoordinate.Y = (float)(y+1) / (World.span + 1);
+							input[(World.span + 1) * y + x] = i;
 						}
 					}
 					tesselatedWorldVB.SetData(input);
 				}
 				tesselatedWorldIB = new IndexBuffer(device,IndexElementSize.ThirtyTwoBits, 
-					(World.worldDim) * (World.worldDim)*6, BufferUsage.None);
+					(World.span) * (World.span)*6, BufferUsage.None);
 				{
-					var input = new int[(World.worldDim) * (World.worldDim) * 6];
-					for (int x = 0; x < World.worldDim ; ++x)
+					var input = new int[(World.span) * (World.span) * 6];
+					for (int x = 0; x < World.span ; ++x)
 					{
-						for (int y = 0; y < World.worldDim ; ++y)
+						for (int y = 0; y < World.span ; ++y)
 						{
-							input[(x + y * (World.worldDim)) * 6 + 0] = (int)(x   + y * (World.worldDim + 1));
-							input[(x + y * (World.worldDim)) * 6 + 1] = (int)(x+1 + y * (World.worldDim + 1));
-							input[(x + y * (World.worldDim)) * 6 + 2] = (int)(x+1  + (y+1) * (World.worldDim + 1));
+							input[(x + y * (World.span)) * 6 + 0] = (int)(x   + y * (World.span + 1));
+							input[(x + y * (World.span)) * 6 + 1] = (int)(x+1 + y * (World.span + 1));
+							input[(x + y * (World.span)) * 6 + 2] = (int)(x+1  + (y+1) * (World.span + 1));
 
-							input[(x + y * (World.worldDim)) * 6 + 3] = (int)(x + y * (World.worldDim + 1));
-							input[(x + y * (World.worldDim)) * 6 + 4] = (int)(x + 1 + (y+1) * (World.worldDim + 1));
-							input[(x + y * (World.worldDim)) * 6 + 5] = (int)(x  + (y + 1) * (World.worldDim + 1));
+							input[(x + y * (World.span)) * 6 + 3] = (int)(x + y * (World.span + 1));
+							input[(x + y * (World.span)) * 6 + 4] = (int)(x + 1 + (y+1) * (World.span + 1));
+							input[(x + y * (World.span)) * 6 + 5] = (int)(x  + (y + 1) * (World.span + 1));
 						}
 					}
 					tesselatedWorldIB.SetData(input);
@@ -752,8 +753,8 @@ namespace COTG
 				tesselatedWorld = new Mesh();
 				tesselatedWorld.vb = tesselatedWorldVB;
 				tesselatedWorld.ib = tesselatedWorldIB;
-				tesselatedWorld.vertexCount = (World.worldDim + 1) * (World.worldDim + 1);
-				tesselatedWorld.triangleCount = (World.worldDim ) * (World.worldDim )*2;
+				tesselatedWorld.vertexCount = (World.span + 1) * (World.span + 1);
+				tesselatedWorld.triangleCount = (World.span ) * (World.span )*2;
 
 
 
@@ -830,7 +831,7 @@ namespace COTG
 			}
 			catch (Exception ex)
 			{
-				Log(ex);
+				LogEx(ex);
 			}
 		}
 
@@ -1212,8 +1213,8 @@ namespace COTG
 					var _c1 = cameraCLag + halfTiles;
 					cx0 = _c0.X.FloorToInt().Max(0);
 					cy0 = (_c0.Y.FloorToInt()).Max(0);
-					cx1 = (_c1.X.CeilToInt() + 1).Min(World.worldDim);
-					cy1 = (_c1.Y.CeilToInt() + 2).Min(World.worldDim);
+					cx1 = (_c1.X.CeilToInt() + 1).Min(World.span);
+					cy1 = (_c1.Y.CeilToInt() + 2).Min(World.span);
 				}
 				cullWC = new Span2i((cx0, cy0), (cx1, cy1));
 
@@ -1302,7 +1303,7 @@ namespace COTG
 									{
 										for (var cx = cx0; cx < cx1; ++cx)
 										{
-											var ccid = cx + cy * World.worldDim;
+											var ccid = cx + cy * World.span;
 											var imageId = layerDat[ccid];
 											if (imageId == 0)
 												continue;
@@ -1739,22 +1740,23 @@ namespace COTG
 									var ti = city.tradeInfo;
 									if (ti == null)
 										continue;
+									var cityHover = city.isHover;
 									try
 									{
 										foreach (var toCid in ti.resDest)
 										{
 											var c1 = toCid.CidToWorld();
-											var t = (tick * city.cid.CidToRandom().Lerp(1.375f / 512.0f, 1.75f / 512f));
-											var r = t.Ramp();
-
-											DrawAction( c1.WToCamera(), wc.WToCamera(), tradeColor);
+											//	var t = (tick * city.cid.CidToRandom().Lerp(1.375f / 512.0f, 1.75f / 512f));
+											//	var r = t.Ramp();
+											var hover = cityHover | Spot.IsHover(toCid);
+											DrawAction( c1.WToCamera(), wc.WToCamera(),hover? tradeColorHover: tradeColor, hover? lineThickness*2f : lineThickness  );
 
 
 										}
 									}
 									catch (Exception ex)
 									{
-										Log(ex);
+										LogEx(ex);
 									}
 
 								}
@@ -1857,7 +1859,7 @@ namespace COTG
 								}
 								catch(Exception ex)
 								{
-									Log(ex); // collection might change, if this happens just about this render, its 
+									LogEx(ex); // collection might change, if this happens just about this render, its 
 								}
 								
 							}
@@ -2043,7 +2045,7 @@ namespace COTG
 			}
 			catch (Exception ex)
 			{
-				Log(ex);
+				LogEx(ex);
 				draw._beginCalled = false;
 			}
 
@@ -2264,7 +2266,7 @@ namespace COTG
 
 		}
 
-		private void DrawAction( Vector2 c0, Vector2 c1, Color color)
+		private void DrawAction( Vector2 c0, Vector2 c1, Color color, float thickness = lineThickness)
 		{
 			DrawAction(0, 1.0f, 1, c0, c1, color, null, false, null, 1, 1);
 			
@@ -2297,10 +2299,10 @@ namespace COTG
 			return (offset + (c0 - c1).Length() * lineTileGain, offset);
 
 		}
-		private static void DrawLine(int layer, Vector2 c0, Vector2 c1, (float u, float v) uv, Color color, float zBias)
+		private static void DrawLine(int layer, Vector2 c0, Vector2 c1, (float u, float v) uv, Color color, float zBias, float thickness= lineThickness)
 		{
 			//	draw.AddLine(layer,lineDraw, c0, c1, lineThickness, , color,(c0.CToDepth()+ zBias, c1.CToDepth()+ zBias) );
-			draw.AddLine(layer, lineDraw, c0, c1, lineThickness, uv.u, uv.v, color, (c0.CToDepth() + zBias, c1.CToDepth() + zBias));
+			draw.AddLine(layer, lineDraw, c0, c1, thickness, uv.u, uv.v, color, (c0.CToDepth() + zBias, c1.CToDepth() + zBias));
 		}
 
 

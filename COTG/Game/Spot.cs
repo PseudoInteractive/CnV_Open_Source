@@ -136,7 +136,7 @@ namespace COTG.Game
 		public int tsHome => (troopsHome.Any() ? troopsHome.TS() : _tsHome);
 		public int tsDefHome => (troopsHome.Any() ? troopsHome.TSDef() : _tsHome);
 		public int tsDefTotal => (troopsTotal.Any() ? troopsTotal.TSDef() : _tsTotal);
-		public float tsRaidIdle => troopsHome.TSRaid()/ (float)troopsTotal.TSRaid().Max(1);
+		public float raidIdle => troopsHome.TSRaid()/ (float)troopsTotal.TSRaid().Max(1);
 
 		public int tsTotal => (troopsTotal.Any() ? troopsTotal.TS() : _tsTotal);
 		public int tsRaidTotal => (troopsTotal.Any() ? troopsTotal.TSRaid() : _tsTotal);
@@ -222,8 +222,8 @@ namespace COTG.Game
 			public byte ports;
 			public byte forums;
 			public bool castle;
-			static public explicit operator Classification(ClassificationExtended e) => e.classification;
-			static public explicit operator ClassificationExtended(Classification e)
+			static public implicit operator Classification(ClassificationExtended e) => e.classification;
+			static public implicit operator ClassificationExtended(Classification e)
 			{
 				var rv = new ClassificationExtended();
 				rv.classification = e;
@@ -806,7 +806,7 @@ namespace COTG.Game
 			}
 			catch (Exception e)
 			{
-				Log(e);
+				LogEx(e);
 			}
 			rv.classification = classification;
 			return rv;
@@ -994,7 +994,7 @@ namespace COTG.Game
 			return viewHover == cid;
 		}
 
-		public static List<int> GetSelectedForContextMenu(int cid, bool onlyIfShiftPressed = true, int ignoreCid=0)
+		public static List<int> GetSelectedForContextMenu(int cid, bool onlyIfShiftPressed = true, int ignoreCid=0, bool onlyCities=true)
 		{
 			var cids = new List<int>();
 			if (cid != 0)
@@ -1004,7 +1004,7 @@ namespace COTG.Game
 			{
 				foreach (var sel in Spot.selected.ToArray())
 				{
-					if (sel != cid && sel != ignoreCid )
+					if (sel != cid && sel != ignoreCid && (!onlyCities||City.Get(sel).isCityOrCastle)   )
 						cids.Add(sel);
 				}
 			}
@@ -1028,7 +1028,7 @@ namespace COTG.Game
 			}
 			catch (Exception ex)
 			{
-				Log(ex);
+				LogEx(ex);
 				return new HashSet<int>(); // if might be corrupt
 			}
 			return rv;
@@ -1134,7 +1134,7 @@ namespace COTG.Game
 				}
 				catch (Exception e)
 				{
-					Log(e);
+					LogEx(e);
 				}
 				finally
 				{
@@ -1823,7 +1823,7 @@ namespace COTG.Game
 			}
 			catch (Exception ex)
 			{
-				Log(ex);
+				LogEx(ex);
 			}
 
 

@@ -124,7 +124,7 @@ namespace COTG.Views
 					}
 					catch (Exception ex)
 					{
-						Log(ex);
+						LogEx(ex);
 					}
 					AddLayouts();
 					var shares = await Tables.ReadShares(Player.myName);
@@ -162,7 +162,7 @@ namespace COTG.Views
 				}
 				catch (Exception ex)
 				{
-					Log(ex);
+					LogEx(ex);
 				}
 				return ContentDialogResult.None;
 
@@ -220,7 +220,7 @@ namespace COTG.Views
 			catch (Exception ex)
 			{
 
-				Log(ex);
+				LogEx(ex);
 			}
 		}
 			

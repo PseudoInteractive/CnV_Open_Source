@@ -81,14 +81,14 @@
 						  TabFocusNavigation="Cycle">
 			<ComboBox x:Name="raidCarryMinBox"
 						  Header="Min Carry%"
-						  DropDownClosed="RaidCarrySelChanged"
+						  DropDownClosed="RaidCarryMinChanged"
 							Width="80"
 						  IsTabStop="True"
 					  TabFocusNavigation="Cycle"
 						  FontSize="{StaticResource MediumFontSize}"
 						  IsTextScaleFactorEnabled="False"
 						  IsEditable="True"
-						  TextSubmitted="RaidCarrySubmitted"
+						  TextSubmitted="RaidCarryMinSubmitted"
 						  Margin="4" ToolTipService.ToolTip="Troops will be divided up into batches that will carry this amount or greater.  Dungeons that that require more troops than the city has at home will not be shown.  When raid carry % drops below 100% your raiding income is as high as it is at 100% but your raiding losses will be higher.  As the dungeon progresses the loot per raid goes up, along with the strength of the monsters, thereby resuling in progressively greater losses.  Establishing an upper bound on the resulting raid loses is that rationale behind setting a min carry above 100%" />
 			<ComboBox x:Name="raidCarryMaxBox"
 						  Header="Max Carry%"

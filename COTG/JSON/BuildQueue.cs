@@ -510,7 +510,7 @@ namespace COTG.JSON
 								}
 								catch (Exception ex)
 								{
-									Log(ex);
+									LogEx(ex);
 								}
 								finally
 								{
@@ -538,7 +538,7 @@ namespace COTG.JSON
 					}
 					catch (Exception _exception)
 					{
-						COTG.Debug.Log(_exception);
+						COTG.Debug.LogEx(_exception);
 					}
 					finally
 					{
@@ -565,7 +565,7 @@ namespace COTG.JSON
 				}
 				catch (Exception ex)
 				{
-					Log(ex);
+					LogEx(ex);
 				}
 				finally
 				{
@@ -639,7 +639,7 @@ namespace COTG.JSON
 			}
 			catch (Exception _exception)
 			{
-				COTG.Debug.Log(_exception);
+				COTG.Debug.LogEx(_exception);
 			}
 			return result;
 
@@ -683,7 +683,7 @@ namespace COTG.JSON
 				}
 				catch (Exception e)
 				{
-					Log(e);
+					LogEx(e);
 				}
 				await Task.Delay(500);
 			}
@@ -902,7 +902,7 @@ namespace COTG.JSON
 				}
 				catch (Exception ex)
 				{
-					Log(ex);
+					LogEx(ex);
 					SaveNeeded(); // something went wrong, try again later
 				}
 
@@ -924,7 +924,7 @@ namespace COTG.JSON
 				}
 				catch(Exception ex)
 				{
-					Log(ex);
+					LogEx(ex);
 					SaveNeeded();
 				}
 				
@@ -957,7 +957,7 @@ namespace COTG.JSON
 			}
 			catch(Exception e)
 			{
-				Log(e);
+				LogEx(e);
 			}
 			return string.Empty;
 		}

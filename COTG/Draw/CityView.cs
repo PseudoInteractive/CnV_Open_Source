@@ -326,7 +326,7 @@ namespace COTG.Draw
 				}
 				catch (Exception exception)
 				{
-					Log(exception);
+					LogEx(exception);
 				}
 
 			}

@@ -230,7 +230,7 @@ namespace COTG.Models
             }
             catch (Exception ex)
             {
-                Log(ex);
+                LogEx(ex);
             }
 
 

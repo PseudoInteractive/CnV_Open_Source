@@ -2,9 +2,11 @@
 using COTG.Services;
 using COTG.Views;
 
+using Microsoft.Toolkit.HighPerformance.Buffers;
 using Microsoft.Xna.Framework;
 
 using System;
+using System.Buffers;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -71,10 +73,7 @@ namespace COTG.Game
 			}
 			return rv;
 		}
-		static public ushort SubStrAsShort(this string s, int start, int count)
-		{
-			return (ushort)SubStrAsInt(s, start, count);
-		}
+	
 		static public byte SubStrAsByte(this string s, int start, int count)
 		{
 			return (byte)SubStrAsInt(s, start, count);
@@ -111,12 +110,9 @@ namespace COTG.Game
 				return RGB16(0x3f, 0xFF, 0x3F);
 
 			return RGB16((type & 1) != 0 ? 0xFFu : 0x3Fu, (type & 2) != 0 ? 0xFFu : 0x3Fu, (type & 4) != 0 ? 0xFFu : 0x3Fu);
-
 		}
-
-		
-
 	}
+
 	public struct Continent
 	{
 		public byte id;
@@ -201,7 +197,8 @@ namespace COTG.Game
 	public class World
 	{
 		public static World current;
-		public const int worldDim = 600;
+		public const int span = 600;
+		public const int spanSquared = span* span;
 		public const int outSize = 2400;
 		public const uint typeMask = 0xf0000000;
 		public const uint dataMask = 0x0fffffff;
@@ -222,12 +219,12 @@ namespace COTG.Game
 		public static byte[] bitmapPixels;// = new byte[outSize / 4 * outSize / 4 * 8];
 		public static byte[] changePixels;// = new byte[outSize / 4 * outSize / 4 * 8];
 
-		public static uint[] raw = new uint[worldDim * worldDim]; // reference with CID, stores playerID
+		public static uint[] raw = new uint[span * span]; // reference with CID, stores playerID
 		public static uint[] rawPrior0; // set if heatmaps are enabled
 		public static uint[] rawPrior1; // set if heatmaps are enabled
 		public static int ClampCoord(int x)
 		{
-			return x.Clamp(0, worldDim);
+			return x.Clamp(0, span);
 		}
 		public static (uint type, int player, bool isCastle, bool isBig, bool isWater, bool isTemple, uint data) GetInfoFromPackedId(int packedId)
 		{
@@ -256,6 +253,37 @@ namespace COTG.Game
 				rv);
 
 		}
+		public static MemoryOwner<uint> RentWorldBuffer()
+		{
+			return MemoryOwner<uint>.Allocate(World.spanSquared);
+		}
+		public static void ReturnWorldBuffer(MemoryOwner<uint> data)
+		{
+			data.Dispose();
+		}
+
+		public static MemoryOwner<uint> SwizzleForCompression(Span<uint> src)
+		{
+			var buffer = RentWorldBuffer();
+			var rv = buffer.Span;
+			for(int i =0;i<World.spanSquared;++i)
+			{
+				uint dat = src[i];
+				switch(dat & typeMask )
+				{
+					case typeCity:
+					case typeShrine:
+					case typePortal:
+						rv[i] = dat.RotateLeft12();
+						break;
+					default:
+						rv[i] = 0;
+						break;
+				}
+			}
+			return buffer;
+		}
+		
 		public static int CidToPlayerOrMe(int _cid) 
 		{
 			var rv = World.GetInfo(_cid.CidToWorld()).player;
@@ -267,7 +295,7 @@ namespace COTG.Game
 		{
 			var x = c.x;
 			var y = c.y;
-			return (x >= 0 & x < worldDim & y >= 0 & y < worldDim) ? x + y * worldDim : 0;
+			return (x >= 0 & x < span & y >= 0 & y < span) ? x + y * span : 0;
 		}
 		public static Microsoft.Xna.Framework.Color GetTint(int packedId)
 		{
@@ -332,7 +360,7 @@ namespace COTG.Game
 		{
 			var x = c.x;
 			var y = c.y;
-			uint rv = (x >= 0 & x < worldDim & y >= 0 & y < worldDim) ? raw[x + y * worldDim] : 0u;
+			uint rv = (x >= 0 & x < span & y >= 0 & y < span) ? raw[x + y * span] : 0u;
 			return (rv & typeMask, (rv & dataMask));
 
 		}
@@ -402,11 +430,11 @@ namespace COTG.Game
 			//	pixels[i * 8 + 6] = 0x55;
 			//	pixels[i * 8 + 7] = 0x55;
 			//}
-			for (int y = 0; y < worldDim; ++y)
+			for (int y = 0; y < span; ++y)
 			{
-				for (int x = 0; x < worldDim; ++x)
+				for (int x = 0; x < span; ++x)
 				{
-					var i = y * worldDim + x;
+					var i = y * span + x;
 					var d0 = prior[i];
 					var d1 = prior1[i];
 					//if (d0 == 0)
@@ -499,11 +527,11 @@ namespace COTG.Game
 		public static void DrawPixels( uint [] data)
 		{
 			var pixels = new byte[outSize / 4 * outSize / 4 * 8];
-			for (int y = 0; y < worldDim; ++y)
+			for (int y = 0; y < span; ++y)
 			{
-				for (int x = 0; x < worldDim; ++x)
+				for (int x = 0; x < span; ++x)
 				{
-					var i = y * worldDim + x;
+					var i = y * span + x;
 					var d0 = data[i];
 
 					var type0 = d0 & typeMask;
@@ -880,7 +908,7 @@ namespace COTG.Game
 				//  LogJS(b);
 				bossList.Add(b);
 
-				var index = (x + y * worldDim);
+				var index = (x + y * span);
 				raw[index] = b.level | (uint)(b.type << 4) | typeBoss;
 
 				
@@ -900,7 +928,7 @@ namespace COTG.Game
 					var level = _t.SubStrAsByte(0, 2) - 10;
 
 					//  LogJS(b);
-					var index = (int)(x + y * worldDim);
+					var index = (int)(x + y * span);
 					
 					raw[index] = (uint)(level | typeDungeon);
 
@@ -923,7 +951,7 @@ namespace COTG.Game
 				};
 				//  LogJS(b);
 				shrineList.Add(b);
-				var index = (int)(b.x + b.y * worldDim);
+				var index = (int)(b.x + b.y * span);
 				
 				raw[index] = b.type | typeShrine;
 			}
@@ -945,11 +973,23 @@ namespace COTG.Game
 				};
 				portals.Add(b);
 
-				var index = (int)(b.x + b.y * worldDim);
+				var index = (int)(b.x + b.y * span);
 				
 				raw[index] = (b.active ? 1u : 0) | typePortal;
 			}
+			while (Player.all.Count == 0)
+			{
+			//	Assert(false);
+				await Task.Delay(500);
+			}
 
+			
+			foreach (var p in Player.all)
+			{
+				p.Value.cities.Clear();
+			}
+
+			var mustAdd = new List<Player>();
 			for (int isLL = 0; isLL < 2; ++isLL)
 			{
 				var ll = isLL == 1;
@@ -999,14 +1039,25 @@ namespace COTG.Game
 						{
 							isTemple = true;
 						}
+						var p = Player.Get((int)pid);
+						if(p==null)
+						{
+							p = new Player();
+							mustAdd.Add(p);
+							p.name = $"*New Player {pid}";
+						}
+						
+						p.alliance = (ushort)alliance;
+						p.cities.Add(((int)x, (int)y).WorldToCid());		
 					}
+
 					//if (pid == Player.myId)
 					//{
 					//    LogJS(c);
 					//    Log(_t);
 					//}
 					// cities.Add(c);
-					var index = (int)(x + y * worldDim);
+					var index = (int)(x + y * span);
 
 
 					var isBig = type >= 5 ? 1 : 0;
@@ -1022,6 +1073,23 @@ namespace COTG.Game
 				}
 			}
 			state = State.partWay;
+
+			if (mustAdd.Any())
+			{
+				var _all = new Dictionary<int,Player>(Player.all);
+				var _ids = new Dictionary<string, int>(Player.nameToId);
+				foreach(var i in mustAdd)
+				{
+					_all.Add(i.id, i);
+					_ids.Add(i.name, i.id);
+
+				}
+
+				mustAdd.Clear();
+				Player.all = _all;
+				Player.nameToId = _ids;
+			}
+
 
 			int counter = 0;
 			// Wait for alliance diplomacy for colors
@@ -1074,42 +1142,20 @@ namespace COTG.Game
 
 			}
 			
-			Task.Run(() => WorldStorage.SaveWorldData(raw));
+			Task.Run( async () =>
+			{
+				await WorldStorage.SaveWorldData(SwizzleForCompression(raw));
+			});
 			current = rv;
 
 			// delay this part
-			while (Player.all.Count == 0)
-			{
-				await Task.Delay(500);
-			}
+			
 
 			///		Assert(state == State.none || state == State.completed);
 			//		state = State.started;
 			// reset players	
-			foreach (var p in Player.all)
-			{
-				p.Value.cities.Clear();
-			}
+			
 
-
-			for (int x = 0; x < worldDim; ++x)
-			{
-				for (int y = 0; y < worldDim; ++y)
-				{
-					var d = World.GetInfo((x, y));
-					if (d.type == typeCity)
-					{
-						if (Player.all.TryGetValue(d.player, out var p))
-						{
-							p.cities.Add((x,y).WorldToCid());
-						}
-						else
-						{
-							Trace($"missing player {d.player} city {x}:{y}");
-						}
-					}
-				}
-			}
 			while (!Alliance.alliancesFetched)
 			{
 				await Task.Delay(500);
@@ -1121,9 +1167,7 @@ namespace COTG.Game
 			// Queue up another one
 			App.QueueIdleTask(RefreshWorldDataIdleTask, 30 * 60 * 1000);  // 5 minutes - todo: change this to 30 minutes
 			
-			
 			SpotTab.LoadFromPriorSession();
-
 		}
 
 		static void RefreshWorldDataIdleTask()
@@ -1165,6 +1209,7 @@ namespace COTG.Game
 					return (null, false, false, false, null);
 			}
 		}
+	
 		public static async void DumpCities(int x0, int y0, int x1, int y1, string allianceName, bool onlyCastles, bool onlyOnWater)
 		{
 			using var scope = new ShellPage.WorkScope("Export Castles...");
@@ -1204,4 +1249,24 @@ namespace COTG.Game
 		}
 		public static int[] continentOpeningOrder = { 22, 23, 32, 33, 12, 43, 13, 42, 21, 34, 24, 31, 11, 44, 14, 41, 02, 53, 20, 35, 25, 30, 52, 03, 01, 54, 04, 51, 40, 15, 45, 10, 05, 50, 00, 55 };
 	}
+	public class WorldBufferScope : IDisposable
+	{
+		public MemoryOwner<uint> b;
+		// passing null results in a Scope with no effect
+		public WorldBufferScope()
+		{
+			b = World.RentWorldBuffer();
+		}
+		public static implicit operator MemoryOwner<uint> (WorldBufferScope w) => w.b;
+		public void Dispose()
+		{
+			var _b = b;
+			b = null;
+			if (_b != null )
+			{
+				World.ReturnWorldBuffer(_b);
+			}
+		}
+	}
+
 }

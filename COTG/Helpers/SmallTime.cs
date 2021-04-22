@@ -17,11 +17,13 @@ namespace COTG
 		internal static readonly DateTimeOffset t0 = new DateTimeOffset(1970, 1, 1, 0, 0, 0, 0, TimeSpan.Zero);
 		internal const int t0Seconds = 0;
 		internal int seconds;
+		internal static SmallTime zero = new SmallTime(0);
+
 		internal DateTimeOffset dateTime => ToDateTime(seconds); // should we convert with localTimeError?
 
 		public SmallTime Date()
 		{
-			return new SmallTime( (int)new DateTimeOffset(dateTime.Date,TimeSpan.Zero).ToUnixTimeMilliseconds());
+			return new SmallTime( (int)new DateTimeOffset(dateTime.Date,TimeSpan.Zero).ToUnixTimeSeconds());
 		}
 		/// <summary>
 		/// Does not correct for invalid system time
@@ -35,8 +37,13 @@ namespace COTG
 		{
 			seconds = _seconds;
 		}
-		public static int serverNow => JSClient.ServerTimeSeconds();
+		public static SmallTime serverNow => new SmallTime(JSClient.ServerTimeSeconds());
+
+		public bool isZero => seconds == 0;
+		
 		public static implicit operator int(SmallTime t) => t.seconds;
+		public static implicit operator SmallTime(DateTimeOffset t) => new SmallTime((int)t.ToUnixTimeSeconds());
+		public static implicit operator SmallTime(int t) => new SmallTime(t);
 
 		private string GetDebuggerDisplay()
 		{

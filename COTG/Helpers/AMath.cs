@@ -27,6 +27,14 @@ namespace COTG
 			return Vector2.Dot(v0, v1);
 		}
 
+		public static uint RotateLeft12(this uint source)
+		{
+			return source << 12 | (source >> (32 - 12) );
+		}
+		public static uint RotateRight12(this uint source)
+		{
+			return source >> 12 | (source << (32 - 12));
+		}
 		public static bool TryParseInt(this string s, out int o)
 		{
 			return int.TryParse(s, System.Globalization.NumberStyles.Number, CultureInfo.InvariantCulture, out o);
@@ -390,13 +398,13 @@ namespace COTG
         }
         public static uint ToCompactCid(this (int x,int y) c)
         {
-            return (uint)c.x | (uint)c.y * World.worldDim;
+            return (uint)c.x | (uint)c.y * World.span;
         }
         public static (int x,int y) FromCompactCid(this uint c)
         {
-			var y = c / World.worldDim;
+			var y = c / World.span;
 
-			return ( (int)(c -y* World.worldDim),(int) y );
+			return ( (int)(c -y* World.span),(int) y );
         }
         static public bool IsNullOrEmpty<T>(this T[] a)
         {

@@ -152,7 +152,7 @@ namespace COTG.Views
                 }
                 catch( Exception e)
                 {
-                    Log(e);
+                    LogEx(e);
                 }
             }
         }

@@ -211,7 +211,9 @@ namespace COTG.Game
         public static TroopTypeCount[] empty = Array.Empty<TroopTypeCount>();
         public int type;
         public int count;
-        [JsonIgnore]
+		internal float attack => count * ttAttack[type] * ttCombatBonus[type];
+
+		[JsonIgnore]
         public string Count => count.ToString(" N0 ");
         [JsonIgnore]
         public BitmapImage Type => ImageHelper.FromImages($"Icons/troops{type}.png");
@@ -256,6 +258,7 @@ namespace COTG.Game
         public byte t { get => (byte)type; set => type = value; }
 
         public int c { get => count; set => count = value; }
+		public bool isWaterRaider => IsWaterRaider(type);
 
 		public static TroopTypeCount[] operator +(TroopTypeCount[] me, TroopTypeCount tt)
 		{

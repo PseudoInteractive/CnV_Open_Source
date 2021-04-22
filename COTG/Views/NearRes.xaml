@@ -142,7 +142,6 @@
                      Grid.Row="1"
                      SelectionMode="Extended"
                      RowDetailsVisibilityMode="Collapsed"
-                   
                         
                      CanUserReorderColumns="True"
                     CanUserSortColumns="True"
@@ -150,8 +149,15 @@
                      GridLinesVisibility="All"
                      AlternatingRowBackground="#FF301030"
                      SelectionChanged="supportGrid_SelectionChanged"
-                     
+					  
                      >
+			<tk:DataGrid.CellStyle >
+				<Style TargetType="tk:DataGridCell">
+					<Setter Property="FontFamily" Value="Tw Cen MT Condensed"/>
+					<Setter Property="FontSize" Value="{StaticResource SmallFontSize}" />
+					<Setter Property="IsTextScaleFactorEnabled" Value="False"/>
+				</Style>
+			</tk:DataGrid.CellStyle>
 			<tk:DataGrid.Columns>
 				<tk:DataGridTemplateColumn Header="I" CanUserSort="False">
 					<tk:DataGridTemplateColumn.CellTemplate>
@@ -184,6 +190,7 @@
 				<tk:DataGridTextColumn  Header="Travel" 
                                         Binding="{Binding travel, Converter={StaticResource TimeConverter},Mode=OneWay}"
                                         IsReadOnly="True" Tag="travel"
+										
                                              />
 				<tk:DataGridTextColumn  Header="Carts" 
                                         Binding="{Binding cartsHome, Converter={StaticResource IntConverter},Mode=OneWay}"
@@ -252,6 +259,7 @@
 				<tk:WrapPanel Orientation="Horizontal" HorizontalAlignment="Stretch" >
 
 				<Button Content="Zero" Click="ZeroClick"  Style="{StaticResource ButtonSmall}" />
+				<Button Content="Max" Click="MaxClick"  Style="{StaticResource ButtonSmall}" />
 				<Button Content="Recalc" Click="RecalcClick"  Style="{StaticResource ButtonSmall}" />
 				<Button Content="Max Wood" Click="MaxWoodClick"  Style="{StaticResource ButtonSmall}" />
 				<Button Content="No Wood" Click="ZeroWoodClick"  Style="{StaticResource ButtonSmall}"  />

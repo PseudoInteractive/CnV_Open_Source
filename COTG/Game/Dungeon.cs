@@ -107,35 +107,30 @@ namespace COTG.Game
 			
 			if (autoRaid)
 			{
-				if(rv.Count>0)
+				var sent = false;
+				if (rv.Count>0)
 				{
-					var success = false;
 					foreach (var _i in rv)
 					{
 						if(!_i.isValid)
 							continue;
 						var i = _i;
 						int counter = 0;
-						for(; ; )
-						{ 
-							var good = await Raiding.SendRaids(i, false);
-							if (good)
-								break;
-							if(++counter > 8)
-							{
-								Note.Show($"Giving up on {city.nameMarkdown}, please try again in a few min");
-								break;
-							}
-							await Task.Delay(500);	
+
+						var good = await Raiding.SendRaids(i, false);
+						if (!good)
+						{
+							Note.Show($"Raid send failed for {city.nameMarkdown}, will try again");
 						}
-						success = true;
+						sent = true;
 						break;
 					}
-					if(!success)
-					{
-						Note.Show($"No appropriate dungeons for {city.nameMarkdown}");
-					}
 				}
+				if (!sent)
+				{
+					Note.Show($"No appropriate dungeons for {city.nameMarkdown}");
+				}
+				return sent;
 			}
 			else
 			{
@@ -143,8 +138,8 @@ namespace COTG.Game
 				// dont wait on this 
 				//COTG.Views.MainPage.UpdateDungeonList(rv);
 				await DungeonView.Show(city, rv);
+				return true;
 			}
-			return true;
 		}
 	}
 }

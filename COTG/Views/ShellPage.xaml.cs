@@ -315,18 +315,8 @@ namespace COTG.Views
 					tabPage.AddTab(MainPage.instance, true);
 					tabPage.AddTab(BuildTab.instance, false);
 					tabPage.AddTab(QueueTab.instance, false);
-					tabPage.AddTab(HeatTab.instance, false);
+				//	tabPage.AddTab(HeatTab.instance, false);
 		
-					// gridTip=new TextBlock();
-					// tabPage.Tabs.TabStripFooter = gridTip;
-					//    tabPage.AddTab(IncomingTab.instance, false);
-
-					//   tabPage.AddTab(DefenseHistoryTab.instance, false);
-
-					//    tabPage.AddTab(AttackTab.instance, false);
-					//    tabPage.AddTab(DonationTab.instance, false);
-					//    tabPage.AddTab(BossTab.instance, false);
-
 				}
 				{
 					var tabPage = CreateTabPage(spotFrame);
@@ -823,7 +813,7 @@ namespace COTG.Views
 			
 			catch (Exception ex)
 			{
-				Log(ex);
+				LogEx(ex);
 			}
 
 

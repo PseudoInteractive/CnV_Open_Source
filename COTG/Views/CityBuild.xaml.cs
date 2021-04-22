@@ -61,9 +61,48 @@ namespace COTG.Views
 		public static HashSet<ushort> waterSpots = new HashSet<ushort>(new ushort[] { 352, 353, 373, 374, 375, 395,396,397,
 																			417,418});
 
-		public static bool IsBuildingSpot(int spot) => !(outerTowerSpots.Contains((ushort)spot) | innerTowerSpots.Contains((ushort)spot) | wallSpots.Contains((ushort)spot) | (spot==bspotWall) );
+		public static HashSet<ushort> buildingSpots = new HashSet<ushort>( Enumerable.Range((ushort)1, (ushort)citySpotCount-1).Select (a=> (ushort)a). Except(wallSpots).Except(innerTowerSpots).Except(outerTowerSpots) );
+		
+		public enum SpotType
+		{
+			invalid,
+			wall,
+			outerTower,
+			innerTower,
+			shore,
+			water,
+			building,
+			townHall,
+		}
+		public static SpotType GetSpotType(int a )
+		{
+			return a switch {
+				_ when IsInnerTowerSpot(a) => SpotType.innerTower,
+				_ when IsOuterTowerSpot(a) => SpotType.outerTower,
+				_ when IsShoreSpot(a) => SpotType.shore,
+				_ when IsBuildingSpot(a) => SpotType.building,
+				_ => SpotType.invalid };
+		}
+		public static HashSet<ushort> GetSpots( SpotType type)
+		{
+			switch (type)
+			{
+				case SpotType.innerTower:
+					return innerTowerSpots;
+
+				case SpotType.outerTower:
+					return outerTowerSpots;
+				case SpotType.shore:  return shoreSpots;
+				default:
+					return buildingSpots; // how should this be properly handled?
+			}
+		}
+
+		public static bool IsBuildingSpot(int spot) => buildingSpots.Contains((ushort)spot);
 		public static bool IsBuildingSpot((int x, int y) cc) => IsBuildingSpot(XYToId(cc));
 		public static bool IsTowerSpot(int spot) => outerTowerSpots.Contains((ushort)spot) | innerTowerSpots.Contains((ushort)spot);
+		public static bool IsInnerTowerSpot(int spot) => innerTowerSpots.Contains((ushort)spot);
+		public static bool IsOuterTowerSpot(int spot) => outerTowerSpots.Contains((ushort)spot);
 		public static bool IsTowerSpot((int x, int y) cc) => IsTowerSpot(XYToId(cc));
 		public static bool IsWallSpot(int spot) => wallSpots.Contains((ushort)spot);
 		public static bool IsWallSpot((int x, int y) cc) => wallSpots.Contains((ushort)XYToId(cc));
@@ -1027,7 +1066,10 @@ namespace COTG.Views
 		}
 		public  static Task Build((int x, int y) cc, int bid, bool dryRun)
 		{
-			return Build(XYToId(cc), bid, dryRun);
+			if (bid != 0)
+				return Build(XYToId(cc), bid, dryRun);
+			else
+				return Task.CompletedTask;
 		}
 
 
@@ -1194,9 +1236,10 @@ namespace COTG.Views
 					bds[a] = temp;
 					if (!isPlanner)
 					{
-						await Services.Post.Send("includes/mBu.php", $"a={a}&b={cityScratchSpot}&c={Spot.build}", World.CidToPlayerOrMe(City.build));
+						var scratch = FindAnyFreeSpot(a);
+						await Services.Post.Send("includes/mBu.php", $"a={a}&b={scratch}&c={Spot.build}", World.CidToPlayerOrMe(City.build));
 						await Services.Post.Send("includes/mBu.php", $"a={b}&b={a}&c={Spot.build}", World.CidToPlayerOrMe(City.build));
-						await Services.Post.Send("includes/mBu.php", $"a={cityScratchSpot}&b={b}&c={Spot.build}", World.CidToPlayerOrMe(City.build));
+						await Services.Post.Send("includes/mBu.php", $"a={scratch}&b={b}&c={Spot.build}", World.CidToPlayerOrMe(City.build));
 						await Task.Delay(200);
 						Player.moveSlots -= 3;
 					}
@@ -1264,16 +1307,20 @@ namespace COTG.Views
 					var source = XYToId(selected);
 
 					// Is this a valid transition
-					var bs1 = IsTowerSpot(bspot) ? 1 : IsWallSpot(bspot) && !testFlag ? 0 : 2;
-					if(bs1 ==0  && !CityBuild.testFlag)
+					var bs1 = GetSpotType(bspot);
+					
+					var bs0 = GetSpotType(XYToId(selected));
+					if(testFlag)
 					{
-						Status("Please don't put buildings on walls.", dryRun);
-						return;
+						if (bs1 == SpotType.wall || bs1 == SpotType.invalid)
+							bs1 = SpotType.building;
+						if (bs0 == SpotType.wall || bs0 == SpotType.invalid)
+							bs0 = SpotType.building;
 					}
-					var bs0 = IsTowerSpot(selected) ? 1 : 2;
+
 					if (bs0 != bs1)
 					{
-						Status("Cannot move between building and wall spots", dryRun);
+						Status("Doesn't fit there", dryRun);
 						return;
 					}
 					if((HasBuildOps(bspot) || HasBuildOps(source))&&!isPlanner )
@@ -1809,7 +1856,7 @@ namespace COTG.Views
 								}
 
 
-								var cb = FindAnyFreeSpot();
+								var cb = FindAnyFreeSpot(bspot);
 								if (!await MoveBuilding(bspot, cb, dryRun))
 									return rv;
 
@@ -1825,7 +1872,7 @@ namespace COTG.Views
 						else
 						{
 
-							await MoveBuilding(bspot, FindAnyFreeSpot(), dryRun);
+							await MoveBuilding(bspot, FindAnyFreeSpot(bspot), dryRun);
 
 							Status($"Found an unneeded {desName}, will move it to the right spot for you", dryRun);
 
@@ -1868,20 +1915,18 @@ namespace COTG.Views
 			return bestSpot;
 		}
 
-	public static int FindAnyFreeSpot()
+	public static int FindAnyFreeSpot(int reference)
 	{
 		var build = City.GetBuild();
-		for (int spot = 0; spot < citySpotCount; ++spot)
+		foreach( var spot in CityBuild.GetSpots(CityBuild.GetSpotType(reference)))
 		{
-			if (!IsBuildingSpot(spot))
-				continue;
 			var bld = postQueueBuildings[spot];
 			if (!bld.isEmpty)
 				continue;
 			if (build.BidFromOverlay(spot) != 0)
 				continue;
-				if (HasBuildOps(spot))
-					continue;
+			if (HasBuildOps(spot))
+				continue;
 			return spot;
 		}
 
@@ -1891,17 +1936,14 @@ namespace COTG.Views
 
 	private static async Task TogglePlanner()
 		{
-			if (PlannerTab.instance.isVisible)
+			if (CityBuild._isPlanner)
 			{
 				CityBuild._isPlanner = false;
 			}
 			else
 			{
-				if (!isPlanner)
-				{
-					if (!GetBuild().isLayoutValid)
-						await ShareString.Show();
-				}
+				if (!GetBuild().isLayoutValid)
+					await ShareString.Show();
 				CityBuild._isPlanner = true;
 
 			}

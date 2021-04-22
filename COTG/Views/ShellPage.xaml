@@ -16,6 +16,7 @@
       mc:Ignorable="d"
 	  IsTabStop="True"
 >
+	
 	<Page.Resources>
 		<ResourceDictionary Source="ms-appx:///Microsoft.UI.Xaml/DensityStyles/Compact.xaml" />
 	</Page.Resources>

@@ -25,7 +25,6 @@
         <Setter Property="FontFamily" Value="Tw Cen MT Condensed"/>
         <Setter Property="FontSize" Value="{StaticResource MediumFontSize}" />
         <Setter Property="IsTextScaleFactorEnabled" Value="False"/>
-		<Setter Property="FontStretch" Value="Condensed"/>
     </Style>
 	<Style x:Key="ButtonMedium" TargetType="Button" BasedOn="{StaticResource ButtonRevealStyle}">
 		<Setter Property="FontFamily" Value="Tw Cen MT Condensed"/>
@@ -47,8 +46,7 @@
 		<Setter Property="FontFamily" Value="Tw Cen MT Condensed"/>
         <Setter Property="FontSize" Value="{StaticResource MediumFontSize}" />
         <Setter Property="IsTextScaleFactorEnabled" Value="False"/>
-		<Setter Property="FontStretch" Value="Condensed"/>
-		<Setter Property="Margin" Value="4"/>
+		<Setter Property="Margin" Value="2"/>
     </Style>
 	<Style TargetType="Border" x:Key="BorderReveal" >
         <Setter Property="BorderThickness" Value="1" />
@@ -72,20 +70,26 @@
         <Setter Property="FontFamily" Value="Tw Cen MT Condensed"/>
         <Setter Property="FontSize" Value="{StaticResource SmallFontSize}" />
         <Setter Property="IsTextScaleFactorEnabled" Value="False"/>
-		<Setter Property="FontStretch" Value="Condensed"/>
-        
+		
     </Style>
-    <Style x:Key="TextBoxSmall" BasedOn="{StaticResource TextBoxReveal}" TargetType="TextBox">
+	<Style x:Key="TextBlockMedium" TargetType="TextBlock">
+		<Setter Property="FontFamily" Value="Tw Cen MT Condensed"/>
+		<Setter Property="FontSize" Value="{StaticResource MediumFontSize}" />
+		<Setter Property="IsTextScaleFactorEnabled" Value="False"/>
+
+	</Style>
+	<Style x:Key="TextBoxSmall" BasedOn="{StaticResource TextBoxReveal}" TargetType="TextBox">
         <Setter Property="FontFamily" Value="Tw Cen MT Condensed"/>
-        <Setter Property="FontSize" Value="{StaticResource SmallFontSize}" />
+        <Setter Property="FontSize" Value="{StaticResource MediumFontSize}" />
         <Setter Property="IsTextScaleFactorEnabled" Value="False"/>
 		 <Setter Property="BorderThickness" Value="1" />
         <Setter Property="BorderBrush" Value="{ThemeResource SystemControlBackgroundBaseLowRevealBorderBrush}"/>
        
     </Style>
     <Style x:Key="NumberBoxSmall" TargetType="winui:NumberBox">
-        <Setter Property="FontSize" Value="{StaticResource SmallFontSize}" />
-        <Setter Property="IsTextScaleFactorEnabled" Value="False"/>
+		<Setter Property="FontSize" Value="{StaticResource MediumFontSize}" />
+		<Setter Property="FontFamily" Value="Tw Cen MT Condensed"/>
+		<Setter Property="IsTextScaleFactorEnabled" Value="False"/>
         <Setter Property="SpinButtonPlacementMode" Value="Compact"/>
 		<Setter Property="SmallChange" Value="1"/>
 		<Setter Property="LargeChange" Value="10"/>
@@ -129,7 +133,8 @@
 
 
 	<Style BasedOn="{StaticResource ToggleButtonRevealStyle}" TargetType="ToggleButton">
-        <Setter Property="FontSize" Value="{StaticResource SmallFontSize}" />
+		<Setter Property="FontFamily" Value="Tw Cen MT Condensed"/>
+		<Setter Property="FontSize" Value="{StaticResource MediumFontSize}" />
         <Setter Property="IsTextScaleFactorEnabled" Value="False"/>
         <Setter Property="Margin" Value="4"/>
 	</Style>

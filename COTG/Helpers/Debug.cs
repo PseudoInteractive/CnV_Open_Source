@@ -101,11 +101,11 @@ namespace COTG
 		}
 
 		[Conditional("DEBUG")]
-        public static void Log<T>(T s,
-        [System.Runtime.CompilerServices.CallerMemberName] string memberName = "",
-        [System.Runtime.CompilerServices.CallerFilePath] string sourceFilePath = "",
-        [System.Runtime.CompilerServices.CallerLineNumber] int sourceLineNumber = 0)
-        {
+		public static void Log<T>(T s,
+		[System.Runtime.CompilerServices.CallerMemberName] string memberName = "",
+		[System.Runtime.CompilerServices.CallerFilePath] string sourceFilePath = "",
+		[System.Runtime.CompilerServices.CallerLineNumber] int sourceLineNumber = 0)
+		{
 
 			var str = $"{sourceFilePath}({sourceLineNumber}): {timeStamp}: {memberName}\n{s}";
 
@@ -130,20 +130,27 @@ namespace COTG
 
 		}
 	//	[Conditional("TRACE")]
-        public static void Log(Exception e,
-        [System.Runtime.CompilerServices.CallerMemberName] string memberName = "",
+        public static void LogEx(Exception e, bool report = true, string extra = null,
+		string eventName = "HandledException",
+		[System.Runtime.CompilerServices.CallerMemberName] string memberName = "",
         [System.Runtime.CompilerServices.CallerFilePath] string sourceFilePath = "",
         [System.Runtime.CompilerServices.CallerLineNumber] int sourceLineNumber = 0)
 
         {
-			Crashes.TrackError(e);
+			var dic = new Dictionary<string, string> { { "message", e.Message },{ "event", eventName } };
+			if (extra != null)
+				dic[extra] = extra;
+			if (report)
+				Crashes.TrackError(e,dic);
+			var msg = $"{eventName} {extra ?? string.Empty} {e.Message}";
 #if TRACE
-			System.Diagnostics.Trace.WriteLine($"{sourceFilePath}({sourceLineNumber}): {timeStamp}: {memberName} : Exception: {e.Message} {e.StackTrace}");
+			System.Diagnostics.Trace.WriteLine($"{sourceFilePath}({sourceLineNumber}): {timeStamp}: {memberName} : Exception: {msg} {e.StackTrace}");
 			DumpStack(new StackTrace(e, true));
 #endif
-			Analytics.TrackEvent("HandledException", new Dictionary<string, string> { { "message", e.Message } });
 
-			Note.Show(e.Message);
+			Analytics.TrackEvent(eventName, dic);
+
+			Note.Show(msg);
 		}
       //  [Conditional("TRACE")]
         public  static void Exception(string s,

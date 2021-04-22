@@ -6,16 +6,16 @@
 	<!--  Common texts  -->
 	<Style x:Key="PageTitleStyle" TargetType="TextBlock">
 		<Setter Property="VerticalAlignment" Value="Center" />
-        <Setter Property="FontSize" Value="{StaticResource  LargeFontSize}" />
-		<Setter Property="TextTrimming" Value="CharacterEllipsis" />
-		<Setter Property="TextWrapping" Value="NoWrap" />
+		<Setter Property="FontFamily" Value="Tw Cen MT Condensed"/>
+		<Setter Property="FontSize" Value="{StaticResource  LargeFontSize}" />
+		<Setter Property="TextWrapping" Value="Wrap" />
 		<Setter Property="IsTextScaleFactorEnabled" Value="False"/>
         
     </Style>
 
 	<Style x:Key="BodyTextStyle" TargetType="TextBlock">
-       <Setter Property="FontSize" Value="{StaticResource MediumFontSize}" />
-		<Setter Property="FontStretch" Value="Condensed" />
+		<Setter Property="FontFamily" Value="Tw Cen MT Condensed"/>
+		<Setter Property="FontSize" Value="{StaticResource MediumFontSize}" />
 		<Setter Property="TextTrimming" Value="CharacterEllipsis" />
 		<Setter Property="TextWrapping" Value="Wrap" />
         <Setter Property="IsTextScaleFactorEnabled" Value="False"/>
@@ -27,16 +27,16 @@
 		x:Key="ListTitleStyle"
 		BasedOn="{StaticResource BaseTextBlockStyle}"
 		TargetType="TextBlock">
-		<Setter Property="FontSize" Value="{StaticResource MediumFontSize}" />
-		<Setter Property="MaxLines" Value="1" />
-		<Setter Property="TextTrimming" Value="CharacterEllipsis" />
-        <Setter Property="IsTextScaleFactorEnabled" Value="False"/>
+		<Setter Property="FontFamily" Value="Tw Cen MT Condensed"/>
+		<Setter Property="FontSize" Value="{StaticResource LargeFontSize}" />
+	    <Setter Property="IsTextScaleFactorEnabled" Value="False"/>
         
     </Style>
 
 	<Style x:Key="ListSubTitleStyle" TargetType="TextBlock">
 		<Setter Property="FontSize" Value="{StaticResource MediumFontSize}" />
-        <Setter Property="MaxLines" Value="1" />
+		<Setter Property="FontFamily" Value="Tw Cen MT Condensed"/>
+		<Setter Property="MaxLines" Value="1" />
 		<Setter Property="TextTrimming" Value="CharacterEllipsis" />
         <Setter Property="IsTextScaleFactorEnabled" Value="False"/>
         
@@ -46,6 +46,7 @@
 		x:Key="DetailSubTitleStyle"
 		BasedOn="{StaticResource BaseTextBlockStyle}"
 		TargetType="TextBlock">
+		<Setter Property="FontFamily" Value="Tw Cen MT Condensed"/>
 		<Setter Property="FontSize" Value="{StaticResource MediumFontSize}" />
         
     </Style>
@@ -54,7 +55,8 @@
 		x:Key="DetailBodyBaseMediumStyle"
 		BasedOn="{StaticResource BaseTextBlockStyle}"
 		TargetType="TextBlock">
-        <Setter Property="FontSize" Value="{StaticResource MediumFontSize}" />
+		<Setter Property="FontFamily" Value="Tw Cen MT Condensed"/>
+		<Setter Property="FontSize" Value="{StaticResource MediumFontSize}" />
 		<Setter Property="Foreground" Value="{ThemeResource SystemControlForegroundBaseMediumBrush}" />
 	</Style>
 
@@ -93,7 +95,8 @@
 		x:Key="DetailBodyStyle"
 		BasedOn="{StaticResource BaseTextBlockStyle}"
 		TargetType="TextBlock">
-        <Setter Property="FontSize" Value="{StaticResource MediumFontSize}" />
+		<Setter Property="FontFamily" Value="Tw Cen MT Condensed"/>
+		<Setter Property="FontSize" Value="{StaticResource MediumFontSize}" />
 	</Style>
 
 </ResourceDictionary>

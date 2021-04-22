@@ -138,7 +138,7 @@ namespace COTG.BinaryMemory
 			position += byteCount;
 		}
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public void WritePackedUints(uint[] data)
+		public void WritePackedUints(Span<uint> data)
 		{
 			var count = data.Length;
 			Write7BitEncoded((ulong)count);

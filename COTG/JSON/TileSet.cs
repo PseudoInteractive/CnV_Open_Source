@@ -170,7 +170,7 @@ namespace COTG.JSON
 				}
 			}
 
-			for (var i = 0; i < World.worldDim * World.worldDim; ++i)
+			for (var i = 0; i < World.span * World.span; ++i)
 			{
 				foreach (var layer in instance.layers)
 				{
@@ -453,7 +453,7 @@ namespace COTG.JSON
 			}
 			catch (Exception e)
 			{
-				Log(e);
+				LogEx(e);
 
 			}
 

@@ -32,7 +32,9 @@ namespace COTG.Services
         public string localPath;
         public static JsonDocument emptyJson;
 
-        public RestAPI(string _localPath, int _pid =-1)
+		public virtual string eventName => string.Empty;
+		public virtual string extra => string.Empty;
+		public RestAPI(string _localPath, int _pid =-1)
         {
             localPath = _localPath;
             emptyJson = JsonDocument.Parse("{}");
@@ -48,7 +50,7 @@ namespace COTG.Services
             try
             {
                 var buff = await resp.Content.ReadAsBufferAsync();
-				if (buff.Length > 0)
+				if (buff.Length >= 2)
 				{
 					var temp = new byte[buff.Length];
 
@@ -67,8 +69,7 @@ namespace COTG.Services
             }
             catch (Exception e)
             {
-				Note.Show("Internet failed");
-                Log(e);
+				LogEx(e,report:false,eventName:$"json:{GetType().Name}{eventName}",extra: resp.RequestMessage.ToString());
 				return false;
             }
 
@@ -91,7 +92,7 @@ namespace COTG.Services
             }
             catch (Exception e)
             {
-                Log(e);
+                LogEx(e);
             }
             return Array.Empty<byte>();
 
@@ -107,7 +108,7 @@ namespace COTG.Services
             }
             catch (Exception e)
             {
-                Log(e);
+                LogEx(e);
                 return null;
             }
 
@@ -124,7 +125,7 @@ namespace COTG.Services
             }
             catch (Exception e)
             {
-                Log(e);
+                LogEx(e);
                 return null;
             }
 
@@ -143,7 +144,7 @@ namespace COTG.Services
             }
             catch (Exception e)
             {
-                Log(e);
+                LogEx(e);
                 return default;
             }
 
@@ -152,7 +153,7 @@ namespace COTG.Services
 
         public virtual void ProcessJsonRaw(byte[] data)
         {
-            var json = JsonDocument.Parse(data);
+            var json = JsonDocument.Parse(data,jsonParseOptions);
             ProcessJson(json);
 
         }
@@ -188,14 +189,16 @@ namespace COTG.Services
                 }
                 catch (Exception e)
                 {
-                    Log(e);
+                    LogEx(e);
 					return false;
                 }
 
         }
 
         public const string nullPost = "a=0";
-        async public Task<HttpResponseMessage> Send(string postContent= nullPost)
+		private static readonly JsonDocumentOptions jsonParseOptions = new() { AllowTrailingCommas = true };
+
+		async public Task<HttpResponseMessage> Send(string postContent= nullPost)
         {
             HttpClient client = null;
 			await JSClient.clientPoolSema.WaitAsync();
@@ -252,7 +255,7 @@ namespace COTG.Services
             catch (Exception e)
             {
                 
-                Log(e);
+                LogEx(e);
             }
 			finally
 			{
@@ -407,7 +410,8 @@ namespace COTG.Services
 			autoRaid = _autoRaid;
 
 		}
-        public static async Task<bool> Post(int _cid, bool getCityFirst, bool _autoRaid)
+		// returns true if raids were sent
+		public static async Task<bool> Post(int _cid, bool getCityFirst, bool _autoRaid)
         {
 
 			
@@ -470,7 +474,7 @@ namespace COTG.Services
                     City.TryGet(cid, out var city);
                     return await Dungeon.ShowDungeonList(city, jse,autoRaid);
                 }
-				return true; // no dungeons?
+				return false; // no dungeons?
             }
             catch (Exception e)
             {
@@ -1074,7 +1078,7 @@ Cookie: _ga=GA1.2.1055797043.1609264074; _fbp=fb.1.1609264074502.2131400288; __g
             catch (Exception e)
             {
                 
-                Log(e);
+                LogEx(e);
             }
 			finally
 			{

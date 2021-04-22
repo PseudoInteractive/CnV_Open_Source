@@ -168,7 +168,7 @@ namespace COTG.JSON
                         }
                         catch (Exception e)
                         {
-                            Log(e);
+                            LogEx(e);
                         }
                     });
 
@@ -444,7 +444,7 @@ namespace COTG.JSON
             }
             catch (Exception _exception)
             {
-                COTG.Debug.Log(_exception);
+                COTG.Debug.LogEx(_exception);
                 updateInProgress = false;
                 if (fetchReports)
                     ShellPage.WorkEnd(work);

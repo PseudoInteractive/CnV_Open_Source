@@ -17,7 +17,6 @@ namespace COTG.Services
 	class Blobs
 	{
 		const string connectionString = "DefaultEndpointsProtocol=https;AccountName=avata;AccountKey=IWRPGlttorpK5DcHWin/GdA2VEcZKnHkr30lE0ZDvKLG0q1CjZONcAQYI2D26DENd7TIAxF8tPsE0mIk98BafA==;EndpointSuffix=core.windows.net";
-		public static BlobContainerClient client;
 
 		struct Stat
 		{
@@ -43,7 +42,7 @@ namespace COTG.Services
 		{
 
 
-			BlobContainerClient container = new BlobContainerClient(connectionString, statsContainerName);
+			BlobContainerClient container = new BlobContainerClient(connectionString, statsContainerName, GetClientOptions());
 			await container.CreateIfNotExistsAsync();
 
 			for (; ; )
@@ -115,7 +114,7 @@ namespace COTG.Services
 							}
 							catch (Exception ex)
 							{
-								Debug.Log(ex);
+								Debug.LogEx(ex);
 							}
 
 						}
@@ -170,7 +169,7 @@ namespace COTG.Services
 		//				mem.Seek(0, SeekOrigin.Begin);
 		//				var str = changes.dateStr;
 		//				var success = await container.GetBlobClient(str).UploadAsync(str, new BlobUploadOptions() { Conditions = new BlobRequestConditions() { IfMatch = changes.eTag } });
-		//				if (success.GetRawResponse().Status != 400)
+		//				if (success.GetRawResponse().Status != 200)
 		//				{
 		//					return false;
 		//				}
@@ -194,11 +193,27 @@ namespace COTG.Services
 
 		//}
 
+		static BlobContainerClient changesContainer;
+		public static BlobClientOptions GetClientOptions()
+		{
+			var rv = new BlobClientOptions();
+
+#if DEBUG
+			rv.Diagnostics.IsLoggingEnabled = true;
+
+#else
+		rv.Diagnostics.IsLoggingEnabled = false;
+#endif
+			return rv;
+		}
 		public static async Task<BlobContainerClient> GetChangesContainer()
 		{
-			BlobContainerClient container = new BlobContainerClient(connectionString, changesContainerName);
-			await container.CreateIfNotExistsAsync();
-			return container;
+			if (changesContainer == null)
+			{
+				changesContainer = new BlobContainerClient(connectionString, changesContainerName, GetClientOptions());
+				await changesContainer.CreateIfNotExistsAsync();
+			}
+			return changesContainer;
 		}
 	}
 }

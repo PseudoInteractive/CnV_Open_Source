@@ -151,7 +151,7 @@ namespace COTG.Game
 			}
 			catch (Exception _e)
 			{
-				Log(_e);
+				LogEx(_e);
 
 			}
 
@@ -240,7 +240,7 @@ namespace COTG.Game
 			}
 			catch (Exception e)
 			{
-				Log(e);
+				LogEx(e);
 			}
 
 

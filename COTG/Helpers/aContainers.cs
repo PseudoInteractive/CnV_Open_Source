@@ -120,11 +120,80 @@ namespace COTG.Helpers
 	{
 		public event NotifyCollectionChangedEventHandler CollectionChanged;
 
-		public void NotifyReset()
+		public void NotifyReset(T changed = default)
 		{
-			//  Assert(App.IsOnUIThread());
-			if (CollectionChanged != null)
-				CollectionChanged(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
+			App.DispatchOnUIThreadSneakyLow(() =>
+			{
+				//  Assert(App.IsOnUIThread());
+				if (CollectionChanged != null)
+				{
+					if (changed != null)
+					{
+						CollectionChanged(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset, changed));
+					}
+					else
+					{
+						CollectionChanged(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
+					}
+				}
+		});
+
+		}
+
+		public void NotifyAdd( T added )
+		{
+			App.DispatchOnUIThreadSneakyLow(() =>
+			{
+				//  Assert(App.IsOnUIThread());
+				if (CollectionChanged != null)
+				{
+					CollectionChanged(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, added));
+				}
+			});
+		}
+		public void NotifyAdd(IList<T> added)
+		{
+			App.DispatchOnUIThreadSneakyLow(() =>
+			{
+				//  Assert(App.IsOnUIThread());
+				if (CollectionChanged != null)
+				{
+					CollectionChanged(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, added));
+				}
+			});
+		}
+		public void NotifyRemove(T removed)
+		{
+			App.DispatchOnUIThreadSneakyLow(() =>
+			{
+				//  Assert(App.IsOnUIThread());
+				if (CollectionChanged != null)
+				{
+					CollectionChanged(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, removed));
+				}
+			});
+		}
+		public void NotifyRemove(IList<T> removed)
+		{
+			App.DispatchOnUIThreadSneakyLow(() =>
+			{
+				//  Assert(App.IsOnUIThread());
+				if (CollectionChanged != null)
+				{
+					CollectionChanged(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, removed));
+				}
+			});
+		}
+		public void NotifyMove(T moved, int oldIndex, int newIndex)
+		{
+			App.DispatchOnUIThreadSneakyLow(() =>
+			{
+				//  Assert(App.IsOnUIThread());
+				if (CollectionChanged != null)
+				{
+					CollectionChanged(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Move,moved,newIndex, oldIndex ));
+				}
+			});
 		}
 		public void Set( IEnumerable<T> src)
 		{
@@ -167,7 +236,7 @@ namespace COTG.Helpers
                }
                catch (Exception e)
                {
-                   Log(e);
+                   LogEx(e);
                }
            });
         }

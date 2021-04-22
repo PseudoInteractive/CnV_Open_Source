@@ -51,7 +51,7 @@ namespace COTG.Views
 
 			   try
 			   {
-				   await JSClient.ChangeCity(cid, false);
+					Assert(cid == City.build);
 				   var city = City.GetOrAddCity(cid);
 				   var nameDialog = new CityRename();
 				   bool isNew = IsNew(city);
@@ -113,7 +113,7 @@ namespace COTG.Views
 					   }
 					   catch (Exception ex)
 					   {
-						   Log(ex);
+						   LogEx(ex);
 					   }
 				   }
 					var result = await App.DispatchOnUIThreadTask(async () =>
@@ -170,7 +170,7 @@ namespace COTG.Views
 				catch (Exception e)
 			   {
 				   Note.Show("Something went wrong");
-				   COTG.Debug.Log(e);
+				   COTG.Debug.LogEx(e);
 			   }
 
 		   

@@ -322,7 +322,7 @@ namespace COTG.Game
 				foreach (var tc in troopsHome)
 				{
 					// todo: research?
-					atk += tc.count * ttAttack[tc.type] * ttCombatBonus[tc.type];
+					atk += tc.attack;
 				}
 				return atk;
 			}
@@ -1032,7 +1032,7 @@ namespace COTG.Game
 			}
 			catch (Exception ex)
 			{
-				Log(ex);
+				LogEx(ex);
 			}
 
 
@@ -1400,6 +1400,7 @@ namespace COTG.Game
 		public enum BuildStage
 		{
 			_new,
+			leave,
 			noLayout,
 			setup,
 			cabins,
@@ -1410,6 +1411,7 @@ namespace COTG.Game
 			teardown,
 			complete,
 			pending,
+			count,
 		}
 		public struct BuildInfo
 		{
@@ -1598,8 +1600,11 @@ namespace COTG.Game
 		public BuildInfo GetBuildStage(BuildingCount bc)
 		{
 			var buildingLimit = GetBuildingLimit(bc);
+			if (leaveMe)
+				return new BuildInfo(BuildStage.leave, buildingLimit);
 			if (CityRename.IsNew(this))
 				return new BuildInfo(BuildStage._new,buildingLimit);
+			
 			if (!isLayoutValid)
 				return new BuildInfo(BuildStage.noLayout, buildingLimit);
 

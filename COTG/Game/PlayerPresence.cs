@@ -73,7 +73,7 @@ namespace COTG.Game
 			}
 			catch(Exception e)
 			{
-				Debug.Log(e);
+				Debug.LogEx(e);
 			}
 		}
 	}

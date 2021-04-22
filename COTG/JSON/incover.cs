@@ -216,7 +216,7 @@ namespace COTG.JSON
 										  }
 										  catch (Exception e)
 										  {
-											  Log(e);
+											  LogEx(e);
 										  }
 										  var sumDef = new List<TroopTypeCount>();
 										  var processedTroopsHome = false; // for some reason, these repeat
@@ -786,7 +786,7 @@ namespace COTG.JSON
 											}
 											catch (Exception e)
 											{
-												Log(e);
+												LogEx(e);
 											}
 
 
@@ -881,7 +881,7 @@ namespace COTG.JSON
 						}
 						catch (Exception _exception)
 						{
-							COTG.Debug.Log(_exception);
+							COTG.Debug.LogEx(_exception);
 						}finally
 						{
 							updateInProgress = false;
@@ -894,7 +894,7 @@ namespace COTG.JSON
 				catch (Exception exception)
 				{
 					updateInProgress = false;
-					Log(exception);
+					LogEx(exception);
 					if (fetchReports)
 						ShellPage.WorkEnd(work);
 				}

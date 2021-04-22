@@ -308,7 +308,7 @@ namespace COTG.Views
 			Assert(App.uiSema.CurrentCount == 0);
 			Assert(App.IsOnUIThread());
 			await GetCity.Post(cid);
-			if (city.LeaveMe())
+			if (city.leaveMe)
 			{
 				Note.Show($"Skipping ${city.nameMarkdown}, 'LeaveMe' tag is set");
 				return true;
@@ -319,10 +319,9 @@ namespace COTG.Views
 
 			if (stage.stage == BuildStage._new && allowRename)
 			{
-
-				//				if(!city.isBuild)
-				//				//					await JSClient.ChangeCity(city.cid, false);
-
+				if (!await CityRename.RenameDialog(cid, false))
+					return false;
+			
 				stage = city.GetBuildStage(bc);
 			}
 			Assert(city.isBuild);
@@ -910,7 +909,7 @@ namespace COTG.Views
 										}
 										else if (pass == 1)
 										{
-											var spare = CityBuild.FindAnyFreeSpot();
+											var spare = CityBuild.FindAnyFreeSpot(id);
 											if (await MoveBuilding(id, spare, false)) 
 											{
 												hasChanges = true;
@@ -926,7 +925,7 @@ namespace COTG.Views
 										}
 
 									}
-								}
+								
 							}
 						}
 						if (hasChanges)
@@ -1160,8 +1159,12 @@ namespace COTG.Game
 
 	public partial class City
 	{
+		public bool leaveMe => HasTag(Tags.LeaveMe);
+
 		public async Task<BuildInfo> GetBuildStage()
 		{
+			if(leaveMe)
+				return new BuildInfo(BuildStage.leave, 100);
 			if (CityRename.IsNew(this))
 				return new BuildInfo(BuildStage._new, 100);
 			//await GetCity.Post(cid);
@@ -1201,6 +1204,8 @@ namespace COTG.Game
 
 		public BuildInfo GetBuildStageNoFetch()
 		{
+			if (leaveMe)
+				return new BuildInfo(BuildStage.leave, 100);
 			if (CityRename.IsNew(this))
 				return new BuildInfo(BuildStage._new, 100);
 			if (buildings == Emptybuildings)
@@ -1214,6 +1219,8 @@ namespace COTG.Game
 		public static async Task<BuildInfo> GetBuildBuildStage(BuildingCount bc)
 		{
 			var city = GetBuild();
+			if (city.leaveMe)
+				return new BuildInfo(BuildStage.leave, 100);
 			if (CityRename.IsNew(city))
 				return new BuildInfo(BuildStage._new, 100);
 		//	await GetCity.Post(City.build);
@@ -1224,6 +1231,9 @@ namespace COTG.Game
 		public static async Task<BuildInfo> GetBuildBuildStage()
 		{
 			var city = GetBuild();
+			if (city.leaveMe)
+				return new BuildInfo(BuildStage.leave, 100);
+
 			if (CityRename.IsNew(city))
 				return new BuildInfo(BuildStage._new, 100);
 			await GetCity.Post(City.build);
@@ -1361,7 +1371,7 @@ namespace COTG.Game
 			}
 			catch(Exception ex)
 			{
-				Log(ex);
+				LogEx(ex);
 			}
 
 			return true;

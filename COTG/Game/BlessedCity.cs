@@ -55,7 +55,7 @@ namespace COTG.Game
             }
             catch (Exception e)
             {
-                COTG.Debug.Log(e);
+                COTG.Debug.LogEx(e);
             }
 
         }

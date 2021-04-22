@@ -38,7 +38,7 @@ namespace COTG.Game
 	{
 		public static TagInfo Get(this Tags tag) => new TagInfo() { id = tag, s = tag.ToString() };
 		//public static TagInfo tagLeaveMe = Get(Tags.LeaveMe);
-		public static bool LeaveMe(this Spot spot) => spot.HasTag(Tags.LeaveMe); 
+		
 
 		public static TagInfo[] tags;
 		static TagHelper()

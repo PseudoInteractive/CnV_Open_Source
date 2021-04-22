@@ -45,7 +45,7 @@
 							UserFilterMode="Auto"
 							PointerPressed="CityGrid_PointerPress"
 							PointerExited="cityGrid_PointerExited"
-							FontSize="{StaticResource MediumFontSize}"
+							FontSize="{StaticResource SmallFontSize}"
 							IsTextScaleFactorEnabled="False"
 							GroupPanelPosition="Bottom"
 							SelectionUnit="Row"

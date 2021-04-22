@@ -54,7 +54,7 @@ namespace COTG
             }
             catch (Exception e)
             {
-                Log(e);
+                LogEx(e);
                 return a;
             }
 
@@ -73,7 +73,7 @@ namespace COTG
             }
             catch (Exception e)
             {
-                Log(e);
+                LogEx(e);
                 return a;
             }
 

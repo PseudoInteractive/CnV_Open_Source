@@ -742,7 +742,7 @@ namespace COTG.Views
 						}
 						catch(UIException ex)
 						{
-							Log(ex);
+							LogEx(ex);
 							EnsureNotCityView();
 		
 							throw;

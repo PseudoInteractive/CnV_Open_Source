@@ -44,7 +44,7 @@
 							UserFilterMode="Auto"
 							PointerPressed="CityGrid_PointerPress"
 							PointerExited="cityGrid_PointerExited"
-							FontSize="{StaticResource MediumFontSize}"
+							FontSize="{StaticResource SmallFontSize}"
 							IsTextScaleFactorEnabled="False"
 							GroupPanelPosition="Bottom"
 							SelectionUnit="Row"
@@ -115,7 +115,7 @@
 												DefaultSortOrder="Descending"
 												SizeMode="Auto"
 												Tip="TS of Troops at home that can raid" />
-				<tg:DataGridNumericalColumn PropertyName="tsRaidIdle"
+				<tg:DataGridNumericalColumn PropertyName="raidIdle"
 										
 												CellContentStyle="{StaticResource RightAlign}"
 												CellContentFormat="{}{0,3:P1}"

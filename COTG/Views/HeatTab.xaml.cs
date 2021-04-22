@@ -18,7 +18,7 @@ using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
-
+using Microsoft.Toolkit.Uwp.UI;
 using static COTG.Debug;
 // The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234236
 
@@ -34,43 +34,19 @@ namespace COTG.Views
 			this.InitializeComponent();
 		}
 
-		public List<WorldRecord> records { get; set; }  = new();
-		public void SetItems(DateTimeOffset[] _items)
+		public static void DaysChanged()
 		{
-			records.Clear();
-			foreach (var _i in _items)
-			{
-				var i = _i;
-				var d = i.Date;
-				WorldRecord rec = null;
-				foreach (var dayRec in records)
+			App.DispatchOnUIThreadLow( ()=>
 				{
-					if(dayRec.t == d)
+					if (instance.groups.View != null)
 					{
-						rec = dayRec;
+						var col = instance.groups.View.CollectionGroups;
+						instance.zoomedOut.ItemsSource = col;
+						HeatMapDay.days.NotifyReset();
 					}
-				}
-				if(rec==null)
-				{
-					rec = new WorldRecord();
-					rec.t = d;
-					records.Add(rec);
-				}
-				rec.children.Add(new WorldRecord() {t=i });
-
-			}
-			//days.Source = dayRecords;
-
-//			var result =
-//				from t in _items
-//				group t by t.Substring(0,10) into g
-//				orderby g.Key
-//				select g;
-
-			//			viewSource.Source = result;
-			//			items=(_items);
-			////			items.NotifyReset();
+			});
 		}
+	
 
 		private void Now_Click(object sender, RoutedEventArgs e)
 		{
@@ -83,8 +59,12 @@ namespace COTG.Views
 
 			if (visible)
 			{
+				HeatMap.LoadList();
+				DaysChanged();
 				zoom.Focus(FocusState.Programmatic);
 				snapshots_SelectionChanged(null, null);
+				zoom.IsZoomedInViewActive = true;
+				HeatMapDay.days.NotifyReset();
 			}
 			else
 			{
@@ -97,8 +77,8 @@ namespace COTG.Views
 		private void snapshots_SelectionChanged(object sender, SelectionChangedEventArgs e)
 		{
 
-			DateTimeOffset t1 = AUtil.dateTimeZero;
-			DateTimeOffset t0 = DateTimeOffset.UtcNow;
+			var t1 = SmallTime.zero;
+			var t0 = SmallTime.serverNow;
 
 			var sel = listView.SelectedItems;
 			
@@ -107,17 +87,17 @@ namespace COTG.Views
 			{
 				foreach(var i in sel)
 				{
-					var t= (i as WorldRecord).t;
+					var t= (i as Game.HeatMapDelta).t;
 					if (t < t0)
 						t0 = t;
 					if (t > t1)
 						t1 = t;
 				}
-				Services.WorldStorage.SetHeatmapDates(t0.FromServerTime(), t1.FromServerTime()); // Is Timezone Right?
+			//	Services.WorldStorage.SetHeatmapDates(t0.FromServerTime(), t1.FromServerTime()); // Is Timezone Right?
 			}
 			else
 			{
-				World.ClearHeatmap();
+			//	World.ClearHeatmap();
 			}
 		}
 
@@ -141,14 +121,50 @@ namespace COTG.Views
 
 		}
 
-		private void TextBlock_Tapped(object sender, TappedRoutedEventArgs e)
+		private void ZoomedOutTapped(object sender, TappedRoutedEventArgs e)
 		{
+			var block = sender as TextBlock;
+			var lv = zoomedOut;
+			var listView = block.FindAscendant(typeof(ListViewItem));
+			lv.Items
 
+
+			Log(e.OriginalSource);
+			Log(sender);
+		}
+
+		private void ZoomedInGroupHeaderTapped(object sender, TappedRoutedEventArgs e)
+		{
+			var block = sender as TextBlock;
+			var lv = zoomedOut
+			var listView = block.FindAscendant(typeof(ListViewItem));
+
+
+			Log(e.OriginalSource);
+			Log(sender);
 		}
 
 		private void listView_ItemClick(object sender, ItemClickEventArgs e)
 		{
-	//		snapshots_SelectionChanged(null, null);
+			Log(e.ClickedItem);
+			Log(sender);
+			//		snapshots_SelectionChanged(null, null);
+		}
+
+		private void ZoomedOutItemClick(object sender, ItemClickEventArgs e)
+		{
+			var i = e.ClickedItem as ICollectionViewGroup;
+			var day = i.Group as HeatMapDay;
+			if(!day.isInitialized )
+			{
+				day.Load();
+			}
+
+		}
+
+		private void ToggleZoom(object sender, RoutedEventArgs e)
+		{
+			zoom.IsZoomedInViewActive = !zoom.IsZoomedInViewActive;
 		}
 	}
 	//public class DayChanges
@@ -156,7 +172,7 @@ namespace COTG.Views
 	//	public SmallTime t; // server time, only the date format is non zero
 	//	public string dateStr => t.ToString("yyyy-MM-dd");
 	//	public Azure.ETag eTag;
-		
+
 	//	public uint[] state; // newest state recorded
 
 	//	public List<SnapshotChanges> snapshots { get; set; } = new();
@@ -183,20 +199,14 @@ namespace COTG.Views
 	//	public void Save(BinaryWriter o)
 	//	{
 	//		o.Write(t.seconds);
-			
+
 	//		o.Write(deltas.Length/2);
 	//	//	o.Write7BitEncodedInt((byte*)deltas);
-			
+
 	//	}
 
 	//}
 
-	public class WorldRecord
-	{
-		public DateTimeOffset t;
-		public string dateStr => t.ToString("yyyy-MM-dd");
-		public string timeStr => t.ToString("HH':'mm':'ss");
-		public List<WorldRecord> children { get; set; } = new();
-	}
+
 
 }

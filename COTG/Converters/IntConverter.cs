@@ -14,7 +14,7 @@ namespace COTG.Converters
 
         public object ConvertBack(object value, Type targetType, object parameter, string language)
         {
-            if (int.TryParse(value.ToString(), System.Globalization.NumberStyles.Number, CultureInfo.InvariantCulture, out var v))
+            if ( value.ToString().TryParseInt( out var v))
                 return v;
             return default(int);
         }

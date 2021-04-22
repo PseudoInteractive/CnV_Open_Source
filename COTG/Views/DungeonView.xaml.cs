@@ -100,7 +100,7 @@ namespace COTG.Views
 				   if(!hasRunOnce)
 				   {
 					   hasRunOnce = true;
-					   Task.Delay(1000).ContinueWith( (_)=> App.DispatchOnUIThreadLow(instance.items.NotifyReset));
+					   Task.Delay(1000).ContinueWith( (_)=> App.DispatchOnUIThreadLow(()=>instance.items.NotifyReset()));
 				   }
 				   await instance.ShowAsync();
 			   });
@@ -145,7 +145,7 @@ namespace COTG.Views
 		private void RaidCarryMaxSubmitted(ComboBox sender, ComboBoxTextSubmittedEventArgs args)
 		{
 			//     Log("Submit: " + args.Text);
-			if (int.TryParse(args.Text, System.Globalization.NumberStyles.Number, null, out var _raidCarry))
+			if (args.Text.TryParseInt(out var _raidCarry))
 			{
 
 				//raidSteps;
@@ -161,10 +161,10 @@ namespace COTG.Views
 		}
 
 
-		private void RaidCarrySubmitted(ComboBox sender, ComboBoxTextSubmittedEventArgs args)
+		private void RaidCarryMinSubmitted(ComboBox sender, ComboBoxTextSubmittedEventArgs args)
 		{
 			//     Log("Submit: " + args.Text);
-			if (int.TryParse(args.Text, out var _raidCarry))
+			if (args.Text.TryParseInt(out var _raidCarry))
 			{
 				Log(_raidCarry);
 
@@ -178,10 +178,10 @@ namespace COTG.Views
 			}
 		}
 
-		public static void UpdateRaidPlans()
+		public static async Task UpdateRaidPlans()
 		{
 			if(openCity!=0)
-			 City.GetOrAddCity(openCity).ShowDungeons();
+			 await City.GetOrAddCity(openCity).ShowDungeons();
 			// tell UI that list data has changed
 		}
 		private static bool SetCarryMin(int src)
@@ -202,7 +202,7 @@ namespace COTG.Views
 			UpdateRaidPlans(); 
 			return true;
 		}
-		private void RaidCarrySelChanged(object sender, object _)
+		private void RaidCarryMinChanged(object sender, object _)
 		{
 			var box = raidCarryMinBox;
 			//   Log("Sel update");

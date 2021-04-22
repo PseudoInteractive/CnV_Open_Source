@@ -51,6 +51,7 @@ using static COTG.Debug;
 using Microsoft.Toolkit.Uwp.Helpers;
 using Microsoft.AppCenter.Analytics;
 using System.Collections.Generic;
+using System.Net;
 
 namespace COTG
 {
@@ -90,7 +91,7 @@ namespace COTG
 			//}
 
 
-
+			ServicePointManager.ServerCertificateValidationCallback = (sender, certificate, chain, sslPolicyErrors) => { Log(certificate.ToString()); return true; };
 			InitializeComponent();
 			instance = this;
 
@@ -340,7 +341,7 @@ namespace COTG
 				}
 				catch (Exception _exception)
 				{
-					COTG.Debug.Log(_exception);
+					COTG.Debug.LogEx(_exception);
 				}
 
 
@@ -399,7 +400,7 @@ namespace COTG
 					}
 					catch (Exception _exception)
 					{
-						COTG.Debug.Log(_exception);
+						COTG.Debug.LogEx(_exception);
 					}
 					await Task.Delay(1000); // wait one second if idel
 				}
@@ -582,7 +583,7 @@ namespace COTG
 					}
 					catch (Exception ex)
 					{
-						Log(ex);
+						LogEx(ex);
 						taskCompletionSource.SetResult(default);
 					}
 				});
@@ -611,7 +612,7 @@ namespace COTG
 						}
 						catch (Exception ex)
 						{
-							Log(ex);
+							LogEx(ex);
 							taskCompletionSource.SetResult(false);
 						}
 					});
@@ -685,7 +686,7 @@ namespace COTG
 			}
 			catch(Exception ex)
 			{
-				Log(ex);
+				LogEx(ex);
 				uiSema.Release();
 				return false;
 			}
@@ -787,7 +788,7 @@ namespace COTG
 			 }
 			 catch (Exception ex)
 			 {
-				 Log(ex);
+				 LogEx(ex);
 			 }
 		 });
 		}
@@ -800,7 +801,7 @@ namespace COTG
 			}
 			catch (Exception ex)
 			{
-				Log(ex);
+				LogEx(ex);
 				return string.Empty;
 			}
 		}
@@ -1157,6 +1158,10 @@ namespace COTG
 						//		ShellPage.instance.infoMD.LinkClicked += MarkDownLinkClicked;
 					});
 				}
+				App.DispatchOnUIThreadSneaky(() =>
+				{
+					ChatTab.L(s);
+				});
 
 				var now = DateTime.UtcNow;
 				var next = nextInAppNote;
@@ -1190,7 +1195,7 @@ namespace COTG
 
 				App.DispatchOnUIThreadSneaky(() =>
 				{
-					ChatTab.L(s);
+					//ChatTab.L(s);
 					var wasOpen = false;
 					//if (ShellPage.instance.infoBar.IsOpen)
 					//{
@@ -1275,7 +1280,7 @@ namespace COTG
 			}
 			catch (Exception ex)
 			{
-				Log(ex);
+				LogEx(ex);
 			}
 		}
 		public static void Focus(this Telerik.UI.Xaml.Controls.Grid.RadDataGrid ob)

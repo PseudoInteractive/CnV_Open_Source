@@ -209,7 +209,7 @@ namespace COTG.Views
 					var cid = ci[0].GetAsInt();
 					var city = City.GetOrAddCity(cid);
 					city.points = (ushort)ci[2].GetAsInt();
-					var isBuilding = ((ci[4].GetAsFloat() + ci[3].GetAsFloat()) != 0)||(city.GetBuildStageNoFetch().stage==BuildStage.complete);
+					var isBuilding = ((ci[4].GetAsFloat() + ci[3].GetAsFloat()) != 0);
 					if (isBuilding != city.isBuilding)
 					{
 						city.isBuilding = isBuilding;
@@ -338,7 +338,7 @@ namespace COTG.Views
 				}
 				catch (Exception ex)
 				{
-					Log(ex);
+					LogEx(ex);
 				}
 				finally
 				{

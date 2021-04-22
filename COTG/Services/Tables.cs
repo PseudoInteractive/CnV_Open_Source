@@ -74,7 +74,7 @@ namespace COTG.Services
 			}
 			catch (Exception e)
 			{
-				Log(e);
+				LogEx(e);
 				tableClient = null; // try recreating it.
 			}
 		}
@@ -98,7 +98,7 @@ namespace COTG.Services
 			}
 			catch(Exception ex)
 			{
-				Log(ex);
+				LogEx(ex);
 				tableClient = null; // try recreating it.
 			}
 			return null;

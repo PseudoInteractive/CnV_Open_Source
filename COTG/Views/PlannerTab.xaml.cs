@@ -430,5 +430,12 @@ namespace COTG.Views
 			CityBuild._isPlanner = false;
 		//	PlannerTab.instance.Close();
 		}
+
+		public override void Close()
+		{
+			base.Close();
+			CityBuild._isPlanner = false;
+
+		}
 	}
 }

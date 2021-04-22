@@ -6,13 +6,14 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
+	TabFocusNavigation="Cycle"
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
   Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
     >
 	<Page.Resources>
 		<ResourceDictionary Source="ms-appx:///Microsoft.UI.Xaml/DensityStyles/Compact.xaml" />
 	</Page.Resources>
-	<Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+	<Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch" TabFocusNavigation="Cycle" >
         <muxc:TabView x:Name="Tabs" x:FieldModifier="public"
                       TabWidthMode="SizeToContent"
                       AllowFocusOnInteraction="True"
@@ -34,12 +35,12 @@
                              TabStripDrop="Tabs_TabStripDrop"
                     
                              TabDragStarting="Tabs_TabDragStarting" >
-            <muxc:TabView.TabStripHeader>
+            <muxc:TabView.TabStripHeader >
                 <Grid x:Name="ShellTitlebarInset"  Background="Transparent"   />
             </muxc:TabView.TabStripHeader>
             <muxc:TabView.TabStripFooter>
                 <Grid x:Name="CustomDragRegion"  Background="Transparent" >
-                    <TextBlock x:Name="tip" x:FieldModifier="public" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+					<TextBlock x:Name="tip" x:FieldModifier="public" VerticalAlignment="Center" HorizontalAlignment="Center" Tapped="tip_Tapped" TabFocusNavigation="Cycle" />
                 </Grid> 
             </muxc:TabView.TabStripFooter>
         </muxc:TabView>

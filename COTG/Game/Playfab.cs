@@ -185,7 +185,7 @@ namespace COTG.Game
 			}
 			catch (Exception _exception)
 			{
-				COTG.Debug.Log(_exception);
+				COTG.Debug.LogEx(_exception);
 			}
 
 

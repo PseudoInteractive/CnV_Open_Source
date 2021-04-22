@@ -1,8 +1,11 @@
-﻿using System;
+﻿using Microsoft.Toolkit.HighPerformance.Buffers;
+
+using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using System.Text;
 
+using static COTG.Debug;
 namespace COTG.BinaryMemory
 {
 	/// <summary>
@@ -388,6 +391,7 @@ namespace COTG.BinaryMemory
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public uint[] ReadUints()
 		{
+			Assert(false);// optimize
 			var count = Read7BitEncoded();
 			var byteCount = count * sizeof(uint);
 			uint[] rv = new uint[count];
@@ -400,13 +404,14 @@ namespace COTG.BinaryMemory
 			return rv;
 		}
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public uint[] ReadPackedUints()
+		public MemoryOwner<uint> ReadPackedUints()
 		{
 			var count = Read7BitEncoded();
-			uint[] rv = new uint[count];
+			var rv = MemoryOwner<uint>.Allocate((int)count);
+			var span = rv.Span;
 			for(int i=0;i<count;++i)
 			{
-				rv[i] = Read7BitEncoded();
+				 span[i] = Read7BitEncoded();
 			}
 
 			return rv;

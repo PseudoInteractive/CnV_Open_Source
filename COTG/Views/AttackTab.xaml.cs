@@ -450,7 +450,7 @@ namespace COTG.Views
             }
             catch (Exception ex)
             {
-                Log(ex);
+                LogEx(ex);
                 Note.Show("Invalid format");
 
             }
@@ -474,7 +474,7 @@ namespace COTG.Views
             }
             catch (Exception ex)
             {
-                Log(ex);
+                LogEx(ex);
                 Note.Show("Invalid clipboard text");
             }
         }
@@ -513,7 +513,7 @@ namespace COTG.Views
                     }
                     catch (Exception ex)
                     {
-                        Log(ex);
+                        LogEx(ex);
                     }
                 }
                 Note.Show($"{reals} added, {duplicates} updated");
@@ -592,7 +592,7 @@ namespace COTG.Views
                     }
                     catch (Exception ex)
                     {
-                        Log(ex);
+                        LogEx(ex);
                     }
                 }
                 Note.Show($"{reals-duplicates} added, {duplicates} updated");
@@ -601,7 +601,7 @@ namespace COTG.Views
             }
             catch (Exception ex)
             {
-                Log(ex);
+                LogEx(ex);
                 Note.Show("Invalid clipboard text");
             }
         }

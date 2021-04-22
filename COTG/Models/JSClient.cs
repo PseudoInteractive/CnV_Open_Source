@@ -33,6 +33,7 @@ using ContentDialogResult = Windows.UI.Xaml.Controls.ContentDialogResult;
 using Microsoft.Toolkit.Uwp.Helpers;
 using System.Text;
 using System.Web;
+using Windows.Security.Cryptography.Certificates;
 
 namespace COTG
 {
@@ -332,6 +333,8 @@ namespace COTG
 
 			try
 			{
+				
+
 				view = new WebView(Windows.UI.Xaml.Controls.WebViewExecutionMode.SeparateThread)
 				{
 					//HorizontalAlignment = HorizontalAlignment.Stretch,
@@ -359,7 +362,7 @@ namespace COTG
 				view.NewWindowRequested += View_NewWindowRequested;
 				//  view.WebResourceRequested += View_WebResourceRequested1;
 				//	webViewBrush = new WebViewBrush() { Stretch = Stretch.Fill };
-				
+		
 				//   view.CacheMode = CacheMode.
 				//Grid.Se SetAlignLeftWithPanel(view, true);
 				//RelativePanel.SetAlignRightWithPanel(view, true);
@@ -383,7 +386,7 @@ namespace COTG
 			}
 			catch (Exception e)
 			{
-				Log(e);
+				LogEx(e);
 			}
 			return view;
 
@@ -578,7 +581,7 @@ namespace COTG
 					}
 					catch (Exception e)
 					{
-						Log(e);
+						LogEx(e);
 					}
 
 				}
@@ -600,7 +603,7 @@ namespace COTG
 			}
 			catch (Exception e)
 			{
-				Log(e);
+				LogEx(e);
 			}
 
 		}
@@ -658,7 +661,7 @@ namespace COTG
 			}
 			catch (Exception e)
 			{
-				Log(e);
+				LogEx(e);
 			}
 
 		}
@@ -747,7 +750,7 @@ namespace COTG
 			}
 			catch (Exception e)
 			{
-				Log(e);
+				LogEx(e);
 			}
 
 		}
@@ -793,7 +796,7 @@ namespace COTG
 			}
 			catch (Exception e)
 			{
-				Log(e);
+				LogEx(e);
 			}
 		}
 
@@ -825,7 +828,7 @@ namespace COTG
 			}
 			catch (Exception e)
 			{
-				Log(e);
+				LogEx(e);
 			}
 		}
 		public static void ShowAlliance(string allianceName)
@@ -837,7 +840,7 @@ namespace COTG
 			}
 			catch (Exception e)
 			{
-				Log(e);
+				LogEx(e);
 			}
 		}
 		public static void ShowReport(string report)
@@ -850,7 +853,7 @@ namespace COTG
 			}
 			catch (Exception e)
 			{
-				Log(e);
+				LogEx(e);
 			}
 		}
 
@@ -893,7 +896,7 @@ namespace COTG
 			}
 			catch (Exception e)
 			{
-				Log(e);
+				LogEx(e);
 			}
 
 
@@ -1431,6 +1434,14 @@ namespace COTG
 			Log($"Nav complete {args.Uri}");
 
 		}
+		static Certificate cotgCert;
+		private static void  ServerCustomValidationRequested(HttpBaseProtocolFilter sender, HttpServerCustomValidationRequestedEventArgs customValidationArgs)
+		{
+		
+			cotgCert = customValidationArgs.ServerCertificate;
+			// Validate the server certificate as required.
+			//            customValidationArgs.Reject();
+		}
 
 		static private void View_NavigationStarting(WebView sender, Windows.UI.Xaml.Controls.WebViewNavigationStartingEventArgs args)
 		{
@@ -1454,8 +1465,16 @@ namespace COTG
 						httpsHostString = $"https://{args.Uri.Host}";
 						httpsHost = new Uri(httpsHostString);
 						httpFilter = new HttpBaseProtocolFilter();
-					//	  HttpBaseProtocolFilter.CreateForUser( User.GetDefault());
-						    httpFilter.AllowAutoRedirect = true;
+						httpFilter.ServerCustomValidationRequested += ServerCustomValidationRequested;
+						httpFilter.IgnorableServerCertificateErrors.Add(ChainValidationResult.Untrusted);
+						httpFilter.IgnorableServerCertificateErrors.Add(ChainValidationResult.Expired);
+
+						
+						
+
+
+						//	  HttpBaseProtocolFilter.CreateForUser( User.GetDefault());
+						httpFilter.AllowAutoRedirect = true;
 						//                         httpFilter.ServerCredential =
 
 
@@ -1464,17 +1483,17 @@ namespace COTG
 							httpFilter.CacheControl.WriteBehavior = HttpCacheWriteBehavior.NoCache;
 						//						if (subId == 0)
 						//							httpFilter.CookieUsageBehavior = HttpCookieUsageBehavior.NoCookies;// HttpCookieUsageBehavior.Default;
-						//		httpFilter.IgnorableServerCertificateErrors.Add(Windows.Security.Cryptography.Certificates.ChainValidationResult.IncompleteChain);
-						//                    httpFilter.IgnorableServerCertificateErrors.Add(Windows.Security.Cryptography.Certificates.ChainValidationResult.InvalidCertificateAuthorityPolicy);
-						//                      httpFilter.IgnorableServerCertificateErrors.Add(Windows.Security.Cryptography.Certificates.ChainValidationResult.OtherErrors);
-						//                  httpFilter.IgnorableServerCertificateErrors.Add(Windows.Security.Cryptography.Certificates.ChainValidationResult.BasicConstraintsError);
-						//              httpFilter.IgnorableServerCertificateErrors.Add(Windows.Security.Cryptography.Certificates.ChainValidationResult.InvalidSignature);
-						//		httpFilter.IgnorableServerCertificateErrors.Add(Windows.Security.Cryptography.Certificates.ChainValidationResult.RevocationInformationMissing);
-						//		httpFilter.IgnorableServerCertificateErrors.Add(Windows.Security.Cryptography.Certificates.ChainValidationResult.RevocationFailure);
-						//                httpFilter.IgnorableServerCertificateErrors.Add(Windows.Security.Cryptography.Certificates.ChainValidationResult.Revoked);
-						//httpFilter.IgnorableServerCertificateErrors.Add(Windows.Security.Cryptography.Certificates.ChainValidationResult.WrongUsage);
-						//httpFilter.IgnorableServerCertificateErrors.Add(Windows.Security.Cryptography.Certificates.ChainValidationResult.Expired);
-						//httpFilter.IgnorableServerCertificateErrors.Add(Windows.Security.Cryptography.Certificates.ChainValidationResult.Untrusted);
+								httpFilter.IgnorableServerCertificateErrors.Add(Windows.Security.Cryptography.Certificates.ChainValidationResult.IncompleteChain);
+//						                    httpFilter.IgnorableServerCertificateErrors.Add(Windows.Security.Cryptography.Certificates.ChainValidationResult.InvalidCertificateAuthorityPolicy);
+						            //          httpFilter.IgnorableServerCertificateErrors.Add(Windows.Security.Cryptography.Certificates.ChainValidationResult.OtherErrors);
+						            //      httpFilter.IgnorableServerCertificateErrors.Add(Windows.Security.Cryptography.Certificates.ChainValidationResult.BasicConstraintsError);
+						         //     httpFilter.IgnorableServerCertificateErrors.Add(Windows.Security.Cryptography.Certificates.ChainValidationResult.InvalidSignature);
+								httpFilter.IgnorableServerCertificateErrors.Add(Windows.Security.Cryptography.Certificates.ChainValidationResult.RevocationInformationMissing);
+								httpFilter.IgnorableServerCertificateErrors.Add(Windows.Security.Cryptography.Certificates.ChainValidationResult.RevocationFailure);
+//						                httpFilter.IgnorableServerCertificateErrors.Add(Windows.Security.Cryptography.Certificates.ChainValidationResult.Revoked);
+						httpFilter.IgnorableServerCertificateErrors.Add(Windows.Security.Cryptography.Certificates.ChainValidationResult.WrongUsage);
+						httpFilter.IgnorableServerCertificateErrors.Add(Windows.Security.Cryptography.Certificates.ChainValidationResult.Expired);
+						httpFilter.IgnorableServerCertificateErrors.Add(Windows.Security.Cryptography.Certificates.ChainValidationResult.Untrusted);
 
 						//                        "Success", "Revoked", "InvalidSignature", "InvalidCertificateAuthorityPolicy", "BasicConstraintsError", "UnknownCriticalExtension", "OtherErrors""Success", "Revoked", "InvalidSignature", "InvalidCertificateAuthorityPolicy", "BasicConstraintsError", "UnknownCriticalExtension", "OtherErrors"
 						//                       httpFilter.AllowUI = true;
@@ -1534,14 +1553,14 @@ namespace COTG
 					catch (Exception e)
 					{
 
-						Log(e);
+						LogEx(e);
 					}
 
 				}
 			}
 			catch (Exception e)
 			{
-				Log(e);
+				LogEx(e);
 			}
 
 
@@ -1606,6 +1625,7 @@ namespace COTG
 		static private void View_NavigationFailed(object sender, Windows.UI.Xaml.Controls.WebViewNavigationFailedEventArgs e)
 		{
 
+			
 			Exception($"Internet failed, press any key to retry {e.Uri} {e.WebErrorStatus}");
 			Log("Refresh");
 			if (view != null)
@@ -1708,7 +1728,7 @@ namespace COTG
 									   }
 									   catch (Exception _ex)
 									   {
-										   Log(_ex);
+										   LogEx(_ex);
 										   await Task.Delay(1000);
 										   continue;
 
@@ -2357,7 +2377,7 @@ namespace COTG
 			   catch (Exception ex)
 			   {
 
-				   Log(ex);
+				   LogEx(ex);
 			   }
 		   });
 		}
