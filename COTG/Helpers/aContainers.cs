@@ -2,6 +2,7 @@
 using COTG.Views;
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
@@ -21,8 +22,12 @@ namespace COTG.Helpers
     public class DumbCollection<T> : List<T>, INotifyCollectionChanged, INotifyPropertyChanged
     {
         public event NotifyCollectionChangedEventHandler CollectionChanged;
+		public void OnPropertyChanged(T city, string propertyName = "") => PropertyChanged?.Invoke(city, new PropertyChangedEventArgs(propertyName));
+		public void OnPropertyChanged( string propertyName = "") => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+		public event PropertyChangedEventHandler PropertyChanged;
 
-        public DumbCollection(IList<T> collection)
+
+		public DumbCollection(IList<T> collection)
         {
             Set(collection);
         }
@@ -79,8 +84,6 @@ namespace COTG.Helpers
             Set(null);
         }
 
-        public void OnPropertyChanged(T city, string propertyName = "") => PropertyChanged?.Invoke(city, new PropertyChangedEventArgs(propertyName));
-        public event PropertyChangedEventHandler PropertyChanged;
 
         //       public void OnPropertyChanged(string propertyName) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 
@@ -116,20 +119,27 @@ namespace COTG.Helpers
 
 	// A List that allows manual reset notifications to be sent for large scale changes
 	// does not support find grained changes, any changes should be promoted to a reset
-	public class ResetableCollection<T> : List<T>, INotifyCollectionChanged
+	public class ResetableCollection<T> : List<T>, INotifyCollectionChanged, INotifyPropertyChanged
 	{
 		public event NotifyCollectionChangedEventHandler CollectionChanged;
+		public void OnPropertyChanged(T city, string propertyName = "") => PropertyChanged?.Invoke(city, new PropertyChangedEventArgs(propertyName));
+		public void OnPropertyChanged(string propertyName = "") => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+		public event PropertyChangedEventHandler PropertyChanged;
 
-		public void NotifyReset(T changed = default)
+
+		public static ResetableCollection<T> empty = new();
+
+		public void NotifyReset(T[] changed = null)
 		{
 			App.DispatchOnUIThreadSneakyLow(() =>
 			{
+				OnPropertyChanged();
 				//  Assert(App.IsOnUIThread());
 				if (CollectionChanged != null)
 				{
 					if (changed != null)
 					{
-						CollectionChanged(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset, changed));
+						CollectionChanged(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset, changed as IList ));
 					}
 					else
 					{
@@ -139,7 +149,15 @@ namespace COTG.Helpers
 		});
 
 		}
+		public void NotifyItemsChanged()
+		{
+			App.DispatchOnUIThreadSneakyLow(() =>
+			{
+				foreach(var i in this)
+					OnPropertyChanged(i);
+			});
 
+		}
 		public void NotifyAdd( T added )
 		{
 			App.DispatchOnUIThreadSneakyLow(() =>
@@ -158,7 +176,7 @@ namespace COTG.Helpers
 				//  Assert(App.IsOnUIThread());
 				if (CollectionChanged != null)
 				{
-					CollectionChanged(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, added));
+					CollectionChanged(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, added as IList));
 				}
 			});
 		}
@@ -180,7 +198,7 @@ namespace COTG.Helpers
 				//  Assert(App.IsOnUIThread());
 				if (CollectionChanged != null)
 				{
-					CollectionChanged(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, removed));
+					CollectionChanged(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, removed as IList));
 				}
 			});
 		}

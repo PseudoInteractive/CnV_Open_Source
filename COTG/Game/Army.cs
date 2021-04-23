@@ -524,7 +524,7 @@ namespace COTG.Game
             return hours;
         }
 
-		public static TroopTypeCount[] Sum(this TroopTypeCount[] a, TroopTypeCount[] b)
+		public static TroopTypeCount[] Add(this TroopTypeCount[] a, TroopTypeCount[] b)
 		{
 			var rv = a;
 			foreach (var tt in b)

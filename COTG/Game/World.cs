@@ -262,7 +262,7 @@ namespace COTG.Game
 			data.Dispose();
 		}
 
-		public static MemoryOwner<uint> SwizzleForCompression(Span<uint> src)
+		public static MemoryOwner<uint> SwizzleForCompression(ReadOnlySpan<uint> src)
 		{
 			var buffer = RentWorldBuffer();
 			var rv = buffer.Span;
@@ -1144,7 +1144,7 @@ namespace COTG.Game
 			
 			Task.Run( async () =>
 			{
-				await WorldStorage.SaveWorldData(SwizzleForCompression(raw));
+				await WorldStorage.SaveWorldData(raw);
 			});
 			current = rv;
 
@@ -1249,24 +1249,24 @@ namespace COTG.Game
 		}
 		public static int[] continentOpeningOrder = { 22, 23, 32, 33, 12, 43, 13, 42, 21, 34, 24, 31, 11, 44, 14, 41, 02, 53, 20, 35, 25, 30, 52, 03, 01, 54, 04, 51, 40, 15, 45, 10, 05, 50, 00, 55 };
 	}
-	public class WorldBufferScope : IDisposable
-	{
-		public MemoryOwner<uint> b;
-		// passing null results in a Scope with no effect
-		public WorldBufferScope()
-		{
-			b = World.RentWorldBuffer();
-		}
-		public static implicit operator MemoryOwner<uint> (WorldBufferScope w) => w.b;
-		public void Dispose()
-		{
-			var _b = b;
-			b = null;
-			if (_b != null )
-			{
-				World.ReturnWorldBuffer(_b);
-			}
-		}
-	}
+	//public class WorldBufferScope : IDisposable
+	//{
+	//	public MemoryOwner<uint> b;
+	//	// passing null results in a Scope with no effect
+	//	public WorldBufferScope()
+	//	{
+	//		b = World.RentWorldBuffer();
+	//	}
+	//	public static implicit operator MemoryOwner<uint> (WorldBufferScope w) => w.b;
+	//	public void Dispose()
+	//	{
+	//		var _b = b;
+	//		b = null;
+	//		if (_b != null )
+	//		{
+	//			World.ReturnWorldBuffer(_b);
+	//		}
+	//	}
+	//}
 
 }

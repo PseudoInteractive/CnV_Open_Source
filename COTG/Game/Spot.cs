@@ -853,7 +853,7 @@ namespace COTG.Game
 				foreach (var i in incoming)
 				{
 					if (i.isAttack)
-						rv = rv != null ? rv.Sum(i.troops) : i.troops;
+						rv = rv != null ? rv.Add(i.troops) : i.troops;
 				}
 				return rv;
 			}

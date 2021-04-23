@@ -26,7 +26,7 @@ namespace COTG.Services
 		private static DateTimeOffset date;
 
 		public static string ArchiveName(int entryId) => entryId.ToString("D6");
-        public static async Task SaveWorldData(MemoryOwner<uint> data)
+        public static async Task SaveWorldData(uint[] data)
         {
 			try
             {
@@ -97,8 +97,7 @@ namespace COTG.Services
 								   {
 									   HeatMap.ApplyDelta(data, uintBuffer);
 								   }
-								   var sw = World.SwizzleForCompression(data);
-								   var map = await HeatMap.AddSnapshot(t, sw, false);
+								   var map = await HeatMap.AddSnapshot(t, data, false);
 
 								   if (map.day != last)
 								   {
@@ -125,7 +124,7 @@ namespace COTG.Services
 				   finally
 				   {
 					   await file.DeleteAsync(); // donw with this
-	   				   ShellPage.WorkStart(workStr);
+	   				   ShellPage.WorkEnd(workStr);
 					}
 
 			}
@@ -140,7 +139,7 @@ namespace COTG.Services
 		}
 
 
-		public static async void SetHeatmapDates( DateTimeOffset t0, DateTimeOffset t1)
+		public static async void SetHeatmapDates( SmallTime t0, SmallTime t1)
         {
             if (World.changeMapInProgress)
                 return;
@@ -151,6 +150,7 @@ namespace COTG.Services
 
 			var data = World.raw.ToArray(); // clone it
 		    var data1 = World.raw;
+
 			var changeMask = new bool[World.span * World.span];
             var file = await folder.CreateFileAsync(fileName, CreationCollisionOption.OpenIfExists);
 			

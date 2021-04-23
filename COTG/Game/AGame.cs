@@ -2081,7 +2081,7 @@ namespace COTG
 				return;
 
 			var c = wc.WToCamera();
-			var dv = AGame.shapeSizeGain*48;
+			var dv = AGame.shapeSizeGain*48*4*SettingsPage.flagScale;
 			float z = zLabels;
 
 			// hover flags

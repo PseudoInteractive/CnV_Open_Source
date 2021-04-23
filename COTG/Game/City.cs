@@ -524,7 +524,7 @@ namespace COTG.Game
 			if (jse.TryGetProperty("sts", out var sts))
 			{
 				var s = sts.GetString();
-				Log(s);
+			//	Log(s);
 				s = s.Replace("&#34;", "\"");
 				//	Log(s);
 				if (!CityBuild.isPlanner)

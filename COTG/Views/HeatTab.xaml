@@ -14,52 +14,35 @@
     d:DesignWidth="400">
 
 	<Grid >
-		<Grid.Resources>
-			<CollectionViewSource x:Name="groups" Source="{x:Bind game:HeatMapDay.days, Mode=OneWay}" IsSourceGrouped="True" ItemsPath="deltas" />
-			<DataTemplate x:Key="ZoomedInGroupHeaderTemplate" x:DataType="game:HeatMapDay">
-				<StackPanel Orientation="Horizontal" Height="24">
-					<TextBlock Text="{x:Bind desc,Mode=OneTime}" Style="{StaticResource ListTitleStyle}" Tapped="ZoomedInGroupHeaderTapped" IsHitTestVisible="True"  />
-				</StackPanel>
-			</DataTemplate>
-			<DataTemplate x:Key="ZoomedOutTemplate" x:DataType="wuxdata:ICollectionViewGroup">
-				<StackPanel Orientation="Horizontal"  Height="24" >
-					<TextBlock Text="{x:Bind ((game:HeatMapDay)Group).desc,Mode=OneTime}" Style="{StaticResource ListTitleStyle}" IsTapEnabled="True" Tapped="ZoomedOutTapped" IsHitTestVisible="True" />
-				</StackPanel>
-			</DataTemplate>
-			<DataTemplate x:Key="recordTempalte" x:DataType="game:HeatMapDelta"  >
-				<StackPanel Orientation="Horizontal" Height="24" >
-					<TextBlock Text="{x:Bind timeStr,Mode=OneTime}" Height="24" Style="{StaticResource TextBlockMedium}" Margin="4,4,4,4" Padding="2,2,2,2"   />
-				</StackPanel>
-			</DataTemplate>
-		</Grid.Resources>
-		
+
 		<Grid.RowDefinitions>
 			<RowDefinition Height="auto"/>
 			<RowDefinition Height="*" />
 			<RowDefinition Height="auto"/>
 		</Grid.RowDefinitions>
-		<SemanticZoom x:Name="zoom" Grid.Row="1" IsZoomOutButtonEnabled="True"  >
-			<SemanticZoom.ZoomedInView>
-				<GridView x:Name="zoomedIn" SelectionChanged="snapshots_SelectionChanged" IsItemClickEnabled="True" ItemClick="listView_ItemClick" SelectionMode="Extended" x:FieldModifier="public" Margin="0" Padding="0"  PointerEntered="snapshots_PointerEntered" ItemTemplate="{StaticResource recordTempalte}"  IsMultiSelectCheckBoxEnabled="False"
-                   ItemsSource="{x:Bind groups.View, Mode=OneWay}" >
+		<win:TreeView Grid.Row="1" x:Name="zoom"  CanReorderItems="False"  SelectionMode="Multiple" IsTabStop="True"  BorderThickness="1" 
+				 TabNavigation="Cycle" CanDragItems="False" AllowDrop="False"  
+						ItemsSource="{x:Bind game:HeatMapDay.days, Mode=OneWay}" ItemInvoked="zoom_ItemInvoked"  Expanding="zoom_Expanding"
+						>
+			<win:TreeView.ItemTemplate>
+				<DataTemplate  x:DataType="game:IHeatMapItem">
+					<win:TreeViewItem ItemsSource="{x:Bind children, Mode=OneWay}" 
+									  HasUnrealizedChildren="{x:Bind hasUnrealizedChildren, Mode=OneWay}"  >
+						<StackPanel Orientation="Horizontal" Height="24">
+							<TextBlock Text="{x:Bind label,Mode=OneWay}" Style="{StaticResource ListTitleStyle}"  />
+						</StackPanel>
+					</win:TreeViewItem>
+				</DataTemplate>
+			</win:TreeView.ItemTemplate>
+		</win:TreeView>
 
-					<GridView.GroupStyle>
-						<GroupStyle HeaderTemplate="{StaticResource ZoomedInGroupHeaderTemplate}"  />
-					</GridView.GroupStyle>
-					
-				</GridView>
-			</SemanticZoom.ZoomedInView>
-			<SemanticZoom.ZoomedOutView>
-				<ListView x:Name="zoomedOut" ItemsSource="{x:Bind groups.View.CollectionGroups}" IsItemClickEnabled="True" ItemTemplate="{StaticResource ZoomedOutTemplate}" 
-						   ItemClick="ZoomedOutItemClick" SelectionMode="Extended"  />
-			</SemanticZoom.ZoomedOutView>
-		</SemanticZoom>
+	
 
 
 		<TextBlock Grid.Row="0" Text="World Snapshots:" VerticalAlignment="Top" HorizontalAlignment="Center" IsColorFontEnabled="False" FocusVisualPrimaryThickness="3,2,2,2" />
 		<StackPanel Grid.Row="2" Orientation="Horizontal">
 			<Button Click="Now_Click"  Content="Clear"  />
-			<Button Click="ToggleZoom"  Content="Zoom"  />
+			
 		</StackPanel>
 	</Grid>
 </views:UserTab>

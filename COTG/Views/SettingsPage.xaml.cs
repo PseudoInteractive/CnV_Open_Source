@@ -92,6 +92,7 @@ namespace COTG.Views
 		public static int autoTowerLevel = 1;
 		public static int scoutpostCount=2;
 		public static bool returnRaidsBeforeSend;
+		public static float flagScale=0.25f;
 		public static int[] raidCarrySteps;
 		public static bool[] includeRaiders = new[] {
 				false, false,true,true,

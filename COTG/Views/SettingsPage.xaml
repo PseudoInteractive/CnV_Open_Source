@@ -44,6 +44,7 @@
 				<Slider Height="128" Margin="8" Header="Planet" Value="{x:Bind views:SettingsPage.planet, Mode=TwoWay}" Maximum="1.0"  TickFrequency="0.125" StepFrequency="0.025" SmallChange="0.025" TickPlacement="Outside" Orientation="Vertical" ToolTipService.ToolTip="Use 0 to disable parallax and shadows" />
 				<Slider Height="128" Margin="8" Header="Font" Value="{x:Bind views:SettingsPage.fontScale, Mode=TwoWay}" Maximum="1.0"  TickFrequency="0.125" StepFrequency="0.025" SmallChange="0.025" TickPlacement="Outside" Orientation="Vertical" ToolTipService.ToolTip="Use 0 if the believe that the world is flat" />
 				<Slider Height="128" Header="Detail" Value="{x:Bind views:SettingsPage.renderScale, Mode=TwoWay}" Maximum="1.0" TickFrequency="0.125"  StepFrequency="0.125" SmallChange="0.125" Margin="8" TickPlacement="Outside" Orientation="Vertical" ToolTipService.ToolTip="Controls the resolution at which the view is renderered.  Lower settings may be faster but might also be more blurry.  Lower settings are only needed if you display has a high resolution and your GPU is weak." />
+				<Slider Height="128" Header="Flag" Value="{x:Bind views:SettingsPage.flagScale, Mode=TwoWay}" Maximum="1.0" TickFrequency="0.125"  StepFrequency="0.125" SmallChange="0.125" Margin="8" TickPlacement="Outside" Orientation="Vertical" ToolTipService.ToolTip="Controls the size of flags above cities and spots." />
 
 			</wct:WrapPanel>
 			

@@ -140,11 +140,17 @@ namespace COTG.BinaryMemory
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public void WritePackedUints(Span<uint> data)
 		{
+			var nonZero = data.CountNonZero();
+			Assert(nonZero != 0);
 			var count = data.Length;
 			Write7BitEncoded((ulong)count);
 			for(int i=0;i<count;++i)
 			{
 				Write7BitEncoded(data[i]);
+				if(data[i]!=0)
+				{
+					int q = 0;
+				}	
 			}
 		}
 
@@ -246,6 +252,8 @@ namespace COTG.BinaryMemory
         /// <param name="data">The unsigned long to write 7 bit encoded.</param>
         public void Write7BitEncoded(ulong data)
         {
+			var initialData = data;
+			var start = position;
             while (data >= 0x80)
             {
                 *position++ = (byte)(data | 0x80);
@@ -253,7 +261,21 @@ namespace COTG.BinaryMemory
             }
 
             *position++ = (byte)data;
-        }
+			ulong result = 0;
+			int shift = 0;
+			for (; ; )
+			{
+				var b = *start++;
+
+				result |= (uint)(b & 0x7F) << shift;
+				shift += 7;
+				if ((b & 0x80) == 0)
+					break;
+			}
+			Assert(result == initialData);
+
+
+		}
 		public void Write7BitEncoded(uint data) => Write7BitEncoded((ulong)data);
 		public void Write7BitEncodedSigned(int data) => Write7BitEncoded(data.ZigZagEncode());
 		public void Write7BitEncoded(int data) {

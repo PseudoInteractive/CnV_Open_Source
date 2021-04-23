@@ -31,18 +31,7 @@ namespace COTG.Game
         {
             get => tSend.TS();
         }
-        public void NotifyChange(string member = "")
-        {
-            App.DispatchOnUIThreadSneakyLow(() =>
-            {
-                OnPropertyChanged(member);
-                Debug.Log("NotifyChange");
-
-                if (NearDefenseTab.instance.supportGrid.SelectedItem == this)
-                    NearDefenseTab.instance.RefreshSupportByType();
-
-            });
-        }
+        
 
        
         public DateTimeOffset eta { get => JSClient.ServerTime() + TimeSpan.FromHours(travel); set => _ = value; }
@@ -64,8 +53,20 @@ namespace COTG.Game
 
         public virtual event PropertyChangedEventHandler PropertyChanged;
         public void OnPropertyChanged(string propertyName) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+		public void NotifyChange(string member = "")
+		{
+			App.DispatchOnUIThreadSneakyLow(() =>
+			{
+				OnPropertyChanged(member);
+				Debug.Log("NotifyChange");
 
-    }
+				if (NearDefenseTab.instance.supportGrid.SelectedItem == this)
+					NearDefenseTab.instance.RefreshSupportByType();
+
+			});
+		}
+
+	}
     // Proxy for a datagrid that displays 1 row per troop type
     public class SupportByTroopType
 	{

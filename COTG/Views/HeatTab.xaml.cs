@@ -37,20 +37,15 @@ namespace COTG.Views
 		public static void DaysChanged()
 		{
 			App.DispatchOnUIThreadLow( ()=>
-				{
-					if (instance.groups.View != null)
-					{
-						var col = instance.groups.View.CollectionGroups;
-						instance.zoomedOut.ItemsSource = col;
-						HeatMapDay.days.NotifyReset();
-					}
+			{
+					HeatMapDay.days.NotifyReset();
 			});
 		}
 	
 
 		private void Now_Click(object sender, RoutedEventArgs e)
 		{
-			listView.SelectedItems.Clear();
+			zoom.SelectedNodes.Clear();
 			World.ClearHeatmap();
 		}
 
@@ -62,8 +57,8 @@ namespace COTG.Views
 				HeatMap.LoadList();
 				DaysChanged();
 				zoom.Focus(FocusState.Programmatic);
-				snapshots_SelectionChanged(null, null);
-				zoom.IsZoomedInViewActive = true;
+				snapshots_SelectionChanged();
+		
 				HeatMapDay.days.NotifyReset();
 			}
 			else
@@ -74,30 +69,27 @@ namespace COTG.Views
 
 		}
 
-		private void snapshots_SelectionChanged(object sender, SelectionChangedEventArgs e)
+		private void snapshots_SelectionChanged()
 		{
-
 			var t1 = SmallTime.zero;
 			var t0 = SmallTime.serverNow;
-
-			var sel = listView.SelectedItems;
-			
+			var sel = zoom.SelectedNodes;
 
 			if (sel.Count > 0)
 			{
-				foreach(var i in sel)
+				foreach (var i in sel)
 				{
-					var t= (i as Game.HeatMapDelta).t;
+					var t = (i.Content is HeatMapDay d) ? d.lastUpdate : (i.Content as HeatMapDelta).t;
 					if (t < t0)
 						t0 = t;
 					if (t > t1)
 						t1 = t;
 				}
-			//	Services.WorldStorage.SetHeatmapDates(t0.FromServerTime(), t1.FromServerTime()); // Is Timezone Right?
+				Services.WorldStorage.SetHeatmapDates(t0.FromServerTime(), t1.FromServerTime()); // Is Timezone Right?
 			}
 			else
 			{
-			//	World.ClearHeatmap();
+				World.ClearHeatmap();
 			}
 		}
 
@@ -108,41 +100,21 @@ namespace COTG.Views
 
 		private void List_GotFocus(object sender, RoutedEventArgs e)
 		{
-			snapshots_SelectionChanged(null, null);
+		//	snapshots_SelectionChanged(null, null);
 		}
 
-		private void tree_ItemInvoked(Microsoft.UI.Xaml.Controls.TreeView sender, Microsoft.UI.Xaml.Controls.TreeViewItemInvokedEventArgs args)
+		private void zoom_ItemInvoked(Windows.UI.Xaml.Controls.TreeView sender, Windows.UI.Xaml.Controls.TreeViewItemInvokedEventArgs args)
 		{
-			snapshots_SelectionChanged(null, null);
+			snapshots_SelectionChanged();
+
 		}
+
 
 		private void tree_KeyDown(object sender, KeyRoutedEventArgs e)
 		{
 
 		}
 
-		private void ZoomedOutTapped(object sender, TappedRoutedEventArgs e)
-		{
-			var block = sender as TextBlock;
-			var lv = zoomedOut;
-			var listView = block.FindAscendant(typeof(ListViewItem));
-			lv.Items
-
-
-			Log(e.OriginalSource);
-			Log(sender);
-		}
-
-		private void ZoomedInGroupHeaderTapped(object sender, TappedRoutedEventArgs e)
-		{
-			var block = sender as TextBlock;
-			var lv = zoomedOut
-			var listView = block.FindAscendant(typeof(ListViewItem));
-
-
-			Log(e.OriginalSource);
-			Log(sender);
-		}
 
 		private void listView_ItemClick(object sender, ItemClickEventArgs e)
 		{
@@ -151,20 +123,19 @@ namespace COTG.Views
 			//		snapshots_SelectionChanged(null, null);
 		}
 
-		private void ZoomedOutItemClick(object sender, ItemClickEventArgs e)
+		
+		
+
+		private void zoom_Expanding(Windows.UI.Xaml.Controls.TreeView sender, Windows.UI.Xaml.Controls.TreeViewExpandingEventArgs args)
 		{
-			var i = e.ClickedItem as ICollectionViewGroup;
-			var day = i.Group as HeatMapDay;
-			if(!day.isInitialized )
+			var i = args.Item as IHeatMapItem;
+			var day = i as HeatMapDay;
+			if(day!=null)
 			{
-				day.Load();
+				if (!day.isInitialized)
+					day.Load();
 			}
 
-		}
-
-		private void ToggleZoom(object sender, RoutedEventArgs e)
-		{
-			zoom.IsZoomedInViewActive = !zoom.IsZoomedInViewActive;
 		}
 	}
 	//public class DayChanges

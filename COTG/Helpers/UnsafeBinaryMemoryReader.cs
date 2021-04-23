@@ -278,11 +278,15 @@ namespace COTG.BinaryMemory
 			uint result = 0;
 			int shift = 0;
 
-			do
+			for(; ; )
 			{
-				result |= (uint)(*position & 0x7F) << shift;
+				var b = *position++;
+
+				result |= (uint)(b & 0x7F) << shift;
 				shift += 7;
-			} while ((*position++ & 0x80) != 0x00);
+				if ((b & 0x80) == 0)
+					break;
+			}
 
 			return result;
 		}
@@ -412,8 +416,16 @@ namespace COTG.BinaryMemory
 			for(int i=0;i<count;++i)
 			{
 				 span[i] = Read7BitEncoded();
+				if(span[i] != 0)
+				{
+					int q = 0;
+				}
 			}
-
+			if (count != 0)
+			{
+				Assert(span.CountNonZero() != 0);
+			//	Assert(rv.Span.CountNonZero() != 0);
+			}
 			return rv;
 		}
 

@@ -57,12 +57,26 @@ namespace COTG
 
 
         }
-        const int defaultStackDepth = 4;
+        const int defaultStackDepth =4;
+		static int breakCounter = 8;
         static void DumpStack(StackTrace  __s)
         {
-        
-          //  var __f = __s.GetFrames();
-            System.Diagnostics.Debug.WriteLine(__s.ToString());
+			try
+			{
+				for (int i = 0; i < defaultStackDepth.Min(__s.FrameCount); ++i)
+				{
+					var __f = __s.GetFrame(i);
+					if (__f != null)
+						System.Diagnostics.Debug.Write($"{__f.GetFileName()}({__f.GetFileLineNumber()}): {__f.GetMethod()},{__f.GetFileColumnNumber()}\n");
+
+				}
+			}
+			catch(Exception ex)
+			{
+
+			}
+			//  var __f = __s.GetFrames();
+		//	System.Diagnostics.Debug.WriteLine(__s.ToString());
             //for (int i = 0; i<defaultStackDepth && i < __s.FrameCount; ++i)
             //{
             //    var __f = __s.GetFrame(i);
@@ -78,7 +92,7 @@ namespace COTG
         [System.Runtime.CompilerServices.CallerFilePath] string sourceFilePath = "",
         [System.Runtime.CompilerServices.CallerLineNumber] int sourceLineNumber = 0)
 		{
-            System.Diagnostics.Debug.WriteLine( $"{sourceFilePath}({sourceLineNumber}): {timeStamp}: {memberName}\n{s}");
+            System.Diagnostics.Debug.Write( $"{sourceFilePath}({sourceLineNumber}): {timeStamp}: {memberName}\n{s}\n");
 			DumpStack(new StackTrace(1, true));
 			//    System.Diagnostics.Debug.WriteLine(new StackTrace());
 
@@ -91,9 +105,9 @@ namespace COTG
         [System.Runtime.CompilerServices.CallerLineNumber] int sourceLineNumber = 0)
         {
 
-			string msg = $"{sourceFilePath}({sourceLineNumber}): {timeStamp}: {memberName}\n{s}";
+			string msg = $"{sourceFilePath}({sourceLineNumber}): {timeStamp}: {memberName}\n{s}\n";
 			Note.Show(s);
-			System.Diagnostics.Trace.WriteLine(msg);
+			System.Diagnostics.Trace.Write(msg);
 			DumpStack(new StackTrace(1, true));
 			//    System.Diagnostics.Debug.WriteLine(new StackTrace());
 
@@ -107,9 +121,9 @@ namespace COTG
 		[System.Runtime.CompilerServices.CallerLineNumber] int sourceLineNumber = 0)
 		{
 
-			var str = $"{sourceFilePath}({sourceLineNumber}): {timeStamp}: {memberName}\n{s}";
+			var str = $"{sourceFilePath}({sourceLineNumber}): {timeStamp}: {memberName}\n{s}\n";
 
-			System.Diagnostics.Debug.WriteLine(str);
+			System.Diagnostics.Debug.Write(str);
 			DumpStack(new StackTrace(1, true));
 			//  System.Diagnostics.Debug.WriteLine(new StackTrace());
 			//Note.Show(str);
@@ -146,6 +160,7 @@ namespace COTG
 #if TRACE
 			System.Diagnostics.Trace.WriteLine($"{sourceFilePath}({sourceLineNumber}): {timeStamp}: {memberName} : Exception: {msg} {e.StackTrace}");
 			DumpStack(new StackTrace(e, true));
+			BreakDebugger();
 #endif
 
 			Analytics.TrackEvent(eventName, dic);
@@ -172,18 +187,29 @@ namespace COTG
             [System.Runtime.CompilerServices.CallerMemberName] string memberName = "",
        [System.Runtime.CompilerServices.CallerFilePath] string sourceFilePath = "",
        [System.Runtime.CompilerServices.CallerLineNumber] int sourceLineNumber = 0)
-        {
-            if (v)
-                return;
+		{
+			if (v)
+				return;
 			var str = $"{sourceFilePath}({sourceLineNumber}): {timeStamp}: {memberName} : Assert";
 			Note.Show(str);
 #if TRACE
 
 			System.Diagnostics.Trace.WriteLine(str);
 			DumpStack(new StackTrace(1, true));
-			System.Diagnostics.Trace.Assert(v);
+			BreakDebugger();
 #endif
 		}
+
+		[Conditional("DEBUG")]
+		private static void BreakDebugger()
+		{
+			if (System.Diagnostics.Debugger.IsAttached && breakCounter > 0)
+			{
+				--breakCounter;
+				System.Diagnostics.Debugger.Break(); ;
+			}
+		}
+
 		public static void Verify(bool v
 #if TRACE
 			,
@@ -200,8 +226,7 @@ namespace COTG
 			DumpStack(new StackTrace(1, true));
 			var str = $"{sourceFilePath}({sourceLineNumber}): {timeStamp}: {memberName} : Assert";
 			ChatTab.L(str);
-			System.Diagnostics.Trace.WriteLine(str);
-			System.Diagnostics.Trace.Assert(v);
+			BreakDebugger();
 #endif
 		}
     }

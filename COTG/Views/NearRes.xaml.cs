@@ -222,7 +222,7 @@ namespace COTG.Views
 				} while (ready == false);
 
 
-				var r = des.Sub(target.res.Add(target.tradeInfo.inc));
+				var r = des;// des.Sub(target.res.Add(target.tradeInfo.inc));
 				r.ClampToPositive();
 				List<ResSource> s = new List<ResSource>();
 				//                supportGrid.ItemsSource = null;

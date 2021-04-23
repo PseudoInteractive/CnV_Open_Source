@@ -406,6 +406,7 @@ namespace COTG.Views
 			using var work = new ShellPage.WorkScope("Auto Raid..");
 
 			var sel = Spot.GetSelectedForContextMenu(0, false);
+			int totalSent = 0;
 			const float minRaidIdle = 0.0625f;
 			for (int pass=0;pass<8;++pass)
 			{
@@ -428,6 +429,7 @@ namespace COTG.Views
 						if( await ScanDungeons.Post(cid, city.commandSlots == 0, true) )
 						{
 							++processed;
+							++totalSent;
 						}
 					}
 
@@ -438,7 +440,7 @@ namespace COTG.Views
 
 			}
 			Note.ShowTip($"Auto Raid: Completed: {sel.Count}/{sel.Count}");
-			Note.Show($"Finished Auto Raid with {sel.Count} selected");
+			Note.Show($"Sent {totalSent.Min(sel.Count)} Raids (from {sel.Count} selected)");
 
 		}
 		private void SelectionChanged(object sender, DataGridSelectionChangedEventArgs e)

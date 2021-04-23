@@ -88,6 +88,69 @@ namespace COTG
 			return (int)MathF.Ceiling(f);
 		}
 
+		/// <summary>
+		/// Workaournd for missing Span<uint>
+		/// </summary>
+		/// <param name="source"></param>
+		/// <returns></returns>
+		public static ulong SumF(this Span<uint> source)
+		{
+			ulong sum = 0;
+				foreach (var v in source)
+				{
+					sum += v;
+				}
+			
+			return sum;
+		}
+		public static int CountF(this Span<uint> source, Func<uint,bool> pred )
+		{
+			int sum = 0;
+		
+			foreach (var v in source)
+			{
+				if (pred(v))
+					++sum;
+			}
+			
+			return sum;
+		}
+		public static int CountNonZero(this Span<uint> source)
+		{
+			int sum = 0;
+
+			foreach (var v in source)
+			{
+				if (v!=0)
+					++sum;
+			}
+
+			return sum;
+		}
+		public static int CountZero(this Span<uint> source)
+		{
+			int sum = 0;
+
+			foreach (var v in source)
+			{
+				if (v == 0)
+					++sum;
+			}
+
+			return sum;
+		}
+		public static int CountPositive(this Span<int> source)
+		{
+			int sum = 0;
+
+			foreach (var v in source)
+			{
+				if (v > 0)
+					++sum;
+			}
+
+			return sum;
+		}
 		//
 		// Summary:
 		//     Computes the average of a sequence of nullable System.Double values.
