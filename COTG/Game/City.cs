@@ -20,6 +20,7 @@ using Microsoft.Toolkit.HighPerformance;
 using Microsoft.Toolkit.HighPerformance.Enumerables;
 using COTG.Draw;
 using System.Threading;
+using EnumsNET;
 
 namespace COTG.Game
 {
@@ -462,21 +463,8 @@ namespace COTG.Game
 				return friendCitiesCache;
 			}
 		}
-		public async Task<int> GetAutobuildCabinLevel()
-		{
-			var split = await CitySettings.GetMinisterOptions(this,false);
-			if (int.TryParse(split[52].Trim(']'), out var rv))
-				return rv;
-			return SettingsPage.cottageLevel;
-		}
 
-		public int GetAutobuildCabinLevelNoFetch()
-		{
-			var split = CitySettings.GetMinisterOptionsNoFetch(this);
-			if (int.TryParse(split[52].Trim(']'), out var rv))
-				return rv;
-			return SettingsPage.cottageLevel;
-		}
+		public int GetAutobuildCabinLevelNoFetch() => autobuildCabinLevel;
 
 		public void LoadCityData(JsonElement jse)
 		{
@@ -512,7 +500,7 @@ namespace COTG.Game
 			}
 			if (jse.TryGetProperty("mo", out var p))
 			{
-				ministerOptions = p.ToString();
+				SetMinisterOptions(p.ToString());
 			}
 
 			if (jse.TryGetProperty("cn", out var cn))
@@ -606,7 +594,7 @@ namespace COTG.Game
 
 					if (cid == City.build)
 						CityView.BuildingsOrQueueChanged();
-
+					UpdateBuildStage();
 				}
 			}
 			if (jse.TryGetProperty("comm", out var comm))
@@ -1085,7 +1073,24 @@ namespace COTG.Game
 			}
 			return best;
 		}
+		public byte GetAttackTroopType()
+		{
+			byte best = 0; // if no raiding troops we return guards 
+			var bestAttack = 0.0f;
+			foreach (var ttc in troopsHome)
+			{
+				var type = ttc.type;
+				
+				var ts = ttc.attack;
+				if (ts > bestAttack)
+				{
+					bestAttack = ts;
+					best = (byte)type;
+				}
 
+			}
+			return best;
+		}
 
 		public byte GetIdealDungeonType()
 		{
@@ -1210,7 +1215,60 @@ namespace COTG.Game
 		public string dungeonsToggle =>  "+";
 
 		public bool isBuilding { get; internal set; }
+		public bool autoWalls;
+		public bool autoTowers;
+		public byte autobuildCabinLevel = (byte)SettingsPage.cottageLevel;
+		public byte buildingLimit;
+		public byte buildingCount;
+		public bool wantCastle;
+		public bool wantSorcTower;
+		public int Buildings => buildingCount;
 
+		public BuildStage buildStage;
+		void SetBuildStage(BuildStage _stage, int _buildingLimit)
+		{
+			buildStage = _stage;
+			buildingLimit = (byte)_buildingLimit;
+		}
+
+		void SetBuildStage(BuildInfo info) => SetBuildStage(info.stage, info.buildingLimit);
+		
+		public BuildingCount UpdateBuildStage()
+		{
+			var bc = GetBuildingCounts(isBuild ? CityBuild.postQueueBuildings : buildings, autobuildCabinLevel);
+			buildingCount = (byte)bc.buildings;
+			buildingLimit = (byte)bc.maxBuildings;
+			SetBuildStage(GetBuildStage(bc));
+			return bc;
+		}
+
+		public void SetMinisterOptions( string _ministerOptions)
+		{
+			ministerOptions = _ministerOptions;
+			try
+			{
+				if (ministerOptions.Length > 4)
+				{
+					var rv = _ministerOptions.Split(',', StringSplitOptions.RemoveEmptyEntries);
+					if (rv[CitySettings.ministerOptionAutobuildCabins - 1] == "[1")
+					{
+						byte.TryParse(rv[CitySettings.ministerOptionAutobuildCabins].TrimEnd(']'), out autobuildCabinLevel);
+
+					}
+					else
+					{
+						autobuildCabinLevel = 0;
+					}
+					autoTowers = rv[CitySettings.ministerOptionAutobuildTowers] == "1";
+					autoWalls = rv[CitySettings.ministerOptionAutobuildWalls] == "1";
+				}
+			}
+			catch (Exception ex)
+			{
+				Log(ex);
+			}
+
+		}
 		internal static void CitiesChanged()
 		{
 			friendCitiesCache = null;
@@ -1397,7 +1455,7 @@ namespace COTG.Game
 			});
 		}
 
-		public enum BuildStage
+		public enum BuildStage : byte
 		{
 			_new,
 			leave,
@@ -1600,6 +1658,8 @@ namespace COTG.Game
 		public BuildInfo GetBuildStage(BuildingCount bc)
 		{
 			var buildingLimit = GetBuildingLimit(bc);
+			wantCastle = NeedsCastle(bc);
+			wantSorcTower = NeedsSorcTower(bc);
 			if (leaveMe)
 				return new BuildInfo(BuildStage.leave, buildingLimit);
 			if (CityRename.IsNew(this))
@@ -1625,7 +1685,7 @@ namespace COTG.Game
 
 
 			var underLimit = bc.buildings < buildingLimit;
-			if (bc.cabins >= SettingsPage.startCabinCount || underLimit )
+			if (bc.cabins+2 >= SettingsPage.startCabinCount || underLimit )
 			{
 				if (bc.unfinishedBuildings > 0 || underLimit)
 					return new BuildInfo(BuildStage.mainBuildings, buildingLimit);
@@ -1637,16 +1697,25 @@ namespace COTG.Game
 				return new BuildInfo(BuildStage.teardown,buildingLimit);
 
 			return new BuildInfo(BuildStage.complete,buildingLimit);
-
-
-
 		}
-	
+
+		public bool AutoWalls
+		{
+			get => autoWalls;
+			set => CitySettings.SetAutoTowersOrWalls(cid,autoWalls:value);
+		}
+		public bool AutoTowers
+		{
+			get => autoTowers;
+			set => CitySettings.SetAutoTowersOrWalls(cid, autoTowers: value);
+		}
+
+
 
 	}
 	public static class CityHelpers
 	{
-		public static bool IsXYInCenter(this (int x, int y) xy) => (xy.x.Abs() <= 4 && xy.y.Abs() <= 4 && (xy.x.Abs() + xy.y.Abs() < 7));
+		public static bool IsXYInCenter(this (int x, int y) xy) => (xy.x.Abs() + xy.y.Abs() < 7);
 
 		public static bool IsInCity(this (int x, int y) xy) => xy.x >= span0 && xy.x <= span1 && xy.y >= span0 && xy.y <= span1;
 

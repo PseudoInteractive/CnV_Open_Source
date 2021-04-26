@@ -617,7 +617,7 @@ namespace COTG.Views
 						
 					}
 					BuildingsOrQueueChanged();
-					PlannerTab.instance.Show();
+					App.DispatchOnUIThreadSneakyLow(()=>PlannerTab.instance.Show());
 				}
 				else
 				{
@@ -625,11 +625,14 @@ namespace COTG.Views
 					b.BuildingsCacheToShareString();
 					b.SaveLayout();
 					GetCity.Post(City.build);
-					if (PlannerTab.instance.isVisible)
-					{
-						PlannerTab.instance.Close();
-						BuildTab.instance.Show();
-					}
+					App.DispatchOnUIThreadSneakyLow(() =>
+				   {
+					   if (PlannerTab.instance.isVisible)
+					   {
+						   PlannerTab.instance.Close();
+						   BuildTab.instance.Show();
+					   }
+				   });
 
 				}
 			}

@@ -421,11 +421,6 @@ namespace COTG.BinaryMemory
 					int q = 0;
 				}
 			}
-			if (count != 0)
-			{
-				Assert(span.CountNonZero() != 0);
-			//	Assert(rv.Span.CountNonZero() != 0);
-			}
 			return rv;
 		}
 

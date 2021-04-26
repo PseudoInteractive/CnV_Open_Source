@@ -131,6 +131,8 @@ namespace COTG.Views
 						   else
 							   lastName = nameDialog.suggested.Text;
 						   city._cityName = lastName;
+						   if (IsNew(lastName))
+							   lastName = string.Empty;
 						   city.BuildStageDirty();
 						   await Post.Send("includes/nnch.php", $"a={HttpUtility.UrlEncode(lastName, Encoding.UTF8)}&cid={cid}", World.CidToPlayerOrMe(cid));
 						   if (SettingsPage.applyTags)
@@ -198,9 +200,10 @@ namespace COTG.Views
 			await Post.Send("includes/sNte.php", $"a={HttpUtility.UrlEncode(tags, Encoding.UTF8)}&b={HttpUtility.UrlEncode(city.notes, Encoding.UTF8)}&cid={cid}", World.CidToPlayerOrMe(cid));
 		}
 
-		public static bool IsNew(City city)
+		public static bool IsNew(City city) => IsNew(city._cityName);
+		public static bool IsNew(string _cityName)
 		{
-			return city._cityName == "*New City" || city._cityName == "lawless city" || city._cityName == "*Lawless City";
+			return _cityName == "*New City" || _cityName == "lawless city" || _cityName == "*Lawless City";
 		}
 	}
-    }
+}

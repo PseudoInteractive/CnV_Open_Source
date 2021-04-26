@@ -38,7 +38,7 @@ namespace COTG
 		}
 	//	public static MemoryOwner<T> AsMemoryOwner<T>(this SpanOwner<T> me) => AsMemoryOwner<T>((ReadOnlySpan<T>)me.Span);
 //		public static MemoryOwner<T> AsMemoryOwner<T>(this Span<T> me) => AsMemoryOwner<T>((ReadOnlySpan<T>)me);
-		public static MemoryOwner<T> AsMemoryOwner<T>(this MemoryOwner<T> me) => AsMemoryOwner<T>(me.Span);
+		public static MemoryOwner<T> Clone<T>(this MemoryOwner<T> me) => AsMemoryOwner<T>(me.Span);
 
 		// this will be false for lamda functions 
 		public static bool IsEqual(this Delegate a, Delegate b)

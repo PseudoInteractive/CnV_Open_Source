@@ -22,7 +22,7 @@ using Windows.UI.Xaml.Media.Imaging;
 using static COTG.Debug;
 using static COTG.Game.WorldViewSettings;
 using Vector2 = System.Numerics.Vector2;
-
+using WorldRaw = Microsoft.Toolkit.HighPerformance.Buffers.MemoryOwner<uint>;
 namespace COTG.Game
 {
 	static class WorldHelper
@@ -178,7 +178,7 @@ namespace COTG.Game
 				if (distanceReference == null)
 					return 0;
 				var d = cid.CidToWorld().DistanceToCid(distanceReference.cid);
-				var tt = distanceReference.GetRaidTroopType();
+				var tt = distanceReference.GetAttackTroopType();
 				var rv = d * Enum.ttTravel[tt] / (60f * Enum.ttSpeedBonus[tt]);
 				if (Enum.IsWaterRaider(tt))
 					rv += 1.0f;
@@ -200,81 +200,111 @@ namespace COTG.Game
 		public const int span = 600;
 		public const int spanSquared = span* span;
 		public const int outSize = 2400;
-		public const uint typeMask = 0xf0000000;
-		public const uint dataMask = 0x0fffffff;
-		public const uint typeCity = 0x10000000;
-		public const uint typeShrine = 0x20000000;
-		public const uint typePortal = 0x30000000;
-		public const uint typeBoss = 0x40000000;
-		public const uint typeDungeon = 0x50000000;
-		public const uint typeNone = 0x00000000;
-		public const int playerMask = 0x00ffffff;
-		public const int typeCityFlagMask = 0x00f000000;
-		public const int typeCityFlagCastle = 0x001000000;
-		public const int typeCityFlagTemple = 0x2000000;
-		public const int typeCityFlagWater = 0x4000000;
-		public const int typeCityFlagBig = 0x8000000;
-
+		public const uint typeMask = 0xfu;
+		public const uint dataMask = 0xfffffff0u;
+		public const uint typeCity = 0x1u;
+		public const uint typeShrine = 0x2u;
+		public const uint typePortal = 0x3u;
+		public const uint typeBoss = 0x4u;
+		public const uint typeDungeon = 0x5u;
+		public const int dataShift = 4; // shifts to data slot
+		public const uint dataMult = 0x10; //  
+		public const uint typeNone = 0x0;
+		public const int playerShift = 8;
+		public const int typeCityFlagMask = 0xf0;
+		public const int typeCityFlagCastle = 0x0010;
+		public const int typeCityFlagTemple = 0x20;
+		public const int typeCityFlagWater = 0x40;
+		public const int typeCityFlagBig = 0x80;
+		public static int GetPlayer(uint data) => (int)(data >> playerShift);
+		public static uint GetType(uint data) => (data & typeMask);
+		public static uint GetData(uint data) => (uint)(data >> dataShift);
+		
 		public static byte[] worldOwnerPixels;// = new byte[outSize / 4 * outSize / 4 * 8];
 		public static byte[] bitmapPixels;// = new byte[outSize / 4 * outSize / 4 * 8];
 		public static byte[] changePixels;// = new byte[outSize / 4 * outSize / 4 * 8];
 
-		public static uint[] raw = new uint[span * span]; // reference with CID, stores playerID
-		public static uint[] rawPrior0; // set if heatmaps are enabled
-		public static uint[] rawPrior1; // set if heatmaps are enabled
+		public static WorldRaw raw = RentWorldBuffer(); // reference with CID, stores playerID
+		public static WorldRaw rawPrior0; // set if heatmaps are enabled
+		public static WorldRaw rawPrior1; // set if heatmaps are enabled
 		public static int ClampCoord(int x)
 		{
 			return x.Clamp(0, span);
 		}
-		public static (uint type, int player, bool isCastle, bool isBig, bool isWater, bool isTemple, uint data) GetInfoFromPackedId(int packedId)
-		{
-			return GetInfoFromPackedId(raw, packedId);
-		}
-		public static (uint type, int player, bool isCastle, bool isBig, bool isWater, bool isTemple, uint data) GetInfo((int x, int y) c)
+		//public static (uint type, int player, bool isCastle, bool isBig, bool isWater, bool isTemple, uint data, uint all) GetInfoFromPackedId(int packedId)
+		//{
+		//	return GetInfoFromPackedId(raw, packedId);
+		//}
+		public static (uint type, int player, bool isCastle, bool isBig, bool isWater, bool isTemple, uint data, uint all) GetInfo((int x, int y) c)
 		{
 			return GetInfoFromPackedId(raw, packedId: GetPackedId(c));
 		}
-		public static (uint type, int player, bool isCastle, bool isBig, bool isWater, bool isTemple, uint data) GetInfoFromCid(int cid)
+		public static (uint type, int player, bool isCastle, bool isBig, bool isWater, bool isTemple, uint data, uint all) GetInfoFromCid(int cid)
 		{
 			return GetInfo(cid.CidToWorld());
 		}
-		public static (uint type, int player, bool isCastle, bool isBig, bool isWater, bool isTemple, uint data) GetInfoPrior(int packedId)
+		//public static (uint type, int player, bool isCastle, bool isBig, bool isWater, bool isTemple, uint data, uint all) GetInfoPrior(int packedId)
+		//{
+		//	return GetInfoFromPackedId(rawPrior0, packedId);
+		//}
+		public static (uint type, int player, bool isCastle, bool isBig, bool isWater, bool isTemple, uint data, uint all) GetInfoFromPackedId(WorldRaw _raw, int packedId)
 		{
-			return GetInfoFromPackedId(rawPrior0, packedId);
-		}
-		public static (uint type, int player, bool isCastle, bool isBig, bool isWater, bool isTemple, uint data) GetInfoFromPackedId(uint[] _raw, int packedId)
-		{
-			uint rv = _raw[packedId];
-			return (rv & typeMask, (int)(rv & playerMask),
-				(rv & typeCityFlagCastle) != 0,
-				(rv & typeCityFlagBig) != 0,
-				(rv & typeCityFlagWater) != 0,
-				(rv & typeCityFlagTemple) != 0,
+			uint rv = _raw.Span[packedId];
+			return (GetType(rv),
+					GetPlayer(rv),
+				IsCastle(rv),
+				IsBig(rv),
+				IsWater(rv),
+				IsTemple(rv),
+				GetData(rv),
 				rv);
 
 		}
-		public static MemoryOwner<uint> RentWorldBuffer()
+
+		public static bool IsTemple(uint rv)
 		{
-			return MemoryOwner<uint>.Allocate(World.spanSquared);
+			return (rv & typeCityFlagTemple) != 0;
 		}
-		public static void ReturnWorldBuffer(MemoryOwner<uint> data)
+
+		public static bool IsWater(uint rv)
+		{
+			return (rv & typeCityFlagWater) != 0;
+		}
+
+		public static bool IsBig(uint rv)
+		{
+			return (rv & typeCityFlagBig) != 0;
+		}
+
+		public static bool IsCastle(uint rv)
+		{
+			return (rv & typeCityFlagCastle) != 0;
+		}
+
+		public static WorldRaw RentWorldBuffer()
+		{
+			return WorldRaw.Allocate(World.spanSquared);
+		}
+		public static void ReturnWorldBuffer(WorldRaw data)
 		{
 			data.Dispose();
 		}
 
-		public static MemoryOwner<uint> SwizzleForCompression(ReadOnlySpan<uint> src)
+		public static WorldRaw SwizzleForCompression(ReadOnlySpan<uint> src)
 		{
 			var buffer = RentWorldBuffer();
 			var rv = buffer.Span;
 			for(int i =0;i<World.spanSquared;++i)
 			{
 				uint dat = src[i];
-				switch(dat & typeMask )
+				var x = rv[i] = (dat << 8) | ((dat >> 20) & 0xF0) | ((dat >> 28) &0xF);
+				switch (x & typeMask )
 				{
 					case typeCity:
 					case typeShrine:
 					case typePortal:
-						rv[i] = dat.RotateLeft12();
+						rv[i] = x;
+
 						break;
 					default:
 						rv[i] = 0;
@@ -283,7 +313,29 @@ namespace COTG.Game
 			}
 			return buffer;
 		}
-		
+		public static WorldRaw FilterForCompression(ReadOnlySpan<uint> src)
+		{
+			var buffer = RentWorldBuffer();
+			var rv = buffer.Span;
+			for (int i = 0; i < World.spanSquared; ++i)
+			{
+				uint dat = src[i];
+				switch (dat & typeMask)
+				{
+					case typeCity:
+					case typeShrine:
+					case typePortal:
+						rv[i] = (dat);
+
+						break;
+					default:
+						rv[i] = 0;
+						break;
+				}
+			}
+			return buffer;
+		}
+
 		public static int CidToPlayerOrMe(int _cid) 
 		{
 			var rv = World.GetInfo(_cid.CidToWorld()).player;
@@ -297,17 +349,23 @@ namespace COTG.Game
 			var y = c.y;
 			return (x >= 0 & x < span & y >= 0 & y < span) ? x + y * span : 0;
 		}
+		public static (int x, int y) PackedIdToCid(uint id )
+		{
+			var y = id / span;
+			var x = id - y * span;
+			return ((int)x, (int)y);
+		}
 		public static Microsoft.Xna.Framework.Color GetTint(int packedId)
 		{
 			if(!SettingsPage.tintCities)
 				return new Color(255, 255, 255, 255);
 			//	var packedId = GetPackedId(xy);
-			uint rv = raw[packedId];
+			uint rv = raw.Span[packedId];
 			switch (rv & typeMask)
 			{
 				case typeCity:
 					{
-						var pid = rv & playerMask;
+						var pid = GetPlayer(rv);
 						// lawless
 						if (pid == 0)
 							return lawless.color.HalfSaturation();
@@ -360,7 +418,7 @@ namespace COTG.Game
 		{
 			var x = c.x;
 			var y = c.y;
-			uint rv = (x >= 0 & x < span & y >= 0 & y < span) ? raw[x + y * span] : 0u;
+			uint rv = (x >= 0 & x < span & y >= 0 & y < span) ? raw.Span[x + y * span] : 0u;
 			return (rv & typeMask, (rv & dataMask));
 
 		}
@@ -384,6 +442,9 @@ namespace COTG.Game
 		}
 		public Portal[] portals;
 		internal static bool changeMapInProgress;
+		internal static bool changeMapRequested;
+		public static SmallTime heatMapT0;
+		public static SmallTime heatMapT1;
 
 		//        public struct City
 		//        {
@@ -416,9 +477,12 @@ namespace COTG.Game
 		}
 
 
-		public static void CreateChangePixels(uint[] prior, uint[] prior1)
+		public static void CreateChangePixels( WorldRaw prior, WorldRaw prior1)
 		{
 			var pixels = new byte[outSize / 4 * outSize / 4 * 8];
+			rawPrior0 = prior;
+			rawPrior1 = prior1;
+
 			//for (int i = 0; i < outSize / 4 * outSize / 4; i++)
 			//{
 			//	pixels[i * 8 + 0] = WorldHelper.RGB16B0(0x60, 0, 0);
@@ -435,8 +499,8 @@ namespace COTG.Game
 				for (int x = 0; x < span; ++x)
 				{
 					var i = y * span + x;
-					var d0 = prior[i];
-					var d1 = prior1[i];
+					var d0 = prior.Span[i];
+					var d1 = prior1.Span[i];
 					//if (d0 == 0)
 					//{
 					//	// no change
@@ -445,7 +509,7 @@ namespace COTG.Game
 					{
 						var dtype0 = d0 & typeMask;
 						var dtype1 = d1 & typeMask;
-						if (d0 == d1 || dtype0 == typeDungeon || dtype0 == typeBoss || dtype1 == typeDungeon || dtype1 == typeBoss)
+						if (d0 == d1 ) //|| dtype0 == typeDungeon || dtype0 == typeBoss || dtype1 == typeDungeon || dtype1 == typeBoss)
 						{
 							pixels[i * 8 + 0] = WorldHelper.RGB16B0(0x60, 0, 0);
 							pixels[i * 8 + 1] = WorldHelper.RGB16B1(0x60, 0, 0);
@@ -460,8 +524,8 @@ namespace COTG.Game
 						uint color = WorldHelper.RGB16(0x80, 0x80, 0x80);
 						if (dtype0 == typeCity || dtype1 == typeCity)
 						{
-							var owner0 = d0 & playerMask;
-							var owner1 = d1 & playerMask;
+							var owner0 = GetPlayer(d0);
+							var owner1 = GetPlayer(d1);
 							var alliance0 = owner0 == 0 ? -1 : Player.Get((int)owner0).alliance;
 							var alliance1 = owner1 == 0 ? -1 : Player.Get((int)owner1).alliance;
 
@@ -491,24 +555,29 @@ namespace COTG.Game
 
 						pixels.SetColor(i, color, 0);
 						// change:  Todo, analysis
-						pixels[i * 8 + 4] = 2 | (3 << 2) | (3 << 4) | (2 << 6);
-						pixels[i * 8 + 5] = 3 | (0 << 2) | (0 << 4) | (3 << 6); // color index 0
-						pixels[i * 8 + 6] = 3 | (0 << 2) | (0 << 4) | (3 << 6); // color index 0
-						pixels[i * 8 + 7] = 2 | (3 << 2) | (3 << 4) | (2 << 6);
+						pixels[i * 8 + 4] = 0 | (0 << 2) | (0 << 4) | (0 << 6);
+						pixels[i * 8 + 5] = 0 | (1 << 2) | (1 << 4) | (0 << 6); // color index 0
+						pixels[i * 8 + 6] = 0 | (1 << 2) | (1 << 4) | (0 << 6); // color index 0
+						pixels[i * 8 + 7] = 0 | (0 << 2) | (0 << 4) | (0 << 6);
 					}
 				}
 			}
 			changePixels = pixels;
-			rawPrior0 = prior;
-			rawPrior1 = prior1;
-			DrawPixels(prior1);
+			DrawPixels(prior1.Span);
 		}
-		public static void ClearHeatmap()
+		public static async void ClearHeatmap()
 		{
-			AGame.ClearHeatmapImage();
+			Log($"Heat Clear: {changeMapInProgress} {changeMapRequested}");
+			while (World.changeMapInProgress)
+			{
+				await Task.Delay(200);
+			}
 			rawPrior0 = null;
 			rawPrior1 = null;
-			DrawPixels(raw);
+			Assert(changeMapRequested == false);
+			AGame.ClearHeatmapImage();
+			
+			DrawPixels(raw.Span);
 		}
 		static bool isDrawingHeatMap => rawPrior0 != null;
 
@@ -524,7 +593,7 @@ namespace COTG.Game
 		public static bool completed => state >= State.completed;
 
 
-		public static void DrawPixels( uint [] data)
+		public static void DrawPixels( Span<uint> data)
 		{
 			var pixels = new byte[outSize / 4 * outSize / 4 * 8];
 			for (int y = 0; y < span; ++y)
@@ -544,7 +613,7 @@ namespace COTG.Game
 								var isCastle = (d0 & typeCityFlagCastle) != 0;
 								var isTemple = (d0 & typeCityFlagTemple) != 0;
 								var isWater = (d0 & typeCityFlagWater) != 0;
-								var pid = d0 & playerMask;
+								var pid = GetPlayer(d0);
 								var hasPlayer = Player.all.TryGetValue((int)pid, out var p);
 								var alliance = hasPlayer ? p.alliance : 0;
 								if (isTemple)
@@ -665,7 +734,7 @@ namespace COTG.Game
 							}
 						case typeBoss:
 							{
-								var level = d0 & 15;
+								var level = GetData(d0) ;
 								if (bosses.isOn && level >= bossMinLevel && level <= bossMaxLevel)
 								{
 									pixels.SetColor(i, bosses.color.R, bosses.color.G, bosses.color.B);
@@ -684,7 +753,7 @@ namespace COTG.Game
 						case typeDungeon:
 							{
 
-								var level = d0 & 15;
+								var level = GetData(d0);
 								if (caverns.isOn && level >= cavernMinLevel && level <= cavernMaxLevel)
 								{
 									pixels.SetColor(i, 0x90, (byte)(0xD0 - level * 8), (byte)(0x40 + level * 7));
@@ -773,7 +842,7 @@ namespace COTG.Game
 								isVisible = shrines.isOn;
 								if (shrines.isOn)
 								{
-									var type = d0 & 255;
+									var type = GetData(d0 );
 									if (type == 255)
 									{
 										pixels.SetColor(i, shrines.color.R, shrines.color.G, shrines.color.B);
@@ -798,7 +867,7 @@ namespace COTG.Game
 						case typePortal:
 							{
 								
-								var active = (d0 & 1) != 0;
+								var active = GetData(d0) != 0;
 								if (active)
 								{
 									isVisible = activePortals.isOn;
@@ -883,8 +952,8 @@ namespace COTG.Game
 			var caverns_ = temp[5].Split("l");
 			var portals_ = temp[6].Split("l");
 
-			Array.Clear(raw, 0, raw.Length); // Todo:  remove decaying cities?
-
+		//	Array.Clear(raw, 0, raw.Length); // Todo:  remove decaying cities?
+			raw.Span.Clear();
 			var rv = new World();
 			/** @type {string} */
 			foreach (var id in bosses_1)
@@ -909,7 +978,7 @@ namespace COTG.Game
 				bossList.Add(b);
 
 				var index = (x + y * span);
-				raw[index] = b.level | (uint)(b.type << 4) | typeBoss;
+				raw.Span[index] = b.level*dataMult  | typeBoss;
 
 				
 			}
@@ -930,7 +999,7 @@ namespace COTG.Game
 					//  LogJS(b);
 					var index = (int)(x + y * span);
 					
-					raw[index] = (uint)(level | typeDungeon);
+					raw.Span[index] = (uint)(level * dataMult | typeDungeon);
 
 				}
 			}
@@ -953,7 +1022,7 @@ namespace COTG.Game
 				shrineList.Add(b);
 				var index = (int)(b.x + b.y * span);
 				
-				raw[index] = b.type | typeShrine;
+				raw.Span[index] = b.type*dataMult | typeShrine;
 			}
 
 			foreach (var id in portals_)
@@ -975,7 +1044,7 @@ namespace COTG.Game
 
 				var index = (int)(b.x + b.y * span);
 				
-				raw[index] = (b.active ? 1u : 0) | typePortal;
+				raw.Span[index] = (b.active ? dataMult : 0) | typePortal;
 			}
 			while (Player.all.Count == 0)
 			{
@@ -1063,7 +1132,7 @@ namespace COTG.Game
 					var isBig = type >= 5 ? 1 : 0;
 					var isCastle = (type == 3 | type == 4 | type == 7 | type == 8) ? 1 : 0;
 					var isWater = (type == 2 | type == 3 | type == 6 | type == 7) ? 1 : 0;
-					raw[index] = (uint)(pid
+					raw.Span[index] = (uint)((pid<<playerShift)
 										| typeCity
 										| (uint)isBig * typeCityFlagBig
 										| (uint)isCastle * typeCityFlagCastle
@@ -1161,7 +1230,7 @@ namespace COTG.Game
 				await Task.Delay(500);
 			}
 			if(!isDrawingHeatMap)
-				DrawPixels(raw);
+				DrawPixels(raw.Span);
 
 			state = State.completed;
 			// Queue up another one
@@ -1247,17 +1316,57 @@ namespace COTG.Game
 
 
 		}
+
+
+		public static void SetHeatmapDates(SmallTime t0, SmallTime t1)
+		{
+			World.heatMapT0 = t0 - 1;
+			World.heatMapT1 = t1 + 1;
+
+			if (World.changeMapInProgress)
+			{
+				Log($"Heat Busy: {changeMapRequested}, {t0}, {t1} ");
+
+				World.changeMapRequested = true;
+				return;
+			}
+			World.changeMapInProgress = true;
+
+			Log($"Heat Change: {changeMapRequested}, {t0}, {t1} ");
+
+			UpdateChangeMap();
+		}
+		public static async void UpdateChangeMap()
+		{
+			Assert(World.changeMapInProgress == true);
+
+			var data = await HeatMap.GetSnapshot(World.heatMapT0);
+			var data1 = await HeatMap.GetSnapshot(World.heatMapT1);
+
+			App.DispatchOnUIThreadSneakyLow(() =>
+		   {
+			   if(HeatTab.instance.isVisible)
+			   {
+				   HeatTab.instance.header.Text= $"{heatMapT0}=>{heatMapT1} - {new ChangeInfo().ComputeDeltas(data.Span, data1.Span).ToString()}";
+			   }
+		   });
+
+			World.CreateChangePixels(data, data1);
+		}
+
+
 		public static int[] continentOpeningOrder = { 22, 23, 32, 33, 12, 43, 13, 42, 21, 34, 24, 31, 11, 44, 14, 41, 02, 53, 20, 35, 25, 30, 52, 03, 01, 54, 04, 51, 40, 15, 45, 10, 05, 50, 00, 55 };
+	
 	}
 	//public class WorldBufferScope : IDisposable
 	//{
-	//	public MemoryOwner<uint> b;
+	//	public WorldRawb;
 	//	// passing null results in a Scope with no effect
 	//	public WorldBufferScope()
 	//	{
 	//		b = World.RentWorldBuffer();
 	//	}
-	//	public static implicit operator MemoryOwner<uint> (WorldBufferScope w) => w.b;
+	//	public static implicit operator WorldRaw(WorldBufferScope w) => w.b;
 	//	public void Dispose()
 	//	{
 	//		var _b = b;

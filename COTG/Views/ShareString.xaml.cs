@@ -156,7 +156,7 @@ namespace COTG.Views
 
 					SetFromSS();
 					instance.Title = city.nameAndRemarks;
-					//SetTags(city.remarks);
+					SetTags(city.remarks);
 
 					return await instance.ShowAsync2();
 				}

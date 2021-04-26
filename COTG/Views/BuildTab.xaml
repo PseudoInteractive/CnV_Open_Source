@@ -79,7 +79,7 @@
 										   CellContentStyle="{StaticResource LeftAlign}"
 										   SizeMode="Auto"
 										    />
-				<tg:DataGridTextColumn PropertyName="buildStage"
+				<tg:DataGridTextColumn PropertyName="bStage"
 										   HeaderTip="Building Stage"
 										   Tip="Click 'Do all the stuff'"
 										   CellContentStyle="{StaticResource CenterAlignLink}"
@@ -101,12 +101,25 @@
 										   Tip="Building if checked, stalled if not"
 										   CellContentStyle="{StaticResource CenterAlignLink}"
 										    />
+				<tg:DataGridBooleanColumn PropertyName="AutoTowers"
+										   HeaderTip="Tower Autobuild"
+										   Tip="Towers are set to autobuild?"
+										    />
+				<tg:DataGridBooleanColumn PropertyName="AutoWalls"
+										   HeaderTip="Wall Autobuild"
+										   Tip="Walls are set to autobuild?"
+										 
+										    />
 				<!--<tg:DataGridTextColumn PropertyName="buildingStr"
 										   HeaderTip="Buildings"
 										   Tip="Number of buildings"
 										   CellContentStyle="{StaticResource CenterAlignLink}"
 										    />-->
-
+				<tg:DataGridNumericalColumn PropertyName="Buildings"
+										   HeaderTip="Building Count"
+										   Tip="May or may not include queued buildings"
+										   CellContentStyle="{StaticResource RightAlign}"
+										    />
 				<tg:DataGridNumericalColumn PropertyName="points"
 												Tip="City score"
 												SizeMode="Auto"

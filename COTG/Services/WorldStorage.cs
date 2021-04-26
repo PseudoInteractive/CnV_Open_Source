@@ -26,11 +26,11 @@ namespace COTG.Services
 		private static DateTimeOffset date;
 
 		public static string ArchiveName(int entryId) => entryId.ToString("D6");
-        public static async Task SaveWorldData(uint[] data)
+        public static async Task SaveWorldData(MemoryOwner<uint> data)
         {
 			try
             {
-				await HeatMap.AddSnapshot(SmallTime.serverNow, data,true);
+				await HeatMap.AddSnapshot(SmallTime.serverNow,World.FilterForCompression(data.Span),true);
 			}
 			catch (Exception e)
 			{
@@ -97,7 +97,7 @@ namespace COTG.Services
 								   {
 									   HeatMap.ApplyDelta(data, uintBuffer);
 								   }
-								   var map = await HeatMap.AddSnapshot(t, data, false);
+								   var map = await HeatMap.AddSnapshot(t,World.SwizzleForCompression(data), false);
 
 								   if (map.day != last)
 								   {
@@ -139,76 +139,6 @@ namespace COTG.Services
 		}
 
 
-		public static async void SetHeatmapDates( SmallTime t0, SmallTime t1)
-        {
-            if (World.changeMapInProgress)
-                return;
-        
-			World.changeMapInProgress = true;
-            if (historyBuffer == null)
-                return;
-
-			var data = World.raw.ToArray(); // clone it
-		    var data1 = World.raw;
-
-			var changeMask = new bool[World.span * World.span];
-            var file = await folder.CreateFileAsync(fileName, CreationCollisionOption.OpenIfExists);
-			
-			using (var streamForZip = await file.OpenStreamForReadAsync())
-            {
-                using (var zip = new ZipArchive(streamForZip, mode: ZipArchiveMode.Read))
-                {
-                    int entry = historyBuffer.Length;
-                    while(--entry >= 0 )
-                    {
-				
-
-                        var dName = ArchiveName(entry);
-                        var prior = zip.GetEntry(dName);
-                        if (GetLastWriteUTC(prior)  == t1 )
-							data1 = data.ToArray();
-						if (GetLastWriteUTC(prior) < t0)
-							break;;
-
-						//Log($"Delta {dName} {prior.Length} {prior.LastWriteTime}");
-						if ( historyBuffer[entry] == null )
-                        {
-                            var byteBuffer = new byte[prior.Length];
-                            using (var instream = prior.Open())
-                            {
-                                instream.Read(byteBuffer, 0, byteBuffer.Length);
-                            }
-                            historyBuffer[entry] = byteBuffer.ConvertToUints();
-
-                        }
-						var delta = historyBuffer[entry];
-
-						HeatMap.ApplyDelta(data, delta);
-						if(GetLastWriteUTC(prior) <= t1 )
-						{
-							int count = delta.Length / 2;
-							for (int i = 0; i < count; ++i)
-							{
-								var off = delta[i * 2];
-								changeMask[off] = true;
-
-							}
-
-						}
-                    }
-					// "erase" changes not in the valid range
-					for(int i=0;i<World.span*World.span;++i)
-					{
-						if(changeMask[i] == false)
-						{
-							data[i] = data1[i];
-						}
-					}
-                    World.CreateChangePixels(data,data1);
-                }
-            }
-        }
-
         public static void CopyBytes(uint src, byte[]  rv, int i  )
         {
             rv[i * 4 + 0] = (byte)(src & 0xff);
@@ -226,36 +156,36 @@ namespace COTG.Services
 
         }
 
-        public static byte[] ConvertToBytesWithoutDungeonsOrBosses( this uint [] data )
-        {
-            int size4 = data.Length;
-            var rv = new byte[size4 * 4];
-            for (var i = 0; i < size4; ++i)
-            {
-                var src = data[i];
-                switch (src & World.typeMask)
-                {
-                    // removing dungeons reduces storage sigificantly
-                    case 0:
-                    case World.typeDungeon:
-                    case World.typeBoss:
-                        {
-                            rv[i * 4 + 0] =
-                            rv[i * 4 + 1] =
-                            rv[i * 4 + 2] =
-                            rv[i * 4 + 3] = 0;
-                            break;
-                        }
-                    default:
-                        {
-                            CopyBytes(src, rv, i);
-                            break;
-                        }
-                }
-            }
-            // Todo: use array pool
-            return rv;
-        }
+        //public static byte[] ConvertToBytesWithoutDungeonsOrBosses( this uint [] data )
+        //{
+        //    int size4 = data.Length;
+        //    var rv = new byte[size4 * 4];
+        //    for (var i = 0; i < size4; ++i)
+        //    {
+        //        var src = data[i];
+        //        switch (src & World.typeMask)
+        //        {
+        //            // removing dungeons reduces storage sigificantly
+        //            case 0:
+        //            case World.typeDungeon:
+        //            case World.typeBoss:
+        //                {
+        //                    rv[i * 4 + 0] =
+        //                    rv[i * 4 + 1] =
+        //                    rv[i * 4 + 2] =
+        //                    rv[i * 4 + 3] = 0;
+        //                    break;
+        //                }
+        //            default:
+        //                {
+        //                    CopyBytes(src, rv, i);
+        //                    break;
+        //                }
+        //        }
+        //    }
+        //    // Todo: use array pool
+        //    return rv;
+        //}
         public static uint[] ConvertToUints(this byte[] src)
         {
             int size =src.Length;

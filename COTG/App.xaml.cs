@@ -52,6 +52,7 @@ using Microsoft.Toolkit.Uwp.Helpers;
 using Microsoft.AppCenter.Analytics;
 using System.Collections.Generic;
 using System.Net;
+using Nito.AsyncEx;
 
 namespace COTG
 {
@@ -156,6 +157,10 @@ namespace COTG
 		{
 			return Microsoft.Xna.Framework.Input.Keys.LeftShift.IsKeyPressed() |
 				   Microsoft.Xna.Framework.Input.Keys.RightShift.IsKeyPressed();// shiftPressed;
+		}
+		public static bool IsKeyPressedShiftOrControl()
+		{
+			return IsKeyPressedShift() | IsKeyPressedControl();
 		}
 		static void OnKeyUp(CoreWindow sender, KeyEventArgs args)
 		{
@@ -458,7 +463,7 @@ namespace COTG
 						   {
 							   while (IncomingTab.instance == null)
 								   await Task.Delay(500);
-							   IncomingTab.instance.Show();
+							   App.DispatchOnUIThreadSneakyLow( ()=>IncomingTab.instance.Show() );
 
 						   });
 						}
@@ -692,7 +697,20 @@ namespace COTG
 			}
 			return true;
 		}
+		public static async Task WaitWhileUiSemaBusy()
+		{
+			Log($"Lock sema: {uiSema.CurrentCount}");
+			for (; ; )
+			{
+				if (!App.isUISemaLocked)
+					break;
 
+				await uiSema.WaitAsync();
+				uiSema.Release();
+				await Task.Delay(500); // if there is another thread waiting on the sema, let them go first
+			}
+
+		}
 		public static void DispatchOnUIThread(DispatchedHandler action)
 		{
 			GlobalDispatcher().RunAsync(CoreDispatcherPriority.Normal, action);
@@ -718,6 +736,15 @@ namespace COTG
 				action();
 			else
 				d.RunAsync(CoreDispatcherPriority.Low, action);
+		}
+		public static async Task DispatchOnUIThreadSneakyLowAwait(DispatchedHandler action)
+		{
+			var d = GlobalDispatcher();
+			// run it immediately if we can
+			if (d.HasThreadAccess && d.CurrentPriority <= CoreDispatcherPriority.Low)
+				action();
+			else
+				await d.RunAsync(CoreDispatcherPriority.Low, action);
 		}
 		public static void DispatchOnUIThreadIdleSneaky(IdleDispatchedHandler action)
 		{

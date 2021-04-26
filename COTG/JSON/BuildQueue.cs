@@ -518,7 +518,7 @@ namespace COTG.JSON
 								}
 								if (buildEx != null)
 								{
-									JSClient.JSInvoke("buildex", new[] { commandBuilder.ToString() });
+									await JSClient.JSInvokeTask("buildex", new[] { commandBuilder.ToString() });
 
 									if (cid == City.build)
 										CityView.BuildingsOrQueueChanged();

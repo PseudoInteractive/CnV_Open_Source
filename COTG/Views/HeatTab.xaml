@@ -16,30 +16,35 @@
 	<Grid >
 
 		<Grid.RowDefinitions>
-			<RowDefinition Height="auto"/>
+			<RowDefinition Height="32"/>
 			<RowDefinition Height="*" />
 			<RowDefinition Height="auto"/>
 		</Grid.RowDefinitions>
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition Width="*" />
+		</Grid.ColumnDefinitions>
+		
 		<win:TreeView Grid.Row="1" x:Name="zoom"  CanReorderItems="False"  SelectionMode="Multiple" IsTabStop="True"  BorderThickness="1" 
-				 TabNavigation="Cycle" CanDragItems="False" AllowDrop="False"  
+				 TabNavigation="Cycle" CanDragItems="False" AllowDrop="False" HorizontalAlignment="Stretch"
 						ItemsSource="{x:Bind game:HeatMapDay.days, Mode=OneWay}" ItemInvoked="zoom_ItemInvoked"  Expanding="zoom_Expanding"
-						>
+					  Width="auto"
+					  >
 			<win:TreeView.ItemTemplate>
-				<DataTemplate  x:DataType="game:IHeatMapItem">
-					<win:TreeViewItem ItemsSource="{x:Bind children, Mode=OneWay}" 
-									  HasUnrealizedChildren="{x:Bind hasUnrealizedChildren, Mode=OneWay}"  >
-						<StackPanel Orientation="Horizontal" Height="24">
-							<TextBlock Text="{x:Bind label,Mode=OneWay}" Style="{StaticResource ListTitleStyle}"  />
-						</StackPanel>
+				<DataTemplate  x:DataType="game:HeatMapItem">
+					<win:TreeViewItem ItemsSource="{x:Bind children, Mode=OneWay}" KeyDown="tree_KeyDown"
+						ToolTipService.ToolTip="First click will load history for this day.  Then you can select a the start and end of a time period to see corresponding changes.  When in doubt, refresh."
+									  HasUnrealizedChildren="{x:Bind hasUnrealizedChildren, Mode=OneWay}" VerticalAlignment="Center"   >
+							<TextBlock Text="{x:Bind desc,Mode=OneWay}" Style="{StaticResource BodyTextStyle}" HorizontalAlignment="Stretch"   />
+					
 					</win:TreeViewItem>
 				</DataTemplate>
 			</win:TreeView.ItemTemplate>
 		</win:TreeView>
 
-	
 
 
-		<TextBlock Grid.Row="0" Text="World Snapshots:" VerticalAlignment="Top" HorizontalAlignment="Center" IsColorFontEnabled="False" FocusVisualPrimaryThickness="3,2,2,2" />
+
+		<TextBlock Grid.Row="0" x:Name="header" x:FieldModifier="public" Text="World Snapshots:" VerticalAlignment="Top" HorizontalAlignment="Center" IsColorFontEnabled="False" FocusVisualPrimaryThickness="3,2,2,2" Style="{StaticResource BodyTextStyle}" />
 		<StackPanel Grid.Row="2" Orientation="Horizontal">
 			<Button Click="Now_Click"  Content="Clear"  />
 			

@@ -92,7 +92,7 @@ namespace COTG.Game
 				rv = new City() { cid = cid, pid = info.player };
 				
 				//       Assert( info.player != 0);
-				rv.type = (byte)(info.type >> 28);
+				rv.type = (byte)(info.type);
 				if (info.type == 0)
 				{
 					Log("Uninitialized");
@@ -113,10 +113,7 @@ namespace COTG.Game
 		}
 		public static void UpdateName(int cid, string name) => GetOrAdd(cid, name);
 
-		internal bool HasTag(Tags tag)
-		{
-			return remarks.Contains(tag.ToString(), StringComparison.OrdinalIgnoreCase);
-		}
+		internal bool HasTag(Tags tag) => tag.IsSet(remarks);
 
 		public bool isMine => pid == Player.myId;
 
@@ -482,7 +479,7 @@ namespace COTG.Game
 							wantRaidScan = false;
 						}
 						break;
-					case nameof(City.buildStage):
+					case nameof(City.bStage):
 						DoTheStuff();
 						break;
 					case nameof(xy):
@@ -547,6 +544,12 @@ namespace COTG.Game
 
 						SetPinned(newSetting);
 
+						return;
+					case nameof(City.AutoWalls):
+						(this as City).AutoWalls = !(this as City).autoWalls;
+						return;
+					case nameof(City.AutoTowers):
+						(this as City).AutoTowers = !(this as City).autoTowers;
 						return;
 					case nameof(City.raidCarry):
 						if (City.CanVisit(cid) && MainPage.IsVisible())
@@ -687,48 +690,60 @@ namespace COTG.Game
 				Classify();
 			}
 		}
+		
+		Classification TagsToClassification()
+		{
+			if (HasTag(Tags.Vanq))
+				return Classification.vanqs;
+			else if (HasTag(Tags.Scorp))
+				return Classification.se;
+			else if (HasTag(Tags.Prae))
+				return Classification.praetor;
+			else if (HasTag(Tags.Priest))
+				return Classification.priestess;
+			else if (HasTag(Tags.RT) || HasTag(Tags.VT))
+				return Classification.rt;
+			else if (HasTag(Tags.Sorc))
+				return Classification.sorcs;
+			else if (HasTag(Tags.Druid))
+				return Classification.druids;
+			else if (HasTag(Tags.Horse))
+				return Classification.horses;
+			else if (HasTag(Tags.Arb))
+				return Classification.arbs;
+			else if (HasTag(Tags.Galley) || HasTag(Tags.Stinger) || HasTag(Tags.Warship))
+				return Classification.navy;
+			else if (HasTag(Tags.Hub))
+				return Classification.hub;
+			return Classification.unknown;
+		}
+
+
 		internal async ValueTask<ClassificationExtended> Classify()
 		{
 			if (isFriend)
 			{
-				if (HasTag(Tags.Vanq))
-					return (ClassificationExtended)Classification.vanqs;
-				else if (HasTag(Tags.Scorp))
-					return (ClassificationExtended)Classification.se;
-				else if (HasTag(Tags.Prae))
-					return (ClassificationExtended)Classification.praetor;
-				else if (HasTag(Tags.Priest))
-					return (ClassificationExtended)Classification.priestess;
-				else if (HasTag(Tags.RT) || HasTag(Tags.VT))
-					return (ClassificationExtended)Classification.rt;
-				else if (HasTag(Tags.Sorc))
-					return (ClassificationExtended)Classification.sorcs;
-				else if (HasTag(Tags.Druid))
-					return (ClassificationExtended)Classification.druids;
-				else if (HasTag(Tags.Horse))
-					return (ClassificationExtended)Classification.horses;
-				else if (HasTag(Tags.Arb))
-					return (ClassificationExtended)Classification.arbs;
-				else if (HasTag(Tags.Galley) || HasTag(Tags.Stinger) || HasTag(Tags.Warship))
-					return (ClassificationExtended)Classification.navy;
-				else if (HasTag(Tags.Hub))
-					return (ClassificationExtended)Classification.hub;
+				classification = TagsToClassification();
+				if (classification != Classification.unknown)
+					return classification;
 				
 				foreach(var tt in troopsTotal)
 				{
 					var i = classificationTTs.FindIndex((byte)tt.type);
 					if (i != -1)
 					{
-						return (ClassificationExtended)(Classification)i;
+						classification = (Classification)i;
+						return classification;
 					}
 				}
 			}
-			ClassificationExtended rv = new ClassificationExtended(); ;
 			if (!Player.isAvatarOrTest && !Alliance.wantsIntel)
 			{
-				rv.classification = Classification.missing;
-				return rv;
+				classification = Classification.missing;
+				return classification;
 			}
+
+			ClassificationExtended rv = new ClassificationExtended(); ;
 			classification = Classification.pending;
 			var str = await Post.SendForText("includes/gLay.php", $"cid={cid}", World.CidToPlayerOrMe(cid));
 			try
@@ -1766,7 +1781,7 @@ namespace COTG.Game
 			if (allianceId == Alliance.myId)
 			{
 				IncomingTab tab = IncomingTab.instance;
-				tab.Show();
+				App.DispatchOnUIThreadSneakyLow( ()=> tab.Show() );
 				for (; ; )
 				{
 					await Task.Delay(2000);
@@ -1782,7 +1797,7 @@ namespace COTG.Game
 			else
 			{
 				var tab = OutgoingTab.instance;
-				tab.Show();
+				App.DispatchOnUIThreadSneakyLow(()=>tab.Show());
 				for (; ; )
 				{
 					await Task.Delay(2000);

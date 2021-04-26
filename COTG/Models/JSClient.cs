@@ -1929,30 +1929,41 @@ namespace COTG
 										   }
 										   else if( id == 9)
 										   {
-											   // founded new city
 											   var cid = int.Parse(ss[1]);
+											   // founded new city
+											   await Task.Delay(12000);
 
-											   await Task.Delay(1000);
-											   await App.DispatchOnUIThreadExclusive(cid,async () =>
+											   try
 											   {
 												   ShellPage.instance.RefreshX(null, null);
-												   
-												   var dialog = new ContentDialog()
-												   {
-													   Title = "New City",
-													   Content = "You have founded a city, would you like to run setup?",
-													   SecondaryButtonText = "No",
-													   PrimaryButtonText = "Setup"
-												   };
-												   var result = await dialog.ShowAsync2().ConfigureAwait(true);
+											   }
+											   catch (Exception ex)
+											   {
 
-												   if(result == ContentDialogResult.Primary)
-												   {
-													  // await ChangeCity(cid,false).ConfigureAwait(true);
-													  // await Task.Delay(1000).ConfigureAwait(true);
-													   await CityRename.RenameDialog(cid,true); 
-												   }
-											   });
+											   }
+
+											   await App.WaitWhileUiSemaBusy();
+
+											   
+											   var result = await App.DispatchOnUIThreadTask( async () =>
+											  {
+												  var dialog = new ContentDialog()
+												  {
+													  Title = "New City",
+													  Content = "You have founded a city, would you like to run setup?",
+													  SecondaryButtonText = "No",
+													  PrimaryButtonText = "Setup"
+												  };
+												  return await dialog.ShowAsync2();
+											  });
+
+												if (result == ContentDialogResult.Primary)
+												{
+													await App.DispatchOnUIThreadExclusive(cid, async () =>
+													{
+														await CityRename.RenameDialog(cid, true);
+													});
+											   }
 
 										   }
 									   }
@@ -1987,7 +1998,9 @@ namespace COTG
 							   }
 						   case "rmp":
 							   {
-									Note.Show(jsp.ToString());
+								   var str = jsp.ToString();
+								   App.CopyTextToClipboard(str);
+									Note.Show(str);
 								   break;
 							   }
 

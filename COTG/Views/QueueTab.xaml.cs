@@ -18,6 +18,7 @@ using static COTG.Game.City;
 using static COTG.Views.CityBuild;
 using static COTG.Views.ShellPage;
 using static COTG.Views.QueueTab;
+using EnumsNET;
 
 namespace COTG.Views
 {
@@ -155,11 +156,12 @@ namespace COTG.Views
 		}
 		public static async void RebuildAll()
 		{
-			var stage = await City.GetBuildBuildStage();
+			var build = GetBuild();
+			var stage = build.UpdateBuildStage();
 			App.DispatchOnUIThreadSneaky(() =>
 			{
 				instance.cities.Clear();
-				instance.stage.Text = $"Stage: {stage.stage}";
+				instance.stage.Text = $"Stage: {build.buildStage.AsString()}";
 				foreach (var city in CityBuildQueue.all.Values)
 				{
 					var view = BuildItemView.Rent().Ctor(city.cid);
@@ -313,40 +315,39 @@ namespace COTG.Views
 				Note.Show($"Skipping ${city.nameMarkdown}, 'LeaveMe' tag is set");
 				return true;
 			}
-			var cabinLevel = city.GetAutobuildCabinLevelNoFetch();
-			var bc = City.GetBuildingCountPostQueue(cabinLevel);
-			var stage = city.GetBuildStage(bc);
-
-			if (stage.stage == BuildStage._new && allowRename)
+			var bc=city.UpdateBuildStage();
+			
+			if (city.buildStage == BuildStage._new && allowRename)
 			{
 				if (!await CityRename.RenameDialog(cid, false))
 					return false;
-			
-				stage = city.GetBuildStage(bc);
+
+				bc=city.UpdateBuildStage();
 			}
 			Assert(city.isBuild);
 
-			if (stage.stage == BuildStage.noLayout && allowSetLayout )
+			if (city.buildStage == BuildStage.noLayout && allowSetLayout )
 			{
 				//				if (!city.isBuild)
 				//				await JSClient.ChangeCity(city.cid, false);
 				await ShareString.ShowNoLock();
-				stage = city.GetBuildStage(bc);
-				if (stage.stage == BuildStage.noLayout)
+				bc=city.UpdateBuildStage();
+
+				if (city.buildStage == BuildStage.noLayout)
 					return false;
 			}
 			Assert(city.isBuild);
-			if (stage.stage == City.BuildStage.complete)
+			if (city.buildStage == City.BuildStage.complete)
 			{
 				Note.Show($"Complete: {city}");
 				return true;
 			}
 			Assert(city.isBuild);
-			if (stage.stage == City.BuildStage.cabins || stage.stage == BuildStage.townHall)
+			if (city.buildStage == City.BuildStage.cabins || city.buildStage == BuildStage.townHall)
 			{
-				if (bc.cabins >= SettingsPage.startCabinCount || bc.buildings >= stage.buildingLimit - 2)
+				if (bc.cabins >= SettingsPage.startCabinCount || bc.buildings >= city.buildingLimit - 2)
 				{
-					Note.Show($"Building {stage.stage.ToString()} - {city}");
+					Note.Show($"Building {city.buildStage.AsString()} - {city}");
 					return true;
 				}
 			}
@@ -416,10 +417,9 @@ namespace COTG.Views
 
 			// todo: teardown
 			//	await JSClient.ChangeCity(city.cid,false);
-			bc = City.GetBuildingCountsPostQueue(cabinLevel);
-			stage = await City.GetBuildBuildStage(bc);
+			bc=city.UpdateBuildStage();
 
-			switch (stage.stage)
+			switch (city.buildStage)
 			{
 				case City.BuildStage.noLayout:
 				case City.BuildStage._new:
@@ -455,7 +455,7 @@ namespace COTG.Views
 										{
 											continue;
 										}
-										if (bc.buildings >= stage.buildingLimit)
+										if (bc.buildings >= city.buildingLimit)
 											goto done;
 										if (CityBuild.postQueueBuildings[City.XYToId(c)].isEmpty && (city.BidFromOverlay(c) == 0))
 										{
@@ -495,7 +495,7 @@ namespace COTG.Views
 					{
 						//var c = RandomCitySpot();
 						var message = string.Empty;
-						var buildingLimit = stage.buildingLimit;// !city.hasCastleInLayout ? 100 : bc.hasCastle ? 100 : 99;
+						var buildingLimit = city.buildingLimit;// !city.hasCastleInLayout ? 100 : bc.hasCastle ? 100 : 99;
 
 						if (bc.buildings < buildingLimit)
 						{
@@ -512,7 +512,7 @@ namespace COTG.Views
 								{
 									message += $"Adding Storehouse";
 									await CityBuild.SmartBuild(city, storage.First(), bidStorehouse, true, false);
-									bc = City.GetBuildingCountsPostQueue(cabinLevel);
+									bc = City.GetBuildingCountsPostQueue(city.autobuildCabinLevel);
 								}
 							}
 							if (bc.forums == 0 && bc.buildings < buildingLimit)
@@ -522,7 +522,7 @@ namespace COTG.Views
 								{
 									message += $"Adding Forum";
 									await CityBuild.SmartBuild(city, bd.First(), bidMarketplace, true, false);
-									bc = City.GetBuildingCountsPostQueue(cabinLevel);
+									bc = City.GetBuildingCountsPostQueue(city.autobuildCabinLevel);
 								}
 							}
 							{
@@ -540,7 +540,7 @@ namespace COTG.Views
 											continue;
 										}
 										await CityBuild.SmartBuild(city, i, bid, true, false);
-										bc = City.GetBuildingCountsPostQueue(cabinLevel);
+										bc = City.GetBuildingCountsPostQueue(city.autobuildCabinLevel);
 									}
 								}
 							}
@@ -559,7 +559,7 @@ namespace COTG.Views
 											break;
 										await CityBuild.SmartBuild(city, i, bid, true, false);
 
-										bc = City.GetBuildingCountsPostQueue(cabinLevel);
+										bc = City.GetBuildingCountsPostQueue(city.autobuildCabinLevel);
 									}
 
 
@@ -577,7 +577,7 @@ namespace COTG.Views
 
 									var bid = city.BidFromOverlay(c);
 									await CityBuild.SmartBuild(city, c, bid, true, false);
-									bc = City.GetBuildingCountsPostQueue(cabinLevel);
+									bc = City.GetBuildingCountsPostQueue(city.autobuildCabinLevel);
 
 								}
 
@@ -598,7 +598,7 @@ namespace COTG.Views
 		
 						const int maxCommands = 15;
 						int count = (maxCommands - GetBuildQueueLength()).Min(bc.cabins * 2);
-						if (count < 2 || bc.unfinishedBuildings > 0)
+						if (count < 2 || bc.unfinishedBuildings > 4)
 						{
 							Note.Show("Already doing teardown or finishing up buildings");
 							break;
@@ -667,7 +667,7 @@ namespace COTG.Views
 									barracks.RemoveAt(0);
 								}
 								count -= await CityBuild.SmartBuild(city, c, bid, true, false, SettingsPage.demoUnwantedBuildingsWithCabins);
-								bc = City.GetBuildingCountsPostQueue(cabinLevel);
+								bc = City.GetBuildingCountsPostQueue(city.autobuildCabinLevel);
 							}
 							Assert(city.isBuild);
 
@@ -861,7 +861,7 @@ namespace COTG.Views
 			var initialMoveSlots = Player.moveSlots;
 				var nextMoveConfirm = initialMoveSlots - movesPerConfirm;
 
-				var result = await App.DoYesNoBox("Move Stuff", $"Whould you like to demo resources where buildings should go?", cancel:"Don't Move Anything" );
+				var result = await App.DoYesNoBox("Move Stuff", $"Whould you like to demo resources where buildings should go?", cancel:"Don't Move", no:"Move Stuff", yes:"Move+Demo" );
 				if(result == -1)
 					return;
 				var allowDemo = result == 1;
@@ -1161,17 +1161,17 @@ namespace COTG.Game
 	{
 		public bool leaveMe => HasTag(Tags.LeaveMe);
 
-		public async Task<BuildInfo> GetBuildStage()
-		{
-			if(leaveMe)
-				return new BuildInfo(BuildStage.leave, 100);
-			if (CityRename.IsNew(this))
-				return new BuildInfo(BuildStage._new, 100);
-			//await GetCity.Post(cid);
-			var cabinLevel = await GetAutobuildCabinLevel();
-			return GetBuildStage(GetBuildingCounts(cabinLevel));
+		//public async Task<BuildInfo> GetBuildStage()
+		//{
+		//	if(leaveMe)
+		//		return new BuildInfo(BuildStage.leave, 100);
+		//	if (CityRename.IsNew(this))
+		//		return new BuildInfo(BuildStage._new, 100);
+		//	//await GetCity.Post(cid);
+		//	var cabinLevel = await GetAutobuildCabinLevel();
+		//	return GetBuildStage(GetBuildingCounts(cabinLevel));
 
-		}
+		//}
 		bool NeedsSorcTower(BuildingCount bc)
 		{
 			return ((bc.sorcTowers == 0 || bc.sorcTowerLevel != 10) && tsTotal > SettingsPage.tsForSorcTower && HasOverlayBuildingOfType(bidSorcTower));
@@ -1181,7 +1181,7 @@ namespace COTG.Game
 			return ((!bc.hasCastle) && tsTotal > SettingsPage.tsForCastle && HasOverlayBuildingOfType(bidCastle));
 		}
 
-		public string buildStage
+		public string bStage
 		{
 			get
 			{
@@ -1192,55 +1192,54 @@ namespace COTG.Game
 					//GetCity.Post(cid);
 					return "pending...";
 				}
-				var bc = GetBuildingCounts(GetAutobuildCabinLevelNoFetch());
-				if (NeedsSorcTower(bc))
-					return $"WantSorc ({bc.buildings})";
-				if (NeedsCastle(bc))
-					return $"WantCastle ({bc.buildings})";
+				if (wantSorcTower)
+					return "WantSorc";
+				if (wantCastle)
+					return "WantCastle";
 
-				return $"{GetBuildStage(bc).stage} ({bc.buildings})";
+				return buildStage.AsString();
 			}
 		}
 
-		public BuildInfo GetBuildStageNoFetch()
-		{
-			if (leaveMe)
-				return new BuildInfo(BuildStage.leave, 100);
-			if (CityRename.IsNew(this))
-				return new BuildInfo(BuildStage._new, 100);
-			if (buildings == Emptybuildings)
-			{
-				//GetCity.Post(cid);
-				return new BuildInfo(BuildStage.pending, 100);
-			}
-			return GetBuildStage(GetBuildingCounts(GetAutobuildCabinLevelNoFetch()));
-		}
+		//public BuildInfo GetBuildStageNoFetch()
+		//{
+		//	if (leaveMe)
+		//		return new BuildInfo(BuildStage.leave, 100);
+		//	if (CityRename.IsNew(this))
+		//		return new BuildInfo(BuildStage._new, 100);
+		//	if (buildings == Emptybuildings)
+		//	{
+		//		//GetCity.Post(cid);
+		//		return new BuildInfo(BuildStage.pending, 100);
+		//	}
+		//	return GetBuildStage(GetBuildingCounts(GetAutobuildCabinLevelNoFetch()));
+		//}
 
-		public static async Task<BuildInfo> GetBuildBuildStage(BuildingCount bc)
-		{
-			var city = GetBuild();
-			if (city.leaveMe)
-				return new BuildInfo(BuildStage.leave, 100);
-			if (CityRename.IsNew(city))
-				return new BuildInfo(BuildStage._new, 100);
+		//public static async Task<BuildInfo> GetBuildBuildStage(BuildingCount bc)
+		//{
+		//	var city = GetBuild();
+		//	if (city.leaveMe)
+		//		return new BuildInfo(BuildStage.leave, 100);
+		//	if (CityRename.IsNew(city))
+		//		return new BuildInfo(BuildStage._new, 100);
+		////	await GetCity.Post(City.build);
+
+		//	return city.GetBuildStage(bc);
+		//}
+
+		//public static async Task<BuildInfo> GetBuildBuildStage()
+		//{
+		//	var city = GetBuild();
+		//	if (city.leaveMe)
+		//		return new BuildInfo(BuildStage.leave, 100);
+
+		//	if (CityRename.IsNew(city))
+		//		return new BuildInfo(BuildStage._new, 100);
 		//	await GetCity.Post(City.build);
+		//	var cabinLevel = await city.GetAutobuildCabinLevel();
+		//	return city.GetBuildStage(GetBuildingCountPostQueue(cabinLevel));
 
-			return city.GetBuildStage(bc);
-		}
-
-		public static async Task<BuildInfo> GetBuildBuildStage()
-		{
-			var city = GetBuild();
-			if (city.leaveMe)
-				return new BuildInfo(BuildStage.leave, 100);
-
-			if (CityRename.IsNew(city))
-				return new BuildInfo(BuildStage._new, 100);
-			await GetCity.Post(City.build);
-			var cabinLevel = await city.GetAutobuildCabinLevel();
-			return city.GetBuildStage(GetBuildingCountPostQueue(cabinLevel));
-
-		}
+		//}
 
 		public bool HasOverlayBuildingOfType(int bid)
 		{

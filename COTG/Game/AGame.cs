@@ -35,6 +35,7 @@ using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
 using Layer = COTG.Draw.Layer;
 using BitmapFont;
+using System.Threading.Tasks;
 
 namespace COTG
 {
@@ -470,6 +471,7 @@ namespace COTG
 					var pixels = World.changePixels;
 					ClearHeatmapImage();
 					worldChanges = CreateFromBytes(pixels, World.outSize, World.outSize, SurfaceFormat.Dxt1, worldSpaceEffect);
+					
 
 				}
 				//if(JSClient.webViewBrush!=null)
@@ -509,8 +511,16 @@ namespace COTG
 				worldChanges = null;
 				w.texture.Dispose();
 			}
-			World.changeMapInProgress = false;// this is used to temporarily block the UI from issuing multiple changes at once
-			
+			if (World.changeMapRequested)
+			{
+				World.changeMapInProgress = true;
+				World.changeMapRequested = false;
+				Task.Run(World.UpdateChangeMap);
+			}
+			else
+			{
+				World.changeMapInProgress = false;// this is used to temporarily block the UI from issuing multiple changes at once
+			}		
 		}
 		
 		//public static void SetCanvasVisibility(bool visible)
@@ -1791,7 +1801,7 @@ namespace COTG
 											// Todo: more accurate senator travel times
 											DrawAction((float)(sen.time - serverNow).TotalSeconds, dist * 60.0f, r, c, c1, senatorColor,
 												troopImages[ttSenator], false, null, 20);
-											DrawFlag(sen.target, SpriteAnim.flagGrey);
+											DrawFlag(sen.target, SpriteAnim.flagGrey, Vector2.Zero);
 										}
 									}
 									if (!IsCulledWC(wc))
@@ -1802,8 +1812,8 @@ namespace COTG
 								{
 									if (!IsCulledWC(wc))
 									{
-										if (!city.isSelected)
-											DrawFlag(city.cid, city.cid == City.build ? SpriteAnim.flagHome : SpriteAnim.flagRed);
+										if (!city.isSelected || city.cid == City.build)
+											DrawFlag(city.cid, city.cid == City.build ? SpriteAnim.flagHome : SpriteAnim.flagRed, new Vector2(4,4) );
 									}
 									if ((MainPage.IsVisible() && SettingsPage.raidsVisible!=0)||SettingsPage.raidsVisible==1 )
 									{
@@ -1829,11 +1839,11 @@ namespace COTG
 
 						foreach (var cid in Spot.selected)
 						{
-							DrawFlag(cid, SpriteAnim.flagSelected);
+							DrawFlag(cid, SpriteAnim.flagSelected, Vector2.Zero);
 						}
 						foreach (var cid in SettingsPage.pinned)
 						{
-							DrawFlag(cid, SpriteAnim.flagPinned);
+							DrawFlag(cid, SpriteAnim.flagPinned, new Vector2(4, -4));
 						}
 						if (Spot.focus != 0)
 						{
@@ -1854,12 +1864,12 @@ namespace COTG
 								{
 									foreach (var cid in p.cities)
 									{
-										DrawFlag(cid, SpriteAnim.flagGrey);
+										DrawFlag(cid, SpriteAnim.flagGrey, new Vector2(-4,4) );
 									}
 								}
 								catch(Exception ex)
 								{
-									LogEx(ex); // collection might change, if this happens just about this render, its 
+									//LogEx(ex); // collection might change, if this happens just about this render, its 
 								}
 								
 							}
@@ -2074,13 +2084,13 @@ namespace COTG
 		static int _blend;
 		static Vector2 _uv0;
 		static Vector2 _uv1;
-		private static void DrawFlag(int cid, SpriteAnim sprite)
+		private static void DrawFlag(int cid, SpriteAnim sprite, Vector2 offset)
 		{
 			var wc = cid.CidToWorld();
 			if (IsCulledWC(wc))
 				return;
 
-			var c = wc.WToCamera();
+			var c = wc.WToCamera()+ offset;
 			var dv = AGame.shapeSizeGain*48*4*SettingsPage.flagScale;
 			float z = zLabels;
 
@@ -2599,11 +2609,11 @@ namespace COTG
 				if (Vector2.Distance(AGame.cameraC, newC) >= thresh)
 				{
 					// try region view
-					if (allowZoomChange )
+					if (allowZoomChange)
 					{
-						if((dc.X.Abs() + 0.5f) * AGame.cameraZoomRegionDefault <= AGame.halfSpan.X &&
+						if ((dc.X.Abs() + 0.5f) * AGame.cameraZoomRegionDefault <= AGame.halfSpan.X &&
 							(dc.Y.Abs() + 0.5f) * AGame.cameraZoomRegionDefault <= AGame.halfSpan.Y)
-							{
+						{
 
 							ShellPage.SetViewModeRegion();
 							goto done;
@@ -2618,10 +2628,10 @@ namespace COTG
 						}
 
 					}
-					done:
+				done:
 					AGame.cameraC = newC;
 					ShellPage.SetJSCamera();
-					if (allowZoomChange && cid != City.build )
+					if (cid != City.build && (allowZoomChange||!City.CanVisit(cid))  )
 						ShellPage.EnsureNotCityView();
 
 					return true;

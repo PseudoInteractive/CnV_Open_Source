@@ -385,7 +385,7 @@
             </tg:RadDataGrid.Columns>
         </tg:RadDataGrid>
         <tk:GridSplitter
-                    Grid.Row="1"
+                    Grid.Row="2"
                     Background="Transparent"
                         VerticalAlignment="Top"
 									 				IsTabStop="True"

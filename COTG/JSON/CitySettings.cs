@@ -85,68 +85,72 @@ namespace COTG.JSON
 			return FilterTargetHub(City.Get(me), hub);
 		}
 
-		public static async Task SetCitySettings(int cid, int ? reqHub=null,int ? targetHub=null, bool setRecruit=false, bool setAutoBuild=false, bool setResources=false, int ? cartReserve=null, bool filterSend=false)
+		public const int ministerOptionAutobuildWalls = 26;
+		public const int ministerOptionAutobuildTowers = 27;
+		public const int ministerOptionAutobuildCabins = 52;
+		public static async Task SetCitySettings(int cid, int? reqHub = null, int? targetHub = null, bool setRecruit = false, bool setAutoBuild = false, bool setResources = false, int? cartReserve = null, bool filterSend = false, bool? autoTowers=null, bool? autoWalls=null)
         {
             await UpdateMinisterOptions(cid, async (split) =>
-            {
+			{
 
 				var spot = Spot.GetOrAdd(cid);
 				if (reqHub < 0)
 					reqHub = 0;
-			//	var cl = Game.CityList.Find(Views.SettingsPage.hubCitylistName);
+				//	var cl = Game.CityList.Find(Views.SettingsPage.hubCitylistName);
 
-           //     int reqHub = 0;
-                //var bestDist = 4096f;
-                //foreach (var hub in cl.cities)
-                //{
-                //    if (cid == hub)
-                //        continue;
+				//     int reqHub = 0;
+				//var bestDist = 4096f;
+				//foreach (var hub in cl.cities)
+				//{
+				//    if (cid == hub)
+				//        continue;
 
-                //    var d = hub.DistanceToCid(cid);
-                //    if (d < bestDist)
-                //    {
-                //        bestDist = d;
-                //        reqHub = hub;
-                //    }
+				//    var d = hub.DistanceToCid(cid);
+				//    if (d < bestDist)
+				//    {
+				//        bestDist = d;
+				//        reqHub = hub;
+				//    }
 
-                //}
+				//}
 
 
-                //        var args = $"[1,{auto},{auto},{auto},{auto},{auto},{auto},{auto},0,0,   0
-                //                      0,0,0,0,0,0,0,0,0,0,                                      10
-                //                      0,0,0,0,0,0,0,0,0,0,                                      20
-                //                      0,0,1,{reqWood},{reqStone},{reqIron},{reqFood},0,0,0,     30
-                //                      0,1,{reqHub},{reqHub},0,0,0,{maxWood},{maxStone},{maxIron}, 40
-                //                     {maxFood},[1,{cottageLevel}],[1,10],[1,10],[1,10],[1,       50
-                //                      10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10]]";
-                //                var args = $"[1,{auto},{auto},{auto},{auto},{auto},{auto},{auto},0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,{reqWood},{reqStone},{reqIron},{reqFood},0,0,0,0,1,{reqHub},{reqHub},0,0,0,{maxWood},{maxStone},{maxIron},{maxFood},[1,{cottageLevel}],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10]]";
+				//        var args = $"[1,{auto},{auto},{auto},{auto},{auto},{auto},{auto},0,0,   0
+				//                      0,0,0,0,0,0,0,0,0,0,                                      10
+				//                      0,0,0,0,0,0,0,0,0,0,                                      20
+				//                      0,0,1,{reqWood},{reqStone},{reqIron},{reqFood},0,0,0,     30
+				//                      0,1,{reqHub},{reqHub},0,0,0,{maxWood},{maxStone},{maxIron}, 40
+				//                     {maxFood},[1,{cottageLevel}],[1,10],[1,10],[1,10],[1,       50
+				//                      10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10]]";
+				//                var args = $"[1,{auto},{auto},{auto},{auto},{auto},{auto},{auto},0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,{reqWood},{reqStone},{reqIron},{reqFood},0,0,0,0,1,{reqHub},{reqHub},0,0,0,{maxWood},{maxStone},{maxIron},{maxFood},[1,{cottageLevel}],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10]]";
 
-                if(autoBuildOn.HasValue & setAutoBuild)
-                {
-                    var autoVal = autoBuildOn.GetValueOrDefault();
-                    var auto = autoVal ? "1" : "0";
-                    split[0] = '[' + auto;
-                    for (int i = 1; i < 8; ++i)
-                        split[i] = auto;
-                    if(autoVal)
-                    {
-                        for (int i = 51; i < 51+24*2; i+=2)
-                            split[i] = '[' + auto;
+				if (autoBuildOn.HasValue & setAutoBuild)
+				{
+					var autoVal = autoBuildOn.GetValueOrDefault();
+					var auto = autoVal ? "1" : "0";
+					split[0] = '[' + auto;
+					for (int i = 1; i < 8; ++i)
+						split[i] = auto;
+					if (autoVal)
+					{
+						for (int i = 51; i < 51 + 24 * 2; i += 2)
+							split[i] = '[' + auto;
 
-                    }
+					}
 
-                }
-				if (reqHub.HasValue )
+				}
+				if (reqHub.HasValue)
 				{
 					split[32] = "1"; // use the same city all requests
-					split[42] =  reqHub.ToString();
+					split[42] = reqHub.ToString();
 				}
-				if (setAutoBuild)
+				if (autoWalls.HasValue)
 				{
-					if (SettingsPage.autoWallLevel == 10)
-						split[26] = "1";
-					if (SettingsPage.autoTowerLevel == 10)
-						split[27] = "1";
+					split[ministerOptionAutobuildWalls] = autoWalls.Value ? "1" : "0";
+				}
+				if (autoTowers.HasValue)
+				{
+					split[ministerOptionAutobuildTowers] = autoTowers.Value? "1" : "0";
 				}
 
 				if (setResources)
@@ -156,20 +160,20 @@ namespace COTG.JSON
 					split[35] = reqIron.ToString();
 					split[36] = reqFood.ToString();
 				}
-				if (targetHub.HasValue )
+				if (targetHub.HasValue)
 				{
 					var cid = targetHub.ToString();
 					split[41] = "0"; // use a different city for all sends
 									 // hubs dont send by default
 									 // send target
-					split[37] = sendWood||   !filterSend ? cid : "0"; // hub to use for this res
-					split[38] = sendStone||  !filterSend ? cid : "0"; // hub to use for this res
-					split[39] = sendIron ||  !filterSend ? cid : "0"; // hub to use for this res
-					split[40] = sendFood ||  !filterSend ? cid : "0"; // hub to use for this res
+					split[37] = sendWood || !filterSend ? cid : "0"; // hub to use for this res
+					split[38] = sendStone || !filterSend ? cid : "0"; // hub to use for this res
+					split[39] = sendIron || !filterSend ? cid : "0"; // hub to use for this res
+					split[40] = sendFood || !filterSend ? cid : "0"; // hub to use for this res
 
 				}
 				int resultSourceHub = 0;
-				if( split[32] == "1")
+				if (split[32] == "1")
 				{
 					int.TryParse(split[42], out resultSourceHub);
 
@@ -186,13 +190,13 @@ namespace COTG.JSON
 				}
 
 				int resultTargetHub = 0;
-				if(split[41] == "1" )
+				if (split[41] == "1")
 				{
 					int.TryParse(split[43], out resultTargetHub);
 				}
 				else
 				{
-					for(int i=37;i<=40;++i)
+					for (int i = 37; i <= 40; ++i)
 					{
 						int.TryParse(split[i], out resultTargetHub);
 						if (resultTargetHub != 0)
@@ -201,7 +205,7 @@ namespace COTG.JSON
 
 				}
 
-				if ( cartReserve.HasValue )
+				if (cartReserve.HasValue)
 				{
 					split[45] = cartReserve.ToString();// 45 is % carts reserved for requests
 				}
@@ -216,9 +220,11 @@ namespace COTG.JSON
 					split[49] = maxIron.ToString();
 					split[50] = maxFood.ToString();
 				}
-                if(cottageLevel > 0 && setAutoBuild)
-                    split[52] = cottageLevel.ToString() + ']';
-                
+				if (cottageLevel > 0 && setAutoBuild)
+				{
+					split[ministerOptionAutobuildCabins] = cottageLevel.ToString() + ']';
+
+				}
 				var str = setRecruit ? SetRecruit(split, spot) : "";
                 
 				Note.Show($"Set {City.Get(cid).nameMarkdown}'s trade settings src:{City.Get(resultSourceHub).nameMarkdown} dest:{City.Get(resultTargetHub).nameMarkdown}");
@@ -255,6 +261,8 @@ namespace COTG.JSON
 				if (city.ministerOptions != null)
 				{
 					rv = city.ministerOptions.Split(',', StringSplitOptions.RemoveEmptyEntries);
+					
+
 				}
 			}
 			catch (Exception ex)
@@ -280,9 +288,10 @@ namespace COTG.JSON
 			    if (await opts(split))
                 {
                     var args2 = string.Join(',', split);
+					city.SetMinisterOptions(args2);
                     await Post.Send("includes/mnio.php", $"a={HttpUtility.UrlEncode(args2, Encoding.UTF8)}&b={cid}", World.CidToPlayerOrMe(cid));
                     // find closest hub
-                    Note.Show($"Set hub settings",true);
+                    Note.Show($"Set Minister options settings",true);
                 }
             }
             catch (Exception e)
@@ -477,6 +486,22 @@ namespace COTG.JSON
 				}
 			}
         }
+
+		public static async void SetAutoTowersOrWalls(int cid, bool ? autoWalls=null,bool ? autoTowers=null)
+		{
+			var targets = Spot.GetSelectedForContextMenu(cid);
+			foreach (var _cid in targets)
+			{
+				await CitySettings.SetCitySettings(_cid,autoWalls:autoWalls,autoTowers:autoTowers);
+			}
+		}
+		public static (bool?autoTowers,bool?autoWalls) IsAutoTowersAndWallsSet(City city)
+		{
+			if (city.ministerOptions == null)
+				return (null,null);
+			var split = GetMinisterOptionsNoFetch(city);
+			return (split[ministerOptionAutobuildTowers] == "1", split[ministerOptionAutobuildWalls] == "1");
+		}
 		public static async void SetSourceHub(int cid, int targetHub)
 		{
 			var targets = Spot.GetSelectedForContextMenu(cid, false,targetHub);

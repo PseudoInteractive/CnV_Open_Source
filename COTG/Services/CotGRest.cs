@@ -69,7 +69,7 @@ namespace COTG.Services
             }
             catch (Exception e)
             {
-				LogEx(e,report:false,eventName:$"json:{GetType().Name}{eventName}",extra: resp.RequestMessage.ToString());
+				LogEx(e,report:false,eventName:$"json:{GetType().Name}{eventName}",extra: resp?.RequestMessage?.ToString());
 				return false;
             }
 

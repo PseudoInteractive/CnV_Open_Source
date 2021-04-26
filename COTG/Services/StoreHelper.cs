@@ -16,25 +16,32 @@ namespace COTG.Services
 		private StoreContext context = null;
 
 		// Downloads and installs package updates in separate steps.
-		public async Task DownloadAndInstallAllUpdatesAsync()
+		public async void DownloadAndInstallAllUpdatesAsync()
 		{
-			if (context == null)
+			try
 			{
-				context = StoreContext.GetDefault();
+				if (context == null)
+				{
+					context = StoreContext.GetDefault();
+				}
+
+				//Debug.Assert(App.IsOnUIThread());
+
+				// Get the updates that are available.
+				IReadOnlyList<StorePackageUpdate> updates =
+					await context.GetAppAndOptionalStorePackageUpdatesAsync();
+
+				if (updates.Count != 0)
+				{
+					// Download the packages.
+
+					await InstallPackageUpdatesAsync(updates);
+
+				}
 			}
-
-			//Debug.Assert(App.IsOnUIThread());
-
-			// Get the updates that are available.
-			IReadOnlyList<StorePackageUpdate> updates =
-				await context.GetAppAndOptionalStorePackageUpdatesAsync().AsTask().ConfigureAwait(true);
-
-			if (updates.Count != 0)
+			catch(Exception ex)
 			{
-				// Download the packages.
-				
-				await InstallPackageUpdatesAsync(updates);
-
+				Debug.LogEx(ex);
 			}
 		}
 

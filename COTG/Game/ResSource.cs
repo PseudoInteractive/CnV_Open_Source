@@ -59,8 +59,12 @@ namespace COTG.Game
 			// round down (truncate as it is positive)
 			return new Resources(wood.Min(b.wood), stone.Min(b.stone), iron.Min(b.iron), food.Min(b.food));
 		}
-	
 
+		public Resources Max(int val)
+		{
+			// round down (truncate as it is positive)
+			return new Resources(wood.Max(val), stone.Max(val), iron.Max(val), food.Max(val));
+		}
 		public string Format() => $"{wood:N0} wood, {stone:N0} stone, {iron:N0} iron, {food:N0} food";
 	
 		public Resources Sub(Resources from)

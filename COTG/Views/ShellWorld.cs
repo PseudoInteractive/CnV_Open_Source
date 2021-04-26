@@ -23,6 +23,7 @@ using Windows.System.Threading;
 using COTG.Draw;
 using static COTG.Helpers.AString;
 using Cysharp.Text;
+using EnumsNET;
 
 namespace COTG.Views
 {
@@ -993,23 +994,23 @@ namespace COTG.Views
 										break;
 									}
 								case World.typeShrine:
-									toolTip = $"Shrine\n{(data.player == 255 ? "Unlit" : "Lit")}";
+									toolTip = $"Shrine\n{(data.data == 255 ? "Unlit" : ((Faith)data.data-1).AsString() )}";
 									break;
 								case World.typeBoss:
-									toolTip = $"Boss\nLevel:{data.player & 0xf}"; // \ntype:{data >> 4}";
+									toolTip = $"Boss\nLevel:{data.data}"; // \ntype:{data >> 4}";
 									break;
 								case World.typeDungeon:
-									toolTip = $"Dungeon\nLevel:{data.player & 0xf}"; // \ntype:{data >> 4}";
+									toolTip = $"Dungeon\nLevel:{data.data}"; // \ntype:{data >> 4}";
 									break;
 								case World.typePortal:
-									toolTip = $"Portal\n{(data.player == 0 ? "Inactive" : "Active")}";
+									toolTip = $"Portal\n{(data.data == 0 ? "Inactive" : "Active")}";
 									break;
 							}
 
 							if (World.rawPrior0 != null)
 							{
 								var pData = World.GetInfoFromPackedId(World.rawPrior0 , packedId);
-								if (pData.data == data.data | pData.type == World.typeBoss | pData.type == World.typeDungeon)
+								if (pData.all == data.all )
 								{
 									// no change
 
@@ -1025,7 +1026,7 @@ namespace COTG.Views
 												{
 													if (pData.player == 0)
 													{
-														toolTip += "\nWas settled";
+														toolTip += "\nLawless was settled";
 													}
 													else if (data.player == 0)
 													{

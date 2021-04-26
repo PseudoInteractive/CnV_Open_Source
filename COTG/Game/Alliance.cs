@@ -258,5 +258,16 @@ namespace COTG.Game
 		{
 			return myId == allianceId;
 		}
+
+		internal static int FromPlayer(int player0)
+		{
+			if (player0 > 0)
+			{
+				var p = Player.Get(player0);
+				if (p != null)
+					return p.alliance;
+			}
+			return 0;
+		}
 	}
 }

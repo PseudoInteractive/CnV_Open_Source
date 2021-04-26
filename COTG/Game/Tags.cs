@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using EnumsNET;
+
 namespace COTG.Game
 {
 	[Flags]
@@ -36,7 +38,7 @@ namespace COTG.Game
 	}
 	public static class TagHelper
 	{
-		public static TagInfo Get(this Tags tag) => new TagInfo() { id = tag, s = tag.ToString() };
+		public static TagInfo Get(this Tags tag) => new TagInfo() { id = tag, s = tag.AsString() };
 		//public static TagInfo tagLeaveMe = Get(Tags.LeaveMe);
 		
 
@@ -95,6 +97,11 @@ namespace COTG.Game
 		{
 			return s.Contains(tag.s, StringComparison.OrdinalIgnoreCase);
 		}
+		public static bool IsSet(this Tags tag, string s)
+		{
+			return s.Contains(tag.AsString(), StringComparison.OrdinalIgnoreCase);
+		}
+
 		public static Tags Get(string src)
 		{
 			Tags result = default;

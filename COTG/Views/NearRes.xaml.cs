@@ -66,7 +66,7 @@ namespace COTG.Views
 		public int reserveCarts { get; set; } = 100;
 		public int reserveShips { get; set; } = 0;
 
-		public int GetTransport(City city) => viaWater ? (city.shipsHome-reserveShips) * 10000 : (city.cartsHome-reserveCarts) * 1000;
+		public int GetTransport(City city) => viaWater ? (city.shipsHome-reserveShips).Max0() * 10000 : (city.cartsHome-reserveCarts).Max0() * 1000;
 
 		public void RefreshSupportByRes()
 		{
@@ -269,8 +269,8 @@ namespace COTG.Views
 					{
 						var info = sup.info;
 						var city = sup.city;
-						var shipping = viaWater ? (city.shipsHome-reserveShips) * 10000 : (city.cartsHome-reserveCarts) * 1000;
-						var send = sup.city.res.Sub(reserve).Min(r);
+						var shipping = viaWater ? (city.shipsHome-reserveShips).Max0() * 10000 : (city.cartsHome-reserveCarts).Max0() * 1000;
+						var send = sup.city.res.Sub(reserve).Max(0).Min(r);
 						var sum = send.sum;
 
 						if (shipping < sum)
@@ -283,8 +283,11 @@ namespace COTG.Views
 						sup.initialized = true;
 					}
 					r = r.Sub(sup.res);
-					supporters.OnPropertyChanged(sup);
-					sup.OnPropertyChanged(string.Empty);
+					App.DispatchOnUIThreadSneakyLow(() =>
+					{
+						supporters.OnPropertyChanged(sup);
+						sup.OnPropertyChanged(string.Empty);
+					});
 
 				}
 				supporters.Set(s);
@@ -293,9 +296,11 @@ namespace COTG.Views
 
 				RefreshSupportByRes();
 			}
-			OnPropertyChanged(nameof(targetIcon));
-			OnPropertyChanged(nameof(targetName));
-			
+			App.DispatchOnUIThreadSneakyLow(() =>
+			{
+				OnPropertyChanged(nameof(targetIcon));
+				OnPropertyChanged(nameof(targetName));
+			});
 		}
 
 		public async override void VisibilityChanged(bool visible)
@@ -382,9 +387,9 @@ namespace COTG.Views
 		{
 			var info = supporter.info;
 			var city = supporter.city;
-			var res = supporter.city.res.Sub(reserve);
+			var res = supporter.city.res.Sub(reserve).Max(0);
 			var viaWater = NearRes.instance.viaWater;
-			var shipping = viaWater ? (city.shipsHome - reserveShips) * 10000 : (city.cartsHome - reserveCarts) * 1000;
+			var shipping = viaWater ? (city.shipsHome - reserveShips).Max0() * 10000 : (city.cartsHome - reserveCarts).Max0() * 1000;
 			if (shipping > res.sum)
 			{
 				supporter.res = res;  // we can send all of it
@@ -421,8 +426,12 @@ namespace COTG.Views
 			{
 				Note.Show($"Something changed, please refresh and try again");
 			}
-			s.NotifyChange();
-			DoRefresh();
+			s.res.Clear();
+			App.DispatchOnUIThreadSneakyLow(() =>
+			{
+				s.NotifyChange();
+				DoRefresh();
+			});
 	//		Analytics.TrackEvent("NearResSend");
 
 		}

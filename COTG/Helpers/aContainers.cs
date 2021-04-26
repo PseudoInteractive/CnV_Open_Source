@@ -38,20 +38,25 @@ namespace COTG.Helpers
 
 
 
-        //public void NotifyChange(T changedItem)
-        //{
-        //    var dummy = PropertyChanged;
-        //    PropertyChanged?.Invoke(changedItem, new PropertyChangedEventArgs(string.Empty));
+		//public void NotifyChange(T changedItem)
+		//{
+		//    var dummy = PropertyChanged;
+		//    PropertyChanged?.Invoke(changedItem, new PropertyChangedEventArgs(string.Empty));
 
-        //    //            CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Replace, changedItem, changedItem));
-        //}
+		//    //            CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Replace, changedItem, changedItem));
+		//}
 
 
-        public void NotifyReset()
-        {
-          //  Assert(App.IsOnUIThread());
-            if (CollectionChanged != null)
-                CollectionChanged(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
+		public void NotifyReset()
+		{
+			if (CollectionChanged != null)
+			{
+				App.DispatchOnUIThreadSneaky(() =>
+
+				   //  Assert(App.IsOnUIThread());
+				   CollectionChanged(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset)));
+			}
+
         }
 
         public void Set(IEnumerable<T> src)

@@ -49,7 +49,10 @@ namespace COTG.Views
 						{
 							// Todo
 						}
-						await CitySettings.SetCitySettings(cid, bestHub,CitySettings.FilterTargetHub(cid,bestHub),SettingsPage.setRecruit,true, true,null, true);
+						await CitySettings.SetCitySettings(cid, bestHub,CitySettings.FilterTargetHub(cid,bestHub),SettingsPage.setRecruit,setAutoBuild:true,setResources:true,filterSend:true,
+								autoWalls:(SettingsPage.autoWallLevel==10)?true:null,
+								autoTowers: (SettingsPage.autoTowerLevel == 10) ? true : null
+								);
 						return true;
 					}
 					else

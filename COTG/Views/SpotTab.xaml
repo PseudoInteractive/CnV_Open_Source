@@ -69,7 +69,7 @@
                                          IsVisible="True"
                                          Tip="Hold down shift to toggle pinned status for all selected spots"
                                       SizeMode="Fixed"
-                                          Width="28" />
+                                          Width="32" />
 
                 <tg:DataGridNumericalColumn PropertyName="cont"
                                        SizeMode="Fixed"

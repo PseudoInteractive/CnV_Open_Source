@@ -20,37 +20,79 @@ using Microsoft.Toolkit.HighPerformance.Buffers;
 using Nito.AsyncEx;
 using COTG.Views;
 using System.ComponentModel;
-using JM.LinqFaster;
+using static COTG.Game.World;
+using Cysharp.Text;
+using EnumsNET;
 
 namespace COTG.Game
 {
-	public interface IHeatMapItem
+	public class HeatMapItem : INotifyPropertyChanged
 	{
-		public ResetableCollection<HeatMapDelta> children { get; } // only valid in heatMapDay
-		public string label { get; }
-		public bool hasUnrealizedChildren { get; }
+		public virtual ResetableCollection<HeatMapDelta> children => ResetableCollection<HeatMapDelta>.empty; // only valid in heatMapDay
+		public string desc = string.Empty;
+		public virtual bool hasUnrealizedChildren => false;
+	
+		public SmallTime t;
 
+		public HeatMapItem(SmallTime t)
+		{
+			this.t = t;
+		}
+
+		public virtual event PropertyChangedEventHandler PropertyChanged;
+		public void OnPropertyChanged(string propertyName) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+		public void NotifyChange(string member = "")
+		{
+			App.DispatchOnUIThreadSneaky(() =>
+			{
+				OnPropertyChanged(member);
+
+			});
+		}
+
+		public override bool Equals(object obj)
+		{
+			return obj is HeatMapItem item &&
+				   t.Equals(item.t);
+		}
+
+		public override int GetHashCode()
+		{
+			return t.seconds;
+		}
+
+		public static bool operator ==(HeatMapItem left, HeatMapItem right)
+		{
+			return EqualityComparer<HeatMapItem>.Default.Equals(left, right);
+		}
+
+		public static bool operator !=(HeatMapItem left, HeatMapItem right)
+		{
+			return !(left == right);
+		}
 	}
 
-	public class HeatMapDay : IHeatMapItem, INotifyPropertyChanged
+	public class HeatMapDay : HeatMapItem
 	{
 		// key is lastUpdated.Date
 		public static ResetableCollection<HeatMapDay> days = new();
 
-		public SmallTime lastUpdate;
-		public string dateStr => lastUpdate.ToString("yyyy-MM-dd");
-		public string desc => dateStr + (isInitialized ? $" - {deltas.Count + 1} snaps" : "...");
+		public HeatMapDay(SmallTime t) : base(t)
+		{
+			desc = dateStr + " ...";
+		}
+
+		public string dateStr => t.ToString("yyyy-MM-dd");
 		public bool isInitialized => snapshot.Length > 0;
 
+		public override string ToString() => desc;
 
 		public Azure.ETag eTag; // server version, if our version is not equal to the version on azure we discard current work and fetch the latest
 
 		public MemoryOwner<uint> snapshot = MemoryOwner<uint>.Empty; // 600*600
 		public ResetableCollection<HeatMapDelta> deltas { get; set; } = new();
-		ResetableCollection<HeatMapDelta> IHeatMapItem.children => deltas;
-		string IHeatMapItem.label => desc;
-		bool IHeatMapItem.hasUnrealizedChildren => !isInitialized ;
-
+		public override ResetableCollection<HeatMapDelta> children => deltas;
+		public override bool hasUnrealizedChildren => true;
 
 		public int UncompressedSizeEstimate()
 		{
@@ -61,21 +103,40 @@ namespace COTG.Game
 			}
 			return rv;
 		}
-		public override string ToString()
-		{
-			return desc;
-		}
 
-		public virtual event PropertyChangedEventHandler PropertyChanged;
-		public void OnPropertyChanged(string propertyName) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-		public void NotifyChange(string member = "")
+		public void UpdateDesc(bool updateNext)
 		{
-			App.DispatchOnUIThreadSneakyLow(() =>
+			var prior = GetEarlier();
+			
+			if (!isInitialized || prior == null || !prior.isInitialized)
 			{
-				OnPropertyChanged(member);
-				Debug.Log("NotifyChange");
+				desc = dateStr + (isInitialized ? $" - {deltas.Count + 1} snaps" : "...");
+			}
+			else
+			{
+				desc = dateStr + new ChangeInfo().ComputeDeltas(prior.snapshot.Span, snapshot.Span).ToString();
+			}
 
-			});
+			NotifyChange(nameof(desc));
+			
+			if(updateNext)
+			{
+				UpdateSnapshots();
+				var next = GetLater();
+				if (next != null)
+					next.UpdateDesc(false);
+			}
+		}
+		public void UpdateSnapshots()
+		{
+			var snap1 = snapshot.Clone();
+			foreach(var delta in deltas)
+			{
+				using var snap0 = snap1.Clone();
+				HeatMap.ApplyDelta(snap1.Span, delta.deltas.Span);
+				delta.desc = delta.timeStr + new ChangeInfo().ComputeDeltas(snap1.Span, snap0.Span).ToString();
+				delta.NotifyChange(nameof(delta.desc));
+			}
 		}
 
 		internal int Write(byte[] buffer)
@@ -88,10 +149,8 @@ namespace COTG.Game
 
 
 
-					o.Write(lastUpdate);
+					o.Write(t);
 					o.WritePackedUints(snapshot.Span);
-					var a = snapshot.Span.CountNonZero();
-					Assert(a != 0);
 
 					int dCount = deltas.Count;
 					o.Write7BitEncoded(dCount);
@@ -102,7 +161,6 @@ namespace COTG.Game
 						var d = deltas[i];
 
 						o.Write(d.t);
-						Assert(d.deltas.Span.CountZero() == 0);
 						o.WritePackedUints(d.deltas.Span);
 					}
 					return (int)(o.Position - pData);
@@ -115,22 +173,19 @@ namespace COTG.Game
 			fixed (byte* pData = data)
 			{
 				var r = new Reader(pData);
-				lastUpdate = r.ReadSmallTime();
+				t = r.ReadSmallTime();
 				if (snapshot.Length > 0)
 				{
 					// dispose it
 				}
 				snapshot = r.ReadPackedUints();
-				var a = snapshot.Span.CountNonZero();
-				Assert(a != 0);
 				var dCount = r.Read7BitEncoded();
 				deltas.Clear();
 				for (int i = 0; i < dCount; ++i)
 				{
 					var t = r.ReadSmallTime();
 					var ds = r.ReadPackedUints();
-					Assert(ds.Span.CountZero() == 0);
-
+				
 					deltas.Add(new HeatMapDelta(t, ds));
 
 				}
@@ -149,12 +204,11 @@ namespace COTG.Game
 		//}
 		public bool AddSnapshot(SmallTime t, MemoryOwner<uint> newSnap)
 		{
-			Trace($"Add Snapshot: {desc} [{t}] [{lastUpdate}]");
+			Trace($"Add Snapshot: {desc} [{t}] [{this.t}]");
 			if (!isInitialized)
 			{
-				lastUpdate = t;
+				this.t = t;
 				snapshot = newSnap;
-				Assert(snapshot.Span.CountNonZero() != 0);
 				Assert(deltas.Count == 0);
 				return true;
 			}
@@ -162,7 +216,7 @@ namespace COTG.Game
 			//			var isDeltaBogus = deltas.Count == 1 && deltas[0].deltas.Length==0;
 
 
-			if (t >= lastUpdate)
+			if (t >= this.t)
 			{
 				// simple operation, add to head
 				var delta = HeatMap.ComputeDelta(snapshot.Span, newSnap.Span);
@@ -173,19 +227,18 @@ namespace COTG.Game
 					World.ReturnWorldBuffer(newSnap);
 					return false;
 				}
-				
-				deltas.Insert(0, new HeatMapDelta(lastUpdate, delta));
-				lastUpdate = t;
+
+				deltas.Insert(0, new HeatMapDelta(this.t, delta));
+				this.t = t;
 				//var prior = snapshot;
 				snapshot = newSnap;
-				Assert(snapshot.Span.CountNonZero() != 0);
 				//World.ReturnWorldBuffer(prior);
 				return true;
 			}
 			else
 			{
 
-				using var temp = snapshot.AsMemoryOwner();
+				using var temp = snapshot.Clone();
 				var tSpan = temp.Span;
 				var snapshotSpan = snapshot.Span;
 
@@ -229,11 +282,15 @@ namespace COTG.Game
 				return true;
 			}
 		}
-		public async Task<HeatMapDay> Load()
+		public async Task Load()
 		{
 			using var _ = await HeatMap.mutex.LockAsync();
-			return await LoadInternal();
+			await LoadInternal();
+			UpdateDesc(true);
+
+			NotifyChange();
 		}
+		
 		public async Task<HeatMapDay> LoadInternal()
 		{
 			try
@@ -294,29 +351,43 @@ namespace COTG.Game
 			}
 			return null;
 		}
+
+		// stored in reverse order, 0 is most recent
+		public HeatMapDay GetLater()
+		{
+			var id = HeatMapDay.days.IndexOf(this);
+			if (id > 0)
+				return HeatMapDay.days[id - 1];
+			else
+				return null;
+
+		}
+		public HeatMapDay GetEarlier()
+		{
+			var id = HeatMapDay.days.IndexOf(this);
+			if (id >= 0 && id + 1 < HeatMapDay.days.Count)
+				return HeatMapDay.days[id + 1];
+			else
+				return null;
+
+		}
+
 	}
 
-	public class HeatMapDelta : IHeatMapItem
+	public class HeatMapDelta : HeatMapItem
 	{
-		public SmallTime t;
 		public MemoryOwner<uint> deltas;
 		public string timeStr => $"{t.ToString("HH':'mm':'ss")} - {deltas.Length / 2} changes";
 
-		ResetableCollection<HeatMapDelta> IHeatMapItem.children => null;
-		string IHeatMapItem.label => timeStr;
-		bool IHeatMapItem.hasUnrealizedChildren => false;
-
-		public HeatMapDelta(SmallTime t, MemoryOwner<uint> deltas)
+		public HeatMapDelta(SmallTime t, MemoryOwner<uint> deltas) : base(t)
 		{
-			this.t = t;
 			this.deltas = deltas;
 
-			Trace($"Delta: {this}");
 			if(deltas.Length > 200)
 			{
 				int q = 0;
 			}
-
+			desc = timeStr;
 		}
 		public override string ToString()
 		{
@@ -396,7 +467,28 @@ namespace COTG.Game
 
 
 		}
-		static HeatMapDay GetDay(SmallTime t)
+		public static async Task<MemoryOwner<uint>> GetSnapshot(SmallTime t)
+		{
+			using var _ = await mutex.LockAsync();
+			var day = GetDay(t, false);
+			if (day == null)
+			{
+				Assert(false);
+				day = HeatMapDay.days.First();
+			}
+			await day.LoadInternal();
+			var rv = day.snapshot.Clone();
+			foreach(var d in day.deltas)
+			{
+				if (d.t < t)
+					break;
+				ApplyDelta(rv.Span, d.deltas.Span);
+
+			}
+			return rv;
+		
+		}
+		static HeatMapDay GetDay(SmallTime t, bool createIfNotExists)
 		{
 
 			var date0 = t.Date();
@@ -404,9 +496,10 @@ namespace COTG.Game
 			int i = 0;
 			for (; i < HeatMapDay.days.Count; ++i)
 			{
-				if (HeatMapDay.days[i].lastUpdate >= date0)
+				var date1 = HeatMapDay.days[i].t.Date();
+				if (date1 <= date0)
 				{
-					if (HeatMapDay.days[i].lastUpdate.Date() == date0)
+					if (date1== date0)
 					{
 						day = HeatMapDay.days[i];
 					}
@@ -414,10 +507,10 @@ namespace COTG.Game
 				}
 			}
 
-			if (day == null)
+			if (day == null && createIfNotExists)
 			{
-				day = new();
-				day.lastUpdate = t;
+				day = new(t);
+			
 				//day.deltas.Add(new HeatMapDelta( t , Array.Empty<uint>() ) );
 				HeatMapDay.days.Insert(i, day);
 				HeatTab.DaysChanged();
@@ -439,21 +532,23 @@ namespace COTG.Game
 					continue;
 
 				var t = new SmallTime(new DateTimeOffset(int.Parse(split[0]), int.Parse(split[1]), int.Parse(split[2]), 0, 0, 1, TimeSpan.Zero));
-				GetDay(t);
+				GetDay(t,true);
 			}
 
 		}
 
 
 
-		public static async Task<(HeatMapDay day, bool modified)> AddSnapshot(SmallTime t, uint[] isSnap, bool uploadIfChanged)
+		public static async Task<(HeatMapDay day, bool modified)> AddSnapshot(SmallTime t, MemoryOwner<uint> isSnap, bool uploadIfChanged)
 		{
 			using var _ = await mutex.LockAsync();
-			var day =await (GetDay(t)).LoadInternal();
+			var day =await (GetDay(t,true)).LoadInternal();
 			if (day != null)
 			{
-				var mod = day.AddSnapshot(t, World.SwizzleForCompression(isSnap));
+				var mod = day.AddSnapshot(t, isSnap);
+				day.UpdateDesc(true);
 				
+
 				if (mod && uploadIfChanged)
 				{
 					await UploadInternal(day);
@@ -500,4 +595,271 @@ namespace COTG.Game
 		}
 
 	}
+	struct ChangeInfo
+	{
+		public byte allianceCaptures;
+		public byte allianceLosses;
+		public byte otherCaptures;
+		public byte allianceNew;
+		public byte otherNew;
+		public byte flattened;
+		public byte shrines;
+		public byte allianceCastles;
+		public byte otherCastles;
+		public byte abandonedCastles;
+		public byte abandonedCities;
+		public byte decayed;
+		public byte grew;
+		public byte portalsOpened;
+		public byte newTemples;
+		public byte destroyedTemples;
+
+		public string ToString()
+		{
+			using var sb = ZString.CreateUtf8StringBuilder();
+			if (newTemples > 0)
+				sb.AppendFormat(", +{0} Temples", newTemples);
+			if (destroyedTemples > 0)
+				sb.AppendFormat(", -{0} Destroyed Temples", destroyedTemples);
+			if (shrines> 0)
+				sb.AppendFormat(", +{0} Shrines", shrines);
+			if (allianceCaptures > 0)
+				sb.AppendFormat(", {0} Alliance Caps", allianceCaptures);
+			if (allianceLosses > 0)
+				sb.AppendFormat(", {0} Lost", allianceLosses);
+			if (otherCaptures > 0)
+				sb.AppendFormat(", {0} Caps", otherCaptures);
+			if (allianceNew > 0)
+				sb.AppendFormat(", +{0} Alliance Cities", allianceNew);
+			if (otherNew > 0)
+				sb.AppendFormat(", +{0} Cities", otherNew);
+			if(abandonedCastles > 0)
+				sb.AppendFormat(", {0} Abandoned Castles", abandonedCastles);
+			if (abandonedCities > 0)
+				sb.AppendFormat(", {0} Abandoned", abandonedCities);
+			if(allianceCastles > 0)
+				sb.AppendFormat(", +{0} Alliance Castles", allianceCastles);
+			if (otherCastles > 0)
+				sb.AppendFormat(", +{0} Castles", otherCastles);
+			if(grew > 0)
+				sb.AppendFormat(", {0} Renovations", grew);
+			if (flattened > 0)
+				sb.AppendFormat(", {0} Downgrades", flattened);
+
+			return sb.ToString();
+		}
+
+		public static string GetChangeDesc(uint v0, uint v1)
+		{
+			if (v0 == v1)
+				return null; 
+			var type0 = World.GetType(v0);
+			var type1 = World.GetType(v1);
+			if (type0 == typeShrine || type1 == typeShrine)
+			{
+				var d = World.GetData(v1);
+				if (d != 255)
+					return $"New { ((Faith)(d-1)).AsString() }";
+
+			}
+			else if (type0 == typePortal || type1 == typePortal)
+			{
+				if (World.GetData(v1) != 0)
+					return "Portal Opened";
+			}
+			else
+			{
+				Assert(type0 == typeCity || type1 == typeCity);
+
+				var player0 = World.GetPlayer(v0);
+				var player1 = World.GetPlayer(v1);
+
+				var alliance0 = Alliance.FromPlayer(player0);
+				var alliance1 = Alliance.FromPlayer(player1);
+				var isTemple0 = IsTemple(v0);
+				var isTemple1 = IsTemple(v1);
+				var isCastle0 = IsCastle(v0);
+				var isCastle1 = IsCastle(v1);
+				var isBig0 = IsBig(v0);
+				var isBig1 = IsBig(v1);
+				if (isTemple0 != isTemple1)
+				{
+					if (isTemple1)
+						return $"{Player.IdToName(player1)} Became Temple";
+					else
+						return $"{Player.IdToName(player1)} No longer Temple :(";
+				}
+				if (player0 != player1)
+				{
+					// New city
+					if (type0 == 0)
+					{
+						return null;// $"{Player.IdToName(player1)} settled city";
+					}
+					else
+					{
+						if (player1 == 0)
+						{
+							return $"{Player.IdToName(player0)} abandoned";
+						}
+						else if (player0 == 0)
+						{
+							return null;// $"{Player.IdToName(player1)} took lawless";
+						}
+						else if (isCastle0)
+						{
+							return $"{Player.IdToName(player0)} conquered by {Player.IdToName(player1)}";
+						}
+
+					}
+
+				}
+				if (isBig0 != isBig1 && isBig0)
+				{
+					if (isCastle0 && player0 != 0 && player1 != 0)
+						return null;// return $"{Player.IdToName(player1)} was flattened";
+				}
+				if (isCastle0 != isCastle1)
+				{
+					if (isCastle1)
+					{
+						return null;// return $"{Player.IdToName(player1)} castled";
+					}
+				}
+
+			}
+			return null;
+		}
+		public ChangeInfo ComputeDeltas(ReadOnlySpan<uint> t0, ReadOnlySpan<uint> t1 )
+		{
+			for(int i=0;i<World.spanSquared;++i)
+			{
+				var v0 = t0[i];
+				var v1 = t1[i];
+				if (v0 == v1)
+					continue;
+				var type0 = World.GetType(v0);
+				var type1 = World.GetType(v1);
+				if (type0 == typeShrine || type1 == typeShrine)
+				{
+					if (World.GetData(v1) != 255)
+						++shrines;
+
+				}
+				else if (type0 == typePortal || type1 == typePortal)
+				{
+					if (World.GetData(v1) != 0)
+						++portalsOpened;
+				}
+				else
+				{
+					Assert(type0 == typeCity || type1 == typeCity);
+
+					var player0 = World.GetPlayer(v0);
+					var player1 = World.GetPlayer(v1);
+
+					var alliance0 = Alliance.FromPlayer(player0);
+					var alliance1 = Alliance.FromPlayer(player1);
+					var isTemple0 = IsTemple(v0);
+					var isTemple1 = IsTemple(v1);
+					var isCastle0 = IsCastle(v0);
+					var isCastle1 = IsCastle(v1);
+					var isBig0 = IsBig(v0);
+					var isBig1 = IsBig(v1);
+					if(isTemple0 != isTemple1)
+					{
+						if (isTemple1)
+							++newTemples;
+						else
+							++destroyedTemples;
+					}
+					if(isBig0 != isBig1 )
+					{
+						if (player0 != 0 && player1 != 0)
+						{
+							if(isBig0)
+							{
+								++flattened;
+							}
+							else
+							{
+								++grew;
+							}
+						}
+					}
+					if(isCastle0!=isCastle1 )
+					{
+						if(isCastle1)
+						{
+							if (Alliance.IsMine(alliance1))
+								++allianceCastles;
+							else
+								++otherCastles;
+						}
+					}
+					if (player0 != player1)
+					{
+						// New city
+						if(type0 == 0)
+						{
+							if (Alliance.IsMine(alliance1))
+								++allianceNew;
+							else
+								++otherNew;
+						}
+						else
+						{
+							if (player1 == 0)
+							{
+								if (isCastle0)
+									++abandonedCastles;
+								else
+									++abandonedCities;
+							}
+							else if (player0 == 0)
+							{
+								// settled lasless
+								if (Alliance.IsMine(alliance1))
+									++allianceNew;
+								else
+									++otherNew;
+							}
+							else if (isCastle0)
+							{
+								// Capture
+								if (Alliance.IsMine(alliance0))
+									++allianceLosses;
+								else if (Alliance.IsMine(alliance1))
+									++allianceCaptures;
+								else if(alliance0 != alliance1)
+									++otherCaptures;
+							}
+
+						}
+					
+					}
+
+					if (type0 != type1)
+					{
+
+						if (type0 == typeCity)
+						{
+							// decayed, ignore
+							++decayed;
+
+						}
+					}
+					else
+					{
+
+					}
+				}
+
+
+			}
+			return this;
+		}
+	}
+
+
 }
