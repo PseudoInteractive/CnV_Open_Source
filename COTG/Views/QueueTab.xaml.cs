@@ -283,7 +283,7 @@ namespace COTG.Views
 			var ob = args.InvokedItem;
 			if (ob is BuildItemView q)
 			{
-				JSClient.ChangeCity(q.cid, false); // this is always true now
+				JSClient.CitySwitch(q.cid, false); // this is always true now
 			}
 			else if (ob is BuildItemView op)
 			{
@@ -359,7 +359,7 @@ namespace COTG.Views
 				//				await JSClient.ChangeCity(city.cid, false); ;
 				//				if(!bc.hasWall)
 				//					await CityBuild.Enqueue(0, 1, bidWall, bspotWall);
-				await CityBuild.Enqueue(0, 1, bidCastle, XYToId(city.FindOverlayBuildingOfType(bidCastle)));
+				await CityBuild.SmartBuild(city, city.FindOverlayBuildingOfType(bidCastle),bidCastle,true,false,false);
 				//bc.wallLevel = 1;
 				bc.hasCastle = true;
 			}
@@ -370,7 +370,7 @@ namespace COTG.Views
 				if (c.bl == 0)
 				{
 					c.bl = 1;
-					await CityBuild.Enqueue(0, 1, bidSorcTower, XYToId((c.x, c.y)));
+					await CityBuild.SmartBuild(city,(c.x,c.y), bidSorcTower,true,false,false );
 				}
 				// raise to level 10
 				await CityBuild.EnqueueUpgrade( 10, XYToId((c.x, c.y)));

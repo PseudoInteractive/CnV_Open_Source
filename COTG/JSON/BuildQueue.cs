@@ -92,7 +92,7 @@ namespace COTG.JSON
 		public bool isNop => slvl == 255; // special token for noop
 		public string buildingName => def.Bn;
 		public bool isBuild => slvl == 0 && elvl != 0;
-		public static BuildQueueItem nop = new BuildQueueItem(255, 255, 0, 0);
+		public static readonly BuildQueueItem nop = new BuildQueueItem(255, 255, 0, 0);
 		internal bool isValid => bid != City.bidTownHall || slvl != 0;
 
 		internal bool isBuilding => !isRes;
@@ -280,7 +280,7 @@ namespace COTG.JSON
 								commandBuilder.Append($"{{\"{cid}\":[");
 								var qFirst = true;
 								var destroyMe = false;
-								string buildEx = null;
+								
 								int offset = 0;
 								await queueLock.WaitAsync();
 								try
@@ -409,7 +409,7 @@ namespace COTG.JSON
 											if (prior.bid != i.bid)
 											{
 												// invalid command, discard it
-												Trace("Invalid demo  {prior.bid} => {i.bid}");
+												Trace($"Invalid demo  {prior.bid} => {i.bid}");
 												RemoveAt(offset);
 												continue;
 											}
@@ -471,7 +471,16 @@ namespace COTG.JSON
 									{
 										commandBuilder.Append("]}");
 
-										buildEx = commandBuilder.ToString();
+										var buildEx = commandBuilder.ToString();
+										if (buildEx != null)
+										{
+											await JSClient.JSInvokeTask("buildex", new[] { commandBuilder.ToString() });
+
+											if (cid == City.build)
+												CityView.BuildingsOrQueueChanged();
+
+											SaveNeeded();
+										}
 									}
 									else
 									{
@@ -516,15 +525,7 @@ namespace COTG.JSON
 								{
 									queueLock.Release();
 								}
-								if (buildEx != null)
-								{
-									await JSClient.JSInvokeTask("buildex", new[] { commandBuilder.ToString() });
-
-									if (cid == City.build)
-										CityView.BuildingsOrQueueChanged();
-
-									SaveNeeded();
-								}
+								
 								if(destroyMe)
 								{
 									Log("Queue Done!");
@@ -764,6 +765,8 @@ namespace COTG.JSON
 		public static bool initialized => saveTimer != null;
 		public static async Task Enqueue(this int cid, byte slvl, byte elvl, ushort bid, ushort spot, bool process=true)
 		{
+			if (elvl > slvl)
+				Assert(elvl == slvl + 1);
 			Assert(initialized);
 			var op = new BuildQueueItem(slvl, elvl, bid, spot);
 			if (bid == City.bidTemple && slvl == 0)
@@ -890,7 +893,7 @@ namespace COTG.JSON
 					{
 						CityBuildQueue.queueLock.Release();
 					}
-					Log($"SaveQueue: {str}");
+					//Log($"SaveQueue: {str}");
 						
 					 SaveBuildQueue(str);
 
@@ -1006,7 +1009,7 @@ namespace COTG.JSON
 			}
 			sb.Append('}');
 			var rv = sb.ToString();
-			Log(rv);
+		//	Log(rv);
 			return rv;
 
 		}

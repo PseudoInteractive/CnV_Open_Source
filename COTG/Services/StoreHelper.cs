@@ -18,6 +18,8 @@ namespace COTG.Services
 		// Downloads and installs package updates in separate steps.
 		public async void DownloadAndInstallAllUpdatesAsync()
 		{
+			if (System.Diagnostics.Debugger.IsAttached)
+				return;
 			try
 			{
 				if (context == null)
@@ -31,7 +33,7 @@ namespace COTG.Services
 				IReadOnlyList<StorePackageUpdate> updates =
 					await context.GetAppAndOptionalStorePackageUpdatesAsync();
 
-				if (updates.Count != 0)
+				if (updates != null && updates.Count != 0)
 				{
 					// Download the packages.
 

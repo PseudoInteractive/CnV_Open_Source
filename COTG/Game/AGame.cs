@@ -1492,6 +1492,9 @@ namespace COTG
 											}
 											var targetCid = attack.targetCid;
 											var sourceCid = attack.sourceCid;
+											if (!(targetCid.TestContinentFilter() | sourceCid.TestContinentFilter()))
+												continue;
+
 											var c1 = targetCid.CidToCamera();
 											var c0 = sourceCid.CidToCamera();
 											// cull (should do this pre-transform as that would be more efficient
@@ -1649,6 +1652,9 @@ namespace COTG
 									bool noneIsAll = list.Length <= SettingsPage.showAttacksLimit;
 									foreach (var city in list)
 									{
+										if (!city.testContinentFilter)
+											continue;
+
 										if (city.incoming.Any() || city.isMine)
 										{
 
@@ -1721,7 +1727,8 @@ namespace COTG
 								{
 									foreach (var city in City.myCities)
 									{
-
+										if (!city.testContinentFilter)
+											continue;
 										Assert(city is City);
 										if (!city.incoming.Any())
 										{
@@ -1743,6 +1750,8 @@ namespace COTG
 							{
 								foreach (var city in City.friendCities)
 								{
+									if (!city.testContinentFilter)
+										continue;
 									var wc = city.cid.CidToWorld();
 									if (IsCulledWC(wc))
 										continue;
@@ -1775,6 +1784,9 @@ namespace COTG
 							const int raidCullSlopSpace = 4;
 							foreach (var city in City.friendCities)
 							{
+								if (!city.testContinentFilter)
+									continue;
+
 								var wc = city.cid.CidToWorld();
 								// Todo: clip thi
 								if (city.senatorInfo.Length != 0 && !(IncomingTab.IsVisible() || NearDefenseTab.IsVisible()))
@@ -2631,7 +2643,7 @@ namespace COTG
 				done:
 					AGame.cameraC = newC;
 					ShellPage.SetJSCamera();
-					if (cid != City.build && (allowZoomChange||!City.CanVisit(cid))  )
+					if (cid != City.build && (!City.CanVisit(cid) || !Spot.CanChangeCity(cid))  )
 						ShellPage.EnsureNotCityView();
 
 					return true;

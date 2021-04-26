@@ -99,7 +99,7 @@
 						  IsEditable="True"
 						  TextSubmitted="RaidCarryMaxSubmitted"
 						  Margin="4" ToolTipService.ToolTip="If the resulting raids computed via min Carry have a carry % that is greater than this number, the dungeon will be ignored.  Total raiding income goes down as carry % goes up (startong at 100%) and sometimes it is better to send to a farther dungeon if that dungeons carry % is closer to 100%.  A common case where a high % carry is required is when you attempt to raid a lower level dungeon and you run out of command slots" />
-						<winui:DropDownButton x:Name="includeButton"
+			<winui:DropDownButton x:Name="includeButton"
 									  Content="Include"
 									  Margin="6,18,6,2"
 									  FontSize="{StaticResource MediumFontSize}"

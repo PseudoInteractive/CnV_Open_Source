@@ -154,7 +154,7 @@ namespace COTG.Game
 
 					int dCount = deltas.Count;
 					o.Write7BitEncoded(dCount);
-					Assert(dCount <= 16);
+					
 					Trace($"Deltas: {dCount}");
 					for (int i = 0; i < dCount; ++i)
 					{
@@ -240,8 +240,7 @@ namespace COTG.Game
 
 				using var temp = snapshot.Clone();
 				var tSpan = temp.Span;
-				var snapshotSpan = snapshot.Span;
-
+			
 
 				int offset;
 				for (offset = 0; offset < deltas.Count; ++offset)
@@ -645,6 +644,8 @@ namespace COTG.Game
 				sb.AppendFormat(", {0} Renovations", grew);
 			if (flattened > 0)
 				sb.AppendFormat(", {0} Downgrades", flattened);
+			if (decayed > 0)
+				sb.AppendFormat(", {0} Decays", decayed);
 
 			return sb.ToString();
 		}
@@ -694,17 +695,23 @@ namespace COTG.Game
 					// New city
 					if (type0 == 0)
 					{
-						return null;// $"{Player.IdToName(player1)} settled city";
+						Assert(player1 != 0);
+						if( isBig1)
+							return $"{Player.IdToName(player1)} speed built";
+						else if (isCastle1)
+							return $"{Player.IdToName(player1)} fast castle";
 					}
 					else
 					{
-						if (player1 == 0)
+						if (player1 == 0  )
 						{
-							return $"{Player.IdToName(player0)} abandoned";
+							if((isBig0 || isCastle0))
+								return $"{Player.IdToName(player0)} abandoned";
 						}
 						else if (player0 == 0)
 						{
-							return null;// $"{Player.IdToName(player1)} took lawless";
+							if( isBig1 || isCastle1)
+							 return  $"{Player.IdToName(player1)} took lawless";
 						}
 						else if (isCastle0)
 						{

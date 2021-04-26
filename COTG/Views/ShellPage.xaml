@@ -91,6 +91,17 @@
 							</DataTemplate>
 						</ComboBox.ItemTemplate>
 					</ComboBox>
+					<winui:DropDownButton x:Name="ContinentFilter"
+									  Content="Cont"
+									  Margin="2"
+									  FontSize="{StaticResource MediumFontSize}"
+										FontFamily="Tw Cen MT Condensed"
+									  IsTextScaleFactorEnabled="False"
+										 
+									  Click="ContinentFilterClick"
+									  Style="{ThemeResource DropDownButtonRevealStyle}"
+									 ToolTipService.ToolTip="Yet another Continent filter.  Uncheck all to show everything"  />
+
 					<Button x:Name="HomeButton" Click="BuildHomeClick" RightTapped="BuildHomeRightTapped" Margin="4" Style="{ThemeResource ButtonRevealStyle}"
                             ToolTipService.ToolTip="&#x0a;Click to switch between region view and city view&#x0a;Right clck for menu" >
 						<Button.Resources>

@@ -673,6 +673,7 @@ namespace COTG
 		public static async Task<bool> LockUiSema(int cid)
 		{
 			Log($"Lock sema: {uiSema.CurrentCount}");
+			Assert(City.CanVisit(cid));
 			if (App.isUISemaLocked)
 			{
 				var i = await App.DoYesNoBox("Busy", "Wait for process to finish?");
@@ -686,7 +687,8 @@ namespace COTG
 			}
 			try
 			{
-				await JSClient.ChangeCity(cid, false, true, true, true);
+				if (!await JSClient.CitySwitch(cid, false, true, true, true, blockOnFail: false))
+					throw new UIException("Sema");
 				City.lockedBuild = cid;
 			}
 			catch(Exception ex)

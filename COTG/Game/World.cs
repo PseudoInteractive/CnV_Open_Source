@@ -194,10 +194,31 @@ namespace COTG.Game
 		public static City distanceReference; // Set temporarily for boss hunting.  Null usually
 	}
 
-	public class World
+	public static class World
 	{
-		public static World current;
+	//	public static World current;
 		public const int span = 600;
+		public const int continentSpan = 6; // 00 .. 55
+		public const int continentCount = continentSpan * continentSpan;
+		public static int CidToPackedContinent(this int cid)
+		{
+			var c = cid.CidToWorld();
+			return (c.x/100) + (c.y/100) * continentSpan;
+		}
+		public static (int x,int y) PackedContinentToXY(this int id)
+		{
+			var y = (int)( (uint)id /(uint) continentSpan);
+			var x = id - y * continentSpan;
+			return (x, y);
+		}
+		public static (int x, int y) ContinentToXY(this int id)
+		{
+			var y = (int)((uint)id / (uint)10);
+			var x = id - y * continentSpan;
+			return (x, y);
+		}
+
+
 		public const int spanSquared = span* span;
 		public const int outSize = 2400;
 		public const uint typeMask = 0xfu;
@@ -431,7 +452,7 @@ namespace COTG.Game
 			public ushort y;
 
 		}
-		public Shrine[] shrineList;
+		public static Shrine[] shrineList;
 
 		public struct Portal
 		{
@@ -440,7 +461,7 @@ namespace COTG.Game
 			public ushort y;
 
 		}
-		public Portal[] portals;
+		public static Portal[] portals;
 		internal static bool changeMapInProgress;
 		internal static bool changeMapRequested;
 		public static SmallTime heatMapT0;
@@ -954,7 +975,6 @@ namespace COTG.Game
 
 		//	Array.Clear(raw, 0, raw.Length); // Todo:  remove decaying cities?
 			raw.Span.Clear();
-			var rv = new World();
 			/** @type {string} */
 			foreach (var id in bosses_1)
 			{
@@ -1169,8 +1189,8 @@ namespace COTG.Game
 
 			
 			//            rv.cities = cities.ToArray();
-			rv.portals = portals.ToArray();
-			rv.shrineList = shrineList.ToArray();
+			World.portals = portals.ToArray();
+			World.shrineList = shrineList.ToArray();
 			Boss.all = bossList.ToArray();
 
 			
@@ -1215,7 +1235,7 @@ namespace COTG.Game
 			{
 				await WorldStorage.SaveWorldData(raw);
 			});
-			current = rv;
+			
 
 			// delay this part
 			

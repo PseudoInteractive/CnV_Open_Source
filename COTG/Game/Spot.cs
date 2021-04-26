@@ -50,6 +50,16 @@ namespace COTG.Game
 		public static City[] defendersI = Array.Empty<City>();
 		public static City[] defendersO = Array.Empty<City>();
 
+		// indexed by PackedContinentId
+		public const ulong continentFilterAll = 0xfffffffffffffffful;
+		public static ulong continentFilter = continentFilterAll;
+		public static ulong ContinentFilterFlag(int id) => 1ul << id;
+		public static bool isContinentFilterAll => continentFilter == continentFilterAll;
+		public static bool TestContinentFilterPacked(int id) => (continentFilter& ContinentFilterFlag(id))!=0;
+		public static void SetContinentFilterPacked(int id, bool set) => continentFilter = (continentFilter&(~ContinentFilterFlag(id))) | ( set ? ContinentFilterFlag(id) : 0ul );
+		public bool testContinentFilter => TestContinentFilter(cid);
+		public static bool TestContinentFilter(int cid) => (continentFilter & ContinentFilterFlag(World.CidToPackedContinent(cid))) != 0;
+
 		public static bool TryGet(int cid, out City spot) => allSpots.TryGetValue(cid, out spot);
 		public static int focus; // city that has focus (selected, but not necessarily building.  IF you click a city once, it goes to this state
 
@@ -489,12 +499,12 @@ namespace COTG.Game
 					case nameof(icon):
 						if (City.CanVisit(cid))
 						{
-							if (!await City.CanChangeCity(cid))
+							
+							var wasBuild = City.IsBuild(cid);
+
+							if (!await JSClient.CitySwitch(cid, false, true, false))
 								return;
 
-							var wasBuild = City.IsBuild(cid);
-							
-							JSClient.ChangeCity(cid, false, true, false);
 							if (wasBuild)
 							{
 								JSClient.ChangeView(ShellPage.viewMode.GetNext() );
@@ -625,7 +635,7 @@ namespace COTG.Game
 				}
 				else
 				{
-					await JSClient.ChangeCity(cid, lazyMove, false, scrollIntoUI); // keep current view, switch to city
+					await JSClient.CitySwitch(cid, lazyMove, false, scrollIntoUI); // keep current view, switch to city
 				//	JSClient.ChangeView(ShellPage.viewMode.GetNextUnowned());// toggle between city/region view
 				}
 				NavStack.Push(cid);
@@ -1242,11 +1252,11 @@ namespace COTG.Game
 			return cid;
 		}
 
-		public void ShowCity(object sender, Windows.UI.Xaml.RoutedEventArgs e)
-		{
-			JSClient.ChangeCity(cid, false);
+		//public void ShowCity(object sender, Windows.UI.Xaml.RoutedEventArgs e)
+		//{
+		//	JSClient.CitySwitch(cid, false);
 
-		}
+		//}
 
 		private string GetDebuggerDisplay()
 		{
@@ -1290,13 +1300,30 @@ namespace COTG.Game
 			return build == cid;
 		}
 
-		public static async Task<bool> CanChangeCity(int cid)
+		public static bool CanChangeCity(int cid)
 		{
+			Assert(City.CanVisit(cid));
+			var changed = cid != build;
+			if (changed)
+			{
+
+				if (lockedBuild != 0 && cid != lockedBuild)
+				{
+					
+					return false;
+					
+				}
+			}
+			return true;
+		}
+		public static async Task<bool> CanChangeCityAsync(int cid)
+		{
+			Assert(City.CanVisit(cid));
 			var changed = cid != build;
 			if (changed)
 			{
 				if (!City.CanVisit(cid))
-					return true;
+					return false;
 
 				if (lockedBuild != 0 && cid != lockedBuild)
 				{
@@ -1524,7 +1551,7 @@ namespace COTG.Game
 				case VirtualKey.Left:
 					{
 						if (spot.canVisit)
-							JSClient.ChangeCity(spot.cid, false);
+							JSClient.CitySwitch(spot.cid, false);
 						else
 							spot.SetFocus(false);
 						return true;

@@ -116,7 +116,7 @@ namespace COTG.Helpers
 					Note.Show($"Navigate to {City.GetOrAddCity(cid).nameMarkdown} {position} {NavStack.backStack.Count}");
 					if (!City.IsBuild(cid) || !City.IsFocus(cid))
 					{
-						JSClient.ChangeCity(cid, false);
+						JSClient.CitySwitch(cid, false);
 					}
 					//if (cityView != COTG.Views.ShellPage.IsCityView())
 					//{

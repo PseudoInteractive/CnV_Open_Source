@@ -4,6 +4,7 @@ using System;
 using System.Buffers;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,6 +12,7 @@ using System.Threading.Tasks;
 using static COTG.Debug;
 namespace COTG
 {
+	[DebuggerDisplay("{" + nameof(GetDebuggerDisplay) + "(),nq}")]
 	public class DArray<T> :  IDisposable, IEnumerable<T>  where T : struct 
 	{
 		static ArrayPool<T> pool = ArrayPool<T>.Shared;
@@ -53,8 +55,9 @@ namespace COTG
 		{
 			if (v != null)
 			{
-				pool.Return(v);
+				var _v = v;
 				v = null;
+				pool.Return(_v);
 			}
 		}
 
@@ -112,6 +115,16 @@ namespace COTG
 				v[i] = v[i + 1];
 			}
 
+		}
+
+		private string GetDebuggerDisplay()
+		{
+			return ToString();
+		}
+
+		public override string ToString()
+		{
+			return $"DArray<{typeof(T)}>{count}";
 		}
 	}
 }

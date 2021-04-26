@@ -74,7 +74,7 @@ namespace COTG.Views
 
                 App.DispatchOnUIThread(()=>
                 {
-                    CityList.SelectedChange();
+                    CityList.NotifyChange();
                     blessedGrid.ItemsSource = BlessedCity.GetForCity(null);
                 }
                 ); // many items changed

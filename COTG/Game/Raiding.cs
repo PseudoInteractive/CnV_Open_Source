@@ -260,7 +260,7 @@ namespace COTG.Game
                 if (updateUI)
                 {
                     // await JSClient.PollCity(cid);
-                    JSClient.ChangeCity(cid,false);
+                    JSClient.CitySwitch(cid,false);
                     NavStack.Push(cid);
                     //                    await Task.Delay(300); // this might not be useful.
                     //                   ScanDungeons.Post(cid, true);
@@ -285,7 +285,7 @@ namespace COTG.Game
                 if (updateUI)
                 {
                    // await JSClient.PollCity(cid);
-                    await JSClient.ChangeCity(cid,false);
+                    await JSClient.CitySwitch(cid,false);
                     NavStack.Push(cid);
                     //// await JSClient.PollCity(cid);
                     ////  await Task.Delay(300); // this might not be useful.

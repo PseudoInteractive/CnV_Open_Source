@@ -692,25 +692,29 @@ namespace COTG
 		//    }
 		//}
 
-		public static async Task ChangeCity(int cityId, bool lazyMove, bool select = true, bool scrollIntoUI = true, bool isLocked=false)
+		public static async Task<bool> CitySwitch(int cityId, bool lazyMove, bool select = true, bool scrollIntoUI = true, bool isLocked=false, bool blockOnFail=false)
 		{
 			// Make sure we don't ignore the exception
 			{
 
 				if (City.CanVisit(cityId)  )
 				{
-					if (!await City.CanChangeCity(cityId))
+					if (!Spot.CanChangeCity(cityId))
 					{
 						ShellPage.EnsureNotCityView();
-						throw new UIException("ChangeCityLocked");
+						Note.Show("Please wait for current operation to complete");
+						if(!blockOnFail)
+							return false;
+						if (await App.DoYesNoBox("Busy", "Please wait for current operation to complete") != 1)
+						{
+							return false;
+						}
 					}
 					var city = City.GetOrAddCity(cityId);
 					
-					if (!lazyMove)
-						cityId.BringCidIntoWorldView(lazyMove, false);
 					if (city.pid != Player.activeId)
 					{
-
+						Assert(false);
 						// need to switch player
 						JSClient.SetPlayer(city.pid, cityId);
 					}
@@ -725,6 +729,8 @@ namespace COTG
 								ChangeCityJS(cityId);
 						}
 					}
+					if (!lazyMove)
+						cityId.BringCidIntoWorldView(lazyMove, false);
 				}
 				else
 				{
@@ -732,7 +738,7 @@ namespace COTG
 				}
 
 			}
-			
+			return true;
 
 		}
 
@@ -1357,10 +1363,10 @@ namespace COTG
 					if (jse.TryGetProperty("lcit", out var lcit))
 					{
 						var cid = lcit.GetAsInt();
-						ChangeCity(cid, true);
+						CitySwitch(cid, true);
 					}
 				}
-				CityList.SelectedChange();
+				CityList.NotifyChange();
 				
 				if (!ppdtInitialized)
 				{
@@ -1806,7 +1812,7 @@ namespace COTG
 						   case "error":
 							   {
 								   var msg = jsp.Value.GetString();
-								   Note.Show(msg);
+								   Trace(msg);
 								 
 								   break;
 							   }
@@ -2239,7 +2245,7 @@ namespace COTG
 								   
 								   if (city.pid == pid) // we want ot visit a specific city
 								   {
-									  ChangeCity(cid,true);
+									  CitySwitch(cid,true);
 								   }
 								   City.CitiesChanged();
 								   break;

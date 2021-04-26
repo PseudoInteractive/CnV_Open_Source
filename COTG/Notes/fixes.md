@@ -110,3 +110,8 @@
 	 - There will be a new interface for setting shipper targets, but until that is ready this is the easiest way to direct shippers to send somewhere
 	 - I.e. filter by City Group "Shippers", select all, shift click on the target and Setup Set Target Hub
 	- There is also "Setup Source Hub" to pull from a specific hub
+### 2021/4/25
+ - **Known Issue**
+   - When the heatmaps were combined I did some bad time zone stuff.  
+   - Historical snapshops that you and others submitted are off by the number of hours it takes for the world to spin you to England (or wherever, depending on the server).
+   - If you walk through a heatmap it may seem like a jumpy trip, but the asymptotic results will be accurate and statistically everything will be mostly fine (which is really not that imporant)

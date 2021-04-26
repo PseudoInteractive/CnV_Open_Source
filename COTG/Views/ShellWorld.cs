@@ -739,14 +739,16 @@ namespace COTG.Views
 					{
 						try
 						{
-							await JSClient.ChangeCity(target.WorldToCid(), true);
+							if(!await JSClient.CitySwitch(target.WorldToCid(), true) )
+							{
+								EnsureNotCityView();
+							}
 						}
 						catch(UIException ex)
 						{
 							LogEx(ex);
 							EnsureNotCityView();
 		
-							throw;
 						}
 					}
 					return true;
@@ -756,7 +758,10 @@ namespace COTG.Views
 		public static void EnsureNotCityView()
 		{
 			if (cameraZoom > cameraZoomRegionDefault)
+			{
 				cameraZoom = cameraZoomRegionDefault;
+				AutoSwitchViewMode();
+			}
 		}
 
 
@@ -1080,7 +1085,7 @@ namespace COTG.Views
 											if (pData.player != 0)
 												toolTip += $"\nDecayed (was {Player.IdToName(pData.player)})";
 											else
-												toolTip += "\nDecayed";
+												toolTip += "\nLawless Decayed";
 											break;
 
 									}

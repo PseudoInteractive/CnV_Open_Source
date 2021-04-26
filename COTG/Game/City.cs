@@ -21,7 +21,7 @@ using Microsoft.Toolkit.HighPerformance.Enumerables;
 using COTG.Draw;
 using System.Threading;
 using EnumsNET;
-
+using JM.LinqFaster;
 namespace COTG.Game
 {
 	//struct Building
@@ -366,8 +366,8 @@ namespace COTG.Game
 		{
 			if (!isBuild)
 			{
-				await JSClient.ChangeCity(cid, lazyMove); // keep current view, switch to city
-
+				if (!await JSClient.CitySwitch(cid, lazyMove)) // keep current view, switch to city 
+					return;
 			}
 			if (!ShellPage.IsWorldView())
 				JSClient.ChangeView(ShellPage.ViewMode.world);// toggle between city/region view
@@ -1715,6 +1715,8 @@ namespace COTG.Game
 	}
 	public static class CityHelpers
 	{
+		public static bool TestContinentFilter(this int cid) => Spot.TestContinentFilter(cid);
+
 		public static bool IsXYInCenter(this (int x, int y) xy) => (xy.x.Abs() + xy.y.Abs() < 7);
 
 		public static bool IsInCity(this (int x, int y) xy) => xy.x >= span0 && xy.x <= span1 && xy.y >= span0 && xy.y <= span1;
@@ -1865,7 +1867,7 @@ namespace COTG.Game
 		}
 
 		public static ComboBox box => ShellPage.instance.cityListBox;
-		public static void SelectedChange()
+		public static void NotifyChange()
 		{
 
 			App.DispatchOnUIThreadLow(() =>
@@ -1873,7 +1875,7 @@ namespace COTG.Game
 				//               Log("CityListChange");
 
 				var selectedCityList = CityList.box.SelectedItem as CityList;
-			   IEnumerable<City> l;
+			   IList<City> l;
 			   if (selectedCityList == null || selectedCityList.id == -1) // "all"
 				{
 				   l = City.myCities;
@@ -1891,7 +1893,7 @@ namespace COTG.Game
 				   }
 				   l = filtered;
 			   }
-			   l = l.OrderBy((a) => a, new CityComparer()).ToArray();
+			   l = l.Where(a => a.testContinentFilter).OrderBy((a) => a, new CityComparer()).ToArray();
 			   ShellPage.instance.cityBox.ItemsSource = l;
 			   SyncCityBox();
 			   var reserveCartsFilter = DonationTab.reserveCarts;
