@@ -55704,7 +55704,7 @@ function outer(){
 					var Z5D = __s[5491];
 					var g5D = a6.ccazzx.encrypt(JSON.stringify(n5D), Z5D, +256);
 					N6();
-					var P5D = $.post("/includes/" + __s[3174], { cid: cid, a: g5D });
+					var P5D = $.post("/includes/bTrp.php", { cid: cid, a: g5D });
 					F6();
 					P5D.done(function (m5D) {
 						if (m5D == (G8y | 29)) Y6(__s[145]);

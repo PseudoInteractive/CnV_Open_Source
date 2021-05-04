@@ -70,6 +70,7 @@ namespace COTG.Views
 		public static bool? troopsVisible;
 		public static bool sendWood = true;
 		public static bool sendStone = true;
+		public static string continentsExport = string.Empty;
 		public static bool sendIron = true;
 		public static bool sendFood = true;
 		public static int tsForCastle = 22000;
@@ -696,15 +697,16 @@ namespace COTG.Views
 				   //   JSClient.GetCitylistOverview();
 				   //			   Note.Show($"Successfully added continent citylists :)");
 			   });
-			this.Hide();
+			HideMe();
 		}
 
 		private void TipsRestore(object sender, RoutedEventArgs e)
 		{
 			Tips.seen = new HashSet<string>();
 			Note.Show("Keener :)");
-			this.Hide();
+			HideMe();
 		}
+		public static void HideMe() => instance. Hide();
 
 		//private void ExportIntelClick(object sender, RoutedEventArgs e)
 		//{

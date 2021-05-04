@@ -5,8 +5,8 @@
 			   xmlns:helper="using:COTG.Helpers"
 			   xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 			   xmlns:cotg="using:COTG"
-			   xmlns:game="using:COTG.Game"
 			   xmlns:views="using:COTG.Views"
+			   xmlns:game="using:COTG.Game"
 			   xmlns:xaml="using:Windows.UI.Xaml"
 			   xmlns:wct="using:Microsoft.Toolkit.Uwp.UI.Controls"
 			   xmlns:controls="using:Microsoft.UI.Xaml.Controls"
@@ -135,8 +135,9 @@
 			<wct:WrapPanel Orientation="Horizontal"
 						   Margin="4">
 
-				<Button Content="Shrine Finder"
-						Click="ShrineFinder"
+				<Button Content="Export for War"
+						Click="{x:Bind views:ExportCastles.Go}"
+						ToolTipService.ToolTip="Exports cities/castles in a spreadshee format based on filters"
 						Style="{ThemeResource ButtonRevealStyle}"
 						Margin="4" />
 				<Button Content="Export Castles"
@@ -147,6 +148,7 @@
 									NumberFormatter="{x:Bind cotg:App.formatterInt,Mode=OneTime}"
 									Style="{StaticResource NumberBoxSmall}"
 									Header="Continent"
+									PlaceholderText="i.e. 22 34"
 									Value="22" />
 				<TextBox x:Name="CastlesAlliance"
 						 Text="Unidos"

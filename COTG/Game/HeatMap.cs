@@ -209,7 +209,7 @@ namespace COTG.Game
 					}
 	//				deltas.NotifyReset();
 				}
-				NotifyChange();
+				//NotifyChange();
 			}
 
 		}
@@ -224,7 +224,7 @@ namespace COTG.Game
 		public bool AddSnapshot(SmallTime t, MemoryOwner<uint> newSnap)
 		{
 			Trace($"Add Snapshot: {desc} [{t}] [{this.t}]");
-			if (!isLoaded)
+			if (snapshot.Length == 0)
 			{
 				this.t = t;
 				snapshot = newSnap;
@@ -326,7 +326,7 @@ namespace COTG.Game
 				UpdateDesc(true, true);
 			}
 
-			NotifyChange();
+//			NotifyChange();
 		}
 		
 		public async Task<HeatMapDay> LoadInternal()
@@ -563,7 +563,7 @@ namespace COTG.Game
 			
 				//day.deltas.Add(new HeatMapDelta( t , Array.Empty<uint>() ) );
 				HeatMapDay.days.Insert(i, day);
-				HeatTab.DaysChanged();
+			//	HeatTab.DaysChanged();
 			}
 			return day;
 
@@ -571,18 +571,24 @@ namespace COTG.Game
 		public static async Task LoadList()
 		{
 			using var _ = await HeatMap.mutex.LockAsync();
-
-			var cont = await Blobs.GetChangesContainer();
-			if (cont == null)
-				return;
-			await foreach (var b in cont.GetBlobsAsync())
+			try
 			{
-				var split = b.Name.Split('-');
-				if (split.Length != 3)
-					continue;
+				var cont = await Blobs.GetChangesContainer();
+				if (cont == null)
+					return;
+				await foreach (var b in cont.GetBlobsAsync())
+				{
+					var split = b.Name.Split('-');
+					if (split.Length != 3)
+						continue;
 
-				var t = new SmallTime(new DateTimeOffset(int.Parse(split[0]), int.Parse(split[1]), int.Parse(split[2]), 0, 0, 1, TimeSpan.Zero));
-				GetDay(t,true);
+					var t = new SmallTime(new DateTimeOffset(int.Parse(split[0]), int.Parse(split[1]), int.Parse(split[2]), 0, 0, 1, TimeSpan.Zero));
+					GetDay(t, true);
+				}
+			}
+			catch (Exception ex)
+			{
+				LogEx(ex);
 			}
 
 		}

@@ -619,9 +619,9 @@ namespace COTG.Views
                         var cl = await spot.ClassifyEx(true);
                         //  string s = $"{cid.CidToString()} {Player.myName} {cl.} {(cl.academies == 1 ? 2 : 0)} {tsTotal}\n";
                         
-                        if (cl.classification == Spot.Classification.se)
+                        if (cl == Spot.Classification.se)
                             atk.attackType = AttackType.se;
-                        else if (cl.hasAcademy)
+                        else if (spot.hasAcademy.GetValueOrDefault())
                             atk.attackType = AttackType.senator;
                         else atk.attackType = AttackType.assault;
 
@@ -839,6 +839,8 @@ namespace COTG.Views
 								case Spot.Classification.hub:
 									break;
 								case Spot.Classification.navy:
+									break;
+								case Spot.Classification.stingers:
 									break;
 								case Spot.Classification.misc:
 									break;

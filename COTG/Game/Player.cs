@@ -65,7 +65,9 @@ namespace COTG.Game
 			return Player.myIds.Contains(playerId);
 		}
 		public static Player _default = new Player() { name = "!Zut!" };
-        public static Player Get(int id) => all.GetValueOrDefault(id, _default);
+		internal bool isMe => id == myId;
+
+		public static Player Get(int id) => all.GetValueOrDefault(id, _default);
 		public static Player GetOrAdd(int id)
 		{
 			Assert(id > 0);

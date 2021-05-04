@@ -803,6 +803,7 @@ namespace COTG.Services
 					var raids = Array.Empty<Raid>();
 					var minCarry = 255;
 					float tWood = 0, tStone = 0, tIron = 0, tFood = 0, tGold = 0;
+					
 					foreach (var r in cr[12].EnumerateArray())
 					{
 						var target = r[8].GetInt32();
@@ -880,6 +881,8 @@ namespace COTG.Services
 					}
 					city.raidCarry = (byte)minCarry.Min(255);
 					city.raids = raids;
+					var commands = (byte)cr[12].GetArrayLength();
+					city.activeCommands = city.activeCommands.Max(commands);
 					// Log($"cid:{cid} carry: {minCarry}");
 
 				}

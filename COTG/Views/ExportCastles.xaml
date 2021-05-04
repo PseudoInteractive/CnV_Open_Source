@@ -1,0 +1,59 @@
+﻿<ContentDialog
+    x:Class="COTG.Views.ExportCastles"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:COTG.Views"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	xmlns:wct="using:Microsoft.Toolkit.Uwp.UI.Controls"
+	xmlns:winui="using:Microsoft.UI.Xaml.Controls"
+	xmlns:cotg="using:COTG"
+	xmlns:views="using:COTG.Views"
+	  xmlns:game="using:COTG.Game"
+
+	mc:Ignorable="d"
+    Title="Castles to Clipboard"
+    PrimaryButtonText="Go"
+    SecondaryButtonText="Cancel">
+
+	<StackPanel>
+
+		
+
+		<wct:WrapPanel Orientation="Horizontal"
+						   Margin="4">
+
+			<winui:RadioButtons Header="Which" x:Name="who" SelectedIndex="0" >
+				<x:String>Mine</x:String>
+				<x:String>Alliance</x:String>
+				<x:String>Others</x:String>
+				<x:String>Unallied</x:String>
+				<x:String>All</x:String>
+			</winui:RadioButtons>
+			
+			<CheckBox x:Name="offence"
+			  ToolTipService.ToolTip="Checked: offensive castles are exported, Unchecked: defensive cities, otherwise both"
+									Content="Offense"
+									IsThreeState="True"
+									IsChecked="True" />
+			<CheckBox x:Name="castles"
+			  ToolTipService.ToolTip="If checked, castles are exported, if off cities, if in between both"
+									Content="Castles"
+			  IsThreeState="True"
+									IsChecked="True" />
+			<CheckBox x:Name="water"
+			  ToolTipService.ToolTip="If checked, cities on water are exported, if off only land cities are exported, otherwise both"
+									Content="Water"
+			  IsThreeState="True"
+									IsChecked="{x:Null}" />
+
+			<CheckBox x:Name="temples"
+			  ToolTipService.ToolTip="Checked: temples, Unchecked: non temples, in between: both"
+									Content="Temples"
+			  IsThreeState="True"
+									IsChecked="{x:Null}" />
+
+		</wct:WrapPanel>
+		
+	</StackPanel>
+</ContentDialog>

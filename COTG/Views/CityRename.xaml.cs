@@ -183,25 +183,25 @@ namespace COTG.Views
 
 		}
 
-		public static async Task ApplyTags(int cid,  Microsoft.Toolkit.Uwp.UI.Controls.WrapPanel tagControls)
-		{
-			City city = City.GetOrAddCity(cid);
-			await GetCity.Post(cid); // need to fetch notes
-			string tags = city.remarks;
+		//public static async Task ApplyTags(int cid,  Microsoft.Toolkit.Uwp.UI.Controls.WrapPanel tagControls)
+		//{
+		//	City city = City.GetOrAddCity(cid);
+		//	await GetCity.Post(cid); // need to fetch notes
+		//	string tags = city.remarks;
 
-			foreach (var tag in TagHelper.tags)
-			{
+		//	foreach (var tag in TagHelper.tags)
+		//	{
 		
-				var check = tagControls.Children.First( (ch) => (ch as ToggleButton)?.Content == tag.s)  as ToggleButton;
-				tags = TagHelper.SetTag(tags, tag.s, check.IsChecked);
+		//		var check = tagControls.Children.First( (ch) => (ch as ToggleButton)?.Content == tag.s)  as ToggleButton;
+		//		tags = TagHelper.SetTag(tags, tag.s, check.IsChecked);
 
-			}
+		//	}
 
 
-			city.remarks = tags;
-			//		Post.Send("includes/sNte.php", $"a={HttpUtility.UrlEncode(tags, Encoding.UTF8)}&b=&cid={cid}");
-			await Post.Send("includes/sNte.php", $"a={HttpUtility.UrlEncode(tags, Encoding.UTF8)}&b={HttpUtility.UrlEncode(city.notes, Encoding.UTF8)}&cid={cid}", World.CidToPlayerOrMe(cid));
-		}
+		//	city.remarks = tags;
+		//	//		Post.Send("includes/sNte.php", $"a={HttpUtility.UrlEncode(tags, Encoding.UTF8)}&b=&cid={cid}");
+		//	await Post.Send("includes/sNte.php", $"a={HttpUtility.UrlEncode(tags, Encoding.UTF8)}&b={HttpUtility.UrlEncode(city.notes, Encoding.UTF8)}&cid={cid}", World.CidToPlayerOrMe(cid));
+		//}
 
 		public static bool IsNew(City city) => IsNew(city._cityName);
 		public static bool IsNew(string _cityName)

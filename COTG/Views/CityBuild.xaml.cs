@@ -1203,26 +1203,26 @@ namespace COTG.Views
 				var rv = true;
 				if (!dryRun)
 				{
-
+					AUtil.Swap(ref buildingsCache[b], ref buildingsCache[a]);
+					if (!isPlanner)
+						AUtil.Swap(ref build.buildings[b], ref build.buildings[a]);
+					AUtil.Swap(ref postQueueBuildings[b], ref postQueueBuildings[a]);
 					if (!isPlanner)
 					{
-						await Move(a, b);
+						return await Move(a, b);
 
 					//	await Task.Delay(200);
 						
 						--Player.moveSlots;
 					}
 					// I hope that these operations are what I expect with references
-					AUtil.Swap(ref buildingsCache[b] , ref buildingsCache[a]);
-					if(!isPlanner)
-						AUtil.Swap(ref build.buildings[b],ref build.buildings[a]);
-					AUtil.Swap(ref postQueueBuildings[b], ref postQueueBuildings[a]);
+				
 				//	BuildingsOrQueueChanged();
 				}
-				return rv;
+				return true;
 			}
 		}
-		async static Task Move(int from, int to)
+		async static Task<bool> Move(int from, int to)
 		{
 			var cid = City.build;
 			var s = await Services.Post.SendForText("includes/mBu.php", $"a={from}&b={to}&c={cid}", World.CidToPlayerOrMe(cid));
@@ -1230,11 +1230,12 @@ namespace COTG.Views
 			
 				( i >= City.bidMin && i <= City.bidMax)) )
 			{
-
+				return true;
 			}
 			else
 			{
-				throw new UIException("Invalid Move");
+				Trace($"Invalid Move {i}" );
+				return false;
 			}
 
 		}
@@ -1263,20 +1264,26 @@ namespace COTG.Views
 				if (!dryRun)
 				{
 
-					AUtil.Swap(ref buildingsCache[a], ref buildingsCache[b]);
-					if(!isPlanner)
-						AUtil.Swap(ref build.buildings[a], ref build.buildings[b]);
-					AUtil.Swap(ref postQueueBuildings[a], ref postQueueBuildings[b]);
-
+					
 					if (!isPlanner)
 					{
 						var scratch = FindAnyFreeSpot(a);
-						await Move(a, scratch);
-						await Move(b, a);
-						await Move(scratch, b);
+						--Player.moveSlots;
+						if (!await Move(a, scratch))
+							return false;
+						--Player.moveSlots;
+						if (!await Move(b, a))
+							return false;
+						--Player.moveSlots;
+						if (!await Move(scratch, b))
+							return false;
 
-						Player.moveSlots -= 3;
 					}
+					AUtil.Swap(ref buildingsCache[a], ref buildingsCache[b]);
+					if (!isPlanner)
+						AUtil.Swap(ref build.buildings[a], ref build.buildings[b]);
+					AUtil.Swap(ref postQueueBuildings[a], ref postQueueBuildings[b]);
+
 					//BuildingsOrQueueChanged();
 				}
 				return true;

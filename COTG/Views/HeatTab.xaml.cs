@@ -84,6 +84,7 @@ namespace COTG.Views
 			});
 		}
 
+		static bool listLoaded = false;
 		override public async void VisibilityChanged(bool visible)
 		{
 			tabVisible = visible;
@@ -91,9 +92,12 @@ namespace COTG.Views
 
 			if (visible)
 			{
-				await HeatMap.LoadList();
-				//	zoom.Focus(FocusState.Programmatic);
-				
+				if (!listLoaded)
+				{
+					listLoaded = true;
+					await HeatMap.LoadList();
+					//	zoom.Focus(FocusState.Programmatic);
+				}
 				await ResetAllChangeDescriptions();
 				DaysChanged();
 				

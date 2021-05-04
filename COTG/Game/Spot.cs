@@ -212,7 +212,8 @@ namespace COTG.Game
 			arbs,
 			se,
 			hub,
-			navy,
+			navy, // warships
+			stingers,
 			misc,
 			pending,
 			missing
@@ -239,7 +240,7 @@ namespace COTG.Game
 		};
 		public Classification classification { get; set; }
 		public sbyte academyInfo = -1;
-		public bool ? hasAcademy => academyInfo == 0 ? false : academyInfo==1 > true : null;
+		public bool ? hasAcademy => academyInfo == 0 ? false : academyInfo==1 ? true : null;
 		public bool isNotClassified => classification == Classification.unknown; // does not include pending
 		public bool isClassified => classification != Classification.unknown && classification != Classification.pending;
 		public bool isPending => classification == Classification.pending;
@@ -728,6 +729,8 @@ namespace COTG.Game
 				return Classification.horses;
 			else if (HasTag(Tags.Arb))
 				return Classification.arbs;
+			else if ( HasTag(Tags.Stinger))
+				return Classification.stingers;
 			else if (HasTag(Tags.Galley) || HasTag(Tags.Stinger) || HasTag(Tags.Warship))
 				return Classification.navy;
 			else if (HasTag(Tags.Hub))
@@ -735,7 +738,7 @@ namespace COTG.Game
 			return Classification.unknown;
 		}
 
-		private async ValueTask<Classification> ClassifyEx(bool isIncomingAttack)
+		public async ValueTask<Classification> ClassifyEx(bool isIncomingAttack)
 		{
 			var rv = await Classify(isIncomingAttack);
 			if (hasAcademy.HasValue)
@@ -1819,12 +1822,7 @@ namespace COTG.Game
 			flyout.ShowAt(uie, position);
 		}
 
-		private void SetTag(Tags id, bool on)
-		{
-			remarks = TagHelper.SetTag(remarks,id.ToString(), on);
-
-
-		}
+		
 		public async Task DoTheStuff()
 		{
 			await App.DispatchOnUIThreadExclusive(cid,async () =>
@@ -1956,12 +1954,12 @@ namespace COTG.Game
 			var sb = new StringBuilder();
 			int counter = 0;
 			var cids = GetSelectedForContextMenu(cid, false);
-			foreach (var _cid in )
+			foreach (var _cid in cids)
 			{
 				++counter;
 				var s = Spot.GetOrAdd(_cid);
 				var c = await s.ClassifyEx(true);
-				switch (c.classification)
+				switch (classification)
 				{
 					case Classification.sorcs:
 						sb.Append("Sorc\t");
@@ -1984,14 +1982,17 @@ namespace COTG.Game
 						sb.Append("Siege engines\t");
 						break;
 					case Classification.navy:
-						sb.Append("Warships\t");
+						sb.Append("Warships?\t");
+						break;
+					case Classification.stingers:
+						sb.Append("Stungers\t");
 						break;
 					default:
 						sb.Append("vanq\t");
 						break;
 				}
 				sb.Append(s.tsTotal + "\t");
-				sb.Append(c.hasAcademy ? "Yes\t" : "No\t");
+				sb.Append(s.hasAcademy.GetValueOrDefault() ? "Yes\t" : "No\t");
 				sb.Append(s.xy + "\n");
 
 			}

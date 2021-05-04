@@ -49,6 +49,9 @@
 							SelectionUnit="Row"
 							Tag="Raid"
 							ScrollViewer.ZoomMode="Enabled"
+						ScrollViewer.IsScrollInertiaEnabled="False"
+						ScrollViewer.IsVerticalScrollChainingEnabled="False"
+						ScrollViewer.IsZoomChainingEnabled="True"
 						
 							>
 

@@ -11,6 +11,10 @@ namespace COTG
 {
 	public static class StringHelper
 	{
+		public static StringList GetWords(this string s)
+		{
+			return GetWords(s.AsSpan());
+		}
 		public static StringList GetWords(this StringSpan s)
 		{
 			StringList rv = new StringList() { Count = 0, s = s };
@@ -41,36 +45,79 @@ namespace COTG
 				}
 			}
 		}
-		public static WordEnumerator EnumerateWords(this string s) => new WordEnumerator(s);
+	//	public static WordEnumerator EnumerateWords(this string s) => new WordEnumerator(s);
 	}
 	public unsafe ref struct StringList
 	{
 		const int maxSize = 128;
-		
-		public fixed int ranges[maxSize*2];
+
+		public fixed int ranges[maxSize * 2];
 		public int Count;
 		public StringSpan s;
 		public StringList(StringSpan s) { this.s = s; Count = 0; }
-		public  StringSpan this[int id]
+		public StringSpan this[int id]
 		{
 			get
 			{
 				Assert(id >= 0);
 				Assert(id < Count);
 
-				return s.Slice(ranges[id*2],ranges[id*2+1] );
+				return s.Slice(ranges[id * 2], ranges[id * 2 + 1]);
 			}
 		}
-		public void Add( int i0, int i1)
+		public void Add(int i0, int i1)
 		{
 			Assert(Count < maxSize);
 			ranges[Count * 2] = i0;
-			ranges[Count * 2+1] = i1;
+			ranges[Count * 2 + 1] = i1;
 			++Count;
 
 		}
+		
 	}
+		public ref struct StringListEnumerator
+		{
+		public ref struct StringPair
+		{
+			public ReadOnlySpan<char> word;
+			public ReadOnlySpan<char> space;
 
+		}
+
+		public StringSpan s;
+			int ip;
+			int i0;
+			int i1;
+			public StringListEnumerator GetEnumerator() { return this; }
+			public StringListEnumerator(StringSpan _s) { s = _s; ip = 0; i0 = 0; i1 = 0; }
+			public StringListEnumerator(string _s) { s = _s.AsSpan(); ip = 0; i0 = 0; i1 = 0; }
+			public StringPair Current => new StringPair() { word = s.Slice(i0, i1 - i0), space = s.Slice(ip, i0 - ip) };
+			public bool MoveNext()
+			{
+				ip = i1;
+				i0 = i1;
+				for (; ; )
+				{
+					if (i0 >= s.Length)
+						return false;
+					var c = s[i0];
+					if (char.IsLetter(c))
+						break;
+					++i0;
+				}
+				i1 = i0 + 1;
+				for (; ; )
+				{
+					if (i1 >= s.Length || !char.IsLetter(s[i1]))
+					{
+						return true;
+					}
+					++i1;
+				}
+			}
+
+		
+	}
 	public ref struct WordEnumerator
 	{
 		private readonly StringSpan s;

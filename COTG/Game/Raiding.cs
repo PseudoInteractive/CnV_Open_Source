@@ -107,7 +107,7 @@ namespace COTG.Game
         {
             var loot = d.loot;
             var carry = city.CarryCapacity(d.isWater); // this should be on demand
-            if (carry <= 0)
+            if (carry <= 0 || city.freeCommandSlots==0)
                 return (0, 0,0,false);
 			//   Log($"{desiredCarry} {carry / (loot * desiredCarry)}");
 			var  idealf = (carry / (loot * SettingsPage.raidCarryMin) );
@@ -115,7 +115,7 @@ namespace COTG.Game
 		    ideal = Math.Min(ideal, city.freeCommandSlots ).Max(1);
 			if (idealf < ideal )//|| !SettingsPage.raidSendExact)
 				idealf = ideal;
-			var averageCarry = carry / (ideal * loot);
+			var averageCarry = carry / (ideal.Max(1) * loot);
 			var isValid = (ideal != 0 && averageCarry < SettingsPage.raidCarryMax) && averageCarry > SettingsPage.raidCarryMin && d.completion > SettingsPage.minDungeonProgress && (loot * 32 > city.CarryCapacityIncludeAway(d.isWater));
 
 

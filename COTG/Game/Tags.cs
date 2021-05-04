@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
+using Cysharp.Text;
 using EnumsNET;
+
+using static COTG.StringList;
 
 namespace COTG.Game
 {
@@ -68,13 +70,36 @@ namespace COTG.Game
 	}
 	public struct TagInfo
 	{
-		public Tags id;
-		public bool isAlias;
+		public Tags v;
 		public string s;
+		public bool isAlias;
+		public static TagInfo invalid = new TagInfo() { s = String.Empty };
+
+		public override bool Equals(object obj)
+		{
+			return obj is TagInfo info &&
+				   s == info.s;
+		}
+
+		public override int GetHashCode()
+		{
+			return HashCode.Combine(s);
+		}
+
+		public static bool operator ==(TagInfo left, TagInfo right)
+		{
+			return left.Equals(right);
+		}
+
+		public static bool operator !=(TagInfo left, TagInfo right)
+		{
+			return !(left == right);
+		}
 	}
+
 	public static class TagHelper
 	{
-		public static TagInfo Get(this Tags tag) => new TagInfo() { id = tag, s = tag.AsString() };
+		public static TagInfo Get(this Tags tag) => new TagInfo() { v = tag, s = tag.AsString() };
 		//public static TagInfo tagLeaveMe = Get(Tags.LeaveMe);
 
 		public static TagInfo[] tags;
@@ -90,12 +115,12 @@ namespace COTG.Game
 			for(int i=0;i<count;++i)
 			{
 				tagsAndAliases[i].s = members[i].Name;
-				tagsAndAliases[i].id = members[i].Value;
+				tagsAndAliases[i].v = members[i].Value;
 				var isAlias = members[i].Attributes.Has<IsAliasAttribute>();
 				tagsAndAliases[i].isAlias = isAlias;
 				if(!isAlias)
 				{
-					_tags.Add(new TagInfo() { id = members[i].Value, s = members[i].Name, isAlias = false });
+					_tags.Add(new TagInfo() { v = members[i].Value, s = members[i].Name, isAlias = false });
 				}
 		
 			}
@@ -103,42 +128,100 @@ namespace COTG.Game
 			
 		}
 
+		
 
-
-		public static string SetTag(string src, string tag, bool isOn)
+		// removes non set tags, appends tags not present
+		static public string ApplyTags(Tags ts, string initial)
 		{
-			var exists = src.Contains(tag, StringComparison.OrdinalIgnoreCase);
-			if (isOn)
+			var sb = ZString.CreateStringBuilder();
+			var w = new StringListEnumerator(initial );
+			bool first = true;
+			foreach(var i in w)
 			{
-				if (exists)
-					return src;
-				else
+				var t = GetTag(i.word);
+				bool keep ;
+
+				if (t == TagInfo.invalid)
 				{
-					// add it
-					if (src.Length > 0)
-						src += " ";
-					return src + tag;
-				}
-			}
-			else
-			{
-				if (exists)
-				{
-					src = src.Replace(tag + " ", "", StringComparison.OrdinalIgnoreCase);
-					src = src.Replace(" " + tag, "", StringComparison.OrdinalIgnoreCase);
-					src = src.Replace(tag, "", StringComparison.OrdinalIgnoreCase);
-					return src;
+					keep = true;
 				}
 				else
-					return src;
+				{
+					keep = ts.HasFlag(t.v);
+					ts &= ~t.v;
+				}
+				if(keep)
+				{
+					if (!first)
+					{
+						if (i.space.IsEmpty)
+							sb.Append(" ");
+						else
+							sb.Append(i.space);
+					}
+					else
+					{
+						first = false;
+					}
+					sb.Append(i.word);
+				}
 			}
+			// append further tags
+			foreach(var t in tags)
+			{
+				if(ts.HasFlag(t.v))
+				{
+					if(!first)
+						sb.Append(" ");
+					first = false;
+
+					sb.Append(t.v);
+				}
+
+			}
+			return sb.ToString();
+
+
 		}
-		public static string SetTag(string src, string tag, bool? isOn)
-		{
-			if (isOn == null)
-				return src;
-			return SetTag(src, tag, isOn.GetValueOrDefault());
-		}
+
+		//public static string SetTag(string src,Tags tag, bool isOn)
+		//{
+		//	foreach(var t in tags)
+		//	{
+		//		if (t.v != tag)
+		//			continue;
+		//	var exists = src.Contains(tag, StringComparison.OrdinalIgnoreCase);
+		//	if (isOn)
+		//	{
+		//		if (exists)
+		//			return src;
+		//		else
+		//		{
+		//			// add it
+		//			if (src.Length > 0)
+		//				src += " ";
+		//			return src + tag;
+		//		}
+		//	}
+		//	else
+		//	{
+		//		if (exists)
+		//		{
+		//			src = src.Replace(tag + " ", "", StringComparison.OrdinalIgnoreCase);
+		//			src = src.Replace(" " + tag, "", StringComparison.OrdinalIgnoreCase);
+		//			src = src.Replace(tag, "", StringComparison.OrdinalIgnoreCase);
+		//			return src;
+		//		}
+		//		else
+		//			return src;
+		//	}
+		//}
+		//public static string SetTag(string src, string tag, bool? isOn)
+		//{
+		//	if (isOn == null)
+		//		return src;
+		//	return SetTag(src, tag, isOn.GetValueOrDefault());
+		//}
 
 		public static bool Has(this TagInfo tag, string s)
 		{
@@ -148,13 +231,28 @@ namespace COTG.Game
 		{
 			return s.Contains(tag.AsString(), StringComparison.OrdinalIgnoreCase);
 		}
+		public static TagInfo GetTag(ReadOnlySpan<char> word)
+		{
+			if (word.Length >= 2)
+			{
+				word = word.TrimEnd('s');
+			}
+			foreach (var t in tagsAndAliases)
+			{
+				if (word.Equals(t.s.AsSpan(), StringComparison.OrdinalIgnoreCase))
+				{
+					return t;
+				}
+			}
+			return TagInfo.invalid;
+		}
 
 		public static Tags Get(string src)
 		{
 			Tags result = default;
-			foreach(var _word in src.EnumerateWords() )
+			foreach(var w in new StringListEnumerator(src) )
 			{
-				var word = _word;
+				var word = w.word;
 				if (word.Length >= 2)
 				{
 					word= word.TrimEnd('s');
@@ -163,7 +261,7 @@ namespace COTG.Game
 				{
 					if ( word.Equals(t.s.AsSpan(),StringComparison.OrdinalIgnoreCase))
 					{
-						result = result | t.id;
+						result = result | t.v;
 						break;
 					}
 				}
@@ -172,6 +270,7 @@ namespace COTG.Game
 
 			return result;
 		}
+		
 		public static Tags GetTags(this Spot city)
 		{
 			return Get(city.remarks);

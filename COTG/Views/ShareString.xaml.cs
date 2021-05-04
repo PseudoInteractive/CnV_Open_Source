@@ -19,6 +19,7 @@ using static COTG.Game.City;
 using static COTG.Debug;
 using COTG.Helpers;
 using COTG.JSON;
+using Microsoft.Toolkit.Uwp.UI.Controls;
 
 namespace COTG.Views
 {
@@ -115,19 +116,7 @@ namespace COTG.Views
 			return true;
 		}
 
-		static public string GetTags(string initial)
-		{
-			foreach (var tag in TagHelper.tagsAndAliases)
-			{
-				if (tag.isAlias)
-					continue;
-
-				var check = instance.tagsPanel.Children.First((ch) => ((ch is ToggleButton t) && (t.Content as string == tag.s))) as ToggleButton;
-				initial = TagHelper.SetTag(initial, tag.s, check.IsChecked);
-
-			}
-			return initial;
-		}
+		
 		static public async Task Show(int cid)
 		{
 			await App.DispatchOnUIThreadExclusive(cid,async () =>
@@ -186,7 +175,7 @@ namespace COTG.Views
 
 					SetFromSS();
 					instance.Title = city.nameAndRemarks;
-					SetTags(city.remarks);
+					SetCheckboxesFromTags(city.remarks);
 					instance.Bindings.Update();
 
 					var result = await instance.ShowAsync2();
@@ -230,7 +219,7 @@ namespace COTG.Views
 						var city = City.GetOrAdd(ci);
 						if ( SettingsPage.shareStringApplyTags)
 						{
-							await CityRename.ApplyTags(ci, instance.tagsPanel);
+							await SetCityTags(ci);
 							//await CitySettings.SetCitySettings(City.build, setRecruit: true);
 						}
 
@@ -288,7 +277,7 @@ namespace COTG.Views
 		}
 		public ShareStringMeta GetMeta()
 		{
-			var meta = new ShareStringMeta() { notes = GetTags(string.Empty), desc = description.Text, path = path.Text };
+			var meta = new ShareStringMeta() { notes = TagHelper.ApplyTags(TagsFromCheckboxes(),string.Empty), desc = description.Text, path = path.Text };
 			if (SettingsPage.embedTradeInShareStrings)
 			{
 				meta.reqWood = GetSetting(SettingsPage.reqWood);
@@ -330,13 +319,11 @@ namespace COTG.Views
 			var s = City.GetBuild();
 			instance.shareString.Text=City.BuildingsToShareString(s.buildings,s.isOnWater);
 		}
-		public static void SetTags(string tags)
+		public static void SetCheckboxesFromTags(string remarks)
 		{
-			foreach (var tag in TagHelper.tagsAndAliases)
+			var tags = TagHelper.Get(remarks);
+			foreach (var tag in TagHelper.tags)
 			{
-				if (tag.isAlias)
-					continue;
-
 				var check = instance.tagsPanel.Children.FirstOrDefault((a) => a is ToggleButton b && b.Content as string == tag.s) as ToggleButton;
 				if (check == null)
 				{
@@ -344,7 +331,7 @@ namespace COTG.Views
 //					check.Checked+= (_,_)=>;
 					instance.tagsPanel.Children.Add(check);
 				}
-				check.IsChecked = tag.Has(tags);
+				check.IsChecked = tags.HasFlag(tag.v);
 			}
 
 		}
@@ -368,7 +355,7 @@ namespace COTG.Views
 
 			if (setResAndTags)
 			{
-				SetTags(tags);
+				SetCheckboxesFromTags(tags);
 				SetValue(ref SettingsPage.reqWood, meta.reqWood);
 				SetValue(ref SettingsPage.reqStone, meta.reqStone);
 				SetValue(ref SettingsPage.reqIron, meta.reqIron);
@@ -431,7 +418,7 @@ namespace COTG.Views
 						instance.description.Text = i.desc;
 						instance.path.Text = i.path;
 						instance.title.Text = i.label;
-						SetTags(i.tags);
+						SetCheckboxesFromTags(i.tags);
 					}
 				}
 			}
@@ -506,6 +493,30 @@ namespace COTG.Views
 					instance.Bindings.Update();
 				}
 			}
+		}
+
+		public static Tags TagsFromCheckboxes()
+		{
+			Tags tags = default;
+			foreach (var tag in TagHelper.tags)
+			{
+
+				var check = instance.tagsPanel.Children.First((ch) => (ch as ToggleButton)?.Content == tag.s) as ToggleButton;
+				if (check.IsChecked.GetValueOrDefault())
+					tags |= tag.v;
+
+			}
+			return tags;
+		}
+
+			public static async Task SetCityTags(int cid)
+		{
+			City city = City.GetOrAddCity(cid);
+			await GetCity.Post(cid); // need to fetch notes
+
+			city.remarks = TagHelper.ApplyTags(TagsFromCheckboxes(), city.remarks);
+			//		Post.Send("includes/sNte.php", $"a={HttpUtility.UrlEncode(tags, Encoding.UTF8)}&b=&cid={cid}");
+			await Post.Send("includes/sNte.php", $"a={HttpUtility.UrlEncode(city.remarks, Encoding.UTF8)}&b={HttpUtility.UrlEncode(city.notes, Encoding.UTF8)}&cid={cid}", World.CidToPlayerOrMe(cid));
 		}
 	}
 	
@@ -612,5 +623,8 @@ namespace COTG.Views
 			myList.Add(this);
 			all.NotifyReset();
 		}
+		
+
+
 	}
 }

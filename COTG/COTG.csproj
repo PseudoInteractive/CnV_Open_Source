@@ -341,6 +341,9 @@
     <Compile Include="Views\DungeonView.xaml.cs">
       <DependentUpon>DungeonView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\ExportCastles.xaml.cs">
+      <DependentUpon>ExportCastles.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\QueueTab.xaml.cs">
       <DependentUpon>QueueTab.xaml</DependentUpon>
     </Compile>
@@ -483,6 +486,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\DungeonView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\ExportCastles.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
