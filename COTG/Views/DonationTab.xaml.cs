@@ -104,17 +104,7 @@ namespace COTG.Views
             base.Refresh();
         }
 
-        private void gridPointerPress(object sender, PointerRoutedEventArgs e)
-        {
-            Spot.ProcessPointerPress(this,sender, e);
-
-        }
-
-        private void gridPointerExited(object sender, PointerRoutedEventArgs e)
-        {
-            Spot.ProcessPointerExited();
-
-        }
+     
 
         private void donationGrid_SelectionChanged(object sender, DataGridSelectionChangedEventArgs e)
         {

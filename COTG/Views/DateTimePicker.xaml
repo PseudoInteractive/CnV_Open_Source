@@ -28,6 +28,6 @@
         <TextBox Grid.Row="1" x:Name="time" Grid.ColumnSpan="2"  KeyDown="Time_KeyDown" LostFocus="time_LostFocus"/>
    
 		<Button x:Name="button" Content="Now"  Grid.Column="1" HorizontalAlignment="Center" Grid.Row="2" Click="NowClick"/>
-        <ComboBox PlaceholderText="Recent..."  Grid.Row="2" HorizontalAlignment="Stretch" ItemsSource="{x:Bind views:DateTimePicker.recentTimes}" SelectionChanged="ComboBox_SelectionChanged" />
+        <ComboBox x:Name="recentTimesBox" PlaceholderText="Recent..."  Grid.Row="2" HorizontalAlignment="Stretch" ItemsSource="{x:Bind views:DateTimePicker.recentTimes}" SelectionChanged="ComboBox_SelectionChanged" />
     </Grid>
 </ContentDialog>

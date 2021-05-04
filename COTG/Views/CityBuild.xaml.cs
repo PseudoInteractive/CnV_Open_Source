@@ -37,6 +37,7 @@ using Windows.UI.Core;
 using static COTG.Game.City;
 using ContentDialog = Windows.UI.Xaml.Controls.ContentDialog;
 using ContentDialogResult = Windows.UI.Xaml.Controls.ContentDialogResult;
+using Windows.System;
 
 namespace COTG.Views
 {
@@ -60,8 +61,10 @@ namespace COTG.Views
 		public static HashSet<ushort> shoreSpots = new HashSet<ushort>(new ushort[] {416,394,372,351,331,332,376,354});
 		public static HashSet<ushort> waterSpots = new HashSet<ushort>(new ushort[] { 352, 353, 373, 374, 375, 395,396,397,
 																			417,418});
+		public static HashSet<ushort> emptySpotList = new HashSet<ushort>();
 
-		public static HashSet<ushort> buildingSpots = new HashSet<ushort>( Enumerable.Range((ushort)1, (ushort)citySpotCount-1).Select (a=> (ushort)a). Except(wallSpots).Except(innerTowerSpots).Except(outerTowerSpots) );
+		public static HashSet<ushort> buildingSpots = new HashSet<ushort>( Enumerable.Range((ushort)1, (ushort)citySpotCount-1).Select (a=> (ushort)a). 
+			Where(a=>!(wallSpots.Contains(a)|innerTowerSpots.Contains(a)|outerTowerSpots.Contains(a)|(a==City.bspotTownHall))) );
 		
 		public enum SpotType
 		{
@@ -80,7 +83,11 @@ namespace COTG.Views
 				_ when IsInnerTowerSpot(a) => SpotType.innerTower,
 				_ when IsOuterTowerSpot(a) => SpotType.outerTower,
 				_ when IsShoreSpot(a) => SpotType.shore,
+				_ when IsWaterSpot(a) => SpotType.water,
 				_ when IsBuildingSpot(a) => SpotType.building,
+				_ when (a==bspotTownHall) => SpotType.townHall,
+				_ when IsWallSpot(a) => SpotType.wall,
+
 				_ => SpotType.invalid };
 		}
 		public static HashSet<ushort> GetSpots( SpotType type)
@@ -89,16 +96,17 @@ namespace COTG.Views
 			{
 				case SpotType.innerTower:
 					return innerTowerSpots;
-
 				case SpotType.outerTower:
 					return outerTowerSpots;
 				case SpotType.shore:  return shoreSpots;
+				case SpotType.building: return buildingSpots;
 				default:
-					return buildingSpots; // how should this be properly handled?
+					return testFlag ? buildingSpots : emptySpotList; // how should this be properly handled?
 			}
 		}
 
 		public static bool IsBuildingSpot(int spot) => buildingSpots.Contains((ushort)spot);
+		public static bool IsBuildingSpotOrTownHall(int spot) => buildingSpots.Contains((ushort)spot) | (spot == City.bspotTownHall);
 		public static bool IsBuildingSpot((int x, int y) cc) => IsBuildingSpot(XYToId(cc));
 		public static bool IsTowerSpot(int spot) => outerTowerSpots.Contains((ushort)spot) | innerTowerSpots.Contains((ushort)spot);
 		public static bool IsInnerTowerSpot(int spot) => innerTowerSpots.Contains((ushort)spot);
@@ -598,11 +606,8 @@ namespace COTG.Views
 		 * 			<AppBarToggleButton x:Name="planner" Checked="PlannerChecked" Unchecked="PlannerUnchecked"  x:FieldModifier="public" Icon="Orientation" Label="Planner"
                            ToolTipService.ToolTip="Toggles between normal city building and planner mode (i.e. like LOUOpt.com" />
 		 */
-		public static bool _isPlanner
+		public static async Task SetIsPlanner(bool value, bool showPlannerIfNeeded=false)
 		{
-			get => isPlanner;
-			 set
-			{
 				if (isPlanner == value)
 					return;
 				menuType = MenuType.invalid; //clear this
@@ -617,25 +622,26 @@ namespace COTG.Views
 						
 					}
 					BuildingsOrQueueChanged();
-					App.DispatchOnUIThreadSneakyLow(()=>PlannerTab.instance.Show());
+					if(showPlannerIfNeeded && !PlannerTab.IsVisible())
+						App.DispatchOnUIThreadSneakyLow(()=>PlannerTab.instance.Show());
 				}
 				else
 				{
 					var b = City.GetBuild();
 					b.BuildingsCacheToShareString();
-					b.SaveLayout();
-					GetCity.Post(City.build);
-					App.DispatchOnUIThreadSneakyLow(() =>
-				   {
-					   if (PlannerTab.instance.isVisible)
-					   {
-						   PlannerTab.instance.Close();
-						   BuildTab.instance.Show();
-					   }
-				   });
+					await b.SaveLayout();
+					await GetCity.Post(City.build);
+					//App.DispatchOnUIThreadSneakyLow(() =>
+				 //  {
+					//   //if (PlannerTab.instance.isVisible)
+					//   //{
+					//	  // PlannerTab.instance.Close();
+					//	  // BuildTab.instance.Show();
+					//   //}
+				 //  });
 
 				}
-			}
+			
 		}
 
 
@@ -705,7 +711,11 @@ namespace COTG.Views
 				Note.Show("Cannot upgrade Res");
 				return;
 			}
-
+			if (sel.isEmpty)
+			{
+				Note.Show("Nothing to upgrade");
+				return;
+			}
 			var lvl = sel.bl;
 			if (level == 1)
 				level = lvl + 1;
@@ -1052,7 +1062,7 @@ namespace COTG.Views
 								return;
 
 						}
-						else if (counts.townHallLevel == 10 && counts.count == 100 && usesSpot)
+						else if (counts.townHallLevel == 10 && counts.count >= 100 && usesSpot)
 						{
 							if (SettingsPage.autoDemoCottages)
 							{
@@ -1173,12 +1183,12 @@ namespace COTG.Views
 			var bds = isPlanner ? buildingsCache : build.buildings;
 			if (HasBuildOps(a) && !isPlanner)
 			{
-				Status($"Cannot move a building that is being rennovated, please wait or cancel build ops on {bds[a].name} at {IdToXY(a).bspotToString()} for best results", dryRun);
+				Status($"Cannot move a building that is being rennovated, please wait or cancel build ops on {bds[a].name} at {IdToXY(a).bspotToString()} or wait", dryRun);
 				return false;
 			}
 			if (HasBuildOps(b) && !isPlanner)
 			{
-				Status($"Cannot move a building to a spot that is being rennovated, please wait or cancel build ops on {bds[b].name} at {IdToXY(b).bspotToString()} for best results", dryRun);
+				Status($"Cannot move a building to a spot that is being rennovated, please wait or cancel build ops on {bds[b].name} at {IdToXY(b).bspotToString()} or wait for best results", dryRun);
 				return false;
 			}
 			if (Player.moveSlots <= 0 && !isPlanner)
@@ -1190,24 +1200,43 @@ namespace COTG.Views
 			{
 				Status($"Move {bds[a].name} to {IdToXY(b).bspotToString()} ", dryRun);
 
+				var rv = true;
 				if (!dryRun)
 				{
 
 					if (!isPlanner)
 					{
-						await Services.Post.Send("includes/mBu.php", $"a={a}&b={b}&c={Spot.build}", World.CidToPlayerOrMe(City.build));
-						await Task.Delay(200);
+						await Move(a, b);
+
+					//	await Task.Delay(200);
 						
 						--Player.moveSlots;
 					}
 					// I hope that these operations are what I expect with references
-					var temp = bds[a];
-					bds[a] = bds[b];
-					bds[b] = temp;
-					BuildingsOrQueueChanged();
+					AUtil.Swap(ref buildingsCache[b] , ref buildingsCache[a]);
+					if(!isPlanner)
+						AUtil.Swap(ref build.buildings[b],ref build.buildings[a]);
+					AUtil.Swap(ref postQueueBuildings[b], ref postQueueBuildings[a]);
+				//	BuildingsOrQueueChanged();
 				}
+				return rv;
 			}
-			return true;
+		}
+		async static Task Move(int from, int to)
+		{
+			var cid = City.build;
+			var s = await Services.Post.SendForText("includes/mBu.php", $"a={from}&b={to}&c={cid}", World.CidToPlayerOrMe(cid));
+			if( ( int.TryParse(s.Trim(),System.Globalization.NumberStyles.Any, System.Globalization.NumberFormatInfo.CurrentInfo,out var i) &&
+			
+				( i >= City.bidMin && i <= City.bidMax)) )
+			{
+
+			}
+			else
+			{
+				throw new UIException("Invalid Move");
+			}
+
 		}
 
 		public static async Task<bool> SwapBuilding(int a, int b, bool dryRun)
@@ -1234,25 +1263,27 @@ namespace COTG.Views
 				if (!dryRun)
 				{
 
-					var temp = bds[b];
-					bds[b] = bds[a];
-					bds[a] = temp;
+					AUtil.Swap(ref buildingsCache[a], ref buildingsCache[b]);
+					if(!isPlanner)
+						AUtil.Swap(ref build.buildings[a], ref build.buildings[b]);
+					AUtil.Swap(ref postQueueBuildings[a], ref postQueueBuildings[b]);
+
 					if (!isPlanner)
 					{
 						var scratch = FindAnyFreeSpot(a);
-						await Services.Post.Send("includes/mBu.php", $"a={a}&b={scratch}&c={Spot.build}", World.CidToPlayerOrMe(City.build));
-						await Services.Post.Send("includes/mBu.php", $"a={b}&b={a}&c={Spot.build}", World.CidToPlayerOrMe(City.build));
-						await Services.Post.Send("includes/mBu.php", $"a={scratch}&b={b}&c={Spot.build}", World.CidToPlayerOrMe(City.build));
-						await Task.Delay(200);
+						await Move(a, scratch);
+						await Move(b, a);
+						await Move(scratch, b);
+
 						Player.moveSlots -= 3;
 					}
-					BuildingsOrQueueChanged();
+					//BuildingsOrQueueChanged();
 				}
 				return true;
 			}
 			else
 			{
-				Status("Note enough move spots", dryRun);
+				Status("Note enough move spots (press shift F5 if this is not true)", dryRun);
 				return false;
 			}
 			
@@ -1539,7 +1570,7 @@ namespace COTG.Views
 				case Action.showShareString:
 					{
 						if(isSingleClickAction)
-							await ShareString.Show();
+							await ShareString.Show(City.build);
 						break;
 					}
 				case Action.togglePlanner:
@@ -1562,7 +1593,7 @@ namespace COTG.Views
 				{
 					if (b.isEmpty)
 					{
-							if (IsBuildingSpot(hovered))
+							if (IsBuildingSpotOrTownHall(XYToId(hovered)))
 							{
 								Status($"Left click to build something\nRight click to select a quick build tool",dryRun);
 
@@ -1639,7 +1670,7 @@ namespace COTG.Views
 			if (searchForSpare && !isPlanner && build.isLayoutValid && usesSpot )
 			{
 				// See if there are spare buildings that we can take
-				for (int xy = 0; xy < City.citySpotCount; ++xy)
+				for (int xy = 1; xy < City.citySpotCount-1; ++xy)
 				{
 					var overlayBid = build.BidFromOverlay(xy);
 					var xyBuilding = postQueueBuildings[xy].def.bid;
@@ -1653,7 +1684,7 @@ namespace COTG.Views
 							// two points for ourbuilding is also needed there
 							var score = ((overlayBid == curBid) ? 2 : 1);
 							if (!HasBuildOps(xy))
-								score += 4;
+								score += 8;
 							if (score > takeScore)
 							{
 								takeScore = score;
@@ -1699,7 +1730,7 @@ namespace COTG.Views
 							await Task.Delay(400).ConfigureAwait(true);
 						if (takeScore > 0 && searchForSpare)
 						{
-							Status($"Waiting on demo, then spare {desName} can be moved into place", dryRun);
+							Status($"Please wait on demo, then spare {desName} can be moved into place", dryRun);
 							// wait for demo
 							return rv;
 						}
@@ -1708,7 +1739,8 @@ namespace COTG.Views
 					{
 						Status($"Found an unneeded {desName}, will move it to the right spot for you", dryRun);
 
-						await MoveBuilding(takeFrom, bspot, dryRun);
+						if (!await MoveBuilding(takeFrom, bspot, dryRun))
+							return -1;
 						return rv;
 					}
 					if (counts.townHallLevel < desB.Thl || (counts.count == counts.max && counts.townHallLevel < 10))
@@ -1728,10 +1760,10 @@ namespace COTG.Views
 					}
 					else if (counts.count >= 100)
 					{
-						if(!desB.isCabin)
+						if(!desB.isCabin && desBid != 0)
 						{
 							// Is there a cabin to remove?
-							int bestSpot = demoExtraBuildings ? QueueTab.FindUnusedBuilding() : -1;
+							int bestSpot = demoExtraBuildings ? QueueTab.FindExtraBuilding() : -1;
 							if( bestSpot == -1)
 								bestSpot = FindCabinToDemo();
 							if (bestSpot != -1)
@@ -1740,13 +1772,19 @@ namespace COTG.Views
 
 								await Demolish(bestSpot, dryRun);
 								//break;
+								--counts.count;
 								++rv;
 
 							}
 						}
+						else
+						{
+							Status("Don't want to demo a cabin to build a cabin", dryRun);
+						}
 
 
 					}
+					//if (counts.count < 100)
 					await Build(cc, desBid == 0 ? bidCottage : desBid, dryRun);
 
 				}
@@ -1762,11 +1800,15 @@ namespace COTG.Views
 					else
 					{
 						// nothing here
-						//		if (counts.count < counts.max ) // can we put a cabin here?
+						if (counts.count < 100 ) // can we put a cabin here?
 						{
 							Status($"No building is wanted here, how about a cottage instead?", dryRun);
 							await Build(cc, bidCottage, dryRun);
 							++rv;
+						}
+						else
+						{
+							Status("Don't want to demo a cabin to build a cabin", dryRun);
 						}
 					}
 				}
@@ -1782,31 +1824,42 @@ namespace COTG.Views
 					if (putScore > 0)
 					{
 						var name = b.def.Bn;
-
-						switch (putScore)
+						if (putScore < 8 )
 						{
-							case 4:
-								{
-									Status($"Swaping {b.def.Bn} and {desName} as they are mixed up ({Player.moveSlots} moves left)", dryRun);
-									{
-										await SwapBuilding(bspot, putTo, dryRun);
-									}
-									// two way swap 
-									break;
-								}
-							case 3:
-								Status($"Move {name} to where it is wanted", dryRun);
-								await MoveBuilding(bspot, putTo, dryRun);
-								break;
-							case 2:
-								Status($"{name} is wanted elsewhere but there is a building in the way", dryRun);
-								break;
-							case 1:
-								Status($"{name} is wanted elsewhere but there are reources in the way", dryRun);
-								break;
-
-
+							Status($"{b.def.Bn} is wanted elsewhere but someone is doing something - please clear the queue or wait", dryRun);
 						}
+						else
+						{
+							switch (putScore)
+							{
+								case 4:
+								case 4 + 8:
+									{
+										Status($"Swaping {b.def.Bn} and {desName} as they are mixed up ({Player.moveSlots} moves left)", dryRun);
+										if (!await SwapBuilding(bspot, putTo, dryRun))
+											return -1;
+										// two way swap 
+										break;
+									}
+								case 3:
+								case 3 + 8:
+									Status($"Move {name} to where it is wanted", dryRun);
+									if(!await MoveBuilding(bspot, putTo, dryRun))
+										return -1;
+									break;
+								case 2:
+								case 2 + 8:
+									Status($"{name} is wanted elsewhere but there is a building in the way", dryRun);
+									break;
+								case 1:
+								case 1 + 8:
+									Status($"{name} is wanted elsewhere but there are reources in the way", dryRun);
+									break;
+
+
+							}
+						}
+						
 
 
 					}
@@ -1830,7 +1883,7 @@ namespace COTG.Views
 
 									if (demoExtraBuildings)
 									{
-										int bestSpot = QueueTab.FindUnusedBuilding();
+										int bestSpot = QueueTab.FindExtraBuilding();
 										if (bestSpot != -1)
 										{
 											await Demolish(bestSpot, dryRun);
@@ -1861,7 +1914,7 @@ namespace COTG.Views
 
 								var cb = FindAnyFreeSpot(bspot);
 								if (!await MoveBuilding(bspot, cb, dryRun))
-									return rv;
+									return -1;
 
 
 								// build the correct building
@@ -1874,13 +1927,21 @@ namespace COTG.Views
 						}
 						else
 						{
+							if (takeScore < 8)
+							{
+								Status($"There an extra {desName}, but it cannot be moved because someone is doing something, please clear queue or wait", dryRun);
 
-							await MoveBuilding(bspot, FindAnyFreeSpot(bspot), dryRun);
+							}
+							else
+							{
+								if (!await MoveBuilding(bspot, FindAnyFreeSpot(bspot), dryRun))
+									return - 1;
 
-							Status($"Found an unneeded {desName}, will move it to the right spot for you", dryRun);
+								Status($"Found an unneeded {desName}, will move it to the right spot for you", dryRun);
 
-							await MoveBuilding(takeFrom, bspot, dryRun);
-
+								if (!await MoveBuilding(takeFrom, bspot, dryRun))
+									return -1;
+							}
 						}
 					}		
 					
@@ -1939,16 +2000,16 @@ namespace COTG.Views
 
 	private static async Task TogglePlanner()
 		{
-			if (CityBuild._isPlanner)
+			if (CityBuild.isPlanner)
 			{
-				CityBuild._isPlanner = false;
+				await CityBuild.SetIsPlanner(false,false);
 			}
 			else
 			{
 				if (!GetBuild().isLayoutValid)
-					await ShareString.Show();
-				CityBuild._isPlanner = true;
-
+					await ShareString.Show(City.build);
+				await CityBuild.SetIsPlanner(true, true);
+			
 			}
 		}
 
@@ -2085,7 +2146,7 @@ namespace COTG.Views
 				bspot == 0 ? MenuType.buliding :
 				b.id == 0 ? (CityBuild.IsTowerSpot(bspot) ? MenuType.tower : CityBuild.IsShoreSpot(bspot) ? MenuType.shore : MenuType.empty ) :
 				b.bl == 0 ? MenuType.res :
-				d.bid == bidTownHall ? _isPlanner ? MenuType.townhallPlanner: MenuType.townhall :
+				d.bid == bidTownHall ? isPlanner ? MenuType.townhallPlanner: MenuType.townhall :
 				MenuType.buliding;
 			UpdateBuildMenuType(type, bspot);
 
@@ -2103,21 +2164,24 @@ namespace COTG.Views
 
 		private async void Abandon_Click(object sender, RoutedEventArgs e)
 		{
-			 await App.DispatchOnUIThreadTask(async () =>
+			var cid = City.build;
+			await App.DispatchOnUIThreadExclusive(cid,async() =>
 			{
 				var dialog = new ContentDialog()
 			{
 				Title = "Are you Sure?",
-				Content = "Abandon " + City.GetBuild().nameAndRemarks,
+				Content = "Abandon " + City.GetOrAdd(cid).nameAndRemarks,
 				PrimaryButtonText = "Yes",
 				SecondaryButtonText = "Cancel"
 			};
 				var rv= await dialog.ShowAsync2();
 				if (rv == ContentDialogResult.Primary)
 				{
-					await JSClient.view.InvokeScriptAsync("misccommand", new[] { "abandoncity", City.build.ToString() });
-
+					await JSClient.view.InvokeScriptAsync("misccommand", new[] { "abandoncity", cid.ToString() });
+					
 					await Task.Delay(500);
+					City.GetOrAdd(cid).pid = 0; //
+					CitiesChanged();
 					NavStack.Back(true);
 				}
 
@@ -2156,7 +2220,7 @@ namespace COTG.Views
 					{
 						Note.Show("Please assign a layout");
 						//		JSClient.JSInvoke("showLayout", null);
-						await ShareString.Show();
+						await ShareString.Show(City.build);
 						SetAction(bi.action);
 						ClearSelectedBuilding();
 //						App.DispatchOnUIThreadLow( ()=> PlannerTeachingTip.Show(nameof(PlannerTeachingTip)));
@@ -2190,7 +2254,7 @@ namespace COTG.Views
 						}
 						else if (bi.action == Action.showShareString)
 						{
-							await ShareString.Show(); 
+							await ShareString.Show(City.build); 
 						}
 						else
 						{
@@ -2215,6 +2279,137 @@ namespace COTG.Views
 		private void StackPanel_AccessKeyInvoked(UIElement sender, AccessKeyInvokedEventArgs args)
 		{
 
+		}
+
+		public static void ProcessKey(VirtualKey key)
+		{
+			switch (key)
+			{
+				case VirtualKey.Space: CityBuild.Click(CityView.hovered, true); return;
+				case VirtualKey.Enter: CityBuild.Click(CityView.hovered, false); return;
+				case Windows.System.VirtualKey.Left:
+					if (CityView.hovered.IsValid())
+						CityView.hovered.x = (CityView.hovered.x - 1).Max(City.span0);
+					else
+						CityView.hovered = (0, 0);
+
+					break;
+
+				case Windows.System.VirtualKey.Up:
+					if (CityView.hovered.IsValid())
+						CityView.hovered.y = (CityView.hovered.y - 1).Max(City.span0);
+					else
+						CityView.hovered = (0, 0);
+					break;
+
+				case Windows.System.VirtualKey.Right:
+					if (CityView.hovered.IsValid())
+						CityView.hovered.x = (CityView.hovered.x + 1).Min(City.span1);
+					else
+						CityView.hovered = (0, 0);
+
+					break;
+
+				case Windows.System.VirtualKey.Down:
+					if (CityView.hovered.IsValid())
+						CityView.hovered.y = (CityView.hovered.y + 1).Min(City.span1);
+					else
+						CityView.hovered = (0, 0);
+					break;
+
+				case Windows.System.VirtualKey.Number1: UpgradeOrTower(1); break;
+				case Windows.System.VirtualKey.Number2: UpgradeOrTower(2); break;
+				case Windows.System.VirtualKey.Number3: UpgradeOrTower(3); break;
+				case Windows.System.VirtualKey.Number4: UpgradeOrTower(4); break;
+				case Windows.System.VirtualKey.Number5: UpgradeOrTower(5); break;
+				case Windows.System.VirtualKey.Number6: UpgradeOrTower(6); break;
+				case Windows.System.VirtualKey.Number7: UpgradeOrTower(7); break;
+				case Windows.System.VirtualKey.Number8: UpgradeOrTower(8); break;
+				case Windows.System.VirtualKey.Number9: UpgradeOrTower(9); break;
+				case Windows.System.VirtualKey.Number0: CityBuild.UpgradeToLevel(10, CityView.hovered); break;
+				case Windows.System.VirtualKey.U: CityBuild.UpgradeToLevel(1, CityView.hovered, false); break;
+				// case Windows.System.VirtualKey.Q: CityBuild.ClearQueue(); break;
+				case Windows.System.VirtualKey.D: CityBuild.Demolish(CityView.hovered, false); break;
+				case Windows.System.VirtualKey.Escape: CityBuild.ClearAction(); break;
+				case (VirtualKey)192:
+					{
+						if (action == CityBuild.Action.moveEnd)
+							CityBuild.MoveHovered(true, false, false);
+						else
+						{
+							CityView.ClearSelectedBuilding();
+							CityBuild.MoveHovered(true, true, false);
+						}
+						break; //  (City.XYToId(CityView.selected), City.XYToId(CityView.hovered)); break;
+					}
+				// short keys
+				case Windows.System.VirtualKey.F: CityBuild.ShortBuild(City.bidForester); return; //  448;
+				case Windows.System.VirtualKey.C: CityBuild.ShortBuild(City.bidCottage); return; //  446;
+				case Windows.System.VirtualKey.R: CityBuild.ShortBuild(City.bidStorehouse); return; //  464;
+				case Windows.System.VirtualKey.S: CityBuild.ShortBuild(City.bidQuarry); return; //  461;
+																								// case
+																								// Windows.System.VirtualKey.Q
+																								// :
+																								// CityBuild.ShortBuild(City.bidHideaway
+																								// );
+																								// return;
+																								// // 479;
+				case Windows.System.VirtualKey.A: CityBuild.ShortBuild(City.bidFarmhouse); return; //  447;
+																								   // case
+																								   // Windows.System.VirtualKey.U
+																								   // :
+																								   // CityBuild.ShortBuild(City.bidCityguardhouse
+																								   // );
+																								   // return;
+																								   // // 504;
+				case Windows.System.VirtualKey.B: CityBuild.ShortBuild(City.bidBarracks); return; //  445;
+				case Windows.System.VirtualKey.I: CityBuild.ShortBuild(City.bidMine); return; //  465;
+				case Windows.System.VirtualKey.T: CityBuild.ShortBuild(City.bidTrainingGround); return; //  483;
+				case Windows.System.VirtualKey.M: CityBuild.ShortBuild(City.bidMarketplace); return; //  449;
+				case Windows.System.VirtualKey.V: CityBuild.ShortBuild(City.bidTownhouse); return; //  481;
+				case Windows.System.VirtualKey.L: CityBuild.ShortBuild(City.bidSawmill); return; //  460;
+				case Windows.System.VirtualKey.E: CityBuild.ShortBuild(City.bidStable); return; //  466;
+				case Windows.System.VirtualKey.H: CityBuild.ShortBuild(City.bidStonemason); return; //  462;
+				case Windows.System.VirtualKey.W: CityBuild.ShortBuild(City.bidSorcTower); return; //  500;
+				case Windows.System.VirtualKey.G: CityBuild.ShortBuild(City.bidWindmill); return; //  463;
+				case Windows.System.VirtualKey.Y: CityBuild.ShortBuild(City.bidAcademy); return; //  482;
+				case Windows.System.VirtualKey.Z: CityBuild.ShortBuild(City.bidSmelter); return; //  477;
+				case Windows.System.VirtualKey.K: CityBuild.ShortBuild(City.bidBlacksmith); return; //  502;
+				case Windows.System.VirtualKey.X: CityBuild.ShortBuild(City.bidCastle); return; //  467;
+				case Windows.System.VirtualKey.O: CityBuild.ShortBuild(City.bidPort); return; //  488;
+				case Windows.System.VirtualKey.P: CityBuild.ShortBuild(City.bidShipyard); return; //  491;
+				case Windows.System.VirtualKey.Q: SmartBuild(City.GetBuild(), hovered,City.GetBuild().BidFromOverlay(hovered), true, false); return; 
+
+				default:
+					break;
+			}
+		}
+
+		private static void UpgradeOrTower(int number)
+		{
+			var xy = CityView.hovered;
+			var spot = City.XYToId(xy);
+			if (CityBuild.IsTowerSpot(spot) && CityBuild.postQueueBuildings[spot].bl == 0)
+			{
+				var bid = number switch
+				{
+					1 => City.bidSentinelPost,
+					2 => bidRangerPost,
+					3 => bidTriariPost,
+					4 => bidPriestessPost,
+					5 => bidBallistaPost,
+					6 => bidSnagBarricade,
+					7 => bidEquineBarricade,
+					8 => bidRuneBarricade,
+					_ => bidVeiledBarricade
+				};
+
+				ShortBuild(bid);
+			}
+			else
+			{
+				CityBuild.UpgradeToLevel(number, CityView.hovered);
+			}
 		}
 		//public static BuildPhase GetBuildPhase()
 		//{

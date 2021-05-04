@@ -74,6 +74,7 @@ namespace COTG.Views
 		public static bool sendFood = true;
 		public static int tsForCastle = 22000;
 		public static int tsForSorcTower = 32000;
+		public static int defaultFoodWarning = 12;
 		public static bool showDungeonsInRegionView = false;
 		public static bool applyTags=true;
 		public static bool setHub = true;
@@ -93,6 +94,7 @@ namespace COTG.Views
 		public static int scoutpostCount=2;
 		public static bool returnRaidsBeforeSend;
 		public static float flagScale=0.25f;
+		public static float iconScale = 0.5f;
 		public static int[] raidCarrySteps;
 		public static bool[] includeRaiders = new[] {
 				false, false,true,true,
@@ -101,6 +103,24 @@ namespace COTG.Views
 				false,false,true,true,
 				true,false};
 
+		public static string VRTRatio = "1:1:1";
+
+		public static (float v, float r,float t) vrtRatio {
+			get
+			{
+				try
+				{
+					var str = VRTRatio.Split(':');
+					return (float.Parse(str[0], NumberStyles.Number), float.Parse(str[1], NumberStyles.Number), float.Parse(str[2], NumberStyles.Number));
+				}
+				catch(Exception ex)
+				{
+					Note.Show($"Invalid VRT ratio {VRTRatio}, should be like '1:1:1'");
+					return (1, 1, 1);
+				}
+
+			}
+		}
 
 		// rooms for 16 for now
 		public static bool[] includeBuildStages = new[] {true,true,true,true,
@@ -109,6 +129,9 @@ namespace COTG.Views
 			true,true,true,true };
 
 		public static int raidIntervals;
+		public static Resources nearResReserve = new Resources(100000, 100000, 100000, 100000);
+		public static float attackMaxTravelHoursSE=40;
+		public static float attackMaxTravelHoursSen=40;
 
 		public float uiMusic
 		{
@@ -137,6 +160,7 @@ namespace COTG.Views
 		public static int mruSize = 32;
 		public static int[] pinned = Array.Empty<int>();
 		public static int showAttacksLimit = 100;
+		public static int showAttacksLimit0 = 30;
 		public static HashSet<int> tipSeen;
 		public static bool soundOn = true;
 		public static float volume = 0.5f;
@@ -147,7 +171,9 @@ namespace COTG.Views
 		public static bool raidSendExact;
 		public static int resetRaidsCarry = 90;
 		public static int resetRaidsIdle = 10;
-		public static DateTimeOffset attackPlayerTime = AUtil.dateTimeZero;
+		public static DateTimeOffset attackPlannerTime = AUtil.dateTimeZero;
+
+
 		public static int raidsVisible = -1;
 		public static bool cityListWarship=true;
 		public static bool cityListShippers = true;

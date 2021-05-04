@@ -155,7 +155,8 @@ IsTabStop="True"
                         RowHeight="{StaticResource GridRowHeight}"
                         AlternationStep="2"
                         SelectionMode="Single"
-								 
+								 						ScrollViewer.ZoomMode="Enabled"
+
                         ColumnDataOperationsMode="Flyout"
                         SelectionUnit="Row"
                         UserSortMode="Auto">

@@ -208,7 +208,7 @@ namespace COTG
 		static readonly Color artColor = Color.DarkOrange;
 		static readonly Color senatorColor = Color.OrangeRed;
 		static readonly Color tradeColor = Color.DarkGreen;
-		static readonly Color tradeColorHover = Color.ForestGreen;
+		static readonly Color tradeColorHover = Color.DarkBlue;
 		static readonly Color defaultAttackColor = Color.Maroon;// (0xFF8B008B);// Color.DarkMagenta;
 		static readonly Color raidColor = Color.Yellow;
 		//        static readonly Color shadowColor = new Color(128, 0, 0, 0);
@@ -515,7 +515,7 @@ namespace COTG
 			{
 				World.changeMapInProgress = true;
 				World.changeMapRequested = false;
-				Task.Run(World.UpdateChangeMap);
+				
 			}
 			else
 			{
@@ -1532,7 +1532,7 @@ namespace COTG
 												var nSprite = attack.troops.Length;
 
 												(int iType, float alpha) = GetTroopBlend(t, nSprite);
-												DrawAction(dt1, journeyTime, r, c0, c1, c, troopImages[attack.troops[iType].type], true, attack, 28, alpha);
+												DrawAction(dt1, journeyTime, r, c0, c1, c, troopImages[attack.troops[iType].type], true, attack,alpha: alpha);
 											}
 											//var progress = (dt0 / (dt0 + dt1).Max(1)).Saturate(); // we don't know the duration so we approximate with 2 hours
 											//var mid = progress.Lerp(c0, c1);
@@ -1559,12 +1559,13 @@ namespace COTG
 							{
 								if (AttackTab.attackClusters != null)
 								{
+									var showAll = AttackTab.attackClusters.Length < 50;
 									foreach (var cluster in AttackTab.attackClusters)
 									{
 										var selected = false;
 										foreach (var i in cluster.attacks)
 										{
-											if (Spot.IsSelectedOrHovered(i, true))
+											if (showAll ||Spot.IsSelectedOrHovered(i, true))
 											{
 												selected = true;
 												break;
@@ -1572,7 +1573,7 @@ namespace COTG
 										}
 										foreach (var i in cluster.targets)
 										{
-											if (Spot.IsSelectedOrHovered(i, true))
+											if (showAll || Spot.IsSelectedOrHovered(i, true))
 											{
 												selected = true;
 												break;
@@ -1581,7 +1582,7 @@ namespace COTG
 										{
 											var c0 = cluster.topLeft.WToCamera();
 											var c1 = cluster.bottomRight.WToCamera();
-											DrawRect(Layer.effects, c0, c1, selected ? Color.Black : Color.Maroon);
+											DrawRect(Layer.effects, c0, c1, selected ? new Color(128,0,0,128) : new Color(64, 0, 0, 128) );
 										}
 
 										if (selected)
@@ -1594,7 +1595,7 @@ namespace COTG
 												var r = t.Ramp();
 												var c1 = a.CidToCamera();
 												var spot = Spot.GetOrAdd(a);
-												DrawAction(0.5f, 1.0f, r, c1, c0, Color.Red, troopImages[(int)spot.GetPrimaryTroopType(false)], false, null, 16);
+												DrawAction(0.5f, 1.0f, r, c1, c0, Color.Red, troopImages[(int)spot.GetPrimaryTroopType(false)], false, null);
 											}
 											foreach (var target in cluster.targets)
 											{
@@ -1650,6 +1651,7 @@ namespace COTG
 									}
 									var list = defenders ? Spot.defendersI : Spot.defendersO;
 									bool noneIsAll = list.Length <= SettingsPage.showAttacksLimit;
+									bool showAll = list.Length <= SettingsPage.showAttacksLimit0 || SettingsPage.incomingAlwaysVisible;
 									foreach (var city in list)
 									{
 										if (!city.testContinentFilter)
@@ -1695,7 +1697,7 @@ namespace COTG
 														c = GetAttackColor(i);
 													}
 												}
-												if (!Spot.IsSelectedOrHovered(i.sourceCid, targetCid, noneIsAll))
+												if (!(showAll||Spot.IsSelectedOrHovered(i.sourceCid, targetCid, noneIsAll)))
 												{
 													continue;
 													//       c.A = (byte)((int)c.A * 3 / 8); // reduce alpha if not selected
@@ -1708,14 +1710,14 @@ namespace COTG
 
 													(int iType, float alpha) = GetTroopBlend(t, nSprite);
 
-													DrawAction(i.TimeToArrival(serverNow), i.journeyTime, r, c0, c1, c, troopImages[i.troops[iType].type], true, i, 28, alpha);
+													DrawAction(i.TimeToArrival(serverNow), i.journeyTime, r, c0, c1, c, troopImages[i.troops[iType].type], true, i, alpha:alpha);
 												}
 												else
 												{
 													Assert(false);
 												}
 											}
-											if (wantDetails || Spot.IsSelectedOrHovered(targetCid, noneIsAll))
+											if (wantDetails || showAll|| Spot.IsSelectedOrHovered(targetCid, noneIsAll))
 											{
 												DrawTextBox($"{incAttacks}`{city.claim.ToString("00")}%`{(incTs + 500) / 1000}k\n{ (city.tsDefMax + 500) / 1000 }k",
 														c1, tipTextFormatCentered, incAttacks != 0 ? Color.White : Color.Cyan, textBackgroundOpacity, Layer.tileText);
@@ -1803,7 +1805,7 @@ namespace COTG
 											recruiting += sen.count;
 										else
 											active += sen.count;
-										if (sen.target != 0)
+										if (sen.target != 0 && sen.type == SenatorInfo.Type.settle )
 										{
 											var c1 = sen.target.CidToCamera();
 
@@ -1812,7 +1814,7 @@ namespace COTG
 											var r = t.Ramp();
 											// Todo: more accurate senator travel times
 											DrawAction((float)(sen.time - serverNow).TotalSeconds, dist * 60.0f, r, c, c1, senatorColor,
-												troopImages[ttSenator], false, null, 20);
+												troopImages[ttSenator], false, null);
 											DrawFlag(sen.target, SpriteAnim.flagGrey, Vector2.Zero);
 										}
 									}
@@ -1841,7 +1843,7 @@ namespace COTG
 											(var c0, var c1) = !raid.isReturning ? (c, ct) : (ct, c);
 											DrawAction((float)(raid.time - serverNow).TotalSeconds,
 												raid.GetOneWayTripTimeMinutes(city) * 60.0f,
-												r, c0, c1, raidColor, troopImages[raid.troopType], false, null, 20);
+												r, c0, c1, raidColor, troopImages[raid.troopType], false, null);
 
 										}
 									}
@@ -1980,7 +1982,7 @@ namespace COTG
 
 												}
 												var r = t.Ramp();
-												var spriteSize = new Vector2(20);
+												var spriteSize = new Vector2(32*SettingsPage.iconScale);
 												var _c0 = c1 - spriteSize;
 												var _c1 = c1 + spriteSize;
 
@@ -2197,7 +2199,7 @@ namespace COTG
 				if (format.verticalAlignment == TextFormat.VerticalAlignment.bottom)
 					c0.Y -= span.Y;
 				backgroundColor.A = (byte)(((int)backgroundColor.A * color.A) / 255);
-				FillRoundedRectangle(layer - 1, c0 - expand, c0 + expand + span, backgroundColor, depth, zBias);
+				FillRoundedRectangle(Layer.textBackground, c0 - expand, c0 + expand + span, backgroundColor, depth, zBias);
 			}
 			textLayout.Draw(at, scale, color, layer, zBias, depth);
 		}
@@ -2232,7 +2234,7 @@ namespace COTG
 
 		const float actionStopDistance = 48.0f;
 		private void DrawAction(float timeToArrival, float journeyTime, float rectSpan, Vector2 c0, Vector2 c1, Color color,
-		Material bitmap, bool applyStopDistance, Army army, float spriteSize, float alpha = 1)
+		Material bitmap, bool applyStopDistance, Army army, float alpha = 1)
 		{
 			if (IsCulled(c0, c1))
 				return;
@@ -2276,7 +2278,8 @@ namespace COTG
 			DrawLine(Layer.action + 2, c0, mid, GetLineUs(c0, mid), color, zLabels);
 			if (applyStopDistance)
 				DrawSquare(Layer.action + 3, new Vector2(c0.X, c0.Y), color, zLabels);
-			var dc = new Vector2(spriteSize, spriteSize);
+			float spriteSize = 32 * SettingsPage.iconScale;
+		    var dc = new Vector2(spriteSize, spriteSize);
 			if (bitmap != null)
 			{
 				var _c0 = new Vector2(mid.X - spriteSize, mid.Y - spriteSize);
@@ -2290,7 +2293,7 @@ namespace COTG
 
 		private void DrawAction( Vector2 c0, Vector2 c1, Color color, float thickness = lineThickness)
 		{
-			DrawAction(0, 1.0f, 1, c0, c1, color, null, false, null, 1, 1);
+			DrawAction(0, 1.0f, 1, c0, c1, color, null, false, null,alpha:1);
 			
 
 /*			if (IsCulled(c0, c1))

@@ -68,6 +68,7 @@ namespace COTG.Views
 
 		public int GetTransport(City city) => viaWater ? (city.shipsHome-reserveShips).Max0() * 10000 : (city.cartsHome-reserveCarts).Max0() * 1000;
 
+
 		public void RefreshSupportByRes()
 		{
 		//	Log("Refresh");
@@ -103,204 +104,225 @@ namespace COTG.Views
 				rv.AddIfAbsent(s.cid);
 			}
 		}
-
+		public static bool updating;
 		public static async Task UpdateTradeStuff()
 		{
+			updating = true;
+	//		try
+	//		{
+				var data = await Post.SendForJson("overview/tcounc.php");
+				//	Trace(data.RootElement.ToString());
+				foreach (var js in data.RootElement[0].EnumerateArray())
+				{
 
-			var data = await Post.SendForJson("overview/tcounc.php");
-		//	Trace(data.RootElement.ToString());
-			foreach (var js in data.RootElement[0].EnumerateArray())
-			{
-				
-				var cid = js.GetAsInt("28");
-				var city = City.GetOrAddCity(cid);
-				CityTradeInfo ct;
-				if (city.tradeInfo != CityTradeInfo.invalid)
-				{
-					ct = city.tradeInfo;
-					ct.resDest.Clear();
-					ct.resSource.Clear();
-				}
-				else
-				{
-					ct = new CityTradeInfo();
-					city.tradeInfo = ct;
-				}
-
-				var cartStr = js.GetAsString("24").Split(@" / ", StringSplitOptions.RemoveEmptyEntries);
-				if (cartStr.Length == 2)
-				{
-					ushort.TryParse(cartStr[0], out city.cartsHome);
-					ushort.TryParse(cartStr[1], out city.carts);
-				}
-				var shipStr = js.GetAsString("25").Split(@" / ", StringSplitOptions.RemoveEmptyEntries);
-				if (shipStr.Length == 2)
-				{
-					ushort.TryParse(shipStr[0], out city.shipsHome);
-					ushort.TryParse(shipStr[1], out city.ships);
-				}
-				city.wood = js.GetAsInt("6");
-				city.stone = js.GetAsInt("7");
-				city.iron = js.GetAsInt("8");
-				city.food = js.GetAsInt("9");
-				
-
-			}
-			
-			// second pass, bind cities
-			foreach (var city in data.RootElement[0].EnumerateArray())
-			{
-				var cid = city.GetAsInt("28");
-
-				var ct = City.GetOrAdd(cid).tradeInfo;
-				if (city.TryGetProperty("22", out var sendTo))
-				{
-					foreach (var to in sendTo.EnumerateObject())
+					var cid = js.GetAsInt("28");
+					var city = City.GetOrAddCity(cid);
+					CityTradeInfo ct;
+					if (city.tradeInfo != CityTradeInfo.invalid)
 					{
-						var toCid = int.Parse(to.Name);
-						var cTo = City.GetOrAddCity(toCid);
-						cTo.tradeInfo.resSource.AddIfAbsent(cid);
-
-						ct.resDest.AddIfAbsent(toCid);
-
+						ct = city.tradeInfo;
+						ct.resDest.Clear();
+						ct.resSource.Clear();
 					}
-				}
-				if (city.TryGetProperty("23", out var sendFrom))
-				{
-					foreach (var to in sendFrom.EnumerateObject())
+					else
 					{
-						var toCid = int.Parse(to.Name);
-						var cTo = City.GetOrAddCity(toCid);
-						cTo.tradeInfo.resDest.Add(cid);
-						ct.resSource.Add(toCid);
-
+						ct = new CityTradeInfo();
+						city.tradeInfo = ct;
 					}
+
+					var cartStr = js.GetAsString("24").Split(@" / ", StringSplitOptions.RemoveEmptyEntries);
+					if (cartStr.Length == 2)
+					{
+						ushort.TryParse(cartStr[0], out city.cartsHome);
+						ushort.TryParse(cartStr[1], out city.carts);
+					}
+					var shipStr = js.GetAsString("25").Split(@" / ", StringSplitOptions.RemoveEmptyEntries);
+					if (shipStr.Length == 2)
+					{
+						ushort.TryParse(shipStr[0], out city.shipsHome);
+						ushort.TryParse(shipStr[1], out city.ships);
+					}
+					city.wood = js.GetAsInt("6");
+					city.stone = js.GetAsInt("7");
+					city.iron = js.GetAsInt("8");
+					city.food = js.GetAsInt("9");
+
+
 				}
 
-			}
+				// second pass, bind cities
+				foreach (var city in data.RootElement[0].EnumerateArray())
+				{
+					var cid = city.GetAsInt("28");
 
-//			await GetCity.Post(target.cid, (jse, c) => { });
+					var ct = City.GetOrAdd(cid).tradeInfo;
+					if (city.TryGetProperty("22", out var sendTo))
+					{
+						foreach (var to in sendTo.EnumerateObject())
+						{
+							var toCid = int.Parse(to.Name);
+							var cTo = City.GetOrAddCity(toCid);
+							cTo.tradeInfo.resSource.AddIfAbsent(cid);
+
+							ct.resDest.AddIfAbsent(toCid);
+
+						}
+					}
+					if (city.TryGetProperty("23", out var sendFrom))
+					{
+						foreach (var to in sendFrom.EnumerateObject())
+						{
+							var toCid = int.Parse(to.Name);
+							var cTo = City.GetOrAddCity(toCid);
+							cTo.tradeInfo.resDest.Add(cid);
+							ct.resSource.Add(toCid);
+
+						}
+					}
+
+				}
+
+				//			await GetCity.Post(target.cid, (jse, c) => { });
 
 
-			//for(var fromTo=0;fromTo<2;++fromTo)
-			//{
-			//	for(int rs =0;rs<4;++rs)
-			//	{
-			//		var cn = city.GetAsInt( (14+fromTo*4+rs).ToString() );
+				//for(var fromTo=0;fromTo<2;++fromTo)
+				//{
+				//	for(int rs =0;rs<4;++rs)
+				//	{
+				//		var cn = city.GetAsInt( (14+fromTo*4+rs).ToString() );
 
 
-			//	}
+				//	}
+				//}
+
+
 			//}
-
-
-
+			
 		}
 
 		public async  Task DoRefresh(bool resetValues=false)
 		{
-			await UpdateTradeStuff();
-			if (resetValues)
-				supporters.Clear();
-
-			//supportGrid.ItemsSource = null;
-			if (target != null && target.isCityOrCastle)
+			if (updating && resetValues==false)
+				return;
+			
+			try
 			{
-				var ready = true;
-				do
-				{
-					await Task.Delay(1000);
-					ready = true;
-					foreach (var city in City.gridCitySource)
-					{
-						if(city.tradeInfo == CityTradeInfo.invalid)
-						{
-							ready = false;
-							break;
+				Trace($"Update {DateTime.Now}");
+				await UpdateTradeStuff();
 
+
+				if (resetValues)
+					supporters.Clear();
+
+				//supportGrid.ItemsSource = null;
+				if (target != null && target.isCityOrCastle)
+				{
+					var ready = true;
+					do
+					{
+						await Task.Delay(1000);
+						ready = true;
+						using var _ = await City.cityGridLock.LockAsync();
+						foreach (var city in City.gridCitySource)
+						{
+							if (city.tradeInfo == CityTradeInfo.invalid)
+							{
+								ready = false;
+								break;
+
+							}
+						}
+					} while (ready == false);
+
+
+					var r = des;// des.Sub(target.res.Add(target.tradeInfo.inc));
+					r.ClampToPositive();
+					List<ResSource> s = new List<ResSource>();
+					//                supportGrid.ItemsSource = null;
+					using (var _ = await City.cityGridLock.LockAsync())
+					{
+
+						foreach (var city in City.gridCitySource)
+						{
+							if (city == target)
+								continue;
+							TimeSpan dt;
+							var ti = city.tradeInfo;
+							if (viaWater)
+							{
+								if (!city.ComputeShipTravelTime(target.cid, out dt) || dt.TotalHours > filterTime || city.shipsHome < filterShipsHome + reserveShips || city.res.Sub(reserve).sum < filterResHome)
+									continue;
+							}
+							else
+							{
+								if (!city.ComputeCartTravelTime(target.cid, out dt) || dt.TotalHours > filterTime || city.cartsHome < filterCartsHome + reserveCarts || city.res.Sub(reserve).sum < filterResHome)
+									continue;
+
+							}
+
+
+							// re-use if possible
+							var supporter = supporters.Find((a) => a.city == city);
+							if (supporter == null)
+							{
+								supporter = new ResSource() { city = city };
+							}
+							if (city.tradeInfo == null)
+							{
+								Assert(false);
+								continue;
+							}
+							supporter.info = city.tradeInfo;
+							s.Add(supporter);
+
+
+							supporter.travel = dt;
 						}
 					}
-				} while (ready == false);
-
-
-				var r = des;// des.Sub(target.res.Add(target.tradeInfo.inc));
-				r.ClampToPositive();
-				List<ResSource> s = new List<ResSource>();
-				//                supportGrid.ItemsSource = null;
-				foreach (var city in City.gridCitySource)
-				{
-					if (city == target)
-						continue;
-					TimeSpan dt;
-					var ti = city.tradeInfo;
-					if (viaWater)
+					s = s.OrderBy(a => a.travel).ToList();
+					foreach (var sup in s)
 					{
-						if (!city.ComputeShipTravelTime(target.cid, out dt) || dt.TotalHours > filterTime || city.shipsHome < filterShipsHome+reserveShips || city.res.Sub(reserve).sum < filterResHome)
-							continue;
-					}
-					else
-					{
-						if (!city.ComputeCartTravelTime(target.cid, out dt) || dt.TotalHours > filterTime || city.cartsHome < filterCartsHome+reserveCarts || city.res.Sub(reserve).sum < filterResHome)
-							continue;
-
-					}
-
-
-					// re-use if possible
-					var supporter = supporters.Find((a) => a.city == city);
-					if (supporter == null)
-					{
-						supporter = new ResSource() { city = city };
-					}
-					if(city.tradeInfo==null)
-					{
-						Assert(false);
-						continue;
-					}
-					supporter.info = city.tradeInfo;
-					s.Add(supporter);
-
-
-					supporter.travel = dt;
-				}
-				s = s.OrderBy(a => a.travel).ToList();
-				foreach (var sup in s)
-				{
-					if (!sup.initialized)
-					{
-						var info = sup.info;
-						var city = sup.city;
-						var shipping = viaWater ? (city.shipsHome-reserveShips).Max0() * 10000 : (city.cartsHome-reserveCarts).Max0() * 1000;
-						var send = sup.city.res.Sub(reserve).Max(0).Min(r);
-						var sum = send.sum;
-
-						if (shipping < sum)
+						if (!sup.initialized)
 						{
-							var ratio = shipping / (double)sum;
+							var info = sup.info;
+							var city = sup.city;
+							var shipping = viaWater ? (city.shipsHome - reserveShips).Max0() * 10000 : (city.cartsHome - reserveCarts).Max0() * 1000;
+							var send = sup.city.res.Sub(reserve).Max(0).Min(r);
+							var sum = send.sum;
 
-							send = send.Scale(ratio);
+							if (shipping < sum)
+							{
+								var ratio = shipping / (double)sum;
+
+								send = send.Scale(ratio);
+							}
+							sup.res = send;
+							sup.initialized = true;
 						}
-						sup.res = send;
-						sup.initialized = true;
+						r = r.Sub(sup.res);
+						App.DispatchOnUIThreadSneakyLow(() =>
+						{
+							supporters.OnPropertyChanged(sup);
+							sup.OnPropertyChanged(string.Empty);
+						});
+
 					}
-					r = r.Sub(sup.res);
-					App.DispatchOnUIThreadSneakyLow(() =>
-					{
-						supporters.OnPropertyChanged(sup);
-						sup.OnPropertyChanged(string.Empty);
-					});
+					supporters.Set(s);
 
+					//	supportGrid.ItemsSource = supporters;
+
+					RefreshSupportByRes();
 				}
-				supporters.Set(s);
-				
-			//	supportGrid.ItemsSource = supporters;
-
-				RefreshSupportByRes();
+				App.DispatchOnUIThreadSneakyLow(() =>
+				{
+					OnPropertyChanged(nameof(targetIcon));
+					OnPropertyChanged(nameof(targetName));
+				});
 			}
-			App.DispatchOnUIThreadSneakyLow(() =>
+			finally
 			{
-				OnPropertyChanged(nameof(targetIcon));
-				OnPropertyChanged(nameof(targetName));
-			});
+				updating = false;
+			}
 		}
 
 		public async override void VisibilityChanged(bool visible)
@@ -640,6 +662,18 @@ namespace COTG.Views
 		private void MaxClick(object sender, RoutedEventArgs e)
 		{
 			MaxClicked(selected);
+		}
+
+		private void ResSetMax(object sender, TappedRoutedEventArgs e)
+		{
+			Trace(e.OriginalSource.ToString());
+
+		}
+
+		private void ResSetZero(object sender, RightTappedRoutedEventArgs e)
+		{
+			Trace(sender.ToString());
+
 		}
 	}
 

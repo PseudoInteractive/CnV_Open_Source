@@ -29,42 +29,59 @@ namespace COTG.Game
         }
         internal static async void ShowReturnDialog(int cid,UIElement uie)
         {
-            
+
+			var shift = App.IsKeyPressedShift();
 
             await Services.ReinforcementsOverview.instance.Post();
-            var spot = Spot.GetOrAdd(cid);
-            var panel = new StackPanel();
-			pid = spot.pid;
+            var _spot = Spot.GetOrAdd(cid);
+			var scroll = new ScrollViewer();
+			
+			var panel = new StackPanel();
+			scroll.Content = panel;
+			pid = _spot.pid;
             
-            var msg = new ContentDialog()
-            {
-                Title="Return Reinforcements",
-                Content=panel,
-                IsPrimaryButtonEnabled=true,
-                PrimaryButtonText="Go",
-                CloseButtonText="Cancel"
-
-            };
+            
 			ElementSoundPlayer.Play(ElementSoundKind.Show);
-			msg.CopyXamlRoomFrom(uie);
 
+			var spots = !shift ?  new[] { _spot } : City.myCities;
+			
             var orders = new List<long>();
-            panel.Children.Add(new TextBlock() { Text="Reinforcements Here:" });
-            foreach(var reIn in spot.reinforcementsIn)
-            {
-                var other = Spot.GetOrAdd(reIn.sourceCid);
-                panel.Children.Add( new CheckBox() { Content = $"{other.xy} {other.nameAndRemarks}{reIn.troops.Format(":",' ',',')}",IsChecked=false } );
-                orders.Add(reIn.order);
-            }
+            panel.Children.Add(new TextBlock() { Text= shift? "All Reinforcements" : "Reinforcements Here:" });
+			foreach (var s in spots)
+			{
+				foreach (var reIn in s.reinforcementsIn)
+				{
+					var other = Spot.GetOrAdd(reIn.sourceCid);
+					panel.Children.Add(new CheckBox() { Content = $"{other.xy} {other.nameAndRemarks}{reIn.troops.Format(":", ' ', ',')}", IsChecked = false });
+					orders.Add(reIn.order);
+				}
+			}
             panel.Children.Add(new TextBlock() { Text="\nDeployed Reinforcements:" });
-            foreach (var reIn in spot.reinforcementsOut)
-            {
-                var other = Spot.GetOrAdd(reIn.targetCid);
-                panel.Children.Add(new CheckBox() { Content = $"{other.xy} {other.nameAndRemarks}{reIn.troops.Format(":", ' ', ',')}", IsChecked=false });
-                orders.Add(reIn.order);
-            }
+			foreach (var s in spots)
+			{
 
-            var result = await msg.ShowAsync2();
+				foreach (var reIn in s.reinforcementsOut)
+				{
+					var other = Spot.GetOrAdd(reIn.targetCid);
+					panel.Children.Add(new CheckBox() { Content = $"{other.xy} {other.nameAndRemarks}{reIn.troops.Format(":", ' ', ',')}", IsChecked = false });
+					orders.Add(reIn.order);
+				}
+			}
+			scroll.VerticalScrollMode = ScrollMode.Enabled;
+			scroll.HorizontalScrollMode = ScrollMode.Enabled;
+			scroll.ZoomMode = ZoomMode.Enabled;
+			scroll.IsTabStop = true;
+			var msg = new ContentDialog()
+			{
+				Title = "Return Reinforcements",
+				Content = scroll,
+				IsPrimaryButtonEnabled = true,
+				PrimaryButtonText = "Go",
+				CloseButtonText = "Cancel"
+
+			};
+			msg.CopyXamlRoomFrom(uie);
+			var result = await msg.ShowAsync2();
             if (result == ContentDialogResult.Primary)
             {
                 int counter = 0;

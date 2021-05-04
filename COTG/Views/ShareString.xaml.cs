@@ -33,6 +33,34 @@ namespace COTG.Views
 			this.InitializeComponent();
 
 		}
+		internal static ShareString Touch()
+		{
+			if (instance == null)
+			{
+					try
+					{
+						new ShareString();
+					}
+					catch (Exception ex)
+					{
+						LogEx(ex);
+					}
+				Task.Run(async () =>
+			   {
+				   AddLayouts();
+				   var shares = await Tables.ReadShares(Player.myName);
+				   foreach (var s in shares)
+				   {
+					   new ShareStringItem(s.s);
+				   }
+			   });
+
+			}
+			return instance;
+		}
+
+
+
 		//	public static ShareStringItem tempItem = new ShareStringItem("temp~na") { notes = "nothing selected" };
 		//[ShareString.1.3]:
 		//[/ShareString]
@@ -89,76 +117,82 @@ namespace COTG.Views
 
 		static public string GetTags(string initial)
 		{
-			foreach (var tag in TagHelper.tags)
+			foreach (var tag in TagHelper.tagsAndAliases)
 			{
+				if (tag.isAlias)
+					continue;
+
 				var check = instance.tagsPanel.Children.First((ch) => ((ch is ToggleButton t) && (t.Content as string == tag.s))) as ToggleButton;
 				initial = TagHelper.SetTag(initial, tag.s, check.IsChecked);
 
 			}
 			return initial;
 		}
-		static public async Task Show()
+		static public async Task Show(int cid)
 		{
-			await App.DispatchOnUIThreadExclusive(City.build,async () =>
+			await App.DispatchOnUIThreadExclusive(cid,async () =>
 
 
 
-				 await ShowNoLock()
+				 await ShowNoLock(cid)
 			
 			);
 		}
-		static public async Task ShowNoLock()
+		static public async Task ShowNoLock(int cid)
 		{
 
+			Assert(cid == City.build);
+
+			var sel = Spot.GetSelectedForContextMenu(cid,false);
+			
+
+			bool setResources = true;
+			bool setLayout = false;
+			var bestHub = CitySettings.FindBestHub(cid);
 			var rv = await App.DispatchOnUIThreadTask(async () =>
 			{
 			try
 			{
 				Assert(App.uiSema.CurrentCount == 0);
 
-				if (instance == null)
-				{
-					try
-					{
-						new ShareString();
-					}
-					catch (Exception ex)
-					{
-						LogEx(ex);
-					}
-					AddLayouts();
-					var shares = await Tables.ReadShares(Player.myName);
-					foreach (var s in shares)
-					{
-						new ShareStringItem(s.s);
-					}
-				}
-				instance.onComplete.IsOn = CityBuild.isPlanner;
+				Touch();
+	//			instance.onComplete.IsOn = CityBuild.isPlanner;
 				instance.shareStrings.SelectedItem = null;
-				var city = City.GetBuild();
-				//	instance.PlannerTeachingTip.Show();
-				// todo: copy text 
-				if (CityBuild.isPlanner)
-					city.BuildingsCacheToShareString();
+				
+				
+					var hubName = Spot.GetOrAdd(bestHub).nameAndRemarks;
+					instance.bestHub.Text = hubName;
+					
+
+					//	instance.PlannerTeachingTip.Show();
+					// todo: copy text 
+					var city = City.GetOrAdd(cid);
+
+					if (CityBuild.isPlanner)
+						city.BuildingsCacheToShareString();
 
 					var res = await CitySettings.GetTradeResourcesSettings(city.cid);
 
-					instance.reqWood.Value = res.req.wood > 0 ? res.req.wood : SettingsPage.reqWood;
-					instance.reqStone.Value = res.req.stone > 0 ? res.req.stone : SettingsPage.reqStone;
-					instance.reqIron.Value = res.req.iron > 0 ? res.req.iron : SettingsPage.reqIron;
-					instance.reqFood.Value = res.req.food > 0 ? res.req.food : SettingsPage.reqFood;
+					SettingsPage.reqWood = res.req.wood > 0 ? res.req.wood : SettingsPage.reqWood;
+					SettingsPage.reqStone = res.req.stone > 0 ? res.req.stone : SettingsPage.reqStone;
+					SettingsPage.reqIron = res.req.iron > 0 ? res.req.iron : SettingsPage.reqIron;
+					SettingsPage.reqFood = res.req.food > 0 ? res.req.food : SettingsPage.reqFood;
 
-					instance.maxWood.Value = res.max.wood > 0 ? res.max.wood : SettingsPage.maxWood;
-					instance.maxStone.Value = res.max.stone > 0 ? res.max.stone : SettingsPage.maxStone;
-					instance.maxIron.Value = res.max.iron > 0 ? res.max.iron : SettingsPage.maxIron;
-					instance.maxFood.Value = res.max.food > 0 ? res.max.food : SettingsPage.maxFood;
+					SettingsPage.maxWood = res.max.wood > 0 ? res.max.wood : SettingsPage.maxWood;
+					SettingsPage.maxStone = res.max.stone > 0 ? res.max.stone : SettingsPage.maxStone;
+					SettingsPage.maxIron = res.max.iron > 0 ? res.max.iron : SettingsPage.maxIron;
+					SettingsPage.maxFood = res.max.food > 0 ? res.max.food : SettingsPage.maxFood;
 
 
 					SetFromSS();
 					instance.Title = city.nameAndRemarks;
 					SetTags(city.remarks);
+					instance.Bindings.Update();
 
-					return await instance.ShowAsync2();
+					var result = await instance.ShowAsync2();
+					setResources = instance.expandResources.IsExpanded;
+					setLayout = instance.expandShareString.IsExpanded;
+					return result;
 				}
 				catch (Exception ex)
 				{
@@ -180,37 +214,57 @@ namespace COTG.Views
 					//	//		Post.Send("includes/sNte.php", $"a={HttpUtility.UrlEncode(tags, Encoding.UTF8)}&b=&cid={cid}");
 					//	await Post.Send("includes/sNte.php", $"a={HttpUtility.UrlEncode(city.remarks, Encoding.UTF8)}&b={HttpUtility.UrlEncode(city.notes, Encoding.UTF8)}&cid={city.cid}", World.CidToPlayerOrMe(city.cid));
 					//}
-
-					if (SettingsPage.shareStringApplyTags)
+					if (sel.Count > 1)
 					{
-						await CityRename.ApplyTags(City.build, instance.tagsPanel);
-						await CitySettings.SetCitySettings(City.build, setRecruit: true);
+						var x = await App.DoYesNoBox("Set Selected Cities?", $"{sel.Count} cities selected",yes:"All", no:"Just this" );
+						if (x == -1)
+							return;
+						if (x == 0)
+						{
+							sel.Clear();
+							sel.Add(cid);
+						}
 					}
-					var city = City.GetBuild();
-					var req = new Resources((int)instance.reqWood.Value, (int)instance.reqStone.Value, (int)instance.reqIron.Value, (int)instance.reqFood.Value);
-					var max = new Resources((int)instance.maxWood.Value, (int)instance.maxStone.Value, (int)instance.maxIron.Value, (int)instance.maxFood.Value);
-					SettingsPage.reqWood = req.wood;
-					SettingsPage.reqStone = req.stone;
-					SettingsPage.reqIron = req.iron;
-					SettingsPage.reqFood = req.food;
-
-					SettingsPage.maxWood = max.wood;
-					SettingsPage.maxStone = max.stone;
-					SettingsPage.maxIron = max.iron;
-					SettingsPage.maxFood = max.food;
-
-					await CitySettings.SetTradeResourcesSettings(city.cid,req,max);
-		
-					
-					city.SetShareString(instance.GetShareStringWithJson());
-					await city.SaveLayout();
-					if (SettingsPage.autoRearrangeShareStrings)
+					foreach (var ci in sel)
 					{
-						CityBuild._isPlanner = true;
-						PlannerTab.SmartRearrange();
+						var city = City.GetOrAdd(ci);
+						if ( SettingsPage.shareStringApplyTags)
+						{
+							await CityRename.ApplyTags(ci, instance.tagsPanel);
+							//await CitySettings.SetCitySettings(City.build, setRecruit: true);
+						}
+
+						//var req = new Resources((int)instance.reqWood.Value, (int)instance.reqStone.Value, (int)instance.reqIron.Value, (int)instance.reqFood.Value);
+						//var max = new Resources((int)instance.maxWood.Value, (int)instance.maxStone.Value, (int)instance.maxIron.Value, (int)instance.maxFood.Value);
+						//SettingsPage.reqWood = req.wood;
+						//SettingsPage.reqStone = req.stone;
+						//SettingsPage.reqIron = req.iron;
+						//SettingsPage.reqFood = req.food;
+
+						//SettingsPage.maxWood = max.wood;
+						//SettingsPage.maxStone = max.stone;
+						//SettingsPage.maxIron = max.iron;
+						//SettingsPage.maxFood = max.food;
+
+						//			await CitySettings.SetTradeResourcesSettings(city.cid,req,max);
+
+						await CitySettings.SetCitySettings(ci, setResources&&SettingsPage.setHub ? bestHub : null, (setResources&&SettingsPage.setHub ? CitySettings.FilterTargetHub(ci, bestHub) : null),
+							SettingsPage.shareStringApplyTags && SettingsPage.setRecruit, setAutoBuild: true, setResources: setResources, filterSend: true,
+											autoWalls: (SettingsPage.autoWallLevel == 10) ? true : null,
+											autoTowers: (SettingsPage.autoTowerLevel == 10) ? true : null
+											);
+
+						if (setLayout)
+						{
+							city.SetShareString(instance.GetShareStringWithJson());
+							await city.SaveLayout();
+						}
 					}
-					CityBuild._isPlanner = instance.onComplete.IsOn;
-					city.BuildStageDirty();
+					if (SettingsPage.autoRearrangeShareStrings && setLayout && City.Get(cid).isLayoutValid )
+					{
+						await PlannerTab.SmartRearrange(true);
+					}
+					City.Get(cid).BuildStageDirty();
 				}
 				else
 				{
@@ -225,9 +279,9 @@ namespace COTG.Views
 		}
 			
 	
-		int ? GetSetting(NumberBox v)
+		int ? GetSetting(int v)
 		{
-			var rv = (int)v.Value;
+			var rv = v;
 			if (rv > 0)
 				return rv;
 			return null; ;
@@ -237,14 +291,14 @@ namespace COTG.Views
 			var meta = new ShareStringMeta() { notes = GetTags(string.Empty), desc = description.Text, path = path.Text };
 			if (SettingsPage.embedTradeInShareStrings)
 			{
-				meta.reqWood = GetSetting(reqWood);
-				meta.reqStone = GetSetting(reqStone);
-				meta.reqIron = GetSetting(reqIron);
-				meta.reqFood = GetSetting(reqFood);
-				meta.maxWood = GetSetting(maxWood);
-				meta.maxStone = GetSetting(maxStone);
-				meta.maxIron = GetSetting(maxIron);
-				meta.maxFood = GetSetting(maxFood);
+				meta.reqWood = GetSetting(SettingsPage.reqWood);
+				meta.reqStone = GetSetting(SettingsPage.reqStone);
+				meta.reqIron = GetSetting(SettingsPage.reqIron);
+				meta.reqFood = GetSetting(SettingsPage.reqFood);
+				meta.maxWood = GetSetting(SettingsPage.maxWood);
+				meta.maxStone = GetSetting(SettingsPage.maxStone);
+				meta.maxIron = GetSetting(SettingsPage.maxIron);
+				meta.maxFood = GetSetting(SettingsPage.maxFood);
 			}
 			return meta;
 		}
@@ -278,8 +332,11 @@ namespace COTG.Views
 		}
 		public static void SetTags(string tags)
 		{
-			foreach (var tag in TagHelper.tags)
+			foreach (var tag in TagHelper.tagsAndAliases)
 			{
+				if (tag.isAlias)
+					continue;
+
 				var check = instance.tagsPanel.Children.FirstOrDefault((a) => a is ToggleButton b && b.Content as string == tag.s) as ToggleButton;
 				if (check == null)
 				{
@@ -291,13 +348,13 @@ namespace COTG.Views
 			}
 
 		}
-		static void SetValue(NumberBox v, int ? source)
+		static void SetValue(ref int v, int ? source)
 		{
 			if (source.HasValue)
-				v.Value = source.Value;
+				v = source.Value;
 		}
 			
-		public static void SetFromSS(string shareString)
+		public static void SetFromSS(string shareString, bool setResAndTags)
 		{
 			var s = SplitShareString(shareString);
 			var meta = JsonSerializer.Deserialize<ShareStringMeta>(s.json, Json.jsonSerializerOptions);
@@ -309,19 +366,22 @@ namespace COTG.Views
 			instance.title.Text = path.title;
 			instance.path.Text = CombinePath(path);
 
-			SetTags(tags);
-			SetValue(instance.reqWood, meta.reqWood);
-			SetValue(instance.reqStone, meta.reqStone);
-			SetValue(instance.reqIron, meta.reqIron);
-			SetValue(instance.reqFood, meta.reqFood);
+			if (setResAndTags)
+			{
+				SetTags(tags);
+				SetValue(ref SettingsPage.reqWood, meta.reqWood);
+				SetValue(ref SettingsPage.reqStone, meta.reqStone);
+				SetValue(ref SettingsPage.reqIron, meta.reqIron);
+				SetValue(ref SettingsPage.reqFood, meta.reqFood);
 
-			SetValue(instance.maxWood, meta.maxWood);
-			SetValue(instance.maxStone, meta.maxStone);
-			SetValue(instance.maxIron, meta.maxIron);
-			SetValue(instance.maxFood, meta.maxFood);
-
+				SetValue(ref SettingsPage.maxWood, meta.maxWood);
+				SetValue(ref SettingsPage.maxStone, meta.maxStone);
+				SetValue(ref SettingsPage.maxIron, meta.maxIron);
+				SetValue(ref SettingsPage.maxFood, meta.maxFood);
+			}
+			
 		}
-		public static void SetFromSS() => SetFromSS(City.GetBuild().shareString);
+		public static void SetFromSS() => SetFromSS(City.GetBuild().shareString,false);
 		public static (string ss, string json) SplitShareString(string shareString)
 		{
 				if (shareString == null)
@@ -363,7 +423,7 @@ namespace COTG.Views
 				{
 					if (i.shareStringWithJson != null)
 					{
-						SetFromSS(i.shareStringWithJson);
+						SetFromSS(i.shareStringWithJson,true);
 					}
 					else
 					{
@@ -377,10 +437,10 @@ namespace COTG.Views
 			}
 		}
 
-		private void TogglePlannerClick(Microsoft.UI.Xaml.Controls.TeachingTip sender, object args)
-		{
-			onComplete.IsOn = true;
-		}
+		//private void TogglePlannerClick(Microsoft.UI.Xaml.Controls.TeachingTip sender, object args)
+		//{
+		//	//onComplete.IsOn = true;
+		//}
 
 		private void ClearClick(object sender, RoutedEventArgs e)
 		{
@@ -421,7 +481,32 @@ namespace COTG.Views
 			instance.path.Text = CombinePath(ss);
 
 		}
-		
+
+		public TradeSettings _TradeSettingsSel;
+		public TradeSettings tradeSettingsSel
+		{
+			get => _TradeSettingsSel;
+			set
+			{
+				if (_TradeSettingsSel != value)
+				{
+					_TradeSettingsSel = value;
+					SettingsPage.reqWood = value.requestWood;
+					SettingsPage.reqStone = value.requestStone;
+					SettingsPage.reqIron = value.requestIron;
+					SettingsPage.reqFood = value.requestFood; ;
+					SettingsPage.sendWood = value.destWood != 0;
+					SettingsPage.sendStone = value.destStone != 0;
+					SettingsPage.sendIron = value.destIron != 0;
+					SettingsPage.sendFood = value.destFood != 0;
+					SettingsPage.maxWood = value.sendWood;
+					SettingsPage.maxStone = value.sendStone;
+					SettingsPage.maxIron = value.sendIron;
+					SettingsPage.maxFood = value.sendFood;
+					instance.Bindings.Update();
+				}
+			}
+		}
 	}
 	
 

@@ -21,8 +21,8 @@ namespace COTG
 	public static partial class AUtil
 	{
 		public const string emptyJson = "{}";
-		public const string defaultTimeFormat = "hh':'mm':'ss";
-		public const string preciseTimeFormat = "hh':'mm':'ss.fff";
+		public const string defaultTimeFormat = "H':'mm':'ss";
+		public const string preciseTimeFormat = "H':'mm':'ss.fff";
 		public const string preciseDateTimeFormat = "MM/dd H':'mm':'ss.fff";
 
 		public const string defaultDateFormat = "MM/dd H':'mm':'ss";
@@ -66,7 +66,11 @@ namespace COTG
 
 		public static DateTimeOffset ToServerTime(this DateTimeOffset t) => t.ToUniversalTime() + JSClient.gameTOffset;
 		public static DateTimeOffset FromServerTime(this DateTimeOffset t) => t - JSClient.gameTOffset;
+		public static string FormatWithSign(this int d)
+		{
+			return d > 0 ? "+" + d.ToString("N0") : d.ToString("N0");
 
+		}
 		public static unsafe void UnsafeCopy<T>(in T[] source, in T[] target) where T : unmanaged
 		{
 			COTG.Debug.Assert(source.Length == target.Length);

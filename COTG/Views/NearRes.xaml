@@ -12,6 +12,9 @@
       xmlns:local="using:COTG.Views"
     mc:Ignorable="d">
 	<Grid>
+		<Grid.Resources>
+			<ResourceDictionary Source="ms-appx:///Microsoft.UI.Xaml/DensityStyles/Compact.xaml" />
+		</Grid.Resources>
 		<Grid.RowDefinitions>
 			<RowDefinition Height="auto" />
 			<RowDefinition Height="3*" />
@@ -134,7 +137,6 @@
 				</tk:WrapPanel>
 			</Border>
 		</StackPanel>
-
 		<tk:DataGrid x:Name="supportGrid" x:FieldModifier="public"
                         AutoGenerateColumns="False"
                         ItemsSource="{x:Bind local:NearRes.supporters, Mode=OneWay}"
@@ -142,15 +144,19 @@
                      Grid.Row="1"
                      SelectionMode="Extended"
                      RowDetailsVisibilityMode="Collapsed"
-                        
+                       
                      CanUserReorderColumns="True"
                     CanUserSortColumns="True"
                      Sorting="supportGrid_Sorting"
                      GridLinesVisibility="All"
                      AlternatingRowBackground="#FF301030"
                      SelectionChanged="supportGrid_SelectionChanged"
-					  
+			
+					 ScrollViewer.ZoomMode="Enabled"
+					 
                      >
+			
+
 			<tk:DataGrid.CellStyle >
 				<Style TargetType="tk:DataGridCell">
 					<Setter Property="FontFamily" Value="Tw Cen MT Condensed"/>
@@ -212,15 +218,44 @@
                                        CellStyle="{StaticResource CellRight}" IsReadOnly="True"  Tag="resSend"
                                         />
 
-				<tk:DataGridTextColumn Header="Wood" Binding="{Binding wood,Converter={StaticResource IntConverter}, Mode=TwoWay}"
-                                       CellStyle="{StaticResource CellRight}"   />
-				<tk:DataGridTextColumn Header="Stone" Binding="{Binding stone,Converter={StaticResource IntConverter}, Mode=TwoWay}"
-                                       CellStyle="{StaticResource CellRight}"   />
-				<tk:DataGridTextColumn Header="Iron" Binding="{Binding iron,Converter={StaticResource IntConverter}, Mode=TwoWay}"
-                                       CellStyle="{StaticResource CellRight}"   />
+				<tk:DataGridTemplateColumn Header="Wood" CanUserSort="False" IsReadOnly="True"> 
+					<tk:DataGridTemplateColumn.CellTemplate>
+						<DataTemplate x:DataType="game:ResSource">
+							<TextBlock Text="{x:Bind ResString(0), Mode=OneWay}" Tapped="ResSetMax" RightTapped="ResSetZero" 
+                                             Style="{StaticResource TextBlockSmall}" VerticalAlignment="Center"
+                                             />
+						</DataTemplate>
+					</tk:DataGridTemplateColumn.CellTemplate>
+				</tk:DataGridTemplateColumn>
 
-				<tk:DataGridTextColumn Header="Food" Binding="{Binding food,Converter={StaticResource IntConverter}, Mode=TwoWay}"
-                                       CellStyle="{StaticResource CellRight}"   />
+
+				<tk:DataGridTemplateColumn Header="Stone" CanUserSort="False" IsReadOnly="True">
+					<tk:DataGridTemplateColumn.CellTemplate>
+						<DataTemplate x:DataType="game:ResSource">
+							<TextBlock Text="{x:Bind ResString(1), Mode=OneWay}" Tapped="ResSetMax" RightTapped="ResSetZero" 
+                                             Style="{StaticResource TextBlockSmall}" VerticalAlignment="Center"
+                                             />
+						</DataTemplate>
+					</tk:DataGridTemplateColumn.CellTemplate>
+				</tk:DataGridTemplateColumn>
+				<tk:DataGridTemplateColumn Header="Iron" CanUserSort="False" IsReadOnly="True">
+					<tk:DataGridTemplateColumn.CellTemplate>
+						<DataTemplate x:DataType="game:ResSource">
+							<TextBlock Text="{x:Bind ResString(2), Mode=OneWay}" Tapped="ResSetMax" RightTapped="ResSetZero" 
+                                             Style="{StaticResource TextBlockSmall}" VerticalAlignment="Center"
+                                             />
+						</DataTemplate>
+					</tk:DataGridTemplateColumn.CellTemplate>
+				</tk:DataGridTemplateColumn>
+				<tk:DataGridTemplateColumn Header="Food" CanUserSort="False" IsReadOnly="True">
+					<tk:DataGridTemplateColumn.CellTemplate>
+						<DataTemplate x:DataType="game:ResSource">
+							<TextBlock Text="{x:Bind ResString(3), Mode=OneWay}" Tapped="ResSetMax" RightTapped="ResSetZero" 
+                                             Style="{StaticResource TextBlockSmall}" VerticalAlignment="Center"
+                                             />
+						</DataTemplate>
+					</tk:DataGridTemplateColumn.CellTemplate>
+				</tk:DataGridTemplateColumn>
 
 				<tk:DataGridTextColumn Header="ETA"
                                        CellStyle="{StaticResource CellCenter}"
@@ -233,7 +268,6 @@
 
 		</tk:DataGrid>
 
-	
 
 		<Border Style="{StaticResource BorderReveal}" x:Name="selectedCommands" Visibility="Collapsed" Grid.Row="2">
 			<StackPanel Orientation="Vertical" >

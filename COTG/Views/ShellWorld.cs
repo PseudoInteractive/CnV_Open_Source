@@ -429,7 +429,7 @@ namespace COTG.Views
 		{
 			if (!isHitTestVisible)
 				return;
-
+			
 			//if (JSClient.IsCityView())
 			//{
 			//	e.Handled = false;
@@ -441,7 +441,13 @@ namespace COTG.Views
 			var gestureResult = Gesture.ProcessRelased(pointerPoint);
 			if (gestureResult.action == GestureAction.none)
 				return;
-
+			// why do this trigger gestures?
+			switch (pointerPoint.Properties.PointerUpdateKind)
+			{
+				case Windows.UI.Input.PointerUpdateKind.XButton1Released:
+				case Windows.UI.Input.PointerUpdateKind.XButton2Released:
+					return;
+			}
 			mousePosition = gestureResult.c;
 			mousePositionC = mousePosition.ScreenToCamera();
 			mousePositionW = mousePositionC.InverseProject();

@@ -277,6 +277,33 @@ namespace COTG.JSON
 			}
 			return rv;
 		}
+		public static Task SetFoodWarning(int cid, int warn)
+		{
+			return Post.Send("includes/svFW.php", $"a={warn}&cid={cid}");
+		}
+		public static async void SetFoodWarnings(int cid)
+		{
+			var targets = Spot.GetSelectedForContextMenu(cid, false);
+			var content = new NumberBox();
+			content.Value = SettingsPage.defaultFoodWarning;
+			var dialog = new ContentDialog()
+			{
+				Title = $"Set Food warning for {targets.Count} cities",
+				Content = content,
+				PrimaryButtonText = "Apply",
+				SecondaryButtonText = "Cancel"
+			};
+			if ((await dialog.ShowAsync2()) != ContentDialogResult.Primary)
+				return;
+			
+			SettingsPage.defaultFoodWarning = content.Value.RoundToInt();
+			foreach(var id in targets)
+			{
+				await SetFoodWarning(id, defaultFoodWarning);
+				Note.Show($"Set food warning for {City.GetOrAddCity(id).nameMarkdown} to {defaultFoodWarning} hours");
+			}
+
+		}
 
 		public static async Task UpdateMinisterOptions(int cid, Func<string[],Task<bool>> opts)
         {
@@ -369,85 +396,121 @@ namespace COTG.JSON
             });
         }
 
+		const int countMany = 3333333;
+		const string sCountMany = "333333";
+		const string sZero = "0";
         private static string SetRecruit(string[] split, Spot spot)
-        {
-            var rem = spot.remarks.ToLower();
-            var result = string.Empty;
-			for(int i = 11;i<26;++i)
-				split[i] = "0";
+		{
+			var rem = spot.remarks.ToLower();
+			var result = string.Empty;
 
-			if (rem.Contains("priest"))
-            {
-                split[13] = "343343";
-                result = "\nSet recruit priestess";
-            }
-            if (rem.Contains("rt") || rem.Contains("ranger") || rem.Contains("triari"))
-            {
-                // 12 is triari
-                // 11 is ranger
-                split[11] = "200000";
-                split[12] = "100000";
-                result = "\nSet recruit rt";
-            }
-			if (rem.Contains("vt") )
+			void CheckTag1( string tag, int id, string count = sCountMany)
+			{
+				if (rem.Contains(tag))
+				{
+					result += $"\nSet recruit {tag}";
+					if (split[id] == sZero)
+						split[id] = count;
+				}
+				else
+				{
+					split[id] = sZero;
+				}
+
+			}
+
+			CheckTag1("priest", 13);
+
+			if (rem.Contains("vrt"))
 			{
 				// 12 is triari
 				// 14 is vanq
-				split[12] = "200000";
-				split[14] = "200000";
+				var vrt = SettingsPage.vrtRatio;
+//				if (split[11] == sZero || split[12] == sZero || split[14] == sZero)
+				{
+					var gain = countMany / (vrt.r + vrt.t + vrt.v);
+					split[11] = (vrt.r * gain).RoundToInt().ToString();
+					split[12] = (vrt.t * gain).RoundToInt().ToString();
+					split[14] = (vrt.v * gain).RoundToInt().ToString();
+				}
+				result = "\nSet recruit VRT";
+			}
+			else if (rem.Contains("rt") || rem.Contains("ranger") || rem.Contains("triari"))
+			{
+				// 12 is triari
+				// 11 is ranger
+				var vrt = SettingsPage.vrtRatio;
+				split[14] = sZero;
+	//			if (split[11] == sZero || split[12] == sZero)
+				{
+					var gain = countMany / (vrt.r + vrt.t );
+					split[11] = (vrt.r * gain).RoundToInt().ToString();
+					split[12] = (vrt.t * gain).RoundToInt().ToString();
+				}
+				result = "\nSet recruit rt";
+			}
+			else if (rem.Contains("vt"))
+			{
+				// 12 is triari
+				// 14 is vanq
+				var vrt = SettingsPage.vrtRatio;
+
+				split[11] = sZero;
+		//		if (split[12] == sZero || split[14] == sZero)
+				{
+					var gain = countMany / (vrt.t + vrt.v);
+					split[12] = (vrt.t * gain).RoundToInt().ToString();
+					split[14] = (vrt.v * gain).RoundToInt().ToString();
+				}
 				result = "\nSet recruit VT";
 			}
-			if (rem.Contains("vanq"))
-            {
-                split[14] = "343343";
-               result = "\nSet recruit vanqs";
+			else if (rem.Contains("vanq"))
+			{
+				split[11] = sZero;
+				split[12] = sZero;
+				if (split[14] == sZero)
+					split[14] = sCountMany;
 
-            }
-            if (rem.Contains("arb"))
-            {
-                result = "\nSet recruit arbs";
-                split[17] = "343343";
-            }
-            if (rem.Contains("horse"))
-            {
-                result = "\nSet recruit horses";
-                split[19] = "343343";
-            }
-            if (rem.Contains("sorc"))
-            {
-                result = "\nSet recruit sorcs";
-                split[15] = "343343";
-            }
-            if (rem.Contains("prae"))
-            {
-                result = "\nSet recruit prae";
-                split[18] = "343343";
-            }
-            if (rem.Contains("galley"))
-            {
-                result += "\nSet recruit Gallys";
-                split[23] = "440";
-            }
+				result = "\nSet recruit vanqs";
+
+			}
+			else
+			{
+				split[11] = sZero;
+				split[12] = sZero;
+				split[14] = sZero;
+			}
+
+			CheckTag1("horse", 19);
+			CheckTag1("arb", 17);
+			CheckTag1("sorc", 15);
+			CheckTag1("prae", 18);
+			CheckTag1("galley", 23, (countMany / 600).ToString() );
+			CheckTag1("druid", 20);
+
+
 			if (rem.Contains("scorp"))
 			{
 				result += "\nSet recruit Scorps + Rams";
-				split[22] = "20000";
-				split[21] = "2000";
+				if (split[22] == sZero && split[21] == sZero)
+				{
+					split[22] = (countMany/10).ToString();
+					split[21] = (countMany/100).ToString();
+				}
 			}
-			if (rem.Contains("warship"))
+			else
 			{
-				result += "\nSet recruit Warships";
-				split[25] = "900";
+				split[21] = sZero;
+				split[22] = sZero;
 			}
-			if (rem.Contains("stinger"))
-			{
-				result += "\nSet recruit Stinger";
-				split[24] = "3600";
-			}
+			CheckTag1("warship", 25,"900");
+			CheckTag1("singer", 24, "3600");
 			return result;
-        }
+		}
 
-        public static async void SetTargetHub(int cid, int targetHub)
+		
+
+		public static async void SetTargetHub(int cid, int targetHub)
         {
 			var targets = Spot.GetSelectedForContextMenu(cid, false, targetHub);
 			var result = await App.DispatchOnUIThreadTask(async () =>

@@ -305,8 +305,8 @@ namespace COTG.Views
 			Assert(city.isBuild);
 			if (ShellPage.viewMode != ViewMode.city)
 				JSClient.ChangeView(ViewMode.city);
-			CityBuild._isPlanner = false;
-
+			await CityBuild.SetIsPlanner(false);
+			
 			Assert(App.uiSema.CurrentCount == 0);
 			Assert(App.IsOnUIThread());
 			await GetCity.Post(cid);
@@ -326,11 +326,11 @@ namespace COTG.Views
 			}
 			Assert(city.isBuild);
 
-			if (city.buildStage == BuildStage.noLayout && allowSetLayout )
+			if ( (city.buildStage == BuildStage.noLayout ||(city.layoutBuildingCount==0) ) && allowSetLayout )
 			{
 				//				if (!city.isBuild)
 				//				await JSClient.ChangeCity(city.cid, false);
-				await ShareString.ShowNoLock();
+				await ShareString.ShowNoLock(City.build);
 				bc=city.UpdateBuildStage();
 
 				if (city.buildStage == BuildStage.noLayout)
@@ -359,7 +359,7 @@ namespace COTG.Views
 				//				await JSClient.ChangeCity(city.cid, false); ;
 				//				if(!bc.hasWall)
 				//					await CityBuild.Enqueue(0, 1, bidWall, bspotWall);
-				await CityBuild.SmartBuild(city, city.FindOverlayBuildingOfType(bidCastle),bidCastle,true,false,false);
+				await CityBuild.SmartBuild(city, city.FindOverlayBuildingOfType(bidCastle), bidCastle, true, false, false);
 				//bc.wallLevel = 1;
 				bc.hasCastle = true;
 			}
@@ -369,11 +369,15 @@ namespace COTG.Views
 
 				if (c.bl == 0)
 				{
-					c.bl = 1;
-					await CityBuild.SmartBuild(city,(c.x,c.y), bidSorcTower,true,false,false );
+					if (await CityBuild.SmartBuild(city, (c.x, c.y), bidSorcTower, true, false, false) != -1)
+						c.bl = 1;
+
+
+
 				}
 				// raise to level 10
-				await CityBuild.EnqueueUpgrade( 10, XYToId((c.x, c.y)));
+				if(c.bl != 0) // did it work?
+					await CityBuild.EnqueueUpgrade( 10, XYToId((c.x, c.y)));
 			}
 			Assert(city.isBuild);
 			if (!bc.hasWall && bc.hasCastle)
@@ -505,13 +509,13 @@ namespace COTG.Views
 								case 0: return true;
 							}
 
-							if (bc.storeHouses == 0)
+							if (bc.storeHouses < SettingsPage.intialStorehouses )
 							{
-								var storage = FindPendingOverlayBuildingsOfType(city, bidStorehouse, 1);
-								if (storage.Any())
+								var storage = FindPendingOverlayBuildingsOfType(city, bidStorehouse, SettingsPage.intialStorehouses  - bc.storeHouses );
+								foreach(var s in storage)
 								{
 									message += $"Adding Storehouse";
-									await CityBuild.SmartBuild(city, storage.First(), bidStorehouse, true, false);
+									await CityBuild.SmartBuild(city, s, bidStorehouse, true, false);
 									bc = City.GetBuildingCountsPostQueue(city.autobuildCabinLevel);
 								}
 							}
@@ -539,7 +543,11 @@ namespace COTG.Views
 										{
 											continue;
 										}
-										await CityBuild.SmartBuild(city, i, bid, true, false);
+										if( await CityBuild.SmartBuild(city, i, bid, true, false) == -1)
+										{
+											Note.Show("Something unusual happened");
+											break;
+										}
 										bc = City.GetBuildingCountsPostQueue(city.autobuildCabinLevel);
 									}
 								}
@@ -549,7 +557,7 @@ namespace COTG.Views
 								var bd = FindPendingOverlayBuildingsOfType(city, bid, buildingLimit);  // find them all
 								int milBid = bc.GetMainMilitaryBid();
 
-								bd = bd.OrderByDescending((x) => CountSurroundingBuildingsOfType(x, milBid)).ToList();
+								bd = bd.OrderByDescending((x) => GetBarrackScore(x, milBid)).ToList();
 								if (bd.Any())
 								{
 									message += $"Adding Barracks";
@@ -557,7 +565,11 @@ namespace COTG.Views
 									{
 										if (bc.buildings >= buildingLimit)
 											break;
-										await CityBuild.SmartBuild(city, i, bid, true, false);
+										if (await CityBuild.SmartBuild(city, i, bid, true, false) == -1)
+										{
+											Note.Show("Something unusual happened");
+											break;
+										}
 
 										bc = City.GetBuildingCountsPostQueue(city.autobuildCabinLevel);
 									}
@@ -569,14 +581,17 @@ namespace COTG.Views
 							{
 								// do the rest
 								var todo = FindPendingOverlayBuildings(city);
-								while (todo.Any() && bc.buildings < buildingLimit)
+								foreach(var c in todo)
 								{
-									var id = AMath.random.Next(todo.Count);
-									var c = todo[id];
-									todo.RemoveAt(id);
+									if (bc.buildings >= buildingLimit)
+										break;
 
 									var bid = city.BidFromOverlay(c);
-									await CityBuild.SmartBuild(city, c, bid, true, false);
+									if( await CityBuild.SmartBuild(city, c, bid, true, false) == -1)
+									{
+										Note.Show("Something unusual happened");
+										break;
+									}
 									bc = City.GetBuildingCountsPostQueue(city.autobuildCabinLevel);
 
 								}
@@ -610,11 +625,12 @@ namespace COTG.Views
 						   
 						   var combo = new ComboBox() {Header="Cabins to remove:", ItemsSource= cabinCounts };
 						   combo.SelectedIndex = SettingsPage.cabinsToRemovePerSwap;
-						   var removeOthers = new ToggleSwitch() { Header = "Extra buildings", OnContent = "Remove", OffContent="Leave"  };
-						   removeOthers.IsOn = SettingsPage.demoUnwantedBuildingsWithCabins;
+						   var hasExtra = hasExtraBuildings;
+						   var removeOthers = hasExtra ? new ToggleSwitch() { Header = "Extra buildings", OnContent = "Remove", OffContent = "Leave", IsOn = SettingsPage.demoUnwantedBuildingsWithCabins } : null; 
 
 						   panel.Children.Add( combo );
-						   panel.Children.Add(removeOthers);
+						   if(hasExtra)
+							   panel.Children.Add(removeOthers);
 
 						   var dialog = new ContentDialog()
 						   {
@@ -629,7 +645,8 @@ namespace COTG.Views
 						   var res = (await dialog.ShowAsync2());
 						   if (res == ContentDialogResult.Primary)
 						   {
-							   SettingsPage.demoUnwantedBuildingsWithCabins = removeOthers.IsOn;
+							   if(removeOthers!=null)
+								   SettingsPage.demoUnwantedBuildingsWithCabins = removeOthers.IsOn;
 							   var sel = combo.SelectedIndex;
 							   if (sel >= 0)
 								   SettingsPage.cabinsToRemovePerSwap = cabinCounts[sel];
@@ -649,16 +666,15 @@ namespace COTG.Views
 
 							var todo = FindPendingOverlayBuildings(city);
 							int milBid =  bc.GetMainMilitaryBid();
-							var barracks = FindPendingOverlayBuildingsOfType(city, bidBarracks, 100).OrderByDescending(a => CountSurroundingBuildingsOfType(a, milBid)).ToList();
+							var barracks = FindPendingOverlayBuildingsOfType(city, bidBarracks, 100).OrderByDescending(a => GetBarrackScore(a, milBid)).ToList();
 							var commandLimit = SettingsPage.cabinsToRemovePerSwap * 2;
+							var todoGet = 0;
 							for (; ; )
 							{
 								count = (commandLimit - GetBuildQueueLength());
-								if (count < 2 || todo.Count == 0 || bc.cabins == 0)
+								if (count < 2 || todoGet >= todo.Count  || bc.cabins == 0)
 									break;
-								var id = AMath.random.Next(todo.Count);
-								var c = todo[id];
-								todo.RemoveAt(id);
+								var c = todo[todoGet++];
 
 								var bid = city.BidFromOverlay(c);
 								if (bid == bidBarracks)
@@ -666,7 +682,13 @@ namespace COTG.Views
 									c = barracks[0];
 									barracks.RemoveAt(0);
 								}
-								count -= await CityBuild.SmartBuild(city, c, bid, true, false, SettingsPage.demoUnwantedBuildingsWithCabins);
+								var delta= await CityBuild.SmartBuild(city, c, bid, true, false, SettingsPage.demoUnwantedBuildingsWithCabins);
+								if(delta == -1)
+								{
+									Note.Show("Something unusual happened");
+									break;
+								}
+								count -= count;
 								bc = City.GetBuildingCountsPostQueue(city.autobuildCabinLevel);
 							}
 							Assert(city.isBuild);
@@ -697,9 +719,10 @@ namespace COTG.Views
 			BuildTab.GetBuildInfo();
 			return true;
 		}
-		static int CountSurroundingBuildingsOfType((int x, int y) c, int bid)
+		static int GetBarrackScore((int x, int y) c, int bid)
 		{
-			int rv = 0;
+			int rv = -GetSpotCost(c);
+
 			for (int y = -1; y <= 1; ++y)
 				for (int x = -1; x <= 1; ++x)
 				{
@@ -709,13 +732,24 @@ namespace COTG.Views
 					if (c1.IsInCity())
 					{
 						if (CityBuild.postQueueBuildings[City.XYToId(c1)].bid == bid)
-							++rv;
+							rv += 4;
 					}
 				}
 
 			return rv;
 		}
 		// starts ate center and searches outwards
+		static int GetSpotCost((int x,int y) c)
+		{
+			var bl = CityBuild.postQueueBuildings[City.XYToId(c)];
+			if (bl.isRes)
+				return 1;
+			else if (bl.isBuilding)
+			    return 2;
+			else
+				return 0;
+
+		}
 		static List<(int x, int y)> FindPendingOverlayBuildings(City city)
 		{
 			List<(int x, int y)> rv = new();
@@ -735,11 +769,12 @@ namespace COTG.Views
 					}
 					if ((bid != 0) && (CityBuild.postQueueBuildings[id].bid != bid))
 					{
-						rv.Add(c);
+						rv.Insert( AMath.random.Next(rv.Count),c);
 
 					}
 				}
 			}
+			rv.Sort( (a,b) => GetSpotCost(a).CompareTo(GetSpotCost(b)));
 			return rv;
 		}
 		static bool WantMoveStuff()
@@ -784,12 +819,15 @@ namespace COTG.Views
 
 			}
 		}
-		public static int FindUnusedBuilding()
+		public static bool hasExtraBuildings => FindExtraBuilding() != -1;
+
+		public static int FindExtraBuilding()
 		{
 			var city = City.GetBuild();
 			if (!city.isLayoutValid)
 				return -1;
 			Dictionary<ushort, short> counts = new();
+
 
 		// first collect counts
 			for (var id = 1; id < City.citySpotCount-1; ++id)
@@ -985,7 +1023,7 @@ namespace COTG.Views
 		static List<(int x, int y)> FindPendingOverlayBuildingsOfType(City city, int bid, int count)
 		{
 			List<(int x, int y)> rv = new();
-			if (count == 0)
+			if (count <= 0)
 				goto done;
 
 			// search from center outwards
@@ -1014,7 +1052,7 @@ namespace COTG.Views
 		static List<(int x, int y)> FindPendingOverlayBuildingsOfType(City city, int count, params int[] bids)
 		{
 			List<(int x, int y)> rv = new();
-			if (count == 0)
+			if (count <= 0)
 				goto done;
 			// search from center outwards
 			for (int r = 1; r <= City.citySpan; ++r)

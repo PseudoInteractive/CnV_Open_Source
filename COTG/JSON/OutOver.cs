@@ -119,7 +119,7 @@ namespace COTG.JSON
                                         }
                                         else
                                         {
-                                            attacker.QueueClassify();
+                                            attacker.QueueClassify(true);
                                             army.troops = new[] { new TroopTypeCount(Game.Enum.ttVanquisher, atkTS) };
                                         }
                                         if (defTS > 0)
@@ -134,7 +134,7 @@ namespace COTG.JSON
 										}
 										//                            army.sumDef = Array.Empty<TroopTypeCount>();
 										spot.incoming = spot.incoming.ArrayAppend(army);
-										spot.QueueClassify();
+										spot.QueueClassify(false);
 
 										defenders.Add(spot);
                                     //   defenders.Add(spot);
@@ -176,21 +176,21 @@ namespace COTG.JSON
                     int fetched = 0;
                     if (fetchReports)
                     {
-                        var reportCache = new Dictionary<int, Army[]>();
-                        foreach (var r in HitTab.instance.history)
-                        {
-                            if (r.reportId.IsNullOrEmpty())
-                                continue;
-                            var hash = Army.ReportHash(r.reportId);
-                            if (reportCache.TryGetValue(hash, out var reports))
-                            {
-                                reportCache[hash] = reports.ArrayAppend(r);
-                            }
-                            else
-                            {
-                                reportCache[hash] = new[] { r };
-                            }
-                        }
+                        //var reportCache = new Dictionary<int, Army[]>();
+                        //foreach (var r in HitTab.instance.history)
+                        //{
+                        //    if (r.reportId.IsNullOrEmpty())
+                        //        continue;
+                        //    var hash = Army.ReportHash(r.reportId);
+                        //    if (reportCache.TryGetValue(hash, out var reports))
+                        //    {
+                        //        reportCache[hash] = reports.ArrayAppend(r);
+                        //    }
+                        //    else
+                        //    {
+                        //        reportCache[hash] = new[] { r };
+                        //    }
+                        //}
                         // hits history
                         using (var jsd = await Post.SendForJson("includes/ofdf.php", "a=1", Player.myId))
                         {
@@ -211,12 +211,9 @@ namespace COTG.JSON
                                     var source = inc[14].GetAsInt().Max(0);
                                     var recId = inc[11].GetAsString();
                                     var hash = Army.ReportHash(recId);
-                                    if (reportCache.TryGetValue(hash, out var reports))
+                                    if (IncomingOverview.reportCache.TryGetValue(hash, out var reports))
                                     {
-                                        foreach (var r in reports)
-                                        {
-                                            parts[part].Add(r);
-                                        }
+                                            parts[part].Add(reports);
                                     }
                                     else
                                     {
@@ -271,9 +268,10 @@ namespace COTG.JSON
                                                     report.sumDef = new[] { new TroopTypeCount(ttGuard, dts) };
                                                 }
                                                 parts[part].Add(report);
-                                   //             await Cosmos.AddBattleRecord(report);
+												IncomingOverview.reportCache.TryAdd(hash, report);
+								   //             await Cosmos.AddBattleRecord(report);
 
-                                            }
+											}
                                             else
                                             {
 
@@ -373,9 +371,10 @@ namespace COTG.JSON
 
                                                                 };
                                                                     parts[part].Add(rep);
-                                                                //    await Cosmos.AddBattleRecord(rep);
+																	IncomingOverview.reportCache.TryAdd(hash, rep);
+																//    await Cosmos.AddBattleRecord(rep);
 
-                                                                }
+																}
                                                                 else
                                                                 {
                                                                     Log("Error!");

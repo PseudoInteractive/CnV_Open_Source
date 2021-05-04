@@ -85,6 +85,8 @@ namespace COTG.Game
 		}
 		public static bool alliancesFetched;
 		public static SortedList<byte, byte> diplomacy = new SortedList<byte, byte>(); // small Dictionary 
+		public  static Alliance none = new Alliance() { id = 0, name="No Alliance" };
+
 		public static async void Ctor(JsonDocument _aldt)
 		{
 			Log("Fetch Aldt");
@@ -98,6 +100,9 @@ namespace COTG.Game
 			var _all = new Dictionary<int, Alliance>();
 			var _nameToId = new Dictionary<string, int>();
 			var _diplomacy = new SortedList<byte, byte>();
+
+			_all.Add(0,Alliance.none);
+			_nameToId.Add(none.name,0);
 
 			try
 			{
@@ -225,7 +230,7 @@ namespace COTG.Game
 									var p = Player.all[pId];
 									p.alliance = (ushort)id;
 								//	p.cities = (byte)me.GetInt("c");
-									p.pointsH = (ushort)(me.GetInt("s") / 100);
+									p.points =(me.GetInt("s"));
 
 								}
 								else

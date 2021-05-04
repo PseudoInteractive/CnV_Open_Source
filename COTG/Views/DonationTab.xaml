@@ -24,17 +24,17 @@
         </Grid.RowDefinitions>
         <StackPanel Orientation="Horizontal" Grid.Row="0" >
             <my:NumberBox Header="Reserve Carts" Value="{x:Bind local:DonationTab.reserveCarts,Mode=TwoWay}"
-						  Style="{StaticResource NumberBoxCarts}" 
+						  Style="{StaticResource NumberBoxCarts}" Width="100"
 						  
 						  />
             <my:NumberBox Header="Reserve Carts %" Value="{x:Bind local:DonationTab.reserveCartsPCT,Mode=TwoWay}" 
-					NumberFormatter="{x:Bind cotg:App.percentFormatter}"
+					NumberFormatter="{x:Bind cotg:App.percentFormatter}" Width="120"
 				Style="{StaticResource NumberBoxPercent}" />
             <my:NumberBox Header="Reserve Ships" Value="{x:Bind local:DonationTab.reserveShips,Mode=TwoWay}"
-						  Style="{StaticResource NumberBoxShips}" 
+						  Style="{StaticResource NumberBoxShips}" Width="100"
 						          />
 			<my:NumberBox Header="Reserve Ships %" Value="{x:Bind local:DonationTab.reserveShipsPCT,Mode=TwoWay}" 
-						   Style="{StaticResource NumberBoxPercent}"
+						   Style="{StaticResource NumberBoxPercent}" Width="120"
 						  NumberFormatter="{x:Bind cotg:App.percentFormatter}"
 						  />
 			
@@ -47,8 +47,8 @@
                    Style="{StaticResource NumberBoxRes}" 
                       />
             <my:NumberBox Header="Wood:Stone" Value="{x:Bind local:DonationTab.woodStoneRatio,Mode=TwoWay}"
-                  Style="{StaticResource NumberBoxPercent}" 
-						  NumberFormatter="{x:Bind cotg:App.percentFormatter}" />
+                  Style="{StaticResource NumberBoxSmall}" 
+						  NumberFormatter="{x:Bind cotg:App.formatter2Digit}" />
         </StackPanel>
         <telerikGrid:RadDataGrid x:Name="donationGrid"
                                  x:FieldModifier="public"
@@ -61,7 +61,8 @@
 								 IsTabStop="True"
                         ColumnResizeHandleDisplayMode="Always"
                         UserGroupMode="Enabled"
-                        PointerPressed="gridPointerPress"
+                        PointerPressed="{x:Bind game:Spot.GridPressed}"
+							PointerExited="{x:Bind game:Spot.GridExited}"
                         FontSize="{StaticResource MediumFontSize}"
                         ItemsSource="{x:Bind game:City.emptyCitySource, Mode=OneTime}"
                         RowHeight="{StaticResource GridRowHeight}"

@@ -144,7 +144,6 @@ declare let city: jsonT.City;
 declare let pollJ: jsonT.Poll;
 declare var P8: number;
 declare function SetViewMode(mode: any): void;
-declare function setTestFlag(flag: any): void;
 declare let xcoord: number;
 declare let ycoord: number;
 declare function debounceArgs(func: () => void, timeout: number): (...args: any[]) => void;

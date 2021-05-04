@@ -80,36 +80,13 @@ namespace COTG.Views
 		}
 
 
-		static RadDataGrid GetGrid(PointerRoutedEventArgs e)
-		{
-			var a = e.OriginalSource as FrameworkElement;
-			while (a != null)
-			{
-				if (a is DataGridCellsPanel panel)
-					return panel.Owner;
-				if (a is DataGridRootPanel root)
-					return root.Owner;
-				a = a.Parent as FrameworkElement;
-			}
-			return null;
-		}
-		static bool IsFromDungeonGrid(PointerRoutedEventArgs e)
-		{
-			var a = GetGrid(e);
-			if (a == null)
-				return false;
-			return a.Tag as String == "Dungeons";
-		}
+		
 		private void CityGrid_PointerPress(object sender, PointerRoutedEventArgs e)
 		{
-			if (IsFromDungeonGrid(e))
-				return;
-			Spot.ProcessPointerPress(this, sender, e);
+			Spot.GridPressed(sender, e);
 		}
 		private void cityGrid_PointerExited(object sender, PointerRoutedEventArgs e)
 		{
-			if (IsFromDungeonGrid(e))
-				return;
 			Spot.ProcessPointerExited();
 			//if (string.Empty!=lastTip)
 			//{
@@ -209,7 +186,11 @@ namespace COTG.Views
 					var cid = ci[0].GetAsInt();
 					var city = City.GetOrAddCity(cid);
 					city.points = (ushort)ci[2].GetAsInt();
-					var isBuilding = ((ci[4].GetAsFloat() + ci[3].GetAsFloat()) != 0);
+					var isBuilding = (ci[4].GetAsFloat()!=0 || ci[3].GetAsFloat() != 0) || (city.buildStage == BuildStage.complete) || (city.buildStage == BuildStage.leave);
+					if(ci[5].GetAsFloat() != 0 )
+					{
+						isBuilding = true;
+					}
 					if (isBuilding != city.isBuilding)
 					{
 						city.isBuilding = isBuilding;
@@ -264,7 +245,10 @@ namespace COTG.Views
 					if (City.build != 0)
 						await GetCity.Post(City.build);
 
-					App.DispatchOnUIThreadSneaky( ()=> City.gridCitySource.NotifyReset() );
+					App.DispatchOnUIThreadSneaky( () =>
+					{
+						City.gridCitySource.NotifyReset();
+					} );
 				}
 
 				GetBuildInfo();

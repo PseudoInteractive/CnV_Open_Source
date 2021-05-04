@@ -1,4 +1,6 @@
-﻿namespace COTG.Views
+﻿using System;
+
+namespace COTG.Views
 {
 	public partial class ShareString
 	{
@@ -126,5 +128,6 @@
 			new ShareStringItem("funky~toopscoutg~5 sec priest/galley", "Priest", "252KTS Default for 10 Fakes - 184969 Priests, 15 Scouts, 670 galleys<br>for 4 fakes - 199969 priests, 15 scouts, 520 galleys<br>for 5 fakes - 197469 priests, 15 scouts, 545 galleys<br>for 6 fakes - 194969 Vanqs, 15 scouts, 570 galleys", "[ShareString.1.3];########################-------#-------#####--------#--------###---------#---------##---------#---------##------#######------##-----##BBBBB##-----##----##BBZBZBB##----##----#BZBZBZBZB#----##----#BBBZBZBBB#----#######BZBZTZBZB#######----#BBBZBZBBB#SMPX##----#BZBZBZBZB#SDPJ##----##BBZBZBB##----##-----##BZBBB##BBBB-##------#######BBVVBB##---------#---BV##VB##---------#---BV###V###--------#---BBV#######-------#---BBBV########################");
 			new ShareStringItem("funky~toopscoutg~6 sec priest/galley", "Priest", "264KTS Default for 10 Fakes - 194969 Priests, 15 Scouts, 690 galleys<br>for 4 fakes - 209969 priests, 15 scouts, 540 galleys<br>for 5 fakes - 207469 priests, 15 scouts, 565 galleys<br>for 6 fakes - 204969 Vanqs, 15 scouts, 590 galleys", "[ShareString.1.3];########################-------#-------#####--------#--------###---------#---------##---------#---------##------#######------##-----##BBBBB##-----##----##BBZBZBB##----##----#BZBBBBBZB#----##----#BBBZBZBBB#----#######BZBBTBBZB#######----#BZBZBZBBB#SMPX##----#BZBZBZBZB#SDP-##----##BBZBZBB##----##-----##BBBBB##BBBBE##------#######BBVVBB##---------#---BV##VB##---------#---BV###V###--------#---BBV#######-------#---JBBV########################");
 		}
+
 	}
 }

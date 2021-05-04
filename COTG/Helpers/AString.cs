@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 
 namespace COTG.Helpers
 {
+
 	public static class AString
 	{
 		public static string Wrap(this ReadOnlySpan<char> str, int chunkSize)

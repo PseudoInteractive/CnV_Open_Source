@@ -27,184 +27,177 @@ using ContentDialogResult = Windows.UI.Xaml.Controls.ContentDialogResult;
 namespace COTG.Services
 {
 	public class RestAPI
-    {
-        //   public static List<RestAPI> all = new List<RestAPI>();
-        public string localPath;
-        public static JsonDocument emptyJson;
+	{
+		//   public static List<RestAPI> all = new List<RestAPI>();
+		public string localPath;
+		public static JsonDocument emptyJson;
 
 		public virtual string eventName => string.Empty;
 		public virtual string extra => string.Empty;
-		public RestAPI(string _localPath, int _pid =-1)
-        {
-            localPath = _localPath;
-            emptyJson = JsonDocument.Parse("{}");
+		public RestAPI(string _localPath, int _pid = -1)
+		{
+			localPath = _localPath;
+			emptyJson = JsonDocument.Parse("{}");
 			pid = _pid;
-            //  all.Add(this);
-        }
+			//  all.Add(this);
+		}
 
 		public int pid = -1;
 
-		public virtual async Task<bool> Accept(HttpResponseMessage resp)
-        {
+		public virtual async Task<bool> AcceptAndProcess(HttpResponseMessage resp)
+		{
 
-            try
-            {
-                var buff = await resp.Content.ReadAsBufferAsync();
-				if (buff.Length >= 2)
+			try
+			{
+				var data = await AcceptBytes(resp);
+				if (data.Length > 2)
 				{
-					var temp = new byte[buff.Length];
-
-					using (var dataReader = Windows.Storage.Streams.DataReader.FromBuffer(buff))
-					{
-						dataReader.ReadBytes(temp);
-					}
-					//   Log(resp.RequestMessage.RequestUri.ToString() + "\n\n>>>>>>>>>>>>>>\n\n" + Encoding.UTF8.GetString(temp) + "\n\n>>>>>>>>>>>>>>\n\n");
-					ProcessJsonRaw(temp);
+					var json = JsonDocument.Parse(data, jsonParseOptions);
+					ProcessJson(json);
 					return true;
 				}
 				else
 				{
 					return false;
 				}
-            }
-            catch (Exception e)
-            {
-				LogEx(e,report:false,eventName:$"json:{GetType().Name}{eventName}",extra: resp?.RequestMessage?.ToString());
+			}
+			catch (Exception e)
+			{
+				LogEx(e, report: false, eventName: $"json:{GetType().Name}{eventName}", extra: resp?.RequestMessage?.RequestUri?.ToString());
 				return false;
-            }
+			}
 
-        }
-        public virtual async Task<byte[]> AcceptAndReturn(HttpResponseMessage resp)
-        {
+		}
+		public static async Task<byte[]> AcceptBytes(HttpResponseMessage resp)
+		{
 
-            try
-            {
-                var buff = await resp.Content.ReadAsBufferAsync();
+			try
+			{
+				var buff = await resp.Content.ReadAsBufferAsync();
 
-                var temp = new byte[buff.Length];
+				var temp = new byte[buff.Length];
 
-                using (var dataReader = Windows.Storage.Streams.DataReader.FromBuffer(buff))
-                {
-                    dataReader.ReadBytes(temp);
-                }
-                //   Log(resp.RequestMessage.RequestUri.ToString() + "\n\n>>>>>>>>>>>>>>\n\n" + Encoding.UTF8.GetString(temp) + "\n\n>>>>>>>>>>>>>>\n\n");
-                return temp;
-            }
-            catch (Exception e)
-            {
-                LogEx(e);
-            }
-            return Array.Empty<byte>();
-
-        }
-        public virtual async Task<JsonDocument> AcceptJson(HttpResponseMessage resp)
-        {
-            var data = await AcceptAndReturn(resp);
-
-            try
-            {
-                return JsonDocument.Parse(data);
-
-            }
-            catch (Exception e)
-            {
-                LogEx(e);
-                return null;
-            }
+				using (var dataReader = Windows.Storage.Streams.DataReader.FromBuffer(buff))
+				{
+					dataReader.ReadBytes(temp);
+				}
+				//   Log(resp.RequestMessage.RequestUri.ToString() + "\n\n>>>>>>>>>>>>>>\n\n" + Encoding.UTF8.GetString(temp) + "\n\n>>>>>>>>>>>>>>\n\n");
+				return temp;
 
 
-        }
-        public virtual async Task<string> AcceptText(HttpResponseMessage resp)
-        {
-            var data = await AcceptAndReturn(resp);
+			}
+			catch (Exception e)
+			{
+				LogEx(e, eventName: "HTTPAcceptBytes");
+			}
+			return Array.Empty<byte>();
 
-            try
-            {
-                return UTF8Encoding.UTF8.GetString( data);
+		}
+		public static async Task<string> AcceptText(HttpResponseMessage resp)
+		{
 
-            }
-            catch (Exception e)
-            {
-                LogEx(e);
-                return null;
-            }
+			try
+			{
+				var buff = await resp.Content.ReadAsStringAsync();
+
+				return buff;
+			}
+			catch (Exception e)
+			{
+				LogEx(e, eventName: "HTTPText");
+			}
+			return string.Empty;
+
+		}
+		public static async Task<JsonDocument> AcceptJson(HttpResponseMessage resp)
+		{
+			var data = await AcceptBytes(resp);
+
+			try
+			{
+				return JsonDocument.Parse(data);
+
+			}
+			catch (Exception e)
+			{
+				LogEx(e, eventName: "HTTPJson");
+				return null;
+			}
 
 
-        }
-		static JsonSerializerOptions jsonOptions => Json.jsonSerializerOptions;
-		public virtual async Task<T> AcceptJsonT<T>(HttpResponseMessage resp)
-        {
-            var data = await AcceptAndReturn(resp);
+		}
+
+		public static async Task<T> AcceptJsonT<T>(HttpResponseMessage resp)
+		{
+			var data = await AcceptBytes(resp);
 			var str = UTF8Encoding.UTF8.GetString(data);
 			Log(str);
 			try
 			{
-                return JsonSerializer.Deserialize<T>(data, jsonOptions);
+				return JsonSerializer.Deserialize<T>(data, Json.jsonSerializerOptions);
 
-            }
-            catch (Exception e)
-            {
-                LogEx(e);
-                return default;
-            }
+			}
+			catch (Exception e)
+			{
+				LogEx(e, eventName: "HTTPJson");
+				return default;
+			}
 
 
-        }
+		}
 
-        public virtual void ProcessJsonRaw(byte[] data)
-        {
-            var json = JsonDocument.Parse(data,jsonParseOptions);
-            ProcessJson(json);
 
-        }
+		public virtual void ProcessJson(JsonDocument json)
+		{
 
-        public virtual void ProcessJson(JsonDocument json)
-        {
+			//if (json.RootElement.TryGetProperty("a", out var a))
+			//{
+			//    var s = a.GetString();
+			//    if (secret != null)
+			//    {
+			//        var raw = COTG.Aes.Decode(s, secret);
+			//        Log(raw);
+			//    }
+			//}
+		}
+		public virtual string GetPostContent()
+		{
+			return nullPost;
+		}
 
-            //if (json.RootElement.TryGetProperty("a", out var a))
-            //{
-            //    var s = a.GetString();
-            //    if (secret != null)
-            //    {
-            //        var raw = COTG.Aes.Decode(s, secret);
-            //        Log(raw);
-            //    }
-            //}
-        }
-        public virtual string GetPostContent()
-        {
-            return nullPost;
-        }
+		async public Task<bool> Post()
+		{
+			while (JSClient.jsVars == null)
+			{
+				await Task.Delay(400);
+			}
+			try
+			{
+				return await AcceptAndProcess(await Send());
 
-        async public Task<bool> Post()
-        {
-            while( JSClient.jsVars == null)
-            {
-                await Task.Delay(400);
-            }
-                try
-                {
-                       return await Accept(await Send(GetPostContent()));
-	
-                }
-                catch (Exception e)
-                {
-                    LogEx(e);
-					return false;
-                }
+			}
+			catch (Exception e)
+			{
+				LogEx(e, eventName: "JsonProcess");
+				return false;
+			}
 
-        }
+		}
 
-        public const string nullPost = "a=0";
+		public const string nullPost = "a=0";
 		private static readonly JsonDocumentOptions jsonParseOptions = new() { AllowTrailingCommas = true };
 
-		async public Task<HttpResponseMessage> Send(string postContent= nullPost)
-        {
-            HttpClient client = null;
+		public Task<HttpResponseMessage> Send()
+		{
+			return Send(GetPostContent());
+		}
+		async public Task<HttpResponseMessage> Send(string postContent)
+		{
+			HttpClient client = null;
 			await JSClient.clientPoolSema.WaitAsync();
 			try
-            {
-				
+			{
+
 
 				for (; ; )
 				{
@@ -216,14 +209,14 @@ namespace COTG.Services
 					await Task.Delay(128);
 				}
 				HttpResponseMessage resp;
-                using (var req = new HttpRequestMessage(HttpMethod.Post, new Uri(JSClient.httpsHost, localPath)))
-                {
-                    req.Content = new HttpStringContent(postContent,
-                                Windows.Storage.Streams.UnicodeEncoding.Utf8,
-                                "application/x-www-form-urlencoded");
+				using (var req = new HttpRequestMessage(HttpMethod.Post, new Uri(JSClient.httpsHost, localPath)))
+				{
+					req.Content = new HttpStringContent(postContent,
+								Windows.Storage.Streams.UnicodeEncoding.Utf8,
+								"application/x-www-form-urlencoded");
 					//req.TransportInformation.
-                    req.Content.Headers.TryAppendWithoutValidation("Content-Encoding", JSClient.PlayerToken(pid));
-					
+					req.Content.Headers.TryAppendWithoutValidation("Content-Encoding", JSClient.PlayerToken(pid));
+
 
 					//                req.Headers.Append("Sec-Fetch-Site", "same-origin");
 					//    req.Headers.Append("Sec-Fetch-Mode", "cors");
@@ -231,32 +224,32 @@ namespace COTG.Services
 
 
 					resp = await client.SendRequestAsync(req, HttpCompletionOption.ResponseContentRead);
-                    //     Log($"res: {resp.GetType()} {resp.Succeeded} {resp}");
-                    //     Log($"req: {resp.RequestMessage.ToString()}");
-                    //   if (resp.ExtendedError != null)
-                    //      Log(resp.ExtendedError);
-                }
-                 
-                    if (resp != null)
-                    {
-                        return resp;
-                        //var b = await resp.Content.ReadAsInputStreamAsync();
+					//     Log($"res: {resp.GetType()} {resp.Succeeded} {resp}");
+					//     Log($"req: {resp.RequestMessage.ToString()}");
+					//   if (resp.ExtendedError != null)
+					//      Log(resp.ExtendedError);
+				}
 
-                        //                    jso = await JsonDocument.ParseAsync(b.ToString);
+				if (resp != null)
+				{
+					return resp;
+					//var b = await resp.Content.ReadAsInputStreamAsync();
 
-                        // Log(b.ToString());
-                    }
-                    else
-                    {
+					//                    jso = await JsonDocument.ParseAsync(b.ToString);
 
-                    }
-                
-            }
-            catch (Exception e)
-            {
-                
-                LogEx(e);
-            }
+					// Log(b.ToString());
+				}
+				else
+				{
+
+				}
+
+			}
+			catch (Exception e)
+			{
+
+				LogEx(e, eventName: "HTTPPost");
+			}
 			finally
 			{
 				if (client != null)
@@ -264,240 +257,305 @@ namespace COTG.Services
 				client = null;
 				JSClient.clientPoolSema.Release();
 			}
-            return null;
+			return null;
 
-
-        }
-
-     //   static RestAPI __0 = new RestAPI("includes/sndRad.php");//, "Sx23WW99212375Daa2dT123ol");
-    //    static RestAPI __2 = new RestAPI("includes/gRepH2.php");//, "g3542RR23qP49sHH");
-   //     static RestAPI __3 = new RestAPI("includes/bTrp.php");//, "X2UsK3KSJJEse2");
-        //  public static GetCity getCity = new GetCity(0);
-        //public static rMp regionView = new rMp();
-  //      static RestAPI __6 = new RestAPI("includes/gSt.php");//, "X22x5DdAxxerj3");
-   //     public static gWrd getWorldInfo = new gWrd();
-  //      static RestAPI __8 = new RestAPI("includes/UrOA.php");//, "Rx3x5DdAxxerx3");
-  //      static RestAPI __9 = new RestAPI("includes/sndTtr.php");//, "JJx452Tdd2375sRAssa");JJx452Tdd2375sRAssa "JJx452Tdd" + b2() + "sRAssa"
-        // "fCv.php"  cid:cid (unencrptypted) "Xs4b2261f55dlme55s"
-        // public static ScanRaids ScanDungeons = new ScanRaids();
-        public static TroopsOverview troopsOverview = new TroopsOverview();
-    }
-
-    //public class rMp : RestAPI
-    //{
-    //    public rMp() : base("includes/rMp.php", "X22ssa41aA1522")
-    //    {
-
-    //    }
-    //    public override string GetPostContent()
-    //    {
-    //        var args = "a=" + HttpUtility.UrlEncode(Aes.Encode("[249]", secret), Encoding.UTF8);
-    //        return args;
-
-
-    //    }
-    //}
-
-    public class GetWorldInfo : RestAPI
-    {
-
-		public GetWorldInfo() : base("includes/gWrd.php") // "Addxddx5DdAxxer569962wz")
-        {
-        }
-
-        public override string GetPostContent()
-        {
-            // this	{"a":"worldButton","b":"block","c":true,"d":1591969039987,"e":"World"}
-            //      {"a":"worldButton","b":"block","c":true,"d":1591988862914,"e":"World"}
-            var json = $"{{\"a\":\"worldButton\",\"b\":\"block\",\"c\":true,\"d\":{JSClient.GameTimeMs()},\"e\":\"World\"}}";
-            var encoded = Aes.Encode(json, $"Addxddx5DdAxxer{Player.activeId}2wz" );
-            var args = "a=" + HttpUtility.UrlEncode(encoded, Encoding.UTF8);
-            //"a=JwHt8WTz416hj%2FsCxccQzDNR47ebTllFGQq957Pigc%2BEb8EHJKNoVgVKQeNu2a4xi9Tx1vFxsUxw9WxRTuPLsey5mcvlVcftThXU4gA9";
-            return args;
-        }
-
-        public override void ProcessJson(JsonDocument json)
-        {
-            World.UpdateCurrent(json);
-        }
-        public static void Send()
-        {
-			Assert(World.state == World.State.none || World.state == World.State.completed); ;
-			World.state = World.State.started;
-			(new GetWorldInfo()).Post();
-        }
-
-        //async public void Post2()
-        //{
-        //    var a = await JSClient.view.InvokeScriptAsync("avapost", new string[] { "includes/gWrd.php",
-        //        "a=tgLyUZYF5F6ynQjCp3FXJOZ6ElUHXPUygineE33LuF2eDHwB%2FWH8MWY%2FA2CM%2FIra7fwRRCRKZzB1BMW826w6Cq2jSWL6%2FH64owys4lIv" });
-        //    Log(a);
-        //}
-    }
-
-    public class GetCity : RestAPI
-    {
-        public int cid;
-        Action<JsonElement, City> action;
-        public GetCity(int _cid, Action<JsonElement, City> _action) : base("includes/gC.php", World.CidToPlayerOrMe(_cid))
-        {
-            cid = _cid;
-            action = _action;
-          
-        }
-        public override string GetPostContent()
-        {
-            var encoded = Aes.Encode(cid.ToString(), $"X2U11s33S{pid}ccJx1e2");
-            var args = "a=" + HttpUtility.UrlEncode(encoded, Encoding.UTF8);
-            return args;
-        }
-
-        public override void ProcessJson(JsonDocument json)
-        {
-            // var cid = json.RootElement.GetAsInt("cid");
-            //   Log("Got JS " + cid);
-            var city = City.GetOrAddCity(cid);
-            var root = json.RootElement;
-            city.LoadCityData(root);
-            if (action != null)
-                action(root, city);
-        }
-        public static Task<bool> Post(int _cid, Action<JsonElement, City> _action = null)
-        {
-            Assert(_cid > 1);
-            return (new GetCity(_cid, _action)).Post();
-
-        }
-     
-
-    }
-
-
-    public class sndRaid : RestAPI
-    {
-        public string json;
-        public int cid;
-        public sndRaid(string _json, int _cid) : base("includes/sndRad.php", World.CidToPlayerOrMe(_cid))
-        {
-			Log($"sndRaid:{_json}");
-            cid = _cid;
-            json = _json;
-        }
-        public override string GetPostContent()
-        {
-            var encoded = Aes.Encode(json, $"Sx23WW9921{World.CidToPlayerOrMe(cid)}Daa2dT123ol");
-			//var encoded = Aes.Encode(json, $"XTR977sW{World.CidToPlayer(cid)}sss2x2");
-			var args = $"cid={cid}&a=" + HttpUtility.UrlEncode(encoded, Encoding.UTF8);
-            return args;
-        }
-
-        public override void ProcessJson(JsonDocument json)
-        {
-            Log("Sent raid");
-        }
-
-    }
-
-    public class ScanDungeons : RestAPI
-    {
-        int cid;
-		bool autoRaid;
-        //                       Xs4b22320360lme55s
-        public static string secret=>JSClient.jsVars.raidSecret;// = "Xs4b2261f55dlme55s";
-        public ScanDungeons(int _cid, bool _autoRaid) : base("includes/fCv.php", World.CidToPlayerOrMe(_cid))
-        {
-			cid = _cid;
-			autoRaid = _autoRaid;
 
 		}
-		// returns true if raids were sent
-		public static async Task<bool> Post(int _cid, bool getCityFirst, bool _autoRaid)
-        {
 
-			
+		//   static RestAPI __0 = new RestAPI("includes/sndRad.php");//, "Sx23WW99212375Daa2dT123ol");
+		//    static RestAPI __2 = new RestAPI("includes/gRepH2.php");//, "g3542RR23qP49sHH");
+		//     static RestAPI __3 = new RestAPI("includes/bTrp.php");//, "X2UsK3KSJJEse2");
+		//  public static GetCity getCity = new GetCity(0);
+		//public static rMp regionView = new rMp();
+		//      static RestAPI __6 = new RestAPI("includes/gSt.php");//, "X22x5DdAxxerj3");
+		//     public static gWrd getWorldInfo = new gWrd();
+		//      static RestAPI __8 = new RestAPI("includes/UrOA.php");//, "Rx3x5DdAxxerx3");
+		//      static RestAPI __9 = new RestAPI("includes/sndTtr.php");//, "JJx452Tdd2375sRAssa");JJx452Tdd2375sRAssa "JJx452Tdd" + b2() + "sRAssa"
+		// "fCv.php"  cid:cid (unencrptypted) "Xs4b2261f55dlme55s"
+		// public static ScanRaids ScanDungeons = new ScanRaids();
+		public static TroopsOverview troopsOverview = new TroopsOverview();
+	}
+	public static class RestHelper
+	{
+
+	}
+
+	//public class rMp : RestAPI
+	//{
+	//    public rMp() : base("includes/rMp.php", "X22ssa41aA1522")
+	//    {
+
+	//    }
+	//    public override string GetPostContent()
+	//    {
+	//        var args = "a=" + HttpUtility.UrlEncode(Aes.Encode("[249]", secret), Encoding.UTF8);
+	//        return args;
+
+
+	//    }
+	//}
+
+	public class GetWorldInfo : RestAPI
+	{
+
+		public GetWorldInfo() : base("includes/gWrd.php") // "Addxddx5DdAxxer569962wz")
+		{
+		}
+
+		public override string GetPostContent()
+		{
+			// this	{"a":"worldButton","b":"block","c":true,"d":1591969039987,"e":"World"}
+			//      {"a":"worldButton","b":"block","c":true,"d":1591988862914,"e":"World"}
+			var json = $"{{\"a\":\"worldButton\",\"b\":\"block\",\"c\":true,\"d\":{JSClient.GameTimeMs()},\"e\":\"World\"}}";
+			var encoded = Aes.Encode(json, $"Addxddx5DdAxxer{Player.activeId}2wz");
+			var args = "a=" + HttpUtility.UrlEncode(encoded, Encoding.UTF8);
+			//"a=JwHt8WTz416hj%2FsCxccQzDNR47ebTllFGQq957Pigc%2BEb8EHJKNoVgVKQeNu2a4xi9Tx1vFxsUxw9WxRTuPLsey5mcvlVcftThXU4gA9";
+			return args;
+		}
+
+		public override void ProcessJson(JsonDocument json)
+		{
+			World.UpdateCurrent(json);
+		}
+		public static Task<bool> Send()
+		{
+			Assert(World.state == World.State.none || World.state == World.State.completed); ;
+			World.state = World.State.started;
+			return (new GetWorldInfo()).Post();
+		}
+
+		//async public void Post2()
+		//{
+		//    var a = await JSClient.view.InvokeScriptAsync("avapost", new string[] { "includes/gWrd.php",
+		//        "a=tgLyUZYF5F6ynQjCp3FXJOZ6ElUHXPUygineE33LuF2eDHwB%2FWH8MWY%2FA2CM%2FIra7fwRRCRKZzB1BMW826w6Cq2jSWL6%2FH64owys4lIv" });
+		//    Log(a);
+		//}
+	}
+
+	public class GetCity : RestAPI
+	{
+		public int cid;
+		Action<JsonElement, City> action;
+		public GetCity(int _cid, Action<JsonElement, City> _action) : base("includes/gC.php", World.CidToPlayerOrMe(_cid))
+		{
+			cid = _cid;
+			action = _action;
+
+		}
+		public override string GetPostContent()
+		{
+			var encoded = Aes.Encode(cid.ToString(), $"X2U11s33S{pid}ccJx1e2");
+			var args = "a=" + HttpUtility.UrlEncode(encoded, Encoding.UTF8);
+			return args;
+		}
+
+		public override void ProcessJson(JsonDocument json)
+		{
+			// var cid = json.RootElement.GetAsInt("cid");
+			//   Log("Got JS " + cid);
+			var city = City.GetOrAddCity(cid);
+			var root = json.RootElement;
+			city.LoadCityData(root);
+			if (action != null)
+				action(root, city);
+		}
+		public static Task<bool> Post(int _cid, Action<JsonElement, City> _action = null)
+		{
+			Assert(_cid > 1);
+			return (new GetCity(_cid, _action)).Post();
+
+		}
+
+
+	}
+
+
+	public class sndRaid : RestAPI
+	{
+		public string json;
+		public int cid;
+		public sndRaid(string _json, int _cid) : base("includes/sndRad.php", World.CidToPlayerOrMe(_cid))
+		{
+			Log($"sndRaid:{_json}");
+			cid = _cid;
+			json = _json;
+		}
+		public override string GetPostContent()
+		{
+			var encoded = Aes.Encode(json, $"Sx23WW9921{World.CidToPlayerOrMe(cid)}Daa2dT123ol");
+			//var encoded = Aes.Encode(json, $"XTR977sW{World.CidToPlayer(cid)}sss2x2");
+			var args = $"cid={cid}&a=" + HttpUtility.UrlEncode(encoded, Encoding.UTF8);
+			return args;
+		}
+
+		public override void ProcessJson(JsonDocument json)
+		{
+			Log("Sent raid");
+		}
+
+	}
+	public static class Recruit
+	{
+
+		struct Args
+		{
+			public int tid { get; set; }
+			public int ttype { get; set; }
+			public int bt { get; set; }
+			public int tc { get; set; }
+			public long ds { get; set; }
+			public long de { get; set; }
+			public int tl { get; set; }
+			public int tm { get; set; }
+			public int tbt { get; set; }
+			public int pa { get; set; }
+		}
+		const string magic = "X2UsK3KSJJEse2";
+		public static async Task<bool> Send(int cid, int tt, int count)
+		{
+			var t = JSClient.ServerTimeMs();
+			var args = new Args() { tid = AMath.random.Next(),bt=1,ds=t,de=t+1,pa=1,tc=count,tm=0,ttype=tt,tbt=4,tl=1  };
+
+			var encoded = Aes.Encode(JsonSerializer.Serialize(args), magic );
+			var urle = $"cid={cid}&a=" + HttpUtility.UrlEncode(encoded, Encoding.UTF8);
+			var str = (await Post.SendForText("includes/bTrp.php",urle)).Trim();
+			if (str == "0")
+			{
+				Note.Show($"Recruit {count} {ttNameWithCaps[tt]} in {City.Get(cid).nameMarkdown}");
+				return true;
+			}
+			else
+			{
+				Note.Show(str);
+				return false;
+			}
+		}
+
+
+	}
+
+	/*
+	  {
+"tid": 1628537154,
+"ttype": 17,
+"bt": 4528000,
+"tc": 1,
+"ds": 1620092155331,
+"de": 1620096683331,
+"tl": 1,
+"tm": 0,
+"tbt": 4,
+"pa": 1
+}
+	 *  var n5D = {
+					tid: Number(p5D),
+					ttype: Number(x5D),
+					bt: Number(z5D),
+					tc: Number(L5D),
+					ds: Number(M5D),
+					de: Number(r5D),
+					tl: Number(L5D),
+					tm: 0,
+					tbt: Number(K5D),
+					pa: 1
+				};
+				if (x5D == +17)
+					ppdt["bc"] = ppdt[_s(+h6R)] + i5D;
+				var Z5D = __s[5491];
+				var g5D = a6.ccazzx.encrypt(JSON.stringify(n5D), Z5D, +256);
+				N6();
+				var P5D = $.post("/includes/" + __s[3174], { cid: cid, a: g5D });
+	 */
+
+	public class ScanDungeons : RestAPI
+	{
+		int cid;
+		//                       Xs4b22320360lme55s
+		public static string secret => JSClient.jsVars.raidSecret;// = "Xs4b2261f55dlme55s";
+		public ScanDungeons(int _cid) : base("includes/fCv.php", World.CidToPlayerOrMe(_cid))
+		{
+			cid = _cid;
+
+		}
+		// returns true if raids were sent or sending failed.  True means that we should loop back and try again
+		public static async Task<bool> Post(int _cid, bool getCityFirst, bool autoRaid)
+		{
+
+
 			//   Log(_cid.CidToString());
 			if (getCityFirst)
 			{
-				for (int counter=0; ;++counter )
+				for (int counter = 0; ; ++counter)
 				{
 					var okay = await GetCity.Post(_cid, null);
 					if (okay)
 						break;
-					if(counter >= 8)
+					if (counter >= 8)
 					{
 						Note.Show($"Internet failed for {Spot.GetOrAdd(_cid).nameMarkdown}, please run auto raids again in a few minutes");
 						return false;
 					}
-					await Task.Delay(500);				
+					await Task.Delay(500);
 				}
 
 			}            //   await Task.Delay(2000);
 						 //   COTG.Views.MainPage.CityListUpdateAll();
 			if (secret == null)
 				return false;
-            
-			return   await new ScanDungeons(_cid, _autoRaid).Post();
 
-        }
-        public override string GetPostContent()
-        {
-            var args = "cid=" + cid;
-            return args;
-        }
+			try
+			{
+				var msg = new ScanDungeons(_cid);
+				var resp = await msg.Send();
+				var buff = await resp.Content.ReadAsBufferAsync();
 
-        public override async Task<bool> Accept(HttpResponseMessage resp)
-        {
-            Log("Got fCv");
+				var temp = new byte[buff.Length - 1];
 
-
-            try
-            {
-              
-                var buff = await resp.Content.ReadAsBufferAsync();
-
-                var temp = new byte[buff.Length - 1];
-
-                using (var dataReader = Windows.Storage.Streams.DataReader.FromBuffer(buff))
-                {
-                    dataReader.ReadByte(); // for some reason, the first two are '\n'
-                    dataReader.ReadBytes(temp);
-                }
-                var dec2 = Encoding.UTF8.GetString(temp);
-                if (!dec2.IsNullOrEmpty())
-                {
-                    var temps = Aes.Decode(dec2, secret);
-                    var json = JsonDocument.Parse(temps);
+				using (var dataReader = Windows.Storage.Streams.DataReader.FromBuffer(buff))
+				{
+					dataReader.ReadByte(); // for some reason, the first two are '\n'
+					dataReader.ReadBytes(temp);
+				}
+				var dec2 = Encoding.UTF8.GetString(temp);
+				if (!dec2.IsNullOrEmpty())
+				{
+					var temps = Aes.Decode(dec2, secret);
+					var json = JsonDocument.Parse(temps);
 
 
-                    var jse = json.RootElement;
-                    jse = jse[0];
-                    City.TryGet(cid, out var city);
-                    return await Dungeon.ShowDungeonList(city, jse,autoRaid);
-                }
+					var jse = json.RootElement;
+					jse = jse[0];
+					City.TryGet(_cid, out var city);
+					return await Dungeon.ShowDungeonList(city, jse, autoRaid);
+				}
 				return false; // no dungeons?
-            }
-            catch (Exception e)
-            {
-                Log(e.Message);
-				return false;
-            }
+			}
+			catch
+			{
+				return true; // try again please
+			}
 
-        }
+		}
+		public override string GetPostContent()
+		{
+			var args = "cid=" + cid;
+			return args;
+		}
 
 
-    }
+	}
 
-    public class OverviewApi : RestAPI
-    {
-        public OverviewApi(string addr) : base(addr) { }
+	public class OverviewApi : RestAPI
+	{
+		public OverviewApi(string addr) : base(addr) { }
 
-    }
-    public class TroopsOverview : OverviewApi
-    {
-        public TroopsOverview() : base("overview/trpover.php") { }
-        public override void ProcessJson(JsonDocument json)
-        {
-            var changed = new HashSet<City>();
+	}
+	public class TroopsOverview : OverviewApi
+	{
+		public TroopsOverview() : base("overview/trpover.php") { }
+		public override void ProcessJson(JsonDocument json)
+		{
+			var changed = new HashSet<City>();
 			if (json.RootElement.ValueKind == JsonValueKind.Array)
 			{
 				foreach (var item in json.RootElement.EnumerateArray())
@@ -538,7 +596,7 @@ namespace COTG.Services
 						v.troopsTotal = tsTotal.ToArray();
 						v._tsHome = v.troopsHome.TS();
 						v._tsTotal = v.troopsTotal.TS();
-					//	Trace($"TS Home {v._tsHome}");
+						//	Trace($"TS Home {v._tsHome}");
 
 					}
 					else
@@ -555,78 +613,78 @@ namespace COTG.Services
 
 				}
 			}
-            if (!changed.IsNullOrEmpty())
-            {
-                changed.NotifyChange(nameof(Spot.tsHome), nameof(Spot.tsRaid), nameof(Spot.tsTotal));
-            }
-            //  Log("Got JS for troop overview");
-            //  Log(json.ToString());
-        }
-    }
-    public class ReinforcementsOverview : OverviewApi
-    {
-        public static ReinforcementsOverview instance = new ReinforcementsOverview();
-        public ReinforcementsOverview() : base("overview/reinover.php") { }
-        public override void ProcessJson(JsonDocument json)
-        {
-            foreach(var s in Spot.allSpots)
-            {
-                s.Value.reinforcementsIn=Array.Empty<Reinforcement>();
-                s.Value.reinforcementsOut=Array.Empty<Reinforcement>();
-            }
-            var jsd = json;
-            var changed = new HashSet<City>();
-            int cityCount = 0;
-            int reinCount = 0;
-            int ts = 0;
-            foreach (var item in jsd.RootElement.EnumerateObject())
-            {
-                var cid = int.Parse(item.Name);
-                var spot = Spot.GetOrAdd(cid);
-                ++cityCount;
-                foreach (var rein in item.Value[9].EnumerateArray())
-                {
-                    var re = new Reinforcement();
-                    re.targetCid = cid;
-                    var targetCId = rein[1].GetAsInt();
-                
-                    Assert(targetCId == cid);
-                    re.sourceCid = rein[15].GetAsInt();
-                    Assert(re.sourceCid!=targetCId);
-                    re.order = rein[10].GetAsInt64();
-                    var troops = new List<TroopTypeCount>();
-                    foreach(var ti in rein[8].EnumerateArray())
-                    {
-                        var str = ti.GetAsString();
-                        int tcEnd = 0;
-                        while (IsDigitOrComma(str, tcEnd))
-                            ++tcEnd;
-                        var count = int.Parse(str.Substring(0, tcEnd), NumberStyles.Number);
-                        var typeS = str.Substring(tcEnd+1);
-                        var tE = Game.Enum.ttNameWithCapsAndBatteringRam.IndexOf(typeS);
-                        troops.Add(new TroopTypeCount(tE, count));
-                    }
-                    re.troops = troops.ToArray();
-                    ts += re.troops.TS();
-                    spot.reinforcementsIn = spot.reinforcementsIn.ArrayAppend(re);
-                    var source = Spot.GetOrAdd(re.sourceCid);
-                    source.reinforcementsOut = source.reinforcementsOut.ArrayAppend(re);
-                    ++reinCount;
-                }
+			if (!changed.IsNullOrEmpty())
+			{
+				changed.NotifyChange(nameof(Spot.tsHome), nameof(Spot.tsRaid), nameof(Spot.tsTotal));
+			}
+			//  Log("Got JS for troop overview");
+			//  Log(json.ToString());
+		}
+	}
+	public class ReinforcementsOverview : OverviewApi
+	{
+		public static ReinforcementsOverview instance = new ReinforcementsOverview();
+		public ReinforcementsOverview() : base("overview/reinover.php") { }
+		public override void ProcessJson(JsonDocument json)
+		{
+			foreach (var s in Spot.allSpots)
+			{
+				s.Value.reinforcementsIn = Array.Empty<Reinforcement>();
+				s.Value.reinforcementsOut = Array.Empty<Reinforcement>();
+			}
+			var jsd = json;
+			var changed = new HashSet<City>();
+			int cityCount = 0;
+			int reinCount = 0;
+			int ts = 0;
+			foreach (var item in jsd.RootElement.EnumerateObject())
+			{
+				var cid = int.Parse(item.Name);
+				var spot = Spot.GetOrAdd(cid);
+				++cityCount;
+				foreach (var rein in item.Value[9].EnumerateArray())
+				{
+					var re = new Reinforcement();
+					re.targetCid = cid;
+					var targetCId = rein[1].GetAsInt();
+
+					Assert(targetCId == cid);
+					re.sourceCid = rein[15].GetAsInt();
+					Assert(re.sourceCid != targetCId);
+					re.order = rein[10].GetAsInt64();
+					var troops = new List<TroopTypeCount>();
+					foreach (var ti in rein[8].EnumerateArray())
+					{
+						var str = ti.GetAsString();
+						int tcEnd = 0;
+						while (IsDigitOrComma(str, tcEnd))
+							++tcEnd;
+						var count = int.Parse(str.Substring(0, tcEnd), NumberStyles.Number);
+						var typeS = str.Substring(tcEnd + 1);
+						var tE = Game.Enum.ttNameWithCapsAndBatteringRam.IndexOf(typeS);
+						troops.Add(new TroopTypeCount(tE, count));
+					}
+					re.troops = troops.ToArray();
+					ts += re.troops.TS();
+					spot.reinforcementsIn = spot.reinforcementsIn.ArrayAppend(re);
+					var source = Spot.GetOrAdd(re.sourceCid);
+					source.reinforcementsOut = source.reinforcementsOut.ArrayAppend(re);
+					++reinCount;
+				}
 
 
-            }
-            Note.Show($"Reinforcements updated {cityCount} cities reinforced with {reinCount} orders and {ts} TS");
-        }
+			}
+			Note.Show($"Reinforcements updated {cityCount} cities reinforced with {reinCount} orders and {ts} TS");
+		}
 
-        private static bool IsDigitOrComma(string str, int tcEnd)
-        {
-            return tcEnd < str.Length && (char.IsDigit(str, tcEnd)||str[tcEnd]==',');
-        }
+		private static bool IsDigitOrComma(string str, int tcEnd)
+		{
+			return tcEnd < str.Length && (char.IsDigit(str, tcEnd) || str[tcEnd] == ',');
+		}
 
-    }
+	}
 
-    /*
+	/*
      {
 	"a": [
 		[
@@ -707,15 +765,15 @@ namespace COTG.Services
 	]
 }
      */
-    public class RaidOverview : OverviewApi
-    {
-        public static RaidOverview inst = new RaidOverview();
-        public static Task Send() => inst.Post();
+	public class RaidOverview : OverviewApi
+	{
+		public static RaidOverview inst = new RaidOverview();
+		public static Task Send() => inst.Post();
 
 		public static Task SendMaybe()
 		{
 			var t = DateTimeOffset.UtcNow;
-			if (t - lastFetched <= TimeSpan.FromMinutes(5) )
+			if (t - lastFetched <= TimeSpan.FromMinutes(5))
 			{
 				lastFetched = t;
 				return inst.Post();
@@ -724,16 +782,16 @@ namespace COTG.Services
 		}
 		public RaidOverview() : base("overview/graid.php") { }
 		public static DateTimeOffset lastFetched = AUtil.dateTimeZero;
-        public override void ProcessJson(JsonDocument jsd)
-        {
+		public override void ProcessJson(JsonDocument jsd)
+		{
 			lastFetched = DateTimeOffset.UtcNow;
 			// reset all to start
 			foreach (var city in City.myCities)
-            {
-                city.raids = Array.Empty<Raid>();
-                city.raidCarry = 0;
-            }
-            float rWood = 0, rStone = 0, rIron = 0, rFood = 0, rGold = 0;
+			{
+				city.raids = Array.Empty<Raid>();
+				city.raidCarry = 0;
+			}
+			float rWood = 0, rStone = 0, rIron = 0, rFood = 0, rGold = 0;
 			if (jsd.RootElement.ValueKind == JsonValueKind.Object)
 			{
 				//           string dateExtra = DateTime.Now.Year
@@ -826,43 +884,43 @@ namespace COTG.Services
 
 				}
 			}
-            App.DispatchOnUIThreadSneakyLow(()
-                =>
-            {
-                MainPage.instance.rWood.Text = $"Wood: {(rWood*0.001).RoundToInt():N0} k/h";
-                MainPage.instance.rStone.Text = $"Stone: {(rStone * 0.001).RoundToInt():N0} k/h";
-                MainPage.instance.rIron.Text = $"Iron: {(rIron * 0.001).RoundToInt():N0} k/h";
-                MainPage.instance.rFood.Text = $"Food: {(rFood * 0.001).RoundToInt():N0} k/h";
-                MainPage.instance.rGold.Text = $"Gold: {(rGold * 0.001).RoundToInt():N0} k/h";
-                //MainPage.rStone = rStone;
-                //MainPage.rIron = rIron;
-                //MainPage.rFood = rFood;
-                //MainPage.rGold = rGold;
-                //// MainPage.CityListUpdateAll();
-                ///
-            });
-        }
-    }
+			App.DispatchOnUIThreadSneakyLow(()
+				=>
+			{
+				MainPage.instance.rWood.Text = $"Wood: {(rWood * 0.001).RoundToInt():N0} k/h";
+				MainPage.instance.rStone.Text = $"Stone: {(rStone * 0.001).RoundToInt():N0} k/h";
+				MainPage.instance.rIron.Text = $"Iron: {(rIron * 0.001).RoundToInt():N0} k/h";
+				MainPage.instance.rFood.Text = $"Food: {(rFood * 0.001).RoundToInt():N0} k/h";
+				MainPage.instance.rGold.Text = $"Gold: {(rGold * 0.001).RoundToInt():N0} k/h";
+				//MainPage.rStone = rStone;
+				//MainPage.rIron = rIron;
+				//MainPage.rFood = rFood;
+				//MainPage.rGold = rGold;
+				//// MainPage.CityListUpdateAll();
+				///
+			});
+		}
+	}
 
-    public class Post : RestAPI
-    {
-        public Post(string url, int _pid=-1) : base(url, _pid) { }
+	public class Post : RestAPI
+	{
+		public Post(string url, int _pid = -1) : base(url, _pid) { }
 
 
-        // Does not wait for full response and does not parse json
-        // postContent is xml uri encoded
-        async public static Task Send(string url, string postContent, int _pid = -1)
-        {
-            var p = new Post(url, _pid);
-            await p.Send(postContent);
+		// Does not wait for full response and does not parse json
+		// postContent is xml uri encoded
+		async public static Task Send(string url, string postContent, int _pid = -1)
+		{
+			var p = new Post(url, _pid);
+			await p.Send(postContent);
 
-        }
+		}
 		async public static Task<HttpResponseMessage> SendForResponse(string url, string postContent, int _pid = -1)
 		{
 			var p = new Post(url, _pid);
 			return await p.Send(postContent);
 		}
-		async public static Task<bool> SendForOkay(string url, string postContent, int _pid=-1)
+		async public static Task<bool> SendForOkay(string url, string postContent, int _pid = -1)
 		{
 			var p = new Post(url, _pid);
 
@@ -875,37 +933,37 @@ namespace COTG.Services
 			return false;
 		}
 
-		async public static Task<JsonDocument> SendForJson(string url, string postContent= nullPost, int _pid=-1)
-        {
-            var p = new Post(url,_pid);
-            return await p.AcceptJson(await p.Send(postContent));
-        }
-        async public static Task<string> SendForText(string url, string postContent = nullPost, int _pid=-1)
-        {
-            var p = new Post(url,_pid);
-            return  await p.AcceptText(await p.Send(postContent));
-        }
+		async public static Task<JsonDocument> SendForJson(string url, string postContent = nullPost, int _pid = -1)
+		{
+			var p = new Post(url, _pid);
+			return await AcceptJson(await p.Send(postContent));
+		}
+		async public static Task<string> SendForText(string url, string postContent = nullPost, int _pid = -1)
+		{
+			var p = new Post(url, _pid);
+			return await AcceptText(await p.Send(postContent));
+		}
 
-        async public static Task<T> SendForJsonT<T>(string url, string postContent=nullPost, int _pid = -1)
-        {
-            var p = new Post(url, _pid);
-            return await p.AcceptJsonT<T>(await p.Send(postContent));
+		async public static Task<T> SendForJsonT<T>(string url, string postContent = nullPost, int _pid = -1)
+		{
+			var p = new Post(url, _pid);
+			return await AcceptJsonT<T>(await p.Send(postContent));
 
 
-        }
+		}
 
-        async public static Task SendEncrypted(string url, string postContentJson, string secret, int _pid)
-        {
-            var p = new Post(url, _pid);
-            await p.Send("a=" + HttpUtility.UrlEncode(Aes.Encode(postContentJson, secret), Encoding.UTF8));
-        }
-        async public static Task<JsonDocument> SendEncryptedForJson(string url, string postContentJson, string secret, int _pid)
-        {
-            var p = new Post(url,_pid);
-            return await p.AcceptJson(await p.Send("a=" + HttpUtility.UrlEncode(Aes.Encode(postContentJson, secret), Encoding.UTF8)));
-        }
+		async public static Task SendEncrypted(string url, string postContentJson, string secret, int _pid)
+		{
+			var p = new Post(url, _pid);
+			await p.Send("a=" + HttpUtility.UrlEncode(Aes.Encode(postContentJson, secret), Encoding.UTF8));
+		}
+		async public static Task<JsonDocument> SendEncryptedForJson(string url, string postContentJson, string secret, int _pid)
+		{
+			var p = new Post(url, _pid);
+			return await AcceptJson(await p.Send("a=" + HttpUtility.UrlEncode(Aes.Encode(postContentJson, secret), Encoding.UTF8)));
+		}
 
-        /*
+		/*
         {
             "rcid": 21627422,
             "tr": "[{\"tt\":\"5\",\"tv\":\"1\"}]",
@@ -914,66 +972,66 @@ namespace COTG.Services
             "ts": 0
         }
         */
-        public struct tt_tv
-        {
-            public int tt { get; set; }
-            public int tv { get; set; }
-        };
-        public struct SndRein
-        {
-            public int rcid { get; set; }
-            public string tr { get; set; }
-            public int snd { get; set; }
-            public int cid { get; set; }
-            public string ts { get; set; }
-        };
+		public struct tt_tv
+		{
+			public int tt { get; set; }
+			public int tv { get; set; }
+		};
+		public struct SndRein
+		{
+			public int rcid { get; set; }
+			public string tr { get; set; }
+			public int snd { get; set; }
+			public int cid { get; set; }
+			public string ts { get; set; }
+		};
 
-        public static async void SendRein( int cid,int rcid, TroopTypeCount[] tsSend,DateTimeOffset departAt, DateTimeOffset arrival, float travelTime,int splits, Windows.UI.Xaml.UIElement uie )
-        {
-            var tttv = new List<tt_tv>();
-            foreach(var t in tsSend)
-            {
-                tttv.Add(new tt_tv() { tt = t.type, tv = t.count/splits });
-            }
+		public static async void SendRein(int cid, int rcid, TroopTypeCount[] tsSend, DateTimeOffset departAt, DateTimeOffset arrival, float travelTime, int splits, Windows.UI.Xaml.UIElement uie)
+		{
+			var tttv = new List<tt_tv>();
+			foreach (var t in tsSend)
+			{
+				tttv.Add(new tt_tv() { tt = t.type, tv = t.count / splits });
+			}
 			var pid = World.CidToPlayerOrMe(cid);
 
 			var sr = new SndRein()
-            {
-                cid = cid,
-                rcid = rcid,
-                tr = JsonSerializer.Serialize(tttv),
-                snd = 1, // 1 means send immediately
-            };
-            if (arrival > JSClient.ServerTime() )
-            {
-                sr.snd = 3;
-                sr.ts = arrival.ToString("MM/dd/yyyy HH':'mm':'ss");
-            }
-            else if( departAt > JSClient.ServerTime() )
-            {
-                sr.snd = 2;
-                sr.ts = departAt.ToString("MM/dd/yyyy HH':'mm':'ss");
-            }
-            var post = JsonSerializer.Serialize(sr);
-            var secret = $"XTR977sW{pid}sss2x2";
-            var city = City.GetOrAddCity(cid);
-            for(var i = 0; ; )
-            {
-                Note.Show("Sending Reinforcements "+(i+1));
-                var jsd = await SendEncryptedForJson("includes/sndRein.php", post, secret,pid);
-                if(jsd ==null )
-                {
-                    Note.Show("Something went wrong");
-                    break;
-                }
+			{
+				cid = cid,
+				rcid = rcid,
+				tr = JsonSerializer.Serialize(tttv),
+				snd = 1, // 1 means send immediately
+			};
+			if (arrival > JSClient.ServerTime())
+			{
+				sr.snd = 3;
+				sr.ts = arrival.ToString("MM/dd/yyyy HH':'mm':'ss");
+			}
+			else if (departAt > JSClient.ServerTime())
+			{
+				sr.snd = 2;
+				sr.ts = departAt.ToString("MM/dd/yyyy HH':'mm':'ss");
+			}
+			var post = JsonSerializer.Serialize(sr);
+			var secret = $"XTR977sW{pid}sss2x2";
+			var city = City.GetOrAddCity(cid);
+			for (var i = 0; ;)
+			{
+				Note.Show("Sending Reinforcements " + (i + 1));
+				var jsd = await SendEncryptedForJson("includes/sndRein.php", post, secret, pid);
+				if (jsd == null)
+				{
+					Note.Show("Something went wrong");
+					break;
+				}
 
-                if (++i >= splits)
-                {
-                    if (sr.snd != 3)
-                    {
-                        Log("Sent last");
-                        if( jsd.RootElement.ValueKind != JsonValueKind.Object)
-                        {
+				if (++i >= splits)
+				{
+					if (sr.snd != 3)
+					{
+						Log("Sent last");
+						if (jsd.RootElement.ValueKind != JsonValueKind.Object)
+						{
 							if (jsd.RootElement.ValueKind == JsonValueKind.Number)
 							{
 								Note.Show("Scheduled Reinforcements");
@@ -1008,161 +1066,162 @@ namespace COTG.Services
 									Note.Show("Something went wrong, maybe not enough troops home");
 								}
 							}
-                            break;
-                        }
-                        city.LoadCityData(jsd.RootElement);
-                        Note.Show("Sent Reinforcements");
-                    }
-                    else
-                    {
-                        Note.Show("Scheduled Reinforcements");
-                    }
-                    break;
-                }
-                await Task.Delay(500); 
-            }
-        }
+							break;
+						}
+						city.LoadCityData(jsd.RootElement);
+						Note.Show("Sent Reinforcements");
+					}
+					else
+					{
+						Note.Show("Scheduled Reinforcements");
+					}
+					break;
+				}
+				await Task.Delay(500);
+			}
+		}
 
-    }
-    public static class TileMapFetch
-    {
-        async static public Task<TileData> Get()
-        {
-            HttpClient client = null;
-            try
-            {
+	}
+	public static class TileMapFetch
+	{
+		async static public Task<TileData> Get()
+		{
+			HttpClient client = null;
+			try
+			{
 				await JSClient.clientPoolSema.WaitAsync();
 				for (; ; )
-                {
-                    if (JSClient.clientPool.TryTake(out client))
-                        break;
+				{
+					if (JSClient.clientPool.TryTake(out client))
+						break;
 					Assert(false);
-                    await Task.Delay(128);
-                }
-                var buff = await client.GetBufferAsync(new Uri(JSClient.httpsHost, $"maps/newmap/rmap6.json?a={HttpUtility.UrlEncode(DateTime.Now.ToString("R"))}"));
-  /*
-   * GET /maps/newmap/rmap6.json?a=Sat%20Mar%2013%202021%2014:24:01%20GMT-0800%20(Pacific%20Standard%20Time) HTTP/1.1
-Host: w23.crownofthegods.com
-Connection: keep-alive
-Pragma: no-cache
-Cache-Control: no-cache
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.82 Safari/537.36 Edg/89.0.774.50
-Accept: 
-Sec-Fetch-Site: same-origin
-Sec-Fetch-Mode: cors
-Sec-Fetch-Dest: empty
-Referer: https://w23.crownofthegods.com/
-Accept-Encoding: gzip, deflate, br
-Accept-Language: en-US,en;q=0.9
-Cookie: _ga=GA1.2.1055797043.1609264074; _fbp=fb.1.1609264074502.2131400288; __gads=ID=bb534c2c262b5eb1-227ecd5a79c5009f:T=1609264077:RT=1609264077:S=ALNI_MbiRMZeGoatJbQVm5gpAomH5vSxRw; MicrosoftApplicationsTelemetryDeviceId=112453f2-6422-4887-88c6-12e528008f71; MicrosoftApplicationsTelemetryFirstLaunchTime=2021-02-28T01:02:30.235Z; remember_me=c50f0c70cd; _gid=GA1.2.991235873.1615674212; _gat=1; sec_session_id=4fr7soo40b1255mi6f1hjspee3
-*/
-                
-                if (buff != null)
-                {
-                    var temp = new byte[buff.Length];
+					await Task.Delay(128);
+				}
+				var buff = await client.GetBufferAsync(new Uri(JSClient.httpsHost, $"maps/newmap/rmap6.json?a={HttpUtility.UrlEncode(DateTime.Now.ToString("R"))}"));
+				/*
+				 * GET /maps/newmap/rmap6.json?a=Sat%20Mar%2013%202021%2014:24:01%20GMT-0800%20(Pacific%20Standard%20Time) HTTP/1.1
+			  Host: w23.crownofthegods.com
+			  Connection: keep-alive
+			  Pragma: no-cache
+			  Cache-Control: no-cache
+			  User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.82 Safari/537.36 Edg/89.0.774.50
+			  Accept: 
+			  Sec-Fetch-Site: same-origin
+			  Sec-Fetch-Mode: cors
+			  Sec-Fetch-Dest: empty
+			  Referer: https://w23.crownofthegods.com/
+			  Accept-Encoding: gzip, deflate, br
+			  Accept-Language: en-US,en;q=0.9
+			  Cookie: _ga=GA1.2.1055797043.1609264074; _fbp=fb.1.1609264074502.2131400288; __gads=ID=bb534c2c262b5eb1-227ecd5a79c5009f:T=1609264077:RT=1609264077:S=ALNI_MbiRMZeGoatJbQVm5gpAomH5vSxRw; MicrosoftApplicationsTelemetryDeviceId=112453f2-6422-4887-88c6-12e528008f71; MicrosoftApplicationsTelemetryFirstLaunchTime=2021-02-28T01:02:30.235Z; remember_me=c50f0c70cd; _gid=GA1.2.991235873.1615674212; _gat=1; sec_session_id=4fr7soo40b1255mi6f1hjspee3
+			  */
 
-                    using (var dataReader = Windows.Storage.Streams.DataReader.FromBuffer(buff))
-                    {
-                        dataReader.ReadBytes(temp);
-                    }
-					
-                   // Log("Hello!");
-                    return JsonSerializer.Deserialize<TileData>(temp);
-                   // Log("Helllo!");
-                }
-                else
-                {
-                    Log("Error!");
-                };
-            }
-            catch (Exception e)
-            {
-                
-                LogEx(e);
-            }
+				if (buff != null)
+				{
+					var temp = new byte[buff.Length];
+
+					using (var dataReader = Windows.Storage.Streams.DataReader.FromBuffer(buff))
+					{
+						dataReader.ReadBytes(temp);
+					}
+
+					// Log("Hello!");
+					return JsonSerializer.Deserialize<TileData>(temp);
+					// Log("Helllo!");
+				}
+				else
+				{
+					Log("Error!");
+				};
+			}
+			catch (Exception e)
+			{
+
+				LogEx(e, eventName: "TileMapFetch");
+			}
 			finally
 			{
-				if(client!=null)
+				if (client != null)
 					JSClient.clientPool.Add(client);
 				JSClient.clientPoolSema.Release();
 			}
-            return null;
+			return null;
 
 
-        }
+		}
 
-     
 
-    }
 
-    public class CityOverview{
-//        public string city { get; set; }
- //       public string location { get; set; }
-        public int score { get; set; }
-        [JsonConverter(typeof(UShortConverter))]
-        public ushort carts_total { get; set; }
-        [JsonConverter(typeof(UShortConverter))]
-        public ushort carts_home { get; set; }
-   //     public int wood_per_hour { get; set; }
-        public int wood { get; set; }
-        public int wood_storage { get; set; }
-     //   public int stone_per_hour { get; set; }
-        public int stone { get; set; }
-        public int stone_storage { get; set; }
-      //  public int iron_per_hour { get; set; }
-        public int iron { get; set; }
-        public int iron_storage { get; set; }
-       // public int food_per_hour { get; set; }
-        public int food { get; set; }
-        public int food_storage { get; set; }
-        [JsonConverter(typeof(UShortConverter))]
-        public ushort ships_total { get; set; }
+	}
 
-        [JsonConverter(typeof(UShortConverter))]
-        public ushort ships_home { get; set; }
-        public string Academy { get; set; }
-        public string Sorc_tower { get; set; }
-       // public string reference { get; set; }
-        public int id { get; set; }
+	public class CityOverview
+	{
+		//        public string city { get; set; }
+		//       public string location { get; set; }
+		public int score { get; set; }
+		[JsonConverter(typeof(UShortConverter))]
+		public ushort carts_total { get; set; }
+		[JsonConverter(typeof(UShortConverter))]
+		public ushort carts_home { get; set; }
+		//     public int wood_per_hour { get; set; }
+		public int wood { get; set; }
+		public int wood_storage { get; set; }
+		//   public int stone_per_hour { get; set; }
+		public int stone { get; set; }
+		public int stone_storage { get; set; }
+		//  public int iron_per_hour { get; set; }
+		public int iron { get; set; }
+		public int iron_storage { get; set; }
+		// public int food_per_hour { get; set; }
+		public int food { get; set; }
+		public int food_storage { get; set; }
+		[JsonConverter(typeof(UShortConverter))]
+		public ushort ships_total { get; set; }
 
-        public static Task<CityOverview[]> Send()
-        {
-            return Post.SendForJsonT<CityOverview[]>("overview/citover.php",RestAPI.nullPost);
-        }
-    }
-    public class UShortConverter : JsonConverter<ushort>
-    {
-        public override ushort Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
-        {
-            if (reader.TokenType == JsonTokenType.String)
-            {
-                var stringValue = reader.GetString();
-                if (stringValue.IsNullOrEmpty())
-                    return 0;
-                if (ushort.TryParse(stringValue, out var value))
-                {
-                    return value;
-                }
-            }
-            else if (reader.TokenType == JsonTokenType.Number)
-            {
-                if (reader.TryGetUInt16(out var rv))
-                    return rv;
+		[JsonConverter(typeof(UShortConverter))]
+		public ushort ships_home { get; set; }
+		public string Academy { get; set; }
+		public string Sorc_tower { get; set; }
+		// public string reference { get; set; }
+		public int id { get; set; }
 
-                return (ushort)reader.GetSingle();
-            }
-            else if (reader.TokenType == JsonTokenType.Null)
-            {
-                return 0;
-            }
-            throw new JsonException();
-        }
+		public static Task<CityOverview[]> Send()
+		{
+			return Post.SendForJsonT<CityOverview[]>("overview/citover.php", RestAPI.nullPost);
+		}
+	}
+	public class UShortConverter : JsonConverter<ushort>
+	{
+		public override ushort Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+		{
+			if (reader.TokenType == JsonTokenType.String)
+			{
+				var stringValue = reader.GetString();
+				if (stringValue.IsNullOrEmpty())
+					return 0;
+				if (ushort.TryParse(stringValue, out var value))
+				{
+					return value;
+				}
+			}
+			else if (reader.TokenType == JsonTokenType.Number)
+			{
+				if (reader.TryGetUInt16(out var rv))
+					return rv;
 
-        public override void Write(Utf8JsonWriter writer, ushort value, JsonSerializerOptions options)
-        {
-            writer.WriteNumberValue(value);
-        }
-    }
+				return (ushort)reader.GetSingle();
+			}
+			else if (reader.TokenType == JsonTokenType.Null)
+			{
+				return 0;
+			}
+			throw new JsonException();
+		}
+
+		public override void Write(Utf8JsonWriter writer, ushort value, JsonSerializerOptions options)
+		{
+			writer.WriteNumberValue(value);
+		}
+	}
 }
 
 

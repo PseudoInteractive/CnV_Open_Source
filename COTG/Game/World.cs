@@ -2,6 +2,8 @@
 using COTG.Services;
 using COTG.Views;
 
+using Cysharp.Text;
+
 using Microsoft.Toolkit.HighPerformance.Buffers;
 using Microsoft.Xna.Framework;
 
@@ -52,6 +54,7 @@ namespace COTG.Game
 			return new System.Numerics.Vector2((float)c2.x, (float)c2.y);
 		}
 		public static int WorldToContinent(this (int x, int y) c) => (c.y / 100) * 10 + (c.x / 100);
+		public static int WorldToContinentPacked(this (int x, int y) c) => (c.y / 100) * World.continentSpan + (c.x / 100);
 		//        public static int CidToContinent(this int cid) => ((cid/65536)/100)*10 | (cid % 65536) / 100;
 		public static int CidToContinent(this int cid) => WorldToContinent(CidToWorld(cid));
 		public static int CidToPid(this int cid)
@@ -376,6 +379,12 @@ namespace COTG.Game
 			var x = id - y * span;
 			return ((int)x, (int)y);
 		}
+		public static int PackedIdToPackedContinent(uint id)
+		{
+			var y = id / span;
+			var x = id - y * span;
+			return (int)((x/100)+ (y/100)*continentSpan);
+		}
 		public static Microsoft.Xna.Framework.Color GetTint(int packedId)
 		{
 			if(!SettingsPage.tintCities)
@@ -599,6 +608,8 @@ namespace COTG.Game
 			AGame.ClearHeatmapImage();
 			
 			DrawPixels(raw.Span);
+			//Task.Run(World.UpdateChangeMap);
+
 		}
 		static bool isDrawingHeatMap => rawPrior0 != null;
 
@@ -1340,6 +1351,8 @@ namespace COTG.Game
 
 		public static void SetHeatmapDates(SmallTime t0, SmallTime t1)
 		{
+			Assert(t0.seconds != 0);
+			Assert(t1.seconds != 0);
 			World.heatMapT0 = t0 - 1;
 			World.heatMapT1 = t1 + 1;
 
@@ -1354,24 +1367,64 @@ namespace COTG.Game
 
 			Log($"Heat Change: {changeMapRequested}, {t0}, {t1} ");
 
-			UpdateChangeMap();
+			Task.Run(UpdateChangeMap);
 		}
 		public static async void UpdateChangeMap()
 		{
-			Assert(World.changeMapInProgress == true);
+			if (World.changeMapInProgress != true)
+			{
+				return;
+			}
+			using var _ = await HeatMap.mutex.LockAsync();
 
 			var data = await HeatMap.GetSnapshot(World.heatMapT0);
 			var data1 = await HeatMap.GetSnapshot(World.heatMapT1);
 
-			App.DispatchOnUIThreadSneakyLow(() =>
+			var task = App.DispatchOnUIThreadTask(() =>
 		   {
 			   if(HeatTab.instance.isVisible)
 			   {
-				   HeatTab.instance.header.Text= $"{heatMapT0}=>{heatMapT1} - {new ChangeInfo().ComputeDeltas(data.Span, data1.Span).ToString()}";
+				   if (rawPrior0 == null)
+				   {
+					   HeatTab.instance.header.Text = "Please select a date range to see changes";
+				   }
+				   else
+				   {
+					   using var sb = ZString.CreateUtf8StringBuilder();
+					   sb.AppendFormat("-- {0} => {1} --\n", (heatMapT0).ToString(), (heatMapT1).ToString());
+					   var c0 = CityCounts.GetcityCountsByAlliance(data1.Span);
+					   var c1 = CityCounts.GetcityCountsByAlliance(data.Span);
+
+					   foreach (var i in c0)
+					   {
+						   var v = i.Value;
+						   var v1 = c1.GetValueOrDefault(i.Key);
+						   if (v1 == null)
+							   v1 = new();
+						   if (v.total < 10 && v1.total < 10)
+							   continue;
+						   var d = v.Sub(v1);
+						   sb.AppendFormat("{0}: {1} ({2})", Alliance.IdToName(i.Key), v.total, d.total.FormatWithSign());
+						   if (v.castles > 0)
+							   sb.AppendFormat(", {0} ({1}) castles", v.castles, d.castles.FormatWithSign());
+						   if (v.temples > 0)
+							   sb.AppendFormat(", {0} ({1}) temples", v.temples, d.temples.FormatWithSign());
+						   if (v.big > 0)
+							   sb.AppendFormat(", {0} ({1}) big", v.big, d.big.FormatWithSign());
+						   sb.AppendLine();
+					   }
+
+					   sb.Append("\nChanges");
+					   sb.Append(new ChangeInfo().ComputeDeltas(data.Span, data1.Span).ToString());
+					   HeatTab.instance.header.Text = sb.ToString();
+				   }
 			   }
+			   return Task.CompletedTask;
 		   });
 
 			World.CreateChangePixels(data, data1);
+			await task;
+
 		}
 
 

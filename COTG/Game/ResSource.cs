@@ -5,7 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Threading.Tasks;
-
+using System.Text.Json.Serialization;
 
 namespace COTG.Game
 {
@@ -18,12 +18,16 @@ namespace COTG.Game
 			"iron",
 			"food"
 		};
-
+		[JsonInclude]
 		public int wood;
+		[JsonInclude]
 		public int stone;
+		[JsonInclude]
 		public int iron;
+		[JsonInclude]
 		public int food;
 
+		
 		public Resources(int wood, int stone, int iron, int food)
 		{
 			this.wood = wood;
@@ -110,26 +114,9 @@ namespace COTG.Game
 		public TimeSpan travel { get; set; }
 
 		public Resources res;
-		public int wood
-		{
-			get => res.wood;
-			set => res.wood = value;
-		}
-		public int stone
-		{
-			get => res.stone;
-			set => res.stone= value;
-		}
-		public int iron
-		{
-			get => res.iron;
-			set => res.iron = value;
-		}
-		public int food
-		{
-			get => res.food;
-			set => res.food = value;
-		}
+		public string ResString(int index) => $"{res[index]:N0} ({city.res[index]:N0})";
+		public void ResSetMax(int index) => res[index] = ResMax(index);
+		public void ResSetZero(int index) => res[index] = 0;
 
 		public void NotifyChange(string member = "")
 		{

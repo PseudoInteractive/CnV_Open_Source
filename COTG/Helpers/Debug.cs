@@ -113,6 +113,21 @@ namespace COTG
 
 
 		}
+		[Conditional("TRACE")]
+		public static void Trace<T>(T o,
+	   [System.Runtime.CompilerServices.CallerMemberName] string memberName = "",
+	   [System.Runtime.CompilerServices.CallerFilePath] string sourceFilePath = "",
+	   [System.Runtime.CompilerServices.CallerLineNumber] int sourceLineNumber = 0)
+		{
+			var s = o.ToString();
+			string msg = $"{sourceFilePath}({sourceLineNumber}): {timeStamp}: {memberName}\n{s}\n";
+			Note.Show(s);
+			System.Diagnostics.Trace.Write(msg);
+			DumpStack(new StackTrace(1, true));
+			//    System.Diagnostics.Debug.WriteLine(new StackTrace());
+
+
+		}
 
 		[Conditional("DEBUG")]
 		public static void Log<T>(T s,

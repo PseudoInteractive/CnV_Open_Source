@@ -687,7 +687,7 @@ namespace COTG
 			}
 			try
 			{
-				if (!await JSClient.CitySwitch(cid, false, true, true, true, blockOnFail: false))
+				if (!await JSClient.CitySwitch(cid, false, true, true, true))
 					throw new UIException("Sema");
 				City.lockedBuild = cid;
 			}
@@ -739,15 +739,15 @@ namespace COTG
 			else
 				d.RunAsync(CoreDispatcherPriority.Low, action);
 		}
-		public static async Task DispatchOnUIThreadSneakyLowAwait(DispatchedHandler action)
-		{
-			var d = GlobalDispatcher();
-			// run it immediately if we can
-			if (d.HasThreadAccess && d.CurrentPriority <= CoreDispatcherPriority.Low)
-				action();
-			else
-				await d.RunAsync(CoreDispatcherPriority.Low, action);
-		}
+		//public static async Task DispatchOnUIThreadSneakyLowAwait(DispatchedHandler action)
+		//{
+		//	var d = GlobalDispatcher();
+		//	// run it immediately if we can
+		//	if (d.HasThreadAccess && d.CurrentPriority <= CoreDispatcherPriority.Low)
+		//		action();
+		//	else
+		//		await d.RunAsync(CoreDispatcherPriority.Low, action);
+		//}
 		public static void DispatchOnUIThreadIdleSneaky(IdleDispatchedHandler action)
 		{
 			var d = GlobalDispatcher();
@@ -795,10 +795,10 @@ namespace COTG
 
 
 		///        public static DumbCollection<City> emptyCityList = new DumbCollection<City>();
-		public static PercentFormatter percentFormatter = new PercentFormatter();// { FractionDigits = 1, NumberRounder=new IncrementNumberRounder() { Increment=.001,RoundingAlgorithm=RoundingAlgorithm.RoundHalfToEven} };
-		public static DecimalFormatter formatter2Digit = new DecimalFormatter() { FractionDigits = 2, IsGrouped = true };
-		public static DecimalFormatter formatterInt = new DecimalFormatter() { FractionDigits = 0, IsGrouped = true };
-		public static DecimalFormatter formatterSeconds = new DecimalFormatter() { FractionDigits = 0, IntegerDigits = 2 };
+		public static PercentFormatter percentFormatter = new PercentFormatter() { FractionDigits=1,IsGrouped = false, NumberRounder = new SignificantDigitsNumberRounder() { SignificantDigits = 1 } };
+		public static DecimalFormatter formatter2Digit = new DecimalFormatter() { FractionDigits = 2, IsGrouped = true, NumberRounder = new SignificantDigitsNumberRounder() { SignificantDigits = 2 } };
+		public static DecimalFormatter formatterInt = new DecimalFormatter() { FractionDigits=0,IsGrouped = true, IsDecimalPointAlwaysDisplayed=false };
+		public static DecimalFormatter formatterSeconds = new DecimalFormatter() { FractionDigits=0,IsGrouped = false, IntegerDigits = 2, IsDecimalPointAlwaysDisplayed = false };
 
 
 		public static void CopyTextToClipboard(string s)
@@ -1292,6 +1292,12 @@ namespace COTG
 					Assert(paths[0].Length == 0);
 					switch (paths[1])
 					{
+						case "s":
+							{
+								var cid = paths[2].FromCoordinate();
+								DoSetup(cid);
+							}
+							break;
 						case "c":
 							Spot.ProcessCoordClick(paths[2].FromCoordinate(), false, App.keyModifiers, false);
 							break;
@@ -1312,6 +1318,27 @@ namespace COTG
 				LogEx(ex);
 			}
 		}
+
+		private static async Task DoSetup(int cid)
+		{
+			try
+			{
+				await ShellPage.instance.RefreshX();
+			}
+			catch (Exception ex)
+			{
+				LogEx(ex);
+			}
+	
+
+
+			await 	App.DispatchOnUIThreadExclusive(cid, async () =>
+			{
+				return await CityRename.RenameDialog(cid, true);
+
+			});
+		}
+
 		public static void Focus(this Telerik.UI.Xaml.Controls.Grid.RadDataGrid ob)
 		{
 			if (ob != null)

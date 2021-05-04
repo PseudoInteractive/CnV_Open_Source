@@ -14,7 +14,8 @@ namespace COTG
 		public static int ToSeconds(DateTimeOffset source) => (int)(source.ToUnixTimeSeconds() );
 
 
-		internal static readonly DateTimeOffset t0 = new DateTimeOffset(1970, 1, 1, 0, 0, 0, 0, TimeSpan.Zero);
+		public static readonly DateTimeOffset t0 = new DateTimeOffset(1970, 1, 1, 0, 0, 0, 0, TimeSpan.Zero);
+
 		internal const int t0Seconds = 0;
 		internal int seconds;
 		internal static SmallTime zero = new SmallTime(0);

@@ -42,7 +42,7 @@ namespace COTG.Converters
 
         public object ConvertBack(object value, Type targetType, object parameter, string language)
         {
-            if (float.TryParse(value.ToString(), System.Globalization.NumberStyles.Number, CultureInfo.InvariantCulture, out var v))
+            if (float.TryParse(value.ToString(), System.Globalization.NumberStyles.Number, NumberFormatInfo.CurrentInfo, out var v))
                 return v;
             return default(float);
         }
@@ -58,7 +58,7 @@ namespace COTG.Converters
 		{
 			var s = value.ToString().TrimEnd('%');
 
-			if (float.TryParse(s, System.Globalization.NumberStyles.Number, CultureInfo.InvariantCulture, out var v))
+			if (float.TryParse(s, System.Globalization.NumberStyles.Number, NumberFormatInfo.CurrentInfo, out var v))
 				return v*(0.01f);
 			return default(float);
 		}

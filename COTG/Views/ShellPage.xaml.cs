@@ -626,12 +626,15 @@ namespace COTG.Views
 			Refresh();
 
 		}
-		private async static void RefreshWorldData()
+		private async static Task RefreshWorldData()
 		{
 			using var work = new WorkScope("Refresh..");
-			if (World.completed) 
-				GetWorldInfo.Send();
-			await TileData.Ctor(false);
+			var task0= TileData.Ctor(false);
+			if (World.completed)
+			{
+				await GetWorldInfo.Send();
+			}
+			await task0;
 		}
 		public static void RefreshAndReloadWorldData()
 		{
@@ -640,12 +643,17 @@ namespace COTG.Views
 				GetWorldInfo.Send();
 			TileData.Ctor(true);
 		}
+		public async Task RefreshX()
+		{ 
+			Note.Show("Refresh All");
+			await RefreshWorldData();
+			RefreshTabs();
+		}
+
 		public void RefreshX(object sender, RightTappedRoutedEventArgs e)
 		{
-			Note.Show("Refresh All");
-			RefreshWorldData();
-			RefreshTabs();
-
+			RefreshX();
+	
 		}
 
 		private static void RefreshTabs()
@@ -1126,6 +1134,10 @@ namespace COTG.Views
 				}
 			}
 			CityList.NotifyChange();
+			if(HeatTab.IsVisible())
+			{
+				HeatTab.ResetAllChangeDescriptions();
+			}
 		}
 
 		private void HomeClick(object sender, RoutedEventArgs e)
@@ -1201,6 +1213,7 @@ namespace COTG.Views
 		private void CitySubmitted(ComboBox sender, ComboBoxTextSubmittedEventArgs args)
 		{
 			var text = args.Text.ToLower();
+			
 			var items = City.gridCitySource;
 			foreach (var it in items)
 			{
@@ -1242,33 +1255,36 @@ namespace COTG.Views
 
 		private void SetLayout(int viewToggle)
 		{
-			var raidInfoVisible = true;
-			switch (viewToggle)
-			{
-				case 0:
-			//		grid.ColumnDefinitions[0].Width = new GridLength(410, GridUnitType.Pixel);
-					grid.ColumnDefinitions[1].Width = new GridLength(2, GridUnitType.Star);
-					grid.ColumnDefinitions[2].Width = new GridLength(1, GridUnitType.Star);
-				//	JSClient.view.Scale = new Vector3(1.0f, 1.0f, 1.0f);
-					break;
-				case 1:
-				//	grid.ColumnDefinitions[0].Width = new GridLength(410*3/4, GridUnitType.Pixel);
-					grid.ColumnDefinitions[1].Width = new GridLength(2, GridUnitType.Star);
-					grid.ColumnDefinitions[2].Width = new GridLength(160);
-					raidInfoVisible = false;
-				//	JSClient.view.Scale = new Vector3(0.75f, 0.75f, 1.0f);
-					break;
-				case 2:
-				//	grid.ColumnDefinitions[0].Width = new GridLength(410 * 3 / 4, GridUnitType.Pixel);
-					grid.ColumnDefinitions[1].Width = new GridLength(1, GridUnitType.Star);
-					grid.ColumnDefinitions[2].Width = new GridLength(2, GridUnitType.Star);
-				//	JSClient.view.Scale = new Vector3(0.75f, 0.75f, 1.0f);
-					break;
+			App.DispatchOnUIThreadLow(() =>
+		   {
+			   var raidInfoVisible = true;
+			   switch (viewToggle)
+			   {
+				   case 0:
+						//		grid.ColumnDefinitions[0].Width = new GridLength(410, GridUnitType.Pixel);
+						grid.ColumnDefinitions[1].Width = new GridLength(2, GridUnitType.Star);
+					   grid.ColumnDefinitions[2].Width = new GridLength(1, GridUnitType.Star);
+						//	JSClient.view.Scale = new Vector3(1.0f, 1.0f, 1.0f);
+						break;
+				   case 1:
+						//	grid.ColumnDefinitions[0].Width = new GridLength(410*3/4, GridUnitType.Pixel);
+						grid.ColumnDefinitions[1].Width = new GridLength(2, GridUnitType.Star);
+					   grid.ColumnDefinitions[2].Width = new GridLength(160);
+					   raidInfoVisible = false;
+						//	JSClient.view.Scale = new Vector3(0.75f, 0.75f, 1.0f);
+						break;
+				   case 2:
+						//	grid.ColumnDefinitions[0].Width = new GridLength(410 * 3 / 4, GridUnitType.Pixel);
+						grid.ColumnDefinitions[1].Width = new GridLength(1, GridUnitType.Star);
+					   grid.ColumnDefinitions[2].Width = new GridLength(2, GridUnitType.Star);
+						//	JSClient.view.Scale = new Vector3(0.75f, 0.75f, 1.0f);
+						break;
 
-			}
+			   }
 
-			MainPage.ToggleInfoBoxes(raidInfoVisible);
-			City.gridCitySource.NotifyReset();
+			   MainPage.ToggleInfoBoxes(raidInfoVisible);
+			   Task.Delay(200).ContinueWith( (_) => City.gridCitySource.NotifyReset() );
+		   });
 		}
 
 		private void webFocus_Click(object sender, RoutedEventArgs e)

@@ -7121,8 +7121,8 @@ window['showLayout']= function()
  $("#editspncn").click();
 //	$("#cityplannerTab")[0].click();
 }
-function setTestFlag(flag) {
-	testFlag = flag;
+window['setTestFlag'] = function(flag : string) {
+	testFlag = flag == "1";
 }
 
 let xcoord=0;
@@ -31650,6 +31650,8 @@ function outer(){
 				.text(__s[z2R * 1] + E4w);
 			$(__s[1952])
 				.text(__s[+z2R] + s3w);
+			if (city.hasOwnProperty("ww") )
+   {
 			$(__s[2139])
 				.text(city[__s[+Q0t]][11]);
 			$(__s[1298])
@@ -31691,6 +31693,7 @@ function outer(){
 					.s6s];
 			var d3w = city[__s[Q0t * 1]][7] + city[__s[+Q0t]][8] + city[__s[Q0t * 1]][9] + city[E6k
 				.S55(+Q0t)][10];
+
 			if (city["r"][4]['g'] < 0) {
 				var O3w = "-";
 				var Q3w = __s[4225];
@@ -31707,6 +31710,7 @@ function outer(){
 				.text(p6(i3w));
 			$(__s[u1y | 517])
 				.text(p6(d3w));
+	}
 			$(__s[1325])
 				.html(__s[+l0p] + p6(Math.floor(city["r"][1]['g'])) + _s("1248" <<
 					737231520));
@@ -58723,6 +58727,10 @@ function outer(){
 						  wrapper.ext.bq = t71.bq;
 
 						}
+						if (t71.hasOwnProperty("bd")) {
+							wrapper.ext.bd = t71.bd;
+
+						}
 					}
 	 
 					let isBuildCity = t71.cid == cid;
@@ -58854,6 +58862,11 @@ function outer(){
 						//            console.log(OGA);
 						//  if OGA is empty it will sometimes fire repeatedly
 						m6F(OGA);
+						//if (!wrapper.citydata) {
+						//	wrapper.citydata = {};
+						//}
+						//wrapper.citydata.OGA = OGA;
+				
 
 					}
 					if (pollJ.hasOwnProperty("OGT")) {// trades
@@ -58924,13 +58937,13 @@ function outer(){
 						var d71 = pollJ["iNt"];
 		
 						//   console.log(JSON.stringify(d71));
-						if( d9F(d71) )
-						{
-							if (!wrapper.citydata) {
-								wrapper.citydata = {};
-							}
-							wrapper.citydata.incRes = [ d71[1],d71[2],d71[3],d71[4] ];
-						}
+						 d9F(d71);
+						//{
+						//	if (!wrapper.citydata) {
+						//		wrapper.citydata = {};
+						//	}
+						//	wrapper.citydata.incRes = [ d71[1],d71[2],d71[3],d71[4] ];
+						//}
 					}
 					var b71 = pollJ[__s[6935]];
 					T5V(b71);
@@ -65455,17 +65468,7 @@ function outer(){
 		}
 
  
-  window['updateArtifacts'] = function()
-  {
-	//if(H2 !== "Avatar")
-	//	 return;
-
-	//for (let i in artifacts) {
-	//	if (!ppdt.itc)
-	//		ppdt.itc = {};
-	//	ppdt.itc[i] = 128;
-	// }
-  }
+  
 
 
 		var artifacts = {

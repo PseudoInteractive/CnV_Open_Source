@@ -183,13 +183,14 @@ namespace COTG
 		{
 			return (int)(DateTimeOffset.UtcNow.ToUnixTimeSeconds() + gameTOffsetSeconds);
 		}
-		public static DateTimeOffset AsJSTime(long t)
+		// timestamp - ServerTime all in in MS 
+		public static int ServerTimeOffsetMs(long t)
 		{
-			return new DateTimeOffset(1970, 1, 1, 0, 0, 0, TimeSpan.Zero) + TimeSpan.FromMilliseconds(t);
+			return (int)(t - ServerTimeMs());
 		}
-		public static int ServerTimeOffset(long t)
+		public static long ServerTimeMs()
 		{
-			return (int)(t - gameTOffsetMs - (long)(DateTimeOffset.UtcNow-new DateTimeOffset(1970, 1, 1, 0, 0, 0, TimeSpan.Zero)).TotalMilliseconds);
+			return (ServerTime() - SmallTime.t0).TotalMilliseconds.RoundToLong();
 		}
 
 		public static DateTimeOffset ServerToLocal(DateTimeOffset t)
@@ -692,7 +693,7 @@ namespace COTG
 		//    }
 		//}
 
-		public static async Task<bool> CitySwitch(int cityId, bool lazyMove, bool select = true, bool scrollIntoUI = true, bool isLocked=false, bool blockOnFail=false)
+		public static async Task<bool> CitySwitch(int cityId, bool lazyMove, bool select = true, bool scrollIntoUI = true, bool isLocked=false)
 		{
 			// Make sure we don't ignore the exception
 			{
@@ -703,12 +704,7 @@ namespace COTG
 					{
 						ShellPage.EnsureNotCityView();
 						Note.Show("Please wait for current operation to complete");
-						if(!blockOnFail)
-							return false;
-						if (await App.DoYesNoBox("Busy", "Please wait for current operation to complete") != 1)
-						{
-							return false;
-						}
+						return false;
 					}
 					var city = City.GetOrAddCity(cityId);
 					
@@ -1036,10 +1032,10 @@ namespace COTG
 		public static JsonDocument extCityHack;
 		public static bool ppdtInitialized;
 		static private int[] lastCln = null;
-		public static async void UpdatePPDT(JsonElement jse, bool updateBuildCity)
+		public static async void UpdatePPDT(JsonElement jse, int thisPid, bool pruneCities=false, bool updateBuildCity=false)
 		{
 			// Todo:  should we update our local PPDT to the server?
-			var thisPid = jse.TryGetProperty("pid", out var _pid) ? _pid.GetAsInt() : Player.activeId;
+		
 			int clChanged = 0;
 			// City lists
 			try
@@ -1064,7 +1060,7 @@ namespace COTG
 				{
 					TradeSettings.all = JsonSerializer.Deserialize<TradeSettings[]>(tcps.ToString(), Json.jsonSerializerOptions);
 					
-					App.DispatchOnUIThread( () => HubSettings.instance.tradeSettings.ItemsSource = TradeSettings.all );
+					App.DispatchOnUIThreadLow( () => ShareString.Touch().tradeSettings.ItemsSource = TradeSettings.all );
 				}
 
 				if(jse.TryGetProperty("wmo", out var wo))
@@ -1308,10 +1304,9 @@ namespace COTG
 					//                    Log(jsCity.ToString());
 					var cid = jsCity.GetProperty("1").GetInt32();
 					Assert(thisPid != 0);
-					if (!ppdtInitialized)
+					if (pruneCities)
 					{
-						var pid = thisPid != 0 ? thisPid : World.GetInfoFromCid(cid).player;
-						if (pid != Player.activeId)
+						if (World.GetInfoFromCid(cid).player != thisPid)
 						{
 							Note.Show($"Invalid City, was it lost? {cid.CidToString()}");
 							App.DispatchOnUIThreadSneaky(() =>
@@ -1679,10 +1674,12 @@ namespace COTG
 		}
 		static async Task ChangeCityJSWait(int cityId)
 		{
+			Log($"Wait {City.GetOrAdd(cityId).nameAndRemarks}");
 			var i = new WaitOnCityDataData(cityId);
 			waitingOnCityData.Add(i);
 			ChangeCityJS(cityId);
 			await i.t.Task;
+			Log($"WaitComplete {City.GetOrAdd(cityId).nameAndRemarks}");
 		}
 		static private void View_ScriptNotify(object sender, Windows.UI.Xaml.Controls.NotifyEventArgs __e)
 
@@ -1785,7 +1782,7 @@ namespace COTG
 								   AddPlayer(true, true, Player.myId, Player.myName, token, raidSecret,s, ppdt.ToString());
 
 
-								   UpdatePPDT(ppdt,false);
+								   UpdatePPDT(ppdt,Player.myId,pruneCities:true);
 								   if (Player.isAvatarOrTest)
 									   Raid.test = true;
 								   Task.Delay(2200).ContinueWith((_)=> App.DispatchOnUIThreadSneakyLow(Spot.UpdateFocusText));
@@ -1937,39 +1934,8 @@ namespace COTG
 										   {
 											   var cid = int.Parse(ss[1]);
 											   // founded new city
-											   await Task.Delay(12000);
-
-											   try
-											   {
-												   ShellPage.instance.RefreshX(null, null);
-											   }
-											   catch (Exception ex)
-											   {
-
-											   }
-
-											   await App.WaitWhileUiSemaBusy();
-
-											   
-											   var result = await App.DispatchOnUIThreadTask( async () =>
-											  {
-												  var dialog = new ContentDialog()
-												  {
-													  Title = "New City",
-													  Content = "You have founded a city, would you like to run setup?",
-													  SecondaryButtonText = "No",
-													  PrimaryButtonText = "Setup"
-												  };
-												  return await dialog.ShowAsync2();
-											  });
-
-												if (result == ContentDialogResult.Primary)
-												{
-													await App.DispatchOnUIThreadExclusive(cid, async () =>
-													{
-														await CityRename.RenameDialog(cid, true);
-													});
-											   }
+											   await Task.Delay(30000);
+											   Note.Show($"You have founded a new city!  Would you like to run [Setup](/s/{cid.CidToString()})");
 
 										   }
 									   }
@@ -2086,7 +2052,7 @@ namespace COTG
 											   App.DispatchOnUIThreadLow(() => ShellPage.instance.focus.Content = city.nameAndRemarks);
 									   }
 									   //     city.SetFocus(true);
-									   if (city.classification == Spot.Classification.unknown)
+									   if (city.isNotClassified )
 									   {
 										   if (App.IsKeyPressedControl() && (Alliance.wantsIntel || Player.isAvatarOrTest) )
 										   {
@@ -2141,7 +2107,7 @@ namespace COTG
 											   i.Done();
 										   }
 								   }
-								   if( !waitingOnCityData.Any(i=>i.isDone) )
+								   if( !waitingOnCityData.Any(i=>!i.isDone) )
 								   {
 									   waitingOnCityData.Clear();
 								   }
@@ -2207,7 +2173,8 @@ namespace COTG
 						   // city lists
 						   case "ppdt":
 							   {
-								   UpdatePPDT(jsp.Value,false);
+									var jse = jsp.Value;
+								   UpdatePPDT(jse,jse.TryGetProperty("pid", out var _pid) ? _pid.GetAsInt() : Player.activeId);
 								   break;
 							   }
 						   case "chat":
@@ -2241,7 +2208,7 @@ namespace COTG
 								   var city = City.GetOrAdd(cid);
 								   // If they are visiting somene elses city we don't want to be directed there
 								   // so we go to the default city
-								   UpdatePPDT(ppdt,(city.pid != pid) ); 
+								   UpdatePPDT(ppdt, pid,updateBuildCity:(city.pid != pid) ); 
 								   
 								   if (city.pid == pid) // we want ot visit a specific city
 								   {

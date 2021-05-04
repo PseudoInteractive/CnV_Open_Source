@@ -95,7 +95,7 @@ namespace COTG.Views
             //if (hit != null)
             //    defenderGrid.ShowRowDetailsForItem(hit);
 
-            Spot.ProcessPointerPress(this,sender, e);
+            Spot.GridPressed(sender, e);
         }
         //private void gridPointerMoved(object sender, PointerRoutedEventArgs e)
         //{

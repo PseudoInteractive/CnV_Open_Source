@@ -54,7 +54,7 @@ namespace COTG.Game
         public string plan { get
             {
                 var r = Raiding.ComputeIdealReps(this,city);
-                return $"{r.reps}x{r.averageCarry:P1}% carry";
+                return $"{(r.isValid?"":"[bad] ")}{r.reps}x{r.averageCarry:P1}% carry";
             }
         }
         public float GetScore( byte bestDungeonType)
@@ -72,8 +72,8 @@ namespace COTG.Game
 		public void ComputeIsValid()
 		{
 				var d = Raiding.ComputeIdealReps(this, city);
-			isValid=(d.reps != 0 && (d.averageCarry < SettingsPage.raidCarryMax) && d.averageCarry > SettingsPage.raidCarryMin && completion > SettingsPage.minDungeonProgress);
-
+			isValid = d.isValid;
+	
 		}
 		public static async Task<bool> ShowDungeonList(City city, JsonElement jse, bool autoRaid)
 		{
@@ -117,7 +117,7 @@ namespace COTG.Game
 						var i = _i;
 						int counter = 0;
 
-						var good = await Raiding.SendRaids(i, false);
+						var good = await Raiding.SendRaids(i);
 						if (!good)
 						{
 							Note.Show($"Raid send failed for {city.nameMarkdown}, will try again");

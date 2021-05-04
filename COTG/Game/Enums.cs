@@ -52,7 +52,7 @@ namespace COTG.Game
         //  4  "priestess",5 "vanquisher",6 "sorcerers",7 "scout", 
         //  8  "arbalist",9 "praetor",10 "horseman",11 "druid",
         //  12 "ram",13 "scorpion",14 "galley",15 "stinger",
-        //  16 "warship",17 "senator"
+        //  16 "warship",17 "senator",
 
         public static float[] ttSpeedBonus = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,1,1,1,1,1 };
         public static float[] ttCombatBonus = { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 };

@@ -109,31 +109,7 @@ namespace COTG.Views
 			}
 			return null;
 		}
-		static bool IsFromDungeonGrid(PointerRoutedEventArgs e)
-		{
-			var a = GetGrid(e);
-			if (a==null)
-				return false;
-			return a.Tag  as String == "Dungeons";
-		}
-        private void CityGrid_PointerPress(object sender, PointerRoutedEventArgs e)
-        {
-				if (IsFromDungeonGrid(e)) 
-					return;
-            Spot.ProcessPointerPress(this,sender,e);
-        }
-        private void cityGrid_PointerExited(object sender, PointerRoutedEventArgs e)
-        {
-			if (IsFromDungeonGrid(e))
-				return;
-			Spot.ProcessPointerExited();
-            //if (string.Empty!=lastTip)
-            //{
-            //    lastTip = string.Empty;
-            //    TabPage.mainTabs.tip.Text = string.Empty;
-            //}
-        }
-
+   
 
         public static List<int> GetContextCids(object sender)
         {
@@ -251,14 +227,14 @@ namespace COTG.Views
 
 		public static void ToggleInfoBoxes(bool on)
 		{
-			if (on)
-				TabPage.mainTabs.Visibility = Visibility.Visible;
-			else
-				TabPage.mainTabs.Visibility = Visibility.Collapsed;
-			//			var vis = on ? Visibility.Visible : Visibility.Collapsed;
-			//			instance.raidInfoBox.Visibility = vis;
-			//	instance.raidOptionBox.Visibility = vis;
-			//		instance.incomeBox.Visibility = vis;
+			//if (on)
+			//	TabPage.mainTabs.Visibility = Visibility.Visible;
+			//else
+			//	TabPage.mainTabs.Visibility = Visibility.Collapsed;
+			////			var vis = on ? Visibility.Visible : Visibility.Collapsed;
+			////			instance.raidInfoBox.Visibility = vis;
+			////	instance.raidOptionBox.Visibility = vis;
+			////		instance.incomeBox.Visibility = vis;
 		}
 		override public async void VisibilityChanged(bool visible)
         {
@@ -409,7 +385,7 @@ namespace COTG.Views
 
 			var sel = Spot.GetSelectedForContextMenu(0, false);
 			int totalSent = 0;
-			const float minRaidIdle = 0.0625f;
+			float minRaidIdle = 0.0625f;
 			for (int pass=0;pass<8;++pass)
 			{
 
@@ -426,7 +402,7 @@ namespace COTG.Views
 					}
 					var c = City.Get(cid);
 					var city = Spot.GetOrAdd(cid);
-					if(city.raidIdle > minRaidIdle )
+					if(city.raidIdle >= minRaidIdle )
 					{
 						if( await ScanDungeons.Post(cid, city.commandSlots == 0, true) )
 						{
@@ -440,6 +416,10 @@ namespace COTG.Views
 					break;
 				Note.Show($"Pass {pass} sent {processed} cities to raid");
 
+				// On second and further passes only send if they are all home
+				// not ideal but it helps
+				if (SettingsPage.raidIntervals != 0)
+					minRaidIdle = 15.0f / 16.0f;
 			}
 			Note.ShowTip($"Auto Raid: Completed: {sel.Count}/{sel.Count}");
 			Note.Show($"Sent {totalSent.Min(sel.Count)} Raids (from {sel.Count} selected)");

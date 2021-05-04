@@ -48,7 +48,7 @@
 										   Tip="Click here to send raids" />
 
 				<tg:DataGridTextColumn PropertyName="plan"
-										   CellContentStyle="{StaticResource RightAlignLink}"
+										   CellContentStyle="{StaticResource LeftAlignLink}"
 											   SizeMode="Auto"
 										   Tip="Click here to send raids" />
 				<tg:DataGridNumericalColumn PropertyName="distance"

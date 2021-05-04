@@ -16,7 +16,6 @@
 	<Style x:Key="BodyTextStyle" TargetType="TextBlock">
 		<Setter Property="FontFamily" Value="Tw Cen MT Condensed"/>
 		<Setter Property="FontSize" Value="{StaticResource MediumFontSize}" />
-		<Setter Property="TextTrimming" Value="CharacterEllipsis" />
 		<Setter Property="TextWrapping" Value="Wrap" />
         <Setter Property="IsTextScaleFactorEnabled" Value="False"/>
         
@@ -24,14 +23,13 @@
 
 	<!--  MasterDetail TextBlock Styles  -->
 	<Style
-		x:Key="ListTitleStyle"
-		BasedOn="{StaticResource BaseTextBlockStyle}"
+		x:Key="ListItemStyle"
+		BasedOn="{StaticResource BodyTextStyle}"
 		TargetType="TextBlock">
-		<Setter Property="FontFamily" Value="Tw Cen MT Condensed"/>
-		<Setter Property="FontSize" Value="{StaticResource LargeFontSize}" />
-	    <Setter Property="IsTextScaleFactorEnabled" Value="False"/>
-        
-    </Style>
+		<Setter Property="MaxLines" Value="4" />
+		<Setter Property="LineStackingStrategy" Value="MaxHeight" />
+
+	</Style>
 
 	<Style x:Key="ListSubTitleStyle" TargetType="TextBlock">
 		<Setter Property="FontSize" Value="{StaticResource MediumFontSize}" />

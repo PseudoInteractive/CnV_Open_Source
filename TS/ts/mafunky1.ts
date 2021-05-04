@@ -818,6 +818,18 @@ function onKeyDown(ev: KeyboardEvent) {
 	setTimeout(()=> window['external']['notify'](str),0);
 }
 
+window['getOGA'] = function () {
+	return JSON.stringify(OGA);
+	//if(H2 !== "Avatar")
+	//	 return;
+
+	//for (let i in artifacts) {
+	//	if (!ppdt.itc)
+	//		ppdt.itc = {};
+	//	ppdt.itc[i] = 128;
+	// }
+}
+
 function onKeyUp(ev: KeyboardEvent) {
 
 	if (ev.key !== "Control" && ev.key !== "Shift")

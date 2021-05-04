@@ -14,13 +14,24 @@ namespace COTG.Game
 		public int id;
         public string name;
         public ushort alliance;
-        public ushort pointsH;// divided by 100
         public byte title;
         public static int myId;
 		public static int activeId;
+		public int points;
 		public static HashSet<int> myIds = new HashSet<int>();
 		public static string myName;
 		public static string subOwner;
+
+		public float MoralePenalty(Player b)
+		{
+			if (points <= b.points * 5)
+				return 0;
+			return (float)(points*10) / b.points;
+		}
+		public static float MoralePenalty(int attackPid, int defendPid)
+		{
+			return Player.Get(attackPid).MoralePenalty(Player.Get(defendPid));
+		}
 
 		public static int myTitle;
         public static int viewHover; // in the view menu

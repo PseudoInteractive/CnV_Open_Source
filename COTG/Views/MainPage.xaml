@@ -33,7 +33,6 @@
 							Grid.Row="3"
 							IsTabStop="True"
 							TabFocusNavigation="Once"
-						AllowFocusOnInteraction="True"
 							UserGroupMode="Auto"
 							AlternationStep="2"
 							ItemsSource="{x:Bind game:City.gridCitySource, Mode=OneWay}"
@@ -42,18 +41,15 @@
 							CanUserChooseColumns="True"
 							RowHeight="{StaticResource GridRowHeight}"
 							UserFilterMode="Auto"
-							PointerPressed="CityGrid_PointerPress"
-							PointerExited="cityGrid_PointerExited"
+							PointerPressed="{x:Bind game:Spot.GridPressed}"
+							PointerExited="{x:Bind game:Spot.GridExited}"
 							FontSize="{StaticResource SmallFontSize}"
 							IsTextScaleFactorEnabled="False"
 							GroupPanelPosition="Bottom"
 							SelectionUnit="Row"
 							Tag="Raid"
 							ScrollViewer.ZoomMode="Enabled"
-							ScrollViewer.VerticalScrollMode="Enabled"
-							ScrollViewer.HorizontalScrollMode="Enabled"
-							ScrollViewer.HorizontalScrollBarVisibility="Visible"
-							ScrollViewer.VerticalScrollBarVisibility="Visible"
+						
 							>
 
 				<tg:RadDataGrid.Commands>

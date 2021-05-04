@@ -10,7 +10,7 @@ using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Data;
@@ -24,6 +24,17 @@ using System.Threading.Tasks;
 
 namespace COTG.Views
 {
+	class HeatmapTemplateSelector : Windows.UI.Xaml.Controls.DataTemplateSelector
+	{
+		public DataTemplate dayTemplate { get; set; }
+		public DataTemplate deltaTemplate { get; set; }
+
+		protected override DataTemplate SelectTemplateCore(object item)
+		{
+			return item is HeatMapDay ? dayTemplate : deltaTemplate;
+		}
+	}
+
 	public sealed partial class HeatTab : UserTab
 	{
 		public static HeatTab instance;
@@ -36,42 +47,65 @@ namespace COTG.Views
 
 		public static void DaysChanged()
 		{
-			App.DispatchOnUIThreadLow( ()=>
-			{
-					HeatMapDay.days.NotifyReset();
-			});
+
+			HeatMapDay.days.NotifyReset();
+			
 		}
 	
 
 		private void Now_Click(object sender, RoutedEventArgs e)
 		{
-			zoom.SelectedNodes.Clear();
+		
+			zoom.SelectedNodes?.Clear();
+		}
+		public static async Task ResetAllChangeDescriptions()
+		{
+			// invalidate
+			lastSelHash = 0;
+			using var _ = await HeatMap.mutex.LockAsync();
+			
+			foreach (var day in HeatMapDay.days)
+			{
+				day.UpdateDesc(false, true);
+			}
+
+			await App.DispatchOnUIThreadTask(() =>
+		   {
+			   foreach (var day in HeatMapDay.days)
+			   {
+				   day.NotifyChange();
+				   if (day.hasDeltas)
+				   {
+					   foreach (var d in day.deltas)
+						   d.NotifyChange();
+				   }
+			   }
+			   return Task.CompletedTask;
+			});
 		}
 
 		override public async void VisibilityChanged(bool visible)
 		{
 			tabVisible = visible;
+			base.VisibilityChanged(visible);
+
 			if (visible)
 			{
-				HeatMap.LoadList();
-				DaysChanged();
+				await HeatMap.LoadList();
 				//	zoom.Focus(FocusState.Programmatic);
+				
+				await ResetAllChangeDescriptions();
+				DaysChanged();
+				
 				if (!callbackRunning)
 					CheckSelectionChanged();
-				foreach (var day in HeatMapDay.days)
-				{
-					day.NotifyChange();
-					foreach (var d in day.deltas)
-						d.NotifyChange();
-				}
-				HeatMapDay.days.NotifyReset();
 			}
 			else
 			{
 		//		World.ClearHeatmap();
 			}
-			base.VisibilityChanged(visible);
 		}
+
 		static bool tabVisible;
 		static bool callbackRunning;
 		static int lastSelHash;
@@ -85,6 +119,7 @@ namespace COTG.Views
 			}
 			return rv;
 		}
+		
 		public async void CheckSelectionChanged()
 		{
 			Assert(callbackRunning == false);
@@ -93,14 +128,18 @@ namespace COTG.Views
 			{
 				for (; ; )
 				{
-					await App.DispatchOnUIThreadSneakyLowAwait(() =>
+					await App.DispatchOnUIThreadTask(() =>
 				   {
-					   var hash = ComputeHash(zoom.SelectedNodes);
-					   if (hash != lastSelHash)
+					   if (zoom.SelectedNodes != null)
 					   {
-						   lastSelHash = hash;
-						   SelectionChanged();
+						   var hash = ComputeHash(zoom.SelectedNodes);
+						   if (hash != lastSelHash)
+						   {
+							   lastSelHash = hash;
+							   SelectionChanged();
+						   }
 					   }
+					   return Task.CompletedTask;
 
 				   });
 					await Task.Delay(500);
@@ -116,28 +155,38 @@ namespace COTG.Views
 
 		public void SelectionChanged()
 		{
-			Trace("Sel Changed");
+
+			var t1 = SmallTime.zero;
+			var t0 = SmallTime.serverNow;
+			var sel = zoom.SelectedNodes;
+			if (sel != null && sel.Count > 0)
 			{
-				var t1 = SmallTime.zero;
-				var t0 = SmallTime.serverNow;
-				var sel = zoom.SelectedNodes;
-				if (sel.Count > 0)
+				foreach (var i in sel)
 				{
-					foreach (var i in sel)
-					{
-						var t = (i.Content as HeatMapItem ).t;
-						if (t < t0)
-							t0 = t;
-						if (t > t1)
-							t1 = t;
-					}
-					World.SetHeatmapDates(t0, t1); // Is Timezone Right?
+					var t = (i.Content as HeatMapItem).t;
+					if (t.seconds == 0)
+						continue; // this is as placeholder for pending
+					if (t < t0)
+						t0 = t;
+					if (t > t1)
+						t1 = t;
 				}
-				else
+				if (t1.seconds != 0)
 				{
-					World.ClearHeatmap();
+					World.SetHeatmapDates(t0, t1); // Is Timezone Right?
+					return;
 				}
 			}
+
+			World.ClearHeatmap();
+			App.DispatchOnUIThreadSneaky(() =>
+		   {
+			   if (HeatTab.instance.isVisible)
+			   {
+				   HeatTab.instance.header.Text = "Please select a date range to see changes";
+
+			   }
+		   });
 		}
 
 		private void snapshots_PointerEntered(object sender, PointerRoutedEventArgs e)
@@ -152,10 +201,11 @@ namespace COTG.Views
 
 		static TreeViewNode FindTreeViewNode(HeatMapItem content) => FindTreeViewNode(instance.zoom.RootNodes, content);
 
-		static bool IsSelected(HeatMapItem content) => instance.zoom.SelectedNodes.Any((a) => a.Content == content);
+		static bool IsSelected(HeatMapItem content, IList<TreeViewNode> sel) => sel != null && sel.Any((a) => a.Content == content);
 
 		static TreeViewNode FindTreeViewNode(IList<TreeViewNode> nodes, HeatMapItem content)
 		{
+			
 			foreach(var n in nodes)
 			{
 				if (n.Content == content)
@@ -172,7 +222,7 @@ namespace COTG.Views
 			return null;
 		}
 		static int deltaOffset;
-		private async void zoom_ItemInvoked(Windows.UI.Xaml.Controls.TreeView sender, Windows.UI.Xaml.Controls.TreeViewItemInvokedEventArgs args)
+		private async void zoom_ItemInvoked(TreeView sender, TreeViewItemInvokedEventArgs args)
 		{
 			args.Handled = true;
 			var item = args.InvokedItem as HeatMapItem;
@@ -183,34 +233,22 @@ namespace COTG.Views
 		{
 			if (item is HeatMapDay day)
 			{
-				if (!day.isInitialized)
-				{
-					await day.Load();
-
-				}
+				await day.Load();
 			}
 			else if (item is HeatMapDelta delta)
 			{
-				if(!IsSelected(delta))
-				{
-					var node = FindTreeViewNode(delta);
-					if (node != null)
-					{
-						instance.zoom.SelectedNodes.Clear();
-						instance.zoom.SelectedNodes.Add(node);
-					}
-
-				}
-
 				if(World.rawPrior0 == null)
 				{
 				}
 				else
 				{
-					for (int counter = 0; counter < 64; ++counter)
+					for (int counter = 0; counter < 256; ++counter)
 					{
 						++deltaOffset;
-						var id = delta.deltas.Span[deltaOffset * 2 % delta.deltas.Length];
+						var id = delta.changes.Span[deltaOffset * 2 % delta.changes.Length];
+						if (!Spot.TestContinentFilterPacked(World.PackedIdToPackedContinent(id)))
+								continue;
+
 						var change = ChangeInfo.GetChangeDesc(World.rawPrior0.Span[(int)id], World.rawPrior1.Span[(int)id]);
 						if (change == null)
 							continue;
@@ -221,34 +259,50 @@ namespace COTG.Views
 					}
 				}
 			}
+//			App.DispatchOnUIThreadSneaky(() =>
+//		   {
+////			   instance.zoom.SelectionMode = TreeViewSelectionMode.None;
+////			   instance.zoom.SelectionMode = TreeViewSelectionMode.Multiple;
+//			   var sel = instance.zoom.SelectedNodes;
+//			   var selected = IsSelected(item,sel);
+//			   sel?.Clear();
+//			   if (!selected)
+//			   {
+//				   var node = FindTreeViewNode(item);
+//				   if (node != null)
+//				   {
+//					   if (sel != null)
+//					   {
+//						   if (item is HeatMapDay )
+//						   {
+//							   foreach (var i in item.deltas)
+//							   {
+//								   var n = FindTreeViewNode(node.Children,i);
+//								   if(n!=null)
+//									   sel.Add(n);
+//							   }
 
+//						   }
+//						   sel.Add(node);
+//						   /// select children?
+//					   }
+//				   }
 
+//			   }
+//			   else
+//			   {
+
+//			   }
+//			   item.NotifyChange();
+//		   });
 		}
 
 
 		private void tree_KeyDown(object sender, KeyRoutedEventArgs e)
 		{
 			var tv = sender as TreeViewItem;
-			ItemInvoked(tv.DataContext as HeatMapItem); 
-	//		Trace($"Key:  {sender} {e}");
-		}
-
-
-		
-
-		
-		
-
-		private void zoom_Expanding(Windows.UI.Xaml.Controls.TreeView sender, Windows.UI.Xaml.Controls.TreeViewExpandingEventArgs args)
-		{
-			var i = args.Item as HeatMapItem;
-			var day = i as HeatMapDay;
-			if(day!=null)
-			{
-				if (!day.isInitialized)
-					day.Load();
-			}
-
+	//		ItemInvoked(tv.DataContext as HeatMapItem); 
+			Trace($"Key:  {sender} {e}");
 		}
 
 		//private void TreeViewItem_Tapped(object sender, TappedRoutedEventArgs e)

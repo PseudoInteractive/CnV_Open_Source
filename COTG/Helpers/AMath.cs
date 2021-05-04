@@ -37,11 +37,11 @@ namespace COTG
 		}
 		public static bool TryParseInt(this string s, out int o)
 		{
-			return int.TryParse(s, System.Globalization.NumberStyles.Number, CultureInfo.InvariantCulture, out o);
+			return int.TryParse(s, System.Globalization.NumberStyles.Number, NumberFormatInfo.CurrentInfo, out o);
         }
 		public static bool TryParseFloat(this string s, out float o)
 		{
-			return float.TryParse(s, System.Globalization.NumberStyles.Number, CultureInfo.InvariantCulture, out o);
+			return float.TryParse(s, System.Globalization.NumberStyles.Number, NumberFormatInfo.CurrentInfo, out o);
 		}
 		public static float SmoothStep(this float f, float v0, float v1, float pow=1)
 		{
@@ -246,6 +246,15 @@ namespace COTG
 		{
 			return f >= 0 ? (int)(f + 0.5f) : -((int)(-f + 0.5f));
 		}
+		public static long RoundToLong(this double f)
+		{
+			return f >= 0 ? (long)(f + 0.5f) : -((long)(-f + 0.5f));
+		}
+		public static long RoundToLong(this float f)
+		{
+			return f >= 0 ? (long)(f + 0.5f) : -((long)(-f + 0.5f));
+		}
+
 		#region Dynamics
 
 		public static float CritDampingKd( float ks)

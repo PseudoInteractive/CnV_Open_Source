@@ -115,3 +115,35 @@
    - When the heatmaps were combined I did some bad time zone stuff.  
    - Historical snapshops that you and others submitted are off by the number of hours it takes for the world to spin you to England (or wherever, depending on the server).
    - If you walk through a heatmap it may seem like a jumpy trip, but the asymptotic results will be accurate and statistically everything will be mostly fine (which is really not that imporant)
+### 2021/4/26
+ - **New**
+  - Global continent filter lets you filter cities and heat map results by continent
+  - _Because we don't have enough ways to filter by continent..._
+  - Selecting more than one continent to filter by is supported
+  - If no contients are selected the filter is disabled and everything passes
+  - Supported for build tab, raid tab, and Heatmap summaries (to see how much activity took place on a continent)
+### 2021/4/26
+ - **New**
+  - Food Warning context item on cities
+  - Select multiple cities to apply one setting to all
+### 2021/4/28
+  - **Update**
+   - Streamlined setup, combined setting sharestring with setting hub settings
+   - There are three expadning groups:  Layout, trade Settings and Tags
+    - Groups that are collapsed will not be be applied to the city
+  - **New**
+    - You can set Layout/Trade setup/Tags via city context menu selecting 'Setup/Change'
+	- You can select multiple cities using shift click, then (still holding shift) right click and select 'Setup/Change' and the settings will be applied to all of them
+### 2021/4/29
+  - **Update** 
+   - AttackPlanner now accepts one max travel time for senators and a separate one for SE
+   - AttackPlanner not aims to minimize morale penalty.  If you are with FBK, don't worry, this has nothing to do with W23.
+### 2021/4/30
+  - **Change** 
+   - New city setup is now a notice rather than a popup.
+   - You can click on the notice or find the Setup hyperlink in the debug tab to run setup
+### 2021/5/3
+  - **New** 
+   - Q key is not a shortcut for Layout build
+  - **New**
+   - Added Recruit Senator command to War context menu

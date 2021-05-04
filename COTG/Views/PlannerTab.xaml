@@ -22,6 +22,8 @@
 					<Button Content="ShareString..." ToolTipService.ToolTip="Open the sharestring dialog where you can chose or set your intitial layout" Style="{StaticResource ButtonMedium}" Click="ShareStringClick" />
 					<Button Content="Flip Horizontal" ToolTipService.ToolTip="Flip buildings horizontally, used to position corner buildings where there are fewer resources" Style="{StaticResource ButtonMedium}" Click="FlipHClick" />
 					<Button Content="Flip Vertical" ToolTipService.ToolTip="Flip buildings vertically, used to position corner buildings to where there are fewer resources" Style="{StaticResource ButtonMedium}" Click="FlipVClick" />
+					<Button Content="Rotate Center" ToolTipService.ToolTip="Rotates buildings in the center" Style="{StaticResource ButtonMedium}" Click="RotateCenterClick" />
+					<Button Content="Rotate Outer" ToolTipService.ToolTip="Rotates buildings outside of the center, do not use with water" Style="{StaticResource ButtonMedium}" Click="RotateOuterClick" />
 					<Button Content="Smart Rearrange" ToolTipService.ToolTip="Moves buildings whose positions don't matter to where existing corresponding buildings are located or to locations without res nodes" Style="{StaticResource ButtonMedium}" Click="SmartRearrange" />
 					<Button Content="Back To Build" ToolTipService.ToolTip="Return to normal building" Style="{StaticResource ButtonMedium}" Click="Done" />
 				</tk:WrapPanel>

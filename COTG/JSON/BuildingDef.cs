@@ -26,6 +26,7 @@ namespace COTG.JSON
 			Log("Bad building! " + bid);
 			return 0;
 		}
+
 		public const int sharestringOffset = 444;
 		public static Dictionary<byte, byte> sharestringToBuldings;
 		public static Dictionary<byte, byte> buildingsToSharestring;

@@ -36,6 +36,8 @@
                         GroupPanelPosition="Bottom"
                         AlternationStep="2"
                         SelectionMode="Single"
+						ScrollViewer.ZoomMode="Enabled"
+
                         AllowFocusOnInteraction="True"
                         ColumnDataOperationsMode="Flyout"
                         SelectionChanged="defenderGrid_SelectionChanged"
@@ -58,7 +60,10 @@
                                        
                                        CellContentStyle="{StaticResource CenterAlignLink}"
                                         />
-                <tg:DataGridNumericalColumn PropertyName="incomingAttacks"
+				<tg:DataGridTextColumn PropertyName="firstIncoming"
+                                       CellContentStyle="{StaticResource LeftAlign}"
+                                        />
+				<tg:DataGridNumericalColumn PropertyName="incomingAttacks"
                                             Header="inA"
                                             
                                             CellContentStyle="{StaticResource CenterAlign}"

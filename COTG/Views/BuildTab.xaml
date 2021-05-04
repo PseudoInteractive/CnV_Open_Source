@@ -35,6 +35,10 @@
 							TabFocusNavigation="Once"
 						AllowFocusOnInteraction="True"
 						ScrollViewer.ZoomMode="Enabled"
+						ScrollViewer.IsScrollInertiaEnabled="False"
+						ScrollViewer.IsVerticalScrollChainingEnabled="False"
+						ScrollViewer.IsZoomChainingEnabled="True"
+						
 							UserGroupMode="Auto"
 							AlternationStep="2"
 							ItemsSource="{x:Bind game:City.gridCitySource, Mode=OneWay}"
@@ -43,18 +47,13 @@
 							CanUserChooseColumns="True"
 							RowHeight="{StaticResource GridRowHeight}"
 							UserFilterMode="Auto"
-							PointerPressed="CityGrid_PointerPress"
-							PointerExited="cityGrid_PointerExited"
+							PointerPressed="{x:Bind game:Spot.GridPressed}"
+							PointerExited="{x:Bind game:Spot.GridExited}"
 							FontSize="{StaticResource SmallFontSize}"
 							IsTextScaleFactorEnabled="False"
 							GroupPanelPosition="Bottom"
 							SelectionUnit="Row"
-							
 							Tag="Raid"
-							ScrollViewer.VerticalScrollMode="Enabled"
-							ScrollViewer.HorizontalScrollMode="Enabled"
-							ScrollViewer.HorizontalScrollBarVisibility="Visible"
-							ScrollViewer.VerticalScrollBarVisibility="Visible"
 							>
 	
 			<tg:RadDataGrid.Commands>
@@ -126,7 +125,15 @@
 												CellContentStyle="{StaticResource RightAlign}"
 												CellContentFormat="{}{0,6:N0}"
 												 />
-
+				<tg:DataGridNumericalColumn PropertyName="constructionSpeed"
+											Header="cs"
+											HeaderTip="Construction Speed"
+												Tip="Construction Speed"
+												SizeMode="Auto"
+												CellContentStyle="{StaticResource RightAlign}"
+												CellContentFormat="{}{0,4:N0}"
+												 />
+				
 				<tg:DataGridNumericalColumn PropertyName="tsTotal"
 												CellContentStyle="{StaticResource RightAlign}"
 												Tip="TS enlisted in city"

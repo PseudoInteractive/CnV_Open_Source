@@ -65,85 +65,88 @@ namespace COTG.Views
             {
                 if (defendant == null )
                     defendant = Spot.GetFocus();
-                if (defendant != null && defendant.isCityOrCastle)
-                {
-                    var portal = this.portal.IsChecked.GetValueOrDefault();
-                  
-                    var onlyHome = this.onlyHome.IsChecked.GetValueOrDefault();
-                    // Dispatch both and then wait for results in parallel
-                    var task0 = RestAPI.troopsOverview.Post();
-                    var task1 = RaidOverview.Send();
-                    await task0;
-                    await task1;
-                    List<Supporter> s = new List<Supporter>();
-                    //                supportGrid.ItemsSource = null;
-                    foreach (var city in City.gridCitySource)
-                    {
-                        Assert(city is City);
-                        if ( (includeOffense? city.tsHome:city.tsDefHome) < filterTSHome |
-                             (includeOffense ? city.tsTotal:city.tsDefTotal) < filterTSTotal)
-                            continue;
-                        var hours = 0.0f;
-                        var onDifferentContinent = false;
-                        if (!portal)
-                        {
-                            if (!city.ComputeTravelTime(defendant.cid,onlyHome, out hours, out onDifferentContinent) || hours > filterTime)
-                                continue;
-                        }
-                        // re-use if possible
-                        var supporter = supporters.Find((a) => a.city == city);
-                        if (supporter == null)
-                        {
-                            supporter = new Supporter() { city = city };
-                        }
-                        var troops = (onlyHome ? city.troopsHome : city.troopsTotal);
-                        s.Add(supporter);
-                        if (onDifferentContinent)
-                        {
-                            var ttGalleys = troops.FirstOrDefault((tt) => tt.type == ttGalley);
-                            // handle Galleys
-                            if (ttGalleys != null)
-                            {
-                                var galleys = ttGalleys.count;
-                                var landTroops = troops.Where((tt) => IsLandRaider(tt.type)).Sum((t) => t.count);
-                                var requiredGalleys = (landTroops + 499) / 500;
-                                var sendGain = 1.0;
-                                if(galleys >= requiredGalleys )
-                                {
-                                    galleys = requiredGalleys;
-                                }
-                                else
-                                {
-                                    sendGain = galleys * 500.0 / landTroops;
-                                }
-                                List<TroopTypeCount> tSend = new List<TroopTypeCount>();
-                                tSend.Add(new TroopTypeCount(ttGalley, galleys));
-                                foreach(var tt in troops)
-                                {
-                                    if (tt.type == ttStinger)
-                                    {
-                                        tSend.Add(tt); 
-                                    }
-                                    else
-                                    {
-                                        if (!IsLandRaider(tt.type) || !Include(tt))
-                                            continue;
-                                        tSend.Add(new TroopTypeCount(tt.type, (int)(sendGain * tt.count))); // round down
-                                    }
-                                }
-                                supporter.tSend = tSend.ToArray();
-                            }
-                            else
-                            {
-                                supporter.tSend = troops.Where((tt) => tt.type == ttStinger).ToArray(); // take stingers
-                            }
-                        }
-                        else
-                        {
-                            supporter.tSend = troops.Where( tt=> (includeOffense|| tt.isDef) ).ToArray(); // clone array
-                        }
-                        supporter.travel = hours;
-                    }
+				if (defendant != null && defendant.isCityOrCastle)
+				{
+					var portal = this.portal.IsChecked.GetValueOrDefault();
+
+					var onlyHome = this.onlyHome.IsChecked.GetValueOrDefault();
+					// Dispatch both and then wait for results in parallel
+					var task0 = RestAPI.troopsOverview.Post();
+					var task1 = RaidOverview.Send();
+					await task0;
+					await task1;
+					List<Supporter> s = new List<Supporter>();
+					//                supportGrid.ItemsSource = null;
+					{
+						using var _ = await City.cityGridLock.LockAsync();
+					foreach (var city in City.gridCitySource)
+					{
+						Assert(city is City);
+						if ((includeOffense ? city.tsHome : city.tsDefHome) < filterTSHome |
+							 (includeOffense ? city.tsTotal : city.tsDefTotal) < filterTSTotal)
+							continue;
+						var hours = 0.0f;
+						var onDifferentContinent = false;
+						if (!portal)
+						{
+							if (!city.ComputeTravelTime(defendant.cid, onlyHome, out hours, out onDifferentContinent) || hours > filterTime)
+								continue;
+						}
+						// re-use if possible
+						var supporter = supporters.Find((a) => a.city == city);
+						if (supporter == null)
+						{
+							supporter = new Supporter() { city = city };
+						}
+						var troops = (onlyHome ? city.troopsHome : city.troopsTotal);
+						s.Add(supporter);
+						if (onDifferentContinent)
+						{
+							var ttGalleys = troops.FirstOrDefault((tt) => tt.type == ttGalley);
+							// handle Galleys
+							if (ttGalleys != null)
+							{
+								var galleys = ttGalleys.count;
+								var landTroops = troops.Where((tt) => IsLandRaider(tt.type)).Sum((t) => t.count);
+								var requiredGalleys = (landTroops + 499) / 500;
+								var sendGain = 1.0;
+								if (galleys >= requiredGalleys)
+								{
+									galleys = requiredGalleys;
+								}
+								else
+								{
+									sendGain = galleys * 500.0 / landTroops;
+								}
+								List<TroopTypeCount> tSend = new List<TroopTypeCount>();
+								tSend.Add(new TroopTypeCount(ttGalley, galleys));
+								foreach (var tt in troops)
+								{
+									if (tt.type == ttStinger)
+									{
+										tSend.Add(tt);
+									}
+									else
+									{
+										if (!IsLandRaider(tt.type) || !Include(tt))
+											continue;
+										tSend.Add(new TroopTypeCount(tt.type, (int)(sendGain * tt.count))); // round down
+									}
+								}
+								supporter.tSend = tSend.ToArray();
+							}
+							else
+							{
+								supporter.tSend = troops.Where((tt) => tt.type == ttStinger).ToArray(); // take stingers
+							}
+						}
+						else
+						{
+							supporter.tSend = troops.Where(tt => (includeOffense || tt.isDef)).ToArray(); // clone array
+						}
+						supporter.travel = hours;
+					}
+				}
                     if (portal)
                     {
                         if(onlyHome)

@@ -69,8 +69,8 @@ namespace COTG.Helpers
         // If outside it returns greated of distance in X and distance in Y.
         public float Distance(Vector2 v)
         {
-            return ((v.X-c1.X).Max(v.Y-c1.Y)).Max((c0.X-v.X).Max(c0.Y-v.Y));
-        }
+            return Distance2(v).Sqrt();
+	    }
         public float Distance2(Vector2 v)
         {
             var dx = ((v.X-c1.X).Max(c0.X-v.X));

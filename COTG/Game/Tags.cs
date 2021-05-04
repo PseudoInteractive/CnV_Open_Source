@@ -8,51 +8,98 @@ using EnumsNET;
 
 namespace COTG.Game
 {
+	public class IsAliasAttribute : Attribute
+	{
+
+	}
 	[Flags]
 	public  enum Tags 
 	{
 		RT= 1 << Enum.ttRanger,
+		[IsAlias]
+		ranger=RT,
+		[IsAlias]
+		triari=RT,
 		VT = 1 << Enum.ttTriari,
 		Vanq = 1 << Enum.ttVanquisher,
-		Priest= 1 << Enum.ttPriestess,
-		Prae= 1 << Enum.ttPraetor,
-		Sorc= 1 << Enum.ttSorcerer,
-		Horse= 1 << Enum.ttHorseman,
+		[IsAlias]
+		Vanquisher = Vanq,
+		Priest = 1 << Enum.ttPriestess,
+		[IsAlias]
+		Priestess = Priest,
+		Prae = 1 << Enum.ttPraetor,
+		[IsAlias]
+		Praetor = Prae,
+		Sorc = 1 << Enum.ttSorcerer,
+		[IsAlias]
+		Sorceress = Sorc,
+		[IsAlias]
+		Mage = Sorc,
+		Horse = 1 << Enum.ttHorseman,
+		[IsAlias]
+		Knight =  Horse,
 		Druid = 1 << Enum.ttDruid,
 		Arb = 1 << Enum.ttArbalist,
-		Scorp= 1 << Enum.ttScorpion,
+		[IsAlias]
+		Arbalist = Arb,
+		Scorp = 1 << Enum.ttScorpion,
+		[IsAlias]
+		Scorpion = Scorp,
+		[IsAlias]
+		cat = Scorp,
+		[IsAlias]
+		catapult = Scorp,
+		[IsAlias]
+		cataram = Scorp,
 		Stinger = 1 << Enum.ttStinger,
+		[IsAlias]
+		Sloop = Stinger,
 		Galley = 1 << Enum.ttGalley,
 		Warship = 1 << Enum.ttWarship,
-		Navy = 1 << 20,
 		Shipper= 1 << 21,
+		[IsAlias]
 		Shipping = 1 << 21,
 		Hub = 1 << 22,
 		LeaveMe = 1 << 23,
 		Storage = 1<< 24,
+		Transport = 1 << 25,
+		VRT = 1 << 26,
+
 	}
 	public struct TagInfo
 	{
 		public Tags id;
+		public bool isAlias;
 		public string s;
 	}
 	public static class TagHelper
 	{
 		public static TagInfo Get(this Tags tag) => new TagInfo() { id = tag, s = tag.AsString() };
 		//public static TagInfo tagLeaveMe = Get(Tags.LeaveMe);
-		
 
 		public static TagInfo[] tags;
+		public static TagInfo[] tagsAndAliases;
 		static TagHelper()
 		{
-			var names = Tags.GetNames(typeof(Tags));
-			tags = new TagInfo[names.Length];
-			for(int i=0;i<names.Length;++i)
+
+			var members = Enums.GetMembers<Tags>();
+			var count = members.Count;
+			var _tags = new List<TagInfo>();
+			tagsAndAliases = new TagInfo[count];
+
+			for(int i=0;i<count;++i)
 			{
-				tags[i].id = Tags.Parse<COTG.Game.Tags>(names[i]);
-				tags[i].s = names[i];
-	
+				tagsAndAliases[i].s = members[i].Name;
+				tagsAndAliases[i].id = members[i].Value;
+				var isAlias = members[i].Attributes.Has<IsAliasAttribute>();
+				tagsAndAliases[i].isAlias = isAlias;
+				if(!isAlias)
+				{
+					_tags.Add(new TagInfo() { id = members[i].Value, s = members[i].Name, isAlias = false });
+				}
+		
 			}
+			tags = _tags.ToArray();
 			
 		}
 
@@ -105,13 +152,24 @@ namespace COTG.Game
 		public static Tags Get(string src)
 		{
 			Tags result = default;
-			foreach (var t in tags)
+			foreach(var _word in src.EnumerateWords() )
 			{
-				if (src.Contains(t.s, StringComparison.OrdinalIgnoreCase))
+				var word = _word;
+				if (word.Length >= 2)
 				{
-					result = result | t.id;
+					word= word.TrimEnd('s');
 				}
+				foreach (var t in tagsAndAliases)
+				{
+					if ( word.Equals(t.s.AsSpan(),StringComparison.OrdinalIgnoreCase))
+					{
+						result = result | t.id;
+						break;
+					}
+				}
+
 			}
+
 			return result;
 		}
 		public static Tags GetTags(this Spot city)

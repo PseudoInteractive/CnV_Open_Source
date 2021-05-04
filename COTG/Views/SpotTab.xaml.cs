@@ -89,7 +89,7 @@ namespace COTG.Views
             {
                 ++disableSelection;
                 ++silenceSelectionChanges;
-                Spot.ProcessPointerPress(this,sender, e);
+                Spot.GridPressed(sender, e);
             }
             catch (Exception ex)
             {

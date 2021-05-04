@@ -215,8 +215,8 @@ namespace COTG.JSON
 							delay = 4000;
 							// process pending queue first if appropriate
 							//	ququeCount= City.buildQueue.count;
-						//	await City.buildQUpdated;
-
+							//	await City.buildQUpdated;
+							//await GetCity.Post(City.build);
 							if (City.buildQInSync)
 							{
 								cotgQ = City.buildQueue;
@@ -228,6 +228,7 @@ namespace COTG.JSON
 						else
 						{
 							var gotBQ = false;
+							var gotBuildings = false;
 							delay = 6000;
 							pollPaused = true;
 							// First try to get it from poll2, then if that fails, try GC 
@@ -250,19 +251,19 @@ namespace COTG.JSON
 								
 								if( JSClient.extCityHack.RootElement.TryGetProperty("ext", out var ext) )
 								{
-									gotBQ = GetBQInfo(ref delay, ref cotgQLength, ref cotgQ, ref ext);
+									gotBQ |= GetBQInfo(ref delay, ref cotgQLength, ref cotgQ, ref ext);
+									gotBuildings |= city.TryGetBuildings(ext);
 								}
 								JSClient.extCityHack = null;
-								if (gotBQ)
+								if (gotBQ && (city.buildingsLoaded) )
 									break;
 							}
-							if (!gotBQ)
+							if (!gotBQ || !city.buildingsLoaded)
 							{
-								Trace("Failed to get poll?");
+								Trace("Failed to get poll or missing buildings?");
 								await GetCity.Post(cid, (jsCity, city) =>
 								 {
-									 queueValid = true;  // if we got here we will assume that it is okay
-									 GetBQInfo(ref delay, ref cotgQLength, ref cotgQ, ref jsCity);
+									 queueValid = GetBQInfo(ref delay, ref cotgQLength, ref cotgQ, ref jsCity);
 								 });
 							}
 							else
@@ -270,7 +271,7 @@ namespace COTG.JSON
 								queueValid = true;
 							}
 						}
-						if (queueValid)
+						if (queueValid && city.buildingsLoaded)
 						{
 							int commandsToQueue = (City.safeBuildQueueLength - cotgQLength).Min(queue.count);
 							if (commandsToQueue > 0 || queue.count==0)
@@ -605,7 +606,7 @@ namespace COTG.JSON
 						//}
 						if (cotgQLength > 0)
 						{
-							delay = delay.Max(JSClient.ServerTimeOffset(bq[(cotgQLength) / 2].GetAsInt64("de"))); // recover after 2 seconds
+							delay = delay.Max(JSClient.ServerTimeOffsetMs(bq[(cotgQLength) / 2].GetAsInt64("de"))); // recover after 2 seconds
 							if (delay > 15 * 60 * 1000) /// never more than 5 minutes please
 							{
 								//	Assert(false);
@@ -999,7 +1000,7 @@ namespace COTG.JSON
 					sb.Append(',');
 				}
 				sb.Append($"\"{city.cid}\":[");
-				Log($"{city.cid} {city.queue.count}");
+			//	Log($"{city.cid} {city.queue.count}");
 				var qFirst = true;
 				foreach (var q in city.queue)
 				{

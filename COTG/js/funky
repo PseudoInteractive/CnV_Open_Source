@@ -8571,9 +8571,9 @@ window['showLayout'] = function () {
     $("#CNtabs").tabs({ active: 3 });
     $("#editspncn").click();
 };
-function setTestFlag(flag) {
-    testFlag = flag;
-}
+window['setTestFlag'] = function (flag) {
+    testFlag = flag == "1";
+};
 let xcoord = 0;
 let ycoord = 0;
 function debounceArgs(func, timeout) {
@@ -29040,63 +29040,65 @@ function outer() {
                 .text(__s[z2R * 1] + E4w);
             $(__s[1952])
                 .text(__s[+z2R] + s3w);
-            $(__s[2139])
-                .text(city[__s[+Q0t]][11]);
-            $(__s[1298])
-                .text(city[__s[+Q0t]][12]);
-            $(__s[503])
-                .text(city[__s[+Q0t]][+m2y]);
-            $(__s[2757])
-                .text(city[__s[+Q0t]]['14' ^ 0]);
-            $(__s[1959])
-                .text(city[__s[+Q0t]]['15' | 11]);
-            $(__s["6575" | 4384])
-                .text(city[__s[Q0t - 0]][2]);
-            $(__s['4026' | 3370])
-                .text(city[__s[Q0t - 0]][3]);
-            $(__s[4083])
-                .text(city[__s[Q0t & 2147483647]][4]);
-            $(__s['3636' | 2068])
-                .text(city[__s[+Q0t]][5]);
-            $(__s[2561])
-                .text(city[__s[Q0t ^ 0]][6]);
-            $(__s[3368])
-                .text(city[__s[+Q0t]][16]);
-            $(__s[O1y ^ 0])
-                .text(city[__s[Q0t | 4160]][+17]);
-            $(__s[1795])
-                .text(city[__s[Q0t ^ 0]][+u7y]);
-            $(__s[2275])
-                .text(city[__s[+Q0t]][+p0y]);
-            $(__s[1614])
-                .text(city[__s[+Q0t]][7]);
-            $(__s[2588])
-                .text(city[__s[+Q0t]][8]);
-            $(__s[1933])
-                .text(city[__s[+Q0t]][9]);
-            $(__s[6191])
-                .text(city[__s[+Q0t]][10]);
-            var i3w = city[__s[+Q0t]][2] + city[__s[Q0t & 2147483647]][3] + city[__s[+Q0t]][4] + city[__s[+Q0t]][5] + city[__s[+Q0t]]["6" & E6k
-                .s6s];
-            var d3w = city[__s[Q0t * 1]][7] + city[__s[+Q0t]][8] + city[__s[Q0t * 1]][9] + city[E6k
-                .S55(+Q0t)][10];
-            if (city["r"][4]['g'] < 0) {
-                var O3w = "-";
-                var Q3w = __s[4225];
+            if (city.hasOwnProperty("ww")) {
+                $(__s[2139])
+                    .text(city[__s[+Q0t]][11]);
+                $(__s[1298])
+                    .text(city[__s[+Q0t]][12]);
+                $(__s[503])
+                    .text(city[__s[+Q0t]][+m2y]);
+                $(__s[2757])
+                    .text(city[__s[+Q0t]]['14' ^ 0]);
+                $(__s[1959])
+                    .text(city[__s[+Q0t]]['15' | 11]);
+                $(__s["6575" | 4384])
+                    .text(city[__s[Q0t - 0]][2]);
+                $(__s['4026' | 3370])
+                    .text(city[__s[Q0t - 0]][3]);
+                $(__s[4083])
+                    .text(city[__s[Q0t & 2147483647]][4]);
+                $(__s['3636' | 2068])
+                    .text(city[__s[+Q0t]][5]);
+                $(__s[2561])
+                    .text(city[__s[Q0t ^ 0]][6]);
+                $(__s[3368])
+                    .text(city[__s[+Q0t]][16]);
+                $(__s[O1y ^ 0])
+                    .text(city[__s[Q0t | 4160]][+17]);
+                $(__s[1795])
+                    .text(city[__s[Q0t ^ 0]][+u7y]);
+                $(__s[2275])
+                    .text(city[__s[+Q0t]][+p0y]);
+                $(__s[1614])
+                    .text(city[__s[+Q0t]][7]);
+                $(__s[2588])
+                    .text(city[__s[+Q0t]][8]);
+                $(__s[1933])
+                    .text(city[__s[+Q0t]][9]);
+                $(__s[6191])
+                    .text(city[__s[+Q0t]][10]);
+                var i3w = city[__s[+Q0t]][2] + city[__s[Q0t & 2147483647]][3] + city[__s[+Q0t]][4] + city[__s[+Q0t]][5] + city[__s[+Q0t]]["6" & E6k
+                    .s6s];
+                var d3w = city[__s[Q0t * 1]][7] + city[__s[+Q0t]][8] + city[__s[Q0t * 1]][9] + city[E6k
+                    .S55(+Q0t)][10];
+                if (city["r"][4]['g'] < 0) {
+                    var O3w = "-";
+                    var Q3w = __s[4225];
+                }
+                else {
+                    var O3w = __s[l0p ^ 0];
+                    var Q3w = "";
+                }
+                var G3w = Math.floor(Number(city[__s[+Q0t]][0]) / (2));
+                $(__s[5811])
+                    .text(G3w + __s[+o9y]);
+                $(__s[1062])
+                    .text(city[__s[Q0t * 1]][1] + __s[2331]);
+                $(__s[1634])
+                    .text(p6(i3w));
+                $(__s[u1y | 517])
+                    .text(p6(d3w));
             }
-            else {
-                var O3w = __s[l0p ^ 0];
-                var Q3w = "";
-            }
-            var G3w = Math.floor(Number(city[__s[+Q0t]][0]) / (2));
-            $(__s[5811])
-                .text(G3w + __s[+o9y]);
-            $(__s[1062])
-                .text(city[__s[Q0t * 1]][1] + __s[2331]);
-            $(__s[1634])
-                .text(p6(i3w));
-            $(__s[u1y | 517])
-                .text(p6(d3w));
             $(__s[1325])
                 .html(__s[+l0p] + p6(Math.floor(city["r"][1]['g'])) + _s("1248" <<
                 737231520));
@@ -54932,6 +54934,9 @@ function outer() {
                         if (t71.hasOwnProperty("bq")) {
                             wrapper.ext.bq = t71.bq;
                         }
+                        if (t71.hasOwnProperty("bd")) {
+                            wrapper.ext.bd = t71.bd;
+                        }
                     }
                     let isBuildCity = t71.cid == cid;
                     if (isBuildCity) {
@@ -55082,12 +55087,7 @@ function outer() {
                     }
                     if (pollJ["iNt"]) {
                         var d71 = pollJ["iNt"];
-                        if (d9F(d71)) {
-                            if (!wrapper.citydata) {
-                                wrapper.citydata = {};
-                            }
-                            wrapper.citydata.incRes = [d71[1], d71[2], d71[3], d71[4]];
-                        }
+                        d9F(d71);
                     }
                     var b71 = pollJ[__s[6935]];
                     T5V(b71);
@@ -61667,8 +61667,6 @@ function outer() {
                 });
             }
         }
-        window['updateArtifacts'] = function () {
-        };
         var artifacts = {
             "49": {
                 "g": 2,
@@ -68999,6 +68997,9 @@ function onKeyDown(ev) {
     let str = JSON.stringify(wrapper);
     setTimeout(() => window['external']['notify'](str), 0);
 }
+window['getOGA'] = function () {
+    return JSON.stringify(OGA);
+};
 function onKeyUp(ev) {
     if (ev.key !== "Control" && ev.key !== "Shift")
         return;

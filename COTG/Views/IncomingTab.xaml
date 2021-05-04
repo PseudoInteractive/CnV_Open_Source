@@ -42,7 +42,7 @@
                        
                         PointerPressed="gridPointerPress"
                         GroupPanelPosition="Bottom"
-                   
+                        ScrollViewer.ZoomMode="Enabled"
                         AlternationStep="2"
                         SelectionMode="Extended"
                         ColumnDataOperationsMode="Flyout"

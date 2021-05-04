@@ -74,11 +74,11 @@ namespace COTG.Game
 		}
 
 		public static City invalid = new City() { _cityName = "?" };
-		public static City pending = new City() { _cityName = "pending" };
+		//public static City pending = new City() { _cityName = "pending" };
 
 		//public static City[] emptySpotSource = new[] { pending };
 
-		public string nameAndRemarks => remarks.IsNullOrEmpty() ? _cityName : $"{_cityName} - {remarks}";
+		public string nameAndRemarks => remarks.IsNullOrEmpty() ? cityName : $"{cityName} - {remarks}";
 		public string remarks { get; set; } = string.Empty; // only for city
 		public string notes { get; set; } = string.Empty; // only for city
 
@@ -238,6 +238,8 @@ namespace COTG.Game
 			}
 		};
 		public Classification classification { get; set; }
+		public sbyte academyInfo = -1;
+		public bool ? hasAcademy => academyInfo == 0 ? false : academyInfo==1 > true : null;
 		public bool isNotClassified => classification == Classification.unknown; // does not include pending
 		public bool isClassified => classification != Classification.unknown && classification != Classification.pending;
 		public bool isPending => classification == Classification.pending;
@@ -413,7 +415,7 @@ namespace COTG.Game
 
 
 
-		public static void ProcessPointerPress(UserTab tab, object sender, PointerRoutedEventArgs e)
+		public static void GridPressed(object sender, PointerRoutedEventArgs e)
 		{
 			(sender as RadDataGrid).Focus();
 			e.KeyModifiers.UpdateKeyModifiers();
@@ -427,6 +429,11 @@ namespace COTG.Game
 				spot.ProcessClick(uiPressColumn, hit.pt, hit.uie, e.KeyModifiers);
 		}
 		public static void ProcessPointerExited()
+		{
+			ClearHover();
+		}
+
+		public static void GridExited(object sender, PointerRoutedEventArgs e)
 		{
 			ClearHover();
 		}
@@ -612,7 +619,7 @@ namespace COTG.Game
 
 		public string ToTsv()
 		{
-			return $"{cid.CidToCoords()}\t{this.player}\t{this._cityName ?? ""}\t{this.remarks ?? ""}\t{this.alliance}\t{this.isCastle}\t{this.isOnWater}";
+			return $"{cid.CidToCoords()}\t{this.player}\t{this.cityName}\t{this.remarks ?? ""}\t{this.alliance}\t{this.isCastle}\t{this.isOnWater}";
 		}
 
 		public static async void ProcessCoordClick(int cid, bool lazyMove, VirtualKeyModifiers mod, bool scrollIntoUI = false)
@@ -651,7 +658,7 @@ namespace COTG.Game
 			//Spot.GetOrAdd(cid).SelectMe(false,mod);
 			SpotTab.TouchSpot(cid, mod, true);
 
-			if (mod.IsShiftAndControl() && Player.isAvatarOrTest)
+			if (mod.IsShiftAndControl() && ( Player.isAvatarOrTest|| City.CanVisit(cid) ) )
 			{
 				//     var spot = Spot.GetOrAdd(cid);
 				//     GetCity.Post(cid, spot.pid, (js, city) => Log(js));
@@ -668,7 +675,7 @@ namespace COTG.Game
 						str = $"{City.shareStringStart}{(World.GetInfoFromCid(cid).isWater ? ';' : ':')}{str.Substring(18)}";
 					App.CopyTextToClipboard(str);
 
-					Launcher.LaunchUriAsync(new Uri($"http://cotgopt.com/?map={str}"));
+					Launcher.LaunchUriAsync(new Uri($"https://cotgopt.com/?map={str}"));
 				});
 			}
 		}
@@ -689,15 +696,15 @@ namespace COTG.Game
 			}
 			else
 			{
-				return (await Classify()).classification;
+				return (await Classify()) ;
 			}
 		}
 
-		internal void QueueClassify()
+		internal void QueueClassify(bool isIncomingAttack)
 		{
 			if (isNotClassified)
 			{
-				Classify();
+				Classify(isIncomingAttack);
 			}
 		}
 		
@@ -711,7 +718,7 @@ namespace COTG.Game
 				return Classification.praetor;
 			else if (HasTag(Tags.Priest))
 				return Classification.priestess;
-			else if (HasTag(Tags.RT) || HasTag(Tags.VT))
+			else if (HasTag(Tags.RT) || HasTag(Tags.VT) || HasTag(Tags.VRT))
 				return Classification.rt;
 			else if (HasTag(Tags.Sorc))
 				return Classification.sorcs;
@@ -728,8 +735,115 @@ namespace COTG.Game
 			return Classification.unknown;
 		}
 
+		private async ValueTask<Classification> ClassifyEx(bool isIncomingAttack)
+		{
+			var rv = await Classify(isIncomingAttack);
+			if (hasAcademy.HasValue)
+				return rv;
+			return await ClassifyFromBuildings(isIncomingAttack);
+		}
 
-		internal async ValueTask<ClassificationExtended> Classify()
+		private async ValueTask<Classification> ClassifyFromBuildings(bool isIncomingAttack)
+		{
+			var str = await Post.SendForText("includes/gLay.php", $"cid={cid}", World.CidToPlayerOrMe(cid));
+
+
+		 byte stables=0;
+		 byte academies = 0;
+		 byte training = 0;
+		 byte sorc = 0;
+		 byte se = 0;
+		byte shipyards = 0;
+		byte ports = 0;
+		 byte forums = 0;
+			bool castle = false;
+			var classification = this.classification;
+
+			try
+			{
+				const int start = 14;
+				const int end = 459;
+
+				for (int i = start; i < end; ++i)
+				{
+					switch (str[i])
+					{
+						case 'E': ++stables; break;
+						case 'Y': ++se; break;
+						case 'J': ++sorc; break;
+						case 'G': ++training; break;
+						case 'Z': ++academies; break;
+						case 'X': castle = true; break;
+						case 'R': ++ports; break;
+						case 'V': ++shipyards; break;
+						case 'P': ++forums; break;
+
+
+					}
+				}
+				academyInfo = academies > 0 ? (sbyte)1 : (sbyte)0;
+				var mx = stables.Max(academies).Max(training.Max(sorc)).Max(academies.Max(training)).Max(se).Max(shipyards).Max(forums).Max(ports);
+				if (mx <= 4)
+				{
+					classification = Classification.misc;
+				}
+				else if (mx == stables)
+				{
+					if (se > 0 || academies > 0 || (stables < 32) || isIncomingAttack)
+						classification = Classification.horses;
+					else
+					{
+						classification = Classification.arbs;
+					}
+				}
+				else if (mx == sorc)
+				{
+					if (sorc == 45 || sorc == 40 || sorc == 29 || sorc == 27)
+						classification = Classification.druids;
+					else
+						classification = Classification.sorcs;
+				}
+				else if (mx == training)
+				{
+					if (se > 0 || academies > 0 || (training < 28 && training != 22)|| isIncomingAttack)
+						classification = Classification.vanqs;
+					else
+						classification = Classification.rt;
+
+				}
+				else if (mx == academies)
+				{
+					classification = Classification.praetor; // todo!
+				}
+				else if (mx == se)
+				{
+					classification = Classification.se;
+				}
+				else if (mx == shipyards)
+				{
+					classification = Classification.navy;
+				}
+				else if (mx == forums || mx == ports)
+				{
+					classification = Classification.hub;
+				}
+				else
+				{
+					classification = Classification.misc;
+				}
+
+			}
+			catch (Exception e)
+			{
+				LogEx(e);
+			}
+			if (this.classification == Classification.pending)
+				this.classification = classification;
+			
+			return (this.classification);
+		}
+
+		internal async ValueTask<Classification> Classify(bool isIncomingAttack=false)
 		{
 			if (isFriend)
 			{
@@ -755,87 +869,8 @@ namespace COTG.Game
 
 			ClassificationExtended rv = new ClassificationExtended(); ;
 			classification = Classification.pending;
-			var str = await Post.SendForText("includes/gLay.php", $"cid={cid}", World.CidToPlayerOrMe(cid));
-			try
-			{
-				const int start = 14;
-				const int end = 459;
 
-				for (int i = start; i < end; ++i)
-				{
-					switch (str[i])
-					{
-						case 'E': ++rv.stables; break;
-						case 'Y': ++rv.se; break;
-						case 'J': ++rv.sorc; break;
-						case 'G': ++rv.training; break;
-						case 'Z': ++rv.academies; break;
-						case 'X': rv.castle = true; break;
-						case 'R': ++rv.ports; break;
-						case 'V': ++rv.shipyards; break;
-						case 'P': ++rv.forums; break;
-
-
-					}
-				}
-				var mx = rv.stables.Max(rv.academies).Max(rv.training.Max(rv.sorc)).Max(rv.academies.Max(rv.training)).Max(rv.se).Max(rv.shipyards).Max(rv.forums).Max(rv.ports);
-				if (mx <= 4)
-				{
-					classification = Classification.misc;
-				}
-				else if (mx == rv.stables)
-				{
-					if (rv.se > 0 || rv.academies > 0 || (rv.stables != 25 && rv.stables == 22)||(rv.stables < 32) )
-						classification = Classification.horses;
-					else
-					{
-						classification = Classification.arbs;
-					}
-				}
-				else if (mx == rv.sorc)
-				{
-					if (rv.sorc == 45 || rv.sorc == 40 || rv.sorc == 29 || rv.sorc == 27)
-						classification = Classification.druids;
-					else
-						classification = Classification.sorcs;
-				}
-				else if (mx == rv.training)
-				{
-					if (rv.se > 0 || rv.academies > 0 || (rv.training < 28 && rv.training != 22) )
-						classification = Classification.vanqs;
-					else
-						classification = Classification.rt;
-
-				}
-				else if (mx == rv.academies)
-				{
-					classification = Classification.praetor; // todo!
-				}
-				else if (mx == rv.se)
-				{
-					classification = Classification.se;
-				}
-				else if (mx == rv.shipyards)
-				{
-					classification = Classification.navy;
-				}
-				else if (mx == rv.forums || mx == rv.ports)
-				{
-					classification = Classification.hub;
-				}
-				else
-				{
-					classification = Classification.misc;
-				}
-
-			}
-			catch (Exception e)
-			{
-				LogEx(e);
-			}
-			rv.classification = classification;
-			return rv;
-
+			return (await ClassifyFromBuildings(isIncomingAttack));
 
 		}
 
@@ -1058,10 +1093,13 @@ namespace COTG.Game
 			}
 			return rv;
 
+			
 		}
-		public void SelectMe(bool showClick, VirtualKeyModifiers mod, bool scrollIntoView = true)
+
+		public void SelectMe(bool showClick=false, VirtualKeyModifiers mod = VirtualKeyModifiers.Shift, bool scrollIntoView = true)
 		{
-			NavStack.Push(cid);
+			if(showClick || scrollIntoView)
+				NavStack.Push(cid);
 			SpotTab.AddToGrid(this, mod, true, scrollIntoView);
 			if (showClick)
 			{
@@ -1350,6 +1388,7 @@ namespace COTG.Game
 						throw new System.Exception("SetBuildOverlap");
 					}
 				}
+				bool wantUnblock = false;
 					if(!isLocked)
 						await App.uiSema.WaitAsync();
 					try
@@ -1379,15 +1418,21 @@ namespace COTG.Game
 						City.CitySwitched();
 						if (wasPlanner)
 						{
-							GetCity.Post(cid, (_, _) => CityBuild._isPlanner = true);
+							await GetCity.Post(cid );
+							await CityBuild.SetIsPlanner(true, false);
 						}
-						CityBuildQueue.UnblockQueue(cid);
+					// async
+						wantUnblock = true;
 					}
 					finally
 					{
 					   if(!isLocked)
 						App.uiSema.Release();
 					}
+
+				if(wantUnblock)
+					CityBuildQueue.UnblockQueue(cid);
+
 			}
 			SetFocus(scrollIntoView, select);
 			City.SyncCityBox();
@@ -1405,7 +1450,50 @@ namespace COTG.Game
 		}
 		public async void ReturnAt(object sender, RoutedEventArgs e)
 		{
-			(var at, var okay) = await Views.DateTimePicker.ShowAsync("Return By:");
+			DateTimeOffset? time = null;
+			try
+			{
+				var ogaStr = await JSClient.view.InvokeScriptAsync("getOGA", null);
+				var jsDoc = JsonDocument.Parse(ogaStr);
+				foreach (var i in jsDoc.RootElement.EnumerateArray())
+				{
+					var type = i[0].GetAsInt();
+					if (type ==5) // raid
+						continue;
+					Trace(type);
+					var timing = i[6].GetAsString();
+					var id = timing.IndexOf("Departs:");
+					if (id == -1)
+						continue;
+					timing = timing.Substring(id + 9);
+					var t = JSClient.ServerTime(); ;
+					var today = timing.StartsWith("Today");
+					var tomorrow = timing.StartsWith("Tomorrow");
+					if (today || tomorrow)
+					{
+						timing = today ? timing.Substring(6) : timing.Substring(9);
+						var hr = int.Parse(timing.Substring(0, 2));
+						var min = int.Parse(timing.Substring(3, 2));
+						var sec = int.Parse(timing.Substring(6, 2));
+						t = new DateTimeOffset(t.Year, t.Month, t.Day, hr, min, sec, TimeSpan.Zero);
+						if (tomorrow)
+							t += TimeSpan.FromDays(1);
+					}
+					else
+					{
+						t = timing.ParseDateTime(true) ;
+					}
+					Trace(t);
+					t -= TimeSpan.FromSeconds(10);
+					if (time == null || time > t)
+						time = t;
+				}
+			}
+			catch (Exception ex)
+			{
+				LogEx(ex, eventName:"OGA");
+			}
+			(var at, var okay) = await Views.DateTimePicker.ShowAsync("Return By:", time);
 			if (!okay)
 				return; // aborted
 
@@ -1548,16 +1636,6 @@ namespace COTG.Game
 					spot.SetFocus(false);
 					return true;
 					break;
-				case VirtualKey.Left:
-					{
-						if (spot.canVisit)
-							JSClient.CitySwitch(spot.cid, false);
-						else
-							spot.SetFocus(false);
-						return true;
-					}
-				case VirtualKey.Right:
-					return true;
 				case VirtualKey.Space:
 					{
 						if (spot.canVisit)
@@ -1624,9 +1702,10 @@ namespace COTG.Game
 					}
 
 					
-					aSetup.AddItem("Setup", Spot.InfoClick, cid);
+					aSetup.AddItem("Setup...", Spot.InfoClick, cid);
 					aSetup.AddItem( "Find Hub", (_, _) => CitySettings.SetHub(cid));
 					aSetup.AddItem( "Set Recruit", (_, _) => CitySettings.SetRecruitFromTag(cid));
+					aSetup.AddItem("Change...", (_, _) => ShareString.Show(cid));
 
 					//   AApp.AddItem(flyout, "Clear Res", (_, _) => JSClient.ClearCenterRes(cid) );
 					aSetup.AddItem("Clear Center Res", (this as City).ClearRes );
@@ -1705,6 +1784,7 @@ namespace COTG.Game
 					aWar.AddItem( "Incoming", ShowIncoming);
 
 
+				aWar.AddItem("Recruit Sen", (_, _) => Recruit.Send(cid, ttSenator,1));
 				aWar.AddItem( "Send Defence", (_, _) => JSDefend(cid));
 				aWar.AddItem( "Show Reinforcements", (_, _) => Reinforcement.ShowReturnDialog(cid, uie));
 				aExport.AddItem( "Defense Sheet", ExportToDefenseSheet);
@@ -1713,6 +1793,7 @@ namespace COTG.Game
 				if (isFriend)
 				{
 					AApp.AddItem(flyout, "Do the stuff", (_, _) => DoTheStuff());
+					AApp.AddItem(flyout, "Food Warnings", (_, _) => CitySettings.SetFoodWarnings(cid) );
 					flyout.AddItem( "Ministers", (this as City).ministersOn,  (this as City).SetMinistersOn );
 				}
 			}
@@ -1874,11 +1955,12 @@ namespace COTG.Game
 		{
 			var sb = new StringBuilder();
 			int counter = 0;
-			foreach (var _cid in GetSelectedForContextMenu(cid, false))
+			var cids = GetSelectedForContextMenu(cid, false);
+			foreach (var _cid in )
 			{
 				++counter;
 				var s = Spot.GetOrAdd(_cid);
-				var c = await s.Classify();
+				var c = await s.ClassifyEx(true);
 				switch (c.classification)
 				{
 					case Classification.sorcs:
@@ -1909,8 +1991,8 @@ namespace COTG.Game
 						break;
 				}
 				sb.Append(s.tsTotal + "\t");
-				sb.Append(c.academies > 0 ? "Yes\t" : "No\t");
-				sb.Append(s.xy + "\t");
+				sb.Append(c.hasAcademy ? "Yes\t" : "No\t");
+				sb.Append(s.xy + "\n");
 
 			}
 			App.CopyTextToClipboard(sb.ToString());

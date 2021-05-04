@@ -440,7 +440,7 @@ namespace COTG.Models
                         break;
 					case nameof(Dungeon.dispatch):
 					case nameof(Dungeon.plan):
-                        Raiding.SendRaids(i,true);
+                        Raiding.SendRaids(i);
 						DungeonView.Close();
 						return;
 //                        break;

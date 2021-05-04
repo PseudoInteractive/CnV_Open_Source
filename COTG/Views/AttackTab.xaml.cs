@@ -29,6 +29,7 @@ using Microsoft.Toolkit;
 using System.Diagnostics.Contracts;
 using Windows.UI.Xaml.Controls;
 using COTG;
+using Microsoft.Toolkit.Uwp.UI.Controls;
 // The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234236
 
 namespace COTG.Views
@@ -52,7 +53,8 @@ namespace COTG.Views
         }
 		static void UpdateArrivalUI()
 		{
-			instance.arrival.Content = SettingsPage.attackPlayerTime.FormatDefault();
+			if(AUtil.dateTimeZero != SettingsPage.attackPlannerTime)
+				instance.arrival.Content = SettingsPage.attackPlannerTime.FormatDefault();
 		}
 
 
@@ -83,7 +85,7 @@ namespace COTG.Views
                     atk.x.Add(xy.x);
                     atk.y.Add(xy.y);
                 }
-				var time = SettingsPage.attackPlayerTime;
+				var time = SettingsPage.attackPlannerTime;
 
 				atk.time = new string[] { time.Hour.ToString("00"), time.Minute.ToString("00"), time.Second.ToString("00"), time.ToString("MM/dd/yyyy") };
                 scripts[clusterId++] = System.Text.Json.JsonSerializer.Serialize(atk, Json.jsonSerializerOptions);
@@ -143,7 +145,66 @@ namespace COTG.Views
             //    }
             //}
         }
-        private void AttackSourceCoord_Tapped(object sender, TappedRoutedEventArgs e)
+
+		static int CompareCid(int cid0, int cid1)
+		{
+			var xy0 = cid0.CidToWorld();
+			var xy1 = cid1.CidToWorld();
+			var rv = xy0.WorldToContinentPacked().CompareTo(xy1.WorldToContinentPacked());
+			if (rv != 0)
+				return rv;
+			return Morton.Encode(xy0).CompareTo(Morton.Encode(xy1));
+		}
+
+		private void AttackersSorting(object sender, Microsoft.Toolkit.Uwp.UI.Controls.DataGridColumnEventArgs e)
+		{
+			var dg = attackGrid;
+			var tag = e.Column.Tag != null? e.Column.Tag.ToString() : e.Column.Header.ToString();
+			//Use the Tag property to pass the bound column name for the sorting implementation
+			Comparison<Spot> comparer = null;
+			switch (tag)
+			{
+				case "ts": comparer = (a, b) => a.tsTotal.CompareTo(b.tsTotal); break;
+				case nameof(Spot.classification): comparer = (a, b) => a.classification.CompareTo(b.classification); break;
+				case "name": comparer = (a, b) => b.nameAndRemarks.CompareTo(a.nameAndRemarks); break;
+				case nameof(Spot.attackCluster) : comparer = (a, b) => b.attackCluster.CompareTo(a.attackCluster); break;
+				case nameof(Spot.attackType): comparer = (a, b) => b.attackType.CompareTo(a.attackType); break;
+				case nameof(Spot.xy): comparer = (a, b) => CompareCid(a.cid,b.cid); break;
+			}
+
+			if (comparer != null)
+			{
+				//Implement sort on the column "Range" using LINQ
+				if (e.Column.SortDirection == null)
+				{
+					e.Column.SortDirection = DataGridSortDirection.Descending;
+					attacks.Sort(comparer);
+					attacks.NotifyReset();
+				}
+				else if (e.Column.SortDirection == DataGridSortDirection.Descending)
+				{
+					e.Column.SortDirection = DataGridSortDirection.Ascending;
+					attacks.Sort((b, a) => comparer(a, b)); // swap order of comparison
+					attacks.NotifyReset();
+				}
+				else
+				{
+					e.Column.SortDirection = null;
+
+				}
+			}
+			// add code to handle sorting by other columns as required
+
+			// Remove sorting indicators from other columns
+			foreach (var dgColumn in dg.Columns)
+			{
+				if (dgColumn.Tag != null && dgColumn.Tag.ToString() != tag)
+				{
+					dgColumn.SortDirection = null;
+				}
+			}
+		}
+		private void AttackSourceCoord_Tapped(object sender, TappedRoutedEventArgs e)
         {
             var i = sender as FrameworkElement;
 
@@ -269,7 +330,7 @@ namespace COTG.Views
                     var spot = Spot.GetOrAdd(att.cid);
                     spot.attackCluster=att.attackCluster;
 					spot.attackType = att.attackType;
-                    spot.QueueClassify();
+                    spot.QueueClassify(true);
 					attacks.Add(spot);
                 }
                 var spots = new List<Spot>();
@@ -279,7 +340,7 @@ namespace COTG.Views
                     {
                         var t = Spot.GetOrAdd(target.cid);
                         t.attackCluster = target.attackCluster;
-                        t.QueueClassify();
+                        t.QueueClassify(false);
                         t.attackType = target.attackType;
                         spots.Add(t);
 
@@ -309,9 +370,9 @@ namespace COTG.Views
         {
             if (visible)
             {
-                await TouchLists();
+				App.DispatchOnUIThreadSneaky( UpdateArrivalUI );
+				await TouchLists();
 				DoRefresh();
-				
 
 			}
 			else
@@ -555,12 +616,12 @@ namespace COTG.Views
                             ++duplicates;
                         }
                         var spot = Spot.GetOrAdd(cid);
-                        var cl = await spot.Classify();
+                        var cl = await spot.ClassifyEx(true);
                         //  string s = $"{cid.CidToString()} {Player.myName} {cl.} {(cl.academies == 1 ? 2 : 0)} {tsTotal}\n";
                         
                         if (cl.classification == Spot.Classification.se)
                             atk.attackType = AttackType.se;
-                        else if (cl.academies > 0)
+                        else if (cl.hasAcademy)
                             atk.attackType = AttackType.senator;
                         else atk.attackType = AttackType.assault;
 
@@ -640,7 +701,7 @@ namespace COTG.Views
         internal static async void AddTarget(IEnumerable<int> cids, AttackType attackType)
         {
             await instance.TouchLists();
-			int added = 0, updated = 0, wrongAlliance=0;
+			int added = 0, cities=0,updated = 0, wrongAlliance=0;
 			foreach (var cid in cids)
 			{
 				var spot = Spot.GetOrAdd(cid);
@@ -648,9 +709,14 @@ namespace COTG.Views
 				{
 					++wrongAlliance;
 					continue;
-				}	
+				}
+				if (!spot.isCastle)
+				{
+					++cities;
+					continue;
+				}
 				spot.attackType = attackType;
-				spot.QueueClassify();
+				spot.QueueClassify(false);
 				spot.attackCluster = Spot.attackClusterNone;
 				if (targets.Contains(spot))
 				{
@@ -662,7 +728,7 @@ namespace COTG.Views
 					targets.Add(spot);
 				}
 			}
-			Note.Show($"Added {added}, Updated {updated} wrong alliance {wrongAlliance}");
+			Note.Show($"Added:{added}, Updated:{updated} wrong alliance:{wrongAlliance} cities:{cities}");
 			WritebackAttacks();
             SaveAttacks();
 
@@ -700,10 +766,12 @@ namespace COTG.Views
 			public void UpdateSpan() => span = CalculateSpan();
 			public float CalculateAttackCost(Spot attacker)
 			{
+				var morale = Player.MoralePenalty(attacker.pid, real.pid);
+
 				if (category == AttackCategory.se)
-					return span.Distance2(attacker.cid.ToWorldC());
+					return span.Distance(attacker.cid.ToWorldC())+morale;
 				// fakes don't matter for distance
-				var score = attacker.cid.DistanceToCid(real.cid)*0.25f; // weighted down
+				var score = (attacker.cid.DistanceToCid(real.cid)+morale); // weighted down
 				switch (attacker.primaryTroopType)
 				{
 					case ttSorcerer:
@@ -715,19 +783,19 @@ namespace COTG.Views
 									break;
 								case Spot.Classification.vanqs:
 								case Spot.Classification.rt:
-									score -= 3;
+									score -= 3*4;
 									break;
 								case Spot.Classification.sorcs:
 								case Spot.Classification.druids:
-									score += 2;
+									score += 2 * 4;
 									break;
 								case Spot.Classification.praetor:
 								case Spot.Classification.priestess:
-									score += 8;
+									score += 8 * 4;
 									break;
 								case Spot.Classification.horses:
 								case Spot.Classification.arbs:
-									score -= 4;
+									score -= 4 * 4;
 									break;
 								case Spot.Classification.se:
 									break;
@@ -751,20 +819,20 @@ namespace COTG.Views
 								case Spot.Classification.vanqs:
 								case Spot.Classification.rt:
 
-									score += 4;
+									score += 4 * 4;
 									break;
 								case Spot.Classification.sorcs:
 								case Spot.Classification.druids:
-									score -= 2;
+									score -= 2 * 4;
 									break;
 								case Spot.Classification.praetor:
 								case Spot.Classification.priestess:
-									score -= 4;
+									score -= 4 * 4;
 									break;
 								case Spot.Classification.horses:
 								case Spot.Classification.arbs:
 
-									score -= 3;
+									score -= 3 * 4;
 									break;
 								case Spot.Classification.se:
 									break;
@@ -788,22 +856,22 @@ namespace COTG.Views
 								case Spot.Classification.vanqs:
 								case Spot.Classification.rt:
 
-									score += 2;
+									score += 2 * 4;
 									break;
 								case Spot.Classification.sorcs:
 								case Spot.Classification.druids:
-									score -= 2;
+									score -= 2 * 4;
 									break;
 								case Spot.Classification.praetor:
-									score -= 6;
+									score -= 6 * 4;
 									break;
 								case Spot.Classification.priestess:
-									score += 1;
+									score += 1 * 4;
 									break;
 								case Spot.Classification.horses:
 								case Spot.Classification.arbs:
 
-									score += 7;
+									score += 7 * 4;
 									break;
 								case Spot.Classification.se:
 									break;
@@ -823,7 +891,7 @@ namespace COTG.Views
 			}
 			public float GetTravelTime(Spot attacker)
 			{
-				var tt = attacker.primaryTroopType;
+				var tt = (category == AttackCategory.senator) ? ttSenator: attacker.primaryTroopType;
 				var t = tt.ApproxTravelTime(attacker.cid, real.cid);
 				foreach (var f in fakes)
 				{
@@ -837,13 +905,14 @@ namespace COTG.Views
 					return false;
 				return fakes.All(f => f.attackType.GetCategory() == category);
 			}
-			public bool IsInRange(Spot attacker, float maxTravelHours)
+			public bool IsInRange(Spot attacker)
 			{
 				if (category == AttackCategory.senator)
 					return true;
 				var tt = attacker.primaryTroopType;
-				return GetTravelTime(attacker) < maxTravelHours;
-				
+				return GetTravelTime(attacker) <= (category == AttackCategory.senator ? SettingsPage.attackMaxTravelHoursSen : SettingsPage.attackMaxTravelHoursSE);
+
+
 			}
 
 		}
@@ -874,7 +943,7 @@ namespace COTG.Views
 				}
 				using var work = new ShellPage.WorkScope($"Planning.. (pass {ignoreIterator})");
 
-				var maxTravelHours = (float)this.maxTravelHours.Value;
+			
 				var maxFakes = (int)this.maxFakes.Value;
 				var minAssaults = (int)this.minAssaults.Value;
 				var clusterCount = reals.Length;
@@ -1088,7 +1157,7 @@ namespace COTG.Views
 								}
 							}
 
-							if (!c.IsInRange(attack, maxTravelHours))
+							if (!c.IsInRange(attack))
 								continue;
 
 							{
@@ -1144,7 +1213,7 @@ namespace COTG.Views
 									continue;
 								foreach (var f0 in attacks)
 								{
-									if (f0.attackCluster != c0 || (f0.isAttackTypeAssault != (isAssault == 1)) || !cluster1.IsInRange(f0, maxTravelHours))
+									if (f0.attackCluster != c0 || (f0.isAttackTypeAssault != (isAssault == 1)) || !cluster1.IsInRange(f0))
 										continue;
 									var d0 = cluster0.CalculateAttackCost(f0);
 									var d1 = cluster1.CalculateAttackCost(f0);
@@ -1186,8 +1255,8 @@ namespace COTG.Views
 							var c1 = f1.attackCluster;
 							if (c0 == c1)
 								continue;
-							if (!clusters[c0].IsInRange(f1, maxTravelHours) ||
-								!clusters[c1].IsInRange(f0, maxTravelHours))
+							if (!clusters[c0].IsInRange(f1) ||
+								!clusters[c1].IsInRange(f0))
 								continue;
 
 							var d0 = clusters[c0].CalculateAttackCost(f0);
@@ -1263,7 +1332,19 @@ namespace COTG.Views
 
 				//           bad = $"{bad} Assigned {reals} reals and {fakes} fakes\nUnused: reals {unusedReals}, fakes {unusedFakes}";
 
-				Note.Show($"Attack plan done, {ignoredTargets.Count} culled real targets, {attacks.Count(a => a.isAttackClusterNone)} culled attacks, {clusterCount} value targets, SE Distance max: {maxDistanceToSE} av: {averageDistanceToSE}  Assault distance max:{maxDistanceToAssault} av:{averageDistanceToAssault} Cluster size max: {maxClusterSize} av: {averageClusterSize}");
+				Note.Show($"Attack plan done, {ignoredTargets.Count} culled real targets, {attacks.Count(a => a.isAttackClusterNone)} culled attacks, {clusterCount} value targets, SE Distance max: {maxDistanceToSE} av: {averageDistanceToSE}, Senator Distance max:{maxDistanceToSenator} av:{averageDistanceToSenator} Assault distance max:{maxDistanceToAssault} av:{averageDistanceToAssault} Cluster size max: {maxClusterSize} av: {averageClusterSize}");
+
+				for (int j = 0; j < 2; ++j)
+				{
+					foreach (var a in (j == 0 ? senatorAttacks : seAttacks))
+					{
+						var d = clusters[a.attackCluster].GetTravelTime(a);
+						if (d >= (j == 0 ? maxDistanceToSenator : maxDistanceToSE) - 1.0f)
+						{
+							Note.Show($"{a.nameMarkdown} leaves at around ${(SettingsPage.attackPlannerTime - TimeSpan.FromHours(d)).FormatDefault()}");
+						}
+					}
+				}
 				DoRefresh();
 				//StringBuilder sb = new StringBuilder();
 				//foreach (var a in attacks)
@@ -1495,10 +1576,10 @@ namespace COTG.Views
 
         private async void ArrivalTapped(object sender, RoutedEventArgs e)
         {
-            (var dateTime, var okay) = await DateTimePicker.ShowAsync("Send At", SettingsPage.attackPlayerTime);
+            (var dateTime, var okay) = await DateTimePicker.ShowAsync("Send At", SettingsPage.attackPlannerTime);
             if (okay)
             {
-				SettingsPage.attackPlayerTime = dateTime;
+				SettingsPage.attackPlannerTime = dateTime;
 				UpdateArrivalUI();
 			}
         }
@@ -1508,5 +1589,22 @@ namespace COTG.Views
             CleanTargets();
             attacks.NotifyReset();
         }
-    }
+
+		private void SelectTargets(object sender, RoutedEventArgs e)
+		{
+			
+			foreach(var i in targets)
+			{
+				i.SelectMe();
+			}
+		}
+		private void SelectAttackers(object sender, RoutedEventArgs e)
+		{
+
+			foreach (var i in attacks)
+			{
+				i.SelectMe();
+			}
+		}
+	}
 }

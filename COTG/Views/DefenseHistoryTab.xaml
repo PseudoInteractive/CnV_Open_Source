@@ -158,6 +158,8 @@ AllowFocusOnInteraction="True"
                         SelectionMode="Single"
                         ColumnDataOperationsMode="Flyout"
                         SelectionUnit="Row"
+								 						ScrollViewer.ZoomMode="Enabled"
+
                         UserSortMode="Auto">
             
             <telerikGrid:RadDataGrid.Commands  >

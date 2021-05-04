@@ -56,11 +56,13 @@ namespace COTG.Views
 				   var nameDialog = new CityRename();
 				   bool isNew = IsNew(city);
 
-				   foreach (var tag in TagHelper.tags)
-				   {
-					   var check = new ToggleButton() { IsChecked = city.HasTag(tag.id), Content = tag.s };
-					   nameDialog.tagsPanel.Children.Add(check);
-				   }
+				  // foreach (var tag in TagHelper.tags)
+				  // {
+						//if (tag.isAlias)
+						//	continue;
+					 //  var check = new ToggleButton() { IsChecked = city.HasTag(tag.id), Content = tag.s };
+					 //  nameDialog.tagsPanel.Children.Add(check);
+				  // }
 
 
 				   var name = isNew ? lastName : city._cityName;
@@ -135,10 +137,10 @@ namespace COTG.Views
 							   lastName = string.Empty;
 						   city.BuildStageDirty();
 						   await Post.Send("includes/nnch.php", $"a={HttpUtility.UrlEncode(lastName, Encoding.UTF8)}&cid={cid}", World.CidToPlayerOrMe(cid));
-						   if (SettingsPage.applyTags)
-						   {
-							   await ApplyTags(cid, nameDialog.tagsPanel);
-						   }
+						   //if (SettingsPage.applyTags)
+						   //{
+							  // await ApplyTags(cid, nameDialog.tagsPanel);
+						   //}
 						   Note.Show($"Set name to {lastName}");
 						  
 					   }
@@ -149,12 +151,12 @@ namespace COTG.Views
 					{
 						if (SettingsPage.setShareString)
 						{
-							await ShareString.ShowNoLock();
+							await ShareString.ShowNoLock(City.build);
 						}
-						if (SettingsPage.setHub)
-						{
-							await HubSettings.Show(cid);
-						}
+						//if (SettingsPage.setHub)
+						//{
+						//	await HubSettings.Show(cid);
+						//}
 						var rv = true;
 						if (SettingsPage.autoBuildCabins  && allowSplat)
 						{
@@ -189,6 +191,7 @@ namespace COTG.Views
 
 			foreach (var tag in TagHelper.tags)
 			{
+		
 				var check = tagControls.Children.First( (ch) => (ch as ToggleButton)?.Content == tag.s)  as ToggleButton;
 				tags = TagHelper.SetTag(tags, tag.s, check.IsChecked);
 

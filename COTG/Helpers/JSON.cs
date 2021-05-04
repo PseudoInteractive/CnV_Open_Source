@@ -35,7 +35,11 @@ namespace COTG.Helpers
         {
             return (byte)(GetAsInt64(js, prop));
         }
-        public static sbyte GetAsSByte(this JsonElement js, string prop)
+		public static byte GetAsByte(this JsonElement js)
+		{
+			return (byte)(GetAsInt64(js));
+		}
+		public static sbyte GetAsSByte(this JsonElement js, string prop)
         {
             return (sbyte)(GetAsInt64(js, prop));
         }

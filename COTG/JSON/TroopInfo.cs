@@ -11,38 +11,37 @@ namespace COTG.JSON
 {
 	public partial class TroopInfo
 	{
-		public static TroopInfo[] all;
-		static TroopInfo()
-		{
-			all = Json.FromResources<TroopInfo[]>("Troops");
+		public const int count = 35;
+		public static TroopInfo[] all = Json.FromResources<TroopInfo[]>("Troops");
 
-		}
+		public int i { get; set; }  // index
+			public string tn { get; set; } // name
+			public string dsc { get; set; }
+			public string dimg { get; set; }
+			public string simg { get; set; }
+			public string tooltip { get; set; }
+			public int fo { get; set; } // food?
+			public int at { get; set; } // attack damage type:  &1 damages walls, &2 damages buildings
+			public int ut { get; set; } // troop transport
+			public int gc { get; set; } // gold cost
+			public int dm { get; set; } // defence magic
+			public int sc { get; set; } // stone cost
+			public int ps { get; set; } // recruit seconds
+			public int ic { get; set; } // icon cost
+			public int dmg { get; set; } // damage
+			public int da { get; set; } // defense art
+			public int ts { get; set; } // ts per unit
+			public int dc { get; set; } // defence cav
+			public int c { get; set; } // carry
+			public int di { get; set; } // defense inf
+			public int ws { get; set; } // speed
+			public int wc { get; set; } // wood cost
+			public int admg { get; set; } // building damage
+			public int tt { get; set; } // not sure
+			public string n { get; set; } // name
+			public string dn { get; set; } // display name
+		
 
-		[J("tn")] public string Tn { get; set; }
-		[J("dsc")] public string Dsc { get; set; }
-		[J("dimg")] public string Dimg { get; set; }
-		[J("simg")] public string Simg { get; set; }
-		[J("tooltip")] public string Tooltip { get; set; }
-		[J("fo")] public long Fo { get; set; }
-		[J("at")] public long At { get; set; }
-		[J("ut")] public long Ut { get; set; }
-		[J("gc")] public long Gc { get; set; }
-		[J("dm")] public long Dm { get; set; }
-		[J("sc")] public long Sc { get; set; }
-		[J("ps")] public long Ps { get; set; }
-		[J("ic")] public long Ic { get; set; }
-		[J("dmg")] public long Dmg { get; set; }
-		[J("da")] public long Da { get; set; }
-		[J("ts")] public long Ts { get; set; }
-		[J("dc")] public long Dc { get; set; }
-		[J("c")] public long C { get; set; }
-		[J("di")] public long Di { get; set; }
-		[J("ws")] public long Ws { get; set; }
-		[J("wc")] public long Wc { get; set; }
-		[J("admg")] public long Admg { get; set; }
-		[J("tt")] public long Tt { get; set; }
-		[J("n")] public string N { get; set; }
-		[J("dn")] public string Dn { get; set; }
 	}
 
 }

@@ -21,7 +21,8 @@ namespace COTG.JSON
 	{
 		public static bool updateInProgress;
 		static ConcurrentHashSet<int> supportReports = new ConcurrentHashSet<int>();
-
+		public static ConcurrentDictionary<int,Army> reportCache = new();
+		
 		// uses Report.Hash(), can have several reports per reportId
 
 
@@ -224,27 +225,27 @@ namespace COTG.JSON
 										  {
 											  var order = armyV.GetAsInt64("0");
 											  Army army = null;
-											  bool reused;
-											  if (order != 0)
-											  {
-												  foreach (var p in prior)
-												  {
-													  if (p.order == order)
-													  {
-														  army = p;
-														  break;
-													  }
-												  }
-											  }
+											  const bool reused = false;
+											  //if (order != 0)
+											  //{
+												 // foreach (var p in prior)
+												 // {
+													//  if (p.order == order)
+													//  {
+													//	  army = p;
+													//	  break;
+													//  }
+												 // }
+											  //}
 
 											  if (army == null)
 											  {
 												  army = new Army() { order = order };
-												  reused = false;
+												 // reused = false;
 											  }
 											  else
 											  {
-												  reused = true;
+												//  reused = true;
 											  }
 											  if (!reused)
 											  {
@@ -373,53 +374,51 @@ namespace COTG.JSON
 												  // not sieging
 												  if (army.type == reportPending)
 												  {
-													  if (reused)
+													  
+													  //if (source.isClassified && army.troops.Length == 1 && army.troops[0].type == ttPending)
+													  //{
+															//  army.miscInfo = COTG.Game.IncomingEstimate.Get(army);
+													  //}
+													  //else
 													  {
 
-														  if (source.isClassified && army.troops.Length == 1 && army.troops[0].type == ttPending)
-														  {
-															  army.miscInfo = COTG.Game.IncomingEstimate.Get(army);
-														  }
-													  }
-													  else
-													  {
+														  source.QueueClassify(true);
 
-														  source.QueueClassify();
-
-														  army.miscInfo = COTG.Game.IncomingEstimate.Get(army);
-														  if (source.classification == Spot.Classification.pending)
-														  {
-															  army.miscInfo = "pending " + army.miscInfo;
-														  }
+														  COTG.Game.IncomingEstimate.Get(army);
+														 // if (source.classification == Spot.Classification.pending)
+														 // {
+														//	  army.miscInfo = "pending " + army.miscInfo;
+														 // }
 
 													  }
 												  }
 												  else
 												  {
-													  if (!reused)
+													 // if (!reused)
 													  {
 														  if (!ttl.IsNullOrEmpty())
 														  {
 															  army.troops = ttl.ToArray();
 														  }
-														  else
+														  else  
 														  {
-															  // attacking info missing?  Use intel
-															  source.QueueClassify();
+															  // this will early out if its already queued
+															  source.QueueClassify(true);
 															  army.troops = new[] { new TroopTypeCount(source.classificationTT, -1) };
+
 														  }
 
 													  }
-													  else
-													  {
-														  // intel ready now
-														  if (source.isClassified && army.troops.Length == 1 && army.troops[0].type == ttPending)
-														  {
-															  COTG.Game.IncomingEstimate.Get(army);
+													  //else
+													  //{
+														 // // intel ready now
+														 // if (source.isClassified && army.troops.Length == 1 && army.troops[0].type == ttPending)
+														 // {
+															//  COTG.Game.IncomingEstimate.Get(army);
 
-														  }
-													  }
-													  if (army.miscInfo.IsNullOrEmpty())
+														 // }
+													  //}
+													  
 													  {
 														  if (army.claim > 0)
 															  army.miscInfo = $"Claim {claim}%";
@@ -550,21 +549,20 @@ namespace COTG.JSON
 					var fetched = 0;
 					if (fetchReports)
 					{
-						var reportCache = new Dictionary<int, Army[]>();
-						foreach (var r in DefenseHistoryTab.instance.history)
-						{
-							if (r.reportId.IsNullOrEmpty())
-								continue;
-							var hash = Army.ReportHash(r.reportId);
-							if (reportCache.TryGetValue(hash, out var reports))
-							{
-								reportCache[hash] = reports.ArrayAppend(r);
-							}
-							else
-							{
-								reportCache[hash] = new[] { r };
-							}
-						}
+						//foreach (var r in DefenseHistoryTab.instance.history)
+						//{
+						//	if (r.reportId.IsNullOrEmpty())
+						//		continue;
+						//	var hash = Army.ReportHash(r.reportId);
+						//	if (reportCache.TryGetValue(hash, out var reports))
+						//	{
+						//		reportCache[hash] = reports.ArrayAppend(r);
+						//	}
+						//	else
+						//	{
+						//		reportCache[hash] = new[] { r };
+						//	}
+						//}
 
 						// defense history
 						using (var jsd = await Post.SendForJson("includes/ofdf.php", "a=2",Player.myId))
@@ -592,10 +590,9 @@ namespace COTG.JSON
 									var hash = Army.ReportHash(recId);
 									if (reportCache.TryGetValue(hash, out var reports))
 									{
-										foreach (var r in reports)
-										{
-											parts[part].Add(r);
-										}
+									
+										parts[part].Add(reports);
+										
 									}
 									else if (supportReports.Contains(hash))
 									{
@@ -623,10 +620,10 @@ namespace COTG.JSON
 												spotted = time - TimeSpan.FromMinutes(target.CidToWorld().Distance(source.CidToWorld()) * TTTravel(ttScout)),
 												type = reportScout,
 
-
 												// todo TS info
 
 											};
+											reportCache.TryAdd(hash, report);
 											parts[part].Add(report);
 								//			await Cosmos.AddBattleRecord(report);
 
@@ -770,6 +767,7 @@ namespace COTG.JSON
 																		// todo TS info
 
 																	};
+																	reportCache.TryAdd(hash, rep);
 																	parts[part].Add(rep);
 
 															//		await Cosmos.AddBattleRecord(rep);

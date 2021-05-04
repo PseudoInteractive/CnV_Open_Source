@@ -103,19 +103,23 @@ namespace COTG.Game
             return false;
         }
         
-        public static (int reps,float averageCarry, float fractionalReps) ComputeIdealReps(Dungeon d, City city)
+        public static (int reps,float averageCarry, float fractionalReps, bool isValid) ComputeIdealReps(Dungeon d, City city)
         {
             var loot = d.loot;
             var carry = city.CarryCapacity(d.isWater); // this should be on demand
             if (carry <= 0)
-                return (0, 0,0);
+                return (0, 0,0,false);
 			//   Log($"{desiredCarry} {carry / (loot * desiredCarry)}");
 			var  idealf = (carry / (loot * SettingsPage.raidCarryMin) );
 			int ideal = (int)(idealf);  // carry at least the ideal amount
 		    ideal = Math.Min(ideal, city.freeCommandSlots ).Max(1);
 			if (idealf < ideal )//|| !SettingsPage.raidSendExact)
 				idealf = ideal;
-            return (ideal, carry /(ideal * loot),idealf );
+			var averageCarry = carry / (ideal * loot);
+			var isValid = (ideal != 0 && averageCarry < SettingsPage.raidCarryMax) && averageCarry > SettingsPage.raidCarryMin && d.completion > SettingsPage.minDungeonProgress && (loot * 32 > city.CarryCapacityIncludeAway(d.isWater));
+
+
+			return (ideal, averageCarry,idealf, isValid);
         }
 
 
@@ -138,18 +142,13 @@ namespace COTG.Game
             public string ts { get; set; }
 			public int iv { get; set;  }
         }
-        public static async Task<bool> SendRaids(Dungeon d, bool clearDungeonList)
+        public static async Task<bool> SendRaids(Dungeon d)
         {
             var city = d.city;
             if (city == null)
                 return true;
             var r = ComputeIdealReps(d,city);
-			if(!clearDungeonList)
-			{
-				if (!d.isValid)
-					return true;
-			}
-
+			
 			var wantDelays = false;// intervals != 0 && clearDungeonList;
 			for (int iter = 0; iter < (wantDelays ? r.reps : 1); ++iter)
 			{
@@ -169,9 +168,19 @@ namespace COTG.Game
 				var trs = JsonSerializer.Serialize(tr);
 				var args = new sndRaidArgs() { rcid = d.cid, type = SettingsPage.wantRaidRepeat ? 1 : 2, co = wantDelays ? 1 : r.reps, rt = 1, snd = 1, rut = 0, tr = trs, iv = SettingsPage.raidIntervals + 1 };
 				var snd = new COTG.Services.sndRaid(JsonSerializer.Serialize(args), city.cid);
-				Note.Show($"{city.nameMarkdown} raid {r.reps}x{(r.averageCarry * 100).RoundToInt()}% carry, cavern: {d.cid.CidToStringMD()}");
-				if (!await snd.Post())
-					return false;
+				var res = await RestAPI.AcceptText(await snd.Send() );
+				if(res != "\n0\n")
+				{
+					Note.Show($"{city.nameMarkdown} raid failed to send");
+			
+				}
+				else
+				{
+					Note.Show($"{city.nameMarkdown} raid {r.reps}x{(r.averageCarry * 100).RoundToInt()}% carry, cavern: {d.cid.CidToStringMD()}");
+
+				}
+			//	Trace("Raid: " + res);
+//				return true;
 				//           await Task.Delay(500);
 				//            UpdateTS(true);
 

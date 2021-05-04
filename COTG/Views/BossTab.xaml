@@ -7,6 +7,7 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       xmlns:cotg="using:COTG"
       xmlns:my="using:Microsoft.UI.Xaml.Controls"
+    	xmlns:tgCore="using:Telerik.Data.Core"
       xmlns:tg="using:Telerik.UI.Xaml.Controls.Grid"
       xmlns:tk="using:Microsoft.Toolkit.Uwp.UI.Controls"
       xmlns:telerikGrid="using:Telerik.UI.Xaml.Controls.Grid"
@@ -29,7 +30,8 @@
                         CanUserChooseColumns="True"
                         ColumnResizeHandleDisplayMode="Always"
                         UserGroupMode="Enabled"
-                        PointerPressed="gridPointerPress"
+                        PointerPressed="{x:Bind game:Spot.GridPressed}"
+							PointerExited="{x:Bind game:Spot.GridExited}"
                         FontSize="{StaticResource MediumFontSize}"
                         ItemsSource="{x:Bind game:City.emptyCitySource, Mode=OneTime}"
                         RowHeight="{StaticResource GridRowHeight}"
@@ -40,6 +42,9 @@
                         GroupPanelPosition="Bottom"
                         SelectionChanged="CityGrid_SelectionChanged"
                         >
+			<telerikGrid:RadDataGrid.SortDescriptors>
+				<tgCore:PropertySortDescriptor PropertyName="homeTroopsAttack" SortOrder="Descending" />
+			</telerikGrid:RadDataGrid.SortDescriptors>
             <telerikGrid:RadDataGrid.Columns>
                 <telerikGrid:DataGridImageColumn PropertyName="icon" Header="I"
                                         SizeMode="Fixed"
@@ -51,7 +56,13 @@
                 <telerikGrid:DataGridTextColumn PropertyName="xy"
                                                 CellContentStyle="{StaticResource CenterAlignLink}"
                                         />
-                <telerikGrid:DataGridNumericalColumn  PropertyName="cont"
+				<telerikGrid:DataGridNumericalColumn PropertyName="homeTroopsAttack"
+												Header="Attack"
+												 CellContentFormat="{}{0,7:N0}"
+												DefaultSortOrder="Descending"
+                                                CellContentStyle="{StaticResource RightAlign}"
+                                        />
+				<telerikGrid:DataGridNumericalColumn  PropertyName="cont"
                                           
                                                       CellContentStyle="{StaticResource CenterAlign}"
                                              />

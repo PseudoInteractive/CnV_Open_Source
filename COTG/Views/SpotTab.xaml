@@ -52,7 +52,7 @@
                         GroupPanelPosition="Bottom"
 						FontFamily="Tw Cen MT Condensed"
 						ScrollViewer.ZoomMode="Enabled"
-    			ScrollViewer.HorizontalScrollBarVisibility="Auto">
+						>
 							  
             <tg:RadDataGrid.Columns>
                 <tg:DataGridImageColumn PropertyName="icon"

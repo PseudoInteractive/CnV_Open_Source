@@ -206,7 +206,15 @@ namespace COTG.Game
             return rv;
         }
     }
-    public sealed class TroopTypeCount : IComparable<TroopTypeCount>
+	public sealed class OutgoingAttack
+	{
+		DateTimeOffset departs;
+		DateTimeOffset arrives;
+		int id;
+		string desc;
+		int targetCid;
+	}
+	public sealed class TroopTypeCount : IComparable<TroopTypeCount>
     {
         public static TroopTypeCount[] empty = Array.Empty<TroopTypeCount>();
         public int type;

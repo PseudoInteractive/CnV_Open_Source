@@ -28,18 +28,19 @@ namespace COTG.Game
 {
 	public class HeatMapItem : INotifyPropertyChanged
 	{
-		public virtual ResetableCollection<HeatMapDelta> children => ResetableCollection<HeatMapDelta>.empty; // only valid in heatMapDay
-		public string desc = string.Empty;
-		public virtual bool hasUnrealizedChildren => false;
+
+		public ResetableCollection<HeatMapDelta> deltas { get; set; } = ResetableCollection<HeatMapDelta>.empty; // only valid in heatMapDay
 	
 		public SmallTime t;
-
+		public string desc { get; set; }
 		public HeatMapItem(SmallTime t)
 		{
 			this.t = t;
+			desc = t.ToString("s");
+
 		}
 
-		public virtual event PropertyChangedEventHandler PropertyChanged;
+	public virtual event PropertyChangedEventHandler PropertyChanged;
 		public void OnPropertyChanged(string propertyName) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 		public void NotifyChange(string member = "")
 		{
@@ -75,67 +76,81 @@ namespace COTG.Game
 	public class HeatMapDay : HeatMapItem
 	{
 		// key is lastUpdated.Date
-		public static ResetableCollection<HeatMapDay> days = new();
+		public static ResetableCollection<HeatMapDay> days = new() ;
 
 		public HeatMapDay(SmallTime t) : base(t)
 		{
-			desc = dateStr + " ...";
+			desc = dateStr + " ..click to load";
+			deltas.Add(HeatMapDelta.pending);
 		}
 
-		public string dateStr => t.ToString("yyyy-MM-dd");
-		public bool isInitialized => snapshot.Length > 0;
 
+		public string dateStr => t.ToString("yyyy-MM-dd");
+		public bool isLoaded => snapshot.Length > 0;
+		public bool loadPending;
 		public override string ToString() => desc;
 
 		public Azure.ETag eTag; // server version, if our version is not equal to the version on azure we discard current work and fetch the latest
 
 		public MemoryOwner<uint> snapshot = MemoryOwner<uint>.Empty; // 600*600
-		public ResetableCollection<HeatMapDelta> deltas { get; set; } = new();
-		public override ResetableCollection<HeatMapDelta> children => deltas;
-		public override bool hasUnrealizedChildren => true;
+		private int deltaCount => hasDeltas ? deltas.Count : 0;
 
+		public bool hasDeltas
+		{
+			get
+			{
+				Assert(deltas.Count != 0);
+				return deltas.Count != 1 || deltas[0] != HeatMapDelta.pending;
+			}
+		}
 		public int UncompressedSizeEstimate()
 		{
 			var rv = 1024 + World.spanSquared * sizeof(uint);
 			foreach (var i in deltas)
 			{
-				rv += 16 + i.deltas.Length * sizeof(uint);
+				rv += 16 + i.changes.Length * sizeof(uint);
 			}
 			return rv;
 		}
 
-		public void UpdateDesc(bool updateNext)
+		public void UpdateDesc(bool updateNext, bool updateSnapshots)
 		{
 			var prior = GetEarlier();
 			
-			if (!isInitialized || prior == null || !prior.isInitialized)
+			if (!isLoaded || prior == null || !prior.isLoaded)
 			{
-				desc = dateStr + (isInitialized ? $" - {deltas.Count + 1} snaps" : "...");
+				desc = dateStr +  " ..click to load";
 			}
 			else
 			{
 				desc = dateStr + new ChangeInfo().ComputeDeltas(prior.snapshot.Span, snapshot.Span).ToString();
 			}
 
-			NotifyChange(nameof(desc));
-			
-			if(updateNext)
-			{
+		//	NotifyChange(nameof(desc));
+			if(updateSnapshots && isLoaded)
 				UpdateSnapshots();
+			if (updateNext)
+			{
 				var next = GetLater();
 				if (next != null)
-					next.UpdateDesc(false);
+					next.UpdateDesc(false,false);
 			}
 		}
 		public void UpdateSnapshots()
 		{
+			Assert(isLoaded);
+			if (!isLoaded)
+				return;
 			var snap1 = snapshot.Clone();
-			foreach(var delta in deltas)
+			if (hasDeltas)
 			{
-				using var snap0 = snap1.Clone();
-				HeatMap.ApplyDelta(snap1.Span, delta.deltas.Span);
-				delta.desc = delta.timeStr + new ChangeInfo().ComputeDeltas(snap1.Span, snap0.Span).ToString();
-				delta.NotifyChange(nameof(delta.desc));
+				foreach (var delta in deltas)
+				{
+					using var snap0 = snap1.Clone();
+					HeatMap.ApplyDelta(snap1.Span, delta.changes.Span);
+					delta.desc = delta.timeStr + new ChangeInfo().ComputeDeltas(snap1.Span, snap0.Span).ToString();
+				//	delta.NotifyChange(nameof(delta.desc));
+				}
 			}
 		}
 
@@ -152,7 +167,7 @@ namespace COTG.Game
 					o.Write(t);
 					o.WritePackedUints(snapshot.Span);
 
-					int dCount = deltas.Count;
+					int dCount = deltaCount;
 					o.Write7BitEncoded(dCount);
 					
 					Trace($"Deltas: {dCount}");
@@ -161,7 +176,7 @@ namespace COTG.Game
 						var d = deltas[i];
 
 						o.Write(d.t);
-						o.WritePackedUints(d.deltas.Span);
+						o.WritePackedUints(d.changes.Span);
 					}
 					return (int)(o.Position - pData);
 				}
@@ -180,16 +195,20 @@ namespace COTG.Game
 				}
 				snapshot = r.ReadPackedUints();
 				var dCount = r.Read7BitEncoded();
-				deltas.Clear();
-				for (int i = 0; i < dCount; ++i)
+				Assert(deltas.Count > 0);
+				if (dCount > 0)
 				{
-					var t = r.ReadSmallTime();
-					var ds = r.ReadPackedUints();
-				
-					deltas.Add(new HeatMapDelta(t, ds));
+					deltas.Clear();
+					for (int i = 0; i < dCount; ++i)
+					{
+						var t = r.ReadSmallTime();
+						var ds = r.ReadPackedUints();
 
+						deltas.Add(new HeatMapDelta(t, ds));
+
+					}
+	//				deltas.NotifyReset();
 				}
-				deltas.NotifyReset();
 				NotifyChange();
 			}
 
@@ -205,11 +224,11 @@ namespace COTG.Game
 		public bool AddSnapshot(SmallTime t, MemoryOwner<uint> newSnap)
 		{
 			Trace($"Add Snapshot: {desc} [{t}] [{this.t}]");
-			if (!isInitialized)
+			if (!isLoaded)
 			{
 				this.t = t;
 				snapshot = newSnap;
-				Assert(deltas.Count == 0);
+				Assert(!hasDeltas);
 				return true;
 			}
 
@@ -227,6 +246,8 @@ namespace COTG.Game
 					World.ReturnWorldBuffer(newSnap);
 					return false;
 				}
+				if (!hasDeltas)
+					deltas.Clear();
 
 				deltas.Insert(0, new HeatMapDelta(this.t, delta));
 				this.t = t;
@@ -240,14 +261,15 @@ namespace COTG.Game
 
 				using var temp = snapshot.Clone();
 				var tSpan = temp.Span;
-			
 
+				int deltaCount = this.deltaCount;
+				
 				int offset;
-				for (offset = 0; offset < deltas.Count; ++offset)
+				for (offset = 0; offset < deltaCount; ++offset)
 				{
 					if (deltas[offset].t <= t)
 						break;
-					HeatMap.ApplyDelta(tSpan, deltas[offset].deltas.Span);
+					HeatMap.ApplyDelta(tSpan, deltas[offset].changes.Span);
 				}
 				var newDelta = HeatMap.ComputeDelta(tSpan, newSnap.Span);
 				if (newDelta.Length < HeatMap.minDeltasPerSnapshot * 2)
@@ -256,23 +278,26 @@ namespace COTG.Game
 					newSnap.Dispose();
 					return false;
 				}
-				if (offset < deltas.Count)
+				if (offset < deltaCount)
 				{
-					HeatMap.ApplyDelta(tSpan, deltas[offset].deltas.Span);
+					HeatMap.ApplyDelta(tSpan, deltas[offset].changes.Span);
 					var newDelta1 = HeatMap.ComputeDelta(tSpan, newSnap.Span);
 				
 					if (newDelta1.Length < HeatMap.minDeltasPerSnapshot * 2)
 					{
-						Trace($"Ignoring small delta {deltas[offset].deltas.Length} => {newDelta1.Length}");
+						Trace($"Ignoring small delta {deltas[offset].changes.Length} => {newDelta1.Length}");
 						newSnap.Dispose();
 						newDelta1.Dispose();
 						return false;
 					}
-					Trace($"ChangeDelta {deltas[offset].deltas.Length} => {newDelta1.Length}" );
-					deltas[offset].deltas = newDelta1;/// HeatMap.ComputeDelta(temp,newSnap);
+					Trace($"ChangeDelta {deltas[offset].changes.Length} => {newDelta1.Length}" );
+					deltas[offset].changes = newDelta1;/// HeatMap.ComputeDelta(temp,newSnap);
 				}
 
 				newSnap.Dispose();
+				if (!hasDeltas)
+					deltas.Clear();
+
 				deltas.Insert(offset, new HeatMapDelta(t, newDelta));
 				for (int i = 0; i < deltas.Count - 1; ++i)
 				{
@@ -283,9 +308,23 @@ namespace COTG.Game
 		}
 		public async Task Load()
 		{
-			using var _ = await HeatMap.mutex.LockAsync();
-			await LoadInternal();
-			UpdateDesc(true);
+			var prior = GetEarlier();
+			if( (prior==null || prior.loadPending)&&loadPending)
+			{
+				return;
+			}
+
+			using (var _ = await HeatMap.mutex.LockAsync())
+			{
+				var _t0 = loadPending ? null : LoadInternal();
+				var _t1 = prior == null || prior.loadPending ? null : prior.LoadInternal();
+				if (_t0 != null)
+					await _t0;
+				if (_t1 != null)
+					await _t1;
+
+				UpdateDesc(true, true);
+			}
 
 			NotifyChange();
 		}
@@ -294,6 +333,7 @@ namespace COTG.Game
 		{
 			try
 			{
+				loadPending = true;
 
 				var cont = await Blobs.GetChangesContainer();
 				if (cont == null)
@@ -375,22 +415,28 @@ namespace COTG.Game
 
 	public class HeatMapDelta : HeatMapItem
 	{
-		public MemoryOwner<uint> deltas;
-		public string timeStr => $"{t.ToString("HH':'mm':'ss")} - {deltas.Length / 2} changes";
+		internal static HeatMapDelta pending = new(0, MemoryOwner<uint>.Empty);
+
+		public MemoryOwner<uint> changes;
+		public string timeStr => t.ToString("HH':'mm':'ss");
+
 
 		public HeatMapDelta(SmallTime t, MemoryOwner<uint> deltas) : base(t)
 		{
-			this.deltas = deltas;
+			this.changes = deltas;
 
-			if(deltas.Length > 200)
+			if(deltas.Length > 0)
 			{
-				int q = 0;
+				desc = timeStr;
 			}
-			desc = timeStr;
+			else
+			{
+				desc = " ..pending";
+			}
 		}
 		public override string ToString()
 		{
-			return timeStr;
+			return $"{t.ToString("s")}: {changes.Length / 2} changes";
 		}
 	}
 
@@ -468,7 +514,7 @@ namespace COTG.Game
 		}
 		public static async Task<MemoryOwner<uint>> GetSnapshot(SmallTime t)
 		{
-			using var _ = await mutex.LockAsync();
+	//		using var _ = await mutex.LockAsync();
 			var day = GetDay(t, false);
 			if (day == null)
 			{
@@ -476,13 +522,18 @@ namespace COTG.Game
 				day = HeatMapDay.days.First();
 			}
 			await day.LoadInternal();
-			var rv = day.snapshot.Clone();
-			foreach(var d in day.deltas)
-			{
-				if (d.t < t)
-					break;
-				ApplyDelta(rv.Span, d.deltas.Span);
 
+			Assert(day.isLoaded);
+			var rv = day.snapshot.Clone();
+			if (day.hasDeltas)
+			{
+				foreach (var d in day.deltas)
+				{
+					if (d.t < t)
+						break;
+					ApplyDelta(rv.Span, d.changes.Span);
+
+				}
 			}
 			return rv;
 		
@@ -545,7 +596,7 @@ namespace COTG.Game
 			if (day != null)
 			{
 				var mod = day.AddSnapshot(t, isSnap);
-				day.UpdateDesc(true);
+			//	day.UpdateDesc(true,true);
 				
 
 				if (mod && uploadIfChanged)
@@ -594,6 +645,53 @@ namespace COTG.Game
 		}
 
 	}
+	public class CityCounts
+	{
+		public int total;
+		public int castles;
+		public int big;
+		public int temples;
+		public CityCounts Sub( CityCounts b)
+		{
+			return new CityCounts() { total = total - b.total, castles = castles - b.castles, big = big - b.big, temples = temples - b.temples };
+		}
+		public static Dictionary<int, CityCounts> GetcityCountsByAlliance(ReadOnlySpan<uint> t0)
+		{
+			Dictionary<int, CityCounts> rv = new();
+			for (int i = 0; i < World.spanSquared; ++i)
+			{
+				if (!Spot.TestContinentFilterPacked(PackedIdToPackedContinent((uint)i)))
+					continue;
+				var v0 = t0[i];
+				if (World.GetType(v0) != typeCity)
+					continue;
+				var player0 = World.GetPlayer(v0);
+				var alliance0 = Alliance.FromPlayer(player0);
+				if (!rv.TryGetValue(alliance0, out var c))
+				{
+					c = new();
+					rv.Add(alliance0, c);
+
+				}
+				var isTemple0 = IsTemple(v0);
+				var isCastle0 = IsCastle(v0);
+				var isBig0 = IsBig(v0);
+
+				++c.total;
+				if (isTemple0)
+					++c.temples;
+				if (isCastle0)
+					++c.castles;
+				if (isBig0)
+					++c.big;
+
+
+
+			}
+			return rv;
+		}
+	}
+
 	struct ChangeInfo
 	{
 		public byte allianceCaptures;
@@ -739,8 +837,13 @@ namespace COTG.Game
 		}
 		public ChangeInfo ComputeDeltas(ReadOnlySpan<uint> t0, ReadOnlySpan<uint> t1 )
 		{
-			for(int i=0;i<World.spanSquared;++i)
+			Assert(t0.Length == World.spanSquared);
+			Assert(t1.Length == World.spanSquared);
+			for (int i=0;i<World.spanSquared;++i)
 			{
+				if(!Spot.TestContinentFilterPacked(PackedIdToPackedContinent((uint)i)))
+					continue;
+
 				var v0 = t0[i];
 				var v1 = t1[i];
 				if (v0 == v1)
@@ -758,9 +861,8 @@ namespace COTG.Game
 					if (World.GetData(v1) != 0)
 						++portalsOpened;
 				}
-				else
+				else if(type0 == typeCity || type1 == typeCity)
 				{
-					Assert(type0 == typeCity || type1 == typeCity);
 
 					var player0 = World.GetPlayer(v0);
 					var player1 = World.GetPlayer(v1);
@@ -860,6 +962,10 @@ namespace COTG.Game
 					{
 
 					}
+				}
+				else
+				{
+				//	Assert(type0 == typeCity || type1 == typeCity);
 				}
 
 

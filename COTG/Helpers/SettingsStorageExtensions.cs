@@ -56,34 +56,7 @@ namespace COTG.Helpers
 
         public static void Save<T>(this ApplicationDataContainer settings, string key, T value)
         {
-            if (typeof(T) == typeof(Nullable<bool>))
-            {
-              settings.Values[key] = value switch { null => -1, true => 1,false=> 0, _ => -1 };
-            }
-            else
-            {
-
-                settings.Values[key] = value switch
-                {
-                    int a => a,
-                    byte a => a,
-                    sbyte a => a,
-                    uint a => a,
-                    ulong a => a,
-                    float a => a,
-                    double a => a,
-                    string a => a,
-                    bool a => a,
-					DateTimeOffset a => a,
-                    TimeSpan a => a,
-                    Guid a => a,
-                    Point a => a,
-                    Size a => a,
-                    Rect a => a,
-                    ApplicationDataCompositeValue a => a,
-                    _ => JsonSerializer.Serialize<T>(value, Json.jsonSerializerOptions)
-                };
-            }
+			SaveT(settings, key, typeof(T), value);
         }
         public static void SaveT(this ApplicationDataContainer settings, string key,Type t,object value)
         {
@@ -105,7 +78,8 @@ namespace COTG.Helpers
                     double a => a,
                     string a => a,
                     bool a => a,
-                    DateTimeOffset a => a,
+                    DateTimeOffset a => a.ToUniversalTime().Ticks,
+					SmallTime a => a.seconds,
                     TimeSpan a => a,
                     Guid a => a,
                     Point a => a,
@@ -124,15 +98,7 @@ namespace COTG.Helpers
 
         public static T Read<T>(this ApplicationDataContainer settings, string key, T _default = default)
         {
-
-            if (settings.Values.TryGetValue(key, out var obj))
-            {
-                if (obj is string && typeof(T) != typeof(string))
-                    obj = JsonSerializer.Deserialize<T>((string)obj, Json.jsonSerializerOptions);
-                return (T)obj;
-            }
-
-            return _default;
+			return (T)ReadT(settings, key, typeof(T), _default);
         }
 
         public static object ReadT(this ApplicationDataContainer settings, string key, Type t, object _default) 
@@ -142,7 +108,15 @@ namespace COTG.Helpers
             {
                 if (settings.Values.TryGetValue(key, out var o))
                 {
-                    if(t == typeof(Nullable<bool>) )
+					if (t == typeof(DateTimeOffset) )
+					{
+						return new DateTimeOffset((long)o, TimeSpan.Zero);
+					}
+					else if (t == typeof(SmallTime))
+					{
+						return new SmallTime((int)o);
+					}
+					else if (t == typeof(Nullable<bool>) )
                     {
                             bool? rv = (int)o switch { 0 => false, 1 => true, _ => null };
                             return rv;

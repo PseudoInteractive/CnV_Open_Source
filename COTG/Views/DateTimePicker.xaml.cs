@@ -66,6 +66,7 @@ namespace COTG.Views
 			try
 			{
 				//			var localDateTime = dateTime - AUtil.localTimeOffset;
+				Assert(dateTime.Offset.Ticks == 0);
 				var localDate = new DateTimeOffset(dateTime.Year, dateTime.Month, dateTime.Day, 12, 0, 0, TimeSpan.Zero);
 				//if (date.SelectedDates.Count == 1)
 				//{
@@ -92,9 +93,13 @@ namespace COTG.Views
 				if (title != null)
 					instance.Title = title;
 				if (_time != null)
+				{
 					dateTime = _time.Value;
-				ElementSoundPlayer.Play(ElementSoundKind.Show);
-
+					//instance.DateToUI();
+					instance.TimeToUI();
+				}
+				instance.recentTimesBox.SelectedItem = null;
+				
 				return  await instance.ShowAsync2();
 			});
 			return (dateTime, result == ContentDialogResult.Primary);
@@ -153,9 +158,9 @@ namespace COTG.Views
 
 		private void ComboBox_SelectionChanged(object sender, Windows.UI.Xaml.Controls.SelectionChangedEventArgs e)
 		{
-			if (e.AddedItems.Any())
+			if (recentTimesBox.SelectedItem != null )
 			{
-				var sel = e.AddedItems.First() as string;
+				var sel = recentTimesBox.SelectedItem.ToString();
 				if (DateTimeOffset.TryParseExact(sel, AUtil.fullDateFormat, DateTimeFormatInfo.InvariantInfo, DateTimeStyles.AllowInnerWhite | DateTimeStyles.AssumeUniversal, out dateTime))
 				{
 					TimeToUI();
