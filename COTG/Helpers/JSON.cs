@@ -74,29 +74,60 @@ namespace COTG.Helpers
             }
         }
 
-        static public IEnumerable<JsonElement> EnumerateArrayOrObject(this JsonElement e)
-        {
-            if (e.ValueKind == JsonValueKind.Array)
-                return e.EnumerateArray();
-            else if(e.ValueKind == JsonValueKind.Object)
-            {
-                var rv = new List<JsonElement>();
-                foreach (var i in e.EnumerateObject())
-                {
-                    rv.Add(i.Value);
-                }
-                return rv;
-
-            }
-            else
-            {
-      //          Log($"Not array or object {e.ToString()}");
-                return Array.Empty<JsonElement>();
-            }
+		static public IEnumerable<JsonElement> EnumerateArrayOrObject(this JsonElement e, bool verbose=false)
+		{
+			if (e.ValueKind == JsonValueKind.Array)
+			{
+				foreach(var i in e.EnumerateArray())
+				{
+					yield return i;
+				}
+			}
+			else if (e.ValueKind == JsonValueKind.Object)
+			{
+				foreach (var i in e.EnumerateObject())
+				{
+					yield return i.Value;
+				}
+			}
+			else
+			{
+				//          Log($"Not array or object {e.ToString()}");
+				if (verbose)
+					Trace(e.ToString());
+			}
+			yield break;
 
         }
+		static public IEnumerator<(int i,JsonElement jse) > EnumerateArrayOrObjectWithIndex(this JsonElement e)
+		{
+			int counter = 0;
+			if (e.ValueKind == JsonValueKind.Array)
+			{
+				foreach (var i in e.EnumerateArray())
+				{
+					yield return (counter++,i);
+				}
+			}
+			else if (e.ValueKind == JsonValueKind.Object)
+			{
+				foreach (var i in e.EnumerateObject())
+				{
+					var o = counter++;
+					int.TryParse(i.Name, out o);
+					yield return (o,i.Value);
+				}
+			}
+			else
+			{
+				//          Log($"Not array or object {e.ToString()}");
+				Assert(false);
+			}
+			yield break;
 
-        public static float GetAsFloat(this JsonElement js, string prop)
+		}
+
+		public static float GetAsFloat(this JsonElement js, string prop)
         {
             if (!js.IsValid())
                 return -1;

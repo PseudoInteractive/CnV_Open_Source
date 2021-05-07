@@ -18,20 +18,20 @@
 
 
 			<DataTemplate x:Key="deltaTemplate"   x:DataType="game:HeatMapDelta">
-				<win:TreeViewItem  KeyDown="tree_KeyDown" Width="auto"
+				<win:TreeViewItem  
 						ToolTipService.ToolTip="First click will load history for this day.  Then you can select a the start and end of a time period to see corresponding changes.  When in doubt, refresh."
-									  VerticalAlignment="Center"   >
-					<TextBlock Text="{x:Bind desc,Mode=OneWay}" Style="{StaticResource ListItemStyle}" Width="auto" Height="auto"  />
+									    >
+					<TextBlock Text="{x:Bind desc,Mode=OneWay}" Style="{StaticResource ListItemStyle}"   />
 
 				</win:TreeViewItem>
 			</DataTemplate>
 
 
 			<DataTemplate x:Key="dayTemplate"   x:DataType="game:HeatMapDay">
-				<win:TreeViewItem ItemsSource="{x:Bind deltas, Mode=OneWay}" KeyDown="tree_KeyDown" Width="auto"
+				<win:TreeViewItem ItemsSource="{x:Bind deltas, Mode=OneWay}"
 						ToolTipService.ToolTip="First click will load history for this day.  Then you can select a the start and end of a time period to see corresponding changes.  When in doubt, refresh."
-									  VerticalAlignment="Center"   >
-						<TextBlock Text="{x:Bind desc,Mode=OneWay}" Style="{StaticResource ListItemStyle}" Width="auto" Height="auto"  />
+									    >
+						<TextBlock Text="{x:Bind desc,Mode=OneWay}" Style="{StaticResource ListItemStyle}"   />
 
 					</win:TreeViewItem>
 			</DataTemplate>
@@ -50,8 +50,8 @@
 			<ColumnDefinition Width="*" />
 		</Grid.ColumnDefinitions>
 
-			<win:TreeView Grid.Row="1" x:Name="zoom"  CanReorderItems="False"  SelectionMode="Multiple" IsTabStop="True"  BorderThickness="1" 
-				 TabNavigation="Cycle" CanDragItems="False" AllowDrop="False" 
+			<win:TreeView Grid.Row="1" x:Name="zoom"  CanReorderItems="False"  SelectionMode="Multiple"   
+				  CanDragItems="False" AllowDrop="False" CanDrag="False" SelectionChanged="zoom_SelectionChanged" 
 						ItemsSource="{x:Bind game:HeatMapDay.days, Mode=OneWay}" ItemInvoked="zoom_ItemInvoked"  
 				ItemTemplateSelector="{StaticResource heatmapTemplateSelector}"	
 					  >

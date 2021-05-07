@@ -588,7 +588,7 @@ namespace COTG.JSON
 			{
 				if (jsCity.TryGetProperty("bq", out var bq))
 				{
-					if (bq.ValueKind == JsonValueKind.Array)
+					if (bq.ValueKind == JsonValueKind.Array || bq.ValueKind == JsonValueKind.Object )
 					{
 						result = true;
 						cotgQLength = bq.GetArrayLength();
@@ -614,10 +614,10 @@ namespace COTG.JSON
 								delay = 15 * 60 * 1000;
 							}
 
-							if ((City.safeBuildQueueLength > cotgQLength))
+						//	if ((City.safeBuildQueueLength > cotgQLength))
 							{
 								cotgQ = new DArray<BuildQueueItem>(128);
-								foreach (var cmd in bq.EnumerateArray())
+								foreach (var cmd in bq.EnumerateArrayOrObject())
 								{
 									cotgQ.Add(new BuildQueueItem(
 												 cmd.GetAsByte("slvl"),
@@ -630,6 +630,9 @@ namespace COTG.JSON
 								}
 							}
 						}
+					}
+					else if (bq.ValueKind == JsonValueKind.Object)
+					{ 
 					}
 					else
 					{

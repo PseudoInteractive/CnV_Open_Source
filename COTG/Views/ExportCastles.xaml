@@ -18,18 +18,20 @@
 
 	<StackPanel>
 
-		
+		<TextBlock Text="You can use the Continent filter to specify which continents to export - one day I'll add it here" />
 
 		<wct:WrapPanel Orientation="Horizontal"
 						   Margin="4">
 
-			<winui:RadioButtons Header="Which" x:Name="who" SelectedIndex="0" >
+			<ComboBox Header="Which" x:Name="who" SelectedIndex="0"  >
 				<x:String>Mine</x:String>
 				<x:String>Alliance</x:String>
+				<x:String>Enemies</x:String>
 				<x:String>Others</x:String>
+				<x:String>Allies</x:String>
 				<x:String>Unallied</x:String>
 				<x:String>All</x:String>
-			</winui:RadioButtons>
+			</ComboBox>
 			
 			<CheckBox x:Name="offence"
 			  ToolTipService.ToolTip="Checked: offensive castles are exported, Unchecked: defensive cities, otherwise both"
@@ -52,6 +54,17 @@
 									Content="Temples"
 			  IsThreeState="True"
 									IsChecked="{x:Null}" />
+
+			<CheckBox x:Name="score"
+			  ToolTipService.ToolTip="If checked, score is output for each castle (slower)"
+									Content="Score"
+			  					IsChecked="False" />
+			<CheckBox x:Name="headers"
+			  ToolTipService.ToolTip="Checked: a header row is output, Checked or Slightly Checked: group rows are output"
+									Content="Headers"
+					  IsThreeState="True"
+			  					IsChecked="False" />
+	
 
 		</wct:WrapPanel>
 		

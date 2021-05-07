@@ -153,6 +153,7 @@
 								   IsOn="{x:Bind views:SettingsPage.setHub, Mode=TwoWay}"
 								     OffContent="Leave"
 									  OnContent="Set"
+									  ToolTipService.ToolTip="If set, the source and target hub will bet set based on which hub is closest.  Choses from the 'Hubs' city group, or if you don't do city groups: the nearest city with 'Hub' in the remarks"
 								  Margin="4"
 								  Width="120" />
 						<ComboBox x:Name="hubCityListBox"
@@ -166,15 +167,7 @@
 							  ToolTipService.ToolTip="Active City List"
 							  Margin="4" />
 						<TextBox x:Name="bestHub" Header="Best hub" Style="{StaticResource TextBoxReveal}" />
-						<winui:NumberBox Header="Cottage Level"
-										Value="{x:Bind views:SettingsPage.cottageLevel, Mode=TwoWay}"
-										Width="100"
-										Style="{StaticResource NumberBoxSmall}"
-										SmallChange="1" />
-						<CheckBox Content="Autobuild"
-							  Margin="4"
-							  IsThreeState="True"
-							  IsChecked="{x:Bind views:SettingsPage.autoBuildOn, Mode=TwoWay}" />
+						
 						<ToggleSwitch Header="Recruit" IsOn="{x:Bind views:SettingsPage.setRecruit,Mode=TwoWay}" OnContent="Set" OffContent="Leave"/>
 						<ComboBox x:Name="tradeSettings"
 							  x:FieldModifier="public"

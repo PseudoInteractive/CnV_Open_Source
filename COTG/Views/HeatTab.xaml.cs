@@ -309,6 +309,11 @@ namespace COTG.Views
 			Trace($"Key:  {sender} {e}");
 		}
 
+		private void zoom_SelectionChanged(TreeView sender, TreeViewSelectionChangedEventArgs args)
+		{
+
+		}
+
 		//private void TreeViewItem_Tapped(object sender, TappedRoutedEventArgs e)
 		//{
 		//	Trace(sender.ToString());

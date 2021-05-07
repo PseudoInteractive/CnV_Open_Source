@@ -28,6 +28,7 @@ using Telerik.UI.Xaml.Controls.Input;
 using COTG.Helpers;
 using Windows.UI.Xaml.Navigation;
 using static COTG.Game.Enum;
+using System.Linq;
 
 namespace COTG.Views
 {
@@ -97,10 +98,15 @@ namespace COTG.Views
         public void SetHistory( Army[] _history)
         {
             history = _history;
-            historyGrid.ItemsSource = history;
-       
-
-        }
+			var sel = IncomingTab.selected;
+			if (sel == null)
+				historyGrid.ItemsSource = history;
+			else
+			{
+				var cid = sel.cid;
+				historyGrid.ItemsSource = history.Where( s => s.targetCid == cid).ToArray() ;
+			}
+		}
 
         public static DefenseHistoryTab instance;
         public static RadDataGrid HistoryGrid => instance.historyGrid;

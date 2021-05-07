@@ -102,7 +102,7 @@ namespace COTG.Views
             if (!isActive)
             {
 
-                tabPage.AddTab(this, false);
+                tabPage.AddOrShowTab(this, false);
             }
             //var activeGroup = Groups.Count > 0 ? Groups.Last() : null;
             //var lastHour = activeGroup == null ? -99 : activeGroup.time.Hour;
@@ -337,7 +337,7 @@ namespace COTG.Views
             }
             var ch = new ChatTab() { Tag=player, whisperTarget = player };
             all = all.ArrayAppend(ch);
-            tabPage.AddTab(ch, activate);
+            tabPage.AddOrShowTab(ch, activate);
             return ch;
         }
 

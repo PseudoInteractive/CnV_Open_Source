@@ -132,31 +132,40 @@ namespace COTG
 		}
 
 
-		//private static CoreVirtualKeyStates GetKeyState(VirtualKey key)
-		//{
-		//	var window = CoreWindow.GetForCurrentThread();
-		//	if (window == null)
-		//	{
-		//		return CoreVirtualKeyStates.None;
-		//	}
+		private static CoreVirtualKeyStates GetKeyState(VirtualKey key)
+		{
+			var window = CoreWindow.GetForCurrentThread();
+			if (window == null)
+			{
+				Assert(false);
+				return CoreVirtualKeyStates.None;
+			}
 
-		//	return window.GetAsyncKeyState(key);
-		//}
-		//public static bool IsModifierKeyDown(VirtualKey key)
-		//{
-		//	var state = GetKeyState(key);
-		//	return (state & CoreVirtualKeyStates.Down) == CoreVirtualKeyStates.Down;
-		//}
+			return window.GetAsyncKeyState(key);
+		}
+		public static bool IsKeyDown(VirtualKey key)
+		{
+			var state = GetKeyState(key);
+			return (state & CoreVirtualKeyStates.Down) == CoreVirtualKeyStates.Down;
+		}
 
 		public static bool IsKeyPressedControl()
 		{
-			return Microsoft.Xna.Framework.Input.Keys.LeftControl.IsKeyPressed() |
-				   Microsoft.Xna.Framework.Input.Keys.RightControl.IsKeyPressed();// shiftPressed;
+			return controlPressed;
+		//	return IsKeyDown(VirtualKey.Control)| IsKeyDown(VirtualKey.LeftControl)| IsKeyDown(VirtualKey.RightControl);
+			//Microsoft.Xna.Framework.Input.Keys.LeftControl.IsKeyPressed() |
+				//   Microsoft.Xna.Framework.Input.Keys.RightControl.IsKeyPressed();// shiftPressed;
+		}
+		public static bool IsEscDown()
+		{
+			return Microsoft.Xna.Framework.Input.Keys.Escape.IsKeyPressed();
 		}
 		public static bool IsKeyPressedShift()
 		{
-			return Microsoft.Xna.Framework.Input.Keys.LeftShift.IsKeyPressed() |
-				   Microsoft.Xna.Framework.Input.Keys.RightShift.IsKeyPressed();// shiftPressed;
+			return shiftPressed;
+//			IsKeyDown(VirtualKey.Shift) | IsKeyDown(VirtualKey.LeftShift) | IsKeyDown(VirtualKey.RightShift);
+//			return Microsoft.Xna.Framework.Input.Keys.LeftShift.IsKeyPressed() |
+//				   Microsoft.Xna.Framework.Input.Keys.RightShift.IsKeyPressed();// shiftPressed;
 		}
 		public static bool IsKeyPressedShiftOrControl()
 		{
@@ -168,18 +177,26 @@ namespace COTG
 			OnKeyUp(key);
 		}
 
+		public static bool shiftPressed;
+		public static bool controlPressed;
+
 		public static void OnKeyUp(VirtualKey key)
 		{
-			//switch (key)
-			//{
-			//	case VirtualKey.Shift:
-			//		shiftPressed = false;
-			//		break;
-			//	case VirtualKey.Control:
-			//		controlPressed = false;
-			//		break;
+			switch (key)
+			{
+				case VirtualKey.Shift:
+				case VirtualKey.LeftShift:
+				case VirtualKey.RightShift:
+					shiftPressed = false;
+					break;
+				case VirtualKey.Control:
+				case VirtualKey.LeftControl:
+				case VirtualKey.RightControl:
 
-			//}
+					controlPressed = false;
+					break;
+
+			}
 			InputRecieved();
 		}
 
@@ -188,23 +205,28 @@ namespace COTG
 		static void OnKeyDown(CoreWindow sender, KeyEventArgs args)
 		{
 			var key = args.VirtualKey;
+	
 			OnKeyDown(key);
 
 		}
 
 		public static void OnKeyDown(VirtualKey key)
 		{
-			//switch (key)
-			//{
-			//	case VirtualKey.Shift:
-			//		shiftPressed = true;
-			//		break;
-			//	case VirtualKey.Control:
-			//		controlPressed = true;
-			//		break;
+			switch (key)
+			{
+				case VirtualKey.Shift:
+				case VirtualKey.LeftShift:
+				case VirtualKey.RightShift:
+					shiftPressed = true;
+					break;
+				case VirtualKey.Control:
+				case VirtualKey.LeftControl:
+				case VirtualKey.RightControl:
 
-			//}
+					controlPressed = true;
+					break;
 
+			}
 			InputRecieved();
 		}
 
@@ -1329,8 +1351,17 @@ namespace COTG
 			{
 				LogEx(ex);
 			}
-	
-
+			for (int i = 0; ; ++i)
+			{
+				await GetCity.Post(cid);
+				if (City.CanVisit(cid))
+					break;
+				if( i > 5)
+				{
+					Trace("City not here");
+				}
+				await Task.Delay(1000);
+			}
 
 			await 	App.DispatchOnUIThreadExclusive(cid, async () =>
 			{

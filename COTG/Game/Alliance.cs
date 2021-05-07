@@ -46,7 +46,11 @@ namespace COTG.Game
 
 		public static Dictionary<int, Alliance> all = new Dictionary<int, Alliance>();
 		public static Dictionary<string, int> nameToId = new Dictionary<string, int>();
-		public static int NameToId(string s) => nameToId.TryGetValue(s, out var rv) ? rv : 0;
+		public static int NameToId(string s)
+		{
+			Assert(alliancesFetched);
+			return nameToId.TryGetValue(s, out var rv) ? rv : 0;
+		}
 		public static bool diplomacyFetched;
 		public static bool PartNameToId(string name, out int id)
 		{
@@ -63,9 +67,10 @@ namespace COTG.Game
 			return false;
 		}
 
-		public static bool wantsIntel => ((myId == 19)||(myId==42)) && JSClient.world == 23;
+		public static bool wantsIntel => ((myId==42)) && JSClient.world == 23;
 		public static string IdToName(int id)
 		{
+			Assert(alliancesFetched);
 			if (all.TryGetValue(id, out var a))
 				return a.name;
 			return string.Empty;
@@ -73,6 +78,9 @@ namespace COTG.Game
 
 		public static Diplomacy GetDiplomacy(int allianceId)
 		{
+			Assert(diplomacyFetched);
+			if (myId == allianceId)
+				return Diplomacy.allied;
 			if (diplomacy.TryGetValue((byte)allianceId, out var result) == false)
 				return Diplomacy.none;
 			return result switch
@@ -266,6 +274,7 @@ namespace COTG.Game
 
 		internal static int FromPlayer(int player0)
 		{
+			Assert(alliancesFetched);
 			if (player0 > 0)
 			{
 				var p = Player.Get(player0);
@@ -274,5 +283,9 @@ namespace COTG.Game
 			}
 			return 0;
 		}
+		public static bool IsNap(int allianceId) => GetDiplomacy(allianceId) == Diplomacy.nap;
+		public static bool IsAlly(int allianceId) => GetDiplomacy(allianceId) == Diplomacy.allied;
+		public static bool IsAllyOrNap(int allianceId) => GetDiplomacy(allianceId) switch { Diplomacy.allied or Diplomacy.nap => true, _=>false };
+		public static bool IsEnemy(int allianceId) => GetDiplomacy(allianceId) == Diplomacy.enemy;
 	}
 }

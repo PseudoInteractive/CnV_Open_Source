@@ -21,9 +21,9 @@ namespace COTG
 	public static partial class AUtil
 	{
 		public const string emptyJson = "{}";
-		public const string defaultTimeFormat = "H':'mm':'ss";
-		public const string preciseTimeFormat = "H':'mm':'ss.fff";
-		public const string preciseDateTimeFormat = "MM/dd H':'mm':'ss.fff";
+		public const string defaultTimeSpanFormat = "h':'mm':'ss";
+		public const string preciseDateTimeFormat = "yyyy-MM-dd H':'mm':'ss.fff";
+//		public const string preciseDateTimeFormat = "MM/dd H':'mm':'ss.fff";
 
 		public const string defaultDateFormat = "MM/dd H':'mm':'ss";
 		public const string fullDateFormat = "yyyy/MM/dd H':'mm':'ss";
@@ -36,11 +36,22 @@ namespace COTG
 			me.CopyTo(i.Span);
 			return i;
 		}
-	//	public static MemoryOwner<T> AsMemoryOwner<T>(this SpanOwner<T> me) => AsMemoryOwner<T>((ReadOnlySpan<T>)me.Span);
-//		public static MemoryOwner<T> AsMemoryOwner<T>(this Span<T> me) => AsMemoryOwner<T>((ReadOnlySpan<T>)me);
-		public static MemoryOwner<T> Clone<T>(this MemoryOwner<T> me) => AsMemoryOwner<T>(me.Span);
-
+		//	public static MemoryOwner<T> AsMemoryOwner<T>(this SpanOwner<T> me) => AsMemoryOwner<T>((ReadOnlySpan<T>)me.Span);
+		//		public static MemoryOwner<T> AsMemoryOwner<T>(this Span<T> me) => AsMemoryOwner<T>((ReadOnlySpan<T>)me);
+		public static MemoryOwner<T> Clone<T>(this MemoryOwner<T> me)
+		{
+			var lg = me.Length;
+			var i = MemoryOwner<T>.Allocate(lg);
+			var sp0 = me.Span;
+			var sp1 = i.Span;
+			for(int index=0;index<lg;++index)
+			{
+				sp1[index] = sp0[index];
+			}
+			return i;
+		}
 		// this will be false for lamda functions 
+		public static int As01(this bool b) => b ? 1 : 0;
 		public static bool IsEqual(this Delegate a, Delegate b)
 		{
 				// ADDED THIS --------------
@@ -130,12 +141,12 @@ namespace COTG
 		public static string FormatDefault(this DateTimeOffset m) => m.ToString(defaultDateFormat);
 		public static string FormatTimeDefault(this DateTimeOffset m) => FormatSkipDateIfToday(m);
 		public static string Format(this TimeSpan t) => t.Days == 0 ? t.ToString("hh'hr 'mm'm 'ss's'", CultureInfo.InvariantCulture) : $"{t.Days:N0}D " + t.ToString("hh'hr 'mm'm 'ss's'", CultureInfo.InvariantCulture);
-		public static string FormatTimePrecise(this DateTimeOffset m) => m.ToString(preciseTimeFormat);
+		public static string FormatTimePrecise(this DateTimeOffset m) => m.ToString(preciseDateTimeFormat);
 		public static string FormatSkipDateIfToday(this DateTimeOffset m)
         {
             var serverNow = JSClient.ServerTime();
             if(serverNow.Day==m.Day && serverNow.Month==m.Month)
-               return  m.ToString(defaultTimeFormat);
+               return  m.ToString(defaultTimeSpanFormat);
             else
                return  m.ToString(defaultDateFormat);
         }
@@ -318,7 +329,39 @@ namespace COTG
             var x = xy - y*columns;
             return (x, y);
         }
-        public static int DecodeCid(int offset, string s)
+		public static int WorldToCid(this (int x, int y) a)
+		{
+			return a.x + (a.y << 16);
+		}
+
+		public static int Translate(this int cid, (int dx, int dy) d)
+		{
+			return cid + d.dx + d.dy * 65536;
+		}
+
+
+		public static System.Numerics.Vector2 ToVector(this (int x, int y) a)
+		{
+			return new (a.x, a.y);
+		}
+
+		public static System.Numerics.Vector2 CidToWorldV(this int c)
+		{
+			var c2 = CidToWorld(c);
+			return new System.Numerics.Vector2((float)c2.x, (float)c2.y);
+		}
+		public static int WorldToContinent(this (int x, int y) c) => (c.y / 100) * 10 + (c.x / 100);
+		public static int WorldToContinentPacked(this (int x, int y) c) => (c.y / 100) * Game.World.continentSpan + (c.x / 100);
+		//        public static int CidToContinent(this int cid) => ((cid/65536)/100)*10 | (cid % 65536) / 100;
+		public static int CidToContinent(this int cid) => WorldToContinent(CidToWorld(cid));
+
+
+		public static (int x, int y) CidToWorld(this int c)
+		{
+			return (c & 65535, c >> 16);
+		}
+
+		public static int DecodeCid(int offset, string s)
         {
             try
             {

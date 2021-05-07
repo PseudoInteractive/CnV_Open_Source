@@ -15,7 +15,6 @@ using System.Threading.Tasks;
 using static COTG.Debug;
 using COTG.Helpers;
 using System.IO.Compression;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Toolkit.HighPerformance.Buffers;
 using Nito.AsyncEx;
 using COTG.Views;
@@ -243,7 +242,7 @@ namespace COTG.Game
 				if (delta.Length < HeatMap.minDeltasPerSnapshot * 2)
 				{
 					Trace("Ignoring small delta");
-					World.ReturnWorldBuffer(newSnap);
+					newSnap.Dispose();
 					return false;
 				}
 				if (!hasDeltas)
@@ -333,6 +332,7 @@ namespace COTG.Game
 		{
 			try
 			{
+				var hasBeenLoaded = loadPending;
 				loadPending = true;
 
 				var cont = await Blobs.GetChangesContainer();
@@ -342,7 +342,7 @@ namespace COTG.Game
 
 				try
 				{
-					var res = await cont.GetBlobClient(str).DownloadAsync(default, new BlobRequestConditions() { IfNoneMatch = eTag });
+					var res = await  cont.GetBlobClient(str).DownloadAsync(default, hasBeenLoaded ? new BlobRequestConditions() { IfNoneMatch = eTag } : null );
 					//if (res.GetRawResponse().Status != 200)
 					//{
 					//	return day;
@@ -717,7 +717,7 @@ namespace COTG.Game
 		public byte newTemples;
 		public byte destroyedTemples;
 
-		public string ToString()
+		public override string ToString()
 		{
 			using var sb = ZString.CreateUtf8StringBuilder();
 			if (newTemples > 0)
@@ -821,9 +821,7 @@ namespace COTG.Game
 						{
 							return $"{Player.IdToName(player0)} conquered by {Player.IdToName(player1)}";
 						}
-
 					}
-
 				}
 				if (isBig0 != isBig1 && isBig0)
 				{
@@ -837,10 +835,10 @@ namespace COTG.Game
 						return null;// return $"{Player.IdToName(player1)} castled";
 					}
 				}
-
 			}
 			return null;
 		}
+
 		public ChangeInfo ComputeDeltas(ReadOnlySpan<uint> t0, ReadOnlySpan<uint> t1 )
 		{
 			Assert(t0.Length == World.spanSquared);

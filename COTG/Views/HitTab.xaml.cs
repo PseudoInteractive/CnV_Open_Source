@@ -27,8 +27,10 @@ namespace COTG.Views
         public Army[] history { get; set; } = Army.empty;
         public void SetHistory(Army[] _history)
         {
-            history = _history;
-            historyGrid.ItemsSource = history;
+			history = _history;
+			var sel = OutgoingTab.selected;
+			var cid = (sel?.cid).GetValueOrDefault();
+			historyGrid.ItemsSource = cid==0 ? history : history.Where(a=>a.targetCid==cid).ToArray();
             historyGrid.IsBusyIndicatorEnabled = false;
         }
         public HitTab()

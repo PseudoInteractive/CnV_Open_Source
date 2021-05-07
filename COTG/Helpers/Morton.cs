@@ -1,4 +1,6 @@
-﻿using System;
+﻿using COTG.Game;
+
+using System;
 using System.Runtime.CompilerServices;
 #if INTRINSIC
 using System.Runtime.InteropServices;
@@ -12,25 +14,14 @@ namespace COTG.Helpers
 
 		public static class Morton
 		{
-			[MethodImpl(MethodImplOptions.AggressiveInlining)]
-			public static void SplitXY(UInt32 i, int bits, out UInt32 x, out UInt32 y)
-			{
-				var mask = ((UInt32)1 << bits) - 1;
-				x = (i >> bits) & mask;
-				y = i & mask;
-			}
 
-			[MethodImpl(MethodImplOptions.AggressiveInlining)]
-			public static void SplitXYZ(UInt32 i, int bits, out UInt32 x, out UInt32 y, out UInt32 z)
-			{
-				var mask = ((UInt32)1 << bits) - 1;
-				x = (i >> (bits + bits)) & mask;
-				y = (i >> bits) & mask;
-				z = i & mask;
-			}
+		public static int ZCurveEncodeCid(this int cid)
+		{
+			return ZCurveEncode(cid.CidToWorld());
+		}
 
-			[MethodImpl(MethodImplOptions.AggressiveInlining)]
-			public static int Encode( (int x, int y) xy)
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+			public static int ZCurveEncode( this (int x, int y) xy)
 			{
 				Assert(xy.x >= 0);
 				Assert(xy.y >= 0);
@@ -62,7 +53,7 @@ namespace COTG.Helpers
 			}
 
 			[MethodImpl(MethodImplOptions.AggressiveInlining)]
-			public static (int x, int y) Decode(int _morton)
+			public static (int x, int y) ZCurveDecode(this int _morton)
 			{
 				uint x, y;
 			Assert(_morton >= 0);
@@ -93,7 +84,7 @@ namespace COTG.Helpers
 			}
 
 			[MethodImpl(MethodImplOptions.AggressiveInlining)]
-			public static UInt32 Encode(UInt32 x, UInt32 y, UInt32 z)
+			public static UInt32 ZCurveEncode(UInt32 x, UInt32 y, UInt32 z)
 			{
 #if INTRINSIC
             if (X86.Bmi2.IsSupported)
@@ -123,7 +114,7 @@ namespace COTG.Helpers
 			}
 
 			[MethodImpl(MethodImplOptions.AggressiveInlining)]
-			public static void Decode(UInt32 morton, out UInt32 x, out UInt32 y, out UInt32 z)
+			public static void ZCurveDecode(UInt32 morton, out UInt32 x, out UInt32 y, out UInt32 z)
 			{
 #if INTRINSIC
             if (X86.Bmi2.IsSupported)

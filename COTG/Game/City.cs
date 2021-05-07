@@ -21,7 +21,7 @@ using Microsoft.Toolkit.HighPerformance.Enumerables;
 using COTG.Draw;
 using System.Threading;
 using EnumsNET;
-using JM.LinqFaster;
+
 using Nito.AsyncEx;
 namespace COTG.Game
 {
@@ -205,7 +205,7 @@ namespace COTG.Game
 
 
 		}
-
+		public int spatialIndex => cid.ZCurveEncodeCid();
 		//public static Span<BuildQueueItem> GetQueue()
 		//{
 
@@ -1978,14 +1978,21 @@ namespace COTG.Game
 					return rv;
 				var xHasRemarks = (x.remarks != null);
 				var yHasRemarks = (y.remarks != null);
-				if (!xHasRemarks && !yHasRemarks)
-					return 0;
-				else if (!xHasRemarks)
+				if (xHasRemarks)
+				{
+					if (!yHasRemarks)
+						return -1;
+					rv = string.Compare(x.remarks, y.remarks, true);
+					if (rv != 0)
+						return rv;
+
+				}
+				else if (yHasRemarks)
+				{
 					return 1;
-				else if (!yHasRemarks)
-					return -1;
-				else
-					return string.Compare(x.remarks, y.remarks, true); ;
+				}
+				return x.spatialIndex.CompareTo(y.spatialIndex);
+
 			}
 		}
 

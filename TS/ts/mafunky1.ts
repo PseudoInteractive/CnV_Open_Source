@@ -67,6 +67,7 @@ function errorgo_(j_) {
 }
 
 
+
 function addToAttackSender(tid)  {
 
 let tempx = Number(tid % 65536);
@@ -313,6 +314,29 @@ function SetupHeaders() {
 //	}
 
 //	}
+
+function openAttackSender(args : string) {
+	$("#warcouncbox").show();
+	tabs.tabs("option", "active", 3);
+	$("#attacktab")[0].click();
+	Aimp(args);
+}
+//replaceElem('h2','h1','#test');
+
+function Aimp(str) {
+	var Aexp = JSON.parse(str);
+	for (let i = 1; i <= Aexp.x.length; i++) {
+		$("#t" + i + "x").val(Aexp.x[i - 1]);
+		$("#t" + i + "y").val(Aexp.y[i - 1]);
+		$("#type" + i).val(Aexp.type[i - 1]).change();
+	}
+	$("#attackHr").val(Aexp.time[0]);
+	$("#attackMin").val(Aexp.time[1]);
+	$("#attackSec").val(Aexp.time[2]);
+	$("#attackDat").val(Aexp.time[3]);
+
+}
+
 
 function Contains(a:string,b:string) {
 	return a.indexOf(b)!=-1;
@@ -1012,6 +1036,8 @@ function setviewmode(mode: string) {
 
 	}
 }
+
+var tabs: any;
 
 function avactor() {
 
@@ -1961,7 +1987,7 @@ function avactor() {
         expwin+="<button id=\"cfunkyX\" onclick=\"$('#ExpImp').remove();\" class=\"xbutton greenb\"><div id=\"xbuttondiv\"><div><div id=\"centxbuttondiv\"></div></div></div></button></div><div id='expbody' class=\"popUpWindow\">";
         expwin+="<textarea style='font-size:11px;width:97%;margin-left:1%;height:17%;' id='expstring' maxlength='200'></textarea><button id='applyExp' style='margin-left: 15px; width: 100px;height: 30px !important; font-size: 12px !important;' class='regButton greenb'>Apply</button></div></div>";
 
-		var tabs = $("#warcouncTabs").tabs();
+		tabs = $("#warcouncTabs").tabs();
 		var ul = tabs.find("ul");
 		$(bosstab).appendTo(ul);
 		$(attacktab).appendTo(ul);
@@ -3054,22 +3080,7 @@ function avactor() {
 	}
 
 
-	//replaceElem('h2','h1','#test');
-
-  	function Aimp(str) {
-        var Aexp=JSON.parse(str);
-        for (let i=1; i<=Aexp.x.length; i++) {
-            $("#t"+i+"x").val(Aexp.x[i-1]);
-            $("#t"+i+"y").val(Aexp.y[i-1]);
-            $("#type"+i).val(Aexp.type[i-1]).change();
-		}
-        $("#attackHr").val(Aexp.time[0]);
-        $("#attackMin").val(Aexp.time[1]);
-        $("#attackSec").val(Aexp.time[2]);
-        $("#attackDat").val(Aexp.time[3]);
-
-	}
-    
+	
 	function neardeftable(t) {
         var cx= Number($("#ndefx").val());
         var cy= Number($("#ndefy").val());
@@ -3336,7 +3347,7 @@ function setAutoDemo(_autodemoon: boolean) {
 	}
 }
 
-function getFormattedTime(date_2) {
+function getFormattedTime(date_2:Date) {
 	var year_1 = date_2.getFullYear();
 	var month_1 = (1 + date_2.getMonth()).toString();
 	month_1 = month_1.length > 1 ? month_1 : `0${month_1}`;

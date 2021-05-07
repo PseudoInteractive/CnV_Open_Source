@@ -59,7 +59,9 @@ namespace COTG.Views
             Assert(instance == null);
             instance = this;
             InitializeComponent();
-           
+
+			spotGrids.Add(cityGrid);
+
 			cityGrid.SelectionChanged += SelectionChanged;
 			//        var rand = new Random();
 
@@ -261,7 +263,7 @@ namespace COTG.Views
             base.VisibilityChanged(visible);
 			if (visible)
 			{
-				Spot.SyncUISelection(true, cityGrid, true);
+				Spot.SyncUISelection(true, City.GetBuild() );
 			}
 		}
         //private void BuildCityContextFlyout(TabPage newPage)

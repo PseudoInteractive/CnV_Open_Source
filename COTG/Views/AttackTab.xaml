@@ -115,7 +115,14 @@
                            x:FieldModifier="public"
                            IsTextSelectionEnabled="True" />
             </Border>
-            <Border 
+			<Border 
+                    Style="{StaticResource BorderReveal}">
+				<TextBlock x:Name="sen"
+                           Margin="4"
+                           x:FieldModifier="public"
+                           IsTextSelectionEnabled="True" />
+			</Border>
+			<Border 
                     Style="{StaticResource BorderReveal}">
                 <TextBlock x:Name="sorcs"
                            Margin="4"

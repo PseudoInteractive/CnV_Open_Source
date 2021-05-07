@@ -79,15 +79,31 @@ namespace COTG
 
 		public static void JSInvoke(string func, string[] args)
 		{
-			App.DispatchOnUIThreadSneaky(() =>
-		   JSClient.view.InvokeScriptAsync(func, args));
-		}
+			App.DispatchOnUIThreadSneaky(async () =>
+			{
 
-		public static Task JSInvokeTask(string func, string[] args)
+				try
+				{
+					await JSClient.view.InvokeScriptAsync(func, args);
+
+				}
+				catch (Exception ex)
+				{
+					LogEx(ex);
+
+				} }
+);
+		}
+	}
+
+		public static async Task<string> JSInvokeTask(string func, string[] args)
 		{
+
 			// this won't await the actually js call
-			return App.DispatchOnUIThreadTask( async () =>
-		   await JSClient.view.InvokeScriptAsync(func, args));
+			return await App.DispatchOnUIThreadTask(  async () =>
+		    await JSClient.view.InvokeScriptAsync(func, args));
+		);
+			
 		}
 		public static HttpClient _genericClient;
 		public static HttpClient genericClient
@@ -748,6 +764,25 @@ namespace COTG
 
 				   await view.InvokeScriptAsync("addtoattacksender", new string[] { (cityId).ToString() });
 			   });
+
+			}
+			catch (Exception e)
+			{
+				LogEx(e);
+			}
+
+		}
+
+		public static async Task OpenAttackSender()
+		{
+			try
+			{
+				await App.DispatchOnUIThreadTask(async () =>
+				{
+
+
+					await view.InvokeScriptAsync("openAttackSender", new string[] { await App.GetClipboardText() });
+				});
 
 			}
 			catch (Exception e)
@@ -1824,6 +1859,23 @@ namespace COTG
 								   var jso = jsp.Value;
 								   var cid = jso.GetAsInt();
 								   Spot.ProcessCoordClick(cid, false, App.keyModifiers, true); // then normal click
+								   App.DispatchOnUIThreadSneaky(async () =>
+								   {
+									   try
+									   {
+										   var t = await App.GetClipboardText();
+										   if (t.StartsWith("{") && t.EndsWith("}"))
+										   {
+											   // is it json?
+											   var p = JsonSerializer.Deserialize<AttackSenderScript>(t);
+											   OpenAttackSender();
+										   }
+									   }
+									   catch (Exception ex)
+									   {
+
+									   }
+								   });
 								   break;
 							   }
 						   case "keyDown":
@@ -2060,6 +2112,7 @@ namespace COTG
 										   }
 									   }
 								   }
+							
 								   break;
 
 							   }

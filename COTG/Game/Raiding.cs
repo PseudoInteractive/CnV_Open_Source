@@ -165,9 +165,9 @@ namespace COTG.Game
 					}
 
 				}
-				var trs = JsonSerializer.Serialize(tr);
+				var trs = JsonSerializer.Serialize(tr, Json.jsonSerializerOptions);
 				var args = new sndRaidArgs() { rcid = d.cid, type = SettingsPage.wantRaidRepeat ? 1 : 2, co = wantDelays ? 1 : r.reps, rt = 1, snd = 1, rut = 0, tr = trs, iv = SettingsPage.raidIntervals + 1 };
-				var snd = new COTG.Services.sndRaid(JsonSerializer.Serialize(args), city.cid);
+				var snd = new COTG.Services.sndRaid(JsonSerializer.Serialize(args, Json.jsonSerializerOptions), city.cid);
 				var res = await RestAPI.AcceptText(await snd.Send() );
 				if(res != "\n0\n")
 				{

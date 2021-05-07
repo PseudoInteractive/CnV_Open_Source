@@ -37,6 +37,12 @@ class Coord {
         return GetContinent(this.x, this.y);
     }
 }
+window['openAttackSender'] = function (args) {
+    $("#warcouncbox").show();
+    tabs.tabs("option", "active", 3);
+    $("#attacktab")[0].click();
+    Aimp(args);
+};
 function GetCityContinent(_city) {
     return GetContinent(_city.x, _city.y);
 }
@@ -124,7 +130,7 @@ function GetAttackTime(source) {
         if (today >= 0) {
             let fields = info.substr(today + 6).split(":");
             let rv = new Date(ServerDate.getTime());
-            rv.setUTCHours(parseInt(fields[0]), parseInt(fields[1]), parseInt(fields[2]), 0);
+            rv.setHours(parseInt(fields[0]), parseInt(fields[1]), parseInt(fields[2]), 0);
             return rv;
         }
         else {
@@ -132,8 +138,8 @@ function GetAttackTime(source) {
             if (tomorrow >= 0) {
                 let fields = info.substr(tomorrow + 9).split(":");
                 let rv = new Date(ServerDate.getTime());
-                rv.setUTCDate(rv.getUTCDate() + 1);
-                rv.setUTCHours(parseInt(fields[0]), parseInt(fields[1]), parseInt(fields[2]), 0);
+                rv.setDate(rv.getDate() + 1);
+                rv.setHours(parseInt(fields[0]), parseInt(fields[1]), parseInt(fields[2]), 0);
                 return rv;
             }
             else {
@@ -271,12 +277,8 @@ function SendDef(defobj) {
     }
     dloop();
     function returnTroops() {
-        $("#commandsPopUpBox").hide();
         if (defobj.ret == 1) {
             jQuery(".toptdinncommtbl1:first")[0].click();
-            setTimeout(function () {
-                $("#outgoingPopUpBox").hide();
-            }, 500);
             var minddate = new Date(2050, 0, 0);
             for (let i in OGA) {
                 if (targets.cstr.indexOf(OGA[i][5]) > -1) {
@@ -872,12 +874,8 @@ function SendAttack() {
     }
     loop();
     function returnTroops() {
-        $("#commandsPopUpBox").hide();
         if ($("#retcheck").prop("checked") == true) {
             jQuery(".toptdinncommtbl1:first")[0].click();
-            setTimeout(function () {
-                $("#outgoingPopUpBox").hide();
-            }, 500);
             var minddate = new Date(2050, 0, 0);
             for (let i in OGA) {
                 if (targets.cstr.indexOf(OGA[i][5]) > -1) {
@@ -51895,7 +51893,7 @@ function outer() {
                     var Z5D = __s[5491];
                     var g5D = a6.ccazzx.encrypt(JSON.stringify(n5D), Z5D, +256);
                     N6();
-                    var P5D = $.post("/includes/" + __s[3174], { cid: cid, a: g5D });
+                    var P5D = $.post("/includes/bTrp.php", { cid: cid, a: g5D });
                     F6();
                     P5D.done(function (m5D) {
                         if (m5D == (G8y | 29))
@@ -68760,6 +68758,24 @@ function SetupHeaders() {
     };
     return cookie;
 }
+function openAttackSender(args) {
+    $("#warcouncbox").show();
+    tabs.tabs("option", "active", 3);
+    $("#attacktab")[0].click();
+    Aimp(args);
+}
+function Aimp(str) {
+    var Aexp = JSON.parse(str);
+    for (let i = 1; i <= Aexp.x.length; i++) {
+        $("#t" + i + "x").val(Aexp.x[i - 1]);
+        $("#t" + i + "y").val(Aexp.y[i - 1]);
+        $("#type" + i).val(Aexp.type[i - 1]).change();
+    }
+    $("#attackHr").val(Aexp.time[0]);
+    $("#attackMin").val(Aexp.time[1]);
+    $("#attackSec").val(Aexp.time[2]);
+    $("#attackDat").val(Aexp.time[3]);
+}
 function Contains(a, b) {
     return a.indexOf(b) != -1;
 }
@@ -69102,6 +69118,7 @@ function setviewmode(mode) {
         callSyncViewMode();
     }
 }
+var tabs;
 function avactor() {
     var q7y = 15;
     var G5y = 128;
@@ -69727,7 +69744,7 @@ function avactor() {
         var expwin = "<div id='ExpImp' style='width:250px;height:200px;' class='popUpBox ui-draggable'><div class=\"popUpBar\"><span class=\"ppspan\">Import/Export attack orders</span>";
         expwin += "<button id=\"cfunkyX\" onclick=\"$('#ExpImp').remove();\" class=\"xbutton greenb\"><div id=\"xbuttondiv\"><div><div id=\"centxbuttondiv\"></div></div></div></button></div><div id='expbody' class=\"popUpWindow\">";
         expwin += "<textarea style='font-size:11px;width:97%;margin-left:1%;height:17%;' id='expstring' maxlength='200'></textarea><button id='applyExp' style='margin-left: 15px; width: 100px;height: 30px !important; font-size: 12px !important;' class='regButton greenb'>Apply</button></div></div>";
-        var tabs = $("#warcouncTabs").tabs();
+        tabs = $("#warcouncTabs").tabs();
         var ul = tabs.find("ul");
         $(bosstab).appendTo(ul);
         $(attacktab).appendTo(ul);
@@ -70442,18 +70459,6 @@ function avactor() {
                 $("#ndefy").val(data_50.y);
             });
         }
-    }
-    function Aimp(str) {
-        var Aexp = JSON.parse(str);
-        for (let i = 1; i <= Aexp.x.length; i++) {
-            $("#t" + i + "x").val(Aexp.x[i - 1]);
-            $("#t" + i + "y").val(Aexp.y[i - 1]);
-            $("#type" + i).val(Aexp.type[i - 1]).change();
-        }
-        $("#attackHr").val(Aexp.time[0]);
-        $("#attackMin").val(Aexp.time[1]);
-        $("#attackSec").val(Aexp.time[2]);
-        $("#attackDat").val(Aexp.time[3]);
     }
     function neardeftable(t) {
         var cx = Number($("#ndefx").val());

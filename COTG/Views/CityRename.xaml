@@ -27,9 +27,17 @@
 		<TextBox Grid.Row="1" x:Name="name" Header="Current" x:FieldModifier="public"   />
 		<ToggleSwitch Grid.Row="2" IsOn="{x:Bind local:SettingsPage.useSuggested, Mode=TwoWay}" OnContent="Suggested" OffContent="Current"/>
 		<controls:WrapPanel Grid.Row="3">
-			<ToggleSwitch Header="Tags" IsOn="{x:Bind local:SettingsPage.applyTags, Mode=TwoWay}" OnContent="Apply" OffContent="Leave"/>
-			<ToggleSwitch Header="Hub" IsOn="{x:Bind local:SettingsPage.setHub, Mode=TwoWay}" OnContent="Set" OffContent="Leave" ToolTipService.ToolTip="If set, the source and target hub will bet set based on which hub is closest.  Choses from the 'Hubs' city group, or if you don't do city groups: the nearest city with 'Hub' in the remarks" />
-			<ToggleSwitch Header="Res" IsOn="{x:Bind local:SettingsPage.clearRes, Mode=TwoWay}" OnContent="Clear" OffContent="Leave" />
+			<winui:NumberBox Header="Cottage Level"
+										Value="{x:Bind views:SettingsPage.cottageLevel, Mode=TwoWay}"
+										Width="100"
+										Style="{StaticResource NumberBoxSmall}"
+										SmallChange="1" />
+			<CheckBox Content="Autobuild"
+							  Margin="4"
+							  IsThreeState="True"
+					  ToolTipService.ToolTip="Checked: Turn on autobuild, Unchecked; Turn off autobuild, Kind of checked: Leave it"
+							  IsChecked="{x:Bind views:SettingsPage.autoBuildOn, Mode=TwoWay}" />
+			<ToggleSwitch Header="Clear Res" IsOn="{x:Bind local:SettingsPage.clearRes, Mode=TwoWay}" OnContent="Clear" OffContent="Leave" />
 			<ToggleSwitch Header="ShareString" IsOn="{x:Bind local:SettingsPage.setShareString, Mode=TwoWay}" OnContent="Set" OffContent="Skip" ToolTipService.ToolTip="If set, you will be able to set the sharestring when you are done here" />
 			<ToggleSwitch Header="Place Cabins" IsOn="{x:Bind local:SettingsPage.autoBuildCabins, Mode=TwoWay}" OnContent="Build" OffContent="Skip" ToolTipService.ToolTip="If set, cabins will be places when setup is complete" />
 			<winui:NumberBox Header="Cabins" Value="{x:Bind views:SettingsPage.startCabinCount,Mode=TwoWay}" Style="{StaticResource NumberBoxSmall}" ToolTipService.ToolTip="The number of cabins to place if PlaceCabins is set" />

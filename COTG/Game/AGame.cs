@@ -1559,7 +1559,7 @@ namespace COTG
 							{
 								if (AttackTab.attackClusters != null)
 								{
-									var showAll = AttackTab.attackClusters.Length < 50;
+									var showAll = AttackTab.attackClusters.Length < 128;
 									foreach (var cluster in AttackTab.attackClusters)
 									{
 										var selected = false;

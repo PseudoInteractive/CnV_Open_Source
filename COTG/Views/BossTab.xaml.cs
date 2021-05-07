@@ -49,9 +49,12 @@ namespace COTG.Views
             Assert(instance == null);
             instance = this;
             this.InitializeComponent();
-        }
 
-        private void gridPointerPress(object sender, PointerRoutedEventArgs e)
+			spotGrids.Add(cityGrid);
+
+		}
+
+		private void gridPointerPress(object sender, PointerRoutedEventArgs e)
         {
 			
 			Spot.GridPressed(sender, e);

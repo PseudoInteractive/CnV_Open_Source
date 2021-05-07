@@ -53,6 +53,7 @@ namespace COTG.Views
             instance = this;
 
             InitializeComponent();
+			spotGrids.Add(defenderGrid);
 
 			defenderGrid.OnKey = Spot.OnKeyDown;
             //            historyGrid.ContextFlyout = cityMenuFlyout;
@@ -130,6 +131,7 @@ namespace COTG.Views
 
         public void OnPropertyChanged(string propertyName) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 
+		public static Spot selected => instance.defenderGrid.SelectedItem as Spot;
 
         public void NotifyIncomingUpdated()
         {
@@ -183,9 +185,9 @@ namespace COTG.Views
         }
         public static bool IsVisible() => instance.isVisible;
 
-        private void defenderGrid_SelectionChanged(object sender, DataGridSelectionChangedEventArgs e)
+        private async void defenderGrid_SelectionChanged(object sender, DataGridSelectionChangedEventArgs e)
         {
-            var sel = defenderGrid.SelectedItems;
+            var sel = defenderGrid.SelectedItem;
             
             var newSel = new HashSet<int>();
             foreach (object s in sel)
@@ -199,8 +201,22 @@ namespace COTG.Views
 
             if (sel.Any())
             {
-                armyGrid.ItemsSource = (sel.First() as Spot).incoming;
-            }
+				var spot = sel.First() as Spot;
+
+				armyGrid.ItemsSource = spot.incoming;
+				
+				var tab = DefenseHistoryTab.instance;
+				if (!tab.isActive)
+				{
+					tab.ShowOrAdd( true,true,TabPage.secondaryTabs );
+
+				}
+				if(tab.isVisible)
+				{
+					tab.Refresh();
+				}
+
+			}
         }
 
 		private void onlyMe_Click(object sender, RoutedEventArgs e)

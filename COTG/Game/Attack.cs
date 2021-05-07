@@ -19,11 +19,9 @@ namespace COTG.Game
 		// only valid as target type
 		senatorFake,
 		seFake,
-
-		sourceStart = assault,
-		sourceEnd = se,
-		targetStart = senator,
-		targetEnd = seFake,
+		invalid,
+	
+	
 
 
 	}
@@ -32,7 +30,7 @@ namespace COTG.Game
 		se,
 		senator,
 		count,
-		first = se
+
 	}
 	//  public class Attack
 	//  {

@@ -48,6 +48,7 @@ namespace COTG.Views
             selectedGrid.SelectionChanged += SpotTabSelectionChanged;
 			selectedGrid.OnKey = Spot.OnKeyDown;
 			selectedGrid.ProcessTooltips();
+			spotGrids.Add(selectedGrid);
 		}
         public static bool IsVisible() => instance.isVisible;
 

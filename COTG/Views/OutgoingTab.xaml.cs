@@ -50,16 +50,18 @@ namespace COTG.Views
             instance = this;
 
             InitializeComponent();
+			spotGrids.Add(attackerGrid);
+
 			attackerGrid.OnKey = Spot.OnKeyDown;
             //            historyGrid.ContextFlyout = cityMenuFlyout;
 
             //      var data = defenderGrid.GetDataView();
         }
 
-        
 
 
-        private void gridPointerPress(object sender, PointerRoutedEventArgs e)
+		public static Spot selected => instance.attackerGrid.SelectedItem as Spot;
+		private void gridPointerPress(object sender, PointerRoutedEventArgs e)
         {
             (var hit, var column, var pointerPoint,_) = Spot.HitTest(sender, e);
             //if (hit != null)
@@ -135,8 +137,20 @@ namespace COTG.Views
             else
             {
                 armyGrid.ItemsSource = sel.incoming;
-            }
-        }
+
+				var tab = HitTab.instance;
+				if (!tab.isActive)
+				{
+					tab.ShowOrAdd(true, true, TabPage.secondaryTabs);
+
+				}
+				if (tab.isVisible)
+				{
+					tab.Refresh();
+				}
+
+			}
+		}
     }
        
 

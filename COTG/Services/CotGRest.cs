@@ -416,7 +416,7 @@ namespace COTG.Services
 			var t = JSClient.ServerTimeMs();
 			var args = new Args() { tid = AMath.random.Next(),bt=1,ds=t,de=t+1,pa=1,tc=count,tm=0,ttype=tt,tbt=4,tl=1  };
 
-			var encoded = Aes.Encode(JsonSerializer.Serialize(args), magic );
+			var encoded = Aes.Encode(JsonSerializer.Serialize(args, Json.jsonSerializerOptions), magic );
 			var urle = $"cid={cid}&a=" + HttpUtility.UrlEncode(encoded, Encoding.UTF8);
 			var str = (await Post.SendForText("includes/bTrp.php",urle)).Trim();
 			if (str == "0")
@@ -1002,7 +1002,7 @@ namespace COTG.Services
 			{
 				cid = cid,
 				rcid = rcid,
-				tr = JsonSerializer.Serialize(tttv),
+				tr = JsonSerializer.Serialize(tttv, Json.jsonSerializerOptions),
 				snd = 1, // 1 means send immediately
 			};
 			if (arrival > JSClient.ServerTime())
@@ -1015,7 +1015,7 @@ namespace COTG.Services
 				sr.snd = 2;
 				sr.ts = departAt.ToString("MM/dd/yyyy HH':'mm':'ss");
 			}
-			var post = JsonSerializer.Serialize(sr);
+			var post = JsonSerializer.Serialize(sr, Json.jsonSerializerOptions);
 			var secret = $"XTR977sW{pid}sss2x2";
 			var city = City.GetOrAddCity(cid);
 			for (var i = 0; ;)

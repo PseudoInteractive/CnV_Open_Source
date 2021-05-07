@@ -40,6 +40,14 @@ class Coord  {
 	}
 
 }
+
+window['openAttackSender'] = function (args: string) {
+	$("#warcouncbox").show();
+	tabs.tabs("option", "active", 3);
+	$("#attacktab")[0].click();
+	Aimp(args);
+}
+
 function GetCityContinent(_city: jsonT.City): number {
 	return GetContinent(_city.x, _city.y);
 }
@@ -164,7 +172,7 @@ function GetAttackTime(source:string) : Date {
 
 
 			let rv = new Date(ServerDate.getTime());
-			rv.setUTCHours(parseInt(fields[0]), parseInt(fields[1]), parseInt(fields[2]), 0);
+			rv.setHours(parseInt(fields[0]), parseInt(fields[1]), parseInt(fields[2]), 0);
 			return rv;
 
 		}
@@ -175,8 +183,8 @@ function GetAttackTime(source:string) : Date {
 
 
 				let rv = new Date(ServerDate.getTime());
-				rv.setUTCDate( rv.getUTCDate()+1 );
-				rv.setUTCHours(parseInt(fields[0]), parseInt(fields[1]), parseInt(fields[2]), 0);
+				rv.setDate( rv.getDate()+1 );
+				rv.setHours(parseInt(fields[0]), parseInt(fields[1]), parseInt(fields[2]), 0);
 				return rv;
 
 			}
@@ -321,12 +329,12 @@ function SendDef(defobj) {
 	dloop();
 	function returnTroops() { //setting return time for raids according to city view outgoing list
 		//console.log(OGA);
-		$("#commandsPopUpBox").hide();
+	//	$("#commandsPopUpBox").hide();
 		if (defobj.ret == 1) {
 			jQuery(".toptdinncommtbl1:first")[0].click();
-			setTimeout(function () {
-				$("#outgoingPopUpBox").hide();
-			}, 500);
+			//setTimeout(function () {
+			//	$("#outgoingPopUpBox").hide();
+			//}, 500);
 			var minddate = new Date(2050, 0, 0);
 			for (let i in OGA) {
 
@@ -875,12 +883,12 @@ function SendAttack() {
 	loop();
 	function returnTroops() { //setting return time for raids according to city view attacks list
 		//console.log(OGA);
-		$("#commandsPopUpBox").hide();
+	//	$("#commandsPopUpBox").hide();
 		if ($("#retcheck").prop("checked") == true) {
 			jQuery(".toptdinncommtbl1:first")[0].click();
-			setTimeout(function () {
-				$("#outgoingPopUpBox").hide();
-			}, 500);
+		//	setTimeout(function () {
+		//		$("#outgoingPopUpBox").hide();
+		//	}, 500);
 			var minddate = new Date(2050, 0, 0);
 			for (let i in OGA) {
 				//console.log(targets.cstr,OGA[i][5]);

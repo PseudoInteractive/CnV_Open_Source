@@ -67,6 +67,8 @@ namespace COTG.Views
 
 			cityGrid.SelectionChanged += SelectionChanged;
 			cityGrid.ProcessTooltips();
+			spotGrids.Add(cityGrid);
+
 		}
 
 		private void CityGrid_CurrentItemChanged(object sender, EventArgs e)
@@ -262,7 +264,7 @@ namespace COTG.Views
 			base.VisibilityChanged(visible);
 			if(visible)
 			{
-				App.DispatchOnUIThreadSneaky(() => Spot.SyncUISelection(true, cityGrid, true));
+				App.DispatchOnUIThreadSneaky(() => Spot.SyncUISelection(true, City.GetBuild() ));
 			}
 		}
 		//private void BuildCityContextFlyout(TabPage newPage)

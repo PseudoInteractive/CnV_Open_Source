@@ -41,17 +41,17 @@ namespace COTG.JSON
 
 		}
 
-		public static int FindBestHub(int cid)
+		public static async Task<int> FindBestHub(int cid)
 		{
+			await NearRes.UpdateTradeStuffifNeeded();
 			int reqHub = 0;
 			var bestDist = 4096f;
 			var hubs = GetHubs();
-			
 				foreach (var hub in hubs)
 				{
 					if (cid == hub)
 						continue;
-					if (!hub.CanReach(cid))
+					if (!hub.CanReachByTrade(cid))
 						continue;
 
 					var d = hub.DistanceToCid(cid);
@@ -61,16 +61,15 @@ namespace COTG.JSON
 						reqHub = hub;
 					}
 
-				}
-			
-			
+				}	
 			return reqHub;
 		}
+
 		public static async void SetHub(int cid)
 		{
 			foreach (var _cid in Spot.GetSelectedForContextMenu(cid, false))
 			{
-				var hub = CitySettings.FindBestHub(_cid);
+				var hub = await CitySettings.FindBestHub(_cid);
 				await CitySettings.SetCitySettings(_cid,hub, FilterTargetHub(cid,hub) );
 			}
 
@@ -220,7 +219,7 @@ namespace COTG.JSON
 					split[49] = maxIron.ToString();
 					split[50] = maxFood.ToString();
 				}
-				if (cottageLevel > 0 && setAutoBuild)
+				if (cottageLevel > 0 && setAutoBuild && split[ministerOptionAutobuildCabins] == "10]" )
 				{
 					split[ministerOptionAutobuildCabins] = cottageLevel.ToString() + ']';
 

@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
 
+using Telerik.UI.Xaml.Controls.Grid;
+
 using Windows.ApplicationModel.Core;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Foundation.Metadata;
@@ -25,8 +27,9 @@ namespace COTG.Views
 {
     public class UserTab : UserControl
     {
-        
-        public static UserTab[] userTabs;
+		public static List<RadDataGrid> spotGrids= new();
+
+		public static UserTab[] userTabs;
         public static void InitUserTabs()
         {
 
@@ -116,7 +119,7 @@ namespace COTG.Views
 		{
 			if (!isActive)
 			{
-				TabPage.mainTabs.AddTab(this, true);
+				TabPage.mainTabs.AddOrShowTab(this, true);
 			}
 			else
 			{
@@ -133,12 +136,41 @@ namespace COTG.Views
 				return;
 			TabPage.Close(this);
 		}
+		public void ShowOrAdd(bool selectMe, bool onlyIfClosed,TabPage page = null)
+
+		{
+			if (onlyIfClosed && isActive)
+				return;
+
+			// already here?
+			var existing = GetViewItem();
+			if (existing.tabPage != null)
+			{
+				if (selectMe)
+					existing.tabPage.Tabs.SelectedItem = this;
+				return;
+			}
+
+			var vi = new TabViewItem()
+			{
+				Header = Tag as string,
+				IconSource = TabPage.GetIconForTab(this),
+				Content = this
+			};
+			if (page == null)
+				page = TabPage.mainTabs;
+			page.Add(vi);
+			if (selectMe)
+				page.Tabs.SelectedItem = vi;
+		}
+
 	}
     public sealed partial class TabPage : Page
     {
         public static List<AppWindow> tabWindows = new List<AppWindow>();
         public static TabPage mainTabs;
-        AppWindow RootAppWindow = null;
+		public static TabPage secondaryTabs;
+		AppWindow RootAppWindow = null;
 
         private const string DataIdentifier = "ChatTabItem";
         public TabPage()
@@ -266,23 +298,15 @@ namespace COTG.Views
                 if (tab.isActive)
                     continue;
 
-                AddTab(tab, selectIt);
+                AddOrShowTab(tab, selectIt);
                 return true;
             }
             return false; 
         }
 
-        public void AddTab(UserTab tab, bool selectIt)
+        public void AddOrShowTab(UserTab tab, bool selectIt=true,bool  onlyIfClosed=false)
         {
-            var vi = new TabViewItem()
-            {
-                Header = tab.Tag as string,
-                IconSource = GetIconForTab(tab),
-                Content = tab
-            };
-            Add(vi);
-            if (selectIt)
-                Tabs.SelectedItem = vi;
+			
         }
 
         static Dictionary<string, Symbol> tabSymbolIcons = new Dictionary<string, Symbol> {
@@ -307,7 +331,7 @@ namespace COTG.Views
             { "Hits","\uEA69" },
 			{ "Heat", "\uF738" },
         };
-        private static Microsoft.UI.Xaml.Controls.IconSource GetIconForTab(UserTab tab)
+        public static Microsoft.UI.Xaml.Controls.IconSource GetIconForTab(UserTab tab)
         {
             if (tabSymbolIcons.TryGetValue(tab.Tag as string, out var symbol))
                 return new SymbolIconSource() { Symbol = symbol };
@@ -549,7 +573,7 @@ namespace COTG.Views
         {
             var title = tab.Tag as string;
             var rv = new MenuFlyoutItem() { Text = title, Icon= GetOldIconForTab(tab)  };
-            rv.Click += (_, _) => AddTab(tab,true);
+            rv.Click += (_, _) => AddOrShowTab(tab,true);
             return rv;
         }
 

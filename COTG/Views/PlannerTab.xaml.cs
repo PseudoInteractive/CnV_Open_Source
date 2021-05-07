@@ -316,12 +316,12 @@ namespace COTG.Views
 			Assert(CityBuild.isPlanner);
 			for (int y = span0; y <= span1; ++y)
 			{
-				for (int x = span0; x < 0; ++x)
+				for (int x = span0; x <= span1; ++x)
 				{
 					var c = (x, y);
 					if (c.IsXYInCenter() ? center : outer)
 					{
-						buildingsCache[XYToId((x, y))] = bc[XYToId((y, x))];
+						buildingsCache[XYToId((x, y))] = bc[XYToId((y, -x))];
 					}
 
 				}

@@ -149,6 +149,10 @@ namespace COTG.Views
 				   });
 					if (result == ContentDialogResult.Primary)
 					{
+						await CitySettings.SetCitySettings(cid, setAutoBuild: SettingsPage.autoBuildOn.GetValueOrDefault(),autoWalls: (SettingsPage.autoWallLevel == 10) ? true : null,
+										autoTowers: (SettingsPage.autoTowerLevel == 10) ? true : null
+										);
+
 						if (SettingsPage.setShareString)
 						{
 							await ShareString.ShowNoLock(City.build);

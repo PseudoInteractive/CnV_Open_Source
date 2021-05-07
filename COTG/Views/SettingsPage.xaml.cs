@@ -382,7 +382,7 @@ namespace COTG.Views
 				Tips.SaveSeen();
 				//  st.Save("attacktime", AttackTab.time.DateTime);
 
-				AttackTab.SaveAttacks();
+				AttackTab.WaitAndSaveAttacks();
 			}
 			catch (Exception e)
 			{
@@ -658,7 +658,7 @@ namespace COTG.Views
 							   continue;
 						   cityList.Add(l.id.ToString() + l.name);
 					   }
-					   sli = ("a=" + HttpUtility.UrlEncode(JsonSerializer.Serialize(cityList)));
+					   sli = ("a=" + HttpUtility.UrlEncode(JsonSerializer.Serialize(cityList, Json.jsonSerializerOptions)));
 					   //                await Post.Send("includes/sLi.php",);
 				   }
 				   {
@@ -685,7 +685,7 @@ namespace COTG.Views
 							   continue;
 
 						   var strs = temp.Select(a => a.id.ToString()).ToArray();
-						   cgs.Add($"a={HttpUtility.UrlEncode(JsonSerializer.Serialize(strs))}&cid={cid}");
+						   cgs.Add($"a={HttpUtility.UrlEncode(JsonSerializer.Serialize(strs, Json.jsonSerializerOptions))}&cid={cid}");
 					   }
 				   }
 				   if (sli != null)

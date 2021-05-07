@@ -39,9 +39,11 @@ namespace COTG.Views
             Assert(instance == null);
             instance = this;
             this.InitializeComponent();
-        }
+			spotGrids.Add(donationGrid);
 
-        public static bool IsVisible() => instance.isVisible;
+		}
+
+		public static bool IsVisible() => instance.isVisible;
         public event PropertyChangedEventHandler PropertyChanged;
         public void OnPropertyChanged(string propertyName) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 

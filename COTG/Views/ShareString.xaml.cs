@@ -137,7 +137,7 @@ namespace COTG.Views
 
 			bool setResources = true;
 			bool setLayout = false;
-			var bestHub = CitySettings.FindBestHub(cid);
+			var bestHub = await CitySettings.FindBestHub(cid);
 			var rv = await App.DispatchOnUIThreadTask(async () =>
 			{
 			try
@@ -238,9 +238,7 @@ namespace COTG.Views
 						//			await CitySettings.SetTradeResourcesSettings(city.cid,req,max);
 
 						await CitySettings.SetCitySettings(ci, setResources&&SettingsPage.setHub ? bestHub : null, (setResources&&SettingsPage.setHub ? CitySettings.FilterTargetHub(ci, bestHub) : null),
-							SettingsPage.shareStringApplyTags && SettingsPage.setRecruit, setAutoBuild: true, setResources: setResources, filterSend: true,
-											autoWalls: (SettingsPage.autoWallLevel == 10) ? true : null,
-											autoTowers: (SettingsPage.autoTowerLevel == 10) ? true : null
+							SettingsPage.shareStringApplyTags && SettingsPage.setRecruit, setResources: setResources, filterSend: true
 											);
 
 						if (setLayout)

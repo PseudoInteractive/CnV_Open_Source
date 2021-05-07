@@ -147,3 +147,5 @@
    - Q key is not a shortcut for Layout build
   - **New**
    - Added Recruit Senator command to War context menu
+  - **Update**
+   - Autobuild settings are only set on *Setup*, previously they would get set when setting the Layout

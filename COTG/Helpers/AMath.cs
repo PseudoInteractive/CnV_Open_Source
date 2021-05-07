@@ -311,11 +311,18 @@ namespace COTG
         {
             return (f >= m ? f : m);
         }
-        public static int Min(this int f, int min)
+		public static float Max(this float f, int m)
+		{
+			return (f >= m ? f : m);
+		}
+		public static int Min(this int f, int min)
         {
             return (f <=min ? f : min);
         }
-
+		public static float Min(this float f, int min)
+		{
+			return (f <= min ? f : min);
+		}
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static float Min(this float a, float b, float c)
 		{
@@ -449,16 +456,16 @@ namespace COTG
         
 
         public static float DistanceToCid(this int a, int cid) => Distance(a.CidToWorld(), cid.CidToWorld());
-		public static bool CanReach(this int cid0, int cid1)
+		public static bool CanReachByTrade(this int hub, int cid1)
 		{
-			if (cid0.CidToContinent() == cid1.CidToContinent())
-				return true;
+			if (hub.CidToContinent() == cid1.CidToContinent())
+			{
+				return (City.Get(hub).carts > 0);
+			}
 			if (!City.Get(cid1).isOnWater)
 				return false;
-			if (!City.Get(cid0).isOnWater)
-				return false;
-			return true;
 
+			return (City.Get(hub).ships > 0);
 		}
 		public static float DistanceToCid(this (int x, int y) a, int cid) => Distance(a, cid.CidToWorld());
         public static uint ToCompactCid(this int c)

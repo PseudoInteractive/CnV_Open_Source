@@ -29,38 +29,12 @@ namespace COTG.Game
 {
 	static class WorldHelper
 	{
-		public static int WorldToCid(this (int x, int y) a)
+	
+			public static int CidToPid(this int cid)
 		{
-			return a.x + (a.y << 16);
+			return World.GetInfo(cid.CidToWorld()).player;
 		}
 
-		public static int Translate(this int cid, (int dx, int dy) d)
-		{
-			return cid + d.dx + d.dy * 65536;
-		}
-
-
-		public static Vector2 ToVector(this (int x, int y) a)
-		{
-			return new Vector2(a.x, a.y);
-		}
-		public static (int x, int y) CidToWorld(this int c)
-		{
-			return (c & 65535, c >> 16);
-		}
-		public static System.Numerics.Vector2 CidToWorldV(this int c)
-		{
-			var c2 = CidToWorld(c);
-			return new System.Numerics.Vector2((float)c2.x, (float)c2.y);
-		}
-		public static int WorldToContinent(this (int x, int y) c) => (c.y / 100) * 10 + (c.x / 100);
-		public static int WorldToContinentPacked(this (int x, int y) c) => (c.y / 100) * World.continentSpan + (c.x / 100);
-		//        public static int CidToContinent(this int cid) => ((cid/65536)/100)*10 | (cid % 65536) / 100;
-		public static int CidToContinent(this int cid) => WorldToContinent(CidToWorld(cid));
-		public static int CidToPid(this int cid)
-		{
-			return World.GetInfo(CidToWorld(cid)).player;
-		}
 		static internal uint SubStrAsInt(this string s, int start, int count)
 		{
 			uint rv = default;
@@ -309,11 +283,7 @@ namespace COTG.Game
 		{
 			return WorldRaw.Allocate(World.spanSquared);
 		}
-		public static void ReturnWorldBuffer(WorldRaw data)
-		{
-			data.Dispose();
-		}
-
+		
 		public static WorldRaw SwizzleForCompression(ReadOnlySpan<uint> src)
 		{
 			var buffer = RentWorldBuffer();
@@ -387,7 +357,7 @@ namespace COTG.Game
 		}
 		public static Microsoft.Xna.Framework.Color GetTint(int packedId)
 		{
-			if(!SettingsPage.tintCities)
+			if(!SettingsPage.tintCities || !Alliance.diplomacyFetched)
 				return new Color(255, 255, 255, 255);
 			//	var packedId = GetPackedId(xy);
 			uint rv = raw.Span[packedId];

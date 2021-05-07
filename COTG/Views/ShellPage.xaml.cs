@@ -313,16 +313,16 @@ namespace COTG.Views
 				{
 					var tabPage = CreateTabPage(shellFrame);
 					TabPage.mainTabs = tabPage;
-					tabPage.AddTab(MainPage.instance, true);
-					tabPage.AddTab(BuildTab.instance, false);
-					tabPage.AddTab(QueueTab.instance, false);
+					tabPage.AddOrShowTab(MainPage.instance, true);
+					tabPage.AddOrShowTab(BuildTab.instance, false);
+					tabPage.AddOrShowTab(QueueTab.instance, false);
 				//	tabPage.AddTab(HeatTab.instance, false);
 		
 				}
 				{
-					var tabPage = CreateTabPage(spotFrame);
+					TabPage.secondaryTabs = CreateTabPage(spotFrame);
 					//   SpotTab.instance = new SpotTab();
-					tabPage.AddTab(SpotTab.instance, true);
+					TabPage.secondaryTabs.AddOrShowTab(SpotTab.instance, true);
 
 				}
 			};
@@ -1187,15 +1187,15 @@ namespace COTG.Views
 					return;
 			}
 			args.Handled = true;
-			foreach (var it in items)
-			{
-				if (it.name.ToLower().StartsWith(text))
-				{
-					sender.Text = it.name;
-					sender.SelectedItem = it;
-					return;
-				}
-			}
+			//foreach (var it in items)
+			//{
+			//	if (it.name.ToLower().StartsWith(text))
+			//	{
+			//		sender.Text = it.name;
+			//		sender.SelectedItem = it;
+			//		return;
+			//	}
+			//}
 			// try contains
 			foreach (var it in items)
 			{
@@ -1222,15 +1222,15 @@ namespace COTG.Views
 					return;
 			}
 			args.Handled = true;
-			foreach (var it in items)
-			{
-				if (it.nameAndRemarks.ToLower().StartsWith(text))
-				{
-					sender.Text = it.nameAndRemarks;
-					sender.SelectedItem = it;
-					return;
-				}
-			}
+			//foreach (var it in items)
+			//{
+			//	if (it.nameAndRemarks.ToLower().StartsWith(text))
+			//	{
+			//		sender.Text = it.nameAndRemarks;
+			//		sender.SelectedItem = it;
+			//		return;
+			//	}
+			//}
 			// try contains
 			foreach (var it in items)
 			{

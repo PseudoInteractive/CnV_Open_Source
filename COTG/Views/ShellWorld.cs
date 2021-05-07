@@ -985,6 +985,8 @@ namespace COTG.Views
 														}
 														if (!city.remarks.IsNullOrEmpty())
 															sb.AppendLine(city.remarks.AsSpan().Wrap(20));
+														if(city.hasAcademy.GetValueOrDefault())
+															sb.AppendLine("Has Academy");
 
 														sb.Append($"{c.y / 100}{c.x / 100} ({c.x}:{c.y})");
 														

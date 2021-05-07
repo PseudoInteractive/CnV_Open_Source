@@ -101,19 +101,17 @@
 		<Setter Property="BorderThickness" Value="1" />
         <Setter Property="BorderBrush" Value="{ThemeResource SystemControlBackgroundBaseLowRevealBorderBrush}"/>
         <Setter Property="AcceptsExpression" Value="True" />
-        
-    </Style>
+		<Setter Property="VerticalAlignment" Value="Center" />
+		<Setter Property="Margin" Value="2" />
+	</Style>
 	<Style  x:Key="RightAlignBox" BasedOn="{StaticResource TextBoxSmall}" TargetType="TextBox">
         <Setter Property="VerticalAlignment"
                         Value="Center" />
     	<Setter Property="TextAlignment" Value="Right" />
-        <Setter Property="Margin" Value="0,0,4,0" />
+       
     </Style>
     <Style  x:Key="RightAlignNumberBox" BasedOn="{StaticResource NumberBoxSmall}" TargetType="winui:NumberBox">
 		<Setter Property="TextAlignment" Value="Right" />
-		<Setter Property="VerticalAlignment"
-                        Value="Center" />
-        <Setter Property="Margin" Value="0,0,4,0" />
     </Style>
 	<Style x:Key="NumberBoxRes" BasedOn="{StaticResource RightAlignNumberBox}" TargetType="winui:NumberBox">
 		<Setter Property="SmallChange" Value="25000"/>

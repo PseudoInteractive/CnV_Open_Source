@@ -104,9 +104,19 @@ namespace COTG.Views
 				rv.AddIfAbsent(s.cid);
 			}
 		}
-		public static bool updating;
+		public static SmallTime lastUpdated;
+		static bool updating = true;
+		public static async Task UpdateTradeStuffifNeeded()
+		{
+			if(SmallTime.serverNow.seconds >  lastUpdated.seconds + 60*5 )
+			{
+				await UpdateTradeStuff();
+			}
+		}
+
 		public static async Task UpdateTradeStuff()
 		{
+			lastUpdated = SmallTime.serverNow;
 			updating = true;
 	//		try
 	//		{
