@@ -1267,7 +1267,11 @@ namespace COTG.Game
 		}
 
 		public static bool IsSelected(int cid) => selected.Contains(cid);
-		public bool isSelected => selected.Contains(cid);
+		public bool isSelected
+		{
+			get => selected.Contains(cid);
+			set => selected.Remove(cid);
+		}
 		public static int viewHover; // in the view menu
 
 		//        public static string uiHoverColumn = string.Empty;

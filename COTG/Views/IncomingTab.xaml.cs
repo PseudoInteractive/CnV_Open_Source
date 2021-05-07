@@ -185,25 +185,27 @@ namespace COTG.Views
         }
         public static bool IsVisible() => instance.isVisible;
 
-        private async void defenderGrid_SelectionChanged(object sender, DataGridSelectionChangedEventArgs e)
+
+		private static Spot SelectionChanged( DataGridSelectionChangedEventArgs e, RadDataGrid grid)
+		{
+			foreach (Spot s in e.RemovedItems)
+			{
+				s.isSelected = false;
+			}
+			foreach (Spot s in e.AddedItems)
+			{
+				s.isSelected = true;
+			}
+
+			return grid.SelectedItem as Spot;
+		}
+
+		private void defenderGrid_SelectionChanged(object sender, DataGridSelectionChangedEventArgs e)
         {
-            var sel = defenderGrid.SelectedItem;
-            
-            var newSel = new HashSet<int>();
-            foreach (object s in sel)
+			var sel = SelectionChanged(e, defenderGrid);
+			if (sel != null )
             {
-                newSel.Add( (s as Spot).cid );
-
-            }
-
-
-            Spot.selected = newSel;
-
-            if (sel.Any())
-            {
-				var spot = sel.First() as Spot;
-
-				armyGrid.ItemsSource = spot.incoming;
+				armyGrid.ItemsSource = sel.incoming;
 				
 				var tab = DefenseHistoryTab.instance;
 				if (!tab.isActive)
