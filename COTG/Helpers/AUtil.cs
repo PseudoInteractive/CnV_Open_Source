@@ -157,28 +157,29 @@ namespace COTG
 			}
 		}
 
-		public static string FormatDefault(this DateTimeOffset m) => m.ToString(defaultDateFormat);
+		public static string FormatDefault(this DateTimeOffset m) => m.ToString(defaultDateFormat, CultureInfo.InvariantCulture);
 
+		public static string FormatFileTime(this DateTimeOffset m) => m.ToString("yyyy_MM_dd_H_mm_ss", CultureInfo.InvariantCulture);
 		public static string FormatTimeDefault(this DateTimeOffset m) => FormatSkipDateIfToday(m);
 
 		public static string Format(this TimeSpan t) => t.Days == 0 ? t.ToString("hh'hr 'mm'm 'ss's'", CultureInfo.InvariantCulture) : $"{t.Days:N0}D " + t.ToString("hh'hr 'mm'm 'ss's'", CultureInfo.InvariantCulture);
 
-		public static string FormatTimePrecise(this DateTimeOffset m) => m.ToString(preciseDateTimeFormat);
+		public static string FormatTimePrecise(this DateTimeOffset m) => m.ToString(preciseDateTimeFormat, CultureInfo.InvariantCulture);
 
 		public static string FormatSkipDateIfToday(this DateTimeOffset m)
 		{
 			var serverNow = JSClient.ServerTime();
 			if (serverNow.Day == m.Day && serverNow.Month == m.Month)
 			{
-				return m.ToString(defaultTimeSpanFormat);
+				return m.ToString(defaultTimeSpanFormat, CultureInfo.InvariantCulture);
 			}
 			else
 			{
-				return m.ToString(defaultDateFormat);
+				return m.ToString(defaultDateFormat, CultureInfo.InvariantCulture);
 			}
 		}
 
-		public static string FormatFull(this DateTimeOffset m) => m.ToString(fullDateFormat);
+		public static string FormatFull(this DateTimeOffset m) => m.ToString(fullDateFormat, CultureInfo.InvariantCulture);
 
 		public static TimeSpan localTimeOffset = TimeZoneInfo.Local.BaseUtcOffset;
 
@@ -407,7 +408,7 @@ namespace COTG
 
 		public static int WorldToContinent(this (int x, int y) c) => (c.y / 100) * 10 + (c.x / 100);
 
-		public static int WorldToContinentPacked(this (int x, int y) c) => (c.y / 100) * Game.World.continentSpan + (c.x / 100);
+		public static int WorldToContinentPacked(this (int x, int y) c) => (c.y / 100) * Game.World.continentCountX + (c.x / 100);
 
 		// public static int CidToContinent(this int cid) => ((cid/65536)/100)*10 | (cid % 65536) / 100;
 		public static int CidToContinent(this int cid) => WorldToContinent(CidToWorld(cid));

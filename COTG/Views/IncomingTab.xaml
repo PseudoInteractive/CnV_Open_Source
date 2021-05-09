@@ -77,7 +77,7 @@
                                             CellContentStyle="{StaticResource RightAlign}"
                                             CellContentFormat="{}{0,7:N0}"
                                             IsVisible="False" />
-				<tg:DataGridTextColumn PropertyName="player"
+				<tg:DataGridTextColumn PropertyName="playerName" Header="Player}"
                                        CellContentStyle="{StaticResource LeftAlign}"
                                        SizeMode="Stretch" />
 				<tg:DataGridBooleanColumn PropertyName="underSiege"

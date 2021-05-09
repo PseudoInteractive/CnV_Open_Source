@@ -213,6 +213,7 @@ namespace COTG.JSON
                                     var hash = Army.ReportHash(recId);
                                     if (IncomingOverview.reportCache.TryGetValue(hash, out var reports))
                                     {
+										if(reports != null)
                                             parts[part].Add(reports);
                                     }
                                     else
@@ -362,7 +363,7 @@ namespace COTG.JSON
                                                                         aTsKill = (atkTS - atkTSLeft),
                                                                         sourceCid = source,
                                                                         targetCid = target,
-                                                                        claim = (byte)report.GetAsFloat("senator").RoundToInt(),
+                                                                        claim = IncomingOverview.ClaimToByte( report.GetAsFloat("senator") ),
 
                                                                         time = time,
                                                                         spotted = time - TimeSpan.FromMinutes(target.CidToWorld().Distance(source.CidToWorld()) * TTTravel(ttVanquisher)),
@@ -386,7 +387,8 @@ namespace COTG.JSON
                                                 }
                                                 else
                                                 {
-                                                    Log("Bad!");
+													IncomingOverview.reportCache.TryAdd(hash, null);
+													Log("Bad!");
                                                 }
 
                                             }

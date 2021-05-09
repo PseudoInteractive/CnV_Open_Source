@@ -65,7 +65,6 @@ namespace COTG.Views
 			cityGrid.CurrentItemChanged += CityGrid_CurrentItemChanged;
 
 
-			cityGrid.SelectionChanged += SelectionChanged;
 			cityGrid.ProcessTooltips();
 			spotGrids.Add(cityGrid);
 
@@ -305,6 +304,9 @@ namespace COTG.Views
 
 		private void SelectionChanged(object sender, DataGridSelectionChangedEventArgs e)
 		{
+			if (!isActive)
+				return;
+
 			if (SpotTab.silenceSelectionChanges == 0)
 			{
 				try

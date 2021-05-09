@@ -118,7 +118,7 @@
       <Version>2.6.0-prerelease.210430001</Version>
     </PackageReference>
     <PackageReference Include="MonoGame.Content.Builder.Task">
-      <Version>3.8.1.1941-develop</Version>
+      <Version>3.8.0.1641</Version>
     </PackageReference>
     <PackageReference Include="NETStandard.Library">
       <Version>2.0.3</Version>
@@ -146,9 +146,6 @@
     </PackageReference>
     <PackageReference Include="System.Numerics.Vectors">
       <Version>4.5.0</Version>
-    </PackageReference>
-    <PackageReference Include="System.Runtime.WindowsRuntime.UI.Xaml">
-      <Version>5.0.0-preview.6.20279.7</Version>
     </PackageReference>
     <PackageReference Include="System.Text.Json">
       <Version>5.0.2</Version>
@@ -309,6 +306,7 @@
     <Compile Include="Services\WindowManagerService.cs" />
     <Compile Include="Services\WorldStorage.cs" />
     <Compile Include="StateTriggers\ControlSizeTrigger.cs" />
+    <Compile Include="Styles\BattleReportTemplateSelector.cs" />
     <Compile Include="TemplateSelectors\SampleDataTemplateSelector.cs" />
     <Compile Include="TemplateSelectors\SharedContentTemplateSelector.cs" />
     <Compile Include="Views\AttackTab.xaml.cs">
@@ -428,6 +426,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Page Include="Styles\BattleReport.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Styles\CommandBar.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -727,6 +729,7 @@
     <EmbeddedResource Include="Content\Fonts\tra.fnt" />
     <EmbeddedResource Include="JSON\buildingDef.json" />
     <None Include="Content\Effects\WorldSpace.fxh" />
+    <None Include="CotgKey.pfx" />
     <None Include="JSON\poll2.json" />
     <EmbeddedResource Include="JSON\Troops.json" />
     <EmbeddedResource Include="JS\jquerymigrate3_3_2" />
@@ -781,7 +784,7 @@
     </Reference>
     <Reference Include="MonoGame.Framework, Version=1.0.0.0, Culture=neutral, processorArchitecture=AMD64">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\ext\MonoGame.Framework.dll</HintPath>
+      <HintPath>..\ext\MonoGame.Framework\MonoGame.Framework.dll</HintPath>
     </Reference>
     <Reference Include="Telerik.Core, Version=0.0.0.0, Culture=neutral, PublicKeyToken=da696acf63be444a, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>

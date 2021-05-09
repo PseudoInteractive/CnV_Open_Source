@@ -75,7 +75,7 @@
                                        SizeMode="Fixed"
                                        CellContentStyle="{StaticResource CenterAlign}"
                                        Width="34" />
-                <tg:DataGridTextColumn PropertyName="player"
+                <tg:DataGridTextColumn PropertyName="playerName" Header="Player"
                                      />
                 <tg:DataGridTextColumn PropertyName="alliance"
                                       />

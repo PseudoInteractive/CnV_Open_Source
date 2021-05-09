@@ -97,7 +97,6 @@
     <PackageReference Include="System.Diagnostics.DiagnosticSource" Version="5.0.1" />
     <PackageReference Include="System.Memory" Version="4.5.4" />
     <PackageReference Include="System.Numerics.Vectors" Version="4.5.0" />
-    <PackageReference Include="System.Runtime.WindowsRuntime.UI.Xaml" Version="5.0.0-preview.6.20279.7" />
     <PackageReference Include="ZString" Version="2.4.2" />
   </ItemGroup>
   <ItemGroup>

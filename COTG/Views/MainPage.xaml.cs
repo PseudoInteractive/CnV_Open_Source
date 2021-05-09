@@ -429,6 +429,9 @@ namespace COTG.Views
 		}
 		private void SelectionChanged(object sender, DataGridSelectionChangedEventArgs e)
 		{
+			if (!isActive)
+				return;
+
 			if (SpotTab.silenceSelectionChanges == 0)
 			{
 				try

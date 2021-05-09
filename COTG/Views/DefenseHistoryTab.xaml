@@ -13,132 +13,7 @@
 			   TabNavigation="Once"
 			  IsTabStop="True"
       mc:Ignorable="d">
-    <UserControl.Resources>
-        <local:ReportTypeStyleSelector x:Key="ReportTypeStyleSelector">
-            <local:ReportTypeStyleSelector.assaultStyle>
-                <Style TargetType="TextBlock">
-                    <Setter Property="Foreground"
-                            Value="#7E3ED4" />
-                    <Setter Property="VerticalAlignment"
-                            Value="Center" />
-                    <Setter Property="HorizontalAlignment"
-                            Value="Left" />
-                    <Setter Property="Margin"
-                            Value="4,0,0,0" />
-                </Style>
-            </local:ReportTypeStyleSelector.assaultStyle>
-            <local:ReportTypeStyleSelector.siegeStyle>
-                <Style TargetType="TextBlock">
-                    <Setter Property="Foreground"
-                            Value="#CF5007" />
-                    <Setter Property="VerticalAlignment"
-                            Value="Center" />
-                    <Setter Property="HorizontalAlignment"
-                            Value="Left" />
-                    <Setter Property="Margin"
-                            Value="4,0,0,0" />
-                </Style>
-            </local:ReportTypeStyleSelector.siegeStyle>
-            <local:ReportTypeStyleSelector.siegingStyle>
-                <Style TargetType="TextBlock">
-                    <Setter Property="Foreground"
-                            Value="#C57F4A" />
-                    <Setter Property="VerticalAlignment"
-                            Value="Center" />
-                    <Setter Property="HorizontalAlignment"
-                            Value="Left" />
-                    <Setter Property="Margin"
-                            Value="4,0,0,0" />
-                </Style>
-            </local:ReportTypeStyleSelector.siegingStyle>
-            <local:ReportTypeStyleSelector.scoutStyle>
-                <Style TargetType="TextBlock">
-                    <Setter Property="Foreground"
-                            Value="#C82DBF" />
-                    <Setter Property="VerticalAlignment"
-                            Value="Center" />
-                    <Setter Property="HorizontalAlignment"
-                            Value="Left" />
-                    <Setter Property="Margin"
-                            Value="4,0,0,0" />
-                </Style>
-            </local:ReportTypeStyleSelector.scoutStyle>
-            <local:ReportTypeStyleSelector.plunderStyle>
-                <Style TargetType="TextBlock">
-                    <Setter Property="Foreground"
-                            Value="#2886C0" />
-                    <Setter Property="VerticalAlignment"
-                            Value="Center" />
-                    <Setter Property="HorizontalAlignment"
-                            Value="Left" />
-                    <Setter Property="Margin"
-                            Value="4,0,0,0" />
-                </Style>
-            </local:ReportTypeStyleSelector.plunderStyle>
-            <local:ReportTypeStyleSelector.pendingStyle>
-                <Style TargetType="TextBlock">
-                    <Setter Property="Foreground"
-                            Value="#8886C0" />
-                    <Setter Property="VerticalAlignment"
-                            Value="Center" />
-                    <Setter Property="HorizontalAlignment"
-                            Value="Left" />
-                    <Setter Property="Margin"
-                            Value="4,0,0,0" />
-                </Style>
-            </local:ReportTypeStyleSelector.pendingStyle>
-        </local:ReportTypeStyleSelector>
-        <local:ReportKillStyleSelector x:Key="ReportKillStyleSelector">
-            <local:ReportKillStyleSelector.attackerWinStyle>
-                <Style TargetType="TextBlock">
-                    <Setter Property="Foreground"
-                            Value="#08B00F" />
-                    <Setter Property="VerticalAlignment"
-                            Value="Center" />
-                    <Setter Property="HorizontalAlignment"
-                            Value="Right" />
-                    <Setter Property="Margin"
-                            Value="0,0,4,0"/>
-                </Style>
-            </local:ReportKillStyleSelector.attackerWinStyle>
-            <local:ReportKillStyleSelector.defenderWinStyle>
-                <Style TargetType="TextBlock">
-                    <Setter Property="Foreground"
-                            Value="#E32B55" />
-                    <Setter Property="VerticalAlignment"
-                            Value="Center" />
-                    <Setter Property="HorizontalAlignment"
-                            Value="Right" />
-                    <Setter Property="Margin"
-                            Value="0,0,4,0" />
-                </Style>
-            </local:ReportKillStyleSelector.defenderWinStyle>
-            <local:ReportKillStyleSelector.noKillsStyle>
-                <Style TargetType="TextBlock">
-                    <Setter Property="Foreground"
-                            Value="#45968C" />
-                    <Setter Property="VerticalAlignment"
-                            Value="Center" />
-                    <Setter Property="HorizontalAlignment"
-                            Value="Right" />
-                    <Setter Property="Margin"
-                            Value="0,0,4,0" />
-                </Style>
-            </local:ReportKillStyleSelector.noKillsStyle>
-            <local:ReportKillStyleSelector.tieStyle>
-                <Style TargetType="TextBlock">
-                    <Setter Property="Foreground"
-                            Value="#939FC2" />
-                    <Setter Property="VerticalAlignment"
-                            Value="Center" />
-                    <Setter Property="HorizontalAlignment"
-                            Value="Right" />
-                    <Setter Property="Margin"
-                            Value="0,0,4,0" />
-                </Style>
-            </local:ReportKillStyleSelector.tieStyle>
-        </local:ReportKillStyleSelector>
-    </UserControl.Resources>
+
     <Grid>
         
         <telerikGrid:RadDataGrid x:Name="historyGrid"
@@ -152,7 +27,7 @@ AllowFocusOnInteraction="True"
                         FontSize="{StaticResource MediumFontSize}"
                                IsTextScaleFactorEnabled="False"
                          GroupPanelPosition="Bottom"
-                        ItemsSource="{x:Bind history, Mode=OneTime}"
+                        ItemsSource="{x:Bind history, Mode=OneWay}"
                         RowHeight="{StaticResource GridRowHeight}"
                         AlternationStep="2"
                         SelectionMode="Single"

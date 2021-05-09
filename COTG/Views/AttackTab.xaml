@@ -176,7 +176,7 @@
 
 				<tk:DataGridTextColumn Header="Player"
 									   Tag="player"
-                                       Binding="{Binding player, Mode=OneTime}" />
+                                       Binding="{Binding playerName, Mode=OneTime}" />
 				<tk:DataGridTemplateColumn Header="XY" Tag="xy">
 					<tk:DataGridTemplateColumn.CellTemplate>
 						<DataTemplate x:DataType="game:Spot">
@@ -359,7 +359,7 @@
 						</tk:DataGridTemplateColumn.CellTemplate>
 					</tk:DataGridTemplateColumn>
 					<tk:DataGridTextColumn Header="Player"
-                                       Binding="{Binding player, Mode=OneTime}" IsReadOnly="True" />
+                                       Binding="{Binding playerName, Mode=OneTime}" IsReadOnly="True" />
 					<tk:DataGridComboBoxColumn  Header="Type"
                                             Binding="{Binding attackType,Mode=TwoWay}"
                                             ItemsSource="{x:Bind game:AttackComboType.targetTypes , Mode=OneTime}"

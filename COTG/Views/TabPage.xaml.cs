@@ -27,6 +27,7 @@ namespace COTG.Views
 {
     public class UserTab : UserControl
     {
+		public virtual TabPage defaultPage => TabPage.mainTabs;
 		public static List<RadDataGrid> spotGrids= new();
 
 		public static UserTab[] userTabs;
@@ -54,10 +55,12 @@ namespace COTG.Views
 		
 		
 
-		public virtual void VisibilityChanged(bool visible)
+		public virtual Task VisibilityChanged(bool visible)
         {
             Log($"VisibilityChanged: {visible} {this}");
-        }
+			return Task.CompletedTask;
+      
+		}
         // If this is not an xaml island, the newXamlRoot will be null
         public virtual void XamlTreeChanged(TabPage newPage) { } // The tab was dragged somewhere else
         public bool isVisible;
@@ -66,22 +69,25 @@ namespace COTG.Views
 
 		static DateTimeOffset nextCityRefresh = DateTimeOffset.UtcNow;
 
-        public virtual void Refresh()
+        public virtual async Task Refresh()
         {
             if (isVisible && isActive)
             {
 				var t = DateTimeOffset.UtcNow;
+				
 				if (t > nextCityRefresh)
 				{
 					nextCityRefresh = t + TimeSpan.FromSeconds(2);
-					VisibilityChanged(false);  // close enough default behaviour
 					if (JSClient.ppdtInitialized)
 					{
+						// don't wait on this
 						Game.City.CitiesChanged();
 						JSClient.JSInvoke("cityRefresh", null);
 					}
 				}
-				VisibilityChanged(true);  // close enough default behaviour
+				await VisibilityChanged(false);  // close enough default behaviour
+
+				await VisibilityChanged(true);  // close enough default behaviour
             }
         }
 
@@ -119,7 +125,7 @@ namespace COTG.Views
 		{
 			if (!isActive)
 			{
-				TabPage.mainTabs.AddOrShowTab(this, true);
+				ShowOrAdd( true);
 			}
 			else
 			{
@@ -136,7 +142,7 @@ namespace COTG.Views
 				return;
 			TabPage.Close(this);
 		}
-		public void ShowOrAdd(bool selectMe, bool onlyIfClosed,TabPage page = null)
+		public void ShowOrAdd(bool selectMe=true, bool onlyIfClosed=false)
 
 		{
 			if (onlyIfClosed && isActive)
@@ -157,8 +163,7 @@ namespace COTG.Views
 				IconSource = TabPage.GetIconForTab(this),
 				Content = this
 			};
-			if (page == null)
-				page = TabPage.mainTabs;
+			var page = defaultPage;
 			page.Add(vi);
 			if (selectMe)
 				page.Tabs.SelectedItem = vi;
@@ -298,16 +303,13 @@ namespace COTG.Views
                 if (tab.isActive)
                     continue;
 
-                AddOrShowTab(tab, selectIt);
+				tab.ShowOrAdd( selectIt);
                 return true;
             }
             return false; 
         }
 
-        public void AddOrShowTab(UserTab tab, bool selectIt=true,bool  onlyIfClosed=false)
-        {
-			
-        }
+      
 
         static Dictionary<string, Symbol> tabSymbolIcons = new Dictionary<string, Symbol> {
             { "Raid", Symbol.ReShare },
@@ -571,13 +573,19 @@ namespace COTG.Views
 
         public MenuFlyoutItem AddTabMenuItem(UserTab tab)
         {
-            var title = tab.Tag as string;
+			var title = tab.Tag as string;
+			 void Rv_Click(object sender, RoutedEventArgs e)
+			{
+				tab.ShowOrAdd(true);
+			}
+			
+			
             var rv = new MenuFlyoutItem() { Text = title, Icon= GetOldIconForTab(tab)  };
-            rv.Click += (_, _) => AddOrShowTab(tab,true);
+            rv.Click += Rv_Click;
             return rv;
         }
 
-        private void Tabs_AddTabButtonClick(TabView sender, object args)
+		private void Tabs_AddTabButtonClick(TabView sender, object args)
         {
             var _args = args as RoutedEventArgs;
             var _sender = _args?.OriginalSource as FrameworkElement;

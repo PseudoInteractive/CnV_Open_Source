@@ -19,7 +19,7 @@ namespace COTG.Game
         public int cont => spot.cont;
         public string city => spot.cityName;
         public string xy => spot.xy;
-        public string player => spot.player;
+        public string player => spot.playerName;
         public string virtue { get; set; }
         public DateTimeOffset blessedUntil { get; set; }
         public int wood { get; set; }

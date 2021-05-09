@@ -101,17 +101,16 @@ namespace COTG.Views
             base.XamlTreeChanged(newPage);
         }
 
-        public override void Refresh()
-        {
-            base.Refresh();
-        }
+   
 
      
 
         private void donationGrid_SelectionChanged(object sender, DataGridSelectionChangedEventArgs e)
         {
-            
-            var it = e.AddedItems.FirstOrDefault();
+			if (!isActive)
+				return;
+
+			var it = e.AddedItems.FirstOrDefault();
             var newSel = it as City;
             blessedGrid.ItemsSource = BlessedCity.GetForCity(newSel);
         }

@@ -205,7 +205,6 @@ namespace COTG.Game
 
 
 		}
-		public int spatialIndex => cid.ZCurveEncodeCid();
 		//public static Span<BuildQueueItem> GetQueue()
 		//{
 

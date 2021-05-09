@@ -44,12 +44,12 @@ namespace COTG.Services
 
 		public int pid = -1;
 
-		public virtual async Task<bool> AcceptAndProcess(HttpResponseMessage resp)
+		public virtual async Task<bool> AcceptAndProcess(HttpResponseMessage resp, bool except)
 		{
 
 			try
 			{
-				var data = await AcceptBytes(resp);
+				var data = await AcceptBytes(resp,except);
 				if (data.Length > 2)
 				{
 					var json = JsonDocument.Parse(data, jsonParseOptions);
@@ -68,7 +68,7 @@ namespace COTG.Services
 			}
 
 		}
-		public static async Task<byte[]> AcceptBytes(HttpResponseMessage resp)
+		public static async Task<byte[]> AcceptBytes(HttpResponseMessage resp, bool except)
 		{
 
 			try
@@ -88,12 +88,12 @@ namespace COTG.Services
 			}
 			catch (Exception e)
 			{
-				LogEx(e, eventName: "HTTPAcceptBytes");
+				LogEx(e,report: except, eventName: "HTTPAcceptBytes");
 			}
 			return Array.Empty<byte>();
 
 		}
-		public static async Task<string> AcceptText(HttpResponseMessage resp)
+		public static async Task<string> AcceptText(HttpResponseMessage resp, bool except=false)
 		{
 
 			try
@@ -104,14 +104,14 @@ namespace COTG.Services
 			}
 			catch (Exception e)
 			{
-				LogEx(e, eventName: "HTTPText");
+				LogEx(e,report: except, eventName: "HTTPText");
 			}
 			return string.Empty;
 
 		}
-		public static async Task<JsonDocument> AcceptJson(HttpResponseMessage resp)
+		public static async Task<JsonDocument> AcceptJson(HttpResponseMessage resp, bool except)
 		{
-			var data = await AcceptBytes(resp);
+			var data = await AcceptBytes(resp,except);
 
 			try
 			{
@@ -120,16 +120,16 @@ namespace COTG.Services
 			}
 			catch (Exception e)
 			{
-				LogEx(e, eventName: "HTTPJson");
+				LogEx(e, report: except,eventName: "HTTPJson");
 				return null;
 			}
 
 
 		}
 
-		public static async Task<T> AcceptJsonT<T>(HttpResponseMessage resp)
+		public static async Task<T> AcceptJsonT<T>(HttpResponseMessage resp, bool except=false)
 		{
-			var data = await AcceptBytes(resp);
+			var data = await AcceptBytes(resp,except);
 			var str = UTF8Encoding.UTF8.GetString(data);
 			Log(str);
 			try
@@ -139,7 +139,7 @@ namespace COTG.Services
 			}
 			catch (Exception e)
 			{
-				LogEx(e, eventName: "HTTPJson");
+				LogEx(e,report: except, eventName: "HTTPJson");
 				return default;
 			}
 
@@ -165,7 +165,7 @@ namespace COTG.Services
 			return nullPost;
 		}
 
-		async public Task<bool> Post()
+		async public Task<bool> Post(bool except=false)
 		{
 			while (JSClient.jsVars == null)
 			{
@@ -173,12 +173,12 @@ namespace COTG.Services
 			}
 			try
 			{
-				return await AcceptAndProcess(await Send());
+				return await AcceptAndProcess(await Send(except),except);
 
 			}
 			catch (Exception e)
 			{
-				LogEx(e, eventName: "JsonProcess");
+				LogEx(e,report: except,eventName: "JsonProcess");
 				return false;
 			}
 
@@ -187,11 +187,11 @@ namespace COTG.Services
 		public const string nullPost = "a=0";
 		private static readonly JsonDocumentOptions jsonParseOptions = new() { AllowTrailingCommas = true };
 
-		public Task<HttpResponseMessage> Send()
+		public Task<HttpResponseMessage> Send(bool except=false)
 		{
-			return Send(GetPostContent());
+			return Send(GetPostContent(), except);
 		}
-		async public Task<HttpResponseMessage> Send(string postContent)
+		async public Task<HttpResponseMessage> Send(string postContent, bool except=true)
 		{
 			HttpClient client = null;
 			await JSClient.clientPoolSema.WaitAsync();
@@ -247,8 +247,8 @@ namespace COTG.Services
 			}
 			catch (Exception e)
 			{
-
-				LogEx(e, eventName: "HTTPPost");
+				if(except)
+					LogEx(e, eventName: "HTTPPost");
 			}
 			finally
 			{
@@ -506,7 +506,7 @@ namespace COTG.Services
 			try
 			{
 				var msg = new ScanDungeons(_cid);
-				var resp = await msg.Send();
+				var resp = await msg.Send(false);
 				var buff = await resp.Content.ReadAsBufferAsync();
 
 				var temp = new byte[buff.Length - 1];
@@ -912,22 +912,22 @@ namespace COTG.Services
 
 		// Does not wait for full response and does not parse json
 		// postContent is xml uri encoded
-		async public static Task Send(string url, string postContent, int _pid = -1)
+		async public static Task Send(string url, string postContent, int _pid = -1, bool except = true)
 		{
 			var p = new Post(url, _pid);
-			await p.Send(postContent);
+			await p.Send(postContent, except);
 
 		}
-		async public static Task<HttpResponseMessage> SendForResponse(string url, string postContent, int _pid = -1)
+		async public static Task<HttpResponseMessage> SendForResponse(string url, string postContent, int _pid = -1, bool except=false)
 		{
 			var p = new Post(url, _pid);
-			return await p.Send(postContent);
+			return await p.Send(postContent, except);
 		}
-		async public static Task<bool> SendForOkay(string url, string postContent, int _pid = -1)
+		async public static Task<bool> SendForOkay(string url, string postContent, int _pid = -1, bool except = false)
 		{
 			var p = new Post(url, _pid);
 
-			var result = await p.Send(postContent);
+			var result = await p.Send(postContent, except);
 			if (result == null)
 				return false;
 			if (result.StatusCode == HttpStatusCode.Ok)
@@ -936,21 +936,21 @@ namespace COTG.Services
 			return false;
 		}
 
-		async public static Task<JsonDocument> SendForJson(string url, string postContent = nullPost, int _pid = -1)
+		async public static Task<JsonDocument> SendForJson(string url, string postContent = nullPost, int _pid = -1, bool except = false)
 		{
 			var p = new Post(url, _pid);
-			return await AcceptJson(await p.Send(postContent));
+			return await AcceptJson(await p.Send(postContent, except), except);
 		}
-		async public static Task<string> SendForText(string url, string postContent = nullPost, int _pid = -1)
+		async public static Task<string> SendForText(string url, string postContent = nullPost, int _pid = -1, bool except=false)
 		{
 			var p = new Post(url, _pid);
-			return await AcceptText(await p.Send(postContent));
+			return await AcceptText(await p.Send(postContent, except), except);
 		}
 
-		async public static Task<T> SendForJsonT<T>(string url, string postContent = nullPost, int _pid = -1)
+		async public static Task<T> SendForJsonT<T>(string url, string postContent = nullPost, int _pid = -1, bool except=false)
 		{
 			var p = new Post(url, _pid);
-			return await AcceptJsonT<T>(await p.Send(postContent));
+			return await AcceptJsonT<T>(await p.Send(postContent, except));
 
 
 		}
@@ -960,10 +960,10 @@ namespace COTG.Services
 			var p = new Post(url, _pid);
 			await p.Send("a=" + HttpUtility.UrlEncode(Aes.Encode(postContentJson, secret), Encoding.UTF8));
 		}
-		async public static Task<JsonDocument> SendEncryptedForJson(string url, string postContentJson, string secret, int _pid)
+		async public static Task<JsonDocument> SendEncryptedForJson(string url, string postContentJson, string secret, int _pid, bool except=true)
 		{
 			var p = new Post(url, _pid);
-			return await AcceptJson(await p.Send("a=" + HttpUtility.UrlEncode(Aes.Encode(postContentJson, secret), Encoding.UTF8)));
+			return await AcceptJson(await p.Send("a=" + HttpUtility.UrlEncode(Aes.Encode(postContentJson, secret), Encoding.UTF8), except),except);
 		}
 
 		/*

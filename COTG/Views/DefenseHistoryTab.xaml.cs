@@ -32,69 +32,11 @@ using System.Linq;
 
 namespace COTG.Views
 {
-    public class ReportKillStyleSelector : Windows.UI.Xaml.Controls.StyleSelector
-	{
-        public Style attackerWinStyle { get; set; }
-
-        public Style defenderWinStyle { get; set; }
-
-        public Style tieStyle { get; set; }
-        public Style noKillsStyle { get; set; }
-
-        protected override Style SelectStyleCore(object item, DependencyObject container)
-        {
-            var cell = (item as DataGridCellInfo);
-            var report = cell.Item as Army;
-            if (report.type == reportPending)
-                return noKillsStyle;
-            if(report.type == reportSieging)
-                return report.claim > 0 ? attackerWinStyle : tieStyle;
-
-            var dKill = report.dTsKill;
-            var aKill = report.aTsKill;
-            if (dKill < 1000 && aKill < 1000)
-                return report.type == reportScout ? attackerWinStyle : noKillsStyle;
-            if (dKill > aKill * 3 / 2)
-                return defenderWinStyle;
-            if (aKill > dKill * 3 / 2)
-                return attackerWinStyle;
-            return tieStyle;
-        }
-
-      
-
-    }
-    public class ReportTypeStyleSelector : Windows.UI.Xaml.Controls.StyleSelector
-	{
-        public Style pendingStyle { get; set; }
-
-        public Style siegingStyle { get; set; }
-        public Style siegeStyle { get; set; }
-
-        public Style scoutStyle { get; set; }
-        public Style assaultStyle { get; set; }
-        public Style plunderStyle { get; set; }
-
-
-        protected override Style SelectStyleCore(object item, DependencyObject container)
-        {
-            var cell = (item as DataGridCellInfo);
-            var report = cell.Item as Army;
-            switch (report.type)
-			{
-                case reportAssault: return assaultStyle;
-                case reportSiege: return siegeStyle;
-                case reportSieging: return siegingStyle;
-                case reportPlunder: return plunderStyle;
-                case reportPending: return pendingStyle;
-                default: return scoutStyle;
-            }
-
-        }
-    }
+ 
     public sealed partial class DefenseHistoryTab : UserTab, INotifyPropertyChanged
     {
-        public Army[] history { get; set; } = Army.empty;
+		public override  TabPage defaultPage => TabPage.secondaryTabs;
+		public Army[] history { get; set; } = Army.empty;
         public void SetHistory( Army[] _history)
         {
             history = _history;
@@ -106,6 +48,7 @@ namespace COTG.Views
 				var cid = sel.cid;
 				historyGrid.ItemsSource = history.Where( s => s.targetCid == cid).ToArray() ;
 			}
+			historyGrid.IsBusyIndicatorEnabled = false;
 		}
 
         public static DefenseHistoryTab instance;

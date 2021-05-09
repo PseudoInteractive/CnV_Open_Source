@@ -69,7 +69,7 @@ namespace COTG.Game
 
 		public static string IdToName(int id)
 		{
-			Assert(alliancesFetched);
+		//	Assert(alliancesFetched);
 			if (all.TryGetValue(id, out var a))
 			{
 				return a.name;

@@ -64,7 +64,7 @@ namespace COTG.Helpers
 		static StorageFolder folder => ApplicationData.Current.LocalFolder;
 		public static async void SaveSeen()
 		{
-			await folder.SaveAsync("tipsSeen", seen.ToArray());
+			await folder.SaveAsync("tipsSeen", seen.ToArray(),false);
 		}
 		public static async void ReadSeen()
 		{

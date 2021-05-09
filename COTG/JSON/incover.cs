@@ -25,7 +25,13 @@ namespace COTG.JSON
 		
 		// uses Report.Hash(), can have several reports per reportId
 
-
+		public static byte ClaimToByte(float claim)
+		{
+			if (claim <= 0)
+				return 0;
+			else
+				return (byte)(((int)claim).Max(1)); // down down so that 99.6% doesn't show as 0, round up so that 0.1 shows as 1
+		}
 
 		//        public IncomingOverview() : base("overview/incover.php") { }
 
@@ -198,7 +204,8 @@ namespace COTG.JSON
 										  var name = val.GetAsString("0");
 										  spot.pid = Player.NameToId(name);
 
-										  var claim = (byte)val.GetAsFloat("4").RoundToInt();
+										  // round down
+										  var claim= ClaimToByte(val.GetAsFloat("4"));
 
 										  spot.claim = claim;
 										  try
@@ -590,8 +597,8 @@ namespace COTG.JSON
 									var hash = Army.ReportHash(recId);
 									if (reportCache.TryGetValue(hash, out var reports))
 									{
-									
-										parts[part].Add(reports);
+										if(reports!=null)						
+											parts[part].Add(reports);
 										
 									}
 									else if (supportReports.Contains(hash))
@@ -636,150 +643,158 @@ namespace COTG.JSON
 											// we have to look up the report
 											try
 											{
-												using (var jsdr = await Post.SendForJson("includes/gFrep2.php", "r=" + recId,Player.myId))
+												using (var jsdr = await Post.SendForJson("includes/gFrep2.php", "r=" + recId, Player.myId))
 												{
-													var root = jsdr.RootElement;
-													int reportType = -1;
-													++fetched;
-
-													foreach (var attackType in Army.reportAttackTypes)
+													if (jsdr != null)
 													{
-														++reportType;
-														if (root.TryGetProperty(attackType, out var reportsByType))
+
+														var root = jsdr.RootElement;
+														int reportType = -1;
+														++fetched;
+
+														foreach (var attackType in Army.reportAttackTypes)
 														{
-															var defTS = reportsByType.GetAsInt("ts_sent");
-															//var defTSLeft = reportsByType.GetAsInt("ts_lost");
-															var atkTSKilled = reportsByType.GetAsInt("ts_killed");
-
-															foreach (var report in reportsByType.GetProperty("reports").EnumerateArray())
+															++reportType;
+															if (root.TryGetProperty(attackType, out var reportsByType))
 															{
-																if (report.GetAsInt("acid") <= 0)
+																var defTS = reportsByType.GetAsInt("ts_sent");
+																//var defTSLeft = reportsByType.GetAsInt("ts_lost");
+																var atkTSKilled = reportsByType.GetAsInt("ts_killed");
+
+																foreach (var report in reportsByType.GetProperty("reports").EnumerateArray())
 																{
-																	supportReports.Add(Army.ReportHash(recId));
-																	continue;
-																}
-																var atkTrops = TroopTypeCount.empty;
-																var defTrops = TroopTypeCount.empty;
-																var defTSLeft = 0;
-																var atkCN = report.GetAsString("acn");
-																source = AUtil.DecodeCid(atkCN.Length - 8, atkCN);
-
-																{
-																	var lg = atkCN.Length;
-																	if (lg > 9)  // trim off '(000:000)'
-																		atkCN = atkCN.Substring(0, lg - 9);
-
-																}
-
-
-																if (report.TryGetProperty("ats", out var ats))
-																{
-																	foreach (var at in ats.EnumerateObject())
+																	if (report.GetAsInt("acid") <= 0)
 																	{
-																		var tc = at.Value.GetAsInt();
-																		if (tc > 0)
-																		{
-
-																			atkTrops = atkTrops.ArrayAppend(new TroopTypeCount() { count = tc, type = int.Parse(at.Name) });
-																		}
+																		supportReports.Add(Army.ReportHash(recId));
+																		continue;
 																	}
-																}
-																{
-																	if (report.TryGetProperty("tts", out var tts))
+																	var atkTrops = TroopTypeCount.empty;
+																	var defTrops = TroopTypeCount.empty;
+																	var defTSLeft = 0;
+																	var atkCN = report.GetAsString("acn");
+																	source = AUtil.DecodeCid(atkCN.Length - 8, atkCN);
+
 																	{
-																		int tt = 0;
-																		foreach (var tle in tts.EnumerateArray())
+																		var lg = atkCN.Length;
+																		if (lg > 9)  // trim off '(000:000)'
+																			atkCN = atkCN.Substring(0, lg - 9);
+
+																	}
+
+
+																	if (report.TryGetProperty("ats", out var ats))
+																	{
+																		foreach (var at in ats.EnumerateObject())
 																		{
-																			var tc = tle.GetInt32();
+																			var tc = at.Value.GetAsInt();
 																			if (tc > 0)
 																			{
-																				defTrops = defTrops.ArrayAppend(new TroopTypeCount() { count = tc, type = tt });
+
+																				atkTrops = atkTrops.ArrayAppend(new TroopTypeCount() { count = tc, type = int.Parse(at.Name) });
 																			}
-																			++tt;
 																		}
 																	}
-																}
-																{
-																	if (report.TryGetProperty("ttle", out var ttle))
 																	{
-																		int tt = 0;
-																		foreach (var tle in ttle.EnumerateArray())
+																		if (report.TryGetProperty("tts", out var tts))
 																		{
-																			defTSLeft += tle.GetInt32() * ttTs[tt];
-																			++tt;
-																		}
-																	}
-																}
-																if (report.TryGetProperty("reinforcers", out var reinforcers))
-																{
-																	if (reinforcers.ValueKind == System.Text.Json.JsonValueKind.Object)
-																	{
-																		foreach (var rein in reinforcers.EnumerateObject())
-																		{
-																			if (rein.Value.TryGetProperty("ttle", out var tle))
+																			int tt = 0;
+																			foreach (var tle in tts.EnumerateArray())
 																			{
-																				if (tle.ValueKind == System.Text.Json.JsonValueKind.Object)
+																				var tc = tle.GetInt32();
+																				if (tc > 0)
 																				{
-																					foreach (var ttc in tle.EnumerateObject())
+																					defTrops = defTrops.ArrayAppend(new TroopTypeCount() { count = tc, type = tt });
+																				}
+																				++tt;
+																			}
+																		}
+																	}
+																	{
+																		if (report.TryGetProperty("ttle", out var ttle))
+																		{
+																			int tt = 0;
+																			foreach (var tle in ttle.EnumerateArray())
+																			{
+																				defTSLeft += tle.GetInt32() * ttTs[tt];
+																				++tt;
+																			}
+																		}
+																	}
+																	if (report.TryGetProperty("reinforcers", out var reinforcers))
+																	{
+																		if (reinforcers.ValueKind == System.Text.Json.JsonValueKind.Object)
+																		{
+																			foreach (var rein in reinforcers.EnumerateObject())
+																			{
+																				if (rein.Value.TryGetProperty("ttle", out var tle))
+																				{
+																					if (tle.ValueKind == System.Text.Json.JsonValueKind.Object)
 																					{
-																						var tt = int.Parse(ttc.Name);
-																						defTSLeft += ttc.Value.GetInt32() * ttTs[tt];
+																						foreach (var ttc in tle.EnumerateObject())
+																						{
+																							var tt = int.Parse(ttc.Name);
+																							defTSLeft += ttc.Value.GetInt32() * ttTs[tt];
+																						}
+																					}
+																				}
+																				if (rein.Value.TryGetProperty("tts", out var tts))
+																				{
+																					if (tle.ValueKind == System.Text.Json.JsonValueKind.Object)
+																					{
+																						foreach (var ttc in tle.EnumerateObject())
+																						{
+																							var tt = int.Parse(ttc.Name);
+																							defTrops = defTrops.ArrayAppend(new TroopTypeCount() { count = ttc.Value.GetInt32(), type = tt });
+																						}
 																					}
 																				}
 																			}
-																			if (rein.Value.TryGetProperty("tts", out var tts))
-																			{
-																				if (tle.ValueKind == System.Text.Json.JsonValueKind.Object)
-																				{
-																					foreach (var ttc in tle.EnumerateObject())
-																					{
-																						var tt = int.Parse(ttc.Name);
-																						defTrops = defTrops.ArrayAppend(new TroopTypeCount() { count = ttc.Value.GetInt32(), type = tt });
-																					}
-																				}
-																			}
 																		}
 																	}
-																}
 
-																if (source > 0)
-																{
-																	var atkTS = report.GetAsInt("ts_sent");
-																	var atkTSLeft = report.GetAsInt("ts_left");
-																	var atkPN = report.GetAsString("apn");
-																	Spot.GetOrAdd(source, atkCN);
-																	bool hasSen = atkTrops.HasTT(ttSenator);
-																	var rep = new Army()
+																	if (source > 0)
 																	{
-																		isAttack = true,
-																		reportId = recId,
-																		sumDef = defTrops,
-																		dTsKill = defTS - defTSLeft,
-																		aTsKill = atkTSKilled.Max(atkTS - atkTSLeft),
-																		troops = atkTrops,
+																		var atkTS = report.GetAsInt("ts_sent");
+																		var atkTSLeft = report.GetAsInt("ts_left");
+																		var atkPN = report.GetAsString("apn");
+																		Spot.GetOrAdd(source, atkCN);
+																		bool hasSen = atkTrops.HasTT(ttSenator);
+																		var rep = new Army()
+																		{
+																			isAttack = true,
+																			reportId = recId,
+																			sumDef = defTrops,
+																			dTsKill = defTS - defTSLeft,
+																			aTsKill = atkTSKilled.Max(atkTS - atkTSLeft),
+																			troops = atkTrops,
 
-																		sourceCid = source,
-																		targetCid = target,
-																		claim = (byte)(hasSen && root.GetAsString("senatorapn") == atkPN ? root.GetAsFloat("senator") : -1),
-																		time = time,
-																		spotted = time - TimeSpan.FromMinutes(target.CidToWorld().Distance(source.CidToWorld()) * TTTravel(ttVanquisher)),
-																		type = (byte)reportType
-																		// todo TS info
+																			sourceCid = source,
+																			targetCid = target,
+																			claim = (byte)(hasSen && root.GetAsString("senatorapn") == atkPN ? root.GetAsFloat("senator") : -1),
+																			time = time,
+																			spotted = time - TimeSpan.FromMinutes(target.CidToWorld().Distance(source.CidToWorld()) * TTTravel(ttVanquisher)),
+																			type = (byte)reportType
+																			// todo TS info
 
-																	};
-																	reportCache.TryAdd(hash, rep);
-																	parts[part].Add(rep);
+																		};
+																		reportCache.TryAdd(hash, rep);
+																		parts[part].Add(rep);
 
-															//		await Cosmos.AddBattleRecord(rep);
-																}
-																else
-																{
-																	Log("bad cid?");
+																		//		await Cosmos.AddBattleRecord(rep);
+																	}
+																	else
+																	{
+																		Log("bad cid?");
+																	}
 																}
 															}
 														}
-													}
 
+													}
+													else
+													{
+														reportCache.TryAdd(hash, null);
+													}
 												}
 											}
 											catch (Exception e)

@@ -53,7 +53,7 @@ namespace COTG.Views
             instance = this;
 
             InitializeComponent();
-			spotGrids.Add(defenderGrid);
+//			spotGrids.Add(defenderGrid);
 
 			defenderGrid.OnKey = Spot.OnKeyDown;
             //            historyGrid.ContextFlyout = cityMenuFlyout;
@@ -188,21 +188,28 @@ namespace COTG.Views
 
 		private static Spot SelectionChanged( DataGridSelectionChangedEventArgs e, RadDataGrid grid)
 		{
-			foreach (Spot s in e.RemovedItems)
-			{
-				s.isSelected = false;
-			}
-			foreach (Spot s in e.AddedItems)
-			{
-				s.isSelected = true;
-			}
+	
+			//if (SpotTab.silenceSelectionChanges == 0)
+			//{
+			//	foreach (Spot s in e.RemovedItems)
+			//	{
+			//		s.isSelected = false;
+			//	}
+			//	foreach (Spot s in e.AddedItems)
+			//	{
+			//		s.isSelected = true;
+			//	}
+			//}
 
 			return grid.SelectedItem as Spot;
 		}
 
 		private void defenderGrid_SelectionChanged(object sender, DataGridSelectionChangedEventArgs e)
         {
-			var sel = SelectionChanged(e, defenderGrid);
+			if (!isActive)
+				return;
+
+			var sel = defenderGrid.SelectedItem as Spot; ;
 			if (sel != null )
             {
 				armyGrid.ItemsSource = sel.incoming;
@@ -210,7 +217,7 @@ namespace COTG.Views
 				var tab = DefenseHistoryTab.instance;
 				if (!tab.isActive)
 				{
-					tab.ShowOrAdd( true,true,TabPage.secondaryTabs );
+					tab.ShowOrAdd( true,true );
 
 				}
 				if(tab.isVisible)
@@ -219,6 +226,7 @@ namespace COTG.Views
 				}
 
 			}
+			
         }
 
 		private void onlyMe_Click(object sender, RoutedEventArgs e)

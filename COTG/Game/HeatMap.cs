@@ -28,7 +28,6 @@ namespace COTG.Game
 	public class HeatMapItem : INotifyPropertyChanged
 	{
 
-		public ResetableCollection<HeatMapDelta> deltas { get; set; } = ResetableCollection<HeatMapDelta>.empty; // only valid in heatMapDay
 	
 		public SmallTime t;
 		public string desc { get; set; }
@@ -76,6 +75,7 @@ namespace COTG.Game
 	{
 		// key is lastUpdated.Date
 		public static ResetableCollection<HeatMapDay> days = new() ;
+		public ResetableCollection<HeatMapDelta> deltas { get; set; } = ResetableCollection<HeatMapDelta>.empty; // only valid in heatMapDay
 
 		public HeatMapDay(SmallTime t) : base(t)
 		{

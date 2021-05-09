@@ -34,7 +34,9 @@ namespace COTG.Views
 {
     public sealed partial class SpotTab : UserTab
     {
-        public DumbCollection<Spot> spotMRU { get; } = new DumbCollection<Spot>();
+		public override TabPage defaultPage => TabPage.secondaryTabs;
+
+		public DumbCollection<Spot> spotMRU { get; } = new DumbCollection<Spot>();
 
         public static DumbCollection<Spot> SpotMRU => instance.spotMRU;
         public static int disableSelection;
@@ -56,7 +58,10 @@ namespace COTG.Views
 
         private void SpotTabSelectionChanged(object sender, DataGridSelectionChangedEventArgs e)
         {
-            if (silenceSelectionChanges == 0)
+			if (!isActive)
+				return;
+
+			if (silenceSelectionChanges == 0)
             {
                 try
                 {

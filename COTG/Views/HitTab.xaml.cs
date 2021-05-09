@@ -5,6 +5,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using System.Text;
+
+using Telerik.UI.Xaml.Controls.Grid;
 
 using Windows.Foundation;
 using Windows.Foundation.Collections;
@@ -27,6 +30,20 @@ namespace COTG.Views
         public Army[] history { get; set; } = Army.empty;
         public void SetHistory(Army[] _history)
         {
+			//{
+			//	StringBuilder sb = new StringBuilder();
+			//	foreach(var i in _history)
+			//	{
+			//		if (i.claim != 100 || i.sPid != Player.myId)
+			//			continue;
+			//		var c = City.Get(i.targetCid);
+			//		var cl = await c.Classify();
+			//		sb.AppendLine($"{c.cid.CidToCoords()}\t{cl}");
+
+			//	}
+			//	App.CopyTextToClipboard(sb.ToString());
+	
+			//}
 			history = _history;
 			var sel = OutgoingTab.selected;
 			var cid = (sel?.cid).GetValueOrDefault();
@@ -48,8 +65,6 @@ namespace COTG.Views
                 OutgoingOverview.Process(SettingsPage.fetchFullHistory); // Todo: throttle
             }
             base.VisibilityChanged(visible);
-
-
-        }
+	}
     }
 }

@@ -50,7 +50,7 @@ namespace COTG.Views
             instance = this;
 
             InitializeComponent();
-			spotGrids.Add(attackerGrid);
+//			spotGrids.Add(attackerGrid);
 
 			attackerGrid.OnKey = Spot.OnKeyDown;
             //            historyGrid.ContextFlyout = cityMenuFlyout;
@@ -128,11 +128,14 @@ namespace COTG.Views
         public static bool IsVisible() => instance.isVisible;
 
         private void defenderGrid_SelectionChanged(object sender, DataGridSelectionChangedEventArgs e)
-        {
-            var sel = attackerGrid.SelectedItem as Spot;
+		{
+			if (!isActive)
+				return;
+
+			var sel = attackerGrid.SelectedItem as Spot;
             if(sel==null)
             {
-                armyGrid.ItemsSource = Army.empty;
+           //     armyGrid.ItemsSource = Army.empty;
             }
             else
             {
@@ -141,7 +144,7 @@ namespace COTG.Views
 				var tab = HitTab.instance;
 				if (!tab.isActive)
 				{
-					tab.ShowOrAdd(true, true, TabPage.secondaryTabs);
+					tab.ShowOrAdd(true, true);
 
 				}
 				if (tab.isVisible)

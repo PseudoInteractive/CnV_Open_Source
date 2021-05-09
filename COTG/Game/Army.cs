@@ -27,15 +27,17 @@ namespace COTG.Game
         public byte type; // reportType* in Enum.cs
         public byte claim { get; set; }
         public bool isAttack { get; set; }
-        public string Type => reportStrings[type];
+        public string Type => claim switch { >= 100 => "Cap!", >0=>"Capping",_=> reportStrings[type] };
        
         public string aType => type switch
         {
             reportDefensePending=> "inc Def",
             reportDefenseStationed => "Def",
             reportPending =>  "Attack",
-            reportSieging => "Siege",
-            _ => "unk"
+            reportSieging when claim >= 100 => "Cap!",
+			reportSieging when claim > 0 => "Capping",
+			reportSieging => "Siege",
+			_ => "unk"
         };
 
         public TroopTypeCount[] troops { get; set; } = TroopTypeCount.empty;

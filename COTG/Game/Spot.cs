@@ -165,7 +165,8 @@ namespace COTG.Game
 
 
 		public int pid { get; set; }
-		public string player => Player.Get(pid).name;
+		public string playerName => Player.Get(pid).name;
+		public Player player => Player.Get(pid);
 		public string alliance => Player.Get(pid).allianceName; // todo:  this should be an into alliance id
 		public ushort allianceId => Player.Get(pid).alliance; // todo:  this should be an into alliance id
 		public byte type;
@@ -367,7 +368,7 @@ namespace COTG.Game
 				var s = Spot.GetOrAdd(_cid);
 				if (s.incoming.Any())
 				{
-					sb.Append(s.player);
+					sb.Append(s.playerName);
 					sb.Append('\t');
 					sb.Append(s.cont);
 					sb.Append('\t');
@@ -622,7 +623,7 @@ namespace COTG.Game
 
 		public string ToTsv()
 		{
-			return $"{cid.CidToCoords()}\t{this.player}\t{this.cityName}\t{this.remarks ?? ""}\t{this.alliance}\t{this.isCastle}\t{this.isOnWater}";
+			return $"{cid.CidToCoords()}\t{this.playerName}\t{this.cityName}\t{this.remarks ?? ""}\t{this.alliance}\t{this.isCastle}\t{this.isOnWater}";
 		}
 
 		public static async void ProcessCoordClick(int cid, bool lazyMove, VirtualKeyModifiers mod, bool scrollIntoUI = false)
@@ -1279,7 +1280,7 @@ namespace COTG.Game
 		public static string uiPressColumn = string.Empty;
 
 		readonly static int[] pointSizes = { 1000, 6000 };
-
+		public int spatialIndex => cid.ZCurveEncodeCid();
 		const int pointSizeCount = 2;
 
 		int GetSize()
@@ -1319,7 +1320,7 @@ namespace COTG.Game
 
 		public override string ToString()
 		{
-			return $"{{{cid},{cityName}, {xy},{player},{tsHome.ToString()}ts}}";
+			return $"{{{cid},{cityName}, {xy},{playerName},{tsHome.ToString()}ts}}";
 		}
 		public void SetFocus(bool scrollIntoView, bool select = true, bool bringIntoWorldView = true, bool lazyMove = true)
 		{
@@ -1861,7 +1862,7 @@ namespace COTG.Game
 		{
 			NearDefenseTab.defendant = this;
 			var tab = NearDefenseTab.instance;
-			TabPage.mainTabs.AddOrShowTab(tab, true);
+			tab.ShowOrAdd(true);
 			tab.Refresh();
 		}
 
@@ -1872,7 +1873,7 @@ namespace COTG.Game
 			tab.target = (City)this;
 			if (!tab.isActive)
 			{
-				TabPage.mainTabs.AddOrShowTab(tab, true);
+				tab.ShowOrAdd( true);
 			}
 			else
 			{

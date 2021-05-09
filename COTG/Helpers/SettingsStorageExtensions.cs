@@ -24,12 +24,16 @@ namespace COTG.Helpers
             return appData.RoamingStorageQuota == 0;
         }
 
-        public static async Task SaveAsync<T>(this StorageFolder folder, string name, T content)
+        public static async Task SaveAsync<T>(this StorageFolder folder, string name, T content, bool backup)
         {
             var file = await folder.CreateFileAsync(GetFileName(name), CreationCollisionOption.ReplaceExisting);
             var fileContent = JsonSerializer.Serialize(content, Json.jsonSerializerOptions);
 
-            await FileIO.WriteTextAsync(file, fileContent);
+			// don't block on this save
+			if (backup)
+				SaveAsync<T>(folder, $"{name}___{JSClient.ServerTime().FormatFileTime()}___",content,false);
+		
+			await FileIO.WriteTextAsync(file, fileContent);
         }
 
 		

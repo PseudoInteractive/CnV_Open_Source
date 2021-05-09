@@ -1402,12 +1402,9 @@ namespace COTG
 				{
 
 					ppdtInitialized = true;
-				
-					if(MainPage.IsVisible())
-					{
-						//Task.Delay(500).ContinueWith( _ => App.DispatchOnUIThreadSneakyLow( MainPage.instance.Refresh));
-						App.DispatchOnUIThreadSneakyLow(MainPage.instance.Refresh);
-					}
+
+					//Task.Delay(500).ContinueWith( _ => App.DispatchOnUIThreadSneakyLow( MainPage.instance.Refresh));
+					App.DispatchOnUIThreadSneakyLow(ShellPage.RefreshTabs);
 				}
 				
 				//    Log(City.all.ToString());

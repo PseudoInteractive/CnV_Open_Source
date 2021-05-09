@@ -51,9 +51,16 @@ namespace COTG.Views
 		const int maxMessageLength = 32 * 1024;
         public ChatEntry(string _a, DateTimeOffset _time = default) { text = Note.TranslateCOTGChatToMarkdown(_a.Truncate(maxMessageLength) ); time = _time; }
         public ChatEntry(string _player, string _text, DateTimeOffset _time, byte _type) { text = _text.Truncate(maxMessageLength); time = _time; type = _type; player = _player; }
-        //  public ChatEntry() { }
 
-    }
+	
+
+		public override string ToString()
+		{
+			return $"{player}:{arrivedString}:{type}:{text}";
+		}
+		//  public ChatEntry() { }
+
+	}
     //public  sealed class ChatEntryGroup
     //{
     //    public DateTimeOffset time;
@@ -77,7 +84,8 @@ namespace COTG.Views
         public static ChatTab[] all = Array.Empty<ChatTab>();
         public static ChatTab[] Ctor()
         {
-            all = new ChatTab[] { alliance, world, officer, debug };
+
+			all = new ChatTab[] { alliance, world, officer, debug };
             return all;
         }
         public string whisperTarget; // null if no target
@@ -96,13 +104,13 @@ namespace COTG.Views
 
             base.VisibilityChanged(visible);
         }
-
-        public void Post(ChatEntry entry)
+		public override TabPage defaultPage => ChatTab.tabPage;
+		public void Post(ChatEntry entry)
         {
             if (!isActive)
             {
 
-                tabPage.AddOrShowTab(this, false);
+                ShowOrAdd(true, false);
             }
             //var activeGroup = Groups.Count > 0 ? Groups.Last() : null;
             //var lastHour = activeGroup == null ? -99 : activeGroup.time.Hour;
@@ -125,7 +133,7 @@ namespace COTG.Views
 			var text = entry.text;
 			if (this != debug && (text.Contains(Player.myName, StringComparison.OrdinalIgnoreCase) || text.Contains("@", StringComparison.Ordinal)))
             {
-                Note.Show(entry.text);
+                Note.Show(entry.ToString());
 
             }
             // Set + if not from me
@@ -337,7 +345,7 @@ namespace COTG.Views
             }
             var ch = new ChatTab() { Tag=player, whisperTarget = player };
             all = all.ArrayAppend(ch);
-            tabPage.AddOrShowTab(ch, activate);
+			ch.ShowOrAdd( activate,false);
             return ch;
         }
 

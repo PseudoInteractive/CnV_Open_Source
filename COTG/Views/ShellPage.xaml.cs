@@ -289,21 +289,24 @@ namespace COTG.Views
 			// Services.NavigationService.Navigate<Views.DefenseHistoryTab>(this); ChatTab.Ctor();
 			{
 				ChatTab.Ctor();
-				ChatTab.tabPage = CreateTabPage(chatTabFrame).AddChatTabs();
+				ChatTab.tabPage = CreateTabPage(chatTabFrame);
 
 				UserTab.InitUserTabs();
+
 				{
 					var tabPage = CreateTabPage(shellFrame);
+					TabPage.secondaryTabs = CreateTabPage(spotFrame);
 					TabPage.mainTabs = tabPage;
-					tabPage.AddOrShowTab(MainPage.instance, true);
-					tabPage.AddOrShowTab(BuildTab.instance, false);
-					tabPage.AddOrShowTab(QueueTab.instance, false);
+					MainPage.instance.ShowOrAdd( true);
+					MainPage.instance.ShowOrAdd( false);
+					MainPage.instance.ShowOrAdd(false);
 					// tabPage.AddTab(HeatTab.instance, false);
 				}
+				ChatTab.tabPage.AddChatTabs();
 				{
-					TabPage.secondaryTabs = CreateTabPage(spotFrame);
+
 					// SpotTab.instance = new SpotTab();
-					TabPage.secondaryTabs.AddOrShowTab(SpotTab.instance, true);
+					SpotTab.instance.ShowOrAdd( true);
 				}
 			};
 
@@ -591,13 +594,14 @@ namespace COTG.Views
 			RefreshX();
 		}
 
-		private static void RefreshTabs()
+		public static void RefreshTabs()
 		{
 			// fall through from shift-refresh. Shift refresh does both
 			City.UpdateSenatorInfo();
 			foreach (var tab in UserTab.userTabs)
 			{
-				tab.Refresh();
+				if(tab.isVisible)
+					tab.Refresh();
 			}
 		}
 

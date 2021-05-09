@@ -68,6 +68,8 @@ namespace COTG.Views
         }
         private void CityGrid_SelectionChanged(object sender, DataGridSelectionChangedEventArgs e)
         {
+			if (!isActive)
+				return;
 
             var it = e.AddedItems.FirstOrDefault();
             var newSel = it as City;
@@ -75,7 +77,8 @@ namespace COTG.Views
             var bosses = new List<Boss>();
             if (newSel != null)
             {
-                newSel.SelectInWorldView(false);
+				if (SpotTab.silenceSelectionChanges == 0)
+					newSel.SelectInWorldView(false);
                 var waterValid = false;
 				var groundValid = false;
 				foreach (var i in newSel.troopsHome)

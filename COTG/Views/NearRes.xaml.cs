@@ -91,24 +91,11 @@ namespace COTG.Views
 
 		}
 
-		public static void GetSelected(List<int> rv)
-		{
-			var i = instance;
-			if (!NearRes.IsVisible())
-				return;
-
-			foreach (var sel in i.supportGrid.SelectedItems)
-			{
-				var s = sel as ResSource;
-				Assert(s != null);
-				rv.AddIfAbsent(s.cid);
-			}
-		}
 		public static SmallTime lastUpdated;
 		static bool updating = true;
 		public static async Task UpdateTradeStuffifNeeded()
 		{
-			if(SmallTime.serverNow.seconds >  lastUpdated.seconds + 60*5 )
+			if(SmallTime.serverNow.seconds >  lastUpdated.seconds + 60 )
 			{
 				await UpdateTradeStuff();
 			}
@@ -350,6 +337,7 @@ namespace COTG.Views
 				supporters.Clear();
 				selected = ResSource.dummy;
 			}
+			base.VisibilityChanged(visible);
 		}
 
 		public NearRes()
@@ -386,7 +374,11 @@ namespace COTG.Views
 
 		private void supportGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
 		{
-			RefreshSupportByRes();
+			if (!isActive)
+				return;
+
+			if (isVisible)
+				RefreshSupportByRes();
 		}
 
 		private void TsSendRightTapped(object sender, RightTappedRoutedEventArgs e)

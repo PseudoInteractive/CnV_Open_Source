@@ -202,7 +202,8 @@ namespace COTG.Views
 
         private void supportGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            RefreshSupportByType();
+			if(isVisible)
+	            RefreshSupportByType();
         }
         public void RefreshSupportByType()
         {

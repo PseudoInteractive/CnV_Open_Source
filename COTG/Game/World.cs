@@ -105,7 +105,7 @@ namespace COTG.Game
 		public const int count = spanX * spanY + 1; // 56 is summary of the workd
 		public const int idAll = count - 1;
 
-		public static int GetPackedIdFromC((int x, int y) c) => GetPackedIdFromCont((c.x / 100, c.y / 100));
+		public static int GetPackedIdFromC((int x, int y) c) => GetPackedIdFromCont((c.x / World.continentSpan, c.y / World.continentSpan));
 		public static int GetPackedIdFromCont((int x, int y) c) => c.x.Clamp(0, 5) + c.y.Clamp(0, 5) * spanX;
 		public static (int x, int y) GetContIdFromPacked(int id) {
 			if (id == idAll)
@@ -174,24 +174,26 @@ namespace COTG.Game
 	public static class World
 	{
 	//	public static World current;
-		public const int span = 600;
-		public const int continentSpan = 6; // 00 .. 55
-		public const int continentCount = continentSpan * continentSpan;
+		public const int continentSpan = 100;
+		public const int continentCountX = 6; // 00 .. 55
+		public const int span = continentCountX*continentSpan;
+		public const int continentCountY = continentCountX; // 00 .. 55
+		public const int continentCount = continentCountX * continentCountY;
 		public static int CidToPackedContinent(this int cid)
 		{
 			var c = cid.CidToWorld();
-			return (c.x/100) + (c.y/100) * continentSpan;
+			return (c.x/continentSpan) + (c.y/continentSpan) * continentCountX;
 		}
 		public static (int x,int y) PackedContinentToXY(this int id)
 		{
-			var y = (int)( (uint)id /(uint) continentSpan);
-			var x = id - y * continentSpan;
+			var y = (int)( (uint)id /(uint) continentCountX);
+			var x = id - y * continentCountX;
 			return (x, y);
 		}
 		public static (int x, int y) ContinentToXY(this int id)
 		{
 			var y = (int)((uint)id / (uint)10);
-			var x = id - y * continentSpan;
+			var x = id - y * continentCountX;
 			return (x, y);
 		}
 
@@ -353,7 +355,7 @@ namespace COTG.Game
 		{
 			var y = id / span;
 			var x = id - y * span;
-			return (int)((x/100)+ (y/100)*continentSpan);
+			return (int)((x/continentSpan)+ (y/continentSpan)*continentCountX);
 		}
 		public static Microsoft.Xna.Framework.Color GetTint(int packedId)
 		{
@@ -591,7 +593,7 @@ namespace COTG.Game
 			completed,
 		}
 		public static State state = State.none;
-		public static bool initialized => state >= State.partWay;
+		public static bool initialized;
 		public static bool completed => state >= State.completed;
 
 
@@ -966,8 +968,8 @@ namespace COTG.Game
 				/** @type {string} */
 				bkey_ = dat_;
 				var _t = dat_.ToString();
-				var x = (int)(_t.SubStrAsInt(6, 3) - 100);
-				var y = (int)(_t.SubStrAsInt(3, 3) - 100);
+				var x = (int)(_t.SubStrAsInt(6, 3) - continentSpan);
+				var y = (int)(_t.SubStrAsInt(3, 3) - continentSpan);
 
 				var b = new Boss()
 				{
@@ -993,8 +995,8 @@ namespace COTG.Game
 					/** @type {string} */
 					cavkey_ = dat_;
 					var _t = dat_.ToString();
-					var x = (ushort)(_t.SubStrAsInt(5, 3) - 100);
-					var y = (ushort)(_t.SubStrAsInt(2, 3) - 100);
+					var x = (ushort)(_t.SubStrAsInt(5, 3) - continentSpan);
+					var y = (ushort)(_t.SubStrAsInt(2, 3) - continentSpan);
 					var level = _t.SubStrAsByte(0, 2) - 10;
 
 					//  LogJS(b);
@@ -1015,8 +1017,8 @@ namespace COTG.Game
 				var _t = dat_.ToString();
 				var b = new Shrine()
 				{
-					x = (ushort)(_t.SubStrAsInt(5, 3) - 100),
-					y = (ushort)(_t.SubStrAsInt(2, 3) - 100),
+					x = (ushort)(_t.SubStrAsInt(5, 3) - continentSpan),
+					y = (ushort)(_t.SubStrAsInt(2, 3) - continentSpan),
 					type = (byte)(_t.SubStrAsInt(0, 1) == 1 ? 255 : _t.SubStrAsByte(1, 1))
 				};
 				//  LogJS(b);
@@ -1037,8 +1039,8 @@ namespace COTG.Game
 				var _t = dat_.ToString();
 				var b = new Portal()
 				{
-					x = (ushort)(_t.SubStrAsInt(4, 3) - 100),
-					y = (ushort)(_t.SubStrAsInt(1, 3) - 100),
+					x = (ushort)(_t.SubStrAsInt(4, 3) - continentSpan),
+					y = (ushort)(_t.SubStrAsInt(1, 3) - continentSpan),
 					active = (_t.SubStrAsInt(0, 1) == 2)
 				};
 				portals.Add(b);
@@ -1087,8 +1089,8 @@ namespace COTG.Game
 					var isTemple = false;
 					if (ll)
 					{
-						x = (_t.SubStrAsInt(4, 3) - 100);
-						y = (_t.SubStrAsInt(1, 3) - 100);
+						x = (_t.SubStrAsInt(4, 3) - continentSpan);
+						y = (_t.SubStrAsInt(1, 3) - continentSpan);
 						Assert(x < 600);
 						Assert(y < 600);
 						pid = 0;
@@ -1102,8 +1104,8 @@ namespace COTG.Game
 						pid = _t.SubStrAsInt(11, (int)digitCount);
 						int aliStart = 11 + (int)digitCount;
 						alliance = (_t.SubStrAsInt(aliStart, _t.Length - aliStart));
-						x = (_t.SubStrAsInt(7, 3) - 100);
-						y = (_t.SubStrAsInt(4, 3) - 100);
+						x = (_t.SubStrAsInt(7, 3) - continentSpan);
+						y = (_t.SubStrAsInt(4, 3) - continentSpan);
 						type = _t.SubStrAsByte(3, 1);
 						if ((int)_t.SubStrAsInt(0, 2) > 10)
 						{
@@ -1159,21 +1161,19 @@ namespace COTG.Game
 				Player.all = _all;
 				Player.nameToId = _ids;
 			}
+			
 
-
-			int counter = 0;
-			// Wait for alliance diplomacy for colors
-			while (!Alliance.diplomacyFetched && counter++ < 16)
-			{
-				await Task.Delay(1000);
-			}
+			
 
 			
 			//            rv.cities = cities.ToArray();
 			World.portals = portals.ToArray();
 			World.shrineList = shrineList.ToArray();
 			Boss.all = bossList.ToArray();
+			initialized = true;
 
+			int counter = 0;
+			// Wait for alliance diplomacy for colors
 			
 			//worldOwnerPixels = ownerPixels;
 
@@ -1207,7 +1207,7 @@ namespace COTG.Game
 				else
 				{
 					ContinentsSnapshot.all = ContinentsSnapshot.all.ArrayAppend(shot);
-					ApplicationData.Current.LocalFolder.SaveAsync("continentHistory", ContinentsSnapshot.all);
+					ApplicationData.Current.LocalFolder.SaveAsync("continentHistory", ContinentsSnapshot.all,false);
 				}
 
 			}
@@ -1216,21 +1216,21 @@ namespace COTG.Game
 			{
 				await WorldStorage.SaveWorldData(raw);
 			});
-			
+
 
 			// delay this part
-			
+
 
 			///		Assert(state == State.none || state == State.completed);
 			//		state = State.started;
 			// reset players	
-			
 
-			while (!Alliance.alliancesFetched)
+		
+			while (!Alliance.alliancesFetched && counter++ < 16)
 			{
-				await Task.Delay(500);
+				await Task.Delay(1000);
 			}
-			if(!isDrawingHeatMap)
+			if (!isDrawingHeatMap)
 				DrawPixels(raw.Span);
 
 			state = State.completed;
