@@ -21,6 +21,7 @@ using COTG.Helpers;
 using System.ComponentModel;
 using COTG.Services;
 using Microsoft.Toolkit.Uwp.UI.Controls;
+using System.Threading.Tasks;
 
 namespace COTG.Views
 {
@@ -59,7 +60,7 @@ namespace COTG.Views
             }
         }
 
-        public async override void VisibilityChanged(bool visible)
+        public async override Task VisibilityChanged(bool visible)
         {
             if (visible)
             {
@@ -167,6 +168,7 @@ namespace COTG.Views
                 //              supportGrid.ItemsSource = null;
 
             }
+			await base.VisibilityChanged(visible);
         }
 
         public NearDefenseTab()

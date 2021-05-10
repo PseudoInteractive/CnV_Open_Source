@@ -15,10 +15,10 @@ namespace COTG.Helpers
 		public static class Morton
 		{
 
-		public static int ZCurveEncodeCid(this int cid)
+		public static uint ZCurveEncodeCid(this int cid)
 		{
 			var xy = cid.CidToWorld();
-			return ZCurveEncode(xy) | (xy.WorldToContinentPacked() << 24);
+			return (uint)(ZCurveEncode(xy) | (xy.WorldToContinentPacked() << 24));
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]

@@ -29,6 +29,7 @@ using COTG.Helpers;
 using Windows.UI.Xaml.Navigation;
 using static COTG.Game.Enum;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace COTG.Views
 {
@@ -71,16 +72,19 @@ namespace COTG.Views
             //            historyGrid.ContextFlyout = cityMenuFlyout;
         
         }
-        override public void VisibilityChanged(bool visible)
+        override public Task VisibilityChanged(bool visible)
         {
-            historyGrid.ItemsSource = Array.Empty<Army>();
+         //   historyGrid.ItemsSource = Array.Empty<Army>();
             if (visible)
             {
-                historyGrid.IsBusyIndicatorEnabled = true;
+				if (!IncomingOverview.updateInProgress)
+				{
 
-                IncomingOverview.Process(SettingsPage.fetchFullHistory, true); // Todo: throttle
-            }
-            base.VisibilityChanged(visible);
+					IncomingOverview.Process(SettingsPage.fetchFullHistory, true); // Todo: throttle
+					historyGrid.IsBusyIndicatorEnabled = true;
+				}
+			}
+			return base.VisibilityChanged(visible);
 
 
         }

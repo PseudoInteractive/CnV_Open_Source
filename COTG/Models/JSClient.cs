@@ -773,17 +773,19 @@ namespace COTG
 
 		}
 
-		public static async Task OpenAttackSender()
+		public static async Task OpenAttackSender(string cmd)
 		{
 			try
 			{
-				await App.DispatchOnUIThreadTask(async () =>
-				{
+	
 
-
-					await view.InvokeScriptAsync("openAttackSender", new string[] { await App.GetClipboardText() });
-				});
-
+					await App.DispatchOnUIThreadTask(async () =>
+					{
+						await view.InvokeScriptAsync("openAttackSender", new string[] { cmd });
+					});
+				var p = JsonSerializer.Deserialize<AttackSenderScript>(cmd);
+				await Task.Delay(500);
+				await CitySwitch(p.cid, true);
 			}
 			catch (Exception e)
 			{
@@ -1856,23 +1858,23 @@ namespace COTG
 								   var jso = jsp.Value;
 								   var cid = jso.GetAsInt();
 								   Spot.ProcessCoordClick(cid, false, App.keyModifiers, true); // then normal click
-								   App.DispatchOnUIThreadSneaky(async () =>
-								   {
-									   try
-									   {
-										   var t = await App.GetClipboardText();
-										   if (t.StartsWith("{") && t.EndsWith("}"))
-										   {
-											   // is it json?
-											   var p = JsonSerializer.Deserialize<AttackSenderScript>(t);
-											   OpenAttackSender();
-										   }
-									   }
-									   catch (Exception ex)
-									   {
+								   //App.DispatchOnUIThreadSneaky(async () =>
+								   //{
+									  // try
+									  // {
+										 //  var t = await App.GetClipboardText();
+										 //  if (t.StartsWith("{") && t.EndsWith("}"))
+										 //  {
+											//   // is it json?
+											//   var p = JsonSerializer.Deserialize<AttackSenderScript>(t);
+											//   OpenAttackSender(t);
+										 //  }
+									  // }
+									  // catch (Exception ex)
+									  // {
 
-									   }
-								   });
+									  // }
+								   //});
 								   break;
 							   }
 						   case "keyDown":
@@ -2239,6 +2241,12 @@ namespace COTG
 						   case "copyclip":
 							   {
 								   App.CopyTextToClipboard(jsp.Value.GetAsString());
+								   break;
+							   }
+						   case "cmd":
+							   {
+								   var str = jsp.Value.GetAsString();
+								   OpenAttackSender(str);
 								   break;
 							   }
 						   case "setglobals":

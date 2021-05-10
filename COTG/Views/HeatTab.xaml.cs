@@ -85,11 +85,10 @@ namespace COTG.Views
 		}
 
 		static bool listLoaded = false;
-		override public async void VisibilityChanged(bool visible)
+		override public async Task VisibilityChanged(bool visible)
 		{
 			tabVisible = visible;
-			base.VisibilityChanged(visible);
-
+		
 			if (visible)
 			{
 				if (!listLoaded)
@@ -108,6 +107,8 @@ namespace COTG.Views
 			{
 		//		World.ClearHeatmap();
 			}
+			await base.VisibilityChanged(visible);
+
 		}
 
 		static bool tabVisible;
@@ -187,7 +188,7 @@ namespace COTG.Views
 		   {
 			   if (HeatTab.instance.isVisible)
 			   {
-				   HeatTab.instance.header.Text = "Please select a date range to see changes";
+				   HeatTab.instance.header.Text = "Please load and select a date range to see changes";
 
 			   }
 		   });

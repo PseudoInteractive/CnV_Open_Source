@@ -165,7 +165,7 @@ namespace COTG.Views
 		public static HashSet<int> tipSeen;
 		public static bool soundOn = true;
 		public static float volume = 0.5f;
-		public static bool spatialOn = true;
+		public static bool spatialOn = false;
 		public static bool stayAlive;
 		public static bool raidOffDungeons = false;
 		public static bool tintCities= true;

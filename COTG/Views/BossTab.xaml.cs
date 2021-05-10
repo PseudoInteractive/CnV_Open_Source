@@ -17,6 +17,7 @@ using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 using static COTG.Game.Enum;
 using static COTG.Debug;
+using System.Threading.Tasks;
 
 namespace COTG.Views
 {
@@ -27,7 +28,7 @@ namespace COTG.Views
 
 
 
-        public async override void VisibilityChanged(bool visible)
+        public override Task VisibilityChanged(bool visible)
         {
             if (visible)
             {
@@ -42,6 +43,7 @@ namespace COTG.Views
                 cityGrid.ItemsSource = City.emptyCitySource;
 
             }
+			return base.VisibilityChanged(visible);
         }
 
         public BossTab()

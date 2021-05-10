@@ -22,6 +22,7 @@ namespace COTG
 	{
 		public const string emptyJson = "{}";
 		public const string defaultTimeSpanFormat = "h':'mm':'ss";
+		public const string defaultTimeSpanFormatNoDate = "H':'mm':'ss";
 		public const string preciseDateTimeFormat = "yyyy-MM-dd H':'mm':'ss.fff";
 		// public const string preciseDateTimeFormat = "MM/dd H':'mm':'ss.fff";
 
@@ -171,7 +172,7 @@ namespace COTG
 			var serverNow = JSClient.ServerTime();
 			if (serverNow.Day == m.Day && serverNow.Month == m.Month)
 			{
-				return m.ToString(defaultTimeSpanFormat, CultureInfo.InvariantCulture);
+				return m.ToString(defaultTimeSpanFormatNoDate, CultureInfo.InvariantCulture);
 			}
 			else
 			{

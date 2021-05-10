@@ -656,8 +656,6 @@ namespace COTG.Game
 			{
 				JSClient.ShowCity(cid, lazyMove, false, scrollIntoUI);
 				NavStack.Push(cid);
-
-
 			}
 			//Spot.GetOrAdd(cid).SelectMe(false,mod);
 			SpotTab.TouchSpot(cid, mod, true);
@@ -672,9 +670,6 @@ namespace COTG.Game
 
 				App.DispatchOnUIThreadSneaky(() =>
 				{
-				
-
-
 						// set is water var
 						str = $"{City.shareStringStart}{(World.GetInfoFromCid(cid).isWater ? ';' : ':')}{str.Substring(18)}";
 					App.CopyTextToClipboard(str);
@@ -1280,7 +1275,7 @@ namespace COTG.Game
 		public static string uiPressColumn = string.Empty;
 
 		readonly static int[] pointSizes = { 1000, 6000 };
-		public int spatialIndex => cid.ZCurveEncodeCid();
+		public uint spatialIndex => cid.ZCurveEncodeCid();
 		const int pointSizeCount = 2;
 
 		int GetSize()
@@ -1748,6 +1743,7 @@ namespace COTG.Game
 						if ( !Alliance.IsAllyOrNap(this.allianceId) )
 						{
 							afly.AddItem("Add as Target" + multiString, (_, _) => AttackTab.AddTarget(sel));
+							afly.AddItem("Ignore Player" + multiString, (_, _) => AttackTab.IgnorePlayer(cid.CidToPid() ));
 						}
 						if (!Alliance.IsEnemy(this.allianceId))
 						{

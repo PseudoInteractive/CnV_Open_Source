@@ -157,7 +157,7 @@
 			SelectionMode="Extended"
                      RowDetailsVisibilityMode="Collapsed"
                      CanUserReorderColumns="True"
-					 Sorting="AttackersSorting"
+					 Sorting="Sorting"
 
                      GridLinesVisibility="All"
                      AlternatingRowBackground="#FF301030">
@@ -231,6 +231,8 @@
 				<tk:DataGridTextColumn Header="Alliance"
 													   IsReadOnly="True"
                                        Binding="{Binding alliance, Mode=OneTime}" />
+				<tk:DataGridTextColumn Header="Points"
+                                       Binding="{Binding points, Mode=OneTime}" IsReadOnly="True" />
 			</tk:DataGrid.Columns>
 		</tk:DataGrid>
 
@@ -333,7 +335,8 @@
                      RowHeight="{StaticResource ShortGridRowHeight}"
 					 GridLinesVisibility="All"
                      SelectionMode="Extended"
-                     AlternatingRowBackground="#FF103020">
+					 Sorting="Sorting"
+					 AlternatingRowBackground="#FF103020">
 				<tk:DataGrid.Columns>
 					<tk:DataGridTemplateColumn Header="Icon" IsReadOnly="True">
 						<tk:DataGridTemplateColumn.CellTemplate>
@@ -382,6 +385,10 @@
 							</DataTemplate>
 						</tk:DataGridTemplateColumn.CellTemplate>
 					</tk:DataGridTemplateColumn>
+					<tk:DataGridTextColumn Header="Points"
+                                       Binding="{Binding points, Mode=OneTime}" IsReadOnly="True" />
+					<tk:DataGridTextColumn Header="Water"
+                                       Binding="{Binding isOnWater, Mode=OneTime}" IsReadOnly="True" />
 					<tk:DataGridTextColumn Header="Alliance"
                                        Binding="{Binding alliance, Mode=OneTime}" IsReadOnly="True" />
 				</tk:DataGrid.Columns>

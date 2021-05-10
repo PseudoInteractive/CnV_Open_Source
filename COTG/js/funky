@@ -36527,8 +36527,16 @@ function outer() {
             .on("click", __s[1233], function () {
             var M2n = $(this)
                 .text();
-            e2();
-            Z5F(M2n);
+            if (M2n[0] == '{') {
+                let wrapper = {
+                    cmd: M2n
+                };
+                window['external']['notify'](JSON.stringify(wrapper));
+            }
+            else {
+                e2();
+                Z5F(M2n);
+            }
         });
         function Q4V() { E6k.R6(); }
         function H6F(l82) {

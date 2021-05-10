@@ -38,7 +38,7 @@ sent or received, and those values are bound in the DataTemplate.-->
                         <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
                     <TextBlock Text="{x:Bind arrivedString,Mode=OneTime}" HorizontalAlignment="Right" VerticalAlignment="Center" Foreground="Gray" FontSize="12" Margin="0,0,0,0" Padding="0,0,0,0" Tag="{Binding ElementName=message}"   />
-                    <HyperlinkButton x:Name="sender" Grid.Column="1" Foreground="{Binding Converter={StaticResource hyperlinkColorConverter}, Mode=OneTime}" VerticalAlignment="Center" HorizontalAlignment="Center" Content="{x:Bind playerName, Mode=OneTime}"  Padding="0,0,0,0" Tapped ="HyperlinkButton_Tapped" RightTapped="HyperlinkButton_RightTapped" FontSize="12" Margin="0,0,0,0"  />
+                    <HyperlinkButton x:Name="sender" Grid.Column="1" Foreground="{Binding Converter={StaticResource hyperlinkColorConverter}, Mode=OneTime}" VerticalAlignment="Center" HorizontalAlignment="Center" Content="{x:Bind player, Mode=OneTime}"  Padding="0,0,0,0" Tapped ="HyperlinkButton_Tapped" RightTapped="HyperlinkButton_RightTapped" FontSize="12" Margin="0,0,0,0"  />
                     <tk:MarkdownTextBlock Grid.Column="2" x:Name="message" Text="{x:Bind text,Mode=OneTime}" VerticalAlignment="Center" FontSize="12" Margin="0,0,0,0"  Padding="0,0,0,0"    Height="Auto" 
                                               InlineCodeForeground="Firebrick" InlineCodeBackground="Black" 
                                               TextWrapping="Wrap" LinkClicked="MarkdownTextBlock_LinkClicked" />

@@ -1323,8 +1323,19 @@ namespace COTG.Game
 		{
 			Assert(t0.seconds != 0);
 			Assert(t1.seconds != 0);
-			World.heatMapT0 = t0 - 1;
-			World.heatMapT1 = t1 + 1;
+			World.heatMapT0 = t0-1;
+			World.heatMapT1 = t1+1;
+			if(World.heatMapT0.Date() != t0.Date())
+			{
+				Assert(false);
+				t0 = World.heatMapT0;
+			}
+
+			if (World.heatMapT1.Date() != t1.Date())
+			{
+				Assert(false);
+				t1 = World.heatMapT1;
+			}
 
 			if (World.changeMapInProgress)
 			{

@@ -322,7 +322,7 @@ namespace COTG.Views
 			}
 		}
 
-		public async override void VisibilityChanged(bool visible)
+		public override Task VisibilityChanged(bool visible)
 		{
 			if (visible)
 			{
@@ -337,7 +337,7 @@ namespace COTG.Views
 				supporters.Clear();
 				selected = ResSource.dummy;
 			}
-			base.VisibilityChanged(visible);
+			return base.VisibilityChanged(visible);
 		}
 
 		public NearRes()

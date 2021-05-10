@@ -170,7 +170,7 @@ namespace COTG.Views
           
         }
 
-        public override void VisibilityChanged(bool visible)
+        public override Task VisibilityChanged(bool visible)
         {
             //  Log("Vis change" + visible);
             App.DispatchOnUIThreadSneaky(() =>
@@ -180,7 +180,8 @@ namespace COTG.Views
             });
             if (visible)
                 IncomingOverview.Process(false,true);
-            base.VisibilityChanged(visible);
+            
+			return base.VisibilityChanged(visible);
 
         }
         public static bool IsVisible() => instance.isVisible;

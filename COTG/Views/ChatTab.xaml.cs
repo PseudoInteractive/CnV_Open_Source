@@ -94,7 +94,7 @@ namespace COTG.Views
         //        public DumbCollection<ChatEntry> logEntries = new DumbCollection<ChatEntry>(new ChatEntry[] { new ChatEntry("Hello") });
         // public DumbCollection<ChatEntryGroup> Groups { get; set; } = new DumbCollection<ChatEntryGroup>();// new[] { new ChatEntryGroup() {time=AUtil.dateTimeZero} });
         public DumbCollection<ChatEntry> items { get; set; } = new DumbCollection<ChatEntry>();
-        override public void VisibilityChanged(bool visible)
+        override public Task VisibilityChanged(bool visible)
         {
             if (items.Count > 0 && visible)
             {
@@ -102,7 +102,7 @@ namespace COTG.Views
                 input.Focus(FocusState.Programmatic);
             }
 
-            base.VisibilityChanged(visible);
+            return base.VisibilityChanged(visible);
         }
 		public override TabPage defaultPage => ChatTab.tabPage;
 		public void Post(ChatEntry entry)

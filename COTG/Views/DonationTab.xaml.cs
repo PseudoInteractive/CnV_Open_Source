@@ -7,6 +7,8 @@ using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using System.Threading.Tasks;
+
 using Telerik.UI.Xaml.Controls.Grid;
 using Telerik.UI.Xaml.Controls.Grid.Commands;
 using Windows.Foundation;
@@ -48,7 +50,7 @@ namespace COTG.Views
         public void OnPropertyChanged(string propertyName) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 
        // List<BlessedCity> blessedGridSource = new List<BlessedCity>();
-        public async override void VisibilityChanged(bool visible)
+        public async override Task VisibilityChanged(bool visible)
         {
             if(visible)
             {
@@ -92,7 +94,7 @@ namespace COTG.Views
                 });
                    BlessedCity.senderCity = null;
             }
-            base.VisibilityChanged(visible);
+           await  base.VisibilityChanged(visible);
 
         }
 

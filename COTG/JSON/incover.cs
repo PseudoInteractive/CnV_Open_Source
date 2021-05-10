@@ -770,7 +770,7 @@ namespace COTG.JSON
 
 																			sourceCid = source,
 																			targetCid = target,
-																			claim = (byte)(hasSen && root.GetAsString("senatorapn") == atkPN ? root.GetAsFloat("senator") : -1),
+																			claim = (byte)(hasSen && root.GetAsString("senatorapn") == atkPN ? IncomingOverview.ClaimToByte(root.GetAsFloat("senator")) : (byte) 0),
 																			time = time,
 																			spotted = time - TimeSpan.FromMinutes(target.CidToWorld().Distance(source.CidToWorld()) * TTTravel(ttVanquisher)),
 																			type = (byte)reportType
@@ -915,7 +915,7 @@ namespace COTG.JSON
 
 			}
 
-
+			return;
 
 		}
 	}

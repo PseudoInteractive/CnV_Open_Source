@@ -125,7 +125,7 @@ namespace COTG.Game
 				desc = dateStr + new ChangeInfo().ComputeDeltas(prior.snapshot.Span, snapshot.Span).ToString();
 			}
 
-		//	NotifyChange(nameof(desc));
+			NotifyChange(nameof(desc));
 			if(updateSnapshots && isLoaded)
 				UpdateSnapshots();
 			if (updateNext)
@@ -148,7 +148,7 @@ namespace COTG.Game
 					using var snap0 = snap1.Clone();
 					HeatMap.ApplyDelta(snap1.Span, delta.changes.Span);
 					delta.desc = delta.timeStr + new ChangeInfo().ComputeDeltas(snap1.Span, snap0.Span).ToString();
-				//	delta.NotifyChange(nameof(delta.desc));
+					delta.NotifyChange(nameof(delta.desc));
 				}
 			}
 		}
@@ -582,7 +582,7 @@ namespace COTG.Game
 					if (split.Length != 3)
 						continue;
 
-					var t = new SmallTime(new DateTimeOffset(int.Parse(split[0]), int.Parse(split[1]), int.Parse(split[2]), 0, 0, 1, TimeSpan.Zero));
+					var t = new SmallTime(new DateTimeOffset(int.Parse(split[0]), int.Parse(split[1]), int.Parse(split[2]), 0, 0, 0, TimeSpan.Zero));
 					GetDay(t, true);
 				}
 			}

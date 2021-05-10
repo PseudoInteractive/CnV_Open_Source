@@ -108,15 +108,33 @@ namespace COTG.Views
             foreach (var player in players)
             {
                 sb.Append($"\n\n{Player.IdToName(player)}");
-                var lastCluster = -1;
                 foreach (var a in attacks)
                 {
                     if (Spot.GetOrAdd(a.cid).pid != player || a.attackCluster==-1)
                         continue;
-                    if (lastCluster != a.attackCluster)
-                    {
-                        lastCluster=a.attackCluster;
-                        sb.Append($"\n\n{scripts[lastCluster]}");
+                    if (true)
+				    {
+						var atk = new AttackSenderScript() { type = new List<int>(), x = new List<int>(), y = new List<int>(), commands = new() };
+						atk.cid = a.cid;
+						// group all attacks for this player
+						foreach (var a1 in attackClusters[a.attackCluster].targets.OrderBy((a) => Spot.GetOrAdd(a).isAttackTypeFake))
+						{
+							var t = Spot.GetOrAdd(a1);
+							atk.commands.Add(t.isAttackTypeAssault ? "assault" : "siege");
+							atk.type.Add(t.isAttackTypeFake ? 0 : 1);
+							
+
+							var xy = a1.CidToWorld();
+							atk.x.Add(xy.x);
+							atk.y.Add(xy.y);
+						}
+						var time = SettingsPage.attackPlannerTime;
+
+						atk.time = new string[] { time.Hour.ToString("00"), time.Minute.ToString("00"), time.Second.ToString("00"), time.ToString("MM/dd/yyyy") };
+						var scrpipt = System.Text.Json.JsonSerializer.Serialize(atk, Json.jsonSerializerOptions);
+
+
+                        sb.Append($"\n\n<player>{scrpipt}</player>");
                     }
                     sb.Append('\n');
                     sb.Append($"{a.cid.CidToCoords()} {a.attackType}" );
@@ -155,9 +173,10 @@ namespace COTG.Views
 			return cid0.ZCurveEncodeCid().CompareTo(cid1.ZCurveEncodeCid());
 		}
 
-		private void AttackersSorting(object sender, Microsoft.Toolkit.Uwp.UI.Controls.DataGridColumnEventArgs e)
+		private void Sorting(object sender, Microsoft.Toolkit.Uwp.UI.Controls.DataGridColumnEventArgs e)
 		{
-			var dg = attackGrid;
+			var dg = sender as DataGrid;
+			var cities = dg == attackGrid ? attacks : targets;
 			var tag = e.Column.Tag != null? e.Column.Tag.ToString() : e.Column.Header.ToString();
 			//Use the Tag property to pass the bound column name for the sorting implementation
 			Comparison<Spot> comparer = null;
@@ -168,7 +187,9 @@ namespace COTG.Views
 				case "name": comparer = (a, b) => b.nameAndRemarks.CompareTo(a.nameAndRemarks); break;
 				case nameof(Spot.attackCluster) : comparer = (a, b) => b.attackCluster.CompareTo(a.attackCluster); break;
 				case nameof(Spot.attackType): comparer = (a, b) => b.attackType.CompareTo(a.attackType); break;
+				case "Points": comparer = (a, b) => b.points.CompareTo(a.points); break;
 				case nameof(Spot.xy): comparer = (a, b) => CompareCid(a.cid,b.cid); break;
+				case "Water": comparer = (a, b) => a.isOnWater.CompareTo(b.isOnWater); break;
 			}
 
 			if (comparer != null)
@@ -177,14 +198,14 @@ namespace COTG.Views
 				if (e.Column.SortDirection == null)
 				{
 					e.Column.SortDirection = DataGridSortDirection.Descending;
-					attacks.Sort(comparer);
-					attacks.NotifyReset();
+					cities.Sort(comparer);
+					cities.NotifyReset();
 				}
 				else if (e.Column.SortDirection == DataGridSortDirection.Descending)
 				{
 					e.Column.SortDirection = DataGridSortDirection.Ascending;
-					attacks.Sort((b, a) => comparer(a, b)); // swap order of comparison
-					attacks.NotifyReset();
+					cities.Sort((b, a) => comparer(a, b)); // swap order of comparison
+					cities.NotifyReset();
 				}
 				else
 				{
@@ -257,11 +278,12 @@ namespace COTG.Views
         public class AttackCluster
         {
 			public int id;
-            public HashSet<int> attacks;// first is SE or siege
-            public HashSet<int> targets;// first is real
+            public int[] attacks;// first is SE or siege
+            public int[] targets;// first is real
             public Vector2 topLeft;
             public Vector2 bottomRight;
-			internal int real => targets.FirstOrDefault( a => City.Get(a).isAttackTypeReal );
+			internal int real => targets.Length > 0 ? targets[0] : 0;
+			//Select(a=>City.Get(a)).Where( a => a.isAttackTypeReal ).DefaultIfEmpty(City.invalid).OrderBy(a=>a.spatialIndex).First().cid;
 			///            public int real => (targets.FirstOrDefault((a) => !Spot.GetOrAdd(a).isSiege));
 
 
@@ -277,8 +299,8 @@ namespace COTG.Views
                 var ac = new AttackCluster();
 				ac.id = i;
                 _attackClusters.Add(ac);
-                ac.targets = new HashSet<int>(targets.Where((a) => a.attackCluster == i).Select((a) => a.cid));
-                ac.attacks = new HashSet<int>(attacks.Where((a) => a.attackCluster == i).Select((a) => a.cid));
+                ac.targets = targets.Where((a) => a.attackCluster == i).OrderBy( a=> a.spatialIndex + (a.isAttackTypeReal? (1u<<31):0u)  ).Select((a) => a.cid).ToArray();
+				ac.attacks = attacks.Where((a) => a.attackCluster == i).OrderBy(a => (ulong)a.spatialIndex + ((ulong)a.attackType<<32) ).Select((a) => a.cid).ToArray();
                 if (ac.targets.Any())
                 {
                     ac.topLeft.X = ac.targets.Select(a => a.ToWorldC().X).Min() - 0.5f;
@@ -296,7 +318,7 @@ namespace COTG.Views
                var attacks = readable.attacks.Where(a => a.attackType != AttackType.none).ToArray();
 				var targets =readable.targets.Where(a => a.attackType != AttackType.none).ToArray();
 
-				instance.attackCount.Text = $"Attacks: {attacks}";
+				instance.attackCount.Text = $"Attacks: {attacks.Length}";
 				var seCount = attacks.Count((a) => a.attackType ==AttackType.se);
                 instance.SE.Text=$"SE: {seCount}";
 				instance.sen.Text = $"Sen: {attacks.Count((a) => a.attackType==AttackType.senator) }";
@@ -811,7 +833,26 @@ namespace COTG.Views
 
         }
 
-        private static void CleanTargets()
+		internal static async void IgnorePlayer(int pid)
+		{
+			using var _ = await instance.TouchLists();
+
+			int removed = 0;
+			foreach (var t in targets)
+			{
+				if(t.pid == pid )
+				{
+					t.attackType = AttackType.none;
+					++removed;
+				}
+			}
+			Note.Show($"Ignoring:{removed} targets from {Player.IdToName(pid)}");
+			WritebackAttacks();
+			await SaveAttacks();
+
+		}
+
+		private static void CleanTargets()
         {
             // var set = new HashSet<int>(targets.Count);
             foreach (var t in targets)
@@ -837,7 +878,14 @@ namespace COTG.Views
 			public List<Spot> fakes;// first is SE or siege
 			public Spot real;
 			public Span2 span;
-
+			//public uint sortKey => real!=null ? real.spatialIndex : (uint)id;
+			public bool isValid => real != null;
+			public void SetInvalid()
+			{
+				real = null;
+				fakes.Clear();
+				category = AttackCategory.invalid;
+			}
 			public Span2 CalculateSpan() => new Span2(fakes.Append(real));
 			public Span2 CalculateSpanWithout(Spot exclude) => new Span2(fakes.Where(a=>a!=exclude).Append(real));
 			public IEnumerable<Spot> targets => fakes.Append(real);
@@ -847,6 +895,9 @@ namespace COTG.Views
 			public void UpdateSpan() => span = CalculateSpan();
 			public float CalculateAttackCost(Spot attacker)
 			{
+				if (!isValid)
+					return float.MaxValue;
+
 				var morale = Player.MoralePenalty(attacker.pid, real.pid) * moralCostBias;
 
 				if (category == AttackCategory.se)
@@ -974,6 +1025,7 @@ namespace COTG.Views
 			}
 			public float GetTravelTime(Spot attacker)
 			{
+				Assert(isValid);
 				var tt = (category == AttackCategory.senator) ? ttSenator: attacker.primaryTroopType;
 				var t = tt.ApproxTravelTime(attacker.cid, real.cid);
 				foreach (var f in fakes)
@@ -984,12 +1036,15 @@ namespace COTG.Views
 			}
 			public bool FakesValid()
 			{
+			
 				if (real.attackType.GetCategory() != category)
 					return false;
 				return fakes.All(f => f.attackType.GetCategory() == category);
 			}
 			public bool IsInRange(Spot attacker)
 			{
+				if (!isValid)
+					return false;
 				//if (category == AttackCategory.senator)
 				//	return true;
 				var tt = attacker.primaryTroopType;
@@ -1010,6 +1065,8 @@ namespace COTG.Views
 
 			for (int ignoreIterator = 0; ; ++ignoreIterator)
 			{
+				var attacks = AttackTab.attacks.OrderBy(a => ((long)a.player.points << 32) + a.spatialIndex).ToArray();
+
 				// first create clusters
 				foreach (var f in targets)
 				{
@@ -1033,12 +1090,12 @@ namespace COTG.Views
 				var minAssaults = (int)this.minAssaults.Value;
 				var clusterCount = reals.Length;
 				var fakes = targets.Where( (a)=>a.isAttackTypeFake ).OrderBy( (a)=>a.spatialIndex ).ToArray();
-				var clusters = new Dictionary<int,Cluster>();
+				var clusters = new Cluster[clusterCount];
 				{
 					for (var c0 = 0; c0 < clusterCount; ++c0)
 					{
 						var real = reals[c0];
-						clusters.Add(c0, new Cluster() { id = c0, category = real.attackType.GetCategory(), fakes = new List<Spot>(), real = real, span = new Span2(real.cid.ToWorldC()) });
+						clusters[c0]= new Cluster() { id = c0, category = real.attackType.GetCategory(), fakes = new List<Spot>(), real = real, span = new Span2(real.cid.ToWorldC()) };
 						real.attackCluster = c0;
 					}
 				}
@@ -1056,16 +1113,16 @@ namespace COTG.Views
 						Cluster best = null;
 						float bestDist = float.MaxValue;
 
-						foreach(var c in clusters.Values)
+						foreach (var c in clusters )
 						{
-							if (c.category != category)
+							if (c.category != category || !c.isValid)
 								continue;
 							var real = c.real;
 						
 
 							// Cannot offset even distribution
 
-							if (c.fakes.Count >= maxFakes.Min(clusters.Values.Where(c => c.category == category).Min(a => a.fakes.Count) + 1))
+							if (c.fakes.Count >= maxFakes.Min(clusters.Where(c => c.category == category).Min(a => a.fakes.Count) + 1))
 								continue;
 
 							var d = c.span.Distance2(fake.cid.ToWorldC());
@@ -1091,15 +1148,17 @@ namespace COTG.Views
 				// first pass, shuffle the extras
 				for (int iter = 0; iter < clusterCount + 8; ++iter)
 				{
-					foreach(var cluster0 in clusters.Values)
+					foreach(var cluster0 in clusters)
 					{
+						if (!cluster0.isValid)
+							continue;
 						var category = cluster0.category;
 						var r0a = cluster0.span.radius2;
 						Spot best = null;
 						Cluster bestCluster = null;
 						float bestScore = 0;
 						var count0 = cluster0.fakes.Count;
-						foreach (var cluster1 in clusters.Values)
+						foreach (var cluster1 in clusters)
 						{
 
 							if (cluster1.fakes.Count <= count0 || cluster1.category != category)
@@ -1140,9 +1199,11 @@ namespace COTG.Views
 				// optimize
 				for (int iter = 0; iter < 32; ++iter)
 				{
-					foreach(var cluster0 in clusters.Values)
+					foreach(var cluster0 in clusters)
 					{
-						foreach (var cluster1 in clusters.Values)
+						if (!cluster0.isValid)
+							continue;
+						foreach (var cluster1 in clusters)
 						{
 							if (cluster0.id >= cluster1.id)
 								continue;
@@ -1199,10 +1260,9 @@ namespace COTG.Views
 				}
 
 
-				var attacks = AttackTab.attacks.OrderBy(a=> a.playerName )
-
+				
 				// Assign attacks to clusters
-				var attackCount = attacks.Count;
+				var attackCount = attacks.Length;
 				var seCount = attacks.Count(a => a.isAttackTypeSE);
 				var senCount = attacks.Count(a => a.isAttackTypeSenator);
 				var assaults = attackCount - seCount - senCount;
@@ -1219,8 +1279,10 @@ namespace COTG.Views
 					var isAssault = attack.isAttackTypeAssault ? 1 : 0;
 					for (int useAssaultForSenators = 0; useAssaultForSenators < 2; ++useAssaultForSenators)
 					{
-						foreach(var c in clusters.Values)
+						foreach(var c in clusters)
 						{
+							if (!c.isValid)
+								continue;
 							var category = c.category;
 							if (category == AttackCategory.se)
 							{
@@ -1245,7 +1307,7 @@ namespace COTG.Views
 								continue;
 
 							{
-								var maxPerCluster = clusters.Where(a => a.Value.category == category).Min(a => a.Value.attackCounts[isAssault]) + 1;
+								var maxPerCluster = clusters.Where(a => a.category == category).Min(a => a.attackCounts[isAssault]) + 1;
 
 								if (c.attackCounts[isAssault] >= maxPerCluster)
 									continue;
@@ -1280,15 +1342,17 @@ namespace COTG.Views
 				// first pass, shuffle the extras, only if there are more attacks than targets
 				for (int iter = 0; iter < clusterCount + 4; ++iter)
 				{
-					foreach(var cluster0 in clusters.Values)
+					foreach(var cluster0 in clusters)
 					{
+						if (!cluster0.isValid)
+							continue;
 						for (var isAssault = 0; isAssault < 2; ++isAssault)
 						{
 							Spot best = null;
 							Cluster bestCluster = null;
 							float bestScore = 0;
 							var count0 = cluster0.attackCounts[isAssault];
-							foreach (var cluster1 in clusters.Values)
+							foreach (var cluster1 in clusters)
 							{
 								
 								var count1 = cluster1.attackCounts[isAssault];
@@ -1362,11 +1426,11 @@ namespace COTG.Views
 				// cull
 				var initialCulledClusters = ignoredTargets.Count;
 				// cull clusters with too few attacks
-				for (; ; )
+				var culled = 0;
+				foreach(var cluster in clusters)
 				{
-					var toRemove = new List<int>();
-					foreach(var cluster in clusters.Values)
-					{
+						if (!cluster.isValid)
+							continue;
 						if (cluster.attackCounts[0] == 0 || (cluster.attackCounts[1] < minAssaults && cluster.category == AttackCategory.se))
 						{
 							var a = ignoredTargets.Add(cluster.real.cid);
@@ -1384,22 +1448,16 @@ namespace COTG.Views
 							{
 								t.attackCluster = Spot.attackClusterNone;
 							}
-							toRemove.Add(cluster.id);
+							cluster.SetInvalid();
 						}
-					}
-					if (toRemove.Count == 0)
-						break;
-					foreach(var r in toRemove)
-					{
-						clusters.Remove(r);
-					}
 				}
-				if(clusters.IsNullOrEmpty())
+				
+				if(!clusters.Any(a=>a.isValid))
 				{
-					Note.Show("No valid attack clusters (not enought attacks?");
+					Note.Show("No valid attack clusters (not enough attacks or out of range?)");
 					return;
 				}
-				if (ignoredTargets.Count > initialCulledClusters && ignoreIterator < 4)
+				if (ignoredTargets.Count > initialCulledClusters && ignoreIterator < 16)
 					continue;
 
 
@@ -1419,8 +1477,8 @@ namespace COTG.Views
 				float maxDistanceToSenator= senatorAttacks.Any()?senatorAttacks.Max((a) => clusters[a.attackCluster].GetTravelTime(a)):0;
 				float averageDistanceToSenator = senatorAttacks.Any()?senatorAttacks.Average((a) => clusters[a.attackCluster].GetTravelTime(a)):0;
 
-				float maxClusterSize = clusters.Max((a) => a.Value.span.radius2.Sqrt());
-				float averageClusterSize = clusters.Average((a) => a.Value.span.radius2.Sqrt());
+				float maxClusterSize = clusters.Where(c=>c.isValid).Max((a) => a.span.radius2.Sqrt());
+				float averageClusterSize = clusters.Where(c => c.isValid).Average((a) => a.span.radius2.Sqrt());
 
 				//           bad = $"{bad} Assigned {reals} reals and {fakes} fakes\nUnused: reals {unusedReals}, fakes {unusedFakes}";
 

@@ -28,6 +28,7 @@ using Telerik.UI.Xaml.Controls.Input;
 using COTG.Helpers;
 using Windows.UI.Xaml.Navigation;
 using Telerik.UI.Xaml.Controls.Grid.Commands;
+using System.Threading.Tasks;
 
 namespace COTG.Views
 {
@@ -112,8 +113,9 @@ namespace COTG.Views
 
         }
 
-        public override void VisibilityChanged(bool visible)
+        public override Task VisibilityChanged(bool visible)
         {
+			/// TODO:  Why clear?
             App.DispatchOnUIThreadSneaky(() =>
             {
                 attackerGrid.ItemsSource = null;
@@ -122,7 +124,7 @@ namespace COTG.Views
 
             if (visible)
                 OutgoingOverview.Process(false);
-            base.VisibilityChanged(visible);
+            return base.VisibilityChanged(visible);
 
         }
         public static bool IsVisible() => instance.isVisible;

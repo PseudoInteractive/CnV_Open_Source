@@ -238,7 +238,7 @@ namespace COTG.Views
 			////	instance.raidOptionBox.Visibility = vis;
 			////		instance.incomeBox.Visibility = vis;
 		}
-		override public async void VisibilityChanged(bool visible)
+		override public async Task VisibilityChanged(bool visible)
         {
             //   Log("Vis change" + visible);
 
@@ -260,11 +260,11 @@ namespace COTG.Views
             {
         //        cityGrid.ItemsSource = null;
             }
-            base.VisibilityChanged(visible);
-			if (visible)
-			{
-				Spot.SyncUISelection(true, City.GetBuild() );
-			}
+	         await   base.VisibilityChanged(visible);
+			//if (visible)
+			//{
+			//	Spot.SyncUISelection(true, City.GetBuild() );
+			//}
 		}
         //private void BuildCityContextFlyout(TabPage newPage)
         //{

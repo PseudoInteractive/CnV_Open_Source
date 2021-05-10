@@ -232,7 +232,7 @@ namespace COTG.Views
 		}
 
 
-		override public async void VisibilityChanged(bool visible)
+		override public async Task VisibilityChanged(bool visible)
 		{
 			//   Log("Vis change" + visible);
 
@@ -260,11 +260,11 @@ namespace COTG.Views
 			{
 				//        cityGrid.ItemsSource = null;
 			}
-			base.VisibilityChanged(visible);
-			if(visible)
-			{
-				App.DispatchOnUIThreadSneaky(() => Spot.SyncUISelection(true, City.GetBuild() ));
-			}
+			await base.VisibilityChanged(visible);
+		//	if(visible)
+		//	{
+		//		App.DispatchOnUIThreadSneaky(() => Spot.SyncUISelection(true, City.GetBuild() ));
+		//	}
 		}
 		//private void BuildCityContextFlyout(TabPage newPage)
 		//{

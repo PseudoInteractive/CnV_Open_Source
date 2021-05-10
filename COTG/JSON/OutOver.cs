@@ -26,22 +26,23 @@ namespace COTG.JSON
 
         public async static Task Process(bool fetchReports)
         {
-            if (true)
-            {
-                if (updateInProgress)
-                {
-                    // If there is one in progress that did not fetch history and this time we want history, we need to wait and the start a new fetch right after the prior one completes
-                    for (; ; )
-                    {
-                        await Task.Delay(1000);
-                        if (!updateInProgress)
-                            break;
-                    }
+    //        if (true)
+    //        {
+				//if (updateInProgress)
+				//	return;
 
-                }
-            }
+    //                // If there is one in progress that did not fetch history and this time we want history, we need to wait and the start a new fetch right after the prior one completes
+    //                for (; ; )
+    //                {
+    //                    await Task.Delay(1000);
+    //                    if (!updateInProgress)
+    //                        break;
+    //                }
 
-            if (updateInProgress)
+                
+    //        }
+
+            if (updateInProgress || !World.initialized)
                 return;
 
             updateInProgress = true;
@@ -105,7 +106,7 @@ namespace COTG.JSON
                                         };
 
                                         army.type = (byte)GetReportType(b[1].GetAsString());
-                                        var claim = b[11].GetAsFloat().RoundToInt();
+                                        var claim = IncomingOverview.ClaimToByte( b[11].GetAsFloat() );
                                         spot.claim = (byte)claim.Max(spot.claim);
                                         var atkTS = b[9].GetAsInt();
                                         var defTS = b[10].GetAsInt();

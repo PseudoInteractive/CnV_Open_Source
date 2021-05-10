@@ -30,7 +30,7 @@ namespace COTG.Game
 		se,
 		senator,
 		count,
-
+		invalid=count,
 	}
 	//  public class Attack
 	//  {
@@ -92,9 +92,11 @@ namespace COTG.Game
 	}
 	public struct AttackSenderScript
 	{
+		public int cid { get; set; }
 		public List<int> x { get; set; }
 		public List<int> y { get; set; }
 		public List<int> type { get; set; }
+		public List<string> commands { get; set; }
 		public string[] time { get; set; }
 		/*	"x": [
 				"282",
@@ -117,6 +119,7 @@ namespace COTG.Game
 			}*/
 
 	}
+	
 	public static class AttackTypeHelper
 		{
 		public static bool IsTargetSE(this AttackType a) => a == AttackType.se || a == AttackType.seFake;

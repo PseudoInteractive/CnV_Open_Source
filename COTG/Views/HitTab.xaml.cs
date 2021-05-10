@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Text;
+using System.Threading.Tasks;
 
 using Telerik.UI.Xaml.Controls.Grid;
 
@@ -55,16 +56,19 @@ namespace COTG.Views
             instance = this;
             this.InitializeComponent();
         }
-        override public void VisibilityChanged(bool visible)
+        override public Task VisibilityChanged(bool visible)
         {
-            historyGrid.ItemsSource = Army.empty;
-            if (visible)
-            {
-                historyGrid.IsBusyIndicatorEnabled = true;
-
-                OutgoingOverview.Process(SettingsPage.fetchFullHistory); // Todo: throttle
-            }
-            base.VisibilityChanged(visible);
+			// historyGrid.ItemsSource = Army.empty;
+			if (visible)
+			{
+				if (OutgoingOverview.updateInProgress == false)
+				{
+					// avaiting on this would take too long
+					OutgoingOverview.Process(SettingsPage.fetchFullHistory); // Todo: throttle
+					historyGrid.IsBusyIndicatorEnabled = true;
+				}
+			}
+            return base.VisibilityChanged(visible);
 	}
     }
 }

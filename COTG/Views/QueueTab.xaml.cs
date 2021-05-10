@@ -174,7 +174,7 @@ namespace COTG.Views
 				}
 			});
 		}
-		override public async void VisibilityChanged(bool visible)
+		override public Task VisibilityChanged(bool visible)
 		{
 			//   Log("Vis change" + visible);
 
@@ -186,7 +186,7 @@ namespace COTG.Views
 			{
 				App.DispatchOnUIThreadSneaky(cities.Clear);
 			}
-			base.VisibilityChanged(visible);
+			return base.VisibilityChanged(visible);
 
 		}
 
