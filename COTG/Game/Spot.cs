@@ -110,7 +110,7 @@ namespace COTG.Game
 				rv.isTemple = info.isTemple;
 				rv.isOnWater = info.isWater;
 				rv.isCastle = info.isCastle;
-				rv.points = (ushort)(info.isBig ? 8000 : 1500);
+				rv.points = (ushort)(info.isBig ? 9000 : 2500);
 
 				Spot.allSpots.TryAdd(cid, rv);
 				if (Player.IsFriend(info.player))
@@ -758,7 +758,7 @@ namespace COTG.Game
 		byte ports = 0;
 		 byte forums = 0;
 			bool castle = false;
-			var classification = this.classification;
+			var classification = Classification.unknown;
 
 			try
 			{
@@ -838,7 +838,7 @@ namespace COTG.Game
 			{
 				LogEx(e);
 			}
-			if (this.classification == Classification.pending)
+			if (this.classification == Classification.pending || this.classification == Classification.unknown)
 				this.classification = classification;
 			
 			return (this.classification);
@@ -868,8 +868,9 @@ namespace COTG.Game
 				return classification;
 			}
 
-			ClassificationExtended rv = new ClassificationExtended(); ;
-			classification = Classification.pending;
+			//ClassificationExtended rv = new ClassificationExtended(); ;
+			if(classification == Classification.unknown)
+				classification = Classification.pending;
 
 			return (await ClassifyFromBuildings(isIncomingAttack));
 
@@ -1431,7 +1432,7 @@ namespace COTG.Game
 						if (wasPlanner)
 						{
 							await GetCity.Post(cid );
-							await CityBuild.SetIsPlanner(true, false);
+							await CityBuild._IsPlanner(true, false);
 						}
 					// async
 						wantUnblock = true;
@@ -1465,6 +1466,7 @@ namespace COTG.Game
 			DateTimeOffset? time = null;
 			try
 			{
+				await JSClient.CitySwitch(cid, lazyMove: true, false, false, waitOnChange: true);
 				var ogaStr = await JSClient.view.InvokeScriptAsync("getOGA", null);
 				var jsDoc = JsonDocument.Parse(ogaStr);
 				foreach (var i in jsDoc.RootElement.EnumerateArray())
@@ -1496,7 +1498,7 @@ namespace COTG.Game
 						t = timing.ParseDateTime(true) ;
 					}
 					Trace(t);
-					t -= TimeSpan.FromSeconds(10);
+					t -= TimeSpan.FromHours(SettingsPage.returnRaidsBias);
 					if (time == null || time > t)
 						time = t;
 				}

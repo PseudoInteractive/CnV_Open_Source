@@ -97,7 +97,7 @@ namespace COTG.Views
 
             StringBuilder sb = new StringBuilder();
             var players = new List<int>();
-
+			int assaultOffset = 0;
             foreach (var a in attacks)
             {
                 var player = Spot.GetOrAdd(a.cid).pid;
@@ -114,13 +114,14 @@ namespace COTG.Views
                         continue;
                     if (true)
 				    {
-						var atk = new AttackSenderScript() { type = new List<int>(), x = new List<int>(), y = new List<int>(), commands = new() };
+						var atk = new AttackSenderScript() { type = new List<int>(), x = new List<int>(), y = new List<int>()};
 						atk.cid = a.cid;
 						// group all attacks for this player
-						foreach (var a1 in attackClusters[a.attackCluster].targets.OrderBy((a) => Spot.GetOrAdd(a).isAttackTypeFake))
+						var c = attackClusters[a.attackCluster];
+						foreach (var a1 in c.targets.OrderBy((a) => Spot.GetOrAdd(a).isAttackTypeFake))
 						{
 							var t = Spot.GetOrAdd(a1);
-							atk.commands.Add(t.isAttackTypeAssault ? "assault" : "siege");
+							
 							atk.type.Add(t.isAttackTypeFake ? 0 : 1);
 							
 
@@ -128,8 +129,15 @@ namespace COTG.Views
 							atk.x.Add(xy.x);
 							atk.y.Add(xy.y);
 						}
-						var time = SettingsPage.attackPlannerTime;
 
+						var time = SettingsPage.attackPlannerTime;
+						atk.command =a.isAttackTypeAssault ? "Assault" : "Siege";
+						if( a.isAttackTypeAssault && c.real.AsCity().attackType == AttackType.senator )
+						{
+							time += TimeSpan.FromHours( (assaultOffset) % 6 );
+							++assaultOffset;
+							
+						}
 						atk.time = new string[] { time.Hour.ToString("00"), time.Minute.ToString("00"), time.Second.ToString("00"), time.ToString("MM/dd/yyyy") };
 						var scrpipt = System.Text.Json.JsonSerializer.Serialize(atk, Json.jsonSerializerOptions);
 
@@ -144,7 +152,8 @@ namespace COTG.Views
 			}
             App.CopyTextToClipboard(sb.ToString());
             Note.Show("Copied Attack sender scripts to clipboard");
-        }
+			SaveAttacks();
+		}
 
         private void AttackTargetCoord_Tapped(object sender, TappedRoutedEventArgs e)
         {
@@ -190,6 +199,9 @@ namespace COTG.Views
 				case "Points": comparer = (a, b) => b.points.CompareTo(a.points); break;
 				case nameof(Spot.xy): comparer = (a, b) => CompareCid(a.cid,b.cid); break;
 				case "Water": comparer = (a, b) => a.isOnWater.CompareTo(b.isOnWater); break;
+				case "Player": comparer = (a, b) => a.playerName.CompareTo(b.playerName); break;
+				case "Alliance": comparer = (a, b) => a.alliance.CompareTo(b.alliance); break;
+
 			}
 
 			if (comparer != null)
@@ -291,7 +303,7 @@ namespace COTG.Views
         public static AttackCluster[] attackClusters;
         public static void BuildAttackClusters()
         {
-            var reals = targets.Where((a) => a.isAttackTypeSiege&&!a.isAttackClusterNone).ToArray();
+            var reals = targets.Where((a) => a.isAttackTypeSiege&&!a.isAttackClusterNone).OrderBy(a=>a.spatialIndex).ToArray();
             var _attackClusters = new List<AttackCluster>();
             foreach(var r in reals)
             {
@@ -299,8 +311,8 @@ namespace COTG.Views
                 var ac = new AttackCluster();
 				ac.id = i;
                 _attackClusters.Add(ac);
-                ac.targets = targets.Where((a) => a.attackCluster == i).OrderBy( a=> a.spatialIndex + (a.isAttackTypeReal? (1u<<31):0u)  ).Select((a) => a.cid).ToArray();
-				ac.attacks = attacks.Where((a) => a.attackCluster == i).OrderBy(a => (ulong)a.spatialIndex + ((ulong)a.attackType<<32) ).Select((a) => a.cid).ToArray();
+                ac.targets = targets.Where((a) => a.attackCluster == i).OrderBy( a=> (long)a.spatialIndex - ((long)a.attackType<<32)  ).Select((a) => a.cid).ToArray();
+				ac.attacks = attacks.Where((a) => a.attackCluster == i).OrderBy(a => (long)a.spatialIndex - ((long)a.attackType<<32) ).Select((a) => a.cid).ToArray();
                 if (ac.targets.Any())
                 {
                     ac.topLeft.X = ac.targets.Select(a => a.ToWorldC().X).Min() - 0.5f;
@@ -400,12 +412,15 @@ namespace COTG.Views
 
 		void DoRefresh()
 		{
-			attacks.NotifyReset();
-			targets.NotifyReset();
-			foreach (var i in attacks)
-				i.OnPropertyChanged("");
-			foreach (var i in targets)
-				i.OnPropertyChanged("");
+			App.DispatchOnUIThreadSneaky(() =>
+			{
+				attacks.NotifyReset();
+				targets.NotifyReset();
+				foreach (var i in attacks)
+					i.OnPropertyChanged("");
+				foreach (var i in targets)
+					i.OnPropertyChanged("");
+			});
 
 		}
         public async override Task VisibilityChanged(bool visible)
@@ -879,7 +894,7 @@ namespace COTG.Views
 			public Spot real;
 			public Span2 span;
 			//public uint sortKey => real!=null ? real.spatialIndex : (uint)id;
-			public bool isValid => real != null;
+			public bool isValid => real != null && category!=AttackCategory.invalid;
 			public void SetInvalid()
 			{
 				real = null;
@@ -1346,17 +1361,22 @@ namespace COTG.Views
 					{
 						if (!cluster0.isValid)
 							continue;
+					
 						for (var isAssault = 0; isAssault < 2; ++isAssault)
 						{
+							var count0 = cluster0.attackCounts[isAssault];
+							if (count0 < clusters.Where(a => a.category == cluster0.category).Max(a => a.attackCounts[isAssault]))
+								continue;
 							Spot best = null;
 							Cluster bestCluster = null;
 							float bestScore = 0;
-							var count0 = cluster0.attackCounts[isAssault];
 							foreach (var cluster1 in clusters)
 							{
 								
 								var count1 = cluster1.attackCounts[isAssault];
-								if (count1 <= count0 || cluster0.category!=cluster1.category)
+								Assert(count1 <= count0);
+
+								if (count1 >= count0 || cluster0.category!=cluster1.category)
 									continue;
 								foreach (var f0 in attacks)
 								{
@@ -1505,7 +1525,9 @@ namespace COTG.Views
 				//    }
 				//}
 				//App.CopyTextToClipboard(sb.ToString());
+
 				AttackSender_Tapped();
+				
 				return;
 			}
         }
@@ -1745,18 +1767,22 @@ namespace COTG.Views
 
 		private void SelectTargets(object sender, RoutedEventArgs e)
 		{
-			
-			foreach(var i in targets)
+			var sel = targetGrid.SelectedItems;
+			foreach (var i in targets)
 			{
 				i.SelectMe();
+				if (!sel.Contains(i))
+					sel.Add(i);
 			}
 		}
 		private void SelectAttackers(object sender, RoutedEventArgs e)
 		{
-
+			var sel = attackGrid.SelectedItems;
 			foreach (var i in attacks)
 			{
 				i.SelectMe();
+				if (!sel.Contains(i))
+					sel.Add(i);
 			}
 		}
 	}

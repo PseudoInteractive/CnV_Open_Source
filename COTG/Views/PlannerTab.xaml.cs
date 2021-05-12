@@ -309,7 +309,7 @@ namespace COTG.Views
 		}
 		public async Task Rotate(bool center, bool outer)
 		{
-			await CityBuild.SetIsPlanner(true);
+			await CityBuild._IsPlanner(true);
 			//	if (layout == null)
 			//		return;
 			var bc = buildingsCache.ToArray();
@@ -334,13 +334,13 @@ namespace COTG.Views
 
 		private async void FlipHClick(object sender, RoutedEventArgs e)
 		{
-			await CityBuild.SetIsPlanner(true);
+			await CityBuild._IsPlanner(true);
 
 			GetBuild().FlipLayoutH(App.IsKeyPressedControl());
 		}
 		private async void FlipVClick(object sender, RoutedEventArgs e)
 		{
-			await CityBuild.SetIsPlanner(true);
+			await CityBuild._IsPlanner(true);
 			GetBuild().FlipLayoutV(App.IsKeyPressedControl());
 		}
 
@@ -385,7 +385,7 @@ namespace COTG.Views
 
 		async void SmartRearrange(object _, RoutedEventArgs __)
 		{
-			await CityBuild.SetIsPlanner(true);
+			await CityBuild._IsPlanner(true);
 
 			SmartRearrange(false);
 		}
@@ -393,7 +393,7 @@ namespace COTG.Views
 		{
 			var wasPlanner = CityBuild.isPlanner;
 			if (!wasPlanner)
-				await CityBuild.SetIsPlanner(true);
+				await CityBuild._IsPlanner(true);
 		
 			var build = City.GetBuild();
 			Assert(build.isLayoutValid);
@@ -528,7 +528,7 @@ namespace COTG.Views
 			}
 			Note.Show($"Moved buildings to reduce overlaps: { CountResOverlaps(ref allowed)} overlaps remain");
 			if (wasPlanner == false && revertIsPlanner)
-				CityBuild.SetIsPlanner(false);
+				CityBuild._IsPlanner(false);
 			CityView.BuildingsOrQueueChanged();
 			
 		}
@@ -547,7 +547,7 @@ namespace COTG.Views
 		public override void Close()
 		{ 
 			base.Close();
-			CityBuild.SetIsPlanner(false);
+			CityBuild._IsPlanner(false);
 
 		}
 

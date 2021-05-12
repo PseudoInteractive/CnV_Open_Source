@@ -46,9 +46,14 @@ namespace COTG.JSON
 		const string work = "fetch incoming";
 		struct IncomingInfo
 		{
+			public Army firstArmy;
 			public int count;
 			public DateTimeOffset first;
-			public string intel;
+			internal int targetCid => firstArmy.targetCid;
+			internal int sourceCid => firstArmy.sourceCid;
+
+			public string intel =>  $"{ttNameWithCaps[firstArmy.troops.GetPrimaryTroopType()]}, {firstArmy.miscInfo}";
+
 		}
 		public static void ProcessTask() { Process(false, false); }
 		public async static Task Process(bool fetchReports, bool showNote)
@@ -93,8 +98,8 @@ namespace COTG.JSON
 					if (hasRun == false)
 						hasRun = true;
 					var watch = SettingsPage.incomingWatch;
-					IncomingInfo personalIncoming = new IncomingInfo() { count = 0, first = new DateTimeOffset(2050, 1, 1, 1, 1, 1, TimeSpan.Zero), intel = string.Empty };
-					IncomingInfo watchIncoming = new IncomingInfo() { count = 0, first = new DateTimeOffset(2050, 1, 1, 1, 1, 1, TimeSpan.Zero), intel = string.Empty };
+					IncomingInfo personalIncoming = new IncomingInfo() { count = 0, first = new DateTimeOffset(2050, 1, 1, 1, 1, 1, TimeSpan.Zero) };
+					IncomingInfo watchIncoming = new IncomingInfo() { count = 0, first = new DateTimeOffset(2050, 1, 1, 1, 1, 1, TimeSpan.Zero) };
 
 					var reportParts = new[] { new List<Army>(), new List<Army>(), new List<Army>(), new List<Army>() };
 					var reportsIncoming = new List<Army>();
@@ -381,10 +386,10 @@ namespace COTG.JSON
 												  // not sieging
 												  if (army.type == reportPending)
 												  {
-													  
+
 													  //if (source.isClassified && army.troops.Length == 1 && army.troops[0].type == ttPending)
 													  //{
-															//  army.miscInfo = COTG.Game.IncomingEstimate.Get(army);
+													  //  army.miscInfo = COTG.Game.IncomingEstimate.Get(army);
 													  //}
 													  //else
 													  {
@@ -392,22 +397,22 @@ namespace COTG.JSON
 														  source.QueueClassify(true);
 
 														  COTG.Game.IncomingEstimate.Get(army);
-														 // if (source.classification == Spot.Classification.pending)
-														 // {
-														//	  army.miscInfo = "pending " + army.miscInfo;
-														 // }
+														  // if (source.classification == Spot.Classification.pending)
+														  // {
+														  //	  army.miscInfo = "pending " + army.miscInfo;
+														  // }
 
 													  }
 												  }
 												  else
 												  {
-													 // if (!reused)
+													  // if (!reused)
 													  {
 														  if (!ttl.IsNullOrEmpty())
 														  {
 															  army.troops = ttl.ToArray();
 														  }
-														  else  
+														  else
 														  {
 															  // this will early out if its already queued
 															  source.QueueClassify(true);
@@ -418,14 +423,14 @@ namespace COTG.JSON
 													  }
 													  //else
 													  //{
-														 // // intel ready now
-														 // if (source.isClassified && army.troops.Length == 1 && army.troops[0].type == ttPending)
-														 // {
-															//  COTG.Game.IncomingEstimate.Get(army);
+													  // // intel ready now
+													  // if (source.isClassified && army.troops.Length == 1 && army.troops[0].type == ttPending)
+													  // {
+													  //  COTG.Game.IncomingEstimate.Get(army);
 
-														 // }
+													  // }
 													  //}
-													  
+
 													  {
 														  if (army.claim > 0)
 															  army.miscInfo = $"Claim {claim}%";
@@ -446,82 +451,85 @@ namespace COTG.JSON
 													  //{
 
 
-														 // if (++reportCount < 64)
-														 // {
-															//  if (await Cosmos.TryAddOrder(order))
-															//  {
-															//	  App.EnqeueTask(async () =>
-															//	  {
-															//		  try
-															//		  {
-															//			  var name = army.tPlayer;
-															//			  if (!Discord.members.TryGetValue(name.ToLower(), out var tag))
-															//				  tag = name;
-															//			  var target = Spot.GetOrAdd(army.targetCid);
-															//			  var _source = Spot.GetOrAdd(army.sourceCid);
-															//			  while (!_source.isClassified)
-															//			  {
-															//				  await Task.Delay(400);
-															//			  }
-															//			  var content = $"<@{tag}> {(army.sourceAlliance == Alliance.myId ? "internal " : "")} {army.time.FormatSkipDateIfToday()}: {_source.classificationString}, {army.miscInfo} to {target.cityName} ({target.xy}) from  {_source.cityName} ({_source.xy}) {_source.player}";
-															//			  if (army.claim > 0)
-															//			  {
-															//				  content += $" claim {army.claim}%";
-															//			  }
-															//		  //  Note.Show(content);
+													  // if (++reportCount < 64)
+													  // {
+													  //  if (await Cosmos.TryAddOrder(order))
+													  //  {
+													  //	  App.EnqeueTask(async () =>
+													  //	  {
+													  //		  try
+													  //		  {
+													  //			  var name = army.tPlayer;
+													  //			  if (!Discord.members.TryGetValue(name.ToLower(), out var tag))
+													  //				  tag = name;
+													  //			  var target = Spot.GetOrAdd(army.targetCid);
+													  //			  var _source = Spot.GetOrAdd(army.sourceCid);
+													  //			  while (!_source.isClassified)
+													  //			  {
+													  //				  await Task.Delay(400);
+													  //			  }
+													  //			  var content = $"<@{tag}> {(army.sourceAlliance == Alliance.myId ? "internal " : "")} {army.time.FormatSkipDateIfToday()}: {_source.classificationString}, {army.miscInfo} to {target.cityName} ({target.xy}) from  {_source.cityName} ({_source.xy}) {_source.player}";
+													  //			  if (army.claim > 0)
+													  //			  {
+													  //				  content += $" claim {army.claim}%";
+													  //			  }
+													  //		  //  Note.Show(content);
 
-															//		  var client = JSClient.genericClient;
+													  //		  var client = JSClient.genericClient;
 
 
-															//			  var message = new Discord.Message() { username = "INCOMING", content = content, avatar_url = "" };
-															//			  for (int i = 0; i < 4; ++i) // retry up to 4 times;
-															//		  {
+													  //			  var message = new Discord.Message() { username = "INCOMING", content = content, avatar_url = "" };
+													  //			  for (int i = 0; i < 4; ++i) // retry up to 4 times;
+													  //		  {
 
-															//				  var post = new HttpStringContent(
-															//								JsonSerializer.Serialize(message), Windows.Storage.Streams.UnicodeEncoding.Utf8,
-															//								 "application/json");
+													  //				  var post = new HttpStringContent(
+													  //								JsonSerializer.Serialize(message), Windows.Storage.Streams.UnicodeEncoding.Utf8,
+													  //								 "application/json");
 
-															//				  var result = await client.PostAsync(Discord.discordIncomingHook, post);
-															//				  if (result.StatusCode == HttpStatusCode.TooManyRequests)
-															//				  {
-															//					  await Task.Delay(2000); // wait 2 seconds
-															//			  }
-															//				  else
-															//				  {
-															//					  result.EnsureSuccessStatusCode();
-															//					  break;
-															//				  }
-															//			  }
-															//		  }
-															//		  catch (Exception ex)
-															//		  {
-															//			  Log(ex);
-															//		  }
-															//	  });
-															//  }
-														 // }
+													  //				  var result = await client.PostAsync(Discord.discordIncomingHook, post);
+													  //				  if (result.StatusCode == HttpStatusCode.TooManyRequests)
+													  //				  {
+													  //					  await Task.Delay(2000); // wait 2 seconds
+													  //			  }
+													  //				  else
+													  //				  {
+													  //					  result.EnsureSuccessStatusCode();
+													  //					  break;
+													  //				  }
+													  //			  }
+													  //		  }
+													  //		  catch (Exception ex)
+													  //		  {
+													  //			  Log(ex);
+													  //		  }
+													  //	  });
+													  //  }
+													  // }
 
 
 													  //}
 
 												  }
-												  if (watch.Contains(name) && army.targetAlliance != army.sourceAlliance)
+												  if (!Alliance.IsAlly(army.sourceAlliance)  )
 												  {
-													  watchIncoming.count++;
-													  if (army.time < watchIncoming.first)
+													  if (watch.Contains(name)  )
 													  {
-														  watchIncoming.first = army.time;
-														  watchIncoming.intel = $"{ttNameWithCaps[army.troops.GetPrimaryTroopType()]}, {army.miscInfo}";
+														  watchIncoming.count++;
+														  if (army.time < watchIncoming.first)
+														  {
+															  watchIncoming.first = army.time;
+															  watchIncoming.firstArmy = army;
+														  }
 													  }
-												  }
-												  if (spot.pid == Player.myId)
-												  {
-													  if (army.time < personalIncoming.first)
+													  if (spot.pid == Player.myId)
 													  {
-														  personalIncoming.first = army.time;
-														  personalIncoming.intel = $"{ttNameWithCaps[army.troops.GetPrimaryTroopType()]}, {army.miscInfo}";
+														  if (army.time < personalIncoming.first)
+														  {
+															  personalIncoming.first = army.time;
+															  personalIncoming.firstArmy = army;
+														  }
+														  ++personalIncoming.count;
 													  }
-													  ++personalIncoming.count;
 												  }
 
 
@@ -829,9 +837,9 @@ namespace COTG.JSON
 								string note = "Incoming";
 
 								if (personalIncoming.count != 0)
-									note += $"{personalIncoming.first.FormatDefault()} first: {personalIncoming.intel}";
+									note += $" {personalIncoming.targetCid.CidToContinent()} {personalIncoming.first.FormatSkipDateIfToday()} first: {personalIncoming.intel} to {City.Get(personalIncoming.targetCid).nameAndRemarks} from {Player.IdToName(personalIncoming.sourceCid.CidToPid())}";
 								if (watchIncoming.count != 0)
-									note += $"(watched {watchIncoming.first.FormatDefault()} first: {watchIncoming.intel})";
+									note += $" (watched {watchIncoming.targetCid.CidToContinent()}  {watchIncoming.first.FormatSkipDateIfToday()} first: {watchIncoming.intel}) to {City.Get(watchIncoming.targetCid).nameAndRemarks} from {Player.IdToName(watchIncoming.sourceCid.CidToPid())}";
 
 								if (lastPersonalIncomingCount < personalIncoming.count || lastWatchIncomingCount < watchIncoming.count)
 								{

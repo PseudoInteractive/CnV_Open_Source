@@ -75,7 +75,7 @@ namespace COTG.Game
 	{
 		// key is lastUpdated.Date
 		public static ResetableCollection<HeatMapDay> days = new() ;
-		public ResetableCollection<HeatMapDelta> deltas { get; set; } = ResetableCollection<HeatMapDelta>.empty; // only valid in heatMapDay
+		public ResetableCollection<HeatMapDelta> deltas { get; set; } = new(); //  ResetableCollection<HeatMapDelta>.empty; // only valid in heatMapDay
 
 		public HeatMapDay(SmallTime t) : base(t)
 		{
@@ -173,7 +173,7 @@ namespace COTG.Game
 					for (int i = 0; i < dCount; ++i)
 					{
 						var d = deltas[i];
-
+						Assert(d.t.Date() == this.t.Date());
 						o.Write(d.t);
 						o.WritePackedUints(d.changes.Span);
 					}
@@ -202,11 +202,17 @@ namespace COTG.Game
 					{
 						var t = r.ReadSmallTime();
 						var ds = r.ReadPackedUints();
-
-						deltas.Add(new HeatMapDelta(t, ds));
+						if (t.Date() == this.t.Date())
+						{
+							deltas.Add(new HeatMapDelta(t, ds));
+						}
+						else
+						{
+							Log($"Invalid Delta {t}");
+						}
 
 					}
-	//				deltas.NotifyReset();
+					deltas.NotifyReset();
 				}
 				//NotifyChange();
 			}
@@ -241,7 +247,7 @@ namespace COTG.Game
 				// only create a snapshot of there is enought space
 				if (delta.Length < HeatMap.minDeltasPerSnapshot * 2)
 				{
-					Trace("Ignoring small delta");
+				//	Trace("Ignoring small delta");
 					newSnap.Dispose();
 					return false;
 				}
@@ -698,7 +704,7 @@ namespace COTG.Game
 		}
 	}
 
-	struct ChangeInfo
+	public struct ChangeInfo
 	{
 		public byte allianceCaptures;
 		public byte allianceLosses;
@@ -754,6 +760,10 @@ namespace COTG.Game
 			return sb.ToString();
 		}
 
+		public static bool includeCastle = false;
+		public static bool includeSettle = false;
+		public static bool includeFlatten = false;
+
 		public static string GetChangeDesc(uint v0, uint v1)
 		{
 			if (v0 == v1)
@@ -804,6 +814,9 @@ namespace COTG.Game
 							return $"{Player.IdToName(player1)} speed built";
 						else if (isCastle1)
 							return $"{Player.IdToName(player1)} fast castle";
+						else if(includeSettle)
+							return $"{Player.IdToName(player1)} settled city";
+
 					}
 					else
 					{
@@ -826,13 +839,13 @@ namespace COTG.Game
 				if (isBig0 != isBig1 && isBig0)
 				{
 					if (isCastle0 && player0 != 0 && player1 != 0)
-						return null;// return $"{Player.IdToName(player1)} was flattened";
+						return includeFlatten ? $"{Player.IdToName(player1)} was flattened" : null;
 				}
 				if (isCastle0 != isCastle1)
 				{
 					if (isCastle1)
 					{
-						return null;// return $"{Player.IdToName(player1)} castled";
+						return includeCastle ? $"{Player.IdToName(player1)} castled" : null;
 					}
 				}
 			}

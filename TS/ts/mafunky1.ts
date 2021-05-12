@@ -330,6 +330,12 @@ function Aimp(str) {
 		$("#t" + i + "y").val(Aexp.y[i - 1]);
 		$("#type" + i).val(Aexp.type[i - 1]).change();
 	}
+	
+	if (Aexp.hasOwnProperty("command"))
+	{
+		$("#realtype").val( Number(Aexp['command'] == "Assault" ? 0 : 1) );
+	}
+
 	$("#attackHr").val(Aexp.time[0]);
 	$("#attackMin").val(Aexp.time[1]);
 	$("#attackSec").val(Aexp.time[2]);

@@ -61,7 +61,7 @@ namespace COTG.Views
 		public static async Task ResetAllChangeDescriptions()
 		{
 			// invalidate
-			lastSelHash = 0;
+			//lastSelHash = 0;
 			using var _ = await HeatMap.mutex.LockAsync();
 			
 			foreach (var day in HeatMapDay.days)
@@ -87,7 +87,7 @@ namespace COTG.Views
 		static bool listLoaded = false;
 		override public async Task VisibilityChanged(bool visible)
 		{
-			tabVisible = visible;
+		//	tabVisible = visible;
 		
 			if (visible)
 			{
@@ -100,8 +100,8 @@ namespace COTG.Views
 				await ResetAllChangeDescriptions();
 				DaysChanged();
 				
-				if (!callbackRunning)
-					CheckSelectionChanged();
+			//	if (!callbackRunning)
+			//		CheckSelectionChanged();
 			}
 			else
 			{
@@ -111,59 +111,60 @@ namespace COTG.Views
 
 		}
 
-		static bool tabVisible;
-		static bool callbackRunning;
-		static int lastSelHash;
-		static int ComputeHash(IList<TreeViewNode> nodes)
-		{
-			int rv = 0;
-			foreach (var n in nodes)
-			{
-				var o = n.Content as HeatMapItem;
-				rv += o.GetHashCode();
-			}
-			return rv;
-		}
-		
-		public async void CheckSelectionChanged()
-		{
-			Assert(callbackRunning == false);
-			callbackRunning = true;
-			try
-			{
-				for (; ; )
+		/*		static bool tabVisible;
+				static bool callbackRunning;
+				static int lastSelHash;
+				static int ComputeHash(IList<TreeViewNode> nodes)
 				{
-					await App.DispatchOnUIThreadTask(() =>
-				   {
-					   if (zoom.SelectedNodes != null)
-					   {
-						   var hash = ComputeHash(zoom.SelectedNodes);
-						   if (hash != lastSelHash)
-						   {
-							   lastSelHash = hash;
-							   SelectionChanged();
-						   }
-					   }
-					   return Task.CompletedTask;
-
-				   });
-					await Task.Delay(500);
-					if (!tabVisible)
-						break;
+					int rv = 0;
+					foreach (var n in nodes)
+					{
+						var o = n.Content as HeatMapItem;
+						rv += o.GetHashCode();
+					}
+					return rv;
 				}
-			}
-			finally
-			{
-				callbackRunning = false;
-			}
-		}
+				*/
+		//public async void CheckSelectionChanged()
+		//{
+		//	Assert(callbackRunning == false);
+		//	callbackRunning = true;
+		//	try
+		//	{
+		//		for (; ; )
+		//		{
+		//			await App.DispatchOnUIThreadTask(() =>
+		//		   {
+		//			   if (zoom.SelectedNodes != null)
+		//			   {
+		//				   var hash = ComputeHash(zoom.SelectedNodes);
+		//				   if (hash != lastSelHash)
+		//				   {
+		//					   lastSelHash = hash;
+		//					   SelectionChanged();
+		//				   }
+		//			   }
+		//			   return Task.CompletedTask;
 
-		public void SelectionChanged()
+		//		   });
+		//			await Task.Delay(500);
+		//			if (!tabVisible)
+		//				break;
+		//		}
+		//	}
+		//	finally
+		//	{
+		//		callbackRunning = false;
+		//	}
+		//}
+
+		public async void SelectionChanged()
 		{
 
 			var t1 = SmallTime.zero;
 			var t0 = SmallTime.serverNow;
-			var sel = zoom.SelectedNodes;
+			await App.DispatchOnUIThreadTask(() => { 
+		   var sel = zoom.SelectedNodes;
 			if (sel != null && sel.Count > 0)
 			{
 				foreach (var i in sel)
@@ -176,12 +177,16 @@ namespace COTG.Views
 					if (t > t1)
 						t1 = t;
 				}
-				if (t1.seconds != 0)
-				{
-					World.SetHeatmapDates(t0, t1); // Is Timezone Right?
-					return;
-				}
 			}
+			return Task.CompletedTask;
+		});
+
+			if (t1.seconds != 0)
+			{
+				World.SetHeatmapDates(t0, t1); // Is Timezone Right?
+				return;
+			}
+			
 
 			World.ClearHeatmap();
 			App.DispatchOnUIThreadSneaky(() =>
@@ -194,15 +199,15 @@ namespace COTG.Views
 		   });
 		}
 
-		private void snapshots_PointerEntered(object sender, PointerRoutedEventArgs e)
-		{
-		//	listView.Focus(FocusState.Programmatic);
-		}
+		//private void snapshots_PointerEntered(object sender, PointerRoutedEventArgs e)
+		//{
+		////	listView.Focus(FocusState.Programmatic);
+		//}
 
-		private void List_GotFocus(object sender, RoutedEventArgs e)
-		{
-		//	snapshots_SelectionChanged(null, null);
-		}
+		//private void List_GotFocus(object sender, RoutedEventArgs e)
+		//{
+		////	snapshots_SelectionChanged(null, null);
+		//}
 
 		static TreeViewNode FindTreeViewNode(HeatMapItem content) => FindTreeViewNode(instance.zoom.RootNodes, content);
 
@@ -227,7 +232,7 @@ namespace COTG.Views
 			return null;
 		}
 		static int deltaOffset;
-		private async void zoom_ItemInvoked(TreeView sender, TreeViewItemInvokedEventArgs args)
+		private void zoom_ItemInvoked(TreeView sender, TreeViewItemInvokedEventArgs args)
 		{
 			args.Handled = true;
 			var item = args.InvokedItem as HeatMapItem;
@@ -310,9 +315,13 @@ namespace COTG.Views
 			Trace($"Key:  {sender} {e}");
 		}
 
+		Action selChanged;
+
 		private void zoom_SelectionChanged(TreeView sender, TreeViewSelectionChangedEventArgs args)
 		{
-
+			if(selChanged == null)
+				selChanged = AUtil.Debounce(SelectionChanged, 300,1000);
+			selChanged();
 		}
 
 		//private void TreeViewItem_Tapped(object sender, TappedRoutedEventArgs e)

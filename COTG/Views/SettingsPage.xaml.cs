@@ -56,6 +56,7 @@ namespace COTG.Views
 		public static string hubCitylistName = "Hubs";
 		public static int reqWood = 160000;
 		public static int reqStone = 205000;
+		public static float returnRaidsBias = 1.0f;
 		public static bool setShareString = true;
 		public static bool autoBuildCabins = true;
 		public static bool autoRearrangeShareStrings= true;
@@ -158,6 +159,16 @@ namespace COTG.Views
 
 		public static bool cartsAreForRequests = false;
 		public static string[] incomingWatch = Array.Empty<string>();
+		public static string exportAllianceMask = string.Empty;
+		public static byte exportOffence;
+		public static byte exportWater;
+		public static byte exportCastles;
+		public static bool? exportTemples;
+		public static bool? exportHeaders = true;
+		public static bool? exportScore;
+		public static byte exportWho;
+
+
 		public static int mruSize = 32;
 		public static int[] pinned = Array.Empty<int>();
 		public static int showAttacksLimit = 100;
@@ -721,7 +732,7 @@ namespace COTG.Views
 				var cont = (int)CastlesCont.Value;
 				var y = cont / 10;
 				var x = cont - y * 10;
-				World.DumpCities(x * 100, y * 100, (x + 1) * 100, (y + 1) * 100, CastlesAlliance.Text, onlyCastles.IsChecked.GetValueOrDefault(), this.onlyWater.IsChecked.GetValueOrDefault());
+				World.DumpCities(x * 100, y * 100, (x + 1) * 100, (y + 1) * 100, exportAllianceMask, onlyCastles.IsChecked.GetValueOrDefault(), this.onlyWater.IsChecked.GetValueOrDefault());
 			}
 			this.Hide();
 		}

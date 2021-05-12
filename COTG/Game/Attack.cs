@@ -76,7 +76,7 @@ namespace COTG.Game
 		public static AttackComboType[] sourceTypes = { new AttackComboType(AttackType.none, "None"),
 			new AttackComboType(AttackType.senator, "Senator"),
 			new AttackComboType(AttackType.se, "SE"),
-			new AttackComboType(AttackType.assault, "Assult")
+			new AttackComboType(AttackType.assault, "Assault")
 		 };
 	}
 
@@ -96,7 +96,7 @@ namespace COTG.Game
 		public List<int> x { get; set; }
 		public List<int> y { get; set; }
 		public List<int> type { get; set; }
-		public List<string> commands { get; set; }
+		public string command { get; set; }
 		public string[] time { get; set; }
 		/*	"x": [
 				"282",
@@ -125,8 +125,9 @@ namespace COTG.Game
 		public static bool IsTargetSE(this AttackType a) => a == AttackType.se || a == AttackType.seFake;
 		public static bool IsTargetSenator(this AttackType a) => a == AttackType.senator || a == AttackType.senatorFake;
 		public static bool IsTargetFake(this AttackType a) => a == AttackType.senatorFake || a == AttackType.seFake;
-		public static bool IsTargetReal(this AttackType a) => !IsTargetFake(a);
-		public static AttackCategory GetCategory(this AttackType a) => IsTargetSE(a) ? AttackCategory.se : AttackCategory.senator;
+		public static bool IsTargetReal(this AttackType a) => IsTargetNone(a) ? false :!IsTargetFake(a);
+		public static bool IsTargetNone(this AttackType a) => a == AttackType.none||a==AttackType.invalid;
+		public static AttackCategory GetCategory(this AttackType a) => IsTargetNone(a) ? AttackCategory.invalid : IsTargetSE(a) ? AttackCategory.se :  AttackCategory.senator;
 		public static int Value(this AttackType a) => (int)a;
 		public static int Value(this AttackCategory a) => (int)a;
 	};

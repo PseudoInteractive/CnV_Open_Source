@@ -98,7 +98,7 @@
 										FontFamily="Tw Cen MT Condensed"
 									  IsTextScaleFactorEnabled="False"
 										 
-									  Click="ContinentFilterClick"
+									  Click="{x:Bind views:ShellPage.ContinentFilterClick}"
 									  Style="{ThemeResource DropDownButtonRevealStyle}"
 									 ToolTipService.ToolTip="Yet another Continent filter.  Uncheck all to show everything"  />
 

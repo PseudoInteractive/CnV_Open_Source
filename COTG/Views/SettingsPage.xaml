@@ -121,7 +121,12 @@
 									 SmallChange="1"
 									 LargeChange="5"
 									 Style="{StaticResource NumberBoxSmall}" />
-
+				<controls:NumberBox Header="Return Raids Offset"
+									 Value="{x:Bind views:SettingsPage.returnRaidsBias,Mode=TwoWay}"
+									 SmallChange="0.125"
+									ToolTipService.ToolTip="When attacks are scheduled and raids are set to return before departure, the time at which they have to be home is depatureTime - ReturnRaidsOffset (in hours)"
+									 LargeChange="1"
+									 Style="{StaticResource NumberBoxSmall}" />
 
 				<ToggleSwitch  Header="Build Queue"
 							   IsOn="{x:Bind views:SettingsPage.extendedBuild, Mode=TwoWay}" ToolTipService.ToolTip="Unlimited is required for 'Do the stuff', only set this to 'normal' if you are running into build queue issues"
@@ -137,7 +142,7 @@
 
 				<Button Content="Export for War"
 						Click="{x:Bind views:ExportCastles.Go}"
-						ToolTipService.ToolTip="Exports cities/castles in a spreadshee format based on filters"
+						ToolTipService.ToolTip="Exports cities/castles in a spreadsheet format based on filters"
 						Style="{ThemeResource ButtonRevealStyle}"
 						Margin="4" />
 				<Button Content="Export Castles"
@@ -150,9 +155,9 @@
 									Header="Continent"
 									PlaceholderText="i.e. 22 34"
 									Value="22" />
-				<TextBox x:Name="CastlesAlliance"
-						 Text="Unidos"
-						 Header="alliance" />
+				<TextBox  ToolTipService.ToolTip="If not empty, only alliances containing this substring will be exported"
+							Text="{x:Bind views:SettingsPage.exportAllianceMask}"
+						 Header="alliance mask" />
 				<CheckBox x:Name="onlyCastles"
 						  Content="Only Castles"
 						  IsChecked="True"

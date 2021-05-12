@@ -208,7 +208,7 @@ namespace COTG.Services
 					Assert(false);
 					await Task.Delay(128);
 				}
-				HttpResponseMessage resp;
+//				HttpResponseMessage resp;
 				using (var req = new HttpRequestMessage(HttpMethod.Post, new Uri(JSClient.httpsHost, localPath)))
 				{
 					req.Content = new HttpStringContent(postContent,
@@ -223,26 +223,22 @@ namespace COTG.Services
 					//    req.Headers.Append("Sec-Fetch-Dest", "empty");
 
 
-					resp = await client.SendRequestAsync(req, HttpCompletionOption.ResponseContentRead);
+					var resp = await client.SendRequestAsync(req, HttpCompletionOption.ResponseContentRead);
 					//     Log($"res: {resp.GetType()} {resp.Succeeded} {resp}");
 					//     Log($"req: {resp.RequestMessage.ToString()}");
 					//   if (resp.ExtendedError != null)
 					//      Log(resp.ExtendedError);
+					if (resp != null)
+					{
+						return resp;
+						//var b = await resp.Content.ReadAsInputStreamAsync();
+
+						//                    jso = await JsonDocument.ParseAsync(b.ToString);
+
+						// Log(b.ToString());
+					}
 				}
 
-				if (resp != null)
-				{
-					return resp;
-					//var b = await resp.Content.ReadAsInputStreamAsync();
-
-					//                    jso = await JsonDocument.ParseAsync(b.ToString);
-
-					// Log(b.ToString());
-				}
-				else
-				{
-
-				}
 
 			}
 			catch (Exception e)

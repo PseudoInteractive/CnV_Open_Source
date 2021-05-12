@@ -1,4 +1,5 @@
 ﻿using COTG.Services;
+using COTG.Views;
 
 using System;
 using System.Collections.Generic;
@@ -21,7 +22,7 @@ namespace COTG.Game
 
         public long order;
         public TroopTypeCount[] troops = TroopTypeCount.empty;
-        static async void Return(long order)
+        static async Task Return(long order)
         {
             await Post.Send("overview/reinreca.php", "a=" + order, pid);
             await Task.Delay(1000);
@@ -82,23 +83,30 @@ namespace COTG.Game
 			};
 			msg.CopyXamlRoomFrom(uie);
 			var result = await msg.ShowAsync2();
-            if (result == ContentDialogResult.Primary)
-            {
-                int counter = 0;
-                foreach(var check in panel.Children)
-                {
-                    if (!(check is CheckBox c))
-                        continue;
-                    if(c.IsChecked.GetValueOrDefault())
-                    {
-                        Return( orders[counter]);
-                        await Task.Delay(400);
-                    }
+			if (result == ContentDialogResult.Primary)
+			{
+				ShellPage.WorkStart("Return..");
+				int counter = 0;
+				foreach (var check in panel.Children)
+				{
+					if (!(check is CheckBox c))
+						continue;
+					if (c.IsChecked.GetValueOrDefault())
+					{
+						await Return(orders[counter]);
+					}
 
-                    ++counter;
-                }
-            }
-        }
+					++counter;
+					ShellPage.WorkUpdate($"Return.. {counter}");
+				}
+				if (counter > 0)
+				{
+					await Task.Delay(400);
+					Services.ReinforcementsOverview.instance.Post();
+				}
+				ShellPage.WorkEnd("Return..");
+			}
+		}
     }
     public static class ReinforcementHelper
     {

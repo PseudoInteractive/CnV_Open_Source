@@ -308,10 +308,10 @@ namespace COTG.Views
 
 					//	supportGrid.ItemsSource = supporters;
 
-					RefreshSupportByRes();
 				}
 				App.DispatchOnUIThreadSneakyLow(() =>
 				{
+					RefreshSupportByRes();
 					OnPropertyChanged(nameof(targetIcon));
 					OnPropertyChanged(nameof(targetName));
 				});

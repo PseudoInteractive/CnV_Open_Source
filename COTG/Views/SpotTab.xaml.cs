@@ -251,6 +251,7 @@ namespace COTG.Views
         {
 			if(!loaded)
 			{
+				
 				loaded = true;
 				SettingsPage.pinned = SettingsPage.pinned.ArrayRemoveDuplicates();
 

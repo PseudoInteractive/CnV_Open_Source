@@ -606,7 +606,7 @@ namespace COTG.Views
 		 * 			<AppBarToggleButton x:Name="planner" Checked="PlannerChecked" Unchecked="PlannerUnchecked"  x:FieldModifier="public" Icon="Orientation" Label="Planner"
                            ToolTipService.ToolTip="Toggles between normal city building and planner mode (i.e. like LOUOpt.com" />
 		 */
-		public static async Task SetIsPlanner(bool value, bool showPlannerIfNeeded=false)
+		public static async Task _IsPlanner(bool value, bool showPlannerIfNeeded=false)
 		{
 				if (isPlanner == value)
 					return;
@@ -2009,13 +2009,13 @@ namespace COTG.Views
 		{
 			if (CityBuild.isPlanner)
 			{
-				await CityBuild.SetIsPlanner(false,false);
+				await CityBuild._IsPlanner(false,false);
 			}
 			else
 			{
 				if (!GetBuild().isLayoutValid)
 					await ShareString.Show(City.build);
-				await CityBuild.SetIsPlanner(true, true);
+				await CityBuild._IsPlanner(true, true);
 			
 			}
 		}

@@ -18,12 +18,28 @@
 
 	<StackPanel>
 
-		<TextBlock Text="You can use the Continent filter to specify which continents to export - one day I'll add it here" />
+		<TextBlock Text="Warning: Setting the Continent filter changes the global setting in the 'Cont' dropdown up top" />
 
 		<wct:WrapPanel Orientation="Horizontal"
 						   Margin="4">
 
-			<ComboBox Header="Which" x:Name="who" SelectedIndex="0"  >
+			<winui:DropDownButton x:Name="ContinentFilter" x:FieldModifier="public"
+									  Content="Continent"
+									  Margin="2"
+									  FontSize="{StaticResource MediumFontSize}"
+										FontFamily="Tw Cen MT Condensed"
+									  IsTextScaleFactorEnabled="False"
+										 
+									  Click="{x:Bind views:ShellPage.ContinentFilterClick}"
+									  Style="{ThemeResource DropDownButtonRevealStyle}"
+									 ToolTipService.ToolTip="Yet another Continent filter.  Uncheck all to show everything"  />
+
+			
+			<TextBox  ToolTipService.ToolTip="If not empty, only alliances containing this substring will be exported"
+							Text="{x:Bind views:SettingsPage.exportAllianceMask}"
+						 Header="Alliance Mask" />
+			
+			<ComboBox Header="Which"  SelectedIndex="{x:Bind views:SettingsPage.exportWho, Mode=TwoWay}"  >
 				<x:String>Mine</x:String>
 				<x:String>Alliance</x:String>
 				<x:String>Enemies</x:String>
@@ -32,38 +48,42 @@
 				<x:String>Unallied</x:String>
 				<x:String>All</x:String>
 			</ComboBox>
-			
-			<CheckBox x:Name="offence"
-			  ToolTipService.ToolTip="Checked: offensive castles are exported, Unchecked: defensive cities, otherwise both"
-									Content="Offense"
-									IsThreeState="True"
-									IsChecked="True" />
-			<CheckBox x:Name="castles"
-			  ToolTipService.ToolTip="If checked, castles are exported, if off cities, if in between both"
-									Content="Castles"
-			  IsThreeState="True"
-									IsChecked="True" />
-			<CheckBox x:Name="water"
-			  ToolTipService.ToolTip="If checked, cities on water are exported, if off only land cities are exported, otherwise both"
-									Content="Water"
-			  IsThreeState="True"
-									IsChecked="{x:Null}" />
+
+
+			<ComboBox Header="Off or Def" SelectedIndex="{x:Bind views:SettingsPage.exportOffence, Mode=TwoWay}"  >
+				<x:String>Any</x:String>
+				<x:String>Offense</x:String>
+				<x:String>Defense</x:String>
+			</ComboBox>
+
+			<ComboBox Header="Castles" SelectedIndex="{x:Bind views:SettingsPage.exportCastles, Mode=TwoWay}"  >
+				<x:String>Any</x:String>
+				<x:String>Castles</x:String>
+				<x:String>Cities</x:String>
+			</ComboBox>
+
+			<ComboBox Header="Water" SelectedIndex="{x:Bind views:SettingsPage.exportWater, Mode=TwoWay}"  >
+				<x:String>Any</x:String>
+				<x:String>Water</x:String>
+				<x:String>Land Locked</x:String>
+			</ComboBox>
+
 
 			<CheckBox x:Name="temples"
 			  ToolTipService.ToolTip="Checked: temples, Unchecked: non temples, in between: both"
 									Content="Temples"
 			  IsThreeState="True"
-									IsChecked="{x:Null}" />
+									IsChecked="{x:Bind views:SettingsPage.exportTemples, Mode=TwoWay}" />
 
 			<CheckBox x:Name="score"
 			  ToolTipService.ToolTip="If checked, score is output for each castle (slower)"
-									Content="Score"
-			  					IsChecked="False" />
+								Content="Score"
+			  					IsChecked="{x:Bind views:SettingsPage.exportScore, Mode=TwoWay}"  />
 			<CheckBox x:Name="headers"
 			  ToolTipService.ToolTip="Checked: a header row is output, Checked or Slightly Checked: group rows are output"
-									Content="Headers"
-					  IsThreeState="True"
-			  					IsChecked="False" />
+								Content="Headers"
+								IsThreeState="True"
+								IsChecked="{x:Bind views:SettingsPage.exportHeaders, Mode=TwoWay}"  />
 	
 
 		</wct:WrapPanel>

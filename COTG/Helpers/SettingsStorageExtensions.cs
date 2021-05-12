@@ -122,14 +122,18 @@ namespace COTG.Helpers
 					}
 					else if (t == typeof(Nullable<bool>) )
                     {
-                            bool? rv = (int)o switch { 0 => false, 1 => true, _ => null };
-                            return rv;
+                        bool? rv = (int)o switch { 0 => false, 1 => true, _ => null };
+                       return rv;
                     }
                     if (o is string && t != typeof(string))
                         return JsonSerializer.Deserialize((string)o, t);
                     else
                         return o;
                 }
+				else
+				{
+
+				}
             }
             catch (Exception e) // not stored properly
             {

@@ -182,8 +182,8 @@ function GetAttackTime(source:string) : Date {
 				let fields = info.substr(tomorrow + 9).split(":");
 
 
-				let rv = new Date(ServerDate.getTime());
-				rv.setDate( rv.getDate()+1 );
+				let rv = new Date(ServerDate.getTime()+24*60*60*1000);
+				//rv.setDate( rv.getDate()+1 );
 				rv.setHours(parseInt(fields[0]), parseInt(fields[1]), parseInt(fields[2]), 0);
 				return rv;
 

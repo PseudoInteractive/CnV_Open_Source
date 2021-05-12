@@ -1717,7 +1717,7 @@ namespace COTG
 													Assert(false);
 												}
 											}
-											if (wantDetails || showAll|| Spot.IsSelectedOrHovered(targetCid, noneIsAll))
+											if (!IsCulled(c1)&&((wantDetails || showAll|| Spot.IsSelectedOrHovered(targetCid, noneIsAll))  ))
 											{
 												DrawTextBox($"{incAttacks}`{city.claim.ToString("00")}%`{(incTs + 500) / 1000}k\n{ (city.tsDefMax + 500) / 1000 }k",
 														c1, tipTextFormatCentered, incAttacks != 0 ? Color.White : Color.Cyan, textBackgroundOpacity, Layer.tileText);
@@ -1736,11 +1736,11 @@ namespace COTG
 										{
 											var targetCid = city.cid;
 											var c1 = targetCid.CidToCamera();
-											if (IsCulled(c1, cullSlopSpace))  // this is in pixel space - Should be normalized for screen resolution or world space (1 continent?)
+											if (IsCulled(c1))  // this is in pixel space - Should be normalized for screen resolution or world space (1 continent?)
 												continue;
 											if (wantDetails || Spot.IsSelectedOrHovered(targetCid, true))
 											{
-												DrawTextBox($"{city.reinforcementsIn.Length},{(city.tsDefMax.Max(city.tsHome) + 500) / 1000 }k", c1, tipTextFormatCentered, Color.Cyan, textBackgroundOpacity, Layer.tileText);
+												DrawTextBox($"{(city.tsDefMax.Max(city.tsHome) + 500) / 1000 }k Ts (#:{city.reinforcementsIn.Length})", c1, tipTextFormatCentered, Color.Cyan, textBackgroundOpacity, Layer.tileText);
 											}
 
 										}

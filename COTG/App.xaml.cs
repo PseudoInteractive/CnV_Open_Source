@@ -709,7 +709,7 @@ namespace COTG
 			}
 			try
 			{
-				if (!await JSClient.CitySwitch(cid, false, true, true, true))
+				if (!await JSClient.CitySwitch(cid, isLocked:true))
 					throw new UIException("Sema");
 				City.lockedBuild = cid;
 			}

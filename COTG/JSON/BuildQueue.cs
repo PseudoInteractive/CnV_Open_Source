@@ -1019,6 +1019,12 @@ namespace COTG.JSON
 		}
 		public static async void Initialize()
 		{
+			
+			while (!World.initialized)
+			{
+				await Task.Delay(500);
+			}
+
 			if (initialized)
 			{
 				Assert(false);

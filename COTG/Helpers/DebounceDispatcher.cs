@@ -11,12 +11,16 @@ namespace COTG
 {
 	public static partial class AUtil
 	{ 
-		public static Action Debounce(this Action func, int milliseconds = 300)
+		public static Action Debounce(this Action func, int milliseconds = 300, int minTimeToNextCall = 300)
 		{
 			CancellationTokenSource cancelTokenSource = null;
+			DateTimeOffset nextCall = default;
 
 			return () =>
 			{
+				if (DateTimeOffset.UtcNow <= nextCall)
+					return;
+
 				cancelTokenSource?.Cancel();
 				cancelTokenSource = new CancellationTokenSource();
 
@@ -25,17 +29,20 @@ namespace COTG
 					{
 						if (t.IsCompletedSuccessfully)
 						{
+							nextCall = DateTimeOffset.UtcNow + TimeSpan.FromMilliseconds(minTimeToNextCall);
 							func();
 						}
 					}, TaskScheduler.Default);
 			};
 		}
-		public static Action DebounceUI(this DispatchedHandler func, int milliseconds = 300)
+		public static Action DebounceUI(this DispatchedHandler func, int milliseconds = 300, int minTimeToNextCall = 300)
 		{
 			CancellationTokenSource cancelTokenSource = null;
-
+			DateTimeOffset nextCall = default;
 			return () =>
 			{
+				if (DateTimeOffset.UtcNow <= nextCall)
+					return;
 				cancelTokenSource?.Cancel();
 				cancelTokenSource = new CancellationTokenSource();
 
@@ -44,6 +51,7 @@ namespace COTG
 					{
 						if (t.IsCompletedSuccessfully)
 						{
+							nextCall = DateTimeOffset.UtcNow + TimeSpan.FromMilliseconds(minTimeToNextCall);
 							App.DispatchOnUIThreadSneaky( func);
 						}
 					}, TaskScheduler.Default);

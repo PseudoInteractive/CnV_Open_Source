@@ -709,7 +709,7 @@ namespace COTG
 		//    }
 		//}
 
-		public static async Task<bool> CitySwitch(int cityId, bool lazyMove, bool select = true, bool scrollIntoUI = true, bool isLocked=false)
+		public static async Task<bool> CitySwitch(int cityId, bool lazyMove=false, bool select = true, bool scrollIntoUI = true, bool isLocked=false, bool waitOnChange = false)
 		{
 			// Make sure we don't ignore the exception
 			{
@@ -735,7 +735,7 @@ namespace COTG
 						var changed = await city.SetBuildInternal(scrollIntoUI,true, isLocked);
 						if (changed)
 						{
-							if (isLocked)
+							if (isLocked || waitOnChange)
 								await ChangeCityJSWait(cityId);
 							else
 								ChangeCityJS(cityId);
@@ -785,7 +785,7 @@ namespace COTG
 					});
 				var p = JsonSerializer.Deserialize<AttackSenderScript>(cmd);
 				await Task.Delay(500);
-				await CitySwitch(p.cid, true);
+				await CitySwitch(p.cid, false);
 			}
 			catch (Exception e)
 			{
@@ -1406,7 +1406,7 @@ namespace COTG
 					ppdtInitialized = true;
 
 					//Task.Delay(500).ContinueWith( _ => App.DispatchOnUIThreadSneakyLow( MainPage.instance.Refresh));
-					App.DispatchOnUIThreadSneakyLow(ShellPage.RefreshTabs);
+					App.DispatchOnUIThreadSneakyLow(ShellPage._RefreshTabs);
 				}
 				
 				//    Log(City.all.ToString());
@@ -1512,8 +1512,8 @@ namespace COTG
 						httpFilter.AllowAutoRedirect = true;
 						//                         httpFilter.ServerCredential =
 
-
-						//  httpFilter.ServerCustomValidationRequested += HttpFilter_ServerCustomValidationRequested;
+						httpFilter.MaxConnectionsPerServer = 10;
+							//  httpFilter.ServerCustomValidationRequested += HttpFilter_ServerCustomValidationRequested;
 							httpFilter.CacheControl.ReadBehavior = HttpCacheReadBehavior.NoCache;
 							httpFilter.CacheControl.WriteBehavior = HttpCacheWriteBehavior.NoCache;
 						//						if (subId == 0)
@@ -1820,6 +1820,7 @@ namespace COTG
 								   if (Player.isAvatarOrTest)
 									   Raid.test = true;
 								   Task.Delay(2200).ContinueWith((_)=> App.DispatchOnUIThreadSneakyLow(Spot.UpdateFocusText));
+								   BuildQueue.Initialize();
 								   break;
 							   }
 						   case "aexp":
@@ -2361,7 +2362,7 @@ namespace COTG
 
 				   if (gotCreds)
 				   {
-					   BuildQueue.Initialize();
+					  
 
 					   ShellPage.SetViewModeCity();
 

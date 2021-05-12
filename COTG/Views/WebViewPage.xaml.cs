@@ -8,6 +8,7 @@ using Windows.UI.Xaml.Navigation;
 using Windows.Web.Http;
 using WebView = Windows.UI.Xaml.Controls.WebView;
 using static COTG.Debug;
+using Windows.System;
 
 namespace COTG.Views
 {
@@ -194,7 +195,10 @@ namespace COTG.Views
 
         private void WebView_NewWindowRequested(WebView sender, WebViewNewWindowRequestedEventArgs args)
 		{
-            Log("Todo");
+			args.Handled = true;
+
+	//	Log(args.Uri.ToString());
+			Launcher.LaunchUriAsync(args.Uri);
 		}
 
 		private async void WebView_UnviewableContentIdentified(WebView sender, WebViewUnviewableContentIdentifiedEventArgs args)

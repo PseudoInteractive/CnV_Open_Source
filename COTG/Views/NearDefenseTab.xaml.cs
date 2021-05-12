@@ -164,8 +164,10 @@ namespace COTG.Views
             else
             {
                 supporters.Clear();
-                troopTypeGrid.ItemsSource=supportByTroopTypeEmpty;
-                //              supportGrid.ItemsSource = null;
+				App.DispatchOnUIThreadSneaky( ()=>
+				
+                troopTypeGrid.ItemsSource=supportByTroopTypeEmpty
+           );     //              supportGrid.ItemsSource = null;
 
             }
 			await base.VisibilityChanged(visible);

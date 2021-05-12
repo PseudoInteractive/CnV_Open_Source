@@ -1837,6 +1837,7 @@ namespace COTG.Game
 	}
 	public static class CityHelpers
 	{
+		public static City AsCity(this int cid) => City.Get(cid);
 		public static bool TestContinentFilter(this int cid) => Spot.TestContinentFilter(cid);
 
 		public static bool IsXYInCenter(this (int x, int y) xy) => (xy.x.Abs() + xy.y.Abs() < 7);

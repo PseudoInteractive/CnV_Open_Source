@@ -49,7 +49,6 @@ namespace COTG.Views
 				var cid = sel.cid;
 				historyGrid.ItemsSource = history.Where( s => s.targetCid == cid).ToArray() ;
 			}
-			historyGrid.IsBusyIndicatorEnabled = false;
 		}
 
         public static DefenseHistoryTab instance;
@@ -81,7 +80,6 @@ namespace COTG.Views
 				{
 
 					IncomingOverview.Process(SettingsPage.fetchFullHistory, true); // Todo: throttle
-					historyGrid.IsBusyIndicatorEnabled = true;
 				}
 			}
 			return base.VisibilityChanged(visible);

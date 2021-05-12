@@ -27,7 +27,9 @@ namespace COTG.Views
     public sealed partial class HitTab : UserTab
     {
         public static HitTab instance;
-        public static bool IsVisible() => instance.isVisible;
+		public override TabPage defaultPage => TabPage.secondaryTabs;
+
+		public static bool IsVisible() => instance.isVisible;
         public Army[] history { get; set; } = Army.empty;
         public void SetHistory(Army[] _history)
         {
@@ -49,7 +51,6 @@ namespace COTG.Views
 			var sel = OutgoingTab.selected;
 			var cid = (sel?.cid).GetValueOrDefault();
 			historyGrid.ItemsSource = cid==0 ? history : history.Where(a=>a.targetCid==cid).ToArray();
-            historyGrid.IsBusyIndicatorEnabled = false;
         }
         public HitTab()
         {
@@ -65,7 +66,6 @@ namespace COTG.Views
 				{
 					// avaiting on this would take too long
 					OutgoingOverview.Process(SettingsPage.fetchFullHistory); // Todo: throttle
-					historyGrid.IsBusyIndicatorEnabled = true;
 				}
 			}
             return base.VisibilityChanged(visible);

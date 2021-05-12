@@ -594,7 +594,8 @@ namespace COTG.Views
 			RefreshX();
 		}
 
-		public static void RefreshTabs()
+		public static Action RefreshTabs = AUtil.Debounce(_RefreshTabs);
+		public static void _RefreshTabs()
 		{
 			// fall through from shift-refresh. Shift refresh does both
 			City.UpdateSenatorInfo();
@@ -1003,7 +1004,7 @@ namespace COTG.Views
 			}
 		}
 
-		private void ContinentFilterClick(object sender, RoutedEventArgs e)
+		public static void ContinentFilterClick(object sender, RoutedEventArgs e)
 		{
 			var button = sender as Microsoft.UI.Xaml.Controls.DropDownButton;
 			var flyout = new MenuFlyout();
@@ -1024,7 +1025,7 @@ namespace COTG.Views
 			flyout.ShowAt(button);
 		}
 
-		private void ContinentFilterClosing(Windows.UI.Xaml.Controls.Primitives.FlyoutBase sender, Windows.UI.Xaml.Controls.Primitives.FlyoutBaseClosingEventArgs args)
+		private static void ContinentFilterClosing(Windows.UI.Xaml.Controls.Primitives.FlyoutBase sender, Windows.UI.Xaml.Controls.Primitives.FlyoutBaseClosingEventArgs args)
 		{
 			var menu = (sender as MenuFlyout);
 			var any = false;
@@ -1045,10 +1046,12 @@ namespace COTG.Views
 					Spot.continentFilter |= Spot.ContinentFilterFlag(id);
 				}
 			}
+			string label;
 			if (!any)
 			{
 				Spot.continentFilter = Spot.continentFilterAll;
-				ContinentFilter.Content = "Cont";
+
+				label = "Cont";
 			}
 			else
 			{
@@ -1056,17 +1059,20 @@ namespace COTG.Views
 				var xy = World.PackedContinentToXY(first);
 				if ((Spot.continentFilter & (Spot.continentFilter - 1ul)) == 0)
 				{
-					ContinentFilter.Content = ZString.Format("{0}{1}", xy.y, xy.x);
+				   label = ZString.Format("{0}{1}", xy.y, xy.x);
 				}
 				else
 				{
-					ContinentFilter.Content = ZString.Format("{0}{1}+", xy.y, xy.x);
+					label = ZString.Format("{0}{1}+", xy.y, xy.x);
 				}
 			}
+			ShellPage.instance.ContinentFilter.Content = label;
+			ExportCastles.instance.ContinentFilter.Content = label;
 			CityList.NotifyChange();
 			if (HeatTab.IsVisible())
 			{
 				HeatTab.ResetAllChangeDescriptions();
+
 			}
 		}
 

@@ -265,8 +265,8 @@ namespace COTG.Game
      
             if (cid != 0)
             {
-                await Post.SendEncrypted("includes/UrOA.php", "{\"a\":" + cid + ",\"c\":0,\"b\":1}", "Rx3x5DdAxxerx3", World.CidToPlayerOrMe(cid));
-                if (updateUI)
+				await ReturnSlow(cid);
+				if (updateUI)
                 {
                     // await JSClient.PollCity(cid);
                     JSClient.CitySwitch(cid,false);
@@ -279,10 +279,10 @@ namespace COTG.Game
         
         public static async Task ReturnAt(int cid, DateTimeOffset at)
         {
-            var json = $"{{\"a\":{cid},\"c\":\"{at.ToString(AUtil.raidDateTimeFormat)}\",\"b\":\"3\"}}";
             if (cid != 0)
             {
-                await Post.SendEncrypted("includes/UrOA.php", json, "Rx3x5DdAxxerx3", World.CidToPlayerOrMe(cid));
+				var json = $"{{\"a\":{cid},\"c\":\"{at.ToString(AUtil.raidDateTimeFormat)}\",\"b\":\"3\"}}";
+				await Post.SendEncrypted("includes/UrOA.php", json, "Rx3x5DdAxxerx3", World.CidToPlayerOrMe(cid));
             }
         }
         public static async Task ReturnFast(int cid, bool updateUI)
@@ -294,7 +294,7 @@ namespace COTG.Game
                 if (updateUI)
                 {
                    // await JSClient.PollCity(cid);
-                    await JSClient.CitySwitch(cid,false);
+                    await JSClient.CitySwitch(cid,true,false,false);
                     NavStack.Push(cid);
                     //// await JSClient.PollCity(cid);
                     ////  await Task.Delay(300); // this might not be useful.
@@ -316,17 +316,23 @@ namespace COTG.Game
             {
 
                 if (cid != 0)
-                {
-                    var json = "{\"a\":" + cid + ",\"c\":0,\"b\":1}";
-                    await Post.SendEncrypted("includes/UrOA.php", json, "Rx3x5DdAxxerx3", World.CidToPlayerOrMe(cid));
-                    ++counter;
-                }
-            }
+				{
+					await ReturnSlow(cid);
+					++counter;
+				}
+			}
             Note.Show($"Issued End Raids on {counter} cities");
             ShellPage.ShowTipRefresh();
             await UpdateTS(true, true);
         }
-        public static async Task ReturnFastBatch(IEnumerable<int> cids)
+
+		private static Task ReturnSlow(int cid)
+		{
+			var json = "{\"a\":" + cid + ",\"c\":0,\"b\":1}";
+			return Post.SendEncrypted("includes/UrOA.php", json, "Rx3x5DdAxxerx3", World.CidToPlayerOrMe(cid));
+		}
+
+		public static async Task ReturnFastBatch(IEnumerable<int> cids)
         {
 			using var work = new ShellPage.WorkScope("Home Please..");
 

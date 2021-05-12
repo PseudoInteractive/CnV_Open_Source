@@ -26,7 +26,8 @@ namespace COTG.Views
 {
 	public sealed partial class ExportCastles : ContentDialog
 	{
-		public static ExportCastles instance;
+
+		public static ExportCastles instance = new();
 		public ExportCastles()
 		{
 			this.InitializeComponent();
@@ -37,18 +38,19 @@ namespace COTG.Views
 		   {
 			   SettingsPage.HideMe();
 
-			   if (instance == null)
-				   instance = new();
+//			   if (instance == null)
+//				   instance = new();
 			   var rv = await instance.ShowAsync2();
 			   if (rv != ContentDialogResult.Primary)
 				   return;
-			   var offence = instance.offence.IsChecked;
-			   var water= instance.water.IsChecked;
-			   var castles = instance.castles.IsChecked;
-			   var temples = instance.temples.IsChecked;
-			   var headers = instance.headers.IsChecked;
+			   var offence = SettingsPage.exportOffence;
+			   var water = SettingsPage.exportWater;
+			   var castles = SettingsPage.exportCastles;
+			   var temples = SettingsPage.exportTemples;
+			   var headers = SettingsPage.exportHeaders;
 			   
-			   var who = instance.who.SelectedIndex;
+			   var who = SettingsPage.exportWho;
+			   var score = SettingsPage.exportScore;
 			   ShellPage.WorkStart("Exporting");
 			  await Task.Run(async () => {
 				   List<int> alliances = new();
@@ -75,15 +77,18 @@ namespace COTG.Views
 
 				   var sb = new StringBuilder();
 				   int counter = 0;
-				   if(headers.GetValueOrDefault())
+				  if (headers != false)
 				  {
 					  sb.AppendLine("Alliance\tPlayer\tContinent\tCoords\tCastle\tTemple\tWater\tOffense\tHasAcademy\tTroops\tTS\tPoints");
 
 				  }
-
+				  var allianceMask = SettingsPage.exportAllianceMask.Trim();
 				  foreach (var alliance in alliances)
 				   {
-					   sb.AppendLine(Alliance.all[alliance].name);
+					  var allianceName = Alliance.all[alliance].name;
+					  if (allianceMask.Length != 0 && !allianceName.Contains(allianceMask, StringComparison.OrdinalIgnoreCase))
+						  continue;
+					   sb.AppendLine(allianceName);
 					   foreach (var p in Player.all.Values)
 					   {
 						   if (p.alliance != alliance)
@@ -91,7 +96,7 @@ namespace COTG.Views
 						   if (onlyMe && !p.isMe)
 							   continue;
 
-						   if(!headers.HasValue||headers.Value==true )
+						   if(headers.GetValueOrDefault() ==true )
 							    sb.AppendLine($"---\t" + p.name);
 
 
@@ -101,21 +106,22 @@ namespace COTG.Views
 							   if (!TestContinentFilter(cid))
 								   continue;
 							   var wi = World.GetInfoFromCid(cid);
-							   if (castles.HasValue && castles.Value != wi.isCastle)
+							   if (castles!=0  && castles!= (wi.isCastle? 1: 2) )
 								   continue;
 							  if (temples.HasValue && temples.Value != wi.isTemple)
 								  continue;
-							  if ( water.HasValue && water.Value != wi.isWater)
+							  if ( water !=0 && water != (wi.isWater? 1: 2) )
 								  continue;
 
 							   var s = Spot.GetOrAdd(cid);
-							   var c = await s.ClassifyEx(offence.GetValueOrDefault());
-
+							   var c = await s.ClassifyEx(offence == 1 );
+							  //if(score.GetValueOrDefault() == true)
+								 // await GetCity.Post()
 							  var isO = c.IsOffense();
 							  var isD = c.IsDefense();
-							  if (offence.HasValue)
+							  if (offence!=0)
 							  {
-								  if (offence.Value != isO)
+								  if (offence != (isO? 1 : 2) )
 									  continue;
 							  }
 
@@ -146,10 +152,10 @@ namespace COTG.Views
 									   sb.Append("Priest\t");
 									   break;
 								   // TODO
-								   case Classification.horses:
+								   case Classification.arbs:
 									  sb.Append("Arbs\t");
 									  break;
-								  case Classification.arbs:
+								  case Classification.horses:
 									   sb.Append("Horses\t");
 									   break;
 
@@ -175,8 +181,9 @@ namespace COTG.Views
 									   sb.Append("wtf\t");
 									   break;
 							   }
-							   sb.AppendLine($"{s.tsTotal}\t{s.points}");
+							  sb.Append($"{s.tsTotal}\t{ s.points}");
 
+							  sb.AppendLine();
 						   }
 					   }
 				   }

@@ -69,7 +69,7 @@ namespace COTG.Views
 
 		static DateTimeOffset nextCityRefresh = DateTimeOffset.UtcNow;
 
-        public virtual async Task Refresh()
+        public virtual async void Refresh()
         {
             if (isVisible && isActive)
             {
