@@ -225,7 +225,7 @@ namespace COTG.JSON
 								Log(cotgQ.ToString());
 							}
 						}
-						else
+						else if(city.isMine)
 						{
 							var gotBQ = false;
 							var gotBuildings = false;
@@ -270,6 +270,14 @@ namespace COTG.JSON
 							{
 								queueValid = true;
 							}
+						}
+						else
+						{
+							// City lost?
+							all.TryRemove(cid, out _);
+							QueueTab.Clear(cid);
+							Dispose();
+							return;
 						}
 						if (queueValid && city.buildingsLoaded)
 						{
@@ -1043,6 +1051,8 @@ namespace COTG.JSON
 					foreach (var jsCity in js.RootElement.EnumerateObject())
 					{
 						var cid = int.Parse(jsCity.Name);
+						if (!cid.AsCity().isMine)
+							continue;
 						using (var cq = await CityBuildQueue.Get(cid))
 						{
 							foreach (var d in jsCity.Value.EnumerateArray())

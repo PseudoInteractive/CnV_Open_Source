@@ -610,8 +610,10 @@ namespace COTG.Views
 				combo.Items.Add("Fake Cap");
 				combo.Items.Add("Real Demo");
 				combo.Items.Add("Fake Demo");
-				combo.Items.Add("None");
-				combo.SelectedIndex = 0;
+				combo.Items.Add("None (Disable)");
+				combo.SelectedIndex. = SettingsPage.chooseAttackTypeUpdate;
+
+			var check = new CheckBox() { Content = "Update Existing", IsChecked = true };
 				//	var removeTargets = new CheckBox() { Content = $"{targetGrid.SelectedItems.Count} targets", IsChecked = true };
 				//	var panel = new StackPanel();
 

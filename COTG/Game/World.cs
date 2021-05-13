@@ -1327,7 +1327,7 @@ namespace COTG.Game
 			World.heatMapT1 = t1+1;
 			if(World.heatMapT0.Date() != t0.Date())
 			{
-				Assert(false);
+			//	Assert(false);
 				t0 = World.heatMapT0;
 			}
 

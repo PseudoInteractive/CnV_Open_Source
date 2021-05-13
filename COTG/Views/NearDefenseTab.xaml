@@ -26,13 +26,13 @@
             <ToggleButton Content="Wait Return" IsChecked="{x:Bind waitReturn,Mode=TwoWay}" VerticalAlignment="Center" Margin="12"
                           Width="70" HorizontalAlignment="Center" Style="{ThemeResource ToggleButtonRevealStyle}"
                       ToolTipService.ToolTip="If on, wait until troops return from raids or to make the arrival time (left), whichever is later" />
-            <ToggleButton Content="Portal" x:Name="portal" VerticalAlignment="Center" Margin="12" Click="PropChanged"
+            <ToggleButton Content="Portal" VerticalAlignment="Center" Margin="12" Click="PropChanged" IsChecked="{x:Bind portal, Mode=TwoWay}"
                           Width="70" HorizontalAlignment="Center" Style="{ThemeResource ToggleButtonRevealStyle}"
                       ToolTipService.ToolTip="If on, there are no restrictions on who can go where (but it won't work if they can't reach their target" />
             <ToggleButton Content="Offense" IsChecked="{x:Bind local:NearDefenseTab.includeOffense, Mode=TwoWay}" VerticalAlignment="Center" Margin="12"
                           Width="70" HorizontalAlignment="Center" Style="{ThemeResource ToggleButtonRevealStyle}" Click="PropChanged"
                       ToolTipService.ToolTip="If on, include offsense" />
-            <ToggleButton Content="Only home" x:Name="onlyHome" VerticalAlignment="Center" Margin="12" IsChecked="True"  Click="PropChanged"
+			<ToggleButton Content="Only home" IsChecked="{x:Bind onlyHome, Mode=TwoWay}" VerticalAlignment="Center" Margin="12"  Click="PropChanged"
                           Width="70" HorizontalAlignment="Center" Style="{ThemeResource ToggleButtonRevealStyle}"
                       ToolTipService.ToolTip="If on, the # to send only counts troops at home" />
             <my:NumberBox Value="{x:Bind _filterTime,Mode=TwoWay}" Style="{StaticResource RightAlignNumberBox}" SpinButtonPlacementMode="Inline"

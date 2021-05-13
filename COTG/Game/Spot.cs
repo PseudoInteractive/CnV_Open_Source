@@ -261,6 +261,7 @@ namespace COTG.Game
 			"scorps",
 			"hub",
 			"navy",
+			"stingers",
 			"misc",
 			"pending",
 			"no intel"
@@ -279,6 +280,7 @@ namespace COTG.Game
 			ttScorpion,
 			ttSenator,
 			ttWarship,
+			ttStinger,
 			ttBallista,
 
 			ttPending,

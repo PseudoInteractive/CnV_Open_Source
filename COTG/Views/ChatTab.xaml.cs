@@ -98,8 +98,12 @@ namespace COTG.Views
         {
             if (items.Count > 0 && visible)
             {
-                listView.ScrollIntoView(items.Last());
-                input.Focus(FocusState.Programmatic);
+				App.DispatchOnUIThreadSneaky(() =>
+				{
+
+					listView.ScrollIntoView(items.Last());
+					input.Focus(FocusState.Programmatic);
+				});
             }
 
             return base.VisibilityChanged(visible);

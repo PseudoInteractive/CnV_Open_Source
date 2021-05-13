@@ -168,6 +168,9 @@ namespace COTG.Views
 		public static bool? exportScore;
 		public static byte exportWho;
 
+		public static int chooseAttackTypeIndex;
+		public static bool chooseAttackTypeUpdate;
+
 
 		public static int mruSize = 32;
 		public static int[] pinned = Array.Empty<int>();

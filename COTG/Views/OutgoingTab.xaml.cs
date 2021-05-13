@@ -116,11 +116,11 @@ namespace COTG.Views
         public override Task VisibilityChanged(bool visible)
         {
 			/// TODO:  Why clear?
-            App.DispatchOnUIThreadSneaky(() =>
-            {
-                attackerGrid.ItemsSource = null;
-                armyGrid.ItemsSource = Army.empty;
-            });
+            //App.DispatchOnUIThreadSneaky(() =>
+            //{
+            //    attackerGrid.ItemsSource = null;
+            //    armyGrid.ItemsSource = Army.empty;
+            //});
 
             if (visible)
                 OutgoingOverview.Process(false);

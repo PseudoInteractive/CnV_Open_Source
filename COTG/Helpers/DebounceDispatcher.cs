@@ -10,7 +10,23 @@ using Windows.UI.Core;
 namespace COTG
 {
 	public static partial class AUtil
-	{ 
+	{
+		public class Debounce
+		{
+			public Action func;
+			public float debounceDelay;
+			public float throttleDelay;
+			enum State
+			{
+				idle,
+				pending,
+				running,
+				
+
+			};
+			
+		}
+
 		public static Action Debounce(this Action func, int milliseconds = 300, int minTimeToNextCall = 300)
 		{
 			CancellationTokenSource cancelTokenSource = null;

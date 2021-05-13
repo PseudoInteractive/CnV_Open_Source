@@ -173,11 +173,11 @@ namespace COTG.Views
         public override Task VisibilityChanged(bool visible)
         {
             //  Log("Vis change" + visible);
-            App.DispatchOnUIThreadSneaky(() =>
-            {
-                defenderGrid.ItemsSource = null;
-                armyGrid.ItemsSource = Army.empty;
-            });
+            //App.DispatchOnUIThreadSneaky(() =>
+            //{
+            //    defenderGrid.ItemsSource = null;
+            //    armyGrid.ItemsSource = Army.empty;
+            //});
             if (visible)
                 IncomingOverview.Process(false,true);
             

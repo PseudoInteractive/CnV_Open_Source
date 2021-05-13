@@ -36,7 +36,10 @@ namespace COTG.Views
         public float filterTime=6;
         public int filterTSTotal=10000;
         public int filterTSHome;
-        public float _filterTime { get => filterTime; set { filterTime = value; Refresh(); } }  // defenders outside of this window are not included
+		public bool portal { get; set; }
+		public bool onlyHome { get; set; } = true;
+
+		public float _filterTime { get => filterTime; set { filterTime = value; Refresh(); } }  // defenders outside of this window are not included
         public int _filterTSTotal { get => filterTSTotal; set { filterTSTotal = value; Refresh(); } }
         public int _filterTSHome { get => filterTSHome; set { filterTSHome = value; Refresh(); } } // need at this this many ts at home to be considered for def
         public DateTimeOffset arriveAt { get; set; } = AUtil.dateTimeZero;
@@ -68,9 +71,9 @@ namespace COTG.Views
                     defendant = Spot.GetFocus();
 				if (defendant != null && defendant.isCityOrCastle)
 				{
-					var portal = this.portal.IsChecked.GetValueOrDefault();
+					var portal = this.portal;
 
-					var onlyHome = this.onlyHome.IsChecked.GetValueOrDefault();
+					var onlyHome = this.onlyHome;
 					// Dispatch both and then wait for results in parallel
 					var task0 = RestAPI.troopsOverview.Post();
 					var task1 = RaidOverview.Send();

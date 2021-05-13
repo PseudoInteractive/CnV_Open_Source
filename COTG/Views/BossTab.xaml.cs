@@ -30,19 +30,22 @@ namespace COTG.Views
 
         public override Task VisibilityChanged(bool visible)
         {
-            if (visible)
-            {
-                bossGrid.ItemsSource = null;
-                bossGrid.ItemsSource = Boss.all;
-                cityGrid.ItemsSource = City.myCities.Where(c => c.testContinentFilter && c.homeTroopsAttack > 50 * 1000.0f).
-                    OrderBy((c) => -c.homeTroopsAttack). ToArray();
-            }
-            else
-            {
-                bossGrid.ItemsSource = null;
-                cityGrid.ItemsSource = City.emptyCitySource;
+			App.DispatchOnUIThreadSneaky(() =>
+		   {
+			   if (visible)
+			   {
+				   bossGrid.ItemsSource = null;
+				   bossGrid.ItemsSource = Boss.all;
+				   cityGrid.ItemsSource = City.myCities.Where(c => c.testContinentFilter && c.homeTroopsAttack > 50 * 1000.0f).
+					   OrderBy((c) => -c.homeTroopsAttack).ToArray();
+			   }
+			   else
+			   {
+				   bossGrid.ItemsSource = null;
+				   cityGrid.ItemsSource = City.emptyCitySource;
 
-            }
+			   }
+		   });
 			return base.VisibilityChanged(visible);
         }
 

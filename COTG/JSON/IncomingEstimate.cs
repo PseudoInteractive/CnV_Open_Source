@@ -10,6 +10,24 @@ using static COTG.Game.Enum;
 
 namespace COTG.Game
 {
+	public enum TravelType
+	{
+		scout,
+		cav,
+		inf,
+		art,
+		sen,
+		navy,
+		count
+	};
+	public struct TravelEstimate
+	{
+		unsafe fixed float gain[(int)TravelType.count];
+		public unsafe float Get(TravelType index) => gain[(int)index];
+		public float this[TravelType index] => Get(index);
+
+	}
+
     public static class IncomingEstimate
     {
         public static float RoundTo6Bits(double f)
