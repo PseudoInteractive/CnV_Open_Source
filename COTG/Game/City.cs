@@ -340,7 +340,7 @@ namespace COTG.Game
 			{
 				if (!IsRaider(tc.type) || !SettingsPage.includeRaiders[tc.type])
 					continue;
-				if (IsWaterRaider(tc.type) == forWater)
+				if (IsTTNaval(tc.type) == forWater)
 				{
 					_carryCapacity += tc.count * ttCarry[tc.type] * Raiding.troopFraction;
 				}
@@ -357,7 +357,7 @@ namespace COTG.Game
 			{
 				if (!IsRaider(tc.type) || !SettingsPage.includeRaiders[tc.type])
 					continue;
-				if (IsWaterRaider(tc.type) == forWater)
+				if (IsTTNaval(tc.type) == forWater)
 				{
 					_carryCapacity += tc.count * ttCarry[tc.type] * Raiding.troopFraction;
 				}
@@ -1318,7 +1318,7 @@ namespace COTG.Game
 			}
 			else
 			{
-				var tt = GetPrimaryTroopType(onlyHome);
+				var tt = GetPrimaryTroopType(onlyHome, Spot.GetOrAdd(target).isOnWater&& isOnWater);
 				if (tt == 0)
 					return false;
 				var dist = cid.DistanceToCid(target);

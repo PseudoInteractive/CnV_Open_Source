@@ -4,249 +4,99 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using static COTG.Debug;
 
 using Windows.UI.Core;
 
 namespace COTG
 {
-	public static partial class AUtil
-	{
 		public class Debounce
 		{
-			public Action func;
-			public float debounceDelay;
-			public float throttleDelay;
+			public Func<Task> func;
+			public int debounceDelay = 300;
+			public int throttleDelay = 300;
+			public bool runOnUiThead;
+			int nextCall = Environment.TickCount;
 			enum State
 			{
 				idle,
 				pending,
 				running,
-				
+
 
 			};
-			
-		}
-
-		public static Action Debounce(this Action func, int milliseconds = 300, int minTimeToNextCall = 300)
-		{
-			CancellationTokenSource cancelTokenSource = null;
-			DateTimeOffset nextCall = default;
-
-			return () =>
+			State state;
+			public Debounce(Func<Task> _func)
 			{
-				if (DateTimeOffset.UtcNow <= nextCall)
-					return;
-
-				cancelTokenSource?.Cancel();
-				cancelTokenSource = new CancellationTokenSource();
-
-				Task.Delay(milliseconds, cancelTokenSource.Token)
-					.ContinueWith(t =>
-					{
-						if (t.IsCompletedSuccessfully)
+				func = _func;
+			}
+			public void Go()
+			{
+				switch (state)
+				{
+					case State.idle:
 						{
-							nextCall = DateTimeOffset.UtcNow + TimeSpan.FromMilliseconds(minTimeToNextCall);
-							func();
+							var dt = nextCall - Environment.TickCount;
+							if (dt >= 0)
+								return;
 						}
-					}, TaskScheduler.Default);
-			};
-		}
-		public static Action DebounceUI(this DispatchedHandler func, int milliseconds = 300, int minTimeToNextCall = 300)
-		{
-			CancellationTokenSource cancelTokenSource = null;
-			DateTimeOffset nextCall = default;
-			return () =>
-			{
-				if (DateTimeOffset.UtcNow <= nextCall)
-					return;
-				cancelTokenSource?.Cancel();
-				cancelTokenSource = new CancellationTokenSource();
-
-				Task.Delay(milliseconds, cancelTokenSource.Token)
-					.ContinueWith(t =>
-					{
-						if (t.IsCompletedSuccessfully)
+						break;
+					case  State.pending:
 						{
-							nextCall = DateTimeOffset.UtcNow + TimeSpan.FromMilliseconds(minTimeToNextCall);
-							App.DispatchOnUIThreadSneaky( func);
+							var nextT = Environment.TickCount + debounceDelay;
+							if (nextT - nextCall > 0)
+							{
+								nextCall = nextT;
+							}
+							return;
 						}
-					}, TaskScheduler.Default);
-			};
-		}
-
-		/// <summary>
-		/// The Throttle dispatcher provides one Action invoking at a specific time interval
-		/// </summary>
-		public class ThrottleDispatcher
-		{
-			#region --- ctor ---
-			/// <summary>
-			/// The Throttle dispatcher provides one Action invoking at a specific time interval
-			/// </summary>
-			/// <param name="interval">The time interval when should be only one invoking</param>
-			/// <param name="intervalFromStart">true - Countdown of the time interval from the beginning of the Action invoking. false - Countdown of the time interval from the complete of the Action invoking</param>
-			/// <param name="resetIntervalOnException">true - if an error occurs, ignore call and do not wait for the time interval for next call</param>
-			public ThrottleDispatcher(int interval, bool intervalFromStart = false, bool resetIntervalOnException = false)
-
-			{
-				this.interval = interval;
-				this.isIntervalSinceInvokeTime = intervalFromStart;
-				this.resetIntervalOnException = resetIntervalOnException;
-			}
-			#endregion
-
-			#region --- public methods ---
-			/// <summary>
-			/// Call the Action that will be invoked if it was the only one at a specific time interval 
-			/// </summary>
-			/// <param name="action">Action that will be invoked</param>
-			/// <returns>Task that will complete when one of called Action will be invoked</returns>
-			public Task ThrottleAsync(Func<Task> action)
-			{
-				return ThrottleAsyncA(() =>
-				{
-					action.Invoke().Wait();
-					return Task.FromResult(true);
-				});
-			}
-			/// <summary>
-			/// Call the Action that will be invoked if it was the only one at a specific time interval
-			/// </summary>
-			/// <param name="action">Action that will be invoked</param>
-			public void Throttle(Action action)
-			{
-				Func<Task<bool>> actionAsync = () => Task.Run(() =>
-				{
-					action.Invoke();
-					return true;
-				});
-
-				ThrottleAsync(actionAsync);
-			}
-			#endregion
-
-			/// <summary>
-			/// The Throttle dispatcher provides one Function invoking at a specific time interval
-			/// </summary>
-			/// <typeparam name="T">The return Type of the Tasks. All tasks will return the same value if the invoking occurs once</typeparam>
-			#region --- private fields ---
-			private Func<Task> functToInvoke;
-			private readonly int interval;
-			private readonly bool isIntervalSinceInvokeTime;
-			private readonly bool resetIntervalOnException;
-			private readonly object locker = new object();
-			private bool busy;
-			private bool waiting;
-			private Task waitingTask;
-			private Task intervalTask;
-			private DateTime? invokeStartTime;
-			#endregion
-
-			#region --- ctor ---
-			/// <summary>
-			/// The Throttle dispatcher provides one Function invoking at a specific time interval
-			/// </summary>
-			/// <param name="interval">The time interval when should be only one invoking</param>
-			/// <param name="intervalFromStart">true - Countdown of the time interval from the beginning of the Function invoking. false - Countdown of the time interval from the complete of the Function invoking</param>
-			/// <param name="resetIntervalOnException">true - if an error occurs, ignore call and do not wait for the time interval for next call</param>
-			#endregion
-
-			#region --- public methods ---
-			/// <summary>
-			/// Call the Function that will be invoked if it was the only one at a specific time interval
-			/// </summary>
-			/// <param name="functToInvoke">Function that will be invoked</param>
-			/// <returns>Task with a result that will complete when one of called Function will be invoked</returns>
-			public Task ThrottleAsyncA(Func<Task> functToInvoke)
-			{
-				lock (locker)
-				{
-					this.functToInvoke = functToInvoke;
-
-					if (busy)
+					case State.running:
+						{
+							return;
+						}
+				default:
 					{
-						return GetWaitingTask();
-					}
-
-					Task actionTask = GetActionTask();
-
-					intervalTask = Task.Run(() => ProcessInterval(actionTask));
-
-					return actionTask;
-				}
-			}
-			#endregion
-
-			#region --- private methods ---
-			private Task GetActionTask()
-			{
-				busy = true;
-				invokeStartTime = DateTime.UtcNow;
-				Task actionTask = this.functToInvoke.Invoke();
-				return actionTask;
-			}
-
-			private Task GetWaitingTask()
-			{
-				if (waiting)
-				{
-					return waitingTask;
-				}
-
-				waiting = true;
-				waitingTask = Task.Run(() => ProcessWaitingTask());
-
-				return waitingTask;
-			}
-
-			private Task ProcessWaitingTask()
-			{
-				intervalTask.Wait();
-				lock (locker)
-				{
-					waiting = false;
-					return ThrottleAsync(this.functToInvoke);
-				}
-			}
-
-			private void ProcessInterval(Task actionTask)
-			{
-				try
-				{
-					actionTask.Wait();
-					DelayToNextProcess();
-				}
-				catch
-				{
-					if (!resetIntervalOnException)
-					{
-						DelayToNextProcess();
+						Assert(false);
+						return;
 					}
 				}
-				finally
-				{
-					lock (locker)
-					{
-						busy = false;
-					}
-				}
+				state = State.pending;
+				nextCall = Environment.TickCount + debounceDelay;
+				Task.Run(async () =>
+			   {
+				   for (; ; )
+				   {
+					   var dt = nextCall - Environment.TickCount;
+					   if (dt <= 0)
+					   {
+
+						   break;
+					   }
+					   else
+					   {
+						   await Task.Delay(dt + 10);
+					   }
+				   }
+				   try
+				   {
+					   state = State.running;
+					   if (runOnUiThead)
+						   await App.DispatchOnUIThreadTask(func);
+					   else
+						   await func();
+				   }
+				   catch (Exception ex)
+				   {
+					   COTG.Debug.LogEx(ex);
+				   }
+				   finally
+				   {
+					   nextCall = Environment.TickCount + throttleDelay;
+					   state = State.idle;
+				   }
+			   });
+
 			}
 
-			private void DelayToNextProcess()
-			{
-				int delay = interval;
-				if (isIntervalSinceInvokeTime && invokeStartTime.HasValue)
-				{
-					delay = (int)(interval - (DateTime.UtcNow - invokeStartTime.Value).TotalMilliseconds);
-				}
-				if (delay > 0)
-				{
-					//Thread.Sleep(delay);
-					Task.Delay(delay).Wait();
-				}
-			}
-			#endregion
-		}
-
-		}
+	}
 }

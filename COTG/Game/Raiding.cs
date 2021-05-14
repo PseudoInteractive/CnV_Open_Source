@@ -157,7 +157,7 @@ namespace COTG.Game
 				{
 					if (!IsRaider(ttc.type) || !SettingsPage.includeRaiders[ttc.type])
 						continue;
-					if (IsWaterRaider(ttc.type) == d.isWater)
+					if (IsTTNaval(ttc.type) == d.isWater)
 					{
 						var count = (int)(ttc.count * troopFraction / (SettingsPage.raidSendExact? r.fractionalReps:r.reps) );
 						tr.Add(new sndRaidtr() { tt = ttc.type.ToString(), tv = count.ToString() });

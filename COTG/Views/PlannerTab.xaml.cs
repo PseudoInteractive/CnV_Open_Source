@@ -105,10 +105,10 @@ namespace COTG.Views
 			return rv;
 		}
 
-		public static void UpdateStats()
+		public static Task UpdateStats()
 		{
 			if (statsDirty ==false || !IsVisible())
-			  return;
+			  return Task.CompletedTask;
 			statsDirty = false;
 			// recruit speeds
 			var city = City.GetBuild();
@@ -287,19 +287,22 @@ namespace COTG.Views
 
 				return rv;
 			}
+
+			return Task.CompletedTask;
+
 		}
 		static bool statsDirty;
 		public static bool IsValidCityCoord((int x, int y) cc)
 		{
 			return (cc.x >= span0) && (cc.y>=span0) && (cc.x <= span1) && (cc.y <= span1);
 		}
-		public static Action PleaseRefresh =AUtil.DebounceUI(PlannerTab.UpdateStats,100);
+		public static Debounce PleaseRefresh = new Debounce(PlannerTab.UpdateStats) { runOnUiThead = true };
 
 		internal static void BuildingsChanged()
 		{
 			CityView.BuildingsOrQueueChanged();
 			statsDirty = true;
-			PleaseRefresh();
+			PleaseRefresh.Go();
 		}
 
 		private void ShareStringClick(object sender, RoutedEventArgs e)

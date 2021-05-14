@@ -35,8 +35,9 @@ namespace COTG.Views
 
     public sealed partial class OutgoingTab : UserTab
     {
+		public static Spot lastSelected;
 
-        public static OutgoingTab instance;
+		public static OutgoingTab instance;
         //        public static Report showingRowDetails;
 
         //public DataTemplate GetTsInfoDataTemplate()
@@ -141,17 +142,21 @@ namespace COTG.Views
             }
             else
             {
-                armyGrid.ItemsSource = sel.incoming;
+				if (lastSelected == sel)
+					return;
+				lastSelected = sel;
+
+				armyGrid.ItemsSource = sel.incoming;
 
 				var tab = HitTab.instance;
-				if (!tab.isActive)
+				if (!isVisible)
 				{
-					tab.ShowOrAdd(true, true);
+					tab.ShowOrAdd(true, false);
 
 				}
-				if (tab.isVisible)
+				else 
 				{
-					tab.Refresh();
+					tab.refresh.Go();
 				}
 
 			}

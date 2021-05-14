@@ -68,8 +68,12 @@ namespace COTG.Views
 		//User pressed F5 or refresh button
 
 		static DateTimeOffset nextCityRefresh = DateTimeOffset.UtcNow;
-
-        public virtual async void Refresh()
+		public Debounce refresh;
+		public UserTab()
+		{
+			 refresh= new(_Refresh);
+		}
+        protected virtual async Task _Refresh()
         {
             if (isVisible && isActive)
             {

@@ -38,6 +38,12 @@ namespace COTG.Views
 		   {
 			   SettingsPage.HideMe();
 
+			   int sumDef=0;
+			   int sumOff = 0;
+			   int sumCastles=0;
+			   int sumTemples = 0;
+
+
 //			   if (instance == null)
 //				   instance = new();
 			   var rv = await instance.ShowAsync2();

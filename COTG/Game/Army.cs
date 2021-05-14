@@ -268,7 +268,7 @@ namespace COTG.Game
         public byte t { get => (byte)type; set => type = value; }
 
         public int c { get => count; set => count = value; }
-		public bool isWaterRaider => IsWaterRaider(type);
+		public bool isWaterRaider => IsTTNaval(type);
 
 		public static TroopTypeCount[] operator +(TroopTypeCount[] me, TroopTypeCount tt)
 		{

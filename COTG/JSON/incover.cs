@@ -218,7 +218,7 @@ namespace COTG.JSON
 											  var scoutRange = val.GetAsString("6");
 											  var hrsMark = scoutRange.IndexOf('h');
 											  if (hrsMark >= 1)
-												  spot.scoutRange = float.Parse(scoutRange.Substring(0, hrsMark));
+												  spot.scoutRange = float.Parse(scoutRange.Substring(0, hrsMark-1));
 											  else
 											  {
 												  var minMark = scoutRange.IndexOf('m');

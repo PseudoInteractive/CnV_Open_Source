@@ -586,7 +586,7 @@ namespace COTG.Views
 		{
 			Note.Show("Refresh All");
 			await RefreshWorldData();
-			RefreshTabs();
+			RefreshTabs.Go();
 		}
 
 		public void RefreshX(object sender, RightTappedRoutedEventArgs e)
@@ -594,16 +594,17 @@ namespace COTG.Views
 			RefreshX();
 		}
 
-		public static Action RefreshTabs = AUtil.Debounce(_RefreshTabs);
-		public static void _RefreshTabs()
+		public static Debounce RefreshTabs = new(_RefreshTabs);
+		public static Task _RefreshTabs()
 		{
 			// fall through from shift-refresh. Shift refresh does both
 			City.UpdateSenatorInfo();
 			foreach (var tab in UserTab.userTabs)
 			{
 				if(tab.isVisible)
-					tab.Refresh();
+					tab.refresh.Go();
 			}
+			return Task.CompletedTask;
 		}
 
 		private static void Refresh()
@@ -617,7 +618,7 @@ namespace COTG.Views
 				Note.Show("Refresh UI");
 			}
 			// fall through from shift-refresh. Shift refresh does both
-			RefreshTabs();
+			RefreshTabs.Go();
 		}
 
 		public event PropertyChangedEventHandler PropertyChanged;

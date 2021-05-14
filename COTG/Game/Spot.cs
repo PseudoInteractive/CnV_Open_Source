@@ -450,7 +450,7 @@ namespace COTG.Game
 		}
 
 		public byte primaryTroopType => GetPrimaryTroopType();
-		public byte GetPrimaryTroopType(bool onlyHomeTroops = false)
+		public byte GetPrimaryTroopType(bool onlyHomeTroops = false, bool includeWater=true)
 		{
 			var troops= (onlyHomeTroops ? troopsHome : troopsTotal);
 			if(troops.IsNullOrEmpty())
@@ -461,6 +461,8 @@ namespace COTG.Game
 			foreach (var ttc in troops)
 			{
 				var type = ttc.type;
+				if (IsTTNaval(type) && !includeWater)
+					continue;
 				var ts = ttc.ts;
 				if (ts > bestTS)
 				{
@@ -1863,7 +1865,7 @@ namespace COTG.Game
 			NearDefenseTab.defendant = this;
 			var tab = NearDefenseTab.instance;
 			tab.ShowOrAdd(true);
-			tab.Refresh();
+			tab.refresh.Go();
 		}
 
 		
@@ -1880,7 +1882,7 @@ namespace COTG.Game
 				if (!tab.isVisible)
 					TabPage.Show(tab);
 				else
-					tab.Refresh();
+					tab.refresh.Go();
 			}
 		}
 		public void BuildStageDirty()

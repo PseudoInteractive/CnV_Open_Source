@@ -477,8 +477,17 @@ namespace COTG
 			//          Trace(httpsHost.Host);
 			if ((httpsHost != null && args.Uri.Host == httpsHost.Host))
 			{
-				WebViewPage.DefaultUrl = args.Uri;
-				await WindowManagerService.Current.TryShowAsStandaloneAsync<WebViewPage>("overview");
+				Log(args.Uri.ToString());
+				if (App.IsKeyPressedShift())
+				{
+
+					Launcher.LaunchUriAsync(args.Uri, new LauncherOptions() { DisplayApplicationPicker = true });
+				}
+				else
+				{
+					WebViewPage.DefaultUrl = args.Uri;
+					await WindowManagerService.Current.TryShowAsStandaloneAsync<WebViewPage>("overview");
+				}
 			}
 			else if(args.Uri.OriginalString.StartsWith("https://accounts.google.com/o/oauth2/auth?"))
 			{
@@ -1406,7 +1415,7 @@ namespace COTG
 					ppdtInitialized = true;
 
 					//Task.Delay(500).ContinueWith( _ => App.DispatchOnUIThreadSneakyLow( MainPage.instance.Refresh));
-					App.DispatchOnUIThreadSneakyLow(ShellPage._RefreshTabs);
+					App.DispatchOnUIThreadSneakyLow(ShellPage.RefreshTabs.Go);
 				}
 				
 				//    Log(City.all.ToString());
@@ -2025,6 +2034,13 @@ namespace COTG
 								   var str = jsp.ToString();
 								   App.CopyTextToClipboard(str);
 									Note.Show(str);
+								   foreach(var o in jsp.Value.EnumerateObject())
+								   {
+									   foreach(var st in o.Value.EnumerateArray())
+									   {
+										   TileData.UpdateTile(st.GetAsString());
+									   }
+								   }
 								   break;
 							   }
 

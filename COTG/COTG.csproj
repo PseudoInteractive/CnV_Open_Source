@@ -35,7 +35,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
     <DebugSymbols>true</DebugSymbols>
     <OutputPath>bin\x64\Debug\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;WINDOWS_UWP;DISABLE_XAML_GENERATED_MAIN;CODE_ANALYSIS;CODE_ANALYSIS</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;WINDOWS_UWP;DISABLE_XAML_GENERATED_MAIN</DefineConstants>
     <NoWarn>;2008</NoWarn>
     <DebugType>full</DebugType>
     <PlatformTarget>x64</PlatformTarget>
@@ -50,7 +50,7 @@
     </DocumentationFile>
     <UseDotNetNativeToolchain>false</UseDotNetNativeToolchain>
     <FileAlignment>2048</FileAlignment>
-    <CodeAnalysisRuleSet>COTGRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSet>ConcurrencyRules.ruleset</CodeAnalysisRuleSet>
     <Optimize>false</Optimize>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">

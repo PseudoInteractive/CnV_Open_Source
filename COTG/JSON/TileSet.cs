@@ -27,7 +27,23 @@ namespace COTG.JSON
 
 	public sealed class TileData
 	{
+		// inclusive
+		public static bool IsSpecialTile(int tile) =>
+		
+			 tile switch { (>= tileShrineStart and <= tileShrineStart)
+				 or tileShrineUnlit
+				 or tilePortalClosed
+				 or tilePortalOpen 
+				 or (>= tileModifierStart and <= tileModifierEnd) => true, _ => false };
 
+		
+		public const int tileShrineStart = tileShrineEnd - 7;
+		public const int tileShrineEnd = 1564;
+		public const int tileShrineUnlit = 1001;
+		public const int tilePortalClosed = 1002;
+		public const int tilePortalOpen = 1003;
+		public const int tileModifierStart = 1677;
+		public const int tileModifierEnd = tileModifierStart+7;
 		public enum State
 		{
 			preInit,
@@ -43,6 +59,64 @@ namespace COTG.JSON
 
 		public static TileData instance;
 
+		public static void UpdateTile(string s) 
+		{
+			
+			var ss = s.Split('-', StringSplitOptions.RemoveEmptyEntries);
+			if( ss.Length <= 1 )
+			{
+				Assert(false);
+				return;
+			}
+			if (!ss[1].TryParseInt(out var xy))
+				return;
+			if (!ss[0].TryParseInt(out var tile))
+				return;
+			if(ss.Length == 3)
+			{
+				// ignore dungeons and bosses
+				if (ss[2].Length == 2 && (ss[2] == "1" || ss[2] == "2"))
+					return;
+			}
+			var x = (xy)/ 1000;
+			var y = (xy - x*1000)-100;
+			x -= 100;
+			int off = x + y * World.span;
+			//	var l = 2;
+			if (tile == 999)
+				return;
+			//for(;l< instance.layers.Length;++l)
+			//{ 
+			//	var data = instance.layers[l].data[off];
+			//	if (data == 0)
+			//		break;
+			//}
+
+			for (int tileId = 0; tileId < instance.tilesets.Length; ++tileId)
+			{
+				var ts = instance.tilesets[tileId];
+				var tileOff = tile - ts.firstgid;
+				//    Assert(ts.tilewidth==64);
+				var offX = tileOff % ts.columns;
+				if ((tileOff >= 0) && tileOff < ts.tilecount)
+				{
+					var data = (ushort)(tileOff | (tileId << 13));
+					// is it already here?
+					bool present = instance.layers.Any(l => l.data[off] == data);
+					if(!present)
+					{
+						if (IsSpecialTile(tile))
+							Layer.bonus.data[off] = data;// << (put++ * 16);
+						else
+							instance.layers[instance.layers.Length - 2].data[off] = data;
+
+					}
+					break;
+				}
+			}
+
+
+		}
 
 		public static async Task Ctor(bool deviceLost)
 		{
@@ -80,6 +154,11 @@ namespace COTG.JSON
 			var tileCount = instance.tilesets.Length - 1;
 			// remove names layer
 			instance.tilesets = instance.tilesets.Take(tileCount).ToArray();
+			if (Layer.bonus == null)
+			{
+				Layer.bonus = new() { wantShadow = true, id = Layer.idBonus, isBase = false, data = new ushort[World.spanSquared], width = World.span, height = World.span, name = "Bonus" };
+			}
+			instance.layers = instance.layers.ArrayAppend(Layer.bonus);
 			//  await canvas.RunOnGameLoopThreadAsync( async () =>
 			if (prior != null)
 			{
@@ -174,7 +253,8 @@ namespace COTG.JSON
 			{
 				foreach (var layer in instance.layers)
 				{
-
+					if ( object.ReferenceEquals(layer,Layer.bonus) )
+						continue;
 					var tile = layer.data[i];
 					if (tile == 0)
 						continue;
@@ -182,12 +262,16 @@ namespace COTG.JSON
 					for (int tileId = 0; tileId < tileCount; ++tileId)
 					{
 						var ts = instance.tilesets[tileId];
-						var off = tile - ts.firstgid;
+						var tileOff = tile - ts.firstgid;
 						//    Assert(ts.tilewidth==64);
-						var offX = off % ts.columns;
-						if ((off >= 0) && off < ts.tilecount)
+						var offX = tileOff % ts.columns;
+						if ((tileOff >= 0) && tileOff < ts.tilecount)
 						{
-							layer.data[i] = (ushort)(off | (tileId << 13));// << (put++ * 16);
+							var data = (ushort)(tileOff | (tileId << 13));// << (put++ * 16);
+							if (IsSpecialTile(tile))
+								Layer.bonus.data[i] = data;
+							else
+								layer.data[i] = data;
 							break;
 						}
 					}
@@ -342,6 +426,8 @@ namespace COTG.JSON
 
 	public sealed class Layer
 	{
+		public static Layer bonus;
+		public const int idBonus = 7; // this layer is above all
 		[JsonIgnore]
 		public float z;
 		[JsonIgnore]

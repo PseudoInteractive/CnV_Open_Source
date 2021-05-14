@@ -202,7 +202,7 @@ namespace COTG
 		public static float bmFontScale = 0.125f;
 		public static Texture2D fontTexture;
 		static readonly Color attackColor = Color.White;
-		static Color ShadowColor(float alpha) => new Color(0, 0, 32, (int)(200*alpha) );
+		static Color ShadowColor(float alpha) => new Color(0, 0, 32, (int)(200 * alpha));
 		static readonly Color defenseColor = new Color(255, 20, 160, 160);
 		static readonly Color defenseArrivedColor = new Color(255, 20, 255, 160);
 		static readonly Color artColor = Color.DarkOrange;
@@ -439,7 +439,7 @@ namespace COTG
 				{
 					// canvas.Paused = true;
 					var pixels = World.bitmapPixels;
-				
+
 					World.bitmapPixels = null;
 					if (worldObjects != null)
 					{
@@ -449,7 +449,7 @@ namespace COTG
 					}
 					worldObjects = CreateFromBytes(pixels, World.outSize, World.outSize, SurfaceFormat.Dxt1SRgb);
 				}
-				if(World.worldOwnerPixels!=null)
+				if (World.worldOwnerPixels != null)
 				{
 					var ownerPixels = World.worldOwnerPixels;
 					World.worldOwnerPixels = null;
@@ -471,7 +471,7 @@ namespace COTG
 					var pixels = World.changePixels;
 					ClearHeatmapImage();
 					worldChanges = CreateFromBytes(pixels, World.outSize, World.outSize, SurfaceFormat.Dxt1, worldSpaceEffect);
-					
+
 
 				}
 				//if(JSClient.webViewBrush!=null)
@@ -515,14 +515,14 @@ namespace COTG
 			{
 				World.changeMapInProgress = true;
 				World.changeMapRequested = false;
-				
+
 			}
 			else
 			{
 				World.changeMapInProgress = false;// this is used to temporarily block the UI from issuing multiple changes at once
-			}		
+			}
 		}
-		
+
 		//public static void SetCanvasVisibility(bool visible)
 		//{
 		//    if (canvas.Visibility == Visibility.Visible)
@@ -725,7 +725,7 @@ namespace COTG
 					bfont.LoadXml(a);
 				}
 
-				tesselatedWorldVB = new VertexBuffer(device, VertexPositionTexture.VertexDeclaration,( (World.span+1) * (World.span + 1) ),BufferUsage.None );
+				tesselatedWorldVB = new VertexBuffer(device, VertexPositionTexture.VertexDeclaration, ((World.span + 1) * (World.span + 1)), BufferUsage.None);
 				{
 					var input = new VertexPositionTexture[(World.span + 1) * (World.span + 1)];
 					for (int x = 0; x < World.span + 1; ++x)
@@ -734,28 +734,28 @@ namespace COTG
 						{
 							var i = new VertexPositionTexture();
 							i.Position = new Vector3(x, y, 0.0f);
-							i.TextureCoordinate.X = (float)(x+1) / (World.span + 1);
-							i.TextureCoordinate.Y = (float)(y+1) / (World.span + 1);
+							i.TextureCoordinate.X = (float)(x + 1) / (World.span + 1);
+							i.TextureCoordinate.Y = (float)(y + 1) / (World.span + 1);
 							input[(World.span + 1) * y + x] = i;
 						}
 					}
 					tesselatedWorldVB.SetData(input);
 				}
-				tesselatedWorldIB = new IndexBuffer(device,IndexElementSize.ThirtyTwoBits, 
-					(World.span) * (World.span)*6, BufferUsage.None);
+				tesselatedWorldIB = new IndexBuffer(device, IndexElementSize.ThirtyTwoBits,
+					(World.span) * (World.span) * 6, BufferUsage.None);
 				{
 					var input = new int[(World.span) * (World.span) * 6];
-					for (int x = 0; x < World.span ; ++x)
+					for (int x = 0; x < World.span; ++x)
 					{
-						for (int y = 0; y < World.span ; ++y)
+						for (int y = 0; y < World.span; ++y)
 						{
-							input[(x + y * (World.span)) * 6 + 0] = (int)(x   + y * (World.span + 1));
-							input[(x + y * (World.span)) * 6 + 1] = (int)(x+1 + y * (World.span + 1));
-							input[(x + y * (World.span)) * 6 + 2] = (int)(x+1  + (y+1) * (World.span + 1));
+							input[(x + y * (World.span)) * 6 + 0] = (int)(x + y * (World.span + 1));
+							input[(x + y * (World.span)) * 6 + 1] = (int)(x + 1 + y * (World.span + 1));
+							input[(x + y * (World.span)) * 6 + 2] = (int)(x + 1 + (y + 1) * (World.span + 1));
 
 							input[(x + y * (World.span)) * 6 + 3] = (int)(x + y * (World.span + 1));
-							input[(x + y * (World.span)) * 6 + 4] = (int)(x + 1 + (y+1) * (World.span + 1));
-							input[(x + y * (World.span)) * 6 + 5] = (int)(x  + (y + 1) * (World.span + 1));
+							input[(x + y * (World.span)) * 6 + 4] = (int)(x + 1 + (y + 1) * (World.span + 1));
+							input[(x + y * (World.span)) * 6 + 5] = (int)(x + (y + 1) * (World.span + 1));
 						}
 					}
 					tesselatedWorldIB.SetData(input);
@@ -764,7 +764,7 @@ namespace COTG
 				tesselatedWorld.vb = tesselatedWorldVB;
 				tesselatedWorld.ib = tesselatedWorldIB;
 				tesselatedWorld.vertexCount = (World.span + 1) * (World.span + 1);
-				tesselatedWorld.triangleCount = (World.span ) * (World.span )*2;
+				tesselatedWorld.triangleCount = (World.span) * (World.span) * 2;
 
 
 
@@ -1069,6 +1069,8 @@ namespace COTG
 				//              ds.TextRenderingParameters = new CanvasTextRenderingParameters(CanvasTextRenderingMode.Default, CanvasTextGridFit.Disable);
 				// var scale = ShellPage.canvas.ConvertPixelsToDips(1);
 				pixelScale = (cameraZoomLag);
+				var bonusLayerScale = pixelScale.Max(64 * SettingsPage.iconScale);
+
 				bmFontScale = MathF.Sqrt(pixelScale / 64.0f) * 0.5f * SettingsPage.fontScale;
 				pixelScaleInverse = 1.0f / cameraZoomLag;
 				shapeSizeGain = MathF.Sqrt(pixelScale * (1.50f / 64.0f));
@@ -1294,111 +1296,108 @@ namespace COTG
 					//			shadowColor = new Color() { A = 128 };
 
 
-					if (wantDetails && TilesReady())
+					if (TilesReady())
 					{
 						var td = TileData.instance;
+
+						// 0 == land
+						// 1 == shadows
+						// 2 == features
+						foreach (var layer in td.layers)
 						{
-							// 0 == land
-							// 1 == shadows
-							// 2 == features
-							for (int pass = 0; pass < 3; ++pass)
+							var isBonus = Object.ReferenceEquals(layer, JSON.Layer.bonus);
+							if (!wantDetails && !isBonus)
+								continue;
+
+							var layerDat = layer.data;
+
+							for (var cy = cy0; cy < cy1; ++cy)
 							{
-								if (pass == 1 && (!wantParallax))
-									continue;
-								foreach (var layer in td.layers)
+								for (var cx = cx0; cx < cx1; ++cx)
 								{
-									var layerDat = layer.data;
+									var ccid = cx + cy * World.span;
+									var imageId = layerDat[ccid];
+									if (imageId == 0)
+										continue;
 
-									for (var cy = cy0; cy < cy1; ++cy)
+
+									var cid = (cx, cy).WorldToCid();
+									//   var layerData = TileData.packedLayers[ccid];
+									//  while (layerData != 0)
 									{
-										for (var cx = cx0; cx < cx1; ++cx)
+										//    var imageId = ((uint)layerData & 0xffffu);
+										//     layerData >>= 16;
+										var tileId = imageId >> 13;
+										var off = imageId & ((1 << 13) - 1);
+										var tile = td.tilesets[tileId];
+
+										if (tile.material == null)
+											continue;
+
+										for (int isShadow = layer.wantShadow ? 2 : 1; --isShadow >= 0;)
 										{
-											var ccid = cx + cy * World.span;
-											var imageId = layerDat[ccid];
-											if (imageId == 0)
-												continue;
-
+											if (isShadow == 1 && !tile.wantShadow)
 											{
-												var cid = (cx, cy).WorldToCid();
-												//   var layerData = TileData.packedLayers[ccid];
-												//  while (layerData != 0)
-												{
-													//    var imageId = ((uint)layerData & 0xffffu);
-													//     layerData >>= 16;
-													var tileId = imageId >> 13;
-													var off = imageId & ((1 << 13) - 1);
-													var tile = td.tilesets[tileId];
-
-													if (tile.material == null)
-														continue;
-													if (tile.isBase != (pass == 0))
-													{
-														continue;
-													}
-													if ((pass == 1) && (!tile.wantShadow || !layer.wantShadow))
-													{
-														continue;
-													}
-													var _tint = (pass == 1) ? tintShadow : (pass == 2) ? World.GetTint(ccid) : tint;
-													if ((pass == 2))
-														_tint.A = intAlpha; ;
-													if (wantCity && cid == City.build && layer.id > 1)
-													{
-														if (cityAlphaI >= 255)
-															continue;
-														_tint.A = (byte)((_tint.A * (256 - cityAlphaI)) / 256);
-													}
-
-													var dz = tile.z * parallaxGain; // shadows draw at terrain level 
-
-
-
-													if (tile.canHover && pass > 0 && viewHovers.TryGetValue((aa) => aa.cid == cid, out var z))
-													{
-														dz += z.z * viewHoverZGain;
-													}
-
-
-													var wc = new Vector2(cx, cy);
-													var cc = wc.WToCamera();
-													if (pass == 1)
-													{
-
-														// shift shadow
-														//	cc = (cc - cameraLightC) * (1 + dz*2) + cameraLightC;
-														//		cc = (cc - cameraLightC)*
-														dz = 0;
-													}
-													var shift = new Vector2(pixelScale * 0.5f);
-													var cc0 = cc - shift;
-													var cc1 = cc + shift;
-													var sy = off / tile.columns;
-													var sx = off - sy * tile.columns;
-													var uv0 = new Vector2((sx) * tile.scaleXToU + tile.halfTexelU, (sy) * tile.scaleYToV + tile.halfTexelV);
-													var uv1 = new Vector2((sx + 1) * tile.scaleXToU + tile.halfTexelU, (sy + 1) * tile.scaleYToV - tile.halfTexelV);
-
-													draw.AddQuad(pass switch { 0 => Layer.tileBase + layer.id, 1 => Layer.tileShadow, _ => Layer.tiles + layer.id },
-														(pass == 1 ? tile.shadowMaterial : tile.material), cc0, cc1,
-														uv0,
-														uv1, _tint,
-														(dz, dz, dz, dz));
-													//(cc0, cc1).RectDepth(dz));
-
-
-
-												}
-
-
+												continue;
 											}
+											var _tint = (isShadow == 1 && wantParallax) ? tintShadow : !tile.isBase ? World.GetTint(ccid) : tint;
+											if (!isBonus && isShadow == 0 && !tile.isBase)
+												_tint.A = intAlpha; ;
+											if (wantCity && cid == City.build && layer.id > 1)
+											{
+												if (cityAlphaI >= 255)
+													continue;
+												_tint.A = (byte)((_tint.A * (256 - cityAlphaI)) / 256);
+											}
+
+											var dz = tile.z * parallaxGain; // shadows draw at terrain level 
+
+
+
+											if (tile.canHover && !tile.isBase && viewHovers.TryGetValue((aa) => aa.cid == cid, out var z))
+											{
+												dz += z.z * viewHoverZGain;
+											}
+
+
+											var wc = new Vector2(cx, cy);
+											var cc = wc.WToCamera();
+											if (isShadow == 1)
+											{
+
+												// shift shadow
+												//	cc = (cc - cameraLightC) * (1 + dz*2) + cameraLightC;
+												//		cc = (cc - cameraLightC)*
+												dz = 0;
+											}
+											var shift = new Vector2( (isBonus ? bonusLayerScale : pixelScale) * 0.5f);
+											var cc0 = cc - shift;
+											var cc1 = cc + shift;
+											var sy = off / tile.columns;
+											var sx = off - sy * tile.columns;
+											var uv0 = new Vector2((sx) * tile.scaleXToU + tile.halfTexelU, (sy) * tile.scaleYToV + tile.halfTexelV);
+											var uv1 = new Vector2((sx + 1) * tile.scaleXToU + tile.halfTexelU, (sy + 1) * tile.scaleYToV - tile.halfTexelV);
+
+											draw.AddQuad((isShadow == 1) ? Layer.tileShadow : tile.isBase ? Layer.tileBase + layer.id : Layer.tiles + layer.id,
+												(isShadow == 1 ? tile.shadowMaterial : tile.material), cc0, cc1,
+												uv0,
+												uv1, _tint,
+												(dz, dz, dz, dz));
+											//(cc0, cc1).RectDepth(dz));
+
+
+
+
 										}
 									}
-
 								}
+
 							}
-						}// sprite batch
-						 //
-						 //   if (attacksVisible)
-						 //       ds.FillRectangle(new Rect(new Point(), clientSpan.ToSize()), desaturateBrush);
+
+						}
+						//
+						//   if (attacksVisible)
+						//       ds.FillRectangle(new Rect(new Point(), clientSpan.ToSize()), desaturateBrush);
 
 
 					}
@@ -1420,7 +1419,7 @@ namespace COTG
 						//var scale = new Vector2(t2d.TexelWidth, t2d.TexelHeight);
 						draw.AddMesh(tesselatedWorld, Layer.tileShadow - 1, worldChanges);
 					}
-					if (worldOwners != null && !focusOnCity  )
+					if (worldOwners != null && !focusOnCity)
 					{
 						var tOffset = new Vector2(0.0f, 0.0f);
 						var t2d = worldOwners.texture2d;
@@ -1445,8 +1444,8 @@ namespace COTG
 
 					if (!focusOnCity)
 					{
-						var defenderVisible = IncomingTab.IsVisible() || NearDefenseTab.IsVisible() ||SettingsPage.incomingAlwaysVisible;
-						var outgoingVisible = OutgoingTab.IsVisible() ||SettingsPage.attacksAlwaysVisible;
+						var defenderVisible = IncomingTab.IsVisible() || NearDefenseTab.IsVisible() || SettingsPage.incomingAlwaysVisible;
+						var outgoingVisible = OutgoingTab.IsVisible() || SettingsPage.attacksAlwaysVisible;
 						{
 							if (DefenseHistoryTab.IsVisible() || HitTab.IsVisible())
 							{
@@ -1532,7 +1531,7 @@ namespace COTG
 												var nSprite = attack.troops.Length;
 
 												(int iType, float alpha) = GetTroopBlend(t, nSprite);
-												DrawAction(dt1, journeyTime, r, c0, c1, c, troopImages[attack.troops[iType].type], true, attack,alpha: alpha);
+												DrawAction(dt1, journeyTime, r, c0, c1, c, troopImages[attack.troops[iType].type], true, attack, alpha: alpha);
 											}
 											//var progress = (dt0 / (dt0 + dt1).Max(1)).Saturate(); // we don't know the duration so we approximate with 2 hours
 											//var mid = progress.Lerp(c0, c1);
@@ -1565,7 +1564,7 @@ namespace COTG
 										var selected = false;
 										foreach (var i in cluster.attacks)
 										{
-											if (showAll ||Spot.IsSelectedOrHovered(i, true))
+											if (showAll || Spot.IsSelectedOrHovered(i, true))
 											{
 												selected = true;
 												break;
@@ -1582,7 +1581,7 @@ namespace COTG
 										{
 											var c0 = cluster.topLeft.WToCamera();
 											var c1 = cluster.bottomRight.WToCamera();
-											DrawRect(Layer.effects, c0, c1, selected ? new Color(128,0,0,128) : new Color(64, 0, 0, 128) );
+											DrawRect(Layer.effects, c0, c1, selected ? new Color(128, 0, 0, 128) : new Color(64, 0, 0, 128));
 										}
 
 										if (selected)
@@ -1697,7 +1696,7 @@ namespace COTG
 														c = GetAttackColor(i);
 													}
 												}
-												if (!(showAll||Spot.IsSelectedOrHovered(i.sourceCid, targetCid, noneIsAll)))
+												if (!(showAll || Spot.IsSelectedOrHovered(i.sourceCid, targetCid, noneIsAll)))
 												{
 													continue;
 													//       c.A = (byte)((int)c.A * 3 / 8); // reduce alpha if not selected
@@ -1710,14 +1709,14 @@ namespace COTG
 
 													(int iType, float alpha) = GetTroopBlend(t, nSprite);
 
-													DrawAction(i.TimeToArrival(serverNow), i.journeyTime, r, c0, c1, c, troopImages[i.troops[iType].type], true, i, alpha:alpha);
+													DrawAction(i.TimeToArrival(serverNow), i.journeyTime, r, c0, c1, c, troopImages[i.troops[iType].type], true, i, alpha: alpha);
 												}
 												else
 												{
 													Assert(false);
 												}
 											}
-											if (!IsCulled(c1)&&((wantDetails || showAll|| Spot.IsSelectedOrHovered(targetCid, noneIsAll))  ))
+											if (!IsCulled(c1) && ((wantDetails || showAll || Spot.IsSelectedOrHovered(targetCid, noneIsAll))))
 											{
 												DrawTextBox($"{incAttacks}`{city.claim.ToString("00")}%`{(incTs + 500) / 1000}k\n{ (city.tsDefMax + 500) / 1000 }k",
 														c1, tipTextFormatCentered, incAttacks != 0 ? Color.White : Color.Cyan, textBackgroundOpacity, Layer.tileText);
@@ -1770,7 +1769,7 @@ namespace COTG
 											//	var t = (tick * city.cid.CidToRandom().Lerp(1.375f / 512.0f, 1.75f / 512f));
 											//	var r = t.Ramp();
 											var hover = cityHover | Spot.IsHover(toCid);
-											DrawAction( c1.WToCamera(), wc.WToCamera(),hover? tradeColorHover: tradeColor, hover? lineThickness*2f : lineThickness  );
+											DrawAction(c1.WToCamera(), wc.WToCamera(), hover ? tradeColorHover : tradeColor, hover ? lineThickness * 2f : lineThickness);
 
 
 										}
@@ -1805,7 +1804,7 @@ namespace COTG
 											recruiting += sen.count;
 										else
 											active += sen.count;
-										if (sen.target != 0 && sen.type == SenatorInfo.Type.settle )
+										if (sen.target != 0 && sen.type == SenatorInfo.Type.settle)
 										{
 											var c1 = sen.target.CidToCamera();
 
@@ -1827,9 +1826,9 @@ namespace COTG
 									if (!IsCulledWC(wc))
 									{
 										if (!city.isSelected || city.cid == City.build)
-											DrawFlag(city.cid, city.cid == City.build ? SpriteAnim.flagHome : SpriteAnim.flagRed, new Vector2(4,4) );
+											DrawFlag(city.cid, city.cid == City.build ? SpriteAnim.flagHome : SpriteAnim.flagRed, new Vector2(4, 4));
 									}
-									if ((MainPage.IsVisible() && SettingsPage.raidsVisible!=0)||SettingsPage.raidsVisible==1 )
+									if ((MainPage.IsVisible() && SettingsPage.raidsVisible != 0) || SettingsPage.raidsVisible == 1)
 									{
 										if (IsCulledWC(wc, raidCullSlopSpace))
 											continue;
@@ -1870,7 +1869,7 @@ namespace COTG
 							DrawAccent(cid, 1.25f, hoverColor);
 						}
 
-						if(Player.viewHover != 0)
+						if (Player.viewHover != 0)
 						{
 							if (Player.all.TryGetValue(Player.viewHover, out var p))
 							{
@@ -1878,14 +1877,14 @@ namespace COTG
 								{
 									foreach (var cid in p.cities)
 									{
-										DrawFlag(cid, SpriteAnim.flagGrey, new Vector2(-4,4) );
+										DrawFlag(cid, SpriteAnim.flagGrey, new Vector2(-4, 4));
 									}
 								}
-								catch(Exception ex)
+								catch (Exception ex)
 								{
 									//LogEx(ex); // collection might change, if this happens just about this render, its 
 								}
-								
+
 							}
 						}
 
@@ -1946,11 +1945,11 @@ namespace COTG
 											//									, Layer.tileText, z,PlanetDepth);
 
 										}
-										if (spot != null && !focusOnCity && !(SettingsPage.troopsVisible.HasValue && SettingsPage.troopsVisible.Value==false) ) 
+										if (spot != null && !focusOnCity && !(SettingsPage.troopsVisible.HasValue && SettingsPage.troopsVisible.Value == false))
 										{
-											if (!spot.troopsTotal.Any() && spot.isNotClassified && spot.isFriend && SettingsPage.troopsVisible.GetValueOrDefault()  )
+											if (!spot.troopsTotal.Any() && spot.isNotClassified && spot.isFriend && SettingsPage.troopsVisible.GetValueOrDefault())
 												spot.Classify();
-											if (spot.troopsTotal.Any()|| spot.isClassified)
+											if (spot.troopsTotal.Any() || spot.isClassified)
 											{
 												var c1 = (cx, cy).WToCamera();
 												var rand = spot.cid.CidToRandom();
@@ -1960,18 +1959,18 @@ namespace COTG
 												float typeBlend;
 												float alpha = 1;// (t * rand.Lerp(0.7f, 0.8f)).Wave() * 0.20f + 0.70f;
 
-												if ( spot.troopsTotal.Any())
+												if (spot.troopsTotal.Any())
 												{
-													var ta  = GetTroopBlend(t, spot.troopsTotal.Length);
+													var ta = GetTroopBlend(t, spot.troopsTotal.Length);
 													alpha = ta.alpha;
-													
+
 													type = spot.troopsTotal[ta.iType].type;
 												}
 												else
 												{
 													type = spot.classificationTT;
 													typeBlend = 1;
-													switch( spot.classification)
+													switch (spot.classification)
 													{
 														case Spot.Classification.misc:
 														case Spot.Classification.unknown:
@@ -1982,14 +1981,14 @@ namespace COTG
 
 												}
 												var r = t.Ramp();
-												var spriteSize = new Vector2(32*SettingsPage.iconScale);
+												var spriteSize = new Vector2(32 * SettingsPage.iconScale);
 												var _c0 = c1 - spriteSize;
 												var _c1 = c1 + spriteSize;
 
-												draw.AddQuadWithShadow(Layer.effects,Layer.effectShadow, troopImages[type], _c0, _c1, HSLToRGB.ToRGBA(rectSpan, 0.3f, 0.825f, alpha, alpha + 0.125f), ShadowColor(alpha),
+												draw.AddQuadWithShadow(Layer.effects, Layer.effectShadow, troopImages[type], _c0, _c1, HSLToRGB.ToRGBA(rectSpan, 0.3f, 0.825f, alpha, alpha + 0.125f), ShadowColor(alpha),
 													(_c0, _c1).RectDepth(zCities), (_c0, _c1).RectDepth(zEffectShadow), shadowOffset);
 											}
-											dontDraw:;
+										dontDraw:;
 										}
 									}
 								}
@@ -2039,17 +2038,17 @@ namespace COTG
 					{
 						var alpha = 255;
 						Vector2 c = new Vector2(clientSpan.X - 32, 16).ScreenToCamera();
-						DrawTextBox($"{CityBuild.postQueueBuildingCount}/{CityBuild.postQueueTownHallLevel*10}", c, tipTextFormatRight, Color.White.Scale(alpha), (byte)(alpha * 192.0f).RoundToInt(), Layer.overlay, 11, 11, ConstantDepth, 0, 0.5f);
+						DrawTextBox($"{CityBuild.postQueueBuildingCount}/{CityBuild.postQueueTownHallLevel * 10}", c, tipTextFormatRight, Color.White.Scale(alpha), (byte)(alpha * 192.0f).RoundToInt(), Layer.overlay, 11, 11, ConstantDepth, 0, 0.5f);
 
 					}
 					var _debugTip = ShellPage.debugTip;
 					if (_debugTip != null)
 					{
-						var alpha =  255;
-						Vector2 c = new Vector2(clientSpan.X-16, 16).ScreenToCamera();
+						var alpha = 255;
+						Vector2 c = new Vector2(clientSpan.X - 16, 16).ScreenToCamera();
 						DrawTextBox(_debugTip, c, tipTextFormatRight, Color.White.Scale(alpha), (byte)(alpha * 192.0f).RoundToInt(), Layer.overlay, 11, 11, ConstantDepth, 0, 0.5f);
 					}
-					
+
 
 				}
 				if (popups.Length > 0)
@@ -2081,15 +2080,15 @@ namespace COTG
 				{
 					var fSprite = nSprite;
 					Assert(t > 0);
-					t -=  MathF.Floor(t /fSprite)*fSprite;
+					t -= MathF.Floor(t / fSprite) * fSprite;
 					var rType = MathF.Floor(t);
 					t -= rType;
 
-					iType = ((int)rType).Min(nSprite-1);
+					iType = ((int)rType).Min(nSprite - 1);
 					if (t < 0.25f)
 						alpha = AMath.SCurve(t * 4.0f);
 					else if (t > 0.75f)
-						alpha = AMath.SCurve( (1 - t) * 4.0f);
+						alpha = AMath.SCurve((1 - t) * 4.0f);
 
 				}
 				return (iType, alpha);
@@ -2104,8 +2103,8 @@ namespace COTG
 			if (IsCulledWC(wc))
 				return;
 
-			var c = wc.WToCamera()+ offset;
-			var dv = AGame.shapeSizeGain*48*4*SettingsPage.flagScale;
+			var c = wc.WToCamera() + offset;
+			var dv = AGame.shapeSizeGain * 48 * 4 * SettingsPage.flagScale;
 			float z = zLabels;
 
 			// hover flags
@@ -2274,40 +2273,40 @@ namespace COTG
 			}
 			DrawLine(Layer.effectShadow, c0 + shadowOffset, c1 + shadowOffset, GetLineUs(c0, c1), shadowColor, zEffectShadow);
 			if (applyStopDistance)
-				DrawSquare(Layer.effectShadow, c0+ shadowOffset, shadowColor, zEffectShadow);
+				DrawSquare(Layer.effectShadow, c0 + shadowOffset, shadowColor, zEffectShadow);
 			DrawLine(Layer.action + 2, c0, mid, GetLineUs(c0, mid), color, zLabels);
 			if (applyStopDistance)
 				DrawSquare(Layer.action + 3, new Vector2(c0.X, c0.Y), color, zLabels);
 			float spriteSize = 32 * SettingsPage.iconScale;
-		    var dc = new Vector2(spriteSize, spriteSize);
+			var dc = new Vector2(spriteSize, spriteSize);
 			if (bitmap != null)
 			{
 				var _c0 = new Vector2(mid.X - spriteSize, mid.Y - spriteSize);
 				var _c1 = new Vector2(mid.X + spriteSize, mid.Y + spriteSize);
-				draw.AddQuadWithShadow(Layer.action + 4,Layer.effectShadow, bitmap, _c0, _c1, HSLToRGB.ToRGBA(rectSpan, 0.3f, 0.825f, alpha, gain * 1.1875f),shadowColor, (_c0, _c1).RectDepth(zLabels), (_c0, _c1).RectDepth(zEffectShadow),shadowOffset);
+				draw.AddQuadWithShadow(Layer.action + 4, Layer.effectShadow, bitmap, _c0, _c1, HSLToRGB.ToRGBA(rectSpan, 0.3f, 0.825f, alpha, gain * 1.1875f), shadowColor, (_c0, _c1).RectDepth(zLabels), (_c0, _c1).RectDepth(zEffectShadow), shadowOffset);
 			}
 			//            ds.DrawRoundedSquare(midS, rectSpan, color, 2.0f);
 
 
 		}
 
-		private void DrawAction( Vector2 c0, Vector2 c1, Color color, float thickness = lineThickness)
+		private void DrawAction(Vector2 c0, Vector2 c1, Color color, float thickness = lineThickness)
 		{
-			DrawAction(0, 1.0f, 1, c0, c1, color, null, false, null,alpha:1);
-			
+			DrawAction(0, 1.0f, 1, c0, c1, color, null, false, null, alpha: 1);
 
-/*			if (IsCulled(c0, c1))
-				return;
 
-			var dl = (c0 - c1);
-			var dllg = dl.Length();
-			var inverseL = 1.0f / dllg;
-			var t0 = (animationT * actionAnimationGain * inverseL) % 1.0f;
+			/*			if (IsCulled(c0, c1))
+							return;
 
-			var cm = t0.Lerp(c0, c1);
+						var dl = (c0 - c1);
+						var dllg = dl.Length();
+						var inverseL = 1.0f / dllg;
+						var t0 = (animationT * actionAnimationGain * inverseL) % 1.0f;
 
-			DrawLine(Layer.effectShadow, cm, cm + dl*inverseL*drawActionLength, (0.0f,1.0f), color, zEffectShadow);
-*/
+						var cm = t0.Lerp(c0, c1);
+
+						DrawLine(Layer.effectShadow, cm, cm + dl*inverseL*drawActionLength, (0.0f,1.0f), color, zEffectShadow);
+			*/
 		}
 		private static void DrawSquare(int layer, Vector2 c0, Color color, float zBias)
 		{
@@ -2324,7 +2323,7 @@ namespace COTG
 			return (offset + (c0 - c1).Length() * lineTileGain, offset);
 
 		}
-		private static void DrawLine(int layer, Vector2 c0, Vector2 c1, (float u, float v) uv, Color color, float zBias, float thickness= lineThickness)
+		private static void DrawLine(int layer, Vector2 c0, Vector2 c1, (float u, float v) uv, Color color, float zBias, float thickness = lineThickness)
 		{
 			//	draw.AddLine(layer,lineDraw, c0, c1, lineThickness, , color,(c0.CToDepth()+ zBias, c1.CToDepth()+ zBias) );
 			draw.AddLine(layer, lineDraw, c0, c1, thickness, uv.u, uv.v, color, (c0.CToDepth() + zBias, c1.CToDepth() + zBias));
@@ -2353,7 +2352,7 @@ namespace COTG
 		public static void DrawAccent(Vector2 c, float radius, float angularSpeed, Color brush)
 		{
 			var angle = angularSpeed * AGame.animationT;
-			DrawAccentBase(c.X+ shadowOffset.X, c.Y+shadowOffset.Y, radius, angle, brush.GetShadowColorDark(), Layer.effectShadow, zEffectShadow);
+			DrawAccentBase(c.X + shadowOffset.X, c.Y + shadowOffset.Y, radius, angle, brush.GetShadowColorDark(), Layer.effectShadow, zEffectShadow);
 			DrawAccentBase(c.X, c.Y, radius, angle, brush, Layer.overlay, zLabels);
 		}
 		public static void DrawAccent(int cid, float angularSpeedBase, Color brush)
@@ -2646,7 +2645,7 @@ namespace COTG
 				done:
 					AGame.cameraC = newC;
 					ShellPage.SetJSCamera();
-					if (cid != City.build && (!City.CanVisit(cid) || !Spot.CanChangeCity(cid))  )
+					if (cid != City.build && (!City.CanVisit(cid) || !Spot.CanChangeCity(cid)))
 						ShellPage.EnsureNotCityView();
 
 					return true;

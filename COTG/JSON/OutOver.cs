@@ -372,7 +372,11 @@ namespace COTG.JSON
                                                                     // todo TS info
 
                                                                 };
-                                                                    parts[part].Add(rep);
+																	if (rep.claim == 100)
+																		rep.dTsKill += defTSLeft;
+
+
+																	parts[part].Add(rep);
 																	IncomingOverview.reportCache.TryAdd(hash, rep);
 																//    await Cosmos.AddBattleRecord(rep);
 

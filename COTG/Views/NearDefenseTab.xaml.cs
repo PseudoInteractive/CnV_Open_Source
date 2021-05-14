@@ -39,9 +39,9 @@ namespace COTG.Views
 		public bool portal { get; set; }
 		public bool onlyHome { get; set; } = true;
 
-		public float _filterTime { get => filterTime; set { filterTime = value; Refresh(); } }  // defenders outside of this window are not included
-        public int _filterTSTotal { get => filterTSTotal; set { filterTSTotal = value; Refresh(); } }
-        public int _filterTSHome { get => filterTSHome; set { filterTSHome = value; Refresh(); } } // need at this this many ts at home to be considered for def
+		public float _filterTime { get => filterTime; set { filterTime = value; refresh.Go(); } }  // defenders outside of this window are not included
+        public int _filterTSTotal { get => filterTSTotal; set { filterTSTotal = value; refresh.Go(); } }
+        public int _filterTSHome { get => filterTSHome; set { filterTSHome = value; refresh.Go(); } } // need at this this many ts at home to be considered for def
         public DateTimeOffset arriveAt { get; set; } = AUtil.dateTimeZero;
         public static DumbCollection<Supporter> supporters = new DumbCollection<Supporter>();
         public static SupportByTroopType [] supportByTroopTypeEmpty = Array.Empty<SupportByTroopType>();
@@ -408,7 +408,7 @@ namespace COTG.Views
        
         private void PropChanged(object sender, RoutedEventArgs e)
         {
-            Refresh();
+            refresh.Go();
         }
     }
 

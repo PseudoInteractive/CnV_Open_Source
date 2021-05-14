@@ -25,6 +25,7 @@ using Windows.Storage;
 using ContentDialog = Windows.UI.Xaml.Controls.ContentDialog;
 using ContentDialogResult = Windows.UI.Xaml.Controls.ContentDialogResult;
 using Cysharp.Text;
+using Windows.System;
 
 namespace COTG.JSON
 {
@@ -162,8 +163,15 @@ namespace COTG.JSON
 	}
 	public class CityBuildQueue : IDisposable
 	{
+		public static DispatcherQueueController _queueController;
+		public static DispatcherQueue _queue;
+		public static DispatcherQueueTimer _timer;
 
-		public bool isRunning;
+		public float nextTick;
+
+	// Start the Timer
+
+	public bool isRunning;
 		public int cid;
 		public DArray<BuildQueueItem> queue = new(128); // extra large
 		public CancellationTokenSource cancellationTokenSource;
@@ -175,6 +183,22 @@ namespace COTG.JSON
 		}
 	     public static SemaphoreSlim queueLock = new SemaphoreSlim(1);
 		public static SemaphoreSlim processLock = new SemaphoreSlim(1);
+		public static void Initialize()
+		{
+			_queueController = DispatcherQueueController.CreateOnDedicatedThread();
+			_queue = _queueController.DispatcherQueue;
+			_timer = _queue.CreateTimer();
+			_timer.Interval = TimeSpan.FromSeconds(0.5f);
+
+			// The tick handler will be invoked repeatedly after every 5
+			// seconds on the dedicated thread.
+			_timer.Tick += Tick;
+
+		}
+
+		private static void Tick(DispatcherQueueTimer sender, object args)
+		{
+		}
 
 		public async void Process(int initialDelay = 1000)
 		{

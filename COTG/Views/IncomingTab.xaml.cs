@@ -38,6 +38,7 @@ namespace COTG.Views
     public sealed partial class IncomingTab : UserTab, INotifyPropertyChanged
     {
 
+		public static Spot lastSelected;
         public static IncomingTab instance;
         //        public static Report showingRowDetails;
 
@@ -140,7 +141,9 @@ namespace COTG.Views
                 try
                 {
                     var sel = defenderGrid.SelectedItem as Spot;
-                    defenderGrid.ItemsSource = onlyMe.IsChecked.GetValueOrDefault() ? Spot.defendersI.Where(w=>w.pid==Player.activeId).ToArray() : Spot.defendersI;
+//					lastSelected = sel;
+
+					defenderGrid.ItemsSource = onlyMe.IsChecked.GetValueOrDefault() ? Spot.defendersI.Where(w=>w.pid==Player.activeId).ToArray() : Spot.defendersI;
                     if (sel!=null)
                     {
                        
@@ -187,23 +190,6 @@ namespace COTG.Views
         public static bool IsVisible() => instance.isVisible;
 
 
-		private static Spot SelectionChanged( DataGridSelectionChangedEventArgs e, RadDataGrid grid)
-		{
-	
-			//if (SpotTab.silenceSelectionChanges == 0)
-			//{
-			//	foreach (Spot s in e.RemovedItems)
-			//	{
-			//		s.isSelected = false;
-			//	}
-			//	foreach (Spot s in e.AddedItems)
-			//	{
-			//		s.isSelected = true;
-			//	}
-			//}
-
-			return grid.SelectedItem as Spot;
-		}
 
 		private void defenderGrid_SelectionChanged(object sender, DataGridSelectionChangedEventArgs e)
         {
@@ -213,17 +199,20 @@ namespace COTG.Views
 			var sel = defenderGrid.SelectedItem as Spot; ;
 			if (sel != null )
             {
+				if (sel == lastSelected)
+					return;
+				lastSelected = sel;
 				armyGrid.ItemsSource = sel.incoming;
 				
 				var tab = DefenseHistoryTab.instance;
-				if (!tab.isActive)
+				if (!tab.isVisible)
 				{
-					tab.ShowOrAdd( true,true );
+					tab.ShowOrAdd( true,false );
 
 				}
-				if(tab.isVisible)
+				else
 				{
-					tab.Refresh();
+					tab.refresh.Go();
 				}
 
 			}
@@ -232,7 +221,7 @@ namespace COTG.Views
 
 		private void onlyMe_Click(object sender, RoutedEventArgs e)
 		{
-			instance.Refresh();
+			instance.refresh.Go();
 		}
 	}
 

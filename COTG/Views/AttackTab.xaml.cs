@@ -611,7 +611,7 @@ namespace COTG.Views
 				combo.Items.Add("Real Demo");
 				combo.Items.Add("Fake Demo");
 				combo.Items.Add("None (Disable)");
-				combo.SelectedIndex. = SettingsPage.chooseAttackTypeUpdate;
+			//	combo.SelectedIndex. = SettingsPage.chooseAttackTypeUpdate;
 
 			var check = new CheckBox() { Content = "Update Existing", IsChecked = true };
 				//	var removeTargets = new CheckBox() { Content = $"{targetGrid.SelectedItems.Count} targets", IsChecked = true };

@@ -157,7 +157,7 @@ namespace COTG.Game
 				var d = cid.CidToWorld().DistanceToCid(distanceReference.cid);
 				var tt = distanceReference.GetAttackTroopType();
 				var rv = d * Enum.ttTravel[tt] / (60f * Enum.ttSpeedBonus[tt]);
-				if (Enum.IsWaterRaider(tt))
+				if (Enum.IsTTNaval(tt))
 					rv += 1.0f;
 				return rv;
 			}
@@ -207,6 +207,7 @@ namespace COTG.Game
 		public const uint typePortal = 0x3u;
 		public const uint typeBoss = 0x4u;
 		public const uint typeDungeon = 0x5u;
+		public const uint typeMisc = 0x5u;
 		public const int dataShift = 4; // shifts to data slot
 		public const uint dataMult = 0x10; //  
 		public const uint typeNone = 0x0;

@@ -20,6 +20,7 @@ using Windows.UI.Xaml.Navigation;
 using Microsoft.Toolkit.Uwp.UI;
 using static COTG.Debug;
 using System.Threading.Tasks;
+using static COTG.AUtil;
 // The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234236
 
 namespace COTG.Views
@@ -158,7 +159,7 @@ namespace COTG.Views
 		//	}
 		//}
 
-		public async void SelectionChanged()
+		public async Task SelectionChanged()
 		{
 
 			var t1 = SmallTime.zero;
@@ -315,13 +316,13 @@ namespace COTG.Views
 			Trace($"Key:  {sender} {e}");
 		}
 
-		Action selChanged;
+		Debounce selChanged;
 
 		private void zoom_SelectionChanged(TreeView sender, TreeViewSelectionChangedEventArgs args)
 		{
 			if(selChanged == null)
-				selChanged = AUtil.Debounce(SelectionChanged, 300,1000);
-			selChanged();
+				selChanged = new (SelectionChanged) { throttleDelay = 1000 };
+			selChanged.Go();
 		}
 
 		//private void TreeViewItem_Tapped(object sender, TappedRoutedEventArgs e)

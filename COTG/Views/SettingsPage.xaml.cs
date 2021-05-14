@@ -260,7 +260,7 @@ namespace COTG.Views
 			get => fetchFullHistory; set
 			{
 				fetchFullHistory = value;
-				DefenseHistoryTab.instance.Refresh();
+				DefenseHistoryTab.instance.refresh.Go();
 			}
 
 		}
