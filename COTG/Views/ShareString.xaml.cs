@@ -132,7 +132,7 @@ namespace COTG.Views
 
 			Assert(cid == City.build);
 
-			var sel = Spot.GetSelectedForContextMenu(cid,false);
+			var sel = Spot.GetSelectedForContextMenu(cid,false, onlyMine: true);
 			
 
 			bool setResources = true;

@@ -30,14 +30,14 @@ namespace COTG.JSON
 		// inclusive
 		public static bool IsSpecialTile(int tile) =>
 		
-			 tile switch { (>= tileShrineStart and <= tileShrineStart)
+			 tile switch { (>= tileShrineStart and <= tileShrineEnd)
 				 or tileShrineUnlit
 				 or tilePortalClosed
 				 or tilePortalOpen 
 				 or (>= tileModifierStart and <= tileModifierEnd) => true, _ => false };
 
 		
-		public const int tileShrineStart = tileShrineEnd - 7;
+		public const int tileShrineStart = 1557;
 		public const int tileShrineEnd = 1564;
 		public const int tileShrineUnlit = 1001;
 		public const int tilePortalClosed = 1002;

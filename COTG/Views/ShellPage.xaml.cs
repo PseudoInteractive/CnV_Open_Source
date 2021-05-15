@@ -562,6 +562,7 @@ namespace COTG.Views
 
 		private async static Task RefreshWorldData()
 		{
+			World.lastUpdatedContinent = -1;
 			using var work = new WorkScope("Refresh..");
 			var task0 = TileData.Ctor(false);
 			if (World.completed)
@@ -574,6 +575,7 @@ namespace COTG.Views
 		public static void RefreshAndReloadWorldData()
 		{
 			using var work = new WorkScope("Refresh..");
+			World.lastUpdatedContinent = -1;
 			if (World.completed)
 			{
 				GetWorldInfo.Send();

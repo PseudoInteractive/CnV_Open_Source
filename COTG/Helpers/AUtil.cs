@@ -418,6 +418,10 @@ namespace COTG
 		{
 			return (c & 65535, c >> 16);
 		}
+		public static (int x, int y) CidToContinentXY(this int c)
+		{
+			return ( (c & 65535)/100, (c >> 16)/100);
+		}
 
 		public static int DecodeCid(int offset, string s)
 		{

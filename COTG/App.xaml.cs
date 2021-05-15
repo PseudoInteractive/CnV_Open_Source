@@ -429,7 +429,7 @@ namespace COTG
 					{
 						COTG.Debug.LogEx(_exception);
 					}
-					await Task.Delay(1000); // wait one second if idel
+					await Task.Delay(1000); // wait one second if idle
 				}
 				// not idle but no tasks
 				await Task.Delay(9 * 1000);

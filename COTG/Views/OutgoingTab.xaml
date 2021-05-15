@@ -82,7 +82,7 @@
                                             CellContentStyle="{StaticResource RightAlign}"
                                             CellContentFormat="{}{0,7:N0}"
                                              />
-                <tg:DataGridTextColumn PropertyName="playerName" Header="Player}"
+                <tg:DataGridTextColumn PropertyName="playerName" Header="Player"
                                        CellContentStyle="{StaticResource LeftAlign}"
                                        
                                         />

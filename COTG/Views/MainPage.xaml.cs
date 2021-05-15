@@ -385,7 +385,7 @@ namespace COTG.Views
 		{
 			using var work = new ShellPage.WorkScope("Auto Raid..");
 
-			var sel = Spot.GetSelectedForContextMenu(0, false);
+			var sel = Spot.GetSelectedForContextMenu(0, false, onlyMine: true);
 			int totalSent = 0;
 			float minRaidIdle = 0.0625f;
 			for (int pass=0;pass<8;++pass)

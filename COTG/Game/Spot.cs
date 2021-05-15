@@ -601,7 +601,7 @@ namespace COTG.Game
 			}
 			else if (pt.Properties.IsRightButtonPressed)
 			{
-				if (!modifiers.IsShift())
+				if (!modifiers.IsShiftOrControl())
 					SetFocus(false, true, true);
 				ShowContextMenu(uie, pt.Position);
 
@@ -810,7 +810,7 @@ namespace COTG.Game
 				}
 				else if (mx == training)
 				{
-					if (se > 0 || academies > 0 || (training < 28 && training != 22)|| isIncomingAttack)
+					if (se > 0 || academies > 0 || (training < 28 && training >= 26) || (training < 22) || isIncomingAttack)
 						classification = Classification.vanqs;
 					else
 						classification = Classification.rt;
@@ -1060,7 +1060,7 @@ namespace COTG.Game
 			return viewHover == cid;
 		}
 
-		public static List<int> GetSelectedForContextMenu(int cid, bool onlyIfShiftPressed = true, int ignoreCid=0, bool onlyCities=true)
+		public static List<int> GetSelectedForContextMenu(int cid, bool onlyIfShiftPressed = true, int ignoreCid=0, bool onlyCities=true, bool onlyMine=false)
 		{
 			var cids = new List<int>();
 			if (cid != 0)
@@ -1333,8 +1333,9 @@ namespace COTG.Game
 			ShellPage.instance.coords.Text = focus.CidToString();
 		}
 
-	public static void SetFocus(int cid, bool scrollintoView, bool select = true, bool bringIntoView = true,bool lazyMove = true)
+		public static void SetFocus(int cid, bool scrollintoView, bool select = true, bool bringIntoView = true,bool lazyMove = true)
 		{
+			World.UpdateRegionInfo(cid);
 			var changed = cid != focus;
 			var spot = Spot.GetOrAdd(cid);
 			if (select)
@@ -1619,11 +1620,16 @@ namespace COTG.Game
 		{
 			JSCommand("spotRaid", cid);
 		}
-		public void ShowDistanceTo(int _cid)
+		public void ShowDistanceTo()
 		{
+			var sel = GetSelectedForContextMenu(0,false,cid,true);
+			var _cid = (sel.Count == 1) ? sel[0] : City.build;
+
+
 			// todo cart travel time, ship travel time
 			var dist = cid.DistanceToCid(_cid);
 			StringBuilder sb = new StringBuilder();
+			sb.AppendLine($"From {nameMarkdown} to {City.Get(_cid).nameMarkdown}");
 			sb.Append(dist.ToString("0.00"));
 
 			sb.Append($"\nCarts: {TimeSpan.FromMinutes(dist * cartTravel).ToString(AUtil.defaultTimeSpanFormat)}, ");
@@ -1826,7 +1832,7 @@ namespace COTG.Game
 			}
 			aMisc.AddItem( "Notify on Decay", DecayQuery);
 
-			aMisc.AddItem( "Distance", (_, _) => City.GetBuild().ShowDistanceTo(Spot.focus));
+			aMisc.AddItem( "Distance", (_, _) => ShowDistanceTo());
 			aMisc.AddItem( "Select", (_, _) => SelectMe(true, App.keyModifiers));
 			aMisc.AddItem("Coords to Chat", () => ChatTab.PasteToChatInput(cid.CidToCoords(), true));
 			flyout.RemoveEmpy();

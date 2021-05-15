@@ -67,7 +67,7 @@ namespace COTG.JSON
 
 		public static async void SetHub(int cid)
 		{
-			foreach (var _cid in Spot.GetSelectedForContextMenu(cid, false))
+			foreach (var _cid in Spot.GetSelectedForContextMenu(cid, false,onlyMine:true))
 			{
 				var hub = await CitySettings.FindBestHub(_cid);
 				await CitySettings.SetCitySettings(_cid,hub, FilterTargetHub(cid,hub) );
@@ -282,7 +282,7 @@ namespace COTG.JSON
 		}
 		public static async void SetFoodWarnings(int cid)
 		{
-			var targets = Spot.GetSelectedForContextMenu(cid, false);
+			var targets = Spot.GetSelectedForContextMenu(cid, false, onlyMine: true);
 			var content = new NumberBox();
 			content.Value = SettingsPage.defaultFoodWarning;
 			var dialog = new ContentDialog()
@@ -511,7 +511,7 @@ namespace COTG.JSON
 
 		public static async void SetTargetHub(int cid, int targetHub)
         {
-			var targets = Spot.GetSelectedForContextMenu(cid, false, targetHub);
+			var targets = Spot.GetSelectedForContextMenu(cid, false, targetHub, onlyMine: true);
 			var result = await App.DispatchOnUIThreadTask(async () =>
 			{
 				var dialog = new ContentDialog()
@@ -551,7 +551,7 @@ namespace COTG.JSON
 
 		public static async void SetAutoTowersOrWalls(int cid, bool ? autoWalls=null,bool ? autoTowers=null)
 		{
-			var targets = Spot.GetSelectedForContextMenu(cid);
+			var targets = Spot.GetSelectedForContextMenu(cid, onlyMine: true);
 			foreach (var _cid in targets)
 			{
 				await CitySettings.SetCitySettings(_cid,autoWalls:autoWalls,autoTowers:autoTowers);

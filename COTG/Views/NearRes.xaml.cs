@@ -95,7 +95,7 @@ namespace COTG.Views
 		static bool updating = true;
 		public static async Task UpdateTradeStuffifNeeded()
 		{
-			if(SmallTime.serverNow.seconds >  lastUpdated.seconds + 60 )
+			if(SmallTime.serverNow.seconds >  lastUpdated.seconds + 60 && (updating ==false) )
 			{
 				await UpdateTradeStuff();
 			}
@@ -104,7 +104,7 @@ namespace COTG.Views
 		public static async Task UpdateTradeStuff()
 		{
 			lastUpdated = SmallTime.serverNow;
-			updating = true;
+//			updating = true;
 	//		try
 	//		{
 				var data = await Post.SendForJson("overview/tcounc.php");
@@ -201,7 +201,7 @@ namespace COTG.Views
 		{
 			if (updating && resetValues==false)
 				return;
-			
+			updating = true;
 			try
 			{
 				Trace($"Update {DateTime.Now}");

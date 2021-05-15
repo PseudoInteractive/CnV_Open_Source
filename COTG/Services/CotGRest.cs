@@ -821,8 +821,9 @@ namespace COTG.Services
 						raid.target = target;
 						raid.time = dateTime;
 						raid.repeatCount = 1;
+						var r4 = r[4].GetInt32(); 
 						raid.isReturning = r[3].GetInt32() != 0;
-						raid.isRepeating = r[4].GetInt32() == 2;
+						raid.isRepeating =  r4== 2 ||r4==3;
 						//    Log(raid.ToString());
 						// raid.arrival.Year = DateTime.Now.Year;
 						var ss0 = desc.Split(',');

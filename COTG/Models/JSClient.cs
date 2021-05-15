@@ -94,16 +94,16 @@ namespace COTG
 				} }
 );
 		}
-	
+
 
 		public static async Task<string> JSInvokeTask(string func, string[] args)
 		{
 
 			// this won't await the actually js call
-			return await App.DispatchOnUIThreadTask(  async () =>
-		    await JSClient.view.InvokeScriptAsync(func, args) );
-		
-			
+			return await App.DispatchOnUIThreadTask(async () =>
+		  await JSClient.view.InvokeScriptAsync(func, args));
+
+
 		}
 		public static HttpClient _genericClient;
 		public static HttpClient genericClient
@@ -142,21 +142,21 @@ namespace COTG
 		public static string httpsHostString;
 
 		// IHttpContent content;
-		public  class JSVars
+		public class JSVars
 		{
 			[JsonInclude]
 			public int pid;
 			[JsonInclude]
 			public string pn; // redundant player name
 			[JsonInclude]
-			public  string token;
-		//	[JsonInclude]
-		//	public  string s ;
+			public string token;
+			//	[JsonInclude]
+			//	public  string s ;
 			[JsonInclude]
 			public string raidSecret;
-	//		[JsonInclude]
-//			public  string cookie; // not used
-			
+			//		[JsonInclude]
+			//			public  string cookie; // not used
+
 			[JsonInclude]
 			public string ppdt;
 
@@ -165,7 +165,7 @@ namespace COTG
 			public int[] deniedPlayers;
 
 			public string cookies;
-			
+
 		}
 		public static JSVars[] jsVarsByPlayer = Array.Empty<JSVars>();
 		public static JSVars jsVars;
@@ -174,11 +174,11 @@ namespace COTG
 		{
 			if (pid == -1)
 				return jsVars;
-			for(int i=0;i<jsVarsByPlayer.Length;++i)
+			for (int i = 0; i < jsVarsByPlayer.Length; ++i)
 			{
 				var p = jsVarsByPlayer[i];
 				if (p.pid == pid)
-					return  p;
+					return p;
 			}
 			return jsVars;
 		}
@@ -213,21 +213,21 @@ namespace COTG
 		{
 			return t.ToUniversalTime() - gameTOffset;
 		}
-			/// <summary>
-			/// Initializes a new instance of the <see cref="JSClient"/> class.
-			/// </summary>
+		/// <summary>
+		/// Initializes a new instance of the <see cref="JSClient"/> class.
+		/// </summary>
 		public JSClient()
 		{
 		}
 
 		public static void SetPlayer(int pid, int cid)
 		{
-			foreach(var p in PlayerPresence.all)
+			foreach (var p in PlayerPresence.all)
 			{
-				if(p.pid ==pid)
+				if (p.pid == pid)
 				{
 
-					SetPlayer(pid,p.token, p.cookies, cid, p.name);
+					SetPlayer(pid, p.token, p.cookies, cid, p.name);
 					return;
 				}
 			}
@@ -246,8 +246,8 @@ namespace COTG
 		//	}
 		//	return ""; // error!
 		//}
-		static string  pendingCookies;
-		public static async void SetPlayer(int pid,string token, string cookies, int cid,string name)
+		static string pendingCookies;
+		public static async void SetPlayer(int pid, string token, string cookies, int cid, string name)
 		{
 			// already set
 			if (jsVars.token == token)
@@ -258,7 +258,7 @@ namespace COTG
 
 			Note.Show($"Entering {name}'s City");
 
-			
+
 			Log($"ChangePlayer:{name}");
 			{
 				var _cookies = cookieManager.GetCookies(new Uri("https://crownofthegods.com"));
@@ -270,7 +270,7 @@ namespace COTG
 
 			var secSessionId = CookieDB.Apply(cookies);
 
-			
+
 			{
 				var _cookies = cookieManager.GetCookies(new Uri("https://crownofthegods.com"));
 				foreach (var c in _cookies)
@@ -278,8 +278,8 @@ namespace COTG
 					Log($"{c.Name} {c.Domain} {c.Path} {c.Value} {c.Secure} {c.HttpOnly}");
 				}
 			}
-		//	AddPlayer(false, true, pid, Player.all[pid].name, token, "", secSessionId, null);
-		//	await GetCity.Post(cid, (jse,city) => Log($"{jse.ToString()} Here!!") );
+			//	AddPlayer(false, true, pid, Player.all[pid].name, token, "", secSessionId, null);
+			//	await GetCity.Post(cid, (jse,city) => Log($"{jse.ToString()} Here!!") );
 			App.DispatchOnUIThreadSneaky(() => view.InvokeScriptAsync("setPlayerGlobals", new[] { token, secSessionId, cid.ToString() }));
 		}
 
@@ -292,11 +292,11 @@ namespace COTG
 				cookie.Secure = true;
 				cookie.HttpOnly = true;
 			}
-			
-			if(!session)
+
+			if (!session)
 			{
 				cookie.Expires = DateTimeOffset.UtcNow + TimeSpan.FromDays(7);
-			}	
+			}
 			cookieManager.DeleteCookie(cookie);
 			if (!clearOnly)
 			{
@@ -305,16 +305,16 @@ namespace COTG
 			}
 		}
 
-		public static void AddPlayer(bool isMe,bool setCurrent,int pid,string pn, string token,string raid,string cookies, string ppdt)
+		public static void AddPlayer(bool isMe, bool setCurrent, int pid, string pn, string token, string raid, string cookies, string ppdt)
 		{
-			var jsv = new JSVars() {  token = token,pn=pn, pid = pid, ppdt = ppdt, cookies = cookies, raidSecret=raid }; // todo: need raidSecret
-			//
-			// add if necessary
-			//
+			var jsv = new JSVars() { token = token, pn = pn, pid = pid, ppdt = ppdt, cookies = cookies, raidSecret = raid }; // todo: need raidSecret
+																															 //
+																															 // add if necessary
+																															 //
 			bool present = false;
-			for(int i=0;i< jsVarsByPlayer.Length;++i)
+			for (int i = 0; i < jsVarsByPlayer.Length; ++i)
 			{
-				if(jsVarsByPlayer[i].pid == pid )
+				if (jsVarsByPlayer[i].pid == pid)
 				{
 					jsVarsByPlayer[i] = jsv;
 					present = true;
@@ -341,7 +341,7 @@ namespace COTG
 				App.DispatchOnUIThreadSneakyLow(() => ShellPage.instance.friendListBox.SelectedItem = pn);
 
 			}
-			
+
 		}
 
 
@@ -350,7 +350,7 @@ namespace COTG
 
 			try
 			{
-				
+
 
 				view = new WebView(Windows.UI.Xaml.Controls.WebViewExecutionMode.SeparateThread)
 				{
@@ -358,14 +358,14 @@ namespace COTG
 					//VerticalAlignment = VerticalAlignment.Stretch,
 					//CacheMode=new BitmapCache()
 					DefaultBackgroundColor = new Windows.UI.Color() { G = 0, B = 0, R = 0, A = 0 },
-					
+
 					Name = "cotgView",
 					//Opacity = 0.5,
-					
+
 				};
 
-			//	view.AddHandler(WebView.KeyDownEvent, new KeyEventHandler(webViewKeyDownHandler), true);
-			//	view.AddHandler(WebView.PointerPressedEvent, new PointerEventHandler(pointerEventHandler), true);
+				//	view.AddHandler(WebView.KeyDownEvent, new KeyEventHandler(webViewKeyDownHandler), true);
+				//	view.AddHandler(WebView.PointerPressedEvent, new PointerEventHandler(pointerEventHandler), true);
 				view.UnsafeContentWarningDisplaying += View_UnsafeContentWarningDisplaying;
 				view.UnsupportedUriSchemeIdentified += View_UnsupportedUriSchemeIdentified;
 
@@ -379,7 +379,7 @@ namespace COTG
 				view.NewWindowRequested += View_NewWindowRequested;
 				//  view.WebResourceRequested += View_WebResourceRequested1;
 				//	webViewBrush = new WebViewBrush() { Stretch = Stretch.Fill };
-		
+
 				//   view.CacheMode = CacheMode.
 				//Grid.Se SetAlignLeftWithPanel(view, true);
 				//RelativePanel.SetAlignRightWithPanel(view, true);
@@ -399,7 +399,7 @@ namespace COTG
 						App.DispatchOnUIThread(() => view.Source = new Uri($"https://w{world}.crownofthegods.com?s=1"));
 					});
 				}
-			//	App.SetupCoreWindowInputHooks();
+				//	App.SetupCoreWindowInputHooks();
 			}
 			catch (Exception e)
 			{
@@ -489,12 +489,12 @@ namespace COTG
 					await WindowManagerService.Current.TryShowAsStandaloneAsync<WebViewPage>("overview");
 				}
 			}
-			else if(args.Uri.OriginalString.StartsWith("https://accounts.google.com/o/oauth2/auth?"))
+			else if (args.Uri.OriginalString.StartsWith("https://accounts.google.com/o/oauth2/auth?"))
 			{
 				WebViewPage.post = args.Uri;
 				await WindowManagerService.Current.TryShowAsStandaloneAsync<WebViewPage>("login");
 			}
-//			else if (httpsHost != null && args.)
+			//			else if (httpsHost != null && args.)
 			else
 			{
 				Launcher.LaunchUriAsync(args.Uri);
@@ -513,7 +513,7 @@ namespace COTG
 			{
 				var req = args.Request;
 
-			//	Log(req.RequestUri.ToString());
+				//	Log(req.RequestUri.ToString());
 				if (req.RequestUri.ToString().EndsWith("jquery/1.9.0/jquery.min.js"))
 				{
 					//	var js = GetJsString("jquery");
@@ -634,9 +634,9 @@ namespace COTG
 
 		}
 
-		public static void PostMouseEventToJS(int x, int y, string eventName,int button, int dx=0, int dy=0)
+		public static void PostMouseEventToJS(int x, int y, string eventName, int button, int dx = 0, int dy = 0)
 		{
-			App.DispatchOnUIThreadSneaky(() => view.InvokeScriptAsync("postMouseEvent", new string[] { x.ToString(), y.ToString(), eventName, button.ToString(),dx.ToString(), dy.ToString() }));
+			App.DispatchOnUIThreadSneaky(() => view.InvokeScriptAsync("postMouseEvent", new string[] { x.ToString(), y.ToString(), eventName, button.ToString(), dx.ToString(), dy.ToString() }));
 		}
 
 		//        public static void Refresh(object ob,RoutedEventArgs args)
@@ -718,12 +718,12 @@ namespace COTG
 		//    }
 		//}
 
-		public static async Task<bool> CitySwitch(int cityId, bool lazyMove=false, bool select = true, bool scrollIntoUI = true, bool isLocked=false, bool waitOnChange = false)
+		public static async Task<bool> CitySwitch(int cityId, bool lazyMove = false, bool select = true, bool scrollIntoUI = true, bool isLocked = false, bool waitOnChange = false)
 		{
 			// Make sure we don't ignore the exception
 			{
 
-				if (City.CanVisit(cityId)  )
+				if (City.CanVisit(cityId))
 				{
 					if (!Spot.CanChangeCity(cityId))
 					{
@@ -732,7 +732,7 @@ namespace COTG
 						return false;
 					}
 					var city = City.GetOrAddCity(cityId);
-					
+
 					if (city.pid != Player.activeId)
 					{
 						Assert(false);
@@ -741,7 +741,7 @@ namespace COTG
 					}
 					else
 					{
-						var changed = await city.SetBuildInternal(scrollIntoUI,true, isLocked);
+						var changed = await city.SetBuildInternal(scrollIntoUI, true, isLocked);
 						if (changed)
 						{
 							if (isLocked || waitOnChange)
@@ -767,12 +767,12 @@ namespace COTG
 		{
 			try
 			{
-				await App.DispatchOnUIThreadTask( async () =>
-			   {
+				await App.DispatchOnUIThreadTask(async () =>
+			  {
 
 
-				   await view.InvokeScriptAsync("addtoattacksender", new string[] { (cityId).ToString() });
-			   });
+				  await view.InvokeScriptAsync("addtoattacksender", new string[] { (cityId).ToString() });
+			  });
 
 			}
 			catch (Exception e)
@@ -786,12 +786,12 @@ namespace COTG
 		{
 			try
 			{
-	
 
-					await App.DispatchOnUIThreadTask(async () =>
-					{
-						await view.InvokeScriptAsync("openAttackSender", new string[] { cmd });
-					});
+
+				await App.DispatchOnUIThreadTask(async () =>
+				{
+					await view.InvokeScriptAsync("openAttackSender", new string[] { cmd });
+				});
 				var p = JsonSerializer.Deserialize<AttackSenderScript>(cmd);
 				await Task.Delay(500);
 				await CitySwitch(p.cid, false);
@@ -839,7 +839,7 @@ namespace COTG
 			try
 			{
 				ShellPage.SetViewMode(viewMode);
-				App.DispatchOnUIThreadSneaky(() => view.InvokeScriptAsync("setviewmode", new string[] { viewMode== ShellPage.ViewMode.city ? "c" : "r" }));
+				App.DispatchOnUIThreadSneaky(() => view.InvokeScriptAsync("setviewmode", new string[] { viewMode == ShellPage.ViewMode.city ? "c" : "r" }));
 
 			}
 			catch (Exception e)
@@ -919,8 +919,8 @@ namespace COTG
 		//    }
 		//}
 
-	
-		
+
+
 		public static async void ShowCity(int cityId, bool lazyMove, bool select = true, bool scrollToInUI = true)
 		{
 			try
@@ -963,13 +963,13 @@ namespace COTG
 			});
 		}
 
+		
 		public static void gStCB(int cityId, Action<JsonElement> cb, int hash)
 		{
 			gstCBs.TryAdd(hash, cb);
 			App.DispatchOnUIThreadSneaky(() =>
 			{
-				var xy = cityId.ToWorldXY();
-				(int x,int y) cc = (xy.X / 100,xy.Y/100);
+				var cc = cityId.CidToContinentXY();
 				var str = "[";
 				var sep = "";
 				for(int i=0;i<4;++i)
@@ -2305,6 +2305,11 @@ namespace COTG
 						   }
 						   case "c":
 							   {
+								   if (!ppdtInitialized )
+								   {
+									  return;
+								   }
+
 								   var jso = jsp.Value;
 								   var popupCount = jso.GetAsInt("p");
 								   //     Note.L("cid=" + cid.CidToString());
