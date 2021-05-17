@@ -38,7 +38,6 @@ namespace COTG.JSON
 		// TODO
 		//        static DateTime lastUpdate = new DateTime();
 		static DateTime lastIncomingNotification = DateTime.UtcNow;
-		static bool updatePending;
 		static int lastPersonalIncomingCount = 0;
 		static int lastWatchIncomingCount = 0;
 		static bool hasRun;
@@ -58,33 +57,32 @@ namespace COTG.JSON
 		public static void ProcessTask() { Process(false, false); }
 		public async static Task Process(bool fetchReports, bool showNote)
 		{
-
-			if (true)
+			if (updateInProgress )
 			{
-				if (updateInProgress || !World.initialized)
+				return;
+			}
+
+			try
+			{
+
+				updateInProgress = true;
+
+				if ( !World.initialized)
 				{
-					if (updateInProgress)
-						return;
-					updatePending = true;
 					do
 					{
 
 						await Task.Delay(1000);
-					} while (updateInProgress || !World.initialized);
-					updatePending = false;
+					} while (World.initialized);
 				}
-			}
 
 
 
-			using (var defenders = new ConcurrentHashSet<City>())
-			{
 
-				//				defenders.Add(Spot.pending);
-				try
+				using (var defenders = new ConcurrentHashSet<City>())
 				{
 
-					updateInProgress = true;
+					//				defenders.Add(Spot.pending);
 					if (fetchReports)
 						ShellPage.WorkStart(work);
 
@@ -107,70 +105,70 @@ namespace COTG.JSON
 					var reportCount = 0;
 					var task0 = Task.Run(async () =>
 					  {
-					  //ConcurrentDictionary<int, Army> rs = new ConcurrentDictionary<int, Army>();
-					  using (var jsd = await Post.SendForJson("overview/incover.php", "a=0",Player.myId))
-					  {
-						  //{
-						  //    var estimator = new Army();
-						  //    var jse = jsd.RootElement.GetProperty("b");
-						  //    foreach (var b in jse.EnumerateArray())
-						  //    {
-						  //        var atkCid = DecodeCid(5, b.GetString("attacker_locatuin"));
-						  //        var defCid = DecodeCid(5, b.GetString("defender_location"));
+						  //ConcurrentDictionary<int, Army> rs = new ConcurrentDictionary<int, Army>();
+						  using (var jsd = await Post.SendForJson("overview/incover.php", "a=0", Player.myId))
+						  {
+							  //{
+							  //    var estimator = new Army();
+							  //    var jse = jsd.RootElement.GetProperty("b");
+							  //    foreach (var b in jse.EnumerateArray())
+							  //    {
+							  //        var atkCid = DecodeCid(5, b.GetString("attacker_locatuin"));
+							  //        var defCid = DecodeCid(5, b.GetString("defender_location"));
 
-						  //        var spotted = b.GetString("spotted").ParseDateTime();
-						  //        var time = b.GetString("arrival").ParseDateTime();
+							  //        var spotted = b.GetString("spotted").ParseDateTime();
+							  //        var time = b.GetString("arrival").ParseDateTime();
 
-						  //        Army rep = new Army();
-						  //        rep.atkP = Player.NameToId(b.GetAsString("attacker_player"));
-						  //        rep.defP = Player.NameToId(b.GetAsString("defender_player"));
-						  //        rep.atkCid = atkCid;
-						  //        rep.defCid = defCid;
-						  //        rep.time = time;
-						  //        rep.spotted = spotted;
-						  //        Spot.GetOrAdd(atkCid, b.GetAsString("attacker_city"));
-						  //        Spot.GetOrAdd(defCid, b.GetAsString("defender_city"));
-						  //        rep.aTS = b.GetAsInt("attack_ts");
-						  //        rep.dTS = b.GetAsInt("defender_ts");
-						  //        rep.dTsLeft = rep.dTS;
-						  //        rep.aTsLeft = rep.aTS;
-						  //        rep.type = b.GetString("attack_type") == "Sieging" ? Report.typeSieging : Report.typePending;
+							  //        Army rep = new Army();
+							  //        rep.atkP = Player.NameToId(b.GetAsString("attacker_player"));
+							  //        rep.defP = Player.NameToId(b.GetAsString("defender_player"));
+							  //        rep.atkCid = atkCid;
+							  //        rep.defCid = defCid;
+							  //        rep.time = time;
+							  //        rep.spotted = spotted;
+							  //        Spot.GetOrAdd(atkCid, b.GetAsString("attacker_city"));
+							  //        Spot.GetOrAdd(defCid, b.GetAsString("defender_city"));
+							  //        rep.aTS = b.GetAsInt("attack_ts");
+							  //        rep.dTS = b.GetAsInt("defender_ts");
+							  //        rep.dTsLeft = rep.dTS;
+							  //        rep.aTsLeft = rep.aTS;
+							  //        rep.type = b.GetString("attack_type") == "Sieging" ? Report.typeSieging : Report.typePending;
 
-						  //        rep.claim = (byte)b.GetAsFloat("baron cap %");
+							  //        rep.claim = (byte)b.GetAsFloat("baron cap %");
 
-						  //        rep.Sen = rep.claim > 0.0f;
-						  //         if (rep.type == Report.typePending)
-						  //            {
-						  //                estimator.sourceCid = atkCid;
-						  //                estimator.targetCid = defCid;
-						  //                estimator.time = time;
-						  //                estimator.spotted = spotted;
-						  //                IncommingEstimate.Get(estimator);
-						  //                bool wantComma = false;
-						  //                string troops = string.Empty;
-						  //                foreach(var tt in estimator.troops)
-						  //                {
-						  //                    if (wantComma)
-						  //                        troops += ", ";
-						  //                    else
-						  //                        wantComma = true;
-						  //                    troops += ttCategory[tt.type];
-						  //                    if (tt.count == -1)
-						  //                        troops += '?';
-						  //                    else
-						  //                        troops += $" {(tt.count)/ -10.0f}%";
-						  //                }
-						  //                estimator.troops = TroopTypeCount.empty;
-						  //                rep.troopEstimate = troops;
-						  //            }
+							  //        rep.Sen = rep.claim > 0.0f;
+							  //         if (rep.type == Report.typePending)
+							  //            {
+							  //                estimator.sourceCid = atkCid;
+							  //                estimator.targetCid = defCid;
+							  //                estimator.time = time;
+							  //                estimator.spotted = spotted;
+							  //                IncommingEstimate.Get(estimator);
+							  //                bool wantComma = false;
+							  //                string troops = string.Empty;
+							  //                foreach(var tt in estimator.troops)
+							  //                {
+							  //                    if (wantComma)
+							  //                        troops += ", ";
+							  //                    else
+							  //                        wantComma = true;
+							  //                    troops += ttCategory[tt.type];
+							  //                    if (tt.count == -1)
+							  //                        troops += '?';
+							  //                    else
+							  //                        troops += $" {(tt.count)/ -10.0f}%";
+							  //                }
+							  //                estimator.troops = TroopTypeCount.empty;
+							  //                rep.troopEstimate = troops;
+							  //            }
 
 
-						  //         reportsIncoming.Add(rep);
+							  //         reportsIncoming.Add(rep);
 
-						  //    }
-						  //}
+							  //    }
+							  //}
 
-						  var needToClear = new HashSet<Spot>(Spot.defendersI);
+							  var needToClear = new HashSet<Spot>(Spot.defendersI);
 							  //var prior = new Dictionary<long, Army>();
 							  //foreach (var spot in Spot.defendersI)
 							  //{
@@ -204,13 +202,13 @@ namespace COTG.JSON
 										  // set info if needed
 										  spot._tsHome = val.GetAsInt("8");
 										  spot.troopsHome = TroopTypeCount.empty;
-										  
+
 
 										  var name = val.GetAsString("0");
 										  spot.pid = Player.NameToId(name);
 
 										  // round down
-										  var claim= ClaimToByte(val.GetAsFloat("4"));
+										  var claim = ClaimToByte(val.GetAsFloat("4"));
 
 										  spot.claim = claim;
 										  try
@@ -218,7 +216,7 @@ namespace COTG.JSON
 											  var scoutRange = val.GetAsString("6");
 											  var hrsMark = scoutRange.IndexOf('h');
 											  if (hrsMark >= 1)
-												  spot.scoutRange = float.Parse(scoutRange.Substring(0, hrsMark-1));
+												  spot.scoutRange = float.Parse(scoutRange.Substring(0, hrsMark - 1));
 											  else
 											  {
 												  var minMark = scoutRange.IndexOf('m');
@@ -240,24 +238,24 @@ namespace COTG.JSON
 											  const bool reused = false;
 											  //if (order != 0)
 											  //{
-												 // foreach (var p in prior)
-												 // {
-													//  if (p.order == order)
-													//  {
-													//	  army = p;
-													//	  break;
-													//  }
-												 // }
+											  // foreach (var p in prior)
+											  // {
+											  //  if (p.order == order)
+											  //  {
+											  //	  army = p;
+											  //	  break;
+											  //  }
+											  // }
 											  //}
 
 											  if (army == null)
 											  {
 												  army = new Army() { order = order };
-												 // reused = false;
+												  // reused = false;
 											  }
 											  else
 											  {
-												//  reused = true;
+												  //  reused = true;
 											  }
 											  if (!reused)
 											  {
@@ -510,9 +508,9 @@ namespace COTG.JSON
 													  //}
 
 												  }
-												  if (!Alliance.IsAlly(army.sourceAlliance)  )
+												  if (!Alliance.IsAlly(army.sourceAlliance))
 												  {
-													  if (watch.Contains(name)  )
+													  if (watch.Contains(name))
 													  {
 														  watchIncoming.count++;
 														  if (army.time < watchIncoming.first)
@@ -559,7 +557,7 @@ namespace COTG.JSON
 							  }
 
 						  }
-						  
+
 					  });
 					var fetched = 0;
 					if (fetchReports)
@@ -580,7 +578,7 @@ namespace COTG.JSON
 						//}
 
 						// defense history
-						using (var jsd = await Post.SendForJson("includes/ofdf.php", "a=2",Player.myId))
+						using (var jsd = await Post.SendForJson("includes/ofdf.php", "a=2", Player.myId))
 						{
 							//int counter = 0;
 							await jsd.RootElement.EnumerateArray().ToArray().ParallelForAsync4(reportParts,
@@ -605,9 +603,9 @@ namespace COTG.JSON
 									var hash = Army.ReportHash(recId);
 									if (reportCache.TryGetValue(hash, out var reports))
 									{
-										if(reports!=null)						
+										if (reports != null)
 											parts[part].Add(reports);
-										
+
 									}
 									else if (supportReports.Contains(hash))
 									{
@@ -640,7 +638,7 @@ namespace COTG.JSON
 											};
 											reportCache.TryAdd(hash, report);
 											parts[part].Add(report);
-								//			await Cosmos.AddBattleRecord(report);
+											//			await Cosmos.AddBattleRecord(report);
 
 
 										}
@@ -778,7 +776,7 @@ namespace COTG.JSON
 
 																			sourceCid = source,
 																			targetCid = target,
-																			claim = (byte)(hasSen && root.GetAsString("senatorapn") == atkPN ? IncomingOverview.ClaimToByte(root.GetAsFloat("senator")) : (byte) 0),
+																			claim = (byte)(hasSen && root.GetAsString("senatorapn") == atkPN ? IncomingOverview.ClaimToByte(root.GetAsFloat("senator")) : (byte)0),
 																			time = time,
 																			spotted = time - TimeSpan.FromMinutes(target.CidToWorld().Distance(source.CidToWorld()) * TTTravel(ttVanquisher)),
 																			type = (byte)reportType
@@ -821,10 +819,10 @@ namespace COTG.JSON
 
 					await task0;
 					//var prior = new Dictionary<long, Army>();
-					
+
 					Spot.defendersI = defenders.ToArray();
 					//if(ShellPage.IsPageDefense())
-					App.DispatchOnUIThreadLow(() =>
+					await App.DispatchOnUIThreadTask(() =>
 					{
 
 						try
@@ -837,9 +835,9 @@ namespace COTG.JSON
 								string note = "Incoming";
 
 								if (personalIncoming.count != 0)
-									note += $" {personalIncoming.targetCid.CidToContinent()} {personalIncoming.first.FormatSkipDateIfToday()} first: {personalIncoming.intel} to {City.Get(personalIncoming.targetCid).nameAndRemarks} from {Player.IdToName(personalIncoming.sourceCid.CidToPid())}";
+									note += $" {personalIncoming.targetCid.CidToContinent()} attacker: {Player.IdToName(personalIncoming.sourceCid.CidToPid())} {personalIncoming.first.FormatSkipDateIfToday()} first: {personalIncoming.intel} to {City.Get(personalIncoming.targetCid).nameAndRemarks}";
 								if (watchIncoming.count != 0)
-									note += $" (watched {watchIncoming.targetCid.CidToContinent()}  {watchIncoming.first.FormatSkipDateIfToday()} first: {watchIncoming.intel}) to {City.Get(watchIncoming.targetCid).nameAndRemarks} from {Player.IdToName(watchIncoming.sourceCid.CidToPid())}";
+									note += $" (watched {Player.IdToName(watchIncoming.targetCid.CidToPid())} attacker: {Player.IdToName(watchIncoming.sourceCid.CidToPid())} to {watchIncoming.targetCid.CidToContinent()}  {watchIncoming.first.FormatSkipDateIfToday()} first: {watchIncoming.intel}) to {City.Get(watchIncoming.targetCid).nameAndRemarks}";
 
 								if (lastPersonalIncomingCount < personalIncoming.count || lastWatchIncomingCount < watchIncoming.count)
 								{
@@ -903,25 +901,26 @@ namespace COTG.JSON
 						catch (Exception _exception)
 						{
 							COTG.Debug.LogEx(_exception);
-						}finally
-						{
-							updateInProgress = false;
-
 						}
-
+						return Task.CompletedTask;
 
 					});
 				}
+				}
 				catch (Exception exception)
 				{
-					updateInProgress = false;
 					LogEx(exception);
 					if (fetchReports)
 						ShellPage.WorkEnd(work);
 				}
 
 
-			}
+			
+		finally
+						{
+							updateInProgress = false;
+
+						}
 
 			return;
 

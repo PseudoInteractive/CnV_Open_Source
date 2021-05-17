@@ -475,7 +475,7 @@ namespace COTG.Views
 							}
 						done:;
 							Assert(city.isBuild);
-							var storeHouses = FindPendingOverlayBuildingsOfType(city, bidStorehouse, SettingsPage.intialStorehouses-bc.storeHouses);
+							var storeHouses = FindPendingOverlayBuildingsOfType(city,  SettingsPage.intialStorehouses-bc.storeHouses, bidStorehouse,true);
 							foreach( var storage in storeHouses)
 							{
 								
@@ -511,7 +511,7 @@ namespace COTG.Views
 
 							if (bc.storeHouses < SettingsPage.intialStorehouses )
 							{
-								var storage = FindPendingOverlayBuildingsOfType(city, bidStorehouse, SettingsPage.intialStorehouses  - bc.storeHouses );
+								var storage = FindPendingOverlayBuildingsOfType(city, SettingsPage.intialStorehouses  - bc.storeHouses, bidStorehouse,true);
 								foreach(var s in storage)
 								{
 									message += $"Adding Storehouse";
@@ -521,7 +521,7 @@ namespace COTG.Views
 							}
 							if (bc.forums == 0 && bc.buildings < buildingLimit)
 							{
-								var bd = FindPendingOverlayBuildingsOfType(city, bidMarketplace, 1);
+								var bd = FindPendingOverlayBuildingsOfType(city,1, bidMarketplace);
 								if (bd.Any())
 								{
 									message += $"Adding Forum";
@@ -554,7 +554,7 @@ namespace COTG.Views
 							}
 							{
 								var bid = bidBarracks;
-								var bd = FindPendingOverlayBuildingsOfType(city, bid, buildingLimit);  // find them all
+								var bd = FindPendingOverlayBuildingsOfType(city, buildingLimit, bid);  // find them all
 								int milBid = bc.GetMainMilitaryBid();
 
 								bd = bd.OrderByDescending((x) => GetBarrackScore(x, milBid)).ToList();
@@ -666,7 +666,7 @@ namespace COTG.Views
 
 							var todo = FindPendingOverlayBuildings(city);
 							int milBid =  bc.GetMainMilitaryBid();
-							var barracks = FindPendingOverlayBuildingsOfType(city, bidBarracks, 100).OrderByDescending(a => GetBarrackScore(a, milBid)).ToList();
+							var barracks = FindPendingOverlayBuildingsOfType(city, 100,bidBarracks).OrderByDescending(a => GetBarrackScore(a, milBid)).ToList();
 							var commandLimit = SettingsPage.cabinsToRemovePerSwap * 2;
 							var todoGet = 0;
 							for (; ; )
@@ -1020,11 +1020,16 @@ namespace COTG.Views
 			return rv;
 		}
 
-		static List<(int x, int y)> FindPendingOverlayBuildingsOfType(City city, int bid, int count)
+		static List<(int x, int y)> FindPendingOverlayBuildingsOfType(City city, int count, int bid, bool addDummyIfNoLayout=false)
 		{
 			List<(int x, int y)> rv = new();
 			if (count <= 0)
 				goto done;
+			if(!city.isLayoutValid && addDummyIfNoLayout)
+			{
+				rv.Add(RandomSpotForBuilding());
+				return rv;
+			}
 
 			// search from center outwards
 			for (int r = 1; r <= City.citySpan; ++r)
@@ -1099,10 +1104,7 @@ namespace COTG.Views
 			}
 			return rv;
 		}
-		private static (int x, int y) RandomCitySpot()
-		{
-			return (x: AMath.random.Next(City.citySpan), y: AMath.random.Next(City.citySpan));
-		}
+		private static (int x, int y) RandomSpotForBuilding() => IdToXY(CityBuild.FindFreeSpot());
 
 		//private async void SplatAll(object sender, Windows.UI.Xaml.RoutedEventArgs e)
 		//{

@@ -92,7 +92,8 @@ namespace COTG.Views
 		}
 
 		public static SmallTime lastUpdated;
-		static bool updating = true;
+		static bool updating = false;
+		static bool resetValuesPending;
 		public static async Task UpdateTradeStuffifNeeded()
 		{
 			if(SmallTime.serverNow.seconds >  lastUpdated.seconds + 60 && (updating ==false) )
@@ -199,7 +200,9 @@ namespace COTG.Views
 
 		public async  Task DoRefresh(bool resetValues=false)
 		{
-			if (updating && resetValues==false)
+			resetValuesPending = resetValues;
+		
+			if (updating )
 				return;
 			updating = true;
 			try
@@ -208,38 +211,23 @@ namespace COTG.Views
 				await UpdateTradeStuff();
 
 
-				if (resetValues)
+				if (resetValuesPending)
+				{
+					resetValuesPending = false;
 					supporters.Clear();
-
+				}
 				//supportGrid.ItemsSource = null;
 				if (target != null && target.isCityOrCastle)
 				{
-					var ready = true;
-					do
-					{
-						await Task.Delay(1000);
-						ready = true;
-						using var _ = await City.cityGridLock.LockAsync();
-						foreach (var city in City.gridCitySource)
-						{
-							if (city.tradeInfo == CityTradeInfo.invalid)
-							{
-								ready = false;
-								break;
-
-							}
-						}
-					} while (ready == false);
-
+				
 
 					var r = des;// des.Sub(target.res.Add(target.tradeInfo.inc));
 					r.ClampToPositive();
 					List<ResSource> s = new List<ResSource>();
 					//                supportGrid.ItemsSource = null;
-					using (var _ = await City.cityGridLock.LockAsync())
 					{
 
-						foreach (var city in City.gridCitySource)
+						foreach (var city in City.myCities)
 						{
 							if (city == target)
 								continue;

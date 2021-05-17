@@ -15,7 +15,6 @@ using Windows.System;
 using System.Text.Json.Serialization;
 using System.Text.Json;
 using COTG.Views;
-using Microsoft.Toolkit.HighPerformance.Buffers;
 
 namespace COTG.Game
 {
@@ -217,12 +216,7 @@ namespace COTG.Game
 		string desc;
 		int targetCid;
 	}
-	public sealed class TroopTypeCounts
-	{
-		MemoryOwner<TroopTypeCount> 
-
-	}
-	public struct TroopTypeCount : IComparable<TroopTypeCount>
+	public sealed class TroopTypeCount : IComparable<TroopTypeCount>
     {
         public static TroopTypeCount[] empty = Array.Empty<TroopTypeCount>();
         public int type;
@@ -261,7 +255,7 @@ namespace COTG.Game
 
         [JsonIgnore]
         public int ts => Enum.ttTs[type] * count;
-		public static void SortByTS(ref TroopTypeCount[] l) => Array.Sort( l);
+        public static void SortByTS(TroopTypeCount[] l) => Array.Sort(l);
 
         // Sort greatest TS to least TS
         int IComparable<TroopTypeCount>.CompareTo(TroopTypeCount other)
@@ -306,7 +300,7 @@ namespace COTG.Game
 	}
     public static class TroopTypeCountHelper
     {
-		public static bool IsSuperSetOf(this ref TroopTypeCount[] me,ref TroopTypeCount[] other)
+		public static bool IsSuperSetOf(this TroopTypeCount[] me,TroopTypeCount[] other)
 		{
 			foreach(var t in other)
 			{
@@ -317,7 +311,7 @@ namespace COTG.Game
 			}
 			return true;
 		}
-        public static int Count(this ref TroopTypeCount[] me, int type)
+        public static int Count(this TroopTypeCount[] me, int type)
         {
             foreach (var i in me)
             {
@@ -326,7 +320,7 @@ namespace COTG.Game
             }
             return 0;
         }
-        public static bool  HasTT(this ref TroopTypeCount[] me, int type)
+        public static bool  HasTT(this TroopTypeCount[] me, int type)
         {
             foreach (var i in me)
             {
@@ -335,7 +329,7 @@ namespace COTG.Game
             }
             return false;
         }
-        public static bool SetCount(this ref TroopTypeCount[] me, int type, int count)
+        public static bool SetCount(this TroopTypeCount[] me, int type, int count)
         {
             foreach (var i in me)
             {

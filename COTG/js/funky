@@ -20518,7 +20518,7 @@ function outer() {
             else
                 S92 = 1;
             N6();
-            var h92 = $.post("/includes/" + __s[6779], { a: J92, b: S92 });
+            var h92 = $.post("/includes/UaO.php", { a: J92, b: S92 });
             $(__s[t4R >> 1409303648])
                 .css("display", "none");
         }
@@ -21623,7 +21623,7 @@ function outer() {
         var H2 = '';
         function K5V(E31) {
             E6k.R6();
-            $(__s[3969])
+            $("#playerOutgoings")
                 .text(E31);
         }
         function s7F(Y7B) {
@@ -33385,7 +33385,7 @@ function outer() {
                 }
             });
             N6();
-            var M81 = $.post(__s[854], { a: z81 });
+            var M81 = $.post("/includes/gAIn.php", { a: z81 });
             F6();
             M81.done(function (i81) {
                 i81 = JSON.parse(i81);
@@ -54926,6 +54926,8 @@ function outer() {
         });
         let lastAllianceIncoming = 0;
         let lastIncoming = 0;
+        let lastOutgoing = 0;
+        let lastAllianceOutgoing = 0;
         function processPoll(G71, extCid) {
             if (G71.length > 1) {
                 pollJ = JSON.parse(G71);
@@ -55086,7 +55088,7 @@ function outer() {
                     if (lastAllianceIncoming != AIC || lastIncoming != IC) {
                         Q5V(AIC);
                         L5V(IC);
-                        wrapper.incoming = { aic: AIC, ic: IC, lic: lastIncoming, oc: pollJ.OC };
+                        wrapper.incoming = { aic: AIC, ic: IC, lic: lastIncoming };
                         lastAllianceIncoming = AIC;
                         lastIncoming = IC;
                     }
@@ -55094,13 +55096,20 @@ function outer() {
                         var d71 = pollJ["iNt"];
                         d9F(d71);
                     }
-                    var b71 = pollJ[__s[6935]];
-                    T5V(b71);
-                    var S71 = pollJ[__s[845]];
-                    K5V(S71);
-                    var J71 = pollJ[__s[677]];
+                    let OC = pollJ["OC"];
+                    let AOC = pollJ["AOC"];
+                    if (OC != lastOutgoing || AOC != lastAllianceOutgoing) {
+                        $("#allianceOutgoings").text("(" + AOC + ")");
+                        if (OC != lastOutgoing) {
+                            $("#playerOutgoings").text(OC);
+                            wrapper.outgoing = { oc: OC };
+                        }
+                        lastOutgoing = OC;
+                        lastAllianceOutgoing = AOC;
+                    }
+                    var J71 = pollJ["EL"];
                     R5V(J71);
-                    var h71 = pollJ[__s[3058]];
+                    var h71 = pollJ["AL"];
                     Y5V(h71);
                     if (pollJ["ICC"]) {
                         var r71 = pollJ["ICC"];
@@ -57192,10 +57201,6 @@ function outer() {
                         .text("-");
                 });
             }
-        }
-        function T5V(c31) {
-            $(__s[3811])
-                .text("(" + c31 + ")");
         }
         function s3V(x1V) { }
         function f5V() {

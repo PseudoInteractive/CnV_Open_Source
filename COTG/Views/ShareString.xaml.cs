@@ -46,14 +46,17 @@ namespace COTG.Views
 					{
 						LogEx(ex);
 					}
-				Task.Run(async () =>
-			   {
-				   AddLayouts();
-				   var shares = await Tables.ReadShares(Player.myName);
-				   foreach (var s in shares)
-				   {
-					   new ShareStringItem(s.s);
-				   }
+				   Tables.ReadShares(Player.myName).ContinueWith( (shares) =>
+
+				   { 
+				   App.DispatchOnUIThreadSneaky(() =>
+				  {
+					  AddLayouts();
+					  foreach (var s in shares.Result)
+					  {
+						  new ShareStringItem(s.s);
+					  }
+				  });
 			   });
 
 			}

@@ -128,7 +128,9 @@ namespace COTG.Views
             return base.VisibilityChanged(visible);
 
         }
-        public static bool IsVisible() => instance.isVisible;
+
+
+		public static bool IsVisible() => instance.isVisible;
 
         private void defenderGrid_SelectionChanged(object sender, DataGridSelectionChangedEventArgs e)
 		{

@@ -77,6 +77,7 @@ namespace COTG.Views
 			building,
 			townHall,
 		}
+		
 		public static SpotType GetSpotType(int a )
 		{
 			return a switch {
@@ -90,6 +91,7 @@ namespace COTG.Views
 
 				_ => SpotType.invalid };
 		}
+
 		public static HashSet<ushort> GetSpots( SpotType type)
 		{
 			switch (type)
@@ -1198,26 +1200,26 @@ namespace COTG.Views
 			}
 			else
 			{
-				Status($"Move {bds[a].name} to {IdToXY(b).bspotToString()} ", dryRun);
+				Status($"Move {bds[a].name} {IdToXY(a).bspotToString()} to {IdToXY(b).bspotToString()} ", dryRun);
 
 				var rv = true;
 				if (!dryRun)
 				{
-					AUtil.Swap(ref buildingsCache[b], ref buildingsCache[a]);
-					if (!isPlanner)
-						AUtil.Swap(ref build.buildings[b], ref build.buildings[a]);
-					AUtil.Swap(ref postQueueBuildings[b], ref postQueueBuildings[a]);
+					AUtil.Swap(ref bds[b], ref bds[a]);
 					if (!isPlanner)
 					{
-						return await Move(a, b);
+						rv = await Move(a, b);
 
 					//	await Task.Delay(200);
 						
 						--Player.moveSlots;
+						BuildingsOrQueueChanged();
+					}
+					else
+					{
 					}
 					// I hope that these operations are what I expect with references
-				
-				//	BuildingsOrQueueChanged();
+
 				}
 				return true;
 			}
@@ -1264,7 +1266,8 @@ namespace COTG.Views
 				if (!dryRun)
 				{
 
-					
+					AUtil.Swap(ref bds[a], ref bds[b]);
+
 					if (!isPlanner)
 					{
 						var scratch = FindAnyFreeSpot(a);
@@ -1278,13 +1281,9 @@ namespace COTG.Views
 						if (!await Move(scratch, b))
 							return false;
 
-					}
-					AUtil.Swap(ref buildingsCache[a], ref buildingsCache[b]);
-					if (!isPlanner)
-						AUtil.Swap(ref build.buildings[a], ref build.buildings[b]);
-					AUtil.Swap(ref postQueueBuildings[a], ref postQueueBuildings[b]);
+						BuildingsOrQueueChanged();
 
-					//BuildingsOrQueueChanged();
+					}
 				}
 				return true;
 			}
@@ -1986,26 +1985,38 @@ namespace COTG.Views
 			return bestSpot;
 		}
 
-	public static int FindAnyFreeSpot(int reference)
+	public static int FindAnyFreeSpot(int referenceBid)
 	{
-		var build = City.GetBuild();
-		foreach( var spot in CityBuild.GetSpots(CityBuild.GetSpotType(reference)))
+		return FindFreeSpot(CityBuild.GetSpotType(referenceBid));
+	}
+		public static ushort findSpotOffset;
+		public static int FindFreeSpot(SpotType type = SpotType.building)
 		{
-			var bld = postQueueBuildings[spot];
-			if (!bld.isEmpty)
-				continue;
-			if (build.BidFromOverlay(spot) != 0)
-				continue;
-			if (HasBuildOps(spot))
-				continue;
-			return spot;
+			var build = City.GetBuild();
+			var spots = CityBuild.GetSpots(type);
+			for(int iter=0;iter<=City.citySpotCount; ++iter)
+			{
+				// update and wrap
+				++findSpotOffset;
+				if (findSpotOffset >= City.citySpotCount - 1)
+					findSpotOffset = 1;
+				
+				if (!spots.Contains(findSpotOffset))
+					continue;
+				var bld = postQueueBuildings[findSpotOffset];
+				if (!bld.isEmpty)
+					continue;
+				if (build.BidFromOverlay(findSpotOffset) != 0)
+					continue;
+				if (HasBuildOps(findSpotOffset))
+					continue;
+				return findSpotOffset;
+			}
+			Assert(false);
+			return 0; // error
 		}
 
-		Assert(false);
-		return 0; // error
-	}
-
-	private static async Task TogglePlanner()
+		private static async Task TogglePlanner()
 		{
 			if (CityBuild.isPlanner)
 			{

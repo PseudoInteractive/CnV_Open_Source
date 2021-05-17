@@ -1106,7 +1106,10 @@ namespace COTG
 				{
 					TradeSettings.all = JsonSerializer.Deserialize<TradeSettings[]>(tcps.ToString(), Json.jsonSerializerOptions);
 					
-					App.DispatchOnUIThreadLow( () => ShareString.Touch().tradeSettings.ItemsSource = TradeSettings.all );
+					App.DispatchOnUIThreadLow( ()=>
+					{
+						ShareString.Touch().tradeSettings.ItemsSource = TradeSettings.all;
+					});
 				}
 
 				if(jse.TryGetProperty("wmo", out var wo))
@@ -2006,17 +2009,14 @@ namespace COTG
 							   }
 						   case "incoming":
 							   {
-								   var jso = jsp.Value;
-								   var aic = jso.GetAsInt("aic");
-								   var ic = jso.GetAsInt("ic");
-								   var lastIc = jso.GetAsInt("lic");
-								   if (ic > lastIc)
-								   {
-
-								   }
 								   App.QueueIdleTask(IncomingOverview.ProcessTask, 1000);
 								   break;
 							   }
+						   case "outgoing":
+							  {
+								   App.QueueIdleTask(OutgoingOverview.ProcessTask, 1000);
+								   break;
+							  }
 						   case "gstcb":
 							   {
 								   Note.Show(jsp.ToString());

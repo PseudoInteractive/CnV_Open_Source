@@ -175,7 +175,7 @@ namespace COTG.Game
 						sb.Append(" ");
 					first = false;
 
-					sb.Append(t.v);
+					sb.Append(t.s);
 				}
 
 			}

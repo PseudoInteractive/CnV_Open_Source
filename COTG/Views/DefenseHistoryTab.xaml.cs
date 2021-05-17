@@ -83,8 +83,6 @@ namespace COTG.Views
 				}
 			}
 			return base.VisibilityChanged(visible);
-
-
         }
 
 

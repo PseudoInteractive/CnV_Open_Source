@@ -23,8 +23,10 @@ namespace COTG.JSON
 
         const string work = "fetch outgoing";
 
+		public static void ProcessTask() { Process(false); }
 
-        public async static Task Process(bool fetchReports)
+
+		public async static Task Process(bool fetchReports)
         {
     //        if (true)
     //        {

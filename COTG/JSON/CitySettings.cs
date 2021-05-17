@@ -402,10 +402,10 @@ namespace COTG.JSON
 		{
 			var rem = spot.remarks.ToLower();
 			var result = string.Empty;
-
-			void CheckTag1( string tag, int id, string count = sCountMany)
+			var tags = spot.GetTags();
+			void CheckTag1( Tags tag, int id, string count = sCountMany)
 			{
-				if (rem.Contains(tag))
+				if (tags.HasFlag(tag))
 				{
 					result += $"\nSet recruit {tag}";
 					if (split[id] == sZero)
@@ -418,9 +418,9 @@ namespace COTG.JSON
 
 			}
 
-			CheckTag1("priest", 13);
+			CheckTag1(Tags.Priest, 13);
 
-			if (rem.Contains("vrt"))
+			if (tags.HasFlag(Tags.VRT))
 			{
 				// 12 is triari
 				// 14 is vanq
@@ -434,7 +434,7 @@ namespace COTG.JSON
 				}
 				result = "\nSet recruit VRT";
 			}
-			else if (rem.Contains("rt") || rem.Contains("ranger") || rem.Contains("triari"))
+			else if (tags.HasFlag(Tags.RT) )
 			{
 				// 12 is triari
 				// 11 is ranger
@@ -448,7 +448,7 @@ namespace COTG.JSON
 				}
 				result = "\nSet recruit rt";
 			}
-			else if (rem.Contains("vt"))
+			else if (tags.HasFlag(Tags.VT) )
 			{
 				// 12 is triari
 				// 14 is vanq
@@ -463,7 +463,7 @@ namespace COTG.JSON
 				}
 				result = "\nSet recruit VT";
 			}
-			else if (rem.Contains("vanq"))
+			else if (tags.HasFlag(Tags.Vanq))
 			{
 				split[11] = sZero;
 				split[12] = sZero;
@@ -480,15 +480,15 @@ namespace COTG.JSON
 				split[14] = sZero;
 			}
 
-			CheckTag1("horse", 19);
-			CheckTag1("arb", 17);
-			CheckTag1("sorc", 15);
-			CheckTag1("prae", 18);
-			CheckTag1("galley", 23, (countMany / 600).ToString() );
-			CheckTag1("druid", 20);
+			CheckTag1(Tags.Horse, 19);
+			CheckTag1(Tags.Arb, 17);
+			CheckTag1(Tags.Sorc, 15);
+			CheckTag1(Tags.Prae, 18);
+			CheckTag1(Tags.Galley, 23, (countMany / 600).ToString() );
+			CheckTag1(Tags.Druid, 20);
 
 
-			if (rem.Contains("scorp"))
+			if (tags.HasFlag(Tags.Scorp))
 			{
 				result += "\nSet recruit Scorps + Rams";
 				if (split[22] == sZero && split[21] == sZero)
@@ -502,8 +502,8 @@ namespace COTG.JSON
 				split[21] = sZero;
 				split[22] = sZero;
 			}
-			CheckTag1("warship", 25,"900");
-			CheckTag1("singer", 24, "3600");
+			CheckTag1(Tags.Warship, 25,"900");
+			CheckTag1(Tags.Stinger, 24, "3600");
 			return result;
 		}
 

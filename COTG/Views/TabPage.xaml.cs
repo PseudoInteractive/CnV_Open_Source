@@ -157,7 +157,7 @@ namespace COTG.Views
 			if (existing.tabPage != null)
 			{
 				if (selectMe)
-					existing.tabPage.Tabs.SelectedItem = this;
+					existing.tabPage.Tabs.SelectedItem = existing.tabViewItem;
 				return;
 			}
 

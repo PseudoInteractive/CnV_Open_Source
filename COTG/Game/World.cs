@@ -1437,7 +1437,7 @@ namespace COTG.Game
 		}
 
 
-		static Debounce UpdateRegionDebounce = new(DoUpdateRegion) { debounceDelay = 2000, throttleDelay = 2000 };
+		static Debounce UpdateRegionDebounce = new(DoUpdateRegion) { debounceDelay = 1500, throttleDelay = 500 };
 		public static async Task DoUpdateRegion()
 		{
 			if (lastUpdatedContinent == -1)
