@@ -1035,27 +1035,28 @@ namespace COTG
 
 		private static void BonusesUpdated()
 		{
-			cartTravel = 10.0f / (1 + faith.merius * 0.5f / 100f + (researchRamp[research[28]]) / 100f);
-			shipTravel = 5.0f / (1 + faith.merius * 0.5f / 100f + (researchRamp[research[27]]) / 100f);
+			cartTravel = 10.0f / (1.0 + faith.merius * 0.5 / 100 + (researchRamp[research[28]]) / 100);
+			shipTravel = 5.0f / (1.0 + faith.merius * 0.5 / 100 + (researchRamp[research[27]]) / 100);
 
-			ttSpeedBonus[0] = 1; // no speed reserach for guard
-			ttSpeedBonus[1] = 1 + (faith.domdis) * 0.5f / 100 + (researchRamp[research[12]]) / 100;
-			ttSpeedBonus[2] = 1 + (faith.ibria) * 0.5f / 100 + (researchRamp[research[8]]) / 100;
-			ttSpeedBonus[3] = 1 + (faith.ibria) * 0.5f / 100 + (researchRamp[research[8]]) / 100;
-			ttSpeedBonus[4] = 1 + (faith.ibria) * 0.5f / 100 + (researchRamp[research[8]]) / 100;
-			ttSpeedBonus[5] = 1 + (faith.ibria) * 0.5f / 100 + (researchRamp[research[8]]) / 100;
-			ttSpeedBonus[6] = 1 + (faith.ibria) * 0.5f / 100 + (researchRamp[research[8]]) / 100;
-			ttSpeedBonus[7] = 1 + (faith.ibria) * 0.5f / 100 + (researchRamp[research[11]]) / 100;
-			ttSpeedBonus[8] = 1 + (faith.ibria) * 0.5f / 100 + (researchRamp[research[9]]) / 100;
-			ttSpeedBonus[9] = 1 + (faith.ibria) * 0.5f / 100 + (researchRamp[research[9]]) / 100;
-			ttSpeedBonus[10] = 1 + (faith.ibria) * 0.5f / 100 + (researchRamp[research[9]]) / 100;
-			ttSpeedBonus[11] = 1 + (faith.ibria) * 0.5f / 100 + (researchRamp[research[9]]) / 100;
-			ttSpeedBonus[12] = 1 + (faith.domdis) * 0.5f / 100 + (researchRamp[research[12]]) / 100;
-			ttSpeedBonus[13] = 1 + (faith.domdis) * 0.5f / 100 + (researchRamp[research[12]]) / 100;
-			ttSpeedBonus[14] = 1 + (faith.domdis) * 0.5f / 100 + (researchRamp[research[13]]) / 100;
-			ttSpeedBonus[15] = 1 + (faith.domdis) * 0.5f / 100 + (researchRamp[research[13]]) / 100;
-			ttSpeedBonus[16] = 1 + (faith.domdis) * 0.5f / 100 + (researchRamp[research[13]]) / 100;
-			ttSpeedBonus[17] = 1 + (faith.domdis) * 0.5f / 100 + (researchRamp[research[14]]) / 100;
+			// these are all scaled by 100 to reduce rounding errors
+			ttSpeedBonus[0] = 100; // no speed reserach for guard
+			ttSpeedBonus[1] = 100 + (faith.domdis) * 0.5f  + (researchRamp[research[12]]) ;
+			ttSpeedBonus[2] = 100 + (faith.ibria) * 0.5f  + (researchRamp[research[8]]) ;
+			ttSpeedBonus[3] = 100 + (faith.ibria) * 0.5f  + (researchRamp[research[8]]) ;
+			ttSpeedBonus[4] = 100 + (faith.ibria) * 0.5f  + (researchRamp[research[8]]) ;
+			ttSpeedBonus[5] = 100 + (faith.ibria) * 0.5f  + (researchRamp[research[8]]) ;
+			ttSpeedBonus[6] = 100 + (faith.ibria) * 0.5f  + (researchRamp[research[8]]) ;
+			ttSpeedBonus[7] = 100 + (faith.ibria) * 0.5f  + (researchRamp[research[11]]) ;
+			ttSpeedBonus[8] = 100 + (faith.ibria) * 0.5f + (researchRamp[research[9]]) ;
+			ttSpeedBonus[9] = 100 + (faith.ibria) * 0.5f  + (researchRamp[research[9]]) ;
+			ttSpeedBonus[10] = 100 + (faith.ibria) * 0.5f  + (researchRamp[research[9]]) ;
+			ttSpeedBonus[11] = 100 + (faith.ibria) * 0.5f  + (researchRamp[research[9]]) ;
+			ttSpeedBonus[12] = 100 + (faith.domdis) * 0.5f + (researchRamp[research[12]]) ;
+			ttSpeedBonus[13] = 100 + (faith.domdis) * 0.5f + (researchRamp[research[12]]) ;
+			ttSpeedBonus[14] = 100 + (faith.domdis) * 0.5f + (researchRamp[research[13]]) ;
+			ttSpeedBonus[15] = 100 + (faith.domdis) * 0.5f + (researchRamp[research[13]]) ;
+			ttSpeedBonus[16] = 100 + (faith.domdis) * 0.5f + (researchRamp[research[13]]) ;
+			ttSpeedBonus[17] = 100 + (faith.domdis) * 0.5f + (researchRamp[research[14]]) ;
 
 
 			ttCombatBonus[0] = 1 + (faith.naera) * 0.5f / 100 + (researchRamp[research[29]]) / 100;

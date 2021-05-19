@@ -15,7 +15,7 @@ using Windows.System;
 using System.Text.Json.Serialization;
 using System.Text.Json;
 using COTG.Views;
-
+using TroopTypeCounts = COTG.DArray<COTG.Game.TroopTypeCount>;
 namespace COTG.Game
 {
     public sealed class Army
@@ -40,8 +40,8 @@ namespace COTG.Game
 			_ => "unk"
         };
 
-        public TroopTypeCount[] troops { get; set; } = TroopTypeCount.empty;
-        public TroopTypeCount[] sumDef { get; set; } = TroopTypeCount.empty;
+        public TroopTypeCounts troops { get; set; } = TroopTypeCount.empty;
+        public TroopTypeCounts sumDef { get; set; } = TroopTypeCount.empty;
         // todo
         public bool isDefense => !isAttack;
         public string sXY => sourceCid.CidToString();
@@ -76,8 +76,9 @@ namespace COTG.Game
         public int aTsKill { get; set; }
         public int dTS => sumDef.TS();
         public int aTS => troops.TS();
-
-        public int dTsLeft => dTS - dTsKill;
+		public int approxKill => ApproximateKillsFromRefines(refines);
+		public int refines { get; set; } 
+		public int dTsLeft => dTS - dTsKill;
         public int aTsLeft => aTS - aTsKill;
 
         //    public bool isSiege => isAttack && !troops.IsNullOrEmpty();// this unforunately includes internal attack regardess of type
@@ -112,8 +113,8 @@ namespace COTG.Game
                 
             }
         }
-        public static string cN(TroopTypeCount[] troops,int n) => troops.Length > n ? $" {troops[n].count:N0} " : null;
-        public static BitmapImage iN(TroopTypeCount[] troops, int n) => troops.Length > n ? ImageHelper.FromImages($"Icons/troops{troops[n].type}.png") : null;
+        public static string cN(TroopTypeCounts troops,int n) => troops.Length > n ? $" {troops[n].count:N0} " : null;
+        public static BitmapImage iN(TroopTypeCounts troops, int n) => troops.Length > n ? ImageHelper.FromImages($"Icons/troops{troops[n].type}.png") : null;
 
         public string c0        => cN(troops,0);
         public BitmapImage i0   => iN(troops, 0);
@@ -207,7 +208,14 @@ namespace COTG.Game
             rv += ";";
             return rv;
         }
-    }
+
+
+		internal static int ApproximateKillsFromRefines(int refines)
+		{
+			// Ranger Equivalent kills based on refines, note troops are worth different amounts, i.e. sorcs 200 vs Vanqs 150.
+			return refines * 1000 / 160;
+		}
+	}
 	public sealed class OutgoingAttack
 	{
 		DateTimeOffset departs;
@@ -216,20 +224,48 @@ namespace COTG.Game
 		string desc;
 		int targetCid;
 	}
-	public sealed class TroopTypeCount : IComparable<TroopTypeCount>
+	public struct TroopTypeCountsX
+	{
+		public unsafe fixed int counts[(ttCount)];
+		public int this[int id]
+		{
+			get
+			{
+				unsafe
+				{
+					var rv = counts[id];
+					return rv;
+				}
+			}
+
+			set
+			{
+				unsafe
+				{
+					counts[id] = value;
+				}
+			}
+		}	
+	}
+
+	public struct TroopTypeCount : IComparable<TroopTypeCount>
     {
-        public static TroopTypeCount[] empty = Array.Empty<TroopTypeCount>();
+        public static TroopTypeCounts empty = new(0);
         public int type;
         public int count;
 		internal float attack => count * ttAttack[type] * ttCombatBonus[type];
 
-		[JsonIgnore]
-        public string Count => count.ToString(" N0 ");
+//		[JsonIgnore]
+      //  public string Count => count.ToString(" N0 ");
         [JsonIgnore]
         public BitmapImage Type => ImageHelper.FromImages($"Icons/troops{type}.png");
+		
+		public double TravelTimeSeconds(double distance)
+		{
+			return Enum.TroopTravelSeconds(type, distance);
+		}
 
-        public TroopTypeCount() { }
-        public TroopTypeCount(TroopTypeCount b)
+		public TroopTypeCount(ref TroopTypeCount b)
         {
             type = b.type;
             count = b.count;
@@ -255,7 +291,7 @@ namespace COTG.Game
 
         [JsonIgnore]
         public int ts => Enum.ttTs[type] * count;
-        public static void SortByTS(TroopTypeCount[] l) => Array.Sort(l);
+        public static void SortByTS(TroopTypeCounts l) => Array.Sort(l.v);
 
         // Sort greatest TS to least TS
         int IComparable<TroopTypeCount>.CompareTo(TroopTypeCount other)
@@ -268,9 +304,9 @@ namespace COTG.Game
         public byte t { get => (byte)type; set => type = value; }
 
         public int c { get => count; set => count = value; }
-		public bool isWaterRaider => IsTTNaval(type);
-
-		public static TroopTypeCount[] operator +(TroopTypeCount[] me, TroopTypeCount tt)
+	//	public bool isWaterRaider => IsTTNaval(type);
+	//	public bool isNaval => IsTTNaval(type);
+		public static TroopTypeCounts operator +(TroopTypeCounts me, TroopTypeCount tt)
 		{
 			int counter = 0;
 			if (tt.count == 0)
@@ -300,7 +336,7 @@ namespace COTG.Game
 	}
     public static class TroopTypeCountHelper
     {
-		public static bool IsSuperSetOf(this TroopTypeCount[] me,TroopTypeCount[] other)
+		public static bool IsSuperSetOf(this TroopTypeCounts me,TroopTypeCounts other)
 		{
 			foreach(var t in other)
 			{
@@ -311,7 +347,7 @@ namespace COTG.Game
 			}
 			return true;
 		}
-        public static int Count(this TroopTypeCount[] me, int type)
+        public static int Count(this TroopTypeCounts me, int type)
         {
             foreach (var i in me)
             {
@@ -320,7 +356,7 @@ namespace COTG.Game
             }
             return 0;
         }
-        public static bool  HasTT(this TroopTypeCount[] me, int type)
+        public static bool  HasTT(this TroopTypeCounts me, int type)
         {
             foreach (var i in me)
             {
@@ -329,7 +365,7 @@ namespace COTG.Game
             }
             return false;
         }
-        public static bool SetCount(this TroopTypeCount[] me, int type, int count)
+        public static bool SetCount(this TroopTypeCounts me, int type, int count)
         {
             foreach (var i in me)
             {
@@ -341,7 +377,7 @@ namespace COTG.Game
             }
             return false;
         }
-        public static TroopTypeCount[]  SetOrAdd(this TroopTypeCount[] me, int type, int count)
+        public static TroopTypeCounts  SetOrAdd(this TroopTypeCounts me, int type, int count)
         {
             int counter = 0;
             foreach (var i in me)
@@ -363,7 +399,7 @@ namespace COTG.Game
         }
 
 		
-        public static int TS(this TroopTypeCount[] me, int type)
+        public static int TS(this TroopTypeCounts me, int type)
         {
             foreach (var i in me)
             {
@@ -525,16 +561,12 @@ namespace COTG.Game
         }
 
         // approximation using players speed bonus
-        public static float ApproxTravelTime(this byte tt,int cid0, int cid1)
+        public static float TravelTimeSeconds(this byte tt,int cid0, int cid1)
         {
-            var dist = cid0.DistanceToCid(cid1);
-            var hours = dist*ttTravel[tt] / (60f * ttSpeedBonus[tt]);
-            if (ttNavy[tt])
-                hours += 1.0f;
-            return hours;
+			return Enum.TroopTravelSeconds(tt, cid0, cid1);
         }
 
-		public static TroopTypeCount[] Add(this TroopTypeCount[] a, TroopTypeCount[] b)
+		public static TroopTypeCounts Add(this TroopTypeCounts a, TroopTypeCounts b)
 		{
 			var rv = a;
 			foreach (var tt in b)

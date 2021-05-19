@@ -50,21 +50,22 @@ namespace COTG.Views
 		{
 
 			HeatMapDay.days.NotifyReset();
-			
+
 		}
-	
+
 
 		private void Now_Click(object sender, RoutedEventArgs e)
 		{
-		
+
 			zoom.SelectedNodes?.Clear();
+			SelectionChanged();
 		}
 		public static async Task ResetAllChangeDescriptions()
 		{
 			// invalidate
 			//lastSelHash = 0;
 			using var _ = await HeatMap.mutex.LockAsync();
-			
+
 			foreach (var day in HeatMapDay.days)
 			{
 				day.UpdateDesc(false, true);
@@ -82,14 +83,14 @@ namespace COTG.Views
 				   }
 			   }
 			   return Task.CompletedTask;
-			});
+		   });
 		}
 
 		static bool listLoaded = false;
 		override public async Task VisibilityChanged(bool visible)
 		{
-		//	tabVisible = visible;
-		
+			//	tabVisible = visible;
+
 			if (visible)
 			{
 				if (!listLoaded)
@@ -100,13 +101,14 @@ namespace COTG.Views
 				}
 				await ResetAllChangeDescriptions();
 				DaysChanged();
-				
-			//	if (!callbackRunning)
-			//		CheckSelectionChanged();
+				SelectionChanged();
+
+				//	if (!callbackRunning)
+				//		CheckSelectionChanged();
 			}
 			else
 			{
-		//		World.ClearHeatmap();
+				//		World.ClearHeatmap();
 			}
 			await base.VisibilityChanged(visible);
 
@@ -159,35 +161,35 @@ namespace COTG.Views
 		//	}
 		//}
 
-		public async Task SelectionChanged()
+		public async Task _SelectionChanged()
 		{
 
 			var t1 = SmallTime.zero;
 			var t0 = SmallTime.serverNow;
-			await App.DispatchOnUIThreadTask(() => { 
-		   var sel = zoom.SelectedNodes;
-			if (sel != null && sel.Count > 0)
-			{
-				foreach (var i in sel)
+			await App.DispatchOnUIThreadTask(() => {
+				var sel = zoom.SelectedNodes;
+				if (sel != null && sel.Count > 0)
 				{
-					var t = (i.Content as HeatMapItem).t;
-					if (t.seconds == 0)
-						continue; // this is as placeholder for pending
-					if (t < t0)
-						t0 = t;
-					if (t > t1)
-						t1 = t;
+					foreach (var i in sel)
+					{
+						var t = (i.Content as HeatMapItem).t;
+						if (t.seconds == 0)
+							continue; // this is as placeholder for pending
+						if (t < t0)
+							t0 = t;
+						if (t > t1)
+							t1 = t;
+					}
 				}
-			}
-			return Task.CompletedTask;
-		});
+				return Task.CompletedTask;
+			});
 
 			if (t1.seconds != 0)
 			{
 				World.SetHeatmapDates(t0, t1); // Is Timezone Right?
 				return;
 			}
-			
+
 
 			World.ClearHeatmap();
 			App.DispatchOnUIThreadSneaky(() =>
@@ -210,28 +212,40 @@ namespace COTG.Views
 		////	snapshots_SelectionChanged(null, null);
 		//}
 
-		static TreeViewNode FindTreeViewNode(HeatMapItem content) => FindTreeViewNode(instance.zoom.RootNodes, content);
+		static TreeViewNode FindTreeViewNode(HeatMapItem content) => content is HeatMapDay day ?  FindTreeViewNode(day) : FindTreeViewNode((HeatMapDelta)content);
 
-		static bool IsSelected(HeatMapItem content, IList<TreeViewNode> sel) => sel != null && sel.Any((a) => a.Content == content);
+		static bool IsSelected(HeatMapItem content, IList<TreeViewNode> sel) => sel != null && sel.Any((a) => object.ReferenceEquals(a.Content ,content) );
 
-		static TreeViewNode FindTreeViewNode(IList<TreeViewNode> nodes, HeatMapItem content)
+		static TreeViewNode FindTreeViewNode(HeatMapDay content) => FindTreeViewNodeNoRecurse(instance.zoom.RootNodes, content);
+		static TreeViewNode FindTreeViewNode( HeatMapDelta  content)
 		{
 			
-			foreach(var n in nodes)
+		
+			foreach (var n in instance.zoom.RootNodes)
 			{
-				if (n.Content == content)
-					return n;
-				var ch = n.Children;
-				if(ch!=null)
-				{
-					var rv = FindTreeViewNode(ch,content);
-					if (rv != null)
-						return rv;
+					var ch = n.Children;
+					if (ch != null)
+					{
+						var rv = FindTreeViewNodeNoRecurse(ch, content);
+						if (rv != null)
+							return rv;
 
-				}
+					}
+				
 			}
 			return null;
 		}
+		static TreeViewNode FindTreeViewNodeNoRecurse(IList<TreeViewNode> nodes, HeatMapItem content)
+		{
+
+			foreach (var n in nodes)
+			{
+				if (object.ReferenceEquals(n.Content, content))
+					return n;
+			}
+			return null;
+		}
+
 		static int deltaOffset;
 		private void zoom_ItemInvoked(TreeView sender, TreeViewItemInvokedEventArgs args)
 		{
@@ -244,11 +258,45 @@ namespace COTG.Views
 		{
 			if (item is HeatMapDay day)
 			{
-				await day.Load();
+				if (day.IsLoadingOrLoaded())
+				{
+
+					var sel = zoom.SelectedNodes;
+					if(sel!=null)
+					{
+						var id = sel.FirstOrDefault(a => object.ReferenceEquals(a.Content, day));
+						// not selected => add
+						if(id == null)
+						{
+							sel.Add(FindTreeViewNode(day));
+						}
+						else
+						{
+							var count = sel.Count;
+							sel.Clear();
+							// many to only this
+							if (count > 1)
+							{
+								sel.Add(FindTreeViewNode(day));
+							}
+							else
+							{
+								// only this to none
+							}
+						}
+						SelectionChanged();
+					}
+
+
+				}
+				else
+				{
+					await day.Load();
+				}
 			}
 			else if (item is HeatMapDelta delta)
 			{
-				if(World.rawPrior0 == null)
+				if (World.rawPrior0 == null)
 				{
 				}
 				else
@@ -258,7 +306,7 @@ namespace COTG.Views
 						++deltaOffset;
 						var id = delta.changes.Span[deltaOffset * 2 % delta.changes.Length];
 						if (!Spot.TestContinentFilterPacked(World.PackedIdToPackedContinent(id)))
-								continue;
+							continue;
 
 						var change = ChangeInfo.GetChangeDesc(World.rawPrior0.Span[(int)id], World.rawPrior1.Span[(int)id]);
 						if (change == null)
@@ -270,59 +318,69 @@ namespace COTG.Views
 					}
 				}
 			}
-//			App.DispatchOnUIThreadSneaky(() =>
-//		   {
-////			   instance.zoom.SelectionMode = TreeViewSelectionMode.None;
-////			   instance.zoom.SelectionMode = TreeViewSelectionMode.Multiple;
-//			   var sel = instance.zoom.SelectedNodes;
-//			   var selected = IsSelected(item,sel);
-//			   sel?.Clear();
-//			   if (!selected)
-//			   {
-//				   var node = FindTreeViewNode(item);
-//				   if (node != null)
-//				   {
-//					   if (sel != null)
-//					   {
-//						   if (item is HeatMapDay )
-//						   {
-//							   foreach (var i in item.deltas)
-//							   {
-//								   var n = FindTreeViewNode(node.Children,i);
-//								   if(n!=null)
-//									   sel.Add(n);
-//							   }
+			//			App.DispatchOnUIThreadSneaky(() =>
+			//		   {
+			////			   instance.zoom.SelectionMode = TreeViewSelectionMode.None;
+			////			   instance.zoom.SelectionMode = TreeViewSelectionMode.Multiple;
+			//			   var sel = instance.zoom.SelectedNodes;
+			//			   var selected = IsSelected(item,sel);
+			//			   sel?.Clear();
+			//			   if (!selected)
+			//			   {
+			//				   var node = FindTreeViewNode(item);
+			//				   if (node != null)
+			//				   {
+			//					   if (sel != null)
+			//					   {
+			//						   if (item is HeatMapDay )
+			//						   {
+			//							   foreach (var i in item.deltas)
+			//							   {
+			//								   var n = FindTreeViewNode(node.Children,i);
+			//								   if(n!=null)
+			//									   sel.Add(n);
+			//							   }
 
-//						   }
-//						   sel.Add(node);
-//						   /// select children?
-//					   }
-//				   }
+			//						   }
+			//						   sel.Add(node);
+			//						   /// select children?
+			//					   }
+			//				   }
 
-//			   }
-//			   else
-//			   {
+			//			   }
+			//			   else
+			//			   {
 
-//			   }
-//			   item.NotifyChange();
-//		   });
+			//			   }
+			//			   item.NotifyChange();
+			//		   });
 		}
 
 
-		private void tree_KeyDown(object sender, KeyRoutedEventArgs e)
+
+		Debounce _selChanged;
+		void SelectionChanged()
 		{
-			var tv = sender as TreeViewItem;
-	//		ItemInvoked(tv.DataContext as HeatMapItem); 
-			Trace($"Key:  {sender} {e}");
+			if (_selChanged == null)
+				_selChanged = new(_SelectionChanged);
+			 _selChanged.Go();
 		}
-
-		Debounce selChanged;
 
 		private void zoom_SelectionChanged(TreeView sender, TreeViewSelectionChangedEventArgs args)
 		{
-			if(selChanged == null)
-				selChanged = new (SelectionChanged) { throttleDelay = 1000 };
-			selChanged.Go();
+			SelectionChanged();
+		}
+
+
+		private void zoom_KeyDown(object sender, KeyRoutedEventArgs e)
+		{
+			var tv = sender as TreeViewItem;
+			//		ItemInvoked(tv.DataContext as HeatMapItem); 
+			Trace($"Key:  {sender} {e}");
+			if (e.Key == Windows.System.VirtualKey.Enter || e.Key == Windows.System.VirtualKey.Space)
+				ItemInvoked(tv.DataContext as HeatMapItem);
+			SelectionChanged();
+
 		}
 
 		//private void TreeViewItem_Tapped(object sender, TappedRoutedEventArgs e)

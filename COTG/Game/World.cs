@@ -156,12 +156,12 @@ namespace COTG.Game
 
 				if (distanceReference == null)
 					return 0;
-				var d = cid.CidToWorld().DistanceToCid(distanceReference.cid);
+				var d = cid.CidToWorld().DistanceToCidD(distanceReference.cid);
 				var tt = distanceReference.GetAttackTroopType();
-				var rv = d * Enum.ttTravel[tt] / (60f * Enum.ttSpeedBonus[tt]);
+				var rv = d * (Enum.ttTravel[tt]*100) / (60f * Enum.ttSpeedBonus[tt]);
 				if (Enum.IsTTNaval(tt))
 					rv += 1.0f;
-				return rv;
+				return (float)rv;
 			}
 		}
 
@@ -572,6 +572,10 @@ namespace COTG.Game
 		}
 		public static async void ClearHeatmap()
 		{
+			if (!isDrawingHeatMap)
+				return;
+			World.heatMapT0 = 0;
+
 			Log($"Heat Clear: {changeMapInProgress} {changeMapRequested}");
 			while (World.changeMapInProgress)
 			{
@@ -1319,9 +1323,6 @@ namespace COTG.Game
 			var str = sb.ToString();
 			App.CopyTextToClipboard(str);
 			Note.Show($"Complete: {counter}");
-
-
-
 		}
 
 
@@ -1329,19 +1330,22 @@ namespace COTG.Game
 		{
 			Assert(t0.seconds != 0);
 			Assert(t1.seconds != 0);
-			World.heatMapT0 = t0 - 1;
-			World.heatMapT1 = t1 + 1;
-			if (World.heatMapT0.Date() != t0.Date())
+			SmallTime _t0 = t0 - 1;
+			SmallTime  _t1 = t1 + 1;
+
+			if ( _t0.Date() != t0.Date())
 			{
 				//	Assert(false);
-				t0 = World.heatMapT0;
+				_t0 = t0;
 			}
+			if (World.heatMapT0 == _t0 &&
+				World.heatMapT1 == _t1)
+				return;
 
-			if (World.heatMapT1.Date() != t1.Date())
-			{
-				Assert(false);
-				t1 = World.heatMapT1;
-			}
+			World.heatMapT0 = _t0;
+			World.heatMapT1 = _t1 ;
+
+
 
 			if (World.changeMapInProgress)
 			{

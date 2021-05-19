@@ -1304,7 +1304,7 @@ namespace COTG
 
 			try
 			{
-				if (e.Link.StartsWith("http", StringComparison.OrdinalIgnoreCase))
+				if (e.Link.StartsWith("http", StringComparison.OrdinalIgnoreCase)||e.Link.StartsWith("mailto"))
 				{
 					Windows.System.Launcher.LaunchUriAsync(new Uri(e.Link));
 				}

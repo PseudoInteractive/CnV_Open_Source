@@ -5,7 +5,7 @@ using COTG.Views;
 
 using Windows.ApplicationModel.Activation;
 using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Controls;
 
 namespace COTG.Activation
 {
@@ -14,7 +14,7 @@ namespace COTG.Activation
         protected override async Task HandleInternalAsync(ShareTargetActivatedEventArgs args)
         {
             // Activation from ShareTarget opens the app as a new modal window which requires a new activation.
-            var frame = new Frame();
+            var frame = new Windows.UI.Xaml.Controls.Frame();
             Window.Current.Content = frame;
             frame.Navigate(typeof(ShareTargetPage), args.ShareOperation);
             Window.Current.Activate();

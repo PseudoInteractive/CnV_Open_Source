@@ -504,15 +504,18 @@ namespace COTG.Views
         static T TryGetValue<T>(object o) => o == null ? default : (T)o;
         public override void Execute(object parameter)
         {
-            var context = parameter as DataBindingCompleteEventArgs;
-            // put your custom logic here
-            var view = context.DataView;
-            
-            MainPage.instance.count.Text =$"Cities: {TryGetValue<ulong>(view.GetAggregateValue(0, null))}";
-            MainPage.instance.tsTotal.Text=$"TS Total:  {TryGetValue<double>(view.GetAggregateValue(1, null)):N0}";
-            MainPage.instance.tsRaid.Text= $"TS Home: {TryGetValue<double>(view.GetAggregateValue(2, null)):N0}";
-            MainPage.instance.castles.Text= $"Castles: {TryGetValue<double>(view.GetAggregateValue(3, null))}";
-            MainPage.instance.water.Text= $"On Water: {TryGetValue<double>(view.GetAggregateValue(4, null))}";
+			App.DispatchOnUIThreadSneaky(() =>
+		   {
+			   var context = parameter as DataBindingCompleteEventArgs;
+				// put your custom logic here
+				var view = context.DataView;
+
+			   MainPage.instance.count.Text = $"Cities: {TryGetValue<ulong>(view.GetAggregateValue(0, null))}";
+			   MainPage.instance.tsTotal.Text = $"TS Total:  {TryGetValue<double>(view.GetAggregateValue(1, null)):N0}";
+			   MainPage.instance.tsRaid.Text = $"TS Home: {TryGetValue<double>(view.GetAggregateValue(2, null)):N0}";
+			   MainPage.instance.castles.Text = $"Castles: {TryGetValue<double>(view.GetAggregateValue(3, null))}";
+			   MainPage.instance.water.Text = $"On Water: {TryGetValue<double>(view.GetAggregateValue(4, null))}";
+		   });
         }
 		
 

@@ -1,4 +1,4 @@
-﻿<local:UserTab
+﻿<views:UserTab
     x:Class="COTG.Views.NearDefenseTab"
     Tag="NearDefense"
      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
@@ -7,17 +7,86 @@
       xmlns:game="using:COTG.Game"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       xmlns:cotg="using:COTG"
+	  xmlns:tg="using:Telerik.UI.Xaml.Controls.Grid"
+      xmlns:tgCore="using:Telerik.Data.Core"
+
       xmlns:my="using:Microsoft.UI.Xaml.Controls"
       xmlns:tk="using:Microsoft.Toolkit.Uwp.UI.Controls"
-      xmlns:local="using:COTG.Views"
+      xmlns:views="using:COTG.Views"
     mc:Ignorable="d">
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="auto" />
+			<RowDefinition Height="auto" />
+			<RowDefinition Height="auto" />
             <RowDefinition Height="3*" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-        <tk:WrapPanel Orientation="Horizontal" HorizontalAlignment="Stretch" >
+		<tg:RadDataGrid x:Name="defendantGrid" x:FieldModifier="public"
+                        Grid.Row="1"
+						AutoGenerateColumns="False"
+                        CanUserChooseColumns="True"
+								 IsTabStop="True"
+								 TabFocusNavigation="Once"
+								 
+                       ColumnResizeHandleDisplayMode="OnColumnHeaderActionFlyoutOpen"
+                                    ColumnDataOperationsMode="Flyout"
+                        PointerPressed="gridPointerPress"
+						AllowFocusOnInteraction="True"
+                        ItemsSource="{x:Bind views:NearDefenseTab.defendants, defendants, Mode=OneWay}"
+													Margin="4,4,8,16"
+
+                        RowHeight="{StaticResource GridRowHeight}"
+                        AlternationStep="2"
+                        SelectionMode="Extended"
+                        SelectionUnit="Row"
+                        GroupPanelPosition="Bottom"
+						FontFamily="Tw Cen MT Condensed"
+						ScrollViewer.ZoomMode="Enabled"
+						>
+
+			<tg:RadDataGrid.Columns>
+				<tg:DataGridImageColumn PropertyName="icon"
+                                        Header="I"
+                                        SizeMode="Fixed"
+                                        Width="32" />
+				<tg:DataGridTextColumn PropertyName="nameAndRemarks"
+                                     
+                                       />
+				<tg:DataGridTextColumn PropertyName="xy"
+                                                CellContentStyle="{StaticResource CenterAlignLink}"
+                                       />
+				<tg:DataGridBooleanColumn PropertyName="pinned"
+                                         IsVisible="True"
+                                         Tip="Hold down shift to toggle pinned status for all selected spots"
+                                      SizeMode="Fixed"
+                                          Width="32" />
+
+				<tg:DataGridNumericalColumn PropertyName="cont"
+                                       SizeMode="Fixed"
+                                       CellContentStyle="{StaticResource CenterAlign}"
+                                       Width="34" />
+				<tg:DataGridTextColumn PropertyName="playerName" Header="Player"
+                                     />
+				<tg:DataGridTextColumn PropertyName="alliance"
+                                      />
+				<tg:DataGridNumericalColumn PropertyName="points"
+                                     
+                                      />
+				<tg:DataGridTextColumn PropertyName="remarks"
+                                       CellContentStyle="{StaticResource LeftAlign}"
+                                       IsVisible="False" />
+				<tg:DataGridBooleanColumn PropertyName="isCastle"
+                                          IsVisible="True"
+                                           />
+				<tg:DataGridBooleanColumn PropertyName="isOnWater"
+                                          IsVisible="True"
+                                          />
+				<tg:DataGridTextColumn PropertyName="troopsString"
+                                       IsCellFlyoutEnabled="True"
+                                             />
+			</tg:RadDataGrid.Columns>
+		</tg:RadDataGrid>
+		<tk:WrapPanel Orientation="Horizontal" HorizontalAlignment="Stretch" >
             <Border  Margin="12" Background="#FF103030" VerticalAlignment="Center">
                 <TextBlock x:Name="sendAtUI"  VerticalAlignment="Center" Text="{x:Bind arriveAt,Mode=OneWay,Converter={StaticResource DateTimeConverter}}"
                            Width="100" HorizontalAlignment="Center" FontSize="14" HorizontalTextAlignment="Center" PointerPressed="SendAtTapped"
@@ -29,7 +98,7 @@
             <ToggleButton Content="Portal" VerticalAlignment="Center" Margin="12" Click="PropChanged" IsChecked="{x:Bind portal, Mode=TwoWay}"
                           Width="70" HorizontalAlignment="Center" Style="{ThemeResource ToggleButtonRevealStyle}"
                       ToolTipService.ToolTip="If on, there are no restrictions on who can go where (but it won't work if they can't reach their target" />
-            <ToggleButton Content="Offense" IsChecked="{x:Bind local:NearDefenseTab.includeOffense, Mode=TwoWay}" VerticalAlignment="Center" Margin="12"
+			<ToggleButton Content="Offense" IsChecked="{x:Bind views:NearDefenseTab.includeOffense, Mode=TwoWay}" VerticalAlignment="Center" Margin="12"
                           Width="70" HorizontalAlignment="Center" Style="{ThemeResource ToggleButtonRevealStyle}" Click="PropChanged"
                       ToolTipService.ToolTip="If on, include offsense" />
 			<ToggleButton Content="Only home" IsChecked="{x:Bind onlyHome, Mode=TwoWay}" VerticalAlignment="Center" Margin="12"  Click="PropChanged"
@@ -48,9 +117,9 @@
         </tk:WrapPanel>
         <tk:DataGrid x:Name="supportGrid" x:FieldModifier="public"
                         AutoGenerateColumns="False"
-                        ItemsSource="{x:Bind local:NearDefenseTab.supporters, Mode=OneWay}"
+                        ItemsSource="{x:Bind views:NearDefenseTab.supporters, Mode=OneWay}"
                         RowHeight="{StaticResource GridRowHeight}"
-                     Grid.Row="1"
+                     Grid.Row="2"
                      SelectionMode="Extended"
                      RowDetailsVisibilityMode="Collapsed"
                      AreRowDetailsFrozen="True" 
@@ -137,7 +206,7 @@
                 <tk:DataGridComboBoxColumn Header="Split" CanUserSort="False" Binding="{Binding split,Mode=OneTime}"
                                        IsReadOnly="False"
                                            ToolTipService.ToolTip=""
-                                           ItemsSource="{x:Bind local:NearDefenseTab.splitArray}"
+                                           ItemsSource="{x:Bind views:NearDefenseTab.splitArray}"
                                         >
                     <tk:DataGridComboBoxColumn.CellStyle>
                         <Style BasedOn="{StaticResource CellCenter}" TargetType="tk:DataGridCell">
@@ -147,7 +216,7 @@
                 </tk:DataGridComboBoxColumn>
             </tk:DataGrid.Columns>
         </tk:DataGrid>
-        <tk:GridSplitter Grid.Row="2"
+        <tk:GridSplitter Grid.Row="3"
                          ResizeDirection="Rows"
 						 						 				IsTabStop="True"
 				CursorBehavior="ChangeOnSplitterHover"
@@ -164,8 +233,8 @@
         </tk:GridSplitter>
         <tk:DataGrid x:Name="troopTypeGrid" x:FieldModifier="public"
                         AutoGenerateColumns="False"
-                     Grid.Row="2"
-                        ItemsSource="{x:Bind local:NearDefenseTab.supportByTroopTypeEmpty, Mode=OneWay}"
+                     Grid.Row="3"
+                        ItemsSource="{x:Bind views:NearDefenseTab.supportByTroopTypeEmpty, Mode=OneWay}"
                         RowHeight="46"
                      Margin="0,14,0,0"
                      CanUserReorderColumns="False"
@@ -212,4 +281,4 @@
             </tk:DataGrid.Columns>
         </tk:DataGrid>
     </Grid>
-</local:UserTab>
+</views:UserTab>

@@ -323,7 +323,7 @@ namespace COTG.JSON
 												  }
 												  else
 												  {
-													  army.spotted = army.time - TimeSpan.FromMinutes(cid.DistanceToCid(army.sourceCid) * TTTravel(ttScout));
+													  army.spotted = army.time - TimeSpan.FromSeconds(cid.DistanceToCidD(army.sourceCid) * TTTravel(ttScout));
 												  }
 											  }
 											  var source = Spot.GetOrAdd(army.sourceCid);
@@ -630,7 +630,7 @@ namespace COTG.JSON
 												sumDef = new[] { new TroopTypeCount(ttGuard, dts) },
 												time = time,
 												reportId = recId,
-												spotted = time - TimeSpan.FromMinutes(target.CidToWorld().Distance(source.CidToWorld()) * TTTravel(ttScout)),
+												spotted = time - TimeSpan.FromSeconds(target.CidToWorld().DistanceD(source.CidToWorld()) * TTTravel(ttScout)),
 												type = reportScout,
 
 												// todo TS info
@@ -685,6 +685,12 @@ namespace COTG.JSON
 																		if (lg > 9)  // trim off '(000:000)'
 																			atkCN = atkCN.Substring(0, lg - 9);
 
+																	}
+
+																	int refines = 0;
+																	if (report.TryGetProperty("rew", out var rew))
+																	{
+																		refines = rew.GetAsInt("w") * 4;// all four are always the same
 																	}
 
 
@@ -767,6 +773,7 @@ namespace COTG.JSON
 																		bool hasSen = atkTrops.HasTT(ttSenator);
 																		var rep = new Army()
 																		{
+																			refines = refines,
 																			isAttack = true,
 																			reportId = recId,
 																			sumDef = defTrops,
@@ -778,7 +785,7 @@ namespace COTG.JSON
 																			targetCid = target,
 																			claim = (byte)(hasSen && root.GetAsString("senatorapn") == atkPN ? IncomingOverview.ClaimToByte(root.GetAsFloat("senator")) : (byte)0),
 																			time = time,
-																			spotted = time - TimeSpan.FromMinutes(target.CidToWorld().Distance(source.CidToWorld()) * TTTravel(ttVanquisher)),
+																			spotted = time - TimeSpan.FromSeconds(target.CidToWorld().DistanceD(source.CidToWorld()) * TTTravel(ttVanquisher)),
 																			type = (byte)reportType
 																			// todo TS info
 

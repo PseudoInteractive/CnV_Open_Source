@@ -48,7 +48,7 @@ AllowFocusOnInteraction="True"
                                        
                                        CellContentStyleSelector="{StaticResource ReportTypeStyleSelector}" />
                 <telerikGrid:DataGridTextColumn 
-                                       PropertyName="Type"
+                                       PropertyName ="{x:Bind GetType()}"
                                        SizeMode="Auto"
                                        CellContentStyleSelector="{StaticResource ReportTypeStyleSelector}" />
                 <telerikGrid:DataGridTextColumn 
@@ -89,7 +89,13 @@ AllowFocusOnInteraction="True"
                                             CellContentStyleSelector="{StaticResource ReportKillStyleSelector}"
                                             CellContentFormat="{}{0,7:N0}"
                                              />
-                <telerikGrid:DataGridTextColumn 
+				<telerikGrid:DataGridNumericalColumn 
+                                            PropertyName="approxKill"
+					                        Header="aprxKill"
+                                            CellContentStyleSelector="{StaticResource ReportKillStyleSelector}"
+                                            CellContentFormat="{}{0,7:N0}"
+                                             />
+				<telerikGrid:DataGridTextColumn 
                                        CellContentStyle="{StaticResource LeftAlign}"
                                        Header="defCN"
                                        PropertyName="targetCN"         />

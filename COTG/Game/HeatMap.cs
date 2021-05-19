@@ -311,6 +311,12 @@ namespace COTG.Game
 				return true;
 			}
 		}
+		public bool IsLoadingOrLoaded()
+		{
+			var prior = GetEarlier();
+			return (prior == null || prior.loadPending) && loadPending;
+		}
+
 		public async Task Load()
 		{
 			var prior = GetEarlier();

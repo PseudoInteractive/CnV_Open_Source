@@ -22,13 +22,13 @@ namespace COTG
 	{
 		public const string emptyJson = "{}";
 		public const string defaultTimeSpanFormat = "h':'mm':'ss";
-		public const string defaultTimeSpanFormatNoDate = "H':'mm':'ss";
-		public const string preciseDateTimeFormat = "yyyy-MM-dd H':'mm':'ss.fff";
+		public const string defaultTimeSpanFormatNoDate = "HH':'mm':'ss";
+		public const string preciseDateTimeFormat = "yyyy-MM-dd HH':'mm':'ss.fff";
 		// public const string preciseDateTimeFormat = "MM/dd H':'mm':'ss.fff";
 
-		public const string defaultDateFormat = "MM/dd H':'mm':'ss";
-		public const string fullDateFormat = "yyyy/MM/dd H':'mm':'ss";
-		public const string raidDateTimeFormat = "MM/dd/yyyy H':'mm':'ss";
+		public const string defaultDateFormat = "MM/dd HH':'mm':'ss";
+		public const string fullDateFormat = "yyyy/MM/dd HH':'mm':'ss";
+		public const string raidDateTimeFormat = "MM/dd/yyyy HH':'mm':'ss";
 
 		public static MemoryOwner<T> AsMemoryOwner<T>(this Span<T> me)
 		{

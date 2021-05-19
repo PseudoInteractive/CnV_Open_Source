@@ -9,7 +9,6 @@ namespace COTG.Game
     public static class Enum
     {
 
-        public const int ttCount = 18;
         public const byte ttGuard = 0;
         public const byte ttBallista = 1;
         public const byte ttRanger = 2;
@@ -29,6 +28,7 @@ namespace COTG.Game
         public const byte ttWarship = 16;
         public const byte ttSenator = 17;
 		public const byte ttPending = 0;
+		public const int ttCount = (ttSenator)+1;
 		public static bool IsRaider(int type) => ttBestDungeonType[type] != (byte)DungeonType.invalid;
         public static bool IsLandRaider(int type) => ttBestDungeonType[type] < (byte)DungeonType.water; // also exludes in valid
         public static bool IsTTNaval(int type) => ttBestDungeonType[type] == (byte)DungeonType.water;
@@ -54,10 +54,25 @@ namespace COTG.Game
         //  12 "ram",13 "scorpion",14 "galley",15 "stinger",
         //  16 "warship",17 "senator",
 
-        public static float[] ttSpeedBonus = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,1,1,1,1,1 };
+		// speed bonus is scaley by 100 as a percent
+        public static float[] ttSpeedBonus = {100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100 };
         public static float[] ttCombatBonus = { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 };
-        public static float cartTravel=10.0f;
-        public static float shipTravel =5.0f;
+        public static double cartTravel=10.0f; // inplicity divided by faith+research
+        public static double shipTravel =5.0f; // pre divided by faith and research
+		public static double TroopTravelSeconds(int tt, double d)
+		{
+			// double
+			// *60 to seconds, *100 because denominator is scaled up by 100
+			var rv = (d * ((int)ttTravel[tt] * 60 * 100)) / ttSpeedBonus[tt];
+			if (IsTTNaval(tt))
+				rv += 60 * 60; // +1 hour
+			return v;
+		}
+		public static double TroopTravelSeconds(int tt,int cid0, int cid1)
+		{
+			// double
+			return TroopTravelSeconds(tt,cid0.DistanceToCidD(cid1));
+		}
 
         // update:  Galleys no longer considered raiders
         public readonly static byte[] ttBestDungeonType = { 255, 255, 2, 2, 2, 2, 1, 255, 0, 0, 0, 1, 255, 255, 3, 3, 3, 255 };
@@ -89,6 +104,7 @@ namespace COTG.Game
                                                         false,false,true,false,
                                                         true,false }; 
 
+		// in minutes
         public readonly static byte[] ttTravel = {   0, 30, 20, 20,
                                                     20, 20, 20, 8,
                                                     10, 10, 10, 10,
@@ -97,7 +113,7 @@ namespace COTG.Game
         public readonly static short[] ttCarry = { 0, 0, 10, 20, 10, 10, 5, 0, 15, 20, 15, 10, 0, 0, 0, 1500, 3000, 1 };
         public readonly static short[] ttAttack = { 10, 50, 30, 10, 25, 50, 70, 10, 40, 60, 90, 120, 50, 150, 3000, 1200, 12000, 1 };
 
-        public static float TTTravel(int type) { return ttTravel[type] / (ttSpeedBonus[type]); }
+        public static double TTTravel(int type) { return ttTravel[type]*(60.0*100) / (ttSpeedBonus[type]); }
 
         //
         // Templates not working for me

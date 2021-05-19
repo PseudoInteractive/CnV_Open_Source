@@ -30,8 +30,9 @@
 
 			<DataTemplate x:Key="dayTemplate"   x:DataType="game:HeatMapDay">
 				<win:TreeViewItem ItemsSource="{x:Bind deltas, Mode=OneWay}"
-						ToolTipService.ToolTip="First click will load history for this day.  Then you can select a the start and end of a time period to see corresponding changes.  When in doubt, refresh."
-									    >
+						ToolTipService.ToolTip="First click will load history for this day.  Then you can select a the start and end of a time period to see corresponding changes.  When in doubt, refresh." 
+								  >
+						
 						<TextBlock Text="{x:Bind desc,Mode=OneWay}" Style="{StaticResource ListItemStyle}"   />
 
 					</win:TreeViewItem>
@@ -52,6 +53,7 @@
 		</Grid.ColumnDefinitions>
 
 			<win:TreeView Grid.Row="1" x:Name="zoom"  CanReorderItems="False"  SelectionMode="Multiple"   
+						  KeyDown="zoom_KeyDown"
 				  CanDragItems="False" AllowDrop="False" CanDrag="False" SelectionChanged="zoom_SelectionChanged" 
 						ItemsSource="{x:Bind game:HeatMapDay.days, Mode=OneWay}" ItemInvoked="zoom_ItemInvoked"  
 				ItemTemplateSelector="{StaticResource heatmapTemplateSelector}"	

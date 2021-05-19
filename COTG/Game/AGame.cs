@@ -317,7 +317,7 @@ namespace COTG
 		const float viewHoverZGain = 1.0f / 64.0f;
 		const float viewHoverElevationKt = 24.0f;
 		public static List<(int cid, float z, float vz)> viewHovers = new List<(int cid, float z, float vz)>();
-
+		public static bool faulted;
 
 		protected override void Update(GameTime gameTime)
 		{
@@ -365,7 +365,7 @@ namespace COTG
 
 				if (clientSpan.X > 0 && clientSpan.Y > 0)
 				{
-					if (resolutionDirtyCounter > 0)
+					if (resolutionDirtyCounter > 0 && !faulted)
 					{
 						if (--resolutionDirtyCounter == 0)
 						{
@@ -434,45 +434,48 @@ namespace COTG
 					}
 
 				}
-
-				if (World.bitmapPixels != null)
+				if (!faulted)
 				{
-					// canvas.Paused = true;
-					var pixels = World.bitmapPixels;
-
-					World.bitmapPixels = null;
-					if (worldObjects != null)
+					if (World.bitmapPixels != null)
 					{
-						var w = worldObjects;
-						worldObjects = null;
-						w.texture.Dispose();
+						// canvas.Paused = true;
+						var pixels = World.bitmapPixels;
+
+						World.bitmapPixels = null;
+						if (worldObjects != null)
+						{
+							var w = worldObjects;
+							worldObjects = null;
+							w.texture.Dispose();
+						}
+						worldObjects = CreateFromBytes(pixels, World.outSize, World.outSize, SurfaceFormat.Dxt1SRgb);
 					}
-					worldObjects = CreateFromBytes(pixels, World.outSize, World.outSize, SurfaceFormat.Dxt1SRgb);
-				}
-				if (World.worldOwnerPixels != null)
-				{
-					var ownerPixels = World.worldOwnerPixels;
-					World.worldOwnerPixels = null;
-					if (worldOwners != null)
+					if (World.worldOwnerPixels != null)
 					{
-						var w = worldOwners;
-						worldOwners = null;
-						w.texture.Dispose();
+						var ownerPixels = World.worldOwnerPixels;
+						World.worldOwnerPixels = null;
+						if (worldOwners != null)
+						{
+							var w = worldOwners;
+							worldOwners = null;
+							w.texture.Dispose();
+						}
+						worldOwners = CreateFromBytes(ownerPixels, World.outSize, World.outSize, SurfaceFormat.Dxt1SRgb);
+						//canvas.Paused = falwirse;
+						//if (worldObjectsDark != null)
+						//    worldObjectsDark.Dispose();
+						//worldObjectsDark = new TintEffect() { BufferPrecision = CanvasBufferPrecision.Precision8UIntNormalizedSrgb, Source = worldObjects, Color = new Color() { A = 255, R = 128, G = 128, B = 128 } };
+
 					}
-					worldOwners = CreateFromBytes(ownerPixels, World.outSize, World.outSize, SurfaceFormat.Dxt1SRgb);
-					//canvas.Paused = falwirse;
-					//if (worldObjectsDark != null)
-					//    worldObjectsDark.Dispose();
-					//worldObjectsDark = new TintEffect() { BufferPrecision = CanvasBufferPrecision.Precision8UIntNormalizedSrgb, Source = worldObjects, Color = new Color() { A = 255, R = 128, G = 128, B = 128 } };
+					if (World.changePixels != null)
+					{
+						var pixels = World.changePixels;
 
-				}
-				if (World.changePixels != null)
-				{
-					var pixels = World.changePixels;
-					ClearHeatmapImage();
-					worldChanges = CreateFromBytes(pixels, World.outSize, World.outSize, SurfaceFormat.Dxt1, worldSpaceEffect);
+						ClearHeatmapImage();
+						worldChanges = CreateFromBytes(pixels, World.outSize, World.outSize, SurfaceFormat.Dxt1, worldSpaceEffect);
 
 
+					}
 				}
 				//if(JSClient.webViewBrush!=null)
 				//	App.DispatchOnUIThread(
@@ -486,8 +489,18 @@ namespace COTG
 			}
 			catch (SharpDX.SharpDXException sex)
 			{
-				COTG.Debug.LogEx(sex);
-				COTG.Debug.Log($"{sex.ResultCode} {sex.Descriptor.ApiCode} {sex.Descriptor.Description} {sex.Descriptor.ToString()} ");
+				if (!faulted)
+				{
+					faulted = true;
+					COTG.Debug.LogEx(sex, report: false);
+					COTG.Debug.Log($"{sex.ResultCode} {sex.Descriptor.ApiCode} {sex.Descriptor.Description} {sex.Descriptor.ToString()} ");
+					App.DispatchOnUIThreadLow(() =>
+				   {
+					   App.DoYesNoBoxUI("Grahics broken","Please restart");
+
+				   });
+				}
+				
 			}
 			catch (Exception _exception)
 			{
@@ -1010,6 +1023,9 @@ namespace COTG
 		//	static CanvasTextRenderingParameters canvasTextRenderingParameters = new CanvasTextRenderingParameters(CanvasTextRenderingMode.NaturalSymmetric, CanvasTextGridFit.Disable);
 		protected override void Draw(GameTime gameTime)
 		{
+			if (faulted)
+				return;
+
 			underMouse = null;
 			bestUnderMouseScore = 32 * 32;
 
@@ -1808,7 +1824,7 @@ namespace COTG
 										{
 											var c1 = sen.target.CidToCamera();
 
-											var dist = city.cid.DistanceToCid(sen.target) * cartTravel; // todo: ship travel?
+											var dist = (float)( city.cid.DistanceToCidD(sen.target) * cartTravel); // todo: ship travel?
 											var t = (tick * city.cid.CidToRandom().Lerp(1.5f / 512.0f, 1.75f / 512f)) + 0.25f;
 											var r = t.Ramp();
 											// Todo: more accurate senator travel times

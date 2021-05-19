@@ -76,7 +76,7 @@ namespace COTG.Game
                 // only on same continent or if both are on water and we have ships
                 if (blc.cont != cont && (!blc.spot.isOnWater || city.shipsHome == 0))
                     continue;
-                blc.dist = worldC.DistanceToCid(blc.spot.cid)*Enum.cartTravel/60.0f;
+                blc.dist = (float) worldC.DistanceToCid(blc.spot.cid)*Enum.cartTravel/60.0f;
                 rv.Add(blc);
             }
             rv.Sort((a, b) => a.sortScore.CompareTo(b.sortScore));

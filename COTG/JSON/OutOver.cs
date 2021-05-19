@@ -95,7 +95,7 @@ namespace COTG.JSON
                                     var time = b[6].GetAsString().ParseDateTime();// b.GetString("arrival").ParseDateTime();
 
                                     var serverTime = JSClient.ServerTime();
-                                        var spotted = time - TimeSpan.FromMinutes(atkCid.DistanceToCid(defCid) * TTTravel(ttVanquisher));
+                                        var spotted = time - TimeSpan.FromSeconds(atkCid.DistanceToCidD(defCid) * TTTravel(ttVanquisher));
                                         if (spotted > serverTime)
                                             spotted = serverTime;
                                         var army = new Army()
@@ -243,7 +243,7 @@ namespace COTG.JSON
 
                                                 time = time,
                                                     reportId = recId,
-                                                    spotted = time - TimeSpan.FromMinutes(target.CidToWorld().Distance(source.CidToWorld()) * TTTravel(ttScout)),// TODO!
+                                                    spotted = time - TimeSpan.FromSeconds(target.CidToWorld().DistanceD(source.CidToWorld()) * TTTravel(ttScout)),// TODO!
                                                 type = reportScout,
                                                 // todo TS info
 
@@ -311,7 +311,13 @@ namespace COTG.JSON
                                                                 }
                                                                 int defTS = 0;
                                                                 int defTSLeft = 0;
-                                                                if (report.TryGetProperty("tts", out var tts))
+																int refines = 0;
+																if (report.TryGetProperty("rew", out var rew))
+																{
+																	refines = rew.GetAsInt("w") * 4;// all four are always the same
+																}
+
+																if (report.TryGetProperty("tts", out var tts))
                                                                 {
                                                                     int counter = 0;
                                                                     foreach (var t in tts.EnumerateArray())
@@ -336,7 +342,7 @@ namespace COTG.JSON
                                                                 //  Assert(defTS > 0);
                                                                 {
                                                                         defTSKilled = defTS - defTSLeft;  // overwrite with calculated value
-                                                                }
+																}
                                                                 }
 
 
@@ -361,15 +367,15 @@ namespace COTG.JSON
                                                                         troops = troops,
                                                                         sumDef = sumDef,
                                                                         reportId = recId,
-
-                                                                        dTsKill = defTSKilled,
+																		refines = refines,
+																		dTsKill = defTSKilled==0 && (atkTS != atkTSLeft) ? Army.ApproximateKillsFromRefines(refines) : defTSKilled,
                                                                         aTsKill = (atkTS - atkTSLeft),
                                                                         sourceCid = source,
                                                                         targetCid = target,
                                                                         claim = IncomingOverview.ClaimToByte( report.GetAsFloat("senator") ),
 
                                                                         time = time,
-                                                                        spotted = time - TimeSpan.FromMinutes(target.CidToWorld().Distance(source.CidToWorld()) * TTTravel(ttVanquisher)),
+                                                                        spotted = time - TimeSpan.FromSeconds(target.CidToWorld().DistanceD(source.CidToWorld()) * TTTravel(ttVanquisher)),
                                                                         type = (byte)reportType
                                                                     // todo TS info
 

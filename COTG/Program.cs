@@ -108,7 +108,14 @@ namespace COTG
 
 		private static void TaskScheduler_UnobservedTaskException(object sender, UnobservedTaskExceptionEventArgs e)
 		{
-			Debug.LogEx(e.Exception);
+			try
+			{
+				e.SetObserved();
+				Debug.LogEx(e.Exception);
+			}catch(Exception ex)
+			{
+
+			}
 		}
 	}
 }

@@ -1044,12 +1044,12 @@ namespace COTG.Views
 			{
 				Assert(isValid);
 				var tt = (category == AttackCategory.senator) ? ttSenator: attacker.primaryTroopType;
-				var t = tt.ApproxTravelTime(attacker.cid, real.cid);
+				var t = tt.TravelTimeSeconds(attacker.cid, real.cid);
 				foreach (var f in fakes)
 				{
-					t = t.Max(tt.ApproxTravelTime(attacker.cid, f.cid));
+					t = t.Max(tt.TravelTimeSeconds(attacker.cid, f.cid));
 				}
-				return t;
+				return t /(60*60); // seconds to hours
 			}
 			public bool FakesValid()
 			{

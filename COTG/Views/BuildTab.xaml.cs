@@ -180,7 +180,7 @@ namespace COTG.Views
 			for (; ; )
 			{
 				getBuildState = 1;
-				var js = await Post.SendForJson("overview/bcounc.php");
+				var js = await Post.SendForJson("overview/bcounc.php").ConfigureAwait(false);
 				foreach (var ci in js.RootElement.EnumerateArray())
 				{
 

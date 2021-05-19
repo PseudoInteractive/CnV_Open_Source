@@ -90,7 +90,7 @@ namespace COTG.Views
 				{
 					if (i.attack > 50 * 1000)
 					{
-						if (i.isWaterRaider)
+						if (i.isNaval)
 							waterValid = true;
 						else
 							groundValid = true;

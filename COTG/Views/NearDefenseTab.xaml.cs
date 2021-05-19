@@ -31,7 +31,8 @@ namespace COTG.Views
         public static NearDefenseTab instance;
         public static bool IsVisible() => instance.isVisible;
         public bool waitReturn { get; set; } = true;
-        public static Spot defendant;
+        public static ResetableCollection<City> defendants = new();
+
         public static bool includeOffense;
         public float filterTime=6;
         public int filterTSTotal=10000;
@@ -67,9 +68,16 @@ namespace COTG.Views
         {
             if (visible)
             {
-                if (defendant == null )
-                    defendant = Spot.GetFocus();
-				if (defendant != null && defendant.isCityOrCastle)
+				if (defendants.Count == 0)
+				{
+					var focus = Spot.GetFocus();
+					if (focus.isCityOrCastle)
+						defendants.Add(focus);
+					else
+						defendants.Add(City.GetBuild());
+				}
+
+//				if (defendants != null && defendant.isCityOrCastle)
 				{
 					var portal = this.portal;
 
@@ -90,6 +98,8 @@ namespace COTG.Views
 							 (includeOffense ? city.tsTotal : city.tsDefTotal) < filterTSTotal)
 							continue;
 						var hours = 0.0f;
+						var canTravelViaWater=city.isOnWater && defendants.Any(a=>a.isOnWater);
+
 						var onDifferentContinent = false;
 						if (!portal)
 						{
@@ -146,7 +156,7 @@ namespace COTG.Views
 						}
 						else
 						{
-							supporter.tSend = troops.Where(tt => (includeOffense || tt.isDef)).ToArray(); // clone array
+							supporter.tSend = troops.Where(tt => (includeOffense || tt.isDef) && (canTravelViaWater||!tt.isNaval) ).ToArray(); // clone array
 						}
 						supporter.travel = hours;
 					}

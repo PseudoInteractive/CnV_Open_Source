@@ -1278,7 +1278,7 @@ namespace COTG.Game
 			}
 			else
 			{
-				var dist = cid.DistanceToCid(target);
+				var dist = cid.DistanceToCidD(target);
 				t = TimeSpan.FromMinutes(dist * Enum.cartTravel);
 				return true;
 
@@ -1293,38 +1293,39 @@ namespace COTG.Game
 				return false;
 
 
-			var dist = cid.DistanceToCid(target);
+			var dist = cid.DistanceToCidD(target);
 			t = TimeSpan.FromMinutes(dist * Enum.shipTravel + 60);
 
 			return true;
 
 		}
-		public bool ComputeTravelTime(int target, bool onlyHome, out float hours, out bool onDifferentContinent)
+		public bool ComputeTravelTime(int target, bool onlyHome, bool viaWater, out float hours, out bool onDifferentContinent)
 		{
 			hours = 0;
 			onDifferentContinent = cont != target.CidToContinent();
-			if (onDifferentContinent)
-			{
-				if (Spot.GetOrAdd(target).isOnWater && (onlyHome ? troopsHome : troopsTotal).Any((t) => t.type == ttGalley || t.type == ttStinger))
-				{
-					var tt = ttGalley;
-					var dist = cid.DistanceToCid(target);
-					hours = dist * ttTravel[tt] / (60f * ttSpeedBonus[tt]) + 1;
-					return true;
-
-				}
+			var targetCity = City.Get(target);
+			var targetOnWater = targetCity.isOnWater;
+			if (!(targetOnWater && isOnWater) && viaWater)
+				return false;
+			if (onDifferentContinent && !viaWater)
 				return false;
 
-			}
-			else
+			var dist = cid.DistanceToCidD(target);
+			bool anyValid = false; 
+
+			foreach ( var tt in (onlyHome ? troopsHome : troopsTotal) )
 			{
-				var tt = GetPrimaryTroopType(onlyHome, Spot.GetOrAdd(target).isOnWater&& isOnWater);
-				if (tt == 0)
-					return false;
-				var dist = cid.DistanceToCid(target);
-				hours = dist * ttTravel[tt] / (60f * ttSpeedBonus[tt]);
-				return true;
+				if (tt.isNaval != viaWater)
+					continue;
+
+				var t = tt.TravelTimeSeconds(dist);
+
+				//var tt = ttGalley;
+				hours = hours.Max((float)(t/(60.0*60.0)) );
+				anyValid = true;
 			}
+			return anyValid;
+
 		}
 		//static City lastDugeonScanCity;
 		

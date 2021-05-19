@@ -1627,7 +1627,7 @@ namespace COTG.Game
 
 
 			// todo cart travel time, ship travel time
-			var dist = cid.DistanceToCid(_cid);
+			var dist = cid.DistanceToCidD(_cid);
 			StringBuilder sb = new StringBuilder();
 			sb.AppendLine($"From {nameMarkdown} to {City.Get(_cid).nameMarkdown}");
 			sb.Append(dist.ToString("0.00"));
@@ -1639,7 +1639,7 @@ namespace COTG.Game
 			}
 			for (int i = 1; i < ttCount; ++i)
 			{
-				var dt = TimeSpan.FromMinutes(dist * TTTravel(i));
+				var dt = TimeSpan.FromSeconds(dist * TTTravel(i));
 				sb.Append($"\n{ttName[i]}: {dt.ToString(AUtil.defaultTimeSpanFormat)}");
 			}
 			var str = sb.ToString();

@@ -228,8 +228,16 @@ namespace COTG
 			Assert(dy.Abs() < 32767);
 			return MathF.Sqrt((float)(dx * dx + dy * dy));
 		}
+		public static double DistanceD(this (int x, int y) a, (int x, int y) b)
+		{
+			var dx = (a.x - b.x);
+			var dy = (a.y - b.y);
+			Assert(dx.Abs() < 32767);
+			Assert(dy.Abs() < 32767);
+			return Math.Sqrt((double)(dx * dx + dy * dy));
+		}
 
-		
+
 		public static (int x, int y) Negate(this (int x, int y) a)
 		{
 			return (-a.x, -a.y);
@@ -456,6 +464,7 @@ namespace COTG
         
 
         public static float DistanceToCid(this int a, int cid) => Distance(a.CidToWorld(), cid.CidToWorld());
+		public static double DistanceToCidD(this int a, int cid) => DistanceD(a.CidToWorld(), cid.CidToWorld());
 		public static bool CanReachByTrade(this int hub, int cid1)
 		{
 			if (hub.CidToContinent() == cid1.CidToContinent())
@@ -468,7 +477,8 @@ namespace COTG
 			return (City.Get(hub).ships > 0);
 		}
 		public static float DistanceToCid(this (int x, int y) a, int cid) => Distance(a, cid.CidToWorld());
-        public static uint ToCompactCid(this int c)
+		public static double DistanceToCidD(this (int x, int y) a, int cid) => DistanceD(a, cid.CidToWorld());
+		public static uint ToCompactCid(this int c)
         {
             var x = c % 65536;
             var y = c >> 16;

@@ -49,21 +49,22 @@ namespace COTG.Game
         // restul int minutes
         public float GetOneWayTripTimeMinutes(City city)
         {
-            var dist = target.DistanceToCid(city.cid);
+            var dist = target.DistanceToCidD(city.cid);
             // based on slowest troop
-            var rv = 0f;
+            var rv = 0.0;
             foreach (var tt in city.troopsTotal)
             {
                 var type = tt.type;
-                var travel = dist * ttTravel[type] / (ttSpeedBonus[type]);
+                var travel = (dist * ttTravel[type]*100) / (ttSpeedBonus[type]);
                 // if (IsWaterRaider(type))
                 // 1 hour extra for all raids
                 travel += 60.0f;
                 if (travel > rv)
                     rv = travel;
             }
-            return rv > 0 ? rv : 90; // if troops are not updated, cannot compute raid income
+            return rv > 0 ? (float)rv : 90; // if troops are not updated, cannot compute raid income
         }
+
     public override int GetHashCode()
         {
             return HashCode.Combine(target, time, isReturning, isRepeating);

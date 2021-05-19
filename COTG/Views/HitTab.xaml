@@ -34,7 +34,7 @@
                         FontSize="{StaticResource SmallFontSize}"
 								 FontStretch="Condensed"
                         GroupPanelPosition="Bottom"
-                        ItemsSource="{x:Bind history, Mode=OneWay}"
+                        ItemsSource="{x:Bind history}"
                         RowHeight="{StaticResource ShortGridRowHeight}"
                         AlternationStep="2"
                         SelectionMode="Single"
@@ -94,7 +94,13 @@
                                             CellContentStyleSelector="{StaticResource ReportKillStyleSelector}"
                                             CellContentFormat="{}{0,7:N0}"
                                              />
-                <telerikGrid:DataGridTextColumn 
+				<telerikGrid:DataGridNumericalColumn 
+                                            PropertyName="approxKill"
+					                        Header="aprxKill"
+                                            CellContentStyleSelector="{StaticResource ReportKillStyleSelector}"
+                                            CellContentFormat="{}{0,7:N0}"
+                                             />
+				<telerikGrid:DataGridTextColumn 
                                        CellContentStyle="{StaticResource LeftAlign}"
                                        Header="defCN"
                                        PropertyName="targetCN"         />

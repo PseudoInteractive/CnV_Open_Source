@@ -1,4 +1,6 @@
-﻿using Microsoft.Toolkit.HighPerformance.Enumerables;
+﻿using COTG.Game;
+
+using Microsoft.Toolkit.HighPerformance.Enumerables;
 
 using System;
 using System.Buffers;
@@ -17,18 +19,52 @@ namespace COTG
 	{
 		static ArrayPool<T> pool = ArrayPool<T>.Shared;
 
-		public T[] v;
+		public T[] v = Array.Empty<T>();
 		public int count;
-	
+		public int Length => count;
+		public int Count => count;
+
 		public DArray(int maxSize)
 		{
-			v = pool.Rent(maxSize);
+			if(maxSize != 0)
+				v = pool.Rent(maxSize);
+		}
+
+		public void AddRange(in IEnumerable<T> i)
+		{
+			foreach (var _i in i)
+			{
+				if (!CanGrow())
+				{
+					GrowBuffer((count + 1) * 2);
+				}
+				v[count++] = _i;
+			}
 		}
 
 		public void Add(in T i)
 		{
+			if(!CanGrow())
+			{
+				GrowBuffer((count + 1) * 2); 
+			}
 			v[count++] = i;
 		}
+		public void GrowBuffer( int size)
+		{
+			if (size <= v.Length)
+				return;
+			var _v = v;
+			v = pool.Rent(size);
+			for(int i=0;i<count;++i)
+			{
+				v[i] = v[i];
+				
+			}
+			if(_v.Length != 0)
+				pool.Return(_v);
+		}
+
 		public bool CanGrow() => count < v.Length;
 		public void Clear() => count = 0;
 
@@ -53,10 +89,11 @@ namespace COTG
 
 		public void Dispose()
 		{
-			if (v != null)
+			if ( v.Length != 0 )
 			{
 				var _v = v;
-				v = null;
+				v = Array.Empty<T>();
+				count = 0;
 				pool.Return(_v);
 			}
 		}
