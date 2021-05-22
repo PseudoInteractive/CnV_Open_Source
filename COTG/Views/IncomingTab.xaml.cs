@@ -37,9 +37,10 @@ namespace COTG.Views
 
     public sealed partial class IncomingTab : UserTab, INotifyPropertyChanged
     {
-
+		public int typeFilter { get; set; }
 		public static Spot lastSelected;
         public static IncomingTab instance;
+		public bool includeInternal { get; set; }
         //        public static Report showingRowDetails;
 
         //public DataTemplate GetTsInfoDataTemplate()
@@ -132,25 +133,46 @@ namespace COTG.Views
 
         public void OnPropertyChanged(string propertyName) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 
-		public static Spot selected => instance.defenderGrid.SelectedItem as Spot;
-
+		public static Spot selected
+		{
+			get
+			{
+				var items = instance.defenderGrid.SelectedItems;
+				if (items.Count == 1)
+					return items[0] as Spot;
+				return null;
+			}
+		}
         public void NotifyIncomingUpdated()
         {
             if (IncomingTab.IsVisible())
             {
                 try
                 {
-                    var sel = defenderGrid.SelectedItem as Spot;
-//					lastSelected = sel;
+                    var sel = defenderGrid.SelectedItems.ToArray();
+					//					lastSelected = sel;
 
-					defenderGrid.ItemsSource = onlyMe.IsChecked.GetValueOrDefault() ? Spot.defendersI.Where(w=>w.pid==Player.activeId).ToArray() : Spot.defendersI;
-                    if (sel!=null)
+					defenderGrid.ItemsSource = Spot.defendersI.Where(w => w.testContinentFilter && (includeInternal||w.hasEnemyIncoming)&&(typeFilter == 2 ? w.pid == Player.activeId : typeFilter == 1 ? SettingsPage.incomingWatch.Contains(w.playerName) : true)).ToArray(); 
+                    if (sel.Length > 0)
                     {
-                       
                         App.DispatchOnUIThreadSneaky(() =>
                         {
-                            defenderGrid.SelectItem(sel);
-                            defenderGrid.ScrollItemIntoView(sel);
+							++SpotTab.silenceSelectionChanges;
+							try
+							{
+								foreach (Spot s in sel)
+								{
+									defenderGrid.SelectItem(s);
+									if (sel.Length == 1)
+									{
+										defenderGrid.ScrollItemIntoView(sel);
+									}
+								}
+							}
+							finally
+							{
+								--SpotTab.silenceSelectionChanges;
+							}
                         });
 
                     }
@@ -196,7 +218,7 @@ namespace COTG.Views
 			if (!isActive)
 				return;
 
-			var sel = defenderGrid.SelectedItem as Spot; ;
+			var sel = selected;
 			if (sel != null )
             {
 				if (sel == lastSelected)
@@ -216,13 +238,15 @@ namespace COTG.Views
 				}
 
 			}
-			
-        }
+			SpotSelectionChanged(sender, e);
+		}
 
-		private void onlyMe_Click(object sender, RoutedEventArgs e)
+		private void filterChanged(object sender, RoutedEventArgs e)
 		{
 			instance.refresh.Go();
 		}
+
+	
 	}
 
    

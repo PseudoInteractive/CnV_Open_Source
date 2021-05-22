@@ -1044,10 +1044,10 @@ namespace COTG.Views
 			{
 				Assert(isValid);
 				var tt = (category == AttackCategory.senator) ? ttSenator: attacker.primaryTroopType;
-				var t = tt.TravelTimeSeconds(attacker.cid, real.cid);
+				var t = (float)tt.TravelTimeSeconds(attacker.cid, real.cid);
 				foreach (var f in fakes)
 				{
-					t = t.Max(tt.TravelTimeSeconds(attacker.cid, f.cid));
+					t = t.Max((float)tt.TravelTimeSeconds(attacker.cid, f.cid));
 				}
 				return t /(60*60); // seconds to hours
 			}

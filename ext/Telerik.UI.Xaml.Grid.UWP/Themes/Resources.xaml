@@ -523,7 +523,7 @@
                                             <DiscreteObjectKeyFrame KeyTime="0:0:0" Value="Visible"/>
                                         </ObjectAnimationUsingKeyFrames>
                                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="DragHereText" Storyboard.TargetProperty="Visibility">
-                                            <DiscreteObjectKeyFrame KeyTime="0:0:0" Value="Visible"/>
+                                            <DiscreteObjectKeyFrame KeyTime="0:0:0" Value="Collapsed"/>
                                         </ObjectAnimationUsingKeyFrames>
                                     </Storyboard>
                                 </VisualState>
@@ -545,7 +545,7 @@
                                             <DiscreteObjectKeyFrame KeyTime="0:0:0" Value="Visible"/>
                                         </ObjectAnimationUsingKeyFrames>
                                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="DragHereText" Storyboard.TargetProperty="Visibility">
-                                            <DiscreteObjectKeyFrame KeyTime="0:0:0" Value="Visible"/>
+                                            <DiscreteObjectKeyFrame KeyTime="0:0:0" Value="Collapsed"/>
                                         </ObjectAnimationUsingKeyFrames>
                                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="Border" Storyboard.TargetProperty="Visibility">
                                             <DiscreteObjectKeyFrame KeyTime="0:0:0" Value="Visible"/>
@@ -644,7 +644,7 @@
                                     <TextBlock x:Name="DragHintGlyph" FontFamily="{ThemeResource SymbolThemeFontFamily}" Text="&#xE169;"
                                              VerticalAlignment="Top" Visibility="Collapsed"/>
                                     <localPrimitives:RotatedContainer  HorizontalAlignment="Center" x:Name="RotatedContainer">
-                                        <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" x:Name="DragHereText"/>
+                                        <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" x:Name="DragHereText" Visibility="Collapsed" />
                                     </localPrimitives:RotatedContainer>
                                 </Grid>
                                 <Rectangle x:Name="InnerShadow" Fill="{ThemeResource TelerikGridInnerShadowBrush}" 

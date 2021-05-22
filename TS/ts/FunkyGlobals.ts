@@ -46,6 +46,7 @@ window['openAttackSender'] = function (args: string) {
 	tabs.tabs("option", "active", 3);
 	$("#attacktab")[0].click();
 	Aimp(args);
+	setTimeout(updateattack, 200);
 }
 
 function GetCityContinent(_city: jsonT.City): number {
@@ -521,12 +522,17 @@ function SendAttack() {
 		}
 	}
 	//galley attack
-	if (t.type.indexOf(14) > -1 && $("#usereal14").prop("checked") === true) {
+	if (t.type.indexOf(14) > -1 && $("#usereal14").prop("checked") === true && ($("#galleyfake").prop("checked") === false )  ) {
 		time = ttspeed[14] / ttSpeedBonus[14] * maxdist;
 		var gali = t.type.indexOf(14);
-		var galnumb = Math.floor((t.home[gali] - fakeg * fakenumb) / realnumb);
+		let _fakeg = fakeg;
+		// hack: todo fix
+		if ($("#galleyfake").prop("checked") === true) {
+			_fakeg = Math.ceil(faketss / 100.0);
+		}
+		var galnumb = Math.floor((t.home[gali] - _fakeg * fakenumb) / realnumb);
 		t.real[gali] = galnumb;
-		t.fake[gali] = fakeg;
+		t.fake[gali] = _fakeg;
 		var galcap = 500 * galnumb;
 		var nongalts = 0;
 		for (let i in t.home) {

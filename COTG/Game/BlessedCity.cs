@@ -26,8 +26,10 @@ namespace COTG.Game
         public int stone { get; set; }
         public int pri { get; set; }
         public string notes { get; set; }
-        public float dist { get; set; } // distance to sending city
-        public float sortScore => dist - pri * 8.0f; // todo: refine this, also take into acccount resources needed
+		public float travelMinutes; // distance to sending city
+		public string travelTime => TimeSpan.FromMinutes(travelMinutes).Format();
+
+		public float sortScore => travelMinutes - pri * (60*3.0f); // todo: refine this, also take into acccount resources needed
         public static async void Refresh()
         {
             try
@@ -76,7 +78,7 @@ namespace COTG.Game
                 // only on same continent or if both are on water and we have ships
                 if (blc.cont != cont && (!blc.spot.isOnWater || city.shipsHome == 0))
                     continue;
-                blc.dist = (float) worldC.DistanceToCid(blc.spot.cid)*Enum.cartTravel/60.0f;
+                blc.travelMinutes = (float)( worldC.DistanceToCidD(blc.spot.cid)*Enum.cartTravel);
                 rv.Add(blc);
             }
             rv.Sort((a, b) => a.sortScore.CompareTo(b.sortScore));

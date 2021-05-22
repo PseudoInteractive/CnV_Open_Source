@@ -42,6 +42,7 @@ window['openAttackSender'] = function (args) {
     tabs.tabs("option", "active", 3);
     $("#attacktab")[0].click();
     Aimp(args);
+    setTimeout(updateattack, 200);
 };
 function GetCityContinent(_city) {
     return GetContinent(_city.x, _city.y);
@@ -489,12 +490,16 @@ function SendAttack() {
             }
         }
     }
-    if (t.type.indexOf(14) > -1 && $("#usereal14").prop("checked") === true) {
+    if (t.type.indexOf(14) > -1 && $("#usereal14").prop("checked") === true && ($("#galleyfake").prop("checked") === false)) {
         time = ttspeed[14] / ttSpeedBonus[14] * maxdist;
         var gali = t.type.indexOf(14);
-        var galnumb = Math.floor((t.home[gali] - fakeg * fakenumb) / realnumb);
+        let _fakeg = fakeg;
+        if ($("#galleyfake").prop("checked") === true) {
+            _fakeg = Math.ceil(faketss / 100.0);
+        }
+        var galnumb = Math.floor((t.home[gali] - _fakeg * fakenumb) / realnumb);
         t.real[gali] = galnumb;
-        t.fake[gali] = fakeg;
+        t.fake[gali] = _fakeg;
         var galcap = 500 * galnumb;
         var nongalts = 0;
         for (let i in t.home) {
@@ -69712,6 +69717,7 @@ function avactor() {
         attacktabbody += "<tr><td><span>Send fake as:</span></td><td><select id='faketype' class='greensel' style='font-size: 15px !important;width:95%;height:30px;'>";
         attacktabbody += "<option value='0'>Assault</option><option value='1'>Siege</option><option value='2'>Plunder</option><option value='3'>Scout</option></select></td><td></td></tr>";
         attacktabbody += "<tr><td><input id='retcheck' class='clsubopti' type='checkbox' checked> Return all Troops</td><td colspan=2><input id='retHr' type='number' style='width: 20px' value='2'> Hours before attack</td></tr>";
+        attacktabbody += "<tr><td><input id='galleyfake' class='clsubopti' type='checkbox' >full galley fakes</td></tr>";
         attacktabbody += "<tr><td><input id='scoutick' class='clsubopti' type='checkbox' checked>30galleys/1scout fake</td></tr></table>";
         attacktabbody += "<table style='width:96%;margin-left:2%'><thead><tr style='text-align:center;'><th></th><th>Hr</th><th>Min</th><th>Sec</th><th colspan='2'>Date</th></tr>";
         attacktabbody += "<tr><td>Set Time: </td><td><input id='attackHr' type='number' style='width: 35px;height: 22px;font-size: 10px;' value='10'></td><td><input id='attackMin' style='width: 35px;height: 22px;font-size: 10px;' type='number' value='00'></td>";

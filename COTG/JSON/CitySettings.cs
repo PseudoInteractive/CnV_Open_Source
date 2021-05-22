@@ -403,7 +403,7 @@ namespace COTG.JSON
 			var rem = spot.remarks.ToLower();
 			var result = string.Empty;
 			var tags = spot.GetTags();
-			void CheckTag1( Tags tag, int id, string count = sCountMany)
+			void CheckTag1( Tags tag, int id, string count = sCountMany, bool zeroIfClear=true)
 			{
 				if (tags.HasFlag(tag))
 				{
@@ -413,7 +413,8 @@ namespace COTG.JSON
 				}
 				else
 				{
-					split[id] = sZero;
+					if(zeroIfClear)
+						split[id] = sZero;
 				}
 
 			}
@@ -481,10 +482,11 @@ namespace COTG.JSON
 			}
 
 			CheckTag1(Tags.Horse, 19);
+			CheckTag1(Tags.Scout, 16,"20000", false);
 			CheckTag1(Tags.Arb, 17);
 			CheckTag1(Tags.Sorc, 15);
 			CheckTag1(Tags.Prae, 18);
-			CheckTag1(Tags.Galley, 23, (countMany / 600).ToString() );
+			CheckTag1(Tags.Galley, 23, (countMany / 600).ToString(),false );
 			CheckTag1(Tags.Druid, 20);
 
 

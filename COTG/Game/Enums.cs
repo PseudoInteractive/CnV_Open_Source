@@ -48,14 +48,14 @@ namespace COTG.Game
             true,false,false,false,
             true,true,false,false,
             false,false,true,true,false,false };
-                    //  0 "guard",1 "ballista",2 "ranger",3 "triari", 
-        //  4  "priestess",5 "vanquisher",6 "sorcerers",7 "scout", 
-        //  8  "arbalist",9 "praetor",10 "horseman",11 "druid",
-        //  12 "ram",13 "scorpion",14 "galley",15 "stinger",
-        //  16 "warship",17 "senator",
+		//  0 "guard",1 "ballista",2 "ranger",3 "triari", 
+		//  4  "priestess",5 "vanquisher",6 "sorcerers",7 "scout", 
+		//  8  "arbalist",9 "praetor",10 "horseman",11 "druid",
+		//  12 "ram",13 "scorpion",14 "galley",15 "stinger",
+		//  16 "warship",17 "senator",
 
 		// speed bonus is scaley by 100 as a percent
-        public static float[] ttSpeedBonus = {100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100 };
+		public static float[] ttSpeedBonus = {100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100 };
         public static float[] ttCombatBonus = { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 };
         public static double cartTravel=10.0f; // inplicity divided by faith+research
         public static double shipTravel =5.0f; // pre divided by faith and research
@@ -66,7 +66,7 @@ namespace COTG.Game
 			var rv = (d * ((int)ttTravel[tt] * 60 * 100)) / ttSpeedBonus[tt];
 			if (IsTTNaval(tt))
 				rv += 60 * 60; // +1 hour
-			return v;
+			return rv;
 		}
 		public static double TroopTravelSeconds(int tt,int cid0, int cid1)
 		{
@@ -94,7 +94,8 @@ namespace COTG.Game
 
 
         public readonly static bool[] ttArtillery =  { false, false, false, false, false, false, false, false, false, false, false, false, true, true, false, false, true, false };
-        public readonly static bool[] ttNavy =       { false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, true, true, false };
+		public readonly static bool[] ttSE =   { false, false, false, false, false, false, false, false, false, false, false, false, true, true, false, false, false, false };
+		public readonly static bool[] ttNavy =       { false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, true, true, false };
         public readonly static int[] otherLoot = { 360, 1050, 4500, 16000, 33000, 58500, 118400, 200450, 300000, 450400 };
         public readonly static int[] mountainLoot = { 360, 1050, 4500, 16000, 33000, 58500, 118400, 200450, 300000, 450400 };
 		

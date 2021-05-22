@@ -44,6 +44,7 @@ namespace COTG.Game
 		Arb = 1 << Enum.ttArbalist,
 		[IsAlias]
 		Arbalist = Arb,
+		Scout = 1 << Enum.ttScout,
 		Scorp = 1 << Enum.ttScorpion,
 		[IsAlias]
 		Scorpion = Scorp,
@@ -67,6 +68,8 @@ namespace COTG.Game
 		Transport = 1 << 25,
 		VRT = 1 << 26,
 
+		// meta tags
+		// mine, alliance enemy other
 	}
 	public struct TagInfo
 	{

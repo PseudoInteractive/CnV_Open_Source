@@ -20,7 +20,9 @@ namespace COTG.Game
     {
         public int target;// cid
         public bool isReturning;
-        public bool isRepeating; // neighter timed return nor raid once
+		public byte r4;
+		public bool isRepeatingOrScheduledToReturn => r4 == 2 || r4 == 3; // not raid once
+		public bool isRepeatingForever => r4==2; // neighter timed return nor raid once
         public byte repeatCount;
         public byte troopType; // todo:  We should store3 of these, or specials value for RT, VRT, VT
         public DateTimeOffset time;
@@ -43,7 +45,7 @@ namespace COTG.Game
             return target == other.target &&
                    time == other.time &&
                    isReturning == other.isReturning &&
-                   isRepeating == other.isRepeating;
+                   r4== other.r4;
         }
 
         // restul int minutes
@@ -67,7 +69,7 @@ namespace COTG.Game
 
     public override int GetHashCode()
         {
-            return HashCode.Combine(target, time, isReturning, isRepeating);
+            return HashCode.Combine(target, time, isReturning, r4);
         }
 
         public static bool operator ==(Raid left, Raid right)
@@ -82,7 +84,7 @@ namespace COTG.Game
 
         public override string ToString()
         {
-            return $"{{target:{target},arrival:{time},isRepeating:{isRepeating},isReturning:{isReturning}}}";
+            return $"{{target:{target}, arrival:{time}, { (r4 switch { 2 => "repeating", 3=>"scheduled return",_=>"once"}) }";
         }
     }
 
@@ -154,15 +156,16 @@ namespace COTG.Game
 			for (int iter = 0; iter < (wantDelays ? r.reps : 1); ++iter)
 			{
 				var tr = new List<sndRaidtr>();
-				foreach (var ttc in city.troopsHome)
+				for(int ttci =0;ttci<city.troopsHome.count;++ttci)
 				{
+					var ttc= city.troopsHome[ttci];
 					if (!IsRaider(ttc.type) || !SettingsPage.includeRaiders[ttc.type])
 						continue;
 					if (IsTTNaval(ttc.type) == d.isWater)
 					{
 						var count = (int)(ttc.count * troopFraction / (SettingsPage.raidSendExact? r.fractionalReps:r.reps) );
 						tr.Add(new sndRaidtr() { tt = ttc.type.ToString(), tv = count.ToString() });
-						ttc.count -= r.reps * count;
+						city.troopsHome[ttci].count -= r.reps * count;
 					}
 
 				}

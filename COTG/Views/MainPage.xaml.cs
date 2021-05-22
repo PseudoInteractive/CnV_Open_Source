@@ -62,7 +62,7 @@ namespace COTG.Views
 
 			spotGrids.Add(cityGrid);
 
-			cityGrid.SelectionChanged += SelectionChanged;
+			cityGrid.SelectionChanged += SpotSelectionChanged;
 			//        var rand = new Random();
 
 			//cityMenuFlyout = new MenuFlyout();
@@ -427,40 +427,7 @@ namespace COTG.Views
 			Note.Show($"Sent {totalSent.Min(sel.Count)} Raids (from {sel.Count} selected)");
 
 		}
-		private void SelectionChanged(object sender, DataGridSelectionChangedEventArgs e)
-		{
-			if (!isActive)
-				return;
-
-			if (SpotTab.silenceSelectionChanges == 0)
-			{
-				try
-				{
-
-					var sel = cityGrid.SelectedItems;
-					var newSel = new HashSet<int>();
-					bool raidVisible = false;
-					foreach (Spot s in sel)
-					{
-						newSel.Add(s.cid);
-					
-					}
-	
-
-					//          Spot.selected.EnterWriteLock();
-
-					Spot.selected = newSel;
-				}
-				catch (Exception ex)
-				{
-					LogEx(ex);
-				}
-				finally
-				{
-					//          Spot.selected.ExitWriteLock();
-				}
-			}
-		}
+		
 
 		private void SelectAll(object sender, RoutedEventArgs e)
 		{

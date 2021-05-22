@@ -59,7 +59,7 @@ namespace COTG.Views
 			Assert(instance == null);
 			instance = this;
 			InitializeComponent();
-			cityGrid.SelectionChanged += SelectionChanged;
+			cityGrid.SelectionChanged += SpotSelectionChanged;
 			cityGrid.OnKey = Spot.OnKeyDown;
 
 			cityGrid.CurrentItemChanged += CityGrid_CurrentItemChanged;

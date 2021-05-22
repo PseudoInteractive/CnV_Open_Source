@@ -782,9 +782,8 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\ext\Cyotek.Drawing.BitmapFont.dll</HintPath>
     </Reference>
-    <Reference Include="MonoGame.Framework, Version=1.0.0.0, Culture=neutral, processorArchitecture=AMD64">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\ext\MonoGame.Framework\MonoGame.Framework.dll</HintPath>
+    <Reference Include="MonoGame.Framework">
+      <HintPath>..\ext\MonoGame.Framework.dll</HintPath>
     </Reference>
     <Reference Include="Telerik.Core, Version=0.0.0.0, Culture=neutral, PublicKeyToken=da696acf63be444a, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>

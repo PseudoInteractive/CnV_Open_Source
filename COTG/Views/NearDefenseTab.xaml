@@ -32,9 +32,9 @@
                                     ColumnDataOperationsMode="Flyout"
                         PointerPressed="gridPointerPress"
 						AllowFocusOnInteraction="True"
-                        ItemsSource="{x:Bind views:NearDefenseTab.defendants, defendants, Mode=OneWay}"
+                        ItemsSource="{x:Bind views:NearDefenseTab.defendants, Mode=OneWay}"
 													Margin="4,4,8,16"
-
+                        UserGroupMode="Disabled"
                         RowHeight="{StaticResource GridRowHeight}"
                         AlternationStep="2"
                         SelectionMode="Extended"
@@ -55,11 +55,6 @@
 				<tg:DataGridTextColumn PropertyName="xy"
                                                 CellContentStyle="{StaticResource CenterAlignLink}"
                                        />
-				<tg:DataGridBooleanColumn PropertyName="pinned"
-                                         IsVisible="True"
-                                         Tip="Hold down shift to toggle pinned status for all selected spots"
-                                      SizeMode="Fixed"
-                                          Width="32" />
 
 				<tg:DataGridNumericalColumn PropertyName="cont"
                                        SizeMode="Fixed"
@@ -67,23 +62,15 @@
                                        Width="34" />
 				<tg:DataGridTextColumn PropertyName="playerName" Header="Player"
                                      />
-				<tg:DataGridTextColumn PropertyName="alliance"
-                                      />
-				<tg:DataGridNumericalColumn PropertyName="points"
-                                     
-                                      />
-				<tg:DataGridTextColumn PropertyName="remarks"
+				<tg:DataGridTextColumn PropertyName="defString"
                                        CellContentStyle="{StaticResource LeftAlign}"
-                                       IsVisible="False" />
+                                       />
 				<tg:DataGridBooleanColumn PropertyName="isCastle"
                                           IsVisible="True"
                                            />
 				<tg:DataGridBooleanColumn PropertyName="isOnWater"
                                           IsVisible="True"
                                           />
-				<tg:DataGridTextColumn PropertyName="troopsString"
-                                       IsCellFlyoutEnabled="True"
-                                             />
 			</tg:RadDataGrid.Columns>
 		</tg:RadDataGrid>
 		<tk:WrapPanel Orientation="Horizontal" HorizontalAlignment="Stretch" >
@@ -98,6 +85,9 @@
             <ToggleButton Content="Portal" VerticalAlignment="Center" Margin="12" Click="PropChanged" IsChecked="{x:Bind portal, Mode=TwoWay}"
                           Width="70" HorizontalAlignment="Center" Style="{ThemeResource ToggleButtonRevealStyle}"
                       ToolTipService.ToolTip="If on, there are no restrictions on who can go where (but it won't work if they can't reach their target" />
+			<ToggleButton Content="Water" VerticalAlignment="Center" Margin="12" Click="PropChanged" IsChecked="{x:Bind sendViaWater, Mode=TwoWay}"
+                          Width="70" HorizontalAlignment="Center" Style="{ThemeResource ToggleButtonRevealStyle}"
+                      ToolTipService.ToolTip="If set troops will be sent via water otherwise by land" />
 			<ToggleButton Content="Offense" IsChecked="{x:Bind views:NearDefenseTab.includeOffense, Mode=TwoWay}" VerticalAlignment="Center" Margin="12"
                           Width="70" HorizontalAlignment="Center" Style="{ThemeResource ToggleButtonRevealStyle}" Click="PropChanged"
                       ToolTipService.ToolTip="If on, include offsense" />

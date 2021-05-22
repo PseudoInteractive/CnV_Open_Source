@@ -75,9 +75,11 @@ namespace COTG.Game
             //          if(Player.myName == "Avatar" )
              var source = Spot.GetOrAdd(army.sourceCid);
 
-              
 
-            army.troops = new[] { new TroopTypeCount(source.classificationTT, -1) };
+
+			army.troops.Set(new TroopTypeCount(source.classificationTT, 1));
+			Debug.Assert(army.troops.count == 1);
+
 			if (army.miscInfo.Length == 0)
 			{
 				var rv = string.Empty;

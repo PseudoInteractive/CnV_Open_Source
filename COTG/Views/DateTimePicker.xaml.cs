@@ -31,7 +31,7 @@ namespace COTG.Views
 			
 				  DateTimeOffset.TryParseExact(time.Text, "HH", DateTimeFormatInfo.InvariantInfo, DateTimeStyles.AllowInnerWhite | DateTimeStyles.AssumeUniversal, out var result)||
 				  DateTimeOffset.TryParseExact(time.Text, "HH':'mm", DateTimeFormatInfo.InvariantInfo, DateTimeStyles.AllowInnerWhite | DateTimeStyles.AssumeUniversal, out result) ||
-				DateTimeOffset.TryParseExact(time.Text, AUtil.defaultTimeSpanFormatNoDate, DateTimeFormatInfo.InvariantInfo, DateTimeStyles.AllowInnerWhite |
+				DateTimeOffset.TryParseExact(time.Text, AUtil.defaultTimeFormatNoDate, DateTimeFormatInfo.InvariantInfo, DateTimeStyles.AllowInnerWhite |
 				DateTimeStyles.AssumeUniversal, out result) )
 				   
 			{

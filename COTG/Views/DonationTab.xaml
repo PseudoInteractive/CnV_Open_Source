@@ -157,11 +157,9 @@
                                                 CellContentStyle="{StaticResource CenterAlignLink}"
                                                 
                                         />
-                <telerikGrid:DataGridNumericalColumn  PropertyName="dist"
+                <telerikGrid:DataGridTextColumn  PropertyName="travelTime"
                                                       Header="Travel"
-                                                      
-                                                      CellContentStyle="{StaticResource CenterAlign}"
-                                            CellContentFormat="{}{0,4:N2}"
+                                                      CellContentStyle="{StaticResource RightAlign}"
                                              />
                 <telerikGrid:DataGridNumericalColumn  PropertyName="cont"
                                                       

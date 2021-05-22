@@ -23,6 +23,8 @@ using Microsoft.UI.Xaml.Controls;
 using Windows.UI.Xaml;
 using ContentDialog = Windows.UI.Xaml.Controls.ContentDialog;
 using ContentDialogResult = Windows.UI.Xaml.Controls.ContentDialogResult;
+using TroopTypeCounts = COTG.DArray<COTG.Game.TroopTypeCount>;
+using TroopTypeCountsRef = COTG.DArrayRef<COTG.Game.TroopTypeCount>;
 
 namespace COTG.Services
 {
@@ -559,8 +561,8 @@ namespace COTG.Services
 					var cid = item.GetAsInt("id");
 					if (!City.TryGet(cid, out var v))
 						continue;
-					List<TroopTypeCount> tsHome = new List<TroopTypeCount>();
-					List<TroopTypeCount> tsTotal = new List<TroopTypeCount>();
+					TroopTypeCounts tsHome = TroopTypeCounts.Rent();
+					TroopTypeCounts tsTotal = TroopTypeCounts.Rent();
 					var hasAny = false;
 					foreach (var tt in item.EnumerateObject())
 					{
@@ -585,11 +587,11 @@ namespace COTG.Services
 							tsTotal.Add(ttc);
 						hasAny = true;
 					}
+					TroopTypeCount.Replace(ref v.troopsHome, ref tsHome);
+					TroopTypeCount.Replace(ref v.troopsTotal,ref tsTotal);
 					var tsh = v.troopsHome.TS();
 					if (hasAny)
 					{
-						v.troopsHome = tsHome.ToArray();
-						v.troopsTotal = tsTotal.ToArray();
 						v._tsHome = v.troopsHome.TS();
 						v._tsTotal = v.troopsTotal.TS();
 						//	Trace($"TS Home {v._tsHome}");
@@ -597,7 +599,6 @@ namespace COTG.Services
 					}
 					else
 					{
-						v.troopsTotal = v.troopsHome = TroopTypeCount.empty;
 						v._tsHome = 0;
 						v._tsTotal = 0;
 					}
@@ -617,6 +618,8 @@ namespace COTG.Services
 			//  Log(json.ToString());
 		}
 	}
+
+
 	public class ReinforcementsOverview : OverviewApi
 	{
 		public static ReinforcementsOverview instance = new ReinforcementsOverview();
@@ -625,8 +628,8 @@ namespace COTG.Services
 		{
 			foreach (var s in Spot.allSpots)
 			{
-				s.Value.reinforcementsIn = Array.Empty<Reinforcement>();
-				s.Value.reinforcementsOut = Array.Empty<Reinforcement>();
+				s.Value.reinforcementsIn = s.Value.reinforcementsIn.WhereNotMine() ;
+				s.Value.reinforcementsOut = s.Value.reinforcementsOut.WhereNotMine();
 			}
 			var jsd = json;
 			var changed = new HashSet<City>();
@@ -648,7 +651,6 @@ namespace COTG.Services
 					re.sourceCid = rein[15].GetAsInt();
 					Assert(re.sourceCid != targetCId);
 					re.order = rein[10].GetAsInt64();
-					var troops = new List<TroopTypeCount>();
 					foreach (var ti in rein[8].EnumerateArray())
 					{
 						var str = ti.GetAsString();
@@ -658,10 +660,9 @@ namespace COTG.Services
 						var count = int.Parse(str.Substring(0, tcEnd), NumberStyles.Number);
 						var typeS = str.Substring(tcEnd + 1);
 						var tE = Game.Enum.ttNameWithCapsAndBatteringRam.IndexOf(typeS);
-						troops.Add(new TroopTypeCount(tE, count));
+						re.troops.Add(new TroopTypeCount(tE, count));
 					}
-					re.troops = troops.ToArray();
-					ts += re.troops.TS();
+					ts += re.troops.v.TS();
 					spot.reinforcementsIn = spot.reinforcementsIn.ArrayAppend(re);
 					var source = Spot.GetOrAdd(re.sourceCid);
 					source.reinforcementsOut = source.reinforcementsOut.ArrayAppend(re);
@@ -821,9 +822,10 @@ namespace COTG.Services
 						raid.target = target;
 						raid.time = dateTime;
 						raid.repeatCount = 1;
-						var r4 = r[4].GetInt32(); 
+						var r4 = r[4].GetByte(); 
 						raid.isReturning = r[3].GetInt32() != 0;
-						raid.isRepeating =  r4== 2 ||r4==3;
+						raid.r4 = r4;
+						//=  r4== 2 ||r4==3;
 						//    Log(raid.ToString());
 						// raid.arrival.Year = DateTime.Now.Year;
 						var ss0 = desc.Split(',');
@@ -986,7 +988,7 @@ namespace COTG.Services
 			public string ts { get; set; }
 		};
 
-		public static async void SendRein(int cid, int rcid, TroopTypeCount[] tsSend, DateTimeOffset departAt, DateTimeOffset arrival, float travelTime, int splits, Windows.UI.Xaml.UIElement uie)
+		public static async Task SendRein(int cid, int rcid, TroopTypeCounts tsSend, DateTimeOffset departAt, DateTimeOffset arrival, float travelTime, int splits, Windows.UI.Xaml.UIElement uie)
 		{
 			var tttv = new List<tt_tv>();
 			foreach (var t in tsSend)
@@ -1056,7 +1058,7 @@ namespace COTG.Services
 									});
 									if (result == ContentDialogResult.Primary)
 									{
-										SendRein(cid, rcid, tsSend, departAt, AUtil.dateTimeZero, travelTime, splits, uie);
+										await SendRein(cid, rcid, tsSend, departAt, AUtil.dateTimeZero, travelTime, splits, uie);
 										return;
 									}
 

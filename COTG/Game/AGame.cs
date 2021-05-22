@@ -1544,10 +1544,12 @@ namespace COTG
 											{
 												var t = (tick * sourceCid.CidToRandom().Lerp(1.5f / 512.0f, 1.75f / 512f)) + 0.25f;
 												var r = t.Ramp();
-												var nSprite = attack.troops.Length;
-
-												(int iType, float alpha) = GetTroopBlend(t, nSprite);
-												DrawAction(dt1, journeyTime, r, c0, c1, c, troopImages[attack.troops[iType].type], true, attack, alpha: alpha);
+												var nSprite = attack.troops.Count;
+												if (nSprite > 0)
+												{
+													(int iType, float alpha) = GetTroopBlend(t, nSprite);
+													DrawAction(dt1, journeyTime, r, c0, c1, c, troopImages[attack.troops[iType].type], true, attack, alpha: alpha);
+												}
 											}
 											//var progress = (dt0 / (dt0 + dt1).Max(1)).Saturate(); // we don't know the duration so we approximate with 2 hours
 											//var mid = progress.Lerp(c0, c1);
@@ -1717,11 +1719,11 @@ namespace COTG
 													continue;
 													//       c.A = (byte)((int)c.A * 3 / 8); // reduce alpha if not selected
 												}
-												if (i.troops.Any())
+												if (i.troops.v.Any())
 												{
 													var t = (tick * i.sourceCid.CidToRandom().Lerp(1.5f / 512.0f, 2.0f / 512f)) + 0.25f;
 													var r = t.Ramp();
-													var nSprite = i.troops.Length;
+													var nSprite = i.troops.Count;
 
 													(int iType, float alpha) = GetTroopBlend(t, nSprite);
 

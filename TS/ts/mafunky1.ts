@@ -1928,7 +1928,8 @@ function avactor() {
 		
         attacktabbody+="<tr><td><input id='retcheck' class='clsubopti' type='checkbox' checked> Return all Troops</td><td colspan=2><input id='retHr' type='number' style='width: 20px' value='2'> Hours before attack</td></tr>";
 		
-        attacktabbody+="<tr><td><input id='scoutick' class='clsubopti' type='checkbox' checked>30galleys/1scout fake</td></tr></table>";
+		attacktabbody += "<tr><td><input id='galleyfake' class='clsubopti' type='checkbox' >full galley fakes</td></tr>"
+		attacktabbody += "<tr><td><input id='scoutick' class='clsubopti' type='checkbox' checked>30galleys/1scout fake</td></tr></table>";
 		
         attacktabbody+="<table style='width:96%;margin-left:2%'><thead><tr style='text-align:center;'><th></th><th>Hr</th><th>Min</th><th>Sec</th><th colspan='2'>Date</th></tr>";
 		

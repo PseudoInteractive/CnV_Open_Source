@@ -852,11 +852,11 @@ namespace COTG.Views
 			}
 			else
 			{
-				if (buildQueueFull)
-				{
-					Status("Build Queue full", dryRun);
-					return;
-				}
+				//if (buildQueueFull)
+				//{
+				//	Status("Build Queue full", dryRun);
+				//	return;
+				//}
 
 				Status($"Destroy {sel.def.Bn}", dryRun);
 				if (!dryRun)
@@ -1217,6 +1217,8 @@ namespace COTG.Views
 					}
 					else
 					{
+						AUtil.Swap(ref postQueuebuildingsCache[b], ref postQueuebuildingsCache[a]);
+						PlannerTab.BuildingsChanged();
 					}
 					// I hope that these operations are what I expect with references
 
@@ -1283,6 +1285,11 @@ namespace COTG.Views
 
 						BuildingsOrQueueChanged();
 
+					}
+					else
+					{
+						AUtil.Swap(ref postQueuebuildingsCache[a], ref postQueuebuildingsCache[b]);
+						PlannerTab.BuildingsChanged();
 					}
 				}
 				return true;

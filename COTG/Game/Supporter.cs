@@ -8,6 +8,9 @@ using System.Text;
 using System.Threading.Tasks;
 using Windows.UI.Xaml.Media.Imaging;
 
+using TroopTypeCounts = COTG.DArray<COTG.Game.TroopTypeCount>;
+using TroopTypeCountsRef = COTG.DArrayRef<COTG.Game.TroopTypeCount>;
+
 namespace COTG.Game
 {
     public class Supporter : INotifyPropertyChanged
@@ -25,17 +28,28 @@ namespace COTG.Game
         public int tsTotal => NearDefenseTab.includeOffense ? city.tsTotal : city.tsDefTotal;
         public int split { get; set; } = 1; // splits def and sends in batches for wings
         public float travel { get; set; }
-
-        public TroopTypeCount[] tSend;
-        public int tsSend
+		public int validTargets { get; set; }
+		public TroopTypeCountsRef tSend = new(true);
+		public int tsSend
         {
-            get => tSend.TS();
+            get => tSend.v.TS();
         }
         
 
        
-        public DateTimeOffset eta { get => JSClient.ServerTime() + TimeSpan.FromHours(travel); set => _ = value; }
-        public DateTimeOffset etaWings { get => JSClient.ServerTime() + 0.5f * TimeSpan.FromHours(travel); set => _ = value; }
+        public DateTimeOffset eta { get => JSClient.ServerTime() + TimeSpan.FromHours(travel);
+			set {
+				NearDefenseTab.instance.arriveAt = value;
+				NearDefenseTab.instance.OnPropertyChanged(string.Empty);
+			}
+		}
+        public DateTimeOffset etaWings { get => JSClient.ServerTime() + 0.5f * TimeSpan.FromHours(travel); 
+			set
+			{
+					NearDefenseTab.instance.arriveAt = value;
+					NearDefenseTab.instance.OnPropertyChanged(string.Empty);
+			}
+		}
         public string troopInfo
         {
             get
@@ -75,7 +89,7 @@ namespace COTG.Game
 
         public BitmapImage icon => ImageHelper.FromImages($"Icons/troops{type}.png");
         public string troopType => Enum.ttNameWithCaps[type];
-        public int send { get => supporter.tSend.Count(type); set => supporter.tSend = supporter.tSend.SetOrAdd(type,value); }
+        public int send { get => supporter.tSend.v.Count(type); set => supporter.tSend.v.SetOrAdd(type,value); }
         public int home { get => supporter.city.troopsHome.Count(type); }
         public int total { get => supporter.city.troopsTotal.Count(type); }
     }

@@ -5,6 +5,7 @@
                xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                xmlns:game="using:COTG.Game"
                xmlns:local="using:COTG.Views"
+			   xmlns:winui="using:Microsoft.UI.Xaml.Controls"  
                xmlns:tk="using:Microsoft.Toolkit.Uwp.UI.Controls"
                xmlns:tg="using:Telerik.UI.Xaml.Controls.Grid"
                Background="{x:Null}"
@@ -19,7 +20,13 @@
 			<RowDefinition />
 		</Grid.RowDefinitions>
 		<tk:WrapPanel>
-			<ToggleButton x:Name="onlyMe" Content="Only Me" Click="onlyMe_Click" />
+			<winui:RadioButtons SelectedIndex="{x:Bind typeFilter,Mode=TwoWay}" MaxColumns="3" SelectionChanged="filterChanged" >
+					<x:String>Alliance</x:String>
+					<x:String>Watched</x:String>
+					<x:String>Me</x:String>
+			</winui:RadioButtons>
+			<ToggleSwitch IsOn="{x:Bind includeInternal,Mode=TwoWay}" Header="Internal" OffContent="Exclude" OnContent="Include" Toggled="filterChanged" />
+
 		</tk:WrapPanel>
 		<tg:RadDataGrid x:Name="defenderGrid"
 						Grid.Row="1"
@@ -53,6 +60,7 @@
                                         SizeMode="Fixed"
                                         Width="32" />
 				<tg:DataGridTextColumn PropertyName="Claim"
+									   SortDirection="Descending"
 
                                        CellContentStyle="{StaticResource CenterAlign}" />
 				<tg:DataGridTextColumn PropertyName="xy"
@@ -60,19 +68,23 @@
                                        CellContentStyle="{StaticResource CenterAlignLink}" />
 				<tg:DataGridNumericalColumn PropertyName="tsDefMax"
 											Header="MaxD"
+									   SortDirection="Descending"
 
                                        CellContentStyle="{StaticResource RightAlign}"
                                             CellContentFormat="{}{0,7:N0}" />
 				<tg:DataGridNumericalColumn PropertyName="tsHome"
                                             Header="tsNow"
+									   SortDirection="Descending"
 
                                             CellContentStyle="{StaticResource RightAlign}"
                                             CellContentFormat="{}{0,7:N0}" />
 				<tg:DataGridNumericalColumn PropertyName="incMax"
+									   SortDirection="Descending"
 
                                             CellContentStyle="{StaticResource RightAlign}"
                                             CellContentFormat="{}{0,7:N0}" />
 				<tg:DataGridNumericalColumn PropertyName="incTotal"
+									   SortDirection="Descending"
 
                                             CellContentStyle="{StaticResource RightAlign}"
                                             CellContentFormat="{}{0,7:N0}"
@@ -81,15 +93,18 @@
                                        CellContentStyle="{StaticResource LeftAlign}"
                                        SizeMode="Stretch" />
 				<tg:DataGridBooleanColumn PropertyName="underSiege"
+									   SortDirection="Descending"
 
                                                       CellContentStyle="{StaticResource CenterAlign}" />
 				<tg:DataGridNumericalColumn PropertyName="incomingAttacks"
                                             Header="inA"
+									   SortDirection="Descending"
 
                                             CellContentStyle="{StaticResource CenterAlign}"
                                             CellContentFormat="{}{0,1:N0}" />
 				<tg:DataGridNumericalColumn PropertyName="incomingDefenders"
                                             Header="inD"
+									   SortDirection="Descending"
 
                                             CellContentStyle="{StaticResource CenterAlign}"
                                             CellContentFormat="{}{0,1:N0}" />
@@ -112,6 +127,7 @@
                                              IsVisible="False" />
 				<tg:DataGridNumericalColumn PropertyName="tsOff"
                                              Header="offense home"
+									   SortDirection="Descending"
 
                                        CellContentStyle="{StaticResource RightAlign}"
                                             CellContentFormat="{}{0,7:N0}"
@@ -162,13 +178,18 @@
                                                    Header="Player"
 
                                                    CellContentStyle="{StaticResource LeftAlign}" />
+				<tg:DataGridTextColumn PropertyName="aType"
+
+                                                      CellContentStyle="{StaticResource CenterAlign}" />
+				<tg:DataGridTextColumn PropertyName="miscInfo"
+                                                   Header="Misc"
+
+                                                   SizeMode="Auto"
+                                                   CellContentStyle="{StaticResource LeftAlign}" />
 				<tg:DataGridNumericalColumn PropertyName="dist"
 
                                        CellContentStyle="{StaticResource RightAlign}"
                                             CellContentFormat="{}{0,3:N0}" />
-				<tg:DataGridTextColumn PropertyName="aType"
-
-                                                      CellContentStyle="{StaticResource CenterAlign}" />
 
 				<tg:DataGridTextColumn PropertyName="sourceCN"
                                                    Header="City"
@@ -179,8 +200,8 @@
                                                    PropertyName="spotted"
                                                    CellContentFormat="{}{0:dd',' HH':'mm':'ss}"
                                                    CellContentStyle="{StaticResource CenterAlign}" />
+				
 				<tg:DataGridTemplateColumn Header="Troops">
-
 					<tg:DataGridTemplateColumn.CellDecorationStyle>
 						<Style TargetType="Rectangle">
 							<Setter Property="Fill" Value="Gray" />

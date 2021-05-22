@@ -14,6 +14,8 @@ using Windows.UI.Input;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media.Imaging;
 using COTG.Views;
+using TroopTypeCounts = COTG.DArray<COTG.Game.TroopTypeCount>;
+using TroopTypeCountsRef = COTG.DArrayRef<COTG.Game.TroopTypeCount>;
 
 using static COTG.Debug;
 using System.ComponentModel;
@@ -34,6 +36,7 @@ using MenuFlyout = Windows.UI.Xaml.Controls.MenuFlyout;
 using ToggleMenuFlyoutItem = Windows.UI.Xaml.Controls.ToggleMenuFlyoutItem;
 using MenuFlyoutSubItem = Windows.UI.Xaml.Controls.MenuFlyoutSubItem;
 using System.Collections.ObjectModel;
+using Cysharp.Text;
 
 namespace COTG.Game
 {
@@ -163,6 +166,45 @@ namespace COTG.Game
 		public Reinforcement[] reinforcementsIn = Array.Empty<Reinforcement>();
 		public Reinforcement[] reinforcementsOut = Array.Empty<Reinforcement>();
 
+		public string defString => GetDefString(", ");
+		public string GetDefString(string separator)
+		{
+			TroopTypeCountsRef all = new(true);
+			if (incoming.Any())
+			{
+				foreach (var a in incoming)
+				{
+					if (a.isDefense)
+						all.v.Append( a.troops.v );
+				}
+
+			}
+			else
+			{
+				all.v.Append(troopsHome, (t => t.isDef || t.isSenator));
+				foreach (var i in reinforcementsIn)
+				{
+					all.v.Append(i.troops.v);
+				}
+			}
+			bool first = true;
+			using var sb = ZString.CreateUtf8StringBuilder();
+			foreach(var tt in all.v)
+			{
+				if(first)
+				{
+					first = false;
+				}
+				else
+				{
+					sb.Append(separator);
+				}
+				sb.AppendFormat("{0:N0} {1}",tt.count,Enum.ttNameWithCaps[tt.type] );
+			}
+
+			return sb.ToString();
+
+		}
 
 		public int pid { get; set; }
 		public string playerName => Player.Get(pid).name;
@@ -363,8 +405,9 @@ namespace COTG.Game
 
 		public void ExportToDefenseSheet()
 		{
-			using var work = new WorkScope("Export Def..");
+			using var work = new WorkScope($"Export Def");
 			var sb = new StringBuilder();
+			sb.Append("Player\tCont\tCoords\tFirst\tTarget Def\tDef Incoming\t# attacks\tIntel\n");
 			foreach (var _cid in GetSelectedForContextMenu(cid, false))
 			{
 				var s = Spot.GetOrAdd(_cid);
@@ -378,14 +421,14 @@ namespace COTG.Game
 					sb.Append('\t');
 					sb.Append(s.incoming.Where(x => x.isAttack).First()?.time.FormatSkipDateIfToday() ?? "??");
 					sb.Append('\t');
-					sb.Append(s.incTT);
-					sb.Append('\t');
 					sb.Append("1000000");
 					sb.Append('\t');
 					var ts = s.tsDefMax;
 					sb.Append(ts);
-					sb.Append('\n');
-					sb.Append(incomingAttacks);
+					sb.Append('\t');
+					sb.Append(s.incomingAttacks);
+					sb.Append('\t');
+					sb.Append(s.incTT);
 					sb.Append('\n');
 				}
 			}
@@ -883,8 +926,10 @@ namespace COTG.Game
 
 		// Incoming attacks
 		public Army[] incoming { get; set; } = Army.empty;
-		public TroopTypeCount[] troopsHome = TroopTypeCount.empty;
-		public TroopTypeCount[] troopsTotal = TroopTypeCount.empty;
+		public TroopTypeCounts troopsHome = TroopTypeCounts.Rent();
+		public TroopTypeCounts troopsTotal = TroopTypeCounts.Rent();
+		public bool hasEnemyIncoming => incoming.Any(w => w.isAttack && !Alliance.IsAllyOrNap(w.sourceAlliance));
+
 		public int incomingAttacks
 		{
 			get
@@ -911,19 +956,19 @@ namespace COTG.Game
 				return rv;
 			}
 		}
-		public TroopTypeCount[] combinedIncoming
-		{
-			get
-			{
-				TroopTypeCount[] rv = null;
-				foreach (var i in incoming)
-				{
-					if (i.isAttack)
-						rv = rv != null ? rv.Add(i.troops) : i.troops;
-				}
-				return rv;
-			}
-		}
+		//public TroopTypeCounts combinedIncoming
+		//{
+		//	get
+		//	{
+		//		TroopTypeCounts rv = null;
+		//		foreach (var i in incoming)
+		//		{
+		//			if (i.isAttack)
+		//				rv = rv != null ? rv.Add(i.troops) : i.troops;
+		//		}
+		//		return rv;
+		//	}
+		//}
 
 
 		public int incomingDefTS
@@ -934,7 +979,7 @@ namespace COTG.Game
 				foreach (var a in incoming)
 				{
 					if (a.isDefense)
-						rv += a.troops.TSDef();
+						rv += a.troops.v.TSDef();
 				}
 				return rv;
 			}
@@ -947,7 +992,7 @@ namespace COTG.Game
 				foreach (var a in incoming)
 				{
 					if (a.isDefense)
-						rv += a.troops.TSOff();
+						rv += a.troops.v.TSOff();
 				}
 				return rv;
 			}
@@ -974,7 +1019,7 @@ namespace COTG.Game
 				{
 					if (!a.isDefense)
 					{
-						rv += a.Format();
+						rv += a.time.FormatSkipDateIfToday() + " " + a.Format() + ";";
 					}
 				}
 				return rv;
@@ -1472,6 +1517,7 @@ namespace COTG.Game
 			try
 			{
 				await JSClient.CitySwitch(cid, lazyMove: true, false, false, waitOnChange: true);
+				await Task.Delay(100);
 				var ogaStr = await JSClient.view.InvokeScriptAsync("getOGA", null);
 				var jsDoc = JsonDocument.Parse(ogaStr);
 				foreach (var i in jsDoc.RootElement.EnumerateArray())
@@ -1868,7 +1914,14 @@ namespace COTG.Game
 		}
 		public void DefendMe()
 		{
-			NearDefenseTab.defendant = this;
+			NearDefenseTab.defendants.Clear();
+			var cids = GetSelectedForContextMenu(cid, false);
+			foreach (var city in cids)
+			{
+				NearDefenseTab.defendants.Add(City.Get(city));
+			}
+			NearDefenseTab.defendants.NotifyReset();
+
 			var tab = NearDefenseTab.instance;
 			tab.ShowOrAdd(true);
 			tab.refresh.Go();

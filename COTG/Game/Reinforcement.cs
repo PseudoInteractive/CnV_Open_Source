@@ -10,6 +10,9 @@ using System.Threading.Tasks;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
+using TroopTypeCounts = COTG.DArray<COTG.Game.TroopTypeCount>;
+using TroopTypeCountsRef = COTG.DArrayRef<COTG.Game.TroopTypeCount>;
+
 namespace COTG.Game
 {
 
@@ -21,8 +24,8 @@ namespace COTG.Game
 		static int pid;
 
         public long order;
-        public TroopTypeCount[] troops = TroopTypeCount.empty;
-        static async Task Return(long order)
+		public TroopTypeCountsRef troops = new(true);
+		static async Task Return(long order)
         {
             await Post.Send("overview/reinreca.php", "a=" + order, pid);
             await Task.Delay(1000);
@@ -53,7 +56,7 @@ namespace COTG.Game
 				foreach (var reIn in s.reinforcementsIn)
 				{
 					var other = Spot.GetOrAdd(reIn.sourceCid);
-					panel.Children.Add(new CheckBox() { Content = $"{other.xy} {other.nameAndRemarks}{reIn.troops.Format(":", ' ', ',')}", IsChecked = false });
+					panel.Children.Add(new CheckBox() { Content = $"{other.xy} {other.nameAndRemarks}{reIn.v.troops.Format(":", ' ', ',')}", IsChecked = false });
 					orders.Add(reIn.order);
 				}
 			}
@@ -64,7 +67,7 @@ namespace COTG.Game
 				foreach (var reIn in s.reinforcementsOut)
 				{
 					var other = Spot.GetOrAdd(reIn.targetCid);
-					panel.Children.Add(new CheckBox() { Content = $"{other.xy} {other.nameAndRemarks}{reIn.troops.Format(":", ' ', ',')}", IsChecked = false });
+					panel.Children.Add(new CheckBox() { Content = $"{other.xy} {other.nameAndRemarks}{reIn.v.troops.Format(":", ' ', ',')}", IsChecked = false });
 					orders.Add(reIn.order);
 				}
 			}
@@ -115,10 +118,16 @@ namespace COTG.Game
             var rv = 0;
             foreach(var t in that)
             {
-                rv += t.troops.TS();
+                rv += t.troops.v.TS();
             }
             return rv;
         }
+		public static Reinforcement [] WhereNotMine(this Reinforcement[] me)
+		{
+			if (me == null || me.Length == 0)
+				return Array.Empty<Reinforcement>();
+			return me.Where(r => !Player.IsMe(r.sourceCid.CidToPid())).ToArray();
+		}
 
-    }
+	}
 }

@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
+using COTG.Game;
+
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
 
@@ -52,9 +54,44 @@ namespace COTG.Views
 				new NearRes()
         };
             }
-		
-		
 
+
+		protected void SpotSelectionChanged(object sender, DataGridSelectionChangedEventArgs e)
+		{
+			var grid = sender as RadDataGrid;
+			Assert(grid != null);
+			if (!isActive)
+				return;
+
+			if (SpotTab.silenceSelectionChanges == 0)
+			{
+				try
+				{
+
+					var sel = grid.SelectedItems;
+					var newSel = new HashSet<int>();
+					foreach (Spot s in sel)
+					{
+						newSel.Add(s.cid);
+
+					}
+
+
+					//          Spot.selected.EnterWriteLock();
+
+					Spot.selected = newSel;
+				}
+				catch (Exception ex)
+				{
+					LogEx(ex);
+				}
+				finally
+				{
+					//          Spot.selected.ExitWriteLock();
+				}
+			}
+
+		}
 		public virtual Task VisibilityChanged(bool visible)
         {
             Log($"VisibilityChanged: {visible} {this}");

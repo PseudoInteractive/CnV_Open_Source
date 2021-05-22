@@ -194,17 +194,17 @@ namespace COTG.Game
 		//	return sp;
 
 		//}
-		public static Span<BuildQueueItem> GetExtQueue(int cid)
-		{
+		//public static Span<BuildQueueItem> GetExtQueue(int cid)
+		//{
 
-			if (CityBuildQueue.all.TryGetValue(cid, out var q))
-			{
-				return new Span<BuildQueueItem>(q.queue.ToArray());
-			}
-			return new Span<BuildQueueItem>();
+		//	if (CityBuildQueue.all.TryGetValue(cid, out var q))
+		//	{
+		//		return new Span<BuildQueueItem>(q.queue.ToArray());
+		//	}
+		//	return new Span<BuildQueueItem>();
 
 
-		}
+		//}
 		//public static Span<BuildQueueItem> GetQueue()
 		//{
 
@@ -233,7 +233,7 @@ namespace COTG.Game
 		public static void CitySwitched()
 		{
 			AUtil.UnsafeCopy(CityView.baseAnimationOffsets, CityView.animationOffsets);
-			buildQueue.Clear();
+			buildQueue.ClearKeepBuffer();
 			buildQInSync = false;
 			Draw.CityView.ClearSelectedBuilding();
 		//	CityBuild.ClearAction();
@@ -260,11 +260,11 @@ namespace COTG.Game
 			return Spot.GetOrAdd(cid);
 		}
 
-		public bool AreRaidsRepeating()
+		public bool MightRaidsRepeat()
 		{
 			foreach (var r in raids)
 			{
-				if (r.isRepeating)
+				if (r.isRepeatingOrScheduledToReturn)
 					return true;
 			}
 			return false;
@@ -587,7 +587,7 @@ namespace COTG.Game
 				if (bq.ValueKind == JsonValueKind.Array)
 				{
 					int count = bq.GetArrayLength();
-					buildQueue.Clear();
+					buildQueue.ClearKeepBuffer();
 					for (int i = 0; i < count; ++i)
 					{
 						var js = bq[i];
@@ -616,13 +616,15 @@ namespace COTG.Game
 
 			if (jse.TryGetProperty("tc", out var tc))
 			{
-				troopsTotal = tc.GetTroopTypeCount().ToArray(); ;
+				troopsTotal.Clear();
+				troopsTotal.Append( tc);
 				_tsTotal = troopsTotal.TS();
 			}
 
 			if (jse.TryGetProperty("th", out var th))
 			{
-				troopsHome = th.GetTroopTypeCount().ToArray();
+				troopsHome.Clear();
+				troopsHome.Append( th );
 				_tsHome = troopsHome.TS();
 
 
@@ -639,7 +641,7 @@ namespace COTG.Game
 						re.targetCid = cid;
 						re.sourceCid = rein.GetAsInt("c");
 						re.order = rein.GetAsInt64("o");
-						re.troops = rein.GetProperty("tr").GetTroopTypeCount2().ToArray();
+						re.troops.v.Append2( rein.GetProperty("tr") );
 						l.Add(re);
 					}
 				}
@@ -973,7 +975,7 @@ namespace COTG.Game
 			get
 			{
 				var t = troopsTotal.FirstOrDefault((a) => a.type == ttSenator);
-				if (t != null)
+				if (t.count !=0 )
 					return t.ts.ToString();
 				foreach (var s in senatorInfo)
 				{
@@ -1299,10 +1301,9 @@ namespace COTG.Game
 			return true;
 
 		}
-		public bool ComputeTravelTime(int target, bool onlyHome, bool viaWater, out float hours, out bool onDifferentContinent)
+		public bool ComputeTravelTime(int target, bool onlyHome,bool includeOffense,bool incudeSenators,bool includeSE, bool viaWater,float maxHours, ref float hours)
 		{
-			hours = 0;
-			onDifferentContinent = cont != target.CidToContinent();
+			var onDifferentContinent = cont != target.CidToContinent();
 			var targetCity = City.Get(target);
 			var targetOnWater = targetCity.isOnWater;
 			if (!(targetOnWater && isOnWater) && viaWater)
@@ -1317,12 +1318,21 @@ namespace COTG.Game
 			{
 				if (tt.isNaval != viaWater)
 					continue;
-
+				if (!includeOffense && !tt.isDef)
+					continue;
+				if (!incudeSenators && tt.isSenator )
+					continue;
+				if (!includeSE && tt.isArt)
+					continue;
 				var t = tt.TravelTimeSeconds(dist);
 
 				//var tt = ttGalley;
-				hours = hours.Max((float)(t/(60.0*60.0)) );
-				anyValid = true;
+				var hr = ((float)(t/(60.0*60.0)) );
+				if (hr <= maxHours)
+				{
+					anyValid = true;
+					hours = hours.Max(hr);
+				}
 			}
 			return anyValid;
 

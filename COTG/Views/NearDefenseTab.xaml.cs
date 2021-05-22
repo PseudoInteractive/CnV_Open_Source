@@ -31,7 +31,9 @@ namespace COTG.Views
         public static NearDefenseTab instance;
         public static bool IsVisible() => instance.isVisible;
         public bool waitReturn { get; set; } = true;
-        public static ResetableCollection<City> defendants = new();
+		public bool sendViaWater { get; set; }
+
+		public static ResetableCollection<City> defendants = new();
 
         public static bool includeOffense;
         public float filterTime=6;
@@ -75,7 +77,10 @@ namespace COTG.Views
 						defendants.Add(focus);
 					else
 						defendants.Add(City.GetBuild());
+					defendants.NotifyReset();
 				}
+
+				var viaWater = sendViaWater && defendants.Any(d => d.isOnWater);
 
 //				if (defendants != null && defendant.isCityOrCastle)
 				{
@@ -97,15 +102,25 @@ namespace COTG.Views
 						if ((includeOffense ? city.tsHome : city.tsDefHome) < filterTSHome |
 							 (includeOffense ? city.tsTotal : city.tsDefTotal) < filterTSTotal)
 							continue;
+						if (viaWater && !city.isOnWater)
+							continue;
+
 						var hours = 0.0f;
 						var canTravelViaWater=city.isOnWater && defendants.Any(a=>a.isOnWater);
 
-						var onDifferentContinent = false;
-						if (!portal)
-						{
-							if (!city.ComputeTravelTime(defendant.cid, onlyHome, out hours, out onDifferentContinent) || hours > filterTime)
-								continue;
-						}
+
+							int validCount = 0;
+							if (!portal)
+							{
+								validCount = FindValidDefendants(viaWater, onlyHome, city, ref hours).Count;
+								if (validCount == 0)
+									continue;
+							}
+							else
+							{
+								validCount = defendants.Count;
+							}
+
 						// re-use if possible
 						var supporter = supporters.Find((a) => a.city == city);
 						if (supporter == null)
@@ -114,11 +129,12 @@ namespace COTG.Views
 						}
 						var troops = (onlyHome ? city.troopsHome : city.troopsTotal);
 						s.Add(supporter);
-						if (onDifferentContinent)
+						supporter.validTargets = validCount;
+						if (viaWater)
 						{
 							var ttGalleys = troops.FirstOrDefault((tt) => tt.type == ttGalley);
 							// handle Galleys
-							if (ttGalleys != null)
+							if (ttGalleys.count > 0 )
 							{
 								var galleys = ttGalleys.count;
 								var landTroops = troops.Where((tt) => IsLandRaider(tt.type)).Sum((t) => t.count);
@@ -132,33 +148,32 @@ namespace COTG.Views
 								{
 									sendGain = galleys * 500.0 / landTroops;
 								}
-								List<TroopTypeCount> tSend = new List<TroopTypeCount>();
-								tSend.Add(new TroopTypeCount(ttGalley, galleys));
+								supporter.tSend.Clear();
+								supporter.tSend.Add(new TroopTypeCount(ttGalley, galleys));
 								foreach (var tt in troops)
 								{
 									if (tt.type == ttStinger)
 									{
-										tSend.Add(tt);
+										supporter.tSend.v.Add(tt);
 									}
 									else
 									{
 										if (!IsLandRaider(tt.type) || !Include(tt))
 											continue;
-										tSend.Add(new TroopTypeCount(tt.type, (int)(sendGain * tt.count))); // round down
+										supporter.tSend.v.Add(new TroopTypeCount(tt.type, (int)(sendGain * tt.count))); // round down
 									}
 								}
-								supporter.tSend = tSend.ToArray();
 							}
 							else
 							{
-								supporter.tSend = troops.Where((tt) => tt.type == ttStinger).ToArray(); // take stingers
+								supporter.tSend.v.Set(  troops.Where((tt) => tt.type == ttStinger) ); // take stingers
 							}
 						}
 						else
 						{
-							supporter.tSend = troops.Where(tt => (includeOffense || tt.isDef) && (canTravelViaWater||!tt.isNaval) ).ToArray(); // clone array
+							supporter.tSend.Set( troops.Where(tt => (includeOffense || tt.isDef) && (canTravelViaWater||!tt.isNaval) ) ); // clone array
 						}
-						supporter.travel = hours;
+						supporter.travel = hours + (defendants.Count - validCount);  // penality for targtes that we cannot make it to
 					}
 				}
                     if (portal)
@@ -169,7 +184,9 @@ namespace COTG.Views
                             supporters.Set(s.OrderByDescending(a => a.tsTotal));
                     }
                     else
-                        supporters.Set(s.OrderBy(a => a.travel));
+                        supporters.Set(s.OrderBy(a => a.travel - a.validTargets ));
+					
+					defendants.NotifyReset();
                 }
 
 
@@ -186,7 +203,24 @@ namespace COTG.Views
 			await base.VisibilityChanged(visible);
         }
 
-        public NearDefenseTab()
+		private List<Spot> FindValidDefendants(bool viaWater, bool onlyHome, City city, ref float hours)
+		{
+			if (portal)
+				return defendants.ToList<Spot>();
+
+			var rv = new List<Spot>();
+			foreach (var d in defendants)
+			{
+
+				if (city.ComputeTravelTime(d.cid, onlyHome, includeOffense, false, false, viaWater, filterTime, ref hours))
+				{
+					rv.Add(d);
+				}
+			}
+			return rv;
+		}
+
+		public NearDefenseTab()
         {
             Assert(instance == null);
             instance = this;
@@ -251,19 +285,19 @@ namespace COTG.Views
             AApp.AddItem(flyout, "Troops Home", (_, _) =>
             {
                 var supporter = stt.supporter;
-                supporter.tSend = supporter.tSend.SetOrAdd(stt.type, stt.supporter.city.troopsHome.Count(stt.type));
+                supporter.tSend.v.SetOrAdd(stt.type, stt.supporter.city.troopsHome.Count(stt.type));
                 supporter.NotifyChange();
             });
             AApp.AddItem(flyout, "Total Troops", (_, _) =>
             {
                 var supporter = stt.supporter;
-                supporter.tSend = supporter.tSend.SetOrAdd(stt.type, stt.supporter.city.troopsTotal.Count(stt.type));
+                supporter.tSend.v.SetOrAdd(stt.type, stt.supporter.city.troopsTotal.Count(stt.type));
                 supporter.NotifyChange();
             });
             AApp.AddItem(flyout, "None", (_, _) =>
             {
                 var supporter = stt.supporter;
-                supporter.tSend = supporter.tSend.SetOrAdd(stt.type, 0);
+                supporter.tSend.v.SetOrAdd(stt.type, 0);
                 supporter.NotifyChange();
             });
 
@@ -279,18 +313,17 @@ namespace COTG.Views
             flyout.CopyXamlRoomFrom(text);
             AApp.AddItem(flyout, "Troops Home", (_, _) =>
             {
-               
-                supporter.tSend = supporter.city.troopsHome.ToArray();
+				supporter.tSend.Set( supporter.city.troopsHome);
                 supporter.NotifyChange();
             });
             AApp.AddItem(flyout, "Total Troops", (_, _) =>
             {
-                supporter.tSend = supporter.city.troopsTotal.ToArray();
+				supporter.tSend.Set( supporter.city.troopsTotal);
                 supporter.NotifyChange();
             });
             AApp.AddItem(flyout, "None", (_, _) =>
             {
-                supporter.tSend = TroopTypeCount.empty;
+                supporter.tSend.Clear();
                 supporter.NotifyChange();
             });
 
@@ -310,11 +343,11 @@ namespace COTG.Views
             }
             var departAt = AUtil.dateTimeZero;
             var _arriveAt = arriveAt;
-            if(waitReturn && !supporter.city.troopsHome.IsSuperSetOf(supporter.tSend))
+            if(waitReturn && !supporter.city.troopsHome.IsSuperSetOf(supporter.tSend.v))
             {
 				RaidOverview.SendMaybe();
 
-				if (city.AreRaidsRepeating())
+				if (city.MightRaidsRepeat())
                 {
                     await Raiding.ReturnFast(city.cid, false);
                 }
@@ -347,14 +380,25 @@ namespace COTG.Views
 
                 }
             }
+			var hours = 0.0f;
+			var def = FindValidDefendants(sendViaWater && defendants.Any(d => d.isOnWater),  onlyHome, city, ref hours);
+			foreach (var d in def)
+			{
+				using var ts = new DArrayRef<TroopTypeCount>(supporter.tSend.v.DividedBy(def.Count));
+				await Post.SendRein(supporter.cid, d.cid, ts.v, departAt, _arriveAt, hours, supporter.split, text);
+			}
 
-            Post.SendRein(supporter.cid, defendant.cid, supporter.tSend,departAt, _arriveAt,supporter.travel,supporter.split,text);
-            
 
         }
+		private void gridPointerPress(object sender, PointerRoutedEventArgs e)
+		{
+
+			Spot.GridPressed(sender, e);
+
+		}
 
 
-        private void supportGrid_Sorting(object sender, Microsoft.Toolkit.Uwp.UI.Controls.DataGridColumnEventArgs e)
+		private void supportGrid_Sorting(object sender, Microsoft.Toolkit.Uwp.UI.Controls.DataGridColumnEventArgs e)
         {
             var dg = supportGrid;
             var tag = e.Column.Tag?.ToString();

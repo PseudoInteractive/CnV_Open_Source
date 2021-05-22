@@ -973,13 +973,22 @@ namespace COTG.Views
 																sb.AppendFormat("{0}% Claim\n", city.claim);
 
 															sb.AppendFormat("{0} total def\n", city.tsDefMax);
-														}
-														if (city.reinforcementsIn.Length > 0)
-														{
 
+															sb.AppendLine(city.GetDefString("\n"));
+														
+														}
+														else if (city.reinforcementsIn.Length > 0)
+														{
+															sb.AppendFormat("{0} def\n", city.tsDefMax);
+															int counter = 0;
 															foreach (var i in city.reinforcementsIn)
 															{
-																sb.AppendLine( i.troops.Format($"From {City.GetOrAddCity(i.sourceCid).nameAndRemarks}:", '\n', '\n'));
+																sb.AppendLine( i.troops.v.Format($"From {City.GetOrAddCity(i.sourceCid).nameAndRemarks}:", '\n', '\n'));
+																if(++counter >= 4)
+																{
+																	sb.AppendLine("...");
+																	break;
+																}
 															}
 
 														}

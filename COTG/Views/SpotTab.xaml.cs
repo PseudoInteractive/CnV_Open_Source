@@ -47,7 +47,7 @@ namespace COTG.Views
             Assert(instance == null);
             instance = this;
             this.InitializeComponent();
-            selectedGrid.SelectionChanged += SpotTabSelectionChanged;
+            selectedGrid.SelectionChanged += SpotSelectionChanged;
 			selectedGrid.OnKey = Spot.OnKeyDown;
 			selectedGrid.ProcessTooltips();
 			spotGrids.Add(selectedGrid);
@@ -56,38 +56,6 @@ namespace COTG.Views
 
         public static int silenceSelectionChanges;
 
-        private void SpotTabSelectionChanged(object sender, DataGridSelectionChangedEventArgs e)
-        {
-			if (!isActive)
-				return;
-
-			if (silenceSelectionChanges == 0)
-            {
-                try
-                {
-
-                    var sel = selectedGrid.SelectedItems;
-                    var newSel = new HashSet<int>();
-                    foreach (Spot s in sel)
-                    {
-                        newSel.Add(s.cid);
-
-                    }
-
-                    //          Spot.selected.EnterWriteLock();
-
-                    Spot.selected = newSel;
-                                    }
-                catch (Exception ex)
-                {
-                    LogEx(ex);
-                }
-                finally
-                {
-          //          Spot.selected.ExitWriteLock();
-                }
-            }
-        }
 
         private void gridPointerPress(object sender, PointerRoutedEventArgs e)
         {

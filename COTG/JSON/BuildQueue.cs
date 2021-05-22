@@ -733,17 +733,18 @@ namespace COTG.JSON
 			if (cid == City.build && !SettingsPage.extendedBuild)
 			{
 				// build immediately
-				StringBuilder sb = new StringBuilder();
+				var sb = ZString.CreateUtf8StringBuilder();
+
 
 				sb.Append($"{{\"{cid}\":[");
 				var qFirst = true;
-				Serialize(ref commandBuilder, op, ref qFirst);
+				Serialize(ref sb, op, ref qFirst);
 				sb.Append("]}");
 
 
 				JSClient.JSInvoke("buildex", new[] { sb.ToString() });
+				sb.Dispose();
 				CityView.BuildingsOrQueueChanged();
-
 				return;
 			}
 

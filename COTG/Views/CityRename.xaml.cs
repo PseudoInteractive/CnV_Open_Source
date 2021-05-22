@@ -149,19 +149,19 @@ namespace COTG.Views
 				   });
 					if (result == ContentDialogResult.Primary)
 					{
-						await CitySettings.SetCitySettings(cid, setAutoBuild: SettingsPage.autoBuildOn.GetValueOrDefault(),autoWalls: (SettingsPage.autoWallLevel == 10) ? true : null,
-										autoTowers: (SettingsPage.autoTowerLevel == 10) ? true : null
-										);
 
 						if (SettingsPage.setShareString)
 						{
 							await ShareString.ShowNoLock(City.build);
 						}
-						//if (SettingsPage.setHub)
-						//{
-						//	await HubSettings.Show(cid);
-						//}
-						var rv = true;
+						await CitySettings.SetCitySettings(cid, setAutoBuild: SettingsPage.autoBuildOn.GetValueOrDefault(), autoWalls: (SettingsPage.autoWallLevel == 10) ? true : null,
+										autoTowers: (SettingsPage.autoTowerLevel == 10) ? true : null
+										);
+					//if (SettingsPage.setHub)
+					//{
+					//	await HubSettings.Show(cid);
+					//}
+					var rv = true;
 						if (SettingsPage.autoBuildCabins  && allowSplat)
 						{
 						// are there any cabins here already?
