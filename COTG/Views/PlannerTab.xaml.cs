@@ -24,7 +24,7 @@ namespace COTG.Views
 			if (visible)
 			{
 //				CityBuild._isPlanner = true;
-				statsDirty = true;
+			//	statsDirty = true;
 				BuildingsChanged();
 			}
 			else
@@ -107,7 +107,7 @@ namespace COTG.Views
 
 		public static Task UpdateStats()
 		{
-			if (statsDirty ==false || !IsVisible())
+			if (!IsVisible())
 			  return Task.CompletedTask;
 			statsDirty = false;
 			// recruit speeds
@@ -296,7 +296,7 @@ namespace COTG.Views
 		{
 			return (cc.x >= span0) && (cc.y>=span0) && (cc.x <= span1) && (cc.y <= span1);
 		}
-		public static Debounce PleaseRefresh = new Debounce(PlannerTab.UpdateStats) { runOnUiThead = true };
+		public static Debounce PleaseRefresh = new Debounce(PlannerTab.UpdateStats) { runOnUiThead = true, throttleDelay=0 };
 
 		internal static void BuildingsChanged()
 		{
@@ -531,7 +531,7 @@ namespace COTG.Views
 			}
 			Note.Show($"Moved buildings to reduce overlaps: { CountResOverlaps(ref allowed)} overlaps remain");
 			if (wasPlanner == false && revertIsPlanner)
-				CityBuild._IsPlanner(false);
+				await CityBuild._IsPlanner(false);
 			CityView.BuildingsOrQueueChanged();
 			
 		}

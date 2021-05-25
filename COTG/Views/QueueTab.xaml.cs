@@ -9,7 +9,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
 
-using Microsoft.UI.Xaml.Controls;
+//using Microsoft.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls;
 using COTG.Views;
 //using Windows.UI.Xaml.Media;
@@ -279,7 +279,7 @@ namespace COTG.Views
 			}
 		}
 
-		private void zoom_ItemInvoked(Microsoft.UI.Xaml.Controls.TreeView sender, Microsoft.UI.Xaml.Controls.TreeViewItemInvokedEventArgs args)
+		private void zoom_ItemInvoked(TreeView sender, TreeViewItemInvokedEventArgs args)
 		{
 			var ob = args.InvokedItem;
 			if (ob is BuildItemView q)

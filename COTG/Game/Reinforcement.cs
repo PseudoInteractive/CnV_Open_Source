@@ -56,7 +56,7 @@ namespace COTG.Game
 				foreach (var reIn in s.reinforcementsIn)
 				{
 					var other = Spot.GetOrAdd(reIn.sourceCid);
-					panel.Children.Add(new CheckBox() { Content = $"{other.xy} {other.nameAndRemarks}{reIn.v.troops.Format(":", ' ', ',')}", IsChecked = false });
+					panel.Children.Add(new CheckBox() { Content = $"{other.xy} {other.playerName} {other.nameAndRemarks}{reIn.troops.v.Format(":", ' ', ',')}", IsChecked = false });
 					orders.Add(reIn.order);
 				}
 			}
@@ -67,7 +67,7 @@ namespace COTG.Game
 				foreach (var reIn in s.reinforcementsOut)
 				{
 					var other = Spot.GetOrAdd(reIn.targetCid);
-					panel.Children.Add(new CheckBox() { Content = $"{other.xy} {other.nameAndRemarks}{reIn.v.troops.Format(":", ' ', ',')}", IsChecked = false });
+					panel.Children.Add(new CheckBox() { Content = $"{other.xy} {other.playerName} {other.nameAndRemarks}{reIn.troops.v.Format(":", ' ', ',')}", IsChecked = false });
 					orders.Add(reIn.order);
 				}
 			}

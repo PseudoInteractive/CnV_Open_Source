@@ -119,17 +119,17 @@ namespace COTG.JSON
                                         {
                                             var type = attacker.GetPrimaryTroopType(false);
 
-											army.troops.Add(new TroopTypeCount(type, atkTS / ttTs[type]));
+											army.troops.v.Add(new TroopTypeCount(type, atkTS / ttTs[type]));
 
                                         }
                                         else
                                         {
                                             attacker.QueueClassify(true);
-                                            army.troops.Add( new TroopTypeCount(Game.Enum.ttVanquisher, atkTS));
+                                            army.troops.v.Add( new TroopTypeCount(Game.Enum.ttVanquisher, atkTS));
                                         }
                                         if (defTS > 0)
                                         {
-                                            army.sumDef.Set( new TroopTypeCount(Game.Enum.ttGuard, defTS) );
+                                            army.sumDef.v.Set( new TroopTypeCount(Game.Enum.ttGuard, defTS) );
                                             spot._tsHome = defTS;
 										//	spot._tsHome = val.GetAsInt("8");
 
@@ -260,7 +260,7 @@ namespace COTG.JSON
                                                         var tc = t.GetInt32();
                                                         if (tc > 0)
                                                         {
-															report.sumDef.Add( new TroopTypeCount() { type = counter, count = tc });
+															report.sumDef.v.Add( new TroopTypeCount() { type = counter, count = tc });
                                                             defTS += tc * ttTs[counter];
                                                         }
                                                         ++counter;

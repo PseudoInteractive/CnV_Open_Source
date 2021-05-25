@@ -167,7 +167,7 @@ namespace COTG.Game
             get {
                 
                     string rv = miscInfo;
-                    foreach (var tt in troops)
+                    foreach (var tt in troops.v)
                     {
                         if (tt.count>0)
                             rv += $", {tt.count:N0} {ttNameWithCaps[tt.type]}";
@@ -245,7 +245,56 @@ namespace COTG.Game
 					counts[id] = value;
 				}
 			}
-		}	
+		}
+
+		//public struct Enumerator : IEnumerator<TroopTypeCount>
+		//{
+		//	public static ulong TTCtoU64(TroopTypeCount v) 
+		//	{
+		//		return ((ulong)v.type << 32) | (ulong)v.count; 
+		//	}
+		//	public static TroopTypeCount U64ToTTC(ulong v)
+		//	{
+		//		return new TroopTypeCount((int)(v >> 32), (int)v);
+		//	}
+		//	public unsafe fixed ulong v[(ttCount)];
+		//	int count;
+		//	public int i;
+		//	public TroopTypeCount r {
+		//		get
+		//		{
+		//			unsafe
+		//			{
+		//				ref U64ToTTC(v[i]); // ref access
+		//			}
+		//		}
+		//		}
+		//	T IEnumerator<TroopTypeCount>.Current => r;
+		//	object IEnumerator.Current => r;
+
+		//	public Enumerator(DArray<T> a) { array = a.v; count = a.count; i = -1; }
+
+		//	public bool Next()
+		//	{
+		//		return ++i < count;
+		//	}
+		//	bool IEnumerator.MoveNext()
+		//	{
+		//		return ++i < count;
+		//	}
+
+		//	void IEnumerator.Reset()
+		//	{
+		//		i = -1;
+		//	}
+
+		//	void IDisposable.Dispose()
+		//	{
+		//		count = 0;
+		//		array = null;
+		//	}
+		//}
+
 	}
 
 	public struct TroopTypeCount : IComparable<TroopTypeCount>
@@ -345,6 +394,7 @@ namespace COTG.Game
 
 
 	}
+	
 	public static class TroopTypeCountHelper
     {
 		// Combine opeeration

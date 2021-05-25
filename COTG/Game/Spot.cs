@@ -1300,12 +1300,12 @@ namespace COTG.Game
 		{
 			return selected.Count != 0;// || viewHover != 0 || uiHover != 0;
 		}
-		public static bool IsSelectedOrHovered(int cid, bool noneIsAll)
+		public static bool IsSelectedOrHovered(int cid, bool noneIsAll=false)
 		{
 			// if nothing is selected we treat it as if everything is selected
 			return (noneIsAll && selected.Count == 0) ? true : (cid == viewHover || selected.Contains(cid) || City.IsFocus(cid));
 		}
-		public static bool IsSelectedOrHovered(int cid0, int cid1, bool noneIsAll)
+		public static bool IsSelectedOrHovered(int cid0, int cid1, bool noneIsAll=false)
 		{
 			// if nothing is selected we treat it as if everything is selected
 			return (noneIsAll && selected.Count == 0) ? true : (cid0 == viewHover || selected.Contains(cid0) || City.IsFocus(cid0)
@@ -1772,7 +1772,7 @@ namespace COTG.Game
 					}
 
 					
-					aSetup.AddItem("Setup...", Spot.InfoClick, cid);
+					aSetup.AddItem("Setup...", (_, _) => Spot.InfoClick(cid) );
 					aSetup.AddItem( "Find Hub", (_, _) => CitySettings.SetHub(cid));
 					aSetup.AddItem( "Set Recruit", (_, _) => CitySettings.SetRecruitFromTag(cid));
 					aSetup.AddItem("Change...", (_, _) => ShareString.Show(cid));
@@ -1896,21 +1896,21 @@ namespace COTG.Game
 				await QueueTab.DoTheStuff(this as City, true, true);
 			});
 		}
-		public static async void InfoClick(object sender, RoutedEventArgs e)
+		public static async void InfoClick(int _cid)
 		{
-			var cids = MainPage.GetContextCids(sender);
-			foreach (var cid in cids)
-			{
-				var _cid = cid;
-				if(!await App.DispatchOnUIThreadExclusive(_cid, async () =>
-				 {
-				 return await CityRename.RenameDialog(_cid, true);
-						
-				}) )
-			{
-				break;
-			}
-			}
+			//	var cids = MainPage.GetContextCids(sender);
+			//	foreach (var cid in cids)
+			//	{
+			//		var _cid = cid;
+			await App.DispatchOnUIThreadExclusive(_cid, async () =>
+			  {
+				  return await CityRename.RenameDialog(_cid, true);
+
+			  }); 
+		//	{
+		//		break;
+		//	}
+		//	}
 		}
 		public void DefendMe()
 		{

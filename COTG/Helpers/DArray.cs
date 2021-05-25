@@ -76,11 +76,11 @@ namespace COTG
 		}
 
 
-		public DArray(T[] _array)
-		{
-			AddRange(_array);
-		}
-		public void AddRange(in IEnumerable<T> i)
+		//public DArray(T[] _array)
+		//{
+		//	AddRange(_array);
+		//}
+		public void AddRange<E>(in E i) where E : IEnumerable<T> 
 		{
 			foreach (var _i in i)
 			{
@@ -91,7 +91,7 @@ namespace COTG
 				v[count++] = _i;
 			}
 		}
-		public void Set(in IEnumerable<T> i)
+		public void Set<E>(in E i) where E : IEnumerable<T>
 		{
 			Clear();
 			AddRange(i);
@@ -290,14 +290,14 @@ namespace COTG
 			this.v = alloc? DArray<T>.Rent() : null;
 		}
 
-		internal void Add(T tt)
-		{
-			v.Add(tt);
-		}
+		//internal void Add(T tt)
+		//{
+		//	v.Add(tt);
+		//}
 
 		public DArray<T> Clone() => v.Clone();
 
-		public void Clear()
+		public void Free()
 		{
 			if (v != null)
 			{
@@ -312,33 +312,33 @@ namespace COTG
 			v.ClearKeepBuffer();
 		}
 
-		public void TakeRented(ref DArray<T> _v)
-		{
-			Clear();
-			v = _v;
-			_v = null;
-		}
-		public void TakeCopy(DArray<T> _v)
-		{
-			Clear();
-			v = _v.Clone();
-		}
+		//public void TakeRented(ref DArray<T> _v)
+		//{
+		//	Free();
+		//	v = _v;
+		//	_v = null;
+		//}
+		//public void TakeCopy(DArray<T> _v)
+		//{
+		//	Free();
+		//	v = _v.Clone();
+		//}
 
-		public DArray<T> Take()
-		{
-			var _v = v;
-			v = null;
-			return _v;
-		}
+		//public DArray<T> Take()
+		//{
+		//	var _v = v;
+		//	v = null;
+		//	return _v;
+		//}
 
-		public void Set(in IEnumerable<T> i)
-		{
-			v.Set(i);
-		}
+		//public void Set(in IEnumerable<T> i)
+		//{
+		//	v.Set(i);
+		//}
 
 		public void Dispose()
 		{
-			Clear();
+			Free();
 		}
 		//IEnumerator<T> IEnumerable<T>.GetEnumerator()
 		//{
@@ -368,7 +368,7 @@ namespace COTG
 
 		internal void Take(ref DArrayRef<T> tr)
 		{
-			Clear();
+			Free();
 			v = tr.v;
 			tr.v=null;
 

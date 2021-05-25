@@ -528,7 +528,11 @@ function SendAttack() {
 		let _fakeg = fakeg;
 		// hack: todo fix
 		if ($("#galleyfake").prop("checked") === true) {
+
 			_fakeg = Math.ceil(faketss / 100.0);
+			let maxGPerFake = Math.floor(gali / fakenumb);
+			if (_fakeg > maxGPerFake)
+				_fakeg = maxGPerFake;
 		}
 		var galnumb = Math.floor((t.home[gali] - _fakeg * fakenumb) / realnumb);
 		t.real[gali] = galnumb;

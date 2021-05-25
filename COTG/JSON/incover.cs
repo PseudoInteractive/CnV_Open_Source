@@ -53,7 +53,7 @@ namespace COTG.JSON
 			internal int targetCid => firstArmy.targetCid;
 			internal int sourceCid => firstArmy.sourceCid;
 
-			public string intel =>  $"{ttNameWithCaps[firstArmy.troops.GetPrimaryTroopType()]}, {firstArmy.miscInfo}";
+			public string intel =>  $"{ttNameWithCaps[firstArmy.troops.v.GetPrimaryTroopType()]}, {firstArmy.miscInfo}";
 
 		}
 		public static void ProcessTask() { Process(false, false); }
@@ -365,8 +365,8 @@ namespace COTG.JSON
 
 												  if (ttl.Count == 0)
 													  continue; // skip empty entries for troops at home when no def is present.
-												  sumDef.v.AddRange(ttl.v);
-												  army.troops.Set( ttl.Clone() );
+												  sumDef.v.Append(ttl.v);
+												  army.troops.v.AddRange( ttl.v );
 												  Assert(army.troops.v.Any());
 											  }
 											  else
@@ -398,7 +398,7 @@ namespace COTG.JSON
 													  {
 														  if (!ttl.v.IsNullOrEmpty())
 														  {
-															  army.troops.Set( ttl.v );
+															  army.troops.v.Set( ttl.v );
 															  Assert(army.troops.count>=1);
 														  }
 														  else
@@ -524,7 +524,7 @@ namespace COTG.JSON
 
 
 											  } // if attack
-											  army.sumDef.TakeCopy( sumDef.v );
+											  army.sumDef.v.AddRange( sumDef.v );
 											  army.sumDef.v.Sort();
 
 

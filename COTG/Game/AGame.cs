@@ -492,13 +492,20 @@ namespace COTG
 				if (!faulted)
 				{
 					faulted = true;
-					COTG.Debug.LogEx(sex, report: false);
-					COTG.Debug.Log($"{sex.ResultCode} {sex.Descriptor.ApiCode} {sex.Descriptor.Description} {sex.Descriptor.ToString()} ");
-					App.DispatchOnUIThreadLow(() =>
-				   {
-					   App.DoYesNoBoxUI("Grahics broken","Please restart");
+					try
+					{
+						COTG.Debug.LogEx(sex, report: false);
+						COTG.Debug.Log($"{sex.ResultCode} {sex.Descriptor.ApiCode} {sex.Descriptor.Description} {sex.Descriptor.ToString()} ");
+						App.DispatchOnUIThreadSneaky(() =>
+					   {
+						   App.DoYesNoBoxUI("Grahics broken", "Please restart");
 
-				   });
+					   });
+					}
+					catch(Exception ex2)
+					{
+
+					}
 				}
 				
 			}
@@ -904,6 +911,7 @@ namespace COTG
 		const float circleRadMin = 3.0f;
 		const float circleRadMax = 5.5f;
 		const float lineThickness = 4.0f;
+		static float LineThickness(bool hovered) => hovered ? lineThickness * 2 : lineThickness;
 		const float rectSpanMin = 4.0f;
 		const float rectSpanMax = 8.0f;
 		const float bSizeGain = 4.0f;
@@ -1548,7 +1556,8 @@ namespace COTG
 												if (nSprite > 0)
 												{
 													(int iType, float alpha) = GetTroopBlend(t, nSprite);
-													DrawAction(dt1, journeyTime, r, c0, c1, c, troopImages[attack.troops[iType].type], true, attack, alpha: alpha);
+													DrawAction(dt1, journeyTime, r, c0, c1, c, troopImages[attack.troops[iType].type], true, attack, alpha: alpha, 
+														lineThickness:LineThickness(Spot.IsSelectedOrHovered(attack.sourceCid,attack.targetCid)) );
 												}
 											}
 											//var progress = (dt0 / (dt0 + dt1).Max(1)).Saturate(); // we don't know the duration so we approximate with 2 hours
@@ -1612,7 +1621,7 @@ namespace COTG
 												var r = t.Ramp();
 												var c1 = a.CidToCamera();
 												var spot = Spot.GetOrAdd(a);
-												DrawAction(0.5f, 1.0f, r, c1, c0, Color.Red, troopImages[(int)spot.GetPrimaryTroopType(false)], false, null);
+												DrawAction(0.5f, 1.0f, r, c1, c0, Color.Red, troopImages[(int)spot.GetPrimaryTroopType(false)], false, null, lineThickness: LineThickness(Spot.IsSelectedOrHovered(a)));
 											}
 											foreach (var target in cluster.targets)
 											{
@@ -1727,7 +1736,7 @@ namespace COTG
 
 													(int iType, float alpha) = GetTroopBlend(t, nSprite);
 
-													DrawAction(i.TimeToArrival(serverNow), i.journeyTime, r, c0, c1, c, troopImages[i.troops[iType].type], true, i, alpha: alpha);
+													DrawAction(i.TimeToArrival(serverNow), i.journeyTime, r, c0, c1, c, troopImages[i.troops[iType].type], true, i, alpha: alpha,lineThickness:LineThickness(Spot.IsSelectedOrHovered(i.sourceCid, i.targetCid)));
 												}
 												else
 												{
@@ -2251,7 +2260,7 @@ namespace COTG
 
 		const float actionStopDistance = 48.0f;
 		private void DrawAction(float timeToArrival, float journeyTime, float rectSpan, Vector2 c0, Vector2 c1, Color color,
-		Material bitmap, bool applyStopDistance, Army army, float alpha = 1)
+		Material bitmap, bool applyStopDistance, Army army, float alpha = 1, float lineThickness = lineThickness)
 		{
 			if (IsCulled(c0, c1))
 				return;
@@ -2289,10 +2298,10 @@ namespace COTG
 					underMouse = army;
 				}
 			}
-			DrawLine(Layer.effectShadow, c0 + shadowOffset, c1 + shadowOffset, GetLineUs(c0, c1), shadowColor, zEffectShadow);
+			DrawLine(Layer.effectShadow, c0 + shadowOffset, c1 + shadowOffset, GetLineUs(c0, c1), shadowColor, zEffectShadow, thickness:lineThickness);
 			if (applyStopDistance)
 				DrawSquare(Layer.effectShadow, c0 + shadowOffset, shadowColor, zEffectShadow);
-			DrawLine(Layer.action + 2, c0, mid, GetLineUs(c0, mid), color, zLabels);
+			DrawLine(Layer.action + 2, c0, mid, GetLineUs(c0, mid), color, zLabels, thickness: lineThickness);
 			if (applyStopDistance)
 				DrawSquare(Layer.action + 3, new Vector2(c0.X, c0.Y), color, zLabels);
 			float spriteSize = 32 * SettingsPage.iconScale;
@@ -2308,9 +2317,9 @@ namespace COTG
 
 		}
 
-		private void DrawAction(Vector2 c0, Vector2 c1, Color color, float thickness = lineThickness)
+		private void DrawAction(Vector2 c0, Vector2 c1, Color color, float thickness )
 		{
-			DrawAction(0, 1.0f, 1, c0, c1, color, null, false, null, alpha: 1);
+			DrawAction(0, 1.0f, 1, c0, c1, color, null, false, null, alpha: 1, lineThickness:thickness);
 
 
 			/*			if (IsCulled(c0, c1))

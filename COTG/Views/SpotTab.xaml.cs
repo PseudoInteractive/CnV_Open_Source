@@ -234,7 +234,7 @@ namespace COTG.Views
 		{
 			bool first = true;
 			var pinned = false;
-			foreach (var cid in Spot.GetSelectedForContextMenu(0,false))
+			foreach (var cid in Spot.GetSelectedForContextMenu(0,false,0,false))
 			{
 				if(first)
 				{

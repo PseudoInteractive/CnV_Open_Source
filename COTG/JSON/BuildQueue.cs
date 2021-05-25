@@ -918,13 +918,13 @@ namespace COTG.JSON
 			
 				try
 				{
-				string str;
 					if (CityBuildQueue.all.Any())
 					{
 						await CityBuildQueue.queueLock.WaitAsync();
 					try
 					{
-						 str = Serialize();
+						var str = Serialize();
+						SaveBuildQueue(str);
 					}
 					finally
 					{
@@ -932,7 +932,6 @@ namespace COTG.JSON
 					}
 					//Log($"SaveQueue: {str}");
 						
-					 SaveBuildQueue(str);
 
 					}
 					else

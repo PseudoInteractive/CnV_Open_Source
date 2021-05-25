@@ -1066,7 +1066,7 @@ namespace COTG.Views
 						}
 						else if (counts.townHallLevel == 10 && counts.count >= 100 && usesSpot)
 						{
-							if (SettingsPage.autoDemoCottages)
+							if (SettingsPage.autoDemoCottages && bid != bidCottage)
 							{
 								var cabin = FindCabinToDemo();
 								if (cabin != -1)
@@ -1359,9 +1359,9 @@ namespace COTG.Views
 					var bs0 = GetSpotType(XYToId(selected));
 					if(testFlag)
 					{
-						if (bs1 == SpotType.wall || bs1 == SpotType.invalid)
+						if (bs1 == SpotType.wall || bs1 == SpotType.invalid || bs1 == SpotType.water)
 							bs1 = SpotType.building;
-						if (bs0 == SpotType.wall || bs0 == SpotType.invalid)
+						if (bs0 == SpotType.wall || bs0 == SpotType.invalid|| bs0 == SpotType.water)
 							bs0 = SpotType.building;
 					}
 
@@ -1906,7 +1906,7 @@ namespace COTG.Views
 
 									}
 
-									if (counts.count >= 100)
+									if (counts.count >= 100 && desBid != bidCottage)
 									{
 										var bestSpot = FindCabinToDemo();
 										if (bestSpot != -1)

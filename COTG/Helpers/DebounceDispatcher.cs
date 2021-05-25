@@ -37,7 +37,7 @@ namespace COTG
 					case State.idle:
 						{
 							var dt = nextCall - Environment.TickCount;
-							if (dt >= 0)
+							if (dt > 0)
 								return;
 						}
 						break;

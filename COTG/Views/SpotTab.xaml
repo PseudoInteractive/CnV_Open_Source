@@ -26,12 +26,13 @@
 			<RowDefinition Height="*"/>
 		</Grid.RowDefinitions>
 		<tk:WrapPanel Orientation="Horizontal"
-						  Grid.Row="2"
+						  Grid.Row="0"
 						  VerticalAlignment="Center"
 						  TabFocusNavigation="Once">
-			<Button Content="Toggle Selected" Style="{StaticResource ButtonSmall}" Click="Button_Click"/>
+			<Button Content="Toggle Selected" Style="{StaticResource ButtonSmall}" ToolTipService.ToolTip="Toggles on/off pinned status for selected items" Click="Button_Click"/>
 </tk:WrapPanel>	
-        <tg:RadDataGrid x:Name="selectedGrid" x:FieldModifier="public"
+        <tg:RadDataGrid x:Name="selectedGrid"
+						x:FieldModifier="public"
                         Grid.Row="1"
 						AutoGenerateColumns="False"
                         CanUserChooseColumns="True"

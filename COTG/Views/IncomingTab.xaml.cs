@@ -197,15 +197,18 @@ namespace COTG.Views
 
         public override Task VisibilityChanged(bool visible)
         {
-            //  Log("Vis change" + visible);
-            //App.DispatchOnUIThreadSneaky(() =>
-            //{
-            //    defenderGrid.ItemsSource = null;
-            //    armyGrid.ItemsSource = Army.empty;
-            //});
-            if (visible)
-                IncomingOverview.Process(false,true);
-            
+			//  Log("Vis change" + visible);
+			//App.DispatchOnUIThreadSneaky(() =>
+			//{
+			//    defenderGrid.ItemsSource = null;
+			//    armyGrid.ItemsSource = Army.empty;
+			//});
+
+			if (visible)
+			{
+				lastSelected = null;
+				IncomingOverview.Process(false, true);
+			}
 			return base.VisibilityChanged(visible);
 
         }
@@ -219,24 +222,25 @@ namespace COTG.Views
 				return;
 
 			var sel = selected;
-			if (sel != null )
-            {
-				if (sel == lastSelected)
-					return;
+			var changed = sel != null && sel != lastSelected;
+			if(changed)
+			{
 				lastSelected = sel;
-				armyGrid.ItemsSource = sel.incoming;
-				
-				var tab = DefenseHistoryTab.instance;
-				if (!tab.isVisible)
+				if (sel != null)
 				{
-					tab.ShowOrAdd( true,false );
+					armyGrid.ItemsSource = sel.incoming;
 
-				}
-				else
-				{
-					tab.refresh.Go();
-				}
+					var tab = DefenseHistoryTab.instance;
+					if (!tab.isVisible)
+					{
+						tab.ShowOrAdd(true, false);
 
+					}
+					else
+					{
+						tab.refresh.Go();
+					}
+				}
 			}
 			SpotSelectionChanged(sender, e);
 		}

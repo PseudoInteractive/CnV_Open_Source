@@ -148,8 +148,7 @@ namespace COTG.Views
 								{
 									sendGain = galleys * 500.0 / landTroops;
 								}
-								supporter.tSend.Clear();
-								supporter.tSend.Add(new TroopTypeCount(ttGalley, galleys));
+								supporter.tSend.v.Set(new TroopTypeCount(ttGalley, galleys));
 								foreach (var tt in troops)
 								{
 									if (tt.type == ttStinger)
@@ -171,7 +170,7 @@ namespace COTG.Views
 						}
 						else
 						{
-							supporter.tSend.Set( troops.Where(tt => (includeOffense || tt.isDef) && (canTravelViaWater||!tt.isNaval) ) ); // clone array
+							supporter.tSend.v.Set( troops.Where(tt => (includeOffense || tt.isDef) && (canTravelViaWater||!tt.isNaval) ) ); // clone array
 						}
 						supporter.travel = hours + (defendants.Count - validCount);  // penality for targtes that we cannot make it to
 					}
@@ -313,17 +312,17 @@ namespace COTG.Views
             flyout.CopyXamlRoomFrom(text);
             AApp.AddItem(flyout, "Troops Home", (_, _) =>
             {
-				supporter.tSend.Set( supporter.city.troopsHome);
+				supporter.tSend.v.Set( supporter.city.troopsHome);
                 supporter.NotifyChange();
             });
             AApp.AddItem(flyout, "Total Troops", (_, _) =>
             {
-				supporter.tSend.Set( supporter.city.troopsTotal);
+				supporter.tSend.v.Set( supporter.city.troopsTotal);
                 supporter.NotifyChange();
             });
             AApp.AddItem(flyout, "None", (_, _) =>
             {
-                supporter.tSend.Clear();
+                supporter.tSend.Reset();
                 supporter.NotifyChange();
             });
 
