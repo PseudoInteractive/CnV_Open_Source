@@ -48,7 +48,7 @@ AllowFocusOnInteraction="True"
                                        
                                        CellContentStyleSelector="{StaticResource ReportTypeStyleSelector}" />
                 <telerikGrid:DataGridTextColumn 
-                                       PropertyName ="{x:Bind GetType()}"
+                                       PropertyName ="Type"
                                        SizeMode="Auto"
                                        CellContentStyleSelector="{StaticResource ReportTypeStyleSelector}" />
                 <telerikGrid:DataGridTextColumn 

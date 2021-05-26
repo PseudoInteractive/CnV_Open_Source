@@ -420,7 +420,18 @@ namespace COTG.Views
                         {
                             batch.Add(GetChatMessage(msg));
                         }
-                        (a switch { 444 => ChatTab.alliance, 333 => ChatTab.world, _ => ChatTab.officer }).Post(batch);
+						if (a == 333)
+						{
+							ChatTab.world.Post(batch);
+						}
+						else
+						{
+							ChatTab.alliance.Post(batch);
+							if (a != 444)
+							{
+								ChatTab.officer.Post(batch);
+							}
+						}
 
                     }
                     break;
@@ -438,13 +449,20 @@ namespace COTG.Views
 
 							ChatTab.GetWhisperTab(ch.player, (prior as TextBox == null) ).Post(ch);
                             // ChatTab.whisper.Post(ch);
-                            //       ChatTab.alliance.Post(ch);
+                            ChatTab.alliance.Post(ch);
                             //       ChatTab.officer.Post(ch);
                             //       ChatTab.world.Post(ch);
                         }
                         else
                         {
-                            (ch.type switch { 4 => ChatTab.alliance, 5 => ChatTab.officer, _ => ChatTab.world }).Post(ch);
+							if (ch.type == 5)
+							{
+								ChatTab.officer.Post(ch);
+							}
+							if (ch.type == 5 || ch.type == 4)
+								ChatTab.alliance.Post(ch);
+							else
+								ChatTab.world.Post(ch);
                         }
                         break;
                     }

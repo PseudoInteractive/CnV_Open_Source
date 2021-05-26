@@ -290,7 +290,9 @@ namespace COTG.Views
             {
                 if (RootAppWindow != null)
                 {
-                    RootAppWindow.CloseAsync();
+					Tabs.TabItemsChanged -= Tabs_TabItemsChanged;
+					RootAppWindow.CloseAsync();
+					
                 }
             //    else
             //    {
@@ -393,7 +395,9 @@ namespace COTG.Views
 
         void SetupWindow(AppWindow window)
         {
-            if (window == null)
+			Tabs.TabItemsChanged -= Tabs_TabItemsChanged;
+
+			if (window == null)
             {
                 // Main Window -- add some default items
               
@@ -427,10 +431,9 @@ namespace COTG.Views
             //    CustomDragRegion.MinWidth = 188;
 
                 window.Frame.DragRegionVisuals.Add(CustomDragRegion);
-            }
-            Tabs.TabItemsChanged -= Tabs_TabItemsChanged;
-            Tabs.TabItemsChanged += Tabs_TabItemsChanged;
-
+				Tabs.TabItemsChanged += Tabs_TabItemsChanged;
+			}
+			
         }
 
         public TabPage AddChatTabs()
@@ -615,14 +618,15 @@ namespace COTG.Views
         public MenuFlyoutItem AddTabMenuItem(UserTab tab)
         {
 			var title = tab.Tag as string;
-			 void Rv_Click(object sender, RoutedEventArgs e)
+			
+			
+			
+            var rv = new MenuFlyoutItem() { DataContext=tab, Text = title, Icon= GetOldIconForTab(tab)  };
+			static void Rv_Click(object sender, RoutedEventArgs e)
 			{
-				tab.ShowOrAdd(true);
+				((sender as MenuFlyoutItem).DataContext as UserTab).ShowOrAdd(true);
 			}
-			
-			
-            var rv = new MenuFlyoutItem() { Text = title, Icon= GetOldIconForTab(tab)  };
-            rv.Click += Rv_Click;
+			rv.Click += Rv_Click;
             return rv;
         }
 

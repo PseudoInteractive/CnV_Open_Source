@@ -17,6 +17,9 @@ using System.Text.Json;
 using COTG.Views;
 using TroopTypeCounts = COTG.DArray<COTG.Game.TroopTypeCount>;
 using TroopTypeCountsRef = COTG.DArrayRef<COTG.Game.TroopTypeCount>;
+using System.Runtime.InteropServices;
+using System.Collections;
+
 namespace COTG.Game
 {
     public sealed class Army
@@ -224,7 +227,8 @@ namespace COTG.Game
 		string desc;
 		int targetCid;
 	}
-	public struct TroopTypeCountsX
+	[StructLayout(LayoutKind.Sequential)]
+	public struct TroopTypeCountsX 
 	{
 		public unsafe fixed int counts[(ttCount)];
 		public int this[int id]
@@ -246,62 +250,140 @@ namespace COTG.Game
 				}
 			}
 		}
+		public int Count
+		{
+			get
+			{
+				int count = 0;
+				unsafe
+				{
+					for (int i = 0; i < ttCount; ++i)
+					{
+						if (counts[i] > 0)
+						{
+							++count;
+						}
+					}
+				}
+				return count;
+			}
+		}
+		public void Append( TroopTypeCount t)
+		{
+			unsafe
+			{
+				counts[t.type] += t.count;
+			}
+		}
+		public void Append(TroopTypeCountsX a)
+		{
+			unsafe
+			{
+				for (int i = 0; i < ttCount; ++i)
+				{
+					counts[i] += a.counts[i];
+				}
+			}
+		}
+		public void Clear()
+		{
+			unsafe
+			{
+				for (int i = 0; i < ttCount; ++i)
+				{
+					counts[i] = 0;
+				}
+			}
+		}
+		public EnumeratorStruct GetEnumerator()
+		{
+			var rv = new EnumeratorStruct();
+			rv.current = -1;
+			int count = 0;
+			unsafe
+			{
+				for (int i = 0; i < ttCount; ++i)
+				{
+					if (counts[i] > 0)
+					{
+						rv.tts[i] = EnumeratorStruct.IntsToU64(i,counts[i]);
+						++count;
+					}
+				}
+			}
+			rv.count = count;
+			return rv;
 
-		//public struct Enumerator : IEnumerator<TroopTypeCount>
-		//{
-		//	public static ulong TTCtoU64(TroopTypeCount v) 
-		//	{
-		//		return ((ulong)v.type << 32) | (ulong)v.count; 
-		//	}
-		//	public static TroopTypeCount U64ToTTC(ulong v)
-		//	{
-		//		return new TroopTypeCount((int)(v >> 32), (int)v);
-		//	}
-		//	public unsafe fixed ulong v[(ttCount)];
-		//	int count;
-		//	public int i;
-		//	public TroopTypeCount r {
-		//		get
-		//		{
-		//			unsafe
-		//			{
-		//				ref U64ToTTC(v[i]); // ref access
-		//			}
-		//		}
-		//		}
-		//	T IEnumerator<TroopTypeCount>.Current => r;
-		//	object IEnumerator.Current => r;
+		}
 
-		//	public Enumerator(DArray<T> a) { array = a.v; count = a.count; i = -1; }
+		public ref struct EnumeratorStruct
+		{
+			public unsafe fixed ulong tts[(ttCount)];
+			public int current;
+			public int count;
+			public static ulong IntsToU64(int type, int count)
+			{
+				return ((ulong)(uint)type) | (((ulong)(uint)count) << 32);
+			}
+			public static ulong TTCToU64(TroopTypeCount v)
+			{
+				return ((ulong)(uint)v.type) | (((ulong)(uint)v.count) << 32);
+			}
+			public static TroopTypeCount U64ToTTC(ulong v)
+			{
+				return new TroopTypeCount((int)(v), (int)(v >> 32));
+			}
+			public unsafe fixed ulong v[(ttCount)];
 
-		//	public bool Next()
-		//	{
-		//		return ++i < count;
-		//	}
-		//	bool IEnumerator.MoveNext()
-		//	{
-		//		return ++i < count;
-		//	}
+			//	int count;
+			//	public int i;
+			public TroopTypeCount this[int i]
+			{
+				get
+				{
+					unsafe
+					{
+						return U64ToTTC(v[i]);
+					}
+				}
+				set
+				{
+					unsafe
+					{
+						v[i] = TTCToU64(value);
+					}
 
-		//	void IEnumerator.Reset()
-		//	{
-		//		i = -1;
-		//	}
+				}
+			}
+			public TroopTypeCount Current => this[current];
 
-		//	void IDisposable.Dispose()
-		//	{
-		//		count = 0;
-		//		array = null;
-		//	}
-		//}
 
+			//	object IEnumerator.Current => r;
+
+			//	public Enumerator(DArray<T> a) { array = a.v; count = a.count; i = -1; }
+
+			//	public bool Next()
+			//	{
+			//		return ++i < count;
+			//	}
+			public bool MoveNext()
+			{
+				return ++current < count;
+			}
+
+			public void Reset()
+			{
+				current = -1;
+			}
+		}
 	}
 
+	[StructLayout(LayoutKind.Sequential, Pack=8,Size =8)]
 	public struct TroopTypeCount : IComparable<TroopTypeCount>
     {
        // public static TroopTypeCounts empty = new(0);
         public int type;
-        public int count;
+		public int count; // 
 		internal float attack => count * ttAttack[type] * ttCombatBonus[type];
 
 //		[JsonIgnore]
@@ -747,5 +829,5 @@ namespace COTG.Game
 			}
 			return rv;
 		}
-	}
-}
+	}}
+

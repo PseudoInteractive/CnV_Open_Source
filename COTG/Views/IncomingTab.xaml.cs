@@ -220,29 +220,31 @@ namespace COTG.Views
         {
 			if (!isActive)
 				return;
-
-			var sel = selected;
-			var changed = sel != null && sel != lastSelected;
-			if(changed)
+			if (SpotTab.silenceSelectionChanges == 0)
 			{
-				lastSelected = sel;
-				if (sel != null)
+				var sel = selected;
+				var changed = sel != null && sel != lastSelected;
+				if (changed)
 				{
-					armyGrid.ItemsSource = sel.incoming;
-
-					var tab = DefenseHistoryTab.instance;
-					if (!tab.isVisible)
+					lastSelected = sel;
+					if (sel != null)
 					{
-						tab.ShowOrAdd(true, false);
+						armyGrid.ItemsSource = sel.incoming;
 
-					}
-					else
-					{
-						tab.refresh.Go();
+						var tab = DefenseHistoryTab.instance;
+						if (!tab.isVisible)
+						{
+							tab.ShowOrAdd(true, false);
+
+						}
+						else
+						{
+							tab.refresh.Go();
+						}
 					}
 				}
+				SpotSelectionChanged(sender, e);
 			}
-			SpotSelectionChanged(sender, e);
 		}
 
 		private void filterChanged(object sender, RoutedEventArgs e)
