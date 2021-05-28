@@ -14,8 +14,11 @@ using Windows.UI.Input;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media.Imaging;
 using COTG.Views;
-using TroopTypeCounts = COTG.DArray<COTG.Game.TroopTypeCount>;
-using TroopTypeCountsRef = COTG.DArrayRef<COTG.Game.TroopTypeCount>;
+using TroopTypeCounts = COTG.Game.TroopTypeCountsX;
+//COTG.DArray<COTG.Game.TroopTypeCount>;
+using TroopTypeCountsRef = COTG.Game.TroopTypeCountsX;
+using static COTG.Game.TroopTypeCountHelper;
+//COTG.DArrayRef<COTG.Game.TroopTypeCount>;
 
 using static COTG.Debug;
 using System.ComponentModel;
@@ -169,27 +172,27 @@ namespace COTG.Game
 		public string defString => GetDefString(", ");
 		public string GetDefString(string separator)
 		{
-			TroopTypeCountsRef all = new(true);
+			TroopTypeCountsRef all = new();
 			if (incoming.Any())
 			{
 				foreach (var a in incoming)
 				{
 					if (a.isDefense)
-						all.v.Append( a.troops.v );
+						Add(ref all, a.troops );
 				}
 
 			}
 			else
 			{
-				all.v.Append(troopsHome, (t => t.isDef || t.isSenator));
+				Add(ref all, troopsHome, (t => t.isDef || t.isSenator));
 				foreach (var i in reinforcementsIn)
 				{
-					all.v.Append(i.troops.v);
+					Add(ref all,i.troops); ;
 				}
 			}
 			bool first = true;
 			using var sb = ZString.CreateUtf8StringBuilder();
-			foreach(var tt in all.v)
+			foreach(var tt in all.Enumerate())
 			{
 				if(first)
 				{
@@ -496,12 +499,12 @@ namespace COTG.Game
 		public byte GetPrimaryTroopType(bool onlyHomeTroops = false, bool includeWater=true)
 		{
 			var troops= (onlyHomeTroops ? troopsHome : troopsTotal);
-			if(troops.IsNullOrEmpty())
+			if(!troops.Any())
 				return (byte)classificationTT;
 			
 			byte best = 0; // if no raiding troops we return guards 
 			var bestTS = 0;
-			foreach (var ttc in troops)
+			foreach (var ttc in troops.Enumerate())
 			{
 				var type = ttc.type;
 				if (IsTTNaval(type) && !includeWater)
@@ -891,29 +894,36 @@ namespace COTG.Game
 			return (this.classification);
 		}
 
-		internal async ValueTask<Classification> Classify(bool isIncomingAttack=false)
+		internal bool TouchClassification()
 		{
 			if (isFriend)
 			{
 				classification = TagsToClassification();
 				if (classification != Classification.unknown)
-					return classification;
-				
-				foreach(var tt in troopsTotal.OrderByDescending(a=>a.count))
+					return true;
+
+				foreach (var tt in troopsTotal.GetListDescending())
 				{
 					var i = classificationTTs.FindIndex((byte)tt.type);
 					if (i != -1)
 					{
 						classification = (Classification)i;
-						return classification;
+						return true;
 					}
 				}
 			}
 			if (!Player.isAvatarOrTest && !Alliance.wantsIntel)
 			{
 				classification = Classification.missing;
-				return classification;
+				return true;
 			}
+			return false;
+		}
+
+		internal async ValueTask<Classification> Classify(bool isIncomingAttack=false)
+		{
+			if (TouchClassification())
+				return classification;
 
 			//ClassificationExtended rv = new ClassificationExtended(); ;
 			if(classification == Classification.unknown)
@@ -926,8 +936,8 @@ namespace COTG.Game
 
 		// Incoming attacks
 		public Army[] incoming { get; set; } = Army.empty;
-		public TroopTypeCounts troopsHome = TroopTypeCounts.Rent();
-		public TroopTypeCounts troopsTotal = TroopTypeCounts.Rent();
+		public TroopTypeCounts troopsHome;
+		public TroopTypeCounts troopsTotal;
 		public bool hasEnemyIncoming => incoming.Any(w => w.isAttack && !Alliance.IsAllyOrNap(w.sourceAlliance));
 
 		public int incomingAttacks
@@ -979,7 +989,7 @@ namespace COTG.Game
 				foreach (var a in incoming)
 				{
 					if (a.isDefense)
-						rv += a.troops.v.TSDef();
+						rv += a.troops.TSDef();
 				}
 				return rv;
 			}
@@ -992,7 +1002,7 @@ namespace COTG.Game
 				foreach (var a in incoming)
 				{
 					if (a.isDefense)
-						rv += a.troops.v.TSOff();
+						rv += a.troops.TSOff();
 				}
 				return rv;
 			}
@@ -1041,7 +1051,7 @@ namespace COTG.Game
 		public string troopsString => GetTroopsString();
 		public string GetTroopsString(string separator = ", ")
 		{
-			if (troopsTotal.IsNullOrEmpty())
+			if (!troopsTotal.Any())
 			{
 				if (isFriend && _tsTotal==0)
 					return "No troops";
@@ -1050,12 +1060,17 @@ namespace COTG.Game
 			}
 				string rv = string.Empty;
 				string sep = string.Empty;
-				foreach (var ttc in troopsTotal)
+			for (int tt = 0; tt < ttCount; ++tt)
+			{
+				var c = troopsTotal[tt];
+				if (c > 0)
 				{
-					rv += $"{sep}{troopsHome.Count(ttc.type):N0}/{ttc.count:N0} {Enum.ttNameWithCaps[ttc.type]}";
+					var ch = troopsHome[tt];
+					rv += $"{sep}{ch:N0}/{c:N0} {Enum.ttNameWithCaps[tt]}";
 					sep = separator;
 				}
-				return rv;
+			}
+			return rv;
 			
 		}
 		public bool underSiege

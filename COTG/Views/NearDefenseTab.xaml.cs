@@ -22,6 +22,7 @@ using System.ComponentModel;
 using COTG.Services;
 using Microsoft.Toolkit.Uwp.UI.Controls;
 using System.Threading.Tasks;
+using static COTG.Game.TroopTypeCountHelper;
 
 namespace COTG.Views
 {
@@ -129,6 +130,7 @@ namespace COTG.Views
 						}
 						var troops = (onlyHome ? city.troopsHome : city.troopsTotal);
 						s.Add(supporter);
+						supporter.tSend.Clear();
 						supporter.validTargets = validCount;
 						if (viaWater)
 						{
@@ -137,7 +139,7 @@ namespace COTG.Views
 							if (ttGalleys.count > 0 )
 							{
 								var galleys = ttGalleys.count;
-								var landTroops = troops.Where((tt) => IsLandRaider(tt.type)).Sum((t) => t.count);
+								var landTroops = troops.TS( (tt) => IsLandRaider(tt.type) );
 								var requiredGalleys = (landTroops + 499) / 500;
 								var sendGain = 1.0;
 								if (galleys >= requiredGalleys)
@@ -148,29 +150,29 @@ namespace COTG.Views
 								{
 									sendGain = galleys * 500.0 / landTroops;
 								}
-								supporter.tSend.v.Set(new TroopTypeCount(ttGalley, galleys));
-								foreach (var tt in troops)
+								Set(ref supporter.tSend, new TroopTypeCount(ttGalley, galleys));
+								foreach (var tt in troops.Enumerate())
 								{
 									if (tt.type == ttStinger)
 									{
-										supporter.tSend.v.Add(tt);
+										Add( ref supporter.tSend ,  tt);
 									}
 									else
 									{
 										if (!IsLandRaider(tt.type) || !Include(tt))
 											continue;
-										supporter.tSend.v.Add(new TroopTypeCount(tt.type, (int)(sendGain * tt.count))); // round down
+										Add(ref supporter.tSend ,new TroopTypeCount(tt.type, (int)(sendGain * tt.count))); // round down
 									}
 								}
 							}
 							else
 							{
-								supporter.tSend.v.Set(  troops.Where((tt) => tt.type == ttStinger) ); // take stingers
+								Add( ref supporter.tSend, troops, (tt) => tt.type == ttStinger ); // take stingers
 							}
 						}
 						else
 						{
-							supporter.tSend.v.Set( troops.Where(tt => (includeOffense || tt.isDef) && (canTravelViaWater||!tt.isNaval) ) ); // clone array
+							Add(ref supporter.tSend,  troops, tt => (includeOffense || tt.isDef) && (canTravelViaWater||!tt.isNaval) ); // clone array
 						}
 						supporter.travel = hours + (defendants.Count - validCount);  // penality for targtes that we cannot make it to
 					}
@@ -262,7 +264,7 @@ namespace COTG.Views
             if( sel is Supporter support )
             {
                 var stt = new List<SupportByTroopType>();
-                foreach (var i in support.city.troopsTotal)
+                foreach (var i in support.city.troopsTotal.Enumerate())
                 {
                     if(Include(i))
                        stt.Add(new SupportByTroopType() { type = i.type, supporter = support });
@@ -284,19 +286,19 @@ namespace COTG.Views
             AApp.AddItem(flyout, "Troops Home", (_, _) =>
             {
                 var supporter = stt.supporter;
-                supporter.tSend.v.SetOrAdd(stt.type, stt.supporter.city.troopsHome.Count(stt.type));
+                Set( ref supporter.tSend, stt.type, stt.supporter.city.troopsHome.GetCount(stt.type));
                 supporter.NotifyChange();
             });
             AApp.AddItem(flyout, "Total Troops", (_, _) =>
             {
                 var supporter = stt.supporter;
-                supporter.tSend.v.SetOrAdd(stt.type, stt.supporter.city.troopsTotal.Count(stt.type));
+                Set( ref supporter.tSend,stt.type, stt.supporter.city.troopsTotal.GetCount(stt.type));
                 supporter.NotifyChange();
             });
             AApp.AddItem(flyout, "None", (_, _) =>
             {
                 var supporter = stt.supporter;
-                supporter.tSend.v.SetOrAdd(stt.type, 0);
+                Set( ref supporter.tSend, stt.type, 0);
                 supporter.NotifyChange();
             });
 
@@ -312,17 +314,17 @@ namespace COTG.Views
             flyout.CopyXamlRoomFrom(text);
             AApp.AddItem(flyout, "Troops Home", (_, _) =>
             {
-				supporter.tSend.v.Set( supporter.city.troopsHome);
+				supporter.tSend = supporter.city.troopsHome;
                 supporter.NotifyChange();
             });
             AApp.AddItem(flyout, "Total Troops", (_, _) =>
             {
-				supporter.tSend.v.Set( supporter.city.troopsTotal);
+				supporter.tSend = supporter.city.troopsTotal;
                 supporter.NotifyChange();
             });
             AApp.AddItem(flyout, "None", (_, _) =>
             {
-                supporter.tSend.Reset();
+                Clear(ref supporter.tSend);
                 supporter.NotifyChange();
             });
 
@@ -342,7 +344,7 @@ namespace COTG.Views
             }
             var departAt = AUtil.dateTimeZero;
             var _arriveAt = arriveAt;
-            if(waitReturn && !supporter.city.troopsHome.IsSuperSetOf(supporter.tSend.v))
+            if(waitReturn && !supporter.city.troopsHome.IsSuperSetOf(supporter.tSend))
             {
 				RaidOverview.SendMaybe();
 
@@ -383,8 +385,8 @@ namespace COTG.Views
 			var def = FindValidDefendants(sendViaWater && defendants.Any(d => d.isOnWater),  onlyHome, city, ref hours);
 			foreach (var d in def)
 			{
-				using var ts = new DArrayRef<TroopTypeCount>(supporter.tSend.v.DividedBy(def.Count));
-				await Post.SendRein(supporter.cid, d.cid, ts.v, departAt, _arriveAt, hours, supporter.split, text);
+				var ts = supporter.tSend.DividedBy(def.Count);
+				await Post.SendRein(supporter.cid, d.cid, ts, departAt, _arriveAt, hours, supporter.split, text);
 			}
 
 

@@ -426,10 +426,13 @@ namespace COTG.Views
 						}
 						else
 						{
-							ChatTab.alliance.Post(batch);
 							if (a != 444)
 							{
 								ChatTab.officer.Post(batch);
+							}
+							else
+							{
+								ChatTab.alliance.Post(batch);
 							}
 						}
 

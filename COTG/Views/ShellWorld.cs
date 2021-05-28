@@ -983,7 +983,7 @@ namespace COTG.Views
 															int counter = 0;
 															foreach (var i in city.reinforcementsIn)
 															{
-																sb.AppendLine( i.troops.v.Format($"From {City.GetOrAddCity(i.sourceCid).nameAndRemarks}:", '\n', '\n'));
+																sb.AppendLine( i.troops.Format($"From {City.GetOrAddCity(i.sourceCid).nameAndRemarks}:", '\n', '\n'));
 																if(++counter >= 4)
 																{
 																	sb.AppendLine("...");

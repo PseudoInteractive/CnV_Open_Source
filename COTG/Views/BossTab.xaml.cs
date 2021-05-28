@@ -86,7 +86,7 @@ namespace COTG.Views
 					newSel.SelectInWorldView(false);
                 var waterValid = false;
 				var groundValid = false;
-				foreach (var i in newSel.troopsHome)
+				foreach (var i in newSel.troopsHome.Enumerate())
 				{
 					if (i.attack > 50 * 1000)
 					{

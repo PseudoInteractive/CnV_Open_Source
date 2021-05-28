@@ -135,6 +135,7 @@
     </RootType>
     <RootType FullName="Telerik.UI.Xaml.Controls.Grid.Primitives.RotatedContainer">
       <RootProperty Name="HorizontalAlignment" />
+      <RootProperty Name="Visibility" />
       <RootProperty Name="Child" />
     </RootType>
     <RootType FullName="Telerik.UI.Xaml.Controls.Grid.Primitives.DataGridCellFlyoutControl">

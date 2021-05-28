@@ -54,7 +54,7 @@ namespace COTG.Game
             var dist = target.DistanceToCidD(city.cid);
             // based on slowest troop
             var rv = 0.0;
-            foreach (var tt in city.troopsTotal)
+            foreach (var tt in city.troopsTotal.Enumerate())
             {
                 var type = tt.type;
                 var travel = (dist * ttTravel[type]*100) / (ttSpeedBonus[type]);
@@ -109,7 +109,7 @@ namespace COTG.Game
         public static (int reps,float averageCarry, float fractionalReps, bool isValid) ComputeIdealReps(Dungeon d, City city)
         {
             var loot = d.loot;
-            var carry = city.CarryCapacity(d.isWater); // this should be on demand
+            var carry = city.CarryCapacityHome(d.isWater); // this should be on demand
             if (carry <= 0 || city.freeCommandSlots==0)
                 return (0, 0,0,false);
 			//   Log($"{desiredCarry} {carry / (loot * desiredCarry)}");
@@ -156,16 +156,18 @@ namespace COTG.Game
 			for (int iter = 0; iter < (wantDelays ? r.reps : 1); ++iter)
 			{
 				var tr = new List<sndRaidtr>();
-				for(int ttci =0;ttci<city.troopsHome.count;++ttci)
+				for(int ttype =0; ttype < ttCount;++ttype)
 				{
-					var ttc= city.troopsHome[ttci];
-					if (!IsRaider(ttc.type) || !SettingsPage.includeRaiders[ttc.type])
+					var ttc= city.troopsHome[ttype];
+					if (ttc <= 0)
 						continue;
-					if (IsTTNaval(ttc.type) == d.isWater)
+					if (!IsRaider(ttype) || !SettingsPage.includeRaiders[ttype])
+						continue;
+					if (IsTTNaval(ttype) == d.isWater)
 					{
-						var count = (int)(ttc.count * troopFraction / (SettingsPage.raidSendExact? r.fractionalReps:r.reps) );
-						tr.Add(new sndRaidtr() { tt = ttc.type.ToString(), tv = count.ToString() });
-						city.troopsHome[ttci].count -= r.reps * count;
+						var count = (int)(ttc * troopFraction / (SettingsPage.raidSendExact? r.fractionalReps:r.reps) );
+						tr.Add(new sndRaidtr() { tt = ttype.ToString(), tv = count.ToString() });
+						city.troopsHome[ttype] -= r.reps * count;
 					}
 
 				}

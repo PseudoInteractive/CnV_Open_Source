@@ -161,7 +161,15 @@ namespace COTG
 
 			if (report)
 			{
-				Crashes.TrackError(e, dic);
+				try
+				{
+					Analytics.TrackEvent(eventName, dic);
+					Crashes.TrackError(e, dic);
+				}
+				catch(Exception ex2)
+				{
+					App.RegisterException(ex2.Message);
+				}
 			}
 
 			var msg = $"{eventName} {extra ?? string.Empty} {e.Message}";
@@ -171,7 +179,6 @@ namespace COTG
 			BreakDebugger();
 #endif
 
-			Analytics.TrackEvent(eventName, dic);
 
 			Note.Show(msg);
 		}

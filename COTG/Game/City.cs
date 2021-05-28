@@ -21,6 +21,7 @@ using Microsoft.Toolkit.HighPerformance.Enumerables;
 using COTG.Draw;
 using System.Threading;
 using EnumsNET;
+using static COTG.Game.TroopTypeCountHelper;
 
 using Nito.AsyncEx;
 namespace COTG.Game
@@ -310,12 +311,8 @@ namespace COTG.Game
 			get
 			{
 				// Todo: water
-				var _carryCapacity = 0;
-				foreach (var tc in troopsHome)
-				{
-					_carryCapacity += tc.count * ttCarry[tc.type];
-				}
-				return _carryCapacity;
+				return troopsHome.Sum( tc => tc.count * ttCarry[tc.type] );
+				
 			}
 		}
 		public float homeTroopsAttack
@@ -323,48 +320,23 @@ namespace COTG.Game
 			get
 			{
 				// Todo: water
-				var atk = 0.0f;
-				foreach (var tc in troopsHome)
-				{
-					// todo: research?
-					atk += tc.attack;
-				}
-				return atk;
+				return troopsHome.Sum(tc => tc.attack);
 			}
 		}
-		public float CarryCapacity(bool forWater)
+		public static float CarryCapacity( in TroopTypeCountsX tt, bool forWater) =>
+			 tt.Sum(tc => IsRaider(tc.type)
+		   && SettingsPage.includeRaiders[tc.type]
+		   && IsTTNaval(tc.type) == forWater
+			   ? tc.count * ttCarry[tc.type] * Raiding.troopFraction : 0.0f);
+
+
+		public float CarryCapacityHome(bool forWater)
 		{
-			// Todo: water
-			var _carryCapacity = 0.0f;
-			foreach (var tc in troopsHome)
-			{
-				if (!IsRaider(tc.type) || !SettingsPage.includeRaiders[tc.type])
-					continue;
-				if (IsTTNaval(tc.type) == forWater)
-				{
-					_carryCapacity += tc.count * ttCarry[tc.type] * Raiding.troopFraction;
-				}
-
-
-			}
-			return _carryCapacity;
+			return CarryCapacity(troopsHome, forWater);
 		}
 		public float CarryCapacityIncludeAway(bool forWater)
 		{
-			// Todo: water
-			var _carryCapacity = 0.0f;
-			foreach (var tc in troopsTotal)
-			{
-				if (!IsRaider(tc.type) || !SettingsPage.includeRaiders[tc.type])
-					continue;
-				if (IsTTNaval(tc.type) == forWater)
-				{
-					_carryCapacity += tc.count * ttCarry[tc.type] * Raiding.troopFraction;
-				}
-
-
-			}
-			return _carryCapacity;
+			return CarryCapacity(troopsTotal, forWater);
 		}
 		internal static City Get(int cid) => GetOrAddCity(cid);
 
@@ -616,15 +588,13 @@ namespace COTG.Game
 
 			if (jse.TryGetProperty("tc", out var tc))
 			{
-				troopsTotal.Clear();
-				troopsTotal.Append( tc);
+				Set( ref troopsTotal, tc);
 				_tsTotal = troopsTotal.TS();
 			}
 
 			if (jse.TryGetProperty("th", out var th))
 			{
-				troopsHome.Clear();
-				troopsHome.Append( th );
+				Set( ref troopsHome, th );
 				_tsHome = troopsHome.TS();
 
 
@@ -641,7 +611,7 @@ namespace COTG.Game
 						re.targetCid = cid;
 						re.sourceCid = rein.GetAsInt("c");
 						re.order = rein.GetAsInt64("o");
-						re.troops.v.Append2( rein.GetProperty("tr") );
+						Set2( ref re.troops, rein.GetProperty("tr") );
 						l.Add(re);
 					}
 				}
@@ -1148,30 +1118,31 @@ namespace COTG.Game
 		{
 			return ToString();
 		}
-		public byte GetRaidTroopType()
-		{
-			byte best = 0; // if no raiding troops we return guards 
-			var bestTS = 0;
-			foreach (var ttc in troopsHome)
-			{
-				var type = ttc.type;
-				if (!IsRaider(type) || !SettingsPage.includeRaiders[type])
-					continue;
-				var ts = ttc.ts;
-				if (ts > bestTS)
-				{
-					bestTS = ts;
-					best = (byte)type;
-				}
 
-			}
-			return best;
-		}
+		//public byte GetRaidTroopType()
+		//{
+		//	byte best = 0; // if no raiding troops we return guards 
+		//	var bestTS = 0;
+		//	foreach (var ttc in troopsHome)
+		//	{
+		//		var type = ttc.type;
+		//		if (!IsRaider(type) || !SettingsPage.includeRaiders[type])
+		//			continue;
+		//		var ts = ttc.ts;
+		//		if (ts > bestTS)
+		//		{
+		//			bestTS = ts;
+		//			best = (byte)type;
+		//		}
+
+		//	}
+		//	return best;
+		//}
 		public byte GetAttackTroopType()
 		{
 			byte best = 0; // if no raiding troops we return guards 
 			var bestAttack = 0.0f;
-			foreach (var ttc in troopsHome)
+			foreach (var ttc in troopsHome.Enumerate() )
 			{
 				var type = ttc.type;
 
@@ -1191,7 +1162,7 @@ namespace COTG.Game
 			// todo:  handle water
 			byte best = 0;
 			var bestTS = 0;
-			foreach (var ttc in troopsHome)
+			foreach (var ttc in troopsHome.Enumerate())
 			{
 				var type = ttBestDungeonType[ttc.type];
 				if (type > (byte)DungeonType.water)
@@ -1314,7 +1285,7 @@ namespace COTG.Game
 			var dist = cid.DistanceToCidD(target);
 			bool anyValid = false; 
 
-			foreach ( var tt in (onlyHome ? troopsHome : troopsTotal) )
+			foreach ( var tt in (onlyHome ? troopsHome.Enumerate() : troopsTotal.Enumerate() ) )
 			{
 				if (tt.isNaval != viaWater)
 					continue;

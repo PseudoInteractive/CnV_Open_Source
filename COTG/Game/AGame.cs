@@ -1552,11 +1552,11 @@ namespace COTG
 											{
 												var t = (tick * sourceCid.CidToRandom().Lerp(1.5f / 512.0f, 1.75f / 512f)) + 0.25f;
 												var r = t.Ramp();
-												var nSprite = attack.troops.Count;
+												var nSprite = attack.troops.count;
 												if (nSprite > 0)
 												{
 													(int iType, float alpha) = GetTroopBlend(t, nSprite);
-													DrawAction(dt1, journeyTime, r, c0, c1, c, troopImages[attack.troops[iType].type], true, attack, alpha: alpha, 
+													DrawAction(dt1, journeyTime, r, c0, c1, c, troopImages[attack.troops.GetIndexType(iType)], true, attack, alpha: alpha, 
 														lineThickness:LineThickness(Spot.IsSelectedOrHovered(attack.sourceCid,attack.targetCid)) );
 												}
 											}
@@ -1728,7 +1728,7 @@ namespace COTG
 													continue;
 													//       c.A = (byte)((int)c.A * 3 / 8); // reduce alpha if not selected
 												}
-												if (i.troops.v.Any())
+												if (i.troops.Any())
 												{
 													var t = (tick * i.sourceCid.CidToRandom().Lerp(1.5f / 512.0f, 2.0f / 512f)) + 0.25f;
 													var r = t.Ramp();
@@ -1736,7 +1736,7 @@ namespace COTG
 
 													(int iType, float alpha) = GetTroopBlend(t, nSprite);
 
-													DrawAction(i.TimeToArrival(serverNow), i.journeyTime, r, c0, c1, c, troopImages[i.troops[iType].type], true, i, alpha: alpha,lineThickness:LineThickness(Spot.IsSelectedOrHovered(i.sourceCid, i.targetCid)));
+													DrawAction(i.TimeToArrival(serverNow), i.journeyTime, r, c0, c1, c, troopImages[i.troops.GetIndexType(iType)], true, i, alpha: alpha,lineThickness:LineThickness(Spot.IsSelectedOrHovered(i.sourceCid, i.targetCid)));
 												}
 												else
 												{
@@ -1991,7 +1991,7 @@ namespace COTG
 													var ta = GetTroopBlend(t, spot.troopsTotal.Length);
 													alpha = ta.alpha;
 
-													type = spot.troopsTotal[ta.iType].type;
+													type = spot.troopsTotal.GetIndexType(ta.iType);
 												}
 												else
 												{

@@ -114,6 +114,10 @@ namespace COTG.Game
         public readonly static short[] ttCarry = { 0, 0, 10, 20, 10, 10, 5, 0, 15, 20, 15, 10, 0, 0, 0, 1500, 3000, 1 };
         public readonly static short[] ttAttack = { 10, 50, 30, 10, 25, 50, 70, 10, 40, 60, 90, 120, 50, 150, 3000, 1200, 12000, 1 };
 
+		public static int TTTs(int type, int count)
+		{
+			return count * ttTs[type];
+		}
         public static double TTTravel(int type) { return ttTravel[type]*(60.0*100) / (ttSpeedBonus[type]); }
 
         //

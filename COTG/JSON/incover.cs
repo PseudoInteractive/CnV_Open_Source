@@ -14,8 +14,11 @@ using static COTG.Debug;
 using Windows.UI.ViewManagement;
 using Windows.Web.Http;
 using System.Text.Json;
-using TroopTypeCountsRef = COTG.DArrayRef<COTG.Game.TroopTypeCount>;
-using TroopTypeCounts = COTG.DArray<COTG.Game.TroopTypeCount>;
+using TroopTypeCountsRef = COTG.Game.TroopTypeCountsX;
+using static COTG.Game.TroopTypeCountHelper;
+//COTG.DArrayRef<COTG.Game.TroopTypeCount>;
+using TroopTypeCounts = COTG.Game.TroopTypeCountsX;
+//COTG.DArray<COTG.Game.TroopTypeCount>;
 
 namespace COTG.JSON
 {
@@ -53,7 +56,7 @@ namespace COTG.JSON
 			internal int targetCid => firstArmy.targetCid;
 			internal int sourceCid => firstArmy.sourceCid;
 
-			public string intel =>  $"{ttNameWithCaps[firstArmy.troops.v.GetPrimaryTroopType()]}, {firstArmy.miscInfo}";
+			public string intel =>  $"{firstArmy.miscInfo}, {ttNameWithCaps[firstArmy.troops.GetPrimaryTroopType()]}";
 
 		}
 		public static void ProcessTask() { Process(false, false); }
@@ -231,7 +234,7 @@ namespace COTG.JSON
 										  {
 											  LogEx(e);
 										  }
-										  TroopTypeCountsRef sumDef =new(true);
+										  TroopTypeCountsRef sumDef =new();
 										  var processedTroopsHome = false; // for some reason, these repeat
 										  foreach (var armyV in val.GetProperty("9").EnumerateArray())
 										  {
@@ -330,7 +333,7 @@ namespace COTG.JSON
 											  }
 											  var source = Spot.GetOrAdd(army.sourceCid);
 
-											  using TroopTypeCountsRef ttl = new(true);
+											  TroopTypeCountsRef ttl = new();
 											  if (!reused || army.isDefense)
 											  {
 												  if (armyV.TryGetProperty("3", out var ttp))
@@ -344,7 +347,7 @@ namespace COTG.JSON
 														  var ttype = Game.Enum.ttNameWithCapsAndBatteringRam.IndexOf(str.Substring(firstSpace + 1));
 														  if (ttype != -1)
 														  {
-															  ttl.v.Add(new TroopTypeCount()
+															  Add( ref ttl, new TroopTypeCount()
 															  {
 																  count = int.Parse(str.Substring(0, firstSpace), System.Globalization.NumberStyles.Number, NumberFormatInfo.InvariantInfo),
 																  type = ttype >= 0 ? ttype : 0
@@ -365,9 +368,9 @@ namespace COTG.JSON
 
 												  if (ttl.Count == 0)
 													  continue; // skip empty entries for troops at home when no def is present.
-												  sumDef.v.Append(ttl.v);
-												  army.troops.v.AddRange( ttl.v );
-												  Assert(army.troops.v.Any());
+												  Add( ref sumDef, ttl);
+												  army.troops = ( ttl );
+												  Assert(army.troops.Any());
 											  }
 											  else
 											  {
@@ -396,17 +399,17 @@ namespace COTG.JSON
 												  {
 													  // if (!reused)
 													  {
-														  if (!ttl.v.IsNullOrEmpty())
+														  if (ttl.Any() )
 														  {
-															  army.troops.v.Set( ttl.v );
+															  army.troops = ( ttl );
 															  Assert(army.troops.count>=1);
 														  }
 														  else
 														  {
 															  // this will early out if its already queued
 															  source.QueueClassify(true);
-															  army.troops.Set( new TroopTypeCount(source.classificationTT, 1) );
-															 Assert(army.troops.count==1);
+															  Set(ref army.troops, new TroopTypeCount(source.classificationTT, -1) );
+															 Assert(army.troops.Count==1);
 														  }
 
 													  }
@@ -524,11 +527,11 @@ namespace COTG.JSON
 
 
 											  } // if attack
-											  army.sumDef.v.AddRange( sumDef.v );
-											  army.sumDef.v.Sort();
+											  army.sumDef = ( sumDef );
+											//  army.sumDef.Sort();
 
 
-											  army.troops.v.Sort();
+											//  army.troops.Sort();
 											  incoming.Add(army);
 
 											  if (!army.isDefense && fetchReports)
@@ -626,8 +629,8 @@ namespace COTG.JSON
 												// todo TS info
 
 											};
-											report.troops.v.AddRange(new[] { new TroopTypeCount(ttScout, ats / 2) });
-											report.sumDef.v.AddRange(new[] { new TroopTypeCount(ttGuard, dts) });
+											Set( ref report.troops, new TroopTypeCount(ttScout, ats / 2) );
+											Set( ref report.sumDef, new TroopTypeCount(ttGuard, dts) );
 												
 											reportCache.TryAdd(hash, report);
 											parts[part].Add(report);
@@ -667,8 +670,8 @@ namespace COTG.JSON
 																		supportReports.Add(Army.ReportHash(recId));
 																		continue;
 																	}
-																	TroopTypeCountsRef atkTroops = new(true);
-																	TroopTypeCountsRef defTroops = new(true);
+																	TroopTypeCountsRef atkTroops = new();
+																	TroopTypeCountsRef defTroops = new();
 																	var defTSLeft = 0;
 																	var atkCN = report.GetAsString("acn");
 																	source = AUtil.DecodeCid(atkCN.Length - 8, atkCN);
@@ -689,13 +692,13 @@ namespace COTG.JSON
 
 																	if (report.TryGetProperty("ats", out var ats))
 																	{
-																		atkTroops.v.Append(ats);
+																		Set(ref atkTroops,ats);
 																		
 																	}
 																	{
 																		if (report.TryGetProperty("tts", out var tts))
 																		{
-																			defTroops.v.Append(tts);
+																			Set(ref defTroops, tts);
 																		}
 																	}
 																	{
@@ -728,7 +731,7 @@ namespace COTG.JSON
 																				}
 																				if (rein.Value.TryGetProperty("tts", out var tts))
 																				{
-																					defTroops.v.Append(tts);
+																					Set(ref defTroops, tts);
 																				}
 																			}
 																		}
@@ -740,7 +743,7 @@ namespace COTG.JSON
 																		var atkTSLeft = report.GetAsInt("ts_left");
 																		var atkPN = report.GetAsString("apn");
 																		Spot.GetOrAdd(source, atkCN);
-																		bool hasSen = atkTroops.v.HasTT(ttSenator);
+																		bool hasSen = atkTroops.HasTT(ttSenator);
 																		var rep = new Army()
 																		{
 																			refines = refines,
@@ -760,8 +763,8 @@ namespace COTG.JSON
 																			// todo TS info
 
 																		};
-																		rep.sumDef.Take(ref defTroops);
-																		rep.troops.Take(ref atkTroops);
+																		rep.sumDef =defTroops;
+																		rep.troops = (atkTroops);
 																		reportCache.TryAdd(hash, rep);
 																		parts[part].Add(rep);
 

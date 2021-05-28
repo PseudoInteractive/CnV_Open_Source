@@ -23,8 +23,11 @@ using Microsoft.UI.Xaml.Controls;
 using Windows.UI.Xaml;
 using ContentDialog = Windows.UI.Xaml.Controls.ContentDialog;
 using ContentDialogResult = Windows.UI.Xaml.Controls.ContentDialogResult;
-using TroopTypeCounts = COTG.DArray<COTG.Game.TroopTypeCount>;
-using TroopTypeCountsRef = COTG.DArrayRef<COTG.Game.TroopTypeCount>;
+using TroopTypeCounts = COTG.Game.TroopTypeCountsX;
+//COTG.DArray<COTG.Game.TroopTypeCount>;
+using TroopTypeCountsRef = COTG.Game.TroopTypeCountsX;
+using static COTG.Game.TroopTypeCountHelper;
+//COTG.DArrayRef<COTG.Game.TroopTypeCount>;
 
 namespace COTG.Services
 {
@@ -561,8 +564,11 @@ namespace COTG.Services
 					var cid = item.GetAsInt("id");
 					if (!City.TryGet(cid, out var v))
 						continue;
-					TroopTypeCounts tsHome = TroopTypeCounts.Rent();
-					TroopTypeCounts tsTotal = TroopTypeCounts.Rent();
+					var tsh = v.troopsHome.TS();
+					v.troopsHome.Clear();
+					v.troopsTotal.Clear();
+				//	TroopTypeCounts tsHome = new();
+			//	TroopTypeCounts tsTotal = new();
 					var hasAny = false;
 					foreach (var tt in item.EnumerateObject())
 					{
@@ -581,15 +587,16 @@ namespace COTG.Services
 							tE = 0;
 						var ttc = new TroopTypeCount(tE, count);
 
+						
+						
 						if (split[1] == "home")
-							tsHome.Add(ttc);
+							Add(ref v.troopsHome, ttc);
 						else
-							tsTotal.Add(ttc);
+							Add(ref v.troopsTotal, ttc);
 						hasAny = true;
 					}
-					TroopTypeCount.Replace(ref v.troopsHome, ref tsHome);
-					TroopTypeCount.Replace(ref v.troopsTotal,ref tsTotal);
-					var tsh = v.troopsHome.TS();
+	//				TroopTypeCount.Replace(ref v.troopsHome, ref tsHome);
+		//			TroopTypeCount.Replace(ref v.troopsTotal,ref tsTotal);
 					if (hasAny)
 					{
 						v._tsHome = v.troopsHome.TS();
@@ -660,9 +667,9 @@ namespace COTG.Services
 						var count = int.Parse(str.Substring(0, tcEnd), NumberStyles.Number);
 						var typeS = str.Substring(tcEnd + 1);
 						var tE = Game.Enum.ttNameWithCapsAndBatteringRam.IndexOf(typeS);
-						re.troops.v.Add(new TroopTypeCount(tE, count));
+						Add(ref re.troops, new TroopTypeCount(tE, count));
 					}
-					ts += re.troops.v.TS();
+					ts += re.troops.TS();
 					spot.reinforcementsIn = spot.reinforcementsIn.ArrayAppend(re);
 					var source = Spot.GetOrAdd(re.sourceCid);
 					source.reinforcementsOut = source.reinforcementsOut.ArrayAppend(re);
@@ -991,10 +998,11 @@ namespace COTG.Services
 		public static async Task SendRein(int cid, int rcid, TroopTypeCounts tsSend, DateTimeOffset departAt, DateTimeOffset arrival, float travelTime, int splits, Windows.UI.Xaml.UIElement uie)
 		{
 			var tttv = new List<tt_tv>();
-			foreach (var t in tsSend)
-			{
-				tttv.Add(new tt_tv() { tt = t.type, tv = t.count / splits });
-			}
+			tsSend.ForEach((t =>
+		   {
+			   tttv.Add(new tt_tv() { tt = t.type, tv = t.count / splits });
+		   }));
+
 			var pid = World.CidToPlayerOrMe(cid);
 
 			var sr = new SndRein()

@@ -11,8 +11,11 @@ using System.Linq;
 using System.Threading.Tasks;
 using static COTG.Game.Enum;
 using static COTG.Debug;
-using TroopTypeCounts = COTG.DArray<COTG.Game.TroopTypeCount>;
-using TroopTypeCountsRef = COTG.DArrayRef<COTG.Game.TroopTypeCount>;
+using TroopTypeCounts = COTG.Game.TroopTypeCountsX;
+//COTG.DArray<COTG.Game.TroopTypeCount>;
+using TroopTypeCountsRef = COTG.Game.TroopTypeCountsX;
+using static COTG.Game.TroopTypeCountHelper;
+//COTG.DArrayRef<COTG.Game.TroopTypeCount>;
 
 namespace COTG.JSON
 {
@@ -119,17 +122,17 @@ namespace COTG.JSON
                                         {
                                             var type = attacker.GetPrimaryTroopType(false);
 
-											army.troops.v.Add(new TroopTypeCount(type, atkTS / ttTs[type]));
+											Add( ref army.troops,new TroopTypeCount(type, atkTS / ttTs[type]));
 
                                         }
                                         else
                                         {
                                             attacker.QueueClassify(true);
-                                            army.troops.v.Add( new TroopTypeCount(Game.Enum.ttVanquisher, atkTS));
+                                           Add(ref army.troops, new TroopTypeCount(Game.Enum.ttVanquisher, atkTS));
                                         }
                                         if (defTS > 0)
                                         {
-                                            army.sumDef.v.Set( new TroopTypeCount(Game.Enum.ttGuard, defTS) );
+											Set(ref army.sumDef, new TroopTypeCount(Game.Enum.ttGuard, defTS) );
                                             spot._tsHome = defTS;
 										//	spot._tsHome = val.GetAsInt("8");
 
@@ -250,7 +253,7 @@ namespace COTG.JSON
                                                 // todo TS info
 
                                             };
-												report.troops.Set(new TroopTypeCount(ttScout, ats / 2));
+												Set(ref report.troops, new TroopTypeCount(ttScout, ats / 2));
                                                 if (jsdr != null && jsdr.RootElement.TryGetProperty("tts", out var tts))
                                                 {
                                                     int counter = 0;
@@ -260,7 +263,7 @@ namespace COTG.JSON
                                                         var tc = t.GetInt32();
                                                         if (tc > 0)
                                                         {
-															report.sumDef.v.Add( new TroopTypeCount() { type = counter, count = tc });
+															Add(ref report.sumDef, new TroopTypeCount() { type = counter, count = tc });
                                                             defTS += tc * ttTs[counter];
                                                         }
                                                         ++counter;
@@ -269,7 +272,7 @@ namespace COTG.JSON
                                                 else
                                                 {
 
-                                                    report.sumDef.Set(  new TroopTypeCount(ttGuard, dts) );
+													Set(ref report.sumDef,  new TroopTypeCount(ttGuard, dts) );
                                                 }
                                                 parts[part].Add(report);
 												IncomingOverview.reportCache.TryAdd(hash, report);
@@ -356,14 +359,14 @@ namespace COTG.JSON
                                                                 };
 																	if (report.TryGetProperty("tts", out var tts))
 																	{
-																		defTS = rep.sumDef.v.Append(tts);
+																		defTS = Set( ref rep.sumDef, tts);
 																	}
 																	defTSKilled = defTS - defTSLeft; ;
 																	rep.dTsKill = defTSKilled == 0 && (atkTS != atkTSLeft) ? Army.ApproximateKillsFromRefines(refines) : defTSKilled;   // overwrite with calculated value
 
 																	if (report.TryGetProperty("ats", out var ats))
 																	{
-																		rep.troops.v.Append(ats);
+																		Set(ref rep.troops,ats);
 																	}
 
 																	if (rep.claim == 100)

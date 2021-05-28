@@ -643,7 +643,7 @@
                                     </Image>
                                     <TextBlock x:Name="DragHintGlyph" FontFamily="{ThemeResource SymbolThemeFontFamily}" Text="&#xE169;"
                                              VerticalAlignment="Top" Visibility="Collapsed"/>
-                                    <localPrimitives:RotatedContainer  HorizontalAlignment="Center" x:Name="RotatedContainer">
+                                    <localPrimitives:RotatedContainer  HorizontalAlignment="Center" x:Name="RotatedContainer" Visibility="Collapsed" >
                                         <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" x:Name="DragHereText" Visibility="Collapsed" />
                                     </localPrimitives:RotatedContainer>
                                 </Grid>

@@ -8,8 +8,11 @@ using System.Text;
 using System.Threading.Tasks;
 using Windows.UI.Xaml.Media.Imaging;
 
-using TroopTypeCounts = COTG.DArray<COTG.Game.TroopTypeCount>;
-using TroopTypeCountsRef = COTG.DArrayRef<COTG.Game.TroopTypeCount>;
+using TroopTypeCounts = COTG.Game.TroopTypeCountsX;
+//COTG.DArray<COTG.Game.TroopTypeCount>;
+using TroopTypeCountsRef = COTG.Game.TroopTypeCountsX;
+using static COTG.Game.TroopTypeCountHelper;
+//COTG.DArrayRef<COTG.Game.TroopTypeCount>;
 
 namespace COTG.Game
 {
@@ -29,10 +32,10 @@ namespace COTG.Game
         public int split { get; set; } = 1; // splits def and sends in batches for wings
         public float travel { get; set; }
 		public int validTargets { get; set; }
-		public TroopTypeCountsRef tSend = new(true);
+		public TroopTypeCountsRef tSend = new();
 		public int tsSend
         {
-            get => tSend.v.TS();
+            get => tSend.TS();
         }
         
 
@@ -56,9 +59,9 @@ namespace COTG.Game
             {
 
                 string rv = "Troops Home/Total";
-                foreach (var ttc in city.troopsTotal)
+                foreach (var ttc in city.troopsTotal.Enumerate())
                 {
-                    rv += $"\n{Enum.ttNameWithCaps[ttc.type]}: {city.troopsHome.Count(ttc.type),4:N0}/{ttc.count,4:N0}";
+                    rv += $"\n{Enum.ttNameWithCaps[ttc.type]}: {city.troopsHome.GetCount(ttc.type),4:N0}/{ttc.count,4:N0}";
                 }
                 return rv;
             }
@@ -89,8 +92,8 @@ namespace COTG.Game
 
         public BitmapImage icon => ImageHelper.FromImages($"Icons/troops{type}.png");
         public string troopType => Enum.ttNameWithCaps[type];
-        public int send { get => supporter.tSend.v.Count(type); set => supporter.tSend.v.SetOrAdd(type,value); }
-        public int home { get => supporter.city.troopsHome.Count(type); }
-        public int total { get => supporter.city.troopsTotal.Count(type); }
+        public int send { get => supporter.tSend.GetCount(type); set => Set(ref supporter.tSend,new TroopTypeCount( type,value) ); }
+        public int home { get => supporter.city.troopsHome.GetCount(type); }
+        public int total { get => supporter.city.troopsTotal.GetCount(type); }
     }
 }
