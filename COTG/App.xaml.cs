@@ -240,15 +240,17 @@ namespace COTG
 
 		static public int storageFull = 0;
 		static ConcurrentDictionary<string, int> exceptions = new();
-		public static void RegisterException(string message)
+		public static bool RegisterException(string message)
 		{
 			if (exceptions.TryGetValue(message, out var i))
 			{
 				exceptions.TryUpdate(message, i + 1, i);
+				return false;
 			}
 			else
 			{
 				exceptions.TryAdd(message, 1);
+				return true;
 			}
 
 		}
@@ -259,20 +261,23 @@ namespace COTG
 			System.Diagnostics.Debug.WriteLine($"Unhandled Exception: " + e.Message);
 			System.Diagnostics.Debug.WriteLine(e.Exception.StackTrace);
 #endif
-			RegisterException(e.Message);
 
 			e.Handled = true;
-			try
+
+			if (RegisterException(e.Message))
 			{
-				Crashes.TrackError(e.Exception);
-				Analytics.TrackEvent("UnhandledException", new Dictionary<string, string> { { "message", e.Message } });
-			}
-			catch (Exception ex2)
-			{
+				try
+				{
+					Crashes.TrackError(e.Exception);
+					Analytics.TrackEvent("UnhandledException", new Dictionary<string, string> { { "message", e.Message } });
+				}
+				catch (Exception ex2)
+				{
 
-				RegisterException(ex2.Message);
+					RegisterException(ex2.Message);
 
 
+				}
 			}
 		}
 

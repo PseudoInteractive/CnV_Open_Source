@@ -520,7 +520,7 @@
                                             <DiscreteObjectKeyFrame KeyTime="0:0:0" Value="{ThemeResource TelerikGridServiceColumnActiveForegroundBrush}"/>
                                         </ObjectAnimationUsingKeyFrames>
                                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="DragHintGlyph" Storyboard.TargetProperty="Visibility">
-                                            <DiscreteObjectKeyFrame KeyTime="0:0:0" Value="Visible"/>
+											<DiscreteObjectKeyFrame KeyTime="0:0:0" Value="Collapsed"/>
                                         </ObjectAnimationUsingKeyFrames>
                                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="DragHereText" Storyboard.TargetProperty="Visibility">
                                             <DiscreteObjectKeyFrame KeyTime="0:0:0" Value="Collapsed"/>
@@ -542,7 +542,7 @@
                                             <DiscreteObjectKeyFrame KeyTime="0:0:0" Value="{ThemeResource TelerikGridServiceColumnActiveForegroundBrush}"/>
                                         </ObjectAnimationUsingKeyFrames>
                                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="DragHintGlyph" Storyboard.TargetProperty="Visibility">
-                                            <DiscreteObjectKeyFrame KeyTime="0:0:0" Value="Visible"/>
+											<DiscreteObjectKeyFrame KeyTime="0:0:0" Value="Collapsed"/>
                                         </ObjectAnimationUsingKeyFrames>
                                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="DragHereText" Storyboard.TargetProperty="Visibility">
                                             <DiscreteObjectKeyFrame KeyTime="0:0:0" Value="Collapsed"/>

@@ -161,14 +161,18 @@ namespace COTG
 
 			if (report)
 			{
-				try
+				if (App.RegisterException(e.Message))
 				{
-					Analytics.TrackEvent(eventName, dic);
-					Crashes.TrackError(e, dic);
-				}
-				catch(Exception ex2)
-				{
-					App.RegisterException(ex2.Message);
+
+					try
+					{
+						Analytics.TrackEvent(eventName, dic);
+						Crashes.TrackError(e, dic);
+					}
+					catch (Exception ex2)
+					{
+						App.RegisterException(ex2.Message);
+					}
 				}
 			}
 
