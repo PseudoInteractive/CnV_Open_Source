@@ -23,6 +23,7 @@ namespace COTG.Draw
 
 		public const int effects = 128;
 		public const int action = effects+8;
+		public const int actionOverlay = action + 8;
 		public const int labelText = maxLayer - 30;
 		public const int overlay = maxLayer-20;
 		public const int overlayText = maxLayer-10;

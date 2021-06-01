@@ -500,6 +500,7 @@ namespace COTG.Game
 			{
 				remarks = cn[0].GetAsString();
 				notes = cn[1].GetAsString();
+				this.UpdateTags();
 
 			}
 			if (jse.TryGetProperty("OGA", out var oga))
@@ -1819,6 +1820,7 @@ namespace COTG.Game
 	}
 	public static class CityHelpers
 	{
+		public static int CidOr0(this City c) => c != null ? c.cid : 0;
 		public static City AsCity(this int cid) => City.Get(cid);
 		public static bool TestContinentFilter(this int cid) => Spot.TestContinentFilter(cid);
 
@@ -2005,7 +2007,7 @@ namespace COTG.Game
 				   }
 				   l = filtered;
 			   }
-			   l = l.Where(a => a.testContinentFilter).OrderBy((a) => a, new CityComparer()).ToArray();
+			   l = l.Where(a => a.testContinentAndTagFilter).OrderBy((a) => a, new CityComparer()).ToArray();
 			   ShellPage.instance.cityBox.ItemsSource = l;
 			   SyncCityBox();
 			   var reserveCartsFilter = DonationTab.reserveCarts;

@@ -724,7 +724,7 @@ namespace COTG.Views
 
 			if (lvl == 0)
 			{
-				await Build(id, sel.def.bid, dryRun);
+				await Build(id, sel.def.bid, dryRun,false);
 				lvl = 1;
 			}
 			if (lvl < level)
@@ -969,7 +969,7 @@ namespace COTG.Views
 			return false;
 		}
 
-		public static async Task Build(int id, int bid, bool dryRun)
+		public static async Task Build(int id, int bid, bool dryRun, bool wantUI)
 		{
 			var sel = GetBuildingPostQueue(id);
 			if (bid != bidWall && !sel.isEmpty && !SettingsPage.extendedBuild) // special case, wall upgrade from level is allowed as a synonym for build
@@ -1066,11 +1066,11 @@ namespace COTG.Views
 						}
 						else if (counts.townHallLevel == 10 && counts.count >= 100 && usesSpot)
 						{
-							if (SettingsPage.autoDemoCottages && bid != bidCottage)
+							if (!dryRun && bid != bidCottage && wantUI)
 							{
-								var cabin = FindCabinToDemo();
-								if (cabin != -1)
-									await Demolish(cabin, dryRun);
+								int toRemove = await FindBuildingToRemoveUI();
+								if (toRemove != -1)
+									await Demolish(toRemove, dryRun);
 							}
 						}
 						await Enqueue(0, 1, bid, id);
@@ -1079,10 +1079,57 @@ namespace COTG.Views
 				}
 			}
 		}
-		public  static Task Build((int x, int y) cc, int bid, bool dryRun)
+
+		private static async Task<int> FindBuildingToRemoveUI()
+		{
+			var toRemove = -1;
+			if (SettingsPage.demoBuildingOnBuildIfFull != false)
+			{
+				var bd = QueueTab.FindExtraBuilding();
+				if (bd != -1)
+				{
+					if (SettingsPage.demoBuildingOnBuildIfFull == null)
+					{
+						var xy = await App.DoYesNoBoxSticky($"Demo {CityBuild.postQueueBuildings[bd].name} to make room?");
+						SettingsPage.demoBuildingOnBuildIfFull = xy.sticky;
+						if (!xy.rv)
+							bd = -1;
+					}
+					if (bd != -1)
+					{
+						toRemove = bd;
+					}
+				}
+			}
+			if (toRemove == -1)
+			{
+				if (SettingsPage.demoCottageOnBuildIfFull != false)
+				{
+					var bd = FindCabinToDemo();
+					if (bd != -1)
+					{
+						if (SettingsPage.demoCottageOnBuildIfFull == null)
+						{
+							var xy = await App.DoYesNoBoxSticky($"Demo cabin to make room?");
+							SettingsPage.demoCottageOnBuildIfFull = xy.sticky;
+							if (!xy.rv)
+								bd = -1;
+						}
+						if (bd != -1)
+						{
+							toRemove = bd;
+						}
+					}
+				}
+			}
+
+			return toRemove;
+		}
+
+		public  static Task Build((int x, int y) cc, int bid, bool dryRun, bool wantRemoveUI)
 		{
 			if (bid != 0)
-				return Build(XYToId(cc), bid, dryRun);
+				return Build(XYToId(cc), bid, dryRun, wantRemoveUI);
 			else
 				return Task.CompletedTask;
 		}
@@ -1490,7 +1537,7 @@ namespace COTG.Views
 						else
 						{
 
-							await SmartBuild( build,cc, build.BidFromOverlay(bspot),true,dryRun);
+							await SmartBuild( build,cc, build.BidFromOverlay(bspot),true,dryRun, wantDemoUI:true);
 
 						}
 						break;
@@ -1524,9 +1571,9 @@ namespace COTG.Views
 							if (sel != 0)
 							{
 								if(isPlanner)
-									await Build(cc, sel,  dryRun);
+									await Build(cc, sel,  dryRun,false);
 								else
-									await SmartBuild(City.GetBuild(),cc, sel, false, dryRun);
+									await SmartBuild(City.GetBuild(),cc, sel, false, dryRun, wantDemoUI: true);
 
 								break;
 							}
@@ -1657,7 +1704,7 @@ namespace COTG.Views
 		
 	}
 
-		public static async Task<int> SmartBuild(City build, (int x, int y) cc, int desBid, bool searchForSpare, bool dryRun = false, bool demoExtraBuildings=false)
+		public static async Task<int> SmartBuild(City build, (int x, int y) cc, int desBid, bool searchForSpare, bool dryRun = false, bool demoExtraBuildings=false,bool wantDemoUI=false)
 		{
 			int rv = 0;
 			var bspot = XYToId(cc);
@@ -1670,7 +1717,7 @@ namespace COTG.Views
 			}
 			if (!IsBuildingSpot(bspot))
 			{
-				await Build(cc, desBid, dryRun); ;
+				await Build(cc, desBid, dryRun,false); ;
 				return 1;
 			}
 			var usesSpot = IsBuildingSpot(bspot) && !desB.isTower && !desB.isTownHall && (bspot != bspotWall);
@@ -1773,15 +1820,24 @@ namespace COTG.Views
 					}
 					else if (counts.count >= 100)
 					{
-						if(!desB.isCabin && desBid != 0)
+						if (!desB.isCabin && desBid != 0)
 						{
-							// Is there a cabin to remove?
-							int bestSpot = demoExtraBuildings ? QueueTab.FindExtraBuilding() : -1;
-							if( bestSpot == -1)
-								bestSpot = FindCabinToDemo();
+							int bestSpot = -1;
+							if (wantDemoUI && !dryRun)
+							{
+								bestSpot = await FindBuildingToRemoveUI();
+
+							}
+							else
+							{
+								// Is there a cabin to remove?
+								bestSpot = demoExtraBuildings ? QueueTab.FindExtraBuilding() : -1;
+								if (bestSpot == -1)
+									bestSpot = FindCabinToDemo();
+							}
 							if (bestSpot != -1)
 							{
-								Status("Will Demolish a Cottage to make room", dryRun);
+								Status("Will Demolish something to make room", dryRun);
 
 								await Demolish(bestSpot, dryRun);
 								//break;
@@ -1798,7 +1854,7 @@ namespace COTG.Views
 
 					}
 					//if (counts.count < 100)
-					await Build(cc, desBid == 0 ? bidCottage : desBid, dryRun);
+					await Build(cc, desBid == 0 ? bidCottage : desBid, dryRun,false);
 
 				}
 				else
@@ -1816,7 +1872,7 @@ namespace COTG.Views
 						if (counts.count < 100 ) // can we put a cabin here?
 						{
 							Status($"No building is wanted here, how about a cottage instead?", dryRun);
-							await Build(cc, bidCottage, dryRun);
+							await Build(cc, bidCottage, dryRun, false) ;
 							++rv;
 						}
 						else
@@ -1934,7 +1990,7 @@ namespace COTG.Views
 								if (dryRun)
 									DrawSprite(hovered, decalBuildingInvalid, .31f);
 
-								await Build(cc, desBid, dryRun);
+								await Build(cc, desBid, dryRun,wantDemoUI);
 								++rv;
 							}
 						}
@@ -2403,7 +2459,7 @@ namespace COTG.Views
 				case Windows.System.VirtualKey.X: CityBuild.ShortBuild(City.bidCastle); return; //  467;
 				case Windows.System.VirtualKey.O: CityBuild.ShortBuild(City.bidPort); return; //  488;
 				case Windows.System.VirtualKey.P: CityBuild.ShortBuild(City.bidShipyard); return; //  491;
-				case Windows.System.VirtualKey.Q: SmartBuild(City.GetBuild(), hovered,City.GetBuild().BidFromOverlay(hovered), true, false); return; 
+				case Windows.System.VirtualKey.Q: SmartBuild(City.GetBuild(), hovered,City.GetBuild().BidFromOverlay(hovered), true, false, wantDemoUI: true); return; 
 
 				default:
 					break;

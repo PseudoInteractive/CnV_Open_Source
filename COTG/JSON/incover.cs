@@ -110,447 +110,454 @@ namespace COTG.JSON
 					var reportCount = 0;
 					var task0 = Task.Run(async () =>
 					  {
-						  //ConcurrentDictionary<int, Army> rs = new ConcurrentDictionary<int, Army>();
-						  using (var jsd = await Post.SendForJson("overview/incover.php", "a=0", Player.myId))
+						  try
 						  {
-							  //{
-							  //    var estimator = new Army();
-							  //    var jse = jsd.RootElement.GetProperty("b");
-							  //    foreach (var b in jse.EnumerateArray())
-							  //    {
-							  //        var atkCid = DecodeCid(5, b.GetString("attacker_locatuin"));
-							  //        var defCid = DecodeCid(5, b.GetString("defender_location"));
-
-							  //        var spotted = b.GetString("spotted").ParseDateTime();
-							  //        var time = b.GetString("arrival").ParseDateTime();
-
-							  //        Army rep = new Army();
-							  //        rep.atkP = Player.NameToId(b.GetAsString("attacker_player"));
-							  //        rep.defP = Player.NameToId(b.GetAsString("defender_player"));
-							  //        rep.atkCid = atkCid;
-							  //        rep.defCid = defCid;
-							  //        rep.time = time;
-							  //        rep.spotted = spotted;
-							  //        Spot.GetOrAdd(atkCid, b.GetAsString("attacker_city"));
-							  //        Spot.GetOrAdd(defCid, b.GetAsString("defender_city"));
-							  //        rep.aTS = b.GetAsInt("attack_ts");
-							  //        rep.dTS = b.GetAsInt("defender_ts");
-							  //        rep.dTsLeft = rep.dTS;
-							  //        rep.aTsLeft = rep.aTS;
-							  //        rep.type = b.GetString("attack_type") == "Sieging" ? Report.typeSieging : Report.typePending;
-
-							  //        rep.claim = (byte)b.GetAsFloat("baron cap %");
-
-							  //        rep.Sen = rep.claim > 0.0f;
-							  //         if (rep.type == Report.typePending)
-							  //            {
-							  //                estimator.sourceCid = atkCid;
-							  //                estimator.targetCid = defCid;
-							  //                estimator.time = time;
-							  //                estimator.spotted = spotted;
-							  //                IncommingEstimate.Get(estimator);
-							  //                bool wantComma = false;
-							  //                string troops = string.Empty;
-							  //                foreach(var tt in estimator.troops)
-							  //                {
-							  //                    if (wantComma)
-							  //                        troops += ", ";
-							  //                    else
-							  //                        wantComma = true;
-							  //                    troops += ttCategory[tt.type];
-							  //                    if (tt.count == -1)
-							  //                        troops += '?';
-							  //                    else
-							  //                        troops += $" {(tt.count)/ -10.0f}%";
-							  //                }
-							  //                estimator.troops = TroopTypeCount.empty;
-							  //                rep.troopEstimate = troops;
-							  //            }
-
-
-							  //         reportsIncoming.Add(rep);
-
-							  //    }
-							  //}
-
-							  var needToClear = new HashSet<Spot>(Spot.defendersI);
-							  //var prior = new Dictionary<long, Army>();
-							  //foreach (var spot in Spot.defendersI)
-							  //{
-							  // spot.claim = 0;
-							  // // reuse these
-							  // foreach (var i in spot.incoming)
-							  // {
-							  //  if (i.order != 0)
-							  //	  prior.Add(i.order, i);
-							  // }
-							  // spot.incoming = Army.empty;
-							  //}
-							  if (jsd.RootElement.ValueKind == JsonValueKind.Object)
+							  //ConcurrentDictionary<int, Army> rs = new ConcurrentDictionary<int, Army>();
+							  using (var jsd = await Post.SendForJson("overview/incover.php", "a=0", Player.myId))
 							  {
-								  if (jsd.RootElement.TryGetProperty("a", out var jse))
+								  //{
+								  //    var estimator = new Army();
+								  //    var jse = jsd.RootElement.GetProperty("b");
+								  //    foreach (var b in jse.EnumerateArray())
+								  //    {
+								  //        var atkCid = DecodeCid(5, b.GetString("attacker_locatuin"));
+								  //        var defCid = DecodeCid(5, b.GetString("defender_location"));
+
+								  //        var spotted = b.GetString("spotted").ParseDateTime();
+								  //        var time = b.GetString("arrival").ParseDateTime();
+
+								  //        Army rep = new Army();
+								  //        rep.atkP = Player.NameToId(b.GetAsString("attacker_player"));
+								  //        rep.defP = Player.NameToId(b.GetAsString("defender_player"));
+								  //        rep.atkCid = atkCid;
+								  //        rep.defCid = defCid;
+								  //        rep.time = time;
+								  //        rep.spotted = spotted;
+								  //        Spot.GetOrAdd(atkCid, b.GetAsString("attacker_city"));
+								  //        Spot.GetOrAdd(defCid, b.GetAsString("defender_city"));
+								  //        rep.aTS = b.GetAsInt("attack_ts");
+								  //        rep.dTS = b.GetAsInt("defender_ts");
+								  //        rep.dTsLeft = rep.dTS;
+								  //        rep.aTsLeft = rep.aTS;
+								  //        rep.type = b.GetString("attack_type") == "Sieging" ? Report.typeSieging : Report.typePending;
+
+								  //        rep.claim = (byte)b.GetAsFloat("baron cap %");
+
+								  //        rep.Sen = rep.claim > 0.0f;
+								  //         if (rep.type == Report.typePending)
+								  //            {
+								  //                estimator.sourceCid = atkCid;
+								  //                estimator.targetCid = defCid;
+								  //                estimator.time = time;
+								  //                estimator.spotted = spotted;
+								  //                IncommingEstimate.Get(estimator);
+								  //                bool wantComma = false;
+								  //                string troops = string.Empty;
+								  //                foreach(var tt in estimator.troops)
+								  //                {
+								  //                    if (wantComma)
+								  //                        troops += ", ";
+								  //                    else
+								  //                        wantComma = true;
+								  //                    troops += ttCategory[tt.type];
+								  //                    if (tt.count == -1)
+								  //                        troops += '?';
+								  //                    else
+								  //                        troops += $" {(tt.count)/ -10.0f}%";
+								  //                }
+								  //                estimator.troops = TroopTypeCount.empty;
+								  //                rep.troopEstimate = troops;
+								  //            }
+
+
+								  //         reportsIncoming.Add(rep);
+
+								  //    }
+								  //}
+
+								  var needToClear = new HashSet<Spot>(Spot.defendersI);
+								  //var prior = new Dictionary<long, Army>();
+								  //foreach (var spot in Spot.defendersI)
+								  //{
+								  // spot.claim = 0;
+								  // // reuse these
+								  // foreach (var i in spot.incoming)
+								  // {
+								  //  if (i.order != 0)
+								  //	  prior.Add(i.order, i);
+								  // }
+								  // spot.incoming = Army.empty;
+								  //}
+								  if (jsd.RootElement.ValueKind == JsonValueKind.Object)
 								  {
-									  foreach (var prop in jse.EnumerateObject())
+									  if (jsd.RootElement.TryGetProperty("a", out var jse))
 									  {
-										  ++incCount;
-										  var val = prop.Value;
-										  var cid = AUtil.DecodeCid(4, val.GetString("2"));
-										  if (cid <= 0)
-											  continue;
-
-
-										  var spot = Spot.GetOrAdd(cid, val.GetAsString("1"));
-										  var prior = spot.incoming;
-										  var incoming = new List<Army>();
-										  needToClear.Remove(spot);
-										  defenders.Add(spot);
-										  // set info if needed
-										  spot._tsHome = val.GetAsInt("8");
-										//  spot.troopsHome = TroopTypeCount.empty;
-
-
-										  var name = val.GetAsString("0");
-										  spot.pid = Player.NameToId(name);
-
-										  // round down
-										  var claim = ClaimToByte(val.GetAsFloat("4"));
-
-										  spot.claim = claim;
-										  try
+										  foreach (var prop in jse.EnumerateObject())
 										  {
-											  var scoutRange = val.GetAsString("6");
-											  var hrsMark = scoutRange.IndexOf('h');
-											  if (hrsMark >= 1)
-												  spot.scoutRange = float.Parse(scoutRange.Substring(0, hrsMark - 1));
-											  else
-											  {
-												  var minMark = scoutRange.IndexOf('m');
-												  if (minMark >= 1)
-													  spot.scoutRange = float.Parse(scoutRange.Substring(0, minMark)) / 60.0f;
+											  ++incCount;
+											  var val = prop.Value;
+											  var cid = AUtil.DecodeCid(4, val.GetString("2"));
+											  if (cid <= 0)
+												  continue;
 
-											  }
-										  }
-										  catch (Exception e)
-										  {
-											  LogEx(e);
-										  }
-										  TroopTypeCountsRef sumDef =new();
-										  var processedTroopsHome = false; // for some reason, these repeat
-										  foreach (var armyV in val.GetProperty("9").EnumerateArray())
-										  {
-											  var order = armyV.GetAsInt64("0");
-											  Army army = null;
-											  const bool reused = false;
-											  //if (order != 0)
-											  //{
-											  // foreach (var p in prior)
-											  // {
-											  //  if (p.order == order)
-											  //  {
-											  //	  army = p;
-											  //	  break;
-											  //  }
-											  // }
-											  //}
 
-											  if (army == null)
+											  var spot = Spot.GetOrAdd(cid, val.GetAsString("1"));
+											  var prior = spot.incoming;
+											  var incoming = new List<Army>();
+											  needToClear.Remove(spot);
+											  defenders.Add(spot);
+											  // set info if needed
+											  spot._tsHome = val.GetAsInt("8");
+											  //  spot.troopsHome = TroopTypeCount.empty;
+
+
+											  var name = val.GetAsString("0");
+											  spot.pid = Player.NameToId(name);
+
+											  // round down
+											  var claim = ClaimToByte(val.GetAsFloat("4"));
+
+											  spot.claim = claim;
+											  try
 											  {
-												  army = new Army() { order = order };
-												  // reused = false;
-											  }
-											  else
-											  {
-												  //  reused = true;
-											  }
-											  if (!reused)
-											  {
-												  var arrival = armyV.GetAsString("7");
-												  var home = (arrival == "home");
-												  bool onSupport = home || (arrival == "on support");
-												  if (onSupport)
+												  var scoutRange = val.GetAsString("6");
+												  var hrsMark = scoutRange.IndexOf('h');
+												  if (hrsMark >= 1)
+													  spot.scoutRange = float.Parse(scoutRange.Substring(0, hrsMark - 1));
+												  else
 												  {
-													  army.time = AUtil.dateTimeZero;
+													  var minMark = scoutRange.IndexOf('m');
+													  if (minMark >= 1)
+														  spot.scoutRange = float.Parse(scoutRange.Substring(0, minMark)) / 60.0f;
+
+												  }
+											  }
+											  catch (Exception e)
+											  {
+												  LogEx(e);
+											  }
+											  TroopTypeCountsRef sumDef = new();
+											  var processedTroopsHome = false; // for some reason, these repeat
+											  foreach (var armyV in val.GetProperty("9").EnumerateArray())
+											  {
+												  var order = armyV.GetAsInt64("0");
+												  Army army = null;
+												  const bool reused = false;
+												  //if (order != 0)
+												  //{
+												  // foreach (var p in prior)
+												  // {
+												  //  if (p.order == order)
+												  //  {
+												  //	  army = p;
+												  //	  break;
+												  //  }
+												  // }
+												  //}
+
+												  if (army == null)
+												  {
+													  army = new Army() { order = order };
+													  // reused = false;
 												  }
 												  else
 												  {
-													  army.time = arrival.ParseDateTime();
+													  //  reused = true;
 												  }
-												  army.claim = claim;
-												  army.targetCid = cid;
-												  var type = armyV.GetAsInt("5");
-												  if (type != 3)
+												  if (!reused)
 												  {
-
-													  army.isAttack = true; // 0 is incoming 1 is sieging I think
-																			// var armyPid = armyV.GetAsString("1");
-																			//army.pid = armyPid switch
-																			//{
-																			//    "Troops home" => spot.pid,
-																			//    var name => Player.NameToId(name)
-																			//};
-													  if (type == 0)
-														  army.type = reportPending;
+													  var arrival = armyV.GetAsString("7");
+													  var home = (arrival == "home");
+													  bool onSupport = home || (arrival == "on support");
+													  if (onSupport)
+													  {
+														  army.time = AUtil.dateTimeZero;
+													  }
 													  else
 													  {
-														  Assert(type == 1);
-														  army.type = reportSieging;
+														  army.time = arrival.ParseDateTime();
 													  }
-												  }
-												  else
-												  {
-													  // defense
-													  army.type = home ? reportDefenseStationed : reportDefensePending;
-												  }
-
-
-
-
-
-												  if (home)
-												  {
-													  // for some reason these get duplicated
-													  if (processedTroopsHome)
-														  continue;
-													  processedTroopsHome = true;
-
-													  army.sourceCid = cid;
-												  }
-												  else
-												  {
-													  army.sourceCid = armyV.GetAsInt("11");
-													  //    var sourceSpot = Spot.GetOrAdd(army.sourceCid, army.sPid);
-
-												  }
-
-												  if (armyV.TryGetProperty("6", out var p6) && (p6.ValueKind == System.Text.Json.JsonValueKind.String))
-												  {
-													  army.spotted = p6.GetString().ParseDateTime();
-												  }
-												  else
-												  {
-													  army.spotted = army.time - TimeSpan.FromSeconds(cid.DistanceToCidD(army.sourceCid) * TTTravel(ttScout));
-												  }
-											  }
-											  var source = Spot.GetOrAdd(army.sourceCid);
-
-											  TroopTypeCountsRef ttl = new();
-											  if (!reused || army.isDefense)
-											  {
-												  if (armyV.TryGetProperty("3", out var ttp))
-												  {
-
-													  foreach (var tt in ttp.EnumerateArrayOrObject())
+													  army.claim = claim;
+													  army.targetCid = cid;
+													  var type = armyV.GetAsInt("5");
+													  if (type != 3)
 													  {
-														  var str = tt.GetAsString();
-														  int firstSpace = str.IndexOf(' ');
 
-														  var ttype = Game.Enum.ttNameWithCapsAndBatteringRam.IndexOf(str.Substring(firstSpace + 1));
-														  if (ttype != -1)
-														  {
-															  Add( ref ttl, new TroopTypeCount()
-															  {
-																  count = int.Parse(str.Substring(0, firstSpace), System.Globalization.NumberStyles.Number, NumberFormatInfo.InvariantInfo),
-																  type = ttype >= 0 ? ttype : 0
-															  });
-														  }
+														  army.isAttack = true; // 0 is incoming 1 is sieging I think
+																				// var armyPid = armyV.GetAsString("1");
+																				//army.pid = armyPid switch
+																				//{
+																				//    "Troops home" => spot.pid,
+																				//    var name => Player.NameToId(name)
+																				//};
+														  if (type == 0)
+															  army.type = reportPending;
 														  else
 														  {
-															  Assert(false);
+															  Assert(type == 1);
+															  army.type = reportSieging;
 														  }
+													  }
+													  else
+													  {
+														  // defense
+														  army.type = home ? reportDefenseStationed : reportDefensePending;
+													  }
+
+
+
+
+
+													  if (home)
+													  {
+														  // for some reason these get duplicated
+														  if (processedTroopsHome)
+															  continue;
+														  processedTroopsHome = true;
+
+														  army.sourceCid = cid;
+													  }
+													  else
+													  {
+														  army.sourceCid = armyV.GetAsInt("11");
+														  //    var sourceSpot = Spot.GetOrAdd(army.sourceCid, army.sPid);
 
 													  }
+
+													  if (armyV.TryGetProperty("6", out var p6) && (p6.ValueKind == System.Text.Json.JsonValueKind.String))
+													  {
+														  army.spotted = p6.GetString().ParseDateTime();
+													  }
+													  else
+													  {
+														  army.spotted = army.time - TimeSpan.FromSeconds(cid.DistanceToCidD(army.sourceCid) * TTTravel(ttScout));
+													  }
 												  }
-											  }
+												  var source = Spot.GetOrAdd(army.sourceCid);
 
-
-											  if (army.isDefense)
-											  {
-
-												  if (ttl.Count == 0)
-													  continue; // skip empty entries for troops at home when no def is present.
-												  Add( ref sumDef, ttl);
-												  army.troops = ( ttl );
-												  Assert(army.troops.Any());
-											  }
-											  else
-											  {
-												  // not sieging
-												  if (army.type == reportPending)
+												  TroopTypeCountsRef ttl = new();
+												  if (!reused || army.isDefense)
 												  {
-
-													  //if (source.isClassified && army.troops.Length == 1 && army.troops[0].type == ttPending)
-													  //{
-													  //  army.miscInfo = COTG.Game.IncomingEstimate.Get(army);
-													  //}
-													  //else
+													  if (armyV.TryGetProperty("3", out var ttp))
 													  {
 
-														  source.QueueClassify(true);
+														  foreach (var tt in ttp.EnumerateArrayOrObject())
+														  {
+															  var str = tt.GetAsString();
+															  int firstSpace = str.IndexOf(' ');
 
-														  COTG.Game.IncomingEstimate.Get(army);
-														  // if (source.classification == Spot.Classification.pending)
+															  var ttype = Game.Enum.ttNameWithCapsAndBatteringRam.IndexOf(str.Substring(firstSpace + 1));
+															  if (ttype != -1)
+															  {
+																  Add(ref ttl, new TroopTypeCount()
+																  {
+																	  count = int.Parse(str.Substring(0, firstSpace), System.Globalization.NumberStyles.Number, NumberFormatInfo.InvariantInfo),
+																	  type = ttype >= 0 ? ttype : 0
+																  });
+															  }
+															  else
+															  {
+																  Assert(false);
+															  }
+
+														  }
+													  }
+												  }
+
+
+												  if (army.isDefense)
+												  {
+
+													  if (ttl.Count == 0)
+														  continue; // skip empty entries for troops at home when no def is present.
+													  Add(ref sumDef, ttl);
+													  army.troops = (ttl);
+													  Assert(army.troops.Any());
+												  }
+												  else
+												  {
+													  // not sieging
+													  if (army.type == reportPending)
+													  {
+
+														  //if (source.isClassified && army.troops.Length == 1 && army.troops[0].type == ttPending)
+														  //{
+														  //  army.miscInfo = COTG.Game.IncomingEstimate.Get(army);
+														  //}
+														  //else
+														  {
+
+															  source.QueueClassify(true);
+
+															  COTG.Game.IncomingEstimate.Get(army);
+															  // if (source.classification == Spot.Classification.pending)
+															  // {
+															  //	  army.miscInfo = "pending " + army.miscInfo;
+															  // }
+
+														  }
+													  }
+													  else
+													  {
+														  // if (!reused)
+														  {
+															  if (ttl.Any())
+															  {
+																  army.troops = (ttl);
+																  Assert(army.troops.count >= 1);
+															  }
+															  else
+															  {
+																  // this will early out if its already queued
+																  source.QueueClassify(true);
+																  Set(ref army.troops, new TroopTypeCount(source.classificationTT, -1));
+																  Assert(army.troops.Count == 1);
+															  }
+
+														  }
+														  //else
+														  //{
+														  // // intel ready now
+														  // if (source.isClassified && army.troops.Length == 1 && army.troops[0].type == ttPending)
 														  // {
-														  //	  army.miscInfo = "pending " + army.miscInfo;
+														  //  COTG.Game.IncomingEstimate.Get(army);
+
+														  // }
+														  //}
+
+														  {
+															  if (army.claim > 0)
+																  army.miscInfo = $"Claim {claim}%";
+															  else
+																  army.miscInfo = "Sieging";
+														  }
+													  }
+
+
+
+
+
+													  if (((army.type == reportPending) || (army.type == reportSieging && (army.claim > 0))) && !reused)
+													  {
+
+
+
+														  //if (Discord.isValid && _hasRun)
+														  //{
+
+
+														  // if (++reportCount < 64)
+														  // {
+														  //  if (await Cosmos.TryAddOrder(order))
+														  //  {
+														  //	  App.EnqeueTask(async () =>
+														  //	  {
+														  //		  try
+														  //		  {
+														  //			  var name = army.tPlayer;
+														  //			  if (!Discord.members.TryGetValue(name.ToLower(), out var tag))
+														  //				  tag = name;
+														  //			  var target = Spot.GetOrAdd(army.targetCid);
+														  //			  var _source = Spot.GetOrAdd(army.sourceCid);
+														  //			  while (!_source.isClassified)
+														  //			  {
+														  //				  await Task.Delay(400);
+														  //			  }
+														  //			  var content = $"<@{tag}> {(army.sourceAlliance == Alliance.myId ? "internal " : "")} {army.time.FormatSkipDateIfToday()}: {_source.classificationString}, {army.miscInfo} to {target.cityName} ({target.xy}) from  {_source.cityName} ({_source.xy}) {_source.player}";
+														  //			  if (army.claim > 0)
+														  //			  {
+														  //				  content += $" claim {army.claim}%";
+														  //			  }
+														  //		  //  Note.Show(content);
+
+														  //		  var client = JSClient.genericClient;
+
+
+														  //			  var message = new Discord.Message() { username = "INCOMING", content = content, avatar_url = "" };
+														  //			  for (int i = 0; i < 4; ++i) // retry up to 4 times;
+														  //		  {
+
+														  //				  var post = new HttpStringContent(
+														  //								JsonSerializer.Serialize(message), Windows.Storage.Streams.UnicodeEncoding.Utf8,
+														  //								 "application/json");
+
+														  //				  var result = await client.PostAsync(Discord.discordIncomingHook, post);
+														  //				  if (result.StatusCode == HttpStatusCode.TooManyRequests)
+														  //				  {
+														  //					  await Task.Delay(2000); // wait 2 seconds
+														  //			  }
+														  //				  else
+														  //				  {
+														  //					  result.EnsureSuccessStatusCode();
+														  //					  break;
+														  //				  }
+														  //			  }
+														  //		  }
+														  //		  catch (Exception ex)
+														  //		  {
+														  //			  Log(ex);
+														  //		  }
+														  //	  });
+														  //  }
 														  // }
 
+
+														  //}
+
 													  }
-												  }
-												  else
-												  {
-													  // if (!reused)
+													  if (!Alliance.IsAlly(army.sourceAlliance))
 													  {
-														  if (ttl.Any() )
+														  if (watch.Contains(name))
 														  {
-															  army.troops = ( ttl );
-															  Assert(army.troops.count>=1);
+															  watchIncoming.count++;
+															  if (army.time < watchIncoming.first)
+															  {
+																  watchIncoming.first = army.time;
+																  watchIncoming.firstArmy = army;
+															  }
 														  }
-														  else
+														  if (spot.pid == Player.myId)
 														  {
-															  // this will early out if its already queued
-															  source.QueueClassify(true);
-															  Set(ref army.troops, new TroopTypeCount(source.classificationTT, -1) );
-															 Assert(army.troops.Count==1);
-														  }
-
-													  }
-													  //else
-													  //{
-													  // // intel ready now
-													  // if (source.isClassified && army.troops.Length == 1 && army.troops[0].type == ttPending)
-													  // {
-													  //  COTG.Game.IncomingEstimate.Get(army);
-
-													  // }
-													  //}
-
-													  {
-														  if (army.claim > 0)
-															  army.miscInfo = $"Claim {claim}%";
-														  else
-															  army.miscInfo = "Sieging";
-													  }
-												  }
-												  
-
-
-
-
-												  if (((army.type == reportPending) || (army.type == reportSieging && (army.claim > 0))) && !reused)
-												  {
-
-
-
-													  //if (Discord.isValid && _hasRun)
-													  //{
-
-
-													  // if (++reportCount < 64)
-													  // {
-													  //  if (await Cosmos.TryAddOrder(order))
-													  //  {
-													  //	  App.EnqeueTask(async () =>
-													  //	  {
-													  //		  try
-													  //		  {
-													  //			  var name = army.tPlayer;
-													  //			  if (!Discord.members.TryGetValue(name.ToLower(), out var tag))
-													  //				  tag = name;
-													  //			  var target = Spot.GetOrAdd(army.targetCid);
-													  //			  var _source = Spot.GetOrAdd(army.sourceCid);
-													  //			  while (!_source.isClassified)
-													  //			  {
-													  //				  await Task.Delay(400);
-													  //			  }
-													  //			  var content = $"<@{tag}> {(army.sourceAlliance == Alliance.myId ? "internal " : "")} {army.time.FormatSkipDateIfToday()}: {_source.classificationString}, {army.miscInfo} to {target.cityName} ({target.xy}) from  {_source.cityName} ({_source.xy}) {_source.player}";
-													  //			  if (army.claim > 0)
-													  //			  {
-													  //				  content += $" claim {army.claim}%";
-													  //			  }
-													  //		  //  Note.Show(content);
-
-													  //		  var client = JSClient.genericClient;
-
-
-													  //			  var message = new Discord.Message() { username = "INCOMING", content = content, avatar_url = "" };
-													  //			  for (int i = 0; i < 4; ++i) // retry up to 4 times;
-													  //		  {
-
-													  //				  var post = new HttpStringContent(
-													  //								JsonSerializer.Serialize(message), Windows.Storage.Streams.UnicodeEncoding.Utf8,
-													  //								 "application/json");
-
-													  //				  var result = await client.PostAsync(Discord.discordIncomingHook, post);
-													  //				  if (result.StatusCode == HttpStatusCode.TooManyRequests)
-													  //				  {
-													  //					  await Task.Delay(2000); // wait 2 seconds
-													  //			  }
-													  //				  else
-													  //				  {
-													  //					  result.EnsureSuccessStatusCode();
-													  //					  break;
-													  //				  }
-													  //			  }
-													  //		  }
-													  //		  catch (Exception ex)
-													  //		  {
-													  //			  Log(ex);
-													  //		  }
-													  //	  });
-													  //  }
-													  // }
-
-
-													  //}
-
-												  }
-												  if (!Alliance.IsAlly(army.sourceAlliance))
-												  {
-													  if (watch.Contains(name))
-													  {
-														  watchIncoming.count++;
-														  if (army.time < watchIncoming.first)
-														  {
-															  watchIncoming.first = army.time;
-															  watchIncoming.firstArmy = army;
+															  if (army.time < personalIncoming.first)
+															  {
+																  personalIncoming.first = army.time;
+																  personalIncoming.firstArmy = army;
+															  }
+															  ++personalIncoming.count;
 														  }
 													  }
-													  if (spot.pid == Player.myId)
-													  {
-														  if (army.time < personalIncoming.first)
-														  {
-															  personalIncoming.first = army.time;
-															  personalIncoming.firstArmy = army;
-														  }
-														  ++personalIncoming.count;
-													  }
-												  }
 
 
-											  } // if attack
-											  army.sumDef = ( sumDef );
-											//  army.sumDef.Sort();
+												  } // if attack
+												  army.sumDef = (sumDef);
+												  //  army.sumDef.Sort();
 
 
-											//  army.troops.Sort();
-											  incoming.Add(army);
+												  //  army.troops.Sort();
+												  incoming.Add(army);
 
-											  if (!army.isDefense && fetchReports)
-												  reportsIncoming.Add(army);
+												  if (!army.isDefense && fetchReports)
+													  reportsIncoming.Add(army);
 
 
-											  //  spot.tsMax = sumDef.TS();
+												  //  spot.tsMax = sumDef.TS();
+											  }
+											  spot.incoming = incoming.ToArray();
 										  }
-										  spot.incoming = incoming.ToArray();
 									  }
 								  }
-							  }
 
-							  foreach (var spot in needToClear)
-							  {
-								  spot.claim = 0;
-								  spot.incoming = Army.empty;
-							  }
+								  foreach (var spot in needToClear)
+								  {
+									  spot.claim = 0;
+									  spot.incoming = Army.empty;
+								  }
 
+							  }
+						  }
+						  catch(Exception ex)
+						  {
+							  LogEx(ex, eventName:"IncomingOverview", report: false);
 						  }
 
 					  });
@@ -867,7 +874,7 @@ namespace COTG.JSON
 									}
 								}
 								killNote = $", {atkKilled:N0}({myAtkKilled:N0})TS atk ts killed, {defKilled:N0}({myDefKilled:N0})TS def Killed";
-								App.CopyTextToClipboard(killNote);
+							//	App.CopyTextToClipboard(killNote);
 								// App.DispatchOnUIThread(() =>
 								// We should do this on the Render Thread
 								defPage.SetHistory((reportsIncoming.OrderByDescending((atk) => atk.time.Ticks)).ToArray());

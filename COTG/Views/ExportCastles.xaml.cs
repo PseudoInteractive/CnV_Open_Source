@@ -32,12 +32,15 @@ namespace COTG.Views
 		{
 			this.InitializeComponent();
 		}
-		public static void Go()
+		public static async void Go()
 		{
-			App.DispatchOnUIThreadSneaky( async () =>
-		   {
-			   SettingsPage.HideMe();
+			SettingsPage.HideMe();
+			{
+				if (!await ContinentTagFilter.Show())
+					return;
 
+			}
+			{ 
 			   int sumDef=0;
 			   int sumOff = 0;
 			   int sumCastles=0;
@@ -200,7 +203,7 @@ namespace COTG.Views
 
 			   });
 		   }
-		   );
+		   
 		}
 	}
 }

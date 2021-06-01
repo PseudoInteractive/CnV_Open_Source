@@ -85,7 +85,8 @@ namespace COTG.Views
 		public static bool wantRaidRepeat=true;
 		public static bool clearRes;
 		public static bool embedTradeInShareStrings = true;
-		public static bool autoDemoCottages=true;
+		public static bool? demoCottageOnBuildIfFull;
+		public static bool? demoBuildingOnBuildIfFull;
 		public static int startCabinCount = 39;
 		public static float fontScale = 0.5f;
 		public static float musicVolume = 0.5f;
@@ -265,6 +266,7 @@ namespace COTG.Views
 
 		}
 		public static float raidCarryMin = 1.15f;
+		public static float raidCarryTarget = 1.15f;
 		public static float raidCarryMax = 1.80f;
 		public static int intialStorehouses=1;
 		public static bool IsThemeWinter()

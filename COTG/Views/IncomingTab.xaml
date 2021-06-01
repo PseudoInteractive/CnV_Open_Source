@@ -26,6 +26,7 @@
 					<x:String>Me</x:String>
 			</winui:RadioButtons>
 			<ToggleSwitch IsOn="{x:Bind includeInternal,Mode=TwoWay}" Header="Internal" OffContent="Exclude" OnContent="Include" Toggled="filterChanged" />
+			<Button Content="To Sheet" Click="ExportSheetsClick" />
 
 		</tk:WrapPanel>
 		<tg:RadDataGrid x:Name="defenderGrid"

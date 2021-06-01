@@ -437,7 +437,7 @@ namespace COTG.JSON
                             }
                             killNote= $", {atkKilled:N0}({myAtkKilled:N0})TS atk killed, {defKilled:N0}({myDefKilled:N0})TS def Killed";
                         }
-                        App.CopyTextToClipboard(killNote);
+  //                      App.CopyTextToClipboard(killNote);
 
                         OutgoingTab.NotifyOutgoingUpdated();
 

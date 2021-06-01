@@ -14,8 +14,11 @@
 	 xmlns:game="using:COTG.Game"
 	xmlns:tg="using:Telerik.UI.Xaml.Controls.Grid"
 	DefaultButton="Close"
-   xmlns:tgCore="using:Telerik.Data.Core"
-    CloseButtonText="Cancel"
+	   xmlns:tgCore="using:Telerik.Data.Core"
+    CloseButtonText="Close"
+	IsPrimaryButtonEnabled="False"
+	IsSecondaryButtonEnabled="False"
+	
    >
 
 	<StackPanel TabFocusNavigation="Cycle" >
@@ -81,23 +84,34 @@
 						  TabFocusNavigation="Cycle">
 			<ComboBox x:Name="raidCarryMinBox"
 						  Header="Min Carry%"
-						  DropDownClosed="RaidCarryMinChanged"
+						  DropDownClosed="RaidCarrySelChanged"
 							Width="80"
-						  IsTabStop="True"
+					 	  IsTabStop="True"
 					  TabFocusNavigation="Cycle"
 						  FontSize="{StaticResource MediumFontSize}"
 						  IsTextScaleFactorEnabled="False"
 						  IsEditable="True"
-						  TextSubmitted="RaidCarryMinSubmitted"
+						TextSubmitted="RaidCarrySubmitted"
 						  Margin="4" ToolTipService.ToolTip="Troops will be divided up into batches that will carry this amount or greater.  Dungeons that that require more troops than the city has at home will not be shown.  When raid carry % drops below 100% your raiding income is as high as it is at 100% but your raiding losses will be higher.  As the dungeon progresses the loot per raid goes up, along with the strength of the monsters, thereby resuling in progressively greater losses.  Establishing an upper bound on the resulting raid loses is that rationale behind setting a min carry above 100%" />
-			<ComboBox x:Name="raidCarryMaxBox"
-						  Header="Max Carry%"
-						  DropDownClosed="RaidCarryMaxSelChanged"
-						  Width="80"
+			<ComboBox x:Name="raidCarryTargetBox"
+						  Header="Target Carry%"
+						  DropDownClosed="RaidCarrySelChanged"
+							Width="80"
+					 	  IsTabStop="True"
+					  TabFocusNavigation="Cycle"
 						  FontSize="{StaticResource MediumFontSize}"
 						  IsTextScaleFactorEnabled="False"
 						  IsEditable="True"
-						  TextSubmitted="RaidCarryMaxSubmitted"
+						  TextSubmitted="RaidCarrySubmitted"
+						  Margin="4" ToolTipService.ToolTip="Raids will be selected that are as close as possible to this target, provided that they are greater than carry Min and less than carry Max" />
+			<ComboBox x:Name="raidCarryMaxBox"
+						  Header="Max Carry%"
+						  DropDownClosed="RaidCarrySelChanged"
+						  Width="80"
+						  FontSize="{StaticResource MediumFontSize}"
+					 	  IsTextScaleFactorEnabled="False"
+						  IsEditable="True"
+						  TextSubmitted="RaidCarrySubmitted"
 						  Margin="4" ToolTipService.ToolTip="If the resulting raids computed via min Carry have a carry % that is greater than this number, the dungeon will be ignored.  Total raiding income goes down as carry % goes up (startong at 100%) and sometimes it is better to send to a farther dungeon if that dungeons carry % is closer to 100%.  A common case where a high % carry is required is when you attempt to raid a lower level dungeon and you run out of command slots" />
 			<winui:DropDownButton x:Name="includeButton"
 									  Content="Include"
@@ -156,12 +170,12 @@
 								  OnContent="Enough"
 								  OffContent="All"
 								  Margin="6,2,6,2" />
-			<ToggleSwitch     Header="Return Troops" Width="90"
+			<!--<ToggleSwitch     Header="Return Troops" Width="90"
 								  FontSize="{StaticResource MediumFontSize}"
 								  IsOn="{x:Bind view:SettingsPage.returnRaidsBeforeSend,Mode=TwoWay}"
 								  OnContent="Return, then send"
 								  OffContent="Send whoomever is home" ToolTipService.ToolTip="This will bring your troops home and then schedule the raids to be sent, which allows you to reset to a more favorable carry % without waiting fdor them to come home first.   Note:  This requires about double the command slots, only dungeons that you can raid effectively with half your command slots will be shown, otherwise the carry % would be too high"
-								  Margin="6,2,6,2" />
+								  Margin="6,2,6,2" />-->
 
 		</tk:WrapPanel>
 

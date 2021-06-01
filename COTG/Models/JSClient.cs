@@ -787,14 +787,14 @@ namespace COTG
 			try
 			{
 
+				var p = JsonSerializer.Deserialize<AttackSenderScript>(cmd);
+				await CitySwitch(p.cid, false);
 
 				await App.DispatchOnUIThreadTask(async () =>
 				{
 					await view.InvokeScriptAsync("openAttackSender", new string[] { cmd });
 				});
-				var p = JsonSerializer.Deserialize<AttackSenderScript>(cmd);
 				await Task.Delay(500);
-				await CitySwitch(p.cid, false);
 			}
 			catch (Exception e)
 			{
@@ -1193,8 +1193,8 @@ namespace COTG
 						}
 					}
 
-					if (World.completed)
-						GetWorldInfo.Send();
+				//	if (World.completed)
+				//		GetWorldInfo.Send();
 				}
 
 				if (jse.TryGetProperty("mvb", out var mvb))
@@ -1379,6 +1379,7 @@ namespace COTG
 					{
 						city.remarks = name.Substring(i + 2);
 						city._cityName = name.Substring(0, i - 1);
+						city.UpdateTags();
 					}
 					else
 					{
@@ -2099,6 +2100,7 @@ namespace COTG
 									   city.pid = pid; // todo: this shoule be an int playerId
 									   city.type = jso.GetAsByte("type");
 									   city.remarks = jso.GetAsString("notes");                //Assert(city.pid > 0);
+									   city.UpdateTags();
 									   city.points = (ushort)jso.GetAsInt("score");
 									   //   city.alliance = jso.GetString("alliance"); // todo:  this should be an into alliance id
 									   //       city.lastAccessed = DateTimeOffset.UtcNow;

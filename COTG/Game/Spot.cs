@@ -59,11 +59,17 @@ namespace COTG.Game
 		// indexed by PackedContinentId
 		public const ulong continentFilterAll = 0xfffffffffffffffful;
 		public static ulong continentFilter = continentFilterAll;
+
+		public static Tags tagFilter = default;
+
 		public static ulong ContinentFilterFlag(int id) => 1ul << id;
 		public static bool isContinentFilterAll => continentFilter == continentFilterAll;
 		public static bool TestContinentFilterPacked(int id) => (continentFilter& ContinentFilterFlag(id))!=0;
 		public static void SetContinentFilterPacked(int id, bool set) => continentFilter = (continentFilter&(~ContinentFilterFlag(id))) | ( set ? ContinentFilterFlag(id) : 0ul );
 		public bool testContinentFilter => TestContinentFilter(cid);
+		public bool testTagFilter => (tagFilter == default) | ((tagFilter & tags) != 0);
+		public bool testContinentAndTagFilter => TestContinentFilter(cid) & testTagFilter;
+
 		public static bool TestContinentFilter(int cid) => (continentFilter & ContinentFilterFlag(World.CidToPackedContinent(cid))) != 0;
 
 		public static bool TryGet(int cid, out City spot) => allSpots.TryGetValue(cid, out spot);
@@ -129,7 +135,7 @@ namespace COTG.Game
 		}
 		public static void UpdateName(int cid, string name) => GetOrAdd(cid, name);
 
-		internal bool HasTag(Tags tag) => tag.IsSet(remarks);
+		internal bool HasTag(Tags tag) => (tags&tag)==tag;
 
 		public bool isMine => pid == Player.myId;
 
@@ -408,10 +414,16 @@ namespace COTG.Game
 
 		public void ExportToDefenseSheet()
 		{
+			var cids = GetSelectedForContextMenu(cid, false);
+			ExportToDefenseSheet(cids);
+		}
+		public static void ExportToDefenseSheet(List<int> cids)
+		{		
+
 			using var work = new WorkScope($"Export Def");
 			var sb = new StringBuilder();
-			sb.Append("Player\tCont\tCoords\tFirst\tTarget Def\tDef Incoming\t# attacks\tIntel\n");
-			foreach (var _cid in GetSelectedForContextMenu(cid, false))
+			sb.Append("Player\tCont\tCoords\tFirst\tDefIncoming\t#Attacks\tTemple\tWater\tIntel\n");
+			foreach (var _cid in cids)
 			{
 				var s = Spot.GetOrAdd(_cid);
 				if (s.incoming.Any())
@@ -424,12 +436,14 @@ namespace COTG.Game
 					sb.Append('\t');
 					sb.Append(s.incoming.Where(x => x.isAttack).First()?.time.FormatSkipDateIfToday() ?? "??");
 					sb.Append('\t');
-					sb.Append("1000000");
-					sb.Append('\t');
 					var ts = s.tsDefMax;
 					sb.Append(ts);
 					sb.Append('\t');
 					sb.Append(s.incomingAttacks);
+					sb.Append('\t');
+					sb.Append(s.isTemple);
+					sb.Append('\t');
+					sb.Append(s.isOnWater);
 					sb.Append('\t');
 					sb.Append(s.incTT);
 					sb.Append('\n');
@@ -437,7 +451,7 @@ namespace COTG.Game
 			}
 			App.CopyTextToClipboard(sb.ToString());
 
-			Note.Show("Exported to clipboard for sheets");
+			Note.Show($"Exported {cids.Count} to clipboard for sheets");
 		}
 
 		// The UIElement returned will be the RadDataGrid
@@ -673,7 +687,7 @@ namespace COTG.Game
 
 		public string ToTsv()
 		{
-			return $"{cid.CidToCoords()}\t{this.playerName}\t{this.cityName}\t{this.remarks ?? ""}\t{this.alliance}\t{this.isCastle}\t{this.isOnWater}";
+			return $"{cid.CidToCoords()}\t{this.playerName}\t{this.cityName}\t{this.remarks ?? ""}\t{this.alliance}\t{this.isCastle}\t{this.isOnWater}\t{this.isTemple}\t{GetTroopsString(";")}";
 		}
 
 		public static async void ProcessCoordClick(int cid, bool lazyMove, VirtualKeyModifiers mod, bool scrollIntoUI = false)
@@ -1711,7 +1725,7 @@ namespace COTG.Game
 
 
 		public string nameMarkdown => $"[{nameAndRemarks}](/c/{cid.CidToString()})";
-		
+		public Tags tags;
 		public static bool OnKeyDown(object _spot, VirtualKey key)
 		{
 			var spot = _spot as Spot;
@@ -1867,8 +1881,8 @@ namespace COTG.Game
 				if (incoming.Any())
 					aWar.AddItem( "Incoming", ShowIncoming);
 
-
-				aWar.AddItem("Recruit Sen", (_, _) => Recruit.Send(cid, ttSenator,1));
+				if(Raid.test)
+					aWar.AddItem("Recruit Sen", (_, _) => Recruit.Send(cid, ttSenator,1));
 				aWar.AddItem( "Send Defence", (_, _) => JSDefend(cid));
 				aWar.AddItem( "Show Reinforcements", (_, _) => Reinforcement.ShowReturnDialog(cid, uie));
 				aExport.AddItem( "Defense Sheet", ExportToDefenseSheet);
@@ -1967,7 +1981,7 @@ namespace COTG.Game
 		{
 			if (allianceId == Alliance.myId)
 			{
-				IncomingTab tab = IncomingTab.instance;
+				var tab = IncomingTab.instance;
 				App.DispatchOnUIThreadSneakyLow( ()=> tab.Show() );
 				for (; ; )
 				{

@@ -113,16 +113,17 @@ namespace COTG.Game
             if (carry <= 0 || city.freeCommandSlots==0)
                 return (0, 0,0,false);
 			//   Log($"{desiredCarry} {carry / (loot * desiredCarry)}");
-			var  idealf = (carry / (loot * SettingsPage.raidCarryMin) );
-			int ideal = (int)(idealf);  // carry at least the ideal amount
-		    ideal = Math.Min(ideal, city.freeCommandSlots ).Max(1);
-			if (idealf < ideal )//|| !SettingsPage.raidSendExact)
-				idealf = ideal;
+			var  idealf = (carry / (loot * SettingsPage.raidCarryTarget) );
+			var ideal = idealf.RoundToInt();
+			var minC = (int)(carry / (loot * SettingsPage.raidCarryMin));
+			if (ideal > minC)
+				ideal = minC;
+			ideal = Math.Min(ideal, city.freeCommandSlots ).Max(1);
 			var averageCarry = carry / (ideal.Max(1) * loot);
 			var isValid = (ideal != 0 && averageCarry < SettingsPage.raidCarryMax) && averageCarry > SettingsPage.raidCarryMin && d.completion > SettingsPage.minDungeonProgress && (loot * 32 > city.CarryCapacityIncludeAway(d.isWater));
 
 
-			return (ideal, averageCarry,idealf, isValid);
+			return (ideal, averageCarry,idealf.Max(1f), isValid);
         }
 
 

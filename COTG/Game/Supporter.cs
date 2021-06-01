@@ -30,8 +30,9 @@ namespace COTG.Game
         public int tsHome => NearDefenseTab.includeOffense ? city.tsHome : city.tsDefHome;
         public int tsTotal => NearDefenseTab.includeOffense ? city.tsTotal : city.tsDefTotal;
         public int split { get; set; } = 1; // splits def and sends in batches for wings
-        public float travel { get; set; }
+		public float travel;
 		public int validTargets { get; set; }
+		public string travelTime => TimeSpan.FromHours(travel).Format();
 		public TroopTypeCountsRef tSend = new();
 		public int tsSend
         {

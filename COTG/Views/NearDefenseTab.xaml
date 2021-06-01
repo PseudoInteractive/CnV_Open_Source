@@ -154,7 +154,7 @@
                     </tk:DataGridTemplateColumn.CellTemplate>
                 </tk:DataGridTemplateColumn>
                 <tk:DataGridTextColumn  Header="DT" 
-                                        Binding="{Binding travel, Converter={StaticResource FloatConverter},Mode=OneTime}"
+                                        Binding="{Binding travelTime,Mode=OneTime}"
                                         IsReadOnly="True" Tag="travel"
                                             CellStyle="{StaticResource CellCenter}"
                                              />

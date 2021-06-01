@@ -136,7 +136,7 @@ namespace COTG.Services
 				AppCenter.SetMaxStorageSizeAsync(16 * 1024 * 1024).ContinueWith((storageTask) => {
 					// The storageTask.Result is false when the size cannot be honored.
 				});
-				AppCenter.LogLevel = System.Diagnostics.Debugger.IsAttached ? Microsoft.AppCenter.LogLevel.Debug : Microsoft.AppCenter.LogLevel.Error;
+				AppCenter.LogLevel = System.Diagnostics.Debugger.IsAttached ? Microsoft.AppCenter.LogLevel.Warn : Microsoft.AppCenter.LogLevel.Error;
 				AppCenter.Start("0b4c4039-3680-41bf-b7d7-685eb68e21d2",
 				   typeof(Analytics), typeof(Crashes));
 				await Crashes.SetEnabledAsync(true);

@@ -1009,6 +1009,9 @@ namespace COTG.Views
 
 		public static void ContinentFilterClick(object sender, RoutedEventArgs e)
 		{
+			ContinentTagFilter.Show();
+			/*
+
 			var button = sender as Microsoft.UI.Xaml.Controls.DropDownButton;
 			var flyout = new MenuFlyout();
 
@@ -1026,58 +1029,59 @@ namespace COTG.Views
 			flyout.CopyXamlRoomFrom(button);
 			flyout.Closing += ContinentFilterClosing;
 			flyout.ShowAt(button);
+			*/
 		}
 
-		private static void ContinentFilterClosing(Windows.UI.Xaml.Controls.Primitives.FlyoutBase sender, Windows.UI.Xaml.Controls.Primitives.FlyoutBaseClosingEventArgs args)
-		{
-			var menu = (sender as MenuFlyout);
-			var any = false;
-			int first = 0;
-			Spot.continentFilter = 0;
-			for (int id = 0; id < World.continentCount; ++id)
-			{
-				var but = menu.Items[id] as ToggleMenuFlyoutItem;
-				var v = but.IsChecked;
-				if (v)
-				{
-					if (!any)
-					{
-						first = id;
-					}
+		//private static void ContinentFilterClosing(Windows.UI.Xaml.Controls.Primitives.FlyoutBase sender, Windows.UI.Xaml.Controls.Primitives.FlyoutBaseClosingEventArgs args)
+		//{
+		//	var menu = (sender as MenuFlyout);
+		//	var any = false;
+		//	int first = 0;
+		//	Spot.continentFilter = 0;
+		//	for (int id = 0; id < World.continentCount; ++id)
+		//	{
+		//		var but = menu.Items[id] as ToggleMenuFlyoutItem;
+		//		var v = but.IsChecked;
+		//		if (v)
+		//		{
+		//			if (!any)
+		//			{
+		//				first = id;
+		//			}
 
-					any = true;
-					Spot.continentFilter |= Spot.ContinentFilterFlag(id);
-				}
-			}
-			string label;
-			if (!any)
-			{
-				Spot.continentFilter = Spot.continentFilterAll;
+		//			any = true;
+		//			Spot.continentFilter |= Spot.ContinentFilterFlag(id);
+		//		}
+		//	}
+		//	string label;
+		//	if (!any)
+		//	{
+		//		Spot.continentFilter = Spot.continentFilterAll;
 
-				label = "Cont";
-			}
-			else
-			{
-				// is just one set?
-				var xy = World.PackedContinentToXY(first);
-				if ((Spot.continentFilter & (Spot.continentFilter - 1ul)) == 0)
-				{
-				   label = ZString.Format("{0}{1}", xy.y, xy.x);
-				}
-				else
-				{
-					label = ZString.Format("{0}{1}+", xy.y, xy.x);
-				}
-			}
-			ShellPage.instance.ContinentFilter.Content = label;
-			ExportCastles.instance.ContinentFilter.Content = label;
-			CityList.NotifyChange();
-			if (HeatTab.IsVisible())
-			{
-				HeatTab.ResetAllChangeDescriptions();
+		//		label = "Cont";
+		//	}
+		//	else
+		//	{
+		//		// is just one set?
+		//		var xy = World.PackedContinentToXY(first);
+		//		if ((Spot.continentFilter & (Spot.continentFilter - 1ul)) == 0)
+		//		{
+		//		   label = ZString.Format("{0}{1}", xy.y, xy.x);
+		//		}
+		//		else
+		//		{
+		//			label = ZString.Format("{0}{1}+", xy.y, xy.x);
+		//		}
+		//	}
+		//	ShellPage.instance.ContinentFilter.Content = label;
+		//	ExportCastles.instance.ContinentFilter.Content = label;
+		//	CityList.NotifyChange();
+		//	if (HeatTab.IsVisible())
+		//	{
+		//		HeatTab.ResetAllChangeDescriptions();
 
-			}
-		}
+		//	}
+		//}
 
 		private void HomeClick(object sender, RoutedEventArgs e)
 		{

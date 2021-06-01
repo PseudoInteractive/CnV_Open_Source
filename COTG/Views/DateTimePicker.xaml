@@ -13,6 +13,7 @@
     CloseButtonText="Cancel"
     PrimaryButtonClick="ContentDialog_PrimaryButtonClick"
    >
+	
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition/>

@@ -609,7 +609,7 @@ namespace COTG.Services
 						v._tsHome = 0;
 						v._tsTotal = 0;
 					}
-					if ((tsh - v.troopsHome.TS()).Abs() > 16)
+					if ( (tsh - v.troopsHome.TS()).Abs() > 16 || (tsh==0) ) 
 					{
 						changed.Add(v);
 						//v.OnPropertyChanged(nameof(v.tsTotal));

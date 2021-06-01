@@ -91,8 +91,8 @@
 							</DataTemplate>
 						</ComboBox.ItemTemplate>
 					</ComboBox>
-					<winui:DropDownButton x:Name="ContinentFilter"
-									  Content="Cont"
+					<winui:DropDownButton x:Name="ContinentFilter"  x:FieldModifier="public"
+									  Content="Cont/Tags"
 									  Margin="2"
 									  FontSize="{StaticResource MediumFontSize}"
 										FontFamily="Tw Cen MT Condensed"

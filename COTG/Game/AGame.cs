@@ -150,6 +150,10 @@ namespace COTG
 		public static Mesh tesselatedWorld;
 		public static EffectPass GetTileEffect() => (SettingsPage.lighting != Lighting.none) ? litEffect : unlitEffect;
 
+		public static Color CColor(byte r=0, byte g=0, byte b=0, byte a=255)
+		{
+			return new Color(r, g, b, a);
+		}
 		internal static void SetLighting(Lighting value)
 		{
 			foreach (var tile in TileData.instance.tilesets)
@@ -1783,6 +1787,26 @@ namespace COTG
 									var wc = city.cid.CidToWorld();
 									if (IsCulledWC(wc))
 										continue;
+									var cc = wc.WToCamera();
+									for (int r = 0; r < 4; ++r)
+									{
+										var xT0 = (r+0.5f) / 4.0f;
+										var xT1 = (r+1.375f) / 4.0f;
+										var yt0 = 0.0f;
+										var yt1 = (city.res[r] * (1.0f / (512 * 128))).Min(1.0f);
+										var color = r switch { 0 => new Color(150, 75, 0, 255), 1 => new Color(128, 128, 128, 255), 2 => new Color(24, 124, 168, 255), _ => new Color(192, 192, 0, 255) };
+										if( yt1 < 0.125f)
+										{
+											yt1 = 0.25f;
+											color = new Color(255, 0, 0, 255);
+										}
+
+										var c0 = new Vector2( cc.X +(xT0*0.8f-0.5f) * pixelScale, cc.Y + (0.25f - yt1 * 0.5f) * pixelScale);
+										var c1 = new Vector2(cc.X + (xT1 * 0.8f - 0.5f) * pixelScale, cc.Y + 0.25f * pixelScale);
+										DrawRect(Layer.actionOverlay, c0, c1, color);
+										DrawRect(Layer.action, c0+shadowOffset, c1 + shadowOffset, CColor(a:192) );
+
+									}
 
 									var ti = city.tradeInfo;
 									if (ti == null)
@@ -1796,7 +1820,7 @@ namespace COTG
 											//	var t = (tick * city.cid.CidToRandom().Lerp(1.375f / 512.0f, 1.75f / 512f));
 											//	var r = t.Ramp();
 											var hover = cityHover | Spot.IsHover(toCid);
-											DrawAction(c1.WToCamera(), wc.WToCamera(), hover ? tradeColorHover : tradeColor, hover ? lineThickness * 2f : lineThickness);
+											DrawAction(c1.WToCamera(), cc, hover ? tradeColorHover : tradeColor, hover ? lineThickness * 2f : lineThickness);
 
 
 										}

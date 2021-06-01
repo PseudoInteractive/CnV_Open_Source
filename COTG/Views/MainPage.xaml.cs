@@ -369,7 +369,7 @@ namespace COTG.Views
 			var ret = new List<int>();
             foreach(var c in City.myCities)
             {
-				if (!c.testContinentFilter)
+				if (!c.testContinentAndTagFilter)
 					continue;
                 if(c.raidCarry != 0 && (c.raidCarry <= SettingsPage.resetRaidsCarry || c.tsRaid*100 >= (c.tsRaidTotal * SettingsPage.resetRaidsIdle) ) )
                 {
@@ -433,6 +433,11 @@ namespace COTG.Views
 		{
 			cityGrid.SelectAll();
 
+		}
+
+		private void RaidSettings(object sender, RoutedEventArgs e)
+		{
+			DungeonView.Show(null, null);
 		}
 
 		//      static Dungeon lastTooltip;

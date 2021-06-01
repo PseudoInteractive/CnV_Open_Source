@@ -134,8 +134,10 @@
 							   OnContent="Unlimited"
 							   OffContent="Normal" />
 
+				<CheckBox Content="Demo cabins if full" IsChecked="{x:Bind views:SettingsPage.demoCottageOnBuildIfFull,Mode=TwoWay}" ToolTipService.ToolTip="If On, cabins will be automatically destroyed when you place a building into a city with 100 buildings"  />
 
 
+				<CheckBox Content="Demo extra buildings if full" IsChecked="{x:Bind views:SettingsPage.demoBuildingOnBuildIfFull,Mode=TwoWay}" ToolTipService.ToolTip="If On, extra buildings will be automatically destroyed when you place a building into a city with 100 buildings"  />
 			</wct:WrapPanel>
 			<wct:WrapPanel Orientation="Horizontal"
 						   Margin="4">

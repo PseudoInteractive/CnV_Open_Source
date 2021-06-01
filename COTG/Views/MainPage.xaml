@@ -214,6 +214,11 @@
 						Click="SelectAll"
 						Style="{StaticResource ButtonSmall}"
 						ToolTipService.ToolTip="Selects all cities, useful for reset raids"  />
+			<Button Content="Raid Settings"
+						Click="RaidSettings"
+						Style="{StaticResource ButtonSmall}"
+						ToolTipService.ToolTip="Shows settigns page for raids"  />
+
 			<Border Style="{StaticResource BorderReveal}">
 				
 

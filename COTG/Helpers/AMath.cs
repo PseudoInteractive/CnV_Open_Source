@@ -500,7 +500,8 @@ namespace COTG
             return a == null || a.Length == 0;
         }
 		public static bool Is00(this (int x, int y) c) => (c.x == 0) & (c.y == 0);
-		static public int IndexOfClosest(this IEnumerable<int> a,int b)
+
+		static public int IndexOfClosest(this int[] a,int b)
 		{
 			var bestScore = long.MaxValue;
 			int bestId = -1;

@@ -160,14 +160,11 @@ namespace COTG.Views
 							++SpotTab.silenceSelectionChanges;
 							try
 							{
-								foreach (Spot s in sel)
-								{
-									defenderGrid.SelectItem(s);
+								defenderGrid.SelectItems(sel);
 									if (sel.Length == 1)
 									{
-										defenderGrid.ScrollItemIntoView(sel);
+										defenderGrid.ScrollItemIntoView(sel[0]);
 									}
-								}
 							}
 							finally
 							{
@@ -206,7 +203,7 @@ namespace COTG.Views
 
 			if (visible)
 			{
-				lastSelected = null;
+			//	lastSelected = null;
 				IncomingOverview.Process(false, true);
 			}
 			return base.VisibilityChanged(visible);
@@ -252,7 +249,17 @@ namespace COTG.Views
 			instance.refresh.Go();
 		}
 
-	
+		private void ExportSheetsClick(object sender, RoutedEventArgs e)
+		{
+			defenderGrid.SelectAll();
+			var sel = defenderGrid.SelectedItems;
+			List<int> cids = new();
+			foreach(var c in sel)
+			{
+				cids.Add((c as City).cid);
+			}
+			Spot.ExportToDefenseSheet(cids);
+		}
 	}
 
    

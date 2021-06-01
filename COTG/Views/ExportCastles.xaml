@@ -23,16 +23,6 @@
 		<wct:WrapPanel Orientation="Horizontal"
 						   Margin="4">
 
-			<winui:DropDownButton x:Name="ContinentFilter" x:FieldModifier="public"
-									  Content="Continent"
-									  Margin="2"
-									  FontSize="{StaticResource MediumFontSize}"
-										FontFamily="Tw Cen MT Condensed"
-									  IsTextScaleFactorEnabled="False"
-										 
-									  Click="{x:Bind views:ShellPage.ContinentFilterClick}"
-									  Style="{ThemeResource DropDownButtonRevealStyle}"
-									 ToolTipService.ToolTip="Yet another Continent filter.  Uncheck all to show everything"  />
 
 			
 			<TextBox  ToolTipService.ToolTip="If not empty, only alliances containing this substring will be exported"

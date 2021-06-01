@@ -274,9 +274,13 @@ namespace COTG.Game
 			return result;
 		}
 		
+		public static void UpdateTags(this Spot city)
+		{
+			city.tags = TagHelper.Get(city.remarks);
+		}
 		public static Tags GetTags(this Spot city)
 		{
-			return Get(city.remarks);
+			return city.tags;
 		}
 	}
 }

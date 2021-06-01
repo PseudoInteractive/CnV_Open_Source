@@ -464,7 +464,7 @@ namespace COTG.Views
 											goto done;
 										if (CityBuild.postQueueBuildings[City.XYToId(c)].isEmpty && (city.BidFromOverlay(c) == 0))
 										{
-											await CityBuild.Build(XYToId(c), bidCottage, false);
+											await CityBuild.Build(XYToId(c), bidCottage, false,false);
 											++bc.cabins;
 										}
 										if (bc.cabins >= SettingsPage.startCabinCount)
@@ -868,6 +868,8 @@ namespace COTG.Views
 
 				}
 			}
+			int rv = -1;
+			int bestLevel = int.MaxValue;
 			for (var id = 1; id < City.citySpotCount-1; ++id)
 			{
 				if (!IsBuildingSpot(id))
@@ -881,11 +883,18 @@ namespace COTG.Views
 					if (bid == oBid)
 						continue;
 					if (counts[bid] < 0)
-						return id;
+					{
+						if (bl.bl < bestLevel)
+						{
+							bestLevel = bl.bl;
+							rv = id;
+						}
+					}
+				
 
 				}
 			}
-			return -1;
+			return rv;
 		}
 
 

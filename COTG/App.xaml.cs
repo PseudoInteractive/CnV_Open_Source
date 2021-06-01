@@ -53,6 +53,7 @@ using Microsoft.AppCenter.Analytics;
 using System.Collections.Generic;
 using System.Net;
 using Nito.AsyncEx;
+using Windows.UI.Xaml.Controls;
 
 namespace COTG
 {
@@ -938,6 +939,36 @@ namespace COTG
 				};
 				return (await dialog.ShowAsync2()) switch { ContentDialogResult.Primary => 1, ContentDialogResult.Secondary => 0, _ => -1 };
 		}
+		public async static Task<(bool rv, bool? sticky)> DoYesNoBoxSticky(string title, string yes = "Yes", string no = "No", string cancel = "Cancel")
+		{
+			return await DispatchOnUIThreadTask(async () => await DoYesNoBoxStickyUI(title,yes,no,cancel));
+		}
+		public async static Task<(bool rv,bool? sticky)> DoYesNoBoxStickyUI(string title,  string yes = "Yes", string no = "No", string cancel = "Cancel")
+		{
+			//	Assert(App.uiSema.CurrentCount == 0);
+				var check = new CheckBox() { Content = "Apply to all", IsChecked = false };
+
+				var dialog = new ContentDialog()
+				{
+					Title = title,
+					Content = check,
+					PrimaryButtonText = yes,
+					SecondaryButtonText = no,
+					CloseButtonText = cancel
+				};
+				var uc = (await dialog.ShowAsync2());
+				if (uc == ContentDialogResult.Primary || uc == ContentDialogResult.Secondary)
+				{
+					var rv = uc == ContentDialogResult.Primary;
+					return (rv, check.IsChecked.GetValueOrDefault() ? rv : null);
+				}
+				else
+				{
+					return (false, null);
+				}
+			
+		}
+
 	}
 
 

@@ -13,6 +13,8 @@ using static COTG.Debug;
 // The Content Dialog item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
 using ContentDialog = Windows.UI.Xaml.Controls.ContentDialog;
 using ContentDialogResult = Windows.UI.Xaml.Controls.ContentDialogResult;
+using System.Collections.ObjectModel;
+
 namespace COTG.Views
 {
 	public sealed partial class DateTimePicker : ContentDialog, INotifyPropertyChanged
@@ -21,7 +23,7 @@ namespace COTG.Views
 		byte pauseChange;
 		byte disableFocusNotification;
 		public static DateTimeOffset dateTime;
-		public static List<string> recentTimes = new List<String>();
+		public static ObservableCollection<string> recentTimes = new ();
 
 		void TimeToUI()  { time.Text = dateTime.FormatTimeDefault(); DateToUI(); } // Does not zero out seconds, hopefully that is okay
 		bool TimeFromUI()
@@ -78,11 +80,13 @@ namespace COTG.Views
 					date.SelectedDates.Add(localDate);
 					date.SetDisplayDate(localDate);
 				}
+
 			}
 			finally
 			{
 				--pauseChange;
 			}
+			OnPropertyChanged(string.Empty);
 		}
 
 		public static async Task<(DateTimeOffset t, bool yes)> ShowAsync(string title, DateTimeOffset? _time=null)
@@ -92,6 +96,8 @@ namespace COTG.Views
 
 				if (title != null)
 					instance.Title = title;
+				if (recentTimes.Count == 0)
+					AddRecentTime(JSClient.ServerTime());
 				if (_time != null)
 				{
 					dateTime = _time.Value;
@@ -99,9 +105,11 @@ namespace COTG.Views
 					instance.TimeToUI();
 				}
 				instance.recentTimesBox.SelectedItem = null;
-				
-				return  await instance.ShowAsync2();
+				instance.OnPropertyChanged(string.Empty);
+				var rv = await instance.ShowAsync2();
+				return rv;
 			});
+			
 			return (dateTime, result == ContentDialogResult.Primary);
 		}
 
@@ -111,9 +119,9 @@ namespace COTG.Views
 			TimeToUI();
 		}
 
-		private void ContentDialog_PrimaryButtonClick(ContentDialog sender, Windows.UI.Xaml.Controls.ContentDialogButtonClickEventArgs args)
+		private static void AddRecentTime(DateTimeOffset _dateTime)
 		{
-			var s = dateTime.ToString(AUtil.fullDateFormat, DateTimeFormatInfo.InvariantInfo);
+			var s = _dateTime.ToString(AUtil.fullDateFormat, DateTimeFormatInfo.InvariantInfo);
 
 			var i = recentTimes.IndexOf(s);
 			if (i != -1)
@@ -135,7 +143,7 @@ namespace COTG.Views
 					var _date = args.AddedDates.First();// -AUtil.localTimeOffset;
 					Log(_date);
 					dateTime = new DateTimeOffset(_date.Year, _date.Month, _date.Day, dateTime.Hour, dateTime.Minute, dateTime.Second, TimeSpan.Zero);
-					Log(dateTime);
+					TimeToUI();// Log(dateTime);
 				}
 			}
 		}
@@ -144,15 +152,15 @@ namespace COTG.Views
 		{
 			dateTime = JSClient.ServerTime();
 			TimeToUI();
-			Log(dateTime);
-			OnPropertyChanged(string.Empty);
+//			Log(dateTime);
 		}
 
 		public event PropertyChangedEventHandler PropertyChanged;
 
 		private void OnPropertyChanged(string propertyName)
 		{
-			DateToUI();
+		//	if(propertyName== nameof() )
+		//		DateToUI();
 			PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 		}
 
@@ -204,6 +212,11 @@ namespace COTG.Views
 		{
 			if(disableFocusNotification==0)
 				TimeFromUI();
+		}
+
+		private void ContentDialog_PrimaryButtonClick(ContentDialog sender, Windows.UI.Xaml.Controls.ContentDialogButtonClickEventArgs args)
+		{
+			AddRecentTime(dateTime);
 		}
 	}
 }

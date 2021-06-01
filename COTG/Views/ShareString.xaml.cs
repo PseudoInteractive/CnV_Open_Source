@@ -514,8 +514,9 @@ namespace COTG.Views
 		{
 			City city = City.GetOrAddCity(cid);
 			await GetCity.Post(cid); // need to fetch notes
-
-			city.remarks = TagHelper.ApplyTags(TagsFromCheckboxes(), city.remarks);
+			var tags = TagsFromCheckboxes();
+			city.tags = tags;
+			city.remarks = TagHelper.ApplyTags(tags, city.remarks);
 			//		Post.Send("includes/sNte.php", $"a={HttpUtility.UrlEncode(tags, Encoding.UTF8)}&b=&cid={cid}");
 			await Post.Send("includes/sNte.php", $"a={HttpUtility.UrlEncode(city.remarks, Encoding.UTF8)}&b={HttpUtility.UrlEncode(city.notes, Encoding.UTF8)}&cid={cid}", World.CidToPlayerOrMe(cid));
 		}

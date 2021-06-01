@@ -31,7 +31,7 @@ namespace COTG.Views
     {
         public static NearDefenseTab instance;
         public static bool IsVisible() => instance.isVisible;
-        public bool waitReturn { get; set; } = true;
+        public bool waitReturn { get; set; }
 		public bool sendViaWater { get; set; }
 
 		public static ResetableCollection<City> defendants = new();
@@ -386,7 +386,9 @@ namespace COTG.Views
 			foreach (var d in def)
 			{
 				var ts = supporter.tSend.DividedBy(def.Count);
-				await Post.SendRein(supporter.cid, d.cid, ts, departAt, _arriveAt, hours, supporter.split, text);
+				var cid = d.cid;
+				await Post.SendRein(supporter.cid, cid, ts, departAt, _arriveAt, hours, supporter.split, text);
+				await Task.Delay(500);
 			}
 
 

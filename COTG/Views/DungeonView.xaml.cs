@@ -27,7 +27,7 @@ namespace COTG.Views
 {
 	public sealed partial class DungeonView : ContentDialog
 	{
-		const int raidStepCount = 15;
+		public const int raidStepCount = 15;
 
 		ResetableCollection<Dungeon> items = new();
 
@@ -37,6 +37,33 @@ namespace COTG.Views
 		{
 			Dungeon.Initialize();
 			instance = new();
+			if (raidCarrySteps == null)
+			{
+				raidCarrySteps = new int[raidStepCount];
+				int put = 85;
+				for (int i = 0; i < raidStepCount / 3 + 2; ++i)
+				{
+					raidCarrySteps[i] = put;
+					put += 5;
+				}
+				for (int i = raidStepCount / 3 + 2; i < raidStepCount * 2 / 3; ++i)
+				{
+					raidCarrySteps[i] = put;
+					put += 15;
+				}
+				for (int i = 2 * raidStepCount / 3; i < raidStepCount; ++i)
+				{
+					raidCarrySteps[i] = put;
+					put += 25;
+				}
+			}
+			instance.raidCarryMinBox.ItemsSource = raidCarrySteps;
+			instance.raidCarryMaxBox.ItemsSource = raidCarrySteps;
+			instance.raidCarryTargetBox.ItemsSource = raidCarrySteps;
+
+			instance.raidCarryTargetBox.SelectedIndex = raidCarrySteps.IndexOfClosest((raidCarryTarget * 100).RoundToInt());
+			instance.raidCarryMinBox.SelectedIndex = raidCarrySteps.IndexOfClosest((raidCarryMin * 100).RoundToInt());
+			instance.raidCarryMaxBox.SelectedIndex = raidCarrySteps.IndexOfClosest((raidCarryMax * 100).RoundToInt());
 		}
 		static void AddStep()
 		{
@@ -45,30 +72,7 @@ namespace COTG.Views
 		public DungeonView()
 		{
 			this.InitializeComponent();
-			if (raidCarrySteps == null)
-			{
-				raidCarrySteps = new int[raidStepCount];
-				int put = 85;
-				for (int i = 0; i < raidStepCount/3+2; ++i)
-				{
-					raidCarrySteps[i] = put;
-					put += 5;
-				}
-				for (int i = raidStepCount / 3+2; i< raidStepCount*2 / 3; ++i)
-				{
-					raidCarrySteps[i] = put;
-					put += 15;
-				}
-				for (int i = 2*raidStepCount / 3; i < raidStepCount ; ++i)
-				{
-					raidCarrySteps[i] = put;
-					put += 25;
-				}
-			}
-			raidCarryMinBox.ItemsSource = raidCarrySteps;
-			raidCarryMaxBox.ItemsSource = raidCarrySteps;
-			raidCarryMinBox.SelectedIndex = raidCarrySteps.IndexOfClosest( (raidCarryMin*100).RoundToInt() );
-			raidCarryMaxBox.SelectedIndex = raidCarrySteps.IndexOfClosest((raidCarryMax * 100).RoundToInt());
+			
 		}
 
 		public static bool IsVisible() => openCity != 0;
@@ -82,7 +86,7 @@ namespace COTG.Views
 		{
 			if (openCity != 0)
 			{
-				if (city.cid == openCity)
+				if (city.CidOr0() == openCity && dungeons!=null)
 				{
 					App.DispatchOnUIThreadLow(() => instance.items.Set(dungeons));
 				}
@@ -93,11 +97,20 @@ namespace COTG.Views
 			{
 				await App.DispatchOnUIThreadTask(async () =>
 			   {
-				   Log(city.nameAndRemarks);
-				   openCity = city.cid;
-				   instance.Title = city.nameAndRemarks;
-				   instance.items.Set( dungeons);
-				   if(!hasRunOnce)
+				   if (city != null)
+				   {
+					   openCity = city.CidOr0();
+					   instance.Title = city.nameAndRemarks;
+					   instance.items.Set(dungeons);
+					   instance.dungeonGrid.Visibility = Visibility.Visible;
+				   }
+				   else
+				   {
+					   openCity = 0;
+					   instance.Title = "Raid Settings";
+					   instance.dungeonGrid.Visibility = Visibility.Collapsed;
+				   }
+				   if (!hasRunOnce && city != null)
 				   {
 					   hasRunOnce = true;
 					   Task.Delay(1000).ContinueWith( (_)=> App.DispatchOnUIThreadLow(()=>instance.items.NotifyReset()));
@@ -118,64 +131,79 @@ namespace COTG.Views
 
 		}
 
-		private static void AddRaidStep(bool isMax )
+		
+
+		private static void EnsureCarryRanges(int changedId)
 		{
-			var v = ((isMax ? raidCarryMax : raidCarryMin)*100).RoundToInt();
-			var bestId = raidCarrySteps.IndexOfClosest(v);
-
-			Log($"Add raid step {isMax}, {v}");
-
-			raidCarrySteps[bestId] = v;
-
-			instance.raidCarryMinBox.ItemsSource = raidCarrySteps;
-			instance.raidCarryMaxBox.ItemsSource = raidCarrySteps;
-			if (isMax)
+			switch (changedId)
 			{
-				raidCarryMax = (raidCarrySteps[bestId]*0.01f);
+				case 0:// min
+					{
+						raidCarryMax = raidCarryMax.Max(raidCarryMin);
+						raidCarryTarget = raidCarryTarget.Max(raidCarryMin);
+						break;
+					}
+				case 1:// target
+					{
+						raidCarryMax = raidCarryMax.Max(raidCarryTarget);
+						raidCarryMin = raidCarryMin.Min(raidCarryTarget);
+						break;
+					}
+				case 2:// max
+					{
+						raidCarryTarget = raidCarryTarget.Min(raidCarryMax);
+						raidCarryMin = raidCarryMin.Min(raidCarryMax);
+						break;
+					}
 			}
-			else
-			{
-				raidCarryMin = raidCarrySteps[bestId]*0.01f;
-			}
-			instance.raidCarryMinBox.SelectedIndex = raidCarrySteps.IndexOfClosest((raidCarryMin * 100).RoundToInt());
-			instance.raidCarryMaxBox.SelectedIndex = raidCarrySteps.IndexOfClosest((raidCarryMax * 100).RoundToInt());
 		}
 
-
-		private void RaidCarryMaxSubmitted(ComboBox sender, ComboBoxTextSubmittedEventArgs args)
+		private void RaidCarrySubmitted(ComboBox sender, ComboBoxTextSubmittedEventArgs args)
 		{
 			//     Log("Submit: " + args.Text);
 			if (args.Text.TryParseInt(out var _raidCarry))
 			{
+				var v = _raidCarry;
+				var bestId = raidCarrySteps.IndexOfClosest(v);
+
+				Log($"Add raid step {v}");
+
+				raidCarrySteps[bestId] = v;
 
 				//raidSteps;
-				SetCarryMax(_raidCarry);
-				Log(_raidCarry);
-				AddRaidStep(true);
+				switch (sender.Name)
+				{
+					case nameof(raidCarryMaxBox):
+						SetCarry(ref SettingsPage.raidCarryMax, _raidCarry, 2, true);
+						break;
+					case nameof(raidCarryMinBox):
+						SetCarry(ref SettingsPage.raidCarryMin, _raidCarry, 0, true);
+						break;
+					default:
+						SetCarry(ref SettingsPage.raidCarryTarget, _raidCarry, 1, true);
+						break;
+				}
+
+				args.Handled = true;
 			}
 			else
 			{
-				args.Handled = true;
+				
 				Assert(false);
 			}
 		}
 
-
-		private void RaidCarryMinSubmitted(ComboBox sender, ComboBoxTextSubmittedEventArgs args)
+		private static void UpdateCarryBox(ComboBox box, float carry, bool sourceUpdated, bool textUpdated)
 		{
-			//     Log("Submit: " + args.Text);
-			if (args.Text.TryParseInt(out var _raidCarry))
-			{
-				Log(_raidCarry);
+			if(sourceUpdated)
+				box.ItemsSource = raidCarrySteps;
+			var vI = (carry * 100).RoundToInt();
+			var i = raidCarrySteps.IndexOfClosest(vI);
+			if (i != box.SelectedIndex)
+				box.SelectedIndex = i;
+			if (textUpdated)
+				box.Text = vI.ToString();
 
-				SetCarryMin(_raidCarry);
-				AddRaidStep(false);
-			}
-			else
-			{
-				args.Handled = true;
-				Assert(false);
-			}
 		}
 
 		public static async Task UpdateRaidPlans()
@@ -184,51 +212,52 @@ namespace COTG.Views
 			 await City.GetOrAddCity(openCity).ShowDungeons();
 			// tell UI that list data has changed
 		}
-		private static bool SetCarryMin(int src)
+		private static bool SetCarry(ref float val, int src, int id, bool sourceUpdated)
 		{
-			var newVal = (src) * 0.01f;
-			if ((newVal - SettingsPage.raidCarryMin).Abs() <= 1.0f / 256.0f)
-				return false;
-			SettingsPage.raidCarryMin = newVal;
-			UpdateRaidPlans(); 
-			return true;
+			bool rv=sourceUpdated;
+			var newVal = src * 0.01f;
+			if ((newVal - val).Abs() <= 1.0f / 128.0f)
+			{
+				// no need to force update
+			}
+			else
+			{
+				val = newVal;
+				EnsureCarryRanges(id);
+				UpdateRaidPlans();
+				rv = true;
+			}
+			if (rv)
+			{
+				UpdateCarryBox(instance.raidCarryMaxBox, raidCarryMax, sourceUpdated,id==2);
+				UpdateCarryBox(instance.raidCarryMinBox, raidCarryMin, sourceUpdated,id==0);
+				UpdateCarryBox(instance.raidCarryTargetBox, raidCarryTarget, sourceUpdated,id==1);
+			}
+
+			return rv;
 		}
-		private static bool SetCarryMax(int src)
+
+		private void RaidCarrySelChanged(object sender, object _)
 		{
-			var newVal = (src) * 0.01f;
-			if ((newVal - SettingsPage.raidCarryMax).Abs() <= 1.0f / 256.0f)
-				return false;
-			SettingsPage.raidCarryMax = newVal;
-			UpdateRaidPlans(); 
-			return true;
-		}
-		private void RaidCarryMinChanged(object sender, object _)
-		{
-			var box = raidCarryMinBox;
+			var box = sender as ComboBox;
 			//   Log("Sel update");
 			var sel = box.SelectedIndex;
 			if (sel != -1 )
 			{
 
-				SetCarryMin(raidCarrySteps[sel]);
-				
-
-			}
-			else
-			{
-				Trace("No selectected");
-			}
-		}
-		private void RaidCarryMaxSelChanged(object sender, object _)
-		{
-			var box = raidCarryMaxBox;
-			//   Log("Sel update");
-			var sel = box.SelectedIndex;
-			if (sel != -1)
-			{
-
-				SetCarryMax(raidCarrySteps[sel]);
-
+				switch( box.Name )
+				{
+					case nameof(raidCarryMaxBox):
+						SetCarry(ref SettingsPage.raidCarryMax, raidCarrySteps[sel], 2,false);
+						break;
+					case nameof(raidCarryMinBox):
+						SetCarry(ref SettingsPage.raidCarryMin, raidCarrySteps[sel], 0, false) ;
+						break;
+					default:
+						SetCarry(ref SettingsPage.raidCarryTarget, raidCarrySteps[sel], 1, false);
+						break;
+				}
+						
 
 			}
 			else

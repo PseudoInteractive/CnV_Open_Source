@@ -44,7 +44,6 @@ namespace COTG.Views
         public static AttackTab instance;
         public static bool IsVisible() => instance.isVisible;
 
-		
         public static DumbCollection<Spot> attacks = new DumbCollection<Spot>();
         public static DumbCollection<Spot> targets = new DumbCollection<Spot>();
         public AttackTab()
@@ -62,6 +61,8 @@ namespace COTG.Views
 
         public event PropertyChangedEventHandler PropertyChanged;
         public void OnPropertyChanged(string propertyName) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+		
+		Dictionary<int, string> attackStrings = new();
 
 		private async void AttackSender_Tapped(object ____=null, object __=null)
         {
@@ -94,8 +95,8 @@ namespace COTG.Views
 				atk.time = new string[] { time.Hour.ToString("00"), time.Minute.ToString("00"), time.Second.ToString("00"), time.ToString("MM/dd/yyyy") };
                 scripts[cluster.id]= System.Text.Json.JsonSerializer.Serialize(atk, Json.jsonSerializerOptions);
             }
-
-            StringBuilder sb = new StringBuilder();
+			attackStrings.Clear();
+			StringBuilder sb = new StringBuilder();
             var players = new List<int>();
 			int assaultOffset = 0;
             foreach (var a in attacks)
@@ -108,7 +109,7 @@ namespace COTG.Views
             foreach (var player in players)
             {
                 sb.Append($"\n\n{Player.IdToName(player)}");
-                foreach (var a in attacks)
+                foreach (City a in attacks)
                 {
                     if (Spot.GetOrAdd(a.cid).pid != player || a.attackCluster==-1)
                         continue;
@@ -141,8 +142,9 @@ namespace COTG.Views
 						atk.time = new string[] { time.Hour.ToString("00"), time.Minute.ToString("00"), time.Second.ToString("00"), time.ToString("MM/dd/yyyy") };
 						var scrpipt = System.Text.Json.JsonSerializer.Serialize(atk, Json.jsonSerializerOptions);
 
+						attackStrings.Add(a.cid, scrpipt);
 
-                        sb.Append($"\n\n<player>{scrpipt}</player>");
+						sb.Append($"\n\n<player>{scrpipt}</player>");
                     }
                     sb.Append('\n');
                     sb.Append($"{a.cid.CidToCoords()} {a.attackType}" );
@@ -160,7 +162,15 @@ namespace COTG.Views
             var i = sender as FrameworkElement;
 
             var atk = i.DataContext as Spot;
-
+			if(attackStrings.TryGetValue(atk.cid, out var script))
+			{
+				JSClient.OpenAttackSender(script);
+			
+			}
+			else
+			{
+				Note.Show("No attack string");
+			}
             //if (atk.targets.Any() )
             //{
             //    var id = atk.targets.FindIndex(Spot.focus)+1;

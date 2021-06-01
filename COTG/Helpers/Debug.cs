@@ -232,27 +232,27 @@ namespace COTG
 			}
 		}
 
-		public static void Verify(bool v
-#if TRACE
-			,
-			[System.Runtime.CompilerServices.CallerMemberName] string memberName = "",
-	   [System.Runtime.CompilerServices.CallerFilePath] string sourceFilePath = "",
-	   [System.Runtime.CompilerServices.CallerLineNumber] int sourceLineNumber = 0
-#endif
+//		public static void Verify(bool v
+//#if TRACE
+//			,
+//			[System.Runtime.CompilerServices.CallerMemberName] string memberName = "",
+//	   [System.Runtime.CompilerServices.CallerFilePath] string sourceFilePath = "",
+//	   [System.Runtime.CompilerServices.CallerLineNumber] int sourceLineNumber = 0
+//#endif
 
-			)
-		{
-			if (v)
-			{
-				return;
-			}
-#if TRACE
-			DumpStack(new StackTrace(1, true));
-			var str = $"{sourceFilePath}({sourceLineNumber}): {timeStamp}: {memberName} : Assert";
-			ChatTab.L(str);
-			BreakDebugger();
-#endif
-		}
+//			)
+//		{
+//			if (v)
+//			{
+//				return;
+//			}
+//#if TRACE
+//			DumpStack(new StackTrace(1, true));
+//			var str = $"{sourceFilePath}({sourceLineNumber}): {timeStamp}: {memberName} : Assert";
+//			ChatTab.L(str);
+//			BreakDebugger();
+//#endif
+//		}
 	}
 
 	public class UIException : Exception
