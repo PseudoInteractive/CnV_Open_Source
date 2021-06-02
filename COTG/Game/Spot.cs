@@ -422,7 +422,7 @@ namespace COTG.Game
 
 			using var work = new WorkScope($"Export Def");
 			var sb = new StringBuilder();
-			sb.Append("Player\tCont\tCoords\tFirst\tDefIncoming\t#Attacks\tTemple\tWater\tIntel\n");
+			sb.Append("Player\tCont\tCoords\tFirst\tClaim\tDefIncoming\t#Attacks\tTemple\tWater\tIntel\n");
 			foreach (var _cid in cids)
 			{
 				var s = Spot.GetOrAdd(_cid);
@@ -435,6 +435,8 @@ namespace COTG.Game
 					sb.Append(s.cid.CidToCoords());
 					sb.Append('\t');
 					sb.Append(s.incoming.Where(x => x.isAttack).First()?.time.FormatSkipDateIfToday() ?? "??");
+					sb.Append('\t');
+					sb.Append(s.claim);
 					sb.Append('\t');
 					var ts = s.tsDefMax;
 					sb.Append(ts);
