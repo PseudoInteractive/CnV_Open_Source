@@ -1261,6 +1261,7 @@ namespace COTG.Views
 						
 						--Player.moveSlots;
 						BuildingsOrQueueChanged();
+						await Task.Delay(200);
 					}
 					else
 					{
@@ -1296,8 +1297,8 @@ namespace COTG.Views
 			var build = City.GetBuild();
 			var bds = isPlanner ? buildingsCache : build.buildings;
 			if ( (HasBuildOps(a) || HasBuildOps(b)) && !isPlanner)
+			if (HasBuildOps(a))
 			{
-				if(HasBuildOps(a))
 				{
 					Status($"Cannot move a building that is being rennovated, please wait or cancel build ops on {bds[a].name} at {IdToXY(a).bspotToString()} for best results", dryRun);
 				}
@@ -1331,6 +1332,7 @@ namespace COTG.Views
 							return false;
 
 						BuildingsOrQueueChanged();
+						await Task.Delay(200);
 
 					}
 					else

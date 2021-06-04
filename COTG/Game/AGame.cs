@@ -502,7 +502,7 @@ namespace COTG
 						COTG.Debug.Log($"{sex.ResultCode} {sex.Descriptor.ApiCode} {sex.Descriptor.Description} {sex.Descriptor.ToString()} ");
 						App.DispatchOnUIThreadSneaky(() =>
 					   {
-						   App.DoYesNoBoxUI("Grahics broken", "Please restart");
+						   App.DoYesNoBoxUI("Video Driver broke", "Please restart, it should recover fine");
 
 					   });
 					}

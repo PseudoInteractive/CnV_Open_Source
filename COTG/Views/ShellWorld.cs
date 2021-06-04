@@ -996,7 +996,11 @@ namespace COTG.Views
 															sb.AppendLine(city.remarks.AsSpan().Wrap(20));
 														if(city.hasAcademy.GetValueOrDefault())
 															sb.AppendLine("Has Academy");
-
+														if( NearRes.instance.isVisible)
+														{
+															sb.AppendLine($"wood:{city.res[0]:N0}, stone:{ city.res[1]:N0}");
+															sb.AppendLine($"iron:{city.res[2]:N0}, food:{ city.res[3]:N0}");
+														}
 														sb.Append($"{c.y / 100}{c.x / 100} ({c.x}:{c.y})");
 														
 														toolTip = sb.ToString();

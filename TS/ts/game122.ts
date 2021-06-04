@@ -50232,9 +50232,7 @@ function outer(){
 				.css("display", "none");
 			$(__s[5002] + j1T)
 				.html("");
-			if ($("#cvs")
-				.css("display") != "none") var j1T = gStCid;
-			else var j1T = 0;
+			var j1T = gStCid;
 			var I1T = { a: Number(j1T), b: Number(w1T), c: cid };
 			var v1T = _s(U5R <<
 				1336466848);

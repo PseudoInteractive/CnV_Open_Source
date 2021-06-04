@@ -166,7 +166,7 @@ namespace COTG.Game
 						continue;
 					if (IsTTNaval(ttype) == d.isWater)
 					{
-						var count = (int)(ttc * troopFraction / (SettingsPage.raidSendExact? r.fractionalReps:r.reps) );
+						var count = (int)(ttc * troopFraction / (SettingsPage.raidSendExact? r.fractionalReps.Max(r.reps):r.reps) );
 						tr.Add(new sndRaidtr() { tt = ttype.ToString(), tv = count.ToString() });
 						city.troopsHome[ttype] -= r.reps * count;
 					}

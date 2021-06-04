@@ -170,7 +170,7 @@ namespace COTG.Views
 		static int getBuildState;
 		static public async void GetBuildInfo()
 		{
-			if(getBuildState == 1)
+			if (getBuildState == 1)
 			{
 				getBuildState = 2;
 				return;
@@ -181,21 +181,22 @@ namespace COTG.Views
 			{
 				getBuildState = 1;
 				var js = await Post.SendForJson("overview/bcounc.php").ConfigureAwait(false);
+				var changes = new List<int>();
 				foreach (var ci in js.RootElement.EnumerateArray())
 				{
 
 					var cid = ci[0].GetAsInt();
 					var city = City.GetOrAddCity(cid);
 					city.points = (ushort)ci[2].GetAsInt();
-					var isBuilding = (ci[4].GetAsFloat()!=0 || ci[3].GetAsFloat() != 0) || (city.buildStage == BuildStage.complete) || (city.buildStage == BuildStage.leave);
-					if(ci[5].GetAsFloat() != 0 )
+					var isBuilding = (ci[4].GetAsFloat() != 0 || ci[3].GetAsFloat() != 0) || (city.buildStage == BuildStage.complete) || (city.buildStage == BuildStage.leave);
+					if (ci[5].GetAsFloat() != 0)
 					{
 						isBuilding = true;
 					}
 					if (isBuilding != city.isBuilding)
 					{
 						city.isBuilding = isBuilding;
-						App.DispatchOnUIThreadSneakyLow( ()=> city.OnPropertyChanged(nameof(city.isBuilding)));
+						changes.Add(city.cid);
 					}
 
 					city.wood = ci[8].GetAsInt();
@@ -205,6 +206,18 @@ namespace COTG.Views
 						GetCity.Post(cid);
 					}
 				}
+				App.DispatchOnUIThreadSneakyLow(() =>
+					{
+					foreach (var cid in changes)
+					{
+						var city = City.Get(cid);
+							city.OnPropertyChanged(nameof(city.isBuilding));
+					}
+		}
+			);
+
+
+
 				if (getBuildState != 2)
 					break;
 			}

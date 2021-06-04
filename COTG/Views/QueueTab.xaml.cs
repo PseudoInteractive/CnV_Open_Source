@@ -607,10 +607,10 @@ namespace COTG.Views
 				case City.BuildStage.preTeardown:
 				case City.BuildStage.teardown:
 					{
-						if( WantMoveStuff() )
-						{
-							await MoveStuffLocked();
-						}
+						//if( WantMoveStuff() )
+						//{
+						//	await MoveStuffLocked();
+						//}
 		
 						const int maxCommands = 15;
 						int count = (maxCommands - GetBuildQueueLength()).Min(bc.cabins * 2);
@@ -946,25 +946,32 @@ namespace COTG.Views
 												if(bl.isRes )
 												{
 													await Demolish(c, false);
+													await Task.Delay(500);
 													hasChanges = true;
 												}
 												if (spare > 0)
 												{
-													if (await MoveBuilding(spare, id, false))
-														hasChanges = true;
+													if (!await MoveBuilding(spare, id, false))
+													{
+														goto error;
+													}
+													hasChanges = true;
 												}
 											}
+										
 										}
 										else if (pass == 1)
 										{
 											var spare = CityBuild.FindAnyFreeSpot(id);
-											if (await MoveBuilding(id, spare, false)) 
+											if (!await MoveBuilding(id, spare, false)) 
 											{
-												hasChanges = true;
-												break;
+												
+												goto error;
 											}
-										}
+											hasChanges = true;
+											break;
 									}
+								}
 									if (Player.moveSlots < nextMoveConfirm)
 										{
 											nextMoveConfirm = (Player.moveSlots - movesPerConfirm).Max(3);
@@ -983,9 +990,14 @@ namespace COTG.Views
 						break;
 
 				}
-			done:;
+
+			done:
 			
 			Note.Show($"Final Move slots: {Player.moveSlots}");
+			return;
+		error:
+			await App.DoYesNoBox("Move Stuff", "Failed, build operations in progress might be blocking?", "Okay", null);
+	
 		}
 
 		static List<(int x, int y)> FindOverlayBuildingsOfType(City city, int bid)

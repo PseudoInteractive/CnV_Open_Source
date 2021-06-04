@@ -149,3 +149,13 @@
    - Added Recruit Senator command to War context menu
   - **Update**
    - Autobuild settings are only set on *Setup*, previously they would get set when setting the Layout
+### 2021/5/3
+ - **Fix**
+   - Temple donation items would go to a city at 0,0 due to COTG not findhing the region view
+ - **New**
+   - The continent filter has been upgraded to filter by continent and optionally tags.
+     - This is similar to city lists without the city lists
+	 - For example you might select vanqs sorcs, druids, scorps, horses to see all offense, or add 43 to see all offense on 43
+ - **Fix**
+   - Raiding would often fail when set to "Enough" rather than "all"
+   - Dungeons are selected based on min, max, target and Distance biased but which will produce the best raid revenue

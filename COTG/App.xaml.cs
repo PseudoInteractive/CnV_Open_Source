@@ -934,6 +934,8 @@ namespace COTG
 					Title = title,
 					Content = text,
 					PrimaryButtonText = yes,
+					IsSecondaryButtonEnabled = no!=null,
+					IsPrimaryButtonEnabled = yes!=null,
 					SecondaryButtonText = no,
 					CloseButtonText = cancel
 				};

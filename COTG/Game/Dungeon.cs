@@ -50,17 +50,21 @@ namespace COTG.Game
         //    [JsonProperty("d")]
         public float distance { get; set; }
 
+		public float carry;
+		public byte reps;
         public float loot => (type == (int)DungeonType.mountain ? mountainLoot[level - 1] : otherLoot[level - 1]) * (2 - completion * 0.01f);
         public string plan { get
             {
-                var r = Raiding.ComputeIdealReps(this,city);
-                return $"{(r.isValid?"":"[bad] ")}{r.reps}x{r.averageCarry:P1}% carry";
+            //    var r = Raiding.ComputeIdealReps(this,city);
+                return $"{(isValid?"":"[bad] ")}{reps}x{carry:P1}% carry";
             }
         }
         public float GetScore( byte bestDungeonType)
         {
             // lower is better
-            var rv = distance;
+            var rv = distance+2;
+			rv *= .75f + 3*(carry - SettingsPage.raidCarryTarget).Abs();
+
             if (bestDungeonType != type)
                 rv += SettingsPage.penaltyForWrongDungeonType; // penalty of 4 spaces for wrong type
 			if (!isValid)
@@ -69,12 +73,6 @@ namespace COTG.Game
 
         }
 		public bool isValid;
-		public void ComputeIsValid()
-		{
-				var d = Raiding.ComputeIdealReps(this, city);
-			isValid = d.isValid;
-	
-		}
 		public static async Task<bool> ShowDungeonList(City city, JsonElement jse, bool autoRaid)
 		{
 			var rv = new List<Dungeon>();
@@ -95,7 +93,10 @@ namespace COTG.Game
 						distance = dung.GetAsFloat("d")
 
 					};
-					d.ComputeIsValid();
+					var r = Raiding.ComputeIdealReps(d, city);
+					d.isValid = r.isValid;
+					d.carry = r.averageCarry;
+					d.reps = (byte)r.reps;
 					if (d.isValid || !autoRaid)
 						rv.Add(d);
 				

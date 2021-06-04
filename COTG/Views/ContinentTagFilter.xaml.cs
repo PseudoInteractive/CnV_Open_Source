@@ -31,7 +31,7 @@ namespace COTG.Views
 			this.InitializeComponent();
 			instance = this;
 		}
-		
+
 		public static async Task<bool> Show()
 		{
 			if (instance == null)
@@ -65,7 +65,7 @@ namespace COTG.Views
 			}
 
 			var rv = await instance.ShowAsync2();
-			if( rv ==  ContentDialogResult.Primary )
+			if (rv == ContentDialogResult.Primary)
 			{
 
 
@@ -76,11 +76,11 @@ namespace COTG.Views
 					var check = instance.tagsPanel.Children.FirstOrDefault((a) => a is ToggleButton b && b.Content as string == tag.s) as ToggleButton;
 					if (check != null)
 					{
-						if (check.IsChecked.GetValueOrDefault() )
+						if (check.IsChecked.GetValueOrDefault())
 						{
 							Spot.tagFilter |= tag.v;
 						}
-						
+
 					}
 				}
 				// Write back continents
@@ -124,7 +124,7 @@ namespace COTG.Views
 						}
 					}
 					ShellPage.instance.ContinentFilter.Content = label;
-				//	ExportCastles.instance.ContinentFilter.Content = label;
+					//	ExportCastles.instance.ContinentFilter.Content = label;
 					CityList.NotifyChange();
 					if (HeatTab.IsVisible())
 					{
@@ -149,6 +149,27 @@ namespace COTG.Views
 
 		private void ContentDialog_SecondaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
 		{
+		}
+
+		private void TagsFilterClear(object sender, RoutedEventArgs e)
+		{
+			foreach (var but in instance.tagsPanel.Children)
+			{
+				var t = but as ToggleButton;
+				if (t != null)
+					t.IsChecked = false;
+			}
+		}
+
+		private void ContinentFilterClear(object sender, RoutedEventArgs e)
+		{
+			foreach (var but in instance.continentsPanel.Children)
+			{
+				var t = but as ToggleButton;
+				if (t != null)
+					t.IsChecked = false;
+			}
+
 		}
 	}
 }
