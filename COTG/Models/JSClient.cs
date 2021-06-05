@@ -2308,15 +2308,11 @@ namespace COTG
 						   }
 						   case "c":
 							   {
-								   if (!ppdtInitialized )
-								   {
-									  return;
-								   }
 
 								   var jso = jsp.Value;
 								   var popupCount = jso.GetAsInt("p");
 								   //     Note.L("cid=" + cid.CidToString());
-								   if(jso.TryGetProperty("v", out var v))
+								   if(ppdtInitialized && jso.TryGetProperty("v", out var v))
 								   {
 									   var vm = (ShellPage.ViewMode)v.GetAsInt();
 									   switch (vm)
@@ -2349,7 +2345,7 @@ namespace COTG
 								   }
 								   ShellPage.NotifyCotgPopup(popupCount);
 								   //                                ShellPage.SetCanvasVisibility(noPopup);
-								   if (jso.TryGetProperty("c", out var _cid))
+								   if (ppdtInitialized && jso.TryGetProperty("c", out var _cid))
 								   {
 									   var cid = _cid.GetAsInt();
 									   if (cid != City.build)

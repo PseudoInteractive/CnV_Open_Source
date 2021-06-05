@@ -135,8 +135,8 @@ namespace COTG.Views
 						atk.command =a.isAttackTypeAssault ? "Assault" : "Siege";
 						if( a.isAttackTypeAssault && c.real.AsCity().attackType == AttackType.senator )
 						{
-							time += TimeSpan.FromHours( (assaultOffset) % 6 );
-							++assaultOffset;
+					//		time += TimeSpan.FromHours( (assaultOffset) % 6 );
+				//			++assaultOffset;
 							
 						}
 						atk.time = new string[] { time.Hour.ToString("00"), time.Minute.ToString("00"), time.Second.ToString("00"), time.ToString("MM/dd/yyyy") };
@@ -310,7 +310,7 @@ namespace COTG.Views
 
 
 		}
-        public static AttackCluster[] attackClusters;
+		public static AttackCluster[] attackClusters = Array.Empty<AttackCluster>();
         public static void BuildAttackClusters()
         {
             var reals = targets.Where((a) => a.isAttackTypeSiege&&!a.isAttackClusterNone).OrderBy(a=>a.spatialIndex).ToArray();
@@ -1775,6 +1775,8 @@ namespace COTG.Views
         {
             CleanTargets();
             attacks.NotifyReset();
+			attackClusters= Array.Empty<AttackCluster>();
+
         }
 
 		private void SelectTargets(object sender, RoutedEventArgs e)

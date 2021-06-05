@@ -923,6 +923,7 @@ namespace COTG
 		const float srcImageSpan = 2400;
 		const float bSizeGain3 = bSizeGain * bSizeGain / bSizeGain2;
 		public static float pixelScale = 1;
+		public static Vector2 halfSquareOffset;
 		public static float circleRadiusBase = 1.0f;
 		public static float shapeSizeGain = 1.0f;
 		public static float bulgeSpan => 1.0f + bulgeNegativeRange;
@@ -1097,6 +1098,7 @@ namespace COTG
 				//              ds.TextRenderingParameters = new CanvasTextRenderingParameters(CanvasTextRenderingMode.Default, CanvasTextGridFit.Disable);
 				// var scale = ShellPage.canvas.ConvertPixelsToDips(1);
 				pixelScale = (cameraZoomLag);
+				halfSquareOffset = new Vector2(pixelScale * 0.5f, pixelScale * .5f);
 				var bonusLayerScale = pixelScale.Max(64 * SettingsPage.iconScale);
 
 				bmFontScale = MathF.Sqrt(pixelScale / 64.0f) * 0.5f * SettingsPage.fontScale;
@@ -1587,7 +1589,7 @@ namespace COTG
 							}
 							if (AttackTab.IsVisible())
 							{
-								if (AttackTab.attackClusters != null)
+								if (!AttackTab.attackClusters.IsNullOrEmpty() )
 								{
 									var showAll = AttackTab.attackClusters.Length < 128;
 									foreach (var cluster in AttackTab.attackClusters)
@@ -1640,12 +1642,33 @@ namespace COTG
 										}
 									}
 								}
+								else
+								{
+									foreach (var t in AttackTab.readable.targets)
+									{
+										var wc = t.cid.CidToWorld();
+										if (IsCulledWC(wc))
+											continue;
+										var cc = wc.WToCamera();
+										var c0 = cc - halfSquareOffset;
+										var c1 = cc + halfSquareOffset;
 
-								//foreach (var t in AttackTab.readable.targets)
-								//{
-								//    var c1 = t.cid.CidToCC();
-								//    DrawTextBox(ds, $"{Spot.GetOrAdd(t.cid).classificationString}", c1, tipTextFormatCentered, t.attackCluster == 0 ? Color.White : Color.Teal);
-								//}
+										DrawRect(Layer.effects, c0, c1,  new Color(64, 0, 0, 128));
+									}
+									foreach (var t in AttackTab.readable.attacks)
+									{
+										var wc = t.cid.CidToWorld();
+										if (IsCulledWC(wc))
+											continue;
+										var cc = wc.WToCamera();
+										var c0 = cc - halfSquareOffset;
+										var c1 = cc + halfSquareOffset;
+
+										DrawRect(Layer.effects, c0, c1, new Color(0, 64, 0, 128));
+									}
+
+								}
+
 								//foreach (var t in AttackTab.readable.attacks)
 								//{
 								//  //  DrawTextBox(ds, $"{Spot.GetOrAdd(t.cid).classificationString}", c1, tipTextFormatCentered, t.attackCluster == 0 ? Color.White : Color.Teal);

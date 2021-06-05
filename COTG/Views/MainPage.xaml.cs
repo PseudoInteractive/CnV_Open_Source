@@ -366,8 +366,11 @@ namespace COTG.Views
             await RaidOverview.Send();
             await RestAPI.troopsOverview.Post();
 			await RaidOverview.Send();
+
+			cityGrid.SelectAll();
 			var ret = new List<int>();
-            foreach(var c in City.myCities)
+
+			foreach (City c in cityGrid.SelectedItems)
             {
 				if (!c.testContinentAndTagFilter)
 					continue;
@@ -377,8 +380,10 @@ namespace COTG.Views
                 }
 
             }
-            Note.Show($"Returning {ret.Count}");
-            Raiding.ReturnFastBatch(ret);
+			if (await App.DoYesNoBox("Reset Raids?", "Will return {ret.Count}, best to only reset if you will be around in an hour to send late returners out again", "Do it", "Maybe Not") == 1)
+			{
+				Raiding.ReturnFastBatch(ret);
+			}
 
         }
 		private async void AutoRaid(object sender, RoutedEventArgs e)
