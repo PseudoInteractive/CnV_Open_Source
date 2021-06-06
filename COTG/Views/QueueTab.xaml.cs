@@ -1438,6 +1438,10 @@ namespace COTG.Game
 			return true;
 		}
 
+		internal bool IsAllyOrNap()
+		{
+			return Alliance.IsAllyOrNap(allianceId);
+		}
 	}
 	//public class BuildItemTemplateSelector : Microsoft.UI.Xaml.Controls.DataTemplateSelector
 

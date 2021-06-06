@@ -484,19 +484,42 @@ namespace COTG.Views
 				{
 					case GestureAction.leftClick:
 						{
-							if (IsCityView() && (cid == City.build))
+
+							if (AttackTab.instance.isVisible && e.KeyModifiers.IsShiftAndControl() && City.Get(cid).isCityOrCastle)
 							{
+								var _cid = cid;
 								App.DispatchOnUIThreadSneaky(() =>
 								{
-									CityBuild.Click(cc,false);
+									var city = City.Get(_cid);
+									if (city.IsAllyOrNap())
+									{
+										AttackTab.AddAttacks(new () { _cid }  );
+
+									}
+									else
+									{
+										AttackTab.AddTarget(new[] { _cid });
+
+									}
 
 								});
 							}
 							else
 							{
-								// check to see if it needs to go to the webview
-								Spot.ProcessCoordClick(cid, cid != City.build, e.KeyModifiers, true); ;
-								e.Handled = true;
+								if (IsCityView() && (cid == City.build))
+								{
+									App.DispatchOnUIThreadSneaky(() =>
+									{
+										CityBuild.Click(cc, false);
+
+									});
+								}
+								else
+								{
+									// check to see if it needs to go to the webview
+									Spot.ProcessCoordClick(cid, cid != City.build, e.KeyModifiers, true); ;
+									e.Handled = true;
+								}
 							}
 							break;
 						}

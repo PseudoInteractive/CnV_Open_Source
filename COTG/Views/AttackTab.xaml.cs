@@ -534,6 +534,7 @@ namespace COTG.Views
                 CleanTargets();
             }
         }
+
         public async void AddAttacksFromSheets(object sender, RoutedEventArgs e)
         {
             try
@@ -613,7 +614,7 @@ namespace COTG.Views
                 Note.Show("Invalid clipboard text");
             }
         }
-		static async Task<AttackType> ChooseAttackType()
+		static async Task<(AttackType atk,bool update)> ChooseAttackType()
 		{
 				var combo = new RadioButtons() { Header = "Add as" };
 				combo.Items.Add("Real Cap");
@@ -625,12 +626,14 @@ namespace COTG.Views
 
 			var check = new CheckBox() { Content = "Update Existing", IsChecked = true };
 				//	var removeTargets = new CheckBox() { Content = $"{targetGrid.SelectedItems.Count} targets", IsChecked = true };
-				//	var panel = new StackPanel();
+			var panel = new StackPanel();
+			panel.Children.Add(check);
+			panel.Children.Add(combo);
 
 				var msg = new ContentDialog()
 				{
 					Title = "Add Attacks",
-					Content = combo,
+					Content = panel,
 					IsPrimaryButtonEnabled = true,
 					PrimaryButtonText = "Add",
 					CloseButtonText = "Cancel"
@@ -638,14 +641,41 @@ namespace COTG.Views
 
 				};
 				if (await msg.ShowAsync2() != ContentDialogResult.Primary)
-					return AttackType.invalid;
-				return combo.SelectedIndex switch { 0 => AttackType.senator, 1 => AttackType.senatorFake, 2 => AttackType.se, 3 => AttackType.seFake, _=>AttackType.none };
+					return (AttackType.invalid,false);
+				return (combo.SelectedIndex switch { 0 => AttackType.senator, 1 => AttackType.senatorFake, 2 => AttackType.se, 3 => AttackType.seFake, _=>AttackType.none },check.IsChecked.GetValueOrDefault());
 		}
-        public async void AddTargetsFromClipboard(object sender, RoutedEventArgs e)
+		static async Task<AttackType> ChooseAttackerType()
+		{
+			var combo = new RadioButtons() { Header = "Type" };
+			combo.Items.Add("SE");
+			combo.Items.Add("Senator");
+			combo.Items.Add("Assault");
+			combo.Items.Add("Fake SE");
+			combo.Items.Add("Fake Senator");
+			combo.Items.Add("Fake Assault");
+			combo.Items.Add("None");
+			//	combo.SelectedIndex. = SettingsPage.chooseAttackTypeUpdate;
+
+
+			var msg = new ContentDialog()
+			{
+				Title = "Attacker Type",
+				Content = combo,
+				IsPrimaryButtonEnabled = true,
+				PrimaryButtonText = "Change",
+				CloseButtonText = "Cancel"
+
+
+			};
+			if (await msg.ShowAsync2() != ContentDialogResult.Primary)
+				return AttackType.invalid;
+			return combo.SelectedIndex switch { 0 => AttackType.se, 1 => AttackType.senator, 2 => AttackType.assault, 3 => AttackType.seFake, 4=> AttackType.senatorFake,5=> AttackType.assault, _=>AttackType.none };
+		}
+		public async void AddTargetsFromClipboard(object sender, RoutedEventArgs e)
         {
 
 			var attackType = await ChooseAttackType();
-			if (attackType == AttackType.invalid)
+			if (attackType.atk == AttackType.invalid)
 				return;
 
 
@@ -677,17 +707,21 @@ namespace COTG.Views
 						Note.Show($"You are not supposed to attack your friend {Player.IdToName(spot.pid)}");
 						continue;
 					}
-					spot.attackType = attackType;
-					spot.attackCluster = Spot.attackClusterNone;
-					if (targets.Contains(spot))
+					var present = targets.Contains(spot);
+					if (!present || attackType.update)
 					{
-						++duplicates;
+						spot.attackType = attackType.atk;
+						spot.attackCluster = Spot.attackClusterNone;
 					}
-					else
-					{
-						targets.Add(spot);
-						++reals;
-					}
+						if (present)
+						{
+							++duplicates;
+						}
+						else
+						{
+							targets.Add(spot);
+							++reals;
+						}
 
 
                     }
@@ -702,49 +736,64 @@ namespace COTG.Views
             
         }
 
+		public static async void AddAttacks(List<int> cids)
+		{
+			try
+			{
+				using var work = new ShellPage.WorkScope("Adding attacks...");
 
-        public async void AddAttacksFromString(string text)
-        {
-            try
-            {
-                using var work = new ShellPage.WorkScope("Adding attacks...");
+				using var _ = await instance.TouchLists();
+				if( cids.All( cid=> attacks.Contains(City.Get(cid) ) ))
+				{
+					var rv = await App.DoYesNoBox("Already Here", "Remove?");
+					if( rv == 1)
+					{
+						int count = 0;
+						foreach (var cid in cids)
+						{
+							attacks.Remove(City.Get(cid));
+							++count;
+						}
+						Note.Show($"Removed {count} attacks");
+						return;
 
-				using var _ = await TouchLists();
-				
-                int duplicates = 0;
-                var reals = 0;
-                var fakes = 0;
-                //     text = text.Replace("\r", "");
-                //    var lines = text.Split('\n', StringSplitOptions.RemoveEmptyEntries);
-                foreach (Match m in AUtil.coordsRegex.Matches(text))
-                {
+					}
+					if (rv == -1)
+						return;
+				}
 
-                    try
-                    {
-                        if (m.Value.EndsWith(':')||m.Value.StartsWith(':'))
-                            continue;
-                        //  var parts = line.Split(' ', StringSplitOptions.RemoveEmptyEntries);
-                        var cid = m.Value.FromCoordinate();
-                        var atk = attacks.Find((a) => a.cid == cid);
-                        var isNew = (atk == null);
-                        if (isNew)
-                        {
-							atk =  Spot.GetOrAdd(cid);
+
+				int duplicates = 0;
+				var reals = 0;
+				var fakes = 0;
+				//     text = text.Replace("\r", "");
+				//    var lines = text.Split('\n', StringSplitOptions.RemoveEmptyEntries);
+				foreach (var cid in cids)
+				{
+
+					try
+					{
+						//  var parts = line.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+						var atk = attacks.Find((a) => a.cid == cid);
+						var isNew = (atk == null);
+						if (isNew)
+						{
+							atk = Spot.GetOrAdd(cid);
 							++reals;
-                        }
-                        else
-                        {
-                            ++duplicates;
-                        }
-                        var spot = Spot.GetOrAdd(cid);
-                        var cl = await spot.ClassifyEx(true);
-                        //  string s = $"{cid.CidToString()} {Player.myName} {cl.} {(cl.academies == 1 ? 2 : 0)} {tsTotal}\n";
-                        
-                        if (cl == Spot.Classification.se)
-                            atk.attackType = AttackType.se;
-                        else if (spot.hasAcademy.GetValueOrDefault())
-                            atk.attackType = AttackType.senator;
-                        else atk.attackType = AttackType.assault;
+						}
+						else
+						{
+							++duplicates;
+						}
+						var spot = Spot.GetOrAdd(cid);
+						var cl = await spot.ClassifyEx(true);
+						//  string s = $"{cid.CidToString()} {Player.myName} {cl.} {(cl.academies == 1 ? 2 : 0)} {tsTotal}\n";
+
+						if (cl == Spot.Classification.se)
+							atk.attackType = AttackType.se;
+						else if (spot.hasAcademy.GetValueOrDefault())
+							atk.attackType = AttackType.senator;
+						else atk.attackType = AttackType.assault;
 
 						//atk.type = (int)Attack.Type.senator;
 
@@ -770,23 +819,52 @@ namespace COTG.Views
 
 
 						if (isNew)
-                            attacks.Add(atk);
-                    }
-                    catch (Exception ex)
-                    {
-                        LogEx(ex);
-                    }
-                }
-                Note.Show($"{reals-duplicates} added, {duplicates} updated");
-                WritebackAttacks();
-                await SaveAttacks();
-            }
-            catch (Exception ex)
-            {
-                LogEx(ex);
-                Note.Show("Invalid clipboard text");
-            }
-        }
+							attacks.Add(atk);
+					}
+					catch (Exception ex)
+					{
+						LogEx(ex);
+					}
+				}
+				Note.Show($"{reals - duplicates} added, {duplicates} updated");
+				WritebackAttacks();
+				await SaveAttacks();
+			}
+			catch (Exception ex)
+			{
+				LogEx(ex);
+			}
+		}
+
+		public async void AddAttacksFromString(string text)
+        {
+			try
+			{
+				List<int> cids = new();
+				foreach (Match m in AUtil.coordsRegex.Matches(text))
+				{
+
+					try
+					{
+						if (m.Value.EndsWith(':') || m.Value.StartsWith(':'))
+							continue;
+						//  var parts = line.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+						var cid = m.Value.FromCoordinate();
+						cids.Add(cid);
+					}
+					catch (Exception ex)
+					{
+						Log(ex);
+					}
+				}
+				AddAttacks(cids);
+			}
+			catch(Exception ex2)
+			{
+				Log(ex2);
+
+			}
+		}
 
         private void SortAttacks()
         {
@@ -822,10 +900,36 @@ namespace COTG.Views
 
         internal static async void AddTarget(IEnumerable<int> cids)
         {
+			using var _ = await instance.TouchLists();
+
+			var allHere = cids.All(c => targets.Contains(City.Get(c)));
+			if(allHere )
+			{
+				var id = await App.DoYesNoBox("Already Here", "Remove?");
+				if (id == 1)
+				{
+					int count = 0;
+					foreach(var cid in cids)
+					{
+						var spot = Spot.GetOrAdd(cid);
+						targets.Remove(spot);
+						++count;
+					}
+
+					Note.Show($"Removed: {count} targets");
+
+					WritebackAttacks();
+					await SaveAttacks();
+
+					return;
+				}
+				else if (id == -1)
+					return;
+			}
+
 			var attackType = await ChooseAttackType();
-			using var _ =await instance.TouchLists();
 			
-			if (attackType == AttackType.invalid)
+			if (attackType.atk == AttackType.invalid)
 				return;
 				int added = 0, cities=0,updated = 0, wrongAlliance=0;
 			foreach (var cid in cids)
@@ -841,15 +945,21 @@ namespace COTG.Views
 					++cities;
 					continue;
 				}
-				spot.attackType = attackType;
 				spot.QueueClassify(false);
-				spot.attackCluster = Spot.attackClusterNone;
 				if (targets.Contains(spot))
 				{
+					if (attackType.update)
+					{
+						spot.attackType = attackType.atk;
+						spot.attackCluster = Spot.attackClusterNone;
+
+					}
 					++updated;
 				}
 				else
 				{
+					spot.attackType = attackType.atk;
+					spot.attackCluster = Spot.attackClusterNone;
 					++added;
 					targets.Add(spot);
 				}
@@ -1113,8 +1223,8 @@ namespace COTG.Views
 				using var work = new ShellPage.WorkScope($"Planning.. (pass {ignoreIterator})");
 
 			
-				var maxFakes = (int)this.maxFakes.Value;
-				var minAssaults = (int)this.minAssaults.Value;
+				var maxFakes = SettingsPage.attackSEMaxFakes;
+				var minAssaults = SettingsPage.attackSEMinAssaults;
 				var clusterCount = reals.Length;
 				var fakes = targets.Where( (a)=>a.isAttackTypeFake ).OrderBy( (a)=>a.spatialIndex ).ToArray();
 				var clusters = new Cluster[clusterCount];
@@ -1798,6 +1908,25 @@ namespace COTG.Views
 				if (!sel.Contains(i))
 					sel.Add(i);
 			}
+		}
+
+		private async void SetAttackerType(object sender, RoutedEventArgs e)
+		{
+			var type = await ChooseAttackerType();
+			if (type == AttackType.invalid)
+				return;
+			using var _ = await TouchLists();
+			int counter = 0;
+			foreach (City sel in attackGrid.SelectedItems)
+			{
+				++counter;
+				var cid = sel.cid;
+				var atk = attacks.First(a => a.cid == cid);
+				atk.attackType = type;
+			}
+			WritebackAttacks();
+			await SaveAttacks();
+			Note.Show($"Set {counter} to {type}");
 		}
 	}
 }

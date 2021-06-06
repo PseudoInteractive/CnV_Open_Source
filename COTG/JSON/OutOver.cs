@@ -424,7 +424,12 @@ namespace COTG.JSON
                             var myAtkKilled = 0;
                             foreach (var i in reportsOutgoing)
                             {
-                                if (i.aTsKill > 0 && i.dTsKill > 0)
+                                if (!(i.aTsKill > 0 && i.dTsKill > 0))
+								{
+
+								//	Log($"Huh? a:{i.aTsKill} d:{i.dTsKill} s:{Player.IdToName(i.sPid)} t:{Player.IdToName(i.tPid)}");
+								}
+								else
                                 {
                                     defKilled += i.dTsKill;
                                     atkKilled += i.aTsKill;

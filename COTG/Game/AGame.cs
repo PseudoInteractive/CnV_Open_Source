@@ -1652,8 +1652,19 @@ namespace COTG
 										var cc = wc.WToCamera();
 										var c0 = cc - halfSquareOffset;
 										var c1 = cc + halfSquareOffset;
-
-										DrawRect(Layer.effects, c0, c1,  new Color(64, 0, 0, 128));
+										var col = t.attackType switch
+										{
+											AttackType.senator => CColor(168, 64, 0, 128),
+											AttackType.senatorFake => CColor(128, 48, 0, 64),
+											AttackType.se => CColor(168, 64, 128, 128),
+											AttackType.seFake => CColor(128, 32, 128, 64),
+											_ => CColor(64, 64, 64, 48)
+										};
+										DrawRect(Layer.effects, c0, c1, col);
+										if( t.attackCluster >= 0)
+										{
+											DrawTextBox(t.attackCluster.ToString(), cc, textformatLabel, new Color(col,255), textBackgroundOpacity, Layer.tileText);
+										}
 									}
 									foreach (var t in AttackTab.readable.attacks)
 									{
@@ -1663,8 +1674,20 @@ namespace COTG
 										var cc = wc.WToCamera();
 										var c0 = cc - halfSquareOffset;
 										var c1 = cc + halfSquareOffset;
-
-										DrawRect(Layer.effects, c0, c1, new Color(0, 64, 0, 128));
+										var col = t.attackType switch
+										{
+											AttackType.assault => CColor(55, 64, 190, 128),
+											AttackType.senator => CColor(168, 64, 0, 128),
+											AttackType.senatorFake => CColor(128, 48, 0, 64), // not really used as attack
+											AttackType.se => CColor(168, 64, 128, 128),
+											AttackType.seFake => CColor(128, 32, 128, 64), // not really used as attack
+											_ => CColor(64, 64, 64, 48)
+										};
+										DrawRect(Layer.effects, c0, c1, col);
+										if (t.attackCluster >= 0)
+										{
+											DrawTextBox(t.attackCluster.ToString(), cc, textformatLabel, new Color(col, 255), textBackgroundOpacity, Layer.tileText);
+										}
 									}
 
 								}

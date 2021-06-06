@@ -380,7 +380,7 @@ namespace COTG.Views
                 }
 
             }
-			if (await App.DoYesNoBox("Reset Raids?", "Will return {ret.Count}, best to only reset if you will be around in an hour to send late returners out again", "Do it", "Maybe Not") == 1)
+			if (await App.DoYesNoBox("Reset Raids?", $"Will return {ret.Count}, best to only reset if you will be around in an hour to send late returners out again", "Do it", "Maybe Not") == 1)
 			{
 				Raiding.ReturnFastBatch(ret);
 			}

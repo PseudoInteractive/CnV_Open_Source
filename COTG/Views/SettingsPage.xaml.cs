@@ -135,6 +135,8 @@ namespace COTG.Views
 		public static Resources nearResReserve = new Resources(100000, 100000, 100000, 100000);
 		public static float attackMaxTravelHoursSE=40;
 		public static float attackMaxTravelHoursSen=40;
+		public static int attackSEMaxFakes = 20;
+		public static int attackSEMinAssaults = 2;
 
 		public float uiMusic
 		{

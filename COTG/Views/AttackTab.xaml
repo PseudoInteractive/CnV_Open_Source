@@ -38,14 +38,14 @@
                              Header="Max fakes"
                              ToolTipService.ToolTip="The maximum number of fakes, if there are more fakes provided, the closest ones will be used"
                              Style="{StaticResource NumberBoxSmall}"
-                             Value="4"
+                             Value="{x:Bind view:SettingsPage.attackSEMaxFakes, Mode=TwoWay}"
                              NumberFormatter="{x:Bind cotg:App.formatterInt,Mode=OneTime}"
                              SmallChange="1" />
 			<winui:NumberBox x:Name="minAssaults"
                              Header="Min Assaults"
                              ToolTipService.ToolTip="For SE only - if assults are culled due to distance and there are fewer assaults than this left, the target will be discarded"
                              Style="{StaticResource NumberBoxSmall}"
-                             Value="4"
+                             Value="{x:Bind view:SettingsPage.attackSEMinAssaults, Mode=TwoWay}"
                              NumberFormatter="{x:Bind cotg:App.formatterInt,Mode=OneTime}"
                              SmallChange="1" />
 			<Button Content="Remove Selected"
@@ -55,7 +55,16 @@
                     Style="{StaticResource ButtonSmall}"
                     ToolTipService.ToolTip="Remove selected Attacks or Targets"
                     Click="RemoveSelected_Click" />
+			
+			<Button Content="Attacker Types"
+                    VerticalAlignment="Center"
+                    Margin="4"
+                    HorizontalAlignment="Center"
+                    ToolTipService.ToolTip="Sets selected attacker castle type"
+                    Style="{StaticResource ButtonSmall}"
+                    Click="SetAttackerType" />
 
+			
 			<Button Content="Add Attacks from Clipboard"
                     VerticalAlignment="Center"
                     Margin="4"
