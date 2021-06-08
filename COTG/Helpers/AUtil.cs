@@ -159,11 +159,11 @@ namespace COTG
 		}
 
 		public static string FormatDefault(this DateTimeOffset m) => m.ToString(defaultDateFormat, CultureInfo.InvariantCulture);
-
+	
 		public static string FormatFileTime(this DateTimeOffset m) => m.ToString("yyyy_MM_dd_H_mm_ss", CultureInfo.InvariantCulture);
 		public static string FormatTimeDefault(this DateTimeOffset m) => FormatSkipDateIfToday(m);
 
-		public static string Format(this TimeSpan t) => t.Days == 0 ? t.ToString("hh'hr 'mm'm 'ss's'", CultureInfo.InvariantCulture) : $"{t.Days:N0}D " + t.ToString("hh'hr 'mm'm 'ss's'", CultureInfo.InvariantCulture);
+		public static string Format(this TimeSpan t) => t.Days == 0 ? t.ToString("hh'hr 'mm'm 'ss's'", CultureInfo.InvariantCulture) : $"{t.Days:N0}d " + t.ToString("hh'hr 'mm'm 'ss's'", CultureInfo.InvariantCulture);
 
 		public static string FormatTimePrecise(this DateTimeOffset m) => m.ToString(preciseDateTimeFormat, CultureInfo.InvariantCulture);
 

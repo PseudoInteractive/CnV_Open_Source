@@ -22,7 +22,7 @@
 				<win:TreeViewItem  
 						ToolTipService.ToolTip="First click will load history for this day.  Then you can select a the start and end of a time period to see corresponding changes.  When in doubt, refresh."
 									    >
-					<TextBlock Text="{x:Bind desc,Mode=OneWay}" Style="{StaticResource ListItemStyle}"   />
+					<TextBlock Text="{x:Bind desc,Mode=OneWay}" Style="{StaticResource ListItemStyle}"  />
 
 				</win:TreeViewItem>
 			</DataTemplate>
@@ -62,7 +62,7 @@
 
 
 
-		<TextBlock Grid.Row="0" x:Name="header" x:FieldModifier="public" Text="World Snapshots:" VerticalAlignment="Center" Style="{StaticResource BodyTextStyle}" />
+		<TextBlock Grid.Row="0" x:Name="header" x:FieldModifier="public" Text="World Snapshots:" VerticalAlignment="Center" IsTextSelectionEnabled="True" Style="{StaticResource BodyTextStyle}" />
 		<tk:WrapPanel Grid.Row="2" Orientation="Horizontal">
 			<Button Click="Now_Click"  Content="Clear"  />
 			<ToggleSwitch Header="Castles" IsOn="{x:Bind game:ChangeInfo.includeCastle, Mode=TwoWay}" />

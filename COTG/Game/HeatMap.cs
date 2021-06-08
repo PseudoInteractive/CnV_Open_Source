@@ -531,7 +531,8 @@ namespace COTG.Game
 			if (day == null)
 			{
 				Assert(false);
-				day = HeatMapDay.days.First();
+				return null;
+//				day = HeatMapDay.days.First();
 			}
 			await day.LoadInternal();
 
@@ -550,6 +551,9 @@ namespace COTG.Game
 			return rv;
 		
 		}
+		
+
+
 		static HeatMapDay GetDay(SmallTime t, bool createIfNotExists)
 		{
 

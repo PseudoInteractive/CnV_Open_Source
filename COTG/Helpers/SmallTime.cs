@@ -26,6 +26,9 @@ namespace COTG
 		{
 			return new SmallTime( (int)new DateTimeOffset(dateTime.Date,TimeSpan.Zero).ToUnixTimeSeconds());
 		}
+		public string FormatDefault() => dateTime.FormatDefault();
+
+
 		/// <summary>
 		/// Does not correct for invalid system time
 		/// </summary>
@@ -63,7 +66,7 @@ namespace COTG
 
 		public override string ToString()
 		{
-			return dateTime.ToString("u");
+			return FormatDefault();
 		}
 		public string ToString(string s)
 		{

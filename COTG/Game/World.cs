@@ -195,7 +195,7 @@ namespace COTG.Game
 		public static (int x, int y) ContinentToXY(this int id)
 		{
 			var y = (int)((uint)id / (uint)10);
-			var x = id - y * continentCountX;
+			var x = id - y * 10;
 			return (x, y);
 		}
 
@@ -1330,14 +1330,14 @@ namespace COTG.Game
 		{
 			Assert(t0.seconds != 0);
 			Assert(t1.seconds != 0);
-			SmallTime _t0 = t0 - 1;
+			SmallTime _t0 = t0;
 			SmallTime  _t1 = t1 + 1;
 
-			if ( _t0.Date() != t0.Date())
-			{
-				//	Assert(false);
-				_t0 = t0;
-			}
+			//if ( _t0.Date() != t0.Date())
+			//{
+			//	//	Assert(false);
+			//	_t0 = t0;
+			//}
 			if (World.heatMapT0 == _t0 &&
 				World.heatMapT1 == _t1)
 				return;
@@ -1360,69 +1360,154 @@ namespace COTG.Game
 
 			Task.Run(UpdateChangeMap);
 		}
+		const int continentCityThreshHold2 = 550;
+		const int continentCityThreshHold1 = 500;
+		const int continentCityThreshHold0 = 450;
 		public static async void UpdateChangeMap()
 		{
 			if (World.changeMapInProgress != true)
 			{
 				return;
 			}
-			using var _ = await HeatMap.mutex.LockAsync();
+			try
+			{
+				using var _ = await HeatMap.mutex.LockAsync();
 
-			var data = await HeatMap.GetSnapshot(World.heatMapT0);
-			var data1 = await HeatMap.GetSnapshot(World.heatMapT1);
-
-			var task = App.DispatchOnUIThreadTask(() =>
-		   {
-			   if (HeatTab.instance.isVisible)
+				Log("Snapshots");
+				var data = await HeatMap.GetSnapshot(World.heatMapT0);
+				var data1 = await HeatMap.GetSnapshot(World.heatMapT1);
+				Log("Change string");
+				
+				var task = App.DispatchOnUIThreadTask(() =>
 			   {
-				   if (rawPrior0 == null)
+				   if (HeatTab.instance.isVisible)
 				   {
-					   HeatTab.instance.header.Text = "Please select a date range to see changes";
-				   }
-				   else
-				   {
-					   using var sb = ZString.CreateUtf8StringBuilder();
-					   sb.AppendFormat("-- {0} => {1} --\n", (heatMapT0).ToString(), (heatMapT1).ToString());
-					   var c0 = CityCounts.GetcityCountsByAlliance(data1.Span);
-					   var c1 = CityCounts.GetcityCountsByAlliance(data.Span);
-
-					   foreach (var i in c0)
+					   if (rawPrior0 == null || (data == null || data1 == null))
 					   {
-						   var v = i.Value;
-						   var v1 = c1.GetValueOrDefault(i.Key);
-						   if (v1 == null)
-							   v1 = new();
-						   if (v.total < 10 && v1.total < 10)
-							   continue;
-						   var d = v.Sub(v1);
-						   sb.AppendFormat("{0}: {1} ({2})", Alliance.IdToName(i.Key), v.total, d.total.FormatWithSign());
-						   if (v.castles > 0)
-							   sb.AppendFormat(", {0} ({1}) castles", v.castles, d.castles.FormatWithSign());
-						   if (v.temples > 0)
-							   sb.AppendFormat(", {0} ({1}) temples", v.temples, d.temples.FormatWithSign());
-						   if (v.big > 0)
-							   sb.AppendFormat(", {0} ({1}) big", v.big, d.big.FormatWithSign());
-						   sb.AppendLine();
+						   HeatTab.instance.header.Text = "Please select a date range to see changes";
 					   }
+					   else
+					   {
+						   using var sb = ZString.CreateUtf8StringBuilder();
+						   sb.AppendFormat("-- {0} => {1} --\n", (heatMapT0).ToString(), (heatMapT1).ToString());
+						   {
+							   // find most recently open continent
+							   for (int c = World.continentCount-1; --c >= 0;)
+							   {
+								   var cidDig = World.continentOpeningOrder[c];
+								   var cId = cidDig.ContinentToXY();
+								   var cityCount1 = World.GetContinentCityCount(data1.Span,cId);
+								   if (cityCount1 <= 0)
+									   continue;
+								   
+									if (cityCount1 >= continentCityThreshHold2)
+									   break;
+									  // all are open
+									  var cityCount0 = World.GetContinentCityCount(data.Span, cId);
+								   var dt = heatMapT1 - heatMapT0;
+								   var dc = cityCount1 - cityCount0;
+								   if (cityCount0 == 0)
+								   {
+									   sb.AppendFormat("To see continent opening prediction select a later start date (after {0} opened)\n", cidDig);
+								   }
+								   else if (dc <= 0 || dt < 60 * 5)
+								   {
+									   sb.AppendFormat("Select an earlier start date to see opening prediction for {0}", World.continentOpeningOrder[c+1] );
+								   }
+								   else
+								   {
+									   sb.AppendFormat("Predicted opening of {0} (current {1}, rate: {2} cities/day)\n", World.continentOpeningOrder[c+1], cityCount1, dc *60*60*24/(dt)   );
+									   for (int j = 0; j < 3; ++j)
+									   {
+										   var target = j == 0 ? continentCityThreshHold0 : j == 1 ? continentCityThreshHold1 : continentCityThreshHold2;
+										   if (cityCount1 < target)
+										   {
+											   var delta = target - cityCount1;
+											   var sec = ((float)dt * (float)(delta) / dc);
+											   sb.AppendFormat("{0} cities at {1}",target, new SmallTime(heatMapT1 + sec.RoundToInt()).ToString());
+											   sb.AppendFormat(" ({0})\n", TimeSpan.FromSeconds(sec).Format());
+										   }
+									   }
+								   }
+								   break;
 
-					   sb.Append("\nChanges");
-					   sb.Append(new ChangeInfo().ComputeDeltas(data.Span, data1.Span).ToString());
-					   HeatTab.instance.header.Text = sb.ToString();
+
+							   }
+
+						   }
+
+
+						   var c0 = CityCounts.GetcityCountsByAlliance(data1.Span);
+						   var c1 = CityCounts.GetcityCountsByAlliance(data.Span);
+
+						   foreach (var i in c0)
+						   {
+							   var v = i.Value;
+							   var v1 = c1.GetValueOrDefault(i.Key);
+							   if (v1 == null)
+								   v1 = new();
+							   if (v.total < 10 && v1.total < 10)
+								   continue;
+							   var d = v.Sub(v1);
+							   sb.AppendFormat("{0}: {1} ({2})", Alliance.IdToName(i.Key), v.total, d.total.FormatWithSign());
+							   if (v.castles > 0)
+								   sb.AppendFormat(", {0} ({1}) castles", v.castles, d.castles.FormatWithSign());
+							   if (v.temples > 0)
+								   sb.AppendFormat(", {0} ({1}) temples", v.temples, d.temples.FormatWithSign());
+							   if (v.big > 0)
+								   sb.AppendFormat(", {0} ({1}) big", v.big, d.big.FormatWithSign());
+							   sb.AppendLine();
+						   }
+
+						   sb.Append("\nChanges");
+						   sb.Append(new ChangeInfo().ComputeDeltas(data.Span, data1.Span).ToString());
+						   var str = sb.ToString();
+						   Log(str);
+						   HeatTab.instance.header.Text = str;
+					   }
 				   }
-			   }
-			   return Task.CompletedTask;
-		   });
+				   Log("Change done");
+				   return Task.CompletedTask;
+			   });
+				
+				if (data == null || data1 == null)
+				{
+					ClearHeatmap();
+					return;
+				}
 
-			World.CreateChangePixels(data, data1);
-			await task;
 
+				Log("Change pixels");
+				World.CreateChangePixels(data, data1);
+				Log("Change pixels Done"); 
+				await task;
+			}
+			catch(Exception ex)
+			{
+				Log(ex);
+			}
 		}
 
 
 		public static int[] continentOpeningOrder = { 22, 23, 32, 33, 12, 43, 13, 42, 21, 34, 24, 31, 11, 44, 14, 41, 02, 53, 20, 35, 25, 30, 52, 03, 01, 54, 04, 51, 40, 15, 45, 10, 05, 50, 00, 55 };
 
 
-		
+
+		public static int GetContinentCityCount(ReadOnlySpan<uint> snapshot, (int x, int y) continent)
+		{
+			int rv = 0;
+			for (int y = continent.y * 100; y < (continent.y + 1) * 100; ++y)
+			{
+				for (int x = continent.x * 100; x < (continent.x + 1) * 100; ++x)
+				{
+					if (World.GetType(snapshot[y * World.span + x]) == typeCity)
+						++rv;
+
+				}
+			}
+			return rv;
+
+		}
 
 
 		public static int lastUpdatedContinent;

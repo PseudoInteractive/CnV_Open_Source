@@ -57,10 +57,10 @@ namespace COTG.Models
 				var x0 = pop.x0;
 				var y0 = pop.y0;
 				AGame.popups[put] = new Span2i(
-					(AGame.dipToNative.ScaleInt(x0 - ShellPage.canvasBaseX),
-					AGame.dipToNative.ScaleInt(y0 - ShellPage.canvasBaseY)), 
-					(AGame.dipToNative.ScaleInt(pop.x1 - ShellPage.canvasBaseX),
-					AGame.dipToNative.ScaleInt(pop.y1 - ShellPage.canvasBaseY)));
+					AGame.dipToNative.ScaleInt(x0 - ShellPage.canvasBaseX),
+					AGame.dipToNative.ScaleInt(y0 - ShellPage.canvasBaseY), 
+					AGame.dipToNative.ScaleInt(pop.x1 - ShellPage.canvasBaseX),
+					AGame.dipToNative.ScaleInt(pop.y1 - ShellPage.canvasBaseY));
 
 
 				//	var canvas = new Windows.UI.Xaml.Controls.Canvas();

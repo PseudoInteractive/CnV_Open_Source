@@ -947,6 +947,10 @@ namespace COTG
 		{
 			return !cullWC.Contains(c);
 		}
+		public static bool IsCulledWC((int x, int y) c0, (int x, int y) c1)
+		{
+			return !cullWC.Overlaps( new Span2i(c0,c1) );
+		}
 		public static bool IsCulledWC((int x, int y) c, int slopSpace)
 		{
 			return !cullWC.Overlaps(c, slopSpace);
@@ -1258,7 +1262,7 @@ namespace COTG
 					cx1 = (_c1.X.CeilToInt() + 1).Min(World.span);
 					cy1 = (_c1.Y.CeilToInt() + 2).Min(World.span);
 				}
-				cullWC = new Span2i((cx0, cy0), (cx1, cy1));
+				cullWC = new Span2i(cx0, cy0, cx1, cy1);
 
 				{
 					//	ds.Antialiasing = CanvasAntialiasing.Aliased;
@@ -1878,7 +1882,36 @@ namespace COTG
 
 								}
 							}
+							if(!defenderVisible && !attacksVisible )
+							{
+								if (Spot.settles.Any())
+								{
+									try
+									{
+										foreach(var s in Spot.settles)
+										{
+											var wc0 = s.cid.CidToWorld();
+											var wc1 = s.rcid.CidToWorld();
+											if (!IsCulledWC(wc0,wc1))
+											{
+												var cc1 = wc1.WToCamera();
+												DrawAction(0.5f,1.0f,1.0f, wc0.WToCamera(),cc1, senatorColor,
+												troopImages[ttSenator], false, null);
+												DrawFlag(s.rcid, SpriteAnim.flagGrey, Vector2.Zero);
 
+											}
+
+
+
+										}
+									}
+									catch(Exception ex)
+									{
+
+									}
+								}
+
+							}
 							const int raidCullSlopSpace = 4;
 							foreach (var city in City.friendCities)
 							{

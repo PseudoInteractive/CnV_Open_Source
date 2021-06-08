@@ -170,6 +170,7 @@ namespace COTG.Views
 				var sel = zoom.SelectedNodes;
 				if (sel != null && sel.Count > 0)
 				{
+					
 					foreach (var i in sel)
 					{
 						var t = (i.Content as HeatMapItem).t;
@@ -183,6 +184,10 @@ namespace COTG.Views
 				}
 				return Task.CompletedTask;
 			});
+			if( t0 == t1)
+			{
+				t0 = SmallTime.serverNow;
+			}
 
 			if (t1.seconds != 0)
 			{

@@ -13,7 +13,7 @@ using Windows.UI.Popups;
 using Microsoft.UI.Xaml.Controls;
 using ContentDialog = Windows.UI.Xaml.Controls.ContentDialog;
 using ContentDialogResult = Windows.UI.Xaml.Controls.ContentDialogResult;
-
+using static COTG.Debug;
 using static COTG.Views.SettingsPage;
 namespace COTG.JSON
 {

@@ -585,10 +585,17 @@ namespace COTG.Views
 
 		public ShareStringItem(string shareString)
 		{
-			var s = ShareString.SplitShareString(shareString);
-			var meta = JsonSerializer.Deserialize<ShareStringMeta>(s.json, Json.jsonSerializerOptions);
-		//	var path = ShareString.DecomposePath(meta.path);
-			Ctor(meta.path, meta.notes ?? string.Empty, meta.desc ?? string.Empty, s.ss ?? string.Empty,shareString);
+			try
+			{
+				var s = ShareString.SplitShareString(shareString);
+				var meta = JsonSerializer.Deserialize<ShareStringMeta>(s.json, Json.jsonSerializerOptions);
+				//	var path = ShareString.DecomposePath(meta.path);
+				Ctor(meta.path, meta.notes ?? string.Empty, meta.desc ?? string.Empty, s.ss ?? string.Empty, shareString);
+			}
+			catch (Exception ex)
+			{
+				Log(ex);
+			}
 		}
 
 		public ShareStringItem(string path, string _tags, string _desc, string _share)

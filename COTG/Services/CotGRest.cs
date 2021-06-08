@@ -136,7 +136,7 @@ namespace COTG.Services
 		{
 			var data = await AcceptBytes(resp,except);
 			var str = UTF8Encoding.UTF8.GetString(data);
-			Log(str);
+			//Log(str);
 			try
 			{
 				return JsonSerializer.Deserialize<T>(data, Json.jsonSerializerOptions);
@@ -377,7 +377,7 @@ namespace COTG.Services
 		public int cid;
 		public sndRaid(string _json, int _cid) : base("includes/sndRad.php", World.CidToPlayerOrMe(_cid))
 		{
-			Log($"sndRaid:{_json}");
+	//		Log($"sndRaid:{_json}");
 			cid = _cid;
 			json = _json;
 		}
@@ -970,6 +970,11 @@ namespace COTG.Services
 		{
 			var p = new Post(url, _pid);
 			return await AcceptJson(await p.Send("a=" + HttpUtility.UrlEncode(Aes.Encode(postContentJson, secret), Encoding.UTF8), except),except);
+		}
+		async public static Task<string> SendEncryptedForText(string url, string postContentJson, string secret, int _pid, bool except = true)
+		{
+			var p = new Post(url, _pid);
+			return await AcceptText(await p.Send("a=" + HttpUtility.UrlEncode(Aes.Encode(postContentJson, secret), Encoding.UTF8), except), except);
 		}
 
 		/*

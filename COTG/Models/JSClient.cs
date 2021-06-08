@@ -1375,7 +1375,7 @@ namespace COTG
 						city.pid = thisPid;
 					var name = jsCity.GetProperty("2").GetString();
 					int i = name.LastIndexOf('-');
-					if (i != -1)
+					if (i != -1 && i+2 < name.Length )
 					{
 						city.remarks = name.Substring(i + 2);
 						city._cityName = name.Substring(0, i - 1);

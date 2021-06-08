@@ -15,8 +15,29 @@ using Vector2 = System.Numerics.Vector2;
 namespace COTG
 {
     public static class AMath
-    {
-        public static Random random = new Random();
+	{
+		public static bool IsOneBitSet(ulong l)
+		{
+			return ((l & (l - 1ul)) == 0);
+		}
+		// Returns the bit index if one bit is set
+		// returns -1 is 0 or 2 or more bits are set
+		// there is a faster way to do this?
+		public static int GetSetBit(ulong l)
+		{
+			if (!IsOneBitSet(l))
+				return -1;
+
+			for(int i=0; ;++i)
+			{
+
+				if ( (l & (1ul << i)) != 0)
+					return i;
+			}
+
+		}
+
+		public static Random random = new Random();
 
 		public static float Dot(this Vector3 v0, Vector3 v1)
 		{

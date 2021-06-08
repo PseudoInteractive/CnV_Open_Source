@@ -12811,8 +12811,6 @@ function outer(){
 					var l9B = 0;
 					city[__s[622]] = "";
 				}
-				var x9B = new Array();
-				x9B.push({ tt: 17, tv: H9B });
 				if (w9B == 1) {
 					var Q9B = 0;
 					var T9B = +l6y;
@@ -12838,11 +12836,11 @@ function outer(){
 					r_g: +t8y,
 					x: l9B
 				};
-				var M9B = '5' &
-					2147483647;
-				var G9B = { cid: cid, rcid: t9B, tr: JSON.stringify(x9B), type: M9B, snd: w9B };
-				var C9B = _s(
-					3945) + b2() + __s[2915];
+//				var M9B = '5' &		2147483647;
+				var x9B = new Array();
+				x9B.push({ tt: 17, tv: H9B });
+				var G9B = { cid: cid, rcid: t9B, tr: JSON.stringify(x9B), type: 5, snd: w9B };
+				var C9B = "Sx2xxresa" + b2() + "sa2dT123ol";
 				var W9B = a6.ccazzx.encrypt(JSON.stringify(G9B), C9B, 256 & 2147483647);
 				N6();
 				var z9B = $.post("/includes/" + "sndNC.php", { a: W9B });

@@ -94,8 +94,13 @@ namespace COTG.Helpers
 
 		public Span2i( (int x, int y) c0, (int x, int y) c1)
 		{
-			this.c0 = c0;
-			this.c1 = c1;
+			this.c0 = (c0.x.Min(c1.x), c0.y.Min(c1.y));
+			this.c1 = (c0.x.Max(c1.x), c0.y.Max(c1.y));
+		}
+		public Span2i(int c0x, int c0y, int c1x, int c1y)
+		{
+			this.c0 = (c0x,c0y);
+			this.c1 = (c1x, c1y);
 		}
 		public bool Contains( (int X, int Y) v)
 		{
@@ -111,6 +116,14 @@ namespace COTG.Helpers
 		{
 			return c0.X-r <= v.X & c0.Y-r <= v.Y &
 				c1.X+r > v.X & c1.Y+r > v.Y;
+		}
+		public bool Overlaps(Span2i s)
+		{
+			return c0.X < s.c1.X &
+					c1.X > s.c0.X &
+				   c0.Y < s.c1.Y &
+					c1.Y > s.c0.Y;
+
 		}
 	}
 }
