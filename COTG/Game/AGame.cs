@@ -758,8 +758,8 @@ namespace COTG
 						{
 							var i = new VertexPositionTexture();
 							i.Position = new Vector3(x, y, 0.0f);
-							i.TextureCoordinate.X = (float)(x + 1) / (World.span + 1);
-							i.TextureCoordinate.Y = (float)(y + 1) / (World.span + 1);
+							i.TextureCoordinate.X = (float)(x+0.5f) / (World.span );
+							i.TextureCoordinate.Y = (float)(y + 0.5f) / (World.span );
 							input[(World.span + 1) * y + x] = i;
 						}
 					}

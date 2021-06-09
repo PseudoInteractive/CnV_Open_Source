@@ -26,8 +26,8 @@ namespace COTG.JSON
 	{
 		public static bool updateInProgress;
 		static ConcurrentHashSet<int> supportReports = new ConcurrentHashSet<int>();
-		public static ConcurrentDictionary<int,Army> reportCache = new();
-		
+		public static ConcurrentDictionary<int, Army> reportCache = new();
+
 		// uses Report.Hash(), can have several reports per reportId
 
 		public static byte ClaimToByte(float claim)
@@ -46,7 +46,7 @@ namespace COTG.JSON
 		static int lastPersonalIncomingCount = 0;
 		static int lastWatchIncomingCount = 0;
 		static bool hasRun;
-		
+
 		const string work = "fetch incoming";
 		struct IncomingInfo
 		{
@@ -56,16 +56,35 @@ namespace COTG.JSON
 			internal int targetCid => firstArmy.targetCid;
 			internal int sourceCid => firstArmy.sourceCid;
 
-			public string intel =>  $"{firstArmy.miscInfo}, {ttNameWithCaps[firstArmy.troops.GetPrimaryTroopType()]}";
+			public string intel => $"{firstArmy.miscInfo}, {ttNameWithCaps[firstArmy.troops.GetPrimaryTroopType()]}";
 
 		}
-		public static void ProcessTask() { Process(false, false); }
-		public async static Task Process(bool fetchReports, bool showNote)
+
+		static Debounce IncomingUpdateDebounce = new(DoProcess) { debounceDelay = 1000, throttleDelay = 2000 };
+
+		static bool fetchReportsRequested;
+
+
+		public static void Process(bool fetch)
+		{
+			fetchReportsRequested |= fetch;
+			IncomingUpdateDebounce.Go();
+		}
+		public static void ProcessTask()
+		{
+			IncomingUpdateDebounce.Go();
+		}
+
+		public async static Task DoProcess()
 		{
 			if (updateInProgress )
 			{
+				Assert(false);
+
 				return;
 			}
+			var fetchReports = fetchReportsRequested;
+			fetchReportsRequested = false;
 
 			try
 			{
@@ -884,7 +903,7 @@ namespace COTG.JSON
 								if (defenderPage != null)
 									defenderPage.NotifyIncomingUpdated();
 							}
-							if (showNote)
+							if (fetchReports)
 								Note.Show($"Complete: {reportsIncoming.Count + incCount} attacks, {fetched} fetched {killNote}");
 						}
 						catch (Exception _exception)

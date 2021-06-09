@@ -65,7 +65,8 @@ namespace COTG.Views
 				if (OutgoingOverview.updateInProgress == false)
 				{
 					// avaiting on this would take too long
-					OutgoingOverview.Process(SettingsPage.fetchFullHistory); // Todo: throttle
+					OutgoingOverview.fetchRequested |= SettingsPage.fetchFullHistory;
+					OutgoingOverview.OutgoingUpdateDebounce.Go();
 				}
 			}
             return base.VisibilityChanged(visible);

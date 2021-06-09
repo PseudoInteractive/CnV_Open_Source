@@ -1542,7 +1542,12 @@ namespace COTG.Game
 		{
 			Raiding.ReturnSlow(cid, true);
 		}
-		public async void ReturnAt(object sender, RoutedEventArgs e)
+		public  void ReturnAt(object sender, RoutedEventArgs e)
+		{
+			ShowReturnAt();
+		}
+		
+		public async Task ShowReturnAt()
 		{
 			DateTimeOffset? time = null;
 			try

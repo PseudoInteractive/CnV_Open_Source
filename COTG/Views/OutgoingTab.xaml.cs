@@ -124,7 +124,7 @@ namespace COTG.Views
             //});
 
             if (visible)
-                OutgoingOverview.Process(false);
+                OutgoingOverview.OutgoingUpdateDebounce.Go();
             return base.VisibilityChanged(visible);
 
         }

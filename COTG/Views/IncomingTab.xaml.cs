@@ -204,7 +204,7 @@ namespace COTG.Views
 			if (visible)
 			{
 				lastSelected = null;
-				IncomingOverview.Process(false, true);
+				IncomingOverview.Process(false);
 			}
 			return base.VisibilityChanged(visible);
 

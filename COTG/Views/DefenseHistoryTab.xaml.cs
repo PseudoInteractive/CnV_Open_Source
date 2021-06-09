@@ -79,7 +79,7 @@ namespace COTG.Views
 				if (!IncomingOverview.updateInProgress)
 				{
 
-					IncomingOverview.Process(SettingsPage.fetchFullHistory, true); // Todo: throttle
+					IncomingOverview.Process(SettingsPage.fetchFullHistory); // Todo: throttle
 				}
 			}
 			return base.VisibilityChanged(visible);

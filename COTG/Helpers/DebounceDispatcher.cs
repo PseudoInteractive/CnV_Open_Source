@@ -13,8 +13,8 @@ namespace COTG
 		public class Debounce
 		{
 			public Func<Task> func;
-			public int debounceDelay = 300;
-			public int throttleDelay = 300;
+			public int debounceDelay = 250;
+			public int throttleDelay = 750;
 			public bool runOnUiThead;
 			int nextCall = Environment.TickCount;
 			enum State
@@ -35,11 +35,11 @@ namespace COTG
 				switch (state)
 				{
 					case State.idle:
-						{
-							var dt = nextCall - Environment.TickCount;
-							if (dt > 0)
-								return;
-						}
+						//{
+						//	var dt = nextCall - Environment.TickCount;
+						//	if (dt > 0)
+						//		return;
+						//}
 						break;
 					case  State.pending:
 						{
@@ -49,11 +49,12 @@ namespace COTG
 								nextCall = nextT;
 							}
 							return;
-						}
+					}
 					case State.running:
-						{
-							return;
-						}
+					{
+						state = State.pending; // we are already in the inner loop, leave the current one running
+						return;
+					}
 				default:
 					{
 						Assert(false);
@@ -61,39 +62,47 @@ namespace COTG
 					}
 				}
 				state = State.pending;
-				nextCall = Environment.TickCount + debounceDelay;
+				nextCall = nextCall.Max( Environment.TickCount + debounceDelay );
 				Task.Run(async () =>
 			   {
+
 				   for (; ; )
 				   {
-					   var dt = nextCall - Environment.TickCount;
-					   if (dt <= 0)
+					   Assert(state == State.pending);
+					   for (; ; )
 					   {
+						   var dt = nextCall - Environment.TickCount;
+						   if (dt <= 0)
+						   {
 
+							   break;
+						   }
+						   else
+						   {
+							   await Task.Delay(dt + 10);
+						   }
+					   }
+					   try
+					   {
+						   state = State.running;
+						   if (runOnUiThead)
+							   await App.DispatchOnUIThreadTask(func);
+						   else
+							   await func();
+					   }
+					   catch (Exception ex)
+					   {
+						   COTG.Debug.LogEx(ex);
+					   }
+					   nextCall = Environment.TickCount + throttleDelay;
+					   if (state == State.running)
+					   {
+						   state = State.idle;
 						   break;
 					   }
-					   else
-					   {
-						   await Task.Delay(dt + 10);
-					   }
+
 				   }
-				   try
-				   {
-					   state = State.running;
-					   if (runOnUiThead)
-						   await App.DispatchOnUIThreadTask(func);
-					   else
-						   await func();
-				   }
-				   catch (Exception ex)
-				   {
-					   COTG.Debug.LogEx(ex);
-				   }
-				   finally
-				   {
-					   nextCall = Environment.TickCount + throttleDelay;
-					   state = State.idle;
-				   }
+				   
 			   });
 
 			}

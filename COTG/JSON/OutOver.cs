@@ -28,29 +28,39 @@ namespace COTG.JSON
 
         const string work = "fetch outgoing";
 
-		public static void ProcessTask() { Process(false); }
+		public static void ProcessTask() 
+		{
+			OutgoingUpdateDebounce.Go();
+		}
+		public static Debounce OutgoingUpdateDebounce = new(_Process) { debounceDelay = 1000, throttleDelay = 2000 };
 
+		public static bool fetchRequested;
 
-		public async static Task Process(bool fetchReports)
+		public async static Task _Process()
         {
-    //        if (true)
-    //        {
-				//if (updateInProgress)
-				//	return;
+			var fetchReports = fetchRequested;
+			fetchRequested = false;
+			//        if (true)
+			//        {
+			//if (updateInProgress)
+			//	return;
 
-    //                // If there is one in progress that did not fetch history and this time we want history, we need to wait and the start a new fetch right after the prior one completes
-    //                for (; ; )
-    //                {
-    //                    await Task.Delay(1000);
-    //                    if (!updateInProgress)
-    //                        break;
-    //                }
+			//                // If there is one in progress that did not fetch history and this time we want history, we need to wait and the start a new fetch right after the prior one completes
+			//                for (; ; )
+			//                {
+			//                    await Task.Delay(1000);
+			//                    if (!updateInProgress)
+			//                        break;
+			//                }
 
-                
-    //        }
 
-            if (updateInProgress || !World.initialized)
-                return;
+			//        }
+
+			if (updateInProgress  )
+			{
+				Assert(false);
+				return;
+			}
 
             updateInProgress = true;
             if (fetchReports)
@@ -58,7 +68,7 @@ namespace COTG.JSON
 
             for (; ; )
             {
-                if (!Alliance.all.IsNullOrEmpty())
+                if (!Alliance.all.IsNullOrEmpty() && World.initialized )
                     break;
                 await Task.Delay(1000);
             }
