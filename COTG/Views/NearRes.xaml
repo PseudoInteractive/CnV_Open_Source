@@ -140,7 +140,7 @@
 		<tk:DataGrid x:Name="supportGrid" x:FieldModifier="public"
                         AutoGenerateColumns="False"
                         ItemsSource="{x:Bind local:NearRes.supporters, Mode=OneWay}"
-                        RowHeight="{StaticResource GridRowHeight}"
+                        RowHeight="{StaticResource ShortGridRowHeight}"
                      Grid.Row="1"
                      SelectionMode="Extended"
                      RowDetailsVisibilityMode="Collapsed"

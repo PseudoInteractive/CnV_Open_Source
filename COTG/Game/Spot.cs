@@ -1603,6 +1603,7 @@ namespace COTG.Game
 		}
 
 		public bool isHubOrStorage => HasTag(Tags.Hub) || HasTag(Tags.Storage);
+		public bool isHub => HasTag(Tags.Hub);
 
 		public async void ReturnAtBatch(object sender, RoutedEventArgs e)
 		{

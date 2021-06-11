@@ -1820,7 +1820,7 @@ namespace COTG.Views
 							++rv; // not exact
  						}
 					}
-					else if (counts.count >= 100 && !desB.isTower && desB.isWall )
+					else if (counts.count >= 100 && !desB.isTower && !desB.isWall )
 					{
 						if (!desB.isCabin && desBid != 0)
 						{

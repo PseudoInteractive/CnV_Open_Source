@@ -467,9 +467,15 @@ namespace COTG.Views
         {
             refresh.Go();
         }
-    }
 
-    public class SupporterTapCommand : DataGridCommand
+		private void troopTypeGrid_RightTapped(object sender, RightTappedRoutedEventArgs e)
+		{
+			Log(sender.ToString());
+			Log(e.OriginalSource.ToString());
+		}
+	}
+
+	public class SupporterTapCommand : DataGridCommand
     {
         public SupporterTapCommand()
         {

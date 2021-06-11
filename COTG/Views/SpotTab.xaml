@@ -46,7 +46,7 @@
                         ItemsSource="{x:Bind spotMRU, Mode=OneWay}"
 													Margin="4,4,8,16"
 
-                        RowHeight="{StaticResource GridRowHeight}"
+                        RowHeight="{StaticResource MediumGridRowHeight}"
                         AlternationStep="2"
                         SelectionMode="Extended"
                         SelectionUnit="Row"

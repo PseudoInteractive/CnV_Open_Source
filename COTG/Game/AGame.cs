@@ -1404,7 +1404,7 @@ namespace COTG
 												//		cc = (cc - cameraLightC)*
 												dz = 0;
 											}
-											var shift = new Vector2( (isBonus ? bonusLayerScale : pixelScale) * 0.5f);
+											var shift = new Vector2( (isBonus ? imageId== TileData.tilePortalOpen ? bonusLayerScale*2f : bonusLayerScale : pixelScale) * 0.5f);
 											var cc0 = cc - shift;
 											var cc1 = cc + shift;
 											var sy = off / tile.columns;

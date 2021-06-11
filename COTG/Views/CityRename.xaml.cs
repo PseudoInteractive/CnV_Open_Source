@@ -47,77 +47,103 @@ namespace COTG.Views
 		static string lastName = string.Empty;
 		public static async Task<bool> RenameDialog(int cid, bool allowSplat)
 		{
-		   
-
-			   try
-			   {
-					Assert(cid == City.build);
-				   var city = City.GetOrAddCity(cid);
-				   var nameDialog = new CityRename();
-				   bool isNew = IsNew(city);
-
-				  // foreach (var tag in TagHelper.tags)
-				  // {
-						//if (tag.isAlias)
-						//	continue;
-					 //  var check = new ToggleButton() { IsChecked = city.HasTag(tag.id), Content = tag.s };
-					 //  nameDialog.tagsPanel.Children.Add(check);
-				  // }
 
 
-				   var name = isNew ? lastName : city._cityName;
-				   if (name.IsNullOrEmpty())
-					   name = $"{city.cont:00} 1001";
+			try
+			{
+				Assert(cid == City.build);
+				var city = City.GetOrAddCity(cid);
+				var nameDialog = new CityRename();
+				bool isNew = IsNew(city);
 
-				   var match = regexCityName.Match(name);
-				   if (match.Success)
-				   {
-					   try
-					   {
-						   Assert(match.Groups.Count == 6);
-						   var cont = match.Groups[2].Value;
-						   var contV = int.Parse(cont);
+				// foreach (var tag in TagHelper.tags)
+				// {
+				//if (tag.isAlias)
+				//	continue;
+				//  var check = new ToggleButton() { IsChecked = city.HasTag(tag.id), Content = tag.s };
+				//  nameDialog.tagsPanel.Children.Add(check);
+				// }
+				if (isNew)
+				{
+					var closestScore = float.MaxValue;
+					City closestHub = null;
+					foreach (var v in City.myCities)
+					{
+						if (v.cont != city.cont)
+							continue;
+						var match = regexCityName.Match(v._cityName);
+						if (match.Success &&(v.isHub ||  match.Groups[4].Value.StartsWith("00")))
+						{
+							var score = city.cid.DistanceToCid(v.cid);
+							if (score < closestScore)
+							{
+								var pre = match.Groups[1].Value;
+								var mid = match.Groups[3].Value;
+								var num = match.Groups[4].Value;
+								var post = match.Groups[5].Value;
+								num.TryParseInt( out var numV);
 
-						   // new cont?
-						   if (contV != city.cont)
-						   {
-							   var lastCity = City.myCities.LastOrDefault((v) => v.cont == city.cont);
-							   if (lastCity != null)
-							   {
-								   name = IsNew(lastCity) ? $"{city.cont:00} 1001" : lastCity._cityName;
-								   match = regexCityName.Match(name);
-								   cont = match.Groups[2].Value;
-								   contV = int.Parse(cont);
-							   }
-							   else
-							   {
-								   name = $"{city.cont:00} 1001";
+								closestScore = score;
+								lastName = pre + city.cont.ToString("00") + mid + (numV * 1000 + 1).ToString() + post;
 
-							   }
+							}
+						}
+					}
+				}
+				{
+					var name = isNew ? lastName : city._cityName;
+					if (name.IsNullOrEmpty())
+						name = $"{city.cont:00} 0001";
 
-						   }
+					var match = regexCityName.Match(name);
+					if (match.Success)
+					{
+						try
+						{
+							Assert(match.Groups.Count == 6);
+							var cont = match.Groups[2].Value;
+							cont.TryParseInt(out var contV);
 
-						   var pre = match.Groups[1].Value;
+							// new cont?
+							if (contV != city.cont)
+							{
+								var lastCity = City.myCities.LastOrDefault((v) => v.cont == city.cont);
+								if (lastCity != null)
+								{
+									name = IsNew(lastCity) ? $"{city.cont:00} 0001" : lastCity._cityName;
+									match = regexCityName.Match(name);
+									cont = match.Groups[2].Value;
+									cont.TryParseInt(out contV);
+								}
+								else
+								{
+									name = $"{city.cont:00} 0001";
 
-						   var mid = match.Groups[3].Value;
-						   var num = match.Groups[4].Value;
-						   var post = match.Groups[5].Value;
-						   var numV = int.Parse(num);
-						   cont = $"{city.cont:00}";
-						   for (; ; )
-						   {
+								}
 
-							   name = pre + cont + mid + numV.ToString() + post;
-							   if (!City.myCities.Any((v) => v._cityName == name && v != city))
-								   break;
-							   ++numV;
-						   }
-					   }
-					   catch (Exception ex)
-					   {
-						   LogEx(ex);
-					   }
-				   }
+							}
+
+							var pre = match.Groups[1].Value;
+
+							var mid = match.Groups[3].Value;
+							var num = match.Groups[4].Value;
+							var post = match.Groups[5].Value;
+							num.TryParseInt(out var numV );
+							cont = $"{city.cont:00}";
+							for (; ; )
+							{
+
+								name = pre + cont + mid + numV.ToString() + post;
+								if (!City.myCities.Any((v) => v._cityName == name && v != city))
+									break;
+								++numV;
+							}
+						}
+						catch (Exception ex)
+						{
+							LogEx(ex);
+						}
+					}
 					var result = await App.DispatchOnUIThreadTask(async () =>
 				   {
 					   nameDialog.name.Text = city._cityName;
@@ -139,13 +165,13 @@ namespace COTG.Views
 						   await Post.Send("includes/nnch.php", $"a={HttpUtility.UrlEncode(lastName, Encoding.UTF8)}&cid={cid}", World.CidToPlayerOrMe(cid));
 						   //if (SettingsPage.applyTags)
 						   //{
-							  // await ApplyTags(cid, nameDialog.tagsPanel);
+						   // await ApplyTags(cid, nameDialog.tagsPanel);
 						   //}
 						   Note.Show($"Set name to {lastName}");
-						  
+
 					   }
-						   return result;
-				   
+					   return result;
+
 				   });
 					if (result == ContentDialogResult.Primary)
 					{
@@ -157,15 +183,15 @@ namespace COTG.Views
 						await CitySettings.SetCitySettings(cid, setAutoBuild: SettingsPage.autoBuildOn.GetValueOrDefault(), autoWalls: (SettingsPage.autoWallLevel == 10) ? true : null,
 										autoTowers: (SettingsPage.autoTowerLevel == 10) ? true : null
 										);
-					//if (SettingsPage.setHub)
-					//{
-					//	await HubSettings.Show(cid);
-					//}
-					var rv = true;
-						if (SettingsPage.autoBuildCabins  && allowSplat)
+						//if (SettingsPage.setHub)
+						//{
+						//	await HubSettings.Show(cid);
+						//}
+						var rv = true;
+						if (SettingsPage.autoBuildCabins && allowSplat)
 						{
-						// are there any cabins here already?
-							rv=  await QueueTab.DoTheStuff(city,false,false);
+							// are there any cabins here already?
+							rv = await QueueTab.DoTheStuff(city, false, false);
 						}
 						if (SettingsPage.clearRes)
 						{
@@ -175,11 +201,12 @@ namespace COTG.Views
 					}
 					return result != ContentDialogResult.Secondary;
 				}
-				catch (Exception e)
-			   {
-				   Note.Show("Something went wrong");
-				   COTG.Debug.LogEx(e);
-			   }
+			}
+			catch (Exception e)
+			{
+				Note.Show("Something went wrong");
+				COTG.Debug.LogEx(e);
+			}
 
 		   
 
