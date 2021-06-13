@@ -38,19 +38,19 @@
 						<my:NumberBox Value="{x:Bind des.wood,Mode=TwoWay}" Style="{StaticResource RightAlignNumberBox}"
 							ValidationMode="InvalidInputOverwritten"
                           ValueChanged="NumberBox_ValueChanged" AcceptsExpression="True"
-                          Header="Wood"  Margin="6,0,6,0" LargeChange="100000" SmallChange="10000" SpinButtonPlacementMode="Inline" />
+                          Header="Wood"  Margin="6,0,6,0" LargeChange="1000000" SmallChange="100000" SpinButtonPlacementMode="Inline" />
 						<my:NumberBox Value="{x:Bind des.stone,Mode=TwoWay}" 
                           ValidationMode="InvalidInputOverwritten"
 						  ValueChanged="NumberBox_ValueChanged"
-                          Header="Stone"  Margin="6,0,6,0" LargeChange="100000" AcceptsExpression="True" SmallChange="10000" SpinButtonPlacementMode="Inline" />
+                          Header="Stone"  Margin="6,0,6,0" LargeChange="1000000" AcceptsExpression="True" SmallChange="100000" SpinButtonPlacementMode="Inline" />
 						<my:NumberBox Value="{x:Bind des.iron,Mode=TwoWay}" Style="{StaticResource RightAlignNumberBox}"
 							ValidationMode="InvalidInputOverwritten"
 									  ValueChanged="NumberBox_ValueChanged"
-                          Header="Iron"  Margin="6,0,6,0"  LargeChange="100000" AcceptsExpression="True" SmallChange="10000" SpinButtonPlacementMode="Inline" />
+                          Header="Iron"  Margin="6,0,6,0"  LargeChange="1000000" AcceptsExpression="True" SmallChange="100000" SpinButtonPlacementMode="Inline" />
 						<my:NumberBox Value="{x:Bind des.food,Mode=TwoWay}" Style="{StaticResource RightAlignNumberBox}"
                           ValidationMode="InvalidInputOverwritten"
 							  ValueChanged="NumberBox_ValueChanged"
-                          Header="Food"  Margin="6,0,6,0"  LargeChange="100000" AcceptsExpression="True" SmallChange="10000" SpinButtonPlacementMode="Inline" />
+                          Header="Food"  Margin="6,0,6,0"  LargeChange="1000000" AcceptsExpression="True" SmallChange="100000" SpinButtonPlacementMode="Inline" />
 						
 					</tk:WrapPanel >
 				</StackPanel>
@@ -63,27 +63,27 @@
 					<my:NumberBox Value="{x:Bind reserve.wood,Mode=TwoWay}" Style="{StaticResource RightAlignNumberBox}"
 							ValidationMode="InvalidInputOverwritten"
                           ValueChanged="NumberBox_ValueChanged" AcceptsExpression="True"
-                          Header="Wood"  Margin="6,0,6,0" LargeChange="1000000" SmallChange="100000" SpinButtonPlacementMode="Inline" />
+                          Header="Wood"  Margin="6,0,6,0" LargeChange="2000000" SmallChange="500000" SpinButtonPlacementMode="Inline" />
 					<my:NumberBox Value="{x:Bind reserve.stone,Mode=TwoWay}" 
                           ValidationMode="InvalidInputOverwritten"
 						  ValueChanged="NumberBox_ValueChanged"
-                          Header="Stone"  Margin="6,0,6,0" LargeChange="1000000" AcceptsExpression="True" SmallChange="100000" SpinButtonPlacementMode="Inline" />
+                          Header="Stone"  Margin="6,0,6,0" LargeChange="2000000" AcceptsExpression="True" SmallChange="500000" SpinButtonPlacementMode="Inline" />
 					<my:NumberBox Value="{x:Bind reserve.iron,Mode=TwoWay}" Style="{StaticResource RightAlignNumberBox}"
 							ValidationMode="InvalidInputOverwritten"
 									  ValueChanged="NumberBox_ValueChanged"
-                          Header="Iron"  Margin="6,0,6,0"  LargeChange="1000000" AcceptsExpression="True" SmallChange="100000" SpinButtonPlacementMode="Inline" />
+                          Header="Iron"  Margin="6,0,6,0"  LargeChange="2000000" AcceptsExpression="True" SmallChange="500000" SpinButtonPlacementMode="Inline" />
 					<my:NumberBox Value="{x:Bind reserve.food,Mode=TwoWay}" Style="{StaticResource RightAlignNumberBox}"
                           ValidationMode="InvalidInputOverwritten"
 							  ValueChanged="NumberBox_ValueChanged"
-                          Header="Food"  Margin="6,0,6,0"  LargeChange="1000000" AcceptsExpression="True" SmallChange="100000" SpinButtonPlacementMode="Inline" />
+                          Header="Food"  Margin="6,0,6,0"  LargeChange="2000000" AcceptsExpression="True" SmallChange="500000" SpinButtonPlacementMode="Inline" />
 						<my:NumberBox Value="{x:Bind reserveCarts,Mode=TwoWay}" Style="{StaticResource RightAlignNumberBox}"
                           ValidationMode="InvalidInputOverwritten"
 							  ValueChanged="NumberBox_ValueChanged"
-                          Header="Carts"  Margin="6,0,6,0"  LargeChange="1000" AcceptsExpression="True" SmallChange="100" SpinButtonPlacementMode="Inline" />
+                          Header="Carts"  Margin="6,0,6,0"  LargeChange="5000" AcceptsExpression="True" SmallChange="500" SpinButtonPlacementMode="Inline" />
 						<my:NumberBox Value="{x:Bind reserveShips,Mode=TwoWay}" Style="{StaticResource RightAlignNumberBox}"
                           ValidationMode="InvalidInputOverwritten"
 							  ValueChanged="NumberBox_ValueChanged"
-                          Header="Ships"  Margin="6,0,6,0"  LargeChange="100" AcceptsExpression="True" SmallChange="10" SpinButtonPlacementMode="Inline" />
+                          Header="Ships"  Margin="6,0,6,0"  LargeChange="200" AcceptsExpression="True" SmallChange="40" SpinButtonPlacementMode="Inline" />
 					</tk:WrapPanel >
 			</StackPanel>
 			</Border>
@@ -119,7 +119,7 @@
                           OffContent="Land" OnContent="Water"  HorizontalAlignment="Center" 
                     />
 					<my:NumberBox Value="{x:Bind _filterTime,Mode=TwoWay}" Style="{StaticResource RightAlignNumberBox}" SpinButtonPlacementMode="Inline"
-                          Header="Max Time (hrs)"  Margin="6,0,6,0" AcceptsExpression="True" SmallChange="0.5"
+                          Header="Max Time (hrs)"  Margin="6,0,6,0" AcceptsExpression="True" SmallChange="1.0"
 							ValueChanged="NumberBox_ValueChanged"
                           />
 					<my:NumberBox Value="{x:Bind filterResHome,Mode=TwoWay}" Style="{StaticResource RightAlignNumberBox}"

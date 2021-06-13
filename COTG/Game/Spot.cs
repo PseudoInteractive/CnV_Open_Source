@@ -1914,9 +1914,11 @@ namespace COTG.Game
 
 			}
 			aMisc.AddItem("Notify on Decay", DecayQuery);
-			aMisc.AddItem("Settle whenever water", (_, _) => TrySettle(City.build,cid,true));
-			aMisc.AddItem("Settle whenever land", (_, _) => TrySettle(City.build, cid, false));
-
+			if (Raid.test)
+			{
+				aMisc.AddItem("Settle whenever water", (_, _) => TrySettle(City.build, cid, true));
+				aMisc.AddItem("Settle whenever land", (_, _) => TrySettle(City.build, cid, false));
+			}
 			aMisc.AddItem("Distance", (_, _) => ShowDistanceTo());
 			aMisc.AddItem("Select", (_, _) => SelectMe(true, App.keyModifiers));
 			aMisc.AddItem("Coords to Chat", () => ChatTab.PasteToChatInput(cid.CidToCoords(), true));

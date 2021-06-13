@@ -195,7 +195,8 @@ namespace COTG.Views
 						}
 						if (SettingsPage.clearRes)
 						{
-							await City.ClearResUI();
+							if(!city.leaveMe)
+								await City.ClearResUI();
 						}
 						return rv;
 					}

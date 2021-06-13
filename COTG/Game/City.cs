@@ -1762,10 +1762,11 @@ namespace COTG.Game
 
 		public BuildInfo GetBuildStage(BuildingCount bc)
 		{
+			var leave = leaveMe;
 			var buildingLimit = GetBuildingLimit(bc);
-			wantCastle = NeedsCastle(bc);
-			wantSorcTower = NeedsSorcTower(bc);
-			if (leaveMe)
+			wantCastle = !leave && NeedsCastle(bc);
+			wantSorcTower = !leave && NeedsSorcTower(bc);
+			if (leave)
 				return new BuildInfo(BuildStage.leave, buildingLimit);
 			if (CityRename.IsNew(this))
 				return new BuildInfo(BuildStage._new,buildingLimit);
