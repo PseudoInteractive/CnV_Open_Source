@@ -1615,18 +1615,19 @@ namespace COTG.Game
 
 			public int GetMainMilitaryBid()
 			{
-				var max = training.Max(academies).Max(sorcTowers).Max(stables.Max(blacksmiths) );
+				var max = training.Max(academies).Max(sorcTowers).Max(stables.Max(blacksmiths).Max(shipyards) );
 				if (max == training)
-					return  bidTrainingGround;
+					return bidTrainingGround;
 				else if (max == academies)
-					return  bidAcademy;
+					return bidAcademy;
 				else if (max == sorcTowers)
-					return  bidSorcTower;
+					return bidSorcTower;
 				else if (max == stables)
-					return  bidStable;
-				else // if(max == bc.blacksmiths)
+					return bidStable;
+				else if (max == blacksmiths)
 					return bidBlacksmith;
-
+				else
+					return bidShipyard;
 			}
 		}
 		public static BuildingCount GetBuildingCountPostQueue(int cabinLevel) => GetBuildingCounts(CityBuild.postQueueBuildings, cabinLevel);

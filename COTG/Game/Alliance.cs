@@ -29,6 +29,9 @@ namespace COTG.Game
 		public static Alliance my = new Alliance();
 		public static int myId;
 
+		public static bool hasAlliance => myId != 0;
+
+
 		// Ass an assert
 		public static int MyId
 		{
@@ -261,8 +264,11 @@ namespace COTG.Game
 			// await Cosmos.GetSpotDB();
 			alliancesFetched = true;
 			// start this off once the fetches are finished
-			Blobs.ProcessStats();
+			Task.Run(Blobs.ProcessStats);
+			if (Alliance.hasAlliance)
+				Task.Run(Blobs.ProcessTSStats);
 		}
+
 
 		internal static bool IsMine(int allianceId)
 		{

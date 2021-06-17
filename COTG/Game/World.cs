@@ -104,14 +104,14 @@ namespace COTG.Game
 		public ushort temples; // [5]
 		public const int spanX = 6;
 		public const int spanY = 6;
-		public const int count = spanX * spanY + 1; // 56 is summary of the workd
+		public const int count = spanX * spanY + 1; // 56 is summary of the world
 		public const int idAll = count - 1;
 
 		public static int GetPackedIdFromC((int x, int y) c) => GetPackedIdFromCont((c.x / World.continentSpan, c.y / World.continentSpan));
 		public static int GetPackedIdFromCont((int x, int y) c) => c.x.Clamp(0, 5) + c.y.Clamp(0, 5) * spanX;
 		public static (int x, int y) GetContIdFromPacked(int id) {
 			if (id == idAll)
-				return (5, 6); // special aliase for "all"
+				return (6, 5); // special aliase for "all"
 
 			var y = id / spanX;
 			var x = id - y * spanX;

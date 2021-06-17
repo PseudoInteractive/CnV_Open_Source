@@ -7,6 +7,8 @@ using System.Threading.Tasks;
 using COTG.Helpers;
 using COTG.Services;
 
+using static COTG.Debug;
+
 namespace COTG.Game
 {
 	class PlayerStats
@@ -47,14 +49,26 @@ namespace COTG.Game
 
 	class Snapshot
 	{
-		public DateTimeOffset dateTime;
+		public SmallTime time;
 		public SortedList<int, PlayerStats> playerStats = new();
 		public SortedList<int, AllianceStats> allianceStats = new();
-
+		//public int UncompressedSizeEstimate()
+		//{
+		//	var rv = 1024;
+		//	foreach(var p in playerStats)
+		//	{
+		//		rv += 7 * 4 + p.Value.perContinent.count * 3 * 4;
+		//	}
+		//	foreach (var a in allianceStats)
+		//	{
+		//		rv += 2 * 4 + a.Value.perContinent.count * 5 * 4;
+		//	}
+		//}
 
 		public static async Task<Snapshot> GetStats()
 		{
 			var snap = new Snapshot();
+			snap.time = SmallTime.serverNow;
 			{
 				var js = await Post.SendForJson("includes/gR.php", "a=0&b=56");
 				// score, cities, alliance
@@ -164,7 +178,7 @@ namespace COTG.Game
 					{
 
 						var contId = Continent.GetContIdFromPacked(id);
-						var js = await Post.SendForJson("includes/gR.php", $"a=0&b={contId.x}{contId.y}");
+						var js = await Post.SendForJson("includes/gR.php", $"a=0&b={contId.y}{contId.x}");
 						// score, cities, alliance
 						foreach (var i in js.RootElement[0].EnumerateArray())
 						{
@@ -173,8 +187,8 @@ namespace COTG.Game
 								continue;
 							var cnt = new ContinentPlayerStats();
 							cnt.continent = id;
-						
-							cnt.score = i.GetAsInt("3"); 
+
+							cnt.score = i.GetAsInt("3");
 							cnt.cities = i.GetAsInt("5");
 							ps.perContinent.Add(cnt);
 						}
@@ -222,7 +236,7 @@ namespace COTG.Game
 				}
 			}
 			//  TODO:  Faith
-			
+
 			{
 				// per continent
 
@@ -232,7 +246,7 @@ namespace COTG.Game
 					{
 
 						var contId = Continent.GetContIdFromPacked(id);
-						var js = await Post.SendForJson("includes/gR.php", $"a=1&b={contId.x}{contId.y}");
+						var js = await Post.SendForJson("includes/gR.php", $"a=1&b={contId.y}{contId.x}");
 						// score, cities, alliance
 						foreach (var i in js.RootElement.GetProperty("1").EnumerateArray())
 						{
@@ -254,22 +268,22 @@ namespace COTG.Game
 				}
 			}
 			{
-				// per continent mulitary
+				// per continent military
 				// include the "all" continent at the end
 				for (int id = 0; id < Continent.count; ++id)
 				{
 					if (Continent.all[id].isOpen)
 					{
 						var contId = Continent.GetContIdFromPacked(id);
-						var js = await Post.SendForJson("includes/gR.php", $"a=20&b={contId.x}{contId.y}");
+						var js = await Post.SendForJson("includes/gR.php", $"a=20&b={contId.y}{contId.x}");
 						foreach (var i in js.RootElement.GetProperty("20").EnumerateArray())
 						{
 							var pid = Alliance.NameToId(i.GetAsString("2"));
 							if (!snap.allianceStats.TryGetValue(pid, out var ps))
 								continue;
-							foreach(var pc in ps.perContinent)
+							foreach (var pc in ps.perContinent)
 							{
-								if(pc.continent == id)
+								if (pc.continent == id)
 								{
 									pc.military = i.GetAsInt("3");
 									break;
@@ -285,6 +299,230 @@ namespace COTG.Game
 			}
 			return snap;
 		}
+
+	}
+	class TSContinentStats
+	{
+		public int continent;
+		public List<TSContinentPlayerStats> players = new(); // ordered by score
+
+	}
+	class TSContinentPlayerStats
+	{
+		public int pid; 
+		public int score; // for sorting unknown players
+		public int cities; // for sorting unknown players
+		public int tsTotal;
+		public int tsOff;
+		public int tsDef;// tsDef is difference
+	}
+	class TSSnapshot
+	{
+		public SmallTime time;
+		public List<TSContinentStats> continents = new();
+
+		public static async Task<TSSnapshot> GetStats()
+		{
+			var snap = new TSSnapshot();
+			snap.time = SmallTime.serverNow;
+			try
+			{
+				// per continent
+
+				for (int id = 0; id < Continent.count; ++id)
+				{
+					if (Continent.all[id].isOpen)
+					{
+						TSContinentStats cs = new();
+						cs.continent = id;
+						snap.continents.Add(cs);
+						const int minScore = 100;
+						var contId = Continent.GetContIdFromPacked(id);
+						{
+							var js = await Post.SendForJson("includes/gR.php", $"a=0&b={contId.y}{contId.x}");
+							// score, cities, alliance
+							foreach (var i in js.RootElement[0].EnumerateArray())
+							{
+								var score = i.GetAsInt("3");
+								if (score <= minScore)
+									continue;
+
+								var pid = Player.NameToId(i.GetAsString("1"));
+								var ps = new TSContinentPlayerStats();
+
+								ps.pid = pid;
+								ps.score = score;
+								ps.cities = i.GetAsInt("5");
+
+								cs.players.Add(ps);
+							}
+						}
+						// these are unknown values
+						List<int> tsTotal = new();
+						List<int> tsOff = new();
+						List<int> tsDef = new();
+
+						{
+							// total ts
+							var js = await Post.SendForJson("includes/gR.php", $"a=16&b={contId.y}{contId.x}");
+							// score, cities, alliance
+							foreach (var i in js.RootElement.GetProperty("16").EnumerateArray())
+							{
+								var ts = i[2].GetAsInt();
+								var name = i[1];
+								if (name.ValueKind != System.Text.Json.JsonValueKind.String)
+								{
+									tsTotal.Add(ts);
+								}
+								else
+								{
+									var pid = Player.NameToId(name.GetAsString());
+									foreach (var player in cs.players)
+									{
+										if (player.pid == pid)
+										{
+											player.tsTotal = ts;
+											break;
+										}
+									}
+								}
+							}
+
+						}
+						{
+							// offense ts
+							var js = await Post.SendForJson("includes/gR.php", $"a=17&b={contId.y}{contId.x}");
+							// score, cities, alliance
+							foreach (var i in js.RootElement.GetProperty("17").EnumerateArray())
+							{
+								var ts = i[2].GetAsInt();
+								var name = i[1];
+								if (name.ValueKind != System.Text.Json.JsonValueKind.String)
+								{
+									tsOff.Add(ts);
+								}
+								else
+								{
+									var pid = Player.NameToId(name.GetAsString());
+									foreach (var player in cs.players)
+									{
+										if (player.pid == pid)
+										{
+											player.tsOff = ts;
+											break;
+										}
+									}
+								}
+							}
+
+						}
+						{
+							// defense ts
+							var js = await Post.SendForJson("includes/gR.php", $"a=18&b={contId.y}{contId.x}");
+							// score, cities, alliance
+							foreach (var i in js.RootElement.GetProperty("18").EnumerateArray())
+							{
+								var ts = i[2].GetAsInt();
+								var name = i[1];
+								if (name.ValueKind != System.Text.Json.JsonValueKind.String)
+								{
+									tsDef.Add(ts);
+								}
+								else
+								{
+									var pid = Player.NameToId(name.GetAsString());
+									foreach (var player in cs.players)
+									{
+										if (player.pid == pid)
+										{
+											player.tsDef = ts;
+											break;
+										}
+									}
+								}
+							}
+
+						}
+						//
+						// these are sorted by score
+						// 
+						foreach (var pp in cs.players)
+						{
+							if (tsTotal.IsNullOrEmpty())
+								break;
+							if(pp.tsTotal == 0)
+							{
+								var ts = tsTotal.Max();
+								pp.tsTotal = ts;
+								tsTotal.RemoveAt(tsTotal.IndexOf(ts));
+								// find matching offense and defense
+								var tsOCount = tsOff.Count;
+								var tsDCount = tsDef.Count;
+								
+								// first check for only def
+								for (int defId = 0; defId < tsDCount; ++defId)
+								{
+									var tsD = tsDef[defId];
+									// only def
+									if (ts == tsD)
+									{
+										pp.tsDef = tsD;
+										pp.tsOff = 0;
+										tsDef.RemoveAt(defId);
+										goto __found;
+									}
+								}
+
+								for (int offId = 0; offId < tsOCount; ++offId)
+								{
+									var tsO = tsOff[offId];
+									var delta = ts - tsO;
+									// check for only off
+									if(delta==0)
+									{
+										pp.tsOff = tsO;
+										pp.tsDef = 0;
+										tsOff.RemoveAt(offId);
+										goto __found;
+									}
+									// check for combo
+									for (int defId = 0; defId < tsDCount; ++defId)
+									{
+										var tsD = tsDef[defId];
+										// combo off and def (most common)
+										if (delta == tsD)
+										{
+											pp.tsOff = tsO;
+											pp.tsDef = tsD;
+											tsOff.RemoveAt(offId);
+											tsDef.RemoveAt(defId);
+											goto __found;
+										}
+									}
+
+								}
+								Log($"Missing: {Player.IdToName(pp.pid)},ts={ts}, cont={contId.y}{contId.x}" );
+								__found:;
+	
+							}
+							
+						}				
+					}
+				}
+			}
+			catch(Exception ex)
+			{
+				LogEx(ex);
+				return null;
+			}
+			return snap;
+		}
 	}
 }
+		
+
+
+	
+
+
 
