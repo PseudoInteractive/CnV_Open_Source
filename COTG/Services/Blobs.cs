@@ -31,24 +31,48 @@ namespace COTG.Services
 				this.id = id;
 			}
 		}
+
 		static string statsContainerName => $"r{JSClient.world}";
 		static string statsTSContainerName => $"t{JSClient.world}{Alliance.MyId}";
 		static string changesContainerName => $"c{JSClient.world}";
 
-		const int timeBetweenSnapshots = 1 * 60;
+		const int timeBetweenSnapshots = 4 * 60;
 		const int minTimeBetweenSnapshots = timeBetweenSnapshots - 15;
 		const int maxTimeBetweenSnapshots = timeBetweenSnapshots + 15;
+
+		static BlobContainerClient snapShotContainer;
+		static BlobContainerClient tsSnapShotContainer;
+
+		static async Task<BlobContainerClient> GetSnapshotContainer()
+		{
+			if (snapShotContainer == null)
+			{
+				snapShotContainer = new BlobContainerClient(connectionString, statsContainerName, GetClientOptions());
+				await snapShotContainer.CreateIfNotExistsAsync();
+
+			}
+			return snapShotContainer;
+		}
+		static async Task<BlobContainerClient> GetTSSnapshotContainer()
+		{
+			if (tsSnapShotContainer == null)
+			{
+				tsSnapShotContainer = new BlobContainerClient(connectionString, statsTSContainerName, GetClientOptions());
+				await tsSnapShotContainer.CreateIfNotExistsAsync();
+			}
+			return tsSnapShotContainer;
+		}
+
+
 		//const int timeBetweenSnapshots = 5;
 		//const int minTimeBetweenSnapshots = timeBetweenSnapshots - 1;
 		//const int maxTimeBetweenSnapshots = timeBetweenSnapshots + 1;
 		public static async void ProcessStats()
 		{
-
 			for (; ; )
 			{
 
-				BlobContainerClient container = new BlobContainerClient(connectionString, statsContainerName, GetClientOptions());
-				await container.CreateIfNotExistsAsync();
+				var container = await GetSnapshotContainer();
 
 				var info = await container.GetPropertiesAsync();
 				var lastWritten = info.Value.LastModified;// + TimeSpan.FromHours(12) + TimeSpan.FromMinutes(AMath.random.Next(60)-30);
@@ -135,9 +159,8 @@ namespace COTG.Services
 		{
 			for (; ; )
 			{
-				BlobContainerClient container = new BlobContainerClient(connectionString, statsTSContainerName, GetClientOptions());
-				await container.CreateIfNotExistsAsync();
-
+				var container = await GetTSSnapshotContainer();
+				
 				var info = await container.GetPropertiesAsync();
 				var lastWritten = info.Value.LastModified;// + TimeSpan.FromHours(12) + TimeSpan.FromMinutes(AMath.random.Next(60)-30);
 				var currentT = DateTimeOffset.UtcNow;
@@ -196,13 +219,200 @@ namespace COTG.Services
 		}
 
 		public static int snapShotBufferSize = 256 * 1024;
-		public async Task<Snapshot> LoadSnapshot(string str)
+		/// <summary>
+		///  Fetch alliance stats
+		/// </summary>
+		/// <param name="str"></param>
+		/// <returns></returns>
+		public static async Task AllianceStats(DateTimeOffset t0, DateTimeOffset t1, int continent, int minCities)
+		{
+			BlobContainerClient container = await  GetSnapshotContainer();
+			var snaps = new List<Snapshot>();
+			await foreach(var bi in container.GetBlobsAsync())
+			{
+				var t = bi.Name.ParseFileTime();
+				if (t >= t0 && t <= t1)
+					snaps.Add(await LoadSnapshot(bi.Name));
+			}
+			if(snaps.IsNullOrEmpty())
+			{
+				Log("No snapshots");
+				return;
+			}
+			snaps.Sort((a, b) => a.time.seconds.CompareTo(b.time.seconds));
+			var sb = new StringBuilder();
+			var aids = new List<int>();
+			foreach(var alli in snaps.Last().allianceStats )
+			{
+				var cont = alli.Value.perContinent.FirstOrDefault(a => a.continent == continent);
+				if (cont != null && cont.cities >= minCities)
+					aids.Add(alli.Value.aid);
+			}
+			sb.Append("Time");
+			foreach (var aid in aids)
+			{
+				var an = Alliance.IdToName(aid);
+				sb.Append($"\t{an}_military\t{an}_score\t{an}_cities");
+			}
+			sb.Append("\n");
+			foreach (var snap in snaps)
+			{
+				sb.Append(snap.time.ToString(AUtil.fullDateFormat));
+				foreach (var aid in aids)
+				{
+					bool present = false;
+					if( snap.allianceStats.TryGetValue(aid, out var alli))
+					{ 
+						var cont = alli.perContinent.FirstOrDefault(a => a.continent == continent);
+						if(cont!=null)
+						{
+							present = true;
+							sb.Append($"\t{cont.military}\t{cont.score}\t{cont.cities}");
+						}
+					}
+					if(!present)
+					{
+						sb.Append($"\t0\t0\t0");
+					}
+
+				}
+				sb.Append("\n");
+			}
+
+			App.CopyTextToClipboard(sb.ToString());
+			Note.Show("Copied stats to clipboard (tsv) for sheets");
+
+		}
+
+		public static async Task PlayerStats(DateTimeOffset t0, DateTimeOffset t1, int continent, int minTS, bool scoreAndCities,bool allianceStats, int maxPlayers, bool tsTotal, bool tsDef, bool tsOff)
+		{
+			BlobContainerClient container = await GetTSSnapshotContainer();
+			var snaps = new List<TSSnapshot>();
+			await foreach (var bi in container.GetBlobsAsync())
+			{
+				var t = bi.Name.ParseFileTime();
+				if (t >= t0 && t <= t1)
+					snaps.Add(await LoadTSSnapshot(bi.Name));
+			}
+			if (snaps.IsNullOrEmpty())
+			{
+				Log("No snapshots");
+				return;
+			}
+			snaps.Sort((a, b) => a.time.seconds.CompareTo(b.time.seconds));
+			var sb = new StringBuilder();
+			var pids = new List<int>();
+			{
+				var cont = snaps.Last().continents.FirstOrDefault(a => a.continent == continent);
+				if(cont ==null)
+				{
+					Log("No snapshots");
+					return;
+				}
+				foreach(var p in cont.players)
+				{
+					if (pids.Count >= maxPlayers)
+						break;
+					if(p.tsTotal >= minTS)
+					{
+						pids.Add(p.pid);
+					}
+				}
+
+			}
+			sb.Append("Time");
+			if(allianceStats)
+				sb.Append("\tAllianceTs\tAllianceTsOff\tAllianceTsDef\tOtherTS\tOtherTsOff\tOtherTsDef");
+			foreach (var pid in pids)
+			{
+				var an =Player.IdToName(pid);
+				if(scoreAndCities)
+					sb.Append($"\t{an}_score\t{an}_cities");
+				if (tsTotal)
+					sb.Append($"\t{an}_ts");
+				if (tsOff)
+					sb.Append($"\t{an}_tsOff");
+				if (tsDef)
+					sb.Append($"\t{an}_tsDef");
+			}
+			sb.Append("\n");
+			foreach (var snap in snaps)
+			{
+				var cont = snap.continents.FirstOrDefault(a => a.continent == continent);
+				if (cont == null)
+					continue;
+				sb.Append(snap.time.ToString(AUtil.fullDateFormat));
+
+
+				//alliance counts
+				var allianceTs = 0;
+				var allianceTsOff = 0;
+				var allianceTsDef = 0;
+				var otherTs = 0;
+				var otherTsOff = 0;
+				var otherTsDef = 0;
+				{
+					foreach (var p in cont.players)
+					{
+						if (Alliance.IsAlly(Player.Get(p.pid).alliance))
+						{
+							allianceTs += p.tsTotal;
+							allianceTsDef += p.tsDef;
+							allianceTsOff += p.tsOff;
+						}
+						else
+						{
+							otherTs += p.tsTotal;
+							otherTsDef += p.tsDef;
+							otherTsOff += p.tsOff;
+
+						}
+					}
+				}
+				if (allianceStats)
+				{
+					sb.Append($"\t{allianceTs}\t{allianceTsOff}\t{allianceTsDef}\t{otherTs}\t{otherTsOff}\t{otherTsDef}");
+				}
+				foreach (var pid in pids)
+				{
+					var p = cont.players.FirstOrDefault(a => a.pid == pid);
+					if (scoreAndCities)
+					{
+						if (p == null)
+							sb.Append("\t0\t0");
+						else
+							sb.Append($"\t{p.score}\t{p.cities}");
+					}
+					if (tsTotal)
+					{
+						sb.Append($"\t{ (p != null ? p.tsTotal : 0)}");
+					}
+					if (tsOff)
+					{
+						sb.Append($"\t{ (p != null ? p.tsOff : 0)}");
+					}
+					if (tsDef)
+					{
+						sb.Append($"\t{ (p != null ? p.tsDef : 0)}");
+					}
+				}
+				sb.Append("\n");
+			 }
+			
+			
+
+			App.CopyTextToClipboard(sb.ToString());
+			Note.Show("Copied stats to clipboard (tsv) for sheets");
+
+		}
+
+
+		public static async Task<Snapshot> LoadSnapshot(string str)
 		{
 			try
 			{
-				BlobContainerClient container = new BlobContainerClient(connectionString, statsContainerName, GetClientOptions());
-				await container.CreateIfNotExistsAsync();
-
+				BlobContainerClient container = await GetSnapshotContainer(); 
+				
 				var res = await container.GetBlobClient(str).DownloadAsync();
 				//if (res.GetRawResponse().Status != 200)
 				//{
@@ -300,13 +510,12 @@ namespace COTG.Services
 			return null;
 		}
 
-		public async Task<TSSnapshot> LoadTSSnapshot(string str)
+		public static async Task<TSSnapshot> LoadTSSnapshot(string str)
 		{
 			try
 			{
-				BlobContainerClient container = new BlobContainerClient(connectionString, statsTSContainerName, GetClientOptions());
-				await container.CreateIfNotExistsAsync();
-
+				BlobContainerClient container = await GetTSSnapshotContainer(); 
+				
 				var res = await container.GetBlobClient(str).DownloadAsync();
 				//if (res.GetRawResponse().Status != 200)
 				//{

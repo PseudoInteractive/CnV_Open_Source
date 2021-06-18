@@ -1,10 +1,10 @@
 ﻿//using System;
-//using System.Threading.Tasks;
+using System.Threading.Tasks;
 //using System.Collections.Generic;
 
 //using COTG.DB;
-//using COTG.Game;
-//using System.Threading;
+using COTG.Game;
+using System.Threading;
 //using static COTG.Debug;
 //using Microsoft.Azure.Cosmos;
 //using System.Net;
@@ -13,8 +13,8 @@
 //using System.Linq;
 //using Azure;
 
-//namespace COTG.Services
-//{
+namespace COTG.Services
+{
 //	public class ShareStringDB : ITableEntity
 //	{
 //		public ShareStringDB()
@@ -58,8 +58,8 @@
 //		public string s { get; set; }
 //	}
 
-//	public static class Cosmos
-//    {
+	public static class Cosmos
+    {
 //        // The Azure Cosmos DB endpoint for running this sample.
 //        private static readonly string EndpointUri = "https://avatars.documents.azure.com:443/";
 //		private static readonly string EndpointUriT = "https://avadata.table.cosmos.azure.com:443/";
@@ -382,13 +382,17 @@
 //        {
 //            public string id { get; set; }
 //        }
-//		static ConcurrentHashSet<long> used = new ConcurrentHashSet<long>();
+		static ConcurrentHashSet<long> used = new ConcurrentHashSet<long>();
 //		/// returns true of the order was inserted, false if it already existed
 //		static ItemRequestOptions itemRequesDefault = new ItemRequestOptions() { EnableContentResponseOnWrite = false };
 
 //		/// 
-//	//	public static async Task<bool> TryAddOrder(long orderId)
-// //       {
+		public static async Task<bool> TryAddOrder(long orderId)
+        {
+			if (used.Add(orderId))
+				return true;
+			else
+				return false;
 //	////		Assert(used.Add(orderId) == true);
 // //           if (!await Touch() )
 // //               return false;
@@ -419,7 +423,7 @@
 //	//			throttle.Release();
 //	//		}
 // //           return true;
-// //       }
+       }
 
 //        public static int battleRecordsUpserted;
 ////        static ItemRequestOptions itemRequestOptions = new ItemRequestOptions() { ConsistencyLevel=ConsistencyLevel.Eventual, EnableContentResponseOnWrite =false}
@@ -636,7 +640,7 @@
 //        //	cosmosClient.Dispose();
 //        //}
 //        // </DeleteDatabaseAndCleanupAsync>
-//    }
-//}
+    }
+}
 
 

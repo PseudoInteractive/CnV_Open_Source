@@ -144,13 +144,108 @@
 
 				<Button Content="Export for War"
 						Click="{x:Bind views:ExportCastles.Go}"
-						ToolTipService.ToolTip="Exports cities/castles in a spreadsheet format based on filters"
+						ToolTipService.ToolTip="Exports cities/castles to the clipboard in a spreadsheet format based on filters"
 						Style="{ThemeResource ButtonRevealStyle}"
 						Margin="4" />
 				<Button Content="Export Castles"
 						Click="CastlesIntel"
 						Style="{ThemeResource ButtonRevealStyle}"
 						Margin="4" />
+				<Button Content="Export Ranks"
+								ToolTipService.ToolTip="Exports AllianceRankings to the clipboard in a spreadsheet format" >	
+					<Button.Flyout>
+						<Flyout>
+							<StackPanel Orientation="Vertical" Width="300" >
+								<wct:WrapPanel Orientation="Horizontal" Margin="4">
+									<controls:NumberBox x:Name="exportRanksCont"
+										NumberFormatter="{x:Bind cotg:App.formatterInt,Mode=OneTime}"
+										Style="{StaticResource NumberBoxSmall}"
+										Header="Continent"
+										ToolTipService.ToolTip="56 means world"
+										Value="3" />
+									<controls:NumberBox x:Name="exportRanksCities"
+										NumberFormatter="{x:Bind cotg:App.formatterInt,Mode=OneTime}"
+										Style="{StaticResource NumberBoxSmall}"
+										Header="Min Cities"
+										ToolTipService.ToolTip="Alliances with fewer than this many cities are skipped"
+										Value="300" />
+									<controls:NumberBox x:Name="exportRanksDays"
+										NumberFormatter="{x:Bind cotg:App.formatter2Digit,Mode=OneTime}"
+										Style="{StaticResource NumberBoxSmall}"
+										Header="Days"
+										ToolTipService.ToolTip="Max number of days to export"
+										Value="7" />
+								</wct:WrapPanel>
+								<Button Content="Export" Click="ExportRanks"/>
+							</StackPanel>
+						</Flyout>
+					</Button.Flyout>
+				</Button>
+
+				<Button Content="Export TS"
+						Click="ExportTS"
+						ToolTipService.ToolTip="Exports Player TS to the clipboard in a spreadsheet format Note: Non alliance TS counts are guesses"
+						Style="{ThemeResource ButtonRevealStyle}"
+						Margin="4" >
+					<Button.Flyout>
+						<Flyout x:Name="exportTSFlyout">
+							<StackPanel Orientation="Vertical" Width="300" >
+								<wct:WrapPanel Orientation="Horizontal" Margin="4">
+									<controls:NumberBox x:Name="exportTSCont"
+									NumberFormatter="{x:Bind cotg:App.formatterInt,Mode=OneTime}"
+									Style="{StaticResource NumberBoxSmall}"
+									Header="Continent"
+									ToolTipService.ToolTip="56 means world"
+									Value="3" />
+									<controls:NumberBox x:Name="exportTSPlayers"
+									NumberFormatter="{x:Bind cotg:App.formatterInt,Mode=OneTime}"
+									Style="{StaticResource NumberBoxSmall}"
+									Header="Players"
+									ToolTipService.ToolTip="Max # of players to export"
+									Value="40" />
+									<controls:NumberBox x:Name="exportTSMinTS"
+									NumberFormatter="{x:Bind cotg:App.formatterInt,Mode=OneTime}"
+									Style="{StaticResource NumberBoxSmall}"
+									Header="MinTS"
+									ToolTipService.ToolTip="Cities with fewer TS will not be exported"
+									Value="300" />
+									<controls:NumberBox x:Name="exportTSDays"
+									NumberFormatter="{x:Bind cotg:App.formatter2Digit,Mode=OneTime}"
+									Style="{StaticResource NumberBoxSmall}"
+									Header="Days"
+									ToolTipService.ToolTip="Max number of days to export"
+									Value="7" />
+									<CheckBox x:Name="exportTSAlliance"
+									Content="Alliance Stats"
+									ToolTipService.ToolTip="Include alliance TS"
+									IsChecked="True" />
+
+									<CheckBox x:Name="exportTSScore"
+									Content="Score"
+									ToolTipService.ToolTip="Include score and city count"
+									IsChecked="False" />
+
+									<CheckBox x:Name="exportTSTotal"
+									Content="TS"
+									ToolTipService.ToolTip="Include Total TS"
+									IsChecked="True" />
+									<CheckBox x:Name="exportTSOff"
+									Content="Def TS"
+									ToolTipService.ToolTip="Include Off TS"
+									IsChecked="False" />
+									<CheckBox x:Name="exportTSDef"
+									Content="Def TS"
+									ToolTipService.ToolTip="Include Def TS"
+									IsChecked="False" />
+
+
+								</wct:WrapPanel>
+								<Button Content="Export" Click="ExportTS"/>
+								
+							</StackPanel>
+						</Flyout>
+					</Button.Flyout>
+				</Button>
 				<controls:NumberBox x:Name="CastlesCont"
 									NumberFormatter="{x:Bind cotg:App.formatterInt,Mode=OneTime}"
 									Style="{StaticResource NumberBoxSmall}"

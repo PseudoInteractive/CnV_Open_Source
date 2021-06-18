@@ -881,5 +881,27 @@ namespace COTG.Views
 			instance.Hide();
 			JSClient.ShowWhatsNew();
 		}
+
+		private void ExportRanks(object sender, RoutedEventArgs e)
+		{
+			var cont = exportRanksCont.Value.RoundToInt();
+			var t1 = JSClient.ServerTime();
+			Blobs.AllianceStats(t1 - TimeSpan.FromDays(exportRanksDays.Value), t1, cont, exportRanksCities.Value.RoundToInt() );
+		}
+
+		private void ExportTS(object sender, RoutedEventArgs e)
+		{
+			var cont = exportTSCont.Value.RoundToInt();
+			var tsMin = exportTSMinTS.Value.RoundToInt();
+			var t1 = JSClient.ServerTime();
+			Blobs.PlayerStats(t1-TimeSpan.FromDays(exportTSDays.Value), t1,cont,tsMin,this.exportTSScore.IsChecked.GetValueOrDefault(),exportTSAlliance.IsChecked.GetValueOrDefault(), 
+				exportTSPlayers.Value.RoundToInt(),
+				exportTSTotal.IsChecked.GetValueOrDefault(),
+				exportTSOff.IsChecked.GetValueOrDefault(),
+				exportTSDef.IsChecked.GetValueOrDefault()
+				);
+
+
+		}
 	}
 }

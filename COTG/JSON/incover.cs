@@ -459,73 +459,73 @@ namespace COTG.JSON
 													  if (((army.type == reportPending) || (army.type == reportSieging && (army.claim > 0))) && !reused)
 													  {
 
+														  if (!Alliance.IsAlly(army.sourceAlliance))
+														  {
 
 
-														  //if (Discord.isValid && _hasRun)
-														  //{
+
+															  if (Discord.isValid )
+															  {
 
 
-														  // if (++reportCount < 64)
-														  // {
-														  //  if (await Cosmos.TryAddOrder(order))
-														  //  {
-														  //	  App.EnqeueTask(async () =>
-														  //	  {
-														  //		  try
-														  //		  {
-														  //			  var name = army.tPlayer;
-														  //			  if (!Discord.members.TryGetValue(name.ToLower(), out var tag))
-														  //				  tag = name;
-														  //			  var target = Spot.GetOrAdd(army.targetCid);
-														  //			  var _source = Spot.GetOrAdd(army.sourceCid);
-														  //			  while (!_source.isClassified)
-														  //			  {
-														  //				  await Task.Delay(400);
-														  //			  }
-														  //			  var content = $"<@{tag}> {(army.sourceAlliance == Alliance.myId ? "internal " : "")} {army.time.FormatSkipDateIfToday()}: {_source.classificationString}, {army.miscInfo} to {target.cityName} ({target.xy}) from  {_source.cityName} ({_source.xy}) {_source.player}";
-														  //			  if (army.claim > 0)
-														  //			  {
-														  //				  content += $" claim {army.claim}%";
-														  //			  }
-														  //		  //  Note.Show(content);
+														    if (++reportCount < 64)
+														    {
+														    if (await Cosmos.TryAddOrder(order))
+														    {
+																	  App.EnqeueTask(async () =>
+																	  {
+																		  try
+																		  {
+																			  var name = army.tPlayer;
+																			
+																			  var target = Spot.GetOrAdd(army.targetCid);
+																			  var _source = Spot.GetOrAdd(army.sourceCid);
+																			  while (!_source.isClassified)
+																			  {
+																				  await Task.Delay(400);
+																			  }
+																			  var content = $"<@{name}> {army.time.FormatSkipDateIfToday()}: {army.miscInfo}, {ttNameWithCaps[army.troops.GetPrimaryTroopType()]} to {target.cityName} ({target.xy}) from  {_source.player.name} {_source.cityName} ({_source.xy}";
+																			  if (army.claim > 0)
+																			  {
+																				  content += $" claim {army.claim}%";
+																			  }
+																		//  Note.Show(content);
 
-														  //		  var client = JSClient.genericClient;
-
-
-														  //			  var message = new Discord.Message() { username = "INCOMING", content = content, avatar_url = "" };
-														  //			  for (int i = 0; i < 4; ++i) // retry up to 4 times;
-														  //		  {
-
-														  //				  var post = new HttpStringContent(
-														  //								JsonSerializer.Serialize(message), Windows.Storage.Streams.UnicodeEncoding.Utf8,
-														  //								 "application/json");
-
-														  //				  var result = await client.PostAsync(Discord.discordIncomingHook, post);
-														  //				  if (result.StatusCode == HttpStatusCode.TooManyRequests)
-														  //				  {
-														  //					  await Task.Delay(2000); // wait 2 seconds
-														  //			  }
-														  //				  else
-														  //				  {
-														  //					  result.EnsureSuccessStatusCode();
-														  //					  break;
-														  //				  }
-														  //			  }
-														  //		  }
-														  //		  catch (Exception ex)
-														  //		  {
-														  //			  Log(ex);
-														  //		  }
-														  //	  });
-														  //  }
-														  // }
+																		var client = JSClient.genericClient;
 
 
-														  //}
+																			  var message = new Discord.Message() { username = "INCOMING", content = content, avatar_url = "" };
+																			  for (int i = 0; i < 4; ++i) // retry up to 4 times;
+																		{
+
+																				  var post = new HttpStringContent(
+																								JsonSerializer.Serialize(message), Windows.Storage.Streams.UnicodeEncoding.Utf8,
+																								 "application/json");
+
+																				  var result = await client.PostAsync(Discord.discordIncomingHook, post);
+																				  if (result.StatusCode == HttpStatusCode.TooManyRequests)
+																				  {
+																					  await Task.Delay(2000); // wait 2 seconds
+																			}
+																				  else
+																				  {
+																					  result.EnsureSuccessStatusCode();
+																					  break;
+																				  }
+																			  }
+																		  }
+																		  catch (Exception ex)
+																		  {
+																			  Log(ex);
+																		  }
+																	  });
+																  }
+															  }
+
+
+														  }
 
 													  }
-													  if (!Alliance.IsAlly(army.sourceAlliance))
-													  {
 														  if (watch.Contains(name))
 														  {
 															  watchIncoming.count++;

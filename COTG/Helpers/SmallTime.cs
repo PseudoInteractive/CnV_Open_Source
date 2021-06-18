@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Globalization;
 
 namespace COTG
 {
@@ -70,7 +71,7 @@ namespace COTG
 		}
 		public string ToString(string s)
 		{
-			return dateTime.ToString(s);
+			return dateTime.ToString(s, CultureInfo.InvariantCulture);
 		}
 
 		public bool Equals(SmallTime other)

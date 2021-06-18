@@ -316,8 +316,10 @@ namespace COTG.Game
 		public int tsOff;
 		public int tsDef;// tsDef is difference
 	}
+
 	class TSSnapshot
 	{
+		const int maxPlayersPerSnapshot = 48;
 		public SmallTime time;
 		public List<TSContinentStats> continents = new();
 
@@ -355,6 +357,8 @@ namespace COTG.Game
 								ps.cities = i.GetAsInt("5");
 
 								cs.players.Add(ps);
+								if (cs.players.Count >= maxPlayersPerSnapshot)
+									break;
 							}
 						}
 						// these are unknown values
