@@ -77,7 +77,7 @@ namespace COTG.JSON
 
 		public async static Task DoProcess()
 		{
-			if (updateInProgress )
+			if (updateInProgress)
 			{
 				Assert(false);
 
@@ -91,7 +91,7 @@ namespace COTG.JSON
 
 				updateInProgress = true;
 
-				if ( !World.initialized)
+				if (!World.initialized)
 				{
 					do
 					{
@@ -393,7 +393,7 @@ namespace COTG.JSON
 													  army.troops = (ttl);
 													  Assert(army.troops.Any());
 												  }
-												  else
+												  else // attack
 												  {
 													  // not sieging
 													  if (army.type == reportPending)
@@ -464,68 +464,75 @@ namespace COTG.JSON
 
 
 
-															  if (Discord.isValid )
+															  if (Discord.isValid)
 															  {
 
 
-														    if (++reportCount < 64)
-														    {
-														    if (await Cosmos.TryAddOrder(order))
-														    {
-																	  App.EnqeueTask(async () =>
+																  if (++reportCount < 64)
+																  {
+																	  var _army = army;
+																	  if (await Tables.TryAddOrder(_army.time,_army.order))
 																	  {
-																		  try
+																		  //Log($"Enqueue {order}");
+																		  App.EnqeueTask(async () =>
 																		  {
-																			  var name = army.tPlayer;
-																			
-																			  var target = Spot.GetOrAdd(army.targetCid);
-																			  var _source = Spot.GetOrAdd(army.sourceCid);
-																			  while (!_source.isClassified)
+																			  try
 																			  {
-																				  await Task.Delay(400);
-																			  }
-																			  var content = $"<@{name}> {army.time.FormatSkipDateIfToday()}: {army.miscInfo}, {ttNameWithCaps[army.troops.GetPrimaryTroopType()]} to {target.cityName} ({target.xy}) from  {_source.player.name} {_source.cityName} ({_source.xy}";
-																			  if (army.claim > 0)
+																				  //Log($"Enqueue2 {order}");
+																				  var name = _army.tPlayer;
+
+																				  var target = Spot.GetOrAdd(_army.targetCid);
+																				  var _source = Spot.GetOrAdd(_army.sourceCid);
+																				  while (!_source.isClassified)
+																				  {
+																					  await Task.Delay(400);
+																				  }
+																				  if (!Discord.members.TryGetValue(name.ToLower(), out var id))
+																					  id = name;
+																					  
+																				  var content = $"<@{id}> {_army.time.FormatSkipDateIfToday()}: {army.miscInfo}, {ttNameWithCaps[army.troops.GetPrimaryTroopType()]} to {target.cityName} ({target.xy}) from  {_source.player.name} {_source.cityName} ({_source.xy}";
+																				  if (army.claim > 0)
+																				  {
+																					  content += $" claim {army.claim}%";
+																				  }
+
+																				  //      Note.Show(content);
+
+																				  var client = JSClient.genericClient;
+
+
+																				  var message = new Discord.Message() { username = "INCOMING", content = content, avatar_url = "" };
+																				  for (int i = 0; i < 4; ++i) // retry up to 4 times;
 																			  {
-																				  content += $" claim {army.claim}%";
-																			  }
-																		//  Note.Show(content);
 
-																		var client = JSClient.genericClient;
+																					  var post = new HttpStringContent(
+																									JsonSerializer.Serialize(message), Windows.Storage.Streams.UnicodeEncoding.Utf8,
+																									 "application/json");
 
-
-																			  var message = new Discord.Message() { username = "INCOMING", content = content, avatar_url = "" };
-																			  for (int i = 0; i < 4; ++i) // retry up to 4 times;
-																		{
-
-																				  var post = new HttpStringContent(
-																								JsonSerializer.Serialize(message), Windows.Storage.Streams.UnicodeEncoding.Utf8,
-																								 "application/json");
-
-																				  var result = await client.PostAsync(Discord.discordIncomingHook, post);
-																				  if (result.StatusCode == HttpStatusCode.TooManyRequests)
-																				  {
-																					  await Task.Delay(2000); // wait 2 seconds
-																			}
-																				  else
-																				  {
-																					  result.EnsureSuccessStatusCode();
-																					  break;
+																					  var result = await client.PostAsync(Discord.discordIncomingHook, post);
+																					  if (result.StatusCode == HttpStatusCode.TooManyRequests)
+																					  {
+																						  await Task.Delay(2000); // wait 2 seconds
+																				  }
+																					  else
+																					  {
+																						  result.EnsureSuccessStatusCode();
+																						  break;
+																					  }
 																				  }
 																			  }
-																		  }
-																		  catch (Exception ex)
-																		  {
-																			  Log(ex);
-																		  }
-																	  });
+																			  catch (Exception ex)
+																			  {
+																				  Log(ex);
+																			  }
+																		  });
+																	  }
 																  }
+
+
 															  }
 
-
 														  }
-
-													  }
 														  if (watch.Contains(name))
 														  {
 															  watchIncoming.count++;
@@ -574,9 +581,9 @@ namespace COTG.JSON
 
 							  }
 						  }
-						  catch(Exception ex)
+						  catch (Exception ex)
 						  {
-							  LogEx(ex, eventName:"IncomingOverview", report: false);
+							  LogEx(ex, eventName: "IncomingOverview", report: false);
 						  }
 
 					  });
@@ -655,9 +662,9 @@ namespace COTG.JSON
 												// todo TS info
 
 											};
-											Set( ref report.troops, new TroopTypeCount(ttScout, ats / 2) );
-											Set( ref report.sumDef, new TroopTypeCount(ttGuard, dts) );
-												
+											Set(ref report.troops, new TroopTypeCount(ttScout, ats / 2));
+											Set(ref report.sumDef, new TroopTypeCount(ttGuard, dts));
+
 											reportCache.TryAdd(hash, report);
 											parts[part].Add(report);
 											//			await Cosmos.AddBattleRecord(report);
@@ -718,8 +725,8 @@ namespace COTG.JSON
 
 																	if (report.TryGetProperty("ats", out var ats))
 																	{
-																		Set(ref atkTroops,ats);
-																		
+																		Set(ref atkTroops, ats);
+
 																	}
 																	{
 																		if (report.TryGetProperty("tts", out var tts))
@@ -775,10 +782,10 @@ namespace COTG.JSON
 																			refines = refines,
 																			isAttack = true,
 																			reportId = recId,
-																			
+
 																			dTsKill = defTS - defTSLeft,
 																			aTsKill = atkTSKilled.Max(atkTS - atkTSLeft),
-																			
+
 
 																			sourceCid = source,
 																			targetCid = target,
@@ -789,7 +796,7 @@ namespace COTG.JSON
 																			// todo TS info
 
 																		};
-																		rep.sumDef =defTroops;
+																		rep.sumDef = defTroops;
 																		rep.troops = (atkTroops);
 																		reportCache.TryAdd(hash, rep);
 																		parts[part].Add(rep);
@@ -893,7 +900,7 @@ namespace COTG.JSON
 									}
 								}
 								killNote = $", {atkKilled:N0}({myAtkKilled:N0})TS atk ts killed, {defKilled:N0}({myDefKilled:N0})TS def Killed";
-							//	App.CopyTextToClipboard(killNote);
+								//	App.CopyTextToClipboard(killNote);
 								// App.DispatchOnUIThread(() =>
 								// We should do this on the Render Thread
 								defPage.SetHistory((reportsIncoming.OrderByDescending((atk) => atk.time.Ticks)).ToArray());
@@ -914,21 +921,21 @@ namespace COTG.JSON
 
 					});
 				}
-				}
-				catch (Exception exception)
-				{
-					LogEx(exception);
-					if (fetchReports)
-						ShellPage.WorkEnd(work);
-				}
+			}
+			catch (Exception exception)
+			{
+				LogEx(exception);
+				if (fetchReports)
+					ShellPage.WorkEnd(work);
+			}
 
 
-			
-		finally
-						{
-							updateInProgress = false;
 
-						}
+			finally
+			{
+				updateInProgress = false;
+
+			}
 
 			return;
 

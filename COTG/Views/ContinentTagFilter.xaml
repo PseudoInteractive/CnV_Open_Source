@@ -12,14 +12,14 @@
     SecondaryButtonText="Cancel"
     PrimaryButtonClick="ContentDialog_PrimaryButtonClick"
     SecondaryButtonClick="ContentDialog_SecondaryButtonClick">
-    <StackPanel>
+	<StackPanel Width="290" >
 		<StackPanel Orientation="Horizontal">
 			<TextBlock Text="Continents" VerticalAlignment="Center" Margin="8,0"  />
 			<Button Content="Clear Filter" Click="ContinentFilterClear" Style="{StaticResource ButtonSmall}" />
 		</StackPanel>
 		<Border
                     Style="{StaticResource BorderReveal}">
-			<tk:WrapPanel x:Name="continentsPanel" x:FieldModifier="public" />
+			<tk:WrapPanel x:Name="continentsPanel" x:FieldModifier="public"  />
 		</Border>
 		<StackPanel Orientation="Horizontal">
 			<TextBlock Text="Tags" VerticalAlignment="Center" Margin="8,0"  />

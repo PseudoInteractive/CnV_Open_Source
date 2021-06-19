@@ -5,6 +5,7 @@ namespace COTG.Services
 	{
 		public static Dictionary<string, string> members = new Dictionary<string, string>
 		{
+			{"goyoalfaz", "269961486707720194" },
 			{ "luminoxus", "716608712873082881" },
 			{ "lord_marty", "747244123668480100" },
 			{ "dhruv", "182783045072322561" },

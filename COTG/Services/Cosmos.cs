@@ -382,48 +382,6 @@ namespace COTG.Services
 //        {
 //            public string id { get; set; }
 //        }
-		static ConcurrentHashSet<long> used = new ConcurrentHashSet<long>();
-//		/// returns true of the order was inserted, false if it already existed
-//		static ItemRequestOptions itemRequesDefault = new ItemRequestOptions() { EnableContentResponseOnWrite = false };
-
-//		/// 
-		public static async Task<bool> TryAddOrder(long orderId)
-        {
-			if (used.Add(orderId))
-				return true;
-			else
-				return false;
-//	////		Assert(used.Add(orderId) == true);
-// //           if (!await Touch() )
-// //               return false;
-// //           var order = new Order() { id = orderId.ToString() };
-//	//		await throttle.WaitAsync();
-//	//		try
-//	//		{
-//	//			//var result = await ordersContainer.CreateItemAsync(order, new PartitionKey(order.id));
-//	//			var result = await ordersContainer.CreateItemAsync(order, new PartitionKey(order.id), itemRequesDefault);
-			
-// //           }
-//	//		catch (CosmosException ex)
-//	//		{
-//	//			if (ex.StatusCode == HttpStatusCode.Conflict)
-//	//				return false;
-//	//			Log(ex);
-
-//	//		}
-//	//		catch (Exception ex)
-// //           {
-              
-//	//			Log(ex);
-//	//			return false;
-// //           }
-			
-//	//		finally
-//	//		{
-//	//			throttle.Release();
-//	//		}
-// //           return true;
-       }
 
 //        public static int battleRecordsUpserted;
 ////        static ItemRequestOptions itemRequestOptions = new ItemRequestOptions() { ConsistencyLevel=ConsistencyLevel.Eventual, EnableContentResponseOnWrite =false}

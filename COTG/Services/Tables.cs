@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Azure;
 using Azure.Data.Tables;
 using Azure.Data.Tables.Models;
+using System.Globalization;
 
 using static COTG.Debug;
 
@@ -36,27 +37,65 @@ namespace COTG.Services
 
 	}
 
+	public class IncomingDB : ITableEntity
+	{
+		public IncomingDB() 
+		{ 
+		}
+
+		public IncomingDB(DateTimeOffset date,long orderId)
+		{
+			this.PartitionKey = date.ToString("yyyy_MM_dd", CultureInfo.InvariantCulture );
+			this.RowKey = orderId.ToString();
+		}
+
+		public string PartitionKey { get; set; }
+		public string RowKey { get; set; }
+		public DateTimeOffset? Timestamp { get; set; }
+		public ETag ETag { get; set; }
+	}
+
 	class Tables
 	{
-			const string accountName = "avata";
+		const string accountName = "avata";
+		const string storageUri = "https://" + accountName + ".table.core.windows.net/";
+		const string storageAccountKey = "IWRPGlttorpK5DcHWin/GdA2VEcZKnHkr30lE0ZDvKLG0q1CjZONcAQYI2D26DENd7TIAxF8tPsE0mIk98BafA==";
+		const string tableName = "sharestring";
+		static string incTableName => $"inc{JSClient.world}";
 		// DefaultEndpointsProtocol=https;AccountName=avata;AccountKey=IWRPGlttorpK5DcHWin/GdA2VEcZKnHkr30lE0ZDvKLG0q1CjZONcAQYI2D26DENd7TIAxF8tPsE0mIk98BafA==;EndpointSuffix=core.windows.net
 		static TableServiceClient serviceClient;
 		static TableClient tableClient;
+		static TableClient incTableClient;
+		static TableServiceClient GetServiceClient()
+		{
+			if(serviceClient == null)
+			{
+				serviceClient = new TableServiceClient(
+					new Uri(storageUri),
+					new TableSharedKeyCredential(accountName, storageAccountKey));
+			}
+			return serviceClient;
+		}
+
 		static bool TouchT()
 		{
 			if (tableClient != null)
 				return true;
 
-			string storageUri = $"https://{accountName}.table.core.windows.net/";
-			string storageAccountKey = "IWRPGlttorpK5DcHWin/GdA2VEcZKnHkr30lE0ZDvKLG0q1CjZONcAQYI2D26DENd7TIAxF8tPsE0mIk98BafA==";
-			string tableName = "sharestring";
-
-			serviceClient = new TableServiceClient(
-				new Uri(storageUri),
-				new TableSharedKeyCredential(accountName, storageAccountKey));
-
+			var serviceClient = GetServiceClient();
 			tableClient = serviceClient.GetTableClient(tableName);
 			return true;
+		}
+		static TableClient TouchIncT()
+		{
+			if (incTableClient == null)
+			{
+				Log("Create Table");
+				var serviceClient = GetServiceClient();
+				incTableClient = serviceClient.GetTableClient(incTableName);
+			}
+
+			return incTableClient;
 		}
 
 
@@ -75,6 +114,7 @@ namespace COTG.Services
 			catch (Exception e)
 			{
 				LogEx(e);
+				serviceClient = null;
 				tableClient = null; // try recreating it.
 			}
 		}
@@ -100,9 +140,73 @@ namespace COTG.Services
 			{
 				LogEx(ex);
 				tableClient = null; // try recreating it.
+				serviceClient = null;
 			}
 			return null;
 		}
+
+		static ConcurrentHashSet<long> ordersSeen = new ConcurrentHashSet<long>();
+		//		/// returns true of the order was inserted, false if it already existed
+		//		static ItemRequestOptions itemRequesDefault = new ItemRequestOptions() { EnableContentResponseOnWrite = false };
+
+		//		/// 
+		public static async Task<bool> TryAddOrder(DateTimeOffset date, long orderId)
+		{
+			//Log($"Order {date} {orderId}");
+			if (!ordersSeen.Add(orderId))
+				return false;
+
+			try
+			{
+
+				var tab = TouchIncT();
+				var ent = new IncomingDB(date, orderId);
+				await tab.AddEntityAsync(ent);
+				//	Log($"Created entry {orderId}");
+
+				return true;
+				
+				//return false;
+			}
+			catch(Exception ex)
+			{
+				//LogEx(ex);
+
+				return false;
+			}
+			//	////		Assert(used.Add(orderId) == true);
+			// //           if (!await Touch() )
+			// //               return false;
+			// //           var order = new Order() { id = orderId.ToString() };
+			//	//		await throttle.WaitAsync();
+			//	//		try
+			//	//		{
+			//	//			//var result = await ordersContainer.CreateItemAsync(order, new PartitionKey(order.id));
+			//	//			var result = await ordersContainer.CreateItemAsync(order, new PartitionKey(order.id), itemRequesDefault);
+
+			// //           }
+			//	//		catch (CosmosException ex)
+			//	//		{
+			//	//			if (ex.StatusCode == HttpStatusCode.Conflict)
+			//	//				return false;
+			//	//			Log(ex);
+
+			//	//		}
+			//	//		catch (Exception ex)
+			// //           {
+
+			//	//			Log(ex);
+			//	//			return false;
+			// //           }
+
+			//	//		finally
+			//	//		{
+			//	//			throttle.Release();
+			//	//		}
+			// //           return true;
+		}
+
+
 	}
 }
 

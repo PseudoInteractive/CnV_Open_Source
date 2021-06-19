@@ -2402,6 +2402,8 @@ namespace COTG
 					   //    App.QueueIdleTask(ShellPage.ShowTipRefresh);
 					   // await RaidOverview.Send();
 					   App.QueueIdleTask(IncomingOverview.ProcessTask, 1000);
+					   App.QueueIdleTask(OutgoingOverview.ProcessTask, 1000);
+
 					   SetStayAlive(SettingsPage.stayAlive);
 					   //{
 					   //    //var now = DateTime.UtcNow;
