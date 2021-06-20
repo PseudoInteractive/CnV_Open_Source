@@ -323,7 +323,7 @@ namespace COTG.Views
 				DonationTab.reserveWood = st.Read(nameof(DonationTab.reserveWood), 0);
 				DonationTab.reserveStone = st.Read(nameof(DonationTab.reserveStone), 0);
 				Tips.ReadSeen();
-				World.LoadContinentHistory();
+			//	World.LoadContinentHistory();
 
 				// incomingWatch = st.Read(nameof(incomingWatch), Array.Empty<string>() );
 				//    autoBuildOn = st.Read(nameof(autoBuildOn)+'2', -1) switch {  0 => false, 1 => true, _ => null };

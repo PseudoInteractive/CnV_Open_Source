@@ -128,19 +128,19 @@ namespace COTG.Game
 
 	};
 
-	public struct ContinentsSnapshot
-	{
-		public DateTime time { get; set; }
-		public struct ContinentSnapshot
-		{
-			public int settled { get; set; } // includes castles
-			public int castles { get; set; } // [3]
-		};
+	//public struct ContinentsSnapshot
+	//{
+	//	public DateTime time { get; set; }
+	//	public struct ContinentSnapshot
+	//	{
+	//		public int settled { get; set; } // includes castles
+	//		public int castles { get; set; } // [3]
+	//	};
 
-		public ContinentSnapshot[] continents { get; set; }
+	//	public ContinentSnapshot[] continents { get; set; }
 
-		static public ContinentsSnapshot[] all = Array.Empty<ContinentsSnapshot>(); // ordered by date and time
-	};
+	//	static public ContinentsSnapshot[] all = Array.Empty<ContinentsSnapshot>(); // ordered by date and time
+	//};
 
 	public class Boss
 	{
@@ -1184,40 +1184,42 @@ namespace COTG.Game
 
 			//worldOwnerPixels = ownerPixels;
 
-			{
-				var contData = jsd.RootElement.GetProperty("b");//.ToString();
-				var shot = new ContinentsSnapshot();
-				shot.continents = new ContinentsSnapshot.ContinentSnapshot[Continent.count];
+			//{
+			//	var contData = jsd.RootElement.GetProperty("b");//.ToString();
+			//	var shot = new ContinentsSnapshot();
+			//	shot.continents = new ContinentsSnapshot.ContinentSnapshot[Continent.count];
 
-				foreach (var cnt in contData.EnumerateObject())
-				{
-					var cntV = cnt.Value;
-					var key = int.Parse(cnt.Name);
-					var contId = Continent.GetPackedIdFromContUnpacked(key);
-					Continent.all[contId].id = (byte)key;
-					Continent.all[contId].unsettled = cntV[0].GetInt32();
-					Continent.all[contId].settled = cntV[1].GetInt32();
-					Continent.all[contId].cities = cntV[2].GetInt32();
-					Continent.all[contId].castles = cntV[3].GetInt32();
-					Continent.all[contId].dungeons = cntV[4].GetUInt16();
-					Continent.all[contId].temples = cntV[5].GetUInt16();
-					Continent.all[contId].bosses = cntV[6].GetUInt16();
-					var index = Continent.GetPackedIdFromContUnpacked(contId);
-					shot.continents[contId].settled = Continent.all[contId].settled;
-					shot.continents[contId].castles = Continent.all[contId].castles;
-				}
-				shot.time = JSClient.ServerTime().UtcDateTime;
-				if (ContinentsSnapshot.all.Length > 0 && shot.time - ContinentsSnapshot.all.Last().time < TimeSpan.FromHours(1.5f))
-				{
-					// don't update, max one snapshot per 1.5 hours
-				}
-				else
-				{
-					ContinentsSnapshot.all = ContinentsSnapshot.all.ArrayAppend(shot);
-					ApplicationData.Current.LocalFolder.SaveAsync("continentHistory", ContinentsSnapshot.all, false);
-				}
+			//	foreach (var cnt in contData.EnumerateObject())
+			//	{
+			//		var cntV = cnt.Value;
+			//		if (cntV.ValueKind != JsonValueKind.Array)
+			//			continue;
+			//		var key = int.Parse(cnt.Name);
+			//		var contId = Continent.GetPackedIdFromContUnpacked(key);
+			//		Continent.all[contId].id = (byte)key;
+			//		Continent.all[contId].unsettled = cntV[0].GetInt32();
+			//		Continent.all[contId].settled = cntV[1].GetInt32();
+			//		Continent.all[contId].cities = cntV[2].GetInt32();
+			//		Continent.all[contId].castles = cntV[3].GetInt32();
+			//		Continent.all[contId].dungeons = cntV[4].GetUInt16();
+			//		Continent.all[contId].temples = cntV[5].GetUInt16();
+			//		Continent.all[contId].bosses = cntV[6].GetUInt16();
+			//		var index = Continent.GetPackedIdFromContUnpacked(contId);
+			//		shot.continents[contId].settled = Continent.all[contId].settled;
+			//		shot.continents[contId].castles = Continent.all[contId].castles;
+			//	}
+			//	shot.time = JSClient.ServerTime().UtcDateTime;
+			//	if (ContinentsSnapshot.all.Length > 0 && shot.time - ContinentsSnapshot.all.Last().time < TimeSpan.FromHours(1.5f))
+			//	{
+			//		// don't update, max one snapshot per 1.5 hours
+			//	}
+			//	else
+			//	{
+			//		ContinentsSnapshot.all = ContinentsSnapshot.all.ArrayAppend(shot);
+			//		ApplicationData.Current.LocalFolder.SaveAsync("continentHistory", ContinentsSnapshot.all, false);
+			//	}
 
-			}
+			//}
 
 			Task.Run(async () =>
 		   {
@@ -1257,11 +1259,11 @@ namespace COTG.Game
 			}
 		}
 
-		public static async void LoadContinentHistory()
-		{
-			ContinentsSnapshot.all = await ApplicationData.Current.LocalFolder.ReadAsync("continentHistory", ContinentsSnapshot.all);
+		//public static async void LoadContinentHistory()
+		//{
+		//	ContinentsSnapshot.all = await ApplicationData.Current.LocalFolder.ReadAsync("continentHistory", ContinentsSnapshot.all);
 
-		}
+		//}
 		public static (string label, bool isMine, bool hasIncoming, bool hovered, Spot spot) GetLabel((int x, int y) c)
 		{
 			var data = GetInfo(c);

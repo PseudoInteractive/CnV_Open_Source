@@ -357,12 +357,12 @@ namespace COTG.Views
 
             });
         }
-
+		static string attacksFile => "attacks" + JSClient.world.ToString();
 		internal static async Task SaveAttacks()
 		{
 			if (loaded)
 			{
-				await folder.SaveAsync("attacks", readable,true);
+				await folder.SaveAsync(attacksFile, readable,true);
 			}
 		}
 		public static async Task WaitAndSaveAttacks()
@@ -384,7 +384,7 @@ namespace COTG.Views
 
 				loaded = true;
                 using var work = new ShellPage.WorkScope("load attacks");
-                readable = await folder.ReadAsync<ReadableAttacks>("attacks", readable);
+                readable = await folder.ReadAsync<ReadableAttacks>(attacksFile, readable);
 				// App.DispatchOnUIThreadSneaky(() =>
 				//  {
 				var attacks = new List<Spot>();
