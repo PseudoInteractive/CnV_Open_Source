@@ -649,7 +649,7 @@ namespace COTG.Game
 				{
 					commandSlots = 5;
 					isCastle = false;
-					if (eBd.GetArrayLength() == citySpan * citySpan)
+					if (eBd.ValueKind == JsonValueKind.Array &&  eBd.GetArrayLength() == citySpan * citySpan)
 					{
 						if (buildings == Emptybuildings)
 							buildings = new JSON.Building[citySpan * citySpan];

@@ -1723,6 +1723,8 @@ namespace COTG.Game
 			for (int i = 1; i < ttCount; ++i)
 			{
 				var dt = TimeSpan.FromSeconds(dist * TTTravel(i));
+				if (IsTTNaval(i))
+					dt += TimeSpan.FromHours(1.0);
 				sb.Append($"\n{ttName[i]}: {dt.ToString(AUtil.defaultTimeSpanFormat)}");
 			}
 			var str = sb.ToString();

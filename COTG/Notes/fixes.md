@@ -166,3 +166,24 @@
     - To run a second instance of the app (for another world for instance) press [Windows Key]+R, then type: cotg:launch?n=1
 	- Not thoroughly tested but it seems to work...
 	- https://i.imgur.com/OrxwWHv.png
+### 2021/6/21
+   - **Workaround**
+	 - Some mysterious change has caused the server to not send a cookie when you login
+	 - The temporary workaround is to log in with a browser, copy your cookie and set it in the App.
+	  - Once set, the cookie will last until you clear the cookie (i.e. switch user or uninstall)
+	 - The problematic cookie is called "remember_me"
+	 - We will post instruction on how to get the cookie from various browsers in Discord (the cookie is a number)
+	 - In app you press the cookie button (top center) and enter the number, this will be remembered, so you should only have to do it once
+### 2021/6/22
+   - **Workaround 2**
+	 - More cookies
+	 - Now there are two
+	 - Please see https://docs.google.com/document/d/1V8Zd47Sw47zzj0UIVge9VBkg4Y8uTut6OIDLR1WR2s8/edit?usp=sharing
+### 2021/6/24
+   - **New**
+	 - The Heatmap now shows measures of player activity
+	 - Select a range of dates, set a continent filter if desired and player activity will be displayed in the bottom tab
+	 - **Tip**
+	  - To see changes for a day, first tap on the "..click to load" text to load the data
+	 - **Tip**
+	  - To export to a spread sheel, use control-a and then control-c, then paste somewhere

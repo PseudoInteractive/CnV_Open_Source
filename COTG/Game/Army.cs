@@ -71,7 +71,8 @@ namespace COTG.Game
         public DateTimeOffset time { get; set; }
         public DateTimeOffset spotted { get; set; }
         public float journeyTime => spotted == AUtil.dateTimeZero ? 2 * 60 * 60.0f : (float)(time - spotted).TotalSeconds;
-        public float TimeToArrival(DateTimeOffset serverTime) => (float)(time - serverTime).TotalSeconds;
+		public double journeyTimeD => spotted == AUtil.dateTimeZero ? 2 * 60 * 60.0 : (time - spotted).TotalSeconds;
+		public float TimeToArrival(DateTimeOffset serverTime) => (float)(time - serverTime).TotalSeconds;
         public int Cont => sourceCid.CidToContinent();
         public int ts => troops.TS();
         public int sPid => sourceCid.CidToPid(); // The owner of the army, 
@@ -165,7 +166,8 @@ namespace COTG.Game
         public bool hasArt => troops.Any((a) => a.isArt);
 
         public float dist => targetCid.DistanceToCid(sourceCid);
-        public static string[] reportAttackTypes = { "assault", "siege", "plunder" };
+		public double distD => targetCid.DistanceToCidD(sourceCid);
+		public static string[] reportAttackTypes = { "assault", "siege", "plunder" };
         public long order;
         public string miscInfo { get; set; } = string.Empty;
 

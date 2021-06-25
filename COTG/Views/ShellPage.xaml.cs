@@ -23,6 +23,7 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Input;
+using Windows.Web.Http;
 
 using static COTG.Debug;
 
@@ -609,18 +610,28 @@ namespace COTG.Views
 			return Task.CompletedTask;
 		}
 
+		
+
 		private static void Refresh()
 		{
-			if (App.IsKeyPressedShift())
+			if (JSClient.world == 0)
 			{
-				RefreshWorldData();
+				JSClient.SetSessionCookie();
+					JSClient.view.Refresh();
 			}
 			else
 			{
-				Note.Show("Refresh UI");
+				if (App.IsKeyPressedShift())
+				{
+					RefreshWorldData();
+				}
+				else
+				{
+					Note.Show("Refresh UI");
+				}
+				// fall through from shift-refresh. Shift refresh does both
+				RefreshTabs.Go();
 			}
-			// fall through from shift-refresh. Shift refresh does both
-			RefreshTabs.Go();
 		}
 
 		public event PropertyChangedEventHandler PropertyChanged;
@@ -1265,6 +1276,40 @@ namespace COTG.Views
 			flyout.AddItem("Medium", () => chatGrid.RowDefinitions[1].Height = new GridLength(chatGrid.ActualHeight * (1.0f / 3.0f)));
 			flyout.AddItem("Small", () => chatGrid.RowDefinitions[1].Height = new GridLength(chatGrid.ActualHeight * (1.0f / 32.0f)));
 			flyout.ShowAt(chatGrid, e.GetPosition(chatGrid));
+		}
+
+		private async void CookieClick(object sender, RoutedEventArgs e)
+		{
+			var content = new StackPanel();
+			var text = new TextBox() { Header = "remember_me", PlaceholderText="01245..." };
+			var text2 = new TextBox() { Header = "sec_session_id", PlaceholderText = "06..." };
+
+			content.Children.Add(text);
+			content.Children.Add(text2);
+
+			var dialog = new ContentDialog()
+			{
+				Title = "Cookie",
+				Content = content,
+				PrimaryButtonText = "Set",
+				CloseButtonText = "Cancel"
+			};
+			var rv = await dialog.ShowAsync();
+			if (rv == ContentDialogResult.Primary)
+			{
+				//var cookieManager = JSClient.cookieManager;
+				
+				JSClient.SetCookie("remember_me", text.Text );
+				//	SetCookie("_ttw", text2.Text);
+				SettingsPage.secSessionId = text2.Text;
+				JSClient.SetCookie("sec_session_id", text2.Text);
+				SettingsPage.SaveAll();
+				//	_ttw = 062667a5a7767056ae099f43a2f6d4e24fd015fb; expires = Mon, 20 - Sep - 2021 19:44:58 GMT; Max - Age = 7776000; path =/; domain =.crownofthegods.com; secure; httponly
+
+				//				WebView.ClearTemporaryWebDataAsync();
+				await App.DoYesNoBox("Cookie set","Cookies");
+				JSClient.view.Refresh();
+			}
 		}
 	}
 }

@@ -174,13 +174,19 @@ namespace COTG
 						App.RegisterException(ex2.Message);
 					}
 				}
+				else
+				{
+					report = false;
+				}
 			}
 
 			var msg = $"{eventName} {extra ?? string.Empty} {e.Message}";
 #if TRACE
 			System.Diagnostics.Trace.WriteLine($"{sourceFilePath}({sourceLineNumber}): {timeStamp}: {memberName} : Exception: {msg} {e.StackTrace}");
-			DumpStack(new StackTrace(e, true));
-			BreakDebugger();
+			var stackTrace = new StackTrace(e, true);
+			DumpStack(stackTrace);
+			if(report) 
+				BreakDebugger(stackTrace,msg);
 #endif
 
 
@@ -217,13 +223,17 @@ namespace COTG
 #if TRACE
 
 			System.Diagnostics.Trace.WriteLine(str);
-			DumpStack(new StackTrace(1, true));
-			BreakDebugger();
+			var stack = new StackTrace(1, true);
+			DumpStack(stack);
+			if (App.RegisterException($"{sourceFilePath}({sourceLineNumber})"))
+			{
+				BreakDebugger(stack,str);
+			}
 #endif
 		}
 
 		[Conditional("DEBUG")]
-		private static void BreakDebugger()
+		private static void BreakDebugger(StackTrace s,string str)
 		{
 			if (System.Diagnostics.Debugger.IsAttached && breakCounter > 0)
 			{

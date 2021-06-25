@@ -714,7 +714,7 @@ namespace COTG.Game
 		}
 	}
 
-	public struct ChangeInfo
+	public class ChangeInfo
 	{
 		public byte allianceCaptures;
 		public byte allianceLosses;
@@ -732,6 +732,9 @@ namespace COTG.Game
 		public byte portalsOpened;
 		public byte newTemples;
 		public byte destroyedTemples;
+		
+		public Dictionary<int, PlayerChanges> players = new();
+
 
 		public override string ToString()
 		{
@@ -894,6 +897,21 @@ namespace COTG.Game
 					var player0 = World.GetPlayer(v0);
 					var player1 = World.GetPlayer(v1);
 
+					// pid0 is lawless
+					if (!players.TryGetValue(player0,out var p0))
+					{
+						p0 = new PlayerChanges() { pid = player0 };
+						if(Player.Get(player0).cities.Count > 1 )
+							players.Add(player0,p0);
+					}
+					if (!players.TryGetValue(player1, out var p1))
+					{
+						p1 = new PlayerChanges() { pid = player1 };
+						if (Player.Get(player1).cities.Count > 1)
+							players.Add(player1,p1);
+					}
+
+
 					var alliance0 = Alliance.FromPlayer(player0);
 					var alliance1 = Alliance.FromPlayer(player1);
 					var isTemple0 = IsTemple(v0);
@@ -905,9 +923,15 @@ namespace COTG.Game
 					if(isTemple0 != isTemple1)
 					{
 						if (isTemple1)
+						{
 							++newTemples;
+							++p1.templesMade;
+						}
 						else
+						{
 							++destroyedTemples;
+							++p0.templesLost;
+						}
 					}
 					if(isBig0 != isBig1 )
 					{
@@ -916,10 +940,12 @@ namespace COTG.Game
 							if(isBig0)
 							{
 								++flattened;
+								++p0.flattened;
 							}
 							else
 							{
 								++grew;
+								++p1.upgraded;
 							}
 						}
 					}
@@ -931,6 +957,7 @@ namespace COTG.Game
 								++allianceCastles;
 							else
 								++otherCastles;
+							++p1.castled;
 						}
 					}
 					if (player0 != player1)
@@ -942,33 +969,61 @@ namespace COTG.Game
 								++allianceNew;
 							else
 								++otherNew;
+							++p1.settled;
+							if (isCastle1)
+								++p1.castled;
 						}
 						else
 						{
 							if (player1 == 0)
 							{
 								if (isCastle0)
+								{
 									++abandonedCastles;
+									++p0.castlesAbandoned;
+								}
 								else
+								{
 									++abandonedCities;
+									++p1.abandonedCities;
+								}
 							}
 							else if (player0 == 0)
 							{
-								// settled lasless
+								// settled lawless
 								if (Alliance.IsMine(alliance1))
 									++allianceNew;
 								else
 									++otherNew;
+								++p1.settled;
 							}
 							else if (isCastle0)
 							{
-								// Capture
-								if (Alliance.IsMine(alliance0))
-									++allianceLosses;
-								else if (Alliance.IsMine(alliance1))
-									++allianceCaptures;
-								else if(alliance0 != alliance1)
-									++otherCaptures;
+								var allianceChanged = (alliance0 != alliance1);
+								if (allianceChanged)
+								{
+									++p0.castlesLostEnemy;
+									++p1.castlesCappedEnemy;
+									// Capture
+									if (Alliance.IsMine(alliance0))
+									{
+										++allianceLosses;
+									}
+									else if (Alliance.IsMine(alliance1))
+									{
+										++allianceCaptures;
+									}
+									else if (alliance0 != alliance1)
+									{
+										++otherCaptures;
+									}
+								}
+							}
+							else
+							{
+								++p0.castlesLostAlly;
+								++p1.castlesCappedAlly;
+
 							}
 
 						}

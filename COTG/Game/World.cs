@@ -1184,42 +1184,42 @@ namespace COTG.Game
 
 			//worldOwnerPixels = ownerPixels;
 
-			//{
-			//	var contData = jsd.RootElement.GetProperty("b");//.ToString();
+			{
+				var contData = jsd.RootElement.GetProperty("b");//.ToString();
 			//	var shot = new ContinentsSnapshot();
 			//	shot.continents = new ContinentsSnapshot.ContinentSnapshot[Continent.count];
 
-			//	foreach (var cnt in contData.EnumerateObject())
-			//	{
-			//		var cntV = cnt.Value;
-			//		if (cntV.ValueKind != JsonValueKind.Array)
-			//			continue;
-			//		var key = int.Parse(cnt.Name);
-			//		var contId = Continent.GetPackedIdFromContUnpacked(key);
-			//		Continent.all[contId].id = (byte)key;
-			//		Continent.all[contId].unsettled = cntV[0].GetInt32();
-			//		Continent.all[contId].settled = cntV[1].GetInt32();
-			//		Continent.all[contId].cities = cntV[2].GetInt32();
-			//		Continent.all[contId].castles = cntV[3].GetInt32();
-			//		Continent.all[contId].dungeons = cntV[4].GetUInt16();
-			//		Continent.all[contId].temples = cntV[5].GetUInt16();
-			//		Continent.all[contId].bosses = cntV[6].GetUInt16();
+				foreach (var cnt in contData.EnumerateObject())
+				{
+					var cntV = cnt.Value;
+					if (cntV.ValueKind != JsonValueKind.Array)
+						continue;
+					var key = int.Parse(cnt.Name);
+					var contId = Continent.GetPackedIdFromContUnpacked(key);
+					Continent.all[contId].id = (byte)key;
+					Continent.all[contId].unsettled = cntV[0].GetInt32();
+					Continent.all[contId].settled = cntV[1].GetInt32();
+					Continent.all[contId].cities = cntV[2].GetInt32();
+					Continent.all[contId].castles = cntV[3].GetInt32();
+					Continent.all[contId].dungeons = cntV[4].GetUInt16();
+					Continent.all[contId].temples = cntV[5].GetUInt16();
+					Continent.all[contId].bosses = cntV[6].GetUInt16();
 			//		var index = Continent.GetPackedIdFromContUnpacked(contId);
-			//		shot.continents[contId].settled = Continent.all[contId].settled;
+				//	shot.continents[contId].settled = Continent.all[contId].settled;
 			//		shot.continents[contId].castles = Continent.all[contId].castles;
-			//	}
+				}
 			//	shot.time = JSClient.ServerTime().UtcDateTime;
-			//	if (ContinentsSnapshot.all.Length > 0 && shot.time - ContinentsSnapshot.all.Last().time < TimeSpan.FromHours(1.5f))
-			//	{
-			//		// don't update, max one snapshot per 1.5 hours
-			//	}
-			//	else
-			//	{
-			//		ContinentsSnapshot.all = ContinentsSnapshot.all.ArrayAppend(shot);
-			//		ApplicationData.Current.LocalFolder.SaveAsync("continentHistory", ContinentsSnapshot.all, false);
-			//	}
+				//if (ContinentsSnapshot.all.Length > 0 && shot.time - ContinentsSnapshot.all.Last().time < TimeSpan.FromHours(1.5f))
+				//{
+				//	// don't update, max one snapshot per 1.5 hours
+				//}
+				//else
+				//{
+				//	ContinentsSnapshot.all = ContinentsSnapshot.all.ArrayAppend(shot);
+				//	ApplicationData.Current.LocalFolder.SaveAsync("continentHistory", ContinentsSnapshot.all, false);
+				//}
 
-			//}
+			}
 
 			Task.Run(async () =>
 		   {
@@ -1394,18 +1394,18 @@ namespace COTG.Game
 						   sb.AppendFormat("-- {0} => {1} --\n", (heatMapT0).ToString(), (heatMapT1).ToString());
 						   {
 							   // find most recently open continent
-							   for (int c = World.continentCount-1; --c >= 0;)
+							   for (int c = World.continentCount - 1; --c >= 0;)
 							   {
 								   var cidDig = World.continentOpeningOrder[c];
 								   var cId = cidDig.ContinentToXY();
-								   var cityCount1 = World.GetContinentCityCount(data1.Span,cId);
+								   var cityCount1 = World.GetContinentCityCount(data1.Span, cId);
 								   if (cityCount1 <= 0)
 									   continue;
-								   
-									if (cityCount1 >= continentCityThreshHold2)
+
+								   if (cityCount1 >= continentCityThreshHold2)
 									   break;
-									  // all are open
-									  var cityCount0 = World.GetContinentCityCount(data.Span, cId);
+								   // all are open
+								   var cityCount0 = World.GetContinentCityCount(data.Span, cId);
 								   var dt = heatMapT1 - heatMapT0;
 								   var dc = cityCount1 - cityCount0;
 								   if (cityCount0 == 0)
@@ -1414,11 +1414,11 @@ namespace COTG.Game
 								   }
 								   else if (dc <= 0 || dt < 60 * 5)
 								   {
-									   sb.AppendFormat("Select an earlier start date to see opening prediction for {0}", World.continentOpeningOrder[c+1] );
+									   sb.AppendFormat("Select an earlier start date to see opening prediction for {0}", World.continentOpeningOrder[c + 1]);
 								   }
 								   else
 								   {
-									   sb.AppendFormat("Predicted opening of {0} (current {1}, rate: {2} cities/day)\n", World.continentOpeningOrder[c+1], cityCount1, dc *60*60*24/(dt)   );
+									   sb.AppendFormat("Predicted opening of {0} (current {1}, rate: {2} cities/day)\n", World.continentOpeningOrder[c + 1], cityCount1, dc * 60 * 60 * 24 / (dt));
 									   for (int j = 0; j < 3; ++j)
 									   {
 										   var target = j == 0 ? continentCityThreshHold0 : j == 1 ? continentCityThreshHold1 : continentCityThreshHold2;
@@ -1426,7 +1426,7 @@ namespace COTG.Game
 										   {
 											   var delta = target - cityCount1;
 											   var sec = ((float)dt * (float)(delta) / dc);
-											   sb.AppendFormat("{0} cities at {1}",target, new SmallTime(heatMapT1 + sec.RoundToInt()).ToString());
+											   sb.AppendFormat("{0} cities at {1}", target, new SmallTime(heatMapT1 + sec.RoundToInt()).ToString());
 											   sb.AppendFormat(" ({0})\n", TimeSpan.FromSeconds(sec).Format());
 										   }
 									   }
@@ -1462,7 +1462,20 @@ namespace COTG.Game
 						   }
 
 						   sb.Append("\nChanges");
-						   sb.Append(new ChangeInfo().ComputeDeltas(data.Span, data1.Span).ToString());
+						   var ch = new ChangeInfo().ComputeDeltas(data.Span, data1.Span);
+						   sb.Append(ch.ToString());
+						   {
+							   PlayerChangeTab.changes.Set( ch.players.Values.OrderByDescending(a => a.activity) );
+							   PlayerChangeTab.changes.NotifyReset();
+							   var tab = PlayerChangeTab.instance;
+							   if (!tab.isVisible)
+							   {
+								   tab.ShowOrAdd(true, false);
+							   }
+						   }
+
+
+
 						   var str = sb.ToString();
 						   Log(str);
 						   HeatTab.instance.header.Text = str;

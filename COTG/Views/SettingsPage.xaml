@@ -22,10 +22,17 @@
 			   Margin="4">
 	<ScrollViewer ZoomMode="Enabled">
 		<StackPanel Orientation="Vertical" ScrollViewer.VerticalScrollMode="Enabled">
+			<StackPanel Orientation="Horizontal">
 			<HyperlinkButton    Content="{x:Bind appInfo}"
 					   FontSize="12" Click="VersionTapped" />
+				<Button    Content="Launch+"
+						   Style="{ThemeResource ButtonRevealStyle}"
+						   ToolTipService.ToolTip="Launches a second instance of the app. It is best not to run two instances with the same player and world"
+					   FontSize="12" Click="LaunchTapped" />
+			</StackPanel>
 			<wct:WrapPanel Orientation="Horizontal"
 						   Margin="4">
+
 
 				<controls:RadioButtons Header="Lighting"
                    SelectedIndex="{x:Bind uiLighting, Mode=TwoWay}">
@@ -152,6 +159,7 @@
 						Style="{ThemeResource ButtonRevealStyle}"
 						Margin="4" />
 				<Button Content="Export Ranks"
+						Style="{ThemeResource ButtonRevealStyle}"
 								ToolTipService.ToolTip="Exports AllianceRankings to the clipboard in a spreadsheet format" >	
 					<Button.Flyout>
 						<Flyout>
@@ -230,7 +238,7 @@
 									ToolTipService.ToolTip="Include Total TS"
 									IsChecked="True" />
 									<CheckBox x:Name="exportTSOff"
-									Content="Def TS"
+									Content="Off TS"
 									ToolTipService.ToolTip="Include Off TS"
 									IsChecked="False" />
 									<CheckBox x:Name="exportTSDef"

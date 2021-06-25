@@ -174,7 +174,7 @@ namespace COTG.Views
 		public static int chooseAttackTypeIndex;
 		public static bool chooseAttackTypeUpdate;
 
-
+		public static string secSessionId;
 		public static int mruSize = 32;
 		public static int[] pinned = Array.Empty<int>();
 		public static int showAttacksLimit = 100;
@@ -902,6 +902,11 @@ namespace COTG.Views
 				);
 
 
+		}
+
+		private void LaunchTapped(object sender, RoutedEventArgs e)
+		{
+			Windows.System.Launcher.LaunchUriAsync(new Uri($"{App.appLink}:launch?n=1"));
 		}
 	}
 }

@@ -284,7 +284,7 @@ namespace COTG.Services
 
 		}
 
-		public static async Task PlayerStats(DateTimeOffset t0, DateTimeOffset t1, int continent, int minTS, bool scoreAndCities,bool allianceStats, int maxPlayers, bool tsTotal, bool tsDef, bool tsOff)
+		public static async Task PlayerStats(DateTimeOffset t0, DateTimeOffset t1, int continent, int minTS, bool scoreAndCities,bool allianceStats, int maxPlayers, bool tsTotal, bool tsOff, bool tsDef)
 		{
 			BlobContainerClient container = await GetTSSnapshotContainer();
 			var snaps = new List<TSSnapshot>();

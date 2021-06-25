@@ -17,7 +17,7 @@ namespace COTG.Views
         // TODO WTS: Set the URI of the page to show by default
         public static Uri DefaultUrl;// = "https://docs.microsoft.com/windows/apps/";
         public static WebViewPage instance;
-        public WebView WebView => webView;
+     //   public WebView WebView => webView;
         private Uri _source;
 
         public Uri Source

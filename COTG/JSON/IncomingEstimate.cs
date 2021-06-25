@@ -32,7 +32,7 @@ namespace COTG.Game
     {
         public static float RoundTo6Bits(double f)
         {
-            return (float)(Math.Round(f * 100)/100.0);
+            return (float)(Math.Round(f * 256)/256.0);
 
         }
         static float StepValue(int i) => i * 0.5f;
@@ -49,22 +49,22 @@ namespace COTG.Game
             for (int i_17 = 0; i_17<steps; ++i_17)
             {
                 /** @type {number} */
-                var temp_1 = 5*100 / (100 + StepValue(i_17));
+                var temp_1 = 5*100 / (100.0 + StepValue(i_17));
                 navyspeed_[i_17] = RoundTo6Bits(temp_1);
                 /** @type {number} */
-                temp_1 = 8*100 / (100 + StepValue(i_17));
+                temp_1 = 8*100 / (100.0 + StepValue(i_17));
                 scoutspeed_[i_17] = RoundTo6Bits(temp_1);
                 /** @type {number} */
-                temp_1 = 10 * 100 / (100 + StepValue(i_17));
+                temp_1 = 10 * 100 / (100.0 + StepValue(i_17));
                 cavspeed_[i_17] = RoundTo6Bits(temp_1);
                 /** @type {number} */
-                temp_1 = 20 * 100 / (100 + StepValue(i_17));
+                temp_1 = 20 * 100 / (100.0 + StepValue(i_17));
                 infspeed_[i_17] = RoundTo6Bits(temp_1);
                 /** @type {number} */
-                temp_1 = 30 * 100 / (100 + StepValue(i_17));
+                temp_1 = 30 * 100 / (100.0 + StepValue(i_17));
                 artspeed_[i_17] = RoundTo6Bits(temp_1);
                 /** @type {number} */
-                temp_1 = 40 * 100 / (100 + StepValue(i_17));
+                temp_1 = 40 * 100 / (100.0 + StepValue(i_17));
                 senspeed_[i_17] = RoundTo6Bits(temp_1);
             }
         }
@@ -151,11 +151,11 @@ namespace COTG.Game
 				//              time_4 = time_4 + mdiff_;
 				//              /** @type {number} */
 				//              time_4 = time_4 + sdiff_ / 60;
-				var journeyTime = army.journeyTime / 60.0; // want minutes
-				var dist_ = army.dist;
-				float landSpeed = RoundTo6Bits(journeyTime / (double)dist_);
+				var journeyTime = army.journeyTimeD / 60.0; // want minutes
+				var dist_ = army.distD;
+				float landSpeed = RoundTo6Bits(journeyTime / dist_);
 
-				float navySpeed = RoundTo6Bits((journeyTime - 60) / (double)dist_);
+				float navySpeed = RoundTo6Bits((journeyTime - 60) / dist_);
 				//            let locks_;
 				//            let lockm_;
 				//            let lockh_;

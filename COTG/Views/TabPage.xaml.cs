@@ -51,7 +51,8 @@ namespace COTG.Views
                 new OutgoingTab(),
                 new HitTab(),
                 new NearDefenseTab(),
-				new NearRes()
+				new NearRes(),
+				new PlayerChangeTab(),
         };
             }
 
@@ -364,7 +365,7 @@ namespace COTG.Views
 			{ "Planner", Symbol.Map },
 			{ "NearRes", Symbol.Favorite },
 			{ "officer" ,Symbol.Admin },
-        };
+		};
 
         static Dictionary<string, string> tabFontIcons = new Dictionary<string, string> {
             { "Incoming" , "\uF0EF"  },//tab.Tag as string,
@@ -375,7 +376,8 @@ namespace COTG.Views
             { "Outgoing","\uE189" },
             { "Hits","\uEA69" },
 			{ "Heat", "\uF738" },
-        };
+			{ "PlayerChange", "\uE822" }
+		};
         public static Microsoft.UI.Xaml.Controls.IconSource GetIconForTab(UserTab tab)
         {
             if (tabSymbolIcons.TryGetValue(tab.Tag as string, out var symbol))

@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en">
+
+
+<head>
+
+
+    <!-- Anti-flicker snippet (for google optimize - prevents page variants flickering on slow connections)  -->
+    <style>
+        .async-hide {
+            opacity: 0 !important
+        }
+    </style>
+    <script>
+        (function (a, s, y, n, c, h, i, d, e) {
+            s.className += ' ' + y; h.start = 1 * new Date;
+            h.end = i = function () { s.className = s.className.replace(RegExp(' ?' + y), '') };
+            (a[n] = a[n] || []).hide = h; setTimeout(function () { i(); h.end = null }, c); h.timeout = c;
+        })(window, document.documentElement, 'async-hide', 'dataLayer', 4000,
+            { 'GTM-WH4TH3B': true });</script>
+
+
+    <script>
+        (function (i, s, o, g, r, a, m) {
+            i['GoogleAnalyticsObject'] = r; i[r] = i[r] || function () {
+                (i[r].q = i[r].q || []).push(arguments)
+            }, i[r].l = 1 * new Date(); a = s.createElement(o),
+                m = s.getElementsByTagName(o)[0]; a.async = 1; a.src = g; m.parentNode.insertBefore(a, m)
+        })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
+
+        ga('create', 'UA-40856442-2', 'auto');
+        //ga._setCustomVar(
+        // 1,             // This custom var is set to slot #1.  Required parameter.
+        //"IP",   // The name of the custom varaible.  Required parameter.
+        //"50.47.114.3",      // Sets the value of "User Type" to "Member" or "Visitor" depending on status.  Required parameter.
+        // 2             // Sets the scope to session-level.  Optional parameter.
+        //);
+
+        ga('require', 'GTM-WH4TH3B'); // google optimize - lisa
+        ga('set', 'dimension1', '50.47.114.3');
+        ga('send', 'pageview');
+
+    </script>
+
+
+
+
+    <link rel="icon" href="/fav.png">
+    <meta charset="utf-8" />
+
+    <title>Crown of the Gods | An empire-building multiplayer strategy game</title>
+    <meta name="description" content="An empire building MMO real-time strategy wargame. Join an alliance today and begin your journey towards the Crown. Play now in any browser!" />
+    <meta name="Keywords" content="strategy, game, rts, empire, building, wargame, champion, CotG, LoU, ultima, innogames, plarium, roman, mmo, multiplayer, alliance, browser, freetoplay, f2p, charisma, indie, gamedev, indiedev">
+
+    <meta name="viewport" content="width=1100" , initial-scale="0.41" maximum-scale="1" />
+
+    <meta property="og:url" content="https://www.crownofthegods.com" />
+    <meta property="og:title" content="Crown of the Gods - An empire-building strategy game" />
+    <meta property="og:description" content="An empire building MMO real-time strategy wargame. Join an alliance today and begin your journey towards the Crown. Play now in any browser!" />
+    <meta property="og:type" content="game" />
+    <meta property="og:site_name" content="Crown of the Gods" />
+    <meta property="og:image" content="https://www.crownofthegods.com/nincludes/images/cardimg.jpg" />
+    <meta property="og:image:width" content="560" />
+    <meta property="og:image:height" content="680" />
+
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:site" content="@Crownofthegods" />
+    <meta name="twitter:title" content="Crown of the Gods" />
+    <meta name="twitter:description" content="An empire building MMO real-time strategy wargame. Play now in any browser and begin your journey towards the Crown!" />
+    <meta name="twitter:image" content="https://www.crownofthegods.com/nincludes/images/cardimg.jpg" />
+
+
+    <script src="https://apis.google.com/js/platform.js" async defer></script>
+    <meta name="google-signin-client_id" content="181714536217-0o3l0ckjqbkv05ddnisocivi7sd8250l.apps.googleusercontent.com">
+    <link href="https://www.crownofthegods.com/css/normalize.css" rel="stylesheet" type="text/css">
+    <link href="https://www.crownofthegods.com/styleindex.css?a=1624275204" rel="stylesheet" type="text/css">
+
+    <!-- Facebook Pixel Code -->
+    <script>
+        !function (f, b, e, v, n, t, s) {
+            if (f.fbq) return; n = f.fbq = function () {
+                n.callMethod ?
+                    n.callMethod.apply(n, arguments) : n.queue.push(arguments)
+            };
+            if (!f._fbq) f._fbq = n; n.push = n; n.loaded = !0; n.version = '2.0';
+            n.queue = []; t = b.createElement(e); t.async = !0;
+            t.src = v; s = b.getElementsByTagName(e)[0];
+            s.parentNode.insertBefore(t, s)
+        }(window, document, 'script',
+            'https://connect.facebook.net/en_US/fbevents.js');
+        fbq('init', '1760535970861194');
+        fbq('track', 'PageView');
+    </script>
+    <noscript>
+        <img height="1" width="1"
+             src="https://www.facebook.com/tr?id=1760535970861194&ev=PageView
+  &noscript=1" />
+    </noscript>
+    <!-- End Facebook Pixel Code -->
+
+
+
+
+
+    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <script>
+        (adsbygoogle = window.adsbygoogle || []).push({
+            google_ad_client: "ca-pub-1904152253149174",
+            enable_page_level_ads: true
+        });
+
+        var serverpath = "https://" + window.location.host;
+    </script>
+
+    <script type="text/javascript">
+        /* <![CDATA[ */
+        goog_snippet_vars = function () {
+            var w = window;
+            w.google_conversion_id = 935855129;
+            w.google_conversion_label = "0hq5CO31kWYQmYigvgM";
+            w.google_remarketing_only = false;
+        }
+        // DO NOT CHANGE THE CODE BELOW.
+        goog_report_conversion = function (url) {
+            goog_snippet_vars();
+            window.google_conversion_format = "3";
+            var opt = new Object();
+            opt.onload_callback = function () {
+                if (typeof (url) != 'undefined') {
+                    window.location = url;
+                }
+            }
+            var conv_handler = window['google_trackConversion'];
+            if (typeof (conv_handler) == 'function') {
+                conv_handler(opt);
+            }
+        }
+        var isrefferred = 0;
+        /* ]]> */
+    </script>
+
+
+    <script type="text/javascript"
+            src="https://www.googleadservices.com/pagead/conversion_async.js">
+    </script>
+</head>
+
+
+<body ID="nhbody">
+
+    <div ID="langselect" title="Coming Soon!">
+        <div ID="langflgg" class="ENlanga"></div>
+        <div ID="arrwdwn"></div>
+    </div>
+    <div ID="langselDD">
+        <div ID="DElang" class="langflagDD"></div>
+        <div ID="ENlang" class="langflagDD"></div>
+        <div ID="ESlang" class="langflagDD"></div>
+        <div ID="FRlang" class="langflagDD"></div>
+        <div ID="HUlang" class="langflagDD"></div>
+        <div ID="NLlang" class="langflagDD"></div>
+        <div ID="PLlang" class="langflagDD"></div>
+        <div ID="PTlang" class="langflagDD"></div>
+        <div ID="RUlang" class="langflagDD"></div>
+        <div ID="TRlang" class="langflagDD"></div>
+    </div>
+
+    <div ID="nhheader">
+        <div ID="headerleft">
+            <button ID="championsHb" class="hdrbut" onclick="location.href = '/champions/';">Champions</button>
+            <button ID="forumHb" class="hdrbut" onclick="location.href = '/cotgforum/';">Forum</button>
+            <button ID="inforHb" class="hdrbut">Information</button>
+            <button ID="newsHb" class="hdrbut" onclick="location.href = '/news/';">News</button>
+            <button ID="galleryHb" class="hdrbut" onclick="location.href = '/gallery/';">Gallery</button>
+            <button ID="alreadregistlogin" class="hdrbut">Already registered? Login!</button>
+        </div>
+
+        <div ID="infodropdown">
+            <div ID="aschendalarchni" onclick="location.href = '/theaschendalarchives/';">The Aschendal Archives</div>
+            <div ID="friendrefni" onclick="location.href = '/friendreferral/';">Friend Referrals</div>
+            <div ID="faqni" onclick="location.href = '/faq/';">Frequently Asked Questions</div>
+        </div>
+
+        <div ID="alreadyregdiv">
+            <div ID="lgdoutdiv">
+                <div ID="lgd1">Login Below</div>
+                <div ID="lgd2">
+                    <form name="login_form" id="login_form" accept-charset="UTF-8">
+                        <div ID="regdvflleft">
+                            <input type="text" class='vemail' name="email" ID="email" placeholder="E-mail Address" />
+                            <input type="password" name="passwrd" ID="passwrd" placeholder="Password" />
+                            <br style="clear: both;" />
+                            <input type="checkbox" name="remember" ID="check" checked>
+                            <input type="hidden" id="frmh" name="frmh" value="63798740c697589366a06756b5d1cfe1">
+                            <div ID="rmmsp">Remember Me</div>
+                            <div ID="frgtpwsp"><a ID="frgtpwa">Forgot Password?</a></div>
+                        </div>
+                        <div ID="regdvflright">
+                            <div ID="lg4dv">Or<br>login with</div>
+                            <div ID="fbsml" class="lginwith"></div>
+                            <div ID="glsml" class="lginwith"></div>
+                            <div id="name"></div>
+                        </div>
+                    </form>
+                </div>
+                <div ID="loginbuttonouter">
+                    <button ID="nilgin">Login</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div ID="fpwlightbx">
+        <div ID="forgotpwdv">
+            <div ID="fpwxbut"></div>
+            <p ID="fpwheader">Forgot/change Password</p>
+            <p class="fpwp">Please enter your e-mail address below. We will send you an e-mail with a link.</p>
+            <input type="text" name="forgotpwemail" ID="forgotpwemail" placeholder="E-mail Address" />
+
+            <div id="forgotbuttonouter">
+                <button id="forgopwgo">Submit</button>
+            </div>
+            <p ID="msentpw">Sent! Please check your e-mail</p>
+        </div>
+    </div>
+
+    <span itemscope itemtype="http://schema.org/VideoGame">
+
+        <div ID="logocontr">
+            <img itemprop="image" ID="lgodv" src="/images/logosmall.png" alt="logo" />
+        </div>
+
+        <div ID="registercontainter">
+
+            <div ID="registerbgr"></div>
+            <div ID="registerdiv">
+                <div ID="registerform">
+                    <form id="registration_form" action="javascript:void(0);" name="registration_form" accept-charset="UTF-8" autocomplete="off">
+                        <input type="text" style="display:none">
+                        <input type="password" style="display:none">
+                        <p>Choose your game name</p>
+                        <input type="text" autocomplete="off" name="rgstrgamename" ID="rgstrgamename" required>
+                        <p class="secpp formopt">Choose your password</p>
+                        <input class='formopt' autocomplete="new-password" type="password" name="rgstrpswrd" ID="rgstrpswrd" required>
+                        <p class="secpp">Enter your e-mail</p>
+                        <input class='vemail' type="text" autocomplete="off" name="rgstremail" ID="rgstremail" required>
+                        <br />
+
+                        <div ID="toscheckboxdiv">
+                            <div>
+                                <!--<input type="checkbox" name="accepttoscb" ID = "accepttoscb">-->
+                                <div class="squaredTwo">
+                                    <input type="checkbox" style='display: none;' value="None" id="accepttoscb" name="accepttoscb" />
+                                    <label for="accepttoscb"></label>
+                                </div>
+                                <input type="hidden" id="frto" name="frto" value='1553077578'>
+                            </div>
+
+                            <div ID="acpttosdv">I accept the <a href="/termsofservice/" target='_blank' ID="rgstrtoslk">Terms of Service</a>, which includes the <a href="/privacypolicy/" target='_blank' ID="rgstrtoslk">Privacy Policy</a></div>
+                        </div>
+                        <br style="clear:both;" />
+                        <div ID="redbutbackgr">
+                            <button ID="registerplaynow" a='0' b='0' class="redbutt">Play Now</button>
+                        </div>
+                    </form>
+                </div>
+                <div ID="alternregisters">
+                    <p>Or:</p>
+                    <div ID="regwFB" class="regwth">
+                    </div>
+                    <div ID="regwGL" class="regwth">
+                    </div>
+                </div>
+
+                <div ID="usernameproblem" class="probtooltip"><div></div><p ID="unprobpara">This nickname is already in use.</p></div>
+                <div ID="passwordproblem" class="probtooltip"><div></div><p ID="pwprobpara"></p></div>
+                <div ID="emailproblem" class="probtooltip"><div></div><p ID="emaprobpara">This e-mail is already in use.</p></div>
+                <div ID="tosproblem" class="probtooltip"><div></div><p ID="tosprobpara">You must agree to the Terms of Service</p></div>
+
+            </div>
+        </div>
+
+        <br style="clear:both;" />
+
+        <div ID="nifooter">
+            ©2014–2021 <a href="https://www.gamingaddictstudios.com/">Gaming Addict Studios, Inc.</a> | <a href="/termsofservice/">Terms of Service</a> | <a href="/privacypolicy/">Privacy Policy</a> | <a href="https://cotg.supportsystem.com/">Contact Support Team</a>
+        </div>
+
+        <div ID="socialfollow">
+            <p>Follow Us:</p>
+            <div ID="socialinner">
+                <div class="soc-ig soc-img">
+                    <a href="https://www.instagram.com/crownofthegods"><div></div></a>
+                </div>
+                <div class="soc-fb soc-img">
+                    <a href="https://www.facebook.com/CrownOfTheGods"><div></div></a>
+                </div>
+                <div class="soc-yt soc-img">
+                    <a href="https://www.youtube.com/channel/UCzfpadfH891YWhn3f8PoVag"><div></div></a>
+                </div>
+                <div class="soc-tw soc-img">
+                    <a href="https://twitter.com/CrownoftheGods"><div></div></a>
+                </div>
+                <div class="soc-rd soc-img">
+                    <a href="https://www.reddit.com/r/CrownoftheGods/"><div></div></a>
+                </div>
+            </div>
+        </div>
+
+        <div ID="indexabout">
+            <div class="indexaboutcont">
+                <div class="indexaboutcontleft">
+                    <h1 class="abouthdr"><span itemprop="name">Crown of the Gods</span> - The new online strategy game</h1>
+
+                    <p class="aboutbdy"><span itemprop="description">Crown of the Gods is a browser-based empire-building massively multiplayer online (MMO) <span itemprop="genre">real-time strategy</span> game, giving a quality gaming experience for players from all walks of life!</span></p>
+                    <p class="aboutbdy2">Build and manage your empire, join alliances, enlist troops and battle them in real-time against other players or against generated monsters, buy and sell resources on the marketplace, chat in game chat, and build alliance Temples in order achieve the lofty rank of Champion of the Gods!</p>
+
+                    <h2 class="abouthdr">Eight tumultuous gods have torn this land apart!</h2>
+                    <p class="aboutbdy">One must come forth who can unite the land again, and appease the eight gods so they cease their battles and allow the people of Aschendal to live in peace once more! Could you be the Champion we seek?</p>
+
+                </div>
+                <div class="indexaboutcontright">
+                    <img src="/images/CotG-intro-1.png" alt="Crown of the Gods - A land at war! Unite the gods!" ID="imgintro1" height="550" width="550">
+                </div>
+            </div>
+
+            <h2 class="abouthdr">Begin with a single city</h2>
+            <p class="aboutbdy">From the humble beginnings of one small village you must build, upgrade, and research - in order to expand your domain and take on your enemies.</p>
+
+            <div class="indexaboutcont" style="margin-top: 60px;">
+                <div class="indexaboutcontleft">
+                    <img src="/images/CotG-intro-2.png" alt="Crown of the Gods - Do you have what it takes?" ID="imgintro2" height="550" width="550">
+                </div>
+
+                <div class="indexaboutcontright">
+                    <h2 class="abouthdr">Join thousands of other players</h2>
+                    <p class="aboutbdy">Join our bustling community of thousands, and battle your way to Champion. Forge diplomacy with other players, join alliances and build Temples with your team in order to battle your way to become Champions together!</p>
+
+                    <h2 class="abouthdr">A strategy game with a difference</h2>
+                    <p class="aboutbdy">Crown of the Gods is an indie game created by Gaming Addict Studios, a small team of gamers from around the globe who were tired of pay-to-win business models in strategy games.</p>
+                    <p class="aboutbdy2">As such, Crown of the Gods introduces an in-game stat called Charisma, which limits the number of items that any player can use in-game. Using this stat, Gaming Addict Studios has created a quality game that can be played by all levels of players, regardless of anyone's spending abilities!</p>
+    </div>
+
+    </div>
+    </div>
+
+    </span>
+
+
+
+
+    <script src="https://www.crownofthegods.com/js/jquery-2.1.4.min.js"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#inforHb').mouseover(function () {
+                $('#infodropdown').show();
+
+                $('#infodropdown').mouseover(function () {
+                    $('#infodropdown').show();
+                }).mouseout(function () {
+                    $('#infodropdown').hide();
+                });
+
+            }).mouseout(function () {
+                $('#infodropdown').hide();
+            });
+
+            // $("#langselect").click( function(e) {
+            //   e.stopPropagation();
+            //     $("#langselDD").toggle();
+            // });
+            // $(".langflagDD").click( function(e) {
+            //   e.stopPropagation();
+            //     var newlang = $(this).attr('id') + "a";
+            //     $("#langflgg").removeClass().addClass(newlang);
+            //     $("#langselDD").hide();
+            // });
+            // $("body").click( function(e) {
+            //   e.stopPropagation();
+            //     $("#langselDD").hide();
+            // });
+
+            $('#frgtpwa').click(function () {
+                $('#fpwlightbx').show();
+            });
+            $('#fpwxbut').click(function () {
+                $('#fpwlightbx').hide();
+            });
+        });
+    </script>
+
+
+    <script src="https://www.crownofthegods.com/js/index.js"></script>
+    <script type="text/JavaScript" src="https://www.crownofthegods.com/jsfunctions/sha512.js"></script>
+
+
+    <script>
+
+        $(document).ready(function () {
+
+            $('#registerplaynow').click(function () {
+                try {
+                    fbq('track', 'CompleteRegistration', {
+                        value: 1.00,
+                        currency: 'USD'
+                    });
+                } catch (err) {
+
+                }
+            });
+        });
+
+        $('#alreadregistlogin').click(function () {
+            $('#alreadyregdiv').toggle();
+        });
+
+    </script>
+
+
+
+    <script>
+        document.cookie = "qrv=f599f0188bafc4ea3b29dfd3bd112fa9; path=/";
+        var glccidd = 0;
+
+
+        var referringsite = "https://www.crownofthegods.com/index.php";
+        var locateref = window.location.href;
+        if (locateref.indexOf("#a=") != -1) {
+            var results = locateref.split("#a=");
+            document.cookie = "referred=" + results[1] + "; path=/";
+            isrefferred = results[1];
+            var htmmmrefff = "https://www.crownofthegods.com/index.php";
+            grefvis(isrefferred, htmmmrefff);
+
+            window.history.pushState("CotG", "Crownofthegods", "https://www.crownofthegods.com/index.php");
+        }
+
+    </script>
+</body>
+
+
+</html>

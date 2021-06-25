@@ -56,7 +56,7 @@ namespace COTG.Game
         public string plan { get
             {
             //    var r = Raiding.ComputeIdealReps(this,city);
-                return $"{(isValid?"":"[bad] ")}{reps}x{carry:P1}% carry";
+                return $"{(isValid?"":"[bad] ")}{reps}x{carry:P1} carry";
             }
         }
         public float GetScore( byte bestDungeonType)
