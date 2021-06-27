@@ -884,7 +884,7 @@ namespace COTG.Views
 
 		private void ExportRanks(object sender, RoutedEventArgs e)
 		{
-			var cont = exportRanksCont.Value.RoundToInt();
+			var cont = exportRanksCont.Value.RoundToInt().ContinentToXY().XYToPackedContinent();
 			var t1 = JSClient.ServerTime();
 			Blobs.AllianceStats(t1 - TimeSpan.FromDays(exportRanksDays.Value), t1, cont, exportRanksCities.Value.RoundToInt() );
 		}

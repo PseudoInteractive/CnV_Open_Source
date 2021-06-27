@@ -54,7 +54,7 @@
 
 			<win:TreeView Grid.Row="1" x:Name="zoom"  CanReorderItems="False"  SelectionMode="Multiple"   
 						  KeyDown="zoom_KeyDown"
-				  CanDragItems="False" AllowDrop="False" CanDrag="False" SelectionChanged="zoom_SelectionChanged" 
+				  CanDragItems="False" AllowDrop="False" CanDrag="False"  
 						ItemsSource="{x:Bind game:HeatMapDay.days, Mode=OneWay}" ItemInvoked="zoom_ItemInvoked"  
 				ItemTemplateSelector="{StaticResource heatmapTemplateSelector}"	
 					  >

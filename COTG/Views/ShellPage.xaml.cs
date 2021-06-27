@@ -1300,7 +1300,8 @@ namespace COTG.Views
 				//var cookieManager = JSClient.cookieManager;
 				
 				JSClient.SetCookie("remember_me", text.Text );
-				//	SetCookie("_ttw", text2.Text);
+			//	JSClient.SetCookie("_ttw", "2ebd127595739638f691d800afb6d9a2cb44f03b");
+			//	JSClient.SetCookie("CotG", "a%3A4%3A%7Bi%3A0%3Bs%3A5%3A%2239311%22%3Bi%3A1%3Bs%3A40%3A%220578a77365184184d96859fd54cb78925d962139%22%3Bi%3A2%3Bi%3A1626898500%3Bi%3A3%3Bi%3A0%3B%7D");
 				SettingsPage.secSessionId = text2.Text;
 				JSClient.SetCookie("sec_session_id", text2.Text);
 				SettingsPage.SaveAll();

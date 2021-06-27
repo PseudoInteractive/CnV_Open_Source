@@ -198,7 +198,10 @@ namespace COTG.Game
 			var x = id - y * 10;
 			return (x, y);
 		}
-
+		public static int XYToPackedContinent(this (int x, int y) c)
+		{
+			return c.y * continentCountX + c.x;
+		}
 
 		public const int spanSquared = span * span;
 		public const int outSize = 2400;

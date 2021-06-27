@@ -371,10 +371,10 @@ namespace COTG.Views
 			 _selChanged.Go();
 		}
 
-		private void zoom_SelectionChanged(TreeView sender, TreeViewSelectionChangedEventArgs args)
-		{
-			SelectionChanged();
-		}
+		//private void zoom_SelectionChanged(TreeView sender, TreeViewSelectionChangedEventArgs args)
+		//{
+		//	SelectionChanged();
+		//}
 
 
 		private void zoom_KeyDown(object sender, KeyRoutedEventArgs e)

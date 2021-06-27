@@ -29,6 +29,7 @@ namespace COTG
 		public const string defaultDateFormat = "MM/dd HH':'mm':'ss";
 		public const string fullDateFormat = "yyyy/MM/dd HH':'mm':'ss";
 		public const string raidDateTimeFormat = "MM/dd/yyyy HH':'mm':'ss";
+		public const string spreadSheetDateTimeFormat = "yyyy/MM/dd HH':'mm':'ss";
 
 		public static MemoryOwner<T> AsMemoryOwner<T>(this Span<T> me)
 		{

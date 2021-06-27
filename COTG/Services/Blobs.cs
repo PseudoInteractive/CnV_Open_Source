@@ -257,7 +257,7 @@ namespace COTG.Services
 			sb.Append("\n");
 			foreach (var snap in snaps)
 			{
-				sb.Append(snap.time.ToString(AUtil.fullDateFormat));
+				sb.Append(snap.time.ToString(AUtil.spreadSheetDateTimeFormat));
 				foreach (var aid in aids)
 				{
 					bool present = false;
