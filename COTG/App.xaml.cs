@@ -93,7 +93,7 @@ namespace COTG
 			//}
 
 
-			ServicePointManager.ServerCertificateValidationCallback = (sender, certificate, chain, sslPolicyErrors) => { Log(certificate.ToString()); return true; };
+		//	ServicePointManager.ServerCertificateValidationCallback = (sender, certificate, chain, sslPolicyErrors) => { Log(certificate.ToString()); return true; };
 			InitializeComponent();
 			instance = this;
 

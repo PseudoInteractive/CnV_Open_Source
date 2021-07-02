@@ -296,7 +296,7 @@ namespace COTG.Services
 			}
 			if (snaps.IsNullOrEmpty())
 			{
-				Log("No snapshots");
+				Note.Show("No snapshots");
 				return;
 			}
 			snaps.Sort((a, b) => a.time.seconds.CompareTo(b.time.seconds));
@@ -306,7 +306,7 @@ namespace COTG.Services
 				var cont = snaps.Last().continents.FirstOrDefault(a => a.continent == continent);
 				if(cont ==null)
 				{
-					Log("No snapshots");
+					Note.Show("No snapshots for Continent");
 					return;
 				}
 				foreach(var p in cont.players)

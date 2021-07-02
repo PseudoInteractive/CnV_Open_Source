@@ -891,7 +891,7 @@ namespace COTG.Views
 
 		private void ExportTS(object sender, RoutedEventArgs e)
 		{
-			var cont = exportTSCont.Value.RoundToInt();
+			var cont = exportTSCont.Value.RoundToInt().ContinentToXY().XYToPackedContinent();
 			var tsMin = exportTSMinTS.Value.RoundToInt();
 			var t1 = JSClient.ServerTime();
 			Blobs.PlayerStats(t1-TimeSpan.FromDays(exportTSDays.Value), t1,cont,tsMin,this.exportTSScore.IsChecked.GetValueOrDefault(),exportTSAlliance.IsChecked.GetValueOrDefault(), 

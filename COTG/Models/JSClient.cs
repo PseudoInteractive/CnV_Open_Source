@@ -34,6 +34,7 @@ using Microsoft.Toolkit.Uwp.Helpers;
 using System.Text;
 using System.Web;
 using Windows.Security.Cryptography.Certificates;
+using Windows.Foundation;
 
 namespace COTG
 {
@@ -348,7 +349,7 @@ namespace COTG
 		}
 		public static void SetSessionCookie()
 		{
-			if(!SettingsPage.secSessionId.IsNullOrEmpty())
+			if(!SettingsPage.secSessionId.IsNullOrEmpty() && !JSClient.isSub )
 			{
 				SetCookie("sec_session_id", SettingsPage.secSessionId);
 			}
@@ -389,6 +390,28 @@ namespace COTG
 			httpFilter.AllowAutoRedirect = true;
 
 			httpFilter.MaxVersion = HttpVersion.Http20;
+			httpFilter.ServerCustomValidationRequested += ServerCustomValidationRequested;
+			//httpFilter.IgnorableServerCertificateErrors.Add(ChainValidationResult.Untrusted);
+			//httpFilter.IgnorableServerCertificateErrors.Add(ChainValidationResult.Expired);
+
+			httpFilter.IgnorableServerCertificateErrors.Add(Windows.Security.Cryptography.Certificates.ChainValidationResult.WrongUsage);
+			httpFilter.IgnorableServerCertificateErrors.Add(Windows.Security.Cryptography.Certificates.ChainValidationResult.Expired);
+			httpFilter.IgnorableServerCertificateErrors.Add(Windows.Security.Cryptography.Certificates.ChainValidationResult.Untrusted);
+			httpFilter.IgnorableServerCertificateErrors.Add(Windows.Security.Cryptography.Certificates.ChainValidationResult.IncompleteChain);
+			httpFilter.IgnorableServerCertificateErrors.Add(Windows.Security.Cryptography.Certificates.ChainValidationResult.RevocationInformationMissing);
+			httpFilter.IgnorableServerCertificateErrors.Add(Windows.Security.Cryptography.Certificates.ChainValidationResult.RevocationFailure);
+
+			httpFilter.AllowUI = true;
+			httpFilter.CookieUsageBehavior = HttpCookieUsageBehavior.Default;
+
+
+			//	  HttpBaseProtocolFilter.CreateForUser( User.GetDefault());
+			//                         httpFilter.ServerCredential =
+
+			httpFilter.MaxConnectionsPerServer = 10;
+			//  httpFilter.ServerCustomValidationRequested += HttpFilter_ServerCustomValidationRequested;
+			httpFilter.CacheControl.ReadBehavior = HttpCacheReadBehavior.NoCache;
+			httpFilter.CacheControl.WriteBehavior = HttpCacheWriteBehavior.NoCache;
 
 			cookieManager = httpFilter.CookieManager;
 			{
@@ -430,8 +453,9 @@ namespace COTG
 				view.NavigationCompleted += View_NavigationCompletedAsync;
 				view.PermissionRequested += View_PermissionRequested;
 				view.NewWindowRequested += View_NewWindowRequested;
-			//	view.WebResourceRequested -= View_WebResourceRequested1;
-			//	view.WebResourceRequested += View_WebResourceRequested1;
+				view.WebResourceRequested += View_WebResourceRequested1;
+				//	view.WebResourceRequested -= View_WebResourceRequested1;
+				//	view.WebResourceRequested += View_WebResourceRequested1;
 				//  view.WebResourceRequested += View_WebResourceRequested1;
 				//	webViewBrush = new WebViewBrush() { Stretch = Stretch.Fill };
 
@@ -568,8 +592,13 @@ namespace COTG
 			{
 				var req = args.Request;
 				var str = req.RequestUri.ToString();
+				if(str.EndsWith("https://www.crownofthegods.com/nincludes/pro_log.php"))
+				{
+
+					GetMe(args,args.GetDeferral());
+				}
 				//	Log(req.RequestUri.ToString());
-				if (str.EndsWith("jquery/1.9.0/jquery.min.js"))
+				else if (str.EndsWith("jquery/1.9.0/jquery.min.js"))
 				{
 					//	var js = GetJsString("jquery");
 					var js = GetJsString("jquery3_5_1") + GetJsString("jquerymigrate");// + GetJsString("jquerymigrate3_3_2");
@@ -1559,12 +1588,64 @@ namespace COTG
 			// Validate the server certificate as required.
 			//            customValidationArgs.Reject();
 		}
+		static HttpResponseMessage resp;
+		private static async void GetMe(Windows.UI.Xaml.Controls.WebViewWebResourceRequestedEventArgs args, Deferral def)
+		{
+			var client = new HttpClient(httpFilter);
+		//	var headers = httpClient.DefaultRequestHeaders;
+			client.DefaultRequestHeaders.Accept.TryParseAdd("application/signed-exchange");
+		
+			// httpClient.DefaultRequestHeaders.TryAppendWithoutValidation("X-Requested-With", "XMLHttpRequest");
+			//    httpClient.DefaultRequestHeaders.Referer = new Uri(httpsHost, "/overview.php?s=0");// new Uri($"https://w{world}.crownofthegods.com");
+			client.DefaultRequestHeaders.Referer = new Uri("https://www.crownofthegods.com/"); // new Uri                                                       //             req.Headers.TryAppendWithoutValidation("Origin", $"https://w{world}.crownofthegods.com");
+																 //httpClient.DefaultRequestHeaders.TryAppendWithoutValidation("Origin", $"https://w{world}.crownofthegods.com");
+			
+				client.DefaultRequestHeaders.Host = new Windows.Networking.HostName("www.crownofthegods.com");
+			//   Log($"Built headers {httpClient.DefaultRequestHeaders.ToString() }");
+			
+			
+			client.DefaultRequestHeaders.UserAgent.TryParseAdd(userAgent);
+
+			
+			{
+				resp = await client.SendRequestAsync(args.Request, HttpCompletionOption.ResponseContentRead);
+				foreach (var h in resp.Headers)
+				{
+					Log(h.Key);
+					Log(h.Value);
+					if(h.Key == "Set-Cookie")
+					{
+						var bb = h.Value.Split(';', StringSplitOptions.RemoveEmptyEntries);
+						var bb2 = bb[0].Split('=', StringSplitOptions.RemoveEmptyEntries);
+						SettingsPage.secSessionId = bb2[1];
+					}
+
+				}
+
+				foreach (var h in resp.Content.Headers)
+				{
+					Log(h.Key);
+					Log(h.Value);
+
+				}
+				var buff = await resp.Content.ReadAsStringAsync();
+				Log(buff);
+				args.Response = resp;
+				def.Complete();
+			}
+
+		}
 
 		static private void View_NavigationStarting(WebView sender, Windows.UI.Xaml.Controls.WebViewNavigationStartingEventArgs args)
 		{
 
 			try
 			{
+				//if (args.Uri.ToString().StartsWith("https://www.crownofthegods.com/?email"))
+				//{
+				//	GetMe(args.Uri);
+				//	return;
+				//}
 				Log($"Nav start {args.Uri} {args.Uri}");
 				
 
@@ -1585,27 +1666,7 @@ namespace COTG
 						httpsHostString = $"https://{args.Uri.Host}";
 						httpsHost = new Uri(httpsHostString);
 						//httpFilter = 
-						httpFilter.ServerCustomValidationRequested += ServerCustomValidationRequested;
-						//httpFilter.IgnorableServerCertificateErrors.Add(ChainValidationResult.Untrusted);
-						//httpFilter.IgnorableServerCertificateErrors.Add(ChainValidationResult.Expired);
-
-						httpFilter.IgnorableServerCertificateErrors.Add(Windows.Security.Cryptography.Certificates.ChainValidationResult.WrongUsage);
-						httpFilter.IgnorableServerCertificateErrors.Add(Windows.Security.Cryptography.Certificates.ChainValidationResult.Expired);
-						httpFilter.IgnorableServerCertificateErrors.Add(Windows.Security.Cryptography.Certificates.ChainValidationResult.Untrusted);
-						httpFilter.IgnorableServerCertificateErrors.Add(Windows.Security.Cryptography.Certificates.ChainValidationResult.IncompleteChain);
-						httpFilter.IgnorableServerCertificateErrors.Add(Windows.Security.Cryptography.Certificates.ChainValidationResult.RevocationInformationMissing);
-						httpFilter.IgnorableServerCertificateErrors.Add(Windows.Security.Cryptography.Certificates.ChainValidationResult.RevocationFailure);
-
-
-
-
-						//	  HttpBaseProtocolFilter.CreateForUser( User.GetDefault());
-						//                         httpFilter.ServerCredential =
-
-						httpFilter.MaxConnectionsPerServer = 10;
-						//  httpFilter.ServerCustomValidationRequested += HttpFilter_ServerCustomValidationRequested;
-						httpFilter.CacheControl.ReadBehavior = HttpCacheReadBehavior.NoCache;
-						httpFilter.CacheControl.WriteBehavior = HttpCacheWriteBehavior.NoCache;
+						
 						//						if (subId == 0)
 						//							httpFilter.CookieUsageBehavior = HttpCookieUsageBehavior.NoCookies;// HttpCookieUsageBehavior.Default;
 						//						httpFilter.IgnorableServerCertificateErrors.Add(Windows.Security.Cryptography.Certificates.ChainValidationResult.IncompleteChain);

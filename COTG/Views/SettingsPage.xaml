@@ -191,7 +191,7 @@
 				</Button>
 
 				<Button Content="Export TS"
-						Click="ExportTS"
+						
 						ToolTipService.ToolTip="Exports Player TS to the clipboard in a spreadsheet format Note: Non alliance TS counts are guesses"
 						Style="{ThemeResource ButtonRevealStyle}"
 						Margin="4" >
