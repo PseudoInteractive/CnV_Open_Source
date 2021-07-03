@@ -52,7 +52,7 @@ namespace COTG
 		//public static string userAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.114 Safari/537.36";
 
 		//public static string userAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.114 Safari/537.36";
-		public static string userAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.114 Safari/537.36 Edg/91.0.864.54";
+		public static string userAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.114 Safari/537.36";// Edg/91.0.864.54";
 		//        public static JsonDocument ppdt;
 		public static JSClient instance = new JSClient();
 		public static WebView view;
@@ -238,18 +238,18 @@ namespace COTG
 			Debug.Log("Missing player");
 		}
 
-		//public static string GetSecSessionId()
-		//{
-		//	var cookies = cookieManager.GetCookies(new Uri("https://crownofthegods.com") );
-		//	foreach(var cookie in cookies)
-		//	{
-		//		if (cookie.Name == "sec_session_id")
-		//			return cookie.Value;
+		public static string GetSecSessionId()
+		{
+			var cookies = cookieManager.GetCookies(new Uri("https://crownofthegods.com"));
+			foreach (var cookie in cookies)
+			{
+				if (cookie.Name == "sec_session_id")
+					return cookie.Value;
 
 
-		//	}
-		//	return ""; // error!
-		//}
+			}
+			return null; // error!
+		}
 		static string pendingCookies;
 		public static async void SetPlayer(int pid, string token, string cookies, int cid, string name)
 		{
@@ -470,7 +470,7 @@ namespace COTG
 					//       view.Source = new Uri($"https://w{world}.crownofthegods.com?s={subId}");
 				}
 				// else
-				view.Source = new Uri("https://www.crownofthegods.com");
+				view.Source = new Uri("https://www.crownofthegods.com/home");
 				if (subId != 0)
 				{
 					Task.Delay(1000).ContinueWith(_ =>
@@ -585,7 +585,14 @@ namespace COTG
 			return new StreamReader((typeof(JSClient).Assembly).GetManifestResourceStream($"COTG.JS.{asm}")).ReadToEnd();
 
 		}
+		static async void GetSessionSoon()
+		{
+			await Task.Delay(2000);
+			SettingsPage.secSessionId= GetSecSessionId();
+			view.Source = new Uri("https://www.crownofthegods.com/home");
 
+
+		}
 		private static void View_WebResourceRequested1(WebView sender, Windows.UI.Xaml.Controls.WebViewWebResourceRequestedEventArgs args)
 		{
 			try
@@ -594,8 +601,9 @@ namespace COTG
 				var str = req.RequestUri.ToString();
 				if(str.EndsWith("https://www.crownofthegods.com/nincludes/pro_log.php"))
 				{
-
-					GetMe(args,args.GetDeferral());
+					//sender.NavigateWithHttpRequestMessage(args.Request);
+					//					GetMe(args,args.GetDeferral());
+					GetSessionSoon();
 				}
 				//	Log(req.RequestUri.ToString());
 				else if (str.EndsWith("jquery/1.9.0/jquery.min.js"))
@@ -1567,8 +1575,9 @@ namespace COTG
 		static private void View_PermissionRequested(WebView sender, Windows.UI.Xaml.Controls.WebViewPermissionRequestedEventArgs args)
 		{
 			var pr = args.PermissionRequest;
-			Log($"Permission {pr.Id} {pr.PermissionType} {pr.State} {pr.ToString()}");
 			pr.Allow();
+			Log($"Permission {pr.Id} {pr.PermissionType} {pr.State} {pr.ToString()}");
+			
 		}
 
 		static private void View_NavigationCompletedAsync(WebView sender, Windows.UI.Xaml.Controls.WebViewNavigationCompletedEventArgs args)
@@ -1822,7 +1831,7 @@ namespace COTG
 		{
 			if (args.Uri.ToString() == "https://www.crownofthegods.com/home/")
 			{
-				SetSessionCookie();
+			//	SetSessionCookie();
 			}
 
 			//Log($"Dom loaded {args.Uri}");

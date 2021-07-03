@@ -58,7 +58,7 @@ namespace COTG.Views
 		{
 
 			zoom.SelectedNodes?.Clear();
-			SelectionChanged();
+			//SelectionChanged();
 		}
 		public static async Task ResetAllChangeDescriptions()
 		{
@@ -89,7 +89,7 @@ namespace COTG.Views
 		static bool listLoaded = false;
 		override public async Task VisibilityChanged(bool visible)
 		{
-			//	tabVisible = visible;
+			tabVisible = visible;
 
 			if (visible)
 			{
@@ -101,10 +101,10 @@ namespace COTG.Views
 				}
 				await ResetAllChangeDescriptions();
 				DaysChanged();
-				SelectionChanged();
-
-				//	if (!callbackRunning)
-				//		CheckSelectionChanged();
+				//			SelectionChanged();
+				lastSelHash = 0;
+				if (!callbackRunning)
+					CheckSelectionChanged();
 			}
 			else
 			{
@@ -114,52 +114,52 @@ namespace COTG.Views
 
 		}
 
-		/*		static bool tabVisible;
-				static bool callbackRunning;
-				static int lastSelHash;
-				static int ComputeHash(IList<TreeViewNode> nodes)
-				{
-					int rv = 0;
-					foreach (var n in nodes)
-					{
-						var o = n.Content as HeatMapItem;
-						rv += o.GetHashCode();
-					}
-					return rv;
-				}
-				*/
-		//public async void CheckSelectionChanged()
-		//{
-		//	Assert(callbackRunning == false);
-		//	callbackRunning = true;
-		//	try
-		//	{
-		//		for (; ; )
-		//		{
-		//			await App.DispatchOnUIThreadTask(() =>
-		//		   {
-		//			   if (zoom.SelectedNodes != null)
-		//			   {
-		//				   var hash = ComputeHash(zoom.SelectedNodes);
-		//				   if (hash != lastSelHash)
-		//				   {
-		//					   lastSelHash = hash;
-		//					   SelectionChanged();
-		//				   }
-		//			   }
-		//			   return Task.CompletedTask;
+		static bool tabVisible;
+		static bool callbackRunning;
+		static int lastSelHash;
+		static int ComputeHash(IList<TreeViewNode> nodes)
+		{
+			int rv = 0;
+			foreach (var n in nodes)
+			{
+				var o = n.Content as HeatMapItem;
+				rv += o.GetHashCode();
+			}
+			return rv;
+		}
 
-		//		   });
-		//			await Task.Delay(500);
-		//			if (!tabVisible)
-		//				break;
-		//		}
-		//	}
-		//	finally
-		//	{
-		//		callbackRunning = false;
-		//	}
-		//}
+		public async void CheckSelectionChanged()
+		{
+			Assert(callbackRunning == false);
+			callbackRunning = true;
+			try
+			{
+				for (; ; )
+				{
+					await App.DispatchOnUIThreadTask(() =>
+				   {
+					   if (zoom.SelectedNodes != null)
+					   {
+						   var hash = ComputeHash(zoom.SelectedNodes);
+						   if (hash != lastSelHash)
+						   {
+							   lastSelHash = hash;
+							   SelectionChanged();
+						   }
+					   }
+					   return Task.CompletedTask;
+
+				   });
+					await Task.Delay(500);
+					if (!tabVisible)
+						break;
+				}
+			}
+			finally
+			{
+				callbackRunning = false;
+			}
+		}
 
 		public async Task _SelectionChanged()
 		{
@@ -289,7 +289,6 @@ namespace COTG.Views
 								// only this to none
 							}
 						}
-						SelectionChanged();
 					}
 
 
@@ -384,7 +383,7 @@ namespace COTG.Views
 			Trace($"Key:  {sender} {e}");
 			if (e.Key == Windows.System.VirtualKey.Enter || e.Key == Windows.System.VirtualKey.Space)
 				ItemInvoked(tv.DataContext as HeatMapItem);
-			SelectionChanged();
+			//SelectionChanged();
 
 		}
 

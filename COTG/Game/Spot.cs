@@ -856,7 +856,7 @@ namespace COTG.Game
 				}
 				else if (mx == stables)
 				{
-					if (se > 0 || academies > 0 || (stables < 32) || isIncomingAttack)
+					if (se > 0 /*|| academies > 0*/ || (stables < 32) || isIncomingAttack)
 						classification = Classification.horses;
 					else
 					{
@@ -872,7 +872,7 @@ namespace COTG.Game
 				}
 				else if (mx == training)
 				{
-					if (se > 0 || academies > 0 || (training < 28 && training >= 26) || (training < 22) || isIncomingAttack)
+					if (se > 0 /*|| academies > 0*/ || (training < 28 && training >= 26) || (training < 22) || isIncomingAttack)
 						classification = Classification.vanqs;
 					else
 						classification = Classification.rt;
@@ -880,7 +880,10 @@ namespace COTG.Game
 				}
 				else if (mx == academies)
 				{
-					classification = Classification.praetor; // todo!
+					if((academies == 34)||(academies==25)||(academies == 19) )
+						classification = Classification.priestess; // todo!
+					else
+						classification = Classification.praetor; // todo!
 				}
 				else if (mx == se)
 				{

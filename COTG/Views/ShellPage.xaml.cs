@@ -616,8 +616,7 @@ namespace COTG.Views
 		{
 			if (JSClient.world == 0)
 			{
-				JSClient.SetSessionCookie();
-					JSClient.view.Refresh();
+				JSClient.view.Source = new Uri("https://www.crownofthegods.com/home");
 			}
 			else
 			{

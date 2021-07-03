@@ -63,7 +63,7 @@ namespace COTG.Game
         {
             // lower is better
             var rv = distance+2;
-			rv *= .75f + 3*(carry - SettingsPage.raidCarryTarget).Abs();
+			rv *= .75f + 2*(carry - SettingsPage.raidCarryTarget).Abs();
 
             if (bestDungeonType != type)
                 rv += SettingsPage.penaltyForWrongDungeonType; // penalty of 4 spaces for wrong type
