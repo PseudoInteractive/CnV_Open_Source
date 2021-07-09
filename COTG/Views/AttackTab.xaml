@@ -160,7 +160,8 @@
                      Grid.Row="2"
 					 FontFamily="Tw Cen MT Condensed"
 		             FontSize = "{StaticResource SmallFontSize}"
-			       FontStretch="Condensed"
+				      RowStyle="{StaticResource RowTextStyle}"
+					 FontStretch="Condensed"
 					 CanUserSortColumns="True"
 			 IsTextScaleFactorEnabled="False"
 			SelectionMode="Extended"
@@ -215,17 +216,26 @@
 				<tk:DataGridTextColumn Header="City"
 									   Tag="name"
 									   IsReadOnly="True"
+									   FontSize="{StaticResource SmallFontSize}"
+		   							   FontFamily="Tw Cen MT Condensed"
+
                                        Binding="{Binding nameAndRemarks, Mode=OneTime}" />
 
 				<tk:DataGridTextColumn Header="ts"
 
+                                       FontSize="{StaticResource SmallFontSize}"
+		   							   FontFamily="Tw Cen MT Condensed"
                                        Binding="{Binding tsTotal, Mode=OneTime}" />
 
 				<tk:DataGridTextColumn Header="tt"
 									   Tag="classification"
-									   Binding="{Binding classificationString, Mode=OneWay}" />
+									   FontSize="{StaticResource SmallFontSize}"
+		   							   FontFamily="Tw Cen MT Condensed"
+                                       Binding="{Binding classificationString, Mode=OneWay}" />
 				<tk:DataGridTextColumn Header="Sen"
-									   Binding="{Binding senForAttack, Mode=OneWay}" />
+									   FontSize="{StaticResource SmallFontSize}"
+		   							   FontFamily="Tw Cen MT Condensed"
+                                       Binding="{Binding senForAttack, Mode=OneWay}" />
 				<tk:DataGridTemplateColumn Header="Remove">
 					<tk:DataGridTemplateColumn.CellTemplate>
 						<DataTemplate x:DataType="game:Spot">
@@ -239,8 +249,14 @@
 				</tk:DataGridTemplateColumn>
 				<tk:DataGridTextColumn Header="Alliance"
 													   IsReadOnly="True"
-                                       Binding="{Binding alliance, Mode=OneTime}" />
+                                       FontSize="{StaticResource SmallFontSize}"
+		   							   FontFamily="Tw Cen MT Condensed"
+
+									   Binding="{Binding alliance, Mode=OneTime}" />
 				<tk:DataGridTextColumn Header="Points"
+									   FontSize="{StaticResource SmallFontSize}"
+		   							   FontFamily="Tw Cen MT Condensed"
+
                                        Binding="{Binding points, Mode=OneTime}" IsReadOnly="True" />
 			</tk:DataGrid.Columns>
 		</tk:DataGrid>

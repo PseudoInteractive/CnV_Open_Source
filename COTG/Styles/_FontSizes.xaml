@@ -2,7 +2,7 @@
     <x:String x:Key="font">"Tw Cen MT Condensed"</x:String>
 	<x:Double x:Key="GridRowHeight">34</x:Double>
 	<x:Double x:Key="MediumGridRowHeight">28</x:Double>
-	<x:Double x:Key="ShortGridRowHeight">24</x:Double>
+	<x:Double x:Key="ShortGridRowHeight">28</x:Double>
 	<x:Double x:Key="LargeFontSize">20</x:Double>
     <x:Double x:Key="MediumFontSize">12</x:Double>
     <x:Double x:Key="SmallFontSize">11</x:Double>

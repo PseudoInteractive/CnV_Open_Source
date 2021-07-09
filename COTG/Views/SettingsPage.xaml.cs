@@ -338,7 +338,7 @@ namespace COTG.Views
 				if (raidCarryMax <= raidCarryMin)
 					raidCarryMax = raidCarryMin*1.75f; // error!
 
-				DungeonView.Initialize();
+			//	DungeonView.Initialize();
 			}
 			catch (Exception e)
 			{

@@ -84,6 +84,9 @@ namespace COTG.Views
 		static bool hasRunOnce;
 		public static async Task Show(City city, List<Dungeon> dungeons)
 		{
+			if (instance == null)
+				Initialize();
+
 			if (openCity != 0)
 			{
 				if (city.CidOr0() == openCity && dungeons!=null)

@@ -149,13 +149,13 @@
 			<wct:WrapPanel Orientation="Horizontal"
 						   Margin="4">
 
-				<Button Content="Export for War"
-						Click="{x:Bind views:ExportCastles.Go}"
-						ToolTipService.ToolTip="Exports cities/castles to the clipboard in a spreadsheet format based on filters"
+                <Button Content="Shrine Finder"
+						Click="{x:Bind ShrineFinder}"
 						Style="{ThemeResource ButtonRevealStyle}"
 						Margin="4" />
-				<Button Content="Export Castles"
-						Click="CastlesIntel"
+                <Button Content="Export for War"
+						Click="{x:Bind views:ExportCastles.Go}"
+						ToolTipService.ToolTip="Exports cities/castles to the clipboard in a spreadsheet format based on filters"
 						Style="{ThemeResource ButtonRevealStyle}"
 						Margin="4" />
 				<Button Content="Export Ranks"

@@ -313,6 +313,8 @@ namespace COTG.Views
 
 		public override Task VisibilityChanged(bool visible)
 		{
+			if (target == null)
+				target = City.GetBuild();
 			if (visible)
 			{
 				if (target == null)

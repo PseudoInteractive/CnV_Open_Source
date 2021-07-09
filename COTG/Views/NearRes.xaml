@@ -38,19 +38,19 @@
 						<my:NumberBox Value="{x:Bind des.wood,Mode=TwoWay}" Style="{StaticResource RightAlignNumberBox}"
 							ValidationMode="InvalidInputOverwritten"
                           ValueChanged="NumberBox_ValueChanged" AcceptsExpression="True"
-                          Header="Wood"  Margin="6,0,6,0" LargeChange="1000000" SmallChange="100000" SpinButtonPlacementMode="Inline" />
+                          Header="Wood"  Margin="6,0,6,0" LargeChange="1000000" SmallChange="100000"  />
 						<my:NumberBox Value="{x:Bind des.stone,Mode=TwoWay}" 
                           ValidationMode="InvalidInputOverwritten"
 						  ValueChanged="NumberBox_ValueChanged"
-                          Header="Stone"  Margin="6,0,6,0" LargeChange="1000000" AcceptsExpression="True" SmallChange="100000" SpinButtonPlacementMode="Inline" />
+                          Header="Stone"  Margin="6,0,6,0" LargeChange="1000000" AcceptsExpression="True" SmallChange="100000"  />
 						<my:NumberBox Value="{x:Bind des.iron,Mode=TwoWay}" Style="{StaticResource RightAlignNumberBox}"
 							ValidationMode="InvalidInputOverwritten"
 									  ValueChanged="NumberBox_ValueChanged"
-                          Header="Iron"  Margin="6,0,6,0"  LargeChange="1000000" AcceptsExpression="True" SmallChange="100000" SpinButtonPlacementMode="Inline" />
+                          Header="Iron"  Margin="6,0,6,0"  LargeChange="1000000" AcceptsExpression="True" SmallChange="100000" />
 						<my:NumberBox Value="{x:Bind des.food,Mode=TwoWay}" Style="{StaticResource RightAlignNumberBox}"
                           ValidationMode="InvalidInputOverwritten"
 							  ValueChanged="NumberBox_ValueChanged"
-                          Header="Food"  Margin="6,0,6,0"  LargeChange="1000000" AcceptsExpression="True" SmallChange="100000" SpinButtonPlacementMode="Inline" />
+                          Header="Food"  Margin="6,0,6,0"  LargeChange="1000000" AcceptsExpression="True" SmallChange="100000"  />
 						
 					</tk:WrapPanel >
 				</StackPanel>
@@ -63,27 +63,27 @@
 					<my:NumberBox Value="{x:Bind reserve.wood,Mode=TwoWay}" Style="{StaticResource RightAlignNumberBox}"
 							ValidationMode="InvalidInputOverwritten"
                           ValueChanged="NumberBox_ValueChanged" AcceptsExpression="True"
-                          Header="Wood"  Margin="6,0,6,0" LargeChange="2000000" SmallChange="500000" SpinButtonPlacementMode="Inline" />
-					<my:NumberBox Value="{x:Bind reserve.stone,Mode=TwoWay}" 
+                          Header="Wood"  Margin="6,0,6,0" LargeChange="2000000" SmallChange="500000" />
+						<my:NumberBox Value="{x:Bind reserve.stone,Mode=TwoWay}" Style="{StaticResource RightAlignNumberBox}"
                           ValidationMode="InvalidInputOverwritten"
 						  ValueChanged="NumberBox_ValueChanged"
-                          Header="Stone"  Margin="6,0,6,0" LargeChange="2000000" AcceptsExpression="True" SmallChange="500000" SpinButtonPlacementMode="Inline" />
+                          Header="Stone"  Margin="6,0,6,0" LargeChange="2000000" AcceptsExpression="True" SmallChange="500000"  />
 					<my:NumberBox Value="{x:Bind reserve.iron,Mode=TwoWay}" Style="{StaticResource RightAlignNumberBox}"
 							ValidationMode="InvalidInputOverwritten"
 									  ValueChanged="NumberBox_ValueChanged"
-                          Header="Iron"  Margin="6,0,6,0"  LargeChange="2000000" AcceptsExpression="True" SmallChange="500000" SpinButtonPlacementMode="Inline" />
+                          Header="Iron"  Margin="6,0,6,0"  LargeChange="2000000" AcceptsExpression="True" SmallChange="500000"  />
 					<my:NumberBox Value="{x:Bind reserve.food,Mode=TwoWay}" Style="{StaticResource RightAlignNumberBox}"
                           ValidationMode="InvalidInputOverwritten"
 							  ValueChanged="NumberBox_ValueChanged"
-                          Header="Food"  Margin="6,0,6,0"  LargeChange="2000000" AcceptsExpression="True" SmallChange="500000" SpinButtonPlacementMode="Inline" />
+                          Header="Food"  Margin="6,0,6,0"  LargeChange="2000000" AcceptsExpression="True" SmallChange="500000"  />
 						<my:NumberBox Value="{x:Bind reserveCarts,Mode=TwoWay}" Style="{StaticResource RightAlignNumberBox}"
                           ValidationMode="InvalidInputOverwritten"
 							  ValueChanged="NumberBox_ValueChanged"
-                          Header="Carts"  Margin="6,0,6,0"  LargeChange="5000" AcceptsExpression="True" SmallChange="500" SpinButtonPlacementMode="Inline" />
+                          Header="Carts"  Margin="6,0,6,0"  LargeChange="5000" AcceptsExpression="True" SmallChange="500"  />
 						<my:NumberBox Value="{x:Bind reserveShips,Mode=TwoWay}" Style="{StaticResource RightAlignNumberBox}"
                           ValidationMode="InvalidInputOverwritten"
 							  ValueChanged="NumberBox_ValueChanged"
-                          Header="Ships"  Margin="6,0,6,0"  LargeChange="200" AcceptsExpression="True" SmallChange="40" SpinButtonPlacementMode="Inline" />
+                          Header="Ships"  Margin="6,0,6,0"  LargeChange="200" AcceptsExpression="True" SmallChange="40" />
 					</tk:WrapPanel >
 			</StackPanel>
 			</Border>
@@ -118,22 +118,22 @@
 					<ToggleSwitch Header="Send Via" IsOn="{x:Bind viaWater,Mode=TwoWay}" VerticalAlignment="Center" Margin="12"
                           OffContent="Land" OnContent="Water"  HorizontalAlignment="Center" 
                     />
-					<my:NumberBox Value="{x:Bind _filterTime,Mode=TwoWay}" Style="{StaticResource RightAlignNumberBox}" SpinButtonPlacementMode="Inline"
+					<my:NumberBox Value="{x:Bind _filterTime,Mode=TwoWay}" Style="{StaticResource RightAlignNumberBox}" 
                           Header="Max Time (hrs)"  Margin="6,0,6,0" AcceptsExpression="True" SmallChange="1.0"
 							ValueChanged="NumberBox_ValueChanged"
                           />
 					<my:NumberBox Value="{x:Bind filterResHome,Mode=TwoWay}" Style="{StaticResource RightAlignNumberBox}"
 				    ValidationMode="InvalidInputOverwritten"
 								  ValueChanged="NumberBox_ValueChanged"
-                          Header="Filter Res"  Margin="6,0,6,0" AcceptsExpression="True" SmallChange="1000" SpinButtonPlacementMode="Inline" />
+                          Header="Filter Res"  Margin="6,0,6,0" AcceptsExpression="True" SmallChange="1000"  />
 					<my:NumberBox Value="{x:Bind filterCartsHome,Mode=TwoWay}" Style="{StaticResource RightAlignNumberBox}"
                 ValidationMode="InvalidInputOverwritten"
 								  ValueChanged="NumberBox_ValueChanged"
-                          Header="Filter Carts"  Margin="6,0,6,0" AcceptsExpression="True" SmallChange="100" SpinButtonPlacementMode="Inline"/>
+                          Header="Filter Carts"  Margin="6,0,6,0" AcceptsExpression="True" SmallChange="100" />
 					<my:NumberBox Value="{x:Bind filterShipsHome,Mode=TwoWay}" Style="{StaticResource RightAlignNumberBox}"
                         ValidationMode="InvalidInputOverwritten"
 								  ValueChanged="NumberBox_ValueChanged"
-                          Header="Filter Ships"  Margin="6,0,6,0" AcceptsExpression="True" SmallChange="10" SpinButtonPlacementMode="Inline"/>
+                          Header="Filter Ships"  Margin="6,0,6,0" AcceptsExpression="True" SmallChange="10" />
 				</tk:WrapPanel>
 			</Border>
 		</StackPanel>
@@ -144,7 +144,7 @@
                      Grid.Row="1"
                      SelectionMode="Extended"
                      RowDetailsVisibilityMode="Collapsed"
-                       
+  				      RowStyle="{StaticResource RowTextStyle}"  
                      CanUserReorderColumns="True"
                     CanUserSortColumns="True"
                      Sorting="supportGrid_Sorting"
@@ -155,10 +155,19 @@
 					 ScrollViewer.ZoomMode="Enabled"
 					 
                      >
-			
 
+
+			<tk:DataGrid.ColumnHeaderStyle >
+				<Style TargetType="tk:DataGridCell">
+					<Setter Property="Margin" Value="0" />
+					<Setter Property="FontFamily" Value="Tw Cen MT Condensed"/>
+					<Setter Property="FontSize" Value="{StaticResource SmallFontSize}" />
+					<Setter Property="IsTextScaleFactorEnabled" Value="False"/>
+				</Style>
+			</tk:DataGrid.ColumnHeaderStyle>
 			<tk:DataGrid.CellStyle >
 				<Style TargetType="tk:DataGridCell">
+					<Setter Property="Margin" Value="0" />
 					<Setter Property="FontFamily" Value="Tw Cen MT Condensed"/>
 					<Setter Property="FontSize" Value="{StaticResource SmallFontSize}" />
 					<Setter Property="IsTextScaleFactorEnabled" Value="False"/>
@@ -196,26 +205,39 @@
 				<tk:DataGridTextColumn  Header="Travel" 
                                         Binding="{Binding travel, Converter={StaticResource TimeConverter},Mode=OneWay}"
                                         IsReadOnly="True" Tag="travel"
+										FontSize="{StaticResource SmallFontSize}"
+										FontFamily="Tw Cen MT Condensed"
 										
+
                                              />
 				<tk:DataGridTextColumn  Header="Carts" 
                                         Binding="{Binding cartsHome, Converter={StaticResource IntConverter},Mode=OneWay}"
                                         IsReadOnly="True" Tag="carts"
                                             CellStyle="{StaticResource CellCenter}"
+										FontSize="{StaticResource SmallFontSize}"
+		   							   FontFamily="Tw Cen MT Condensed"
+
                                              />
 				<tk:DataGridTextColumn  Header="Ships" 
                                         Binding="{Binding shipsHome, Converter={StaticResource IntConverter},Mode=OneWay}"
-                                        IsReadOnly="True" Tag="ships"
+                                        FontSize="{StaticResource SmallFontSize}"
+										FontFamily="Tw Cen MT Condensed"
+										IsReadOnly="True" Tag="ships"
                                             CellStyle="{StaticResource CellCenter}"
                                              />
 
 				<tk:DataGridTextColumn  Header="City Name"
                                         Binding="{Binding name, Mode=OneWay }"
                                         IsReadOnly="True"
+										FontSize="{StaticResource SmallFontSize}"
+		   							   FontFamily="Tw Cen MT Condensed"
                                             CellStyle="{StaticResource CellLeft}" />
 
 				<tk:DataGridTextColumn Header="Send Res" Binding="{Binding totalRes,Converter={StaticResource IntConverter}, Mode=OneTime}"
-                                       CellStyle="{StaticResource CellRight}" IsReadOnly="True"  Tag="resSend"
+                                       FontSize="{StaticResource SmallFontSize}"
+		   							   FontFamily="Tw Cen MT Condensed"
+
+									   CellStyle="{StaticResource CellRight}" IsReadOnly="True"  Tag="resSend"
                                         />
 
 				<tk:DataGridTemplateColumn Header="Wood" CanUserSort="False" IsReadOnly="True"> 
@@ -259,6 +281,8 @@
 
 				<tk:DataGridTextColumn Header="ETA"
                                        CellStyle="{StaticResource CellCenter}"
+										FontSize="{StaticResource SmallFontSize}"
+		   							   FontFamily="Tw Cen MT Condensed"
                                        IsReadOnly="False"
                                        ToolTipService.ToolTip="Time at which res will arrive"
                                        Binding="{Binding eta,Converter={StaticResource DateTimeConverter},Mode=OneWay}"
@@ -273,19 +297,19 @@
 			<StackPanel Orientation="Vertical" >
 			<tk:WrapPanel Orientation="Horizontal" HorizontalAlignment="Stretch" >
 
-				<my:NumberBox Value="{x:Bind sendWood,Mode=TwoWay}" Style="{StaticResource RightAlignNumberBox}" SpinButtonPlacementMode="Inline"
+				<my:NumberBox Value="{x:Bind sendWood,Mode=TwoWay}" Style="{StaticResource RightAlignNumberBox}" 
                           Header="Wood"  Margin="6,0,6,0" AcceptsExpression="True" SmallChange="100000" LargeChange="1000000"
 							ValueChanged="ItemValueChanged"
                           />
-				<my:NumberBox Value="{x:Bind sendStone,Mode=TwoWay}" Style="{StaticResource RightAlignNumberBox}" SpinButtonPlacementMode="Inline"
+				<my:NumberBox Value="{x:Bind sendStone,Mode=TwoWay}" Style="{StaticResource RightAlignNumberBox}" 
                           Header="Stone"  Margin="6,0,6,0" AcceptsExpression="True" SmallChange="100000" LargeChange="1000000"
 							ValueChanged="ItemValueChanged"
                           />
-				<my:NumberBox Value="{x:Bind sendIron,Mode=TwoWay}" Style="{StaticResource RightAlignNumberBox}" SpinButtonPlacementMode="Inline"
+				<my:NumberBox Value="{x:Bind sendIron,Mode=TwoWay}" Style="{StaticResource RightAlignNumberBox}" 
                           Header="Iron"  Margin="6,0,6,0" AcceptsExpression="True" SmallChange="100000" LargeChange="1000000"
 							ValueChanged="ItemValueChanged"
                           />
-				<my:NumberBox Value="{x:Bind sendFood,Mode=TwoWay}" Style="{StaticResource RightAlignNumberBox}" SpinButtonPlacementMode="Inline"
+				<my:NumberBox Value="{x:Bind sendFood,Mode=TwoWay}" Style="{StaticResource RightAlignNumberBox}" 
                           Header="Food"  Margin="6,0,6,0" AcceptsExpression="True" SmallChange="100000" LargeChange="1000000"
 							ValueChanged="ItemValueChanged"
                           />

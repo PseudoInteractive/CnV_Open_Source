@@ -69,7 +69,8 @@
 		x:Key="CellTextStyle"
 		TargetType="tk:DataGridCell">
 		<Setter Property="FontFamily" Value="Tw Cen MT Condensed"/>
-		<Setter Property="FontSize" Value="9" />
+		<Setter Property="FontSize" Value="{StaticResource SmallFontSize}" />
+		<Setter Property="Height" Value="{StaticResource ShortGridRowHeight}" />
 		<Setter Property="FontStretch" Value="Condensed" />
 		<Setter Property="IsTextScaleFactorEnabled" Value="False"/>
     </Style>
@@ -77,7 +78,8 @@
 		x:Key="RowTextStyle"
 		TargetType="tk:DataGridRow">
 		<Setter Property="FontFamily" Value="Tw Cen MT Condensed"/>
-		<Setter Property="FontSize" Value="9" />
+		<Setter Property="FontSize" Value="{StaticResource SmallFontSize}" />
+		<Setter Property="Height" Value="{StaticResource ShortGridRowHeight}" />
 		<Setter Property="FontStretch" Value="Condensed" />
 		<Setter Property="IsTextScaleFactorEnabled" Value="False"/>
 	</Style>

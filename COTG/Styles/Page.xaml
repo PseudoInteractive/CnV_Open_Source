@@ -16,10 +16,8 @@
 	<x:Double x:Key="TeachingTipMaxHeight">800</x:Double>
 	<x:Double x:Key="TeachingTipMaxWidth">680</x:Double>
 	<Style TargetType="Page">
-	
-        <Setter Property="FontFamily" Value="Tw Cen MT Condensed"/>
-	
-        <Setter Property="IsTextScaleFactorEnabled" Value="False"/>
+		<Setter Property="FontFamily" Value="Tw Cen MT Condensed"/>
+		<Setter Property="IsTextScaleFactorEnabled" Value="False"/>
     </Style>
     <Style x:Key="ButtonSmall" TargetType="Button" BasedOn="{StaticResource ButtonRevealStyle}">
         <Setter Property="FontFamily" Value="Tw Cen MT Condensed"/>
@@ -74,22 +72,19 @@
     <Style x:Key="TextBlockSmall" TargetType="TextBlock">
         <Setter Property="FontFamily" Value="Tw Cen MT Condensed"/>
         <Setter Property="FontSize" Value="{StaticResource SmallFontSize}" />
-        <Setter Property="IsTextScaleFactorEnabled" Value="False"/>
-		
-    </Style>
+		<Setter Property="IsTextScaleFactorEnabled" Value="False"/>
+	</Style>
 	<Style x:Key="TextBlockMedium" TargetType="TextBlock">
 		<Setter Property="FontFamily" Value="Tw Cen MT Condensed"/>
 		<Setter Property="FontSize" Value="{StaticResource MediumFontSize}" />
 		<Setter Property="IsTextScaleFactorEnabled" Value="False"/>
-
 	</Style>
 	<Style x:Key="TextBoxSmall" BasedOn="{StaticResource TextBoxReveal}" TargetType="TextBox">
         <Setter Property="FontFamily" Value="Tw Cen MT Condensed"/>
         <Setter Property="FontSize" Value="{StaticResource MediumFontSize}" />
         <Setter Property="IsTextScaleFactorEnabled" Value="False"/>
-		 <Setter Property="BorderThickness" Value="1" />
-        <Setter Property="BorderBrush" Value="{ThemeResource SystemControlBackgroundBaseLowRevealBorderBrush}"/>
-       
+		<Setter Property="BorderThickness" Value="1" />
+        <Setter Property="BorderBrush" Value="{ThemeResource SystemControlBackgroundBaseLowRevealBorderBrush}"/>       
     </Style>
     <Style x:Key="NumberBoxSmall" TargetType="winui:NumberBox">
 		<Setter Property="FontSize" Value="{StaticResource MediumFontSize}" />

@@ -27,17 +27,17 @@ using static COTG.Debug;
 using ContentDialog = Windows.UI.Xaml.Controls.ContentDialog;
 using ContentDialogResult = Windows.UI.Xaml.Controls.ContentDialogResult;
 namespace COTG.Views
-    {
+{
     public sealed partial class CityRename : ContentDialog
-        {
+    {
 		public CityRename()
-            {
+        {
             this.InitializeComponent();
-            }
+        }
 
         private void ContentDialog_PrimaryButtonClick(ContentDialog sender, Windows.UI.Xaml.Controls.ContentDialogButtonClickEventArgs args)
-            {
-            }
+        {
+        }
 
 		
 
@@ -47,8 +47,6 @@ namespace COTG.Views
 		static string lastName = string.Empty;
 		public static async Task<bool> RenameDialog(int cid, bool allowSplat)
 		{
-
-
 			try
 			{
 				Assert(cid == City.build);
@@ -69,7 +67,7 @@ namespace COTG.Views
 					City closestHub = null;
 					foreach (var v in City.myCities)
 					{
-						if (v.cont != city.cont)
+						if (v.cont != city.cont || v._cityName==null )
 							continue;
 						var match = regexCityName.Match(v._cityName);
 						if (match.Success &&(v.isHub ||  match.Groups[4].Value.StartsWith("00")))
@@ -91,7 +89,7 @@ namespace COTG.Views
 					}
 				}
 				{
-					var name = isNew ? lastName : city._cityName;
+					var name = (isNew || city._cityName==null) ? lastName : city._cityName;
 					if (name.IsNullOrEmpty())
 						name = $"{city.cont:00} 0001";
 
@@ -110,7 +108,7 @@ namespace COTG.Views
 								var lastCity = City.myCities.LastOrDefault((v) => v.cont == city.cont);
 								if (lastCity != null)
 								{
-									name = IsNew(lastCity) ? $"{city.cont:00} 0001" : lastCity._cityName;
+									name = IsNew(lastCity) ? $"{city.cont:00} 0001" : lastCity.cityNameOrNull;
 									match = regexCityName.Match(name);
 									cont = match.Groups[2].Value;
 									cont.TryParseInt(out contV);
@@ -205,14 +203,10 @@ namespace COTG.Views
 			}
 			catch (Exception e)
 			{
-				Note.Show("Something went wrong");
+				Note.Show("Something went wrong, make new or lost cities?  Please retart app");
 				COTG.Debug.LogEx(e);
 			}
-
-		   
-
 			return false;
-
 		}
 
 		//public static async Task ApplyTags(int cid,  Microsoft.Toolkit.Uwp.UI.Controls.WrapPanel tagControls)
@@ -220,13 +214,10 @@ namespace COTG.Views
 		//	City city = City.GetOrAddCity(cid);
 		//	await GetCity.Post(cid); // need to fetch notes
 		//	string tags = city.remarks;
-
 		//	foreach (var tag in TagHelper.tags)
 		//	{
-		
 		//		var check = tagControls.Children.First( (ch) => (ch as ToggleButton)?.Content == tag.s)  as ToggleButton;
 		//		tags = TagHelper.SetTag(tags, tag.s, check.IsChecked);
-
 		//	}
 
 

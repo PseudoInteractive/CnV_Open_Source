@@ -141,7 +141,7 @@ namespace COTG.Game
 
 		public string _cityName;
 		public string cityName => _cityName ?? xy;
-
+		public string cityNameOrNull => _cityName ?? string.Empty;
 		public int cid; // x,y combined into 1 number
 		public string xy => cid.CidToString();//$"({cid % 65536}:{cid / 65536})";
 		public int x => cid % 65536;

@@ -118,7 +118,7 @@
       <Version>7.0.2</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.UI.Xaml">
-      <Version>2.6.0</Version>
+      <Version>2.6.1</Version>
     </PackageReference>
     <PackageReference Include="MonoGame.Content.Builder.Task">
       <Version>3.8.0.1641</Version>
@@ -154,10 +154,7 @@
       <Version>6.0.0-preview.5.21301.5</Version>
     </PackageReference>
     <PackageReference Include="System.Text.Json">
-      <Version>6.0.0-preview.5.21301.5</Version>
-    </PackageReference>
-    <PackageReference Include="System.Threading.Tasks">
-      <Version>4.3.0</Version>
+      <Version>5.0.2</Version>
     </PackageReference>
     <PackageReference Include="Win2D.uwp">
       <Version>1.26.0</Version>
@@ -182,6 +179,13 @@
     <Compile Include="Activation\WebToAppLinkActivationHandler.cs" />
     <Compile Include="Converters\DateTimeFormatConverter.cs" />
     <Compile Include="Converters\IntConverter.cs" />
+    <Compile Include="DiscordSdk\ActivityManager.cs" />
+    <Compile Include="DiscordSdk\Constants.cs" />
+    <Compile Include="DiscordSdk\Core.cs" />
+    <Compile Include="DiscordSdk\ImageManager.cs" />
+    <Compile Include="DiscordSdk\LobbyManager.cs" />
+    <Compile Include="DiscordSdk\StorageManager.cs" />
+    <Compile Include="DiscordSdk\StoreManager.cs" />
     <Compile Include="Draw\CityView.cs" />
     <Compile Include="Draw\Layer.cs" />
     <Compile Include="Draw\SpriteAnim.cs" />
@@ -743,6 +747,7 @@
     <EmbeddedResource Include="JS\jquerymigrate" />
     <EmbeddedResource Include="Notes\fixes.md" />
     <EmbeddedResource Include="JS\index.htm" />
+    <Content Include="discord_game_sdk.dll" />
     <Content Include="Shader\light.hlsl" />
     <EmbeddedResource Include="JS\DHRUVCC.js" />
     <None Include="Content\Effects\Macros.fxh" />
@@ -925,6 +930,9 @@
   <PropertyGroup>
     <PreBuildEvent>
     </PreBuildEvent>
+  </PropertyGroup>
+  <PropertyGroup>
+    <PostBuildEvent>xcopy S:\source\DiscordSDK\lib\x86_64\discord_game_sdk.dll $(TargetDir) /D /Y</PostBuildEvent>
   </PropertyGroup>
   <ProjectExtensions />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

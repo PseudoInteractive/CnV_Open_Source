@@ -35,6 +35,7 @@ using System.Text;
 using System.Web;
 using Windows.Security.Cryptography.Certificates;
 using Windows.Foundation;
+using Windows.Web.Http.Headers;
 
 namespace COTG
 {
@@ -52,7 +53,7 @@ namespace COTG
 		//public static string userAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.114 Safari/537.36";
 
 		//public static string userAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.114 Safari/537.36";
-		public static string userAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.114 Safari/537.36";// Edg/91.0.864.54";
+		public static string userAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.114 Safari/537.36 Edg/91.0.864.64";
 		//        public static JsonDocument ppdt;
 		public static JSClient instance = new JSClient();
 		public static WebView view;
@@ -355,11 +356,9 @@ namespace COTG
 			}
 		}
 
-		public static void SetCookie(string name, string value)
+		public static void SetCookie(string name, string value, string domain = ".crownofthegods.com", string path = "/" )
 		{
-
-
-			var cookie = new HttpCookie(name, ".crownofthegods.com", "/");
+			var cookie = new HttpCookie(name, domain, path);
 			//		var remember = new HttpCookie("remember_me", ".crownofthegods.com", "/");
 			//if (httpOnly)
 			{
@@ -602,7 +601,7 @@ namespace COTG
 				if(str.EndsWith("https://www.crownofthegods.com/nincludes/pro_log.php"))
 				{
 					//sender.NavigateWithHttpRequestMessage(args.Request);
-					//					GetMe(args,args.GetDeferral());
+					GetMe(args,args.GetDeferral());
 					GetSessionSoon();
 				}
 				//	Log(req.RequestUri.ToString());
@@ -1601,8 +1600,9 @@ namespace COTG
 		private static async void GetMe(Windows.UI.Xaml.Controls.WebViewWebResourceRequestedEventArgs args, Deferral def)
 		{
 			var client = new HttpClient(httpFilter);
-		//	var headers = httpClient.DefaultRequestHeaders;
-			client.DefaultRequestHeaders.Accept.TryParseAdd("application/signed-exchange");
+			//	var headers = httpClient.DefaultRequestHeaders;
+			//client.DefaultRequestHeaders.Accept.Clear();
+			//client.DefaultRequestHeaders.Accept.ParseAdd("application/signed-exchange");
 		
 			// httpClient.DefaultRequestHeaders.TryAppendWithoutValidation("X-Requested-With", "XMLHttpRequest");
 			//    httpClient.DefaultRequestHeaders.Referer = new Uri(httpsHost, "/overview.php?s=0");// new Uri($"https://w{world}.crownofthegods.com");
@@ -1614,8 +1614,23 @@ namespace COTG
 			
 			
 			client.DefaultRequestHeaders.UserAgent.TryParseAdd(userAgent);
-
 			
+
+
+			client.DefaultRequestHeaders.TryAppendWithoutValidation("Sec-Fetch-Dest", "document");
+			client.DefaultRequestHeaders.TryAppendWithoutValidation("Sec-Fetch-Site", "same-origin");
+			client.DefaultRequestHeaders.TryAppendWithoutValidation("Sec-Fetch-User", "?1");
+			client.DefaultRequestHeaders.TryAppendWithoutValidation("sec-ch-ua", "\" Not; A Brand\";v=\"99\", \"Microsoft Edge\"; v=\"91\", \"Chromium\"; v=\"91\"");
+			client.DefaultRequestHeaders.TryAppendWithoutValidation("sec-ch-ua-mobile", "?0");
+
+			SetCookie("lout", "1");
+			SetCookie("G_AUTHUSER_H", "0", "www.crownofthegods.com", "/");
+			SetCookie("G_AUTHUSER_H", "0", "www.crownofthegods.com", "/home");
+
+
+			var req = args.Request;
+			args.Request.Headers.Accept.Clear();
+			args.Request.Headers.Accept.ParseAdd("application/signed-exchange;v=b3;q=0.9");
 			{
 				resp = await client.SendRequestAsync(args.Request, HttpCompletionOption.ResponseContentRead);
 				foreach (var h in resp.Headers)

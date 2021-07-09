@@ -837,7 +837,7 @@ namespace COTG.Views
 					continue;
 
 				var bid = (ushort)city.BidFromOverlay(id);
-				if (bid != 0)
+				if (bid != 0 && bid != bidTemple && bid != bidCastle)
 				{
 					if (counts.TryGetValue(bid, out var c) == false)
 					{
