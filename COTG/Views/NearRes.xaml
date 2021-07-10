@@ -156,15 +156,6 @@
 					 
                      >
 
-
-			<tk:DataGrid.ColumnHeaderStyle >
-				<Style TargetType="tk:DataGridCell">
-					<Setter Property="Margin" Value="0" />
-					<Setter Property="FontFamily" Value="Tw Cen MT Condensed"/>
-					<Setter Property="FontSize" Value="{StaticResource SmallFontSize}" />
-					<Setter Property="IsTextScaleFactorEnabled" Value="False"/>
-				</Style>
-			</tk:DataGrid.ColumnHeaderStyle>
 			<tk:DataGrid.CellStyle >
 				<Style TargetType="tk:DataGridCell">
 					<Setter Property="Margin" Value="0" />

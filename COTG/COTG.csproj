@@ -186,6 +186,7 @@
     <Compile Include="DiscordSdk\LobbyManager.cs" />
     <Compile Include="DiscordSdk\StorageManager.cs" />
     <Compile Include="DiscordSdk\StoreManager.cs" />
+    <Compile Include="Discord\DiscordGame.cs" />
     <Compile Include="Draw\CityView.cs" />
     <Compile Include="Draw\Layer.cs" />
     <Compile Include="Draw\SpriteAnim.cs" />
@@ -932,7 +933,8 @@
     </PreBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
-    <PostBuildEvent>xcopy S:\source\DiscordSDK\lib\x86_64\discord_game_sdk.dll $(TargetDir) /D /Y</PostBuildEvent>
+    <PostBuildEvent>
+    </PostBuildEvent>
   </PropertyGroup>
   <ProjectExtensions />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

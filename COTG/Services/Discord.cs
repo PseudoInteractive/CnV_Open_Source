@@ -1,4 +1,5 @@
-﻿using COTG.Game;
+﻿using COTG;
+using COTG.Game;
 
 using System;
 using System.Collections.Generic;
@@ -6,9 +7,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace COTG.Services
+namespace DiscordCnV
 {
-	public static partial class Discord
+	public static partial class DGame
 	{
 		public struct Message
 		{

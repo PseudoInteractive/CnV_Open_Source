@@ -18,6 +18,7 @@ using TroopTypeCountsRef = COTG.Game.TroopTypeCountsX;
 using static COTG.Game.TroopTypeCountHelper;
 //COTG.DArrayRef<COTG.Game.TroopTypeCount>;
 using TroopTypeCounts = COTG.Game.TroopTypeCountsX;
+using DiscordCnV;
 //COTG.DArray<COTG.Game.TroopTypeCount>;
 
 namespace COTG.JSON
@@ -464,7 +465,7 @@ namespace COTG.JSON
 
 
 
-															  if (Discord.isValid)
+															  if (DGame.isValid)
 															  {
 
 
@@ -487,7 +488,7 @@ namespace COTG.JSON
 																				  {
 																					  await Task.Delay(400);
 																				  }
-																				  if (!Discord.members.TryGetValue(name.ToLower(), out var id))
+																				  if (!DGame.members.TryGetValue(name.ToLower(), out var id))
 																					  id = name;
 																					  
 																				  var content = $"<@{id}> {_army.time.FormatSkipDateIfToday()}: {army.miscInfo}, {ttNameWithCaps[army.troops.GetPrimaryTroopType()]} to {target.cityName} ({target.xy}) from  {_source.player.name} {_source.cityName} ({_source.xy}";
@@ -501,7 +502,7 @@ namespace COTG.JSON
 																				  var client = JSClient.genericClient;
 
 
-																				  var message = new Discord.Message() { username = "INCOMING", content = content, avatar_url = "" };
+																				  var message = new DGame.Message() { username = "INCOMING", content = content, avatar_url = "" };
 																				  for (int i = 0; i < 4; ++i) // retry up to 4 times;
 																			  {
 
@@ -509,7 +510,7 @@ namespace COTG.JSON
 																									JsonSerializer.Serialize(message), Windows.Storage.Streams.UnicodeEncoding.Utf8,
 																									 "application/json");
 
-																					  var result = await client.PostAsync(Discord.discordIncomingHook, post);
+																					  var result = await client.PostAsync(DGame.discordIncomingHook, post);
 																					  if (result.StatusCode == HttpStatusCode.TooManyRequests)
 																					  {
 																						  await Task.Delay(2000); // wait 2 seconds

@@ -1,7 +1,7 @@
 using System.Collections.Generic;
-namespace COTG.Services
+namespace DiscordCnV
 {
-	public static partial class Discord
+	public static partial class DGame
 	{
 		public static Dictionary<string, string> members = new Dictionary<string, string>
 		{

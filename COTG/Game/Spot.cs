@@ -40,6 +40,7 @@ using ToggleMenuFlyoutItem = Windows.UI.Xaml.Controls.ToggleMenuFlyoutItem;
 using MenuFlyoutSubItem = Windows.UI.Xaml.Controls.MenuFlyoutSubItem;
 using System.Collections.ObjectModel;
 using Cysharp.Text;
+using DiscordCnV;
 
 namespace COTG.Game
 {
@@ -1913,7 +1914,7 @@ namespace COTG.Game
 				AApp.AddItem(flyout, "Raid", (_, _) => Spot.JSRaid(cid));
 
 			}
-			else if (this.isEmpty && Discord.isValid)
+			else if (this.isEmpty && DGame.isValid)
 			{
 				AApp.AddItem(flyout, "Claim", this.DiscordClaim);
 
@@ -2035,7 +2036,7 @@ namespace COTG.Game
 
 		public async void DiscordClaim()
 		{
-			if (!Discord.isValid)
+			if (!DGame.isValid)
 			{
 				Log("Invalid");
 				return;
@@ -2046,13 +2047,13 @@ namespace COTG.Game
 				var client = JSClient.genericClient;
 
 
-				var message = new Discord.Message() { username = "Cord Claim", content = $"{xy} claimed by {Player.myName}", avatar_url = "" };
+				var message = new DGame.Message() { username = "Cord Claim", content = $"{xy} claimed by {Player.myName}", avatar_url = "" };
 
 				var content = new HttpStringContent(
 						  JsonSerializer.Serialize(message, Json.jsonSerializerOptions), Windows.Storage.Streams.UnicodeEncoding.Utf8,
 						   "application/json");
 
-				var result = await client.PostAsync(Discord.discordHook, content);
+				var result = await client.PostAsync(DGame.discordHook, content);
 				result.EnsureSuccessStatusCode();
 			}
 			catch (Exception ex)
