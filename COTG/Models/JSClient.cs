@@ -36,6 +36,7 @@ using System.Web;
 using Windows.Security.Cryptography.Certificates;
 using Windows.Foundation;
 using Windows.Web.Http.Headers;
+using DiscordCnV;
 
 namespace COTG
 {
@@ -483,6 +484,7 @@ namespace COTG
 			{
 				LogEx(e);
 			}
+
 			return view;
 
 

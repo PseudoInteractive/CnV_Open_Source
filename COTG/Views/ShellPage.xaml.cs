@@ -5,6 +5,8 @@ using COTG.Services;
 
 using Cysharp.Text;
 
+using DiscordCnV;
+
 using Microsoft.Toolkit.Uwp.UI.Controls;
 
 using System;
@@ -337,6 +339,11 @@ namespace COTG.Views
 				//ShellPage.canvas.IsHitTestVisible = false;
 				//ShellPage.canvas.Visibility = Visibility.Collapsed;
 			}));
+
+			Task.Delay(5000).ContinueWith((_) =>
+			{
+				DGame.Startup();
+			});
 		}
 
 		//void GetPlacement()
