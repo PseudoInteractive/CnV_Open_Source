@@ -147,7 +147,7 @@ namespace COTG.Services
 					ErrorReport crashReport = await Crashes.GetLastSessionCrashReportAsync();
 				}
 			}
-			await ThemeSelectorService.SetRequestedThemeAsync();
+	//		await ThemeSelectorService.SetRequestedThemeAsync();
 
 			// TODO WTS: Configure and enable Azure Notification Hub integration.
 			//  1. Go to the HubNotificationsService class, in the InitializeAsync() method, provide the Hub Name and DefaultListenSharedAccessSignature.

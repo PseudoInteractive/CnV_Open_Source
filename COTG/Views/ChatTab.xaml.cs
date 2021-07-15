@@ -28,6 +28,7 @@ using Windows.UI;
 using COTG.Services;
 using System.Threading.Tasks;
 using System.Text;
+using CnVDiscord;
 // The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234236
 
 namespace COTG.Views
@@ -109,11 +110,18 @@ namespace COTG.Views
             return base.VisibilityChanged(visible);
         }
 		public override TabPage defaultPage => ChatTab.tabPage;
+		public ChatEntry lastChat = new ChatEntry(null,string.Empty,DateTimeOffset.MinValue,0);
 		public void Post(ChatEntry entry)
         {
+			// duplicate?
+			if (lastChat.player == entry.player
+				&& string.Equals(lastChat.text, entry.text, StringComparison.Ordinal)
+				&& lastChat.type == entry.type)
+				return;
+			lastChat = entry;
+
             if (!isActive)
             {
-
                 ShowOrAdd(true, false);
             }
             //var activeGroup = Groups.Count > 0 ? Groups.Last() : null;
@@ -135,15 +143,17 @@ namespace COTG.Views
             }
             items.Add(entry);
 			var text = entry.text;
-			if (this != debug && (text.Contains(Player.myName, StringComparison.OrdinalIgnoreCase) || text.Contains("@", StringComparison.Ordinal)))
+			if (this != debug && (text.Contains(Player.myName, StringComparison.OrdinalIgnoreCase) || text.Contains("@here", StringComparison.OrdinalIgnoreCase)))
             {
                 Note.Show(entry.ToString());
 
             }
-            // Set + if not from me
-            if (entry.player != Player.myName && entry.player != null && entry.type != ChatEntry.typeWhisperTo)
-                SetPlus(true);
-
+			// Set + if not from me
+			if (entry.player != Player.myName && entry.player != null && entry.type != ChatEntry.typeWhisperTo)
+			{
+				Log(entry);
+				SetPlus(true);
+			}
         }
         public void Post(IEnumerable<ChatEntry> entries)
         {
@@ -400,7 +410,6 @@ namespace COTG.Views
                 App.CopyTextToClipboard(c);
                 //               Note.Show($"[{c}](/c/{c}) posted to chat");
             }
-
         }
 
         public static void ProcessIncomingChat(JsonProperty jsp)
@@ -445,12 +454,15 @@ namespace COTG.Views
                         var ch = GetChatMessage(jsp.Value);
                         if (ch.type == ChatEntry.typeWhisperFrom || ch.type == ChatEntry.typeWhisperTo) // whisper
                         {
-                            // add to all tabs
-                            ch.text = $"`{(ch.type == ChatEntry.typeWhisperFrom ? "whispers" : "you whisper")}` {ch.text}";
-							var prior = FocusManager.GetFocusedElement();
-							Log(prior.GetType());
+							if(ch.player == "Avatar")
+								PlayerHooks.PlayerChat?.Invoke(new PlayerHooks.PlayerChatEventArgs() { player = Player.FromName(ch.player), text = ch.text });
 
-							ChatTab.GetWhisperTab(ch.player, (prior as TextBox == null) ).Post(ch);
+							// add to all tabs
+							ch.text = $"`{(ch.type == ChatEntry.typeWhisperFrom ? "whispers" : "you whisper")}` {ch.text}";
+					//		var prior = FocusManager.GetFocusedElement();
+					//		Log(prior.GetType());
+							
+							ChatTab.GetWhisperTab(ch.player, false ).Post(ch);
                             // ChatTab.whisper.Post(ch);
                             ChatTab.alliance.Post(ch);
                             //       ChatTab.officer.Post(ch);
@@ -463,7 +475,11 @@ namespace COTG.Views
 								ChatTab.officer.Post(ch);
 							}
 							if (ch.type == 5 || ch.type == 4)
+							{
+								if(ch.type==4)
+									PlayerHooks.PlayerChat?.Invoke(new PlayerHooks.PlayerChatEventArgs() { player = Player.FromName(ch.player), text = ch.text } );
 								ChatTab.alliance.Post(ch);
+							}
 							else
 								ChatTab.world.Post(ch);
                         }
@@ -634,7 +650,7 @@ namespace COTG.Views
         private void inputPointerOver(object sender, PointerRoutedEventArgs e)
         {
             //           Log("Tapped");
-            listView.Focus(FocusState.Programmatic);
+         //   listView.Focus(FocusState.Programmatic);
 			App.DispatchOnUIThread(()=>input.Focus(FocusState.Programmatic) );
         }
 

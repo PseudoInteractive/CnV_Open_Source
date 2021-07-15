@@ -83,7 +83,8 @@ namespace COTG.Views
 		public static bool useSuggested = true;
 		public static bool demoUnwantedBuildingsWithCabins = true;
 		public static bool wantRaidRepeat=true;
-		public static bool clearRes;
+		public static bool clearOnlyCenterRes;
+		public static bool clearRes=true;
 		public static bool embedTradeInShareStrings = true;
 		public static bool? demoCottageOnBuildIfFull;
 		public static bool? demoBuildingOnBuildIfFull;
@@ -99,12 +100,14 @@ namespace COTG.Views
 		public static float flagScale=0.25f;
 		public static float iconScale = 0.5f;
 		public static int[] raidCarrySteps;
+
 		public static bool[] includeRaiders = new[] {
 				false, false,true,true,
 				true,true,true,false,
 				true,true,true,true,
 				false,false,true,true,
-				true,false};
+				true,false
+		};
 
 		public static string VRTRatio = "1:1:1";
 
@@ -156,7 +159,7 @@ namespace COTG.Views
 				theme = (Theme)value;
 				ShellPage.RefreshAndReloadWorldData();
 				Draw.CityView.LoadTheme();
-				Note.Show("City theme will not update until you restart the app");
+				Note.Show("City theme will not completly update until you restart the app");
 			}
 		}
 
@@ -166,7 +169,7 @@ namespace COTG.Views
 		public static byte exportOffence;
 		public static byte exportWater;
 		public static byte exportCastles;
-		public static bool? exportTemples;
+		public static bool onlyTemples;
 		public static bool? exportHeaders = true;
 		public static bool? exportScore;
 		public static byte exportWho;

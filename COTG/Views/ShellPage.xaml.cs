@@ -340,10 +340,10 @@ namespace COTG.Views
 				//ShellPage.canvas.Visibility = Visibility.Collapsed;
 			}));
 
-			Task.Delay(5000).ContinueWith((_) =>
-			{
-				DGame.Startup();
-			});
+			//Task.Delay(5000).ContinueWith((_) =>
+			//{
+			//	DGame.Startup();
+			//});
 		}
 
 		//void GetPlacement()
@@ -1289,6 +1289,7 @@ namespace COTG.Views
 			var content = new StackPanel();
 			var text = new TextBox() { Header = "remember_me", PlaceholderText="01245..." };
 			var text2 = new TextBox() { Header = "sec_session_id", PlaceholderText = "06..." };
+
 
 			content.Children.Add(text);
 			content.Children.Add(text2);

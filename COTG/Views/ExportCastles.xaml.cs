@@ -55,7 +55,7 @@ namespace COTG.Views
 			   var offence = SettingsPage.exportOffence;
 			   var water = SettingsPage.exportWater;
 			   var castles = SettingsPage.exportCastles;
-			   var temples = SettingsPage.exportTemples;
+			   var onlyTemples = SettingsPage.onlyTemples;
 			   var headers = SettingsPage.exportHeaders;
 			   
 			   var who = SettingsPage.exportWho;
@@ -117,7 +117,7 @@ namespace COTG.Views
 							   var wi = World.GetInfoFromCid(cid);
 							   if (castles!=0  && castles!= (wi.isCastle? 1: 2) )
 								   continue;
-							  if (temples.HasValue && temples.Value != wi.isTemple)
+							  if (onlyTemples && !wi.isTemple)
 								  continue;
 							  if ( water !=0 && water != (wi.isWater? 1: 2) )
 								  continue;

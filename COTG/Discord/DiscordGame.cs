@@ -89,6 +89,7 @@ namespace DiscordCnV
 		});
 		}
 
+
 		public static void Startup()
 		{
 			// Use your client ID from Discord's developer site.

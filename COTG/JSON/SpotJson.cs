@@ -38,9 +38,9 @@ namespace COTG.DB
 		{
 			var cookies = _cookies.Split(';');
 			string rv = string.Empty;
-			{
-				JSClient.SetCookie("_gat", string.Empty, false, false, true); // bonus cookie
-			}
+			//{
+			//	JSClient.SetCookie("_gat", string.Empty, false, false, true); // bonus cookie
+			//}
 			foreach (var c in cookies)
 			{
 				var split = 1;

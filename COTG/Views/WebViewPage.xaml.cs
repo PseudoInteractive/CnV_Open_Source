@@ -182,6 +182,7 @@ namespace COTG.Views
 			}
 			else
 			{
+				Assert(DefaultUrl != null);
 				Source = (DefaultUrl);
 				DefaultUrl = null;
 			}

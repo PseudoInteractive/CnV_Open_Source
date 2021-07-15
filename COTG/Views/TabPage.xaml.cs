@@ -139,14 +139,24 @@ namespace COTG.Views
             if(tvi!=null)
             {
                 var h = tvi.Header as string;
-                 
-                if( (h[0] == '+') != set )
-                {
-                    var str = h.Replace("+", string.Empty, StringComparison.Ordinal);
-                    if (set)
-                        tvi.Header = '+' + str;
-                    else
-                        tvi.Header = str;
+				var hasNumber = ((h[0] >= '0') && (h[0] <= '9'));
+				if (!set)
+				{
+					if ( hasNumber )
+					{
+						tvi.Header = h.Substring(2);
+					}
+				}
+				else
+				{
+					if (hasNumber)
+					{
+						tvi.Header=(int.Parse(h.Substring(0,1))+1).Min(9) + h.Substring(1);
+					}
+					else
+					{
+						tvi.Header = "1 " + h;
+					}
                 }
             }
         }

@@ -11,6 +11,16 @@
 			<ResourceDictionary.MergedDictionaries>
                
 				<XamlControlsResources xmlns="using:Microsoft.UI.Xaml.Controls" />
+				<win10:ColorPaletteResources Accent="#9A8862F2" AltHigh="#6C404040" AltLow="#6F800000" AltMedium="#6C404080" AltMediumHigh="#66008080" AltMediumLow="#6F604040"
+																	BaseLow="#FF4D2B3A" BaseMedium="#FFAF939F" BaseMediumHigh="#FFC7ADB8" BaseMediumLow="#FF7E5F6C" ChromeAltLow="#90C7ADB8" ChromeBlackHigh="#90808080" ChromeBlackLow="#90C7ADB8" ChromeBlackMedium="#CC5802A2" ChromeBlackMediumLow="#CC5802A2" ChromeDisabledHigh="#FF4D2B3A" ChromeDisabledLow="#FFAF939F" ChromeGray="#80967986" ChromeHigh="#90967986" ChromeLow="#9031091D" ChromeMedium="#80381124" ChromeMediumLow="#80462233" ChromeWhite="#80FFFFFF" ListLow="#90381124" ListMedium="#904D2B3A" />
+				<ResourceDictionary>
+					<Color x:Key="SystemChromeAltMediumHighColor">#9CB00840</Color>
+					<Color x:Key="SystemChromeAltHighColor">#9C6D6BAA</Color>
+					<Color x:Key="SystemAccentColor">#9A8862F2</Color>
+					<!-- Override system shape defaults -->
+					<!-- Override system borders -->
+					<!-- Override system generated accent colors -->
+				</ResourceDictionary>
                 <ResourceDictionary Source="/Styles/_Colors.xaml" />
                 <ResourceDictionary Source="/Styles/_FontSizes.xaml" />
                 <ResourceDictionary Source="/Styles/_Thickness.xaml" />
@@ -18,45 +28,12 @@
                 <ResourceDictionary Source="/Styles/CommandBar.xaml" />
                 <ResourceDictionary Source="/Styles/Page.xaml" />
 				<ResourceDictionary Source="/Styles/BattleReport.xaml" />
-			</ResourceDictionary.MergedDictionaries>
-            <ResourceDictionary.ThemeDictionaries>
-                    <ResourceDictionary x:Key="Dark">
-                        <ResourceDictionary.MergedDictionaries>
 
-                        <win10:ColorPaletteResources Accent="#9A8862F2" AltHigh="#6C404040" AltLow="#6F800000" AltMedium="#6C404080" AltMediumHigh="#66008080" AltMediumLow="#6F604040"
-																	BaseLow="#FF4D2B3A" BaseMedium="#FFAF939F" BaseMediumHigh="#FFC7ADB8" BaseMediumLow="#FF7E5F6C" ChromeAltLow="#90C7ADB8" ChromeBlackHigh="#90808080" ChromeBlackLow="#90C7ADB8" ChromeBlackMedium="#CC5802A2" ChromeBlackMediumLow="#CC5802A2" ChromeDisabledHigh="#FF4D2B3A" ChromeDisabledLow="#FFAF939F" ChromeGray="#80967986" ChromeHigh="#90967986" ChromeLow="#9031091D" ChromeMedium="#80381124" ChromeMediumLow="#80462233" ChromeWhite="#80FFFFFF" ListLow="#90381124" ListMedium="#904D2B3A" />
-                            <ResourceDictionary>
-                                <Color x:Key="SystemChromeAltMediumHighColor">#9CB00840</Color>
-                                <Color x:Key="SystemChromeAltHighColor">#9C6D6BAA</Color>
-                                <Color x:Key="SystemAccentColor">#9A8862F2</Color>
-                            <!-- Override system shape defaults -->
-                                <!-- Override system borders -->
-                                <!-- Override system generated accent colors -->
-                        </ResourceDictionary>
-                        </ResourceDictionary.MergedDictionaries>
-                    </ResourceDictionary>
-                    <ResourceDictionary x:Key="Light">
-                        <ResourceDictionary.MergedDictionaries>
-                            <ResourceDictionary>
-                                
-                                <Color x:Key="SystemChromeAltMediumHighColor">#CCD6FAEB</Color>
-                                <Color x:Key="SystemChromeAltHighColor">#CC5802F2</Color>
-                                <!-- Override system shape defaults -->
-                   
-                                <!-- Override system borders -->
-                                <!-- Override system generated accent colors -->
-                                <Color x:Key="SystemAccentColorLight1">#FF73AF9A</Color>
-                                <Color x:Key="SystemAccentColorLight2">#FF84BBA8</Color>
-                                <Color x:Key="SystemAccentColorLight3">#FF96C8B6</Color>
-                                <Color x:Key="SystemAccentColorDark1">#FF4E9179</Color>
-                                <Color x:Key="SystemAccentColorDark2">#FF3B7F66</Color>
-                                <Color x:Key="SystemAccentColorDark3">#FF276C52</Color>
-                            </ResourceDictionary>
-                        </ResourceDictionary.MergedDictionaries>
-                    </ResourceDictionary>
-           
-                </ResourceDictionary.ThemeDictionaries>
-			
+
+
+
+
+			</ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>
     

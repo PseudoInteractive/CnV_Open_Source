@@ -1386,9 +1386,8 @@ namespace COTG.Game
 						{
 							if ((x == -r || x == r) || (y == -r || y == r))
 							{
-								
 								var c = (x, y);// (int x, int y) c = RandCitySpot();
-								if (!c.IsXYInCenter())
+								if (!c.IsXYInCenter() && SettingsPage.clearOnlyCenterRes)
 									continue;
 								if (city.BidFromOverlay(c) == 0)
 									continue;

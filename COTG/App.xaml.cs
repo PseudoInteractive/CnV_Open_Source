@@ -346,8 +346,8 @@ namespace COTG
 			}
 
 
-			var coreTitleBar = CoreApplication.GetCurrentView().TitleBar;
-			coreTitleBar.ExtendViewIntoTitleBar = false;
+			//var coreTitleBar = CoreApplication.GetCurrentView().TitleBar;
+			//coreTitleBar.ExtendViewIntoTitleBar = false;
 			SystemInformation.Instance.TrackAppUse(args);
 			//  UpdateTitleBarLayout(coreTitleBar);
 
@@ -1439,7 +1439,7 @@ namespace COTG
 		{
 			if (ob != null)
 			{
-				ShellPage.instance.commandBar.Focus(FocusState.Programmatic);
+			//	ShellPage.instance.commandBar.Focus(FocusState.Programmatic);
 
 				App.DispatchOnUIThreadLow(() => ob.Focus(FocusState.Programmatic));
 			}
@@ -1448,7 +1448,7 @@ namespace COTG
 		{
 			if (ob != null)
 			{
-				ShellPage.keyboardProxy.Focus(FocusState.Programmatic);
+			//	ShellPage.keyboardProxy.Focus(FocusState.Programmatic);
 
 				App.DispatchOnUIThreadIdle((_) => ob.Focus(FocusState.Programmatic));
 			}

@@ -143,6 +143,8 @@
 
 				<CheckBox Content="Demo cabins if full" IsChecked="{x:Bind views:SettingsPage.demoCottageOnBuildIfFull,Mode=TwoWay}" ToolTipService.ToolTip="If On, cabins will be automatically destroyed when you place a building into a city with 100 buildings"  />
 
+				<CheckBox Content="Clear only center res" IsChecked="{x:Bind views:SettingsPage.clearOnlyCenterRes,Mode=TwoWay}" ToolTipService.ToolTip="If clear res is used, this will determine if all nodes are cleared vs only nodes in the center part"  />
+
 
 				<CheckBox Content="Demo extra buildings if full" IsChecked="{x:Bind views:SettingsPage.demoBuildingOnBuildIfFull,Mode=TwoWay}" ToolTipService.ToolTip="If On, extra buildings will be automatically destroyed when you place a building into a city with 100 buildings"  />
 			</wct:WrapPanel>
@@ -339,87 +341,6 @@
 
 			</wct:WrapPanel>
 
-			<StackPanel Style="{StaticResource StackPanelReveal}">
-				<TextBlock Text="Set Nearest Hub Settings"
-						   Style="{ThemeResource SubtitleTextBlockStyle}"
-						   Margin="4,4,4,4" />
-				<StackPanel Orientation="Horizontal"
-							Margin="4">
-					<controls:NumberBox Header="Req Wood"
-										Value="{x:Bind views:SettingsPage.reqWood, Mode=TwoWay}"
-										NumberFormatter="{x:Bind cotg:App.formatterInt,Mode=OneTime}"
-										Width="120"
-										Style="{StaticResource NumberBoxSmall}"
-										SmallChange="10000" />
-					<controls:NumberBox Header="Req Stone"
-										Value="{x:Bind views:SettingsPage.reqStone, Mode=TwoWay}"
-										Width="120"
-										NumberFormatter="{x:Bind cotg:App.formatterInt,Mode=OneTime}"
-										Style="{StaticResource NumberBoxSmall}"
-										SmallChange="10000" />
-					<controls:NumberBox Header="Req Iron"
-										Value="{x:Bind views:SettingsPage.reqIron, Mode=TwoWay}"
-										NumberFormatter="{x:Bind cotg:App.formatterInt,Mode=OneTime}"
-										Width="120"
-										Style="{StaticResource NumberBoxSmall}"
-										SmallChange="10000" />
-					<controls:NumberBox Header="Req Food"
-										Value="{x:Bind views:SettingsPage.reqFood, Mode=TwoWay}"
-										Width="120"
-										NumberFormatter="{x:Bind cotg:App.formatterInt,Mode=OneTime}"
-										Style="{StaticResource NumberBoxSmall}"
-										SmallChange="10000" />
-				</StackPanel>
-				<StackPanel Orientation="Horizontal"
-							Margin="4">
-					<controls:NumberBox Header="Max Wood"
-										Value="{x:Bind views:SettingsPage.maxWood, Mode=TwoWay}"
-										NumberFormatter="{x:Bind cotg:App.formatterInt,Mode=OneTime}"
-										Width="120"
-										Style="{StaticResource NumberBoxSmall}"
-										SmallChange="10000" />
-					<controls:NumberBox Header="Max Stone"
-										Value="{x:Bind views:SettingsPage.maxStone, Mode=TwoWay}"
-										Width="120"
-										NumberFormatter="{x:Bind cotg:App.formatterInt,Mode=OneTime}"
-										Style="{StaticResource NumberBoxSmall}"
-										SmallChange="10000" />
-					<controls:NumberBox Header="Max Iron"
-										Value="{x:Bind views:SettingsPage.maxIron, Mode=TwoWay}"
-										NumberFormatter="{x:Bind cotg:App.formatterInt,Mode=OneTime}"
-										Width="120"
-										Style="{StaticResource NumberBoxSmall}"
-										SmallChange="10000" />
-					<controls:NumberBox Header="Max Food"
-										Value="{x:Bind views:SettingsPage.maxFood, Mode=TwoWay}"
-										Width="120"
-										NumberFormatter="{x:Bind cotg:App.formatterInt,Mode=OneTime}"
-										Style="{StaticResource NumberBoxSmall}"
-										SmallChange="10000" />
-				</StackPanel>
-				<StackPanel Orientation="Horizontal"
-							Margin="4">
-					<ToggleSwitch  Header="Export Wood"
-								   IsOn="{x:Bind views:SettingsPage.sendWood, Mode=TwoWay}"
-								   Margin="4"
-								   Width="120" />
-					<ToggleSwitch  Header="Export Stone"
-								   IsOn="{x:Bind views:SettingsPage.sendStone, Mode=TwoWay}"
-								   Margin="4"
-								   Width="120" />
-					<ToggleSwitch  Header="Export Iron"
-								   IsOn="{x:Bind views:SettingsPage.sendIron, Mode=TwoWay}"
-								   Margin="4"
-								   Width="120" />
-					<ToggleSwitch  Header="Export Food"
-								   IsOn="{x:Bind views:SettingsPage.sendFood, Mode=TwoWay}"
-								   Margin="4"
-								   Width="120" />
-					<ToggleSwitch Header="Carts for requests"
-								  IsOn="{x:Bind views:SettingsPage.cartsAreForRequests, Mode=TwoWay}"
-								  Margin="4"
-								  Width="120" />
-				</StackPanel>
 				<StackPanel Orientation="Horizontal">
 					<ComboBox x:Name="hubCityListBox"
 							  x:FieldModifier="public"
@@ -441,7 +362,6 @@
 							  IsChecked="{x:Bind views:SettingsPage.autoBuildOn, Mode=TwoWay}" />
 					
 				</StackPanel>
-			</StackPanel>
 			<StackPanel Style="{StaticResource StackPanelReveal}">
 				<TextBlock x:Uid="Settings_Theme"
 						   Style="{ThemeResource SubtitleTextBlockStyle}"

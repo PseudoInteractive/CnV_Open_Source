@@ -2,15 +2,13 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <RootNamespace>COTG.Core</RootNamespace>
-    <Platforms>x64;x86;AnyCPU</Platforms>
+    <Platforms>x64</Platforms>
     <LangVersion>preview</LangVersion>
     <NeutralLanguage>en-US</NeutralLanguage>
-    <FileUpgradeFlags>40</FileUpgradeFlags>
-    <UpgradeBackupLocation>C:\Source\COTG\Backup\COTG.Core\</UpgradeBackupLocation>
-    <OldToolsVersion>2.0</OldToolsVersion>
     <RunAnalyzersDuringBuild>false</RunAnalyzersDuringBuild>
     <EnableNETAnalyzers>false</EnableNETAnalyzers>
     <AnalysisLevel>preview</AnalysisLevel>
+    <Configurations>Debug;Release;DiscordLink</Configurations>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <PlatformTarget>x64</PlatformTarget>
@@ -21,16 +19,7 @@
     <DebugSymbols>true</DebugSymbols>
     <Optimize>false</Optimize>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <PlatformTarget>x64</PlatformTarget>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <FileAlignment>2048</FileAlignment>
-    <DebugType>pdbonly</DebugType>
-    <DebugSymbols>true</DebugSymbols>
-    <Optimize>false</Optimize>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x86'">
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DiscordLink|x64'">
     <PlatformTarget>x64</PlatformTarget>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
@@ -46,39 +35,6 @@
     <DefineConstants></DefineConstants>
     <Optimize>true</Optimize>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <DebugType>pdbonly</DebugType>
-    <DebugSymbols>false</DebugSymbols>
-    <DefineConstants />
-    <Optimize>true</Optimize>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x86'">
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <DebugType>pdbonly</DebugType>
-    <DebugSymbols>false</DebugSymbols>
-    <DefineConstants />
-    <Optimize>true</Optimize>
-  </PropertyGroup>
-  <ItemGroup>
-    <Content Remove="C:\Users\dwu\.nuget\packages\microsoft.azure.cosmos\3.18.0-preview\contentFiles\any\netstandard2.0\ThirdPartyNotice.txt" />
-    <Content Remove="C:\Users\dwu\.nuget\packages\monogame.extended\3.8.0\contentFiles\any\netstandard2.0\CppNet.dll" />
-    <Content Remove="C:\Users\dwu\.nuget\packages\monogame.extended\3.8.0\contentFiles\any\netstandard2.0\libmojoshader_64.dll" />
-    <Content Remove="C:\Users\dwu\.nuget\packages\monogame.extended\3.8.0\contentFiles\any\netstandard2.0\mgfxc.deps.json" />
-    <Content Remove="C:\Users\dwu\.nuget\packages\monogame.extended\3.8.0\contentFiles\any\netstandard2.0\mgfxc.dll" />
-    <Content Remove="C:\Users\dwu\.nuget\packages\monogame.extended\3.8.0\contentFiles\any\netstandard2.0\mgfxc.exe" />
-    <Content Remove="C:\Users\dwu\.nuget\packages\monogame.extended\3.8.0\contentFiles\any\netstandard2.0\mgfxc.pdb" />
-    <Content Remove="C:\Users\dwu\.nuget\packages\monogame.extended\3.8.0\contentFiles\any\netstandard2.0\mgfxc.runtimeconfig.dev.json" />
-    <Content Remove="C:\Users\dwu\.nuget\packages\monogame.extended\3.8.0\contentFiles\any\netstandard2.0\mgfxc.runtimeconfig.json" />
-    <Content Remove="C:\Users\dwu\.nuget\packages\monogame.extended\3.8.0\contentFiles\any\netstandard2.0\SharpDX.D3DCompiler.dll" />
-    <Content Remove="C:\Users\dwu\.nuget\packages\monogame.extended\3.8.0\contentFiles\any\netstandard2.0\SharpDX.D3DCompiler.xml" />
-    <Content Remove="C:\Users\dwu\.nuget\packages\monogame.extended\3.8.0\contentFiles\any\netstandard2.0\SharpDX.dll" />
-    <Content Remove="C:\Users\dwu\.nuget\packages\monogame.extended\3.8.0\contentFiles\any\netstandard2.0\SharpDX.xml" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Remove="C:\Users\dwu\.nuget\packages\microsoft.diagnostics.tracing.traceevent\2.0.56\build\..\lib\native\amd64\KernelTraceControl.dll" />
-    <None Remove="C:\Users\dwu\.nuget\packages\microsoft.diagnostics.tracing.traceevent\2.0.56\build\..\lib\native\amd64\msdia140.dll" />
-  </ItemGroup>
   <ItemGroup>
     <Folder Include="Models\" />
   </ItemGroup>
@@ -96,8 +52,8 @@
     <PackageReference Include="PlayFabAllSDK" Version="1.95.210629" />
     <PackageReference Include="System.Memory" Version="4.5.4" />
     <PackageReference Include="System.Numerics.Vectors" Version="4.5.0" />
-    <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="6.0.0-preview.5.21301.5" />
-    <PackageReference Include="System.Text.Json" Version="5.0.2" />
+    <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="6.0.0-preview.6.21352.12" />
+    <PackageReference Include="System.Text.Json" Version="6.0.0-preview.6.21352.12" />
     <PackageReference Include="ZString" Version="2.4.2" />
   </ItemGroup>
 </Project>

@@ -106,6 +106,11 @@ namespace COTG.Game
       //      Note.Show("Got Players");
 
 
-        }        
-    }
+        }
+
+		internal static Player FromName(string player)
+		{
+			return all[nameToId.GetValueOrDefault(player)];
+		}
+	}
 }

@@ -54,7 +54,7 @@ namespace COTG
 		//public static string userAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.114 Safari/537.36";
 
 		//public static string userAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.114 Safari/537.36";
-		public static string userAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.114 Safari/537.36 Edg/91.0.864.64";
+		public static string userAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.114 Safari/537.36 Edg/91.0.864.54";
 		//        public static JsonDocument ppdt;
 		public static JSClient instance = new JSClient();
 		public static WebView view;
@@ -301,7 +301,7 @@ namespace COTG
 
 			if (!session)
 			{
-				cookie.Expires = DateTimeOffset.UtcNow + TimeSpan.FromDays(7);
+				cookie.Expires = DateTimeOffset.UtcNow + TimeSpan.FromDays(40);
 			}
 			cookieManager.DeleteCookie(cookie);
 			if (!clearOnly)
@@ -412,6 +412,7 @@ namespace COTG
 			//  httpFilter.ServerCustomValidationRequested += HttpFilter_ServerCustomValidationRequested;
 			httpFilter.CacheControl.ReadBehavior = HttpCacheReadBehavior.NoCache;
 			httpFilter.CacheControl.WriteBehavior = HttpCacheWriteBehavior.NoCache;
+			
 
 			cookieManager = httpFilter.CookieManager;
 			{
@@ -453,7 +454,7 @@ namespace COTG
 				view.NavigationCompleted += View_NavigationCompletedAsync;
 				view.PermissionRequested += View_PermissionRequested;
 				view.NewWindowRequested += View_NewWindowRequested;
-				view.WebResourceRequested += View_WebResourceRequested1;
+				//view.WebResourceRequested += View_WebResourceRequested1;
 				//	view.WebResourceRequested -= View_WebResourceRequested1;
 				//	view.WebResourceRequested += View_WebResourceRequested1;
 				//  view.WebResourceRequested += View_WebResourceRequested1;
@@ -478,7 +479,12 @@ namespace COTG
 						App.DispatchOnUIThread(() => view.Source = new Uri($"https://w{world}.crownofthegods.com?s=1"));
 					});
 				}
+				else
+				{
+					
+				}
 				//	App.SetupCoreWindowInputHooks();
+
 			}
 			catch (Exception e)
 			{
@@ -596,6 +602,7 @@ namespace COTG
 		}
 		private static void View_WebResourceRequested1(WebView sender, Windows.UI.Xaml.Controls.WebViewWebResourceRequestedEventArgs args)
 		{
+
 			try
 			{
 				var req = args.Request;
@@ -603,8 +610,8 @@ namespace COTG
 				if(str.EndsWith("https://www.crownofthegods.com/nincludes/pro_log.php"))
 				{
 					//sender.NavigateWithHttpRequestMessage(args.Request);
-					GetMe(args,args.GetDeferral());
-					GetSessionSoon();
+				//	GetMe(args,args.GetDeferral());
+				//	GetSessionSoon();
 				}
 				//	Log(req.RequestUri.ToString());
 				else if (str.EndsWith("jquery/1.9.0/jquery.min.js"))
@@ -768,8 +775,10 @@ namespace COTG
 						message = message.Substring(0, div);
 					}
 					view.InvokeScriptAsync("sendchat", new string[] { channel.ToString(), message });
+					
 					if (remainder == null)
 						break;
+					
 					// Copy Whisper to the next segment
 					if (message[0] == '/')
 					{
@@ -781,11 +790,10 @@ namespace COTG
 						}
 						remainder = message.Substring(0, sp + 1) + remainder;
 					}
-
-					message = remainder;
+					
+					Task.Delay(1000).ContinueWith( (_)=> App.DispatchOnUIThreadLow(()=> SendChat(channel, remainder) ));
+					break;
 				}
-
-
 			}
 			catch (Exception e)
 			{
@@ -1625,9 +1633,9 @@ namespace COTG
 			client.DefaultRequestHeaders.TryAppendWithoutValidation("sec-ch-ua", "\" Not; A Brand\";v=\"99\", \"Microsoft Edge\"; v=\"91\", \"Chromium\"; v=\"91\"");
 			client.DefaultRequestHeaders.TryAppendWithoutValidation("sec-ch-ua-mobile", "?0");
 
-			SetCookie("lout", "1");
-			SetCookie("G_AUTHUSER_H", "0", "www.crownofthegods.com", "/");
-			SetCookie("G_AUTHUSER_H", "0", "www.crownofthegods.com", "/home");
+	//		SetCookie("lout", "1");
+	//		SetCookie("G_AUTHUSER_H", "0", "www.crownofthegods.com", "/");
+	//		SetCookie("G_AUTHUSER_H", "0", "www.crownofthegods.com", "/home");
 
 
 			var req = args.Request;
@@ -2593,6 +2601,8 @@ namespace COTG
 					   // 
 					   
 					   App.state = App.State.active;
+					   CnVDiscord.Discord.Initialize();
+
 				   }
 			   }
 			   //}

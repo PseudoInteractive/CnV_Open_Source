@@ -60,13 +60,13 @@
 
 
 			<CheckBox x:Name="temples"
-			  ToolTipService.ToolTip="Checked: temples, Unchecked: non temples, in between: both"
-									Content="Temples"
-			  IsThreeState="True"
-									IsChecked="{x:Bind views:SettingsPage.exportTemples, Mode=TwoWay}" />
+			  ToolTipService.ToolTip="Checked: only temples, Unchecked: temples and non temples"
+									Content="Only Temples"
+			
+									IsChecked="{x:Bind views:SettingsPage.onlyTemples, Mode=TwoWay}" />
 
 			<CheckBox x:Name="score"
-			  ToolTipService.ToolTip="If checked, score is output for each castle (slower)"
+			  ToolTipService.ToolTip="If checked, score is output for each castle (only works for your cities or your alliance cities otherwise it would be slow)"
 								Content="Score"
 			  					IsChecked="{x:Bind views:SettingsPage.exportScore, Mode=TwoWay}"  />
 			<CheckBox x:Name="headers"

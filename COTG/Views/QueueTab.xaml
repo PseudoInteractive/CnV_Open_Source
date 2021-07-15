@@ -6,9 +6,8 @@
                xmlns:game="using:COTG.Game"
                xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                xmlns:cotg="using:COTG"
-			   xmlns:win="using:Windows.UI.Xaml.Controls"
-  			    xmlns:winui="using:Microsoft.UI.Xaml.Controls"
-               xmlns:tk="using:Microsoft.Toolkit.Uwp.UI.Controls"
+			   xmlns:winui="using:Windows.UI.Xaml.Controls"
+  			   xmlns:tk="using:Microsoft.Toolkit.Uwp.UI.Controls"
                xmlns:views="using:COTG.Views"
 
 			   TabNavigation="Once"
@@ -17,12 +16,12 @@
 	<views:UserTab.Resources>
 	
 		<DataTemplate x:Key="BuildTabTemplate" x:DataType="views:BuildItemView">
-			<win:TreeViewItem ItemsSource="{x:Bind queue}">
+			<winui:TreeViewItem ItemsSource="{x:Bind queue}">
 			<StackPanel Orientation="Horizontal" Margin="4" MinWidth="200">
 				<Canvas Background="{x:Bind brush}" Width="32" Height="32" />
 				<TextBlock Text="{x:Bind text}" />
 			</StackPanel>
-			</win:TreeViewItem>
+			</winui:TreeViewItem>
 		</DataTemplate>
 
 
@@ -43,13 +42,12 @@
 			<!--<Button Margin="4" Content="Do the places" Click="SplatAll" Style="{StaticResource ButtonSmall}" ToolTipService.ToolTip="Does all the things and all of the stuff in all of the places" />-->
 			<Button Margin="4" Content="Clear Queue" Click="ClearQueue" Style="{StaticResource ButtonSmall}" />
 			<Button Margin="4" Content="Cancel Selected" Click="ClearSelected" Style="{StaticResource ButtonSmall}" />
-		
 		</StackPanel>
-		<win:TreeView Grid.Row="1" x:Name="zoom"  CanReorderItems="False"  SelectionMode="Multiple" IsTabStop="True"  BorderThickness="1" 
+		<winui:TreeView Grid.Row="1" x:Name="zoom"  CanReorderItems="False"  SelectionMode="Multiple" IsTabStop="True"  BorderThickness="1" 
  TabNavigation="Once" CanDragItems="False" AllowDrop="False" ItemTemplate="{StaticResource BuildTabTemplate}" 
 						ItemsSource="{x:Bind cities}" ItemInvoked="zoom_ItemInvoked" 
 						>
-		</win:TreeView>
+		</winui:TreeView>
 
 	</Grid>
 </views:UserTab>
