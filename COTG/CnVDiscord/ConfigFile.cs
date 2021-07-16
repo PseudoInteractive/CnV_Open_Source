@@ -13,7 +13,7 @@ namespace CnVDiscord
     {
         public string DiscordBotToken = "NzgzNTU3MDAzNTYwNjE1OTc2.X8ceUw.My9T4SLadfgdVFLHUOosxnuu4Oo";
         public string Prefix = "/";
-        public ulong ChatID = 863918043388969012;
+		public ulong ChatID = 0;// 863918043388969012;
         public ulong LogID = 0;
 		public ulong CommandID = 0;
 

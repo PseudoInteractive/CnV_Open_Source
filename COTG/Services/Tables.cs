@@ -8,9 +8,11 @@ using Azure;
 using Azure.Data.Tables;
 using Azure.Data.Tables.Models;
 using System.Globalization;
-
+using Standart.Hash.xxHash;
 using static COTG.Debug;
-
+using COTG.Game;
+using System.Runtime.InteropServices;
+using System.Web;
 
 namespace COTG.Services
 {
@@ -36,6 +38,17 @@ namespace COTG.Services
 
 
 	}
+	public class DiscordAllianceDB : ITableEntity
+	{
+		public string PartitionKey { get; set; }
+		public string RowKey { get; set; }
+		public DateTimeOffset? Timestamp { get; set; }
+		public ETag ETag { get; set; }
+		public Int64 ChatID { get; set; }
+
+
+	}
+
 
 	public class IncomingDB : ITableEntity
 	{
@@ -55,17 +68,30 @@ namespace COTG.Services
 		public ETag ETag { get; set; }
 	}
 
-	class Tables
+	static class Tables
 	{
+		const string accountNameCnV = "cnv";
+		const string storageAccountKeyCnV = "EWd320nJYCPBsIJIb53HTQvdauQLpX0zyzXhkmhzNaZLSkXJhhfzeQa6bliSfUWAWyRjlTsvPVtGxSzsfq+Rqw==";
+		static string tableNameDiscord => $"Discord{JSClient.world}";
+		const string storageUriCnV = "https://" + accountNameCnV + ".table.core.windows.net/";
+		static bool tableClientCnVInitialized;
+		static TableClient tableClientCnV;
+
 		const string accountName = "avata";
 		const string storageUri = "https://" + accountName + ".table.core.windows.net/";
 		const string storageAccountKey = "IWRPGlttorpK5DcHWin/GdA2VEcZKnHkr30lE0ZDvKLG0q1CjZONcAQYI2D26DENd7TIAxF8tPsE0mIk98BafA==";
+		
 		const string tableName = "sharestring";
 		static string incTableName => $"inc{JSClient.world}";
 		// DefaultEndpointsProtocol=https;AccountName=avata;AccountKey=IWRPGlttorpK5DcHWin/GdA2VEcZKnHkr30lE0ZDvKLG0q1CjZONcAQYI2D26DENd7TIAxF8tPsE0mIk98BafA==;EndpointSuffix=core.windows.net
 		static TableServiceClient serviceClient;
 		static TableClient tableClient;
 		static TableClient incTableClient;
+
+		const int httpStatusSuccessStart = 200;
+		const int httpStatusSuccessEnd = 299;
+		public static bool IsHttpSuccess(int status) => status >=httpStatusSuccessStart && status <= httpStatusSuccessEnd;
+
 		static TableServiceClient GetServiceClient()
 		{
 			if(serviceClient == null)
@@ -98,6 +124,79 @@ namespace COTG.Services
 			return incTableClient;
 		}
 
+		static public async Task<TableClient> TouchCnV()
+		{
+			if (tableClientCnVInitialized)
+				return tableClientCnV;
+			int counter = 0;
+			while (!Alliance.alliancesFetched)
+			{
+				if (counter++ >= 64)
+					return null; // no alliance?
+				await Task.Delay(1000).ConfigureAwait(false);
+			}
+
+			if (Alliance.my == null)
+				return null;
+
+			try
+			{
+				if (tableClientCnVInitialized)
+					return tableClientCnV;
+
+				tableClientCnVInitialized = true;
+
+				var serviceClientCnV = new TableServiceClient(
+					new Uri(storageUriCnV),
+					new TableSharedKeyCredential(accountNameCnV, storageAccountKeyCnV));
+
+				tableClientCnV = serviceClientCnV.GetTableClient(tableNameDiscord);
+				return tableClientCnV;
+			}
+			catch(Exception ex)
+			{
+				LogEx(ex);
+				return null;
+			}
+		}
+		static public async Task<ulong> GetDiscordChatId()
+		{
+			try
+			{
+				var tableClient = await TouchCnV().ConfigureAwait(false);
+				if (tableClient == null)
+					return 0;
+
+				var entity = await tableClient.GetEntityAsync<DiscordAllianceDB>($"{Alliance.my.name} ChatInfo", "IDs").ConfigureAwait(false);
+				return (ulong)entity.Value.ChatID;
+			}
+			catch (Exception ex)
+			{
+				return 0;
+			}
+		}
+		public static ulong Hash64(this string a)
+		{
+			var span = MemoryMarshal.AsBytes(a.AsSpan());
+			return xxHash64.ComputeHash(span, span.Length);
+		}
+		static public async Task<bool> TryAddChatMessage(string message)
+		{
+			try
+			{
+				var tableClient = await TouchCnV().ConfigureAwait(false);
+				if (tableClient == null)
+					return false;
+				var hash = message.Hash64().ToString();
+				var i = await tableClient.AddEntityAsync(new TableEntity() { PartitionKey = $"{Alliance.my.name} ChatInfo", RowKey = hash }).ConfigureAwait(false);
+				return IsHttpSuccess(i.Status);
+			}
+			catch (Exception ex)
+			{
+				return false;
+			}
+		}
+
 
 		public static async void ShareShareString(string part, string key, string s)
 		{
@@ -108,7 +207,7 @@ namespace COTG.Services
 			{
 
 				var i = new ShareStringDB(part, key, s);
-				var r = await tableClient.UpsertEntityAsync(i, TableUpdateMode.Replace);
+				var r = await tableClient.UpsertEntityAsync(i, TableUpdateMode.Replace).ConfigureAwait(false);
 				// todo
 			}
 			catch (Exception e)
@@ -160,11 +259,14 @@ namespace COTG.Services
 			{
 
 				var tab = TouchIncT();
+				if (tab == null)
+					return false;
+
 				var ent = new IncomingDB(date, orderId);
-				await tab.AddEntityAsync(ent);
+				var i = await tab.AddEntityAsync(ent).ConfigureAwait(false);
 				//	Log($"Created entry {orderId}");
 
-				return true;
+				return IsHttpSuccess(i.Status);
 				
 				//return false;
 			}

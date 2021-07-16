@@ -187,3 +187,16 @@
 	  - To see changes for a day, first tap on the "..click to load" text to load the data
 	 - **Tip**
 	  - To export to a spread sheel, use control-a and then control-c, then paste somewhere
+### 2021/7/14
+  -**Update**
+    - Res clearing now removes all res nodes when buildings should go, previously it only removed the center
+      - This can be disabled in settings
+  - **Update**
+    - ExportForWar temples 3 state option has been replaced with a onlyTemples checkbox
+  - **New**
+    -  Preliminay Discord bridge for chat
+    - Works best if player nicknames match in game names
+    - Alliance Discord admins need me to set this up for it to work.
+  - **Fix**
+    - Temples do not demo when you don't have building space.  
+    - Do people people really sacrifice 4000 ts for a temple..?

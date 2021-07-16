@@ -71,7 +71,6 @@ namespace COTG.Services
                     {
                         whisperInitialized = true;
                     }
-
                 }
             }
         }

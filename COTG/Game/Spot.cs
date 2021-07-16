@@ -1821,7 +1821,7 @@ namespace COTG.Game
 					aSetup.AddItem("Change...", (_, _) => ShareString.Show(cid));
 
 					//   AApp.AddItem(flyout, "Clear Res", (_, _) => JSClient.ClearCenterRes(cid) );
-					aSetup.AddItem("Clear Center Res", (this as City).ClearRes);
+					aSetup.AddItem("Clear Res", (this as City).ClearRes);
 
 
 					aExport.AddItem("Troops to Sheets", CopyForSheets);

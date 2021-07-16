@@ -21,36 +21,36 @@ using static COTG.Debug;
 using DSharpPlus.CommandsNext.Converters;
 using COTG;
 using Microsoft.Extensions.Azure;
+using COTG.Views;
+using COTG.Services;
+using SharpDX.Direct2D1;
+using COTG.Helpers;
+using Windows.UI.Xaml.Media.Imaging;
 
 namespace CnVDiscord
 {
 	public static class Discord
 	{
-
-		static Dictionary<string, DiscordMember> playerToDiscordId;
+		public static Dictionary<string, string> avatarUrls = new();
+		public static Dictionary<string, BitmapImage> avatarBrushes = new();
+		const int messageFetchCount =200;
+		static Dictionary<string, DiscordMember> playerToMember;
+//		static Dictionary<ulong, DiscordMember> UserIdToMemeber;
 
 		static Color Color;
 		public static DiscordGuild guild;
 		public static DiscordChannel chatChannel;
 		public static DiscordClient DiscordBot { get; set; }
 		public static CommandsNextExtension DiscordCommands { get; set; }
-		public static ConfigFile Config;
-
+		public static ConfigFile Config = new ();
+		public static bool IsAllianceConnected => Config.ChatID != 0;
 		public async static void Initialize()
 		{
-			#region Hooks
-			//ServerApi.Hooks.ServerCommand.Register(this, Logs.OnServerCommand);
-			//ServerApi.Hooks.GamePostInitialize.Register(this, Utils.OnPostInitialize);
-			//ServerApi.Hooks.ServerBroadcast.Register(this, Bridge.OnBC);
-			//ServerApi.Hooks.NetGreetPlayer.Register(this, OnGreet);
-			//ServerApi.Hooks.WorldSave.Register(this, OnSave);
-			//GetDataHandlers.KillMe += Bridge.OnKill; 
-			PlayerHooks.PlayerCommand += Logs.OnPlayerCommand;
-			PlayerHooks.PlayerLogout += OnLogout;
-			PlayerHooks.PlayerChat += OnChat;
-			#endregion
+			
 
-			LoadConfig();
+			Config.ChatID = await Tables.GetDiscordChatId().ConfigureAwait(false);
+			if (Config.ChatID == 0)
+				return;
 
 			Color = new Color(Config.Messagecolor[0], Config.Messagecolor[1], Config.Messagecolor[2]);
 
@@ -60,45 +60,66 @@ namespace CnVDiscord
 			{
 				Token = Config.DiscordBotToken,
 				TokenType = TokenType.Bot,
+				Intents = DiscordIntents.AllUnprivileged,
 
 				MinimumLogLevel = LogLevel.Warning
 			});
-			await DiscordBot.ConnectAsync();
+
+			await DiscordBot.ConnectAsync().ConfigureAwait(false);
 
 			DiscordBot.Ready += async (client, args) =>
 			{
-				chatChannel = await DiscordBot.GetChannelAsync(Config.ChatID);
+				chatChannel = await DiscordBot.GetChannelAsync(Config.ChatID).ConfigureAwait(false);
 				guild = chatChannel.Guild;
-				playerToDiscordId = (await guild.GetAllMembersAsync()).ToDictionary((a => a.DisplayName), (a => a));
-
-			};
-
-
+				var members = await guild.GetAllMembersAsync().ConfigureAwait(false);
+				playerToMember = members.ToDictionary((a => a.DisplayName), (a => a));
+				//			UserIdToMemeber = members.ToDictionary((a => a.Id), (a => a));
 
 
-			if (Config.Commands)
-			{
-				var ccfg = new CommandsNextConfiguration
+
+
+				#region Hooks
+				//ServerApi.Hooks.ServerCommand.Register(this, Logs.OnServerCommand);
+				//ServerApi.Hooks.GamePostInitialize.Register(this, Utils.OnPostInitialize);
+				//ServerApi.Hooks.ServerBroadcast.Register(this, Bridge.OnBC);
+				//ServerApi.Hooks.NetGreetPlayer.Register(this, OnGreet);
+				//ServerApi.Hooks.WorldSave.Register(this, OnSave);
+				//GetDataHandlers.KillMe += Bridge.OnKill; 
+				PlayerHooks.PlayerCommand += Logs.OnPlayerCommand;
+				PlayerHooks.PlayerLogout += OnLogout;
+				PlayerHooks.PlayerChat += OnChat;
+				#endregion
+
+
+				//if (Config.Commands )
+				//{
+				//	var ccfg = new CommandsNextConfiguration
+				//	{
+				//		StringPrefixes = new[] { Config.Prefix },
+
+				//		EnableDms = false,
+
+				//		EnableMentionPrefix = false
+				//	};
+
+				//	DiscordCommands = DiscordBot.UseCommandsNext(ccfg);
+
+				//	DiscordCommands.RegisterCommands<BotCommands>();
+
+				//	DiscordCommands.SetHelpFormatter<HelpFormatter>();
+
+				//	DiscordCommands.CommandExecuted += CommandExecuted;
+				//	DiscordCommands.CommandErrored += CommandErrored;
+				//}
+
+				DiscordBot.ClientErrored += ClientErrored;
+				DiscordBot.MessageCreated += OnMessageCreated;
+				var fetch = await chatChannel.GetMessagesAsync(messageFetchCount).ConfigureAwait(false);
+				foreach(var message in fetch)
 				{
-					StringPrefixes = new[] { Config.Prefix },
-
-					EnableDms = false,
-
-					EnableMentionPrefix = false
-				};
-
-				DiscordCommands = DiscordBot.UseCommandsNext(ccfg);
-
-				DiscordCommands.RegisterCommands<BotCommands>();
-
-				DiscordCommands.SetHelpFormatter<HelpFormatter>();
-
-				DiscordCommands.CommandExecuted += CommandExecuted;
-				DiscordCommands.CommandErrored += CommandErrored;
-			}
-
-			DiscordBot.ClientErrored += ClientErrored;
-			DiscordBot.MessageCreated += OnMessageCreated;
+					await AddMessage(message).ConfigureAwait(false);
+				}
+			};
 		}
 
 		//protected void Dispose(bool disposing)
@@ -155,8 +176,8 @@ namespace CnVDiscord
 			// let's log the name of the command and user
 			//  e.Context.Client.DebugLogger.LogMessage(LogLevel.Info, "ExampleBot", $"{e.Context.User.Username} successfully executed '{e.Command.QualifiedName}'", DateTime.Now);
 
-			var logs = await DiscordBot.GetChannelAsync(Config.LogID);
-			await DiscordBot.SendMessageAsync(logs, "**" + e.Context.User.Username + ":** " + e.Context.Message.Content);
+			var logs = await DiscordBot.GetChannelAsync(Config.LogID).ConfigureAwait(false);
+			await DiscordBot.SendMessageAsync(logs, "**" + e.Context.User.Username + ":** " + e.Context.Message.Content).ConfigureAwait(false);
 
 			// since this method is not async, let's return
 			// a completed task, so that no additional work
@@ -179,7 +200,7 @@ namespace CnVDiscord
 					Description = $"{emoji} You do not have the permissions required to execute this command.",
 					Color = new DiscordColor(0xFF0000) // red
 				};
-				await e.Context.RespondAsync("", embed: embed);
+				await e.Context.RespondAsync("", embed: embed).ConfigureAwait(false);
 			}
 			if (e.Exception is ArgumentException)
 			{
@@ -192,20 +213,86 @@ namespace CnVDiscord
 													   // there are also some pre-defined colors available
 													   // as static members of the DiscordColor struct
 				};
-				await e.Context.RespondAsync("", embed: embed);
+				await e.Context.RespondAsync("", embed: embed).ConfigureAwait(false);
 			}
 		}
 
-		#region Discord Hooks
-		private static async Task OnMessageCreated(DiscordClient s, MessageCreateEventArgs e)
+		public static string DisplayName(DiscordUser user)
 		{
-			if (e.Channel.Id != Config.ChatID)
-				return;
-			if (e.Author == DiscordBot.CurrentUser || e.Author.IsBot)
-				return;
-			var name = e.Author.Username;
-			e.Message
-			TShock.Utils.Broadcast(string.Format(Config.DiscordToTerrariaFormat, , e.Message.Content), Color);
+			return (user is DiscordMember member) ? member.DisplayName : user.Username;
+		}
+		static Regex regexMention = new Regex(@"\<@(\w+)\>", RegexOptions.CultureInvariant | RegexOptions.Compiled);
+
+		private static async Task AddMessage(DiscordMessage message)
+		{
+			try
+			{
+				var author = message.Author;
+				if (author.IsBot)
+					return;
+
+				var name = DisplayName(author); // todo: use clients
+				if(!avatarUrls.TryGetValue(name,out var avatarUrl) )
+				{
+					var url = author.GetAvatarUrl(ImageFormat.Auto, 32);
+					avatarUrl = $"![Helpers Image]({url})";
+					avatarUrls.Add(name, avatarUrl);
+				
+
+					var _name = name; 
+					
+					await App.DispatchOnUIThreadTask( () =>
+					{
+
+						avatarBrushes.Add(_name, new BitmapImage(new Uri(url)));
+						return Task.CompletedTask;
+					})
+						;
+				}
+				var content = message.Content;
+
+				foreach (var i in message.MentionedUsers)
+				{
+					var mention = i.Mention;
+					var displayName = DisplayName(i);
+					var mentionGame = $"[{displayName}](/p/{displayName})";
+					content = content.Replace(mention ,mentionGame );
+					if(content.Contains('!'))
+					{
+						int q = 0;
+					}
+					if (mention.Contains('!'))
+						mention = mention.Replace("!", "");
+					else
+						mention = regexMention.Replace(mention,"<@!$1>" );
+
+					content = content.Replace(mention, mentionGame);
+				}
+				var chat = new ChatEntry(name, content, message.Timestamp.ToServerTime(), ChatEntry.typeAlliance);
+				App.DispatchOnUIThreadLow(() => ChatTab.alliance.Post(chat));
+			}
+			catch (Exception ex)
+			{
+				LogEx(ex);
+			}
+			return;
+		}
+
+
+		#region Discord Hooks
+		private static async  Task OnMessageCreated(DiscordClient s, MessageCreateEventArgs e)
+		{
+			try
+			{
+				if (e.Channel.Id != Config.ChatID)
+					return;
+				await AddMessage(e.Message).ConfigureAwait(false);
+				e.Handled = true;
+			}
+			catch (Exception ex)
+			{
+				LogEx(ex);
+			}
 			return;
 		}
 		#endregion
@@ -242,22 +329,24 @@ namespace CnVDiscord
 				try
 				{
 					var name = args.player.name;
-
-					var user = playerToDiscordId.GetValueOrDefault(name);
+					if (!await Tables.TryAddChatMessage(name + args.text))
+						return;
+					var user = playerToMember.GetValueOrDefault(name);
 					//DiscordMessageBuilder message;
 					var users = new List<IMention>();
 
 					StringBuilder sb = new StringBuilder();
-					if (user == null)
-					{
-						sb.Append(args.player.name);
-					}
-					else
-					{
-						sb.Append(user.Mention.ToString());
-						users.Add(new UserMention(user));
-					}
-					sb.Append(':');
+					//var displayName;
+					//if (user == null)
+					//{
+					//	displayName = (args.player.name);
+					//}
+					//else
+					//{
+					//	displayName = (user.Mention.ToString());
+					//	users.Add(new UserMention(user));
+					//}
+				//	sb.Append(':');
 					var str = args.text;
 					for (; ; )
 					{
@@ -281,7 +370,7 @@ namespace CnVDiscord
 						}
 						
 						var mentionName = str.Substring(fStart, f - fStart);
-						var mention = playerToDiscordId.GetValueOrDefault(mentionName);
+						var mention = playerToMember.GetValueOrDefault(mentionName);
 						if (mention != null)
 						{
 							sb.Append(mention.Mention);
@@ -294,10 +383,10 @@ namespace CnVDiscord
 						str = str.Substring(f);
 					}
 
-
-					var message = new DiscordMessageBuilder().WithContent(sb.ToString()).WithAllowedMentions(users);
-					var channel = await Discord.DiscordBot.GetChannelAsync(Discord.Config.ChatID);
-					await Discord.DiscordBot.SendMessageAsync(channel, message);
+					var embed = new DiscordEmbedBuilder().WithFooter(user.DisplayName,user.AvatarUrl);
+					var message = new DiscordMessageBuilder().WithContent(sb.ToString()).WithAllowedMentions(users).WithEmbed(embed);
+					var channel = chatChannel;
+					await DiscordBot.SendMessageAsync(channel, message).ConfigureAwait(false);
 
 				}
 				catch (Exception a)

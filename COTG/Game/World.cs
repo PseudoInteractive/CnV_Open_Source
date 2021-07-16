@@ -1238,7 +1238,7 @@ namespace COTG.Game
 			// reset players	
 
 
-			while (!Alliance.alliancesFetched && counter++ < 16)
+			while (!Alliance.alliancesFetched && counter++ < 64)
 			{
 				await Task.Delay(1000);
 			}
