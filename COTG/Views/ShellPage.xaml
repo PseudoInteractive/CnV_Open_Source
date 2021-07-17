@@ -29,8 +29,6 @@
                     Value="Stretch" />
 				<Setter Property="VerticalContentAlignment"
                     Value="Stretch" />
-				<Setter Property="MaxWidth"
-                    Value="1900" />
 			</Style>
 		</Grid.Resources>
 		<Grid.RowDefinitions>
@@ -322,8 +320,10 @@
                                   Grid.Row="1"
                               HorizontalAlignment="Left"
                               VerticalAlignment="Top"
+							  VerticalOffset="0"
+								Margin="0,48,0,0"
 
-                              VerticalOffset="-160"
+                              HorizontalOffset="64"
                                   Grid.Column="1"
                               IsTabStop="False"
                              

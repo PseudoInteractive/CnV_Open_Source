@@ -11,15 +11,14 @@
 			<ResourceDictionary.MergedDictionaries>
                
 				<XamlControlsResources xmlns="using:Microsoft.UI.Xaml.Controls" />
-				<ColorPaletteResources Accent="#FF56207D" AltHigh="#FF000000" AltLow="#FF000000" AltMedium="#FF000000" AltMediumHigh="#FF000000" AltMediumLow="#FF000000" BaseHigh="#FFFFFFFF" BaseLow="#FF4F1A1A" BaseMedium="#FFB18A8A" BaseMediumHigh="#FFCAA6A6" BaseMediumLow="#FF805252" ChromeAltLow="#FFCAA6A6" ChromeBlackHigh="#FF000000" ChromeBlackLow="#FFCAA6A6" ChromeBlackMedium="#FF000000" ChromeBlackMediumLow="#FF000000" ChromeDisabledHigh="#FF4F1A1A" ChromeDisabledLow="#FFB18A8A" ChromeGray="#FF996E6E" ChromeHigh="#FF996E6E" ChromeLow="#FF330505" ChromeMedium="#FF3A0A0A" ChromeMediumLow="#FF481515" ChromeWhite="#FFFFFFFF" ListLow="#FF3A0A0A" ListMedium="#FF4F1A1A" />
+				<ColorPaletteResources Accent="#FF56207D" AltHigh="#80F00000" AltLow="#8000F000" AltMedium="#80000000" AltMediumHigh="#80000000" AltMediumLow="#80000000" BaseHigh="#FFFFFFFF" BaseLow="#804F1A1A" BaseMedium="#80B18A8A" BaseMediumHigh="#80CAA6A6" BaseMediumLow="#80805252" ChromeAltLow="#FFCAA6A6" ChromeBlackHigh="#FF000000" ChromeBlackLow="#FFCAA6A6" ChromeBlackMedium="#FF000000" ChromeBlackMediumLow="#FF000000" ChromeDisabledHigh="#FF4F1A1A" ChromeDisabledLow="#FFB18A8A" ChromeGray="#FF996E6E" ChromeHigh="#FF996E6E" ChromeLow="#80330505" ChromeMedium="#803A0A0A" ChromeMediumLow="#80481515" ChromeWhite="#FFFFFFFF" ListLow="#FF3A0A0A" ListMedium="#FF4F1A1A" />
 				<ResourceDictionary>
-					
-					<Color x:Key="SystemChromeAltMediumHighColor">#CC050021</Color>
+					<Color x:Key="SystemChromeAltMediumHighColor">#CC0E210F</Color>
 					<Color x:Key="SystemChromeAltHighColor">#FF4F1A1A</Color>
 					<Color x:Key="SystemRevealListLowColor">#FF3A0A0A</Color>
 					<Color x:Key="SystemRevealListMediumColor">#FF4F1A1A</Color>
 					<AcrylicBrush x:Key="SystemControlAcrylicWindowBrush" BackgroundSource="HostBackdrop" TintColor="{ThemeResource SystemChromeAltHighColor}" TintOpacity="0.8" FallbackColor="{ThemeResource SystemChromeMediumColor}" />
-					
+
 					<!-- Override system generated accent colors -->
 					<Color x:Key="SystemAccentColorDark1">#FF6C3C8F</Color>
 					<Color x:Key="SystemAccentColorDark2">#FF8257A1</Color>
@@ -27,7 +26,7 @@
 					<Color x:Key="SystemAccentColorLight1">#FF4B1A70</Color>
 					<Color x:Key="SystemAccentColorLight2">#FF3F1364</Color>
 					<Color x:Key="SystemAccentColorLight3">#FF340D57</Color>
-					<Color x:Key="RegionColor">#FF050021</Color>
+					<Color x:Key="RegionColor">#FF0E210F</Color>
 					<SolidColorBrush x:Key="RegionBrush" Color="{StaticResource RegionColor}" />
 				</ResourceDictionary>
 				<ResourceDictionary Source="/Styles/_Colors.xaml" />

@@ -144,45 +144,52 @@ namespace COTG.Views
 				&& lastChat.type == entry.type)
 				return;
 			lastChat = entry;
-
-			if (!isActive)
+			try
 			{
-				ShowOrAdd(true, false);
+
+				if (!isActive)
+				{
+					ShowOrAdd(true, false);
+				}
+				var at = entry.time;
+				//var activeGroup = Groups.Count > 0 ? Groups.Last() : null;
+				//var lastHour = activeGroup == null ? -99 : activeGroup.time.Hour;
+				//var newHour = entry.time.Hour;
+				//if (lastHour != newHour)
+				//{
+				//    activeGroup = new ChatEntryGroup() { time = entry.time };
+				//    Groups.Add(activeGroup);
+				//}
+				int count = items.Count;
+
+				//foreach (var g in Groups)
+				//    count += g.Items.Count;
+				if (count >= maxItems)
+				{
+					for (int i = 0; i < 32; ++i)
+						items.RemoveAt(0);
+				}
+				var insert = items.Count;
+				for (; insert > 0 && items[insert - 1].time > at; --insert) { }
+
+				items.Insert(insert, entry);
+
+				var text = entry.text;
+				if (this != debug && (text.Contains(Player.myName, StringComparison.OrdinalIgnoreCase) || text.Contains("@here", StringComparison.OrdinalIgnoreCase)))
+				{
+					Note.Show(entry.ToString());
+				}
+
+				// Set + if not from me
+				if (entry.player != Player.myName && entry.player != null && entry.type != ChatEntry.typeWhisperTo)
+				{
+					Log(entry);
+					SetPlus(true);
+				}
 			}
-			var at = entry.time;
-			//var activeGroup = Groups.Count > 0 ? Groups.Last() : null;
-			//var lastHour = activeGroup == null ? -99 : activeGroup.time.Hour;
-			//var newHour = entry.time.Hour;
-			//if (lastHour != newHour)
-			//{
-			//    activeGroup = new ChatEntryGroup() { time = entry.time };
-			//    Groups.Add(activeGroup);
-			//}
-			int count = items.Count;
-
-			//foreach (var g in Groups)
-			//    count += g.Items.Count;
-			if (count >= maxItems)
+			catch(Exception ex)
 			{
-				for (int i = 0; i < 32; ++i)
-					items.RemoveAt(0);
-			}
-			var insert = items.Count;
-			for (; insert > 0 && items[insert - 1].time > at; --insert) { }
-
-			items.Insert(insert, entry);
-
-			var text = entry.text;
-			if (this != debug && (text.Contains(Player.myName, StringComparison.OrdinalIgnoreCase) || text.Contains("@here", StringComparison.OrdinalIgnoreCase)))
-			{
-				Note.Show(entry.ToString());
-			}
-
-			// Set + if not from me
-			if (entry.player != Player.myName && entry.player != null && entry.type != ChatEntry.typeWhisperTo)
-			{
-				Log(entry);
-				SetPlus(true);
+				LogEx(ex);
 			}
 		}
 		public void Post(IEnumerable<ChatEntry> entries)
@@ -397,9 +404,9 @@ namespace COTG.Views
 		{
 			if (!msg.TryGetProperty("b", out var info))
 			{
-				return new ChatEntry(null, "Error");
+				return new ChatEntry("", "Error");
 			}
-			var ch = new ChatEntry(info.GetAsString("b"), System.Net.WebUtility.HtmlDecode(info.GetAsString("d")))
+			var ch = new ChatEntry(info.GetAsString("b"), System.Net.WebUtility.HtmlDecode(info.GetAsString("d") ) )
 			{
 				crown = info.GetAsByte("c"),
 				type = info.GetAsByte("a")
@@ -431,7 +438,6 @@ namespace COTG.Views
 			foreach (var tab in all)
 				tab.Paste(coords, afterInput);
 
-
 			var lg = coords.Length;  //  <coords>000:000</coords>
 			if (lg == 24)
 			{
@@ -458,6 +464,24 @@ namespace COTG.Views
 						{
 							batch.Add(GetChatMessage(msg));
 						}
+						int c = batch.Count-1;
+						var now = JSClient.ServerTime();
+						if (batch[c].time > now)
+						{
+							var delta = TimeSpan.FromDays( (now - batch[c].time).Days - 1 );
+							batch[c - 1].time += delta; // days are missing damn it
+						}
+
+						for (; c > 0;--c)
+						{
+							if( batch[c].time < batch[c-1].time )
+							{
+								var delta = TimeSpan.FromDays( (batch[c ].time - batch[c-1].time).Days - 1);
+								batch[c - 1].time += delta; // days are missing damn it
+
+							}
+						}
+
 						if (a == 333)
 						{
 							ChatTab.world.Post(batch);
@@ -483,8 +507,8 @@ namespace COTG.Views
 						var ch = GetChatMessage(jsp.Value);
 						if (ch.type == ChatEntry.typeWhisperFrom || ch.type == ChatEntry.typeWhisperTo) // whisper
 						{
-							//if (ch.player == "Avatar" && ch.type == ChatEntry.typeWhisperFrom)
-							//	PlayerHooks.PlayerChat?.Invoke(new PlayerHooks.PlayerChatEventArgs() { player = Player.FromName(ch.player), text = ch.text });
+							if (ch.player == "Avatar" && ch.type == ChatEntry.typeWhisperFrom)
+								PlayerHooks.PlayerChat?.Invoke(new PlayerHooks.PlayerChatEventArgs() { player = Player.FromName(ch.player), text = ch.text });
 
 							// add to all tabs
 							ch.text = $"`{(ch.type == ChatEntry.typeWhisperFrom ? "whispers" : "you whisper")}` {ch.text}";
@@ -719,8 +743,8 @@ namespace COTG.Views
 
 			brushes = new SolidColorBrush[ChatEntry.typeAnnounce + 1];
 			brushes[1] = brushes[0] = new SolidColorBrush() { Color = Colors.Orange };
-			brushes[2] = new SolidColorBrush() { Color = Colors.Magenta };
-			brushes[3] = new SolidColorBrush() { Color = Colors.MediumVioletRed };
+			brushes[2] = new SolidColorBrush() { Color = Colors.MediumPurple };
+			brushes[3] = new SolidColorBrush() { Color = Colors.BlueViolet };
 			brushes[4] = new SolidColorBrush() { Color = Colors.ForestGreen };
 			brushes[5] = new SolidColorBrush() { Color = Colors.Cyan };
 			brushes[ChatEntry.typeAnnounce] = new SolidColorBrush() { Color = Colors.Red };

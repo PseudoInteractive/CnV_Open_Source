@@ -61,7 +61,7 @@ namespace COTG.Services
                             all = temp;
                             foreach (var message in all)
                             {
-                                var ch = new ChatEntry(Player.IdToName(playerId), message.text, message.time, message.type);
+                                var ch = new ChatEntry(Player.IdToName(playerId), message.text, message.time.ToServerTime(), message.type);
                                 // post!
                             }
                             whisperInitialized = true;

@@ -94,7 +94,7 @@ namespace COTG
 
 		public static DateTimeOffset ToServerTime(this DateTimeOffset t) => t.ToUniversalTime() + JSClient.gameTOffset;
 
-		public static DateTimeOffset FromServerTime(this DateTimeOffset t) => t - JSClient.gameTOffset;
+		public static DateTimeOffset FromServerTime(this DateTimeOffset t) => t.ToUniversalTime() - JSClient.gameTOffset;
 
 		public static string FormatWithSign(this int d)
 		{

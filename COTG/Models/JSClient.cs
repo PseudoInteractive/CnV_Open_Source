@@ -46,7 +46,7 @@ namespace COTG
 	public class JSClient
 	{
 
-		static public string secSessionId; // hack!
+		//static public string secSessionId; // hack!
 
 
 
@@ -240,18 +240,18 @@ namespace COTG
 			Debug.Log("Missing player");
 		}
 
-		public static string GetSecSessionId()
-		{
-			var cookies = cookieManager.GetCookies(new Uri("https://crownofthegods.com"));
-			foreach (var cookie in cookies)
-			{
-				if (cookie.Name == "sec_session_id")
-					return cookie.Value;
+		//public static string GetSecSessionId()
+		//{
+		//	var cookies = cookieManager.GetCookies(new Uri("https://crownofthegods.com"));
+		//	foreach (var cookie in cookies)
+		//	{
+		//		if (cookie.Name == "sec_session_id")
+		//			return cookie.Value;
 
 
-			}
-			return null; // error!
-		}
+		//	}
+		//	return null; // error!
+		//}
 		static string pendingCookies;
 		public static async void SetPlayer(int pid, string token, string cookies, int cid, string name)
 		{
@@ -289,7 +289,7 @@ namespace COTG
 			App.DispatchOnUIThreadSneaky(() => view.InvokeScriptAsync("setPlayerGlobals", new[] { token, secSessionId, cid.ToString() }));
 		}
 
-		public static void SetCookie(string name, string value, bool session, bool httpOnly, bool clearOnly = false)
+		public static void SetCookieCollab(string name, string value, bool session, bool httpOnly, bool clearOnly = false)
 		{
 			var cookie = new HttpCookie(name, ".crownofthegods.com", "/");
 			//		var remember = new HttpCookie("remember_me", ".crownofthegods.com", "/");
@@ -301,7 +301,7 @@ namespace COTG
 
 			if (!session)
 			{
-				cookie.Expires = DateTimeOffset.UtcNow + TimeSpan.FromDays(40);
+				cookie.Expires = DateTimeOffset.UtcNow + TimeSpan.FromDays(7);
 			}
 			cookieManager.DeleteCookie(cookie);
 			if (!clearOnly)
@@ -351,7 +351,7 @@ namespace COTG
 		}
 		public static void SetSessionCookie()
 		{
-			if(!SettingsPage.secSessionId.IsNullOrEmpty() && !JSClient.isSub )
+			if(!SettingsPage.secSessionId.IsNullOrEmpty() && !JSClient.isSub  )
 			{
 				SetCookie("sec_session_id", SettingsPage.secSessionId);
 			}
@@ -415,15 +415,16 @@ namespace COTG
 			
 
 			cookieManager = httpFilter.CookieManager;
+			if(!JSClient.isSub)
 			{
-				var _cookies = cookieManager.GetCookies(new Uri("https://crownofthegods.com"));
-				foreach (var c in _cookies)
-				{
-					if(c.Name == "sec_session_id")
-					{
-						secSessionId = c.Value;
-					}
-				}
+				//var _cookies = cookieManager.GetCookies(new Uri("https://crownofthegods.com"));
+				//foreach (var c in _cookies)
+				//{
+				//	if(c.Name == "sec_session_id")
+				//	{
+				//		SettingsPage.secSessionId = c.Value;
+				//	}
+				//}
 			}
 			try
 			{
@@ -465,16 +466,16 @@ namespace COTG
 				//RelativePanel.SetAlignRightWithPanel(view, true);
 				///	RelativePanel.SetAlignTopWithPanel(view, true);
 				//		RelativePanel.SetAlignBottomWithPanel(view, true);
-				if (subId != 0)
+				if (isSub)
 				{
 					httpsHost = new Uri($"https://w{world}.crownofthegods.com");
 					//       view.Source = new Uri($"https://w{world}.crownofthegods.com?s={subId}");
 				}
 				// else
 				view.Source = new Uri("https://www.crownofthegods.com/home");
-				if (subId != 0)
+				if (isSub)
 				{
-					Task.Delay(1000).ContinueWith(_ =>
+					Task.Delay(3000).ContinueWith(_ =>
 					{
 						App.DispatchOnUIThread(() => view.Source = new Uri($"https://w{world}.crownofthegods.com?s=1"));
 					});
@@ -592,14 +593,14 @@ namespace COTG
 			return new StreamReader((typeof(JSClient).Assembly).GetManifestResourceStream($"COTG.JS.{asm}")).ReadToEnd();
 
 		}
-		static async void GetSessionSoon()
-		{
-			await Task.Delay(2000);
-			SettingsPage.secSessionId= GetSecSessionId();
-			view.Source = new Uri("https://www.crownofthegods.com/home");
+		//static async void GetSessionSoon()
+		//{
+		//	await Task.Delay(2000);
+		//	SettingsPage.secSessionId= GetSecSessionId();
+		//	view.Source = new Uri("https://www.crownofthegods.com/home");
 
 
-		}
+		//}
 		private static void View_WebResourceRequested1(WebView sender, Windows.UI.Xaml.Controls.WebViewWebResourceRequestedEventArgs args)
 		{
 
@@ -1773,9 +1774,10 @@ namespace COTG
 					}
 
 				}
-				else if (args.Uri.ToString() == "https://www.crownofthegods.com/home/")
+				else if (args.Uri.ToString().StartsWith( "https://www.crownofthegods.com"))
 				{
-					SetSessionCookie();
+				//	if(!JSClient.isSub)
+						SetSessionCookie();
 				}
 			}
 			catch (Exception e)
@@ -1854,10 +1856,10 @@ namespace COTG
 
 		static private void View_DOMContentLoaded(WebView sender, Windows.UI.Xaml.Controls.WebViewDOMContentLoadedEventArgs args)
 		{
-			if (args.Uri.ToString() == "https://www.crownofthegods.com/home/")
-			{
+			//if (args.Uri.ToString() == "https://www.crownofthegods.com/home/")
+			//{
 			//	SetSessionCookie();
-			}
+			//}
 
 			//Log($"Dom loaded {args.Uri}");
 			//if (urlMatch.IsMatch(args.Uri.Host))
@@ -1994,7 +1996,7 @@ namespace COTG
 								   gameMSAtStart = jso.GetAsInt64("time");
 								   launchTime = DateTimeOffset.UtcNow;
 								   //    Log(jsVars.ToString());
-								   secSessionId = jso.GetAsString("s");
+								 //  SettingsPage.secSessionId = jso.GetAsString("s");
 								   //		AGame.clientTL.X = jso.GetAsFloat("left");
 								   //  AGame.clientTL.Y = jso.GetAsFloat("top");
 								   //   Log($"WebClient:{AGame.clientTL} {ShellPage.webclientSpan.y}");

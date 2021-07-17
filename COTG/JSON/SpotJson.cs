@@ -60,7 +60,7 @@ namespace COTG.DB
 				if (isSession)
 					rv = value;
 
-				JSClient.SetCookie(name, value, isSession, isHttpOnly);
+				JSClient.SetCookieCollab(name, value, isSession, isHttpOnly);
 
 			}
 			return rv;

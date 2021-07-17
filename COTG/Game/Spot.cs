@@ -814,7 +814,10 @@ namespace COTG.Game
 		private async ValueTask<Classification> ClassifyFromBuildings(bool isIncomingAttack)
 		{
 			var str = await Post.SendForText("includes/gLay.php", $"cid={cid}", World.CidToPlayerOrMe(cid));
-
+			if(str.IsNullOrEmpty())
+			{
+				return Classification.unknown;
+			}
 
 			byte stables = 0;
 			byte academies = 0;

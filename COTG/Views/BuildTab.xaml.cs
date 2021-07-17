@@ -62,7 +62,7 @@ namespace COTG.Views
 			cityGrid.SelectionChanged += SpotSelectionChanged;
 			cityGrid.OnKey = Spot.OnKeyDown;
 
-			cityGrid.CurrentItemChanged += CityGrid_CurrentItemChanged;
+			//cityGrid.CurrentItemChanged += CityGrid_CurrentItemChanged;
 
 
 			cityGrid.ProcessTooltips();
@@ -70,10 +70,10 @@ namespace COTG.Views
 
 		}
 
-		private void CityGrid_CurrentItemChanged(object sender, EventArgs e)
-		{
-			           Log("Current item " + sender.ToString());
-		}
+		//private void CityGrid_CurrentItemChanged(object sender, EventArgs e)
+		//{
+		//	           Log("Current item " + sender.ToString());
+		//}
 
 		private void ColumnHeaderTap()
 		{

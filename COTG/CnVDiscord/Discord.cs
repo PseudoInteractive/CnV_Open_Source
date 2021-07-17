@@ -33,20 +33,20 @@ namespace CnVDiscord
 	{
 		public static Dictionary<string, string> avatarUrls = new();
 		public static Dictionary<string, BitmapImage> avatarBrushes = new();
-		const int messageFetchCount =200;
+		const int messageFetchCount = 200;
 		static Dictionary<string, DiscordMember> playerToMember;
-//		static Dictionary<ulong, DiscordMember> UserIdToMemeber;
+		//		static Dictionary<ulong, DiscordMember> UserIdToMemeber;
 
 		static Color Color;
 		public static DiscordGuild guild;
 		public static DiscordChannel chatChannel;
 		public static DiscordClient DiscordBot { get; set; }
 		public static CommandsNextExtension DiscordCommands { get; set; }
-		public static ConfigFile Config = new ();
+		public static ConfigFile Config = new();
 		public static bool IsAllianceConnected => Config.ChatID != 0;
 		public async static void Initialize()
 		{
-			
+
 
 			Config.ChatID = await Tables.GetDiscordChatId().ConfigureAwait(false);
 			if (Config.ChatID == 0)
@@ -72,7 +72,11 @@ namespace CnVDiscord
 				chatChannel = await DiscordBot.GetChannelAsync(Config.ChatID).ConfigureAwait(false);
 				guild = chatChannel.Guild;
 				var members = await guild.GetAllMembersAsync().ConfigureAwait(false);
-				playerToMember = members.ToDictionary((a => a.DisplayName), (a => a));
+				playerToMember = new(members.Count);
+				foreach (var i in members)
+				{
+					playerToMember.TryAdd(i.DisplayName, i);
+				}
 				//			UserIdToMemeber = members.ToDictionary((a => a.Id), (a => a));
 
 
@@ -111,7 +115,30 @@ namespace CnVDiscord
 				//	DiscordCommands.CommandExecuted += CommandExecuted;
 				//	DiscordCommands.CommandErrored += CommandErrored;
 				//}
+				await App.DispatchOnUIThreadTask(() =>
+				{
+					foreach (var author in guild.Members.Values)
+					{
+						var name = author.DisplayName;
+						if (!avatarUrls.TryGetValue(name, out var avatarUrl))
+						{
+							var url = author.GetAvatarUrl(ImageFormat.Auto, 32);
+							avatarUrl = $"![Helpers Image]({url})";
+							avatarUrls.Add(name, avatarUrl);
 
+
+							var _name = name;
+
+
+
+							avatarBrushes.Add(_name, new BitmapImage(new Uri(url)));
+						}
+					}
+					return Task.CompletedTask;
+
+				}).ConfigureAwait(false);
+							;
+		
 				DiscordBot.ClientErrored += ClientErrored;
 				DiscordBot.MessageCreated += OnMessageCreated;
 				var fetch = await chatChannel.GetMessagesAsync(messageFetchCount).ConfigureAwait(false);
@@ -346,7 +373,16 @@ namespace CnVDiscord
 					//	displayName = (user.Mention.ToString());
 					//	users.Add(new UserMention(user));
 					//}
-				//	sb.Append(':');
+					//	sb.Append(':');
+					if (user != null)
+					{
+						sb.Append($"<img src=\"{user.AvatarUrl}\" alt=\"{user.DisplayName}\") width=\"32\" height=\"32\" > ");
+					}
+					else
+					{
+						sb.Append(name);
+						sb.Append(": ");
+					}
 					var str = args.text;
 					for (; ; )
 					{
@@ -383,8 +419,8 @@ namespace CnVDiscord
 						str = str.Substring(f);
 					}
 
-					var embed = new DiscordEmbedBuilder().WithFooter(user.DisplayName,user.AvatarUrl);
-					var message = new DiscordMessageBuilder().WithContent(sb.ToString()).WithAllowedMentions(users).WithEmbed(embed);
+					var message = new DiscordMessageBuilder().WithContent(sb.ToString()).WithAllowedMentions(users);
+					
 					var channel = chatChannel;
 					await DiscordBot.SendMessageAsync(channel, message).ConfigureAwait(false);
 
