@@ -56,7 +56,7 @@ namespace COTG.Views
 		const int maxMessageLength = 32 * 1024;
 		static BitmapImage GetAvatar(string player)
 		{
-			if (player != null && CnVDiscord.Discord.avatarBrushes.TryGetValue(player, out var url))
+			if (player != null && CnVDiscord.Discord.avatarBrushes.TryGetValue(player.ToLower(), out var url))
 			{
 				return url;
 			}
@@ -183,7 +183,7 @@ namespace COTG.Views
 				// Set + if not from me
 				if (entry.player != Player.myName && entry.player != null && entry.type != ChatEntry.typeWhisperTo)
 				{
-					Log(entry);
+				//	Log(entry);
 					SetPlus(true);
 				}
 			}
@@ -465,7 +465,7 @@ namespace COTG.Views
 							batch.Add(GetChatMessage(msg));
 						}
 						int c = batch.Count-1;
-						var now = JSClient.ServerTime();
+						var now = JSClient.ServerTime() - TimeSpan.FromSeconds(120);
 						if (batch[c].time > now)
 						{
 							var delta = TimeSpan.FromDays( (now - batch[c].time).Days - 1 );
@@ -474,7 +474,7 @@ namespace COTG.Views
 
 						for (; c > 0;--c)
 						{
-							if( batch[c].time < batch[c-1].time )
+							if( batch[c].time < batch[c-1].time - TimeSpan.FromSeconds(120))
 							{
 								var delta = TimeSpan.FromDays( (batch[c ].time - batch[c-1].time).Days - 1);
 								batch[c - 1].time += delta; // days are missing damn it

@@ -406,7 +406,13 @@ namespace COTG.JSON
 										{
 											var prior = city.GetBuildingPostQueue(i.bspot, cotgQ);
 											// is build not yet queued?
-											if (prior.bid != i.bid)
+											if(i.elvl > 10)
+											{
+												Trace($"Invalid ugrade to level {i.elvl}");
+												RemoveAt(offset);
+												continue;
+											}
+											else if (prior.bid != i.bid)
 											{
 												City.GetPostQueue(ref prior, i.bspot, queue.v, offset); // is the build queued?
 												if (prior.bid != i.bid)
@@ -446,6 +452,7 @@ namespace COTG.JSON
 												RemoveAt(offset);
 												continue;
 											}
+											
 											// if there are any modifications keep it in the queue until they are done
 											var isBeingModified = cotgQ != null && cotgQ.Any(a => a.bspot == i.bspot);
 											if (isBeingModified)
@@ -586,8 +593,8 @@ namespace COTG.JSON
 
 				}
 //				if(delay > 60*1000 )
-				if(city.cid!= City.build)
-					Trace($"iterate: Q {queue.count} delay {delay} city {city.nameAndRemarks}");
+		//		if(city.cid!= City.build)
+		//			Trace($"iterate: Q {queue.count} delay {delay} city {city.nameAndRemarks}");
 				cancellationTokenSource = new();
 				try
 				{
@@ -810,6 +817,12 @@ namespace COTG.JSON
 			{
 				Assert(cid == City.build);
 				await JSClient.JSInvokeTask("buildTemple", new[] {spot.ToString()});
+				return;
+			}
+			if (bid == City.bidTemple && elvl == 0)
+			{
+				Assert(cid == City.build);
+				Trace("Invalid temple demo");
 				return;
 			}
 			if (bid == City.bidCastle && slvl == 0)

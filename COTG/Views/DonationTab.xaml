@@ -91,7 +91,12 @@
                                                       SizeMode="Auto"
                                                       CellContentStyle="{StaticResource CenterAlign}"
                                              />
-                    <telerikGrid:DataGridNumericalColumn PropertyName="Wood"
+				<telerikGrid:DataGridNumericalColumn  PropertyName="CartsHome"
+                                            CellContentFormat="{}{0,5:N0}"
+                                            CellContentStyle="{StaticResource RightAlign}"
+                                            SizeMode="Auto"
+                                             />
+				<telerikGrid:DataGridNumericalColumn PropertyName="Wood"
                                             CellContentFormat="{}{0,7:N0}"
                                                      CellContentStyle="{StaticResource RightAlign}"
                                             

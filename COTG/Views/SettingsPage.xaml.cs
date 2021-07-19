@@ -56,6 +56,8 @@ namespace COTG.Views
 		public static string hubCitylistName = "Hubs";
 		public static int reqWood = 160000;
 		public static int reqStone = 205000;
+		public static bool drawBuildingOverlays=true;
+
 		public static float returnRaidsBias = 1.0f;
 		public static bool setShareString = true;
 		public static bool autoBuildCabins = true;
@@ -92,7 +94,7 @@ namespace COTG.Views
 		public static float fontScale = 0.5f;
 		public static float musicVolume = 0.5f;
 		public static bool? autoBuildWalls=true;
-		public static float minDungeonProgress = 5;
+		public static float minDungeonCompletion = 15;
 		public static int autoWallLevel = 1;
 		public static int autoTowerLevel = 1;
 		public static int scoutpostCount=2;
@@ -274,6 +276,7 @@ namespace COTG.Views
 		public static float raidCarryTarget = 1.15f;
 		public static float raidCarryMax = 1.80f;
 		public static int intialStorehouses=1;
+		public static int intialMarkets = 1;
 		public static bool IsThemeWinter()
 		{
 			return theme == Theme.louWinter;
@@ -663,7 +666,7 @@ namespace COTG.Views
 						   var cl = CityList.GetForContinent(city.cont, processed);
 						   cl.cities.Add(city.cid);
 					   }
-					   if (CityList.IsNew(city))
+					   if (city.IsNew())
 					   {
 						   newCities.cities.Add(city.cid);
 					   }
@@ -769,8 +772,8 @@ namespace COTG.Views
 						}
 					}
 				}
-
 		}
+
 		private async void WatchIncomingForPlayers(object sender, RoutedEventArgs e)
 		{
 			this.Hide();
@@ -783,6 +786,7 @@ namespace COTG.Views
 				SaveAll();
 				Note.Show("Updated incoming watch list");
 				IncomingOverview.ProcessTask();
+				SettingsPage.SaveAll();
 			}
 		}
 

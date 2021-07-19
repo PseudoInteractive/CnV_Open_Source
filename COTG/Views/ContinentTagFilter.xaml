@@ -12,7 +12,7 @@
     SecondaryButtonText="Cancel"
     PrimaryButtonClick="ContentDialog_PrimaryButtonClick"
     SecondaryButtonClick="ContentDialog_SecondaryButtonClick">
-	<StackPanel Width="290" >
+	<StackPanel Width="320" >
 		<StackPanel Orientation="Horizontal">
 			<TextBlock Text="Continents" VerticalAlignment="Center" Margin="8,0"  />
 			<Button Content="Clear Filter" Click="ContinentFilterClear" Style="{StaticResource ButtonSmall}" />

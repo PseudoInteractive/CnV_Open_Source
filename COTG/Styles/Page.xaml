@@ -37,6 +37,12 @@
 		<Setter Property="IsTextScaleFactorEnabled" Value="False"/>
 		<Setter Property="Margin" Value="4"/>
 	</Style>
+	<Style x:Key="ButtonLarge" TargetType="Button" BasedOn="{StaticResource ButtonRevealStyle}">
+		<Setter Property="FontFamily" Value="Tw Cen MT Condensed"/>
+		<Setter Property="FontSize" Value="{StaticResource LargeFontSize}" />
+		<Setter Property="IsTextScaleFactorEnabled" Value="False"/>
+		<Setter Property="Margin" Value="4"/>
+	</Style>
 	<Style TargetType="TextBlock">
         <Setter Property="FontFamily" Value="Tw Cen MT Condensed"/>
         <Setter Property="FontSize" Value="{StaticResource MediumFontSize}" />
@@ -81,6 +87,11 @@
         <Setter Property="FontSize" Value="{StaticResource SmallFontSize}" />
 		<Setter Property="IsTextScaleFactorEnabled" Value="False"/>
 	</Style>
+	<Style x:Key="TextBlockLarge" TargetType="TextBlock">
+		<Setter Property="FontFamily" Value="Tw Cen MT Condensed"/>
+		<Setter Property="FontSize" Value="{StaticResource LargeFontSize}" />
+		<Setter Property="IsTextScaleFactorEnabled" Value="False"/>
+	</Style>
 	<Style x:Key="TextBlockMedium" TargetType="TextBlock">
 		<Setter Property="FontFamily" Value="Tw Cen MT Condensed"/>
 		<Setter Property="FontSize" Value="{StaticResource MediumFontSize}" />
@@ -105,7 +116,12 @@
         <Setter Property="AcceptsExpression" Value="True" />
 		<Setter Property="VerticalAlignment" Value="Center" />
 		<Setter Property="Margin" Value="2" />
+		<Setter Property="Width" Value="120" />
 	</Style>
+	<Style  x:Key="NumberBoxWide" BasedOn="{StaticResource NumberBoxSmall}" TargetType="winui:NumberBox">
+		<Setter Property="Width" Value="120" />
+	</Style>
+
 	<Style  x:Key="RightAlignBox" BasedOn="{StaticResource TextBoxSmall}" TargetType="TextBox">
         <Setter Property="VerticalAlignment"
                         Value="Center" />
@@ -117,23 +133,23 @@
     </Style>
 	<Style x:Key="NumberBoxRes" BasedOn="{StaticResource RightAlignNumberBox}" TargetType="winui:NumberBox">
 		<Setter Property="SmallChange" Value="25000"/>
-		<Setter Property="Width" Value="120"/>
+		<Setter Property="Width" Value="140"/>
 		<Setter Property="LargeChange" Value="100000"/>
 	</Style>
 	<Style x:Key="NumberBoxCarts" BasedOn="{StaticResource RightAlignNumberBox}" TargetType="winui:NumberBox">
 		<Setter Property="SmallChange" Value="100"/>
-		<Setter Property="Width" Value="100"/>
+		<Setter Property="Width" Value="120"/>
 		<Setter Property="LargeChange" Value="1000"/>
 	</Style>
 	<Style x:Key="NumberBoxShips" BasedOn="{StaticResource RightAlignNumberBox}" TargetType="winui:NumberBox">
 		<Setter Property="SmallChange" Value="10"/>
-		<Setter Property="Width" Value="100"/>
+		<Setter Property="Width" Value="120"/>
 		<Setter Property="LargeChange" Value="100"/>
 	</Style>
 	<Style x:Key="NumberBoxPercent" BasedOn="{StaticResource RightAlignNumberBox}" TargetType="winui:NumberBox">
 		<Setter Property="SmallChange" Value="0.01"/>
 		<Setter Property="LargeChange" Value="0.1"/>
-		<Setter Property="Width" Value="100"/>
+		<Setter Property="Width" Value="120"/>
 	</Style>
 
 

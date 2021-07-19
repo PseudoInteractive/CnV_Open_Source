@@ -82,7 +82,7 @@ namespace COTG.Views
                     blessedGrid.ItemsSource = BlessedCity.GetForCity(null);
                 }
                 ); // many items changed
-          //     donationGrid.ItemsSource = City.gridCitySource;
+               donationGrid.ItemsSource = City.gridCitySource;
             }
             else
             {

@@ -109,7 +109,7 @@ namespace COTG.Views
 		public Debounce refresh;
 		public UserTab()
 		{
-			 refresh= new(_Refresh);
+			 refresh= new(_Refresh) { throttled = true };
 		}
         protected virtual async Task _Refresh()
         {
@@ -119,7 +119,7 @@ namespace COTG.Views
 				
 				if (t > nextCityRefresh)
 				{
-					nextCityRefresh = t + TimeSpan.FromSeconds(2);
+					nextCityRefresh = t + TimeSpan.FromSeconds(0.5f);
 					if (JSClient.ppdtInitialized)
 					{
 						// don't wait on this

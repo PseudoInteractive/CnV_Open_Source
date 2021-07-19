@@ -1769,7 +1769,7 @@ namespace COTG.Game
 			wantSorcTower = !leave && NeedsSorcTower(bc);
 			if (leave)
 				return new BuildInfo(BuildStage.leave, buildingLimit);
-			if (CityRename.IsNew(this))
+			if (IsNew())
 				return new BuildInfo(BuildStage._new,buildingLimit);
 			
 			if (!isLayoutValid)
@@ -1804,6 +1804,10 @@ namespace COTG.Game
 				return new BuildInfo(BuildStage.teardown,buildingLimit);
 
 			return new BuildInfo(BuildStage.complete,buildingLimit);
+		}
+		public bool IsNew()
+		{
+			return CityRename.IsNew(this) && points <= 60;
 		}
 
 		public bool AutoWalls
@@ -1873,7 +1877,7 @@ namespace COTG.Game
 		public int id { get; set; } // 0 is unassigned, others are pids
 		public bool isUnassigned => id == 0;
 		public HashSet<int> cities = new HashSet<int>(); // list of cities
-		public static bool IsNew(City city) => city._cityName == "*New City" && city.points <= 60;
+	//	public static bool IsNew(City city) => CityRename.IsNew(city._cityName) && city.points <= 60;
 		public CityList(string _name) { name = _name; id = AMath.random.Next(65536) + 10000; }
 		public CityList() { }
 		public static CityList Find(int id)
@@ -2021,8 +2025,8 @@ namespace COTG.Game
 				   using var _ = await cityGridLock.LockAsync();
 				   City.gridCitySource.Set(l);
 			   }
-			   if (IncomingTab.instance.isVisible)
-				   IncomingTab.instance.refresh.Go();
+			   //if (IncomingTab.instance.isVisible)
+				//   IncomingTab.instance.refresh.Go();
 
 
 

@@ -128,8 +128,6 @@ namespace COTG.Services
 				LogEx(e, report: except,eventName: "HTTPJson");
 				return null;
 			}
-
-
 		}
 
 		public static async Task<T> AcceptJsonT<T>(HttpResponseMessage resp, bool except=false)
@@ -147,8 +145,6 @@ namespace COTG.Services
 				LogEx(e,report: except, eventName: "HTTPJson");
 				return default;
 			}
-
-
 		}
 
 

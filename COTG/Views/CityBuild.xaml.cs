@@ -761,6 +761,18 @@ namespace COTG.Views
 
 		public static int postQueueBuildingCount;
 		public static int postQueueTownHallLevel;
+		public static Building[] GetBuildingCache()
+		{
+			if (!postQueueBuildingsDirty || isPlanner)
+				return buildingsCache;
+			buildingsCache = City.GetBuild().buildings;
+			return buildingsCache;
+		}
+		public static void TouchBuildingCache()
+		{
+			GetBuildingCache();
+		}
+
 		public static Building[] postQueueBuildings
 		{
 			get
@@ -1297,7 +1309,6 @@ namespace COTG.Views
 			var build = City.GetBuild();
 			var bds = isPlanner ? buildingsCache : build.buildings;
 			if ( (HasBuildOps(a) || HasBuildOps(b)) && !isPlanner)
-			if (HasBuildOps(a))
 			{
 				{
 					Status($"Cannot move a building that is being rennovated, please wait or cancel build ops on {bds[a].name} at {IdToXY(a).bspotToString()} for best results", dryRun);
@@ -1329,8 +1340,10 @@ namespace COTG.Views
 							return false;
 						--Player.moveSlots;
 						if (!await Move(scratch, b))
+						{
+							Note.Show("Failed to move for some reason?  Was the city building?");
 							return false;
-
+						}
 						BuildingsOrQueueChanged();
 						await Task.Delay(200);
 
@@ -2094,6 +2107,16 @@ namespace COTG.Views
 				await CityBuild._IsPlanner(true, true);
 			
 			}
+		}
+		private static async Task RemoveCastleFromLayout()
+		{
+			var wasPlanner = CityBuild.isPlanner;
+			if(!wasPlanner)
+				await CityBuild._IsPlanner(true, false);
+
+
+			if(!wasPlanner)
+				await CityBuild._IsPlanner(false, false);
 		}
 
 		internal static void ShortBuild(short bid)

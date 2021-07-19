@@ -150,7 +150,7 @@
 			<winui:NumberBox  
 						  Header="Min Progress"
 						  ValueChanged="RaidFraction_ValueChanged"
-						  Value="{x:Bind view:SettingsPage.minDungeonProgress,Mode=TwoWay}"
+						  Value="{x:Bind view:SettingsPage.minDungeonCompletion,Mode=TwoWay}"
 						  FontSize="{StaticResource MediumFontSize}"
 						 Style="{StaticResource RightAlignNumberBox}"
 						SmallChange="5"

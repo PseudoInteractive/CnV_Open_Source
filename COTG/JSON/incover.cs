@@ -61,7 +61,7 @@ namespace COTG.JSON
 
 		}
 
-		static Debounce IncomingUpdateDebounce = new(DoProcess) { debounceDelay = 1000, throttleDelay = 2000 };
+		static Debounce IncomingUpdateDebounce = new(DoProcess) { throttled = true, debounceDelay = 1000, throttleDelay = 2000 };
 
 		static bool fetchReportsRequested;
 

@@ -42,15 +42,16 @@ namespace COTG.Views
     {
         public static MainPage instance;
      
-       
-        //        public static City showingRowDetails;
 
-        //{
-        //    var rv = cityGrid.Resources["tsInfoDT"] as DataTemplate;
-        //    Assert(rv != null);
-        //    return rv;
-        //}
-        public static RadDataGrid CityGrid => instance.cityGrid;
+
+		//        public static City showingRowDetails;
+
+		//{
+		//    var rv = cityGrid.Resources["tsInfoDT"] as DataTemplate;
+		//    Assert(rv != null);
+		//    return rv;
+		//}
+		public static RadDataGrid CityGrid => instance.cityGrid;
     
       //  static MenuFlyout cityMenuFlyout;
         public MainPage()

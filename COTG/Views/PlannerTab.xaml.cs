@@ -49,7 +49,65 @@ namespace COTG.Views
 			p.Visibility = visible ? Visibility.Visible : Visibility.Collapsed;
 			return visible;
 		}
-		static int GetScore( (int x,int y) xy, int bid, int militaryBid )
+		//public static bool TryFindBuildingInLayout(City city,int bid,out int _xy)
+		//{
+		//	if( !isPlanner )
+		//	{
+		//		return TryFindBuildingInLayout
+		//		return city.
+		//	}
+		//	var bc = City.buildingsCache;
+		//	for (int x = span0; x <= span1; ++x)
+		//	{
+		//		for (int y = span0; y <= span1; ++y)
+		//		{
+		//			var id  = XYToId( (x, y) );
+		//			var bd1 = bc[id];
+		//			if(bd1 =bid )
+		//			{
+		//				_xy = id;
+		//				return true;
+		//			}	
+		//		}
+		//	}
+		//	_xy = 0;
+		//	return false;
+		//}
+		//static bool TryFindBuildingInLayout(City bid, out int _xy)
+		//{
+		//	if (!isPlanner)
+		//	{
+		//		return
+		//	}
+		//	var bc = City.buildingsCache;
+		//	for (int x = span0; x <= span1; ++x)
+		//	{
+		//		for (int y = span0; y <= span1; ++y)
+		//		{
+		//			var id = XYToId((x, y));
+		//			var bd1 = bc[id];
+		//			if (bd1 = bid)
+		//			{
+		//				_xy = id;
+		//				return true;
+		//			}
+		//		}
+		//	}
+		//	_xy = 0;
+		//	return false;
+		//}
+		//static bool TryRemoveBuildingInLayout(int bid)
+		//{
+		//	if(TryFindBuildingInLayout(bid, out var id))
+		//	{
+		//		CityBuild.remove
+		//		return true;
+		//	}
+		//	return false;
+
+		//}
+
+			static int GetScore( (int x,int y) xy, int bid, int militaryBid )
 		{
 			var bds = City.GetBuild().buildings;
 			var bc = City.buildingsCache;
@@ -296,7 +354,7 @@ namespace COTG.Views
 		{
 			return (cc.x >= span0) && (cc.y>=span0) && (cc.x <= span1) && (cc.y <= span1);
 		}
-		public static Debounce PleaseRefresh = new Debounce(PlannerTab.UpdateStats) { runOnUiThead = true };
+		public static Debounce PleaseRefresh = new (PlannerTab.UpdateStats) { runOnUiThead = true };
 
 		internal static void BuildingsChanged()
 		{
@@ -364,23 +422,30 @@ namespace COTG.Views
 				var des = bdc[i];
 				var bdBid = des.bid;
 				// these ones can be arranged
-				if (bdBid == bidCastle || (bdBid == bidSorcTower && allowed.sorc) || (bdBid == bidMarketplace) || (bdBid == bidStorehouse && allowed.storage))
-					continue;
+			
 				if (!des.isBuilding)
 					continue;
 				if (bds[i].bid == bdBid)
-					continue;
-				if (bds[i].isBuilding)
 				{
-					rv += 2;
+					--rv;
 				}
-				else if (bds[i].isEmpty)
+				else
 				{
-					rv += 1;
-				}
-				else if (bds[i].isRes)
-				{
-					rv += 8;
+					if (bdBid == bidCastle || (bdBid == bidSorcTower && allowed.sorc) || (bdBid == bidMarketplace) || (bdBid == bidStorehouse && allowed.storage))
+						continue;
+
+					if (bds[i].isBuilding)
+					{
+						rv += 2;
+					}
+					else if (bds[i].isEmpty)
+					{
+						rv += 1;
+					}
+					else if (bds[i].isRes)
+					{
+						rv += 8;
+					}
 				}
 			}
 			return rv;
@@ -411,7 +476,7 @@ namespace COTG.Views
 				for (int id = 0; id < City.citySpotCount; ++id)
 				{
 					var bid = bdc[id].bid;
-					if (bid != 0)
+					if (bid != 0 && bid != bidShipyard && bid != bidPort )
 					{
 						if (CityBuild.IsWaterSpot(id))
 							hasInvalid = true;

@@ -325,7 +325,7 @@ namespace COTG
 		{
 			this.DebugSettings.FailFastOnErrors = false;
 #if TRACE || DEBUG
-			//   this.DebugSettings.FailFastOnErrors = true;
+//			this.DebugSettings.FailFastOnErrors = true;
 #endif
 			this.DebugSettings.EnableFrameRateCounter = false;
 			this.DebugSettings.IsTextPerformanceVisualizationEnabled = false;
@@ -1444,15 +1444,16 @@ namespace COTG
 				App.DispatchOnUIThreadLow(() => ob.Focus(FocusState.Programmatic));
 			}
 		}
-		public static void Focus(this Windows.UI.Xaml.Controls.Control ob)
-		{
-			if (ob != null)
-			{
-			//	ShellPage.keyboardProxy.Focus(FocusState.Programmatic);
+		//public static void Focus(this Windows.UI.Xaml.Controls.Control ob)
+		//{
+		//	if (ob != null)
+		//	{
+		//	//	ShellPage.keyboardProxy.Focus(FocusState.Programmatic);
 
-				App.DispatchOnUIThreadIdle((_) => ob.Focus(FocusState.Programmatic));
-			}
-		}
+		//		App.DispatchOnUIThreadIdle((_) => ob.Focus(FocusState.Programmatic));
+		//	}
+		//}
+
 		static string lastTip;
 		public static void ProcessTooltipsOnPointerMoved(object sender, PointerRoutedEventArgs e)
 		{

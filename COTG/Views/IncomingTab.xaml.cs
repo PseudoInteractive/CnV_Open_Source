@@ -137,7 +137,9 @@ namespace COTG.Views
 		{
 			get
 			{
-				var items = instance.defenderGrid.SelectedItems;
+				if (!instance.isVisible)
+					return null;
+				var items =  instance.defenderGrid.SelectedItems;
 				if (items.Count == 1)
 					return items[0] as Spot;
 				return null;

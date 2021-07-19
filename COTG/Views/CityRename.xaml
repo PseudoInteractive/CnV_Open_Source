@@ -8,8 +8,9 @@
 	   xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
 		   mc:Ignorable="d"
 	 xmlns:views="using:COTG.Views"
-    Title="Name (try to avoid '-')"
-	 xmlns:winui="using:Microsoft.UI.Xaml.Controls"
+    Title="Name:"
+	 
+	xmlns:winui="using:Microsoft.UI.Xaml.Controls"
     PrimaryButtonText="Apply"
     CloseButtonText="Cancel"
     PrimaryButtonClick="ContentDialog_PrimaryButtonClick"
@@ -21,12 +22,22 @@
 			<RowDefinition/>
 			<RowDefinition/>
 			<RowDefinition/>
-			<RowDefinition/>
 		</Grid.RowDefinitions>
-		<TextBox Grid.Row="0" x:Name="suggested" Header="Suggested" x:FieldModifier="public" />
-		<TextBox Grid.Row="1" x:Name="name" Header="Current" x:FieldModifier="public"   />
-		<ToggleSwitch Grid.Row="2" IsOn="{x:Bind local:SettingsPage.useSuggested, Mode=TwoWay}" OnContent="Suggested" OffContent="Current"/>
-		<controls:WrapPanel Grid.Row="3">
+		<StackPanel Grid.Row="0" VerticalAlignment="Stretch" >
+			<TextBox  x:Name="suggested" Header="Suggested" x:FieldModifier="public" />
+			<TextBox  x:Name="name" Header="Current" x:FieldModifier="public"   />
+			<TextBlock Style="{StaticResource BodyTextStyle}" MaxLines="8" MaxHeight="256"  TextWrapping="Wrap" >
+				Try to avoid '-'<LineBreak/>		
+				If you name hubs 22 001, 22 002... cites will wind up like 22 1003, 22 4005... where 1 and 4 are hub cluster #'s (the # of the closest hub)
+				cities will sort in order of continents, hubs, then clusters of cities for each hub.<LineBreak/>
+				The hub cluster # will be chosen based on the closest hub and offered as the suggestion.<LineBreak/>
+				If you name everything the same - well, then I hate you - Please stop making it difficult to attack the right city."<LineBreak/>
+			</TextBlock>
+		</StackPanel>
+
+
+		<ToggleSwitch Grid.Row="1" IsOn="{x:Bind local:SettingsPage.useSuggested, Mode=TwoWay}" OnContent="Suggested" OffContent="Current"/>
+		<controls:WrapPanel Grid.Row="2">
 			<winui:NumberBox Header="Cottage Level"
 										Value="{x:Bind views:SettingsPage.cottageLevel, Mode=TwoWay}"
 										Width="100"
@@ -48,6 +59,7 @@
 			<winui:NumberBox Header="Scout Towers" Value="{x:Bind views:SettingsPage.scoutpostCount,Mode=TwoWay}" Style="{StaticResource NumberBoxSmall}" ToolTipService.ToolTip="The number of scout towers to place.  They are placed with the castle  during 'do the stuff'" />
 
 			<winui:NumberBox Header="Storehouses" Value="{x:Bind views:SettingsPage.intialStorehouses,Mode=TwoWay}" Style="{StaticResource NumberBoxSmall}" ToolTipService.ToolTip="The number of storehouses to start a city with" />
+			<winui:NumberBox Header="Markets" Value="{x:Bind views:SettingsPage.intialStorehouses,Mode=TwoWay}" Style="{StaticResource NumberBoxSmall}" ToolTipService.ToolTip="The number of markets to start a city with" />
 
 		</controls:WrapPanel>
 	</Grid>

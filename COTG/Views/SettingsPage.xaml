@@ -33,6 +33,7 @@
 			<wct:WrapPanel Orientation="Horizontal"
 						   Margin="4">
 
+				
 
 				<controls:RadioButtons Header="Lighting"
                    SelectedIndex="{x:Bind uiLighting, Mode=TwoWay}">
@@ -349,7 +350,7 @@
 							  SelectedItem="{x:Bind views:SettingsPage.hubCitylistUI, Mode=TwoWay}"
 							  DisplayMemberPath="name"
 							  ItemsSource="{x:Bind game:CityList.all, Mode=OneTime}"
-							  ToolTipService.ToolTip="Active City List"
+							  ToolTipService.ToolTip="City List used for hubs"
 							  Margin="4" />
 					<controls:NumberBox Header="Cottage Level"
 										Value="{x:Bind views:SettingsPage.cottageLevel, Mode=TwoWay}"
@@ -360,8 +361,15 @@
 							  Margin="4"
 							  IsThreeState="True"
 							  IsChecked="{x:Bind views:SettingsPage.autoBuildOn, Mode=TwoWay}" />
-					
-				</StackPanel>
+			
+					<CheckBox Content="Building Overlays"
+							  Margin="4"
+							  IsThreeState="false"
+							  ToolTipService.ToolTip="Draw or don't draw the share string building overlays"
+							  IsChecked="{x:Bind views:SettingsPage.drawBuildingOverlays, Mode=TwoWay}" />
+
+
+			</StackPanel>
 			<StackPanel Style="{StaticResource StackPanelReveal}">
 				<TextBlock x:Uid="Settings_Theme"
 						   Style="{ThemeResource SubtitleTextBlockStyle}"

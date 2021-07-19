@@ -1822,7 +1822,11 @@ namespace COTG.Game
 					aSetup.AddItem("Find Hub", (_, _) => CitySettings.SetHub(cid));
 					aSetup.AddItem("Set Recruit", (_, _) => CitySettings.SetRecruitFromTag(cid));
 					aSetup.AddItem("Change...", (_, _) => ShareString.Show(cid));
+					//aSetup.AddItem("Remove Castle", (_, _) => 
+					//{
+					//	CityBuild.
 
+					//}
 					//   AApp.AddItem(flyout, "Clear Res", (_, _) => JSClient.ClearCenterRes(cid) );
 					aSetup.AddItem("Clear Res", (this as City).ClearRes);
 

@@ -1,4 +1,4 @@
-﻿### 2021/2/12
+﻿7### 2021/2/12
  - **Fix** Ports and Shipyards work with layouts
  - **New** Clicking on the top border of the chat tab allows you to toggle between predefined sizes
  - **Fix** Castles issue warning on upgrade
@@ -188,15 +188,42 @@
 	 - **Tip**
 	  - To export to a spread sheel, use control-a and then control-c, then paste somewhere
 ### 2021/7/14
-  -**Update**
+  - **Update**
     - Res clearing now removes all res nodes when buildings should go, previously it only removed the center
       - This can be disabled in settings
   - **Update**
     - ExportForWar temples 3 state option has been replaced with a onlyTemples checkbox
   - **New**
-    -  Preliminay Discord bridge for chat
+    - Preliminay Discord bridge for chat
     - Works best if player nicknames match in game names
     - Alliance Discord admins need me to set this up for it to work.
+
+### 2021/7/17
+  - **Fix** 
+    - Temples do not demo when you don't have building space.
+  - **Fix** 
+    - Citys called *New City* did not work with auto build
+
+### 2021/7/18
   - **Fix**
-    - Temples do not demo when you don't have building space.  
-    - Do people people really sacrifice 4000 ts for a temple..?
+    - Smart rearrange did not cooperate with ports and shipyards
+  - **Update**
+    - When linking discord nicknames to player names, case it not considered.  I.e. "Avatar" now matches "avatar"
+  - **New**
+    - You can turn off building overlays using BuildingOverlays setting in Settings.
+- ### 2021/7/18
+  - **Fix**
+    - When swapping buildings if one was building the move would fail and leave a building in a random place
+  - **Upate**
+    - If you have cabins in your layout cabins will be put there during inital cabin layout
+  - **Note** subs are finicky
+    - Here is how to enter a sub:
+		- Click Accept
+        - If your requested sub is set, clear it
+        - Set it to someone random
+        - Clear it
+        - Set it back to your desired sub
+        - Click Enter Account 
+        - Don't ask questions;
+  - **Fix**
+    - Fixed a bug. 

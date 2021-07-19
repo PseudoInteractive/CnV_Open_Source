@@ -142,7 +142,7 @@ namespace COTG.Draw
 			// 2..3: Fade Out Op, fade in B1
 			// 3..4: B1
 			// 4..5: Fade out B1 fade in B0
-
+			CityBuild.TouchBuildingCache();
 			var fontScale = (pixelScale / 64.0f) * (2.5f/64.0f) * SettingsPage.fontScale; // perspective attenuation with distance
 			for (var cy = span0; cy <= span1; ++cy)
 			{
@@ -256,7 +256,8 @@ namespace COTG.Draw
 			var city1 = buildCityOrigin + citySpan;
 			draw.AddQuad(Layer.tileCity - 2, city.isOnWater ? cityWallsWater : cityWallsLand, city0.WToCamera(), city1.WToCamera(), iAlpha.AlphaToAll(),  (0f,0f,0f,0f) );
 
-			if(build.isLayoutValid )
+			// draw overlays
+			if(build.isLayoutValid && SettingsPage.drawBuildingOverlays )
 			{
 				try
 				{

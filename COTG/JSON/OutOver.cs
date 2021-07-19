@@ -32,7 +32,7 @@ namespace COTG.JSON
 		{
 			OutgoingUpdateDebounce.Go();
 		}
-		public static Debounce OutgoingUpdateDebounce = new(_Process) { debounceDelay = 1000, throttleDelay = 2000 };
+		public static Debounce OutgoingUpdateDebounce = new(_Process) { throttled = true, debounceDelay = 1000, throttleDelay = 2000 };
 
 		public static bool fetchRequested;
 

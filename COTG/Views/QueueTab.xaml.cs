@@ -450,16 +450,27 @@ namespace COTG.Views
 							if (bc.cabins < SettingsPage.startCabinCount)
 							{
 								message = $"Adding {SettingsPage.startCabinCount - bc.cabins}";
+								var cabinsInLayout = FindPendingOverlayBuildingsOfType(city, 100, bidCottage);
+
 								// find a good spot for a cabin
 								for (var y = span0; y <= span1; ++y)
 								{
 									for (var x = span0; x <= span1; ++x)
 									{
-										var c = (x, y);// (int x, int y) c = RandCitySpot();
+										bool hasCabinsInLayout = cabinsInLayout.Any();
+										
+										var c = hasCabinsInLayout ?  cabinsInLayout.First(): (x, y);// (int x, int y) c = RandCitySpot();
+										if(hasCabinsInLayout)
+										{
+											cabinsInLayout.RemoveAt(0);
+										}
+
 										if (!IsBuildingSpot(c))
 										{
 											continue;
 										}
+										
+
 										if (bc.buildings >= city.buildingLimit)
 											goto done;
 										if (CityBuild.postQueueBuildings[City.XYToId(c)].isEmpty && (city.BidFromOverlay(c) == 0))
@@ -476,7 +487,7 @@ namespace COTG.Views
 							}
 						done:;
 							Assert(city.isBuild);
-							var storeHouses = FindPendingOverlayBuildingsOfType(city,  SettingsPage.intialStorehouses-bc.storeHouses, bidStorehouse,true);
+							var storeHouses = FindPendingOverlayBuildingsOfType(  SettingsPage.intialStorehouses-bc.storeHouses, bidStorehouse,true);
 							foreach( var storage in storeHouses)
 							{
 								
@@ -512,7 +523,7 @@ namespace COTG.Views
 
 							if (bc.storeHouses < SettingsPage.intialStorehouses )
 							{
-								var storage = FindPendingOverlayBuildingsOfType(city, SettingsPage.intialStorehouses  - bc.storeHouses, bidStorehouse,true);
+								var storage = FindPendingOverlayBuildingsOfType( SettingsPage.intialStorehouses  - bc.storeHouses, bidStorehouse,true);
 								foreach(var s in storage)
 								{
 									message += $"Adding Storehouse";
@@ -522,11 +533,16 @@ namespace COTG.Views
 							}
 							if (bc.forums == 0 && bc.buildings < buildingLimit)
 							{
-								var bd = FindPendingOverlayBuildingsOfType(city,1, bidMarketplace);
-								if (bd.Any())
+								var bd = FindPendingOverlayBuildingsOfType(city, SettingsPage.intialMarkets, bidMarketplace);
+								if(!bd.Any())
+									bd = FindPendingOverlayBuildingsOfType(city, SettingsPage.intialMarkets, bidPort);
+
+								foreach(var b in bd)
 								{
-									message += $"Adding Forum";
-									await CityBuild.SmartBuild(city, bd.First(), bidMarketplace, true, false);
+									if (bc.buildings >= buildingLimit)
+										break;
+									message += $"Adding Forum or Port";
+									await CityBuild.SmartBuild(city, b, bidMarketplace, true, false);
 									bc = City.GetBuildingCountsPostQueue(city.autobuildCabinLevel);
 								}
 							}
@@ -651,6 +667,7 @@ namespace COTG.Views
 							   var sel = combo.SelectedIndex;
 							   if (sel >= 0)
 								   SettingsPage.cabinsToRemovePerSwap = cabinCounts[sel];
+							   SettingsPage.SaveAll();
 							   return 1;
 						   }
 						   if (res == ContentDialogResult.Secondary)
@@ -956,28 +973,29 @@ namespace COTG.Views
 														goto error;
 													}
 													hasChanges = true;
+												if (Player.moveSlots < nextMoveConfirm)
+												{
+													nextMoveConfirm = (Player.moveSlots - movesPerConfirm).Max(3);
+													if (await App.DoYesNoBox("Move Stuff", $"{initialMoveSlots - Player.moveSlots} moves so far, {Player.moveSlots} moves left, continue?") != 1)
+														goto done;
 												}
+											}
 											}
 										
 										}
-										else if (pass == 1)
-										{
-											var spare = CityBuild.FindAnyFreeSpot(id);
-											if (!await MoveBuilding(id, spare, false)) 
-											{
+									//	else if (pass == 1)
+									//	{
+									//		var spare = CityBuild.FindAnyFreeSpot(id);
+									//		if (!await MoveBuilding(id, spare, false)) 
+									//		{
 												
-												goto error;
-											}
-											hasChanges = true;
-											break;
-									}
+									//			goto error;
+									//		}
+									//		hasChanges = true;
+									//		break;
+									//}
 								}
-									if (Player.moveSlots < nextMoveConfirm)
-										{
-											nextMoveConfirm = (Player.moveSlots - movesPerConfirm).Max(3);
-											if (await App.DoYesNoBox("Move Stuff", $"{initialMoveSlots-Player.moveSlots} moves so far, {Player.moveSlots} moves left, continue?") != 1)
-												goto done;
-										}
+									
 
 									}
 								
@@ -1000,13 +1018,16 @@ namespace COTG.Views
 	
 		}
 
-		static List<(int x, int y)> FindOverlayBuildingsOfType(City city, int bid)
+		static List<(int x, int y)> FindOverlayBuildingsOfType(City city, int bid, int max= 100)
 		{
 			List<(int x, int y)> rv = new();
 			for (var cy = span0; cy <= span1; ++cy)
 			{
 				for (var cx = span0; cx <= span1; ++cx)
 				{
+					if (rv.Count > max)
+						return rv;
+
 					var c = (cx, cy);
 					if (bid == city.BidFromOverlay(c))
 					{
@@ -1042,8 +1063,9 @@ namespace COTG.Views
 			return rv;
 		}
 
-		static List<(int x, int y)> FindPendingOverlayBuildingsOfType(City city, int count, int bid, bool addDummyIfNoLayout=false)
+		static List<(int x, int y)> FindPendingOverlayBuildingsOfType( int count, int bid, bool addDummyIfNoLayout=false)
 		{
+			var city = City.GetBuild();
 			List<(int x, int y)> rv = new();
 			if (count <= 0)
 				goto done;
@@ -1247,7 +1269,7 @@ namespace COTG.Game
 		{
 			get
 			{
-				if (CityRename.IsNew(this))
+				if (IsNew())
 					return "New";
 				if (buildings == Emptybuildings)
 				{

@@ -41,7 +41,7 @@ namespace COTG.Views
 
 		
 
-		static Regex regexCityName = new Regex(@"([^\d]*)(\d+)([^\d]+)(\d+)(.*)", RegexOptions.CultureInvariant | RegexOptions.Compiled);
+		static Regex regexCityName = new Regex(@"([^\d]*)(\d+)([^\d]+)(0*)(\d+)(.*)", RegexOptions.CultureInvariant | RegexOptions.Compiled);
 
 
 		static string lastName = string.Empty;
@@ -52,7 +52,7 @@ namespace COTG.Views
 				Assert(cid == City.build);
 				var city = City.GetOrAddCity(cid);
 				var nameDialog = new CityRename();
-				bool isNew = IsNew(city);
+				bool isNew = IsNewOrCaptured(city);
 
 				// foreach (var tag in TagHelper.tags)
 				// {
@@ -70,19 +70,26 @@ namespace COTG.Views
 						if (v.cont != city.cont || v._cityName==null )
 							continue;
 						var match = regexCityName.Match(v._cityName);
-						if (match.Success &&(v.isHub ||  match.Groups[4].Value.StartsWith("00")))
+						bool hasLeadingZero = !match.Groups[4].Value.IsNullOrEmpty();
+						if (match.Success &&(v.isHub ||  !hasLeadingZero ))
 						{
 							var score = city.cid.DistanceToCid(v.cid);
 							if (score < closestScore)
 							{
 								var pre = match.Groups[1].Value;
 								var mid = match.Groups[3].Value;
-								var num = match.Groups[4].Value;
-								var post = match.Groups[5].Value;
+								var leadingZeros = match.Groups[4].Value;
+								var num = match.Groups[5].Value;
+								var post = match.Groups[6].Value;
+								string numStr;
+
 								num.TryParseInt( out var numV);
 
+//								if(num.StartsWith("0"))
+
+
 								closestScore = score;
-								lastName = pre + city.cont.ToString("00") + mid + (numV * 1000 + 1).ToString() + post;
+								lastName = pre + city.cont.ToString("00") + mid + ( (hasLeadingZero ? numV * 1000 : numV) + 1).ToString() + post;
 
 							}
 						}
@@ -98,7 +105,7 @@ namespace COTG.Views
 					{
 						try
 						{
-							Assert(match.Groups.Count == 6);
+							Assert(match.Groups.Count == 7);
 							var cont = match.Groups[2].Value;
 							cont.TryParseInt(out var contV);
 
@@ -108,7 +115,7 @@ namespace COTG.Views
 								var lastCity = City.myCities.LastOrDefault((v) => v.cont == city.cont);
 								if (lastCity != null)
 								{
-									name = IsNew(lastCity) ? $"{city.cont:00} 0001" : lastCity.cityNameOrNull;
+									name = IsNewOrCaptured(lastCity) ? $"{city.cont:00} 0001" : lastCity.cityNameOrNull;
 									match = regexCityName.Match(name);
 									cont = match.Groups[2].Value;
 									cont.TryParseInt(out contV);
@@ -124,14 +131,15 @@ namespace COTG.Views
 							var pre = match.Groups[1].Value;
 
 							var mid = match.Groups[3].Value;
-							var num = match.Groups[4].Value;
-							var post = match.Groups[5].Value;
+							var leadingZeros = match.Groups[4].Value;
+							var num = match.Groups[5].Value;
+							var post = match.Groups[6].Value;
 							num.TryParseInt(out var numV );
 							cont = $"{city.cont:00}";
 							for (; ; )
 							{
 
-								name = pre + cont + mid + numV.ToString() + post;
+								name = pre + cont + mid + leadingZeros + numV.ToString() + post;
 								if (!City.myCities.Any((v) => v._cityName == name && v != city))
 									break;
 								++numV;
@@ -178,9 +186,7 @@ namespace COTG.Views
 						{
 							await ShareString.ShowNoLock(City.build);
 						}
-						await CitySettings.SetCitySettings(cid, setAutoBuild: SettingsPage.autoBuildOn.GetValueOrDefault(), autoWalls: (SettingsPage.autoWallLevel == 10) ? true : null,
-										autoTowers: (SettingsPage.autoTowerLevel == 10) ? true : null
-										);
+						
 						//if (SettingsPage.setHub)
 						//{
 						//	await HubSettings.Show(cid);
@@ -191,6 +197,9 @@ namespace COTG.Views
 							// are there any cabins here already?
 							rv = await QueueTab.DoTheStuff(city, false, false);
 						}
+						await CitySettings.SetCitySettings(cid, setAutoBuild: SettingsPage.autoBuildOn.GetValueOrDefault(), autoWalls: (SettingsPage.autoWallLevel == 10) ? true : null,
+										autoTowers: (SettingsPage.autoTowerLevel == 10) ? true : null
+										);
 						if (SettingsPage.clearRes)
 						{
 							if(!city.leaveMe)
@@ -229,7 +238,11 @@ namespace COTG.Views
 		public static bool IsNew(City city) => IsNew(city._cityName);
 		public static bool IsNew(string _cityName)
 		{
-			return _cityName == "*New City" || _cityName == "lawless city" || _cityName == "*Lawless City";
+			return _cityName == "*New City" ;
+		}
+		public static bool IsNewOrCaptured(City city)
+		{
+			return IsNew(city._cityName) || city._cityName == "lawless city" || city._cityName == "*Lawless City";
 		}
 	}
 }

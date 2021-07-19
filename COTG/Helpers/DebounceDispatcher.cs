@@ -16,6 +16,7 @@ namespace COTG
 			public int debounceDelay = 250;
 			public int throttleDelay = 750;
 			public bool runOnUiThead;
+			public bool throttled;
 			int nextCall = Environment.TickCount;
 			enum State
 			{
@@ -35,11 +36,12 @@ namespace COTG
 				switch (state)
 				{
 					case State.idle:
-						//{
-						//	var dt = nextCall - Environment.TickCount;
-						//	if (dt > 0)
-						//		return;
-						//}
+						if(throttled)
+						{
+							var dt = nextCall - Environment.TickCount;
+							if (dt > 0)
+								return;
+						}
 						break;
 					case  State.pending:
 						{
@@ -79,16 +81,16 @@ namespace COTG
 						   }
 						   else
 						   {
-							   await Task.Delay(dt + 10);
+							   await Task.Delay(dt + 10).ConfigureAwait(false);
 						   }
 					   }
 					   try
 					   {
 						   state = State.running;
 						   if (runOnUiThead)
-							   await App.DispatchOnUIThreadTask(func);
+							   await App.DispatchOnUIThreadTask(func).ConfigureAwait(false);
 						   else
-							   await func();
+							   await func().ConfigureAwait(false);
 					   }
 					   catch (Exception ex)
 					   {

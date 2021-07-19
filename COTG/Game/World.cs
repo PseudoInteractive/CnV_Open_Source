@@ -1529,14 +1529,17 @@ namespace COTG.Game
 
 
 		public static int lastUpdatedContinent;
+		public static int nextUpdateTick;
 		public static void UpdateRegionInfo(int cid)
 		{
 			if (JSON.TileData.state != JSON.TileData.State.ready)
 				return;
 
+			var tick = Environment.TickCount;
 			var continentId = cid.CidToPackedContinent();
-			if (continentId == lastUpdatedContinent)
+			if (continentId == lastUpdatedContinent && ((nextUpdateTick - tick ) > 0) )
 				return;
+			nextUpdateTick = tick + 1000 * 60 * 2; // 2 every min 
 			lastUpdatedContinent = continentId;
 
 			UpdateRegionDebounce.Go();
@@ -1547,6 +1550,7 @@ namespace COTG.Game
 		static Debounce UpdateRegionDebounce = new(DoUpdateRegion) { debounceDelay = 1000, throttleDelay = 1500 };
 		public static async Task DoUpdateRegion()
 		{
+			
 			if (lastUpdatedContinent == -1)
 				return;
 			var cc = lastUpdatedContinent.PackedContinentToXY();

@@ -119,19 +119,13 @@ namespace CnVDiscord
 				{
 					foreach (var author in guild.Members.Values)
 					{
-						var name = author.DisplayName;
-						if (!avatarUrls.TryGetValue(name, out var avatarUrl))
+						var nameLower = author.DisplayName.ToLower();
+						if (!avatarUrls.TryGetValue(nameLower, out var avatarUrl))
 						{
 							var url = author.GetAvatarUrl(ImageFormat.Auto, 32);
 							avatarUrl = $"![Helpers Image]({url})";
-							avatarUrls.Add(name, avatarUrl);
-
-
-							var _name = name;
-
-
-
-							avatarBrushes.Add(_name, new BitmapImage(new Uri(url)));
+							avatarUrls.TryAdd(nameLower, avatarUrl);
+							avatarBrushes.TryAdd(nameLower, new BitmapImage(new Uri(url)));
 						}
 					}
 					return Task.CompletedTask;
@@ -259,19 +253,19 @@ namespace CnVDiscord
 					return;
 
 				var name = DisplayName(author); // todo: use clients
-				if(!avatarUrls.TryGetValue(name,out var avatarUrl) )
+				var nameLower = name.ToLower();
+				if (!avatarUrls.TryGetValue(nameLower,out var avatarUrl) )
 				{
 					var url = author.GetAvatarUrl(ImageFormat.Auto, 32);
 					avatarUrl = $"![Helpers Image]({url})";
-					avatarUrls.Add(name, avatarUrl);
+					avatarUrls.TryAdd(nameLower, avatarUrl);
 				
 
 					var _name = name; 
 					
 					await App.DispatchOnUIThreadTask( () =>
 					{
-
-						avatarBrushes.Add(_name, new BitmapImage(new Uri(url)));
+						avatarBrushes.TryAdd(nameLower, new BitmapImage(new Uri(url)));
 						return Task.CompletedTask;
 					})
 						;
@@ -374,15 +368,21 @@ namespace CnVDiscord
 					//	users.Add(new UserMention(user));
 					//}
 					//	sb.Append(':');
+					var embed = new DiscordEmbedBuilder();
+					var displayName = user != null ? user.DisplayName : name;
+
 					if (user != null)
 					{
-						sb.Append($"<img src=\"{user.AvatarUrl}\" alt=\"{user.DisplayName}\") width=\"32\" height=\"32\" > ");
+						embed.WithAuthor(displayName,user.AvatarUrl);//,null,user.GetAvatarUrl(ImageFormat.Auto, 64));
+						embed.WithThumbnail(user.GetAvatarUrl(ImageFormat.Auto,64));
+	//					sb.Append($"<img src=\"{user.AvatarUrl}\" alt=\"{user.DisplayName}\") width=\"32\" height=\"32\" > ");
 					}
 					else
 					{
-						sb.Append(name);
-						sb.Append(": ");
+						embed.WithAuthor(displayName);//,null,user.GetAvatarUrl(ImageFormat.Auto, 64));
 					}
+
+
 					var str = args.text;
 					for (; ; )
 					{
@@ -418,8 +418,9 @@ namespace CnVDiscord
 						}
 						str = str.Substring(f);
 					}
+					embed.WithDescription(sb.ToString());
 
-					var message = new DiscordMessageBuilder().WithContent(sb.ToString()).WithAllowedMentions(users);
+					var message = new DiscordMessageBuilder().WithAllowedMentions(users).WithEmbed(embed);
 					
 					var channel = chatChannel;
 					await DiscordBot.SendMessageAsync(channel, message).ConfigureAwait(false);

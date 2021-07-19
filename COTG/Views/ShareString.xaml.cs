@@ -20,6 +20,7 @@ using static COTG.Debug;
 using COTG.Helpers;
 using COTG.JSON;
 using Microsoft.Toolkit.Uwp.UI.Controls;
+using System.Text.RegularExpressions;
 
 namespace COTG.Views
 {
@@ -583,12 +584,22 @@ namespace COTG.Views
 		//}
 		public override string ToString() => JsonSerializer.Serialize(this, Json.jsonSerializerOptions);
 
+		public static Regex squiggleBracketMatcher = new(@"[^()]*(?>(?>(?'open'\{)[^()]*)+(?>(?'-open'\})[^()]*)+)+(?(open)(?!))", RegexOptions.Compiled);
+
+
+
 		public ShareStringItem(string shareString)
 		{
 			try
 			{
 				var s = ShareString.SplitShareString(shareString);
-				var meta = JsonSerializer.Deserialize<ShareStringMeta>(s.json, Json.jsonSerializerOptions);
+				var json = s.json.Replace("&#34;", "\"");
+				var match = squiggleBracketMatcher.Match(json);
+				if( match.Captures.Count > 1 )
+				{
+					int q = 0;
+				}
+				var meta = JsonSerializer.Deserialize<ShareStringMeta>(json, Json.jsonSerializerOptions);
 				//	var path = ShareString.DecomposePath(meta.path);
 				Ctor(meta.path, meta.notes ?? string.Empty, meta.desc ?? string.Empty, s.ss ?? string.Empty, shareString);
 			}

@@ -70,7 +70,7 @@
 		<winui:TeachingTip
                                 x:Name="PlannerTeachingTip"
                                 Title="City Planer"
-                                Subtitle="To Edit your layout select 'planner', this will put you in a mode that is similar to LOUTOPT/COTGOPT">
+                                Subtitle="To Edit your layout select 'planner', this will put you in a mode that is similar to LOUTOPT/COTGOPT but different">
 		</winui:TeachingTip>-->
 	</Grid>
 </UserControl>
