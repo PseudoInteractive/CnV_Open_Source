@@ -54,7 +54,7 @@ namespace COTG.Game
             var dist = target.DistanceToCidD(city.cid);
             // based on slowest troop
             var rv = 0.0;
-            foreach (var tt in city.troopsTotal.Enumerate())
+            foreach (var tt in Raiding.GetTroops(city.troopsTotal,true,true) )
             {
                 var type = tt.type;
                 var travel = (dist * ttTravel[type]*100) / (ttSpeedBonus[type]);
@@ -105,12 +105,46 @@ namespace COTG.Game
             }
             return false;
         }
-        
-        public static (int reps,float averageCarry, float fractionalReps, bool isValid) ComputeIdealReps(Dungeon d, City city)
+		public static TroopTypeCounts GetTroops(in TroopTypeCounts tt, bool includeWater, bool includeLand)
+		{
+			TroopTypeCounts rv;
+			for (int type = 0; type < ttCount; ++type)
+			{
+				var tsHome = tt[type];
+				if (tsHome <= 0 || !SettingsPage.includeRaiders[type])
+					continue;
+				var naval = IsTTNaval(type);
+				if (naval)
+				{
+					if (!includeWater)
+						continue;
+				}
+				else
+				{
+					if (!includeLand)
+						continue;
+				}
+
+				rv[type] = (tsHome * Raiding.troopFraction).RoundToInt();
+			}
+
+			if (rv[ttTriari] > 0)
+			{
+				var maxTriari = ((rv[ttRanger] + rv[ttVanquisher]) * SettingsPage.raidMaxTriariRatio).RoundToInt();
+				if (rv[ttTriari] > maxTriari)
+				{
+					rv[ttTriari] = maxTriari;
+				}
+			}
+			return rv;
+		}
+
+
+		public static (int reps,float averageCarry, float fractionalReps, bool isValid) ComputeIdealReps(Dungeon d, City city)
         {
             var loot = d.loot;
             var carry = city.CarryCapacityHome(d.isWater); // this should be on demand
-            if (carry <= 0 || city.freeCommandSlots==0)
+            if (carry <= 0 || city.freeCommandSlots <= SettingsPage.raidReserveCommandSlots)
                 return (0, 0,0,false);
 			//   Log($"{desiredCarry} {carry / (loot * desiredCarry)}");
 			var  idealf = (carry / (loot * SettingsPage.raidCarryTarget) );
@@ -118,7 +152,7 @@ namespace COTG.Game
 			var minC = (int)(carry / (loot * SettingsPage.raidCarryMin));
 			if (ideal > minC)
 				ideal = minC;
-			ideal = Math.Min(ideal, city.freeCommandSlots ).Max(1);
+			ideal = Math.Min(ideal, city.freeCommandSlots- SettingsPage.raidReserveCommandSlots).Max(1);
 			var averageCarry = carry / (ideal.Max(1) * loot);
 			var isValid = (ideal != 0 && averageCarry < SettingsPage.raidCarryMax) && averageCarry > SettingsPage.raidCarryMin && d.completion > SettingsPage.minDungeonCompletion && (loot * 32 > city.CarryCapacityIncludeAway(d.isWater));
 
@@ -157,19 +191,15 @@ namespace COTG.Game
 			for (int iter = 0; iter < (wantDelays ? r.reps : 1); ++iter)
 			{
 				var tr = new List<sndRaidtr>();
+				var troops = Raiding.GetTroops(city.troopsHome, d.isWater, !d.isWater); 
 				for(int ttype =0; ttype < ttCount;++ttype)
 				{
-					var ttc= city.troopsHome[ttype];
+					var ttc= troops[ttype];
 					if (ttc <= 0)
 						continue;
-					if (!IsRaider(ttype) || !SettingsPage.includeRaiders[ttype])
-						continue;
-					if (IsTTNaval(ttype) == d.isWater)
-					{
-						var count = (int)(ttc * troopFraction / (SettingsPage.raidSendExact? r.fractionalReps.Max(r.reps):r.reps) );
+						var count = (int)(ttc / (SettingsPage.raidSendExact? r.fractionalReps.Max(r.reps):r.reps) );
 						tr.Add(new sndRaidtr() { tt = ttype.ToString(), tv = count.ToString() });
 						city.troopsHome[ttype] -= r.reps * count;
-					}
 
 				}
 				var trs = JsonSerializer.Serialize(tr, Json.jsonSerializerOptions);
@@ -186,6 +216,7 @@ namespace COTG.Game
 					Note.Show($"{city.nameMarkdown} raid {r.reps}x{(r.averageCarry * 100).RoundToInt()}% carry, cavern: {d.cid.CidToStringMD()}");
 
 				}
+				//city.PropertyChanged(nameof(city.troopsHome));
 			//	Trace("Raid: " + res);
 //				return true;
 				//           await Task.Delay(500);
@@ -201,8 +232,8 @@ namespace COTG.Game
                 await city.SuperRaid();
             }
 			return true;
-
         }
+
         public static DateTimeOffset nextAllowedTsHomeUpdate;
         public static DateTimeOffset nextAllowedTsUpdate;
         //public static async void UpdateTSHome(bool force = false, bool updateRaids=false)

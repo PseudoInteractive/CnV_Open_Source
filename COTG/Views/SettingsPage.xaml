@@ -56,10 +56,42 @@
 				<Slider Height="128" Header="Icons" Value="{x:Bind views:SettingsPage.iconScale, Mode=TwoWay}" Maximum="1.0" TickFrequency="0.125"  StepFrequency="0.125" SmallChange="0.125" Margin="8" TickPlacement="Outside" Orientation="Vertical" ToolTipService.ToolTip="Controls the size of troop icons in world view." />
 
 			</wct:WrapPanel>
-			
 			<wct:WrapPanel Orientation="Horizontal"
 						   Margin="4">
 
+
+
+				<controls:RadioButtons Header="Lighting"
+                   SelectedIndex="{x:Bind uiLighting, Mode=TwoWay}">
+					<x:String>Day</x:String>
+					<x:String>Night</x:String>
+					<x:String>None</x:String>
+				</controls:RadioButtons>
+
+				<controls:RadioButtons Header="Theme"
+                   SelectedIndex="{x:Bind uiTheme, Mode=TwoWay}">
+					<x:String>COTG</x:String>
+					<x:String>Winter</x:String>
+				</controls:RadioButtons>
+
+				<Slider Height="128" Header="Parallax" Value="{x:Bind views:SettingsPage.parallax, Mode=TwoWay}" Maximum="1.0" TickFrequency="0.125"  StepFrequency="0.025" SmallChange="0.025" Margin="8" TickPlacement="Outside" Orientation="Vertical" />
+				<Slider Height="128" Margin="8" Header="Planet" Value="{x:Bind views:SettingsPage.planet, Mode=TwoWay}" Maximum="1.0"  TickFrequency="0.125" StepFrequency="0.0625" SmallChange="0.0625" TickPlacement="Outside" Orientation="Vertical" ToolTipService.ToolTip="Use 0 to disable parallax and shadows" />
+				<Slider Height="128" Margin="8" Header="Font" Value="{x:Bind views:SettingsPage.fontScale, Mode=TwoWay}" Maximum="1.0"  TickFrequency="0.125" StepFrequency="0.0625" SmallChange="0.0625" TickPlacement="Outside" Orientation="Vertical" ToolTipService.ToolTip="Use 0 if the believe that the world is flat" />
+				<!--<Slider Height="128" Header="Detail" Value="{x:Bind views:SettingsPage.renderScale, Mode=TwoWay}" Maximum="1.0" TickFrequency="0.125"  StepFrequency="0.125" SmallChange="0.125" Margin="8" TickPlacement="Outside" Orientation="Vertical" ToolTipService.ToolTip="Controls the resolution at which the view is renderered.  Lower settings may be faster but might also be more blurry.  Lower settings are only needed if you display has a high resolution and your GPU is weak." />-->
+				<Slider Height="128" Header="Flag" Value="{x:Bind views:SettingsPage.flagScale, Mode=TwoWay}" Maximum="1.0" TickFrequency="0.125"  StepFrequency="0.0625" SmallChange="0.0625" Margin="8" TickPlacement="Outside" Orientation="Vertical" ToolTipService.ToolTip="Controls the size of flags above cities and spots." />
+				<Slider Height="128" Header="Icons" Value="{x:Bind views:SettingsPage.iconScale, Mode=TwoWay}" Maximum="1.0" TickFrequency="0.125"  StepFrequency="0.0625" SmallChange="0.0625" Margin="8" TickPlacement="Outside" Orientation="Vertical" ToolTipService.ToolTip="Controls the size of troop icons in world view." />
+
+			</wct:WrapPanel>
+
+			<wct:WrapPanel Orientation="Horizontal"
+						   Margin="4">
+				<Slider Height="128" Header="Tab Zoom" Value="{x:Bind views:SettingsPage.tabZoom, Mode=TwoWay}" Maximum="1.0" TickFrequency="0.125"  StepFrequency="0.0625" SmallChange="0.0625" Margin="8" TickPlacement="Outside" Orientation="Vertical" ToolTipService.ToolTip="Zooms Tabs" ValueChanged="{x:Bind views:UserTab.UpdateZoom}" />
+				<Slider Height="128" Header="Chat Zoom" Value="{x:Bind views:SettingsPage.chatZoom, Mode=TwoWay}" Maximum="1.0" TickFrequency="0.125"  StepFrequency="0.0625" SmallChange="0.0625" Margin="8" TickPlacement="Outside" Orientation="Vertical" ToolTipService.ToolTip="Zooms Chat" ValueChanged="{x:Bind views:UserTab.UpdateZoom}" />
+				<Slider Height="128" Header="HTML Zoom" Value="{x:Bind views:SettingsPage.htmlZoom, Mode=TwoWay}" Maximum="1.0" TickFrequency="0.125"  StepFrequency="0.0625" SmallChange="0.0625" Margin="8" TickPlacement="Outside" Orientation="Vertical" ToolTipService.ToolTip="Zooms COTG HTML, requires a restart"  />
+
+			</wct:WrapPanel>
+
+			<wct:WrapPanel Orientation="Horizontal">
 				<CheckBox Content="Fetch Full Defense History"
 						  IsChecked="{x:Bind FetchFullHistory,Mode=TwoWay}"
 						  Margin="8" />
@@ -149,6 +181,7 @@
 
 				<CheckBox Content="Demo extra buildings if full" IsChecked="{x:Bind views:SettingsPage.demoBuildingOnBuildIfFull,Mode=TwoWay}" ToolTipService.ToolTip="If On, extra buildings will be automatically destroyed when you place a building into a city with 100 buildings"  />
 			</wct:WrapPanel>
+		
 			<wct:WrapPanel Orientation="Horizontal"
 						   Margin="4">
 

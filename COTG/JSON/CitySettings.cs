@@ -22,21 +22,18 @@ namespace COTG.JSON
 		static HashSet<int> GetHubs()
 		{
 			var cl = Game.CityList.Find(Views.SettingsPage.hubCitylistName);
-			if (cl != null)
-				return cl.cities;
-			Note.Show("Warning:  No hub city list, querying all cities with the word 'Hub' in their remarks");
-			HashSet<int> result = new HashSet<int>();
+//			if (cl != null)
+//				return cl.cities;
+//			Note.Show("Warning:  No hub city list, querying all cities with the word 'Hub' in their remarks");
+			HashSet<int> result = cl!=null ? new(cl.cities) : new ();
 			foreach(var i in City.myCities)
 			{
-				if (i.remarks.Contains("hub", StringComparison.OrdinalIgnoreCase))
+				if (i.HasTag(Tags.Hub))
 				{
 					result.Add(i.cid);
 				}
 			}
-			if(result.Count==0)
-			{
-				Note.Show("Warning:  No hubs found");
-			}
+			Note.Show($"{result.Count}  No hubs found");
 			return result;
 
 		}

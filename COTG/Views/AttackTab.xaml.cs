@@ -358,18 +358,19 @@ namespace COTG.Views
             });
         }
 		static string attacksFile => "attacks" + JSClient.world.ToString();
-		internal static async Task SaveAttacks()
+		internal static Task SaveAttacks()
 		{
 			if (loaded)
 			{
-				await folder.SaveAsync(attacksFile, readable,true);
+				return folder.SaveAsync(attacksFile, readable,true);
 			}
+			return Task.CompletedTask;
 		}
 		public static async Task WaitAndSaveAttacks()
 		{
 			if (loaded)
 			{
-				using var _ = await asyncLock.LockAsync();
+				using var _ = await asyncLock.LockAsync().ConfigureAwait(false);
 				await SaveAttacks();
 			}
 		}

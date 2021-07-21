@@ -10,8 +10,8 @@ using System.Threading.Tasks;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
-using TroopTypeCounts = COTG.Game.TroopTypeCountsX;
-using TroopTypeCountsRef = COTG.Game.TroopTypeCountsX;
+using TroopTypeCounts = COTG.Game.TroopTypeCounts;
+using TroopTypeCountsRef = COTG.Game.TroopTypeCounts;
 using static COTG.Game.TroopTypeCountHelper;
 //COTG.DArrayRef<COTG.Game.TroopTypeCount>;
 

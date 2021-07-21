@@ -14,10 +14,10 @@ using static COTG.Debug;
 using Windows.UI.ViewManagement;
 using Windows.Web.Http;
 using System.Text.Json;
-using TroopTypeCountsRef = COTG.Game.TroopTypeCountsX;
+using TroopTypeCountsRef = COTG.Game.TroopTypeCounts;
 using static COTG.Game.TroopTypeCountHelper;
 //COTG.DArrayRef<COTG.Game.TroopTypeCount>;
-using TroopTypeCounts = COTG.Game.TroopTypeCountsX;
+using TroopTypeCounts = COTG.Game.TroopTypeCounts;
 using DiscordCnV;
 //COTG.DArray<COTG.Game.TroopTypeCount>;
 

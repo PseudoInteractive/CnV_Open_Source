@@ -37,6 +37,8 @@ using Windows.Security.Cryptography.Certificates;
 using Windows.Foundation;
 using Windows.Web.Http.Headers;
 using DiscordCnV;
+using Windows.UI.Xaml.Controls;
+using Microsoft.Toolkit.Uwp.UI;
 
 namespace COTG
 {
@@ -442,6 +444,8 @@ namespace COTG
 
 				};
 
+				view.SizeChanged += View_SizeChanged;
+
 				//	view.AddHandler(WebView.KeyDownEvent, new KeyEventHandler(webViewKeyDownHandler), true);
 				//	view.AddHandler(WebView.PointerPressedEvent, new PointerEventHandler(pointerEventHandler), true);
 				view.UnsafeContentWarningDisplaying += View_UnsafeContentWarningDisplaying;
@@ -496,6 +500,15 @@ namespace COTG
 
 
 
+		}
+
+		private static void View_SizeChanged(object sender, SizeChangedEventArgs e)
+		{
+			var scrollView = sender as ScrollViewer;
+			if(scrollView!=null)
+			{
+				Log(e);
+			}
 		}
 
 		//		public static async void CaptureWebPage(ICanvasResourceCreator canvas)

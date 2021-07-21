@@ -5,6 +5,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 
+using COTG.Game;
 namespace COTG.JSON
 {
 	public struct Building
@@ -20,6 +21,7 @@ namespace COTG.JSON
 		public string name => def.Bn;
 	
 		public bool isCabin => id == BuildingDef.idCabin;
+		public bool isTemple => id == BuildingDef.BidToId(City.bidTemple);
 
 		public void AssertValid() => COTG.Debug.Assert( isRes || bl!=0 );
 		public bool isMilitary => def.isMilitary;

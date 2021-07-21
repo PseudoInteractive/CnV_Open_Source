@@ -63,7 +63,7 @@ namespace COTG.Game
         {
             // lower is better
             var rv = distance+2;
-			rv *= .75f + 2*(carry - SettingsPage.raidCarryTarget).Abs();
+			rv *= .75f + 4*SettingsPage.raidCarryVsDistance*(carry - SettingsPage.raidCarryTarget).Abs();
 
             if (bestDungeonType != type)
                 rv += SettingsPage.penaltyForWrongDungeonType; // penalty of 4 spaces for wrong type
@@ -81,7 +81,7 @@ namespace COTG.Game
 			foreach (var dung in jse.EnumerateArray())
 			{
 				var type = dung.GetAsByte("t");
-				if (Views.SettingsPage.raidOffDungeons || (type == idealType))
+				if (Views.SettingsPage.raidOffDungeons || (type == idealType) || type == (byte)DungeonType.water )
 				{
 					var d = new Dungeon()
 					{

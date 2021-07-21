@@ -14,9 +14,9 @@ using Windows.UI.Input;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media.Imaging;
 using COTG.Views;
-using TroopTypeCounts = COTG.Game.TroopTypeCountsX;
+using TroopTypeCounts = COTG.Game.TroopTypeCounts;
 //COTG.DArray<COTG.Game.TroopTypeCount>;
-using TroopTypeCountsRef = COTG.Game.TroopTypeCountsX;
+using TroopTypeCountsRef = COTG.Game.TroopTypeCounts;
 using static COTG.Game.TroopTypeCountHelper;
 //COTG.DArrayRef<COTG.Game.TroopTypeCount>;
 
@@ -814,7 +814,7 @@ namespace COTG.Game
 		private async ValueTask<Classification> ClassifyFromBuildings(bool isIncomingAttack)
 		{
 			var str = await Post.SendForText("includes/gLay.php", $"cid={cid}", World.CidToPlayerOrMe(cid));
-			if(str.IsNullOrEmpty())
+			if (str.IsNullOrEmpty())
 			{
 				return Classification.unknown;
 			}
@@ -884,7 +884,7 @@ namespace COTG.Game
 				}
 				else if (mx == academies)
 				{
-					if((academies == 34)||(academies==25)||(academies == 19) )
+					if ((academies == 34) || (academies == 25) || (academies == 19))
 						classification = Classification.priestess; // todo!
 					else
 						classification = Classification.praetor; // todo!
@@ -961,6 +961,26 @@ namespace COTG.Game
 		public Army[] incoming { get; set; } = Army.empty;
 		public TroopTypeCounts troopsHome;
 		public TroopTypeCounts troopsTotal;
+
+
+		//public int raidTroopCount
+		//{
+		//	get
+		//	{
+
+		//		int rv = 0;
+		//		for (var type = 0; type < ttCount; ++type)
+		//		{
+		//			var tsHome = troopsHome[type];
+		//			if (!includeRaiders[type])
+		//				continue;
+		//			rv += tsHome * ttToTs[type];
+		//		}
+		//		return rv;
+		//	}
+		//}
+
+
 		public bool hasEnemyIncoming => incoming.Any(w => w.isAttack && !Alliance.IsAllyOrNap(w.sourceAlliance));
 
 		public int incomingAttacks
@@ -1221,10 +1241,10 @@ namespace COTG.Game
 			{
 				try
 				{
-					//	var sel0 = SpotTab.instance.selectedGrid.SelectedItems;
-					//var grid = GetGrid();
-					//var sel1 = grid.SelectedItems;
-					var sel = selected;
+			//	var sel0 = SpotTab.instance.selectedGrid.SelectedItems;
+			//var grid = GetGrid();
+			//var sel1 = grid.SelectedItems;
+			var sel = selected;
 					var present = sel.Contains(cid);
 					var wantUISync = false;
 					if (mod.IsShift() || mod.IsControl() || forceSelect)
@@ -1234,14 +1254,14 @@ namespace COTG.Game
 							if (!forceSelect && !mod.IsShift())
 							{
 								selected = new HashSet<int>(sel.Where(a => a != cid));
-								//		sel0.Remove(this);
-								//		sel1.Remove(this);
+						//		sel0.Remove(this);
+						//		sel1.Remove(this);
 
-							}
+					}
 							else
 							{
-								//	wantUISync = true;
-							}
+						//	wantUISync = true;
+					}
 						}
 						else
 						{
@@ -1249,34 +1269,34 @@ namespace COTG.Game
 							newSel.Add(cid);
 							selected = newSel;
 
-							//sel0.Add(this);
-							//	sel1.Add(this);
-							wantUISync = true;
+					//sel0.Add(this);
+					//	sel1.Add(this);
+					wantUISync = true;
 
 						}
-						//                 SpotTab.SelectedToGrid();
-					}
+				//                 SpotTab.SelectedToGrid();
+			}
 
 					else
 					{
 						wantUISync = true;
-						// clear selection and select this
-						if (present && selected.Count == 1)
+				// clear selection and select this
+				if (present && selected.Count == 1)
 						{
-							/// nothing
-						}
+					/// nothing
+				}
 						else
 						{
 							selected = new HashSet<int>(new[] { cid });
 
-							///sel0.Clear();
-							//sel0.Add(this);
+					///sel0.Clear();
+					//sel0.Add(this);
 
-							//sel1.Clear();
-							//sel1.Add(this);
-						}
-						//                   SpotTab.SelectOne(this);
-					}
+					//sel1.Clear();
+					//sel1.Add(this);
+				}
+				//                   SpotTab.SelectOne(this);
+			}
 					SyncUISelection(scrollIntoView, this);
 				}
 				catch (Exception e)
@@ -1549,11 +1569,11 @@ namespace COTG.Game
 		{
 			Raiding.ReturnSlow(cid, true);
 		}
-		public  void ReturnAt(object sender, RoutedEventArgs e)
+		public void ReturnAt(object sender, RoutedEventArgs e)
 		{
 			ShowReturnAt();
 		}
-		
+
 		public async Task ShowReturnAt()
 		{
 			DateTimeOffset? time = null;
@@ -1649,8 +1669,8 @@ namespace COTG.Game
 					   Content = cid.CidToString(),
 					   PrimaryButtonText = "Okay"
 				   };
-				   //SettingsPage.BoostVolume();
-				   ElementSoundPlayer.Play(ElementSoundKind.Invoke);
+		   //SettingsPage.BoostVolume();
+		   ElementSoundPlayer.Play(ElementSoundKind.Invoke);
 				   COTG.Services.ToastNotificationsService.instance.SpotChanged($"{cid.CidToString()} has changed");
 				   dialog.ShowAsync2();
 			   });
@@ -2131,29 +2151,29 @@ namespace COTG.Game
 			{
 
 				{
-					/// MainPage.CityGrid.SelectedItem = this;
-					//                      MainPage.CityGrid.SetCurrentItem(this);
+			/// MainPage.CityGrid.SelectedItem = this;
+			//                      MainPage.CityGrid.SetCurrentItem(this);
 
-					//     MainPage.CityGrid.SetCurrentItem(this,false);
-					if (MainPage.IsVisible())
+			//     MainPage.CityGrid.SetCurrentItem(this,false);
+			if (MainPage.IsVisible())
 						MainPage.CityGrid.ScrollItemIntoView(City.GetOrAdd(cid));
 					if (BuildTab.IsVisible())
 						BuildTab.CityGrid.ScrollItemIntoView(City.GetOrAdd(cid));
-					// await Task.Delay(200);
-					//MainPage.CityGrid.SelectItem(this);
-					//var id = gridCitySource.IndexOf(this);
-					//if (id != -1)
-					//{
-					//    MainPage.CityGrid.ScrollIndexIntoView(id);
+			// await Task.Delay(200);
+			//MainPage.CityGrid.SelectItem(this);
+			//var id = gridCitySource.IndexOf(this);
+			//if (id != -1)
+			//{
+			//    MainPage.CityGrid.ScrollIndexIntoView(id);
 
-					//}
-				}
-				// todo: donations page and boss hunting
+			//}
+		}
+		// todo: donations page and boss hunting
 
 
-				// ShellPage.instance.coords.Text = cid.CidToString();
-				//            });
-			});
+		// ShellPage.instance.coords.Text = cid.CidToString();
+		//            });
+	});
 
 		}
 		public void ScrollMeIntoView() => ScrollIntoView(cid);
@@ -2171,29 +2191,29 @@ namespace COTG.Game
 			public int snd { get; set; }
 		}
 
-		public static HashSet<(int cid, int rcid) > settles = new();
-		public async static void TrySettle(int cid,int target, bool bySea)
+		public static HashSet<(int cid, int rcid)> settles = new();
+		public async static void TrySettle(int cid, int target, bool bySea)
 		{
 			var _cid = cid;
 			var _pid = City.Get(_cid).pid;
 			settles.Add((_cid, target));
 			var rcid = target;
-			for (; ;)
+			for (; ; )
 			{
 				try
 				{
-					var sc = new sndnc() { cid = _cid, rcid = rcid, type = 5, snd = bySea?2:1, tr = @"[{'tt':17,'tv':1}]" };
+					var sc = new sndnc() { cid = _cid, rcid = rcid, type = 5, snd = bySea ? 2 : 1, tr = @"[{'tt':17,'tv':1}]" };
 					var magic = "Sx2xxresa" + _pid.ToString() + "sa2dT123ol";
-					var txt = await Post.SendEncryptedForText("includes/sndNC.php", JsonSerializer.Serialize(sc, Json.jsonSerializerOptions),magic,_pid,false);
+					var txt = await Post.SendEncryptedForText("includes/sndNC.php", JsonSerializer.Serialize(sc, Json.jsonSerializerOptions), magic, _pid, false);
 					var tr = txt.Trim();
-					if(tr.Length > 0 && tr[0] == '{' )
+					if (tr.Length > 0 && tr[0] == '{')
 					{
-						await App.DoYesNoBox("Something sent","or someting");
+						await App.DoYesNoBox("Something sent", "or someting");
 						try
 						{
 							settles.Remove((_cid, rcid));
 						}
-						catch( Exception ex1)
+						catch (Exception ex1)
 						{
 
 						}
@@ -2205,7 +2225,7 @@ namespace COTG.Game
 					}
 
 				}
-				catch(Exception ex)
+				catch (Exception ex)
 				{
 					Log(ex);
 				}
@@ -2217,7 +2237,7 @@ namespace COTG.Game
 		}
 
 	}
-public static class SpotHelper
+	public static class SpotHelper
 	{
 		public static bool IsOffense(this Spot.Classification c)
 		{
@@ -2238,7 +2258,7 @@ public static class SpotHelper
 			{
 				Spot.Classification.rt or
 				Spot.Classification.praetor or
-				Spot.Classification.priestess or 
+				Spot.Classification.priestess or
 				Spot.Classification.arbs or
 				Spot.Classification.stingers => true,
 				_ => false

@@ -41,7 +41,15 @@ namespace COTG.Views
 		//       private static IdentityService IdentityService => Singleton<IdentityService>.Instance;
 
 
-
+		public static bool? syncIncoming = null;
+		public static bool? syncOutgoing = null;
+		public static int raidReserveCommandSlots = 0;
+		public static float raidMaxTriariRatio = 1;
+		public static bool raidSplitPraeAndPriestess = true;
+		public static float raidCarryVsDistance= 0.5f;
+		public static float tabZoom = 0.5f;
+		public static float chatZoom = 0.5f;
+		public static float htmlZoom = 0.25f;
 		//private static bool _isLoggedIn;
 		//private static bool _isBusy;
 		public static float renderScale=1.0f;
@@ -272,9 +280,9 @@ namespace COTG.Views
 			}
 
 		}
-		public static float raidCarryMin = 1.15f;
+		public static float raidCarryMin = 0.9f;
 		public static float raidCarryTarget = 1.15f;
-		public static float raidCarryMax = 1.80f;
+		public static float raidCarryMax = 2.00f;
 		public static int intialStorehouses=1;
 		public static int intialMarkets = 1;
 		public static bool IsThemeWinter()
@@ -915,5 +923,7 @@ namespace COTG.Views
 		{
 			Windows.System.Launcher.LaunchUriAsync(new Uri($"{App.appLink}:launch?n=1"));
 		}
+
+		
 	}
 }

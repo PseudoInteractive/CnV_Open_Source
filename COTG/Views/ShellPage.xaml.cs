@@ -8,7 +8,7 @@ using Cysharp.Text;
 using DiscordCnV;
 
 using Microsoft.Toolkit.Uwp.UI.Controls;
-
+using System.Numerics;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -26,7 +26,7 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Input;
 using Windows.Web.Http;
-
+using Windows.UI.Xaml.Media;
 using static COTG.Debug;
 
 using WinUI = Microsoft.UI.Xaml.Controls;
@@ -59,6 +59,8 @@ namespace COTG.Views
 		private bool _isAuthorized;
 
 		public static TextBlock gridTip;
+
+		public static ScrollViewer webScale;
 
 		private static DateTime workStarted;
 		private static readonly List<string> workQueue = new List<string>();
@@ -237,8 +239,16 @@ namespace COTG.Views
 			// foreach (var i in webView.KeyboardAccelerators) i.IsEnabled = false;
 			// webView.AllowFocusOnInteraction = false; c.hitTest.Margin= webView.Margin = new
 			// Thickness(0, 0, 11, 0);
-			grid.Children.Add(webView);
+			webScale = new ScrollViewer();
+			webScale.ZoomMode = ZoomMode.Enabled;
+		//	webScale.AllowFocusOnInteraction = false;
+			webScale.VerticalScrollMode = ScrollMode.Disabled;
+			webScale.HorizontalScrollMode = ScrollMode.Disabled;
+			webScale.ChangeView(null,null,SettingsPage.htmlZoom.Squared() * 2.0f + 0.5f);
+			webScale.Content = webView;
 
+			grid.Children.Add(webScale);
+			
 			//c.hitTest.Fill = JSClient.webViewBrush;
 			//				var visual = ElementCompositionPreview.GetElementVisual(c.canvas);
 			//			var webVisual = ElementCompositionPreview.GetElementVisual(view);
@@ -251,11 +261,14 @@ namespace COTG.Views
 			// 0); Grid.SetRowSpan(shellFrame, 6); shellFrame.Margin = new Thickness(13, 0, 0, 0);
 			// Canvas.SetZIndex(shellFrame, 3);
 
-			Grid.SetColumn(webView, 0);
-			Grid.SetRow(webView, 1);
-			Grid.SetRowSpan(webView, 5);
-			Grid.SetColumnSpan(webView, 2);
-			Canvas.SetZIndex(webView, 10);
+			Grid.SetColumn(webScale, 0);
+			Grid.SetRow(webScale, 1);
+			Grid.SetRowSpan(webScale, 5);
+			Grid.SetColumnSpan(webScale, 2);
+			Canvas.SetZIndex(webScale, 10);
+			
+	//		webView.Scale = new Vector3(SettingsPage.htmlZoom.Squared() * 2.0f + 0.5f);
+
 
 			//var splitter = new GridSplitter();
 			//grid.Children.Add(splitter);
@@ -306,11 +319,9 @@ namespace COTG.Views
 					// tabPage.AddTab(HeatTab.instance, false);
 				}
 				ChatTab.tabPage.AddChatTabs();
-				{
+				SpotTab.instance.ShowOrAdd( true);
+				UserTab.UpdateZoom();
 
-					// SpotTab.instance = new SpotTab();
-					SpotTab.instance.ShowOrAdd( true);
-				}
 			};
 
 			// refreshAccelerator.Invoked += (_, __) => view?.Refresh();
@@ -328,8 +339,8 @@ namespace COTG.Views
 			var displayInformation = DisplayInformation.GetForCurrentView();
 			var screenSize = new Size(displayInformation.ScreenWidthInRawPixels,
 									  displayInformation.ScreenHeightInRawPixels);
-			ShellPage.webclientSpan.x = (screenSize.Width * .715625f).RoundToInt();
-			ShellPage.webclientSpan.y = (screenSize.Height * 0.89236111111111116f).RoundToInt();
+			ShellPage.webclientSpan.x = (screenSize.Width * .715625f * SettingsPage.htmlZoom).RoundToInt();
+			ShellPage.webclientSpan.y = (screenSize.Height * 0.89236111111111116f * SettingsPage.htmlZoom).RoundToInt();
 
 			AGame.Create(canvas);
 			Task.Delay(500).ContinueWith((_) => App.DispatchOnUIThreadLow(() =>
@@ -1220,6 +1231,7 @@ namespace COTG.Views
 		{
 			App.DispatchOnUIThreadLow(() =>
 		   {
+			   //scroll.ChangeView(null, null, 0.5f);
 			   var raidInfoVisible = true;
 			   switch (viewToggle)
 			   {

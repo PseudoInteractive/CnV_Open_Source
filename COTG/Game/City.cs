@@ -237,7 +237,7 @@ namespace COTG.Game
 			buildQueue.ClearKeepBuffer();
 			buildQInSync = false;
 			Draw.CityView.ClearSelectedBuilding();
-		//	CityBuild.ClearAction();
+			//	CityBuild.ClearAction();
 			CityView.BuildingsOrQueueChanged();
 
 			//if (CityBuild.menuOpen)
@@ -249,7 +249,7 @@ namespace COTG.Game
 
 
 
-//		public long lastUpdateTick;
+		//		public long lastUpdateTick;
 
 		public Raid[] raids = Array.Empty<Raid>();
 
@@ -311,8 +311,8 @@ namespace COTG.Game
 			get
 			{
 				// Todo: water
-				return troopsHome.Sum( tc => tc.count * ttCarry[tc.type] );
-				
+				return troopsHome.Sum(tc => tc.count * ttCarry[tc.type]);
+
 			}
 		}
 		public float homeTroopsAttack
@@ -323,12 +323,11 @@ namespace COTG.Game
 				return troopsHome.Sum(tc => tc.attack);
 			}
 		}
-		public static float CarryCapacity( in TroopTypeCountsX tt, bool forWater) =>
-			 tt.Sum(tc => IsRaider(tc.type)
-		   && SettingsPage.includeRaiders[tc.type]
-		   && IsTTNaval(tc.type) == forWater
-			   ? tc.count * ttCarry[tc.type] * Raiding.troopFraction : 0.0f);
+		public static float CarryCapacity(in TroopTypeCounts tt, bool forWater)
+		{
+			return Raiding.GetTroops(tt, forWater, !forWater).Sum(tc => tc.count * ttCarry[tc.type] );
 
+		}
 
 		public float CarryCapacityHome(bool forWater)
 		{
@@ -376,7 +375,7 @@ namespace COTG.Game
 
 		public int BidFromOverlay(int id)
 		{
-			if (shareString == null || shareString.Length <= shareStringStartOffset)
+			if (!isLayoutValid)
 				return 0;
 			if (id == bspotTownHall)
 				return bidTownHall;
@@ -390,6 +389,28 @@ namespace COTG.Game
 			{
 				return 0;
 			}
+
+		}
+		//public void SetBuildingInOverlay( (int x,int y) xy, int bid  )
+		//{
+		//	if (!isLayoutValid)
+		//		return;
+		//	shareString[ XYToId(xy) + shareStringStartOffset].bid
+		//	var t = shareString[id + shareStringStartOffset];
+		//	if (BuildingDef.sharestringToBuldings.TryGetValue((byte)t, out var c) && c != 0)
+		//	{
+
+		//		return (int)c + BuildingDef.sharestringOffset;
+		//	}
+		//	else
+		//	{
+		//		return 0;
+		//	}
+
+		//}
+		public void SetBuildingInOverlay(int id)
+		{
+			var t = shareString[id + shareStringStartOffset];
 
 		}
 
@@ -722,7 +743,7 @@ namespace COTG.Game
 
 		public static string BuildingsToShareString(Building[] _layout, bool _isOnWater)
 		{
-			if (_layout == null)
+			if (!City.GetBuild().isLayoutValid)
 				return string.Empty;
 
 			var sb = new StringBuilder(shareStringStart);
@@ -739,15 +760,11 @@ namespace COTG.Game
 				else
 				{
 					var bid = c.bid;
-					if (bid != 0)
-					{
-						bid -= BuildingDef.sharestringOffset;
-						anyValid = true;
-					}
-					if (!BuildingDef.buildingsToSharestring.TryGetValue((byte)bid, out o))
-					{
-						o = (byte)'-';
-					}
+					var x = BuildingDef.BuildingToShareString(c.bid);
+					anyValid |= x.valid;
+					o = x.id;
+					
+
 				}
 				sb.Append((char)o);
 
@@ -806,6 +823,8 @@ namespace COTG.Game
 					}
 				}
 			}
+			rv[bspotTownHall].bl = 10;
+			rv[bspotTownHall].id = BuildingDef.BidToId(bidTownHall);
 			return rv;
 		}
 		public Building[] GetPlannerBuildings()
@@ -1153,7 +1172,6 @@ namespace COTG.Game
 					bestAttack = ts;
 					best = (byte)type;
 				}
-
 			}
 			return best;
 		}
@@ -1166,7 +1184,7 @@ namespace COTG.Game
 			foreach (var ttc in troopsHome.Enumerate())
 			{
 				var type = ttBestDungeonType[ttc.type];
-				if (type > (byte)DungeonType.water)
+				if (type >= (byte)DungeonType.water)
 					continue;// todo: handle water
 				var ts = ttc.ts;
 				if (ts > bestTS)
@@ -1174,10 +1192,10 @@ namespace COTG.Game
 					bestTS = ts;
 					best = type;
 				}
-
 			}
 			return best;
 		}
+
 		/*
          * Resource and other details
         */

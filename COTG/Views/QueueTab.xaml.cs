@@ -869,7 +869,7 @@ namespace COTG.Views
 				}
 				
 				var bl = CityBuild.postQueueBuildings[id];
-				if (!(bl.isRes || bl.isEmpty || bl.isCabin || bl.isTower))
+				if (!(bl.isRes || bl.isEmpty || bl.isTemple || bl.isCabin || bl.isTower))
 				{
 					bid = (ushort)bl.bid;
 					if (counts.TryGetValue(bid, out var c) == false)
@@ -894,7 +894,7 @@ namespace COTG.Views
 
 				var oBid = (ushort)city.BidFromOverlay(id);
 				var bl = CityBuild.postQueueBuildings[id];
-				if (!(bl.isRes || bl.isEmpty || bl.isCabin || bl.isTower))
+				if (!(bl.isRes || bl.isEmpty || bl.isTemple  ||  bl.isCabin || bl.isTower))
 				{
 					var bid = (ushort)bl.bid;
 					if (bid == oBid)

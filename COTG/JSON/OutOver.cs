@@ -11,9 +11,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using static COTG.Game.Enum;
 using static COTG.Debug;
-using TroopTypeCounts = COTG.Game.TroopTypeCountsX;
+using TroopTypeCounts = COTG.Game.TroopTypeCounts;
 //COTG.DArray<COTG.Game.TroopTypeCount>;
-using TroopTypeCountsRef = COTG.Game.TroopTypeCountsX;
+using TroopTypeCountsRef = COTG.Game.TroopTypeCounts;
 using static COTG.Game.TroopTypeCountHelper;
 //COTG.DArrayRef<COTG.Game.TroopTypeCount>;
 

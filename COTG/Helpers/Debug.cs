@@ -242,7 +242,6 @@ namespace COTG
 			}
 		}
 
-
 //		public static void Verify(bool v
 //#if TRACE
 //			,

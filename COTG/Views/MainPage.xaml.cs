@@ -434,11 +434,9 @@ namespace COTG.Views
 
 		}
 		
-
 		private void SelectAll(object sender, RoutedEventArgs e)
 		{
 			cityGrid.SelectAll();
-
 		}
 
 		private void RaidSettings(object sender, RoutedEventArgs e)

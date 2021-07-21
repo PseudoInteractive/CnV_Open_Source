@@ -17,9 +17,10 @@
 			  IsTabStop="True"
 			  FontFamily="Tw Cen MT Condensed">
 
-	<Grid x:Name="cityBaseGrid">
+	<Grid x:Name="cityBaseGrid" Padding="16,16,16,16">
 		
-		<Grid.RowDefinitions>
+		<Grid.RowDefinitions 
+						>
 				<RowDefinition Height="auto" />
 				<RowDefinition Height="auto" />
 				<RowDefinition Height="auto" />
@@ -31,6 +32,7 @@
 							ColumnResizeHandleDisplayMode="OnColumnHeaderActionFlyoutOpen"
 							ColumnDataOperationsMode="Flyout"
 							Grid.Row="3"
+							
 							IsTabStop="True"
 							TabFocusNavigation="Once"
 							UserGroupMode="Auto"

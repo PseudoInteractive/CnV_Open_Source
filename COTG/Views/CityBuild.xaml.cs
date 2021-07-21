@@ -53,7 +53,6 @@ namespace COTG.Views
 		static Dictionary<string, ImageBrush> brushFromImageCache = new();
 		static Dictionary<BitmapImage, ImageBrush> brushFromImageCache2 = new();
 
-
 		public static HashSet<ushort> outerTowerSpots =new HashSet<ushort>(new ushort[] {3, 7, 13, 17, 83, 167, 293, 377, 437, 433, 427, 423, 357, 273, 147, 63} );
 		public static HashSet<ushort> innerTowerSpots = new HashSet<ushort>(new ushort[] { 113, 117, 173, 257, 323, 327, 183, 267 });
 		public static HashSet<ushort> wallSpots = new HashSet<ushort>(new ushort[] { 1, 2, 4, 5, 6, 8, 9, 10, 11, 12, 14, 15, 16, 18, 19, 20, 21, 22, 23, 31, 39, 40, 41, 42, 43, 52, 61, 62, 73, 84, 94, 104, 105, 112, 114, 115, 116, 118, 125, 126, 132, 133, 139, 140, 146, 152, 153, 161, 162, 168, 188, 189, 194, 204, 209, 210, 211, 212, 213, 214, 215, 225, 226, 227, 228, 229, 230, 231, 236, 246, 251, 252, 272, 278, 279, 287, 288, 294, 300, 301, 307, 308, 314, 315, 322, 324, 325, 326, 328, 335, 336, 346, 356, 367, 378, 379, 388, 397, 398, 399, 400, 401, 409, 417, 418, 419, 420, 421, 422, 424, 425, 426, 428, 429, 430, 431, 432, 434, 435, 436, 438, 439, 440 });
@@ -117,7 +116,6 @@ namespace COTG.Views
 		public static bool IsWallSpot(int spot) => wallSpots.Contains((ushort)spot);
 		public static bool IsWallSpot((int x, int y) cc) => wallSpots.Contains((ushort)XYToId(cc));
 		public static bool IsWaterSpot(int spot) => City.GetBuild().isOnWater && waterSpots.Contains((ushort)spot);
-
 		public static bool IsShoreSpot(int spot) => City.GetBuild().isOnWater && shoreSpots.Contains((ushort)spot);
 
 		public static Regex shortKeyRegEx = new Regex(@"Shortkey: (.)", RegexOptions.CultureInvariant | RegexOptions.Compiled);
@@ -270,6 +268,7 @@ namespace COTG.Views
 		static BuildMenuItem amSetPlanner = new BuildMenuItem("Planner", Action.togglePlanner, "City/build_details_gloss_overlay.png", "Set planner mode");
 		static BuildMenuItem amSetBuild = new BuildMenuItem("Build", Action.togglePlanner, "City/build_details_gloss_overlay.png", "Set build mode");
 		static BuildMenuItem amSelectShareString = new BuildMenuItem("ShareString", Action.showShareString, "City/build_details_gloss_overlay.png", "Sharestring selection and exporting");
+		static BuildMenuItem amDoTheStuff = new BuildMenuItem("Planner", Action.togglePlanner, "City/build_details_gloss_overlay.png", "Set planner mode");
 
 
 
@@ -2108,15 +2107,19 @@ namespace COTG.Views
 			
 			}
 		}
-		private static async Task RemoveCastleFromLayout()
+		public static (int x, int y) int00 = (0, 0);
+
+		private static async Task RemoveCastleFromLayout(City city)
 		{
-			var wasPlanner = CityBuild.isPlanner;
-			if(!wasPlanner)
-				await CityBuild._IsPlanner(true, false);
-
-
-			if(!wasPlanner)
-				await CityBuild._IsPlanner(false, false);
+			if(CityBuild.isPlanner)
+				Note.Show("Might not work properly in planner mode, good luck!");
+			
+			var id = city.FindOverlayBuildingOfType(bidCastle);
+			if(id == int00 )
+			{
+				Assert(false);
+				return;
+			}
 		}
 
 		internal static void ShortBuild(short bid)

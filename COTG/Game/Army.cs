@@ -15,8 +15,8 @@ using Windows.System;
 using System.Text.Json.Serialization;
 using System.Text.Json;
 using COTG.Views;
-using TroopTypeCounts = COTG.Game.TroopTypeCountsX;//COTG.DArray<COTG.Game.TroopTypeCount>;
-using TroopTypeCountsRef = COTG.Game.TroopTypeCountsX;
+using TroopTypeCounts = COTG.Game.TroopTypeCounts;//COTG.DArray<COTG.Game.TroopTypeCount>;
+using TroopTypeCountsRef = COTG.Game.TroopTypeCounts;
 using static COTG.Game.TroopTypeCountHelper;
 
 using System.Runtime.InteropServices;
@@ -230,7 +230,7 @@ namespace COTG.Game
 		int targetCid;
 	}
 	[StructLayout(LayoutKind.Sequential)]
-	public struct TroopTypeCountsX 
+	public struct TroopTypeCounts 
 	{
 		public unsafe fixed int counts[(ttCount)];
 
@@ -675,17 +675,8 @@ namespace COTG.Game
 		}
 		// combined TS
 		public readonly int TSRaid()
-		{
-			var rv = 0;
-			unsafe
-			{
-				for (int i = 0; i < ttCount; ++i)
-				{
-					if (IsRaider(i) && SettingsPage.includeRaiders[i])
-						rv += Enum.ttTs[i] * counts[i];
-				}
-			}
-			return rv;
+		{	
+			return Raiding.GetTroops(this, true, true).Sum((tt) => tt.count * Enum.ttTs[tt.type]);
 		}
 		public readonly int TSDef()
 		{
@@ -1044,14 +1035,14 @@ namespace COTG.Game
 			}
 			return rv;
 		}
-		internal static void Add(ref TroopTypeCountsX me, TroopTypeCount ttc)
+		internal static void Add(ref TroopTypeCounts me, TroopTypeCount ttc)
 		{
 			unsafe
 			{
 				me.counts[ttc.type] += ttc.count;
 			}
 		}
-		internal static void Add(ref TroopTypeCountsX me,in TroopTypeCountsX add)
+		internal static void Add(ref TroopTypeCounts me,in TroopTypeCounts add)
 		{
 			unsafe
 			{
@@ -1061,7 +1052,7 @@ namespace COTG.Game
 				}
 			}
 		}
-		public static void Add(ref TroopTypeCountsX me, in TroopTypeCountsX a, Func<TroopTypeCount, bool> pred)
+		public static void Add(ref TroopTypeCounts me, in TroopTypeCounts a, Func<TroopTypeCount, bool> pred)
 		{
 			unsafe
 			{
@@ -1074,14 +1065,14 @@ namespace COTG.Game
 				}
 			}
 		}
-		internal static void Set(ref TroopTypeCountsX me, TroopTypeCount ttc)
+		internal static void Set(ref TroopTypeCounts me, TroopTypeCount ttc)
 		{
 			unsafe
 			{
 				me.counts[ttc.type] = ttc.count;
 			}
 		}
-		internal static void Clear(ref TroopTypeCountsX me)
+		internal static void Clear(ref TroopTypeCounts me)
 		{
 			for (int i = 0; i < ttCount; ++i)
 			{
@@ -1089,14 +1080,14 @@ namespace COTG.Game
 			}
 
 		}
-		internal static void Set(ref TroopTypeCountsX me, int type, int count)
+		internal static void Set(ref TroopTypeCounts me, int type, int count)
 		{
 			unsafe
 			{
 				me.counts[type] = count;
 			}
 		}
-		public static int Set(ref TroopTypeCountsX me, System.Text.Json.JsonElement tts)
+		public static int Set(ref TroopTypeCounts me, System.Text.Json.JsonElement tts)
 		{
 			int ts = 0;
 			me.Clear();
@@ -1131,7 +1122,7 @@ namespace COTG.Game
 			return ts;
 		}
 
-		public static void Set2(ref TroopTypeCountsX me, System.Text.Json.JsonElement tts)
+		public static void Set2(ref TroopTypeCounts me, System.Text.Json.JsonElement tts)
 		{
 			me.Clear();
 			if (tts.ValueKind == JsonValueKind.Array)

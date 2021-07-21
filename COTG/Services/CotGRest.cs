@@ -23,9 +23,9 @@ using Microsoft.UI.Xaml.Controls;
 using Windows.UI.Xaml;
 using ContentDialog = Windows.UI.Xaml.Controls.ContentDialog;
 using ContentDialogResult = Windows.UI.Xaml.Controls.ContentDialogResult;
-using TroopTypeCounts = COTG.Game.TroopTypeCountsX;
+using TroopTypeCounts = COTG.Game.TroopTypeCounts;
 //COTG.DArray<COTG.Game.TroopTypeCount>;
-using TroopTypeCountsRef = COTG.Game.TroopTypeCountsX;
+using TroopTypeCountsRef = COTG.Game.TroopTypeCounts;
 using static COTG.Game.TroopTypeCountHelper;
 //COTG.DArrayRef<COTG.Game.TroopTypeCount>;
 

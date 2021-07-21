@@ -5,9 +5,9 @@ using System.Linq;
 using System.Collections.Generic;
 using Windows.Web.Http;
 using System.Text;
-using TroopTypeCounts = COTG.Game.TroopTypeCountsX;
+using TroopTypeCounts = COTG.Game.TroopTypeCounts;
 //COTG.DArray<COTG.Game.TroopTypeCount>;
-using TroopTypeCountsRef = COTG.Game.TroopTypeCountsX;
+using TroopTypeCountsRef = COTG.Game.TroopTypeCounts;
 using static COTG.Game.TroopTypeCountHelper;
 //COTG.DArrayRef<COTG.Game.TroopTypeCount>;
 
