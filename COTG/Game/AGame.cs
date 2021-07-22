@@ -36,6 +36,7 @@ using Microsoft.Xna.Framework.Media;
 using Layer = COTG.Draw.Layer;
 using BitmapFont;
 using System.Threading.Tasks;
+using static COTG.Views.AttackTab;
 
 namespace COTG
 {
@@ -1591,37 +1592,36 @@ namespace COTG
 									}
 								}
 							}
+
 							if (AttackTab.IsVisible())
 							{
-								if (!AttackTab.attackClusters.IsNullOrEmpty() )
+								List<AttackCluster> hovered = new();
+								if (!AttackTab.attackClusters.IsNullOrEmpty())
 								{
-									var showAll = AttackTab.attackClusters.Length < 128;
 									foreach (var cluster in AttackTab.attackClusters)
 									{
-										var selected = false;
-										foreach (var i in cluster.attacks)
+										if( cluster.attacks.Any(a => Spot.IsSelectedOrHovered(a)) |
+														cluster.targets.Any(a => Spot.IsSelectedOrHovered(a)))
 										{
-											if (showAll || Spot.IsSelectedOrHovered(i, true))
-											{
-												selected = true;
-												break;
-											}
+											hovered.Add(cluster);
 										}
-										foreach (var i in cluster.targets)
-										{
-											if (showAll || Spot.IsSelectedOrHovered(i, true))
-											{
-												selected = true;
-												break;
-											}
-										}
+									}
+								}
+
+								if (!AttackTab.attackClusters.IsNullOrEmpty() )
+								{
+									var showAll = (AttackTab.attackClusters.Length < 128)&&(!hovered.Any());
+									foreach (var cluster in AttackTab.attackClusters)
+									{
+										var isHover = hovered.Contains(cluster);
+										if (!(showAll || isHover))
+											continue;
 										{
 											var c0 = cluster.topLeft.WToCamera();
 											var c1 = cluster.bottomRight.WToCamera();
-											DrawRect(Layer.effects, c0, c1, selected ? new Color(128, 0, 0, 128) : new Color(64, 0, 0, 128));
+											DrawRectOutlineShadow(Layer.effects, c0, c1, isHover ? new Color(128, 64, 64, 220) : new Color(64, 0, 0, 162));
 										}
 
-										if (selected)
 										{
 											var real = cluster.real;
 											var c0 = real.CidToCamera();
@@ -1635,18 +1635,20 @@ namespace COTG
 											}
 											foreach (var target in cluster.targets)
 											{
-												var c = target.CidToCamera();
-												var rnd = target.CidToRandom();
+										//		var c = target.CidToCamera();
+											//	var rnd = target.CidToRandom();
 
-												var t = (tick * rnd.Lerp(1.5f / 512.0f, 1.75f / 512f)) + 0.25f;
-												var r = t.Wave().Lerp(circleRadiusBase, circleRadiusBase * 1.325f);
-												DrawAccent(target, 0.2f, Color.White);
+											//	var t = (tick * rnd.Lerp(1.5f / 512.0f, 1.75f / 512f)) + 0.25f;
+												//var r = t.Wave().Lerp(circleRadiusBase, circleRadiusBase * 1.325f);
+
+												DrawAccent(target, 0.2f, Color.White );
 											}
+											DrawAccent(real, 1.0f, Color.Red,2.0f);
+
 
 										}
 									}
 								}
-								else
 								{
 									foreach (var t in AttackTab.readable.targets)
 									{
@@ -1658,13 +1660,13 @@ namespace COTG
 										var c1 = cc + halfSquareOffset;
 										var col = t.attackType switch
 										{
-											AttackType.senator => CColor(168, 64, 0, 128),
-											AttackType.senatorFake => CColor(128, 48, 0, 64),
-											AttackType.se => CColor(168, 64, 128, 128),
-											AttackType.seFake => CColor(128, 32, 128, 64),
-											_ => CColor(64, 64, 64, 48)
+											AttackType.senator => CColor(168, 64, 0, 222),
+											AttackType.senatorFake => CColor(128, 48, 0, 128),
+											AttackType.se => CColor(0, 0, 255, 255),
+											AttackType.seFake => CColor(98, 32, 168, 128),
+											_ => CColor(64, 64, 64, 64)
 										};
-										DrawRect(Layer.effects, c0, c1, col);
+										DrawRectOutlineShadow(Layer.effects, c0, c1, col);
 										if( t.attackCluster >= 0)
 										{
 											DrawTextBox(t.attackCluster.ToString(), cc, textformatLabel, new Color(col,255), textBackgroundOpacity, Layer.tileText);
@@ -1680,14 +1682,14 @@ namespace COTG
 										var c1 = cc + halfSquareOffset;
 										var col = t.attackType switch
 										{
-											AttackType.assault => CColor(55, 64, 190, 128),
-											AttackType.senator => CColor(168, 64, 0, 128),
-											AttackType.senatorFake => CColor(128, 48, 0, 64), // not really used as attack
-											AttackType.se => CColor(168, 64, 128, 128),
-											AttackType.seFake => CColor(128, 32, 128, 64), // not really used as attack
-											_ => CColor(64, 64, 64, 48)
+											AttackType.assault => CColor(55, 64, 190, 222),
+											AttackType.senator => CColor(168, 64, 0, 196),
+											AttackType.senatorFake => CColor(128, 48, 0, 128), // not really used as attack
+											AttackType.se => CColor(148, 0, 148, 222),
+											AttackType.seFake => CColor(128, 32, 128, 128), // not really used as attack
+											_ => CColor(64, 64, 64, 64)
 										};
-										DrawRect(Layer.effects, c0, c1, col);
+										DrawRectOutlineShadow(Layer.effects, c0, c1, col);
 										if (t.attackCluster >= 0)
 										{
 											DrawTextBox(t.attackCluster.ToString(), cc, textformatLabel, new Color(col, 255), textBackgroundOpacity, Layer.tileText);
@@ -1731,7 +1733,7 @@ namespace COTG
 									}
 									var list = defenders ? Spot.defendersI : Spot.defendersO;
 									bool noneIsAll = list.Length <= SettingsPage.showAttacksLimit;
-									bool showAll = list.Length <= SettingsPage.showAttacksLimit0 || SettingsPage.incomingAlwaysVisible;
+									bool showAll = list.Length <= SettingsPage.showAttacksLimit0 ||(defenders? SettingsPage.incomingAlwaysVisible: SettingsPage.attacksAlwaysVisible);
 									foreach (var city in list)
 									{
 										if (!city.testContinentFilter)
@@ -2446,6 +2448,41 @@ namespace COTG
 		{
 			draw.AddQuad(layer, quadTexture, c0, c1, new Vector2(), new Vector2(1, 1), color, PlanetDepth, zLabels);
 		}
+		private static void DrawRectOutline(int layer, Vector2 c0, Vector2 c1, Color color)
+		{
+			const float d = 6;
+
+
+			draw.AddQuad(layer, quadTexture, new(c0.X,c0.Y), new(c1.X,c0.Y+d), new Vector2(), new Vector2(1, 1), color, PlanetDepth, zLabels);
+			draw.AddQuad(layer, quadTexture, new(c0.X, c0.Y), new(c0.X + d, c1.Y), new Vector2(), new Vector2(1, 1), color, PlanetDepth, zLabels);
+
+			draw.AddQuad(layer, quadTexture, new(c0.X, c1.Y-d), new(c1.X, c1.Y), new Vector2(), new Vector2(1, 1), color, PlanetDepth, zLabels);
+			draw.AddQuad(layer, quadTexture, new(c1.X-d, c0.Y), new(c1.X, c1.Y), new Vector2(), new Vector2(1, 1), color, PlanetDepth, zLabels);
+		}
+		private static void DrawDiamond(int layer, Vector2 c0, Vector2 c1, Color color)
+		{
+			const float d = 2;
+			var cm = (c0 + c1) * 0.5f;
+			var ct = new Vector2(cm.X, c0.Y);
+			var cb = new Vector2(cm.X, c1.Y);
+			var cl = new Vector2(c0.X,cm.Y);
+			var cr = new Vector2(c1.X, cm.Y);
+			draw.AddLine(layer, lineDraw, cl, ct, d, 0.0f,0.0f, color, (cl.CToDepth(), ct.CToDepth()));
+			draw.AddLine(layer, lineDraw, ct, cr, d, 0.0f, 0.0f, color, (ct.CToDepth(), cr.CToDepth()));
+			draw.AddLine(layer, lineDraw, cr, cb, d, 0.0f, 0.0f, color, (cr.CToDepth(), cb.CToDepth()));
+			draw.AddLine(layer, lineDraw, cb, cl, d, 0.0f, 0.0f, color, (cb.CToDepth(), cl.CToDepth())); ;
+		}
+
+		private static void DrawRectOutlineShadow(int layer, Vector2 c0, Vector2 c1, Color color)
+		{
+			DrawRectOutline(layer, c0, c1, color);
+			DrawRectOutline(Layer.effectShadow, c0+shadowOffset, c1+shadowOffset, color.GetShadowColorDark() );
+		}
+		private static void DrawDiamondShadow(int layer, Vector2 c0, Vector2 c1, Color color)
+		{
+			DrawDiamond(layer, c0, c1, color);
+			DrawDiamond(Layer.effectShadow, c0 + shadowOffset, c1 + shadowOffset, color.GetShadowColorDark());
+		}
 
 		(float u, float v) GetLineUs(Vector2 c0, Vector2 c1)
 		{
@@ -2485,7 +2522,7 @@ namespace COTG
 			DrawAccentBase(c.X + shadowOffset.X, c.Y + shadowOffset.Y, radius, angle, brush.GetShadowColorDark(), Layer.effectShadow, zEffectShadow);
 			DrawAccentBase(c.X, c.Y, radius, angle, brush, Layer.overlay, zLabels);
 		}
-		public static void DrawAccent(int cid, float angularSpeedBase, Color brush)
+		public static void DrawAccent(int cid, float angularSpeedBase, Color brush, float radiusScale = 1.0f)
 		{
 
 			var wc = cid.CidToWorld();
@@ -2498,7 +2535,7 @@ namespace COTG
 
 			var angularSpeed = angularSpeedBase + rnd * 0.5f;
 			var t = (AGame.animationT * rnd.Lerp(1.25f / 256.0f, 1.75f / 256f));
-			var r = t.Wave().Lerp(AGame.circleRadiusBase, AGame.circleRadiusBase * 1.375f);
+			var r = t.Wave().Lerp(AGame.circleRadiusBase, AGame.circleRadiusBase * 1.375f)* radiusScale;
 			DrawAccent(c, r, angularSpeed, brush);
 		}
 		public static float PlanetDepth(float x, float y, float zBase)
@@ -2688,11 +2725,11 @@ namespace COTG
 		//	var paralaxGain = ParalaxScaleShadow(dz);
 		//	return (c - AGame.worldLightC) * paralaxGain * AGame.pixelScale + AGame.cameraLightC;
 		//}
-		public static Vector2 CToCShadow(this Vector2 c, float dz)
-		{
-			//var paralaxGain = ParalaxScaleShadow(dz);
-			return c;//(c - AGame.cameraLightC) * paralaxGain + AGame.cameraLightC;
-		}
+		//public static Vector2 CToCShadow(this Vector2 c, float dz)
+		//{
+		//	//var paralaxGain = ParalaxScaleShadow(dz);
+		//	return c;//(c - AGame.cameraLightC) * paralaxGain + AGame.cameraLightC;
+		//}
 		// camera space to camera space with parallax
 		//public static Vector2 CToCp(this Vector2 c, float dz)
 		//{

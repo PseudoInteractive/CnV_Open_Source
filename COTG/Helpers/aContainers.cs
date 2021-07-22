@@ -97,18 +97,21 @@ namespace COTG.Helpers
         {
             int id = Count;
             base.Add(item);
-            CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, item, id));
+			if(CollectionChanged!=null)
+	            App.DispatchOnUIThreadSneaky( ()=> CollectionChanged.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, item, id)));
         }
         public new void Insert(int id, T item)
         {
             base.Insert(id, item);
-            CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, item, id));
+			if (CollectionChanged != null)
+				App.DispatchOnUIThreadSneaky(() => CollectionChanged.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, item, id)));
         }
         public new void RemoveAt(int id)
         {
             var item = base[id];
             base.RemoveAt(id);
-            CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, item, id));
+			if(CollectionChanged!=null)
+				App.DispatchOnUIThreadSneaky(() => CollectionChanged.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, item, id)));
         }
         public new void Remove(T i)
         {

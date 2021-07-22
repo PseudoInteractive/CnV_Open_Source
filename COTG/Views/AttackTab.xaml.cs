@@ -32,6 +32,8 @@ using COTG;
 using Microsoft.Toolkit.Uwp.UI.Controls;
 // The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234236
 using Nito.AsyncEx;
+using Telerik.UI.Xaml.Controls.Input.Calendar;
+using static COTG.Game.Spot;
 
 namespace COTG.Views
 {
@@ -44,8 +46,8 @@ namespace COTG.Views
         public static AttackTab instance;
         public static bool IsVisible() => instance.isVisible;
 
-        public static DumbCollection<Spot> attacks = new DumbCollection<Spot>();
-        public static DumbCollection<Spot> targets = new DumbCollection<Spot>();
+        public static DumbCollection<City> attacks = new ();
+        public static DumbCollection<City> targets = new ();
         public AttackTab()
         {
             Assert(instance == null);
@@ -54,12 +56,14 @@ namespace COTG.Views
         }
 		static void UpdateArrivalUI()
 		{
-			if(AUtil.dateTimeZero != SettingsPage.attackPlannerTime)
-				instance.arrival.Content = SettingsPage.attackPlannerTime.FormatDefault();
+			if(0 != readable.senTime )
+				instance.arrivalSen.Content = senTime.FormatDefault();
+			if (0 != readable.seTime)
+				instance.arrivalSE.Content = seTime.FormatDefault();
 		}
 
 
-        public event PropertyChangedEventHandler PropertyChanged;
+		public event PropertyChangedEventHandler PropertyChanged;
         public void OnPropertyChanged(string propertyName) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 		
 		Dictionary<int, string> attackStrings = new();
@@ -74,27 +78,27 @@ namespace COTG.Views
      //       var clusterCount = attackClusters.Length;
 //            var used = new HashSet<int>(readable.attacks.Length);
 
-            var scripts = new string[attackClusters.Max(a=>a.id) + 1];
-            //int clusterId = 0;
-            foreach (var cluster in attackClusters)
-            {
-                var atk = new AttackSenderScript() { type = new List<int>(), x = new List<int>(), y = new List<int>() };
-                // group all attacks for this player
-                foreach (var a1 in cluster.targets.OrderBy((a) => Spot.GetOrAdd(a).isAttackTypeFake))
-                {
-                    var t = Spot.GetOrAdd(a1);
+    //        var scripts = new string[attackClusters.Max(a=>a.id) + 1];
+    //        //int clusterId = 0;
+    //        foreach (var cluster in attackClusters)
+    //        {
+    //            var atk = new AttackSenderScript() { type = new List<int>(), x = new List<int>(), y = new List<int>() };
+    //            // group all attacks for this player
+    //            foreach (var a1 in cluster.targets.OrderBy((a) => Spot.GetOrAdd(a).isAttackTypeFake))
+    //            {
+    //                var t = Spot.GetOrAdd(a1);
 
-                    atk.type.Add(t.isAttackTypeFake ? 0 : 1);
+    //                atk.type.Add(t.isAttackTypeFake ? 0 : 1);
 
-                    var xy = a1.CidToWorld();
-                    atk.x.Add(xy.x);
-                    atk.y.Add(xy.y);
-                }
-				var time = SettingsPage.attackPlannerTime;
+    //                var xy = a1.CidToWorld();
+    //                atk.x.Add(xy.x);
+    //                atk.y.Add(xy.y);
+    //            }
+				//var time = SettingsPage.attackPlannerTime;
 
-				atk.time = new string[] { time.Hour.ToString("00"), time.Minute.ToString("00"), time.Second.ToString("00"), time.ToString("MM/dd/yyyy") };
-                scripts[cluster.id]= System.Text.Json.JsonSerializer.Serialize(atk, Json.jsonSerializerOptions);
-            }
+				//atk.time = new string[] { time.Hour.ToString("00"), time.Minute.ToString("00"), time.Second.ToString("00"), time.ToString("MM/dd/yyyy") };
+    //            scripts[cluster.id]= System.Text.Json.JsonSerializer.Serialize(atk, Json.jsonSerializerOptions);
+    //        }
 			attackStrings.Clear();
 			StringBuilder sb = new StringBuilder();
             var players = new List<int>();
@@ -131,13 +135,13 @@ namespace COTG.Views
 							atk.y.Add(xy.y);
 						}
 
-						var time = SettingsPage.attackPlannerTime;
+						bool isSE = c.real.AsCity().attackType == AttackType.se;
+						var time = isSE ? seTime: senTime;
 						atk.command =a.isAttackTypeAssault ? "Assault" : "Siege";
-						if( a.isAttackTypeAssault && c.real.AsCity().attackType == AttackType.senator )
+						if ( a.isAttackTypeAssault && !isSE )
 						{
-					//		time += TimeSpan.FromHours( (assaultOffset) % 6 );
-				//			++assaultOffset;
-							
+							time += TimeSpan.FromHours( (assaultOffset) % readable.tickToCapture );
+				 			++assaultOffset;
 						}
 						atk.time = new string[] { time.Hour.ToString("00"), time.Minute.ToString("00"), time.Second.ToString("00"), time.ToString("MM/dd/yyyy") };
 						var scrpipt = System.Text.Json.JsonSerializer.Serialize(atk, Json.jsonSerializerOptions);
@@ -261,15 +265,21 @@ namespace COTG.Views
 
         public class ReadableAttacks
         {
-            public AttackDataPersist[] attacks { get; set; }
+			public int tickToCapture { get; set; } = 4;
+			public int senTime { get; set; }
+			public int seTime { get; set; }
+
+			public AttackDataPersist[] attacks { get; set; }
             public AttackDataPersist[] targets { get; set; }
-			public int smallTime { get; set; }
 
         }
-        // read only cache to enable threads to read the attacks white another thread is writing
-        public static ReadableAttacks readable = new ReadableAttacks() { attacks= Array.Empty<AttackDataPersist>(), targets  = Array.Empty<AttackDataPersist>() };
+		// read only cache to enable threads to read the attacks white another thread is writing
+		public static ReadableAttacks readable = new ReadableAttacks() { attacks= Array.Empty<AttackDataPersist>(), targets  = Array.Empty<AttackDataPersist>() };
 
-        internal static void WritebackAttacks()
+		public static DateTimeOffset senTime { get => new SmallTime(readable.senTime).dateTime; set => readable.senTime = new SmallTime(value); }
+		public static DateTimeOffset seTime { get => new SmallTime(readable.seTime).dateTime; set => readable.seTime = new SmallTime(value); }
+
+		internal static void WritebackAttacks()
         {
 		
 
@@ -304,7 +314,7 @@ namespace COTG.Views
             public int[] targets;// first is real
             public Vector2 topLeft;
             public Vector2 bottomRight;
-			internal int real => targets.Length > 0 ? targets[0] : 0;
+			internal int real => targets.FirstOrDefault(a => City.Get(a).isAttackTypeReal);
 			//Select(a=>City.Get(a)).Where( a => a.isAttackTypeReal ).DefaultIfEmpty(City.invalid).OrderBy(a=>a.spatialIndex).First().cid;
 			///            public int real => (targets.FirstOrDefault((a) => !Spot.GetOrAdd(a).isSiege));
 
@@ -349,8 +359,9 @@ namespace COTG.Views
                 instance.horses.Text=$"Horse: {attacks.Count((a) => a.spot.primaryTroopType==ttHorseman)}";
                 var fakes = targets.Count(a => a.spot.isAttackTypeFake );
                 var reals =  targets.Count(a=> a.spot.isAttackTypeReal );
-				instance.fakeCount.Text=$"Fake Ratio: {fakes/(float)reals.Max(1):0.00}";
-                instance.realCount.Text = $"Reals: {reals }";
+				instance.fakeCount.Text=$"Fake Count: {fakes}";
+				instance.fakeRatio.Text = $"Fake Ratio: {fakes / (float)reals.Max(1):0.00}";
+				instance.realCount.Text = $"Reals: {reals }";
                 instance.sePerTarget.Text = $"SE/Target: {seCount/(float)reals.Max(1):0.00}";
                 instance.attacksPerTarget.Text = $"Attacks/Target: {attacks.Length/(float)reals.Max(1):0.00}";
 
@@ -374,6 +385,14 @@ namespace COTG.Views
 				await SaveAttacks();
 			}
 		}
+		public static async void SaveAttacksBlock()
+		{
+			if (loaded)
+			{
+				using var _ = await asyncLock.LockAsync();
+				await SaveAttacks();
+			}
+		}
 		public async Task<IDisposable> TouchLists()
         {
 			// First init
@@ -388,21 +407,21 @@ namespace COTG.Views
                 readable = await folder.ReadAsync<ReadableAttacks>(attacksFile, readable);
 				// App.DispatchOnUIThreadSneaky(() =>
 				//  {
-				var attacks = new List<Spot>();
+				var attacks = new List<City>();
 				foreach (var att in readable.attacks)
                 {
-                    var spot = Spot.GetOrAdd(att.cid);
+                    var spot = City.GetOrAdd(att.cid);
                     spot.attackCluster=att.attackCluster;
 					spot.attackType = att.attackType;
                     spot.QueueClassify(true);
 					attacks.Add(spot);
                 }
-                var spots = new List<Spot>();
+                var spots = new List<City>();
                 if (readable.targets != null)
                 {
                     foreach (var target in readable.targets)
                     {
-                        var t = Spot.GetOrAdd(target.cid);
+                        var t = City.GetOrAdd(target.cid);
                         t.attackCluster = target.attackCluster;
                         t.QueueClassify(false);
                         t.attackType = target.attackType;
@@ -499,14 +518,14 @@ namespace COTG.Views
             {
                 if (removeAttacks.IsChecked.GetValueOrDefault())
                 {
-                    var temp = new List<Spot>();
+                    var temp = new List<City>();
                     foreach (var sel in attackGrid.SelectedItems)
                     {
-                        temp.Add(sel as Spot);
+                        temp.Add(sel as City);
                     }
                     foreach (var sel in temp)
                     {
-                        var id = attacks.IndexOf(sel as Spot);
+                        var id = attacks.IndexOf(sel);
                         if (id >= 0)
                         {
                             attacks.RemoveAt(id);
@@ -516,10 +535,10 @@ namespace COTG.Views
                 }
                 if (removeTargets.IsChecked.GetValueOrDefault())
                 {
-                    var temp = new List<Spot>();
+                    var temp = new List<City>();
                     foreach (var sel in targetGrid.SelectedItems)
                     {
-                        temp.Add(sel as Spot);
+                        temp.Add(sel as City);
                     }
                     foreach (var sel in temp)
                     {
@@ -535,44 +554,63 @@ namespace COTG.Views
                 CleanTargets();
             }
         }
+		static Regex regexSen = new Regex("\b(?:s|sen|senator|academy)\b", RegexOptions.IgnoreCase);
+		static Regex regexSE = new Regex("\b(?:se|catapult|Scorp|Scorpion|catapults)\b", RegexOptions.IgnoreCase);
 
-        public async void AddAttacksFromSheets(object sender, RoutedEventArgs e)
+		public async void AddAttacksFromSheets(object sender, RoutedEventArgs e)
         {
-            try
-            {
+			try
+			{
 
 				using var _ = await TouchLists();
-                int duplicates = 0;
-                int prior = attacks.Count;
-                var text = await App.GetClipboardText();
-                var strs = text.Split('\t', StringSplitOptions.RemoveEmptyEntries);
-                Assert((strs.Length %3)==0);
-                int count = strs.Length;
-                for (int i = 0; i<count; i+=3)
-                {
-                    var cid = strs[i+2].FromCoordinate();
-                    var atk = attacks.Find((a) => a.cid == cid);
-                    var isNew = (atk == null);
-                    if (isNew)
-                    {
-						atk = Spot.GetOrAdd(cid);
-                    }
-                    else
-                    {
-                        ++duplicates;
-                    }
+				int duplicates = 0;
+				int prior = attacks.Count;
+				var text = await App.GetClipboardText();
+				var strs = text.Split(new char[] { '\n', ',', ';' }, StringSplitOptions.RemoveEmptyEntries);
 
-                    //atk.troopType =  strs[i].ToLower() switch
-                    //{
-                    //    "vanq" => ttVanquisher,
-                    //    "sorc" => ttSorcerer,
-                    //    "horses" => ttHorseman,
-                    //    "siege engines" => ttScorpion,
-                    //    "druids" => ttDruid,
-                    //    _ => throw new ArgumentException()
-                    //};
+				int count = strs.Length;
+				foreach (var str in strs)
+				{
 
-                    atk.attackType = atk.primaryTroopType == ttScorpion ? AttackType.se : strs[i+1]=="Yes" ? AttackType.senator : AttackType.assault;
+					var match = AUtil.coordsRegex.Matches(str);
+					if (match.Count == 0)
+						continue;
+					if (match.Count > 1)
+					{
+						Note.Show($"Invalid format:  No separator between two coordinates {str}");
+						continue;
+					}
+
+					var cid = match[0].Groups[0].Captures[0].Value.FromCoordinate();
+					var atk = attacks.Find((a) => a.cid == cid);
+					var isNew = (atk == null);
+					
+					if (isNew)
+					{
+						atk = City.GetOrAdd(cid);
+						var cl = await atk.ClassifyEx(true);
+
+						atk.attackType = cl == Classification.se ? AttackType.se : (atk.hasAcademy.GetValueOrDefault() ? AttackType.senator : AttackType.assault);
+					}
+					else
+					{
+						++duplicates;
+					}
+
+					if (!atk.IsAllyOrNap())
+					{
+						Note.Show("Warning - bad person added");
+					}
+
+					if(regexSen.IsMatch(text))
+					{
+						atk.attackType = AttackType.senator;
+
+					}
+					else if (regexSE.IsMatch(text))
+					{
+						atk.attackType = AttackType.se;
+					}
 
 
 					atk.attackCluster = Spot.attackClusterNone;
@@ -689,18 +727,18 @@ namespace COTG.Views
                 var reals = 0;
                 //     text = text.Replace("\r", "");
                 var text = await Clipboard.GetContent().GetTextAsync();
-
+			    
+				
 
                 //    var lines = text.Split('\n', StringSplitOptions.RemoveEmptyEntries);
-                foreach (Match m in AUtil.coordsRegex.Matches(text))
+                foreach (Match m in AUtil.coordsRegex2.Matches(text))
                 {
 
                     try
                     {
-                        if (m.Value.EndsWith(':')||m.Value.StartsWith(':'))
-                            continue;
+                       
                         //  var parts = line.Split(' ', StringSplitOptions.RemoveEmptyEntries);
-                        var cid = m.Value.FromCoordinate();
+                        var cid = m.Groups[0].Value.FromCoordinate();
 
                         var spot = Spot.GetOrAdd(cid);
 					if(Alliance.GetDiplomacy( spot.allianceId) == Diplomacy.allied)
@@ -1203,6 +1241,7 @@ namespace COTG.Views
 
 			for (int ignoreIterator = 0; ; ++ignoreIterator)
 			{
+				Note.Show($"Pass {ignoreIterator}");
 				var attacks = AttackTab.attacks.OrderBy(a => ((long)a.player.points << 32) + a.spatialIndex).ToArray();
 
 				// first create clusters
@@ -1228,58 +1267,58 @@ namespace COTG.Views
 				var minAssaults = SettingsPage.attackSEMinAssaults;
 				var clusterCount = reals.Length;
 				var fakes = targets.Where( (a)=>a.isAttackTypeFake ).OrderBy( (a)=>a.spatialIndex ).ToArray();
+
 				var clusters = new Cluster[clusterCount];
+				foreach (var fake in fakes)
 				{
-					for (var c0 = 0; c0 < clusterCount; ++c0)
-					{
+					fake.attackCluster = -1;
+				}
+				
+				for (var c0 = 0; c0 < clusterCount; ++c0)
+				{
 						var real = reals[c0];
 						clusters[c0]= new Cluster() { id = c0, category = real.attackType.GetCategory(), fakes = new List<Spot>(), real = real, span = new Span2(real.cid.ToWorldC()) };
 						real.attackCluster = c0;
-					}
+					// choose fakes
+						
 				}
-				//	var fakeCountPerCluster = new int[AttackCategory.count.Value()];
-				//	for (int j = 0; j < (int)AttackCategory.count; ++j)
-				//		fakeCountPerCluster[j] = (fakes[j].Length / initialClusterCount[j]).Min(maxFakes); // rounds down
-
-				// Group together fakes
-					foreach (var fake in fakes)
+				for (int fakeId = 0; fakeId < maxFakes; ++fakeId)
+				{
+					for (int cluster = 0; cluster < clusterCount; ++cluster)
 					{
-						//   var a = Spot.GetOrAdd(attack.cid);
-				//		var fake = _fake[(int)t];
-						var attackType = fake.attackType;
-					var category = attackType.GetCategory();
-						Cluster best = null;
+						var c = clusters[cluster];
+						var real = c.real;
+						var category = c.category;
+
+						City best = null;
 						float bestDist = float.MaxValue;
 
-						foreach (var c in clusters )
+						foreach (var fake in fakes)
 						{
-							if (c.category != category || !c.isValid)
-								continue;
-							var real = c.real;
-						
-
-							// Cannot offset even distribution
-
-							if (c.fakes.Count >= maxFakes.Min(clusters.Where(c => c.category == category).Min(a => a.fakes.Count) + 1))
+							if (fake.attackCluster != -1)
 								continue;
 
+							if (fake.attackType.GetCategory() != category)
+								continue;
 							var d = c.span.Distance2(fake.cid.ToWorldC());
 							if (d < bestDist)
 							{
 								bestDist = d;
-								best = c;
+								best = fake;
 							}
-						}
 
+
+						}
 						if (best != null)
 						{
-							
-							best.fakes.Add(fake);
-							Assert(best.FakesValid());
-							fake.attackCluster = best.id;
-							best.span += fake.cid.ToWorldC();
+							c.fakes.Add(best);
+							best.attackCluster = c.id;
+							c.span += best.cid.ToWorldC();
 						}
+
+
 					}
+				}
 				
 
 				// optimize
@@ -1470,7 +1509,8 @@ namespace COTG.Views
 						// useAssaultsForSenators will be 1 here and isAssault will be 1
 						// try a second search for assaults vs senators...
 					}
-
+					if (best == -1)
+						Note.Show($"{attack.nameMarkdown} Has no {attack.attackType.GetCategory()} targets in range");
 				}
 
 
@@ -1574,9 +1614,15 @@ namespace COTG.Views
 				{
 						if (!cluster.isValid)
 							continue;
-						if (cluster.attackCounts[0] == 0 || (cluster.attackCounts[1] < minAssaults && cluster.category == AttackCategory.se))
+					var culledSE = (cluster.attackCounts[1] < minAssaults && cluster.category == AttackCategory.se);
+						if (cluster.attackCounts[0] == 0 || culledSE)
 						{
-							var a = ignoredTargets.Add(cluster.real.cid);
+							if (cluster.attackCounts[0] == 0)
+								Note.Show($"{cluster.real.nameMarkdown} {cluster.category}  culled, no reals or not in range");
+							if (culledSE)
+								Note.Show($"{City.Get(cluster.real.cid).nameMarkdown} culled, not enough fakes in range");
+
+						var a = ignoredTargets.Add(cluster.real.cid);
 							Assert(a == true);
 
 							foreach (var f0 in attacks)
@@ -1601,8 +1647,9 @@ namespace COTG.Views
 					return;
 				}
 				if (ignoredTargets.Count > initialCulledClusters && ignoreIterator < 16)
+				{
 					continue;
-
+				}
 
 				WritebackAttacks();
 				
@@ -1634,7 +1681,7 @@ namespace COTG.Views
 						var d = clusters[a.attackCluster].GetTravelTime(a);
 						if (d >= (j == 0 ? maxDistanceToSenator : maxDistanceToSE) - 3.0f)
 						{
-							Note.Show($"{a.nameMarkdown} leaves at around {(SettingsPage.attackPlannerTime - TimeSpan.FromHours(d)).FormatDefault()}");
+							Note.Show($"{a.nameMarkdown} leaves at around {( (j == 0 ? senTime: seTime) - TimeSpan.FromHours(d)).FormatDefault()}");
 						}
 					}
 				}
@@ -1853,7 +1900,7 @@ namespace COTG.Views
 			using  var _ = await TouchLists();
 			var i = sender as FrameworkElement;
 
-            var spot = i.DataContext as Spot;
+            var spot = i.DataContext as City;
             targets.Remove(spot);
             CleanTargets();
             WritebackAttacks();
@@ -1866,23 +1913,32 @@ namespace COTG.Views
 
 			var i = sender as FrameworkElement;
 
-            var spot = i.DataContext as Spot;
+            var spot = i.DataContext as City;
             attacks.Remove(spot);
             WritebackAttacks();
             await SaveAttacks();
         }
 
-        private async void ArrivalTapped(object sender, RoutedEventArgs e)
+        private async void ArrivalSETapped(object sender, RoutedEventArgs e)
         {
-            (var dateTime, var okay) = await DateTimePicker.ShowAsync("Send At", SettingsPage.attackPlannerTime);
+            (var dateTime, var okay) = await DateTimePicker.ShowAsync("Send SE At", seTime);
             if (okay)
             {
-				SettingsPage.attackPlannerTime = dateTime;
+				seTime = dateTime;
 				UpdateArrivalUI();
 			}
         }
+		private async void ArrivalSenTapped(object sender, RoutedEventArgs e)
+		{
+			(var dateTime, var okay) = await DateTimePicker.ShowAsync("Send Sen At", seTime);
+			if (okay)
+			{
+				senTime = dateTime;
+				UpdateArrivalUI();
+			}
+		}
 
-        private void ClearTargets_Click(object sender, RoutedEventArgs e)
+		private void ClearTargets_Click(object sender, RoutedEventArgs e)
         {
             CleanTargets();
             attacks.NotifyReset();

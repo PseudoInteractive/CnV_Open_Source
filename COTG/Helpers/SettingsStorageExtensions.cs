@@ -31,8 +31,7 @@ namespace COTG.Helpers
 
 			// don't block on this save
 			if (backup)
-				SaveAsync<T>(folder, $"{name}___{JSClient.ServerTime().FormatFileTime()}___",content,false);
-		
+				await SaveAsync<T>(folder, $"{name}___{JSClient.ServerTime().FormatFileTime()}___", content, false);
 			await FileIO.WriteTextAsync(file, fileContent);
         }
 

@@ -39,7 +39,7 @@
 							ValidationMode="InvalidInputOverwritten"
                           ValueChanged="NumberBox_ValueChanged" AcceptsExpression="True"
                           Header="Wood"  Margin="6,0,6,0" LargeChange="1000000" SmallChange="100000"  />
-						<my:NumberBox Value="{x:Bind des.stone,Mode=TwoWay}" 
+						<my:NumberBox Value="{x:Bind des.stone,Mode=TwoWay}" Style="{StaticResource RightAlignNumberBox}"
                           ValidationMode="InvalidInputOverwritten"
 						  ValueChanged="NumberBox_ValueChanged"
                           Header="Stone"  Margin="6,0,6,0" LargeChange="1000000" AcceptsExpression="True" SmallChange="100000"  />

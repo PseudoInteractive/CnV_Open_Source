@@ -60,7 +60,7 @@ namespace COTG.Views
 
 		public static TextBlock gridTip;
 
-		public static ScrollViewer webScale;
+		public static ScrollViewer webView;
 
 		private static DateTime workStarted;
 		private static readonly List<string> workQueue = new List<string>();
@@ -239,15 +239,9 @@ namespace COTG.Views
 			// foreach (var i in webView.KeyboardAccelerators) i.IsEnabled = false;
 			// webView.AllowFocusOnInteraction = false; c.hitTest.Margin= webView.Margin = new
 			// Thickness(0, 0, 11, 0);
-			webScale = new ScrollViewer();
-			webScale.ZoomMode = ZoomMode.Enabled;
-		//	webScale.AllowFocusOnInteraction = false;
-			webScale.VerticalScrollMode = ScrollMode.Disabled;
-			webScale.HorizontalScrollMode = ScrollMode.Disabled;
-			webScale.ChangeView(null,null,SettingsPage.htmlZoom.Squared() * 2.0f + 0.5f);
-			webScale.Content = webView;
+			grid.Children.Add(webView);
 
-			grid.Children.Add(webScale);
+
 			
 			//c.hitTest.Fill = JSClient.webViewBrush;
 			//				var visual = ElementCompositionPreview.GetElementVisual(c.canvas);
@@ -261,11 +255,11 @@ namespace COTG.Views
 			// 0); Grid.SetRowSpan(shellFrame, 6); shellFrame.Margin = new Thickness(13, 0, 0, 0);
 			// Canvas.SetZIndex(shellFrame, 3);
 
-			Grid.SetColumn(webScale, 0);
-			Grid.SetRow(webScale, 1);
-			Grid.SetRowSpan(webScale, 5);
-			Grid.SetColumnSpan(webScale, 2);
-			Canvas.SetZIndex(webScale, 10);
+			Grid.SetColumn(webView, 0);
+			Grid.SetRow(webView, 1);
+			Grid.SetRowSpan(webView, 5);
+			Grid.SetColumnSpan(webView, 2);
+			Canvas.SetZIndex(webView, 10);
 			
 	//		webView.Scale = new Vector3(SettingsPage.htmlZoom.Squared() * 2.0f + 0.5f);
 
@@ -320,7 +314,7 @@ namespace COTG.Views
 				}
 				ChatTab.tabPage.AddChatTabs();
 				SpotTab.instance.ShowOrAdd( true);
-				UserTab.UpdateZoom();
+
 
 			};
 
@@ -339,8 +333,8 @@ namespace COTG.Views
 			var displayInformation = DisplayInformation.GetForCurrentView();
 			var screenSize = new Size(displayInformation.ScreenWidthInRawPixels,
 									  displayInformation.ScreenHeightInRawPixels);
-			ShellPage.webclientSpan.x = (screenSize.Width * .715625f * SettingsPage.htmlZoom).RoundToInt();
-			ShellPage.webclientSpan.y = (screenSize.Height * 0.89236111111111116f * SettingsPage.htmlZoom).RoundToInt();
+			ShellPage.webclientSpan.x = (screenSize.Width * .715625f* SettingsPage.htmlZoom * 2).RoundToInt();
+			ShellPage.webclientSpan.y = (screenSize.Height * 0.89236111111111116f * SettingsPage.htmlZoom*2).RoundToInt();
 
 			AGame.Create(canvas);
 			Task.Delay(500).ContinueWith((_) => App.DispatchOnUIThreadLow(() =>

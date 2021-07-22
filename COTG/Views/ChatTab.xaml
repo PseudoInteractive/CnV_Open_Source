@@ -38,11 +38,11 @@ sent or received, and those values are bound in the DataTemplate.-->
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
-                    <TextBlock Text="{x:Bind arrivedString,Mode=OneTime}" VerticalAlignment="Center" Foreground="Gray" FontSize="12" Margin="0,0,2,0" Padding="0,0,2,0" Tag="{Binding ElementName=message}"   />
-					<HyperlinkButton x:Name="sender" Grid.Column="2" Foreground="{Binding Converter={StaticResource hyperlinkColorConverter}, Mode=OneTime}" VerticalAlignment="Center" HorizontalAlignment="Center" Content="{x:Bind player, Mode=OneTime}"  Tapped ="HyperlinkButton_Tapped" RightTapped="HyperlinkButton_RightTapped" FontSize="12" Margin="2,0,4,0" Padding="2,0,4,0"  />
-					<Image Grid.Column="1" Stretch="Fill" MaxHeight="32"  Source="{x:Bind avatar}" Margin="2,0,2,0" VerticalAlignment="Center"/>
-					<tk:MarkdownTextBlock Grid.Column="3" x:Name="message" Text="{x:Bind text,Mode=OneTime}"  FontSize="12" Margin="0,0,0,0"  Padding="0,0,0,0"    Height="Auto" 
-                                               InlineCodeBackground="Black" VerticalAlignment="Center" VerticalContentAlignment="Center"
+					<TextBlock Text="{x:Bind arrivedString,Mode=OneTime}" VerticalAlignment="Center" Foreground="Gray" FontSize="{StaticResource ChatFontSize}" Margin="0,0,2,0" Padding="0,0,2,0" Tag="{Binding ElementName=message}"   />
+					<HyperlinkButton x:Name="sender" Grid.Column="2" Foreground="{Binding Converter={StaticResource hyperlinkColorConverter}, Mode=OneTime}" VerticalAlignment="Center" HorizontalAlignment="Center" Content="{x:Bind player, Mode=OneTime}"  Tapped ="HyperlinkButton_Tapped" RightTapped="HyperlinkButton_RightTapped" FontSize="{ThemeResource ChatFontSize}"  Margin="2,0,4,0" Padding="2,0,4,0"  />
+					<Image Grid.Column="1" Stretch="Fill" MaxHeight="{StaticResource ChatImageHeight}"  Source="{x:Bind avatar}" Margin="2,0,2,0" VerticalAlignment="Center"/>
+					<tk:MarkdownTextBlock Grid.Column="3" x:Name="message" Text="{x:Bind text,Mode=OneTime}"  FontSize="{StaticResource ChatFontSize}" Margin="0,0,0,0"  Padding="0,0,0,0"    
+                                               InlineCodeBackground="Black" VerticalAlignment="Center" 
                                               TextWrapping="Wrap" LinkClicked="MarkdownTextBlock_LinkClicked"  />
                     </Grid>
                 
@@ -57,9 +57,9 @@ sent or received, and those values are bound in the DataTemplate.-->
            <Button Grid.Column="1" Click="Copy_Click" Style="{ThemeResource ButtonRevealStyle}" ToolTipService.ToolTip="This will copy selected messages to the clipboard, tip - select a message above and press control-A to select all" >
 				<SymbolIcon Symbol="Copy"/>
 			</Button>
-			<TextBox x:Name="input" x:FieldModifier="public" Grid.Column="2" HorizontalAlignment="Stretch"  Canvas.ZIndex="99" VerticalAlignment="Center" KeyDown="input_KeyDown" PlaceholderText="Please enter message" IsTabStop="True" TabFocusNavigation="Cycle" Margin="4"  GotFocus="input_GotFocus" PointerEntered="inputPointerOver"  IsSpellCheckEnabled="True" IsTextPredictionEnabled="True" AllowFocusOnInteraction="True" TextWrapping="Wrap"  />
+			<TextBox x:Name="input" x:FieldModifier="public" Grid.Column="2" HorizontalAlignment="Stretch"  Canvas.ZIndex="99" VerticalAlignment="Center" KeyDown="input_KeyDown" PlaceholderText="Please enter message" IsTabStop="True" TabFocusNavigation="Cycle" Margin="4"  GotFocus="input_GotFocus" PointerEntered="inputPointerOver"  IsSpellCheckEnabled="True" IsTextPredictionEnabled="True" AllowFocusOnInteraction="True" TextWrapping="Wrap" FontSize="{ThemeResource ChatFontSize}"  />
         </Grid>
-                <ListView x:Name="listView" x:FieldModifier="public" Margin="0" Padding="0" ItemTemplate="{StaticResource MessageViewTemplate}" MinHeight="20" SelectionMode="Extended" IsMultiSelectCheckBoxEnabled="False" IsTabStop="True" AllowFocusOnInteraction="True" TabFocusNavigation="Cycle" 
+                <ListView x:Name="listView" x:FieldModifier="public" Margin="0" Padding="0" ItemTemplate="{StaticResource MessageViewTemplate}" SelectionMode="Extended" IsMultiSelectCheckBoxEnabled="False" IsTabStop="True" AllowFocusOnInteraction="True" TabFocusNavigation="Cycle" 
                    ItemsSource="{x:Bind items,Mode=OneWay}" >
             
                      

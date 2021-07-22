@@ -22,8 +22,7 @@
                              AllowDropTabs="True"
                       TabFocusNavigation="Cycle"
                       IsTabStop="True"
-                      CloseButtonOverlayMode="Auto"
-
+                        FontSize="{StaticResource MediumFontSize}"
                       SelectionChanged="Tabs_SelectionChanged"
 
                              CanDragTabs="True"

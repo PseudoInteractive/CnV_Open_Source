@@ -17,7 +17,7 @@
 			  IsTabStop="True"
 			  FontFamily="Tw Cen MT Condensed">
 
-	<Grid x:Name="cityBaseGrid" Padding="16,16,16,16">
+	<Grid x:Name="cityBaseGrid" >
 		
 		<Grid.RowDefinitions 
 						>
@@ -32,7 +32,7 @@
 							ColumnResizeHandleDisplayMode="OnColumnHeaderActionFlyoutOpen"
 							ColumnDataOperationsMode="Flyout"
 							Grid.Row="3"
-							
+							Padding="16,16,16,16"
 							IsTabStop="True"
 							TabFocusNavigation="Once"
 							UserGroupMode="Auto"
@@ -50,11 +50,8 @@
 							GroupPanelPosition="Bottom"
 							SelectionUnit="Row"
 							Tag="Raid"
-							ScrollViewer.ZoomMode="Enabled"
-						ScrollViewer.IsScrollInertiaEnabled="False"
-						ScrollViewer.IsVerticalScrollChainingEnabled="False"
-						ScrollViewer.IsZoomChainingEnabled="True"
-						
+					
+					
 							>
 
 				<tg:RadDataGrid.Commands>
@@ -180,7 +177,8 @@
 												IsVisible="False"
 												 />
 					<tg:DataGridTextColumn PropertyName="troopsString"
-										   IsCellFlyoutEnabled="True"
+												CellContentStyle="{StaticResource LeftAlign}"
+											   IsCellFlyoutEnabled="True"
 										  
                                              />
 				</tg:RadDataGrid.Columns>
@@ -219,7 +217,11 @@
 			<Button Content="Raid Settings"
 						Click="RaidSettings"
 						Style="{StaticResource ButtonSmall}"
-						ToolTipService.ToolTip="Shows settigns page for raids"  />
+						ToolTipService.ToolTip="Shows settings page for raids"  />
+			<Button Content="Return For Outgoing"
+						Click="ReturnRaidsForOutgoing"
+						Style="{StaticResource ButtonSmall}"
+						ToolTipService.ToolTip="Schedules all troops with outgoing attacks to return in time for attacks.  Warning this takes time, please do not interrupt it"  />
 
 			<Border Style="{StaticResource BorderReveal}">
 				

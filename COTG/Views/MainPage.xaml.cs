@@ -32,6 +32,7 @@ using Microsoft.UI.Xaml.Controls;
 using Telerik.UI.Xaml.Controls.Grid.Commands;
 using System.Threading;
 using Telerik.UI.Xaml.Controls.Grid.Primitives;
+using COTG.JSON;
 
 namespace COTG.Views
 {
@@ -98,7 +99,7 @@ namespace COTG.Views
 
         }
 
-      
+		
 		static RadDataGrid GetGrid(PointerRoutedEventArgs e)
 		{
 			var a = e.OriginalSource as FrameworkElement;
@@ -442,6 +443,29 @@ namespace COTG.Views
 		private void RaidSettings(object sender, RoutedEventArgs e)
 		{
 			DungeonView.Show(null, null);
+		}
+
+		private async void ReturnRaidsForOutgoing(object sender, RoutedEventArgs e)
+		{
+			using var work = new ShellPage.WorkScope("Return For Outgoing..");
+			var counter = OutgoingOverview.outgoingCounter+1;
+			OutgoingOverview.OutgoingUpdateDebounce.Go();
+			do
+			{
+				await Task.Delay(500);
+			} while (counter > OutgoingOverview.outgoingCounter);
+					
+			int cities = 0;
+			foreach(var city in Spot.allianceCitiesWithOutgoing)
+			{
+				if (!city.isMine)
+					continue;
+				await city.ShowReturnAt(false);
+				await Task.Delay(200);
+				++cities;
+			}
+			Note.Show($"{cities} returned cities with outgoing");
+
 		}
 
 		//      static Dungeon lastTooltip;

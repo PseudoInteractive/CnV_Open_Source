@@ -476,6 +476,7 @@ namespace COTG
 		}
 
 		public static Regex coordsRegex = new Regex(@":*\b\d{1,3}:\d{1,3}\b:*", RegexOptions.CultureInvariant | RegexOptions.Compiled);
+		public static Regex coordsRegex2 = new Regex(@"[^:]?\b(\d{1,3}:\d{1,3})\b[^:]?", RegexOptions.CultureInvariant | RegexOptions.Compiled);
 	}
 
 	public class SemaFrame

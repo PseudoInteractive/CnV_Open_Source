@@ -25,6 +25,7 @@ using Microsoft.Toolkit.Uwp.UI;
 using static COTG.Debug;
 using Windows.UI.Xaml.Media;
 using SymbolIconSource = Microsoft.UI.Xaml.Controls.SymbolIconSource;
+using Microsoft.Xna.Framework.Input;
 
 namespace COTG.Views
 {
@@ -138,16 +139,6 @@ namespace COTG.Views
 				await VisibilityChanged(true);  // close enough default behaviour
             }
         }
-		public static void UpdateZoom(object sender = null, Windows.UI.Xaml.Controls.Primitives.RangeBaseValueChangedEventArgs e =null)
-		{
-			var chatZoom = SettingsPage.chatZoom.Squared() * 2 + 0.5f;
-			var tabZoom = SettingsPage.tabZoom.Squared() * 2 + 0.5f;
-			foreach (var tab in UserTab.userTabs)
-			{
-			//	var scroll = tab.FindAscendant<ScrollViewer>();
-			//	scroll.ChangeView(null, null, tab is ChatTab ? chatZoom : tabZoom);
-			}
-		}
 
 		public void SetPlus(bool set)
         {

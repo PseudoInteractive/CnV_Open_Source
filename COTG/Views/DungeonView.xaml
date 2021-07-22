@@ -76,23 +76,21 @@
 		</tg:RadDataGrid>
 		
 		<tk:WrapPanel  
-			  
 			             x:Name="raidOptionBox"
-							Orientation="Horizontal"
-						  
-						  VerticalAlignment="Center"
-						  TabFocusNavigation="Cycle">
+						Orientation="Horizontal"
+						VerticalAlignment="Center"
+						TabFocusNavigation="Cycle">
 			<ComboBox x:Name="raidCarryMinBox"
-						  Header="Min Carry%"
-						  DropDownClosed="RaidCarrySelChanged"
-							Width="80"
-					 	  IsTabStop="True"
-					  TabFocusNavigation="Cycle"
-						  FontSize="{StaticResource MediumFontSize}"
-						  IsTextScaleFactorEnabled="False"
-						  IsEditable="True"
+						Header="Min Carry%"
+						DropDownClosed="RaidCarrySelChanged"
+						Width="80"
+					 	IsTabStop="True"
+						TabFocusNavigation="Cycle"
+						FontSize="{StaticResource MediumFontSize}"
+						IsTextScaleFactorEnabled="False"
+						IsEditable="True"
 						TextSubmitted="RaidCarrySubmitted"
-						  Margin="4" ToolTipService.ToolTip="Troops will be divided up into batches that will carry this amount or greater.  Dungeons that that require more troops than the city has at home will not be shown.  When raid carry % drops below 100% your raiding income is as high as it is at 100% but your raiding losses will be higher.  As the dungeon progresses the loot per raid goes up, along with the strength of the monsters, thereby resuling in progressively greater losses.  Establishing an upper bound on the resulting raid loses is that rationale behind setting a min carry above 100%" />
+						Margin="4" ToolTipService.ToolTip="Troops will be divided up into batches that will carry this amount or greater.  Dungeons that that require more troops than the city has at home will not be shown.  When raid carry % drops below 100% your raiding income is as high as it is at 100% but your raiding losses will be higher.  As the dungeon progresses the loot per raid goes up, along with the strength of the monsters, thereby resuling in progressively greater losses.  Establishing an upper bound on the resulting raid loses is that rationale behind setting a min carry above 100%" />
 			<ComboBox x:Name="raidCarryTargetBox"
 						  Header="Target Carry%"
 						  DropDownClosed="RaidCarrySelChanged"
@@ -163,13 +161,16 @@
 								  IsOn="{x:Bind view:SettingsPage.raidOffDungeons,Mode=TwoWay}"
 								  OnContent="Include"
 								  OffContent="Exclude"
+							  ToolTipService.ToolTip="Whether to include dungeons that do not match your troop type (i.e. mountains for infantry)"
 								  Margin="6,2,6,2" />
 			<ToggleSwitch     Header="# to Send" Width="90"
 								  FontSize="{StaticResource MediumFontSize}"
 								  IsOn="{x:Bind view:SettingsPage.raidSendExact,Mode=TwoWay}"
 								  OnContent="Enough"
 								  OffContent="All"
-								  Margin="6,2,6,2" />
+							  ToolTipService.ToolTip="All: Sends all troops, even if that is above your target carry, Enough: Sends only enough troops for your target carry, leaving others home.  With this setting you might be able to set the extra troops to a lower level dungeon if you raid again"
+							 
+							  Margin="6,2,6,2" />
 			<!--<ToggleSwitch     Header="Return Troops" Width="90"
 								  FontSize="{StaticResource MediumFontSize}"
 								  IsOn="{x:Bind view:SettingsPage.returnRaidsBeforeSend,Mode=TwoWay}"

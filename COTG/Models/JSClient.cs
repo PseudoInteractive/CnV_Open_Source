@@ -444,7 +444,7 @@ namespace COTG
 
 				};
 
-				view.SizeChanged += View_SizeChanged;
+				view.EffectiveViewportChanged += View_EffectiveViewportChanged;
 
 				//	view.AddHandler(WebView.KeyDownEvent, new KeyEventHandler(webViewKeyDownHandler), true);
 				//	view.AddHandler(WebView.PointerPressedEvent, new PointerEventHandler(pointerEventHandler), true);
@@ -502,14 +502,17 @@ namespace COTG
 
 		}
 
-		private static void View_SizeChanged(object sender, SizeChangedEventArgs e)
+		private static void View_EffectiveViewportChanged(FrameworkElement sender, EffectiveViewportChangedEventArgs args)
 		{
 			var scrollView = sender as ScrollViewer;
-			if(scrollView!=null)
+			if (scrollView != null)
 			{
-				Log(e);
+				Log(args);
 			}
+			Log(sender);
 		}
+
+		
 
 		//		public static async void CaptureWebPage(ICanvasResourceCreator canvas)
 		//		{
@@ -2365,7 +2368,7 @@ namespace COTG
 																							   //  }
 								   }
 								   NavStack.Push(cid);
-								   foreach (var i in waitingOnCityData)
+								   foreach( var i in waitingOnCityData )
 								   {
 										   if(i.cid == cid)
 										   {

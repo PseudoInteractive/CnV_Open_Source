@@ -57,6 +57,22 @@ namespace COTG.Game
 		public static City[] defendersI = Array.Empty<City>();
 		public static City[] defendersO = Array.Empty<City>();
 
+		public static HashSet<City> allianceCitiesWithOutgoing
+		{
+			get
+			{
+				HashSet<City> rv = new();
+				foreach (var d in defendersO)
+				{
+					foreach (var att in d.incoming)
+					{
+						rv.Add(att.sourceCity);
+					}
+				}
+				return rv;
+			}
+		}
+
 		// indexed by PackedContinentId
 		public const ulong continentFilterAll = 0xfffffffffffffffful;
 		public static ulong continentFilter = continentFilterAll;
@@ -697,7 +713,28 @@ namespace COTG.Game
 		{
 			mod.UpdateKeyModifiers();
 
-			if (City.CanVisit(cid) && !mod.IsShiftOrControl())
+			if(mod.IsShiftAndControl() && AttackTab.IsVisible() && City.Get(cid).isCastle)
+			{
+				var city = City.Get(cid);
+				if(city.IsAllyOrNap())
+				{
+					city.attackType = city.attackType switch { AttackType.assault => AttackType.senator, AttackType.senator => AttackType.se, AttackType.se => AttackType.none, _ => AttackType.assault };
+					if (!AttackTab.attacks.Contains(city))
+						AttackTab.attacks.Add(city);
+					AttackTab.attacks.NotifyReset();
+				}
+				else
+				{
+					city.attackType = city.attackType switch { AttackType.seFake => AttackType.se, AttackType.se => AttackType.senatorFake, AttackType.senatorFake => AttackType.senator,
+						AttackType.senator => AttackType.none, _ => AttackType.seFake };
+					if (!AttackTab.targets.Contains(city))
+						AttackTab.targets.Add(city);
+					AttackTab.targets.NotifyReset();
+				}
+				Note.Show($"{city.nameAndRemarks} set to {city.attackType}");
+				AttackTab.WaitAndSaveAttacks();
+			}
+			else if (City.CanVisit(cid) && !mod.IsShiftOrControl())
 			{
 				if (City.IsBuild(cid))
 				{
@@ -727,7 +764,7 @@ namespace COTG.Game
 			//Spot.GetOrAdd(cid).SelectMe(false,mod);
 			SpotTab.TouchSpot(cid, mod, true);
 
-			if (mod.IsShiftAndControl() && (Player.isAvatarOrTest || City.CanVisit(cid)))
+			if (mod.IsShiftAndControl() && (Player.isAvatarOrTest || City.CanVisit(cid)) && (!AttackTab.IsVisible()) )
 			{
 				//     var spot = Spot.GetOrAdd(cid);
 				//     GetCity.Post(cid, spot.pid, (js, city) => Log(js));
@@ -1571,62 +1608,87 @@ namespace COTG.Game
 		}
 		public void ReturnAt(object sender, RoutedEventArgs e)
 		{
-			ShowReturnAt();
+			ShowReturnAt(true);
 		}
-
-		public async Task ShowReturnAt()
+		
+		public async Task ShowReturnAt(bool wantDialog)
 		{
-			DateTimeOffset? time = null;
 			try
 			{
-				await JSClient.CitySwitch(cid, lazyMove: true, false, false, waitOnChange: true);
-				await Task.Delay(100);
-				var ogaStr = await JSClient.view.InvokeScriptAsync("getOGA", null);
-				var jsDoc = JsonDocument.Parse(ogaStr);
-				foreach (var i in jsDoc.RootElement.EnumerateArray())
+				if (!IsBuild())
 				{
-					var type = i[0].GetAsInt();
-					if (type == 5) // raid
-						continue;
-					Trace(type);
-					var timing = i[6].GetAsString();
-					var id = timing.IndexOf("Departs:");
-					if (id == -1)
-						continue;
-					timing = timing.Substring(id + 9);
-					var t = JSClient.ServerTime(); ;
-					var today = timing.StartsWith("Today");
-					var tomorrow = timing.StartsWith("Tomorrow");
-					if (today || tomorrow)
+					await JSClient.CitySwitch(cid, lazyMove: true, false, false, waitOnChange: true);
+					await Task.Delay(1500);
+				}
+				App.DispatchOnUIThreadSneaky(async () =>
+				{
+
+					DateTimeOffset? time = null;
+					var ogaStr = await JSClient.view.InvokeScriptAsync("getOGA", null);
+					var jsDoc = JsonDocument.Parse(ogaStr);
+					foreach (var i in jsDoc.RootElement.EnumerateArray())
 					{
-						timing = today ? timing.Substring(6) : timing.Substring(9);
-						var hr = int.Parse(timing.Substring(0, 2));
-						var min = int.Parse(timing.Substring(3, 2));
-						var sec = int.Parse(timing.Substring(6, 2));
-						t = new DateTimeOffset(t.Year, t.Month, t.Day, hr, min, sec, TimeSpan.Zero);
-						if (tomorrow)
-							t += TimeSpan.FromDays(1);
+						try
+						{
+							var type = i[0].GetAsInt();
+							if (type == 5) // raid
+								continue;
+							Trace(type);
+							var timing = i[6].GetAsString();
+							var id = timing.IndexOf("Departs:");
+							if (id == -1)
+								continue;
+							timing = timing.Substring(id + 9);
+							var t = JSClient.ServerTime(); ;
+							var today = timing.StartsWith("Today");
+							var tomorrow = timing.StartsWith("Tomorrow");
+							if (today || tomorrow)
+							{
+								timing = today ? timing.Substring(6) : timing.Substring(9);
+								var hr = int.Parse(timing.Substring(0, 2));
+								var min = int.Parse(timing.Substring(3, 2));
+								var sec = int.Parse(timing.Substring(6, 2));
+								t = new DateTimeOffset(t.Year, t.Month, t.Day, hr, min, sec, TimeSpan.Zero);
+								if (tomorrow)
+									t += TimeSpan.FromDays(1);
+							}
+							else
+							{
+								t = timing.ParseDateTime(true);
+							}
+							Trace(t);
+							t -= TimeSpan.FromHours(SettingsPage.returnRaidsBias);
+							if (time == null || time > t)
+								time = t;
+						}
+						catch (Exception ex)
+						{
+							LogEx(ex);
+						}
+					}
+
+
+					if (wantDialog)
+					{
+						(time, var okay) = await Views.DateTimePicker.ShowAsync("Return By:", time);
+						if (!okay)
+							return; // aborted
+					}
+					if (time != null)
+					{
+						await Raiding.ReturnAt(cid, time.Value);
+						Note.Show($"{City.Get(cid).nameMarkdown} end raids at {time.Value.FormatDefault()}");
 					}
 					else
 					{
-						t = timing.ParseDateTime(true);
+						Note.Show($"{City.Get(cid).nameMarkdown} no scheduled outgoing");
 					}
-					Trace(t);
-					t -= TimeSpan.FromHours(SettingsPage.returnRaidsBias);
-					if (time == null || time > t)
-						time = t;
-				}
+				});
 			}
 			catch (Exception ex)
 			{
 				LogEx(ex, eventName: "OGA");
 			}
-			(var at, var okay) = await Views.DateTimePicker.ShowAsync("Return By:", time);
-			if (!okay)
-				return; // aborted
-
-			await Raiding.ReturnAt(cid, at);
-			Note.Show($"{City.Get(cid).nameMarkdown} end raids at {at.FormatDefault()}");
 		}
 
 		public bool isHubOrStorage => HasTag(Tags.Hub) || HasTag(Tags.Storage);

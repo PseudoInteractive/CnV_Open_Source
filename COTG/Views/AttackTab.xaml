@@ -48,6 +48,12 @@
                              Value="{x:Bind view:SettingsPage.attackSEMinAssaults, Mode=TwoWay}"
                              NumberFormatter="{x:Bind cotg:App.formatterInt,Mode=OneTime}"
                              SmallChange="1" />
+			<winui:NumberBox Header="Hours To Cap"
+                             ToolTipService.ToolTip="For Senator only, the number of hours required to capture.  Used to time assaults"
+                             Style="{StaticResource NumberBoxSmall}"
+                             Value="{x:Bind view:AttackTab.readable.tickToCapture, Mode=TwoWay}"
+                             NumberFormatter="{x:Bind cotg:App.formatterInt,Mode=OneTime}"
+                             SmallChange="1" />
 			<Button Content="Remove Selected"
                     VerticalAlignment="Center"
                     Margin="4"
@@ -92,14 +98,22 @@
                     HorizontalAlignment="Center"
                     Style="{StaticResource ButtonSmall}"
                     Click="SelectAttackers" />
-			<Button x:Name="arrival"
+			<Button x:Name="arrivalSen"
                            VerticalAlignment="Center"
-                           Content="Arrival..."
-						Margin="4"
+                           Content="Sen Arrival..."
+	    					Margin="4"
                            HorizontalAlignment="Center"
-                           Click="ArrivalTapped"
+                           Click="ArrivalSETapped"
                             Style="{StaticResource ButtonSmall}"
-                           ToolTipService.ToolTip="Time at which attacks arrive." />
+                           ToolTipService.ToolTip="Time at which Senator sieges arrive." />
+			<Button x:Name="arrivalSE"
+                           VerticalAlignment="Center"
+                           Content="SE Arrival..."
+    						Margin="4"
+                           HorizontalAlignment="Center"
+                           Click="ArrivalSETapped"
+                            Style="{StaticResource ButtonSmall}"
+                           ToolTipService.ToolTip="Time at which SE arrives." />
 		</tk:WrapPanel>
 		<tk:WrapPanel Grid.Row="1">
 
@@ -297,6 +311,13 @@
 				<Border
                     Style="{StaticResource BorderReveal}">
 					<TextBlock x:Name="fakeCount"
+                           Margin="4"
+                           x:FieldModifier="public"
+                           IsTextSelectionEnabled="True" />
+				</Border>
+				<Border
+                    Style="{StaticResource BorderReveal}">
+					<TextBlock x:Name="fakeRatio"
                            Margin="4"
                            x:FieldModifier="public"
                            IsTextSelectionEnabled="True" />

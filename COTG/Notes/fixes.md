@@ -227,3 +227,9 @@
         - Don't ask questions;
   - **Fix**
     - Fixed a bug. 
+- ### 2021/7/18
+  - **New**
+    - You can scale down the font sizes for some things (if the fonts are too large for you)
+    - You must restart to see the changes
+    - 
+ 

@@ -78,7 +78,8 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         <WebView x:Name="webView" Source="{x:Bind Source, Mode=OneWay}"
-			
+			    EffectiveViewportChanged="WebView_EffectiveViewportChanged"
+				 SizeChanged="WebView_SizeChanged"
                  NavigationCompleted="OnNavigationCompleted"
                  NavigationFailed="OnNavigationFailed" />
 

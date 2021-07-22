@@ -42,8 +42,38 @@ namespace COTG.Services
                 });
             }
         }
+		public static Debounce RefreshXaml = new(_RefreshXaml) { debounceDelay = 100, throttleDelay = 100 };
+		public static async Task _RefreshXaml()
+		{
+			var theme = Theme;
+			var tempTheme = theme == ElementTheme.Light ? ElementTheme.Dark : ElementTheme.Light;
+			await App.DispatchOnUIThreadTask(()=>
+			{
+				foreach (var view in CoreApplication.Views)
+				{
+					if (Window.Current.Content is FrameworkElement frameworkElement)
+					{
+						frameworkElement.RequestedTheme = tempTheme;
+					}
+				}
+				return Task.CompletedTask;
+			}	);
+			await Task.Delay(200);
+			await App.DispatchOnUIThreadTask(() =>
+			{
+				foreach (var view in CoreApplication.Views)
+				{
+					if (Window.Current.Content is FrameworkElement frameworkElement)
+					{
+						frameworkElement.RequestedTheme = Theme;
+					}
+				}
+				return Task.CompletedTask;
+			});
+		}
 
-        private static async Task<ElementTheme> LoadThemeFromSettingsAsync()
+
+		private static async Task<ElementTheme> LoadThemeFromSettingsAsync()
         {
             ElementTheme cacheTheme = ElementTheme.Dark;
             string themeName = App.Settings().Read<string>(SettingsKey);

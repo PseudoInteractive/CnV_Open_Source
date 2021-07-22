@@ -45,7 +45,6 @@ namespace COTG.Views
 		public static bool? syncOutgoing = null;
 		public static int raidReserveCommandSlots = 0;
 		public static float raidMaxTriariRatio = 1;
-		public static bool raidSplitPraeAndPriestess = true;
 		public static float raidCarryVsDistance= 0.5f;
 		public static float tabZoom = 0.5f;
 		public static float chatZoom = 0.5f;
@@ -202,7 +201,6 @@ namespace COTG.Views
 		public static bool raidSendExact;
 		public static int resetRaidsCarry = 90;
 		public static int resetRaidsIdle = 10;
-		public static DateTimeOffset attackPlannerTime = AUtil.dateTimeZero;
 
 
 		public static int raidsVisible = -1;
@@ -352,13 +350,36 @@ namespace COTG.Views
 				if (raidCarryMax <= raidCarryMin)
 					raidCarryMax = raidCarryMin*1.75f; // error!
 
-			//	DungeonView.Initialize();
+				UpdateZoom();
+				//	DungeonView.Initialize();
 			}
 			catch (Exception e)
 			{
 				LogEx(e);
 			}
 		}
+
+		public static void UpdateZoom(object sender = null, Windows.UI.Xaml.Controls.Primitives.RangeBaseValueChangedEventArgs e = null)
+		{
+			var chatZoom = SettingsPage.chatZoom.Squared()  + 0.75f;
+			var tabZoom = SettingsPage.tabZoom.Squared()  + 0.75f;
+
+			App.instance.Resources["SmallFontSize"] = tabZoom * 11.0;
+			App.instance.Resources["LargeFontSize"] = tabZoom * 20.0;
+			App.instance.Resources["MediumFontSize"] = tabZoom * 12.0;
+			App.instance.Resources["ChatFontSize"] = chatZoom * 12.0;
+
+			App.instance.Resources["GridRowHeight"] = tabZoom * 34.0;
+			App.instance.Resources["MediumGridRowHeight"] = tabZoom * 34.0;
+			App.instance.Resources["ShortGridRowHeight"] = tabZoom * 28.0;
+
+			App.instance.Resources["ChatFontSize"] = chatZoom * 12.0;
+			App.instance.Resources["ChatFontImageHeight"] = chatZoom * 32.0;
+			
+
+		}
+
+
 		public static void SaveAll(object __ = null, Windows.ApplicationModel.SuspendingEventArgs _=null)
 		{
 			try
@@ -414,7 +435,7 @@ namespace COTG.Views
 				Tips.SaveSeen();
 				//  st.Save("attacktime", AttackTab.time.DateTime);
 
-				AttackTab.WaitAndSaveAttacks();
+				AttackTab.SaveAttacksBlock();
 			}
 			catch (Exception e)
 			{

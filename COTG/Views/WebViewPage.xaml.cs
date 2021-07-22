@@ -262,5 +262,15 @@ namespace COTG.Views
 			base.OnNavigatedFrom(e);
 
 		}
+
+		private void WebView_EffectiveViewportChanged(FrameworkElement sender, EffectiveViewportChangedEventArgs args)
+		{
+
+		}
+
+		private void WebView_SizeChanged(object sender, SizeChangedEventArgs e)
+		{
+
+		}
 	}
 }

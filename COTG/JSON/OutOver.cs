@@ -22,7 +22,7 @@ namespace COTG.JSON
     public static class OutgoingOverview
     {
         public static bool updateInProgress;
-
+		public static int outgoingCounter;
         // uses Report.Hash(), can have several reports per reportId
 
 
@@ -62,7 +62,7 @@ namespace COTG.JSON
 				return;
 			}
 
-            updateInProgress = true;
+			updateInProgress = true;
             if (fetchReports)
                 ShellPage.WorkStart(work);
 
@@ -452,9 +452,10 @@ namespace COTG.JSON
                             }
                             killNote= $", {atkKilled:N0}({myAtkKilled:N0})TS atk killed, {defKilled:N0}({myDefKilled:N0})TS def Killed";
                         }
-  //                      App.CopyTextToClipboard(killNote);
+						//                      App.CopyTextToClipboard(killNote);
 
-                        OutgoingTab.NotifyOutgoingUpdated();
+						++outgoingCounter;
+						OutgoingTab.NotifyOutgoingUpdated();
 
                         Note.Show($"Complete: {reportsOutgoing.Count} attacks {fetched} fetched records {killNote}");
                     });
@@ -464,7 +465,9 @@ namespace COTG.JSON
             {
                 COTG.Debug.LogEx(_exception);
                 updateInProgress = false;
-                if (fetchReports)
+				++outgoingCounter;
+
+				if (fetchReports)
                     ShellPage.WorkEnd(work);
 
             }

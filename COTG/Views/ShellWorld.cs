@@ -485,26 +485,26 @@ namespace COTG.Views
 					case GestureAction.leftClick:
 						{
 
-							if (AttackTab.instance.isVisible && e.KeyModifiers.IsShiftAndControl() && City.Get(cid).isCityOrCastle)
-							{
-								var _cid = cid;
-								App.DispatchOnUIThreadSneaky(() =>
-								{
-									var city = City.Get(_cid);
-									if (city.IsAllyOrNap())
-									{
-										AttackTab.AddAttacks(new () { _cid }  );
+							//if (AttackTab.instance.isVisible && e.KeyModifiers.IsShiftAndControl() && City.Get(cid).isCityOrCastle)
+							//{
+							//	var _cid = cid;
+							//	App.DispatchOnUIThreadSneaky(() =>
+							//	{
+							//		var city = City.Get(_cid);
+							//		if (city.IsAllyOrNap())
+							//		{
+							//			AttackTab.AddAttacks(new () { _cid }  );
 
-									}
-									else
-									{
-										AttackTab.AddTarget(new[] { _cid });
+							//		}
+							//		else
+							//		{
+							//			AttackTab.AddTarget(new[] { _cid });
 
-									}
+							//		}
 
-								});
-							}
-							else
+							//	});
+							//}
+							//else
 							{
 								if (IsCityView() && (cid == City.build))
 								{

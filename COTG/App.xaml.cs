@@ -1351,17 +1351,17 @@ namespace COTG
 			cancellationTokenSource = new CancellationTokenSource();
 		}
 
-		static Regex regexCoordsTag = new Regex(@"\<coords\>(\d{1,3}:\d{1,3})\<\/coords\>", RegexOptions.CultureInvariant | RegexOptions.Compiled);
-		static Regex regexPlayer = new Regex(@"\<player\>(\w+)\<\/player\>", RegexOptions.CultureInvariant | RegexOptions.Compiled);
-		static Regex regexAlliance = new Regex(@"\<alliance\>(\w+)\<\/alliance\>", RegexOptions.CultureInvariant | RegexOptions.Compiled);
-		static Regex regexReport = new Regex(@"\<report\>(\w+)\<\/report\>", RegexOptions.CultureInvariant | RegexOptions.Compiled);
+		static Regex regexCoordsTag = new Regex(@" ?\<coords\>(\d{1,3}:\d{1,3})\<\/coords\>", RegexOptions.CultureInvariant | RegexOptions.Compiled);
+		static Regex regexPlayer = new Regex(@" ?\<player\>(\w+)\<\/player\>", RegexOptions.CultureInvariant | RegexOptions.Compiled);
+		static Regex regexAlliance = new Regex(@" ?\<alliance\>(\w+)\<\/alliance\>", RegexOptions.CultureInvariant | RegexOptions.Compiled);
+		static Regex regexReport = new Regex(@" ?\<report\>(\w+)\<\/report\>", RegexOptions.CultureInvariant | RegexOptions.Compiled);
 		public static string TranslateCOTGChatToMarkdown(string s)
 		{
 
-			s = regexCoordsTag.Replace(s, @"[$1](/c/$1)");
-			s = regexPlayer.Replace(s, @"[$1](/p/$1)");
-			s = regexAlliance.Replace(s, @"[$1](/a/$1)");
-			s = regexReport.Replace(s, @"[Report:$1](/r/$1)");
+			s = regexCoordsTag.Replace(s, @" [$1](/c/$1)");
+			s = regexPlayer.Replace(s, @" [$1](/p/$1)");
+			s = regexAlliance.Replace(s, @" [$1](/a/$1)");
+			s = regexReport.Replace(s, @" [Report:$1](/r/$1)");
 			return s;
 		}
 		public static void MarkDownLinkClicked(object sender, LinkClickedEventArgs e)

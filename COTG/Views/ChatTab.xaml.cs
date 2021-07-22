@@ -51,6 +51,7 @@ namespace COTG.Views
 		public DateTimeOffset time;
 		public string arrivedString => time.ToString("HH':'mm':'ss");
 		public BitmapImage avatar { get; set; }
+		
 
 		public string text { get; set; } = string.Empty;
 		const int maxMessageLength = 32 * 1024;
@@ -507,8 +508,8 @@ namespace COTG.Views
 						var ch = GetChatMessage(jsp.Value);
 						if (ch.type == ChatEntry.typeWhisperFrom || ch.type == ChatEntry.typeWhisperTo) // whisper
 						{
-							if (ch.player == "Avatar" && ch.type == ChatEntry.typeWhisperFrom)
-								PlayerHooks.PlayerChat?.Invoke(new PlayerHooks.PlayerChatEventArgs() { player = Player.FromName(ch.player), text = ch.text });
+							//if (ch.player == "Avatar" && ch.type == ChatEntry.typeWhisperFrom)
+							//	PlayerHooks.PlayerChat?.Invoke(new PlayerHooks.PlayerChatEventArgs() { player = Player.FromName(ch.player), text = ch.text });
 
 							// add to all tabs
 							ch.text = $"`{(ch.type == ChatEntry.typeWhisperFrom ? "whispers" : "you whisper")}` {ch.text}";
@@ -529,6 +530,7 @@ namespace COTG.Views
 							}
 							if (ch.type == 5 || ch.type == 4)
 							{
+
 								if (ch.type == 4)
 									PlayerHooks.PlayerChat?.Invoke(new PlayerHooks.PlayerChatEventArgs() { player = Player.FromName(ch.player), text = ch.text });
 								ChatTab.alliance.Post(ch);

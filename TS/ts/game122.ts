@@ -18643,8 +18643,8 @@ function outer(){
 				ClearCity();
 				callSyncViewMode();
 				getCity(Number(d9l));
-				X8();
-				DoPoll2(300);
+			//	X8();
+				DoPoll2(50);
 	
 		}
 
