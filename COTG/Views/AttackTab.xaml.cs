@@ -34,6 +34,7 @@ using Microsoft.Toolkit.Uwp.UI.Controls;
 using Nito.AsyncEx;
 using Telerik.UI.Xaml.Controls.Input.Calendar;
 using static COTG.Game.Spot;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace COTG.Views
 {
@@ -151,7 +152,7 @@ namespace COTG.Views
 						sb.Append($"\n\n<player>{scrpipt}</player>");
                     }
                     sb.Append('\n');
-                    sb.Append($"{a.cid.CidToCoords()} {a.attackType}" );
+                    sb.Append($"{a.cid.CidToCoords()} {a.classificationString} {a.attackType}" );
 				}
 
 
@@ -215,7 +216,6 @@ namespace COTG.Views
 				case "Water": comparer = (a, b) => a.isOnWater.CompareTo(b.isOnWater); break;
 				case "Player": comparer = (a, b) => a.playerName.CompareTo(b.playerName); break;
 				case "Alliance": comparer = (a, b) => a.alliance.CompareTo(b.alliance); break;
-
 			}
 
 			if (comparer != null)
@@ -272,6 +272,7 @@ namespace COTG.Views
 			public AttackDataPersist[] attacks { get; set; }
             public AttackDataPersist[] targets { get; set; }
 
+
         }
 		// read only cache to enable threads to read the attacks white another thread is writing
 		public static ReadableAttacks readable = new ReadableAttacks() { attacks= Array.Empty<AttackDataPersist>(), targets  = Array.Empty<AttackDataPersist>() };
@@ -289,25 +290,23 @@ namespace COTG.Views
 			var attackCount = AttackTab.attacks.Count;
 			var attacks = new AttackDataPersist[attackCount];
 			for (int i = 0; i < targetCount; ++i)
-            {
-                var t = AttackTab.targets[i];
-                targets[i].attackCluster = t.attackCluster;
-                targets[i].cid = t.cid;
-                targets[i].attackType = t.attackType;
-            }
+			{
+				var t = AttackTab.targets[i];
+				targets[i].CopyFrom(t);
+			}
 			for (int i = 0; i < attackCount; ++i)
 			{
 				var t = AttackTab.attacks[i];
-				attacks[i].attackCluster = t.attackCluster;
-				attacks[i].cid = t.cid;
-				attacks[i].attackType = t.attackType;
+				attacks[i].CopyFrom(t);
 			}
 			readable.attacks = attacks; // This is not completely atomic
             readable.targets = targets;
             UpdateStats();
             BuildAttackClusters();
         }
-        public class AttackCluster
+
+		
+		public class AttackCluster
         {
 			public int id;
             public int[] attacks;// first is SE or siege
@@ -385,7 +384,7 @@ namespace COTG.Views
 				await SaveAttacks();
 			}
 		}
-		public static async void SaveAttacksBlock()
+		public static async Task SaveAttacksBlock()
 		{
 			if (loaded)
 			{
@@ -411,9 +410,7 @@ namespace COTG.Views
 				foreach (var att in readable.attacks)
                 {
                     var spot = City.GetOrAdd(att.cid);
-                    spot.attackCluster=att.attackCluster;
-					spot.attackType = att.attackType;
-                    spot.QueueClassify(true);
+					att.CopyTo(spot);
 					attacks.Add(spot);
                 }
                 var spots = new List<City>();
@@ -422,9 +419,7 @@ namespace COTG.Views
                     foreach (var target in readable.targets)
                     {
                         var t = City.GetOrAdd(target.cid);
-                        t.attackCluster = target.attackCluster;
-                        t.QueueClassify(false);
-                        t.attackType = target.attackType;
+						target.CopyTo(t);
                         spots.Add(t);
 
                     }
@@ -554,21 +549,113 @@ namespace COTG.Views
                 CleanTargets();
             }
         }
-		static Regex regexSen = new Regex("\b(?:s|sen|senator|academy)\b", RegexOptions.IgnoreCase);
-		static Regex regexSE = new Regex("\b(?:se|catapult|Scorp|Scorpion|catapults)\b", RegexOptions.IgnoreCase);
 
 		public async void AddAttacksFromSheets(object sender, RoutedEventArgs e)
         {
 			try
 			{
-
-				using var _ = await TouchLists();
-				int duplicates = 0;
-				int prior = attacks.Count;
 				var text = await App.GetClipboardText();
-				var strs = text.Split(new char[] { '\n', ',', ';' }, StringSplitOptions.RemoveEmptyEntries);
+				await AddAttacksFromString(text);
+			}
+			catch (Exception ex)
+            {
+                LogEx(ex);
+                Note.Show("Invalid format");
 
-				int count = strs.Length;
+            }
+
+
+        }
+
+//		static Regex regexSen = new Regex("\b(?:sen|senator|academy)\b", RegexOptions.Compiled);
+		static Regex regexSE = new Regex("\b(?:se|cat|catapult|scorp|scorpion)s?\b", RegexOptions.Compiled);
+//		static Regex regexHorse = new Regex("\b(?:horse|knight)s?\b", RegexOptions.Compiled);
+//		static Regex regexVanq = new Regex("\b(?:van|vanq|vanquisher)s?\b", RegexOptions.Compiled);
+
+		public static void FindTags(string s , out byte? troopType,out bool hasAcademy )
+		{
+			troopType = null;
+			hasAcademy = false;
+			s = s.ToLower();
+
+
+
+			if (s.Contains("van") || s.Contains("zerk"))
+				troopType = ttVanquisher;
+			else if (s.Contains("hors") || s.Contains("knight"))
+				troopType = ttHorseman;
+			else if (s.Contains("sorc") || s.Contains("mage"))
+				troopType = ttSorcerer;
+			else if (s.Contains("druid"))
+				troopType = ttDruid;
+			else if (regexSE.IsMatch(s) )
+				troopType = ttScorpion;
+			else if (s.Contains("prae"))
+			{
+				troopType = ttPraetor;
+				hasAcademy = true;
+			}
+			else if (s.Contains("ranger"))
+				troopType = ttRanger;
+
+			if (s.Contains("acad") || s.Contains("sen"))
+				hasAcademy = true;
+
+		}
+		public static async Task AddAttacksFromCitys(List<City> cities)
+		{
+			using var __lock = await instance.TouchLists();
+			try
+			{
+				int prior = attacks.Count;
+				var duplicates = 0;
+				//int count = strs.Length;
+				foreach (var atk in cities)
+				{
+					if (!atk.IsAllyOrNap())
+					{
+						Note.Show("Warning - bad person almost added as attacker");
+						continue;
+					}
+
+					var isNew = !attacks.Contains(atk);
+					if (isNew)
+					{
+						if(atk.attackType == AttackType.none)
+							atk.attackType = atk.classification == Classification.se ? AttackType.se : (atk.hasAcademy.GetValueOrDefault() ? AttackType.senator : AttackType.assault);
+
+						atk.attackCluster = Spot.attackClusterNone;
+						attacks.Add(atk);
+					}
+					else
+					{
+						++duplicates;
+					}
+
+					
+				}
+				Note.Show($"Added {attacks.Count - prior}, updated {duplicates}");
+				WritebackAttacks();
+				await SaveAttacks();
+
+			}
+			catch (Exception ex)
+			{
+				Note.Show("Something went wrong");
+				LogEx(ex);
+			}
+		}
+
+		public static async Task AddAttacksFromString(string text)
+		{
+			using var __lock = await instance.TouchLists();
+
+			try
+			{
+				var strs = text.Split(new char[] { '\n', ',', ';' }, StringSplitOptions.RemoveEmptyEntries);
+				int prior = attacks.Count;
+				var duplicates = 0;
+				//int count = strs.Length;
 				foreach (var str in strs)
 				{
 
@@ -584,58 +671,58 @@ namespace COTG.Views
 					var cid = match[0].Groups[0].Captures[0].Value.FromCoordinate();
 					var atk = attacks.Find((a) => a.cid == cid);
 					var isNew = (atk == null);
-					
+
 					if (isNew)
 					{
 						atk = City.GetOrAdd(cid);
-						var cl = await atk.ClassifyEx(true);
-
-						atk.attackType = cl == Classification.se ? AttackType.se : (atk.hasAcademy.GetValueOrDefault() ? AttackType.senator : AttackType.assault);
 					}
 					else
 					{
 						++duplicates;
 					}
-
 					if (!atk.IsAllyOrNap())
 					{
-						Note.Show("Warning - bad person added");
+						Note.Show("Warning - bad person almost added as attacker");
+						continue;
 					}
 
-					if(regexSen.IsMatch(text))
-					{
-						atk.attackType = AttackType.senator;
-
+					if (isNew)
+					{ 
+						FindTags(str, out var troopType, out var hasAcademy);
+						_ = await atk.ClassifyEx(true);
+						if (troopType.HasValue )
+						{
+							Spot.TryConvertTroopTypeToClassification(troopType.Value,out atk.classification);
+							
+						}
+						else
+						{
+							hasAcademy = atk.hasAcademy.GetValueOrDefault();
+						}
+						if (atk.attackType == AttackType.none)
+							atk.attackType = atk.classification == Classification.se ? AttackType.se : (hasAcademy? AttackType.senator : AttackType.assault);
 					}
-					else if (regexSE.IsMatch(text))
-					{
-						atk.attackType = AttackType.se;
-					}
-
 
 					atk.attackCluster = Spot.attackClusterNone;
-                    if (isNew)
-                        attacks.Add(atk);
-                }
-                Note.Show($"Added {attacks.Count-prior}, updated {duplicates}");
-                WritebackAttacks();
-                await SaveAttacks();
-            }
-            catch (Exception ex)
-            {
-                LogEx(ex);
-                Note.Show("Invalid format");
+					if (isNew)
+						attacks.Add(atk);
+				}
+				Note.Show($"Added {attacks.Count - prior}, updated {duplicates}");
+				WritebackAttacks();
+				await SaveAttacks();
+			
+			}
+			catch (Exception ex)
+			{
+				Note.Show("Something went wrong");
+				LogEx(ex);
+			}
+		}
 
-            }
-
-
-        }
-
-        public async void AddAttacksFromClipboard(object sender, RoutedEventArgs e)
+		public async void AddAttacksFromClipboard(object sender, RoutedEventArgs e)
         {
             try
             {
-				using var _ = await TouchLists();
 
 				var text = await Clipboard.GetContent().GetTextAsync();
 
@@ -644,7 +731,7 @@ namespace COTG.Views
                     Note.Show("No clipboard text");
                     return;
                 }
-                AddAttacksFromString(text);
+                await AddAttacksFromString(text);
 
             }
             catch (Exception ex)
@@ -653,7 +740,7 @@ namespace COTG.Views
                 Note.Show("Invalid clipboard text");
             }
         }
-		static async Task<(AttackType atk,bool update)> ChooseAttackType()
+		static async Task<(AttackType atk,bool update)> ChooseTargetType()
 		{
 				var combo = new RadioButtons() { Header = "Add as" };
 				combo.Items.Add("Real Cap");
@@ -671,7 +758,7 @@ namespace COTG.Views
 
 				var msg = new ContentDialog()
 				{
-					Title = "Add Attacks",
+					Title = "Add Targets",
 					Content = panel,
 					IsPrimaryButtonEnabled = true,
 					PrimaryButtonText = "Add",
@@ -713,14 +800,12 @@ namespace COTG.Views
 		public async void AddTargetsFromClipboard(object sender, RoutedEventArgs e)
         {
 
-			var attackType = await ChooseAttackType();
+			var attackType = await ChooseTargetType();
 			if (attackType.atk == AttackType.invalid)
 				return;
 
-
-
-
 			using var _ = await TouchLists();
+			
 			using var work = new ShellPage.WorkScope("Adding attacks...");
 
                 int duplicates = 0;
@@ -751,6 +836,7 @@ namespace COTG.Views
 					{
 						spot.attackType = attackType.atk;
 						spot.attackCluster = Spot.attackClusterNone;
+
 					}
 						if (present)
 						{
@@ -775,135 +861,136 @@ namespace COTG.Views
             
         }
 
-		public static async void AddAttacks(List<int> cids)
-		{
-			try
-			{
-				using var work = new ShellPage.WorkScope("Adding attacks...");
+		//public static async void AddAttacks(List<int> cids)
+		//{
+		//	try
+		//	{
+		//		using var work = new ShellPage.WorkScope("Adding attacks...");
 
-				using var _ = await instance.TouchLists();
-				if( cids.All( cid=> attacks.Contains(City.Get(cid) ) ))
-				{
-					var rv = await App.DoYesNoBox("Already Here", "Remove?");
-					if( rv == 1)
-					{
-						int count = 0;
-						foreach (var cid in cids)
-						{
-							attacks.Remove(City.Get(cid));
-							++count;
-						}
-						Note.Show($"Removed {count} attacks");
-						return;
+		//		using var _ = await instance.TouchLists();
+		//		if( cids.All( cid=> attacks.Contains(City.Get(cid) ) ))
+		//		{
+		//			var rv = await App.DoYesNoBox("Already Here", "Remove?");
+		//			if( rv == 1)
+		//			{
+		//				int count = 0;
+		//				foreach (var cid in cids)
+		//				{
+		//					attacks.Remove(City.Get(cid));
+		//					++count;
+		//				}
+		//				Note.Show($"Removed {count} attacks");
+		//				return;
 
-					}
-					if (rv == -1)
-						return;
-				}
-
-
-				int duplicates = 0;
-				var reals = 0;
-				var fakes = 0;
-				//     text = text.Replace("\r", "");
-				//    var lines = text.Split('\n', StringSplitOptions.RemoveEmptyEntries);
-				foreach (var cid in cids)
-				{
-
-					try
-					{
-						//  var parts = line.Split(' ', StringSplitOptions.RemoveEmptyEntries);
-						var atk = attacks.Find((a) => a.cid == cid);
-						var isNew = (atk == null);
-						if (isNew)
-						{
-							atk = Spot.GetOrAdd(cid);
-							++reals;
-						}
-						else
-						{
-							++duplicates;
-						}
-						var spot = Spot.GetOrAdd(cid);
-						var cl = await spot.ClassifyEx(true);
-						//  string s = $"{cid.CidToString()} {Player.myName} {cl.} {(cl.academies == 1 ? 2 : 0)} {tsTotal}\n";
-
-						if (cl == Spot.Classification.se)
-							atk.attackType = AttackType.se;
-						else if (spot.hasAcademy.GetValueOrDefault())
-							atk.attackType = AttackType.senator;
-						else atk.attackType = AttackType.assault;
-
-						//atk.type = (int)Attack.Type.senator;
-
-						//atk.fake = parts[3].ToLowerInvariant() == "fake";
-						//var tt = parts[2].ToLowerInvariant();
-						//if (tt.StartsWith("sorc"))
-						//    atk.troopType = ttSorcerer;
-						//else if (tt.StartsWith("horse"))
-						//    atk.troopType = ttHorseman;
-						//else if (tt.StartsWith("van"))
-						//    atk.troopType = ttVanquisher;
-						//else if (tt.StartsWith("druid"))
-						//    atk.troopType = ttDruid;
-						//else atk.troopType = ttGuard;
-
-						//atk.
-						//if (int.TryParse(parts[2], out var ts))
-						//{
-						//    atk.ts = ts;
-						//}
-
-						atk.attackCluster = Spot.attackClusterNone;
+		//			}
+		//			if (rv == -1)
+		//				return;
+		//		}
 
 
-						if (isNew)
-							attacks.Add(atk);
-					}
-					catch (Exception ex)
-					{
-						LogEx(ex);
-					}
-				}
-				Note.Show($"{reals - duplicates} added, {duplicates} updated");
-				WritebackAttacks();
-				await SaveAttacks();
-			}
-			catch (Exception ex)
-			{
-				LogEx(ex);
-			}
-		}
+		//		int duplicates = 0;
+		//		var reals = 0;
+		//		var fakes = 0;
+		//		//     text = text.Replace("\r", "");
+		//		//    var lines = text.Split('\n', StringSplitOptions.RemoveEmptyEntries);
+		//		foreach (var cid in cids)
+		//		{
 
-		public async void AddAttacksFromString(string text)
-        {
-			try
-			{
-				List<int> cids = new();
-				foreach (Match m in AUtil.coordsRegex.Matches(text))
-				{
+		//			try
+		//			{
+		//				//  var parts = line.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+		//				var atk = attacks.Find((a) => a.cid == cid);
+		//				var isNew = (atk == null);
+		//				if (isNew)
+		//				{
+		//					atk = Spot.GetOrAdd(cid);
+		//					++reals;
+		//				}
+		//				else
+		//				{
+		//					++duplicates;
+		//				}
+		//				var spot = Spot.GetOrAdd(cid);
+		//				var cl = await spot.ClassifyEx(true);
+		//				//  string s = $"{cid.CidToString()} {Player.myName} {cl.} {(cl.academies == 1 ? 2 : 0)} {tsTotal}\n";
 
-					try
-					{
-						if (m.Value.EndsWith(':') || m.Value.StartsWith(':'))
-							continue;
-						//  var parts = line.Split(' ', StringSplitOptions.RemoveEmptyEntries);
-						var cid = m.Value.FromCoordinate();
-						cids.Add(cid);
-					}
-					catch (Exception ex)
-					{
-						Log(ex);
-					}
-				}
-				AddAttacks(cids);
-			}
-			catch(Exception ex2)
-			{
-				Log(ex2);
+		//				if (cl == Spot.Classification.se)
+		//					atk.attackType = AttackType.se;
+		//				else if (spot.hasAcademy.GetValueOrDefault())
+		//					atk.attackType = AttackType.senator;
+		//				else atk.attackType = AttackType.assault;
 
-			}
-		}
+		//				//atk.type = (int)Attack.Type.senator;
+
+		//				//atk.fake = parts[3].ToLowerInvariant() == "fake";
+		//				//var tt = parts[2].ToLowerInvariant();
+		//				//if (tt.StartsWith("sorc"))
+		//				//    atk.troopType = ttSorcerer;
+		//				//else if (tt.StartsWith("horse"))
+		//				//    atk.troopType = ttHorseman;
+		//				//else if (tt.StartsWith("van"))
+		//				//    atk.troopType = ttVanquisher;
+		//				//else if (tt.StartsWith("druid"))
+		//				//    atk.troopType = ttDruid;
+		//				//else atk.troopType = ttGuard;
+
+		//				//atk.
+		//				//if (int.TryParse(parts[2], out var ts))
+		//				//{
+		//				//    atk.ts = ts;
+		//				//}
+
+		//				atk.attackCluster = Spot.attackClusterNone;
+
+
+		//				if (isNew)
+		//					attacks.Add(atk);
+		//			}
+		//			catch (Exception ex)
+		//			{
+		//				LogEx(ex);
+		//			}
+		//		}
+		//		Note.Show($"{reals - duplicates} added, {duplicates} updated");
+		//		WritebackAttacks();
+		//		await SaveAttacks();
+		//	}
+		//	catch (Exception ex)
+		//	{
+		//		LogEx(ex);
+		//	}
+		//}
+
+		//public async void AddAttacksFromString(string text)
+  //      {
+		//	try
+		//	{
+		//		List<int> cids = new();
+		//		foreach (Match m in AUtil.coordsRegex.Matches(text))
+		//		{
+
+		//			try
+		//			{
+		//				if (m.Value.EndsWith(':') || m.Value.StartsWith(':'))
+		//					continue;
+		//				//  var parts = line.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+		//				var cid = m.Value.FromCoordinate();
+		//				cids.Add(cid);
+
+		//			}
+		//			catch (Exception ex)
+		//			{
+		//				Log(ex);
+		//			}
+		//		}
+		//		AddAttacks(cids);
+		//	}
+		//	catch(Exception ex2)
+		//	{
+		//		Log(ex2);
+
+		//	}
+		//}
 
         private void SortAttacks()
         {
@@ -966,7 +1053,7 @@ namespace COTG.Views
 					return;
 			}
 
-			var attackType = await ChooseAttackType();
+			var attackType = await ChooseTargetType();
 			
 			if (attackType.atk == AttackType.invalid)
 				return;
@@ -984,7 +1071,6 @@ namespace COTG.Views
 					++cities;
 					continue;
 				}
-				spot.QueueClassify(false);
 				if (targets.Contains(spot))
 				{
 					if (attackType.update)
@@ -997,6 +1083,7 @@ namespace COTG.Views
 				}
 				else
 				{
+					spot.QueueClassify(false);
 					spot.attackType = attackType.atk;
 					spot.attackCluster = Spot.attackClusterNone;
 					++added;
@@ -1091,7 +1178,7 @@ namespace COTG.Views
 									break;
 								case Spot.Classification.vanqs:
 								case Spot.Classification.rt:
-									score -= 3*4;
+									score -= 6*4;
 									break;
 								case Spot.Classification.sorcs:
 								case Spot.Classification.druids:
@@ -1103,7 +1190,7 @@ namespace COTG.Views
 									break;
 								case Spot.Classification.horses:
 								case Spot.Classification.arbs:
-									score -= 4 * 4;
+									score -= 6 * 4;
 									break;
 								case Spot.Classification.se:
 									break;
@@ -1119,6 +1206,7 @@ namespace COTG.Views
 							break;
 						}
 					case ttVanquisher:
+					case ttRanger:
 						{
 							switch (real.classification)
 							{
@@ -1158,6 +1246,8 @@ namespace COTG.Views
 							break;
 						}
 					case ttHorseman:
+					case ttArbalist:
+					case ttPraetor:
 						{
 							switch (real.classification)
 							{
@@ -1166,7 +1256,7 @@ namespace COTG.Views
 								case Spot.Classification.vanqs:
 								case Spot.Classification.rt:
 
-									score += 2 * 4;
+									score += 6 * 4;
 									break;
 								case Spot.Classification.sorcs:
 								case Spot.Classification.druids:
@@ -1181,7 +1271,7 @@ namespace COTG.Views
 								case Spot.Classification.horses:
 								case Spot.Classification.arbs:
 
-									score += 7 * 4;
+									score += 6 * 4;
 									break;
 								case Spot.Classification.se:
 									break;
@@ -1484,7 +1574,9 @@ namespace COTG.Views
 								continue;
 
 							{
-								var maxPerCluster = clusters.Where(a => a.category == category).Min(a => a.attackCounts[isAssault]) + 1;
+								var maxPerCluster = (clusters.Where(a => a.category == category).Min(a => a.attackCounts[isAssault]) + 1);
+								if( (isAssault==1) && (category == AttackCategory.se) )
+									maxPerCluster = maxPerCluster.Min(SettingsPage.attackSEMaxAssaults);
 
 								if (c.attackCounts[isAssault] >= maxPerCluster)
 									continue;
@@ -1537,10 +1629,11 @@ namespace COTG.Views
 							{
 								
 								var count1 = cluster1.attackCounts[isAssault];
-								Assert(count1 <= count0);
+								
 
 								if (count1 >= count0 || cluster0.category!=cluster1.category)
 									continue;
+								Assert(count1 <= count0);
 								foreach (var f0 in attacks)
 								{
 									if (f0.attackCluster != cluster0.id || (f0.isAttackTypeAssault != (isAssault == 1)) || !cluster1.IsInRange(f0))
@@ -1930,7 +2023,7 @@ namespace COTG.Views
         }
 		private async void ArrivalSenTapped(object sender, RoutedEventArgs e)
 		{
-			(var dateTime, var okay) = await DateTimePicker.ShowAsync("Send Sen At", seTime);
+			(var dateTime, var okay) = await DateTimePicker.ShowAsync("Send Sen At", senTime);
 			if (okay)
 			{
 				senTime = dateTime;
@@ -1985,5 +2078,7 @@ namespace COTG.Views
 			await SaveAttacks();
 			Note.Show($"Set {counter} to {type}");
 		}
+
+		
 	}
 }

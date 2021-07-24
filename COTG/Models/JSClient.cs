@@ -479,7 +479,7 @@ namespace COTG
 				view.Source = new Uri("https://www.crownofthegods.com/home");
 				if (isSub)
 				{
-					Task.Delay(3000).ContinueWith(_ =>
+					Task.Delay(5000).ContinueWith(_ =>
 					{
 						App.DispatchOnUIThread(() => view.Source = new Uri($"https://w{world}.crownofthegods.com?s=1"));
 					});

@@ -7,6 +7,7 @@ using Cysharp.Text;
 using EnumsNET;
 
 using static COTG.StringList;
+using static COTG.Game.Enum;
 
 namespace COTG.Game
 {
@@ -61,7 +62,7 @@ namespace COTG.Game
 		Warship = 1 << Enum.ttWarship,
 		Shipper= 1 << 21,
 		[IsAlias]
-		Shipping = 1 << 21,
+		Shipping = Shipper,
 		Hub = 1 << 22,
 		LeaveMe = 1 << 23,
 		Storage = 1<< 24,
@@ -104,6 +105,29 @@ namespace COTG.Game
 	{
 		public static TagInfo Get(this Tags tag) => new TagInfo() { v = tag, s = tag.AsString() };
 		//public static TagInfo tagLeaveMe = Get(Tags.LeaveMe);
+		public static Tags FromTroopType(byte troopType)
+		{
+			switch(troopType)
+			{
+				case ttVanquisher: return Tags.Vanq;
+				case ttTriari: 
+				case ttRanger:return Tags.RT;
+				case ttPriestess:  return Tags.Priest;
+				case ttSorcerer: return Tags.Sorc;
+				case ttScout: return Tags.Scout;
+				case ttHorseman: return Tags.Horse;
+				case ttArbalist: return Tags.Arb;
+				case ttPraetor: return Tags.Praetor;
+				case ttDruid: return Tags.Druid;
+				case ttScorpion:
+				case ttRam: return Tags.Scorp;
+				case ttGalley: return Tags.Galley;
+				case ttStinger: return Tags.Stinger;
+				case ttWarship: return Tags.Warship;
+
+				default: return 0;
+			}
+		}
 
 		public static TagInfo[] tags;
 		public static TagInfo[] tagsAndAliases;

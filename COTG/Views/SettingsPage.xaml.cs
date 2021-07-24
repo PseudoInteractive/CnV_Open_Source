@@ -149,6 +149,7 @@ namespace COTG.Views
 		public static float attackMaxTravelHoursSen=40;
 		public static int attackSEMaxFakes = 20;
 		public static int attackSEMinAssaults = 2;
+		public static int attackSEMaxAssaults = 20;
 
 		public float uiMusic
 		{
@@ -435,7 +436,7 @@ namespace COTG.Views
 				Tips.SaveSeen();
 				//  st.Save("attacktime", AttackTab.time.DateTime);
 
-				AttackTab.SaveAttacksBlock();
+//				AttackTab.SaveAttacksBlock();
 			}
 			catch (Exception e)
 			{
@@ -767,17 +768,17 @@ namespace COTG.Views
 		//    this.Hide();
 		//}
 
-		private void CastlesIntel(object sender, RoutedEventArgs e)
-		{
+		//private void CastlesIntel(object sender, RoutedEventArgs e)
+		//{
 
-			{
-				var cont = (int)CastlesCont.Value;
-				var y = cont / 10;
-				var x = cont - y * 10;
-				World.DumpCities(x * 100, y * 100, (x + 1) * 100, (y + 1) * 100, exportAllianceMask, onlyCastles.IsChecked.GetValueOrDefault(), this.onlyWater.IsChecked.GetValueOrDefault());
-			}
-			this.Hide();
-		}
+		//	{
+		//		var cont = (int)CastlesCont.Value;
+		//		var y = cont / 10;
+		//		var x = cont - y * 10;
+		//		World.DumpCities(x * 100, y * 100, (x + 1) * 100, (y + 1) * 100, exportAllianceMask, onlyCastles.IsChecked.GetValueOrDefault(), this.onlyWater.IsChecked.GetValueOrDefault());
+		//	}
+		//	this.Hide();
+		//}
 		private async void ShrineFinder(object sender, RoutedEventArgs e)
 		{
 			this.Hide();

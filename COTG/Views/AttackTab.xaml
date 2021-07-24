@@ -42,10 +42,16 @@
                              NumberFormatter="{x:Bind cotg:App.formatterInt,Mode=OneTime}"
                              SmallChange="1" />
 			<winui:NumberBox x:Name="minAssaults"
-                             Header="Min Assaults"
+                             Header="Min SE Assaults"
                              ToolTipService.ToolTip="For SE only - if assults are culled due to distance and there are fewer assaults than this left, the target will be discarded"
                              Style="{StaticResource NumberBoxSmall}"
                              Value="{x:Bind view:SettingsPage.attackSEMinAssaults, Mode=TwoWay}"
+                             NumberFormatter="{x:Bind cotg:App.formatterInt,Mode=OneTime}"
+                             SmallChange="1" />
+			<winui:NumberBox x:Name="maxSEAssaults"
+                             Header="Max SE Assaults"
+                             Style="{StaticResource NumberBoxSmall}"
+                             Value="{x:Bind view:SettingsPage.attackSEMaxAssaults, Mode=TwoWay}"
                              NumberFormatter="{x:Bind cotg:App.formatterInt,Mode=OneTime}"
                              SmallChange="1" />
 			<winui:NumberBox Header="Hours To Cap"
@@ -78,6 +84,13 @@
                     ToolTipService.ToolTip="Extracts coordinates from the clipboard and adds attacks"
                     Style="{StaticResource ButtonSmall}"
                     Click="AddAttacksFromClipboard" />
+			<Button Content="Add Attacks from Player"
+                    VerticalAlignment="Center"
+                    Margin="4"
+                    HorizontalAlignment="Center"
+                    ToolTipService.ToolTip="Adds castles from a player, given a troop type and continent"
+                    Style="{StaticResource ButtonSmall}"
+                    Click="{x:Bind view:AttackAddPlayer.Show}" />
 			<!--<Button Content="Add Attacks from Clipboard (form)"
                     VerticalAlignment="Center"
                     Margin="4"
@@ -103,7 +116,7 @@
                            Content="Sen Arrival..."
 	    					Margin="4"
                            HorizontalAlignment="Center"
-                           Click="ArrivalSETapped"
+                           Click="ArrivalSenTapped"
                             Style="{StaticResource ButtonSmall}"
                            ToolTipService.ToolTip="Time at which Senator sieges arrive." />
 			<Button x:Name="arrivalSE"
@@ -182,7 +195,6 @@
                      RowDetailsVisibilityMode="Collapsed"
                      CanUserReorderColumns="True"
 					 Sorting="Sorting"
-
                      GridLinesVisibility="All"
                      AlternatingRowBackground="#FF301030">
 			<tk:DataGrid.Columns>
@@ -235,6 +247,7 @@
 
                                        Binding="{Binding nameAndRemarks, Mode=OneTime}" />
 
+				
 				<tk:DataGridTextColumn Header="ts"
 
                                        FontSize="{StaticResource SmallFontSize}"
@@ -245,12 +258,18 @@
 									   Tag="classification"
 									   FontSize="{StaticResource SmallFontSize}"
 		   							   FontFamily="Tw Cen MT Condensed"
-                                       Binding="{Binding classificationString, Mode=OneWay}" />
+                                       Binding="{Binding classificationString, Mode=OneWay}"
+									   IsReadOnly="True" />
+				<tk:DataGridCheckBoxColumn Header="Academy"
+									   Binding="{Binding hasAcademy, Mode=OneWay}"
+									/>
+				
 				<tk:DataGridTextColumn Header="Sen"
 									   FontSize="{StaticResource SmallFontSize}"
 		   							   FontFamily="Tw Cen MT Condensed"
                                        Binding="{Binding senForAttack, Mode=OneWay}" />
-				<tk:DataGridTemplateColumn Header="Remove">
+
+					<tk:DataGridTemplateColumn Header="Remove">
 					<tk:DataGridTemplateColumn.CellTemplate>
 						<DataTemplate x:DataType="game:Spot">
 							<HyperlinkButton Content="Remove"
@@ -402,6 +421,7 @@
                                              Tapped="TargetCoord_Tapped"
                                              HorizontalAlignment="Center"
                                              HorizontalContentAlignment="Center"
+									   Style="{StaticResource TextBlockButtonStyle}"
 
 											 ToolTipService.ToolTip="The target to attack" />
 							</DataTemplate>

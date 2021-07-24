@@ -152,7 +152,7 @@ namespace COTG.Game
 		}
 		public static void UpdateName(int cid, string name) => GetOrAdd(cid, name);
 
-		internal bool HasTag(Tags tag) => (tags & tag) == tag;
+		internal bool HasTag(Tags tag) => tags.HasFlag(tag);
 
 		public bool isMine => pid == Player.myId;
 
@@ -267,7 +267,6 @@ namespace COTG.Game
 
 		public const int attackClusterNone = -1;
 
-
 		public bool isAttackClusterNone => attackCluster == attackClusterNone;
 
 		public enum Classification : byte
@@ -289,6 +288,7 @@ namespace COTG.Game
 			pending,
 			missing
 		}
+
 		public struct ClassificationExtended
 		{
 			public Classification classification;
@@ -309,9 +309,13 @@ namespace COTG.Game
 				return rv;
 			}
 		};
-		public Classification classification { get; set; }
+		public Classification classification;
 		public sbyte academyInfo = -1;
-		public bool? hasAcademy => academyInfo == 0 ? false : academyInfo == 1 ? true : null;
+		public bool? hasAcademy
+		{
+			get => academyInfo == 0 ? false : academyInfo == 1 ? true : null;
+			set => academyInfo = value == true ? (sbyte)1 : (sbyte)0;
+		}
 		public bool isNotClassified => classification == Classification.unknown; // does not include pending
 		public bool isClassified => classification != Classification.unknown && classification != Classification.pending;
 		public bool isPending => classification == Classification.pending;
@@ -535,7 +539,7 @@ namespace COTG.Game
 			if (!troops.Any())
 				return (byte)classificationTT;
 
-			byte best = 0; // if no raiding troops we return guards 
+			byte best = 0; // based on clasification or guards
 			var bestTS = 0;
 			foreach (var ttc in troops.Enumerate())
 			{
@@ -716,22 +720,31 @@ namespace COTG.Game
 			if(mod.IsShiftAndControl() && AttackTab.IsVisible() && City.Get(cid).isCastle)
 			{
 				var city = City.Get(cid);
-				if(city.IsAllyOrNap())
 				{
-					city.attackType = city.attackType switch { AttackType.assault => AttackType.senator, AttackType.senator => AttackType.se, AttackType.se => AttackType.none, _ => AttackType.assault };
-					if (!AttackTab.attacks.Contains(city))
-						AttackTab.attacks.Add(city);
-					AttackTab.attacks.NotifyReset();
-				}
-				else
-				{
-					city.attackType = city.attackType switch { AttackType.seFake => AttackType.se, AttackType.se => AttackType.senatorFake, AttackType.senatorFake => AttackType.senator,
-						AttackType.senator => AttackType.none, _ => AttackType.seFake };
-					if (!AttackTab.targets.Contains(city))
-						AttackTab.targets.Add(city);
-					AttackTab.targets.NotifyReset();
+					using var __lock = await AttackTab.instance.TouchLists();
+
+					if (city.IsAllyOrNap())
+					{
+						city.attackType = city.attackType switch { AttackType.assault => AttackType.senator, AttackType.senator => AttackType.se, AttackType.se => AttackType.none, _ => AttackType.assault };
+						if (!AttackTab.attacks.Contains(city))
+							AttackTab.attacks.Add(city);
+					}
+					else
+					{
+						city.attackType = city.attackType switch
+						{
+							AttackType.seFake => AttackType.se,
+							AttackType.se => AttackType.senatorFake,
+							AttackType.senatorFake => AttackType.senator,
+							AttackType.senator => AttackType.none,
+							_ => AttackType.seFake
+						};
+						if (!AttackTab.targets.Contains(city))
+							AttackTab.targets.Add(city);
+					}
 				}
 				Note.Show($"{city.nameAndRemarks} set to {city.attackType}");
+				AttackTab.WritebackAttacks();
 				AttackTab.WaitAndSaveAttacks();
 			}
 			else if (City.CanVisit(cid) && !mod.IsShiftOrControl())
@@ -782,6 +795,7 @@ namespace COTG.Game
 				});
 			}
 		}
+
 		internal async Task<Classification> ClassifyIfNeeded()
 		{
 			if (isClassified)
@@ -833,7 +847,7 @@ namespace COTG.Game
 				return Classification.arbs;
 			else if (HasTag(Tags.Stinger))
 				return Classification.stingers;
-			else if (HasTag(Tags.Galley) || HasTag(Tags.Stinger) || HasTag(Tags.Warship))
+			else if (HasTag(Tags.Galley) || HasTag(Tags.Warship))
 				return Classification.navy;
 			else if (HasTag(Tags.Hub))
 				return Classification.hub;
@@ -889,7 +903,7 @@ namespace COTG.Game
 
 					}
 				}
-				academyInfo = academies > 0 ? (sbyte)1 : (sbyte)0;
+				hasAcademy = academies > 0;
 				var mx = stables.Max(academies).Max(training.Max(sorc)).Max(academies.Max(training)).Max(se).Max(shipyards).Max(forums).Max(ports);
 				if (mx <= 4)
 				{
@@ -952,6 +966,17 @@ namespace COTG.Game
 				this.classification = classification;
 
 			return (this.classification);
+		}
+		static public bool TryConvertTroopTypeToClassification(byte ttype, out Classification classification)
+		{
+			var i = classificationTTs.FindIndex((byte)ttype);
+			if(i!= -1)
+			{
+				classification = (Classification)i;
+				return true;
+			}
+			classification = Classification.unknown;
+			return false;
 		}
 
 		internal bool TouchClassification()
@@ -1615,7 +1640,9 @@ namespace COTG.Game
 		{
 			try
 			{
-				if (!IsBuild())
+				await CityBuildQueue.processLock.WaitAsync();
+
+				if (!IsBuild(cid))
 				{
 					await JSClient.CitySwitch(cid, lazyMove: true, false, false, waitOnChange: true);
 					await Task.Delay(1500);
@@ -1689,6 +1716,12 @@ namespace COTG.Game
 			{
 				LogEx(ex, eventName: "OGA");
 			}
+			finally
+			{
+				CityBuildQueue.processLock.Release();
+
+			}
+
 		}
 
 		public bool isHubOrStorage => HasTag(Tags.Hub) || HasTag(Tags.Storage);
@@ -1946,7 +1979,7 @@ namespace COTG.Game
 							{
 								s = s + id.CidToString() + "\t";
 							}
-							AttackTab.instance.AddAttacksFromString(s);
+							AttackTab.AddAttacksFromString(s);
 							Note.Show($"Added attacker {s}");
 
 						});
@@ -2152,6 +2185,7 @@ namespace COTG.Game
 
 
 		}
+		
 		async void CopyForSheets()
 		{
 			var sb = new StringBuilder();
@@ -2162,40 +2196,11 @@ namespace COTG.Game
 				++counter;
 				var s = Spot.GetOrAdd(_cid);
 				var c = await s.ClassifyEx(true);
-				switch (classification)
-				{
-					case Classification.sorcs:
-						sb.Append("Sorc\t");
-						break;
-					case Classification.druids:
-						sb.Append("Druids\t");
-						break;
-					case Classification.praetor:
-						sb.Append("prae\t");
-						break;
-					case Classification.priestess:
-						sb.Append("priest\t");
-						break;
-					case Classification.horses:
-					case Classification.arbs:
-						sb.Append("Horses\t");
-						break;
-
-					case Classification.se:
-						sb.Append("Siege engines\t");
-						break;
-					case Classification.navy:
-						sb.Append("Warships?\t");
-						break;
-					case Classification.stingers:
-						sb.Append("Stungers\t");
-						break;
-					default:
-						sb.Append("vanq\t");
-						break;
-				}
-				sb.Append(s.tsTotal + "\t");
-				sb.Append(s.hasAcademy.GetValueOrDefault() ? "Yes\t" : "No\t");
+				sb.Append(classificationString);
+				sb.Append('\t');
+				sb.Append(s.tsTotal);
+				sb.Append('\t');
+				sb.Append(s.hasAcademy.GetValueOrDefault() ? "Academy\t" : "None\t");
 				sb.Append(s.xy + "\n");
 
 			}

@@ -1,0 +1,33 @@
+﻿<ContentDialog
+    x:Class="COTG.Views.AttackAddPlayer"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:COTG.Views"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+	xmlns:winui="using:Microsoft.UI.Xaml.Controls"
+    Title="Add Attack Castles for Player"
+    PrimaryButtonText="Okay"
+    SecondaryButtonText="Cancel" >
+	<StackPanel>
+		<AutoSuggestBox Header="Player" x:Name="playerName" PlaceholderText="Type a player name" TextChanged="{x:Bind local:PlayerGroup.PlayerNameSuggest_TextChanged}"
+                QueryIcon="Find" QuerySubmitted="Suggest_QuerySubmitted" 
+                Width="300" HorizontalAlignment="Left" />
+		<winui:RadioButtons x:Name="troopType" SelectedIndex="0" MaxColumns="2" >
+			<x:String>Vanq</x:String>
+			<x:String>Sorc</x:String>
+			<x:String>Druid</x:String>
+			<x:String>Horse</x:String>
+			<x:String>Prae</x:String>
+			<x:String>SE</x:String>
+			<x:String>Ballista</x:String>
+			<x:String>Unknown</x:String>
+		</winui:RadioButtons>
+		<winui:NumberBox x:Name="cont" Value="22" Header="Continent" Style="{StaticResource NumberBoxSmall}" />
+		<StackPanel Orientation="Horizontal">
+			<winui:NumberBox x:Name="count" Value="1" Header="Count" Style="{StaticResource NumberBoxSmall}" />
+			<CheckBox x:Name="academy" Content="Has Academy" IsChecked="True" Margin="8,0,8,0" IsThreeState="True"  />
+		</StackPanel>
+	</StackPanel>
+</ContentDialog>

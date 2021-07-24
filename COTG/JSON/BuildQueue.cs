@@ -375,7 +375,6 @@ namespace COTG.JSON
 													++offset;
 													continue;
 												}
-
 											}
 
 											// is there a building in the way?
@@ -627,7 +626,7 @@ namespace COTG.JSON
 			{
 				if (jsCity.TryGetProperty("bq", out var bq))
 				{
-					if (bq.ValueKind == JsonValueKind.Array || bq.ValueKind == JsonValueKind.Object )
+					if (bq.ValueKind == JsonValueKind.Array )
 					{
 						result = true;
 						cotgQLength = bq.GetArrayLength();

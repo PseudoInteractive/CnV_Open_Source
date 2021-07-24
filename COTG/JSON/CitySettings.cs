@@ -381,15 +381,19 @@ namespace COTG.JSON
 
 
 
-		public static void SetRecruitFromTag(int cid)
+		public static async void SetRecruitFromTag(int _cid)
         {
-            var spot = Spot.GetOrAdd(cid);
+			var targets = Spot.GetSelectedForContextMenu(_cid, onlyMine: true);
+			foreach (var cid in targets)
+			{
 
-            UpdateMinisterOptions(cid, async (split) =>
-            {
-                SetRecruit(split, spot);
-                return true;
-            });
+				await UpdateMinisterOptions(cid, async (split) =>
+				{
+					 SetRecruit(split, City.Get(cid) );
+					return true;
+				});
+			}
+			Note.Show($"Updated recruit for {targets.Count} cities");
         }
 
 		const int countMany = 3333333;

@@ -325,6 +325,11 @@ function openAttackSender(args : string) {
 
 function Aimp(str) {
 	var Aexp = JSON.parse(str);
+	for (let i = 1; i <= 15; i++) {
+		$("#t" + i + "x").val(null);
+		$("#t" + i + "y").val(null);
+	}
+
 	for (let i = 1; i <= Aexp.x.length; i++) {
 		$("#t" + i + "x").val(Aexp.x[i - 1]);
 		$("#t" + i + "y").val(Aexp.y[i - 1]);

@@ -121,7 +121,7 @@ namespace COTG.Game
         public static double TTTravel(int type) { return ttTravel[type]*(60.0*100) / (ttSpeedBonus[type]); }
 
         //
-        // Templates not working for me
+		// Templates not working for me
         //
         public enum DungeonType : byte
         {

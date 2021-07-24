@@ -108,7 +108,6 @@ namespace COTG.Views
 						   if(headers.GetValueOrDefault() ==true )
 							    sb.AppendLine($"---\t" + p.name);
 
-
 						   foreach (var _cid in p.cities)
 						   {
 							  var cid = _cid;
@@ -172,10 +171,10 @@ namespace COTG.Views
 									   sb.Append("Scorp\t");
 									   break;
 								   case Classification.navy:
-									   sb.Append("Warship\t");
+									   sb.Append("Warship?\t");
 									   break;
 								  case Classification.stingers:
-									  sb.Append("Stinger\t");
+									  sb.Append("Stinger?\t");
 									  break;
 								  case Classification.rt:
 									  sb.Append("RT\t");

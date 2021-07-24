@@ -1610,7 +1610,7 @@ namespace COTG
 
 								if (!AttackTab.attackClusters.IsNullOrEmpty() )
 								{
-									var showAll = (AttackTab.attackClusters.Length < 128)&&(!hovered.Any());
+									var showAll = (AttackTab.attackClusters.Length < SettingsPage.showAttacksLimit) &&(!hovered.Any());
 									foreach (var cluster in AttackTab.attackClusters)
 									{
 										var isHover = hovered.Contains(cluster);
@@ -1660,8 +1660,8 @@ namespace COTG
 										var c1 = cc + halfSquareOffset;
 										var col = t.attackType switch
 										{
-											AttackType.senator => CColor(168, 64, 0, 222),
-											AttackType.senatorFake => CColor(128, 48, 0, 128),
+											AttackType.senator => CColor(168, 0, 0, 222),
+											AttackType.senatorFake => CColor(128, 34, 33, 128),
 											AttackType.se => CColor(0, 0, 255, 255),
 											AttackType.seFake => CColor(98, 32, 168, 128),
 											_ => CColor(64, 64, 64, 64)
@@ -1682,8 +1682,8 @@ namespace COTG
 										var c1 = cc + halfSquareOffset;
 										var col = t.attackType switch
 										{
-											AttackType.assault => CColor(55, 64, 190, 222),
-											AttackType.senator => CColor(168, 64, 0, 196),
+											AttackType.assault => CColor(55, 94, 190, 222),
+											AttackType.senator => CColor(168, 64, 0, 222),
 											AttackType.senatorFake => CColor(128, 48, 0, 128), // not really used as attack
 											AttackType.se => CColor(148, 0, 148, 222),
 											AttackType.seFake => CColor(128, 32, 128, 128), // not really used as attack

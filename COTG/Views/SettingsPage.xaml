@@ -14,7 +14,6 @@
 			   
 			   PrimaryButtonText="Done"
 			   Title="Settings"
-			   CloseButtonText="Cancel"
 			   FullSizeDesired="True"
 			   UseSystemFocusVisuals="True"
 			   BorderBrush="{ThemeResource SystemControlBackgroundBaseLowRevealBorderBrush}"
@@ -69,7 +68,7 @@
 			<wct:WrapPanel Orientation="Horizontal">
 				<CheckBox Content="Fetch Full Defense History"
 						  IsChecked="{x:Bind FetchFullHistory,Mode=TwoWay}"
-						  Margin="8" />
+						  Margin="4" />
 				<controls:NumberBox  Header="Show Attacks Limit"
 									 Value="{x:Bind views:SettingsPage.showAttacksLimit,Mode=TwoWay}"
 									 SmallChange="1"
@@ -160,11 +159,24 @@
 			<wct:WrapPanel Orientation="Horizontal"
 						   Margin="4">
 
-                <Button Content="Shrine Finder"
-						Click="{x:Bind ShrineFinder}"
+				<Button Content="Shrine Finder"
 						Style="{ThemeResource ButtonRevealStyle}"
-						Margin="4" />
-                <Button Content="Export for War"
+						Margin="4">
+					<Button.Flyout>
+						<Flyout>
+							<StackPanel Orientation="Vertical">
+								<controls:NumberBox x:Name="CastlesCont"
+									NumberFormatter="{x:Bind cotg:App.formatterInt,Mode=OneTime}"
+									Style="{StaticResource NumberBoxSmall}"
+									Header="Continent"
+									PlaceholderText="i.e. 22 34"
+									Value="22" />
+								<Button Content="Go" Click="{x:Bind ShrineFinder}" />
+							</StackPanel>
+						</Flyout>
+					</Button.Flyout>
+				</Button>
+				<Button Content="Export for War"
 						Click="{x:Bind views:ExportCastles.Go}"
 						ToolTipService.ToolTip="Exports cities/castles to the clipboard in a spreadsheet format based on filters"
 						Style="{ThemeResource ButtonRevealStyle}"
@@ -265,23 +277,6 @@
 						</Flyout>
 					</Button.Flyout>
 				</Button>
-				<controls:NumberBox x:Name="CastlesCont"
-									NumberFormatter="{x:Bind cotg:App.formatterInt,Mode=OneTime}"
-									Style="{StaticResource NumberBoxSmall}"
-									Header="Continent"
-									PlaceholderText="i.e. 22 34"
-									Value="22" />
-				<TextBox  ToolTipService.ToolTip="If not empty, only alliances containing this substring will be exported"
-							Text="{x:Bind views:SettingsPage.exportAllianceMask}"
-						 Header="alliance mask" />
-				<CheckBox x:Name="onlyCastles"
-						  Content="Only Castles"
-						  IsChecked="True"
-						  IsThreeState="False" />
-				<CheckBox x:Name="onlyWater"
-						  Content="Only on Water"
-						  IsChecked="False"
-						  IsThreeState="False" />
 			</wct:WrapPanel>
 
 			<TextBlock Text="City Lists"

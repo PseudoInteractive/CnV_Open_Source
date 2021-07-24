@@ -514,10 +514,10 @@ namespace COTG.JSON
 																					  if (result.StatusCode == HttpStatusCode.TooManyRequests)
 																					  {
 																						  await Task.Delay(2000); // wait 2 seconds
-																				  }
+																					  }
 																					  else
 																					  {
-																						  result.EnsureSuccessStatusCode();
+																						//  result.EnsureSuccessStatusCode();
 																						  break;
 																					  }
 																				  }

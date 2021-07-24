@@ -690,7 +690,7 @@ namespace COTG.Views
 							for (; ; )
 							{
 								count = (commandLimit - GetBuildQueueLength());
-								if (count < 2 || todoGet >= todo.Count  || bc.cabins == 0)
+								if (count < 2 || todoGet >= todo.Length  || bc.cabins == 0)
 									break;
 								var c = todo[todoGet++];
 
@@ -768,32 +768,37 @@ namespace COTG.Views
 				return 0;
 
 		}
-		static List<(int x, int y)> FindPendingOverlayBuildings(City city)
+		static (int x, int y)[] FindPendingOverlayBuildings(City city)
 		{
 			List<(int x, int y)> rv = new();
-			for (var cy = span0; cy <= span1; ++cy)
+			for (int r = 1; r <= City.citySpan; ++r)
 			{
-				for (var cx = span0; cx <= span1; ++cx)
+				for (var y = -r; y <= r; ++y)
 				{
-					var c = (cx, cy);
-					var id = XYToId(c);
-					if (!IsBuildingSpot(id))
-						continue;
-
-					var bid = city.BidFromOverlay(id);
-					if (bid switch { bidCottage or bidWall or bidTownHall or (>= bidResStart and <= bidResEnd) => true, _ => false })
+					for (var x = -r; x <= r; ++x)
 					{
-						continue;
-					}
-					if ((bid != 0) && (CityBuild.postQueueBuildings[id].bid != bid))
-					{
-						rv.Insert( AMath.random.Next(rv.Count),c);
+						if ((x == -r || x == r) || (y == -r || y == r))
+						{
+							var c = (x, y);
+							var id = XYToId(c);
+							if (!IsBuildingSpot(id))
+								continue;
 
+							var bid = city.BidFromOverlay(id);
+							if (bid switch { bidCottage or bidWall or bidTownHall or (>= bidResStart and <= bidResEnd) => true, _ => false })
+							{
+								continue;
+							}
+							if ((bid != 0) && (CityBuild.postQueueBuildings[id].bid != bid))
+							{
+								rv.Add(c);
+
+							}
+						}
 					}
 				}
 			}
-			rv.Sort( (a,b) => GetSpotCost(a).CompareTo(GetSpotCost(b)));
-			return rv;
+			return rv.OrderBy( (a) => GetSpotCost(a) ).ToArray();
 		}
 		static bool WantMoveStuff()
 		{

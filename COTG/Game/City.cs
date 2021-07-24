@@ -964,6 +964,8 @@ namespace COTG.Game
 		public string senForAttack {
 			get
 			{
+				if (!isMine)
+					return "?";
 				var t = troopsTotal.FirstOrDefault((a) => a.type == ttSenator);
 				if (t.count !=0 )
 					return t.ts.ToString();
@@ -1217,7 +1219,6 @@ namespace COTG.Game
 		public ushort Ships => ships;
 		public ushort shipsHome;
 		public ushort ShipsHome => shipsHome;
-		public bool academy { get; set; }
 		public bool sorcTower { get; set; }
 		public bool ministersOn { get; set; }
 

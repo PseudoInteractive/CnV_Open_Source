@@ -36,13 +36,14 @@ namespace COTG.Views
         public static float woodStoneRatio = -1;
         public static int reserveWood = 0;
         public static int reserveStone = 0;
+		public static bool proportionateToWhatsNeeded = true;
         public DonationTab()
         {
             Assert(instance == null);
             instance = this;
             this.InitializeComponent();
 			spotGrids.Add(donationGrid);
-
+	
 		}
 
 		public static bool IsVisible() => instance.isVisible;
@@ -55,6 +56,7 @@ namespace COTG.Views
             if(visible)
             {
                 BlessedCity.Refresh();
+				// This just updates details for all cities
                 var details = await  CityOverview.Send();
                 foreach(var detail in details)
                 {
@@ -72,7 +74,7 @@ namespace COTG.Views
                     city.ironStorage = detail.iron_storage;
                     city.food = detail.food;
                     city.foodStorage = detail.food_storage;
-                    city.academy = detail.Academy == "Y";
+                    city.hasAcademy = detail.Academy == "Y";
                     city.sorcTower = detail.Sorc_tower == "Y";
                 }
 
@@ -201,7 +203,9 @@ public class BlessedTapCommand : DataGridCommand
                                         wood = (int)(wood * ratio);
                                         stone = (int)(stone * ratio);
                                         float denom = (wood + stone);
-                                        var desRatio = DonationTab.woodStoneRatio;
+                                        var desRatio = DonationTab.proportionateToWhatsNeeded && (i.wood > 0 || i.stone > 0) ?
+												   (float)i.wood / (i.wood + i.stone).Max(1) :
+												   DonationTab.woodStoneRatio;
                                         if (desRatio >= 0)
                                         {
                                             while (wood > 1000 && stone < maxStone -1000 &&  (wood-1000)/ denom > desRatio)

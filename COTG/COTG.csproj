@@ -329,6 +329,9 @@
     <Compile Include="Styles\BattleReportTemplateSelector.cs" />
     <Compile Include="TemplateSelectors\SampleDataTemplateSelector.cs" />
     <Compile Include="TemplateSelectors\SharedContentTemplateSelector.cs" />
+    <Compile Include="Views\AttackAddPlayer.xaml.cs">
+      <DependentUpon>AttackAddPlayer.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\AttackTab.xaml.cs">
       <DependentUpon>AttackTab.xaml</DependentUpon>
     </Compile>
@@ -477,6 +480,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Styles\TextBlock.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\AttackAddPlayer.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

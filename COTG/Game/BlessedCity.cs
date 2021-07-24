@@ -29,7 +29,7 @@ namespace COTG.Game
 		public float travelMinutes; // distance to sending city
 		public string travelTime => TimeSpan.FromMinutes(travelMinutes).Format();
 
-		public float sortScore => travelMinutes - pri * (60*3.0f); // todo: refine this, also take into acccount resources needed
+		public float sortScore => travelMinutes - (pri==4? 0.0625f : (pri+1.0f).Squared() )* (60*6.0f); // todo: refine this, also take into acccount resources needed
         public static async void Refresh()
         {
             try

@@ -121,47 +121,71 @@ namespace COTG.Game
                 
             }
         }
-        public static string cN(in TroopTypeCounts troops,int n) => troops.Count > n ? $" {troops.GetIndexCount(n):N0} " : null;
-        public static BitmapImage iN(in TroopTypeCounts troops, int n) => troops.Count > n ? ImageHelper.FromImages($"Icons/troops{troops.GetIndexType(n) }.png") : null;
-
+	
+		public static string cN(in TroopTypeCounts troops,int n) => troops.Count > n ? $" {troops.GetIndexCount(n):N0} " : null;
+		
+		public static BitmapImage iN(in TroopTypeCounts troops, int n) => troops.Count > n ? ImageHelper.FromImages($"Icons/troops{troops.GetIndexType(n) }.png") : null;
+		[JsonIgnore]
         public string c0        => cN(troops,0);
-        public BitmapImage i0   => iN(troops, 0);
+		[JsonIgnore]
+		public BitmapImage i0   => iN(troops, 0);
 
-        public string c1 => cN(troops, 1);
-        public BitmapImage i1 => iN(troops, 1);
-
-
-        public string c2 => cN(troops, 2);
-        public BitmapImage i2 => iN(troops, 2);
-
-        public string c3 => cN(troops, 3);
-        public BitmapImage i3 => iN(troops, 3);
+		[JsonIgnore]
+		public string c1 => cN(troops, 1);
+		[JsonIgnore]
+		public BitmapImage i1 => iN(troops, 1);
 
 
-        public string sc0 => cN(sumDef, 0);
-        public BitmapImage si0 => iN(sumDef, 0);
+		[JsonIgnore]
+		public string c2 => cN(troops, 2);
+		[JsonIgnore]
+		public BitmapImage i2 => iN(troops, 2);
 
-        public string sc1 => cN(sumDef, 1);
-        public BitmapImage si1 => iN(sumDef, 1);
-
-
-        public string sc2 => cN(sumDef, 2);
-        public BitmapImage si2 => iN(sumDef, 2);
-
-        public string sc3 => cN(sumDef, 3);
-        public BitmapImage si3 => iN(sumDef, 3);
-
-        public string sc4 => cN(sumDef, 4);
-        public BitmapImage si4 => iN(sumDef, 4);
-        public string sc5 => cN(sumDef, 5);
-        public BitmapImage si5 => iN(sumDef, 5);
-        public string sc6 => cN(sumDef, 6);
-        public BitmapImage si6 => iN(sumDef, 6);
-        public string sc7 => cN(sumDef, 7);
-        public BitmapImage si7 => iN(sumDef, 7);
+		[JsonIgnore]
+		public string c3 => cN(troops, 3);
+		[JsonIgnore]
+		public BitmapImage i3 => iN(troops, 3);
 
 
-        public bool hasSenator => troops.Any((a) => a.isSenator);
+		[JsonIgnore]
+		public string sc0 => cN(sumDef, 0);
+		[JsonIgnore]
+		public BitmapImage si0 => iN(sumDef, 0);
+
+		[JsonIgnore]
+		public string sc1 => cN(sumDef, 1);
+		[JsonIgnore]
+		public BitmapImage si1 => iN(sumDef, 1);
+
+
+		[JsonIgnore]
+		public string sc2 => cN(sumDef, 2);
+		[JsonIgnore]
+		public BitmapImage si2 => iN(sumDef, 2);
+
+		[JsonIgnore]
+		public string sc3 => cN(sumDef, 3);
+		[JsonIgnore]
+		public BitmapImage si3 => iN(sumDef, 3);
+
+		[JsonIgnore]
+		public string sc4 => cN(sumDef, 4);
+		[JsonIgnore]
+		public BitmapImage si4 => iN(sumDef, 4);
+		[JsonIgnore]
+		public string sc5 => cN(sumDef, 5);
+		[JsonIgnore]
+		public BitmapImage si5 => iN(sumDef, 5);
+		[JsonIgnore]
+		public string sc6 => cN(sumDef, 6);
+		[JsonIgnore]
+		public BitmapImage si6 => iN(sumDef, 6);
+		[JsonIgnore]
+		public string sc7 => cN(sumDef, 7);
+		[JsonIgnore]
+		public BitmapImage si7 => iN(sumDef, 7);
+
+		public bool hasSenator => troops.Any((a) => a.isSenator);
         public bool hasNaval => troops.Any((a) => a.isNaval);
         public bool hasArt => troops.Any((a) => a.isArt);
 

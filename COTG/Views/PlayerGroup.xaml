@@ -17,7 +17,7 @@
             <RowDefinition />
             <RowDefinition />
         </Grid.RowDefinitions>
-        <AutoSuggestBox x:Name="suggest" PlaceholderText="Type a player name" TextChanged="Suggest_TextChanged"
+		<AutoSuggestBox x:Name="suggest" PlaceholderText="Type a player name" TextChanged="{x:Bind local:PlayerGroup.PlayerNameSuggest_TextChanged}"
                 QueryIcon="Find" QuerySubmitted="Suggest_QuerySubmitted" 
                 Width="300" HorizontalAlignment="Left" />
 

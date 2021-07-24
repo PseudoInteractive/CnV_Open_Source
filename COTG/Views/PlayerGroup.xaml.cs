@@ -37,7 +37,7 @@ namespace COTG.Views
         {
         }
 
-        private void Suggest_TextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)
+        public static void PlayerNameSuggest_TextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)
         {
             if (args.Reason == AutoSuggestionBoxTextChangeReason.UserInput)
             {
@@ -60,7 +60,7 @@ namespace COTG.Views
                 if (items.Count > 0)
                     sender.ItemsSource = items;
                 else
-                    sender.ItemsSource = new string[] { "No results found" };
+                    sender.ItemsSource = new string[] { "No Players found" };
             }
         }
 

@@ -124,12 +124,16 @@ namespace COTG
 			await TabPage.CloseAllTabWindows();
 		}
 
-		private void App_Suspending(object sender, SuspendingEventArgs e)
+		private async void App_Suspending(object sender, SuspendingEventArgs e)
 		{
+			var deferral = e.SuspendingOperation.GetDeferral();
+			//TODO: Save application state and stop any background activity
 			Trace("Suspend");
 			isForeground = false;
-			JSON.BuildQueue.SaveIfNeeded().Wait();
+			await JSON.BuildQueue.SaveIfNeeded();
 			SettingsPage.SaveAll();
+			await AttackTab.SaveAttacksBlock();
+			deferral.Complete();
 		}
 
 

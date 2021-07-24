@@ -231,5 +231,10 @@
   - **New**
     - You can scale down the font sizes for some things (if the fonts are too large for you)
     - You must restart to see the changes
-    - 
+  - **New**
+    - Donation priorization no longer treats Do No Send as the highest setting
+  - **Update**
+    - When donating, the ratio sent will be proportionate to what is missing
+      - You can enable/disable this with the "Wood Vs Stone" slider
+  - 
  

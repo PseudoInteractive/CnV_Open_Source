@@ -84,12 +84,38 @@ namespace COTG.Game
 	{
 		public int cid { get; set; } // spot that this refers to
 		public AttackType attackType { get; set; }
+		public byte troopType { get; set; }
+		public bool hasAcademy { get; set;}
+
 		public int attackCluster { get; set; } // for SE clusters,
 
 		[JsonIgnore]
 		public Spot spot => Spot.GetOrAdd(cid);
 
+		public void CopyFrom(City t)
+		{
+			attackCluster = t.attackCluster;
+			cid = t.cid;
+			troopType = t.primaryTroopType;
+			hasAcademy = t.hasAcademy.GetValueOrDefault();
+			attackType = t.attackType;
+		}
+		
+		public void CopyTo(City t)
+		{
+			t.attackCluster = attackCluster;
+			t.cid = cid;
+			if (!t.isMine)
+			{
+				Spot.TryConvertTroopTypeToClassification(troopType, out t.classification);
+				t.tags = TagHelper.FromTroopType(troopType);
+			}
+
+			t.hasAcademy = hasAcademy;
+			t.attackType = attackType;
+		}
 	}
+
 	public struct AttackSenderScript
 	{
 		public int cid { get; set; }
