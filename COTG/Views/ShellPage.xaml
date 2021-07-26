@@ -48,7 +48,7 @@
 
 
 		<CommandBar Grid.ColumnSpan="2" TabFocusNavigation="Once" UseSystemFocusVisuals="True" x:Name="commandBar" x:FieldModifier="public"   >
-			<CommandBar.Content>
+			<CommandBar.Content   >
 				<StackPanel Orientation="Horizontal" VerticalAlignment="Center">
 					<ComboBox x:Name="windowLayout" SelectedIndex="0" SelectionChanged="windowLayout_SelectionChanged" VerticalAlignment="Center" Margin="4"
                            ToolTipService.ToolTip="Select a view layout" >
@@ -119,98 +119,96 @@
 						<SymbolIcon Symbol="Next"/>
 					</Button>
 					<TextBox x:Name="coords" Margin="4" Width="100" TextAlignment="Center"  Text="000:000" VerticalAlignment="Center" x:FieldModifier="public" KeyDown="coords_KeyDown"/>
-					<Button x:Name="focus" Margin="4" Width="180"  VerticalAlignment="Center" x:FieldModifier="public"
+					<Button x:Name="focus" Margin="4" Width="140"  VerticalAlignment="Center" x:FieldModifier="public"
                             Style="{ThemeResource ButtonRevealStyle}" Click="HomeClick" RightTapped="HomeRightTapped" FontFamily="Tw Cen MT Condensed"
-                            ToolTipService.ToolTip="Spot with Focus.&#x0a;Click to re-center or swith to this city&#x0a;Right clck for menu"/>
+                            ToolTipService.ToolTip="Spot with Focus.&#x0a;Click to re-center or swith to this city&#x0a;Right clck for menu" Visibility="Collapsed"/>
 					<winui:ProgressRing x:Name="progress" IsActive="False" />
 					<TextBlock x:Name="work" x:FieldModifier="public" Margin="6" VerticalAlignment="Center"  />
 
 				</StackPanel>
 			</CommandBar.Content>
 
-			<AppBarButton x:Name="cookie" x:FieldModifier="public" Click="CookieClick" Icon="SetLockScreen" Label="Cookie"
+				<AppBarButton x:Name="cookie" x:FieldModifier="public" Click="CookieClick" Icon="SetLockScreen" Label="Cookie"
                            ToolTipService.ToolTip="Workaround for cookies" />
 
-			
-			<AppBarButton Click="{x:Bind helpers:NavStack.BackClick}"  Icon="Back" Label="Back" RightTapped="BackRightTapped" Style="{StaticResource AppBarButtonRevealStyle}"
+				<AppBarButton Click="{x:Bind helpers:NavStack.BackClick}"  Icon="Back" Label="Back" RightTapped="BackRightTapped" Style="{StaticResource AppBarButtonRevealStyle}"
                           ToolTipService.ToolTip="Switch to most recently visited city&#x0a;Right click to view history"  />
-			<AppBarButton Click="{x:Bind helpers:NavStack.ForwardClick}" Icon="Forward" Label="Forward" RightTapped="ForwardRightTapped" Style="{StaticResource AppBarButtonRevealStyle}"
+				<AppBarButton Click="{x:Bind helpers:NavStack.ForwardClick}" Icon="Forward" Label="Forward" RightTapped="ForwardRightTapped" Style="{StaticResource AppBarButtonRevealStyle}"
                            ToolTipService.ToolTip="Move forward in city history&#x0a;This is only useful after you have pressed 'Back'&#x0a;Right click to view forward history" />
-			<AppBarSeparator/>
+				<AppBarSeparator/>
 
-			<AppBarToggleButton x:Name="webFocus" Click="webFocus_Click" Icon="Caption" Label="HTML"
+				<AppBarToggleButton x:Name="webFocus" Click="webFocus_Click" Icon="Caption" Label="HTML"
                            ToolTipService.ToolTip="If there are COTG stuffs that are not behaving, click here to hide the native windows and focus on HTML" />
 
-
-			<AppBarButton x:Name="Fresh"
+				<AppBarButton x:Name="Fresh"
                               Label="Fresh"
                               Click="Refresh"
                           RightTapped="RefreshX"
                           Style="{StaticResource AppBarButtonRevealStyle}"
                                ToolTipService.ToolTip="When in doubt, refresh - Right click to refresh world data"
                               Icon="RepeatAll">
-				<AppBarButton.Resources>
-					<winui:TeachingTip x:Name="RefreshTip"
+					<AppBarButton.Resources>
+						<winui:TeachingTip x:Name="RefreshTip"
                                 IsLightDismissEnabled="True" 
                                 Title="Refresh"
                            x:FieldModifier="public"
                                 Target="{x:Bind Fresh}"
                                 Subtitle="Keeping track of all troops takes time, if the display gets out of sync, press refresh to update troop counts manually">
-						<TextBlock Text="Right click will refresh all World data (castles, cities, bosses etc)" />
-					</winui:TeachingTip>
-				</AppBarButton.Resources>
-			</AppBarButton>
-			<AppBarSeparator/>
-			<AppBarButton  x:Name="buildingsButton"
+							<TextBlock Text="Right click will refresh all World data (castles, cities, bosses etc)" />
+						</winui:TeachingTip>
+					</AppBarButton.Resources>
+				</AppBarButton>
+				<AppBarSeparator/>
+				<AppBarButton  x:Name="buildingsButton"
                                Label="Sum"
                                Click="ShowBuildings"
                            Style="{StaticResource AppBarButtonRevealStyle}"
                                ToolTipService.ToolTip="Show building counts for current city"
                                Icon="AllApps">
-				<Button.Flyout>
-					<Flyout Closing="FlyoutClosing"
+					<Button.Flyout>
+						<Flyout Closing="FlyoutClosing"
                                 ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                                 ScrollViewer.VerticalScrollBarVisibility="Disabled"
                                 ShowMode="Auto">
-						<GridView x:Name="buildingList"
+							<GridView x:Name="buildingList"
                                       ScrollViewer.VerticalScrollBarVisibility="Disabled">
-							<GridView.ItemTemplate>
-								<DataTemplate x:DataType="game:BuildingCount">
-									<Grid >
-										<Grid.RowDefinitions>
-											<RowDefinition Height="auto" />
-											<RowDefinition  />
-										</Grid.RowDefinitions>
-										<Rectangle Fill="{x:Bind brush, Mode=OneTime}"
+								<GridView.ItemTemplate>
+									<DataTemplate x:DataType="game:BuildingCount">
+										<Grid >
+											<Grid.RowDefinitions>
+												<RowDefinition Height="auto" />
+												<RowDefinition  />
+											</Grid.RowDefinitions>
+											<Rectangle Fill="{x:Bind brush, Mode=OneTime}"
                                                    Width="64" Height="64" />
-										<TextBlock Grid.Row="1"
+											<TextBlock Grid.Row="1"
                                                        HorizontalAlignment="Center"
                                                        VerticalAlignment="Center"
                                                        Text="{x:Bind count, Mode=OneTime}" />
-									</Grid>
-								</DataTemplate>
-							</GridView.ItemTemplate>
-							<GridView.ItemsPanel>
-								<ItemsPanelTemplate>
-									<ItemsWrapGrid MaximumRowsOrColumns="6"
+										</Grid>
+									</DataTemplate>
+								</GridView.ItemTemplate>
+								<GridView.ItemsPanel>
+									<ItemsPanelTemplate>
+										<ItemsWrapGrid MaximumRowsOrColumns="6"
                                                        Orientation="Horizontal" />
-								</ItemsPanelTemplate>
-							</GridView.ItemsPanel>
-						</GridView>
-					</Flyout>
-				</Button.Flyout>
-			</AppBarButton>
-			<AppBarSeparator/>
-			<AppBarButton Label="Time"
+									</ItemsPanelTemplate>
+								</GridView.ItemsPanel>
+							</GridView>
+						</Flyout>
+					</Button.Flyout>
+				</AppBarButton>
+				<AppBarSeparator/>
+				<AppBarButton Label="Time"
                               Icon="Shuffle"
                           Style="{StaticResource AppBarButtonRevealStyle}"
                                ToolTipService.ToolTip="Survey battle reports from the last 24 hours">
-				<Button.Flyout>
-					<Flyout Placement="Right"
+					<Button.Flyout>
+						<Flyout Placement="Right"
                                 FlyoutPresenterStyle="{StaticResource TimeFlyoutStyle}">
-						<StackPanel Width="1840">
-							<TextBlock x:Name="eventTimeTravelText">Attack Time Travel</TextBlock>
-							<Slider x:Name="eventTimeTravelSlider"
+							<StackPanel Width="1840">
+								<TextBlock x:Name="eventTimeTravelText">Attack Time Travel</TextBlock>
+								<Slider x:Name="eventTimeTravelSlider"
                                         ValueChanged="EventTimeTravelSliderChanged"
                                         TickFrequency="10"
                                     AllowFocusOnInteraction="True"
@@ -222,12 +220,12 @@
                                     Maximum="1430.0"
                                         Minimum="-1430.0"
                                         Value="{x:Bind eventTimeOffset,Mode=TwoWay}" />
-						</StackPanel>
-					</Flyout>
-				</Button.Flyout>
-			</AppBarButton>
-			<AppBarSeparator/>
-			<AppBarButton Label="Settings" Icon="Setting" Click="ShowSettings" Style="{StaticResource AppBarButtonRevealStyle}"/>
+							</StackPanel>
+						</Flyout>
+					</Button.Flyout>
+				</AppBarButton>
+				<AppBarSeparator/>
+				<AppBarButton Label="Settings" Icon="Setting" Click="ShowSettings" Style="{StaticResource AppBarButtonRevealStyle}"/>
 		</CommandBar>
 		<Grid Grid.Column="2" Grid.RowSpan="6" Margin="0,0,0,0">
 			<Grid.RowDefinitions>

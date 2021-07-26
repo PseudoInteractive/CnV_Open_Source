@@ -128,7 +128,7 @@ namespace COTG.Views
 			}
 		}
 
-		private void RaidFraction_ValueChanged(Microsoft.UI.Xaml.Controls.NumberBox sender, Microsoft.UI.Xaml.Controls.NumberBoxValueChangedEventArgs args)
+		private void SomethingChanged(Microsoft.UI.Xaml.Controls.NumberBox sender, Microsoft.UI.Xaml.Controls.NumberBoxValueChangedEventArgs args)
 		{
 			UpdateRaidPlans();
 

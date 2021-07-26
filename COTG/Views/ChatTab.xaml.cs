@@ -213,7 +213,7 @@ namespace COTG.Views
 
 		}
 		//     private static readonly SemaphoreSlim _logSemaphore = new SemaphoreSlim(1, 1);
-		// [Conditional("TRACE")]
+
 		public static void L(string s)
 		{
 

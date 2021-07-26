@@ -35,8 +35,36 @@ namespace COTG.Helpers
 			await FileIO.WriteTextAsync(file, fileContent);
         }
 
-		
+		public static async Task SaveAsyncBackup<T>(this StorageFolder folder, string name, T content,string prior)
+		{
+			var fileContent = JsonSerializer.Serialize(content, Json.jsonSerializerOptions);
+			if (fileContent == prior)
+				return;
+			
 
+			// don't block on this save
+			if(!prior.IsNullOrEmpty() )
+				await FileIO.WriteTextAsync(await folder.CreateFileAsync(GetFileName($"{name}___{JSClient.ServerTime().FormatFileTime()}___"), CreationCollisionOption.ReplaceExisting), prior);
+	
+			var file = await folder.CreateFileAsync(GetFileName(name), CreationCollisionOption.ReplaceExisting);
+			await FileIO.WriteTextAsync(file, fileContent);
+		}
+		public static async Task<(T d,string prior)> ReadAsyncForBackup<T>(this StorageFolder folder, string name, T _default)
+		{
+			var fileName = GetFileName(name);
+
+			if (!File.Exists(Path.Combine(folder.Path, fileName)))
+			{
+				return (_default,string.Empty);
+			}
+
+			var file = await folder.GetFileAsync(fileName);
+			var fileContent = await FileIO.ReadTextAsync(file);
+			if (fileContent.IsNullOrEmpty())
+				return (_default,string.Empty);
+
+			return (JsonSerializer.Deserialize<T>(fileContent, Json.jsonSerializerOptions),fileContent);
+		}
 		public static async Task<T> ReadAsync<T>(this StorageFolder folder, string name, T _default)
         {
 			var fileName = GetFileName(name);

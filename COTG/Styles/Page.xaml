@@ -57,16 +57,10 @@
 		<Setter Property="IsTextScaleFactorEnabled" Value="False"/>
 	</Style>
 	<Style TargetType="tk:WrapPanel">
-		 <Setter Property="Margin" Value="4"/>
-         <Setter Property="HorizontalSpacing" Value="4"/>
-          <Setter Property="VerticalSpacing" Value="4"/>
+		<Setter Property="Margin" Value="4"/>
+		<Setter Property="HorizontalSpacing" Value="4"/>
+		<Setter Property="VerticalSpacing" Value="4"/>
 	</Style>
-    <Style TargetType="winui:NumberBox">
-		<Setter Property="FontFamily" Value="Tw Cen MT Condensed"/>
-        <Setter Property="FontSize" Value="{StaticResource MediumFontSize}" />
-        <Setter Property="IsTextScaleFactorEnabled" Value="False"/>
-		<Setter Property="Margin" Value="2"/>
-    </Style>
 	<Style TargetType="Border" x:Key="BorderReveal" >
         <Setter Property="BorderThickness" Value="1" />
 		<Setter Property="Margin" Value="2"/>
@@ -124,10 +118,13 @@
         <Setter Property="AcceptsExpression" Value="True" />
 		<Setter Property="VerticalAlignment" Value="Center" />
 		<Setter Property="Margin" Value="2" />
-		<Setter Property="Width" Value="100" />
+		<Setter Property="Width" Value="110" />
 	</Style>
+	<!--Todo merge this two-->
+	<Style TargetType="winui:NumberBox" BasedOn="{StaticResource NumberBoxSmall}" />
+
 	<Style  x:Key="NumberBoxWide" BasedOn="{StaticResource NumberBoxSmall}" TargetType="winui:NumberBox">
-		<Setter Property="Width" Value="120" />
+		<Setter Property="Width" Value="130" />
 	</Style>
 
 	<Style  x:Key="RightAlignBox" BasedOn="{StaticResource TextBoxSmall}" TargetType="TextBox">

@@ -138,16 +138,37 @@
 								   IsOn="{x:Bind view:SettingsPage.wantRaidRepeat, Mode=TwoWay}"
 						  OnContent="Yes"
 						  OffContent="Once" />
+
+			<winui:NumberBox 
+								  Header="Max Triari"
+								  Margin="6,2,6,2"
+								  Value="{x:Bind view:SettingsPage.raidMaxTriariRatio,Mode=TwoWay}"
+								  ValueChanged="SomethingChanged"
+							ToolTipService.ToolTip="Sometimes you have many triari at home (maybe a training tower hit level 10).  Sending them to raid without others to protect the is not always the best idea.  This limits the ratio of triari to other troops when sending raids" />
+			<winui:NumberBox 
+								  Header="Reserve Commands"
+								  Margin="6,2,6,2"
+								  Value="{x:Bind view:SettingsPage.raidReserveCommandSlots,Mode=TwoWay}"
+								  ValueChanged="SomethingChanged"
+							ToolTipService.ToolTip="Limits the number of raids sent to ensure that this many command slots are free for other purposes" />
+
+			<winui:NumberBox 
+								  Header="CarryVsDistance"
+								  Margin="6,2,6,2"
+								  Value="{x:Bind view:SettingsPage.raidCarryVsDistance,Mode=TwoWay}"
+								  ValueChanged="SomethingChanged"
+							ToolTipService.ToolTip="Determines the relative weighting between getting a good carry % and getting a close dungeon, 0 means favour dungeons where you can get a good carry %, 1 means favour the closest dungeon, 0.5 is a balance between the two" />
+			
 			<winui:NumberBox  x:Name="raidFraction"
 								  Header="Use fraction"
 								  Margin="6,2,6,2"
 								  Value="{x:Bind game:Raiding.troopFraction,Mode=TwoWay}"
-								  ValueChanged="RaidFraction_ValueChanged"
+								  ValueChanged="SomethingChanged"
 							  NumberFormatter="{x:Bind cotg:App.percentFormatter}"
 								  Style="{StaticResource NumberBoxPercent}" />
 			<winui:NumberBox  
 						  Header="Min Progress"
-						  ValueChanged="RaidFraction_ValueChanged"
+						  ValueChanged="SomethingChanged"
 						  Value="{x:Bind view:SettingsPage.minDungeonCompletion,Mode=TwoWay}"
 						  FontSize="{StaticResource MediumFontSize}"
 						 Style="{StaticResource RightAlignNumberBox}"

@@ -110,6 +110,10 @@ namespace COTG.Game
 				Spot.TryConvertTroopTypeToClassification(troopType, out t.classification);
 				t.tags = TagHelper.FromTroopType(troopType);
 			}
+			else
+			{
+				t.TouchClassification();
+			}	
 
 			t.hasAcademy = hasAcademy;
 			t.attackType = attackType;

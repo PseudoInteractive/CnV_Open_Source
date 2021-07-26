@@ -138,7 +138,7 @@
 				<controls:NumberBox Header="Return Raids Offset"
 									 Value="{x:Bind views:SettingsPage.returnRaidsBias,Mode=TwoWay}"
 									 SmallChange="0.125"
-									ToolTipService.ToolTip="When attacks are scheduled and raids are set to return before departure, the time at which they have to be home is depatureTime - ReturnRaidsOffset (in hours)"
+									ToolTipService.ToolTip="When attacks are scheduled and raids are asked to return before departure, they will come home this many hours before departure"
 									 LargeChange="1"
 									 Style="{StaticResource NumberBoxSmall}" />
 

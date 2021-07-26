@@ -23,10 +23,10 @@
 					<Color x:Key="SystemAccentColorDark1">#FF6C3C8F</Color>
 					<Color x:Key="SystemAccentColorDark2">#FF8257A1</Color>
 					<Color x:Key="SystemAccentColorDark3">#FF9873B4</Color>
-					<Color x:Key="SystemAccentColorLight1">#FF4B1A70</Color>
-					<Color x:Key="SystemAccentColorLight2">#FF3F1364</Color>
-					<Color x:Key="SystemAccentColorLight3">#FF340D57</Color>
-					<Color x:Key="RegionColor">#FF0E210F</Color>
+					<Color x:Key="SystemAccentColorLight1">#FF6B10D0</Color>
+					<Color x:Key="SystemAccentColorLight2">#FF5F03B4</Color>
+					<Color x:Key="SystemAccentColorLight3">#FF4400A0</Color>
+					<Color x:Key="RegionColor">#FF0E310F</Color>
 					<SolidColorBrush x:Key="RegionBrush" Color="{StaticResource RegionColor}" />
 				</ResourceDictionary>
 				<ResourceDictionary Source="/Styles/_Colors.xaml" />

@@ -85,7 +85,9 @@ namespace COTG.Helpers
         public float radius => (c1.X-c0.X).Max(c1.Y-c0.Y);
         // Ellipsoid like squared radius
         public float radius2 => (c1.X-c0.X).Squared()+ (c1.Y-c0.Y).Squared();
-    }
+
+		public float area => (c1.X - c0.X) * (c1.Y - c0.Y);
+	}
 	public struct Span2i
 	{
 		// [c0..c1)  c1 itself is not included

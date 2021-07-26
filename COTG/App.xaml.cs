@@ -128,12 +128,23 @@ namespace COTG
 		{
 			var deferral = e.SuspendingOperation.GetDeferral();
 			//TODO: Save application state and stop any background activity
-			Trace("Suspend");
-			isForeground = false;
-			await JSON.BuildQueue.SaveIfNeeded();
-			SettingsPage.SaveAll();
-			await AttackTab.SaveAttacksBlock();
-			deferral.Complete();
+			try
+			{
+				Log("Suspend");
+				isForeground = false;
+				await JSON.BuildQueue.SaveIfNeeded();
+				Log("Suspend 2");
+				SettingsPage.SaveAll();
+				Log("Suspend 2.5");
+				await AttackTab.SaveAttacksBlock();
+				Log("Suspend 3");
+			}
+			catch (Exception ex)
+			{ 
+			}
+			finally {
+				deferral.Complete();
+			}
 		}
 
 
@@ -237,7 +248,7 @@ namespace COTG
 
 		private void App_LeavingBackground(object sender, LeavingBackgroundEventArgs e)
 		{
-			Trace("LeavingBackground");
+			Log("LeavingBackground");
 			isForeground = true;
 			//if (ShellPage.canvas != null)
 			//    ShellPage.canvas.Paused = false;
@@ -589,29 +600,38 @@ namespace COTG
 		{
 			return new Views.ShellPage();
 		}
-		private void App_EnteredBackground(object sender, EnteredBackgroundEventArgs e)
+		private async void App_EnteredBackground(object sender, EnteredBackgroundEventArgs e)
 		{
-			Trace("Enter Background");
+			Log("Enter Background");
 			isForeground = false;
+			var deferral = e.GetDeferral();
+			try
+			{
+				//   if (ShellPage.canvas != null)
+				//      ShellPage.canvas.Paused = true;
+				//	SettingsPage.SaveAll();
+				await JSON.BuildQueue.SaveIfNeeded();
 
-			//   if (ShellPage.canvas != null)
-			//      ShellPage.canvas.Paused = true;
-			//	SettingsPage.SaveAll();
-			JSON.BuildQueue.SaveIfNeeded().Wait();
-
-			//            var deferral = e.GetDeferral();
-			//            await Singleton<SuspendAndResumeService>.Instance.SaveStateAsync();
-			//           deferral.Complete();
-			var t = DateTimeOffset.UtcNow;
-			SystemInformation.Instance.AddToAppUptime(t - activeStart);
-			activeStart = t;
-			
+				//            var deferral = e.GetDeferral();
+				//            await Singleton<SuspendAndResumeService>.Instance.SaveStateAsync();
+				//           deferral.Complete();
+				var t = DateTimeOffset.UtcNow;
+				SystemInformation.Instance.AddToAppUptime(t - activeStart);
+				activeStart = t;
+			}
+			catch
+			{
+			}
+			finally
+			{
+				deferral.Complete();
+			}
 
 		}
 
 		private void App_Resuming(object sender, object e)
 		{
-			Trace("Resume");
+			Log("Resume");
 			isForeground = true;
 			activeStart = DateTimeOffset.UtcNow;
 

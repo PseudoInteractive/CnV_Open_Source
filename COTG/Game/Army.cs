@@ -35,8 +35,9 @@ namespace COTG.Game
         public byte claim { get; set; }
         public bool isAttack { get; set; }
         public string Type => claim switch { >= 100 => "Cap!", >0=>"Capping",_=> reportStrings[type] };
-       
-        public string aType => type switch
+		public bool isSiege => type == reportSieging;
+
+		public string aType => type switch
         {
             reportDefensePending=> "inc Def",
             reportDefenseStationed => "Def",

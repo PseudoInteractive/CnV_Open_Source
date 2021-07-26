@@ -236,5 +236,9 @@
   - **Update**
     - When donating, the ratio sent will be proportionate to what is missing
       - You can enable/disable this with the "Wood Vs Stone" slider
-  - 
+- ### 2021/7/25
+   - **New**
+     - ReturnRaidsForAttacks button in raid tab to return all raids in time for scheduled attacks
+       - Experimental, please double check results
+     - 
  

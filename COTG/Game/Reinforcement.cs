@@ -36,7 +36,7 @@ namespace COTG.Game
         internal static async void ShowReturnDialog(int cid,UIElement uie)
         {
 
-			var shift = App.IsKeyPressedShift();
+			var showAll = App.IsKeyPressedShift();
 
             await Services.ReinforcementsOverview.instance.Post();
             var _spot = Spot.GetOrAdd(cid);
@@ -49,16 +49,22 @@ namespace COTG.Game
             
 			ElementSoundPlayer.Play(ElementSoundKind.Show);
 
-			var spots = !shift ?  new[] { _spot } : City.myCities;
+			var spots = !showAll ?  new[] { _spot } : City.myCities;
 			
             var orders = new List<long>();
-            panel.Children.Add(new TextBlock() { Text= shift? "All Reinforcements" : "Reinforcements Here:" });
+            
+			panel.Children.Add(new TextBlock() { Text= "For accurate incoming info, open or refresh the incoming tab" });
+			
+			panel.Children.Add(new TextBlock() { Text = showAll ? "All Incoming Reinforcements" : "Reinforcements Here:" });
 			foreach (var s in spots)
 			{
 				foreach (var reIn in s.reinforcementsIn)
 				{
 					var other = Spot.GetOrAdd(reIn.sourceCid);
-					panel.Children.Add(new CheckBox() { Content = $"{other.xy} {other.playerName} {other.nameAndRemarks}{reIn.troops.Format(":", ' ', ',')}", IsChecked = false });
+					var me = Spot.GetOrAdd(reIn.targetCid);
+					var content = showAll ? $"{other.xy} {other.playerName} {other.nameAndRemarks} {other.IncomingInfo() } -> {me.xy} {me.nameAndRemarks} {me.IncomingInfo()} {reIn.troops.Format(":", ' ', ',')}"
+						: $"{other.xy} {other.playerName} {other.nameAndRemarks} {other.IncomingInfo() } {reIn.troops.Format(":", ' ', ',')}";
+					panel.Children.Add(new CheckBox() { Content = content, IsChecked = false });
 					orders.Add(reIn.order);
 				}
 			}
@@ -69,7 +75,11 @@ namespace COTG.Game
 				foreach (var reIn in s.reinforcementsOut)
 				{
 					var other = Spot.GetOrAdd(reIn.targetCid);
-					panel.Children.Add(new CheckBox() { Content = $"{other.xy} {other.playerName} {other.nameAndRemarks}{reIn.troops.Format(":", ' ', ',')}", IsChecked = false });
+					var me = Spot.GetOrAdd(reIn.sourceCid);
+					var content = showAll ? $"{other.xy} {other.playerName} {other.nameAndRemarks} {other.IncomingInfo()} <- {me.xy} {me.nameAndRemarks} {me.IncomingInfo()} {reIn.troops.Format(":", ' ', ',')}"
+						: $"{other.xy} {other.playerName} {other.nameAndRemarks} {other.IncomingInfo()} {reIn.troops.Format(":", ' ', ',')}";
+
+					panel.Children.Add(new CheckBox() { Content = content, IsChecked = false });
 					orders.Add(reIn.order);
 				}
 			}

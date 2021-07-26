@@ -43,9 +43,6 @@ namespace COTG.Views
 
 		public static bool? syncIncoming = null;
 		public static bool? syncOutgoing = null;
-		public static int raidReserveCommandSlots = 0;
-		public static float raidMaxTriariRatio = 1;
-		public static float raidCarryVsDistance= 0.5f;
 		public static float tabZoom = 0.5f;
 		public static float chatZoom = 0.5f;
 		public static float htmlZoom = 0.25f;
@@ -145,12 +142,7 @@ namespace COTG.Views
 
 		public static int raidIntervals;
 		public static Resources nearResReserve = new Resources(100000, 100000, 100000, 100000);
-		public static float attackMaxTravelHoursSE=40;
-		public static float attackMaxTravelHoursSen=40;
-		public static int attackSEMaxFakes = 20;
-		public static int attackSEMinAssaults = 2;
-		public static int attackSEMaxAssaults = 20;
-
+		
 		public float uiMusic
 		{
 			get => musicVolume;
@@ -279,6 +271,10 @@ namespace COTG.Views
 			}
 
 		}
+		public static int raidReserveCommandSlots = 0;
+		public static float raidMaxTriariRatio = 1;
+		public static float raidCarryVsDistance = 0.5f;
+
 		public static float raidCarryMin = 0.9f;
 		public static float raidCarryTarget = 1.15f;
 		public static float raidCarryMax = 2.00f;

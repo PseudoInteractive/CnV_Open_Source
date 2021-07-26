@@ -321,7 +321,8 @@ namespace COTG.Game
             {
 				var json = $"{{\"a\":{cid},\"c\":\"{at.ToString(AUtil.raidDateTimeFormat)}\",\"b\":\"3\"}}";
 				await Post.SendEncrypted("includes/UrOA.php", json, "Rx3x5DdAxxerx3", World.CidToPlayerOrMe(cid));
-            }
+				Note.Show($"Return {City.Get(cid).nameAndRemarks} at {at.FormatDefault()}");
+			}
         }
         public static async Task ReturnFast(int cid, bool updateUI)
         {

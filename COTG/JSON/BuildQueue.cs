@@ -900,7 +900,7 @@ namespace COTG.JSON
 		{
 			if (!initialized)
 				return;
-		  await SaveTimerGo(true);
+		  await SaveTimerGo(true,true);
 		}
 
 		// Where should this go?
@@ -909,13 +909,13 @@ namespace COTG.JSON
 			if (!initialized)
 				return;
 			saveTimer.Cancel();
-			await SaveTimerGo(true); // flush pending saves if any
+			await SaveTimerGo(true,true); // flush pending saves if any
 		}
 		static internal void SaveTimer_Tick(ThreadPoolTimer timer)
 		{
-			SaveTimerGo(false);
+			SaveTimerGo(false,false);
 		}
-		static internal async Task SaveTimerGo(bool force)
+		static internal async Task SaveTimerGo(bool force,bool awaitContext)
 		{
 			if (buildActionCounter == 0)
 			{
@@ -932,11 +932,11 @@ namespace COTG.JSON
 				{
 					if (CityBuildQueue.all.Any())
 					{
-						await CityBuildQueue.queueLock.WaitAsync();
+						await CityBuildQueue.queueLock.WaitAsync().ConfigureAwait(awaitContext);
 					try
 					{
 						var str = Serialize();
-						SaveBuildQueue(str);
+						await SaveBuildQueue(str).ConfigureAwait(awaitContext);
 					}
 					finally
 					{
@@ -959,7 +959,7 @@ namespace COTG.JSON
 
 		}
 
-		private static async void SaveBuildQueue(string str)
+		private static async Task SaveBuildQueue(string str)
 		{
 			if (JSClient.isSub)
 				return;
@@ -1111,7 +1111,7 @@ namespace COTG.JSON
 				}
 			}
 
-			saveTimer = ThreadPoolTimer.CreatePeriodicTimer(SaveTimer_Tick, TimeSpan.FromSeconds(30));
+			saveTimer = ThreadPoolTimer.CreatePeriodicTimer(SaveTimer_Tick, TimeSpan.FromSeconds(60));
 
 		}
 	}

@@ -857,13 +857,20 @@ namespace COTG.Game
 		public async ValueTask<Classification> ClassifyEx(bool isIncomingAttack)
 		{
 			var rv = await Classify(isIncomingAttack);
-			if (hasAcademy.HasValue)
+			if (hasAcademy.HasValue || (!Alliance.wantsIntel && !isMine) )
 				return rv;
 			return await ClassifyFromBuildings(isIncomingAttack);
 		}
 
 		private async ValueTask<Classification> ClassifyFromBuildings(bool isIncomingAttack)
 		{
+			if(!Alliance.wantsIntel && !isMine)
+			{
+				// todo
+				
+
+			}
+
 			var str = await Post.SendForText("includes/gLay.php", $"cid={cid}", World.CidToPlayerOrMe(cid));
 			if (str.IsNullOrEmpty())
 			{
