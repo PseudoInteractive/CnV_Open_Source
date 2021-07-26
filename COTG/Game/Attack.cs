@@ -80,13 +80,14 @@ namespace COTG.Game
 		 };
 	}
 
-	public struct AttackDataPersist // structure use to persist targets
+	public struct AttackDataPersist // structure use to persist targets and attackers
 	{
 		public int cid { get; set; } // spot that this refers to
 		public AttackType attackType { get; set; }
 		public byte troopType { get; set; }
 		public bool hasAcademy { get; set;}
-
+		public int target { get; set; } // only valid if attack, if set the target is specified by the player
+										
 		public int attackCluster { get; set; } // for SE clusters,
 
 		[JsonIgnore]

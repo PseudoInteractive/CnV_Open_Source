@@ -188,10 +188,14 @@ namespace COTG.Views
 					var cid = ci[0].GetAsInt();
 					var city = City.GetOrAddCity(cid);
 					city.points = (ushort)ci[2].GetAsInt();
-					var isBuilding = (ci[4].GetAsFloat() != 0 || ci[3].GetAsFloat() != 0) || (city.buildStage == BuildStage.complete) || (city.buildStage == BuildStage.leave);
+					var isBuilding = (ci[4].GetAsFloat() != 0 ) || (city.buildStage == BuildStage.complete) || (city.buildStage == BuildStage.leave);
+					if (ci[3].GetAsFloat() != 0)
+					{
+					//	Log($"3!: {city.nameAndRemarks}");
+					}
 					if (ci[5].GetAsFloat() != 0)
 					{
-						isBuilding = true;
+					//	Log($"5!: {city.nameAndRemarks}");
 					}
 					if (isBuilding != city.isBuilding)
 					{
@@ -205,6 +209,17 @@ namespace COTG.Views
 					{
 						GetCity.Post(cid);
 					}
+					city.bcBuildings = ci[6].GetAsInt()==0;
+					city.bcTowers = ci[7].GetAsInt()==0;
+					//	city.bcConvert = (ci[5].GetAsFloat() > 0);
+					//	city.bcFill = ci[12].GetAsInt() > 0 && ci[13].GetAsInt() > 0;
+
+					//city.b12 = ci[12].GetAsInt();
+					//city.b13 = ci[13].GetAsInt();
+					city.bcBlocked = ci[14].GetAsInt() != 0;// && ((ci[14].GetAsInt()==1&& ci[16].GetAsInt()==1)||(ci[3].GetAsFloat()==0&& ci[5].GetAsFloat()==0));
+
+					city.bc15 = ci[15].GetAsInt()!=0;
+					city.bc16 = ci[16].GetAsInt() != 0;
 				}
 				App.DispatchOnUIThreadSneakyLow(() =>
 					{

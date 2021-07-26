@@ -1361,7 +1361,11 @@ namespace COTG.Game
 			SetBuildStage(GetBuildStage(bc));
 			return bc;
 		}
-
+		public bool bcBuildings { get; set; }
+		public bool bcTowers { get; set; }
+		public bool bcBlocked { get; set; }
+		public bool bc15 { get; set; }
+		public bool bc16 { get; set; }
 		public void SetMinisterOptions( string _ministerOptions)
 		{
 			ministerOptions = _ministerOptions;

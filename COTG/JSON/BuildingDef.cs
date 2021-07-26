@@ -23,7 +23,8 @@ namespace COTG.JSON
 				return 0;
 			if (all.TryGetValue(bid, out var def))
 				return def.id;
-			Log("Bad building! " + bid);
+			if(!(bid >= 891 && bid <= 894))
+				Log("Bad building! " + bid); // farms an temples have extras
 			return 0;
 		}
 		public static (byte id,bool valid) BuildingToShareString(int bid)

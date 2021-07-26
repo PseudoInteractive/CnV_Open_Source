@@ -712,6 +712,7 @@ namespace COTG.Game
 		{
 			return $"{cid.CidToCoords()}\t{this.playerName}\t{this.cityName}\t{this.remarks ?? ""}\t{this.alliance}\t{this.isCastle}\t{this.isOnWater}\t{this.isTemple}\t{GetTroopsString(";")}";
 		}
+		public static int lastCoordClick;
 
 		public static async void ProcessCoordClick(int cid, bool lazyMove, VirtualKeyModifiers mod, bool scrollIntoUI = false)
 		{
@@ -1415,6 +1416,25 @@ namespace COTG.Game
 						grid.ScrollItemIntoView(spot ?? (City.GetBuild().isSelected ? City.GetBuild() : sel1.First()));
 					}
 				}
+				if (AttackTab.IsVisible() && spot != null )
+				{
+					try
+					{
+						if( AttackTab.attacks.Contains(spot) )
+						{
+							AttackTab.instance.attackGrid.SelectedItem = spot;
+							AttackTab.instance.attackGrid.ScrollIntoView(spot, null);
+						}
+						if (AttackTab.targets.Contains(spot))
+						{
+							AttackTab.instance.targetGrid.SelectedItem = spot;
+							AttackTab.instance.targetGrid.ScrollIntoView(spot, null);
+						}
+					}
+					catch
+					{
+					}
+				}
 			}
 			finally
 			{
@@ -1969,7 +1989,6 @@ namespace COTG.Game
 					{
 						var multiString = sel.Count > 1 ? $" _x {sel.Count} selected" : "";
 						var afly = AApp.AddSubMenu(flyout, "Attack Planner");
-
 						if (!Alliance.IsAllyOrNap(this.allianceId))
 						{
 							afly.AddItem("Add as Target" + multiString, (_, _) => AttackTab.AddTarget(sel));

@@ -133,7 +133,6 @@
 												CellContentStyle="{StaticResource RightAlign}"
 												CellContentFormat="{}{0,4:N0}"
 												 />
-				
 				<tg:DataGridNumericalColumn PropertyName="tsTotal"
 												CellContentStyle="{StaticResource RightAlign}"
 												Tip="TS enlisted in city"
@@ -141,7 +140,6 @@
 												DefaultSortOrder="Descending"
 												SizeMode="Auto"
 												 />
-				
 				<tg:DataGridTextColumn PropertyName="remarks"
 										   CellContentStyle="{StaticResource LeftAlign}"
 										   SizeMode="Auto"
@@ -158,7 +156,15 @@
 											  IsVisible="False"
 											  SizeMode="Auto"
 											   />
-				
+				<tg:DataGridBooleanColumn PropertyName="bcBlocked"
+										  Tip="Buildings that can't build, maybe?"
+											Header="??" />
+				<tg:DataGridBooleanColumn PropertyName="bc15"
+										  Tip="I don't know what this means"
+											Header="*?"	 />
+				<tg:DataGridBooleanColumn PropertyName="bc16"
+										  Tip="Another mystery"
+											Header="!?"  	 />
 			</tg:RadDataGrid.Columns>
 
 		</tg:RadDataGrid>
