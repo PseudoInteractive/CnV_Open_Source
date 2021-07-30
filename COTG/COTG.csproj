@@ -765,7 +765,6 @@
     <EmbeddedResource Include="JS\jquerymigrate" />
     <EmbeddedResource Include="Notes\fixes.md" />
     <EmbeddedResource Include="JS\index.htm" />
-    <Content Include="Shader\light.hlsl" />
     <EmbeddedResource Include="JS\DHRUVCC.js" />
     <None Include="Content\Effects\Macros.fxh" />
     <None Include="Content\Effects\Structures.fxh" />
@@ -819,6 +818,7 @@
     <Folder Include="Content\Art\Tiles\" />
     <Folder Include="Content\Audio\" />
     <Folder Include="EventHandlers\" />
+    <Folder Include="Shader\" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Cyotek.Drawing.BitmapFont, Version=1.0.0.0, Culture=neutral, processorArchitecture=AMD64">

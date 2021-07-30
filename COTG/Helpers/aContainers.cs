@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 using Windows.System;
 
 using static COTG.Debug;
-namespace COTG.Helpers
+namespace COTG
 {
 
     // All updates should happen on the UI thread atomically and synchronously which will reduce the need for synchronization
@@ -267,6 +267,11 @@ namespace COTG.Helpers
 		}
 
 	}
+	public class ACollection<T> : ObservableCollection<T>
+	{
+		public void NotifyReset() => OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
+		public void NotifyPropertyChange() => OnPropertyChanged(new PropertyChangedEventArgs(string.Empty));
+	}
 	public static class DumbHelpers
     {
         public static void NotifyChange(this HashSet<City> items, params string[] memberName)
@@ -304,7 +309,51 @@ namespace COTG.Helpers
                }
            });
         }
+		public static void SyncList<T>(this IEnumerable<T> from, IList<T> to)
+		{
+			int iter = to.Count;
+			while (--iter >= 0)
+			{
+				var b = to[iter];
+				if (!from.Any(a => EqualityComparer<T>.Default.Equals(a, b)))
+					to.RemoveAt(iter);
+			}
+			foreach (var b in from)
+			{
+				if (!to.Any(a => EqualityComparer<T>.Default.Equals(a,b)))
+					to.Add(b);
+			}
+		}
+		public static void SyncList<T>(this HashSet<T> from, IList<T> to)
+		{
+			int iter = to.Count;
+			while (--iter >= 0)
+			{
+				var b = to[iter];
+				if (!from.Contains(b))
+					to.RemoveAt(iter);
+			}
+			foreach (var b in from)
+			{
+				if (!to.Any(a => EqualityComparer<T>.Default.Equals(a, b)))
+					to.Add(b);
+			}
+		}
+		public static void SyncList<T0, T1>(this IEnumerable<T0> from, IList<T1> to, Func<T0, T1, bool> equals, Func<T0, T1> convert)
+		{
+			int iter = to.Count;
+			while (--iter >= 0)
+			{
+				var b = to[iter];
+				if (!from.Any(a => equals(a, b)))
+					to.RemoveAt(iter);
+			}
+			foreach (var b in from)
+			{
+				if (!to.Any(a => equals(b, a)))
+					to.Add(convert(b));
+			}
+		}
 
-
-    }
+	}
 }

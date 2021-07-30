@@ -214,8 +214,7 @@
 				</tk:DataGridTemplateColumn>
 
 				<tk:DataGridTextColumn Header="Player"
-									   Tag="player"
-                                       Binding="{Binding playerName, Mode=OneTime}" />
+									   Binding="{Binding playerName, Mode=OneTime}" />
 				<tk:DataGridTemplateColumn Header="XY" Tag="xy">
 					<tk:DataGridTemplateColumn.CellTemplate>
 						<DataTemplate x:DataType="game:City">

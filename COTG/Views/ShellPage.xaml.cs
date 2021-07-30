@@ -601,6 +601,7 @@ namespace COTG.Views
 		{
 			Note.Show("Refresh All");
 			await RefreshWorldData();
+			await JSClient.CityRefresh();
 			RefreshTabs.Go();
 		}
 

@@ -178,15 +178,15 @@ namespace COTG.Game
 
 		public static AttackPlanCity none = new();
 
-		public static bool operator ==(AttackPlanCity left, AttackPlanCity right)
-		{
-			return left.Equals(right);
-		}
+		//public static bool operator ==(AttackPlanCity left, AttackPlanCity right)
+		//{
+		//	return left.Equals(right);
+		//}
 
-		public static bool operator !=(AttackPlanCity left, AttackPlanCity right)
-		{
-			return !(left == right);
-		}
+		//public static bool operator !=(AttackPlanCity left, AttackPlanCity right)
+		//{
+		//	return !left.Equals(right);
+		//}
 		public static AttackPlanCity Get(int cid) => AttackPlan.Get(cid);
 		
 	}

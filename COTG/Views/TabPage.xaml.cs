@@ -102,8 +102,16 @@ namespace COTG.Views
 			return Task.CompletedTask;
       
 		}
-        // If this is not an xaml island, the newXamlRoot will be null
-        public virtual void XamlTreeChanged(TabPage newPage) { } // The tab was dragged somewhere else
+		//public virtual Task Reset()
+		//{
+		//	if(visible)
+		//	{
+		//		await VisibilityChanged(false);  // close enough default behaviour
+		//		await VisibilityChanged(true);  // close enough default behaviour
+		//	}
+		//}
+		// If this is not an xaml island, the newXamlRoot will be null
+		public virtual void XamlTreeChanged(TabPage newPage) { } // The tab was dragged somewhere else
         public bool isVisible;
         public bool isActive;
 		//User pressed F5 or refresh button
@@ -112,28 +120,16 @@ namespace COTG.Views
 		public Debounce refresh;
 		public UserTab()
 		{
-			if(refresh == null)
-			 refresh= new(_Refresh) { throttled = true };
+			if (refresh == null)
+				refresh = new(_Refresh);// { throttled = true };
 			ScrollViewer.SetZoomMode(this, ZoomMode.Enabled);
 			//DependencyObjectExtensions.FindDescendant<ScrollViewer>(this).AllowFocusOnInteraction= false;
 		}
-
+		
 		protected virtual async Task _Refresh()
         {
             if (isVisible && isActive)
             {
-				var t = DateTimeOffset.UtcNow;
-				
-				if (t > nextCityRefresh)
-				{
-					nextCityRefresh = t + TimeSpan.FromSeconds(0.5f);
-					if (JSClient.ppdtInitialized)
-					{
-						// don't wait on this
-						Game.City.CitiesChanged();
-						JSClient.JSInvoke("cityRefresh", null);
-					}
-				}
 				await VisibilityChanged(false);  // close enough default behaviour
 
 				await VisibilityChanged(true);  // close enough default behaviour

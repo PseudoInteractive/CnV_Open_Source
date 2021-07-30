@@ -1547,7 +1547,7 @@ namespace COTG
 					ppdtInitialized = true;
 
 					//Task.Delay(500).ContinueWith( _ => App.DispatchOnUIThreadSneakyLow( MainPage.instance.Refresh));
-					App.DispatchOnUIThreadSneakyLow(ShellPage.RefreshTabs.Go);
+					ShellPage.RefreshTabs.Go();
 				}
 				
 				//    Log(City.all.ToString());
@@ -1561,7 +1561,20 @@ namespace COTG
 			// Log(ppdt.ToString());
 		}
 
-		private static async void ShowCouncillorsMissingDialog()
+		
+		public static async Task CityRefresh()
+		{
+				if (JSClient.ppdtInitialized)
+				{
+					// don't wait on this
+					await JSClient.JSInvokeTask("cityRefresh", new[] { City.build.ToString() } );
+					Game.City.CitiesChanged();
+				}
+		}
+
+
+
+private static async void ShowCouncillorsMissingDialog()
 		{
 			 await App.DispatchOnUIThreadTask(async () =>
 			{

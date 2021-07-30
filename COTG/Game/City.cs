@@ -2054,7 +2054,7 @@ namespace COTG.Game
 			   //   if (MainPage.IsVisible())
 			   {
 				   using var _ = await cityGridLock.LockAsync();
-				   City.gridCitySource.Set(l);
+				   City.gridCitySource.NotifyReset();
 			   }
 			   //if (IncomingTab.instance.isVisible)
 				//   IncomingTab.instance.refresh.Go();

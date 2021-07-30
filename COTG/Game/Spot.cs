@@ -93,7 +93,7 @@ namespace COTG.Game
 		public static int focus; // city that has focus (selected, but not necessarily building.  IF you click a city once, it goes to this state
 
 		public virtual event PropertyChangedEventHandler PropertyChanged;
-		public void OnPropertyChanged(string propertyName = null) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+		public void OnPropertyChanged(string propertyName = "") => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 
 		public bool isFriend => Player.IsFriend(pid); // this is set if it is one of our cities or our ally cities that we can visit
 
@@ -1388,11 +1388,9 @@ namespace COTG.Game
 					}
 					if (!uiInSync)
 					{
-						sel1.Clear();
-						foreach (var i in selected)
-						{
-							sel1.Add(City.GetOrAddCity(i));
-						}
+						selected.SyncList<int,object>(sel1, (cid,spot)=> City.Get(cid)==spot,(cid)=>City.Get(cid) );
+						
+						
 					}
 					if ((scrollIntoView || !uiInSync) && (sel1.Any() || spot != null))
 					{
@@ -1403,12 +1401,12 @@ namespace COTG.Game
 				{
 					try
 					{
-						if( AttackTab.attacks.Contains(spot.cid) )
+						if( AttackTab.attacks.Contains(spot.cid)&& !AttackTab.instance.attackGrid.SelectedItems.Contains(spot) )
 						{
 							AttackTab.instance.attackGrid.SelectedItem = spot as City;
 							AttackTab.instance.attackGrid.ScrollIntoView(spot, null);
 						}
-						if (AttackTab.targets.Contains(spot.cid))
+						if (AttackTab.targets.Contains(spot.cid)&& !AttackTab.instance.targetGrid.SelectedItems.Contains(spot))
 						{
 							AttackTab.instance.targetGrid.SelectedItem = spot as City;
 							AttackTab.instance.targetGrid.ScrollIntoView(spot, null);

@@ -37,7 +37,7 @@ using static COTG.Game.AttackPlanCity;
 using static System.Net.Mime.MediaTypeNames;
 using System.Collections.Immutable;
 using static COTG.Game.AttackPlan;
-
+using System.Collections.ObjectModel;
 namespace COTG.Views
 {
 
@@ -298,7 +298,7 @@ namespace COTG.Views
 
 
 
-		private static void SyncList(ImmutableArray<AttackPlanCity> s,DumbCollection<City> ui)
+private static void SyncList(ImmutableArray<AttackPlanCity> s,DumbCollection<City> ui)
 		{
 			int iter = ui.Count;
 			while (--iter >= 0)
@@ -335,7 +335,7 @@ namespace COTG.Views
             public int[] targets;// first is real
             public Vector2 topLeft;
             public Vector2 bottomRight;
-			internal int real => targets.FirstOrDefault(a => AttackPlan.Get(a).isAttackTypeReal);
+			internal int real => targets.FirstOrDefault(a => AttackPlan.GetForRead(a).isAttackTypeReal);
 			//Select(a=>City.Get(a)).Where( a => a.isAttackTypeReal ).DefaultIfEmpty(City.invalid).OrderBy(a=>a.spatialIndex).First().cid;
 			///            public int real => (targets.FirstOrDefault((a) => !City.GetOrAdd(a).isSiege));
 
@@ -481,7 +481,7 @@ namespace COTG.Views
             {
 				App.DispatchOnUIThreadSneaky( UpdateArrivalUI );
 				using var _ = await TouchLists();
-
+				WritebackAttacks();
 				DoRefresh();
 
 			}
@@ -1819,7 +1819,7 @@ namespace COTG.Views
 
 			var i = sender as FrameworkElement;
 
-            var spot = i.DataContext as AttackPlanCity;
+            var spot = i.DataContext as City;
             Remove(spot.cid);
             WritebackAttacks();
             await SaveAttacks();
@@ -1857,9 +1857,10 @@ namespace COTG.Views
 			var sel = targetGrid.SelectedItems;
 			foreach (var i in targets)
 			{
-				i.city.SelectMe();
-				if (!sel.Contains(i))
-					sel.Add(i);
+				var city = i.city;
+				if (!sel.Contains(city))
+					sel.Add(city);
+				city.SelectMe(scrollIntoView: false);
 			}
 		}
 		private void SelectAttackers(object sender, RoutedEventArgs e)
@@ -1867,9 +1868,10 @@ namespace COTG.Views
 			var sel = attackGrid.SelectedItems;
 			foreach (var i in attacks)
 			{
-				i.city.SelectMe();
-				if (!sel.Contains(i))
-					sel.Add(i);
+				var city = i.city;
+				if (!sel.Contains(city))
+					sel.Add(city);
+				city.SelectMe(scrollIntoView:false);
 			}
 		}
 

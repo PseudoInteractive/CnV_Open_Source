@@ -18624,58 +18624,50 @@ function outer(){
 		}(window.String.fromCharCode, parseInt);
 
 
-		function SetCity(d9l) {
+		function SetCity(newCid,forceRefresh : boolean = false) {
 		//	console.log("set city " + d9l);
 			clearIdle();
-			let __cid = Number(d9l);
-			if(__cid === cid )
+			let newCidInt = Number(newCid);
+			if (newCidInt == cid && !forceRefresh )
 				   return;
 			if(disablePoll)
 			{
-				onResumePoll.push(() => SetCity(__cid) );
+				onResumePoll.push(() => SetCity(__cid,forceRefresh) );
 				return;
 			}
 
-				_cid = cid = __cid;
+				_cid = cid = newCidInt;
 				bqInFlight=0;
 				lastSentBq=-1;
 				lastSentBD=0;
 				ClearCity();
 				callSyncViewMode();
-				getCity(Number(d9l));
+				getCity(cid);
 			//	X8();
 				DoPoll2(150);
 	
 		}
 
- window['cityRefresh'] = function()
+ window['cityRefresh'] = function(_cid : string)
 {
-	if(disablePoll)
-	{
-		onResumePoll.push(window['cityRefresh']);
-		return;
-	}
-	{
-		let wrapper = { ppdt: ppdt };
-		 window['external']['notify'](JSON.stringify(wrapper));
-   }
-	if(cid==0)
-	 return;
-
-	bqInFlight=0;
-	 isProcessingBuildQueue=false;
-	lastSentBq=-1;
-	lastSentBD=-1;
-	ClearCity();
-	lastSendMoveSlots=0;
-				
-	getCity(cid);
-	DoPoll2(400);
-	
+	 if (disablePoll) {
+		 onResumePoll.push(() => window['cityRefresh'](_cid));
+		 return;
+	 }
+	 SetCity(_cid);
  // once more for good measure
-	setTimeout(function () {DoPoll2(400);callSyncViewMode(); J2(); }, 1000);
+	setTimeout(function () 
+		{
+			DoPoll2(400);
+			J2(); 
+		
+			let wrapper = { ppdt: ppdt };
+			window['external']['notify'](JSON.stringify(wrapper));
+		
 
-}
+		}, 1000);
+
+ }
 
 		function W3F(d9T) {
 			var g9T = artifacts[d9T]["n"];
