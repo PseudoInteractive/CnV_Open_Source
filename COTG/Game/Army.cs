@@ -56,6 +56,10 @@ namespace COTG.Game
         public string tXY => targetCid.CidToString();
         public int targetCid;
         public int sourceCid;
+		// We can't get this from source and targetCid because there might have been a cap
+		public int targetPlayer;
+		public int sourcePlayer;
+
 		public City sourceCity => City.Get(sourceCid);
         public int sourceAlliance => Player.Get(sourceCid.CidToPid()).alliance;
         public string sourceAllianceName => Player.Get(sourceCid.CidToPid()).allianceName;

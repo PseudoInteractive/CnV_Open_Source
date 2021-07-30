@@ -23,7 +23,7 @@ namespace COTG.Helpers
             c0.X = c1.X = v.X;
             c0.Y = c1.Y = v.Y;
         }
-        public Span2(IEnumerable<Spot> spots)
+        public Span2(IEnumerable<AttackPlanCity> spots)
         {
             c0 = new Vector2(float.MaxValue);
             c1 = new Vector2(-float.MaxValue);
@@ -32,7 +32,8 @@ namespace COTG.Helpers
                 Union(spot.cid.ToWorldC());
             }
         }
-        public static Span2 UnionWithout(IEnumerable<Spot>  spots,Spot exclude )
+
+        public static Span2 UnionWithout(IEnumerable<AttackPlanCity>  spots, AttackPlanCity exclude )
         {
             Span2 rv;
             rv.c0 = new Vector2(float.MaxValue);

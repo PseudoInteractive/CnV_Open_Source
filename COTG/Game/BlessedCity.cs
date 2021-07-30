@@ -81,7 +81,7 @@ namespace COTG.Game
                 blc.travelMinutes = (float)( worldC.DistanceToCidD(blc.spot.cid)*Enum.cartTravel);
                 rv.Add(blc);
             }
-            rv.Sort((a, b) => a.sortScore.CompareTo(b.sortScore));
+            rv.SortSmall( b => b.sortScore);
             return rv;
         }
         public void SendDonation(int woodToSend,int stoneToSend, int sendType)

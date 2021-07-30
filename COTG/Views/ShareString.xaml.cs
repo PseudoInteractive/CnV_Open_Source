@@ -241,8 +241,9 @@ namespace COTG.Views
 
 						//			await CitySettings.SetTradeResourcesSettings(city.cid,req,max);
 
-						await CitySettings.SetCitySettings(ci, setResources&&SettingsPage.setHub ? bestHub : null, (setResources&&SettingsPage.setHub ? CitySettings.FilterTargetHub(ci, bestHub) : null),
-							SettingsPage.shareStringApplyTags && SettingsPage.setRecruit, setResources: setResources, filterSend: true
+						await CitySettings.SetCitySettings(ci, setResources&&SettingsPage.setHub ? bestHub : null,
+							(setResources&&SettingsPage.setHub ? CitySettings.FilterTargetHub(ci, bestHub) : null),
+							SettingsPage.shareStringApplyTags && SettingsPage.setRecruit, setResources: setResources
 											);
 
 						if (setLayout)
@@ -484,10 +485,10 @@ namespace COTG.Views
 					SettingsPage.reqStone = value.requestStone;
 					SettingsPage.reqIron = value.requestIron;
 					SettingsPage.reqFood = value.requestFood; ;
-					SettingsPage.sendWood = value.destWood != 0;
-					SettingsPage.sendStone = value.destStone != 0;
-					SettingsPage.sendIron = value.destIron != 0;
-					SettingsPage.sendFood = value.destFood != 0;
+				//	SettingsPage.sendWood = value.destWood != 0;
+				//	SettingsPage.sendStone = value.destStone != 0;
+			//		SettingsPage.sendIron = value.destIron != 0;
+			//		SettingsPage.sendFood = value.destFood != 0;
 					SettingsPage.maxWood = value.sendWood;
 					SettingsPage.maxStone = value.sendStone;
 					SettingsPage.maxIron = value.sendIron;

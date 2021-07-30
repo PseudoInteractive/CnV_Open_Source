@@ -19,7 +19,7 @@ namespace DiscordCnV
 		}
 		public static Uri discordHook = new Uri("https://discord.com/api/webhooks/766166495411437578/xwt4o5KsEjh7MVe3xLluez9Q6keeCjdYOpfBsgBXJriK8WtNUnYvNtKI9IUIqt0hbJbM");
 		public static Uri discordIncomingHook = new Uri("https://discord.com/api/webhooks/855244185203114004/VnQqDsyNlTZcaDixFtZalwSfosOr9thAEdtPNJQkT_1vFteIqlIVxfkauUPpH8hYP4gM");
-		public static bool isValid 	=>	JSClient.world == 23 && (Alliance.MyId == 42 ); // XMen
+		public static bool isValidForIncomingNotes 	=>	JSClient.world == 23 && (Alliance.MyId == 42 ); // XMen
 			
 			
     }

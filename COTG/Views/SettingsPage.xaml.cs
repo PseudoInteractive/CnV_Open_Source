@@ -75,11 +75,11 @@ namespace COTG.Views
 		public static int cabinsToRemovePerSwap= 6;
 		public static int cottageLevel = 7;
 		public static bool? troopsVisible;
-		public static bool sendWood = true;
-		public static bool sendStone = true;
-		public static string continentsExport = string.Empty;
-		public static bool sendIron = true;
-		public static bool sendFood = true;
+//		public static bool sendWood = true;
+//		public static bool sendStone = true;
+//		public static string continentsExport = string.Empty;
+//		public static bool sendIron = true;
+//		public static bool sendFood = true;
 		public static int tsForCastle = 22000;
 		public static int tsForSorcTower = 32000;
 		public static int defaultFoodWarning = 12;

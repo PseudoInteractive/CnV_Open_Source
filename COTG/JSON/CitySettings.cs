@@ -15,6 +15,8 @@ using ContentDialog = Windows.UI.Xaml.Controls.ContentDialog;
 using ContentDialogResult = Windows.UI.Xaml.Controls.ContentDialogResult;
 using static COTG.Debug;
 using static COTG.Views.SettingsPage;
+using Windows.UI.Xaml.Controls;
+
 namespace COTG.JSON
 {
     public class CitySettings
@@ -84,7 +86,13 @@ namespace COTG.JSON
 		public const int ministerOptionAutobuildWalls = 26;
 		public const int ministerOptionAutobuildTowers = 27;
 		public const int ministerOptionAutobuildCabins = 52;
-		public static async Task SetCitySettings(int cid, int? reqHub = null, int? targetHub = null, bool setRecruit = false, bool setAutoBuild = false, bool setResources = false, int? cartReserve = null, bool filterSend = false, bool? autoTowers=null, bool? autoWalls=null)
+		public static async Task SetCitySettings(int cid, int? reqHub = null, int? targetHub = null, bool setRecruit = false, 
+			bool setAutoBuild = false, bool setResources = false, int? cartReserve = null, 
+			bool _filterSend = false, bool? autoTowers=null, bool? autoWalls=null,
+			bool? sendWood=true, 
+			bool? sendStone=true,
+			bool? sendIron=true,
+			bool? sendFood=true)
         {
             await UpdateMinisterOptions(cid, async (split) =>
 			{
@@ -162,10 +170,14 @@ namespace COTG.JSON
 					split[41] = "0"; // use a different city for all sends
 									 // hubs dont send by default
 									 // send target
-					split[37] = sendWood || !filterSend ? cid : "0"; // hub to use for this res
-					split[38] = sendStone || !filterSend ? cid : "0"; // hub to use for this res
-					split[39] = sendIron || !filterSend ? cid : "0"; // hub to use for this res
-					split[40] = sendFood || !filterSend ? cid : "0"; // hub to use for this res
+					if(sendWood.HasValue)
+						split[37] = sendWood.Value ? cid : "0"; // hub to use for this res
+					if(sendStone.HasValue)
+						split[38] = sendStone.Value ? cid : "0"; // hub to use for this res
+					if(sendIron.HasValue)
+						split[39] = sendIron.Value ? cid : "0"; // hub to use for this res
+					if(sendFood.HasValue)
+						split[40] = sendFood.Value  ? cid : "0"; // hub to use for this res
 
 				}
 				int resultSourceHub = 0;
@@ -515,16 +527,34 @@ namespace COTG.JSON
 		public static async void SetTargetHub(int cid, int targetHub)
         {
 			var targets = Spot.GetSelectedForContextMenu(cid, false, targetHub, onlyMine: true);
+			bool? sendWood=null, sendStone = null, sendFood = null, sendIron = null;
 			var result = await App.DispatchOnUIThreadTask(async () =>
 			{
+				var panel = new StackPanel();
+				panel.Children.Add(new TextBlock() 
+				{ Text= $"Set {Spot.GetOrAdd(cid).nameAndRemarks}{(targets.Count>1?" and "+(targets.Count-1)+" others)" : string.Empty)} to send resources to {Spot.GetOrAdd(targetHub).nameAndRemarks}" });
+				var sendW = new CheckBox() { Content = "Send Wood", IsThreeState = true, IsChecked = null };
+				var sendS = new CheckBox() { Content = "Send Stone", IsThreeState = true, IsChecked = null };
+				var sendI = new CheckBox() { Content = "Send Iron", IsThreeState = true, IsChecked = null };
+				var sendF = new CheckBox() { Content = "Send Food", IsThreeState = true, IsChecked = null };
+				panel.Children.Add(sendW);
+				panel.Children.Add(sendS);
+				panel.Children.Add(sendI);
+				panel.Children.Add(sendF);
+
 				var dialog = new ContentDialog()
 				{
-					Title = $"Set Trade Settings",
-					Content = $"Set {Spot.GetOrAdd(cid).nameAndRemarks} to send resources to {Spot.GetOrAdd(targetHub).nameAndRemarks} ({targets.Count} cities selected)",
+					Title = $"Set Target Hub",
+					Content = panel,
 					PrimaryButtonText = "Yes",
 					SecondaryButtonText = "Cancel"
 				};
-				return await dialog.ShowAsync2();
+				var rv = await dialog.ShowAsync2();
+				sendWood = sendW.IsChecked;
+				sendStone = sendS.IsChecked;
+				sendIron = sendI.IsChecked;
+				sendFood = sendF.IsChecked;
+				return rv;
 			});
 			if (result != ContentDialogResult.Primary)
 			{
@@ -537,7 +567,7 @@ namespace COTG.JSON
 					var city = City.Get(_cid);
 					if(city.isHubOrStorage)
 					{
-						var i = await App.DoYesNoBox("Hub Target?", $"Set {city.nameAndRemarks}'s target to {City.Get(targetHub)}?");
+						var i = await App.DoYesNoBox("Hub Selected", $"Double checkin: Send resources from {city.nameAndRemarks}'s?");
 						if(i == 0)
 						{
 							continue;
@@ -547,7 +577,7 @@ namespace COTG.JSON
 							break;
 						}
 					}
-					await CitySettings.SetCitySettings(_cid, null, targetHub);
+					await CitySettings.SetCitySettings(_cid, targetHub: targetHub,sendWood:sendWood,sendStone:sendStone,sendIron:sendIron,sendFood:sendFood);
 				}
 			}
         }

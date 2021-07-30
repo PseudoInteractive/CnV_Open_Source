@@ -58,7 +58,7 @@ namespace COTG.JSON
 			internal int sourceCid => firstArmy.sourceCid;
 
 			public string intel => $"{firstArmy.miscInfo}, {ttNameWithCaps[firstArmy.troops.GetPrimaryTroopType()]}";
-
+			public string note => $"{Player.IdToName(targetCid.CidToPid())} attacker: {Player.IdToName(sourceCid.CidToPid())} to {targetCid.CidToContinent()} {first.FormatSkipDateIfToday()} first: {intel}) to {City.Get(targetCid).nameAndRemarks} at {first.FormatSkipDateIfToday()}{( count>1?$" and {count-1} others":"")}";
 		}
 
 		static Debounce IncomingUpdateDebounce = new(DoProcess) { throttled = true, debounceDelay = 1000, throttleDelay = 2000 };
@@ -465,7 +465,7 @@ namespace COTG.JSON
 
 
 
-															  if (DGame.isValid)
+															  if (DGame.isValidForIncomingNotes)
 															  {
 
 
@@ -517,7 +517,7 @@ namespace COTG.JSON
 																					  }
 																					  else
 																					  {
-																						//  result.EnsureSuccessStatusCode();
+																						  result.EnsureSuccessStatusCode();
 																						  break;
 																					  }
 																				  }
@@ -851,9 +851,9 @@ namespace COTG.JSON
 								string note = "Incoming";
 
 								if (personalIncoming.count != 0)
-									note += $" {personalIncoming.targetCid.CidToContinent()} attacker: {Player.IdToName(personalIncoming.sourceCid.CidToPid())} {personalIncoming.first.FormatSkipDateIfToday()} first: {personalIncoming.intel} to {City.Get(personalIncoming.targetCid).nameAndRemarks}";
+									note += $" {personalIncoming.note}";
 								if (watchIncoming.count != 0)
-									note += $" (watched {Player.IdToName(watchIncoming.targetCid.CidToPid())} attacker: {Player.IdToName(watchIncoming.sourceCid.CidToPid())} to {watchIncoming.targetCid.CidToContinent()}  {watchIncoming.first.FormatSkipDateIfToday()} first: {watchIncoming.intel}) to {City.Get(watchIncoming.targetCid).nameAndRemarks}";
+									note += $" (watched {watchIncoming.note})";
 
 								if (lastPersonalIncomingCount < personalIncoming.count || lastWatchIncomingCount < watchIncoming.count)
 								{
@@ -862,7 +862,7 @@ namespace COTG.JSON
 									{
 										lastIncomingNotification = now;
 										Note.Show(note);
-										COTG.Services.ToastNotificationsService.instance.ShowIncomingNotification(note);
+										COTG.Services.ToastNotificationsService.instance.ShowNotification(note,"Incoming");
 
 									}
 								}

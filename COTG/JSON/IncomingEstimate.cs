@@ -156,6 +156,7 @@ namespace COTG.Game
 				float landSpeed = RoundTo6Bits(journeyTime / dist_);
 
 				float navySpeed = RoundTo6Bits((journeyTime - 60) / dist_);
+				var bothOnWater = army.sourceCity.isOnWater;
 				//            let locks_;
 				//            let lockm_;
 				//            let lockh_;

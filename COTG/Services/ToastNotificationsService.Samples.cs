@@ -9,7 +9,7 @@ namespace COTG.Services
     internal partial class ToastNotificationsService
     {
 
-        public void ShowIncomingNotification(string info)
+        public void ShowNotification(string info, string tag)
         {
 
             // Create the toast content
@@ -41,7 +41,7 @@ namespace COTG.Services
                     Buttons =
                     {
                         // More about Toast Buttons at https://docs.microsoft.com/dotnet/api/microsoft.toolkit.uwp.notifications.toastbutton
-                        new ToastButton("OK", "incomingNotification")
+                        new ToastButton("Okay", tag+"Okay")
                         {
                             ActivationType = ToastActivationType.Foreground,
                            
@@ -77,7 +77,7 @@ namespace COTG.Services
             {
                 // TODO WTS: Set a unique identifier for this notification within the notification group. (optional)
                 // More details at https://docs.microsoft.com/uwp/api/windows.ui.notifications.toastnotification.tag
-                Tag = "incomingTag"
+                Tag = tag+"Tag"
             };
 
             // And show the toast

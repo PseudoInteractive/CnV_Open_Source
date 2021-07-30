@@ -90,28 +90,51 @@ namespace COTG.Helpers
         }
 
 
-        //       public void OnPropertyChanged(string propertyName) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+		//       public void OnPropertyChanged(string propertyName) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 
+		//public new Task AddAsync(T item)
+		//{
+		//	int id = Count;
+		//	base.Add(item);
+		//	if (CollectionChanged != null)
+		//		return App.DispatchOnUIThreadTask(() => CollectionChanged.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, item, id)));
+		//	else
+		//		return Task.CompletedTask;
+		//}
 
-        public new void Add(T item)
+		public new void Add(T item)
         {
-            int id = Count;
             base.Add(item);
 			if(CollectionChanged!=null)
-	            App.DispatchOnUIThreadSneaky( ()=> CollectionChanged.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, item, id)));
+	            App.DispatchOnUIThreadSneaky( ()=>
+				{
+					var id = IndexOf( item );
+					if(id != -1)
+						CollectionChanged.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add,item, id ));
+				});
         }
         public new void Insert(int id, T item)
         {
             base.Insert(id, item);
 			if (CollectionChanged != null)
-				App.DispatchOnUIThreadSneaky(() => CollectionChanged.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, item, id)));
+				App.DispatchOnUIThreadSneaky(() =>
+				{
+					var id = IndexOf(item);
+					if (id != -1)
+						CollectionChanged.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, item, id));
+				});
         }
         public new void RemoveAt(int id)
         {
             var item = base[id];
             base.RemoveAt(id);
-			if(CollectionChanged!=null)
-				App.DispatchOnUIThreadSneaky(() => CollectionChanged.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, item, id)));
+			var count = Count;
+			if (CollectionChanged != null)
+				App.DispatchOnUIThreadSneaky(() =>
+				{
+					if (id < Count)
+						CollectionChanged.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, item, id));
+				});
         }
         public new void Remove(T i)
         {
@@ -187,6 +210,7 @@ namespace COTG.Helpers
 					CollectionChanged(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, added as IList));
 				}
 			});
+			
 		}
 		public void NotifyRemove(T removed)
 		{
@@ -210,22 +234,36 @@ namespace COTG.Helpers
 				}
 			});
 		}
-		public void NotifyMove(T moved, int oldIndex, int newIndex)
-		{
-			App.DispatchOnUIThreadSneakyLow(() =>
-			{
-				//  Assert(App.IsOnUIThread());
-				if (CollectionChanged != null)
-				{
-					CollectionChanged(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Move,moved,newIndex, oldIndex ));
-				}
-			});
-		}
+		//public void NotifyMove(T moved, int oldIndex, int newIndex)
+		//{
+		//	App.DispatchOnUIThreadSneakyLow(() =>
+		//	{
+		//		//  Assert(App.IsOnUIThread());
+		//		if (CollectionChanged != null)
+		//		{
+		//			CollectionChanged(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Move,moved,newIndex, oldIndex ));
+		//		}
+		//	});
+		//}
 		public void Set( IEnumerable<T> src)
 		{
 			Clear();
-			AddRange(src);
+			base.AddRange(src);
 			NotifyReset();
+		}
+		public void AddRange(IEnumerable<T> src)
+		{
+			Assert(false);
+			base.AddRange(src);
+			if (src is IList<T> _src)
+			{
+				NotifyAdd(_src);
+			}
+			else
+			{
+				Assert(false);
+				NotifyReset();
+			}
 		}
 
 	}

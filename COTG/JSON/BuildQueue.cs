@@ -810,6 +810,15 @@ namespace COTG.JSON
 		{
 			if (elvl > slvl)
 				Assert(elvl == slvl + 1);
+			if(elvl < slvl && elvl != 0)
+			{
+				if(elvl != slvl -1 )
+				{
+					Note.Show($"Bad downgrade? {slvl} => {elvl}");
+					Assert(false);
+					return;
+				}
+			}
 			Assert(initialized);
 			var op = new BuildQueueItem(slvl, elvl, bid, spot);
 			if (bid == City.bidTemple && slvl == 0)

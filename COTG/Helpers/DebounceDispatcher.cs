@@ -81,7 +81,7 @@ namespace COTG
 						   }
 						   else
 						   {
-							   await Task.Delay(dt + 10).ConfigureAwait(false);
+							   await Task.Delay(dt + 32).ConfigureAwait(false);
 						   }
 					   }
 					   try

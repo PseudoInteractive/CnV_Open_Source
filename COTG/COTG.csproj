@@ -238,6 +238,7 @@
     <Compile Include="Helpers\DiscordIds.cs" />
     <Compile Include="Helpers\FloatN.cs" />
     <Compile Include="Helpers\HSLToRGB.cs" />
+    <Compile Include="Helpers\Sort.cs" />
     <Compile Include="Helpers\JSON.cs" />
     <Compile Include="Helpers\KeyFrame.cs" />
     <Compile Include="Helpers\Morton.cs" />
@@ -650,7 +651,6 @@
     <Content Include="Assets\BadgeLogo.scale-150.png" />
     <Content Include="Assets\BadgeLogo.scale-200.png" />
     <None Include="ClassDiagram2.cd" />
-    <None Include="CnVDiscord\app.config" />
     <None Include="Content\Effects\AlphaAdd.fxh" />
     <Content Include="Assets\BadgeLogo.scale-400.png" />
     <Content Include="Assets\LargeTile.scale-400.png" />

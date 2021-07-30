@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
@@ -38,6 +39,7 @@ namespace COTG.Views
 			}
 		}
 
+		
 		public static void Show(object sender, RoutedEventArgs e)
 		{
 			if (instance == null)
@@ -77,8 +79,10 @@ namespace COTG.Views
 				var ttCompare = tt;
 				var wantContinent = cont.Value.RoundToInt();
 				var hasTwoTT = tt == ttSorcerer || tt == ttDruid || tt == ttHorseman || tt == ttPraetor;
-				var toAdd = new List<City>();
+				var toAdd = new List<AttackPlanCity>();
 				Spot.TryConvertTroopTypeToClassification(tt, out var baseClassification);
+				
+				
 				for (int j = 0; j < (hasTwoTT ? 2 : 1); ++j)
 				{
 					Spot.TryConvertTroopTypeToClassification(ttCompare, out var classification);
@@ -92,19 +96,17 @@ namespace COTG.Views
 							continue;
 						if (cid.CidToContinent() != wantContinent)
 							continue;
-
 						var city = City.GetOrAdd(cid);
 						var cls = await city.ClassifyEx(false);
 						if (cls != classification)
 							continue;
 						if (wantAcademy.GetValueOrDefault() && !city.hasAcademy.GetValueOrDefault())
 							continue;
-						if (AttackTab.attacks.Contains(city))
+						if (AttackTab.attacks.Any(a => a.cid==cid))
 							continue;
-						toAdd.Add(city);
 						city.classification = baseClassification;
-						city.attackType = baseClassification == Classification.se ? AttackType.se 
-							: ((wantAcademy.HasValue ? wantAcademy.Value : city.hasAcademy.GetValueOrDefault()) ? AttackType.senator : AttackType.assault);
+						toAdd.Add(new AttackPlanCity(city, baseClassification == Classification.se ? AttackType.se
+							: ((wantAcademy.HasValue ? wantAcademy.Value : city.hasAcademy.GetValueOrDefault()) ? AttackType.senator : AttackType.assault)));
 
 					}
 					if (hasTwoTT)
@@ -120,7 +122,7 @@ namespace COTG.Views
 					}
 				}
 				if(toAdd.Any())
-					await AttackTab.AddAttacksFromCitys(toAdd);
+					await AttackTab.AddAttacks(toAdd);
 				if(toAdd.Count < wantCount )
 				{
 					Note.Show($"Only found {toAdd.Count} appropriate castles");

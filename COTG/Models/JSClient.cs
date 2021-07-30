@@ -2188,8 +2188,8 @@ namespace COTG
 											   var msg = new ChatEntry(friend, online ? " has come online" : " has gone offline", ServerTime(), ChatEntry.typeAnnounce);
 											   App.DispatchOnUIThreadLow(() =>
 											  {
-												  ChatTab.alliance.Post(msg);
-												  ChatTab.world.Post(msg);
+												  ChatTab.alliance.Post(msg,true);
+												  ChatTab.world.Post(msg, true);
 											  }); // post on both
 										   }
 										   else if( id == 9)

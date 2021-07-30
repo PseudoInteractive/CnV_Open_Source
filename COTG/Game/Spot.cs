@@ -93,7 +93,7 @@ namespace COTG.Game
 		public static int focus; // city that has focus (selected, but not necessarily building.  IF you click a city once, it goes to this state
 
 		public virtual event PropertyChangedEventHandler PropertyChanged;
-		public void OnPropertyChanged(string propertyName) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+		public void OnPropertyChanged(string propertyName = null) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 
 		public bool isFriend => Player.IsFriend(pid); // this is set if it is one of our cities or our ally cities that we can visit
 
@@ -250,24 +250,7 @@ namespace COTG.Game
 		public bool isDungeon => type == typeDungeon;
 		public bool isEmpty => type == typeNone;
 
-		//public DateTimeOffset lastAccessed { get; set; } // lass user access
-		public int attackCluster { get; set; } = -1; // For attackTab, 
-
-
-		public AttackType attackType { get; set; }
-		public bool isAttackTypeAssault => attackType == AttackType.assault;
-		public bool isAttackTypeSenator => attackType == AttackType.senator;
-		public bool isAttackTypeSenatorFake => attackType == AttackType.senatorFake;
-		public bool isAttackTypeSE => attackType == AttackType.se;
-		public bool isAttackTypeSEFake => attackType == AttackType.seFake;
-		public bool isAttackTypeReal => attackType == AttackType.assault || attackType == AttackType.se || attackType == AttackType.senator;
-		public bool isAttackTypeSiege => attackType == AttackType.se || attackType == AttackType.senator;
-		public bool isAttackTypeFake => attackType == AttackType.seFake || attackType == AttackType.senatorFake;
-		public bool isAttackTypeNone => attackType == AttackType.none;
-
-		public const int attackClusterNone = -1;
-
-		public bool isAttackClusterNone => attackCluster == attackClusterNone;
+	
 
 		public enum Classification : byte
 		{
@@ -726,22 +709,19 @@ namespace COTG.Game
 
 					if (city.IsAllyOrNap())
 					{
-						city.attackType = city.attackType switch { AttackType.assault => AttackType.senator, AttackType.senator => AttackType.se, AttackType.se => AttackType.none, _ => AttackType.assault };
-						if (!AttackTab.attacks.Contains(city))
-							AttackTab.attacks.Add(city);
+						AttackPlan.AddOrUpdate( new(city,city.attackType switch
+						{ AttackType.assault => AttackType.senator, AttackType.senator => AttackType.se, AttackType.se => AttackType.none, _ => AttackType.assault }));
 					}
 					else
 					{
-						city.attackType = city.attackType switch
+						AttackPlan.AddOrUpdate( new(city, city.attackType switch
 						{
 							AttackType.seFake => AttackType.se,
 							AttackType.se => AttackType.senatorFake,
 							AttackType.senatorFake => AttackType.senator,
 							AttackType.senator => AttackType.none,
 							_ => AttackType.seFake
-						};
-						if (!AttackTab.targets.Contains(city))
-							AttackTab.targets.Add(city);
+						}));
 					}
 				}
 				Note.Show($"{city.nameAndRemarks} set to {city.attackType}");
@@ -997,7 +977,10 @@ namespace COTG.Game
 
 				foreach (var tt in troopsTotal.GetListDescending())
 				{
-					var i = classificationTTs.FindIndex((byte)tt.type);
+					// some have two classifications
+					var type = tt.type switch { ttTriari => ttRanger, ttRam => ttScorpion, var a => a };
+
+					var i = classificationTTs.FindIndex((byte)type);
 					if (i != -1)
 					{
 						classification = (Classification)i;
@@ -1420,14 +1403,14 @@ namespace COTG.Game
 				{
 					try
 					{
-						if( AttackTab.attacks.Contains(spot) )
+						if( AttackTab.attacks.Contains(spot.cid) )
 						{
-							AttackTab.instance.attackGrid.SelectedItem = spot;
+							AttackTab.instance.attackGrid.SelectedItem = spot as City;
 							AttackTab.instance.attackGrid.ScrollIntoView(spot, null);
 						}
-						if (AttackTab.targets.Contains(spot))
+						if (AttackTab.targets.Contains(spot.cid))
 						{
-							AttackTab.instance.targetGrid.SelectedItem = spot;
+							AttackTab.instance.targetGrid.SelectedItem = spot as City;
 							AttackTab.instance.targetGrid.ScrollIntoView(spot, null);
 						}
 					}
@@ -1493,12 +1476,16 @@ namespace COTG.Game
 			return other != null &&
 				   cid == other.cid;
 		}
-
+		public bool Equals(int _cid)
+		{
+				return   cid == _cid;
+		}
 		public override int GetHashCode()
 		{
 			return cid;
 		}
-
+		public static bool operator ==(Spot a, int cid) => a.cid == cid;
+		public static bool operator !=(Spot a, int cid) => a.cid != cid;
 		//public void ShowCity(object sender, Windows.UI.Xaml.RoutedEventArgs e)
 		//{
 		//	JSClient.CitySwitch(cid, false);
@@ -2005,7 +1992,7 @@ namespace COTG.Game
 							{
 								s = s + id.CidToString() + "\t";
 							}
-							AttackTab.AddAttacksFromString(s);
+							AttackTab.AddAttacksFromString(s,false);
 							Note.Show($"Added attacker {s}");
 
 						});
@@ -2062,7 +2049,7 @@ namespace COTG.Game
 				AApp.AddItem(flyout, "Raid", (_, _) => Spot.JSRaid(cid));
 
 			}
-			else if (this.isEmpty && DGame.isValid)
+			else if (this.isEmpty && DGame.isValidForIncomingNotes)
 			{
 				AApp.AddItem(flyout, "Claim", this.DiscordClaim);
 
@@ -2184,7 +2171,7 @@ namespace COTG.Game
 
 		public async void DiscordClaim()
 		{
-			if (!DGame.isValid)
+			if (!DGame.isValidForIncomingNotes)
 			{
 				Log("Invalid");
 				return;

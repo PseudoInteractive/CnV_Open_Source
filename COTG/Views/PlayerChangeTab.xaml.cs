@@ -94,13 +94,13 @@ namespace COTG.Views
 					if (e.Column.SortDirection == null)
 					{
 						e.Column.SortDirection = DataGridSortDirection.Descending;
-						cities.Sort(comparer);
+						cities.SortSmall(comparer);
 						cities.NotifyReset();
 					}
 					else if (e.Column.SortDirection == DataGridSortDirection.Descending)
 					{
 						e.Column.SortDirection = DataGridSortDirection.Ascending;
-						cities.Sort((b, a) => comparer(a, b)); // swap order of comparison
+						cities.SortSmall((b, a) => comparer(a, b)); // swap order of comparison
 						cities.NotifyReset();
 					}
 					else

@@ -87,6 +87,14 @@ namespace COTG.Game
 
 		public const int bidMin = bidBarracks;
 		public const int bidMax = bidTemple + 1;
+		public AttackPlanCity plan => AttackPlan.GetForRead(cid);
+		public AttackPlanCity planWritable => AttackPlan.Get(cid);
+		public int attackCluster => plan.attackCluster;
+		public AttackType attackType
+		{
+			get => plan.attackType;
+			set => planWritable.attackType = value; // Todo:  Throw exception if not present
+		}
 
 		public static int XYToId((int x, int y) xy) => (xy.x.Clamp(span0, span1) - span0) + (xy.y.Clamp(span0, span1) - span0) * citySpan;
 

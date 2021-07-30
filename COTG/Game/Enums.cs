@@ -12,21 +12,30 @@ namespace COTG.Game
         public const byte ttGuard = 0;
         public const byte ttBallista = 1;
         public const byte ttRanger = 2;
-        public const byte ttTriari = 3;
+		public const byte ttRT = ttRanger;
+		public const byte ttTriari = 3;
         public const byte ttPriestess = 4;
-        public const byte ttVanquisher = 5;
-        public const byte ttSorcerer = 6;
-        public const byte ttScout = 7;
+		public const byte ttPriest = ttPriestess;
+		public const byte ttVanquisher = 5;
+		public const byte ttVanq = ttVanquisher;
+		public const byte ttSorcerer = 6;
+		public const byte ttSorc = ttSorcerer;
+		public const byte ttScout = 7;
         public const byte ttArbalist = 8;
-        public const byte ttPraetor = 9;
-        public const byte ttHorseman = 10;
-        public const byte ttDruid = 11;
+		public const byte ttArb = ttArbalist;
+		public const byte ttPraetor = 9;
+		public const byte ttPrae = ttPraetor;
+		public const byte ttHorseman = 10;
+		public const byte ttHorse = ttHorseman;
+		public const byte ttDruid = 11;
         public const byte ttRam = 12;
         public const byte ttScorpion = 13;
-        public const byte ttGalley = 14;
+		public const byte ttScorp = ttScorpion;
+		public const byte ttGalley = 14;
         public const byte ttStinger = 15;
         public const byte ttWarship = 16;
-        public const byte ttSenator = 17;
+		public const byte ttSenator = 17;
+		public const byte ttSen = ttSenator;
 		public const byte ttPending = 0;
 		public const int ttCount = (ttSenator)+1;
 		public static bool IsRaider(int type) => ttBestDungeonType[type] != (byte)DungeonType.invalid;
@@ -175,9 +184,11 @@ namespace COTG.Game
                 if (a[i] == b)
                     return i;
             return -1;
-        }
+		}
+		public static bool IsTroopTypeSE(this byte tt) => tt == ttScorpion || tt == ttRam;
 
-        public const byte reportAssault = 0;
+
+		public const byte reportAssault = 0;
         public const byte reportSiege = 1; // siege in history
         public const byte reportPlunder = 2;
         public const byte reportScout = 3;

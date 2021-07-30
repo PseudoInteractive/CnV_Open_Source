@@ -126,14 +126,13 @@
 												Tip="TS of Troops at home (including non raiding troops)"
 												CellContentFormat="{}{0,7:N0}"
 												SizeMode="Auto"
-												IsVisible="False" />
-					<tg:DataGridTextColumn PropertyName="raidReturn"
+												IsVisible="False"/>
+				<tg:DataGridTextColumn PropertyName="raidReturn"
 												Tip="Click here to bring troops home asap"
 												CellContentStyle="{StaticResource RightAlignLink}"
 												CellContentFormat="{}{0,6:N0}"
-												SizeMode="Auto"
-												 />
-					<tg:DataGridNumericalColumn PropertyName="raidCarry"
+												SizeMode="Auto"/>
+				<tg:DataGridNumericalColumn PropertyName="raidCarry"
 												Tip="% of loot carried per raid&#x0a;Click here to bring troops home after the next raid"
 												CellContentStyle="{StaticResource RightAlignLink}"
 												CellContentFormat="{}{0,5:N1}"

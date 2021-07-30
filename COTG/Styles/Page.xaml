@@ -30,20 +30,17 @@
 		<Setter Property="IsTextScaleFactorEnabled" Value="False"/>
     </Style>
     <Style x:Key="ButtonSmall" TargetType="Button" BasedOn="{StaticResource ButtonRevealStyle}">
-        <Setter Property="FontFamily" Value="Tw Cen MT Condensed"/>
+		<Setter Property="VerticalAlignment" Value="Center"/>
+		<Setter Property="HorizontalAlignment" Value="Center"/>
+		<Setter Property="FontFamily" Value="Tw Cen MT Condensed"/>
         <Setter Property="FontSize" Value="{StaticResource MediumFontSize}" />
         <Setter Property="IsTextScaleFactorEnabled" Value="False"/>
-    </Style>
-	<Style x:Key="ButtonMedium" TargetType="Button" BasedOn="{StaticResource ButtonRevealStyle}">
-		<Setter Property="FontFamily" Value="Tw Cen MT Condensed"/>
-		<Setter Property="FontSize" Value="{StaticResource MediumFontSize}" />
-		<Setter Property="IsTextScaleFactorEnabled" Value="False"/>
+		<Setter Property="Margin" Value="2"/>
+	</Style>
+	<Style x:Key="ButtonMedium" TargetType="Button" BasedOn="{StaticResource ButtonSmall}">
 		<Setter Property="Margin" Value="4"/>
 	</Style>
-	<Style x:Key="ButtonLarge" TargetType="Button" BasedOn="{StaticResource ButtonRevealStyle}">
-		<Setter Property="FontFamily" Value="Tw Cen MT Condensed"/>
-		<Setter Property="FontSize" Value="{StaticResource LargeFontSize}" />
-		<Setter Property="IsTextScaleFactorEnabled" Value="False"/>
+	<Style x:Key="ButtonLarge" TargetType="Button" BasedOn="{StaticResource ButtonSmall}">
 		<Setter Property="Margin" Value="4"/>
 	</Style>
 	<Style TargetType="TextBlock">

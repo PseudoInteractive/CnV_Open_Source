@@ -109,7 +109,7 @@ namespace COTG.Views
 							bosses.Add(b);
 					}
 				}
-                bosses.Sort((a, b) => a.dist.CompareTo(b.dist));
+                bosses.SortSmall((a, b) => a.dist.CompareTo(b.dist));
             }
             bossGrid.ItemsSource = bosses; // todo
 

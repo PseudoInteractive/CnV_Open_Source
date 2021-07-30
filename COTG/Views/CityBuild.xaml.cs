@@ -676,7 +676,7 @@ namespace COTG.Views
 			var b = CityBuild.postQueueBuildings[spot];
 			var bid = b.bid;
 			Assert(bid != 0);
-			for (var level = b.bl;level < elvl;++level)
+			for (var level = b.bl;level < elvl.Min(10);++level)
 			{
 				++rv;
 				await BuildQueue.Enqueue(City.build, (byte)level, (byte)(level +1), (ushort)bid, (ushort)spot);
@@ -718,6 +718,12 @@ namespace COTG.Views
 				return;
 			}
 			var lvl = sel.bl;
+			if(lvl >= 10)
+			{
+				Note.Show("Already level 10");
+				return;
+			}
+
 			if (level == 1)
 				level = lvl + 1;
 

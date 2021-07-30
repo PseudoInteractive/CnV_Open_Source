@@ -48824,8 +48824,7 @@ function outer(){
 						return;
 	 				}
 
-					window['external']['notify'](JSON.stringify(wrapper));
-
+					
 				
 				
 
@@ -50095,10 +50094,12 @@ function outer(){
 												.css("display", '');
 										} else
 											if (N46 == 4) {
+												let h36 = Number(B46.substring(1, 2));
 												let Y46 = {
 													y: A46,
 													x: r46,
-													type: "spot",
+													water: h36,
+			 										type: "spot",
 													info: { name: "Vacation Spot", player: "world" }
 												};
 												cotgPublish("regional", Y46);
@@ -50111,8 +50112,6 @@ function outer(){
 												$(__s[+F0t])
 													.attr("display", "block");
 												var L36 = B46.substring(2);
-												var h36 = B46
-													.substring(1, 2);
 												L36 = L36.split(__s[2367]);
 												var Y16 = L36[0];
 												var J16 = L36[2];

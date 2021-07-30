@@ -103,6 +103,7 @@ namespace COTG
 		public static float zTopLevel => zTopLevelBase * AGame.parallaxGain;
 		public static float zCities => zCitiesBase * AGame.parallaxGain;
 		public static float zLabels => zLabelsBase * AGame.parallaxGain;
+		 const byte textBackgroundOpacity = 192;
 		public static float zEffectShadow => zEffectShadowBase * 0.5f;
 
 		static Vector2 shadowOffset = new Vector2(4, 4);
@@ -218,7 +219,7 @@ namespace COTG
 		static readonly Color defaultAttackColor = Color.Maroon;// (0xFF8B008B);// Color.DarkMagenta;
 		static readonly Color raidColor = Color.Yellow;
 		//        static readonly Color shadowColor = new Color(128, 0, 0, 0);
-		static readonly Color selectColor = new Color(255, 20, 255, 192);
+		static readonly Color selectColor = new Color(20, 255, 255, 192);
 		static readonly Color buildColor = Color.DarkRed;
 		static readonly Color hoverColor = Color.Purple;
 		static readonly Color focusColor = Color.Maroon;
@@ -1006,7 +1007,7 @@ namespace COTG
 
 		public static float animationTWrap; // wraps every 3 seconds
 		public static float animationT; // approximate animation time in seconds
-		private TextFormat textformatLabel = new TextFormat(TextFormat.HorizontalAlignment.center, TextFormat.VerticalAlignment.center);
+		private static TextFormat textformatLabel = new TextFormat(TextFormat.HorizontalAlignment.center, TextFormat.VerticalAlignment.center);
 		private TextFormat tipTextFormatCentered = new TextFormat(TextFormat.HorizontalAlignment.center);
 		private TextFormat tipTextFormat = new TextFormat(TextFormat.HorizontalAlignment.left);
 		private TextFormat tipTextFormatRight = new TextFormat(TextFormat.HorizontalAlignment.right);
@@ -1090,7 +1091,6 @@ namespace COTG
 
 				//   ShellPage.T("Draw");
 
-				byte textBackgroundOpacity = 192;
 				//	defaultStrokeStyle.DashOffset = (1 - animT) * dashLength;
 
 
@@ -1633,7 +1633,8 @@ namespace COTG
 												var r = t.Ramp();
 												var c1 = a.CidToCamera();
 												var spot = Spot.GetOrAdd(a);
-												DrawAction(0.5f, 1.0f, r, c1, c0, Color.Red, troopImages[(int)spot.GetPrimaryTroopType(false)], false, null, lineThickness: LineThickness(Spot.IsSelectedOrHovered(a)));
+												DrawAction(0.5f, 1.0f, r, c1, c0, Color.Red, troopImages[(int)spot.GetPrimaryTroopType(false)], false, null, 
+													lineThickness: LineThickness(Spot.IsSelectedOrHovered(a)));
 											}
 											foreach (var target in cluster.targets)
 											{
@@ -1652,14 +1653,8 @@ namespace COTG
 									}
 								}
 								{
-									foreach (var t in AttackTab.readable.targets)
+									foreach (var t in AttackPlan.plan.targets)
 									{
-										var wc = t.cid.CidToWorld();
-										if (IsCulledWC(wc))
-											continue;
-										var cc = wc.WToCamera();
-										var c0 = cc - halfSquareOffset;
-										var c1 = cc + halfSquareOffset;
 										var col = t.attackType switch
 										{
 											AttackType.senator => CColor(168, 0, 0, 242),
@@ -1668,20 +1663,10 @@ namespace COTG
 											AttackType.seFake => CColor(98, 32, 168, 192),
 											_ => CColor(64, 64, 64, 64)
 										};
-										DrawDiamondShadow(Layer.effects, c0, c1, col);
-										if( t.attackCluster >= 0)
-										{
-											DrawTextBox(t.attackCluster.ToString(), cc, textformatLabel, new Color(col,255), textBackgroundOpacity, Layer.tileText, scale:(bmFontScale*2.0f).Min(0.5f) );
-										}
+										DrawRectOutlineShadow(Layer.effects, t.cid, col, (t.attackCluster >= 0) ? t.attackCluster.ToString():null );
 									}
-									foreach (var t in AttackTab.readable.attacks)
+									foreach (var t in AttackPlan.plan.attacks)
 									{
-										var wc = t.cid.CidToWorld();
-										if (IsCulledWC(wc))
-											continue;
-										var cc = wc.WToCamera();
-										var c0 = cc - halfSquareOffset;
-										var c1 = cc + halfSquareOffset;
 										var col = t.attackType switch
 										{
 											AttackType.assault => CColor(55, 94, 190, 242),
@@ -1691,11 +1676,7 @@ namespace COTG
 											AttackType.seFake => CColor(128, 32, 128, 192), // not really used as attack
 											_ => CColor(64, 64, 64, 64)
 										};
-										DrawRectOutlineShadow(Layer.effects, c0, c1, col);
-										if (t.attackCluster >= 0)
-										{
-											DrawTextBox(t.attackCluster.ToString(), cc, textformatLabel, new Color(col, 255), textBackgroundOpacity, Layer.tileText, scale: (bmFontScale * 2.0f).Min(0.5f));
-										}
+										DrawDiamondShadow(Layer.effects, t.cid, col, (t.attackCluster >= 0) ? t.attackCluster.ToString() : null);
 									}
 
 								}
@@ -1986,7 +1967,8 @@ namespace COTG
 
 						foreach (var cid in Spot.selected)
 						{
-							DrawFlag(cid, SpriteAnim.flagSelected, Vector2.Zero);
+							DrawRectOutlineShadow(Layer.effects - 1, cid,selectColor, null, 1.5f,2.0f);
+							//DrawFlag(cid, SpriteAnim.flagSelected, Vector2.Zero);
 						}
 						foreach (var cid in SettingsPage.pinned)
 						{
@@ -2450,23 +2432,23 @@ namespace COTG
 		{
 			draw.AddQuad(layer, quadTexture, c0, c1, new Vector2(), new Vector2(1, 1), color, PlanetDepth, zLabels);
 		}
-		private static void DrawRectOutline(int layer, Vector2 c0, Vector2 c1, Color color,float z, float thickness )
+		private static void DrawRectOutline(int layer, Vector2 c0, Vector2 c1, Color color, float z, float thickness, float expand = 0f )
 		{
-			float d = thickness;
+			float d = thickness+expand;
+			
 
+			draw.AddQuad(layer, quadTexture, new(c0.X - expand, c0.Y - expand), new(c1.X + expand, c0.Y+d), new Vector2(), new Vector2(1, 1), color, PlanetDepth, z);
+			draw.AddQuad(layer, quadTexture, new(c0.X - expand, c0.Y - expand), new(c0.X + d, c1.Y + expand), new Vector2(), new Vector2(1, 1), color, PlanetDepth, z);
 
-			draw.AddQuad(layer, quadTexture, new(c0.X,c0.Y), new(c1.X,c0.Y+d), new Vector2(), new Vector2(1, 1), color, PlanetDepth, z);
-			draw.AddQuad(layer, quadTexture, new(c0.X, c0.Y), new(c0.X + d, c1.Y), new Vector2(), new Vector2(1, 1), color, PlanetDepth, z);
-
-			draw.AddQuad(layer, quadTexture, new(c0.X, c1.Y-d), new(c1.X, c1.Y), new Vector2(), new Vector2(1, 1), color, PlanetDepth, z);
-			draw.AddQuad(layer, quadTexture, new(c1.X-d, c0.Y), new(c1.X, c1.Y), new Vector2(), new Vector2(1, 1), color, PlanetDepth, z);
+			draw.AddQuad(layer, quadTexture, new(c0.X - expand, c1.Y-d), new(c1.X + expand, c1.Y + expand), new Vector2(), new Vector2(1, 1), color, PlanetDepth, z);
+			draw.AddQuad(layer, quadTexture, new(c1.X-d, c0.Y - expand), new(c1.X + expand, c1.Y + expand), new Vector2(), new Vector2(1, 1), color, PlanetDepth, z);
 		}
-		private static void DrawDiamond(int layer, Vector2 c0, Vector2 c1, Color color,float z, float thickness = 3)
+		private static void DrawDiamond(int layer, Vector2 c0, Vector2 c1, Color color,float z, float thickness = 3,float expand=0)
 		{
 			float d = thickness;
 			var cm = (c0 + c1) * 0.5f;
-			const float ext = 0.25f;
-			const float ext1 = 1.0f + ext;
+			float ext = 0.41f + expand;
+			float ext1 = 1.0f + ext;
 			var ct = new Vector2(cm.X, c0.Y*ext1-cm.Y * ext);
 			var cb = new Vector2(cm.X, c1.Y *ext1 -cm.Y*ext);
 			var cl = new Vector2(c0.X* ext1 -cm.X * ext, cm.Y);
@@ -2477,17 +2459,45 @@ namespace COTG
 			draw.AddLine(layer, whiteMaterial, cb, cl, d, 0.0f,1.0f, color, (cb.CToDepth(z), cl.CToDepth(  z))); ;
 		}
 
-		private static void DrawRectOutlineShadow(int layer, Vector2 c0, Vector2 c1, Color color, float thickness = 5)
+		private static void DrawRectOutlineShadow(int layer, Vector2 c0, Vector2 c1, Color color, float thickness = 5, float expand=0)
 		{
-			DrawRectOutline(layer, c0, c1, color,zCities, thickness);
+			DrawRectOutline(layer, c0, c1, color,zCities, thickness,expand);
 			if(AGame.parallaxGain > 0)
-				DrawRectOutline(Layer.tileShadow, c0 +shadowOffset, c1+shadowOffset, color.GetShadowColorDark(),0.0f, thickness);
+				DrawRectOutline(Layer.tileShadow, c0 +shadowOffset, c1+shadowOffset, color.GetShadowColorDark(),0.0f, thickness,expand);
 		}
-		private static void DrawDiamondShadow(int layer, Vector2 c0, Vector2 c1, Color color,float thickness=4)
+		private static void DrawRectOutlineShadow(int layer, int cid, Color col, string label = null, float thickness = 4,float expand=0)
 		{
-			DrawDiamond(layer, c0, c1, color,zCities, thickness);
+			var wc = cid.CidToWorld();
+			if (IsCulledWC(wc))
+				return;
+			var cc = wc.WToCamera();
+			var c0 = cc - halfSquareOffset;
+			var c1 = cc + halfSquareOffset;
+			DrawRectOutlineShadow(Layer.effects, c0, c1, col,thickness,expand);
+			if (label != null)
+			{
+				DrawTextBox(label, cc, textformatLabel, new Color(col, 255), textBackgroundOpacity, Layer.tileText, scale: (bmFontScale * 2.0f).Min(0.5f));
+			}
+		}
+		private static void DrawDiamondShadow(int layer, Vector2 c0, Vector2 c1, Color color,float thickness=4, float expand = 0)
+		{
+			DrawDiamond(layer, c0, c1, color,zCities, thickness,expand);
 			if (AGame.parallaxGain > 0)
-				DrawDiamond(Layer.tileShadow, c0 + shadowOffset, c1 + shadowOffset, color.GetShadowColorDark(),0f, thickness);
+				DrawDiamond(Layer.tileShadow, c0 + shadowOffset, c1 + shadowOffset, color.GetShadowColorDark(),0f, thickness,expand);
+		}
+		private static void DrawDiamondShadow(int layer, int cid, Color col,string label=null, float thickness = 4, float expand = 0)
+		{
+			var wc = cid.CidToWorld();
+			if (IsCulledWC(wc))
+				return;
+			var cc = wc.WToCamera();
+			var c0 = cc - halfSquareOffset;
+			var c1 = cc + halfSquareOffset;
+			DrawDiamondShadow(Layer.effects, c0, c1, col,expand);
+			if (label != null )
+			{
+				DrawTextBox(label, cc, textformatLabel, new Color(col, 255), textBackgroundOpacity, Layer.tileText, scale: (bmFontScale * 2.0f).Min(0.5f));
+			}
 		}
 
 		(float u, float v) GetLineUs(Vector2 c0, Vector2 c1)

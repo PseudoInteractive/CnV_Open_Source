@@ -5,12 +5,19 @@ using System.Linq;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
-
+using System.Text.Json.Serialization;
 namespace COTG
 {
 	public class Json
 	{
-		public static JsonSerializerOptions jsonSerializerOptions = new JsonSerializerOptions() { AllowTrailingCommas = true, DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull, NumberHandling = System.Text.Json.Serialization.JsonNumberHandling.AllowReadingFromString | System.Text.Json.Serialization.JsonNumberHandling.AllowNamedFloatingPointLiterals, ReadCommentHandling = JsonCommentHandling.Skip };
+		public static JsonSerializerOptions jsonSerializerOptions = new JsonSerializerOptions() 
+		{ 
+			AllowTrailingCommas = true, 
+			DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull, 
+			NumberHandling = JsonNumberHandling.AllowReadingFromString|JsonNumberHandling.AllowNamedFloatingPointLiterals, 
+			ReadCommentHandling = JsonCommentHandling.Skip,
+			IgnoreReadOnlyProperties=true
+		};
 		public static T FromResources<T>(string asm)
 		{
 			var str = new System.IO.StreamReader(typeof(JSClient).Assembly.GetManifestResourceStream($"COTG.JSON.{asm}.json")).ReadToEnd();

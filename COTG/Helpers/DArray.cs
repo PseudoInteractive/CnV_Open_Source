@@ -268,10 +268,10 @@ namespace COTG
 			return $"DArray<{typeof(T)}>{count}";
 		}
 
-		internal void Sort()
-		{
-			Array.Sort<T>(v,0, count);
-		}
+		//internal void Sort()
+		//{
+		//	v.SortSmall();
+		//}
 	}
 	public struct DArrayRef<T> : IDisposable where T : struct
 	{

@@ -136,15 +136,15 @@ namespace COTG.Views
 			return base.VisibilityChanged(visible);
 		}
 		public override TabPage defaultPage => ChatTab.tabPage;
-		public ChatEntry lastChat = new ChatEntry(null, string.Empty, DateTimeOffset.MinValue, 0);
-		public void Post(ChatEntry entry)
+		//public ChatEntry lastChat = new ChatEntry(null, string.Empty, DateTimeOffset.MinValue, 0);
+		public void Post(ChatEntry entry, bool isNew) // if is new, this message is fresh.  Otherwise loaded from archives
 		{
 			// duplicate?
-			if (lastChat.player == entry.player
-				&& string.Equals(lastChat.text, entry.text, StringComparison.Ordinal)
-				&& lastChat.type == entry.type)
-				return;
-			lastChat = entry;
+			//if (lastChat.player == entry.player
+			//	&& string.Equals(lastChat.text, entry.text, StringComparison.Ordinal)
+			//	&& lastChat.type == entry.type)
+			//	return;
+			//lastChat = entry;
 			try
 			{
 
@@ -171,14 +171,27 @@ namespace COTG.Views
 						items.RemoveAt(0);
 				}
 				var insert = items.Count;
-				for (; insert > 0 && items[insert - 1].time > at; --insert) { }
-
-				items.Insert(insert, entry);
-
-				var text = entry.text;
-				if (this != debug && (text.Contains(Player.myName, StringComparison.OrdinalIgnoreCase) || text.Contains("@here", StringComparison.OrdinalIgnoreCase)))
+				if (!isNew)
 				{
-					Note.Show(entry.ToString());
+					for (; insert > 0 && items[insert - 1].time > at; --insert) { }
+					if (insert > 0)
+					{
+						var lastChat = items[insert - 1];
+						if (lastChat.player == entry.player
+							&& string.Equals(lastChat.text, entry.text, StringComparison.Ordinal)
+							&& lastChat.type == entry.type)
+							return;
+					}
+				}
+				items.Insert(insert, entry);
+				var text = entry.text;
+				if (isNew)
+				{
+					if (this != debug && (text.Contains(Player.myName, StringComparison.OrdinalIgnoreCase) || text.Contains("@here", StringComparison.OrdinalIgnoreCase)))
+					{
+						ToastNotificationsService.instance.ShowNotification(entry.ToString(), "mention");
+						Note.Show(entry.ToString());
+					}
 				}
 
 				// Set + if not from me
@@ -197,7 +210,7 @@ namespace COTG.Views
 		{
 			// Todo: batch these
 			foreach (var entry in entries)
-				Post(entry);
+				Post(entry,false);
 		}
 
 
@@ -230,7 +243,7 @@ namespace COTG.Views
 					//  var str = $"{Tick.MSS()}:{s}";
 					//  instance.logEntries
 
-					debug.Post(new ChatEntry(null, s, JSClient.ServerTime()));
+					debug.Post(new ChatEntry(null, s, JSClient.ServerTime()), true);
 				}
 				catch (Exception e)
 				{
@@ -516,9 +529,9 @@ namespace COTG.Views
 							//		var prior = FocusManager.GetFocusedElement();
 							//		Log(prior.GetType());
 
-							ChatTab.GetWhisperTab(ch.player, false).Post(ch);
+							ChatTab.GetWhisperTab(ch.player, false).Post(ch, true);
 							// ChatTab.whisper.Post(ch);
-							ChatTab.alliance.Post(ch);
+							ChatTab.alliance.Post(ch,true);
 							//       ChatTab.officer.Post(ch);
 							//       ChatTab.world.Post(ch);
 						}
@@ -526,17 +539,17 @@ namespace COTG.Views
 						{
 							if (ch.type == 5)
 							{
-								ChatTab.officer.Post(ch);
+								ChatTab.officer.Post(ch, true);
 							}
 							if (ch.type == 5 || ch.type == 4)
 							{
 
 								if (ch.type == 4)
 									PlayerHooks.PlayerChat?.Invoke(new PlayerHooks.PlayerChatEventArgs() { player = Player.FromName(ch.player), text = ch.text });
-								ChatTab.alliance.Post(ch);
+								ChatTab.alliance.Post(ch, true);
 							}
 							else
-								ChatTab.world.Post(ch);
+								ChatTab.world.Post(ch, true);
 						}
 						break;
 					}

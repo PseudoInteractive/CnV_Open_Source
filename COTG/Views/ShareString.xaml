@@ -124,29 +124,7 @@
 										Style="{StaticResource NumberBoxRes}"
 										 />
 					</tk:WrapPanel>
-					<tk:WrapPanel Orientation="Horizontal"
-							Margin="4">
-						<ToggleSwitch  Header="Export Wood"
-								   IsOn="{x:Bind views:SettingsPage.sendWood, Mode=TwoWay}"
-								   Margin="4"
-								   Width="120" />
-						<ToggleSwitch  Header="Export Stone"
-								   IsOn="{x:Bind views:SettingsPage.sendStone, Mode=TwoWay}"
-								   Margin="4"
-								   Width="120" />
-						<ToggleSwitch  Header="Export Iron"
-								   IsOn="{x:Bind views:SettingsPage.sendIron, Mode=TwoWay}"
-								   Margin="4"
-								   Width="120" />
-						<ToggleSwitch  Header="Export Food"
-								   IsOn="{x:Bind views:SettingsPage.sendFood, Mode=TwoWay}"
-								   Margin="4"
-								   Width="120" />
-						<ToggleSwitch Header="Carts for requests"
-								  IsOn="{x:Bind views:SettingsPage.cartsAreForRequests, Mode=TwoWay}"
-								  Margin="4"
-								  Width="120" />
-					</tk:WrapPanel>
+					
 					<tk:WrapPanel Orientation="Horizontal">
 						<ToggleSwitch Header="Hub"
 								   IsOn="{x:Bind views:SettingsPage.setHub, Mode=TwoWay}"

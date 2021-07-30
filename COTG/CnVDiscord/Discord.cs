@@ -138,7 +138,7 @@ namespace CnVDiscord
 				var fetch = await chatChannel.GetMessagesAsync(messageFetchCount).ConfigureAwait(false);
 				foreach(var message in fetch)
 				{
-					await AddMessage(message).ConfigureAwait(false);
+					await AddMessage(message,false).ConfigureAwait(false);
 				}
 			};
 		}
@@ -244,7 +244,7 @@ namespace CnVDiscord
 		}
 		static Regex regexMention = new Regex(@"\<@(\w+)\>", RegexOptions.CultureInvariant | RegexOptions.Compiled);
 
-		private static async Task AddMessage(DiscordMessage message)
+		private static async Task AddMessage(DiscordMessage message, bool isNew)
 		{
 			try
 			{
@@ -290,7 +290,7 @@ namespace CnVDiscord
 					content = content.Replace(mention, mentionGame);
 				}
 				var chat = new ChatEntry(name, content, message.Timestamp.ToServerTime(), ChatEntry.typeAlliance);
-				App.DispatchOnUIThreadLow(() => ChatTab.alliance.Post(chat));
+				App.DispatchOnUIThreadLow(() => ChatTab.alliance.Post(chat, isNew));
 			}
 			catch (Exception ex)
 			{
@@ -307,7 +307,7 @@ namespace CnVDiscord
 			{
 				if (e.Channel.Id != Config.ChatID)
 					return;
-				await AddMessage(e.Message).ConfigureAwait(false);
+				await AddMessage(e.Message,true).ConfigureAwait(false); // is this correct
 				e.Handled = true;
 			}
 			catch (Exception ex)

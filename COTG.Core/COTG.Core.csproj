@@ -51,6 +51,7 @@
     <PackageReference Include="Nito.AsyncEx.Coordination" Version="5.1.0" />
     <PackageReference Include="PlayFabAllSDK" Version="1.97.210720" />
     <PackageReference Include="Standart.Hash.xxHash" Version="3.1.0" />
+    <PackageReference Include="System.Collections.Immutable" Version="6.0.0-preview.6.21352.12" />
     <PackageReference Include="System.Memory" Version="4.5.4" />
     <PackageReference Include="System.Numerics.Vectors" Version="4.5.0" />
     <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="6.0.0-preview.6.21352.12" />

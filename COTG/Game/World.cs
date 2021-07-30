@@ -249,6 +249,11 @@ namespace COTG.Game
 		{
 			return GetInfo(cid.CidToWorld());
 		}
+		
+		public static bool IsOnWater(int cid)
+		{
+			return GetInfoFromCid(cid).isWater;
+		}
 		//public static (uint type, int player, bool isCastle, bool isBig, bool isWater, bool isTemple, uint data, uint all) GetInfoPrior(int packedId)
 		//{
 		//	return GetInfoFromPackedId(rawPrior0, packedId);
