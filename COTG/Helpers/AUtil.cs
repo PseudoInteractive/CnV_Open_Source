@@ -634,4 +634,25 @@ namespace COTG
 
 		#endregion Dispose
 	}
+	//public class GridEnumerator : IEnumerable<(int x,int y)>
+	//{
+	//	public int radius;
+	//	public static IEnumerable<BuildQueueItem> IterateQueue()
+	//	{
+	//		foreach (var i in buildQueue)
+	//			yield return i;
+
+	//		if (CityBuildQueue.all.TryGetValue(City.build, out var q))
+	//		{
+	//			var count = q.queue.count;
+	//			var data = q.queue.v;
+
+	//			for (int i = 0; i < count; ++i)
+	//			{
+	//				//semi safe
+	//				yield return data[i];
+	//			}
+	//		}
+	//	}
+	//}
 }

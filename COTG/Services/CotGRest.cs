@@ -660,7 +660,7 @@ namespace COTG.Services
 						int tcEnd = 0;
 						while (IsDigitOrComma(str, tcEnd))
 							++tcEnd;
-						var count = int.Parse(str.Substring(0, tcEnd), NumberStyles.Number);
+						var count = int.Parse(str.Substring(0, tcEnd), NumberStyles.Any);
 						var typeS = str.Substring(tcEnd + 1);
 						var tE = Game.Enum.ttNameWithCapsAndBatteringRam.IndexOf(typeS);
 						Add(ref re.troops, new TroopTypeCount(tE, count));

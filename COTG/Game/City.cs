@@ -584,24 +584,32 @@ namespace COTG.Game
 					//}
 				}
 			}
-			if (cid == City.build && jse.TryGetProperty("bq", out var bq))
+			if ( jse.TryGetProperty("bq", out var bq))
 			{
-				if (bq.ValueKind == JsonValueKind.Array)
+			//	Log($"BQ: {(cid == City.build)} {nameAndRemarks} {bq.ToString()}");
+				if (cid == City.build)
 				{
-					int count = bq.GetArrayLength();
-					buildQueue.ClearKeepBuffer();
-					for (int i = 0; i < count; ++i)
+					if (bq.ValueKind == JsonValueKind.Array)
 					{
-						var js = bq[i];
-						buildQueue.Add(new BuildQueueItem(
-							js.GetAsByte("slvl"),
-							js.GetAsByte("elvl"),
-							js.GetAsUShort("brep"),
-							js.GetAsUShort("bspot")
-							));
+						int count = bq.GetArrayLength();
+						buildQueue.ClearKeepBuffer();
+						for (int i = 0; i < count; ++i)
+						{
+							var js = bq[i];
+							buildQueue.Add(new BuildQueueItem(
+								js.GetAsByte("slvl"),
+								js.GetAsByte("elvl"),
+								js.GetAsUShort("brep"),
+								js.GetAsUShort("bspot")
+								));
+						}
+						buildQInSync = true;
+						CityView.BuildingsOrQueueChanged();
 					}
-					buildQInSync = true;
-					CityView.BuildingsOrQueueChanged();
+					else
+					{
+						Assert(false);
+					}
 				}
 			}
 
@@ -2054,7 +2062,7 @@ namespace COTG.Game
 			   //   if (MainPage.IsVisible())
 			   {
 				   using var _ = await cityGridLock.LockAsync();
-				   City.gridCitySource.NotifyReset();
+				   City.gridCitySource.Set(l);
 			   }
 			   //if (IncomingTab.instance.isVisible)
 				//   IncomingTab.instance.refresh.Go();

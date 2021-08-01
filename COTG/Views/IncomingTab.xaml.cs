@@ -230,15 +230,18 @@ namespace COTG.Views
 					{
 						armyGrid.ItemsSource = sel.incoming;
 
-						var tab = DefenseHistoryTab.instance;
-						if (!tab.isVisible)
+						if (SettingsPage.fetchFullHistory)
 						{
-							tab.ShowOrAdd(true, false);
+							var tab = DefenseHistoryTab.instance;
+							if (!tab.isVisible)
+							{
+								tab.ShowOrAdd(true, false);
 
-						}
-						else
-						{
-							tab.refresh.Go();
+							}
+							else
+							{
+								tab.refresh.Go();
+							}
 						}
 					}
 				}

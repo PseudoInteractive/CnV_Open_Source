@@ -100,8 +100,8 @@ namespace COTG.Views
 					foreach (var city in City.gridCitySource)
 					{
 						Assert(city is City);
-						if ((includeOffense ? city.tsHome : city.tsDefHome) < filterTSHome |
-							 (includeOffense ? city.tsTotal : city.tsDefTotal) < filterTSTotal)
+						if ((includeOffense ? city.tsHome : city.tsDefCityHome) < filterTSHome |
+							 (includeOffense ? city.tsTotal : city.tsDefCityTotal) < filterTSTotal)
 							continue;
 						if (viaWater && !city.isOnWater)
 							continue;

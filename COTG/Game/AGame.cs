@@ -1733,6 +1733,10 @@ namespace COTG
 												continue;
 											var incAttacks = 0;
 											var incTs = 0;
+											var sieged = false;
+											var hasSen = false;
+											var hasArt = false;
+
 											foreach (var i in city.incoming)
 											{
 												var c0 = i.sourceCid.CidToCamera();
@@ -1763,6 +1767,9 @@ namespace COTG
 													{
 														c = GetAttackColor(i);
 													}
+													sieged |= i.isSiege;
+													hasSen |= i.hasSenator;
+													hasArt |= i.hasArt;
 												}
 												if (!(showAll || Spot.IsSelectedOrHovered(i.sourceCid, targetCid, noneIsAll)))
 												{
@@ -1786,7 +1793,7 @@ namespace COTG
 											}
 											if (!IsCulled(c1) && ((wantDetails || showAll || Spot.IsSelectedOrHovered(targetCid, noneIsAll))))
 											{
-												DrawTextBox($"{incAttacks}`{city.claim.ToString("00")}%`{(incTs + 500) / 1000}k\n{ (city.tsDefMax + 500) / 1000 }k",
+												DrawTextBox($"{incAttacks}{city.IncomingInfo()}\n{ (city.tsDefMax + 999) / 1000 }k",
 														c1, tipTextFormatCentered, incAttacks != 0 ? Color.White : Color.Cyan, textBackgroundOpacity, Layer.tileText);
 											}
 										}
@@ -1807,7 +1814,7 @@ namespace COTG
 												continue;
 											if (wantDetails || Spot.IsSelectedOrHovered(targetCid, true))
 											{
-												DrawTextBox($"{(city.tsDefMax.Max(city.tsHome) + 500) / 1000 }k Ts (#:{city.reinforcementsIn.Length})", c1, tipTextFormatCentered, Color.Cyan, textBackgroundOpacity, Layer.tileText);
+												DrawTextBox($"{(city.tsDefMax.Max(city.tsHome) + 999) / 1000 }k Ts (#:{city.reinforcementsIn.Length})", c1, tipTextFormatCentered, Color.Cyan, textBackgroundOpacity, Layer.tileText);
 											}
 
 										}
@@ -2512,7 +2519,7 @@ namespace COTG
 
 		(float u, float v) GetLineUs(Vector2 c0, Vector2 c1)
 		{
-			float offset = (lineAnimationGain * (animationTWrap+ hash)) % 1;
+			float offset = (lineAnimationGain * (animationTWrap)) % 1;
 			return (offset , offset-(c0 - c1).Length()* clampedScaleInverse * lineTileGain);
 
 		}
@@ -2627,7 +2634,7 @@ namespace COTG
 					hasArt |= i.hasArt;
 				}
 			}
-			return $"({(sieged ? ((hasArt&&hasSen?"SA":hasArt ? "A": hasSen? "S" : "s") + city.claim.ToString("00") + "%") : "i") } { (ts ==0 ? "?" : (ts + 500) / 1000) }k ts)";
+			return $"({(sieged ? ((hasArt&&hasSen?"SA ":hasArt ? "A ": hasSen? "S " : "n ") + ((hasSen||city.claim>0)? city.claim.ToString("00") + "% ":"") ) : "i ") } { (ts ==0 ? "?" : (ts + 999) / 1000) }kTs)";
 		}
 
 		public static bool IsDark(this Color color) => ((int)color.R + color.G + color.B) < (int)color.A * 3 / 2;

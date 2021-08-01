@@ -18624,7 +18624,7 @@ function outer(){
 		}(window.String.fromCharCode, parseInt);
 
 
-		function SetCity(newCid,forceRefresh : boolean = false) {
+		function SetCity(newCid,forceRefresh = false) {
 		//	console.log("set city " + d9l);
 			clearIdle();
 			let newCidInt = Number(newCid);
@@ -18632,7 +18632,7 @@ function outer(){
 				   return;
 			if(disablePoll)
 			{
-				onResumePoll.push(() => SetCity(__cid,forceRefresh) );
+				onResumePoll.push(() => SetCity(newCid,forceRefresh) );
 				return;
 			}
 
@@ -18654,7 +18654,7 @@ function outer(){
 		 onResumePoll.push(() => window['cityRefresh'](_cid));
 		 return;
 	 }
-	 SetCity(_cid);
+	 SetCity(_cid,true);
  // once more for good measure
 	setTimeout(function () 
 		{

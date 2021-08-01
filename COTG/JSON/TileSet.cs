@@ -34,7 +34,7 @@ namespace COTG.JSON
 				 or tileShrineUnlit
 				 or tilePortalClosed
 				 or tilePortalOpen 
-				 or (>= tileModifierStart and <= tileModifierEnd) => true, _ => false };
+				 or (>= tileModifierStart) => true, _ => false };
 
 		
 		public const int tileShrineStart = 1557;

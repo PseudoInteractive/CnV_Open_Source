@@ -162,7 +162,18 @@ namespace COTG.Views
 
 			return rv;
 		}
+		/// <summary>
+		///  0,1,-1,2,-2,3,-3
+		/// </summary>
+		// 8 offsets surrounding a square
+		// ordered from closest to farthest, top down, lef to right
+		public static (int dx, int dy)[] surroundingSquare = new[]  {       (0,-1),
+																	(-1, 0),       (1, 0),
+																	        (0, 1),
 
+																	(-1,-1),       (1,-1),
+										 						     
+															 	    (-1, 1),       (1, 1) };
 		public static Task UpdateStats()
 		{
 			if (!IsVisible())

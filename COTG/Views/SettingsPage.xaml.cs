@@ -123,7 +123,7 @@ namespace COTG.Views
 				try
 				{
 					var str = VRTRatio.Split(':');
-					return (float.Parse(str[0], NumberStyles.Number), float.Parse(str[1], NumberStyles.Number), float.Parse(str[2], NumberStyles.Number));
+					return (float.Parse(str[0], NumberStyles.Any), float.Parse(str[1], NumberStyles.Any), float.Parse(str[2], NumberStyles.Any));
 				}
 				catch(Exception ex)
 				{
@@ -165,7 +165,6 @@ namespace COTG.Views
 			}
 		}
 
-		public static bool cartsAreForRequests = false;
 		public static string[] incomingWatch = Array.Empty<string>();
 		public static string exportAllianceMask = string.Empty;
 		public static byte exportOffence;

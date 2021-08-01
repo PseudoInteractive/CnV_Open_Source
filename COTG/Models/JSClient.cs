@@ -61,7 +61,7 @@ namespace COTG
 		public static JSClient instance = new JSClient();
 		public static WebView view;
 		//public static WebViewBrush webViewBrush; 
-		static HttpBaseProtocolFilter httpFilter;
+		public static HttpBaseProtocolFilter httpFilter;
 		public static HttpCookieManager cookieManager;
 		const int clientCount = 6;
 		public static ConcurrentBag<HttpClient> clientPool;
@@ -69,6 +69,8 @@ namespace COTG
 		static HttpClient _downloadImageClient;
 		static bool hasCouncilors;
 		static bool councillorsChecked;
+		public static int spanX;
+		public static int spanY;
 		//public static HttpClient downloadImageClient
 		//{
 		//	get
@@ -375,6 +377,7 @@ namespace COTG
 			}
 			JSClient.cookieManager.DeleteCookie(cookie);
 			//if (!clearOnly)
+			if(!value.IsNullOrEmpty())
 			{
 				cookie.Value = value;
 				JSClient.cookieManager.SetCookie(cookie);
@@ -390,6 +393,7 @@ namespace COTG
 			httpFilter.AutomaticDecompression = true;
 
 			httpFilter.AllowAutoRedirect = true;
+		//	httpFilter.UseProxy = false;
 
 			httpFilter.MaxVersion = HttpVersion.Http20;
 			httpFilter.ServerCustomValidationRequested += ServerCustomValidationRequested;
@@ -501,7 +505,15 @@ namespace COTG
 
 
 		}
+		public static void ClearAllCookies(string domain= "https://crownofthegods.com")
+		{
+			var _cookies = cookieManager.GetCookies(new Uri(domain));
+			foreach (var c in _cookies)
+			{
+				cookieManager.DeleteCookie(c);
+			}
 
+		}
 		private static void View_EffectiveViewportChanged(FrameworkElement sender, EffectiveViewportChangedEventArgs args)
 		{
 			var scrollView = sender as ScrollViewer;
@@ -633,11 +645,11 @@ namespace COTG
 				//	Log(req.RequestUri.ToString());
 				else if (str.EndsWith("jquery/1.9.0/jquery.min.js"))
 				{
-					//	var js = GetJsString("jquery");
-					var js = GetJsString("jquery3_5_1") + GetJsString("jquerymigrate");// + GetJsString("jquerymigrate3_3_2");
-					var newContent = new Windows.Web.Http.HttpStringContent(js, Windows.Storage.Streams.UnicodeEncoding.Utf8, "text/json");
+					////	var js = GetJsString("jquery");
+					//var js = GetJsString("jquery3_5_1") + GetJsString("jquerymigrate");// + GetJsString("jquerymigrate3_3_2");
+					//var newContent = new Windows.Web.Http.HttpStringContent(js, Windows.Storage.Streams.UnicodeEncoding.Utf8, "text/json");
 
-					args.Response = new HttpResponseMessage(HttpStatusCode.Accepted) { Content = newContent };
+					//args.Response = new HttpResponseMessage(HttpStatusCode.Accepted) { Content = newContent };
 
 				}
 				//else if (str == "https://www.crownofthegods.com/index.php")
@@ -682,11 +694,11 @@ namespace COTG
 				}
 				else if (str.Contains("/jsfunctions/pack.js"))
 				{
-					var js = GetJsString("pack.js");
+					//var js = GetJsString("pack.js");
 
-					var newContent = new Windows.Web.Http.HttpStringContent(js, Windows.Storage.Streams.UnicodeEncoding.Utf8, "text/json");
+					//var newContent = new Windows.Web.Http.HttpStringContent(js, Windows.Storage.Streams.UnicodeEncoding.Utf8, "text/json");
 
-					args.Response = new HttpResponseMessage(HttpStatusCode.Accepted) { Content = newContent };
+					//args.Response = new HttpResponseMessage(HttpStatusCode.Accepted) { Content = newContent };
 
 				}
 				//else if (req.RequestUri.LocalPath.Contains("building_set5"))
@@ -2031,6 +2043,9 @@ private static async void ShowCouncillorsMissingDialog()
 								   //   Log($"WebClient:{AGame.clientTL} {ShellPage.webclientSpan.y}");
 								   //     Note.Show($" {clientSpanX}:{clientSpanY} {ShellPage.clientTL} ");
 								   gotCreds = true;
+					//			   spanX = jso.GetAsInt("spanX");
+					//			   spanY = jso.GetAsInt("spanY");
+					//			   Note.Show($"ClientSpan: {spanX}x{spanY}");
 								   //    Log($"Built heades {httpClient.DefaultRequestHeaders.ToString() }");
 
 								   //   UpdatePPDT(jso.GetProperty("ppdt"));

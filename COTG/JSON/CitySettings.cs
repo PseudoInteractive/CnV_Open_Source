@@ -86,9 +86,18 @@ namespace COTG.JSON
 		public const int ministerOptionAutobuildWalls = 26;
 		public const int ministerOptionAutobuildTowers = 27;
 		public const int ministerOptionAutobuildCabins = 52;
-		public static async Task SetCitySettings(int cid, int? reqHub = null, int? targetHub = null, bool setRecruit = false, 
-			bool setAutoBuild = false, bool setResources = false, int? cartReserve = null, 
-			bool _filterSend = false, bool? autoTowers=null, bool? autoWalls=null,
+		public static async Task SetCitySettings(
+			int cid, 
+			int? reqHub = null, 
+			int? targetHub = null, 
+			bool setRecruit = false, 
+			bool setAutoBuild = false, 
+			bool setResources = false, 
+			int? cartReserve = null,
+			int? shipReserve = null,
+			bool _filterSend = false, 
+			bool? autoTowers=null, 
+			bool? autoWalls=null,
 			bool? sendWood=true, 
 			bool? sendStone=true,
 			bool? sendIron=true,
@@ -216,6 +225,10 @@ namespace COTG.JSON
 				if (cartReserve.HasValue)
 				{
 					split[45] = cartReserve.ToString();// 45 is % carts reserved for requests
+				}
+				if (shipReserve.HasValue)
+				{
+					split[46] = shipReserve.ToString();// 45 is % carts reserved for requests
 				}
 
 				//                split[43] = sendHub.ToString();
@@ -528,19 +541,34 @@ namespace COTG.JSON
         {
 			var targets = Spot.GetSelectedForContextMenu(cid, false, targetHub, onlyMine: true);
 			bool? sendWood=null, sendStone = null, sendFood = null, sendIron = null;
+			int? reserveCarts = null, reserveShips = null;
 			var result = await App.DispatchOnUIThreadTask(async () =>
 			{
 				var panel = new StackPanel();
 				panel.Children.Add(new TextBlock() 
 				{ Text= $"Set {Spot.GetOrAdd(cid).nameAndRemarks}{(targets.Count>1?" and "+(targets.Count-1)+" others)" : string.Empty)} to send resources to {Spot.GetOrAdd(targetHub).nameAndRemarks}" });
 				var sendW = new CheckBox() { Content = "Send Wood", IsThreeState = true, IsChecked = null };
+				var sendTip = "Check:  Send, Empty: Don't send, Square: Leave as is";
 				var sendS = new CheckBox() { Content = "Send Stone", IsThreeState = true, IsChecked = null };
 				var sendI = new CheckBox() { Content = "Send Iron", IsThreeState = true, IsChecked = null };
 				var sendF = new CheckBox() { Content = "Send Food", IsThreeState = true, IsChecked = null };
+				ToolTipService.SetToolTip(sendW, sendTip);
+				ToolTipService.SetToolTip(sendS, sendTip);
+				ToolTipService.SetToolTip(sendI, sendTip);
+				ToolTipService.SetToolTip(sendF, sendTip);
+				var reserveS = new NumberBox() { Header = "Reserve Ships", PlaceholderText="No Change" };
+				var reserveC = new NumberBox() { Header = "Reserve Carts", PlaceholderText = "No Change" };
+
+				var reserveTip = "Reserves ships/carts for requests rather than sending them all on overflow (mainly for hubs)";
+				ToolTipService.SetToolTip(reserveS, reserveTip);
+				ToolTipService.SetToolTip(reserveC, reserveTip);
+
 				panel.Children.Add(sendW);
 				panel.Children.Add(sendS);
 				panel.Children.Add(sendI);
 				panel.Children.Add(sendF);
+				panel.Children.Add(reserveC);
+				panel.Children.Add(reserveS);
 
 				var dialog = new ContentDialog()
 				{
@@ -554,6 +582,9 @@ namespace COTG.JSON
 				sendStone = sendS.IsChecked;
 				sendIron = sendI.IsChecked;
 				sendFood = sendF.IsChecked;
+				reserveCarts = reserveC.Text.IsNullOrEmpty() ? null : reserveC.Value.RoundToIntOrNAN();
+				reserveShips = reserveS.Text.IsNullOrEmpty() ? null : reserveS.Value.RoundToIntOrNAN();
+				
 				return rv;
 			});
 			if (result != ContentDialogResult.Primary)
@@ -577,7 +608,9 @@ namespace COTG.JSON
 							break;
 						}
 					}
-					await CitySettings.SetCitySettings(_cid, targetHub: targetHub,sendWood:sendWood,sendStone:sendStone,sendIron:sendIron,sendFood:sendFood);
+					await CitySettings.SetCitySettings(_cid, targetHub: targetHub,
+							sendWood:sendWood,sendStone:sendStone,sendIron:sendIron,sendFood:sendFood,
+							cartReserve:reserveCarts,shipReserve:reserveShips);
 				}
 			}
         }

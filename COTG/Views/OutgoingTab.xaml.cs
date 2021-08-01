@@ -149,16 +149,18 @@ namespace COTG.Views
 				lastSelected = sel;
 
 				armyGrid.ItemsSource = sel.incoming;
-
-				var tab = HitTab.instance;
-				if (!isVisible)
+				if (SettingsPage.fetchFullHistory)
 				{
-					tab.ShowOrAdd(true, false);
+					var tab = HitTab.instance;
+					if (!isVisible)
+					{
+						tab.ShowOrAdd(true, false);
 
-				}
-				else 
-				{
-					tab.refresh.Go();
+					}
+					else
+					{
+						tab.refresh.Go();
+					}
 				}
 
 			}

@@ -45,9 +45,9 @@ namespace COTG
 			for (; ; )
 			{
 
-				if (freePool != null)
+				var rv = freePool;
+				if (rv != null)
 				{
-					var rv = freePool;
 					var next = freePool.freePoolNext;
 					if (object.ReferenceEquals(Interlocked.CompareExchange(ref freePool, next, rv), rv))
 					{

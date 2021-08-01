@@ -74,7 +74,9 @@ namespace COTG.Game
         public string sourceCN => Spot.GetOrAdd(sourceCid).cityName;
         public string targetCN => Spot.GetOrAdd(targetCid).cityName;
         public DateTimeOffset time { get; set; }
-        public DateTimeOffset spotted { get; set; }
+		public bool arrived => time <= JSClient.ServerTime();
+		public bool Arrived(DateTimeOffset serverTime) => time <= serverTime;
+		public DateTimeOffset spotted { get; set; }
         public float journeyTime => spotted == AUtil.dateTimeZero ? 2 * 60 * 60.0f : (float)(time - spotted).TotalSeconds;
 		public double journeyTimeD => spotted == AUtil.dateTimeZero ? 2 * 60 * 60.0 : (time - spotted).TotalSeconds;
 		public float TimeToArrival(DateTimeOffset serverTime) => (float)(time - serverTime).TotalSeconds;

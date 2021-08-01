@@ -27,8 +27,8 @@ namespace COTG.Game
         public Windows.UI.Xaml.Media.Imaging.BitmapImage icon => city.icon;
         public int cid => city.cid;
         public string raidReturn => city.raidReturn;
-        public int tsHome => NearDefenseTab.includeOffense ? city.tsHome : city.tsDefHome;
-        public int tsTotal => NearDefenseTab.includeOffense ? city.tsTotal : city.tsDefTotal;
+        public int tsHome => NearDefenseTab.includeOffense ? city.tsHome : city.tsDefCityHome;
+        public int tsTotal => NearDefenseTab.includeOffense ? city.tsTotal : city.tsDefCityTotal;
         public int split { get; set; } = 1; // splits def and sends in batches for wings
 		public float travel;
 		public int validTargets { get; set; }

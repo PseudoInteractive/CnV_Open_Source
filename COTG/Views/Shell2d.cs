@@ -21,8 +21,13 @@ namespace COTG.Views
 	{
 		// public static Rectangle canvasHitTest;
 
-		public const int canvasBaseX = 414;
-		public const int canvasBaseY = 95;
+		public const int canvasBaseXUnscaled = 410;
+		public const int canvasTitleYOffset = 42;
+		public const int canvasHtmlYOffset = 53;
+		public static int canvasBaseYUnscaled = 95;
+
+		public static int canvasBaseX = 410;
+		public static int canvasBaseY = 95;
 		public static int cachedTopOffset = 0;
 		public static int cachedXOffset = 0;
 		static public SwapChainPanel canvas;
@@ -186,7 +191,7 @@ namespace COTG.Views
 				Visibility = Visibility.Visible,
 				// IsTabStop = true, UseSharedDevice = true, TargetElapsedTime =
 				// TimeSpan.FromSeconds(1.0f / 60.0f),
-				Margin = new Thickness(0, canvasBaseY, 0, 0),
+				Margin = new Thickness(0, canvasBaseY*ShellPage.webViewScale, 0, 0),
 				// IsFixedTimeStep = false
 			};
 			keyboardProxy = new KeyboardProxy()

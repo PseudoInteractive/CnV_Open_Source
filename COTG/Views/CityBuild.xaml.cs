@@ -1295,7 +1295,7 @@ namespace COTG.Views
 		{
 			var cid = City.build;
 			var s = await Services.Post.SendForText("includes/mBu.php", $"a={from}&b={to}&c={cid}", World.CidToPlayerOrMe(cid));
-			if( ( int.TryParse(s.Trim(),System.Globalization.NumberStyles.Any, System.Globalization.NumberFormatInfo.CurrentInfo,out var i) &&
+			if( ( int.TryParse(s.Trim(),System.Globalization.NumberStyles.Any, System.Globalization.NumberFormatInfo.InvariantInfo, out var i) &&
 			
 				( i >= City.bidMin && i <= City.bidMax)) )
 			{

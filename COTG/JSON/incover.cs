@@ -371,7 +371,7 @@ namespace COTG.JSON
 															  {
 																  Add(ref ttl, new TroopTypeCount()
 																  {
-																	  count = int.Parse(str.Substring(0, firstSpace), System.Globalization.NumberStyles.Number, NumberFormatInfo.InvariantInfo),
+																	  count = int.Parse(str.Substring(0, firstSpace), System.Globalization.NumberStyles.Any, NumberFormatInfo.InvariantInfo),
 																	  type = ttype >= 0 ? ttype : 0
 																  });
 															  }

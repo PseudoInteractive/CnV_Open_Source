@@ -984,11 +984,11 @@ namespace COTG.Views
 																{
 																	++incAttacks;
 																	incTs += i.ts;
-																	if(incAttacks<=2)
+																	if(incAttacks<=3)
 																	{
 																		sb.AppendLine(i.troopInfo); // only show first two
 																	}
-																	else if(incAttacks ==3)
+																	else if(incAttacks ==4)
 																	{
 																		sb.AppendLine("..");
 																	}

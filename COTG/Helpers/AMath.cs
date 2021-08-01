@@ -58,11 +58,44 @@ namespace COTG
 		}
 		public static bool TryParseInt(this string s, out int o)
 		{
-			return int.TryParse(s, System.Globalization.NumberStyles.Number, NumberFormatInfo.CurrentInfo, out o);
+			return int.TryParse(s, System.Globalization.NumberStyles.Any, NumberFormatInfo.InvariantInfo, out o);
         }
+		public static bool TryParseIntChecked(this string s, out int o)
+		{
+			
+			checked
+			{
+
+				try
+				{
+					var rv = long.TryParse(s, System.Globalization.NumberStyles.Any, NumberFormatInfo.InvariantInfo, out var _o);
+					if (rv == false)
+					{
+						o = 0;
+					}
+					else
+					{
+						if (_o > int.MaxValue)
+							o = int.MaxValue;
+						else if (_o < int.MinValue)
+							o = int.MinValue;
+						else
+							o = (int)_o;
+
+					}
+					return rv;
+				}
+				catch (Exception ex)
+				{
+					o = 0;
+					return false;
+				}			
+			}
+		}
+
 		public static bool TryParseFloat(this string s, out float o)
 		{
-			return float.TryParse(s, System.Globalization.NumberStyles.Number, NumberFormatInfo.CurrentInfo, out o);
+			return float.TryParse(s, System.Globalization.NumberStyles.Any, NumberFormatInfo.InvariantInfo, out o);
 		}
 		public static float SmoothStep(this float f, float v0, float v1, float pow=1)
 		{
@@ -98,7 +131,7 @@ namespace COTG
 
 		public static int RoundToInt(this float f)
 		{
-			return f >= 0 ? (int)(f + 0.5f) : -((int)(-f + 0.5f));
+			return (int)MathF.Round(f);
 		}
 		public static int FloorToInt(this float f)
 		{
@@ -273,15 +306,20 @@ namespace COTG
 
 		public static int RoundToInt(this double f)
 		{
-			return f >= 0 ? (int)(f + 0.5f) : -((int)(-f + 0.5f));
+			return (int)Math.Round(f);
 		}
 		public static long RoundToLong(this double f)
 		{
-			return f >= 0 ? (long)(f + 0.5f) : -((long)(-f + 0.5f));
+			return (long)Math.Round(f); 
 		}
 		public static long RoundToLong(this float f)
 		{
-			return f >= 0 ? (long)(f + 0.5f) : -((long)(-f + 0.5f));
+			return (long)MathF.Round(f); 
+		}
+
+		public static int? RoundToIntOrNAN(this double f)
+		{
+			return double.IsNaN(f) ? null : (int)Math.Round(f);
 		}
 
 		#region Dynamics

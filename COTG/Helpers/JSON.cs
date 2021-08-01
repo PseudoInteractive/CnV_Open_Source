@@ -54,7 +54,7 @@ namespace COTG.Helpers
                         if (str.Length == 1 && str[0] == '-')
                             return 0;
 
-                        return float.TryParse(str, NumberStyles.Number, NumberFormatInfo.InvariantInfo, out var v) ? v : default;
+                        return float.TryParse(str, NumberStyles.Any, NumberFormatInfo.InvariantInfo, out var v) ? v : default;
                     }
                 case JsonValueKind.Number:
                     {
@@ -113,8 +113,7 @@ namespace COTG.Helpers
 			{
 				foreach (var i in e.EnumerateObject())
 				{
-					var o = counter++;
-					int.TryParse(i.Name, out o);
+					int.TryParse(i.Name, out var o);
 					yield return (o,i.Value);
 				}
 			}
@@ -161,7 +160,7 @@ namespace COTG.Helpers
                         var str = js.GetString();
                         if (str.Length == 1 && str[0] == '-')
                             return 0;
-                        return long.TryParse(str, NumberStyles.Number, NumberFormatInfo.InvariantInfo, out var v) ? v : default;
+                        return long.TryParse(str, NumberStyles.Any, NumberFormatInfo.InvariantInfo, out var v) ? v : default;
                     }
                 case JsonValueKind.Number:
                     {

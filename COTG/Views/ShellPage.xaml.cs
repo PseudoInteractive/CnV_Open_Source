@@ -601,7 +601,7 @@ namespace COTG.Views
 		{
 			Note.Show("Refresh All");
 			await RefreshWorldData();
-			await JSClient.CityRefresh();
+			
 			RefreshTabs.Go();
 		}
 
@@ -620,6 +620,7 @@ namespace COTG.Views
 				if(tab.isVisible)
 					tab.refresh.Go();
 			}
+			JSClient.CityRefresh();
 			return Task.CompletedTask;
 		}
 
@@ -1222,16 +1223,23 @@ namespace COTG.Views
 			}
 		}
 
-		private void SetLayout(int viewToggle)
+		public static float webViewScale = 1;
+		private  void SetLayout(int viewToggle)
 		{
-			App.DispatchOnUIThreadLow(() =>
+			App.DispatchOnUIThreadLow(async () =>
 		   {
+		   var spanX = int.Parse(await JSClient.view.InvokeScriptAsync("eval", new string[] { "document.body.clientWidth.toString()" }));
+		   webViewScale = ((float)(grid.ColumnDefinitions[0].ActualWidth + grid.ColumnDefinitions[1].ActualWidth)) / spanX;
+			   canvasBaseX = (canvasBaseXUnscaled * webViewScale).RoundToInt();
+			   canvasBaseY = (canvasBaseYUnscaled * webViewScale).RoundToInt();
+			   grid.ColumnDefinitions[0].Width = new GridLength(ShellPage.canvasBaseX, GridUnitType.Pixel);
+			   canvas.Margin = new Thickness(0, canvasBaseY, 0, 0);
+			   //			   UpdateCanvasMarginForWebview(webViewScale);
 			   //scroll.ChangeView(null, null, 0.5f);
 			   var raidInfoVisible = true;
 			   switch (viewToggle)
 			   {
 				   case 0:
-					   // grid.ColumnDefinitions[0].Width = new GridLength(410, GridUnitType.Pixel);
 					   grid.ColumnDefinitions[1].Width = new GridLength(2, GridUnitType.Star);
 					   grid.ColumnDefinitions[2].Width = new GridLength(1, GridUnitType.Star);
 					   // JSClient.view.Scale = new Vector3(1.0f, 1.0f, 1.0f);
@@ -1254,7 +1262,7 @@ namespace COTG.Views
 			   }
 
 			   MainPage.ToggleInfoBoxes(raidInfoVisible);
-			   Task.Delay(200).ContinueWith((_) => City.gridCitySource.NotifyReset());
+			//   Task.Delay(200).ContinueWith((_) => City.gridCitySource.NotifyReset());
 		   });
 		}
 
@@ -1296,32 +1304,43 @@ namespace COTG.Views
 			var content = new StackPanel();
 			var text = new TextBox() { Header = "remember_me", PlaceholderText="01245..." };
 			var text2 = new TextBox() { Header = "sec_session_id", PlaceholderText = "06..." };
+			var clear  = new CheckBox() { Content = "Clear Cookie", IsChecked=false };
 
 
 			content.Children.Add(text);
 			content.Children.Add(text2);
+			content.Children.Add(clear);
 
 			var dialog = new ContentDialog()
 			{
 				Title = "Cookie",
 				Content = content,
-				PrimaryButtonText = "Set",
+				PrimaryButtonText = "Apply",
 				CloseButtonText = "Cancel"
 			};
 			var rv = await dialog.ShowAsync();
 			if (rv == ContentDialogResult.Primary)
 			{
-				//var cookieManager = JSClient.cookieManager;
-				
-				JSClient.SetCookie("remember_me", text.Text );
-			//	JSClient.SetCookie("_ttw", "2ebd127595739638f691d800afb6d9a2cb44f03b");
-			//	JSClient.SetCookie("CotG", "a%3A4%3A%7Bi%3A0%3Bs%3A5%3A%2239311%22%3Bi%3A1%3Bs%3A40%3A%220578a77365184184d96859fd54cb78925d962139%22%3Bi%3A2%3Bi%3A1626898500%3Bi%3A3%3Bi%3A0%3B%7D");
-				SettingsPage.secSessionId = text2.Text;
-				JSClient.SetCookie("sec_session_id", text2.Text);
-				SettingsPage.SaveAll();
-				//	_ttw = 062667a5a7767056ae099f43a2f6d4e24fd015fb; expires = Mon, 20 - Sep - 2021 19:44:58 GMT; Max - Age = 7776000; path =/; domain =.crownofthegods.com; secure; httponly
+				if( clear.IsChecked.GetValueOrDefault())
+				{
+					JSClient.httpFilter.ClearAuthenticationCache();
+					WebView.ClearTemporaryWebDataAsync();
+					JSClient.ClearAllCookies();
+				}
+				else 
+				{
+					JSClient.SetCookie("remember_me", text.Text);
+					//	JSClient.SetCookie("_ttw", "2ebd127595739638f691d800afb6d9a2cb44f03b");
+					//	JSClient.SetCookie("CotG", "a%3A4%3A%7Bi%3A0%3Bs%3A5%3A%2239311%22%3Bi%3A1%3Bs%3A40%3A%220578a77365184184d96859fd54cb78925d962139%22%3Bi%3A2%3Bi%3A1626898500%3Bi%3A3%3Bi%3A0%3B%7D");
+					//	_ttw = 062667a5a7767056ae099f43a2f6d4e24fd015fb; expires = Mon, 20 - Sep - 2021 19:44:58 GMT; Max - Age = 7776000; path =/; domain =.crownofthegods.com; secure; httponly
 
-				//				WebView.ClearTemporaryWebDataAsync();
+					//				WebView.ClearTemporaryWebDataAsync();
+					JSClient.SetCookie("sec_session_id", text2.Text);
+				}
+				SettingsPage.secSessionId = text2.Text;
+				SettingsPage.SaveAll();
+
+
 				await App.DoYesNoBox("Cookie set","Cookies");
 				JSClient.view.Refresh();
 			}

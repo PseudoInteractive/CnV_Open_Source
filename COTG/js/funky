@@ -18046,7 +18046,7 @@ function outer() {
             if (newCidInt == cid && !forceRefresh)
                 return;
             if (disablePoll) {
-                onResumePoll.push(() => SetCity(__cid, forceRefresh));
+                onResumePoll.push(() => SetCity(newCid, forceRefresh));
                 return;
             }
             _cid = cid = newCidInt;
@@ -18063,7 +18063,7 @@ function outer() {
                 onResumePoll.push(() => window['cityRefresh'](_cid));
                 return;
             }
-            SetCity(_cid);
+            SetCity(_cid, true);
             setTimeout(function () {
                 DoPoll2(400);
                 J2();
@@ -69085,8 +69085,8 @@ function postppdt() {
             cookie: document.cookie,
             cid: ppdt.lcit,
             time: currentTime(),
-            spanX: mainMapDiv.clientWidth,
-            spanY: mainMapDiv.clientHeight,
+            spanX: document.body.clientWidth,
+            spanY: document.body.clientHeight,
             left: mainMapDiv.clientLeft,
             top: mainMapDiv.clientTop,
             timeoffset: (ServerDate.getTime() - Date.now()),

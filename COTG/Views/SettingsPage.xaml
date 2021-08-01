@@ -66,8 +66,9 @@
 			</wct:WrapPanel>
 
 			<wct:WrapPanel Orientation="Horizontal">
-				<CheckBox Content="Fetch Full Defense History"
+				<CheckBox Content="Fetch Attack Reports"
 						  IsChecked="{x:Bind FetchFullHistory,Mode=TwoWay}"
+						  ToolTipService.ToolTip="If disabled, the Hits tab and Defense History tab will not work, but incoming and outgoing tabs will be faster"
 						  Margin="4" />
 				<controls:NumberBox  Header="Show Attacks Limit"
 									 Value="{x:Bind views:SettingsPage.showAttacksLimit,Mode=TwoWay}"
