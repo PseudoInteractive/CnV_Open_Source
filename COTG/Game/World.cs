@@ -1338,8 +1338,8 @@ namespace COTG.Game
 
 		public static void SetHeatmapDates(SmallTime t0, SmallTime t1)
 		{
-			Assert(t0.seconds != 0);
-			Assert(t1.seconds != 0);
+			Assert(t0.secondsI != 0);
+			Assert(t1.secondsI != 0);
 			SmallTime _t0 = t0;
 			SmallTime  _t1 = t1 + 1;
 

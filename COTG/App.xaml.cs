@@ -187,6 +187,10 @@ namespace COTG
 		{
 			return IsKeyPressedShift() | IsKeyPressedControl();
 		}
+		public static bool IsKeyPressedShiftAndControl()
+		{
+			return IsKeyPressedShift() && IsKeyPressedControl();
+		}
 		static void OnKeyUp(CoreWindow sender, KeyEventArgs args)
 		{
 			var key = args.VirtualKey;
@@ -1281,9 +1285,15 @@ namespace COTG
 		{
 			ChatTab.L(s);
 		}
+		public enum Priority
+		{
+			low, // if one is active, drop this
+			medium, // if one is active wait
+			high // if one is active cancel it
+		}
 		static DateTime nextInAppNote = new DateTime(0);
 		static CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
-		public static async void Show(string s, bool lowPriority = false, bool useInfoBar = false, int timeout = 5000)
+		public static async void Show(string s, Priority priority=Priority.medium, bool useInfoBar = false, int timeout = 5000)
 		{
 			const int noteDelay = 2;
 			if (ShellPage.instance != null)
@@ -1305,14 +1315,14 @@ namespace COTG
 
 				var now = DateTime.UtcNow;
 				var next = nextInAppNote;
-				if (now >= next)
+				if (now >= next || priority == Priority.high)
 				{
 					// all clear
 					nextInAppNote = now + TimeSpan.FromSeconds(noteDelay);
 				}
 				else
 				{
-					if (lowPriority)
+					if (priority == Priority.low)
 						return;
 					var wait = (next - now);
 					if (wait.TotalSeconds >= 20.0f)

@@ -132,7 +132,7 @@ namespace COTG
 		{
 			if (size <= v.Length)
 				return;
-			size = size.Max(16);
+			//size = size.Max(16);
 			var _v = v;
 			var wasLeased = arrayLeased;
 			arrayLeased = true;

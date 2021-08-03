@@ -174,7 +174,7 @@ namespace COTG.Views
 					foreach (var i in sel)
 					{
 						var t = (i.Content as HeatMapItem).t;
-						if (t.seconds == 0)
+						if (t.secondsI == 0)
 							continue; // this is as placeholder for pending
 						if (t < t0)
 							t0 = t;
@@ -189,7 +189,7 @@ namespace COTG.Views
 				t0 = SmallTime.serverNow;
 			}
 
-			if (t1.seconds != 0)
+			if (t1.secondsI != 0)
 			{
 				World.SetHeatmapDates(t0, t1); // Is Timezone Right?
 				return;

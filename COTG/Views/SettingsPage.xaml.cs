@@ -271,7 +271,7 @@ namespace COTG.Views
 
 		}
 		public static int raidReserveCommandSlots = 0;
-		public static float raidMaxTriariRatio = 1;
+		public static float raidMaxTriariRatio = 2;
 		public static float raidCarryVsDistance = 0.5f;
 
 		public static float raidCarryMin = 0.9f;

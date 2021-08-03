@@ -57,7 +57,7 @@ namespace COTG.Game
 
 		public override int GetHashCode()
 		{
-			return t.seconds;
+			return t.secondsI;
 		}
 
 		public static bool operator ==(HeatMapItem left, HeatMapItem right)

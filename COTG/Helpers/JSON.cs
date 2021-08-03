@@ -31,7 +31,15 @@ namespace COTG.Helpers
         {
             return (ushort)(GetAsInt64(js, prop));
         }
-        public static byte GetAsByte(this JsonElement js, string prop)
+		public static ushort GetAsUShort(this JsonElement js)
+		{
+			return (ushort)(GetAsInt64(js));
+		}
+		public static ushort GetAsUShortClamp(this JsonElement js, string prop)
+		{
+			return (ushort)(GetAsInt64(js, prop).Clamp(0,65535) ) ;
+		}
+		public static byte GetAsByte(this JsonElement js, string prop)
         {
             return (byte)(GetAsInt64(js, prop));
         }

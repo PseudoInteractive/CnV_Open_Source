@@ -71,19 +71,21 @@ namespace COTG.JSON
 	}
 	public readonly struct BuildQueueItem : IEquatable<BuildQueueItem>
 	{
-	//	public static MemoryPool<BuildQueueItem> pool = MemoryPool<BuildQueueItem>.Shared;
-		public readonly byte slvl;
-		public readonly byte elvl;
+		//	public static MemoryPool<BuildQueueItem> pool = MemoryPool<BuildQueueItem>.Shared;
 		public readonly ushort bid; // building id
 		public readonly ushort bspot; // xy
-		
+		public readonly ushort secondsUntilCompletion; // delta time to end in seconds
+		public readonly byte slvl;
+		public readonly byte elvl;
 
-		public BuildQueueItem(byte slvl, byte elvl, ushort bid, ushort bspot)
+
+		public BuildQueueItem(byte slvl, byte elvl, ushort bid, ushort bspot, ushort secondsUntilCompletion = 0)
 		{
 			this.slvl = slvl;
 			this.elvl = elvl;
 			this.bid = bid;
 			this.bspot = bspot;
+			this.secondsUntilCompletion = secondsUntilCompletion;
 		}
 
 		//public bool isBuild => slvl == 0;
@@ -93,16 +95,16 @@ namespace COTG.JSON
 		public bool isNop => slvl == 255; // special token for noop
 		public string buildingName => def.Bn;
 		public bool isBuild => slvl == 0 && elvl != 0;
-		public static readonly BuildQueueItem nop = new BuildQueueItem(255, 255, 0, 0);
+		public static readonly BuildQueueItem nop = new BuildQueueItem(255, 255, 0, 0, 0);
 		internal bool isValid => bid != City.bidTownHall || slvl != 0;
 
 		internal bool isBuilding => !isRes;
 
 		public string bn => def.Bn;
-		public bool isUpgrade => slvl < elvl && slvl !=0;
-		public BuildOp op => 
-			isDemo ? BuildOp.demo : 
-			isBuild ? BuildOp.build : 
+		public bool isUpgrade => slvl < elvl && slvl != 0;
+		public BuildOp op =>
+			isDemo ? BuildOp.demo :
+			isBuild ? BuildOp.build :
 			isNop ? BuildOp.nop :
 			slvl > elvl ? BuildOp.downgrade :
 					BuildOp.upgrade;
@@ -114,13 +116,13 @@ namespace COTG.JSON
 		//		City.buildQueue.Add(this);
 		//	Assert(App.IsOnUIThread());
 		//	return JSClient.view.InvokeScriptAsync("buildex", new[] { bid.ToString(), bspot.ToString(), slvl.ToString(), elvl.ToString(), cid.ToString() });
-			
+
 		//}
 		//public void ApplyOnUIThread(int cid)
 		//{
 		//	if (cid == City.build)
 		//		City.buildQueue.Add(this);
-			
+
 		//	JSClient.JSInvoke("buildex", new[] { bid.ToString(), bspot.ToString(), slvl.ToString(), elvl.ToString(), cid.ToString() });
 		//	if (cid == City.build)
 		//		CityView.BuildingsOrQueueChanged();
@@ -143,7 +145,7 @@ namespace COTG.JSON
 
 		public override int GetHashCode()
 		{
-			return (int)slvl + (int)elvl*10+bspot*128+(int)bid*51200;
+			return (int)slvl + (int)elvl * 10 + bspot * 128 + (int)bid * 51200;
 		}
 
 		public override string ToString()
@@ -163,15 +165,15 @@ namespace COTG.JSON
 	}
 	public class CityBuildQueue : IDisposable
 	{
-		public static DispatcherQueueController _queueController;
-		public static DispatcherQueue _queue;
-		public static DispatcherQueueTimer _timer;
+		//public static DispatcherQueueController _queueController;
+		//public static DispatcherQueue _queue;
+		//public static DispatcherQueueTimer _timer;
 
 		public float nextTick;
 
-	// Start the Timer
+		// Start the Timer
 
-	public bool isRunning;
+		public bool isRunning;
 		public int cid;
 		public DArray<BuildQueueItem> queue = new(128); // extra large
 		public CancellationTokenSource cancellationTokenSource;
@@ -181,24 +183,26 @@ namespace COTG.JSON
 			QueueTab.RemoveOp(queue[id], cid);
 			queue.RemoveAt(id);
 		}
-	     public static SemaphoreSlim queueLock = new SemaphoreSlim(1);
+		public static SemaphoreSlim queueLock = new SemaphoreSlim(1);
 		public static SemaphoreSlim processLock = new SemaphoreSlim(1);
-		public static void Initialize()
-		{
-			_queueController = DispatcherQueueController.CreateOnDedicatedThread();
-			_queue = _queueController.DispatcherQueue;
-			_timer = _queue.CreateTimer();
-			_timer.Interval = TimeSpan.FromSeconds(0.5f);
+		// todo
+		//public static void Initialize()
+		//{
+		//	_queueController = DispatcherQueueController.CreateOnDedicatedThread();
+		//	_queue = _queueController.DispatcherQueue;
+		//	_timer = _queue.CreateTimer();
+		//	_timer.Interval = TimeSpan.FromSeconds(0.5f);
 
-			// The tick handler will be invoked repeatedly after every 5
-			// seconds on the dedicated thread.
-			_timer.Tick += Tick;
+		//	// The tick handler will be invoked repeatedly after every 5
+		//	// seconds on the dedicated thread.
+		//	_timer.Tick += Tick;
 
-		}
+		//}
 
-		private static void Tick(DispatcherQueueTimer sender, object args)
-		{
-		}
+		//private static void Tick(DispatcherQueueTimer sender, object args)
+		//{
+		//}
+		public static City cityQueueInUse;
 
 		public async void Process(int initialDelay = 1000)
 		{
@@ -217,21 +221,25 @@ namespace COTG.JSON
 			// Temple:  must demo first
 
 			var city = City.GetOrAdd(cid);
-		
+
 			for (; ; )
 			{
-				int delay = 3000;
-				var pollPaused = false;
+				int delay = 5000;
+				//var pollPaused = false;
 				//if (queue.count > 0)
 				{
-					
-					int cotgQLength = 0;
-					DArray<BuildQueueItem> cotgQ = null;
+
 					await processLock.WaitAsync();
 
 					try
 					{
-						var queueValid = false;
+						await GetCity.Post(cid);
+
+
+						//	var queueValid = false;
+						// what if someone modifies this while in use?
+						cityQueueInUse = city;
+						var cotgQ = city.buildQueue;
 
 						if (cid == City.build)
 						{
@@ -240,60 +248,64 @@ namespace COTG.JSON
 							// process pending queue first if appropriate
 							//	ququeCount= City.buildQueue.count;
 							//	await City.buildQUpdated;
-							//await GetCity.Post(City.build);
-							if (City.buildQInSync)
-							{
-								cotgQ = City.buildQueue;
-								cotgQLength = cotgQ.count;
-								queueValid = true;
-								Log(cotgQ.ToString());
-							}
-						}
-						else if(city.isMine)
-						{
-							var gotBQ = false;
-							var gotBuildings = false;
-							delay = 6000;
-							pollPaused = true;
-							// First try to get it from poll2, then if that fails, try GC 
-							for (int i = 0; i < 3; ++i)
-							{
-								//	await Post.Send("/overview/mconv.php", $"a={cid}");
-								//	await Post.Send("/overview/bqSt.php", $"cid={cid}");
-								JSClient.extCityHack = null;
-								await JSClient.JSInvokeTask("extpoll", new[] { cid.ToString() });
-								int timeout = 0;
-								while(JSClient.extCityHack==null)
-								{
-									await Task.Delay(50);
-									if (++timeout > 20)
-										break;
-								}
+							//if (City.buildQInSync)
+							//{
+							//	queueValid = true;
+							////	Log(cotgQ.ToString());
+							//}
 
-								if (JSClient.extCityHack == null)
-									continue;
-								
-								if( JSClient.extCityHack.RootElement.TryGetProperty("ext", out var ext) )
-								{
-									gotBQ |= GetBQInfo(ref delay, ref cotgQLength, ref cotgQ, ref ext);
-									gotBuildings |= city.TryGetBuildings(ext);
-								}
-								JSClient.extCityHack = null;
-								if (gotBQ && (city.buildingsLoaded) )
-									break;
-							}
-							if (!gotBQ || !city.buildingsLoaded)
+						}
+						else if (city.isMine)
+						{
+							//var gotBQ = false;
+							//var gotBuildings = false;
+							delay = 20 * 1000; // 20 default
+							var lg = cotgQ.Length;
+							if (lg > 0)
 							{
-								Trace("Failed to get poll or missing buildings?");
-								await GetCity.Post(cid, (jsCity, city) =>
-								 {
-									 queueValid = GetBQInfo(ref delay, ref cotgQLength, ref cotgQ, ref jsCity);
-								 });
+								delay = delay.Max(JSClient.ServerTimeOffsetMs(cotgQ[(lg - 2).Max(0)].secondsUntilCompletion * 1000).Min(15 * 60 * 1000));
 							}
-							else
-							{
-								queueValid = true;
-							}
+
+							//pollPaused = true;
+							// First try to get it from poll2, then if that fails, try GC 
+							//for (int i = 0; i < 3; ++i)
+							//{
+							//	//	await Post.Send("/overview/mconv.php", $"a={cid}");
+							//	//	await Post.Send("/overview/bqSt.php", $"cid={cid}");
+							//	JSClient.extCityHack = null;
+							//	await JSClient.JSInvokeTask("extpoll", new[] { cid.ToString() });
+							//	int timeout = 0;
+							//	while(JSClient.extCityHack==null)
+							//	{
+							//		await Task.Delay(50);
+							//		if (++timeout > 20)
+							//			break;
+							//	}
+
+							//	if (JSClient.extCityHack == null)
+							//		continue;
+
+							//	if( JSClient.extCityHack.RootElement.TryGetProperty("ext", out var ext) )
+							//	{
+							//		gotBQ |= GetBQInfo(ref delay, ref cotgQLength, ref cotgQ, ref ext);
+							//		gotBuildings |= city.TryGetBuildings(ext);
+							//	}
+							//	JSClient.extCityHack = null;
+							//	if (gotBQ && (city.buildingsLoaded) )
+							//		break;
+							//}
+							//if (!gotBQ || !city.buildingsLoaded)
+							//{
+							//	Trace("Failed to get poll or missing buildings?");
+							//	await GetCity.Post(cid, (jsCity, city) =>
+							//	 {
+							//		 queueValid = GetBQInfo(ref delay, ref cotgQLength, ref cotgQ, ref jsCity);
+							//	 });
+							//}
+							//else
+							//{
+							//	queueValid = true;
+							//}
 						}
 						else
 						{
@@ -303,27 +315,32 @@ namespace COTG.JSON
 							Dispose();
 							return;
 						}
-						if (queueValid && city.buildingsLoaded)
+						if (city.buildingsLoaded)
 						{
-							int commandsToQueue = (City.safeBuildQueueLength - cotgQLength).Min(queue.count);
-							if (commandsToQueue > 0 || queue.count==0)
+							var counts = city.CountBuildingsWithoutQueue();
+							int commandsToQueue = (City.safeBuildQueueLength - cotgQ.Length).Min(queue.count);
+
+							if (commandsToQueue > 0 || queue.count == 0)
 							{
 								commandBuilder.Clear();
-								
+								int validCount = 0;
 								commandBuilder.Append($"{{\"{cid}\":[");
 								var qFirst = true;
 								var destroyMe = false;
-								
+
 								int offset = 0;
 								await queueLock.WaitAsync();
 								try
 								{
-									// refresh
-									commandsToQueue = (City.safeBuildQueueLength - cotgQLength).Min(queue.count);
+									// up to 16
+									commandsToQueue = (City.safeBuildQueueLength + 1 - cotgQ.Length).Min(queue.count);
 
-									while (offset < queue.count && commandsToQueue > 0)
+
+									var forceUnblockAdd = 0;
+									while (offset < queue.count && cotgQ.Length < City.buildQMax)
 									{
 										var i = queue.v[offset];
+										bool needToUnblock = cotgQ.Length == City.safeBuildQueueLength;
 
 										// do we have to wait on this on?
 										// - towers before wall
@@ -331,11 +348,12 @@ namespace COTG.JSON
 										{
 											if (i.def.isTower)
 											{
+												// Todo:  check res
 												if (city.buildings[City.bspotWall].bl == 0)
 												{
 													// wait for wall to build first
 													// is there a wall queued?
-													var wallPending = (cotgQ != null && cotgQ.Any((a) => a.bid == City.bidWall && a.slvl == 0));
+													var wallPending = (cotgQ.Any((a) => a.bid == City.bidWall && a.slvl == 0));
 													if (!wallPending)
 													{
 														for (int j = 0; j < offset; ++j)
@@ -361,29 +379,35 @@ namespace COTG.JSON
 													}
 													continue;
 												}
+												++validCount;
 											}
-											else if (i.def.bid == City.bidCastle)
+											else if (i.def.isWall)
 											{
-												Log($"Castle  {city.nameAndRemarks}");
-												// TODO: check res
-												var bd = city.CountBuildingsWithoutQueue();
-												// cannot queue if there is no room, even if there is a demo in progress
-												if (bd.count >= bd.max)
+												// todo:  check res
+												++validCount;
+											}
+											else
+											{
+												if (i.def.bid == City.bidCastle)
 												{
-													Log("Waiting for space for castle");
-													// leave it in the queue
-													++offset;
-													continue;
+													//	Log($"Castle  {city.nameAndRemarks}");
+													// TODO: check res
+													// cannot queue if there is no room, even if there is a demo in progress
+													if (counts.count >= counts.max || city.stone < 20 * 1000)
+													{
+														Trace("Waiting for space or stone for castle");
+														// leave it in the queue
+														++offset;
+														continue;
+													}
 												}
-											}
 
-											// is there a building in the way?
-											// wait for the demo
-											if (i.bspot != City.bspotWall)
-											{
+												// is there a building in the way?
+												// wait for the demo
+
 												if (!city.buildings[i.bspot].isEmpty)
 												{
-													var demoPending = (cotgQ != null) && cotgQ.Any(a => a.isDemo && a.bspot == i.bspot);
+													var demoPending = cotgQ.Any(a => a.isDemo && a.bspot == i.bspot);
 													if (!demoPending)
 													{
 														Trace($"Invalid build: {city.nameMarkdown} {i.ToString()} <=> {city.buildings[i.bspot].bid} {city.buildings[i.bspot].name},{city.buildings[i.bspot].bl}");
@@ -399,13 +423,25 @@ namespace COTG.JSON
 													}
 													continue;
 												}
-											}
+												if (counts.count < counts.max)
+												{
+													++validCount;
+												}
+												else
+												{
+													if (needToUnblock)
+													{
+														++offset;
+														continue;
+													}
+												}
+											}// is building
 										}
 										else if (i.isUpgrade)
 										{
 											var prior = city.GetBuildingPostQueue(i.bspot, cotgQ);
 											// is build not yet queued?
-											if(i.elvl > 10)
+											if (i.elvl > 10)
 											{
 												Trace($"Invalid ugrade to level {i.elvl}");
 												RemoveAt(offset);
@@ -439,6 +475,7 @@ namespace COTG.JSON
 
 													continue;
 												}
+												++validCount;
 											}
 										}
 										else if (i.isDemo)
@@ -451,57 +488,29 @@ namespace COTG.JSON
 												RemoveAt(offset);
 												continue;
 											}
-											
+											// Todo checkr es
 											// if there are any modifications keep it in the queue until they are done
-											var isBeingModified = cotgQ != null && cotgQ.Any(a => a.bspot == i.bspot);
+											var isBeingModified = cotgQ.Any(a => a.bspot == i.bspot);
 											if (isBeingModified)
 											{
 												// wait for later to destroy
 												++offset;
 												continue;
 											}
-
+											++validCount;
 										}
 
 										// issue this command
 										RemoveAt(offset);
 										//									if (cid == City.build)
 										//										City.buildQueue.Add(i);
-										if (cotgQ == null)
-											cotgQ = new DArray<BuildQueueItem>(128);
 										cotgQ.Add(i);
-										++cotgQLength;
 
 										Serialize(ref commandBuilder, i, ref qFirst);
 										--commandsToQueue;
 
-									}
-									// Are we blocked?
-									if (cotgQ != null)
-									{
-										var counts = City.CountBuildings(cid, cotgQ.span);
-										if (counts.count >= counts.max && cotgQLength <= City.safeBuildQueueLength)
-										{
-											// search for a command that will increase building limit (townhall) or reduce building count (demo)
-											var tOffset = offset;
-
-											while (tOffset < queue.count)
-											{
-												var i = queue.v[tOffset];
-												if ((i.isUpgrade && i.bspot == City.bspotTownHall) || (i.isDemo && i.isBuilding && !i.def.isTower))
-												{
-													RemoveAt(tOffset);
-													//	if (cid == City.build)
-													//		City.buildQueue.Add(i);
-													cotgQ.Add(i);
-													++cotgQLength;
-
-													Serialize(ref commandBuilder, i, ref qFirst);
-													break;
-												}
-												++tOffset;
-											}
-										}
+										if (validCount > 0 && cotgQ.Length >= City.safeBuildQueueLength)
+											break;
 									}
 
 
@@ -539,22 +548,23 @@ namespace COTG.JSON
 
 
 
-									if (queueValid && !queue.Any())
+									if (!queue.Any())
 									{
-											if (!queue.Any())
-											{
-												all.TryRemove(cid, out _);
-												destroyMe = true;
-												QueueTab.Clear(cid);
-											}
-									
-
+										//	if (!queue.Any())
+										{
+											all.TryRemove(cid, out _);
+											destroyMe = true;
+											QueueTab.Clear(cid);
+										}
 									}
 									else
 									{
 										//	Trace("Queue invalid");
 									}
 									//	Log($"Next in {delay / 1000.0f} {City.GetOrAdd(cid).nameAndRemarks}");
+
+
+
 								}
 								catch (Exception ex)
 								{
@@ -564,8 +574,8 @@ namespace COTG.JSON
 								{
 									queueLock.Release();
 								}
-								
-								if(destroyMe)
+
+								if (destroyMe)
 								{
 									Log("Queue Done!");
 									SaveNeeded();
@@ -582,18 +592,18 @@ namespace COTG.JSON
 					}
 					finally
 					{
-						if(pollPaused)
-						 await JSClient.JSInvokeTask("resumepoll", null);
-						if (cotgQ != null && cotgQ != City.buildQueue)
-							cotgQ.Dispose();
-
+						//if(pollPaused)
+						//  await JSClient.JSInvokeTask("resumepoll", null);
+						//if (cotgQ != null && cotgQ != City.buildQueue)
+						//	cotgQ.Dispose();
+						cityQueueInUse = null;
 						processLock.Release();
 					}
 
 				}
-//				if(delay > 60*1000 )
-		//		if(city.cid!= City.build)
-		//			Trace($"iterate: Q {queue.count} delay {delay} city {city.nameAndRemarks}");
+				//				if(delay > 60*1000 )
+				//		if(city.cid!= City.build)
+				//			Trace($"iterate: Q {queue.count} delay {delay} city {city.nameAndRemarks}");
 				cancellationTokenSource = new();
 				try
 				{
@@ -612,94 +622,93 @@ namespace COTG.JSON
 					var c = cancellationTokenSource;
 					cancellationTokenSource = null;
 					c.Dispose();
-
 				}
-
 			}
-
 		}
 
-		private static bool GetBQInfo(ref int delay, ref int cotgQLength, ref DArray<BuildQueueItem> cotgQ, ref JsonElement jsCity)
-		{
-			var result = false;
-			try
-			{
-				if (jsCity.TryGetProperty("bq", out var bq))
-				{
-					if (bq.ValueKind == JsonValueKind.Array )
-					{
-						result = true;
-						cotgQLength = bq.GetArrayLength();
+		//private static bool GetBQInfo(ref int delay, City city)
+		//{
+		//	var lg = city.buildQueue.Length;
+		//	if (lg > 0)
+		//	{
+		//		delay = delay.Max(JSClient.ServerTimeOffsetMs(city.buildQueue[ (lg-2).Max(0) ].de ).Min(15*60*1000) ); 
+		//	}
+		//	try
+		//	{
+		//		if (jsCity.TryGetProperty("bq", out var bq))
+		//		{
+		//			if (bq.ValueKind == JsonValueKind.Array )
+		//			{
+		//				result = true;
 
-						//{
-						//	var delays = new float[cotgQLength*2];
-						//	var put = 0;
-						//	foreach (var cmd in bq.EnumerateArray())
-						//	{
-						//		delays[put++] = JSClient.ServerTimeOffset(cmd.GetAsInt64("ds"));
-						//		delays[put++] = JSClient.ServerTimeOffset(cmd.GetAsInt64("de"));
-						//	}
-						//	ShellPage.debugTip = delays.ToArrayString();
-						//	Log(delays.ToArrayString());
-						//}
-						if (cotgQLength > 0)
-						{
-							delay = delay.Max(JSClient.ServerTimeOffsetMs(bq[(cotgQLength) / 2].GetAsInt64("de"))); // recover after 2 seconds
-							if (delay > 15 * 60 * 1000) /// never more than 5 minutes please
-							{
-								//	Assert(false);
+		//				//{
+		//				//	var delays = new float[cotgQLength*2];
+		//				//	var put = 0;
+		//				//	foreach (var cmd in bq.EnumerateArray())
+		//				//	{
+		//				//		delays[put++] = JSClient.ServerTimeOffset(cmd.GetAsInt64("ds"));
+		//				//		delays[put++] = JSClient.ServerTimeOffset(cmd.GetAsInt64("de"));
+		//				//	}
+		//				//	ShellPage.debugTip = delays.ToArrayString();
+		//				//	Log(delays.ToArrayString());
+		//				//}
+		//				if (cotgQLength > 0)
+		//				{
+		//					if (delay > 15 * 60 * 1000) /// never more than 15 minutes please
+		//					{
+		//						//	Assert(false);
 
-								delay = 15 * 60 * 1000;
-							}
+		//						delay = 15 * 60 * 1000;
+		//					}
 
-						//	if ((City.safeBuildQueueLength > cotgQLength))
-							{
-								cotgQ = new DArray<BuildQueueItem>(128);
-								foreach (var cmd in bq.EnumerateArrayOrObject())
-								{
-									cotgQ.Add(new BuildQueueItem(
-												 cmd.GetAsByte("slvl"),
-												 cmd.GetAsByte("elvl"),
-												 cmd.GetAsUShort("brep"),
-												 cmd.GetAsUShort("bspot")
-												 ));
+		//				//	if ((City.safeBuildQueueLength > cotgQLength))
+		//					{
+		//						cotgQ = new DArray<BuildQueueItem>(128);
+		//						foreach (var cmd in bq.EnumerateArrayOrObject())
+		//						{
+		//							cotgQ.Add(new BuildQueueItem(
+		//										 cmd.GetAsByte("slvl"),
+		//										 cmd.GetAsByte("elvl"),
+		//										 cmd.GetAsUShort("brep"),
+		//										 cmd.GetAsUShort("bspot")
+		//										 ));
 
 
-								}
-							}
-						}
-					}
-					else if (bq.ValueKind == JsonValueKind.Object)
-					{ 
-					}
-					else
-					{
-						Assert(false);
+		//						}
+		//					}
+		//				}
+		//			}
+		//			else if (bq.ValueKind == JsonValueKind.Object)
+		//			{ 
+		//			}
+		//			else
+		//			{
+		//				Assert(false);
 
-					}
-				}
+		//			}
+		//		}
 
-			}
-			catch (Exception _exception)
-			{
-				COTG.Debug.LogEx(_exception);
-			}
-			return result;
+		//	}
+		//	catch (Exception _exception)
+		//	{
+		//		COTG.Debug.LogEx(_exception);
+		//	}
+		//	return result;
 
-		}
+		//}
 
 		public static async Task UnblockQueue(int cid)
 		{
 			await queueLock.WaitAsync();
-				try
+			try
+			{
+				if (all.TryGetValue(cid, out var rv))
 				{
-					if (all.TryGetValue(cid, out var rv))
-					{
-						if (rv.cancellationTokenSource != null)
-							rv.cancellationTokenSource.Cancel();
+					if (rv.cancellationTokenSource != null)
+						rv.cancellationTokenSource.Cancel();
 
-					}
 				}
+			}
 			finally
 			{
 				queueLock.Release();
@@ -711,9 +720,9 @@ namespace COTG.JSON
 		public static async Task<CityBuildQueueLock> Get(int cid)
 		{
 			await queueLock.WaitAsync();
-			for(; ; )
+			for (; ; )
 			{
-			
+
 				try
 				{
 					if (all.TryGetValue(cid, out var rv))
@@ -734,7 +743,7 @@ namespace COTG.JSON
 
 
 
-		public  void Enqueue(BuildQueueItem op)
+		public void Enqueue(BuildQueueItem op)
 		{
 			if (cid == City.build && !SettingsPage.extendedBuild)
 			{
@@ -754,26 +763,26 @@ namespace COTG.JSON
 				return;
 			}
 
-			if(!op.isValid)
+			if (!op.isValid)
 			{
 				Note.Show("Please don't build a second town hall");
 				return;
 			}
-			CityView.animationOffsets[op.bspot] = AGame.animationT*CityView.animationRate; // start animation
-			if(op.bid == 0)
+			CityView.animationOffsets[op.bspot] = AGame.animationT * CityView.animationRate; // start animation
+			if (op.bid == 0)
 			{
 				Trace($"Bad queueop {op}");
 				return;
 			}
 			queue.Add(op);
-			if(cid==City.build)
+			if (cid == City.build)
 				CityView.BuildingsOrQueueChanged();
 			QueueTab.AddOp(op, cid);
 		}
 
 		public void Dispose()
 		{
-			if(queue!=null)
+			if (queue != null)
 			{
 				queue.Dispose();
 				queue = null;
@@ -791,7 +800,7 @@ namespace COTG.JSON
 
 		public void Dispose()
 		{
-			if(cityBuildQueue!=null)
+			if (cityBuildQueue != null)
 				CityBuildQueue.queueLock.Release();
 		}
 	}
@@ -806,13 +815,13 @@ namespace COTG.JSON
 		static string fileName => $"buildQueue{JSClient.world}_{Player.myName}.json";
 
 		public static bool initialized => saveTimer != null;
-		public static async Task Enqueue(this int cid, byte slvl, byte elvl, ushort bid, ushort spot, bool process=true)
+		public static async Task Enqueue(this int cid, byte slvl, byte elvl, ushort bid, ushort spot, bool process = true)
 		{
 			if (elvl > slvl)
 				Assert(elvl == slvl + 1);
-			if(elvl < slvl && elvl != 0)
+			if (elvl < slvl && elvl != 0)
 			{
-				if(elvl != slvl -1 )
+				if (elvl != slvl - 1)
 				{
 					Note.Show($"Bad downgrade? {slvl} => {elvl}");
 					Assert(false);
@@ -824,7 +833,7 @@ namespace COTG.JSON
 			if (bid == City.bidTemple && slvl == 0)
 			{
 				Assert(cid == City.build);
-				await JSClient.JSInvokeTask("buildTemple", new[] {spot.ToString()});
+				await JSClient.JSInvokeTask("buildTemple", new[] { spot.ToString() });
 				return;
 			}
 			if (bid == City.bidTemple && elvl == 0)
@@ -871,20 +880,20 @@ namespace COTG.JSON
 				}
 			}
 
-			
+
 		}
 
-		public static void CancelBuildOp(int cid,in  BuildQueueItem i)
+		public static void CancelBuildOp(int cid, in BuildQueueItem i)
 		{
 			if (!CityBuildQueue.all.TryGetValue(cid, out var cq))
 				return;
 			var q = cq.queue;
-			for(int iter=0;iter<q.count;++iter)
+			for (int iter = 0; iter < q.count; ++iter)
 			{
 				if (q[iter] == i)
 				{
 					q.RemoveAt(iter);
-			
+
 				}
 			}
 			QueueTab.RemoveOp(i, cid);
@@ -892,7 +901,7 @@ namespace COTG.JSON
 			CityView.BuildingsOrQueueChanged();
 		}
 
-		
+
 		public static void ClearQueue(int cid = -1)
 		{
 			if (cid == -1)
@@ -909,7 +918,7 @@ namespace COTG.JSON
 		{
 			if (!initialized)
 				return;
-		  await SaveTimerGo(true,true);
+			await SaveTimerGo(true, true);
 		}
 
 		// Where should this go?
@@ -918,13 +927,13 @@ namespace COTG.JSON
 			if (!initialized)
 				return;
 			saveTimer.Cancel();
-			await SaveTimerGo(true,true); // flush pending saves if any
+			await SaveTimerGo(true, true); // flush pending saves if any
 		}
 		static internal void SaveTimer_Tick(ThreadPoolTimer timer)
 		{
-			SaveTimerGo(false,false);
+			SaveTimerGo(false, false);
 		}
-		static internal async Task SaveTimerGo(bool force,bool awaitContext)
+		static internal async Task SaveTimerGo(bool force, bool awaitContext)
 		{
 			if (buildActionCounter == 0)
 			{
@@ -936,12 +945,12 @@ namespace COTG.JSON
 				--buildActionCounter;
 			if (buildActionCounter > 0)
 				return;
-			
-				try
+
+			try
+			{
+				if (CityBuildQueue.all.Any())
 				{
-					if (CityBuildQueue.all.Any())
-					{
-						await CityBuildQueue.queueLock.WaitAsync().ConfigureAwait(awaitContext);
+					await CityBuildQueue.queueLock.WaitAsync().ConfigureAwait(awaitContext);
 					try
 					{
 						var str = Serialize();
@@ -952,19 +961,19 @@ namespace COTG.JSON
 						CityBuildQueue.queueLock.Release();
 					}
 					//Log($"SaveQueue: {str}");
-						
 
-					}
-					else
-					{
-					//	Cosmos.ClearBuildQueue();
-					}
+
 				}
-				catch (Exception ex)
+				else
 				{
-					LogEx(ex);
-					SaveNeeded(); // something went wrong, try again later
+					//	Cosmos.ClearBuildQueue();
 				}
+			}
+			catch (Exception ex)
+			{
+				LogEx(ex);
+				SaveNeeded(); // something went wrong, try again later
+			}
 
 		}
 
@@ -973,22 +982,22 @@ namespace COTG.JSON
 			if (JSClient.isSub)
 				return;
 
-				try
+			try
+			{
+				var file = await folder.CreateFileAsync(fileName, CreationCollisionOption.ReplaceExisting);
+				if (file != null)
 				{
-					var file = await folder.CreateFileAsync(fileName, CreationCollisionOption.ReplaceExisting);
-					if (file != null)
-					{
-						await FileIO.WriteTextAsync(file, str);
-					}
-					
+					await FileIO.WriteTextAsync(file, str);
 				}
-				catch(Exception ex)
-				{
-					LogEx(ex);
-					SaveNeeded();
-				}
-				
-			
+
+			}
+			catch (Exception ex)
+			{
+				LogEx(ex);
+				SaveNeeded();
+			}
+
+
 
 		}
 		//private static async void SaveBuildQueue(string str)
@@ -1007,15 +1016,15 @@ namespace COTG.JSON
 			if (JSClient.isSub)
 				return string.Empty;
 
-			try 
-			{	
+			try
+			{
 				var file = await folder.CreateFileAsync(fileName, CreationCollisionOption.OpenIfExists);
-				if (file!=null)
+				if (file != null)
 				{
 					return await FileIO.ReadTextAsync(file);
 				}
 			}
-			catch(Exception e)
+			catch (Exception e)
 			{
 				LogEx(e);
 			}
@@ -1056,7 +1065,7 @@ namespace COTG.JSON
 					sb.Append(',');
 				}
 				sb.Append($"\"{city.cid}\":[");
-			//	Log($"{city.cid} {city.queue.count}");
+				//	Log($"{city.cid} {city.queue.count}");
 				var qFirst = true;
 				foreach (var q in city.queue)
 				{
@@ -1066,13 +1075,13 @@ namespace COTG.JSON
 			}
 			sb.Append('}');
 			var rv = sb.ToString();
-		//	Log(rv);
+			//	Log(rv);
 			return rv;
 
 		}
 		public static async void Initialize()
 		{
-			
+
 			while (!World.initialized)
 			{
 				await Task.Delay(500);
@@ -1086,7 +1095,7 @@ namespace COTG.JSON
 			var data = await LoadBuildQueue();
 			if (!data.IsNullOrEmpty())
 			{
-			//	await CityBuildQueue.throttle.WaitAsync();
+				//	await CityBuildQueue.throttle.WaitAsync();
 				// Todo:  Ensure no building occurs yet
 				// Load from JSon, too bad we can't do UTF8
 				try
@@ -1102,26 +1111,26 @@ namespace COTG.JSON
 						{
 							foreach (var d in jsCity.Value.EnumerateArray())
 							{
-							if (cq.cityBuildQueue.queue.CanGrow())
-							{
+								if (cq.cityBuildQueue.queue.CanGrow())
+								{
 
-								var op = new BuildQueueItem(d[2].GetByte(), d[3].GetByte(), d[1].GetUInt16(), d[0].GetUInt16());
-								cq.cityBuildQueue.Enqueue(op);
-							}
+									var op = new BuildQueueItem(d[2].GetByte(), d[3].GetByte(), d[1].GetUInt16(), d[0].GetUInt16());
+									cq.cityBuildQueue.Enqueue(op);
+								}
 							}
 							Log($"{cid} {cq.cityBuildQueue.queue.count}");
-							cq.cityBuildQueue.Process(AMath.random.Next(3*1024, 6 * 1024)); // wait 1 - 3 seconds.
+							cq.cityBuildQueue.Process(AMath.random.Next(3 * 1024, 6 * 1024)); // wait 1 - 3 seconds.
 						}
 					}
 				}
 				finally
 				{
-				//	CityBuildQueue.throttle.Release();
+					//	CityBuildQueue.throttle.Release();
 				}
 			}
 
 			saveTimer = ThreadPoolTimer.CreatePeriodicTimer(SaveTimer_Tick, TimeSpan.FromSeconds(60));
-
 		}
 	}
 }
+

@@ -303,6 +303,7 @@ namespace COTG.Services
 		{
 			// this	{"a":"worldButton","b":"block","c":true,"d":1591969039987,"e":"World"}
 			//      {"a":"worldButton","b":"block","c":true,"d":1591988862914,"e":"World"}
+			// this should be server time??
 			var json = $"{{\"a\":\"worldButton\",\"b\":\"block\",\"c\":true,\"d\":{JSClient.GameTimeMs()},\"e\":\"World\"}}";
 			var encoded = Aes.Encode(json, $"Addxddx5DdAxxer{Player.activeId}2wz");
 			var args = "a=" + HttpUtility.UrlEncode(encoded, Encoding.UTF8);

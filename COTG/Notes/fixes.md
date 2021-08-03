@@ -240,5 +240,17 @@
    - **New**
      - ReturnRaidsForAttacks button in raid tab to return all raids in time for scheduled attacks
        - Experimental, please double check results
-     - 
+- ### 2021/8/01
+   - **New**
+     - You can now set the max ratio of triari to send out (setting was 1 and missing in prior build)
+     - Various other raiding options
+ ### 2021/8/01
+   - **New**
+     - If your build queue might be blocke in a situation lie:
+       - 100 buildings
+       - 15 castles queued to be built (in COTG queue)
+       - 15 demos queue after (not yet in COTG queue)
+      - A coloumn (to the far right) labedl ?? will be checked
+      - A checked entry does not guarantee this situation, I dont' know why.
+      - WildHeader and Ting wanted it, its not my fault
  

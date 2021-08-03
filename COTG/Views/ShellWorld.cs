@@ -577,7 +577,7 @@ namespace COTG.Views
 				{
 
 					var spot = Spot.GetOrAdd(cid);
-					if (!App.IsKeyPressedShift())
+					if (!App.IsKeyPressedShiftOrControl())
 						spot.SetFocus(true, true, false);
 					spot.ShowContextMenu(canvas, CanvasToDIP(mousePosition));
 					// }

@@ -216,10 +216,11 @@ namespace COTG.Views
 
 					//city.b12 = ci[12].GetAsInt();
 					//city.b13 = ci[13].GetAsInt();
-					city.bcBlocked = ci[14].GetAsInt() != 0;// && ((ci[14].GetAsInt()==1&& ci[16].GetAsInt()==1)||(ci[3].GetAsFloat()==0&& ci[5].GetAsFloat()==0));
+					city.bcBlocked = (ci[15].GetAsInt() == 1)&&
+						                 ((ci[14].GetAsInt()==1&&ci[16].GetAsInt()==1)||
+									      (ci[3].GetAsFloat()==0&& ci[5].GetAsFloat()==0) );
 
-					city.bc15 = ci[15].GetAsInt()!=0;
-					city.bc16 = ci[16].GetAsInt() != 0;
+
 				}
 				App.DispatchOnUIThreadSneakyLow(() =>
 					{

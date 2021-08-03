@@ -101,11 +101,11 @@
 										   CellContentStyle="{StaticResource CenterAlignLink}"
 										    />
 				<tg:DataGridBooleanColumn PropertyName="AutoTowers"
-										   HeaderTip="Tower Autobuild"
+										   HeaderTip="Tower build"
 										   Tip="Towers are set to autobuild?"
 										    />
 				<tg:DataGridBooleanColumn PropertyName="AutoWalls"
-										   HeaderTip="Wall Autobuild"
+										   HeaderTip="Wall build"
 										   Tip="Walls are set to autobuild?"
 										 
 										    />
@@ -159,12 +159,9 @@
 				<tg:DataGridBooleanColumn PropertyName="bcBlocked"
 										  Tip="Buildings that can't build, maybe?"
 											Header="??" />
-				<tg:DataGridBooleanColumn PropertyName="bc15"
-										  Tip="I don't know what this means"
-											Header="*?"	 />
-				<tg:DataGridBooleanColumn PropertyName="bc16"
-										  Tip="Another mystery"
-											Header="!?"  	 />
+				<tg:DataGridBooleanColumn PropertyName="bcTowers"
+										  Tip="Buildings has towers"
+											Header="twr" />
 			</tg:RadDataGrid.Columns>
 
 		</tg:RadDataGrid>

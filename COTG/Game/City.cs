@@ -127,20 +127,19 @@ namespace COTG.Game
 		//public Building GetBuiding((int x, int y) xy) => buildings[XYToId(xy)];
 		//	public Building GetBuiding( int bspot) => buildings[bspot];
 
-		public static DArray<BuildQueueItem> buildQueue = new DArray<BuildQueueItem>(128);// fixed size to improve threading behaviour and performance
-		public static bool buildQInSync;
-		public static ManualResetEventSlim buildQUpdated = new();
+		public DArray<BuildQueueItem> buildQueue = DArray<BuildQueueItem>.Rent();// fixed size to improve threading behaviour and performance
+		//public static ManualResetEventSlim buildQUpdated = new();
 		public const int buildQMax = 16; // this should depend on ministers
-		public static bool buildQueueFull => buildQueue.count >= buildQMax && !SettingsPage.extendedBuild;
-		public static bool wantBuildCommands => buildQueue.count < safeBuildQueueLength;
+	//	public static bool buildQueueFull => buildQueue.count >= buildQMax && !SettingsPage.extendedBuild;
+	//	public static bool wantBuildCommands => buildQueue.count < safeBuildQueueLength;
 		public const int safeBuildQueueLength = 15; // leave space for autobuild
 
-		public static IEnumerable<BuildQueueItem> IterateQueue()
+		public IEnumerable<BuildQueueItem> IterateQueue()
 		{
-			foreach (var i in buildQueue)
+			foreach (var i in buildQueue) // COTG Queue
 				yield return i;
 
-			if (CityBuildQueue.all.TryGetValue(City.build, out var q))
+			if (CityBuildQueue.all.TryGetValue(cid, out var q))
 			{
 				var count = q.queue.count;
 				var data = q.queue.v;
@@ -152,11 +151,11 @@ namespace COTG.Game
 				}
 			}
 		}
-		public static int GetBuildQueueLength()
+		public int GetBuildQueueLength()
 		{
 			var rv = buildQueue.count;
 
-			if (CityBuildQueue.all.TryGetValue(City.build, out var q))
+			if (CityBuildQueue.all.TryGetValue(cid, out var q))
 			{
 				rv += q.queue.count;
 			}
@@ -222,12 +221,12 @@ namespace COTG.Game
 
 		//}
 
-		public static void IterateQueue(Action<BuildQueueItem> action)
+		public void IterateQueue(Action<BuildQueueItem> action)
 		{
 			foreach (var i in buildQueue)
 				action(i);
 
-			if (CityBuildQueue.all.TryGetValue(City.build, out var q))
+			if (CityBuildQueue.all.TryGetValue(cid, out var q))
 			{
 				var count = q.queue.count;
 				var data = q.queue.v;
@@ -242,8 +241,8 @@ namespace COTG.Game
 		public static void CitySwitched()
 		{
 			AUtil.UnsafeCopy(CityView.baseAnimationOffsets, CityView.animationOffsets);
-			buildQueue.ClearKeepBuffer();
-			buildQInSync = false;
+			//buildQueue.ClearKeepBuffer();
+			//buildQInSync = false;
 			Draw.CityView.ClearSelectedBuilding();
 			//	CityBuild.ClearAction();
 			CityView.BuildingsOrQueueChanged();
@@ -516,6 +515,43 @@ namespace COTG.Game
 				else if (i == 0)
 					isOnWater = false;
 			}
+
+			if (jse.TryGetProperty("r", out var r))
+			{
+				if(r.TryGetProperty("1",out var w))
+				{
+					wood = w.GetAsFloat("r").RoundToInt();
+				}
+				if (r.TryGetProperty("2", out var s))
+				{
+					stone = s.GetAsFloat("r").RoundToInt();
+				}
+				if (r.TryGetProperty("3", out var _i))
+				{
+					iron = _i.GetAsFloat("r").RoundToInt();
+				}
+				if (r.TryGetProperty("4", out var f))
+				{
+					food = f.GetAsFloat("r").RoundToInt();
+				}
+			}
+			// carts?
+			if(jse.TryGetProperty("crth", out var crth))
+			{
+				cartsHome = crth.GetAsUShort();
+			}
+			if (jse.TryGetProperty("crt", out var crt))
+			{
+				carts = crt.GetAsUShort();
+			}
+			if (jse.TryGetProperty("shph", out var shph))
+			{
+				shipsHome = crth.GetAsUShort();
+			}
+			if (jse.TryGetProperty("shp", out var shp))
+			{
+				ships = shp.GetAsUShort();
+			}
 			if (jse.TryGetProperty("coof", out var coof))
 			{
 				ministersOn = coof.GetAsInt() != 0;
@@ -584,34 +620,43 @@ namespace COTG.Game
 					//}
 				}
 			}
-			if ( jse.TryGetProperty("bq", out var bq))
+			if ((this != CityBuildQueue.cityQueueInUse))
 			{
-			//	Log($"BQ: {(cid == City.build)} {nameAndRemarks} {bq.ToString()}");
-				if (cid == City.build)
+				if (jse.TryGetProperty("bq", out var bq))
 				{
-					if (bq.ValueKind == JsonValueKind.Array)
-					{
-						int count = bq.GetArrayLength();
-						buildQueue.ClearKeepBuffer();
-						for (int i = 0; i < count; ++i)
+
+					//	Log($"BQ: {(cid == City.build)} {nameAndRemarks} {bq.ToString()}");
+					//if (cid == cityQueueInUse)
+					//{
+						if (bq.ValueKind == JsonValueKind.Array)
 						{
-							var js = bq[i];
-							buildQueue.Add(new BuildQueueItem(
-								js.GetAsByte("slvl"),
-								js.GetAsByte("elvl"),
-								js.GetAsUShort("brep"),
-								js.GetAsUShort("bspot")
-								));
+							int count = bq.GetArrayLength();
+							buildQueue.ClearKeepBuffer();
+							for (int i = 0; i < count; ++i)
+							{
+								var js = bq[i];
+								buildQueue.Add(new BuildQueueItem(
+									js.GetAsByte("slvl"),
+									js.GetAsByte("elvl"),
+									js.GetAsUShort("brep"),
+									js.GetAsUShort("bspot"),
+									(ushort)JSClient.ServerTimeOffsetSeconds(js.GetAsInt64("de"))));
+							}
+							CityView.BuildingsOrQueueChanged();
 						}
-						buildQInSync = true;
-						CityView.BuildingsOrQueueChanged();
-					}
-					else
-					{
-						Assert(false);
-					}
+						else
+						{
+							Assert(false);
+						}
+					//}
+				}
+				else
+				{
+					//Assert(false);
+					buildQueue.Clear();
 				}
 			}
+		
 
 			TryGetBuildings(jse);
 			if (jse.TryGetProperty("comm", out var comm))
@@ -1380,8 +1425,6 @@ namespace COTG.Game
 		public bool bcBuildings { get; set; }
 		public bool bcTowers { get; set; }
 		public bool bcBlocked { get; set; }
-		public bool bc15 { get; set; }
-		public bool bc16 { get; set; }
 		public void SetMinisterOptions( string _ministerOptions)
 		{
 			ministerOptions = _ministerOptions;
@@ -1415,12 +1458,12 @@ namespace COTG.Game
 			myCitiesCache = null;
 		}
 
-		public static (int max, int count) CountBuildings(int cid, Span<BuildQueueItem> buildQueue)
+		public (int max, int count) CountBuildings(int cid, Span<BuildQueueItem> buildQueue)
 		{
 			var max = -1;
 			var count = 0;
 
-			foreach (var bi in GetOrAddCity(cid).buildings)
+			foreach (var bi in buildings)
 			{
 				if (bi.id == 0 || bi.bl == 0)
 					continue;
@@ -1458,6 +1501,10 @@ namespace COTG.Game
 					{
 						++count;
 					}
+				}
+				else if( r.bspot == bspotTownHall)
+				{
+					max = r.elvl * 10;
 				}
 
 			}

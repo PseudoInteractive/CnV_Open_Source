@@ -122,7 +122,7 @@ namespace COTG.Views
 								  continue;
 
 							   var s = Spot.GetOrAdd(cid);
-							   var c = await s.ClassifyEx(offence == 1 );
+							   var c = await s.ClassifyEx(false);
 							  //if(score.GetValueOrDefault() == true)
 								 // await GetCity.Post()
 							  var isO = c.IsOffense();

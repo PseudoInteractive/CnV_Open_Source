@@ -200,7 +200,7 @@ namespace COTG.BinaryMemory
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public void Write(in SmallTime data)
 		{
-			*(int*)position = data.seconds;
+			*(int*)position = data.secondsI;
 
 			position += 4;
 		}

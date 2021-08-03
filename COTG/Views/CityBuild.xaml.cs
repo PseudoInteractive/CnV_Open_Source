@@ -786,9 +786,10 @@ namespace COTG.Views
 				if (!postQueueBuildingsDirty)
 					return postQueuebuildingsCache;
 				postQueueBuildingsDirty = false;
+				var build = City.GetBuild();
 				if (!CityBuild.isPlanner)
 				{
-					buildingsCache = City.GetBuild().buildings;
+					buildingsCache = build.buildings;
 				}
 				//
 				// copy current buildings
@@ -803,7 +804,7 @@ namespace COTG.Views
 					// Apply queue
 					//
 					{
-						foreach (var q in buildQueue)
+						foreach (var q in build.buildQueue)
 						{
 							ref var b = ref postQueuebuildingsCache.DangerousGetReferenceAt(q.bspot);
 							b.bl = q.elvl;
@@ -1237,7 +1238,7 @@ namespace COTG.Views
 
 		public static bool HasBuildOps(int bspot)
 		{
-			return (IterateQueue().Any(a => a.bspot == bspot));
+			return (City.GetBuild().IterateQueue().Any(a => a.bspot == bspot));
 
 		}
 
@@ -2088,6 +2089,9 @@ namespace COTG.Views
 					continue;
 				var bld = postQueueBuildings[findSpotOffset];
 				if (!bld.isEmpty)
+					continue;
+				// not yet removed
+				if (!build.buildings[findSpotOffset].isEmpty)
 					continue;
 				if (build.BidFromOverlay(findSpotOffset) != 0)
 					continue;

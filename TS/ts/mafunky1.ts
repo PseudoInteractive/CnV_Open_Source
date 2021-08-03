@@ -103,6 +103,27 @@ for (let i = 1; i <= 15; i++) {
 
 window['addtoattacksender'] = addToAttackSender;
 
+function sendMail(to:string,subject:string,body:string) {
+
+//		var dhruv = "<p>Number of offensive castles is '" + counteroff + "'</p>";
+
+	//	dhruv += '</p><table class="mce-item-table" style="width: 266.273px; "data-mce-style="width: 266.273px; "border="1" data-mce-selected="1"><thead><th>Number</th><th>Troop</th><th>TS Amount</th></thead><tbody>';
+		
+
+		dhruv += "</tbody></table>";
+		if (conttemp == 99) { conttemp = "Navy"; }
+		jQuery("#mnlsp")[0].click();
+		jQuery("#composeButton")[0].click();
+		var temppo = $("#mailname").val();
+		$("#mailToto").val(to);
+		$("#mailToSub").val(subject);
+		let __iframe = $('#mailBody_ifr');
+
+		__iframe.ready(function () {
+			__iframe.contents().find("body").append(body);
+		});
+
+}
 //function betterBase64Decode() {
 //	try {
 //		//var me=arguments.callee.caller.caller.prototype;

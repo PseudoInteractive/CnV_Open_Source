@@ -239,7 +239,7 @@ namespace COTG.Services
 				Log("No snapshots");
 				return;
 			}
-			snaps.SortSmall((a, b) => a.time.seconds.CompareTo(b.time.seconds));
+			snaps.SortSmall((a, b) => a.time.secondsI.CompareTo(b.time.secondsI));
 			var sb = new StringBuilder();
 			var aids = new List<int>();
 			foreach(var alli in snaps.Last().allianceStats )
@@ -299,7 +299,7 @@ namespace COTG.Services
 				Note.Show("No snapshots");
 				return;
 			}
-			snaps.SortSmall((a, b) => a.time.seconds.CompareTo(b.time.seconds));
+			snaps.SortSmall((a, b) => a.time.secondsI.CompareTo(b.time.secondsI));
 			var sb = new StringBuilder();
 			var pids = new List<int>();
 			{

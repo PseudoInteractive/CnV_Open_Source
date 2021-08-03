@@ -205,24 +205,29 @@ namespace COTG
 		{
 			return (DateTimeOffset.UtcNow + gameTOffset);
 		}
-		public static int ServerTimeSeconds()
+		public static uint ServerTimeSeconds()
 		{
-			return (int)(DateTimeOffset.UtcNow.ToUnixTimeSeconds() + gameTOffsetSeconds);
+			return (uint)(DateTimeOffset.UtcNow.ToUnixTimeSeconds() + gameTOffsetSeconds);
+		}
+		public static SmallTime ServerTimeSmall()
+		{
+			return (uint)(DateTimeOffset.UtcNow.ToUnixTimeSeconds() + gameTOffsetSeconds);
 		}
 		// timestamp - ServerTime all in in MS 
-		public static int ServerTimeOffsetMs(long t)
+		public static int ServerTimeOffsetMs(long t) // t is COTG server time in MS
 		{
 			return (int)(t - ServerTimeMs());
 		}
-		public static long ServerTimeMs()
+		public static int ServerTimeOffsetSeconds(long t)
 		{
-			return (ServerTime() - SmallTime.t0).TotalMilliseconds.RoundToLong();
+			return (int)(t - ServerTimeSeconds());
 		}
+		public static long ServerTimeMs() => ServerTimeSeconds() * 1000;
 
-		public static DateTimeOffset ServerToLocal(DateTimeOffset t)
-		{
-			return t.ToUniversalTime() - gameTOffset;
-		}
+		//public static DateTimeOffset ServerToLocal(DateTimeOffset t)
+		//{
+		//	return t.ToUniversalTime() - gameTOffset;
+		//}
 		/// <summary>
 		/// Initializes a new instance of the <see cref="JSClient"/> class.
 		/// </summary>
@@ -1347,13 +1352,11 @@ namespace COTG
 					councillorsChecked = true;
 					if (jse.TryGetProperty("cob", out var cob))
 					{
-						var serverTime = GameTimeMs();
-
-
+						
 						foreach (var c in cob.EnumerateObject())
 						{
-							var t = c.Value.GetAsInt64() * 1000;
-							if (t < serverTime)
+							var t = ServerTimeOffsetMs(c.Value.GetAsInt64());
+							if (t <=0)
 							{
 								App.DispatchOnUIThreadSneaky(ShowCouncillorsMissingDialog);
 								break;

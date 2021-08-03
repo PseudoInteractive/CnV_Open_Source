@@ -12,7 +12,7 @@ namespace COTG.Game
 	{
 		public readonly int pid; // playerId is actually an int
 		public readonly int cid; // where they are located
-		public readonly int lastSeenSec;// { get; set; } // time last seen
+		public readonly uint lastSeenSec;// { get; set; } // time last seen
 										// todo: last action
 		public readonly string token;// { get; set; } // token
 		public readonly string cookies;// { get; set; } // cookie
@@ -39,7 +39,7 @@ namespace COTG.Game
 				cookies = pp.ck;
 			}
 			cid = pp.cid;
-			lastSeenSec = pp.t;
+			lastSeenSec = (uint)pp.t;
 		}
 		public static PlayerPresence[] all = Array.Empty<PlayerPresence>();
 	}

@@ -212,8 +212,10 @@ namespace COTG
 		static Color ShadowColor(float alpha) => new Color(0, 0, 32, (int)(200 * alpha));
 		static readonly Color defenseColor = new Color(255, 20, 160, 160);
 		static readonly Color defenseArrivedColor = new Color(255, 20, 255, 160);
-		static readonly Color artColor = Color.DarkOrange;
+		static readonly Color artColor = Color.DarkBlue;
 		static readonly Color senatorColor = Color.OrangeRed;
+		static readonly Color siegeColor = Color.DarkOrange;
+		static readonly Color assaultColor = CColor(55, 94, 190, 242);
 		static readonly Color tradeColor = Color.DarkGreen;
 		static readonly Color tradeColorHover = Color.DarkBlue;
 		static readonly Color defaultAttackColor = Color.Maroon;// (0xFF8B008B);// Color.DarkMagenta;
@@ -917,7 +919,7 @@ namespace COTG
 
 		const float circleRadMin = 3.0f;
 		const float circleRadMax = 5.5f;
-		const float lineThickness = 4.0f;
+		const float lineThickness = 3.0f;
 		static float LineThickness(bool hovered) => hovered ? lineThickness * 2 : lineThickness;
 		const float rectSpanMin = 4.0f;
 		const float rectSpanMax = 8.0f;
@@ -1017,7 +1019,7 @@ namespace COTG
 		internal static Material darkFontMaterial;
 		public static BitmapFont.BitmapFont bfont;
 		public static float parallaxGain;
-		const float lineTileGain = 1.0f / 32.0f;
+		const float lineTileGain = 1.0f / 64.0f;
 
 		const float actionAnimationGain = 64.0f;
 		const float drawActionLength = 32;
@@ -1671,7 +1673,7 @@ namespace COTG
 									{
 										var col = t.attackType switch
 										{
-											AttackType.assault => CColor(55, 94, 190, 242),
+											AttackType.assault => assaultColor,
 											AttackType.senator => CColor(168, 64, 0, 242),
 											AttackType.senatorFake => CColor(128, 48, 0, 192), // not really used as attack
 											AttackType.se => CColor(148, 0, 148, 242),
@@ -1736,12 +1738,13 @@ namespace COTG
 											var sieged = false;
 											var hasSen = false;
 											var hasArt = false;
-
+											var hasAssault = false;
 											foreach (var i in city.incoming)
 											{
 												var c0 = i.sourceCid.CidToCamera();
 												if (IsCulled(c0, c1))
 													continue;
+
 												Color c;
 												if (i.isDefense)
 												{
@@ -1757,7 +1760,8 @@ namespace COTG
 													incTs += i.ts;
 													if (i.hasArt)
 													{
-														c = artColor;
+														hasArt = true;
+														c = assaultColor;
 													}
 													else if (i.hasSenator)
 													{
@@ -1765,14 +1769,15 @@ namespace COTG
 													}
 													else
 													{
-														c = GetAttackColor(i);
+														hasAssault = true;
+														c = assaultColor;
 													}
 													sieged |= i.isSiege;
 													hasSen |= i.hasSenator;
-													hasArt |= i.hasArt;
 												}
 												if (!(showAll || Spot.IsSelectedOrHovered(i.sourceCid, targetCid, noneIsAll)))
 												{
+//													DrawRectOutlineShadow(Layer.effects, targetCid, c, null, 2, -4f);
 													continue;
 													//       c.A = (byte)((int)c.A * 3 / 8); // reduce alpha if not selected
 												}
@@ -1791,6 +1796,15 @@ namespace COTG
 													Assert(false);
 												}
 											}
+											if( hasArt )
+												DrawRectOutlineShadow(Layer.effects - 1, targetCid, artColor, null, 4, -2f);
+											if (hasSen)
+												DrawRectOutlineShadow(Layer.effects - 1, targetCid, senatorColor, null, 4, -6f);
+											if (hasAssault)
+												DrawRectOutlineShadow(Layer.effects - 1, targetCid, assaultColor, null, 4, -10f);
+											if (sieged)
+												DrawRectOutlineShadow(Layer.effects-1, targetCid, siegeColor, null, 4, -12f);
+
 											if (!IsCulled(c1) && ((wantDetails || showAll || Spot.IsSelectedOrHovered(targetCid, noneIsAll))))
 											{
 												DrawTextBox($"{incAttacks}{city.IncomingInfo()}\n{ (city.tsDefMax + 999) / 1000 }k",
@@ -2265,19 +2279,19 @@ namespace COTG
 			draw.AddQuad(layer, quadTexture, c0, c1, background, depth, z);/// c0.CToDepth(),(c1.X,c0.Y).CToDepth(), (c0.X,c1.Y).CToDepth(), c1.CToDepth() );
 		}
 
-		private static Color GetAttackColor(Army attack)
-		{
-			return attack.type switch
-			{
-				reportAssault => new Color(255 / 2, 0x7e / 2, 0x3e / 2, 0xd4 / 2),
-				reportSiege => new Color(255 / 2, 0xcf / 2, 0x50 / 2, 0x07 / 2),
-				reportSieging => new Color(192, 0xc5 / 2, 0x7f / 2, 0x4a / 2),
-				reportPlunder => new Color(255 / 2, 0x28 / 2, 0x86 / 2, 0xc0 / 2),
-				reportScout => new Color(255 / 2, 0xc8 / 2, 0x2d / 2, 0xbf / 2),
+		//private static Color GetAttackColor(Army attack)
+		//{
+		//	return attack.type switch
+		//	{
+		//		reportAssault => new
+		//		reportSiege => new Color(255 / 2, 0xcf / 2, 0x50 / 2, 0x07 / 2),
+		//		reportSieging => new Color(192, 0xc5 / 2, 0x7f / 2, 0x4a / 2),
+		//		reportPlunder => new Color(255 / 2, 0x28 / 2, 0x86 / 2, 0xc0 / 2),
+		//		reportScout => new Color(255 / 2, 0xc8 / 2, 0x2d / 2, 0xbf / 2),
 
-				_ => defaultAttackColor
-			};
-		}
+		//		_ => defaultAttackColor
+		//	};
+		//}
 		public static void DrawTextBox(string text, Vector2 at, TextFormat format, Color color, byte backgroundAlpha, int layer = Layer.tileText, float _expandX = 2.0f, float _expandY = 0, DepthFunction depth = null, float zBias = -1, float scale = 0)
 		{
 			DrawTextBox(text, at, format, color, backgroundAlpha == 0 ? new Color() : color.IsDark() ? new Color((byte)255, (byte)255, (byte)255, backgroundAlpha) : new Color((byte)(byte)0, (byte)0, (byte)0, backgroundAlpha), layer, _expandX, _expandY, depth, zBias, scale);

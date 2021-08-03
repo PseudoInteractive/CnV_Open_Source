@@ -724,7 +724,7 @@ namespace COTG.Game
 						}));
 					}
 				}
-				Note.Show($"{city.nameAndRemarks} set to {city.attackType}");
+				Note.Show($"{city.nameAndRemarks} set to {city.attackType}", Note.Priority.high);
 				AttackTab.WritebackAttacks();
 				AttackTab.WaitAndSaveAttacks();
 			}
@@ -1863,7 +1863,7 @@ namespace COTG.Game
 			}
 			var str = sb.ToString();
 			App.CopyTextToClipboard(str);
-			Note.Show(str, false, false, 20 * 1000);
+			Note.Show(str, timeout: 20 * 1000);
 		}
 		public bool canVisit => isFriend;
 

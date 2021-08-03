@@ -30,6 +30,7 @@ using System.Threading.Tasks;
 using System.Text;
 using CnVDiscord;
 using Windows.UI.Xaml.Media.Imaging;
+using System.Collections.ObjectModel;
 
 // The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234236
 
@@ -120,7 +121,7 @@ namespace COTG.Views
 		public static string[] chatToId = { nameof(world), "whisper", nameof(alliance), nameof(officer) };
 		//        public DumbCollection<ChatEntry> logEntries = new DumbCollection<ChatEntry>(new ChatEntry[] { new ChatEntry("Hello") });
 		// public DumbCollection<ChatEntryGroup> Groups { get; set; } = new DumbCollection<ChatEntryGroup>();// new[] { new ChatEntryGroup() {time=AUtil.dateTimeZero} });
-		public DumbCollection<ChatEntry> items { get; set; } = new DumbCollection<ChatEntry>();
+		public DumbCollection<ChatEntry> items { get; set; } = new ();
 		override public Task VisibilityChanged(bool visible)
 		{
 			if (items.Count > 0 && visible)

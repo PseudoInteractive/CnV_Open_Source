@@ -43,7 +43,9 @@
                            HorizontalContentAlignment="Stretch"
                            IsExpanded="True"
 						 ToolTipService.ToolTip="Expand to set Layout, if collapsed, layout is not changed"
-                           ExpandDirection="Down">
+                           ExpandDirection="Down"
+						 Collapsed="CollapsedDisable"
+						 Expanded="ExpandedEnable" >
 				<StackPanel Orientation="Vertical">
 					<TextBox x:Name="shareString" Header="ShareString" TextWrapping="Wrap" AcceptsReturn="False" IsSpellCheckEnabled="False" MinWidth="500" />
 					<Border Style="{StaticResource BorderReveal}">

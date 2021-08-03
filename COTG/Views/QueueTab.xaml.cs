@@ -629,7 +629,7 @@ namespace COTG.Views
 						//}
 		
 						const int maxCommands = 15;
-						int count = (maxCommands - GetBuildQueueLength()).Min(bc.cabins * 2);
+						int count = (maxCommands - city.GetBuildQueueLength()).Min(bc.cabins * 2);
 						if (count < 2 || bc.unfinishedBuildings > 4)
 						{
 							Note.Show("Already doing teardown or finishing up buildings");
@@ -689,7 +689,7 @@ namespace COTG.Views
 							var todoGet = 0;
 							for (; ; )
 							{
-								count = (commandLimit - GetBuildQueueLength());
+								count = (commandLimit - city.GetBuildQueueLength());
 								if (count < 2 || todoGet >= todo.Length  || bc.cabins == 0)
 									break;
 								var c = todo[todoGet++];
@@ -922,7 +922,7 @@ namespace COTG.Views
 
 		private static async Task MoveStuffLocked()
 		{
-			const int movesPerConfirm = 10;
+			const int movesPerConfirm = 5;
 			var cid = City.build;
 			var city = GetBuild();
 			Note.Show($"Move slots: {Player.moveSlots}");
@@ -952,6 +952,8 @@ namespace COTG.Views
 										var c = (x, y);
 										var id = XYToId(c);
 										if (!IsBuildingSpot(id))
+											continue;
+										if (HasBuildOps(id))
 											continue;
 										var bid = city.BidFromOverlay(id);
 										if (bid == 0)

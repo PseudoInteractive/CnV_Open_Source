@@ -85,11 +85,16 @@ namespace COTG.Game
 	{
 		[JsonInclude]
 		public int cid; // spot that this refers to
+		[JsonInclude]
 		public AttackType attackType { get; set; }
+		[JsonInclude]
 		public byte troopType { get; set; }
+		[JsonInclude]
 		public bool hasAcademy { get; set;}
+		[JsonInclude]
 		public int fixedTarget { get; set; } // only valid if attack, if set the target is specified by the player
 
+		[JsonInclude]
 		public int attackCluster { get; set; } = AttackPlan.attackClusterNone; // for SE clusters,
 
 		[JsonIgnore]
@@ -192,22 +197,36 @@ namespace COTG.Game
 	}
 	public class AttackPlan
 	{
+		[JsonInclude]
 		public float attackMaxTravelHoursSE { get; set; } = 40;
+		[JsonInclude]
 		public float attackMaxTravelHoursSen { get; set; } = 40;
 
+		[JsonInclude]
 		public int tickToCapture { get; set; } = 4;
+		[JsonInclude]
 		public int senTime { get; set; }
+		[JsonInclude]
 		public int seTime { get; set; }
 		// if there are 2 reals, then it wants 2x assaults
+		[JsonInclude]
 		public bool normalizeAssaultsPerSeSiege { get; set; } = true;
+		[JsonInclude]
 		public int attackSEMaxFakes { get; set; } = 10;
+		[JsonInclude]
 		public int attackSEMinFakes { get; set; } = 7;
+		[JsonInclude]
 		public int attackSenMaxFakes { get; set; } = 10;
+		[JsonInclude]
 		public int attackSenMinFakes { get; set; } = 0;
+		[JsonInclude]
 		public int attackSEMinAssaults { get; set; } = 6;
 
+		[JsonInclude]
 		public int attackSEMaxAssaults { get; set; } = 40;
+		[JsonInclude]
 		public int attackSenMinAssaults { get; set; } = 0;
+		[JsonInclude]
 		public int attackSenMaxAssaults { get; set; } = 40;
 
 
@@ -263,6 +282,17 @@ namespace COTG.Game
 				else
 				{
 					cur.attackType = c.attackType;
+					
+					if (c.troopType != ttPending)
+					{
+						cur.troopType = c.troopType;
+						City.TryConvertTroopTypeToClassification(cur.troopType, out city.classification);
+					}
+					// for UI
+					App.DispatchOnUIThreadLow( ()=>cur.city.OnPropertyChanged() );
+					// can this be done on a background thread?
+					// Todo:  hasAcademy
+					
 					return false;
 				}
 			}

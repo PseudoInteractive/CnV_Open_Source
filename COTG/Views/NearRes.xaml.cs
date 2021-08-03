@@ -96,7 +96,7 @@ namespace COTG.Views
 		static bool resetValuesPending;
 		public static async Task UpdateTradeStuffifNeeded()
 		{
-			if(SmallTime.serverNow.seconds >  lastUpdated.seconds + 60 && (updating ==false) )
+			if(SmallTime.serverNow.secondsI >  lastUpdated.secondsI + 60 && (updating ==false) )
 			{
 				await UpdateTradeStuff();
 			}
@@ -431,8 +431,15 @@ namespace COTG.Views
 
 			var secret = $"JJx452Tdd{pid}sRAssa";
 			var reqF = $"{{\"a\":{s.res.wood},\"b\":{s.res.stone},\"c\":{s.res.iron},\"d\":{s.res.food},\"cid\":{s.city.cid},\"rcid\":{target.cid},\"t\":\"{(viaWater?2:1)}\"}}"; // t==1 is land, t==2 is water
-
-			var res = await Post.SendForText("includes/sndTr.php", $"cid={s.city.cid}&f=" + HttpUtility.UrlEncode(Aes.Encode(reqF, secret), Encoding.UTF8), pid);
+			int count = App.IsKeyPressedShiftAndControl() ? 4 : 1;
+			string res = string.Empty;
+			for (int j = 0; j < count; ++j)
+			{
+				res = await Post.SendForText("includes/sndTr.php", $"cid={s.city.cid}&f=" + HttpUtility.UrlEncode(Aes.Encode(reqF, secret), Encoding.UTF8), pid);
+				if (count == 1)
+					break;
+				await Task.Delay(500);
+			}
 			if (int.TryParse(res.Trim(), out var i) && i == 10)
 			{
 				Note.Show($"Sent {s.res.Format()}");

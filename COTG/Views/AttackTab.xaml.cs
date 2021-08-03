@@ -73,7 +73,8 @@ namespace COTG.Views
 		public event PropertyChangedEventHandler PropertyChanged;
         public void OnPropertyChanged(string propertyName) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 		
-		Dictionary<int, string> attackStrings = new();
+		static Dictionary<int, string> attackStrings = new();
+		static Dictionary<int, string> playerCommands = new();
 
 		public static int GetFixedTarget(AttackPlanCity city) => city.fixedTarget;
 		public static bool IsTargetFixed(AttackPlanCity city) => GetFixedTarget(city) != 0;
@@ -112,7 +113,8 @@ namespace COTG.Views
 			StringBuilder sb = new StringBuilder();
             var players = new List<int>();
 			int assaultOffset = 0;
-            foreach (var a in attacks)
+			string allCommands = "";
+			foreach (var a in attacks)
             {
                 var player = City.GetOrAdd(a.cid).pid;
                 if (players.Contains(player))
@@ -158,10 +160,12 @@ namespace COTG.Views
                     sb.Append('\n');
                     sb.Append($"{a.cid.CidToCoords()} {a.city.classificationString} {a.attackType}" );
 				}
-
-
+				var command = sb.ToString();
+				playerCommands.Add(player, command);
+				allCommands += command;
+				sb.Clear();
 			}
-            App.CopyTextToClipboard(sb.ToString());
+            App.CopyTextToClipboard(allCommands);
             Note.Show("Copied Attack sender scripts to clipboard");
 			SaveAttacks();
 		}
@@ -248,7 +252,7 @@ namespace COTG.Views
 
 			if (comparer != null)
 			{
-				//Implement sort on the column "Range" using LINQ
+			
 				if (e.Column.SortDirection == null)
 				{
 					e.Column.SortDirection = DataGridSortDirection.Descending;
@@ -1882,17 +1886,21 @@ private static void SyncList(ImmutableArray<AttackPlanCity> s,DumbCollection<Cit
 				return;
 			using var _ = await TouchLists();
 			int counter = 0;
-			foreach (City sel in attackGrid.SelectedItems)
+			await App.DispatchOnUIThreadTask(()=>
 			{
-				++counter;
-				var cid = sel.cid;
-				var atk = AttackPlan.Get(cid);
-				atk.attackType = type;
-				sel.OnPropertyChanged();
-			}
+				foreach (City sel in attackGrid.SelectedItems)
+				{
+					++counter;
+					var cid = sel.cid;
+					var atk = AttackPlan.Get(cid);
+					atk.attackType = type;
+					sel.OnPropertyChanged();
+				}
+				return Task.CompletedTask;
+			});
 			WritebackAttacks();
 			await SaveAttacks();
-			//attacksUI.NotifyReset();
+			attacksUI.NotifyReset();
 			Note.Show($"Set {counter} to {type}");
 		}
 
@@ -1912,23 +1920,27 @@ private static void SyncList(ImmutableArray<AttackPlanCity> s,DumbCollection<Cit
 				return;
 			}
 			var targetCid = selTargets.Count > 0 ? (selTargets[0] as AttackPlanCity).cid : 0;
-			foreach(AttackPlanCity atk in selAtk)
-			{
-				var per = plan.attacks.FirstOrDefault(a => a.cid == atk.cid);
-				if(per!=null)
-				{
-					per.fixedTarget = targetCid;
-					per.city.OnPropertyChanged();
-					if (targetCid == 0)
-						Note.Show($"Target cleared for {AttackPlanCity.Get(per.cid).nameMarkdown}");
-					else
-						Note.Show($"{AttackPlanCity.Get(per.cid).nameMarkdown} set to attack {AttackPlanCity.Get(targetCid).nameMarkdown}");
-				}
-				else
-				{
-					Assert(false);
-				}	
-			}
+			await App.DispatchOnUIThreadTask(() =>
+		   {
+			   foreach (AttackPlanCity atk in selAtk)
+			   {
+				   var per = plan.attacks.FirstOrDefault(a => a.cid == atk.cid);
+				   if (per != null)
+				   {
+					   per.fixedTarget = targetCid;
+					   per.city.OnPropertyChanged();
+					   if (targetCid == 0)
+						   Note.Show($"Target cleared for {AttackPlanCity.Get(per.cid).nameMarkdown}");
+					   else
+						   Note.Show($"{AttackPlanCity.Get(per.cid).nameMarkdown} set to attack {AttackPlanCity.Get(targetCid).nameMarkdown}");
+				   }
+				   else
+				   {
+					   Assert(false);
+				   }
+			   }
+			   return Task.CompletedTask;
+		   });
 			WritebackAttacks();
 			await SaveAttacks();
 			//attacks.NotifyReset();

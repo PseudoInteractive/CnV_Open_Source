@@ -522,8 +522,21 @@ namespace COTG.Views
 			//		Post.Send("includes/sNte.php", $"a={HttpUtility.UrlEncode(tags, Encoding.UTF8)}&b=&cid={cid}");
 			await Post.Send("includes/sNte.php", $"a={HttpUtility.UrlEncode(city.remarks, Encoding.UTF8)}&b={HttpUtility.UrlEncode(city.notes, Encoding.UTF8)}&cid={cid}", World.CidToPlayerOrMe(cid));
 		}
+
+		private void CollapsedDisable(object sender, EventArgs e)
+		{
+			var exp = sender as Microsoft.Toolkit.Uwp.UI.Controls.Expander;
+			Assert(exp!=null);
+			exp.Header = exp.Header as string + " No Change";
+		}
+		private void ExpandedEnable(object sender, EventArgs e)
+		{
+			var exp = sender as Microsoft.Toolkit.Uwp.UI.Controls.Expander;
+			Assert(exp!=null);
+			exp.Header = (exp.Header as string).Replace( " No Change", "");
+		}
 	}
-	
+
 
 
 
