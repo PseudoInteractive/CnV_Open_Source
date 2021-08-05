@@ -266,6 +266,10 @@ namespace COTG
 		{
 			return (a.x / b, a.y / b);
 		}
+		public static int DivideRoundUp(this int a, int b)
+		{
+			return (a+b-1)/b;
+		}
 		public static (int x, int y) Mul(this (int x, int y) a, int b)
 		{
 			return (a.x * b, a.y * b);

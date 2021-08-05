@@ -26,8 +26,8 @@ namespace COTG.Game
 		public int iron;
 		[JsonInclude]
 		public int food;
+		internal static Resources zero = default; // all zeros
 
-		
 		public Resources(int wood, int stone, int iron, int food)
 		{
 			this.wood = wood;
@@ -91,6 +91,69 @@ namespace COTG.Game
 			wood = stone = iron = food = 0;
 		}
 	}
+
+	public struct ResourceFilter
+	{
+		public bool? wood;
+		public bool? stone;
+		public bool? iron;
+		public bool? food;
+		public bool Any => wood.HasValue | stone.HasValue | iron.HasValue | food.HasValue;
+		public static ResourceFilter _true = new ResourceFilter(true, true, true, true);
+		public static ResourceFilter _false = new ResourceFilter(false, false, false, false);
+		public static ResourceFilter _null = default;
+		public ResourceFilter(bool? wood, bool? stone, bool? iron, bool? food)
+		{
+			this.wood = wood;
+			this.stone = stone;
+			this.iron = iron;
+			this.food = food;
+		}
+
+	}
+	public struct ResourcesNullable
+	{
+		public int? wood;
+		[JsonInclude]
+		public int? stone;
+		[JsonInclude]
+		public int? iron;
+		[JsonInclude]
+		public int? food;
+		public bool Any => wood.HasValue | stone.HasValue | iron.HasValue | food.HasValue;
+
+		public ResourcesNullable(int? wood, int? stone, int? iron, int? food)
+		{
+			this.wood = wood;
+			this.stone = stone;
+			this.iron = iron;
+			this.food = food;
+		}
+
+		public static ResourcesNullable zero = new ResourcesNullable(0, 0, 0, 0);
+		public static ResourcesNullable _null = default;
+
+		public int? this[int index]
+		{
+			get => index switch { 0 => wood, 1 => stone, 2 => iron, _ => food };
+			set
+			{
+				switch (index)
+				{
+					case 0: wood = value; break;
+					case 1: stone = value; break;
+					case 2: iron = value; break;
+					default: food = value; break;
+				}
+
+			}
+		}
+		public string Format() => $"{wood:N0} wood, {stone:N0} stone, {iron:N0} iron, {food:N0} food";
+		internal void Clear()
+		{
+			wood = stone = iron = food = null;
+		}
+	}
 	public class ResSource : INotifyPropertyChanged
 	{
 		public static ResSource dummy=new ResSource();
@@ -132,7 +195,7 @@ namespace COTG.Game
 			return (city.res[type]- NearRes.instance.reserve[type]).Min(NearRes.instance.GetTransport(city)); // TODO
 		}
 
-	public DateTimeOffset eta { get => JSClient.ServerTime() + travel; set => _ = value; }
+		public DateTimeOffset eta { get => JSClient.ServerTime() + travel; set => _ = value; }
 
 		public virtual event PropertyChangedEventHandler PropertyChanged;
 		public void OnPropertyChanged(string propertyName) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));

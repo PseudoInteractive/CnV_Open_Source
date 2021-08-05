@@ -1303,12 +1303,12 @@ namespace COTG.Views
 		{
 			var content = new StackPanel();
 			var text = new TextBox() { Header = "remember_me", PlaceholderText="01245..." };
-			var text2 = new TextBox() { Header = "sec_session_id", PlaceholderText = "06..." };
+//			var text2 = new TextBox() { Header = "sec_session_id", PlaceholderText = "06..." };
 			var clear  = new CheckBox() { Content = "Clear Cookie", IsChecked=false };
 
 
 			content.Children.Add(text);
-			content.Children.Add(text2);
+	//		content.Children.Add(text2);
 			content.Children.Add(clear);
 
 			var dialog = new ContentDialog()
@@ -1327,7 +1327,7 @@ namespace COTG.Views
 					WebView.ClearTemporaryWebDataAsync();
 					JSClient.ClearAllCookies();
 				}
-				else 
+				else if(!text.Text.IsNullOrEmpty()) 
 				{
 					JSClient.SetCookie("remember_me", text.Text);
 					//	JSClient.SetCookie("_ttw", "2ebd127595739638f691d800afb6d9a2cb44f03b");
@@ -1335,14 +1335,15 @@ namespace COTG.Views
 					//	_ttw = 062667a5a7767056ae099f43a2f6d4e24fd015fb; expires = Mon, 20 - Sep - 2021 19:44:58 GMT; Max - Age = 7776000; path =/; domain =.crownofthegods.com; secure; httponly
 
 					//				WebView.ClearTemporaryWebDataAsync();
-					JSClient.SetCookie("sec_session_id", text2.Text);
+		//			JSClient.SetCookie("sec_session_id", text2.Text);
 				}
-				SettingsPage.secSessionId = text2.Text;
-				SettingsPage.SaveAll();
+			//	SettingsPage.secSessionId = text2.Text;
+			//	SettingsPage.SaveAll();
 
 
-				await App.DoYesNoBox("Cookie set","Cookies");
-				JSClient.view.Refresh();
+				await App.DoYesNoBox("Cookie set","Cookies", "Okay", null, "Okay");
+				if(!clear.IsChecked.GetValueOrDefault())
+					JSClient.view.Refresh();
 			}
 		}
 	}

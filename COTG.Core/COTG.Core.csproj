@@ -39,17 +39,18 @@
     <Folder Include="Models\" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Azure.Core" Version="1.16.0" />
+    <PackageReference Include="Azure.Core" Version="1.17.0" />
     <PackageReference Include="Azure.Data.Tables" Version="12.1.0" />
     <PackageReference Include="Azure.Storage.Blobs" Version="12.9.1" />
     <PackageReference Include="Enums.NET" Version="4.0.0" />
     <PackageReference Include="Microsoft.DependencyValidation.Analyzers" Version="0.11.0" />
     <PackageReference Include="Microsoft.Toolkit" Version="7.0.2" />
     <PackageReference Include="Microsoft.Toolkit.HighPerformance" Version="7.0.2" />
+    <PackageReference Include="Microsoft.Toolkit.Mvvm" Version="7.0.2" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     <PackageReference Include="Nito.AsyncEx.Context" Version="5.1.0" />
     <PackageReference Include="Nito.AsyncEx.Coordination" Version="5.1.0" />
-    <PackageReference Include="PlayFabAllSDK" Version="1.97.210720" />
+    <PackageReference Include="PlayFabAllSDK" Version="1.98.210802" />
     <PackageReference Include="Standart.Hash.xxHash" Version="3.1.0" />
     <PackageReference Include="System.Collections.Immutable" Version="6.0.0-preview.6.21352.12" />
     <PackageReference Include="System.Memory" Version="4.5.4" />

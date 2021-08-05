@@ -246,7 +246,7 @@
      - Various other raiding options
  ### 2021/8/01
    - **New**
-     - If your build queue might be blocke in a situation lie:
+     - If your build queue might be block in a situation lie:
        - 100 buildings
        - 15 castles queued to be built (in COTG queue)
        - 15 demos queue after (not yet in COTG queue)

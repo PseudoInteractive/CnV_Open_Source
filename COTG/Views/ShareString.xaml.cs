@@ -21,14 +21,24 @@ using COTG.Helpers;
 using COTG.JSON;
 using Microsoft.Toolkit.Uwp.UI.Controls;
 using System.Text.RegularExpressions;
+using Microsoft.Toolkit.Mvvm.ComponentModel;
+using System.ComponentModel;
 
 namespace COTG.Views
 {
 
-	public sealed partial class ShareString : Windows.UI.Xaml.Controls.ContentDialog
+//	record ab(string a=null, string b=null);
+
+	public sealed partial class ShareString : Windows.UI.Xaml.Controls.ContentDialog, INotifyPropertyChanged
 	{
+		#region PropertyChanged
+		public void OnPropertyChanged(string propertyName = "") => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+		public event PropertyChangedEventHandler PropertyChanged;
+		#endregion
+
 		public static bool loadedLayouts;
 		static public ShareString instance;
+		
 		public ShareString()
 		{
 			instance = this;
@@ -48,16 +58,15 @@ namespace COTG.Views
 						LogEx(ex);
 					}
 				   Tables.ReadShares(Player.myName).ContinueWith( (shares) =>
-
 				   { 
-				   App.DispatchOnUIThreadSneaky(() =>
-				  {
-					  AddLayouts();
-					  foreach (var s in shares.Result)
+					   App.DispatchOnUIThreadSneaky(() =>
 					  {
-						  new ShareStringItem(s.s);
-					  }
-				  });
+						  AddLayouts();
+						  foreach (var s in shares.Result)
+						  {
+							  new ShareStringItem(s.s);
+						  }
+					  });
 			   });
 
 			}
@@ -125,13 +134,11 @@ namespace COTG.Views
 		{
 			await App.DispatchOnUIThreadExclusive(cid,async () =>
 
-
-
-				 await ShowNoLock(cid)
+				 await Touch().ShowNoLock(cid)
 			
 			);
 		}
-		static public async Task ShowNoLock(int cid)
+		public async Task ShowNoLock(int cid)
 		{
 
 			Assert(cid == City.build);
@@ -139,52 +146,44 @@ namespace COTG.Views
 			var sel = Spot.GetSelectedForContextMenu(cid,false, onlyMine: true);
 			
 
-			bool setResources = true;
+			bool setResources = false;
 			bool setLayout = false;
+			bool setTags = false;
 			var bestHub = await CitySettings.FindBestHub(cid);
 			var rv = await App.DispatchOnUIThreadTask(async () =>
 			{
 			try
-			{
-				Assert(App.uiSema.CurrentCount == 0);
+				{
+					Assert(App.uiSema.CurrentCount == 0);
 
-				Touch();
-	//			instance.onComplete.IsOn = CityBuild.isPlanner;
-				instance.shareStrings.SelectedItem = null;
-				
-				
-					var hubName = Spot.GetOrAdd(bestHub).nameAndRemarks;
-					instance.bestHub.Text = hubName;
-					
+					Touch();
+					//			onComplete.IsOn = CityBuild.isPlanner;
+					shareStrings.SelectedItem = null;
 
-					//	instance.PlannerTeachingTip.Show();
+
+
+
+					//	PlannerTeachingTip.Show();
 					// todo: copy text 
 					var city = City.GetOrAdd(cid);
 
 					if (CityBuild.isPlanner)
 						city.BuildingsCacheToShareString();
 
-					var res = await CitySettings.GetTradeResourcesSettings(city.cid);
+					await res.InitTradeSettings(city,bestHub,city.isHubOrStorage ? 0 : bestHub);
 
-					SettingsPage.reqWood = res.req.wood > 0 ? res.req.wood : SettingsPage.reqWood;
-					SettingsPage.reqStone = res.req.stone > 0 ? res.req.stone : SettingsPage.reqStone;
-					SettingsPage.reqIron = res.req.iron > 0 ? res.req.iron : SettingsPage.reqIron;
-					SettingsPage.reqFood = res.req.food > 0 ? res.req.food : SettingsPage.reqFood;
-
-					SettingsPage.maxWood = res.max.wood > 0 ? res.max.wood : SettingsPage.maxWood;
-					SettingsPage.maxStone = res.max.stone > 0 ? res.max.stone : SettingsPage.maxStone;
-					SettingsPage.maxIron = res.max.iron > 0 ? res.max.iron : SettingsPage.maxIron;
-					SettingsPage.maxFood = res.max.food > 0 ? res.max.food : SettingsPage.maxFood;
-
+					res.applyRequested = true;
+					res.applySend = true;
 
 					SetFromSS();
-					instance.Title = city.nameAndRemarks;
+					Title = city.nameAndRemarks;
 					SetCheckboxesFromTags(city.remarks);
-					instance.Bindings.Update();
+					Bindings.Update();
 
-					var result = await instance.ShowAsync2();
-					setResources = instance.expandResources.IsExpanded;
-					setLayout = instance.expandShareString.IsExpanded;
+					var result = await this.ShowAsync2();
+					setResources = expandResources.IsExpanded;
+					setLayout = expandShareString.IsExpanded;
+					setTags = expandTags.IsExpanded;
 					return result;
 				}
 				catch (Exception ex)
@@ -201,7 +200,7 @@ namespace COTG.Views
 				if (rv == ContentDialogResult.Primary)
 				{
 
-					//if ( instance.applyTags.IsOn)
+					//if ( applyTags.IsOn)
 					//{
 					//	city.remarks = GetTags(city.remarks);
 					//	//		Post.Send("includes/sNte.php", $"a={HttpUtility.UrlEncode(tags, Encoding.UTF8)}&b=&cid={cid}");
@@ -221,14 +220,14 @@ namespace COTG.Views
 					foreach (var ci in sel)
 					{
 						var city = City.GetOrAdd(ci);
-						if ( SettingsPage.shareStringApplyTags)
+						if ( setTags)
 						{
 							await SetCityTags(ci);
 							//await CitySettings.SetCitySettings(City.build, setRecruit: true);
 						}
 
-						//var req = new Resources((int)instance.reqWood.Value, (int)instance.reqStone.Value, (int)instance.reqIron.Value, (int)instance.reqFood.Value);
-						//var max = new Resources((int)instance.maxWood.Value, (int)instance.maxStone.Value, (int)instance.maxIron.Value, (int)instance.maxFood.Value);
+						//var req = new Resources((int)reqWood.Value, (int)reqStone.Value, (int)reqIron.Value, (int)reqFood.Value);
+						//var max = new Resources((int)maxWood.Value, (int)maxStone.Value, (int)maxIron.Value, (int)maxFood.Value);
 						//SettingsPage.reqWood = req.wood;
 						//SettingsPage.reqStone = req.stone;
 						//SettingsPage.reqIron = req.iron;
@@ -238,17 +237,18 @@ namespace COTG.Views
 						//SettingsPage.maxStone = max.stone;
 						//SettingsPage.maxIron = max.iron;
 						//SettingsPage.maxFood = max.food;
-
+						var reqFilter = res.applyRequested ? res.reqFilter : ResourceFilter._null;
+						var sendFilter = (!city.isHubOrStorage)&&res.applySend ? res.sendFilter : ResourceFilter._null;
 						//			await CitySettings.SetTradeResourcesSettings(city.cid,req,max);
 
-						await CitySettings.SetCitySettings(ci, setResources&&SettingsPage.setHub ? bestHub : null,
-							(setResources&&SettingsPage.setHub ? CitySettings.FilterTargetHub(ci, bestHub) : null),
-							SettingsPage.shareStringApplyTags && SettingsPage.setRecruit, setResources: setResources
-											);
+						await CitySettings.SetCitySettings(ci,reqHub: bestHub,targetHub:bestHub,
+							 setRecruit:setTags && SettingsPage.setRecruit,
+							 req:res.req,max:res.max,
+							reqFilter:reqFilter,sendFilter:sendFilter);
 
 						if (setLayout)
 						{
-							city.SetShareString(instance.GetShareStringWithJson());
+							city.SetShareString(GetShareStringWithJson());
 							await city.SaveLayout();
 						}
 					}
@@ -269,8 +269,9 @@ namespace COTG.Views
 				LogEx(ex);
 			}
 		}
-			
-	
+
+		
+
 		int ? GetSetting(int v)
 		{
 			var rv = v;
@@ -283,14 +284,14 @@ namespace COTG.Views
 			var meta = new ShareStringMeta() { notes = TagHelper.ApplyTags(TagsFromCheckboxes(),string.Empty), desc = description.Text, path = path.Text };
 			if (SettingsPage.embedTradeInShareStrings)
 			{
-				meta.reqWood = GetSetting(SettingsPage.reqWood);
-				meta.reqStone = GetSetting(SettingsPage.reqStone);
-				meta.reqIron = GetSetting(SettingsPage.reqIron);
-				meta.reqFood = GetSetting(SettingsPage.reqFood);
-				meta.maxWood = GetSetting(SettingsPage.maxWood);
-				meta.maxStone = GetSetting(SettingsPage.maxStone);
-				meta.maxIron = GetSetting(SettingsPage.maxIron);
-				meta.maxFood = GetSetting(SettingsPage.maxFood);
+				meta.reqWood = res.req.wood;
+				meta.reqStone = res.req.stone;
+				meta.reqIron = res.req.iron;
+				meta.reqFood = res.req.food;
+				meta.maxWood = res.max.wood;
+				meta.maxStone = res.max.stone;
+				meta.maxIron = res.max.iron;
+				meta.maxFood = res.max.food;
 			}
 			return meta;
 		}
@@ -303,9 +304,9 @@ namespace COTG.Views
 		}
 	
 		
-		static string GetShareString()
+		string GetShareString()
 		{
-			return instance.shareString.Text.Replace("\n", "", StringComparison.Ordinal).Replace("\r", "", StringComparison.Ordinal);
+			return shareString.Text.Replace("\n", "", StringComparison.Ordinal).Replace("\r", "", StringComparison.Ordinal);
 
 		}
 
@@ -320,58 +321,59 @@ namespace COTG.Views
 		private void UseBuildingsClick(object sender, RoutedEventArgs e)
 		{
 			var s = City.GetBuild();
-			instance.shareString.Text=City.BuildingsToShareString(s.buildings,s.isOnWater);
+			shareString.Text=City.BuildingsToShareString(s.buildings,s.isOnWater);
 		}
-		public static void SetCheckboxesFromTags(string remarks)
+		public void SetCheckboxesFromTags(string remarks)
 		{
 			var tags = TagHelper.Get(remarks);
 			foreach (var tag in TagHelper.tags)
 			{
-				var check = instance.tagsPanel.Children.FirstOrDefault((a) => a is ToggleButton b && b.Content as string == tag.s) as ToggleButton;
+				var check = tagsPanel.Children.FirstOrDefault((a) => a is ToggleButton b && b.Content as string == tag.s) as ToggleButton;
 				if (check == null)
 				{
 					check = new ToggleButton() { Content = tag.s };
 //					check.Checked+= (_,_)=>;
-					instance.tagsPanel.Children.Add(check);
+					tagsPanel.Children.Add(check);
 				}
 				check.IsChecked = tags.HasFlag(tag.v);
 			}
 
 		}
-		static void SetValue(ref int v, int ? source)
+		static void SetValue(ref int? v, int ? source)
 		{
 			if (source.HasValue)
 				v = source.Value;
 		}
 			
-		public static void SetFromSS(string shareString, bool setResAndTags)
+		public void SetFromSS(string shareString, bool setResAndTags)
 		{
 			var s = SplitShareString(shareString);
 			var meta = JsonSerializer.Deserialize<ShareStringMeta>(s.json, Json.jsonSerializerOptions);
 			var path = DecomposePath(meta.path);
-			instance.shareString.Text = s.ss ?? string.Empty;
+			this.shareString.Text = s.ss ?? string.Empty;
 			var tags = meta.notes ?? string.Empty;
 
-			instance.description.Text = meta.desc ?? string.Empty;
-			instance.title.Text = path.title;
-			instance.path.Text = CombinePath(path);
+			description.Text = meta.desc ?? string.Empty;
+			title.Text = path.title;
+			this.path.Text = CombinePath(path);
 
 			if (setResAndTags)
 			{
 				SetCheckboxesFromTags(tags);
-				SetValue(ref SettingsPage.reqWood, meta.reqWood);
-				SetValue(ref SettingsPage.reqStone, meta.reqStone);
-				SetValue(ref SettingsPage.reqIron, meta.reqIron);
-				SetValue(ref SettingsPage.reqFood, meta.reqFood);
+				SetValue(ref res.req.wood, meta.reqWood);
+				SetValue(ref res.req.stone, meta.reqStone);
+				SetValue(ref res.req.iron, meta.reqIron);
+				SetValue(ref res.req.food, meta.reqFood);
 
-				SetValue(ref SettingsPage.maxWood, meta.maxWood);
-				SetValue(ref SettingsPage.maxStone, meta.maxStone);
-				SetValue(ref SettingsPage.maxIron, meta.maxIron);
-				SetValue(ref SettingsPage.maxFood, meta.maxFood);
+				SetValue(ref res.max.wood, meta.maxWood);
+				SetValue(ref res.max.stone, meta.maxStone);
+				SetValue(ref res.max.iron, meta.maxIron);
+				SetValue(ref res.max.food, meta.maxFood);
+				res.OnPropertyChanged();
 			}
 			
 		}
-		public static void SetFromSS() => SetFromSS(City.GetBuild().shareString,false);
+		public void SetFromSS() => SetFromSS(City.GetBuild().shareString,false);
 		public static (string ss, string json) SplitShareString(string shareString)
 		{
 				if (shareString == null)
@@ -394,7 +396,7 @@ namespace COTG.Views
 			else
 			{
 				Note.Show($"New Sharestring: {text}");
-				instance.shareString.Text = text;
+				shareString.Text = text;
 			}
 		}
 
@@ -417,10 +419,10 @@ namespace COTG.Views
 					}
 					else
 					{
-						instance.shareString.Text = i.shareString.Replace("\n", "", StringComparison.Ordinal).Replace("\r", "", StringComparison.Ordinal);
-						instance.description.Text = i.desc;
-						instance.path.Text = i.path;
-						instance.title.Text = i.label;
+						shareString.Text = i.shareString.Replace("\n", "", StringComparison.Ordinal).Replace("\r", "", StringComparison.Ordinal);
+						description.Text = i.desc;
+						path.Text = i.path;
+						title.Text = i.label;
 						SetCheckboxesFromTags(i.tags);
 					}
 				}
@@ -464,47 +466,22 @@ namespace COTG.Views
 
 		private void title_TextChanged(object sender, TextChangedEventArgs e)
 		{
-			var ss = DecomposePath(instance.path.Text);
+			var ss = DecomposePath(path.Text);
 			ss.title = title.Text;
 			ss.root = Player.myName;
 
-			instance.path.Text = CombinePath(ss);
+			path.Text = CombinePath(ss);
 
 		}
 
-		public TradeSettings _TradeSettingsSel;
-		public TradeSettings tradeSettingsSel
-		{
-			get => _TradeSettingsSel;
-			set
-			{
-				if (_TradeSettingsSel != value)
-				{
-					_TradeSettingsSel = value;
-					SettingsPage.reqWood = value.requestWood;
-					SettingsPage.reqStone = value.requestStone;
-					SettingsPage.reqIron = value.requestIron;
-					SettingsPage.reqFood = value.requestFood; ;
-				//	SettingsPage.sendWood = value.destWood != 0;
-				//	SettingsPage.sendStone = value.destStone != 0;
-			//		SettingsPage.sendIron = value.destIron != 0;
-			//		SettingsPage.sendFood = value.destFood != 0;
-					SettingsPage.maxWood = value.sendWood;
-					SettingsPage.maxStone = value.sendStone;
-					SettingsPage.maxIron = value.sendIron;
-					SettingsPage.maxFood = value.sendFood;
-					instance.Bindings.Update();
-				}
-			}
-		}
-
-		public static Tags TagsFromCheckboxes()
+		
+		public Tags TagsFromCheckboxes()
 		{
 			Tags tags = default;
 			foreach (var tag in TagHelper.tags)
 			{
 
-				var check = instance.tagsPanel.Children.First((ch) => (ch as ToggleButton)?.Content == tag.s) as ToggleButton;
+				var check = tagsPanel.Children.First((ch) => (ch as ToggleButton)?.Content == tag.s) as ToggleButton;
 				if (check.IsChecked.GetValueOrDefault())
 					tags |= tag.v;
 
@@ -512,7 +489,7 @@ namespace COTG.Views
 			return tags;
 		}
 
-			public static async Task SetCityTags(int cid)
+		public  async Task SetCityTags(int cid)
 		{
 			City city = City.GetOrAddCity(cid);
 			await GetCity.Post(cid); // need to fetch notes
@@ -527,13 +504,13 @@ namespace COTG.Views
 		{
 			var exp = sender as Microsoft.Toolkit.Uwp.UI.Controls.Expander;
 			Assert(exp!=null);
-			exp.Header = exp.Header as string + " No Change";
+			exp.Header = exp.Header as string + " - No Change";
 		}
 		private void ExpandedEnable(object sender, EventArgs e)
 		{
 			var exp = sender as Microsoft.Toolkit.Uwp.UI.Controls.Expander;
 			Assert(exp!=null);
-			exp.Header = (exp.Header as string).Replace( " No Change", "");
+			exp.Header = (exp.Header as string).Replace( " - No Change", "");
 		}
 	}
 

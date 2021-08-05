@@ -31,7 +31,26 @@ namespace COTG.Converters
 			return TimeSpan.Zero;
 		}
 	}
+	public class NullableIntToDoubleConverter : IValueConverter
+	{
+		public object Convert(object value, Type targetType, object parameter, string language)
+		{
+			var _value = (int?)value;
+			return (_value.HasValue ? (double)_value.Value : double.NaN );
+		}
 
+		public object ConvertBack(object value, Type targetType, object parameter, string language)
+		{
+			if (double.TryParse(value.ToString(), System.Globalization.NumberStyles.Any, NumberFormatInfo.InvariantInfo, out var v) && !double.IsNaN(v) )
+			{
+				return v.RoundToInt();
+			}
+			else
+			{
+				return null;
+			}
+		}
+	}
 	public class FloatConverter : IValueConverter
     {
         const string defaultFormat = "{0,3:N2}";

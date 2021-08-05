@@ -118,7 +118,6 @@ namespace COTG.Game
 
 		public bool buildingsLoaded => buildings != Emptybuildings;
 		public Building[] buildings = Emptybuildings;
-		public string ministerOptions;
 		public static Building[] buildingsCache;
 		public static Building[] postQueuebuildingsCache = new JSON.Building[citySpotCount];
 
@@ -1425,14 +1424,13 @@ namespace COTG.Game
 		public bool bcBuildings { get; set; }
 		public bool bcTowers { get; set; }
 		public bool bcBlocked { get; set; }
-		public void SetMinisterOptions( string _ministerOptions)
+		public void SetMinisterOptions( string ministerOptions)
 		{
-			ministerOptions = _ministerOptions;
 			try
 			{
 				if (ministerOptions.Length > 4)
 				{
-					var rv = _ministerOptions.Split(',', StringSplitOptions.RemoveEmptyEntries);
+					var rv = ministerOptions.Split(',', StringSplitOptions.RemoveEmptyEntries);
 					if (rv[CitySettings.ministerOptionAutobuildCabins - 1] == "[1")
 					{
 						byte.TryParse(rv[CitySettings.ministerOptionAutobuildCabins].TrimEnd(']'), out autobuildCabinLevel);

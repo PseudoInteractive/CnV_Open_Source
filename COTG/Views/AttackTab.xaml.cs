@@ -44,8 +44,9 @@ namespace COTG.Views
 	public sealed partial class AttackTab : UserTab, INotifyPropertyChanged
     {
 		public static AsyncLock asyncLock = new ();
-		public const float moralCostBias = 128;
-		public const float  assaultBias = 16;
+		public const float moralCostBias = 32;
+		public const float  assaultCountBias = 16;
+		public const float troopTypeBias = 4;
 		public static StorageFolder folder => ApplicationData.Current.LocalFolder;
         public static AttackTab instance;
         public static bool IsVisible() => instance.isVisible;
@@ -302,7 +303,7 @@ namespace COTG.Views
 
 
 
-private static void SyncList(ImmutableArray<AttackPlanCity> s,DumbCollection<City> ui)
+		private static void SyncList(ImmutableArray<AttackPlanCity> s,DumbCollection<City> ui)
 		{
 			int iter = ui.Count;
 			while (--iter >= 0)
@@ -327,7 +328,7 @@ private static void SyncList(ImmutableArray<AttackPlanCity> s,DumbCollection<Cit
         {
 			Assert(loaded);
 		//	SyncGrids();         
-			UpdateStats();
+			instance.UpdateStats();
             BuildAttackClusters();
         }
 
@@ -369,32 +370,33 @@ private static void SyncList(ImmutableArray<AttackPlanCity> s,DumbCollection<Cit
             }
             attackClusters = _attackClusters.ToArray();
         }
-        private static void UpdateStats()
+        private void UpdateStats()
         {
             App.DispatchOnUIThreadSneakyLow(() =>
             {
                var attacks = plan.attacks.Where(a => a.attackType != AttackType.none).ToArray();
 				var targets =plan.targets.Where(a => a.attackType != AttackType.none).ToArray();
 
-				instance.attackCount.Text = $"Attacks: {attacks.Length}";
+				attackCount.Text = $"Attacks: {attacks.Length}";
 				var seCount = attacks.Count((a) => a.attackType ==AttackType.se);
-                instance.SE.Text=$"SE: {seCount}";
-				instance.sen.Text = $"Sen: {attacks.Count((a) => a.attackType==AttackType.senator) }";
-				instance.vanqs.Text=$"Vanqs: {attacks.Count((a) => a.city.primaryTroopType==ttVanquisher)}";
-                instance.sorcs.Text=$"Sorc: {attacks.Count((a) => a.city.primaryTroopType==ttSorcerer)}";
-                instance.horses.Text=$"Horse: {attacks.Count((a) => a.city.primaryTroopType==ttHorseman)}";
+                SE.Text=$"SE: {seCount}";
+				sen.Text = $"Sen: {attacks.Count((a) => a.attackType==AttackType.senator) }";
+				vanqs.Text=$"Vanqs: {attacks.Count((a) => a.city.primaryTroopType==ttVanquisher)}";
+                sorcs.Text=$"Sorc: {attacks.Count((a) => a.city.primaryTroopType==ttSorcerer)}";
+                horses.Text=$"Horse: {attacks.Count((a) => a.city.primaryTroopType==ttHorseman)}";
                 var fakes = targets.Count(a => a.isAttackTypeFake );
                 var senSieges =  targets.Count(a=> a.isAttackTypeSenator );
 				var seSieges = targets.Count(a => a.isAttackTypeSE );
-				instance.fakeCount.Text=$"Fake Count: {fakes}";
-				instance.fakeRatio.Text = $"Fakes Per Target: {fakes / (float)(seSieges+senSieges).Max(1):0.00}";
-				instance.senSiegeCount.Text = $"Sen Sieges: {senSieges}";
-				instance.seSiegeCount.Text = $"SE Sieges: {seSieges}";
-				instance.sePerTarget.Text = $"SE/Target: {seCount/(float)seSieges.Max(1):0.00}";
-                instance.attacksPerTarget.Text = $"Attacks/Target: {attacks.Length/(float)(senSieges+seSieges).Max(1):0.00}";
+				fakeCount.Text=$"Fake Count: {fakes}";
+				fakeRatio.Text = $"Fakes Per Target: {fakes / (float)(seSieges+senSieges).Max(1):0.00}";
+				senSiegeCount.Text = $"Sen Sieges: {senSieges}";
+				seSiegeCount.Text = $"SE Sieges: {seSieges}";
+				sePerTarget.Text = $"SE/Target: {seCount/(float)seSieges.Max(1):0.00}";
+                attacksPerTarget.Text = $"Attacks/Target: {attacks.Length/(float)(senSieges+seSieges).Max(1):0.00}";
+				OnPropertyChanged("");
 
 
-            });
+			});
         }
 		static string attacksFile => "attacks" + JSClient.world.ToString();
 		internal static Task SaveAttacks()
@@ -745,6 +747,7 @@ private static void SyncList(ImmutableArray<AttackPlanCity> s,DumbCollection<Cit
 
 		public async void AddAttacksFromClipboard(object sender, RoutedEventArgs e)
         {
+			addAttackFlyout.Hide();
             try
             {
 				var updateExisting = UpdateExisting.IsChecked.GetValueOrDefault();
@@ -1131,7 +1134,6 @@ private static void SyncList(ImmutableArray<AttackPlanCity> s,DumbCollection<Cit
 		{
 			public int id; // redundant
 			public AttackCategory category;
-			public int[] attackCounts = new int[2]; // 0 is real, 1 is fake
 			public List<AttackPlanCity> fakes;// first is SE or siege
 			public AttackPlanCity real;
 			public Span2 span;
@@ -1155,8 +1157,8 @@ private static void SyncList(ImmutableArray<AttackPlanCity> s,DumbCollection<Cit
 
 				var morale = Player.MoralePenalty(attacker.pid, real.pid) * moralCostBias;
 
-				var score= span.Distance2(attacker.cid.ToWorldC())+morale;
-				score += currentAttacks.Squared() * assaultBias;
+				var score= span.Distance(attacker.cid.ToWorldC())+morale;
+				score += currentAttacks * assaultCountBias;
 				// fakes don't matter for distance
 				switch (attacker.troopType)
 				{
@@ -1166,28 +1168,28 @@ private static void SyncList(ImmutableArray<AttackPlanCity> s,DumbCollection<Cit
 							switch (real.troopType)
 							{
 								case ttVanq:
-									score -= 2 * 4;
+									score -= 2 * troopTypeBias;
 									break;
 								case ttRanger:
-									score -= 6 * 4;
+									score -= 6 * troopTypeBias;
 									break;
 								case ttSorc:
 								case ttDruid:
-									score += 2 * 4;
+									score += 2 * troopTypeBias;
 									break;
 								case ttPrae:
 								case ttPriestess:
-									score += 8 * 4;
+									score += 8 * troopTypeBias;
 									break;
 								case ttHorse:
-									score -= 2 * 4;
+									score -= 2 * troopTypeBias;
 									break;
 								case ttArb:
-									score -= 4 * 4;
+									score -= 4 * troopTypeBias;
 									break;
 								case ttStinger:
 								case ttWarship:
-									score -= 4 * 4;
+									score -= 4 * troopTypeBias;
 									break;
 								default:
 									break;
@@ -1200,24 +1202,24 @@ private static void SyncList(ImmutableArray<AttackPlanCity> s,DumbCollection<Cit
 							switch (real.troopType)
 							{
 								case ttVanq:
-									score += 4 * 4;
+									score += 4 *troopTypeBias;
 									break;
 								case ttRT:
-									score += 6 * 4;
+									score += 6 *troopTypeBias;
 									break;
 								case ttSorc:
 								case ttDruid:
-									score -= 0 * 4;
+									score -= 0 *troopTypeBias;
 									break;
 								case ttPraetor:
 								case ttPriestess:
-									score -= 5 * 4;
+									score -= 5 *troopTypeBias;
 									break;
 								case ttHorse:
-									score -= 3 * 4;
+									score -= 3 *troopTypeBias;
 									break;
 								case ttArb:
-									score -= 4 * 4;
+									score -= 4 *troopTypeBias;
 									break;
 								default:
 									break;
@@ -1231,26 +1233,26 @@ private static void SyncList(ImmutableArray<AttackPlanCity> s,DumbCollection<Cit
 							switch (real.troopType)
 							{
 								case ttVanq:
-									score += 4 * 4;
+									score += 4 *troopTypeBias;
 									break;
 								case ttRT:
-									score += 6 * 4;
+									score += 6 *troopTypeBias;
 									break;
 								case ttSorc:
 								case ttDruid:
-									score -= 0 * 4;
+									score -= 0 *troopTypeBias;
 									break;
 								case ttPraetor:
-									score -= 5 * 4;
+									score -= 5 *troopTypeBias;
 									break;
 								case ttPriestess:
-									score -= 1 * 4;
+									score -= 1 *troopTypeBias;
 									break;
 								case ttHorse:
-									score += 5 * 4;
+									score += 5 *troopTypeBias;
 									break;
 								case ttArb:
-									score += 7 * 4;
+									score += 7 *troopTypeBias;
 									break;
 								default:
 									break;
@@ -1306,32 +1308,34 @@ private static void SyncList(ImmutableArray<AttackPlanCity> s,DumbCollection<Cit
 				return (attacks.Count(a => a.attackCluster == id && a.isAttackTypeAssault) + reals - 1) / reals;
 			}
 			public int NormalizedAttacks(bool isAssault) => (isAssault&&category==AttackCategory.se&&plan.normalizeAssaultsPerSeSiege) ? AssaultsPerReal() : AttackCount(isAssault);
-		}
 
+
+		}
 
 		private async void AssignAttacks_Click(object sender, RoutedEventArgs e)
         {
 			using var _ = await TouchLists();
 
-			var ignoredTargets = new HashSet<int>();
+			var ignoredTargets = new HashSet<int>();// targets.Where(a=>a.attackType==AttackType.none).Select( a=>a.cid) );
 			//   int[] initialClusterCount = { targets.Count(a => a.isAttackTypeReal && a.isAttackTypeSE),
 			//	targets.Count(a => a.isAttackTypeReal && a.isAttackTypeSenator)};
 
 			for (int ignoreIterator = 0; ; ++ignoreIterator)
 			{
 				Note.Show($"Pass {ignoreIterator}");
-				var attacks = AttackTab.attacks.OrderByDescending(a => ((long)a.city.player.points << 32) + a.spatialIndex).ToArray();
+				// set them all, including "None"'s
+				foreach (var a in AttackTab.attacks)
+				{
+					a.attackCluster = attackClusterNone;
+				}
 
-				// first create clusters
+				var attacks = AttackTab.attacks.Where(a=>a.attackType!=AttackType.none).OrderByDescending(a => a.spatialIndex).ToArray();
+
 				foreach (var f in targets)
 				{
 					f.attackCluster = attackClusterNone;
 				}
-				foreach (var a in attacks)
-				{
-					a.attackCluster = attackClusterNone;
-				}
-				// Todo: order by score?
+
 				var reals = targets.Where((a) => a.isAttackTypeSiege && !ignoredTargets.Contains(a.cid)).OrderBy(a => a.spatialIndex).ToArray();
 				if (!reals.Any())
 				{
@@ -1345,21 +1349,24 @@ private static void SyncList(ImmutableArray<AttackPlanCity> s,DumbCollection<Cit
 				//var minAssaults = readable.attackSEMinAssaults;
 				var clusterCount = reals.Length;
 				var fakes = targets.Where((a) => a.isAttackTypeFake).OrderBy((a) => a.spatialIndex).ToArray();
+				var seTargetCount = reals.Count(a => a.isAttackTypeSE);
+				var senTargetCount = reals.Count(a => a.isAttackTypeSenator);
+				var totalAttacks = attacks.Length;
+				var seAttackCount = attacks.Count(a => a.isAttackTypeSE);
+				var senAttackCount = attacks.Count(a => a.isAttackTypeSenator);
+				var assaults = attacks.Count(a => a.isAttackTypeAssault);
+
 
 				var clusters = new Cluster[clusterCount];
-				foreach (var fake in fakes)
-				{
-					fake.attackCluster = -1;
-				}
-
+				
 				for (var c0 = 0; c0 < clusterCount; ++c0)
 				{
 					var real = reals[c0];
 					clusters[c0] = new Cluster() { id = c0, category = real.attackType.GetCategory(), fakes = new List<AttackPlanCity>(), real = real, span = new Span2(real.cid.ToWorldC()) };
 					real.attackCluster = c0;
 					// choose fakes
-
 				}
+
 				// Cluster to together fakes and reals
 				for (AttackCategory category = 0; category < AttackCategory.count; category++)
 				{
@@ -1416,8 +1423,9 @@ private static void SyncList(ImmutableArray<AttackPlanCity> s,DumbCollection<Cit
 					}
 					// optimize
 					// first pass, shuffle the extras
-					for (int iter = 0; iter < 32; ++iter)
+					for (int iter = 0; iter < 64; ++iter)
 					{
+						int changes = 0;
 						foreach (var cluster0 in clustersC)
 						{
 							if (!cluster0.isValid)
@@ -1463,15 +1471,16 @@ private static void SyncList(ImmutableArray<AttackPlanCity> s,DumbCollection<Cit
 
 								bestCluster.UpdateSpan();
 								cluster0.UpdateSpan();
+								++changes;
 							}
 
 						}
-					}
+					
 					//
 					// Try swaps
 					//
-					for (int iter = 0; iter < 32; ++iter)
-					{
+					//for (int iter = 0; iter < 32; ++iter)
+					//{
 						foreach (var cluster0 in clustersC)
 						{
 							if (!cluster0.isValid)
@@ -1526,31 +1535,39 @@ private static void SyncList(ImmutableArray<AttackPlanCity> s,DumbCollection<Cit
 
 									cluster0.UpdateSpan();
 									cluster1.UpdateSpan();
+									++changes;
 								}
 
 							}
 						}
+						Log("Fake swaps: " + changes);
+						if (changes == 0)
+							break;
 					}
 				} // for each category
 
-
-
-
-
 				// Assign attacks to clusters
-				var totalAttacks = attacks.Length;
-				var seCount = attacks.Count(a => a.isAttackTypeSE);
-				var senCount = attacks.Count(a => a.isAttackTypeSenator);
-				var assaults = totalAttacks - seCount - senCount;
 
 				//
 				// Assign explicit attacks
 				//
+				/// siege, assault
+				///  0 is SE, 1 is senator
+				///  
+				var minAttacksByType = new int[2, 2] { { seAttackCount / seTargetCount.Max(1), 1 }, // siege 
+														{plan.attackSEMinAssaults, plan.attackSenMinAssaults } }; // assault
+				var maxAttacksByType = new int[2, 2] { {seAttackCount.DivideRoundUp(seTargetCount.Max(1)), // se siege
+														senAttackCount.DivideRoundUp(senTargetCount.Max(1)) },        // sen siege, todo:  Make this 1 always 
+														{plan.attackSEMaxAssaults, 
+														 plan.attackSenMaxAssaults } };
+				Assert(minAttacksByType[1, 0] == plan.attackSEMinAssaults);
+
 				foreach (var persist in plan.attacks )
 				{ 
 					if(persist.fixedTarget!=0)
 					{
-						AttackPlan.Get(persist.cid).attackCluster = AttackPlanCity.Get(persist.fixedTarget).attackCluster;
+						var cluster = AttackPlanCity.Get(persist.fixedTarget).attackCluster;
+						persist.attackCluster = cluster;
 					}
 				}
 				for (AttackCategory category = 0; category < AttackCategory.count; category++)
@@ -1562,12 +1579,12 @@ private static void SyncList(ImmutableArray<AttackPlanCity> s,DumbCollection<Cit
 					{
 						var isAssault = siegeAssaultCounter ==1;
 						var isSiege = !isAssault;
-						var minAtk = isSiege ? 1 : category == AttackCategory.se ? plan.attackSEMinAssaults : plan.attackSenMinAssaults;
-						var maxAtk = isSiege ? (category == AttackCategory.se ? 2 : 1) : category == AttackCategory.se ? plan.attackSEMaxAssaults : plan.attackSenMaxAssaults;
+						var minAtk = minAttacksByType[siegeAssaultCounter,(int)category];// isSiege ? 1 : category == AttackCategory.se ? plan.attackSEMinAssaults : plan.attackSenMinAssaults;
+						var maxAtk = maxAttacksByType[siegeAssaultCounter, (int)category];// isSiege ? (category == AttackCategory.se ? 2 : 1) : category == AttackCategory.se ? plan.attackSEMaxAssaults : plan.attackSenMaxAssaults;
 
 						for (; ; )
 						{
-							var attacksC = attacks.Where(a => a.attackCluster == -1 && (isAssault ? (a.isAttackTypeAssault == isAssault) : (a.attackType.GetCategory() == category) )).ToArray();
+							var attacksC = attacks.Where(a => a.attackCluster == -1 && a.isAttackTypeAssault == isAssault && (!isAssault || (a.attackType.GetCategory() == category) )).ToArray();
 							if (!attacksC.Any())
 								break;
 
@@ -1608,7 +1625,6 @@ private static void SyncList(ImmutableArray<AttackPlanCity> s,DumbCollection<Cit
 							}
 							if (best == null)
 								break;
-							++bestCluster.attackCounts[isAssault ? 1 : 0];
 							best.attackCluster = bestCluster.id;
 
 						}
@@ -1621,43 +1637,45 @@ private static void SyncList(ImmutableArray<AttackPlanCity> s,DumbCollection<Cit
 						Note.Show($"{atk.city.nameMarkdown} has no targets in range or all targets have enough attacks of this ones type");
 					}
 				}
-			
-	
 
 
 				// optimize
 
-				// first pass, shuffle the extras, only if there are more attacks than targets
-				for (int iter = 0; iter < clusterCount + 4; ++iter)
+				// first pass, shuffle the extras
+				for (int iter = 0; iter < 64; ++iter)
 				{
+					var changes = 0;
 					foreach(var cluster0 in clusters)
 					{
 						if (!cluster0.isValid)
 							continue;
-					
-						for (var isAssault = 0; isAssault < 2; ++isAssault)
+						var category = cluster0.category;
+						for (var siegeAssaultCounter = 0; siegeAssaultCounter < 2; ++siegeAssaultCounter)
 						{
-							var count0 = cluster0.attackCounts[isAssault];
-							if (count0 < clusters.Where(a => a.category == cluster0.category).Max(a => a.attackCounts[isAssault]))
+							var isAssault = siegeAssaultCounter == 1;
+							var isSiege = !isAssault;
+							var count0 = cluster0.AttackCount(isAssault);
+
+							if (count0 <= minAttacksByType[siegeAssaultCounter, (int)category])
 								continue;
+							var maxAttack = maxAttacksByType[siegeAssaultCounter, (int)category];
 							AttackPlanCity best = null;
 							Cluster bestCluster = null;
 							float bestScore = 0;
 							foreach (var cluster1 in clusters)
 							{
 								
-								var count1 = cluster1.attackCounts[isAssault];
+								var count1 = cluster1.AttackCount(isAssault);
 								
 
-								if (count1 >= count0 || cluster0.category!=cluster1.category)
+								if (count1 >= maxAttack || (isSiege && category!=cluster1.category) || cluster0.id == cluster1.id )
 									continue;
-								Assert(count1 <= count0);
 								foreach (var f0 in attacks)
 								{
-									if (f0.attackCluster != cluster0.id || (f0.isAttackTypeAssault != (isAssault == 1)) || !cluster1.IsInRange(f0) || IsTargetFixed(f0))
+									if (f0.attackCluster != cluster0.id || (f0.isAttackTypeAssault != (isAssault)) || !cluster1.IsInRange(f0) || IsTargetFixed(f0))
 										continue;
-									var d0 = cluster0.CalculateAttackCost(f0,count0);
-									var d1 = cluster1.CalculateAttackCost(f0,count1);
+									var d0 = cluster0.CalculateAttackCost(f0,count0-1);
+									var d1 = cluster1.CalculateAttackCost(f0,count1+1);
 									var score = d1 - d0;
 									if (score < bestScore)
 									{
@@ -1671,16 +1689,12 @@ private static void SyncList(ImmutableArray<AttackPlanCity> s,DumbCollection<Cit
 							}
 							if (best != null)
 							{
+								++changes;
 								best.attackCluster = bestCluster.id;
-								--cluster0.attackCounts[isAssault];
-								++bestCluster.attackCounts[isAssault];
 							}
 						}
 					}
-				}
-				// second pass, symetric swaps
-				for (int iter = 0; iter < 32; ++iter)
-				{
+				// next pass, symetric swaps
 					foreach (var f0 in attacks)
 					{
 						//                    var s0 = AttackPlanCity.GetOrAdd(f0.cid);
@@ -1691,12 +1705,10 @@ private static void SyncList(ImmutableArray<AttackPlanCity> s,DumbCollection<Cit
 						var attackType = f0.attackType;
 						foreach (var f1 in attacks)
 						{
-							if (f1.isAttackClusterNone || f1.attackType != attackType || IsTargetFixed(f1))
+							if (f1.isAttackClusterNone || f1.attackCluster==c0|| f1.attackType != attackType || IsTargetFixed(f1))
 								continue;
 							//var s1 = AttackPlanCity.GetOrAdd(f1.cid);
 							var c1 = f1.attackCluster;
-							if (c0 == c1)
-								continue;
 							if (!clusters[c0].IsInRange(f1) ||
 								!clusters[c1].IsInRange(f0))
 								continue;
@@ -1711,6 +1723,7 @@ private static void SyncList(ImmutableArray<AttackPlanCity> s,DumbCollection<Cit
 							var dd1 = clusters[c1].CalculateAttackCost(f0,atkCount1);
 							if (d0 + d1 > dd0 + dd1)
 							{
+								++changes;
 								// a change improves things
 								f1.attackCluster = c0;
 								f0.attackCluster = c1;
@@ -1720,6 +1733,9 @@ private static void SyncList(ImmutableArray<AttackPlanCity> s,DumbCollection<Cit
 						}
 
 					}
+					Log("Attack Swaps: " + changes);
+					if (changes == 0)
+						break;
 				}
 				// cull
 				var initialCulledClusters = ignoredTargets.Count;
@@ -1729,10 +1745,10 @@ private static void SyncList(ImmutableArray<AttackPlanCity> s,DumbCollection<Cit
 				{
 						if (!cluster.isValid)
 							continue;
-						var culledSE = (cluster.attackCounts[1] < plan.attackSEMinAssaults && cluster.category == AttackCategory.se);
-						if (cluster.attackCounts[0] == 0 || culledSE)
+						var culledSE = (cluster.AttackCount(true) < plan.attackSEMinAssaults && cluster.category == AttackCategory.se);
+						if (cluster.AttackCount(false) == 0 || culledSE)
 						{
-							if (cluster.attackCounts[0] == 0)
+							if (cluster.AttackCount(false) == 0)
 								Note.Show($"{cluster.real.nameMarkdown} {cluster.category}  culled, no reals or not in range");
 							if (culledSE)
 								Note.Show($"{AttackPlanCity.Get(cluster.real.cid).nameMarkdown} culled, not enough fakes in range");
@@ -1767,36 +1783,39 @@ private static void SyncList(ImmutableArray<AttackPlanCity> s,DumbCollection<Cit
 				}
 
 				WritebackAttacks();
-				
+
 				//         var targetCluster = new List<int>();
 				//           targetCluster.Add(real.cid);
 				//            targetCluster.Add(bestFake);
-				var seAttacks = attacks.Where((a) => a.isAttackTypeSE && !a.isAttackClusterNone);
-				var assaultAttacks = attacks.Where((a) => a.isAttackTypeAssault && !a.isAttackClusterNone);
-				var senatorAttacks = attacks.Where((a) => a.isAttackTypeSenator && !a.isAttackClusterNone);
-				float maxDistanceToSE = seAttacks.Any()? seAttacks.Max((a) => clusters[a.attackCluster].GetTravelTime(a) ): 0;
-				float averageDistanceToSE = seAttacks.Any() ? seAttacks.Average((a) => clusters[a.attackCluster].GetTravelTime(a)):0;
-				float maxDistanceToAssault = assaultAttacks.Any()?assaultAttacks.Max((a) => clusters[a.attackCluster].GetTravelTime(a)):0;
-				float averageDistanceToAssault = assaultAttacks.Any()?assaultAttacks.Average((a) => clusters[a.attackCluster].GetTravelTime(a)):0;
-
-				float maxDistanceToSenator= senatorAttacks.Any()?senatorAttacks.Max((a) => clusters[a.attackCluster].GetTravelTime(a)):0;
-				float averageDistanceToSenator = senatorAttacks.Any()?senatorAttacks.Average((a) => clusters[a.attackCluster].GetTravelTime(a)):0;
-
-				float maxClusterSize = clusters.Where(c=>c.isValid).Max((a) => a.span.radius2.Sqrt());
-				float averageClusterSize = clusters.Where(c => c.isValid).Average((a) => a.span.radius2.Sqrt());
-
-				//           bad = $"{bad} Assigned {reals} reals and {fakes} fakes\nUnused: reals {unusedReals}, fakes {unusedFakes}";
-
-				Note.Show($"Attack plan done, {ignoredTargets.Count} culled real targets, {attacks.Count(a => a.isAttackClusterNone)} culled attacks, {clusterCount} valid targets, SE Distance max: {maxDistanceToSE} av: {averageDistanceToSE}, Senator Distance max:{maxDistanceToSenator} av:{averageDistanceToSenator} Assault distance max:{maxDistanceToAssault} av:{averageDistanceToAssault} Cluster size max: {maxClusterSize} av: {averageClusterSize}");
-
-				for (int j = 0; j < 2; ++j)
 				{
-					foreach (var a in (j == 0 ? senatorAttacks : seAttacks))
+					var seAttacks = attacks.Where((a) => a.isAttackTypeSE && !a.isAttackClusterNone);
+					var assaultAttacks = attacks.Where((a) => a.isAttackTypeAssault && !a.isAttackClusterNone);
+					var senatorAttacks = attacks.Where((a) => a.isAttackTypeSenator && !a.isAttackClusterNone);
+					float maxDistanceToSE = seAttacks.Any() ? seAttacks.Max((a) => clusters[a.attackCluster].GetTravelTime(a)) : 0;
+					float averageDistanceToSE = seAttacks.Any() ? seAttacks.Average((a) => clusters[a.attackCluster].GetTravelTime(a)) : 0;
+					
+					float maxDistanceToAssault = assaultAttacks.Any() ? assaultAttacks.Max((a) => clusters[a.attackCluster].GetTravelTime(a)) : 0;
+					float averageDistanceToAssault = assaultAttacks.Any() ? assaultAttacks.Average((a) => clusters[a.attackCluster].GetTravelTime(a)) : 0;
+
+					float maxDistanceToSenator = senatorAttacks.Any() ? senatorAttacks.Max((a) => clusters[a.attackCluster].GetTravelTime(a)) : 0;
+					float averageDistanceToSenator = senatorAttacks.Any() ? senatorAttacks.Average((a) => clusters[a.attackCluster].GetTravelTime(a)) : 0;
+
+					float maxClusterSize = clusters.Where(c => c.isValid).Max((a) => a.span.radius2.Sqrt());
+					float averageClusterSize = clusters.Where(c => c.isValid).Average((a) => a.span.radius2.Sqrt());
+
+					//           bad = $"{bad} Assigned {reals} reals and {fakes} fakes\nUnused: reals {unusedReals}, fakes {unusedFakes}";
+
+					Note.Show($"Attack plan done, {ignoredTargets.Count} culled real targets, {attacks.Count(a => a.isAttackClusterNone)} culled attacks, {clusterCount} valid targets, SE Distance max: {maxDistanceToSE} av: {averageDistanceToSE}, Senator Distance max:{maxDistanceToSenator} av:{averageDistanceToSenator} Assault distance max:{maxDistanceToAssault} av:{averageDistanceToAssault} Cluster size max: {maxClusterSize} av: {averageClusterSize}");
+
+					for (int j = 0; j < 2; ++j)
 					{
-						var d = clusters[a.attackCluster].GetTravelTime(a);
-						if (d >= (j == 0 ? maxDistanceToSenator : maxDistanceToSE) - 3.0f)
+						foreach (var a in (j == 0 ? senatorAttacks : seAttacks))
 						{
-							Note.Show($"{a.nameMarkdown} leaves at around {( (j == 0 ? senTime: seTime) - TimeSpan.FromHours(d)).FormatDefault()}");
+							var d = clusters[a.attackCluster].GetTravelTime(a);
+							if (d >= (j == 0 ? maxDistanceToSenator : maxDistanceToSE) - 3.0f)
+							{
+								Note.Show($"{a.nameMarkdown} leaves at around {((j == 0 ? senTime : seTime) - TimeSpan.FromHours(d)).FormatDefault()}");
+							}
 						}
 					}
 				}
@@ -1853,7 +1872,6 @@ private static void SyncList(ImmutableArray<AttackPlanCity> s,DumbCollection<Cit
   //          CleanTargets();
   //          attacks.NotifyReset();
 		//	attackClusters= Array.Empty<AttackCluster>();
-
   //      }
 
 		private void SelectTargets(object sender, RoutedEventArgs e)
@@ -1946,6 +1964,14 @@ private static void SyncList(ImmutableArray<AttackPlanCity> s,DumbCollection<Cit
 			//attacks.NotifyReset();
 			Note.Show($"Update attack to see results");
 		
+		}
+
+		private void Player_Tapped(object sender, TappedRoutedEventArgs e)
+		{
+			var i = sender as FrameworkElement;
+			var city = i.DataContext as City;
+			JSClient.view.InvokeScriptAsync("sendmail", new string[] { city.playerName, "test", playerCommands[city.pid].Replace("<", "&amp;lt;").Replace(">", "&amp;gt;").Replace("\n", "&amp;lt;br&amp;gt;")  });
+
 		}
 	}
 }

@@ -280,8 +280,7 @@ namespace COTG.Services
 			}
 
 			App.CopyTextToClipboard(sb.ToString());
-			Note.Show("Copied stats to clipboard (tsv) for sheets");
-
+			Note.Show("Copied stats to clipboard (tsv) for sheets",priority: Note.Priority.high,timeout: 8*10000);
 		}
 
 		public static async Task PlayerStats(DateTimeOffset t0, DateTimeOffset t1, int continent, int minTS, bool scoreAndCities,bool allianceStats, int maxPlayers, bool tsTotal, bool tsOff, bool tsDef)

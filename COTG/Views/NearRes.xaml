@@ -142,9 +142,11 @@
                         ItemsSource="{x:Bind local:NearRes.supporters, Mode=OneWay}"
                         RowHeight="{StaticResource ShortGridRowHeight}"
                      Grid.Row="1"
+					 					 RowHeaderStyle="{StaticResource DataGridColumnHeaderStyle}"
+					RowStyle="{StaticResource DataGridRowStyle}"
                      SelectionMode="Extended"
                      RowDetailsVisibilityMode="Collapsed"
-  				      RowStyle="{StaticResource RowTextStyle}"  
+  				     
                      CanUserReorderColumns="True"
                     CanUserSortColumns="True"
                      Sorting="supportGrid_Sorting"

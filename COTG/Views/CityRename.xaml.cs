@@ -184,7 +184,7 @@ namespace COTG.Views
 
 						if (SettingsPage.setShareString)
 						{
-							await ShareString.ShowNoLock(City.build);
+							await ShareString.Touch().ShowNoLock(City.build);
 						}
 						
 						//if (SettingsPage.setHub)
@@ -197,10 +197,12 @@ namespace COTG.Views
 							// are there any cabins here already?
 							rv = await QueueTab.DoTheStuff(city, false, false);
 						}
-						await CitySettings.SetCitySettings(cid, setAutoBuild: SettingsPage.autoBuildOn.GetValueOrDefault(), 
+
+						await CitySettings.SetCitySettings(cid,
+							autoBuildOn: SettingsPage.autoBuildOn,
 							autoWalls: (SettingsPage.autoWallLevel == 10) ? true : null,
-							autoTowers: (SettingsPage.autoTowerLevel == 10) ? true : null
-										);
+							autoTowers: (SettingsPage.autoTowerLevel == 10) ? true : null							);		
+							
 						if (SettingsPage.clearRes)
 						{
 							if(!city.leaveMe)

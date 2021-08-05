@@ -37,6 +37,7 @@
         <Setter Property="IsTextScaleFactorEnabled" Value="False"/>
 		<Setter Property="Margin" Value="2"/>
 	</Style>
+	
 	<Style x:Key="ButtonMedium" TargetType="Button" BasedOn="{StaticResource ButtonSmall}">
 		<Setter Property="Margin" Value="4"/>
 	</Style>
@@ -251,5 +252,6 @@
     <converter:IntConverter x:Key="IntConverter" />
 	<converter:TimeConverter x:Key="TimeConverter" />
 	<converter:FloatConverter x:Key="FloatConverter" />
-    <converterTK:FormatStringConverter x:Key="FormatString" />
+	<converter:NullableIntToDoubleConverter x:Key="NullableIntConverter" />
+	<converterTK:FormatStringConverter x:Key="FormatString" />
 </ResourceDictionary>

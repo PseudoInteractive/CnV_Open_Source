@@ -154,7 +154,7 @@ namespace COTG.Game
 				ideal = minC;
 			ideal = Math.Min(ideal, city.freeCommandSlots- SettingsPage.raidReserveCommandSlots).Max(1);
 			var averageCarry = carry / (ideal.Max(1) * loot);
-			var isValid = (ideal != 0 && averageCarry < SettingsPage.raidCarryMax) && averageCarry > SettingsPage.raidCarryMin && d.completion > SettingsPage.minDungeonCompletion && (loot * 32 > city.CarryCapacityIncludeAway(d.isWater));
+			var isValid = (ideal != 0 && averageCarry < SettingsPage.raidCarryMax) && averageCarry > SettingsPage.raidCarryMin && d.completion > SettingsPage.minDungeonCompletion && (loot * 64 > city.CarryCapacityIncludeAway(d.isWater));
 
 
 			return (ideal, averageCarry,idealf.Max(1f), isValid);

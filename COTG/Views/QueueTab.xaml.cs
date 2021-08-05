@@ -331,7 +331,7 @@ namespace COTG.Views
 			{
 				//				if (!city.isBuild)
 				//				await JSClient.ChangeCity(city.cid, false);
-				await ShareString.ShowNoLock(City.build);
+				await ShareString.Touch().ShowNoLock(City.build);
 				bc=city.UpdateBuildStage();
 
 				if (city.buildStage == BuildStage.noLayout)

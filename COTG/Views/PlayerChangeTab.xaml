@@ -26,6 +26,8 @@
 				    CanUserSortColumns="True"
 					 CanUserResizeColumns="True"
 					 IsReadOnly="True"
+					 					 RowHeaderStyle="{StaticResource DataGridColumnHeaderStyle}"
+                    RowStyle="{StaticResource DataGridRowStyle}"
 					ClipboardCopyMode="IncludeHeader"
 					 FrozenColumnCount="3"
                      Sorting="playerChangesSorting"

@@ -360,10 +360,10 @@ namespace COTG
 		}
 		public static void SetSessionCookie()
 		{
-			if(!SettingsPage.secSessionId.IsNullOrEmpty() && !JSClient.isSub  )
-			{
-				SetCookie("sec_session_id", SettingsPage.secSessionId);
-			}
+			//if(!SettingsPage.secSessionId.IsNullOrEmpty() && !JSClient.isSub  )
+			//{
+			//	SetCookie("sec_session_id", SettingsPage.secSessionId);
+			//}
 		}
 
 		public static void SetCookie(string name, string value, string domain = ".crownofthegods.com", string path = "/" )
@@ -1253,7 +1253,7 @@ namespace COTG
 					
 					App.DispatchOnUIThreadLow( ()=>
 					{
-						ShareString.Touch().tradeSettings.ItemsSource = TradeSettings.all;
+						ResSettings.tradeSettingsItemsSource = TradeSettings.all;
 					});
 				}
 
@@ -1651,69 +1651,69 @@ private static async void ShowCouncillorsMissingDialog()
 			// Validate the server certificate as required.
 			//            customValidationArgs.Reject();
 		}
-		static HttpResponseMessage resp;
-		private static async void GetMe(Windows.UI.Xaml.Controls.WebViewWebResourceRequestedEventArgs args, Deferral def)
-		{
-			var client = new HttpClient(httpFilter);
-			//	var headers = httpClient.DefaultRequestHeaders;
-			//client.DefaultRequestHeaders.Accept.Clear();
-			//client.DefaultRequestHeaders.Accept.ParseAdd("application/signed-exchange");
+	//	static HttpResponseMessage resp;
+	//	private static async void GetMe(Windows.UI.Xaml.Controls.WebViewWebResourceRequestedEventArgs args, Deferral def)
+	//	{
+	//		var client = new HttpClient(httpFilter);
+	//		//	var headers = httpClient.DefaultRequestHeaders;
+	//		//client.DefaultRequestHeaders.Accept.Clear();
+	//		//client.DefaultRequestHeaders.Accept.ParseAdd("application/signed-exchange");
 		
-			// httpClient.DefaultRequestHeaders.TryAppendWithoutValidation("X-Requested-With", "XMLHttpRequest");
-			//    httpClient.DefaultRequestHeaders.Referer = new Uri(httpsHost, "/overview.php?s=0");// new Uri($"https://w{world}.crownofthegods.com");
-			client.DefaultRequestHeaders.Referer = new Uri("https://www.crownofthegods.com/"); // new Uri                                                       //             req.Headers.TryAppendWithoutValidation("Origin", $"https://w{world}.crownofthegods.com");
-																 //httpClient.DefaultRequestHeaders.TryAppendWithoutValidation("Origin", $"https://w{world}.crownofthegods.com");
+	//		// httpClient.DefaultRequestHeaders.TryAppendWithoutValidation("X-Requested-With", "XMLHttpRequest");
+	//		//    httpClient.DefaultRequestHeaders.Referer = new Uri(httpsHost, "/overview.php?s=0");// new Uri($"https://w{world}.crownofthegods.com");
+	//		client.DefaultRequestHeaders.Referer = new Uri("https://www.crownofthegods.com/"); // new Uri                                                       //             req.Headers.TryAppendWithoutValidation("Origin", $"https://w{world}.crownofthegods.com");
+	//															 //httpClient.DefaultRequestHeaders.TryAppendWithoutValidation("Origin", $"https://w{world}.crownofthegods.com");
 			
-				client.DefaultRequestHeaders.Host = new Windows.Networking.HostName("www.crownofthegods.com");
-			//   Log($"Built headers {httpClient.DefaultRequestHeaders.ToString() }");
+	//			client.DefaultRequestHeaders.Host = new Windows.Networking.HostName("www.crownofthegods.com");
+	//		//   Log($"Built headers {httpClient.DefaultRequestHeaders.ToString() }");
 			
 			
-			client.DefaultRequestHeaders.UserAgent.TryParseAdd(userAgent);
+	//		client.DefaultRequestHeaders.UserAgent.TryParseAdd(userAgent);
 			
 
 
-			client.DefaultRequestHeaders.TryAppendWithoutValidation("Sec-Fetch-Dest", "document");
-			client.DefaultRequestHeaders.TryAppendWithoutValidation("Sec-Fetch-Site", "same-origin");
-			client.DefaultRequestHeaders.TryAppendWithoutValidation("Sec-Fetch-User", "?1");
-			client.DefaultRequestHeaders.TryAppendWithoutValidation("sec-ch-ua", "\" Not; A Brand\";v=\"99\", \"Microsoft Edge\"; v=\"91\", \"Chromium\"; v=\"91\"");
-			client.DefaultRequestHeaders.TryAppendWithoutValidation("sec-ch-ua-mobile", "?0");
+	//		client.DefaultRequestHeaders.TryAppendWithoutValidation("Sec-Fetch-Dest", "document");
+	//		client.DefaultRequestHeaders.TryAppendWithoutValidation("Sec-Fetch-Site", "same-origin");
+	//		client.DefaultRequestHeaders.TryAppendWithoutValidation("Sec-Fetch-User", "?1");
+	//		client.DefaultRequestHeaders.TryAppendWithoutValidation("sec-ch-ua", "\" Not; A Brand\";v=\"99\", \"Microsoft Edge\"; v=\"91\", \"Chromium\"; v=\"91\"");
+	//		client.DefaultRequestHeaders.TryAppendWithoutValidation("sec-ch-ua-mobile", "?0");
 
-	//		SetCookie("lout", "1");
-	//		SetCookie("G_AUTHUSER_H", "0", "www.crownofthegods.com", "/");
-	//		SetCookie("G_AUTHUSER_H", "0", "www.crownofthegods.com", "/home");
+	////		SetCookie("lout", "1");
+	////		SetCookie("G_AUTHUSER_H", "0", "www.crownofthegods.com", "/");
+	////		SetCookie("G_AUTHUSER_H", "0", "www.crownofthegods.com", "/home");
 
 
-			var req = args.Request;
-			args.Request.Headers.Accept.Clear();
-			args.Request.Headers.Accept.ParseAdd("application/signed-exchange;v=b3;q=0.9");
-			{
-				resp = await client.SendRequestAsync(args.Request, HttpCompletionOption.ResponseContentRead);
-				foreach (var h in resp.Headers)
-				{
-					Log(h.Key);
-					Log(h.Value);
-					if(h.Key == "Set-Cookie")
-					{
-						var bb = h.Value.Split(';', StringSplitOptions.RemoveEmptyEntries);
-						var bb2 = bb[0].Split('=', StringSplitOptions.RemoveEmptyEntries);
-						SettingsPage.secSessionId = bb2[1];
-					}
+	//		var req = args.Request;
+	//		args.Request.Headers.Accept.Clear();
+	//		args.Request.Headers.Accept.ParseAdd("application/signed-exchange;v=b3;q=0.9");
+	//		{
+	//			resp = await client.SendRequestAsync(args.Request, HttpCompletionOption.ResponseContentRead);
+	//			foreach (var h in resp.Headers)
+	//			{
+	//				Log(h.Key);
+	//				Log(h.Value);
+	//				if(h.Key == "Set-Cookie")
+	//				{
+	//					var bb = h.Value.Split(';', StringSplitOptions.RemoveEmptyEntries);
+	//					var bb2 = bb[0].Split('=', StringSplitOptions.RemoveEmptyEntries);
+	//					SettingsPage.secSessionId = bb2[1];
+	//				}
 
-				}
+	//			}
 
-				foreach (var h in resp.Content.Headers)
-				{
-					Log(h.Key);
-					Log(h.Value);
+	//			foreach (var h in resp.Content.Headers)
+	//			{
+	//				Log(h.Key);
+	//				Log(h.Value);
 
-				}
-				var buff = await resp.Content.ReadAsStringAsync();
-				Log(buff);
-				args.Response = resp;
-				def.Complete();
-			}
+	//			}
+	//			var buff = await resp.Content.ReadAsStringAsync();
+	//			Log(buff);
+	//			args.Response = resp;
+	//			def.Complete();
+	//		}
 
-		}
+	//	}
 
 		static private void View_NavigationStarting(WebView sender, Windows.UI.Xaml.Controls.WebViewNavigationStartingEventArgs args)
 		{

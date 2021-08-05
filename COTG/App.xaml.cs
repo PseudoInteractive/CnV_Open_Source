@@ -1273,6 +1273,7 @@ namespace COTG
 
 		private static void InAppNote_Closed(object sender, InAppNotificationClosedEventArgs e)
 		{
+			currentPriority = Priority.none;
 			if (e.DismissKind == InAppNotificationDismissKind.User)
 			{
 				cancellationTokenSource.Cancel();
@@ -1287,10 +1288,12 @@ namespace COTG
 		}
 		public enum Priority
 		{
+			none,
 			low, // if one is active, drop this
 			medium, // if one is active wait
 			high // if one is active cancel it
 		}
+		static Priority currentPriority;
 		static DateTime nextInAppNote = new DateTime(0);
 		static CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
 		public static async void Show(string s, Priority priority=Priority.medium, bool useInfoBar = false, int timeout = 5000)
@@ -1315,17 +1318,18 @@ namespace COTG
 
 				var now = DateTime.UtcNow;
 				var next = nextInAppNote;
-				if (now >= next || priority == Priority.high)
+				var _priority = priority;
+				if (now >= next || ((priority >= Priority.high)&&(currentPriority< Priority.high)))
 				{
 					// all clear
-					nextInAppNote = now + TimeSpan.FromSeconds(noteDelay);
+					nextInAppNote = now + TimeSpan.FromSeconds((priority >= Priority.high) ? timeout: noteDelay);
 				}
 				else
 				{
 					if (priority == Priority.low)
 						return;
 					var wait = (next - now);
-					if (wait.TotalSeconds >= 20.0f)
+					if (wait.TotalSeconds >= 20.0f && priority < Priority.high)
 						return;
 
 					nextInAppNote = next + TimeSpan.FromSeconds(noteDelay);
@@ -1347,12 +1351,13 @@ namespace COTG
 				{
 					//ChatTab.L(s);
 					var wasOpen = false;
+					currentPriority = _priority;
 					//if (ShellPage.instance.infoBar.IsOpen)
 					//{
 					//	wasOpen = true;
 					//	ShellPage.instance.infoBar.IsOpen = false;
 					//}
-					if (!useInfoBar)
+					//if (!useInfoBar)
 					{
 						var textBlock = new MarkdownTextBlock() { Text = s, Background = null };
 						textBlock.LinkClicked += MarkDownLinkClicked;

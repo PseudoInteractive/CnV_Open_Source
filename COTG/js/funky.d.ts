@@ -705,6 +705,7 @@ declare var errz_: number;
 declare function buildQTouch(__cid: number): void;
 declare function errorgo_(j_: any): void;
 declare function addToAttackSender(tid: any): void;
+declare function sendMail(to: string, subject: string, body: string): void;
 declare function GetCity(): jsonT.City;
 declare let defaultHeaders: Record<string, string>;
 declare function SetupHeaders(): string;

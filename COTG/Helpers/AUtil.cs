@@ -202,7 +202,7 @@ namespace COTG
 		{
 		}
 
-		public static DateTimeOffset dateTimeZero => new DateTimeOffset(1969, 1, 1, 0, 0, 0, TimeSpan.Zero);
+		public static DateTimeOffset dateTimeZero => new DateTimeOffset(1970, 1, 1, 0, 0, 0, TimeSpan.Zero);
 
 		// Lists
 		public static Color Lerp(this float t, Color c0, Color c1)

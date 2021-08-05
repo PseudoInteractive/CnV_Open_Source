@@ -1,0 +1,114 @@
+﻿<UserControl
+    x:Class="COTG.Views.ResSettings"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:COTG.Views"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+     xmlns:tk="using:Microsoft.Toolkit.Uwp.UI.Controls"
+	xmlns:winui="using:Microsoft.UI.Xaml.Controls"
+    mc:Ignorable="d"
+	 xmlns:cotg="using:COTG"
+	 xmlns:game="using:COTG.Game"
+	 xmlns:views="using:COTG.Views"
+	xmlns:converter="using:COTG.Converters"
+    d:DesignHeight="300"
+    d:DesignWidth="400">
+
+	<StackPanel>
+		<Border Style="{StaticResource BorderReveal}">
+			<StackPanel>
+				<views:CityControl x:Name="sourceHub"  x:FieldModifier="public"
+						   ToolTipService.ToolTip="If req boxes below are checked, this hub will be set as the source hub" />
+				<views:CityControl x:Name="targetHub"  x:FieldModifier="public"
+						   ToolTipService.ToolTip="If export boxes below are checked, this hub will be set as the target hub" />
+				<ComboBox   Header="COTG Preset"
+						      SelectedItem="{x:Bind tradeSettingsSel, Mode=TwoWay}"	
+							  ItemsSource="{x:Bind views:ResSettings.tradeSettingsItemsSource}"
+							  DisplayMemberPath="N"
+							  ToolTipService.ToolTip="Select a COTG Trade setting to override settings"
+							  Margin="4" />
+			</StackPanel>
+		</Border>
+		<Border Style="{StaticResource BorderReveal}">
+			<StackPanel>
+				<ToggleSwitch Header="Request Resources" OnContent="Set" OffContent="Ignore" IsOn="{x:Bind applyRequested}" />
+				<tk:WrapPanel Orientation="Horizontal" Margin="4" >
+
+					<winui:NumberBox Header="Req Wood"
+										PlaceholderText="No Change"
+										Value="{x:Bind req.wood, Converter={StaticResource NullableIntConverter}, Mode=TwoWay}"
+										Style="{StaticResource NumberBoxRes}"
+										ToolTipService.ToolTip="A blank value means leave as is"	 />
+					<winui:NumberBox Header="Req Stone"
+										PlaceholderText="No Change"
+										Value="{x:Bind req.stone, Converter={StaticResource NullableIntConverter},Mode=TwoWay}"
+										Style="{StaticResource NumberBoxRes}"
+										ToolTipService.ToolTip="A blank value means leave as is"			
+										 />
+					<winui:NumberBox Header="Req Iron"
+										PlaceholderText="No Change"
+										Value="{x:Bind req.iron, Converter={StaticResource NullableIntConverter},Mode=TwoWay}"
+										Style="{StaticResource NumberBoxRes}"
+										ToolTipService.ToolTip="A blank value means leave as is"			
+										 />
+					<winui:NumberBox Header="Req Food"
+										PlaceholderText="No Change"
+										Value="{x:Bind req.food,Converter={StaticResource NullableIntConverter}, Mode=TwoWay}"
+										Style="{StaticResource NumberBoxRes}"
+										ToolTipService.ToolTip="A blank value means leave as is"			
+										 />
+				</tk:WrapPanel>
+			</StackPanel>
+		</Border>
+		<Border Style="{StaticResource BorderReveal}" Margin="2,8,2,2">
+			<StackPanel>
+				<ToggleSwitch Header="Send Resources" OnContent="Set" OffContent="Ignore" IsOn="{x:Bind applySend}" />
+				<tk:WrapPanel  Orientation="Horizontal" >
+					<winui:NumberBox Header="Wood Limit"
+										PlaceholderText="No Change"
+										Value="{x:Bind max.wood, Converter={StaticResource NullableIntConverter},Mode=TwoWay}"
+										Style="{StaticResource NumberBoxRes}"
+										ToolTipService.ToolTip="If there is more res than this number the excess will be exported, an empty value means leave it as is, a negative value means use max storage - [value] i.e. -75,000 with a storage of 375,000 would be 300,000"
+										 />
+					<winui:NumberBox Header="Stone Limit"
+										PlaceholderText="No Change"
+										Value="{x:Bind max.stone,Converter={StaticResource NullableIntConverter}, Mode=TwoWay}"
+										Style="{StaticResource NumberBoxRes}"
+										ToolTipService.ToolTip="If there is more res than this number the excess will be exported, an empty value means leave it as is, a negative value means use max storage - [value] i.e. -75,000 with a storage of 375,000 would be 300,000"
+										 />
+					<winui:NumberBox Header="Iron Limit"
+										PlaceholderText="No Change"
+										Value="{x:Bind max.iron,Converter={StaticResource NullableIntConverter}, Mode=TwoWay}"
+										Style="{StaticResource NumberBoxRes}"
+										ToolTipService.ToolTip="If there is more res than this number the excess will be exported, an empty value means leave it as is, a negative value means use max storage - [value] i.e. -75,000 with a storage of 375,000 would be 300,000"
+										/>
+					<winui:NumberBox Header="Food Limit"
+										PlaceholderText="No Change"
+										Value="{x:Bind max.food,Converter={StaticResource NullableIntConverter}, Mode=TwoWay}"
+										Style="{StaticResource NumberBoxRes}"
+										ToolTipService.ToolTip="If there is more res than this number the excess will be exported, an empty value means leave it as is, a negative value means use max storage - [value] i.e. -75,000 with a storage of 375,000 would be 300,000"
+										 />
+				</tk:WrapPanel>
+			</StackPanel>
+		</Border>
+		<StackPanel>
+			<Border Style="{StaticResource BorderReveal}">
+				<tk:WrapPanel  Orientation="Horizontal">
+					<CheckBox  Content="Export Wood" IsThreeState="True" IsChecked="{x:Bind reqFilter.wood}" ToolTipService.ToolTip="If checked wood is requested sent on overflow, otherwise it is stored or refined, the 'box' setting means leave as is" />
+					<CheckBox  Content="Export Stone" IsThreeState="True" IsChecked="{x:Bind reqFilter.stone}" ToolTipService.ToolTip="If set, stone is sent on overflow, otherwise it is stored or refined, the 'box' setting means leave as is" />
+					<CheckBox  Content="Export Iron" IsThreeState="True" IsChecked="{x:Bind reqFilter.iron}" ToolTipService.ToolTip="If set, iron is sent on overflow, otherwise it is stored or refined, the 'box' setting means leave as is" />
+					<CheckBox  Content="Export Food" IsThreeState="True" IsChecked="{x:Bind reqFilter.food}" ToolTipService.ToolTip="If set, food is sent on overflow, otherwise it is stored or refined, the 'box' setting means leave as is" />
+				</tk:WrapPanel  >
+			</Border>
+			<Border Style="{StaticResource BorderReveal}">
+				<tk:WrapPanel  Orientation="Horizontal">
+					<CheckBox Content="Export Wood" IsThreeState="True" IsChecked="{x:Bind sendFilter.wood}" ToolTipService.ToolTip="If set, wood is sent on overflow, otherwise it is stored or refined, the 'box' setting means leave as is" />
+					<CheckBox Content="Export Stone" IsThreeState="True" IsChecked="{x:Bind sendFilter.stone}" ToolTipService.ToolTip="If set, stone is sent on overflow, otherwise it is stored or refined, the 'box' setting means leave as is" />
+					<CheckBox Content="Export Iron" IsThreeState="True" IsChecked="{x:Bind sendFilter.iron}" ToolTipService.ToolTip="If set, iron is sent on overflow, otherwise it is stored or refined, the 'box' setting means leave as is" />
+					<CheckBox Content="Export Food" IsThreeState="True" IsChecked="{x:Bind sendFilter.food}" ToolTipService.ToolTip="If set, food is sent on overflow, otherwise it is stored or refined, the 'box' setting means leave as is" />
+				</tk:WrapPanel  >
+			</Border>
+		</StackPanel>
+	</StackPanel>
+</UserControl>

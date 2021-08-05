@@ -79,10 +79,10 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="DSharpPlus">
-      <Version>4.0.1</Version>
+      <Version>4.1.0</Version>
     </PackageReference>
     <PackageReference Include="DSharpPlus.CommandsNext">
-      <Version>4.0.1</Version>
+      <Version>4.1.0</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.AppCenter">
       <Version>4.3.0</Version>
@@ -348,6 +348,9 @@
     <Compile Include="Views\CityBuild.xaml.cs">
       <DependentUpon>CityBuild.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\CityControl.xaml.cs">
+      <DependentUpon>CityControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\CityRename.xaml.cs">
       <DependentUpon>CityRename.xaml</DependentUpon>
     </Compile>
@@ -413,6 +416,9 @@
     </Compile>
     <Compile Include="Views\QuickBuild.xaml.cs">
       <DependentUpon>QuickBuild.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\ResSettings.xaml.cs">
+      <DependentUpon>ResSettings.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\SchemeActivationSamplePage.xaml.cs">
       <DependentUpon>SchemeActivationSamplePage.xaml</DependentUpon>
@@ -508,6 +514,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\CityControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Views\CityRename.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -593,6 +603,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\QuickBuild.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\ResSettings.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

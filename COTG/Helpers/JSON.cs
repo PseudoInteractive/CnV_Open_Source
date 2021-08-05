@@ -278,7 +278,10 @@ namespace COTG.Helpers
         {
             var format = "s";
             var serverTime = JSClient.ServerTime();
-            var split = src.Split(' ', StringSplitOptions.RemoveEmptyEntries) ;
+			int bad = src.IndexOf('<'); // what is this doing here?
+			if (bad != -1)
+				src = src.Substring(0, bad);
+            var split = src.Split( ' ' , StringSplitOptions.RemoveEmptyEntries) ;
             string s;
             if (split.Length == 1)
             {
@@ -287,6 +290,11 @@ namespace COTG.Helpers
             }
             else
             {
+				// time and date are reversed :(
+				if (split[1].Count(a => a == ':') == 2)
+					AUtil.Swap(ref split[0], ref split[1]);
+				Assert(split[0].Count(a => a == ':') == 2);
+
                 var dateEtc = split[1].Split('/', StringSplitOptions.RemoveEmptyEntries);
                 if (dateEtc.Length == 1)
                 {
@@ -313,5 +321,20 @@ namespace COTG.Helpers
             return AUtil.dateTimeZero;
 
         }
-    }
+		public static bool TryParseDateTime(this string src, bool monthThenDay,out DateTimeOffset result)
+		{
+			try
+			{
+				result = ParseDateTime(src, monthThenDay);
+				if (result != AUtil.dateTimeZero)
+					return true;
+			}
+			catch
+			{
+
+			}
+			result =AUtil.dateTimeZero;
+			return false;
+		}
+	}
 }

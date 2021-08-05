@@ -9,7 +9,6 @@
       xmlns:cotg="using:COTG"
 	  xmlns:tg="using:Telerik.UI.Xaml.Controls.Grid"
       xmlns:tgCore="using:Telerik.Data.Core"
-
       xmlns:my="using:Microsoft.UI.Xaml.Controls"
       xmlns:tk="using:Microsoft.Toolkit.Uwp.UI.Controls"
       xmlns:views="using:COTG.Views"
@@ -107,13 +106,14 @@
         </tk:WrapPanel>
         <tk:DataGrid x:Name="supportGrid" x:FieldModifier="public"
                         AutoGenerateColumns="False"
+					 					 RowHeaderStyle="{StaticResource DataGridColumnHeaderStyle}"
                         ItemsSource="{x:Bind views:NearDefenseTab.supporters, Mode=OneWay}"
                         RowHeight="{StaticResource MediumGridRowHeight}"
                      Grid.Row="2"
                      SelectionMode="Extended"
                      RowDetailsVisibilityMode="Collapsed"
                      AreRowDetailsFrozen="True" 
- 				      RowStyle="{StaticResource RowTextStyle}"
+ 				      RowStyle="{StaticResource DataGridRowStyle}"
                      FrozenColumnCount="2"
                      CanUserReorderColumns="True"
 					  CellStyle="{StaticResource CellTextStyle}"
@@ -227,6 +227,8 @@
                      Grid.Row="3"
                         ItemsSource="{x:Bind views:NearDefenseTab.supportByTroopTypeEmpty, Mode=OneWay}"
                         RowHeight="46"
+					 					 RowHeaderStyle="{StaticResource DataGridColumnHeaderStyle}"
+                    RowStyle="{StaticResource DataGridRowStyle}"
 					 IsRightTapEnabled="True"
 					 RightTapped="troopTypeGrid_RightTapped"
                      Margin="0,14,0,0"
@@ -240,7 +242,7 @@
                 <tk:DataGridTemplateColumn Header="Icon" >
                     <tk:DataGridTemplateColumn.CellTemplate>
                         <DataTemplate x:DataType="game:SupportByTroopType">
-                            <Image Source= "{x:Bind icon}" HorizontalAlignment="Center" Stretch= "UniformToFill"
+                            <Image Source= "{x:Bind icon}" HorizontalAlignment="Center" Stretch= "Uniform"
                                    VerticalAlignment="Center" RightTapped="TTSendRightTapped"  />
                         </DataTemplate>
                     </tk:DataGridTemplateColumn.CellTemplate>

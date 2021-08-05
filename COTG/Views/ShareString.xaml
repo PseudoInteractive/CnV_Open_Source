@@ -27,7 +27,7 @@
 				</StackPanel>
 			</winui:TreeViewItem>
 		</DataTemplate>
-		
+
 
 	</ContentDialog.Resources>
 	<ScrollViewer ZoomMode="Enabled">
@@ -86,80 +86,15 @@
 	 						 ToolTipService.ToolTip="Expand to set trade resources settings, if collapsed, trade settings are not changed"
                            HorizontalContentAlignment="Stretch"
                            IsExpanded="True"
-                           ExpandDirection="Down">
-				<StackPanel>
-					
-					<tk:WrapPanel Orientation="Horizontal"
-							Margin="4">
-						<winui:NumberBox Header="Req Wood"
-										Value="{x:Bind views:SettingsPage.reqWood, Mode=TwoWay}"
-										Style="{StaticResource NumberBoxRes}"
-										 />
-					<winui:NumberBox Header="Req Stone"
-										Value="{x:Bind views:SettingsPage.reqStone, Mode=TwoWay}"
-										Style="{StaticResource NumberBoxRes}"
-										 />
-					<winui:NumberBox Header="Req Iron"
-										Value="{x:Bind views:SettingsPage.reqIron, Mode=TwoWay}"
-										Style="{StaticResource NumberBoxRes}"
-										 />
-					<winui:NumberBox Header="Req Food"
-										Value="{x:Bind views:SettingsPage.reqFood, Mode=TwoWay}"
-										Style="{StaticResource NumberBoxRes}"
-										 />
-					</tk:WrapPanel>
-					<tk:WrapPanel  Orientation="Horizontal">
-						<winui:NumberBox Header="Max Wood"
-										Value="{x:Bind views:SettingsPage.maxWood, Mode=TwoWay}"
-										Style="{StaticResource NumberBoxRes}"
-										 />
-						<winui:NumberBox Header="Max Stone"
-										Value="{x:Bind views:SettingsPage.maxStone, Mode=TwoWay}"
-										Style="{StaticResource NumberBoxRes}"
-										 />
-						<winui:NumberBox Header="Max Iron"
-										Value="{x:Bind views:SettingsPage.maxIron, Mode=TwoWay}"
-										Style="{StaticResource NumberBoxRes}"
-										/>
-						<winui:NumberBox Header="Max Food"
-										Value="{x:Bind views:SettingsPage.maxFood, Mode=TwoWay}"
-										Style="{StaticResource NumberBoxRes}"
-										 />
-					</tk:WrapPanel>
-					
-					<tk:WrapPanel Orientation="Horizontal">
-						<ToggleSwitch Header="Hub"
-								   IsOn="{x:Bind views:SettingsPage.setHub, Mode=TwoWay}"
-								     OffContent="Leave"
-									  OnContent="Set"
-									  ToolTipService.ToolTip="If set, the source and target hub will bet set based on which hub is closest.  Choses from the 'Hubs' city group, or if you don't do city groups: the nearest city with 'Hub' in the remarks"
-								  Margin="4"
-								  Width="120" />
-						<ComboBox x:Name="hubCityListBox"
-							  x:FieldModifier="public"
-							  Header="Hub City List"
-							  Width="120"
-							     SelectedItem="{x:Bind views:SettingsPage.hubCitylistUI, Mode=TwoWay}"
-							
-							  DisplayMemberPath="name"
-							  ItemsSource="{x:Bind game:CityList.all, Mode=OneTime}"
-							  ToolTipService.ToolTip="Active City List"
-							  Margin="4" />
-						<TextBox x:Name="bestHub" Header="Best hub" Style="{StaticResource TextBoxReveal}" />
-						
-						<ToggleSwitch Header="Recruit" IsOn="{x:Bind views:SettingsPage.setRecruit,Mode=TwoWay}" OnContent="Set" OffContent="Leave"/>
-						<ComboBox x:Name="tradeSettings"
-							  x:FieldModifier="public"
-							  Header="Trade Settings"
-						     SelectedItem="{x:Bind tradeSettingsSel, Mode=TwoWay}"							
-							  DisplayMemberPath="N"
-							  ToolTipService.ToolTip="Trade setting configurations used"
-							  Margin="4" />
-					</tk:WrapPanel>
-				</StackPanel>
-				</tk:Expander>
+                         Collapsed="CollapsedDisable"
+						 Expanded="ExpandedEnable"  
+						 ExpandDirection="Down">
+					<views:ResSettings x:Name="res" />
+			</tk:Expander>
 			<tk:Expander Grid.Row="1" x:Name="expandTags"
 						 Header="Tags"
+						 Collapsed="CollapsedDisable"
+						 Expanded="ExpandedEnable"
 	 						 ToolTipService.ToolTip="Expand to set tags, if collapsed, tags and recruit are not changed"
                            HorizontalContentAlignment="Stretch"
                            IsExpanded="{x:Bind views:SettingsPage.shareStringApplyTags, Mode=TwoWay}"
@@ -167,19 +102,19 @@
 
 				<StackPanel>
 					<StackPanel Orientation="Horizontal">
-					<ToggleSwitch x:Name="setRecruit" Header="Recruit" OffContent="Leave" OnContent="From Tags" ToolTipService.ToolTip="If set, the city will be set to recruit troops based on the tags" IsOn="{x:Bind views:SettingsPage.setRecruit}"  />
+						<ToggleSwitch x:Name="setRecruit" Header="Recruit" OffContent="Leave" OnContent="From Tags" ToolTipService.ToolTip="If set, the city will be set to recruit troops based on the tags" IsOn="{x:Bind views:SettingsPage.setRecruit}"  />
 						<TextBox 
 						 Text="{x:Bind views:SettingsPage.VRTRatio, Mode=TwoWay}"
 						 Header="V/R/T Ratio (if applicable)" />
 					</StackPanel>
 
 
-							<tk:WrapPanel x:Name="tagsPanel" x:FieldModifier="public">
+					<tk:WrapPanel x:Name="tagsPanel" x:FieldModifier="public">
 
 					</tk:WrapPanel>
 				</StackPanel>
 			</tk:Expander>
-			
+
 
 		</Grid>
 	</ScrollViewer>

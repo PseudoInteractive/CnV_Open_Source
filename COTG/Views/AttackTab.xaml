@@ -12,7 +12,9 @@
 			  TabNavigation="Once"
 			  IsTabStop="True"
                mc:Ignorable="d">
+	
 	<Grid>
+		
 		<Grid.RowDefinitions>
 			<RowDefinition Height="auto" />
 			<RowDefinition Height="auto" />
@@ -58,17 +60,20 @@
                              Value="{x:Bind game:AttackPlan.plan.attackSenMinFakes, Mode=TwoWay}"
                              NumberFormatter="{x:Bind cotg:App.formatterInt,Mode=OneTime}"
                              SmallChange="1" />
-			<winui:NumberBox x:Name="minAssaults"
-                             Header="Min SE Assaults"
+			<winui:NumberBox Header="Min SE Assaults"
                              ToolTipService.ToolTip="If assults are culled due to distance and there are fewer assaults than this left, the target will be discarded"
                              Style="{StaticResource NumberBoxSmall}"
                              Value="{x:Bind game:AttackPlan.plan.attackSEMinAssaults, Mode=TwoWay}"
                              NumberFormatter="{x:Bind cotg:App.formatterInt,Mode=OneTime}"
                              SmallChange="1" />
-			<winui:NumberBox x:Name="maxSEAssaults"
-                             Header="Max SE Assaults"
+			<winui:NumberBox Header="Max SE Assaults"
                              Style="{StaticResource NumberBoxSmall}"
                              Value="{x:Bind game:AttackPlan.plan.attackSEMaxAssaults, Mode=TwoWay}"
+                             NumberFormatter="{x:Bind cotg:App.formatterInt,Mode=OneTime}"
+                             SmallChange="1" />
+			<winui:NumberBox Header="Max Sen Assaults"
+                             Style="{StaticResource NumberBoxSmall}"
+                             Value="{x:Bind game:AttackPlan.plan.attackSenMaxAssaults, Mode=TwoWay}"
                              NumberFormatter="{x:Bind cotg:App.formatterInt,Mode=OneTime}"
                              SmallChange="1" />
 			<winui:NumberBox Header="Hours To Cap"
@@ -98,9 +103,9 @@
                     ToolTipService.ToolTip="Extracts coordinates from the clipboard and adds attacks"
                     Style="{StaticResource ButtonSmall}">
 				<Button.Flyout>
-					<Flyout>
+					<Flyout x:Name="addAttackFlyout">
 						<StackPanel>
-							<CheckBox x:Name="UpdateExisting" IsChecked="True" />
+							<CheckBox x:Name="UpdateExisting" Content="Update Existing" IsChecked="True" />
 							<Button Content="Add" Click="AddAttacksFromClipboard" 
 								                Style="{StaticResource ButtonSmall}"
 								/>
@@ -184,14 +189,18 @@
 		</tk:WrapPanel>
 		<tk:DataGrid x:Name="attackGrid"
                      Grid.Row="3"
+
 					 x:FieldModifier="public"
                      AutoGenerateColumns="False"
                      ItemsSource="{x:Bind view:AttackTab.attacksUI, Mode=OneWay}"
                      RowHeight="{StaticResource ShortGridRowHeight}"
                      FontFamily="Tw Cen MT Condensed"
 		             FontSize = "{StaticResource SmallFontSize}"
-				      RowStyle="{StaticResource RowTextStyle}"
+				      RowStyle="{StaticResource DataGridRowStyle}"
+					 RowHeaderStyle="{StaticResource DataGridColumnHeaderStyle}"
 					 FontStretch="Condensed"
+					 ColumnWidth="SizeToCells"
+					 
 					 CanUserSortColumns="True"
 			 IsTextScaleFactorEnabled="False"
 			SelectionMode="Extended"
@@ -199,22 +208,34 @@
                      CanUserReorderColumns="True"
 					 Sorting="Sorting"
                      GridLinesVisibility="All"
+					 
                      AlternatingRowBackground="#FF301030">
+			
 			<tk:DataGrid.Columns>
 				<tk:DataGridTemplateColumn Header="Icon">
 					<tk:DataGridTemplateColumn.CellTemplate>
 						<DataTemplate x:DataType="game:City">
 							<Image Source="{x:Bind icon,Mode=OneTime}"
                                    HorizontalAlignment="Center"
-                                   Stretch="UniformToFill"
+                                   Stretch="Uniform"
                                     Tapped="AttackSourceCoord_Tapped"
                                     VerticalAlignment="Center" />
 						</DataTemplate>
 					</tk:DataGridTemplateColumn.CellTemplate>
 				</tk:DataGridTemplateColumn>
 
-				<tk:DataGridTextColumn Header="Player"
-									   Binding="{Binding playerName, Mode=OneTime}" />
+				<tk:DataGridTemplateColumn Header="Player" >
+					<tk:DataGridTemplateColumn.CellTemplate>
+						<DataTemplate x:DataType="game:City">
+							<HyperlinkButton Content="{x:Bind playerName}"
+                                             Tapped="Player_Tapped"
+                                             HorizontalAlignment="Center"
+                                             HorizontalContentAlignment="Center"
+                                             ToolTipService.ToolTip="Send commands via mail" />
+						</DataTemplate>
+					</tk:DataGridTemplateColumn.CellTemplate>
+				</tk:DataGridTemplateColumn>
+				
 				<tk:DataGridTemplateColumn Header="XY" Tag="xy">
 					<tk:DataGridTemplateColumn.CellTemplate>
 						<DataTemplate x:DataType="game:City">
@@ -262,7 +283,7 @@
 		   							   FontFamily="Tw Cen MT Condensed"
                                        Binding="{Binding classificationString, Mode=OneWay}"
 									   IsReadOnly="True" />
-				<tk:DataGridCheckBoxColumn Header="Academy"
+				<tk:DataGridCheckBoxColumn Header="Acad"
 									   Binding="{Binding hasAcademy, Mode=OneWay}"
 									/>
 				
@@ -375,7 +396,7 @@
                     HorizontalAlignment="Center"
                     Style="{StaticResource ButtonSmall}"
                     Click="AssignAttacks_Click" />
-				<Button Content="Export"
+				<Button Content="To Clipboard"
                     VerticalAlignment="Center"
                     Margin="2"
                     HorizontalAlignment="Center"
@@ -391,6 +412,8 @@
 
 			<tk:DataGrid x:Name="targetGrid" Grid.Row="2"
                      x:FieldModifier="public"
+						 					 RowHeaderStyle="{StaticResource DataGridColumnHeaderStyle}"
+					RowStyle="{StaticResource DataGridRowStyle}"
                      AutoGenerateColumns="False"
 					 CanUserSortColumns="True"
                       FontFamily="Tw Cen MT Condensed"

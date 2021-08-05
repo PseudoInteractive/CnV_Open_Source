@@ -198,36 +198,38 @@ namespace COTG.Game
 	public class AttackPlan
 	{
 		[JsonInclude]
-		public float attackMaxTravelHoursSE { get; set; } = 40;
+		public float attackMaxTravelHoursSE = 40;
 		[JsonInclude]
-		public float attackMaxTravelHoursSen { get; set; } = 40;
+		public float attackMaxTravelHoursSen = 40;
 
 		[JsonInclude]
-		public int tickToCapture { get; set; } = 4;
+		public int tickToCapture = 4;
 		[JsonInclude]
-		public int senTime { get; set; }
+		public int senTime;
 		[JsonInclude]
-		public int seTime { get; set; }
+		public int seTime;	
 		// if there are 2 reals, then it wants 2x assaults
 		[JsonInclude]
-		public bool normalizeAssaultsPerSeSiege { get; set; } = true;
+		public bool normalizeAssaultsPerSeSiege  = true;
 		[JsonInclude]
-		public int attackSEMaxFakes { get; set; } = 10;
+		public int attackSEMaxFakes = 9;
 		[JsonInclude]
-		public int attackSEMinFakes { get; set; } = 7;
+		public int attackSEMinFakes = 3;
 		[JsonInclude]
-		public int attackSenMaxFakes { get; set; } = 10;
+		public int attackSenMaxFakes  = 10;
 		[JsonInclude]
-		public int attackSenMinFakes { get; set; } = 0;
+		public int attackSenMinFakes = 0;
 		[JsonInclude]
-		public int attackSEMinAssaults { get; set; } = 6;
-
+		public int attackSEMinAssaults = 6;
+		
 		[JsonInclude]
-		public int attackSEMaxAssaults { get; set; } = 40;
+		public int attackSEMaxAssaults = 20;
+	
 		[JsonInclude]
-		public int attackSenMinAssaults { get; set; } = 0;
+		public int attackSenMinAssaults=0;
+		
 		[JsonInclude]
-		public int attackSenMaxAssaults { get; set; } = 40;
+		public int attackSenMaxAssaults = 10;
 
 
 		[JsonInclude]
@@ -235,7 +237,7 @@ namespace COTG.Game
 		[JsonInclude]
 		public ImmutableArray<AttackPlanCity> targets = ImmutableArray<AttackPlanCity>.Empty;
 
-
+		
 		public static AttackPlan plan = new();
 		public static AttackPlanCity GetForRead(int cid) => Get(cid) ?? AttackPlanCity.none;
 		public static AttackPlanCity Get(int cid)

@@ -50,9 +50,13 @@ namespace COTG.Views
 		public sbyte allignment;
 		public HorizontalAlignment MsgAlignment => (AMath.random.Next(3) - 1) switch { -1 => HorizontalAlignment.Left, 1 => HorizontalAlignment.Right, _ => HorizontalAlignment.Center };
 		public DateTimeOffset time;
+#if DEBUG
+		public string arrivedString => time.ToString("dd HH':'mm':'ss");
+#else
 		public string arrivedString => time.ToString("HH':'mm':'ss");
+#endif
 		public BitmapImage avatar { get; set; }
-		
+
 
 		public string text { get; set; } = string.Empty;
 		const int maxMessageLength = 32 * 1024;

@@ -16,6 +16,7 @@ using ContentDialogResult = Windows.UI.Xaml.Controls.ContentDialogResult;
 using static COTG.Debug;
 using static COTG.Views.SettingsPage;
 using Windows.UI.Xaml.Controls;
+using COTG.Helpers;
 
 namespace COTG.JSON
 {
@@ -35,7 +36,7 @@ namespace COTG.JSON
 					result.Add(i.cid);
 				}
 			}
-			Note.Show($"{result.Count}  No hubs found");
+			Note.Show($"{result.Count} hubs found");
 			return result;
 
 		}
@@ -66,12 +67,39 @@ namespace COTG.JSON
 
 		public static async void SetHub(int cid)
 		{
-			foreach (var _cid in Spot.GetSelectedForContextMenu(cid, false,onlyMine:true))
-			{
-				var hub = await CitySettings.FindBestHub(_cid);
-				await CitySettings.SetCitySettings(_cid,hub, FilterTargetHub(cid,hub) );
-			}
+			SetTradeSettings(cid, autofind: true);
+		}
+		public static async void SetTradeSettings(int _cid, int ? sourceHub = null, int ? targetHub=null,bool autofind=false)
+		{
 
+			var settings = new ResSettings();
+			var dialog = new ContentDialog()
+			{
+				Content = settings,
+				PrimaryButtonText = "Apply",
+				SecondaryButtonText = "Skip",
+				CloseButtonText = "Cancel"
+			};
+
+			foreach (var __cid in Spot.GetSelectedForContextMenu(_cid, false, onlyMine: true))
+			{
+				var cid = __cid;
+				var city = City.Get(cid);
+				if (autofind)
+					sourceHub = targetHub = await FindBestHub(cid);
+				dialog.Title = $"Set Trade settings for {city.nameAndRemarks} cities";
+				settings.InitTradeSettings(City.Get(cid),sourceHub.GetValueOrDefault(), city.isHubOrStorage ? 0 : targetHub.GetValueOrDefault() );
+				var rv = await dialog.ShowAsync2();
+				if (rv == ContentDialogResult.Primary)
+				{
+					// does this change threads?
+					await CitySettings.SetCitySettings(cid, req: settings.req, max: settings.max, reqFilter: settings.reqFilter, sendFilter: settings.sendFilter);
+				}
+				else if (rv == ContentDialogResult.None)
+				{
+					break;
+				}
+			}
 		}
 
 		public static int? FilterTargetHub( City me, int hub)
@@ -83,55 +111,36 @@ namespace COTG.JSON
 			return FilterTargetHub(City.Get(me), hub);
 		}
 
+
+
 		public const int ministerOptionAutobuildWalls = 26;
 		public const int ministerOptionAutobuildTowers = 27;
 		public const int ministerOptionAutobuildCabins = 52;
 		public static async Task SetCitySettings(
-			int cid, 
-			int? reqHub = null, 
-			int? targetHub = null, 
-			bool setRecruit = false, 
-			bool setAutoBuild = false, 
-			bool setResources = false, 
+			int cid,
+			int? reqHub = null,
+			int? targetHub = null,
+			// todo: Move
+			bool setRecruit = false,
+			// todo: Remove
+			bool? autoBuildOn = null,
 			int? cartReserve = null,
 			int? shipReserve = null,
-			bool _filterSend = false, 
+			ResourcesNullable req=default,
+			ResourcesNullable max=default,
+			Resources storage = default,
+			ResourceFilter reqFilter = default,
+			ResourceFilter sendFilter = default,
 			bool? autoTowers=null, 
-			bool? autoWalls=null,
-			bool? sendWood=true, 
-			bool? sendStone=true,
-			bool? sendIron=true,
-			bool? sendFood=true,
-			bool? reqWood = true,
-			bool? reqStone = true,
-			bool? reqIron = true,
-			bool? reqFood = true)
+			bool? autoWalls=null)
         {
-            await UpdateMinisterOptions(cid, async (split) =>
+            await UpdateMinisterOptions(cid, async ( __s ) =>
 			{
 
 				var spot = Spot.GetOrAdd(cid);
 				if (reqHub < 0)
 					reqHub = 0;
-				//	var cl = Game.CityList.Find(Views.SettingsPage.hubCitylistName);
-
-				//     int reqHub = 0;
-				//var bestDist = 4096f;
-				//foreach (var hub in cl.cities)
-				//{
-				//    if (cid == hub)
-				//        continue;
-
-				//    var d = hub.DistanceToCid(cid);
-				//    if (d < bestDist)
-				//    {
-				//        bestDist = d;
-				//        reqHub = hub;
-				//    }
-
-				//}
-
-
+				
 				//        var args = $"[1,{auto},{auto},{auto},{auto},{auto},{auto},{auto},0,0,   0
 				//                      0,0,0,0,0,0,0,0,0,0,                                      10
 				//                      0,0,0,0,0,0,0,0,0,0,                                      20
@@ -140,8 +149,8 @@ namespace COTG.JSON
 				//                     {maxFood},[1,{cottageLevel}],[1,10],[1,10],[1,10],[1,       50
 				//                      10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10]]";
 				//                var args = $"[1,{auto},{auto},{auto},{auto},{auto},{auto},{auto},0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,{reqWood},{reqStone},{reqIron},{reqFood},0,0,0,0,1,{reqHub},{reqHub},0,0,0,{maxWood},{maxStone},{maxIron},{maxFood},[1,{cottageLevel}],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10]]";
-
-				if (autoBuildOn.HasValue & setAutoBuild)
+				var split = __s.split;
+				if (autoBuildOn.HasValue)
 				{
 					var autoVal = autoBuildOn.GetValueOrDefault();
 					var auto = autoVal ? "1" : "0";
@@ -154,19 +163,19 @@ namespace COTG.JSON
 							split[i] = '[' + auto;
 
 					}
-
 				}
-				if (reqHub.HasValue)
+				if (reqHub.HasValue || reqFilter.Any)
 				{
 					split[32] = "0"; // use the different city all requests
-					if(reqWood.HasValue ) 
-						split[28] = reqWood.Value ? reqHub.ToString() : "0";
-					if (reqStone.HasValue)
-						split[29] = reqStone.Value ? reqHub.ToString() : "0";
-					if (reqIron.HasValue)
-						split[30] = reqIron.Value ? reqHub.ToString() : "0";
-					if (reqFood.HasValue)
-						split[31] = reqFood.Value ? reqHub.ToString() : "0";
+					
+					if(reqFilter.wood.HasValue ) 
+						split[28] = reqFilter.wood.Value ? reqHub.ToString() : "0";
+					if (reqFilter.stone.HasValue)
+						split[29] = reqFilter.stone.Value ? reqHub.ToString() : "0";
+					if (reqFilter.iron.HasValue)
+						split[30] = reqFilter.iron.Value ? reqHub.ToString() : "0";
+					if (reqFilter.food.HasValue)
+						split[31] = reqFilter.food.Value ? reqHub.ToString() : "0";
 
 					//split[42] = reqHub.ToString();
 				}
@@ -179,60 +188,28 @@ namespace COTG.JSON
 					split[ministerOptionAutobuildTowers] = autoTowers.Value? "1" : "0";
 				}
 
-				if (setResources)
+				//if (setResources)
+				var reqResources = new Resources();
 				{
-					split[33] = reqWood.ToString();
-					split[34] = reqStone.ToString();
-					split[35] = reqIron.ToString();
-					split[36] = reqFood.ToString();
+					SetResourceScalar(0, req, storage, Resources.zero, ref split[33], ref reqResources);
+					SetResourceScalar(1, req, storage, Resources.zero, ref split[34], ref reqResources);
+					SetResourceScalar(2, req, storage, Resources.zero, ref split[35], ref reqResources);
+					SetResourceScalar(3, req, storage, Resources.zero, ref split[36], ref reqResources);
 				}
-				if (targetHub.HasValue)
+				if (targetHub.HasValue || sendFilter.Any )
 				{
 					var cid = targetHub.ToString();
 					split[41] = "0"; // use a different city for all sends
 									 // hubs dont send by default
 									 // send target
-					if(sendWood.HasValue)
-						split[37] = sendWood.Value ? cid : "0"; // hub to use for this res
-					if(sendStone.HasValue)
-						split[38] = sendStone.Value ? cid : "0"; // hub to use for this res
-					if(sendIron.HasValue)
-						split[39] = sendIron.Value ? cid : "0"; // hub to use for this res
-					if(sendFood.HasValue)
-						split[40] = sendFood.Value  ? cid : "0"; // hub to use for this res
-
-				}
-				int resultSourceHub = 0;
-				if (split[32] == "1")
-				{
-					int.TryParse(split[42], out resultSourceHub);
-
-				}
-				else
-				{
-
-					for (int i = 28; i <= 31; ++i)
-					{
-						int.TryParse(split[i], out resultSourceHub);
-						if (resultSourceHub != 0)
-							break;
-					}
-				}
-
-				int resultTargetHub = 0;
-				if (split[41] == "1")
-				{
-					int.TryParse(split[43], out resultTargetHub);
-				}
-				else
-				{
-					for (int i = 37; i <= 40; ++i)
-					{
-						int.TryParse(split[i], out resultTargetHub);
-						if (resultTargetHub != 0)
-							break;
-					}
-
+					if(sendFilter.wood.HasValue)
+						split[37] = sendFilter.wood.Value ? cid : "0"; // hub to use for this res
+					if(sendFilter.stone.HasValue)
+						split[38] = sendFilter.stone.Value ? cid : "0"; // hub to use for this res
+					if(sendFilter.iron.HasValue)
+						split[39] = sendFilter.iron.Value ? cid : "0"; // hub to use for this res
+					if(sendFilter.food.HasValue)
+						split[40] = sendFilter.food.Value  ? cid : "0"; // hub to use for this res
 				}
 
 				if (cartReserve.HasValue)
@@ -246,71 +223,102 @@ namespace COTG.JSON
 
 				//                split[43] = sendHub.ToString();
 
-
-				if (setResources)
 				{
-					split[47] = maxWood.ToString();
-					split[48] = maxStone.ToString();
-					split[49] = maxIron.ToString();
-					split[50] = maxFood.ToString();
+					var dummy = new Resources();
+					SetResourceScalar(0, max, storage, reqResources, ref split[47],ref dummy);
+					SetResourceScalar(1, max, storage, reqResources, ref split[48],ref dummy);
+					SetResourceScalar(2, max, storage, reqResources, ref split[49],ref dummy);
+					SetResourceScalar(3,max,storage, reqResources, ref split[50],ref  dummy);
 				}
-				if (cottageLevel > 0 && setAutoBuild && split[ministerOptionAutobuildCabins] == "10]" )
+
+				
+				if (cottageLevel > 0 && autoBuildOn.GetValueOrDefault() && split[ministerOptionAutobuildCabins] == "10]" )
 				{
 					split[ministerOptionAutobuildCabins] = cottageLevel.ToString() + ']';
 
 				}
 				var str = setRecruit ? SetRecruit(split, spot) : "";
                 
-				Note.Show($"Set {City.Get(cid).nameMarkdown}'s trade settings src:{City.Get(resultSourceHub).nameMarkdown} dest:{City.Get(resultTargetHub).nameMarkdown}");
+				Note.Show($"Set {City.Get(cid).nameMarkdown}'s trade settings{str}" );
                 return true;
             });
 
 
         }
-		public static async Task<string[]> GetMinisterOptions(City city, bool force)
-		{
-				if (city.ministerOptions == null || force)
-				{
-					for (; ; )
-					{
-						await GetCity.Post(city.cid);
-						if (city.ministerOptions != null)
-							break;
 
-						if (!city.isCityOrCastle)
+		private static void SetResourceScalar(int resId, ResourcesNullable max,Resources storage, Resources lowerLimit, ref string split, ref Resources outRes)
+		{
+			if (max[resId].HasValue)
+			{
+				var v = max[resId].Value;
+				if (v < 0)
+					v = storage[resId] + v;
+				v = v.Max(lowerLimit[resId]);
+
+				outRes[resId] = v;
+				split = v.ToString();
+			}
+			else
+			{
+				if (AMath.TryParseInt(split, out var o))
+				{
+					outRes[resId] = o;
+				}
+			}
+		}
+
+		public static async Task<(string[] split, Resources storage)> GetMinisterOptions(City city)
+		{
+				Resources storage = new();
+				string ministerOptions = null;
+				
+				for (int i=0;i<8;++i)
+				{
+					await GetCity.Post(city.cid, (jse, _city) =>
+					{
+						if (jse.TryGetProperty("st",out var st))
 						{
-							throw new UIException(city.nameAndRemarks);
+							storage.wood = st.GetAsInt("1");
+							storage.stone = st.GetAsInt("2");
+							storage.iron = st.GetAsInt("3");
+							storage.food = st.GetAsInt("4");
 						}
-						await Task.Delay(500);
+						if (jse.TryGetProperty("mo", out var p))
+						{
+							ministerOptions = p.ToString();
+						}
+					});
+					if (ministerOptions != null)
+						break;
+
+					if (!city.isCityOrCastle)
+					{
+						throw new UIException(city.nameAndRemarks);
+					}
+					await Task.Delay(500);
+				}	
+
+				string[] rv = null;
+				try
+				{
+					if (ministerOptions != null)
+					{
+						rv =ministerOptions .Split(',', StringSplitOptions.RemoveEmptyEntries);
 					}
 				}
-				return GetMinisterOptionsNoFetch(city);
-			
-		}
-		public static string[] GetMinisterOptionsNoFetch(City city)
-		{
-			string[] rv = null;
-			try
-			{
-				if (city.ministerOptions != null)
+				catch (Exception ex)
 				{
-					rv = city.ministerOptions.Split(',', StringSplitOptions.RemoveEmptyEntries);
-					
-
+					Debug.LogEx(ex);
 				}
-			}
-			catch (Exception ex)
-			{
-				Debug.LogEx(ex);
-			}
-			if (rv == null || rv.Length != 99)
-			{
-				COTG.Debug.Log($"Invalid options");
-				const string defaults = "[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10]]";
-				rv = defaults.Split(',', StringSplitOptions.RemoveEmptyEntries);
-			}
-			return rv;
+				if (rv == null || rv.Length != 99)
+				{
+					COTG.Debug.Log($"Invalid options");
+					const string defaults = "[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10]]";
+					rv = defaults.Split(',', StringSplitOptions.RemoveEmptyEntries);
+				}
+				return (rv,storage);
 		}
+
 		public static Task SetFoodWarning(int cid, int warn)
 		{
 			return Post.Send("includes/svFW.php", $"a={warn}&cid={cid}");
@@ -339,14 +347,14 @@ namespace COTG.JSON
 
 		}
 
-		public static async Task UpdateMinisterOptions(int cid, Func<string[],Task<bool>> opts)
+		public static async Task UpdateMinisterOptions(int cid, Func<(string[]split,Resources storage),Task<bool>> opts)
         {
 			var city = City.GetOrAddCity(cid);
             
 			try
 			{
-				var split = await GetMinisterOptions(city,true);
-			    if (await opts(split))
+				var split = await GetMinisterOptions(city);
+			    if (await opts((split.split,split.storage)))
                 {
                     var args2 = string.Join(',', split);
 					city.SetMinisterOptions(args2);
@@ -365,7 +373,7 @@ namespace COTG.JSON
 		public static async Task<(Resources req,Resources max)> GetTradeResourcesSettings(int cid) 
 		{
 			var city = City.GetOrAddCity(cid);
-			var split = await GetMinisterOptions(city, true);
+			(var split,_) = await GetMinisterOptions(city);
 	
 			Resources req = new Resources();
 			Resources max = new Resources();
@@ -387,33 +395,33 @@ namespace COTG.JSON
 			return (req, max);
 		}
 
-		public static async Task SetTradeResourcesSettings(int cid, Resources req, Resources max )
-		{
-			var city = City.GetOrAddCity(cid);
-			await UpdateMinisterOptions(cid,async (split) =>
-			{
+		//public static async Task SetTradeResourcesSettings(int cid, Resources req, Resources max )
+		//{
+		//	var city = City.GetOrAddCity(cid);
+		//	await UpdateMinisterOptions(cid,async (split) =>
+		//	{
 
 
-				for (int i = 33; i <= 36; ++i)
-				{
-					var id = i - 33;
-					if(req[id] >= 0)
-					{
-						split[i] = req[id].ToString();
-					}
-				}
-				for (int i = 47; i <= 50; ++i)
-				{
-					var id = i - 47;
-					if (max[id] >= 0)
-					{
-						split[i] = max[id].ToString();
-					}
-				}
-				return true;
-			});
+		//		for (int i = 33; i <= 36; ++i)
+		//		{
+		//			var id = i - 33;
+		//			if(req[id] >= 0)
+		//			{
+		//				split[i] = req[id].ToString();
+		//			}
+		//		}
+		//		for (int i = 47; i <= 50; ++i)
+		//		{
+		//			var id = i - 47;
+		//			if (max[id] >= 0)
+		//			{
+		//				split[i] = max[id].ToString();
+		//			}
+		//		}
+		//		return true;
+		//	});
 
-		}
+		//}
 		//		Name Protocol    Method Result  Content type    Received Time    Initiator
 		//https://w21.crownofthegods.com/includes/pSs.php	HTTP/1.0	POST	200	text/html		85.7 ms	XMLHttpRequest
 
@@ -427,7 +435,7 @@ namespace COTG.JSON
 
 				await UpdateMinisterOptions(cid, async (split) =>
 				{
-					 SetRecruit(split, City.Get(cid) );
+					 SetRecruit(split.split, City.Get(cid) );
 					return true;
 				});
 			}
@@ -552,80 +560,80 @@ namespace COTG.JSON
 
 		public static async void SetTargetHub(int cid, int targetHub)
         {
-			var targets = Spot.GetSelectedForContextMenu(cid, false, targetHub, onlyMine: true);
-			bool? sendWood=null, sendStone = null, sendFood = null, sendIron = null;
-			int? reserveCarts = null, reserveShips = null;
-			var result = await App.DispatchOnUIThreadTask(async () =>
-			{
-				var panel = new StackPanel();
-				panel.Children.Add(new TextBlock() 
-				{ Text= $"Set {Spot.GetOrAdd(cid).nameAndRemarks}{(targets.Count>1?" and "+(targets.Count-1)+" others)" : string.Empty)} to send resources to {Spot.GetOrAdd(targetHub).nameAndRemarks}" });
-				var sendW = new CheckBox() { Content = "Send Wood", IsThreeState = true, IsChecked = null };
-				var sendTip = "Check:  Send, Empty: Don't send, Square: Leave as is";
-				var sendS = new CheckBox() { Content = "Send Stone", IsThreeState = true, IsChecked = null };
-				var sendI = new CheckBox() { Content = "Send Iron", IsThreeState = true, IsChecked = null };
-				var sendF = new CheckBox() { Content = "Send Food", IsThreeState = true, IsChecked = null };
-				ToolTipService.SetToolTip(sendW, sendTip);
-				ToolTipService.SetToolTip(sendS, sendTip);
-				ToolTipService.SetToolTip(sendI, sendTip);
-				ToolTipService.SetToolTip(sendF, sendTip);
-				var reserveS = new NumberBox() { Header = "Reserve Ships", PlaceholderText="No Change" };
-				var reserveC = new NumberBox() { Header = "Reserve Carts", PlaceholderText = "No Change" };
+			//var targets = Spot.GetSelectedForContextMenu(cid, false, targetHub, onlyMine: true);
+			//bool? sendWood=null, sendStone = null, sendFood = null, sendIron = null;
+			//int? reserveCarts = null, reserveShips = null;
+			//var result = await App.DispatchOnUIThreadTask(async () =>
+			//{
+			//	var panel = new StackPanel();
+			//	panel.Children.Add(new TextBlock() 
+			//	{ Text= $"Set {Spot.GetOrAdd(cid).nameAndRemarks}{(targets.Count>1?" and "+(targets.Count-1)+" others)" : string.Empty)} to send resources to {Spot.GetOrAdd(targetHub).nameAndRemarks}" });
+			//	var sendW = new CheckBox() { Content = "Send Wood", IsThreeState = true, IsChecked = null };
+			//	var sendTip = "Check:  Send, Empty: Don't send, Square: Leave as is";
+			//	var sendS = new CheckBox() { Content = "Send Stone", IsThreeState = true, IsChecked = null };
+			//	var sendI = new CheckBox() { Content = "Send Iron", IsThreeState = true, IsChecked = null };
+			//	var sendF = new CheckBox() { Content = "Send Food", IsThreeState = true, IsChecked = null };
+			//	ToolTipService.SetToolTip(sendW, sendTip);
+			//	ToolTipService.SetToolTip(sendS, sendTip);
+			//	ToolTipService.SetToolTip(sendI, sendTip);
+			//	ToolTipService.SetToolTip(sendF, sendTip);
+			//	var reserveS = new NumberBox() { Header = "Reserve Ships", PlaceholderText="No Change" };
+			//	var reserveC = new NumberBox() { Header = "Reserve Carts", PlaceholderText = "No Change" };
 
-				var reserveTip = "Reserves ships/carts for requests rather than sending them all on overflow (mainly for hubs)";
-				ToolTipService.SetToolTip(reserveS, reserveTip);
-				ToolTipService.SetToolTip(reserveC, reserveTip);
+			//	var reserveTip = "Reserves ships/carts for requests rather than sending them all on overflow (mainly for hubs)";
+			//	ToolTipService.SetToolTip(reserveS, reserveTip);
+			//	ToolTipService.SetToolTip(reserveC, reserveTip);
 
-				panel.Children.Add(sendW);
-				panel.Children.Add(sendS);
-				panel.Children.Add(sendI);
-				panel.Children.Add(sendF);
-				panel.Children.Add(reserveC);
-				panel.Children.Add(reserveS);
+			//	panel.Children.Add(sendW);
+			//	panel.Children.Add(sendS);
+			//	panel.Children.Add(sendI);
+			//	panel.Children.Add(sendF);
+			//	panel.Children.Add(reserveC);
+			//	panel.Children.Add(reserveS);
 
-				var dialog = new ContentDialog()
-				{
-					Title = $"Set Target Hub",
-					Content = panel,
-					PrimaryButtonText = "Yes",
-					SecondaryButtonText = "Cancel"
-				};
-				var rv = await dialog.ShowAsync2();
-				sendWood = sendW.IsChecked;
-				sendStone = sendS.IsChecked;
-				sendIron = sendI.IsChecked;
-				sendFood = sendF.IsChecked;
-				reserveCarts = reserveC.Text.IsNullOrEmpty() ? null : reserveC.Value.RoundToIntOrNAN();
-				reserveShips = reserveS.Text.IsNullOrEmpty() ? null : reserveS.Value.RoundToIntOrNAN();
+			//	var dialog = new ContentDialog()
+			//	{
+			//		Title = $"Set Target Hub",
+			//		Content = panel,
+			//		PrimaryButtonText = "Yes",
+			//		SecondaryButtonText = "Cancel"
+			//	};
+			//	var rv = await dialog.ShowAsync2();
+			//	sendWood = sendW.IsChecked;
+			//	sendStone = sendS.IsChecked;
+			//	sendIron = sendI.IsChecked;
+			//	sendFood = sendF.IsChecked;
+			//	reserveCarts = reserveC.Text.IsNullOrEmpty() ? null : reserveC.Value.RoundToIntOrNAN();
+			//	reserveShips = reserveS.Text.IsNullOrEmpty() ? null : reserveS.Value.RoundToIntOrNAN();
 				
-				return rv;
-			});
-			if (result != ContentDialogResult.Primary)
-			{
-				return;
-			}
-			foreach (var _cid in targets )
-			{
-				if (targetHub != _cid)
-				{
-					var city = City.Get(_cid);
-					if(city.isHubOrStorage)
-					{
-						var i = await App.DoYesNoBox("Hub Selected", $"Double checkin: Send resources from {city.nameAndRemarks}'s?");
-						if(i == 0)
-						{
-							continue;
-						}
-						if ( i == -1)
-						{
-							break;
-						}
-					}
-					await CitySettings.SetCitySettings(_cid, targetHub: targetHub,
-							sendWood:sendWood,sendStone:sendStone,sendIron:sendIron,sendFood:sendFood,
-							cartReserve:reserveCarts,shipReserve:reserveShips);
-				}
-			}
+			//	return rv;
+			//});
+			//if (result != ContentDialogResult.Primary)
+			//{
+			//	return;
+			//}
+			//foreach (var _cid in targets )
+			//{
+			//	if (targetHub != _cid)
+			//	{
+			//		var city = City.Get(_cid);
+			//		if(city.isHubOrStorage)
+			//		{
+			//			var i = await App.DoYesNoBox("Hub Selected", $"Double checkin: Send resources from {city.nameAndRemarks}'s?");
+			//			if(i == 0)
+			//			{
+			//				continue;
+			//			}
+			//			if ( i == -1)
+			//			{
+			//				break;
+			//			}
+			//		}
+			//		await CitySettings.SetCitySettings(_cid, targetHub: targetHub,
+			//				sendWood:sendWood,sendStone:sendStone,sendIron:sendIron,sendFood:sendFood,
+			//				cartReserve:reserveCarts,shipReserve:reserveShips);
+			//	}
+			//}
         }
 
 		public static async void SetAutoTowersOrWalls(int cid, bool ? autoWalls=null,bool ? autoTowers=null)
@@ -636,13 +644,14 @@ namespace COTG.JSON
 				await CitySettings.SetCitySettings(_cid,autoWalls:autoWalls,autoTowers:autoTowers);
 			}
 		}
-		public static (bool?autoTowers,bool?autoWalls) IsAutoTowersAndWallsSet(City city)
-		{
-			if (city.ministerOptions == null)
-				return (null,null);
-			var split = GetMinisterOptionsNoFetch(city);
-			return (split[ministerOptionAutobuildTowers] == "1", split[ministerOptionAutobuildWalls] == "1");
-		}
+
+		//public static (bool?autoTowers,bool?autoWalls) IsAutoTowersAndWallsSet(City city)
+		//{
+		//	if (city.ministerOptions == null)
+		//		return (null,null);
+		//	var split = GetMinisterOptionsNoFetch(city);
+		//	return (split[ministerOptionAutobuildTowers] == "1", split[ministerOptionAutobuildWalls] == "1");
+		//}
 		//public static async void SetSourceHub(int cid, int targetHub)
 		//{
 		//	var targets = Spot.GetSelectedForContextMenu(cid, false,targetHub);
@@ -671,57 +680,57 @@ namespace COTG.JSON
 		public static async void SetSourceHub(int cid, int targetHub)
 		{ 
 		var targets = Spot.GetSelectedForContextMenu(cid, false, targetHub, onlyMine: true);
-		bool? sendWood = null, sendStone = null, sendFood = null, sendIron = null;
-		var result = await App.DispatchOnUIThreadTask(async () =>
-		{
-			var panel = new StackPanel();
-			panel.Children.Add(new TextBlock()
-			{ Text = $"Set {Spot.GetOrAdd(cid).nameAndRemarks}{(targets.Count > 1 ? " and " + (targets.Count - 1) + " others)" : string.Empty)} to send resources to {Spot.GetOrAdd(targetHub).nameAndRemarks}" });
-			var sendW = new CheckBox() { Content = "Send Wood", IsThreeState = true, IsChecked = null };
-			var sendTip = "Check:  Send, Empty: Don't send, Square: Leave as is";
-			var sendS = new CheckBox() { Content = "Send Stone", IsThreeState = true, IsChecked = null };
-			var sendI = new CheckBox() { Content = "Send Iron", IsThreeState = true, IsChecked = null };
-			var sendF = new CheckBox() { Content = "Send Food", IsThreeState = true, IsChecked = null };
-			ToolTipService.SetToolTip(sendW, sendTip);
-			ToolTipService.SetToolTip(sendS, sendTip);
-			ToolTipService.SetToolTip(sendI, sendTip);
-			ToolTipService.SetToolTip(sendF, sendTip);
+		//bool? sendWood = null, sendStone = null, sendFood = null, sendIron = null;
+		//var result = await App.DispatchOnUIThreadTask(async () =>
+		//{
+		//	var panel = new StackPanel();
+		//	panel.Children.Add(new TextBlock()
+		//	{ Text = $"Set {Spot.GetOrAdd(cid).nameAndRemarks}{(targets.Count > 1 ? " and " + (targets.Count - 1) + " others)" : string.Empty)} to send resources to {Spot.GetOrAdd(targetHub).nameAndRemarks}" });
+		//	var sendW = new CheckBox() { Content = "Send Wood", IsThreeState = true, IsChecked = null };
+		//	var sendTip = "Check:  Send, Empty: Don't send, Square: Leave as is";
+		//	var sendS = new CheckBox() { Content = "Send Stone", IsThreeState = true, IsChecked = null };
+		//	var sendI = new CheckBox() { Content = "Send Iron", IsThreeState = true, IsChecked = null };
+		//	var sendF = new CheckBox() { Content = "Send Food", IsThreeState = true, IsChecked = null };
+		//	ToolTipService.SetToolTip(sendW, sendTip);
+		//	ToolTipService.SetToolTip(sendS, sendTip);
+		//	ToolTipService.SetToolTip(sendI, sendTip);
+		//	ToolTipService.SetToolTip(sendF, sendTip);
 
 
-			panel.Children.Add(sendW);
-			panel.Children.Add(sendS);
-			panel.Children.Add(sendI);
-			panel.Children.Add(sendF);
+		//	panel.Children.Add(sendW);
+		//	panel.Children.Add(sendS);
+		//	panel.Children.Add(sendI);
+		//	panel.Children.Add(sendF);
 
-			var dialog = new ContentDialog()
-			{
-				Title = $"Set Source Hub",
-				Content = panel,
-				PrimaryButtonText = "Yes",
-				SecondaryButtonText = "Cancel"
-			};
-			var rv = await dialog.ShowAsync2();
-			sendWood = sendW.IsChecked;
-			sendStone = sendS.IsChecked;
-			sendIron = sendI.IsChecked;
-			sendFood = sendF.IsChecked;
+		//	var dialog = new ContentDialog()
+		//	{
+		//		Title = $"Set Source Hub",
+		//		Content = panel,
+		//		PrimaryButtonText = "Yes",
+		//		SecondaryButtonText = "Cancel"
+		//	};
+		//	var rv = await dialog.ShowAsync2();
+		//	sendWood = sendW.IsChecked;
+		//	sendStone = sendS.IsChecked;
+		//	sendIron = sendI.IsChecked;
+		//	sendFood = sendF.IsChecked;
 
-			return rv;
-		});
-			if (result != ContentDialogResult.Primary)
-			{
-				return;
-			}
-			foreach (var _cid in targets )
-			{
-				if (targetHub != _cid)
-				{
-					var city = City.Get(_cid);
-					await CitySettings.SetCitySettings(_cid, reqHub: targetHub,
-							reqWood: sendWood, reqStone: sendStone, reqIron: sendIron, reqFood: sendFood
-							);
-				}
-			}
+		//	return rv;
+		//});
+		//	if (result != ContentDialogResult.Primary)
+		//	{
+		//		return;
+		//	}
+		//	foreach (var _cid in targets )
+		//	{
+		//		if (targetHub != _cid)
+		//		{
+		//			var city = City.Get(_cid);
+		//			await CitySettings.SetCitySettings(_cid, reqHub: targetHub,
+		//					wantWood: sendWood, wantStone: sendStone, wantIron: sendIron, wantFood: sendFood
+		//					);
+		//		}
+			//}
 		}
 
         //public static void SetOtherHubSettings(int cid, int sourceHub)

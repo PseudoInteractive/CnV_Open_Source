@@ -14,7 +14,7 @@ using COTG.JSON;
 using COTG.Models;
 using COTG.Services;
 using static COTG.Debug;
-
+using Microsoft.Toolkit.Uwp.UI;
 using Windows.ApplicationModel;
 using Windows.Globalization.NumberFormatting;
 using Windows.UI.Xaml;
@@ -58,20 +58,20 @@ namespace COTG.Views
 		public static float planet = 0.5f;
 		public static float parallax = 0.5f;
 		public static string hubCitylistName = "Hubs";
-		public static int reqWood = 160000;
-		public static int reqStone = 205000;
+		//public static int reqWood = 160000;
+		//public static int reqStone = 205000;
 		public static bool drawBuildingOverlays=true;
 
 		public static float returnRaidsBias = 1.0f;
 		public static bool setShareString = true;
 		public static bool autoBuildCabins = true;
 		public static bool autoRearrangeShareStrings= true;
-		public static int reqIron = 200000;
-		public static int reqFood = 200000;
-		public static int maxWood = 250000;
-		public static int maxStone = 250000;
-		public static int maxIron = 300000;
-		public static int maxFood = 300000;
+		//public static int reqIron = 200000;
+		//public static int reqFood = 200000;
+		//public static int maxWood = 250000;
+		//public static int maxStone = 250000;
+		//public static int maxIron = 300000;
+		//public static int maxFood = 300000;
 		public static int cabinsToRemovePerSwap= 6;
 		public static int cottageLevel = 7;
 		public static bool? troopsVisible;
@@ -178,7 +178,7 @@ namespace COTG.Views
 		public static int chooseAttackTypeIndex;
 		public static bool chooseAttackTypeUpdate;
 
-		public static string secSessionId;
+		//public static string secSessionId;
 		public static int mruSize = 32;
 		public static int[] pinned = Array.Empty<int>();
 		public static int showAttacksLimit = 100;
@@ -366,7 +366,7 @@ namespace COTG.Views
 			App.instance.Resources["ChatFontSize"] = chatZoom * 12.0;
 
 			App.instance.Resources["GridRowHeight"] = tabZoom * 34.0;
-			App.instance.Resources["MediumGridRowHeight"] = tabZoom * 34.0;
+			App.instance.Resources["MediumGridRowHeight"] = tabZoom * 30.0;
 			App.instance.Resources["ShortGridRowHeight"] = tabZoom * 28.0;
 
 			App.instance.Resources["ChatFontSize"] = chatZoom * 12.0;
@@ -916,13 +916,26 @@ namespace COTG.Views
 
 		private void ExportRanks(object sender, RoutedEventArgs e)
 		{
+			HideFlyout(sender);
 			var cont = exportRanksCont.Value.RoundToInt().ContinentToXY().XYToPackedContinent();
 			var t1 = JSClient.ServerTime();
 			Blobs.AllianceStats(t1 - TimeSpan.FromDays(exportRanksDays.Value), t1, cont, exportRanksCities.Value.RoundToInt() );
 		}
 
+		static void HideFlyout(object sender)
+		{
+			var but = sender as Button;
+			Assert(but != null);
+			if (but != null)
+			{
+				var fly = but.FindParent<FlyoutPresenter>();
+				fly?.ContextFlyout?.Hide();
+			}
+		
+		}
 		private void ExportTS(object sender, RoutedEventArgs e)
 		{
+			HideFlyout(sender);
 			var cont = exportTSCont.Value.RoundToInt().ContinentToXY().XYToPackedContinent();
 			var tsMin = exportTSMinTS.Value.RoundToInt();
 			var t1 = JSClient.ServerTime();
