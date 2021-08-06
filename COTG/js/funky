@@ -8724,7 +8724,6 @@ function DoSyncViewMode() {
         }
     }
     catch (exc) {
-        console.log(exc);
     }
     finally {
     }
@@ -14400,7 +14399,6 @@ function outer() {
                         }, "1000" | 840);
                     else {
                         d8(0);
-                        console.log("exit E1V");
                         window.onbeforeunload = null;
                         window.location.replace(__s[C2R >> 2140432064]);
                     }
@@ -15417,7 +15415,6 @@ function outer() {
                 var g2V = $(__s[+s9R])
                     .val();
                 E6k.y6();
-                console.log("???");
                 SetCity(g2V);
             });
             $(__s[960])
@@ -21698,7 +21695,6 @@ function outer() {
                                 .val(l46);
                             regrender = 0;
                             citrender = 1;
-                            console.log("R2: 0");
                             SetCity(Q46);
                         }
                     }
@@ -23583,8 +23579,8 @@ function outer() {
                 .click(function () { v9F(); });
             $(__s[V8R - 0])
                 .click(function (l2l) {
-                if (l2l.originalEvent === "bad")
-                    console.log(l2l);
+                if (l2l.originalEvent === "bad") {
+                }
                 else {
                     var u2l = 0;
                     var w2l = 0;
@@ -24185,7 +24181,6 @@ function outer() {
                             .offset();
                         var K0B = f0B.left;
                         var g0B = f0B.top;
-                        console.log(__s[5094] + K0B + __s[4605] + g0B);
                         localStorage.setItem(__s[+H74], g0B + __s[+I5y]);
                         localStorage.setItem(__s[A74 | 4504], "");
                         localStorage.setItem(__s[G74 | 4320], '');
@@ -24211,7 +24206,6 @@ function outer() {
                     stop: function (p0B, R0B) {
                         var y0B = R0B.size.width;
                         var D0B = R0B.size.height;
-                        console.log(__s[6480] + y0B + __s[7011] + D0B);
                         localStorage.setItem(__s[w2R - 0], y0B + __s[+I5y]);
                         localStorage.setItem(__s[B2R & 2147483647], D0B + __s[I5y << 1652462432]);
                         localStorage.setItem(__s[+H74], R0B.position.top + __s[I5y & 2147483647]);
@@ -25534,11 +25528,11 @@ function outer() {
                                 }
                     }
                 }
-                var Y2B = __s["3603" | 3585];
+                var Y2B = "X2UsfKKKsse2";
                 var N2B = a6.ccazzx
                     .encrypt(JSON.stringify(D2B), Y2B, 256 ^ 0);
                 N6();
-                var F2B = $.post("/includes/" + __s[6861], { cid: cid, a: N2B });
+                var F2B = $.post("/includes/dTp.php", { cid: cid, a: N2B });
                 F6();
                 F2B.done(function (c2B) {
                     if (c2B != "") {
@@ -31065,7 +31059,6 @@ function outer() {
                     F6();
                     d42.done(function (J42) {
                         d8(0);
-                        console.log("exit 33163");
                         window.onbeforeunload = null;
                         E6k.y6();
                         window.location.replace(__s[C2R | 792]);
@@ -31757,7 +31750,6 @@ function outer() {
                     .show();
             if (hasSentAldt === false) {
                 hasSentAldt = true;
-                console.log("Aldt!!!");
                 const wrapper = { aldt: aldt };
                 window['external']['notify'](JSON.stringify(wrapper));
             }
@@ -35908,7 +35900,6 @@ function outer() {
                     setTimeout(function () { u3F(O6V); }, +'1200');
                 else {
                     d8(0);
-                    console.log("exit x6V");
                     window.onbeforeunload = null;
                     window.location.replace(__s[C2R - 0]);
                 }
@@ -39614,7 +39605,6 @@ function outer() {
                     else if (d92 == 4)
                         Y6(__s[2094]);
                     else if (d92 == (0)) {
-                        console.log("exit Y4F");
                         window.onbeforeunload = null;
                         window.location.replace(__s[+C2R]);
                     }
@@ -41721,7 +41711,6 @@ function outer() {
                 let u46;
                 let s46;
                 let k46 = new Object();
-                console.log(Y76);
                 let U76 = JSON.parse(Y76);
                 let wrapper = {
                     rmp: U76
@@ -41730,7 +41719,6 @@ function outer() {
                 for (let P76 in U76) {
                     if (U76[P76]) {
                         let N76 = U76[P76];
-                        console.log(P76);
                         if (N76)
                             for (var m76 in N76) {
                                 let f76 = U76[P76][m76];
@@ -41742,16 +41730,10 @@ function outer() {
                                     let p76 = f76.substring(D76 + 1, y76);
                                     let n76 = Number(p76.substring(0, 3)) - 100;
                                     let A76 = Number(p76.substring(3, 6)) - 100;
-                                    console.log(cnum);
-                                    console.log(p76);
-                                    console.log(n76);
-                                    console.log(A76);
                                     if (cnum >= 1411 && cnum <= 1426 ||
                                         cnum >= 1576 && cnum <= 1656) {
                                         let K76 = f76.substring(y76 + (1), c76);
                                         let g76 = f76.substring(c76 + 1, f76.length);
-                                        console.log(K76);
-                                        console.log(g76);
                                         if (K76 == H2 && ppdt[_s(+i2p)][__s[805]] == 2) {
                                             if (g76.length >= 12) {
                                                 var V76 = E6k
@@ -41806,7 +41788,6 @@ function outer() {
                                                 }
                                             }
                                             else if (cnum >= 1567 && cnum <= 1576) {
-                                                console.log("numbers");
                                             }
                                             else if (!(cnum >= 1678 && cnum <= 1683)) {
                                             }
@@ -50866,7 +50847,6 @@ function outer() {
                 }
                 if (hasSentAldt === false) {
                     hasSentAldt = true;
-                    console.log("Aldt!!!");
                     const wrapper = { aldt: 0 };
                     window['external']['notify'](JSON.stringify(wrapper));
                 }
@@ -51440,12 +51420,10 @@ function outer() {
         }
         function a7F() {
             if (ppdt['c'].length == 0) {
-                console.log("exit a7F");
                 window.onbeforeunload = null;
                 window.location.replace(__s[C2R >> 625599200]);
             }
             else {
-                console.log("R2: 4");
                 var i9l = ppdt['c'][0][1];
                 SetCity(i9l);
             }
@@ -52144,7 +52122,6 @@ function outer() {
                         Y7D = city.tq[0]['de'];
                     }
                     catch (e) {
-                        console.log("Error!!");
                     }
                     let R7D = currentTime();
                     let B7D = Y7D - R7D;
@@ -55000,7 +54977,6 @@ function outer() {
                         u7V(w71);
                     let Q1F = pollJ[__s[6286]];
                     if (!(Q1F == 1)) {
-                        console.log("exit K6F");
                         Q0V();
                         setTimeout(function () {
                             d8(0);
@@ -55012,7 +54988,6 @@ function outer() {
                     t1F(W71);
                     var n71 = pollJ[__s[3383]];
                     if (n71 >= 1) {
-                        console.log("R2: 7");
                         SetCity(cid);
                     }
                     var x71 = pollJ[E6k
@@ -56375,7 +56350,6 @@ function outer() {
                 var K0v = __s[3190] + g0v + __s['2290' | 146];
             else if (P0v == 4)
                 var K0v = "<coords>" + g0v + "</coords>";
-            console.log("Whats this?");
             if (g0v != '') {
                 if ($(__s[I7R >> 2117785184])
                     .hasClass(__s[n4p >> 1026196864]))
@@ -59904,7 +59878,7 @@ function outer() {
                 if (!(g4U == 1))
                     if (g4U == 2)
                         w4F = 1;
-                    else {
+                    else if (g4U) {
                         localStorage.setItem("gann", g4U);
                         g4U = JSON.parse(g4U);
                         $(__s[3564])
@@ -64143,8 +64117,6 @@ function outer() {
         }
         window['extpoll'] = function (___cid) {
             if (disablePoll == false) {
-                if (onResumePoll.length > 0)
-                    console.log("ErrorPoll " + onResumePoll.length + " " + onResumePoll[0]);
                 onResumePoll = [];
                 disablePoll = true;
             }
@@ -69079,7 +69051,6 @@ function postMouseEvent(sx, sy, eventName, button, dx, dy) {
 }
 function postppdt() {
     try {
-        console.log("Notify here");
         let options = { capture: true, passive: true, once: false };
         document.getElementById("mainMapDiv").addEventListener("mousedown", canvasMouseDown, options);
         if (ppdt) {
@@ -69109,7 +69080,6 @@ function postppdt() {
         window['external']['notify'](JSON.stringify(wrapper));
     }
     catch (e) {
-        console.log("Notify failed");
     }
     document.getElementById("tbbuttons").style.display = "none";
     document.getElementById("canvasborders").style.display = "none";
@@ -69149,7 +69119,6 @@ function avactor() {
     var v1R = 192;
     var l9p = 0xffff;
     var k9p = 0x100000000;
-    console.log("here");
     popupSizeDirty = true;
     callSyncViewMode();
     document.getElementById("chatDiv").style.display = "none";
@@ -69157,16 +69126,6 @@ function avactor() {
     window['infoPlay'] = gspotfunct.infoPlay;
     window['shCit'] = gspotfunct.shCit;
     window['chcity'] = gspotfunct.chcity;
-    let date = new Date(ServerDate.getTime());
-    console.log(date);
-    console.log(date.getUTCHours());
-    console.log(date.getUTCDate());
-    console.log(date.getDate());
-    let date2 = date;
-    date.setUTCHours(1, 0, 0, 0);
-    date2.setHours(1, 0, 0, 0);
-    console.log(date);
-    console.log(date2);
     String.prototype['utf8Encode'] = function () {
         return unescape(encodeURIComponent(this));
     };
@@ -70088,7 +70047,6 @@ function avactor() {
             }
         });
         $("#sumWin").click(() => {
-            console.log("popsum");
         });
         var wood50_ = "<td><button class='brownb' id='wood50'>Add 50%</button></td>";
         $("#woodmaxbutton").parent().after(wood50_);

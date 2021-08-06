@@ -428,17 +428,17 @@ namespace COTG.Views
 			var s = text.DataContext as ResSource;
 			var city = s.city;
 			var pid = city.pid;
-
+			var cid = city.cid;
 			var secret = $"JJx452Tdd{pid}sRAssa";
 			var reqF = $"{{\"a\":{s.res.wood},\"b\":{s.res.stone},\"c\":{s.res.iron},\"d\":{s.res.food},\"cid\":{s.city.cid},\"rcid\":{target.cid},\"t\":\"{(viaWater?2:1)}\"}}"; // t==1 is land, t==2 is water
 			int count = App.IsKeyPressedShiftAndControl() ? 4 : 1;
 			string res = string.Empty;
 			for (int j = 0; j < count; ++j)
 			{
-				res = await Post.SendForText("includes/sndTr.php", $"cid={s.city.cid}&f=" + HttpUtility.UrlEncode(Aes.Encode(reqF, secret), Encoding.UTF8), pid);
+				res = await Post.SendForText("includes/sndTr.php", $"cid={cid}&f=" + HttpUtility.UrlEncode(Aes.Encode(reqF, secret), Encoding.UTF8), pid);
 				if (count == 1)
 					break;
-				await Task.Delay(250);
+				await Task.Delay(1000);
 			}
 			if (int.TryParse(res.Trim(), out var i) && i == 10)
 			{

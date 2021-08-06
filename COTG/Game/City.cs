@@ -1092,7 +1092,7 @@ namespace COTG.Game
 		public async static void UpdateSenatorInfo()
 		{
 			// Todo:  Do overviews use secsessionid?
-
+		
 			try
 			{
 				var a = await Post.SendForJson("overview/senfind.php", "a=0");

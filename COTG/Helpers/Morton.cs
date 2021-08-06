@@ -17,8 +17,8 @@ namespace COTG.Helpers
 
 		public static uint ZCurveEncodeCid(this int cid)
 		{
-			var xy = cid.CidToWorld();
-			return (uint)(ZCurveEncode(xy) | (xy.WorldToContinentPacked() << 24));
+			var c = World.WorldToContinentAndOffset(cid.CidToWorld());
+			return (uint)((ZCurveEncode( (c.x,c.y))&0xffffff) + (c.continent << 24));
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]

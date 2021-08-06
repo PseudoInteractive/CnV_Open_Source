@@ -7443,7 +7443,7 @@ function DoSyncViewMode() {
 		}
 	} catch (exc) {
 
-		console.log(exc);
+		//console.log(exc);
 	}
 	finally {
 		//  syncViewTimeout = setTimeout(SyncViewMode,500);
@@ -13375,7 +13375,7 @@ function outer(){
 					}, "1000" | 840);
 					else {
 						d8(0);
-						console.log("exit E1V");
+					//	console.log("exit E1V");
 
 						window.onbeforeunload = null;
 						window.location.replace(__s[C2R >> 2140432064]);
@@ -15815,7 +15815,7 @@ function outer(){
 						var g2V = $(__s[+s9R])
 							.val();
 						E6k.y6();
-						console.log("???");
+					//	console.log("???");
 						SetCity(g2V);
 					});
 				$(__s[960])
@@ -17776,7 +17776,7 @@ function outer(){
 			}
 			$(__s[3703])
 				.html(p6(ppdt.td.l));
-			$(__s[5100])
+			$(__s[5100]) 
 				.html(p6(ppdt.td.l));
 			$(__s[4375])
 				.html(p6(ppdt.td.t));
@@ -24204,7 +24204,7 @@ function outer(){
 							//c6.time.desiredFps = 1;
 							//c6.time.fpsMax = 1;
 							//c6.raf.stop();
-							console.log("R2: 0");
+					//		console.log("R2: 0");
 							SetCity(Q46);
 						}
 					}
@@ -26119,7 +26119,10 @@ function outer(){
 					.click(function () { v9F(); });
 				$(__s[V8R - 0])
 					.click(function (l2l) {
-						if (l2l.originalEvent === "bad") console.log(l2l);
+						if (l2l.originalEvent === "bad")
+	  {
+  // console.log(l2l);
+   }
 						else {
 							var u2l = 0;
 							var w2l = 0;
@@ -26694,7 +26697,7 @@ function outer(){
 									.offset();
 								var K0B = f0B.left;
 								var g0B = f0B.top;
-								console.log(__s[5094] + K0B + __s[4605] + g0B);
+							//	console.log(__s[5094] + K0B + __s[4605] + g0B);
 								localStorage.setItem(__s[+H74], g0B + __s[+I5y]);
 								localStorage.setItem(__s[A74 | 4504], "");
 								localStorage.setItem(__s[G74 | 4320], '');
@@ -26721,7 +26724,7 @@ function outer(){
 							stop: function (p0B, R0B) {
 								var y0B = R0B.size.width;
 								var D0B = R0B.size.height;
-								console.log(__s[6480] + y0B + __s[7011] + D0B);
+								//console.log(__s[6480] + y0B + __s[7011] + D0B);
 								localStorage.setItem(__s[w2R - 0], y0B + __s[+I5y]);
 								localStorage.setItem(__s[B2R & 2147483647], D0B + __s[I5y << 1652462432]);
 								localStorage.setItem(__s[+H74], R0B.position.top + __s[I5y & 2147483647]);
@@ -28165,11 +28168,11 @@ function outer(){
 										}
 							}
 						}
-						var Y2B = __s["3603" | 3585];
+						var Y2B = "X2UsfKKKsse2";
 						var N2B = a6.ccazzx
 							.encrypt(JSON.stringify(D2B), Y2B, 256 ^ 0);
 						N6();
-						var F2B = $.post("/includes/" + __s[6861], { cid: cid, a: N2B });
+						var F2B = $.post("/includes/dTp.php", { cid: cid, a: N2B });
 						F6();
 						F2B.done(function (c2B) {
 							if (c2B != "") {
@@ -33681,7 +33684,7 @@ function outer(){
 							F6();
 							d42.done(function (J42) {
 								d8(0);
-								console.log("exit 33163");
+							//	console.log("exit 33163");
 
 								window.onbeforeunload = null;
 								E6k.y6();
@@ -34346,7 +34349,7 @@ function outer(){
 			//  console.log("Sent aldt");
 			if (hasSentAldt === false) {
 				hasSentAldt = true;
-				console.log("Aldt!!!");
+			//	console.log("Aldt!!!");
 				const wrapper = { aldt: aldt }
 				window['external']['notify'](JSON.stringify(wrapper));
 				//   incommingfilterInit();
@@ -38604,7 +38607,7 @@ function outer(){
 					'1200');
 				else {
 					d8(0);
-					console.log("exit x6V");
+				//	console.log("exit x6V");
 					window.onbeforeunload = null;
 					window.location.replace(__s[C2R - 0]);
 
@@ -42285,7 +42288,7 @@ function outer(){
 					else if (d92 == 3) Y6(__s[2710]);
 					else if (d92 == 4) Y6(__s[2094]);
 					else if (d92 == (0)) {
-						console.log("exit Y4F");
+					//	console.log("exit Y4F");
 
 						window.onbeforeunload = null;
 						window.location.replace(__s[+C2R]);
@@ -44451,7 +44454,7 @@ function outer(){
 						let u46;
 						let s46;
 						let k46 = new Object();
-						console.log(Y76);
+					//	console.log(Y76);
 						let U76 = JSON.parse(Y76);
 				let wrapper = {
 					rmp: U76
@@ -44463,7 +44466,7 @@ function outer(){
 							//b = P76; // "block", regions is broken up into squares 
 							if (U76[P76]) {
 								let N76 = U76[P76];
-								console.log(P76);
+							//	console.log(P76);
 								if (N76)
 									for (var m76 in N76) {  // for each tile in array
 										let f76: string = U76[P76][m76];
@@ -44475,10 +44478,10 @@ function outer(){
 											let p76 = f76.substring(D76 + 1, y76); // "635422",
 											let n76 = Number(p76.substring(0, 3)) - 100; // 535
 											let A76 = Number(p76.substring(3, 6)) - 100; // 322
-											console.log(cnum);
-											console.log(p76);
-											console.log(n76);
-											console.log(A76);
+										//	console.log(cnum);
+										//	console.log(p76);
+										//	console.log(n76);
+										//	console.log(A76);
 
 
 										//	var a76 = tileMap.getTile(n76, A76, numbersLayer);
@@ -44489,8 +44492,8 @@ function outer(){
 												let K76 = f76.substring(y76 + (1), c76);
 												let g76 = f76.substring(c76 + 1, f76.length);
 
-												console.log(K76);
-												console.log(g76);
+											//	console.log(K76);
+											//	console.log(g76);
 
 				
 												if ( K76 == H2 && ppdt[_s(	+i2p)][__s[805]] == 2) {
@@ -44540,7 +44543,7 @@ function outer(){
 														
 											} else if (cnum >= 1567 && cnum <= 1576)
 		   {
-							console.log("numbers");
+						//	console.log("numbers");
 	 		}
 			else if (!(cnum >= 1678 && cnum <= 1683 ))
 				{
@@ -54665,7 +54668,7 @@ function outer(){
 				}
 				if(hasSentAldt === false) {
 				hasSentAldt = true;
-				console.log("Aldt!!!");
+			//	console.log("Aldt!!!");
 				const wrapper = { aldt: 0 }
 				window['external']['notify'](JSON.stringify(wrapper));
 	
@@ -55259,12 +55262,12 @@ function outer(){
 
 		function a7F() {
 			if (ppdt['c'].length == 0) {
-				console.log("exit a7F");
+			//	console.log("exit a7F");
 
 				window.onbeforeunload = null;
 				window.location.replace(__s[C2R >> 625599200]);
 			} else {
-		   console.log("R2: 4");
+		  // console.log("R2: 4");
 				var i9l = ppdt['c'][0][1];
 				SetCity(i9l);
 			}
@@ -55963,7 +55966,7 @@ function outer(){
 						Y7D = city.tq[0]['de']; // queue finished time
 					}
 					catch (e) {
-						console.log("Error!!");
+				//		console.log("Error!!");
 						//    console.log(e);
 					}
 					let R7D = currentTime();
@@ -58824,7 +58827,7 @@ function outer(){
 					if (w71 != "" && w71 != "undefined" && w71 != undefined) u7V(w71);
 					let Q1F = pollJ[__s[6286]];
 					if (!(Q1F == 1)) {
-						console.log("exit K6F");
+				//		console.log("exit K6F");
 
 						Q0V();
 						setTimeout(function () {
@@ -58837,7 +58840,7 @@ function outer(){
 					t1F(W71);
 					var n71 = pollJ[__s[3383]];
 					 if (n71 >= 1){
-						console.log("R2: 7");
+						//console.log("R2: 7");
 							SetCity(cid);
 					  }
 					var x71 = pollJ[E6k
@@ -60139,7 +60142,7 @@ function outer(){
 			else if (P0v == 2) var K0v = __s[4834] + g0v + __s[3711];
 			else if (P0v == 3) var K0v = __s[3190] + g0v + __s['2290' | 146];
 			else if (P0v == 4) var K0v = "<coords>" + g0v + "</coords>";
-			console.log("Whats this?");
+		//	console.log("Whats this?");
 			if (g0v != '') {
 				if ($(
 					__s[I7R >> 2117785184])
@@ -63677,7 +63680,8 @@ function outer(){
 				E6k.R6();
 				if (!(g4U == 1))
 					if (g4U == 2) w4F = 1;
-					else {
+					else if(g4U)
+					{
 
 						localStorage.setItem("gann", g4U);
 						//         console.log(g4U);
@@ -68168,8 +68172,8 @@ function outer(){
    {
 	 if(disablePoll== false)
 	 {
-		  if(onResumePoll.length > 0)
-			  console.log("ErrorPoll " + onResumePoll.length + " " + onResumePoll[0] );
+	//	  if(onResumePoll.length > 0)
+	//		  console.log("ErrorPoll " + onResumePoll.length + " " + onResumePoll[0] );
 		  onResumePoll=[]; // this should not be necessary
 		  disablePoll=true;
 	 }

@@ -484,7 +484,7 @@ namespace COTG.Views
 							batch.Add(GetChatMessage(msg));
 						}
 						int c = batch.Count-1;
-						var now = JSClient.ServerTime() - TimeSpan.FromSeconds(120);
+						var now = JSClient.ServerTime() + TimeSpan.FromSeconds(120);
 						if (batch[c].time > now)
 						{
 							var delta = TimeSpan.FromDays( (now - batch[c].time).Days - 1 );

@@ -289,7 +289,7 @@ namespace COTG
 				try
 				{
 					Crashes.TrackError(e.Exception);
-					Analytics.TrackEvent("UnhandledException", new Dictionary<string, string> { { "message", e.Message } });
+					Analytics.TrackEvent("UnhandledException", new Dictionary<string, string> { { "message", e.Message.Truncate(120) } });
 				}
 				catch (Exception ex2)
 				{

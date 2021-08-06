@@ -54,27 +54,30 @@ namespace COTG.Game
 
 		public static async Task LoadAll()
 		{
-			try
-			{
-				var post = Post.SendForJson("includes/gfrnd.php");
-				var dat = (await post);
-				var jse = dat.RootElement;
-				var count = jse.GetArrayLength();
-				all = new Friend[count];
-				for (int i = 0; i < count; ++i)
-				{
-					var jsf = jse[i];
-					all[i].name = jsf[2].GetString();
-					all[i].pid = jsf[4].GetInt32();
-					all[i].online = jsf[0].GetInt32();
-					all[i].flag1 = jsf[1].GetInt32();
-					all[i].flag2 = jsf[3].GetInt32();
-				}
-			}
-			catch(Exception e)
-			{
-				Debug.LogEx(e);
-			}
+			//try
+			//{
+			//	var post = Post.SendForJson("includes/gfrnd.php");
+			//	var dat = (await post);
+			//	if (dat != null)
+			//	{
+			//		var jse = dat.RootElement;
+			//		var count = jse.GetArrayLength();
+			//		all = new Friend[count];
+			//		for (int i = 0; i < count; ++i)
+			//		{
+			//			var jsf = jse[i];
+			//			all[i].name = jsf[2].GetString();
+			//			all[i].pid = jsf[4].GetInt32();
+			//			all[i].online = jsf[0].GetInt32();
+			//			all[i].flag1 = jsf[1].GetInt32();
+			//			all[i].flag2 = jsf[3].GetInt32();
+			//		}
+			//	}
+			//}
+			//catch(Exception e)
+			//{
+			//	Debug.LogEx(e);
+			//}
 		}
 	}
 

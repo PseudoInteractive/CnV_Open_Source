@@ -9,6 +9,7 @@ using Microsoft.AppCenter.Crashes;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using COTG.Helpers;
 
 namespace COTG
 {
@@ -153,7 +154,7 @@ namespace COTG
 		[System.Runtime.CompilerServices.CallerLineNumber] int sourceLineNumber = 0)
 
 		{
-			var dic = new Dictionary<string, string> { { "message", e.Message }, { "event", eventName } };
+			var dic = new Dictionary<string, string> { { "message", e.Message.Truncate(120) }, { "event", eventName.Truncate(120) } };
 			if (extra != null)
 			{
 				dic[extra] = extra;

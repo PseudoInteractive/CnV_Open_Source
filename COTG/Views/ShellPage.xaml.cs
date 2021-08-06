@@ -621,6 +621,7 @@ namespace COTG.Views
 					tab.refresh.Go();
 			}
 			JSClient.CityRefresh();
+			instance.UpdateWebViewScale();
 			return Task.CompletedTask;
 		}
 
@@ -1227,43 +1228,73 @@ namespace COTG.Views
 		private  void SetLayout(int viewToggle)
 		{
 			App.DispatchOnUIThreadLow(async () =>
-		   {
-		   var spanX = int.Parse(await JSClient.view.InvokeScriptAsync("eval", new string[] { "document.body.clientWidth.toString()" }));
-		   webViewScale = ((float)(grid.ColumnDefinitions[0].ActualWidth + grid.ColumnDefinitions[1].ActualWidth)) / spanX;
-			   canvasBaseX = (canvasBaseXUnscaled * webViewScale).RoundToInt();
-			   canvasBaseY = (canvasBaseYUnscaled * webViewScale).RoundToInt();
-			   grid.ColumnDefinitions[0].Width = new GridLength(ShellPage.canvasBaseX, GridUnitType.Pixel);
-			   canvas.Margin = new Thickness(0, canvasBaseY, 0, 0);
-			   //			   UpdateCanvasMarginForWebview(webViewScale);
-			   //scroll.ChangeView(null, null, 0.5f);
-			   var raidInfoVisible = true;
-			   switch (viewToggle)
-			   {
-				   case 0:
-					   grid.ColumnDefinitions[1].Width = new GridLength(2, GridUnitType.Star);
-					   grid.ColumnDefinitions[2].Width = new GridLength(1, GridUnitType.Star);
-					   // JSClient.view.Scale = new Vector3(1.0f, 1.0f, 1.0f);
-					   break;
+			{
+				//			   UpdateCanvasMarginForWebview(webViewScale);
+				//scroll.ChangeView(null, null, 0.5f);
+				var raidInfoVisible = true;
+				switch (viewToggle)
+				{
+					case 0:
+						grid.ColumnDefinitions[1].Width = new GridLength(2, GridUnitType.Star);
+						grid.ColumnDefinitions[2].Width = new GridLength(1, GridUnitType.Star);
+						// JSClient.view.Scale = new Vector3(1.0f, 1.0f, 1.0f);
+						break;
 
-				   case 1:
-					   // grid.ColumnDefinitions[0].Width = new GridLength(410*3/4, GridUnitType.Pixel);
-					   grid.ColumnDefinitions[1].Width = new GridLength(2, GridUnitType.Star);
-					   grid.ColumnDefinitions[2].Width = new GridLength(160);
-					   raidInfoVisible = false;
-					   // JSClient.view.Scale = new Vector3(0.75f, 0.75f, 1.0f);
-					   break;
+					case 1:
+						// grid.ColumnDefinitions[0].Width = new GridLength(410*3/4, GridUnitType.Pixel);
+						grid.ColumnDefinitions[1].Width = new GridLength(2, GridUnitType.Star);
+						grid.ColumnDefinitions[2].Width = new GridLength(160);
+						raidInfoVisible = false;
+						// JSClient.view.Scale = new Vector3(0.75f, 0.75f, 1.0f);
+						break;
 
-				   case 2:
-					   // grid.ColumnDefinitions[0].Width = new GridLength(410 * 3 / 4, GridUnitType.Pixel);
-					   grid.ColumnDefinitions[1].Width = new GridLength(1, GridUnitType.Star);
-					   grid.ColumnDefinitions[2].Width = new GridLength(2, GridUnitType.Star);
-					   // JSClient.view.Scale = new Vector3(0.75f, 0.75f, 1.0f);
-					   break;
-			   }
+					case 2:
+						// grid.ColumnDefinitions[0].Width = new GridLength(410 * 3 / 4, GridUnitType.Pixel);
+						grid.ColumnDefinitions[1].Width = new GridLength(1, GridUnitType.Star);
+						grid.ColumnDefinitions[2].Width = new GridLength(2, GridUnitType.Star);
+						// JSClient.view.Scale = new Vector3(0.75f, 0.75f, 1.0f);
+						break;
+				}
 
-			   MainPage.ToggleInfoBoxes(raidInfoVisible);
-			//   Task.Delay(200).ContinueWith((_) => City.gridCitySource.NotifyReset());
-		   });
+				MainPage.ToggleInfoBoxes(raidInfoVisible);
+				//   Task.Delay(200).ContinueWith((_) => City.gridCitySource.NotifyReset());
+				UpdateWebViewScale();
+
+			});
+		}
+
+		public void UpdateWebViewScale()
+		{
+			return;
+				if (!Alliance.alliancesFetched)
+					return;
+				App.DispatchOnUIThreadLow(async ()
+					=>
+				{
+					try
+					{
+
+						var spanX = int.Parse(await JSClient.view.InvokeScriptAsync("eval", new string[] { "document.body.clientWidth.toString()" }));
+						var _webViewScale = ((float)(grid.ColumnDefinitions[0].ActualWidth + grid.ColumnDefinitions[1].ActualWidth)) / spanX;
+						if ((_webViewScale - webViewScale).Abs() <= 1.0f / 128f)
+							return;
+						webViewScale = _webViewScale;
+						canvasBaseX = (canvasBaseXUnscaled * webViewScale).RoundToInt();
+						canvasBaseY = (canvasBaseYUnscaled * webViewScale).RoundToInt();
+						if (canvas != null && grid != null)
+						{
+							App.DispatchOnUIThreadSneakyLow(() =>
+							{
+								grid.ColumnDefinitions[0].Width = new GridLength(ShellPage.canvasBaseX, GridUnitType.Pixel);
+								canvas.Margin = new Thickness(0, canvasBaseY, 0, 0);
+							});
+						}
+					}
+					catch (Exception ex)
+					{
+						LogEx(ex);
+					}
+				});
 		}
 
 		private void webFocus_Click(object sender, RoutedEventArgs e)

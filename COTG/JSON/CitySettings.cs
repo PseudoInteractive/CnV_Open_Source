@@ -196,7 +196,7 @@ namespace COTG.JSON
 					SetResourceScalar(2, req, storage, Resources.zero, ref split[35], ref reqResources);
 					SetResourceScalar(3, req, storage, Resources.zero, ref split[36], ref reqResources);
 				}
-				if (targetHub.HasValue || sendFilter.Any )
+				if (targetHub.HasValue && sendFilter.Any )
 				{
 					var cid = targetHub.ToString();
 					split[41] = "0"; // use a different city for all sends
@@ -353,10 +353,10 @@ namespace COTG.JSON
             
 			try
 			{
-				var split = await GetMinisterOptions(city);
-			    if (await opts((split.split,split.storage)))
+				var mo = await GetMinisterOptions(city);
+			    if (await opts((mo.split,mo.storage)))
                 {
-                    var args2 = string.Join(',', split);
+					var args2 = string.Join(',', mo.split);
 					city.SetMinisterOptions(args2);
                     await Post.Send("includes/mnio.php", $"a={HttpUtility.UrlEncode(args2, Encoding.UTF8)}&b={cid}", World.CidToPlayerOrMe(cid));
                     // find closest hub

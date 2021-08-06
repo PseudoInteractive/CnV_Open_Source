@@ -176,6 +176,8 @@ namespace COTG.Views
 					res.applySend = true;
 
 					SetFromSS();
+					res.sendFilter = ResourceFilter._true;
+					res.reqFilter = ResourceFilter._true;
 					Title = city.nameAndRemarks;
 					SetCheckboxesFromTags(city.remarks);
 					Bindings.Update();

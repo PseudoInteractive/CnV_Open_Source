@@ -390,42 +390,13 @@ namespace COTG
 			return (x, y);
 		}
 
-		public static int WorldToCid(this (int x, int y) a)
-		{
-			return a.x + (a.y << 16);
-		}
-
-		public static int Translate(this int cid, (int dx, int dy) d)
-		{
-			return cid + d.dx + d.dy * 65536;
-		}
+		
 
 		public static System.Numerics.Vector2 ToVector(this (int x, int y) a)
 		{
 			return new(a.x, a.y);
 		}
 
-		public static System.Numerics.Vector2 CidToWorldV(this int c)
-		{
-			var c2 = CidToWorld(c);
-			return new System.Numerics.Vector2(c2.x, c2.y);
-		}
-
-		public static int WorldToContinent(this (int x, int y) c) => (c.y / 100) * 10 + (c.x / 100);
-
-		public static int WorldToContinentPacked(this (int x, int y) c) => (c.y / 100) * Game.World.continentCountX + (c.x / 100);
-
-		// public static int CidToContinent(this int cid) => ((cid/65536)/100)*10 | (cid % 65536) / 100;
-		public static int CidToContinent(this int cid) => WorldToContinent(CidToWorld(cid));
-
-		public static (int x, int y) CidToWorld(this int c)
-		{
-			return (c & 65535, c >> 16);
-		}
-		public static (int x, int y) CidToContinentXY(this int c)
-		{
-			return ( (c & 65535)/100, (c >> 16)/100);
-		}
 
 		public static int DecodeCid(int offset, string s)
 		{
@@ -477,6 +448,9 @@ namespace COTG
 
 		public static Regex coordsRegex = new Regex(@":*\b\d{1,3}:\d{1,3}\b:*", RegexOptions.CultureInvariant | RegexOptions.Compiled);
 		public static Regex coordsRegex2 = new Regex(@"[^:]?\b(\d{1,3}:\d{1,3})\b[^:]?", RegexOptions.CultureInvariant | RegexOptions.Compiled);
+		public static Regex coordsRegexAny = new Regex(@"(?:[^\d]|^)?(\d{1,3}:\d{1,3})(?:[^\d]|$)", RegexOptions.CultureInvariant | RegexOptions.Compiled);
+
+
 	}
 
 	public class SemaFrame

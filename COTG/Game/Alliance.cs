@@ -214,40 +214,43 @@ namespace COTG.Game
 					// var al = _al;
 					using (var jsa = await Post.SendForJson("includes/gAd.php", "a=" + HttpUtility.UrlEncode(alName)))
 					{
-						var id = jsa.RootElement.GetAsInt("id");
-						if (all.TryGetValue(id, out var al) == false)
+						if (jsa != null)
 						{
-							al = new Alliance() { id = id, name = alName };
-							_all.Add(id, al);
-							_nameToId.Add(alName, id);
-						}
-
-						// _all.Add(id, al); _nameToId.Add(alName, id);
-						int counter = 0;
-						if (jsa.RootElement.TryGetProperty("me", out var meList))
-						{
-							foreach (var me in meList.EnumerateArray())
+							var id = jsa.RootElement.GetAsInt("id");
+							if (all.TryGetValue(id, out var al) == false)
 							{
-								var meName = me.GetString("n");
-								if (meName == null)
+								al = new Alliance() { id = id, name = alName };
+								_all.Add(id, al);
+								_nameToId.Add(alName, id);
+							}
+
+							// _all.Add(id, al); _nameToId.Add(alName, id);
+							int counter = 0;
+							if (jsa.RootElement.TryGetProperty("me", out var meList))
+							{
+								foreach (var me in meList.EnumerateArray())
 								{
-									//Log("Missing name? " + counter);
-									//foreach (var member in me.EnumerateObject())
-									//{
-									//    Log($"{member.Name}:{member.Value.ToString()}");
-									//}
-								}
-								else if (Player.nameToId.TryGetValue(meName, out var pId))
-								{
-									++counter;
-									var p = Player.all[pId];
-									p.alliance = (ushort)id;
-									// p.cities = (byte)me.GetInt("c");
-									p.points = (me.GetInt("s"));
-								}
-								else
-								{
-									Log("Error: " + meName);
+									var meName = me.GetString("n");
+									if (meName == null)
+									{
+										//Log("Missing name? " + counter);
+										//foreach (var member in me.EnumerateObject())
+										//{
+										//    Log($"{member.Name}:{member.Value.ToString()}");
+										//}
+									}
+									else if (Player.nameToId.TryGetValue(meName, out var pId))
+									{
+										++counter;
+										var p = Player.all[pId];
+										p.alliance = (ushort)id;
+										// p.cities = (byte)me.GetInt("c");
+										p.points = (me.GetInt("s"));
+									}
+									else
+									{
+										Log("Error: " + meName);
+									}
 								}
 							}
 						}

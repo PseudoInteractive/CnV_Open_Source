@@ -229,7 +229,6 @@ namespace COTG.Game
 			}
 
 			return sb.ToString();
-
 		}
 
 		public int pid { get; set; }
@@ -249,8 +248,6 @@ namespace COTG.Game
 		public bool isBoss => type == typeBoss;
 		public bool isDungeon => type == typeDungeon;
 		public bool isEmpty => type == typeNone;
-
-	
 
 		public enum Classification : byte
 		{

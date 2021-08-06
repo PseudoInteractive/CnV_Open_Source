@@ -253,4 +253,8 @@
       - A coloumn (to the far right) labedl ?? will be checked
       - A checked entry does not guarantee this situation, I dont' know why.
       - WildHeader and Ting wanted it, its not my fault
- 
+ ### 2021/8/06
+   - **Update**
+     - Login process now uses 50% less cookies and you can no longer log into other peoples accounts
+     - For login instruction https://docs.google.com/document/d/1V8Zd47Sw47zzj0UIVge9VBkg4Y8uTut6OIDLR1WR2s8/edit?usp=sharing 
+   - ** 

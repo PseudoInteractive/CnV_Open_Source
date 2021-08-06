@@ -395,13 +395,13 @@ namespace COTG
 		internal static WebView Initialize(Windows.UI.Xaml.Controls.Grid panel)
 		{
 			httpFilter = new HttpBaseProtocolFilter();
-			httpFilter.AutomaticDecompression = true;
+	//		httpFilter.AutomaticDecompression = true;
 
-			httpFilter.AllowAutoRedirect = true;
+		//	httpFilter.AllowAutoRedirect = true;
 		//	httpFilter.UseProxy = false;
 
 			httpFilter.MaxVersion = HttpVersion.Http20;
-			httpFilter.ServerCustomValidationRequested += ServerCustomValidationRequested;
+		//	httpFilter.ServerCustomValidationRequested += ServerCustomValidationRequested;
 			//httpFilter.IgnorableServerCertificateErrors.Add(ChainValidationResult.Untrusted);
 			//httpFilter.IgnorableServerCertificateErrors.Add(ChainValidationResult.Expired);
 
@@ -412,14 +412,14 @@ namespace COTG
 			httpFilter.IgnorableServerCertificateErrors.Add(Windows.Security.Cryptography.Certificates.ChainValidationResult.RevocationInformationMissing);
 			httpFilter.IgnorableServerCertificateErrors.Add(Windows.Security.Cryptography.Certificates.ChainValidationResult.RevocationFailure);
 
-			httpFilter.AllowUI = true;
-			httpFilter.CookieUsageBehavior = HttpCookieUsageBehavior.Default;
+		//	httpFilter.AllowUI = true;
+//			httpFilter.CookieUsageBehavior = HttpCookieUsageBehavior.Default;
 
 
 			//	  HttpBaseProtocolFilter.CreateForUser( User.GetDefault());
 			//                         httpFilter.ServerCredential =
 
-			httpFilter.MaxConnectionsPerServer = 10;
+		//	httpFilter.MaxConnectionsPerServer = 10;
 			//  httpFilter.ServerCustomValidationRequested += HttpFilter_ServerCustomValidationRequested;
 			httpFilter.CacheControl.ReadBehavior = HttpCacheReadBehavior.NoCache;
 			httpFilter.CacheControl.WriteBehavior = HttpCacheWriteBehavior.NoCache;
@@ -441,7 +441,7 @@ namespace COTG
 			{
 
 
-				view = new WebView(Windows.UI.Xaml.Controls.WebViewExecutionMode.SeparateThread)
+				view = new WebView( Windows.UI.Xaml.Controls.WebViewExecutionMode.SeparateThread)
 				{
 					//HorizontalAlignment = HorizontalAlignment.Stretch,
 					//VerticalAlignment = VerticalAlignment.Stretch,
@@ -1231,6 +1231,25 @@ namespace COTG
 			// City lists
 			try
 			{
+				if (!councillorsChecked)
+				{
+					if (jse.TryGetProperty("cob", out var cob))
+					{
+						councillorsChecked = true;
+
+						foreach (var c in cob.EnumerateObject())
+						{
+							var t = ServerTimeOffsetMs(c.Value.GetAsInt64());
+							if (t <= 0)
+							{
+								App.DispatchOnUIThreadSneaky(ShowCouncillorsMissingDialog);
+								break;
+							}
+
+						}
+					}
+				}
+
 				bool bonusesUpdated = false;
 				// research?
 				if (jse.TryGetProperty("rs", out var rss))
@@ -1347,24 +1366,7 @@ namespace COTG
 					Player.moveSlots = mvb.ValueKind == JsonValueKind.Number ? mvb.GetAsInt() : mvb.GetAsInt("l");
 
 				}
-				if (!councillorsChecked)
-				{
-					councillorsChecked = true;
-					if (jse.TryGetProperty("cob", out var cob))
-					{
-						
-						foreach (var c in cob.EnumerateObject())
-						{
-							var t = ServerTimeOffsetMs(c.Value.GetAsInt64());
-							if (t <=0)
-							{
-								App.DispatchOnUIThreadSneaky(ShowCouncillorsMissingDialog);
-								break;
-							}
-
-						}
-					}
-				}
+				
 				if (jse.TryGetProperty("fa", out var fa))
 				{
 					faith.evara = fa.GetAsByte("1");
@@ -1630,7 +1632,7 @@ private static async void ShowCouncillorsMissingDialog()
 		{
 			var pr = args.PermissionRequest;
 			pr.Allow();
-			Log($"Permission {pr.Id} {pr.PermissionType} {pr.State} {pr.ToString()}");
+			//Log($"Permission {pr.Id} {pr.PermissionType} {pr.State} {pr.ToString()}");
 			
 		}
 
@@ -2620,7 +2622,6 @@ private static async void ShowCouncillorsMissingDialog()
 					   ShellPage.isHitTestVisible = true;
 					   ///                   await GetCitylistOverview();
 					   Task.Delay(3000).ContinueWith( (_)=> City.UpdateSenatorInfo() );  // no async
-					   Friend.LoadAll();
 					   TileData.Ctor(false);
 					   //if (TipsSeen.instance.refresh == false
 					   //||TipsSeen.instance.chat0==false
@@ -2646,9 +2647,10 @@ private static async void ShowCouncillorsMissingDialog()
 					   {
 						   App.DispatchOnUIThreadSneaky(ShowWhatsNew);
 					   }
-					
+
 					   // 
-					   
+					   Friend.LoadAll();
+
 					   App.state = App.State.active;
 					   CnVDiscord.Discord.Initialize();
 

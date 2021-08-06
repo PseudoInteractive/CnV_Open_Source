@@ -847,7 +847,7 @@ START OF QUICKBUILD SCRIPT
 // Adding buttons once game loaded
     var waitForGameLoaded = function () {
         if ($("#incAttacksDiv").length > 0) {
-            console.log("Game Loaded.");
+//            console.log("Game Loaded.");
 
 
 
@@ -894,7 +894,7 @@ START OF QUICKBUILD SCRIPT
             setTimeout(waitForGameLoaded, 1000);
         }
 
-        console.log("Quickbuild Script Loading");
+       // console.log("Quickbuild Script Loading");
     };
     waitForGameLoaded();
 

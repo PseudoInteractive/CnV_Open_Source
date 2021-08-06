@@ -938,7 +938,7 @@ function postppdt()
 
 	try {
 
-		console.log("Notify here");
+		//console.log("Notify here");
 		let options: AddEventListenerOptions = { capture: true, passive:true,once:false } 
 		//document.addEventListener("keydown", onKeyDown, options);
 		//document.addEventListener("keyup", onKeyUp, options);
@@ -979,7 +979,7 @@ function postppdt()
 		window['external']['notify'](JSON.stringify(wrapper));
 		//OptimizeAjax();
 	} catch (e) {
-		console.log("Notify failed");
+	//	console.log("Notify failed");
 //		setTimeout(SendCreds, 1000); // vars are probably not ready try again in 1s
 	}
 	document.getElementById("tbbuttons").style.display = "none"; // these no longer work
@@ -1079,7 +1079,7 @@ function avactor() {
 //	var P2y = 1000;
 	var l9p = 0xffff;
 	var k9p = 0x100000000;
-	console.log("here");
+	//console.log("here");
 	
 	popupSizeDirty=true;
 	callSyncViewMode();
@@ -1102,16 +1102,16 @@ function avactor() {
 	//	}
 	//}
 	
-	let date = new Date(ServerDate.getTime());
-	console.log( date );
-	console.log(date.getUTCHours());
-	console.log(date.getUTCDate());
-	console.log(date.getDate());
-	let date2 = date;
-	date.setUTCHours(1, 0, 0, 0);
-	date2.setHours(1, 0, 0, 0);
-	console.log(date);
-	console.log(date2);
+//	let date = new Date(ServerDate.getTime());
+//	console.log( date );
+//	console.log(date.getUTCHours());
+//	console.log(date.getUTCDate());
+//	console.log(date.getDate());
+//	let date2 = date;
+//	date.setUTCHours(1, 0, 0, 0);
+//	date2.setHours(1, 0, 0, 0);
+//	console.log(date);
+//	console.log(date2);
 	String.prototype['utf8Encode'] = function () {
 		//		//	if (encryptStr.length > 8)
 		//		//		encryptStr.shift();
@@ -2426,7 +2426,7 @@ function avactor() {
 			}
 		});
 		$("#sumWin").click(() => {
-			console.log("popsum");
+	//		console.log("popsum");
 		});
 		
 		var wood50_ = "<td><button class='brownb' id='wood50'>Add 50%</button></td>";

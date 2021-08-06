@@ -1,6 +1,7 @@
 ﻿using COTG.Helpers;
 using COTG.Services;
 using COTG.Views;
+using System.Text.RegularExpressions;
 
 using Cysharp.Text;
 
@@ -1581,7 +1582,45 @@ namespace COTG.Game
 				}
 			}
 		}
+		public static int WorldToContinentPacked(this (int x, int y) c) => (c.y / 100) * Game.World.continentCountX + (c.x / 100);
+		public static int WorldToContinent(this (int x, int y) c) => (c.y / 100) * 10 + (c.x / 100);
 
+		public static (int x, int y) WorldToContinent2(this (int x, int y) c) => ((c.x / 100), (c.y / 100));
+
+		// decompose world space coords to continent + offset
+		public static (int continent, int x, int y) WorldToContinentAndOffset(this (int x, int y) c)
+		{
+			var cx = (c.x / 100);
+			var cy = (c.y / 100);
+			return (cx + cy * 10, c.x - cx * 100, c.y - cy * 100);
+		}
+
+		// public static int CidToContinent(this int cid) => ((cid/65536)/100)*10 | (cid % 65536) / 100;
+		public static int CidToContinent(this int cid) => WorldToContinent(CidToWorld(cid));
+
+		public static (int x, int y) CidToWorld(this int c)
+		{
+			return (c & 65535, c >> 16);
+		}
+		public static (int x, int y) CidToContinentXY(this int c)
+		{
+			return ((c & 65535) / 100, (c >> 16) / 100);
+		}
+
+		
+		public static int WorldToCid(this (int x, int y) a)
+		{
+			return a.x + (a.y << 16);
+		}
+		public static System.Numerics.Vector2 CidToWorldV(this int c)
+		{
+			var c2 = CidToWorld(c);
+			return new System.Numerics.Vector2(c2.x, c2.y);
+		}
+		public static int Translate(this int cid, (int dx, int dy) d)
+		{
+			return cid + d.dx + d.dy * 65536;
+		}
 	}
 
 	//public class WorldBufferScope : IDisposable

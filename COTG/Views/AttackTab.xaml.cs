@@ -1312,7 +1312,7 @@ namespace COTG.Views
 
 		}
 
-		private async void AssignAttacks_Click(object sender, RoutedEventArgs e)
+		private  async void AssignAttacks_Click(object sender, RoutedEventArgs e)
         {
 			using var _ = await TouchLists();
 
@@ -1554,83 +1554,102 @@ namespace COTG.Views
 				/// siege, assault
 				///  0 is SE, 1 is senator
 				///  
-				var minAttacksByType = new int[2, 2] { { seAttackCount / seTargetCount.Max(1), 1 }, // siege 
-														{plan.attackSEMinAssaults, plan.attackSenMinAssaults } }; // assault
-				var maxAttacksByType = new int[2, 2] { {seAttackCount.DivideRoundUp(seTargetCount.Max(1)), // se siege
-														senAttackCount.DivideRoundUp(senTargetCount.Max(1)) },        // sen siege, todo:  Make this 1 always 
-														{plan.attackSEMaxAssaults, 
-														 plan.attackSenMaxAssaults } };
-				Assert(minAttacksByType[1, 0] == plan.attackSEMinAssaults);
+				var minAttacksByType = new  int[] {  seAttackCount / seTargetCount.Max(1), 1 , // siege 
+														   plan.attackSEMinAssaults, plan.attackSenMinAssaults  }; // assault
+				var maxAttacksByType = new [] { seAttackCount.DivideRoundUp(seTargetCount.Max(1)), // se siege
+														senAttackCount.DivideRoundUp(senTargetCount.Max(1)) ,        // sen siege, todo:  Make this 1 always 
+														plan.attackSEMaxAssaults, 
+														 plan.attackSenMaxAssaults  };
+				Assert(minAttacksByType[1*2+ 0] == plan.attackSEMinAssaults);
 
 				foreach (var persist in plan.attacks )
-				{ 
+				{
 					if(persist.fixedTarget!=0)
 					{
 						var cluster = AttackPlanCity.Get(persist.fixedTarget).attackCluster;
 						persist.attackCluster = cluster;
 					}
 				}
-				for (AttackCategory category = 0; category < AttackCategory.count; category++)
+				for(; ; )
 				{
-					var clustersC = clusters.Where(a => a.category == category).ToArray();
-					if (clustersC.Length == 0)
-						continue;
+
+				//	var minAttacks =stackalloc new int[4];
+					bool hasMin = true;
 					for (int siegeAssaultCounter = 0; siegeAssaultCounter <= 1; ++siegeAssaultCounter)
 					{
-						var isAssault = siegeAssaultCounter ==1;
-						var isSiege = !isAssault;
-						var minAtk = minAttacksByType[siegeAssaultCounter,(int)category];// isSiege ? 1 : category == AttackCategory.se ? plan.attackSEMinAssaults : plan.attackSenMinAssaults;
-						var maxAtk = maxAttacksByType[siegeAssaultCounter, (int)category];// isSiege ? (category == AttackCategory.se ? 2 : 1) : category == AttackCategory.se ? plan.attackSEMaxAssaults : plan.attackSenMaxAssaults;
-
-						for (; ; )
+						for (AttackCategory category = 0; category < AttackCategory.count; category++)
 						{
-							var attacksC = attacks.Where(a => a.attackCluster == -1 && a.isAttackTypeAssault == isAssault && (!isAssault || (a.attackType.GetCategory() == category) )).ToArray();
-							if (!attacksC.Any())
-								break;
+							var id = siegeAssaultCounter * 2 + (int)category;
+							var atkCount=  clusters.Where(c => c.category ==category).Min(c => c.NormalizedAttacks(siegeAssaultCounter == 1));
+					//		minAttacks[id] = atkCount;
+							if (atkCount < minAttacksByType[id])
+								hasMin = false;
+						}
+					}
+					//var attacks1 = clustersC.Max(c => c.NormalizedAttacks(isAssault));
 
-							var attacks0 = clustersC.Min( c => c.NormalizedAttacks(isAssault) );
-							var attacks1 = clustersC.Max( c => c.NormalizedAttacks(isAssault) );
+					AttackPlanCity best = null;
+					float bestDist = float.MaxValue;
+					Cluster bestCluster = null;
 
-							if (attacks0 >= maxAtk)
-								break;
-							AttackPlanCity best = null;
-							float bestDist = float.MaxValue;
-							Cluster bestCluster = null;
+					for (AttackCategory category = 0; category < AttackCategory.count; category++)
+					{
+						var clustersC = clusters.Where(a => a.category == category).ToArray();
+						if (clustersC.Length == 0)
+							continue;
+						for (int siegeAssaultCounter = 0; siegeAssaultCounter <= 1; ++siegeAssaultCounter)
+						{
+							var id = siegeAssaultCounter * 2 + (int)category;
+							var isAssault = siegeAssaultCounter == 1;
+							var isSiege = !isAssault;
+							var minAtk = minAttacksByType[id];// isSiege ? 1 : category == AttackCategory.se ? plan.attackSEMinAssaults : plan.attackSenMinAssaults;
+							var maxAtk = maxAttacksByType[id];// isSiege ? (category == AttackCategory.se ? 2 : 1) : category == AttackCategory.se ? plan.attackSEMaxAssaults : plan.attackSenMaxAssaults;
 
-							// count 
-							foreach (var c in clustersC)
 							{
-								var real = c.real;
-								if (c.category != category)
-									continue;
-								int attackCount = c.NormalizedAttacks(isAssault);
-								if (attacks0 < minAtk ? (attackCount < minAtk) : (attackCount < maxAtk))
+								var attacksC = attacks.Where(a => a.attackCluster == -1 && a.isAttackTypeAssault == isAssault && 
+																(isAssault || 
+																		(a.attackType.GetCategory() == category))).ToArray();
+								if (!attacksC.Any())
+									break;
+
+					
+								// count 
+								foreach (var c in clustersC)
 								{
-									// valid
-
-									foreach (var attack in attacksC)
+									var real = c.real;
+									if (c.category != category)
+										continue;
+									int attackCount = c.NormalizedAttacks(isAssault);
+									if ( (hasMin ? attackCount < maxAtk :attackCount < minAtk) )
 									{
-										if (!c.IsInRange(attack))
-											continue;
-										var cost = c.CalculateAttackCost(attack,attackCount);
+										// valid
 
-										if (cost < bestDist)
+										foreach (var attack in attacksC)
 										{
-											bestDist = cost;
-											bestCluster = c;
-											best = attack;
+											if (!c.IsInRange(attack))
+												continue;
+											var cost = c.CalculateAttackCost(attack, attackCount);
+
+											if (cost < bestDist)
+											{
+												bestDist = cost;
+												bestCluster = c;
+												best = attack;
+											}
 										}
 									}
 								}
-							}
-							if (best == null)
-								break;
-							best.attackCluster = bestCluster.id;
 
+							}
 						}
 					}
+					if (best == null)
+						break;
+					best.attackCluster = bestCluster.id;
+
 				}
-				foreach(var atk in attacks)
+
+				foreach (var atk in attacks)
 				{
 					if( atk.attackCluster==-1)
 					{
@@ -1655,18 +1674,17 @@ namespace COTG.Views
 							var isAssault = siegeAssaultCounter == 1;
 							var isSiege = !isAssault;
 							var count0 = cluster0.AttackCount(isAssault);
+							var id = siegeAssaultCounter * 2 + (int)category;
 
-							if (count0 <= minAttacksByType[siegeAssaultCounter, (int)category])
+							if (count0 <= minAttacksByType[id])
 								continue;
-							var maxAttack = maxAttacksByType[siegeAssaultCounter, (int)category];
+							var maxAttack = maxAttacksByType[id];
 							AttackPlanCity best = null;
 							Cluster bestCluster = null;
 							float bestScore = 0;
 							foreach (var cluster1 in clusters)
 							{
-								
 								var count1 = cluster1.AttackCount(isAssault);
-								
 
 								if (count1 >= maxAttack || (isSiege && category!=cluster1.category) || cluster0.id == cluster1.id )
 									continue;
@@ -1683,9 +1701,7 @@ namespace COTG.Views
 										bestCluster = cluster1;
 										best = f0;
 									}
-
 								}
-
 							}
 							if (best != null)
 							{
@@ -1739,10 +1755,11 @@ namespace COTG.Views
 				}
 				// cull
 				var initialCulledClusters = ignoredTargets.Count;
-				// cull clusters with too few attacks
-				//var culled = 0;
-				foreach(var cluster in clusters)
 				{
+					// cull clusters with too few attacks
+					//var culled = 0;
+					foreach (var cluster in clusters)
+					{
 						if (!cluster.isValid)
 							continue;
 						var culledSE = (cluster.AttackCount(true) < plan.attackSEMinAssaults && cluster.category == AttackCategory.se);
@@ -1753,7 +1770,7 @@ namespace COTG.Views
 							if (culledSE)
 								Note.Show($"{AttackPlanCity.Get(cluster.real.cid).nameMarkdown} culled, not enough fakes in range");
 
-						var a = ignoredTargets.Add(cluster.real.cid);
+							var a = ignoredTargets.Add(cluster.real.cid);
 							Assert(a == true);
 
 							foreach (var f0 in attacks)
@@ -1770,6 +1787,7 @@ namespace COTG.Views
 							}
 							cluster.SetInvalid();
 						}
+					}
 				}
 				
 				if(!clusters.Any(a=>a.isValid))
