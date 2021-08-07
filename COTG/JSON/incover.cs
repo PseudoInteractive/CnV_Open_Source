@@ -67,7 +67,6 @@ namespace COTG.JSON
 
 		public static void Process(bool fetch)
 		{
-			fetchReportsRequested |= fetch;
 			IncomingUpdateDebounce.Go();
 		}
 		public static void ProcessTask()
@@ -84,8 +83,7 @@ namespace COTG.JSON
 				return;
 			}
 			var fetchReports = DefenseHistoryTab.IsVisible();
-			fetchReportsRequested = false;
-
+			
 			try
 			{
 
@@ -609,10 +607,10 @@ namespace COTG.JSON
 									  }
 								  }
 								  //   ShellPage.instance.incoming.Text = $"In {personalIncomingCount} at {firstIncomingStr} ({watchIncomingCount} at {firstWatchIncomingStr})";
-								  if (watchIncoming.count + personalIncoming.count > 0)
-									  ApplicationView.GetForCurrentView().Title = note;
-								  else
-									  ApplicationView.GetForCurrentView().Title = $"No incoming";
+								//  if (watchIncoming.count + personalIncoming.count > 0)
+								//	  ApplicationView.GetForCurrentView().Title = note;
+								 // else
+								//	  ApplicationView.GetForCurrentView().Title = $"No incoming";
 
 								  lastPersonalIncomingCount = personalIncoming.count;
 								  lastWatchIncomingCount = watchIncoming.count;

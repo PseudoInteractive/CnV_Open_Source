@@ -75,7 +75,7 @@ namespace COTG.Services
                 frame.Navigate(pageType, viewControl);
                 Window.Current.Content = frame;
                 Window.Current.Activate();
-                ApplicationView.GetForCurrentView().Title = viewControl.Title;
+             //   ApplicationView.GetForCurrentView().Title = viewControl.Title;
             });
 
             return viewControl;

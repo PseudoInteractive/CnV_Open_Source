@@ -340,7 +340,7 @@ namespace COTG.Views
             if (RootAppWindow == null)
             {
 
-                var coreTitleBar = CoreApplication.GetCurrentView().TitleBar;
+    //            var coreTitleBar = CoreApplication.GetCurrentView().TitleBar;
   //              coreTitleBar.LayoutMetricsChanged -= CoreTitleBar_LayoutMetricsChanged;
 
             }

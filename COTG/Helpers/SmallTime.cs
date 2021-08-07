@@ -20,17 +20,17 @@ namespace COTG
 
 		internal const uint t0Seconds = 0;
 		// legacy
-		internal int secondsI => (int)seconds;
+		internal readonly int secondsI => (int)seconds;
 		internal uint seconds;
 		internal static SmallTime zero = new SmallTime(0);
 
-		internal DateTimeOffset dateTime => ToDateTime(seconds); // should we convert with localTimeError?
+		internal readonly DateTimeOffset dateTime => ToDateTime(seconds); // should we convert with localTimeError?
 
-		public SmallTime Date()
+		public readonly SmallTime Date()
 		{
 			return new SmallTime( (uint)new DateTimeOffset(dateTime.Date,TimeSpan.Zero).ToUnixTimeSeconds());
 		}
-		public string FormatDefault() => dateTime.FormatDefault();
+		public readonly string FormatDefault() => dateTime.FormatDefault();
 
 
 		/// <summary>
@@ -51,7 +51,7 @@ namespace COTG
 		}
 		public static SmallTime serverNow => new SmallTime(JSClient.ServerTimeSeconds());
 
-		public bool isZero => seconds == 0;
+		public readonly bool isZero => seconds == 0;
 		
 		public static implicit operator uint(SmallTime t) => t.seconds;
 		public static implicit operator  int(SmallTime t) => t.secondsI;
@@ -59,36 +59,36 @@ namespace COTG
 		public static implicit operator SmallTime(uint t) => new SmallTime(t);
 		public static implicit operator SmallTime(int t) => new SmallTime(t);
 
-		private string GetDebuggerDisplay()
+		private readonly string GetDebuggerDisplay()
 		{
 			return ToString();
 		}
 
-		public override bool Equals(object obj)
+		public readonly override bool Equals(object obj)
 		{
 			return obj != null && obj is SmallTime t && t.seconds == seconds;
 		}
 
-		public override int GetHashCode()
+		public readonly override int GetHashCode()
 		{
 			return (int)seconds;
 		}
 
-		public override string ToString()
+		public readonly override string ToString()
 		{
 			return FormatDefault();
 		}
-		public string ToString(string s)
+		public readonly string ToString(string s)
 		{
 			return dateTime.ToString(s, CultureInfo.InvariantCulture);
 		}
 
-		public bool Equals(SmallTime other)
+		public readonly bool Equals(SmallTime other)
 		{
 			return seconds == other.seconds;
 		}
 
-		int IComparable<SmallTime>.CompareTo(SmallTime other)
+		public readonly int CompareTo(SmallTime other)
 		{
 			return seconds.CompareTo(other.seconds);
 		}

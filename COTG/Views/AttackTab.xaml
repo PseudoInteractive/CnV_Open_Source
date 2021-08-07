@@ -79,34 +79,12 @@
                              Value="{x:Bind game:AttackPlan.plan.attackSenMaxAssaults, Mode=TwoWay}"
                              NumberFormatter="{x:Bind cotg:App.formatterInt,Mode=OneTime}"
                              SmallChange="1" />
-			</tk:WrapPanel>
-			<tk:WrapPanel Orientation="Horizontal">
-				<winui:NumberBox Header="Assault 0 Time"
+				<winui:NumberBox Header="Ticks to Cap"
                              Style="{StaticResource NumberBoxSmall}"
-                             Value="{x:Bind game:AttackPlan.plan.assault0Time, Mode=TwoWay}"
-                             ToolTipService.ToolTip="The first round of senator assaults will arrive at SiegeTime + AssaultTime (in hours)"
-                             NumberFormatter="{x:Bind cotg:App.formatter2Digit,Mode=OneTime}"
+                             Value="{x:Bind game:AttackPlan.plan.ticksToCapture, Mode=TwoWay}"
+                             NumberFormatter="{x:Bind cotg:App.formatterInt,Mode=OneTime}"
+                             ToolTipService.ToolTip="The number of ticks to capture a city.  For a capture of 20% this is 5, for >= 25% this is 4"
                              SmallChange="1" />
-				<winui:NumberBox Header="Assault 1 Time"
-                             Style="{StaticResource NumberBoxSmall}"
-                             Value="{x:Bind game:AttackPlan.plan.assault1Time, Mode=TwoWay}"
-                             ToolTipService.ToolTip="The second round of senator assaults will arrive at SiegeTime + AssaultTime (in hours)"
-                             NumberFormatter="{x:Bind cotg:App.formatter2Digit,Mode=OneTime}"
-                             SmallChange="1" />
-				<winui:NumberBox Header="Assault 2 Time"
-                             Style="{StaticResource NumberBoxSmall}"
-                             Value="{x:Bind game:AttackPlan.plan.assault2Time, Mode=TwoWay}"
-                             ToolTipService.ToolTip="The third round of senator assaults will arrive at SiegeTime + AssaultTime (in hours)"
-                             NumberFormatter="{x:Bind cotg:App.formatter2Digit,Mode=OneTime}"
-                             SmallChange="1" />
-				<winui:NumberBox Header="Assault 3 Time"
-                             Style="{StaticResource NumberBoxSmall}"
-                             Value="{x:Bind game:AttackPlan.plan.assault3Time, Mode=TwoWay}"
-                             ToolTipService.ToolTip="The fourth round of senator assaults will arrive at SiegeTime + AssaultTime (in hours)"
-                             NumberFormatter="{x:Bind cotg:App.formatter2Digit,Mode=OneTime}"
-                             SmallChange="1" />
-
-
 			</tk:WrapPanel>
 			<tk:WrapPanel Orientation="Horizontal">
 				<winui:NumberBox Header="Distance Penalty"
@@ -262,7 +240,7 @@
                      AlternatingRowBackground="#FF301030">
 
 			<tk:DataGrid.Columns>
-				<tk:DataGridTemplateColumn Header="Icon">
+				<tk:DataGridTemplateColumn Header="I">
 					<tk:DataGridTemplateColumn.CellTemplate>
 						<DataTemplate x:DataType="game:City">
 							<Image Source="{x:Bind icon,Mode=OneTime}"
@@ -297,7 +275,7 @@
 						</DataTemplate>
 					</tk:DataGridTemplateColumn.CellTemplate>
 				</tk:DataGridTemplateColumn>
-				<tk:DataGridTemplateColumn Header="Target" IsReadOnly="True" Tag="attackCluster">
+				<tk:DataGridTemplateColumn Header="Id" IsReadOnly="True" Tag="attackCluster">
 					<tk:DataGridTemplateColumn.CellTemplate>
 						<DataTemplate x:DataType="game:City">
 							<HyperlinkButton Content="{x:Bind plan.attackCluster}"
@@ -485,7 +463,7 @@
 					 Sorting="Sorting"
 					 AlternatingRowBackground="#FF103020">
 				<tk:DataGrid.Columns>
-					<tk:DataGridTemplateColumn Header="Icon" IsReadOnly="True">
+					<tk:DataGridTemplateColumn Header="I" IsReadOnly="True">
 						<tk:DataGridTemplateColumn.CellTemplate>
 							<DataTemplate x:DataType="game:City">
 								<Image Source="{x:Bind icon,Mode=OneTime}"
@@ -509,19 +487,21 @@
 							</DataTemplate>
 						</tk:DataGridTemplateColumn.CellTemplate>
 					</tk:DataGridTemplateColumn>
-					<tk:DataGridTextColumn Header="Player"
-                                       Binding="{Binding playerName, Mode=OneTime}" IsReadOnly="True" />
 					<tk:DataGridComboBoxColumn  Header="Type"
                                             Binding="{Binding attackType,Mode=TwoWay}"
                                             ItemsSource="{x:Bind game:AttackComboType.targetTypes , Mode=OneTime}"
-                                            DisplayMemberPath="name" />
-					<tk:DataGridTextColumn Header="Cluster" Tag="AttackCluster"
-                                       Binding="{Binding plan.attackCluster, Mode=OneWay}"
-                                       IsReadOnly="True" />
-					<tk:DataGridTextColumn Header="City"
-                                       Binding="{Binding nameAndRemarks, Mode=OneTime}" IsReadOnly="True" />
+                                            DisplayMemberPath="name" IsReadOnly="False" />
+					<tk:DataGridTextColumn Header="Pri"
+                                       Binding="{Binding PlanPriority,Converter={StaticResource FloatConverter},Mode=TwoWay}"  />
 					<tk:DataGridTextColumn Header="Intel"
                                        Binding="{Binding classificationString, Mode=OneTime}" IsReadOnly="True" />
+					<tk:DataGridTextColumn Header="Id" Tag="AttackCluster"
+                                       Binding="{Binding plan.attackCluster, Mode=OneWay}"
+                                       IsReadOnly="True" />
+					<tk:DataGridTextColumn Header="Player"
+                                       Binding="{Binding playerName, Mode=OneTime}" IsReadOnly="True" />
+					<tk:DataGridTextColumn Header="City"
+                                       Binding="{Binding nameAndRemarks, Mode=OneTime}" IsReadOnly="True" />
 					<tk:DataGridTemplateColumn Header="Remove">
 						<tk:DataGridTemplateColumn.CellTemplate>
 							<DataTemplate x:DataType="game:City">

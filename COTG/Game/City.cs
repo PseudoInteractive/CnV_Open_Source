@@ -87,7 +87,7 @@ namespace COTG.Game
 
 		public const int bidMin = bidBarracks;
 		public const int bidMax = bidTemple + 1;
-		public AttackPlanCity plan => AttackPlan.GetForRead(cid);
+		public  AttackPlanCity plan => AttackPlan.GetForRead(cid);
 		public AttackPlanCity planWritable => AttackPlan.Get(cid);
 		public int attackCluster => plan.attackCluster;
 		public AttackType attackType
@@ -1691,11 +1691,11 @@ namespace COTG.Game
 			public int unfinishedCabins;
 			public bool hasCastle;
 			public int wallLevel;
-			public bool hasWall=>wallLevel > 0;
+			public readonly bool hasWall =>wallLevel > 0;
 			public int scoutpostCount;
 			public int unfinishedTowerCount;
 			internal int towerCount;
-			public int maxBuildings => townHallLevel * 10;
+			public readonly int maxBuildings => townHallLevel * 10;
 
 			public int GetMainMilitaryBid()
 			{
@@ -1717,7 +1717,7 @@ namespace COTG.Game
 		public static BuildingCount GetBuildingCountPostQueue(int cabinLevel) => GetBuildingCounts(CityBuild.postQueueBuildings, cabinLevel);
 
 	
-		public  int GetBuildingLimit(BuildingCount bc)
+		public int GetBuildingLimit(BuildingCount bc)
 		{
 			(bool hasCastleInLayout, bool hasSorcTowerInLayout) = hasCastleOrSorcTowerInLayout;
 			var rv = 100;
@@ -1828,7 +1828,11 @@ namespace COTG.Game
 				return $"{bc.buildings}/{bc.maxBuildings} c:{bc.cabins} a:{bc.academies!=0} s:{bc.sorcTowers!=0} u:{bc.unfinishedBuildings}";
 			}
 		}
-
+		public float PlanPriority
+		{
+			get => plan.priority;
+			set => planWritable.priority = value;
+		}	
 		public static void AllCityDataDirty()
 		{
 			App.DispatchOnUIThreadLow(async () =>

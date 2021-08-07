@@ -79,13 +79,13 @@ namespace COTG.Game
 		public bool isAlias;
 		public static TagInfo invalid = new TagInfo() { s = String.Empty };
 
-		public override bool Equals(object obj)
+		public readonly override bool Equals(object obj)
 		{
 			return obj is TagInfo info &&
 				   s == info.s;
 		}
 
-		public override int GetHashCode()
+		public readonly override int GetHashCode()
 		{
 			return HashCode.Combine(s);
 		}

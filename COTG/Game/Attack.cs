@@ -93,6 +93,11 @@ namespace COTG.Game
 		public byte troopType { get; set; }
 		[JsonInclude]
 		public bool hasAcademy { get; set;}
+
+		[JsonInclude]
+		public float priority { get; set; } = 1;
+
+		
 		[JsonInclude]
 		public int fixedTarget { get; set; } // only valid if attack, if set the target is specified by the player
 
@@ -103,11 +108,11 @@ namespace COTG.Game
 		public City city => City.GetOrAdd(cid);
 		public Player player => city.player;
 		public int pid => city.pid;
-		public float TraveltimeMinutes(AttackPlanCity other)
+		public float TraveltimeMinutes(int otherCid)
 		{
 			// Todo: Ram attacks
 			var tt = (attackType == AttackType.senator) ? ttSenator : (attackType == AttackType.se) ? ttScorp :troopType;
-			return  tt.TravelTimeMinutes(cid, other.cid);
+			return  (float)tt.TravelTimeMinutes(cid, otherCid);
 		}
 
 		public bool isAttack => city.IsAllyOrNap(); // true for attack, false for target, must be set on initialization
@@ -252,14 +257,6 @@ namespace COTG.Game
 		[JsonInclude]
 		public int attackSenMaxAssaults = 10;
 
-		[JsonInclude]
-		public int assault0Time = 2;
-		[JsonInclude]
-		public int assault1Time = 0;
-		[JsonInclude]
-		public int assault2Time = 3;
-		[JsonInclude]
-		public int assault3Time = 1;
 
 		[JsonInclude]
 		public float moralPenalty = 32;
@@ -270,6 +267,8 @@ namespace COTG.Game
 		[JsonInclude]
 		public float distancePenalty = 1;
 
+		[JsonInclude]
+		public int ticksToCapture = 4;
 
 		[JsonInclude]
 		public ImmutableArray<AttackPlanCity> attacks  = ImmutableArray<AttackPlanCity>.Empty;

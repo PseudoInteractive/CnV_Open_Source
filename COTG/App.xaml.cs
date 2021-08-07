@@ -364,11 +364,21 @@ namespace COTG
 				ProcessIdleTasks();
 			}
 
-
-			//var coreTitleBar = CoreApplication.GetCurrentView().TitleBar;
-			//coreTitleBar.ExtendViewIntoTitleBar = false;
 			SystemInformation.Instance.TrackAppUse(args);
+#if DEBUG
+			var coreTitleBar = CoreApplication.GetCurrentView().TitleBar;
+			coreTitleBar.ExtendViewIntoTitleBar = false;
+			var titleBar = Windows.UI.ViewManagement.ApplicationView.GetForCurrentView().TitleBar;
+
+
+var color = Windows.UI.Color.FromArgb(0xFF, 0x20, 0x0, 0x35);
+			titleBar.BackgroundColor = color;
+			titleBar.ForegroundColor = color;
+	//		titleBar.ButtonForegroundColor = color;
+			titleBar.ButtonBackgroundColor = color;
+			//titleBar.ButtonInactiveBackgroundColor = Windows.UI.Colors.Transparent;
 			//  UpdateTitleBarLayout(coreTitleBar);
+#endif
 
 			// Set XAML element as a draggable region.
 			//          Window.Current.SetTitleBar(ShellPage.instance.AppTitleBar);
@@ -378,7 +388,7 @@ namespace COTG
 
 			foreach (var view in CoreApplication.Views)
 			{
-				Log($"{view.TitleBar.ToString()} {view.IsMain} ");
+				//Log($"{view.TitleBar.ToString()} {view.IsMain} ");
 				var window = view.CoreWindow;
 				window.PointerMoved -= OnPointerMoved;
 				window.PointerPressed -= OnPointerPressed; ;

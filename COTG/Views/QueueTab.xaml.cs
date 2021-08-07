@@ -1250,7 +1250,7 @@ namespace COTG.Game
 
 	public partial class City
 	{
-		public bool leaveMe => HasTag(Tags.LeaveMe);
+		public  bool leaveMe => HasTag(Tags.LeaveMe);
 
 		//public async Task<BuildInfo> GetBuildStage()
 		//{
@@ -1263,16 +1263,16 @@ namespace COTG.Game
 		//	return GetBuildStage(GetBuildingCounts(cabinLevel));
 
 		//}
-		bool NeedsSorcTower(BuildingCount bc)
+		public  bool NeedsSorcTower(BuildingCount bc)
 		{
 			return ((bc.sorcTowers == 0 || bc.sorcTowerLevel != 10) && tsTotal > SettingsPage.tsForSorcTower && HasOverlayBuildingOfType(bidSorcTower));
 		}
-		bool NeedsCastle(BuildingCount bc)
+		public  bool NeedsCastle(BuildingCount bc)
 		{
 			return ((!bc.hasCastle) && tsTotal > SettingsPage.tsForCastle && HasOverlayBuildingOfType(bidCastle));
 		}
 
-		public string bStage
+		public  string bStage
 		{
 			get
 			{
@@ -1332,7 +1332,7 @@ namespace COTG.Game
 
 		//}
 
-		public bool HasOverlayBuildingOfType(int bid)
+		public  bool HasOverlayBuildingOfType(int bid)
 		{
 			if (!isLayoutValid)
 				return false;
@@ -1359,7 +1359,7 @@ namespace COTG.Game
 			return (0, 0);
 		}
 
-		public bool hasCastleInLayout
+		public  bool hasCastleInLayout
 		{
 			get
 			{
@@ -1374,7 +1374,7 @@ namespace COTG.Game
 				return false;
 			}
 		}
-		public (bool hasCastle, bool hasSorcTower) hasCastleOrSorcTowerInLayout
+		public  (bool hasCastle, bool hasSorcTower) hasCastleOrSorcTowerInLayout
 		{
 			get
 			{
@@ -1394,7 +1394,7 @@ namespace COTG.Game
 			}
 		}
 
-		public void ClearRes()
+		public  void ClearRes()
 		{
 			App.DispatchOnUIThreadExclusive(cid,async () =>
 		   {
@@ -1436,7 +1436,7 @@ namespace COTG.Game
 			}
 		}
 
-		public bool IsLayoutComplete()
+		public  bool IsLayoutComplete()
 		{
 			try
 			{
@@ -1466,7 +1466,7 @@ namespace COTG.Game
 			return true;
 		}
 
-		internal bool IsAllyOrNap()
+		internal  bool IsAllyOrNap()
 		{
 			return Alliance.IsAllyOrNap(allianceId);
 		}

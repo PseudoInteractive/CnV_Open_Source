@@ -55,7 +55,7 @@ namespace COTG
 		public int Count;
 		public StringSpan s;
 		public StringList(StringSpan s) { this.s = s; Count = 0; }
-		public StringSpan this[int id]
+		public readonly StringSpan this[int id]
 		{
 			get
 			{
@@ -91,7 +91,7 @@ namespace COTG
 			public StringListEnumerator GetEnumerator() { return this; }
 			public StringListEnumerator(StringSpan _s) { s = _s; ip = 0; i0 = 0; i1 = 0; }
 			public StringListEnumerator(string _s) { s = _s.AsSpan(); ip = 0; i0 = 0; i1 = 0; }
-			public StringPair Current => new StringPair() { word = s.Slice(i0, i1 - i0), space = s.Slice(ip, i0 - ip) };
+			public readonly StringPair Current => new StringPair() { word = s.Slice(i0, i1 - i0), space = s.Slice(ip, i0 - ip) };
 			public bool MoveNext()
 			{
 				ip = i1;

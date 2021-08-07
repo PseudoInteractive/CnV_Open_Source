@@ -62,7 +62,7 @@ namespace COTG.JSON
 			}
 
 			updateInProgress = true;
-			fetchReport = HitTab.IsVisible;
+			var fetchReports = HitTab.IsVisible();
             if (fetchReports)
                 ShellPage.WorkStart(work);
 

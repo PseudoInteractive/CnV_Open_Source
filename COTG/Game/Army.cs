@@ -286,7 +286,7 @@ namespace COTG.Game
 		}
 		public readonly int Count
 		{
-			get
+			 get
 			{
 				int count = 0;
 				unsafe
@@ -1042,7 +1042,7 @@ namespace COTG.Game
         // approximation using players speed bonus
         public static double TravelTimeMinutes(this byte tt,int cid0, int cid1)
         {
-			return Enum.TroopTravelMinutes(tt, cid0, cid1);
+			return Enum.TroopTravelMinutes(tt, cid0.DistanceToCid(cid1) );
         }
 
 

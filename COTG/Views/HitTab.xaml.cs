@@ -65,7 +65,6 @@ namespace COTG.Views
 				if (OutgoingOverview.updateInProgress == false)
 				{
 					// avaiting on this would take too long
-					OutgoingOverview.fetchRequested |= SettingsPage.fetchFullHistory;
 					OutgoingOverview.OutgoingUpdateDebounce.Go();
 				}
 			}
