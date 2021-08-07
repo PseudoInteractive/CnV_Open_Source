@@ -484,21 +484,15 @@ namespace COTG.Views
 							batch.Add(GetChatMessage(msg));
 						}
 						int c = batch.Count-1;
-						var now = JSClient.ServerTime() + TimeSpan.FromSeconds(120);
-						if (batch[c].time > now)
+						var epsilon = TimeSpan.FromSeconds(10);
+						var lastTime = JSClient.ServerTime() + epsilon;
+						for (; c >= 0;--c)
 						{
-							var delta = TimeSpan.FromDays( (now - batch[c].time).Days - 1 );
-							batch[c - 1].time += delta; // days are missing damn it
-						}
-
-						for (; c > 0;--c)
-						{
-							if( batch[c].time < batch[c-1].time - TimeSpan.FromSeconds(120))
+							while( lastTime < batch[c].time )
 							{
-								var delta = TimeSpan.FromDays( (batch[c ].time - batch[c-1].time).Days - 1);
-								batch[c - 1].time += delta; // days are missing damn it
-
+								batch[c].time -= TimeSpan.FromDays(1); // days are missing damn it
 							}
+							lastTime = batch[c].time+epsilon;
 						}
 
 						if (a == 333)

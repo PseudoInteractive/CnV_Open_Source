@@ -90,6 +90,7 @@ namespace COTG.Game
 		{
 			wood = stone = iron = food = 0;
 		}
+		public bool isNonZero => (wood | stone | iron | food) != 0;
 	}
 
 	public struct ResourceFilter
@@ -132,7 +133,7 @@ namespace COTG.Game
 
 		public static ResourcesNullable zero = new ResourcesNullable(0, 0, 0, 0);
 		public static ResourcesNullable _null = default;
-
+		public bool isNull => (wood is null) & (stone is null) & (iron is null) & (food is null);
 		public int? this[int index]
 		{
 			get => index switch { 0 => wood, 1 => stone, 2 => iron, _ => food };

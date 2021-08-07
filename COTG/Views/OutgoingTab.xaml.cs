@@ -154,7 +154,7 @@ namespace COTG.Views
 					var tab = HitTab.instance;
 					if (!isVisible)
 					{
-						tab.ShowOrAdd(true, false);
+						tab.ShowOrAdd(true, onlyIfClosed:true);
 
 					}
 					else

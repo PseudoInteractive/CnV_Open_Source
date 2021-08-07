@@ -395,9 +395,9 @@ namespace COTG
 		internal static WebView Initialize(Windows.UI.Xaml.Controls.Grid panel)
 		{
 			httpFilter = new HttpBaseProtocolFilter();
-	//		httpFilter.AutomaticDecompression = true;
+			httpFilter.AutomaticDecompression = true;
 
-		//	httpFilter.AllowAutoRedirect = true;
+			httpFilter.AllowAutoRedirect = true;
 		//	httpFilter.UseProxy = false;
 
 			httpFilter.MaxVersion = HttpVersion.Http20;
@@ -412,14 +412,14 @@ namespace COTG
 			httpFilter.IgnorableServerCertificateErrors.Add(Windows.Security.Cryptography.Certificates.ChainValidationResult.RevocationInformationMissing);
 			httpFilter.IgnorableServerCertificateErrors.Add(Windows.Security.Cryptography.Certificates.ChainValidationResult.RevocationFailure);
 
-		//	httpFilter.AllowUI = true;
-//			httpFilter.CookieUsageBehavior = HttpCookieUsageBehavior.Default;
+			httpFilter.AllowUI = true;
+			httpFilter.CookieUsageBehavior = HttpCookieUsageBehavior.Default;
 
 
 			//	  HttpBaseProtocolFilter.CreateForUser( User.GetDefault());
 			//                         httpFilter.ServerCredential =
 
-		//	httpFilter.MaxConnectionsPerServer = 10;
+			httpFilter.MaxConnectionsPerServer = 10;
 			//  httpFilter.ServerCustomValidationRequested += HttpFilter_ServerCustomValidationRequested;
 			httpFilter.CacheControl.ReadBehavior = HttpCacheReadBehavior.NoCache;
 			httpFilter.CacheControl.WriteBehavior = HttpCacheWriteBehavior.NoCache;

@@ -63,7 +63,6 @@ namespace COTG.JSON
 
 		static Debounce IncomingUpdateDebounce = new(DoProcess) { throttled = true, debounceDelay = 1000, throttleDelay = 2000 };
 
-		static bool fetchReportsRequested;
 
 
 		public static void Process(bool fetch)
@@ -84,7 +83,7 @@ namespace COTG.JSON
 
 				return;
 			}
-			var fetchReports = fetchReportsRequested;
+			var fetchReports = DefenseHistoryTab.IsVisible();
 			fetchReportsRequested = false;
 
 			try
@@ -430,7 +429,7 @@ namespace COTG.JSON
 															  {
 																  // this will early out if its already queued
 																  source.QueueClassify(true);
-																  Set(ref army.troops, new TroopTypeCount(source.classificationTT, -1));
+																  Set(ref army.troops, new TroopTypeCount(source.classificationTroopType, -1));
 																  Assert(army.troops.Count == 1);
 															  }
 
@@ -581,6 +580,45 @@ namespace COTG.JSON
 								  }
 
 							  }
+							  {
+								  var defenderPage = IncomingTab.instance;
+								  if (defenderPage != null)
+								  {
+									 App.DispatchOnUIThreadLow( defenderPage.NotifyIncomingUpdated );
+								  }
+							
+							  }
+							  if (lastPersonalIncomingCount != personalIncoming.count || watchIncoming.count != lastWatchIncomingCount)
+							  {
+								  string note = "Incoming";
+
+								  if (personalIncoming.count != 0)
+									  note += $" {personalIncoming.note}";
+								  if (watchIncoming.count != 0)
+									  note += $" (watched {watchIncoming.note})";
+
+								  if (lastPersonalIncomingCount < personalIncoming.count || lastWatchIncomingCount < watchIncoming.count)
+								  {
+									  var now = DateTime.UtcNow;
+									  if (now - lastIncomingNotification > TimeSpan.FromMinutes(3))
+									  {
+										  lastIncomingNotification = now;
+										  Note.Show(note);
+										  COTG.Services.ToastNotificationsService.instance.ShowNotification(note, "Incoming");
+
+									  }
+								  }
+								  //   ShellPage.instance.incoming.Text = $"In {personalIncomingCount} at {firstIncomingStr} ({watchIncomingCount} at {firstWatchIncomingStr})";
+								  if (watchIncoming.count + personalIncoming.count > 0)
+									  ApplicationView.GetForCurrentView().Title = note;
+								  else
+									  ApplicationView.GetForCurrentView().Title = $"No incoming";
+
+								  lastPersonalIncomingCount = personalIncoming.count;
+								  lastWatchIncomingCount = watchIncoming.count;
+
+							  }
+
 						  }
 						  catch (Exception ex)
 						  {
@@ -846,36 +884,6 @@ namespace COTG.JSON
 							if (fetchReports)
 								ShellPage.WorkEnd(work);
 
-							if (lastPersonalIncomingCount != personalIncoming.count || watchIncoming.count != lastWatchIncomingCount)
-							{
-								string note = "Incoming";
-
-								if (personalIncoming.count != 0)
-									note += $" {personalIncoming.note}";
-								if (watchIncoming.count != 0)
-									note += $" (watched {watchIncoming.note})";
-
-								if (lastPersonalIncomingCount < personalIncoming.count || lastWatchIncomingCount < watchIncoming.count)
-								{
-									var now = DateTime.UtcNow;
-									if (now - lastIncomingNotification > TimeSpan.FromMinutes(3))
-									{
-										lastIncomingNotification = now;
-										Note.Show(note);
-										COTG.Services.ToastNotificationsService.instance.ShowNotification(note,"Incoming");
-
-									}
-								}
-								//   ShellPage.instance.incoming.Text = $"In {personalIncomingCount} at {firstIncomingStr} ({watchIncomingCount} at {firstWatchIncomingStr})";
-								if (watchIncoming.count + personalIncoming.count > 0)
-									ApplicationView.GetForCurrentView().Title = note;
-								else
-									ApplicationView.GetForCurrentView().Title = $"No incoming";
-
-								lastPersonalIncomingCount = personalIncoming.count;
-								lastWatchIncomingCount = watchIncoming.count;
-
-							}
 							string killNote = "";
 
 							if (fetchReports)
@@ -905,11 +913,6 @@ namespace COTG.JSON
 								// App.DispatchOnUIThread(() =>
 								// We should do this on the Render Thread
 								defPage.SetHistory((reportsIncoming.OrderByDescending((atk) => atk.time.Ticks)).ToArray());
-							}
-							{
-								var defenderPage = IncomingTab.instance;
-								if (defenderPage != null)
-									defenderPage.NotifyIncomingUpdated();
 							}
 							if (fetchReports)
 								Note.Show($"Complete: {reportsIncoming.Count + incCount} attacks, {fetched} fetched {killNote}");

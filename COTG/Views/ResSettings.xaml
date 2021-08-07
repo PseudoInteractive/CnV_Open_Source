@@ -32,7 +32,7 @@
 		</Border>
 		<Border Style="{StaticResource BorderReveal}">
 			<StackPanel>
-				<ToggleSwitch Header="Request Resources" OnContent="Set" OffContent="Ignore" IsOn="{x:Bind applyRequested}" />
+				<!--<ToggleSwitch Header="Request Resources" OnContent="Set" OffContent="Ignore" IsOn="{x:Bind applyRequested}" />-->
 				<tk:WrapPanel Orientation="Horizontal" Margin="4" >
 
 					<winui:NumberBox Header="Req Wood"
@@ -63,7 +63,7 @@
 		</Border>
 		<Border Style="{StaticResource BorderReveal}" Margin="2,8,2,2">
 			<StackPanel>
-				<ToggleSwitch Header="Send Resources" OnContent="Set" OffContent="Ignore" IsOn="{x:Bind applySend}" />
+				<!--<ToggleSwitch Header="Send Resources" OnContent="Set" OffContent="Ignore" IsOn="{x:Bind applySend}" />-->
 				<tk:WrapPanel  Orientation="Horizontal" >
 					<winui:NumberBox Header="Wood Limit"
 										PlaceholderText="No Change"

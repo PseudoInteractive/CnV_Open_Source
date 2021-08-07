@@ -12,183 +12,233 @@
 			  TabNavigation="Once"
 			  IsTabStop="True"
                mc:Ignorable="d">
-	
+
 	<Grid>
-		
+
 		<Grid.RowDefinitions>
-			<RowDefinition Height="auto" />
-			<RowDefinition Height="auto" />
 			<RowDefinition Height="auto" />
 			<RowDefinition Height="*" />
 			<RowDefinition Height="*" />
 		</Grid.RowDefinitions>
-		
-		<tk:WrapPanel Orientation="Horizontal">
-			<winui:NumberBox Header="Max travel hours Sen"
+		<StackPanel>
+			<tk:WrapPanel Orientation="Horizontal">
+				<winui:NumberBox Header="Max travel hours Sen"
                              Style="{StaticResource NumberBoxSmall}"
                              Value="{x:Bind game:AttackPlan.plan.attackMaxTravelHoursSen, Mode=TwoWay}"
                              ToolTipService.ToolTip="Senator targets that require longer travel times are ignored"
                              NumberFormatter="{x:Bind cotg:App.formatter2Digit,Mode=OneTime}"
                              SmallChange="0.25" />
-			<winui:NumberBox Header="Max travel hours SE"
+				<winui:NumberBox Header="Max travel hours SE"
                              Style="{StaticResource NumberBoxSmall}"
                              Value="{x:Bind game:AttackPlan.plan.attackMaxTravelHoursSE, Mode=TwoWay}"
                              ToolTipService.ToolTip="SE targets that require longer travel times are ignored"
                              NumberFormatter="{x:Bind cotg:App.formatter2Digit,Mode=OneTime}"
                              SmallChange="0.25" />
-			<winui:NumberBox Header="Max SE fakes"
+				<winui:NumberBox Header="Max SE fakes"
                              ToolTipService.ToolTip="The maximum number of fakes, if there are more fakes provided, the closest ones will be used"
                              Style="{StaticResource NumberBoxSmall}"
                              Value="{x:Bind game:AttackPlan.plan.attackSEMaxFakes, Mode=TwoWay}"
                              NumberFormatter="{x:Bind cotg:App.formatterInt,Mode=OneTime}"
                              SmallChange="1" />
-			<winui:NumberBox Header="Min SE fakes"
+				<winui:NumberBox Header="Min SE fakes"
                              ToolTipService.ToolTip="The minimum number of fakes per se target"
                              Style="{StaticResource NumberBoxSmall}"
                              Value="{x:Bind game:AttackPlan.plan.attackSEMinFakes, Mode=TwoWay}"
                              NumberFormatter="{x:Bind cotg:App.formatterInt,Mode=OneTime}"
                              SmallChange="1" />
-			<winui:NumberBox Header="Max Sen fakes"
+				<winui:NumberBox Header="Max Sen fakes"
                              ToolTipService.ToolTip="The maximum number of fakes, if there are more fakes provided, the closest ones will be used"
                              Style="{StaticResource NumberBoxSmall}"
                              Value="{x:Bind game:AttackPlan.plan.attackSenMaxFakes, Mode=TwoWay}"
                              NumberFormatter="{x:Bind cotg:App.formatterInt,Mode=OneTime}"
                              SmallChange="1" />
-			<winui:NumberBox Header="Min Sen fakes"
+				<winui:NumberBox Header="Min Sen fakes"
                              ToolTipService.ToolTip="The minimum number of fakes per se target"
                              Style="{StaticResource NumberBoxSmall}"
                              Value="{x:Bind game:AttackPlan.plan.attackSenMinFakes, Mode=TwoWay}"
                              NumberFormatter="{x:Bind cotg:App.formatterInt,Mode=OneTime}"
                              SmallChange="1" />
-			<winui:NumberBox Header="Min SE Assaults"
+				<winui:NumberBox Header="Min SE Assaults"
                              ToolTipService.ToolTip="If assults are culled due to distance and there are fewer assaults than this left, the target will be discarded"
                              Style="{StaticResource NumberBoxSmall}"
                              Value="{x:Bind game:AttackPlan.plan.attackSEMinAssaults, Mode=TwoWay}"
                              NumberFormatter="{x:Bind cotg:App.formatterInt,Mode=OneTime}"
                              SmallChange="1" />
-			<winui:NumberBox Header="Max SE Assaults"
+				<winui:NumberBox Header="Max SE Assaults"
                              Style="{StaticResource NumberBoxSmall}"
                              Value="{x:Bind game:AttackPlan.plan.attackSEMaxAssaults, Mode=TwoWay}"
                              NumberFormatter="{x:Bind cotg:App.formatterInt,Mode=OneTime}"
                              SmallChange="1" />
-			<winui:NumberBox Header="Max Sen Assaults"
+				<winui:NumberBox Header="Min Sen Assaults"
+                             Style="{StaticResource NumberBoxSmall}"
+                             Value="{x:Bind game:AttackPlan.plan.attackSenMinAssaults, Mode=TwoWay}"
+                             NumberFormatter="{x:Bind cotg:App.formatterInt,Mode=OneTime}"
+                             SmallChange="1" />
+				<winui:NumberBox Header="Max Sen Assaults"
                              Style="{StaticResource NumberBoxSmall}"
                              Value="{x:Bind game:AttackPlan.plan.attackSenMaxAssaults, Mode=TwoWay}"
                              NumberFormatter="{x:Bind cotg:App.formatterInt,Mode=OneTime}"
                              SmallChange="1" />
-			<winui:NumberBox Header="Hours To Cap"
-                             ToolTipService.ToolTip="For Senator only, the number of hours required to capture.  Used to time assaults"
+			</tk:WrapPanel>
+			<tk:WrapPanel Orientation="Horizontal">
+				<winui:NumberBox Header="Assault 0 Time"
                              Style="{StaticResource NumberBoxSmall}"
-                             Value="{x:Bind game:AttackPlan.plan.tickToCapture, Mode=TwoWay}"
-                             NumberFormatter="{x:Bind cotg:App.formatterInt,Mode=OneTime}"
+                             Value="{x:Bind game:AttackPlan.plan.assault0Time, Mode=TwoWay}"
+                             ToolTipService.ToolTip="The first round of senator assaults will arrive at SiegeTime + AssaultTime (in hours)"
+                             NumberFormatter="{x:Bind cotg:App.formatter2Digit,Mode=OneTime}"
                              SmallChange="1" />
-		</tk:WrapPanel>
-		<tk:WrapPanel Orientation="Horizontal" Grid.Row="1">
-			<Button Content="Set Attack"
+				<winui:NumberBox Header="Assault 1 Time"
+                             Style="{StaticResource NumberBoxSmall}"
+                             Value="{x:Bind game:AttackPlan.plan.assault1Time, Mode=TwoWay}"
+                             ToolTipService.ToolTip="The second round of senator assaults will arrive at SiegeTime + AssaultTime (in hours)"
+                             NumberFormatter="{x:Bind cotg:App.formatter2Digit,Mode=OneTime}"
+                             SmallChange="1" />
+				<winui:NumberBox Header="Assault 2 Time"
+                             Style="{StaticResource NumberBoxSmall}"
+                             Value="{x:Bind game:AttackPlan.plan.assault2Time, Mode=TwoWay}"
+                             ToolTipService.ToolTip="The third round of senator assaults will arrive at SiegeTime + AssaultTime (in hours)"
+                             NumberFormatter="{x:Bind cotg:App.formatter2Digit,Mode=OneTime}"
+                             SmallChange="1" />
+				<winui:NumberBox Header="Assault 3 Time"
+                             Style="{StaticResource NumberBoxSmall}"
+                             Value="{x:Bind game:AttackPlan.plan.assault3Time, Mode=TwoWay}"
+                             ToolTipService.ToolTip="The fourth round of senator assaults will arrive at SiegeTime + AssaultTime (in hours)"
+                             NumberFormatter="{x:Bind cotg:App.formatter2Digit,Mode=OneTime}"
+                             SmallChange="1" />
+
+
+			</tk:WrapPanel>
+			<tk:WrapPanel Orientation="Horizontal">
+				<winui:NumberBox Header="Distance Penalty"
+                             Style="{StaticResource NumberBoxSmall}"
+                             Value="{x:Bind game:AttackPlan.plan.distancePenalty, Mode=TwoWay}"
+                             ToolTipService.ToolTip="Higher: Value short travel distances.  Lower:  Value other criteria more"
+                             NumberFormatter="{x:Bind cotg:App.formatter2Digit,Mode=OneTime}"
+                             SmallChange="1" />
+				<winui:NumberBox Header="Morale Penalty"
+                             Style="{StaticResource NumberBoxSmall}"
+                             Value="{x:Bind game:AttackPlan.plan.moralPenalty, Mode=TwoWay}"
+                             ToolTipService.ToolTip="Higher: Attacks with moral penalty are less likely.  Lower:  Value other criteria more"
+                             NumberFormatter="{x:Bind cotg:App.formatter2Digit,Mode=OneTime}"
+                             SmallChange="1" />
+				<winui:NumberBox Header="Unbalanced Assault Penalty"
+                             Style="{StaticResource NumberBoxSmall}"
+                             Value="{x:Bind game:AttackPlan.plan.unbalancedAssaultPenalty, Mode=TwoWay}"
+                             ToolTipService.ToolTip="Higher: Each target will have a similar number of assaults.  Lower:  Value other criteria more"
+                             NumberFormatter="{x:Bind cotg:App.formatter2Digit,Mode=OneTime}"
+                             SmallChange="1" />
+				<winui:NumberBox Header="Troop Match Bonus"
+                             Style="{StaticResource NumberBoxSmall}"
+                             Value="{x:Bind game:AttackPlan.plan.troopMatchBonus, Mode=TwoWay}"
+                             ToolTipService.ToolTip="Higher: Attacks will be chosen where the attacker troop type does well against defender troop type (i.e. Horse vs Prae).  Lower:  Value other criteria more"
+                             NumberFormatter="{x:Bind cotg:App.formatter2Digit,Mode=OneTime}"
+                             SmallChange="1" />
+
+
+			</tk:WrapPanel>
+			<tk:WrapPanel Orientation="Horizontal">
+				<Button Content="Set Attack"
                     Style="{StaticResource ButtonSmall}"
                     ToolTipService.ToolTip="Assign attackers to explicit targets (uses selected)"
                     Click="SetAttack_Click" />
 
-			<Button Content="Remove Selected.."
+				<Button Content="Remove Selected.."
                     Style="{StaticResource ButtonSmall}"
                     ToolTipService.ToolTip="Remove selected Attacks or Targets"
                     Click="RemoveSelected_Click" />
-			
-			<Button Content="Attacker Types.."
-                    ToolTipService.ToolTip="Sets selected attacker castle type"
+
+				<Button Content="Attacker Types.."
+                    ToolTipService.ToolTip="Sets selected attacker types"
                     Style="{StaticResource ButtonSmall}"
                     Click="SetAttackerType" />
 
-			<Button Content="Add Attacks from Clipboard"
+				<Button Content="Add Attacks from Clipboard"
                     ToolTipService.ToolTip="Extracts coordinates from the clipboard and adds attacks"
                     Style="{StaticResource ButtonSmall}">
-				<Button.Flyout>
-					<Flyout x:Name="addAttackFlyout">
-						<StackPanel>
-							<CheckBox x:Name="UpdateExisting" Content="Update Existing" IsChecked="True" />
-							<Button Content="Add" Click="AddAttacksFromClipboard" 
+					<Button.Flyout>
+						<Flyout x:Name="addAttackFlyout">
+							<StackPanel>
+								<CheckBox x:Name="UpdateExisting" Content="Update Existing" IsChecked="True" />
+								<Button Content="Add" Click="AddAttacksFromClipboard" 
 								                Style="{StaticResource ButtonSmall}"
 								/>
-						</StackPanel>
-					</Flyout>
-				</Button.Flyout>
-				
-			</Button>
-			<Button Content="Add Attacks from Player"
+							</StackPanel>
+						</Flyout>
+					</Button.Flyout>
+
+				</Button>
+				<Button Content="Add Attacks from Player"
                     ToolTipService.ToolTip="Adds castles from a player, given a troop type and continent"
                     Style="{StaticResource ButtonSmall}"
                     Click="{x:Bind view:AttackAddPlayer.Show}" />
-			<Button Content="Add Targets from Clipboard"
-                    ToolTipService.ToolTip="Extracts coordinates from the clipboard and adds fakse, you can later select which are real"
-                    Style="{StaticResource ButtonSmall}"
-                    Click="AddTargetsFromClipboard" />
-			<Button Content="Select Attackers"
+				<Button Content="Select Attackers"
                     Style="{StaticResource ButtonSmall}"
                     Click="SelectAttackers" />
-			<Button x:Name="arrivalSen"
+				<Button x:Name="arrivalSen"
                            Content="Sen Arrival..."
 	    	               Click="ArrivalSenTapped"
                             Style="{StaticResource ButtonSmall}"
                            ToolTipService.ToolTip="Time at which Senator sieges arrive." />
-			<Button x:Name="arrivalSE"
+				<Button x:Name="arrivalSE"
                            Content="SE Arrival..."
     		               Click="ArrivalSETapped"
                             Style="{StaticResource ButtonSmall}"
                            ToolTipService.ToolTip="Time at which SE arrives." />
-		</tk:WrapPanel>
-		<tk:WrapPanel Grid.Row="2">
+			</tk:WrapPanel>
+			<tk:WrapPanel>
 
-			<Border Style="{StaticResource BorderReveal}">
-				<TextBlock x:Name="attackCount"
+				<Border Style="{StaticResource BorderReveal}">
+					<TextBlock x:Name="attackCount"
                            x:FieldModifier="public"
                            IsTextSelectionEnabled="True" />
-			</Border>
-			<Border
+				</Border>
+				<Border
                     Style="{StaticResource BorderReveal}">
-				<TextBlock x:Name="vanqs"
+					<TextBlock x:Name="vanqs"
                            Margin="2"
                            x:FieldModifier="public"
                            IsTextSelectionEnabled="True" />
-			</Border>
-			<Border
+				</Border>
+				<Border
                     Style="{StaticResource BorderReveal}">
-				<TextBlock x:Name="SE"
+					<TextBlock x:Name="SE"
                            Margin="2"
                            x:FieldModifier="public"
                            IsTextSelectionEnabled="True" />
-			</Border>
-			<Border
+				</Border>
+				<Border
                     Style="{StaticResource BorderReveal}">
-				<TextBlock x:Name="sen"
+					<TextBlock x:Name="sen"
                            Margin="2"
                            x:FieldModifier="public"
                            IsTextSelectionEnabled="True" />
-			</Border>
-			<Border
+				</Border>
+				<Border
                     Style="{StaticResource BorderReveal}">
-				<TextBlock x:Name="sorcs"
+					<TextBlock x:Name="sorcs"
                            Margin="2"
 						   
                            x:FieldModifier="public"
                            IsTextSelectionEnabled="True" />
-			</Border>
-			<Border
+				</Border>
+				<Border
                     Style="{StaticResource BorderReveal}">
-				<TextBlock x:Name="druids"
+					<TextBlock x:Name="druids"
                            Margin="2"
                            x:FieldModifier="public"
                            IsTextSelectionEnabled="True" />
-			</Border>
-			<Border
+				</Border>
+				<Border
                     Style="{StaticResource BorderReveal}">
-				<TextBlock x:Name="horses"
+					<TextBlock x:Name="horses"
                            Margin="2"
                            x:FieldModifier="public"
                            IsTextSelectionEnabled="True" />
-			</Border>
-		</tk:WrapPanel>
+				</Border>
+			</tk:WrapPanel>
+		</StackPanel>
 		<tk:DataGrid x:Name="attackGrid"
-                     Grid.Row="3"
+                     Grid.Row="1"
 
 					 x:FieldModifier="public"
                      AutoGenerateColumns="False"
@@ -210,7 +260,7 @@
                      GridLinesVisibility="All"
 					 
                      AlternatingRowBackground="#FF301030">
-			
+
 			<tk:DataGrid.Columns>
 				<tk:DataGridTemplateColumn Header="Icon">
 					<tk:DataGridTemplateColumn.CellTemplate>
@@ -235,7 +285,7 @@
 						</DataTemplate>
 					</tk:DataGridTemplateColumn.CellTemplate>
 				</tk:DataGridTemplateColumn>
-				
+
 				<tk:DataGridTemplateColumn Header="XY" Tag="xy">
 					<tk:DataGridTemplateColumn.CellTemplate>
 						<DataTemplate x:DataType="game:City">
@@ -270,7 +320,7 @@
 
                                        Binding="{Binding nameAndRemarks, Mode=OneTime}" />
 
-				
+
 				<tk:DataGridTextColumn Header="ts"
 
                                        FontSize="{StaticResource SmallFontSize}"
@@ -286,13 +336,13 @@
 				<tk:DataGridCheckBoxColumn Header="Acad"
 									   Binding="{Binding hasAcademy, Mode=OneWay}"
 									/>
-				
+
 				<tk:DataGridTextColumn Header="Sen"
 									   FontSize="{StaticResource SmallFontSize}"
 		   							   FontFamily="Tw Cen MT Condensed"
                                        Binding="{Binding senForAttack, Mode=OneWay}" />
 
-					<tk:DataGridTemplateColumn Header="Remove">
+				<tk:DataGridTemplateColumn Header="Remove">
 					<tk:DataGridTemplateColumn.CellTemplate>
 						<DataTemplate x:DataType="game:City">
 							<HyperlinkButton Content="Remove"
@@ -317,7 +367,7 @@
 			</tk:DataGrid.Columns>
 		</tk:DataGrid>
 
-		<tk:GridSplitter Grid.Row="4"
+		<tk:GridSplitter Grid.Row="2"
                          ResizeDirection="Rows"
                          Height="11"
 						 				IsTabStop="True"
@@ -332,7 +382,7 @@
                           IsHitTestVisible="False" />
 			</tk:GridSplitter.Element>
 		</tk:GridSplitter>
-		<Grid Grid.Row="4">
+		<Grid Grid.Row="2">
 			<Grid.RowDefinitions>
 				<RowDefinition Height="auto" />
 				<RowDefinition Height="auto" />
@@ -408,6 +458,14 @@
                     HorizontalAlignment="Center"
                     Style="{StaticResource ButtonSmall}"
                     Click="SelectTargets" />
+				<Button Content="Add Targets from Clipboard"
+                    ToolTipService.ToolTip="Extracts coordinates from the clipboard and adds fakse, you can later select which are real"
+                    Style="{StaticResource ButtonSmall}"
+                    Click="AddTargetsFromClipboard" />
+				<Button Content="Target Types.."
+                    ToolTipService.ToolTip="Sets selected target types"
+                    Style="{StaticResource ButtonSmall}"
+                    Click="SetTargetType" />
 			</tk:WrapPanel>
 
 			<tk:DataGrid x:Name="targetGrid" Grid.Row="2"

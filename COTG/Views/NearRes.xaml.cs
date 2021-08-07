@@ -40,7 +40,7 @@ namespace COTG.Views
 				_viaWater = value;
 				DoRefresh(true);
 			} }
-		
+		public bool templeDonation;
 		public City target;
 		public float filterTime = 6;
 		public float _filterTime { get => filterTime; set { filterTime = value; DoRefresh(); } }  // defenders outside of this window are not included
@@ -438,7 +438,7 @@ namespace COTG.Views
 				res = await Post.SendForText("includes/sndTr.php", $"cid={cid}&f=" + HttpUtility.UrlEncode(Aes.Encode(reqF, secret), Encoding.UTF8), pid);
 				if (count == 1)
 					break;
-				await Task.Delay(1000);
+				await Task.Delay(150);
 			}
 			if (int.TryParse(res.Trim(), out var i) && i == 10)
 			{

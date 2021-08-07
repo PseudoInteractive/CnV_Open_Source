@@ -51,7 +51,7 @@ namespace COTG.Views
 		public static float renderScale=1.0f;
 		public static Lighting lighting = Lighting.day;
 		//        private static UserData _user;
-		public static bool fetchFullHistory = true;
+		public static bool fetchFullHistory = false;
 		public static bool? autoBuildOn = true;
 		public static bool setRecruit = true;
 		public static bool extendedBuild=true;
@@ -266,7 +266,7 @@ namespace COTG.Views
 			get => fetchFullHistory; set
 			{
 				fetchFullHistory = value;
-				DefenseHistoryTab.instance.refresh.Go();
+				//DefenseHistoryTab.instance.refresh.Go();
 			}
 
 		}

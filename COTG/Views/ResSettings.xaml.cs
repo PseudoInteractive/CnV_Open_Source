@@ -33,11 +33,11 @@ namespace COTG.Views
 
 		public ResourcesNullable req;
 		public ResourcesNullable max;
-		public bool applyRequested = true;
-		public bool applySend = true;
-		public ResourceFilter reqFilter; // TODO
+//		public bool applyRequested = true;
+//		public bool applySend = true;
+		public ResourceFilter reqFilter; 
 		public ResourceFilter sendFilter;
-		public int? reserveCarts;
+		public int? reserveCarts; // todo
 		public int? reserveShips;
 
 		public TradeSettings _TradeSettingsSel;
@@ -75,24 +75,43 @@ namespace COTG.Views
 
 			sourceHub.city = _sourceHub != 0 ? City.Get(_sourceHub) : null;
 			targetHub.city = _targetHub != 0 ? City.Get(_targetHub) : null;
-			if (curSettings.req.wood > 0)
-				this.req.wood = curSettings.req.wood;
-			if (curSettings.req.stone > 0)
-				this.req.stone = curSettings.req.stone;
-			if (curSettings.req.iron > 0)
-				this.req.iron = curSettings.req.iron;
-			if (curSettings.req.food > 0)
-				this.req.food = curSettings.req.food;
 
-			if (curSettings.max.wood > 0)
+			if (curSettings.req.isNonZero)
+			{
+				this.req.wood = curSettings.req.wood;
+				this.req.stone = curSettings.req.stone;
+				this.req.iron = curSettings.req.iron;
+				this.req.food = curSettings.req.food;
+			}
+			else if(req.isNull)
+			{
+				req.wood = (125000);
+				req.stone = 125 * 1000;
+				req.iron =  125 * 1000;
+				req.food = 200 * 1000;
+			}
+
+			if (curSettings.max.isNonZero)
+			{
 				this.max.wood = curSettings.max.wood;
-			if (curSettings.max.stone > 0)
 				this.max.stone = curSettings.max.stone;
-			if (curSettings.max.iron > 0)
 				this.max.iron = curSettings.max.iron;
-			if (curSettings.max.food > 0)
 				this.max.food = curSettings.max.food;
+			}
+			else
+			{
+				if(max.isNull)
+				{
+					max.wood = (300 * 1000).Max(curSettings.storage.wood*3/4);
+					max.stone = (300 * 1000).Max(curSettings.storage.stone* 3 / 4);
+					max.iron = (300 * 1000).Max(curSettings.storage.iron * 3 / 4);
+					max.food = (350 * 1000).Max(curSettings.storage.food * 3 / 4);
+				}
+			}
+
 			OnPropertyChanged();
+			sourceHub.OnPropertyChanged();
+			targetHub.OnPropertyChanged();
 		}
 		public ResSettings()
 		{

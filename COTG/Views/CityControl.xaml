@@ -14,9 +14,9 @@
 			<ColumnDefinition Width="{StaticResource GridRowHeight}" />
 			<ColumnDefinition Width="auto" />
 		</Grid.ColumnDefinitions>
-		<Image Source= "{x:Bind icon}" Tapped="Image_Tapped" RightTapped="Image_RightTapped" HorizontalAlignment="Center"
+		<Image Source= "{x:Bind icon, Mode=OneWay}" Tapped="Image_Tapped" RightTapped="Image_RightTapped" HorizontalAlignment="Center"
                                             
                      Stretch="Uniform" VerticalAlignment="Center"  />
-		<TextBlock Grid.Column="1" Text="{x:Bind name}" Tapped="TextBlock_Tapped" IsHitTestVisible="True" />
+		<TextBlock Grid.Column="1" Text="{x:Bind name, Mode=OneWay}" Tapped="TextBlock_Tapped" IsHitTestVisible="True" />
 	</Grid>
 </UserControl>

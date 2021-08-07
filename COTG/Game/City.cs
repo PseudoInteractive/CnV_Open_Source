@@ -1110,55 +1110,57 @@ namespace COTG.Game
 
 				if (a.RootElement.ValueKind == JsonValueKind.Object)
 				{
-
-					foreach (var cit in a.RootElement.GetProperty("b").EnumerateArray())
+					if (a.RootElement.TryGetProperty("b", out var b) && b.ValueKind == JsonValueKind.Array)
 					{
-						var cid = cit[0].GetInt32();
-						//  Log(cid.ToString());
-						if (!City.TryGet(cid, out var city))
-							continue;
-						List<SenatorInfo> sens = new List<SenatorInfo>();
-						foreach (var target in cit[7].EnumerateArray())
+						foreach (var cit in b.EnumerateArray())
 						{
-							sens.Add(new SenatorInfo()
+							var cid = cit[0].GetInt32();
+							//  Log(cid.ToString());
+							if (!City.TryGet(cid, out var city))
+								continue;
+							List<SenatorInfo> sens = new List<SenatorInfo>();
+							foreach (var target in cit[7].EnumerateArray())
 							{
-								type = SenatorInfo.Type.recruit,
-								count = (byte)target[0].GetInt32(),
-								time = target[1].GetString().ParseDateTime(false)
-							});
-						}
-						var idle = cit[4].GetByte();
-						if (idle != 0)
-						{
-							sens.Add(new SenatorInfo()
+								sens.Add(new SenatorInfo()
+								{
+									type = SenatorInfo.Type.recruit,
+									count = (byte)target[0].GetInt32(),
+									time = target[1].GetString().ParseDateTime(false)
+								});
+							}
+							var idle = cit[4].GetByte();
+							if (idle != 0)
 							{
-								type = SenatorInfo.Type.idle,
-								count = idle
-							});
-						}
-						foreach (var siege in cit[9].EnumerateArray())
-						{
-							sens.Add(new SenatorInfo()
+								sens.Add(new SenatorInfo()
+								{
+									type = SenatorInfo.Type.idle,
+									count = idle
+								});
+							}
+							foreach (var siege in cit[9].EnumerateArray())
 							{
-								type = SenatorInfo.Type.siege,
-								count = siege[3].GetAsByte(),
-								target = siege[0].GetInt32(),
-								time = siege[1].GetString().ParseDateTime(false)
-							});
-						}
-						foreach (var target in cit[8].EnumerateArray())
-						{
-							sens.Add(new SenatorInfo()
+								sens.Add(new SenatorInfo()
+								{
+									type = SenatorInfo.Type.siege,
+									count = siege[3].GetAsByte(),
+									target = siege[0].GetInt32(),
+									time = siege[1].GetString().ParseDateTime(false)
+								});
+							}
+							foreach (var target in cit[8].EnumerateArray())
 							{
-								type = SenatorInfo.Type.settle,
-								count = 1,
-								target = target[0].GetInt32(),
-								time = target[1].GetString().ParseDateTime(false)
-							});
-						}
-						city.senatorInfo = sens.ToArray();
-						changed.Add(city);
+								sens.Add(new SenatorInfo()
+								{
+									type = SenatorInfo.Type.settle,
+									count = 1,
+									target = target[0].GetInt32(),
+									time = target[1].GetString().ParseDateTime(false)
+								});
+							}
+							city.senatorInfo = sens.ToArray();
+							changed.Add(city);
 
+						}
 					}
 
 					changed.NotifyChange(nameof(City.senny));
@@ -1375,14 +1377,12 @@ namespace COTG.Game
 					continue;
 				if (!includeSE && tt.isArt)
 					continue;
-				var t = tt.TravelTimeSeconds(dist);
+				var t = (float)(tt.TravelTimeMinutes(dist)/ (60.0));
 
-				//var tt = ttGalley;
-				var hr = ((float)(t/(60.0*60.0)) );
-				if (hr <= maxHours)
+				if (t <= maxHours)
 				{
 					anyValid = true;
-					hours = hours.Max(hr);
+					hours = hours.Max(t);
 				}
 			}
 			return anyValid;

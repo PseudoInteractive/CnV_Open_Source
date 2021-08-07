@@ -74,7 +74,7 @@ namespace COTG.Game
 			//		}
 			//	}
 			//}
-			//catch(Exception e)
+			//catch (Exception e)
 			//{
 			//	Debug.LogEx(e);
 			//}

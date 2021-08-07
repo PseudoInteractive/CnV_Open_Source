@@ -211,7 +211,7 @@ namespace COTG.JSON
 			isRunning = true;
 			if (initialDelay > 0)
 			{
-				await Task.Delay(initialDelay);
+				await Task.Delay(initialDelay).ConfigureAwait(false);
 			}
 			// Ordering:
 			// too few buildings - advance townhall or a demo
@@ -229,11 +229,11 @@ namespace COTG.JSON
 				//if (queue.count > 0)
 				{
 
-					await processLock.WaitAsync();
+					await processLock.WaitAsync().ConfigureAwait(false);
 
 					try
 					{
-						await GetCity.Post(cid);
+						await GetCity.Post(cid).ConfigureAwait(false);
 
 
 						//	var queueValid = false;
@@ -329,7 +329,7 @@ namespace COTG.JSON
 								var destroyMe = false;
 
 								int offset = 0;
-								await queueLock.WaitAsync();
+								await queueLock.WaitAsync().ConfigureAwait(false);
 								try
 								{
 									// up to 16
@@ -522,7 +522,7 @@ namespace COTG.JSON
 										var buildEx = commandBuilder.ToString();
 										if (buildEx != null)
 										{
-											await JSClient.JSInvokeTask("buildex", new[] { commandBuilder.ToString() });
+											await JSClient.JSInvokeTask("buildex", new[] { commandBuilder.ToString() }).ConfigureAwait(false);
 
 											if (cid == City.build)
 												CityView.BuildingsOrQueueChanged();
@@ -607,7 +607,7 @@ namespace COTG.JSON
 				cancellationTokenSource = new();
 				try
 				{
-					await Task.Delay(delay, cancellationTokenSource.Token);
+					await Task.Delay(delay, cancellationTokenSource.Token).ConfigureAwait(false);
 
 				}
 				catch (TaskCanceledException tex)
@@ -699,7 +699,7 @@ namespace COTG.JSON
 
 		public static async Task UnblockQueue(int cid)
 		{
-			await queueLock.WaitAsync();
+			await queueLock.WaitAsync().ConfigureAwait(false);
 			try
 			{
 				if (all.TryGetValue(cid, out var rv))
@@ -719,7 +719,7 @@ namespace COTG.JSON
 
 		public static async Task<CityBuildQueueLock> Get(int cid)
 		{
-			await queueLock.WaitAsync();
+			await queueLock.WaitAsync().ConfigureAwait(false);
 			for (; ; )
 			{
 
@@ -737,7 +737,7 @@ namespace COTG.JSON
 				{
 					LogEx(e);
 				}
-				await Task.Delay(500);
+				await Task.Delay(500).ConfigureAwait(false);
 			}
 		}
 
@@ -782,10 +782,11 @@ namespace COTG.JSON
 
 		public void Dispose()
 		{
-			if (queue != null)
+			var _queue = queue;
+			queue = null;
+			if (_queue != null)
 			{
-				queue.Dispose();
-				queue = null;
+				_queue.Clear();
 			}
 		}
 	}
@@ -864,7 +865,7 @@ namespace COTG.JSON
 				}
 
 			}
-			using (var pending = await CityBuildQueue.Get(cid))
+			using (var pending = await CityBuildQueue.Get(cid).ConfigureAwait(false))
 			{
 				if (pending.cityBuildQueue.queue.CanGrow())
 				{

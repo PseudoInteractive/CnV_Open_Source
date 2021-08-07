@@ -44,9 +44,6 @@ namespace COTG.Views
 	public sealed partial class AttackTab : UserTab, INotifyPropertyChanged
     {
 		public static AsyncLock asyncLock = new ();
-		public const float moralCostBias = 32;
-		public const float  assaultCountBias = 16;
-		public const float troopTypeBias = 4;
 		public static StorageFolder folder => ApplicationData.Current.LocalFolder;
         public static AttackTab instance;
         public static bool IsVisible() => instance.isVisible;
@@ -72,7 +69,7 @@ namespace COTG.Views
 
 
 		public event PropertyChangedEventHandler PropertyChanged;
-        public void OnPropertyChanged(string propertyName) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        public void OnPropertyChanged(string propertyName="") => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 		
 		static Dictionary<int, string> attackStrings = new();
 		static Dictionary<int, string> playerCommands = new();
@@ -111,9 +108,10 @@ namespace COTG.Views
     //            scripts[cluster.id]= System.Text.Json.JsonSerializer.Serialize(atk, Json.jsonSerializerOptions);
     //        }
 			attackStrings.Clear();
+			playerCommands.Clear();
 			StringBuilder sb = new StringBuilder();
             var players = new List<int>();
-			int assaultOffset = 0;
+			var assaultOffsets = new int[attackClusters.Length];
 			string allCommands = "";
 			foreach (var a in attacks)
             {
@@ -148,8 +146,15 @@ namespace COTG.Views
 						atk.command =a.isAttackTypeAssault ? "Assault" : "Siege";
 						if ( a.isAttackTypeAssault && !isSE )
 						{
-							time += TimeSpan.FromHours( (assaultOffset) % plan.tickToCapture );
-				 			++assaultOffset;
+							time += TimeSpan.FromHours( ((assaultOffsets[a.attackCluster]) % 4) switch 
+							{
+								0=>plan.assault0Time,
+								1 => plan.assault1Time,
+								2 => plan.assault2Time,
+								_ => plan.assault3Time,
+							}
+							);
+				 			++assaultOffsets[a.attackCluster];
 						}
 						atk.time = new string[] { time.Hour.ToString("00"), time.Minute.ToString("00"), time.Second.ToString("00"), time.ToString("MM/dd/yyyy") };
 						var scrpipt = System.Text.Json.JsonSerializer.Serialize(atk, Json.jsonSerializerOptions);
@@ -394,6 +399,7 @@ namespace COTG.Views
 				sePerTarget.Text = $"SE/Target: {seCount/(float)seSieges.Max(1):0.00}";
                 attacksPerTarget.Text = $"Attacks/Target: {attacks.Length/(float)(senSieges+seSieges).Max(1):0.00}";
 				OnPropertyChanged("");
+				plan.OnPropertyChanged();
 
 
 			});
@@ -461,6 +467,7 @@ namespace COTG.Views
                 //});
                 UpdateStats();
                 BuildAttackClusters();
+				Bindings.Update(); 
 				loaded = true;
 			}
 			return rv;
@@ -730,7 +737,7 @@ namespace COTG.Views
 					if (isNew || ((troopType.HasValue || atk.attackType == AttackType.none) && updateExisting))
 					{
 						// academy may be overriden for the purpose of attack type
-						AttackPlan.AddOrUpdate(new(atk, atk.classification == City.Classification.se ? AttackType.se : (hasAcademy ? AttackType.senator : AttackType.assault) ));
+						AttackPlan.AddOrUpdate(new(atk, atk.classification == City.Classification.se ? AttackType.se : (hasAcademy ? AttackType.senator : AttackType.assault),atk.primaryTroopType ));
 					}
 				}
 				Note.Show($"Added {attacks.Length - prior}, updated {duplicates}");
@@ -767,7 +774,7 @@ namespace COTG.Views
                 Note.Show("Invalid clipboard text");
             }
         }
-		static async Task<(AttackType atk,bool update)> ChooseTargetType()
+		static async Task<(AttackType atk,bool update)> ChooseTargetType(bool showUpdate)
 		{
 				var combo = new RadioButtons() { Header = "Add as" };
 				combo.Items.Add("Real Cap");
@@ -780,7 +787,8 @@ namespace COTG.Views
 			var check = new CheckBox() { Content = "Update Existing", IsChecked = true };
 				//	var removeTargets = new CheckBox() { Content = $"{targetGrid.SelectedItems.Count} targets", IsChecked = true };
 			var panel = new StackPanel();
-			panel.Children.Add(check);
+			if(showUpdate)
+				panel.Children.Add(check);
 			panel.Children.Add(combo);
 
 				var msg = new ContentDialog()
@@ -824,10 +832,10 @@ namespace COTG.Views
 				return AttackType.invalid;
 			return combo.SelectedIndex switch { 0 => AttackType.se, 1 => AttackType.senator, 2 => AttackType.assault, 3 => AttackType.seFake, 4=> AttackType.senatorFake,5=> AttackType.assault, _=>AttackType.none };
 		}
-
+		
 		public async void AddTargetsFromClipboard(object sender, RoutedEventArgs e)
         {
-			var attackType = await ChooseTargetType();
+			var attackType = await ChooseTargetType(true);
 			if (attackType.atk == AttackType.invalid)
 				return;
 
@@ -860,7 +868,8 @@ namespace COTG.Views
 					var present = targets.Contains(spot.cid);
 					if (!present || attackType.update)
 					{
-						AttackPlan.AddOrUpdate(new(spot, attackType.atk));
+						await spot.Classify();
+						AttackPlan.AddOrUpdate(new(spot, attackType.atk,spot.primaryTroopType));
 					}
 						if (present)
 						{
@@ -1054,7 +1063,7 @@ namespace COTG.Views
 					return;
 			}
 
-			var attackType = await ChooseTargetType();
+			var attackType = await ChooseTargetType(true);
 			
 			if (attackType.atk == AttackType.invalid)
 				return;
@@ -1155,11 +1164,12 @@ namespace COTG.Views
 				if (!isValid)
 					return float.MaxValue;
 
-				var morale = Player.MoralePenalty(attacker.pid, real.pid) * moralCostBias;
+				var score = span.Distance(attacker.cid.ToWorldC()) * plan.distancePenalty;
+				score += Player.MoralePenalty(attacker.pid, real.pid) * plan.moralPenalty;
+				score += currentAttacks * plan.unbalancedAssaultPenalty;
 
-				var score= span.Distance(attacker.cid.ToWorldC())+morale;
-				score += currentAttacks * assaultCountBias;
 				// fakes don't matter for distance
+				var troopMatchBonus = plan.troopMatchBonus;
 				switch (attacker.troopType)
 				{
 					case ttSorcerer:
@@ -1168,28 +1178,28 @@ namespace COTG.Views
 							switch (real.troopType)
 							{
 								case ttVanq:
-									score -= 2 * troopTypeBias;
+									score -= 2 * troopMatchBonus;
 									break;
 								case ttRanger:
-									score -= 6 * troopTypeBias;
+									score -= 6 * troopMatchBonus;
 									break;
 								case ttSorc:
 								case ttDruid:
-									score += 2 * troopTypeBias;
+									score += 2 * troopMatchBonus;
 									break;
 								case ttPrae:
 								case ttPriestess:
-									score += 8 * troopTypeBias;
+									score += 8 * troopMatchBonus;
 									break;
 								case ttHorse:
-									score -= 2 * troopTypeBias;
+									score -= 2 * troopMatchBonus;
 									break;
 								case ttArb:
-									score -= 4 * troopTypeBias;
+									score -= 4 * troopMatchBonus;
 									break;
 								case ttStinger:
 								case ttWarship:
-									score -= 4 * troopTypeBias;
+									score -= 4 * troopMatchBonus;
 									break;
 								default:
 									break;
@@ -1202,24 +1212,24 @@ namespace COTG.Views
 							switch (real.troopType)
 							{
 								case ttVanq:
-									score += 4 *troopTypeBias;
+									score += 4 *troopMatchBonus;
 									break;
 								case ttRT:
-									score += 6 *troopTypeBias;
+									score += 6 *troopMatchBonus;
 									break;
 								case ttSorc:
 								case ttDruid:
-									score -= 0 *troopTypeBias;
+									score -= 0 *troopMatchBonus;
 									break;
 								case ttPraetor:
 								case ttPriestess:
-									score -= 5 *troopTypeBias;
+									score -= 5 *troopMatchBonus;
 									break;
 								case ttHorse:
-									score -= 3 *troopTypeBias;
+									score -= 3 *troopMatchBonus;
 									break;
 								case ttArb:
-									score -= 4 *troopTypeBias;
+									score -= 4 *troopMatchBonus;
 									break;
 								default:
 									break;
@@ -1233,26 +1243,26 @@ namespace COTG.Views
 							switch (real.troopType)
 							{
 								case ttVanq:
-									score += 4 *troopTypeBias;
+									score += 4 *troopMatchBonus;
 									break;
 								case ttRT:
-									score += 6 *troopTypeBias;
+									score += 6 *troopMatchBonus;
 									break;
 								case ttSorc:
 								case ttDruid:
-									score -= 0 *troopTypeBias;
+									score -= 0 *troopMatchBonus;
 									break;
 								case ttPraetor:
-									score -= 5 *troopTypeBias;
+									score -= 5 *troopMatchBonus;
 									break;
 								case ttPriestess:
-									score -= 1 *troopTypeBias;
+									score -= 1 *troopMatchBonus;
 									break;
 								case ttHorse:
-									score += 5 *troopTypeBias;
+									score += 5 *troopMatchBonus;
 									break;
 								case ttArb:
-									score += 7 *troopTypeBias;
+									score += 7 *troopMatchBonus;
 									break;
 								default:
 									break;
@@ -1262,17 +1272,17 @@ namespace COTG.Views
 				}
 				return score;
 			}
-			public float GetTravelTime(AttackPlanCity attacker)
+			public float GetTravelTimeHours(AttackPlanCity attacker)
 			{
 				Assert(isValid);
 				// Todo: Ram attacks
 				var tt = (attacker.attackType == AttackType.senator) ? ttSenator: attacker.troopType;
-				var t = (float)tt.TravelTimeSeconds(attacker.cid, real.cid);
+				var t = (float)tt.TravelTimeMinutes(attacker.cid, real.cid);
 				foreach (var f in fakes)
 				{
-					t = t.Max((float)tt.TravelTimeSeconds(attacker.cid, f.cid));
+					t = t.Max((float)tt.TravelTimeMinutes(attacker.cid, f.cid));
 				}
-				return t /(60*60); // seconds to hours
+				return t /(60); // minutes to hours
 			}
 			public bool FakesValid()
 			{
@@ -1287,7 +1297,12 @@ namespace COTG.Views
 				//if (category == AttackCategory.senator)
 				//	return true;
 				var tt = attacker.troopType;
-				return GetTravelTime(attacker) <= (category == AttackCategory.senator ? plan.attackMaxTravelHoursSen : plan.attackMaxTravelHoursSE);
+				var time = GetTravelTimeHours(attacker);
+				var limit = (category == AttackCategory.senator ? plan.attackMaxTravelHoursSen : plan.attackMaxTravelHoursSE);
+				if (time <= limit)
+					return true;
+				
+				return false;
 
 
 			}
@@ -1303,9 +1318,9 @@ namespace COTG.Views
 
 			public int AssaultsPerReal()
 			{
-				var reals = SiegeCount().Max(1);
+				var reals = SiegeCount();
 				
-				return (attacks.Count(a => a.attackCluster == id && a.isAttackTypeAssault) + reals - 1) / reals;
+				return (attacks.Count(a => a.attackCluster == id && a.isAttackTypeAssault) + reals - 1) / reals.Max(1);
 			}
 			public int NormalizedAttacks(bool isAssault) => (isAssault&&category==AttackCategory.se&&plan.normalizeAssaultsPerSeSiege) ? AssaultsPerReal() : AttackCount(isAssault);
 
@@ -1315,7 +1330,12 @@ namespace COTG.Views
 		private  async void AssignAttacks_Click(object sender, RoutedEventArgs e)
         {
 			using var _ = await TouchLists();
-
+			// just in case
+			foreach (var a in AttackTab.attacks)
+			{
+				if (a.troopType == ttPending)
+					await a.GuessTroopType();
+			}
 			var ignoredTargets = new HashSet<int>();// targets.Where(a=>a.attackType==AttackType.none).Select( a=>a.cid) );
 			//   int[] initialClusterCount = { targets.Count(a => a.isAttackTypeReal && a.isAttackTypeSE),
 			//	targets.Count(a => a.isAttackTypeReal && a.isAttackTypeSenator)};
@@ -1329,7 +1349,7 @@ namespace COTG.Views
 					a.attackCluster = attackClusterNone;
 				}
 
-				var attacks = AttackTab.attacks.Where(a=>a.attackType!=AttackType.none).OrderByDescending(a => a.spatialIndex).ToArray();
+				var attacks = AttackTab.attacks.Where(a=>a.attackType!=AttackType.none).OrderBy(a=>a.player.name).OrderByDescending(a => a.spatialIndex).ToArray();
 
 				foreach (var f in targets)
 				{
@@ -1560,7 +1580,7 @@ namespace COTG.Views
 														senAttackCount.DivideRoundUp(senTargetCount.Max(1)) ,        // sen siege, todo:  Make this 1 always 
 														plan.attackSEMaxAssaults, 
 														 plan.attackSenMaxAssaults  };
-				Assert(minAttacksByType[1*2+ 0] == plan.attackSEMinAssaults);
+			//	Assert(minAttacksByType[1*2+ 0] == plan.attackSEMinAssaults);
 
 				foreach (var persist in plan.attacks )
 				{
@@ -1570,22 +1590,27 @@ namespace COTG.Views
 						persist.attackCluster = cluster;
 					}
 				}
+				bool[] hasMin = new bool[4];
 				for(; ; )
 				{
 
-				//	var minAttacks =stackalloc new int[4];
-					bool hasMin = true;
+					//	var minAttacks =stackalloc new int[4];
+					//hasMin[2] = hasMin[3]=hasMin[1] = hasMin[0] = true;
+
 					for (int siegeAssaultCounter = 0; siegeAssaultCounter <= 1; ++siegeAssaultCounter)
 					{
 						for (AttackCategory category = 0; category < AttackCategory.count; category++)
 						{
 							var id = siegeAssaultCounter * 2 + (int)category;
-							var atkCount=  clusters.Where(c => c.category ==category).Min(c => c.NormalizedAttacks(siegeAssaultCounter == 1));
-					//		minAttacks[id] = atkCount;
-							if (atkCount < minAttacksByType[id])
-								hasMin = false;
+							var attacksForCategory=  clusters.Where(c => c.category ==category);
+							//.Min(c => c.NormalizedAttacks(siegeAssaultCounter == 1));
+								var atkCount = attacksForCategory.Any() ? attacksForCategory.Min(c => c.NormalizedAttacks(siegeAssaultCounter == 1)) : 0;
+							//		minAttacks[id] = atkCount;
+							hasMin[id] = (atkCount >= minAttacksByType[id]);
 						}
 					}
+					// these two share
+				//	hasMin[2] = hasMin[3] = hasMin[2] & hasMin[3];
 					//var attacks1 = clustersC.Max(c => c.NormalizedAttacks(isAssault));
 
 					AttackPlanCity best = null;
@@ -1610,17 +1635,17 @@ namespace COTG.Views
 																(isAssault || 
 																		(a.attackType.GetCategory() == category))).ToArray();
 								if (!attacksC.Any())
-									break;
+									continue;
 
 					
 								// count 
 								foreach (var c in clustersC)
 								{
-									var real = c.real;
-									if (c.category != category)
-										continue;
+	//								var real = c.real;
+								//	if (c.category != category)
+								//		continue;
 									int attackCount = c.NormalizedAttacks(isAssault);
-									if ( (hasMin ? attackCount < maxAtk :attackCount < minAtk) )
+									if ( hasMin[id] ? (attackCount < maxAtk) : (attackCount < minAtk) )
 									{
 										// valid
 
@@ -1644,7 +1669,10 @@ namespace COTG.Views
 						}
 					}
 					if (best == null)
+					{
 						break;
+					}
+					//					break;
 					best.attackCluster = bestCluster.id;
 
 				}
@@ -1809,14 +1837,14 @@ namespace COTG.Views
 					var seAttacks = attacks.Where((a) => a.isAttackTypeSE && !a.isAttackClusterNone);
 					var assaultAttacks = attacks.Where((a) => a.isAttackTypeAssault && !a.isAttackClusterNone);
 					var senatorAttacks = attacks.Where((a) => a.isAttackTypeSenator && !a.isAttackClusterNone);
-					float maxDistanceToSE = seAttacks.Any() ? seAttacks.Max((a) => clusters[a.attackCluster].GetTravelTime(a)) : 0;
-					float averageDistanceToSE = seAttacks.Any() ? seAttacks.Average((a) => clusters[a.attackCluster].GetTravelTime(a)) : 0;
+					float maxDistanceToSE = seAttacks.Any() ? seAttacks.Max((a) => clusters[a.attackCluster].GetTravelTimeHours(a)) : 0;
+					float averageDistanceToSE = seAttacks.Any() ? seAttacks.Average((a) => clusters[a.attackCluster].GetTravelTimeHours(a)) : 0;
 					
-					float maxDistanceToAssault = assaultAttacks.Any() ? assaultAttacks.Max((a) => clusters[a.attackCluster].GetTravelTime(a)) : 0;
-					float averageDistanceToAssault = assaultAttacks.Any() ? assaultAttacks.Average((a) => clusters[a.attackCluster].GetTravelTime(a)) : 0;
+					float maxDistanceToAssault = assaultAttacks.Any() ? assaultAttacks.Max((a) => clusters[a.attackCluster].GetTravelTimeHours(a)) : 0;
+					float averageDistanceToAssault = assaultAttacks.Any() ? assaultAttacks.Average((a) => clusters[a.attackCluster].GetTravelTimeHours(a)) : 0;
 
-					float maxDistanceToSenator = senatorAttacks.Any() ? senatorAttacks.Max((a) => clusters[a.attackCluster].GetTravelTime(a)) : 0;
-					float averageDistanceToSenator = senatorAttacks.Any() ? senatorAttacks.Average((a) => clusters[a.attackCluster].GetTravelTime(a)) : 0;
+					float maxDistanceToSenator = senatorAttacks.Any() ? senatorAttacks.Max((a) => clusters[a.attackCluster].GetTravelTimeHours(a)) : 0;
+					float averageDistanceToSenator = senatorAttacks.Any() ? senatorAttacks.Average((a) => clusters[a.attackCluster].GetTravelTimeHours(a)) : 0;
 
 					float maxClusterSize = clusters.Where(c => c.isValid).Max((a) => a.span.radius2.Sqrt());
 					float averageClusterSize = clusters.Where(c => c.isValid).Average((a) => a.span.radius2.Sqrt());
@@ -1829,7 +1857,7 @@ namespace COTG.Views
 					{
 						foreach (var a in (j == 0 ? senatorAttacks : seAttacks))
 						{
-							var d = clusters[a.attackCluster].GetTravelTime(a);
+							var d = clusters[a.attackCluster].GetTravelTimeHours(a);
 							if (d >= (j == 0 ? maxDistanceToSenator : maxDistanceToSE) - 3.0f)
 							{
 								Note.Show($"{a.nameMarkdown} leaves at around {((j == 0 ? senTime : seTime) - TimeSpan.FromHours(d)).FormatDefault()}");
@@ -1930,6 +1958,34 @@ namespace COTG.Views
 					var cid = sel.cid;
 					var atk = AttackPlan.Get(cid);
 					atk.attackType = type;
+					AddOrUpdate(atk);
+					//sel.OnPropertyChanged();
+				}
+				return Task.CompletedTask;
+			});
+			WritebackAttacks();
+			await SaveAttacks();
+			attacksUI.NotifyReset();
+			OnPropertyChanged();
+			Note.Show($"Set {counter} to {type}");
+		}
+
+		private async void SetTargetType(object sender, RoutedEventArgs e)
+		{
+			var type = (await ChooseTargetType(false)).atk;
+			if (type == AttackType.invalid)
+				return;
+			using var _ = await TouchLists();
+			int counter = 0;
+			await App.DispatchOnUIThreadTask(() =>
+			{
+				foreach (City sel in targetGrid.SelectedItems)
+				{
+					++counter;
+					var cid = sel.cid;
+					var atk = AttackPlan.Get(cid);
+					atk.attackType = type; 
+					AddOrUpdate(atk);
 					sel.OnPropertyChanged();
 				}
 				return Task.CompletedTask;
@@ -1937,7 +1993,9 @@ namespace COTG.Views
 			WritebackAttacks();
 			await SaveAttacks();
 			attacksUI.NotifyReset();
+			OnPropertyChanged();
 			Note.Show($"Set {counter} to {type}");
+
 		}
 
 		private async void SetAttack_Click(object sender, RoutedEventArgs e)
@@ -1988,7 +2046,7 @@ namespace COTG.Views
 		{
 			var i = sender as FrameworkElement;
 			var city = i.DataContext as City;
-			JSClient.view.InvokeScriptAsync("sendmail", new string[] { city.playerName, "test", playerCommands[city.pid].Replace("<", "&amp;lt;").Replace(">", "&amp;gt;").Replace("\n", "&amp;lt;br&amp;gt;")  });
+			JSClient.view.InvokeScriptAsync("sendmail", new string[] { city.playerName, "test", playerCommands[city.pid].Replace("<", "&lt;").Replace(">", "&gt;").Replace("\n", "\r\n") });
 
 		}
 	}

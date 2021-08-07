@@ -273,106 +273,106 @@ namespace COTG
 		//	v.SortSmall();
 		//}
 	}
-	public struct DArrayRef<T> : IDisposable where T : struct
-	{
-		public DArray<T> v;
-		public int Count => v != null ? v.Count : 0;
-		public int count => Count;
-		public int Length => Count;
+	//public struct DArrayRef<T> : IDisposable where T : struct
+	//{
+	//	public DArray<T> v;
+	//	public int Count => v != null ? v.Count : 0;
+	//	public int count => Count;
+	//	public int Length => Count;
 		
-		public DArrayRef(DArray<T> v)
-		{
-			this.v = v;
-		}
-		public ref T this[int i] => ref v.v[i];
-		public DArrayRef(bool alloc=true)
-		{
-			this.v = alloc? DArray<T>.Rent() : null;
-		}
+	//	public DArrayRef(DArray<T> v)
+	//	{
+	//		this.v = v;
+	//	}
+	//	public ref T this[int i] => ref v.v[i];
+	//	public DArrayRef(bool alloc=true)
+	//	{
+	//		this.v = alloc? DArray<T>.Rent() : null;
+	//	}
 
-		//internal void Add(T tt)
-		//{
-		//	v.Add(tt);
-		//}
+	//	//internal void Add(T tt)
+	//	//{
+	//	//	v.Add(tt);
+	//	//}
 
-		public DArray<T> Clone() => v.Clone();
+	//	public DArray<T> Clone() => v.Clone();
 
-		public void Free()
-		{
-			if (v != null)
-			{
-				var _v = v;
-				v = null;
-				_v.Dispose();
-			}
+	//	public void Free()
+	//	{
+	//		if (v != null)
+	//		{
+	//			var _v = v;
+	//			v = null;
+	//			_v.Clear();
+	//		}
 
-		}
-		public void Reset()
-		{
-			v.ClearKeepBuffer();
-		}
+	//	}
+	//	public void Reset()
+	//	{
+	//		v.ClearKeepBuffer();
+	//	}
 
-		//public void TakeRented(ref DArray<T> _v)
-		//{
-		//	Free();
-		//	v = _v;
-		//	_v = null;
-		//}
-		//public void TakeCopy(DArray<T> _v)
-		//{
-		//	Free();
-		//	v = _v.Clone();
-		//}
+	//	//public void TakeRented(ref DArray<T> _v)
+	//	//{
+	//	//	Free();
+	//	//	v = _v;
+	//	//	_v = null;
+	//	//}
+	//	//public void TakeCopy(DArray<T> _v)
+	//	//{
+	//	//	Free();
+	//	//	v = _v.Clone();
+	//	//}
 
-		//public DArray<T> Take()
-		//{
-		//	var _v = v;
-		//	v = null;
-		//	return _v;
-		//}
+	//	//public DArray<T> Take()
+	//	//{
+	//	//	var _v = v;
+	//	//	v = null;
+	//	//	return _v;
+	//	//}
 
-		//public void Set(in IEnumerable<T> i)
-		//{
-		//	v.Set(i);
-		//}
+	//	//public void Set(in IEnumerable<T> i)
+	//	//{
+	//	//	v.Set(i);
+	//	//}
 
-		public void Dispose()
-		{
-			Free();
-		}
-		//IEnumerator<T> IEnumerable<T>.GetEnumerator()
-		//{
-		//	Assert(v != null);
-		//	return new DArray<T>.Enumerator(v);
-		//}
-		//IEnumerator IEnumerable.GetEnumerator()
-		//{
-		//	Assert(v != null);
-		//	return new DArray<T>.Enumerator(v);
-		//}
+	//	public void Dispose()
+	//	{
+	//		Free();
+	//	}
+	//	//IEnumerator<T> IEnumerable<T>.GetEnumerator()
+	//	//{
+	//	//	Assert(v != null);
+	//	//	return new DArray<T>.Enumerator(v);
+	//	//}
+	//	//IEnumerator IEnumerable.GetEnumerator()
+	//	//{
+	//	//	Assert(v != null);
+	//	//	return new DArray<T>.Enumerator(v);
+	//	//}
 
-		//internal static DArray<T> Alloc()
-		//{
-		//	return DArray<T>.Rent();
-		//}
+	//	//internal static DArray<T> Alloc()
+	//	//{
+	//	//	return DArray<T>.Rent();
+	//	//}
 
-		//internal void TakeCopy(DArray<T> sumDef)
-		//{
-		//	TakeCopy(sumDef.v);
-		//}
+	//	//internal void TakeCopy(DArray<T> sumDef)
+	//	//{
+	//	//	TakeCopy(sumDef.v);
+	//	//}
 
-		internal void Set(T t)
-		{
-			v.Set(t);
-		}
+	//	internal void Set(T t)
+	//	{
+	//		v.Set(t);
+	//	}
 
-		internal void Take(ref DArrayRef<T> tr)
-		{
-			Free();
-			v = tr.v;
-			tr.v=null;
+	//	internal void Take(ref DArrayRef<T> tr)
+	//	{
+	//		Free();
+	//		v = tr.v;
+	//		tr.v=null;
 
 
-		}
-	}
+	//	}
+	//}
 }

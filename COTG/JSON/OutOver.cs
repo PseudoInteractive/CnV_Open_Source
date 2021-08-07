@@ -34,12 +34,11 @@ namespace COTG.JSON
 		}
 		public static Debounce OutgoingUpdateDebounce = new(_Process) { throttled = true, debounceDelay = 1000, throttleDelay = 2000 };
 
-		public static bool fetchRequested;
 
 		public async static Task _Process()
         {
-			var fetchReports = fetchRequested;
-			fetchRequested = false;
+//			var fetchReports = fetchRequested;
+//			fetchRequested = false;
 			//        if (true)
 			//        {
 			//if (updateInProgress)
@@ -63,6 +62,7 @@ namespace COTG.JSON
 			}
 
 			updateInProgress = true;
+			fetchReport = HitTab.IsVisible;
             if (fetchReports)
                 ShellPage.WorkStart(work);
 
@@ -87,7 +87,7 @@ namespace COTG.JSON
                         try
                         {
                         //ConcurrentDictionary<int, Report> rs = new ConcurrentDictionary<int, Report>();
-                        using (var jsd = await Post.SendForJson("overview/outover.php", "a=0",Player.myId))
+							using (var jsd = await Post.SendForJson("overview/outover.php", "a=0",Player.myId))
                             {
                                 foreach (var spot in Spot.defendersO)
                                 {
@@ -183,8 +183,11 @@ namespace COTG.JSON
 
                                 }
                             }
-                        }
-                        catch (Exception e)
+							App.DispatchOnUIThreadLow(OutgoingTab.NotifyOutgoingUpdated);
+
+
+						}
+						catch (Exception e)
                         {
                             LogEx(e);
                         }
@@ -455,12 +458,12 @@ namespace COTG.JSON
 						//                      App.CopyTextToClipboard(killNote);
 
 						++outgoingCounter;
-						OutgoingTab.NotifyOutgoingUpdated();
+						
 
                         Note.Show($"Complete: {reportsOutgoing.Count} attacks {fetched} fetched records {killNote}");
                     });
                 }
-            }
+			}
             catch (Exception _exception)
             {
                 COTG.Debug.LogEx(_exception);

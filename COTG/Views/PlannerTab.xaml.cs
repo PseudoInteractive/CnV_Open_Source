@@ -515,12 +515,14 @@ namespace COTG.Views
 			var overlap3 = CountResOverlaps(ref allowed);
 			if( overlap0 <= overlap1 && overlap0 <= overlap2 &&overlap0 <= overlap3)
 			{
-				build.FlipLayoutV(); // this one is best
+				build.FlipLayoutH(); // 0 is best one is best
+				build.FlipLayoutV(); // 0 is best one is best
+				build.FlipLayoutH(); // 0 is best one is best
 			}
 			else if( overlap1 <= overlap2 && overlap1 <= overlap3)
 			{
-				build.FlipLayoutV(); // this one is best
 				build.FlipLayoutH(); // this one is best
+				build.FlipLayoutV(); // this one is best
 			}
 			else if (overlap2 <= overlap3)
 			{

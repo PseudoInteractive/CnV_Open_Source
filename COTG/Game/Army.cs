@@ -773,9 +773,9 @@ namespace COTG.Game
         [JsonIgnore]
         public readonly BitmapImage Type => ImageHelper.FromImages($"Icons/troops{type}.png");
 		
-		public readonly double TravelTimeSeconds(double distance)
+		public readonly double TravelTimeMinutes(double distance)
 		{
-			return Enum.TroopTravelSeconds(type, distance);
+			return Enum.TroopTravelMinutes(type, distance);
 		}
 
 		public TroopTypeCount(ref TroopTypeCount b)
@@ -1040,9 +1040,9 @@ namespace COTG.Game
   //      }
 
         // approximation using players speed bonus
-        public static double TravelTimeSeconds(this byte tt,int cid0, int cid1)
+        public static double TravelTimeMinutes(this byte tt,int cid0, int cid1)
         {
-			return Enum.TroopTravelSeconds(tt, cid0, cid1);
+			return Enum.TroopTravelMinutes(tt, cid0, cid1);
         }
 
 

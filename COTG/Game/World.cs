@@ -1559,6 +1559,8 @@ namespace COTG.Game
 			
 			if (lastUpdatedContinent == -1)
 				return;
+			if (JSClient.world >= 24 && Continent.all[lastUpdatedContinent].cities == 0)
+				return;
 			var cc = lastUpdatedContinent.PackedContinentToXY();
 			var str = "[";
 			var sep = "";
@@ -1573,12 +1575,15 @@ namespace COTG.Game
 			str += "]";
 			const string magic = "X22ssa41aA1522";
 			var jsp = await Post.SendEncryptedForJson("includes/rMp.php", str, magic, Player.activeId);
-			foreach (var o in jsp.RootElement.EnumerateObject())
+			if (jsp != null)
 			{
-
-				foreach (var st in o.Value.EnumerateArray())
+				foreach (var o in jsp.RootElement.EnumerateObject())
 				{
-					JSON.TileData.UpdateTile(st.GetAsString());
+
+					foreach (var st in o.Value.EnumerateArray())
+					{
+						JSON.TileData.UpdateTile(st.GetAsString());
+					}
 				}
 			}
 		}

@@ -68,19 +68,15 @@ namespace COTG.Game
         public static float[] ttCombatBonus = { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 };
         public static double cartTravel=10.0f; // inplicity divided by faith+research
         public static double shipTravel =5.0f; // pre divided by faith and research
-		public static double TroopTravelSeconds(int tt, double d)
+		public static double TroopTravelMinutes(int tt, double d)
 		{
 			// double
-			// *60 to seconds, *100 because denominator is scaled up by 100
-			var rv = (d * ((int)ttTravel[tt] * 60 * 100)) / ttSpeedBonus[tt];
+			Debug.Assert(tt != 0);
+			// *100 because denominator is scaled up by 100
+			var rv = (d * ((int)ttTravel[tt] * 100)) /ttSpeedBonus[tt];
 			if (IsTTNaval(tt))
-				rv += 60 * 60; // +1 hour
+				rv += 60; // +1 hour
 			return rv;
-		}
-		public static double TroopTravelSeconds(int tt,int cid0, int cid1)
-		{
-			// double
-			return TroopTravelSeconds(tt,cid0.DistanceToCidD(cid1));
 		}
 
         // update:  Galleys no longer considered raiders
@@ -115,7 +111,7 @@ namespace COTG.Game
                                                         true,false }; 
 
 		// in minutes
-        public readonly static byte[] ttTravel = {   0, 30, 20, 20,
+        public readonly static byte[] ttTravel = {   20, 30, 20, 20,
                                                     20, 20, 20, 8,
                                                     10, 10, 10, 10,
                                                     30, 30, 5, 5,

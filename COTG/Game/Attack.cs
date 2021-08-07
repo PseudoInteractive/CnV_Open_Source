@@ -4,11 +4,13 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
+using System.ComponentModel;
 using System.Text;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using COTG.Views;
 using static COTG.Game.Enum;
+
 namespace COTG.Game
 {
 	public enum AttackType : byte
@@ -101,6 +103,12 @@ namespace COTG.Game
 		public City city => City.GetOrAdd(cid);
 		public Player player => city.player;
 		public int pid => city.pid;
+		public float TraveltimeMinutes(AttackPlanCity other)
+		{
+			// Todo: Ram attacks
+			var tt = (attackType == AttackType.senator) ? ttSenator : (attackType == AttackType.se) ? ttScorp :troopType;
+			return  tt.TravelTimeMinutes(cid, other.cid);
+		}
 
 		public bool isAttack => city.IsAllyOrNap(); // true for attack, false for target, must be set on initialization
 		public bool isTarget => !isAttack; // true for attack, false for target
@@ -150,6 +158,16 @@ namespace COTG.Game
 		public AttackPlanCity(City city, AttackType _attackType = AttackType.invalid, byte troopType = ttPending) => Set(city, _attackType, troopType);
 		public AttackPlanCity(int cid, AttackType _attackType = AttackType.invalid, byte troopType = ttPending) => Set(City.Get(cid), _attackType, troopType);
 		public AttackPlanCity() { }
+		public async Task GuessTroopType()
+		{
+			if (troopType != ttPending)
+				return;
+			var _city = city;
+			await _city.Classify();
+			if (troopType != ttPending)
+				return;
+			troopType = (byte)_city.classificationTroopType;
+		}
 
 		public void CopyTo(City t)
 		{
@@ -195,15 +213,18 @@ namespace COTG.Game
 		public static AttackPlanCity Get(int cid) => AttackPlan.Get(cid);
 		
 	}
-	public class AttackPlan
+	public sealed class AttackPlan : INotifyPropertyChanged
 	{
+		#region PropertyChanged
+		public void OnPropertyChanged(string propertyName = "") => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+		public event PropertyChangedEventHandler PropertyChanged;
+		#endregion
+
 		[JsonInclude]
 		public float attackMaxTravelHoursSE = 40;
 		[JsonInclude]
 		public float attackMaxTravelHoursSen = 40;
 
-		[JsonInclude]
-		public int tickToCapture = 4;
 		[JsonInclude]
 		public int senTime;
 		[JsonInclude]
@@ -230,6 +251,24 @@ namespace COTG.Game
 		
 		[JsonInclude]
 		public int attackSenMaxAssaults = 10;
+
+		[JsonInclude]
+		public int assault0Time = 2;
+		[JsonInclude]
+		public int assault1Time = 0;
+		[JsonInclude]
+		public int assault2Time = 3;
+		[JsonInclude]
+		public int assault3Time = 1;
+
+		[JsonInclude]
+		public float moralPenalty = 32;
+		[JsonInclude]
+		public float unbalancedAssaultPenalty = 16;
+		[JsonInclude]
+		public float troopMatchBonus = 4;
+		[JsonInclude]
+		public float distancePenalty = 1;
 
 
 		[JsonInclude]
@@ -278,6 +317,7 @@ namespace COTG.Game
 				if (cur == null)
 				{
 					l = l.Add( c );
+				//	Debug.Assert(c.troopType != ttPending);
 					AttackTab.SyncUIGrids();
 					return true;
 				}
@@ -289,6 +329,11 @@ namespace COTG.Game
 					{
 						cur.troopType = c.troopType;
 						City.TryConvertTroopTypeToClassification(cur.troopType, out city.classification);
+					}
+					else
+					{
+						City.TryConvertTroopTypeToClassification(cur.troopType, out city.classification);
+
 					}
 					// for UI
 					App.DispatchOnUIThreadLow( ()=>cur.city.OnPropertyChanged() );

@@ -235,7 +235,7 @@ namespace COTG.Views
 							var tab = DefenseHistoryTab.instance;
 							if (!tab.isVisible)
 							{
-								tab.ShowOrAdd(true, false);
+								tab.ShowOrAdd(true, onlyIfClosed:true);
 
 							}
 							else

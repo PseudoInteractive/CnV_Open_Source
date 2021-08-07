@@ -172,8 +172,8 @@ namespace COTG.Views
 
 					await res.InitTradeSettings(city,bestHub,city.isHubOrStorage ? 0 : bestHub);
 
-					res.applyRequested = true;
-					res.applySend = true;
+			//		res.applyRequested = true;
+			//		res.applySend = true;
 
 					SetFromSS();
 					res.sendFilter = ResourceFilter._true;
@@ -239,8 +239,8 @@ namespace COTG.Views
 						//SettingsPage.maxStone = max.stone;
 						//SettingsPage.maxIron = max.iron;
 						//SettingsPage.maxFood = max.food;
-						var reqFilter = res.applyRequested ? res.reqFilter : ResourceFilter._null;
-						var sendFilter = (!city.isHubOrStorage)&&res.applySend ? res.sendFilter : ResourceFilter._null;
+						var reqFilter = res.reqFilter;
+						var sendFilter = (!city.isHubOrStorage) ? res.sendFilter : ResourceFilter._null;
 						//			await CitySettings.SetTradeResourcesSettings(city.cid,req,max);
 
 						await CitySettings.SetCitySettings(ci,reqHub: bestHub,targetHub:bestHub,

@@ -339,7 +339,7 @@ namespace COTG.Game
 			ttPending
 		};
 		public string classificationString => classifications[(int)classification];
-		public int classificationTT => classificationTTs[(int)classification];
+		public int classificationTroopType => classificationTTs[(int)classification];
 		public string attackers
 		{
 			get
@@ -517,7 +517,7 @@ namespace COTG.Game
 		{
 			var troops = (onlyHomeTroops ? troopsHome : troopsTotal);
 			if (!troops.Any())
-				return (byte)classificationTT;
+				return (byte)classificationTroopType;
 
 			byte best = 0; // based on clasification or guards
 			var bestTS = 0;
@@ -535,7 +535,7 @@ namespace COTG.Game
 
 			}
 			if (best == 0)
-				return (byte)classificationTT;
+				return (byte)classificationTroopType;
 			else
 				return best;
 		}
@@ -1943,7 +1943,7 @@ namespace COTG.Game
 
 
 					aSetup.AddItem("Setup...", (_, _) => Spot.InfoClick(cid));
-					aSetup.AddItem("Find Hub", (_, _) => CitySettings.SetHub(cid));
+					aSetup.AddItem("Find Hub", (_, _) => CitySettings.SetClosestHub(cid));
 					aSetup.AddItem("Set Recruit", (_, _) => CitySettings.SetRecruitFromTag(cid));
 					aSetup.AddItem("Change...", (_, _) => ShareString.Show(cid));
 					//aSetup.AddItem("Remove Castle", (_, _) => 

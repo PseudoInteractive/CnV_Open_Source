@@ -2107,7 +2107,7 @@ namespace COTG
 												}
 												else
 												{
-													type = spot.classificationTT;
+													type = spot.classificationTroopType;
 													typeBlend = 1;
 													switch (spot.classification)
 													{

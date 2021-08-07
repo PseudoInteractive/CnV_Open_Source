@@ -25,7 +25,8 @@ namespace COTG.Game
         public int wood { get; set; }
         public int stone { get; set; }
         public int pri { get; set; }
-        public string notes { get; set; }
+		public int level { get; set; }
+		public string notes { get; set; }
 		public float travelMinutes; // distance to sending city
 		public string travelTime => TimeSpan.FromMinutes(travelMinutes).Format();
 
@@ -44,8 +45,9 @@ namespace COTG.Game
                     bc.spot = Spot.GetOrAdd(cid);
                     bc.spot._cityName = city[0].GetString();
                     bc.spot.pid = Player.NameToId(city[2].GetString());
-                    bc.virtue = city[3].GetString();
-                    bc.blessedUntil = city[5].GetString().ParseDateTime(true);
+					bc.virtue = city[3].GetString();
+					bc.level = city[4].GetAsInt();
+					bc.blessedUntil = city[5].GetString().ParseDateTime(true);
                     bc.wood = city[6].GetInt32();
                     bc.stone = city[7].GetInt32();
                     bc.pri = city[8].GetInt32();
@@ -92,11 +94,11 @@ namespace COTG.Game
             var reqF = $"{{\"a\":{woodToSend},\"b\":{stoneToSend},\"c\":0,\"d\":0,\"cid\":{senderCity.cid},\"rcid\":{cid},\"t\":\"{sendType}\"}}"; // t==1 is land, t==2 is water
 			Note.Show($"Sent {woodToSend:N0} wood and {stoneToSend:N0} stone in {((woodToSend + stoneToSend + 999) / (sendType == 1 ? 1000 : 10000)):N0} {(sendType == 1 ? "carts" : "ships")} from {City.Get(senderCity.cid).nameMarkdown}");
 			int count = App.IsKeyPressedShiftAndControl() ? 4 : 1;
-			var _sender = senderCity;
+			var _sender = senderCity.cid;
 			for (int i = 0; i < count; ++i)
 			{
-				await Post.Send("includes/sndTtr.php", $"cid={_sender.cid}&f=" + HttpUtility.UrlEncode(Aes.Encode(reqF, secret), Encoding.UTF8), pid);
-				await Task.Delay(950);
+				await Post.Send("includes/sndTtr.php", $"cid={_sender}&f=" + HttpUtility.UrlEncode(Aes.Encode(reqF, secret), Encoding.UTF8), pid);
+				await Task.Delay(150);
 			}
         }
 

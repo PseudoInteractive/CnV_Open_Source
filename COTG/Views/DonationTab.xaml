@@ -172,26 +172,9 @@
                                                       
                                                       CellContentStyle="{StaticResource CenterAlign}"
                                              />
-                <telerikGrid:DataGridTextColumn PropertyName="xy"
-                                                
-                                                CellContentStyle="{StaticResource CenterAlignLink}"
-                                        />
-                <telerikGrid:DataGridDateColumn PropertyName="blessedUntil"
-                                                    
-                                                
-                                                                                       CellContentFormat="{}{0:dd',' HH':'mm':'ss}"
-
-                                                CellContentStyle="{StaticResource CenterAlign}"
-                                        />
-                <telerikGrid:DataGridTextColumn PropertyName="playerName" Header="Player"
-                                                
-                                                CellContentStyle="{StaticResource CenterAlign}"
-                                                
-                                        />
-                <telerikGrid:DataGridTextColumn PropertyName="city"
-                                       
-                                                CellContentStyle="{StaticResource CenterAlign}"
-                                        />
+               
+              
+               
                 <telerikGrid:DataGridNumericalColumn  PropertyName="wood"
                                                       CellContentStyle="{StaticResource RightAlign}"
                                             CellContentFormat="{}{0,9:N0}"
@@ -202,6 +185,11 @@
                                             CellContentFormat="{}{0,9:N0}"
                                                       
                                              />
+				<telerikGrid:DataGridNumericalColumn  PropertyName="level"
+                                                      
+                                                      CellContentStyle="{StaticResource CenterAlign}"
+                                            CellContentFormat="{}{0,2:N0}"
+                                             />
                 <telerikGrid:DataGridNumericalColumn  PropertyName="pri"
                                                       
                                                       CellContentStyle="{StaticResource CenterAlign}"
@@ -209,7 +197,28 @@
                                              />
                 <telerikGrid:DataGridTextColumn PropertyName="notes" CellContentStyle="{StaticResource LeftAlign}"
                          />
-            </telerikGrid:RadDataGrid.Columns>
+			
+				<telerikGrid:DataGridDateColumn PropertyName="blessedUntil"
+                                                    
+                                                
+                                                                                       CellContentFormat="{}{0:dd',' HH':'mm':'ss}"
+
+                                                CellContentStyle="{StaticResource CenterAlign}"
+                                        />
+				<telerikGrid:DataGridTextColumn PropertyName="xy"
+                                                
+                                                CellContentStyle="{StaticResource CenterAlignLink}"
+                                        />
+				<telerikGrid:DataGridTextColumn PropertyName="playerName" Header="Player"
+                                                
+                                                CellContentStyle="{StaticResource CenterAlign}"
+                                                
+                                        />
+				<telerikGrid:DataGridTextColumn PropertyName="city"
+                                       
+                                                CellContentStyle="{StaticResource CenterAlign}"
+                                        />
+			</telerikGrid:RadDataGrid.Columns>
         </telerikGrid:RadDataGrid>
         <tk:GridSplitter Grid.Row="3"
                          ResizeDirection="Rows"

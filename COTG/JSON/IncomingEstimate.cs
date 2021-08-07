@@ -77,7 +77,7 @@ namespace COTG.Game
 
 
 
-			TroopTypeCountHelper.Set(ref army.troops, new TroopTypeCount(source.classificationTT, -1));
+			TroopTypeCountHelper.Set(ref army.troops, new TroopTypeCount(source.classificationTroopType, -1));
 			Debug.Assert(army.troops.count == 1);
 
 			if (army.miscInfo.Length == 0)
