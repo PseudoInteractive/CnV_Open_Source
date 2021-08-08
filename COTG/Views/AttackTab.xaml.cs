@@ -688,14 +688,14 @@ namespace COTG.Views
 
 			try
 			{
-				var strs = text.Split(new char[] { '\n', ',', ';' }, StringSplitOptions.RemoveEmptyEntries);
+				var strs = text.Split(App.IsKeyPressedControl()? new char[] { '\n', ',', ';',' ','\t' } : new char[] { '\n', ',', ';','\t' }, StringSplitOptions.RemoveEmptyEntries);
 				int prior = attacks.Length;
 				var duplicates = 0;
 				//int count = strs.Length;
 				foreach (var str in strs)
 				{
 
-					var match = AUtil.coordsRegex.Matches(str);
+					var match = App.IsKeyPressedShift() ? AUtil.coordsRegex.Matches(str) : AUtil.coordsRegexAny.Matches(str);
 					if (match.Count == 0)
 						continue;
 					if (match.Count > 1)

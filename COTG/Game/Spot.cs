@@ -1032,7 +1032,8 @@ namespace COTG.Game
 
 
 		public bool hasEnemyIncoming => incoming.Any(w => w.isAttack && !Alliance.IsAllyOrNap(w.sourceAlliance));
-
+		public bool HasIncomingFrom(int pid) => incoming.Any(i => i.sPid == pid);
+			
 		public int incomingAttacks
 		{
 			get

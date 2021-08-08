@@ -371,11 +371,14 @@ namespace COTG
 			var titleBar = Windows.UI.ViewManagement.ApplicationView.GetForCurrentView().TitleBar;
 
 
-var color = Windows.UI.Color.FromArgb(0xFF, 0x20, 0x0, 0x35);
+			var color = Windows.UI.Color.FromArgb(0xFF, 0x20, 0x0, 0x35);
+			var colorInactive = Windows.UI.Color.FromArgb(0xFF, 0x00, 0x0, 0x35);
 			titleBar.BackgroundColor = color;
-			titleBar.ForegroundColor = color;
-	//		titleBar.ButtonForegroundColor = color;
+			//titleBar.ForegroundColor = color;
+			//titleBar.ButtonForegroundColor = color;
 			titleBar.ButtonBackgroundColor = color;
+			titleBar.InactiveBackgroundColor = titleBar.ButtonInactiveBackgroundColor = colorInactive;
+//				titleBar.InactiveForegroundColor =  titleBar.ButtonInactiveForegroundColor = colorInactive;
 			//titleBar.ButtonInactiveBackgroundColor = Windows.UI.Colors.Transparent;
 			//  UpdateTitleBarLayout(coreTitleBar);
 #endif

@@ -74,18 +74,22 @@ namespace COTG.JSON
 		//	public static MemoryPool<BuildQueueItem> pool = MemoryPool<BuildQueueItem>.Shared;
 		public readonly ushort bid; // building id
 		public readonly ushort bspot; // xy
-		public readonly ushort secondsUntilCompletion; // delta time to end in seconds
+		public readonly ushort buildTime; // delta time in seconds
 		public readonly byte slvl;
-		public readonly byte elvl;
+		public readonly byte elvlAndPA; // 0xf is level mask, ox10 is pa mask
+		public byte elvl => (byte)(elvlAndPA & 0xF);
+		public bool pa => (elvlAndPA & 0x10)!= 0;
 
 
-		public BuildQueueItem(byte slvl, byte elvl, ushort bid, ushort bspot, ushort secondsUntilCompletion = 0)
+		public BuildQueueItem(byte slvl, byte elvl, ushort bid, ushort bspot, ushort buildTime = 0, bool pa = true)
 		{
+			if (pa)
+				elvl |= 0x10;
 			this.slvl = slvl;
-			this.elvl = elvl;
+			this.elvlAndPA = elvl;
 			this.bid = bid;
 			this.bspot = bspot;
-			this.secondsUntilCompletion = secondsUntilCompletion;
+			this.buildTime = buildTime;
 		}
 
 		//public bool isBuild => slvl == 0;
@@ -259,11 +263,15 @@ namespace COTG.JSON
 						{
 							//var gotBQ = false;
 							//var gotBuildings = false;
-							delay = 20 * 1000; // 20 default
+							delay = 10 * 1000; // 10s default
 							var lg = cotgQ.Length;
 							if (lg > 0)
 							{
-								delay = delay.Max(JSClient.ServerTimeOffsetMs(cotgQ[(lg - 2).Max(0)].secondsUntilCompletion * 1000).Min(15 * 60 * 1000));
+								var bt = 0;
+								// skip the first
+								for(int i=1;i<lg;++i )
+									bt += cotgQ[i].buildTime;
+								delay = (bt * 1000).Clamp(5*1000,15 * 60 * 1000);
 							}
 
 							//pollPaused = true;
@@ -318,8 +326,16 @@ namespace COTG.JSON
 						if (city.buildingsLoaded)
 						{
 							var counts = city.CountBuildingsWithoutQueue();
-							int commandsToQueue = (City.safeBuildQueueLength - cotgQ.Length).Min(queue.count);
+							var spaceInQueue =  City.safeBuildQueueLength- cotgQ.Length;
+							// this is either 1..+ can send commands normally
+							//                0 can send unblocking commands
+							//               -1  unblock un progress
+							var isBlocked = spaceInQueue==0 && cotgQ[0].pa == false;
+							int commandsToQueue = isBlocked ? 1 : spaceInQueue.Min(queue.count);
+	if (isBlocked)
+		Note.Show($"Blocked! {city.nameMarkdown} ");
 
+	// queue.count goes through here if the player cancels the queue so that this can be deleted
 							if (commandsToQueue > 0 || queue.count == 0)
 							{
 								commandBuilder.Clear();
@@ -333,20 +349,25 @@ namespace COTG.JSON
 								try
 								{
 									// up to 16
-									commandsToQueue = (City.safeBuildQueueLength + 1 - cotgQ.Length).Min(queue.count);
+							//		commandsToQueue = (City.safeBuildQueueLength + 1 - cotgQ.Length).Min(queue.count);
+									var endPoint = cotgQ.Length + commandsToQueue;
 
-
-									var forceUnblockAdd = 0;
-									while (offset < queue.count && cotgQ.Length < City.buildQMax)
+									while (offset < queue.count && cotgQ.Length < endPoint)
 									{
 										var i = queue.v[offset];
-										bool needToUnblock = cotgQ.Length == City.safeBuildQueueLength;
 
-										// do we have to wait on this on?
-										// - towers before wall
-										if (i.isBuild)
+				if (isBlocked && (i.isBuild || i.isUpgrade) )
+				{
+					++offset;
+					continue;
+				}
+
+				// do we have to wait on this on?
+				// - towers before wall
+				if (i.isBuild)
 										{
-											if (i.def.isTower)
+
+					if (i.def.isTower)
 											{
 												// Todo:  check res
 												if (city.buildings[City.bspotWall].bl == 0)
@@ -379,15 +400,14 @@ namespace COTG.JSON
 													}
 													continue;
 												}
-												++validCount;
 											}
 											else if (i.def.isWall)
 											{
 												// todo:  check res
-												++validCount;
 											}
 											else
 											{
+						
 												if (i.def.bid == City.bidCastle)
 												{
 													//	Log($"Castle  {city.nameAndRemarks}");
@@ -423,19 +443,8 @@ namespace COTG.JSON
 													}
 													continue;
 												}
-												if (counts.count < counts.max)
-												{
-													++validCount;
 												}
-												else
-												{
-													if (needToUnblock)
-													{
-														++offset;
-														continue;
-													}
-												}
-											}// is building
+											// is building
 										}
 										else if (i.isUpgrade)
 										{
@@ -475,7 +484,6 @@ namespace COTG.JSON
 
 													continue;
 												}
-												++validCount;
 											}
 										}
 										else if (i.isDemo)
@@ -497,11 +505,11 @@ namespace COTG.JSON
 												++offset;
 												continue;
 											}
-											++validCount;
 										}
+				++validCount;
 
-										// issue this command
-										RemoveAt(offset);
+				// issue this command
+				RemoveAt(offset);
 										//									if (cid == City.build)
 										//										City.buildQueue.Add(i);
 										cotgQ.Add(i);
@@ -509,8 +517,8 @@ namespace COTG.JSON
 										Serialize(ref commandBuilder, i, ref qFirst);
 										--commandsToQueue;
 
-										if (validCount > 0 && cotgQ.Length >= City.safeBuildQueueLength)
-											break;
+									//	if (validCount > 0 && cotgQ.Length >= City.safeBuildQueueLength)
+									//		break;
 									}
 
 
@@ -584,7 +592,7 @@ namespace COTG.JSON
 
 								}
 							}
-						}
+						} // buildings loaded
 					}
 					catch (Exception _exception)
 					{

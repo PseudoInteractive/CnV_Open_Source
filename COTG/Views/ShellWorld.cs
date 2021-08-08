@@ -427,7 +427,7 @@ namespace COTG.Views
 		}
 		private static void Canvas_PointerReleased(object sender, PointerEventArgs e)
 		{
-			if (!isHitTestVisible)
+			if (!isFocused)
 				return;
 			
 			//if (JSClient.IsCityView())
@@ -612,7 +612,7 @@ namespace COTG.Views
 			//	return;
 			//}
 
-			if (!isHitTestVisible)
+			if (!isFocused)
 				return;
 		
 			Assert(isOverPopup == false);
@@ -872,7 +872,7 @@ namespace COTG.Views
 			App.InputRecieved(); // prevent idle timer;
 			//	PointerInfo(e);
 			e.KeyModifiers.UpdateKeyModifiers();
-			if (!isHitTestVisible)
+			if (!isFocused)
 				return;
 		//	var priorMouseC = mousePosition;
 			var gestureResult = Gesture.ProcessMoved(e.CurrentPoint);

@@ -245,7 +245,7 @@ namespace COTG.Game
             return rv;
         }
 
-
+		
 		internal static int ApproximateKillsFromRefines(int refines)
 		{
 			// Ranger Equivalent kills based on refines, note troops are worth different amounts, i.e. sorcs 200 vs Vanqs 150.

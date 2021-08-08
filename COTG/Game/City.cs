@@ -639,7 +639,9 @@ namespace COTG.Game
 									js.GetAsByte("elvl"),
 									js.GetAsUShort("brep"),
 									js.GetAsUShort("bspot"),
-									(ushort)JSClient.ServerTimeOffsetSeconds(js.GetAsInt64("de"))));
+									buildTime: ((js.GetAsInt64("bt")/1000).ClampToU16() ),
+									pa: js.GetAsInt64("pa")==  1));
+
 							}
 							CityView.BuildingsOrQueueChanged();
 						}

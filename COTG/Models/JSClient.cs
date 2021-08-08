@@ -218,10 +218,10 @@ namespace COTG
 		{
 			return (int)(t - ServerTimeMs());
 		}
-		public static int ServerTimeOffsetSeconds(long t)
-		{
-			return (int)(t - ServerTimeSeconds());
-		}
+		//public static int ServerTimeOffsetSeconds(long t)
+		//{
+		//	return (int)(t - ServerTimeSeconds());
+		//}
 		public static long ServerTimeMs() => ServerTimeSeconds() * 1000;
 
 		//public static DateTimeOffset ServerToLocal(DateTimeOffset t)

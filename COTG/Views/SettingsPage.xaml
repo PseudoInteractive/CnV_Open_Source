@@ -223,18 +223,19 @@
 						<Flyout x:Name="exportTSFlyout">
 							<StackPanel Orientation="Vertical" Width="300" >
 								<wct:WrapPanel Orientation="Horizontal" Margin="4">
-									<controls:NumberBox x:Name="exportTSCont"
+									<controls:NumberBox 
+									Value="{x:Bind views:SettingsPage.exportContinent, Mode=TwoWay}"
 									NumberFormatter="{x:Bind cotg:App.formatterInt,Mode=OneTime}"
 									Style="{StaticResource NumberBoxSmall}"
 									Header="Continent"
 									ToolTipService.ToolTip="56 means world"
-									Value="3" />
+									 />
 									<controls:NumberBox x:Name="exportTSPlayers"
 									NumberFormatter="{x:Bind cotg:App.formatterInt,Mode=OneTime}"
 									Style="{StaticResource NumberBoxSmall}"
 									Header="Players"
 									ToolTipService.ToolTip="Max # of players to export"
-									Value="40" />
+									Value="10" />
 									<controls:NumberBox x:Name="exportTSMinTS"
 									NumberFormatter="{x:Bind cotg:App.formatterInt,Mode=OneTime}"
 									Style="{StaticResource NumberBoxSmall}"

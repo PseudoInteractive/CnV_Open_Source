@@ -201,7 +201,7 @@ namespace COTG.Views
 
 		public static bool isHitTestVisible = true;
 		public static bool canvasVisible;
-
+		public static bool isFocused => isHitTestVisible && App.isForeground;
 		private void OnLoaded(object sender, RoutedEventArgs e)
 		{
 			SystemNavigationManagerPreview.GetForCurrentView().CloseRequested += App.App_CloseRequested; ;
@@ -1265,7 +1265,7 @@ namespace COTG.Views
 
 		public void UpdateWebViewScale()
 		{
-			return;
+			
 				if (!Alliance.alliancesFetched)
 					return;
 				App.DispatchOnUIThreadLow(async ()

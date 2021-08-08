@@ -372,7 +372,7 @@ namespace COTG
 				}
 
 
-				if (clientSpan.X > 0 && clientSpan.Y > 0)
+				if (clientSpan.X > 0 && clientSpan.Y > 0 && App.isForeground)
 				{
 					if (resolutionDirtyCounter > 0 && !faulted)
 					{
@@ -443,7 +443,7 @@ namespace COTG
 					}
 
 				}
-				if (!faulted)
+				if (!faulted && App.isForeground)
 				{
 					if (World.bitmapPixels != null)
 					{
@@ -1048,13 +1048,15 @@ namespace COTG
 		{
 			if (faulted)
 				return;
+			if (!App.isForeground)
+				return;
 
 			underMouse = null;
 			bestUnderMouseScore = 32 * 32;
 
 
 			//parallaxZ0 = 1024 * 64.0f / cameraZoomLag;
-			var isFocused = ShellPage.isHitTestVisible;
+			var isFocused = ShellPage.isHitTestVisible && App.isForeground;
 
 			try
 			{

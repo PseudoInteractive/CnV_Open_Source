@@ -29,6 +29,7 @@ using COTG.Helpers;
 using Windows.UI.Xaml.Navigation;
 using Telerik.UI.Xaml.Controls.Grid.Commands;
 using System.Threading.Tasks;
+using System.Linq;
 
 namespace COTG.Views
 {
@@ -36,6 +37,8 @@ namespace COTG.Views
     public sealed partial class OutgoingTab : UserTab
     {
 		public static Spot lastSelected;
+		bool includeInternal;
+		bool onlyMine;
 
 		public static OutgoingTab instance;
         //        public static Report showingRowDetails;
@@ -93,7 +96,9 @@ namespace COTG.Views
                 {
                     App.DispatchOnUIThreadSneaky(() =>
                     {
-                        instance.attackerGrid.ItemsSource = Spot.defendersO;
+                        instance.attackerGrid.ItemsSource = Spot.defendersO.Where( w => w.testContinentFilter 
+																					&& (instance.includeInternal || !w.IsAllyOrNap() ) 
+																					&& (!instance.onlyMine ||w.HasIncomingFrom(Player.activeId))).ToArray();
                     });
                 }
                 catch (Exception e)
@@ -132,29 +137,20 @@ namespace COTG.Views
 
 		public static bool IsVisible() => instance.isVisible;
 
-        private void defenderGrid_SelectionChanged(object sender, DataGridSelectionChangedEventArgs e)
+		static Debounce selChanged = new Debounce(SelChanged) { runOnUiThead = true };
+
+		static Task SelChanged()
 		{
-			if (!isActive)
-				return;
-
-			var sel = attackerGrid.SelectedItem as Spot;
-            if(sel==null)
-            {
-           //     armyGrid.ItemsSource = Army.empty;
-            }
-            else
-            {
-				if (lastSelected == sel)
-					return;
-				lastSelected = sel;
-
-				armyGrid.ItemsSource = sel.incoming;
+			var sel = lastSelected;
+			if (sel != null)
+			{
+				instance.armyGrid.ItemsSource = sel.incoming;
 				if (SettingsPage.fetchFullHistory)
 				{
 					var tab = HitTab.instance;
-					if (!isVisible)
+					if (!instance.isVisible)
 					{
-						tab.ShowOrAdd(true, onlyIfClosed:true);
+						tab.ShowOrAdd(true, onlyIfClosed: true);
 
 					}
 					else
@@ -162,10 +158,37 @@ namespace COTG.Views
 						tab.refresh.Go();
 					}
 				}
+			}
+			return Task.CompletedTask;
+		}
+		
+
+        private void defenderGrid_SelectionChanged(object sender, DataGridSelectionChangedEventArgs e)
+		{
+			if (!isActive)
+				return;
+
+			var sel = attackerGrid.SelectedItem as Spot;
+           // if(sel==null)
+           // {
+           ////     armyGrid.ItemsSource = Army.empty;
+           // }
+           // else
+            {
+				if (lastSelected == sel)
+					return;
+				lastSelected = sel;
+
+				selChanged.Go();
 
 			}
 		}
-    }
+
+		private void ToggleSwitch_Toggled(object sender, RoutedEventArgs e)
+		{
+			instance.refresh.Go();
+		}
+	}
        
 
 }

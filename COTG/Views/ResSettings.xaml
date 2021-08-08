@@ -95,18 +95,18 @@
 		<StackPanel>
 			<Border Style="{StaticResource BorderReveal}">
 				<tk:WrapPanel  Orientation="Horizontal">
-					<CheckBox  Content="Export Wood" IsThreeState="True" IsChecked="{x:Bind reqFilter.wood}" ToolTipService.ToolTip="If checked wood is requested sent on overflow, otherwise it is stored or refined, the 'box' setting means leave as is" />
-					<CheckBox  Content="Export Stone" IsThreeState="True" IsChecked="{x:Bind reqFilter.stone}" ToolTipService.ToolTip="If set, stone is sent on overflow, otherwise it is stored or refined, the 'box' setting means leave as is" />
-					<CheckBox  Content="Export Iron" IsThreeState="True" IsChecked="{x:Bind reqFilter.iron}" ToolTipService.ToolTip="If set, iron is sent on overflow, otherwise it is stored or refined, the 'box' setting means leave as is" />
-					<CheckBox  Content="Export Food" IsThreeState="True" IsChecked="{x:Bind reqFilter.food}" ToolTipService.ToolTip="If set, food is sent on overflow, otherwise it is stored or refined, the 'box' setting means leave as is" />
+					<CheckBox  Content="Request Wood" IsThreeState="True" IsChecked="{x:Bind reqFilter.wood, Mode=TwoWay}" ToolTipService.ToolTip="Checked:  Wood is requested from the source hub Off: City does not request wood In between: Leave wood source hub as is" />
+					<CheckBox  Content="Request Stone" IsThreeState="True" IsChecked="{x:Bind reqFilter.stone, Mode=TwoWay}" ToolTipService.ToolTip="[Checked]:  Stone is requested from the source hub  [Off]: City does not request stone.  [In between]: Leave stone source hub as is" />
+					<CheckBox  Content="Request Iron" IsThreeState="True" IsChecked="{x:Bind reqFilter.iron, Mode=TwoWay}" ToolTipService.ToolTip="Checked:  Iron is requested from the source hub Off: City does not request iron In between: Leave iron source hub as is" />
+					<CheckBox  Content="Request Food" IsThreeState="True" IsChecked="{x:Bind reqFilter.food, Mode=TwoWay}" ToolTipService.ToolTip="Checked:  Food is requested from the source hub Off: City does not request food In between: Leave food source hub as is" />
 				</tk:WrapPanel  >
 			</Border>
 			<Border Style="{StaticResource BorderReveal}">
 				<tk:WrapPanel  Orientation="Horizontal">
-					<CheckBox Content="Export Wood" IsThreeState="True" IsChecked="{x:Bind sendFilter.wood}" ToolTipService.ToolTip="If set, wood is sent on overflow, otherwise it is stored or refined, the 'box' setting means leave as is" />
-					<CheckBox Content="Export Stone" IsThreeState="True" IsChecked="{x:Bind sendFilter.stone}" ToolTipService.ToolTip="If set, stone is sent on overflow, otherwise it is stored or refined, the 'box' setting means leave as is" />
-					<CheckBox Content="Export Iron" IsThreeState="True" IsChecked="{x:Bind sendFilter.iron}" ToolTipService.ToolTip="If set, iron is sent on overflow, otherwise it is stored or refined, the 'box' setting means leave as is" />
-					<CheckBox Content="Export Food" IsThreeState="True" IsChecked="{x:Bind sendFilter.food}" ToolTipService.ToolTip="If set, food is sent on overflow, otherwise it is stored or refined, the 'box' setting means leave as is" />
+					<CheckBox Content="Export Wood" IsThreeState="True" IsChecked="{x:Bind sendFilter.wood, Mode=TwoWay}" ToolTipService.ToolTip="If set, wood is sent on overflow, otherwise it is stored or refined, the 'box' setting means leave as is" />
+					<CheckBox Content="Export Stone" IsThreeState="True" IsChecked="{x:Bind sendFilter.stone, Mode=TwoWay}" ToolTipService.ToolTip="If set, stone is sent on overflow, otherwise it is stored or refined, the 'box' setting means leave as is" />
+					<CheckBox Content="Export Iron" IsThreeState="True" IsChecked="{x:Bind sendFilter.iron, Mode=TwoWay}" ToolTipService.ToolTip="If set, iron is sent on overflow, otherwise it is stored or refined, the 'box' setting means leave as is" />
+					<CheckBox Content="Export Food" IsThreeState="True" IsChecked="{x:Bind sendFilter.food, Mode=TwoWay}" ToolTipService.ToolTip="If set, food is sent on overflow, otherwise it is stored or refined, the 'box' setting means leave as is" />
 				</tk:WrapPanel  >
 			</Border>
 		</StackPanel>

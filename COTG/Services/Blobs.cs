@@ -320,19 +320,30 @@ namespace COTG.Services
 
 			}
 			sb.Append("Time");
-			if(allianceStats)
-				sb.Append("\tAllianceTs\tAllianceTsOff\tAllianceTsDef\tOtherTS\tOtherTsOff\tOtherTsDef");
+			if (allianceStats)
+			{
+				for (int i = 0; i < 2; ++i)
+				{
+					var cat = i == 0 ? Alliance.my.name : "Other";
+					if (tsTotal)
+						sb.Append($"\t{cat} TS");
+					if (tsOff)
+						sb.Append($"\t{cat} TSOff");
+					if (tsDef)
+						sb.Append($"\t{cat} TSDef");
+				}
+			}
 			foreach (var pid in pids)
 			{
 				var an =Player.IdToName(pid);
 				if(scoreAndCities)
-					sb.Append($"\t{an}_score\t{an}_cities");
+					sb.Append($"\t{an} Score\t{an} Cities");
 				if (tsTotal)
-					sb.Append($"\t{an}_ts");
+					sb.Append($"\t{an} TS");
 				if (tsOff)
-					sb.Append($"\t{an}_tsOff");
+					sb.Append($"\t{an} TSOff");
 				if (tsDef)
-					sb.Append($"\t{an}_tsDef");
+					sb.Append($"\t{an} TSDef");
 			}
 			sb.Append("\n");
 			foreach (var snap in snaps)
@@ -371,7 +382,22 @@ namespace COTG.Services
 				if (allianceStats)
 				{
 					sb.Append($"\t{allianceTs}\t{allianceTsOff}\t{allianceTsDef}\t{otherTs}\t{otherTsOff}\t{otherTsDef}");
+
+					if (tsTotal)
+						sb.Append($"\t{allianceTs}");
+					if (tsOff)
+						sb.Append($"\t{allianceTsOff}");
+					if(tsDef)
+						sb.Append($"\t{allianceTsDef}");
+					if (tsTotal)
+						sb.Append($"\t{otherTs}");
+					if (tsOff)
+						sb.Append($"\t{otherTsOff}");
+					if (tsDef)
+						sb.Append($"\t{otherTsDef}");
 				}
+
+			
 				foreach (var pid in pids)
 				{
 					var p = cont.players.FirstOrDefault(a => a.pid == pid);
@@ -399,8 +425,7 @@ namespace COTG.Services
 			 }
 			
 			
-
-			App.CopyTextToClipboard(sb.ToString());
+			App.CopyTextToClipboard(sb.ToString() );
 			Note.Show("Copied stats to clipboard (tsv) for sheets");
 
 		}

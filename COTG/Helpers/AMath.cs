@@ -362,6 +362,10 @@ namespace COTG
 			Assert(max >= min);
 			return f >= min ? (f <= max ? f : max) : min;
 		}
+		public static ushort ClampToU16(this long v)
+		{
+			return v < 0 ? (ushort)0 : v > 65535 ? (ushort)65535u : (ushort)v;
+		}
 		public static float Min(this float f,  float max)
         {
             return (f <= max ? f : max);

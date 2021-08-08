@@ -312,8 +312,8 @@ namespace COTG.Game
 		public int pid; 
 		public int score; // for sorting unknown players
 		public int cities; // for sorting unknown players
-		public int tsTotal;
-		public int tsOff;
+		public int tsTotal; // approximate
+		public int tsOff; // approximate
 		public int tsDef;// tsDef is difference
 	}
 

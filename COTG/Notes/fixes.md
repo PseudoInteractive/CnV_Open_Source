@@ -257,4 +257,16 @@
    - **Update**
      - Login process now uses 50% less cookies and you can no longer log into other peoples accounts
      - For login instruction https://docs.google.com/document/d/1V8Zd47Sw47zzj0UIVge9VBkg4Y8uTut6OIDLR1WR2s8/edit?usp=sharing 
-   - ** 
+ ### 2021/8/08
+   - **Fix** 
+     - Background build queues overestimated their duration by 1000x.
+   - **Update**
+     - New algorithm for unblocking build queue
+     - Not it handles things like 49 cabins + clear res more gracefully
+   - **New**
+     - You can scale down the COTG side bar for more screen space
+       - click on the side bar, hold down control and scroll mouse wheel down
+       - Or on touch screen pinch it
+       - Or on track pad either pinch the track pad or do a two finger scroll. I really don't know.
+     - When done press F5 or refresh button and things will mostly adjust
+     

@@ -77,7 +77,7 @@ namespace COTG.Views
 		public static bool? troopsVisible;
 //		public static bool sendWood = true;
 //		public static bool sendStone = true;
-//		public static string continentsExport = string.Empty;
+		public static int exportContinent = 22;
 //		public static bool sendIron = true;
 //		public static bool sendFood = true;
 		public static int tsForCastle = 22000;
@@ -817,6 +817,7 @@ namespace COTG.Views
 
 		private async void ImportSpots(object sender, RoutedEventArgs e)
 		{
+			HideMe();
 			try
 			{
 				var str = await Windows.ApplicationModel.DataTransfer.Clipboard.GetContent().GetTextAsync();
@@ -917,6 +918,7 @@ namespace COTG.Views
 		private void ExportRanks(object sender, RoutedEventArgs e)
 		{
 			HideFlyout(sender);
+			HideMe();
 			var cont = exportRanksCont.Value.RoundToInt().ContinentToXY().XYToPackedContinent();
 			var t1 = JSClient.ServerTime();
 			Blobs.AllianceStats(t1 - TimeSpan.FromDays(exportRanksDays.Value), t1, cont, exportRanksCities.Value.RoundToInt() );
@@ -936,7 +938,8 @@ namespace COTG.Views
 		private void ExportTS(object sender, RoutedEventArgs e)
 		{
 			HideFlyout(sender);
-			var cont = exportTSCont.Value.RoundToInt().ContinentToXY().XYToPackedContinent();
+			HideMe();
+			var cont = SettingsPage.exportContinent.ContinentToXY().XYToPackedContinent();
 			var tsMin = exportTSMinTS.Value.RoundToInt();
 			var t1 = JSClient.ServerTime();
 			Blobs.PlayerStats(t1-TimeSpan.FromDays(exportTSDays.Value), t1,cont,tsMin,this.exportTSScore.IsChecked.GetValueOrDefault(),exportTSAlliance.IsChecked.GetValueOrDefault(), 
@@ -951,6 +954,7 @@ namespace COTG.Views
 
 		private void LaunchTapped(object sender, RoutedEventArgs e)
 		{
+			HideMe();
 			Windows.System.Launcher.LaunchUriAsync(new Uri($"{App.appLink}:launch?n=1"));
 		}
 
