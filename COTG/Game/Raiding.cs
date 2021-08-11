@@ -35,19 +35,7 @@ namespace COTG.Game
 
         
 
-        public override bool Equals(object obj)
-        {
-            return obj is Raid raid && Equals(raid);
-        }
-
-        public bool Equals(Raid other)
-        {
-            return target == other.target &&
-                   time == other.time &&
-                   isReturning == other.isReturning &&
-                   r4== other.r4;
-        }
-
+      
         // restul int minutes
         public float GetOneWayTripTimeMinutes(City city)
         {
@@ -57,20 +45,15 @@ namespace COTG.Game
             foreach (var tt in Raiding.GetTroops(city.troopsTotal,true,true) )
             {
                 var type = tt.type;
-                var travel = (dist * ttTravel[type]*100) / (ttSpeedBonus[type]);
+                var travel = TroopTravelMinutes(type, target.DistanceToCidD(city.cid),true);
                 // if (IsWaterRaider(type))
                 // 1 hour extra for all raids
-                travel += 60.0f;
                 if (travel > rv)
                     rv = travel;
             }
             return rv > 0 ? (float)rv : 90; // if troops are not updated, cannot compute raid income
         }
 
-    public override int GetHashCode()
-        {
-            return HashCode.Combine(target, time, isReturning, r4);
-        }
 
         public static bool operator ==(Raid left, Raid right)
         {
@@ -86,7 +69,24 @@ namespace COTG.Game
         {
             return $"{{target:{target}, arrival:{time}, { (r4 switch { 2 => "repeating", 3=>"scheduled return",_=>"once"}) }";
         }
-    }
+		public override bool Equals(object obj)
+		{
+			return obj is Raid raid  && Equals(raid);
+		}
+		public  bool Equals( Raid raid)
+		{
+			return target == raid.target &&
+				   isReturning == raid.isReturning &&
+				   r4 == raid.r4 &&
+				   repeatCount == raid.repeatCount &&
+				   time.Equals(raid.time);
+		}
+
+		public override int GetHashCode()
+		{
+			return HashCode.Combine(target, isReturning, r4, repeatCount, time);
+		}
+	}
 
     public static class Raiding
     {

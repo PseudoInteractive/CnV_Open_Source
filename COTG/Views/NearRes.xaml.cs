@@ -438,7 +438,7 @@ namespace COTG.Views
 				res = await Post.SendForText("includes/sndTr.php", $"cid={cid}&f=" + HttpUtility.UrlEncode(Aes.Encode(reqF, secret), Encoding.UTF8), pid);
 				if (count == 1)
 					break;
-				await Task.Delay(350);
+				await Task.Delay(650);
 			}
 			if (int.TryParse(res.Trim(), out var i) && i == 10)
 			{

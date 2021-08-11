@@ -698,6 +698,10 @@ namespace COTG.Game
 						Set2( ref re.troops, rein.GetProperty("tr") );
 						l.Add(re);
 					}
+					else
+					{
+						Assert(rein.ValueKind == JsonValueKind.Array && rein.GetArrayLength() == 0);
+					}
 				}
 				reinforcementsIn = l.ToArray();
 			}
@@ -2109,7 +2113,7 @@ namespace COTG.Game
 			   var reserveCartsFilter = DonationTab.reserveCarts;
 			   if (DonationTab.IsVisible())
 				   DonationTab.instance.donationGrid.ItemsSource = l.Where((city) => city.cartsHome >= reserveCartsFilter)
-					   .OrderByDescending(a => a.cartsHome).ToArray();
+					   .OrderBy(a=>a.cont).ToArray();
 			   //   if (MainPage.IsVisible())
 			   {
 				   using var _ = await cityGridLock.LockAsync();

@@ -209,7 +209,7 @@ namespace COTG
 		public static float bmFontScale = 0.125f;
 		public static Texture2D fontTexture;
 		static readonly Color attackColor = Color.White;
-		static Color ShadowColor(float alpha) => new Color(0, 0, 32, (int)(200 * alpha));
+		static Color ShadowColor(float alpha,bool highlight=false) => new Color(highlight?128:0, highlight?128:0, highlight? 192:32, (int)(200 * alpha));
 		static readonly Color defenseColor = new Color(255, 20, 160, 160);
 		static readonly Color defenseArrivedColor = new Color(255, 20, 255, 160);
 		static readonly Color artColor = Color.DarkBlue;
@@ -920,7 +920,7 @@ namespace COTG
 		const float circleRadMin = 3.0f;
 		const float circleRadMax = 5.5f;
 		const float lineThickness = 3.0f;
-		static float LineThickness(bool hovered) => hovered ? lineThickness * 2 : lineThickness;
+	//	static float LineThickness(bool hovered) => hovered ? lineThickness * 2 : lineThickness;
 		const float rectSpanMin = 4.0f;
 		const float rectSpanMax = 8.0f;
 		const float bSizeGain = 4.0f;
@@ -1576,7 +1576,7 @@ namespace COTG
 							//					{
 							//						(int iType, float alpha) = GetTroopBlend(t, nSprite);
 							//						DrawAction(dt1, journeyTime, r, c0, c1, c, troopImages[attack.troops.GetIndexType(iType)], true, attack, alpha: alpha, 
-							//							lineThickness:LineThickness(Spot.IsSelectedOrHovered(attack.sourceCid,attack.targetCid)) );
+							//							lineThickness:lineThickness,highlight:Spot.IsSelectedOrHovered(a)(attack.sourceCid,attack.targetCid)) );
 							//					}
 							//				}
 							//				//var progress = (dt0 / (dt0 + dt1).Max(1)).Saturate(); // we don't know the duration so we approximate with 2 hours
@@ -1640,7 +1640,7 @@ namespace COTG
 												var c1 = a.CidToCamera();
 												var spot = Spot.GetOrAdd(a);
 												DrawAction(0.5f, 1.0f, r, c1, c0, Color.Red, troopImages[(int)spot.GetPrimaryTroopType(false)], false, null, 
-													lineThickness: LineThickness(Spot.IsSelectedOrHovered(a)));
+													lineThickness: lineThickness,highlight:Spot.IsSelectedOrHovered(a));
 											}
 										//	foreach (var target in cluster.targets)
 										//	{
@@ -1791,7 +1791,7 @@ namespace COTG
 
 													(int iType, float alpha) = GetTroopBlend(t, nSprite);
 
-													DrawAction(i.TimeToArrival(serverNow), i.journeyTime, r, c0, c1, c, troopImages[i.troops.GetIndexType(iType)], true, i, alpha: alpha,lineThickness:LineThickness(Spot.IsSelectedOrHovered(i.sourceCid, i.targetCid)));
+													DrawAction(i.TimeToArrival(serverNow), i.journeyTime, r, c0, c1, c, troopImages[i.troops.GetIndexType(iType)], true, i, alpha: alpha,lineThickness:lineThickness,highlight:Spot.IsSelectedOrHovered(i.sourceCid, i.targetCid));
 												}
 												else
 												{
@@ -1880,7 +1880,7 @@ namespace COTG
 											//	var t = (tick * city.cid.CidToRandom().Lerp(1.375f / 512.0f, 1.75f / 512f));
 											//	var r = t.Ramp();
 											var hover = cityHover | Spot.IsHover(toCid);
-											DrawAction(c1.WToCamera(), cc, hover ? tradeColorHover : tradeColor, hover ? lineThickness * 2f : lineThickness);
+											DrawAction(c1.WToCamera(), cc, hover ? tradeColorHover : tradeColor,  lineThickness, hover);
 
 
 										}
@@ -1906,7 +1906,7 @@ namespace COTG
 											{
 												var cc1 = wc1.WToCamera();
 												DrawAction(0.5f,1.0f,1.0f, wc0.WToCamera(),cc1, senatorColor,
-												troopImages[ttSenator], false, null);
+												troopImages[ttSenator], false, null, highlight:Spot.IsSelectedOrHovered(s.cid) );
 												DrawFlag(s.rcid, SpriteAnim.flagGrey, Vector2.Zero);
 
 											}
@@ -1953,7 +1953,7 @@ namespace COTG
 											var r = t.Ramp();
 											// Todo: more accurate senator travel times
 											DrawAction((float)(sen.time - serverNow).TotalSeconds, dist * 60.0f, r, c, c1, senatorColor,
-												troopImages[ttSenator], false, null);
+												troopImages[ttSenator], false, null, highlight: Spot.IsSelectedOrHovered(city.cid));
 											DrawFlag(sen.target, SpriteAnim.flagGrey, Vector2.Zero);
 										}
 									}
@@ -1982,7 +1982,7 @@ namespace COTG
 											(var c0, var c1) = !raid.isReturning ? (c, ct) : (ct, c);
 											DrawAction((float)(raid.time - serverNow).TotalSeconds,
 												raid.GetOneWayTripTimeMinutes(city) * 60.0f,
-												r, c0, c1, raidColor, troopImages[raid.troopType], false, null);
+												r, c0, c1, raidColor, troopImages[raid.troopType], false, null, highlight: Spot.IsSelectedOrHovered(city.cid));
 
 										}
 									}
@@ -1992,7 +1992,7 @@ namespace COTG
 
 						foreach (var cid in Spot.selected)
 						{
-							DrawRectOutlineShadow(Layer.effects - 1, cid,selectColor, null, 3.0f,0.0f);
+							DrawRectOutlineShadow(Layer.effects - 1, cid,selectColor, null, 3.0f,4.0f);
 							//DrawFlag(cid, SpriteAnim.flagSelected, Vector2.Zero);
 						}
 						foreach (var cid in SettingsPage.pinned)
@@ -2374,7 +2374,7 @@ namespace COTG
 
 		const float actionStopDistance = 48.0f;
 		private void DrawAction(float timeToArrival, float journeyTime, float rectSpan, Vector2 c0, Vector2 c1, Color color,
-		Material bitmap, bool applyStopDistance, Army army, float alpha = 1, float lineThickness = lineThickness)
+		Material bitmap, bool applyStopDistance, Army army, float alpha = 1, float lineThickness = lineThickness, bool highlight=false)
 		{
 			if (IsCulled(c0, c1))
 				return;
@@ -2402,7 +2402,7 @@ namespace COTG
 			if (timeToArrival < postAttackDisplayTime)
 				gain = 1.0f + (1.0f - timeToArrival / postAttackDisplayTime) * 0.25f;
 			var mid = progress.Lerp(c0, c1);
-			var shadowColor = ShadowColor(alpha);
+			var shadowColor = ShadowColor(alpha, highlight);
 			if (army != null)
 			{
 				var d2 = Vector2.DistanceSquared(mid, ShellPage.mousePositionW);
@@ -2431,9 +2431,9 @@ namespace COTG
 
 		}
 
-		private void DrawAction(Vector2 c0, Vector2 c1, Color color, float thickness )
+		private void DrawAction(Vector2 c0, Vector2 c1, Color color, float thickness, bool highlight )
 		{
-			DrawAction(0, 1.0f, 1, c0, c1, color, null, false, null, alpha: 1, lineThickness:thickness);
+			DrawAction(0, 1.0f, 1, c0, c1, color, null, false, null, alpha: 1, lineThickness:thickness, highlight:highlight);
 
 
 			/*			if (IsCulled(c0, c1))

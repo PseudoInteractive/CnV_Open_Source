@@ -423,7 +423,7 @@ namespace COTG.Views
 		{
 			var dt = TimeSpan.FromMinutes(e.NewValue);
 			var serverTime = JSClient.ServerTime() + TimeSpan.FromMinutes(e.NewValue);
-			eventTimeTravelText.Text = $"Attack Time Travel:\t\t{dt.Hours}:{dt.Minutes},\t\tT:{serverTime.Hour}:{serverTime.Minute:D2}";
+			eventTimeTravelText.Text = $"Attack Time Travel:\t\t{dt.Hours}:{dt.Minutes},\t\tT:{serverTime.FormatSkipDateIfToday()}";
 		}
 		private static void Canvas_PointerReleased(object sender, PointerEventArgs e)
 		{

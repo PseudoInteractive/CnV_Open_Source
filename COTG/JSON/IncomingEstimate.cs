@@ -151,7 +151,7 @@ namespace COTG.Game
 				//              time_4 = time_4 + mdiff_;
 				//              /** @type {number} */
 				//              time_4 = time_4 + sdiff_ / 60;
-				var journeyTime = army.journeyTimeD / 60.0; // want minutes
+				var journeyTime = army.journeyTimeMinutes; // want minutes
 				var dist_ = army.distD;
 				float landSpeed = RoundTo6Bits(journeyTime / dist_);
 
@@ -288,7 +288,8 @@ namespace COTG.Game
 				/** @type {number} */
 				var zsn_ = senspeed_.IndexOf(landSpeed);
 				const float tsGain = 0.5f;
-				if (targetContinent == sourceContinent)
+				var sameContinent = targetContinent == sourceContinent;
+				if (sameContinent)
 				{
 					if (landSpeed > 30)
 					{
@@ -457,7 +458,8 @@ namespace COTG.Game
 						}
 					}
 				}
-				army.miscInfo = rv;
+				army.miscInfo = $"{rv}, Speed: {(sameContinent?landSpeed : navySpeed)}, {army.journeyTimeString}";
+				
 			}
         }
     }

@@ -688,7 +688,7 @@ namespace COTG.Views
 
 		public static (int x, int y) webclientSpan;
 
-		private async void ShowBuildings(object sender, RoutedEventArgs e)
+		private async void ShowBuildings(object sender, object e)
 		{
 			try
 			{
@@ -1258,7 +1258,7 @@ namespace COTG.Views
 
 				MainPage.ToggleInfoBoxes(raidInfoVisible);
 				//   Task.Delay(200).ContinueWith((_) => City.gridCitySource.NotifyReset());
-				UpdateWebViewScale();
+				//UpdateWebViewScale();
 
 			});
 		}
@@ -1377,5 +1377,6 @@ namespace COTG.Views
 					JSClient.view.Refresh();
 			}
 		}
+
 	}
 }

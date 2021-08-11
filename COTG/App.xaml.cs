@@ -53,6 +53,7 @@ using Microsoft.AppCenter.Analytics;
 using System.Collections.Generic;
 using System.Net;
 using Nito.AsyncEx;
+using Microsoft.Toolkit.Uwp.UI;
 using Windows.UI.Xaml.Controls;
 
 namespace COTG
@@ -1011,7 +1012,17 @@ namespace COTG
 				}
 			
 		}
+		public static void HideFlyout(object sender)
+		{
+			var but = sender as Button;
+			Assert(but != null);
+			if (but != null)
+			{
+				var fly = but.FindParent<FlyoutPresenter>();
+				fly?.ContextFlyout?.Hide();
+			}
 
+		}
 	}
 
 

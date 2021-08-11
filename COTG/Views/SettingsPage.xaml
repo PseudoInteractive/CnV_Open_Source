@@ -121,11 +121,6 @@
 							   Margin="4"
 							   OnContent="Keep COTG Alive"
 							   OffContent="Drop connection on Idle" />
-				<controls:NumberBox Header="Penalty for wrong Dungeon Type"
-									 Value="{x:Bind views:SettingsPage.penaltyForWrongDungeonType,Mode=TwoWay}"
-									 SmallChange="0.5"
-									 LargeChange="2"
-									 Style="{StaticResource NumberBoxSmall}" />
 				<controls:NumberBox Header="Reset Raids Carry %"
 									 Value="{x:Bind views:SettingsPage.resetRaidsCarry,Mode=TwoWay}"
 									 SmallChange="1"
@@ -248,14 +243,21 @@
 									Header="Days"
 									ToolTipService.ToolTip="Max number of days to export"
 									Value="7" />
-									<CheckBox x:Name="exportTSAlliance"
+								</wct:WrapPanel>
+								<wct:WrapPanel>
+								
+								 <CheckBox x:Name="exportTSAlliance"
 									Content="Alliance Stats"
 									ToolTipService.ToolTip="Include alliance TS"
 									IsChecked="True" />
 
 									<CheckBox x:Name="exportTSScore"
 									Content="Score"
-									ToolTipService.ToolTip="Include score and city count"
+									ToolTipService.ToolTip="Include score"
+									IsChecked="False" />
+									<CheckBox x:Name="exportTSCities"
+									Content="Cities"
+									ToolTipService.ToolTip="Include city count"
 									IsChecked="False" />
 
 									<CheckBox x:Name="exportTSTotal"

@@ -2,7 +2,6 @@
     x:Class="COTG.Views.DungeonView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:COTG.Views"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
@@ -140,7 +139,7 @@
 						  OffContent="Once" />
 
 			<winui:NumberBox 
-								  Header="Max Triari"
+								  Header="Max Triari Ratio"
 								  Margin="6,2,6,2"
 								  Value="{x:Bind view:SettingsPage.raidMaxTriariRatio,Mode=TwoWay}"
 								  ValueChanged="SomethingChanged"
@@ -184,6 +183,12 @@
 								  OffContent="Exclude"
 							  ToolTipService.ToolTip="Whether to include dungeons that do not match your troop type (i.e. mountains for infantry)"
 								  Margin="6,2,6,2" />
+			<winui:NumberBox Header="Penalty for wrong Dungeon Type"
+									 Value="{x:Bind view:SettingsPage.penaltyForWrongDungeonType,Mode=TwoWay}"
+									 SmallChange="0.5"
+									 LargeChange="2"
+							ToolTipService.ToolTip="For dungeons that do not match your troop type (i.e. mountains for infantry), this makes them less likely to be chosen"
+									 Style="{StaticResource NumberBoxSmall}" />
 			<ToggleSwitch     Header="# to Send" Width="90"
 								  FontSize="{StaticResource MediumFontSize}"
 								  IsOn="{x:Bind view:SettingsPage.raidSendExact,Mode=TwoWay}"

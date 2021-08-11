@@ -346,48 +346,76 @@ namespace COTG.Views
 		//    instance.TipRaiding101.Show();
 		//}
 		//static public void ShowTipRaiding2()
-        //{
-        //    if (!Tips.instance.raiding1 || Tips.instance.raiding2 || Tips.tipQueued)
-        //        return;
-        //    raidingTip2.Dispatch(instance.TipRaiding201, () => Tips.instance.raiding2 = true);
-        //}
+		//{
+		//    if (!Tips.instance.raiding1 || Tips.instance.raiding2 || Tips.tipQueued)
+		//        return;
+		//    raidingTip2.Dispatch(instance.TipRaiding201, () => Tips.instance.raiding2 = true);
+		//}
 
 
-        //static public void ShowTipRaiding3()
-        //{
-        //    if (Tips.instance.raiding2|| Tips.instance.raiding3 || Tips.tipQueued)
-        //        return;
-        //    raidingTip3.Dispatch(instance.TipRaiding301, () => Tips.instance.raiding3 = true);
-        //}
+		//static public void ShowTipRaiding3()
+		//{
+		//    if (Tips.instance.raiding2|| Tips.instance.raiding3 || Tips.tipQueued)
+		//        return;
+		//    raidingTip3.Dispatch(instance.TipRaiding301, () => Tips.instance.raiding3 = true);
+		//}
 
 
-       
 
-        private async void ResetRaids(object sender, RoutedEventArgs e)
+		private void ResetBadRaidsFast(object sender, RoutedEventArgs e)
+		{
+			App.HideFlyout(sender);
+			ReturnRaids(true, true);
+		}
+		private void ResetBadRaidsSlow(object sender, RoutedEventArgs e)
+		{
+			App.HideFlyout(sender);
+			ReturnRaids(false, true);
+		}
+		private void ResetRaidsFast(object sender, RoutedEventArgs e)
+		{
+			App.HideFlyout(sender);
+			ReturnRaids(true, false);
+		}
+
+		private void ResetRaidsSlow(object sender, RoutedEventArgs e)
+		{
+			App.HideFlyout(sender);
+			ReturnRaids(false, false);
+		}
+		private async void ReturnRaids(bool fast, bool onlyNeeded)
         {
             await RaidOverview.Send();
             await RestAPI.troopsOverview.Post();
 			await RaidOverview.Send();
 
-			cityGrid.SelectAll();
+			if (cityGrid.SelectedItems.Count <= 1)
+			{
+				if (await App.DoYesNoBoxUI("Select All", "Non selected, select all?") != 1)
+					return;
+				cityGrid.SelectAll();
+			}
 			var ret = new List<int>();
 
 			foreach (City c in cityGrid.SelectedItems)
             {
-				if (!c.testContinentAndTagFilter)
+				if (!c.testContinentAndTagFilter )
 					continue;
-                if(c.raidCarry != 0 && (c.raidCarry <= SettingsPage.resetRaidsCarry || c.tsRaid*100 >= (c.tsRaidTotal * SettingsPage.resetRaidsIdle) ) )
+                if( !onlyNeeded || (c.raidCarry != 0 && (c.raidCarry <= SettingsPage.resetRaidsCarry || c.tsRaid*100 >= (c.tsRaidTotal * SettingsPage.resetRaidsIdle) )) )
                 {
                     ret.Add(c.cid);
                 }
 
             }
-			if (await App.DoYesNoBox("Reset Raids?", $"Will return {ret.Count}, best to only reset if you will be around in an hour to send late returners out again", "Do it", "Maybe Not") == 1)
+			if (await App.DoYesNoBox("Reset Raids?", $"Will return {ret.Count}, best to only reset if you will be around to send returners out again", "Do it", "Maybe Not") == 1)
 			{
-				Raiding.ReturnFastBatch(ret);
+				if(fast)
+					Raiding.ReturnFastBatch(ret);
+				else
+					Raiding.ReturnSlowBatch(ret);
 			}
 
-        }
+		}
 		private async void AutoRaid(object sender, RoutedEventArgs e)
 		{
 			using var work = new ShellPage.WorkScope("Auto Raid..");
@@ -450,6 +478,7 @@ namespace COTG.Views
 			using var work = new ShellPage.WorkScope("Return For Outgoing..");
 			var counter = OutgoingOverview.outgoingCounter+1;
 			OutgoingOverview.OutgoingUpdateDebounce.Go();
+
 			do
 			{
 				await Task.Delay(500);
@@ -467,6 +496,8 @@ namespace COTG.Views
 			Note.Show($"{cities} returned cities with outgoing");
 
 		}
+
+		
 
 		//      static Dungeon lastTooltip;
 		//private void DungeonPointerMoved(object sender, Windows.UI.Xaml.Input.PointerRoutedEventArgs e)

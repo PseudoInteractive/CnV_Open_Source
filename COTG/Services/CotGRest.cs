@@ -632,8 +632,8 @@ namespace COTG.Services
 		{
 			foreach (var s in Spot.allSpots)
 			{
-				s.Value.reinforcementsIn = s.Value.reinforcementsIn.WhereNotMine() ;
-				s.Value.reinforcementsOut = s.Value.reinforcementsOut.WhereNotMine();
+				s.Value.reinforcementsIn = s.Value.reinforcementsIn.WhereNotMine(true) ;
+				s.Value.reinforcementsOut = s.Value.reinforcementsOut.WhereNotMine(false);
 			}
 			var jsd = json;
 			var changed = new HashSet<City>();
@@ -647,30 +647,47 @@ namespace COTG.Services
 				++cityCount;
 				foreach (var rein in item.Value[9].EnumerateArray())
 				{
-					var re = new Reinforcement();
-					re.targetCid = cid;
-					var targetCId = rein[1].GetAsInt();
-
-					Assert(targetCId == cid);
-					re.sourceCid = rein[15].GetAsInt();
-					Assert(re.sourceCid != targetCId);
-					re.order = rein[10].GetAsInt64();
-					foreach (var ti in rein[8].EnumerateArray())
+					try
 					{
-						var str = ti.GetAsString();
-						int tcEnd = 0;
-						while (IsDigitOrComma(str, tcEnd))
-							++tcEnd;
-						var count = int.Parse(str.Substring(0, tcEnd), NumberStyles.Any);
-						var typeS = str.Substring(tcEnd + 1);
-						var tE = Game.Enum.ttNameWithCapsAndBatteringRam.IndexOf(typeS);
-						Add(ref re.troops, new TroopTypeCount(tE, count));
+						var re = new Reinforcement();
+						re.targetCid = cid;
+						var targetCId = rein[1].GetAsInt();
+
+						Assert(targetCId == cid);
+						re.sourceCid = rein[15].GetAsInt();
+						Assert(re.sourceCid != targetCId);
+						re.order = rein[10].GetAsInt64();
+						foreach (var ti in rein[8].EnumerateArray())
+						{
+							var str = ti.GetAsString();
+							int tcEnd = 0;
+							while (IsDigitOrCommaOrMinus(str, tcEnd))
+								++tcEnd;
+							if (str.Substring(0, tcEnd).TryParseIntChecked(out var count))
+							{
+								//					var count = int.Parse(str.Substring(0, tcEnd), NumberStyles.Any);
+								var typeS = str.Substring(tcEnd + 1);
+								var tE = Game.Enum.ttNameWithCapsAndBatteringRam.IndexOf(typeS);
+								Add(ref re.troops, new TroopTypeCount(tE, count));
+							}
+							else
+							{
+								Add(ref re.troops, new TroopTypeCount(0, -1));
+								Log("Bad string: " + ti.GetAsString());
+							}
+						}
+						ts += re.troops.TS();
+						spot.reinforcementsIn = spot.reinforcementsIn.ArrayAppend(re);
+						var source = Spot.GetOrAdd(re.sourceCid);
+						source.reinforcementsOut = source.reinforcementsOut.ArrayAppend(re);
+						++reinCount;
 					}
-					ts += re.troops.TS();
-					spot.reinforcementsIn = spot.reinforcementsIn.ArrayAppend(re);
-					var source = Spot.GetOrAdd(re.sourceCid);
-					source.reinforcementsOut = source.reinforcementsOut.ArrayAppend(re);
-					++reinCount;
+					catch(Exception ex)
+					{
+						LogEx(ex);
+
+					}
+
 				}
 
 
@@ -681,6 +698,10 @@ namespace COTG.Services
 		private static bool IsDigitOrComma(string str, int tcEnd)
 		{
 			return tcEnd < str.Length && (char.IsDigit(str, tcEnd) || str[tcEnd] == ',');
+		}
+		private static bool IsDigitOrCommaOrMinus(string str, int tcEnd)
+		{
+			return tcEnd < str.Length && (char.IsDigit(str, tcEnd) || str[tcEnd] == ',' || str[tcEnd] == '-');
 		}
 
 	}

@@ -305,7 +305,24 @@ namespace COTG.Game
 	{
 		public int continent;
 		public List<TSContinentPlayerStats> players = new(); // ordered by score
+		public void FixupPlayers(ContinentAllianceStats[]  allianceStats, TSContinentStats predicted )
+		{
+			//struct allianceTemps
+			//{
+			//	var reportedTs;
+			//}
+			var allianceCount = allianceStats.Length;
 
+			// sort by continent
+			for (; ; )
+			{
+				var changes = false;
+				// swap TS to match alliances
+				
+
+			}
+
+		}
 	}
 	class TSContinentPlayerStats
 	{
@@ -319,7 +336,7 @@ namespace COTG.Game
 
 	class TSSnapshot
 	{
-		const int maxPlayersPerSnapshot = 48;
+		const int maxPlayersPerSnapshot = 1024;
 		public SmallTime time;
 		public List<TSContinentStats> continents = new();
 

@@ -283,7 +283,7 @@ namespace COTG.Services
 			Note.Show("Copied stats to clipboard (tsv) for sheets",priority: Note.Priority.high,timeout: 8*10000);
 		}
 
-		public static async Task PlayerStats(DateTimeOffset t0, DateTimeOffset t1, int continent, int minTS, bool scoreAndCities,bool allianceStats, int maxPlayers, bool tsTotal, bool tsOff, bool tsDef)
+		public static async Task PlayerStats(DateTimeOffset t0, DateTimeOffset t1, int continent, int minTS, bool score, bool cities,bool allianceStats, int maxPlayers, bool tsTotal, bool tsOff, bool tsDef)
 		{
 			BlobContainerClient container = await GetTSSnapshotContainer();
 			var snaps = new List<TSSnapshot>();
@@ -301,6 +301,7 @@ namespace COTG.Services
 			snaps.SortSmall((a, b) => a.time.secondsI.CompareTo(b.time.secondsI));
 			var sb = new StringBuilder();
 			var pids = new List<int>();
+
 			{
 				var cont = snaps.Last().continents.FirstOrDefault(a => a.continent == continent);
 				if(cont ==null)
@@ -319,12 +320,18 @@ namespace COTG.Services
 				}
 
 			}
+			var alliances = pids.Select(p => Player.Get(p).alliance).Distinct().OrderBy(a => Alliance.IdToName(a)).ToArray();
+
 			sb.Append("Time");
 			if (allianceStats)
 			{
-				for (int i = 0; i < 2; ++i)
+				foreach (var a in alliances)
 				{
-					var cat = i == 0 ? Alliance.my.name : "Other";
+					var cat = Alliance.IdToName(a);
+					if (score)
+						sb.Append($"\t{cat} Score");
+					if (cities)
+						sb.Append($"\t{cat} Cities");
 					if (tsTotal)
 						sb.Append($"\t{cat} TS");
 					if (tsOff)
@@ -336,8 +343,10 @@ namespace COTG.Services
 			foreach (var pid in pids)
 			{
 				var an =Player.IdToName(pid);
-				if(scoreAndCities)
-					sb.Append($"\t{an} Score\t{an} Cities");
+				if (score)
+					sb.Append($"\t{an} Score");
+				if(cities)
+					sb.Append($"\t{an} Cities");
 				if (tsTotal)
 					sb.Append($"\t{an} TS");
 				if (tsOff)
@@ -346,6 +355,7 @@ namespace COTG.Services
 					sb.Append($"\t{an} TSDef");
 			}
 			sb.Append("\n");
+			
 			foreach (var snap in snaps)
 			{
 				var cont = snap.continents.FirstOrDefault(a => a.continent == continent);
@@ -355,58 +365,50 @@ namespace COTG.Services
 
 
 				//alliance counts
-				var allianceTs = 0;
-				var allianceTsOff = 0;
-				var allianceTsDef = 0;
-				var otherTs = 0;
-				var otherTsOff = 0;
-				var otherTsDef = 0;
+				//{
+				//	foreach (var p in cont.players)
+				//	{
+				//		int i = Alliance.IsAlly(Player.Get(p.pid).alliance) ? 1 : 0;
+				//		allianceTs[i] += p.tsTotal;
+				//		allianceTsDef[i] += p.tsDef;
+				//		allianceTsOff[i] += p.tsOff;
+				//		allianceCities[i] += p.cities;
+				//		allianceScore[i] += p.score;
+				//	}
+				//}
+				foreach (var a in alliances)
 				{
-					foreach (var p in cont.players)
-					{
-						if (Alliance.IsAlly(Player.Get(p.pid).alliance))
-						{
-							allianceTs += p.tsTotal;
-							allianceTsDef += p.tsDef;
-							allianceTsOff += p.tsOff;
-						}
-						else
-						{
-							otherTs += p.tsTotal;
-							otherTsDef += p.tsDef;
-							otherTsOff += p.tsOff;
-
-						}
-					}
-				}
-				if (allianceStats)
-				{
-					sb.Append($"\t{allianceTs}\t{allianceTsOff}\t{allianceTsDef}\t{otherTs}\t{otherTsOff}\t{otherTsDef}");
-
-					if (tsTotal)
-						sb.Append($"\t{allianceTs}");
-					if (tsOff)
-						sb.Append($"\t{allianceTsOff}");
-					if(tsDef)
-						sb.Append($"\t{allianceTsDef}");
-					if (tsTotal)
-						sb.Append($"\t{otherTs}");
-					if (tsOff)
-						sb.Append($"\t{otherTsOff}");
-					if (tsDef)
-						sb.Append($"\t{otherTsDef}");
+//					var name = Alliance.IdToName(a);
+					if (score)
+						sb.Append('\t').Append((cont.players.Where(p => Alliance.PidToAlliance(p.pid) == a).Sum(p => p.score)));
+						if (cities)
+							sb.Append('\t').Append((cont.players.Where(p => Alliance.PidToAlliance(p.pid) == a).Sum(p => p.cities)));
+						if (tsTotal)
+							sb.Append('\t').Append((cont.players.Where(p => Alliance.PidToAlliance(p.pid) == a).Sum(p => p.tsTotal)));
+						if (tsOff)
+							sb.Append('\t').Append((cont.players.Where(p => Alliance.PidToAlliance(p.pid) == a).Sum(p => p.tsOff)));
+						if (tsDef)
+							sb.Append('\t').Append((cont.players.Where(p => Alliance.PidToAlliance(p.pid) == a).Sum(p => p.tsDef)));
+					
 				}
 
 			
 				foreach (var pid in pids)
 				{
 					var p = cont.players.FirstOrDefault(a => a.pid == pid);
-					if (scoreAndCities)
+					if (score)
 					{
 						if (p == null)
-							sb.Append("\t0\t0");
+							sb.Append("\t0");
 						else
-							sb.Append($"\t{p.score}\t{p.cities}");
+							sb.Append($"\t{p.score}");
+					}
+					if (cities)
+					{
+						if (p == null)
+							sb.Append("\t0");
+						else
+							sb.Append($"\t{p.cities}");
 					}
 					if (tsTotal)
 					{

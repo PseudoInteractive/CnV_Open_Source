@@ -134,6 +134,7 @@ namespace COTG.Game
 				rv.type = (byte)(info.type);
 				if (info.type == 0)
 				{
+				//	Assert(!World.loadedAtLeastOnce);
 					Log("Uninitialized");
 				}
 				rv.isTemple = info.isTemple;
@@ -774,7 +775,7 @@ namespace COTG.Game
 			}
 		}
 
-		internal async Task<Classification> ClassifyIfNeeded()
+		internal async Task<Classification> ClassifyIfNeeded(Action onComplete=null)
 		{
 			if (isClassified)
 			{
@@ -795,7 +796,7 @@ namespace COTG.Game
 			}
 		}
 
-		internal void QueueClassify(bool isIncomingAttack)
+		internal void QueueClassify(bool isIncomingAttack, Action onComplete = null)
 		{
 			if (isNotClassified)
 			{

@@ -943,7 +943,8 @@ namespace COTG.Game
 			}
 			bitmapPixels = pixels;
 		}
-
+		public static Action worldFirstLoadedActions;
+		public static bool loadedAtLeastOnce;
 		public static async void Decode(JsonDocument jsd)
 		{
 			Assert(state == State.started);
@@ -1255,16 +1256,35 @@ namespace COTG.Game
 			// Queue up another one
 			App.QueueIdleTask(RefreshWorldDataIdleTask, 30 * 60 * 1000);  // 5 minutes - todo: change this to 30 minutes
 
-			SpotTab.LoadFromPriorSession();
+
+			if(!loadedAtLeastOnce)
+			{
+				loadedAtLeastOnce = true;
+				SpotTab.LoadFromPriorSession();
+			//	App.DispatchOnUIThreadSneakyLow(Spot.UpdateFocusText);
+				worldFirstLoadedActions?.Invoke();
+				worldFirstLoadedActions = null;
+				
+			}
+		}
+		public static void RunWhenLoaded( Action a )
+		{
+			if (loadedAtLeastOnce)
+				a();
+			else
+				worldFirstLoadedActions += a;
 		}
 
 		static void RefreshWorldDataIdleTask()
 		{
-			Trace("World refresh");
 			if (World.completed)
 			{
 				World.lastUpdatedContinent = -1;
 				GetWorldInfo.Send();
+			}
+			else
+			{
+
 			}
 		}
 

@@ -48,33 +48,9 @@
 
 
 		<CommandBar Grid.ColumnSpan="2" TabFocusNavigation="Once" UseSystemFocusVisuals="True" x:Name="commandBar" x:FieldModifier="public"   >
-			<CommandBar.SecondaryCommands>
-				
-			</CommandBar.SecondaryCommands>
 			<CommandBar.Content   >
 				<StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-					<ComboBox x:Name="windowLayout" SelectedIndex="0" SelectionChanged="windowLayout_SelectionChanged" VerticalAlignment="Center" Margin="4"
-                           ToolTipService.ToolTip="Select a view layout" >
-						<x:String>Default</x:String>
-						<x:String>Visual</x:String>
-						<x:String>Numbers</x:String>
-					</ComboBox>
-					<ComboBox x:Name="friendListBox" x:FieldModifier="public"
-							  Visibility="Collapsed"
-                     SelectionChanged="friendListBox_SelectionChanged"
-                      Width="120"
-                     
-                      VerticalAlignment="Center" ToolTipService.ToolTip="Friends"
-                      Margin="4" />
-					<ComboBox x:Name="cityListBox" x:FieldModifier="public"
-                     IsEditable="True"
-					TextSubmitted="CityListSubmitted"
-                      Width="120"
-                      SelectedValuePath="id"
-                      DisplayMemberPath="name"
-                      ItemsSource="{x:Bind game:CityList.selections, Mode=OneTime}"
-                      VerticalAlignment="Center" ToolTipService.ToolTip="Active City List"
-                      Margin="4" />
+					
 					<ComboBox x:Name="cityBox" x:FieldModifier="public" 
                       Width="200"
 							  IsEditable="True"
@@ -130,6 +106,66 @@
 
 				</StackPanel>
 			</CommandBar.Content>
+			<CommandBar.SecondaryCommands>
+				<AppBarElementContainer>
+				<ComboBox x:Name="windowLayout" SelectedIndex="0" SelectionChanged="windowLayout_SelectionChanged" VerticalAlignment="Center" Margin="4"
+                           ToolTipService.ToolTip="Select a view layout" >
+					<x:String>Default</x:String>
+					<x:String>Visual</x:String>
+					<x:String>Numbers</x:String>
+				</ComboBox>
+				</AppBarElementContainer>
+
+				<AppBarElementContainer>
+					<ComboBox x:Name="friendListBox" x:FieldModifier="public"
+							  Visibility="Collapsed"
+                     SelectionChanged="friendListBox_SelectionChanged"
+                      Width="120"
+                     
+                      VerticalAlignment="Center" ToolTipService.ToolTip="Friends"
+                      Margin="4" />
+				</AppBarElementContainer>
+				<AppBarElementContainer>
+					<ComboBox x:Name="cityListBox" x:FieldModifier="public"
+                     IsEditable="True"
+					TextSubmitted="CityListSubmitted"
+                      Width="120"
+                      SelectedValuePath="id"
+                      DisplayMemberPath="name"
+                      ItemsSource="{x:Bind game:CityList.selections, Mode=OneTime}"
+                      VerticalAlignment="Center" ToolTipService.ToolTip="Active City List"
+                      Margin="4" />
+				</AppBarElementContainer>
+				<AppBarButton Label="Time"
+                              Icon="Shuffle"
+                          Style="{StaticResource AppBarButtonRevealStyle}"
+                               ToolTipService.ToolTip="No longer does much">
+					<Button.Flyout>
+						<Flyout Placement="Right"
+                                FlyoutPresenterStyle="{StaticResource TimeFlyoutStyle}">
+							<Grid>
+								<Grid.RowDefinitions>
+									
+								</Grid.RowDefinitions>
+								<TextBlock Grid.Row="1" x:Name="eventTimeTravelText">Preview Time</TextBlock>
+								<Slider x:Name="eventTimeTravelSlider"
+                                        ValueChanged="EventTimeTravelSliderChanged"
+                                        TickFrequency="10"
+                                    AllowFocusOnInteraction="True"
+                                    IsTabStop="True"
+                                        StepFrequency="10"
+                                    SmallChange="10" LargeChange="60"
+                                        HorizontalAlignment="Stretch"
+                                TickPlacement="Outside"
+                                    Maximum="1430.0"
+                                        Minimum="-1430.0"
+                                        Value="{x:Bind eventTimeOffset,Mode=TwoWay}" />
+							</Grid>
+						</Flyout>
+					</Button.Flyout>
+				</AppBarButton>
+
+			</CommandBar.SecondaryCommands>
 			<CommandBar.PrimaryCommands>
 				<AppBarButton x:Name="cookie" x:FieldModifier="public" Click="CookieClick" Icon="SetLockScreen" Label="Cookie"
                            ToolTipService.ToolTip="Workaround for cookies" />
@@ -163,15 +199,14 @@
 				<AppBarSeparator/>
 				<AppBarButton  x:Name="buildingsButton"
                                Label="Sum"
-                               Click="ShowBuildings"
+                              
                            Style="{StaticResource AppBarButtonRevealStyle}"
                                ToolTipService.ToolTip="Show building counts for current city"
                                Icon="AllApps">
 					<Button.Flyout>
 						<Flyout Closing="FlyoutClosing"
-                                ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                                ScrollViewer.VerticalScrollBarVisibility="Disabled"
-                                ShowMode="Auto">
+								Opening="ShowBuildings"
+                                ShowMode="Standard">
 							<GridView x:Name="buildingList"
                                       ScrollViewer.VerticalScrollBarVisibility="Disabled">
 								<GridView.ItemTemplate>
@@ -201,31 +236,6 @@
 					</Button.Flyout>
 				</AppBarButton>
 				<AppBarSeparator/>
-				<AppBarButton Label="Time"
-                              Icon="Shuffle"
-                          Style="{StaticResource AppBarButtonRevealStyle}"
-                               ToolTipService.ToolTip="Survey battle reports from the last 24 hours">
-					<Button.Flyout>
-						<Flyout Placement="Right"
-                                FlyoutPresenterStyle="{StaticResource TimeFlyoutStyle}">
-							<StackPanel Width="1840">
-								<TextBlock x:Name="eventTimeTravelText">Attack Time Travel</TextBlock>
-								<Slider x:Name="eventTimeTravelSlider"
-                                        ValueChanged="EventTimeTravelSliderChanged"
-                                        TickFrequency="10"
-                                    AllowFocusOnInteraction="True"
-                                    IsTabStop="True"
-                                        StepFrequency="10"
-                                    SmallChange="10" LargeChange="60"
-                                        HorizontalAlignment="Stretch"
-                                TickPlacement="Outside"
-                                    Maximum="1430.0"
-                                        Minimum="-1430.0"
-                                        Value="{x:Bind eventTimeOffset,Mode=TwoWay}" />
-							</StackPanel>
-						</Flyout>
-					</Button.Flyout>
-				</AppBarButton>
 				<AppBarSeparator/>
 				<AppBarButton Label="Settings" Icon="Setting" Click="ShowSettings" Style="{StaticResource AppBarButtonRevealStyle}"/>
 			</CommandBar.PrimaryCommands>

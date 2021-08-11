@@ -299,5 +299,10 @@ namespace COTG.Game
 		public static bool IsAllyOrNap(int allianceId) => GetDiplomacy(allianceId) switch { Diplomacy.allied or Diplomacy.nap => true, _ => false };
 
 		public static bool IsEnemy(int allianceId) => GetDiplomacy(allianceId) == Diplomacy.enemy;
+
+		internal static ushort PidToAlliance(int pid)
+		{
+			return Player.Get(pid).alliance;
+		}
 	}
 }

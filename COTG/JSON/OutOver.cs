@@ -249,16 +249,16 @@ namespace COTG.JSON
                                             // this is a scout
                                             var dts = inc[9].GetAsInt();
                                                 var ats = inc[8].GetAsInt();
-                                            //       Assert((ats & 1) == 0);
-                                            var report = new Army()
-                                                {
-                                                   
-                                                    sourceCid = source,
-                                                    targetCid = target,
-                                                    isAttack = true,
-                                                //  atkCN = inc[14].GetAsString(),
-                                                // defP = defP,
+												//       Assert((ats & 1) == 0);
+												var report = new Army()
+												{
 
+													sourceCid = source,
+													targetCid = target,
+													isAttack = true,
+													//  atkCN = inc[14].GetAsString(),
+													// defP = defP,
+													
                                                 time = time,
                                                     reportId = recId,
                                                     spotted = time - TimeSpan.FromSeconds(target.CidToWorld().DistanceD(source.CidToWorld()) * TTTravel(ttScout)),// TODO!
@@ -266,6 +266,7 @@ namespace COTG.JSON
                                                 // todo TS info
 
                                             };
+											//	Assert(false);
 												Set(ref report.troops, new TroopTypeCount(ttScout, ats / 2));
                                                 if (jsdr != null && jsdr.RootElement.TryGetProperty("tts", out var tts))
                                                 {

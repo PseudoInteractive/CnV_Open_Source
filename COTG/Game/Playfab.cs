@@ -6,12 +6,23 @@ using System.Threading.Tasks;
 using PlayFab.ClientModels;
 using PlayFab;
 using static COTG.Debug;
+/*
 
+  New World:  
+     - Add TitleId
+	 - 
+ */
 namespace COTG.Game
 {
 	public class APlayfab
 	{
-		static string titleId => JSClient.world switch { 22 => "2B907", 23 => "97E7D",  _=> "1DBCE" };
+		const int W24Id = 0x34B84;
+		const string W24IdString = "34B84";
+		private const string W22IdString = "2B907";
+		private const string defaultIdString = "1DBCE";
+		private const string W23IdString = "97E7D";
+
+		static string titleId => JSClient.world switch { 22 => W22IdString, 23 => W23IdString, 24=> W24IdString, _ => defaultIdString };
 		static PlayFabAuthenticationContext authenticationContext;
 		static LoginResult login;
 		public static string GetClientId()

@@ -67,9 +67,10 @@ namespace COTG.JSON
 
 		public static async void SetClosestHub(int cid)
 		{
-			SetTradeSettings(cid, autoFind: true);
+			SetTradeSettings(cid, autoFind: true,reqFilter:ResourceFilter._true, targetFilter: ResourceFilter._true);
 		}
-		public static async void SetTradeSettings(int _cid, int ? sourceHub = null, int ? targetHub=null,bool autoFind=false)
+
+		public static async void SetTradeSettings(int _cid, int ? sourceHub = null, ResourceFilter reqFilter = default, int? targetHub = null, ResourceFilter targetFilter = default,bool autoFind=false)
 		{
 
 			var settings = new ResSettings();
@@ -80,10 +81,10 @@ namespace COTG.JSON
 				SecondaryButtonText = "Skip",
 				CloseButtonText = "Cancel"
 			};
-			if (sourceHub.HasValue||autoFind)
-				settings.reqFilter = ResourceFilter._true;
-			if (targetHub.HasValue||autoFind)
-				settings.sendFilter = ResourceFilter._true;
+	//		if (sourceHub.HasValue)
+				settings.reqFilter = reqFilter;
+	//		if (targetHub.HasValue)
+				settings.sendFilter = targetFilter;
 //			settings.applyRequested = sourceHub.HasValue || autofind;
 //			settings.applySend = targetHub.HasValue || autoFind;
 			var targetExplicit = targetHub.HasValue;
@@ -94,12 +95,12 @@ namespace COTG.JSON
 				if (autoFind)
 					sourceHub = targetHub = await FindBestHub(cid);
 				dialog.Title = $"Set Trade settings for {city.nameAndRemarks} cities";
-				settings.InitTradeSettings(City.Get(cid),sourceHub.GetValueOrDefault(), (city.isHubOrStorage&&!targetExplicit) ? 0 : targetHub.GetValueOrDefault() );
+				await settings.InitTradeSettings(City.Get(cid),sourceHub.GetValueOrDefault(), (city.isHubOrStorage&&!targetExplicit) ? 0 : targetHub.GetValueOrDefault() );
 				var rv = await dialog.ShowAsync2();
 				if (rv == ContentDialogResult.Primary)
 				{
 					// does this change threads?
-					await CitySettings.SetCitySettings(cid,reqHub:sourceHub,targetHub:targetHub, req:  settings.req, max:settings.max, reqFilter: settings.reqFilter, sendFilter: settings.sendFilter);
+					await SetCitySettings(cid,reqHub:sourceHub,targetHub:targetHub, req:  settings.req, max:settings.max, reqFilter: settings.reqFilter, sendFilter: settings.sendFilter);
 				}
 				else if (rv == ContentDialogResult.None)
 				{
@@ -323,15 +324,17 @@ namespace COTG.JSON
 				}
 				return (rv,storage);
 		}
+
 		public static async Task<Resources> GetStorage(City city)
 		{
 			return (await GetMinisterOptions(city)).storage;
 
 		}
-			public static Task SetFoodWarning(int cid, int warn)
+		public static Task SetFoodWarning(int cid, int warn)
 		{
 			return Post.Send("includes/svFW.php", $"a={warn}&cid={cid}");
 		}
+
 		public static async void SetFoodWarnings(int cid)
 		{
 			var targets = Spot.GetSelectedForContextMenu(cid, false, onlyMine: true);
@@ -353,8 +356,8 @@ namespace COTG.JSON
 				await SetFoodWarning(id, defaultFoodWarning);
 				Note.Show($"Set food warning for {City.GetOrAddCity(id).nameMarkdown} to {defaultFoodWarning} hours");
 			}
-
 		}
+
 
 		public static async Task UpdateMinisterOptions(int cid, Func<(string[]split,Resources storage),Task<bool>> opts)
         {
@@ -378,6 +381,7 @@ namespace COTG.JSON
                 Note.Show($"Set hub failed, restarting might fix it");
             }
         }
+
 
 		public static async Task<(Resources req,Resources max,Resources storage)> GetTradeResourcesSettings(int cid) 
 		{
@@ -435,7 +439,6 @@ namespace COTG.JSON
 		//https://w21.crownofthegods.com/includes/pSs.php	HTTP/1.0	POST	200	text/html		85.7 ms	XMLHttpRequest
 
 
-
 		public static async void SetRecruitFromTag(int _cid)
         {
 			var targets = Spot.GetSelectedForContextMenu(_cid, onlyMine: true);
@@ -451,12 +454,13 @@ namespace COTG.JSON
 			Note.Show($"Updated recruit for {targets.Count} cities");
         }
 
-		const int countMany = 3333333;
+
+		const int countMany = 333333;
 		const string sCountMany = "333333";
 		const string sZero = "0";
         private static string SetRecruit(string[] split, Spot spot)
 		{
-			var rem = spot.remarks.ToLower();
+		//	var rem = spot.remarks.ToLower();
 			var result = string.Empty;
 			var tags = spot.GetTags();
 			void CheckTag1( Tags tag, int id, string count = sCountMany, bool zeroIfClear=true)
@@ -542,7 +546,7 @@ namespace COTG.JSON
 			CheckTag1(Tags.Arb, 17);
 			CheckTag1(Tags.Sorc, 15);
 			CheckTag1(Tags.Prae, 18);
-			CheckTag1(Tags.Galley, 23, (countMany / 600).ToString(),false );
+			CheckTag1(Tags.Galley, 23, (countMany.DivideRoundUp(600)).ToString(),false );
 			CheckTag1(Tags.Druid, 20);
 
 
@@ -569,7 +573,8 @@ namespace COTG.JSON
 
 		public static async void SetTargetHub(int cid, int targetHub)
         {
-			SetTradeSettings(cid, targetHub: targetHub);
+			SetTradeSettings(cid, sourceHub: targetHub, targetHub: targetHub, targetFilter: ResourceFilter._true);
+//			SetTradeSettings(cid, targetHub: targetHub);
 
 			//var targets = Spot.GetSelectedForContextMenu(cid, false, targetHub, onlyMine: true);
 			//bool? sendWood=null, sendStone = null, sendFood = null, sendIron = null;
@@ -690,7 +695,7 @@ namespace COTG.JSON
 		//}
 		public static async void SetSourceHub(int cid, int targetHub)
 		{
-			SetTradeSettings(cid, sourceHub: targetHub);
+			SetTradeSettings(cid, sourceHub: targetHub,targetHub:targetHub,reqFilter:ResourceFilter._true );
 
 			//		var targets = Spot.GetSelectedForContextMenu(cid, false, targetHub, onlyMine: true);
 			//bool? sendWood = null, sendStone = null, sendFood = null, sendIron = null;

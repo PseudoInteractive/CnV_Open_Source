@@ -185,14 +185,32 @@
 			</tg:RadDataGrid>
 			<tk:WrapPanel x:Name="raidInfoBox"
 						  Orientation="Horizontal"
-						  Margin="4"
-						  HorizontalSpacing="4"
-						  VerticalSpacing="4"
+						  Margin="2"
+						  HorizontalSpacing="2"
+						  VerticalSpacing="2"
 						  Grid.Row="0">
 			<Button Content="Reset Raids"
-						Click="ResetRaids"
 						Style="{StaticResource ButtonSmall}"
 						ToolTipService.ToolTip="Resets all with raid carry less than 90% (configurable in settings) or idle troops greater than 25% (configurable in settings)"  >
+				<Button.Flyout>
+					<Flyout>
+						<StackPanel>
+							<Button Content="Bad ones Fast"
+									ToolTipService.ToolTip="Returns all selected raids with carry less than 90% (configurable in settings) or idle troops greater than 25% (configurable in settings)" 
+									Click="ResetBadRaidsFast" />
+							<Button Content="Bad ones Slow"
+									ToolTipService.ToolTip="Returns all selected raids with carry less than 90% (configurable in settings) or idle troops greater than 25% (configurable in settings)" 
+									Click="ResetBadRaidsSlow" />
+							<Button Content="Selected Fast"
+									ToolTipService.ToolTip="Return all selected raids as quickly as possible" 
+									Click="ResetRaidsFast"/>
+
+							<Button Content="Selected Whenever"
+									ToolTipService.ToolTip="Return all selected raids once they are finished their current raid"
+									Click="ResetRaidsSlow"/>
+						</StackPanel>
+					</Flyout>
+				</Button.Flyout>
 				<Button.Resources>
 					<winui:TeachingTip x:Name="TipResetRaids1"
 						   x:FieldModifier="public"

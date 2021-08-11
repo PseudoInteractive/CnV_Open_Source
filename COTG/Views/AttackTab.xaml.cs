@@ -1143,17 +1143,17 @@ namespace COTG.Views
 		class Cluster
 		{
 			public int id; // redundant
-			public AttackCategory category;
+			public TargetCategory category;
 			public List<AttackPlanCity> fakes;// first is SE or siege
 			public AttackPlanCity real;
 			public Span2 span;
 			//public uint sortKey => real!=null ? real.spatialIndex : (uint)id;
-			public bool isValid => real != null && category!=AttackCategory.invalid;
+			public bool isValid => real != null && category!=TargetCategory.invalid;
 			public void SetInvalid()
 			{
 				real = null;
 				fakes.Clear();
-				category = AttackCategory.invalid;
+				category = TargetCategory.invalid;
 			}
 			public Span2 CalculateSpan() => new Span2(fakes.Append(real));
 			public Span2 CalculateSpanWithout(AttackPlanCity exclude) => new Span2(fakes.Where(a=>a!=exclude).Append(real));
@@ -1305,7 +1305,7 @@ namespace COTG.Views
 				//	return true;
 				var tt = attacker.troopType;
 				var time = GetTravelTimeHours(attacker);
-				var limit = (category == AttackCategory.senator ? plan.attackMaxTravelHoursSen : plan.attackMaxTravelHoursSE);
+				var limit = (category == TargetCategory.senator ? plan.attackMaxTravelHoursSen : plan.attackMaxTravelHoursSE);
 				if (time <= limit)
 					return true;
 				
@@ -1329,7 +1329,7 @@ namespace COTG.Views
 
 				return (attacks.Count(a => a.attackCluster == id && a.isAttackTypeAssault) + reals - 1) / (reals.Max(1));
 			}
-			public int NormalizedAttacks(bool isAssault) => (isAssault&&category==AttackCategory.se&&plan.normalizeAssaultsPerSeSiege) ? AssaultsPerReal() : AttackCount(isAssault);
+			public int NormalizedAttacks(bool isAssault) => (isAssault&&category==TargetCategory.se&&plan.normalizeAssaultsPerSeSiege) ? AssaultsPerReal() : AttackCount(isAssault);
 
 
 		}
@@ -1397,10 +1397,10 @@ namespace COTG.Views
 					}
 
 					// Cluster to together fakes and reals
-					for (AttackCategory category = 0; category < AttackCategory.count; category++)
+					for (TargetCategory category = 0; category < TargetCategory.count; category++)
 					{
-						var minFakes = category == AttackCategory.se ? plan.attackSEMinFakes : plan.attackSenMinFakes;
-						var maxFakes = category == AttackCategory.se ? plan.attackSEMaxFakes : plan.attackSenMaxFakes;
+						var minFakes = category == TargetCategory.se ? plan.attackSEMinFakes : plan.attackSenMinFakes;
+						var maxFakes = category == TargetCategory.se ? plan.attackSEMaxFakes : plan.attackSenMaxFakes;
 						var clustersC = clusters.Where(a => a.category == category).ToArray();
 						if (clustersC.Length == 0)
 							continue;
@@ -1608,7 +1608,7 @@ namespace COTG.Views
 
 						for (int siegeAssaultCounter = 0; siegeAssaultCounter <= 1; ++siegeAssaultCounter)
 						{
-							for (AttackCategory category = 0; category < AttackCategory.count; category++)
+							for (TargetCategory category = 0; category < TargetCategory.count; category++)
 							{
 								var id = siegeAssaultCounter * 2 + (int)category;
 								var attacksForCategory = clusters.Where(c => c.category == category);
@@ -1626,7 +1626,7 @@ namespace COTG.Views
 						float bestDist = float.MaxValue;
 						Cluster bestCluster = null;
 
-						for (AttackCategory category = 0; category < AttackCategory.count; category++)
+						for (TargetCategory category = 0; category < TargetCategory.count; category++)
 						{
 							var clustersC = clusters.Where(a => a.category == category).ToArray();
 							if (clustersC.Length == 0)
@@ -1769,11 +1769,11 @@ namespace COTG.Views
 								var atkCount0 = clusters[c0].NormalizedAttacks(isAssault);
 								var atkCount1 = clusters[c1].NormalizedAttacks(isAssault);
 								// least squares
-								var d0 = clusters[c0].CalculateAttackCost(f0, atkCount0);
-								var d1 = clusters[c1].CalculateAttackCost(f1, atkCount1);
+								var d0 = clusters[c0].CalculateAttackCost(f0, atkCount0).Squared();
+								var d1 = clusters[c1].CalculateAttackCost(f1, atkCount1).Squared();
 
-								var dd0 = clusters[c0].CalculateAttackCost(f1, atkCount0);
-								var dd1 = clusters[c1].CalculateAttackCost(f0, atkCount1);
+								var dd0 = clusters[c0].CalculateAttackCost(f1, atkCount0).Squared();
+								var dd1 = clusters[c1].CalculateAttackCost(f0, atkCount1).Squared();
 								if (d0 + d1 > dd0 + dd1)
 								{
 									++changes;

@@ -2062,7 +2062,9 @@ private static async void ShowCouncillorsMissingDialog()
 								   UpdatePPDT(ppdt,Player.myId,pruneCities:true);
 								   if (Player.isAvatarOrTest)
 									   Raid.test = true;
-								   Task.Delay(2200).ContinueWith((_)=> App.DispatchOnUIThreadSneakyLow(Spot.UpdateFocusText));
+								   World.RunWhenLoaded(()=> App.DispatchOnUIThreadSneakyLow(Spot.UpdateFocusText) );
+
+
 								   BuildQueue.Initialize();
 								   break;
 							   }
@@ -2572,7 +2574,7 @@ private static async void ShowCouncillorsMissingDialog()
 									   Models.JSPopupNode.Show(popup);
 
 								   }
-								   ShellPage.NotifyCotgPopup(popupCount);
+								 //  ShellPage.NotifyCotgPopup(popupCount);
 								   //                                ShellPage.SetCanvasVisibility(noPopup);
 								   if (ppdtInitialized && jso.TryGetProperty("c", out var _cid))
 								   {

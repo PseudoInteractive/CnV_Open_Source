@@ -78,7 +78,8 @@ namespace COTG.Game
 		public bool Arrived(DateTimeOffset serverTime) => time <= serverTime;
 		public DateTimeOffset spotted { get; set; }
         public float journeyTime => spotted == AUtil.dateTimeZero ? 2 * 60 * 60.0f : (float)(time - spotted).TotalSeconds;
-		public double journeyTimeD => spotted == AUtil.dateTimeZero ? 2 * 60 * 60.0 : (time - spotted).TotalSeconds;
+		public double journeyTimeMinutes => spotted == AUtil.dateTimeZero ? 2 * 60 * 60.0 : (time - spotted).TotalMinutes;
+		public string journeyTimeString => spotted == AUtil.dateTimeZero ? ":(" : (time - spotted).Format();
 		public float TimeToArrival(DateTimeOffset serverTime) => (float)(time - serverTime).TotalSeconds;
         public int Cont => sourceCid.CidToContinent();
         public int ts => troops.TS();

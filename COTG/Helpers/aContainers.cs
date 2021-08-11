@@ -111,6 +111,8 @@ namespace COTG
 					var id = IndexOf( item );
 					if(id != -1)
 						CollectionChanged.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add,item, id ));
+					else
+						CollectionChanged.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
 				});
         }
         public new void Insert(int id, T item)
@@ -122,6 +124,8 @@ namespace COTG
 					var id = IndexOf(item);
 					if (id != -1)
 						CollectionChanged.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, item, id));
+					else
+						CollectionChanged.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
 				});
         }
         public new void RemoveAt(int id)
@@ -132,8 +136,10 @@ namespace COTG
 			if (CollectionChanged != null)
 				App.DispatchOnUIThreadSneaky(() =>
 				{
-					if (id < Count)
+					if (id <= Count)
 						CollectionChanged.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, item, id));
+					else
+						CollectionChanged.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
 				});
         }
         public new void Remove(T i)

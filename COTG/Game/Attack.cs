@@ -16,18 +16,19 @@ namespace COTG.Game
 	public enum AttackType : byte
 	{
 		none,
-		// only valid as attack type
+		// rare for target types, mostly for partial attacks
 		assault,
 
 		senator,
 		se,
 
 		// only valid as target type
+		assaultFake,
 		senatorFake,
 		seFake,
 		invalid,
 	}
-	public enum AttackCategory
+	public enum TargetCategory
 	{
 		se,
 		senator,
@@ -383,9 +384,9 @@ namespace COTG.Game
 		public static bool IsTargetFake(this AttackType a) => a == AttackType.senatorFake || a == AttackType.seFake;
 		public static bool IsTargetReal(this AttackType a) => IsTargetNone(a) ? false :!IsTargetFake(a);
 		public static bool IsTargetNone(this AttackType a) => a == AttackType.none||a==AttackType.invalid;
-		public static AttackCategory GetCategory(this AttackType a) => IsTargetNone(a) ? AttackCategory.invalid : IsTargetSE(a) ? AttackCategory.se :  AttackCategory.senator;
+		public static TargetCategory GetCategory(this AttackType a) => IsTargetNone(a) ? TargetCategory.invalid : IsTargetSE(a) ? TargetCategory.se :  TargetCategory.senator;
 		public static int Value(this AttackType a) => (int)a;
-		public static int Value(this AttackCategory a) => (int)a;
+		public static int Value(this TargetCategory a) => (int)a;
 
 		public static bool Contains(this ImmutableArray<AttackPlanCity> l, int cid) => l.Any(a => a.cid==cid);
 		public static bool Contains(this ImmutableArray<AttackPlanCity> l, City city) => Contains(l, city.cid);

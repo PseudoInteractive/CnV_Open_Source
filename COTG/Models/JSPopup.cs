@@ -56,12 +56,17 @@ namespace COTG.Models
 				// All controls should be relative to this 
 				var x0 = pop.x0;
 				var y0 = pop.y0;
+				var x1 = pop.x1;
+				var y1 = pop.y1;
+				// maybe a date?
+			//	if(y1-y0 > 180) // random guess
+
 				var scale =  AGame.dipToNative; // ShellPage.webViewScale *
 				AGame.popups[put] = new Span2i(
 					(scale *(x0* ShellPage.webViewScale - ShellPage.canvasBaseX)).RoundToInt(),
 					(scale * (y0 * ShellPage.webViewScale - ShellPage.canvasBaseY)).RoundToInt(),
-					(scale *(pop.x1 * ShellPage.webViewScale - ShellPage.canvasBaseX)).RoundToInt(),
-					(scale *(pop.y1 * ShellPage.webViewScale - ShellPage.canvasBaseY)).RoundToInt());
+					(scale *(x1 * ShellPage.webViewScale - ShellPage.canvasBaseX)).RoundToInt(),
+					(scale *(y1 * ShellPage.webViewScale - ShellPage.canvasBaseY)).RoundToInt());
 
 
 				//	var canvas = new Windows.UI.Xaml.Controls.Canvas();

@@ -172,6 +172,7 @@ namespace COTG.Services
 			}
 			catch (Exception ex)
 			{
+				Log("Alliance has no chat id");
 				return 0;
 			}
 		}

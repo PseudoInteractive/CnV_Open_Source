@@ -138,11 +138,14 @@ namespace COTG.Game
             }
             return rv;
         }
-		public static Reinforcement [] WhereNotMine(this Reinforcement[] me)
+		public static Reinforcement [] WhereNotMine(this Reinforcement[] me, bool wantIn)
 		{
 			if (me == null || me.Length == 0)
 				return Array.Empty<Reinforcement>();
-			return me.Where(r => !Player.IsMe(r.sourceCid.CidToPid())).ToArray();
+			if(wantIn)
+				return me.Where(r => !Player.IsMe(r.targetCid.CidToPid())).ToArray();
+			else
+				return me.Where(r => !Player.IsMe(r.sourceCid.CidToPid())).ToArray();
 		}
 
 	}

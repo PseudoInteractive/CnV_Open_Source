@@ -6440,7 +6440,7 @@ const __s = [".shRinf",
 	"px;'><div id='abspt",
 	"ht",
 	"<div ID=\"bdmgInfoReportsumm\"> <span class=\"reportTitties\">Total Building Damage</span><br><table style=\"width:98%;margin-left:1%;border-collapse: collapse;\"><tr>",
-	"+0400",
+	"+0000",
 	"#r13_",
 	"<tr class='trsortbq shwBspot buildqueuepop' id='a",
 	"#ccTradeCB",
@@ -7403,6 +7403,15 @@ function DoSyncViewMode() {
 				if(speedupUse!=null)
 					popups.push( BuildPopup(speedupUse) );
 
+			}
+			let calendar = document.getElementById("ui-datepicker-div");
+			if(calendar !== null)
+			{
+			   if(calendar.style.display == "block")
+			   {
+				   _popupCount++;
+				   popups.push(BuildPopup(calendar));
+			   }
 			}
 
 
@@ -10533,6 +10542,7 @@ function outer(){
 	const A2R = '6943';
 	const r8R = "5152";
 	const T6p = "240";
+	const __timezone = 0;
 	var
 		e5t = '1404';
 	const i7R = "322";
@@ -27757,7 +27767,7 @@ function outer(){
 						timeFormat: __s[+O34],
 						useLocalTimezone: !!0,
 						defaultTimezone: __s[+v34],
-						timezone: -(T6p |
+						timezone: -(__timezone |
 							16),
 						setDate: currentTime(),
 						minDate: gnewd(),
@@ -27771,7 +27781,7 @@ function outer(){
 						timeFormat: __s[+O34],
 						useLocalTimezone: !1,
 						defaultTimezone: __s[+v34],
-						timezone: - +T6p,
+						timezone: -__timezone,
 						setDate: currentTime(),
 						minDate: gnewd(),
 						onSelect: function (x2B) { D4F(2, x2B); },
@@ -27787,7 +27797,7 @@ function outer(){
 						useLocalTimezone: !{},
 						defaultTimezone: __s[+v34],
 						timezone: - +
-							T6p,
+							__timezone,
 						setDate: currentTime(),
 						minDate: gnewd(),
 						maxDate: 5,
@@ -27814,7 +27824,7 @@ function outer(){
 						timeFormat: __s[+O34],
 						useLocalTimezone: !!0,
 						defaultTimezone: __s[+v34],
-						timezone: - +T6p,
+						timezone: - +__timezone,
 						setDate: currentTime(),
 						minDate: gnewd(),
 						maxDate: 5
@@ -27827,7 +27837,7 @@ function outer(){
 						timeFormat: __s[+O34],
 						useLocalTimezone: ![],
 						defaultTimezone: __s[v34 << 152357792],
-						timezone: - +T6p,
+						timezone: - +__timezone,
 						setDate: currentTime(),
 						minDate: gnewd(),
 						maxDate: 5
@@ -27840,7 +27850,7 @@ function outer(){
 						timeFormat: __s[O34 << 885879616],
 						useLocalTimezone: !!0,
 						defaultTimezone: __s[v34 & 2147483647],
-						timezone: - +T6p,
+						timezone: - +__timezone,
 						setDate: currentTime(),
 						minDate: gnewd(),
 						maxDate: 5
@@ -27853,7 +27863,7 @@ function outer(){
 						timeFormat: __s[+O34],
 						useLocalTimezone: !{},
 						defaultTimezone: __s[+v34],
-						timezone: - +T6p,
+						timezone: - +__timezone,
 						setDate: currentTime(),
 						minDate: gnewd(),
 						maxDate: 5
@@ -27866,7 +27876,7 @@ function outer(){
 						timeFormat: __s[O34 | 2785],
 						useLocalTimezone: !!0,
 						defaultTimezone: __s[v34 << 2060447392],
-						timezone: -(T6p << 55417120),
+						timezone: -(__timezone << 55417120),
 						setDate: currentTime(),
 						minDate: gnewd(),
 						maxDate: 5
@@ -27879,7 +27889,7 @@ function outer(){
 						timeFormat: __s[+O34],
 						useLocalTimezone: !"1",
 						defaultTimezone: __s[+v34],
-						timezone: -(T6p *
+						timezone: -(__timezone *
 							1),
 						setDate: currentTime(),
 						minDate: gnewd(),
@@ -27893,7 +27903,7 @@ function outer(){
 						timeFormat: __s[+O34],
 						useLocalTimezone: ![],
 						defaultTimezone: __s[+v34],
-						timezone: -(T6p >>
+						timezone: -(__timezone >>
 							1319654752),
 						setDate: currentTime(),
 						minDate: gnewd(),
@@ -27925,73 +27935,86 @@ function outer(){
 					.focus(function () {
 						$(__s[X34 ^ 0])
 							.css(__s[t7y ^ 0], t8y * 1);
+						callSyncViewMode();
 					});
 				$(__s[S2R | 16])
 					.focus(function () {
 						$(__s[+X34])
 							.css(__s[t7y & 2147483647], +t8y);
+						callSyncViewMode();
 					});
 				$(__s[o2R & 2147483647])
 					.focus(function () {
 						E6k.y6();
 						$(__s[X34 >> 979358592])
 							.css(__s[t7y & 2147483647], t8y - 0);
+						callSyncViewMode();
 					});
 				$(__s[w34 >> 1021539008])
 					.focus(function () {
 						E6k.R6();
 						$(__s[+X34])
 							.css(__s[t7y * 1], t8y * 1);
+						callSyncViewMode();
 					});
 				$(__s[A34 - 0])
 					.focus(function () {
 						E6k.y6();
 						$(__s[+X34])
 							.css(__s[+t7y], t8y >> 1275709280);
+						callSyncViewMode();
 					});
 				$(__s[k2R | 5891])
 					.focus(function () {
 						$(__s[+X34])
 							.css(__s[+t7y], t8y << 110071360);
+						callSyncViewMode();
 					});
 				$(__s[99])
 					.focus(function () {
 						E6k.y6();
 						$(__s[+X34])
 							.css(__s[t7y * 1], +t8y);
+						callSyncViewMode();
 					});
 				$(__s[H34 << 317118432])
 					.focus(function () {
 						E6k.R6();
 						$(__s[X34 | 3])
 							.css(__s[+t7y], +t8y);
+						callSyncViewMode();
 					});
 				$(__s[G34 - 0])
 					.focus(function () {
 						E6k.R6();
 						$(__s[X34 >> 1502173248])
 							.css(__s[t7y ^ 0], t8y >> 1678589504);
+						callSyncViewMode();
 					});
 				$(__s[+r34])
 					.focus(function () {
 						E6k.y6();
 						$(__s[+X34])
 							.css(__s[t7y * 1], +t8y);
+						callSyncViewMode();
 					});
 				$(__s[733])
 					.focus(function () {
 						$(__s[X34 * 1])
 							.css(__s[t7y >> 107954944], t8y ^ 0);
+						callSyncViewMode();
 					});
 				$(__s[+h34])
 					.focus(function () {
 						$(__s[X34 | 2050])
 							.css(__s[+t7y], +t8y);
+						callSyncViewMode();
 					});
 				$(__s[+t74])
 					.focus(function () {
 						$(__s[X34 * 1])
 							.css(__s[+t7y], +t8y);
+						callSyncViewMode();
 					});
 				$(__s[G34 * 1])
 					.change(function () {

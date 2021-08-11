@@ -318,13 +318,14 @@ namespace COTG.Views
 			}
 			var bc=city.UpdateBuildStage();
 			
-			if (city.buildStage == BuildStage._new && allowRename)
+			if (allowRename && (city.buildStage == BuildStage._new|| (city.autobuildCabinLevel==0&&(await App.DoYesNoBox("Autobuild Off?","Maybe you want Setup?")==1) )))
 			{
 				if (!await CityRename.RenameDialog(cid, false))
 					return false;
 
 				bc=city.UpdateBuildStage();
 			}
+
 			Assert(city.isBuild);
 
 			if ( (city.buildStage == BuildStage.noLayout ||(city.layoutBuildingCount==0) ) && allowSetLayout )
@@ -337,6 +338,7 @@ namespace COTG.Views
 				if (city.buildStage == BuildStage.noLayout)
 					return false;
 			}
+
 			Assert(city.isBuild);
 			if (city.buildStage == City.BuildStage.complete)
 			{
@@ -446,7 +448,16 @@ namespace COTG.Views
 							{
 								await EnqueueUpgrade(4, bspotTownHall);
 							}
+							var storeHouses = FindPendingOverlayBuildingsOfType(SettingsPage.intialStorehouses - bc.storeHouses, bidStorehouse, true);
+							foreach (var storage in storeHouses)
+							{
 
+								message += $"Adding Storehouse";
+								await CityBuild.SmartBuild(city, storage, bidStorehouse, true, false);
+								++bc.storeHouses;
+
+
+							}
 							if (bc.cabins < SettingsPage.startCabinCount)
 							{
 								message = $"Adding {SettingsPage.startCabinCount - bc.cabins}";
@@ -487,16 +498,7 @@ namespace COTG.Views
 							}
 						done:;
 							Assert(city.isBuild);
-							var storeHouses = FindPendingOverlayBuildingsOfType(  SettingsPage.intialStorehouses-bc.storeHouses, bidStorehouse,true);
-							foreach( var storage in storeHouses)
-							{
-								
-									message += $"Adding Storehouse";
-									await CityBuild.SmartBuild(city, storage, bidStorehouse, true, false);
-									++bc.storeHouses;
-								
-
-							}
+							
 
 							Note.Show(message);
 						}

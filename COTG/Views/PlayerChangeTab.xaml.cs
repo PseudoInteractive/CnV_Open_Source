@@ -27,6 +27,8 @@ namespace COTG.Views
 			castlesLostEnemy*4 - castlesLostAlly*4 - castlesAbandoned*4 + templesMade*32 -templesLost ; // approximate measure of overall non sub activity
 																										//	public int nonSubActivity; // approximate measure of overall non sub activity
 		public string alliance => Player.Get(pid).allianceName;
+		
+		public ushort allianceId => Player.Get(pid).alliance;
 		public string name => Player.IdToName(pid);
 		public int cities => Player.Get(pid).cities.Count();
 		public int settled { get; set; }

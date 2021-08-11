@@ -21,7 +21,7 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
 using System.Text.RegularExpressions;
-
+using System.Reflection;
 namespace COTG.Views
 {
 	public enum Theme
@@ -181,8 +181,10 @@ namespace COTG.Views
 		//public static string secSessionId;
 		public static int mruSize = 32;
 		public static int[] pinned = Array.Empty<int>();
+		public static bool isPinnedLoaded => pinned != null; 
 		public static int showAttacksLimit = 100;
 		public static int showAttacksLimit0 = 30;
+		[NonSerialized]
 		public static HashSet<int> tipSeen;
 		public static bool soundOn = true;
 		public static float volume = 0.5f;
@@ -263,7 +265,8 @@ namespace COTG.Views
 		// public TipsSeen tips => TipsSeen.instance;
 		public bool FetchFullHistory
 		{
-			get => fetchFullHistory; set
+			get => fetchFullHistory; 
+			set
 			{
 				fetchFullHistory = value;
 				//DefenseHistoryTab.instance.refresh.Go();
@@ -289,7 +292,7 @@ namespace COTG.Views
 
 			//     TipsSeen.instance = st.Read(nameof(TipsSeen), new TipsSeen());
 			//  hubCitylistName = st.Read(nameof(hubCitylistName), "Hubs");
-			var props = typeof(SettingsPage).GetFields(System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.DeclaredOnly);
+			var props = typeof(SettingsPage).GetFields(BindingFlags.Static  | BindingFlags.Public | BindingFlags.DeclaredOnly  );
 			var st = App.Settings();
 			if (!st.Values.ContainsKey("currentVersion") )
 			{
@@ -298,13 +301,16 @@ namespace COTG.Views
 			
 			foreach (var p in props)
 			{
-				try
+				if (!p.IsNotSerialized)
 				{
-					p.SetValue(null, st.ReadT(p.Name, p.FieldType, p.GetValue(null)));
-				}
-				catch (Exception e)
-				{
-					LogEx(e);
+					try
+					{
+						p.SetValue(null, st.ReadT(p.Name, p.FieldType, p.GetValue(null)));
+					}
+					catch (Exception e)
+					{
+						LogEx(e);
+					}
 				}
 			}
 			try
@@ -354,6 +360,17 @@ namespace COTG.Views
 				LogEx(e);
 			}
 		}
+		//public static string pinsFileName => $"pinned{JSClient.world}";
+		//public static void SavePinned()
+		//{
+		//	if(isPinnedLoaded)
+		//		folder.SaveAsync(pinsFileName, pinned, false);
+		//}
+		//public static async void ReadSeen()
+		//{
+		//	Assert(!isPinnedLoaded);
+		//	pinned = await folder.ReadAsync(pinsFileName, Array.Empty<int>());
+		//}
 
 		public static void UpdateZoom(object sender = null, Windows.UI.Xaml.Controls.Primitives.RangeBaseValueChangedEventArgs e = null)
 		{
@@ -395,7 +412,10 @@ namespace COTG.Views
 				//}
 				foreach (var p in props)
 				{
-					st.SaveT(p.Name, p.FieldType, p.GetValue(null));
+					if (!p.IsNotSerialized)
+					{
+						st.SaveT(p.Name, p.FieldType, p.GetValue(null));
+					}
 
 				}
 				//6st.Save(nameof(raidCarry), Raiding.desiredCarry);
@@ -917,32 +937,25 @@ namespace COTG.Views
 
 		private void ExportRanks(object sender, RoutedEventArgs e)
 		{
-			HideFlyout(sender);
+			App.HideFlyout(sender);
 			HideMe();
 			var cont = exportRanksCont.Value.RoundToInt().ContinentToXY().XYToPackedContinent();
 			var t1 = JSClient.ServerTime();
 			Blobs.AllianceStats(t1 - TimeSpan.FromDays(exportRanksDays.Value), t1, cont, exportRanksCities.Value.RoundToInt() );
 		}
 
-		static void HideFlyout(object sender)
-		{
-			var but = sender as Button;
-			Assert(but != null);
-			if (but != null)
-			{
-				var fly = but.FindParent<FlyoutPresenter>();
-				fly?.ContextFlyout?.Hide();
-			}
-		
-		}
+
 		private void ExportTS(object sender, RoutedEventArgs e)
 		{
-			HideFlyout(sender);
+			App.HideFlyout(sender);
 			HideMe();
 			var cont = SettingsPage.exportContinent.ContinentToXY().XYToPackedContinent();
 			var tsMin = exportTSMinTS.Value.RoundToInt();
 			var t1 = JSClient.ServerTime();
-			Blobs.PlayerStats(t1-TimeSpan.FromDays(exportTSDays.Value), t1,cont,tsMin,this.exportTSScore.IsChecked.GetValueOrDefault(),exportTSAlliance.IsChecked.GetValueOrDefault(), 
+			Blobs.PlayerStats(t1-TimeSpan.FromDays(exportTSDays.Value), t1,cont,tsMin,
+				this.exportTSScore.IsChecked.GetValueOrDefault(),
+				this.exportTSCities.IsChecked.GetValueOrDefault(),
+				exportTSAlliance.IsChecked.GetValueOrDefault(), 
 				exportTSPlayers.Value.RoundToInt(),
 				exportTSTotal.IsChecked.GetValueOrDefault(),
 				exportTSOff.IsChecked.GetValueOrDefault(),

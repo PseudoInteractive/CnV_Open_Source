@@ -68,13 +68,13 @@ namespace COTG.Game
         public static float[] ttCombatBonus = { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 };
         public static double cartTravel=10.0f; // inplicity divided by faith+research
         public static double shipTravel =5.0f; // pre divided by faith and research
-		public static double TroopTravelMinutes(int tt, double d)
+		public static double TroopTravelMinutes(int tt, double d, bool isForRaid=false)
 		{
 			// double
-			Debug.Assert(tt != 0);
+		//	Debug.Assert(tt != 0);
 			// *100 because denominator is scaled up by 100
 			var rv = (d * ((int)ttTravel[tt] * 100)) /ttSpeedBonus[tt];
-			if (IsTTNaval(tt))
+			if (IsTTNaval(tt)|| isForRaid)
 				rv += 60; // +1 hour
 			return rv;
 		}
@@ -111,7 +111,7 @@ namespace COTG.Game
                                                         true,false }; 
 
 		// in minutes
-        public readonly static byte[] ttTravel = {   20, 30, 20, 20,
+        public readonly static byte[] ttTravel = {   0, 30, 20, 20,
                                                     20, 20, 20, 8,
                                                     10, 10, 10, 10,
                                                     30, 30, 5, 5,

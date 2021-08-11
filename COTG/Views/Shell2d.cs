@@ -28,8 +28,8 @@ namespace COTG.Views
 
 		public static int canvasBaseX = 410;
 		public static int canvasBaseY = 95;
-		public static int cachedTopOffset = 0;
-		public static int cachedXOffset = 0;
+		//public static int cachedTopOffset = 0;
+		//public static int cachedXOffset = 0;
 		static public SwapChainPanel canvas;
 		public static bool hasKeyboardFocus;
 		public static KeyboardProxy keyboardProxy;
@@ -55,20 +55,20 @@ namespace COTG.Views
 		{
 			//JSClient.CaptureWebPage(canvas);
 			//	cotgPopupOpen = 0;
-			var hasPopup = (cotgPopupOpen & 127) != 0;
-			var hasLongWindow = cotgPopupOpen >= 128;
-			var leftOffset = hasPopup ? cotgPopupRight - canvasBaseX : 0;
-			var topOffset = hasLongWindow ? webclientSpan.y * 65 / 100 : canvasBaseY;
+			//var hasPopup = (cotgPopupOpen & 127) != 0;
+			//var hasLongWindow = cotgPopupOpen >= 128;
+			//var leftOffset = hasPopup ? cotgPopupRight - canvasBaseX : 0;
+			//var topOffset = hasLongWindow ? webclientSpan.y * 65 / 100 : canvasBaseY;
 
-			// temp
-			leftOffset = 0;
-			topOffset = canvasBaseY;
+			//// temp
+			//leftOffset = 0;
+			//topOffset = canvasBaseY;
 
-			if (leftOffset == cachedXOffset && cachedTopOffset == topOffset)
-				return;
-			cachedTopOffset = topOffset;
-			cachedXOffset = leftOffset;
-			var _canvas = canvas;
+			//if (leftOffset == cachedXOffset && cachedTopOffset == topOffset)
+			//	return;
+			//cachedTopOffset = topOffset;
+			//cachedXOffset = leftOffset;
+			////	var _canvas = canvas;
 			// var _in = canvasHitTest;
 
 			//  App.DispatchOnUIThreadLow(() => _grid.Margin = new Thickness(0, topOffset, 0, bottomMargin));
@@ -116,10 +116,11 @@ namespace COTG.Views
 				ShellPage.isOverPopup = false;// reset
 											  //var isWorld = IsWorldView();
 				ShellPage.isHitTestVisible = !webviewHasFocus;
+				
 				App.DispatchOnUIThreadLow(() =>
 				{
 					instance.webFocus.IsChecked = webviewHasFocus;
-
+					Log("WebViewFocus");
 					ShellPage.isOverPopup = false;// reset again in case it changed
 					ShellPage.canvas.IsHitTestVisible = ShellPage.isHitTestVisible;
 					ShellPage.canvas.Visibility = !ShellPage.canvasVisible ? Visibility.Collapsed : Visibility.Visible;

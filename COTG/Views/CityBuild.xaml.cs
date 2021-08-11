@@ -136,6 +136,7 @@ namespace COTG.Views
 			flipLayoutH,
 			togglePlanner,
 			showShareString,
+			doTheStuff,
 			invalid,
 			count = invalid,
 
@@ -267,8 +268,8 @@ namespace COTG.Views
 		static BuildMenuItem amFlipLayoutV = new BuildMenuItem("Flip V", Action.flipLayoutV, "City/build_details_gloss_overlay.png", "Flip Layout Vertically");
 		static BuildMenuItem amSetPlanner = new BuildMenuItem("Planner", Action.togglePlanner, "City/build_details_gloss_overlay.png", "Set planner mode");
 		static BuildMenuItem amSetBuild = new BuildMenuItem("Build", Action.togglePlanner, "City/build_details_gloss_overlay.png", "Set build mode");
-		static BuildMenuItem amSelectShareString = new BuildMenuItem("ShareString", Action.showShareString, "City/build_details_gloss_overlay.png", "Sharestring selection and exporting");
-		static BuildMenuItem amDoTheStuff = new BuildMenuItem("Planner", Action.togglePlanner, "City/build_details_gloss_overlay.png", "Set planner mode");
+		static BuildMenuItem amSelectShareString = new BuildMenuItem("Settings", Action.showShareString, "City/build_details_gloss_overlay.png", "Sharestring and other settings");
+		static BuildMenuItem amDoTheStuff = new BuildMenuItem("DoTheStuff", Action.togglePlanner, "City/decal_building_valid_multi.png", "Run Do The Stuff");
 
 
 
@@ -365,6 +366,7 @@ namespace COTG.Views
 					commands.items.Add(amDowngrade);
 					commands.items.Add(isPlanner ? amSetBuild: amSetPlanner);
 					commands.items.Add(amSelectShareString);
+					commands.items.Add(amDoTheStuff);
 
 					foreach (var i in allBuildings)
 					{
@@ -397,6 +399,7 @@ namespace COTG.Views
 					commands.items.Add(amUpgrade);
 					commands.items.Add(amDowngrade);
 					commands.items.Add(amSelectShareString);
+					commands.items.Add(amDoTheStuff);
 					commands.items.Add(isPlanner ? amSetBuild : amSetPlanner);
 
 					break;
@@ -405,6 +408,7 @@ namespace COTG.Views
 					commands.items.Add(amUpgrade);
 					commands.items.Add(isPlanner ? amSetBuild : amSetPlanner);
 					commands.items.Add(amSelectShareString);
+					commands.items.Add(amDoTheStuff);
 					commands.items.Add(amFlipLayoutH);
 					commands.items.Add(amFlipLayoutV);
 
@@ -414,6 +418,7 @@ namespace COTG.Views
 					commands.items.Add(amLayout);
 					commands.items.Add(isPlanner ? amSetBuild : amSetPlanner);
 					commands.items.Add(amSelectShareString);
+					commands.items.Add(amDoTheStuff);
 
 
 					// restrict by level?
@@ -1246,8 +1251,14 @@ namespace COTG.Views
 		{
 			// Todo:  Cannot be moved if queued
 			// Todo: Error checking
+			if (a == 0 || b == 0)
+			{
+				Status($"No buildings to move?", dryRun);
+				return false;
+			}
 			var build = City.GetBuild();
 			var bds = isPlanner ? buildingsCache : build.buildings;
+			
 			if (HasBuildOps(a) && !isPlanner)
 			{
 				Status($"Cannot move a building that is being rennovated, please wait or cancel build ops on {bds[a].name} at {IdToXY(a).bspotToString()} or wait", dryRun);
@@ -1338,6 +1349,9 @@ namespace COTG.Views
 					if (!isPlanner)
 					{
 						var scratch = FindAnyFreeSpot(a);
+						if (scratch == 0)
+							return false;
+
 						--Player.moveSlots;
 						if (!await Move(a, scratch))
 							return false;
@@ -1652,6 +1666,12 @@ namespace COTG.Views
 					{
 						if(isSingleClickAction)
 							await ShareString.Show(City.build);
+						break;
+					}
+				case Action.doTheStuff:
+					{
+						if (isSingleClickAction)
+							await City.GetBuild().DoTheStuff();
 						break;
 					}
 				case Action.togglePlanner:
@@ -2002,7 +2022,7 @@ namespace COTG.Views
 								}
 
 
-								var cb = FindAnyFreeSpot(bspot);
+								var cb = FindAnyFreeSpot(bspot,!dryRun);
 								if (!await MoveBuilding(bspot, cb, dryRun))
 									return -1;
 
@@ -2069,12 +2089,12 @@ namespace COTG.Views
 			return bestSpot;
 		}
 
-	public static int FindAnyFreeSpot(int referenceBid)
+	public static int FindAnyFreeSpot(int referenceBid, bool verbose=true)
 	{
-		return FindFreeSpot(CityBuild.GetSpotType(referenceBid));
+		return FindFreeSpot(CityBuild.GetSpotType(referenceBid),verbose);
 	}
 		public static ushort findSpotOffset;
-		public static int FindFreeSpot(SpotType type = SpotType.building)
+		public static int FindFreeSpot(SpotType type = SpotType.building, bool verbose = true)
 		{
 			var build = City.GetBuild();
 			var spots = CityBuild.GetSpots(type);
@@ -2099,7 +2119,8 @@ namespace COTG.Views
 					continue;
 				return findSpotOffset;
 			}
-			Assert(false);
+			if(verbose)
+				Assert(false);
 			return 0; // error
 		}
 
@@ -2497,7 +2518,7 @@ namespace COTG.Views
 				case Windows.System.VirtualKey.X: CityBuild.ShortBuild(City.bidCastle); return; //  467;
 				case Windows.System.VirtualKey.O: CityBuild.ShortBuild(City.bidPort); return; //  488;
 				case Windows.System.VirtualKey.P: CityBuild.ShortBuild(City.bidShipyard); return; //  491;
-				case Windows.System.VirtualKey.Q: SmartBuild(City.GetBuild(), hovered,City.GetBuild().BidFromOverlay(hovered), true, false, wantDemoUI: true); return; 
+				case Windows.System.VirtualKey.Q:if(!isPlanner) SmartBuild(City.GetBuild(), hovered,City.GetBuild().BidFromOverlay(hovered), true, false, wantDemoUI: true); return; 
 
 				default:
 					break;
