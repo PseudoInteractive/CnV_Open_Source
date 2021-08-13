@@ -126,7 +126,7 @@ namespace COTG.Views
 		//        public DumbCollection<ChatEntry> logEntries = new DumbCollection<ChatEntry>(new ChatEntry[] { new ChatEntry("Hello") });
 		// public DumbCollection<ChatEntryGroup> Groups { get; set; } = new DumbCollection<ChatEntryGroup>();// new[] { new ChatEntryGroup() {time=AUtil.dateTimeZero} });
 		public DumbCollection<ChatEntry> items { get; set; } = new ();
-		override public Task VisibilityChanged(bool visible)
+		override public Task VisibilityChanged(bool visible, bool longTerm)
 		{
 			if (items.Count > 0 && visible)
 			{
@@ -138,7 +138,7 @@ namespace COTG.Views
 				});
 			}
 
-			return base.VisibilityChanged(visible);
+			return base.VisibilityChanged(visible, longTerm: longTerm);
 		}
 		public override TabPage defaultPage => ChatTab.tabPage;
 		//public ChatEntry lastChat = new ChatEntry(null, string.Empty, DateTimeOffset.MinValue, 0);

@@ -96,8 +96,8 @@ namespace COTG.Views
 			}
 
 		}
-		public virtual Task VisibilityChanged(bool visible)
-        {
+		public virtual Task VisibilityChanged(bool visible, bool longTerm)
+		{
             Log($"VisibilityChanged: {visible} {this}");
 			return Task.CompletedTask;
       
@@ -114,15 +114,16 @@ namespace COTG.Views
 		public virtual void XamlTreeChanged(TabPage newPage) { } // The tab was dragged somewhere else
         public bool isVisible;
         public bool isActive;
+		public bool hasAnnouncedActive; // true after active has been called at least once
 		//User pressed F5 or refresh button
 
-		static DateTimeOffset nextCityRefresh = DateTimeOffset.UtcNow;
+//		static DateTimeOffset nextCityRefresh = DateTimeOffset.UtcNow;
 		public Debounce refresh;
 		public UserTab()
 		{
 			if (refresh == null)
 				refresh = new(_Refresh);// { throttled = true };
-			ScrollViewer.SetZoomMode(this, ZoomMode.Enabled);
+		//	ScrollViewer.SetZoomMode(this, ZoomMode.Enabled);
 			//DependencyObjectExtensions.FindDescendant<ScrollViewer>(this).AllowFocusOnInteraction= false;
 		}
 		
@@ -130,9 +131,9 @@ namespace COTG.Views
         {
             if (isVisible && isActive)
             {
-				await VisibilityChanged(false);  // close enough default behaviour
+				await VisibilityChanged(false, longTerm: false);  // close enough default behaviour
 
-				await VisibilityChanged(true);  // close enough default behaviour
+				await VisibilityChanged(true, longTerm: false);  // close enough default behaviour
             }
         }
 
@@ -687,7 +688,7 @@ namespace COTG.Views
             {
                 itab.isVisible = false;
                 itab.isActive = false;
-                itab.VisibilityChanged(false);
+                itab.VisibilityChanged(false, longTerm: true);
 				itab.Close();
             }
             // var chatTab = tab.Content as ChatTab;
@@ -704,7 +705,7 @@ namespace COTG.Views
 		       RemoveTab(sender,args.Tab);
         }
 
-        private void Tabs_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private async void Tabs_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             foreach (var tab in e.RemovedItems)
             {
@@ -712,8 +713,11 @@ namespace COTG.Views
                 var userControl = (tab as TabViewItem).Content as UserTab;
                 if (userControl != null)
                 {
-                    userControl.isVisible = false;
-                    userControl.VisibilityChanged(false);
+					if (userControl.isVisible)
+					{
+						userControl.isVisible = false;
+						await userControl.VisibilityChanged(false, longTerm: false);
+					}
                 }
             }
             foreach (var tab in e.AddedItems )
@@ -721,9 +725,12 @@ namespace COTG.Views
                 var userControl = (tab as TabViewItem).Content as UserTab;
                 if (userControl != null)
                 {
-                    userControl.isVisible = true;
+					if (!userControl.isVisible)
+					{
+						userControl.isVisible = true;
 
-                    userControl.VisibilityChanged(true);
+						await userControl.VisibilityChanged(true, longTerm: false);
+					}
                 }
             }
         }

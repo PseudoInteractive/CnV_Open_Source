@@ -57,8 +57,8 @@ namespace COTG.Views
             instance = this;
             this.InitializeComponent();
         }
-        override public Task VisibilityChanged(bool visible)
-        {
+        override public Task VisibilityChanged(bool visible, bool longTerm)
+		{
 			// historyGrid.ItemsSource = Army.empty;
 			if (visible)
 			{
@@ -68,7 +68,7 @@ namespace COTG.Views
 					OutgoingOverview.OutgoingUpdateDebounce.Go();
 				}
 			}
-            return base.VisibilityChanged(visible);
+            return base.VisibilityChanged(visible, longTerm: longTerm);
 	}
     }
 }

@@ -314,6 +314,7 @@ namespace COTG.Game
 			else
 			{
 				var cur = AttackPlan.Get(c.cid);
+				c.CopyTo(c.city);
 				if (cur == null)
 				{
 					l = l.Add( c );

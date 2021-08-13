@@ -109,7 +109,8 @@
 
                                             CellContentStyle="{StaticResource CenterAlign}"
                                             CellContentFormat="{}{0,1:N0}" />
-				<tg:DataGridTextColumn PropertyName="firstIncoming"
+				<tg:DataGridTextColumn PropertyName="firstIncomingString"
+									   Header="First"
                                        SizeMode="Stretch"
                                        CellContentStyle="{StaticResource LeftAlign}" />
 

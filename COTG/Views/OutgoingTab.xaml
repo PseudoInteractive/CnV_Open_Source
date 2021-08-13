@@ -65,7 +65,8 @@
                                        
                                        CellContentStyle="{StaticResource CenterAlignLink}"
                                         />
-				<tg:DataGridTextColumn PropertyName="firstIncoming"
+				<tg:DataGridTextColumn PropertyName="firstIncomingString"
+									   Header="First"
                                        CellContentStyle="{StaticResource LeftAlign}"
                                         />
 				<tg:DataGridNumericalColumn PropertyName="incomingAttacks"

@@ -57,7 +57,7 @@ namespace COTG.Views
             InitializeComponent();
 //			spotGrids.Add(defenderGrid);
 
-			defenderGrid.OnKey = Spot.OnKeyDown;
+			//defenderGrid.OnKey = Spot.OnKeyDown;
             //            historyGrid.ContextFlyout = cityMenuFlyout;
 
       //      var data = defenderGrid.GetDataView();
@@ -198,8 +198,8 @@ namespace COTG.Views
           
         }
 
-        public override Task VisibilityChanged(bool visible)
-        {
+        public override Task VisibilityChanged(bool visible, bool longTerm)
+		{
 			//  Log("Vis change" + visible);
 			//App.DispatchOnUIThreadSneaky(() =>
 			//{
@@ -212,7 +212,7 @@ namespace COTG.Views
 				lastSelected = null;
 				IncomingOverview.Process(false);
 			}
-			return base.VisibilityChanged(visible);
+			return base.VisibilityChanged(visible, longTerm: longTerm);
 
         }
         public static bool IsVisible() => instance.isVisible;

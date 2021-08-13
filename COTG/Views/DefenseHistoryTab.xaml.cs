@@ -71,8 +71,8 @@ namespace COTG.Views
             //            historyGrid.ContextFlyout = cityMenuFlyout;
         
         }
-        override public Task VisibilityChanged(bool visible)
-        {
+        override public Task VisibilityChanged(bool visible, bool longTerm)
+		{
          //   historyGrid.ItemsSource = Array.Empty<Army>();
             if (visible)
             {
@@ -82,7 +82,7 @@ namespace COTG.Views
 					IncomingOverview.Process(SettingsPage.fetchFullHistory); // Todo: throttle
 				}
 			}
-			return base.VisibilityChanged(visible);
+			return base.VisibilityChanged(visible, longTerm: longTerm);
         }
 
 

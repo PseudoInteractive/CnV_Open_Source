@@ -54975,15 +54975,7 @@ function outer() {
                                 wrapper.citydata.th = city.th;
                                 wrapper.citydata.tc = city.tc;
                                 wrapper.citydata.ts = 1;
-                                if (city.hasOwnProperty('trin') && city.trin.length > 0) {
-                                    wrapper.citydata.trin = city.trin;
-                                }
-                                if (city.hasOwnProperty('trintr') && city.trintr.length > 0) {
-                                    wrapper.citydata.trintr = city.trintr;
-                                }
-                                if (city.hasOwnProperty('triin') && city.triin.length > 0) {
-                                    wrapper.citydata.triin = city.triin;
-                                }
+                                wrapper.citydata.trintr = city.hasOwnProperty('trintr') ? city.trintr : [];
                             }
                             lastTroopsHome = troopsHome;
                         }
@@ -68863,15 +68855,7 @@ function sendCityData(delayInMs) {
         if (compareSts()) {
             wrapper.citydata.sts = city.sts;
         }
-        if (city.hasOwnProperty('trin') && city.trin.length > 0) {
-            wrapper.citydata.trin = city.trin;
-        }
-        if (city.hasOwnProperty('trintr') && city.trintr.length > 0) {
-            wrapper.citydata.trintr = city.trintr;
-        }
-        if (city.hasOwnProperty('triin') && city.triin.length > 0) {
-            wrapper.citydata.triin = city.triin;
-        }
+        wrapper.citydata.trintr = city.hasOwnProperty('trintr') ? city.trintr : [];
         if (city.hasOwnProperty('ble') && city.ble.length > 0) {
             wrapper.citydata.ble = city.ble;
         }

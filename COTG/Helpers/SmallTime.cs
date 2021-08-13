@@ -30,7 +30,7 @@ namespace COTG
 		{
 			return new SmallTime( (uint)new DateTimeOffset(dateTime.Date,TimeSpan.Zero).ToUnixTimeSeconds());
 		}
-		public readonly string FormatDefault() => dateTime.FormatDefault();
+		public readonly string Format() => dateTime.Format();
 
 
 		/// <summary>
@@ -49,7 +49,7 @@ namespace COTG
 		{
 			seconds = _seconds;
 		}
-		public static SmallTime serverNow => new SmallTime(JSClient.ServerTimeSeconds());
+		public static SmallTime serverNow => JSClient.ServerTimeSmall();
 
 		public readonly bool isZero => seconds == 0;
 		
@@ -76,7 +76,7 @@ namespace COTG
 
 		public readonly override string ToString()
 		{
-			return FormatDefault();
+			return Format();
 		}
 		public readonly string ToString(string s)
 		{
@@ -96,5 +96,6 @@ namespace COTG
 
 		//		public  static implicit operator int (SmallTime t) => (int)t.seconds;
 	}
+	
 
 }

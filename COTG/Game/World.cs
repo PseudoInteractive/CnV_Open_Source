@@ -1525,6 +1525,7 @@ namespace COTG.Game
 				World.CreateChangePixels(data, data1);
 				Log("Change pixels Done"); 
 				await task;
+				World.changeMapInProgress = false;
 			}
 			catch(Exception ex)
 			{

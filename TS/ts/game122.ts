@@ -58820,16 +58820,8 @@ function outer(){
 									wrapper.citydata.tc= city.tc;
 									wrapper.citydata.ts= 1;
 									
-								
-									if (city.hasOwnProperty('trin') && city.trin.length > 0) {
-										wrapper.citydata.trin = city.trin;
-									}
-									if (city.hasOwnProperty('trintr') && city.trintr.length > 0) {
-										wrapper.citydata.trintr = city.trintr;
-									}
-									if (city.hasOwnProperty('triin') && city.triin.length > 0) {
-										wrapper.citydata.triin = city.triin;
-									}
+									wrapper.citydata.trintr = city.hasOwnProperty('trintr') ? city.trintr : [];
+
 		
 							
 							}

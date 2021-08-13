@@ -14,8 +14,13 @@
 			  IsTabStop="True"
       mc:Ignorable="d">
     <Grid>
-        
-        <telerikGrid:RadDataGrid x:Name="historyGrid"
+		<Grid.RowDefinitions>
+			<RowDefinition Height="auto"/>
+			<RowDefinition />
+		</Grid.RowDefinitions>
+		
+        <telerikGrid:RadDataGrid Grid.Row="1"
+								 x:Name="historyGrid"
                     IsTabStop="True"
 								 TabFocusNavigation="Cycle"
 								 TabNavigation="Cycle"

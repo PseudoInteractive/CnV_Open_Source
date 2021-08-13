@@ -87,9 +87,9 @@ namespace COTG.Views
 		}
 
 		static bool listLoaded = false;
-		override public async Task VisibilityChanged(bool visible)
+		override public async Task VisibilityChanged(bool visible, bool longTerm)
 		{
-			tabVisible = visible;
+			//tabVisible = visible;
 
 			if (visible)
 			{
@@ -110,7 +110,7 @@ namespace COTG.Views
 			{
 				//		World.ClearHeatmap();
 			}
-			await base.VisibilityChanged(visible);
+			await base.VisibilityChanged(visible, longTerm: longTerm);
 
 		}
 
@@ -151,7 +151,7 @@ namespace COTG.Views
 
 				   });
 					await Task.Delay(500);
-					if (!tabVisible)
+					if (!HeatTab.IsVisible())
 						break;
 				}
 			}

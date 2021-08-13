@@ -17,16 +17,20 @@ using TroopTypeCountsRef = COTG.Game.TroopTypeCounts;
 using static COTG.Game.TroopTypeCountHelper;
 //COTG.DArrayRef<COTG.Game.TroopTypeCount>;
 
-namespace COTG.JSON
+namespace COTG.Game
 {
     public static class OutgoingOverview
     {
         public static bool updateInProgress;
 		public static int outgoingCounter;
-        // uses Report.Hash(), can have several reports per reportId
+		// uses Report.Hash(), can have several reports per reportId
 
+		static int defKilled = 0;
+		static int atkKilled = 0;
+		static int myDefKilled = 0;
+		static int myAtkKilled = 0;
 
-        const string work = "fetch outgoing";
+		const string work = "fetch outgoing";
 
 		public static void ProcessTask() 
 		{
@@ -152,6 +156,7 @@ namespace COTG.JSON
 										}
 										//                            army.sumDef = Array.Empty<TroopTypeCount>();
 										spot.incoming = spot.incoming.ArrayAppend(army);
+										spot.incoming.SortSmall((a, b) => a.time.CompareTo(b.time) );
 										spot.QueueClassify(false);
 
 										defenders.Add(spot);
@@ -432,19 +437,20 @@ namespace COTG.JSON
                         // App.DispatchOnUIThread(() =>
                         // We should do this on the Render Thread
                         page.SetHistory((reportsOutgoing.OrderByDescending((atk) => atk.time.Ticks)).ToArray());
-                            var defKilled = 0;
-                            var atkKilled = 0;
-                            var myDefKilled = 0;
-                            var myAtkKilled = 0;
+                            defKilled = 0;
+                            atkKilled = 0;
+                            myDefKilled = 0;
+                            myAtkKilled = 0;
                             foreach (var i in reportsOutgoing)
                             {
-                                if (!(i.aTsKill > 0 && i.dTsKill > 0))
-								{
+        //                        if (!(i.aTsKill > 0 && i.dTsKill > 0))
+								//{
 
-								//	Log($"Huh? a:{i.aTsKill} d:{i.dTsKill} s:{Player.IdToName(i.sPid)} t:{Player.IdToName(i.tPid)}");
-								}
-								else
-                                {
+								////	Log($"Huh? a:{i.aTsKill} d:{i.dTsKill} s:{Player.IdToName(i.sPid)} t:{Player.IdToName(i.tPid)}");
+								//}
+								//else
+                                if(i.targetCid.TestContinentFilter())
+								{
                                     defKilled += i.dTsKill;
                                     atkKilled += i.aTsKill;
                                     if (i.sPid == Player.myId || i.tPid == Player.myId)

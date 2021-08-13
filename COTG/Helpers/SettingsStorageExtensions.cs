@@ -186,19 +186,25 @@ namespace COTG.Helpers
             return storageFile;
         }
 
-        public static async Task<byte[]> ReadFileAsync(this StorageFolder folder, string fileName)
-        {
-            var item = await folder.TryGetItemAsync(fileName).AsTask().ConfigureAwait(false);
+   //     public static async Task<byte[]> ReadFileAsync(this StorageFolder folder, string fileName)
+   //     {
+			//try
+			//{
+			//	var item = await folder.TryGetItemAsync(fileName).AsTask().ConfigureAwait(false);
 
-            if ((item != null) && item.IsOfType(StorageItemTypes.File))
-            {
-                var storageFile = await folder.GetFileAsync(fileName);
-                byte[] content = await storageFile.ReadBytesAsync();
-                return content;
-            }
+			//	if ((item != null) && item.IsOfType(StorageItemTypes.File))
+			//	{
+			//		byte[] content = (await item as StorageFile).ReadBytesAsync();
+			//		return content;
+			//	}
+			//}
+			//catch(Exception ex)
+			//{
+			//	Debug.LogEx(ex);
+			//}
 
-            return null;
-        }
+   //         return null;
+   //     }
 
         public static async Task<byte[]> ReadBytesAsync(this StorageFile file)
         {

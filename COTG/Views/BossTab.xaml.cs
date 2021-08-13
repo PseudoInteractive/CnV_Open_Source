@@ -28,8 +28,8 @@ namespace COTG.Views
 
 
 
-        public override Task VisibilityChanged(bool visible)
-        {
+        public override Task VisibilityChanged(bool visible, bool longTerm)
+		{
 			App.DispatchOnUIThreadSneaky(() =>
 		   {
 			   if (visible)
@@ -46,7 +46,7 @@ namespace COTG.Views
 
 			   }
 		   });
-			return base.VisibilityChanged(visible);
+			return base.VisibilityChanged(visible, longTerm: longTerm);
         }
 
         public BossTab()

@@ -22,11 +22,12 @@ namespace COTG
 	{
 		public const string emptyJson = "{}";
 		public const string defaultTimeSpanFormat = "h':'mm':'ss";
-		public const string defaultTimeFormatNoDate = "HH':'mm':'ss";
+		public const string defaultTimeFormat = "HH':'mm':'ss";
+		public const string defaultDateFormat = "MM/dd HH':'mm':'ss";
+
 		public const string preciseDateTimeFormat = "yyyy-MM-dd HH':'mm':'ss.fff";
 		// public const string preciseDateTimeFormat = "MM/dd H':'mm':'ss.fff";
 
-		public const string defaultDateFormat = "MM/dd HH':'mm':'ss";
 		public const string fullDateFormat = "yyyy/MM/dd HH':'mm':'ss";
 		public const string raidDateTimeFormat = "MM/dd/yyyy HH':'mm':'ss";
 		public const string spreadSheetDateTimeFormat = "yyyy/MM/dd HH':'mm':'ss";
@@ -96,10 +97,6 @@ namespace COTG
 
 		public static DateTimeOffset FromServerTime(this DateTimeOffset t) => t.ToUniversalTime() - JSClient.gameTOffset;
 
-		public static string FormatWithSign(this int d)
-		{
-			return d > 0 ? "+" + d.ToString("N0") : d.ToString("N0");
-		}
 
 		public static unsafe void UnsafeCopy<T>(in T[] source, in T[] target) where T : unmanaged
 		{
@@ -159,30 +156,57 @@ namespace COTG
 			}
 		}
 
-		public static string FormatDefault(this DateTimeOffset m) => m.ToString(defaultDateFormat, CultureInfo.InvariantCulture);
-
 		public static string fileTimeFormat = "yyyy_MM_dd_H_mm_ss";
 		public static string FormatFileTime(this DateTimeOffset m) => m.ToString(fileTimeFormat, CultureInfo.InvariantCulture);
 		public static DateTimeOffset ParseFileTime(this string s) => DateTimeOffset.ParseExact(s,fileTimeFormat, CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal);
 
-		public static string FormatTimeDefault(this DateTimeOffset m) => FormatSkipDateIfToday(m);
 
-		public static string Format(this TimeSpan t) => t.Days == 0 ? t.ToString("hh'hr 'mm'm 'ss's'", CultureInfo.InvariantCulture) : $"{t.Days:N0}d " + t.ToString("hh'hr 'mm'm 'ss's'", CultureInfo.InvariantCulture);
+		public static string Format(this TimeSpan t)
+		{
+			if (t <= TimeSpan.FromMinutes(1))
+				return t.ToString("ss's'", CultureInfo.InvariantCulture);
+			if (t <= TimeSpan.FromHours(1))
+				return t.ToString("mm'm 'ss's'", CultureInfo.InvariantCulture);
+			if ( t <= TimeSpan.FromDays(1))
+				return t.ToString("hh'hr 'mm'm 'ss's'", CultureInfo.InvariantCulture);
+			return t.ToString("dd'd 'hh'hr 'mm'm 'ss's'", CultureInfo.InvariantCulture);
+		}
+		public static string Format(this int i)
+		{
+			return i > 10_000_000 ? i.DivideRound(1_000_000).ToString("N0") + "m" : i > 10_000 ? i.DivideRound(1000).ToString("N0") + "k": i.ToString("N0");
+		}
+		public static string FormatWithSign(this int d)
+		{
+			return d >= 0 ? ("+" + Format(d)) : Format(d);
+		}
+
+		public static string Format(this (int i, int max) k) => $"{Format(k.i)}/{Format(k.max)}";
+		public static string Format(this int i, int max) => $"{Format(i)}/{Format(max)}";
+		public static string Format(this (ushort i, ushort max) k ) => Format( ((int)k.i,(int)k.max));
+		public static string Format(this ushort i, ushort max) => Format(((int)i, (int)max));
+
+
+		public static string Format(this ushort i) => Format((int)i);
+		public static string Format(this short i) => Format((int)i);
 
 		public static string FormatTimePrecise(this DateTimeOffset m) => m.ToString(preciseDateTimeFormat, CultureInfo.InvariantCulture);
 
-		public static string FormatSkipDateIfToday(this DateTimeOffset m)
+
+		
+		public static string Format(this DateTimeOffset m)
 		{
 			var serverNow = JSClient.ServerTime();
 			if (serverNow.Day == m.Day && serverNow.Month == m.Month)
 			{
-				return m.ToString(defaultTimeFormatNoDate, CultureInfo.InvariantCulture);
+				return m.ToString(defaultTimeFormat, CultureInfo.InvariantCulture);
 			}
 			else
 			{
 				return m.ToString(defaultDateFormat, CultureInfo.InvariantCulture);
 			}
 		}
+
+
 
 		public static string FormatFull(this DateTimeOffset m) => m.ToString(fullDateFormat, CultureInfo.InvariantCulture);
 

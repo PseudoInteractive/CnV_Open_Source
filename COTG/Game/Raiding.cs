@@ -21,10 +21,14 @@ namespace COTG.Game
         public int target;// cid
         public bool isReturning;
 		public byte r4;
+		public const byte repeating = 2;
+		public const byte scheduled = 3;
+		public const byte once = 1;
+
 		public bool isRepeatingOrScheduledToReturn => r4 == 2 || r4 == 3; // not raid once
 		public bool isRepeatingForever => r4==2; // neighter timed return nor raid once
         public byte repeatCount;
-        public byte troopType; // todo:  We should store3 of these, or specials value for RT, VRT, VT
+        public byte troopType; // todo:  for now we use the slowest
         public DateTimeOffset time;
 		public static bool test;
         //  0 "guard",1 "ballista",2 "ranger",3 "triari", 
@@ -39,23 +43,16 @@ namespace COTG.Game
         // restul int minutes
         public float GetOneWayTripTimeMinutes(City city)
         {
-            var dist = target.DistanceToCidD(city.cid);
-            // based on slowest troop
-            var rv = 0.0;
-            foreach (var tt in Raiding.GetTroops(city.troopsTotal,true,true) )
-            {
-                var type = tt.type;
-                var travel = TroopTravelMinutes(type, target.DistanceToCidD(city.cid),true);
-                // if (IsWaterRaider(type))
-                // 1 hour extra for all raids
-                if (travel > rv)
-                    rv = travel;
-            }
-            return rv > 0 ? (float)rv : 90; // if troops are not updated, cannot compute raid income
+			return (float)TroopTravelMinutes(troopType, target.DistanceToCidD(city.cid), true);
         }
+		public DateTimeOffset GetReturnTime(City city)
+		{
+			// based on slowest troop
+			return isReturning ? time : time + TimeSpan.FromMinutes(GetOneWayTripTimeMinutes(city));
+		}
 
 
-        public static bool operator ==(Raid left, Raid right)
+		public static bool operator ==(Raid left, Raid right)
         {
             return left.Equals(right);
         }
@@ -321,7 +318,7 @@ namespace COTG.Game
             {
 				var json = $"{{\"a\":{cid},\"c\":\"{at.ToString(AUtil.raidDateTimeFormat)}\",\"b\":\"3\"}}";
 				await Post.SendEncrypted("includes/UrOA.php", json, "Rx3x5DdAxxerx3", World.CidToPlayerOrMe(cid));
-				Note.Show($"Return {City.Get(cid).nameAndRemarks} at {at.FormatDefault()}");
+				Note.Show($"Return {City.Get(cid).nameAndRemarks} at {at.Format()}");
 			}
         }
         public static async Task ReturnFast(int cid, bool updateUI)

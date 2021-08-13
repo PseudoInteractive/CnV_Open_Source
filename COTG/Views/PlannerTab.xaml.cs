@@ -19,7 +19,7 @@ namespace COTG.Views
 		public static PlannerTab instance;
 		public static bool IsVisible() => instance.isVisible;
 
-		public  override Task VisibilityChanged(bool visible)
+		public  override Task VisibilityChanged(bool visible, bool longTerm)
 		{
 			if (visible)
 			{
@@ -32,7 +32,7 @@ namespace COTG.Views
 //				CityBuild._isPlanner = false;
 
 			}
-			return base.VisibilityChanged(visible);
+			return base.VisibilityChanged(visible, longTerm: longTerm);
 		}
 
 		public PlannerTab()

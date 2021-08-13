@@ -423,7 +423,7 @@ namespace COTG.Views
 		{
 			var dt = TimeSpan.FromMinutes(e.NewValue);
 			var serverTime = JSClient.ServerTime() + TimeSpan.FromMinutes(e.NewValue);
-			eventTimeTravelText.Text = $"Attack Time Travel:\t\t{dt.Hours}:{dt.Minutes},\t\tT:{serverTime.FormatSkipDateIfToday()}";
+			eventTimeTravelText.Text = $"Attack Time Travel:\t\t{dt.Hours}:{dt.Minutes},\t\tT:{serverTime.Format()}";
 		}
 		private static void Canvas_PointerReleased(object sender, PointerEventArgs e)
 		{
@@ -1027,10 +1027,13 @@ namespace COTG.Views
 															sb.AppendLine(city.remarks.AsSpan().Wrap(20));
 														if(city.hasAcademy.GetValueOrDefault())
 															sb.AppendLine("Has Academy");
-														if( NearRes.instance.isVisible)
+														sb.AppendLine($"Carts:{AUtil.Format( (city.cartsHome, city.carts))}");
+														if(city.ships > 0)
+															sb.AppendLine($"Ships:{AUtil.Format(city.shipsHome,city.ships)}");
+														if ( NearRes.instance.isVisible)
 														{
-															sb.AppendLine($"wood:{city.res[0]:N0}, stone:{ city.res[1]:N0}");
-															sb.AppendLine($"iron:{city.res[2]:N0}, food:{ city.res[3]:N0}");
+															sb.AppendLine($"Wood:{city.res[0].Format()}, Stone:{ city.res[1].DivideRound(1000):4,N0}k");
+															sb.AppendLine($"Iron:{city.res[2].Format()}, Food:{ city.res[3].FormatWithSign()}k");
 														}
 														sb.Append($"{c.y / 100}{c.x / 100} ({c.x}:{c.y})");
 														

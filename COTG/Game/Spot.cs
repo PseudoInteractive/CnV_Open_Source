@@ -360,23 +360,28 @@ namespace COTG.Game
 					return string.Join(',', rv);
 			}
 		}
-		public string firstIncoming
+		public DateTimeOffset firstIncoming
 		{
 			get
 			{
-
-
 				foreach (var atk in incoming)
 				{
 					if (atk.isAttack)
 					{
-						return atk.time.FormatDefault();
+						return atk.time;
 					}
 				}
-				return "??";
+				return AUtil.dateTimeZero;
 			}
 		}
-
+		public string firstIncomingString
+		{
+			get
+			{
+				var t = firstIncoming;
+				return t.IsZero() ? "??" : t.Format();
+			}
+		}
 		public bool isCastle { get; set; }
 		public bool isOnWater { get; set; }
 		public bool isTemple { get; set; }
@@ -436,7 +441,7 @@ namespace COTG.Game
 					sb.Append('\t');
 					sb.Append(s.cid.CidToCoords());
 					sb.Append('\t');
-					sb.Append(s.incoming.Where(x => x.isAttack).First()?.time.FormatSkipDateIfToday() ?? "??");
+					sb.Append(s.incoming.Where(x => x.isAttack).First()?.time.Format() ?? "??");
 					sb.Append('\t');
 					sb.Append(s.claim);
 					sb.Append('\t');
@@ -1124,7 +1129,7 @@ namespace COTG.Game
 				{
 					if (!a.isDefense)
 					{
-						rv += a.time.FormatSkipDateIfToday() + " " + a.Format() + ";";
+						rv += a.time.Format() + " " + a.Format() + ";";
 					}
 				}
 				return rv;
@@ -1715,7 +1720,7 @@ namespace COTG.Game
 					if (time != null)
 					{
 						await Raiding.ReturnAt(cid, time.Value);
-						Note.Show($"{City.Get(cid).nameMarkdown} end raids at {time.Value.FormatDefault()}");
+						Note.Show($"{City.Get(cid).nameMarkdown} end raids at {time.Value.Format()}");
 					}
 					else
 					{
@@ -1751,7 +1756,7 @@ namespace COTG.Game
 				var __cid = _cid;
 				await Raiding.ReturnAt(__cid, at);
 			}
-			Note.Show($"End {cids.Count} raids at {at.FormatDefault()} ");
+			Note.Show($"End {cids.Count} raids at {at.Format()} ");
 
 		}
 
@@ -2028,7 +2033,7 @@ namespace COTG.Game
 					aWar.AddItem("Incoming", ShowIncoming);
 
 				if (Raid.test)
-					aWar.AddItem("Recruit Sen", (_, _) => Recruit.Send(cid, ttSenator, 1));
+					aWar.AddItem("Recruit Sen", (_, _) => Recruit.Send(cid, ttSenator, 1, true));
 				aWar.AddItem("Send Defence", (_, _) => JSDefend(cid));
 				aWar.AddItem("Show Reinforcements", (_, _) => Reinforcement.ShowReturnDialog(cid, uie));
 				aExport.AddItem("Defense Sheet", ExportToDefenseSheet);

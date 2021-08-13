@@ -175,7 +175,7 @@ namespace COTG.Views
 				}
 			});
 		}
-		override public Task VisibilityChanged(bool visible)
+		override public Task VisibilityChanged(bool visible, bool longTerm)
 		{
 			//   Log("Vis change" + visible);
 
@@ -187,7 +187,7 @@ namespace COTG.Views
 			{
 				App.DispatchOnUIThreadSneaky(cities.Clear);
 			}
-			return base.VisibilityChanged(visible);
+			return base.VisibilityChanged(visible, longTerm: longTerm);
 
 		}
 
@@ -933,7 +933,7 @@ namespace COTG.Views
 			var initialMoveSlots = Player.moveSlots;
 				var nextMoveConfirm = initialMoveSlots - movesPerConfirm;
 
-				var result = await App.DoYesNoBox("Move Stuff", $"Whould you like to demo resources where buildings should go?", cancel:"Don't Move", no:"Move Stuff", yes:"Move+Demo" );
+				var result = await App.DoYesNoBox("Move Stuff", "Whould you like to demo resources where buildings should go?", cancel:"Don't Move", no:"Move Stuff", yes:"Move+Demo" );
 				if(result == -1)
 					return;
 				var allowDemo = result == 1;

@@ -281,25 +281,7 @@ namespace COTG.Game
 
 		public DateTimeOffset GetRaidReturnTime()
 		{
-			var rv = AUtil.dateTimeZero;
-			foreach (var r in raids)
-			{
-				if (r.isReturning)
-				{
-					if (rv < r.time)
-						rv = r.time;
-				}
-				else
-				{
-
-					var travel = r.GetOneWayTripTimeMinutes(this);
-					var _t = r.time + TimeSpan.FromMinutes(travel);
-					if (_t > rv)
-						rv = _t;
-
-				}
-			}
-			return rv;
+			return raids.Any() ? raids.Max(a=>a.GetReturnTime(this)) :  AUtil.dateTimeZero;
 		}
 
 		public static bool CanVisit(int cid)
@@ -351,11 +333,9 @@ namespace COTG.Game
 			{
 				if (raids.IsNullOrEmpty())
 					return "---"; // no raids
-				var dt = (float)(raids[0].time - JSClient.ServerTime()).TotalMinutes; // should we check more than one
-				if (raids[0].isReturning)
-					return dt.ToString("0.00");
-				else
-					return $"({(1.0f).Max(raids[0].GetOneWayTripTimeMinutes(this) - dt):N2})";
+				var postFix = raids[0].r4 switch  { Raid.scheduled=> " @", Raid.repeating=>" +" , _ => " ~"};
+				var t =  raids.Max(a=> a.GetReturnTime(this) ); // should we check more than one
+				return  t.Format() + (raids.Any(a=>!a.isReturning) ? " >" : " <") + postFix;
 			}
 		}
 
@@ -686,36 +666,31 @@ namespace COTG.Game
 			}
 			if (jse.TryGetProperty("trintr", out var trintr))
 			{
-				var l = new List<Reinforcement>();
-				foreach (var rein in trintr.EnumerateArray())
+				if (trintr.ValueKind == JsonValueKind.Array && trintr.GetArrayLength() > 0)
 				{
-					if (rein.ValueKind == JsonValueKind.Object)
+					var l = new List<Reinforcement>();
+
+					foreach (var rein in trintr.EnumerateArray())
 					{
-						var re = new Reinforcement();
-						re.targetCid = cid;
-						re.sourceCid = rein.GetAsInt("c");
-						re.order = rein.GetAsInt64("o");
-						Set2( ref re.troops, rein.GetProperty("tr") );
-						l.Add(re);
+						if (rein.ValueKind == JsonValueKind.Object)
+						{
+							var re = new Reinforcement();
+							re.targetCid = cid;
+							re.sourceCid = rein.GetAsInt("c");
+							re.order = rein.GetAsInt64("o");
+							Set2(ref re.troops, rein.GetProperty("tr"));
+							l.Add(re);
+						}
+						else
+						{
+							Assert(rein.ValueKind == JsonValueKind.Array && rein.GetArrayLength() == 0);
+						}
 					}
-					else
-					{
-						Assert(rein.ValueKind == JsonValueKind.Array && rein.GetArrayLength() == 0);
-					}
+					reinforcementsIn = l.ToArray();
 				}
-				reinforcementsIn = l.ToArray();
+
 			}
-			//if (jse.TryGetProperty("trin", out var trin))
-			//{
-			//    Log(trin);
-
-			//}
-			//if (jse.TryGetProperty("triin", out var triin))
-			//{
-			////    Log(triin);
-
-			//}
-
+			
 
 		//lastUpdateTick = Environment.TickCount;
 

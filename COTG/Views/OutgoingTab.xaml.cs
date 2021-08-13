@@ -57,7 +57,7 @@ namespace COTG.Views
             InitializeComponent();
 //			spotGrids.Add(attackerGrid);
 
-			attackerGrid.OnKey = Spot.OnKeyDown;
+		//	attackerGrid.OnKey = Spot.OnKeyDown;
             //            historyGrid.ContextFlyout = cityMenuFlyout;
 
             //      var data = defenderGrid.GetDataView();
@@ -98,7 +98,7 @@ namespace COTG.Views
                     {
                         instance.attackerGrid.ItemsSource = Spot.defendersO.Where( w => w.testContinentFilter 
 																					&& (instance.includeInternal || !w.IsAllyOrNap() ) 
-																					&& (!instance.onlyMine ||w.HasIncomingFrom(Player.activeId))).ToArray();
+																					&& (!instance.onlyMine ||w.HasIncomingFrom(Player.activeId))).OrderBy(w=>w.firstIncoming).ToArray();
                     });
                 }
                 catch (Exception e)
@@ -119,8 +119,8 @@ namespace COTG.Views
 
         }
 
-        public override Task VisibilityChanged(bool visible)
-        {
+        public override Task VisibilityChanged(bool visible, bool longTerm)
+		{
 			/// TODO:  Why clear?
             //App.DispatchOnUIThreadSneaky(() =>
             //{
@@ -130,7 +130,7 @@ namespace COTG.Views
 
             if (visible)
                 OutgoingOverview.OutgoingUpdateDebounce.Go();
-            return base.VisibilityChanged(visible);
+            return base.VisibilityChanged(visible, longTerm: longTerm);
 
         }
 

@@ -23,12 +23,15 @@ namespace COTG.Views
 	public class PlayerChanges
 	{
 		public int pid;
-		public int activity => settled + castled*4 - abandonedCities + upgraded*1 - flattened*1 + castlesCappedEnemy*16 + castlesCappedAlly*2 - 
-			castlesLostEnemy*4 - castlesLostAlly*4 - castlesAbandoned*4 + templesMade*32 -templesLost ; // approximate measure of overall non sub activity
+		public int activity => settled*2 + castled*4 + abandonedCities + upgraded*1 - flattened*0 + castlesCappedEnemy*16 + castlesCappedAlly*4 - 
+			castlesLostEnemy* 2 - castlesLostAlly*2 - castlesAbandoned*2 + templesMade*32 -templesLost*32; // approximate measure of overall non sub activity
 																										//	public int nonSubActivity; // approximate measure of overall non sub activity
-		public string alliance => Player.Get(pid).allianceName;
-		
-		public ushort allianceId => Player.Get(pid).alliance;
+		public int progress => settled*4 + castled * 4 - abandonedCities*3 + upgraded * 1 - flattened * 1 + castlesCappedEnemy * 16 + castlesCappedAlly * 2 -
+			castlesLostEnemy * 4 - castlesLostAlly * 2 - castlesAbandoned * 4 + templesMade * 32 - templesLost*32; // approximate measure of overall non sub activity
+																												   //	public int nonSubActivity; // approximate measure of overall non sub 	public string alliance => Player.Get(pid).allianceName;
+
+		public string alliance => Player.Get(pid).allianceName; 
+public ushort allianceId => Player.Get(pid).alliance;
 		public string name => Player.IdToName(pid);
 		public int cities => Player.Get(pid).cities.Count();
 		public int settled { get; set; }

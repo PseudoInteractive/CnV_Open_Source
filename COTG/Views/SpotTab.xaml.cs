@@ -48,7 +48,7 @@ namespace COTG.Views
             instance = this;
             this.InitializeComponent();
             selectedGrid.SelectionChanged += SpotSelectionChanged;
-			selectedGrid.OnKey = Spot.OnKeyDown;
+		//	selectedGrid.OnKey = Spot.OnKeyDown;
 			selectedGrid.ProcessTooltips();
 			spotGrids.Add(selectedGrid);
 		}

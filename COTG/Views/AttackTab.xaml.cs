@@ -52,9 +52,9 @@ namespace COTG.Views
 		static void UpdateArrivalUI()
 		{
 			if(0 != plan.senTime )
-				instance.arrivalSen.Content = senTime.FormatDefault();
+				instance.arrivalSen.Content = senTime.Format();
 			if (0 != plan.seTime)
-				instance.arrivalSE.Content = seTime.FormatDefault();
+				instance.arrivalSE.Content = seTime.Format();
 		}
 
 
@@ -160,7 +160,7 @@ namespace COTG.Views
 							sb.Append($"\n\n<player>{scrpipt}</player>");
 						}
 						sb.Append('\n');
-						sb.Append($"{a.cid.CidToCoords()} {a.city.classificationString} {a.attackType}");
+						sb.Append($"{a.cid.CidToCoords()} {a.attackType} {a.city.nameAndRemarks} ");
 					}
 					var command = sb.ToString();
 					playerCommands.Add(player, command);
@@ -489,8 +489,8 @@ namespace COTG.Views
 			});
 
 		}
-        public async override Task VisibilityChanged(bool visible)
-        {
+        public async override Task VisibilityChanged(bool visible, bool longTerm)
+		{
             if (visible)
             {
 				App.DispatchOnUIThreadSneaky( UpdateArrivalUI );
@@ -1869,7 +1869,7 @@ namespace COTG.Views
 								var d = clusters[a.attackCluster].GetTravelTimeHours(a);
 								if (d >= (j == 0 ? maxDistanceToSenator : maxDistanceToSE) - 3.0f)
 								{
-									Note.Show($"{a.nameMarkdown} leaves at around {((j == 0 ? senTime : seTime) - TimeSpan.FromHours(d)).FormatDefault()}");
+									Note.Show($"{a.nameMarkdown} leaves at around {((j == 0 ? senTime : seTime) - TimeSpan.FromHours(d)).Format()}");
 								}
 							}
 						}

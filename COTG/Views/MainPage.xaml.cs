@@ -74,8 +74,8 @@ namespace COTG.Views
 			//c = new MenuFlyoutItem() { Text = "Home Please" };
 			//c.Click += ReturnFastClick;
 			//cityMenuFlyout.Items.Add(c);
-
-			cityGrid.OnKey = Spot.OnKeyDown;
+	//		cityGrid.tab
+		//	cityGrid.OnKey = Spot.OnKeyDown;
 
 			//cityGrid.ContextFlyout = cityMenuFlyout;
 
@@ -240,8 +240,8 @@ namespace COTG.Views
 			////	instance.raidOptionBox.Visibility = vis;
 			////		instance.incomeBox.Visibility = vis;
 		}
-		override public async Task VisibilityChanged(bool visible)
-        {
+		override public async Task VisibilityChanged(bool visible, bool longTerm)
+		{
             //   Log("Vis change" + visible);
 
             if (visible)
@@ -262,7 +262,7 @@ namespace COTG.Views
             {
         //        cityGrid.ItemsSource = null;
             }
-	         await   base.VisibilityChanged(visible);
+	         await   base.VisibilityChanged(visible, longTerm: longTerm);
 			//if (visible)
 			//{
 			//	Spot.SyncUISelection(true, City.GetBuild() );
@@ -525,15 +525,8 @@ namespace COTG.Views
             this.Id = CommandId.DataBindingComplete;
         }
 
-        public override bool CanExecute(object parameter)
-        {
-            var context = parameter as DataBindingCompleteEventArgs;
-            // put your custom logic here
-            return true;
-        }
-
-        static T TryGetValue<T>(object o) => o == null ? default : (T)o;
-        public override void Execute(object parameter)
+		static T GetValue<T>(IDataView view, int id) => view.GetAggregateValue(id, null) is T o ? o : default;
+		public override void Execute(object parameter)
         {
 			App.DispatchOnUIThreadSneaky(() =>
 		   {
@@ -541,11 +534,11 @@ namespace COTG.Views
 				// put your custom logic here
 				var view = context.DataView;
 
-			   MainPage.instance.count.Text = $"Cities: {TryGetValue<ulong>(view.GetAggregateValue(0, null))}";
-			   MainPage.instance.tsTotal.Text = $"TS Total:  {TryGetValue<double>(view.GetAggregateValue(1, null)):N0}";
-			   MainPage.instance.tsRaid.Text = $"TS Home: {TryGetValue<double>(view.GetAggregateValue(2, null)):N0}";
-			   MainPage.instance.castles.Text = $"Castles: {TryGetValue<double>(view.GetAggregateValue(3, null))}";
-			   MainPage.instance.water.Text = $"On Water: {TryGetValue<double>(view.GetAggregateValue(4, null))}";
+			   MainPage.instance.count.Text = $"Cities: {GetValue<ulong>(view,0)}";
+			   MainPage.instance.tsTotal.Text = $"TS Total:  {GetValue<double>(view,1):N0}";
+			   MainPage.instance.tsRaid.Text = $"TS Home: {GetValue<double>(view,2):N0}";
+			   MainPage.instance.castles.Text = $"Castles: {GetValue<double>(view,3)}";
+			   MainPage.instance.water.Text = $"On Water: {GetValue<double>(view,4)}";
 		   });
         }
 		

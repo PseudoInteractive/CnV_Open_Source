@@ -25,15 +25,15 @@ namespace COTG.Views
 		public static DateTimeOffset dateTime;
 		public static ObservableCollection<string> recentTimes = new ();
 
-		void TimeToUI()  { time.Text = dateTime.FormatTimeDefault(); DateToUI(); } // Does not zero out seconds, hopefully that is okay
+		void TimeToUI()  { time.Text = dateTime.Format(); DateToUI(); } // Does not zero out seconds, hopefully that is okay
 		bool TimeFromUI()
 		{
 			var rv = false;
 			if (
 			
-				  DateTimeOffset.TryParseExact(time.Text, "HH", DateTimeFormatInfo.InvariantInfo, DateTimeStyles.AllowInnerWhite | DateTimeStyles.AssumeUniversal, out var result)||
-				  DateTimeOffset.TryParseExact(time.Text, "HH':'mm", DateTimeFormatInfo.InvariantInfo, DateTimeStyles.AllowInnerWhite | DateTimeStyles.AssumeUniversal, out result) ||
-				DateTimeOffset.TryParseExact(time.Text, AUtil.defaultTimeFormatNoDate, DateTimeFormatInfo.InvariantInfo, DateTimeStyles.AllowInnerWhite |
+				  DateTimeOffset.TryParseExact(time.Text, "HH", DateTimeFormatInfo.InvariantInfo, DateTimeStyles.AllowWhiteSpaces | DateTimeStyles.AssumeUniversal, out var result)||
+				  DateTimeOffset.TryParseExact(time.Text, "HH':'mm", DateTimeFormatInfo.InvariantInfo, DateTimeStyles.AllowWhiteSpaces | DateTimeStyles.AssumeUniversal, out result) ||
+				DateTimeOffset.TryParseExact(time.Text, AUtil.defaultTimeFormat, DateTimeFormatInfo.InvariantInfo, DateTimeStyles.AllowWhiteSpaces |
 				DateTimeStyles.AssumeUniversal, out result) )
 				   
 			{
@@ -42,14 +42,14 @@ namespace COTG.Views
 
 			}
 			else if (
-				 DateTimeOffset.TryParseExact(time.Text, AUtil.defaultDateFormat, DateTimeFormatInfo.InvariantInfo, DateTimeStyles.AllowInnerWhite | DateTimeStyles.AssumeUniversal, out result))
+				 DateTimeOffset.TryParseExact(time.Text, AUtil.defaultDateFormat, DateTimeFormatInfo.InvariantInfo, DateTimeStyles.AllowWhiteSpaces | DateTimeStyles.AssumeUniversal, out result))
 			{
 				// all except year
 				dateTime = new DateTimeOffset(dateTime.Year, result.Month, result.Day, result.Hour, result.Minute, result.Second, TimeSpan.Zero); // strip off timezone 
 				rv = true;
 			}
 			else if(  // anything goes
-				DateTimeOffset.TryParse(time.Text, DateTimeFormatInfo.InvariantInfo, DateTimeStyles.AllowInnerWhite | DateTimeStyles.AssumeUniversal, out result)
+				DateTimeOffset.TryParse(time.Text, DateTimeFormatInfo.InvariantInfo, DateTimeStyles.AllowWhiteSpaces | DateTimeStyles.AssumeUniversal, out result)
   )
 			{
 				// includes date
@@ -169,7 +169,7 @@ namespace COTG.Views
 			if (recentTimesBox.SelectedItem != null )
 			{
 				var sel = recentTimesBox.SelectedItem.ToString();
-				if (DateTimeOffset.TryParseExact(sel, AUtil.fullDateFormat, DateTimeFormatInfo.InvariantInfo, DateTimeStyles.AllowInnerWhite | DateTimeStyles.AssumeUniversal, out dateTime))
+				if (DateTimeOffset.TryParseExact(sel, AUtil.fullDateFormat, DateTimeFormatInfo.InvariantInfo, DateTimeStyles.AllowWhiteSpaces | DateTimeStyles.AssumeUniversal, out dateTime))
 				{
 					TimeToUI();
 					OnPropertyChanged(string.Empty);

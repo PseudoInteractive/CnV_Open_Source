@@ -67,8 +67,8 @@ namespace COTG.Views
             }
         }
 
-        public async override Task VisibilityChanged(bool visible)
-        {
+        public async override Task VisibilityChanged(bool visible, bool longTerm)
+		{
             if (visible)
             {
 				if (defendants.Count == 0)
@@ -201,7 +201,7 @@ namespace COTG.Views
            );     //              supportGrid.ItemsSource = null;
 
             }
-			await base.VisibilityChanged(visible);
+			await base.VisibilityChanged(visible, longTerm: longTerm);
         }
 
 		private List<Spot> FindValidDefendants(bool viaWater, bool onlyHome, City city, ref float hours)

@@ -311,7 +311,7 @@ namespace COTG.Views
 			}
 		}
 
-		public override Task VisibilityChanged(bool visible)
+		public override Task VisibilityChanged(bool visible, bool longTerm)
 		{
 			if (target == null)
 				target = City.GetBuild();
@@ -328,7 +328,7 @@ namespace COTG.Views
 				supporters.Clear();
 				selected = ResSource.dummy;
 			}
-			return base.VisibilityChanged(visible);
+			return base.VisibilityChanged(visible, longTerm: longTerm);
 		}
 
 		public NearRes()

@@ -36,7 +36,7 @@ namespace COTG.Services
 			{
 				LogEx(e);
 			}
-			await UploadHistory();
+			//await UploadHistory();
 		}
 
 		public static DateTimeOffset GetLastWriteUTC( ZipArchiveEntry e)
@@ -48,95 +48,95 @@ namespace COTG.Services
 			return new DateTimeOffset(e.LastWriteTime.Ticks, TimeSpan.Zero);
 		}
 
-		const string workStr = "Combining Heatmaps";
-		public static async Task UploadHistory()
-		{
-			try
-			{
-				var file = await folder.GetFileAsync(fileName);
+		//const string workStr = "Combining Heatmaps";
+		//public static async Task UploadHistory()
+		//{
+		//	try
+		//	{
+		//		var file = await folder.TryGetItemAsync(fileName);
 
-				if (file == null)
-					return;
+		//		if (file == null)
+		//			return;
 
-				ShellPage.WorkStart(workStr);
-				   try
-				   {
-					   using (var streamForZip = await file.OpenStreamForReadAsync() )
-					   {
-						   using (var zip = new ZipArchive(streamForZip, mode: ZipArchiveMode.Read))
-						   {
-							   var count = zip.Entries.Count;
-							   int entry = count;
+		//		ShellPage.WorkStart(workStr);
+		//		   try
+		//		   {
+		//			   using (var streamForZip = await file.OpenStreamForReadAsync() )
+		//			   {
+		//				   using (var zip = new ZipArchive(streamForZip, mode: ZipArchiveMode.Read))
+		//				   {
+		//					   var count = zip.Entries.Count;
+		//					   int entry = count;
 
-							   uint[] data = null;
-							   HeatMapDay last = null;
-							   var lastModified = false;
-							   while (--entry >= 0)
-							   {
-								ShellPage.WorkUpdate(workStr + $"... {count - entry}/{count}");
+		//					   uint[] data = null;
+		//					   HeatMapDay last = null;
+		//					   var lastModified = false;
+		//					   while (--entry >= 0)
+		//					   {
+		//						ShellPage.WorkUpdate(workStr + $"... {count - entry}/{count}");
 									
-									var dName = ArchiveName(entry);
+		//							var dName = ArchiveName(entry);
 
-								   var prior = zip.GetEntry(dName);
-								   var byteBuffer = new byte[prior.Length];
-								   var t = GetLastWriteServer(prior);
-
-
-								   using (var instream = prior.Open())
-								   {
-									   instream.Read(byteBuffer, 0, byteBuffer.Length);
-								   }
-								   var uintBuffer = byteBuffer.ConvertToUints();
-
-								   if (data == null)
-								   {
-									   data = uintBuffer;
-									   Assert(data.Length == World.spanSquared);
-								   }
-								   else
-								   {
-									   HeatMap.ApplyDelta(data, uintBuffer);
-								   }
-								   var map = await HeatMap.AddSnapshot(t,World.SwizzleForCompression(data), false);
-
-								   if (map.day != last)
-								   {
-									   if (last != null && lastModified)
-										   await HeatMap.Upload(last);
+		//						   var prior = zip.GetEntry(dName);
+		//						   var byteBuffer = new byte[prior.Length];
+		//						   var t = GetLastWriteServer(prior);
 
 
-									   last = map.day;
-									   lastModified = map.modified;
+		//						   using (var instream = prior.Open())
+		//						   {
+		//							   instream.Read(byteBuffer, 0, byteBuffer.Length);
+		//						   }
+		//						   var uintBuffer = byteBuffer.ConvertToUints();
 
-								   }
-								   else
-								   {
-									   lastModified |= map.modified;
-								   }
-							   }
-							   if (last != null)
-								   await HeatMap.Upload(last);
+		//						   if (data == null)
+		//						   {
+		//							   data = uintBuffer;
+		//							   Assert(data.Length == World.spanSquared);
+		//						   }
+		//						   else
+		//						   {
+		//							   HeatMap.ApplyDelta(data, uintBuffer);
+		//						   }
+		//						   var map = await HeatMap.AddSnapshot(t,World.SwizzleForCompression(data), false);
 
-						   }
+		//						   if (map.day != last)
+		//						   {
+		//							   if (last != null && lastModified)
+		//								   await HeatMap.Upload(last);
 
-					   }
-				   }
-				   finally
-				   {
-					   await file.DeleteAsync(); // donw with this
-	   				   ShellPage.WorkEnd(workStr);
-					}
 
-			}
-			catch(FileNotFoundException notFound)
-			{
-				return;  // file does not exist
-			}
-			catch(Exception ex)
-			{
-				LogEx(ex, false, eventName:"UploadHistory");
-			}
-		}
+		//							   last = map.day;
+		//							   lastModified = map.modified;
+
+		//						   }
+		//						   else
+		//						   {
+		//							   lastModified |= map.modified;
+		//						   }
+		//					   }
+		//					   if (last != null)
+		//						   await HeatMap.Upload(last);
+
+		//				   }
+
+		//			   }
+		//		   }
+		//		   finally
+		//		   {
+		//			   await file.DeleteAsync(); // donw with this
+	 //  				   ShellPage.WorkEnd(workStr);
+		//			}
+
+		//	}
+		//	catch(FileNotFoundException notFound)
+		//	{
+		//		return;  // file does not exist
+		//	}
+		//	catch(Exception ex)
+		//	{
+		//		LogEx(ex, false, eventName:"UploadHistory");
+		//	}
+		//}
 
 
         public static void CopyBytes(uint src, byte[]  rv, int i  )

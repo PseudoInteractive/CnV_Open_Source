@@ -51,8 +51,8 @@ namespace COTG.Views
         public void OnPropertyChanged(string propertyName) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 
        // List<BlessedCity> blessedGridSource = new List<BlessedCity>();
-        public async override Task VisibilityChanged(bool visible)
-        {
+        public async override Task VisibilityChanged(bool visible, bool longTerm)
+		{
             if(visible)
             {
                 BlessedCity.Refresh();
@@ -96,7 +96,7 @@ namespace COTG.Views
                 });
                    BlessedCity.senderCity = null;
             }
-           await  base.VisibilityChanged(visible);
+           await  base.VisibilityChanged(visible, longTerm: longTerm);
 
         }
 

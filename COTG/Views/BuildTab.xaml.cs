@@ -60,7 +60,7 @@ namespace COTG.Views
 			instance = this;
 			InitializeComponent();
 			cityGrid.SelectionChanged += SpotSelectionChanged;
-			cityGrid.OnKey = Spot.OnKeyDown;
+			//cityGrid.OnKey = Spot.OnKeyDown;
 
 			//cityGrid.CurrentItemChanged += CityGrid_CurrentItemChanged;
 
@@ -261,7 +261,7 @@ namespace COTG.Views
 		}
 
 
-		override public async Task VisibilityChanged(bool visible)
+		override public async Task VisibilityChanged(bool visible, bool longTerm)
 		{
 			//   Log("Vis change" + visible);
 
@@ -289,7 +289,7 @@ namespace COTG.Views
 			{
 				//        cityGrid.ItemsSource = null;
 			}
-			await base.VisibilityChanged(visible);
+			await base.VisibilityChanged(visible, longTerm: longTerm);
 		//	if(visible)
 		//	{
 		//		App.DispatchOnUIThreadSneaky(() => Spot.SyncUISelection(true, City.GetBuild() ));

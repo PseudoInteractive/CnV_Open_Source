@@ -409,63 +409,94 @@ namespace COTG.Services
 			public int pa { get; set; }
 		}
 		const string magic = "X2UsK3KSJJEse2";
-		public static async Task<bool> Send(int cid, int tt, int count)
+		public static async Task<bool> Send(int cid, int tt, int count, bool cancelOrDismiss)
 		{
-			var t = JSClient.ServerTimeMs();
-			var args = new Args() { tid = AMath.random.Next(),bt=1,ds=t,de=t+1,pa=1,tc=count,tm=0,ttype=tt,tbt=4,tl=1  };
+			if (cancelOrDismiss)
+			{
+				long tid = 0;
+				await GetCity.Post(cid, (jse, _city) =>
+				{
+					if (jse.TryGetProperty("tq", out var tq))
+					{
+						if (tq.ValueKind == JsonValueKind.Array && tq.GetArrayLength() > 0)
+						{
+							tid = tq[0].GetAsInt64("tid");
+						}
+					}
+				});
+				if (tid != 0)
+				{
+					await Post.Send("includes/cTrp.php", $"cid={cid}&a={tid}");
+				}
+				else
+				{
+					var magic = "X2UsfKKKsse2"; ;
+					var encoded = Aes.Encode("{\"5\":1}", magic);
+					var urle = $"cid={cid}&a=" + HttpUtility.UrlEncode(encoded, Encoding.UTF8);
 
-			var encoded = Aes.Encode(JsonSerializer.Serialize(args, Json.jsonSerializerOptions), magic );
-			var urle = $"cid={cid}&a=" + HttpUtility.UrlEncode(encoded, Encoding.UTF8);
-			var str = (await Post.SendForText("includes/bTrp.php",urle)).Trim();
-			if (str == "0")
-			{
-				Note.Show($"Recruit {count} {ttNameWithCaps[tt]} in {City.Get(cid).nameMarkdown}");
-				return true;
+					Post.Send("includes/dTp.php", urle);
+
+				}
 			}
-			else
+			for(int i=0;;++i)
 			{
-				Note.Show(str);
-				return false;
+
+				var t = JSClient.ServerTimeMs();
+				var args = new Args() { tid = AMath.random.Next(), bt = 1, ds = t, de = t + 1, pa = 1, tc = count, tm = 0, ttype = tt, tbt = 4, tl = 1 };
+
+				var encoded = Aes.Encode(JsonSerializer.Serialize(args, Json.jsonSerializerOptions), magic);
+				var urle = $"cid={cid}&a=" + HttpUtility.UrlEncode(encoded, Encoding.UTF8);
+				var str = (await Post.SendForText("includes/bTrp.php", urle)).Trim();
+				if (str == "0")
+				{
+					Note.Show($"Recruit {count} {ttNameWithCaps[tt]} in {City.Get(cid).nameMarkdown}");
+					return true;
+				}
+				else if(i==2)
+				{
+					Note.Show(str);
+					return false;
+				}
 			}
 		}
-
+		
 
 	}
 
-	/*
-	  {
-"tid": 1628537154,
-"ttype": 17,
-"bt": 4528000,
-"tc": 1,
-"ds": 1620092155331,
-"de": 1620096683331,
-"tl": 1,
-"tm": 0,
-"tbt": 4,
-"pa": 1
-}
-	 *  var n5D = {
-					tid: Number(p5D),
-					ttype: Number(x5D),
-					bt: Number(z5D),
-					tc: Number(L5D),
-					ds: Number(M5D),
-					de: Number(r5D),
-					tl: Number(L5D),
-					tm: 0,
-					tbt: Number(K5D),
-					pa: 1
-				};
-				if (x5D == +17)
-					ppdt["bc"] = ppdt[_s(+h6R)] + i5D;
-				var Z5D = __s[5491];
-				var g5D = a6.ccazzx.encrypt(JSON.stringify(n5D), Z5D, +256);
-				N6();
-				var P5D = $.post("/includes/" + __s[3174], { cid: cid, a: g5D });
-	 */
+		/*
+		  {
+	"tid": 1628537154,
+	"ttype": 17,
+	"bt": 4528000,
+	"tc": 1,
+	"ds": 1620092155331,
+	"de": 1620096683331,
+	"tl": 1,
+	"tm": 0,
+	"tbt": 4,
+	"pa": 1
+	}
+		 *  var n5D = {
+						tid: Number(p5D),
+						ttype: Number(x5D),
+						bt: Number(z5D),
+						tc: Number(L5D),
+						ds: Number(M5D),
+						de: Number(r5D),
+						tl: Number(L5D),
+						tm: 0,
+						tbt: Number(K5D),
+						pa: 1
+					};
+					if (x5D == +17)
+						ppdt["bc"] = ppdt[_s(+h6R)] + i5D;
+					var Z5D = __s[5491];
+					var g5D = a6.ccazzx.encrypt(JSON.stringify(n5D), Z5D, +256);
+					N6();
+					var P5D = $.post("/includes/" + __s[3174], { cid: cid, a: g5D });
+		 */
 
-	public class ScanDungeons : RestAPI
+		public class ScanDungeons : RestAPI
 	{
 		int cid;
 		//                       Xs4b22320360lme55s
@@ -630,10 +661,11 @@ namespace COTG.Services
 		public ReinforcementsOverview() : base("overview/reinover.php") { }
 		public override void ProcessJson(JsonDocument json)
 		{
+			// This gets rid of all reinforcements except those that from other players 
 			foreach (var s in Spot.allSpots)
 			{
-				s.Value.reinforcementsIn = s.Value.reinforcementsIn.WhereNotMine(true) ;
-				s.Value.reinforcementsOut = s.Value.reinforcementsOut.WhereNotMine(false);
+				s.Value.reinforcementsIn = s.Value.reinforcementsIn.WhereNotMine() ;
+				s.Value.reinforcementsOut = s.Value.reinforcementsOut.WhereNotMine();
 			}
 			var jsd = json;
 			var changed = new HashSet<City>();
@@ -656,6 +688,7 @@ namespace COTG.Services
 						Assert(targetCId == cid);
 						re.sourceCid = rein[15].GetAsInt();
 						Assert(re.sourceCid != targetCId);
+						// re.time = rein[9].ToString(
 						re.order = rein[10].GetAsInt64();
 						foreach (var ti in rein[8].EnumerateArray())
 						{
@@ -846,7 +879,6 @@ namespace COTG.Services
 						raid.repeatCount = 1;
 						raid.target = target;
 						raid.time = dateTime;
-						raid.repeatCount = 1;
 						var r4 = r[4].GetByte(); 
 						raid.isReturning = r[3].GetInt32() != 0;
 						raid.r4 = r4;
@@ -863,16 +895,19 @@ namespace COTG.Services
 						var res = (isMountain ? mountainLoot[level - 1] : otherLoot[level - 1]) * (2 - completion * 0.01f);
 						int cc = 0;
 
-						var tsMaxTS = 0;
+						// slowest
+						var maxTravel = 0.0;
 						foreach (var ttr in r[5].EnumerateArray())
 						{
 							var tt = ttr.GetAsInt("tt");
 							int tv = ttr.GetAsInt("tv");
 							cc += ttCarry[tt] * tv;
-							var ts = ttTs[tt] * tv;
-							if (ts > tsMaxTS)
+							//var ts = ttTs[tt] * tv;
+							var travel = TTTravel(tt);
+							// Todo Navy
+							if (travel > maxTravel)
 							{
-								tsMaxTS = ts;
+								maxTravel = travel;
 								raid.troopType = (byte)tt;
 							}
 							//   Log($"{tt}:{tv}");

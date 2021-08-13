@@ -274,50 +274,79 @@ namespace COTG.Helpers
             }
      
         public static string timeZoneString=string.Empty;
-        public static DateTimeOffset ParseDateTime(this string src, bool monthThenDay=true)
+
+		public static bool IsReasonable(DateTimeOffset rv)
+		{
+			var delta = (rv - JSClient.ServerTime()).TotalDays;
+			if (delta >= -2.0 && delta <= 2.0) ;
+				return true;
+			
+			Log("Suspicous: " + rv.Format());
+			// log but don't assert if within a week+1
+			if (delta >= -8.0 && delta <= 8.0) ;
+				return true;
+			return false;
+
+		}
+		public static DateTimeOffset ParseDateTime(this string src, bool monthThenDay=true)
         {
-            var format = "s";
-            var serverTime = JSClient.ServerTime();
-			int bad = src.IndexOf('<'); // what is this doing here?
-			if (bad != -1)
-				src = src.Substring(0, bad);
-            var split = src.Split( ' ' , StringSplitOptions.RemoveEmptyEntries) ;
-            string s;
-            if (split.Length == 1)
-            {
-                s = $"{serverTime.Year}-{serverTime.Month:D2}-{serverTime.Day:D2}T{split[0]}";
+			try
+			{
+				var format = "s";
+				var serverTime = JSClient.ServerTime();
+				int bad = src.IndexOf('<'); // what is this doing here?
+				if (bad != -1)
+					src = src.Substring(0, bad);
+				var split = src.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+				string s;
+				if (split.Length == 1)
+				{
+					s = $"{serverTime.Year:D4}-{serverTime.Month:D2}-{serverTime.Day:D2}T{split[0]}";
 
-            }
-            else
-            {
-				// time and date are reversed :(
-				if (split[1].Count(a => a == ':') == 2)
-					AUtil.Swap(ref split[0], ref split[1]);
-				Assert(split[0].Count(a => a == ':') == 2);
+				}
+				else
+				{
+					// time and date are reversed :(
+					if (split[1].Count(a => a == ':') == 2)
+						AUtil.Swap(ref split[0], ref split[1]);
+					Assert(split[0].Count(a => a == ':') == 2);
 
-                var dateEtc = split[1].Split('/', StringSplitOptions.RemoveEmptyEntries);
-                if (dateEtc.Length == 1)
-                {
-                    // only day
-                    s = $"{serverTime.Year}-{serverTime.Month:D2}-{int.Parse(dateEtc[0]):D2}T{split[0]}";
-                }
-                else if (dateEtc.Length == 2)
-                {
-                    // month then day
-                    s = $"{serverTime.Year}-{int.Parse(dateEtc[monthThenDay ? 0 : 1]):D2}-{int.Parse(dateEtc[monthThenDay ? 1 : 0]):D2}T{split[0]}";
-                }
-                else
-                {
-                    // month then day
-                    s = $"{dateEtc[2]}-{int.Parse(dateEtc[monthThenDay ? 0 : 1]):D2}-{int.Parse(dateEtc[monthThenDay ? 1 : 0]):D2}T{split[0]}";
-                }
-            }
+					var dateEtc = split[1].Split('/', StringSplitOptions.RemoveEmptyEntries);
+					if (dateEtc.Length == 1)
+					{
+						// only day
+						s = $"{serverTime.Year:D4}-{serverTime.Month:D2}-{int.Parse(dateEtc[0]):D2}T{split[0]}";
+					}
+					else if (dateEtc.Length == 2)
+					{
+						// month then day
+						s = $"{serverTime.Year:D4}-{int.Parse(dateEtc[monthThenDay ? 0 : 1]):D2}-{int.Parse(dateEtc[monthThenDay ? 1 : 0]):D2}T{split[0]}";
+					}
+					else
+					{
+						// month then day
+						s = $"{dateEtc[2]:D4}-{int.Parse(dateEtc[monthThenDay ? 0 : 1]):D2}-{int.Parse(dateEtc[monthThenDay ? 1 : 0]):D2}T{split[0]}";
+					}
+				}
 
-            if (DateTimeOffset.TryParseExact(s, format, DateTimeFormatInfo.InvariantInfo, DateTimeStyles.AllowInnerWhite | DateTimeStyles.AssumeUniversal, out var rv))
-                return rv;
-            if (DateTimeOffset.TryParse(s, DateTimeFormatInfo.InvariantInfo, DateTimeStyles.AllowInnerWhite | DateTimeStyles.AssumeUniversal, out rv))
-                return rv;
-            Assert(false);
+				if (DateTimeOffset.TryParseExact(s, format, DateTimeFormatInfo.InvariantInfo, DateTimeStyles.AllowWhiteSpaces | DateTimeStyles.AssumeUniversal, out var rv))
+				{
+					Assert(IsReasonable(rv));
+					return rv;
+				}
+				Log($"Semi bad: {src} {monthThenDay}");
+				if (DateTimeOffset.TryParse(s, DateTimeFormatInfo.InvariantInfo, DateTimeStyles.AllowWhiteSpaces | DateTimeStyles.AssumeUniversal, out rv))
+				{
+					Assert(IsReasonable(rv));
+					return rv;
+				}
+			}
+			catch (Exception ex)
+			{
+				LogEx(ex);
+			}
+
+			Assert(false);
             return AUtil.dateTimeZero;
 
         }

@@ -1033,6 +1033,7 @@ namespace COTG
 				return false;
 			return base.BeginDraw();
 		}
+
 		static KeyF[] bulgeKeys = new[] { new KeyF(0.0f, 0.0f), new KeyF(0.44f, 0.44f), new KeyF(1.5f, 0.44f), new KeyF(2.5f, 0.0f) };
 
 		private static bool TilesReady()
@@ -1980,8 +1981,8 @@ namespace COTG
 										{
 											var ct = raid.target.CidToCamera();
 											(var c0, var c1) = !raid.isReturning ? (c, ct) : (ct, c);
-											DrawAction((float)(raid.time - serverNow).TotalSeconds,
-												raid.GetOneWayTripTimeMinutes(city) * 60.0f,
+											DrawAction((float)(raid.time - serverNow).TotalMinutes,
+												raid.GetOneWayTripTimeMinutes(city) ,
 												r, c0, c1, raidColor, troopImages[raid.troopType], false, null, highlight: Spot.IsSelectedOrHovered(city.cid));
 
 										}

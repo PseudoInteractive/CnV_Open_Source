@@ -21,7 +21,7 @@ using TroopTypeCounts = COTG.Game.TroopTypeCounts;
 using DiscordCnV;
 //COTG.DArray<COTG.Game.TroopTypeCount>;
 
-namespace COTG.JSON
+namespace COTG.Game
 {
 	public static class IncomingOverview
 	{
@@ -30,6 +30,11 @@ namespace COTG.JSON
 		public static ConcurrentDictionary<int, Army> reportCache = new();
 
 		// uses Report.Hash(), can have several reports per reportId
+
+		static int defKilled = 0;
+		static int atkKilled = 0;
+		static int myDefKilled = 0;
+		static int myAtkKilled = 0;
 
 		public static byte ClaimToByte(float claim)
 		{
@@ -58,7 +63,7 @@ namespace COTG.JSON
 			internal int sourceCid => firstArmy.sourceCid;
 
 			public string intel => $"{firstArmy.miscInfo}, {ttNameWithCaps[firstArmy.troops.GetPrimaryTroopType()]}";
-			public string note => $"{Player.IdToName(targetCid.CidToPid())} attacker: {Player.IdToName(sourceCid.CidToPid())} to {targetCid.CidToContinent()} {first.FormatSkipDateIfToday()} first: {intel}) to {City.Get(targetCid).nameAndRemarks} at {first.FormatSkipDateIfToday()}{( count>1?$" and {count-1} others":"")}";
+			public string note => $"{Player.IdToName(targetCid.CidToPid())} attacker: {Player.IdToName(sourceCid.CidToPid())} to {targetCid.CidToContinent()} {first.Format()} first: {intel}) to {City.Get(targetCid).nameAndRemarks} at {first.Format()}{( count>1?$" and {count-1} others":"")}";
 		}
 
 		static Debounce IncomingUpdateDebounce = new(DoProcess) { throttled = true, debounceDelay = 1000, throttleDelay = 2000 };
@@ -488,7 +493,7 @@ namespace COTG.JSON
 																				  if (!DGame.members.TryGetValue(name.ToLower(), out var id))
 																					  id = name;
 																					  
-																				  var content = $"<@{id}> {_army.time.FormatSkipDateIfToday()}: {army.miscInfo}, {ttNameWithCaps[army.troops.GetPrimaryTroopType()]} to {target.cityName} ({target.xy}) from  {_source.player.name} {_source.cityName} ({_source.xy}";
+																				  var content = $"<@{id}> {_army.time.Format()}: {army.miscInfo}, {ttNameWithCaps[army.troops.GetPrimaryTroopType()]} to {target.cityName} ({target.xy}) from  {_source.player.name} {_source.cityName} ({_source.xy}";
 																				  if (army.claim > 0)
 																				  {
 																					  content += $" claim {army.claim}%";
@@ -889,14 +894,16 @@ namespace COTG.JSON
 								var defPage = DefenseHistoryTab.instance;
 								for (int i = 0; i < reportParts.Length; ++i)
 									reportsIncoming.AddRange(reportParts[i]);
-								var defKilled = 0;
-								var atkKilled = 0;
-								var myDefKilled = 0;
-								var myAtkKilled = 0;
+								defKilled = 0;
+								atkKilled = 0;
+								myDefKilled = 0;
+								myAtkKilled = 0;
 								foreach (var i in reportsIncoming)
 								{
-									if (i.aTsKill > 0 && i.dTsKill > 0)
+									//if (i.aTsKill > 0 && i.dTsKill > 0)
+									if(i.targetCid.TestContinentFilter() )
 									{
+
 										defKilled += i.dTsKill;
 										atkKilled += i.aTsKill;
 										if (i.sPid == Player.myId || i.tPid == Player.myId)

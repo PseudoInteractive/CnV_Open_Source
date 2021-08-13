@@ -22,7 +22,8 @@ namespace COTG.Game
     //"trintr"
     public class Reinforcement
     {
-        public int sourceCid;
+		public SmallTime time;  // arrival
+		public int sourceCid;
         public int targetCid;
 		//static int pid;
 
@@ -56,7 +57,7 @@ namespace COTG.Game
 			
             var orders = new List<Reinforcement>();
 			
-			panel.Children.Add(new TextBlock() { Text= "For accurate incoming info, open or refresh the incoming tab" });
+			panel.Children.Add(new TextBlock() { Text= "For info related to other players reinforcements in a city, please visit the city" });
 			
 			panel.Children.Add(new TextBlock() { Text = showAll ? "All Incoming Reinforcements" : "Reinforcements Here:" });
 
@@ -121,8 +122,9 @@ namespace COTG.Game
 				if (counter > 0)
 				{
 					await Task.Delay(400);
-					Services.ReinforcementsOverview.instance.Post();
+					await Services.ReinforcementsOverview.instance.Post();
 				}
+
 				ShellPage.WorkEnd("Return..");
 			}
 		}
@@ -138,14 +140,11 @@ namespace COTG.Game
             }
             return rv;
         }
-		public static Reinforcement [] WhereNotMine(this Reinforcement[] me, bool wantIn)
+		public static Reinforcement [] WhereNotMine(this Reinforcement[] me)
 		{
 			if (me == null || me.Length == 0)
 				return Array.Empty<Reinforcement>();
-			if(wantIn)
-				return me.Where(r => !Player.IsMe(r.targetCid.CidToPid())).ToArray();
-			else
-				return me.Where(r => !Player.IsMe(r.sourceCid.CidToPid())).ToArray();
+			return me.Where(r => !Player.IsMe(r.sourceCid.CidToPid())).ToArray();
 		}
 
 	}

@@ -121,34 +121,43 @@ namespace COTG
 
 		public static async void App_CloseRequested(object sender, SystemNavigationCloseRequestedPreviewEventArgs e)
 		{
+			Log("Close");
 			state = State.closing;
 			await TabPage.CloseAllTabWindows();
 		}
 
 		private async void App_Suspending(object sender, SuspendingEventArgs e)
 		{
-			var deferral = e.SuspendingOperation.GetDeferral();
-			//TODO: Save application state and stop any background activity
-			try
+			if (isForeground == true)
 			{
-				Log("Suspend");
 				isForeground = false;
-				await JSON.BuildQueue.SaveIfNeeded();
-				Log("Suspend 2");
-				SettingsPage.SaveAll();
-				Log("Suspend 2.5");
-				await AttackTab.SaveAttacksBlock();
-				Log("Suspend 3");
-			}
-			catch (Exception ex)
-			{ 
-			}
-			finally {
-				deferral.Complete();
+
+				var deferral = e.SuspendingOperation.GetDeferral();
+				//TODO: Save application state and stop any background activity
+				try
+				{
+					await SaveState();
+
+				}
+				catch (Exception ex)
+				{
+				}
+				finally
+				{
+					deferral.Complete();
+				}
 			}
 		}
 
+		private static async Task SaveState()
+		{
+			await JSON.BuildQueue.SaveIfNeeded();
+			SettingsPage.SaveAll();
+			await AttackTab.SaveAttacksBlock();
+		}
 
+
+		// can only be called from UI thread
 		private static CoreVirtualKeyStates GetKeyState(VirtualKey key)
 		{
 			var window = CoreWindow.GetForCurrentThread();
@@ -166,6 +175,7 @@ namespace COTG
 			return (state & CoreVirtualKeyStates.Down) == CoreVirtualKeyStates.Down;
 		}
 
+		// can be called from any thread
 		public static bool IsKeyPressedControl()
 		{
 			return controlPressed;
@@ -533,7 +543,7 @@ namespace COTG
 			if (activation != null && activation.PreviousExecutionState == ApplicationExecutionState.Running)
 			{
 				Window.Current.Activate();
-				isForeground = true;
+			//	isForeground = true;
 
 				// Todo:  Handle arguments and stuff
 				// Ensure the current window is active
@@ -625,14 +635,8 @@ namespace COTG
 			var deferral = e.GetDeferral();
 			try
 			{
-				//   if (ShellPage.canvas != null)
-				//      ShellPage.canvas.Paused = true;
-				//	SettingsPage.SaveAll();
-				await JSON.BuildQueue.SaveIfNeeded();
+				await SaveState();
 
-				//            var deferral = e.GetDeferral();
-				//            await Singleton<SuspendAndResumeService>.Instance.SaveStateAsync();
-				//           deferral.Complete();
 				var t = DateTimeOffset.UtcNow;
 				SystemInformation.Instance.AddToAppUptime(t - activeStart);
 				activeStart = t;
@@ -650,7 +654,7 @@ namespace COTG
 		private void App_Resuming(object sender, object e)
 		{
 			Log("Resume");
-			isForeground = true;
+		//	isForeground = true;
 			activeStart = DateTimeOffset.UtcNow;
 
 			//         Singleton<SuspendAndResumeService>.Instance.ResumeApp();
@@ -973,14 +977,14 @@ namespace COTG
 
 			var dialog = new ContentDialog()
 				{
-					Title = title,
-					Content = text,
-					PrimaryButtonText = yes,
-					IsSecondaryButtonEnabled = no!=null,
-					IsPrimaryButtonEnabled = yes!=null,
-					SecondaryButtonText = no,
-					CloseButtonText = cancel
-				};
+					Title = title ?? string.Empty,
+					Content = text ?? string.Empty,
+					PrimaryButtonText = yes ?? string.Empty,
+					IsSecondaryButtonEnabled = no is not null,
+					IsPrimaryButtonEnabled = yes is not null,
+					SecondaryButtonText = no??string.Empty,
+					CloseButtonText = cancel ?? string.Empty
+			};
 				return (await dialog.ShowAsync2()) switch { ContentDialogResult.Primary => 1, ContentDialogResult.Secondary => 0, _ => -1 };
 		}
 		public async static Task<(bool rv, bool? sticky)> DoYesNoBoxSticky(string title, string yes = "Yes", string no = "No", string cancel = "Cancel")

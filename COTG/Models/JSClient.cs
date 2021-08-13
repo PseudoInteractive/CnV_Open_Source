@@ -2026,7 +2026,7 @@ private static async void ShowCouncillorsMissingDialog()
 								   //   Log(JSONHelper.timeZoneString);
 								   
 								   Log($"TOffset {gameTOffset}");
-								   Log(ServerTime().ToString());
+								   Log(ServerTime().ToString("u"));
 								   ppss = jso.GetAsInt("ppss");
 								   Player.myName = jso.GetString("player");
 								   if (Player.subOwner == null)
