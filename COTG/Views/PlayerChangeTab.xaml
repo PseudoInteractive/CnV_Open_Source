@@ -17,22 +17,12 @@
 		<tk:DataGrid x:Name="playerGrid" x:FieldModifier="public"
                         AutoGenerateColumns="True"
                         ItemsSource="{x:Bind views:PlayerChangeTab.changes, Mode=OneWay}"
-                        RowHeight="6"
-                     SelectionMode="Extended"
-				     RowDetailsVisibilityMode="Collapsed"
+                      
+                     RowDetailsVisibilityMode="Collapsed"
                      AreRowDetailsFrozen="True" 
-                     CanUserReorderColumns="True"
-					  CellStyle="{StaticResource CellTextStyle}"
-				    CanUserSortColumns="True"
-					 CanUserResizeColumns="True"
-					 IsReadOnly="True"
-					 					 RowHeaderStyle="{StaticResource DataGridColumnHeaderStyle}"
-                    RowStyle="{StaticResource DataGridRowStyle}"
-					ClipboardCopyMode="IncludeHeader"
-					 FrozenColumnCount="3"
+                    IsReadOnly="True"
+					 FrozenColumnCount="1"
                      Sorting="playerChangesSorting"
-                     GridLinesVisibility="All"
-                     AlternatingRowBackground="#FF301060"
                      
                      >
 		</tk:DataGrid>

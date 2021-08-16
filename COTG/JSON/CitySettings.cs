@@ -441,7 +441,7 @@ namespace COTG.JSON
 
 		public static async void SetRecruitFromTag(int _cid)
         {
-			var targets = Spot.GetSelectedForContextMenu(_cid, onlyMine: true);
+			var targets = Spot.GetSelectedForContextMenu(_cid, onlyIfShiftPressed :true, onlyMine: true);
 			foreach (var cid in targets)
 			{
 
@@ -654,10 +654,10 @@ namespace COTG.JSON
 
 		public static async void SetAutoTowersOrWalls(int cid, bool ? autoWalls=null,bool ? autoTowers=null)
 		{
-			var targets = Spot.GetSelectedForContextMenu(cid, onlyMine: true);
-			foreach (var _cid in targets)
+		//	var targets = Spot.GetSelectedForContextMenu(cid, onlyIfShiftPressed: true, onlyMine: true);
+		//	foreach (var _cid in targets)
 			{
-				await CitySettings.SetCitySettings(_cid,autoWalls:autoWalls,autoTowers:autoTowers);
+				await CitySettings.SetCitySettings(cid,autoWalls:autoWalls,autoTowers:autoTowers);
 			}
 		}
 

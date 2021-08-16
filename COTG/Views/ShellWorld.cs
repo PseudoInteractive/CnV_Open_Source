@@ -1027,11 +1027,11 @@ namespace COTG.Views
 															sb.AppendLine(city.remarks.AsSpan().Wrap(20));
 														if(city.hasAcademy.GetValueOrDefault())
 															sb.AppendLine("Has Academy");
-														sb.AppendLine($"Carts:{AUtil.Format( (city.cartsHome, city.carts))}");
-														if(city.ships > 0)
-															sb.AppendLine($"Ships:{AUtil.Format(city.shipsHome,city.ships)}");
 														if ( NearRes.instance.isVisible)
 														{
+															sb.AppendLine($"Carts:{AUtil.Format((city.cartsHome, city.carts))}");
+															if (city.ships > 0)
+																sb.AppendLine($"Ships:{AUtil.Format(city.shipsHome, city.ships)}");
 															sb.AppendLine($"Wood:{city.res[0].Format()}, Stone:{ city.res[1].DivideRound(1000):4,N0}k");
 															sb.AppendLine($"Iron:{city.res[2].Format()}, Food:{ city.res[3].FormatWithSign()}k");
 														}

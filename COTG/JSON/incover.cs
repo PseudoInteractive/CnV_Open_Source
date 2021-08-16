@@ -432,7 +432,7 @@ namespace COTG.Game
 															  {
 																  // this will early out if its already queued
 																  source.QueueClassify(true);
-																  Set(ref army.troops, new TroopTypeCount(source.classificationTroopType, -1));
+																  Set(ref army.troops, new TroopTypeCount(source.TroopType, -1));
 																  Assert(army.troops.Count == 1);
 															  }
 

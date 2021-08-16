@@ -193,6 +193,7 @@ namespace COTG
 			return jsVars;
 		}
 		public static string PlayerToken(int pid) => PlayerVars(pid).token;
+	//	public static string PlayerToken(int pid) => PlayerVars(pid).token;
 
 		public static int ppss;
 		public static bool isSub => subId != 0;
@@ -235,19 +236,19 @@ namespace COTG
 		{
 		}
 
-		public static void SetPlayer(int pid, int cid)
-		{
-			foreach (var p in PlayerPresence.all)
-			{
-				if (p.pid == pid)
-				{
+		//public static void SetPlayer(int pid, int cid)
+		//{
+		//	foreach (var p in PlayerPresence.all)
+		//	{
+		//		if (p.pid == pid)
+		//		{
 
-					SetPlayer(pid, p.token, p.cookies, cid, p.name);
-					return;
-				}
-			}
-			Debug.Log("Missing player");
-		}
+		//			SetPlayer(pid, p.token, p.cookies, cid, p.name);
+		//			return;
+		//		}
+		//	}
+		//	Debug.Log("Missing player");
+		//}
 
 		//public static string GetSecSessionId()
 		//{
@@ -320,12 +321,12 @@ namespace COTG
 			}
 		}
 
-		public static void AddPlayer(bool isMe, bool setCurrent, int pid, string pn, string token, string raid, string cookies, string ppdt)
+		public static void AddPlayer(bool isMe, bool setCurrent, int pid , string pn, string token, string raid = null, string cookies=null, string ppdt=null)
 		{
 			var jsv = new JSVars() { token = token, pn = pn, pid = pid, ppdt = ppdt, cookies = cookies, raidSecret = raid }; // todo: need raidSecret
 																															 //
-																															 // add if necessary
-																															 //
+																															 //			Player.myIds																								 // add if necessary
+
 			bool present = false;
 			for (int i = 0; i < jsVarsByPlayer.Length; ++i)
 			{
@@ -343,7 +344,6 @@ namespace COTG
 
 			if (isMe)
 			{
-				jsBase = jsv;
 				jsVars = jsv;
 				Player.activeId = pid;
 			}
@@ -353,7 +353,7 @@ namespace COTG
 				Player.activeId = pid;
 				jsVars = jsv;
 
-				App.DispatchOnUIThreadSneakyLow(() => ShellPage.instance.friendListBox.SelectedItem = pn);
+//				App.DispatchOnUIThreadSneakyLow(() => ShellPage.instance.friendListBox.SelectedItem = pn);
 
 			}
 
@@ -378,7 +378,7 @@ namespace COTG
 
 			//if (!session)
 			{
-				cookie.Expires = DateTimeOffset.UtcNow + TimeSpan.FromDays(200);
+				cookie.Expires = DateTimeOffset.UtcNow + TimeSpan.FromDays(64);
 			}
 			JSClient.cookieManager.DeleteCookie(cookie);
 			//if (!clearOnly)
@@ -881,7 +881,7 @@ namespace COTG
 					{
 						Assert(false);
 						// need to switch player
-						JSClient.SetPlayer(city.pid, cityId);
+						//JSClient.SetPlayer(city.pid, cityId);
 					}
 					else
 					{
@@ -1823,7 +1823,7 @@ private static async void ShowCouncillorsMissingDialog()
 				else if (args.Uri.ToString().StartsWith( "https://www.crownofthegods.com"))
 				{
 				//	if(!JSClient.isSub)
-						SetSessionCookie();
+					//	SetSessionCookie();
 				}
 			}
 			catch (Exception e)
@@ -1972,100 +1972,105 @@ private static async void ShowCouncillorsMissingDialog()
 				   {
 					   case "jsvars":
 						   {
-							   App.DispatchOnUIThreadSneaky(() => ShellPage.instance.cookie.Visibility = Visibility.Collapsed );
+						//	   App.DispatchOnUIThreadSneaky(() => ShellPage.instance.cookie.Visibility = Visibility.Collapsed);
 
-								   var jso = jsp.Value;
+							   var jso = jsp.Value;
 
-								   var s = CookieDB.Serialize(cookieManager);// GetSecSessionId();
-								   var token = jso.GetString("token");
-								   var raidSecret = jso.GetString("raid");
-								   var agent = jso.GetString("agent");
-//								   jsVars.cookie = jso.GetString("cookie");
-								//   Log(jsVars.cookie);
-								   Log(token);
-								   Log(s);
-								   for (int i = 0; i < clientCount; ++i)
+							//   var s = CookieDB.Serialize(cookieManager);// GetSecSessionId();
+							   var token = jso.GetString("token");
+							   var raidSecret = jso.GetString("raid");
+							   var agent = jso.GetString("agent");
+							   //								   jsVars.cookie = jso.GetString("cookie");
+							   //   Log(jsVars.cookie);
+							   Log(token);
+							  // Log(s);
+							   for (int i = 0; i < clientCount; ++i)
+							   {
+								   await clientPoolSema.WaitAsync();
+							   }
+							   for (; ; )
+							   {
+								   try
 								   {
-									   await clientPoolSema.WaitAsync();
-								   }
-								   for (; ; )
-								   {
-									   try
 									   {
+										   //    var clients = clientPool.ToArray();
+										   foreach (var httpClient in clientPool)
 										   {
-											   //    var clients = clientPool.ToArray();
-											   foreach (var httpClient in clientPool)
-											   {
 
-												   
-								//				   if (subId == 0)
-									//				   httpClient.DefaultRequestHeaders.TryAppendWithoutValidation("Cookie", "sec_session_id=" + s);
-											   }
+
+											   //				   if (subId == 0)
+											   //				   httpClient.DefaultRequestHeaders.TryAppendWithoutValidation("Cookie", "sec_session_id=" + s);
 										   }
 									   }
-									   catch (Exception _ex)
-									   {
-										   LogEx(_ex);
-										   await Task.Delay(1000);
-										   continue;
-
-									   }
-									   break;
 								   }
+								   catch (Exception _ex)
+								   {
+									   LogEx(_ex);
+									   await Task.Delay(1000);
+									   continue;
 
-								   clientPoolSema.Release(clientCount);
-								   
-								   var timeOffset = jso.GetAsInt64("timeoffset");
-								   var timeOffsetRounded = Math.Round(timeOffset / (1000.0 * 60 * 30)) * 30.0f; // round to nearest half hour
-								   gameTOffset = TimeSpan.FromMinutes(timeOffsetRounded);
-								   gameTOffsetSeconds = (int)gameTOffset.TotalSeconds;
-									gameTOffsetMs = (long)gameTOffset.TotalMilliseconds;
-								   var str = timeOffsetRounded >= 0 ? " +" : " ";
-								   str += $"{gameTOffset.Hours:D2}:{gameTOffset.Minutes:D2}";
-								   Helpers.JSON.timeZoneString = str;
-								   //   Log(JSONHelper.timeZoneString);
-								   
-								   Log($"TOffset {gameTOffset}");
-								   Log(ServerTime().ToString("u"));
-								   ppss = jso.GetAsInt("ppss");
-								   Player.myName = jso.GetString("player");
-								   if (Player.subOwner == null)
-									   Player.subOwner = Player.myName;
-								   Player.activeId =Player.myId = jso.GetAsInt("pid"); ;
-								   Player.myIds.Add(Player.myId);
-								   var cid = jso.GetAsInt("cid");
-								   City.build = City.focus = cid;
-								   NavStack.Push(cid);
-								   App.DispatchOnUIThreadLow(() => ShellPage.instance.coords.Text = cid.CidToString());
-								   AGame.cameraC = cid.CidToWorldV();
-								   //Note.L("cid=" + cid.CidToString());
-								   gameMSAtStart = jso.GetAsInt64("time");
-								   launchTime = DateTimeOffset.UtcNow;
-								   //    Log(jsVars.ToString());
-								 //  SettingsPage.secSessionId = jso.GetAsString("s");
-								   //		AGame.clientTL.X = jso.GetAsFloat("left");
-								   //  AGame.clientTL.Y = jso.GetAsFloat("top");
-								   //   Log($"WebClient:{AGame.clientTL} {ShellPage.webclientSpan.y}");
-								   //     Note.Show($" {clientSpanX}:{clientSpanY} {ShellPage.clientTL} ");
-								   gotCreds = true;
-					//			   spanX = jso.GetAsInt("spanX");
-					//			   spanY = jso.GetAsInt("spanY");
-					//			   Note.Show($"ClientSpan: {spanX}x{spanY}");
-								   //    Log($"Built heades {httpClient.DefaultRequestHeaders.ToString() }");
+								   }
+								   break;
+							   }
 
-								   //   UpdatePPDT(jso.GetProperty("ppdt"));
-								   var ppdt = jso.GetProperty("ppdt");
-								    // todo: utf
-								   AddPlayer(true, true, Player.myId, Player.myName, token, raidSecret,s, ppdt.ToString());
+							   clientPoolSema.Release(clientCount);
 
+							   var timeOffset = jso.GetAsInt64("timeoffset");
+							   var timeOffsetRounded = Math.Round(timeOffset / (1000.0 * 60 * 30)) * 30.0f; // round to nearest half hour
+							   gameTOffset = TimeSpan.FromMinutes(timeOffsetRounded);
+							   gameTOffsetSeconds = (int)gameTOffset.TotalSeconds;
+							   gameTOffsetMs = (long)gameTOffset.TotalMilliseconds;
+							   var str = timeOffsetRounded >= 0 ? " +" : " ";
+							   str += $"{gameTOffset.Hours:D2}:{gameTOffset.Minutes:D2}";
+							   Helpers.JSON.timeZoneString = str;
+							   //   Log(JSONHelper.timeZoneString);
 
-								   UpdatePPDT(ppdt,Player.myId,pruneCities:true);
-								   if (Player.isAvatarOrTest)
-									   Raid.test = true;
-								   World.RunWhenLoaded(()=> App.DispatchOnUIThreadSneakyLow(Spot.UpdateFocusText) );
+							   Log($"TOffset {gameTOffset}");
+							   Log(ServerTime().ToString("u"));
+							   ppss = jso.GetAsInt("ppss");
+							   Player.myName = jso.GetString("player");
+							   if (Player.subOwner == null)
+								   Player.subOwner = Player.myName;
+							   Player.activeId = Player.myId = jso.GetAsInt("pid"); ;
+							   Player.myIds.Add(Player.myId);
+							   var cid = jso.GetAsInt("cid");
+							   City.build = City.focus = cid;
+							   NavStack.Push(cid);
+							   AGame.cameraC = cid.CidToWorldV();
+							   //Note.L("cid=" + cid.CidToString());
+							   gameMSAtStart = jso.GetAsInt64("time");
+							   launchTime = DateTimeOffset.UtcNow;
+							   //    Log(jsVars.ToString());
+							   //  SettingsPage.secSessionId = jso.GetAsString("s");
+							   //		AGame.clientTL.X = jso.GetAsFloat("left");
+							   //  AGame.clientTL.Y = jso.GetAsFloat("top");
+							   //   Log($"WebClient:{AGame.clientTL} {ShellPage.webclientSpan.y}");
+							   //     Note.Show($" {clientSpanX}:{clientSpanY} {ShellPage.clientTL} ");
+							   gotCreds = true;
+							   //			   spanX = jso.GetAsInt("spanX");
+							   //			   spanY = jso.GetAsInt("spanY");
+							   //			   Note.Show($"ClientSpan: {spanX}x{spanY}");
+							   //    Log($"Built heades {httpClient.DefaultRequestHeaders.ToString() }");
+
+							   //   UpdatePPDT(jso.GetProperty("ppdt"));
+							   var ppdt = jso.GetProperty("ppdt");
+									// todo: utf
+									AddPlayer(true, true, Player.myId, Player.myName, token, raidSecret);//, s, ppdt.ToString());
 
 
-								   BuildQueue.Initialize();
+							   UpdatePPDT(ppdt, Player.myId, pruneCities: true);
+							   if (Player.isAvatarOrTest)
+								   Raid.test = true;
+							   World.RunWhenLoaded(() => App.DispatchOnUIThreadSneakyLow(Spot.UpdateFocusText));
+
+
+							   BuildQueue.Initialize();
+							   App.DispatchOnUIThreadLow(() =>
+							   {
+							   ShellPage.instance.coords.Text = cid.CidToString();
+								   ShellPage.instance.cookie.Visibility = Visibility.Collapsed;
+						   });
+
 								   break;
 							   }
 						   case "aexp":
@@ -2502,38 +2507,40 @@ private static async void ShowCouncillorsMissingDialog()
 							   }
 						   case "setglobals":
 							   {
-								   var jso = jsp.Value;
-								   var raidSecret = jso.GetString("secret");
-								   var pid = jso.GetInt("pid");
+								   Assert(false);
+								   //var jso = jsp.Value;
+								   //var raidSecret = jso.GetString("secret");
+								   //var pid = jso.GetInt("pid");
 
-								   pendingCookies = null;
-								   var pn = jso.GetString("pn");
-								   var ppdt = jso.GetProperty("ppdt");
-								   var token = jso.GetString("token");
-								   var s = jso.GetString("s");
-								   var cid = jso.GetAsInt("cid");
-								   AddPlayer(false, true, pid, pn, token, raidSecret, s, ppdt.ToString());
+								   //pendingCookies = null;
+								   //var pn = jso.GetString("pn");
+								   //var ppdt = jso.GetProperty("ppdt");
+								   //var token = jso.GetString("token");
+								   //var s = jso.GetString("s");
+								   //var cid = jso.GetAsInt("cid");
+								   //AddPlayer(false, true, pid, pn, token, raidSecret, s, ppdt.ToString());
 
-								   var city = City.GetOrAdd(cid);
-								   // If they are visiting somene elses city we don't want to be directed there
-								   // so we go to the default city
-								   UpdatePPDT(ppdt, pid,updateBuildCity:(city.pid != pid) ); 
+								   //var city = City.GetOrAdd(cid);
+								   //// If they are visiting somene elses city we don't want to be directed there
+								   //// so we go to the default city
+								   //UpdatePPDT(ppdt, pid,updateBuildCity:(city.pid != pid) ); 
 								   
-								   if (city.pid == pid) // we want ot visit a specific city
-								   {
-									  CitySwitch(cid,true);
-								   }
-								   City.CitiesChanged();
+								   //if (city.pid == pid) // we want ot visit a specific city
+								   //{
+									  //CitySwitch(cid,true);
+								   //}
+								   //City.CitiesChanged();
 								   break;
 							   }
 						   case "restoreglobals":
 						   {
-								   Note.Show("Cookies failed, maybe they need to log in again to refresh cookies?");
-								   // only need to restore cookies
-								   CookieDB.Apply(jsVars.cookies);
-								   pendingCookies = null;
+								   Assert(false);
+								   //Note.Show("Cookies failed, maybe they need to log in again to refresh cookies?");
+								   //// only need to restore cookies
+								   //CookieDB.Apply(jsVars.cookies);
+								   //pendingCookies = null;
 
-								   App.DispatchOnUIThreadSneaky(() => ShellPage.instance.friendListBox.SelectedItem = Player.activePlayerName);
+								   //App.DispatchOnUIThreadSneaky(() => ShellPage.instance.friendListBox.SelectedItem = Player.activePlayerName);
 
 								   break;
 						   }
@@ -2651,7 +2658,7 @@ private static async void ShowCouncillorsMissingDialog()
 					   }
 
 					   // 
-					   Friend.LoadAll();
+					  // Friend.LoadAll();
 
 					   App.state = App.State.active;
 					   CnVDiscord.Discord.Initialize();

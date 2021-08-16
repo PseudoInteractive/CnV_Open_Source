@@ -1,4 +1,4 @@
-﻿7### 2021/2/12
+﻿### 2021/2/12
  - **Fix** Ports and Shipyards work with layouts
  - **New** Clicking on the top border of the chat tab allows you to toggle between predefined sizes
  - **Fix** Castles issue warning on upgrade
@@ -269,4 +269,6 @@
        - Or on touch screen pinch it
        - Or on track pad either pinch the track pad or do a two finger scroll. I really don't know.
      - When done press F5 or refresh button and things will mostly adjust
-     
+### 2021/8/08
+     - **Fix**
+        - Attack Planner failed to load in release builds

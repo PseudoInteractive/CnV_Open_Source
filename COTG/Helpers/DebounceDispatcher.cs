@@ -64,6 +64,7 @@ namespace COTG
 					}
 				}
 				state = State.pending;
+			var next = Environment.TickCount + debounceDelay;
 				nextCall = nextCall.Max( Environment.TickCount + debounceDelay );
 				Task.Run(async () =>
 			   {

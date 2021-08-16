@@ -6,7 +6,7 @@ using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading;
-
+//using NetFabric.Hyperlinq; 
 using Color = Microsoft.Xna.Framework.Color;
 
 namespace COTG
@@ -26,7 +26,7 @@ namespace COTG
 		public const string defaultDateFormat = "MM/dd HH':'mm':'ss";
 
 		public const string preciseDateTimeFormat = "yyyy-MM-dd HH':'mm':'ss.fff";
-		// public const string preciseDateTimeFormat = "MM/dd H':'mm':'ss.fff";
+		// public const string preciseDateTimeFormat = "MM/dd HH':'mm':'ss.fff";
 
 		public const string fullDateFormat = "yyyy/MM/dd HH':'mm':'ss";
 		public const string raidDateTimeFormat = "MM/dd/yyyy HH':'mm':'ss";
@@ -39,7 +39,17 @@ namespace COTG
 			me.CopyTo(i.Span);
 			return i;
 		}
-
+		public static string FirstCharToUpper(this string s)
+		{
+			// Check for empty string.  
+			if (string.IsNullOrEmpty(s) || !(s[0] >= 'a' && s[0] <= 'z'))
+			{
+				return s;
+			}
+			// Return char and concat substring.  
+			return (char)(s[0] + ('A'-'a')) + s.Substring(1);
+		}
+		public static T PickRandom<T>(this T[] array) => array[AMath.random.Next(array.Length)];
 		// public static MemoryOwner<T> AsMemoryOwner<T>(this SpanOwner<T> me) =>
 		// AsMemoryOwner<T>((ReadOnlySpan<T>)me.Span); public static MemoryOwner<T>
 		// AsMemoryOwner<T>(this Span<T> me) => AsMemoryOwner<T>((ReadOnlySpan<T>)me);
@@ -156,9 +166,10 @@ namespace COTG
 			}
 		}
 
-		public static string fileTimeFormat = "yyyy_MM_dd_H_mm_ss";
+		public static string fileTimeFormat = "yyyy_MM_dd_HH_mm_ss";
+		public static string fileTimeFormatMinute = "yyyy_MM_dd_HH_mm";
 		public static string FormatFileTime(this DateTimeOffset m) => m.ToString(fileTimeFormat, CultureInfo.InvariantCulture);
-		public static DateTimeOffset ParseFileTime(this string s) => DateTimeOffset.ParseExact(s,fileTimeFormat, CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal);
+		public static string FormatFileTimeToMinute(this DateTimeOffset m) => m.ToString(fileTimeFormatMinute, CultureInfo.InvariantCulture); public static DateTimeOffset ParseFileTime(this string s) => DateTimeOffset.ParseExact(s,fileTimeFormat, CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal);
 
 
 		public static string Format(this TimeSpan t)
@@ -206,8 +217,8 @@ namespace COTG
 			}
 		}
 
-
-
+		public static string FormatDateForFileName(this DateTimeOffset m)=>	m.ToString("yyyy_MM_dd", CultureInfo.InvariantCulture);
+	
 		public static string FormatFull(this DateTimeOffset m) => m.ToString(fullDateFormat, CultureInfo.InvariantCulture);
 
 		public static TimeSpan localTimeOffset = TimeZoneInfo.Local.BaseUtcOffset;
@@ -369,6 +380,7 @@ namespace COTG
 			}
 			return result;
 		}
+//		public static T[] RemoveAll<T>(this T[] l, Func<T, bool> pred) => l.Where(pred).ToArray();
 
 		public static T[] ArrayClone<T>(this T[] l)
 		{
@@ -473,14 +485,43 @@ namespace COTG
 		public static Regex coordsRegex = new Regex(@":*\b\d{2,3}:\d{2,3}\b:*", RegexOptions.CultureInvariant | RegexOptions.Compiled);
 		public static Regex coordsRegex2 = new Regex(@"[^:]?\b(\d{2,3}:\d{2,3})\b[^:]?", RegexOptions.CultureInvariant | RegexOptions.Compiled);
 		public static Regex coordsRegexAny = new Regex(@"(?:[^\d]|^)?(\d{2,3}:\d{2,3})(?:[^\d]|$)", RegexOptions.CultureInvariant | RegexOptions.Compiled);
+		static Regex regexEndNumber = new Regex(@"([0-9|A-F]+)$", RegexOptions.CultureInvariant | RegexOptions.Compiled);
+		public static string IncrementVersion(this string s)
+		{
+			var i = regexEndNumber.Match(s);
+			if (i.Success && i.Groups.Count > 1)
+			{
+				var g = i.Groups[1];
+				if (int.TryParse(g.Value, NumberStyles.HexNumber, NumberFormatInfo.InvariantInfo, out var v))
+				{
+					return i.Result(@"$`" + (v + 1).ToString("X"));
+				}
+			}
+			return s+(AMath.random.Next(0x10)).ToString("X");
+		}
 
+
+		public static string ReplaceInvalidFileNameChars(string fileName, char newValue = '_' )
+		{
+			var invalid = System.IO.Path.GetInvalidFileNameChars();
+
+			char[] chars = fileName.ToCharArray();
+			for (int i = 0; i < chars.Length; i++)
+			{
+				char c = chars[i];
+				if (invalid.Contains(c))
+					chars[i] = newValue;
+			}
+
+			return new string(chars);
+		}
 
 	}
 
-	public class SemaFrame
-	{
-		private readonly SemaphoreSlim mySema;
-	}
+	//public class SemaFrame
+	//{
+	//	private readonly SemaphoreSlim mySema;
+	//}
 
 	public class ConcurrentHashSet<T> : IDisposable
 	{

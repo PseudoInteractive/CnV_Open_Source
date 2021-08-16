@@ -16,7 +16,7 @@ namespace CnVDiscord
 {
     class Utils
     {
-        static IDbConnection database;
+//        static IDbConnection database;
         public Utils()
         {
         }

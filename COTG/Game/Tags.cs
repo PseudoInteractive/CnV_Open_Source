@@ -18,12 +18,14 @@ namespace COTG.Game
 	[Flags]
 	public  enum Tags 
 	{
-		RT= 1 << Enum.ttRanger,
+		// Ones with more than 1 flag should come first
+		VRT = (1 << Enum.ttRanger) | (1 << Enum.ttTriari) | (1 << Enum.ttVanquisher),
+		RT = (1 << Enum.ttRanger)| (1 << Enum.ttTriari),
+		VT = (1 << Enum.ttVanquisher) | (1 << Enum.ttTriari),
 		[IsAlias]
 		ranger=RT,
 		[IsAlias]
-		triari=RT,
-		VT = 1 << Enum.ttTriari,
+		triari=RT, // todo: fix this
 		Vanq = 1 << Enum.ttVanquisher,
 		[IsAlias]
 		Vanquisher = Vanq,
@@ -67,12 +69,12 @@ namespace COTG.Game
 		LeaveMe = 1 << 23,
 		Storage = 1<< 24,
 		Transport = 1 << 25,
-		VRT = 1 << 26,
-
+		[IsAlias] 
+		TroopTypeMask = (1<<ttCount)-1,
 		// meta tags
 		// mine, alliance enemy other
 	}
-	public struct TagInfo
+	public struct TagInfo : IEquatable<TagInfo>
 	{
 		public Tags v;
 		public string s;
@@ -81,13 +83,17 @@ namespace COTG.Game
 
 		public readonly override bool Equals(object obj)
 		{
-			return obj is TagInfo info &&
-				   s == info.s;
+			return obj is TagInfo info &&(this == info);
 		}
 
 		public readonly override int GetHashCode()
 		{
 			return HashCode.Combine(s);
+		}
+
+		public bool Equals(TagInfo other)
+		{
+			return v == other.v && isAlias == other.isAlias && s == other.s;
 		}
 
 		public static bool operator ==(TagInfo left, TagInfo right)
@@ -104,38 +110,39 @@ namespace COTG.Game
 	public static class TagHelper
 	{
 		public static TagInfo Get(this Tags tag) => new TagInfo() { v = tag, s = tag.AsString() };
+		public static Tags Troops(this Tags tag) => tag & Tags.TroopTypeMask;
 		//public static TagInfo tagLeaveMe = Get(Tags.LeaveMe);
-		public static Tags FromTroopType(byte troopType)
+		public static Tags FromTroopType(byte troopType, Tags baseTags)
 		{
+			baseTags &= ~Tags.TroopTypeMask;
 			switch(troopType)
 			{
-				case ttVanquisher: return Tags.Vanq;
+				case ttVanquisher: return baseTags|Tags.Vanq;
 				case ttTriari: 
-				case ttRanger:return Tags.RT;
-				case ttPriestess:  return Tags.Priest;
-				case ttSorcerer: return Tags.Sorc;
-				case ttScout: return Tags.Scout;
-				case ttHorseman: return Tags.Horse;
-				case ttArbalist: return Tags.Arb;
-				case ttPraetor: return Tags.Praetor;
-				case ttDruid: return Tags.Druid;
+				case ttRanger:return baseTags | Tags.RT;
+				case ttPriestess:  return baseTags | Tags.Priest;
+				case ttSorcerer: return baseTags | Tags.Sorc;
+				case ttScout: return baseTags | Tags.Scout;
+				case ttHorseman: return baseTags | Tags.Horse;
+				case ttArbalist: return baseTags | Tags.Arb;
+				case ttPraetor: return baseTags | Tags.Praetor;
+				case ttDruid: return baseTags | Tags.Druid;
 				case ttScorpion:
-				case ttRam: return Tags.Scorp;
-				case ttGalley: return Tags.Galley;
-				case ttStinger: return Tags.Stinger;
-				case ttWarship: return Tags.Warship;
-
-				default: return 0;
+				case ttRam: return baseTags | Tags.Scorp;
+				case ttGalley: return baseTags | Tags.Galley;
+				case ttStinger: return baseTags | Tags.Stinger;
+				case ttWarship: return baseTags | Tags.Warship;
+				default: return baseTags;
 			}
 		}
 
-		public static TagInfo[] tags;
+		public static TagInfo[] tagsWithoutAliases;
 		public static TagInfo[] tagsAndAliases;
 		static TagHelper()
 		{
 
-			var members = Enums.GetMembers<Tags>();
-			var count = members.Count;
+			var members = Enums.GetMembers<Tags>().OrderByDescending(a=>a).ToArray();
+			var count = members.Length;
 			var _tags = new List<TagInfo>();
 			tagsAndAliases = new TagInfo[count];
 
@@ -151,7 +158,8 @@ namespace COTG.Game
 				}
 		
 			}
-			tags = _tags.ToArray();
+			tagsWithoutAliases = _tags.ToArray();
+			//Assert(tagsWithoutAliases.IndexOf(Tags.VT) < tagsWithoutAliases.IndexOf(Tags.Vanquisher)); 
 			
 		}
 
@@ -193,15 +201,15 @@ namespace COTG.Game
 					sb.Append(i.word);
 				}
 			}
-			// append further tags
-			foreach(var t in tags)
+			// append tags not included
+			foreach(var t in tagsWithoutAliases)
 			{
 				if(ts.HasFlag(t.v))
 				{
 					if(!first)
 						sb.Append(" ");
 					first = false;
-
+					ts &= ~t.v; // remove it, no longer needed
 					sb.Append(t.s);
 				}
 

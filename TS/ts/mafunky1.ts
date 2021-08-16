@@ -114,7 +114,7 @@ function sendMail(to:string,subject:string,body:string) {
 		let __iframe = $('#mailBody_ifr');
 
 		__iframe.ready(function () {
-			__iframe.contents().find("body").append(body);
+			__iframe.contents().find("body").val(body);
 		});
 
 }

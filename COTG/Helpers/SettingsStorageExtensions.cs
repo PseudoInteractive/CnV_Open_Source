@@ -10,6 +10,7 @@ using System.Text.Json;
 using Windows.Foundation;
 using Windows.Storage.Compression;
 using System.Runtime.InteropServices.WindowsRuntime;
+using System.Text.RegularExpressions;
 
 namespace COTG.Helpers
 {
@@ -31,9 +32,12 @@ namespace COTG.Helpers
 
 			// don't block on this save
 			if (backup)
-				await SaveAsync<T>(folder, $"{name}___{JSClient.ServerTime().FormatFileTime()}___", content, false);
+				await SaveAsync<T>(folder, $"{name}___{JSClient.ServerTime().FormatFileTimeToMinute()}___", content, false);
 			await FileIO.WriteTextAsync(file, fileContent);
         }
+
+
+		public static Regex regexBackupDatePostFix = new Regex(@"__(?:_\d{1,4})*___", RegexOptions.CultureInvariant | RegexOptions.Compiled);
 
 		public static async Task SaveAsyncBackup<T>(this StorageFolder folder, string name, T content,string prior)
 		{
@@ -44,7 +48,7 @@ namespace COTG.Helpers
 
 			// don't block on this save
 			if(!prior.IsNullOrEmpty() )
-				await FileIO.WriteTextAsync(await folder.CreateFileAsync(GetFileName($"{name}___{JSClient.ServerTime().FormatFileTime()}___"), CreationCollisionOption.ReplaceExisting), prior);
+				await FileIO.WriteTextAsync(await folder.CreateFileAsync(GetFileName($"{name}___{JSClient.ServerTime().FormatFileTimeToMinute()}___"), CreationCollisionOption.ReplaceExisting), prior);
 	
 			var file = await folder.CreateFileAsync(GetFileName(name), CreationCollisionOption.ReplaceExisting);
 			await FileIO.WriteTextAsync(file, fileContent);

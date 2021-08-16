@@ -132,17 +132,10 @@ namespace COTG.Game
                                         var atkTS = b[9].GetAsInt();
                                         var defTS = b[10].GetAsInt();
                                         var attacker = Spot.GetOrAdd(atkCid);
-                                        if (attacker.isClassified)
-                                        {
-                                            var type = attacker.GetPrimaryTroopType(false);
+									    {
+                                            var type = attacker.TroopType;
 
 											Add( ref army.troops,new TroopTypeCount(type, atkTS / ttTs[type]));
-
-                                        }
-                                        else
-                                        {
-                                            attacker.QueueClassify(true);
-                                           Add(ref army.troops, new TroopTypeCount(Game.Enum.ttVanquisher, atkTS));
                                         }
                                         if (defTS > 0)
                                         {

@@ -37,7 +37,7 @@ namespace COTG.Views
 			if (instance == null)
 				new ContinentTagFilter();
 
-			foreach (var tag in TagHelper.tags)
+			foreach (var tag in TagHelper.tagsWithoutAliases)
 			{
 				var check = instance.tagsPanel.Children.FirstOrDefault((a) => a is ToggleButton b && b.Content as string == tag.s) as ToggleButton;
 				if (check == null)
@@ -71,7 +71,7 @@ namespace COTG.Views
 
 				Spot.tagFilter = default;
 				// Write back tags
-				foreach (var tag in TagHelper.tags)
+				foreach (var tag in TagHelper.tagsWithoutAliases)
 				{
 					var check = instance.tagsPanel.Children.FirstOrDefault((a) => a is ToggleButton b && b.Content as string == tag.s) as ToggleButton;
 					if (check != null)

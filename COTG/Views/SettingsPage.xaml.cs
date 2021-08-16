@@ -46,6 +46,7 @@ namespace COTG.Views
 		public static float tabZoom = 0.5f;
 		public static float chatZoom = 0.5f;
 		public static float htmlZoom = 0.25f;
+		public static string attackPlanName = "PlanB";
 		//private static bool _isLoggedIn;
 		//private static bool _isBusy;
 		public static float renderScale=1.0f;

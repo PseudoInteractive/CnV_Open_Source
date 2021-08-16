@@ -22,9 +22,9 @@
 		<Setter Property="FontSize" Value="{StaticResource MediumFontSize}" />
 		<Setter Property="IsTextScaleFactorEnabled" Value="False"/>
 	</Style>
-	<Style TargetType="tk:MarkdownTextBlock">
+	<!--<Style TargetType="tk:MarkdownTextBlock">
 		<Setter Property="LinkForeground" Value="{StaticResource HyperLinkBrush}" />
-	</Style>
+	</Style>-->
 	<Style TargetType="Page">
 		<Setter Property="FontFamily" Value="Tw Cen MT Condensed"/>
 		<Setter Property="IsTextScaleFactorEnabled" Value="False"/>
@@ -62,13 +62,13 @@
 	<Style TargetType="Border" x:Key="BorderReveal" >
         <Setter Property="BorderThickness" Value="1" />
 		<Setter Property="Margin" Value="2"/>
-		<Setter Property="Padding" Value="1"/>
+		<Setter Property="Padding" Value="4"/>
         <Setter Property="BorderBrush" Value="{ThemeResource SystemControlBackgroundBaseLowRevealBorderBrush}"/>
     </Style>
 	<Style TargetType="StackPanel" x:Key="StackPanelReveal" >
         <Setter Property="BorderThickness" Value="1" />
 		<Setter Property="Margin" Value="4"/>
-		<Setter Property="Padding" Value="1"/>
+		<Setter Property="Padding" Value="4"/>
         <Setter Property="BorderBrush" Value="{ThemeResource SystemControlBackgroundBaseLowRevealBorderBrush}"/>
     </Style>
 	<Style TargetType="tk:Expander">
@@ -76,11 +76,15 @@
 		<Setter Property="Margin" Value="4" />
 		<Setter Property="BorderBrush" Value="{ThemeResource SystemControlBackgroundBaseLowRevealBorderBrush}"/>
 	</Style>
+	<Style TargetType="TextBox">
+		<Setter Property="FontFamily" Value="Tw Cen MT Condensed"/>
+		<Setter Property="FontSize" Value="{StaticResource MediumFontSize}" />
+		<Setter Property="BorderBrush" Value="{ThemeResource SystemControlBackgroundBaseLowRevealBorderBrush}"/>
+	</Style>
 	<Style TargetType="TextBox" x:Key="TextBoxReveal" >
-        <Setter Property="BorderThickness" Value="1" />
-		<Setter Property="Margin" Value="3"/>
-		<Setter Property="Padding" Value="1"/>
-        <Setter Property="BorderBrush" Value="{ThemeResource SystemControlBackgroundBaseLowRevealBorderBrush}"/>
+		<Setter Property="FontFamily" Value="Tw Cen MT Condensed"/>
+		<Setter Property="FontSize" Value="{StaticResource MediumFontSize}" />
+		<Setter Property="BorderBrush" Value="{ThemeResource SystemControlBackgroundBaseLowRevealBorderBrush}"/>
     </Style>
     <Style x:Key="TextBlockSmall" TargetType="TextBlock">
         <Setter Property="FontFamily" Value="Tw Cen MT Condensed"/>
@@ -248,7 +252,22 @@
         <Setter Property="HorizontalAlignment"
                         Value="Left" />
     </Style>
-    <converter:DateTimeConverter x:Key="DateTimeConverter" />
+	<Style TargetType="tk:DataGrid">
+		<Setter Property="RowHeight" Value="{StaticResource ShortGridRowHeight}" />
+		<Setter Property="FontFamily" Value="Tw Cen MT Condensed" />
+		<Setter Property="FontSize" Value="{StaticResource SmallFontSize}" />
+		<Setter Property="RowStyle" Value="{StaticResource DataGridRowStyle}" />
+		<Setter Property="RowHeaderStyle" Value="{StaticResource DataGridColumnHeaderStyle}"/>
+		<Setter Property="FontStretch" Value="Condensed" />
+		<Setter Property="CanUserSortColumns" Value="True" />
+		<Setter Property="SelectionMode" Value="Extended" />
+		<Setter Property="CanUserReorderColumns" Value="True" />
+		<Setter Property="CanUserResizeColumns" Value="True" />
+		<Setter Property="GridLinesVisibility" Value="All" />
+		<Setter Property="ClipboardCopyMode" Value="IncludeHeader"/>
+		<Setter Property="AlternatingRowBackground" Value="#FF200020" />
+	</Style>
+	<converter:DateTimeConverter x:Key="DateTimeConverter" />
     <converter:IntConverter x:Key="IntConverter" />
 	<converter:TimeConverter x:Key="TimeConverter" />
 	<converter:FloatConverter x:Key="FloatConverter" />

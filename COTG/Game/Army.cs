@@ -253,14 +253,14 @@ namespace COTG.Game
 			return refines * 1000 / 160;
 		}
 	}
-	public sealed class OutgoingAttack
-	{
-		DateTimeOffset departs;
-		DateTimeOffset arrives;
-		int id;
-		string desc;
-		int targetCid;
-	}
+	//public sealed class OutgoingAttack
+	//{
+	//	DateTimeOffset departs;
+	//	DateTimeOffset arrives;
+	//	int id;
+	//	string desc;
+	//	int targetCid;
+	//}
 	[StructLayout(LayoutKind.Sequential)]
 	public struct TroopTypeCounts 
 	{

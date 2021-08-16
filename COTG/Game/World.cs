@@ -1293,7 +1293,7 @@ namespace COTG.Game
 		//	ContinentsSnapshot.all = await ApplicationData.Current.LocalFolder.ReadAsync("continentHistory", ContinentsSnapshot.all);
 
 		//}
-		public static (string label, bool isMine, bool hasIncoming, bool hovered, Spot spot) GetLabel((int x, int y) c)
+		public static (string label, bool isMine, bool hasIncoming, bool hovered, City spot) GetLabel((int x, int y) c)
 		{
 			var data = GetInfo(c);
 			switch (data.type)

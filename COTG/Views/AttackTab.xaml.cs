@@ -27,21 +27,23 @@ using Windows.UI.Xaml.Input;
 using static COTG.Debug;
 using static COTG.Game.AttackPlan;
 using static COTG.Game.Enum;
+using System.Linq;
+
 namespace COTG.Views
 {
 
 	public sealed partial class AttackTab : UserTab, INotifyPropertyChanged
     {
 		public static AsyncLock asyncLock = new ();
-		public static StorageFolder folder => ApplicationData.Current.LocalFolder;
-        public static AttackTab instance;
+		public static StorageFolder folder;
+		public static AttackTab instance;
 		
         public static bool IsVisible() => instance.isVisible;
 
         public static DumbCollection<City> attacksUI = new ();
         public static DumbCollection<City> targetsUI = new ();
-		public static ImmutableArray<AttackPlanCity> attacks => AttackPlan.plan.attacks;
-		public static ImmutableArray<AttackPlanCity> targets => AttackPlan.plan.targets;
+		public static AttackPlanCity[] attacks => AttackPlan.plan.attacks;
+		public static AttackPlanCity[] targets => AttackPlan.plan.targets;
 		
 		public AttackTab()
         {
@@ -246,7 +248,7 @@ namespace COTG.Views
 			switch (tag)
 			{
 				case "ts": comparer = (a, b) => a.tsTotal.CompareTo(b.tsTotal); break;
-				case nameof(City.classification): comparer = (a, b) => a.classification.CompareTo(b.classification); break;
+				case "Intel": comparer = (a, b) => a.TroopType.CompareTo(b.TroopType); break;
 				case "name": comparer = (a, b) => b.nameAndRemarks.CompareTo(a.nameAndRemarks); break;
 				case nameof(City.attackCluster): comparer = (a, b) => b.attackCluster.CompareTo(a.attackCluster); break;
 				case nameof(City.attackType): comparer = (a, b) => b.attackType.CompareTo(a.attackType); break;
@@ -309,7 +311,7 @@ namespace COTG.Views
 
 
 
-		private static void SyncList(ImmutableArray<AttackPlanCity> s,DumbCollection<City> ui)
+		private static void SyncList(AttackPlanCity[] s,DumbCollection<City> ui)
 		{
 			int iter = ui.Count;
 			while (--iter >= 0)
@@ -380,16 +382,18 @@ namespace COTG.Views
         {
             App.DispatchOnUIThreadSneakyLow(() =>
             {
-               var attacks = plan.attacks.Where(a => a.attackType != AttackType.none).ToArray();
+				planName.Text = SettingsPage.attackPlanName;
+
+				var attacks = plan.attacks.Where(a => a.attackType != AttackType.none).ToArray();
 				var targets =plan.targets.Where(a => a.attackType != AttackType.none).ToArray();
 
 				attackCount.Text = $"Attacks: {attacks.Length}";
 				var seCount = attacks.Count((a) => a.attackType ==AttackType.se);
                 SE.Text=$"SE: {seCount}";
 				sen.Text = $"Sen: {attacks.Count((a) => a.attackType==AttackType.senator) }";
-				vanqs.Text=$"Vanqs: {attacks.Count((a) => a.city.primaryTroopType==ttVanquisher)}";
-                sorcs.Text=$"Sorc: {attacks.Count((a) => a.city.primaryTroopType==ttSorcerer)}";
-                horses.Text=$"Horse: {attacks.Count((a) => a.city.primaryTroopType==ttHorseman)}";
+				vanqs.Text=$"Vanqs: {attacks.Count((a) => a.city.TroopType==ttVanquisher)}";
+                sorcs.Text=$"Sorc: {attacks.Count((a) => a.city.TroopType==ttSorcerer)}";
+                horses.Text=$"Horse: {attacks.Count((a) => a.city.TroopType==ttHorseman)}";
                 var fakes = targets.Count(a => a.isAttackTypeFake );
                 var senSieges =  targets.Count(a=> a.isAttackTypeSenator );
 				var seSieges = targets.Count(a => a.isAttackTypeSE );
@@ -405,12 +409,12 @@ namespace COTG.Views
 
 			});
         }
-		static string attacksFile => "attacks" + JSClient.world.ToString();
+//		static string attacksFile => $"attackPlans{JSClient.world.ToString()}\\attacks";
 		internal static Task SaveAttacks()
 		{
 			if (loaded)
 			{
-				return folder.SaveAsyncBackup(attacksFile, plan,lastSave);
+				return folder.SaveAsyncBackup(SettingsPage.attackPlanName, plan,lastSave);
 			}
 			return Task.CompletedTask;
 		}
@@ -435,13 +439,17 @@ namespace COTG.Views
         {
 			// First init
 			//  AttackTab.attacks.Clear();
-			var rv = await asyncLock.LockAsync();
+			using var rv = await asyncLock.LockAsync();
 
 			if (!loaded)
             {
+				folder = await ApplicationData.Current.LocalFolder.CreateFolderAsync("attacks", CreationCollisionOption.OpenIfExists);
 
-                using var work = new ShellPage.WorkScope("load attacks");
-                (plan,lastSave) = await folder.ReadAsyncForBackup<AttackPlan>(attacksFile, plan);
+				using var work = new ShellPage.WorkScope("load attacks");
+				(plan,lastSave) = await folder.ReadAsyncForBackup<AttackPlan>(SettingsPage.attackPlanName, plan);
+				// if we just loaded a backup, strip the backup info from the name
+				SettingsPage.attackPlanName = SettingsStorageExtensions.regexBackupDatePostFix.Replace(SettingsPage.attackPlanName,"");
+
 				// App.DispatchOnUIThreadSneaky(() =>
 				//  {
 				var attacks = new List<City>();
@@ -462,7 +470,7 @@ namespace COTG.Views
 
                     }
                 }
-
+				Note.Show($"Loaded {plan.attacks.Length} attackers, {plan.targets.Length} targets");
 				SyncUIGrids();// AttackTab.attacksUI.Set(attacks);
 				//AttackTab.targetsUI.Set(targets);
                 //});
@@ -554,53 +562,46 @@ namespace COTG.Views
             {
                 if (removeAttacks.IsChecked.GetValueOrDefault())
                 {
-                    var temp = new List<City>();
-                    foreach (var sel in attackGrid.SelectedItems)
-                    {
-                        temp.Add(sel as City);
-                    }
-					plan.attacks = plan.attacks.RemoveAll(a => temp.Any(c => c.cid == a.cid));
+					var temp = attackGrid.SelectedItems.CityListToCids();
+					plan.attacks = plan.attacks.Where(a => !temp.Contains(a.cid)).ToArray();
                 }
                 if (removeTargets.IsChecked.GetValueOrDefault())
-                {
-                    var temp = new List<City>();
-                    foreach (var sel in targetGrid.SelectedItems)
-                    {
-                        temp.Add(sel as City);
-                    }
-					plan.targets = plan.targets.RemoveAll(a => temp.Any(c => c.cid == a.cid));
-                }
+				{
+					var temp = targetGrid.SelectedItems.CityListToCids();
+					plan.targets = plan.targets.Where(a => !temp.Contains(a.cid)).ToArray();
+				}
 				SyncUIGrids();
                 WritebackAttacks();
 			}
         }
 
+
 		//public async void AddAttacksFromSheets(object sender, RoutedEventArgs e)
-  //      {
+		//      {
 		//	try
 		//	{
 		//		var text = await App.GetClipboardText();
 		//		await AddAttacksFromString(text);
 		//	}
 		//	catch (Exception ex)
-  //          {
-  //              LogEx(ex);
-  //              Note.Show("Invalid format");
+		//          {
+		//              LogEx(ex);
+		//              Note.Show("Invalid format");
 
-  //          }
+		//          }
 
 
-  //      }
+		//      }
 
-//		static Regex regexSen = new Regex(@"\b(?:sen|senator|academy)\b", RegexOptions.Compiled);
-		static Regex regexSE = new Regex(@"\b(?:se|cat|catapult|scorp|scorpion)s?\b", RegexOptions.Compiled);
+		//		static Regex regexSen = new Regex(@"\b(?:sen|senator|academy)\b", RegexOptions.CultureInvariant|RegexOptions.Compiled);
+		static Regex regexSE = new Regex(@"\b(?:se|cat|catapult|scorp|scorpion)s?\b", RegexOptions.CultureInvariant | RegexOptions.Compiled);
 //		static Regex regexHorse = new Regex(@"\b(?:horse|knight)s?\b", RegexOptions.Compiled);
 //		static Regex regexVanq1 = new Regex(@"\b(?:van|vanq|vanquisher)s?\b", RegexOptions.Compiled);
-		static Regex regexVanq1 = new Regex(@"\bv\b", RegexOptions.Compiled);
-		static Regex regexHorse1 = new Regex(@"\b(?:h|k)\b", RegexOptions.Compiled);
-		static Regex regexSorc1 = new Regex(@"\b(?:s|m)\b", RegexOptions.Compiled);
-		static Regex regexDruid = new Regex(@"\bd\b", RegexOptions.Compiled);
-		static Regex regexPrae= new Regex(@"\bp\b", RegexOptions.Compiled);
+		static Regex regexVanq1 = new Regex(@"\bv\b", RegexOptions.CultureInvariant|RegexOptions.Compiled);
+		static Regex regexHorse1 = new Regex(@"\b(?:h|k)\b", RegexOptions.CultureInvariant|RegexOptions.Compiled);
+		static Regex regexSorc1 = new Regex(@"\b(?:s|m)\b", RegexOptions.CultureInvariant|RegexOptions.Compiled);
+		static Regex regexDruid = new Regex(@"\bd\b", RegexOptions.CultureInvariant|RegexOptions.Compiled);
+		static Regex regexPrae= new Regex(@"\bp\b", RegexOptions.CultureInvariant|RegexOptions.Compiled);
 
 		public static void FindTags(string s , out byte? troopType,out bool hasAcademy )
 		{
@@ -738,7 +739,7 @@ namespace COTG.Views
 					if (isNew || ((troopType.HasValue || atk.attackType == AttackType.none) && updateExisting))
 					{
 						// academy may be overriden for the purpose of attack type
-						AttackPlan.AddOrUpdate(new(atk, atk.classification == City.Classification.se ? AttackType.se : (hasAcademy ? AttackType.senator : AttackType.assault),atk.primaryTroopType ));
+						AttackPlan.AddOrUpdate(new(atk, atk.classification == City.Classification.se ? AttackType.se : (hasAcademy ? AttackType.senator : AttackType.assault),atk.TroopType ));
 					}
 				}
 				Note.Show($"Added {attacks.Length - prior}, updated {duplicates}");
@@ -870,7 +871,7 @@ namespace COTG.Views
 					if (!present || attackType.update)
 					{
 						await spot.Classify();
-						AttackPlan.AddOrUpdate(new(spot, attackType.atk,spot.primaryTroopType));
+						AttackPlan.AddOrUpdate(new(spot, attackType.atk,spot.TroopType));
 					}
 						if (present)
 						{
@@ -1027,8 +1028,8 @@ namespace COTG.Views
         private void SortAttacks()
         {
 			//		using var _ = await TouchLists();
-			plan.attacks = plan.attacks.OrderBy(a => a.city.playerName).ThenBy(a => a.attackCluster).ToImmutableArray();
-			plan.targets = plan.targets.OrderBy(a => a.city.playerName).ThenBy(a => a.attackCluster).ToImmutableArray(); 
+			plan.attacks = plan.attacks.OrderBy(a => a.city.playerName).ThenBy(a => a.attackCluster).ToArray();
+			plan.targets = plan.targets.OrderBy(a => a.city.playerName).ThenBy(a => a.attackCluster).ToArray(); 
           //  attacks.NotifyReset();
            // targets.NotifyReset();
             WritebackAttacks();
@@ -1908,15 +1909,26 @@ namespace COTG.Views
         }
 
         private async void ArrivalSETapped(object sender, RoutedEventArgs e)
-        {
-            (var dateTime, var okay) = await DateTimePicker.ShowAsync("Send SE At", seTime);
-            if (okay)
-            {
+		{
+			await ShowSETimePicker();
+		}
+
+		private static async Task ShowSETimePicker()
+		{
+			(var dateTime, var okay) = await DateTimePicker.ShowAsync("Send SE At", seTime);
+			if (okay)
+			{
 				seTime = dateTime;
 				UpdateArrivalUI();
 			}
-        }
+		}
+
 		private async void ArrivalSenTapped(object sender, RoutedEventArgs e)
+		{
+			await ShowSenTimePicker();
+		}
+
+		private static async Task ShowSenTimePicker()
 		{
 			(var dateTime, var okay) = await DateTimePicker.ShowAsync("Send Sen At", senTime);
 			if (okay)
@@ -1927,11 +1939,11 @@ namespace COTG.Views
 		}
 
 		//private void ClearTargets_Click(object sender, RoutedEventArgs e)
-  //      {
-  //          CleanTargets();
-  //          attacks.NotifyReset();
+		//      {
+		//          CleanTargets();
+		//          attacks.NotifyReset();
 		//	attackClusters= Array.Empty<AttackCluster>();
-  //      }
+		//      }
 
 		private void SelectTargets(object sender, RoutedEventArgs e)
 		{
@@ -2056,10 +2068,132 @@ namespace COTG.Views
 			
 		private void Player_Tapped(object sender, TappedRoutedEventArgs e)
 		{
-			var i = sender as FrameworkElement;
-			var city = i.DataContext as City;
-			JSClient.view.InvokeScriptAsync("sendmail", new string[] { city.playerName, "test", playerCommands[city.pid].Replace("<", "&lt;").Replace(">", "&gt;").Replace("\n", "&#10;") });
+			try
+			{
+				var i = sender as FrameworkElement;
+				var city = i.DataContext as City;
+				JSClient.view.InvokeScriptAsync("sendmail", new string[] { city.playerName, SettingsPage.attackPlanName + " " + plan.attackTime.FormatDateForFileName(), playerCommands[city.pid].Replace("<", "&lt;").Replace(">", "&gt;").Replace("\n", "&#10;&#13;") });
+			}
+			catch(Exception ex)
+			{
+				Note.Show("Might need to create Plan first?");
+				Log(ex);
+			}
+		}
+
+		private async void AddSelected(object sender, RoutedEventArgs e)
+		{
+			var sel = Spot.GetSelectedForContextMenu(0, false);
+			AttackType enemy = AttackType.invalid;
+			AttackType friend = AttackType.invalid;
+			foreach(var cid in sel)
+			{
+				var city = new AttackPlanCity(cid);
+				if(Alliance.IsAllyOrNap(cid))
+				{
+					if(friend==AttackType.invalid)
+					{
+						friend = await ChooseAttackerType();
+					}
+					if (friend == AttackType.none)
+						break;
+					city.attackType = friend;
+
+				}
+				else
+				{
+					if (enemy == AttackType.invalid)
+					{
+						(enemy,_) = await ChooseTargetType(false);
+					}
+					city.attackType =enemy;
+					if (enemy == AttackType.none)
+						break;
+
+				}
+
+				AttackPlan.AddOrUpdate(city);
+			}
+
+			SyncUIGrids();
+			WritebackAttacks();
+		}
+
+		static string[] planSynonyms = { "scheme", "plan", "proposal", "proposition", "ploy", "project", "procedure", "strategy", "stratagem", "formula", "recipe", "scenario", "agenda", "way", "maneuver", "ruse" };
+		static string [] attackSynonyms =	{"scheme","plan", "proposal", "proposition", "project", "procedure","strategy","attack","scenario","agenda","cue","maneuver" ,"ruse" };
+		static string [] goodSynonyms =
+		{
+			"quality","superior","satisfactory","acceptable","adequate","not bad","all right","excellent","superb","outstanding","magnificent","highest quality","exceptional","marvelous","wonderful","first-rate","first-class","superlative","splendid","admirable","worthy","sterling","super","great","OK","hunky-dory","A1","ace","terrific","tremendous","smashing","fantastic","fab","supercalifragilisticexpialidocious","top-notch","tip-top","class","awesome","magic","wicked","brilliant","brill","bosting","on fleek","beaut","bonzer","spiffing","ripping","cracking","wizard","champion","swell","delicious","mouthwatering","appetizing","tasty","flavorsome","flavorful","delectable","toothsome","inviting","enjoyable","palatable","succulent","luscious","rich","sweet","savory","piquant","scrumptious","delish","scrummy","yummy","yum-yum","moreish","finger-licking","nummy","ambrosial","ambrosian","nectareous","nectarean","flavorous","sapid","valid","genuine","authentic","legitimate","sound","bona fide","convincing","persuasive","forceful","striking","telling","potent","powerful","cogent","compelling","trenchant","important"
+	};
+
+		private void NewPlanClick0(object sender, RoutedEventArgs e)
+		{
+			SaveAttacks();
+			newPlanName.Text =  goodSynonyms.PickRandom().FirstCharToUpper() + " " +attackSynonyms.PickRandom().FirstCharToUpper();
+			OnPropertyChanged();
+//			plan.name = "None";
+		}
+
+		private async void NewPlanClick1(object sender, RoutedEventArgs e)
+		{
+
+			HideMe0.Hide();
+			using var _ = await TouchLists();
+			SettingsPage.attackPlanName = newPlanName.Text;
+			plan.attacks = Array.Empty<AttackPlanCity>();
+			plan.targets = Array.Empty<AttackPlanCity>();
+
+			await ShowSenTimePicker();
+			seTime = senTime + TimeSpan.FromHours(2);
+			await ShowSETimePicker();
+
+
+			SyncUIGrids();
+			WritebackAttacks();
 
 		}
+
+		private async void OpenPlanClick0(object sender, RoutedEventArgs e)
+		{
+
+			var query = folder.CreateFileQuery();// WithOptions(new Windows.Storage.Search.QueryOptions(Windows.Storage.Search.CommonFileQuery.OrderByDate, new[] { ".json" }));
+			var files = await query.GetFilesAsync();
+			openListView.ItemsSource = files.OrderByDescending(f=>f.DateCreated); 
+
+		}
+
+		private async void OpenPlanClick1(object sender, ItemClickEventArgs e)
+		{
+			HideMe1.Hide();
+			var sel = e.ClickedItem;
+			Log(sel);
+			if(sel is StorageFile file)
+			{
+				SettingsPage.attackPlanName = file.DisplayName;
+				Log(file.DisplayName);
+
+				// reload
+				loaded = false;
+				await TouchLists();
+				SettingsPage.SaveAll();
+
+			}
+			else
+			{
+				Assert(false);
+			}
+
+		}
+
 	}
+	class TroopTypeItemSource
+	{
+		public byte TroopType { get; set; }
+		public string name { get; set; }
+
+		public override string ToString() => name;
+
+		public static TroopTypeItemSource[] all = Game.Enum.ttNameWithCaps.Select( (a,i) => new TroopTypeItemSource() { name = a, TroopType = (byte)i} ).ToArray();
+	}
+
 }

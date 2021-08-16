@@ -328,7 +328,7 @@ namespace COTG.Views
 		public void SetCheckboxesFromTags(string remarks)
 		{
 			var tags = TagHelper.Get(remarks);
-			foreach (var tag in TagHelper.tags)
+			foreach (var tag in TagHelper.tagsWithoutAliases)
 			{
 				var check = tagsPanel.Children.FirstOrDefault((a) => a is ToggleButton b && b.Content as string == tag.s) as ToggleButton;
 				if (check == null)
@@ -480,7 +480,7 @@ namespace COTG.Views
 		public Tags TagsFromCheckboxes()
 		{
 			Tags tags = default;
-			foreach (var tag in TagHelper.tags)
+			foreach (var tag in TagHelper.tagsWithoutAliases)
 			{
 
 				var check = tagsPanel.Children.First((ch) => (ch as ToggleButton)?.Content == tag.s) as ToggleButton;
@@ -577,21 +577,30 @@ namespace COTG.Views
 		//}
 		public override string ToString() => JsonSerializer.Serialize(this, Json.jsonSerializerOptions);
 
-		public static Regex squiggleBracketMatcher = new(@"[^()]*(?>(?>(?'open'\{)[^()]*)+(?>(?'-open'\})[^()]*)+)+(?(open)(?!))", RegexOptions.Compiled);
-
-
+//		public static Regex squiggleBracketMatcher = new(@"[^{}]*(?>(?>(?'open'\{)[^()]*)+(?>(?'-open'\})[^{}]*)+)+(?(open)(?!))", RegexOptions.CultureInvariant | RegexOptions.Compiled);
 
 		public ShareStringItem(string shareString)
 		{
 			try
 			{
 				var s = ShareString.SplitShareString(shareString);
+				//if(s.json.Contains("}{"))
+				//{
+				//	int q = 0;
+
+				//}
 				var json = s.json.Replace("&#34;", "\"");
-				var match = squiggleBracketMatcher.Match(json);
-				if( match.Captures.Count > 1 )
+				// massive hack!
+				var id = json.LastIndexOf('{');
+				if(id > 0)
 				{
-					int q = 0;
+					json = json.Substring(id);
 				}
+				//var match = squiggleBracketMatcher.Match(json);
+				//if( match.Captures.Count > 1 )
+				//{
+				//	int q = 0;
+				//}
 				var meta = JsonSerializer.Deserialize<ShareStringMeta>(json, Json.jsonSerializerOptions);
 				//	var path = ShareString.DecomposePath(meta.path);
 				Ctor(meta.path, meta.notes ?? string.Empty, meta.desc ?? string.Empty, s.ss ?? string.Empty, shareString);

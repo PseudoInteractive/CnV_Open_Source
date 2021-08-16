@@ -50,7 +50,7 @@
     </DocumentationFile>
     <UseDotNetNativeToolchain>false</UseDotNetNativeToolchain>
     <FileAlignment>2048</FileAlignment>
-    <CodeAnalysisRuleSet>ConcurrencyRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
     <Optimize>false</Optimize>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
@@ -71,8 +71,7 @@
     <WarningLevel>3</WarningLevel>
     <FileAlignment>4096</FileAlignment>
     <DebugSymbols>true</DebugSymbols>
-    <CodeAnalysisRuleSet>
-    </CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSet>ManagedMinimumRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup>
     <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
@@ -93,11 +92,8 @@
     <PackageReference Include="Microsoft.AppCenter.Crashes">
       <Version>4.3.0</Version>
     </PackageReference>
-    <PackageReference Include="Microsoft.DependencyValidation.Analyzers">
-      <Version>0.11.0</Version>
-    </PackageReference>
     <PackageReference Include="Microsoft.Extensions.Primitives">
-      <Version>6.0.0-preview.6.21352.12</Version>
+      <Version>6.0.0-preview.7.21377.19</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
       <Version>6.2.12</Version>
@@ -106,25 +102,28 @@
       <Version>10.1901.28001</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.Toolkit.Uwp">
-      <Version>7.0.2</Version>
+      <Version>7.1.0-preview1</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.Toolkit.Uwp.DeveloperTools">
-      <Version>7.0.2</Version>
+      <Version>7.1.0-preview1</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.Toolkit.Uwp.Notifications">
-      <Version>7.0.2</Version>
+      <Version>7.1.0-preview1</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.Toolkit.Uwp.UI">
-      <Version>7.0.2</Version>
+      <Version>7.1.0-preview1</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.Toolkit.Uwp.UI.Controls">
-      <Version>7.0.2</Version>
+      <Version>7.1.0-preview1</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.Toolkit.Uwp.UI.Controls.DataGrid">
-      <Version>7.0.2</Version>
+      <Version>7.1.0-preview1</Version>
+    </PackageReference>
+    <PackageReference Include="Microsoft.Toolkit.Uwp.UI.Controls.Markdown">
+      <Version>7.1.0-preview1</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.UI.Xaml">
-      <Version>2.6.1</Version>
+      <Version>2.6.2-prerelease.210811003</Version>
     </PackageReference>
     <PackageReference Include="MonoGame.Content.Builder.Task">
       <Version>3.8.1.1941-develop</Version>
@@ -157,10 +156,10 @@
       <Version>4.5.0</Version>
     </PackageReference>
     <PackageReference Include="System.Runtime.CompilerServices.Unsafe">
-      <Version>6.0.0-preview.6.21352.12</Version>
+      <Version>6.0.0-preview.7.21377.19</Version>
     </PackageReference>
     <PackageReference Include="System.Text.Json">
-      <Version>6.0.0-preview.6.21352.12</Version>
+      <Version>6.0.0-preview.7.21377.19</Version>
     </PackageReference>
     <PackageReference Include="Win2D.uwp">
       <Version>1.26.0</Version>

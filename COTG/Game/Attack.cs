@@ -2,7 +2,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Collections.Immutable;
 using System.Linq;
 using System.ComponentModel;
 using System.Text;
@@ -10,6 +9,7 @@ using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using COTG.Views;
 using static COTG.Game.Enum;
+using Microsoft.Toolkit.Mvvm.ComponentModel;
 
 namespace COTG.Game
 {
@@ -143,12 +143,12 @@ namespace COTG.Game
 			cid = city.cid;
 			if (troopType == ttPending)
 			{
-				troopType = city.primaryTroopType;
+				troopType = city.TroopType;
 			}
 			else
 			{
-				troopType = troopType;
-				City.TryConvertTroopTypeToClassification(troopType, out city.classification);
+				//troopType = troopType;
+				//City.TryConvertTroopTypeToClassification(troopType, out city.classification);
 			}
 			hasAcademy = city.hasAcademy.GetValueOrDefault();
 			if (_attackType != AttackType.invalid)
@@ -172,15 +172,14 @@ namespace COTG.Game
 			await _city.Classify();
 			if (troopType != ttPending)
 				return;
-			troopType = (byte)_city.classificationTroopType;
+			troopType = (byte)_city.TroopType;
 		}
 
 		public void CopyTo(City t)
 		{
 			if (!t.isMine)
 			{
-				Spot.TryConvertTroopTypeToClassification(troopType, out t.classification);
-				t.tags = TagHelper.FromTroopType(troopType);
+				t.TroopType = troopType;
 				t.hasAcademy = hasAcademy;
 			}
 			else
@@ -234,7 +233,11 @@ namespace COTG.Game
 		[JsonInclude]
 		public int senTime;
 		[JsonInclude]
-		public int seTime;	
+		public int seTime;
+
+		[JsonIgnore]
+		public SmallTime attackTime => new SmallTime( senTime != 0 ? seTime != 0 ? senTime.Min(seTime) : senTime : seTime); 
+
 		// if there are 2 reals, then it wants 2x assaults
 		[JsonInclude]
 		public bool normalizeAssaultsPerSeSiege  = true;
@@ -272,9 +275,9 @@ namespace COTG.Game
 		public int ticksToCapture = 4;
 
 		[JsonInclude]
-		public ImmutableArray<AttackPlanCity> attacks  = ImmutableArray<AttackPlanCity>.Empty;
+		public AttackPlanCity[] attacks  = Array.Empty<AttackPlanCity>();
 		[JsonInclude]
-		public ImmutableArray<AttackPlanCity> targets = ImmutableArray<AttackPlanCity>.Empty;
+		public AttackPlanCity[] targets = Array.Empty<AttackPlanCity>();
 
 		
 		public static AttackPlan plan = new();
@@ -307,7 +310,7 @@ namespace COTG.Game
 				l = ref plan.targets;
 			if (c.attackType == AttackType.none)
 			{
-				l = l.RemoveAll(a => a.cid == c.cid);
+				l = l.Where( a => a.cid != c.cid).ToArray();
 				AttackTab.SyncUIGrids();
 				return false;
 			}
@@ -317,7 +320,7 @@ namespace COTG.Game
 				c.CopyTo(c.city);
 				if (cur == null)
 				{
-					l = l.Add( c );
+					l = l.ArrayAppend( c );
 				//	Debug.Assert(c.troopType != ttPending);
 					AttackTab.SyncUIGrids();
 					return true;
@@ -329,13 +332,11 @@ namespace COTG.Game
 					if (c.troopType != ttPending)
 					{
 						cur.troopType = c.troopType;
-						City.TryConvertTroopTypeToClassification(cur.troopType, out city.classification);
+					
+						//if (!city.isMine)
+							City.TryConvertTroopTypeToClassification(cur.troopType, out city.classification);
 					}
-					else
-					{
-						City.TryConvertTroopTypeToClassification(cur.troopType, out city.classification);
-
-					}
+	
 					// for UI
 					App.DispatchOnUIThreadLow( ()=>cur.city.OnPropertyChanged() );
 					// can this be done on a background thread?
@@ -389,8 +390,8 @@ namespace COTG.Game
 		public static int Value(this AttackType a) => (int)a;
 		public static int Value(this TargetCategory a) => (int)a;
 
-		public static bool Contains(this ImmutableArray<AttackPlanCity> l, int cid) => l.Any(a => a.cid==cid);
-		public static bool Contains(this ImmutableArray<AttackPlanCity> l, City city) => Contains(l, city.cid);
+		public static bool Contains(this AttackPlanCity[] l, int cid) => l.Any(a => a.cid==cid);
+		public static bool Contains(this AttackPlanCity[] l, City city) => Contains(l, city.cid);
 
 	};
 }

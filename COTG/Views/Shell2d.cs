@@ -149,7 +149,7 @@ namespace COTG.Views
 
 		public static void TakeKeyboardFocus()
 		{
-			// if (hasKeyboardFocus) return; Trace($"Take focus {hasKeyboardFocus}"); Set this
+			//if (hasKeyboardFocus) return; //Trace($"Take focus {hasKeyboardFocus}"); Set this
 			// early, it gets set again once the asyn executes
 			hasKeyboardFocus = true;
 			App.DispatchOnUIThreadLow(() =>
@@ -198,13 +198,16 @@ namespace COTG.Views
 			keyboardProxy = new KeyboardProxy()
 			{
 				AllowFocusOnInteraction = true,
-				TabFocusNavigation = KeyboardNavigationMode.Cycle,
+				TabFocusNavigation = KeyboardNavigationMode.Once,
 				Background = null,
 				IsTabStop = true
 			};
 			keyboardProxy.AddHandler(KeyDownEvent, new KeyEventHandler(KeyboardProxy_KeyDown), true);
 			keyboardProxy.LostFocus += KeyboardProxy_LostFocus;
 			keyboardProxy.GettingFocus += KeyboardProxy_GettingFocus;
+//			GettingFocusEvent
+	//		keyboardProxy.AddHandler(GettingFocusEvent, KeyboardProxy_GettingFocus, true);
+	//		keyboardProxy.AddHandler(LostFocusEvent, KeyboardProxy_LostFocus, true);
 			canvas.Children.Add(keyboardProxy);
 			//canvasHitTest = new Rectangle()
 			//{
@@ -234,9 +237,22 @@ namespace COTG.Views
 
 		private void KeyboardProxy_GettingFocus(UIElement sender, Windows.UI.Xaml.Input.GettingFocusEventArgs args)
 		{
+			if(args.FocusState == FocusState.Unfocused)
+			{
+				Assert(false);
+				return;
+			}
+			if(args.NewFocusedElement == keyboardProxy)
+			{
+				hasKeyboardFocus = true;
+			}
+			else
+
+			{
+				Assert(false);
+			}
 			//Log("Get focus");
 			//	Trace($"Got focus {hasKeyboardFocus}");
-			hasKeyboardFocus = true;
 		}
 
 		private void KeyboardProxy_KeyDown(object sender, Windows.UI.Xaml.Input.KeyRoutedEventArgs e)
@@ -253,7 +269,7 @@ namespace COTG.Views
 
 			//}
 			var key = e.Key;
-			if (IsWorldView())
+			if (!IsCityView())
 			{
 				switch (key)
 				{

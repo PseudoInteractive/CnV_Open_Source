@@ -25,6 +25,13 @@ using EnumsNET;
 
 namespace COTG.Game
 {
+	public enum AzureLoadState : byte
+	{
+		none,
+		loading,
+		loaded,
+		failed,
+	}
 	public class HeatMapItem : INotifyPropertyChanged
 	{
 
@@ -85,8 +92,9 @@ namespace COTG.Game
 
 
 		public string dateStr => t.ToString("yyyy-MM-dd");
-		public bool isLoaded => snapshot.Length > 0;
-		public bool loadPending;
+		public bool isLoaded => loadState == AzureLoadState.loading;
+		public bool loadHasBeenCalled => loadState >= AzureLoadState.loading;
+		public AzureLoadState loadState;
 		public override string ToString() => desc;
 
 		public Azure.ETag eTag; // server version, if our version is not equal to the version on azure we discard current work and fetch the latest
@@ -314,21 +322,21 @@ namespace COTG.Game
 		public bool IsLoadingOrLoaded()
 		{
 			var prior = GetEarlier();
-			return (prior == null || prior.loadPending) && loadPending;
+			return (prior == null || prior.loadHasBeenCalled) && loadHasBeenCalled;
 		}
 
 		public async Task Load()
 		{
 			var prior = GetEarlier();
-			if( (prior==null || prior.loadPending)&&loadPending)
+			if( (prior==null || prior.loadHasBeenCalled)&&loadHasBeenCalled)
 			{
 				return;
 			}
 
 			using (var _ = await HeatMap.mutex.LockAsync())
 			{
-				var _t0 = loadPending ? null : LoadInternal();
-				var _t1 = prior == null || prior.loadPending ? null : prior.LoadInternal();
+				var _t0 = loadHasBeenCalled ? null : LoadInternal();
+				var _t1 = prior == null || prior.loadHasBeenCalled ? null : prior.LoadInternal();
 				if (_t0 != null)
 					await _t0;
 				if (_t1 != null)
@@ -344,9 +352,14 @@ namespace COTG.Game
 		{
 			try
 			{
-				var hasBeenLoaded = loadPending;
-				loadPending = true;
-
+				while(loadState == AzureLoadState.loading)
+				{
+					await Task.Delay(500).ConfigureAwait(false);
+				}
+				//
+				if (loadState == AzureLoadState.none)
+					loadState = AzureLoadState.loading;
+			
 				var cont = await Blobs.GetChangesContainer();
 				if (cont == null)
 					return this;
@@ -354,7 +367,9 @@ namespace COTG.Game
 
 				try
 				{
-					var res = await  cont.GetBlobClient(str).DownloadAsync(default, hasBeenLoaded ? new BlobRequestConditions() { IfNoneMatch = eTag } : null );
+					// If etag changes it should be reloaded 
+					// This might get loaded more than once if called again before prior load has completed but thats not fatal
+					var res = await  cont.GetBlobClient(str).DownloadAsync(default, isLoaded? new BlobRequestConditions() { IfNoneMatch = eTag } : null );
 					//if (res.GetRawResponse().Status != 200)
 					//{
 					//	return day;
@@ -381,26 +396,52 @@ namespace COTG.Game
 					}
 
 					Read(readBuffer);
+					Assert(snapshot.Length>0);
 					ArrayPool<byte>.Shared.Return(readBuffer);
 					eTag = res.Value.Details.ETag;
+					loadState = AzureLoadState.loaded;
 					return this;
 				}
 				catch (Azure.RequestFailedException r)
 				{
-					Log(r.ErrorCode);
+					Assert(isLoaded);
+					if (loadState == AzureLoadState.loading)
+					{
+						Assert(false);
+						loadState = AzureLoadState.failed;
+					}
+					Log(r.ErrorCode); // already loaded, leave it
 					Assert(r.Status == 404);
-					return this;
+			//		return isLoaded() ? this : null;
 				}
+			//	catch (Azure.NoBodyResponse<Azure.Storage.Blobs.Models.BlobDownloadStreamingResult>.ResponseBodyNotFoundException)
+			//	{
+			//		Assert(isLoaded);
+			//		if (loadState == AzureLoadState.loading)
+			//			loadState = AzureLoadState.failed;
+
+			//		// etag mismatch
+			////		return this;
+			//	}
 				catch (Exception e)
 				{
-					return this;
+					Assert(isLoaded);
+					if (loadState == AzureLoadState.loading)
+					{
+						Assert(false);
+						loadState = AzureLoadState.failed;
+					}
+					LogEx(e);
+		//			return this;
 				}
 			}
 			catch (Exception ex)
 			{
+				loadState = AzureLoadState.failed;
+
 				Debug.LogEx(ex);
 			}
-			return null;
+			return isLoaded ? this : null; 
 		}
 
 		// stored in reverse order, 0 is most recent
@@ -497,13 +538,13 @@ namespace COTG.Game
 					var str = day.dateStr;
 					// What abougt etag == null?
 					var success = await cont.GetBlobClient(str).UploadAsync(mem, new BlobUploadOptions() { Conditions = new BlobRequestConditions() { IfMatch = day.eTag } });
-					Log(success.GetRawResponse());
+				//	Log(success.GetRawResponse());
 					//if (success.GetRawResponse().Status != 200)
 					//{
 					//	return false;
 					//}
 
-					Log(success.Value.ETag);
+	//				Log(success.Value.ETag);
 					day.eTag = success.Value.ETag;
 				}
 				return true;

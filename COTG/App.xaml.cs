@@ -231,7 +231,7 @@ namespace COTG
 			InputRecieved();
 		}
 
-		static bool webViewInFront = false;
+		//static bool webViewInFront = false;
 
 		static void OnKeyDown(CoreWindow sender, KeyEventArgs args)
 		{
@@ -868,7 +868,8 @@ namespace COTG
 
 
 		// We only have 1 UI thread here
-		public static CoreDispatcher GlobalDispatcher() => ShellPage.instance?.Dispatcher;
+		public static CoreDispatcher globalDispatcher; // set on shell page initialize
+		public static CoreDispatcher GlobalDispatcher() => globalDispatcher;// ShellPage.instance?.Dispatcher;
 
 		public static bool IsOnUIThread() => GlobalDispatcher() switch { null => false, var a => a.HasThreadAccess };
 		//public static bool IsKeyPressedControl()
@@ -1023,6 +1024,7 @@ namespace COTG
 			if (but != null)
 			{
 				var fly = but.FindParent<FlyoutPresenter>();
+				Assert(fly != null);
 				fly?.ContextFlyout?.Hide();
 			}
 
@@ -1111,11 +1113,11 @@ namespace COTG
 		}
 
 
-		[Conditional("DEBUG")]
+		//[Conditional("DEBUG")]
 		public static void UpdateKeyModifiers(this VirtualKeyModifiers mod)
 		{
-			//	App.shiftPressed = mod.IsShift();
-			//	App.controlPressed = mod.IsControl();
+				App.shiftPressed = mod.IsShift();
+				App.controlPressed = mod.IsControl();
 		}
 		public static string CidToStringMD(this int cid)
 		{

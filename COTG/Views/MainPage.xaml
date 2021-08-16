@@ -212,10 +212,10 @@
 					</Flyout>
 				</Button.Flyout>
 				<Button.Resources>
-					<winui:TeachingTip x:Name="TipResetRaids1"
+					<winui:TeachingTip x:Key="TipResetRaids1"
 						   x:FieldModifier="public"
 						   Title="Reset Raids Tip"
-						   Target="{x:Bind cityGrid}"
+						  
 						   Subtitle="Resetting raids is used bring troops home if their carry% is too low (which means that you are taking more raids losses) or the % idle troops in a city is high (this typically occurs while your cities are not full and still recruiting, i.e. for early cities or after a battle.  By bringing raids home you can consoldate your raids).  Warning: it can take some time for all troops to return, only use this button if you will be around about 1 hour after the reset to set them raiding again">
 					</winui:TeachingTip> 
 				</Button.Resources>
@@ -318,7 +318,7 @@
 		<winui:TeachingTip x:Name="TipRaiding101"
 						   x:FieldModifier="public"
 						   Title="Raiding 101"
-						   Target="{x:Bind cityGrid}"
+						  
 						   CloseButtonContent="Okay"
 						   PreferredPlacement="LeftTop"
 						   Subtitle="Tap the 'tsRaid' column header to sort your cities in order of their # of troops available for raiding">
@@ -329,7 +329,7 @@
 						   Title="Raiding 102"
 						   CloseButtonContent="Okay"
 						   PreferredPlacement="LeftTop"
-						   Target="{x:Bind cityGrid}"
+						  
 						   Subtitle="Click the + icon to show a list of recomended raids for a given city.">
 			<TextBlock  TextWrapping="Wrap">
 				Possible raid choices will be shown sorted in order of closest to farthest, with dungeons appropriate for the city troop types listed first.
@@ -341,7 +341,7 @@
 						   Title="Dungeons 101"
 						   CloseButtonContent="Okay"
 						   PreferredPlacement="LeftTop"
-						   Target="{x:Bind cityGrid}"
+						  
 						   Subtitle="Select a dungeon that you would like to send raids to (the first one in the list is often the best choice)">
 			<TextBlock  TextWrapping="Wrap">                    
                 The 'plan' cell displays the raids that will be dispatced, click on it to dispatch raids</TextBlock>
@@ -349,7 +349,7 @@
 		<winui:TeachingTip x:Name="TipRaidReturn101"
 						   x:FieldModifier="public"
 						   Title="Raid Return Column"
-						   Target="{x:Bind cityGrid}"
+						  
 						   CloseButtonContent="Okay"
 						   PreferredPlacement="Left">
 			<TextBlock TextWrapping="Wrap">
@@ -362,7 +362,7 @@
 		<winui:TeachingTip x:Name="TipRaidReturn102"
 						   x:FieldModifier="public"
 						   Title="Raid Return Column"
-						   Target="{x:Bind cityGrid}"
+						  
 						   CloseButtonContent="Okay"
 						   PreferredPlacement="Left">
 			<TextBlock TextWrapping="Wrap">
@@ -374,7 +374,7 @@
 		<winui:TeachingTip x:Name="TipRaidReturn103"
 						   x:FieldModifier="public"
 						   Title="Multiple Cities"
-						   Target="{x:Bind cityGrid}"
+						  
 						   CloseButtonContent="Okay"
 						   PreferredPlacement="Left">
 			<TextBlock TextWrapping="Wrap">
@@ -385,7 +385,7 @@
 		<winui:TeachingTip x:Name="TipRaidReturn104"
 						    x:FieldModifier="public"
 						   Title="Shortcuts"
-						   Target="{x:Bind cityGrid}"
+						  
 						   CloseButtonContent="Okay"
 						   PreferredPlacement="Left">
 			<TextBlock TextWrapping="Wrap">
@@ -396,7 +396,7 @@
 		<winui:TeachingTip x:Name="TipCarryCapacity101"
 						   x:FieldModifier="public"
 						   Title="Reseting Raids"
-						   Target="{x:Bind cityGrid}"
+						  
 						   CloseButtonContent="Okay"
 						   PreferredPlacement="LeftBottom">
 			<TextBlock TextWrapping="Wrap">

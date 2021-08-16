@@ -186,6 +186,7 @@ namespace COTG.Views
 			instance = this;
 			InitializeComponent();
 			Initialize();
+			App.globalDispatcher = Dispatcher;
 		}
 
 		private void Initialize()
@@ -201,7 +202,7 @@ namespace COTG.Views
 
 		public static bool isHitTestVisible = true;
 		public static bool canvasVisible;
-		public static bool isFocused => isHitTestVisible && App.isForeground;
+		public static bool isFocused => isHitTestVisible && App.isForeground && canvasVisible;
 		private void OnLoaded(object sender, RoutedEventArgs e)
 		{
 			SystemNavigationManagerPreview.GetForCurrentView().CloseRequested += App.App_CloseRequested; ;
@@ -441,11 +442,14 @@ namespace COTG.Views
 			switch (args.KeyboardAccelerator.Key)
 			{
 				case VirtualKey.F2:
-					SetLayout(0); break;
+					this.windowLayout.SelectedItem= 0;
+					break;
 				case VirtualKey.F3:
-					SetLayout(1); break;
+					this.windowLayout.SelectedItem = 1;
+					break;
 				case VirtualKey.F4:
-					SetLayout(2); break;
+					this.windowLayout.SelectedItem = 2;
+					; break;
 			}
 		}
 
@@ -1259,7 +1263,6 @@ namespace COTG.Views
 				MainPage.ToggleInfoBoxes(raidInfoVisible);
 				//   Task.Delay(200).ContinueWith((_) => City.gridCitySource.NotifyReset());
 				//UpdateWebViewScale();
-
 			});
 		}
 
@@ -1307,19 +1310,19 @@ namespace COTG.Views
 			SetWebViewHasFocus(hasFocus);
 		}
 
-		private void FriendListSubmitted(ComboBox sender, ComboBoxTextSubmittedEventArgs args)
-		{
-		}
+		//private void FriendListSubmitted(ComboBox sender, ComboBoxTextSubmittedEventArgs args)
+		//{
+		//}
 
-		private void friendListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
-		{
-			if (e.AddedItems.Any())
-			{
-				var s = e.AddedItems[0] as string;
-				var friend = Array.Find(PlayerPresence.all, f => f.name == s);
-				JSClient.SetPlayer(friend.pid, friend.token, friend.cookies, friend.cid, friend.name);
-			}
-		}
+		//private void friendListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+		//{
+		//	if (e.AddedItems.Any())
+		//	{
+		//		var s = e.AddedItems[0] as string;
+		//		var friend = Array.Find(PlayerPresence.all, f => f.name == s);
+		//		JSClient.SetPlayer(friend.pid, friend.token, friend.cookies, friend.cid, friend.name);
+		//	}
+		//}
 
 		private void chatResizeTapped(object sender, TappedRoutedEventArgs e)
 		{

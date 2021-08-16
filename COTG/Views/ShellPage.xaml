@@ -50,7 +50,13 @@
 		<CommandBar Grid.ColumnSpan="2" TabFocusNavigation="Once" UseSystemFocusVisuals="True" x:Name="commandBar" x:FieldModifier="public"   >
 			<CommandBar.Content   >
 				<StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-					
+					<ComboBox x:Name="windowLayout" SelectedIndex="0" SelectionChanged="windowLayout_SelectionChanged" VerticalAlignment="Center" Margin="4"
+                           ToolTipService.ToolTip="Select a view layout" >
+						<x:String>Default</x:String>
+						<x:String>Visual</x:String>
+						<x:String>Numbers</x:String>
+					</ComboBox>
+
 					<ComboBox x:Name="cityBox" x:FieldModifier="public" 
                       Width="200"
 							  IsEditable="True"
@@ -68,6 +74,7 @@
 							</DataTemplate>
 						</ComboBox.ItemTemplate>
 					</ComboBox>
+					<TextBox x:Name="coords" Margin="4" Width="100" TextAlignment="Center"  Text="000:000" VerticalAlignment="Center" x:FieldModifier="public" KeyDown="coords_KeyDown"/>
 					<winui:DropDownButton x:Name="ContinentFilter"  x:FieldModifier="public"
 									  Content="Cont/Tags"
 									  Margin="2"
@@ -82,8 +89,8 @@
 					<Button x:Name="HomeButton" Click="BuildHomeClick" RightTapped="BuildHomeRightTapped" Margin="4" Style="{ThemeResource ButtonRevealStyle}"
                             ToolTipService.ToolTip="&#x0a;Click to switch between region view and city view&#x0a;Right clck for menu" >
 						<Button.Resources>
-							<winui:TeachingTip x:Name="HomeButtonTip" Title="Home Button" x:FieldModifier="public"
-                                   IsLightDismissEnabled="True" PreferredPlacement="Right" Target="{x:Bind HomeButton}"
+							<winui:TeachingTip x:Key="HomeButtonTip" Title="Home Button" x:FieldModifier="public"
+                                   IsLightDismissEnabled="True" PreferredPlacement="Right" 
                                     Subtitle="Click to toggle between city and world view, and to focus on the current city" />
 						</Button.Resources>
 						<SymbolIcon Symbol="Home"/>
@@ -97,7 +104,6 @@
                             ToolTipService.ToolTip="Switch to next city in the current city list" >
 						<SymbolIcon Symbol="Next"/>
 					</Button>
-					<TextBox x:Name="coords" Margin="4" Width="100" TextAlignment="Center"  Text="000:000" VerticalAlignment="Center" x:FieldModifier="public" KeyDown="coords_KeyDown"/>
 					<Button x:Name="focus" Margin="4" Width="140"  VerticalAlignment="Center" x:FieldModifier="public"
                             Style="{ThemeResource ButtonRevealStyle}" Click="HomeClick" RightTapped="HomeRightTapped" FontFamily="Tw Cen MT Condensed"
                             ToolTipService.ToolTip="Spot with Focus.&#x0a;Click to re-center or swith to this city&#x0a;Right clck for menu" Visibility="Collapsed"/>
@@ -107,16 +113,8 @@
 				</StackPanel>
 			</CommandBar.Content>
 			<CommandBar.SecondaryCommands>
-				<AppBarElementContainer>
-				<ComboBox x:Name="windowLayout" SelectedIndex="0" SelectionChanged="windowLayout_SelectionChanged" VerticalAlignment="Center" Margin="4"
-                           ToolTipService.ToolTip="Select a view layout" >
-					<x:String>Default</x:String>
-					<x:String>Visual</x:String>
-					<x:String>Numbers</x:String>
-				</ComboBox>
-				</AppBarElementContainer>
-
-				<AppBarElementContainer>
+				
+				<!--<AppBarElementContainer>
 					<ComboBox x:Name="friendListBox" x:FieldModifier="public"
 							  Visibility="Collapsed"
                      SelectionChanged="friendListBox_SelectionChanged"
@@ -124,7 +122,7 @@
                      
                       VerticalAlignment="Center" ToolTipService.ToolTip="Friends"
                       Margin="4" />
-				</AppBarElementContainer>
+				</AppBarElementContainer>-->
 				<AppBarElementContainer>
 					<ComboBox x:Name="cityListBox" x:FieldModifier="public"
                      IsEditable="True"
@@ -141,8 +139,7 @@
                           Style="{StaticResource AppBarButtonRevealStyle}"
                                ToolTipService.ToolTip="No longer does much">
 					<Button.Flyout>
-						<Flyout Placement="Right"
-                                FlyoutPresenterStyle="{StaticResource TimeFlyoutStyle}">
+						<Flyout FlyoutPresenterStyle="{StaticResource TimeFlyoutStyle}">
 							<Grid>
 								<Grid.RowDefinitions>
 									
@@ -186,11 +183,11 @@
                                ToolTipService.ToolTip="When in doubt, refresh - Right click to refresh world data"
                               Icon="RepeatAll">
 					<AppBarButton.Resources>
-						<winui:TeachingTip x:Name="RefreshTip"
+						<winui:TeachingTip x:Key="RefreshTip"
                                 IsLightDismissEnabled="True" 
                                 Title="Refresh"
 	                          x:FieldModifier="public"
-                                Target="{x:Bind Fresh}"
+                                
                                 Subtitle="If something is not updated or missing, try this button, use right click to refresh many things">
 							<TextBlock Text="Right click will refresh all World data (castles, cities, bosses etc)" />
 						</winui:TeachingTip>
@@ -274,20 +271,20 @@
 			</Grid.ColumnDefinitions>
 			<Frame x:Name="chatTabFrame" x:FieldModifier="public" Grid.Column ="1" Grid.Row="1" IsNavigationStackEnabled="False" Margin="12,12,16,0" IsTabStop="True" TabFocusNavigation="Once" >
 				<Frame.Resources>
-					<winui:TeachingTip x:Name="ChatTip0"
+					<winui:TeachingTip x:Key="ChatTip0"
                                 Title="Chat Window"
                                    IsLightDismissEnabled="True"
-									Target="{x:Bind chatTabFrame}"
+								
 									   Subtitle="Drag up to view chat"></winui:TeachingTip>
-					<winui:TeachingTip x:Name="ChatTip1"
+					<winui:TeachingTip x:Key="ChatTip1"
                                    IsLightDismissEnabled="True"
                                 Title="Translate Incoming"
-                              Target="{x:Bind chatTabFrame}" 
+                               
                                 Subtitle="Right click on a message and select a language to translate"></winui:TeachingTip>
-					<winui:TeachingTip x:Name="ChatTip2"
+					<winui:TeachingTip x:Key="ChatTip2"
                                 Title="Translate Outgoing"
                                    IsLightDismissEnabled="True"
-                               Target="{x:Bind chatTabFrame}"
+                              
                                 Subtitle="Click on the language icon to translate outgoing. You can repeat multi times for more languages"></winui:TeachingTip>
 				</Frame.Resources>
 			</Frame>

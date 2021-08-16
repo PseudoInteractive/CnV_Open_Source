@@ -151,15 +151,15 @@ namespace COTG.Views
             {
                 try
                 {
-                    var sel = defenderGrid.SelectedItems.ToArray();
 					//					lastSelected = sel;
 
 					defenderGrid.ItemsSource = Spot.defendersI.Where(w => w.testContinentFilter 
 													&& (includeInternal||w.hasEnemyIncoming)
 													&&(typeFilter == 2 ? w.pid == Player.activeId 
 													: typeFilter == 1 ? SettingsPage.incomingWatch.Contains(w.playerName)|| w.pid == Player.activeId 
-													: true)).ToArray(); 
-                    if (sel.Length > 0)
+													: true)).OrderBy(w=>w.firstIncoming).ToArray();
+					var sel = defenderGrid.SelectedItems.ToArray();
+					if (sel.Length > 0)
                     {
                         App.DispatchOnUIThreadSneaky(() =>
                         {

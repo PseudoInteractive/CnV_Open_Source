@@ -9,6 +9,7 @@
 			  xmlns:view="using:COTG.Views"
 			  xmlns:tk="using:Microsoft.Toolkit.Uwp.UI.Controls"
 			  xmlns:winui="using:Microsoft.UI.Xaml.Controls"
+			  xmlns:storage="using:Windows.Storage"
 			  TabNavigation="Once"
 			  IsTabStop="True"
                mc:Ignorable="d">
@@ -21,7 +22,9 @@
 			<RowDefinition Height="*" />
 		</Grid.RowDefinitions>
 		<StackPanel>
+			<TextBlock x:Name="planName" Padding="4" Margin="4,4,24,4" ToolTipService.ToolTip="Plans are stored as files, this will be the filename" />
 			<tk:WrapPanel Orientation="Horizontal">
+				
 				<winui:NumberBox Header="Max travel hours Sen"
                              Style="{StaticResource NumberBoxSmall}"
                              Value="{x:Bind game:AttackPlan.plan.attackMaxTravelHoursSen, Mode=TwoWay}"
@@ -115,9 +118,50 @@
 
 			</tk:WrapPanel>
 			<tk:WrapPanel Orientation="Horizontal">
+				<Button Content="Open.."
+                Style="{StaticResource ButtonSmall}"
+                ToolTipService.ToolTip="Open a prior plan or revert to a prior state of this plan"
+                Click="OpenPlanClick0">
+					<Button.Flyout>
+						<Flyout x:Name="HideMe1">
+						
+								<ListView x:Name="openListView" 
+										  Header="Select Plan.."
+											MaxHeight="600"
+										  IsItemClickEnabled="True"
+										ItemClick="OpenPlanClick1"
+										 >
+									<ListView.ItemTemplate>
+										<DataTemplate x:DataType="storage:StorageFile">
+											<TextBlock Text="{x:Bind DisplayName}"  />
+										</DataTemplate>
+									</ListView.ItemTemplate>
+								</ListView>
+						</Flyout>
+					</Button.Flyout>
+				</Button>
+
+					<Button Content="New.."
+                    Style="{StaticResource ButtonSmall}"
+                    ToolTipService.ToolTip="Start a new plan"
+                    Click="NewPlanClick0">
+					<Button.Flyout>
+						<Flyout x:Name="HideMe0">
+							<StackPanel>
+								<CheckBox x:Name="clearPlan" Content="Clear Existing" IsChecked="True" ToolTipService.ToolTip="If set, attackers and targes willl be removed" />
+								<TextBox x:Name="newPlanName" 
+										 ToolTipService.ToolTip="Filename of new Plan"
+										 PlaceholderText="Enter Plan Name"/>
+							
+								<Button Content="Confirm" Click="NewPlanClick1" />
+							</StackPanel>
+						</Flyout>
+					</Button.Flyout>
+				</Button>
+
 				<Button Content="Set Attack"
                     Style="{StaticResource ButtonSmall}"
-                    ToolTipService.ToolTip="Assign attackers to explicit targets (uses selected)"
+                    ToolTipService.ToolTip="Assign attackers to explicit targets (select a attacking castle and a target castle)"
                     Click="SetAttack_Click" />
 
 				<Button Content="Remove Selected.."
@@ -129,6 +173,10 @@
                     ToolTipService.ToolTip="Sets selected attacker types"
                     Style="{StaticResource ButtonSmall}"
                     Click="SetAttackerType" />
+				<Button Content="Add Selected"
+                    ToolTipService.ToolTip="Adds selected castles as attackers or targets"
+                    Style="{StaticResource ButtonSmall}"
+                    Click="AddSelected" />
 
 				<Button Content="Add Attacks from Clipboard"
                     ToolTipService.ToolTip="Extracts coordinates from the clipboard and adds attacks"
@@ -230,7 +278,7 @@
 					 ColumnWidth="SizeToCells"
 					 
 					 CanUserSortColumns="True"
-			 IsTextScaleFactorEnabled="False"
+			
 			SelectionMode="Extended"
                      RowDetailsVisibilityMode="Collapsed"
                      CanUserReorderColumns="True"
@@ -305,12 +353,14 @@
 		   							   FontFamily="Tw Cen MT Condensed"
                                        Binding="{Binding tsTotal, Mode=OneTime}" />
 
-				<tk:DataGridTextColumn Header="tt"
-									   Tag="classification"
+				<tk:DataGridComboBoxColumn Header="Intel"
 									   FontSize="{StaticResource SmallFontSize}"
 		   							   FontFamily="Tw Cen MT Condensed"
-                                       Binding="{Binding classificationString, Mode=OneWay}"
-									   IsReadOnly="True" />
+                                       Binding="{Binding TroopType, Mode=TwoWay}"
+									   ItemsSource="{x:Bind view:TroopTypeItemSource.all, Mode=OneTime}"
+										   DisplayMemberPath="name"
+
+									    />
 				<tk:DataGridCheckBoxColumn Header="Acad"
 									   Binding="{Binding hasAcademy, Mode=OneWay}"
 									/>
@@ -493,8 +543,12 @@
                                             DisplayMemberPath="name" IsReadOnly="False" />
 					<tk:DataGridTextColumn Header="Pri"
                                        Binding="{Binding PlanPriority,Converter={StaticResource FloatConverter},Mode=TwoWay}"  />
-					<tk:DataGridTextColumn Header="Intel"
-                                       Binding="{Binding classificationString, Mode=OneTime}" IsReadOnly="True" />
+					<tk:DataGridComboBoxColumn Header="Intel"
+											   Binding="{Binding TroopType, Mode=TwoWay}"
+									   
+                                      ItemsSource="{x:Bind view:TroopTypeItemSource.all, Mode=OneTime}"
+									 DisplayMemberPath="name"
+											   />
 					<tk:DataGridTextColumn Header="Id" Tag="AttackCluster"
                                        Binding="{Binding plan.attackCluster, Mode=OneWay}"
                                        IsReadOnly="True" />

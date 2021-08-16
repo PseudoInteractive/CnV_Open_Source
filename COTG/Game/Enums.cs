@@ -9,7 +9,8 @@ namespace COTG.Game
     public static class Enum
     {
 
-        public const byte ttGuard = 0;
+		public const byte ttPending = 0;
+		public const byte ttGuard = 0;
         public const byte ttBallista = 1;
         public const byte ttRanger = 2;
 		public const byte ttRT = ttRanger;
@@ -36,7 +37,6 @@ namespace COTG.Game
         public const byte ttWarship = 16;
 		public const byte ttSenator = 17;
 		public const byte ttSen = ttSenator;
-		public const byte ttPending = 0;
 		public const int ttCount = (ttSenator)+1;
 		public static bool IsRaider(int type) => ttBestDungeonType[type] != (byte)DungeonType.invalid;
         public static bool IsLandRaider(int type) => ttBestDungeonType[type] < (byte)DungeonType.water; // also exludes in valid

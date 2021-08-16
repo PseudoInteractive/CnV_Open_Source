@@ -41,6 +41,7 @@ namespace COTG.Views
 
 	public sealed partial class BuildTab : UserTab, INotifyPropertyChanged
 	{
+		private const string workStr = "Refreshing build states..";
 		public static BuildTab instance;
 
 
@@ -166,17 +167,30 @@ namespace COTG.Views
 
 
 
-
+		// -1, refreshed once, not refreshing
+		//  0 never refreshed
+		//  1 refreshing
+		//  2 is pending refresh
+		//  build info requested => [-1,0] => 1
+		//  ] => 2
+		//  on refresh complete 2 => -1
 		static int getBuildState;
 		static public async void GetBuildInfo()
 		{
-			if (getBuildState == 1)
+			// Refreshing
+			if (getBuildState == 1 || getBuildState == 2)
 			{
 				getBuildState = 2;
 				return;
 			}
-			if (getBuildState == 2)
-				return;
+			var firstTime = false;
+
+			if ( getBuildState == 0)
+			{
+				firstTime = true;
+				ShellPage.WorkStart(workStr);
+
+			}
 			for (; ; )
 			{
 				getBuildState = 1;
@@ -232,12 +246,17 @@ namespace COTG.Views
 		}
 			);
 
+				if(firstTime==true)
+				{
+					firstTime = false;
+					ShellPage.WorkEnd(workStr);
 
+				}
 
 				if (getBuildState != 2)
 					break;
 			}
-			getBuildState = 0;
+			getBuildState = -1;
 					/*
 0:		 17236203,  // cid
 1:		"22+1001+-+Vanq",

@@ -319,7 +319,7 @@ namespace COTG.Game
 			"pending",
 			"no intel"
 		};
-		private static int[] classificationTTs =
+		protected static byte[] classificationTTs =
 		{
 			ttGuard,
 			ttVanquisher,
@@ -340,7 +340,7 @@ namespace COTG.Game
 			ttPending
 		};
 		public string classificationString => classifications[(int)classification];
-		public int classificationTroopType => classificationTTs[(int)classification];
+
 		public string attackers
 		{
 			get
@@ -518,33 +518,7 @@ namespace COTG.Game
 			ShellPage.ClearHover();
 		}
 
-		public byte primaryTroopType => GetPrimaryTroopType();
-		public byte GetPrimaryTroopType(bool onlyHomeTroops = false, bool includeWater = true)
-		{
-			var troops = (onlyHomeTroops ? troopsHome : troopsTotal);
-			if (!troops.Any())
-				return (byte)classificationTroopType;
-
-			byte best = 0; // based on clasification or guards
-			var bestTS = 0;
-			foreach (var ttc in troops.Enumerate())
-			{
-				var type = ttc.type;
-				if (IsTTNaval(type) && !includeWater)
-					continue;
-				var ts = ttc.ts;
-				if (ts > bestTS)
-				{
-					bestTS = ts;
-					best = (byte)type;
-				}
-
-			}
-			if (best == 0)
-				return (byte)classificationTroopType;
-			else
-				return best;
-		}
+		
 
 
 		public async void ProcessClick(string column, PointerPoint pt, UIElement uie, VirtualKeyModifiers modifiers)
@@ -811,9 +785,8 @@ namespace COTG.Game
 
 		Classification TagsToClassification()
 		{
-			if (HasTag(Tags.Vanq))
-				return Classification.vanqs;
-			else if (HasTag(Tags.Scorp))
+			
+			if (HasTag(Tags.Scorp))
 				return Classification.se;
 			else if (HasTag(Tags.Prae))
 				return Classification.praetor;
@@ -821,6 +794,9 @@ namespace COTG.Game
 				return Classification.priestess;
 			else if (HasTag(Tags.RT) || HasTag(Tags.VT) || HasTag(Tags.VRT))
 				return Classification.rt;
+			// Must come after VT and VRT
+			else if (HasTag(Tags.Vanq))
+				return Classification.vanqs;
 			else if (HasTag(Tags.Sorc))
 				return Classification.sorcs;
 			else if (HasTag(Tags.Druid))
@@ -1220,7 +1196,7 @@ namespace COTG.Game
 			return viewHover == cid;
 		}
 
-		public static List<int> GetSelectedForContextMenu(int cid, bool onlyIfShiftPressed = true, int ignoreCid = 0, bool onlyCities = true, bool onlyMine = false)
+		public static List<int> GetSelectedForContextMenu(int cid=0, bool onlyIfShiftPressed = false, int ignoreCid = 0, bool onlyCities = true, bool onlyMine = false)
 		{
 			var cids = new List<int>();
 			if (cid != 0)
@@ -1606,13 +1582,13 @@ namespace COTG.Game
 					Assert(pid == Player.activeId);
 					//Cosmos.PublishPlayerInfo(JSClient.jsBase.pid, City.build, JSClient.jsBase.token, JSClient.jsBase.cookies); // broadcast change
 
-					foreach (var p in PlayerPresence.all)
-					{
-						if (p.pid != Player.myId && p.cid == cid)
-						{
-							Note.Show($"You have joined {p.name } in {City.Get(p.cid).nameMarkdown}");
-						}
-					}
+					//foreach (var p in PlayerPresence.all)
+					//{
+					//	if (p.pid != Player.myId && p.cid == cid)
+					//	{
+					//		Note.Show($"You have joined {p.name } in {City.Get(p.cid).nameMarkdown}");
+					//	}
+					//}
 
 					City.CitySwitched();
 					if (wasPlanner)

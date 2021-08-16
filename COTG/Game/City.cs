@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -95,7 +96,67 @@ namespace COTG.Game
 			get => plan.attackType;
 			set => planWritable.attackType = value; // Todo:  Throw exception if not present
 		}
+		public byte TroopType
+		{
+			get
+			{
+				TouchClassification();
+				// Does not wait
+				var rv = classificationTTs[(int)classification];
+				Assert(planWritable == null || planWritable.troopType == rv || planWritable.troopType == 0 || (rv == ttPending));
+				return rv;
+			}
+			set
+			{
+				var troopType = value;
+				TryConvertTroopTypeToClassification(troopType, out classification);
+				if (!isMine)
+				{
+					tags = TagHelper.FromTroopType(troopType, tags);
 
+				}
+				var plan = planWritable;
+				if (plan != null)
+					plan.troopType = troopType;
+				
+			}
+		}
+		public async Task<byte> TroopTypeAsync() => classificationTTs[(int)(await Classify())];
+
+		/// <summary>
+		/// Evaluates based on troops in cities if known
+		/// Otherwise evaluates based on classification 
+		/// </summary>
+		/// <param name="onlyHomeTroops"></param>
+		/// <param name="includeWater"></param>
+		/// <returns></returns>
+		//public byte GetPrimaryTroopType(bool onlyHomeTroops = false, bool includeWater = true)
+		//{
+		//	Assert(isMine);
+		//	var troops = (onlyHomeTroops ? troopsHome : troopsTotal);
+		//	if (!troops.Any())
+		//		return (byte)TroopType;
+
+		//	byte best = 0; // based on clasification or guards
+		//	var bestTS = 0;
+		//	foreach (var ttc in troops.Enumerate())
+		//	{
+		//		var type = ttc.type;
+		//		if (IsTTNaval(type) && !includeWater)
+		//			continue;
+		//		var ts = ttc.ts;
+		//		if (ts > bestTS)
+		//		{
+		//			bestTS = ts;
+		//			best = (byte)type;
+		//		}
+
+		//	}
+		//	if (best == 0)
+		//		return (byte)TroopType;
+		//	else
+		//		return best;
+		//}
 		public static int XYToId((int x, int y) xy) => (xy.x.Clamp(span0, span1) - span0) + (xy.y.Clamp(span0, span1) - span0) * citySpan;
 
 		public static (int x, int y) IdToXY(int id)
@@ -619,7 +680,7 @@ namespace COTG.Game
 									js.GetAsByte("elvl"),
 									js.GetAsUShort("brep"),
 									js.GetAsUShort("bspot"),
-									buildTime: ((js.GetAsInt64("bt")/1000).ClampToU16() ),
+									buildTime: ((js.GetAsInt64("de")- js.GetAsInt64("ds") )/1000).ClampToU16(),
 									pa: js.GetAsInt64("pa")==  1));
 
 							}
@@ -1919,6 +1980,17 @@ namespace COTG.Game
 				_ => ShellPage.ViewMode.region
 			};
 		}
+		public static List<int> CityListToCids(this IList selList)
+		{
+			var temp = new List<int>();
+			foreach (City sel in selList)
+			{
+				temp.Add(sel.cid);
+			}
+
+			return temp;
+		}
+
 	}
 	public class SenatorInfo
 	{

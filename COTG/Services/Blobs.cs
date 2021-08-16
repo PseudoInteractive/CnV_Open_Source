@@ -48,8 +48,10 @@ namespace COTG.Services
 			if (snapShotContainer == null)
 			{
 				snapShotContainer = new BlobContainerClient(connectionString, statsContainerName, GetClientOptions());
-				await snapShotContainer.CreateIfNotExistsAsync();
-
+				try
+				{
+					await snapShotContainer.CreateIfNotExistsAsync();
+				} catch  { }
 			}
 			return snapShotContainer;
 		}
@@ -58,7 +60,11 @@ namespace COTG.Services
 			if (tsSnapShotContainer == null)
 			{
 				tsSnapShotContainer = new BlobContainerClient(connectionString, statsTSContainerName, GetClientOptions());
-				await tsSnapShotContainer.CreateIfNotExistsAsync();
+				try
+				{
+					await tsSnapShotContainer.CreateIfNotExistsAsync();
+				}
+				catch  { }
 			}
 			return tsSnapShotContainer;
 		}
@@ -683,8 +689,15 @@ namespace COTG.Services
 		{
 			if (changesContainer == null)
 			{
-				changesContainer = new BlobContainerClient(connectionString, changesContainerName, GetClientOptions());
-				await changesContainer.CreateIfNotExistsAsync();
+				try
+				{
+					changesContainer = new BlobContainerClient(connectionString, changesContainerName, GetClientOptions());
+				
+					await changesContainer.CreateIfNotExistsAsync();
+				}catch
+				{
+					// assume already created?
+				}
 			}
 			return changesContainer;
 		}

@@ -40,23 +40,22 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Azure.Core" Version="1.17.0" />
-    <PackageReference Include="Azure.Data.Tables" Version="12.1.0" />
-    <PackageReference Include="Azure.Storage.Blobs" Version="12.9.1" />
+    <PackageReference Include="Azure.Data.Tables" Version="12.2.0-beta.1" />
+    <PackageReference Include="Azure.Storage.Blobs" Version="12.10.0-beta.2" />
     <PackageReference Include="Enums.NET" Version="4.0.0" />
-    <PackageReference Include="Microsoft.DependencyValidation.Analyzers" Version="0.11.0" />
-    <PackageReference Include="Microsoft.Toolkit" Version="7.0.2" />
-    <PackageReference Include="Microsoft.Toolkit.HighPerformance" Version="7.0.2" />
-    <PackageReference Include="Microsoft.Toolkit.Mvvm" Version="7.0.2" />
+    <PackageReference Include="Microsoft.Toolkit" Version="7.1.0-preview1" />
+    <PackageReference Include="Microsoft.Toolkit.HighPerformance" Version="7.1.0-preview1" />
+    <PackageReference Include="Microsoft.Toolkit.Mvvm" Version="7.1.0-preview1" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     <PackageReference Include="Nito.AsyncEx.Context" Version="5.1.0" />
     <PackageReference Include="Nito.AsyncEx.Coordination" Version="5.1.0" />
     <PackageReference Include="PlayFabAllSDK" Version="1.98.210802" />
     <PackageReference Include="Standart.Hash.xxHash" Version="3.1.0" />
-    <PackageReference Include="System.Collections.Immutable" Version="6.0.0-preview.6.21352.12" />
+    <PackageReference Include="StructLinq" Version="0.27.0" />
     <PackageReference Include="System.Memory" Version="4.5.4" />
     <PackageReference Include="System.Numerics.Vectors" Version="4.5.0" />
-    <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="6.0.0-preview.6.21352.12" />
-    <PackageReference Include="System.Text.Json" Version="6.0.0-preview.6.21352.12" />
+    <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="6.0.0-preview.7.21377.19" />
+    <PackageReference Include="System.Text.Json" Version="6.0.0-preview.7.21377.19" />
     <PackageReference Include="ZString" Version="2.4.2" />
   </ItemGroup>
 </Project>

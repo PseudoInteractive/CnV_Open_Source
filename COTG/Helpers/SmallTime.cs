@@ -31,6 +31,7 @@ namespace COTG
 			return new SmallTime( (uint)new DateTimeOffset(dateTime.Date,TimeSpan.Zero).ToUnixTimeSeconds());
 		}
 		public readonly string Format() => dateTime.Format();
+		public readonly string FormatDateForFileName() => dateTime.FormatDateForFileName();
 
 
 		/// <summary>

@@ -1640,7 +1640,7 @@ namespace COTG
 												var r = t.Ramp();
 												var c1 = a.CidToCamera();
 												var spot = Spot.GetOrAdd(a);
-												DrawAction(0.5f, 1.0f, r, c1, c0, Color.Red, troopImages[(int)spot.GetPrimaryTroopType(false)], false, null, 
+												DrawAction(0.5f, 1.0f, r, c1, c0, Color.Red, troopImages[(int)spot.TroopType], false, null, 
 													lineThickness: lineThickness,highlight:Spot.IsSelectedOrHovered(a));
 											}
 										//	foreach (var target in cluster.targets)
@@ -2110,7 +2110,7 @@ namespace COTG
 												}
 												else
 												{
-													type = spot.classificationTroopType;
+													type = spot.TroopType;
 													typeBlend = 1;
 													switch (spot.classification)
 													{
@@ -2137,23 +2137,23 @@ namespace COTG
 							}
 						}
 					}
-					if (!ShellPage.IsCityView() && Player.isTest)
-					{
-						var avatars = PlayerPresence.all;
-						foreach (var a in avatars)
-						{
-							var cid = a.cid;
-							var pid = a.pid;
-							if (Player.myId == pid) // don't show me
-								continue;
+					//if (!ShellPage.IsCityView() && Player.isTest)
+					//{
+					//	var avatars = PlayerPresence.all;
+					//	foreach (var a in avatars)
+					//	{
+					//		var cid = a.cid;
+					//		var pid = a.pid;
+					//		if (Player.myId == pid) // don't show me
+					//			continue;
 
-							var wc = cid.CidToWorld();
-							if (!IsCulledWC(wc))
-							{
-								DrawTextBox($"~{Player.IdToName(pid)}~", wc.WToCamera(), tipTextFormatCentered, Color.Red, 255, Layer.tileText, 3, 3, null, -1, 0.75f * SettingsPage.fontScale);
-							}
-						}
-					}
+					//		var wc = cid.CidToWorld();
+					//		if (!IsCulledWC(wc))
+					//		{
+					//			DrawTextBox($"~{Player.IdToName(pid)}~", wc.WToCamera(), tipTextFormatCentered, Color.Red, 255, Layer.tileText, 3, 3, null, -1, 0.75f * SettingsPage.fontScale);
+					//		}
+					//	}
+					//}
 					// show selected
 					var _toolTip = ShellPage.toolTip;
 					if (underMouse != null)
@@ -2236,9 +2236,9 @@ namespace COTG
 				return (iType, alpha);
 			}
 		}
-		static int _blend;
-		static Vector2 _uv0;
-		static Vector2 _uv1;
+	//	static int _blend;
+	//	static Vector2 _uv0;
+	//	static Vector2 _uv1;
 		private static void DrawFlag(int cid, SpriteAnim sprite, Vector2 offset)
 		{
 			var wc = cid.CidToWorld();
