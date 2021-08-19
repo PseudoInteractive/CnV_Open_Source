@@ -2072,7 +2072,8 @@ namespace COTG.Views
 			{
 				var i = sender as FrameworkElement;
 				var city = i.DataContext as City;
-				JSClient.view.InvokeScriptAsync("sendmail", new string[] { city.playerName, SettingsPage.attackPlanName + " " + plan.attackTime.FormatDateForFileName(), playerCommands[city.pid].Replace("<", "&lt;").Replace(">", "&gt;").Replace("\n", "&#10;&#13;") });
+				JSClient.view.InvokeScriptAsync("sendmail", new string[] { city.playerName, SettingsPage.attackPlanName + " " + plan.attackTime.FormatDateForFileName(), 
+					playerCommands[city.pid].Replace("<", "&lt;").Replace(">", "&gt;").Replace("\n","<br />") });//.Replace("\n", "&#10;&#10;") });
 			}
 			catch(Exception ex)
 			{

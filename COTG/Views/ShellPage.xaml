@@ -81,18 +81,18 @@
 									  FontSize="{StaticResource MediumFontSize}"
 										FontFamily="Tw Cen MT Condensed"
 									  IsTextScaleFactorEnabled="False"
-										 
+										 RightTapped="FilterRightTapped"
 									  Click="{x:Bind views:ShellPage.ContinentFilterClick}"
 									  Style="{ThemeResource DropDownButtonRevealStyle}"
 									 ToolTipService.ToolTip="Yet another Continent filter.  Uncheck all to show everything"  />
 
 					<Button x:Name="HomeButton" Click="BuildHomeClick" RightTapped="BuildHomeRightTapped" Margin="4" Style="{ThemeResource ButtonRevealStyle}"
                             ToolTipService.ToolTip="&#x0a;Click to switch between region view and city view&#x0a;Right clck for menu" >
-						<Button.Resources>
+						<!--<Button.Resources>
 							<winui:TeachingTip x:Key="HomeButtonTip" Title="Home Button" x:FieldModifier="public"
                                    IsLightDismissEnabled="True" PreferredPlacement="Right" 
                                     Subtitle="Click to toggle between city and world view, and to focus on the current city" />
-						</Button.Resources>
+						</Button.Resources>-->
 						<SymbolIcon Symbol="Home"/>
 
 					</Button>
@@ -182,7 +182,7 @@
                           Style="{StaticResource AppBarButtonRevealStyle}"
                                ToolTipService.ToolTip="When in doubt, refresh - Right click to refresh world data"
                               Icon="RepeatAll">
-					<AppBarButton.Resources>
+					<!--<AppBarButton.Resources>
 						<winui:TeachingTip x:Key="RefreshTip"
                                 IsLightDismissEnabled="True" 
                                 Title="Refresh"
@@ -191,7 +191,7 @@
                                 Subtitle="If something is not updated or missing, try this button, use right click to refresh many things">
 							<TextBlock Text="Right click will refresh all World data (castles, cities, bosses etc)" />
 						</winui:TeachingTip>
-					</AppBarButton.Resources>
+					</AppBarButton.Resources>-->
 				</AppBarButton>
 				<AppBarSeparator/>
 				<AppBarButton  x:Name="buildingsButton"
@@ -270,7 +270,7 @@
 				<ColumnDefinition />
 			</Grid.ColumnDefinitions>
 			<Frame x:Name="chatTabFrame" x:FieldModifier="public" Grid.Column ="1" Grid.Row="1" IsNavigationStackEnabled="False" Margin="12,12,16,0" IsTabStop="True" TabFocusNavigation="Once" >
-				<Frame.Resources>
+				<!--<Frame.Resources>
 					<winui:TeachingTip x:Key="ChatTip0"
                                 Title="Chat Window"
                                    IsLightDismissEnabled="True"
@@ -286,7 +286,7 @@
                                    IsLightDismissEnabled="True"
                               
                                 Subtitle="Click on the language icon to translate outgoing. You can repeat multi times for more languages"></winui:TeachingTip>
-				</Frame.Resources>
+				</Frame.Resources>-->
 			</Frame>
 			<!-- Chat Width resizer -->
 			<tk:GridSplitter

@@ -476,6 +476,7 @@ namespace COTG.Views
 		public static bool incomingAlwaysVisible;
 		public static bool attacksAlwaysVisible;
 		public static float penaltyForWrongDungeonType = 6;
+		public static ushort scoreForSorcTower = 2000;
 
 		public string VersionDescription
 		{

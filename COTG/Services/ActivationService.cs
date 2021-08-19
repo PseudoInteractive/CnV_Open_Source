@@ -4,8 +4,6 @@ using System.Linq;
 using System.Threading.Tasks;
 
 using COTG.Activation;
-using COTG.Core.Helpers;
-using COTG.Core.Services;
 using COTG.Services;
 using COTG.Views;
 
@@ -163,7 +161,7 @@ namespace COTG.Services
             // TODO restore        yield return Singleton<LiveTileService>.Instance;
             // TODO restore     yield return Singleton<HubNotificationsService>.Instance;
             yield return ToastNotificationsService.instance;
-            yield return Singleton<ShareTargetActivationHandler>.Instance;
+          //  yield return Singleton<ShareTargetActivationHandler>.Instance;
             // TODO restore    yield return Singleton<BackgroundTaskService>.Instance;
 //            yield return Singleton<SuspendAndResumeService>.Instance;
            // yield return Singleton<WebToAppLinkActivationHandler>.Instance;

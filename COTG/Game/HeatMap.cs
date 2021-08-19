@@ -30,6 +30,7 @@ namespace COTG.Game
 		none,
 		loading,
 		loaded,
+		doesNotExist,
 		failed,
 	}
 	public class HeatMapItem : INotifyPropertyChanged
@@ -92,7 +93,8 @@ namespace COTG.Game
 
 
 		public string dateStr => t.ToString("yyyy-MM-dd");
-		public bool isLoaded => loadState == AzureLoadState.loading;
+		public bool isLoaded => loadState == AzureLoadState.loaded;
+		public bool isLoadedOrDoesNotExist => loadState switch { AzureLoadState.loaded or AzureLoadState.doesNotExist=>true,_ => false }; 
 		public bool loadHasBeenCalled => loadState >= AzureLoadState.loading;
 		public AzureLoadState loadState;
 		public override string ToString() => desc;
@@ -404,14 +406,21 @@ namespace COTG.Game
 				}
 				catch (Azure.RequestFailedException r)
 				{
-					Assert(isLoaded);
-					if (loadState == AzureLoadState.loading)
+					if ((r.Status == 404))
 					{
-						Assert(false);
-						loadState = AzureLoadState.failed;
+						loadState = AzureLoadState.doesNotExist;
 					}
-					Log(r.ErrorCode); // already loaded, leave it
-					Assert(r.Status == 404);
+					else
+					{
+						Assert(isLoaded);
+						if (loadState == AzureLoadState.loading)
+						{
+							Assert(false);
+							loadState = AzureLoadState.failed;
+						}
+						Log(r.ErrorCode); // already loaded, leave it
+					}
+					//Assert(r.Status == 404);
 			//		return isLoaded() ? this : null;
 				}
 			//	catch (Azure.NoBodyResponse<Azure.Storage.Blobs.Models.BlobDownloadStreamingResult>.ResponseBodyNotFoundException)
@@ -441,7 +450,7 @@ namespace COTG.Game
 
 				Debug.LogEx(ex);
 			}
-			return isLoaded ? this : null; 
+			return isLoadedOrDoesNotExist ? this : null; 
 		}
 
 		// stored in reverse order, 0 is most recent

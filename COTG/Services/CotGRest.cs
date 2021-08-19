@@ -411,55 +411,75 @@ namespace COTG.Services
 		const string magic = "X2UsK3KSJJEse2";
 		public static async Task<bool> Send(int cid, int tt, int count, bool cancelOrDismiss)
 		{
-			if (cancelOrDismiss)
+			var city = City.Get(cid);
+			try
 			{
-				long tid = 0;
-				await GetCity.Post(cid, (jse, _city) =>
+				if (cancelOrDismiss)
 				{
-					if (jse.TryGetProperty("tq", out var tq))
+					long tid = 0;
+					int maxTs = 0;
+					int curTs = 0;
+					await GetCity.Post(cid, (jse, _city) =>
 					{
-						if (tq.ValueKind == JsonValueKind.Array && tq.GetArrayLength() > 0)
+						if (jse.TryGetProperty("tq", out var tq))
 						{
-							tid = tq[0].GetAsInt64("tid");
+							if (tq.ValueKind == JsonValueKind.Array && tq.GetArrayLength() > 0)
+							{
+								tid = tq[0].GetAsInt64("tid");
+							}
 						}
+						maxTs = jse.GetAsInt("tt");
+						curTs = jse.GetAsInt("tu");
+					});
+					if (tid != 0) // if recruiting
+					{
+						await Post.Send("includes/cTrp.php", $"cid={cid}&a={tid}");
 					}
-				});
-				if (tid != 0)
-				{
-					await Post.Send("includes/cTrp.php", $"cid={cid}&a={tid}");
+
+					if (curTs >= maxTs)
+					{
+						await city.SetMinistersOnAsync(false);
+						var magic = "X2UsfKKKsse2"; ;
+						var encoded = Aes.Encode("{\"5\":1}", magic);
+						var urle = $"cid={cid}&a=" + HttpUtility.UrlEncode(encoded, Encoding.UTF8);
+
+						await Post.Send("includes/dTp.php", urle);
+
+					}
 				}
-				else
+				for (int i = 0; ; ++i)
 				{
-					var magic = "X2UsfKKKsse2"; ;
-					var encoded = Aes.Encode("{\"5\":1}", magic);
+
+					var t = JSClient.ServerTimeMs();
+					var args = new Args() { tid = AMath.random.Next(), bt = 1, ds = t, de = t + 1, pa = 1, tc = count, tm = 0, ttype = tt, tbt = 4, tl = 1 };
+
+					var encoded = Aes.Encode(JsonSerializer.Serialize(args, Json.jsonSerializerOptions), magic);
 					var urle = $"cid={cid}&a=" + HttpUtility.UrlEncode(encoded, Encoding.UTF8);
-
-					Post.Send("includes/dTp.php", urle);
-
+					var str = (await Post.SendForText("includes/bTrp.php", urle)).Trim();
+					if (str == "0")
+					{
+						Note.Show($"Recruit {count} {ttNameWithCaps[tt]} in {City.Get(cid).nameMarkdown}");
+						return true;
+					}
+					else if (i == 4)
+					{
+						Note.Show(str);
+						return false;
+					}
+					await Task.Delay(250);
 				}
 			}
-			for(int i=0;;++i)
+			catch (Exception ex)
 			{
-
-				var t = JSClient.ServerTimeMs();
-				var args = new Args() { tid = AMath.random.Next(), bt = 1, ds = t, de = t + 1, pa = 1, tc = count, tm = 0, ttype = tt, tbt = 4, tl = 1 };
-
-				var encoded = Aes.Encode(JsonSerializer.Serialize(args, Json.jsonSerializerOptions), magic);
-				var urle = $"cid={cid}&a=" + HttpUtility.UrlEncode(encoded, Encoding.UTF8);
-				var str = (await Post.SendForText("includes/bTrp.php", urle)).Trim();
-				if (str == "0")
-				{
-					Note.Show($"Recruit {count} {ttNameWithCaps[tt]} in {City.Get(cid).nameMarkdown}");
-					return true;
-				}
-				else if(i==2)
-				{
-					Note.Show(str);
-					return false;
-				}
+				LogEx(ex);
 			}
+			finally
+			{
+				city.SetMinistersOn(true);
+			}
+			return false;
 		}
-		
+
 
 	}
 

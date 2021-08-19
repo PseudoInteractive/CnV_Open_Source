@@ -38,6 +38,7 @@ using static COTG.Game.City;
 using ContentDialog = Windows.UI.Xaml.Controls.ContentDialog;
 using ContentDialogResult = Windows.UI.Xaml.Controls.ContentDialogResult;
 using Windows.System;
+using System.Threading;
 
 namespace COTG.Views
 {
@@ -131,12 +132,8 @@ namespace COTG.Views
 			pending,
 			upgrade,
 			downgrade,
-			abandon,
 			flipLayoutV,
 			flipLayoutH,
-			togglePlanner,
-			showShareString,
-			doTheStuff,
 			invalid,
 			count = invalid,
 
@@ -263,13 +260,8 @@ namespace COTG.Views
 		static BuildMenuItem amUpgrade = new BuildMenuItem("Upgrade", Action.upgrade, "City/decal_building_valid.png", "Upgrade buildings");
 		static BuildMenuItem amBuild = new BuildMenuItem("Build", Action.upgrade, "City/decal_building_valid.png", "Buidl this");
 		static BuildMenuItem amDowngrade = new BuildMenuItem("Downgrade", Action.downgrade, "City/decal_building_invalid.png", "Downgrade buildings");
-		static BuildMenuItem amAbandon = new BuildMenuItem("Abandon", Action.abandon, "City/decal_building_invalid.png", "Abandon this city");
 		static BuildMenuItem amFlipLayoutH = new BuildMenuItem("Flip H", Action.flipLayoutH, "City/build_details_gloss_overlay.png", "Flip Layout Horizontally");
 		static BuildMenuItem amFlipLayoutV = new BuildMenuItem("Flip V", Action.flipLayoutV, "City/build_details_gloss_overlay.png", "Flip Layout Vertically");
-		static BuildMenuItem amSetPlanner = new BuildMenuItem("Planner", Action.togglePlanner, "City/build_details_gloss_overlay.png", "Set planner mode");
-		static BuildMenuItem amSetBuild = new BuildMenuItem("Build", Action.togglePlanner, "City/build_details_gloss_overlay.png", "Set build mode");
-		static BuildMenuItem amSelectShareString = new BuildMenuItem("Settings", Action.showShareString, "City/build_details_gloss_overlay.png", "Sharestring and other settings");
-		static BuildMenuItem amDoTheStuff = new BuildMenuItem("DoTheStuff", Action.togglePlanner, "City/decal_building_valid_multi.png", "Run Do The Stuff");
 
 
 
@@ -353,7 +345,7 @@ namespace COTG.Views
 			menuType = _menuType;
 
 			var townHallLevel = postQueueBuildings[City.bspotTownHall].bl;
-
+			instance.TogglePlanner.Label = isPlanner ? "Build" : "Planner";
 
 			switch (menuType)
 			{
@@ -364,10 +356,7 @@ namespace COTG.Views
 					commands.items.Add(amMove);
 					commands.items.Add(amUpgrade);
 					commands.items.Add(amDowngrade);
-					commands.items.Add(isPlanner ? amSetBuild: amSetPlanner);
-					commands.items.Add(amSelectShareString);
-					commands.items.Add(amDoTheStuff);
-
+				
 					foreach (var i in allBuildings)
 					{
 						if (!App.IsKeyPressedShift())
@@ -389,26 +378,17 @@ namespace COTG.Views
 					else
 						commands.items.Add(amUpgrade);
 					commands.items.Add(amMove);
-					commands.items.Add(isPlanner ? amSetBuild : amSetPlanner);
 
 
 					break;
 				case MenuType.townhall:
 					commands.items.Add(amMove);
-					commands.items.Add(amAbandon);
 					commands.items.Add(amUpgrade);
 					commands.items.Add(amDowngrade);
-					commands.items.Add(amSelectShareString);
-					commands.items.Add(amDoTheStuff);
-					commands.items.Add(isPlanner ? amSetBuild : amSetPlanner);
 
 					break;
 				case MenuType.townhallPlanner:
-					commands.items.Add(amAbandon);
 					commands.items.Add(amUpgrade);
-					commands.items.Add(isPlanner ? amSetBuild : amSetPlanner);
-					commands.items.Add(amSelectShareString);
-					commands.items.Add(amDoTheStuff);
 					commands.items.Add(amFlipLayoutH);
 					commands.items.Add(amFlipLayoutV);
 
@@ -416,9 +396,6 @@ namespace COTG.Views
 				case MenuType.empty:
 
 					commands.items.Add(amLayout);
-					commands.items.Add(isPlanner ? amSetBuild : amSetPlanner);
-					commands.items.Add(amSelectShareString);
-					commands.items.Add(amDoTheStuff);
 
 
 					// restrict by level?
@@ -459,7 +436,6 @@ namespace COTG.Views
 
 				case MenuType.res:
 					commands.items.Add(amDemo);
-					commands.items.Add(isPlanner ? amSetBuild : amSetPlanner);
 
 					//	for (int i = 0; i < 7; ++i)
 					//		Item(buildMenu, i + 1).SetBid(buildingMru[i].bid);
@@ -612,13 +588,18 @@ namespace COTG.Views
 		 * 			<AppBarToggleButton x:Name="planner" Checked="PlannerChecked" Unchecked="PlannerUnchecked"  x:FieldModifier="public" Icon="Orientation" Label="Planner"
                            ToolTipService.ToolTip="Toggles between normal city building and planner mode (i.e. like LOUOpt.com" />
 		 */
-		public static async Task _IsPlanner(bool value, bool showPlannerIfNeeded=false)
+
+		//public static SemaphoreSlim plannerSetSema = new SemaphoreSlim(1);
+
+		public static async Task _IsPlanner(bool value, bool syncPlannerTab=false)
 		{
+		//	using var loc = await SemaLock.Go(plannerSetSema);
+			
 				if (isPlanner == value)
 					return;
 				menuType = MenuType.invalid; //clear this
 				isPlanner = value;
-				if (isPlanner)
+				if (value)
 				{
 
 					var build = GetBuild();
@@ -627,8 +608,9 @@ namespace COTG.Views
 						build.ShareStringToBuildingsCache();
 						
 					}
-					BuildingsOrQueueChanged();
-					if(showPlannerIfNeeded && !PlannerTab.IsVisible())
+				//	BuildingsOrQueueChanged();
+			
+					if (syncPlannerTab && !PlannerTab.IsVisible())
 						App.DispatchOnUIThreadSneakyLow(()=>PlannerTab.instance.Show());
 				}
 				else
@@ -636,15 +618,20 @@ namespace COTG.Views
 					var b = City.GetBuild();
 					b.BuildingsCacheToShareString();
 					await b.SaveLayout();
+
 					await GetCity.Post(City.build);
-					//App.DispatchOnUIThreadSneakyLow(() =>
-				 //  {
-					//   //if (PlannerTab.instance.isVisible)
-					//   //{
-					//	  // PlannerTab.instance.Close();
-					//	  // BuildTab.instance.Show();
-					//   //}
-				 //  });
+					
+		
+					if (syncPlannerTab && PlannerTab.IsVisible())
+					{
+						App.DispatchOnUIThreadSneaky(() =>
+					   {
+						   if (PlannerTab.instance.isVisible)
+						   {
+							   PlannerTab.instance.Close();
+						   }
+					   });
+					}
 
 				}
 			
@@ -653,6 +640,7 @@ namespace COTG.Views
 
 		internal static void ClearQueue()
 		{
+			Note.Show("Cleared Queue");
 			BuildQueue.ClearQueue();
 			JSClient.view.InvokeScriptAsync("cancelbuilds", Array.Empty<string>() );
 		}
@@ -1644,12 +1632,6 @@ namespace COTG.Views
 						UpgradeToLevel(1,cc,dryRun);
 						break;
 					}
-				case Action.abandon:
-					{
-						if(!dryRun)
-							instance.Abandon_Click(null, null);
-						break;
-					}
 				case Action.flipLayoutH:
 					{
 						if (!dryRun)
@@ -1662,28 +1644,34 @@ namespace COTG.Views
 
 						break;
 					}
-				case Action.showShareString:
-					{
-						if(isSingleClickAction)
-							await ShareString.Show(City.build);
-						break;
-					}
-				case Action.doTheStuff:
-					{
-						if (isSingleClickAction)
-							await City.GetBuild().DoTheStuff();
-						break;
-					}
-				case Action.togglePlanner:
-					{
-						if (!dryRun)
-						{
+				//case Action.showShareString:
+				//	{
+				//		if (!dryRun)
+				//		{
+				//			if (isSingleClickAction)
+				//			await ShareString.Show(City.build);
+				//		}
+				//		break;
+				//	}
+				//case Action.doTheStuff:
+				//	{
+				//		if (!dryRun)
+				//		{
+				//			if (isSingleClickAction)
+				//			await City.GetBuild().DoTheStuff();
+				//		}
+				//		break;
+				//	}
+				//case Action.togglePlanner:
+				//	{
+				//		if (!dryRun)
+				//		{
 
-							App.DispatchOnUIThreadSneaky(()=>TogglePlanner() );
-						}
+				//			App.DispatchOnUIThreadSneaky(()=>TogglePlanner() );
+				//		}
 
-						break;
-					}
+				//		break;
+				//	}
 				case Action.flipLayoutV:
 					{
 						if (!dryRun)
@@ -2124,20 +2112,7 @@ namespace COTG.Views
 			return 0; // error
 		}
 
-		private static async Task TogglePlanner()
-		{
-			if (CityBuild.isPlanner)
-			{
-				await CityBuild._IsPlanner(false,false);
-			}
-			else
-			{
-				if (!GetBuild().isLayoutValid)
-					await ShareString.Show(City.build);
-				await CityBuild._IsPlanner(true, true);
-			
-			}
-		}
+		
 		public static (int x, int y) int00 = (0, 0);
 
 		private static async Task RemoveCastleFromLayout(City city)
@@ -2302,31 +2277,6 @@ namespace COTG.Views
 
 		}
 
-		private async void Abandon_Click(object sender, RoutedEventArgs e)
-		{
-			var cid = City.build;
-			await App.DispatchOnUIThreadExclusive(cid,async() =>
-			{
-				var dialog = new ContentDialog()
-			{
-				Title = "Are you Sure?",
-				Content = "Abandon " + City.GetOrAdd(cid).nameAndRemarks,
-				PrimaryButtonText = "Yes",
-				SecondaryButtonText = "Cancel"
-			};
-				var rv= await dialog.ShowAsync2();
-				if (rv == ContentDialogResult.Primary)
-				{
-					await JSClient.view.InvokeScriptAsync("misccommand", new[] { "abandoncity", cid.ToString() });
-					
-					await Task.Delay(500);
-					City.GetOrAdd(cid).pid = 0; //
-					CitiesChanged();
-					NavStack.Back(true);
-				}
-
-			});
-		}
 		public async void ItemClick(object sender, Windows.UI.Xaml.Controls.ItemClickEventArgs e)
 		{
 			contextMenuResultSelected = true;
@@ -2385,16 +2335,6 @@ namespace COTG.Views
 								RevertToLastAction();
 
 							}
-						}
-						else if(bi.action == Action.togglePlanner)
-						{
-							await TogglePlanner();
-							
-
-						}
-						else if (bi.action == Action.showShareString)
-						{
-							await ShareString.Show(City.build); 
 						}
 						else
 						{
@@ -2550,6 +2490,69 @@ namespace COTG.Views
 			{
 				CityBuild.UpgradeToLevel(number, CityView.hovered);
 			}
+		}
+
+		private async void DoTheStuff_ExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
+		{
+			buildMenu.Hide();
+			await City.GetBuild().DoTheStuff().ConfigureAwait(false);
+		}
+
+		private async void TogglePlanner_ExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
+		{
+			buildMenu.Hide();
+
+			if (CityBuild.isPlanner)
+			{
+				await CityBuild._IsPlanner(false, true);
+			}
+			else
+			{
+				if (!GetBuild().isLayoutValid)
+					await ShareString.Show(City.build);
+				await CityBuild._IsPlanner(true, true);
+
+			}
+		}
+
+		private async void Settings_ExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
+		{
+			buildMenu.Hide();
+			await ShareString.Show(City.build).ConfigureAwait(false);
+		}
+
+		private async void Abandon_ExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
+		{
+			buildMenu.Hide();
+			var cid = City.build;
+			await App.DispatchOnUIThreadExclusive(cid, async () =>
+			{
+				var dialog = new ContentDialog()
+				{
+					Title = "Are you Sure?",
+					Content = "Abandon " + City.GetOrAdd(cid).nameAndRemarks,
+					PrimaryButtonText = "Yes",
+					SecondaryButtonText = "Cancel"
+				};
+				var rv = await dialog.ShowAsync2();
+				if (rv == ContentDialogResult.Primary)
+				{
+					await JSClient.view.InvokeScriptAsync("misccommand", new[] { "abandoncity", cid.ToString() });
+
+					await Task.Delay(500);
+					City.GetOrAdd(cid).pid = 0; //
+					CitiesChanged();
+					NavStack.Back(true);
+				}
+
+			});
+
+		}
+
+		private void CancelQueue_ExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
+		{
+			buildMenu.Hide();
+			ClearQueue();
 		}
 		//public static BuildPhase GetBuildPhase()
 		//{

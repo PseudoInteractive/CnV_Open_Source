@@ -183,63 +183,64 @@
 				</tg:RadDataGrid.Columns>
 
 			</tg:RadDataGrid>
-			<tk:WrapPanel x:Name="raidInfoBox"
-						  Orientation="Horizontal"
+		<StackPanel Grid.Row="0">
+			<tk:WrapPanel Orientation="Horizontal"
 						  Margin="2"
 						  HorizontalSpacing="2"
 						  VerticalSpacing="2"
-						  Grid.Row="0">
-			<Button Content="Reset Raids"
+						  >
+				<Button Content="Reset Raids"
 						Style="{StaticResource ButtonSmall}"
 						ToolTipService.ToolTip="Resets all with raid carry less than 90% (configurable in settings) or idle troops greater than 25% (configurable in settings)"  >
-				<Button.Flyout>
-					<Flyout>
-						<StackPanel>
-							<Button Content="Bad ones Fast"
+					<Button.Flyout>
+						<Flyout>
+							<StackPanel>
+								<Button Content="Bad ones Fast"
 									ToolTipService.ToolTip="Returns all selected raids with carry less than 90% (configurable in settings) or idle troops greater than 25% (configurable in settings)" 
 									Click="ResetBadRaidsFast" />
-							<Button Content="Bad ones Slow"
+								<Button Content="Bad ones Slow"
 									ToolTipService.ToolTip="Returns all selected raids with carry less than 90% (configurable in settings) or idle troops greater than 25% (configurable in settings)" 
 									Click="ResetBadRaidsSlow" />
-							<Button Content="Selected Fast"
+								<Button Content="Selected Fast"
 									ToolTipService.ToolTip="Return all selected raids as quickly as possible" 
 									Click="ResetRaidsFast"/>
 
-							<Button Content="Selected Whenever"
+								<Button Content="Selected Whenever"
 									ToolTipService.ToolTip="Return all selected raids once they are finished their current raid"
 									Click="ResetRaidsSlow"/>
-						</StackPanel>
-					</Flyout>
-				</Button.Flyout>
-				<Button.Resources>
-					<winui:TeachingTip x:Key="TipResetRaids1"
+							</StackPanel>
+						</Flyout>
+					</Button.Flyout>
+					<!--<Button.Resources>
+						<winui:TeachingTip x:Key="TipResetRaids1"
 						   x:FieldModifier="public"
 						   Title="Reset Raids Tip"
 						  
 						   Subtitle="Resetting raids is used bring troops home if their carry% is too low (which means that you are taking more raids losses) or the % idle troops in a city is high (this typically occurs while your cities are not full and still recruiting, i.e. for early cities or after a battle.  By bringing raids home you can consoldate your raids).  Warning: it can take some time for all troops to return, only use this button if you will be around about 1 hour after the reset to set them raiding again">
-					</winui:TeachingTip> 
-				</Button.Resources>
-			</Button>
-			
-	
+						</winui:TeachingTip>
+					</Button.Resources>-->
+				</Button>
+
+
 				<Button x:Name="autoRaid"
 					    Content="Raid Selected"
 						Click="AutoRaid"
 						Style="{StaticResource ButtonSmall}"
 						ToolTipService.ToolTip="For all selected castles, raids are sent to the closest appropriate dungeon.  Use with care." />
-			<Button Content="Select All"
+				<Button Content="Select All"
 						Click="SelectAll"
 						Style="{StaticResource ButtonSmall}"
 						ToolTipService.ToolTip="Selects all cities, useful for reset raids"  />
-			<Button Content="Raid Settings"
+				<Button Content="Raid Settings"
 						Click="RaidSettings"
 						Style="{StaticResource ButtonSmall}"
 						ToolTipService.ToolTip="Shows settings page for raids"  />
-			<Button Content="Return For Outgoing"
+				<Button Content="Return For Outgoing"
 						Click="ReturnRaidsForOutgoing"
 						Style="{StaticResource ButtonSmall}"
 						ToolTipService.ToolTip="Schedules all troops with outgoing attacks to return in time for attacks.  Uses ReturnRaidsOffset in settings  Warning 0: this takes time, please do not interrupt it.   Warning 1: Not well tested, please double check the results"  />
-
+			</tk:WrapPanel>
+			<tk:WrapPanel>				
 			<Border Style="{StaticResource BorderReveal}">
 				
 
@@ -273,8 +274,8 @@
 							   IsTextSelectionEnabled="True" />
 				</Border>
 			</tk:WrapPanel>
-
-			<tk:WrapPanel x:Name="incomeBox"
+		</StackPanel>
+		<tk:WrapPanel x:Name="incomeBox"
 				          Orientation="Horizontal"
 						  Margin="4"
 						  HorizontalSpacing="4"
@@ -315,7 +316,7 @@
 			</tk:WrapPanel>
 		
 
-		<winui:TeachingTip x:Name="TipRaiding101"
+		<!--<winui:TeachingTip x:Name="TipRaiding101"
 						   x:FieldModifier="public"
 						   Title="Raiding 101"
 						  
@@ -356,7 +357,7 @@
                     <LineBreak />The 'raidReturn' column tells you when (in minutes) the city raiders will reach their current destination.
                     <LineBreak />    -   If the number is in brackets, they are on their way to the dungeon
                     <LineBreak />    -   Otherwise they are returning
-                    <LineBreak />    -   "---" means that there are no raids 
+                    <LineBreak />    -   means that there are no raids 
                     </TextBlock>
 		</winui:TeachingTip>
 		<winui:TeachingTip x:Name="TipRaidReturn102"
@@ -409,5 +410,6 @@
 				<LineBreak />		- The downside with this approach is that near the end your raids will be at as low as 50% carry capacity (usuually not that low)  which means that your raiding losses will be higher than ideal.
 			</TextBlock>
 		</winui:TeachingTip>
+		-->
 	</Grid>
 </view:UserTab>

@@ -46886,7 +46886,6 @@ function outer() {
             var Y9g = bidWALL >> 790423264;
             var y9g = 0;
             v0w = Number(v0w);
-            var X0w = new Array();
             if (true)
                 var x0w = 16;
             else
@@ -46908,8 +46907,7 @@ function outer() {
                 var m9g = Number(bam["buildings"][Number(Y9g)][_s(h6R &
                     2147483647)][Number(R9g)][__s[B1p | 576]]);
                 var l0w = Number(city.r[1].r);
-                var I0w = Number(city.r["2" |
-                    2].r);
+                var I0w = Number(city.r[2].r);
                 if (j0w == (0)) {
                     var B9g = currentTime();
                     var D9g = Number(B9g) + Number(P9g);
@@ -46932,16 +46930,6 @@ function outer() {
                     if (v0w == 1 && l0w >= c9g && I0w >= m9g && G0w == 0) {
                         var q9g = 1;
                         var F9g = +bidWALL;
-                        X0w = {
-                            bspot: y9g,
-                            de: D9g,
-                            ds: B9g,
-                            brep: Y9g,
-                            bid: N9g,
-                            slvl: 0,
-                            btype: F9g,
-                            elvl: q9g
-                        };
                         var s0w = {
                             bt: Number(0),
                             bid: N9g,
@@ -47025,7 +47013,6 @@ function outer() {
                         var E9g = R9g - 1;
                         var q9g = R9g;
                         var F9g = +bidWALL;
-                        X0w = { btype: F9g, ds: B9g, elvl: q9g, bspot: y9g, de: D9g, brep: Y9g, bid: N9g, slvl: E9g };
                         var C0w = y9g % +A5y;
                         var W0w = (y9g - C0w) / +A5y;
                         var s0w = {
@@ -47111,7 +47098,6 @@ function outer() {
                         var E9g = R9g + ("1" | 1);
                         var q9g = R9g;
                         var F9g = bidWALL & 2147483647;
-                        X0w = { de: D9g, slvl: E9g, bspot: y9g, elvl: q9g, btype: F9g, bid: N9g, brep: Y9g, ds: B9g };
                         var s0w = {
                             bt: Number(2),
                             brep: Y9g,
@@ -47200,7 +47186,6 @@ function outer() {
                             var E9g = R9g;
                             var q9g = 0;
                             var F9g = bidWALL >> 307699904;
-                            X0w = { elvl: q9g, slvl: E9g, ds: B9g, brep: Y9g, bid: N9g, bspot: y9g, de: D9g, btype: F9g };
                             var s0w = {
                                 bt: Number(3),
                                 de: D9g,
@@ -68740,7 +68725,7 @@ function sendMail(to, subject, body) {
     $("#mailToSub").val(subject);
     let __iframe = $('#mailBody_ifr');
     __iframe.ready(function () {
-        __iframe.contents().find("body").val(body);
+        __iframe.contents().find("body").html(body);
     });
 }
 window['sendmail'] = sendMail;

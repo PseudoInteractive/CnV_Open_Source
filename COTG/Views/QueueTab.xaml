@@ -14,13 +14,13 @@
 			  IsTabStop="True"
                mc:Ignorable="d">
 	<views:UserTab.Resources>
-	
+
 		<DataTemplate x:Key="BuildTabTemplate" x:DataType="views:BuildItemView">
 			<winui:TreeViewItem ItemsSource="{x:Bind queue}">
-			<StackPanel Orientation="Horizontal" Margin="4" MinWidth="200">
-				<Canvas Background="{x:Bind brush}" Width="32" Height="32" />
-				<TextBlock Text="{x:Bind text}" />
-			</StackPanel>
+				<StackPanel Orientation="Horizontal" Margin="4" MinWidth="200">
+					<Canvas Background="{x:Bind brush}" Width="32" Height="32" />
+					<TextBlock Text="{x:Bind text}" />
+				</StackPanel>
 			</winui:TreeViewItem>
 		</DataTemplate>
 

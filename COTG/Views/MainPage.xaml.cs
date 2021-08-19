@@ -306,14 +306,14 @@ namespace COTG.Views
 
 		static string[] raidingTips =
 		{
-			nameof(instance.TipRaiding101),
-			nameof(instance.TipRaiding103),
-			nameof(instance.TipRaiding103),
-			nameof(instance.TipRaidReturn101),
-			nameof(instance.TipRaidReturn102),
-			nameof(instance.TipRaidReturn103),
-			nameof(instance.TipRaidReturn104),
-			nameof(instance.TipCarryCapacity101),
+			//nameof(instance.TipRaiding101),
+			//nameof(instance.TipRaiding103),
+			//nameof(instance.TipRaiding103),
+			//nameof(instance.TipRaidReturn101),
+			//nameof(instance.TipRaidReturn102),
+			//nameof(instance.TipRaidReturn103),
+			//nameof(instance.TipRaidReturn104),
+			//nameof(instance.TipCarryCapacity101),
 		};
 
 		public static void CheckTipRaiding()
@@ -525,7 +525,19 @@ namespace COTG.Views
             this.Id = CommandId.DataBindingComplete;
         }
 
-		static T GetValue<T>(IDataView view, int id) => view.GetAggregateValue(id, null) is T o ? o : default;
+		static T GetValue<T>(IDataView view, int id)
+		{
+			var rv = view.GetAggregateValue(id, null);
+			if (rv is null)
+				return default;
+			return (T)rv;
+		}
+		public override bool CanExecute(object parameter)
+		{
+			var context = parameter as DataBindingCompleteEventArgs;
+			// put your custom logic here
+			return true;
+		}
 		public override void Execute(object parameter)
         {
 			App.DispatchOnUIThreadSneaky(() =>

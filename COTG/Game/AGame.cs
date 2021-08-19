@@ -189,7 +189,7 @@ namespace COTG
 		public const float cityZoomDefault = 1280;
 		public float eventTimeOffsetLag;
 		public float eventTimeEnd;
-		static public Color nameColor, nameColorHover, myNameColor, nameColorIncoming, nameColorSieged, nameColorIncomingHover, nameColorSiegedHover, myNameColorIncoming, myNameColorSieged; //shadowColor;
+		static public Color nameColor, nameColorHover, myNameColor, nameColorOutgoing, nameColorIncoming, nameColorSieged, nameColorIncomingHover, nameColorSiegedHover, myNameColorIncoming, myNameColorSieged; //shadowColor;
 																																															  //	static CanvasLinearGradientBrush tipBackgroundBrush, tipTextBrush;
 																																															  //	static CanvasTextFormat tipTextFormat = new CanvasTextFormat() { FontSize = 14, WordWrapping = CanvasWordWrapping.NoWrap, FontStretch = fontStretch };
 																																															  //	static CanvasTextFormat tipTextFormatCentered = new CanvasTextFormat() { FontSize = 12, HorizontalAlignment = CanvasHorizontalAlignment.Center, VerticalAlignment = CanvasVerticalAlignment.Center, WordWrapping = CanvasWordWrapping.NoWrap, FontStretch = fontStretch };
@@ -214,6 +214,7 @@ namespace COTG
 		static readonly Color defenseArrivedColor = new Color(255, 20, 255, 160);
 		static readonly Color artColor = Color.DarkBlue;
 		static readonly Color senatorColor = Color.OrangeRed;
+		static readonly Color attackingColor = Color.PaleVioletRed; 
 		static readonly Color siegeColor = Color.DarkOrange;
 		static readonly Color assaultColor = CColor(55, 94, 190, 242);
 		static readonly Color tradeColor = Color.DarkGreen;
@@ -505,13 +506,10 @@ namespace COTG
 					{
 						COTG.Debug.LogEx(sex, report: false);
 						COTG.Debug.Log($"{sex.ResultCode} {sex.Descriptor.ApiCode} {sex.Descriptor.Description} {sex.Descriptor.ToString()} ");
-						App.DispatchOnUIThreadSneaky(() =>
-					   {
-						   App.DoYesNoBoxUI("Video Driver broke", "Please restart, it should recover fine");
+						Faulted();
 
-					   });
 					}
-					catch(Exception ex2)
+					catch (Exception ex2)
 					{
 
 					}
@@ -527,9 +525,19 @@ namespace COTG
 
 		}
 
+		private static async Task Faulted()
+		{
+			var a = await App.DispatchOnUIThreadTask(async () =>
+			{
+				return await App.DoYesNoBoxUI("Video Driver broke", "Please restart, it should recover fine");
 
-
-
+			});
+			if (a == 1)
+			{
+				instance.GraphicsDevice.Reset();
+				faulted = false;
+			}
+		}
 
 		public static void ClearHeatmapImage()
 		{
@@ -1053,7 +1061,7 @@ namespace COTG
 				return;
 
 			underMouse = null;
-			bestUnderMouseScore = 32 * 32;
+			bestUnderMouseScore = 8;
 
 
 			//parallaxZ0 = 1024 * 64.0f / cameraZoomLag;
@@ -1069,7 +1077,7 @@ namespace COTG
 				cameraCLag += (cameraC - cameraCLag) * gain;
 				cameraZoomLag += (cameraZoom - cameraZoomLag) * gain;
 				eventTimeOffsetLag += (ShellPage.instance.eventTimeOffset - eventTimeOffsetLag) * gain;
-				cameraLightC = (ShellPage.mousePositionW);
+				cameraLightC = (ShellPage.mousePositionC);
 				//                cameraZoomLag += (cameraZoom
 
 				var serverNow = _serverNow + TimeSpan.FromMinutes(eventTimeOffsetLag);
@@ -1115,7 +1123,7 @@ namespace COTG
 
 				bmFontScale = (MathF.Sqrt(pixelScale / 64.0f) * 0.5f * SettingsPage.fontScale);//.Min(0.5f);
 				pixelScaleInverse = 1.0f / cameraZoomLag;
-				clampedScaleInverse = (64 * pixelScaleInverse).Min(2.0f);
+				clampedScaleInverse = (64 * pixelScaleInverse).Min(4.0f);
 				shapeSizeGain = MathF.Sqrt(pixelScale * (1.50f / 64.0f));
 				var deltaZoom = cameraZoomLag - detailsZoomThreshold;
 				var wantDetails = deltaZoom > 0;
@@ -1328,6 +1336,7 @@ namespace COTG
 					//else
 					{
 						nameColor = new Color() { A = intAlpha, G = 255, B = 255, R = 255 };
+						nameColorOutgoing = new Color() { A = intAlpha, G = 128, B = 212, R = 255 };
 						nameColorHover = new Color() { A = intAlpha, G = 255, B = 255, R = 140 };
 						myNameColor = new Color() { A = intAlpha, G = 255, B = 150, R = 170 };
 						nameColorIncoming = new Color() { A = intAlpha, G = 190, B = 190, R = 255 };
@@ -1807,8 +1816,10 @@ namespace COTG
 												DrawRectOutlineShadow(Layer.effects - 1, targetCid, assaultColor, null, 4, -10f);
 											if (sieged)
 												DrawRectOutlineShadow(Layer.effects-1, targetCid, siegeColor, null, 4, -12f);
+											if(city.outGoing!=City.OutGoing.none)
+												DrawRectOutlineShadow(Layer.effects - 1, targetCid, attackColor, null, 4, -8f);
 
-											if (!IsCulled(c1) && ((wantDetails || showAll || Spot.IsSelectedOrHovered(targetCid, noneIsAll))))
+											if (!IsCulled(c1) && (wantDetails || showAll || Spot.IsSelectedOrHovered(targetCid, noneIsAll)))
 											{
 												DrawTextBox($"{incAttacks}{city.IncomingInfo()}\n{ (city.tsDefMax + 999) / 1000 }k",
 														c1, tipTextFormatCentered, incAttacks != 0 ? Color.White : Color.Cyan, textBackgroundOpacity, Layer.tileText);
@@ -2072,12 +2083,15 @@ namespace COTG
 												(hasIncoming ?
 													(spot.underSiege ? myNameColorSieged
 																	: myNameColorIncoming)
+																	: spot.outGoing != 0 ? nameColorOutgoing
 																		: myNameColor) :
 											(hasIncoming ?
 												(hovered ?
 													(spot.underSiege ? nameColorSiegedHover : nameColorIncomingHover)
 												   : (spot.underSiege ? nameColorSieged : nameColorIncoming))
-												   : hovered ? nameColorHover : nameColor);
+												   : hovered ? nameColorHover 												   												    
+												   :spot.outGoing != 0 ? nameColorOutgoing
+												   :	nameColor);
 
 											DrawTextBox(name, drawC, nameTextFormat, wantDarkText ? color.A.AlphaToBlack() : color,
 
@@ -2090,7 +2104,7 @@ namespace COTG
 										if (spot != null && !focusOnCity && !(SettingsPage.troopsVisible.HasValue && SettingsPage.troopsVisible.Value == false))
 										{
 											if (!spot.troopsTotal.Any() && spot.isNotClassified && spot.isFriend && SettingsPage.troopsVisible.GetValueOrDefault())
-												spot.Classify();
+												spot.TouchClassification();
 											if (spot.troopsTotal.Any() || spot.isClassified)
 											{
 												var c1 = (cx, cy).WToCamera();
@@ -2403,24 +2417,30 @@ namespace COTG
 			if (timeToArrival < postAttackDisplayTime)
 				gain = 1.0f + (1.0f - timeToArrival / postAttackDisplayTime) * 0.25f;
 			var mid = progress.Lerp(c0, c1);
-			var shadowColor = ShadowColor(alpha, highlight);
-			if (army != null)
+
+			float spriteSize = 32 * SettingsPage.iconScale;
+
+			if (army is not null && ShellPage.toolTip is null)
 			{
-				var d2 = Vector2.DistanceSquared(mid, ShellPage.mousePositionW);
-				if (d2 < bestUnderMouseScore)
+				(var distance,_) = ShellPage.mousePositionW.DistanceToSegment(c0,c1);
+				if (distance < bestUnderMouseScore)
 				{
-					bestUnderMouseScore = d2;
+					bestUnderMouseScore = distance;
 					underMouse = army;
+					highlight = true;
+					spriteSize *= 1.5f;
 				}
 			}
-			DrawLine(Layer.effectShadow, c0 + shadowOffset, c1 + shadowOffset, GetLineUs(c0, c1), shadowColor, zEffectShadow, thickness:lineThickness);
+			if(highlight)
+				lineThickness *= 2;
+			var shadowColor = ShadowColor(alpha, highlight);
+			DrawLine(Layer.effectShadow, c0 + shadowOffset, c1 + shadowOffset, GetLineUs(c0, c1), shadowColor, zEffectShadow, thickness: lineThickness);
 			if (applyStopDistance)
 				DrawSquare(Layer.effectShadow, c0 + shadowOffset, shadowColor, zEffectShadow);
 			DrawLine(Layer.action + 2, c0, mid, GetLineUs(c0, mid), color, zLabels, thickness: lineThickness);
 			if (applyStopDistance)
 				DrawSquare(Layer.action + 3, new Vector2(c0.X, c0.Y), color, zLabels);
-			float spriteSize = 32 * SettingsPage.iconScale;
-			var dc = new Vector2(spriteSize, spriteSize);
+			//var dc = new Vector2(spriteSize, spriteSize);
 			if (bitmap != null)
 			{
 				var _c0 = new Vector2(mid.X - spriteSize, mid.Y - spriteSize);
@@ -2653,7 +2673,6 @@ namespace COTG
 			}
 			return $"({(sieged ? ((hasArt&&hasSen?"SA ":hasArt ? "A ": hasSen? "S " : "n ") + ((hasSen||city.claim>0)? city.claim.ToString("00") + "% ":"") ) : "i ") } { (ts ==0 ? "?" : (ts + 999) / 1000) }kTs)";
 		}
-
 		public static bool IsDark(this Color color) => ((int)color.R + color.G + color.B) < (int)color.A * 3 / 2;
 
 		public static Color AlphaToWhite(this int alpha) { return new Color(255, 255, 255, alpha); }
@@ -2751,10 +2770,10 @@ namespace COTG
 
 		public static Vector2 InverseProject(this Vector2 c)
 		{
-			float zBias = AGame.zCities * 0.625f;
+			float zBias = AGame.zCities;
 			float z = CToDepth(c,zBias);
 
-			for (int i = 0; i < 4; ++i)
+			for (int i = 0; i < 8; ++i)
 			{
 				var test = InverseProject(c, z);
 				z = new Vector2(test.X, test.Y).CToDepth(zBias);

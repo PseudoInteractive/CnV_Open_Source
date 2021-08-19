@@ -272,3 +272,18 @@
 ### 2021/8/08
      - **Fix**
         - Attack Planner failed to load in release builds
+### 2021/8/16
+     - **Fix**
+        - City stats show in raid tab
+     - **Update**
+        - Hubs will ask to build sorc tower to 10 when their score >= 2000 (configuarable)
+     - **Update**
+        - DoTheStuff will warn when a layout is very different from the current building setup and would require many moves to fix
+        - You may want to select a new layout or open planner and select "Use Buildings"
+     - **Update**
+        - For every 8 or so moves performed during a operation, DoTheStuff will warn you, allowing you to stop
+     - **Update**
+        - Use Buildings is available from the Planner tab
+     - **Fix**
+        - Attack planner will add newlines to the plans that get emailed out
+            - Why are HTML newlines so temperamental?

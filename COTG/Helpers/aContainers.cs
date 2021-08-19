@@ -186,6 +186,27 @@ namespace COTG
 		});
 
 		}
+		public Task NotifyResetAsync(T[] changed = null)
+		{
+			return App.DispatchOnUIThreadTask(  () =>
+			{
+				OnPropertyChanged();
+				//  Assert(App.IsOnUIThread());
+				if (CollectionChanged != null)
+				{
+					if (changed != null)
+					{
+						CollectionChanged(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset, changed as IList));
+					}
+					else
+					{
+						CollectionChanged(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
+					}
+				}
+				return Task.CompletedTask;
+			});
+
+		}
 		public void NotifyItemsChanged()
 		{
 			App.DispatchOnUIThreadSneakyLow(() =>
@@ -257,7 +278,7 @@ namespace COTG
 			base.AddRange(src);
 			NotifyReset();
 		}
-		public void AddRange(IEnumerable<T> src)
+		public new void AddRange(IEnumerable<T> src)
 		{
 			Assert(false);
 			base.AddRange(src);

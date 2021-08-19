@@ -123,8 +123,9 @@ namespace COTG.Views
 		{
 			if (refresh == null)
 				refresh = new(_Refresh);// { throttled = true };
-		//	ScrollViewer.SetZoomMode(this, ZoomMode.Enabled);
-			//DependencyObjectExtensions.FindDescendant<ScrollViewer>(this).AllowFocusOnInteraction= false;
+			ScrollViewer.SetIsVerticalScrollChainingEnabled(this,false);
+
+		//	ScrollViewer.SetVerticalScrollMode(this, ScrollMode.Auto); //DependencyObjectExtensions.FindDescendant<ScrollViewer>(this).AllowFocusOnInteraction= false;
 		}
 		
 		protected virtual async Task _Refresh()

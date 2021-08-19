@@ -6,48 +6,90 @@
 	xmlns:winui="using:Microsoft.UI.Xaml.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-	
 	mc:Ignorable="d">
 	<UserControl.Resources>
+		
+		<XamlUICommand x:Name="DoTheStuff" 
+                       ExecuteRequested="DoTheStuff_ExecuteRequested"
+                       Description="Do The Stuff please" 
+                       Label="DoTheStuff">
+			<XamlUICommand.IconSource>
+				<SymbolIconSource Symbol="Bullets" />
+			</XamlUICommand.IconSource>
+		</XamlUICommand>
+		<XamlUICommand x:Name="TogglePlanner" 
+                     ExecuteRequested="TogglePlanner_ExecuteRequested"
+                     Description="Toggle between planner and build" 
+                     Label="Toggle Planner">
+			<XamlUICommand.IconSource >
+				<SymbolIconSource Symbol="Map" />
+			</XamlUICommand.IconSource>
+		</XamlUICommand>
+		<XamlUICommand x:Name="Settings" 
+                   ExecuteRequested="Settings_ExecuteRequested"
+                   Description="Share string, tags and stuff" 
+                   Label="Setup..">
+			<XamlUICommand.IconSource >
+				<SymbolIconSource Symbol="Setting" />
+			</XamlUICommand.IconSource>
+		</XamlUICommand>
+		<XamlUICommand x:Name="CancelQueue" 
+                 ExecuteRequested="CancelQueue_ExecuteRequested"
+                 Description="Cancel all commands in queue" 
+                 Label="Cancel Queue">
+			<XamlUICommand.IconSource >
+				<SymbolIconSource Symbol="ClearSelection" />
+			</XamlUICommand.IconSource>
+		</XamlUICommand>
+		<XamlUICommand x:Name="Abandon" 
+                 ExecuteRequested="Abandon_ExecuteRequested"
+                 Description="Abandon city" 
+                 Label="Abandon..">
+			
+		</XamlUICommand>
+
 		<CollectionViewSource x:Name="cvsGroups" IsSourceGrouped="True" 
                               ItemsPath="items"/>
 	</UserControl.Resources>
-	<Grid>
+		<Grid>
+		<Grid.RowDefinitions>
+			<RowDefinition Height="*"/>
+			<RowDefinition Height="auto"/>
+		</Grid.RowDefinitions>
 		<GridView x:Name="gridView" SelectionMode="None" IsItemClickEnabled="True" ItemClick="ItemClick" Height="Auto" BorderThickness="1" MaxWidth="840" HorizontalAlignment="Center" HorizontalContentAlignment="Center"
 			  ItemsSource="{x:Bind cvsGroups.View, Mode=OneWay}" >
 
 
-			<GridView.ItemTemplate>
-				<DataTemplate x:DataType="views:BuildMenuItem">
-					<StackPanel Orientation="Vertical" ToolTipService.ToolTip="{x:Bind toolTip}" AccessKey="{x:Bind accessKey}" >
-						<Canvas Width="64" Height="64" Background="{x:Bind brush}" />
-						<TextBlock Text="{x:Bind header}"  Style="{StaticResource CenterAlign}" FontSize="10" VerticalAlignment="Bottom" TextWrapping="WrapWholeWords" />
-					</StackPanel>
-				</DataTemplate>
-			</GridView.ItemTemplate>
-			<GridView.ItemsPanel>
-				<ItemsPanelTemplate>
-					<ItemsWrapGrid MaximumRowsOrColumns="8" AreStickyGroupHeadersEnabled="True" 
+				<GridView.ItemTemplate>
+					<DataTemplate x:DataType="views:BuildMenuItem">
+						<StackPanel Orientation="Vertical" ToolTipService.ToolTip="{x:Bind toolTip}" AccessKey="{x:Bind accessKey}" >
+							<Canvas Width="64" Height="64" Background="{x:Bind brush}" />
+							<TextBlock Text="{x:Bind header}"  Style="{StaticResource CenterAlign}" FontSize="10" VerticalAlignment="Bottom" TextWrapping="WrapWholeWords" />
+						</StackPanel>
+					</DataTemplate>
+				</GridView.ItemTemplate>
+				<GridView.ItemsPanel>
+					<ItemsPanelTemplate>
+						<ItemsWrapGrid MaximumRowsOrColumns="8" AreStickyGroupHeadersEnabled="True" 
                               Orientation="Horizontal" />
-				</ItemsPanelTemplate>
-			</GridView.ItemsPanel>
-			<GridView.GroupStyle>
-				<GroupStyle HidesIfEmpty="True">
-					<GroupStyle.HeaderTemplate>
-						<DataTemplate x:DataType="views:BuildMenuItemGroup" >
-							<Grid BorderThickness="1" >
-								<TextBlock Text="{x:Bind title}" />
-							</Grid>
-						</DataTemplate>
-					</GroupStyle.HeaderTemplate>
-				</GroupStyle>
-			</GridView.GroupStyle>
-		</GridView>
-		<!--<winui:TeachingTip x:Name="tipBuildLeft"
+					</ItemsPanelTemplate>
+				</GridView.ItemsPanel>
+				<GridView.GroupStyle>
+					<GroupStyle HidesIfEmpty="True">
+						<GroupStyle.HeaderTemplate>
+							<DataTemplate x:DataType="views:BuildMenuItemGroup" >
+								<Grid BorderThickness="1" >
+									<TextBlock Text="{x:Bind title}" />
+								</Grid>
+							</DataTemplate>
+						</GroupStyle.HeaderTemplate>
+					</GroupStyle>
+				</GridView.GroupStyle>
+			</GridView>
+			<!--<winui:TeachingTip x:Name="tipBuildLeft"
 						   x:FieldModifier="public"
 						   Title="Left Click Action"
 						  
-						   Target="{x:Bind gridView}"
 						   Background="{x:Null}"
 						   Subtitle="Appy a single action to whatever is under the mouse">
 			<TextBlock  TextWrapping="Wrap">
@@ -59,7 +101,6 @@
 						   x:FieldModifier="public"
 						   Title="Right Click Action"
 						  
-						   Target="{x:Bind gridView}"
 						   Background="{x:Null}"
 						   Subtitle="Select a tool and use it to apply multiple actions, one after another">
 			<TextBlock  TextWrapping="Wrap"  >
@@ -67,10 +108,19 @@
 				If you would like to do a one off action on a specific building or spot, use left click<LineBreak />
 			</TextBlock>
 		</winui:TeachingTip>
-		<winui:TeachingTip
+			<winui:TeachingTip
                                 x:Name="PlannerTeachingTip"
                                 Title="City Planer"
                                 Subtitle="To Edit your layout select 'planner', this will put you in a mode that is similar to LOUTOPT/COTGOPT but different">
-		</winui:TeachingTip>-->
+			</winui:TeachingTip>-->
+	<CommandBar x:Name="commands"  Grid.Row="1" >
+			<CommandBar.PrimaryCommands>
+				<AppBarButton Command="{StaticResource DoTheStuff}" />
+				<AppBarButton Command="{StaticResource TogglePlanner}" />
+				<AppBarButton Command="{StaticResource CancelQueue}" />
+				<AppBarButton Command="{StaticResource Abandon}" />
+				<AppBarButton Command="{StaticResource Settings}" />
+			</CommandBar.PrimaryCommands>
+	</CommandBar>
 	</Grid>
 </UserControl>

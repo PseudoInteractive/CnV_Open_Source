@@ -1,4 +1,6 @@
-﻿using Microsoft.Toolkit.HighPerformance.Buffers;
+﻿using Cysharp.Text;
+
+using Microsoft.Toolkit.HighPerformance.Buffers;
 
 using System;
 using System.Collections.Generic;
@@ -6,6 +8,7 @@ using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading;
+using System.Threading.Tasks;
 //using NetFabric.Hyperlinq; 
 using Color = Microsoft.Xna.Framework.Color;
 
@@ -518,10 +521,41 @@ namespace COTG
 
 	}
 
-	//public class SemaFrame
+	//public ref struct SemaLockRef
 	//{
+	//	public static async Task<SemaLockRef> Go(SemaphoreSlim _sema)
+	//	{
+	//		await _sema.WaitAsync();
+	//		return new SemaLockRef(_sema);
+	//	}
 	//	private readonly SemaphoreSlim mySema;
+	//	private SemaLockRef(SemaphoreSlim _sema) {  mySema = _sema; }
+	//	public void Dispose()
+	//	{
+	//		if (mySema != null)
+	//			mySema.Release();
+	//	}
 	//}
+	public struct SemaLock : IDisposable
+	{
+		public static async Task<SemaLock> Go(SemaphoreSlim _sema)
+		{
+			await _sema.WaitAsync();
+			return new SemaLock(_sema );
+		}
+		private readonly SemaphoreSlim mySema;
+
+		private SemaLock(SemaphoreSlim mySema)
+		{
+			this.mySema = mySema;
+		}
+
+		public void Dispose()
+		{
+			if (mySema != null)
+				mySema.Release();
+		}
+	}
 
 	public class ConcurrentHashSet<T> : IDisposable
 	{

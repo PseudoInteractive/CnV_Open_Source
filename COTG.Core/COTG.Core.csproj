@@ -36,7 +36,25 @@
     <Optimize>true</Optimize>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Remove="Helpers\Json.cs" />
+    <Compile Remove="Helpers\LoginResultType.cs" />
+    <Compile Remove="Helpers\Singleton.cs" />
+    <Compile Remove="Helpers\StreamExtensions.cs" />
+    <Compile Remove="Helpers\TaskExtensions.cs" />
+    <Compile Remove="Models\DataPoint.cs" />
+    <Compile Remove="Models\SampleCompany.cs" />
+    <Compile Remove="Models\SampleOrder.cs" />
+    <Compile Remove="Models\SampleOrderDetail.cs" />
+    <Compile Remove="Models\User.cs" />
+    <Compile Remove="Services\HttpDataService.cs" />
+    <Compile Remove="Services\IdentityService.cs" />
+    <Compile Remove="Services\MicrosoftGraphService.cs" />
+    <Compile Remove="Services\SampleDataService.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Helpers\" />
     <Folder Include="Models\" />
+    <Folder Include="Services\" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Azure.Core" Version="1.17.0" />

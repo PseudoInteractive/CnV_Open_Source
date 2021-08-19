@@ -23,7 +23,7 @@ using COTG.Draw;
 using System.Threading;
 using EnumsNET;
 using static COTG.Game.TroopTypeCountHelper;
-
+using static Cysharp.Text.ZString;
 using Nito.AsyncEx;
 namespace COTG.Game
 {
@@ -394,7 +394,7 @@ namespace COTG.Game
 			{
 				if (raids.IsNullOrEmpty())
 					return "---"; // no raids
-				var postFix = raids[0].r4 switch  { Raid.scheduled=> " @", Raid.repeating=>" +" , _ => " ~"};
+				var postFix = raids[0].r4 switch  { Raid.scheduled=> "@", Raid.repeating=>"+" , _ => "~"};
 				var t =  raids.Max(a=> a.GetReturnTime(this) ); // should we check more than one
 				return  t.Format() + (raids.Any(a=>!a.isReturning) ? " >" : " <") + postFix;
 			}
@@ -417,15 +417,26 @@ namespace COTG.Game
 		// Abusing invalid jsE by returning it when we want to return null
 		//  public JsonElement troopsHome => !jsE.IsValid() ? jsE : jsE.GetProperty("th");
 		//  public JsonElement troopsTotal => !jsE.IsValid() ? jsE : jsE.GetProperty("tc");
+		public string shareString;
 
-		public string shareString; // for building
+		//public byte[] plannerOverlay =null; // for building
+		//public string shareString
+		//{
+		//	get
+		//	{
+		//		if (shareString == null)
+		//			return string.Empty;
+		//		return Encoding.ASCII.GetString(plannerOverlay);
+
+		//	}
+		//}
 
 		public int BidFromOverlay(int id)
 		{
-			if (!isLayoutValid)
-				return 0;
 			if (id == bspotTownHall)
 				return bidTownHall;
+			if (!isLayoutValid)
+				return 0;
 			var t = shareString[id + shareStringStartOffset];
 			if (BuildingDef.sharestringToBuldings.TryGetValue((byte)t, out var c) && c != 0)
 			{
@@ -830,11 +841,13 @@ namespace COTG.Game
 				ShareStringToBuildingsCache();
 		}
 
-		public void SetMinistersOn(bool on)
+		public Task SetMinistersOnAsync(bool on)
 		{
 			ministersOn = on;
-			Post.Send("includes/coOO.php", $"a={cid}&b={(on ? 1 : 0)}");
+			return Post.Send("includes/coOO.php", $"a={cid}&b={(on ? 1 : 0)}");
 		}
+		public void SetMinistersOn(bool on) => SetMinistersOnAsync(on);
+
 		internal static City GetBuild()
 		{
 			if (build != 0 && Spot.TryGet(build, out var city))
@@ -848,7 +861,8 @@ namespace COTG.Game
 			if (!City.GetBuild().isLayoutValid)
 				return string.Empty;
 
-			var sb = new StringBuilder(shareStringStart);
+			using var sb = CreateUtf8StringBuilder();
+			sb.Append(shareStringStart);
 			sb.Append(_isOnWater ? ';' : ':');
 			var anyValid = false;
 			int id = 0;
@@ -1327,7 +1341,7 @@ namespace COTG.Game
 		public bool ministersOn { get; set; }
 
 		public Resources res => new Resources(wood, stone, iron, food);
-		public static DumbCollection<City> gridCitySource = new DumbCollection<City>();
+		public static ResetableCollection<City> gridCitySource = new ResetableCollection<City>();
 		public static AsyncLock cityGridLock = new();
 		public static City[] emptyCitySource = Array.Empty<City>();
 		internal CityTradeInfo tradeInfo = CityTradeInfo.invalid;
@@ -1729,6 +1743,7 @@ namespace COTG.Game
 			public int smelters;
 			public int barracks;
 			public int forums;
+			public int ports;
 			public int unfinishedBuildings;
 			public int unfinishedCabins;
 			public bool hasCastle;
@@ -1843,6 +1858,8 @@ namespace COTG.Game
 					++rv.smelters;
 				else if (bid == bidBarracks)
 					++rv.barracks;
+				else if (bid == bidPort)
+					++rv.ports;
 				else if (bid == bidMarketplace)
 					++rv.forums;
 				else if (bid == bidTrainingGround)
@@ -1875,21 +1892,21 @@ namespace COTG.Game
 			get => plan.priority;
 			set => planWritable.priority = value;
 		}	
-		public static void AllCityDataDirty()
-		{
-			App.DispatchOnUIThreadLow(async () =>
-		   {
-		   using (var _ = await cityGridLock.LockAsync())
-			{ 
+		//public static void AllCityDataDirty()
+		//{
+		//	App.DispatchOnUIThreadLow(async () =>
+		//   {
+		//   using (var _ = await cityGridLock.LockAsync())
+		//	{ 
 			   
-				foreach (var i in City.gridCitySource)
+		//		foreach (var i in City.gridCitySource)
 			   
-				   i.OnPropertyChanged(string.Empty);
-			  }
+		//		   i.OnPropertyChanged(string.Empty);
+		//	  }
 			
-			   City.gridCitySource.NotifyReset();
-		   });
-		}
+		//		City.gridCitySource.NotifyReset();
+		//   });
+		//}
 
 		public BuildInfo GetBuildStage(BuildingCount bc)
 		{

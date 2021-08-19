@@ -56,6 +56,8 @@ namespace COTG.Game
 		public static HashSet<int> selected = new HashSet<int>();
 		public static City[] defendersI = Array.Empty<City>();
 		public static City[] defendersO = Array.Empty<City>();
+		public static City[] attackersI = Array.Empty<City>();
+		public static City[] attackersO = Array.Empty<City>();
 
 		public static HashSet<City> allianceCitiesWithOutgoing
 		{
@@ -107,7 +109,40 @@ namespace COTG.Game
 
 		//public static City[] emptySpotSource = new[] { pending };
 
-		public string nameAndRemarks => remarks.IsNullOrEmpty() ? cityName : $"{cityName} - {remarks}";
+		public string nameAndRemarks {
+			get
+			{
+				using var sb = ZString.CreateUtf8StringBuilder();
+				sb.Append(cityName);
+				if (!remarks.IsNullOrEmpty())
+				{
+					sb.Append(" - ");
+					sb.Append(remarks);
+				}
+				if (incoming.Length > 0)
+				{
+					var sieged = false;
+					var hasSen = false;
+					var hasArt = false;
+					foreach (var i in incoming)
+					{
+						if (i.isAttack)
+						{
+							sieged |= i.isSiege;
+							hasSen |= i.hasSenator;
+							hasArt |= i.hasArt;
+						}
+					}
+					sb.Append(sieged ? (hasArt && hasSen ? "(SA)" : hasArt ? "(A)" : hasSen ? "(S)" : "(n)") : "(i)");
+				}
+				if (outGoing!=OutGoing.none)
+				{
+					sb.Append("(!)");
+				}
+
+				return sb.ToString();
+			}
+		}
 		public string remarks { get; set; } = string.Empty; // only for city
 		public string notes { get; set; } = string.Empty; // only for city
 
@@ -785,7 +820,7 @@ namespace COTG.Game
 
 		Classification TagsToClassification()
 		{
-			
+
 			if (HasTag(Tags.Scorp))
 				return Classification.se;
 			else if (HasTag(Tags.Prae))
@@ -811,6 +846,10 @@ namespace COTG.Game
 				return Classification.navy;
 			else if (HasTag(Tags.Hub))
 				return Classification.hub;
+			else if (HasTag(Tags.Storage))
+				return Classification.hub;
+			else if (tags != 0)
+				return Classification.misc;
 			return Classification.unknown;
 		}
 
@@ -834,7 +873,7 @@ namespace COTG.Game
 			var str = await Post.SendForText("includes/gLay.php", $"cid={cid}", World.CidToPlayerOrMe(cid));
 			if (str.IsNullOrEmpty())
 			{
-				return Classification.unknown;
+				return Classification.missing;
 			}
 
 			byte stables = 0;
@@ -846,7 +885,7 @@ namespace COTG.Game
 			byte ports = 0;
 			byte forums = 0;
 			bool castle = false;
-			var classification = Classification.unknown;
+			var classification = Classification.missing;
 
 			try
 			{
@@ -991,6 +1030,15 @@ namespace COTG.Game
 
 		// Incoming attacks
 		public Army[] incoming { get; set; } = Army.empty;
+		[Flags]
+		public enum OutGoing : byte
+		{ 
+			none=0,
+			scheduled=1,
+			sending=2,
+			sieging=4,
+		}
+		public OutGoing outGoing;
 		public TroopTypeCounts troopsHome;
 		public TroopTypeCounts troopsTotal;
 
@@ -1569,14 +1617,15 @@ namespace COTG.Game
 				try
 				{
 
-					var wasPlanner = CityBuild.isPlanner;
+				//	var wasPlanner = CityBuild.isPlanner;
 
-					if (wasPlanner)
+					if (CityBuild.isPlanner)
 					{
-						var b = City.GetBuild();
-						b.BuildingsCacheToShareString();
-						await b.SaveLayout();
-						CityBuild.isPlanner = false;
+						//	var b = City.GetBuild();
+						//	b.BuildingsCacheToShareString();
+						//		await b.SaveLayout();
+						//					CityBuild.isPlanner = false;
+						await CityBuild._IsPlanner(false, true);
 					}
 					City.build = cid;
 					Assert(pid == Player.activeId);
@@ -1591,11 +1640,11 @@ namespace COTG.Game
 					//}
 
 					City.CitySwitched();
-					if (wasPlanner)
-					{
-						await GetCity.Post(cid);
-						await CityBuild._IsPlanner(true, false);
-					}
+					//if (wasPlanner)
+					//{
+					//	await GetCity.Post(cid);
+					//	await CityBuild._IsPlanner(true, false);
+					//}
 					// async
 					wantUnblock = true;
 				}
@@ -1850,6 +1899,8 @@ namespace COTG.Game
 
 		public string nameMarkdown => $"[{nameAndRemarks}](/c/{cid.CidToString()})";
 		public Tags tags;
+		public bool isMilitary => tags.MilitaryTroops()!=0;
+
 		public static bool OnKeyDown(object _spot, VirtualKey key)
 		{
 			var spot = _spot as Spot;

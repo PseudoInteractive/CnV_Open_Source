@@ -19,39 +19,46 @@
 	<Style TargetType="HyperlinkButton" >
 		<Setter Property="Foreground" Value="{StaticResource HyperLinkBrush}" />
 		<Setter Property="FontFamily" Value="Tw Cen MT Condensed"/>
-		<Setter Property="FontSize" Value="{StaticResource MediumFontSize}" />
-		<Setter Property="IsTextScaleFactorEnabled" Value="False"/>
+		<Setter Property="FontSize" Value="{StaticResource SmallFontSize}" />
 	</Style>
 	<!--<Style TargetType="tk:MarkdownTextBlock">
 		<Setter Property="LinkForeground" Value="{StaticResource HyperLinkBrush}" />
 	</Style>-->
 	<Style TargetType="Page">
 		<Setter Property="FontFamily" Value="Tw Cen MT Condensed"/>
-		<Setter Property="IsTextScaleFactorEnabled" Value="False"/>
-    </Style>
-    <Style x:Key="ButtonSmall" TargetType="Button" BasedOn="{StaticResource ButtonRevealStyle}">
+	</Style>
+	<Style TargetType="Button" BasedOn="{StaticResource ButtonRevealStyle}">
 		<Setter Property="VerticalAlignment" Value="Center"/>
 		<Setter Property="HorizontalAlignment" Value="Center"/>
 		<Setter Property="FontFamily" Value="Tw Cen MT Condensed"/>
-        <Setter Property="FontSize" Value="{StaticResource MediumFontSize}" />
-        <Setter Property="IsTextScaleFactorEnabled" Value="False"/>
+		<Setter Property="FontSize" Value="{StaticResource SmallFontSize}" />
 		<Setter Property="Margin" Value="2"/>
+	</Style>
+
+	<Style x:Key="ButtonSmall" TargetType="Button" BasedOn="{StaticResource ButtonRevealStyle}">
+		<Setter Property="VerticalAlignment" Value="Center"/>
+		<Setter Property="HorizontalAlignment" Value="Center"/>
+		<Setter Property="FontFamily" Value="Tw Cen MT Condensed"/>
+		<Setter Property="FontSize" Value="{StaticResource SmallFontSize}" />
+		<Setter Property="Margin" Value="2"/>
+		<Setter Property="IsTextScaleFactorEnabled" Value="False"/>
 	</Style>
 	
 	<Style x:Key="ButtonMedium" TargetType="Button" BasedOn="{StaticResource ButtonSmall}">
 		<Setter Property="Margin" Value="4"/>
+		<Setter Property="FontSize" Value="{StaticResource MediumFontSize}" />
 	</Style>
 	<Style x:Key="ButtonLarge" TargetType="Button" BasedOn="{StaticResource ButtonSmall}">
+		<Setter Property="FontSize" Value="{StaticResource LargeFontSize}" />
 		<Setter Property="Margin" Value="4"/>
 	</Style>
 	<Style TargetType="TextBlock">
         <Setter Property="FontFamily" Value="Tw Cen MT Condensed"/>
-        <Setter Property="FontSize" Value="{StaticResource MediumFontSize}" />
-        <Setter Property="IsTextScaleFactorEnabled" Value="False"/>
-    </Style>
+		<Setter Property="FontSize" Value="{StaticResource SmallFontSize}" />
+	</Style>
 	<Style TargetType="CheckBox">
 		<Setter Property="FontFamily" Value="Tw Cen MT Condensed"/>
-		<Setter Property="FontSize" Value="{StaticResource MediumFontSize}" />
+		<Setter Property="FontSize" Value="{StaticResource SmallFontSize}" />
 		<Setter Property="IsTextScaleFactorEnabled" Value="False"/>
 	</Style>
 	<Style TargetType="tk:WrapPanel">
@@ -78,7 +85,7 @@
 	</Style>
 	<Style TargetType="TextBox">
 		<Setter Property="FontFamily" Value="Tw Cen MT Condensed"/>
-		<Setter Property="FontSize" Value="{StaticResource MediumFontSize}" />
+		<Setter Property="FontSize" Value="{StaticResource SmallFontSize}" />
 		<Setter Property="BorderBrush" Value="{ThemeResource SystemControlBackgroundBaseLowRevealBorderBrush}"/>
 	</Style>
 	<Style TargetType="TextBox" x:Key="TextBoxReveal" >
@@ -94,7 +101,6 @@
 	<Style x:Key="TextBlockLarge" TargetType="TextBlock">
 		<Setter Property="FontFamily" Value="Tw Cen MT Condensed"/>
 		<Setter Property="FontSize" Value="{StaticResource LargeFontSize}" />
-		<Setter Property="IsTextScaleFactorEnabled" Value="False"/>
 	</Style>
 	<Style x:Key="TextBlockMedium" TargetType="TextBlock">
 		<Setter Property="FontFamily" Value="Tw Cen MT Condensed"/>
@@ -103,13 +109,13 @@
 	</Style>
 	<Style x:Key="TextBoxSmall" BasedOn="{StaticResource TextBoxReveal}" TargetType="TextBox">
         <Setter Property="FontFamily" Value="Tw Cen MT Condensed"/>
-        <Setter Property="FontSize" Value="{StaticResource MediumFontSize}" />
+		<Setter Property="FontSize" Value="{StaticResource SmallFontSize}" />
         <Setter Property="IsTextScaleFactorEnabled" Value="False"/>
 		<Setter Property="BorderThickness" Value="1" />
         <Setter Property="BorderBrush" Value="{ThemeResource SystemControlBackgroundBaseLowRevealBorderBrush}"/>       
     </Style>
     <Style x:Key="NumberBoxSmall" TargetType="winui:NumberBox">
-		<Setter Property="FontSize" Value="{StaticResource MediumFontSize}" />
+		<Setter Property="FontSize" Value="{StaticResource SmallFontSize}" />
 		<Setter Property="FontFamily" Value="Tw Cen MT Condensed"/>
 		<Setter Property="IsTextScaleFactorEnabled" Value="False"/>
         <Setter Property="SpinButtonPlacementMode" Value="Compact"/>
@@ -136,7 +142,7 @@
        
     </Style>
     <Style  x:Key="RightAlignNumberBox" BasedOn="{StaticResource NumberBoxSmall}" TargetType="winui:NumberBox">
-		<Setter Property="HorizontalContentAlignment" Value="Right" />
+		<Setter Property="TextAlignment" Value="Right" />
     </Style>
 	<Style x:Key="NumberBoxRes" BasedOn="{StaticResource RightAlignNumberBox}" TargetType="winui:NumberBox">
 		<Setter Property="SmallChange" Value="25000"/>

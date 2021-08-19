@@ -294,10 +294,9 @@ namespace COTG.Views
 					if (City.build != 0)
 						await GetCity.Post(City.build);
 
-					App.DispatchOnUIThreadSneaky( () =>
-					{
-						City.gridCitySource.NotifyReset();
-					} );
+					
+					City.gridCitySource.NotifyReset();
+					
 				}
 
 				GetBuildInfo();

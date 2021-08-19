@@ -1381,5 +1381,9 @@ namespace COTG.Views
 			}
 		}
 
+		private void FilterRightTapped(object sender, RightTappedRoutedEventArgs e)
+		{
+			ContinentTagFilter.Show(true);
+		}
 	}
 }

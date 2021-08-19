@@ -19,20 +19,20 @@ namespace COTG.Views
 		public static PlannerTab instance;
 		public static bool IsVisible() => instance.isVisible;
 
-		public  override Task VisibilityChanged(bool visible, bool longTerm)
+		public  override async Task VisibilityChanged(bool visible, bool longTerm)
 		{
 			if (visible)
 			{
-//				CityBuild._isPlanner = true;
-			//	statsDirty = true;
+				await CityBuild._IsPlanner(true,false);
+				statsDirty = true;
 				BuildingsChanged();
 			}
 			else
 			{
-//				CityBuild._isPlanner = false;
+				await CityBuild._IsPlanner( false,false );
 
 			}
-			return base.VisibilityChanged(visible, longTerm: longTerm);
+			await base.VisibilityChanged(visible, longTerm: longTerm);
 		}
 
 		public PlannerTab()
@@ -107,7 +107,7 @@ namespace COTG.Views
 
 		//}
 
-			static int GetScore( (int x,int y) xy, int bid, int militaryBid )
+		static int GetScore( (int x,int y) xy, int bid, int militaryBid )
 		{
 			var bds = City.GetBuild().buildings;
 			var bc = City.buildingsCache;
@@ -381,6 +381,7 @@ namespace COTG.Views
 		}
 		public async Task Rotate(bool center, bool outer)
 		{
+			Assert(CityBuild.isPlanner);
 			await CityBuild._IsPlanner(true);
 			//	if (layout == null)
 			//		return;
@@ -406,12 +407,14 @@ namespace COTG.Views
 
 		private async void FlipHClick(object sender, RoutedEventArgs e)
 		{
+			Assert(CityBuild.isPlanner);
 			await CityBuild._IsPlanner(true);
 
 			GetBuild().FlipLayoutH(App.IsKeyPressedControl());
 		}
 		private async void FlipVClick(object sender, RoutedEventArgs e)
 		{
+			Assert(CityBuild.isPlanner);
 			await CityBuild._IsPlanner(true);
 			GetBuild().FlipLayoutV(App.IsKeyPressedControl());
 		}
@@ -464,9 +467,10 @@ namespace COTG.Views
 
 		async void SmartRearrange(object _, RoutedEventArgs __)
 		{
-			await CityBuild._IsPlanner(true);
+		//	Assert(CityBuild.isPlanner);
+		//	await CityBuild._IsPlanner(true);
 
-			SmartRearrange(false);
+			await SmartRearrange(false);
 		}
 		public static async Task SmartRearrange(bool revertIsPlanner)
 		{
@@ -621,7 +625,7 @@ namespace COTG.Views
 
 		private void Done(object sender, RoutedEventArgs e)
 		{
-	//		CityBuild.SetIsPlanner(false);
+		//	CityBuild._IsPlanner(false);
 			PlannerTab.instance.Close();
 		}
 
@@ -640,6 +644,27 @@ namespace COTG.Views
 		private void RotateOuterClick(object sender, RoutedEventArgs e)
 		{
 			Rotate(false, true);
+		}
+
+		private void UseBuildingsClick(object sender, RoutedEventArgs e)
+		{
+			// copy buildings to buildingCache
+			var b = City.GetBuild();
+			var bds = b.buildings;
+			var rv = new Building[citySpotCount];
+			for (int i = 0; i < citySpotCount; ++i)
+			{
+				var bd = bds[i];
+				if (bd.isBuilding && !bd.isCabin)
+				{
+					rv[i].id = bds[i].id;
+					rv[i].bl = 10;
+				}
+			
+			}
+			buildingsCache = rv;
+			b.BuildingsCacheToShareString();
+			CityView.BuildingsOrQueueChanged();
 		}
 	}
 }

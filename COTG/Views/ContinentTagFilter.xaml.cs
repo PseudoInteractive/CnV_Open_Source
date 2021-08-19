@@ -31,8 +31,8 @@ namespace COTG.Views
 			this.InitializeComponent();
 			instance = this;
 		}
-
-		public static async Task<bool> Show()
+		
+		public static async Task<bool> Show(bool actuallyClearPlease=false)
 		{
 			if (instance == null)
 				new ContinentTagFilter();
@@ -45,10 +45,10 @@ namespace COTG.Views
 					check = new ToggleButton() { Content = tag.s };
 					instance.tagsPanel.Children.Add(check);
 				}
-				check.IsChecked = Spot.tagFilter.HasFlag(tag.v);
+				check.IsChecked = actuallyClearPlease ? false : Spot.tagFilter.HasFlag(tag.v);
 			}
 			{
-				var isAll = Spot.isContinentFilterAll;
+				var isAll = Spot.isContinentFilterAll|actuallyClearPlease;
 				for (int id = 0; id < World.continentCount; ++id)
 				{
 					var xy = World.PackedContinentToXY(id);
@@ -64,7 +64,7 @@ namespace COTG.Views
 				}
 			}
 
-			var rv = await instance.ShowAsync2();
+			var rv = actuallyClearPlease ? ContentDialogResult.Primary : await instance.ShowAsync2();
 			if (rv == ContentDialogResult.Primary)
 			{
 

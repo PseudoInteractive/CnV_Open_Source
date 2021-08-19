@@ -21,7 +21,6 @@ using COTG.Helpers;
 using COTG.JSON;
 using Microsoft.Toolkit.Uwp.UI.Controls;
 using System.Text.RegularExpressions;
-using Microsoft.Toolkit.Mvvm.ComponentModel;
 using System.ComponentModel;
 
 namespace COTG.Views

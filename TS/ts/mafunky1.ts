@@ -112,9 +112,9 @@ function sendMail(to:string,subject:string,body:string) {
 		$("#mailToto").val(to);
 		$("#mailToSub").val(subject);
 		let __iframe = $('#mailBody_ifr');
-
+		
 		__iframe.ready(function () {
-			__iframe.contents().find("body").val(body);
+			__iframe.contents().find("body").html(body);
 		});
 
 }

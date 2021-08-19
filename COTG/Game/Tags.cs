@@ -69,8 +69,6 @@ namespace COTG.Game
 		LeaveMe = 1 << 23,
 		Storage = 1<< 24,
 		Transport = 1 << 25,
-		[IsAlias] 
-		TroopTypeMask = (1<<ttCount)-1,
 		// meta tags
 		// mine, alliance enemy other
 	}
@@ -110,11 +108,15 @@ namespace COTG.Game
 	public static class TagHelper
 	{
 		public static TagInfo Get(this Tags tag) => new TagInfo() { v = tag, s = tag.AsString() };
-		public static Tags Troops(this Tags tag) => tag & Tags.TroopTypeMask;
+		public const Tags TroopMask = (Tags)((1 << ttCount) - 1);
+		public const Tags MilitaryTroopMask = TroopMask & (Tags)(~((1 << ttSenator)|(1<<ttGuard)) );
+		public static Tags Troops(this Tags tag) => tag & TroopMask;
+		public static Tags MilitaryTroops(this Tags tag) => tag & MilitaryTroopMask;
+
 		//public static TagInfo tagLeaveMe = Get(Tags.LeaveMe);
 		public static Tags FromTroopType(byte troopType, Tags baseTags)
 		{
-			baseTags &= ~Tags.TroopTypeMask;
+			baseTags &= ~TroopMask;
 			switch(troopType)
 			{
 				case ttVanquisher: return baseTags|Tags.Vanq;
@@ -308,7 +310,7 @@ namespace COTG.Game
 		
 		public static void UpdateTags(this Spot city)
 		{
-			city.tags = TagHelper.Get(city.remarks);
+			city.tags |= TagHelper.Get(city.remarks);
 		}
 		public static Tags GetTags(this Spot city)
 		{

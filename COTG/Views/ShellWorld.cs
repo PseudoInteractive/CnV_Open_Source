@@ -1008,6 +1008,15 @@ namespace COTG.Views
 															sb.AppendLine(city.GetDefString("\n"));
 														
 														}
+														if(city.outGoing!=0)
+														{
+															if(city.outGoing.HasFlag(City.OutGoing.sieging))
+																sb.Append("Sieging\n");
+															else if(city.outGoing.HasFlag(City.OutGoing.scheduled))
+																sb.Append("Attack Scheduled\n");
+															else
+																sb.Append("Attack Sent\n");
+														}
 														else if (city.reinforcementsIn.Length > 0)
 														{
 															sb.AppendFormat("{0} def\n", city.tsDefMax);
@@ -1054,16 +1063,19 @@ namespace COTG.Views
 										break;
 									}
 								case World.typeShrine:
-									toolTip = $"Shrine\n{(data.data == 255 ? "Unlit" : ((Faith)data.data-1).AsString() )}";
+									if (WorldViewSettings.shrines.isOn)
+										toolTip = $"Shrine\n{(data.data == 255 ? "Unlit" : ((Faith)data.data-1).AsString() )}";
 									break;
 								case World.typeBoss:
-									toolTip = $"Boss\nLevel:{data.data}"; // \ntype:{data >> 4}";
+									if (WorldViewSettings.bosses.isOn) 
+										toolTip = $"Boss\nLevel:{data.data}"; // \ntype:{data >> 4}";
 									break;
 								case World.typeDungeon:
-									toolTip = $"Dungeon\nLevel:{data.data}"; // \ntype:{data >> 4}";
+									if(WorldViewSettings.caverns.isOn)
+										toolTip = $"Dungeon\nLevel:{data.data}"; // \ntype:{data >> 4}";
 									break;
 								case World.typePortal:
-									toolTip = $"Portal\n{(data.data == 0 ? "Inactive" : "Active")}";
+										toolTip = $"Portal\n{(data.data == 0 ? "Inactive" : "Active")}";
 									break;
 							}
 

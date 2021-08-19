@@ -634,19 +634,23 @@ namespace COTG
         {
             return string.IsNullOrEmpty(a);
         }
+		public const uint randomPrime0 = 0xcc9e2d51;
+		public const int randomPrime1s = 0x1b873593; // signed
+		public const uint randomPrime1 = 0x1b873593;
 		// Randomish hash for city ids
 		public static float CidToRandom(this int cid)
 		{
-			const uint c1 = 0xcc9e2d51;
-			const uint c2 = 0x1b873593;
+			const uint c1 = randomPrime0;
+			const uint c2 = randomPrime1;
+			
 			var result = (((int)(cid * c1 + cid/11131 * c2) >> 8) & 0xffff);
 			return result * (1.0f / 0x10000);
 		}
 		// not very random at all, but good enough
 		public static float BSpotToRandom(this int bspot)
 		{
-			const uint c1 = 0xcc9e2d51;
-			const uint c2 = 0x1b873593;
+			const uint c1 = randomPrime0;
+			const uint c2 = randomPrime1;
 
 			var result = (((int)(bspot * c1 + c2) >> 4) & 0xffff);
 			return result * (1.0f / 0x10000);
@@ -802,7 +806,50 @@ namespace COTG
 
 				return output;
 			}
-		}
+
+		// return distance to line segment, normalized T of closest point
+		// t==0 is p1, t==1 is p2
+			public static (float distance, float t) DistanceToSegment(this Vector2 pt, Vector2 p0, Vector2 p1)
+			{
+				float dx = p1.X - p0.X;
+				float dy = p1.Y - p0.Y;
+				if ((dx == 0) && (dy == 0))
+				{
+					// It's a point not a line segment.
+					dx = pt.X - p0.X;
+					dy = pt.Y - p0.Y;
+					return (MathF.Sqrt(dx * dx + dy * dy),0f);
+				}
+
+				// Calculate the t that minimizes the distance.
+				float t = ((pt.X - p0.X) * dx + (pt.Y - p0.Y) * dy) /
+					(dx * dx + dy * dy);
+
+				// See if this represents one of the segment's
+				// end points or a point in the middle.
+				if (t < 0)
+				{
+		//			closest = new Vector2(p1.X, p1.Y);
+					dx = pt.X - p0.X;
+					dy = pt.Y - p0.Y;
+				}
+				else if (t > 1)
+				{
+					//closest = new Vector2(p2.X, p2.Y);
+					dx = pt.X - p1.X;
+					dy = pt.Y - p1.Y;
+				}
+				else
+				{
+					var closest = new Vector2(p0.X + t * dx, p0.Y + t * dy);
+					dx = pt.X - closest.X;
+					dy = pt.Y - closest.Y;
+				}
+
+				return (MathF.Sqrt(dx * dx + dy * dy),t);
+			}
+
+	}
 
 	
 }

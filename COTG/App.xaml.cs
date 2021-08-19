@@ -488,14 +488,14 @@ namespace COTG
 			for (; ; )
 			{
 				var tick = Environment.TickCount;
-				// must be idle for at least 16 s
-				if ((tick - lastInputTick).Abs() < 16 * 1000)
+				// must be idle for at least 4 s
+				if ((tick - lastInputTick).Abs() < 4 * 1000)
 				{
 					// not idle
-					await Task.Delay(9 * 1000);
+					await Task.Delay(4 * 1000);
 					continue;
 				}
-				if (idleTasks.TryDequeue(out Action a))
+				while(idleTasks.TryDequeue(out Action a))
 				{
 					try
 					{
@@ -508,7 +508,7 @@ namespace COTG
 					await Task.Delay(1000); // wait one second if idle
 				}
 				// not idle but no tasks
-				await Task.Delay(9 * 1000);
+				await Task.Delay(4 * 1000);
 			}
 		}
 

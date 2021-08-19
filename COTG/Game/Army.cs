@@ -44,7 +44,11 @@ namespace COTG.Game
             reportPending =>  "Attack",
             reportSieging when claim >= 100 => "Cap!",
 			reportSieging when claim > 0 => "Capping",
-			reportSieging => "Siege",
+			reportSiege  => "Siege",
+			reportSieging => "Sieging",
+			reportAssault => "Assult",
+			reportPlunder => "Plunder",
+			reportScout => "Scout",
 			_ => "unk"
         };
 
@@ -57,15 +61,17 @@ namespace COTG.Game
         public int targetCid;
         public int sourceCid;
 		// We can't get this from source and targetCid because there might have been a cap
-		public int targetPlayer;
-		public int sourcePlayer;
-
+		public int targetPid;
+		public int sourcePid;
+		public Player targetPlayer => Player.Get(targetPid);
+		public Player sourcePlayer => Player.Get(sourcePid); 
 		public City sourceCity => City.Get(sourceCid);
-        public int sourceAlliance => Player.Get(sourceCid.CidToPid()).alliance;
-        public string sourceAllianceName => Player.Get(sourceCid.CidToPid()).allianceName;
+		public City targetCity => City.Get(targetCid);
+		public int sourceAlliance => Player.Get(sourcePid).alliance;
+        public string sourceAllianceName => Player.Get(sourcePid).allianceName;
 
-        public int targetAlliance => Player.Get(targetCid.CidToPid()).alliance;
-        public string targetAllianceName => Player.Get(targetCid.CidToPid()).allianceName;
+        public int targetAlliance => Player.Get(targetPid).alliance;
+        public string targetAllianceName => Player.Get(targetPid).allianceName;
 
         public string reportId; // If not null, this is a history report with a report id
         public static int ReportHash(string reportId) => HashCode.Combine( reportId);
@@ -83,10 +89,10 @@ namespace COTG.Game
 		public float TimeToArrival(DateTimeOffset serverTime) => (float)(time - serverTime).TotalSeconds;
         public int Cont => sourceCid.CidToContinent();
         public int ts => troops.TS();
-        public int sPid => sourceCid.CidToPid(); // The owner of the army, 
-        public int tPid => targetCid.CidToPid(); // The owner of the army, 
-        public string sPlayer => Player.IdToName(sPid);
-        public string tPlayer => Player.IdToName(tPid);
+        public int sPid => sourcePid; // The owner of the army, 
+        public int tPid => targetPid; // The owner of the army, 
+        public string sPlayer => Player.IdToName(sourcePid);
+        public string tPlayer => Player.IdToName(targetPid);
 
         public int dTsKill { get; set; }
         public int aTsKill { get; set; }
@@ -222,19 +228,8 @@ namespace COTG.Game
 
             internal string GetToopTip(DateTimeOffset serverNow)
         {
-            if (isDefense)
-            {
-                return  troops.Format(time <= serverNow ? "Stationed:": "Incoming:",'\n'); ;
-            }
-            else
-            {
-                if (!troops.Any())
-                    return string.Empty;
-                   return troops.Format($"{sPlayer} (from)\n{tPlayer} (to)\n{miscInfo}",'\n');
-                    
-
-               
-            }
+                 //   return string.Empty;
+                   return troops.Format($"{aType}\n{sPlayer} (from)\n{tPlayer} (to)\n{miscInfo}\n{time.Format()}",'\n');
         }
 
         internal string Format(string delimiter = " ")
@@ -253,6 +248,19 @@ namespace COTG.Game
 			return refines * 1000 / 160;
 		}
 	}
+	//public sealed class ArmySourceTargetComparer : IEqualityComparer<Army>
+	//{
+	//	public bool Equals(Army x, Army y)
+	//	{
+	//		return ((x.sourceCid - y.sourceCid) | (x.targetCid - y.targetCid)) == 0;
+	//	}
+
+	//	public int GetHashCode(Army x)
+	//	{
+	//		return (x.sourceCid * AMath.randomPrime1s + x.targetCid);
+	//		// symetric?
+	//	}
+	//}
 	//public sealed class OutgoingAttack
 	//{
 	//	DateTimeOffset departs;
