@@ -436,11 +436,12 @@ namespace COTG.Services
 						await Post.Send("includes/cTrp.php", $"cid={cid}&a={tid}");
 					}
 
-					if (curTs >= maxTs)
+					// dismisss
+					if (curTs+count > maxTs)
 					{
 						await city.SetMinistersOnAsync(false);
 						var magic = "X2UsfKKKsse2"; ;
-						var encoded = Aes.Encode("{\"5\":1}", magic);
+						var encoded = Aes.Encode("{\"5\":" + count + "}", magic);
 						var urle = $"cid={cid}&a=" + HttpUtility.UrlEncode(encoded, Encoding.UTF8);
 
 						await Post.Send("includes/dTp.php", urle);

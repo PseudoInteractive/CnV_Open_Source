@@ -16,22 +16,15 @@
     d:DesignWidth="400">
 
 	<StackPanel>
-		<Border Style="{StaticResource BorderReveal}">
-			<StackPanel>
+			<StackPanel Style="{StaticResource StackPanelReveal}">
 				<views:CityControl x:Name="sourceHub"  x:FieldModifier="public"
 						   ToolTipService.ToolTip="If req boxes below are checked, this hub will be set as the source hub" />
 				<views:CityControl x:Name="targetHub"  x:FieldModifier="public"
 						   ToolTipService.ToolTip="If export boxes below are checked, this hub will be set as the target hub" />
-				<ComboBox   Header="COTG Preset"
-						      SelectedItem="{x:Bind tradeSettingsSel, Mode=TwoWay}"	
-							  ItemsSource="{x:Bind views:ResSettings.tradeSettingsItemsSource}"
-							  DisplayMemberPath="N"
-							  ToolTipService.ToolTip="Select a COTG Trade setting to override settings"
-							  Margin="4" />
+				
 			</StackPanel>
-		</Border>
 		<Border Style="{StaticResource BorderReveal}">
-			<StackPanel>
+			<StackPanel Style="{StaticResource BorderReveal}">
 				<!--<ToggleSwitch Header="Request Resources" OnContent="Set" OffContent="Ignore" IsOn="{x:Bind applyRequested}" />-->
 				<tk:WrapPanel Orientation="Horizontal" Margin="4" >
 
@@ -62,7 +55,7 @@
 			</StackPanel>
 		</Border>
 		<Border Style="{StaticResource BorderReveal}" Margin="2,8,2,2">
-			<StackPanel>
+			<StackPanel Style="{StaticResource StackPanelReveal}" >
 				<!--<ToggleSwitch Header="Send Resources" OnContent="Set" OffContent="Ignore" IsOn="{x:Bind applySend}" />-->
 				<tk:WrapPanel  Orientation="Horizontal" >
 					<winui:NumberBox Header="Wood Limit"
@@ -92,7 +85,7 @@
 				</tk:WrapPanel>
 			</StackPanel>
 		</Border>
-		<StackPanel>
+		<StackPanel Style="{StaticResource StackPanelReveal}" >
 			<Border Style="{StaticResource BorderReveal}">
 				<tk:WrapPanel  Orientation="Horizontal">
 					<CheckBox  Content="Request Wood" IsThreeState="True" IsChecked="{x:Bind reqFilter.wood, Mode=TwoWay}" ToolTipService.ToolTip="Checked:  Wood is requested from the source hub Off: City does not request wood In between: Leave wood source hub as is" />
@@ -102,7 +95,7 @@
 				</tk:WrapPanel  >
 			</Border>
 			<Border Style="{StaticResource BorderReveal}">
-				<tk:WrapPanel  Orientation="Horizontal">
+				<tk:WrapPanel  Orientation="Horizontal" >
 					<CheckBox Content="Export Wood" IsThreeState="True" IsChecked="{x:Bind sendFilter.wood, Mode=TwoWay}" ToolTipService.ToolTip="If set, wood is sent on overflow, otherwise it is stored or refined, the 'box' setting means leave as is" />
 					<CheckBox Content="Export Stone" IsThreeState="True" IsChecked="{x:Bind sendFilter.stone, Mode=TwoWay}" ToolTipService.ToolTip="If set, stone is sent on overflow, otherwise it is stored or refined, the 'box' setting means leave as is" />
 					<CheckBox Content="Export Iron" IsThreeState="True" IsChecked="{x:Bind sendFilter.iron, Mode=TwoWay}" ToolTipService.ToolTip="If set, iron is sent on overflow, otherwise it is stored or refined, the 'box' setting means leave as is" />
@@ -110,5 +103,27 @@
 				</tk:WrapPanel  >
 			</Border>
 		</StackPanel>
+		<tk:WrapPanel  Orientation="Horizontal" >
+			<winui:NumberBox Header="Cart Reserve"
+							PlaceholderText="No Change"
+							Value="{x:Bind reserveCarts,Converter={StaticResource NullableIntConverter}, Mode=TwoWay}"
+							Style="{StaticResource RightAlignNumberBox}"
+							ToolTipService.ToolTip="% carts reserved for trades that are not the result of sending overflow"
+							 />
+			<winui:NumberBox Header="Ship Reserve"
+							PlaceholderText="No Change"
+							Value="{x:Bind reserveShips,Converter={StaticResource NullableIntConverter}, Mode=TwoWay}"
+							Style="{StaticResource RightAlignNumberBox}"
+							ToolTipService.ToolTip="% ships reserved for trades that are not the result of sending overflow"
+							 />
+			<ComboBox   Header="COTG Preset"
+						      SelectedItem="{x:Bind tradeSettingsSel, Mode=TwoWay}"	
+							  ItemsSource="{x:Bind views:ResSettings.tradeSettingsItemsSource}"
+							  DisplayMemberPath="N"
+							  ToolTipService.ToolTip="Select a COTG Trade setting to override settings"
+							  Margin="4" />
+
+		</tk:WrapPanel  >
+
 	</StackPanel>
 </UserControl>

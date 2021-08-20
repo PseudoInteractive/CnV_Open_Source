@@ -436,18 +436,19 @@ namespace COTG.Views
 			for (int j = 0; j < count; ++j)
 			{
 				res = await Post.SendForText("includes/sndTr.php", $"cid={cid}&f=" + HttpUtility.UrlEncode(Aes.Encode(reqF, secret), Encoding.UTF8), pid);
+				if (int.TryParse(res.Trim(), out var i) && i == 10)
+				{
+					Note.Show($"Sent {s.res.Format()}");
+				}
+				else
+				{
+					Note.Show($"Something changed, please refresh and try again");
+				}
 				if (count == 1)
 					break;
-				await Task.Delay(650);
+				await Task.Delay(450);
 			}
-			if (int.TryParse(res.Trim(), out var i) && i == 10)
-			{
-				Note.Show($"Sent {s.res.Format()}");
-			}
-			else
-			{
-				Note.Show($"Something changed, please refresh and try again");
-			}
+			
 			s.res.Clear();
 			App.DispatchOnUIThreadSneakyLow(() =>
 			{

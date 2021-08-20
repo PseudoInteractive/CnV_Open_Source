@@ -364,7 +364,7 @@ namespace COTG.Game
 			
 				var cont = await Blobs.GetChangesContainer();
 				if (cont == null)
-					return this;
+					return null;
 				var str = dateStr;
 
 				try
@@ -372,36 +372,47 @@ namespace COTG.Game
 					// If etag changes it should be reloaded 
 					// This might get loaded more than once if called again before prior load has completed but thats not fatal
 					var res = await  cont.GetBlobClient(str).DownloadAsync(default, isLoaded? new BlobRequestConditions() { IfNoneMatch = eTag } : null );
-					//if (res.GetRawResponse().Status != 200)
-					//{
-					//	return day;
-					//}
-
-					using var deflate = new GZipStream(res.Value.Content, CompressionMode.Decompress);
-					byte[] readBuffer = ArrayPool<byte>.Shared.Rent(HeatMap.bufferSize);
-					var readOffset = 0;
-					for (; ; )
+					var status = res.GetRawResponse().Status;
+					if ( status >= 300)
 					{
-
-						var readSize = deflate.Read(readBuffer, readOffset, HeatMap.bufferSize - readOffset);
-						if (readSize < HeatMap.bufferSize)
-						{
-							break;
-						}
-						readOffset += readSize;
-						var _readBuffer = readBuffer;
-						HeatMap.bufferSize *= 2;
-						readBuffer = ArrayPool<byte>.Shared.Rent(HeatMap.bufferSize);
-						for (int i = 0; i < readOffset; ++i)
-							readBuffer[i] = _readBuffer[i];
-						ArrayPool<byte>.Shared.Return(_readBuffer);
+						Assert(status == 304);
+						// No need to load
 					}
+					else
+					{
+						Assert(status == 200);
 
-					Read(readBuffer);
-					Assert(snapshot.Length>0);
-					ArrayPool<byte>.Shared.Return(readBuffer);
-					eTag = res.Value.Details.ETag;
-					loadState = AzureLoadState.loaded;
+						//if (res.GetRawResponse().Status != 200)
+						//{
+						//	return day;
+						//}
+
+						using var deflate = new GZipStream(res.Value.Content, CompressionMode.Decompress);
+						byte[] readBuffer = ArrayPool<byte>.Shared.Rent(HeatMap.bufferSize);
+						var readOffset = 0;
+						for (; ; )
+						{
+
+							var readSize = deflate.Read(readBuffer, readOffset, HeatMap.bufferSize - readOffset);
+							if (readSize < HeatMap.bufferSize)
+							{
+								break;
+							}
+							readOffset += readSize;
+							var _readBuffer = readBuffer;
+							HeatMap.bufferSize *= 2;
+							readBuffer = ArrayPool<byte>.Shared.Rent(HeatMap.bufferSize);
+							for (int i = 0; i < readOffset; ++i)
+								readBuffer[i] = _readBuffer[i];
+							ArrayPool<byte>.Shared.Return(_readBuffer);
+						}
+
+						Read(readBuffer);
+						Assert(snapshot.Length > 0);
+						ArrayPool<byte>.Shared.Return(readBuffer);
+						eTag = res.Value.Details.ETag;
+						loadState = AzureLoadState.loaded;
+					}
 					return this;
 				}
 				catch (Azure.RequestFailedException r)
@@ -423,15 +434,15 @@ namespace COTG.Game
 					//Assert(r.Status == 404);
 			//		return isLoaded() ? this : null;
 				}
-			//	catch (Azure.NoBodyResponse<Azure.Storage.Blobs.Models.BlobDownloadStreamingResult>.ResponseBodyNotFoundException)
-			//	{
-			//		Assert(isLoaded);
-			//		if (loadState == AzureLoadState.loading)
-			//			loadState = AzureLoadState.failed;
+				//	catch (Azure.NoBodyResponse<Azure.Storage.Blobs.Models.BlobDownloadStreamingResult>.ResponseBodyNotFoundException)
+				//	{
+				//		Assert(isLoaded);
+				//		if (loadState == AzureLoadState.loading)
+				//			loadState = AzureLoadState.failed;
 
-			//		// etag mismatch
-			////		return this;
-			//	}
+				//		// etag mismatch
+				////		return this;
+				//	}
 				catch (Exception e)
 				{
 					Assert(isLoaded);
@@ -440,7 +451,7 @@ namespace COTG.Game
 						Assert(false);
 						loadState = AzureLoadState.failed;
 					}
-					LogEx(e);
+					LogEx(e,false);
 		//			return this;
 				}
 			}
@@ -514,11 +525,11 @@ namespace COTG.Game
 				bufferSize = minSize;
 			return ArrayPool<byte>.Shared.Rent(bufferSize);
 		}
-		public static async Task<bool> Upload(HeatMapDay day)
-		{
-			using var _ = await mutex.LockAsync();
-			return await UploadInternal(day);
-		}
+		//public static async Task<bool> Upload(HeatMapDay day)
+		//{
+		//	using var _ = await mutex.LockAsync();
+		//	return await UploadInternal(day);
+		//}
 		public static async Task<bool> UploadInternal(HeatMapDay day)
 		{
 			
@@ -547,12 +558,13 @@ namespace COTG.Game
 					var str = day.dateStr;
 					// What abougt etag == null?
 					var success = await cont.GetBlobClient(str).UploadAsync(mem, new BlobUploadOptions() { Conditions = new BlobRequestConditions() { IfMatch = day.eTag } });
-				//	Log(success.GetRawResponse());
-					//if (success.GetRawResponse().Status != 200)
-					//{
-					//	return false;
-					//}
-
+					//	Log(success.GetRawResponse());
+					var result = success.GetRawResponse().Status;
+					if(result >= 300)
+					{
+						Assert(result == 304); // changed, don't overwrite overwrite please
+					}
+					day.loadState = AzureLoadState.loaded;
 	//				Log(success.Value.ETag);
 					day.eTag = success.Value.ETag;
 				}

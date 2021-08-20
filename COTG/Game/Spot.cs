@@ -2059,7 +2059,7 @@ namespace COTG.Game
 				if (incoming.Any())
 					aWar.AddItem("Incoming", ShowIncoming);
 
-				if (Raid.test)
+			//	if (Raid.test)
 					aWar.AddItem("Recruit Sen", (_, _) => Recruit.Send(cid, ttSenator, 1, true));
 				aWar.AddItem("Send Defence", (_, _) => JSDefend(cid));
 				aWar.AddItem("Show Reinforcements", (_, _) => Reinforcement.ShowReturnDialog(cid, uie));

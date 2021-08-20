@@ -1404,10 +1404,10 @@ namespace COTG.Game
 			{
 				using var _ = await HeatMap.mutex.LockAsync();
 
-				Log("Snapshots");
+				//Log("Snapshots");
 				var data = await HeatMap.GetSnapshot(World.heatMapT0);
 				var data1 = await HeatMap.GetSnapshot(World.heatMapT1);
-				Log("Change string");
+				//Log("Change string");
 				
 				var task = App.DispatchOnUIThreadTask(() =>
 			   {

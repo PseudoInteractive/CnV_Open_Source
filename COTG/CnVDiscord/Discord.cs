@@ -194,15 +194,23 @@ namespace CnVDiscord
 
 		private static async Task CommandExecuted(CommandsNextExtension s, CommandExecutionEventArgs e)
 		{
-			// let's log the name of the command and user
-			//  e.Context.Client.DebugLogger.LogMessage(LogLevel.Info, "ExampleBot", $"{e.Context.User.Username} successfully executed '{e.Command.QualifiedName}'", DateTime.Now);
+			try
+			{
+				// let's log the name of the command and user
+				//  e.Context.Client.DebugLogger.LogMessage(LogLevel.Info, "ExampleBot", $"{e.Context.User.Username} successfully executed '{e.Command.QualifiedName}'", DateTime.Now);
 
-			var logs = await DiscordBot.GetChannelAsync(Config.LogID).ConfigureAwait(false);
-			await DiscordBot.SendMessageAsync(logs, "**" + e.Context.User.Username + ":** " + e.Context.Message.Content).ConfigureAwait(false);
+				var logs = await DiscordBot.GetChannelAsync(Config.LogID).ConfigureAwait(false);
+				await DiscordBot.SendMessageAsync(logs, "**" + e.Context.User.Username + ":** " + e.Context.Message.Content).ConfigureAwait(false);
 
-			// since this method is not async, let's return
-			// a completed task, so that no additional work
-			// is done
+				// since this method is not async, let's return
+				// a completed task, so that no additional work
+				// is done
+			}
+			catch (Exception ex)
+			{
+
+				LogEx(ex);
+			}
 			return;
 		}
 		private static async Task CommandErrored(CommandsNextExtension s, CommandErrorEventArgs e)

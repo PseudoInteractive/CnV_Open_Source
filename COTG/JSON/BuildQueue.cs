@@ -271,7 +271,8 @@ namespace COTG.JSON
 								// skip the first
 								for(int i=1;i<lg;++i )
 									bt += cotgQ[i].buildTime;
-								delay = (bt * 1000).Clamp(5*1000,15 * 60 * 1000);
+								delay = (bt* 1000).Clamp(5*1000,15 * 60 * 1000);
+								Log("Delay " + delay/1000);
 							}
 
 							//pollPaused = true;

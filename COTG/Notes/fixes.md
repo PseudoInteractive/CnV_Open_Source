@@ -287,3 +287,6 @@
      - **Fix**
         - Attack planner will add newlines to the plans that get emailed out
             - Why are HTML newlines so temperamental?
+     - **New**
+        - Right click on the continent/tag filter to clear it
+            - tlgger request

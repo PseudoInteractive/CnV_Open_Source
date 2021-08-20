@@ -858,8 +858,8 @@ namespace COTG.Game
 
 		public static string BuildingsToShareString(Building[] _layout, bool _isOnWater)
 		{
-			if (!City.GetBuild().isLayoutValid)
-				return string.Empty;
+		//	if (!City.GetBuild().isLayoutValid)
+	//			return string.Empty;
 
 			using var sb = CreateUtf8StringBuilder();
 			sb.Append(shareStringStart);
