@@ -58,7 +58,7 @@ namespace COTG.Views
 					}
 				   Tables.ReadShares(Player.myName).ContinueWith( (shares) =>
 				   { 
-					   App.DispatchOnUIThreadSneaky(() =>
+					   App.DispatchOnUIThreadLow(() =>
 					  {
 						  AddLayouts();
 						  foreach (var s in shares.Result)
@@ -244,6 +244,8 @@ namespace COTG.Views
 
 						await CitySettings.SetCitySettings(ci,reqHub: bestHub,targetHub:bestHub,
 							 setRecruit:setTags && SettingsPage.setRecruit,
+							 cartReserve: res.cartReserve,
+						shipReserve: res.shipReserve,
 							 req:res.req,max:res.max,
 							reqFilter:reqFilter,sendFilter:sendFilter);
 
@@ -532,8 +534,10 @@ namespace COTG.Views
 		public int? maxStone { get; set; }
 		public int? maxIron { get; set; }
 		public int? maxFood { get; set; }
-
+		public int? cabinCount { get; set; }
+		public int? cabinLevel { get; set; }
 	}
+
 	public class ShareStringItem
 	{
 		public string path { get; set; } = string.Empty;

@@ -171,9 +171,19 @@ namespace COTG
 
 		public static string fileTimeFormat = "yyyy_MM_dd_HH_mm_ss";
 		public static string fileTimeFormatMinute = "yyyy_MM_dd_HH_mm";
+		public static string fileTimeFormatLegacy = "yyyy_MM_dd_H_mm_ss";
 		public static string FormatFileTime(this DateTimeOffset m) => m.ToString(fileTimeFormat, CultureInfo.InvariantCulture);
-		public static string FormatFileTimeToMinute(this DateTimeOffset m) => m.ToString(fileTimeFormatMinute, CultureInfo.InvariantCulture); public static DateTimeOffset ParseFileTime(this string s) => DateTimeOffset.ParseExact(s,fileTimeFormat, CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal);
+		public static string FormatFileTimeToMinute(this DateTimeOffset m) => m.ToString(fileTimeFormatMinute, CultureInfo.InvariantCulture);
+		public static DateTimeOffset ParseFileTime(this string s)
+		{
+			if (DateTimeOffset.TryParseExact(s, fileTimeFormat, CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal, out var rv))
+				return rv;
+			if (DateTimeOffset.TryParseExact(s, fileTimeFormatLegacy, CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal, out rv))
+				return rv;
+			Debug.Assert(false);
+			return DateTimeOffset.MinValue;
 
+		}
 
 		public static string Format(this TimeSpan t)
 		{

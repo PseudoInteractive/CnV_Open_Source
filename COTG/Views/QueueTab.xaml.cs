@@ -77,7 +77,7 @@ namespace COTG.Views
 				return;
 			}
 
-			App.DispatchOnUIThreadSneakyLow(() =>
+			App.DispatchOnUIThreadIdle((_) =>
 			{
 				BuildItemView view = null;
 				foreach (var c in instance.cities)
@@ -99,7 +99,7 @@ namespace COTG.Views
 
 		public static void Clear(int cid)
 		{
-			App.DispatchOnUIThreadSneakyLow(() =>
+			App.DispatchOnUIThreadIdle((_) =>
 			{
 				foreach (var c in instance.cities)
 				{
@@ -124,7 +124,7 @@ namespace COTG.Views
 				return;
 			}
 
-			App.DispatchOnUIThreadSneakyLow(() =>
+			App.DispatchOnUIThreadIdle((_) =>
 			{
 				BuildItemView view = null;
 				foreach (var c in instance.cities)
@@ -163,7 +163,7 @@ namespace COTG.Views
 		{
 			var build = GetBuild();
 			var stage = build.UpdateBuildStage();
-			App.DispatchOnUIThreadSneaky(() =>
+			App.DispatchOnUIThreadLow(() =>
 			{
 				instance.cities.Clear();
 				instance.stage.Text = $"Stage: {build.buildStage.AsString()}";
@@ -189,7 +189,7 @@ namespace COTG.Views
 			}
 			else
 			{
-				App.DispatchOnUIThreadSneaky(cities.Clear);
+				App.DispatchOnUIThreadLow(cities.Clear);
 			}
 			return base.VisibilityChanged(visible, longTerm: longTerm);
 
@@ -375,6 +375,15 @@ namespace COTG.Views
 
 
 			Assert(city.isBuild);
+			if(city.is7Point)
+			{
+				if (bc.townHallLevel < 8)
+				{
+					await EnqueueUpgrade(8, bspotTownHall);
+					bc = city.UpdateBuildStage();
+				}
+
+			}
 			if (city.buildStage == City.BuildStage.cabins || city.buildStage == BuildStage.townHall)
 			{
 				if (bc.cabins >= SettingsPage.startCabinCount || bc.buildings >= city.buildingLimit - 2)
@@ -385,15 +394,22 @@ namespace COTG.Views
 			}
 
 			Assert(city.isBuild);
-			if (!bc.hasCastle  && city.tsTotal > SettingsPage.tsForCastle && city.hasCastleInLayout)
+			if (!bc.hasCastle  && ((city.tsTotal > SettingsPage.tsForCastle)||(city.is7Point&&bc.townHallLevel>=8)) && city.hasCastleInLayout )
 			{
 				//			if (!city.isBuild)
 				//				await JSClient.ChangeCity(city.cid, false); ;
 				//				if(!bc.hasWall)
 				//					await CityBuild.Enqueue(0, 1, bidWall, bspotWall);
 				await CityBuild.SmartBuild(city, city.FindOverlayBuildingOfType(bidCastle), bidCastle, true, false, false);
+				bc = city.UpdateBuildStage();
 				//bc.wallLevel = 1;
-				bc.hasCastle = true;
+				if (city.is7Point)
+					await CitySettings.SetCitySettings(city.cid, autoBuildOn: false);
+
+				if (city.is7Point && bc.hasCastle)
+				{
+					await CityBuild.DowngradeTo((0, 0), 1); // downgrade town hall
+				}
 			}
 			if ((bc.sorcTowers == 0 || bc.sorcTowerLevel != 10) && (city.tsTotal > SettingsPage.tsForSorcTower || (!city.isMilitary && city.points> SettingsPage.scoreForSorcTower) ) && city.HasOverlayBuildingOfType( bidSorcTower) )
 			{
@@ -412,13 +428,13 @@ namespace COTG.Views
 					await CityBuild.EnqueueUpgrade( 10, XYToId((c.x, c.y)));
 			}
 			Assert(city.isBuild);
-			if (!bc.hasWall && bc.hasCastle)
+			if (!bc.hasWall && bc.hasCastle && !city.is7Point)
 			{
 				await CityBuild.Enqueue(0, 1, bidWall, bspotWall);
 				bc.wallLevel = 1;
 			}
 			Assert(city.isBuild);
-			if (bc.hasWall && bc.scoutpostCount < SettingsPage.scoutpostCount)
+			if (bc.hasWall && bc.scoutpostCount < SettingsPage.scoutpostCount && !city.is7Point)
 			{
 				while (bc.scoutpostCount < SettingsPage.scoutpostCount)
 				{
@@ -464,7 +480,7 @@ namespace COTG.Views
 				case City.BuildStage.townHall:
 				case City.BuildStage.cabins:
 					{
-						if (bc.cabins < SettingsPage.startCabinCount || (bc.storeHouses == 0))
+						if ( (bc.cabins < SettingsPage.startCabinCount || (bc.storeHouses == 0)) && !city.is7Point )
 						{
 							switch (await App.DoYesNoBox("Add Cabins", $"Would you like to add cabins to {city.nameAndRemarks}?"))
 							{
@@ -476,7 +492,7 @@ namespace COTG.Views
 
 							if (bc.townHallLevel < 4)
 							{
-								await EnqueueUpgrade(4, bspotTownHall);
+								await EnqueueUpgrade( 4, bspotTownHall);
 							}
 							var storeHouses = FindPendingOverlayBuildingsOfType(SettingsPage.intialStorehouses - bc.storeHouses, bidStorehouse, true);
 							foreach (var storage in storeHouses)

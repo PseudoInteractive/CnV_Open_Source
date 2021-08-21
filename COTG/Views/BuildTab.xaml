@@ -162,6 +162,9 @@
 				<tg:DataGridBooleanColumn PropertyName="bcTowers"
 										  Tip="Buildings has towers"
 											Header="twr" />
+				<tg:DataGridBooleanColumn PropertyName="ministersOn"
+										  Tip="Ministers On. Might need to visit city to update"
+											Header="mnO" />
 			</tg:RadDataGrid.Columns>
 
 		</tg:RadDataGrid>

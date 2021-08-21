@@ -667,7 +667,7 @@ namespace COTG.Game
 					tradeInfo.inc[3] = ir[3].GetAsInt();
 					//if (NearRes.IsVisible())
 					//{
-					//	App.DispatchOnUIThreadSneaky( ()=> NearRes.instance.Refresh() );
+					//	App.DispatchOnUIThreadLow( ()=> NearRes.instance.Refresh() );
 					//}
 				}
 			}
@@ -1013,7 +1013,7 @@ namespace COTG.Game
 
 		public void NotifyChange(string member = "")
 		{
-			App.DispatchOnUIThreadSneakyLow(() =>
+			App.DispatchOnUIThreadIdle((_) =>
 	   {
 		   OnPropertyChanged(member);
 	   });
@@ -1139,7 +1139,7 @@ namespace COTG.Game
 		//}
 
 		//public void OnPropertyChanged(string propertyName) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-		//public void OnPropertyChangedUI(string propertyName) => App.DispatchOnUIThreadLow(()=> PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName)));
+		//public void OnPropertyChangedUI(string propertyName) => App.(()=> PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName)));
 
 		public override string ToString()
 		{
@@ -1338,7 +1338,8 @@ namespace COTG.Game
 		public ushort shipsHome;
 		public ushort ShipsHome => shipsHome;
 		public bool sorcTower { get; set; }
-		public bool ministersOn { get; set; }
+		public NullableBool ministersOn;
+		public bool? MinistersOn { get => ministersOn; set=>ministersOn=value; }
 
 		public Resources res => new Resources(wood, stone, iron, food);
 		public static ResetableCollection<City> gridCitySource = new ResetableCollection<City>();
@@ -1686,7 +1687,7 @@ namespace COTG.Game
 		//}
 		public static void SyncCityBox()
 		{
-			App.DispatchOnUIThreadLow(() =>
+			App.DispatchOnUIThreadIdle((_) =>
 			{
 				var _build = City.GetBuild();
 				if (_build != ShellPage.instance.cityBox.SelectedItem)
@@ -1894,7 +1895,7 @@ namespace COTG.Game
 		}	
 		//public static void AllCityDataDirty()
 		//{
-		//	App.DispatchOnUIThreadLow(async () =>
+		//	App.(async () =>
 		//   {
 		//   using (var _ = await cityGridLock.LockAsync())
 		//	{ 
@@ -2148,7 +2149,7 @@ namespace COTG.Game
 		public static void NotifyChange()
 		{
 
-			App.DispatchOnUIThreadLow(async () =>
+			App.DispatchOnUIThreadIdle(async (___) =>
 		   {
 				//               Log("CityListChange");
 

@@ -51,7 +51,7 @@ namespace COTG
 		{
 			if (CollectionChanged != null)
 			{
-				App.DispatchOnUIThreadSneaky(() =>
+				App.DispatchOnUIThreadIdle((_) =>
 
 				   //  Assert(App.IsOnUIThread());
 				   CollectionChanged(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset)));
@@ -76,7 +76,7 @@ namespace COTG
 			{
 				base.AddRange(src);
 			}
-			//App.DispatchOnUIThreadSneaky(() =>
+			//App.DispatchOnUIThreadLow(() =>
    //         {
    //             // catch for thread safety
                
@@ -106,7 +106,7 @@ namespace COTG
         {
             base.Add(item);
 			if(CollectionChanged!=null)
-	            App.DispatchOnUIThreadSneaky( ()=>
+	            App.DispatchOnUIThreadLow( ()=>
 				{
 					var id = IndexOf( item );
 					if(id != -1)
@@ -119,7 +119,7 @@ namespace COTG
         {
             base.Insert(id, item);
 			if (CollectionChanged != null)
-				App.DispatchOnUIThreadSneaky(() =>
+				App.DispatchOnUIThreadLow(() =>
 				{
 					var id = IndexOf(item);
 					if (id != -1)
@@ -134,7 +134,7 @@ namespace COTG
             base.RemoveAt(id);
 			var count = Count;
 			if (CollectionChanged != null)
-				App.DispatchOnUIThreadSneaky(() =>
+				App.DispatchOnUIThreadLow(() =>
 				{
 					if (id <= Count)
 						CollectionChanged.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, item, id));
@@ -168,7 +168,7 @@ namespace COTG
 
 		public void NotifyReset(T[] changed = null)
 		{
-			App.DispatchOnUIThreadSneakyLow(() =>
+			App.DispatchOnUIThreadIdle((_) =>
 			{
 				OnPropertyChanged();
 				//  Assert(App.IsOnUIThread());
@@ -209,7 +209,7 @@ namespace COTG
 		}
 		public void NotifyItemsChanged()
 		{
-			App.DispatchOnUIThreadSneakyLow(() =>
+			App.DispatchOnUIThreadIdle((_) =>
 			{
 				foreach(var i in this)
 					OnPropertyChanged(i);
@@ -218,7 +218,7 @@ namespace COTG
 		}
 		public void NotifyAdd( T added )
 		{
-			App.DispatchOnUIThreadSneakyLow(() =>
+			App.DispatchOnUIThreadLow(() =>
 			{
 				//  Assert(App.IsOnUIThread());
 				if (CollectionChanged != null)
@@ -229,7 +229,7 @@ namespace COTG
 		}
 		public void NotifyAdd(IList<T> added)
 		{
-			App.DispatchOnUIThreadSneakyLow(() =>
+			App.DispatchOnUIThreadLow(() =>
 			{
 				//  Assert(App.IsOnUIThread());
 				if (CollectionChanged != null)
@@ -241,7 +241,7 @@ namespace COTG
 		}
 		public void NotifyRemove(T removed)
 		{
-			App.DispatchOnUIThreadSneakyLow(() =>
+			App.DispatchOnUIThreadLow(() =>
 			{
 				//  Assert(App.IsOnUIThread());
 				if (CollectionChanged != null)
@@ -252,7 +252,7 @@ namespace COTG
 		}
 		public void NotifyRemove(IList<T> removed)
 		{
-			App.DispatchOnUIThreadSneakyLow(() =>
+			App.DispatchOnUIThreadLow(() =>
 			{
 				//  Assert(App.IsOnUIThread());
 				if (CollectionChanged != null)
@@ -307,7 +307,7 @@ namespace COTG
                 return;
 
             // defer the call, we don't need it right away
-           App.DispatchOnUIThreadSneakyLow(() =>
+           App.DispatchOnUIThreadIdle((_) =>
            {
                try
                {

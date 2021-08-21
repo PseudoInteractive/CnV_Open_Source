@@ -100,7 +100,7 @@ namespace COTG.Views
         //public static void SelectedToGrid()
         //{
         //    ++silenceChanges;
-        //    App.DispatchOnUIThreadSneaky(() =>
+        //    App.DispatchOnUIThreadLow(() =>
         //    {
         //        try
         //        {
@@ -151,7 +151,7 @@ namespace COTG.Views
         //}
         //public static void SelectOne(Spot spot)
         //{
-        //    App.DispatchOnUIThreadSneaky(() =>
+        //    App.DispatchOnUIThreadLow(() =>
         //    {
         //        try
         //        {
@@ -181,7 +181,7 @@ namespace COTG.Views
             if (disableSelection == 0)
             {
 
-                App.DispatchOnUIThreadSneaky(() =>
+                App.DispatchOnUIThreadLow(() =>
            {
                var id = SpotMRU.IndexOf(spot);
                if (id != 0)

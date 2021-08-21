@@ -30,7 +30,7 @@ namespace COTG.Views
 
         public override Task VisibilityChanged(bool visible, bool longTerm)
 		{
-			App.DispatchOnUIThreadSneaky(() =>
+			App.DispatchOnUIThreadLow(() =>
 		   {
 			   if (visible)
 			   {

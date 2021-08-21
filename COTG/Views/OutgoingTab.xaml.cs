@@ -94,7 +94,7 @@ namespace COTG.Views
             {
                 try
                 {
-                    App.DispatchOnUIThreadSneaky(() =>
+                    App.DispatchOnUIThreadLow(() =>
                     {
                         instance.attackerGrid.ItemsSource = Spot.defendersO.Where( w => w.testContinentFilter 
 																					&& (instance.includeInternal || !w.IsAllyOrNap() ) 
@@ -122,7 +122,7 @@ namespace COTG.Views
         public override Task VisibilityChanged(bool visible, bool longTerm)
 		{
 			/// TODO:  Why clear?
-            //App.DispatchOnUIThreadSneaky(() =>
+            //App.DispatchOnUIThreadLow(() =>
             //{
             //    attackerGrid.ItemsSource = null;
             //    armyGrid.ItemsSource = Army.empty;

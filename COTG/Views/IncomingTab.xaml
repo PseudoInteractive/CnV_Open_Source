@@ -133,7 +133,7 @@
 
                                        CellContentStyle="{StaticResource RightAlign}"
                                             CellContentFormat="{}{0,7:N0}"
-                                             IsVisible="False" />
+                                              />
 				<tg:DataGridBooleanColumn PropertyName="isOnWater"
 
                                                       CellContentStyle="{StaticResource CenterAlign}" IsVisible="False" />

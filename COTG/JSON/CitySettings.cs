@@ -100,7 +100,11 @@ namespace COTG.JSON
 				if (rv == ContentDialogResult.Primary)
 				{
 					// does this change threads?
-					await SetCitySettings(cid,reqHub:sourceHub,targetHub:targetHub, req:  settings.req, max:settings.max, reqFilter: settings.reqFilter, sendFilter: settings.sendFilter);
+					await SetCitySettings(cid,reqHub:sourceHub,targetHub:targetHub, req:  settings.req, max:settings.max, 
+						cartReserve:settings.cartReserve,
+						shipReserve:settings.shipReserve,
+						reqFilter: settings.reqFilter, 
+						sendFilter: settings.sendFilter);
 				}
 				else if (rv == ContentDialogResult.None)
 				{
@@ -170,6 +174,9 @@ namespace COTG.JSON
 
 					}
 				}
+				if (spot.is7Point)
+					split[90] = "8]"; // hack!  townhall to level 8
+
 				if (reqHub.HasValue || reqFilter.Any)
 				{
 					split[32] = "0"; // use the different city all requests
@@ -383,7 +390,7 @@ namespace COTG.JSON
         }
 
 
-		public static async Task<(Resources req,Resources max,Resources storage)> GetTradeResourcesSettings(int cid) 
+		public static async Task<(Resources req,Resources max,Resources storage,int cartReserve,int shipReserve)> GetTradeResourcesSettings(int cid) 
 		{
 			var city = City.GetOrAddCity(cid);
 			(var split,var storage) = await GetMinisterOptions(city);
@@ -404,8 +411,10 @@ namespace COTG.JSON
 					max[i - 47] = v;
 				}
 			}
+			split[45].TryParseInt(out var cartReserve);
+			split[46].TryParseInt(out var shipReserve);
 
-			return (req, max,storage);
+			return (req, max,storage,cartReserve,shipReserve);
 		}
 
 		//public static async Task SetTradeResourcesSettings(int cid, Resources req, Resources max )

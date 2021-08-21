@@ -62,7 +62,7 @@ namespace COTG.Views
 		const int maxMessageLength = 32 * 1024;
 		static BitmapImage GetAvatar(string player)
 		{
-			if (player != null && CnVDiscord.Discord.avatarBrushes.TryGetValue(player.ToLower(), out var url))
+			if (player != null && CnVDiscord.Discord.avatarBrushes.TryGetValue(player.ToLowerInvariant(), out var url))
 			{
 				return url;
 			}
@@ -130,7 +130,7 @@ namespace COTG.Views
 		{
 			if (items.Count > 0 && visible)
 			{
-				App.DispatchOnUIThreadSneaky(() =>
+				App.DispatchOnUIThreadLow(() =>
 				{
 
 					listView.ScrollIntoView(items.Last());
@@ -225,7 +225,7 @@ namespace COTG.Views
 		{
 			this.InitializeComponent();
 
-			//   Task.Delay(2000).ContinueWith((_) => App.DispatchOnUIThreadLow(() =>
+			//   Task.Delay(2000).ContinueWith((_) => App.(() =>
 			//{ //ChatTip0.IsOpen = true;
 			//   /// ChatTip1.IsOpen = true;
 			//   // ChatTip2.IsOpen = true;
@@ -242,7 +242,7 @@ namespace COTG.Views
 			//              await _logSemaphore.WaitAsync();
 			// try
 			////  {
-			App.DispatchOnUIThreadSneakyLow(() =>
+			App.DispatchOnUIThreadIdle((_) =>
 			{
 
 				try
@@ -602,7 +602,7 @@ namespace COTG.Views
 
 		//    var ll = await Avatarslate.TouchAsync();
 		//    var langs = await ll.GetLanguagesAsync();
-		//    App.DispatchOnUIThreadSneaky(() =>
+		//    App.DispatchOnUIThreadLow(() =>
 		//    {
 		//        var fly = new MenuFlyout();
 		//        var i = fly.Items;
@@ -634,7 +634,7 @@ namespace COTG.Views
 		//    var i = fly.Items;
 		//    var ll = await Avatarslate.TouchAsync();
 		//    var langs = await Avatarslate.GetLanguagesAsync();
-		//    App.DispatchOnUIThreadSneaky(() =>
+		//    App.DispatchOnUIThreadLow(() =>
 		//    {
 		//        foreach (var l in langs)
 		//        {
@@ -655,7 +655,7 @@ namespace COTG.Views
 		//    var i = fly.Items;
 		//    var ll = await Avatarslate.TouchAsync();
 		//    var langs = await Avatarslate.GetLanguagesAsync();
-		//    App.DispatchOnUIThreadSneaky(() =>
+		//    App.DispatchOnUIThreadLow(() =>
 		//    {
 		//        foreach (var l in langs)
 		//        {
@@ -672,7 +672,7 @@ namespace COTG.Views
 		//    var msg = sender as Button;
 		//    var ll = await Avatarslate.TouchAsync();
 		//    var langs = await Avatarslate.GetLanguagesAsync();
-		//    App.DispatchOnUIThreadSneaky(() =>
+		//    App.DispatchOnUIThreadLow(() =>
 		//    {
 		//        var fly = new MenuFlyout();
 		//        var i = fly.Items;
@@ -696,7 +696,7 @@ namespace COTG.Views
 
 		//    var ll = await Avatarslate.TouchAsync();
 		//    var langs = await ll.GetLanguagesAsync();
-		//    App.DispatchOnUIThreadSneaky(() =>
+		//    App.DispatchOnUIThreadLow(() =>
 		//    {
 		//        var fly = new MenuFlyout();
 		//        var i = fly.Items;

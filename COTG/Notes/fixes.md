@@ -290,3 +290,10 @@
      - **New**
         - Right click on the continent/tag filter to clear it
             - tlgger request
+### 2021/8/21
+    -   **Fix**
+        - The number of milliseconds since Unix was started is now to big to fit in an integer, this caused ministers to think that they were expired.
+            - Changed the date at which Unix was started.
+    -   **New**
+        -   City Tag: "SevenPoint", for 7 point castles
+            -   If you need a good layout, I have shared one: see "7pt"

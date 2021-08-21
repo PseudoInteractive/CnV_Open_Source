@@ -261,7 +261,7 @@ namespace COTG.Views
 			//if (CityBuild.menuOpen)
 			//{
 			//	// todo:  Handle naviation menu items and selection
-			//	App.DispatchOnUIThreadSneaky(() =>
+			//	App.DispatchOnUIThreadLow(() =>
 			//	{
 			//		ShellPage.instance.buildMenu.IsOpen = false;
 			//	});
@@ -298,7 +298,7 @@ namespace COTG.Views
 			}
 			else
 			{
-				// App.DispatchOnUIThreadSneaky(() =>
+				// App.DispatchOnUIThreadLow(() =>
 				
 				ProcessKey(key);
 				

@@ -380,7 +380,7 @@ namespace COTG.Views
         }
         private void UpdateStats()
         {
-            App.DispatchOnUIThreadSneakyLow(() =>
+            App.DispatchOnUIThreadIdle((_) =>
             {
 				planName.Text = SettingsPage.attackPlanName;
 
@@ -450,7 +450,7 @@ namespace COTG.Views
 				// if we just loaded a backup, strip the backup info from the name
 				SettingsPage.attackPlanName = SettingsStorageExtensions.regexBackupDatePostFix.Replace(SettingsPage.attackPlanName,"");
 
-				// App.DispatchOnUIThreadSneaky(() =>
+				// App.DispatchOnUIThreadLow(() =>
 				//  {
 				var attacks = new List<City>();
 				foreach (var att in plan.attacks)
@@ -485,7 +485,7 @@ namespace COTG.Views
 
 		void DoRefresh()
 		{
-			App.DispatchOnUIThreadSneaky(() =>
+			App.DispatchOnUIThreadLow(() =>
 			{
 				SyncUIGrids();
 				attacksUI.NotifyReset();
@@ -501,7 +501,7 @@ namespace COTG.Views
 		{
             if (visible)
             {
-				App.DispatchOnUIThreadSneaky( UpdateArrivalUI );
+				App.DispatchOnUIThreadLow( UpdateArrivalUI );
 				using var _ = await TouchLists();
 				WritebackAttacks();
 				DoRefresh();

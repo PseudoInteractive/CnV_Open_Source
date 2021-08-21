@@ -163,7 +163,7 @@ namespace COTG.Views
 			Log($"{action}=>{_action}");
 			action = _action;
 
-			ShellPage.coreInputSource.Dispatcher.RunAsync(CoreDispatcherPriority.Low, ()=>
+			ShellPage.coreInputSource.Dispatcher.TryRunAsync(CoreDispatcherPriority.Low, ()=>
 		   {
 			   switch (action)
 			   {
@@ -187,7 +187,7 @@ namespace COTG.Views
 					   break;
 			   }
 		   });
-			//	App.DispatchOnUIThreadSneaky( ()=> instance.quickBuild.SelectedIndex = (int)_action ); /// the first 3 are mapped. this triggers a selected changed event
+			//	App.DispatchOnUIThreadLow( ()=> instance.quickBuild.SelectedIndex = (int)_action ); /// the first 3 are mapped. this triggers a selected changed event
 		}
 		public static void SetQuickBuild(int quickBuildItemBid)
 		{
@@ -197,7 +197,7 @@ namespace COTG.Views
 			
 			lastQuickBuildActionBSpot = -1;
 			quickBuildId = quickBuildItemBid;
-			//	App.DispatchOnUIThreadSneaky( ()=> instance.quickBuild.SelectedIndex = (int)_action ); /// the first 3 are mapped. this triggers a selected changed event
+			//	App.DispatchOnUIThreadLow( ()=> instance.quickBuild.SelectedIndex = (int)_action ); /// the first 3 are mapped. this triggers a selected changed event
 		}
 
 		//static List<QuickBuildItem> items;
@@ -512,7 +512,7 @@ namespace COTG.Views
 			//		if (!open)
 			//		{
 			//			await Task.Delay(450);
-			//			App.DispatchOnUIThreadSneaky( ()=>buildMenuCanvas.Visibility = Visibility.Collapsed );
+			//			App.DispatchOnUIThreadLow( ()=>buildMenuCanvas.Visibility = Visibility.Collapsed );
 
 			//			menuOpen = false;
 			//		}
@@ -611,7 +611,7 @@ namespace COTG.Views
 				//	BuildingsOrQueueChanged();
 			
 					if (syncPlannerTab && !PlannerTab.IsVisible())
-						App.DispatchOnUIThreadSneakyLow(()=>PlannerTab.instance.Show());
+						App.DispatchOnUIThreadLow(()=>PlannerTab.instance.Show());
 				}
 				else
 				{
@@ -624,7 +624,7 @@ namespace COTG.Views
 		
 					if (syncPlannerTab && PlannerTab.IsVisible())
 					{
-						App.DispatchOnUIThreadSneaky(() =>
+						App.DispatchOnUIThreadLow(() =>
 					   {
 						   if (PlannerTab.instance.isVisible)
 						   {
@@ -921,6 +921,16 @@ namespace COTG.Views
 			}
 			//if(!dryRun)
 			//	buildQueue.Add(new BuildQueueItem() { bspot = id, bid = sel.def.bid, slvl = sel.bl, elvl = (byte)(sel.bl-1) });
+		}
+		public static async Task DowngradeTo((int x, int y) building, int level)
+		{
+			var id = XYToId(building);
+			var sel = GetBuildingPostQueue(id);
+			int count = sel.bl - level;
+			for(int i=0;i<count;++i)
+			{
+				await Downgrade(building, false);
+			}
 		}
 		static async Task<bool> BuildWallDialogue()
 		{
@@ -1667,7 +1677,7 @@ namespace COTG.Views
 				//		if (!dryRun)
 				//		{
 
-				//			App.DispatchOnUIThreadSneaky(()=>TogglePlanner() );
+				//			App.DispatchOnUIThreadLow(()=>TogglePlanner() );
 				//		}
 
 				//		break;
@@ -2313,7 +2323,7 @@ namespace COTG.Views
 						await ShareString.Show(City.build);
 						SetAction(bi.action);
 						ClearSelectedBuilding();
-//						App.DispatchOnUIThreadLow( ()=> PlannerTeachingTip.Show(nameof(PlannerTeachingTip)));
+//						App.( ()=> PlannerTeachingTip.Show(nameof(PlannerTeachingTip)));
 
 
 					}

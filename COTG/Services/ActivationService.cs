@@ -46,7 +46,8 @@ namespace COTG.Services
 
         public async Task ActivateAsync(object activationArgs)
         {
-            if (IsInteractive(activationArgs))
+
+			if (IsInteractive(activationArgs))
             {
                 // Initialize services that you need before app activation
                 // take into account that the splash screen is shown while this code runs.

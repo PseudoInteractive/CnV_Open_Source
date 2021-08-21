@@ -89,7 +89,7 @@ namespace COTG
 
 		public static void JSInvoke(string func, string[] args)
 		{
-			App.DispatchOnUIThreadSneaky(async () =>
+			App.DispatchOnUIThreadLow(async () =>
 			{
 
 				try
@@ -215,15 +215,15 @@ namespace COTG
 			return (uint)(DateTimeOffset.UtcNow.ToUnixTimeSeconds() + gameTOffsetSeconds);
 		}
 		// timestamp - ServerTime all in in MS 
-		public static int ServerTimeOffsetMs(long t) // t is COTG server time in MS
+		public static uint ServerTimeOffsetSeonds(uint t) // t is COTG server time in MS
 		{
-			return (int)(t - ServerTimeMs());
+			return (t - ServerTimeSeconds());
 		}
 		//public static int ServerTimeOffsetSeconds(long t)
 		//{
 		//	return (int)(t - ServerTimeSeconds());
 		//}
-		public static long ServerTimeMs() => ServerTimeSeconds() * 1000;
+		public static long ServerTimeMs() => (DateTimeOffset.UtcNow.ToUnixTimeMilliseconds() + gameTOffsetSeconds*1000l);
 
 		//public static DateTimeOffset ServerToLocal(DateTimeOffset t)
 		//{
@@ -296,7 +296,7 @@ namespace COTG
 			}
 			//	AddPlayer(false, true, pid, Player.all[pid].name, token, "", secSessionId, null);
 			//	await GetCity.Post(cid, (jse,city) => Log($"{jse.ToString()} Here!!") );
-			App.DispatchOnUIThreadSneaky(() => view.InvokeScriptAsync("setPlayerGlobals", new[] { token, secSessionId, cid.ToString() }));
+			App.DispatchOnUIThreadLow(() => view.InvokeScriptAsync("setPlayerGlobals", new[] { token, secSessionId, cid.ToString() }));
 		}
 
 		public static void SetCookieCollab(string name, string value, bool session, bool httpOnly, bool clearOnly = false)
@@ -779,7 +779,7 @@ namespace COTG
 
 		public static void PostMouseEventToJS(int x, int y, string eventName, int button, int dx = 0, int dy = 0)
 		{
-			App.DispatchOnUIThreadSneaky(() => view.InvokeScriptAsync("postMouseEvent", new string[] { x.ToString(), y.ToString(), eventName, button.ToString(), dx.ToString(), dy.ToString() }));
+			App.DispatchOnUIThreadLow(() => view.InvokeScriptAsync("postMouseEvent", new string[] { x.ToString(), y.ToString(), eventName, button.ToString(), dx.ToString(), dy.ToString() }));
 		}
 
 		//        public static void Refresh(object ob,RoutedEventArgs args)
@@ -793,7 +793,7 @@ namespace COTG
 
 		public static void SetStayAlive(bool stayAlive)
 		{
-			App.DispatchOnUIThreadSneakyLow(() => view.InvokeScriptAsync("setStayAlive", new string[] { stayAlive ? "1" : "" }));
+			App.DispatchOnUIThreadLow(() => view.InvokeScriptAsync("setStayAlive", new string[] { stayAlive ? "1" : "" }));
 		}
 		public static void SendChat(int channel, string message)
 		{
@@ -950,7 +950,7 @@ namespace COTG
 		//{
 		//	try
 		//	{
-		//		App.DispatchOnUIThreadSneaky(async () =>
+		//		App.DispatchOnUIThreadLow(async () =>
 		//		{
 
 		//			if (City.StBuild(cityId, false).changed)
@@ -983,7 +983,7 @@ namespace COTG
 			try
 			{
 				ShellPage.SetViewMode(viewMode);
-				App.DispatchOnUIThreadSneaky(() => view.InvokeScriptAsync("setviewmode", new string[] { viewMode == ShellPage.ViewMode.city ? "c" : "r" }));
+				App.DispatchOnUIThreadLow(() => view.InvokeScriptAsync("setviewmode", new string[] { viewMode == ShellPage.ViewMode.city ? "c" : "r" }));
 
 			}
 			catch (Exception e)
@@ -1096,7 +1096,7 @@ namespace COTG
 
 		public static void FetchCity(int cityId)
 		{
-			App.DispatchOnUIThreadSneaky(() =>
+			App.DispatchOnUIThreadLow(() =>
 			{
 				view.InvokeScriptAsync("shCit", new string[] { (cityId).ToString() });
 				//int x = cityId%65536;
@@ -1111,7 +1111,7 @@ namespace COTG
 		public static void gStCB(int cityId, Action<JsonElement> cb, int hash)
 		{
 			gstCBs.TryAdd(hash, cb);
-			App.DispatchOnUIThreadSneaky(() =>
+			App.DispatchOnUIThreadLow(() =>
 			{
 				var cc = cityId.CidToContinentXY();
 				var str = "[";
@@ -1239,10 +1239,10 @@ namespace COTG
 
 						foreach (var c in cob.EnumerateObject())
 						{
-							var t = ServerTimeOffsetMs(c.Value.GetAsInt64());
+							var t = ServerTimeOffsetSeonds((uint)c.Value.GetAsInt64());
 							if (t <= 0)
 							{
-								App.DispatchOnUIThreadSneaky(ShowCouncillorsMissingDialog);
+								App.DispatchOnUIThreadLow(ShowCouncillorsMissingDialog);
 								break;
 							}
 
@@ -1270,7 +1270,7 @@ namespace COTG
 				{
 					TradeSettings.all = JsonSerializer.Deserialize<TradeSettings[]>(tcps.ToString(), Json.jsonSerializerOptions);
 					
-					App.DispatchOnUIThreadLow( ()=>
+					App.DispatchOnUIThreadIdle( (_)=>
 					{
 						ResSettings.tradeSettingsItemsSource = TradeSettings.all;
 					});
@@ -1453,7 +1453,7 @@ namespace COTG
 
 				if (clChanged >= 2)
 				{
-					App.DispatchOnUIThreadLow(() =>
+					App.DispatchOnUIThreadIdle((_) =>
 				   {
 					   var priorIndex = CityList.box.SelectedIndex;
 					   CityList.selections = new CityList[lists.Count + 1];
@@ -1503,7 +1503,7 @@ namespace COTG
 						if (World.GetInfoFromCid(cid).player != thisPid)
 						{
 							Note.Show($"Invalid City, was it lost? {cid.CidToString()}");
-							App.DispatchOnUIThreadSneaky(() =>
+							App.DispatchOnUIThreadLow(() =>
 							 view.InvokeScriptAsync("chcity", new string[] { (cid).ToString() }));
 
 							await Task.Delay(2000);
@@ -1940,7 +1940,7 @@ private static async void ShowCouncillorsMissingDialog()
 		static ConcurrentBag<WaitOnCityDataData> waitingOnCityData = new();
 		static void ChangeCityJS(int cityId)
 		{
-			App.DispatchOnUIThreadSneaky(() =>
+			App.DispatchOnUIThreadLow(() =>
 							view.InvokeScriptAsync("chcity", new string[] { (cityId).ToString() }));
 
 		}
@@ -1972,7 +1972,7 @@ private static async void ShowCouncillorsMissingDialog()
 				   {
 					   case "jsvars":
 						   {
-						//	   App.DispatchOnUIThreadSneaky(() => ShellPage.instance.cookie.Visibility = Visibility.Collapsed);
+						//	   App.DispatchOnUIThreadLow(() => ShellPage.instance.cookie.Visibility = Visibility.Collapsed);
 
 							   var jso = jsp.Value;
 
@@ -2016,11 +2016,11 @@ private static async void ShowCouncillorsMissingDialog()
 							   clientPoolSema.Release(clientCount);
 
 							   var timeOffset = jso.GetAsInt64("timeoffset");
-							   var timeOffsetRounded = Math.Round(timeOffset / (1000.0 * 60 * 30)) * 30.0f; // round to nearest half hour
-							   gameTOffset = TimeSpan.FromMinutes(timeOffsetRounded);
-							   gameTOffsetSeconds = (int)gameTOffset.TotalSeconds;
-							   gameTOffsetMs = (long)gameTOffset.TotalMilliseconds;
-							   var str = timeOffsetRounded >= 0 ? " +" : " ";
+							   var timeOffsetSecondsRounded = Math.Round(timeOffset / (1000.0 * 60*30)) * 60 * 30.0f; // round to nearest half hour
+							   gameTOffset = TimeSpan.FromSeconds(timeOffsetSecondsRounded);
+							   gameTOffsetSeconds = (int)timeOffsetSecondsRounded;
+							   gameTOffsetMs = (long)timeOffsetSecondsRounded*1000;
+							   var str = timeOffsetSecondsRounded >= 0 ? " +" : " ";
 							   str += $"{gameTOffset.Hours:D2}:{gameTOffset.Minutes:D2}";
 							   Helpers.JSON.timeZoneString = str;
 							   //   Log(JSONHelper.timeZoneString);
@@ -2061,7 +2061,7 @@ private static async void ShowCouncillorsMissingDialog()
 							   UpdatePPDT(ppdt, Player.myId, pruneCities: true);
 							   if (Player.isAvatarOrTest)
 								   Raid.test = true;
-							   World.RunWhenLoaded(() => App.DispatchOnUIThreadSneakyLow(Spot.UpdateFocusText));
+							   World.RunWhenLoaded(() => App.DispatchOnUIThreadIdle(Spot.UpdateFocusText));
 
 
 							   BuildQueue.Initialize();
@@ -2109,7 +2109,7 @@ private static async void ShowCouncillorsMissingDialog()
 								   var jso = jsp.Value;
 								   var cid = jso.GetAsInt();
 								   Spot.ProcessCoordClick(cid, false, App.keyModifiers, true); // then normal click
-								   //App.DispatchOnUIThreadSneaky(async () =>
+								   //App.DispatchOnUIThreadLow(async () =>
 								   //{
 									  // try
 									  // {
@@ -2345,7 +2345,7 @@ private static async void ShowCouncillorsMissingDialog()
 									   if (blessed != city.isBlessed)
 									   {
 										   city.isBlessed = blessed;
-										   App.DispatchOnUIThreadSneakyLow(() => city.OnPropertyChanged(nameof(City.icon)));
+										   App.DispatchOnUIThreadLow(() => city.OnPropertyChanged(nameof(City.icon)));
 									   }
 									   city.isOnWater |= jso.GetAsInt("water") != 0;  // Use Or in case the data is imcomplete or missing, in which case we get it from world data, if that is not incomplete or missing ;)
 									   city.isTemple = jso.GetAsInt("plvl") != 0;
@@ -2464,7 +2464,7 @@ private static async void ShowCouncillorsMissingDialog()
 								   }
 								   if (Player.isAvatarOrTest)
 								   {
-									   App.DispatchOnUIThreadSneaky(() =>
+									   App.DispatchOnUIThreadLow(() =>
 									   {
 									   // create a timer for precense updates
 									   presenceTimer = new DispatcherTimer();
@@ -2540,7 +2540,7 @@ private static async void ShowCouncillorsMissingDialog()
 								   //CookieDB.Apply(jsVars.cookies);
 								   //pendingCookies = null;
 
-								   //App.DispatchOnUIThreadSneaky(() => ShellPage.instance.friendListBox.SelectedItem = Player.activePlayerName);
+								   //App.DispatchOnUIThreadLow(() => ShellPage.instance.friendListBox.SelectedItem = Player.activePlayerName);
 
 								   break;
 						   }
@@ -2577,7 +2577,7 @@ private static async void ShowCouncillorsMissingDialog()
 
 									   var popup = System.Text.Json.JsonSerializer.Deserialize<Models.JSPopupNode[]>(str, Json.jsonSerializerOptions);
 									   Log(popup.Length.ToString() );
-									   // App.DispatchOnUIThreadSneaky(() => Models.JSPopupNode.Show(popup));
+									   // App.DispatchOnUIThreadLow(() => Models.JSPopupNode.Show(popup));
 									   Models.JSPopupNode.Show(popup);
 
 								   }
@@ -2654,7 +2654,7 @@ private static async void ShowCouncillorsMissingDialog()
 					   }
 					   if (SystemInformation.Instance.IsAppUpdated)
 					   {
-						   App.DispatchOnUIThreadSneaky(ShowWhatsNew);
+						   App.DispatchOnUIThreadLow(ShowWhatsNew);
 					   }
 
 					   // 
@@ -2754,7 +2754,7 @@ private static async void ShowCouncillorsMissingDialog()
 
 			if(changed)
 			{
-				App.DispatchOnUIThreadLow(() =>
+				App.(() =>
 				{
 					// Update menu
 					ShellPage.instance.friendListBox.SelectedIndex = -1;

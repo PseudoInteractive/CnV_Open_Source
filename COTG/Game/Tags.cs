@@ -8,6 +8,7 @@ using EnumsNET;
 
 using static COTG.StringList;
 using static COTG.Game.Enum;
+using COTG.Services;
 
 namespace COTG.Game
 {
@@ -69,6 +70,7 @@ namespace COTG.Game
 		LeaveMe = 1 << 23,
 		Storage = 1<< 24,
 		Transport = 1 << 25,
+		SevenPoint = 1 << 26,
 		// meta tags
 		// mine, alliance enemy other
 	}
@@ -311,6 +313,13 @@ namespace COTG.Game
 		public static void UpdateTags(this Spot city)
 		{
 			city.tags |= TagHelper.Get(city.remarks);
+		}
+		public static async Task<Tags> TouchTags(this Spot city)
+		{
+			await GetCity.Post(city.cid);
+			city.UpdateTags();
+			return city.tags;
+			
 		}
 		public static Tags GetTags(this Spot city)
 		{

@@ -73,11 +73,10 @@ namespace COTG.Game
         public void OnPropertyChanged(string propertyName) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 		public void NotifyChange(string member = "")
 		{
-			App.DispatchOnUIThreadSneakyLow(() =>
+			App.DispatchOnUIThreadIdle((_) =>
 			{
 				OnPropertyChanged(member);
-				Debug.Log("NotifyChange");
-
+				
 				if (NearDefenseTab.instance.supportGrid.SelectedItem == this)
 					NearDefenseTab.instance.RefreshSupportByType();
 

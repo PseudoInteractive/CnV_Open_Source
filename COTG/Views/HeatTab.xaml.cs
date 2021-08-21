@@ -197,7 +197,7 @@ namespace COTG.Views
 
 
 			World.ClearHeatmap();
-			App.DispatchOnUIThreadSneaky(() =>
+			App.DispatchOnUIThreadLow(() =>
 		   {
 			   if (HeatTab.instance.isVisible)
 			   {
@@ -322,7 +322,7 @@ namespace COTG.Views
 					}
 				}
 			}
-			//			App.DispatchOnUIThreadSneaky(() =>
+			//			App.DispatchOnUIThreadLow(() =>
 			//		   {
 			////			   instance.zoom.SelectionMode = TreeViewSelectionMode.None;
 			////			   instance.zoom.SelectionMode = TreeViewSelectionMode.Multiple;

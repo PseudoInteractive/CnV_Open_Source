@@ -57,7 +57,7 @@ namespace COTG.Views
             {
                 BlessedCity.Refresh();
 				// This just updates details for all cities
-                var details = await  CityOverview.Send();
+                var details = await  CityOverview.Send().ConfigureAwait(false);
                 foreach(var detail in details)
                 {
                     var city = City.GetOrAddCity(detail.id);
@@ -89,7 +89,7 @@ namespace COTG.Views
             else
             {
                 // Not listening
-                App.DispatchOnUIThreadSneaky(() =>
+                App.DispatchOnUIThreadLow(() =>
                 {
                     blessedGrid.ItemsSource = null;
                     donationGrid.ItemsSource = null;

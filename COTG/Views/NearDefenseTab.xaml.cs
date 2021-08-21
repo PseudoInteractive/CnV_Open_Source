@@ -195,7 +195,7 @@ namespace COTG.Views
             else
             {
                 supporters.Clear();
-				App.DispatchOnUIThreadSneaky( ()=>
+				App.DispatchOnUIThreadLow( ()=>
 				
                 troopTypeGrid.ItemsSource=supportByTroopTypeEmpty
            );     //              supportGrid.ItemsSource = null;

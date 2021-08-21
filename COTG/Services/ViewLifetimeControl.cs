@@ -113,7 +113,7 @@ namespace COTG.Services
                     refCountCopy = --_refCount;
                     if (refCountCopy == 0)
                     {
-                        Dispatcher.RunAsync(CoreDispatcherPriority.Low, FinalizeRelease).AsTask();
+                        Dispatcher.TryRunAsync(CoreDispatcherPriority.Low, FinalizeRelease).AsTask();
                     }
                 }
             }
@@ -158,7 +158,7 @@ namespace COTG.Services
                 UnregisterForEvents();
                 if (InternalReleased == null)
                 {
-                    await WindowManagerService.Current.MainDispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+                    await WindowManagerService.Current.MainDispatcher.TryRunAsync(CoreDispatcherPriority.Normal, () =>
                     {
                         WindowManagerService.Current.SecondaryViews.Remove(this);
                     });

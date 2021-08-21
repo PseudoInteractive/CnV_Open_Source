@@ -140,7 +140,7 @@ namespace COTG.Views
 		//    if (instance == null)
 		//        return;
 		//    // Note.L("UpdateAll: ");
-		//    instance.Dispatcher.DispatchOnUIThreadLow(() =>
+		//    instance.Dispatcher.(() =>
 		//    {
 		//        City.gridCitySource.NotifyReset();
 		//        City.GetBuild()?.SelectInUI(true);
@@ -201,6 +201,13 @@ namespace COTG.Views
 
 					var cid = ci[0].GetAsInt();
 					var city = City.GetOrAddCity(cid);
+					var filter = city.testContinentAndTagFilter;
+					if (!city.buildingsLoaded && filter)
+					{
+						GetCity.Post(cid);
+						getBuildState = 2; // need to restart
+					}
+
 					city.points = (ushort)ci[2].GetAsInt();
 					var isBuilding = (ci[4].GetAsFloat() != 0 ) || (city.buildStage == BuildStage.complete) || (city.buildStage == BuildStage.leave);
 					if (ci[3].GetAsFloat() != 0)
@@ -211,18 +218,15 @@ namespace COTG.Views
 					{
 					//	Log($"5!: {city.nameAndRemarks}");
 					}
-					if (isBuilding != city.isBuilding)
+					if (isBuilding != city.isBuilding )
 					{
 						city.isBuilding = isBuilding;
-						changes.Add(city.cid);
+						if(filter)
+							changes.Add(city.cid);
 					}
 
 					city.wood = ci[8].GetAsInt();
 					city.stone = ci[9].GetAsInt();
-					if (!city.buildingsLoaded)
-					{
-						GetCity.Post(cid);
-					}
 					city.bcBuildings = ci[6].GetAsInt()==0;
 					city.bcTowers = ci[7].GetAsInt()==0;
 					//	city.bcConvert = (ci[5].GetAsFloat() > 0);
@@ -236,14 +240,21 @@ namespace COTG.Views
 
 
 				}
-				App.DispatchOnUIThreadSneakyLow(() =>
+				App.DispatchOnUIThreadIdle((_) =>
 					{
-					foreach (var cid in changes)
-					{
-						var city = City.Get(cid);
-							city.OnPropertyChanged(nameof(city.isBuilding));
-					}
-		}
+						if (changes.Count > 8)
+						{
+							City.gridCitySource.NotifyReset();
+						}
+						else
+						{
+							foreach (var cid in changes)
+							{
+								var city = City.Get(cid);
+								city.OnPropertyChanged(nameof(city.isBuilding));
+							}
+						}
+				}
 			);
 
 				if(firstTime==true)
@@ -310,7 +321,7 @@ namespace COTG.Views
 			await base.VisibilityChanged(visible, longTerm: longTerm);
 		//	if(visible)
 		//	{
-		//		App.DispatchOnUIThreadSneaky(() => Spot.SyncUISelection(true, City.GetBuild() ));
+		//		App.DispatchOnUIThreadLow(() => Spot.SyncUISelection(true, City.GetBuild() ));
 		//	}
 		}
 		//private void BuildCityContextFlyout(TabPage newPage)

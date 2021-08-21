@@ -286,7 +286,7 @@ namespace COTG.Views
 							sup.initialized = true;
 						}
 						r = r.Sub(sup.res);
-						App.DispatchOnUIThreadSneakyLow(() =>
+						App.DispatchOnUIThreadIdle((_) =>
 						{
 							supporters.OnPropertyChanged(sup);
 							sup.OnPropertyChanged(string.Empty);
@@ -298,7 +298,7 @@ namespace COTG.Views
 					//	supportGrid.ItemsSource = supporters;
 
 				}
-				App.DispatchOnUIThreadSneakyLow(() =>
+				App.DispatchOnUIThreadIdle((_) =>
 				{
 					RefreshSupportByRes();
 					OnPropertyChanged(nameof(targetIcon));
@@ -450,7 +450,7 @@ namespace COTG.Views
 			}
 			
 			s.res.Clear();
-			App.DispatchOnUIThreadSneakyLow(() =>
+			App.DispatchOnUIThreadIdle((_) =>
 			{
 				s.NotifyChange();
 				DoRefresh();

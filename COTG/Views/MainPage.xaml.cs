@@ -208,7 +208,7 @@ namespace COTG.Views
         //    if (instance == null)
         //        return;
         //    // Note.L("UpdateAll: ");
-        //    instance.Dispatcher.DispatchOnUIThreadLow(() =>
+        //    instance.Dispatcher.(() =>
         //    {
         //        City.gridCitySource.NotifyReset();
         //        City.GetBuild()?.SelectInUI(true);
@@ -323,7 +323,7 @@ namespace COTG.Views
 			//	if(!Tips.seen.Contains(t))
 			//	{
 			//		var tt = instance.GetType().GetField(t).GetValue(instance) as TeachingTip;
-			//		App.DispatchOnUIThreadLow(()=>tt.Show(t,4000) );
+			//		App.(()=>tt.Show(t,4000) );
 			//		return;
 			//	}
 			//}
@@ -540,7 +540,7 @@ namespace COTG.Views
 		}
 		public override void Execute(object parameter)
         {
-			App.DispatchOnUIThreadSneaky(() =>
+			App.DispatchOnUIThreadLow(() =>
 		   {
 			   var context = parameter as DataBindingCompleteEventArgs;
 				// put your custom logic here

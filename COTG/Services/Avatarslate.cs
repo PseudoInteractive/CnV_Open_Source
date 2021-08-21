@@ -64,7 +64,7 @@
 //			}
 //			if (xresult != null)
 //			{
-//				App.DispatchOnUIThreadSneaky(() =>
+//				App.DispatchOnUIThreadLow(() =>
 //				{
 //					var result = $"{src} {{ {item.Text}: {xresult} }}";
 //					if (markdown != null)

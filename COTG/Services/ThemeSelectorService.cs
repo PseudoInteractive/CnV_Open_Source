@@ -33,7 +33,7 @@ namespace COTG.Services
         {
             foreach (var view in CoreApplication.Views)
             {
-                await view.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+                await view.Dispatcher.TryRunAsync(CoreDispatcherPriority.Normal, () =>
                 {
                     if (Window.Current.Content is FrameworkElement frameworkElement)
                     {

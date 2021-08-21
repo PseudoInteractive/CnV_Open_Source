@@ -78,7 +78,7 @@ namespace COTG.JSON
 		public readonly byte slvl;
 		public readonly byte elvlAndPA; // 0xf is level mask, ox10 is pa mask
 		public byte elvl => (byte)(elvlAndPA & 0xF);
-		public bool pa => (elvlAndPA & 0x10)!= 0;
+		public bool pa => (elvlAndPA & 0x10) != 0;
 
 
 		public BuildQueueItem(byte slvl, byte elvl, ushort bid, ushort bspot, ushort buildTime = 0, bool pa = true)
@@ -106,11 +106,12 @@ namespace COTG.JSON
 
 		public string bn => def.Bn;
 		public bool isUpgrade => slvl < elvl && slvl != 0;
+		public bool isDowngrade => slvl > elvl && elvl != 0;
 		public BuildOp op =>
 			isDemo ? BuildOp.demo :
 			isBuild ? BuildOp.build :
 			isNop ? BuildOp.nop :
-			slvl > elvl ? BuildOp.downgrade :
+			isDowngrade ? BuildOp.downgrade :
 					BuildOp.upgrade;
 
 		// Moves from the pending queue to the active queue;
@@ -269,10 +270,10 @@ namespace COTG.JSON
 							{
 								var bt = 0;
 								// skip the first
-								for(int i=1;i<lg;++i )
+								for (int i = 1; i < lg; ++i)
 									bt += cotgQ[i].buildTime;
-								delay = (bt* 1000).Clamp(5*1000,15 * 60 * 1000);
-								Log("Delay " + delay/1000);
+								delay = (bt * 1000).Clamp(5 * 1000, 15 * 60 * 1000);
+								Log("Delay " + delay / 1000);
 							}
 
 							//pollPaused = true;
@@ -327,16 +328,16 @@ namespace COTG.JSON
 						if (city.buildingsLoaded)
 						{
 							var counts = city.CountBuildingsWithoutQueue();
-							var spaceInQueue =  City.safeBuildQueueLength- cotgQ.Length;
+							var spaceInQueue = City.safeBuildQueueLength - cotgQ.Length;
 							// this is either 1..+ can send commands normally
 							//                0 can send unblocking commands
 							//               -1  unblock un progress
-							var isBlocked = spaceInQueue==0 && cotgQ[0].pa == false;
+							var isBlocked = spaceInQueue == 0 && cotgQ[0].pa == false;
 							int commandsToQueue = isBlocked ? 1 : spaceInQueue.Min(queue.count);
-	if (isBlocked)
-		Note.Show($"Blocked! {city.nameMarkdown} ");
+							if (isBlocked)
+								Note.Show($"Blocked! {city.nameMarkdown} ");
 
-	// queue.count goes through here if the player cancels the queue so that this can be deleted
+							// queue.count goes through here if the player cancels the queue so that this can be deleted
 							if (commandsToQueue > 0 || queue.count == 0)
 							{
 								commandBuilder.Clear();
@@ -350,25 +351,25 @@ namespace COTG.JSON
 								try
 								{
 									// up to 16
-							//		commandsToQueue = (City.safeBuildQueueLength + 1 - cotgQ.Length).Min(queue.count);
+									//		commandsToQueue = (City.safeBuildQueueLength + 1 - cotgQ.Length).Min(queue.count);
 									var endPoint = cotgQ.Length + commandsToQueue;
-
+									bool anyBuildsPending = false;
 									while (offset < queue.count && cotgQ.Length < endPoint)
 									{
 										var i = queue.v[offset];
 
-				if (isBlocked && (i.isBuild || i.isUpgrade) )
-				{
-					++offset;
-					continue;
-				}
-
-				// do we have to wait on this on?
-				// - towers before wall
-				if (i.isBuild)
+										if (isBlocked && (i.isBuild || i.isUpgrade))
 										{
+											++offset;
+											continue;
+										}
 
-					if (i.def.isTower)
+										// do we have to wait on this on?
+										// - towers before wall
+										if (i.isBuild)
+										{
+											anyBuildsPending = true;
+											if (i.def.isTower)
 											{
 												// Todo:  check res
 												if (city.buildings[City.bspotWall].bl == 0)
@@ -408,15 +409,15 @@ namespace COTG.JSON
 											}
 											else
 											{
-						
+
 												if (i.def.bid == City.bidCastle)
 												{
 													//	Log($"Castle  {city.nameAndRemarks}");
 													// TODO: check res
 													// cannot queue if there is no room, even if there is a demo in progress
-													if (counts.count >= counts.max || city.stone < 20 * 1000)
+													if (counts.count >= counts.max || city.stone < 20 * 1000 || city.buildings[City.bspotTownHall].bl < 8)
 													{
-														Trace("Waiting for space or stone for castle");
+														Trace("Waiting for space or stone or level for castle");
 														// leave it in the queue
 														++offset;
 														continue;
@@ -444,7 +445,7 @@ namespace COTG.JSON
 													}
 													continue;
 												}
-												}
+											}
 											// is building
 										}
 										else if (i.isUpgrade)
@@ -507,10 +508,20 @@ namespace COTG.JSON
 												continue;
 											}
 										}
-				++validCount;
+										else if(i.isDowngrade)
+										{
+											if(anyBuildsPending && i.bspot == City.bspotTownHall)
+											{
+												// Don't down grade townhall until building finished
+													++offset;
+													continue;
 
-				// issue this command
-				RemoveAt(offset);
+											}
+										}
+										++validCount;
+
+										// issue this command
+										RemoveAt(offset);
 										//									if (cid == City.build)
 										//										City.buildQueue.Add(i);
 										cotgQ.Add(i);
@@ -518,8 +529,8 @@ namespace COTG.JSON
 										Serialize(ref commandBuilder, i, ref qFirst);
 										--commandsToQueue;
 
-									//	if (validCount > 0 && cotgQ.Length >= City.safeBuildQueueLength)
-									//		break;
+										//	if (validCount > 0 && cotgQ.Length >= City.safeBuildQueueLength)
+										//		break;
 									}
 
 

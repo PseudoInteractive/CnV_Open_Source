@@ -168,7 +168,7 @@ namespace COTG.Views
 						(var worldC, var cc) = ScreenToWorldAndCityC(mousePositionW);
 						Reset();
 						var cid = worldC.WorldToCid();
-						App.DispatchOnUIThreadSneaky(RightClick(cc, cid));
+						App.DispatchOnUIThreadLow(RightClick(cc, cid));
 
 					}
 				}
@@ -340,7 +340,7 @@ namespace COTG.Views
 		*/
 		//private void CoreInputSource_PointerEntered(object sender, PointerEventArgs args)
 		//{
-		// //   App.DispatchOnUIThreadLow(() => FocusManager.TryFocusAsync(canvas,FocusState.Programmatic));
+		// //   App.(() => FocusManager.TryFocusAsync(canvas,FocusState.Programmatic));
 		//}
 
 		public static Vector2 GetCanvasPosition(Windows.Foundation.Point screenC)
@@ -488,7 +488,7 @@ namespace COTG.Views
 							//if (AttackTab.instance.isVisible && e.KeyModifiers.IsShiftAndControl() && City.Get(cid).isCityOrCastle)
 							//{
 							//	var _cid = cid;
-							//	App.DispatchOnUIThreadSneaky(() =>
+							//	App.DispatchOnUIThreadLow(() =>
 							//	{
 							//		var city = City.Get(_cid);
 							//		if (city.IsAllyOrNap())
@@ -508,7 +508,7 @@ namespace COTG.Views
 							{
 								if (IsCityView() && (cid == City.build))
 								{
-									App.DispatchOnUIThreadSneaky(() =>
+									App.DispatchOnUIThreadLow(() =>
 									{
 										CityBuild.Click(cc, false);
 
@@ -526,12 +526,12 @@ namespace COTG.Views
 
 					case GestureAction.rightClick:
 						{
-							App.DispatchOnUIThreadSneaky(RightClick( cc, cid));
+							App.DispatchOnUIThreadLow(RightClick( cc, cid));
 							break;
 						}
 					//case Windows.UI.Input.PointerUpdateKind.MiddleButtonReleased:
 					//	{
-					//		App.DispatchOnUIThreadSneaky(() =>
+					//		App.DispatchOnUIThreadLow(() =>
 					//		{
 
 					//			var spot = Spot.GetOrAdd(cid);
@@ -608,7 +608,7 @@ namespace COTG.Views
 		{
 			//if (CityBuild.menuOpen)
 			//{
-			//	App.DispatchOnUIThreadSneaky(() => ShellPage.instance.buildMenu.IsOpen = false); // light dismiss
+			//	App.DispatchOnUIThreadLow(() => ShellPage.instance.buildMenu.IsOpen = false); // light dismiss
 			//	return;
 			//}
 
@@ -1168,7 +1168,7 @@ namespace COTG.Views
 			{
 				var cid = c.WorldToCid();
 				
-				App.DispatchOnUIThreadSneaky(RightClick(cc, cid));
+				App.DispatchOnUIThreadLow(RightClick(cc, cid));
 			}
 			else
 			{

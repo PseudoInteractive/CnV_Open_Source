@@ -34,11 +34,11 @@ namespace CnVDiscord
 		public static Dictionary<string, string> avatarUrls = new();
 		public static Dictionary<string, BitmapImage> avatarBrushes = new();
 		const int messageFetchCount = 200;
-		static Dictionary<string, DiscordMember> playerToMember;
+		static Dictionary<string, DiscordMember> playerToMember = new();
 		//		static Dictionary<ulong, DiscordMember> UserIdToMemeber;
 
-		static Color Color;
-		public static DiscordGuild guild;
+	//	static Color Color;
+	//	public static DiscordGuild guild;
 		public static DiscordChannel chatChannel;
 		public static DiscordClient DiscordBot { get; set; }
 		public static CommandsNextExtension DiscordCommands { get; set; }
@@ -52,7 +52,7 @@ namespace CnVDiscord
 			if (Config.ChatID == 0)
 				return;
 
-			Color = new Color(Config.Messagecolor[0], Config.Messagecolor[1], Config.Messagecolor[2]);
+		//	Color = new Color(Config.Messagecolor[0], Config.Messagecolor[1], Config.Messagecolor[2]);
 
 
 
@@ -66,16 +66,47 @@ namespace CnVDiscord
 			});
 
 			await DiscordBot.ConnectAsync().ConfigureAwait(false);
+			
+			//DiscordBot.GuildDownloadCompleted += (_, args) =>
+			//{
+			//	return App.DispatchOnUIThreadTask(() =>
+			//	{
+			//		foreach (var g in args.Guilds)
+			//		{
+			//			foreach (var author in g.Value.Members.Values)
+			//			{
+			//				var nameLower = author.DisplayName.ToLower();
+			//				if (!avatarUrls.TryGetValue(nameLower, out var _))
+			//				{
+			//					var url = author.GetAvatarUrl(ImageFormat.Auto, 32);
+			//					avatarUrls.TryAdd(nameLower, $"![Helpers Image]({url})");
+			//					avatarBrushes.TryAdd(nameLower, new BitmapImage(new Uri(url)));
+			//				}
+			//			}
+			//		}
+			//		return Task.CompletedTask;
+
+			//	});
+				
+
+			//};
+
 
 			DiscordBot.Ready += async (client, args) =>
 			{
 				chatChannel = await DiscordBot.GetChannelAsync(Config.ChatID).ConfigureAwait(false);
-				guild = chatChannel.Guild;
-				var members = await guild.GetAllMembersAsync().ConfigureAwait(false);
-				playerToMember = new(members.Count);
+				var members = await chatChannel.Guild.GetAllMembersAsync().ConfigureAwait(false);
 				foreach (var i in members)
 				{
-					playerToMember.TryAdd(i.DisplayName, i);
+					var nameLower = i.DisplayName.ToLowerInvariant();
+					if (!avatarUrls.TryGetValue(nameLower, out var _))
+					{
+						var url = i.GetAvatarUrl(ImageFormat.Auto, 32);
+						avatarUrls.TryAdd(nameLower, $"![Helpers Image]({url})");
+						avatarBrushes.TryAdd(nameLower, new BitmapImage(new Uri(url)));
+					}
+
+					playerToMember.TryAdd(nameLower, i);
 				}
 				//			UserIdToMemeber = members.ToDictionary((a => a.Id), (a => a));
 
@@ -115,22 +146,6 @@ namespace CnVDiscord
 				//	DiscordCommands.CommandExecuted += CommandExecuted;
 				//	DiscordCommands.CommandErrored += CommandErrored;
 				//}
-				await App.DispatchOnUIThreadTask(() =>
-				{
-					foreach (var author in guild.Members.Values)
-					{
-						var nameLower = author.DisplayName.ToLower();
-						if (!avatarUrls.TryGetValue(nameLower, out var avatarUrl))
-						{
-							var url = author.GetAvatarUrl(ImageFormat.Auto, 32);
-							avatarUrl = $"![Helpers Image]({url})";
-							avatarUrls.TryAdd(nameLower, avatarUrl);
-							avatarBrushes.TryAdd(nameLower, new BitmapImage(new Uri(url)));
-						}
-					}
-					return Task.CompletedTask;
-
-				}).ConfigureAwait(false);
 							;
 		
 				DiscordBot.ClientErrored += ClientErrored;
@@ -261,7 +276,7 @@ namespace CnVDiscord
 					return;
 
 				var name = DisplayName(author); // todo: use clients
-				var nameLower = name.ToLower();
+				var nameLower = name.ToLowerInvariant();
 				if (!avatarUrls.TryGetValue(nameLower,out var avatarUrl) )
 				{
 					var url = author.GetAvatarUrl(ImageFormat.Auto, 32);
@@ -360,7 +375,7 @@ namespace CnVDiscord
 					var name = args.player.name;
 					if (!await Tables.TryAddChatMessage(name + args.text))
 						return;
-					var user = playerToMember.GetValueOrDefault(name);
+					var user = playerToMember.GetValueOrDefault(name.ToLowerInvariant());
 					//DiscordMessageBuilder message;
 					var users = new List<IMention>();
 
@@ -414,7 +429,7 @@ namespace CnVDiscord
 						}
 						
 						var mentionName = str.Substring(fStart, f - fStart);
-						var mention = playerToMember.GetValueOrDefault(mentionName);
+						var mention = playerToMember.GetValueOrDefault(mentionName.ToLowerInvariant());
 						if (mention != null)
 						{
 							sb.Append(mention.Mention);

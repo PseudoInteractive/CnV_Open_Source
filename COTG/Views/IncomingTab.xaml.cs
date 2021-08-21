@@ -161,7 +161,7 @@ namespace COTG.Views
 					var sel = defenderGrid.SelectedItems.ToArray();
 					if (sel.Length > 0)
                     {
-                        App.DispatchOnUIThreadSneaky(() =>
+                        App.DispatchOnUIThreadLow(() =>
                         {
 							++SpotTab.silenceSelectionChanges;
 							try
@@ -201,7 +201,7 @@ namespace COTG.Views
         public override Task VisibilityChanged(bool visible, bool longTerm)
 		{
 			//  Log("Vis change" + visible);
-			//App.DispatchOnUIThreadSneaky(() =>
+			//App.DispatchOnUIThreadLow(() =>
 			//{
 			//    defenderGrid.ItemsSource = null;
 			//    armyGrid.ItemsSource = Army.empty;

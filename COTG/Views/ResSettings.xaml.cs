@@ -36,8 +36,8 @@ namespace COTG.Views
 //		public bool applySend = true;
 		public ResourceFilter reqFilter; 
 		public ResourceFilter sendFilter;
-		public int? reserveCarts; // todo
-		public int? reserveShips;
+		public int? cartReserve; // todo
+		public int? shipReserve;
 
 		public TradeSettings _TradeSettingsSel;
 		public static TradeSettings[] tradeSettingsItemsSource;
@@ -74,7 +74,8 @@ namespace COTG.Views
 
 			sourceHub.city = _sourceHub != 0 ? City.Get(_sourceHub) : null;
 			targetHub.city = _targetHub != 0 ? City.Get(_targetHub) : null;
-
+			cartReserve = curSettings.cartReserve;
+			shipReserve = curSettings.shipReserve;
 			if (curSettings.req.isNonZero)
 			{
 				this.req.wood = curSettings.req.wood;

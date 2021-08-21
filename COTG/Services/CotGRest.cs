@@ -967,7 +967,7 @@ namespace COTG.Services
 
 				}
 			}
-			App.DispatchOnUIThreadSneakyLow(()
+			App.DispatchOnUIThreadIdle((_)
 				=>
 			{
 				MainPage.instance.rWood.Text = $"Wood: {(rWood * 0.001).RoundToInt():N0} k/h";

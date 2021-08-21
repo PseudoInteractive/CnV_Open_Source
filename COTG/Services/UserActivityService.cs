@@ -35,7 +35,7 @@ namespace COTG.Services
 
         private static async Task SaveAsync(UserActivity activity)
         {
-            await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(
+            await CoreApplication.MainView.CoreWindow.Dispatcher.TryRunAsync(
                 CoreDispatcherPriority.Normal, async () =>
                 {
                     await activity.SaveAsync();

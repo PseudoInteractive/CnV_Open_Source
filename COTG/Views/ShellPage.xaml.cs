@@ -67,7 +67,7 @@ namespace COTG.Views
 
 		public static string WorkStart(string desc)
 		{
-			App.DispatchOnUIThreadSneaky(() =>
+			App.DispatchOnUIThreadLow(() =>
 		   {
 			   if (!workQueue.Any())
 			   {
@@ -84,7 +84,7 @@ namespace COTG.Views
 		// Todo:  Queue updates with tasks
 		public static void WorkUpdate(string desc)
 		{
-			App.DispatchOnUIThreadSneaky(() =>
+			App.DispatchOnUIThreadLow(() =>
 			{
 				instance.work.Text = desc;
 			});
@@ -92,7 +92,7 @@ namespace COTG.Views
 
 		public static void WorkEnd(string desc)
 		{
-			App.DispatchOnUIThreadSneaky(() =>
+			App.DispatchOnUIThreadLow(() =>
 			{
 				if (!workQueue.Any())
 				{
@@ -186,7 +186,7 @@ namespace COTG.Views
 			instance = this;
 			InitializeComponent();
 			Initialize();
-			App.globalDispatcher = Dispatcher;
+			
 		}
 
 		private void Initialize()
@@ -338,7 +338,7 @@ namespace COTG.Views
 			ShellPage.webclientSpan.y = (screenSize.Height * 0.89236111111111116f * SettingsPage.htmlZoom*2).RoundToInt();
 
 			AGame.Create(canvas);
-			Task.Delay(500).ContinueWith((_) => App.DispatchOnUIThreadLow(() =>
+			Task.Delay(500).ContinueWith((_) => App.DispatchOnUIThreadIdle((_) =>
 			{
 				var sz = canvas.ActualSize;
 				AGame.SetClientSpan(sz.X, sz.Y);
@@ -756,7 +756,7 @@ namespace COTG.Views
 					bd.Add(new BuildingCount() { count = bCount, brush = CityBuild.BuildingBrush(City.bidTownHall, 0.5f) });
 
 					// var button = sender as Button; button.Focus(FocusState.Programmatic);
-					App.DispatchOnUIThread(() =>
+					App.DispatchOnUIThreadLow(() =>
 					{
 						buildingList.Width = double.NaN;
 						buildingList.Height = double.NaN;
@@ -1231,7 +1231,7 @@ namespace COTG.Views
 		public static float webViewScale = 1;
 		private  void SetLayout(int viewToggle)
 		{
-			App.DispatchOnUIThreadLow(async () =>
+			App.DispatchOnUIThreadIdle(async (_) =>
 			{
 				//			   UpdateCanvasMarginForWebview(webViewScale);
 				//scroll.ChangeView(null, null, 0.5f);
@@ -1271,7 +1271,7 @@ namespace COTG.Views
 			
 				if (!Alliance.alliancesFetched)
 					return;
-				App.DispatchOnUIThreadLow(async ()
+				App.DispatchOnUIThreadIdle(async (_)
 					=>
 				{
 					try
@@ -1286,7 +1286,7 @@ namespace COTG.Views
 						canvasBaseY = (canvasBaseYUnscaled * webViewScale).RoundToInt();
 						if (canvas != null && grid != null)
 						{
-							App.DispatchOnUIThreadSneakyLow(() =>
+							App.DispatchOnUIThreadIdle((_) =>
 							{
 								grid.ColumnDefinitions[0].Width = new GridLength(ShellPage.canvasBaseX, GridUnitType.Pixel);
 								canvas.Margin = new Thickness(0, canvasBaseY, 0, 0);

@@ -53,7 +53,7 @@ namespace COTG.Services
                         }
 
                         var temp = System.Text.Json.JsonSerializer.Deserialize<List<WhisperMessage>>(byteBuffer);
-                        App.DispatchOnUIThread(() =>
+                        App.DispatchOnUIThreadLow(() =>
                         {
 
                             // add in new messages

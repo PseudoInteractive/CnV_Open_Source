@@ -265,6 +265,11 @@ namespace COTG
 		{
 			Log("LeavingBackground");
 			isForeground = true;
+			var t = DateTimeOffset.UtcNow;
+			var dt = t - activeStart;
+			activeStart = t;
+			Analytics.TrackEvent("BackgroundLeave", new Dictionary<string, string> { { "time", dt.TotalSeconds.RoundToInt().ToString() } });
+
 			//if (ShellPage.canvas != null)
 			//    ShellPage.canvas.Paused = false;
 		}
@@ -336,7 +341,9 @@ namespace COTG
 
 				//ApplicationView.PreferredLaunchViewSize = new Size(bounds.Width, bounds.Height);
 				//ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.PreferredLaunchViewSize;
+		
 			}
+			App.globalDispatcher = CoreWindow.GetForCurrentThread().Dispatcher;
 
 			CoreApplication.EnablePrelaunch(false);
 
@@ -495,17 +502,20 @@ namespace COTG
 					await Task.Delay(4 * 1000);
 					continue;
 				}
-				while(idleTasks.TryDequeue(out Action a))
+				if (isForeground)
 				{
-					try
+					while (idleTasks.TryDequeue(out Action a))
 					{
-						a();
+						try
+						{
+							a();
+						}
+						catch (Exception _exception)
+						{
+							COTG.Debug.LogEx(_exception);
+						}
+						await Task.Delay(1000); // wait one second if idle
 					}
-					catch (Exception _exception)
-					{
-						COTG.Debug.LogEx(_exception);
-					}
-					await Task.Delay(1000); // wait one second if idle
 				}
 				// not idle but no tasks
 				await Task.Delay(4 * 1000);
@@ -537,88 +547,88 @@ namespace COTG
 
 		}
 
-		protected override async void OnActivated(IActivatedEventArgs args)
-		{
-			var activation = args as IActivatedEventArgs;
-			if (activation != null && activation.PreviousExecutionState == ApplicationExecutionState.Running)
-			{
-				Window.Current.Activate();
-			//	isForeground = true;
+		//protected override async void OnActivated(IActivatedEventArgs args)
+		//{
+		//	var activation = args as IActivatedEventArgs;
+		//	if (activation != null && activation.PreviousExecutionState == ApplicationExecutionState.Running)
+		//	{
+		//		Window.Current.Activate();
+		//	//	isForeground = true;
 
-				// Todo:  Handle arguments and stuff
-				// Ensure the current window is active
-				if (args is ToastNotificationActivatedEventArgs toastActivationArgs)
-				{
-					// Obtain the arguments from the notification
-					var toastArgs = System.Web.HttpUtility.ParseQueryString(toastActivationArgs.Argument);
-					// Obtain any user input (text boxes, menu selections) from the notification
-					ValueSet userInput = toastActivationArgs.UserInput;
-					foreach (var op in toastArgs.AllKeys)
-					{
-						if (op == "incomingNotification")
-						{
-							Task.Delay(3000).ContinueWith(async (_) =>
-						   {
-							   while (IncomingTab.instance == null)
-								   await Task.Delay(500);
-							   App.DispatchOnUIThreadSneakyLow( ()=>IncomingTab.instance.Show() );
+		//		// Todo:  Handle arguments and stuff
+		//		// Ensure the current window is active
+		//		if (args is ToastNotificationActivatedEventArgs toastActivationArgs)
+		//		{
+		//			// Obtain the arguments from the notification
+		//			var toastArgs = System.Web.HttpUtility.ParseQueryString(toastActivationArgs.Argument);
+		//			// Obtain any user input (text boxes, menu selections) from the notification
+		//			ValueSet userInput = toastActivationArgs.UserInput;
+		//			foreach (var op in toastArgs.AllKeys)
+		//			{
+		//				if (op == "incomingNotification")
+		//				{
+		//					Task.Delay(3000).ContinueWith(async (_) =>
+		//				   {
+		//					   while (IncomingTab.instance == null)
+		//						   await Task.Delay(500);
+		//					   App.DispatchOnUIThreadLow( ()=>IncomingTab.instance.Show() );
 
-						   });
-						}
-					}
-					// TODO: Show the corresponding content
-				}
-
-
-				return;
-			}
-			await ActivationService.ActivateAsync(args);
-			OnLaunchedOrActivated(args);
+		//				   });
+		//				}
+		//			}
+		//			// TODO: Show the corresponding content
+		//		}
 
 
-
-			//var configuration = new ConfigurationBuilder()
-			//                                .AddJsonFile("appsettings.json", false, true)
-			//                                .Build();
+		//		return;
+		//	}
+		//	await ActivationService.ActivateAsync(args);
+		//	OnLaunchedOrActivated(args);
 
 
 
-
-			//    CreateDefaultBuilder(args)
-			//        .ConfigureWebHostDefaults(webBuilder =>
-			//        {
-			//            webBuilder.UseStartup<Startup>();
-			//        }).Build().Run();
+		//	//var configuration = new ConfigurationBuilder()
+		//	//                                .AddJsonFile("appsettings.json", false, true)
+		//	//                                .Build();
 
 
-			//ILogger logger;
-
-			//using (var serviceProvider = new ServiceCollection()
-			//    .AddLogging(cfg =>
-			//    {
-			//        cfg.AddConfiguration(configuration.GetSection("Logging"));
-			//        cfg.AddConsole();
-			//    })
-			//    .BuildServiceProvider())
-			//{
-			//    logger = serviceProvider.GetService<ILogger<App>>();
-			//}
-
-			//logger.LogInformation("logger information");
-			//logger.LogWarning("logger warning");
 
 
-			//using (var listener = new LoggerTraceListener(logger))
-			//{
-			//    System.Diagnostics.Trace.Listeners.Add(listener);
-			//    TraceSources.Instance.InitLoggerTraceListener(listener);
-
-			//    TraceLover.DoSomething();
-			//    TraceSourceLover.DoSomething();
-			//}
+		//	//    CreateDefaultBuilder(args)
+		//	//        .ConfigureWebHostDefaults(webBuilder =>
+		//	//        {
+		//	//            webBuilder.UseStartup<Startup>();
+		//	//        }).Build().Run();
 
 
-		}
+		//	//ILogger logger;
+
+		//	//using (var serviceProvider = new ServiceCollection()
+		//	//    .AddLogging(cfg =>
+		//	//    {
+		//	//        cfg.AddConfiguration(configuration.GetSection("Logging"));
+		//	//        cfg.AddConsole();
+		//	//    })
+		//	//    .BuildServiceProvider())
+		//	//{
+		//	//    logger = serviceProvider.GetService<ILogger<App>>();
+		//	//}
+
+		//	//logger.LogInformation("logger information");
+		//	//logger.LogWarning("logger warning");
+
+
+		//	//using (var listener = new LoggerTraceListener(logger))
+		//	//{
+		//	//    System.Diagnostics.Trace.Listeners.Add(listener);
+		//	//    TraceSources.Instance.InitLoggerTraceListener(listener);
+
+		//	//    TraceLover.DoSomething();
+		//	//    TraceSourceLover.DoSomething();
+		//	//}
+
+
+		//}
 		private ActivationService CreateActivationService()
 		{
 			return new ActivationService(this, null, new Lazy<UIElement>(CreateShell));
@@ -631,6 +641,7 @@ namespace COTG
 		private async void App_EnteredBackground(object sender, EnteredBackgroundEventArgs e)
 		{
 			Log("Enter Background");
+
 			isForeground = false;
 			var deferral = e.GetDeferral();
 			try
@@ -638,8 +649,11 @@ namespace COTG
 				await SaveState();
 
 				var t = DateTimeOffset.UtcNow;
-				SystemInformation.Instance.AddToAppUptime(t - activeStart);
+				var dt = t - activeStart;
 				activeStart = t;
+				SystemInformation.Instance.AddToAppUptime(dt);
+				Analytics.TrackEvent("BackgroundEnter", new Dictionary<string, string> { { "time", dt.TotalSeconds.RoundToInt().ToString() } });
+				
 			}
 			catch
 			{
@@ -655,44 +669,67 @@ namespace COTG
 		{
 			Log("Resume");
 		//	isForeground = true;
+
 			activeStart = DateTimeOffset.UtcNow;
 
 			//         Singleton<SuspendAndResumeService>.Instance.ResumeApp();
 		}
 
-		protected override async void OnBackgroundActivated(BackgroundActivatedEventArgs args)
-		{
-			await ActivationService.ActivateAsync(args);
-		}
+		//protected override async void OnBackgroundActivated(BackgroundActivatedEventArgs args)
+		//{
+		//	App.globalDispatcher = CoreWindow.GetForCurrentThread().Dispatcher;
 
-		protected override async void OnShareTargetActivated(ShareTargetActivatedEventArgs args)
-		{
-			await ActivationService.ActivateFromShareTargetAsync(args);
-		}
+		//	await ActivationService.ActivateAsync(args);
+		//}
+
+		//protected override async void OnShareTargetActivated(ShareTargetActivatedEventArgs args)
+		//{
+		//	await ActivationService.ActivateFromShareTargetAsync(args);
+		//}
 
 		public static async Task<T>
 			DispatchOnUIThreadTask<T>(  Func<Task<T>> func, CoreDispatcherPriority priority = CoreDispatcherPriority.Low, bool useCurrentThreadIfPossible = true)
 		{
 			var d = GlobalDispatcher();
-			if (useCurrentThreadIfPossible && d.HasThreadAccess)
+			var idle = priority == CoreDispatcherPriority.Idle;
+			if (useCurrentThreadIfPossible&& !idle && d.HasThreadAccess)
 			{
 				return await func();
 			}
 			else
 			{
 				var taskCompletionSource = new TaskCompletionSource<T>();
-				await d.RunAsync(priority, async () =>
+				if (!idle)
 				{
-					try
+					await d.TryRunAsync(priority,async () =>
+				  {
+					  try
+					  {
+						  taskCompletionSource.SetResult(await func());
+					  }
+					  catch (Exception ex)
+					  {
+						  LogEx(ex);
+						  taskCompletionSource.SetResult(default);
+					  }
+				  });
+				}
+				else
+				{
+					await d.TryRunIdleAsync( async (_) =>
 					{
-						taskCompletionSource.SetResult(await func());
-					}
-					catch (Exception ex)
-					{
-						LogEx(ex);
-						taskCompletionSource.SetResult(default);
-					}
-				});
+						try
+						{
+							taskCompletionSource.SetResult(await func());
+						}
+						catch (Exception ex)
+						{
+							LogEx(ex);
+							taskCompletionSource.SetResult(default);
+						}
+					});
+
+				}
 				return await taskCompletionSource.Task;
 			}
 		}
@@ -702,14 +739,34 @@ namespace COTG
 	  Func<Task> func, CoreDispatcherPriority priority = CoreDispatcherPriority.Low, bool useCurrentThreadIfPossible = true)
 		{
 			var d = GlobalDispatcher();
-			if (useCurrentThreadIfPossible && d.HasThreadAccess)
+			var idle = priority == CoreDispatcherPriority.Idle;
+
+			if (useCurrentThreadIfPossible&&!idle && d.HasThreadAccess)
 			{
 				await func();
 			}
 			else
 			{
 				var taskCompletionSource = new TaskCompletionSource<bool>();
-				await d.RunAsync(priority, async () =>
+				if (!idle)
+				{
+					await d.TryRunAsync(priority, async () =>
+						{
+							try
+							{
+								await func();
+								taskCompletionSource.SetResult(true);
+							}
+							catch (Exception ex)
+							{
+								LogEx(ex);
+								taskCompletionSource.SetResult(false);
+							}
+						});
+				}
+				else
+				{
+					await d.RunIdleAsync(async (_) =>
 					{
 						try
 						{
@@ -722,6 +779,8 @@ namespace COTG
 							taskCompletionSource.SetResult(false);
 						}
 					});
+
+				}
 				await taskCompletionSource.Task;
 			}
 		}
@@ -814,32 +873,47 @@ namespace COTG
 			}
 
 		}
-		public static void DispatchOnUIThread(DispatchedHandler action)
-		{
-			GlobalDispatcher().RunAsync(CoreDispatcherPriority.Normal, action);
-		}
-		public static void DispatchOnUIThreadLow(DispatchedHandler action)
-		{
-			GlobalDispatcher().RunAsync(CoreDispatcherPriority.Low, action);
-		}
-		public static void DispatchOnUIThreadSneaky(DispatchedHandler action)
-		{
-			var d = GlobalDispatcher();
-			// run it immediately if we can
-			if (d.HasThreadAccess)
-				action();
-			else
-				d.RunAsync(CoreDispatcherPriority.Low, action);
-		}
-		public static void DispatchOnUIThreadSneakyLow(DispatchedHandler action)
+		
+	public static void DispatchOnUIThread(DispatchedHandler action, CoreDispatcherPriority priority= CoreDispatcherPriority.Normal, bool alwaysQueue = false)
+	{
+		var d = GlobalDispatcher();
+		// run it immediately if we can
+		if (d.HasThreadAccess && !alwaysQueue)
+			action();
+		else
+			d.TryRunAsync(priority, action);
+	}
+
+		public static void DispatchOnUIThreadIdle(IdleDispatchedHandler action)
 		{
 			var d = GlobalDispatcher();
-			// run it immediately if we can
-			if (d.HasThreadAccess && d.CurrentPriority <= CoreDispatcherPriority.Low)
-				action();
-			else
-				d.RunAsync(CoreDispatcherPriority.Low, action);
+			d.TryRunIdleAsync(action);
 		}
+
+		public static void DispatchOnUIThreadLow(DispatchedHandler action, bool alwaysQueue = false) => DispatchOnUIThread(action, CoreDispatcherPriority.Low, alwaysQueue);
+	
+		//public static int pendingDispatch;
+		//public static int pendingDispatchMax=10;
+		//public static void DispatchStart()
+		//{
+		//	++pendingDispatch;
+		//	if(pendingDispatch > pendingDispatchMax)
+		//	{
+		//		pendingDispatchMax = pendingDispatch + 5;
+		//		Trace("PendingDispatch: " + pendingDispatch);
+		//	}
+		//}
+		//public static void DispatchEnd() => --pendingDispatch;
+
+		//public static void DispatchOnUIThreadSneakyLow(DispatchedHandler action)
+		//{
+		//	var d = GlobalDispatcher();
+		//	// run it immediately if we can
+		//	if (d.HasThreadAccess && d.CurrentPriority <= CoreDispatcherPriority.Low)
+		//		action();
+		//	else
+		//		d.RunAsync(CoreDispatcherPriority.Low, action);
+		//}
 		//public static async Task DispatchOnUIThreadSneakyLowAwait(DispatchedHandler action)
 		//{
 		//	var d = GlobalDispatcher();
@@ -849,22 +923,9 @@ namespace COTG
 		//	else
 		//		await d.RunAsync(CoreDispatcherPriority.Low, action);
 		//}
-		public static void DispatchOnUIThreadIdleSneaky(IdleDispatchedHandler action)
-		{
-			var d = GlobalDispatcher();
-			// run it immediately if we can
-			if (d.HasThreadAccess && d.CurrentPriority <= CoreDispatcherPriority.Low)
-				action(null);
-			else
-				d.RunIdleAsync(action);
-		}
+		
 
 
-		public static void DispatchOnUIThreadIdle(IdleDispatchedHandler action)
-		{
-			var d = GlobalDispatcher();
-			d.RunIdleAsync(action);
-		}
 
 
 		// We only have 1 UI thread here
@@ -905,7 +966,7 @@ namespace COTG
 
 		public static void CopyTextToClipboard(string s)
 		{
-			App.DispatchOnUIThreadSneaky(() =>
+			App.DispatchOnUIThreadLow(() =>
 		 {
 			 try
 			 {
@@ -1097,20 +1158,6 @@ namespace COTG
 		
 
 
-		public static void DispatchOnUIThreadLow(this CoreDispatcher d, DispatchedHandler action)
-		{
-			//if (d.HasThreadAccess && d.CurrentPriority == CoreDispatcherPriority.Low)
-			//    action();
-			//else
-			d.RunAsync(CoreDispatcherPriority.Low, action);
-		}
-		public static void DispatchOnUIThread(this CoreDispatcher d, DispatchedHandler action)
-		{
-			//if (d.HasThreadAccess && d.CurrentPriority == CoreDispatcherPriority.Normal)
-			//    action();
-			//else
-			d.RunAsync(CoreDispatcherPriority.Normal, action);
-		}
 
 
 		//[Conditional("DEBUG")]
@@ -1334,14 +1381,14 @@ namespace COTG
 				if (!initialized)
 				{
 					initialized = true;
-					App.DispatchOnUIThreadSneaky(() =>
+					App.DispatchOnUIThreadLow(() =>
 					{
 						ShellPage.inAppNote.Closed += InAppNote_Closed;
 						//		ShellPage.instance.infoBar.CloseButtonClick += InfoBar_CloseButtonClick;
 						//		ShellPage.instance.infoMD.LinkClicked += MarkDownLinkClicked;
 					});
 				}
-				App.DispatchOnUIThreadSneaky(() =>
+				App.DispatchOnUIThreadLow(() =>
 				{
 					ChatTab.L(s);
 				});
@@ -1377,7 +1424,7 @@ namespace COTG
 
 				}
 
-				App.DispatchOnUIThreadSneaky(() =>
+				App.DispatchOnUIThreadLow(() =>
 				{
 					//ChatTab.L(s);
 					var wasOpen = false;
@@ -1535,7 +1582,7 @@ namespace COTG
 			if (str != lastTip)
 			{
 				lastTip = str;
-				App.DispatchOnUIThreadSneaky(() =>
+				App.DispatchOnUIThreadLow(() =>
 			   TabPage.mainTabs.tip.Text = str); // Todo:  use the correct tabPage
 			}
 		}

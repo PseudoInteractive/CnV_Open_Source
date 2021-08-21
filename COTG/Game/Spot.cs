@@ -41,6 +41,7 @@ using MenuFlyoutSubItem = Windows.UI.Xaml.Controls.MenuFlyoutSubItem;
 using System.Collections.ObjectModel;
 using Cysharp.Text;
 using DiscordCnV;
+using Windows.UI.Core;
 
 namespace COTG.Game
 {
@@ -431,7 +432,7 @@ namespace COTG.Game
 				SettingsPage.pinned = SettingsPage.pinned.ArrayAppendIfAbsent(cid);
 			else
 				SettingsPage.pinned = SettingsPage.pinned.Where(a => a != cid).ToArray();
-			App.DispatchOnUIThreadSneakyLow(() => OnPropertyChanged(nameof(pinned)));
+			App.DispatchOnUIThreadIdle((_) => OnPropertyChanged(nameof(pinned)));
 		}  // pinned in MRU
 		public byte claim; // only if this is under attack
 		public byte shipyards { get; set; }
@@ -778,7 +779,7 @@ namespace COTG.Game
 				var str = await Post.SendForText("includes/gLay.php", $"cid={cid}", World.CidToPlayerOrMe(cid));
 				Log(str);
 
-				App.DispatchOnUIThreadSneaky(() =>
+				App.DispatchOnUIThreadLow(() =>
 				{
 					// set is water var
 					str = $"{City.shareStringStart}{(World.GetInfoFromCid(cid).isWater ? ';' : ':')}{str.Substring(18)}";
@@ -1318,7 +1319,7 @@ namespace COTG.Game
 		{
 			++SpotTab.silenceSelectionChanges;
 
-			App.DispatchOnUIThreadSneaky(() =>
+			App.DispatchOnUIThreadLow(() =>
 			{
 				try
 				{
@@ -1532,7 +1533,7 @@ namespace COTG.Game
 			SetFocus(cid, scrollIntoView, select, bringIntoWorldView, lazyMove);
 		}
 
-		public static void UpdateFocusText()
+		public static void UpdateFocusText(IdleDispatchedHandlerArgs __ = null)
 		{
 			ShellPage.instance.focus.Content = Spot.GetOrAdd(focus).nameAndRemarks;
 			ShellPage.instance.coords.Text = focus.CidToString();
@@ -1548,7 +1549,7 @@ namespace COTG.Game
 			if (changed)
 			{
 				focus = cid;
-				App.DispatchOnUIThreadSneakyLow(UpdateFocusText);
+				App.DispatchOnUIThreadIdle(UpdateFocusText);
 			}
 			if (bringIntoView)
 				cid.BringCidIntoWorldView(lazyMove, false);
@@ -1688,7 +1689,7 @@ namespace COTG.Game
 					await JSClient.CitySwitch(cid, lazyMove: true, false, false, waitOnChange: true);
 					await Task.Delay(1500);
 				}
-				App.DispatchOnUIThreadSneaky(async () =>
+				App.DispatchOnUIThreadLow(async () =>
 				{
 
 					DateTimeOffset? time = null;
@@ -1767,6 +1768,7 @@ namespace COTG.Game
 
 		public bool isHubOrStorage => HasTag(Tags.Hub) || HasTag(Tags.Storage);
 		public bool isHub => HasTag(Tags.Hub);
+		public bool is7Point => HasTag(Tags.SevenPoint);
 
 		public async void ReturnAtBatch(object sender, RoutedEventArgs e)
 		{
@@ -1797,7 +1799,7 @@ namespace COTG.Game
 			Assert(cid == _cid);
 			if (type != 3 && type != -1) // 4 is empty, 3 is city or ruins, -1 means not open (for a continent)
 			{
-				App.DispatchOnUIThreadSneaky(() =>
+				App.DispatchOnUIThreadLow(() =>
 			   {
 				   var dialog = new ContentDialog()
 				   {
@@ -2070,7 +2072,7 @@ namespace COTG.Game
 				{
 					AApp.AddItem(flyout, "Do the stuff", (_, _) => DoTheStuff());
 					AApp.AddItem(flyout, "Food Warnings", (_, _) => CitySettings.SetFoodWarnings(cid));
-					flyout.AddItem("Ministers", (this as City).ministersOn, (this as City).SetMinistersOn);
+					flyout.AddItem("Ministers", (this as City).ministersOn.IsTrueOrNull, (this as City).SetMinistersOn);
 				}
 			}
 			else if (this.isDungeon || this.isBoss)
@@ -2157,21 +2159,21 @@ namespace COTG.Game
 		}
 		public void BuildStageDirty()
 		{
-			App.DispatchOnUIThreadSneakyLow(() => OnPropertyChanged(nameof(City.buildStage)));
+			App.DispatchOnUIThreadIdle((_) => OnPropertyChanged(nameof(City.buildStage)));
 		}
 		public async void ShowIncoming()
 		{
 			if (allianceId == Alliance.myId)
 			{
 				var tab = IncomingTab.instance;
-				App.DispatchOnUIThreadSneakyLow(() => tab.Show());
+				App.DispatchOnUIThreadLow(() => tab.Show());
 				for (; ; )
 				{
 					await Task.Delay(2000);
 					if (tab.defenderGrid.ItemsSource != null)
 						break;
 				}
-				App.DispatchOnUIThreadSneaky(() =>
+				App.DispatchOnUIThreadIdle((_) =>
 				{
 					tab.defenderGrid.SelectItem(this);
 					tab.defenderGrid.ScrollItemIntoView(this);
@@ -2181,14 +2183,14 @@ namespace COTG.Game
 			else
 			{
 				var tab = OutgoingTab.instance;
-				App.DispatchOnUIThreadSneakyLow(() => tab.Show());
+				App.DispatchOnUIThreadLow(() => tab.Show());
 				for (; ; )
 				{
 					await Task.Delay(2000);
 					if (tab.attackerGrid.ItemsSource != null)
 						break;
 				}
-				App.DispatchOnUIThreadSneaky(() =>
+				App.DispatchOnUIThreadIdle((_) =>
 				{
 					tab.attackerGrid.SelectItem(this);
 					tab.attackerGrid.ScrollItemIntoView(this);
@@ -2256,7 +2258,7 @@ namespace COTG.Game
 			//          instance.Dispatcher.RunAsync(CoreDispatcherPriority.Low, () =>
 			//           {
 			//   await Task.Delay(200);
-			App.DispatchOnUIThreadSneakyLow(() =>
+			App.DispatchOnUIThreadIdle((_) =>
 			{
 
 				{
@@ -2264,7 +2266,7 @@ namespace COTG.Game
 			//                      MainPage.CityGrid.SetCurrentItem(this);
 
 			//     MainPage.CityGrid.SetCurrentItem(this,false);
-			if (MainPage.IsVisible())
+					if (MainPage.IsVisible())
 						MainPage.CityGrid.ScrollItemIntoView(City.GetOrAdd(cid));
 					if (BuildTab.IsVisible())
 						BuildTab.CityGrid.ScrollItemIntoView(City.GetOrAdd(cid));

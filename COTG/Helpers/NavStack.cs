@@ -49,7 +49,7 @@ namespace COTG.Helpers
 					Note.Show("Please navigate first");
 					if (cityBackOnEmpty)
 					{
-						App.DispatchOnUIThreadSneaky(() =>
+						App.DispatchOnUIThreadLow(() =>
 					   Views.ShellPage.instance.ChangeCityClick(-1));
 					}
 
@@ -62,7 +62,7 @@ namespace COTG.Helpers
 				Note.Show("This is the first city");
 				if (cityBackOnEmpty)
 				{
-					App.DispatchOnUIThreadSneaky(() =>
+					App.DispatchOnUIThreadLow(() =>
 				   Views.ShellPage.instance.ChangeCityClick(-1));
 				}
 				return false;
@@ -91,7 +91,7 @@ namespace COTG.Helpers
 
 				if (cityForwardOnEmpty)
 				{
-					App.DispatchOnUIThreadSneaky(() => Views.ShellPage.instance.ChangeCityClick(1));
+					App.DispatchOnUIThreadLow(() => Views.ShellPage.instance.ChangeCityClick(1));
 				}
 				return false;
 			}

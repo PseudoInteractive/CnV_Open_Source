@@ -24,7 +24,7 @@
 				
 			</StackPanel>
 		<Border Style="{StaticResource BorderReveal}">
-			<StackPanel Style="{StaticResource BorderReveal}">
+			<StackPanel Style="{StaticResource StackPanelReveal}">
 				<!--<ToggleSwitch Header="Request Resources" OnContent="Set" OffContent="Ignore" IsOn="{x:Bind applyRequested}" />-->
 				<tk:WrapPanel Orientation="Horizontal" Margin="4" >
 
@@ -106,13 +106,13 @@
 		<tk:WrapPanel  Orientation="Horizontal" >
 			<winui:NumberBox Header="Cart Reserve"
 							PlaceholderText="No Change"
-							Value="{x:Bind reserveCarts,Converter={StaticResource NullableIntConverter}, Mode=TwoWay}"
+							Value="{x:Bind cartReserve,Converter={StaticResource NullableIntConverter}, Mode=TwoWay}"
 							Style="{StaticResource RightAlignNumberBox}"
 							ToolTipService.ToolTip="% carts reserved for trades that are not the result of sending overflow"
 							 />
 			<winui:NumberBox Header="Ship Reserve"
 							PlaceholderText="No Change"
-							Value="{x:Bind reserveShips,Converter={StaticResource NullableIntConverter}, Mode=TwoWay}"
+							Value="{x:Bind shipReserve,Converter={StaticResource NullableIntConverter}, Mode=TwoWay}"
 							Style="{StaticResource RightAlignNumberBox}"
 							ToolTipService.ToolTip="% ships reserved for trades that are not the result of sending overflow"
 							 />

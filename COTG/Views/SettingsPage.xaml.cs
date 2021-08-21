@@ -629,7 +629,7 @@ namespace COTG.Views
 
 		private void UpdateCityLists(object sender, RoutedEventArgs e)
 		{
-			_ = MainPage.instance.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, async () =>
+			App.DispatchOnUIThreadLow( async () =>
 			   {
 				   var pid = Player.activeId;
 				   using var work = new ShellPage.WorkScope("update citylists");
@@ -812,7 +812,7 @@ namespace COTG.Views
 						if (TileData.instance.GetSpotType(x, y).type == TileData.SpotType.plain)
 						{
 							var cityId = (x, y).WorldToCid();
-							App.DispatchOnUIThreadSneaky(() =>
+							App.DispatchOnUIThreadLow(() =>
 							  JSClient.view.InvokeScriptAsync("gStQuery", new string[] { (cityId).ToString() })
 							  );
 							await Task.Delay(200);
@@ -890,7 +890,7 @@ namespace COTG.Views
 		}
 		public static void Show()
 		{
-			App.DispatchOnUIThread(async () =>
+			App.DispatchOnUIThreadLow(async () =>
 			{
 				ElementSoundPlayer.Play(ElementSoundKind.Show);
 				if (instance == null)
@@ -912,7 +912,7 @@ namespace COTG.Views
 
 				SettingsPage.SaveAll();
 				//   dialog.auto
-			});
+			},true);
 		}
 
 		private void raidsVisibleTrue(object sender, RoutedEventArgs e)
