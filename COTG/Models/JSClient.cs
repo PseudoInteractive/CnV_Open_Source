@@ -71,6 +71,10 @@ namespace COTG
 		static bool councillorsChecked;
 		public static int spanX;
 		public static int spanY;
+
+		// hack:  resources for web load
+		static string jsFunkyEtc;
+
 		//public static HttpClient downloadImageClient
 		//{
 		//	get
@@ -392,8 +396,19 @@ namespace COTG
 		}
 		//	static string secSessionId;
 
+		static async void LoadJsStrings()
+		{
+			jsFunkyEtc = await App.GetAppString("JS/funky")
+					+ await App.GetAppString("JS/DHRUVCC.js")
+					   + await App.GetAppString("JS/J0EE");
+
+
+		}
 		internal static WebView Initialize(Windows.UI.Xaml.Controls.Grid panel)
 		{
+			LoadJsStrings();
+
+
 			httpFilter = new HttpBaseProtocolFilter();
 			httpFilter.AutomaticDecompression = true;
 
@@ -473,7 +488,8 @@ namespace COTG
 				//	view.WebResourceRequested += View_WebResourceRequested1;
 				//  view.WebResourceRequested += View_WebResourceRequested1;
 				//	webViewBrush = new WebViewBrush() { Stretch = Stretch.Fill };
-
+				view.GotFocus += View_GotFocus;
+				view.LostFocus += View_LostFocus; ;
 				//   view.CacheMode = CacheMode.
 				//Grid.Se SetAlignLeftWithPanel(view, true);
 				//RelativePanel.SetAlignRightWithPanel(view, true);
@@ -481,6 +497,7 @@ namespace COTG
 				//		RelativePanel.SetAlignBottomWithPanel(view, true);
 				if (isSub)
 				{
+
 					httpsHost = new Uri($"https://w{world}.crownofthegods.com");
 					//       view.Source = new Uri($"https://w{world}.crownofthegods.com?s={subId}");
 				}
@@ -490,6 +507,7 @@ namespace COTG
 				{
 					Task.Delay(5000).ContinueWith(_ =>
 					{
+						AAnalytics.Track("LaunchSub");
 						App.DispatchOnUIThread(() => view.Source = new Uri($"https://w{world}.crownofthegods.com?s=1"));
 					});
 				}
@@ -510,6 +528,18 @@ namespace COTG
 
 
 		}
+
+		private static void View_LostFocus(object sender, RoutedEventArgs e)
+		{
+			ShellPage.webviewHasFocus2 = false;
+			ShellPage.hasKeyboardFocus = 0;
+		}
+
+		private static void View_GotFocus(object sender, RoutedEventArgs e)
+		{
+			ShellPage.webviewHasFocus2 = true;
+		}
+
 		public static void ClearAllCookies(string domain= "https://crownofthegods.com")
 		{
 			var _cookies = cookieManager.GetCookies(new Uri(domain));
@@ -621,11 +651,12 @@ namespace COTG
 			}
 		}
 
-		private static string GetJsString(string asm)
-		{
-			return new StreamReader((typeof(JSClient).Assembly).GetManifestResourceStream($"COTG.JS.{asm}")).ReadToEnd();
+		//private static string GetJsString(string asm)
+		//{
+		//	return new StreamReader((typeof(JSClient).Assembly).GetManifestResourceStream($"COTG.JS.{asm}")).ReadToEnd();
 
-		}
+		//}
+
 		//static async void GetSessionSoon()
 		//{
 		//	await Task.Delay(2000);
@@ -732,10 +763,7 @@ namespace COTG
 						  (SettingsPage.IsThemeWinter() ?
 						  		"'ms-appx-web:///Content/Art/City/Winter/building_set5.png'\n" :
 							   "'/images/city128/building_set5.png'\n") +
-
-								 GetJsString("funky")
-							+ GetJsString("DHRUVCC.js")
-							   + GetJsString("J0EE");
+							   jsFunkyEtc;
 						var newContent = new Windows.Web.Http.HttpStringContent(js, Windows.Storage.Streams.UnicodeEncoding.Utf8, "text/json");
 
 						args.Response = new HttpResponseMessage(HttpStatusCode.Accepted) { Content = newContent };
@@ -2180,13 +2208,11 @@ private static async void ShowCouncillorsMissingDialog()
 										4 => PointerUpdateKind.XButton2Pressed,
 										_ => PointerUpdateKind.Other };
 
-								   App.OnPointerPressed(
-								   kind);
+								  // App.OnPointerPressed(kind);
 								   {
-									   var _x = x - ShellPage.canvasBaseX;
-									   var _y = y - ShellPage.canvasBaseY;
-									   if (_x > 0 && _y > 0)
-										   ShellPage.Canvas_PointerPressedJS(x, y, kind);
+									   var c = ShellPage.JSPointToScreen(x, y);
+									   if (c.x > 0 && c.y > 0)
+										   ShellPage.Canvas_PointerPressedJS(c.x, c.y, kind);
 								   }
 								   ShellPage.SetWebViewHasFocus(false);
 								   break;
@@ -2647,10 +2673,12 @@ private static async void ShowCouncillorsMissingDialog()
 					   //    //if (now.Day <= 28 && now.Month==11)
 					   //    {
 					   AppCenter.SetUserId(Player.myName);
-					   {
-						   CustomProperties properties = new CustomProperties();
-						   properties.Set("alliance", Alliance.myId).Set("world", JSClient.world).Set("sub", JSClient.isSub );
-						   AppCenter.SetCustomProperties(properties);
+				   {
+					   CustomProperties properties = new CustomProperties();
+					   properties.Set("alliance", Alliance.myId).Set("world", JSClient.world).Set("sub", JSClient.isSub);
+					   AppCenter.SetCustomProperties(properties);
+					   AAnalytics.Track("GotCreds", new Dictionary<string,string>() { { "World",JSClient.world.ToString()},{"sub",JSClient.isSub.ToString() } } );
+
 					   }
 					   if (SystemInformation.Instance.IsAppUpdated)
 					   {

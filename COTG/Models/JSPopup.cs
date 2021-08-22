@@ -37,6 +37,7 @@ namespace COTG.Models
 		//	public JSPopupNode[] children { get; set; }
 		//	public static TeachingTip[] existingPopups;
 
+		
 		public static void Show(JSPopupNode[] popups)
 		{
 			//if (existingPopups != null)
@@ -63,10 +64,8 @@ namespace COTG.Models
 
 				var scale =  AGame.dipToNative; // ShellPage.webViewScale *
 				AGame.popups[put] = new Span2i(
-					(scale *(x0* ShellPage.webViewScale - ShellPage.canvasBaseX)).RoundToInt(),
-					(scale * (y0 * ShellPage.webViewScale - ShellPage.canvasBaseY)).RoundToInt(),
-					(scale *(x1 * ShellPage.webViewScale - ShellPage.canvasBaseX)).RoundToInt(),
-					(scale *(y1 * ShellPage.webViewScale - ShellPage.canvasBaseY)).RoundToInt());
+					ShellPage.JSPointToScreen(x0, y0),
+					ShellPage.JSPointToScreen(x1, y1));
 
 
 				//	var canvas = new Windows.UI.Xaml.Controls.Canvas();

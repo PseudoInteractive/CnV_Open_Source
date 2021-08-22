@@ -167,7 +167,7 @@ namespace COTG
 
 					try
 					{
-						Analytics.TrackEvent(eventName, dic);
+						AAnalytics.Track(eventName, dic);
 						Crashes.TrackError(e, dic);
 					}
 					catch (Exception ex2)
@@ -239,7 +239,7 @@ namespace COTG
 			if (System.Diagnostics.Debugger.IsAttached && breakCounter > 0)
 			{
 				--breakCounter;
-				System.Diagnostics.Debugger.Break(); ;
+					System.Diagnostics.Debugger.Break(); ;
 			}
 		}
 

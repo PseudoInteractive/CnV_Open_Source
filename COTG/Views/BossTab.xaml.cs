@@ -80,7 +80,7 @@ namespace COTG.Views
             var newSel = it as City;
             Boss.distanceReference = newSel;
             var bosses = new List<Boss>();
-            if (newSel != null)
+            if (newSel != null && newSel.isCityOrCastle)
             {
 				if (SpotTab.silenceSelectionChanges == 0)
 					newSel.SelectInWorldView(false);
@@ -110,10 +110,10 @@ namespace COTG.Views
 					}
 				}
                 bosses.SortSmall((a, b) => a.dist.CompareTo(b.dist));
-            }
-            bossGrid.ItemsSource = bosses; // todo
+				bossGrid.ItemsSource = bosses; // todo
+			}
 
-        }
+		}
     }
         public class BossTapCommand : DataGridCommand
         {

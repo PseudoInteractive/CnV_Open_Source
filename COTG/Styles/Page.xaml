@@ -142,7 +142,7 @@
        
     </Style>
     <Style  x:Key="RightAlignNumberBox" BasedOn="{StaticResource NumberBoxSmall}" TargetType="winui:NumberBox">
-		<Setter Property="TextAlignment" Value="Right" />
+		<Setter Property="HorizontalContentAlignment" Value="Right" />
     </Style>
 	<Style x:Key="NumberBoxRes" BasedOn="{StaticResource RightAlignNumberBox}" TargetType="winui:NumberBox">
 		<Setter Property="SmallChange" Value="25000"/>

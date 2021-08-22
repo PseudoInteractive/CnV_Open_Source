@@ -96,18 +96,22 @@ namespace CnVDiscord
 			{
 				chatChannel = await DiscordBot.GetChannelAsync(Config.ChatID).ConfigureAwait(false);
 				var members = await chatChannel.Guild.GetAllMembersAsync().ConfigureAwait(false);
-				foreach (var i in members)
-				{
-					var nameLower = i.DisplayName.ToLowerInvariant();
-					if (!avatarUrls.TryGetValue(nameLower, out var _))
-					{
-						var url = i.GetAvatarUrl(ImageFormat.Auto, 32);
-						avatarUrls.TryAdd(nameLower, $"![Helpers Image]({url})");
-						avatarBrushes.TryAdd(nameLower, new BitmapImage(new Uri(url)));
-					}
+				await App.DispatchOnUIThreadTask(() =>
+			   {
+				   foreach (var i in members)
+				   {
+					   var nameLower = i.DisplayName.ToLowerInvariant();
+					   if (!avatarUrls.TryGetValue(nameLower, out var _))
+					   {
+						   var url = i.GetAvatarUrl(ImageFormat.Auto, 32);
+						   avatarUrls.TryAdd(nameLower, $"![Helpers Image]({url})");
+						   avatarBrushes.TryAdd(nameLower, new BitmapImage(new Uri(url)));
+					   }
 
-					playerToMember.TryAdd(nameLower, i);
-				}
+					   playerToMember.TryAdd(nameLower, i);
+				   }
+				   return Task.CompletedTask;
+			   }).ConfigureAwait(false);
 				//			UserIdToMemeber = members.ToDictionary((a => a.Id), (a => a));
 
 

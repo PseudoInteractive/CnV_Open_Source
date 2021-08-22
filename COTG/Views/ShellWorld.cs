@@ -345,8 +345,11 @@ namespace COTG.Views
 
 		public static Vector2 GetCanvasPosition(Windows.Foundation.Point screenC)
 		{
-			var point = screenC;
-			return new Vector2((float)(point.X*dipToNative), (float)(point.Y*dipToNative) );
+			return new Vector2((float)(screenC.X*dipToNative), (float)(screenC.Y*dipToNative) );
+		}
+		public static Vector2 GetCanvasPosition( int x , int y )
+		{
+			return new Vector2((float)(x * dipToNative), (float)(y * dipToNative));
 		}
 		public static Windows.Foundation.Point CanvasToScreen(Vector2 point)
 		{
@@ -366,7 +369,14 @@ namespace COTG.Views
 			//var regionC = (cameraC + c0 - c1) * 64.0f;
 			//    ShellPage.SetJSCamera(regionC);
 		}
+		public static (int x, int y) JSPointToScreen((int x, int y) c) => JSPointToScreen(c.x, c.y);
+		public static (int x, int y) JSPointToScreen(int x, int y)
+		{
+			var scale = AGame.dipToNative;
+			return ((scale * (x * ShellPage.webViewScale - ShellPage.canvasBaseX)).RoundToInt(),
+					(scale * (y * ShellPage.webViewScale - ShellPage.canvasBaseY)).RoundToInt());
 
+		}
 		public static void ClearHover()
 		{
 			if(!IsCityView())
@@ -696,25 +706,12 @@ namespace COTG.Views
 			Assert(isOverPopup == false);
 			//            canvas.CapturePointer(e.Pointer);
 			//	var point = e.CurrentPoint;
-
-			//var properties = point.Properties;
-			mousePosition = new Vector2(x, y);
-			
-			var prior = lastMousePressTime;
-			lastMousePressTime = DateTimeOffset.UtcNow;
-			lastMousePressPosition = mousePosition;
-
-
-			//  if (ShellPage.IsCityView())
-			// The app pas priority over back and forward events
 			{
 				switch (kind)
 				{
 					case Windows.UI.Input.PointerUpdateKind.XButton1Pressed:
-						ClearHover();
 						return;
 					case Windows.UI.Input.PointerUpdateKind.XButton2Pressed:
-						ClearHover();
 						return;
 
 
@@ -722,8 +719,19 @@ namespace COTG.Views
 				//    e.Handled = false;
 				//    return;
 			}
-			TakeKeyboardFocus();
+			//var properties = point.Properties;
+			mousePosition = GetCanvasPosition( x, y);
+			Log($"!Focus Canvas pressed? {x} {y} {kind}");
+			var prior = lastMousePressTime;
+			lastMousePressTime = DateTimeOffset.UtcNow;
+			lastMousePressPosition = mousePosition;
+
 			ClearHover();
+
+			//  if (ShellPage.IsCityView())
+			// The app pas priority over back and forward events
+			
+			TakeKeyboardFocus();
 			//  e.Handled = false;
 			Gesture.Reset();
 		}

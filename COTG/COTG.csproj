@@ -144,7 +144,7 @@
       <Version>7.1.0-preview1</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.UI.Xaml">
-      <Version>2.7.0-prerelease.210816001</Version>
+      <Version>2.6.2</Version>
     </PackageReference>
     <PackageReference Include="MonoGame.Content.Builder.Task">
       <Version>3.8.1.1941-develop</Version>
@@ -213,10 +213,8 @@
     </PRIResource>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="JS\funky">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </EmbeddedResource>
-    <EmbeddedResource Include="JS\J0EE" />
+    <Content Include="JS\funky" />
+    <Content Include="JS\J0EE" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Activation\ActivationHandler.cs" />
@@ -270,6 +268,7 @@
     <Compile Include="Helpers\aContainers.cs" />
     <Compile Include="Helpers\AES.cs" />
     <Compile Include="Helpers\AMath.cs" />
+    <Compile Include="Helpers\Analytics.cs" />
     <Compile Include="Helpers\aParallelFor.cs" />
     <Compile Include="Helpers\AString.cs" />
     <Compile Include="Helpers\AuthenticationHelper.cs" />
@@ -718,7 +717,7 @@
     <None Include="Content\Effects\NoTexture.fxh" />
     <None Include="Content\Effects\sdf.fxh" />
     <None Include="Content\Effects\unlit.fxh" />
-    <EmbeddedResource Include="JS\alasstylesheet.css" />
+    <None Include="JS\alasstylesheet.css" />
     <Content Include="Assets\LargeTile.scale-100.png" />
     <Content Include="Assets\LargeTile.scale-125.png" />
     <Content Include="Assets\LargeTile.scale-150.png" />
@@ -799,13 +798,13 @@
     <Content Include="Content\Art\Icons\troops7.png" />
     <Content Include="Content\Art\Icons\troops8.png" />
     <Content Include="Content\Art\Icons\troops9.png" />
-    <EmbeddedResource Include="JS\jquery1_12_4" />
-    <EmbeddedResource Include="JS\jquery-migrate1_4_1" />
-    <EmbeddedResource Include="JS\jquery3_5_1" />
-    <EmbeddedResource Include="JS\jquerymigrate" />
+    <None Include="JS\jquery1_12_4" />
+    <None Include="JS\jquery-migrate1_4_1" />
+    <None Include="JS\jquery3_5_1" />
+    <None Include="JS\jquerymigrate" />
     <EmbeddedResource Include="Notes\fixes.md" />
-    <EmbeddedResource Include="JS\index.htm" />
-    <EmbeddedResource Include="JS\DHRUVCC.js" />
+    <None Include="JS\index.htm" />
+    <Content Include="JS\DHRUVCC.js" />
     <None Include="Content\Effects\Macros.fxh" />
     <None Include="Content\Effects\Structures.fxh" />
     <EmbeddedResource Include="Content\Fonts\tra.fnt" />
@@ -814,9 +813,9 @@
     <None Include="CotgKey.pfx" />
     <None Include="JSON\poll2.json" />
     <EmbeddedResource Include="JSON\Troops.json" />
-    <EmbeddedResource Include="JS\jquerymigrate3_3_2" />
+    <None Include="JS\jquerymigrate3_3_2" />
     <None Include="Package.StoreAssociation.xml" />
-    <EmbeddedResource Include="JS\jquery" />
+    <None Include="JS\jquery" />
     <Content Include="Properties\Default.rd.xml" />
     <Content Include="Assets\LockScreenLogo.scale-200.png" />
     <Content Include="Assets\SplashScreen.scale-200.png" />
@@ -836,7 +835,7 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
     <None Include="COTG_TemporaryKey.pfx" />
-    <EmbeddedResource Include="JS\pack.js" />
+    <None Include="JS\pack.js" />
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="App.xaml">

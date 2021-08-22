@@ -268,7 +268,7 @@ namespace COTG
 			var t = DateTimeOffset.UtcNow;
 			var dt = t - activeStart;
 			activeStart = t;
-			Analytics.TrackEvent("BackgroundLeave", new Dictionary<string, string> { { "time", dt.TotalSeconds.RoundToInt().ToString() } });
+			AAnalytics.Track("Foreground", new Dictionary<string, string> { { "time", dt.TotalSeconds.RoundToInt().ToString() } });
 
 			//if (ShellPage.canvas != null)
 			//    ShellPage.canvas.Paused = false;
@@ -305,7 +305,7 @@ namespace COTG
 				try
 				{
 					Crashes.TrackError(e.Exception);
-					Analytics.TrackEvent("UnhandledException", new Dictionary<string, string> { { "message", e.Message.Truncate(120) } });
+					AAnalytics.Track("UnhandledException", new Dictionary<string, string> { { "message", e.Message.Truncate(120) } });
 				}
 				catch (Exception ex2)
 				{
@@ -652,7 +652,7 @@ namespace COTG
 				var dt = t - activeStart;
 				activeStart = t;
 				SystemInformation.Instance.AddToAppUptime(dt);
-				Analytics.TrackEvent("BackgroundEnter", new Dictionary<string, string> { { "time", dt.TotalSeconds.RoundToInt().ToString() } });
+				AAnalytics.Track("Background", new Dictionary<string, string> { { "time", dt.TotalSeconds.RoundToInt().ToString() } });
 				
 			}
 			catch

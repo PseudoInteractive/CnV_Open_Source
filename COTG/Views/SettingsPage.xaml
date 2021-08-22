@@ -22,7 +22,7 @@
 	<ScrollViewer ZoomMode="Enabled">
 		<StackPanel Orientation="Vertical" ScrollViewer.VerticalScrollMode="Enabled">
 			<StackPanel Orientation="Horizontal">
-			<HyperlinkButton    Content="{x:Bind appInfo}"
+			<HyperlinkButton  Content="{x:Bind views:SettingsPage.versionDescription}"
 					   FontSize="12" Click="VersionTapped" />
 				<Button    Content="Launch+"
 						   Style="{ThemeResource ButtonRevealStyle}"

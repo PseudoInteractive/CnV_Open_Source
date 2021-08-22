@@ -256,5 +256,12 @@ namespace COTG
 
 			return buffer.ToArray();
 		}
+		public static async Task<string> GetAppString(string filename)
+		{
+			var uri = new Uri("ms-appx:///" + filename);
+			var file = await StorageFile.GetFileFromApplicationUriAsync(uri);
+
+			return  await FileIO.ReadTextAsync(file);
+		}
 	}
 }

@@ -31,13 +31,20 @@ using static COTG.Game.TroopTypeCountHelper;
 
 namespace COTG.Services
 {
+	[Flags]
+	public enum RestFlags
+	{
+		silenceError=1,
+		track=2, // only if eventName is not empty
+	}
 	public class RestAPI
 	{
 		//   public static List<RestAPI> all = new List<RestAPI>();
 		public string localPath;
 		public static JsonDocument emptyJson;
 
-		public virtual string eventName => string.Empty;
+		public RestFlags restFlags =  RestFlags.track;
+		public string eventName = string.Empty;
 		public virtual string extra => string.Empty;
 		public RestAPI(string _localPath, int _pid = -1)
 		{
@@ -209,8 +216,9 @@ namespace COTG.Services
 					Assert(false);
 					await Task.Delay(128);
 				}
-//				HttpResponseMessage resp;
-				using (var req = new HttpRequestMessage(HttpMethod.Post, new Uri(JSClient.httpsHost, localPath)))
+				//				HttpResponseMessage resp;
+				var uri = new Uri(JSClient.httpsHost, localPath);
+				using (var req = new HttpRequestMessage(HttpMethod.Post, uri))
 				{
 					req.Content = new HttpStringContent(postContent,
 								Windows.Storage.Streams.UnicodeEncoding.Utf8,
@@ -224,11 +232,17 @@ namespace COTG.Services
 					//    req.Headers.Append("Sec-Fetch-Dest", "empty");
 
 
-					var resp = await client.SendRequestAsync(req, HttpCompletionOption.ResponseContentRead);
+					var respT = client.SendRequestAsync(req, HttpCompletionOption.ResponseContentRead);
 					//     Log($"res: {resp.GetType()} {resp.Succeeded} {resp}");
 					//     Log($"req: {resp.RequestMessage.ToString()}");
 					//   if (resp.ExtendedError != null)
 					//      Log(resp.ExtendedError);
+					if(restFlags.HasFlag(RestFlags.track))
+					{
+						AAnalytics.Track(uri.LocalPath);
+					}
+					var resp = await respT;
+				
 					if (resp != null)
 					{
 						return resp;
@@ -377,6 +391,7 @@ namespace COTG.Services
 	//		Log($"sndRaid:{_json}");
 			cid = _cid;
 			json = _json;
+		//	restFlags &= ~RestFlags.track;
 		}
 		public override string GetPostContent()
 		{
@@ -525,6 +540,7 @@ namespace COTG.Services
 		public ScanDungeons(int _cid) : base("includes/fCv.php", World.CidToPlayerOrMe(_cid))
 		{
 			cid = _cid;
+		//	restFlags &= ~RestFlags.track;
 
 		}
 		// returns true if raids were sent or sending failed.  True means that we should loop back and try again

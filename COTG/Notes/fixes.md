@@ -297,3 +297,5 @@
     -   **New**
         -   City Tag: "SevenPoint", for 7 point castles
             -   If you need a good layout, I have shared one: see "7pt"
+    -   **Fix**
+        - Boss tab has fewer focus issues

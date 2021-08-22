@@ -47,11 +47,17 @@ namespace COTG.Services
 		{
 			if (snapShotContainer == null)
 			{
-				snapShotContainer = new BlobContainerClient(connectionString, statsContainerName, GetClientOptions());
 				try
 				{
+					snapShotContainer = new BlobContainerClient(connectionString, statsContainerName, GetClientOptions());
+				
 					await snapShotContainer.CreateIfNotExistsAsync();
-				} catch  { }
+				}
+				catch (Exception ex) 
+				{
+					if (snapShotContainer == null)
+						LogEx(ex);
+				}
 			}
 			return snapShotContainer;
 		}
@@ -59,168 +65,209 @@ namespace COTG.Services
 		{
 			if (tsSnapShotContainer == null)
 			{
-				tsSnapShotContainer = new BlobContainerClient(connectionString, statsTSContainerName, GetClientOptions());
 				try
 				{
+					tsSnapShotContainer = new BlobContainerClient(connectionString, statsTSContainerName, GetClientOptions());
+				
 					await tsSnapShotContainer.CreateIfNotExistsAsync();
 				}
-				catch  { }
+				catch (Exception ex)
+				{
+					if (tsSnapShotContainer == null)
+						LogEx(ex);
+				}
 			}
 			return tsSnapShotContainer;
 		}
+		public static async Task<BlobContainerClient> GetChangesContainer()
+		{
+			if (changesContainer == null)
+			{
+				try
+				{
+					changesContainer = new BlobContainerClient(connectionString, changesContainerName, GetClientOptions());
 
+					await changesContainer.CreateIfNotExistsAsync();
+				}
+				catch (Exception ex)
+				{
+					if (changesContainer == null)
+						LogEx(ex);
+					// assume already created?
+				}
+			}
+			return changesContainer;
+		}
 
 		//const int timeBetweenSnapshots = 5;
 		//const int minTimeBetweenSnapshots = timeBetweenSnapshots - 1;
 		//const int maxTimeBetweenSnapshots = timeBetweenSnapshots + 1;
 		public static async void ProcessStats()
 		{
-			for (; ; )
+			try
 			{
-
-				var container = await GetSnapshotContainer();
-
-				var info = await container.GetPropertiesAsync();
-				var lastWritten = info.Value.LastModified;// + TimeSpan.FromHours(12) + TimeSpan.FromMinutes(AMath.random.Next(60)-30);
-				var currentT = DateTimeOffset.UtcNow;
-				var dt = currentT - lastWritten;
-				if (dt.TotalMinutes > minTimeBetweenSnapshots)
+				for (; ; )
 				{
-					COTG.Debug.Trace("Snapshot");
-					// take a snapshot
-					var snap = await Snapshot.GetStats();
-					using (var mem = new MemoryStream())
+
+					var container = await GetSnapshotContainer();
+					if (container == null)
+						return;
+
+					var info = await container.GetPropertiesAsync();
+					var lastWritten = info.Value.LastModified;// + TimeSpan.FromHours(12) + TimeSpan.FromMinutes(AMath.random.Next(60)-30);
+					var currentT = DateTimeOffset.UtcNow;
+					var dt = currentT - lastWritten;
+					if (dt.TotalMinutes > minTimeBetweenSnapshots)
 					{
-						using (var deflate = new GZipStream(mem, CompressionLevel.Optimal, true))
+						COTG.Debug.Trace("Snapshot");
+						// take a snapshot
+						var snap = await Snapshot.GetStats();
+						using (var mem = new MemoryStream())
 						{
-							using (var writer = new BinaryWriter(deflate, Encoding.UTF8, true))
+							using (var deflate = new GZipStream(mem, CompressionLevel.Optimal, true))
 							{
-								writer.Write(snap.time);
-								writer.Write(snap.playerStats.Count);
-								foreach (var pss in snap.playerStats)
+								using (var writer = new BinaryWriter(deflate, Encoding.UTF8, true))
 								{
-									var ps = pss.Value;
-
-									writer.Write(ps.pid);
-									writer.Write(ps.reputation);
-									writer.Write(ps.offensiveRep);
-									writer.Write(ps.defensiveRep);
-									writer.Write(ps.unitKills);
-									writer.Write(ps.alliance);
-									writer.Write(ps.raiding);
-									writer.Write(ps.perContinent.Count);
-									foreach (var c in ps.perContinent)
+									writer.Write(snap.time);
+									writer.Write(snap.playerStats.Count);
+									foreach (var pss in snap.playerStats)
 									{
-										writer.Write(c.continent);
-										writer.Write(c.cities);
-										writer.Write(c.score);
+										var ps = pss.Value;
 
+										writer.Write(ps.pid);
+										writer.Write(ps.reputation);
+										writer.Write(ps.offensiveRep);
+										writer.Write(ps.defensiveRep);
+										writer.Write(ps.unitKills);
+										writer.Write(ps.alliance);
+										writer.Write(ps.raiding);
+										writer.Write(ps.perContinent.Count);
+										foreach (var c in ps.perContinent)
+										{
+											writer.Write(c.continent);
+											writer.Write(c.cities);
+											writer.Write(c.score);
+
+										}
 									}
-								}
-								writer.Write(snap.allianceStats.Count);
-								foreach (var pss in snap.allianceStats)
-								{
-									var ps = pss.Value;
-
-									writer.Write(ps.aid);
-									writer.Write(ps.reputation);
-									writer.Write(ps.perContinent.Count);
-
-									foreach (var c in ps.perContinent)
+									writer.Write(snap.allianceStats.Count);
+									foreach (var pss in snap.allianceStats)
 									{
-										writer.Write(c.continent);
-										writer.Write(c.cities);
-										writer.Write(c.score);
-										writer.Write(c.military);
+										var ps = pss.Value;
+
+										writer.Write(ps.aid);
+										writer.Write(ps.reputation);
+										writer.Write(ps.perContinent.Count);
+
+										foreach (var c in ps.perContinent)
+										{
+											writer.Write(c.continent);
+											writer.Write(c.cities);
+											writer.Write(c.score);
+											writer.Write(c.military);
+										}
 									}
+
 								}
+							}
+							try
+							{
+								mem.Flush();
+								mem.Seek(0, SeekOrigin.Begin);
+								var str = snap.time.dateTime.FormatFileTime();
+								await container.UploadBlobAsync(str, mem);
+								await container.SetMetadataAsync(new Dictionary<string, string>() { { "last", str } });
 
 							}
-						}
-						try
-						{
-							mem.Flush();
-							mem.Seek(0, SeekOrigin.Begin);
-							var str = snap.time.dateTime.FormatFileTime();
-							await container.UploadBlobAsync(str, mem);
-							await container.SetMetadataAsync(new Dictionary<string, string>() { { "last", str } });
+							catch (Exception ex)
+							{
+								Debug.LogEx(ex);
+							}
 
 						}
-						catch (Exception ex)
-						{
-							Debug.LogEx(ex);
-						}
-
+						lastWritten = currentT;
 					}
-					lastWritten = currentT;
+
+					var nextSnapShot = lastWritten + TimeSpan.FromMinutes(AMath.random.Next(minTimeBetweenSnapshots, maxTimeBetweenSnapshots));
+
+					await Task.Delay((nextSnapShot - currentT));
 				}
-
-				var nextSnapShot = lastWritten + TimeSpan.FromMinutes(AMath.random.Next(minTimeBetweenSnapshots, maxTimeBetweenSnapshots));
-
-				await Task.Delay((nextSnapShot - currentT));
+			} catch(Exception ex)
+			{
+				LogEx(ex);
 			}
 		}
 
 		public static async void ProcessTSStats()
 		{
-			for (; ; )
+			try
 			{
-				var container = await GetTSSnapshotContainer();
-				
-				var info = await container.GetPropertiesAsync();
-				var lastWritten = info.Value.LastModified;// + TimeSpan.FromHours(12) + TimeSpan.FromMinutes(AMath.random.Next(60)-30);
-				var currentT = DateTimeOffset.UtcNow;
-				var dt = currentT - lastWritten;
-				if (dt.TotalMinutes > minTimeBetweenSnapshots)
+				for (; ; )
 				{
-					COTG.Debug.Trace("Snapshot");
-					// take a snapshot
-					var snap = await TSSnapshot.GetStats();
-					using (var mem = new MemoryStream())
+					var container = await GetTSSnapshotContainer();
+					if (container == null)
 					{
-						using (var deflate = new GZipStream(mem, CompressionLevel.Optimal, true))
+						return;
+					}
+					var info = await container.GetPropertiesAsync();
+					var lastWritten = info.Value.LastModified;// + TimeSpan.FromHours(12) + TimeSpan.FromMinutes(AMath.random.Next(60)-30);
+					var currentT = DateTimeOffset.UtcNow;
+					var dt = currentT - lastWritten;
+					if (dt.TotalMinutes > minTimeBetweenSnapshots)
+					{
+						COTG.Debug.Trace("Snapshot");
+						// take a snapshot
+						var snap = await TSSnapshot.GetStats();
+						using (var mem = new MemoryStream())
 						{
-							using (var writer = new BinaryWriter(deflate, Encoding.UTF8, true))
+							using (var deflate = new GZipStream(mem, CompressionLevel.Optimal, true))
 							{
-								writer.Write(snap.time);
-								writer.Write(snap.continents.Count);
-								foreach (var cont in snap.continents)
+								using (var writer = new BinaryWriter(deflate, Encoding.UTF8, true))
 								{
-									writer.Write(cont.continent);
-									writer.Write(cont.players.Count);
-									foreach (var p in cont.players)
+									writer.Write(snap.time);
+									writer.Write(snap.continents.Count);
+									foreach (var cont in snap.continents)
 									{
-										writer.Write(p.pid);
-										writer.Write(p.score);
-										writer.Write(p.cities);
-										writer.Write(p.tsTotal);
-										writer.Write(p.tsOff);
-										writer.Write(p.tsDef);
+										writer.Write(cont.continent);
+										writer.Write(cont.players.Count);
+										foreach (var p in cont.players)
+										{
+											writer.Write(p.pid);
+											writer.Write(p.score);
+											writer.Write(p.cities);
+											writer.Write(p.tsTotal);
+											writer.Write(p.tsOff);
+											writer.Write(p.tsDef);
+										}
 									}
 								}
 							}
-						}
-						try
-						{
-							mem.Flush();
-							mem.Seek(0, SeekOrigin.Begin);
-							var str = snap.time.dateTime.FormatFileTime();
-							await container.UploadBlobAsync(str, mem);
-							await container.SetMetadataAsync(new Dictionary<string, string>() { { "last", str } });
+							try
+							{
+								mem.Flush();
+								mem.Seek(0, SeekOrigin.Begin);
+								var str = snap.time.dateTime.FormatFileTime();
+								await container.UploadBlobAsync(str, mem);
+								await container.SetMetadataAsync(new Dictionary<string, string>() { { "last", str } });
+
+							}
+							catch (Exception ex)
+							{
+								Debug.LogEx(ex);
+							}
 
 						}
-						catch (Exception ex)
-						{
-							Debug.LogEx(ex);
-						}
-
+						lastWritten = currentT;
 					}
-					lastWritten = currentT;
+
+					var nextSnapShot = lastWritten + TimeSpan.FromMinutes(AMath.random.Next(minTimeBetweenSnapshots, maxTimeBetweenSnapshots));
+
+					await Task.Delay((nextSnapShot - currentT));
 				}
-
-				var nextSnapShot = lastWritten + TimeSpan.FromMinutes(AMath.random.Next(minTimeBetweenSnapshots, maxTimeBetweenSnapshots));
-
-				await Task.Delay((nextSnapShot - currentT));
+			}
+			catch(Exception ex)
+			{
+				LogEx(ex);
 			}
 		}
 
@@ -685,21 +732,6 @@ namespace COTG.Services
 #endif
 			return rv;
 		}
-		public static async Task<BlobContainerClient> GetChangesContainer()
-		{
-			if (changesContainer == null)
-			{
-				try
-				{
-					changesContainer = new BlobContainerClient(connectionString, changesContainerName, GetClientOptions());
-				
-					await changesContainer.CreateIfNotExistsAsync();
-				}catch
-				{
-					// assume already created?
-				}
-			}
-			return changesContainer;
-		}
+		
 	}
 }

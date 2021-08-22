@@ -449,7 +449,7 @@ namespace COTG.Views
 				st.Save(nameof(DonationTab.woodStoneRatio), DonationTab.woodStoneRatio);
 				st.Save(nameof(DonationTab.reserveWood), DonationTab.reserveWood);
 				st.Save(nameof(DonationTab.reserveStone), DonationTab.reserveStone);
-				Tips.SaveSeen();
+				//Tips.SaveSeen();
 				//  st.Save("attacktime", AttackTab.time.DateTime);
 
 //				AttackTab.SaveAttacksBlock();
@@ -472,18 +472,18 @@ namespace COTG.Views
 			set { if (value) ThemeSelectorService.SetThemeAsync(ElementTheme.Dark); }
 		}
 
-		private static string _versionDescription;
+		public static string versionDescription = string.Empty;
 		public static bool incomingAlwaysVisible;
 		public static bool attacksAlwaysVisible;
 		public static float penaltyForWrongDungeonType = 6;
 		public static ushort scoreForSorcTower = 2000;
 
-		public string VersionDescription
-		{
-			get { return _versionDescription; }
+		//public string VersionDescription
+		//{
+		//	get { return _versionDescription; }
 
-			set { Set(ref _versionDescription, value); }
-		}
+		//	set { Set(ref _versionDescription, value); }
+		//}
 
 		//public bool IsLoggedIn
 		//{
@@ -532,7 +532,12 @@ namespace COTG.Views
 
 		public static void Initialize()
 		{
-			_versionDescription = GetVersionDescription();
+			var package = Package.Current;
+			var packageId = package.Id;
+			var version = packageId.Version;
+
+			versionDescription =   $"{package.DisplayName} - {version.Major}.{version.Minor}.{version.Build}.{version.Revision}\nInstalled {package.InstalledDate}";
+
 			//      IdentityService.LoggedIn += OnLoggedIn;
 			//       IdentityService.LoggedOut += OnLoggedOut;
 			//       UserDataService.UserDataUpdated += OnUserDataUpdated;
@@ -549,15 +554,7 @@ namespace COTG.Views
 
 		
 
-		private static string GetVersionDescription()
-		{
-			var appName = "AppDisplayName".GetLocalized();
-			var package = Package.Current;
-			var packageId = package.Id;
-			var version = packageId.Version;
-
-			return $"{appName} - {version.Major}.{version.Minor}.{version.Build}.{version.Revision}";
-		}
+		
 
 		private async void ThemeChanged_CheckedAsync(object sender, RoutedEventArgs e)
 		{
@@ -877,17 +874,7 @@ namespace COTG.Views
 		//	}
 		//	Note.Show("Fixup reserve cmoplete");
 		//}
-		string appInfo
-		{
-			get
-			{
-				var package = Package.Current;
-				var packageId = package.Id;
-				var version = packageId.Version;
-
-				return $"{package.DisplayName} - {version.Major}.{version.Minor}.{version.Build}.{version.Revision}\nInstalled {package.InstalledDate}";
-			}
-		}
+		
 		public static void Show()
 		{
 			App.DispatchOnUIThreadLow(async () =>

@@ -1229,6 +1229,8 @@ namespace COTG.Views
 		}
 
 		public static float webViewScale = 1;
+		internal static bool webviewHasFocus2;
+
 		private  void SetLayout(int viewToggle)
 		{
 			App.DispatchOnUIThreadIdle(async (_) =>
@@ -1340,7 +1342,7 @@ namespace COTG.Views
 //			var text2 = new TextBox() { Header = "sec_session_id", PlaceholderText = "06..." };
 			var clear  = new CheckBox() { Content = "Clear Cookie", IsChecked=false };
 
-
+			AAnalytics.Track("CookieClick");
 			content.Children.Add(text);
 	//		content.Children.Add(text2);
 			content.Children.Add(clear);
