@@ -21,14 +21,11 @@
 		<TextBlock Text="Warning: Setting the Continent filter changes the global setting in the 'Cont' dropdown up top" />
 
 		<wct:WrapPanel Orientation="Horizontal"
-						   Margin="4">
+						   Margin="4" >
 
 
-			
-			<TextBox  ToolTipService.ToolTip="If not empty, only alliances containing this substring will be exported"
-							Text="{x:Bind views:SettingsPage.exportAllianceMask}"
-						 Header="Alliance Mask" />
-			
+
+
 			<ComboBox Header="Which"  SelectedIndex="{x:Bind views:SettingsPage.exportWho, Mode=TwoWay}"  >
 				<x:String>Mine</x:String>
 				<x:String>Alliance</x:String>
@@ -38,8 +35,22 @@
 				<x:String>Unallied</x:String>
 				<x:String>All</x:String>
 			</ComboBox>
+			<AutoSuggestBox Header="Player" x:Name="filterPlayer" PlaceholderText="All Players" TextChanged="{x:Bind views:PlayerGroup.PlayerNameSuggest_TextChanged}"
+                QueryIcon="OtherUser"
+							ToolTipService.ToolTip="Leave Blank to use the 'Which' filter"
+							Text="{x:Bind views:SettingsPage.exportPlayer, Mode=TwoWay}"
+                Width="300"  />
 
+			<AutoSuggestBox Header="Alliance" x:Name="filterAlliance" PlaceholderText="All Alliances" 
+                QueryIcon="MusicInfo"  
+							ToolTipService.ToolTip="Leave Blank to use the 'Which' filter" TextChanged="{x:Bind views:PlayerGroup.AllianceSuggest_TextChanged}"
+							
+                Width="300"  />
 
+		</wct:WrapPanel>
+
+		<wct:WrapPanel Orientation="Horizontal"
+						   Margin="4" >
 			<ComboBox Header="Off or Def" SelectedIndex="{x:Bind views:SettingsPage.exportOffence, Mode=TwoWay}"  >
 				<x:String>Any</x:String>
 				<x:String>Offense</x:String>
@@ -58,6 +69,10 @@
 				<x:String>Land Locked</x:String>
 			</ComboBox>
 
+		</wct:WrapPanel>
+
+		<wct:WrapPanel Orientation="Horizontal"
+						   Margin="4" >
 
 			<CheckBox x:Name="temples"
 			  ToolTipService.ToolTip="Checked: only temples, Unchecked: temples and non temples"

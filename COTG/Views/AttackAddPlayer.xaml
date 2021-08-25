@@ -12,7 +12,7 @@
     SecondaryButtonText="Cancel" >
 	<StackPanel>
 		<AutoSuggestBox Header="Player" x:Name="playerName" PlaceholderText="Type a player name" TextChanged="{x:Bind local:PlayerGroup.PlayerNameSuggest_TextChanged}"
-                QueryIcon="Find" QuerySubmitted="Suggest_QuerySubmitted" 
+                QueryIcon="Find" 
                 Width="300" HorizontalAlignment="Left" />
 		<winui:RadioButtons x:Name="troopType" SelectedIndex="0" MaxColumns="2" >
 			<x:String>Vanq</x:String>

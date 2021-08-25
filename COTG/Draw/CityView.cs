@@ -87,10 +87,10 @@ namespace COTG.Draw
 		public static float[] animationOffsets = new float[citySpotCount];
 		public static float[] baseAnimationOffsets = new float[citySpotCount];
 		public static float animationRate = 0.25f;
-		public static bool postQueueBuildingsDirty = true;
-		public static void BuildingsOrQueueChanged() => postQueueBuildingsDirty = true;
+		public bool postQueueBuildingsDirty = true;
+		public void BuildingsOrQueueChanged() => postQueueBuildingsDirty = true;
 
-		public static Building GetBuilding( int id) => buildingsCache[id];
+		public Building GetBuilding( int id) => buildingsCache[id];
 		public static Building GetBuilding((int x, int y) xy) => buildingsCache[XYToId(xy)];
 		static Vector2 waterC =new Vector2( 1.0f - 768.0f* cityTileGainX / 128,
 										1.0f - 704.0f*cityTileGainY / 128 );

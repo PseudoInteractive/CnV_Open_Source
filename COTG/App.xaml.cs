@@ -651,9 +651,10 @@ namespace COTG
 				var t = DateTimeOffset.UtcNow;
 				var dt = t - activeStart;
 				activeStart = t;
-				SystemInformation.Instance.AddToAppUptime(dt);
+			
 				AAnalytics.Track("Background", new Dictionary<string, string> { { "time", dt.TotalSeconds.RoundToInt().ToString() } });
-				
+				SystemInformation.Instance.AddToAppUptime(dt);
+
 			}
 			catch
 			{

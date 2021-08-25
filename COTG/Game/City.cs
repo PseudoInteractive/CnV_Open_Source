@@ -103,7 +103,7 @@ namespace COTG.Game
 				TouchClassification();
 				// Does not wait
 				var rv = classificationTTs[(int)classification];
-				Assert(planWritable == null || planWritable.troopType == rv || planWritable.troopType == 0 || (rv == ttPending));
+			//	Assert(planWritable == null || planWritable.troopType == rv || planWritable.troopType == 0 || (rv == ttPending));
 				return rv;
 			}
 			set
@@ -179,14 +179,14 @@ namespace COTG.Game
 
 		public bool buildingsLoaded => buildings != Emptybuildings;
 		public Building[] buildings = Emptybuildings;
-		public static Building[] buildingsCache;
-		public static Building[] postQueuebuildingsCache = new JSON.Building[citySpotCount];
+		//public static Building[] buildingsCache;
+		//	public static Building[] postQueuebuildingsCache = new JSON.Building[citySpotCount];
 
 		//	public string buildStage => GetBuildStageNoFetch().ToString();
 
 		//public Building GetBuiding((int x, int y) xy) => buildings[XYToId(xy)];
 		//	public Building GetBuiding( int bspot) => buildings[bspot];
-
+		public Building[] postQueuebuildingsCache = Emptybuildings;
 		public DArray<BuildQueueItem> buildQueue = DArray<BuildQueueItem>.Rent();// fixed size to improve threading behaviour and performance
 		//public static ManualResetEventSlim buildQUpdated = new();
 		public const int buildQMax = 16; // this should depend on ministers
@@ -417,7 +417,10 @@ namespace COTG.Game
 		// Abusing invalid jsE by returning it when we want to return null
 		//  public JsonElement troopsHome => !jsE.IsValid() ? jsE : jsE.GetProperty("th");
 		//  public JsonElement troopsTotal => !jsE.IsValid() ? jsE : jsE.GetProperty("tc");
-		public string shareString;
+		public static byte[] emptyLayout = new byte[citySpotCount]; 
+		public byte[] layout = emptyLayout;
+		public string shareStringJson = string.Empty;
+		public string shareString => $"[ShareString.1.3]{Encoding.ASCII.GetString(emptyLayout)}{shareStringJson}";
 
 		//public byte[] plannerOverlay =null; // for building
 		//public string shareString
@@ -437,18 +440,13 @@ namespace COTG.Game
 				return bidTownHall;
 			if (!isLayoutValid)
 				return 0;
-			var t = shareString[id + shareStringStartOffset];
-			if (BuildingDef.sharestringToBuldings.TryGetValue((byte)t, out var c) && c != 0)
-			{
-
-				return (int)c + BuildingDef.sharestringOffset;
-			}
-			else
-			{
-				return 0;
-			}
-
+			return BuildingDef.LayoutToBid(layout[id]);
 		}
+		public Building BuildingFromOverlay(int id)
+		{
+			return new Building(BidFromOverlay(id), 10);
+		}
+		//public int LayoutToBid(byte v) => BuildingDef.LayoutToBid(v);
 		//public void SetBuildingInOverlay( (int x,int y) xy, int bid  )
 		//{
 		//	if (!isLayoutValid)
@@ -468,13 +466,13 @@ namespace COTG.Game
 		//}
 		public void SetBuildingInOverlay(int id)
 		{
-			var t = shareString[id + shareStringStartOffset];
+			var t = layout[id + shareStringStartOffset];
 
 		}
 
 		public int FirstBuildingInOverlay(int bid)
 		{
-			if (shareString.IsNullOrEmpty())
+			if (layout.IsNullOrEmpty())
 				return 0;
 			for (int i = 0; i < City.citySpotCount; ++i)
 			{
@@ -486,7 +484,7 @@ namespace COTG.Game
 		}
 		public int CountBuildingsInOverlay(int bid)
 		{
-			if (shareString.IsNullOrEmpty())
+			if (layout.IsNullOrEmpty())
 				return 0;
 			int rv = 0;
 			for (int i = 0; i < City.citySpotCount; ++i)
@@ -830,12 +828,12 @@ namespace COTG.Game
 			if (s != null && s.Length >= citySpotCount)
 			{
 				// TODO:  What if we are in planner mode?
-				shareString = s;
+				layout = s;
 
 			}
 			else
 			{
-				shareString = null;
+				layout = null;
 			}
 			if (CityBuild.isPlanner)
 				ShareStringToBuildingsCache();
@@ -876,7 +874,7 @@ namespace COTG.Game
 				else
 				{
 					var bid = c.bid;
-					var x = BuildingDef.BuildingToShareString(c.bid);
+					var x = BuildingDef.BidToLayout(c.bid);
 					anyValid |= x.valid;
 					o = x.id;
 					
@@ -891,11 +889,11 @@ namespace COTG.Game
 		public const int shareStringStartOffset = 17 + 1;
 		public const int minShareStringLength = shareStringStartOffset + City.citySpotCount;
 
-		public (string ss, string json) splitShareString => ShareString.SplitShareString(shareString);
+		public (string ss, string json) splitShareString => ShareString.SplitShareString(layout);
 		public async Task SaveLayout()
 		{
 			Note.Show("Saved layout");
-			var post = $"cid={cid}&a=" + System.Web.HttpUtility.UrlEncode(shareString ?? string.Empty, Encoding.UTF8);
+			var post = $"cid={cid}&a=" + System.Web.HttpUtility.UrlEncode(layout ?? string.Empty, Encoding.UTF8);
 			var rv = await Post.SendForOkay("/includes/pSs.php", post, World.CidToPlayerOrMe(cid));
 			Assert(rv == true);
 		}
@@ -903,7 +901,7 @@ namespace COTG.Game
 		public void BuildingsCacheToShareString()
 		{
 
-			shareString = BuildingsToShareString(buildingsCache, isOnWater) + splitShareString.json;
+			layout = BuildingsToShareString(buildingsCache, isOnWater) + splitShareString.json;
 			//			await SaveLayout();
 		}
 
@@ -1354,7 +1352,7 @@ namespace COTG.Game
 			}
 			return tradeInfo;
 		}
-		internal bool isLayoutValid => shareString != null && shareString.Length >= minShareStringLength;
+		internal bool isLayoutValid => layout != null && layout.Length >= minShareStringLength;
 		internal int layoutBuildingCount
 		{
 			get
@@ -1877,7 +1875,7 @@ namespace COTG.Game
 			return rv;
 		}
 		public static BuildingCount GetBuildingCountsPostQueue(int cabinLevel) => GetBuildingCounts(CityBuild.postQueueBuildings, cabinLevel);
-		public BuildingCount GetBuildingCounts(int cabinLevel) => GetBuildingCounts(buildings, cabinLevel);
+	//	public BuildingCount GetBuildingCounts(int cabinLevel) => GetBuildingCounts(buildings, cabinLevel);
 		public BuildingCount GetBuildingCountsNoFetch() => GetBuildingCounts(buildings, GetAutobuildCabinLevelNoFetch() );
 
 		public string buildingStr

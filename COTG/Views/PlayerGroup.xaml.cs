@@ -36,37 +36,49 @@ namespace COTG.Views
         private void ContentDialog_SecondaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
         {
         }
+		public static void Suggest_TextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args, IEnumerable<string> options)
+		{
+			if (args.Reason == AutoSuggestionBoxTextChangeReason.UserInput)
+			{
+				var items = new List<string>();
+				var txt = sender.Text.ToLower();
+				if (txt.Length == 0)
+				{
+					
+					return;
+				}
+				var startsWith = txt.Length <= 1;
+				foreach (var p in options)
+				{
+					if (startsWith ? p.StartsWith(txt, StringComparison.InvariantCultureIgnoreCase) : p.Contains(txt,StringComparison.InvariantCultureIgnoreCase))
+					{
+						items.Add(p);
+					}
+				}
+				if (items.Count > 0)
+					sender.ItemsSource = items;
+				else
+					sender.ItemsSource = new string[] { "None found" };
+			}
+		}
 
-        public static void PlayerNameSuggest_TextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)
+		public static void PlayerNameSuggest_TextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)
         {
-            if (args.Reason == AutoSuggestionBoxTextChangeReason.UserInput)
-            {
-                var items = new List<string>();
-                var txt = sender.Text.ToLower();
-                if (txt.Length == 0)
-                {
-                    sender.ItemsSource = null;
-                    return;
-                }
-                var startsWith = txt.Length <= 1;
-                foreach (var p in Player.all)
-                {
-                    var comp = p.Value.name.ToLower();
-                    if (startsWith ? comp.StartsWith(txt) : comp.Contains(txt) )
-                    {
-                        items.Add(p.Value.name);
-                    }
-                }
-                if (items.Count > 0)
-                    sender.ItemsSource = items;
-                else
-                    sender.ItemsSource = new string[] { "No Players found" };
-            }
+			Suggest_TextChanged(sender, args, Player.all.Select(p => p.Value.name));
         }
+		public static void CityNameSuggest_TextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)
+		{
+			Suggest_TextChanged(sender, args, City.myCities.Select(p => p.nameAndRemarks));
+		}
+		public static void AllianceSuggest_TextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)
+		{
+			Suggest_TextChanged(sender, args, Alliance.all.Select(p => p.Value.name));
 
-      
+		}
 
-        private void Suggest_QuerySubmitted(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs args)
+
+
+		private void Suggest_QuerySubmitted(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs args)
         {
             if (args.ChosenSuggestion != null )
             {

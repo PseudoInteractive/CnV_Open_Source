@@ -988,6 +988,8 @@ namespace COTG.Game
 
 		internal bool TouchClassification()
 		{
+			if (classification != Classification.unknown)
+				return true;
 			if (isFriend)
 			{
 				classification = TagsToClassification();
@@ -2093,7 +2095,7 @@ namespace COTG.Game
 			}
 			aMisc.AddItem("Distance", (_, _) => ShowDistanceTo());
 			aMisc.AddItem("Select", (_, _) => SelectMe(true, App.keyModifiers));
-			aMisc.AddItem("Coords to Chat", () => ChatTab.PasteToChatInput(cid.CidToCoords(), true));
+			aMisc.AddItem("Coords to Chat", () => CoordsToChat(cid));
 			flyout.RemoveEmpy();
 			flyout.CopyXamlRoomFrom(uie);
 
@@ -2101,7 +2103,23 @@ namespace COTG.Game
 			flyout.ShowAt(uie, position);
 		}
 
-
+		public static async void CoordsToChat(int _cid)
+		{
+			var targets = Spot.GetSelectedForContextMenu(_cid, false, onlyMine: false, onlyCities: false);
+			StringBuilder sb = new ();
+			var first = true;
+			foreach (var cid in targets)
+			{
+				if (first)
+					first = false;
+				else
+					sb.Append('\t');
+				sb.Append(cid.CidToCoords());
+			}
+			var str = sb.ToString();
+			App.CopyTextToClipboard(str);
+			ChatTab.PasteToChatInput(str);
+		}
 		public async Task DoTheStuff()
 		{
 			await App.DispatchOnUIThreadExclusive(cid, async () =>

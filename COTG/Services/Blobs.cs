@@ -429,20 +429,23 @@ namespace COTG.Services
 				//		allianceScore[i] += p.score;
 				//	}
 				//}
-				foreach (var a in alliances)
+				if (allianceStats)
 				{
-//					var name = Alliance.IdToName(a);
-					if (score)
-						sb.Append('\t').Append((cont.players.Where(p => Alliance.PidToAlliance(p.pid) == a).Sum(p => p.score)));
+					foreach (var a in alliances)
+					{
+						//					var name = Alliance.IdToName(a);
+						if (score)
+							sb.Append('\t').Append(cont.players.Where(p => Alliance.PidToAlliance(p.pid) == a).Sum(p => p.score));
 						if (cities)
-							sb.Append('\t').Append((cont.players.Where(p => Alliance.PidToAlliance(p.pid) == a).Sum(p => p.cities)));
+							sb.Append('\t').Append(cont.players.Where(p => Alliance.PidToAlliance(p.pid) == a).Sum(p => p.cities));
 						if (tsTotal)
-							sb.Append('\t').Append((cont.players.Where(p => Alliance.PidToAlliance(p.pid) == a).Sum(p => p.tsTotal)));
+							sb.Append('\t').Append(cont.players.Where(p => Alliance.PidToAlliance(p.pid) == a).Sum(p => p.tsTotal));
 						if (tsOff)
-							sb.Append('\t').Append((cont.players.Where(p => Alliance.PidToAlliance(p.pid) == a).Sum(p => p.tsOff)));
+							sb.Append('\t').Append(cont.players.Where(p => Alliance.PidToAlliance(p.pid) == a).Sum(p => p.tsOff));
 						if (tsDef)
-							sb.Append('\t').Append((cont.players.Where(p => Alliance.PidToAlliance(p.pid) == a).Sum(p => p.tsDef)));
-					
+							sb.Append('\t').Append(cont.players.Where(p => Alliance.PidToAlliance(p.pid) == a).Sum(p => p.tsDef));
+
+					}
 				}
 
 			

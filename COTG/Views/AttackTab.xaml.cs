@@ -348,7 +348,7 @@ namespace COTG.Views
             public int[] targets;// first is real
             public Vector2 topLeft;
             public Vector2 bottomRight;
-			internal int real => targets.FirstOrDefault(a => AttackPlan.GetForRead(a).isAttackTypeReal);
+			internal int real => targets.Length > 0 ? targets[0] : 0;
 			//Select(a=>City.Get(a)).Where( a => a.isAttackTypeReal ).DefaultIfEmpty(City.invalid).OrderBy(a=>a.spatialIndex).First().cid;
 			///            public int real => (targets.FirstOrDefault((a) => !City.GetOrAdd(a).isSiege));
 
@@ -366,8 +366,8 @@ namespace COTG.Views
                 var ac = new AttackCluster();
 				ac.id = i;
                 _attackClusters.Add(ac);
-                ac.targets = targets.Where((a) => a.attackCluster == i).OrderBy( a=> (long)a.spatialIndex - ((long)a.attackType<<32)  ).Select((a) => a.cid).ToArray();
-				ac.attacks = attacks.Where((a) => a.attackCluster == i).OrderBy(a => (long)a.spatialIndex - ((long)a.attackType<<32) ).Select((a) => a.cid).ToArray();
+                ac.targets = targets.Where((a) => a.attackCluster == i).OrderByDescending(a=>a.isTargetReal).ThenBy( a=> (long)a.spatialIndex - ((long)a.attackType<<32)  ).Select((a) => a.cid).ToArray();
+				ac.attacks = attacks.Where((a) => a.attackCluster == i).OrderByDescending(a=>a.isAttackTypeSiege).ThenBy(a => (long)a.spatialIndex - ((long)a.attackType<<32) ).Select((a) => a.cid).ToArray();
                 if (ac.targets.Any())
                 {
                     ac.topLeft.X = ac.targets.Select(a => a.ToWorldC().X).Min() - 0.5f;

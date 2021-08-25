@@ -48,7 +48,7 @@ namespace COTG.Game
 		public static int NameToId(string s)
 		{
 			Assert(alliancesFetched);
-			return nameToId.TryGetValue(s, out var rv) ? rv : 0;
+			return nameToId.GetValueOrDefault(s);
 		}
 
 		public static bool diplomacyFetched;

@@ -131,7 +131,7 @@ namespace COTG.Game
 		public bool isAttackTypeFake => attackType == AttackType.seFake || attackType == AttackType.senatorFake;
 		public bool isAttackTypeNone => attackType == AttackType.none;
 		public string nameMarkdown => city.nameMarkdown;
-
+		public bool isTargetReal => attackType.IsTargetReal();
 		public bool isAttackClusterNone => attackCluster == AttackPlan.attackClusterNone;
 
 		public uint spatialIndex => cid.ZCurveEncodeCid();

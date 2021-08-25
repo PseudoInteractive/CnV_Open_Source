@@ -45,7 +45,9 @@
                  ExecuteRequested="Abandon_ExecuteRequested"
                  Description="Abandon city" 
                  Label="Abandon..">
-			
+			<XamlUICommand.IconSource >
+				<FontIconSource Glyph="&#x1F47B;" />
+			</XamlUICommand.IconSource>
 		</XamlUICommand>
 
 		<CollectionViewSource x:Name="cvsGroups" IsSourceGrouped="True" 

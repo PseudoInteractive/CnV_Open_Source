@@ -123,7 +123,7 @@ namespace COTG.Views
 				App.DispatchOnUIThreadLow(() =>
 				{
 					instance.webFocus.IsChecked = webviewHasFocus;
-					Log($"!FocusWeb: {hasKeyboardFocus} w{webviewHasFocus} w2{webviewHasFocus2}");
+					//	Log($"!FocusWeb: {hasKeyboardFocus} w{webviewHasFocus} w2{webviewHasFocus2}");
 					ShellPage.isOverPopup = false;// reset again in case it changed
 					ShellPage.canvas.IsHitTestVisible = ShellPage.isHitTestVisible;
 					ShellPage.canvas.Visibility = !ShellPage.canvasVisible ? Visibility.Collapsed : Visibility.Visible;
@@ -156,17 +156,17 @@ namespace COTG.Views
 			//if (hasKeyboardFocus) return; //Trace($"Take focus {hasKeyboardFocus}"); Set this
 			// early, it gets set again once the asyn executes
 			//	Assert(webviewHasFocus == webviewHasFocus2);
-			Log($"!Focus0: {hasKeyboardFocus} w{webviewHasFocus} w2{webviewHasFocus2}");
+	//		Log($"!Focus0: {hasKeyboardFocus} w{webviewHasFocus} w2{webviewHasFocus2}");
 			if (webviewHasFocus)
 				return;
 			if ( Interlocked.CompareExchange(ref hasKeyboardFocus, 1, 0) == 0)
 			{
 				App.DispatchOnUIThread(() =>
 				{
-					Log($"!Focus1: {hasKeyboardFocus} w{webviewHasFocus} w2{webviewHasFocus2}");
+					//	Log($"!Focus1: {hasKeyboardFocus} w{webviewHasFocus} w2{webviewHasFocus2}");
 					hasKeyboardFocus = 0;
 					keyboardProxy.Focus(FocusState.Programmatic);
-					Log($"!Focus2: {hasKeyboardFocus} w{webviewHasFocus} w2{webviewHasFocus2}");
+					//	Log($"!Focus2: {hasKeyboardFocus} w{webviewHasFocus} w2{webviewHasFocus2}");
 				});
 			}
 		}
@@ -251,7 +251,7 @@ namespace COTG.Views
 
 		private void KeyboardProxy_GotFocus(object sender, RoutedEventArgs e)
 		{
-			Log($"!FocusGot: {hasKeyboardFocus} w{webviewHasFocus} w2{webviewHasFocus2}");
+		//	Log($"!FocusGot: {hasKeyboardFocus} w{webviewHasFocus} w2{webviewHasFocus2}");
 
 			hasKeyboardFocus = 1;
 		
@@ -332,7 +332,7 @@ namespace COTG.Views
 
 		private void KeyboardProxy_LostFocus(object sender, RoutedEventArgs e)
 		{
-			Log($"!FocusLost: {hasKeyboardFocus} w{webviewHasFocus} w2{webviewHasFocus2}");
+			//	Log($"!FocusLost: {hasKeyboardFocus} w{webviewHasFocus} w2{webviewHasFocus2}");
 
 			// Trace($"Lost focus {hasKeyboardFocus}");
 			hasKeyboardFocus = 0;

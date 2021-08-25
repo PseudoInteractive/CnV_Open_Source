@@ -30,15 +30,7 @@ namespace COTG.Views
 			this.InitializeComponent();
 		}
 
-		private void Suggest_QuerySubmitted(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs args)
-		{
-			if (args.ChosenSuggestion != null)
-			{
-				sender.Text = args.ChosenSuggestion as string;
-				sender.ItemsSource = null;
-			}
-		}
-
+	
 		
 		public static void Show(object sender, RoutedEventArgs e)
 		{
@@ -67,7 +59,7 @@ namespace COTG.Views
 			if (rv == ContentDialogResult.Primary)
 			{
 				ElementSoundPlayer.Play(ElementSoundKind.Invoke);
-				var p = Player.FromName(playerName.Text);
+				var p = Player.FromNameOrNull(playerName.Text);
 				if (p == null)
 				{
 					Note.Show($"Missing player: {playerName}");

@@ -721,7 +721,7 @@ namespace COTG.Views
 			}
 			//var properties = point.Properties;
 			mousePosition = GetCanvasPosition( x, y);
-			Log($"!Focus Canvas pressed? {x} {y} {kind}");
+			//	Log($"!Focus Canvas pressed? {x} {y} {kind}");
 			var prior = lastMousePressTime;
 			lastMousePressTime = DateTimeOffset.UtcNow;
 			lastMousePressPosition = mousePosition;

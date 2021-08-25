@@ -364,7 +364,7 @@ namespace COTG.JSON
 				Note.Show($"Set food warning for {City.GetOrAddCity(id).nameMarkdown} to {defaultFoodWarning} hours");
 			}
 		}
-
+		
 
 		public static async Task UpdateMinisterOptions(int cid, Func<(string[]split,Resources storage),Task<bool>> opts)
         {

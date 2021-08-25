@@ -112,5 +112,11 @@ namespace COTG.Game
 		{
 			return all[nameToId.GetValueOrDefault(player)];
 		}
+		internal static Player FromNameOrNull(string player)
+		{
+			if(nameToId.TryGetValue(player, out var p))
+				return all[p];
+			return null;
+		}
 	}
 }

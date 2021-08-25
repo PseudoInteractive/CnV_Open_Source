@@ -27,22 +27,26 @@ namespace COTG.JSON
 				Log("Bad building! " + bid); // farms an temples have extras
 			return 0;
 		}
-		public static (byte id,bool valid) BuildingToShareString(int bid)
+		public static (byte id,bool valid) BidToLayout(int bid)
 		{
 			if (bid != 0)
 			{
-				bid -= BuildingDef.sharestringOffset;
+				if (BuildingDef.buildingsToSharestring.TryGetValue((byte)(bid- BuildingDef.sharestringOffset), out var o) )
+				{
+					Assert(o != 0);
+					return (o, true);
+				}
+
 			}
-			byte o;
-			if (!BuildingDef.buildingsToSharestring.TryGetValue((byte)bid, out o))
-				o =(byte)'-';
-			
-			return (o, o == (byte)'-');
+
+			return ((byte)'-',false);
 		}
+		public static int LayoutToBid(byte v) => BuildingDef.sharestringToBuldings.TryGetValue((byte)v, out var c) && c != 0 ? (int)c + BuildingDef.sharestringOffset : 0;
 
 		public const int sharestringOffset = 444;
 		public static Dictionary<byte, byte> sharestringToBuldings;
 		public static Dictionary<byte, byte> buildingsToSharestring;
+
 		public static Dictionary<ushort, ushort> protToBid = new Dictionary<ushort, ushort>(new KeyValuePair<ushort, ushort>[] {
  new KeyValuePair<ushort,ushort>(443, 448),new KeyValuePair<ushort,ushort>(456, 445),new KeyValuePair<ushort,ushort>(457, 446),new KeyValuePair<ushort,ushort>(458, 447),new KeyValuePair<ushort,ushort>(459, 449),new KeyValuePair<ushort,ushort>(468, 460),new KeyValuePair<ushort,ushort>(469, 461),new KeyValuePair<ushort,ushort>(470, 462),new KeyValuePair<ushort,ushort>(471, 463),new KeyValuePair<ushort,ushort>(472, 464),new KeyValuePair<ushort,ushort>(473, 465),new KeyValuePair<ushort,ushort>(474, 466),new KeyValuePair<ushort,ushort>(475, 467),new KeyValuePair<ushort,ushort>(478, 477),new KeyValuePair<ushort,ushort>(480, 479),new KeyValuePair<ushort,ushort>(485, 481),new KeyValuePair<ushort,ushort>(486, 482),new KeyValuePair<ushort,ushort>(487, 483),new KeyValuePair<ushort,ushort>(492, 488),new KeyValuePair<ushort,ushort>(493, 489),new KeyValuePair<ushort,ushort>(494, 490),new KeyValuePair<ushort,ushort>(495, 491),new KeyValuePair<ushort,ushort>(497, 496),new KeyValuePair<ushort,ushort>(499, 498),new KeyValuePair<ushort,ushort>(501, 500),new KeyValuePair<ushort,ushort>(503, 502),new KeyValuePair<ushort,ushort>(505, 504),new KeyValuePair<ushort,ushort>(575, 539),new KeyValuePair<ushort,ushort>(576, 540),new KeyValuePair<ushort,ushort>(577, 541),new KeyValuePair<ushort,ushort>(578, 542),new KeyValuePair<ushort,ushort>(579, 543),new KeyValuePair<ushort,ushort>(580, 544),new KeyValuePair<ushort,ushort>(581, 545),new KeyValuePair<ushort,ushort>(582, 546),new KeyValuePair<ushort,ushort>(583, 547),new KeyValuePair<ushort,ushort>(584, 547),new KeyValuePair<ushort,ushort>(586, 549),new KeyValuePair<ushort,ushort>(587, 551),new KeyValuePair<ushort,ushort>(588, 552),new KeyValuePair<ushort,ushort>(589, 553),new KeyValuePair<ushort,ushort>(590, 554),new KeyValuePair<ushort,ushort>(591, 555),new KeyValuePair<ushort,ushort>(592, 556),new KeyValuePair<ushort,ushort>(593, 557),new KeyValuePair<ushort,ushort>(594, 558),new KeyValuePair<ushort,ushort>(595, 559),new KeyValuePair<ushort,ushort>(596, 560),new KeyValuePair<ushort,ushort>(597, 561),new KeyValuePair<ushort,ushort>(598, 562),new KeyValuePair<ushort,ushort>(599, 563),new KeyValuePair<ushort,ushort>(600, 564),new KeyValuePair<ushort,ushort>(601, 565),new KeyValuePair<ushort,ushort>(602, 566),new KeyValuePair<ushort,ushort>(603, 567),new KeyValuePair<ushort,ushort>(604, 568),new KeyValuePair<ushort,ushort>(605, 569),new KeyValuePair<ushort,ushort>(606, 570),new KeyValuePair<ushort,ushort>(607, 571),new KeyValuePair<ushort,ushort>(608, 572),new KeyValuePair<ushort,ushort>(609, 573),new KeyValuePair<ushort,ushort>(610, 574)});
 
@@ -50,6 +54,7 @@ namespace COTG.JSON
 
 		public int ProtToBid(int prot)
 		{
+			Tar
 			if (protToBid.TryGetValue((ushort)prot, out var rv))
 				return rv;
 			return prot;

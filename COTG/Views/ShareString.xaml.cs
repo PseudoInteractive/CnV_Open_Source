@@ -376,7 +376,7 @@ namespace COTG.Views
 			}
 			
 		}
-		public void SetFromSS() => SetFromSS(City.GetBuild().shareString,false);
+		public void SetFromSS() => SetFromSS(City.GetBuild().layout,false);
 		public static (string ss, string json) SplitShareString(string shareString)
 		{
 				if (shareString == null)

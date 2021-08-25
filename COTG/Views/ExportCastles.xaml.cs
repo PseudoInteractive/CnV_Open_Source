@@ -57,30 +57,46 @@ namespace COTG.Views
 			   var castles = SettingsPage.exportCastles;
 			   var onlyTemples = SettingsPage.onlyTemples;
 			   var headers = SettingsPage.exportHeaders;
-			   
+				var exportPlayer = Player.FromNameOrNull(SettingsPage.exportPlayer);
+				var exportAlliance = Alliance.NameToId(SettingsPage.exportAlliance);
 			   var who = SettingsPage.exportWho;
 			   var score = SettingsPage.exportScore;
 			   ShellPage.WorkStart("Exporting");
 			  await Task.Run(async () => {
 				   List<int> alliances = new();
-				   switch (who)
-				   {
-					   case 0:
-					   case 1: alliances.Add(Alliance.MyId); break;
-					  case 2:
-						  alliances.AddRange(from a in Alliance.all.Keys where Alliance.GetDiplomacy(a)== Diplomacy.enemy  select a);
-						  break;
-					  case 3: alliances.AddRange(from a in Alliance.all.Keys where a != 0 && a != Alliance.myId select a);
-						   break;
-					  case 4:
-						  alliances.AddRange(from a in Alliance.all.Keys where Alliance.GetDiplomacy(a) == Diplomacy.allied select a);
-						  break;
-					  case 5: alliances.Add(0);
-						   break;
-					  default:
-						   alliances.AddRange(Alliance.all.Keys);
-						   break;
-				   }
+				  if (exportAlliance != 0)
+				  {
+					  alliances.Add(exportAlliance);
+					  who = 6;
+				  }
+				  else if (exportPlayer != null)
+				  {
+					  alliances.Add(exportPlayer.alliance);
+					  who = 6;
+				  }
+				  else
+				  {
+					  switch (who)
+					  {
+						  case 0:
+						  case 1: alliances.Add(Alliance.MyId); break;
+						  case 2:
+							  alliances.AddRange(from a in Alliance.all.Keys where Alliance.GetDiplomacy(a) == Diplomacy.enemy select a);
+							  break;
+						  case 3:
+							  alliances.AddRange(from a in Alliance.all.Keys where a != 0 && a != Alliance.myId select a);
+							  break;
+						  case 4:
+							  alliances.AddRange(from a in Alliance.all.Keys where Alliance.GetDiplomacy(a) == Diplomacy.allied select a);
+							  break;
+						  case 5:
+							  alliances.Add(0);
+							  break;
+						  default:
+							  alliances.AddRange(Alliance.all.Keys);
+							  break;
+					  }
+				  }
 				   var onlyMe = who == 0;
 
 
@@ -91,12 +107,11 @@ namespace COTG.Views
 					  sb.AppendLine("Alliance\tPlayer\tContinent\tCoords\tCastle\tAcademy\tTemple\tWater\tOffense\tTroops\tTS\tPoints");
 
 				  }
-				  var allianceMask = SettingsPage.exportAllianceMask.Trim();
+				
 				  foreach (var alliance in alliances)
 				   {
 					  var allianceName = Alliance.all[alliance].name;
-					  if (allianceMask.Length != 0 && !allianceName.Contains(allianceMask, StringComparison.OrdinalIgnoreCase))
-						  continue;
+					
 					   sb.AppendLine(allianceName);
 					   foreach (var p in Player.all.Values)
 					   {
@@ -104,6 +119,8 @@ namespace COTG.Views
 							   continue;
 						   if (onlyMe && !p.isMe)
 							   continue;
+						  if (exportPlayer != null && exportPlayer != p)
+							  continue;
 
 						   if(headers.GetValueOrDefault() ==true )
 							    sb.AppendLine($"---\t" + p.name);

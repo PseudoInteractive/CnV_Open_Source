@@ -37,6 +37,7 @@ namespace CnVDiscord
 		static Dictionary<string, DiscordMember> playerToMember = new();
 		//		static Dictionary<ulong, DiscordMember> UserIdToMemeber;
 
+	
 	//	static Color Color;
 	//	public static DiscordGuild guild;
 		public static DiscordChannel chatChannel;
@@ -90,7 +91,7 @@ namespace CnVDiscord
 				
 
 			//};
-
+			
 
 			DiscordBot.Ready += async (client, args) =>
 			{

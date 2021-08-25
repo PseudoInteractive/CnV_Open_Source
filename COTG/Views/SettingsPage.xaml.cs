@@ -59,6 +59,8 @@ namespace COTG.Views
 		public static float planet = 0.5f;
 		public static float parallax = 0.5f;
 		public static string hubCitylistName = "Hubs";
+		public static string exportPlayer = string.Empty;
+		public static string exportAlliance = string.Empty;
 		//public static int reqWood = 160000;
 		//public static int reqStone = 205000;
 		public static bool drawBuildingOverlays=true;
@@ -167,7 +169,6 @@ namespace COTG.Views
 		}
 
 		public static string[] incomingWatch = Array.Empty<string>();
-		public static string exportAllianceMask = string.Empty;
 		public static byte exportOffence;
 		public static byte exportWater;
 		public static byte exportCastles;
@@ -182,6 +183,7 @@ namespace COTG.Views
 		//public static string secSessionId;
 		public static int mruSize = 32;
 		public static int[] pinned = Array.Empty<int>();
+
 		public static bool isPinnedLoaded => pinned != null; 
 		public static int showAttacksLimit = 100;
 		public static int showAttacksLimit0 = 30;
@@ -795,24 +797,25 @@ namespace COTG.Views
 		//}
 		private async void ShrineFinder(object sender, RoutedEventArgs e)
 		{
+			var cont = (int)CastlesCont.Value;
 			this.Hide();
 
-			var cont = (int)CastlesCont.Value;
 			var cy = cont / 10;
 			var cx = cont - cy * 10;
 			int x0 = cx * 100, y0 = cy * 100, x1 = (cx + 1) * 100, y1 = (cy + 1) * 100;
 			using (new ShellPage.WorkScope("Shrine Finder"))
 				for (int x = x0; x < x1; ++x)
 				{
+					ShellPage.WorkUpdate($"Shrine Finder: {x - x0}%");
 					for (int y = y0; y < y1; ++y)
 					{
 						if (TileData.instance.GetSpotType(x, y).type == TileData.SpotType.plain)
 						{
 							var cityId = (x, y).WorldToCid();
-							App.DispatchOnUIThreadLow(() =>
-							  JSClient.view.InvokeScriptAsync("gStQuery", new string[] { (cityId).ToString() })
+							await App.DispatchOnUIThreadTask( async () =>
+							  await JSClient.view.InvokeScriptAsync("gStQuery", new string[] { (cityId).ToString() })
 							  );
-							await Task.Delay(200);
+							
 						}
 					}
 				}

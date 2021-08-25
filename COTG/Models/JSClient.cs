@@ -917,7 +917,13 @@ namespace COTG
 						if (changed)
 						{
 							if (isLocked || waitOnChange)
-								await ChangeCityJSWait(cityId);
+							{
+								if( await ChangeCityJSWait(cityId) == false)
+								{
+									Note.Show("Somethings wrong, please try again");
+									return false;
+								}
+							}
 							else
 								ChangeCityJS(cityId);
 						}
@@ -1957,29 +1963,63 @@ private static async void ShowCouncillorsMissingDialog()
 
 			public void Done()
 			{
-				cid = 0;
-				var _t = t;
-				t = null;
-				_t.SetResult(true);
+				try
+				{
+					cid = 0;
+					var _t = t;
+					t = null;
+					if (_t != null)
+						_t.SetResult(true);
+
+				}
+				catch (Exception ex)
+				{
+
+					LogEx(ex);
+				}
+			}
+			public void Abort()
+			{
+				try
+				{
+					cid = 0;
+					var _t = t;
+					t = null;
+					if(_t != null)
+						_t.SetResult(false);
+
+				}
+				catch (Exception ex)
+				{
+
+					LogEx(ex);
+				}
 			}
 			public bool isDone => t == null;
 		}
 
-		static ConcurrentBag<WaitOnCityDataData> waitingOnCityData = new();
+		static WaitOnCityDataData[] waitingOnCityData = Array.Empty<WaitOnCityDataData>();
 		static void ChangeCityJS(int cityId)
 		{
 			App.DispatchOnUIThreadLow(() =>
 							view.InvokeScriptAsync("chcity", new string[] { (cityId).ToString() }));
 
 		}
-		static async Task ChangeCityJSWait(int cityId)
+		static async Task<bool> ChangeCityJSWait(int cityId)
 		{
 			Log($"Wait {City.GetOrAdd(cityId).nameAndRemarks}");
 			var i = new WaitOnCityDataData(cityId);
-			waitingOnCityData.Add(i);
+			waitingOnCityData =  waitingOnCityData.ArrayAppend(i);
 			ChangeCityJS(cityId);
-			await i.t.Task;
-			Log($"WaitComplete {City.GetOrAdd(cityId).nameAndRemarks}");
+			var t = i.t.Task;
+			var xx = (await Task.WhenAny( t , Task.Delay(10000) )) == t;
+			Assert(xx);
+			Log($"WaitComplete {xx} {City.GetOrAdd(cityId).nameAndRemarks}");
+			if(!xx)
+			{
+				i.Abort();
+			}
+			return xx;
 		}
 		static private void View_ScriptNotify(object sender, Windows.UI.Xaml.Controls.NotifyEventArgs __e)
 
@@ -2408,42 +2448,57 @@ private static async void ShowCouncillorsMissingDialog()
 
 						   case "citydata":
 							   {
-								   var jse = jsp.Value;
-								   // var priorCid = cid;
-								   var cid = jse.GetInt("cid");
-								   //if (!ShellPage.IsWorldView())
-									  // AGame.cameraC = cid.CidToWorldV();
-								   var isFromTs = jse.TryGetProperty("ts", out _);
-								   //Note.L("citydata=" + cid.CidToString());
-								   var city = City.GetOrAddCity(cid);
-								   city.LoadCityData(jse);
+								   try
+								   {
+									   var jse = jsp.Value;
+									   // var priorCid = cid;
+									   var cid = jse.GetInt("cid");
+									   //if (!ShellPage.IsWorldView())
+									   // AGame.cameraC = cid.CidToWorldV();
+									   var isFromTs = jse.TryGetProperty("ts", out _);
+									   //Note.L("citydata=" + cid.CidToString());
+									   var city = City.GetOrAddCity(cid);
+									   city.LoadCityData(jse);
 
-								   // If it does not include TS it is from a call to chcity
-								   // Otherwise is is from a change in TS
+									   // If it does not include TS it is from a call to chcity
+									   // Otherwise is is from a change in TS
 
-								   if (!isFromTs)
-								   {
-								//		if (cid != City.build)
-								//		   city.SetBuild(false);
-								   }
-								   if (isFromTs && cid == DungeonView.openCity && DungeonView.IsVisible())
-								   {
-									   //   if (jse.TryGetProperty("ts", out _))
-									   //  {
-									   ScanDungeons.Post(cid, city.commandSlots == 0, false);  // if command slots is 0, something was not send correctly
-																							   //  }
-								   }
-								   NavStack.Push(cid);
-								   foreach( var i in waitingOnCityData )
-								   {
-										   if(i.cid == cid)
+									   if (!isFromTs)
+									   {
+										   //		if (cid != City.build)
+										   //		   city.SetBuild(false);
+									   }
+									   if (isFromTs && cid == DungeonView.openCity && DungeonView.IsVisible())
+									   {
+										   //   if (jse.TryGetProperty("ts", out _))
+										   //  {
+										   ScanDungeons.Post(cid, city.commandSlots == 0, false);  // if command slots is 0, something was not send correctly
+																								   //  }
+									   }
+									   NavStack.Push(cid);
+									   if (waitingOnCityData.Length > 0)
+									   {
+										   bool allDone = true;
+										   foreach (var i in waitingOnCityData)
 										   {
-											   i.Done();
+											   if (i.cid == cid)
+											   {
+												   i.Done();
+											   }
+											   allDone &= i.isDone;
 										   }
-								   }
-								   if( !waitingOnCityData.Any(i=>!i.isDone) )
+										   if (allDone)
+										   {
+											   waitingOnCityData = Array.Empty<WaitOnCityDataData>();
+										   }
+									   }
+								   }catch(Exception ex)
 								   {
-									   waitingOnCityData.Clear();
+									   LogEx(ex);
+								   }
+								   finally
+								   {
+
 								   }
 								   
 								   
@@ -2673,11 +2728,12 @@ private static async void ShowCouncillorsMissingDialog()
 					   //    //if (now.Day <= 28 && now.Month==11)
 					   //    {
 					   AppCenter.SetUserId(Player.myName);
+					   //AppCenter.Analytics.Properties.put("UserId", "your user Id");
 				   {
 					   CustomProperties properties = new CustomProperties();
-					   properties.Set("alliance", Alliance.myId).Set("world", JSClient.world).Set("sub", JSClient.isSub);
+					   properties.Set("alliance", Alliance.myId).Set("world", JSClient.world).Set("sub", JSClient.isSub).Set("UserId", Player.myName);
 					   AppCenter.SetCustomProperties(properties);
-					   AAnalytics.Track("GotCreds", new Dictionary<string,string>() { { "World",JSClient.world.ToString()},{"sub",JSClient.isSub.ToString() } } );
+					   AAnalytics.Track("GotCreds", new Dictionary<string,string>() { { "World",JSClient.world.ToString()},{"sub",JSClient.isSub.ToString() },{"UserId", Player.myName } );
 
 					   }
 					   if (SystemInformation.Instance.IsAppUpdated)

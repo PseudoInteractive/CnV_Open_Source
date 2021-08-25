@@ -31,7 +31,7 @@ namespace COTG.JSON
 		public bool isWall => def.isWall;
 		public bool isTownHall => id == BuildingDef.idTownHall;
 
-		internal void SetBid(int bid, int bl)
+		public Building(int bid, int bl)
 		{
 			this.id = BuildingDef.BidToId(bid);
 			this.bl = (byte)bl;
