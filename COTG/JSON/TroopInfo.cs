@@ -12,8 +12,11 @@ namespace COTG.JSON
 	public partial class TroopInfo
 	{
 		public const int count = 35;
-		public static TroopInfo[] all = Json.FromResources<TroopInfo[]>("Troops");
-
+		public static TroopInfo[] all;
+		public static async void Init()
+		{
+			all = await Json.FromContent<TroopInfo[]>("Troops");
+		}
 		public int i { get; set; }  // index
 			public string tn { get; set; } // name
 			public string dsc { get; set; }

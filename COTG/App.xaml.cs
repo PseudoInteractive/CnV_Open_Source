@@ -55,6 +55,7 @@ using System.Net;
 using Nito.AsyncEx;
 using Microsoft.Toolkit.Uwp.UI;
 using Windows.UI.Xaml.Controls;
+using Microsoft.Toolkit.Uwp;
 
 namespace COTG
 {
@@ -151,6 +152,7 @@ namespace COTG
 
 		private static async Task SaveState()
 		{
+
 			await JSON.BuildQueue.SaveIfNeeded();
 			SettingsPage.SaveAll();
 			await AttackTab.SaveAttacksBlock();
@@ -343,8 +345,8 @@ namespace COTG
 				//ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.PreferredLaunchViewSize;
 		
 			}
-			App.globalDispatcher = CoreWindow.GetForCurrentThread().Dispatcher;
-
+			//App.globalDispatcher = CoreWindow.GetForCurrentThread().Dispatcher;
+			globalQueue = DispatcherQueue.GetForCurrentThread();
 			CoreApplication.EnablePrelaunch(false);
 
 			if (args.Kind == ActivationKind.Launch)
@@ -378,8 +380,8 @@ namespace COTG
 			{
 				processingTasksStarted = true;
 
-				ProcessThrottledTasks();
-				ProcessIdleTasks();
+				Task.Run(ProcessThrottledTasks);
+				Task.Run(ProcessIdleTasks);
 			}
 
 			SystemInformation.Instance.TrackAppUse(args);
@@ -445,7 +447,7 @@ namespace COTG
 					if (!throttledTasks.IsEmpty)
 					{
 						if (throttledTasks.TryDequeue(out var t))
-							await t();
+							await t().ConfigureAwait(false);
 
 					}
 				}
@@ -455,7 +457,7 @@ namespace COTG
 				}
 
 
-				await Task.Delay(500);
+				await Task.Delay(500).ConfigureAwait(false);
 			}
 		}
 		public static void EnqeueTask(Func<Task> a)
@@ -492,6 +494,7 @@ namespace COTG
 
 		private static async void ProcessIdleTasks()
 		{
+	//		await TaskScheduler.Default;
 			for (; ; )
 			{
 				var tick = Environment.TickCount;
@@ -499,7 +502,7 @@ namespace COTG
 				if ((tick - lastInputTick).Abs() < 4 * 1000)
 				{
 					// not idle
-					await Task.Delay(4 * 1000);
+					await Task.Delay(4 * 1000).ConfigureAwait(false);
 					continue;
 				}
 				if (isForeground)
@@ -514,11 +517,11 @@ namespace COTG
 						{
 							COTG.Debug.LogEx(_exception);
 						}
-						await Task.Delay(1000); // wait one second if idle
+						await Task.Delay(1000).ConfigureAwait(false); // wait one second if idle
 					}
 				}
 				// not idle but no tasks
-				await Task.Delay(4 * 1000);
+				await Task.Delay(4 * 1000).ConfigureAwait(false);
 			}
 		}
 
@@ -646,6 +649,8 @@ namespace COTG
 			var deferral = e.GetDeferral();
 			try
 			{
+				// only save if we have c
+
 				await SaveState();
 
 				var t = DateTimeOffset.UtcNow;
@@ -688,51 +693,54 @@ namespace COTG
 		//	await ActivationService.ActivateFromShareTargetAsync(args);
 		//}
 
-		public static async Task<T>
-			DispatchOnUIThreadTask<T>(  Func<Task<T>> func, CoreDispatcherPriority priority = CoreDispatcherPriority.Low, bool useCurrentThreadIfPossible = true)
+		public static Task<T>
+			DispatchOnUIThreadTask<T>(  Func<Task<T>> func, DispatcherQueuePriority priority = DispatcherQueuePriority.Low)
 		{
 			var d = GlobalDispatcher();
-			var idle = priority == CoreDispatcherPriority.Idle;
-			if (useCurrentThreadIfPossible&& !idle && d.HasThreadAccess)
-			{
-				return await func();
-			}
-			else
-			{
-				var taskCompletionSource = new TaskCompletionSource<T>();
-				if (!idle)
-				{
-					await d.TryRunAsync(priority,async () =>
-				  {
-					  try
-					  {
-						  taskCompletionSource.SetResult(await func());
-					  }
-					  catch (Exception ex)
-					  {
-						  LogEx(ex);
-						  taskCompletionSource.SetResult(default);
-					  }
-				  });
-				}
-				else
-				{
-					await d.TryRunIdleAsync( async (_) =>
-					{
-						try
-						{
-							taskCompletionSource.SetResult(await func());
-						}
-						catch (Exception ex)
-						{
-							LogEx(ex);
-							taskCompletionSource.SetResult(default);
-						}
-					});
+			
+			return d.EnqueueAsync<T>(func, priority);
 
-				}
-				return await taskCompletionSource.Task;
-			}
+			//var idle = priority == CoreDispatcherPriority.Idle;
+			//if (useCurrentThreadIfPossible&& !idle && d.HasThreadAccess)
+			//{
+			//	return await func();
+			//}
+			//else
+			//{
+			//	var taskCompletionSource = new TaskCompletionSource<T>();
+			//	if (!idle)
+			//	{
+			//		await d.TryRunAsync(priority,async () =>
+			//	  {
+			//		  try
+			//		  {
+			//			  taskCompletionSource.SetResult(await func());
+			//		  }
+			//		  catch (Exception ex)
+			//		  {
+			//			  LogEx(ex);
+			//			  taskCompletionSource.SetResult(default);
+			//		  }
+			//	  });
+			//	}
+			//	else
+			//	{
+			//		await d.TryRunIdleAsync( async (_) =>
+			//		{
+			//			try
+			//			{
+			//				taskCompletionSource.SetResult(await func());
+			//			}
+			//			catch (Exception ex)
+			//			{
+			//				LogEx(ex);
+			//				taskCompletionSource.SetResult(default);
+			//			}
+			//		});
+
+			//	}
+			//	return await taskCompletionSource.Task;
+			//}
 		}
 
 		// There is no TaskCompletionSource<void> so we use a bool that we throw away.
@@ -809,7 +817,7 @@ namespace COTG
 		public static async Task
 			DispatchOnUIThreadExclusive(int cid, Func<Task> func, CoreDispatcherPriority priority = CoreDispatcherPriority.Low)
 		{
-			if (!await LockUiSema(cid))
+			if (!await LockUiSema(cid).ConfigureAwait(false))
 				return ;
 
 			try
@@ -860,20 +868,20 @@ namespace COTG
 			}
 			return true;
 		}
-		public static async Task WaitWhileUiSemaBusy()
-		{
-			Log($"Lock sema: {uiSema.CurrentCount}");
-			for (; ; )
-			{
-				if (!App.isUISemaLocked)
-					break;
+		//public static async Task WaitWhileUiSemaBusy()
+		//{
+		//	Log($"Lock sema: {uiSema.CurrentCount}");
+		//	for (; ; )
+		//	{
+		//		if (!App.isUISemaLocked)
+		//			break;
 
-				await uiSema.WaitAsync();
-				uiSema.Release();
-				await Task.Delay(500); // if there is another thread waiting on the sema, let them go first
-			}
+		//		await uiSema.WaitAsync();
+		//		uiSema.Release();
+		//		await Task.Delay(500); // if there is another thread waiting on the sema, let them go first
+		//	}
 
-		}
+		//}
 		
 	public static void DispatchOnUIThread(DispatchedHandler action, CoreDispatcherPriority priority= CoreDispatcherPriority.Normal, bool alwaysQueue = false)
 	{
@@ -885,14 +893,15 @@ namespace COTG
 			d.TryRunAsync(priority, action);
 	}
 
-		public static void DispatchOnUIThreadIdle(IdleDispatchedHandler action)
+		public static void DispatchOnUIThreadIdle(DispatchedHandler action)
 		{
-			var d = GlobalDispatcher();
-			d.TryRunIdleAsync(action);
+			DispatchOnUIThread(action, CoreDispatcherPriority.Low, false);
+//			var d = GlobalDispatcher();
+//			d.TryRunIdleAsync((_)=> action() );
 		}
 
 		public static void DispatchOnUIThreadLow(DispatchedHandler action, bool alwaysQueue = false) => DispatchOnUIThread(action, CoreDispatcherPriority.Low, alwaysQueue);
-	
+
 		//public static int pendingDispatch;
 		//public static int pendingDispatchMax=10;
 		//public static void DispatchStart()
@@ -924,16 +933,15 @@ namespace COTG
 		//	else
 		//		await d.RunAsync(CoreDispatcherPriority.Low, action);
 		//}
-		
+
 
 
 
 
 		// We only have 1 UI thread here
-		public static CoreDispatcher globalDispatcher; // set on shell page initialize
-		public static CoreDispatcher GlobalDispatcher() => globalDispatcher;// ShellPage.instance?.Dispatcher;
-
-		public static bool IsOnUIThread() => GlobalDispatcher() switch { null => false, var a => a.HasThreadAccess };
+		public static DispatcherQueue GlobalDispatcher() => globalQueue;
+		public static DispatcherQueue globalQueue;
+		public static bool IsOnUIThread() => globalQueue.HasThreadAccess };
 		//public static bool IsKeyPressedControl()
 		//{
 		//    var window = CoreWindow.GetForCurrentThread();
@@ -1567,7 +1575,7 @@ namespace COTG
 		//	{
 		//	//	ShellPage.keyboardProxy.Focus(FocusState.Programmatic);
 
-		//		App.DispatchOnUIThreadIdle((_) => ob.Focus(FocusState.Programmatic));
+		//		App.DispatchOnUIThreadIdle(() => ob.Focus(FocusState.Programmatic));
 		//	}
 		//}
 

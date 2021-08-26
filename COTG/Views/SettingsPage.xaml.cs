@@ -285,10 +285,12 @@ namespace COTG.Views
 		public static float raidCarryMax = 2.00f;
 		public static int intialStorehouses=1;
 		public static int intialMarkets = 1;
+		
 		public static bool IsThemeWinter()
 		{
 			return theme == Theme.louWinter;
 		}
+		static bool loadedOnce;
 		public static void LoadAll()
 		{
 			///  fetchFullHistory = st.Read(nameof(fetchFullHistory),true ); // default is true
@@ -339,9 +341,15 @@ namespace COTG.Views
 				DonationTab.woodStoneRatio = st.Read(nameof(DonationTab.woodStoneRatio), -1f);
 				DonationTab.reserveWood = st.Read(nameof(DonationTab.reserveWood), 0);
 				DonationTab.reserveStone = st.Read(nameof(DonationTab.reserveStone), 0);
-				Tips.ReadSeen();
+			//	Tips.ReadSeen();
 			//	World.LoadContinentHistory();
+				if(!loadedOnce)
+				{
+					loadedOnce = true;
+					BuildingDef.Init();
+					TroopInfo.Init();
 
+				}
 				// incomingWatch = st.Read(nameof(incomingWatch), Array.Empty<string>() );
 				//    autoBuildOn = st.Read(nameof(autoBuildOn)+'2', -1) switch {  0 => false, 1 => true, _ => null };
 				// AttackTab.time = st.Read("attacktime", DateTime.UtcNow.Date);
@@ -357,6 +365,7 @@ namespace COTG.Views
 
 				UpdateZoom();
 				//	DungeonView.Initialize();
+				loadedOnce = true;
 			}
 			catch (Exception e)
 			{
@@ -398,6 +407,8 @@ namespace COTG.Views
 
 		public static void SaveAll(object __ = null, Windows.ApplicationModel.SuspendingEventArgs _=null)
 		{
+			if (!loadedOnce)
+				return;
 			try
 			{
 				var props = typeof(SettingsPage).GetFields(System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.DeclaredOnly);

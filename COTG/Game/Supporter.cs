@@ -73,7 +73,7 @@ namespace COTG.Game
         public void OnPropertyChanged(string propertyName) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 		public void NotifyChange(string member = "")
 		{
-			App.DispatchOnUIThreadIdle((_) =>
+			App.DispatchOnUIThreadIdle(() =>
 			{
 				OnPropertyChanged(member);
 				

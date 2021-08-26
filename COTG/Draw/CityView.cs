@@ -87,11 +87,9 @@ namespace COTG.Draw
 		public static float[] animationOffsets = new float[citySpotCount];
 		public static float[] baseAnimationOffsets = new float[citySpotCount];
 		public static float animationRate = 0.25f;
-		public bool postQueueBuildingsDirty = true;
-		public void BuildingsOrQueueChanged() => postQueueBuildingsDirty = true;
-
-		public Building GetBuilding( int id) => buildingsCache[id];
-		public static Building GetBuilding((int x, int y) xy) => buildingsCache[XYToId(xy)];
+		
+	//	public Building GetBuilding( int id) => buildingsCache[id];
+		//public static Building GetBuilding((int x, int y) xy) => buildingsCache[XYToId(xy)];
 		static Vector2 waterC =new Vector2( 1.0f - 768.0f* cityTileGainX / 128,
 										1.0f - 704.0f*cityTileGainY / 128 );
 		
@@ -128,7 +126,7 @@ namespace COTG.Draw
 			if (build == null)
 				return;
 			int iAlpha = (int)(alpha * 255f);
-			var postBuildings = CityBuild.postQueueBuildings;
+			var postBuildings = build.postQueueBuildings;
 			buildCityOrigin = build.cid.CidToWorldV();
 			// draw each building tile
 			var city = City.GetBuild();
@@ -142,29 +140,42 @@ namespace COTG.Draw
 			// 2..3: Fade Out Op, fade in B1
 			// 3..4: B1
 			// 4..5: Fade out B1 fade in B0
-			CityBuild.TouchBuildingCache();
 			var fontScale = (pixelScale / 64.0f) * (2.5f/64.0f) * SettingsPage.fontScale; // perspective attenuation with distance
 			for (var cy = span0; cy <= span1; ++cy)
 			{
 				for (var cx = span0; cx <= span1; ++cx)
 				{
 					var id = XYToId((cx, cy));
-					var bid = buildingsCache[id];
+
+					Building cur, next,overlay;
+					if(!CityBuild.isPlanner)
+					{
+						cur = city.buildings[id];
+						next = city.postQueueBuildings[id];
+						overlay = city.BuildingFromOverlay(id);
+					}
+					else
+					{
+						cur = city.BuildingFromOverlay(id); 
+						next = cur;
+						overlay = city.postQueueBuildings[id];
+					}
+
+					// this is to show the demo symbol?
 					var bidOverride = -1;
 					if (id == 0)
 					{
-						if (bid.bl == 0)
+						if (cur.bl == 0)
 							continue;
 						bidOverride = 799;
 					}
 
-					var next = postBuildings[id];
 					var cs = CityPointToQuad(cx, cy);
 					
 					float blendT = (animationT * 0.375f - animationOffsets[id] + 0.2f).Frac();
-					if (bid.id==next.id)
+					if (cur.id==next.id)
 					{
-						if (next.bl != bid.bl)
+						if (next.bl != cur.bl)
 						{
 							float blendOp=0;
 							byte  bl;
@@ -190,7 +201,7 @@ namespace COTG.Draw
 								var t = (blendT - 0.5f) * 4.0f; // fade in new number
 								blendOp = t.SCurve(1,0);
 								// fade in last number
-								bl = bid.bl;
+								bl = cur.bl;
 								fontA = t.Bezier(0,1,1);
 							}
 							else
@@ -198,20 +209,20 @@ namespace COTG.Draw
 								// fade in number
 								var t = (blendT - 0.75f) * 4.0f; // fade in new number
 																 // fade out number
-								bl = bid.bl;
+								bl = cur.bl;
 								fontA = t.Bezier(1,1,0);// prior number out	
 							}
-							DrawBuilding(iAlpha, zBase, fontScale, cs, bid, Layer.tileCity,(int)(alpha*fontA*255f),bl, bidOverride);
+							DrawBuilding(iAlpha, zBase, fontScale, cs, cur, Layer.tileCity,(int)(alpha*fontA*255f),bl, bidOverride);
 							if (blendOp > 0)
 							{
 									// upgrade
-								draw.AddQuad(Layer.tileCity + 2, (next.bl > bid.bl)? decalBuildingValid: decalSelectEmpty, cs.c0, cs.c1, new Color(iAlpha, iAlpha, iAlpha, iAlpha / 2).Scale(blendOp), PlanetDepth, zHover);
+								draw.AddQuad(Layer.tileCity + 2, (next.bl > cur.bl)? decalBuildingValid: decalSelectEmpty, cs.c0, cs.c1, new Color(iAlpha, iAlpha, iAlpha, iAlpha / 2).Scale(blendOp), PlanetDepth, zHover);
 							}
 						}
 						else
 						{
 							// not changing
-							DrawBuilding(iAlpha, zBase, fontScale, cs, bid, Layer.tileCity,-1,-1, bidOverride);
+							DrawBuilding(iAlpha, zBase, fontScale, cs, cur, Layer.tileCity,-1,-1, bidOverride);
 
 						}
 
@@ -224,7 +235,7 @@ namespace COTG.Draw
 						if (next.id == 0)
 						{
 							blendMat = decalBuildingInvalid;
-							bd = bid;
+							bd = cur;
 						}
 						else
 						{

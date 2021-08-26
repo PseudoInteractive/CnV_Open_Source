@@ -51,7 +51,7 @@ namespace COTG
 		{
 			if (CollectionChanged != null)
 			{
-				App.DispatchOnUIThreadIdle((_) =>
+				App.DispatchOnUIThreadIdle(() =>
 
 				   //  Assert(App.IsOnUIThread());
 				   CollectionChanged(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset)));
@@ -168,7 +168,7 @@ namespace COTG
 
 		public void NotifyReset(T[] changed = null)
 		{
-			App.DispatchOnUIThreadIdle((_) =>
+			App.DispatchOnUIThreadIdle(() =>
 			{
 				OnPropertyChanged();
 				//  Assert(App.IsOnUIThread());
@@ -209,7 +209,7 @@ namespace COTG
 		}
 		public void NotifyItemsChanged()
 		{
-			App.DispatchOnUIThreadIdle((_) =>
+			App.DispatchOnUIThreadIdle(() =>
 			{
 				foreach(var i in this)
 					OnPropertyChanged(i);
@@ -307,7 +307,7 @@ namespace COTG
                 return;
 
             // defer the call, we don't need it right away
-           App.DispatchOnUIThreadIdle((_) =>
+           App.DispatchOnUIThreadIdle(() =>
            {
                try
                {

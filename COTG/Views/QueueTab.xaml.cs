@@ -77,7 +77,7 @@ namespace COTG.Views
 				return;
 			}
 
-			App.DispatchOnUIThreadIdle((_) =>
+			App.DispatchOnUIThreadIdle(() =>
 			{
 				BuildItemView view = null;
 				foreach (var c in instance.cities)
@@ -99,7 +99,7 @@ namespace COTG.Views
 
 		public static void Clear(int cid)
 		{
-			App.DispatchOnUIThreadIdle((_) =>
+			App.DispatchOnUIThreadIdle(() =>
 			{
 				foreach (var c in instance.cities)
 				{
@@ -124,7 +124,7 @@ namespace COTG.Views
 				return;
 			}
 
-			App.DispatchOnUIThreadIdle((_) =>
+			App.DispatchOnUIThreadIdle(() =>
 			{
 				BuildItemView view = null;
 				foreach (var c in instance.cities)

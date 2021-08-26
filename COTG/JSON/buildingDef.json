@@ -2301,6 +2301,7 @@
 	"489": {
 		"bn": "Port",
 		"proto": 493,
+		"nonFacingAlias": 488,
 		"ds": "Ports create Trading Ships that move resources between cities and allow you to trade with other players by sea. Place a Villa next to a Port to boost the Villa’s taxes. Shortkey: O",
 		"bimg": "/images/city/buildings/port_curs.png",
 		"dimg": "port.png",
@@ -2415,6 +2416,7 @@
 	"490": {
 		"bn": "Port",
 		"proto": 494,
+		"nonFacingAlias": 488,
 		"ds": "Ports create Trading Ships that move resources between cities and allow you to trade with other players by sea. Place a Villa next to a Port to boost the Villa’s taxes. Shortkey: O",
 		"bimg": "/images/city/buildings/port_curs.png",
 		"dimg": "port.png",
@@ -2631,6 +2633,7 @@
 	"496": {
 		"bn": "Shipyard",
 		"proto": 497,
+		"nonFacingAlias": 491,
 		"ds": "Building a Shipyard will allow you to enlist Naval units. Upgrade your Shipyard to increase its unit enlistment rate. Place a Shipyard next to a Barracks to boost your city’s Naval enlistment rate. Shortkey: P",
 		"bimg": "/images/city/buildings/shipyard_curs.png",
 		"dimg": "shipyard.png",
@@ -2733,6 +2736,7 @@
 	"498": {
 		"bn": "Shipyard",
 		"proto": 499,
+		"nonFacingAlias": 491,
 		"ds": "Building a Shipyard will allow you to enlist Naval units. Upgrade your Shipyard to increase its unit enlistment rate. Place a Shipyard next to a Barracks to boost your city’s Naval enlistment rate. Shortkey: P",
 		"bimg": "/images/city/buildings/shipyard_curs.png",
 		"dimg": "shipyard.png",

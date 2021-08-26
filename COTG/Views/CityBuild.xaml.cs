@@ -49,10 +49,13 @@ namespace COTG.Views
 		public static HashSet<ushort> innerTowerSpots = new HashSet<ushort>(new ushort[] { 113, 117, 173, 257, 323, 327, 183, 267 });
 		public static HashSet<ushort> wallSpots = new HashSet<ushort>(new ushort[] { 1, 2, 4, 5, 6, 8, 9, 10, 11, 12, 14, 15, 16, 18, 19, 20, 21, 22, 23, 31, 39, 40, 41, 42, 43, 52, 61, 62, 73, 84, 94, 104, 105, 112, 114, 115, 116, 118, 125, 126, 132, 133, 139, 140, 146, 152, 153, 161, 162, 168, 188, 189, 194, 204, 209, 210, 211, 212, 213, 214, 215, 225, 226, 227, 228, 229, 230, 231, 236, 246, 251, 252, 272, 278, 279, 287, 288, 294, 300, 301, 307, 308, 314, 315, 322, 324, 325, 326, 328, 335, 336, 346, 356, 367, 378, 379, 388, 397, 398, 399, 400, 401, 409, 417, 418, 419, 420, 421, 422, 424, 425, 426, 428, 429, 430, 431, 432, 434, 435, 436, 438, 439, 440 });
 
+
 		public static HashSet<ushort> shoreSpots = new HashSet<ushort>(new ushort[] { 416, 394, 372, 351, 331, 332, 376, 354 });
 		public static HashSet<ushort> waterSpots = new HashSet<ushort>(new ushort[] { 352, 353, 373, 374, 375, 395,396,397,
 																			417,418});
 		public static HashSet<ushort> emptySpotList = new HashSet<ushort>();
+
+		public static bool IsShoreOrWaterSpot(ushort r) => shoreSpots.Contains(r) | waterSpots.Contains(r);
 
 		public static HashSet<ushort> buildingSpots = new HashSet<ushort>(Enumerable.Range(1, citySpotCount - 1).Select(a => (ushort)a).
 			Where(a => !(wallSpots.Contains(a) | innerTowerSpots.Contains(a) | outerTowerSpots.Contains(a) | (a == City.bspotTownHall))));
@@ -68,6 +71,7 @@ namespace COTG.Views
 			building,
 			townHall,
 		}
+
 
 		public static SpotType GetSpotType(int a)
 		{
@@ -101,6 +105,7 @@ namespace COTG.Views
 		}
 
 		public static bool IsBuildingSpot(int spot) => buildingSpots.Contains((ushort)spot);
+		public static bool IsBuildingSpot(int spot, bool isWater) => buildingSpots.Contains((ushort)spot) && (!isWater || !(waterSpots.Contains((ushort)spot) || shoreSpots.Contains((ushort)spot)));
 		public static bool IsBuildingSpotOrTownHall(int spot) => buildingSpots.Contains((ushort)spot) | (spot == City.bspotTownHall);
 		public static bool IsBuildingSpot((int x, int y) cc) => IsBuildingSpot(XYToId(cc));
 		public static bool IsTowerSpot(int spot) => outerTowerSpots.Contains((ushort)spot) | innerTowerSpots.Contains((ushort)spot);
@@ -336,8 +341,9 @@ namespace COTG.Views
 			//	}
 			//}
 			menuType = _menuType;
+			var city = City.GetBuild();
+			var townHallLevel = city.postQueueBuildings[City.bspotTownHall].bl;
 
-			var townHallLevel = postQueueBuildings[City.bspotTownHall].bl;
 			instance.TogglePlanner.Label = isPlanner ? "Build" : "Planner";
 
 			switch (menuType)
@@ -366,7 +372,7 @@ namespace COTG.Views
 					commands.items.Add(amDemo);
 					commands.items.Add(amDowngrade);
 					commands.items.Add(amLayout);
-					if (postQueueBuildings[bspot].bl == 0)
+					if (city.postQueueBuildings[bspot].bl == 0)
 						commands.items.Add(amBuild);
 					else
 						commands.items.Add(amUpgrade);
@@ -655,11 +661,12 @@ namespace COTG.Views
 			//		return;
 
 			//	}	
-
 			//}
+			var city = City.GetBuild();
 			//var maxBuildings = postQueueBuildings[bspotTownHall].bl * 10;
-			CityBuild.postQueueBuildings[spot].SetBid(elvl != 0 ? bid : 0, elvl);
-			return BuildQueue.Enqueue(City.build, (byte)slvl, (byte)elvl, (ushort)bid, (ushort)spot);
+			// preview the change immediately
+			city.postQueueBuildings[spot].SetBid(elvl != 0 ? bid : 0, elvl);
+			return BuildQueue.Enqueue(city.cid, (byte)slvl, (byte)elvl, (ushort)bid, (ushort)spot);
 
 		}
 		public static async Task<int> EnqueueUpgrade(int elvl, int spot)
@@ -765,10 +772,6 @@ namespace COTG.Views
 			buildingsCache = City.GetBuild().buildings;
 			return buildingsCache;
 		}
-		public static void TouchBuildingCache()
-		{
-			GetBuildingCache();
-		}
 		public Building[] postQueueBuildings
 		{
 			get
@@ -850,87 +853,7 @@ namespace COTG.Views
 
 
 		}
-		public static Building[] postQueueBuildings
-		{
-			get
-			{
 
-				if (!postQueueBuildingsDirty)
-					return postQueuebuildingsCache;
-				postQueueBuildingsDirty = false;
-				var build = City.GetBuild();
-				if (!CityBuild.isPlanner)
-				{
-					buildingsCache = build.buildings;
-				}
-				//
-				// copy current buildings
-				//
-				for (var i = 0; i < citySpotCount; ++i)
-				{
-					postQueuebuildingsCache.DangerousGetReferenceAt(i) = buildingsCache.DangerousGetReferenceAt(i);
-				}
-				if (!CityBuild.isPlanner)
-				{
-					//
-					// Apply queue
-					//
-					{
-						foreach (var q in build.buildQueue)
-						{
-							ref var b = ref postQueuebuildingsCache.DangerousGetReferenceAt(q.bspot);
-							b.bl = q.elvl;
-							if (q.elvl == 0)
-								b.id = 0;
-							else
-								b.id = BuildingDef.BidToId(q.bid);
-						}
-
-						if (CityBuildQueue.all.TryGetValue(City.build, out var bq))
-						{
-							var count = bq.queue.count;
-							var data = bq.queue.v;
-
-							for (int i = 0; i < count; ++i)
-							{
-								ref var q = ref data[i];
-								ref var b = ref postQueuebuildingsCache.DangerousGetReferenceAt(q.bspot);
-								b.bl = q.elvl;
-								if (q.elvl == 0)
-									b.id = 0;
-								else
-									b.id = BuildingDef.BidToId(q.bid);
-							}
-						}
-
-
-
-					}
-				}
-				// calculate counts
-				postQueueBuildingCount = 0;
-				postQueueTownHallLevel = 10;
-				foreach (var bi in postQueuebuildingsCache)
-				{
-					if (bi.id == 0 || bi.bl == 0)
-						continue;
-					var bd = bi.def;
-					if (bd.isTower || bd.isWall)
-					{
-						continue;
-					}
-					if (bd.isTownHall)
-					{
-						postQueueTownHallLevel = bi.bl;
-						continue;
-					}
-					++postQueueBuildingCount;
-				}
-				return postQueuebuildingsCache;
-			}
-
-
-		}
 
 
 		public static async Task Demolish(int id, bool dryRun)
@@ -2626,12 +2549,16 @@ namespace COTG.Views
 				var rv = await dialog.ShowAsync2();
 				if (rv == ContentDialogResult.Primary)
 				{
+					var city = City.Get(cid);
 					await JSClient.view.InvokeScriptAsync("misccommand", new[] { "abandoncity", cid.ToString() });
-
+					city.pid = 0; //
+					if (myCities.Length > 1)
+					{
+						var closest = myCities.Min<City, (float d, City c)>(a => (a == city ? float.MaxValue : cid.DistanceToCid(a.cid), a));
+						await JSClient.CitySwitch(closest.c.cid, false);
+					}
 					await Task.Delay(500);
-					City.GetOrAdd(cid).pid = 0; //
 					CitiesChanged();
-					NavStack.Back(true);
 				}
 
 			});
@@ -2657,6 +2584,7 @@ namespace COTG.Views
 		//	}
 		//}
 	}
+
 	public enum BuildPhase
 	{
 		cabins,
@@ -2797,5 +2725,71 @@ namespace COTG.Views
 			Height = 64;
 		}
 	}
+}
+namespace COTG.Game
+{
+	using COTG.Views;
 
+	public partial class City
+	{
+		private static Building[] postQueueBuildingCache = new Building[citySpotCount];
+		public static City cachedCity;
+		public void BuildingsOrQueueChanged() => cachedCity = null;
+
+		public Building[] postQueueBuildings
+		{
+			get
+			{
+				if (cachedCity == this)
+					return postQueueBuildingCache;
+				cachedCity = this;
+				//if (!CityBuild.isPlanner)
+				//{
+				//var  buildingsCache = buildings;
+				//}
+				var rv = postQueueBuildingCache;
+				//
+				// copy current buildings
+				//
+				for (var i = 0; i < citySpotCount; ++i)
+				{
+					rv.DangerousGetReferenceAt(i) = buildings.DangerousGetReferenceAt(i);
+				}
+				if (!CityBuild.isPlanner)
+				{
+					//
+					// Apply queue
+					//
+					{
+						foreach (var q in buildQueue)
+						{
+							q.Apply( ref rv.DangerousGetReferenceAt(q.bspot));
+						}
+
+						if (CityBuildQueue.all.TryGetValue(City.build, out var bq))
+						{
+							var count = bq.queue.count;
+							var data = bq.queue.v;
+
+							for (int i = 0; i < count; ++i)
+							{
+								data[i].Apply( ref rv.DangerousGetReferenceAt(q.bspot));
+							}
+						}
+
+
+
+					}
+				}
+				//postQueuebuildingsCache = rv;
+				return rv;
+			}
+		}
+			public int postQueueTownHallLevel => postQueueBuildings[bspotTownHall].bl;
+			public int postQueueBuildingCount=> postQueueBuildings.Count(c=>c.requiresBuildingSpot);
+
+	
+
+	
+	}
 }

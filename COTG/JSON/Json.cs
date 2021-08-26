@@ -6,6 +6,8 @@ using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 using System.Text.Json.Serialization;
+using Windows.Storage;
+
 namespace COTG
 {
 	public class Json
@@ -18,10 +20,10 @@ namespace COTG
 			ReadCommentHandling = JsonCommentHandling.Skip,
 			IgnoreReadOnlyProperties=true
 		};
-		public static T FromResources<T>(string asm)
+		public static async Task<T> FromContent<T>(string asm)
 		{
-			var str = new System.IO.StreamReader(typeof(JSClient).Assembly.GetManifestResourceStream($"COTG.JSON.{asm}.json")).ReadToEnd();
-			return JsonSerializer.Deserialize<T>(str, jsonSerializerOptions);
+			var file = await ApplicationData.Current.LocalFolder.GetFileAsync($"ms-appx:///JSON/{asm}.json");
+			return JsonSerializer.Deserialize<T>(await FileIO.ReadTextAsync(file), jsonSerializerOptions);
 
 		}
 	}

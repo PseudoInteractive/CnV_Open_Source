@@ -242,7 +242,7 @@ namespace COTG.Views
 			//              await _logSemaphore.WaitAsync();
 			// try
 			////  {
-			App.DispatchOnUIThreadIdle((_) =>
+			App.DispatchOnUIThreadIdle(() =>
 			{
 
 				try

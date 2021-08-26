@@ -338,7 +338,7 @@ namespace COTG.Views
 			ShellPage.webclientSpan.y = (screenSize.Height * 0.89236111111111116f * SettingsPage.htmlZoom*2).RoundToInt();
 
 			AGame.Create(canvas);
-			Task.Delay(500).ContinueWith((_) => App.DispatchOnUIThreadIdle((_) =>
+			Task.Delay(500).ContinueWith((_) => App.DispatchOnUIThreadIdle(() =>
 			{
 				var sz = canvas.ActualSize;
 				AGame.SetClientSpan(sz.X, sz.Y);
@@ -442,14 +442,17 @@ namespace COTG.Views
 			switch (args.KeyboardAccelerator.Key)
 			{
 				case VirtualKey.F2:
-					this.windowLayout.SelectedItem= 0;
+					this.windowLayout.SelectedIndex= 0;
+					args.Handled = true;
 					break;
 				case VirtualKey.F3:
-					this.windowLayout.SelectedItem = 1;
+					this.windowLayout.SelectedIndex = 1;
+					args.Handled = true;
 					break;
 				case VirtualKey.F4:
-					this.windowLayout.SelectedItem = 2;
-					; break;
+					this.windowLayout.SelectedIndex= 2;
+					args.Handled = true;
+					break;
 			}
 		}
 
@@ -1288,7 +1291,7 @@ namespace COTG.Views
 						canvasBaseY = (canvasBaseYUnscaled * webViewScale).RoundToInt();
 						if (canvas != null && grid != null)
 						{
-							App.DispatchOnUIThreadIdle((_) =>
+							App.DispatchOnUIThreadIdle(() =>
 							{
 								grid.ColumnDefinitions[0].Width = new GridLength(ShellPage.canvasBaseX, GridUnitType.Pixel);
 								canvas.Margin = new Thickness(0, canvasBaseY, 0, 0);

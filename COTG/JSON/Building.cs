@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Buffers;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -6,37 +7,38 @@ using System.Text;
 using System.Threading.Tasks;
 
 using COTG.Game;
-namespace COTG.JSON
+namespace COTG
 {
-	public struct Building
+	public readonly record struct Building
 	{
-		public byte id; // this is pretranslated from the buildingDefs definitions to pack it into a byte
-		public byte bl; // building level
+		public readonly byte id; // this is pretranslated from the buildingDefs definitions to pack it into a byte
+		public readonly byte bl; // building level
 
-		public int bid => def.bid;
-		public bool isBuilding => bl > 0;
-		public bool isEmpty => id == 0;
-		public bool isRes => def.isRes;
-		public BuildingDef def => BuildingDef.FromId(id);
-		public string name => def.Bn;
+		public readonly int bid => def.bid;
+		public readonly bool isBuilding => bl > 0;
+		public readonly bool isEmpty => id == 0;
+		public readonly bool isRes => def.isRes;
+		public readonly BuildingDef def => BuildingDef.FromId(id);
+		public readonly string name => def.Bn;
 	
-		public bool isCabin => id == BuildingDef.idCabin;
-		public bool isTemple => id == BuildingDef.BidToId(City.bidTemple);
+		public readonly bool isCabin => id == BuildingDef.idCabin;
+		public readonly bool isTemple => id == BuildingDef.BidToId(City.bidTemple);
 
-		public void AssertValid() => COTG.Debug.Assert( isRes || bl!=0 );
-		public bool isMilitary => def.isMilitary;
-		public bool isBarracks => def.isBarracks;
+		public readonly void AssertValid() => COTG.Debug.Assert( isRes || bl!=0 );
+		public readonly bool isMilitary => def.isMilitary;
+		public readonly bool isBarracks => def.isBarracks;
 
-		public bool isTower => def.isTower;
-		public bool isWall => def.isWall;
-		public bool isTownHall => id == BuildingDef.idTownHall;
-
+		public readonly bool isTower => def.isTower;
+		public readonly bool isWall => def.isWall;
+		public readonly bool isTownHall => id == BuildingDef.idTownHall;
+		public readonly bool requiresBuildingSlot => def.requiresBuildingSlot;
 		public Building(int bid, int bl)
 		{
 			this.id = BuildingDef.BidToId(bid);
 			this.bl = (byte)bl;
-
 		}
+	//	public static ArrayPool<Building> pool = ArrayPool<Building>.Create(City.citySpotCount,64);
+	//	public static Building[] Rent() => pool.Rent(City.citySpotCount);
 		//[J("bu")] public long Bu { get; set; }
 		//	[J("bd")] public long Bd { get; set; }
 		//	[J("rt")] public long Rt { get; set; }

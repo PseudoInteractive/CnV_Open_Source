@@ -432,7 +432,7 @@ namespace COTG.Game
 				SettingsPage.pinned = SettingsPage.pinned.ArrayAppendIfAbsent(cid);
 			else
 				SettingsPage.pinned = SettingsPage.pinned.Where(a => a != cid).ToArray();
-			App.DispatchOnUIThreadIdle((_) => OnPropertyChanged(nameof(pinned)));
+			App.DispatchOnUIThreadIdle(() => OnPropertyChanged(nameof(pinned)));
 		}  // pinned in MRU
 		public byte claim; // only if this is under attack
 		public byte shipyards { get; set; }
@@ -1601,75 +1601,7 @@ namespace COTG.Game
 			return true;
 		}
 
-		public async Task<bool> SetBuildInternal(bool scrollIntoView, bool select = true, bool isLocked = false)
-		{
-			var changed = cid != build;
-			if (changed)
-			{
-				if (lockedBuild != 0 && cid != lockedBuild)
-				{
-					Note.Show("Please wait for current operation to complete");
-					if (await App.DoYesNoBox("Busy", "Please wait for current operation to complete") != 1)
-					{
-						throw new System.Exception("SetBuildOverlap");
-					}
-				}
-				bool wantUnblock = false;
-				if (!isLocked)
-					await App.uiSema.WaitAsync();
-				try
-				{
-
-				//	var wasPlanner = CityBuild.isPlanner;
-
-					if (CityBuild.isPlanner)
-					{
-						//	var b = City.GetBuild();
-						//	b.BuildingsCacheToShareString();
-						//		await b.SaveLayout();
-						//					CityBuild.isPlanner = false;
-						await CityBuild._IsPlanner(false, true);
-					}
-					City.build = cid;
-					Assert(pid == Player.activeId);
-					//Cosmos.PublishPlayerInfo(JSClient.jsBase.pid, City.build, JSClient.jsBase.token, JSClient.jsBase.cookies); // broadcast change
-
-					//foreach (var p in PlayerPresence.all)
-					//{
-					//	if (p.pid != Player.myId && p.cid == cid)
-					//	{
-					//		Note.Show($"You have joined {p.name } in {City.Get(p.cid).nameMarkdown}");
-					//	}
-					//}
-
-					City.CitySwitched();
-					//if (wasPlanner)
-					//{
-					//	await GetCity.Post(cid);
-					//	await CityBuild._IsPlanner(true, false);
-					//}
-					// async
-					wantUnblock = true;
-				}
-				finally
-				{
-					if (!isLocked)
-						App.uiSema.Release();
-				}
-
-				if (wantUnblock)
-					CityBuildQueue.UnblockQueue(cid);
-
-			}
-			SetFocus(scrollIntoView, select);
-			City.SyncCityBox();
-			return changed;
-			//if (!noRaidScan)
-			// {
-			//      if (changed)
-			//          ScanDungeons.Post(cid, getCityData);
-			//  }
-		}
+		
 
 		public void ReturnSlowClick()
 		{
@@ -2177,7 +2109,7 @@ namespace COTG.Game
 		}
 		public void BuildStageDirty()
 		{
-			App.DispatchOnUIThreadIdle((_) => OnPropertyChanged(nameof(City.buildStage)));
+			App.DispatchOnUIThreadIdle(() => OnPropertyChanged(nameof(City.buildStage)));
 		}
 		public async void ShowIncoming()
 		{
@@ -2191,7 +2123,7 @@ namespace COTG.Game
 					if (tab.defenderGrid.ItemsSource != null)
 						break;
 				}
-				App.DispatchOnUIThreadIdle((_) =>
+				App.DispatchOnUIThreadIdle(() =>
 				{
 					tab.defenderGrid.SelectItem(this);
 					tab.defenderGrid.ScrollItemIntoView(this);
@@ -2208,7 +2140,7 @@ namespace COTG.Game
 					if (tab.attackerGrid.ItemsSource != null)
 						break;
 				}
-				App.DispatchOnUIThreadIdle((_) =>
+				App.DispatchOnUIThreadIdle(() =>
 				{
 					tab.attackerGrid.SelectItem(this);
 					tab.attackerGrid.ScrollItemIntoView(this);
@@ -2276,7 +2208,7 @@ namespace COTG.Game
 			//          instance.Dispatcher.RunAsync(CoreDispatcherPriority.Low, () =>
 			//           {
 			//   await Task.Delay(200);
-			App.DispatchOnUIThreadIdle((_) =>
+			App.DispatchOnUIThreadIdle(() =>
 			{
 
 				{

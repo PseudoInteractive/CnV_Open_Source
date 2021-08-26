@@ -187,7 +187,7 @@ namespace COTG
 		public const float cityZoomWorldThreshold = 32;
 		public const float cityZoomFocusThreshold = 512;
 		public const float cityZoomDefault = 1280;
-		public float eventTimeOffsetLag;
+		public float eventTimeOffsetLag; // smoothed version of event time offset
 		public float eventTimeEnd;
 		static public Color nameColor, nameColorHover, myNameColor, nameColorOutgoing, nameColorIncoming, nameColorSieged, nameColorIncomingHover, nameColorSiegedHover, myNameColorIncoming, myNameColorSieged; //shadowColor;
 																																															  //	static CanvasLinearGradientBrush tipBackgroundBrush, tipTextBrush;
@@ -998,7 +998,7 @@ namespace COTG
 		//public static Vector2 shadowOffset = new Vector2(6.0f, 6.0f);
 		//public static Vector2 halfShadowOffset = new Vector2(3.0f, 3.0f);
 		public static void SetCameraCNoLag(Vector2 c) => cameraCLag = cameraC = c;
-		static DateTimeOffset lastDrawTime;
+//		static DateTimeOffset lastDrawTime;
 		public static bool tileSetsPending;
 		private const float smallRectSpan = 4;
 		public const float lightZ0 = 460f;
@@ -1069,22 +1069,22 @@ namespace COTG
 
 			try
 			{
-				var _serverNow = JSClient.ServerTime();
-				var dt = ((float)(_serverNow - lastDrawTime).TotalSeconds).Saturate(); // max delta is 1s
-				lastDrawTime = _serverNow;
+		//		var _serverNow = JSClient.ServerTime();
+				var dt = (float)gameTime.ElapsedGameTime.TotalSeconds; // max delta is 1s
+			//	lastDrawTime = _serverNow;
 
-				var gain = (1 - MathF.Exp(-4 * dt));
+				var gain = 1.0f - MathF.Exp(-4.0f * dt);
 				cameraCLag += (cameraC - cameraCLag) * gain;
 				cameraZoomLag += (cameraZoom - cameraZoomLag) * gain;
-				eventTimeOffsetLag += (ShellPage.instance.eventTimeOffset - eventTimeOffsetLag) * gain;
 				cameraLightC = (ShellPage.mousePositionC);
 				//                cameraZoomLag += (cameraZoom
-
-				var serverNow = _serverNow + TimeSpan.FromMinutes(eventTimeOffsetLag);
+				// smooth ease towards target
+				eventTimeOffsetLag += (ShellPage.instance.eventTimeOffset - eventTimeOffsetLag) * gain;
+				var serverNow = JSClient.ServerTime() + TimeSpan.FromMinutes(eventTimeOffsetLag);
 
 				// not too high or we lose float precision
 				// not too low or people will see when when wraps
-				animationT = ((uint)Environment.TickCount % 0xffffff) * (1.0f / 1000.0f);
+				animationT = (float)gameTime.TotalGameTime.TotalSeconds;// ((uint)Environment.TickCount % 0xffffff) * (1.0f / 1000.0f);
 
 				//{
 				//	var i = (int)(animationT / 4.0f);
@@ -1093,7 +1093,7 @@ namespace COTG
 				//	tipTextFormat.FontStretch = fontStretch;
 				//	tipTextFormatCentered.FontStretch = fontStretch;
 				//}
-				animationTWrap = ((uint)Environment.TickCount % 3000) * (1.0f / 3000); // wraps every 3 seconds, 0..1
+				animationTWrap = (animationT*0.333f).Frac(); // wraps every 3 seconds, 0..1
 
 				device.Textures[7] = fontTexture;
 				//				float accentAngle = animT * MathF.PI * 2;

@@ -890,50 +890,113 @@ namespace COTG
 		//    }
 		//}
 
-		public static async Task<bool> CitySwitch(int cityId, bool lazyMove = false, bool select = true, bool scrollIntoUI = true, bool isLocked = false, bool waitOnChange = false)
+		public static async Task<bool> CitySwitch(int cid, bool lazyMove = false, bool select = true, bool scrollIntoUI = true, bool isLocked = false, bool waitOnChange = false)
 		{
 			// Make sure we don't ignore the exception
 			{
-
-				if (City.CanVisit(cityId))
+				// is it my city?
+				if (City.CanVisit(cid))
 				{
-					if (!Spot.CanChangeCity(cityId))
+					Assert(cid != City.build);
+					// Is it locked?
+					if (!Spot.CanChangeCity(cid))
 					{
 						ShellPage.EnsureNotCityView();
 						Note.Show("Please wait for current operation to complete");
 						return false;
 					}
-					var city = City.GetOrAddCity(cityId);
+					var city = City.GetOrAddCity(cid);
 
 					if (city.pid != Player.activeId)
 					{
+						// no longer happens
 						Assert(false);
 						// need to switch player
 						//JSClient.SetPlayer(city.pid, cityId);
 					}
 					else
 					{
-						var changed = await city.SetBuildInternal(scrollIntoUI, true, isLocked);
+						var changed = cid != City.build;
+						if (changed)
+						{
+							if (lockedBuild != 0 && cid != lockedBuild)
+							{
+								Note.Show("Please wait for current operation to complete");
+								if (await App.DoYesNoBox("Busy", "Please wait for current operation to complete") != 1)
+								{
+									throw new System.Exception("SetBuildOverlap");
+								}
+							}
+							bool wantUnblock = false;
+							if (!isLocked)
+								await App.uiSema.WaitAsync();
+							try
+							{
+
+								//	var wasPlanner = CityBuild.isPlanner;
+
+								if (CityBuild.isPlanner)
+								{
+									//	var b = City.GetBuild();
+									//	b.BuildingsCacheToShareString();
+									//		await b.SaveLayout();
+									//					CityBuild.isPlanner = false;
+									await CityBuild._IsPlanner(false, true);
+								}
+								City.build = cid;
+								Assert(pid == Player.activeId);
+								//Cosmos.PublishPlayerInfo(JSClient.jsBase.pid, City.build, JSClient.jsBase.token, JSClient.jsBase.cookies); // broadcast change
+
+								//foreach (var p in PlayerPresence.all)
+								//{
+								//	if (p.pid != Player.myId && p.cid == cid)
+								//	{
+								//		Note.Show($"You have joined {p.name } in {City.Get(p.cid).nameMarkdown}");
+								//	}
+								//}
+
+								City.CitySwitched();
+								//if (wasPlanner)
+								//{
+								//	await GetCity.Post(cid);
+								//	await CityBuild._IsPlanner(true, false);
+								//}
+								// async
+								wantUnblock = true;
+							}
+							finally
+							{
+								if (!isLocked)
+									App.uiSema.Release();
+							}
+
+							if (wantUnblock)
+								CityBuildQueue.UnblockQueue(cid);
+
+						}
+						city.SetFocus(scrollIntoUI, select);
+						City.SyncCityBox();
+
 						if (changed)
 						{
 							if (isLocked || waitOnChange)
 							{
-								if( await ChangeCityJSWait(cityId) == false)
+								if( await ChangeCityJSWait(cid) == false)
 								{
 									Note.Show("Somethings wrong, please try again");
 									return false;
 								}
 							}
 							else
-								ChangeCityJS(cityId);
+								ChangeCityJS(cid);
 						}
 					}
 					if (!lazyMove)
-						cityId.BringCidIntoWorldView(lazyMove, false);
+						cid.BringCidIntoWorldView(lazyMove, false);
 				}
 				else
 				{
-					ShowCity(cityId, lazyMove, scrollIntoUI);
+					ShowCity(cid, lazyMove, scrollIntoUI);
 				}
 
 			}
@@ -1487,7 +1550,7 @@ namespace COTG
 
 				if (clChanged >= 2)
 				{
-					App.DispatchOnUIThreadIdle((_) =>
+					App.DispatchOnUIThreadIdle(() =>
 				   {
 					   var priorIndex = CityList.box.SelectedIndex;
 					   CityList.selections = new CityList[lists.Count + 1];
@@ -2054,7 +2117,7 @@ private static async void ShowCouncillorsMissingDialog()
 							  // Log(s);
 							   for (int i = 0; i < clientCount; ++i)
 							   {
-								   await clientPoolSema.WaitAsync();
+								   await clientPoolSema.WaitAsync().ConfigureAwait(false);
 							   }
 							   for (; ; )
 							   {
@@ -2074,7 +2137,7 @@ private static async void ShowCouncillorsMissingDialog()
 								   catch (Exception _ex)
 								   {
 									   LogEx(_ex);
-									   await Task.Delay(1000);
+									   await Task.Delay(1000).ConfigureAwait(false);
 									   continue;
 
 								   }
@@ -2302,7 +2365,7 @@ private static async void ShowCouncillorsMissingDialog()
 										   {
 											   var cid = int.Parse(ss[1]);
 											   // founded new city
-											   await Task.Delay(30000);
+											   await Task.Delay(30000).ConfigureAwait(false);
 											   Note.Show($"You have founded a new city!  Would you like to run [Setup](/s/{cid.CidToString()})");
 
 										   }
@@ -2541,22 +2604,22 @@ private static async void ShowCouncillorsMissingDialog()
 								   Player.Ctor(jsp.Value);
 								   while( !ppdtInitialized || !Alliance.diplomacyFetched)
 								   {
-									   await Task.Delay(500);
+									   await Task.Delay(500).ConfigureAwait(false);
 								   }
-								   if (Player.isAvatarOrTest)
-								   {
-									   App.DispatchOnUIThreadLow(() =>
-									   {
-									   // create a timer for precense updates
-									   presenceTimer = new DispatcherTimer();
-										   presenceTimer.Interval = TimeSpan.FromSeconds(16);
-										   presenceTimer.Tick += PresenceTimer_Tick; ;
-										   presenceTimer.Start();
-									   // Seed it off
+								   //if (Player.isAvatarOrTest)
+								   //{
+									  // App.DispatchOnUIThreadLow(() =>
+									  // {
+									  // // create a timer for precense updates
+									  // presenceTimer = new DispatcherTimer();
+										 //  presenceTimer.Interval = TimeSpan.FromSeconds(16);
+										 //  presenceTimer.Tick += PresenceTimer_Tick; ;
+										 //  presenceTimer.Start();
+									  // // Seed it off
 
-								   });
-									   PresenceTimer_Tick(null, null); // seed it off, but only after our token has time to have been set
-								   }
+								   //});
+									  // PresenceTimer_Tick(null, null); // seed it off, but only after our token has time to have been set
+								   //}
 								   break;
 							   }
 						   // city lists
@@ -2666,11 +2729,12 @@ private static async void ShowCouncillorsMissingDialog()
 								   //                                ShellPage.SetCanvasVisibility(noPopup);
 								   if (ppdtInitialized && jso.TryGetProperty("c", out var _cid))
 								   {
+									   // this should be rare, sometimes the JS city is out of sync with the registered city
+									   Assert(false);
 									   var cid = _cid.GetAsInt();
 									   if (cid != City.build)
 									   {
-										   var city = City.GetOrAddCity(cid);
-										   city.SetBuildInternal(true);
+										   CitySwitch(cid, true, false, false, false, false);
 									   }
 								   }
 								   break;
@@ -2733,7 +2797,7 @@ private static async void ShowCouncillorsMissingDialog()
 					   CustomProperties properties = new CustomProperties();
 					   properties.Set("alliance", Alliance.myId).Set("world", JSClient.world).Set("sub", JSClient.isSub).Set("UserId", Player.myName);
 					   AppCenter.SetCustomProperties(properties);
-					   AAnalytics.Track("GotCreds", new Dictionary<string,string>() { { "World",JSClient.world.ToString()},{"sub",JSClient.isSub.ToString() },{"UserId", Player.myName } );
+					   AAnalytics.Track("GotCreds", new Dictionary<string, string>() { { "World", JSClient.world.ToString() }, { "sub", JSClient.isSub.ToString() }, { "UserId", Player.myName } } );
 
 					   }
 					   if (SystemInformation.Instance.IsAppUpdated)

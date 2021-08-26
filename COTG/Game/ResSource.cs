@@ -185,7 +185,7 @@ namespace COTG.Game
 		public void NotifyChange(string member = "")
 		{
 			
-			App.DispatchOnUIThreadIdle((_) =>
+			App.DispatchOnUIThreadIdle(() =>
 			{
 				NearRes.supporters.OnPropertyChanged(this);
 				OnPropertyChanged(member);

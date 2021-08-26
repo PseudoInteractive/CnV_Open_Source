@@ -380,7 +380,7 @@ namespace COTG.Views
         }
         private void UpdateStats()
         {
-            App.DispatchOnUIThreadIdle((_) =>
+            App.DispatchOnUIThreadIdle(() =>
             {
 				planName.Text = SettingsPage.attackPlanName;
 

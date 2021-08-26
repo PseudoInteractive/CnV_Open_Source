@@ -107,10 +107,9 @@ namespace COTG.Views
 
 		//}
 
-		static int GetScore( (int x,int y) xy, int bid, int militaryBid )
+		static int GetScore( City city,(int x,int y) xy, int bid, int militaryBid )
 		{
-			var bds = City.GetBuild().buildings;
-			var bc = City.buildingsCache;
+			var bds = city.buildings;
 			int id = XYToId(xy);
 			var rv = 0;
 			if (bds[id].bid == bid)
@@ -130,10 +129,9 @@ namespace COTG.Views
 					if (!IsValidCityCoord(cc1))
 						continue;
 
-					var bd1 = bc[XYToId(cc1)];
-					if (!bd1.isBuilding)
+					var bid1 = city.BidFromOverlay(XYToId(cc1));
+					if (bid1==0)
 						continue;
-					var bid1 = bd1.bid;
 					if (IsResHelper(bid))
 					{
 						if (bid1 == bidStorehouse)
@@ -470,18 +468,17 @@ namespace COTG.Views
 		//	Assert(CityBuild.isPlanner);
 		//	await CityBuild._IsPlanner(true);
 
-			await SmartRearrange(false);
+			await SmartRearrange(City.GetBuild(),false);
 		}
-		public static async Task SmartRearrange(bool revertIsPlanner)
+		public static async Task SmartRearrange(City city,bool revertIsPlanner)
 		{
 			var wasPlanner = CityBuild.isPlanner;
 			if (!wasPlanner)
 				await CityBuild._IsPlanner(true);
 		
-			var build = City.GetBuild();
-			Assert(build.isLayoutValid);
+			Assert(city.isLayoutValid);
 			var bdc = City.buildingsCache;
-			var bds = build.buildings;
+			var bds = city.buildings;
 
 			var bc = GetBuildingCounts(bdc, 10);
 

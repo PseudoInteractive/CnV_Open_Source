@@ -77,8 +77,8 @@ namespace COTG.JSON
 		public readonly ushort buildTime; // delta time in seconds
 		public readonly byte slvl;
 		public readonly byte elvlAndPA; // 0xf is level mask, ox10 is pa mask
-		public byte elvl => (byte)(elvlAndPA & 0xF);
-		public bool pa => (elvlAndPA & 0x10) != 0;
+		public readonly byte elvl => (byte)(elvlAndPA & 0xF);
+		public readonly bool pa => (elvlAndPA & 0x10) != 0;
 
 
 		public BuildQueueItem(byte slvl, byte elvl, ushort bid, ushort bspot, ushort buildTime = 0, bool pa = true)
@@ -93,21 +93,21 @@ namespace COTG.JSON
 		}
 
 		//public bool isBuild => slvl == 0;
-		public BuildingDef def => BuildingDef.all[bid];
-		public bool isRes => BuildingDef.IsRes(bid);
-		public bool isDemo => elvl == 0;
-		public bool isNop => slvl == 255; // special token for noop
-		public string buildingName => def.Bn;
-		public bool isBuild => slvl == 0 && elvl != 0;
-		public static readonly BuildQueueItem nop = new BuildQueueItem(255, 255, 0, 0, 0);
-		internal bool isValid => bid != City.bidTownHall || slvl != 0;
+		public readonly BuildingDef def => BuildingDef.all[bid];
+		public readonly bool isRes => BuildingDef.IsRes(bid);
+		public readonly bool isDemo => elvl == 0;
+		public readonly bool isNop => slvl == 255; // special token for noop
+		public readonly string buildingName => def.Bn;
+		public readonly bool isBuild => slvl == 0 && elvl != 0;
+		public readonly static  BuildQueueItem nop = new BuildQueueItem(255, 255, 0, 0, 0);
+		internal readonly bool isValid => bid != City.bidTownHall || slvl != 0;
 
-		internal bool isBuilding => !isRes;
+		internal readonly bool isBuilding => !isRes;
 
-		public string bn => def.Bn;
-		public bool isUpgrade => slvl < elvl && slvl != 0;
-		public bool isDowngrade => slvl > elvl && elvl != 0;
-		public BuildOp op =>
+		public readonly string bn => def.Bn;
+		public readonly bool isUpgrade => slvl < elvl && slvl != 0;
+		public readonly bool isDowngrade => slvl > elvl && elvl != 0;
+		public readonly BuildOp op =>
 			isDemo ? BuildOp.demo :
 			isBuild ? BuildOp.build :
 			isNop ? BuildOp.nop :
@@ -133,12 +133,12 @@ namespace COTG.JSON
 		//		CityView.BuildingsOrQueueChanged();
 		//}
 
-		public override bool Equals(object obj)
+		public readonly override bool Equals(object obj)
 		{
 			return base.Equals(obj);
 		}
 
-		public bool Equals(BuildQueueItem other)
+		public readonly bool Equals(BuildQueueItem other)
 		{
 			return slvl == other.slvl &&
 				   elvl == other.elvl &&
@@ -148,12 +148,12 @@ namespace COTG.JSON
 
 
 
-		public override int GetHashCode()
+		public readonly override int GetHashCode()
 		{
 			return (int)slvl + (int)elvl * 10 + bspot * 128 + (int)bid * 51200;
 		}
 
-		public override string ToString()
+		public readonly override string ToString()
 		{
 			return $"{slvl}=>{elvl} {buildingName} <{City.IdToXY(bspot).bspotToString()}>({bspot})";
 		}
@@ -166,6 +166,20 @@ namespace COTG.JSON
 		public static bool operator !=(BuildQueueItem left, BuildQueueItem right)
 		{
 			return !(left == right);
+		}
+		public readonly void Apply( ref Building b)
+		{
+			b.bl = elvl;
+			if (elvl == 0)
+			{
+				b.id = 0;
+			}
+			else
+			{
+				if (slvl != 0)
+					Assert(b.id == BuildingDef.BidToId(bid));
+				b.id = BuildingDef.BidToId(bid);
+			}
 		}
 	}
 	public class CityBuildQueue : IDisposable
@@ -545,7 +559,7 @@ namespace COTG.JSON
 											await JSClient.JSInvokeTask("buildex", new[] { commandBuilder.ToString() }).ConfigureAwait(false);
 
 											if (cid == City.build)
-												CityView.BuildingsOrQueueChanged();
+												City.BuildingsOrQueueChanged();
 
 											SaveNeeded();
 										}
@@ -788,7 +802,7 @@ namespace COTG.JSON
 				Note.Show("Please don't build a second town hall");
 				return;
 			}
-			CityView.animationOffsets[op.bspot] = AGame.animationT * CityView.animationRate; // start animation
+			CityView.animationOffsets[op.bspot] = AGame.animationT;// * CityView.animationRate; // start animation
 			if (op.bid == 0)
 			{
 				Trace($"Bad queueop {op}");

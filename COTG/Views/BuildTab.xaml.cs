@@ -240,7 +240,7 @@ namespace COTG.Views
 
 
 				}
-				App.DispatchOnUIThreadIdle((_) =>
+				App.DispatchOnUIThreadIdle(() =>
 					{
 						if (changes.Count > 8)
 						{

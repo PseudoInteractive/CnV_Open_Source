@@ -438,8 +438,6 @@ namespace COTG.Game
 		{
 			if (id == bspotTownHall)
 				return bidTownHall;
-			if (!isLayoutValid)
-				return 0;
 			return BuildingDef.LayoutToBid(layout[id]);
 		}
 		public Building BuildingFromOverlay(int id)
@@ -1011,7 +1009,7 @@ namespace COTG.Game
 
 		public void NotifyChange(string member = "")
 		{
-			App.DispatchOnUIThreadIdle((_) =>
+			App.DispatchOnUIThreadIdle(() =>
 	   {
 		   OnPropertyChanged(member);
 	   });
@@ -1685,7 +1683,7 @@ namespace COTG.Game
 		//}
 		public static void SyncCityBox()
 		{
-			App.DispatchOnUIThreadIdle((_) =>
+			App.DispatchOnUIThreadIdle(() =>
 			{
 				var _build = City.GetBuild();
 				if (_build != ShellPage.instance.cityBox.SelectedItem)

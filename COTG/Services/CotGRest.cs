@@ -983,7 +983,7 @@ namespace COTG.Services
 
 				}
 			}
-			App.DispatchOnUIThreadIdle((_)
+			App.DispatchOnUIThreadIdle(()
 				=>
 			{
 				MainPage.instance.rWood.Text = $"Wood: {(rWood * 0.001).RoundToInt():N0} k/h";

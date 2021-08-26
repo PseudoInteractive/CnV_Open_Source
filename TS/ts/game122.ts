@@ -54301,6 +54301,7 @@ function outer(){
 					buildEx(__cid,iter+1, queue);
 					return;
 				}
+	// Translate port into facing port
 						if (bId == +r4y && (bXY == +V5R || bXY == c5R - 0 || bXY == (u8y ^ 0) || bXY == M5R >>
 							1074238720)) {
 							t5w = 492;
@@ -54319,6 +54320,7 @@ function outer(){
 							t5w = X4y * 1;
 							bId = +P4y;
 						}
+	  // facing tower
 						if (V5w == 1) {
 							var y5w = y0V(bId, bXY);
 							bId = y5w.t;
