@@ -81,7 +81,7 @@ namespace COTG.Views
 			//	//Canvas.SetTop(_canvas, topOffset);
 			//	//RemakeRenderTarget();
 			//});
-			//            _grid.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
+			//            _grid.Dispatcher.RunAsync(Windows.UI.Core.DispatcherQueuePriority.Normal, () =>
 			//            AUtil.Nop( (_grid.ColumnDefinitions[0].Width = new GridLength(leftOffset),
 			//          _grid.ColumnDefinitions[1].Width = new GridLength(_grid.ColumnDefinitions[1].Width.Value-delta))));
 		}

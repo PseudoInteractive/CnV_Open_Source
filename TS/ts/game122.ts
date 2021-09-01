@@ -70572,11 +70572,10 @@ function outer(){
 		//    r5F();
 		//  }
 		//}
-		$(document)
-			.ready(function () {
+		window['godset'] = function (){
+
 				E6k.y6();
-				if (typeof godmode !== "undefined") $(__s[5354])
-					.click(function () {
+				{
 						if ($(__s[4206])
 							.length == (0)) {
 							N6();
@@ -70727,7 +70726,7 @@ function outer(){
 						} else $(__s[4206])
 							.remove();
 					});
-			});
+			};
 
 		function z4V() {
 			var v79 = $(__s[+L4R])

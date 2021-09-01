@@ -33,7 +33,9 @@ namespace COTG.Helpers
 			if (backup)
 				await SaveAsync<T>(folder, $"{name}___{JSClient.ServerTime().FormatFileTimeToMinute()}___", content, false);
 			await FileIO.WriteTextAsync(file, fileContent);
-        }
+		
+
+		}
 
 
 		public static Regex regexBackupDatePostFix = new Regex(@"__(?:_\d{1,4})*___", RegexOptions.CultureInvariant | RegexOptions.Compiled);
@@ -81,7 +83,7 @@ namespace COTG.Helpers
             var fileContent = await FileIO.ReadTextAsync(file);
 			if (fileContent.IsNullOrEmpty())
 				return _default;
-
+			
             return JsonSerializer.Deserialize<T>(fileContent, Json.jsonSerializerOptions);
         }
 
@@ -120,7 +122,7 @@ namespace COTG.Helpers
                     Size a => a,
                     Rect a => a,
                     ApplicationDataCompositeValue a => a,
-                    _ => JsonSerializer.Serialize(value,t)
+                    _ => JsonSerializer.Serialize(value,t,Json.jsonSerializerOptions)
                 };
             }
         }
@@ -156,7 +158,7 @@ namespace COTG.Helpers
                        return rv;
                     }
                     if (o is string && t != typeof(string))
-                        return JsonSerializer.Deserialize((string)o, t);
+                        return JsonSerializer.Deserialize((string)o, t,Json.jsonSerializerOptions);
                     else
                         return o;
                 }

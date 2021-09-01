@@ -7,3 +7,4 @@ using System.Diagnostics.CodeAnalysis;
 
 [assembly: SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "<Pending>", Scope = "member", Target = "~P:COTG.Draw.Material.Width")]
 [assembly: SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "<Pending>", Scope = "member", Target = "~P:COTG.App.ActivationService")]
+[assembly: SuppressMessage("Readability", "RCS1018:Add accessibility modifiers (or vice versa).", Justification = "<Pending>", Scope = "member", Target = "~M:COTG.AGame.ShadowColor(System.Single,System.Boolean)~Microsoft.Xna.Framework.Color")]

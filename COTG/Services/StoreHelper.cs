@@ -59,7 +59,7 @@ namespace COTG.Services
 		//	// package in this request.
 		//	downloadOperation.Progress = async (asyncInfo, progress) =>
 		//	{
-		//		//await this.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal,
+		//		//await this.Dispatcher.RunAsync(Windows.UI.Core.DispatcherQueuePriority.Normal,
 		//		//() =>
 		//		//{
 		//		//	downloadProgressBar.Value = progress.PackageDownloadProgress;

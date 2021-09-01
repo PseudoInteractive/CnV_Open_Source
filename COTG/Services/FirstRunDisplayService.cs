@@ -17,7 +17,7 @@
 //        internal static async Task ShowIfAppropriateAsync()
 //        {
 //            await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(
-//                CoreDispatcherPriority.Normal, async () =>
+//                DispatcherQueuePriority.Normal, async () =>
 //                {
 //                    if (SystemInformation.IsFirstRun && !shown)
 //                    {

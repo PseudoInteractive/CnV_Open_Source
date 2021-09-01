@@ -13,7 +13,7 @@ namespace COTG.JSON
 	{
 		public const int count = 35;
 		public static TroopInfo[] all;
-		public static async void Init()
+		public static async Task Init()
 		{
 			all = await Json.FromContent<TroopInfo[]>("Troops");
 		}

@@ -18,12 +18,13 @@ namespace COTG
 			DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull, 
 			NumberHandling = JsonNumberHandling.AllowReadingFromString|JsonNumberHandling.AllowNamedFloatingPointLiterals, 
 			ReadCommentHandling = JsonCommentHandling.Skip,
+			
 			IgnoreReadOnlyProperties=true
 		};
 		public static async Task<T> FromContent<T>(string asm)
 		{
-			var file = await ApplicationData.Current.LocalFolder.GetFileAsync($"ms-appx:///JSON/{asm}.json");
-			return JsonSerializer.Deserialize<T>(await FileIO.ReadTextAsync(file), jsonSerializerOptions);
+			var file = await App.GetAppString( $"JSON/{asm}.json");
+			return JsonSerializer.Deserialize<T>(file, jsonSerializerOptions);
 
 		}
 	}

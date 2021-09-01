@@ -2194,8 +2194,13 @@ namespace COTG
 					{
 						var alpha = 255;
 						Vector2 c = new Vector2(clientSpan.X - 32, 16).ScreenToCamera();
-						DrawTextBox($"{CityBuild.postQueueBuildingCount}/{CityBuild.postQueueTownHallLevel * 10}", c, tipTextFormatRight, Color.White.Scale(alpha), (byte)(alpha * 192.0f).RoundToInt(), Layer.overlay, 11, 11, ConstantDepth, 0, 0.5f );
+						var city = City.GetBuild();
+						if (city != null)
+						{
+							var counts = city.GetTownHallAndBuildingCount();
 
+							DrawTextBox($"{counts.buildingCount}/{counts.townHallLevel * 10}", c, tipTextFormatRight, Color.White.Scale(alpha), (byte)(alpha * 192.0f).RoundToInt(), Layer.overlay, 11, 11, ConstantDepth, 0, 0.5f);
+						}
 					}
 					var _debugTip = ShellPage.debugTip;
 					if (_debugTip != null)

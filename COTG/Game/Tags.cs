@@ -63,6 +63,7 @@ namespace COTG.Game
 		Sloop = Stinger,
 		Galley = 1 << Enum.ttGalley,
 		Warship = 1 << Enum.ttWarship,
+		HLT = 1<<20,
 		Shipper= 1 << 21,
 		[IsAlias]
 		Shipping = Shipper,
@@ -71,6 +72,8 @@ namespace COTG.Game
 		Storage = 1<< 24,
 		Transport = 1 << 25,
 		SevenPoint = 1 << 26,
+		Jumper = 1 << 27,
+		Portal = 1 << 28,
 		// meta tags
 		// mine, alliance enemy other
 	}

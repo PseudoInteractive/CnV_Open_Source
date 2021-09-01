@@ -61,20 +61,14 @@ namespace COTG.Views
 		public static string hubCitylistName = "Hubs";
 		public static string exportPlayer = string.Empty;
 		public static string exportAlliance = string.Empty;
-		//public static int reqWood = 160000;
-		//public static int reqStone = 205000;
 		public static bool drawBuildingOverlays=true;
 
 		public static float returnRaidsBias = 1.0f;
 		public static bool setShareString = true;
 		public static bool autoBuildCabins = true;
 		public static bool autoRearrangeShareStrings= true;
-		//public static int reqIron = 200000;
-		//public static int reqFood = 200000;
-		//public static int maxWood = 250000;
-		//public static int maxStone = 250000;
-		//public static int maxIron = 300000;
-		//public static int maxFood = 300000;
+		public static ResourcesNullable defaultReq = new (200000,220000,200000,250000);
+		public static ResourcesNullable defaultSend = new(250000,250000,300000,350000);
 		public static int cabinsToRemovePerSwap= 6;
 		public static int cottageLevel = 7;
 		public static bool? troopsVisible;
@@ -346,8 +340,7 @@ namespace COTG.Views
 				if(!loadedOnce)
 				{
 					loadedOnce = true;
-					BuildingDef.Init();
-					TroopInfo.Init();
+					
 
 				}
 				// incomingWatch = st.Read(nameof(incomingWatch), Array.Empty<string>() );
@@ -365,7 +358,7 @@ namespace COTG.Views
 
 				UpdateZoom();
 				//	DungeonView.Initialize();
-				loadedOnce = true;
+			
 			}
 			catch (Exception e)
 			{

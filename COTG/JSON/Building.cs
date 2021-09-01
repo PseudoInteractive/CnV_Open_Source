@@ -14,7 +14,7 @@ namespace COTG
 		public readonly byte id; // this is pretranslated from the buildingDefs definitions to pack it into a byte
 		public readonly byte bl; // building level
 
-		public readonly int bid => def.bid;
+		public readonly short bid => def.bid;
 		public readonly bool isBuilding => bl > 0;
 		public readonly bool isEmpty => id == 0;
 		public readonly bool isRes => def.isRes;
@@ -32,10 +32,10 @@ namespace COTG
 		public readonly bool isWall => def.isWall;
 		public readonly bool isTownHall => id == BuildingDef.idTownHall;
 		public readonly bool requiresBuildingSlot => def.requiresBuildingSlot;
-		public Building(int bid, int bl)
+		public Building(byte id, byte bl)
 		{
-			this.id = BuildingDef.BidToId(bid);
-			this.bl = (byte)bl;
+			this.id = id;
+			this.bl = bl;
 		}
 	//	public static ArrayPool<Building> pool = ArrayPool<Building>.Create(City.citySpotCount,64);
 	//	public static Building[] Rent() => pool.Rent(City.citySpotCount);

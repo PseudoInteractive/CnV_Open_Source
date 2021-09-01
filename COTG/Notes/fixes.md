@@ -289,13 +289,18 @@
             - Why are HTML newlines so temperamental?
      - **New**
         - Right click on the continent/tag filter to clear it
-            - tlgger request
+          - tlgger request
 ### 2021/8/21
-    -   **Fix**
+    - **Fix**
         - The number of milliseconds since Unix was started is now to big to fit in an integer, this caused ministers to think that they were expired.
             - Changed the date at which Unix was started.
-    -   **New**
+    - **New**
         -   City Tag: "SevenPoint", for 7 point castles
             -   If you need a good layout, I have shared one: see "7pt"
-    -   **Fix**
+    - **Fix**
         - Boss tab has fewer focus issues
+### 2021/8/31
+    - **Fix**
+        - Launching a second instance works
+    - **New**
+        - Figgis requested new Tags:  HLT, Portal and Jumper

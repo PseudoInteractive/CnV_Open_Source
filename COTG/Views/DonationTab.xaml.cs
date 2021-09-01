@@ -42,7 +42,7 @@ namespace COTG.Views
             Assert(instance == null);
             instance = this;
             this.InitializeComponent();
-			spotGrids.Add(donationGrid);
+		//	spotGrids.Add(donationGrid);
 	
 		}
 
@@ -82,7 +82,7 @@ namespace COTG.Views
                 {
                     CityList.NotifyChange();
                     blessedGrid.ItemsSource = BlessedCity.GetForCity(null);
-					donationGrid.ItemsSource = City.gridCitySource;
+				///	donationGrid.ItemsSource = City.gridCitySource;
 				}
 				); // many items changed
             }

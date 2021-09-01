@@ -27,7 +27,7 @@ namespace COTG.Views
 	
 	public sealed partial class QueueTab : UserTab, INotifyPropertyChanged
 	{
-		const int movesPerConfirm = 8;
+		public const int movesPerConfirm = 8;
 
 
 		static readonly int[] cabinCounts ={ 0,1, 2, 3, 4, 5, 6, 7, 8 };
@@ -159,14 +159,13 @@ namespace COTG.Views
 			});
 
 		}
-		public static void RebuildAll()
+		public static void RebuildAll(City city)
 		{
-			var build = GetBuild();
-			var stage = build.UpdateBuildStage();
+			var stage = city.UpdateBuildStage();
 			App.DispatchOnUIThreadLow(() =>
 			{
 				instance.cities.Clear();
-				instance.stage.Text = $"Stage: {build.buildStage.AsString()}";
+				instance.stage.Text = $"Stage: {city.buildStage.AsString()}";
 				foreach (var city in CityBuildQueue.all.Values)
 				{
 					var view = BuildItemView.Rent().Ctor(city.cid);
@@ -185,7 +184,7 @@ namespace COTG.Views
 
 			if (visible)
 			{
-				RebuildAll();
+				RebuildAll(City.GetBuild());
 			}
 			else
 			{
@@ -321,7 +320,7 @@ namespace COTG.Views
 			Assert(city.isBuild);
 			if (ShellPage.viewMode != ViewMode.city)
 				JSClient.ChangeView(ViewMode.city);
-			await CityBuild._IsPlanner(false,true);
+			await CityBuild.SetIsPlanner(false,true);
 			
 			Assert(App.uiSema.CurrentCount == 0);
 			Assert(App.IsOnUIThread());
@@ -343,7 +342,7 @@ namespace COTG.Views
 
 			Assert(city.isBuild);
 
-			if ( (city.buildStage == BuildStage.noLayout ||(city.layoutBuildingCount==0) ) && allowSetLayout )
+			if ( city.buildStage == BuildStage.noLayout && allowSetLayout )
 			{
 				//				if (!city.isBuild)
 				//				await JSClient.ChangeCity(city.cid, false);
@@ -360,7 +359,7 @@ namespace COTG.Views
 				Note.Show($"Complete: {city}");
 				return true;
 			}
-			var bad = CountBadBuildings();
+			var bad = CountBadBuildings(city);
 			if (bad.isBad)
 			{
 				switch (await App.DoYesNoBox("Layout is not ideal", $"{bad.matches} matches, {bad.extraBuildings} extra or misplaced, {bad.missingOverlayBuildings} missing or out of place, Yes to Continue, No to cancel and change layout (or 'Use Buildings' in planner)", "Continue", "Layout..", "Cancel"))
@@ -379,7 +378,7 @@ namespace COTG.Views
 			{
 				if (bc.townHallLevel < 8)
 				{
-					await EnqueueUpgrade(8, bspotTownHall);
+					await city.EnqueueUpgrade(8, bspotTownHall);
 					bc = city.UpdateBuildStage();
 				}
 
@@ -399,8 +398,8 @@ namespace COTG.Views
 				//			if (!city.isBuild)
 				//				await JSClient.ChangeCity(city.cid, false); ;
 				//				if(!bc.hasWall)
-				//					await CityBuild.Enqueue(0, 1, bidWall, bspotWall);
-				await CityBuild.SmartBuild(city, city.FindOverlayBuildingOfType(bidCastle), bidCastle, true, false, false);
+				//					await city.Enqueue(0, 1, bidWall, bspotWall);
+				await city.SmartBuild( city.FindOverlayBuildingOfType(bidCastle), bidCastle, true, false, false);
 				bc = city.UpdateBuildStage();
 				//bc.wallLevel = 1;
 				if (city.is7Point)
@@ -408,7 +407,7 @@ namespace COTG.Views
 
 				if (city.is7Point && bc.hasCastle)
 				{
-					await CityBuild.DowngradeTo((0, 0), 1); // downgrade town hall
+					await city.DowngradeTo((0, 0), 1); // downgrade town hall
 				}
 			}
 			if ((bc.sorcTowers == 0 || bc.sorcTowerLevel != 10) && (city.tsTotal > SettingsPage.tsForSorcTower || (!city.isMilitary && city.points> SettingsPage.scoreForSorcTower) ) && city.HasOverlayBuildingOfType( bidSorcTower) )
@@ -417,7 +416,7 @@ namespace COTG.Views
 
 				if (c.bl == 0)
 				{
-					if (await CityBuild.SmartBuild(city, (c.x, c.y), bidSorcTower, true, false, false) != -1)
+					if (await city.SmartBuild( (c.x, c.y), bidSorcTower, true, false, false) != -1)
 						c.bl = 1;
 
 
@@ -425,12 +424,12 @@ namespace COTG.Views
 				}
 				// raise to level 10
 				if(c.bl != 0) // did it work?
-					await CityBuild.EnqueueUpgrade( 10, XYToId((c.x, c.y)));
+					await city.EnqueueUpgrade( 10, XYToId((c.x, c.y)));
 			}
 			Assert(city.isBuild);
 			if (!bc.hasWall && bc.hasCastle && !city.is7Point)
 			{
-				await CityBuild.Enqueue(0, 1, bidWall, bspotWall);
+				await city.Enqueue(0, 1, bidWall, bspotWall);
 				bc.wallLevel = 1;
 			}
 			Assert(city.isBuild);
@@ -441,7 +440,7 @@ namespace COTG.Views
 					var spot = 0;
 					foreach (var _spot in innerTowerSpots)
 					{
-						if (CityBuild.postQueueBuildings[_spot].isEmpty)
+						if (city.postQueueBuildings[_spot].isEmpty)
 						{
 							spot = _spot;
 							goto added;
@@ -450,7 +449,7 @@ namespace COTG.Views
 					}
 					foreach (var _spot in outerTowerSpots)
 					{
-						if (CityBuild.postQueueBuildings[_spot].isEmpty)
+						if (city.postQueueBuildings[_spot].isEmpty)
 						{
 							spot = _spot;
 							goto added;
@@ -461,7 +460,7 @@ namespace COTG.Views
 				added:
 					if (spot == 0)
 						break;
-					await CityBuild.Enqueue(0, 1, bidSentinelPost, spot);
+					await city.Enqueue(0, 1, bidSentinelPost, spot);
 
 					++bc.scoutpostCount;
 				}
@@ -492,14 +491,14 @@ namespace COTG.Views
 
 							if (bc.townHallLevel < 4)
 							{
-								await EnqueueUpgrade( 4, bspotTownHall);
+								await city.EnqueueUpgrade( 4, bspotTownHall);
 							}
-							var storeHouses = FindPendingOverlayBuildingsOfType(SettingsPage.intialStorehouses - bc.storeHouses, bidStorehouse, true);
+							var storeHouses = FindPendingOverlayBuildingsOfType(city,SettingsPage.intialStorehouses - bc.storeHouses, bidStorehouse, true);
 							foreach (var storage in storeHouses)
 							{
 
 								message += $"Adding Storehouse";
-								await CityBuild.SmartBuild(city, storage, bidStorehouse, true, false);
+								await city.SmartBuild( storage, bidStorehouse, true, false);
 								++bc.storeHouses;
 
 
@@ -530,9 +529,9 @@ namespace COTG.Views
 
 										if (bc.buildings >= city.buildingLimit)
 											goto done;
-										if (CityBuild.postQueueBuildings[City.XYToId(c)].isEmpty && (city.BidFromOverlay(c) == 0))
+										if (city.postQueueBuildings[City.XYToId(c)].isEmpty && (city.BidFromOverlay(c) == 0))
 										{
-											await CityBuild.Build(XYToId(c), bidCottage, false,false);
+											await city.Build(XYToId(c), bidCottage, false,false);
 											++bc.cabins;
 										}
 										if (bc.cabins >= SettingsPage.startCabinCount)
@@ -571,12 +570,12 @@ namespace COTG.Views
 
 							if (bc.storeHouses < SettingsPage.intialStorehouses )
 							{
-								var storage = FindPendingOverlayBuildingsOfType( SettingsPage.intialStorehouses  - bc.storeHouses, bidStorehouse,true);
+								var storage = FindPendingOverlayBuildingsOfType(city, SettingsPage.intialStorehouses  - bc.storeHouses, bidStorehouse,true);
 								foreach(var s in storage)
 								{
 									message += $"Adding Storehouse";
-									await CityBuild.SmartBuild(city, s, bidStorehouse, true, false);
-									bc = City.GetBuildingCountsPostQueue(city.autobuildCabinLevel);
+									await city.SmartBuild(s, bidStorehouse, true, false);
+									bc = city.GetBuildingCounts();
 								}
 							}
 							if (bc.forums == 0 && bc.ports==0 && bc.buildings < buildingLimit)
@@ -593,8 +592,8 @@ namespace COTG.Views
 									if (bc.buildings >= buildingLimit)
 										break;
 									message += $"Adding Forum or Port";
-									await CityBuild.SmartBuild(city, b, bid, true, false);
-									bc = City.GetBuildingCountsPostQueue(city.autobuildCabinLevel);
+									await city.SmartBuild(b, bid, true, false);
+									bc = city.GetBuildingCounts();
 								}
 							}
 							{
@@ -627,12 +626,12 @@ namespace COTG.Views
 										{
 											continue;
 										}
-										if (await CityBuild.SmartBuild(city, i, bid, true, false) == -1)
+										if (await city.SmartBuild( i, bid, true, false) == -1)
 										{
 											Note.Show("Something unusual happened");
 											break;
 										}
-										bc = City.GetBuildingCountsPostQueue(city.autobuildCabinLevel);
+										bc = city.GetBuildingCounts();
 									}
 								}
 							}
@@ -641,7 +640,7 @@ namespace COTG.Views
 								var bd = FindPendingOverlayBuildingsOfType(city, buildingLimit, bid);  // find them all
 								int milBid = bc.GetMainMilitaryBid();
 
-								bd = bd.OrderByDescending((x) => GetBarrackScore(x, milBid)).ToList();
+								bd = bd.OrderByDescending((x) => GetBarrackScore(city,x, milBid)).ToList();
 								if (bd.Any())
 								{
 									message += $"Adding Barracks";
@@ -655,13 +654,13 @@ namespace COTG.Views
 										if (xx == 0)
 											break;
 
-										if (await CityBuild.SmartBuild(city, i, bid, true, false) == -1)
+										if (await city.SmartBuild( i, bid, true, false) == -1)
 										{
 											Note.Show("Something unusual happened");
 											break;
 										}
 
-										bc = City.GetBuildingCountsPostQueue(city.autobuildCabinLevel);
+										bc = city.GetBuildingCounts();
 									}
 
 
@@ -682,12 +681,12 @@ namespace COTG.Views
 										break;
 
 									var bid = city.BidFromOverlay(c);
-									if( await CityBuild.SmartBuild(city, c, bid, true, false) == -1)
+									if( await city.SmartBuild( c, bid, true, false) == -1)
 									{
 										Note.Show("Something unusual happened");
 										break;
 									}
-									bc = City.GetBuildingCountsPostQueue(city.autobuildCabinLevel);
+									bc = city.GetBuildingCounts();
 
 								}
 
@@ -720,7 +719,7 @@ namespace COTG.Views
 						   
 						   var combo = new ComboBox() {Header="Cabins to remove:", ItemsSource= cabinCounts };
 						   combo.SelectedIndex = SettingsPage.cabinsToRemovePerSwap;
-						   var hasExtra = hasExtraBuildings;
+						   var hasExtra = city.hasExtraBuildings;
 						   var removeOthers = hasExtra ? new ToggleSwitch() { Header = "Extra buildings", OnContent = "Remove", OffContent = "Leave", IsOn = SettingsPage.demoUnwantedBuildingsWithCabins } : null; 
 
 						   panel.Children.Add( combo );
@@ -762,7 +761,7 @@ namespace COTG.Views
 
 							var todo = FindPendingOverlayBuildings(city);
 							int milBid =  bc.GetMainMilitaryBid();
-							var barracks = FindPendingOverlayBuildingsOfType(city, 100,bidBarracks).OrderByDescending(a => GetBarrackScore(a, milBid)).ToList();
+							var barracks = FindPendingOverlayBuildingsOfType(city, 100,bidBarracks).OrderByDescending(a => GetBarrackScore(city,a, milBid)).ToList();
 							var commandLimit = SettingsPage.cabinsToRemovePerSwap * 2;
 							var todoGet = 0;
 							for (; ; )
@@ -784,14 +783,14 @@ namespace COTG.Views
 									c = barracks[0];
 									barracks.RemoveAt(0);
 								}
-								var delta= await CityBuild.SmartBuild(city, c, bid, true, false, SettingsPage.demoUnwantedBuildingsWithCabins);
+								var delta= await city.SmartBuild( c, bid, true, false, SettingsPage.demoUnwantedBuildingsWithCabins);
 								if(delta == -1)
 								{
 									Note.Show("Something unusual happened");
 									break;
 								}
 								count -= count;
-								bc = City.GetBuildingCountsPostQueue(city.autobuildCabinLevel);
+								bc = city.GetBuildingCounts();
 							}
 							Assert(city.isBuild);
 
@@ -807,14 +806,14 @@ namespace COTG.Views
 			}
 			if (bc.unfinishedTowerCount > 0)
 			{
-				foreach (var t in FindAllUnfinishedTowers())
+				foreach (var t in FindAllUnfinishedTowers(city))
 				{
-					await CityBuild.UpgradeToLevel(SettingsPage.autoTowerLevel, t, false);
+					await city.UpgradeToLevel(SettingsPage.autoTowerLevel, t, false);
 				}
 			}
 			if (bc.hasWall && bc.wallLevel < SettingsPage.autoWallLevel && SettingsPage.autoWallLevel != 10)
 			{
-				await CityBuild.UpgradeToLevel(SettingsPage.autoWallLevel, IdToXY(bspotWall), false);
+				await city.UpgradeToLevel(SettingsPage.autoWallLevel, IdToXY(bspotWall), false);
 
 			}
 			city.NotifyChange();
@@ -822,9 +821,9 @@ namespace COTG.Views
 			return true;
 
 		}
-		static int GetBarrackScore((int x, int y) c, int bid)
+		static int GetBarrackScore(City city,(int x, int y) c, int bid)
 		{
-			int rv = -GetSpotCost(c);
+			int rv = -GetSpotCost(city,c);
 
 			for (int y = -1; y <= 1; ++y)
 				for (int x = -1; x <= 1; ++x)
@@ -834,7 +833,7 @@ namespace COTG.Views
 					var c1 = (c.x + x, c.y + y);
 					if (c1.IsInCity())
 					{
-						if (CityBuild.postQueueBuildings[City.XYToId(c1)].bid == bid)
+						if (city.postQueueBuildings[City.XYToId(c1)].bid == bid)
 							rv += 4;
 					}
 				}
@@ -842,9 +841,9 @@ namespace COTG.Views
 			return rv;
 		}
 		// starts ate center and searches outwards
-		static int GetSpotCost((int x,int y) c)
+		static int GetSpotCost(City city,(int x,int y) c)
 		{
-			var bl = CityBuild.postQueueBuildings[City.XYToId(c)];
+			var bl = city.postQueueBuildings[City.XYToId(c)];
 			if (bl.isRes)
 				return 1;
 			else if (bl.isBuilding)
@@ -874,7 +873,7 @@ namespace COTG.Views
 							{
 								continue;
 							}
-							if ((bid != 0) && (CityBuild.postQueueBuildings[id].bid != bid))
+							if ((bid != 0) && (city.postQueueBuildings[id].bid != bid))
 							{
 								rv.Add(c);
 
@@ -883,14 +882,13 @@ namespace COTG.Views
 					}
 				}
 			}
-			return rv.OrderBy( (a) => GetSpotCost(a) ).ToArray();
+			return rv.OrderBy( (a) => GetSpotCost(city,a) ).ToArray();
 		}
-		public static (int matches,int missingOverlayBuildings,int extraBuildings, bool isBad) CountBadBuildings()
+		public static (int matches,int missingOverlayBuildings,int extraBuildings, bool isBad) CountBadBuildings(City city)
 		{
 			int matches = 0;
 			int missingOverlayBuildings = 0;
 			int extraBuildings = 0;
-			var city = City.GetBuild();
 			for (var y = span0; y <= span1; ++y)
 			{
 				for (var x = span0; x <= span1; ++x)
@@ -899,7 +897,7 @@ namespace COTG.Views
 					var id = XYToId(c);
 					if (!IsBuildingSpot(id))
 						continue;
-					var pb = CityBuild.postQueueBuildings[id];
+					var pb = city.postQueueBuildings[id];
 					var pbid = (!pb.isBuilding || pb.isCabin) ? 0 : pb.bid;
 					var bid = city.BidFromOverlay(c);
 
@@ -926,7 +924,7 @@ namespace COTG.Views
 				return;
 			try
 			{
-				await MoveStuffLocked();
+				await City.GetBuild().MoveStuffLocked();
 
 			}
 			finally
@@ -935,187 +933,9 @@ namespace COTG.Views
 
 			}
 		}
-		public static bool hasExtraBuildings => FindExtraBuilding() != -1;
+		
 
-		public static int FindExtraBuilding()
-		{
-			var city = City.GetBuild();
-			if (!city.isLayoutValid)
-				return -1;
-			Dictionary<ushort, short> counts = new();
-
-
-		// first collect counts
-			for (var id = 1; id < City.citySpotCount-1; ++id)
-			{
-				if (!IsBuildingSpot(id))
-					continue;
-
-				var bid = (ushort)city.BidFromOverlay(id);
-				if (bid != 0 && bid != bidTemple && bid != bidCastle)
-				{
-					if (counts.TryGetValue(bid, out var c) == false)
-					{
-						c = 1;
-						counts.TryAdd(bid, c);
-					}
-					else
-					{
-						++c;
-						counts[bid] = c;
-					}
-				}
-				
-				var bl = CityBuild.postQueueBuildings[id];
-				if (!(bl.isRes || bl.isEmpty || bl.isTemple || bl.isCabin || bl.isTower))
-				{
-					bid = (ushort)bl.bid;
-					if (counts.TryGetValue(bid, out var c) == false)
-					{
-						c = -1;
-						counts.TryAdd(bid, c);
-					}
-					else
-					{
-						--c;
-						counts[bid] = c;
-					}
-
-				}
-			}
-			int rv = -1;
-			int bestLevel = int.MaxValue;
-			for (var id = 1; id < City.citySpotCount-1; ++id)
-			{
-				if (!IsBuildingSpot(id))
-					continue;
-
-				var oBid = (ushort)city.BidFromOverlay(id);
-				var bl = CityBuild.postQueueBuildings[id];
-				if (!(bl.isRes || bl.isEmpty || bl.isTemple  ||  bl.isCabin || bl.isTower))
-				{
-					var bid = (ushort)bl.bid;
-					if (bid == oBid)
-						continue;
-					if (counts[bid] < 0)
-					{
-						if (bl.bl < bestLevel)
-						{
-							bestLevel = bl.bl;
-							rv = id;
-						}
-					}
-				
-
-				}
-			}
-			return rv;
-		}
-
-
-		private static async Task MoveStuffLocked()
-		{
-			var cid = City.build;
-			var city = GetBuild();
-			Note.Show($"Move slots: {Player.moveSlots}");
-
-
-			var initialMoveSlots = Player.moveSlots;
-				var nextMoveConfirm = initialMoveSlots - movesPerConfirm;
-
-				var result = await App.DoYesNoBox("Move Stuff", "Whould you like to demo resources where buildings should go?", cancel:"Don't Move", no:"Move Stuff", yes:"Move+Demo" );
-				if(result == -1)
-					return;
-				var allowDemo = result == 1;
-
-				for (int bad=0;bad<16;++bad)
-				{
-					var hasChanges = false;
-					for (int pass = 0; pass < 2; ++pass)
-					{
-						for (int r = 1; r <= City.citySpan; ++r)
-						{
-							for (var y = -r; y <= r; ++y)
-							{
-								for (var x = -r; x <= r; ++x)
-								{
-									if ((x == -r || x == r) || (y == -r || y == r))
-									{
-										var c = (x, y);
-										var id = XYToId(c);
-										if (!IsBuildingSpot(id))
-											continue;
-										if (HasBuildOps(id))
-											continue;
-										var bid = city.BidFromOverlay(id);
-										if (bid == 0)
-											continue;
-										var bl = CityBuild.postQueueBuildings[id];
-										var pbid = bl.bid;
-										if (pbid == bid)
-											continue;
-										if (pbid == 0 || (bl.isRes&&allowDemo)  )
-										{
-											var spare = FindSpare(bid, false);
-											if (spare != 0 )
-											{
-												if(bl.isRes )
-												{
-													await Demolish(c, false);
-													await Task.Delay(500);
-													hasChanges = true;
-												}
-												if (spare > 0)
-												{
-													if (!await MoveBuilding(spare, id, false))
-													{
-														goto error;
-													}
-													hasChanges = true;
-												if (Player.moveSlots < nextMoveConfirm)
-												{
-													nextMoveConfirm = (Player.moveSlots - movesPerConfirm).Max(3);
-													if (await App.DoYesNoBox("Move Stuff", $"{initialMoveSlots - Player.moveSlots} moves so far, {Player.moveSlots} moves left, continue?") != 1)
-														goto done;
-												}
-											}
-											}
-										
-										}
-									//	else if (pass == 1)
-									//	{
-									//		var spare = CityBuild.FindAnyFreeSpot(id);
-									//		if (!await MoveBuilding(id, spare, false)) 
-									//		{
-												
-									//			goto error;
-									//		}
-									//		hasChanges = true;
-									//		break;
-									//}
-								}
-									
-
-									}
-								
-							}
-						}
-						if (hasChanges)
-							break;
-					}
-					if (!hasChanges)
-						break;
-
-				}
-
-			done:
-			
-			Note.Show($"Final Move slots: {Player.moveSlots}");
-			return;
-		error:
-			await App.DoYesNoBox("Move Stuff", "Failed, build operations in progress might be blocking?", "Okay", null);
-	
-		}
+		
 
 		static List<(int x, int y)> FindOverlayBuildingsOfType(City city, int bid, int max= 100)
 		{
@@ -1146,7 +966,7 @@ namespace COTG.Views
 				for (var cx = span0; cx <= span1; ++cx)
 				{
 					var c = (cx, cy);
-					var b = CityBuild.postQueueBuildings[XYToId(c)];
+					var b = city.postQueueBuildings[XYToId(c)];
 					if (b.bid == bid)
 					{
 						if (b.bl > rv.bl)
@@ -1162,15 +982,14 @@ namespace COTG.Views
 			return rv;
 		}
 
-		static List<(int x, int y)> FindPendingOverlayBuildingsOfType( int count, int bid, bool addDummyIfNoLayout=false)
+		static List<(int x, int y)> FindPendingOverlayBuildingsOfType(City city, int count, int bid, bool addDummyIfNoLayout=false)
 		{
-			var city = City.GetBuild();
 			List<(int x, int y)> rv = new();
 			if (count <= 0)
 				goto done;
 			if(!city.isLayoutValid && addDummyIfNoLayout)
 			{
-				rv.Add(RandomSpotForBuilding());
+				rv.Add(RandomSpotForBuilding(city));
 				return rv;
 			}
 
@@ -1184,7 +1003,7 @@ namespace COTG.Views
 						if ((x == -r || x == r) || (y == -r || y == r))
 						{
 							var c = (x, y);// (int x, int y) c = RandCitySpot();
-							if ((city.BidFromOverlay(c) == bid) && (CityBuild.postQueueBuildings[City.XYToId(c)].bid != bid))
+							if ((city.BidFromOverlay(c) == bid) && (city.postQueueBuildings[City.XYToId(c)].bid != bid))
 							{
 								rv.Add(c);
 								if (rv.Count >= count)
@@ -1215,7 +1034,7 @@ namespace COTG.Views
 							var bid = city.BidFromOverlay(c);
 							if (bid == 0)
 								continue;
-							if (bids.Contains(bid) && (CityBuild.postQueueBuildings[City.XYToId(c)].bid != bid))
+							if (bids.Contains(bid) && (city.postQueueBuildings[City.XYToId(c)].bid != bid))
 							{
 								rv.Add(c);
 								if (rv.Count >= count)
@@ -1228,7 +1047,7 @@ namespace COTG.Views
 		done:
 			return rv;
 		}
-		static List<(int x, int y)> FindAllUnfinishedTowers()
+		static List<(int x, int y)> FindAllUnfinishedTowers(City city)
 		{
 			List<(int x, int y)> rv = new();
 
@@ -1238,7 +1057,7 @@ namespace COTG.Views
 				for (var cx = span0; cx <= span1; ++cx)
 				{
 					var c = (cx, cy);// (int x, int y) c = RandCitySpot();
-					var b = CityBuild.postQueueBuildings[City.XYToId(c)];
+					var b = city.postQueueBuildings[City.XYToId(c)];
 					if (b.isTower && b.bl < SettingsPage.autoTowerLevel)
 					{
 						rv.Add(c);
@@ -1247,7 +1066,7 @@ namespace COTG.Views
 			}
 			return rv;
 		}
-		private static (int x, int y) RandomSpotForBuilding() => IdToXY(CityBuild.FindFreeSpot());
+		private static (int x, int y) RandomSpotForBuilding(City city) => IdToXY(city.FindFreeSpot());
 
 		//private async void SplatAll(object sender, Windows.UI.Xaml.RoutedEventArgs e)
 		//{
@@ -1363,7 +1182,107 @@ namespace COTG.Game
 		{
 			return ((!bc.hasCastle) && tsTotal > SettingsPage.tsForCastle && HasOverlayBuildingOfType(bidCastle));
 		}
+		public async Task MoveStuffLocked()
+		{
+			Note.Show($"Move slots: {Player.moveSlots}");
 
+
+			var initialMoveSlots = Player.moveSlots;
+			var nextMoveConfirm = initialMoveSlots - movesPerConfirm;
+
+			var result = await App.DoYesNoBox("Move Stuff", "Whould you like to demo resources where buildings should go?", cancel: "Don't Move", no: "Move Stuff", yes: "Move+Demo");
+			if (result == -1)
+				return;
+			var allowDemo = result == 1;
+
+			for (int bad = 0; bad < 16; ++bad)
+			{
+				var hasChanges = false;
+				for (int pass = 0; pass < 2; ++pass)
+				{
+					for (int r = 1; r <= City.citySpan; ++r)
+					{
+						for (var y = -r; y <= r; ++y)
+						{
+							for (var x = -r; x <= r; ++x)
+							{
+								if ((x == -r || x == r) || (y == -r || y == r))
+								{
+									var c = (x, y);
+									var id = XYToId(c);
+									if (!IsBuildingSpot(id))
+										continue;
+									if (HasBuildOps(id))
+										continue;
+									var bid = BidFromOverlay(id);
+									if (bid == 0)
+										continue;
+									var bl = postQueueBuildings[id];
+									var pbid = bl.bid;
+									if (pbid == bid)
+										continue;
+									if (pbid == 0 || (bl.isRes && allowDemo))
+									{
+										var spare = FindSpare(bid, false);
+										if (spare != 0)
+										{
+											if (bl.isRes)
+											{
+												await Demolish(c, false);
+												await Task.Delay(500);
+												hasChanges = true;
+											}
+											if (spare > 0)
+											{
+												if (!await MoveBuilding(spare, id, false))
+												{
+													goto error;
+												}
+												hasChanges = true;
+												if (Player.moveSlots < nextMoveConfirm)
+												{
+													nextMoveConfirm = (Player.moveSlots - movesPerConfirm).Max(3);
+													if (await App.DoYesNoBox("Move Stuff", $"{initialMoveSlots - Player.moveSlots} moves so far, {Player.moveSlots} moves left, continue?") != 1)
+														goto done;
+												}
+											}
+										}
+
+									}
+									//	else if (pass == 1)
+									//	{
+									//		var spare = CityBuild.FindAnyFreeSpot(id);
+									//		if (!await MoveBuilding(id, spare, false)) 
+									//		{
+
+									//			goto error;
+									//		}
+									//		hasChanges = true;
+									//		break;
+									//}
+								}
+
+
+							}
+
+						}
+					}
+					if (hasChanges)
+						break;
+				}
+				if (!hasChanges)
+					break;
+
+			}
+
+		done:
+
+			Note.Show($"Final Move slots: {Player.moveSlots}");
+			return;
+		error:
+			await App.DoYesNoBox("Move Stuff", "Failed, build operations in progress might be blocking?", "Okay", null);
+
+		}
 		public  string bStage
 		{
 			get
@@ -1450,8 +1369,83 @@ namespace COTG.Game
 				}
 			return (0, 0);
 		}
+		public  bool hasExtraBuildings => FindExtraBuilding() != -1;
 
-		public  bool hasCastleInLayout
+		public  int FindExtraBuilding()
+		{
+			if (!isLayoutValid)
+				return -1;
+			Dictionary<short, short> counts = new();
+
+
+			// first collect counts
+			for (var id = 1; id < City.citySpotCount - 1; ++id)
+			{
+				if (!IsBuildingSpot(id))
+					continue;
+
+				var bid = (short)BidFromOverlay(id);
+				if (bid != 0 && bid != bidTemple && bid != bidCastle)
+				{
+					if (counts.TryGetValue(bid, out var c) == false)
+					{
+						c = 1;
+						counts.TryAdd(bid, c);
+					}
+					else
+					{
+						++c;
+						counts[bid] = c;
+					}
+				}
+
+				var bl = postQueueBuildings[id];
+				if (!(bl.isRes || bl.isEmpty || bl.isTemple || bl.isCabin || bl.isTower))
+				{
+					bid = bl.bid;
+					if (counts.TryGetValue(bid, out var c) == false)
+					{
+						c = -1;
+						counts.TryAdd(bid, c);
+					}
+					else
+					{
+						--c;
+						counts[bid] = c;
+					}
+
+				}
+			}
+			int rv = -1;
+			int bestLevel = int.MaxValue;
+			for (var id = 1; id < City.citySpotCount - 1; ++id)
+			{
+				if (!IsBuildingSpot(id))
+					continue;
+
+				var oBid = (short)BidFromOverlay(id);
+				var bl = postQueueBuildings[id];
+				if (!(bl.isRes || bl.isEmpty || bl.isTemple || bl.isCabin || bl.isTower))
+				{
+					var bid = (short)bl.bid;
+					if (bid == oBid)
+						continue;
+					if (counts[bid] < 0)
+					{
+						if (bl.bl < bestLevel)
+						{
+							bestLevel = bl.bl;
+							rv = id;
+						}
+					}
+
+
+				}
+			}
+			return rv;
+		}
+
+		public bool hasCastleInLayout
 		{
 			get
 			{
@@ -1494,11 +1488,9 @@ namespace COTG.Game
 			  await ClearResUI();
 		   });
 		}
-		public static async Task ClearResUI()
+		public  async Task ClearResUI()
 		{
-			var city = GetBuild();
-
-			if(city.isLayoutValid)
+			if(isLayoutValid)
 			{
 				for (int r = 1; r <= City.citySpan; ++r)
 				{
@@ -1511,10 +1503,10 @@ namespace COTG.Game
 								var c = (x, y);// (int x, int y) c = RandCitySpot();
 								if (!c.IsXYInCenter() && SettingsPage.clearOnlyCenterRes)
 									continue;
-								if (city.BidFromOverlay(c) == 0)
+								if (BidFromOverlay(c) == 0)
 									continue;
 								
-								if (CityBuild.postQueueBuildings[City.XYToId(c)].isRes )
+								if (postQueueBuildings[City.XYToId(c)].isRes )
 								{
 									await Demolish(City.XYToId(c), false);
 								}
@@ -1525,17 +1517,17 @@ namespace COTG.Game
 			}
 			else
 			{
-				await JSClient.ClearCenter(city.cid);
+				await JSClient.ClearCenter(cid);
 			}
 		}
 
-		public  bool IsLayoutComplete()
+		public  bool IsLayoutComplete(City city)
 		{
 			try
 			{
 				if (!isLayoutValid)
 					return true;
-				var bds = isBuild ? CityBuild.postQueueBuildings : buildings;
+				var bds = isBuild ? city.postQueueBuildings : buildings;
 				for (var id = 1; id < City.citySpotCount; ++id)
 				{
 					if (!IsBuildingSpot(id))

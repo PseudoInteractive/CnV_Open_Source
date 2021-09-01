@@ -95,9 +95,13 @@ namespace COTG.Game
 
 	public struct ResourceFilter
 	{
+		[JsonInclude]
 		public bool? wood;
+		[JsonInclude]
 		public bool? stone;
+		[JsonInclude]
 		public bool? iron;
+		[JsonInclude]
 		public bool? food;
 		public bool Any => wood.HasValue | stone.HasValue | iron.HasValue | food.HasValue;
 		public static ResourceFilter _true = new ResourceFilter(true, true, true, true);
@@ -114,6 +118,7 @@ namespace COTG.Game
 	}
 	public struct ResourcesNullable
 	{
+		[JsonInclude]
 		public int? wood;
 		[JsonInclude]
 		public int? stone;
@@ -153,6 +158,10 @@ namespace COTG.Game
 		internal void Clear()
 		{
 			wood = stone = iron = food = null;
+		}
+		public static implicit operator ResourcesNullable( Resources r )
+		{
+			return new(r.wood,r.stone,r.iron,r.food);
 		}
 	}
 	public class ResSource : INotifyPropertyChanged

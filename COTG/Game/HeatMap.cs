@@ -781,6 +781,7 @@ namespace COTG.Game
 		public byte allianceCaptures;
 		public byte allianceLosses;
 		public byte otherCaptures;
+		public byte otherLosses;
 		public byte allianceNew;
 		public byte otherNew;
 		public byte flattened;
@@ -811,8 +812,10 @@ namespace COTG.Game
 				sb.AppendFormat(", {0} Alliance Caps", allianceCaptures);
 			if (allianceLosses > 0)
 				sb.AppendFormat(", {0} Lost", allianceLosses);
+			if (otherLosses > 0)
+				sb.AppendFormat(", {0} Other Losses", otherLosses);
 			if (otherCaptures > 0)
-				sb.AppendFormat(", {0} Caps", otherCaptures);
+				sb.AppendFormat(", {0} Other Caps", otherCaptures);
 			if (allianceNew > 0)
 				sb.AppendFormat(", +{0} Alliance Cities", allianceNew);
 			if (otherNew > 0)
@@ -1057,7 +1060,23 @@ namespace COTG.Game
 									++allianceNew;
 								else
 									++otherNew;
-								++p1.settled;
+								if (isCastle0)
+								{
+									++p1.castlesCappedLawless;
+
+									if (Alliance.IsMine(alliance1))
+									{
+										++allianceCaptures;
+									}
+									else if (alliance0 != alliance1)
+									{
+										++otherCaptures;
+									}
+								}
+								else
+								{
+									++p1.settled;
+								}
 							}
 							else if (isCastle0)
 							{

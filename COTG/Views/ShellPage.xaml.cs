@@ -196,7 +196,7 @@ namespace COTG.Views
 		public static void SetHeaderText(string text)
 		{
 			// if(instance!=null && instance.navigationView!=null)
-			// instance.Dispatcher.RunAsync(CoreDispatcherPriority.Low, () =>
+			// instance.Dispatcher.RunAsync(DispatcherQueuePriority.Low, () =>
 			// instance.status.Label=text );
 		}
 
@@ -734,7 +734,7 @@ namespace COTG.Views
 					}
 				}
 
-				foreach (var bdi in CityBuild.postQueueBuildings)
+				foreach (var bdi in build.postQueueBuildings)
 				{
 					var id = bdi.id;
 					if (id == 0 || !bdi.isBuilding)
@@ -807,24 +807,24 @@ namespace COTG.Views
 			//if (TipsSeen.instance.refresh==false)
 			//{
 			//    TipsSeen.instance.refresh = true;
-			//    instance.Dispatcher.RunAsync(CoreDispatcherPriority.Low, () => instance.RefreshTip.IsOpen = true);
+			//    instance.Dispatcher.RunAsync(DispatcherQueuePriority.Low, () => instance.RefreshTip.IsOpen = true);
 			//}
 			//else if(TipsSeen.instance.chat0==false)
 			//{
 			//    TipsSeen.instance.chat0 = true;
-			//    instance.Dispatcher.RunAsync(CoreDispatcherPriority.Low, () => instance.ChatTip0.IsOpen = true);
+			//    instance.Dispatcher.RunAsync(DispatcherQueuePriority.Low, () => instance.ChatTip0.IsOpen = true);
 
 			//}
 			//else if (TipsSeen.instance.chat1 == false)
 			//{
 			//    TipsSeen.instance.chat1 = true;
-			//    instance.Dispatcher.RunAsync(CoreDispatcherPriority.Low, () => instance.ChatTip1.IsOpen = true);
+			//    instance.Dispatcher.RunAsync(DispatcherQueuePriority.Low, () => instance.ChatTip1.IsOpen = true);
 
 			//}
 			//else if (TipsSeen.instance.chat2 == false)
 			//{
 			//    TipsSeen.instance.chat2 = true;
-			//    instance.Dispatcher.RunAsync(CoreDispatcherPriority.Low, () => instance.ChatTip2.IsOpen = true);
+			//    instance.Dispatcher.RunAsync(DispatcherQueuePriority.Low, () => instance.ChatTip2.IsOpen = true);
 
 			//}
 		}
@@ -1236,7 +1236,7 @@ namespace COTG.Views
 
 		private  void SetLayout(int viewToggle)
 		{
-			App.DispatchOnUIThreadIdle(async (_) =>
+			App.DispatchOnUIThreadIdle(async () =>
 			{
 				//			   UpdateCanvasMarginForWebview(webViewScale);
 				//scroll.ChangeView(null, null, 0.5f);
@@ -1276,7 +1276,7 @@ namespace COTG.Views
 			
 				if (!Alliance.alliancesFetched)
 					return;
-				App.DispatchOnUIThreadIdle(async (_)
+				App.DispatchOnUIThreadIdle(async ()
 					=>
 				{
 					try

@@ -26,7 +26,6 @@ using System.Windows.Input;
 //using Microsoft.Extensions.DependencyInjection;
 //using Microsoft.Extensions.Logging;
 //using Microsoft.Extensions.Options;
-
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.ApplicationModel.Core;
@@ -34,6 +33,7 @@ using Windows.ApplicationModel.DataTransfer;
 using Windows.Foundation.Collections;
 using Windows.Globalization.NumberFormatting;
 using Windows.System;
+using DispatcherQueueHandler = Windows.System.DispatcherQueueHandler;
 using Windows.UI.Core;
 using Windows.UI.Core.Preview;
 using Windows.UI.Input;
@@ -56,6 +56,7 @@ using Nito.AsyncEx;
 using Microsoft.Toolkit.Uwp.UI;
 using Windows.UI.Xaml.Controls;
 using Microsoft.Toolkit.Uwp;
+using Microsoft.AppCenter;
 
 namespace COTG
 {
@@ -77,6 +78,27 @@ namespace COTG
 		}
 		public static App instance;
 		public static string appLink = "cotg";
+
+		public static async void StartAnalytics()
+		{
+			if (AppCenter.Configured)
+			{
+				return;
+			}
+			AppCenter.SetMaxStorageSizeAsync(16 * 1024 * 1024).ContinueWith((storageTask) => {
+				// The storageTask.Result is false when the size cannot be honored.
+			});
+			AppCenter.LogLevel = System.Diagnostics.Debugger.IsAttached ? Microsoft.AppCenter.LogLevel.Warn : Microsoft.AppCenter.LogLevel.Error;
+			AppCenter.Start("0b4c4039-3680-41bf-b7d7-685eb68e21d2",
+			   typeof(Analytics), typeof(Crashes));
+			await Task.WhenAll(  Crashes.SetEnabledAsync(true),
+								Analytics.SetEnabledAsync(true) );
+			bool didAppCrash = await Crashes.HasCrashedInLastSessionAsync();
+			if (didAppCrash)
+			{
+				ErrorReport crashReport = await Crashes.GetLastSessionCrashReportAsync();
+			}
+		}
 		public App()
 		{
 
@@ -93,9 +115,10 @@ namespace COTG
 			//{
 			//    Log(e);
 			//}
+			
 
 
-		//	ServicePointManager.ServerCertificateValidationCallback = (sender, certificate, chain, sslPolicyErrors) => { Log(certificate.ToString()); return true; };
+			//	ServicePointManager.ServerCertificateValidationCallback = (sender, certificate, chain, sslPolicyErrors) => { Log(certificate.ToString()); return true; };
 			InitializeComponent();
 			instance = this;
 
@@ -110,8 +133,6 @@ namespace COTG
 			Resuming += App_Resuming;
 			Suspending += App_Suspending;
 
-			//AppCenter.Start("0b4c4039-3680-41bf-b7d7-685eb68e21d2",
-			//	   typeof(Analytics), typeof(Crashes));
 			// TODO WTS: Add your app in the app center and set your secret here. More at https://docs.microsoft.com/appcenter/sdk/getting-started/uwp
 
 			// Deferred execution until used. Check https://msdn.microsoft.com/library/dd642331(v=vs.110).aspx for further info on Lazy<T> class.
@@ -270,7 +291,7 @@ namespace COTG
 			var t = DateTimeOffset.UtcNow;
 			var dt = t - activeStart;
 			activeStart = t;
-			AAnalytics.Track("Foreground", new Dictionary<string, string> { { "time", dt.TotalSeconds.RoundToInt().ToString() } });
+		//	AAnalytics.Track("Foreground", new Dictionary<string, string> { { "time", dt.TotalSeconds.RoundToInt().ToString() } });
 
 			//if (ShellPage.canvas != null)
 			//    ShellPage.canvas.Paused = false;
@@ -406,6 +427,91 @@ namespace COTG
 			// Set XAML element as a draggable region.
 			//          Window.Current.SetTitleBar(ShellPage.instance.AppTitleBar);
 		}
+
+		protected override async void OnActivated(IActivatedEventArgs args)
+		{
+			var activation = args as IActivatedEventArgs;
+			globalQueue = DispatcherQueue.GetForCurrentThread();
+			if (activation != null && activation.PreviousExecutionState == ApplicationExecutionState.Running)
+			{
+				Window.Current.Activate();
+				//	isForeground = true;
+
+				// Todo:  Handle arguments and stuff
+				// Ensure the current window is active
+				if (args is ToastNotificationActivatedEventArgs toastActivationArgs)
+				{
+					// Obtain the arguments from the notification
+					var toastArgs = System.Web.HttpUtility.ParseQueryString(toastActivationArgs.Argument);
+					// Obtain any user input (text boxes, menu selections) from the notification
+					ValueSet userInput = toastActivationArgs.UserInput;
+					foreach (var op in toastArgs.AllKeys)
+					{
+						if (op == "incomingNotification")
+						{
+							Task.Delay(3000).ContinueWith(async (_) =>
+							{
+								while (IncomingTab.instance == null)
+									await Task.Delay(500);
+								App.DispatchOnUIThreadLow(IncomingTab.instance.Show);
+
+							});
+						}
+					}
+					// TODO: Show the corresponding content
+				}
+
+
+				return;
+			}
+			await ActivationService.ActivateAsync(args);
+			OnLaunchedOrActivated(args);
+
+
+
+			//var configuration = new ConfigurationBuilder()
+			//                                .AddJsonFile("appsettings.json", false, true)
+			//                                .Build();
+
+
+
+
+			//    CreateDefaultBuilder(args)
+			//        .ConfigureWebHostDefaults(webBuilder =>
+			//        {
+			//            webBuilder.UseStartup<Startup>();
+			//        }).Build().Run();
+
+
+			//ILogger logger;
+
+			//using (var serviceProvider = new ServiceCollection()
+			//    .AddLogging(cfg =>
+			//    {
+			//        cfg.AddConfiguration(configuration.GetSection("Logging"));
+			//        cfg.AddConsole();
+			//    })
+			//    .BuildServiceProvider())
+			//{
+			//    logger = serviceProvider.GetService<ILogger<App>>();
+			//}
+
+			//logger.LogInformation("logger information");
+			//logger.LogWarning("logger warning");
+
+
+			//using (var listener = new LoggerTraceListener(logger))
+			//{
+			//    System.Diagnostics.Trace.Listeners.Add(listener);
+			//    TraceSources.Instance.InitLoggerTraceListener(listener);
+
+			//    TraceLover.DoSomething();
+			//    TraceSourceLover.DoSomething();
+			//}
+
+
+		}
+
 		public static void SetupCoreWindowInputHooks()
 		{
 
@@ -700,7 +806,7 @@ namespace COTG
 			
 			return d.EnqueueAsync<T>(func, priority);
 
-			//var idle = priority == CoreDispatcherPriority.Idle;
+			//var idle = priority == DispatcherQueuePriority.Idle;
 			//if (useCurrentThreadIfPossible&& !idle && d.HasThreadAccess)
 			//{
 			//	return await func();
@@ -744,61 +850,45 @@ namespace COTG
 		}
 
 		// There is no TaskCompletionSource<void> so we use a bool that we throw away.
-		public static async Task DispatchOnUIThreadTask(
-	  Func<Task> func, CoreDispatcherPriority priority = CoreDispatcherPriority.Low, bool useCurrentThreadIfPossible = true)
+		public static Task DispatchOnUIThreadTask(
+	  Func<Task> func, DispatcherQueuePriority priority = DispatcherQueuePriority.Low, bool useCurrentThreadIfPossible = true)
 		{
 			var d = GlobalDispatcher();
-			var idle = priority == CoreDispatcherPriority.Idle;
+			return d.EnqueueAsync(func, priority);
 
-			if (useCurrentThreadIfPossible&&!idle && d.HasThreadAccess)
-			{
-				await func();
-			}
-			else
-			{
-				var taskCompletionSource = new TaskCompletionSource<bool>();
-				if (!idle)
-				{
-					await d.TryRunAsync(priority, async () =>
-						{
-							try
-							{
-								await func();
-								taskCompletionSource.SetResult(true);
-							}
-							catch (Exception ex)
-							{
-								LogEx(ex);
-								taskCompletionSource.SetResult(false);
-							}
-						});
-				}
-				else
-				{
-					await d.RunIdleAsync(async (_) =>
-					{
-						try
-						{
-							await func();
-							taskCompletionSource.SetResult(true);
-						}
-						catch (Exception ex)
-						{
-							LogEx(ex);
-							taskCompletionSource.SetResult(false);
-						}
-					});
+			//var idle = priority == DispatcherQueuePriority.Idle;
 
-				}
-				await taskCompletionSource.Task;
-			}
+			//if (useCurrentThreadIfPossible&&!idle && d.HasThreadAccess)
+			//{
+			//	await func();
+			//}
+			//else
+			//{
+			//	var taskCompletionSource = new TaskCompletionSource<bool>();
+			//	{
+			//		await d.TryEnqueue(priority, async () =>
+			//			{
+			//				try
+			//				{
+			//					await func();
+			//					taskCompletionSource.SetResult(true);
+			//				}
+			//				catch (Exception ex)
+			//				{
+			//					LogEx(ex);
+			//					taskCompletionSource.SetResult(false);
+			//				}
+			//			});
+			//	}
+			//	await taskCompletionSource.Task;
+			//}
 		}
 		public static SemaphoreSlim uiSema = new SemaphoreSlim(1);
 
 
 		public static bool isUISemaLocked => uiSema.CurrentCount != 1;
 		public static async Task<T>
-			DispatchOnUIThreadExclusive<T>(int cid,Func<Task<T>> func, CoreDispatcherPriority priority = CoreDispatcherPriority.Low)
+			DispatchOnUIThreadExclusive<T>(int cid,Func<Task<T>> func, DispatcherQueuePriority priority = DispatcherQueuePriority.Low)
 		{
 			if (!await LockUiSema(cid))
 				return default;
@@ -815,7 +905,7 @@ namespace COTG
 		}
 		
 		public static async Task
-			DispatchOnUIThreadExclusive(int cid, Func<Task> func, CoreDispatcherPriority priority = CoreDispatcherPriority.Low)
+			DispatchOnUIThreadExclusive(int cid, Func<Task> func, DispatcherQueuePriority priority = DispatcherQueuePriority.Low)
 		{
 			if (!await LockUiSema(cid).ConfigureAwait(false))
 				return ;
@@ -883,24 +973,24 @@ namespace COTG
 
 		//}
 		
-	public static void DispatchOnUIThread(DispatchedHandler action, CoreDispatcherPriority priority= CoreDispatcherPriority.Normal, bool alwaysQueue = false)
+	public static void DispatchOnUIThread(DispatcherQueueHandler action, DispatcherQueuePriority priority= DispatcherQueuePriority.Normal, bool alwaysQueue = false)
 	{
 		var d = GlobalDispatcher();
 		// run it immediately if we can
 		if (d.HasThreadAccess && !alwaysQueue)
 			action();
 		else
-			d.TryRunAsync(priority, action);
+			d.TryEnqueue( priority, action);
 	}
 
-		public static void DispatchOnUIThreadIdle(DispatchedHandler action)
+		public static void DispatchOnUIThreadIdle(Windows.System.DispatcherQueueHandler action)
 		{
-			DispatchOnUIThread(action, CoreDispatcherPriority.Low, false);
+			DispatchOnUIThread(action, DispatcherQueuePriority.Low, false);
 //			var d = GlobalDispatcher();
 //			d.TryRunIdleAsync((_)=> action() );
 		}
 
-		public static void DispatchOnUIThreadLow(DispatchedHandler action, bool alwaysQueue = false) => DispatchOnUIThread(action, CoreDispatcherPriority.Low, alwaysQueue);
+		public static void DispatchOnUIThreadLow(DispatcherQueueHandler action, bool alwaysQueue = false) => DispatchOnUIThread(action, DispatcherQueuePriority.Low, alwaysQueue);
 
 		//public static int pendingDispatch;
 		//public static int pendingDispatchMax=10;
@@ -915,23 +1005,23 @@ namespace COTG
 		//}
 		//public static void DispatchEnd() => --pendingDispatch;
 
-		//public static void DispatchOnUIThreadSneakyLow(DispatchedHandler action)
+		//public static void DispatchOnUIThreadSneakyLow(DispatcherQueueHandler action)
 		//{
 		//	var d = GlobalDispatcher();
 		//	// run it immediately if we can
-		//	if (d.HasThreadAccess && d.CurrentPriority <= CoreDispatcherPriority.Low)
+		//	if (d.HasThreadAccess && d.CurrentPriority <= DispatcherQueuePriority.Low)
 		//		action();
 		//	else
-		//		d.RunAsync(CoreDispatcherPriority.Low, action);
+		//		d.RunAsync(DispatcherQueuePriority.Low, action);
 		//}
-		//public static async Task DispatchOnUIThreadSneakyLowAwait(DispatchedHandler action)
+		//public static async Task DispatchOnUIThreadSneakyLowAwait(DispatcherQueueHandler action)
 		//{
 		//	var d = GlobalDispatcher();
 		//	// run it immediately if we can
-		//	if (d.HasThreadAccess && d.CurrentPriority <= CoreDispatcherPriority.Low)
+		//	if (d.HasThreadAccess && d.CurrentPriority <= DispatcherQueuePriority.Low)
 		//		action();
 		//	else
-		//		await d.RunAsync(CoreDispatcherPriority.Low, action);
+		//		await d.RunAsync(DispatcherQueuePriority.Low, action);
 		//}
 
 
@@ -941,7 +1031,7 @@ namespace COTG
 		// We only have 1 UI thread here
 		public static DispatcherQueue GlobalDispatcher() => globalQueue;
 		public static DispatcherQueue globalQueue;
-		public static bool IsOnUIThread() => globalQueue.HasThreadAccess };
+		public static bool IsOnUIThread() => globalQueue.HasThreadAccess;
 		//public static bool IsKeyPressedControl()
 		//{
 		//    var window = CoreWindow.GetForCurrentThread();
@@ -975,7 +1065,7 @@ namespace COTG
 
 		public static void CopyTextToClipboard(string s)
 		{
-			App.DispatchOnUIThreadLow(() =>
+			App.DispatchOnUIThread(() =>
 		 {
 			 try
 			 {
@@ -1385,12 +1475,13 @@ namespace COTG
 		public static async void Show(string s, Priority priority=Priority.medium, bool useInfoBar = false, int timeout = 5000)
 		{
 			const int noteDelay = 2;
-			if (ShellPage.instance != null)
+			const int noteDelayHigh = 5;
+			if(ShellPage.instance != null)
 			{
 				if (!initialized)
 				{
 					initialized = true;
-					App.DispatchOnUIThreadLow(() =>
+					App.DispatchOnUIThread(() =>
 					{
 						ShellPage.inAppNote.Closed += InAppNote_Closed;
 						//		ShellPage.instance.infoBar.CloseButtonClick += InfoBar_CloseButtonClick;
@@ -1405,10 +1496,10 @@ namespace COTG
 				var now = DateTime.UtcNow;
 				var next = nextInAppNote;
 				var _priority = priority;
-				if (now >= next || ((priority >= Priority.high)&&(currentPriority< Priority.high)))
+				if (now >= next || ((priority >= Priority.high)))
 				{
 					// all clear
-					nextInAppNote = now + TimeSpan.FromSeconds((priority >= Priority.high) ? timeout: noteDelay);
+					nextInAppNote = now + TimeSpan.FromSeconds((priority >= Priority.high) ? noteDelayHigh : noteDelay);
 				}
 				else
 				{

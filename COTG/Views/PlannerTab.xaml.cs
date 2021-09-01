@@ -11,6 +11,9 @@ using Windows.UI.Xaml;
 using static COTG.Debug;
 using static COTG.Game.City;
 using static COTG.Game.Enum;
+using static COTG.BuildingDef;
+using System.Buffers;
+using static System.Buffers.ArrayPool<COTG.Building>;
 
 namespace COTG.Views
 {
@@ -23,13 +26,13 @@ namespace COTG.Views
 		{
 			if (visible)
 			{
-				await CityBuild._IsPlanner(true,false);
+				await CityBuild.SetIsPlanner(true,false);
 				statsDirty = true;
 				BuildingsChanged();
 			}
 			else
 			{
-				await CityBuild._IsPlanner( false,false );
+				await CityBuild.SetIsPlanner( false,false );
 
 			}
 			await base.VisibilityChanged(visible, longTerm: longTerm);
@@ -109,14 +112,13 @@ namespace COTG.Views
 
 		static int GetScore( City city,(int x,int y) xy, int bid, int militaryBid )
 		{
-			var bds = city.buildings;
 			int id = XYToId(xy);
 			var rv = 0;
-			if (bds[id].bid == bid)
+			if (city.buildings[id].bid == bid)
 				rv+=2;
-			else if (bds[id].isEmpty)
+			else if (city.buildings[id].isEmpty)
 				rv += 1;
-			else if (bds[id].isRes)
+			else if (city.buildings[id].isRes)
 				rv -= 4;
 
 			for(int x=-1;x<=1;++x)
@@ -179,7 +181,7 @@ namespace COTG.Views
 			statsDirty = false;
 			// recruit speeds
 			var city = City.GetBuild();
-			var bds = city.GetPlannerBuildings();
+			var bds = city.GetLayoutBuildings();
 			var tsMultipler = 1;
 			var stTownHall = BuildingDef.all[bidTownHall].St[10];
 			int carts = 0,ships=0,ts=0, cs=100,rsInf = 0, rsBlessed=0,rsMagic=0,rsArt=0,rsNavy=0,rsCav=0, stWood = stTownHall, stIron = stTownHall, stStone = stTownHall, stFood= stTownHall;
@@ -355,6 +357,7 @@ namespace COTG.Views
 				return rv;
 			}
 
+			City.buildingCache.Return(bds);
 			return Task.CompletedTask;
 
 		}
@@ -377,14 +380,14 @@ namespace COTG.Views
 			ShareString.Show(City.build);
 
 		}
-		public async Task Rotate(bool center, bool outer)
+		public async Task Rotate(City city,bool center, bool outer)
 		{
 			Assert(CityBuild.isPlanner);
-			await CityBuild._IsPlanner(true);
+			await CityBuild.SetIsPlanner(true);
 			//	if (layout == null)
 			//		return;
-			var bc = buildingsCache.ToArray();
-
+			var bc = city.layout.ToArray();
+			
 			Assert(CityBuild.isPlanner);
 			for (int y = span0; y <= span1; ++y)
 			{
@@ -393,7 +396,7 @@ namespace COTG.Views
 					var c = (x, y);
 					if (c.IsXYInCenter() ? center : outer)
 					{
-						buildingsCache[XYToId((x, y))] = bc[XYToId((y, -x))];
+						city.layout[XYToId((x, y))] = bc[XYToId((y, -x))];
 					}
 
 				}
@@ -406,14 +409,14 @@ namespace COTG.Views
 		private async void FlipHClick(object sender, RoutedEventArgs e)
 		{
 			Assert(CityBuild.isPlanner);
-			await CityBuild._IsPlanner(true);
+			await CityBuild.SetIsPlanner(true);
 
 			GetBuild().FlipLayoutH(App.IsKeyPressedControl());
 		}
 		private async void FlipVClick(object sender, RoutedEventArgs e)
 		{
 			Assert(CityBuild.isPlanner);
-			await CityBuild._IsPlanner(true);
+			await CityBuild.SetIsPlanner(true);
 			GetBuild().FlipLayoutV(App.IsKeyPressedControl());
 		}
 
@@ -423,15 +426,17 @@ namespace COTG.Views
 			public bool sorc;
 
 		}
+
+
 		static int CountResOverlaps( ref AllowedToMove allowed)
 		{
-			var build = City.GetBuild();
+			var city = City.GetBuild();
 			int rv = 0;
-			var bdc = City.buildingsCache;
-			var bds = build.buildings;
+			//var bdc = city.layout;
+			var bds = city.postQueueBuildings;
 			for(int i=0;i<citySpotCount;++i)
 			{
-				var des = bdc[i];
+				var des = city.BuildingFromOverlay(i);
 				var bdBid = des.bid;
 				// these ones can be arranged
 			
@@ -474,13 +479,13 @@ namespace COTG.Views
 		{
 			var wasPlanner = CityBuild.isPlanner;
 			if (!wasPlanner)
-				await CityBuild._IsPlanner(true);
+				await CityBuild.SetIsPlanner(true);
 		
 			Assert(city.isLayoutValid);
-			var bdc = City.buildingsCache;
-			var bds = city.buildings;
+			var bdc = city.GetLayoutBuildings();
+			var bds = city.postQueueBuildings;
 
-			var bc = GetBuildingCounts(bdc, 10);
+			var bc = city.GetBuildingCounts(bdc);
 
 			var hasInvalid = false;
 			int resHelpers = 0;
@@ -497,9 +502,9 @@ namespace COTG.Views
 					}
 				}
 			}
-			if(hasInvalid&& build.isOnWater)
+			if(hasInvalid&& city.isOnWater)
 			{
-				build.FlipLayoutH(true);
+				city.FlipLayoutH(true);
 			}
 
 			var allowed = new AllowedToMove() { sorc = bc.sorcTowers == 1, storage = (resHelpers == 0) };
@@ -508,26 +513,26 @@ namespace COTG.Views
 
 			// first try flips
 			var overlap0 = CountResOverlaps(ref allowed);
-			build.FlipLayoutH();
+			city.FlipLayoutH();
 			var overlap1 = CountResOverlaps(ref allowed);
-			build.FlipLayoutV();
+			city.FlipLayoutV();
 			var overlap2 = CountResOverlaps(ref allowed);
-			build.FlipLayoutH();
+			city.FlipLayoutH();
 			var overlap3 = CountResOverlaps(ref allowed);
 			if( overlap0 <= overlap1 && overlap0 <= overlap2 &&overlap0 <= overlap3)
 			{
-				build.FlipLayoutH(); // 0 is best one is best
-				build.FlipLayoutV(); // 0 is best one is best
-				build.FlipLayoutH(); // 0 is best one is best
+				city.FlipLayoutH(); // 0 is best one is best
+				city.FlipLayoutV(); // 0 is best one is best
+				city.FlipLayoutH(); // 0 is best one is best
 			}
 			else if( overlap1 <= overlap2 && overlap1 <= overlap3)
 			{
-				build.FlipLayoutH(); // this one is best
-				build.FlipLayoutV(); // this one is best
+				city.FlipLayoutH(); // this one is best
+				city.FlipLayoutV(); // this one is best
 			}
 			else if (overlap2 <= overlap3)
 			{
-				build.FlipLayoutH(); // this one is best
+				city.FlipLayoutH(); // this one is best
 			}
 			else 
 			{
@@ -566,7 +571,7 @@ namespace COTG.Views
 
 						//if ( bds[bdId].isRes)
 						{
-							var score = GetScore( (x,y), bd.bid, milBid);
+							var score = GetScore(city, (x,y), bd.bid, milBid);
 
 							// move to a non res spot
 							for (int r = 1;r< citySpan; ++r)
@@ -586,7 +591,7 @@ namespace COTG.Views
 											continue;
 										}
 
-										var score1 = GetScore((x0, y0), bd.bid, milBid);
+										var score1 = GetScore(city,(x0, y0), bd.bid, milBid);
 										if(score1 > score)
 										{
 
@@ -610,9 +615,13 @@ namespace COTG.Views
 			}
 			Note.Show($"Moved buildings to reduce overlaps: { CountResOverlaps(ref allowed)} overlaps remain");
 			if (wasPlanner == false && revertIsPlanner)
-				await CityBuild._IsPlanner(false);
+				await CityBuild.SetIsPlanner(false);
+			for(int i=0;i<City.citySpotCount;++i)
+			{
+				city.layout[i] = BidToLayout(bdc[i].bid).c;
+			}
 			CityView.BuildingsOrQueueChanged();
-			
+			City.buildingCache.Return(bdc);
 		}
 
 		private static bool IsResHelper(int bid)
@@ -629,24 +638,25 @@ namespace COTG.Views
 		public override void Close()
 		{ 
 			base.Close();
-			CityBuild._IsPlanner(false);
+			CityBuild.SetIsPlanner(false);
 
 		}
 
 		private void RotateCenterClick(object sender, RoutedEventArgs e)
 		{
-			Rotate(true, false);
+			Rotate(City.GetBuild(), true, false);
 		}
 
 		private void RotateOuterClick(object sender, RoutedEventArgs e)
 		{
-			Rotate(false, true);
+			Rotate(City.GetBuild(),false, true);
 		}
 
 		private void UseBuildingsClick(object sender, RoutedEventArgs e)
 		{
 			// copy buildings to buildingCache
 			var b = City.GetBuild();
+			var layout = b.EnsureLayoutCustom();
 			var bds = b.buildings;
 			var rv = new Building[citySpotCount];
 			for (int i = 0; i < citySpotCount; ++i)
@@ -654,13 +664,12 @@ namespace COTG.Views
 				var bd = bds[i];
 				if (bd.isBuilding && !bd.isCabin)
 				{
-					rv[i].id = bds[i].id;
-					rv[i].bl = 10;
+					layout[i] = BidToLayout(bd.id).c;
 				}
 			
 			}
-			buildingsCache = rv;
-			b.BuildingsCacheToShareString();
+		//	buildingsCache = rv;
+		//	b.BuildingsCacheToShareString();
 			CityView.BuildingsOrQueueChanged();
 		}
 	}

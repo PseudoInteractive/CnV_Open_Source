@@ -185,7 +185,7 @@ namespace COTG.Views
 			}
 			var firstTime = false;
 
-			if ( getBuildState == 0)
+			if (getBuildState == 0)
 			{
 				firstTime = true;
 				ShellPage.WorkStart(workStr);
@@ -209,53 +209,57 @@ namespace COTG.Views
 					}
 
 					city.points = (ushort)ci[2].GetAsInt();
-					var isBuilding = (ci[4].GetAsFloat() != 0 ) || (city.buildStage == BuildStage.complete) || (city.buildStage == BuildStage.leave);
+					var isBuilding = (ci[4].GetAsFloat() != 0) || (city.buildStage == BuildStage.complete) || (city.buildStage == BuildStage.leave);
 					if (ci[3].GetAsFloat() != 0)
 					{
-					//	Log($"3!: {city.nameAndRemarks}");
+						//	Log($"3!: {city.nameAndRemarks}");
 					}
 					if (ci[5].GetAsFloat() != 0)
 					{
-					//	Log($"5!: {city.nameAndRemarks}");
+						//	Log($"5!: {city.nameAndRemarks}");
 					}
-					if (isBuilding != city.isBuilding )
+					if (isBuilding != city.isBuilding)
 					{
 						city.isBuilding = isBuilding;
-						if(filter)
+						if (filter)
 							changes.Add(city.cid);
 					}
 
 					city.wood = ci[8].GetAsInt();
 					city.stone = ci[9].GetAsInt();
-					city.bcBuildings = ci[6].GetAsInt()==0;
-					city.bcTowers = ci[7].GetAsInt()==0;
+					city.bcBuildings = ci[6].GetAsInt() == 0;
+					city.bcTowers = ci[7].GetAsInt() == 0;
 					//	city.bcConvert = (ci[5].GetAsFloat() > 0);
 					//	city.bcFill = ci[12].GetAsInt() > 0 && ci[13].GetAsInt() > 0;
 
 					//city.b12 = ci[12].GetAsInt();
 					//city.b13 = ci[13].GetAsInt();
-					city.bcBlocked = (ci[15].GetAsInt() == 1)&&
-						                 ((ci[14].GetAsInt()==1&&ci[16].GetAsInt()==1)||
-									      (ci[3].GetAsFloat()==0&& ci[5].GetAsFloat()==0) );
+					city.bcBlocked = (ci[15].GetAsInt() == 1) &&
+										 ((ci[14].GetAsInt() == 1 && ci[16].GetAsInt() == 1) ||
+										  (ci[3].GetAsFloat() == 0 && ci[5].GetAsFloat() == 0));
 
 
 				}
-				App.DispatchOnUIThreadIdle(() =>
-					{
-						if (changes.Count > 8)
+				if (changes.Any())
+				{
+
+					App.DispatchOnUIThreadIdle(() =>
 						{
-							City.gridCitySource.NotifyReset();
-						}
-						else
-						{
-							foreach (var cid in changes)
+							if (changes.Count > 8)
 							{
-								var city = City.Get(cid);
-								city.OnPropertyChanged(nameof(city.isBuilding));
+								City.gridCitySource.NotifyReset();
 							}
-						}
+							else
+							{
+								foreach (var cid in changes)
+								{
+									var city = City.Get(cid);
+									city.OnPropertyChanged(nameof(city.isBuilding));
+								}
+							}
+						});
 				}
-			);
+		
 
 				if(firstTime==true)
 				{

@@ -28,11 +28,11 @@ namespace COTG
 				Log("Bad building! " + bid); // farms an temples have extras
 			return 0;
 		}
-		public static (byte id, bool valid) BidToLayout(int bid)
+		public static (byte c, bool valid) BidToLayout(int bid)
 		{
 			if (bid != 0)
 			{
-				if (BuildingDef.buildingsToSharestring.TryGetValue((byte)(bid - BuildingDef.sharestringOffset), out var o))
+				if (BuildingDef.buildingsToSharestring.TryGetValue((bid - BuildingDef.sharestringOffset).AsByte(), out var o))
 				{
 					Assert(o != 0);
 					return (o, true);
@@ -42,9 +42,9 @@ namespace COTG
 
 			return ((byte)'-', false);
 		}
-		public static int LayoutToBid(byte v) => BuildingDef.sharestringToBuldings.TryGetValue((byte)v, out var c) && c != 0 ? (int)c + BuildingDef.sharestringOffset : 0;
+		public static short LayoutToBid(byte v) => (short)(BuildingDef.sharestringToBuldings.TryGetValue(v, out var c) && c != 0 ? (c + BuildingDef.sharestringOffset).AsShort() : (short) 0);
 
-		public const int sharestringOffset = 444;
+		public const short sharestringOffset = 444;
 		public static Dictionary<byte, byte> sharestringToBuldings;
 		public static Dictionary<byte, byte> buildingsToSharestring;
 

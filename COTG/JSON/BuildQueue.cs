@@ -72,8 +72,8 @@ namespace COTG.JSON
 	public readonly struct BuildQueueItem : IEquatable<BuildQueueItem>
 	{
 		//	public static MemoryPool<BuildQueueItem> pool = MemoryPool<BuildQueueItem>.Shared;
-		public readonly ushort bid; // building id
-		public readonly ushort bspot; // xy
+		public readonly short bid; // building id
+		public readonly short bspot; // xy
 		public readonly ushort buildTime; // delta time in seconds
 		public readonly byte slvl;
 		public readonly byte elvlAndPA; // 0xf is level mask, ox10 is pa mask
@@ -81,7 +81,7 @@ namespace COTG.JSON
 		public readonly bool pa => (elvlAndPA & 0x10) != 0;
 
 
-		public BuildQueueItem(byte slvl, byte elvl, ushort bid, ushort bspot, ushort buildTime = 0, bool pa = true)
+		public BuildQueueItem(byte slvl, byte elvl, short bid, short bspot, ushort buildTime = 0, bool pa = true)
 		{
 			if (pa)
 				elvl |= 0x10;
@@ -90,6 +90,16 @@ namespace COTG.JSON
 			this.bid = bid;
 			this.bspot = bspot;
 			this.buildTime = buildTime;
+		}
+
+		public void Deconstruct(out byte slvl, out byte elvl, out short bspot, out  ushort buildTime, out bool pa)
+		{
+			slvl = this.slvl;
+			elvl = this.elvl;
+			bspot = this.bspot;
+			buildTime = this.buildTime;
+			pa = this.pa;
+			
 		}
 
 		//public bool isBuild => slvl == 0;
@@ -167,20 +177,24 @@ namespace COTG.JSON
 		{
 			return !(left == right);
 		}
-		public readonly void Apply( ref Building b)
+		
+		public readonly Building Apply( Building b)
 		{
-			b.bl = elvl;
+			byte id;
 			if (elvl == 0)
 			{
-				b.id = 0;
+				id = 0;
 			}
 			else
 			{
 				if (slvl != 0)
 					Assert(b.id == BuildingDef.BidToId(bid));
-				b.id = BuildingDef.BidToId(bid);
+				id = BuildingDef.BidToId(bid);
 			}
+			return new Building(id, elvl);
 		}
+
+		
 	}
 	public class CityBuildQueue : IDisposable
 	{
@@ -850,34 +864,35 @@ namespace COTG.JSON
 		static string fileName => $"buildQueue{JSClient.world}_{Player.myName}.json";
 
 		public static bool initialized => saveTimer != null;
-		public static async Task Enqueue(this int cid, byte slvl, byte elvl, ushort bid, ushort spot, bool process = true)
+		public static async Task Enqueue(this int cid, BuildQueueItem b)
 		{
-			if (elvl > slvl)
-				Assert(elvl == slvl + 1);
-			if (elvl < slvl && elvl != 0)
+			var a = b;
+			if (a.elvl > a.slvl)
+				Assert(a.elvl == a.slvl + 1);
+			if (a.elvl < a.slvl && a.elvl != 0)
 			{
-				if (elvl != slvl - 1)
+				if (a.elvl != a.slvl - 1)
 				{
-					Note.Show($"Bad downgrade? {slvl} => {elvl}");
+					Note.Show($"Bad downgrade? {a.slvl} => {a.elvl}");
 					Assert(false);
 					return;
 				}
 			}
 			Assert(initialized);
-			var op = new BuildQueueItem(slvl, elvl, bid, spot);
-			if (bid == City.bidTemple && slvl == 0)
+			var op = new BuildQueueItem(a.slvl, a.elvl,a.bid, a.bspot);
+			if (a.bid == City.bidTemple && a.slvl == 0)
 			{
 				Assert(cid == City.build);
-				await JSClient.JSInvokeTask("buildTemple", new[] { spot.ToString() });
+				await JSClient.JSInvokeTask("buildTemple", new[] { a.bspot.ToString() });
 				return;
 			}
-			if (bid == City.bidTemple && elvl == 0)
+			if (a.bid == City.bidTemple && a.elvl == 0)
 			{
 				Assert(cid == City.build);
 				Trace("Invalid temple demo");
 				return;
 			}
-			if (bid == City.bidCastle && slvl == 0)
+			if (a.bid == City.bidCastle && a.slvl == 0)
 			{
 				Assert(cid == City.build);
 				var result = await App.DispatchOnUIThreadTask(async () =>
@@ -908,7 +923,7 @@ namespace COTG.JSON
 					SaveNeeded();
 
 					pending.cityBuildQueue.Process();
-					if (bid == City.bidCastle && slvl == 0)
+					if (a.bid == City.bidCastle && a.slvl == 0)
 					{
 						await Task.Delay(200);
 					}
@@ -1149,7 +1164,7 @@ namespace COTG.JSON
 								if (cq.cityBuildQueue.queue.CanGrow())
 								{
 
-									var op = new BuildQueueItem(d[2].GetByte(), d[3].GetByte(), d[1].GetUInt16(), d[0].GetUInt16());
+									var op = new BuildQueueItem(d[2].GetByte(), d[3].GetByte(), d[1].GetInt16(), d[0].GetInt16());
 									cq.cityBuildQueue.Enqueue(op);
 								}
 							}

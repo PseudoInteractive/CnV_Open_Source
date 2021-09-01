@@ -74,6 +74,26 @@ namespace COTG.Views
 
 		}
 
+		public static Windows.System.DispatcherQueueHandler RightClick((int x, int y) cc, int cid)
+		{
+			return () =>
+			{
+				if (IsCityView() && (cid == City.build))
+				{
+					CityBuild.Click(cc, true);
+				}
+				else
+				{
+
+					var spot = Spot.GetOrAdd(cid);
+					if (!App.IsKeyPressedShiftOrControl())
+						spot.SetFocus(true, true, false);
+					spot.ShowContextMenu(canvas, CanvasToDIP(mousePosition));
+					// }
+				}
+			};
+		}
+
 		private static void CoreInputSource_InputEnabled(object sender, InputEnabledEventArgs args) {
 			LogJson(args);
 		}
@@ -174,7 +194,7 @@ namespace COTG.Views
 				}
 
 			}
-
+			
 			public static void ProcessPointerExited(Windows.UI.Input.PointerPoint point)
 			{
 					var id = point.PointerId;
@@ -575,7 +595,7 @@ namespace COTG.Views
 			}
 		}
 
-		private static DispatchedHandler RightClick( (int x, int y) cc, int cid)
+		private static Windows.System.DispatcherQueueHandler HandleRight( (int x, int y) cc, int cid)
 		{
 			return () =>
 			{

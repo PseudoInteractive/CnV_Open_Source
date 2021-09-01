@@ -39,6 +39,7 @@ using Windows.Web.Http.Headers;
 using DiscordCnV;
 using Windows.UI.Xaml.Controls;
 using Microsoft.Toolkit.Uwp.UI;
+using static COTG.Game.City;
 
 namespace COTG
 {
@@ -897,7 +898,7 @@ namespace COTG
 				// is it my city?
 				if (City.CanVisit(cid))
 				{
-					Assert(cid != City.build);
+			//		Assert(cid != City.build);
 					// Is it locked?
 					if (!Spot.CanChangeCity(cid))
 					{
@@ -919,7 +920,7 @@ namespace COTG
 						var changed = cid != City.build;
 						if (changed)
 						{
-							if (lockedBuild != 0 && cid != lockedBuild)
+							if (Spot.lockedBuild != 0 && cid != Spot.lockedBuild)
 							{
 								Note.Show("Please wait for current operation to complete");
 								if (await App.DoYesNoBox("Busy", "Please wait for current operation to complete") != 1)
@@ -941,10 +942,10 @@ namespace COTG
 									//	b.BuildingsCacheToShareString();
 									//		await b.SaveLayout();
 									//					CityBuild.isPlanner = false;
-									await CityBuild._IsPlanner(false, true);
+									await CityBuild.SetIsPlanner(false, true);
 								}
 								City.build = cid;
-								Assert(pid == Player.activeId);
+							//	Assert(pid == Player.activeId);
 								//Cosmos.PublishPlayerInfo(JSClient.jsBase.pid, City.build, JSClient.jsBase.token, JSClient.jsBase.cookies); // broadcast change
 
 								//foreach (var p in PlayerPresence.all)
@@ -1028,7 +1029,7 @@ namespace COTG
 			try
 			{
 
-				var p = JsonSerializer.Deserialize<AttackSenderScript>(cmd);
+				var p = JsonSerializer.Deserialize<AttackSenderScript>(cmd,Json.jsonSerializerOptions);
 				await CitySwitch(p.cid, false);
 
 				await App.DispatchOnUIThreadTask(async () =>
@@ -1367,7 +1368,7 @@ namespace COTG
 				{
 					TradeSettings.all = JsonSerializer.Deserialize<TradeSettings[]>(tcps.ToString(), Json.jsonSerializerOptions);
 					
-					App.DispatchOnUIThreadIdle( (_)=>
+					App.DispatchOnUIThreadIdle( ()=>
 					{
 						ResSettings.tradeSettingsItemsSource = TradeSettings.all;
 					});
@@ -1431,7 +1432,7 @@ namespace COTG
 						foreach(var pset in p.EnumerateObject())
 						{
 							var ps = new WorldViewSettings.PlayerSetting();
-							ps.pid = int.Parse(pset.Name);
+							ps.pid = pset.Value.GetAsInt("a");
 							ps.color = pset.Value.GetColor("c");
 							ps.isOn = pset.Value.GetAsInt("d") == 1;
 
@@ -1445,7 +1446,7 @@ namespace COTG
 						foreach (var pset in a.EnumerateObject())
 						{
 							var ps = new WorldViewSettings.AllianceSetting();
-							ps.pid = int.Parse(pset.Name);
+							ps.pid = pset.Value.GetAsInt("a");
 							ps.color = pset.Value.GetColor("c");
 							ps.isOn = pset.Value.GetAsInt("d") == 1;
 
@@ -2730,7 +2731,7 @@ private static async void ShowCouncillorsMissingDialog()
 								   if (ppdtInitialized && jso.TryGetProperty("c", out var _cid))
 								   {
 									   // this should be rare, sometimes the JS city is out of sync with the registered city
-									   Assert(false);
+									  // Assert(false);
 									   var cid = _cid.GetAsInt();
 									   if (cid != City.build)
 									   {

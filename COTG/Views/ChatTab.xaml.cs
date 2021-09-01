@@ -264,7 +264,7 @@ namespace COTG.Views
 			//}
 			//await Task.Delay(500);
 
-			//await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Low, () =>
+			//await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(DispatcherQueuePriority.Low, () =>
 			//{
 			//    lock (logLock)
 			//    {

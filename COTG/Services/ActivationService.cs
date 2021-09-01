@@ -19,6 +19,8 @@ using Windows.Storage.Streams;
 using Windows.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls;
+using COTG.JSON;
+using Windows.System;
 
 namespace COTG.Services
 {
@@ -46,6 +48,7 @@ namespace COTG.Services
 
         public async Task ActivateAsync(object activationArgs)
         {
+			//App.globalQueue = DispatcherQueue.GetForCurrentThread();
 
 			if (IsInteractive(activationArgs))
             {
@@ -93,9 +96,12 @@ namespace COTG.Services
 
         private async Task InitializeAsync()
         {
-            // TODO restore       await Singleton<LiveTileService>.Instance.EnableQueueAsync().ConfigureAwait(false);
-            // TODO restore       await Singleton<BackgroundTaskService>.Instance.RegisterBackgroundTasksAsync().ConfigureAwait(false);
-            SettingsPage.Initialize();
+			// TODO restore       await Singleton<LiveTileService>.Instance.EnableQueueAsync().ConfigureAwait(false);
+			// TODO restore       await Singleton<BackgroundTaskService>.Instance.RegisterBackgroundTasksAsync().ConfigureAwait(false);
+			await BuildingDef.Init();
+			await TroopInfo.Init();
+
+			SettingsPage.Initialize();
             var t0= ThemeSelectorService.InitializeAsync();
             var t1= WindowManagerService.Current.InitializeAsync();
             await Task.WhenAll(t0, t1);
@@ -130,22 +136,7 @@ namespace COTG.Services
 			//{
 			//	Crashes.TrackError(args.Exception);
 			//};
-			if (!AppCenter.Configured)
-			{
-				AppCenter.SetMaxStorageSizeAsync(16 * 1024 * 1024).ContinueWith((storageTask) => {
-					// The storageTask.Result is false when the size cannot be honored.
-				});
-				AppCenter.LogLevel = System.Diagnostics.Debugger.IsAttached ? Microsoft.AppCenter.LogLevel.Warn : Microsoft.AppCenter.LogLevel.Error;
-				AppCenter.Start("0b4c4039-3680-41bf-b7d7-685eb68e21d2",
-				   typeof(Analytics), typeof(Crashes));
-				await Crashes.SetEnabledAsync(true);
-				await Analytics.SetEnabledAsync(true);
-				bool didAppCrash = await Crashes.HasCrashedInLastSessionAsync();
-				if (didAppCrash)
-				{
-					ErrorReport crashReport = await Crashes.GetLastSessionCrashReportAsync();
-				}
-			}
+			
 	//		await ThemeSelectorService.SetRequestedThemeAsync();
 
 			// TODO WTS: Configure and enable Azure Notification Hub integration.

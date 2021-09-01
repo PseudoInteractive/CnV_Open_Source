@@ -106,8 +106,8 @@ namespace COTG.Views
 		{
 			lastUpdated = SmallTime.serverNow;
 //			updating = true;
-	//		try
-	//		{
+			try
+			{
 				var data = await Post.SendForJson("overview/tcounc.php");
 				//	Trace(data.RootElement.ToString());
 				foreach (var js in data.RootElement[0].EnumerateArray())
@@ -194,7 +194,10 @@ namespace COTG.Views
 				//}
 
 
-			//}
+			} catch(Exception ex)
+			{
+				Log(ex);
+			}
 			
 		}
 

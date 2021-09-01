@@ -2,7 +2,7 @@
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
-
+using Windows.System;
 using Windows.ApplicationModel.Core;
 using Windows.UI.Core;
 using Windows.UI.ViewManagement;
@@ -35,7 +35,8 @@ namespace COTG.Services
                 MainViewId = ApplicationView.GetForCurrentView().Id;
                 MainDispatcher = Window.Current.Dispatcher;
             });
-        }
+			App.StartAnalytics();
+		}
 
         // Displays a view as a standalone
         // You can use the resulting ViewLifeTileControl to interact with the new window.

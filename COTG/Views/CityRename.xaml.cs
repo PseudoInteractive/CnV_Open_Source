@@ -230,14 +230,13 @@ namespace COTG.Views
 						await CitySettings.SetCitySettings(cid,
 							autoBuildOn: SettingsPage.autoBuildOn,
 							autoWalls: (SettingsPage.autoWallLevel == 10) ? true : null,
-							autoTowers: (SettingsPage.autoTowerLevel == 10) ? true : null							);		
-							
-						if (SettingsPage.clearRes)
-						{
-							if(!city.leaveMe)
-								await City.ClearResUI();
-						}
-						return rv;
+							autoTowers: (SettingsPage.autoTowerLevel == 10) ? true : null							);
+
+					if (SettingsPage.clearRes && !city.leaveMe)
+					{
+						await city.ClearResUI();
+					}
+					return rv;
 					}
 					return result != ContentDialogResult.Secondary;
 				

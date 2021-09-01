@@ -370,11 +370,32 @@ namespace COTG
 		{
 			return v < 0 ? (ushort)0 : v > 65535 ? (ushort)65535u : (ushort)v;
 		}
+
+		
 		public static float Min(this float f,  float max)
         {
             return (f <= max ? f : max);
 		}
-		public static float Frac(this float f) => f - MathF.Floor(f);
+		public static byte AsByte(this int v)
+		{
+			Assert(v >= byte.MinValue);
+			Assert(v <=byte.MaxValue);
+			return (byte)v;
+		}
+		public static short AsShort(this int v)
+		{
+			Assert(v >= short.MinValue);
+			Assert(v <= short.MaxValue);
+			return (short)v;
+		}
+		public static ushort AsUShort(this int v)
+		{
+			Assert(v >= ushort.MinValue);
+			Assert(v <= ushort.MaxValue);
+			return (ushort)v;
+		}
+
+		public static float Frac(this float f) => f%1.0f;
 		public static float Max(this float f, float m)
         {
             return (f >= m ? f : m);

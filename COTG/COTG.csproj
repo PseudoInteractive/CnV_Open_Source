@@ -104,9 +104,6 @@
     <PackageReference Include="Microsoft.AppCenter.Crashes">
       <Version>4.3.0</Version>
     </PackageReference>
-    <PackageReference Include="Microsoft.DependencyValidation.Analyzers">
-      <Version>0.11.0</Version>
-    </PackageReference>
     <PackageReference Include="Microsoft.Extensions.Primitives">
       <Version>6.0.0-preview.7.21377.19</Version>
     </PackageReference>
@@ -117,37 +114,34 @@
       <Version>10.1901.28001</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.Toolkit">
-      <Version>7.1.0-preview1</Version>
+      <Version>7.1.0-rc1</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.Toolkit.HighPerformance">
-      <Version>7.1.0-preview1</Version>
+      <Version>7.1.0-rc1</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.Toolkit.Uwp">
-      <Version>7.1.0-preview1</Version>
+      <Version>7.1.0-rc1</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.Toolkit.Uwp.DeveloperTools">
-      <Version>7.1.0-preview1</Version>
+      <Version>7.1.0-rc1</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.Toolkit.Uwp.Notifications">
-      <Version>7.1.0-preview1</Version>
+      <Version>7.1.0-rc1</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.Toolkit.Uwp.UI">
-      <Version>7.1.0-preview1</Version>
+      <Version>7.1.0-rc1</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.Toolkit.Uwp.UI.Controls">
-      <Version>7.1.0-preview1</Version>
+      <Version>7.1.0-rc1</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.Toolkit.Uwp.UI.Controls.DataGrid">
-      <Version>7.1.0-preview1</Version>
+      <Version>7.1.0-rc1</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.Toolkit.Uwp.UI.Controls.Markdown">
-      <Version>7.1.0-preview1</Version>
+      <Version>7.1.0-rc1</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.UI.Xaml">
       <Version>2.6.2</Version>
-    </PackageReference>
-    <PackageReference Include="Microsoft.VisualStudio.Threading">
-      <Version>17.0.32-alpha</Version>
     </PackageReference>
     <PackageReference Include="MonoGame.Content.Builder.Task">
       <Version>3.8.1.1941-develop</Version>
@@ -198,7 +192,7 @@
       <Version>5.1.0</Version>
     </PackageReference>
     <PackageReference Include="PlayFabAllSDK">
-      <Version>1.99.210816</Version>
+      <Version>1.100.210830</Version>
     </PackageReference>
     <PackageReference Include="Standart.Hash.xxHash">
       <Version>3.1.0</Version>
@@ -250,6 +244,7 @@
     <Compile Include="Game\Attack.cs" />
     <Compile Include="Game\BlessedCity.cs" />
     <Compile Include="Game\City.cs" />
+    <Compile Include="Game\City2.cs" />
     <Compile Include="Game\Dungeon.cs" />
     <Compile Include="Game\Enums.cs" />
     <Compile Include="Game\Faith.cs" />
@@ -381,6 +376,7 @@
     <Compile Include="Views\BossTab.xaml.cs">
       <DependentUpon>BossTab.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\BuildMenu.cs" />
     <Compile Include="Views\BuildTab.xaml.cs">
       <DependentUpon>BuildTab.xaml</DependentUpon>
     </Compile>
@@ -811,11 +807,11 @@
     <None Include="Content\Effects\Macros.fxh" />
     <None Include="Content\Effects\Structures.fxh" />
     <EmbeddedResource Include="Content\Fonts\tra.fnt" />
-    <EmbeddedResource Include="JSON\buildingDef.json" />
+    <Content Include="JSON\buildingDef.json" />
     <None Include="Content\Effects\WorldSpace.fxh" />
     <None Include="CotgKey.pfx" />
     <None Include="JSON\poll2.json" />
-    <EmbeddedResource Include="JSON\Troops.json" />
+    <Content Include="JSON\Troops.json" />
     <None Include="JS\jquerymigrate3_3_2" />
     <None Include="Package.StoreAssociation.xml" />
     <None Include="JS\jquery" />

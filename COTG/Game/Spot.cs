@@ -1535,7 +1535,7 @@ namespace COTG.Game
 			SetFocus(cid, scrollIntoView, select, bringIntoWorldView, lazyMove);
 		}
 
-		public static void UpdateFocusText(IdleDispatchedHandlerArgs __ = null)
+		public static void UpdateFocusText()
 		{
 			ShellPage.instance.focus.Content = Spot.GetOrAdd(focus).nameAndRemarks;
 			ShellPage.instance.coords.Text = focus.CidToString();
@@ -2116,10 +2116,10 @@ namespace COTG.Game
 			if (allianceId == Alliance.myId)
 			{
 				var tab = IncomingTab.instance;
-				App.DispatchOnUIThreadLow(() => tab.Show());
+				App.DispatchOnUIThread(() => tab.Show());
 				for (; ; )
 				{
-					await Task.Delay(2000);
+					await Task.Delay(1000);
 					if (tab.defenderGrid.ItemsSource != null)
 						break;
 				}
@@ -2133,10 +2133,10 @@ namespace COTG.Game
 			else
 			{
 				var tab = OutgoingTab.instance;
-				App.DispatchOnUIThreadLow(() => tab.Show());
+				App.DispatchOnUIThread(() => tab.Show());
 				for (; ; )
 				{
-					await Task.Delay(2000);
+					await Task.Delay(1000);
 					if (tab.attackerGrid.ItemsSource != null)
 						break;
 				}
@@ -2205,7 +2205,7 @@ namespace COTG.Game
 		public static void ScrollIntoView(int cid)
 		{
 			//         await Task.Delay(2000);
-			//          instance.Dispatcher.RunAsync(CoreDispatcherPriority.Low, () =>
+			//          instance.Dispatcher.RunAsync(DispatcherQueuePriority.Low, () =>
 			//           {
 			//   await Task.Delay(200);
 			App.DispatchOnUIThreadIdle(() =>
