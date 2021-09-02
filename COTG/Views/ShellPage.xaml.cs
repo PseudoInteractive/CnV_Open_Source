@@ -710,7 +710,7 @@ namespace COTG.Views
 						return;
 					}
 
-					var id = bd.Proto;
+					var id = bd.refId;
 					if (!bdd.TryGetValue(id, out var counter))
 					{
 						bdd.Add(id, 0);
@@ -752,7 +752,7 @@ namespace COTG.Views
 					{
 						if (i.Value > 0)
 						{
-							var bdf = BuildingDef.prototypes[i.Key];
+							var bdf = BuildingDef.all[i.Key];
 							bd.Add(new BuildingCount() { count = i.Value, brush = CityBuild.BuildingBrush(bdf.bid, 0.5f) });
 						}
 					}
@@ -1231,7 +1231,7 @@ namespace COTG.Views
 			}
 		}
 
-		public static float webViewScale = 1;
+		public static Vector2 webViewScale = new(1,1);
 		internal static bool webviewHasFocus2;
 
 		private  void SetLayout(int viewToggle)
@@ -1282,13 +1282,18 @@ namespace COTG.Views
 					try
 					{
 
-						var spanX = int.Parse(await JSClient.view.InvokeScriptAsync("eval", new string[] { "document.body.clientWidth.toString()" }));
-						var _webViewScale = ((float)(grid.ColumnDefinitions[0].ActualWidth + grid.ColumnDefinitions[1].ActualWidth)) / spanX;
-						if ((_webViewScale - webViewScale).Abs() <= 1.0f / 128f)
+						var spanXY = int.Parse(await JSClient.view.InvokeScriptAsync("eval", new string[] { "(document.body.clientWidth+document.body.clientHeight*65536).toString()" }));
+						var spanY = spanXY>>16;
+						var spanX = spanXY%0xffff;
+						var _webViewScale = new Vector2( 
+							(float)(shellFrame.ActualWidth / spanX),
+						(float)(shellFrame.ActualHeight/ spanY));
+				//		var _webViewScale = ((float)(grid.ColumnDefinitions[0].ActualWidth + grid.ColumnDefinitions[1].ActualWidth)) / spanX;
+						if((_webViewScale - webViewScale).LengthSquared() <= (1.0f / 128f).Squared() )
 							return;
 						webViewScale = _webViewScale;
-						canvasBaseX = (canvasBaseXUnscaled * webViewScale).RoundToInt();
-						canvasBaseY = (canvasBaseYUnscaled * webViewScale).RoundToInt();
+						canvasBaseX = (canvasBaseXUnscaled * webViewScale.X).RoundToInt();
+						canvasBaseY = (canvasBaseYUnscaled * webViewScale.Y).RoundToInt();
 						if (canvas != null && grid != null)
 						{
 							App.DispatchOnUIThreadIdle(() =>

@@ -15,6 +15,7 @@ namespace COTG
 		public readonly byte bl; // building level
 
 		public readonly short bid => def.bid;
+		public readonly short refId => def.refId;
 		public readonly bool isBuilding => bl > 0;
 		public readonly bool isEmpty => id == 0;
 		public readonly bool isRes => def.isRes;

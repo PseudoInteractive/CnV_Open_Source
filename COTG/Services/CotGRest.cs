@@ -43,7 +43,7 @@ namespace COTG.Services
 		public string localPath;
 		public static JsonDocument emptyJson;
 
-		public RestFlags restFlags =  RestFlags.track;
+		public RestFlags restFlags =  default;
 		public string eventName = string.Empty;
 		public virtual string extra => string.Empty;
 		public RestAPI(string _localPath, int _pid = -1)
@@ -61,17 +61,11 @@ namespace COTG.Services
 
 			try
 			{
-				var data = await AcceptBytes(resp,except);
-				if (data.Length > 2)
-				{
-					var json = JsonDocument.Parse(data, jsonParseOptions);
+				
+					var json = JsonDocument.Parse(await AsStream(resp), jsonParseOptions);
 					ProcessJson(json);
 					return true;
-				}
-				else
-				{
-					return false;
-				}
+				
 			}
 			catch (Exception e)
 			{
@@ -80,31 +74,41 @@ namespace COTG.Services
 			}
 
 		}
-		public static async Task<byte[]> AcceptBytes(HttpResponseMessage resp, bool except)
+
+
+
+		//public static async Task<byte[]> AcceptBytes(HttpResponseMessage resp, bool except)
+		//{
+
+		//	try
+		//	{
+		//		var buff = await AsStream(resp);
+		//		var temp = new byte[buff.Length];
+
+		//		using(var dataReader = Windows.Storage.Streams.DataReader.FromBuffer(buff))
+		//		{
+		//			dataReader.ReadBytes(temp);
+		//		}
+		//		//   Log(resp.RequestMessage.RequestUri.ToString() + "\n\n>>>>>>>>>>>>>>\n\n" + Encoding.UTF8.GetString(temp) + "\n\n>>>>>>>>>>>>>>\n\n");
+		//		return temp;
+
+
+		//	}
+		//	catch (Exception e)
+		//	{
+		//		LogEx(e,report: except, eventName: "HTTPAcceptBytes");
+		//	}
+		//	return Array.Empty<byte>();
+
+		//}
+
+		private static async Task<Stream> AsStream(HttpResponseMessage resp)
 		{
+			var buffer = await resp.Content.ReadAsBufferAsync();
 
-			try
-			{
-				var buff = await resp.Content.ReadAsBufferAsync();
-
-				var temp = new byte[buff.Length];
-
-				using (var dataReader = Windows.Storage.Streams.DataReader.FromBuffer(buff))
-				{
-					dataReader.ReadBytes(temp);
-				}
-				//   Log(resp.RequestMessage.RequestUri.ToString() + "\n\n>>>>>>>>>>>>>>\n\n" + Encoding.UTF8.GetString(temp) + "\n\n>>>>>>>>>>>>>>\n\n");
-				return temp;
-
-
-			}
-			catch (Exception e)
-			{
-				LogEx(e,report: except, eventName: "HTTPAcceptBytes");
-			}
-			return Array.Empty<byte>();
-
+			return (buffer).AsStream();
 		}
+
 		public static async Task<string> AcceptText(HttpResponseMessage resp, bool except=false)
 		{
 
@@ -123,11 +127,10 @@ namespace COTG.Services
 		}
 		public static async Task<JsonDocument> AcceptJson(HttpResponseMessage resp, bool except)
 		{
-			var data = await AcceptBytes(resp,except);
 
 			try
 			{
-				return JsonDocument.Parse(data);
+				return JsonDocument.Parse(await AsStream(resp));
 
 			}
 			catch (Exception e)
@@ -139,12 +142,9 @@ namespace COTG.Services
 
 		public static async Task<T> AcceptJsonT<T>(HttpResponseMessage resp, bool except=false)
 		{
-			var data = await AcceptBytes(resp,except);
-			var str = UTF8Encoding.UTF8.GetString(data);
-			//Log(str);
 			try
 			{
-				return JsonSerializer.Deserialize<T>(data, Json.jsonSerializerOptions);
+				return JsonSerializer.Deserialize<T>(await AsStream(resp), Json.jsonSerializerOptions);
 
 			}
 			catch (Exception e)

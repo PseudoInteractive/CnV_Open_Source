@@ -985,51 +985,59 @@ namespace COTG
 
 		public static void DispatchOnUIThreadIdle(Windows.System.DispatcherQueueHandler action)
 		{
-			DispatchOnUIThread(action, DispatcherQueuePriority.Low, false);
+			DispatchOnUIThreadLow(action,  false);
 //			var d = GlobalDispatcher();
 //			d.TryRunIdleAsync((_)=> action() );
 		}
 
-		public static void DispatchOnUIThreadLow(DispatcherQueueHandler action, bool alwaysQueue = false) => DispatchOnUIThread(action, DispatcherQueuePriority.Low, alwaysQueue);
+	public static void DispatchOnUIThreadLow(DispatcherQueueHandler action, bool alwaysQueue = false)
+	{
+		var d = GlobalDispatcher();
+		// run it immediately if we can
+		if (d.HasThreadAccess && !alwaysQueue)
+			action();
+		else
+			d.TryEnqueue(action);
+	}
 
-		//public static int pendingDispatch;
-		//public static int pendingDispatchMax=10;
-		//public static void DispatchStart()
-		//{
-		//	++pendingDispatch;
-		//	if(pendingDispatch > pendingDispatchMax)
-		//	{
-		//		pendingDispatchMax = pendingDispatch + 5;
-		//		Trace("PendingDispatch: " + pendingDispatch);
-		//	}
-		//}
-		//public static void DispatchEnd() => --pendingDispatch;
+	//public static int pendingDispatch;
+	//public static int pendingDispatchMax=10;
+	//public static void DispatchStart()
+	//{
+	//	++pendingDispatch;
+	//	if(pendingDispatch > pendingDispatchMax)
+	//	{
+	//		pendingDispatchMax = pendingDispatch + 5;
+	//		Trace("PendingDispatch: " + pendingDispatch);
+	//	}
+	//}
+	//public static void DispatchEnd() => --pendingDispatch;
 
-		//public static void DispatchOnUIThreadSneakyLow(DispatcherQueueHandler action)
-		//{
-		//	var d = GlobalDispatcher();
-		//	// run it immediately if we can
-		//	if (d.HasThreadAccess && d.CurrentPriority <= DispatcherQueuePriority.Low)
-		//		action();
-		//	else
-		//		d.RunAsync(DispatcherQueuePriority.Low, action);
-		//}
-		//public static async Task DispatchOnUIThreadSneakyLowAwait(DispatcherQueueHandler action)
-		//{
-		//	var d = GlobalDispatcher();
-		//	// run it immediately if we can
-		//	if (d.HasThreadAccess && d.CurrentPriority <= DispatcherQueuePriority.Low)
-		//		action();
-		//	else
-		//		await d.RunAsync(DispatcherQueuePriority.Low, action);
-		//}
-
-
+	//public static void DispatchOnUIThreadSneakyLow(DispatcherQueueHandler action)
+	//{
+	//	var d = GlobalDispatcher();
+	//	// run it immediately if we can
+	//	if (d.HasThreadAccess && d.CurrentPriority <= DispatcherQueuePriority.Low)
+	//		action();
+	//	else
+	//		d.RunAsync(DispatcherQueuePriority.Low, action);
+	//}
+	//public static async Task DispatchOnUIThreadSneakyLowAwait(DispatcherQueueHandler action)
+	//{
+	//	var d = GlobalDispatcher();
+	//	// run it immediately if we can
+	//	if (d.HasThreadAccess && d.CurrentPriority <= DispatcherQueuePriority.Low)
+	//		action();
+	//	else
+	//		await d.RunAsync(DispatcherQueuePriority.Low, action);
+	//}
 
 
 
-		// We only have 1 UI thread here
-		public static DispatcherQueue GlobalDispatcher() => globalQueue;
+
+
+	// We only have 1 UI thread here
+	public static DispatcherQueue GlobalDispatcher() => globalQueue;
 		public static DispatcherQueue globalQueue;
 		public static bool IsOnUIThread() => globalQueue.HasThreadAccess;
 		//public static bool IsKeyPressedControl()

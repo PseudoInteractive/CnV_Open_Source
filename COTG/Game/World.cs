@@ -95,7 +95,7 @@ namespace COTG.Game
 
 	public struct Continent
 	{
-		public byte id;
+		//public byte id;
 		public ushort bosses;   // [6]
 		public int unsettled; // [0]
 		public int settled; // [1]
@@ -192,6 +192,12 @@ namespace COTG.Game
 			var y = (int)((uint)id / (uint)continentCountX);
 			var x = id - y * continentCountX;
 			return (x, y);
+		}
+		public static int UnpackedContinent(this int id)
+		{
+			var y = (int)((uint)id / (uint)continentCountX);
+			var x = id - y * continentCountX;
+			return x + y*10;
 		}
 		public static (int x, int y) ContinentToXY(this int id)
 		{
@@ -1206,7 +1212,7 @@ namespace COTG.Game
 						continue;
 					var key = int.Parse(cnt.Name);
 					var contId = Continent.GetPackedIdFromContUnpacked(key);
-					Continent.all[contId].id = (byte)key;
+					//Continent.all[contId].id = (byte)key;
 					Continent.all[contId].unsettled = cntV[0].GetInt32();
 					Continent.all[contId].settled = cntV[1].GetInt32();
 					Continent.all[contId].cities = cntV[2].GetInt32();

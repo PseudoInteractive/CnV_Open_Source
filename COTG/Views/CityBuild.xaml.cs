@@ -161,30 +161,30 @@ namespace COTG.Views
 			Log($"{action}=>{_action}");
 			action = _action;
 
-			App.globalQueue.TryEnqueue(DispatcherQueuePriority.Low, () =>
-		   {
-			   switch (action)
-			   {
-				   case Action.moveStart:
-					   App.cursorMoveStart.Set();
-					   break;
-				   case Action.moveEnd:
-					   App.cursorMoveEnd.Set();
-					   break;
-				   case Action.destroy:
-					   App.cursorDestroy.Set();
-					   break;
-				   case Action.build:
-					   App.cursorQuickBuild.Set();
-					   break;
-				   case Action.layout:
-					   App.cursorLayout.Set();
-					   break;
-				   default:
-					   App.cursorDefault.Set();
-					   break;
-			   }
-		   });
+				//App.globalQueue.TryEnqueue(DispatcherQueuePriority.Low, () =>
+			 //  {
+				//   switch (action)
+				//   {
+				//	   case Action.moveStart:
+				//		   App.cursorMoveStart.Set();
+				//		   break;
+				//	   case Action.moveEnd:
+				//		   App.cursorMoveEnd.Set();
+				//		   break;
+				//	   case Action.destroy:
+				//		   App.cursorDestroy.Set();
+				//		   break;
+				//	   case Action.build:
+				//		   App.cursorQuickBuild.Set();
+				//		   break;
+				//	   case Action.layout:
+				//		   App.cursorLayout.Set();
+				//		   break;
+				//	   default:
+				//		   App.cursorDefault.Set();
+				//		   break;
+				//   }
+			 //  });
 			//	App.DispatchOnUIThreadLow( ()=> instance.quickBuild.SelectedIndex = (int)_action ); /// the first 3 are mapped. this triggers a selected changed event
 		}
 		public static void SetQuickBuild(int quickBuildItemBid)
@@ -482,7 +482,7 @@ namespace COTG.Views
 				Content = instance
 			};
 
-			buildMenu.Closed += BuildMenu_Closed;
+	//		buildMenu.Closed += BuildMenu_Closed;
 			Style s = new Windows.UI.Xaml.Style { TargetType = typeof(Windows.UI.Xaml.Controls.FlyoutPresenter) };
 			s.Setters.Add(new Setter(MinHeightProperty, "300"));
 			s.Setters.Add(new Setter(MinWidthProperty, "300"));

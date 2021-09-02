@@ -84,7 +84,7 @@ namespace COTG.Views
 		public static bool applyTags=true;
 		public static bool setHub = true;
 		public static bool useSuggested = true;
-		public static bool demoUnwantedBuildingsWithCabins = true;
+		public static bool demoUnwantedBuildingsWithCabins = false;
 		public static bool wantRaidRepeat=true;
 		public static bool clearOnlyCenterRes;
 		public static bool clearRes=true;
@@ -810,7 +810,7 @@ namespace COTG.Views
 			using (new ShellPage.WorkScope("Shrine Finder"))
 				for (int x = x0; x < x1; ++x)
 				{
-					ShellPage.WorkUpdate($"Shrine Finder: {x - x0}%");
+					ShellPage.WorkUpdate($"Shrine Finder {cont}:  {x - x0}%");
 					for (int y = y0; y < y1; ++y)
 					{
 						if (TileData.instance.GetSpotType(x, y).type == TileData.SpotType.plain)

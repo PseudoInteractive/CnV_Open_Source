@@ -664,7 +664,7 @@ namespace COTG.Views
 				var bd = bds[i];
 				if (bd.isBuilding && !bd.isCabin)
 				{
-					layout[i] = BidToLayout(bd.id).c;
+					layout[i] = BidToLayout(bd.bid).c;
 				}
 			
 			}

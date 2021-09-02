@@ -395,7 +395,7 @@ namespace COTG
 			return (ushort)v;
 		}
 
-		public static float Frac(this float f) => f%1.0f;
+		public static float Frac(this float f) => f - MathF.Floor(f);
 		public static float Max(this float f, float m)
         {
             return (f >= m ? f : m);
@@ -668,13 +668,12 @@ namespace COTG
 			return result * (1.0f / 0x10000);
 		}
 		// not very random at all, but good enough
-		public static float BSpotToRandom(this int bspot)
+		public static float BSpotToRandom(this (int x,int y) c )
 		{
-			const uint c1 = randomPrime0;
-			const uint c2 = randomPrime1;
-
-			var result = (((int)(bspot * c1 + c2) >> 4) & 0xffff);
-			return result * (1.0f / 0x10000);
+			var cx = (float)c.x;
+			var cy = (float)c.y;
+			var r = (c.x.Squared() + c.y.Squared()).Sqrt();
+			return (MathF.Atan2(cy,cx))*AMath.inverse2Pi+r*(1.0f/16.0f);
 
 		}
 		public static float RandomFloat(uint offset)
@@ -767,6 +766,7 @@ namespace COTG
 			}
 		}
 		public static ParticleRandomSeedGenerator randomF = new ParticleRandomSeedGenerator((uint)Environment.TickCount);
+		private const float inverse2Pi = 1.0f/(2.0f*MathF.PI);
 
 		public static Vector3 Normalized(this Vector3 me) => Vector3.Normalize(me);
 		public static Vector2 Normalized(this Vector2 me) => Vector2.Normalize(me);

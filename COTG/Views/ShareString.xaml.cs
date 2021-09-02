@@ -347,6 +347,7 @@ namespace COTG.Views
 		{
 			var s = SplitShareString(shareString);
 			ShareStringMeta meta = new();
+			
 			try
 			{
 				meta = JsonSerializer.Deserialize<ShareStringMeta>(s.json,Json.jsonSerializerOptions);
@@ -355,6 +356,7 @@ namespace COTG.Views
 			{
 				LogEx(ex);
 			}
+			
 			var path = DecomposePath(meta.path);
 			this.shareString.Text = s.ss ?? string.Empty;
 			var tags = meta.notes ?? string.Empty;
@@ -376,8 +378,7 @@ namespace COTG.Views
 				SetValue(ref res.max.iron, meta.maxIron);
 				SetValue(ref res.max.food, meta.maxFood);
 				res.OnPropertyChanged();
-			}
-			
+			}			
 		}
 		public static (string ss, string json) SplitShareString(string shareString)
 		{
@@ -392,7 +393,7 @@ namespace COTG.Views
 			else
 				json = shareString.Substring(i);
 			if (shareString.Length >= shareStringStartOffset + citySpotCount)
-				ss = shareString.Substring(shareStringStartOffset,  citySpotCount);
+				ss = shareString.Substring(0,shareStringStartOffset+  citySpotCount);
 			else
 				ss = string.Empty;
 			return (ss, json);

@@ -950,7 +950,7 @@ namespace COTG.Views
 							if (!IsCityView())
 							{
 								ref var cn = ref Continent.all[cont];
-								contToolTip = $"{cn.id}\nSettled {cn.settled}\nFree {cn.unsettled}\nCities {cn.cities}\nCastles {cn.castles}\nTemples {cn.temples}\nDungeons {cn.dungeons}";
+								contToolTip = $"{World.UnpackedContinent(cont)}\nSettled {cn.settled}\nFree {cn.unsettled}\nCities {cn.cities}\nCastles {cn.castles}\nTemples {cn.temples}\nDungeons {cn.dungeons}";
 
 							}
 						}

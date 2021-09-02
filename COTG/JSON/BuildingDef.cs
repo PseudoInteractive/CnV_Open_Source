@@ -66,15 +66,23 @@ namespace COTG
 			all = await Json.FromContent<Dictionary<int, BuildingDef>>("buildingDef");
 			byte counter = 0;
 			idToBid = new BuildingDef[byte.MaxValue];
-			prototypes = new Dictionary<int, BuildingDef>();
+		//	prototypes = new Dictionary<int, BuildingDef>();
 			foreach (var i in all)
 			{
 				var b = all[i.Key];
 				b.bid = (short)i.Key;
 				b.id = counter;
-				idToBid[counter] = i.Value;
+				if(b.refId==0)
+				{
+					b.refId = b.bid;
+					idToBid[counter] = i.Value;
+				}
+				else
+				{
+					idToBid[counter] = all[b.refId];
+				}
 				// use the first one for the prototype?
-				prototypes.TryAdd(b.Proto, b);
+			//	prototypes.TryAdd(b.Proto, b);
 				++counter;
 			}
 			// all extra buildings are assigned to "None" this may not be needed
@@ -109,9 +117,9 @@ namespace COTG
 				 (byte)'L',(byte)(460 - sharestringOffset),
 				 (byte)'M',(byte)(463 - sharestringOffset),
 				 (byte)'P',(byte)(449 - sharestringOffset),
+				 (byte)'R',(byte)(bidPort - sharestringOffset),
 				 (byte)'R',(byte)(490 - sharestringOffset),
 				 (byte)'R',(byte)(489 - sharestringOffset),
-				 (byte)'R',(byte)(bidPort - sharestringOffset),
 				 (byte)'S',(byte)(464 - sharestringOffset),
 				 (byte)'T',(byte)(0),
 				 (byte)'U',(byte)(481 - sharestringOffset),
@@ -136,7 +144,7 @@ namespace COTG
 		public static BuildingDef FromId(byte id) => idToBid[id];
 		public static BuildingDef[] idToBid;
 		public static Dictionary<int, BuildingDef> all; // indexed via bid
-		public static Dictionary<int, BuildingDef> prototypes; // maps prototype id's to buildings.  Some buildings share a prototype
+		//public static Dictionary<int, BuildingDef> prototypes; // maps prototype id's to buildings.  Some buildings share a prototype
 
 		[JsonIgnore]
 		public bool isRes => IsRes(bid);
@@ -165,7 +173,8 @@ namespace COTG
 		public byte id; // packed id
 						// not persisted
 						// 8 bit 
-		public short nonFacingAlias; // offset 
+		[JsonInclude]
+		public short refId; // reference ID, sometimes this offset 
 		[JsonIgnore]
 		public short bid; // building id
 		[JsonIgnore]

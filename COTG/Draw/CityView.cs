@@ -124,380 +124,367 @@ namespace COTG.Draw
 			ShellPage.contToolTip = null;
 
 			var build = City.GetBuild();
-			if (build == null)
+			if(build == null)
 				return;
-			int iAlpha = (int)(alpha * 255f);
-			var postBuildings = build.postQueueBuildings;
-			buildCityOrigin = build.cid.CidToWorldV();
-			// draw each building tile
-			var city = City.GetBuild();
-			cityDrawAlpha = iAlpha;
-			var zBase = 0f;
-			// selected
 
-			// Timeline:
-			// 0..1: B0
-			// 1..2: Fade Out B0, fade in Op
-			// 2..3: Fade Out Op, fade in B1
-			// 3..4: B1
-			// 4..5: Fade out B1 fade in B0
-			var fontScale = (pixelScale / 64.0f) * (2.5f/64.0f) * SettingsPage.fontScale; // perspective attenuation with distance
-			for (var cy = span0; cy <= span1; ++cy)
+			try
 			{
-				for (var cx = span0; cx <= span1; ++cx)
+				int iAlpha = (int)(alpha * 255f);
+				var postBuildings = build.postQueueBuildings;
+				buildCityOrigin = build.cid.CidToWorldV();
+				// draw each building tile
+				var city = City.GetBuild();
+				cityDrawAlpha = iAlpha;
+				var zBase = 0f;
+				// selected
+
+				// Timeline:
+				// 0..1: B0
+				// 1..2: Fade Out B0, fade in Op
+				// 2..3: Fade Out Op, fade in B1
+				// 3..4: B1
+				// 4..5: Fade out B1 fade in B0
+				var fontScale = (pixelScale / 64.0f) * (2.5f/64.0f) * SettingsPage.fontScale; // perspective attenuation with distance
+				for(var cy = span0;cy <= span1;++cy)
 				{
-					var id = XYToId((cx, cy));
+					for(var cx = span0;cx <= span1;++cx)
+					{
+						var bspot = XYToId((cx, cy));
 
-					Building cur, next,overlay;
-					if(!CityBuild.isPlanner)
-					{
-						cur = city.buildings[id];
-						next = city.postQueueBuildings[id];
-						overlay = city.BuildingFromOverlay(id);
-					}
-					else
-					{
-						cur = city.BuildingFromOverlay(id); 
-						next = cur;
-						overlay = city.postQueueBuildings[id];
-					}
-
-					// this is to show the demo symbol?
-					var bidOverride = -1;
-					if (id == 0)
-					{
-						if (cur.bl == 0)
-							continue;
-						bidOverride = 799;
-					}
-
-					var cs = CityPointToQuad(cx, cy);
-					
-					float blendT = (animationT * 0.375f - animationOffsets[id] + 0.2f).Frac();
-					if (cur.id==next.id)
-					{
-						if (next.bl != cur.bl)
+						Building cur, next;//,overlay;
+						if(!CityBuild.isPlanner)
 						{
-							float blendOp=0;
-							byte  bl;
-							float fontA;
-							if (blendT < 0.25f)
-							{
-								var t = (blendT) * 4.0f;
-								bl = next.bl; // fade next number
-								fontA = t.Bezier(0,1,1);
-								blendOp = t.SCurve();
-							}
-							else if(blendT < 0.5f)
-							{
-								var t = (blendT - 0.25f) * 4.0f;
-								blendOp = 1;
-								// fade out number
-								bl = next.bl; // fade next number
-								fontA = t.Bezier(1,1,0);
+							cur = city.buildings[bspot];
+							next = city.postQueueBuildings[bspot];
+							//					overlay = city.BuildingFromOverlay(id);
+						}
+						else
+						{
+							cur = city.BuildingFromOverlay(bspot);
+							next = cur;
+							//				overlay = city.postQueueBuildings[id];
+						}
 
-							}
-							else if( blendT < 0.75f) // fade out hammer
+						// this is to show the demo symbol?
+						var bidOverride = -1;
+						if(bspot == 0)
+						{
+							if(cur.bl == 0)
+								continue;
+							bidOverride = 799;
+						}
+
+						var cs = CityPointToQuad(cx,cy);
+
+						float blendT = (animationT - animationOffsets[bspot]).Frac();
+						if(cur.id==next.id)
+						{
+							if(next.bl != cur.bl)
 							{
-								var t = (blendT - 0.5f) * 4.0f; // fade in new number
-								blendOp = t.SCurve(1,0);
-								// fade in last number
-								bl = cur.bl;
-								fontA = t.Bezier(0,1,1);
+								float blendOp = 0;
+								byte bl;
+								float fontA;
+								if(blendT < 0.25f)
+								{
+									var t = (blendT) * 4.0f;
+									bl = next.bl; // fade next number
+									fontA = t.Bezier(0,1,1);
+									blendOp = t.SCurve();
+								}
+								else if(blendT < 0.5f)
+								{
+									var t = (blendT - 0.25f) * 4.0f;
+									blendOp = 1;
+									// fade out number
+									bl = next.bl; // fade next number
+									fontA = t.Bezier(1,1,0);
+
+								}
+								else if(blendT < 0.75f) // fade out hammer
+								{
+									var t = (blendT - 0.5f) * 4.0f; // fade in new number
+									blendOp = t.SCurve(1,0);
+									// fade in last number
+									bl = cur.bl;
+									fontA = t.Bezier(0,1,1);
+								}
+								else
+								{
+									// fade in number
+									var t = (blendT - 0.75f) * 4.0f; // fade in new number
+																	 // fade out number
+									bl = cur.bl;
+									fontA = t.Bezier(1,1,0);// prior number out	
+								}
+								DrawBuilding(iAlpha,zBase,fontScale,cs,cur,Layer.tileCity,(int)(alpha*fontA*255f),bl,bidOverride);
+								if(blendOp > 0)
+								{
+									// upgrade
+									draw.AddQuad(Layer.tileCity + 2,(next.bl > cur.bl) ? decalBuildingValid : decalSelectEmpty,cs.c0,cs.c1,new Color(iAlpha,iAlpha,iAlpha,iAlpha / 2).Scale(blendOp),PlanetDepth,zHover);
+								}
 							}
 							else
 							{
-								// fade in number
-								var t = (blendT - 0.75f) * 4.0f; // fade in new number
-																 // fade out number
-								bl = cur.bl;
-								fontA = t.Bezier(1,1,0);// prior number out	
+								// not changing
+								DrawBuilding(iAlpha,zBase,fontScale,cs,cur,Layer.tileCity,-1,-1,bidOverride);
+
 							}
-							DrawBuilding(iAlpha, zBase, fontScale, cs, cur, Layer.tileCity,(int)(alpha*fontA*255f),bl, bidOverride);
-							if (blendOp > 0)
+
+						}
+						else
+						{
+							float blendOp;
+							Material blendMat;
+							Building bd;
+							if(next.id == 0)
 							{
-									// upgrade
-								draw.AddQuad(Layer.tileCity + 2, (next.bl > cur.bl)? decalBuildingValid: decalSelectEmpty, cs.c0, cs.c1, new Color(iAlpha, iAlpha, iAlpha, iAlpha / 2).Scale(blendOp), PlanetDepth, zHover);
+								blendMat = decalBuildingInvalid;
+								bd = cur;
 							}
-						}
-						else
-						{
-							// not changing
-							DrawBuilding(iAlpha, zBase, fontScale, cs, cur, Layer.tileCity,-1,-1, bidOverride);
+							else
+							{
+								blendMat = decalBuildingValid;
+								bd = next;
+							}
+							if(blendT < 0.25f)
+							{
+								var t = blendT * 4.0f; // demo fades in, half second
+								blendOp = t.Bezier(0,1,1);
+							}
+							else
+							{
+								var t = (blendT - 0.25f) *(1.0f/0.75f); // building fades in, hammer fades out 1 seconds
+								blendOp = t.Bezier(1,1,0);
+							}
 
-						}
+							if(blendOp > 0)
+							{
+								draw.AddQuad(Layer.tileCity + 2,blendMat,cs.c0,cs.c1,(new Color(iAlpha,iAlpha,iAlpha,iAlpha)).Scale(blendOp),PlanetDepth,zHover);
+							}
 
-					}
-					else
-					{
-						float  blendOp;
-						Material blendMat;
-						Building bd;
-						if (next.id == 0)
-						{
-							blendMat = decalBuildingInvalid;
-							bd = cur;
+							DrawBuilding(iAlpha,zBase,fontScale,cs,bd,Layer.tileCity,-1,-1,bidOverride);
 						}
-						else
+						// draw overlays
+						if(build.isLayoutValid && SettingsPage.drawBuildingOverlays)
 						{
-							blendMat = decalBuildingValid;
-							bd = next;
-						}
-						if (blendT < 0.25f)
-						{
-							var t = blendT * 4.0f; // demo fades in, half second
-							blendOp = t.Bezier(0,1,1);
-						}
-						else
-						{
-							var t = (blendT - 0.25f) *(1.0f/0.75f); // building fades in, hammer fades out 1 seconds
-							blendOp = t.Bezier(1,1, 0);
-						}
-
-						if (blendOp > 0)
-						{
-							draw.AddQuad(Layer.tileCity + 2, blendMat, cs.c0, cs.c1, (new Color(iAlpha, iAlpha, iAlpha, iAlpha)).Scale(blendOp), PlanetDepth, zHover);
-						}
-						
-						DrawBuilding(iAlpha, zBase, fontScale, cs, bd , Layer.tileCity,-1,-1, bidOverride);
-					}
-				}
-			}
-			var citySpan = new Vector2(0.5f, 0.5f * yScale);
-			var city0 = buildCityOrigin - citySpan;
-			var city1 = buildCityOrigin + citySpan;
-			draw.AddQuad(Layer.tileCity - 2, city.isOnWater ? cityWallsWater : cityWallsLand, city0.WToCamera(), city1.WToCamera(), iAlpha.AlphaToAll(),  (0f,0f,0f,0f) );
-
-			// draw overlays
-			if(build.isLayoutValid && SettingsPage.drawBuildingOverlays )
-			{
-				try
-				{
-					for (var cy = span0; cy <= span1; ++cy)
-					{
-						for (var cx = span0; cx <= span1; ++cx)
-						{
-							var bspot = City.XYToId((cx, cy));
-							if (!CityBuild.IsBuildingSpot(bspot)  )
-								continue; // wall
-
 							int bid;
-							BuildingDef bd;
-							if (CityBuild.isPlanner)
+							//	BuildingDef bd;
+							Building current;
+							if(CityBuild.isPlanner)
 							{
-								var bs = city.buildings[bspot];
+								var bs = postBuildings[bspot];
 								if(bs.isEmpty)
 								{
 									continue;
 								}
 								bid = bs.bid;
-								bd = bs.def;
-						
+								current = build.BuildingFromOverlay(bspot);
+
 							}
 							else
 							{
-								(bid,bd)=build.BFromOverlay((cx, cy));
-								if (bd.isRes)
-									bid = 0;
+								current = postBuildings[bspot];
+								bid=build.BidFromOverlay(bspot);
 							}
-							var current =  postBuildings[bspot];
-							var currentBid = current.def.bid;
-							if (!CityBuild.isPlanner)
-							{
-								if (!current.isBuilding)
-									currentBid = 0;
-							}
-							if (currentBid == bid)
+							var currentBid = current.refId;
+
+							if(currentBid == bid)
 								continue;
 
 							if(bid==0)
 							{
 								bid = 443 + 8 * 4; // X mark
-								if (current.isCabin)
+								if(current.isCabin)
 									continue; // leave it, it is fine
 							}
-							if (bid == 0)
-								continue;
+
 
 							var iconId = BidToAtlas(bid);
 
 							var u0 = iconId.x * duDt;
 							var v0 = iconId.y * dvDt;
-							var cs = CityPointToQuad(cx, cy);
-							var _c0 = 0.25f.Lerp(cs.c0, cs.c1);
-							var _c1 = 0.75f.Lerp(cs.c0, cs.c1);
-							var shadowOffset = new Vector2(5.0f, 5.0f);
-							var off = (bspot.BSpotToRandom() + animationT * 0.3245f);
-							var cScale = new Vector2(off.Wave().Lerp(0.8f, 1.0f), off.WaveC().Lerp(0.8f, 1.0f));
+							//var cs = CityPointToQuad(cx,cy);
+							var _c0 = 0.0f.Lerp(cs.c0,cs.c1);
+							var _c1 = 0.5f.Lerp(cs.c0,cs.c1);
+							var shadowOffset = new Vector2(5.0f,5.0f);
+							var off = (AMath.BSpotToRandom((cx, cy)) + animationT * 0.3245f);
+							var cScale = new Vector2(off.Wave().Lerp(0.8f,1.0f),off.WaveC().Lerp(0.8f,1.0f));
 
-							draw.AddQuad(Layer.tileCity + 1, buildingShadows, _c0+shadowOffset,_c1+shadowOffset, new Vector2(u0, v0), new Vector2(u0 + duDt, v0 + dvDt), new Color(0,0,0,iAlpha*7/8).Scale(cScale), (zBase, zBase, zBase, zBase)); // shader does the z transform
+							draw.AddQuad(Layer.tileCity + 1,buildingShadows,_c0+shadowOffset,_c1+shadowOffset,new Vector2(u0,v0),new Vector2(u0 + duDt,v0 + dvDt),new Color(0,0,0,iAlpha*7/8).Scale(cScale),(zBase, zBase, zBase, zBase)); // shader does the z transform
 
-							draw.AddQuad(Layer.tileCity+2, buildingAtlas, _c0, _c1, new Vector2(u0, v0), new Vector2(u0 + duDt, v0 + dvDt), iAlpha.AlphaToAll().Scale(cScale), (zBase, zBase, zBase, zBase)); // shader does the z transform
-							
+							draw.AddQuad(Layer.tileCity+2,buildingAtlas,_c0,_c1,new Vector2(u0,v0),new Vector2(u0 + duDt,v0 + dvDt),iAlpha.AlphaToAll().Scale(cScale),(zBase, zBase, zBase, zBase)); // shader does the z transform
+
 						}
 					}
-				}
-				catch (Exception exception)
-				{
-					LogEx(exception);
-				}
+					var citySpan = new Vector2(0.5f,0.5f * yScale);
+					var city0 = buildCityOrigin - citySpan;
+					var city1 = buildCityOrigin + citySpan;
+					draw.AddQuad(Layer.tileCity - 2,city.isOnWater ? cityWallsWater : cityWallsLand,city0.WToCamera(),city1.WToCamera(),iAlpha.AlphaToAll(),(0f, 0f, 0f, 0f));
 
+					// draw overlays
+
+					//if(isPlanner && !build.isLayoutValid)
+					//{
+					//	Status("Please set a layout.",dryRun);
+					//}
+
+
+					// if selected is 
+
+					//var biSelected = postQueuebuildingsCache[XYToId(selected)];
+					//var bdSelected = biSelected.def;
+
+					//if (selected.IsValid())
+					//{
+					//	Material mat = CityBuild.action switch
+					//	{
+					//		CityBuild.Action.build => null,
+					//		CityBuild.Action.destroy => null,
+					//		CityBuild.Action.move => decalMoveBuilding,
+					//		_ => decalSelectBuilding
+					//	};
+
+					//	if (mat != null)
+					//	{
+					//		var off = (animationT * 0.3256f);
+					//		var cScale = new Vector2(off.Wave().Lerp(0.8f, 1.0f), off.WaveC().Lerp(0.8f, 1.0f));
+					//		var cs = CityPointToQuad(selected.x, selected.y, 1.2f);
+					//		draw.AddQuad(Layer.tileCity + 2, mat, cs.c0, cs.c1, new Color(iAlpha, iAlpha, iAlpha, iAlpha / 2).Scale(cScale), PlanetDepth, zHover);
+
+					//	}
+					//}
+
+					// hovered
+					//if (hovered.IsValid())
+					//{
+					//	var biHovered = postQueuebuildingsCache[XYToId(hovered)]; ;
+					//	var bdHovered = biHovered.def;
+
+					//	Material mat = CityBuild.action switch
+					//	{
+					//		CityBuild.Action.layout => decalBuildingValidMulti,
+					//		CityBuild.Action.build => (bdHovered.id == 0) ? decalBuildingValid : decalSelectEmpty,
+					//		CityBuild.Action.destroy => (bdHovered.id == 0) ? decalSelectEmpty : decalBuildingInvalid,
+					//		CityBuild.Action.move => selected.IsValid() ?
+					//			(bdHovered.id == 0 ? decalMoveBuilding : biHovered.isBuilding?decalMoveBuilding: decalBuildingInvalid)
+					//			: (bdHovered.id == 0 ? decalSelectEmpty : decalMoveBuilding),
+					//		// create
+					//		_ => (bdHovered.id == 0) ? decalSelectEmpty : decalSelectEmpty
+					//	};
+
+					//	if (mat != null)
+					//	{
+					//		DrawSprite(hovered, mat, 0.312f);
+
+					//	}
+					//	// draw the quickbuild placeholder building
+					//	if (CityBuild.action == CityBuild.Action.build)
+					//	{
+					//		//if (bdHovered.id == 0)
+					//		//{
+
+					//		//	var sel = CityBuild.quickBuildId;
+					//		//	if (sel != 0)
+					//		//	{
+					//		//		DrawBuilding(hovered, iAlpha, sel, animationT * 0.3247f);
+					//		//		ShellPage.contToolTip = $"Click to place { BuildingDef.all[sel].Bn }";
+					//		//	}
+					//		//}
+					//		//else
+					//		//{
+					//		//	ShellPage.contToolTip = $"Spot is occupied";
+					//		//}
+					//	}
+					//	else if (CityBuild.action == CityBuild.Action.move)
+					//	{
+
+					//		if (selected.IsValid())
+					//		{
+					//			if (Player.isAvatarOrTest ? IsTowerSpot(hovered):!IsBuildingSpot(hovered))
+					//			{
+					//				ShellPage.contToolTip = $"Please do not build buildings on walls";
+					//			}
+					//			else
+					//			{
+					//				if (bdHovered.id == 0)
+					//				{
+					//					ShellPage.contToolTip = $"Click to Move {GetBuilding(selected).name} to ({hovered.x},{hovered.y})";
+					//					DrawBuilding(hovered, iAlpha, GetBuilding(selected).def.bid, animationT * 0.3249f);
+
+
+					//				}
+					//				else
+					//				{
+					//					if (bdHovered.isRes)
+					//						ShellPage.contToolTip = $"Target is occupied by {bdHovered.Bn}, click to demo";
+					//					else
+					//					{
+					//						ShellPage.contToolTip = $"Swap {bdHovered.Bn} with {GetBuilding(selected).name}, (takes 3 moves)";
+					//						DrawBuilding(hovered, iAlpha, GetBuilding(selected).def.bid, animationT * 0.3249f);
+					//						// draw a move icond too
+					//					}
+					//				}
+					//			}
+
+					//		}
+					//		else
+					//		{
+					//			if (biHovered.isBuilding)
+					//			{
+					//				ShellPage.contToolTip = $"Click to move {bdHovered.Bn}";
+					//			}
+					//			else
+					//			{
+					//				ShellPage.contToolTip = $"Please Select a building to move";
+					//			}
+					//		}
+					//	}
+
+
+					//}
+					PreviewBuildAction();
+					//var processed = new HashSet<int>();
+					//foreach (var r in IterateQueue() )
+					//{
+					//	int bspot = r.bspot;
+					//	if (!processed.Add(bspot))
+					//		continue;
+					//	var cc = IdToXY(bspot);
+					//	var cs = CityPointToQuad(cc.x, cc.y, 1.2f);
+					//	var off = (bspot.BSpotToRandom() + animationT*0.325f);
+					//	var cScale = new Vector2(off.Wave().Lerp(0.3f,1.0f), off.WaveC().Lerp(0.3f, 1.0f));
+					//	if (r.elvl == 0)
+					//	{
+					//		// demo
+					//		draw.AddQuad(Layer.tileCity + 2, decalBuildingInvalid, cs.c0, cs.c1, (new Color(iAlpha, iAlpha, iAlpha, iAlpha / 2)).Scale(cScale), PlanetDepth, zHover);
+					//	}
+					//	else if (r.slvl == 0)
+					//	{
+					//		// new building
+					//		DrawBuilding(cc, iAlpha, r.bid, off);
+
+					//		// now the overlay
+					//		draw.AddQuad(Layer.tileCity + 2, decalBuildingValidMulti, cs.c0, cs.c1, new Color(iAlpha, iAlpha , iAlpha , iAlpha/2).Scale(cScale), PlanetDepth, zHover);
+					//	}
+					//	else if (r.slvl < r.elvl)
+					//	{
+					//		// upgrade
+					//		draw.AddQuad(Layer.tileCity + 2, decalBuildingValid, cs.c0, cs.c1, new Color(iAlpha, iAlpha , iAlpha , iAlpha / 2).Scale(cScale), PlanetDepth, zHover);
+					//	}
+					//	else
+					//	{
+					//		// downgrade or other, just highlight it
+					//		draw.AddQuad(Layer.tileCity +2, decalSelectEmpty, cs.c0, cs.c1, new Color(iAlpha, iAlpha, iAlpha, iAlpha / 2).Scale(cScale), PlanetDepth, zHover);
+
+					//	}
+					//}
+				}
 			}
-			//if(isPlanner && !build.isLayoutValid)
-			//{
-			//	Status("Please set a layout.",dryRun);
-			//}
-
-
-			// if selected is 
-			
-			//var biSelected = postQueuebuildingsCache[XYToId(selected)];
-			//var bdSelected = biSelected.def;
-
-			//if (selected.IsValid())
-			//{
-			//	Material mat = CityBuild.action switch
-			//	{
-			//		CityBuild.Action.build => null,
-			//		CityBuild.Action.destroy => null,
-			//		CityBuild.Action.move => decalMoveBuilding,
-			//		_ => decalSelectBuilding
-			//	};
-
-			//	if (mat != null)
-			//	{
-			//		var off = (animationT * 0.3256f);
-			//		var cScale = new Vector2(off.Wave().Lerp(0.8f, 1.0f), off.WaveC().Lerp(0.8f, 1.0f));
-			//		var cs = CityPointToQuad(selected.x, selected.y, 1.2f);
-			//		draw.AddQuad(Layer.tileCity + 2, mat, cs.c0, cs.c1, new Color(iAlpha, iAlpha, iAlpha, iAlpha / 2).Scale(cScale), PlanetDepth, zHover);
-
-			//	}
-			//}
-
-			// hovered
-			//if (hovered.IsValid())
-			//{
-			//	var biHovered = postQueuebuildingsCache[XYToId(hovered)]; ;
-			//	var bdHovered = biHovered.def;
-
-			//	Material mat = CityBuild.action switch
-			//	{
-			//		CityBuild.Action.layout => decalBuildingValidMulti,
-			//		CityBuild.Action.build => (bdHovered.id == 0) ? decalBuildingValid : decalSelectEmpty,
-			//		CityBuild.Action.destroy => (bdHovered.id == 0) ? decalSelectEmpty : decalBuildingInvalid,
-			//		CityBuild.Action.move => selected.IsValid() ?
-			//			(bdHovered.id == 0 ? decalMoveBuilding : biHovered.isBuilding?decalMoveBuilding: decalBuildingInvalid)
-			//			: (bdHovered.id == 0 ? decalSelectEmpty : decalMoveBuilding),
-			//		// create
-			//		_ => (bdHovered.id == 0) ? decalSelectEmpty : decalSelectEmpty
-			//	};
-
-			//	if (mat != null)
-			//	{
-			//		DrawSprite(hovered, mat, 0.312f);
-
-			//	}
-			//	// draw the quickbuild placeholder building
-			//	if (CityBuild.action == CityBuild.Action.build)
-			//	{
-			//		//if (bdHovered.id == 0)
-			//		//{
-
-			//		//	var sel = CityBuild.quickBuildId;
-			//		//	if (sel != 0)
-			//		//	{
-			//		//		DrawBuilding(hovered, iAlpha, sel, animationT * 0.3247f);
-			//		//		ShellPage.contToolTip = $"Click to place { BuildingDef.all[sel].Bn }";
-			//		//	}
-			//		//}
-			//		//else
-			//		//{
-			//		//	ShellPage.contToolTip = $"Spot is occupied";
-			//		//}
-			//	}
-			//	else if (CityBuild.action == CityBuild.Action.move)
-			//	{
-
-			//		if (selected.IsValid())
-			//		{
-			//			if (Player.isAvatarOrTest ? IsTowerSpot(hovered):!IsBuildingSpot(hovered))
-			//			{
-			//				ShellPage.contToolTip = $"Please do not build buildings on walls";
-			//			}
-			//			else
-			//			{
-			//				if (bdHovered.id == 0)
-			//				{
-			//					ShellPage.contToolTip = $"Click to Move {GetBuilding(selected).name} to ({hovered.x},{hovered.y})";
-			//					DrawBuilding(hovered, iAlpha, GetBuilding(selected).def.bid, animationT * 0.3249f);
-
-
-			//				}
-			//				else
-			//				{
-			//					if (bdHovered.isRes)
-			//						ShellPage.contToolTip = $"Target is occupied by {bdHovered.Bn}, click to demo";
-			//					else
-			//					{
-			//						ShellPage.contToolTip = $"Swap {bdHovered.Bn} with {GetBuilding(selected).name}, (takes 3 moves)";
-			//						DrawBuilding(hovered, iAlpha, GetBuilding(selected).def.bid, animationT * 0.3249f);
-			//						// draw a move icond too
-			//					}
-			//				}
-			//			}
-
-			//		}
-			//		else
-			//		{
-			//			if (biHovered.isBuilding)
-			//			{
-			//				ShellPage.contToolTip = $"Click to move {bdHovered.Bn}";
-			//			}
-			//			else
-			//			{
-			//				ShellPage.contToolTip = $"Please Select a building to move";
-			//			}
-			//		}
-			//	}
+			catch(Exception __ex)
+			{
+				LogEx(__ex);
 				
-
-			//}
-			PreviewBuildAction();
-			//var processed = new HashSet<int>();
-			//foreach (var r in IterateQueue() )
-			//{
-			//	int bspot = r.bspot;
-			//	if (!processed.Add(bspot))
-			//		continue;
-			//	var cc = IdToXY(bspot);
-			//	var cs = CityPointToQuad(cc.x, cc.y, 1.2f);
-			//	var off = (bspot.BSpotToRandom() + animationT*0.325f);
-			//	var cScale = new Vector2(off.Wave().Lerp(0.3f,1.0f), off.WaveC().Lerp(0.3f, 1.0f));
-			//	if (r.elvl == 0)
-			//	{
-			//		// demo
-			//		draw.AddQuad(Layer.tileCity + 2, decalBuildingInvalid, cs.c0, cs.c1, (new Color(iAlpha, iAlpha, iAlpha, iAlpha / 2)).Scale(cScale), PlanetDepth, zHover);
-			//	}
-			//	else if (r.slvl == 0)
-			//	{
-			//		// new building
-			//		DrawBuilding(cc, iAlpha, r.bid, off);
-					
-			//		// now the overlay
-			//		draw.AddQuad(Layer.tileCity + 2, decalBuildingValidMulti, cs.c0, cs.c1, new Color(iAlpha, iAlpha , iAlpha , iAlpha/2).Scale(cScale), PlanetDepth, zHover);
-			//	}
-			//	else if (r.slvl < r.elvl)
-			//	{
-			//		// upgrade
-			//		draw.AddQuad(Layer.tileCity + 2, decalBuildingValid, cs.c0, cs.c1, new Color(iAlpha, iAlpha , iAlpha , iAlpha / 2).Scale(cScale), PlanetDepth, zHover);
-			//	}
-			//	else
-			//	{
-			//		// downgrade or other, just highlight it
-			//		draw.AddQuad(Layer.tileCity +2, decalSelectEmpty, cs.c0, cs.c1, new Color(iAlpha, iAlpha, iAlpha, iAlpha / 2).Scale(cScale), PlanetDepth, zHover);
-
-			//	}
-			//}
+			}
 		}
 
 		private static void DrawBuilding(int iAlpha, float zBase, float fontScale, (Vector2 c0,Vector2 c1) cs,in Building bid,int layer,int fontAlpha=-1, int blOverride=-1, int bidOverride = -1)

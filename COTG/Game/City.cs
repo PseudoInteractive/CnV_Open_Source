@@ -440,7 +440,7 @@ namespace COTG.Game
 		public byte[] layout = emptyLayout;
 		public static byte[] newLayout => new byte[citySpotCount];
 		public string shareStringJson = string.Empty;
-		public string shareStringWithoutJson => $"[ShareString.1.3]{(isOnWater ? ";":":")}{Encoding.ASCII.GetString(emptyLayout)}";
+		public string shareStringWithoutJson => $"[ShareString.1.3]{(isOnWater ? ";":":")}{Encoding.ASCII.GetString(layout)}";
 		public string shareString
 		{
 			get => shareStringWithoutJson + shareStringJson;
@@ -666,7 +666,7 @@ namespace COTG.Game
 			{
 				constructionSpeed = cs.GetAsFloat();
 			}
-			if (!CityBuild.isPlanner )
+			if (!CityBuild.isPlanner || cid != City.build )
 			{
 				if (jse.TryGetProperty("sts", out var sts))
 				{
@@ -850,10 +850,10 @@ namespace COTG.Game
 		public void SetShareString(string s, bool save)
 		{
 			(var _layout, shareStringJson) = ShareString.SplitShareString(s);
-			if (_layout.Length > minShareStringLength)
+			if (_layout.Length >= City.citySpotCount+shareStringStartOffset)
 			{
-				Assert(_layout.Length == City.citySpotCount);
-				layout = Encoding.ASCII.GetBytes(_layout);
+				//Assert(_layout.Length == City.citySpotCount);
+				layout = Encoding.ASCII.GetBytes(_layout,shareStringStartOffset,citySpotCount);
 			}
 			else
 				layout = emptyLayout;

@@ -23,12 +23,12 @@ namespace COTG.Views
 	{
 		// public static Rectangle canvasHitTest;
 
-		public const int canvasBaseXUnscaled = 410;
-		public const int canvasTitleYOffset = 42;
-		public const int canvasHtmlYOffset = 53;
+		public const int canvasBaseXUnscaled = 420;
+		public const int canvasTitleYOffset = 40;
+		public const int canvasHtmlYOffset = 55;
 		public static int canvasBaseYUnscaled = 95;
 
-		public static int canvasBaseX = 410;
+		public static int canvasBaseX = 420;
 		public static int canvasBaseY = 95;
 		//public static int cachedTopOffset = 0;
 		//public static int cachedXOffset = 0;
