@@ -143,6 +143,9 @@
     <PackageReference Include="Microsoft.UI.Xaml">
       <Version>2.6.2</Version>
     </PackageReference>
+    <PackageReference Include="Microsoft.Windows.CppWinRT">
+      <Version>2.0.210825.3</Version>
+    </PackageReference>
     <PackageReference Include="MonoGame.Content.Builder.Task">
       <Version>3.8.1.1941-develop</Version>
     </PackageReference>
@@ -824,7 +827,7 @@
     <Content Include="Assets\Wide310x150Logo.scale-200.png" />
     <None Include="SignatureKey.snk" />
     <None Include="SignaturePubKey.snk" />
-    <Compile Include="Wiki\wiki.md" />
+    <None Include="Wiki\wiki.md" />
   </ItemGroup>
   <ItemGroup>
     <MonoGameContentReference Include="Content\cotg.mgcb" />

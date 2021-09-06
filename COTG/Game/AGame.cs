@@ -439,6 +439,7 @@ namespace COTG
 					}
 					else
 					{
+						ShellPage.coreInputSource.Dispatcher.CurrentPriority = CoreDispatcherPriority.Low;
 						ShellPage.coreInputSource.Dispatcher.ProcessEvents(CoreProcessEventsOption.ProcessAllIfPresent);
 						ShellPage.Gesture.Tick();
 					}

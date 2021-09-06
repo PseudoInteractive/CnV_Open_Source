@@ -1397,6 +1397,7 @@ namespace COTG.Game
 
 			Task.Run(UpdateChangeMap);
 		}
+		const int continentCityThreshHold3 = 650;
 		const int continentCityThreshHold2 = 550;
 		const int continentCityThreshHold1 = 500;
 		const int continentCityThreshHold0 = 450;
@@ -1437,7 +1438,7 @@ namespace COTG.Game
 								   if (cityCount1 <= 0)
 									   continue;
 
-								   if (cityCount1 >= continentCityThreshHold2)
+								   if (cityCount1 >= continentCityThreshHold3)
 									   break;
 								   // all are open
 								   var cityCount0 = World.GetContinentCityCount(data.Span, cId);
@@ -1454,9 +1455,9 @@ namespace COTG.Game
 								   else
 								   {
 									   sb.AppendFormat("Predicted opening of {0} (current {1}, rate: {2} cities/day)\n", World.continentOpeningOrder[c + 1], cityCount1, dc * 60 * 60 * 24 / (dt));
-									   for (int j = 0; j < 3; ++j)
+									   for (int j = 0; j < 4; ++j)
 									   {
-										   var target = j == 0 ? continentCityThreshHold0 : j == 1 ? continentCityThreshHold1 : continentCityThreshHold2;
+										   var target = j switch { 0 => continentCityThreshHold0,1 => continentCityThreshHold1,2=> continentCityThreshHold2,_=>continentCityThreshHold3 };
 										   if (cityCount1 < target)
 										   {
 											   var delta = target - cityCount1;

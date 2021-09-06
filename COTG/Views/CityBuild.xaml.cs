@@ -596,7 +596,7 @@ namespace COTG.Views
 
 		//public static SemaphoreSlim plannerSetSema = new SemaphoreSlim(1);
 
-		public static async Task SetIsPlanner(bool value, bool syncPlannerTab = false)
+		public static async Task _IsPlanner(bool value, bool syncPlannerTab = false)
 		{
 			//	using var loc = await SemaLock.Go(plannerSetSema);
 
@@ -639,9 +639,7 @@ namespace COTG.Views
 				}
 
 			}
-
 		}
-
 
 		internal static void ClearQueue()
 		{
@@ -1410,7 +1408,6 @@ namespace COTG.Views
 		}
 		private void StackPanel_AccessKeyInvoked(UIElement sender, AccessKeyInvokedEventArgs args)
 		{
-
 		}
 
 		public static void ProcessKey(VirtualKey key)
@@ -1556,22 +1553,24 @@ namespace COTG.Views
 
 			if (CityBuild.isPlanner)
 			{
-				await CityBuild.SetIsPlanner(false, true);
+				await CityBuild._IsPlanner(false, true);
 			}
 			else
 			{
 				if (!GetBuild().isLayoutValid)
 					await ShareString.Show(City.build);
-				await CityBuild.SetIsPlanner(true, true);
+				await CityBuild._IsPlanner(true, true);
 
 			}
 		}
+
 
 		private async void Settings_ExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
 		{
 			buildMenu.Hide();
 			await ShareString.Show(City.build).ConfigureAwait(false);
 		}
+
 
 		private async void Abandon_ExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
 		{

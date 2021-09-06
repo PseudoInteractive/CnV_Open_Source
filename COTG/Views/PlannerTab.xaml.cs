@@ -26,13 +26,13 @@ namespace COTG.Views
 		{
 			if (visible)
 			{
-				await CityBuild.SetIsPlanner(true,false);
+				await CityBuild._IsPlanner(true,false);
 				statsDirty = true;
 				BuildingsChanged();
 			}
 			else
 			{
-				await CityBuild.SetIsPlanner( false,false );
+				await CityBuild._IsPlanner( false,false );
 
 			}
 			await base.VisibilityChanged(visible, longTerm: longTerm);
@@ -383,7 +383,7 @@ namespace COTG.Views
 		public async Task Rotate(City city,bool center, bool outer)
 		{
 			Assert(CityBuild.isPlanner);
-			await CityBuild.SetIsPlanner(true);
+			await CityBuild._IsPlanner(true);
 			//	if (layout == null)
 			//		return;
 			var bc = city.layout.ToArray();
@@ -409,14 +409,14 @@ namespace COTG.Views
 		private async void FlipHClick(object sender, RoutedEventArgs e)
 		{
 			Assert(CityBuild.isPlanner);
-			await CityBuild.SetIsPlanner(true);
+			await CityBuild._IsPlanner(true);
 
 			GetBuild().FlipLayoutH(App.IsKeyPressedControl());
 		}
 		private async void FlipVClick(object sender, RoutedEventArgs e)
 		{
 			Assert(CityBuild.isPlanner);
-			await CityBuild.SetIsPlanner(true);
+			await CityBuild._IsPlanner(true);
 			GetBuild().FlipLayoutV(App.IsKeyPressedControl());
 		}
 
@@ -479,7 +479,7 @@ namespace COTG.Views
 		{
 			var wasPlanner = CityBuild.isPlanner;
 			if (!wasPlanner)
-				await CityBuild.SetIsPlanner(true);
+				await CityBuild._IsPlanner(true);
 		
 			Assert(city.isLayoutValid);
 			var bdc = city.GetLayoutBuildings();
@@ -615,7 +615,7 @@ namespace COTG.Views
 			}
 			Note.Show($"Moved buildings to reduce overlaps: { CountResOverlaps(ref allowed)} overlaps remain");
 			if (wasPlanner == false && revertIsPlanner)
-				await CityBuild.SetIsPlanner(false);
+				await CityBuild._IsPlanner(false);
 			for(int i=0;i<City.citySpotCount;++i)
 			{
 				city.layout[i] = BidToLayout(bdc[i].bid).c;
@@ -638,7 +638,7 @@ namespace COTG.Views
 		public override void Close()
 		{ 
 			base.Close();
-			CityBuild.SetIsPlanner(false);
+			CityBuild._IsPlanner(false);
 
 		}
 
@@ -662,7 +662,7 @@ namespace COTG.Views
 			for (int i = 0; i < citySpotCount; ++i)
 			{
 				var bd = bds[i];
-				if (bd.isBuilding && !bd.isCabin)
+				if (bd.requiresBuildingSlot && !bd.isCabin)
 				{
 					layout[i] = BidToLayout(bd.bid).c;
 				}

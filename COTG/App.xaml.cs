@@ -76,6 +76,7 @@ namespace COTG
 		{
 			get { return _activationService.Value; }
 		}
+
 		public static App instance;
 		public static string appLink = "cotg";
 
@@ -1410,6 +1411,7 @@ namespace COTG
 			menu.Items.Add(rv);
 			return rv;
 		}
+
 		public static void RemoveEmpy(this MenuFlyout menu)
 		{
 			for (int i = menu.Items.Count; --i >= 0;)
@@ -1421,6 +1423,7 @@ namespace COTG
 				}
 			}
 		}
+
 		public static MenuFlyoutItem AddItem(this MenuFlyout menu, string text, Action command)
 		{
 			var rv = new MenuFlyoutItem() { Text = text };
@@ -1429,6 +1432,7 @@ namespace COTG
 			menu.Items.Add(rv);
 			return rv;
 		}
+
 		public static MenuFlyoutItem AddItem(this MenuFlyoutSubItem menu, string text, Action command)
 		{
 			var rv = new MenuFlyoutItem() { Text = text };
@@ -1444,7 +1448,6 @@ namespace COTG
 			if (ShellPage.coreInputSource != null)
 				ShellPage.coreInputSource.PointerCursor = type;
 		}
-
 	}
 
 	public static class Note
@@ -1452,7 +1455,6 @@ namespace COTG
 		static bool initialized = false;
 		static Note()
 		{
-
 		}
 
 		private static void InAppNote_Closed(object sender, InAppNotificationClosedEventArgs e)

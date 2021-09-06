@@ -320,7 +320,7 @@ namespace COTG.Views
 			Assert(city.isBuild);
 			if (ShellPage.viewMode != ViewMode.city)
 				JSClient.ChangeView(ViewMode.city);
-			await CityBuild.SetIsPlanner(false,true);
+			await CityBuild._IsPlanner(false,true);
 			
 			Assert(App.uiSema.CurrentCount == 0);
 			Assert(App.IsOnUIThread());

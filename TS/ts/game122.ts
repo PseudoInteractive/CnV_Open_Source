@@ -57201,7 +57201,7 @@ function outer(){
 						.off("click");
 					$(__s["5861" | 1])
 						.click(function () {
-							//      newWin = window.open("", __s[266]);
+							newWin = window.open("", __s[266]);
 							E6k.y6();
 							var s92 = $(this)
 								.attr("a");

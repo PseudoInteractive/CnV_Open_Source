@@ -26,7 +26,7 @@ namespace COTG.Views
 		public const int canvasBaseXUnscaled = 420;
 		public const int canvasTitleYOffset = 40;
 		public const int canvasHtmlYOffset = 55;
-		public static int canvasBaseYUnscaled = 95;
+		public const int canvasBaseYUnscaled = 95;
 
 		public static int canvasBaseX = 420;
 		public static int canvasBaseY = 95;
@@ -205,7 +205,7 @@ namespace COTG.Views
 				Visibility = Visibility.Visible,
 				// IsTabStop = true, UseSharedDevice = true, TargetElapsedTime =
 				// TimeSpan.FromSeconds(1.0f / 60.0f),
-				Margin = new Thickness(0, canvasBaseY*ShellPage.webViewScale, 0, 0),
+				Margin = new Thickness(0, canvasBaseY, 0, 0),
 				// IsFixedTimeStep = false
 			};
 			keyboardProxy = new KeyboardProxy()

@@ -36,8 +36,8 @@ namespace COTG.Draw
 
 				}
 			AUtil.UnsafeCopy(CityView.baseAnimationOffsets, CityView.animationOffsets);
-
 		}
+
 		public static void BuildingsOrQueueChanged() => City.BuildingsOrQueueChanged();
 		const int atlasTileSize = 128;
 		const int atlasColumns = 4;
@@ -83,8 +83,8 @@ namespace COTG.Draw
 			var baseScale = (0.5f * cityTileGainX * AGame.pixelScale);
 			var dc = new Vector2(baseScale* additionalXScale, baseScale* yScale);
 			return (c - dc, c + dc);
-	
 		}
+
 		public static float[] animationOffsets = new float[citySpotCount];
 		public static float[] baseAnimationOffsets = new float[citySpotCount];
 		public static float animationRate = 0.25f;
@@ -176,7 +176,7 @@ namespace COTG.Draw
 
 						var cs = CityPointToQuad(cx,cy);
 
-						float blendT = (animationT - animationOffsets[bspot]).Frac();
+						float blendT = ((animationT - animationOffsets[bspot])*0.325f).Frac();
 						if(cur.id==next.id)
 						{
 							if(next.bl != cur.bl)
@@ -267,9 +267,9 @@ namespace COTG.Draw
 						// draw overlays
 						if(build.isLayoutValid && SettingsPage.drawBuildingOverlays)
 						{
-							int bid;
+							int bid, currentBid;
 							//	BuildingDef bd;
-							Building current;
+							//Building current;
 							if(CityBuild.isPlanner)
 							{
 								var bs = postBuildings[bspot];
@@ -277,16 +277,20 @@ namespace COTG.Draw
 								{
 									continue;
 								}
+
 								bid = bs.bid;
-								current = build.BuildingFromOverlay(bspot);
+
+								currentBid = build.BidFromOverlay(bspot);
 
 							}
 							else
 							{
-								current = postBuildings[bspot];
+								currentBid = postBuildings[bspot].bid;
 								bid=build.BidFromOverlay(bspot);
 							}
-							var currentBid = current.refId;
+							if(BuildingDef.IsBidRes(bid)||BuildingDef.IsBidRes(currentBid))
+								continue;
+							//							var currentBid = current.refId;
 
 							if(currentBid == bid)
 								continue;
@@ -294,7 +298,7 @@ namespace COTG.Draw
 							if(bid==0)
 							{
 								bid = 443 + 8 * 4; // X mark
-								if(current.isCabin)
+								if(currentBid == bidCottage)
 									continue; // leave it, it is fine
 							}
 
@@ -304,8 +308,8 @@ namespace COTG.Draw
 							var u0 = iconId.x * duDt;
 							var v0 = iconId.y * dvDt;
 							//var cs = CityPointToQuad(cx,cy);
-							var _c0 = 0.0f.Lerp(cs.c0,cs.c1);
-							var _c1 = 0.5f.Lerp(cs.c0,cs.c1);
+							var _c0 = 0.125f.Lerp(cs.c0,cs.c1);
+							var _c1 = 0.625f.Lerp(cs.c0,cs.c1);
 							var shadowOffset = new Vector2(5.0f,5.0f);
 							var off = (AMath.BSpotToRandom((cx, cy)) + animationT * 0.3245f);
 							var cScale = new Vector2(off.Wave().Lerp(0.8f,1.0f),off.WaveC().Lerp(0.8f,1.0f));
@@ -442,6 +446,7 @@ namespace COTG.Draw
 
 
 					//}
+				}
 					PreviewBuildAction();
 					//var processed = new HashSet<int>();
 					//foreach (var r in IterateQueue() )
@@ -478,7 +483,7 @@ namespace COTG.Draw
 
 					//	}
 					//}
-				}
+				
 			}
 			catch(Exception __ex)
 			{
@@ -509,10 +514,7 @@ namespace COTG.Draw
 						new Color(0xf1* fontAlpha/256, 0xd1* fontAlpha/256, 0x1b* fontAlpha/256, fontAlpha),
 						(byte)iAlpha, ((int)layer+16), scale: fontScale, zBias: 0);
 				
-
 			}
-
-
 		}
 
 		public static void DrawSprite( (int x, int y) cc, Material mat, float animFreq)

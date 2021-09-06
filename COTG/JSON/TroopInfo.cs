@@ -27,7 +27,7 @@ namespace COTG.JSON
 			public int at { get; set; } // attack damage type:  &1 damages walls, &2 damages buildings
 			public int ut { get; set; } // troop transport
 			public int gc { get; set; } // gold cost
-			public int dm { get; set; } // defence magic
+			public int dm { get; set; } // defense magic
 			public int sc { get; set; } // stone cost
 			public int ps { get; set; } // recruit seconds
 			public int ic { get; set; } // icon cost

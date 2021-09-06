@@ -147,9 +147,9 @@ namespace COTG
 		//public static Dictionary<int, BuildingDef> prototypes; // maps prototype id's to buildings.  Some buildings share a prototype
 
 		[JsonIgnore]
-		public bool isRes => IsRes(bid);
+		public bool isRes => IsBidRes(bid);
 
-		public static bool IsRes(int bid) => (bid >= City.bidResStart) & (bid <= City.bidResEnd);
+		public static bool IsBidRes(int bid) => (bid >= City.bidResStart) & (bid <= City.bidResEnd);
 
 		[JsonIgnore]
 		public bool isPost => Trcap != null;

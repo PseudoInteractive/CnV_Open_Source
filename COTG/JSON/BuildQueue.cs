@@ -104,7 +104,7 @@ namespace COTG.JSON
 
 		//public bool isBuild => slvl == 0;
 		public readonly BuildingDef def => BuildingDef.all[bid];
-		public readonly bool isRes => BuildingDef.IsRes(bid);
+		public readonly bool isRes => BuildingDef.IsBidRes(bid);
 		public readonly bool isDemo => elvl == 0;
 		public readonly bool isNop => slvl == 255; // special token for noop
 		public readonly string buildingName => def.Bn;

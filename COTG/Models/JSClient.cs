@@ -942,7 +942,7 @@ namespace COTG
 									//	b.BuildingsCacheToShareString();
 									//		await b.SaveLayout();
 									//					CityBuild.isPlanner = false;
-									await CityBuild.SetIsPlanner(false, true);
+									await CityBuild._IsPlanner(false, true);
 								}
 								City.build = cid;
 							//	Assert(pid == Player.activeId);

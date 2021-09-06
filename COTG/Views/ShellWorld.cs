@@ -392,9 +392,9 @@ namespace COTG.Views
 		public static (int x, int y) JSPointToScreen((int x, int y) c) => JSPointToScreen(c.x, c.y);
 		public static (int x, int y) JSPointToScreen(int x, int y)
 		{
-			var scale = AGame.dipToNative;
-			return ((scale * (x * ShellPage.webViewScale - ShellPage.canvasBaseX)).RoundToInt(),
-					(scale * (y * ShellPage.webViewScale - ShellPage.canvasBaseY)).RoundToInt());
+			var dipToNative = AGame.dipToNative;
+			return ((dipToNative * (x * ShellPage.webViewScale.X - ShellPage.canvasBaseX)).RoundToInt(),
+					(dipToNative * (y * ShellPage.webViewScale.Y - ShellPage.canvasBaseY)).RoundToInt());
 
 		}
 		public static void ClearHover()
@@ -624,7 +624,7 @@ namespace COTG.Views
 				if (popup.Contains(mousePosition))
 				{
 					if(eventName!=null)
-						JSClient.PostMouseEventToJS( (int)(AGame.nativeToDip * mousePosition.X) + canvasBaseX, (int)(AGame.nativeToDip * mousePosition.Y) + canvasBaseY, eventName, button );
+						JSClient.PostMouseEventToJS( (int)(AGame.nativeToDip/ShellPage.webViewScale.X * mousePosition.X) + canvasBaseX, (int)(AGame.nativeToDip/ShellPage.webViewScale.Y * mousePosition.Y) + canvasBaseY, eventName, button );
 					return true;
 				}
 			}

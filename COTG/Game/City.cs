@@ -468,7 +468,7 @@ namespace COTG.Game
 		public Building BuildingFromOverlay(int id)
 		{
 			var bid = BidFromOverlay(id);
-			return new Building(BidToId(bid), (IsRes(bid) ? (byte)0 : (byte)10) );
+			return new Building(BidToId(bid), (IsBidRes(bid) ? (byte)0 : (byte)10) );
 		}
 		//public int LayoutToBid(byte v) => BuildingDef.LayoutToBid(v);
 		//public void SetBuildingInOverlay( (int x,int y) xy, int bid  )

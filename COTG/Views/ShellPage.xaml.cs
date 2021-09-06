@@ -203,7 +203,7 @@ namespace COTG.Views
 		public static bool isHitTestVisible = true;
 		public static bool canvasVisible;
 		public static bool isFocused => isHitTestVisible && App.isForeground && canvasVisible;
-		private void OnLoaded(object sender, RoutedEventArgs e)
+		private async void OnLoaded(object sender, RoutedEventArgs e)
 		{
 			SystemNavigationManagerPreview.GetForCurrentView().CloseRequested += App.App_CloseRequested; ;
 
@@ -334,9 +334,9 @@ namespace COTG.Views
 			var displayInformation = DisplayInformation.GetForCurrentView();
 			var screenSize = new Size(displayInformation.ScreenWidthInRawPixels,
 									  displayInformation.ScreenHeightInRawPixels);
-			ShellPage.webclientSpan.x = (screenSize.Width * .715625f* SettingsPage.htmlZoom * 2).RoundToInt();
-			ShellPage.webclientSpan.y = (screenSize.Height * 0.89236111111111116f * SettingsPage.htmlZoom*2).RoundToInt();
-
+			//	ShellPage.webclientSpan.x = (screenSize.Width * .715625f* SettingsPage.htmlZoom * 2).RoundToInt();
+			//	ShellPage.webclientSpan.y = (screenSize.Height * 0.89236111111111116f * SettingsPage.htmlZoom*2).RoundToInt();
+			await UpdateWebViewScale();
 			AGame.Create(canvas);
 			Task.Delay(500).ContinueWith((_) => App.DispatchOnUIThreadIdle(() =>
 			{
@@ -693,7 +693,7 @@ namespace COTG.Views
 
 		//static short[] bidMap = new short[] { 448, 446, 464, 461, 479, 447, 504, 445, 465, 483, 449, 481, 460, 466, 462, 500, 463, 482, 477, 502, 467, 488, 489, 490, 491, 496, 498, bidTownHall, 467 };
 
-		public static (int x, int y) webclientSpan;
+//		public static (int x, int y) webclientSpan;
 
 		private async void ShowBuildings(object sender, object e)
 		{
@@ -1271,12 +1271,13 @@ namespace COTG.Views
 			});
 		}
 
-		public void UpdateWebViewScale()
+		public Task UpdateWebViewScale()
 		{
 			
-				if (!Alliance.alliancesFetched)
-					return;
-				App.DispatchOnUIThreadIdle(async ()
+			//	if (!Alliance.alliancesFetched)
+			//		return;
+
+				return App.DispatchOnUIThreadTask(async ()
 					=>
 				{
 					try
@@ -1284,23 +1285,27 @@ namespace COTG.Views
 
 						var spanXY = int.Parse(await JSClient.view.InvokeScriptAsync("eval", new string[] { "(document.body.clientWidth+document.body.clientHeight*65536).toString()" }));
 						var spanY = spanXY>>16;
-						var spanX = spanXY%0xffff;
-						var _webViewScale = new Vector2( 
-							(float)(shellFrame.ActualWidth / spanX),
-						(float)(shellFrame.ActualHeight/ spanY));
-				//		var _webViewScale = ((float)(grid.ColumnDefinitions[0].ActualWidth + grid.ColumnDefinitions[1].ActualWidth)) / spanX;
-						if((_webViewScale - webViewScale).LengthSquared() <= (1.0f / 128f).Squared() )
+						var spanX = spanXY&0xffff;
+						//					var _webViewScale = new Vector2( 
+						//						(float)(JSClient.view.ActualWidth / spanX),
+						//						(float)(JSClient.view.ActualHeight/ spanY));
+						var displayWidth =   grid.ColumnDefinitions.Take(2).Sum(a=>a.ActualWidth);
+						var displayHeight = grid.RowDefinitions.Skip(1).SkipLast(1).Sum((a) => a.ActualHeight) + canvasBaseYUnscaled- canvasHtmlYOffset;
+						var _webViewScale = new Vector2((float)displayWidth / spanX,
+														(float)displayHeight/ spanY );
+						AGame.SetClientSpan(grid.ColumnDefinitions[1].ActualWidth,displayHeight);
+						if((_webViewScale - webViewScale).Length() <= (1.0f / 64f) )
 							return;
 						webViewScale = _webViewScale;
-						canvasBaseX = (canvasBaseXUnscaled * webViewScale.X).RoundToInt();
-						canvasBaseY = (canvasBaseYUnscaled * webViewScale.Y).RoundToInt();
+						canvasBaseX = (canvasBaseXUnscaled);//.RoundToInt();
+						canvasBaseY = (canvasTitleYOffset + canvasBaseYUnscaled-canvasTitleYOffset);//.RoundToInt();
 						if (canvas != null && grid != null)
 						{
-							App.DispatchOnUIThreadIdle(() =>
-							{
+						//	App.DispatchOnUIThreadIdle(() =>
+						//	{
 								grid.ColumnDefinitions[0].Width = new GridLength(ShellPage.canvasBaseX, GridUnitType.Pixel);
 								canvas.Margin = new Thickness(0, canvasBaseY, 0, 0);
-							});
+						//	});
 						}
 					}
 					catch (Exception ex)

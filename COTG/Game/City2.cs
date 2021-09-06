@@ -509,7 +509,7 @@ namespace COTG.Game
 			var b = GetBuildingPostQueue(bspot);
 			var desB = BuildingDef.all[desBid];
 			var desName = desB.Bn;
-			if (BuildingDef.IsRes(desBid))
+			if (BuildingDef.IsBidRes(desBid))
 			{
 				desBid = 0; // if it is a resource, ignore it
 			}
