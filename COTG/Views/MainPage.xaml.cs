@@ -416,7 +416,7 @@ namespace COTG.Views
 			}
 
 		}
-		private async void AutoRaid(object sender, RoutedEventArgs e)
+		public async void AutoRaid(object sender, RoutedEventArgs e)
 		{
 			using var work = new ShellPage.WorkScope("Auto Raid..");
 
@@ -468,7 +468,7 @@ namespace COTG.Views
 			cityGrid.SelectAll();
 		}
 
-		private void RaidSettings(object sender, RoutedEventArgs e)
+		public void RaidSettings(object sender, RoutedEventArgs e)
 		{
 			DungeonView.Show(null, null);
 		}

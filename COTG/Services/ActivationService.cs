@@ -98,13 +98,13 @@ namespace COTG.Services
         {
 			// TODO restore       await Singleton<LiveTileService>.Instance.EnableQueueAsync().ConfigureAwait(false);
 			// TODO restore       await Singleton<BackgroundTaskService>.Instance.RegisterBackgroundTasksAsync().ConfigureAwait(false);
-			await BuildingDef.Init();
-			await TroopInfo.Init();
-
+			var t2 =  BuildingDef.Init();
+			var t3 =  TroopInfo.Init();
+			await Task.WhenAll(t2,t3);
 			SettingsPage.Initialize();
             var t0= ThemeSelectorService.InitializeAsync();
             var t1= WindowManagerService.Current.InitializeAsync();
-            await Task.WhenAll(t0, t1);
+			await Task.WhenAll(t0, t1);
             Window.Current.Closed += async (a,b)=> await TabPage.CloseAllTabWindows();
         }
 

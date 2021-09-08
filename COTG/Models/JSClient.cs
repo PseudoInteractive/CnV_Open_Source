@@ -27,7 +27,7 @@ using Windows.Graphics.Imaging;
 using System.Text.Json.Serialization;
 using COTG.DB;
 using Microsoft.AppCenter;
-using WebView = Windows.UI.Xaml.Controls.WebView;
+using WebView = Microsoft.UI.Xaml.Controls.WebView2;
 using ContentDialog = Windows.UI.Xaml.Controls.ContentDialog;
 using ContentDialogResult = Windows.UI.Xaml.Controls.ContentDialogResult;
 using Microsoft.Toolkit.Uwp.Helpers;
@@ -37,10 +37,11 @@ using Windows.Security.Cryptography.Certificates;
 using Windows.Foundation;
 using Windows.Web.Http.Headers;
 using DiscordCnV;
-using Windows.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Controls;
 using Microsoft.Toolkit.Uwp.UI;
 using static COTG.Game.City;
-
+using Microsoft.Web.WebView2.Core;
+using CoreWebView = Microsoft.Web.WebView2.Core.CoreWebView2;
 namespace COTG
 {
 	/// <summary>
@@ -58,12 +59,14 @@ namespace COTG
 
 		//public static string userAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.114 Safari/537.36";
 		public static string userAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.114 Safari/537.36 Edg/91.0.864.54";
+
 		//        public static JsonDocument ppdt;
 		public static JSClient instance = new JSClient();
 		public static WebView view;
+		public static CoreWebView coreWebView;
 		//public static WebViewBrush webViewBrush; 
 		public static HttpBaseProtocolFilter httpFilter;
-		public static HttpCookieManager cookieManager;
+	//	public static HttpCookieManager cookieManager;
 		const int clientCount = 6;
 		public static ConcurrentBag<HttpClient> clientPool;
 		public static SemaphoreSlim clientPoolSema = new SemaphoreSlim(clientCount);
@@ -72,9 +75,9 @@ namespace COTG
 		static bool councillorsChecked;
 		public static int spanX;
 		public static int spanY;
-
+		public static string cookies;
 		// hack:  resources for web load
-		static string jsFunkyEtc;
+		//		static string jsFunkyEtc;
 
 		//public static HttpClient downloadImageClient
 		//{
@@ -92,14 +95,14 @@ namespace COTG
 		//	}
 		//}
 
-		public static void JSInvoke(string func, string[] args)
+		public static void JSInvoke(string func)
 		{
 			App.DispatchOnUIThreadLow(async () =>
 			{
 
 				try
 				{
-					await JSClient.view.InvokeScriptAsync(func, args);
+					await JSClient.view.ExecuteScriptAsync(func);
 
 				}
 				catch (Exception ex)
@@ -111,12 +114,12 @@ namespace COTG
 		}
 
 
-		public static async Task<string> JSInvokeTask(string func, string[] args)
+		public static async Task<string> JSInvokeTask(string func)
 		{
 
 			// this won't await the actually js call
 			return await App.DispatchOnUIThreadTask(async () =>
-		  await JSClient.view.InvokeScriptAsync(func, args));
+		  await JSClient.view.ExecuteScriptAsync(func));
 
 
 		}
@@ -257,74 +260,74 @@ namespace COTG
 
 		//public static string GetSecSessionId()
 		//{
-		//	var cookies = cookieManager.GetCookies(new Uri("https://crownofthegods.com"));
-		//	foreach (var cookie in cookies)
+		//	var cookies = coreWebView.CookieManager.Get.GetCookies(new Uri("https://crownofthegods.com"));
+		//	foreach(var cookie in cookies)
 		//	{
-		//		if (cookie.Name == "sec_session_id")
+		//		if(cookie.Name == "sec_session_id")
 		//			return cookie.Value;
 
 
 		//	}
 		//	return null; // error!
 		//}
-		static string pendingCookies;
-		public static async void SetPlayer(int pid, string token, string cookies, int cid, string name)
-		{
-			// already set
-			if (jsVars.token == token)
-				return;
-			if (pendingCookies != null)
-				return;
-			pendingCookies = cookies;
+		//static string pendingCookies;
+		//public static async void SetPlayer(int pid, string token, string cookies, int cid, string name)
+		//{
+		//	// already set
+		//	if (jsVars.token == token)
+		//		return;
+		//	if (pendingCookies != null)
+		//		return;
+		//	pendingCookies = cookies;
 
-			Note.Show($"Entering {name}'s City");
-
-
-			Log($"ChangePlayer:{name}");
-			{
-				var _cookies = cookieManager.GetCookies(new Uri("https://crownofthegods.com"));
-				foreach (var c in _cookies)
-				{
-					Log($"{c.Name} {c.Domain} {c.Path} {c.Value}");
-				}
-			}
-
-			var secSessionId = CookieDB.Apply(cookies);
+		//	Note.Show($"Entering {name}'s City");
 
 
-			{
-				var _cookies = cookieManager.GetCookies(new Uri("https://crownofthegods.com"));
-				foreach (var c in _cookies)
-				{
-					Log($"{c.Name} {c.Domain} {c.Path} {c.Value} {c.Secure} {c.HttpOnly}");
-				}
-			}
-			//	AddPlayer(false, true, pid, Player.all[pid].name, token, "", secSessionId, null);
-			//	await GetCity.Post(cid, (jse,city) => Log($"{jse.ToString()} Here!!") );
-			App.DispatchOnUIThreadLow(() => view.InvokeScriptAsync("setPlayerGlobals", new[] { token, secSessionId, cid.ToString() }));
-		}
+		//	Log($"ChangePlayer:{name}");
+		//	{
+		//		var _cookies = cookieManager.GetCookies(new Uri("https://crownofthegods.com"));
+		//		foreach (var c in _cookies)
+		//		{
+		//			Log($"{c.Name} {c.Domain} {c.Path} {c.Value}");
+		//		}
+		//	}
 
-		public static void SetCookieCollab(string name, string value, bool session, bool httpOnly, bool clearOnly = false)
-		{
-			var cookie = new HttpCookie(name, ".crownofthegods.com", "/");
-			//		var remember = new HttpCookie("remember_me", ".crownofthegods.com", "/");
-			if (httpOnly)
-			{
-				cookie.Secure = true;
-				cookie.HttpOnly = true;
-			}
+		//	var secSessionId = CookieDB.Apply(cookies);
 
-			if (!session)
-			{
-				cookie.Expires = DateTimeOffset.UtcNow + TimeSpan.FromDays(7);
-			}
-			cookieManager.DeleteCookie(cookie);
-			if (!clearOnly)
-			{
-				cookie.Value = value;
-				cookieManager.SetCookie(cookie);
-			}
-		}
+
+		//	{
+		//		var _cookies = cookieManager.GetCookies(new Uri("https://crownofthegods.com"));
+		//		foreach (var c in _cookies)
+		//		{
+		//			Log($"{c.Name} {c.Domain} {c.Path} {c.Value} {c.Secure} {c.HttpOnly}");
+		//		}
+		//	}
+		//	//	AddPlayer(false, true, pid, Player.all[pid].name, token, "", secSessionId, null);
+		//	//	await GetCity.Post(cid, (jse,city) => Log($"{jse.ToString()} Here!!") );
+		//	App.DispatchOnUIThreadLow(() => view.ExecuteScriptAsync($"setPlayerGlobals({token},{secSessionId},{cid})"));
+		//}
+
+		//public static void SetCookieCollab(string name, string value, bool session, bool httpOnly, bool clearOnly = false)
+		//{
+		//	var cookie = new HttpCookie(name, ".crownofthegods.com", "/");
+		//	//		var remember = new HttpCookie("remember_me", ".crownofthegods.com", "/");
+		//	if (httpOnly)
+		//	{
+		//		cookie.Secure = true;
+		//		cookie.HttpOnly = true;
+		//	}
+
+		//	if (!session)
+		//	{
+		//		cookie.Expires = DateTimeOffset.UtcNow + TimeSpan.FromDays(7);
+		//	}
+		//	cookieManager.DeleteCookie(cookie);
+		//	if (!clearOnly)
+		//	{
+		//		cookie.Value = value;
+		//		cookieManager.SetCookie(cookie);
+		//	}
+		//}
 
 		public static void AddPlayer(bool isMe, bool setCurrent, int pid , string pn, string token, string raid = null, string cookies=null, string ppdt=null)
 		{
@@ -363,17 +366,17 @@ namespace COTG
 			}
 
 		}
-		public static void SetSessionCookie()
-		{
-			//if(!SettingsPage.secSessionId.IsNullOrEmpty() && !JSClient.isSub  )
-			//{
-			//	SetCookie("sec_session_id", SettingsPage.secSessionId);
-			//}
-		}
+		//public static void SetSessionCookie()
+		//{
+		//	//if(!SettingsPage.secSessionId.IsNullOrEmpty() && !JSClient.isSub  )
+		//	//{
+		//	//	SetCookie("sec_session_id", SettingsPage.secSessionId);
+		//	//}
+		//}
 
-		public static void SetCookie(string name, string value, string domain = ".crownofthegods.com", string path = "/" )
+		public static void SetCookie(string name,string value,string domain = "crownofthegods.com",string path = "/")
 		{
-			var cookie = new HttpCookie(name, domain, path);
+			var cookie = new HttpCookie(name,domain,path);
 			//		var remember = new HttpCookie("remember_me", ".crownofthegods.com", "/");
 			//if (httpOnly)
 			{
@@ -385,29 +388,58 @@ namespace COTG
 			{
 				cookie.Expires = DateTimeOffset.UtcNow + TimeSpan.FromDays(64);
 			}
-			JSClient.cookieManager.DeleteCookie(cookie);
+			var cookieManager = httpFilter.CookieManager;
+			cookieManager.DeleteCookie(cookie);
 			//if (!clearOnly)
 			if(!value.IsNullOrEmpty())
 			{
 				cookie.Value = value;
-				JSClient.cookieManager.SetCookie(cookie);
+				cookieManager.SetCookie(cookie);
 			}
 
 
 		}
 		//	static string secSessionId;
+		static CoreWebView2WebResourceResponse jsFunkyEtc;
 
-		static async void LoadJsStrings()
+		static async Task LoadJsStrings()
 		{
-			jsFunkyEtc = await App.GetAppString("JS/funky")
-					+ await App.GetAppString("JS/DHRUVCC.js")
-					   + await App.GetAppString("JS/J0EE");
+			var t0 = App.GetAppString("JS/funky");
+			var t1 = App.GetAppString("JS/DHRUVCC.js");
+			var t2 = App.GetAppString("JS/J0EE");
 
+			var jsf = await t0+ await t1+ await t2;
+
+			var stream = new Windows.Storage.Streams.InMemoryRandomAccessStream();
+			// Create the data writer object backed by the in-memory stream.
+			using(var dataWriter = new Windows.Storage.Streams.DataWriter(stream))
+			{
+				var js = "const cityAtlas = " +
+				  (SettingsPage.IsThemeWinter() ?
+						  "'ms-appx-web:///Content/Art/City/Winter/building_set5.png'\n" :
+					   "'/images/city128/building_set5.png'\n") +
+					   jsf;
+
+				dataWriter.WriteString(js);
+				await dataWriter.StoreAsync();
+				await dataWriter.FlushAsync();
+				dataWriter.DetachStream();
+			}
+
+			stream.Seek(0);
+			var Response = coreWebView.Environment.CreateWebResourceResponse(stream,200,"Ok","");
+			var headers = Response.Headers;
+			headers.AppendHeader("Content-Type","text/javascript");
+		//	headers.AppendHeader("Content-Encoding","text/json");
+		//	headers.("Content-Encoding","text/json");
+			jsFunkyEtc =Response;
 
 		}
-		internal static WebView Initialize(Windows.UI.Xaml.Controls.Grid panel)
+
+		private const string jsFunctionMask = "*jsfunctions/*";
+
+		internal static async Task Initialize(Windows.UI.Xaml.Controls.Grid panel, WebView _view)
 		{
-			LoadJsStrings();
 
 
 			httpFilter = new HttpBaseProtocolFilter();
@@ -429,19 +461,19 @@ namespace COTG
 			httpFilter.IgnorableServerCertificateErrors.Add(Windows.Security.Cryptography.Certificates.ChainValidationResult.RevocationFailure);
 
 			httpFilter.AllowUI = true;
-			httpFilter.CookieUsageBehavior = HttpCookieUsageBehavior.Default;
+		//	httpFilter.CookieUsageBehavior = HttpCookieUsageBehavior.NoCookies;
 
 
 			//	  HttpBaseProtocolFilter.CreateForUser( User.GetDefault());
 			//                         httpFilter.ServerCredential =
 
-			httpFilter.MaxConnectionsPerServer = 10;
+		//	httpFilter.MaxConnectionsPerServer = 10;
 			//  httpFilter.ServerCustomValidationRequested += HttpFilter_ServerCustomValidationRequested;
 			httpFilter.CacheControl.ReadBehavior = HttpCacheReadBehavior.NoCache;
 			httpFilter.CacheControl.WriteBehavior = HttpCacheWriteBehavior.NoCache;
 			
 
-			cookieManager = httpFilter.CookieManager;
+			//cookieManager = httpFilter.CookieManager;
 			if(!JSClient.isSub)
 			{
 				//var _cookies = cookieManager.GetCookies(new Uri("https://crownofthegods.com"));
@@ -455,39 +487,46 @@ namespace COTG
 			}
 			try
 			{
+				//var environment= await App.createWebEnvironmentTask;
 
+				view = _view;
+				//{
+				//	//HorizontalAlignment = HorizontalAlignment.Stretch,
+				//	//VerticalAlignment = VerticalAlignment.Stretch,
+				//	//CacheMode=new BitmapCache()
+					
+					
+				//	Name = "cotgView",
+				//	//Opacity = 0.5,
 
-				view = new WebView( Windows.UI.Xaml.Controls.WebViewExecutionMode.SeparateThread)
-				{
-					//HorizontalAlignment = HorizontalAlignment.Stretch,
-					//VerticalAlignment = VerticalAlignment.Stretch,
-					//CacheMode=new BitmapCache()
-					DefaultBackgroundColor = new Windows.UI.Color() { G = 0, B = 0, R = 0, A = 0 },
+				//};
+				await view.EnsureCoreWebView2Async();
 
-					Name = "cotgView",
-					//Opacity = 0.5,
-
-				};
-
-				view.EffectiveViewportChanged += View_EffectiveViewportChanged;
+				coreWebView = view.CoreWebView2;
+				coreWebView.Settings.UserAgent = userAgent;
+				coreWebView.Settings.IsWebMessageEnabled=true;
+				coreWebView.Settings.IsPasswordAutosaveEnabled=true;
+				coreWebView.Settings.IsScriptEnabled=true;
+				coreWebView.Settings.IsPinchZoomEnabled =false;
+				//coreWebView.AddWebResourceRequestedFilter("*jsfunctions/game.js",ResourceContext:CoreWebView2WebResourceContext.Script);
+				coreWebView.AddWebResourceRequestedFilter(jsFunctionMask,ResourceContext: CoreWebView2WebResourceContext.Script);
+				coreWebView.WebResourceRequested += View_WebResourceRequested;
+				coreWebView.WebMessageReceived +=CoreWebView_WebMessageReceived;
+				//	view.EffectiveViewportChanged += View_EffectiveViewportChanged;
 
 				//	view.AddHandler(WebView.KeyDownEvent, new KeyEventHandler(webViewKeyDownHandler), true);
 				//	view.AddHandler(WebView.PointerPressedEvent, new PointerEventHandler(pointerEventHandler), true);
-				view.UnsafeContentWarningDisplaying += View_UnsafeContentWarningDisplaying;
-				view.UnsupportedUriSchemeIdentified += View_UnsupportedUriSchemeIdentified;
+				//	view.UnsafeContentWarningDisplaying += View_UnsafeContentWarningDisplaying;
+				//	view.UnsupportedUriSchemeIdentified += View_UnsupportedUriSchemeIdentified;
 
-				view.UnviewableContentIdentified += View_UnviewableContentIdentified;
-				view.ScriptNotify += View_ScriptNotify;
-				view.DOMContentLoaded += View_DOMContentLoaded;
-				view.NavigationFailed += View_NavigationFailed;
-				view.NavigationStarting += View_NavigationStarting;
-				view.NavigationCompleted += View_NavigationCompletedAsync;
-				view.PermissionRequested += View_PermissionRequested;
-				view.NewWindowRequested += View_NewWindowRequested;
-				//view.WebResourceRequested += View_WebResourceRequested1;
-				//	view.WebResourceRequested -= View_WebResourceRequested1;
-				//	view.WebResourceRequested += View_WebResourceRequested1;
-				//  view.WebResourceRequested += View_WebResourceRequested1;
+				//	view.UnviewableContentIdentified += View_UnviewableContentIdentified;
+				//	view.ScriptNotify += View_ScriptNotify;
+				//	view.DOMContentLoaded += View_DOMContentLoaded;
+				//	view.NavigationFailed += View_NavigationFailed;
+				view.NavigationStarting+=View_NavigationStarting;
+			//	view.NavigationCompleted+=View_NavigationCompleted;
+				coreWebView.PermissionRequested+=View_PermissionRequested; ;
+			//	coreWebView.NewWindowRequested+=View_NewWindowRequested;
 				//	webViewBrush = new WebViewBrush() { Stretch = Stretch.Fill };
 				view.GotFocus += View_GotFocus;
 				view.LostFocus += View_LostFocus; ;
@@ -502,6 +541,8 @@ namespace COTG
 					httpsHost = new Uri($"https://w{world}.crownofthegods.com");
 					//       view.Source = new Uri($"https://w{world}.crownofthegods.com?s={subId}");
 				}
+				await LoadJsStrings();
+
 				// else
 				view.Source = new Uri("https://www.crownofthegods.com/home");
 				if (isSub)
@@ -524,12 +565,32 @@ namespace COTG
 				LogEx(e);
 			}
 
-			return view;
+			return;
 
 
 
 		}
 
+		private static void View_PermissionRequested(CoreWebView sender,CoreWebView2PermissionRequestedEventArgs args)
+		{
+			switch(args.PermissionKind)
+			{
+				case CoreWebView2PermissionKind.ClipboardRead:
+				case CoreWebView2PermissionKind.Microphone:
+				case CoreWebView2PermissionKind.Notifications:
+					args.State = CoreWebView2PermissionState.Allow;
+					break;
+
+			}
+			
+		}
+
+
+		
+
+		
+		
+		
 		private static void View_LostFocus(object sender, RoutedEventArgs e)
 		{
 			ShellPage.webviewHasFocus2 = false;
@@ -541,24 +602,24 @@ namespace COTG
 			ShellPage.webviewHasFocus2 = true;
 		}
 
-		public static void ClearAllCookies(string domain= "https://crownofthegods.com")
-		{
-			var _cookies = cookieManager.GetCookies(new Uri(domain));
-			foreach (var c in _cookies)
-			{
-				cookieManager.DeleteCookie(c);
-			}
+		//public static void ClearAllCookies(string domain= "https://crownofthegods.com")
+		//{
+		//	var _cookies = cookieManager.GetCookies(new Uri(domain));
+		//	foreach (var c in _cookies)
+		//	{
+		//		cookieManager.DeleteCookie(c);
+		//	}
 
-		}
-		private static void View_EffectiveViewportChanged(FrameworkElement sender, EffectiveViewportChangedEventArgs args)
-		{
-			var scrollView = sender as ScrollViewer;
-			if (scrollView != null)
-			{
-				Log(args);
-			}
-			Log(sender);
-		}
+		//}
+		//private static void View_EffectiveViewportChanged(FrameworkElement sender, EffectiveViewportChangedEventArgs args)
+		//{
+		//	var scrollView = sender as Windows.UI.Xaml.Controls.ScrollViewer;
+		//	if (scrollView != null)
+		//	{
+		//		Log(args);
+		//	}
+		//	Log(sender);
+		//}
 
 		
 
@@ -614,43 +675,43 @@ namespace COTG
 		//	Note.Show("Key " + e.Key + e.ToString());
 		//}
 
-		async private static void View_NewWindowRequested(WebView sender, Windows.UI.Xaml.Controls.WebViewNewWindowRequestedEventArgs args)
-		{
-			args.Handled = true;
-			//if (WebViewPage.instance != null)
-			//{
-			//    WebViewPage.instance.Focus(FocusState.Programmatic);
-			//    return;
-			//}
+//		private async static void View_NewWindowRequested(CoreWebView sender,CoreWebView2NewWindowRequestedEventArgs args)
+//		{
+////			args.Handled = true;
+//			var uri = new Uri(args.Uri);
+//			//if (WebViewPage.instance != null)
+//			//{
+//			//    WebViewPage.instance.Focus(FocusState.Programmatic);
+//			//    return;
+//			//}
 
-			Trace(args.Uri.ToString());
-			Trace(args.Uri.Host);
-			//          Trace(httpsHost.Host);
-			if ((httpsHost != null && args.Uri.Host == httpsHost.Host))
-			{
-				Log(args.Uri.ToString());
-				if (App.IsKeyPressedShift())
-				{
+//			Trace(args.Uri);
+//			//          Trace(httpsHost.Host);
+//			if ((httpsHost != null && uri.Host == httpsHost.Host))
+//			{
+//				Log(uri.ToString());
+//				if (App.IsKeyPressedShift())
+//				{
 
-					Launcher.LaunchUriAsync(args.Uri, new LauncherOptions() { DisplayApplicationPicker = true });
-				}
-				else
-				{
-					WebViewPage.DefaultUrl = args.Uri;
-					await WindowManagerService.Current.TryShowAsStandaloneAsync<WebViewPage>("overview");
-				}
-			}
-			else if (args.Uri.OriginalString.StartsWith("https://accounts.google.com/o/oauth2/auth?"))
-			{
-				WebViewPage.post = args.Uri;
-				await WindowManagerService.Current.TryShowAsStandaloneAsync<WebViewPage>("login");
-			}
-			//			else if (httpsHost != null && args.)
-			else
-			{
-				Launcher.LaunchUriAsync(args.Uri);
-			}
-		}
+//					Launcher.LaunchUriAsync(uri, new LauncherOptions() { DisplayApplicationPicker = true });
+//				}
+//				else
+//				{
+//					WebViewPage.DefaultUrl = uri;
+//					await WindowManagerService.Current.TryShowAsStandaloneAsync<WebViewPage>("overview");
+//				}
+//			}
+//			else if (args.Uri.OriginalString.StartsWith("https://accounts.google.com/o/oauth2/auth?"))
+//			{
+//				WebViewPage.post =uri;
+//				await WindowManagerService.Current.TryShowAsStandaloneAsync<WebViewPage>("login");
+//			}
+//			//			else if (httpsHost != null && args.)
+//			else
+//			{
+//				Launcher.LaunchUriAsync(uri);
+//			}
+//		}
 
 		//private static string GetJsString(string asm)
 		//{
@@ -665,122 +726,100 @@ namespace COTG
 		//	view.Source = new Uri("https://www.crownofthegods.com/home");
 
 
+//		const string webResourceFilter = "webResourceFilter";
 		//}
-		private static void View_WebResourceRequested1(WebView sender, Windows.UI.Xaml.Controls.WebViewWebResourceRequestedEventArgs args)
+
+//		HTTP/1.1 200 OK
+//static readonly string headers=
+//			@"Content-Type: application/x-javascript Content-Encoding: gzip
+
+
+
+
+		private static async void View_WebResourceRequested(CoreWebView sender,CoreWebView2WebResourceRequestedEventArgs args)
 		{
+
 
 			try
 			{
 				var req = args.Request;
-				var str = req.RequestUri.ToString();
-				if(str.EndsWith("https://www.crownofthegods.com/nincludes/pro_log.php"))
+				var str = req.Uri.ToString();
+				if (str.Contains("/jsfunctions/phaser.js"))
 				{
-					//sender.NavigateWithHttpRequestMessage(args.Request);
-				//	GetMe(args,args.GetDeferral());
-				//	GetSessionSoon();
+					//var a = args.GetDeferral();
+					//var stream = new Windows.Storage.Streams.InMemoryRandomAccessStream();
+					//	// Create the data writer object backed by the in-memory stream.
+					//	using(var dataWriter = new Windows.Storage.Streams.DataWriter(stream))
+					//	{
+							
+					//		dataWriter.WriteString(" ");
+					//		await dataWriter.StoreAsync();
+					//		await dataWriter.FlushAsync();
+					//		dataWriter.DetachStream();
+					//	}
+
+					//	stream.Seek(0);
+					args.Response = coreWebView.Environment.CreateWebResourceResponse(null,200,"Ok","Content-Type: text/javascript" );
+
+	//				a.Complete();
 				}
-				//	Log(req.RequestUri.ToString());
-				else if (str.EndsWith("jquery/1.9.0/jquery.min.js"))
-				{
-					////	var js = GetJsString("jquery");
-					//var js = GetJsString("jquery3_5_1") + GetJsString("jquerymigrate");// + GetJsString("jquerymigrate3_3_2");
-					//var newContent = new Windows.Web.Http.HttpStringContent(js, Windows.Storage.Streams.UnicodeEncoding.Utf8, "text/json");
-
-					//args.Response = new HttpResponseMessage(HttpStatusCode.Accepted) { Content = newContent };
-
-				}
-				//else if (str == "https://www.crownofthegods.com/index.php")
-				//{
-
-				//	//	var js = GetJsString("jquery");
-				//	var js = GetJsString("index.htm");// + GetJsString("jquerymigrate3_3_2");
-				//	var newContent = new Windows.Web.Http.HttpStringContent(js, Windows.Storage.Streams.UnicodeEncoding.Utf8, "text/json");
-
-				//	args.Response = new HttpResponseMessage(HttpStatusCode.Accepted) { Content = newContent };
-				//}
-				//else if (req.RequestUri.ToString().Contains("alasstylesheet.css"))
-				//{
-				//	if (SettingsPage.IsThemeWinter())
-				//	{
-				//		var js = GetJsString("alasstylesheet.css");
-
-				//		var newContent = new Windows.Web.Http.HttpStringContent(js, Windows.Storage.Streams.UnicodeEncoding.Utf8, "text/css");
-
-				//		args.Response = new HttpResponseMessage(HttpStatusCode.Accepted) { Content = newContent };
-				//	}
-				//}
-				//else if (req.RequestUri.ToString().Contains("index.html"))
-				//{
-				//    Assert(false);
-				//    var js = GetJsString("jquery");
-				//    args.de
-
-				//    var newContent = new Windows.Web.Http.HttpStringContent(js, Windows.Storage.Streams.UnicodeEncoding.Utf8, "text/json");
-
-				//    args.Response = new HttpResponseMessage(HttpStatusCode.Accepted) { Content = newContent };
-
-				//}
-				else if (str.Contains("/jsfunctions/phaser.js"))
-				{
-					//   var js = GetJsString("phaser");
-
-					var newContent = new Windows.Web.Http.HttpStringContent("", Windows.Storage.Streams.UnicodeEncoding.Utf8, "text/json");
-
-					args.Response = new HttpResponseMessage(HttpStatusCode.Accepted) { Content = newContent };
-
-				}
-				else if (str.Contains("/jsfunctions/pack.js"))
-				{
-					//var js = GetJsString("pack.js");
-
-					//var newContent = new Windows.Web.Http.HttpStringContent(js, Windows.Storage.Streams.UnicodeEncoding.Utf8, "text/json");
-
-					//args.Response = new HttpResponseMessage(HttpStatusCode.Accepted) { Content = newContent };
-
-				}
-				//else if (req.RequestUri.LocalPath.Contains("building_set5"))
-				//{
-				//	int q = 0;
-				//	var data = TitleContainer.OpenStream("Art/buildingset5");
-
-				//	args.Response = new HttpResponseMessage(HttpStatusCode.Accepted) { Content = new HttpBufferContent( data) };
-
-				//}
-
 				else if (str.Contains("jsfunctions/game.js"))
 				{
-					try
-					{
+						//var a= args.GetDeferral();
 
-						view.WebResourceRequested -= View_WebResourceRequested1;
-						string host = args.Request.RequestUri.Host;
-						string uri = args.Request.RequestUri.AbsoluteUri;
+						//var stream = new Windows.Storage.Streams.InMemoryRandomAccessStream();
+						//// Create the data writer object backed by the in-memory stream.
+						//using(var dataWriter = new Windows.Storage.Streams.DataWriter(stream))
+						//{
+						//var js = "const cityAtlas = " +
+						//  (SettingsPage.IsThemeWinter() ?
+						//  		"'ms-appx-web:///Content/Art/City/Winter/building_set5.png'\n" :
+						//	   "'/images/city128/building_set5.png'\n") +
+						//	   jsFunkyEtc;
+
+						//	dataWriter.WriteString(js);
+						//	await dataWriter.StoreAsync();
+						//	await dataWriter.FlushAsync();
+						//	dataWriter.DetachStream();
+						//}
+
+						//stream.Seek(0);
+						//var Response = coreWebView.Environment.CreateWebResourceResponse(stream,200,"Ok","Content-Type: application/x-javascript\r\nContent-Encoding: text/json\r\n");
+						//var headers = Response.Headers;
+						//headers.AppendHeader("Content-Type","application/x-javascript");
+						//headers.AppendHeader("Content-Encoding","text/json");
+						cookies = args.Request.Headers.GetHeader("Cookie");
+					    
+						
+
+						args.Response = jsFunkyEtc;
+
+
+						//	coreWebView.RemoveWebResourceRequestedFilter(,)
+						//					string host = args.Request.RequestUri.Host;
+						//						string uri = args.Request.RequestUri.AbsoluteUri;
 
 						//   var reqMsg = args.Request;
 						//   var respTask = httpClient.SendRequestAsync(reqMsg).AsTask();
 
-						var asm = typeof(JSClient).Assembly;
-						var js = "const cityAtlas = " +
-						  (SettingsPage.IsThemeWinter() ?
-						  		"'ms-appx-web:///Content/Art/City/Winter/building_set5.png'\n" :
-							   "'/images/city128/building_set5.png'\n") +
-							   jsFunkyEtc;
-						var newContent = new Windows.Web.Http.HttpStringContent(js, Windows.Storage.Streams.UnicodeEncoding.Utf8, "text/json");
+						//	var asm = typeof(JSClient).Assembly;
+						//var newContent = new Windows.Web.Http.HttpStringContent(js, Windows.Storage.Streams.UnicodeEncoding.Utf8, "text/json");
+					//	args.Response = coreWebView.Environment.CreateWebResourceResponse(stream,(int)HttpStatusCode.Ok,"OK",null);//"text/json");
 
-						args.Response = new HttpResponseMessage(HttpStatusCode.Accepted) { Content = newContent };
+
+						//	args.Response = new HttpResponseMessage(HttpStatusCode.Accepted) { Content = newContent };
 						// args.Response = resp;
 						//var response = await client.SendRequestAsync(reqMsg).AsTask();
 						// resp.Content = newContent;
 						//    }
+				//		args.Response = jsFunkyEtc;
+						//a.Complete();
+//App.DispatchOnUIThread(()=>{
+//						coreWebView.WebResourceRequested-=View_WebResourceRequested; //-= View_WebResourceRequested1;
+//						coreWebView.RemoveWebResourceRequestedFilter(jsFunctionMask,ResourceContext: CoreWebView2WebResourceContext.Script);
+//	Log("Done");
+//});
 
-
-
-
-					}
-					catch (Exception e)
-					{
-						LogEx(e);
-					}
 
 				}
 
@@ -806,9 +845,11 @@ namespace COTG
 
 		}
 
+		
+
 		public static void PostMouseEventToJS(int x, int y, string eventName, int button, int dx = 0, int dy = 0)
 		{
-			App.DispatchOnUIThreadLow(() => view.InvokeScriptAsync("postMouseEvent", new string[] { x.ToString(), y.ToString(), eventName, button.ToString(), dx.ToString(), dy.ToString() }));
+			App.DispatchOnUIThreadLow(() => view.ExecuteScriptAsync($"postMouseEvent({x},{y},{eventName},{button},{dx},{dy})") );
 		}
 
 		//        public static void Refresh(object ob,RoutedEventArgs args)
@@ -822,7 +863,7 @@ namespace COTG
 
 		public static void SetStayAlive(bool stayAlive)
 		{
-			App.DispatchOnUIThreadLow(() => view.InvokeScriptAsync("setStayAlive", new string[] { stayAlive ? "1" : "" }));
+			App.DispatchOnUIThreadLow(() => ExecuteScriptAsync("setStayAlive",( stayAlive ? "1" : "") ) );
 		}
 		public static void SendChat(int channel, string message)
 		{
@@ -837,7 +878,7 @@ namespace COTG
 						remainder = message.Substring(div);
 						message = message.Substring(0, div);
 					}
-					view.InvokeScriptAsync("sendchat", new string[] { channel.ToString(), message });
+					ExecuteScriptAsync("sendchat", channel.ToString(), message );
 					
 					if (remainder == null)
 						break;
@@ -876,7 +917,7 @@ namespace COTG
 		//            var city = City.StBuild(cityId,true);
 		//          //  city.SetFocus( false, true, false);
 
-		//            view.InvokeScriptAsync("viewcity", new string[] { (cityId).ToString() });
+		//            view.ExecuteScriptAsync("viewcity", new string[] { (cityId).ToString() });
 		//        }
 		//        else
 		//        {
@@ -1013,7 +1054,7 @@ namespace COTG
 			  {
 
 
-				  await view.InvokeScriptAsync("addtoattacksender", new string[] { (cityId).ToString() });
+				  await ExecuteScriptAsync("addtoattacksender", cityId.ToString());
 			  });
 
 			}
@@ -1034,7 +1075,7 @@ namespace COTG
 
 				await App.DispatchOnUIThreadTask(async () =>
 				{
-					await view.InvokeScriptAsync("openAttackSender", new string[] { cmd });
+					await ExecuteScriptAsync("openAttackSender", cmd );
 				});
 				await Task.Delay(500);
 			}
@@ -1053,10 +1094,10 @@ namespace COTG
 
 		//			if (City.StBuild(cityId, false).changed)
 		//			{
-		//				await view.InvokeScriptAsync("chcity", new string[] { (cityId).ToString() });
+		//				await view.ExecuteScriptAsync("chcity", new string[] { (cityId).ToString() });
 		//				await Task.Delay(1000);
 		//			}
-		//			view.InvokeScriptAsync("clearres", new string[] { (cityId).ToString() });
+		//			view.ExecuteScriptAsync("clearres", new string[] { (cityId).ToString() });
 		//		});
 
 		//	}
@@ -1081,7 +1122,7 @@ namespace COTG
 			try
 			{
 				ShellPage.SetViewMode(viewMode);
-				App.DispatchOnUIThreadLow(() => view.InvokeScriptAsync("setviewmode", new string[] { viewMode == ShellPage.ViewMode.city ? "c" : "r" }));
+				App.DispatchOnUIThreadLow(() => ExecuteScriptAsync("setviewmode", ( viewMode == ShellPage.ViewMode.city ? "c" : "r" )));
 
 			}
 			catch (Exception e)
@@ -1095,7 +1136,7 @@ namespace COTG
 			// Thiis is not working as it should
 			//try
 			//{ 
-			//    view.InvokeScriptAsync("setCameraC", new string[] {
+			//    view.ExecuteScriptAsync("setCameraC", new string[] {
 			//        (cameraC.X).RoundToInt().ToString(),
 			//        (cameraC.Y).RoundToInt().ToString()
 			//    });
@@ -1113,8 +1154,8 @@ namespace COTG
 			try
 			{
 				App.CopyTextToClipboard(playerName);
-				//     view.InvokeScriptAsync("eval", new string[] { $"gspotfunct.infoPlay('{playerName}')" });
-				view.InvokeScriptAsync("infoPlay", new string[] { playerName });
+				//     view.ExecuteScriptAsync("eval", new string[] { $"gspotfunct.infoPlay('{playerName}')" });
+				ExecuteScriptAsync("infoPlay", playerName );
 			}
 			catch (Exception e)
 			{
@@ -1125,8 +1166,8 @@ namespace COTG
 		{
 			try
 			{
-				view.InvokeScriptAsync("alliancelink", new[] { allianceName });
-				//     view.InvokeScriptAsync("eval", new string[] { $"gspotfunct.alliancelink('{allianceName}')" });
+				ExecuteScriptAsync("alliancelink", allianceName );
+				//     view.ExecuteScriptAsync("eval", new string[] { $"gspotfunct.alliancelink('{allianceName}')" });
 			}
 			catch (Exception e)
 			{
@@ -1139,7 +1180,7 @@ namespace COTG
 				return;
 			try
 			{
-				view.InvokeScriptAsync("eval", new string[] { $"__c.showreport('{report}')" });
+				view.ExecuteScriptAsync( $"__c.showreport('{report}')");
 			}
 			catch (Exception e)
 			{
@@ -1153,7 +1194,7 @@ namespace COTG
 		//    {
 
 		//        ShellPage.EnsureOnScreen(cityId,lazy);
-		//             view.InvokeScriptAsync("gStphp", new string[] { (cityId%65536).ToString(),(cityId/65536).ToString() });
+		//             view.ExecuteScriptAsync("gStphp", new string[] { (cityId%65536).ToString(),(cityId/65536).ToString() });
 		//    }
 		//    catch (Exception e)
 		//    {
@@ -1192,11 +1233,11 @@ namespace COTG
 
 		}
 
-		public static void FetchCity(int cityId)
+		public static Task FetchCity(int cityId)
 		{
-			App.DispatchOnUIThreadLow(() =>
+			return App.DispatchOnUIThreadTask(async () =>
 			{
-				view.InvokeScriptAsync("shCit", new string[] { (cityId).ToString() });
+				await ExecuteScriptAsync("shCit", (cityId).ToString() );
 				//int x = cityId%65536;
 				//int y = cityId/65536;
 				//var spotInfo = TileData.instance.GetSpotType(x, y);
@@ -1204,8 +1245,12 @@ namespace COTG
 
 			});
 		}
+		public static IAsyncOperation<string> ExecuteScriptAsync(string func, string arg0) => view.ExecuteScriptAsync($"{func}({arg0})");
+		public static IAsyncOperation<string> ExecuteScriptAsync(string func,string arg0,string arg1) => view.ExecuteScriptAsync($"{func}({arg0},{arg1})");
+		public static IAsyncOperation<string> ExecuteScriptAsync(string func,string arg0,string arg1,string arg2) => view.ExecuteScriptAsync($"{func}({arg0},{arg1},{arg2})");
 
-		
+
+
 		public static void gStCB(int cityId, Action<JsonElement> cb, int hash)
 		{
 			gstCBs.TryAdd(hash, cb);
@@ -1224,8 +1269,8 @@ namespace COTG
 				}
 				str += "]";
 				
-				view.InvokeScriptAsync("rmp",  new string[] { str });
-				view.InvokeScriptAsync("gStQueryCB", new string[] { (cityId).ToString(), hash.ToString() });
+				ExecuteScriptAsync("rmp",str);
+				ExecuteScriptAsync("gStQueryCB",  (cityId).ToString(), hash.ToString() );
 			});
 
 		}
@@ -1241,9 +1286,9 @@ namespace COTG
 		//            using (StreamReader reader = new StreamReader(stream))
 		//            {
 		//                Log("execute");
-		//                await view.InvokeScriptAsync("eval", new string[] { reader.ReadToEnd() });
+		//                await view.ExecuteScriptAsync("eval", new string[] { reader.ReadToEnd() });
 		//                Log("funky");
-		//                await view.InvokeScriptAsync("avactor", null);
+		//                await view.ExecuteScriptAsync("avactor", null);
 		//   }
 		//        }
 
@@ -1258,7 +1303,7 @@ namespace COTG
 		//public static async Task GetCitylistOverview()
 		//{
 
-		//    var str = await view.InvokeScriptAsync("getppdt", null);
+		//    var str = await view.ExecuteScriptAsync("getppdt", null);
 		//    ppdt = JsonDocument.Parse(str);
 		//    UpdatePPDT(ppdt.RootElement);
 		//}
@@ -1266,9 +1311,9 @@ namespace COTG
 		//public static async Task PollCity(int cid)
 		//{
 		//	await Task.Delay(50);
-		//	await view.InvokeScriptAsync("pollthis", new[] { cid.ToString() });
+		//	await view.ExecuteScriptAsync("pollthis", new[] { cid.ToString() });
 		//	await Task.Delay(400); // hack:  Todo, handle this property
-		//	await view.InvokeScriptAsync("pollthis", new[] { cid.ToString() });
+		//	await view.ExecuteScriptAsync("pollthis", new[] { cid.ToString() });
 		//	await Task.Delay(300); // hack:  Todo, handle this property
 		//}
 		static readonly float[] researchRamp = { 0, 1, 3, 6, 10, 15, 20, 25, 30, 35, 40, 45, 50 };
@@ -1602,7 +1647,7 @@ namespace COTG
 						{
 							Note.Show($"Invalid City, was it lost? {cid.CidToString()}");
 							App.DispatchOnUIThreadLow(() =>
-							 view.InvokeScriptAsync("chcity", new string[] { (cid).ToString() }));
+							 ExecuteScriptAsync("chcity",  (cid).ToString() ));
 
 							await Task.Delay(2000);
 							continue;
@@ -1682,7 +1727,7 @@ namespace COTG
 				if (JSClient.ppdtInitialized)
 				{
 					// don't wait on this
-					await JSClient.JSInvokeTask("cityRefresh", new[] { City.build.ToString() } );
+					await JSClient.JSInvokeTask($"cityRefresh({City.build})" );
 					Game.City.CitiesChanged();
 				}
 		}
@@ -1726,111 +1771,99 @@ private static async void ShowCouncillorsMissingDialog()
 			return rv;
 		}
 
-		static private void View_PermissionRequested(WebView sender, Windows.UI.Xaml.Controls.WebViewPermissionRequestedEventArgs args)
-		{
-			var pr = args.PermissionRequest;
-			pr.Allow();
-			//Log($"Permission {pr.Id} {pr.PermissionType} {pr.State} {pr.ToString()}");
-			
-		}
-
-		static private void View_NavigationCompletedAsync(WebView sender, Windows.UI.Xaml.Controls.WebViewNavigationCompletedEventArgs args)
-		{
-			Log($"Complete {args.Uri}");
-//			if(  )
-			{
-
-			}
-
-		}
-		static Certificate cotgCert;
-		private static void  ServerCustomValidationRequested(HttpBaseProtocolFilter sender, HttpServerCustomValidationRequestedEventArgs customValidationArgs)
-		{
 		
-			cotgCert = customValidationArgs.ServerCertificate;
-			// Validate the server certificate as required.
-			//            customValidationArgs.Reject();
-		}
-	//	static HttpResponseMessage resp;
-	//	private static async void GetMe(Windows.UI.Xaml.Controls.WebViewWebResourceRequestedEventArgs args, Deferral def)
-	//	{
-	//		var client = new HttpClient(httpFilter);
-	//		//	var headers = httpClient.DefaultRequestHeaders;
-	//		//client.DefaultRequestHeaders.Accept.Clear();
-	//		//client.DefaultRequestHeaders.Accept.ParseAdd("application/signed-exchange");
+
 		
-	//		// httpClient.DefaultRequestHeaders.TryAppendWithoutValidation("X-Requested-With", "XMLHttpRequest");
-	//		//    httpClient.DefaultRequestHeaders.Referer = new Uri(httpsHost, "/overview.php?s=0");// new Uri($"https://w{world}.crownofthegods.com");
-	//		client.DefaultRequestHeaders.Referer = new Uri("https://www.crownofthegods.com/"); // new Uri                                                       //             req.Headers.TryAppendWithoutValidation("Origin", $"https://w{world}.crownofthegods.com");
-	//															 //httpClient.DefaultRequestHeaders.TryAppendWithoutValidation("Origin", $"https://w{world}.crownofthegods.com");
-			
-	//			client.DefaultRequestHeaders.Host = new Windows.Networking.HostName("www.crownofthegods.com");
-	//		//   Log($"Built headers {httpClient.DefaultRequestHeaders.ToString() }");
-			
-			
-	//		client.DefaultRequestHeaders.UserAgent.TryParseAdd(userAgent);
-			
+		
+		//static Certificate cotgCert;
+		//private static void  ServerCustomValidationRequested(HttpBaseProtocolFilter sender, HttpServerCustomValidationRequestedEventArgs customValidationArgs)
+		//{
+		
+		//	cotgCert = customValidationArgs.ServerCertificate;
+		//	// Validate the server certificate as required.
+		//	//            customValidationArgs.Reject();
+		//}
+		////	static HttpResponseMessage resp;
+		////	private static async void GetMe(Windows.UI.Xaml.Controls.WebViewWebResourceRequestedEventArgs args, Deferral def)
+		////	{
+		////		var client = new HttpClient(httpFilter);
+		////		//	var headers = httpClient.DefaultRequestHeaders;
+		////		//client.DefaultRequestHeaders.Accept.Clear();
+		////		//client.DefaultRequestHeaders.Accept.ParseAdd("application/signed-exchange");
+
+		////		// httpClient.DefaultRequestHeaders.TryAppendWithoutValidation("X-Requested-With", "XMLHttpRequest");
+		////		//    httpClient.DefaultRequestHeaders.Referer = new Uri(httpsHost, "/overview.php?s=0");// new Uri($"https://w{world}.crownofthegods.com");
+		////		client.DefaultRequestHeaders.Referer = new Uri("https://www.crownofthegods.com/"); // new Uri                                                       //             req.Headers.TryAppendWithoutValidation("Origin", $"https://w{world}.crownofthegods.com");
+		////															 //httpClient.DefaultRequestHeaders.TryAppendWithoutValidation("Origin", $"https://w{world}.crownofthegods.com");
+
+		////			client.DefaultRequestHeaders.Host = new Windows.Networking.HostName("www.crownofthegods.com");
+		////		//   Log($"Built headers {httpClient.DefaultRequestHeaders.ToString() }");
 
 
-	//		client.DefaultRequestHeaders.TryAppendWithoutValidation("Sec-Fetch-Dest", "document");
-	//		client.DefaultRequestHeaders.TryAppendWithoutValidation("Sec-Fetch-Site", "same-origin");
-	//		client.DefaultRequestHeaders.TryAppendWithoutValidation("Sec-Fetch-User", "?1");
-	//		client.DefaultRequestHeaders.TryAppendWithoutValidation("sec-ch-ua", "\" Not; A Brand\";v=\"99\", \"Microsoft Edge\"; v=\"91\", \"Chromium\"; v=\"91\"");
-	//		client.DefaultRequestHeaders.TryAppendWithoutValidation("sec-ch-ua-mobile", "?0");
-
-	////		SetCookie("lout", "1");
-	////		SetCookie("G_AUTHUSER_H", "0", "www.crownofthegods.com", "/");
-	////		SetCookie("G_AUTHUSER_H", "0", "www.crownofthegods.com", "/home");
+		////		client.DefaultRequestHeaders.UserAgent.TryParseAdd(userAgent);
 
 
-	//		var req = args.Request;
-	//		args.Request.Headers.Accept.Clear();
-	//		args.Request.Headers.Accept.ParseAdd("application/signed-exchange;v=b3;q=0.9");
-	//		{
-	//			resp = await client.SendRequestAsync(args.Request, HttpCompletionOption.ResponseContentRead);
-	//			foreach (var h in resp.Headers)
-	//			{
-	//				Log(h.Key);
-	//				Log(h.Value);
-	//				if(h.Key == "Set-Cookie")
-	//				{
-	//					var bb = h.Value.Split(';', StringSplitOptions.RemoveEmptyEntries);
-	//					var bb2 = bb[0].Split('=', StringSplitOptions.RemoveEmptyEntries);
-	//					SettingsPage.secSessionId = bb2[1];
-	//				}
 
-	//			}
+		////		client.DefaultRequestHeaders.TryAppendWithoutValidation("Sec-Fetch-Dest", "document");
+		////		client.DefaultRequestHeaders.TryAppendWithoutValidation("Sec-Fetch-Site", "same-origin");
+		////		client.DefaultRequestHeaders.TryAppendWithoutValidation("Sec-Fetch-User", "?1");
+		////		client.DefaultRequestHeaders.TryAppendWithoutValidation("sec-ch-ua", "\" Not; A Brand\";v=\"99\", \"Microsoft Edge\"; v=\"91\", \"Chromium\"; v=\"91\"");
+		////		client.DefaultRequestHeaders.TryAppendWithoutValidation("sec-ch-ua-mobile", "?0");
 
-	//			foreach (var h in resp.Content.Headers)
-	//			{
-	//				Log(h.Key);
-	//				Log(h.Value);
+		//////		SetCookie("lout", "1");
+		//////		SetCookie("G_AUTHUSER_H", "0", "www.crownofthegods.com", "/");
+		//////		SetCookie("G_AUTHUSER_H", "0", "www.crownofthegods.com", "/home");
 
-	//			}
-	//			var buff = await resp.Content.ReadAsStringAsync();
-	//			Log(buff);
-	//			args.Response = resp;
-	//			def.Complete();
-	//		}
 
-	//	}
+		////		var req = args.Request;
+		////		args.Request.Headers.Accept.Clear();
+		////		args.Request.Headers.Accept.ParseAdd("application/signed-exchange;v=b3;q=0.9");
+		////		{
+		////			resp = await client.SendRequestAsync(args.Request, HttpCompletionOption.ResponseContentRead);
+		////			foreach (var h in resp.Headers)
+		////			{
+		////				Log(h.Key);
+		////				Log(h.Value);
+		////				if(h.Key == "Set-Cookie")
+		////				{
+		////					var bb = h.Value.Split(';', StringSplitOptions.RemoveEmptyEntries);
+		////					var bb2 = bb[0].Split('=', StringSplitOptions.RemoveEmptyEntries);
+		////					SettingsPage.secSessionId = bb2[1];
+		////				}
 
-		static private void View_NavigationStarting(WebView sender, Windows.UI.Xaml.Controls.WebViewNavigationStartingEventArgs args)
+		////			}
+
+		////			foreach (var h in resp.Content.Headers)
+		////			{
+		////				Log(h.Key);
+		////				Log(h.Value);
+
+		////			}
+		////			var buff = await resp.Content.ReadAsStringAsync();
+		////			Log(buff);
+		////			args.Response = resp;
+		////			def.Complete();
+		////		}
+
+		////	}
+
+		private static void View_NavigationStarting(WebView sender,CoreWebView2NavigationStartingEventArgs args)
 		{
 
 			try
 			{
+				var uri = new Uri(args.Uri);
 				//if (args.Uri.ToString().StartsWith("https://www.crownofthegods.com/?email"))
 				//{
 				//	GetMe(args.Uri);
 				//	return;
 				//}
-				Log($"Nav start {args.Uri} {args.Uri}");
+				Log($"Nav start {uri}");
 				
 
-				var match = urlMatch.Match(args.Uri.Host);
+				var match = urlMatch.Match(uri.Host);
 
-				if (match.Groups.Count == 2 && (args.Uri.LocalPath == "/" || args.Uri.Fragment.Contains('&')))
+				if (match.Groups.Count == 2 && (uri.LocalPath == "/" || uri.Fragment.Contains('&')))
 				{
 					//if (httpFilter != null)
 					//	Debug.Fatal();  // Todo
@@ -1842,7 +1875,7 @@ private static async void ShowCouncillorsMissingDialog()
 					try
 					{
 
-						httpsHostString = $"https://{args.Uri.Host}";
+						httpsHostString = $"https://{uri.Host}";
 						httpsHost = new Uri(httpsHostString);
 						//httpFilter = 
 						
@@ -1906,8 +1939,7 @@ private static async void ShowCouncillorsMissingDialog()
 						}
 						//cookieManager = new HttpBaseProtocolFilter().CookieManager;
 						//  clientPool.CompleteAdding();
-						view.WebResourceRequested -= View_WebResourceRequested1;
-						view.WebResourceRequested += View_WebResourceRequested1;
+						
 
 
 					}
@@ -1988,15 +2020,7 @@ private static async void ShowCouncillorsMissingDialog()
 		//	Log(args.ToString());
 		//}
 
-		static private void View_NavigationFailed(object sender, Windows.UI.Xaml.Controls.WebViewNavigationFailedEventArgs e)
-		{
-
-			
-			Exception($"Internet failed, press any key to retry {e.Uri} {e.WebErrorStatus}");
-			Log("Refresh");
-			if (view != null)
-				view.Refresh();
-		}
+		
 
 		static private void View_DOMContentLoaded(WebView sender, Windows.UI.Xaml.Controls.WebViewDOMContentLoadedEventArgs args)
 		{
@@ -2066,7 +2090,7 @@ private static async void ShowCouncillorsMissingDialog()
 		static void ChangeCityJS(int cityId)
 		{
 			App.DispatchOnUIThreadLow(() =>
-							view.InvokeScriptAsync("chcity", new string[] { (cityId).ToString() }));
+							ExecuteScriptAsync("chcity",(cityId).ToString() ));
 
 		}
 		static async Task<bool> ChangeCityJSWait(int cityId)
@@ -2085,17 +2109,15 @@ private static async void ShowCouncillorsMissingDialog()
 			}
 			return xx;
 		}
-		static private void View_ScriptNotify(object sender, Windows.UI.Xaml.Controls.NotifyEventArgs __e)
-
+		private static void CoreWebView_WebMessageReceived(CoreWebView sender,CoreWebView2WebMessageReceivedEventArgs args)
 		{
-			var eValue = __e.Value;
-			var eCallingUri = __e.CallingUri;
+			var eValue = args.WebMessageAsJson;
 			Task.Run(async () =>
 		   {
 		   try
 		   {
 			   bool gotCreds = false;
-			   Log($"Notify: {eValue.Length},{eCallingUri},{sender}:{eValue.Truncate(128) }");
+			   Log($"Notify: {eValue.Length},{sender}:{eValue.Truncate(128) }");
 			   var jsDoc = JsonDocument.Parse(eValue);
 			   var jsd = jsDoc.RootElement;
 			   foreach (var jsp in jsd.EnumerateObject())
@@ -2112,15 +2134,24 @@ private static async void ShowCouncillorsMissingDialog()
 							   var token = jso.GetString("token");
 							   var raidSecret = jso.GetString("raid");
 							   var agent = jso.GetString("agent");
-							   //								   jsVars.cookie = jso.GetString("cookie");
+							 //  var cookie = jso.GetString("cookie");
 							   //   Log(jsVars.cookie);
 							   Log(token);
+							Log(cookies);
 							  // Log(s);
 							   for (int i = 0; i < clientCount; ++i)
 							   {
-								   await clientPoolSema.WaitAsync().ConfigureAwait(false);
+								   await clientPoolSema.WaitAsync();//.ConfigureAwait(false);
+								//   httpFilter.CookieManager.SetCookie(new HttpCookie)
+
 							   }
-							   for (; ; )
+								   //HTTPCook
+								   // {
+
+								   //  var cooki
+								   // }
+
+								   for (; ; )
 							   {
 								   try
 								   {
@@ -2128,17 +2159,17 @@ private static async void ShowCouncillorsMissingDialog()
 										   //    var clients = clientPool.ToArray();
 										   foreach (var httpClient in clientPool)
 										   {
+												  // httpClient.DefaultRequestHeaders.Cookie = "sec_session_id="+s;
 
-
-											   //				   if (subId == 0)
-											   //				   httpClient.DefaultRequestHeaders.TryAppendWithoutValidation("Cookie", "sec_session_id=" + s);
+//											   		if (subId == 0)
+											   		//  httpClient.DefaultRequestHeaders.TryAppendWithoutValidation("Cookie",cookies);//"sec_session_id=" + s);
 										   }
 									   }
 								   }
 								   catch (Exception _ex)
 								   {
 									   LogEx(_ex);
-									   await Task.Delay(1000).ConfigureAwait(false);
+									   await Task.Delay(1000);//.ConfigureAwait(false);
 									   continue;
 
 								   }
@@ -2187,7 +2218,7 @@ private static async void ShowCouncillorsMissingDialog()
 							   //   UpdatePPDT(jso.GetProperty("ppdt"));
 							   var ppdt = jso.GetProperty("ppdt");
 									// todo: utf
-									AddPlayer(true, true, Player.myId, Player.myName, token, raidSecret);//, s, ppdt.ToString());
+									AddPlayer(true, true, Player.myId, Player.myName, token, raidSecret,cookies);//, s, ppdt.ToString());
 
 
 							   UpdatePPDT(ppdt, Player.myId, pruneCities: true);
@@ -2200,7 +2231,7 @@ private static async void ShowCouncillorsMissingDialog()
 							   App.DispatchOnUIThreadLow(() =>
 							   {
 							   ShellPage.instance.coords.Text = cid.CidToString();
-								   ShellPage.instance.cookie.Visibility = Visibility.Collapsed;
+						//		   ShellPage.instance.cookie.Visibility = Visibility.Collapsed;
 						   });
 
 								   break;
@@ -2366,7 +2397,7 @@ private static async void ShowCouncillorsMissingDialog()
 										   {
 											   var cid = int.Parse(ss[1]);
 											   // founded new city
-											   await Task.Delay(30000).ConfigureAwait(false);
+											   await Task.Delay(30000);//.ConfigureAwait(false);
 											   Note.Show($"You have founded a new city!  Would you like to run [Setup](/s/{cid.CidToString()})");
 
 										   }

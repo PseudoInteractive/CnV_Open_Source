@@ -57,6 +57,7 @@ using Microsoft.Toolkit.Uwp.UI;
 using Windows.UI.Xaml.Controls;
 using Microsoft.Toolkit.Uwp;
 using Microsoft.AppCenter;
+using Microsoft.Web.WebView2.Core;
 
 namespace COTG
 {
@@ -76,6 +77,7 @@ namespace COTG
 		{
 			get { return _activationService.Value; }
 		}
+
 
 		public static App instance;
 		public static string appLink = "cotg";
@@ -127,9 +129,9 @@ namespace COTG
 
 			FocusVisualKind = FocusVisualKind.Reveal;
 
+			
 
-
-			EnteredBackground += App_EnteredBackground;
+		  EnteredBackground += App_EnteredBackground;
 			LeavingBackground += App_LeavingBackground;
 			Resuming += App_Resuming;
 			Suspending += App_Suspending;
@@ -142,6 +144,8 @@ namespace COTG
 
 		}
 
+	//	public static Windows.Foundation.IAsyncOperation<CoreWebView2Environment> createWebEnvironmentTask;
+
 		public static async void App_CloseRequested(object sender, SystemNavigationCloseRequestedPreviewEventArgs e)
 		{
 			Log("Close");
@@ -151,24 +155,36 @@ namespace COTG
 
 		private async void App_Suspending(object sender, SuspendingEventArgs e)
 		{
-			if (isForeground == true)
+			Log("Suspend");
+			var deferral = e.SuspendingOperation.GetDeferral();
+
+			try
 			{
-				isForeground = false;
+				if (isForeground == true)
+				{
+					isForeground = false;
 
-				var deferral = e.SuspendingOperation.GetDeferral();
-				//TODO: Save application state and stop any background activity
-				try
-				{
-					await SaveState();
+					//TODO: Save application state and stop any background activity
+					try
+					{
+					
+						await SaveState();
+					}
+					catch (Exception ex)
+					{
+					}
+				}
+				ShellPage.instance.NukeWebView();
+			
+			}
+			catch(Exception ext)
+			{
 
-				}
-				catch (Exception ex)
-				{
-				}
-				finally
-				{
-					deferral.Complete();
-				}
+			}
+			finally
+			{
+				
+				deferral.Complete();
 			}
 		}
 
@@ -376,6 +392,9 @@ namespace COTG
 				// do this asynchronously
 				Services.StoreHelper.instance.DownloadAndInstallAllUpdatesAsync();
 			}
+
+		//	createWebEnvironmentTask =  CoreWebView2Environment.CreateAsync();
+			
 
 			await ActivationService.ActivateAsync(args);
 			// if (!args.PrelaunchActivated)

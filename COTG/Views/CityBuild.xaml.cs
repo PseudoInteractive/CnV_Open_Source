@@ -621,10 +621,10 @@ namespace COTG.Views
 			else
 			{
 				var b = City.GetBuild();
-				b.BuildingsCacheToShareString();
-				await b.SaveLayout();
+				//b.BuildingsCacheToShareString();
+				//await b.SaveShareStringFromLayout();
 
-				await GetCity.Post(City.build);
+				//await GetCity.Post(City.build);
 
 
 				if (syncPlannerTab && PlannerTab.IsVisible())
@@ -645,7 +645,7 @@ namespace COTG.Views
 		{
 			Note.Show("Cleared Queue");
 			BuildQueue.ClearQueue();
-			JSClient.view.InvokeScriptAsync("cancelbuilds", Array.Empty<string>());
+			JSClient.view.ExecuteScriptAsync("cancelbuilds()");
 		}
 
 
@@ -975,7 +975,7 @@ namespace COTG.Views
 
 			int bspot = XYToId(cc);
 			var build = GetBuild();
-			var b = City.GetBuild().GetBuildingPostQueue(bspot);
+			var b = City.GetBuild().GetBuildingOrLayout(bspot);
 
 			if (action == Action.moveEnd)
 			{
@@ -1002,7 +1002,7 @@ namespace COTG.Views
 						{
 							Status("You are in layout mode, exit to use the layout tool", dryRun);
 						}
-						else if (!build.isLayoutValid)
+						else if (!build.isLayoutCustom)
 						{
 
 							Status("Please assign a layout", dryRun);
@@ -1301,7 +1301,7 @@ namespace COTG.Views
 			}
 			var d = b.def;
 			if (d.bid != 0)
-				JSClient.view.InvokeScriptAsync("exBuildingInfo", new[] { d.bid.ToString(), b.bl.ToString(), bspot.ToString() });
+				JSClient.ExecuteScriptAsync("exBuildingInfo", d.bid.ToString(), b.bl.ToString(), bspot.ToString() );
 
 			CityView.SetSelectedBuilding(cc, isSingleClickAction);
 
@@ -1356,7 +1356,7 @@ namespace COTG.Views
 				else if (bi.isAction)
 				{
 					//			var items = ShellPage.instance.buildMenu.Items;
-					if (bi.action == Action.layout && !City.GetBuild().isLayoutValid)
+					if (bi.action == Action.layout && !City.GetBuild().isLayoutCustom)
 					{
 						Note.Show("Please assign a layout");
 						//		JSClient.JSInvoke("showLayout", null);
@@ -1557,7 +1557,7 @@ namespace COTG.Views
 			}
 			else
 			{
-				if (!GetBuild().isLayoutValid)
+				if (!GetBuild().isLayoutCustom)
 					await ShareString.Show(City.build);
 				await CityBuild._IsPlanner(true, true);
 
@@ -1589,7 +1589,7 @@ namespace COTG.Views
 				if (rv == ContentDialogResult.Primary)
 				{
 					var city = City.Get(cid);
-					await JSClient.view.InvokeScriptAsync("misccommand", new[] { "abandoncity", cid.ToString() });
+					await JSClient.ExecuteScriptAsync("misccommand",  "abandoncity", cid.ToString() );
 					city.pid = 0; //
 						if (myCities.Length > 1)
 					{

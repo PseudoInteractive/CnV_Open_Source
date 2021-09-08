@@ -92,6 +92,22 @@ namespace COTG.Game
 
 		public static bool TestContinentFilter(int cid) => (continentFilter & ContinentFilterFlag(World.CidToPackedContinent(cid))) != 0;
 
+		// slow
+		public static bool TryGet(string nameAndRemarks,bool mine,out City spot) 
+		{
+			City[] cities = mine ? allSpots.Values as City[] : City.myCities;
+			foreach(var i in cities)
+			{
+				if(i.nameAndRemarks == nameAndRemarks)
+				{
+					spot = i;
+					return true;
+				}
+
+			}
+			spot = null; 
+			return false;
+		}
 		public static bool TryGet(int cid, out City spot) => allSpots.TryGetValue(cid, out spot);
 		public static int focus; // city that has focus (selected, but not necessarily building.  IF you click a city once, it goes to this state
 
@@ -109,6 +125,9 @@ namespace COTG.Game
 		//public static City pending = new City() { _cityName = "pending" };
 
 		//public static City[] emptySpotSource = new[] { pending };
+
+		public string nameAndRemarksAndPlayer => isMine? nameAndRemarks : $"{nameAndRemarks} - {playerName}";
+
 
 		public string nameAndRemarks {
 			get
@@ -1627,7 +1646,7 @@ namespace COTG.Game
 				{
 
 					DateTimeOffset? time = null;
-					var ogaStr = await JSClient.view.InvokeScriptAsync("getOGA", null);
+					var ogaStr = await JSClient.view.ExecuteScriptAsync("getOGA()");
 					var jsDoc = JsonDocument.Parse(ogaStr);
 					foreach (var i in jsDoc.RootElement.EnumerateArray())
 					{
@@ -1784,7 +1803,7 @@ namespace COTG.Game
 		//}
 		public static void JSCommand(string func, int cid)
 		{
-			JSClient.view.InvokeScriptAsync(func, new string[] { (cid % 65536).ToString(), (cid >> 16).ToString() });
+			JSClient.view.ExecuteScriptAsync($"{func}({cid % 65536},{cid >> 16})");
 		}
 		public static void JSAttack(int cid)
 		{
@@ -1861,7 +1880,7 @@ namespace COTG.Game
 			return false;
 		}
 
-		public void ShowContextMenu(UIElement uie, Windows.Foundation.Point position)
+		public async Task ShowContextMenu(UIElement uie, Windows.Foundation.Point position)
 		{
 
 			//   SelectMe(false) ;
@@ -1890,6 +1909,7 @@ namespace COTG.Game
 					//}
 					// This one has multi select
 					var aRaid = AApp.AddSubMenu(flyout, "Raid..");
+					aRaid.AddItem($"Raid ..",()=>ScanDungeons.Post(cid,true,false) ) ;
 
 					int count = 1;
 					if (uie == MainPage.CityGrid || uie == BuildTab.CityGrid || uie == NearDefenseTab.instance.supportGrid)
@@ -1931,7 +1951,7 @@ namespace COTG.Game
 				{
 					if (_cityName == null)
 					{
-						JSClient.FetchCity(cid);
+						await JSClient.FetchCity(cid);
 					}
 
 				}

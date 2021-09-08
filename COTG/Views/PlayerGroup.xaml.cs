@@ -68,11 +68,18 @@ namespace COTG.Views
         }
 		public static void CityNameSuggest_TextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)
 		{
-			Suggest_TextChanged(sender, args, City.myCities.Select(p => p.nameAndRemarks));
+			Suggest_TextChanged(sender, args, City.myCities.Select(p => p.nameAndRemarksAndPlayer));
 		}
 		public static void AllianceSuggest_TextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)
 		{
 			Suggest_TextChanged(sender, args, Alliance.all.Select(p => p.Value.name));
+
+		}
+
+
+		public static void CitySuggest_TextChanged(AutoSuggestBox sender,AutoSuggestBoxTextChangedEventArgs args)
+		{
+			Suggest_TextChanged(sender,args,City.myCities.Select(p => p.nameAndRemarks));
 
 		}
 

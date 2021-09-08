@@ -130,7 +130,7 @@ namespace COTG.JSON
 		//	if (cid == City.build)
 		//		City.buildQueue.Add(this);
 		//	Assert(App.IsOnUIThread());
-		//	return JSClient.view.InvokeScriptAsync("buildex", new[] { bid.ToString(), bspot.ToString(), slvl.ToString(), elvl.ToString(), cid.ToString() });
+		//	return JSClient.view.ExecuteScriptAsync("buildex", new[] { bid.ToString(), bspot.ToString(), slvl.ToString(), elvl.ToString(), cid.ToString() });
 
 		//}
 		//public void ApplyOnUIThread(int cid)
@@ -570,7 +570,7 @@ namespace COTG.JSON
 										var buildEx = commandBuilder.ToString();
 										if (buildEx != null)
 										{
-											await JSClient.JSInvokeTask("buildex", new[] { commandBuilder.ToString() }).ConfigureAwait(false);
+											await JSClient.JSInvokeTask($"buildex({ commandBuilder.ToString() })").ConfigureAwait(false);
 
 											if (cid == City.build)
 												City.BuildingsOrQueueChanged();
@@ -805,7 +805,7 @@ namespace COTG.JSON
 				sb.Append("]}");
 
 
-				JSClient.JSInvoke("buildex", new[] { sb.ToString() });
+				JSClient.JSInvoke("$buildex({sb.ToString()})");
 				sb.Dispose();
 				CityView.BuildingsOrQueueChanged();
 				return;
@@ -883,7 +883,7 @@ namespace COTG.JSON
 			if (a.bid == City.bidTemple && a.slvl == 0)
 			{
 				Assert(cid == City.build);
-				await JSClient.JSInvokeTask("buildTemple", new[] { a.bspot.ToString() });
+				await JSClient.JSInvokeTask($"buildTemple({a.bspot.ToString()})" );
 				return;
 			}
 			if (a.bid == City.bidTemple && a.elvl == 0)

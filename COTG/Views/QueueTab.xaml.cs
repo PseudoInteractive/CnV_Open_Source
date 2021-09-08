@@ -987,7 +987,7 @@ namespace COTG.Views
 			List<(int x, int y)> rv = new();
 			if (count <= 0)
 				goto done;
-			if(!city.isLayoutValid && addDummyIfNoLayout)
+			if(!city.isLayoutCustom && addDummyIfNoLayout)
 			{
 				rv.Add(RandomSpotForBuilding(city));
 				return rv;
@@ -1345,7 +1345,7 @@ namespace COTG.Game
 
 		public  bool HasOverlayBuildingOfType(int bid)
 		{
-			if (!isLayoutValid)
+			if (!isLayoutCustom)
 				return false;
 
 			for (var id = 0; id < City.citySpotCount; ++id)
@@ -1358,7 +1358,7 @@ namespace COTG.Game
 		}
 		public  (int x, int y) FindOverlayBuildingOfType( int bid)
 		{
-			if (!isLayoutValid)
+			if (!isLayoutCustom)
 				return (0,0);
 			
 			for (var id = 0;id<City.citySpotCount; ++id)
@@ -1373,7 +1373,7 @@ namespace COTG.Game
 
 		public  int FindExtraBuilding()
 		{
-			if (!isLayoutValid)
+			if (!isLayoutCustom)
 				return -1;
 			Dictionary<short, short> counts = new();
 
@@ -1449,7 +1449,7 @@ namespace COTG.Game
 		{
 			get
 			{
-				if (!isLayoutValid)
+				if (!isLayoutCustom)
 					return false;
 
 				for (int i = 0; i < citySpotCount; ++i)
@@ -1466,7 +1466,7 @@ namespace COTG.Game
 			{
 				bool hasCastle = false;
 				bool hasSorcTower = false;
-				if (!isLayoutValid)
+				if (!isLayoutCustom)
 					return (false, false);
 
 				for (int i = 0; i < citySpotCount; ++i)
@@ -1490,7 +1490,7 @@ namespace COTG.Game
 		}
 		public  async Task ClearResUI()
 		{
-			if(isLayoutValid)
+			if(isLayoutCustom)
 			{
 				for (int r = 1; r <= City.citySpan; ++r)
 				{
@@ -1525,7 +1525,7 @@ namespace COTG.Game
 		{
 			try
 			{
-				if (!isLayoutValid)
+				if (!isLayoutCustom)
 					return true;
 				var bds = isBuild ? city.postQueueBuildings : buildings;
 				for (var id = 1; id < City.citySpotCount; ++id)

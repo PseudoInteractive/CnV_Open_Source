@@ -46,6 +46,12 @@
 		</Grid.ColumnDefinitions>
 
 
+		<winui:WebView2 x:Name="webView" x:FieldModifier="public"
+						Grid.RowSpan="5"
+						Grid.ColumnSpan="2"
+						Canvas.ZIndex="10"
+						Grid.Row="1" />
+
 
 		<CommandBar Grid.ColumnSpan="2" TabFocusNavigation="Once" UseSystemFocusVisuals="True" x:Name="commandBar" x:FieldModifier="public"   >
 			<CommandBar.Content   >
@@ -164,8 +170,6 @@
 
 			</CommandBar.SecondaryCommands>
 			<CommandBar.PrimaryCommands>
-				<AppBarButton x:Name="cookie" x:FieldModifier="public" Click="CookieClick" Icon="SetLockScreen" Label="Cookie"
-                           ToolTipService.ToolTip="Workaround for cookies" />
 
 				<AppBarButton Click="{x:Bind helpers:NavStack.BackClick}"  Icon="Back" Label="Back" RightTapped="BackRightTapped" Style="{StaticResource AppBarButtonRevealStyle}"
                           ToolTipService.ToolTip="Switch to most recently visited city&#x0a;Right click to view history"  />

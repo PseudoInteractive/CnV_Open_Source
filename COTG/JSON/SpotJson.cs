@@ -34,37 +34,37 @@ namespace COTG.DB
 
 
 
-		public static string Apply(string _cookies)
-		{
-			var cookies = _cookies.Split(';');
-			string rv = string.Empty;
-			//{
-			//	JSClient.SetCookie("_gat", string.Empty, false, false, true); // bonus cookie
-			//}
-			foreach (var c in cookies)
-			{
-				var split = 1;
-				int count = c.Length;
-				for(int i=1;i<count-1;++i)
-				{
-					if(c[i] == '=')
-					{
-						split = i;
-						break;
-					}	
-				}
-				var name = c.Substring(0, split).Trim();
-				var value = c.Substring(split + 1, count - (split + 1)).Trim() ;
-				var isSession = IsSession(name);
-				var isHttpOnly = isSession | (name == "remember_me");
-				if (isSession)
-					rv = value;
+	//	public static string Apply(string _cookies)
+	//	{
+	//		var cookies = _cookies.Split(';');
+	//		string rv = string.Empty;
+	//		//{
+	//		//	JSClient.SetCookie("_gat", string.Empty, false, false, true); // bonus cookie
+	//		//}
+	//		foreach (var c in cookies)
+	//		{
+	//			var split = 1;
+	//			int count = c.Length;
+	//			for(int i=1;i<count-1;++i)
+	//			{
+	//				if(c[i] == '=')
+	//				{
+	//					split = i;
+	//					break;
+	//				}	
+	//			}
+	//			var name = c.Substring(0, split).Trim();
+	//			var value = c.Substring(split + 1, count - (split + 1)).Trim() ;
+	//			var isSession = IsSession(name);
+	//			var isHttpOnly = isSession | (name == "remember_me");
+	//			if (isSession)
+	//				rv = value;
 
-				JSClient.SetCookieCollab(name, value, isSession, isHttpOnly);
+	////			JSClient.SetCookieCollab(name, value, isSession, isHttpOnly);
 
-			}
-			return rv;
-		}
+	//		}
+	//		return rv;
+	//	}
 		public static string Serialize(HttpCookieManager cookieManager)
 		{
 			var cookies = cookieManager.GetCookies(new Uri("https://crownofthegods.com"));

@@ -34,7 +34,7 @@ declare var ctims: number; // = ned.getTime();
 declare var ppdt: jsonT.Player;
 declare var qam: { any };
 declare var bam: { any };
-declare var ppss;   
+declare var ppss : Number;   
 declare var s : string;
 declare var cid: number;
 declare var worldrender: any; // '0' or 0 or 1

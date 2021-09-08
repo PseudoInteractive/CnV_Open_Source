@@ -1,4 +1,5 @@
 /// <reference types="jquery" />
+/// <reference types="jqueryui" />
 declare function AsNumber(a: any): number;
 declare function LocalStoreAsInt(__s: string, __def?: number): number;
 declare function LocalStoreAsFloat(__s: string, __def?: number): number;

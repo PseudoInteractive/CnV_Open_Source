@@ -32,7 +32,7 @@ namespace COTG
 		{
 			if (bid != 0)
 			{
-				if (BuildingDef.buildingsToSharestring.TryGetValue((bid - BuildingDef.sharestringOffset).AsByte(), out var o))
+				if (BuildingDef.buildingsToSharestring.TryGetValue((bid - BuildingDef.sharestringBuildingOffset).AsByte(), out var o))
 				{
 					Assert(o != 0);
 					return (o, true);
@@ -42,9 +42,9 @@ namespace COTG
 
 			return ((byte)'-', false);
 		}
-		public static short LayoutToBid(byte v) => (short)(BuildingDef.sharestringToBuldings.TryGetValue(v, out var c) && c != 0 ? (c + BuildingDef.sharestringOffset).AsShort() : (short) 0);
+		public static short LayoutToBid(byte v) => (short)(BuildingDef.sharestringToBuldings.TryGetValue(v, out var c) && c != 0 ? (c + BuildingDef.sharestringBuildingOffset).AsShort() : (short) 0);
 
-		public const short sharestringOffset = 444;
+		public const short sharestringBuildingOffset = 444;
 		public static Dictionary<byte, byte> sharestringToBuldings;
 		public static Dictionary<byte, byte> buildingsToSharestring;
 
@@ -99,36 +99,36 @@ namespace COTG
 				 (byte)'-',(byte)(0),
 				 (byte)',',(byte)0,//(452 - sharestringOffset),
 				 (byte)'.',(byte)0,//(454 - sharestringOffset),
-				 (byte)'1',(byte)(447 - sharestringOffset),
-				 (byte)'2',(byte)(448 - sharestringOffset),
-				 (byte)'3',(byte)(461 - sharestringOffset),
-				 (byte)'4',(byte)(465 - sharestringOffset),
+				 (byte)'1',(byte)(447 - sharestringBuildingOffset),
+				 (byte)'2',(byte)(448 - sharestringBuildingOffset),
+				 (byte)'3',(byte)(461 - sharestringBuildingOffset),
+				 (byte)'4',(byte)(465 - sharestringBuildingOffset),
 				 (byte)':',(byte)0,//(451 - sharestringOffset), // stone
 				 (byte)';',(byte)0,//(453 - sharestringOffset),
-				 (byte)'A',(byte)(462 - sharestringOffset),
-				 (byte)'B',(byte)(445 - sharestringOffset),
-				 (byte)'C',(byte)(446 - sharestringOffset),
-				 (byte)'D',(byte)(477 - sharestringOffset),
-				 (byte)'E',(byte)(466 - sharestringOffset),
-				 (byte)'G',(byte)(483 - sharestringOffset),
-				 (byte)'H',(byte)(479 - sharestringOffset),
-				 (byte)'J',(byte)(500 - sharestringOffset),
-				 (byte)'K',(byte)(504 - sharestringOffset),
-				 (byte)'L',(byte)(460 - sharestringOffset),
-				 (byte)'M',(byte)(463 - sharestringOffset),
-				 (byte)'P',(byte)(449 - sharestringOffset),
-				 (byte)'R',(byte)(bidPort - sharestringOffset),
-				 (byte)'R',(byte)(490 - sharestringOffset),
-				 (byte)'R',(byte)(489 - sharestringOffset),
-				 (byte)'S',(byte)(464 - sharestringOffset),
-				 (byte)'T',(byte)(0),
-				 (byte)'U',(byte)(481 - sharestringOffset),
-				 (byte)'V',(byte)(bidShipyard - sharestringOffset),
-				 (byte)'V',(byte)(496 - sharestringOffset),
-				 (byte)'V',(byte)(498 - sharestringOffset),
-				 (byte)'X',(byte)(467 - sharestringOffset),
-				 (byte)'Y',(byte)(502 - sharestringOffset),
-				 (byte)'Z',(byte)(482 - sharestringOffset),
+				 (byte)'A',(byte)(462 - sharestringBuildingOffset),
+				 (byte)'B',(byte)(445 - sharestringBuildingOffset),
+				 (byte)'C',(byte)(446 - sharestringBuildingOffset),
+				 (byte)'D',(byte)(477 - sharestringBuildingOffset),
+				 (byte)'E',(byte)(466 - sharestringBuildingOffset),
+				 (byte)'G',(byte)(483 - sharestringBuildingOffset),
+				 (byte)'H',(byte)(479 - sharestringBuildingOffset),
+				 (byte)'J',(byte)(500 - sharestringBuildingOffset),
+				 (byte)'K',(byte)(504 - sharestringBuildingOffset),
+				 (byte)'L',(byte)(460 - sharestringBuildingOffset),
+				 (byte)'M',(byte)(463 - sharestringBuildingOffset),
+				 (byte)'P',(byte)(449 - sharestringBuildingOffset),
+				 (byte)'R',(byte)(bidPort - sharestringBuildingOffset),
+				 (byte)'R',(byte)(490 - sharestringBuildingOffset),
+				 (byte)'R',(byte)(489 - sharestringBuildingOffset),
+				 (byte)'S',(byte)(464 - sharestringBuildingOffset),
+				 (byte)'T',(byte)(bidTownHall - sharestringBuildingOffset),
+				 (byte)'U',(byte)(481 - sharestringBuildingOffset),
+				 (byte)'V',(byte)(bidShipyard - sharestringBuildingOffset),
+				 (byte)'V',(byte)(496 - sharestringBuildingOffset),
+				 (byte)'V',(byte)(498 - sharestringBuildingOffset),
+				 (byte)'X',(byte)(467 - sharestringBuildingOffset),
+				 (byte)'Y',(byte)(502 - sharestringBuildingOffset),
+				 (byte)'Z',(byte)(482 - sharestringBuildingOffset),
 			};
 			sharestringToBuldings = new Dictionary<byte, byte>(ix.Length);
 			buildingsToSharestring = new Dictionary<byte, byte>(ix.Length);

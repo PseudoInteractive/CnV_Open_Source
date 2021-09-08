@@ -8726,7 +8726,7 @@ function DoSyncViewMode() {
                     wrapper.c['c'] = _cid;
                     _cid = 0;
                 }
-                window['external']['notify'](JSON.stringify(wrapper));
+                window['chrome']['webview']['postMessage'](wrapper);
             }
         }
     }
@@ -8777,7 +8777,7 @@ function setStayAlive(on) {
 }
 function PostChatIn(c) {
     const wrapper = { chatin: c };
-    window['external']['notify'](JSON.stringify(wrapper));
+    window['chrome']['webview']['postMessage'](wrapper);
 }
 I0rr(X0rr());
 I0VV(u0VV());
@@ -10680,7 +10680,7 @@ function ppdtChanged(__ppdt) {
         wrapper.ppdt['r'] = __ppdt['r'];
     }
     setTimeout(() => {
-        window['external']['notify'](JSON.stringify(wrapper));
+        window['chrome']['webview']['postMessage'](wrapper);
     }, 300);
 }
 function reportAway() {
@@ -13931,7 +13931,7 @@ function outer() {
                                 sendBuildingData();
                             }
                     const wrapper = { snd: "{}" };
-                    window['external']['notify'](JSON.stringify(wrapper));
+                    window['chrome']['webview']['postMessage'](wrapper);
                 });
             }
         }
@@ -17400,7 +17400,7 @@ function outer() {
                     cid = parseInt(_cid);
                     raidSecret = Q3F();
                     let wrapper = { setglobals: { secret: raidSecret, pid: P8, pn: H2, ppdt: ppdt, token: token, s: cookie, cid: _cid } };
-                    window['external']['notify'](JSON.stringify(wrapper));
+                    window['chrome']['webview']['postMessage'](wrapper);
                 }
                 catch (exception) {
                     ppdt = savedPpdt;
@@ -17411,7 +17411,7 @@ function outer() {
                     P8 = ppdt.pid;
                     raidSecret = Q3F();
                     let wrapper = { restoreglobals: { s: s } };
-                    window['external']['notify'](JSON.stringify(wrapper));
+                    window['chrome']['webview']['postMessage'](wrapper);
                     return;
                 }
                 let B9Z = $.post("/includes/unblock.php", { a: "[10]" });
@@ -18073,7 +18073,7 @@ function outer() {
                 DoPoll2(400);
                 J2();
                 let wrapper = { ppdt: ppdt };
-                window['external']['notify'](JSON.stringify(wrapper));
+                window['chrome']['webview']['postMessage'](wrapper);
             }, 1000);
         };
         function W3F(d9T) {
@@ -19179,7 +19179,7 @@ function outer() {
                 websocket.onmessage = function (G3V) {
                     var M3V = JSON.parse(G3V.data);
                     const wrapper = { "chat": M3V };
-                    window['external']['notify'](JSON.stringify(wrapper));
+                    window['chrome']['webview']['postMessage'](wrapper);
                     l6F(M3V);
                 };
                 websocket.onclose = function () {
@@ -20417,19 +20417,19 @@ function outer() {
                 .append(a6n);
             i6F(E6n, k2n);
             const wrapper = { error: e2n };
-            window['external']['notify'](JSON.stringify(wrapper));
+            window['chrome']['webview']['postMessage'](wrapper);
         }
         function __log(message) {
             const wrapper = { error: "cotg_wtf: " + message };
-            window['external']['notify'](JSON.stringify(wrapper));
+            window['chrome']['webview']['postMessage'](wrapper);
         }
         function LogBuildQueueFull() {
             const wrapper = { error: "Build queue full" };
-            window['external']['notify'](JSON.stringify(wrapper));
+            window['chrome']['webview']['postMessage'](wrapper);
         }
         function __logBuild(err) {
             const wrapper = { buildFail: err };
-            window['external']['notify'](JSON.stringify(wrapper));
+            window['chrome']['webview']['postMessage'](wrapper);
         }
         var i9 = __s['6163' | 3];
         function t7V(b3D) {
@@ -31772,7 +31772,7 @@ function outer() {
             if (hasSentAldt === false) {
                 hasSentAldt = true;
                 const wrapper = { aldt: aldt };
-                window['external']['notify'](JSON.stringify(wrapper));
+                window['chrome']['webview']['postMessage'](wrapper);
             }
         }
         function e4V(O26) {
@@ -33275,7 +33275,7 @@ function outer() {
             }
             if (__cid != cid) {
                 const wrapper = { error: "Please press the refresh button." };
-                window['external']['notify'](JSON.stringify(wrapper));
+                window['chrome']['webview']['postMessage'](wrapper);
                 return;
             }
             t7F(_action);
@@ -36539,7 +36539,7 @@ function outer() {
                 let wrapper = {
                     cmd: M2n
                 };
-                window['external']['notify'](JSON.stringify(wrapper));
+                window['chrome']['webview']['postMessage'](wrapper);
             }
             else {
                 e2();
@@ -39716,7 +39716,7 @@ function outer() {
             let wrapper = {
                 shcit: Number(cid)
             };
-            window['external']['notify'](JSON.stringify(wrapper));
+            window['chrome']['webview']['postMessage'](wrapper);
         }
         function O8Internal(Z9V) {
             Z9V = Number(Z9V);
@@ -41206,7 +41206,7 @@ function outer() {
             let wrapper = {
                 copyclip: a9V
             };
-            window['external']['notify'](JSON.stringify(wrapper));
+            window['chrome']['webview']['postMessage'](wrapper);
             var m9V = a9V;
             $(__s[5398])
                 .text(a9V);
@@ -41736,7 +41736,7 @@ function outer() {
                 let wrapper = {
                     rmp: U76
                 };
-                window['external']['notify'](JSON.stringify(wrapper));
+                window['chrome']['webview']['postMessage'](wrapper);
                 for (let P76 in U76) {
                     if (U76[P76]) {
                         let N76 = U76[P76];
@@ -45236,7 +45236,7 @@ function outer() {
                         let wrapper = {
                             gstempty: { water: h36, cid: rcid, res: L36 }
                         };
-                        window['external']['notify'](JSON.stringify(wrapper));
+                        window['chrome']['webview']['postMessage'](wrapper);
                     }
                 }
             });
@@ -45284,7 +45284,7 @@ function outer() {
                             var g36 = $.post("/includes/" + __s[3620], { a: rcid });
                             g36.done(function (a16) {
                                 wrapper.gstcb.k = JSON.parse(a16);
-                                window['external']['notify'](JSON.stringify(wrapper));
+                                window['chrome']['webview']['postMessage'](wrapper);
                             });
                             return;
                         }
@@ -47590,7 +47590,7 @@ function outer() {
                     let wrapper = {
                         sub: 1
                     };
-                    window['external']['notify'](JSON.stringify(wrapper));
+                    window['chrome']['webview']['postMessage'](wrapper);
                 }
             });
         }
@@ -50854,7 +50854,7 @@ function outer() {
                 if (hasSentAldt === false) {
                     hasSentAldt = true;
                     const wrapper = { aldt: 0 };
-                    window['external']['notify'](JSON.stringify(wrapper));
+                    window['chrome']['webview']['postMessage'](wrapper);
                 }
             }
             else if (!(j11 == 1)) {
@@ -53312,6 +53312,7 @@ function outer() {
                         .off("click");
                     $(__s["5861" | 1])
                         .click(function () {
+                        newWin = window.open("", __s[266]);
                         E6k.y6();
                         var s92 = $(this)
                             .attr("a");
@@ -55103,7 +55104,7 @@ function outer() {
                             wrapper.citydata.cid = cid;
                             wrapper.citydata.pid = city.pid;
                         }
-                        window['external']['notify'](JSON.stringify(wrapper));
+                        window['chrome']['webview']['postMessage'](wrapper);
                     }
                 }
             }
@@ -56286,7 +56287,7 @@ function outer() {
         }
         function sendPPDT() {
             let wrapper = { ppdt: ppdt };
-            window['external']['notify'](JSON.stringify(wrapper));
+            window['chrome']['webview']['postMessage'](wrapper);
         }
         function o8() {
             $(__s[3181])
@@ -66238,7 +66239,7 @@ function outer() {
                 pldata = JSON.parse(s5T);
                 {
                     const wrapper = { gPlA: pldata };
-                    window['external']['notify'](JSON.stringify(wrapper));
+                    window['chrome']['webview']['postMessage'](wrapper);
                 }
             });
         }
@@ -66338,178 +66339,175 @@ function outer() {
             else
                 return ![];
         }
-        $(document)
-            .ready(function () {
+        window['godset'] = function () {
             E6k.y6();
-            if (typeof godmode !== "undefined")
-                $(__s[5354])
-                    .click(function () {
-                    if ($(__s[4206])
-                        .length == (0)) {
-                        N6();
-                        var N6i = $.post("/includes/god.php", {
-                            b: 0,
-                            a: 0
-                        });
-                        F6();
-                        N6i.done(function (q6i) {
-                            if (q6i == 0)
-                                $(__s[5354])
-                                    .remove();
-                            else {
-                                q6i = JSON.parse(q6i);
-                                var c6i = __s[1878];
-                                F6i = "";
-                                if (q6i[1] == 1)
-                                    F6i = __s[M7R >> 509555040];
-                                c6i += __s[J1m - 0] + F6i + __s[3509];
-                                F6i = '';
-                                if (q6i[2] == (1))
-                                    F6i = __s[+M7R];
-                                c6i += __s[+n4y] + F6i + __s[2806];
-                                F6i = '';
-                                if (q6i[3] == 1)
-                                    F6i = __s[M7R - 0];
-                                c6i += __s[4769] + F6i + __s[5783];
-                                F6i = "";
-                                if (q6i[4] == 1)
-                                    F6i = __s[M7R - 0];
-                                c6i += __s[3342] + F6i + __s[7074];
-                                F6i = "";
-                                if (q6i[5] == 1)
-                                    F6i = _s(M7R & E6k
-                                        .s6s);
-                                c6i += __s[4223] + F6i + __s["906" | 130];
-                                var F6i = "";
-                                if (q6i[0] == 1)
-                                    F6i = __s[M7R ^ 0];
-                                c6i += __s[5847] + F6i + __s[6008];
-                                F6i = '';
-                                if (q6i[6] == ("1" | 1))
-                                    F6i = __s[+M7R];
-                                c6i += __s[5302] + F6i + __s[6529];
-                                F6i = '';
-                                if (q6i[7] == (1))
-                                    F6i = __s[+M7R];
-                                c6i += __s[7016] + F6i + __s['6947' | 769];
-                                c6i += __s[2498] + q6i[u6y | 0] + __s[3039];
-                                c6i += __s[3414] + q6i[A5y << 677852736] + __s[5298];
-                                c6i += __s[4343] + q6i[j6y ^ 0] + __s[5742];
-                                c6i += __s[1829] + q6i[+F8y] + __s[5555];
-                                c6i += __s[609] + q6i[24] + __s[6356];
-                                c6i += __s[5928];
-                                AppendPopup(c6i);
-                                $(__s[4206])
-                                    .draggable({
-                                    handle: __s[2633],
-                                    containment: __s[q5y | 6282],
-                                    scroll: !1
+            {
+                if ($(__s[4206])
+                    .length == (0)) {
+                    N6();
+                    var N6i = $.post("/includes/god.php", {
+                        b: 0,
+                        a: 0
+                    });
+                    F6();
+                    N6i.done(function (q6i) {
+                        if (q6i == 0)
+                            $(__s[5354])
+                                .remove();
+                        else {
+                            q6i = JSON.parse(q6i);
+                            var c6i = __s[1878];
+                            F6i = "";
+                            if (q6i[1] == 1)
+                                F6i = __s[M7R >> 509555040];
+                            c6i += __s[J1m - 0] + F6i + __s[3509];
+                            F6i = '';
+                            if (q6i[2] == (1))
+                                F6i = __s[+M7R];
+                            c6i += __s[+n4y] + F6i + __s[2806];
+                            F6i = '';
+                            if (q6i[3] == 1)
+                                F6i = __s[M7R - 0];
+                            c6i += __s[4769] + F6i + __s[5783];
+                            F6i = "";
+                            if (q6i[4] == 1)
+                                F6i = __s[M7R - 0];
+                            c6i += __s[3342] + F6i + __s[7074];
+                            F6i = "";
+                            if (q6i[5] == 1)
+                                F6i = _s(M7R & E6k
+                                    .s6s);
+                            c6i += __s[4223] + F6i + __s["906" | 130];
+                            var F6i = "";
+                            if (q6i[0] == 1)
+                                F6i = __s[M7R ^ 0];
+                            c6i += __s[5847] + F6i + __s[6008];
+                            F6i = '';
+                            if (q6i[6] == ("1" | 1))
+                                F6i = __s[+M7R];
+                            c6i += __s[5302] + F6i + __s[6529];
+                            F6i = '';
+                            if (q6i[7] == (1))
+                                F6i = __s[+M7R];
+                            c6i += __s[7016] + F6i + __s['6947' | 769];
+                            c6i += __s[2498] + q6i[u6y | 0] + __s[3039];
+                            c6i += __s[3414] + q6i[A5y << 677852736] + __s[5298];
+                            c6i += __s[4343] + q6i[j6y ^ 0] + __s[5742];
+                            c6i += __s[1829] + q6i[+F8y] + __s[5555];
+                            c6i += __s[609] + q6i[24] + __s[6356];
+                            c6i += __s[5928];
+                            AppendPopup(c6i);
+                            $(__s[4206])
+                                .draggable({
+                                handle: __s[2633],
+                                containment: __s[q5y | 6282],
+                                scroll: !1
+                            });
+                            $(__s[7080])
+                                .off("click");
+                            $(__s[7080])
+                                .click(function () {
+                                var m6i = {
+                                    "4": 0,
+                                    "3": 0,
+                                    "20": 0,
+                                    "7": 0,
+                                    "23": +'0',
+                                    "5": 0,
+                                    "1": 0,
+                                    "2": 0,
+                                    "6": 0,
+                                    "24": "0" >>
+                                        1660515104,
+                                    "22": 0,
+                                    "0": 0,
+                                    "21": 0
+                                };
+                                E6k.y6();
+                                if ($(__s[3647])
+                                    .prop(__s[286]) == !!{})
+                                    m6i[0] = 1;
+                                if ($(__s[6095])
+                                    .prop(__s["286" | 24]) == !!{})
+                                    m6i[1] = 1;
+                                if ($(_s('2407' & E6k
+                                    .s6s))
+                                    .prop(__s[286]) == !!"1")
+                                    m6i[2] = 1;
+                                if ($(_s(+"4643"))
+                                    .prop(__s[286]) == !![])
+                                    m6i[3] = 1;
+                                if ($(_s('6313' |
+                                    6312))
+                                    .prop(__s[286]) == !"")
+                                    m6i[4] = 1;
+                                if ($(_s("3525" <<
+                                    1447609376))
+                                    .prop(__s[286]) == !!{})
+                                    m6i[5] = 1;
+                                if ($(__s[782])
+                                    .prop(__s[286]) == !!{})
+                                    m6i[6] = 1;
+                                if ($(_s(+'6455'))
+                                    .prop(__s[286]) == !!"1")
+                                    m6i[7] = 1;
+                                m6i[+u6y] = Math.abs(Number($(__s['3601' | 2065])
+                                    .val()));
+                                m6i[+A5y] = Math.abs(Number($(__s[6915])
+                                    .val()));
+                                m6i[j6y & 2147483647] = Math.abs(Number($(__s[5314])
+                                    .val()));
+                                m6i[+F8y] = Math.abs(Number($(__s[2242])
+                                    .val()));
+                                m6i[24] = Math.abs(Number($(__s[6863])
+                                    .val()));
+                                var a6i = $.post("/includes/god.php", {
+                                    a: 1,
+                                    b: JSON
+                                        .stringify(m6i)
                                 });
-                                $(__s[7080])
-                                    .off("click");
-                                $(__s[7080])
-                                    .click(function () {
-                                    var m6i = {
-                                        "4": 0,
-                                        "3": 0,
-                                        "20": 0,
-                                        "7": 0,
-                                        "23": +'0',
-                                        "5": 0,
-                                        "1": 0,
-                                        "2": 0,
-                                        "6": 0,
-                                        "24": "0" >>
-                                            1660515104,
-                                        "22": 0,
-                                        "0": 0,
-                                        "21": 0
-                                    };
-                                    E6k.y6();
-                                    if ($(__s[3647])
-                                        .prop(__s[286]) == !!{})
-                                        m6i[0] = 1;
-                                    if ($(__s[6095])
-                                        .prop(__s["286" | 24]) == !!{})
-                                        m6i[1] = 1;
-                                    if ($(_s('2407' & E6k
-                                        .s6s))
-                                        .prop(__s[286]) == !!"1")
-                                        m6i[2] = 1;
-                                    if ($(_s(+"4643"))
-                                        .prop(__s[286]) == !![])
-                                        m6i[3] = 1;
-                                    if ($(_s('6313' |
-                                        6312))
-                                        .prop(__s[286]) == !"")
-                                        m6i[4] = 1;
-                                    if ($(_s("3525" <<
-                                        1447609376))
-                                        .prop(__s[286]) == !!{})
-                                        m6i[5] = 1;
-                                    if ($(__s[782])
-                                        .prop(__s[286]) == !!{})
-                                        m6i[6] = 1;
-                                    if ($(_s(+'6455'))
-                                        .prop(__s[286]) == !!"1")
-                                        m6i[7] = 1;
-                                    m6i[+u6y] = Math.abs(Number($(__s['3601' | 2065])
-                                        .val()));
-                                    m6i[+A5y] = Math.abs(Number($(__s[6915])
-                                        .val()));
-                                    m6i[j6y & 2147483647] = Math.abs(Number($(__s[5314])
-                                        .val()));
-                                    m6i[+F8y] = Math.abs(Number($(__s[2242])
-                                        .val()));
-                                    m6i[24] = Math.abs(Number($(__s[6863])
-                                        .val()));
-                                    var a6i = $.post("/includes/god.php", {
-                                        a: 1,
-                                        b: JSON
-                                            .stringify(m6i)
-                                    });
-                                });
-                                $(__s[4061])
-                                    .off("click");
-                                $(__s[4061])
-                                    .click(function () {
-                                    $(__s[3647])
-                                        .prop(__s[286], !1);
-                                    $(__s["6095" | 1346])
-                                        .prop(__s[286], !!"");
-                                    $(__s[2407])
-                                        .prop(__s['286' | 20], !{});
-                                    $(__s[4643])
-                                        .prop(__s[286], !!0);
-                                    $(__s[6313])
-                                        .prop(__s[286], !!0);
-                                    $(__s[3525])
-                                        .prop(__s[286], !!"");
-                                    $(__s[782])
-                                        .prop(__s[286], !!"");
-                                    $(__s[6455])
-                                        .prop(__s[286], !1);
-                                    $(__s[1626])
-                                        .prop(__s[286], !1);
-                                    $(__s[3601])
-                                        .val(0);
-                                    $(__s[6915])
-                                        .val(0);
-                                    $(__s[5314])
-                                        .val(0);
-                                    $(__s[2242])
-                                        .val(0);
-                                    $(__s[6863])
-                                        .val(0);
-                                });
-                            }
-                        });
-                    }
-                    else
-                        $(__s[4206])
-                            .remove();
-                });
-        });
+                            });
+                            $(__s[4061])
+                                .off("click");
+                            $(__s[4061])
+                                .click(function () {
+                                $(__s[3647])
+                                    .prop(__s[286], !1);
+                                $(__s["6095" | 1346])
+                                    .prop(__s[286], !!"");
+                                $(__s[2407])
+                                    .prop(__s['286' | 20], !{});
+                                $(__s[4643])
+                                    .prop(__s[286], !!0);
+                                $(__s[6313])
+                                    .prop(__s[286], !!0);
+                                $(__s[3525])
+                                    .prop(__s[286], !!"");
+                                $(__s[782])
+                                    .prop(__s[286], !!"");
+                                $(__s[6455])
+                                    .prop(__s[286], !1);
+                                $(__s[1626])
+                                    .prop(__s[286], !1);
+                                $(__s[3601])
+                                    .val(0);
+                                $(__s[6915])
+                                    .val(0);
+                                $(__s[5314])
+                                    .val(0);
+                                $(__s[2242])
+                                    .val(0);
+                                $(__s[6863])
+                                    .val(0);
+                            });
+                        }
+                    });
+                }
+                else
+                    $(__s[4206])
+                        .remove();
+            }
+        };
         function z4V() {
             var v79 = $(__s[+L4R])
                 .val();
@@ -68689,7 +68687,7 @@ function errorgo_(j_) {
         $(c_).remove();
     }, 6000);
     const wrapper = { error: j_ };
-    window['external']['notify'](JSON.stringify(wrapper));
+    window['chrome']['webview']['postMessage'](wrapper);
 }
 function addToAttackSender(tid) {
     let tempx = Number(tid % 65536);
@@ -68844,7 +68842,7 @@ function sendCityData(delayInMs) {
         if (city.hasOwnProperty('ble') && city.ble.length > 0) {
             wrapper.citydata.ble = city.ble;
         }
-        window['external']['notify'](JSON.stringify(wrapper));
+        window['chrome']['webview']['postMessage'](wrapper);
         clearTimeout(updateTimeout);
         let counc = document.getElementById("warcouncbox");
         if (counc !== null && counc.style !== null && counc.style.display === "") {
@@ -68870,7 +68868,7 @@ function sendBuildingData() {
         wrapper.citydata.bd = city.bd;
     }
     if (any)
-        window['external']['notify'](JSON.stringify(wrapper));
+        window['chrome']['webview']['postMessage'](wrapper);
 }
 function sendchat(channel, message) {
     __c.sendchat(+channel, message);
@@ -68995,8 +68993,8 @@ function onKeyDown(ev) {
     let wrapper = {
         keyDown: { key: ev.key, alt: ev.altKey, shift: ev.shiftKey, control: ev.ctrlKey }
     };
-    let str = JSON.stringify(wrapper);
-    setTimeout(() => window['external']['notify'](str), 0);
+    let str = wrapper;
+    setTimeout(() => window['chrome']['webview']['postMessage'](str), 0);
 }
 window['getOGA'] = function () {
     return JSON.stringify(OGA);
@@ -69007,8 +69005,8 @@ function onKeyUp(ev) {
     let wrapper = {
         keyUp: { key: ev.key, alt: ev.altKey, shift: ev.shiftKey, control: ev.ctrlKey }
     };
-    let str = JSON.stringify(wrapper);
-    setTimeout(() => window['external']['notify'](str), 0);
+    let str = wrapper;
+    setTimeout(() => window['chrome']['webview']['postMessage'](str), 0);
 }
 function canvasMouseDown(ev) {
     let wrapper = {
@@ -69016,7 +69014,7 @@ function canvasMouseDown(ev) {
             button: ev.button, alt: ev.altKey, shift: ev.shiftKey, control: ev.ctrlKey, x: ev.clientX, y: ev.clientY
         }
     };
-    window['external']['notify'](JSON.stringify(wrapper));
+    window['chrome']['webview']['postMessage'](wrapper);
 }
 let underMouse = null;
 function postMouseEvent(sx, sy, eventName, button, dx, dy) {
@@ -69067,7 +69065,7 @@ function postppdt() {
             ppdt: ppdt
         };
         let wrapper = { jsvars: creds };
-        window['external']['notify'](JSON.stringify(wrapper));
+        window['chrome']['webview']['postMessage'](wrapper);
     }
     catch (e) {
     }
@@ -69614,7 +69612,7 @@ function avactor() {
         else {
         }
         const wrapper = { cityclick: it };
-        window['external']['notify'](JSON.stringify(wrapper));
+        window['chrome']['webview']['postMessage'](wrapper);
     });
     setTimeout(() => {
         $("<style type='text/css'> .ava{ width: auto; line-height:100%; table-layout: auto;text-align: center;padding-top:0px;padding-left:0px;border-width:1px;margin-left:0px } </style>").appendTo("head");
@@ -69946,7 +69944,7 @@ function avactor() {
             const wrapper = {
                 aexp: Aexp
             };
-            window['external']['notify'](JSON.stringify(wrapper));
+            window['chrome']['webview']['postMessage'](wrapper);
         });
         $("#Aimport").click(function () {
             $("body").append(expwin);

@@ -80,7 +80,7 @@ namespace COTG.Game
 				return rv;
 			}
 		}
-		public int postQueueTownHallLevel => postQueueBuildings[bspotTownHall].bl;
+		public int postQueueTownHallLevel => CityBuild.isPlanner switch { true => 10, _ => postQueueBuildings[bspotTownHall].bl };
 		//	public int postQueueBuildingCount => postQueueBuildings.Count(c => c.requiresBuildingSlot);
 
 		public async Task<bool> BuildWallDialogue()
@@ -143,7 +143,7 @@ namespace COTG.Game
 
 		public async Task Build(int id, int bid, bool dryRun, bool wantUI)
 		{
-			var sel = GetBuildingPostQueue(id);
+			var sel = GetBuildingOrLayout(id);
 			if (bid != bidWall && !sel.isEmpty && !SettingsPage.extendedBuild) // special case, wall upgrade from level is allowed as a synonym for build
 			{
 				Status("Spot is occupied", dryRun);
@@ -223,7 +223,7 @@ namespace COTG.Game
 					if (isPlanner)
 					{
 						layout[id] = BidToLayout(bid).c;
-						PlannerTab.BuildingsChanged();
+						PlannerTab.BuildingsChanged(this);
 					}
 					else
 					{
@@ -309,10 +309,10 @@ namespace COTG.Game
 		}
 		public async Task Demolish(int id, bool dryRun)
 		{
-			var sel = GetBuildingPostQueue(id);
+			var sel = GetBuildingOrLayout(id);
 			if (sel.isEmpty)
 			{
-				Status("Already destoryed", dryRun);
+				Status("Already destroyed", dryRun);
 			}
 			else
 			{
@@ -328,7 +328,7 @@ namespace COTG.Game
 					if (isPlanner)
 					{
 						layout[id] = BidToLayout(0).c;
-						PlannerTab.BuildingsChanged();
+						PlannerTab.BuildingsChanged(this);
 					}
 					else
 					{
@@ -450,9 +450,14 @@ namespace COTG.Game
 			return Demolish(XYToId(building), dryRun);
 		}
 
-		public Building GetBuildingPostQueue(int spot)
+		//public Building GetBuildingPostQueue(int spot)
+		//{
+		//	return postQueueBuildings[spot];
+
+		//}
+		public Building GetBuildingOrLayout(int spot)
 		{
-			return postQueueBuildings[spot];
+			return isPlanner ? BuildingFromOverlay(spot) : postQueueBuildings[spot];
 
 		}
 
@@ -506,7 +511,7 @@ namespace COTG.Game
 		{
 			int rv = 0;
 			var bspot = XYToId(cc);
-			var b = GetBuildingPostQueue(bspot);
+			var b = GetBuildingOrLayout(bspot);
 			var desB = BuildingDef.all[desBid];
 			var desName = desB.Bn;
 			if (BuildingDef.IsBidRes(desBid))
@@ -525,7 +530,7 @@ namespace COTG.Game
 			var putTo = -1;
 			var putScore = 0;
 
-			if (searchForSpare && !isPlanner && isLayoutValid && usesSpot)
+			if (searchForSpare && !isPlanner && isLayoutCustom && usesSpot)
 			{
 				// See if there are spare buildings that we can take
 				for (int xy = 1; xy < City.citySpotCount - 1; ++xy)
@@ -576,10 +581,10 @@ namespace COTG.Game
 				// Do we want a building here?
 				if (desBid != 0)
 				{
-					if (b.isRes)
+					if (b.isRes || isPlanner)
 					{
 
-						Status($"Destorying {b.def.Bn} to make way for {desName}", dryRun);
+						Status($"Destroying {b.def.Bn} to make way for {desName}", dryRun);
 
 
 						await Demolish(cc, dryRun);
@@ -601,7 +606,7 @@ namespace COTG.Game
 							return -1;
 						return rv;
 					}
-					if (counts.townHallLevel < desB.Thl || (counts.buildingCount == counts.max && counts.townHallLevel < 10))
+					if ((counts.townHallLevel < desB.Thl || (counts.buildingCount == counts.max && counts.townHallLevel < 10)))
 					{
 						var level = (counts.buildingCount / 10 + 1).Max(b.def.Thl).Min(10);
 						if (dryRun)
@@ -616,7 +621,7 @@ namespace COTG.Game
 							++rv; // not exact
 						}
 					}
-					else if (counts.buildingCount >= 100 && !desB.isTower && !desB.isWall)
+					else if ( counts.buildingCount >= 100 && !desB.isTower && !desB.isWall)
 					{
 						if (!desB.isCabin && desBid != 0)
 						{
@@ -945,7 +950,6 @@ namespace COTG.Game
 					if (!dryRun)
 					{
 						AUtil.Swap(ref bds[b], ref bds[a]);
-						if (!isPlanner)
 						{
 							rv = await Move(a, b);
 
@@ -955,11 +959,7 @@ namespace COTG.Game
 							BuildingsOrQueueChanged();
 							await Task.Delay(200);
 						}
-						else
-						{
-							AUtil.Swap(ref postQueuebuildingsCache[b], ref postQueuebuildingsCache[a]);
-							PlannerTab.BuildingsChanged();
-						}
+						
 						// I hope that these operations are what I expect with references
 
 					}
@@ -973,7 +973,7 @@ namespace COTG.Game
 				if (!dryRun)
 				{
 					layout[b] = layout[a];
-					PlannerTab.BuildingsChanged();
+					PlannerTab.BuildingsChanged(this);
 
 				}
 				return true;
@@ -1061,7 +1061,7 @@ namespace COTG.Game
 				if (!dryRun)
 				{
 					AUtil.Swap(ref layout[a], ref layout[b]);
-					PlannerTab.BuildingsChanged();
+					PlannerTab.BuildingsChanged(this);
 				}
 				return true;
 

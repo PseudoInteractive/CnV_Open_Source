@@ -28,7 +28,7 @@ namespace COTG.Views
 			{
 				await CityBuild._IsPlanner(true,false);
 				statsDirty = true;
-				BuildingsChanged();
+				BuildingsChanged(City.GetBuild(),false);
 			}
 			else
 			{
@@ -110,15 +110,15 @@ namespace COTG.Views
 
 		//}
 
-		static int GetScore( City city,(int x,int y) xy, int bid, int militaryBid )
+		static int GetScore(Building[] layoutB, Building[]cityB ,(int x,int y) xy, int bid, int militaryBid )
 		{
 			int id = XYToId(xy);
 			var rv = 0;
-			if (city.buildings[id].bid == bid)
+			if (cityB[id].bid == bid)
 				rv+=2;
-			else if (city.buildings[id].isEmpty)
+			else if (cityB[id].isEmpty)
 				rv += 1;
-			else if (city.buildings[id].isRes)
+			else if (cityB[id].isRes)
 				rv -= 4;
 
 			for(int x=-1;x<=1;++x)
@@ -131,7 +131,7 @@ namespace COTG.Views
 					if (!IsValidCityCoord(cc1))
 						continue;
 
-					var bid1 = city.BidFromOverlay(XYToId(cc1));
+					var bid1 = layoutB[XYToId(cc1)].bid;
 					if (bid1==0)
 						continue;
 					if (IsResHelper(bid))
@@ -176,6 +176,7 @@ namespace COTG.Views
 															 	    (-1, 1),       (1, 1) };
 		public static Task UpdateStats()
 		{
+			//SetShareStrongFromLayout();
 			if (!IsVisible())
 			  return Task.CompletedTask;
 			statsDirty = false;
@@ -368,11 +369,19 @@ namespace COTG.Views
 		}
 		public static Debounce PleaseRefresh = new (PlannerTab.UpdateStats) { runOnUiThead = true };
 
-		internal static void BuildingsChanged()
+		internal static void BuildingsChanged(City city, bool wasWritten=true)
 		{
-			CityView.BuildingsOrQueueChanged();
-			statsDirty = true;
-			PleaseRefresh.Go();
+			Assert(City.emptyLayout.GetHashCode() == City.emptyLayoutHashCode);
+
+			if(wasWritten)
+				city.SaveShareStringFromLayout();
+
+			if(city.cid == City.build)
+			{
+				CityView.BuildingsOrQueueChanged();
+				statsDirty = true;
+				PleaseRefresh.Go();
+			}
 		}
 
 		private void ShareStringClick(object sender, RoutedEventArgs e)
@@ -401,7 +410,7 @@ namespace COTG.Views
 
 				}
 			}
-			PlannerTab.BuildingsChanged();
+			PlannerTab.BuildingsChanged(city,true);
 			// SaveLayout();
 		}
 
@@ -410,14 +419,17 @@ namespace COTG.Views
 		{
 			Assert(CityBuild.isPlanner);
 			await CityBuild._IsPlanner(true);
-
-			GetBuild().FlipLayoutH(App.IsKeyPressedControl());
+			var city = GetBuild();
+			city.FlipLayoutH(App.IsKeyPressedControl());
+			PlannerTab.BuildingsChanged(city,true);
 		}
 		private async void FlipVClick(object sender, RoutedEventArgs e)
 		{
 			Assert(CityBuild.isPlanner);
 			await CityBuild._IsPlanner(true);
-			GetBuild().FlipLayoutV(App.IsKeyPressedControl());
+			var city = GetBuild();
+			city.FlipLayoutV(App.IsKeyPressedControl());
+			PlannerTab.BuildingsChanged(city,true);
 		}
 
 		struct AllowedToMove
@@ -428,15 +440,15 @@ namespace COTG.Views
 		}
 
 
-		static int CountResOverlaps( ref AllowedToMove allowed)
+		static int CountResOverlaps(Building [] overlay, Building[] bds,  ref AllowedToMove allowed)
 		{
-			var city = City.GetBuild();
+//			var city = City.GetBuild();
 			int rv = 0;
 			//var bdc = city.layout;
-			var bds = city.postQueueBuildings;
+		//	var bds = city.postQueueBuildings;
 			for(int i=0;i<citySpotCount;++i)
 			{
-				var des = city.BuildingFromOverlay(i);
+				var des = overlay[i];
 				var bdBid = des.bid;
 				// these ones can be arranged
 			
@@ -481,18 +493,18 @@ namespace COTG.Views
 			if (!wasPlanner)
 				await CityBuild._IsPlanner(true);
 		
-			Assert(city.isLayoutValid);
-			var bdc = city.GetLayoutBuildings();
+			Assert(city.isLayoutCustom);
+			var layoutB = city.GetLayoutBuildings();
 			var bds = city.postQueueBuildings;
 
-			var bc = city.GetBuildingCounts(bdc);
+			var bc = city.GetBuildingCounts(layoutB);
 
 			var hasInvalid = false;
 			int resHelpers = 0;
 			{
 				for (int id = 0; id < City.citySpotCount; ++id)
 				{
-					var bid = bdc[id].bid;
+					var bid = layoutB[id].bid;
 					if (bid != 0 && bid != bidShipyard && bid != bidPort )
 					{
 						if (CityBuild.IsWaterSpot(id))
@@ -505,6 +517,8 @@ namespace COTG.Views
 			if(hasInvalid&& city.isOnWater)
 			{
 				city.FlipLayoutH(true);
+				buildingCache.Return(layoutB);
+				layoutB=city.GetLayoutBuildings();
 			}
 
 			var allowed = new AllowedToMove() { sorc = bc.sorcTowers == 1, storage = (resHelpers == 0) };
@@ -512,13 +526,13 @@ namespace COTG.Views
 			var milBid = bc.GetMainMilitaryBid();
 
 			// first try flips
-			var overlap0 = CountResOverlaps(ref allowed);
+			var overlap0 = CountResOverlaps(layoutB, bds,ref allowed);
 			city.FlipLayoutH();
-			var overlap1 = CountResOverlaps(ref allowed);
+			var overlap1 = CountResOverlaps(layoutB,bds,ref allowed);
 			city.FlipLayoutV();
-			var overlap2 = CountResOverlaps(ref allowed);
+			var overlap2 = CountResOverlaps(layoutB,bds,ref allowed);
 			city.FlipLayoutH();
-			var overlap3 = CountResOverlaps(ref allowed);
+			var overlap3 = CountResOverlaps(layoutB,bds,ref allowed);
 			if( overlap0 <= overlap1 && overlap0 <= overlap2 &&overlap0 <= overlap3)
 			{
 				city.FlipLayoutH(); // 0 is best one is best
@@ -537,6 +551,9 @@ namespace COTG.Views
 			else 
 			{
 			}
+			buildingCache.Return(layoutB);
+			layoutB=city.GetLayoutBuildings();
+			
 			Note.Show("Flipped layout to reduce overlaps");
 
 			for (int x = span0; x <= span1; ++x)
@@ -544,7 +561,7 @@ namespace COTG.Views
 				for (int y = span0; y <= span1; ++y)
 				{
 					var bdId = XYToId((x, y));
-					var bd = bdc[bdId];
+					var bd = layoutB[bdId];
 					// correct building is here, leave it
 					if (bds[bdId].id == bd.id)
 						continue;
@@ -571,7 +588,7 @@ namespace COTG.Views
 
 						//if ( bds[bdId].isRes)
 						{
-							var score = GetScore(city, (x,y), bd.bid, milBid);
+							var score = GetScore(layoutB, bds, (x,y), bd.bid, milBid);
 
 							// move to a non res spot
 							for (int r = 1;r< citySpan; ++r)
@@ -584,19 +601,19 @@ namespace COTG.Views
 										if (!((x0 == x - r) || (x0 == x + r) || (y0 == y - r) || (y0 == y + r)))
 											continue;
 										var id1 = XYToId((x0, y0));
-										if (bdc[id1].isBuilding)
+										if (layoutB[id1].isBuilding)
 											continue;
 										if (!CityBuild.IsBuildingSpot(id1))
 										{
 											continue;
 										}
 
-										var score1 = GetScore(city,(x0, y0), bd.bid, milBid);
+										var score1 = GetScore(layoutB,bds,(x0, y0), bd.bid, milBid);
 										if(score1 > score)
 										{
 
 											Note.Show($"Moving {bd.def.Bn} from a res node to an empty spot");
-											AUtil.Swap(ref bdc[bdId], ref bdc[id1]);
+											AUtil.Swap(ref layoutB[bdId], ref layoutB[id1]);
 											foundOne = true;
 											break;
 										}
@@ -613,15 +630,18 @@ namespace COTG.Views
 					}
 				}
 			}
-			Note.Show($"Moved buildings to reduce overlaps: { CountResOverlaps(ref allowed)} overlaps remain");
-			if (wasPlanner == false && revertIsPlanner)
-				await CityBuild._IsPlanner(false);
-			for(int i=0;i<City.citySpotCount;++i)
+			Note.Show($"Moved buildings to reduce overlaps, final layout match score: {CountResOverlaps(layoutB, bds, ref allowed) }");
+			city.TouchLayoutForWrite();
+
+			for(int i = 0;i<City.citySpotCount;++i)
 			{
-				city.layout[i] = BidToLayout(bdc[i].bid).c;
+				city.layout[i] = BidToLayout(layoutB[i].bid).c;
 			}
-			CityView.BuildingsOrQueueChanged();
-			City.buildingCache.Return(bdc);
+			City.buildingCache.Return(layoutB);
+
+			BuildingsChanged(city);
+			if(wasPlanner == false && revertIsPlanner)
+				await CityBuild._IsPlanner(false);
 		}
 
 		private static bool IsResHelper(int bid)
@@ -652,25 +672,11 @@ namespace COTG.Views
 			Rotate(City.GetBuild(),false, true);
 		}
 
-		private void UseBuildingsClick(object sender, RoutedEventArgs e)
+		private void UseBuildingsClick(object sender,RoutedEventArgs e)
 		{
-			// copy buildings to buildingCache
-			var b = City.GetBuild();
-			var layout = b.EnsureLayoutCustom();
-			var bds = b.buildings;
-			var rv = new Building[citySpotCount];
-			for (int i = 0; i < citySpotCount; ++i)
-			{
-				var bd = bds[i];
-				if (bd.requiresBuildingSlot && !bd.isCabin)
-				{
-					layout[i] = BidToLayout(bd.bid).c;
-				}
-			
-			}
-		//	buildingsCache = rv;
-		//	b.BuildingsCacheToShareString();
-			CityView.BuildingsOrQueueChanged();
+			var s = City.GetBuild();
+			s.SetLayoutFromBuildings(s.postQueueBuildings,false);
+
 		}
 	}
 }

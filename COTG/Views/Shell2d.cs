@@ -201,7 +201,7 @@ namespace COTG.Views
 			{
 				// DpiScale = SettingsPage.dpiScale != 0 ? SettingsPage.dpiScale : (dpiLimit / DisplayInformation.GetForCurrentView().LogicalDpi).Min(1.0f),
 				Name = "Region",
-				IsHitTestVisible = true,
+				IsHitTestVisible = false,
 				Visibility = Visibility.Visible,
 				// IsTabStop = true, UseSharedDevice = true, TargetElapsedTime =
 				// TimeSpan.FromSeconds(1.0f / 60.0f),
@@ -322,7 +322,7 @@ namespace COTG.Views
 					{
 						CityBuild.testFlag ^= true;
 						Note.Show("Test: " + testFlag);
-						JSClient.view.InvokeScriptAsync("setTestFlag", new[] { (testFlag ? "1" : "0") });
+						JSClient.view.ExecuteScriptAsync($"setTestFlag({(testFlag ? "1" : "0")}");
 					}
 					break;
 			}

@@ -63,7 +63,7 @@ function errorgo_(j_) {
 		$(c_).remove();
 	}, 6000);
 	const wrapper = { error: j_ }
-	window['external']['notify'](JSON.stringify(wrapper));
+	window['chrome']['webview']['postMessage'](wrapper);
 }
 
 
@@ -472,7 +472,7 @@ function sendCityData(delayInMs) {
 			wrapper.citydata.ble = city.ble;
 		}
 
-		window['external']['notify'](JSON.stringify(wrapper));
+		window['chrome']['webview']['postMessage'](wrapper);
 		clearTimeout(updateTimeout);
 		let counc = document.getElementById("warcouncbox");
 		if (counc !== null && counc.style !== null && counc.style.display === "") {
@@ -505,7 +505,7 @@ function sendBuildingData() {
 			wrapper.citydata.bd = city.bd;
 		}
 		if(any)
-			window['external']['notify'](JSON.stringify(wrapper));
+			window['chrome']['webview']['postMessage'](wrapper);
 }
 function sendchat(channel:string,message:string)
 {
@@ -789,7 +789,7 @@ function UpdateResearchAndFaith(): void {
 		ttCombatBonus[17] = 1; // no combat research for senator
 
 	//	let wrapper = { speedBonus: ttSpeedBonus, combatBonus: ttCombatBonus }
-	//	window['external']['notify'](JSON.stringify(wrapper));
+	//	window['chrome']['webview']['postMessage'](wrapper);
 
 	}
 	catch(e) {
@@ -859,8 +859,8 @@ function onKeyDown(ev: KeyboardEvent) {
 	let wrapper = {
 		keyDown: { key: ev.key, alt: ev.altKey, shift: ev.shiftKey, control: ev.ctrlKey }
 	};
-	let str = JSON.stringify(wrapper);
-	setTimeout(()=> window['external']['notify'](str),0);
+	let str = wrapper;
+	setTimeout(()=> window['chrome']['webview']['postMessage'](str),0);
 }
 
 window['getOGA'] = function () {
@@ -883,8 +883,8 @@ function onKeyUp(ev: KeyboardEvent) {
 	let wrapper = {
 		keyUp: { key: ev.key, alt: ev.altKey, shift: ev.shiftKey, control: ev.ctrlKey }
 	};
-	let str = JSON.stringify(wrapper);
-	setTimeout(() => window['external']['notify'](str), 0);
+	let str = wrapper;
+	setTimeout(() => window['chrome']['webview']['postMessage'](str), 0);
 }
 
 
@@ -895,7 +895,7 @@ function canvasMouseDown(ev: MouseEvent ) {
 			button: ev.button, alt: ev.altKey, shift: ev.shiftKey, control: ev.ctrlKey, x: ev.clientX, y: ev.clientY
 		}
 	}
-	window['external']['notify'](JSON.stringify(wrapper));
+	window['chrome']['webview']['postMessage'](wrapper);
 }
 
 // i.e. "click"
@@ -960,6 +960,7 @@ function postppdt()
 			top: mainMapDiv.clientTop,
 			timeoffset: (ServerDate.getTime() - Date.now()),
 			agent: navigator.userAgent,
+			cookie: document.cookie,
 			ppdt:ppdt
 		};
 
@@ -968,7 +969,7 @@ function postppdt()
 //		if (city != null)
 //			wrapper['citydata'] = city;
 
-		window['external']['notify'](JSON.stringify(wrapper));
+		window['chrome']['webview']['postMessage'](wrapper);
 		//OptimizeAjax();
 	} catch (e) {
 	//	console.log("Notify failed");
@@ -1010,7 +1011,7 @@ function GetDate(jq: string) {
 //	if (i >= 10000) {
 //		console.log("done");
 //		const wrapper = { stable: stringTable }
-//		window['external']['notify'](JSON.stringify(wrapper));
+//		window['chrome']['webview']['postMessage'](wrapper);
 //	} else {
 //		console.log(i);
 //		setTimeout(() => BuildStringTable(i), 100);
@@ -1729,7 +1730,7 @@ function avactor() {
 			//console.log(mru);
 			//localStorage.setItem("mru", JSON.stringify(mru));
 			const wrapper = { cityclick: it }
-			window['external']['notify'](JSON.stringify(wrapper));
+			window['chrome']['webview']['postMessage'](wrapper);
 
 		
 	});
@@ -2263,7 +2264,7 @@ function avactor() {
 			const wrapper = {
 				aexp: Aexp
 			};
-			window['external']['notify'](JSON.stringify(wrapper));
+			window['chrome']['webview']['postMessage'](wrapper);
 
     //        var aa=prompt("Attack Orders Expot", JSON.stringify(Aexp));
 

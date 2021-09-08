@@ -265,7 +265,7 @@ namespace COTG.Draw
 							DrawBuilding(iAlpha,zBase,fontScale,cs,bd,Layer.tileCity,-1,-1,bidOverride);
 						}
 						// draw overlays
-						if(build.isLayoutValid && SettingsPage.drawBuildingOverlays)
+						if(build.isLayoutCustom && SettingsPage.drawBuildingOverlays)
 						{
 							int bid, currentBid;
 							//	BuildingDef bd;

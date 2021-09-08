@@ -168,8 +168,8 @@ namespace COTG.Views
 					// todo: copy text 
 					var city = City.GetOrAdd(cid);
 
-					if (CityBuild.isPlanner)
-						city.BuildingsCacheToShareString();
+				//	if (CityBuild.isPlanner)
+				//		city.BuildingsCacheToShareString();
 
 					await res.InitTradeSettings(city,bestHub,city.isHubOrStorage ? 0 : bestHub);
 
@@ -259,7 +259,7 @@ namespace COTG.Views
 							city.SetShareString(GetShareStringWithJson(),true);
 						}
 					}
-					if (SettingsPage.autoRearrangeShareStrings && setLayout && City.Get(cid).isLayoutValid )
+					if (SettingsPage.autoRearrangeShareStrings && setLayout && City.Get(cid).isLayoutCustom )
 					{
 						await PlannerTab.SmartRearrange(City.GetBuild(),true);
 					}
@@ -319,7 +319,7 @@ namespace COTG.Views
 		private void UseBuildingsClick(object sender, RoutedEventArgs e)
 		{
 			var s = City.GetBuild();
-			shareString.Text=City.BuildingsToShareString(s.buildings,s.isOnWater);
+			shareString.Text=City.BuildingsToShareString(s.postQueueBuildings,s.isOnWater);
 		}
 		public void SetCheckboxesFromTags(string remarks)
 		{

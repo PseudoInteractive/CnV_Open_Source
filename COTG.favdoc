@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Favorites xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <folders />
+  <favorites>
+    <Favorite>
+      <name>JSClient.cs</name>
+      <path>COTG\Models\JSClient.cs</path>
+      <absolutePath>C:\Source\COTG\COTG\Models\JSClient.cs</absolutePath>
+      <position>
+        <line>500</line>
+        <column>3</column>
+        <lineHash>vevbrGI2+oAHOTsYrEF81cHyuntIdK0olal244B472U=</lineHash>
+      </position>
+    </Favorite>
+  </favorites>
+</Favorites>

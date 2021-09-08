@@ -7447,7 +7447,7 @@ function DoSyncViewMode() {
 					wrapper.c['c'] = _cid;
 					_cid=0;
 				}
-				window['external']['notify'](JSON.stringify(wrapper));
+				window['chrome']['webview']['postMessage'](wrapper);
 			}
 		}
 	} catch (exc) {
@@ -7516,7 +7516,7 @@ function setStayAlive(on) {
 
 function PostChatIn(c) {
 	const wrapper = { chatin: c }
-	window['external']['notify'](JSON.stringify(wrapper));
+	window['chrome']['webview']['postMessage'](wrapper);
 }
 I0rr(X0rr());
 I0VV(u0VV());
@@ -9457,7 +9457,7 @@ function ppdtChanged(__ppdt) {
 	// console.log("Update ppdt");
 	setTimeout(() => {
 	
-		window['external']['notify'](JSON.stringify(wrapper));
+		window['chrome']['webview']['postMessage'](wrapper);
 	}	, 300);
 }
 
@@ -12898,7 +12898,7 @@ function outer(){
 							 sendBuildingData();
 							}
 					const wrapper = { snd: "{}" }
-					window['external']['notify'](JSON.stringify(wrapper));
+					window['chrome']['webview']['postMessage'](wrapper);
 
 				});
 			}
@@ -17883,7 +17883,7 @@ function outer(){
 	 				let wrapper = { setglobals: {secret:raidSecret,pid:P8,pn:H2,ppdt:ppdt,token:token,s:cookie,cid:_cid } };
   //	send back the raid secret and ppdt
 	
-					window['external']['notify'](JSON.stringify(wrapper));
+					window['chrome']['webview']['postMessage'](wrapper);
 	
  // I am not sure if this unblock even works
  
@@ -17900,7 +17900,7 @@ function outer(){
 					raidSecret = Q3F();
 
 					let wrapper = { restoreglobals: { s:s} };
-					 window['external']['notify'](JSON.stringify(wrapper));
+					 window['chrome']['webview']['postMessage'](wrapper);
 			//	send back the raid secret and ppdt
 	
 					
@@ -18672,7 +18672,7 @@ function outer(){
 			J2(); 
 		
 			let wrapper = { ppdt: ppdt };
-			window['external']['notify'](JSON.stringify(wrapper));
+			window['chrome']['webview']['postMessage'](wrapper);
 		
 
 		}, 1000);
@@ -20336,7 +20336,7 @@ function outer(){
 					var M3V = JSON.parse(G3V.data);
 
 					const wrapper = { "chat": M3V };
-					window['external']['notify'](JSON.stringify(wrapper));
+					window['chrome']['webview']['postMessage'](wrapper);
 					l6F(M3V);
 				};
 				websocket.onclose = function () {
@@ -22929,24 +22929,24 @@ function outer(){
 				.append(a6n);
 			i6F(E6n, k2n);
 			const wrapper = { error: e2n }
-			window['external']['notify'](JSON.stringify(wrapper));
+			window['chrome']['webview']['postMessage'](wrapper);
 
 		}
 
 		function __log(message:string) {
 			const wrapper = { error: "cotg_wtf: " + message }
-			window['external']['notify'](JSON.stringify(wrapper));
+			window['chrome']['webview']['postMessage'](wrapper);
 
 		}
 		function LogBuildQueueFull() {
 			const wrapper = { error: "Build queue full" }
-			window['external']['notify'](JSON.stringify(wrapper));
+			window['chrome']['webview']['postMessage'](wrapper);
 
 		}
 
 		function __logBuild( err ) {
 			const wrapper = { buildFail: err }
-			window['external']['notify'](JSON.stringify(wrapper));
+			window['chrome']['webview']['postMessage'](wrapper);
 
 		}
 
@@ -34374,7 +34374,7 @@ function outer(){
 				hasSentAldt = true;
 			//	console.log("Aldt!!!");
 				const wrapper = { aldt: aldt }
-				window['external']['notify'](JSON.stringify(wrapper));
+				window['chrome']['webview']['postMessage'](wrapper);
 				//   incommingfilterInit();
 				//   mailcitycoordsInit();
 
@@ -35897,7 +35897,7 @@ function outer(){
 			if(__cid != cid)
 			{
 				const wrapper = { error: "Please press the refresh button." };
-				window['external']['notify'](JSON.stringify(wrapper));
+				window['chrome']['webview']['postMessage'](wrapper);
 				return;
 			}
 			t7F(_action);
@@ -39248,7 +39248,7 @@ function outer(){
 					 let wrapper = {
 					cmd: M2n
 					};
-					window['external']['notify'](JSON.stringify(wrapper));
+					window['chrome']['webview']['postMessage'](wrapper);
 				}
 				else
 				 {
@@ -42397,7 +42397,7 @@ function outer(){
 			let wrapper = {
 				shcit: Number(cid)
 			};
-			window['external']['notify'](JSON.stringify(wrapper));
+			window['chrome']['webview']['postMessage'](wrapper);
 
 		}
 
@@ -43972,7 +43972,7 @@ function outer(){
 			let wrapper = {
 				copyclip: a9V
 			};
-			window['external']['notify'](JSON.stringify(wrapper));
+			window['chrome']['webview']['postMessage'](wrapper);
 
 			var m9V = a9V;
 			$(__s[5398])
@@ -44482,7 +44482,7 @@ function outer(){
 				let wrapper = {
 					rmp: U76
 				};
-				window['external']['notify'](JSON.stringify(wrapper));
+				window['chrome']['webview']['postMessage'](wrapper);
 
 
 						for (let P76 in U76) {
@@ -48763,7 +48763,7 @@ function outer(){
 						let wrapper = {
 							gstempty: { water: h36, cid: rcid, res: L36 }
 						};
-						window['external']['notify'](JSON.stringify(wrapper));
+						window['chrome']['webview']['postMessage'](wrapper);
 					}
 				}
 
@@ -48834,7 +48834,7 @@ function outer(){
 							wrapper.gstcb.k = JSON.parse(a16);
 
 
-							window['external']['notify'](JSON.stringify(wrapper));
+							window['chrome']['webview']['postMessage'](wrapper);
 
 						});
 					
@@ -51356,7 +51356,7 @@ function outer(){
 					let wrapper = {
 						sub: 1
 					};
-					window['external']['notify'](JSON.stringify(wrapper));
+					window['chrome']['webview']['postMessage'](wrapper);
 
 					//  newWin.location = window.location.href + __s[1093];
 					//  newWin.focus();
@@ -54684,7 +54684,7 @@ function outer(){
 				hasSentAldt = true;
 			//	console.log("Aldt!!!");
 				const wrapper = { aldt: 0 }
-				window['external']['notify'](JSON.stringify(wrapper));
+				window['chrome']['webview']['postMessage'](wrapper);
 	
 				}
 			} else if (!(j11 == 1)) {
@@ -58819,7 +58819,7 @@ function outer(){
 							lastTroopsHome = troopsHome
 						}
 						//  const wrapper = { OGA: o71 }
-						//  window['external']['notify'](JSON.stringify(wrapper));
+						//  window['chrome']['webview']['postMessage'](wrapper);
 						// }
 					}else
 
@@ -58882,7 +58882,7 @@ function outer(){
 						//if(L71.length > 0)
 						//{
 						//    const wrapper = { OGT: L71 }
-						//    window['external']['notify'](JSON.stringify(wrapper));
+						//    window['chrome']['webview']['postMessage'](wrapper);
 						//    }
 					}
 					if (pollJ.hasOwnProperty('OGR')) {
@@ -58891,7 +58891,7 @@ function outer(){
 						//if(X71.length > 0)
 						//{
 						//  const wrapper = { OGR: X71 }
-						//  window['external']['notify'](JSON.stringify(wrapper));
+						//  window['chrome']['webview']['postMessage'](wrapper);
 						// }
 					}
 				}
@@ -59011,7 +59011,7 @@ function outer(){
 							wrapper.citydata.cid = cid;
 							wrapper.citydata.pid = city.pid; // in some cases this is not ours
 						}
-						window['external']['notify'](JSON.stringify(wrapper));
+						window['chrome']['webview']['postMessage'](wrapper);
 					}
 				}
 			}
@@ -60077,7 +60077,7 @@ function outer(){
 		function sendPPDT()
   {
 			let wrapper = { ppdt: ppdt };
-			window['external']['notify'](JSON.stringify(wrapper));
+			window['chrome']['webview']['postMessage'](wrapper);
 
   }
 
@@ -70451,7 +70451,7 @@ function outer(){
 
 				{
 					const wrapper = { gPlA: pldata }
-					window['external']['notify'](JSON.stringify(wrapper));
+					window['chrome']['webview']['postMessage'](wrapper);
 				}
 			});
 		}
@@ -70725,9 +70725,9 @@ function outer(){
 							});
 						} else $(__s[4206])
 							.remove();
-					});
+					}
 			};
-
+   
 		function z4V() {
 			var v79 = $(__s[+L4R])
 				.val();
@@ -70750,7 +70750,11 @@ function outer(){
 				$(__s[+J3m])
 					.text(o79);
 			});
-		}
+	}
+   
+
+   
+		
 
 		function v9F() {
 			N6();

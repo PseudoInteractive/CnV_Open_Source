@@ -60,7 +60,7 @@ namespace COTG.Views
 
 		public static TextBlock gridTip;
 
-		public static ScrollViewer webView;
+//		public static ScrollViewer webView;
 
 		private static DateTime workStarted;
 		private static readonly List<string> workQueue = new List<string>();
@@ -236,11 +236,11 @@ namespace COTG.Views
 			// Placement.LayoutUpdated += Placement_LayoutUpdated; grid.Children.Add(img);
 
 			// Grid.SetRowSpan(img, 4); Grid.SetColumnSpan(img, 4); Canvas.SetZIndex(img, 12);
-			var webView = JSClient.Initialize(grid);
+			await JSClient.Initialize(grid,webView);
 			// foreach (var i in webView.KeyboardAccelerators) i.IsEnabled = false;
 			// webView.AllowFocusOnInteraction = false; c.hitTest.Margin= webView.Margin = new
 			// Thickness(0, 0, 11, 0);
-			grid.Children.Add(webView);
+	//		grid.Children.Add(webView);
 
 
 			
@@ -256,11 +256,11 @@ namespace COTG.Views
 			// 0); Grid.SetRowSpan(shellFrame, 6); shellFrame.Margin = new Thickness(13, 0, 0, 0);
 			// Canvas.SetZIndex(shellFrame, 3);
 
-			Grid.SetColumn(webView, 0);
-			Grid.SetRow(webView, 1);
-			Grid.SetRowSpan(webView, 5);
-			Grid.SetColumnSpan(webView, 2);
-			Canvas.SetZIndex(webView, 10);
+	//		Grid.SetColumn(webView, 0);
+	//		Grid.SetRow(webView, 1);
+	//		Grid.SetRowSpan(webView, 5);
+	//		Grid.SetColumnSpan(webView, 2);
+	//		Canvas.SetZIndex(webView, 10);
 			
 	//		webView.Scale = new Vector3(SettingsPage.htmlZoom.Squared() * 2.0f + 0.5f);
 
@@ -591,7 +591,17 @@ namespace COTG.Views
 			}
 			await task0;
 		}
-
+		public void NukeWebView()
+		{
+			if(webView!=null)
+			{
+				var _w = webView;
+				webView=null;
+			//	grid.Children.Remove(_w);
+				_w.Close();
+				//webView = null;
+			}
+		}
 		public static void RefreshAndReloadWorldData()
 		{
 			using var work = new WorkScope("Refresh..");
@@ -1283,30 +1293,32 @@ namespace COTG.Views
 					try
 					{
 
-						var spanXY = int.Parse(await JSClient.view.InvokeScriptAsync("eval", new string[] { "(document.body.clientWidth+document.body.clientHeight*65536).toString()" }));
-						var spanY = spanXY>>16;
-						var spanX = spanXY&0xffff;
-						//					var _webViewScale = new Vector2( 
-						//						(float)(JSClient.view.ActualWidth / spanX),
-						//						(float)(JSClient.view.ActualHeight/ spanY));
+					//	var scale = webView.C
+					//	var scale = JSClient.coreWebView.core;
+						//var spanXY = int.Parse(await JSClient.view.ExecuteScriptAsync("(document.body.clientWidth+document.body.clientHeight*65536).toString()" ));
+						//var spanY = spanXY>>16;
+						//var spanX = spanXY&0xffff;
+						////					var _webViewScale = new Vector2( 
+						////						(float)(JSClient.view.ActualWidth / spanX),
+						////						(float)(JSClient.view.ActualHeight/ spanY));
 						var displayWidth =   grid.ColumnDefinitions.Take(2).Sum(a=>a.ActualWidth);
 						var displayHeight = grid.RowDefinitions.Skip(1).SkipLast(1).Sum((a) => a.ActualHeight) + canvasBaseYUnscaled- canvasHtmlYOffset;
-						var _webViewScale = new Vector2((float)displayWidth / spanX,
-														(float)displayHeight/ spanY );
+						//var _webViewScale = new Vector2((float)displayWidth / spanX,
+						//								(float)displayHeight/ spanY );
 						AGame.SetClientSpan(grid.ColumnDefinitions[1].ActualWidth,displayHeight);
-						if((_webViewScale - webViewScale).Length() <= (1.0f / 64f) )
-							return;
-						webViewScale = _webViewScale;
-						canvasBaseX = (canvasBaseXUnscaled);//.RoundToInt();
-						canvasBaseY = (canvasTitleYOffset + canvasBaseYUnscaled-canvasTitleYOffset);//.RoundToInt();
-						if (canvas != null && grid != null)
-						{
-						//	App.DispatchOnUIThreadIdle(() =>
-						//	{
-								grid.ColumnDefinitions[0].Width = new GridLength(ShellPage.canvasBaseX, GridUnitType.Pixel);
-								canvas.Margin = new Thickness(0, canvasBaseY, 0, 0);
-						//	});
-						}
+						//if((_webViewScale - webViewScale).Length() <= (1.0f / 64f) )
+						//	return;
+						//webViewScale = _webViewScale;
+						//canvasBaseX = (canvasBaseXUnscaled);//.RoundToInt();
+						//canvasBaseY = (canvasTitleYOffset + canvasBaseYUnscaled-canvasTitleYOffset);//.RoundToInt();
+						//if (canvas != null && grid != null)
+						//{
+						////	App.DispatchOnUIThreadIdle(() =>
+						////	{
+						//		grid.ColumnDefinitions[0].Width = new GridLength(ShellPage.canvasBaseX, GridUnitType.Pixel);
+						//		canvas.Margin = new Thickness(0, canvasBaseY, 0, 0);
+						////	});
+						//}
 					}
 					catch (Exception ex)
 					{
@@ -1348,53 +1360,53 @@ namespace COTG.Views
 			flyout.ShowAt(chatGrid, e.GetPosition(chatGrid));
 		}
 
-		private async void CookieClick(object sender, RoutedEventArgs e)
-		{
-			var content = new StackPanel();
-			var text = new TextBox() { Header = "remember_me", PlaceholderText="01245..." };
-//			var text2 = new TextBox() { Header = "sec_session_id", PlaceholderText = "06..." };
-			var clear  = new CheckBox() { Content = "Clear Cookie", IsChecked=false };
+//		private async void CookieClick(object sender, RoutedEventArgs e)
+//		{
+//			var content = new StackPanel();
+//			var text = new TextBox() { Header = "remember_me", PlaceholderText="01245..." };
+////			var text2 = new TextBox() { Header = "sec_session_id", PlaceholderText = "06..." };
+//			var clear  = new CheckBox() { Content = "Clear Cookie", IsChecked=false };
 
-			AAnalytics.Track("CookieClick");
-			content.Children.Add(text);
-	//		content.Children.Add(text2);
-			content.Children.Add(clear);
+//			AAnalytics.Track("CookieClick");
+//			content.Children.Add(text);
+//	//		content.Children.Add(text2);
+//			content.Children.Add(clear);
 
-			var dialog = new ContentDialog()
-			{
-				Title = "Cookie",
-				Content = content,
-				PrimaryButtonText = "Apply",
-				CloseButtonText = "Cancel"
-			};
-			var rv = await dialog.ShowAsync();
-			if (rv == ContentDialogResult.Primary)
-			{
-				if( clear.IsChecked.GetValueOrDefault())
-				{
-					JSClient.httpFilter.ClearAuthenticationCache();
-					WebView.ClearTemporaryWebDataAsync();
-					JSClient.ClearAllCookies();
-				}
-				else if(!text.Text.IsNullOrEmpty()) 
-				{
-					JSClient.SetCookie("remember_me", text.Text);
-					//	JSClient.SetCookie("_ttw", "2ebd127595739638f691d800afb6d9a2cb44f03b");
-					//	JSClient.SetCookie("CotG", "a%3A4%3A%7Bi%3A0%3Bs%3A5%3A%2239311%22%3Bi%3A1%3Bs%3A40%3A%220578a77365184184d96859fd54cb78925d962139%22%3Bi%3A2%3Bi%3A1626898500%3Bi%3A3%3Bi%3A0%3B%7D");
-					//	_ttw = 062667a5a7767056ae099f43a2f6d4e24fd015fb; expires = Mon, 20 - Sep - 2021 19:44:58 GMT; Max - Age = 7776000; path =/; domain =.crownofthegods.com; secure; httponly
+//			var dialog = new ContentDialog()
+//			{
+//				Title = "Cookie",
+//				Content = content,
+//				PrimaryButtonText = "Apply",
+//				CloseButtonText = "Cancel"
+//			};
+//			var rv = await dialog.ShowAsync();
+//			if (rv == ContentDialogResult.Primary)
+//			{
+//				if( clear.IsChecked.GetValueOrDefault())
+//				{
+//					JSClient.httpFilter.ClearAuthenticationCache();
+//					Microsft.UI.Xaml.WebView2.ClearTemporaryWebDataAsync();
+//					JSClient.ClearAllCookies();
+//				}
+//				else if(!text.Text.IsNullOrEmpty()) 
+//				{
+//					JSClient.SetCookie("remember_me", text.Text);
+//					//	JSClient.SetCookie("_ttw", "2ebd127595739638f691d800afb6d9a2cb44f03b");
+//					//	JSClient.SetCookie("CotG", "a%3A4%3A%7Bi%3A0%3Bs%3A5%3A%2239311%22%3Bi%3A1%3Bs%3A40%3A%220578a77365184184d96859fd54cb78925d962139%22%3Bi%3A2%3Bi%3A1626898500%3Bi%3A3%3Bi%3A0%3B%7D");
+//					//	_ttw = 062667a5a7767056ae099f43a2f6d4e24fd015fb; expires = Mon, 20 - Sep - 2021 19:44:58 GMT; Max - Age = 7776000; path =/; domain =.crownofthegods.com; secure; httponly
 
-					//				WebView.ClearTemporaryWebDataAsync();
-		//			JSClient.SetCookie("sec_session_id", text2.Text);
-				}
-			//	SettingsPage.secSessionId = text2.Text;
-			//	SettingsPage.SaveAll();
+//					//				WebView.ClearTemporaryWebDataAsync();
+//		//			JSClient.SetCookie("sec_session_id", text2.Text);
+//				}
+//			//	SettingsPage.secSessionId = text2.Text;
+//			//	SettingsPage.SaveAll();
 
 
-				await App.DoYesNoBox("Cookie set","Cookies", "Okay", null, "Okay");
-				if(!clear.IsChecked.GetValueOrDefault())
-					JSClient.view.Refresh();
-			}
-		}
+//				await App.DoYesNoBox("Cookie set","Cookies", "Okay", null, "Okay");
+//				if(!clear.IsChecked.GetValueOrDefault())
+//					JSClient.view.Refresh();
+//			}
+//		}
 
 		private void FilterRightTapped(object sender, RightTappedRoutedEventArgs e)
 		{

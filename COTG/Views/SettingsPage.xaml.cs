@@ -817,7 +817,7 @@ namespace COTG.Views
 						{
 							var cityId = (x, y).WorldToCid();
 							await App.DispatchOnUIThreadTask( async () =>
-							  await JSClient.view.InvokeScriptAsync("gStQuery", new string[] { (cityId).ToString() })
+							  await JSClient.ExecuteScriptAsync("gStQuery", (cityId).ToString() )
 							  );
 							
 						}

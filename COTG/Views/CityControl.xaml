@@ -2,7 +2,7 @@
     x:Class="COTG.Views.CityControl"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:COTG.Views"
+    xmlns:views="using:COTG.Views"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
@@ -13,10 +13,20 @@
 		<Grid.ColumnDefinitions>
 			<ColumnDefinition Width="{StaticResource GridRowHeight}" />
 			<ColumnDefinition Width="auto" />
+			<ColumnDefinition Width="auto" />
 		</Grid.ColumnDefinitions>
+		
 		<Image Source= "{x:Bind icon, Mode=OneWay}" Tapped="Image_Tapped" RightTapped="Image_RightTapped" HorizontalAlignment="Center"
                                             
                      Stretch="Uniform" VerticalAlignment="Center"  />
-		<TextBlock Grid.Column="1" Text="{x:Bind name, Mode=OneWay}" Tapped="TextBlock_Tapped" IsHitTestVisible="True" />
+		<AutoSuggestBox Grid.Column="1" Text="{x:Bind name}" 
+						Header="City"
+						PlaceholderText="None Selected"
+						TextChanged="{x:Bind views:PlayerGroup.CityNameSuggest_TextChanged}"
+						
+						AutomationProperties.Name="cityBoxName"
+						ToolTipService.ToolTip="Enter City Name to Search.."
+						/>
+		<ToggleSwitch Grid.Column="2" x:Name="useAll" Header="Include" OnContent="Everyone's" OffContent="Mine" ToolTipService.ToolTip="'Everyones' includes all cities, to specify someone else's city add the '- [playerName]' to the end, note this may be slow" />
 	</Grid>
 </UserControl>

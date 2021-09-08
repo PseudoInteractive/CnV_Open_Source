@@ -5,7 +5,6 @@
     xmlns:game="using:COTG.Game"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:cotg="using:COTG"
-              xmlns:winui="using:Windows.UI.Xaml.Controls"
                xmlns:tk="using:Microsoft.Toolkit.Uwp.UI.Controls"
                xmlns:views="using:COTG.Views"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"

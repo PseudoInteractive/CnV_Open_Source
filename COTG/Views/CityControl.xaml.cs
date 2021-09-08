@@ -61,5 +61,16 @@ namespace COTG.Views
 			if (cc?.city != null)
 				cc.city.ShowContextMenu(image, e.GetPosition(image));
 		}
+
+		
+		private void CityName_SuggestionChosen(AutoSuggestBox sender,AutoSuggestBoxSuggestionChosenEventArgs args)
+		{
+			if(Spot.TryGet(args.SelectedItem as string,useAll.IsOn,out var _city))
+			{
+				this.city = _city;
+				OnPropertyChanged();
+		
+			}
+		}
 	}
 }

@@ -62,7 +62,7 @@ namespace COTG.Services
 			try
 			{
 				
-					var json = JsonDocument.Parse(await AsStream(resp), jsonParseOptions);
+					var json = JsonDocument.Parse(await AsArray(resp), jsonParseOptions);
 					ProcessJson(json);
 					return true;
 				
@@ -102,11 +102,17 @@ namespace COTG.Services
 
 		//}
 
-		private static async Task<Stream> AsStream(HttpResponseMessage resp)
+		//private static async Task<Stream> AsStream(HttpResponseMessage resp)
+		//{
+		//	var buffer = await resp.Content.ReadAsBufferAsync();
+
+		//	return (buffer).AsStream();
+		//}
+		private static async Task<byte[]> AsArray(HttpResponseMessage resp)
 		{
 			var buffer = await resp.Content.ReadAsBufferAsync();
 
-			return (buffer).AsStream();
+			return (buffer).ToArray();
 		}
 
 		public static async Task<string> AcceptText(HttpResponseMessage resp, bool except=false)
@@ -130,7 +136,7 @@ namespace COTG.Services
 
 			try
 			{
-				return JsonDocument.Parse(await AsStream(resp));
+				return JsonDocument.Parse(await AsArray(resp));
 
 			}
 			catch (Exception e)
@@ -144,7 +150,7 @@ namespace COTG.Services
 		{
 			try
 			{
-				return JsonSerializer.Deserialize<T>(await AsStream(resp), Json.jsonSerializerOptions);
+				return JsonSerializer.Deserialize<T>(await AsArray(resp), Json.jsonSerializerOptions);
 
 			}
 			catch (Exception e)
@@ -225,7 +231,7 @@ namespace COTG.Services
 								"application/x-www-form-urlencoded");
 					//req.TransportInformation.
 					req.Content.Headers.TryAppendWithoutValidation("Content-Encoding", JSClient.PlayerToken(pid));
-
+					req.Headers.Cookie.ParseAdd(JSClient.cookies); 
 
 					//                req.Headers.Append("Sec-Fetch-Site", "same-origin");
 					//    req.Headers.Append("Sec-Fetch-Mode", "cors");
@@ -338,7 +344,7 @@ namespace COTG.Services
 
 		//async public void Post2()
 		//{
-		//    var a = await JSClient.view.InvokeScriptAsync("avapost", new string[] { "includes/gWrd.php",
+		//    var a = await JSClient.view.ExecuteScriptAsync("avapost", new string[] { "includes/gWrd.php",
 		//        "a=tgLyUZYF5F6ynQjCp3FXJOZ6ElUHXPUygineE33LuF2eDHwB%2FWH8MWY%2FA2CM%2FIra7fwRRCRKZzB1BMW826w6Cq2jSWL6%2FH64owys4lIv" });
 		//    Log(a);
 		//}

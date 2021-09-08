@@ -3,16 +3,18 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
 using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
 using Windows.Web.Http;
-using WebView = Windows.UI.Xaml.Controls.WebView;
+using WebView = Microsoft.UI.Xaml.Controls.WebView2;
 using static COTG.Debug;
 using Windows.System;
+using Microsoft.Web.WebView2.Core;
 
 namespace COTG.Views
 {
-    public sealed partial class WebViewPage : Page, INotifyPropertyChanged
+    public sealed partial class WebViewPage :Windows.UI.Xaml.Controls.Page, INotifyPropertyChanged
     {
         // TODO WTS: Set the URI of the page to show by default
         public static Uri DefaultUrl;// = "https://docs.microsoft.com/windows/apps/";
@@ -85,43 +87,18 @@ namespace COTG.Views
         }
 
         public string stringTable;
-		internal static Uri post;
+		internal static CoreWebView2WebResourceRequest post;
 
-		async private void OnNavigationCompleted(WebView sender, WebViewNavigationCompletedEventArgs args)
-        {
-            IsLoading = false;
-            OnPropertyChanged(nameof(IsBackEnabled));
-            OnPropertyChanged(nameof(IsForwardEnabled));
+	
 
-//            stringTable = await webView.InvokeScriptAsync("eval", new [] {
-// 	"let stringTable = []; "+
-//    "for (let i = 0; i < 1000; ++i) { "+
-//    "	let x = ''; "+
-//    "	try { "+
-//    "		x = o0FF.y5u(i) || x; "+
-//    "	} "+
-//"		catch (e) { "+
-//"		} "+
-//"		stringTable.push(x); "+
-//"	} "+
-//"	JSON.stringify(stringTable); "
-
-//            });
-//            Log(stringTable);
-        }
-
-        private void OnNavigationFailed(object sender, WebViewNavigationFailedEventArgs e)
-        {
-            // Use `e.WebErrorStatus` to vary the displayed message based on the error reason
-            IsShowingFailedMessage = true;
-        }
+    
 
         private void OnRetry(object sender, RoutedEventArgs e)
         {
             IsShowingFailedMessage = false;
             IsLoading = true;
 
-            webView.Refresh();
+            webView.Reload();
         }
 
         public bool IsBackEnabled
@@ -146,7 +123,7 @@ namespace COTG.Views
 
         private void OnRefresh(object sender, RoutedEventArgs e)
         {
-            webView.Refresh();
+            webView.Reload();
         }
 
         private async void OnOpenInBrowser(object sender, RoutedEventArgs e)
@@ -160,23 +137,24 @@ namespace COTG.Views
             IsLoading = true;
      //       Assert(instance == null);
             instance = this;
-			webView.ContentLoading += WebView_ContentLoading;
-			webView.ScriptNotify += WebView_ScriptNotify;
-			webView.DOMContentLoaded += WebView_DOMContentLoaded;
-            webView.PermissionRequested += WebView_PermissionRequested;
-			webView.UnsafeContentWarningDisplaying += WebView_UnsafeContentWarningDisplaying;
-			webView.UnsupportedUriSchemeIdentified += WebView_UnsupportedUriSchemeIdentified;
-			webView.UnviewableContentIdentified += WebView_UnviewableContentIdentified;
-			webView.NewWindowRequested += WebView_NewWindowRequested;
+			//webView.CoreWebView2.ContentLoading += WebView_ContentLoading;
+			//webView.CoreWebView2.IsWeb += WebView_ScriptNotify;
+			//		webView.DOMContentLoaded += WebView_DOMContentLoaded;
+			webView.CoreWebView2.PermissionRequested+=CoreWebView2_PermissionRequested;
+			webView.NavigationCompleted+=WebView_NavigationCompleted;
+			//		webView.UnsafeContentWarningDisplaying += WebView_UnsafeContentWarningDisplaying;
+			//	webView.UnsupportedUriSchemeIdentified += WebView_UnsupportedUriSchemeIdentified;
+			//webView.UnviewableContentIdentified += WebView_UnviewableContentIdentified;
+			webView.CoreWebView2.NewWindowRequested+=CoreWebView2_NewWindowRequested;
 			if(post != null)
 			{
 				var p = post;
 				post = null;
-				using (var req = new HttpRequestMessage(HttpMethod.Post, new Uri(p.OriginalString)))
+				//using (var req = onew CoreWebView2WebResourceRequest(HttpMethod.Post, new Uri(p.OriginalString)))
 				{
 					
 
-					webView.NavigateWithHttpRequestMessage(req);
+					webView.CoreWebView2.NavigateWithWebResourceRequest(p);
 
 				}
 			}
@@ -188,57 +166,43 @@ namespace COTG.Views
 			}
 		}
 
-		private void WebView_PermissionRequested(WebView sender, WebViewPermissionRequestedEventArgs args)
-            {
-            Log("Permission");
-            args.PermissionRequest.Allow();
-            }
-
-        private void WebView_NewWindowRequested(WebView sender, WebViewNewWindowRequestedEventArgs args)
+		private void CoreWebView2_NewWindowRequested(Microsoft.Web.WebView2.Core.CoreWebView2 sender,Microsoft.Web.WebView2.Core.CoreWebView2NewWindowRequestedEventArgs args)
 		{
 			args.Handled = true;
 
-	//	Log(args.Uri.ToString());
-			Launcher.LaunchUriAsync(args.Uri);
+			//	Log(args.Uri.ToString());
+			Launcher.LaunchUriAsync(new Uri(args.Uri));
 		}
 
-		private async void WebView_UnviewableContentIdentified(WebView sender, WebViewUnviewableContentIdentifiedEventArgs args)
+		private void CoreWebView2_PermissionRequested(Microsoft.Web.WebView2.Core.CoreWebView2 sender,Microsoft.Web.WebView2.Core.CoreWebView2PermissionRequestedEventArgs args)
 		{
-            if (await Windows.System.Launcher.LaunchUriAsync(args.Uri))
-            {
-                Note.Show($"Launched {args.Uri}");
-            }
-            else
-            {
-                Note.Show($"Failed to launch {args.Uri}");
-            }
-        }
-
-		private void WebView_UnsupportedUriSchemeIdentified(WebView sender, WebViewUnsupportedUriSchemeIdentifiedEventArgs args)
-		{
-            Log("Todo");
+			Log("Permission " + args.PermissionKind);
+//			args.PermissionKindAllow();
 		}
 
-		private void WebView_UnsafeContentWarningDisplaying(WebView sender, object args)
+		private void WebView_NavigationCompleted(WebView sender,Microsoft.Web.WebView2.Core.CoreWebView2NavigationCompletedEventArgs args)
 		{
-            Log("Todo");
+			IsLoading = false;
+			OnPropertyChanged(nameof(IsBackEnabled));
+			OnPropertyChanged(nameof(IsForwardEnabled));
+
 		}
 
-		private void WebView_DOMContentLoaded(WebView sender, WebViewDOMContentLoadedEventArgs args)
-		{
-            Log("Todo");
-		}
+        
 
-		private void WebView_ScriptNotify(object sender, NotifyEventArgs e)
-		{
-            Log("Todo");
-		}
+		//private async void WebView_UnviewableContentIdentified(WebView sender, WebViewUnviewableContentIdentifiedEventArgs args)
+		//{
+  //          if (await Windows.System.Launcher.LaunchUriAsync(args.Uri))
+  //          {
+  //              Note.Show($"Launched {args.Uri}");
+  //          }
+  //          else
+  //          {
+  //              Note.Show($"Failed to launch {args.Uri}");
+  //          }
+  //      }
 
-		private void WebView_ContentLoading(WebView sender, WebViewContentLoadingEventArgs args)
-		{
-            Log("loading");
-		}
-       
+	
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -263,14 +227,7 @@ namespace COTG.Views
 
 		}
 
-		private void WebView_EffectiveViewportChanged(FrameworkElement sender, EffectiveViewportChangedEventArgs args)
-		{
 
-		}
 
-		private void WebView_SizeChanged(object sender, SizeChangedEventArgs e)
-		{
-
-		}
 	}
 }
