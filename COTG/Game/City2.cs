@@ -222,7 +222,8 @@ namespace COTG.Game
 				{
 					if (isPlanner)
 					{
-						layout[id] = BidToLayout(bid).c;
+
+						layoutWritable[id] = BidToLayout(bid).c;
 						PlannerTab.BuildingsChanged(this);
 					}
 					else
@@ -327,7 +328,7 @@ namespace COTG.Game
 				{
 					if (isPlanner)
 					{
-						layout[id] = BidToLayout(0).c;
+						layoutWritable[id] = BidToLayout(0).c;
 						PlannerTab.BuildingsChanged(this);
 					}
 					else
@@ -972,7 +973,7 @@ namespace COTG.Game
 
 				if (!dryRun)
 				{
-					layout[b] = layout[a];
+					layoutWritable[b] = layoutWritable[a];
 					PlannerTab.BuildingsChanged(this);
 
 				}
@@ -1060,7 +1061,7 @@ namespace COTG.Game
 				//Status($"Swap {bds[b].name} and {bds[a].name} ({Player.moveSlots} moves left) ", dryRun);
 				if (!dryRun)
 				{
-					AUtil.Swap(ref layout[a], ref layout[b]);
+					AUtil.Swap(ref layoutWritable[a], ref layoutWritable[b]);
 					PlannerTab.BuildingsChanged(this);
 				}
 				return true;

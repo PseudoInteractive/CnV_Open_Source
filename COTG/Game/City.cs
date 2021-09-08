@@ -436,7 +436,7 @@ namespace COTG.Game
 		//  public JsonElement troopsHome => !jsE.IsValid() ? jsE : jsE.GetProperty("th");
 		//  public JsonElement troopsTotal => !jsE.IsValid() ? jsE : jsE.GetProperty("tc");
 		public static byte[] emptyLayout = NewLayout(); // new byte[citySpotCount];
-		public int emptyLayoutHashCode = emptyLayout.GetHashCode();
+		public static int emptyLayoutHashCode = emptyLayout.GetHashCode();
 
 		public static string emptyLayoutString = ShareStringWithoutJson(NewLayout(),false); 
 		public byte[] layout = emptyLayout;
@@ -450,7 +450,18 @@ namespace COTG.Game
 			}
 			return rv;
 		}
-		
+		internal bool isLayoutCustom => !object.ReferenceEquals(layout,emptyLayout);
+		internal bool isLayoutEmpty => object.ReferenceEquals(layout,emptyLayout);
+
+		// can have side effects
+		public byte[] TouchLayoutForWrite()
+		{
+			if(isLayoutEmpty)
+				layout = NewLayout(); // we need a writable blank one
+			return layout;
+		}
+		// can have side effects
+		public byte[] layoutWritable => TouchLayoutForWrite();
 		//public static string[] NewString()
 		//{
 		//	return ShareStringWithoutJson(ShareStringWithoutJson,isOnWater);
@@ -1121,7 +1132,7 @@ namespace COTG.Game
 			//if (layout == null)
 			//	return;
 			Assert(CityBuild.isPlanner);
-			Assert(isLayoutCustom);
+			TouchLayoutForWrite(); 
 			var water = isOnWater && !ignoreWater;
 			for (int y = span0; y < 0; ++y)
 			{
@@ -1480,9 +1491,7 @@ namespace COTG.Game
 			}
 			return tradeInfo;
 		}
-		internal bool isLayoutCustom => !object.ReferenceEquals(layout,emptyLayout);
-		internal bool isLayoutEmpty => object.ReferenceEquals(layout,emptyLayout);
-
+		
 
 		public bool ComputeCartTravelTime(int target, out TimeSpan t)
 		{

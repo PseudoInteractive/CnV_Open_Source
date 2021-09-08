@@ -395,6 +395,7 @@ namespace COTG.Views
 			await CityBuild._IsPlanner(true);
 			//	if (layout == null)
 			//		return;
+			city.TouchLayoutForWrite();
 			var bc = city.layout.ToArray();
 			
 			Assert(CityBuild.isPlanner);
