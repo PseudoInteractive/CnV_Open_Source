@@ -164,6 +164,7 @@ namespace COTG.Views
 
 			ShellPage.coreInputSource.Dispatcher.TryRunAsync(CoreDispatcherPriority.Low,() =>
 			{
+
 				switch(action)
 			  {
 				  case Action.moveStart:

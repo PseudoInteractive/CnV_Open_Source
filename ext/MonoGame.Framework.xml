@@ -3385,11 +3385,6 @@
             Indicates if the game is the focused application.
             </summary>
         </member>
-        <member name="P:Microsoft.Xna.Framework.Game.IsMouseVisible">
-            <summary>
-            Indicates if the mouse cursor is visible on the game screen.
-            </summary>
-        </member>
         <member name="P:Microsoft.Xna.Framework.Game.TargetElapsedTime">
             <summary>
             The time between frames when running with a fixed time step. <seealso cref="P:Microsoft.Xna.Framework.Game.IsFixedTimeStep"/>
@@ -8504,6 +8499,11 @@
         <member name="F:Microsoft.Xna.Framework.Graphics.PrimitiveType.LineStrip">
             <summary>
             Renders the vertices as a single polyline; the count may be any positive integer.
+            </summary>
+        </member>
+        <member name="F:Microsoft.Xna.Framework.Graphics.PrimitiveType.PointList">
+            <summary>
+            Renders the vertices as individual points; the count may be any positive integer.
             </summary>
         </member>
         <member name="M:Microsoft.Xna.Framework.Graphics.VertexBuffer.GraphicsDeviceResetting">
@@ -17544,7 +17544,7 @@
             </summary>
             <param name="key">The key involved in this event</param>
         </member>
-        <member name="P:Microsoft.Xna.Framework.InputEvents.CoreCursor">
+        <member name="M:Microsoft.Xna.Framework.InputEvents.#ctor(Windows.UI.Core.CoreWindow,Windows.UI.Xaml.UIElement,Microsoft.Xna.Framework.Input.Touch.TouchQueue)">
             <summary>
             Sets the cursor of <see cref="T:Windows.UI.Core.CoreIndependentInputSource"/> thread
             </summary>

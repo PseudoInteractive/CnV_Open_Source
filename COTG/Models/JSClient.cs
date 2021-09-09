@@ -374,31 +374,31 @@ namespace COTG
 		//	//}
 		//}
 
-		public static void SetCookie(string name,string value,string domain = "crownofthegods.com",string path = "/")
-		{
-			var cookie = new HttpCookie(name,domain,path);
-			//		var remember = new HttpCookie("remember_me", ".crownofthegods.com", "/");
-			//if (httpOnly)
-			{
-				cookie.Secure = true;
-				cookie.HttpOnly = true;
-			}
+		//public static void SetCookie(string name,string value,string domain = "crownofthegods.com",string path = "/")
+		//{
+		//	var cookie = new HttpCookie(name,domain,path);
+		//	//		var remember = new HttpCookie("remember_me", ".crownofthegods.com", "/");
+		//	//if (httpOnly)
+		//	{
+		//		cookie.Secure = true;
+		//		cookie.HttpOnly = true;
+		//	}
 
-			//if (!session)
-			{
-				cookie.Expires = DateTimeOffset.UtcNow + TimeSpan.FromDays(64);
-			}
-			var cookieManager = httpFilter.CookieManager;
-			cookieManager.DeleteCookie(cookie);
-			//if (!clearOnly)
-			if(!value.IsNullOrEmpty())
-			{
-				cookie.Value = value;
-				cookieManager.SetCookie(cookie);
-			}
+		//	//if (!session)
+		//	{
+		//		cookie.Expires = DateTimeOffset.UtcNow + TimeSpan.FromDays(64);
+		//	}
+		//	var cookieManager = httpFilter.CookieManager;
+		//	cookieManager.DeleteCookie(cookie);
+		//	//if (!clearOnly)
+		//	if(!value.IsNullOrEmpty())
+		//	{
+		//		cookie.Value = value;
+		//		cookieManager.SetCookie(cookie);
+		//	}
 
 
-		}
+		//}
 		//	static string secSessionId;
 		static CoreWebView2WebResourceResponse jsFunkyEtc;
 
@@ -461,7 +461,7 @@ namespace COTG
 			httpFilter.IgnorableServerCertificateErrors.Add(Windows.Security.Cryptography.Certificates.ChainValidationResult.RevocationFailure);
 
 			httpFilter.AllowUI = true;
-		//	httpFilter.CookieUsageBehavior = HttpCookieUsageBehavior.NoCookies;
+			httpFilter.CookieUsageBehavior = HttpCookieUsageBehavior.NoCookies;
 
 
 			//	  HttpBaseProtocolFilter.CreateForUser( User.GetDefault());
@@ -509,7 +509,9 @@ namespace COTG
 				coreWebView.Settings.IsScriptEnabled=true;
 				coreWebView.Settings.IsPinchZoomEnabled =false;
 				coreWebView.Settings.IsZoomControlEnabled=false;
-			//	coreWebView.Settings.IsSwipeNavigationEnabled=false;
+				coreWebView.Settings.IsStatusBarEnabled=false;
+				coreWebView.Settings.AreBrowserAcceleratorKeysEnabled=false;
+				coreWebView.Settings.AreDefaultContextMenusEnabled=false;
 				
 //				coreWebView.Settings.AreBrowserAcceleratorKeysEnabled=false;
 				//coreWebView.AddWebResourceRequestedFilter("*jsfunctions/game.js",ResourceContext:CoreWebView2WebResourceContext.Script);
@@ -534,6 +536,8 @@ namespace COTG
 				//	webViewBrush = new WebViewBrush() { Stretch = Stretch.Fill };
 				view.GotFocus += View_GotFocus;
 				view.LostFocus += View_LostFocus; ;
+				view.AllowFocusOnInteraction=false;
+				
 				//   view.CacheMode = CacheMode.
 				//Grid.Se SetAlignLeftWithPanel(view, true);
 				//RelativePanel.SetAlignRightWithPanel(view, true);
@@ -1268,9 +1272,11 @@ namespace COTG
 		static string FormatJSArg<T>(T a) => a switch 
 		{
 			int i => i.ToString() , 
-			string s => '\n' + s + '\n',
-			_ => '\n'+a.ToString()+'\n' };
+			// simple string escaping
+			string s => '\"' + s.Replace("\"", "\\\"") + '\"' ,
+			_ => '\"'+a.ToString()+'\"' };
 
+		public static IAsyncOperation<string> ExecuteScriptAsync<T0>(string func,T0 arg0) => view.ExecuteScriptAsync($"{func}({FormatJSArg(arg0)})");
 		public static IAsyncOperation<string> ExecuteScriptAsync<T0,T1>(string func,T0 arg0,T1 arg1) => view.ExecuteScriptAsync($"{func}({FormatJSArg(arg0)},{FormatJSArg(arg1)})");
 		public static IAsyncOperation<string> ExecuteScriptAsync<T0, T1, T2>(string func,T0 arg0,T1 arg1, T2 arg2) =>
 			view.ExecuteScriptAsync($"{func}({FormatJSArg(arg0)},{FormatJSArg(arg1)},{FormatJSArg(arg2)})");
@@ -1913,7 +1919,7 @@ private static async void ShowCouncillorsMissingDialog()
 						//httpFilter = 
 						
 						//						if (subId == 0)
-						//							httpFilter.CookieUsageBehavior = HttpCookieUsageBehavior.NoCookies;// HttpCookieUsageBehavior.Default;
+					//	httpFilter.CookieUsageBehavior = HttpCookieUsageBehavior.NoCookies;// HttpCookieUsageBehavior.Default;
 						//						httpFilter.IgnorableServerCertificateErrors.Add(Windows.Security.Cryptography.Certificates.ChainValidationResult.IncompleteChain);
 						//						                    httpFilter.IgnorableServerCertificateErrors.Add(Windows.Security.Cryptography.Certificates.ChainValidationResult.InvalidCertificateAuthorityPolicy);
 						//          httpFilter.IgnorableServerCertificateErrors.Add(Windows.Security.Cryptography.Certificates.ChainValidationResult.OtherErrors);

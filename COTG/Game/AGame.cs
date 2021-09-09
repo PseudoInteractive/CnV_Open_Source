@@ -262,7 +262,7 @@ namespace COTG
 			IsFixedTimeStep = false;
 			_graphics.PreparingDeviceSettings += _graphics_PreparingDeviceSettings;
 			Content.RootDirectory = "Content";
-			IsMouseVisible = true;
+		//	IsMouseVisible = true;
 		}
 
 		private void _graphics_PreparingDeviceSettings(object sender, PreparingDeviceSettingsEventArgs e)

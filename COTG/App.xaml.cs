@@ -174,7 +174,7 @@ namespace COTG
 					{
 					}
 				}
-				ShellPage.instance.NukeWebView();
+			//	ShellPage.instance.NukeWebView();
 			
 			}
 			catch(Exception ext)
@@ -1466,10 +1466,18 @@ namespace COTG
 		{
 			// is this thread safe?
 			if(ShellPage.coreInputSource != null)
-				ShellPage.coreInputSource.PointerCursor = type;
-		}
-	}
+			{				
+				ShellPage.coreInputSource.Dispatcher.TryRunAsync(CoreDispatcherPriority.Normal,() =>
+				
+					ShellPage.coreInputSource.PointerCursor = type);
+			}
+		
 
+			App.DispatchOnUIThread( () =>
+				CoreWindow.GetForCurrentThread().PointerCursor = type);
+		}
+
+	}
 	public static class Note
 	{
 		static bool initialized = false;
@@ -1721,7 +1729,6 @@ namespace COTG
 			grid.PointerMoved -= ProcessTooltipsOnPointerMoved;
 			grid.PointerMoved += ProcessTooltipsOnPointerMoved;
 		}
+		
 	}
-
-
 }
