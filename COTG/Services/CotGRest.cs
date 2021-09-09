@@ -208,7 +208,7 @@ namespace COTG.Services
 		async public Task<HttpResponseMessage> Send(string postContent, bool except=true)
 		{
 			HttpClient client = null;
-			await JSClient.clientPoolSema.WaitAsync();
+			await JSClient.clientPoolSema.WaitAsync().ConfigureAwait(false);
 			try
 			{
 
@@ -220,7 +220,7 @@ namespace COTG.Services
 						break;
 					}
 					Assert(false);
-					await Task.Delay(128);
+					await Task.Delay(128).ConfigureAwait(false);
 				}
 				//				HttpResponseMessage resp;
 				var uri = new Uri(JSClient.httpsHost, localPath);
@@ -413,6 +413,32 @@ namespace COTG.Services
 		}
 
 	}
+	public class BuildEx:RestAPI
+	{
+		public string json;
+		public int cid;
+		public BuildEx(string _json,int _cid) : base("includes/nBuu.php",World.CidToPlayerOrMe(_cid))
+		{
+			//		Log($"sndRaid:{_json}");
+			cid = _cid;
+			json = _json;
+			//	restFlags &= ~RestFlags.track;
+		}
+		public override string GetPostContent()
+		{
+			var encoded = Aes.Encode(json,$"X2U11s33S{World.CidToPlayerOrMe(cid)}ccJx1e2");
+			//var encoded = Aes.Encode(json, $"XTR977sW{World.CidToPlayer(cid)}sss2x2");
+			var args = $"cid={cid}&a=" + HttpUtility.UrlEncode(encoded,Encoding.UTF8);
+			return args;
+		}
+
+		public override void ProcessJson(JsonDocument json)
+		{
+			Log($"Sent buildex {json?.RootElement.ToString()}");
+		}
+
+	}
+
 	public static class Recruit
 	{
 

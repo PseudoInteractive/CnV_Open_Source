@@ -188,7 +188,7 @@ namespace COTG.Game
 
 		//	public string buildStage => GetBuildStageNoFetch().ToString();
 
-		public static ArrayPool<Building> buildingCache = ArrayPool<Building>.Create(citySpotCount, citySpotCount);
+		//public static ArrayPool<Building> buildingCache = ArrayPool<Building>.Create(citySpotCount, citySpotCount);
 
 		//Building[] BuildingsFromLayout()
 		//{
@@ -499,7 +499,7 @@ namespace COTG.Game
 		public Building BuildingFromOverlay(int id)
 		{
 			var bid = BidFromOverlay(id);
-			return new Building(BidToId(bid), (IsBidRes(bid) ? (byte)0 : (byte)10) );
+			return new Building(BidToId(bid), (IsBidRes(bid)||(bid==0) ? (byte)0 : (byte)10) );
 		}
 		//public int LayoutToBid(byte v) => BuildingDef.LayoutToBid(v);
 		//public void SetBuildingInOverlay( (int x,int y) xy, int bid  )
@@ -1085,7 +1085,7 @@ namespace COTG.Game
 
 		public	 Building[] GetLayoutBuildings()
 		{
-			var rv = buildingCache.Rent(citySpotCount);
+			var rv = new Building[citySpotCount];
 			for (int s = 0; s < citySpotCount; ++s)
 			{
 					rv[s]=BuildingFromOverlay(s);
@@ -1101,7 +1101,7 @@ namespace COTG.Game
 
 		//}
 
-		public void FlipLayoutH(bool ignoreWater = false)
+		public void FlipLayoutH(bool notifyChange=false,bool ignoreWater=false)
 		{
 			//	if (layout == null)
 			//		return;
@@ -1123,11 +1123,12 @@ namespace COTG.Game
 					AUtil.Swap(ref layout[XYToId((x, y))], ref layout[XYToId((x1, y))]);
 				}
 			}
-			PlannerTab.BuildingsChanged(this);
+			if(notifyChange)
+				PlannerTab.BuildingsChanged(this);
 			// SaveLayout();
 		}
 
-		public void FlipLayoutV(bool ignoreWater = false)
+		public void FlipLayoutV( bool notifyChange=false,bool ignoreWater=false)
 		{
 			//if (layout == null)
 			//	return;
@@ -1148,7 +1149,8 @@ namespace COTG.Game
 					AUtil.Swap(ref layout[XYToId((x, y))], ref layout[XYToId((x, y1))]);
 				}
 			}
-			PlannerTab.BuildingsChanged(this);
+			if(notifyChange)
+				PlannerTab.BuildingsChanged(this);
 			///SaveLayout();
 		}
 
@@ -1628,59 +1630,59 @@ namespace COTG.Game
 			myCitiesCache = null;
 		}
 
-		public (int max, int count) CountBuildings(int cid, Span<BuildQueueItem> buildQueue)
-		{
-			var max = -1;
-			var count = 0;
+		//public (int max, int count) CountBuildings(int cid, Span<BuildQueueItem> buildQueue)
+		//{
+		//	var max = -1;
+		//	var count = 0;
 
-			foreach (var bi in buildings)
-			{
-				if (bi.id == 0 || bi.bl == 0)
-					continue;
-				var bd = bi.def;
-				if (bd.isTower || bd.isWall)
-				{
-					continue;
-				}
-				if (bd.isTownHall)
-				{
-					max = bi.bl * 10;
-					continue;
-				}
-				++count;
-			}
-			// process queue for new and deleted buildings
-			foreach (var r in buildQueue)
-			{
-				if (r.bid == 0)
-					continue;
+		//	foreach (var bi in buildings)
+		//	{
+		//		if (bi.id == 0 || bi.bl == 0)
+		//			continue;
+		//		var bd = bi.def;
+		//		if (bd.isTower || bd.isWall)
+		//		{
+		//			continue;
+		//		}
+		//		if (bd.isTownHall)
+		//		{
+		//			max = bi.bl * 10;
+		//			continue;
+		//		}
+		//		++count;
+		//	}
+		//	// process queue for new and deleted buildings
+		//	foreach (var r in buildQueue)
+		//	{
+		//		if (r.bid == 0)
+		//			continue;
 
-				if (r.isDemo)
-				{
-					var bd = BuildingDef.all[r.bid];
-					if (!(bd.isWall || bd.isTower || r.isRes))
-					{
-						--count;
-					}
+		//		if (r.isDemo)
+		//		{
+		//			var bd = BuildingDef.all[r.bid];
+		//			if (!(bd.isWall || bd.isTower || r.isRes))
+		//			{
+		//				--count;
+		//			}
 
-				}
-				else if (r.slvl == 0)
-				{
-					var bd = BuildingDef.all[r.bid];
-					if (!(bd.isWall || bd.isTower))
-					{
-						++count;
-					}
-				}
-				else if( r.bspot == bspotTownHall)
-				{
-					max = r.elvl * 10;
-				}
+		//		}
+		//		else if (r.slvl == 0)
+		//		{
+		//			var bd = BuildingDef.all[r.bid];
+		//			if (!(bd.isWall || bd.isTower))
+		//			{
+		//				++count;
+		//			}
+		//		}
+		//		else if( r.bspot == bspotTownHall)
+		//		{
+		//			max = r.elvl * 10;
+		//		}
 
-			}
-			return (max, count);
+		//	}
+		//	return (max, count);
 
-		}
+		//}
 
 
 	

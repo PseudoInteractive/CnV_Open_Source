@@ -50634,8 +50634,7 @@ function outer(){
 							slvl: E9g,
 							pa: 0
 						};
-						var H0w = _s(p8R <<
-							1591465440) + b2() + __s[+z8R];
+						var H0w="X2U11s33S"+b2()+"ccJx1e2";
 						var e0w = a6.ccazzx.encrypt(JSON.stringify(s0w), H0w, 256 & E6k
 							.s6s);
 						N6();
@@ -54496,7 +54495,7 @@ function outer(){
 										ds: L5w,
 										elvl: 0
 									};
-									var Q5w = __s[+p8R] + b2() + __s[z8R - 0];
+									var Q5w="X2U11s33S" + b2() + __s[z8R - 0];
 									var l5w = a6.ccazzx.encrypt(
 										JSON.stringify(T5w), Q5w, +256);
 									N6();++bqInFlight;
@@ -54595,6 +54594,10 @@ function outer(){
   // }
 
 	
+	//window['chrome'].webview.addEventListener('message', (json : object)=>
+ // {
+ // }
+   
 
   function processNextQueue()
   {

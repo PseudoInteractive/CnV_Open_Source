@@ -475,12 +475,11 @@ namespace COTG.Views
 			instance = new CityBuild();
 			buildMenu = new Windows.UI.Xaml.Controls.Flyout()
 			{
-				LightDismissOverlayMode = Windows.UI.Xaml.Controls.LightDismissOverlayMode.Auto,
+				LightDismissOverlayMode = Windows.UI.Xaml.Controls.LightDismissOverlayMode.Off,
 				ShowMode = FlyoutShowMode.Standard,
-				AreOpenCloseAnimationsEnabled = true,
-				AllowFocusOnInteraction = true,
 				Content = instance
 			};
+			
 
 	//		buildMenu.Closed += BuildMenu_Closed;
 			Style s = new Windows.UI.Xaml.Style { TargetType = typeof(Windows.UI.Xaml.Controls.FlyoutPresenter) };
@@ -1087,7 +1086,7 @@ namespace COTG.Views
 						if (!dryRun)
 						{
 							var city = GetBuild();
-							city.FlipLayoutH();
+							city.FlipLayoutH(true);
 
 
 						}
@@ -1125,7 +1124,7 @@ namespace COTG.Views
 				case Action.flipLayoutV:
 					{
 						if (!dryRun)
-							GetBuild().FlipLayoutV();
+							GetBuild().FlipLayoutV(true);
 						break;
 					}
 				case Action.none:
@@ -1301,7 +1300,7 @@ namespace COTG.Views
 			}
 			var d = b.def;
 			if (d.bid != 0)
-				JSClient.ExecuteScriptAsync("exBuildingInfo", d.bid.ToString(), b.bl.ToString(), bspot.ToString() );
+				JSClient.ExecuteScriptAsync("exBuildingInfo", d.bid, b.bl, bspot );
 
 			CityView.SetSelectedBuilding(cc, isSingleClickAction);
 

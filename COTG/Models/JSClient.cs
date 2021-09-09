@@ -508,12 +508,14 @@ namespace COTG
 				coreWebView.Settings.IsPasswordAutosaveEnabled=true;
 				coreWebView.Settings.IsScriptEnabled=true;
 				coreWebView.Settings.IsPinchZoomEnabled =false;
+				coreWebView.Settings.IsZoomControlEnabled=false;
+				coreWebView.Settings.IsSwipeNavigationEnabled=false;
+//				coreWebView.Settings.AreBrowserAcceleratorKeysEnabled=false;
 				//coreWebView.AddWebResourceRequestedFilter("*jsfunctions/game.js",ResourceContext:CoreWebView2WebResourceContext.Script);
 				coreWebView.AddWebResourceRequestedFilter(jsFunctionMask,ResourceContext: CoreWebView2WebResourceContext.Script);
 				coreWebView.WebResourceRequested += View_WebResourceRequested;
 				coreWebView.WebMessageReceived +=CoreWebView_WebMessageReceived;
 				//	view.EffectiveViewportChanged += View_EffectiveViewportChanged;
-
 				//	view.AddHandler(WebView.KeyDownEvent, new KeyEventHandler(webViewKeyDownHandler), true);
 				//	view.AddHandler(WebView.PointerPressedEvent, new PointerEventHandler(pointerEventHandler), true);
 				//	view.UnsafeContentWarningDisplaying += View_UnsafeContentWarningDisplaying;
@@ -524,7 +526,8 @@ namespace COTG
 				//	view.DOMContentLoaded += View_DOMContentLoaded;
 				//	view.NavigationFailed += View_NavigationFailed;
 				view.NavigationStarting+=View_NavigationStarting;
-			//	view.NavigationCompleted+=View_NavigationCompleted;
+				view.NavigationCompleted+=View_NavigationCompleted; ;
+				//	view.NavigationCompleted+=View_NavigationCompleted;
 				coreWebView.PermissionRequested+=View_PermissionRequested; ;
 			//	coreWebView.NewWindowRequested+=View_NewWindowRequested;
 				//	webViewBrush = new WebViewBrush() { Stretch = Stretch.Fill };
@@ -570,6 +573,12 @@ namespace COTG
 
 
 		}
+
+		private static void View_NavigationCompleted(WebView sender,CoreWebView2NavigationCompletedEventArgs args)
+		{
+			Log("Nav complete: " + args);
+		}
+
 
 		private static void View_PermissionRequested(CoreWebView sender,CoreWebView2PermissionRequestedEventArgs args)
 		{
@@ -794,7 +803,8 @@ namespace COTG
 
 						args.Response = jsFunkyEtc;
 
-
+	
+						hasMainPageLoaded=true;
 						//	coreWebView.RemoveWebResourceRequestedFilter(,)
 						//					string host = args.Request.RequestUri.Host;
 						//						string uri = args.Request.RequestUri.AbsoluteUri;
@@ -849,7 +859,7 @@ namespace COTG
 
 		public static void PostMouseEventToJS(int x, int y, string eventName, int button, int dx = 0, int dy = 0)
 		{
-			App.DispatchOnUIThreadLow(() => view.ExecuteScriptAsync($"postMouseEvent({x},{y},{eventName},{button},{dx},{dy})") );
+			App.DispatchOnUIThreadLow(() => view.ExecuteScriptAsync($"postMouseEvent({x},{y},\"{eventName}\",{button},{dx},{dy})") );
 		}
 
 		//        public static void Refresh(object ob,RoutedEventArgs args)
@@ -863,7 +873,7 @@ namespace COTG
 
 		public static void SetStayAlive(bool stayAlive)
 		{
-			App.DispatchOnUIThreadLow(() => ExecuteScriptAsync("setStayAlive",( stayAlive ? "1" : "") ) );
+			App.DispatchOnUIThreadLow(() => ExecuteScriptAsync("setStayAlive",( stayAlive ? 1: 0) ) );
 		}
 		public static void SendChat(int channel, string message)
 		{
@@ -878,7 +888,7 @@ namespace COTG
 						remainder = message.Substring(div);
 						message = message.Substring(0, div);
 					}
-					ExecuteScriptAsync("sendchat", channel.ToString(), message );
+					ExecuteScriptAsync("sendchat", channel, message );
 					
 					if (remainder == null)
 						break;
@@ -1054,7 +1064,7 @@ namespace COTG
 			  {
 
 
-				  await ExecuteScriptAsync("addtoattacksender", cityId.ToString());
+				  await ExecuteScriptAsync("addtoattacksender", cityId );
 			  });
 
 			}
@@ -1237,7 +1247,7 @@ namespace COTG
 		{
 			return App.DispatchOnUIThreadTask(async () =>
 			{
-				await ExecuteScriptAsync("shCit", (cityId).ToString() );
+				await ExecuteScriptAsync("shCit", (cityId) );
 				//int x = cityId%65536;
 				//int y = cityId/65536;
 				//var spotInfo = TileData.instance.GetSpotType(x, y);
@@ -1245,9 +1255,18 @@ namespace COTG
 
 			});
 		}
-		public static IAsyncOperation<string> ExecuteScriptAsync(string func, string arg0) => view.ExecuteScriptAsync($"{func}({arg0})");
-		public static IAsyncOperation<string> ExecuteScriptAsync(string func,string arg0,string arg1) => view.ExecuteScriptAsync($"{func}({arg0},{arg1})");
-		public static IAsyncOperation<string> ExecuteScriptAsync(string func,string arg0,string arg1,string arg2) => view.ExecuteScriptAsync($"{func}({arg0},{arg1},{arg2})");
+		public static IAsyncOperation<string> ExecuteScriptAsync(string func,  string arg0) => view.ExecuteScriptAsync($"{func}(\"{arg0}\")");
+		public static IAsyncOperation<string> ExecuteScriptAsync(string func,int arg0) => view.ExecuteScriptAsync($"{func}({arg0})");
+
+		static string FormatJSArg<T>(T a) => a switch 
+		{
+			int i => i.ToString() , 
+			string s => '\n' + s + '\n',
+			_ => '\n'+a.ToString()+'\n' };
+
+		public static IAsyncOperation<string> ExecuteScriptAsync<T0,T1>(string func,T0 arg0,T1 arg1) => view.ExecuteScriptAsync($"{func}({FormatJSArg(arg0)},{FormatJSArg(arg1)})");
+		public static IAsyncOperation<string> ExecuteScriptAsync<T0, T1, T2>(string func,T0 arg0,T1 arg1, T2 arg2) =>
+			view.ExecuteScriptAsync($"{func}({FormatJSArg(arg0)},{FormatJSArg(arg1)},{FormatJSArg(arg2)})");
 
 
 
@@ -1270,7 +1289,7 @@ namespace COTG
 				str += "]";
 				
 				ExecuteScriptAsync("rmp",str);
-				ExecuteScriptAsync("gStQueryCB",  (cityId).ToString(), hash.ToString() );
+				ExecuteScriptAsync("gStQueryCB",  (cityId), hash.ToString() );
 			});
 
 		}
@@ -1319,7 +1338,7 @@ namespace COTG
 		static readonly float[] researchRamp = { 0, 1, 3, 6, 10, 15, 20, 25, 30, 35, 40, 45, 50 };
 
 		static ConcurrentDictionary<int, Action<JsonElement>> gstCBs = new ConcurrentDictionary<int, Action<JsonElement>>();
-
+		public static bool hasMainPageLoaded;
 		private static void BonusesUpdated()
 		{
 			cartTravel = 10.0f / (1.0 + faith.merius * 0.5 / 100 + (researchRamp[research[28]]) / 100);
@@ -1647,7 +1666,7 @@ namespace COTG
 						{
 							Note.Show($"Invalid City, was it lost? {cid.CidToString()}");
 							App.DispatchOnUIThreadLow(() =>
-							 ExecuteScriptAsync("chcity",  (cid).ToString() ));
+							 ExecuteScriptAsync("chcity",  (cid) ));
 
 							await Task.Delay(2000);
 							continue;
@@ -1852,6 +1871,13 @@ private static async void ShowCouncillorsMissingDialog()
 
 			try
 			{
+				// You can check out any time you like..
+				if(hasMainPageLoaded)
+				{
+					args.Cancel = true;
+					return;
+				}
+
 				var uri = new Uri(args.Uri);
 				//if (args.Uri.ToString().StartsWith("https://www.crownofthegods.com/?email"))
 				//{
@@ -2090,7 +2116,7 @@ private static async void ShowCouncillorsMissingDialog()
 		static void ChangeCityJS(int cityId)
 		{
 			App.DispatchOnUIThreadLow(() =>
-							ExecuteScriptAsync("chcity",(cityId).ToString() ));
+							ExecuteScriptAsync("chcity",(cityId) ));
 
 		}
 		static async Task<bool> ChangeCityJSWait(int cityId)

@@ -1144,12 +1144,12 @@ namespace COTG
 		//	}
 		//}
 
-		public static CoreCursor cursorDefault = new(CoreCursorType.Arrow, 0);
-		public static CoreCursor cursorQuickBuild = new(CoreCursorType.Cross, 0);
-		public static CoreCursor cursorMoveStart = new(CoreCursorType.SizeNortheastSouthwest, 0);
-		public static CoreCursor cursorMoveEnd = new(CoreCursorType.SizeNorthwestSoutheast, 0);
-		public static CoreCursor cursorLayout = new(CoreCursorType.Pin, 0);
-		public static CoreCursor cursorDestroy = new(CoreCursorType.UniversalNo, 0);
+//		public static CoreCursor cursorDefault = new(CoreCursorType.Arrow, 0);
+//		public static CoreCursor cursorQuickBuild = new(CoreCursorType.Cross, 0);
+//		public static CoreCursor cursorMoveStart = new(CoreCursorType.SizeNortheastSouthwest, 0);
+//		public static CoreCursor cursorMoveEnd = new(CoreCursorType.SizeNorthwestSoutheast, 0);
+//		public static CoreCursor cursorLayout = new(CoreCursorType.Pin, 0);
+//		public static CoreCursor cursorDestroy = new(CoreCursorType.UniversalNo, 0);
 
 		public async static Task<int> DoYesNoBox(string title, string text, string yes="Yes", string no = "No", string cancel ="Cancel" )
 		{
@@ -1461,12 +1461,12 @@ namespace COTG
 			return rv;
 		}
 
-		public static void Set(this CoreCursor type)
-		{
-			// is this thread safe?
-			if (ShellPage.coreInputSource != null)
-				ShellPage.coreInputSource.PointerCursor = type;
-		}
+		//public static void Set(this CoreCursor type)
+		//{
+		//	// is this thread safe?
+		//	if (ShellPage.coreInputSource != null)
+		//		ShellPage.coreInputSource.PointerCursor = type;
+		//}
 	}
 
 	public static class Note

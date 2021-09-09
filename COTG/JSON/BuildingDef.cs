@@ -34,8 +34,7 @@ namespace COTG
 			{
 				if (BuildingDef.buildingsToSharestring.TryGetValue((bid - BuildingDef.sharestringBuildingOffset).AsByte(), out var o))
 				{
-					Assert(o != 0);
-					return (o, true);
+					return (o, o != (byte)'-' );
 				}
 
 			}

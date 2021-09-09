@@ -222,6 +222,7 @@ namespace COTG.Views
 	//		keyboardProxy.AddHandler(GettingFocusEvent, KeyboardProxy_GettingFocus, true);
 	//		keyboardProxy.AddHandler(LostFocusEvent, KeyboardProxy_LostFocus, true);
 			canvas.Children.Add(keyboardProxy);
+			
 			//canvasHitTest = new Rectangle()
 			//{
 			//	Name="webDrawer",
@@ -322,7 +323,7 @@ namespace COTG.Views
 					{
 						CityBuild.testFlag ^= true;
 						Note.Show("Test: " + testFlag);
-						JSClient.view.ExecuteScriptAsync($"setTestFlag({(testFlag ? "1" : "0")}");
+						JSClient.view.ExecuteScriptAsync($"setTestFlag({(testFlag ? "1" : "0")})");
 					}
 					break;
 			}

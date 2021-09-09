@@ -11,22 +11,24 @@
 
 	<Grid Height="{StaticResource GridRowHeight}">
 		<Grid.ColumnDefinitions>
+			<ColumnDefinition Width="*" />
 			<ColumnDefinition Width="{StaticResource GridRowHeight}" />
-			<ColumnDefinition Width="auto" />
+			<ColumnDefinition Width="6*" />
 			<ColumnDefinition Width="auto" />
 		</Grid.ColumnDefinitions>
-		
-		<Image Source= "{x:Bind icon, Mode=OneWay}" Tapped="Image_Tapped" RightTapped="Image_RightTapped" HorizontalAlignment="Center"
-                                            
+
+		<TextBlock Text="{x:Bind Label}" Style="{StaticResource TextBlockMedium}" />
+
+		<Image Source= "{x:Bind icon, Mode=OneWay}" Grid.Column="1" Tapped="Image_Tapped" RightTapped="Image_RightTapped" HorizontalAlignment="Center"
                      Stretch="Uniform" VerticalAlignment="Center"  />
-		<AutoSuggestBox Grid.Column="1" Text="{x:Bind name}" 
-						Header="City"
-						PlaceholderText="None Selected"
+			   
+		<AutoSuggestBox Grid.Column="2" Text="{x:Bind name}" 
+						PlaceholderText="None"
 						TextChanged="{x:Bind views:PlayerGroup.CityNameSuggest_TextChanged}"
 						
 						AutomationProperties.Name="cityBoxName"
 						ToolTipService.ToolTip="Enter City Name to Search.."
 						/>
-		<ToggleSwitch Grid.Column="2" x:Name="useAll" Header="Include" OnContent="Everyone's" OffContent="Mine" ToolTipService.ToolTip="'Everyones' includes all cities, to specify someone else's city add the '- [playerName]' to the end, note this may be slow" />
+		<CheckBox Grid.Column="3" x:Name="onlyMine" Content="Only Mine" ToolTipService.ToolTip="if unchecked, includes all cities, to specify someone else's city add the '- [playerName]' to the end, note this may be slow"  IsChecked="True" />
 	</Grid>
 </UserControl>

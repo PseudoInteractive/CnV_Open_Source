@@ -108,6 +108,7 @@ namespace COTG.JSON
 		public readonly bool isDemo => elvl == 0;
 		public readonly bool isNop => slvl == 255; // special token for noop
 		public readonly string buildingName => def.Bn;
+		public readonly int proto=> def.Proto;
 		public readonly bool isBuild => slvl == 0 && elvl != 0;
 		public readonly static  BuildQueueItem nop = new BuildQueueItem(255, 255, 0, 0, 0);
 		internal readonly bool isValid => bid != City.bidTownHall || slvl != 0;
@@ -382,6 +383,7 @@ namespace COTG.JSON
 									//		commandsToQueue = (City.safeBuildQueueLength + 1 - cotgQ.Length).Min(queue.count);
 									var endPoint = cotgQ.Length + commandsToQueue;
 									bool anyBuildsPending = false;
+									bool hasAny=false;
 									while (offset < queue.count && cotgQ.Length < endPoint)
 									{
 										var i = queue.v[offset];
@@ -554,29 +556,22 @@ namespace COTG.JSON
 										//										City.buildQueue.Add(i);
 										cotgQ.Add(i);
 
-										Serialize(ref commandBuilder, i, ref qFirst);
+										await IssueCommand( i,cid );
 										--commandsToQueue;
-
+										hasAny =true;
 										//	if (validCount > 0 && cotgQ.Length >= City.safeBuildQueueLength)
 										//		break;
 									}
 
 
 
-									if (!qFirst)
+									if (hasAny)
 									{
-										commandBuilder.Append("]}");
-
-										var buildEx = commandBuilder.ToString();
-										if (buildEx != null)
-										{
-											await JSClient.JSInvokeTask($"buildex({ commandBuilder.ToString() })").ConfigureAwait(false);
-
+										
 											if (cid == City.build)
 												City.BuildingsOrQueueChanged();
 
 											SaveNeeded();
-										}
 									}
 									else
 									{
@@ -589,8 +584,8 @@ namespace COTG.JSON
 										}
 										else
 										{
-											if (delay < 2 * 60 * 1000)
-												delay = 2 * 60 * 1000;
+											if (delay < 1 * 60 * 1000)
+												delay = 1 * 60 * 1000;
 										}
 									}
 
@@ -805,7 +800,7 @@ namespace COTG.JSON
 				sb.Append("]}");
 
 
-				JSClient.JSInvoke("$buildex({sb.ToString()})");
+				JSClient.JSInvoke($"buildex(\"{sb.ToString()}\")");
 				sb.Dispose();
 				CityView.BuildingsOrQueueChanged();
 				return;
@@ -1097,6 +1092,25 @@ namespace COTG.JSON
 			}
 			sb.Append($"[{q.bspot},{q.bid},{q.slvl},{q.elvl}]");
 		}
+
+
+		static public async Task IssueCommand(BuildQueueItem q,int cid)
+		{
+			var t0 = JSClient.ServerTimeMs();
+			var json = $"{{\"bt\":{(q.isBuild?0:q.isDemo?3:q.isUpgrade?1:2)},\"pa\":{0},\"slvl\":{q.slvl},\"elvl\":{q.elvl},\"bid\":\"{AMath.RandomDigits(10)}\",\"brep\":{q.bid},\"ds\":{t0},\"de\":{t0+1000},\"btype\":{q.proto},\"bspot\":{q.bspot}}}";
+			var rv= await new BuildEx(json,cid).Post(false);
+			Assert(rv==true);
+			//if(qFirst)
+			//{
+			//	qFirst = false;
+			//}
+			//else
+			//{
+			//	sb.Append(',');
+			//}
+			//sb.Append($"[{q.bspot},{q.bid},{q.slvl},{q.elvl}]");
+		}
+
 
 		static public string Serialize()
 		{

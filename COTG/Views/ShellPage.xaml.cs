@@ -342,6 +342,7 @@ namespace COTG.Views
 			{
 				var sz = canvas.ActualSize;
 				AGame.SetClientSpan(sz.X, sz.Y);
+				SetWebViewHasFocus(true);
 				//ShellPage.canvas.IsHitTestVisible = false;
 				//ShellPage.canvas.Visibility = Visibility.Collapsed;
 			}));

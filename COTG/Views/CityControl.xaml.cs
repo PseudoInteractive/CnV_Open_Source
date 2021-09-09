@@ -35,6 +35,19 @@ namespace COTG.Views
 		{
 			this.InitializeComponent();
 		}
+		public static readonly DependencyProperty LabelProperty = DependencyProperty.Register(
+  "Label",
+  typeof(string),
+  typeof(CityControl),
+  new PropertyMetadata(null)
+);
+
+
+		public string Label
+		{
+			get { return (string)GetValue(LabelProperty); }
+			set { SetValue(LabelProperty,value); }
+		}
 
 		private void TextBlock_Tapped(object sender, TappedRoutedEventArgs e)
 		{
@@ -65,7 +78,7 @@ namespace COTG.Views
 		
 		private void CityName_SuggestionChosen(AutoSuggestBox sender,AutoSuggestBoxSuggestionChosenEventArgs args)
 		{
-			if(Spot.TryGet(args.SelectedItem as string,useAll.IsOn,out var _city))
+			if(Spot.TryGet(args.SelectedItem as string,!onlyMine.IsChecked.GetValueOrDefault(),out var _city))
 			{
 				this.city = _city;
 				OnPropertyChanged();

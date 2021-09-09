@@ -287,9 +287,11 @@ namespace COTG.Draw
 							{
 								currentBid = postBuildings[bspot].bid;
 								bid=build.BidFromOverlay(bspot);
+								if(BuildingDef.IsBidRes(currentBid) && bid == 0) // don't need to be removed
+								{
+									continue;
+								}
 							}
-							if(BuildingDef.IsBidRes(bid)||BuildingDef.IsBidRes(currentBid))
-								continue;
 							//							var currentBid = current.refId;
 
 							if(currentBid == bid)

@@ -17,9 +17,9 @@
 
 	<StackPanel>
 			<StackPanel Style="{StaticResource StackPanelReveal}">
-				<views:CityControl x:Name="sourceHub"  x:FieldModifier="public"
+				<views:CityControl x:Name="sourceHub" Label="Request" x:FieldModifier="public"
 						   ToolTipService.ToolTip="If req boxes below are checked, this hub will be set as the source hub" />
-				<views:CityControl x:Name="targetHub"  x:FieldModifier="public"
+				<views:CityControl x:Name="targetHub" Label="Send To" x:FieldModifier="public"
 						   ToolTipService.ToolTip="If export boxes below are checked, this hub will be set as the target hub" />
 				
 			</StackPanel>

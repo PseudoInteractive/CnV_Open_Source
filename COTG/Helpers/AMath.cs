@@ -266,6 +266,13 @@ namespace COTG
 		{
 			return (a.x / b, a.y / b);
 		}
+	    public static string RandomDigits(int count)
+		{
+			var rv = new byte[count];
+			for(int i =0;i<count;++i)
+				rv[i] = (byte)random.Next('0','9');
+			return Encoding.ASCII.GetString(rv);
+		}
 		public static int DivideRoundUp(this int a, int b)
 		{
 			return (a+b-1)/b;

@@ -7,9 +7,11 @@ using System.Text;
 using System.Threading.Tasks;
 
 using COTG.Game;
+
+
 namespace COTG
 {
-	public readonly record struct Building
+	public readonly struct Building
 	{
 		public readonly byte id; // this is pretranslated from the buildingDefs definitions to pack it into a byte
 		public readonly byte bl; // building level
@@ -52,23 +54,36 @@ namespace COTG
 		//	[J("rtt", NullValueHandling = N.Ignore)] public Rbb[] Rtt { get; set; }
 	}
 
-		//public partial class Rb
-		//{
-		//	[J("b")] public long B { get; set; }
-		//	[J("i")] public long I { get; set; }
-		//	[J("a")] public long A { get; set; }
-		//	[J("bl")] public long Bl { get; set; }
-		//	[J("au")] public long Au { get; set; }
-		//	[J("ad")] public long Ad { get; set; }
-		//	[J("add")] public long Add { get; set; }
-		//	[J("bt", NullValueHandling = N.Ignore)] public long? Bt { get; set; }
-		//}
+	//struct BuildingArrayPoolPolicy:IPooledObjectPolicy<Building[]>
+	//{
+	//	public Building[] Create()
+	//	{
+	//		return new Building[City.citySpotCount];
+	//	}
 
-		//public partial class Rbb
-		//{
-		//	[J("rt")] public long Rt { get; set; }
-		//	[J("rh")] public long Rh { get; set; }
-		//	[J("ruh")] public long Ruh { get; set; }
-		//	[J("rdh")] public long Rdh { get; set; }
-		//}
-	}
+	//	public bool Return(Building[] obj)
+	//	{
+	//		return true;
+	//	}
+	//}
+
+	//public partial class Rb
+	//{
+	//	[J("b")] public long B { get; set; }
+	//	[J("i")] public long I { get; set; }
+	//	[J("a")] public long A { get; set; }
+	//	[J("bl")] public long Bl { get; set; }
+	//	[J("au")] public long Au { get; set; }
+	//	[J("ad")] public long Ad { get; set; }
+	//	[J("add")] public long Add { get; set; }
+	//	[J("bt", NullValueHandling = N.Ignore)] public long? Bt { get; set; }
+	//}
+
+	//public partial class Rbb
+	//{
+	//	[J("rt")] public long Rt { get; set; }
+	//	[J("rh")] public long Rh { get; set; }
+	//	[J("ruh")] public long Ruh { get; set; }
+	//	[J("rdh")] public long Rdh { get; set; }
+	//}
+}

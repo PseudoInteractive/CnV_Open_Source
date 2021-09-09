@@ -382,7 +382,7 @@ namespace COTG.Views
 			var chatZoom = SettingsPage.chatZoom.Squared()  + 0.75f;
 			var tabZoom = SettingsPage.tabZoom.Squared()  + 0.75f;
 
-			App.instance.Resources["SmallFontSize"] = tabZoom * 11.0;
+			App.instance.Resources["SmallFontSize"] = tabZoom * 12.0;
 			App.instance.Resources["LargeFontSize"] = tabZoom * 20.0;
 			App.instance.Resources["MediumFontSize"] = tabZoom * 12.0;
 			App.instance.Resources["ChatFontSize"] = chatZoom * 12.0;

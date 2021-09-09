@@ -358,7 +358,7 @@ namespace COTG.Views
 				return rv;
 			}
 
-			City.buildingCache.Return(bds);
+		//	City.buildingCache.Return(bds);
 			return Task.CompletedTask;
 
 		}
@@ -421,16 +421,16 @@ namespace COTG.Views
 			Assert(CityBuild.isPlanner);
 			await CityBuild._IsPlanner(true);
 			var city = GetBuild();
-			city.FlipLayoutH(App.IsKeyPressedControl());
-			PlannerTab.BuildingsChanged(city,true);
+			city.FlipLayoutH(true,App.IsKeyPressedControl());
+		//	PlannerTab.BuildingsChanged(city,true);
 		}
 		private async void FlipVClick(object sender, RoutedEventArgs e)
 		{
 			Assert(CityBuild.isPlanner);
 			await CityBuild._IsPlanner(true);
 			var city = GetBuild();
-			city.FlipLayoutV(App.IsKeyPressedControl());
-			PlannerTab.BuildingsChanged(city,true);
+			city.FlipLayoutV(true,App.IsKeyPressedControl());
+			//PlannerTab.BuildingsChanged(city,true);
 		}
 
 		struct AllowedToMove
@@ -490,9 +490,13 @@ namespace COTG.Views
 		}
 		public static async Task SmartRearrange(City city,bool revertIsPlanner)
 		{
-			var wasPlanner = CityBuild.isPlanner;
-			if (!wasPlanner)
-				await CityBuild._IsPlanner(true);
+			//var wasPlanner = CityBuild.isPlanner;
+			if(city.isLayoutEmpty)
+			{
+				return;
+			}
+			//if (!wasPlanner)
+			//	await CityBuild._IsPlanner(true);
 		
 			Assert(city.isLayoutCustom);
 			var layoutB = city.GetLayoutBuildings();
@@ -517,8 +521,7 @@ namespace COTG.Views
 			}
 			if(hasInvalid&& city.isOnWater)
 			{
-				city.FlipLayoutH(true);
-				buildingCache.Return(layoutB);
+				city.FlipLayoutH(false,true);
 				layoutB=city.GetLayoutBuildings();
 			}
 
@@ -552,7 +555,7 @@ namespace COTG.Views
 			else 
 			{
 			}
-			buildingCache.Return(layoutB);
+			//buildingCache.Return(layoutB);
 			layoutB=city.GetLayoutBuildings();
 			
 			Note.Show("Flipped layout to reduce overlaps");
@@ -632,17 +635,16 @@ namespace COTG.Views
 				}
 			}
 			Note.Show($"Moved buildings to reduce overlaps, final layout match score: {CountResOverlaps(layoutB, bds, ref allowed) }");
-			city.TouchLayoutForWrite();
+			//city.TouchLayoutForWrite();
 
 			for(int i = 0;i<City.citySpotCount;++i)
 			{
 				city.layout[i] = BidToLayout(layoutB[i].bid).c;
 			}
-			City.buildingCache.Return(layoutB);
-
+			//City.buildingCache.Return(layoutB);
 			BuildingsChanged(city);
-			if(wasPlanner == false && revertIsPlanner)
-				await CityBuild._IsPlanner(false);
+		//	if(wasPlanner == false && revertIsPlanner)
+		//		await CityBuild._IsPlanner(false);
 		}
 
 		private static bool IsResHelper(int bid)
