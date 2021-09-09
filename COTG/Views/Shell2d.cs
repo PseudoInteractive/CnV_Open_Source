@@ -36,7 +36,7 @@ namespace COTG.Views
 		public static int hasKeyboardFocus;
 		public static KeyboardProxy keyboardProxy;
 		public static ViewMode viewMode;
-		public static bool webviewHasFocus;
+		public static bool webviewHasFocus=true;
 		private const int bottomMargin = 0;
 		private const int cotgPopupLeft = 438;
 		private const int cotgPopupRight = cotgPopupLeft + cotgPopupWidth;

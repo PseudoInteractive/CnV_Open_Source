@@ -200,7 +200,7 @@ namespace COTG.Views
 			// instance.status.Label=text );
 		}
 
-		public static bool isHitTestVisible = true;
+		public static bool isHitTestVisible = false;
 		public static bool canvasVisible;
 		public static bool isFocused => isHitTestVisible && App.isForeground && canvasVisible;
 		private async void OnLoaded(object sender, RoutedEventArgs e)
@@ -336,13 +336,14 @@ namespace COTG.Views
 									  displayInformation.ScreenHeightInRawPixels);
 			//	ShellPage.webclientSpan.x = (screenSize.Width * .715625f* SettingsPage.htmlZoom * 2).RoundToInt();
 			//	ShellPage.webclientSpan.y = (screenSize.Height * 0.89236111111111116f * SettingsPage.htmlZoom*2).RoundToInt();
-			await UpdateWebViewScale();
+		//	await UpdateWebViewScale();
 			AGame.Create(canvas);
 			Task.Delay(500).ContinueWith((_) => App.DispatchOnUIThreadIdle(() =>
 			{
+		//		ShellPage.SetupCoreInput();
 				var sz = canvas.ActualSize;
 				AGame.SetClientSpan(sz.X, sz.Y);
-				SetWebViewHasFocus(true);
+			//	SetWebViewHasFocus(true);
 				//ShellPage.canvas.IsHitTestVisible = false;
 				//ShellPage.canvas.Visibility = Visibility.Collapsed;
 			}));
@@ -639,7 +640,7 @@ namespace COTG.Views
 					tab.refresh.Go();
 			}
 			JSClient.CityRefresh();
-			instance.UpdateWebViewScale();
+		//	instance.UpdateWebViewScale();
 			return Task.CompletedTask;
 		}
 
@@ -1243,7 +1244,7 @@ namespace COTG.Views
 		}
 
 		public static Vector2 webViewScale = new(1,1);
-		internal static bool webviewHasFocus2;
+		internal static bool webviewHasFocus2=true;
 
 		private  void SetLayout(int viewToggle)
 		{

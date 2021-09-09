@@ -160,7 +160,7 @@ namespace COTG.Draw
 						}
 						else
 						{
-							cur = city.BuildingFromOverlay(bspot);
+							cur = city.GetLayoutBuilding(bspot);
 							next = cur;
 							//				overlay = city.postQueueBuildings[id];
 						}
@@ -280,13 +280,13 @@ namespace COTG.Draw
 
 								bid = bs.bid;
 
-								currentBid = build.BidFromOverlay(bspot);
+								currentBid = build.GetLayoutBid(bspot);
 
 							}
 							else
 							{
 								currentBid = postBuildings[bspot].bid;
-								bid=build.BidFromOverlay(bspot);
+								bid=build.GetLayoutBid(bspot);
 								if(BuildingDef.IsBidRes(currentBid) && bid == 0) // don't need to be removed
 								{
 									continue;

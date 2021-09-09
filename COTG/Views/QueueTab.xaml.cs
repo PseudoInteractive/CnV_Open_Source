@@ -529,7 +529,7 @@ namespace COTG.Views
 
 										if (bc.buildings >= city.buildingLimit)
 											goto done;
-										if (city.postQueueBuildings[City.XYToId(c)].isEmpty && (city.BidFromOverlay(c) == 0))
+										if (city.postQueueBuildings[City.XYToId(c)].isEmpty && (city.GetLayoutBid(c) == 0))
 										{
 											await city.Build(XYToId(c), bidCottage, false,false);
 											++bc.cabins;
@@ -616,7 +616,7 @@ namespace COTG.Views
 
 										if (bc.buildings >= buildingLimit)
 											break;
-										var bid = city.BidFromOverlay(i);
+										var bid = city.GetLayoutBid(i);
 										//
 										// these ones come last?
 										// Assume either blacksmith, sorc tower or academy or stable
@@ -680,7 +680,7 @@ namespace COTG.Views
 									if (xx == 0)
 										break;
 
-									var bid = city.BidFromOverlay(c);
+									var bid = city.GetLayoutBid(c);
 									if( await city.SmartBuild( c, bid, true, false) == -1)
 									{
 										Note.Show("Something unusual happened");
@@ -777,7 +777,7 @@ namespace COTG.Views
 
 								var c = todo[todoGet++];
 
-								var bid = city.BidFromOverlay(c);
+								var bid = city.GetLayoutBid(c);
 								if (bid == bidBarracks)
 								{
 									c = barracks[0];
@@ -868,7 +868,7 @@ namespace COTG.Views
 							if (!IsBuildingSpot(id))
 								continue;
 
-							var bid = city.BidFromOverlay(id);
+							var bid = city.GetLayoutBid(id);
 							if (bid switch { bidCottage or bidWall or bidTownHall or (>= bidResStart and <= bidResEnd) => true, _ => false })
 							{
 								continue;
@@ -899,7 +899,7 @@ namespace COTG.Views
 						continue;
 					var pb = city.postQueueBuildings[id];
 					var pbid = (!pb.isBuilding || pb.isCabin) ? 0 : pb.bid;
-					var bid = city.BidFromOverlay(c);
+					var bid = city.GetLayoutBid(c);
 
 					if (pbid == bid)
 					{
@@ -948,7 +948,7 @@ namespace COTG.Views
 						return rv;
 
 					var c = (cx, cy);
-					if (bid == city.BidFromOverlay(c))
+					if (bid == city.GetLayoutBid(c))
 					{
 						rv.Add(c);
 
@@ -972,7 +972,7 @@ namespace COTG.Views
 						if (b.bl > rv.bl)
 							rv = (cx, cy, b.bl);
 					}
-					else if (rv.bl == 0 && bid == city.BidFromOverlay(c))
+					else if (rv.bl == 0 && bid == city.GetLayoutBid(c))
 					{
 						rv = (cx, cy, 0);
 
@@ -1003,7 +1003,7 @@ namespace COTG.Views
 						if ((x == -r || x == r) || (y == -r || y == r))
 						{
 							var c = (x, y);// (int x, int y) c = RandCitySpot();
-							if ((city.BidFromOverlay(c) == bid) && (city.postQueueBuildings[City.XYToId(c)].bid != bid))
+							if ((city.GetLayoutBid(c) == bid) && (city.postQueueBuildings[City.XYToId(c)].bid != bid))
 							{
 								rv.Add(c);
 								if (rv.Count >= count)
@@ -1031,7 +1031,7 @@ namespace COTG.Views
 						if ((x == -r || x == r) || (y == -r || y == r))
 						{
 							var c = (x, y);// (int x, int y) c = RandCitySpot();
-							var bid = city.BidFromOverlay(c);
+							var bid = city.GetLayoutBid(c);
 							if (bid == 0)
 								continue;
 							if (bids.Contains(bid) && (city.postQueueBuildings[City.XYToId(c)].bid != bid))
@@ -1214,7 +1214,7 @@ namespace COTG.Game
 										continue;
 									if (HasBuildOps(id))
 										continue;
-									var bid = BidFromOverlay(id);
+									var bid = GetLayoutBid(id);
 									if (bid == 0)
 										continue;
 									var bl = postQueueBuildings[id];
@@ -1350,7 +1350,7 @@ namespace COTG.Game
 
 			for (var id = 0; id < City.citySpotCount; ++id)
 			{
-				if (bid == BidFromOverlay(id))
+				if (bid == GetLayoutBid(id))
 					return true;
 
 			}
@@ -1363,7 +1363,7 @@ namespace COTG.Game
 			
 			for (var id = 0;id<City.citySpotCount; ++id)
 			{
-					if (bid == BidFromOverlay(id))
+					if (bid == GetLayoutBid(id))
 						return IdToXY(id);
 
 				}
@@ -1384,7 +1384,7 @@ namespace COTG.Game
 				if (!IsBuildingSpot(id))
 					continue;
 
-				var bid = (short)BidFromOverlay(id);
+				var bid = (short)GetLayoutBid(id);
 				if (bid != 0 && bid != bidTemple && bid != bidCastle)
 				{
 					if (counts.TryGetValue(bid, out var c) == false)
@@ -1423,7 +1423,7 @@ namespace COTG.Game
 				if (!IsBuildingSpot(id))
 					continue;
 
-				var oBid = (short)BidFromOverlay(id);
+				var oBid = (short)GetLayoutBid(id);
 				var bl = postQueueBuildings[id];
 				if (!(bl.isRes || bl.isEmpty || bl.isTemple || bl.isCabin || bl.isTower))
 				{
@@ -1454,7 +1454,7 @@ namespace COTG.Game
 
 				for (int i = 0; i < citySpotCount; ++i)
 				{
-					if (BidFromOverlay(i) == bidCastle)
+					if (GetLayoutBid(i) == bidCastle)
 						return true;
 				}
 				return false;
@@ -1471,9 +1471,9 @@ namespace COTG.Game
 
 				for (int i = 0; i < citySpotCount; ++i)
 				{
-					if (BidFromOverlay(i) == bidCastle)
+					if (GetLayoutBid(i) == bidCastle)
 						hasCastle = true;
-					else if (BidFromOverlay(i) == bidSorcTower)
+					else if (GetLayoutBid(i) == bidSorcTower)
 						hasSorcTower = true;
 				}
 				return (hasCastle, hasSorcTower);
@@ -1503,7 +1503,7 @@ namespace COTG.Game
 								var c = (x, y);// (int x, int y) c = RandCitySpot();
 								if (!c.IsXYInCenter() && SettingsPage.clearOnlyCenterRes)
 									continue;
-								if (BidFromOverlay(c) == 0)
+								if (GetLayoutBid(c) == 0)
 									continue;
 								
 								if (postQueueBuildings[City.XYToId(c)].isRes )
@@ -1533,7 +1533,7 @@ namespace COTG.Game
 					if (!IsBuildingSpot(id))
 						continue;
 
-					var bid = BidFromOverlay(id);
+					var bid = GetLayoutBid(id);
 					if (bid != 0)
 					{
 						var bl = bds[id];

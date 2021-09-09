@@ -65,12 +65,12 @@ namespace COTG.Views
 				coreInputSource.PointerCaptureLost += CoreInputSource_PointerCaptureLost;
 
 				coreInputSource.PointerWheelChanged += Canvas_PointerWheelChanged;
+				//coreInputSource.PointerCursor = 
 	//			coreInputSource.Dispatcher.ProcessEvents(CoreProcessEventsOption.ProcessUntilQuit);
 //				coreInputSource.IsInputEnabled = true;
 
 			};
-		//	var inputWorker = ThreadPool.RunAsync(workItemHandler, WorkItemPriority.High, WorkItemOptions.TimeSliced);
-
+			//	var inputWorker = ThreadPool.RunAsync(workItemHandler, WorkItemPriority.High, WorkItemOptions.TimeSliced);
 
 		}
 
@@ -177,23 +177,23 @@ namespace COTG.Views
 						return (c,false);
 					}
 			}
-			public static void Tick()
-			{
-				if (points.Any() && currentGesture == GestureAction.none)
-				{
-					var tick = (Environment.TickCount - (int)(points[0].startTimestamp/1000) );
-					if(tick > 700)
-					{
-						// auto rick click on hold
-						(var worldC, var cc) = ScreenToWorldAndCityC(mousePositionW);
-						Reset();
-						var cid = worldC.WorldToCid();
-						App.DispatchOnUIThreadLow(RightClick(cc, cid));
+			//public static void Tick()
+			//{
+			//	if (points.Any() && currentGesture == GestureAction.none)
+			//	{
+			//		var tick = (Environment.TickCount - (int)(points[0].startTimestamp/1000) );
+			//		if(tick > 700)
+			//		{
+			//			// auto rick click on hold
+			//			(var worldC, var cc) = ScreenToWorldAndCityC(mousePositionW);
+			//			Reset();
+			//			var cid = worldC.WorldToCid();
+			//			App.DispatchOnUIThreadLow(RightClick(cc, cid));
 
-					}
-				}
+			//		}
+			//	}
 
-			}
+			//}
 			
 			public static void ProcessPointerExited(Windows.UI.Input.PointerPoint point)
 			{

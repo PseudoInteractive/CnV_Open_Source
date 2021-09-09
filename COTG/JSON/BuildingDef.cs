@@ -129,8 +129,8 @@ namespace COTG
 				 (byte)'Y',(byte)(502 - sharestringBuildingOffset),
 				 (byte)'Z',(byte)(482 - sharestringBuildingOffset),
 			};
-			sharestringToBuldings = new Dictionary<byte, byte>(ix.Length);
-			buildingsToSharestring = new Dictionary<byte, byte>(ix.Length);
+			sharestringToBuldings = new Dictionary<byte, byte>(ix.Length/2);
+			buildingsToSharestring = new Dictionary<byte, byte>(ix.Length/2);
 			for (int p = 0; p < ix.Length; p += 2)
 			{
 				sharestringToBuldings.TryAdd(ix[p], ix[p + 1]);

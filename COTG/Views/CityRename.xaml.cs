@@ -96,7 +96,7 @@ namespace COTG.Views
 							continue;
 						var match = regexCityName.Match(v._cityName);
 						bool hasLeadingZero = match.Groups[4].Value.IsNullOrEmpty() && !match.Groups[5].Value.IsNullOrEmpty();
-						if (match.Success && (v.isHub || hasLeadingZero))
+						if (match.Success && (v.isHub ))
 						{
 							var score = city.cid.DistanceToCid(v.cid);
 							if (score < closestScore)

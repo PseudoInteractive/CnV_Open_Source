@@ -457,9 +457,13 @@ namespace COTG.Game
 		public byte[] TouchLayoutForWrite()
 		{
 			if(isLayoutEmpty)
+			{
 				layout = NewLayout(); // we need a writable blank one
+				shareStringLoaded=true;
+			}
 			return layout;
 		}
+
 		// can have side effects
 		public byte[] layoutWritable => TouchLayoutForWrite();
 		//public static string[] NewString()
@@ -490,16 +494,16 @@ namespace COTG.Game
 		//	}
 		//}
 
-		public int BidFromOverlay(int id)
+		public int GetLayoutBid(int id)
 		{
 			if (id == bspotTownHall)
 				return bidTownHall;
 			return BuildingDef.LayoutToBid(layout[id]);
 		}
-		public Building BuildingFromOverlay(int id)
+		public Building GetLayoutBuilding(int id)
 		{
-			var bid = BidFromOverlay(id);
-			return new Building(BidToId(bid), (IsBidRes(bid)||(bid==0) ? (byte)0 : (byte)10) );
+			var bid = GetLayoutBid(id);
+			return new Building(BidToId(bid), IsBidRes(bid)||(bid==0) ? (byte)0 : (byte)10 );
 		}
 		//public int LayoutToBid(byte v) => BuildingDef.LayoutToBid(v);
 		//public void SetBuildingInOverlay( (int x,int y) xy, int bid  )
@@ -531,7 +535,7 @@ namespace COTG.Game
 				return 0;
 			for (int i = 0; i < City.citySpotCount; ++i)
 			{
-				var bO = BidFromOverlay(i);
+				var bO = GetLayoutBid(i);
 				if (bid == bO)
 					return i;
 			}
@@ -544,19 +548,19 @@ namespace COTG.Game
 			int rv = 0;
 			for (int i = 0; i < City.citySpotCount; ++i)
 			{
-				var bO = BidFromOverlay(i);
+				var bO = GetLayoutBid(i);
 				if (bid == bO)
 					++rv;
 			}
 			return rv;
 		}
-		public int BidFromOverlay((int x, int y) c) => BidFromOverlay(XYToId(c));
+		public int GetLayoutBid((int x, int y) c) => GetLayoutBid(XYToId(c));
 
-		public (int bid, BuildingDef bd) BFromOverlay((int x, int y) c)
-		{
-			var bid = BidFromOverlay(c);
-			return (bid, BuildingDef.all[bid]);
-		}
+		//public (int bid, BuildingDef bd) BFromOverlay((int x, int y) c)
+		//{
+		//	var bid = GetLayoutBid(c);
+		//	return (bid, BuildingDef.all[bid]);
+		//}
 
 		public static City[] myCitiesCache;
 		public static City[] friendCitiesCache;
@@ -697,10 +701,11 @@ namespace COTG.Game
 			{
 				constructionSpeed = cs.GetAsFloat();
 			}
-			if (!CityBuild.isPlanner || cid != City.build )
+			if (!shareStringLoaded)
 			{
 				if (jse.TryGetProperty("sts", out var sts))
 				{
+					
 					var s = sts.GetString();
 					//	Log(s);
 					s = s.Replace("&#34;", "\"");
@@ -887,7 +892,8 @@ namespace COTG.Game
 		static int shareStringBaseHash = emptyLayoutString.Substring(shareStringStartOffset).GetHashCode();
 
 		int shareStringSavedHash;
-		
+		bool shareStringLoaded; // this is only allowed to load once, or 0 times if switched to
+
 		public void SetShareString(string s, bool save=true)
 		{
 			(var _layout, var _shareStringJson) = ShareString.SplitShareString(s);
@@ -896,7 +902,7 @@ namespace COTG.Game
 		
 		public void SetShareString(string _layout,string _shareStringJson,bool save = true)
 		{
-
+			shareStringLoaded=true;
 			Assert(emptyLayout.GetHashCode() == emptyLayoutHashCode);
 
 			//	(var _layout,var _shareStringJson) = ShareString.SplitShareString(s);
@@ -1034,7 +1040,7 @@ namespace COTG.Game
 			sb.Append(shareStringStart);
 			sb.Append(_isOnWater ? ';' : ':');
 			var anyValid = false;
-			int id = 0;
+			//int id = 0;
 			for(var i =0;i<citySpotCount;++i)
 			{
 				byte o;
@@ -1044,7 +1050,7 @@ namespace COTG.Game
 				}
 				else
 				{
-					var bid = BuildingDef.LayoutToBid( _layout[id] ); 
+					var bid = BuildingDef.LayoutToBid( _layout[i] ); 
 					var x = BuildingDef.BidToLayout(bid);
 					anyValid |= x.valid;
 					o = x.c;
@@ -1088,7 +1094,7 @@ namespace COTG.Game
 			var rv = new Building[citySpotCount];
 			for (int s = 0; s < citySpotCount; ++s)
 			{
-					rv[s]=BuildingFromOverlay(s);
+					rv[s]=GetLayoutBuilding(s);
 			
 			}
 			return rv;
@@ -1106,7 +1112,7 @@ namespace COTG.Game
 			//	if (layout == null)
 			//		return;
 			var water = isOnWater && !ignoreWater;
-			Assert(CityBuild.isPlanner);
+			//Assert(CityBuild.isPlanner);
 			TouchLayoutForWrite();
 			Assert(isLayoutCustom);
 			for (int y = span0; y <= span1; ++y)
@@ -1132,7 +1138,7 @@ namespace COTG.Game
 		{
 			//if (layout == null)
 			//	return;
-			Assert(CityBuild.isPlanner);
+		//	Assert(CityBuild.isPlanner);
 			TouchLayoutForWrite(); 
 			var water = isOnWater && !ignoreWater;
 			for (int y = span0; y < 0; ++y)

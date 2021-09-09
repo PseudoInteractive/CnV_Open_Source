@@ -38,6 +38,7 @@ namespace COTG.Views
 		public static bool testFlag;
 		public static int quickBuildId;
 		public static int lastQuickBuildActionBSpot = -1;
+		public static int lastBuildToolTipSpot = -1;
 		public static CityBuild instance;
 		public static bool isPlanner;
 
@@ -161,30 +162,30 @@ namespace COTG.Views
 			Log($"{action}=>{_action}");
 			action = _action;
 
-				//App.globalQueue.TryEnqueue(DispatcherQueuePriority.Low, () =>
-			 //  {
-				//   switch (action)
-				//   {
-				//	   case Action.moveStart:
-				//		   App.cursorMoveStart.Set();
-				//		   break;
-				//	   case Action.moveEnd:
-				//		   App.cursorMoveEnd.Set();
-				//		   break;
-				//	   case Action.destroy:
-				//		   App.cursorDestroy.Set();
-				//		   break;
-				//	   case Action.build:
-				//		   App.cursorQuickBuild.Set();
-				//		   break;
-				//	   case Action.layout:
-				//		   App.cursorLayout.Set();
-				//		   break;
-				//	   default:
-				//		   App.cursorDefault.Set();
-				//		   break;
-				//   }
-			 //  });
+			ShellPage.coreInputSource.Dispatcher.TryRunAsync(CoreDispatcherPriority.Low,() =>
+			{
+				switch(action)
+			  {
+				  case Action.moveStart:
+					  App.cursorMoveStart.Set();
+					  break;
+				  case Action.moveEnd:
+					  App.cursorMoveEnd.Set();
+					  break;
+				  case Action.destroy:
+					  App.cursorDestroy.Set();
+					  break;
+				  case Action.build:
+					  App.cursorQuickBuild.Set();
+					  break;
+				  case Action.layout:
+					  App.cursorLayout.Set();
+					  break;
+				  default:
+					  App.cursorDefault.Set();
+					  break;
+			  }
+		  });
 			//	App.DispatchOnUIThreadLow( ()=> instance.quickBuild.SelectedIndex = (int)_action ); /// the first 3 are mapped. this triggers a selected changed event
 		}
 		public static void SetQuickBuild(int quickBuildItemBid)
@@ -192,7 +193,7 @@ namespace COTG.Views
 
 			SetAction(Action.build);
 
-
+			lastBuildToolTipSpot=-1;
 			lastQuickBuildActionBSpot = -1;
 			quickBuildId = quickBuildItemBid;
 			//	App.DispatchOnUIThreadLow( ()=> instance.quickBuild.SelectedIndex = (int)_action ); /// the first 3 are mapped. this triggers a selected changed event
@@ -253,7 +254,7 @@ namespace COTG.Views
 		static readonly BuildMenuItem amSelect = new BuildMenuItem("Modify", Action.none, "City/decal_select_building.png", "Left click opens a menu");
 		static readonly BuildMenuItem amMove = new BuildMenuItem("Move", Action.moveStart, "City/decal_move_building.png", "In this mode you first click a building, then click empty space, then click the next buildin to move, etc.");
 		static readonly BuildMenuItem amDemo = new BuildMenuItem("Demo", Action.destroy, "City/decal_building_invalid.png", "Destroy anything you click");
-		static readonly BuildMenuItem amLayout = new BuildMenuItem("Layout", Action.layout, "City/decal_building_valid_multi.png", "Smart build based on city layouts");
+		static readonly BuildMenuItem amLayout = new BuildMenuItem("Smart", Action.layout, "City/decal_building_valid_multi.png", "Smart build based on city layouts");
 		static readonly BuildMenuItem amNone = new BuildMenuItem();
 		static readonly BuildMenuItem amUpgrade = new BuildMenuItem("Upgrade", Action.upgrade, "City/decal_building_valid.png", "Upgrade buildings");
 		static readonly BuildMenuItem amBuild = new BuildMenuItem("Build", Action.upgrade, "City/decal_building_valid.png", "Buidl this");
@@ -833,7 +834,7 @@ namespace COTG.Views
 				return;
 			}
 			int bspot = XYToId(hovered);
-			var b = isPlanner ? build.BuildingFromOverlay(bspot) : build.buildings[bspot];
+			var b = isPlanner ? build.GetLayoutBuilding(bspot) : build.buildings[bspot];
 
 			if (isStart)
 			{
@@ -1009,7 +1010,7 @@ namespace COTG.Views
 						else
 						{
 
-							await City.GetBuild().SmartBuild(cc, build.BidFromOverlay(bspot), true, dryRun, wantDemoUI: true);
+							await City.GetBuild().SmartBuild(cc, build.GetLayoutBid(bspot), true, dryRun, wantDemoUI: true);
 
 						}
 						break;
@@ -1331,6 +1332,7 @@ namespace COTG.Views
 			contextMenuResultSelected = true;
 			var bi = e.ClickedItem as BuildMenuItem;
 			lastQuickBuildActionBSpot = -1; // reset
+			lastBuildToolTipSpot=-1;
 			if (bi != null)
 			{
 				if (bi.isBuilding)
@@ -1506,7 +1508,7 @@ namespace COTG.Views
 				case Windows.System.VirtualKey.X: CityBuild.ShortBuild(City.bidCastle); return; //  467;
 				case Windows.System.VirtualKey.O: CityBuild.ShortBuild(City.bidPort); return; //  488;
 				case Windows.System.VirtualKey.P: CityBuild.ShortBuild(City.bidShipyard); return; //  491;
-				case Windows.System.VirtualKey.Q: if (!isPlanner) City.GetBuild().SmartBuild(hovered, City.GetBuild().BidFromOverlay(hovered), true, false, wantDemoUI: true); return;
+				case Windows.System.VirtualKey.Q: if (!isPlanner) City.GetBuild().SmartBuild(hovered, City.GetBuild().GetLayoutBid(hovered), true, false, wantDemoUI: true); return;
 
 				default:
 					break;
@@ -1588,7 +1590,7 @@ namespace COTG.Views
 				if (rv == ContentDialogResult.Primary)
 				{
 					var city = City.Get(cid);
-					await JSClient.ExecuteScriptAsync("misccommand",  "abandoncity", cid.ToString() );
+					await JSClient.ExecuteScriptAsync("misccommand",  "abandoncity", cid );
 					city.pid = 0; //
 						if (myCities.Length > 1)
 					{

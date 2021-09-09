@@ -430,18 +430,18 @@ namespace COTG
 				//ShellPage.Canvas_PointerWheelChanged(mouseState, priorMouseState);
 				//ShellPage.Canvas_PointerPressed(mouseState, priorMouseState);
 
-				if (App.isForeground)
+				if(App.isForeground)
 				{
-					if (ShellPage.coreInputSource == null)
+					if(ShellPage.coreInputSource == null)
 					{
 						ShellPage.SetupCoreInput();
 
 					}
 					else
 					{
-						ShellPage.coreInputSource.Dispatcher.CurrentPriority = CoreDispatcherPriority.Low;
+					//	ShellPage.coreInputSource.Dispatcher.CurrentPriority = CoreDispatcherPriority.Low;
 						ShellPage.coreInputSource.Dispatcher.ProcessEvents(CoreProcessEventsOption.ProcessAllIfPresent);
-						ShellPage.Gesture.Tick();
+						//ShellPage.Gesture.Tick();
 					}
 
 				}
@@ -657,6 +657,8 @@ namespace COTG
 		//}
 		public static bool readyToLoad;
 		public static Song[] music;
+	//	bool inputInitialized;
+
 		const int musicCount = 7;
 		static int lastSongPlayed;
 		public static void UpdateMusic()

@@ -458,7 +458,7 @@ namespace COTG.Game
 		//}
 		public Building GetBuildingOrLayout(int spot)
 		{
-			return isPlanner ? BuildingFromOverlay(spot) : postQueueBuildings[spot];
+			return isPlanner ? GetLayoutBuilding(spot) : postQueueBuildings[spot];
 
 		}
 
@@ -536,7 +536,7 @@ namespace COTG.Game
 				// See if there are spare buildings that we can take
 				for (int xy = 1; xy < City.citySpotCount - 1; ++xy)
 				{
-					var overlayBid = BidFromOverlay(xy);
+					var overlayBid = GetLayoutBid(xy);
 					var xyBuilding = postQueueBuildings[xy].def.bid;
 
 					if (overlayBid != xyBuilding)
@@ -876,7 +876,7 @@ namespace COTG.Game
 				// not yet removed
 				if (!build.buildings[findSpotOffset].isEmpty)
 					continue;
-				if (build.BidFromOverlay(findSpotOffset) != 0)
+				if (build.GetLayoutBid(findSpotOffset) != 0)
 					continue;
 				if (HasBuildOps(findSpotOffset))
 					continue;
@@ -892,7 +892,7 @@ namespace COTG.Game
 			var build = City.GetBuild();
 			for (int xy = 0; xy < City.citySpotCount; ++xy)
 			{
-				var overlayBid = build.BidFromOverlay(xy);
+				var overlayBid = build.GetLayoutBid(xy);
 				var xyBuilding = postQueueBuildings[xy].def.bid;
 
 				if (overlayBid == xyBuilding || xyBuilding != bid)

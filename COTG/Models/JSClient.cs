@@ -509,7 +509,8 @@ namespace COTG
 				coreWebView.Settings.IsScriptEnabled=true;
 				coreWebView.Settings.IsPinchZoomEnabled =false;
 				coreWebView.Settings.IsZoomControlEnabled=false;
-				coreWebView.Settings.IsSwipeNavigationEnabled=false;
+			//	coreWebView.Settings.IsSwipeNavigationEnabled=false;
+				
 //				coreWebView.Settings.AreBrowserAcceleratorKeysEnabled=false;
 				//coreWebView.AddWebResourceRequestedFilter("*jsfunctions/game.js",ResourceContext:CoreWebView2WebResourceContext.Script);
 				coreWebView.AddWebResourceRequestedFilter(jsFunctionMask,ResourceContext: CoreWebView2WebResourceContext.Script);
@@ -529,7 +530,7 @@ namespace COTG
 				view.NavigationCompleted+=View_NavigationCompleted; ;
 				//	view.NavigationCompleted+=View_NavigationCompleted;
 				coreWebView.PermissionRequested+=View_PermissionRequested; ;
-			//	coreWebView.NewWindowRequested+=View_NewWindowRequested;
+				//coreWebView.NewWindowRequested+=CoreWebView_NewWindowRequested; ;
 				//	webViewBrush = new WebViewBrush() { Stretch = Stretch.Fill };
 				view.GotFocus += View_GotFocus;
 				view.LostFocus += View_LostFocus; ;
@@ -574,9 +575,19 @@ namespace COTG
 
 		}
 
+		//private static void CoreWebView_NewWindowRequested(CoreWebView sender,CoreWebView2NewWindowRequestedEventArgs args)
+		//{
+		//	args.NewWindow.Settings.UserAgent = userAgent;
+		//}
+
 		private static void View_NavigationCompleted(WebView sender,CoreWebView2NavigationCompletedEventArgs args)
 		{
 			Log("Nav complete: " + args);
+			if(hasMainPageLoaded)
+			{
+				coreWebView.WebResourceRequested-=View_WebResourceRequested; //-= View_WebResourceRequested1;
+				coreWebView.RemoveWebResourceRequestedFilter(jsFunctionMask,ResourceContext: CoreWebView2WebResourceContext.Script);
+			}
 		}
 
 
@@ -609,6 +620,7 @@ namespace COTG
 		private static void View_GotFocus(object sender, RoutedEventArgs e)
 		{
 			ShellPage.webviewHasFocus2 = true;
+			ShellPage.hasKeyboardFocus = 0;
 		}
 
 		//public static void ClearAllCookies(string domain= "https://crownofthegods.com")
@@ -630,7 +642,7 @@ namespace COTG
 		//	Log(sender);
 		//}
 
-		
+
 
 		//		public static async void CaptureWebPage(ICanvasResourceCreator canvas)
 		//		{
@@ -824,11 +836,6 @@ namespace COTG
 						//    }
 				//		args.Response = jsFunkyEtc;
 						//a.Complete();
-//App.DispatchOnUIThread(()=>{
-//						coreWebView.WebResourceRequested-=View_WebResourceRequested; //-= View_WebResourceRequested1;
-//						coreWebView.RemoveWebResourceRequestedFilter(jsFunctionMask,ResourceContext: CoreWebView2WebResourceContext.Script);
-//	Log("Done");
-//});
 
 
 				}

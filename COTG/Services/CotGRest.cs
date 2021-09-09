@@ -35,7 +35,8 @@ namespace COTG.Services
 	public enum RestFlags
 	{
 		silenceError=1,
-		track=2, // only if eventName is not empty
+		track=1<<1, // only if eventName is not empty
+		onlyHeaders=1<<2,
 	}
 	public class RestAPI
 	{
@@ -238,7 +239,7 @@ namespace COTG.Services
 					//    req.Headers.Append("Sec-Fetch-Dest", "empty");
 
 
-					var respT = client.SendRequestAsync(req, HttpCompletionOption.ResponseContentRead);
+					var respT = client.SendRequestAsync(req,restFlags.HasFlag(RestFlags.onlyHeaders)? HttpCompletionOption.ResponseHeadersRead: HttpCompletionOption.ResponseContentRead);
 					//     Log($"res: {resp.GetType()} {resp.Succeeded} {resp}");
 					//     Log($"req: {resp.RequestMessage.ToString()}");
 					//   if (resp.ExtendedError != null)
