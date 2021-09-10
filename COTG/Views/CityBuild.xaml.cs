@@ -162,8 +162,7 @@ namespace COTG.Views
 			Log($"{action}=>{_action}");
 			action = _action;
 
-			ShellPage.coreInputSource.Dispatcher.TryRunAsync(CoreDispatcherPriority.Low,() =>
-			{
+			
 
 				switch(action)
 			  {
@@ -186,7 +185,7 @@ namespace COTG.Views
 					  App.cursorDefault.Set();
 					  break;
 			  }
-		  });
+		  
 			//	App.DispatchOnUIThreadLow( ()=> instance.quickBuild.SelectedIndex = (int)_action ); /// the first 3 are mapped. this triggers a selected changed event
 		}
 		public static void SetQuickBuild(int quickBuildItemBid)

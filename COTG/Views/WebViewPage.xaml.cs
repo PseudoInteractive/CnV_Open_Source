@@ -11,22 +11,17 @@ using WebView = Microsoft.UI.Xaml.Controls.WebView2;
 using static COTG.Debug;
 using Windows.System;
 using Microsoft.Web.WebView2.Core;
+using COTG.Services;
 
 namespace COTG.Views
 {
     public sealed partial class WebViewPage :Windows.UI.Xaml.Controls.Page, INotifyPropertyChanged
     {
         // TODO WTS: Set the URI of the page to show by default
-        public static Uri DefaultUrl;// = "https://docs.microsoft.com/windows/apps/";
+    //    public static Uri DefaultUrl;// = "https://docs.microsoft.com/windows/apps/";
         public static WebViewPage instance;
      //   public WebView WebView => webView;
-        private Uri _source;
-
-        public Uri Source
-        {
-            get { return _source; }
-            set { Set(ref _source, value); }
-        }
+        
 
         private bool _isLoading;
 
@@ -140,38 +135,42 @@ namespace COTG.Views
 			//webView.CoreWebView2.ContentLoading += WebView_ContentLoading;
 			//webView.CoreWebView2.IsWeb += WebView_ScriptNotify;
 			//		webView.DOMContentLoaded += WebView_DOMContentLoaded;
-			webView.CoreWebView2.PermissionRequested+=CoreWebView2_PermissionRequested;
-			webView.NavigationCompleted+=WebView_NavigationCompleted;
-			//		webView.UnsafeContentWarningDisplaying += WebView_UnsafeContentWarningDisplaying;
-			//	webView.UnsupportedUriSchemeIdentified += WebView_UnsupportedUriSchemeIdentified;
-			//webView.UnviewableContentIdentified += WebView_UnviewableContentIdentified;
-			webView.CoreWebView2.NewWindowRequested+=CoreWebView2_NewWindowRequested;
-			if(post != null)
-			{
-				var p = post;
-				post = null;
-				//using (var req = onew CoreWebView2WebResourceRequest(HttpMethod.Post, new Uri(p.OriginalString)))
-				{
-					
 
-					webView.CoreWebView2.NavigateWithWebResourceRequest(p);
+		}
+		private void OnLoaded(object sender,RoutedEventArgs e)
+		{
+			webView.CoreWebView2Initialized+=WebView_CoreWebView2Initialized;
 
-				}
-			}
-			else
-			{
-				Assert(DefaultUrl != null);
-				Source = (DefaultUrl);
-				DefaultUrl = null;
-			}
 		}
 
-		private void CoreWebView2_NewWindowRequested(Microsoft.Web.WebView2.Core.CoreWebView2 sender,Microsoft.Web.WebView2.Core.CoreWebView2NewWindowRequestedEventArgs args)
-		{
-			args.Handled = true;
+		//		webView.UnsafeContentWarningDisplaying += WebView_UnsafeContentWarningDisplaying;
+		//	webView.UnsupportedUriSchemeIdentified += WebView_UnsupportedUriSchemeIdentified;
+		//webView.UnviewableContentIdentified += WebView_UnviewableContentIdentified;
+		//webView.CoreWebView2.NewWindowRequested+=CoreWebView2_NewWindowRequested;
+		//if(post != null)
+		//{
+		//	var p = post;
+		//	post = null;
+		//	//using (var req = onew CoreWebView2WebResourceRequest(HttpMethod.Post, new Uri(p.OriginalString)))
+		//	{
 
-			//	Log(args.Uri.ToString());
-			Launcher.LaunchUriAsync(new Uri(args.Uri));
+
+		//		webView.CoreWebView2.NavigateWithWebResourceRequest(p);
+
+		//	}
+		//}
+		//else
+		//{
+		//	Assert(DefaultUrl != null);
+		//	Source = (DefaultUrl);
+		//	DefaultUrl = null;
+		//}
+	
+
+	private void WebView_CoreWebView2Initialized(WebView sender,CoreWebView2InitializedEventArgs args)
+		{
+		webView.CoreWebView2.PermissionRequested+=CoreWebView2_PermissionRequested;
+			webView.NavigationCompleted+=WebView_NavigationCompleted;
 		}
 
 		private void CoreWebView2_PermissionRequested(Microsoft.Web.WebView2.Core.CoreWebView2 sender,Microsoft.Web.WebView2.Core.CoreWebView2PermissionRequestedEventArgs args)
@@ -229,5 +228,5 @@ namespace COTG.Views
 
 
 
-	}
+	}	
 }

@@ -532,7 +532,7 @@ namespace COTG
 				view.NavigationCompleted+=View_NavigationCompleted; ;
 				//	view.NavigationCompleted+=View_NavigationCompleted;
 				coreWebView.PermissionRequested+=View_PermissionRequested; ;
-				//coreWebView.NewWindowRequested+=CoreWebView_NewWindowRequested; ;
+				coreWebView.NewWindowRequested+=CoreWebView_NewWindowRequested; ;
 				//	webViewBrush = new WebViewBrush() { Stretch = Stretch.Fill };
 				view.GotFocus += View_GotFocus;
 				view.LostFocus += View_LostFocus; ;
@@ -578,6 +578,41 @@ namespace COTG
 
 
 		}
+
+		private async static void CoreWebView_NewWindowRequested(CoreWebView sender,CoreWebView2NewWindowRequestedEventArgs args)
+		{
+			var defer = args.GetDeferral();
+			try
+			{
+				
+				//WebViewPage.DefaultUrl = new Uri(args.Uri);
+				WebViewPage.instance = null;
+				var w = await WindowManagerService.Current.TryShowAsStandaloneAsync<WebViewPage>("overview");
+				while(WebViewPage.instance == null || WebViewPage.instance.webView==null)
+				{
+					await Task.Delay(1000);
+				}
+				var view = WebViewPage.instance.webView;
+				await view.Dispatcher.TryRunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal,   async ()=>
+				{
+					await view.EnsureCoreWebView2Async();
+
+					args.NewWindow = view.CoreWebView2;
+					view.CoreWebView2.Settings.UserAgent = userAgent;
+					view.Source = new Uri(args.Uri);
+					args.Handled = true;
+					defer.Complete();
+				});
+				
+				//	Log(args.Uri.ToString());
+				//	Launcher.LaunchUriAsync(new Uri(args.Uri));
+				//	}
+
+			}
+			catch(Exception __ex)
+			{
+				Debug.LogEx(__ex);
+			}		}
 
 		//private static void CoreWebView_NewWindowRequested(CoreWebView sender,CoreWebView2NewWindowRequestedEventArgs args)
 		//{

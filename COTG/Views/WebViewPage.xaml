@@ -5,6 +5,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 	xmlns:winui="using:Microsoft.UI.Xaml.Controls"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	Loaded="OnLoaded"
     mc:Ignorable="d">
     <Page.Resources>
         <Style x:Key="BrowserButtonStyle" TargetType="Button">
@@ -78,7 +79,8 @@
             <RowDefinition Height="*" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-		<winui:WebView2 x:Name="webView" Source="{x:Bind Source, Mode=OneWay}"
+		<winui:WebView2 x:Name="webView" x:FieldModifier="public"
+						
 			   
 			      />
 

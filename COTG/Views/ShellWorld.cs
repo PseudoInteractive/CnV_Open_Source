@@ -50,7 +50,7 @@ namespace COTG.Views
 		{
 
 		//	var workItemHandler = new WorkItemHandler((action) =>
-			{
+			//{
 				var inputDevices = CoreInputDeviceTypes.Mouse | CoreInputDeviceTypes.Pen | CoreInputDeviceTypes.Touch;
 			//	Log(canvas.ManipulationMode);
 			//	canvas.ManipulationMode = ManipulationModes.All;
@@ -65,11 +65,11 @@ namespace COTG.Views
 				coreInputSource.PointerCaptureLost += CoreInputSource_PointerCaptureLost;
 
 				coreInputSource.PointerWheelChanged += Canvas_PointerWheelChanged;
-				//coreInputSource.PointerCursor = 
-	//			coreInputSource.Dispatcher.ProcessEvents(CoreProcessEventsOption.ProcessUntilQuit);
-//				coreInputSource.IsInputEnabled = true;
-
-			};
+			//coreInputSource.PointerCursor = 
+			//			coreInputSource.Dispatcher.ProcessEvents(CoreProcessEventsOption.ProcessUntilQuit);
+			//				coreInputSource.IsInputEnabled = true;
+			App.cursorDefault.Set();
+			//		};
 			//	var inputWorker = ThreadPool.RunAsync(workItemHandler, WorkItemPriority.High, WorkItemOptions.TimeSliced);
 
 		}
