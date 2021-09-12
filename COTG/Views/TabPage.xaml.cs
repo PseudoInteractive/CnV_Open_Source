@@ -123,7 +123,7 @@ namespace COTG.Views
 		{
 			if (refresh == null)
 				refresh = new(_Refresh);// { throttled = true };
-			ScrollViewer.SetIsVerticalScrollChainingEnabled(this,false);
+		//	ScrollViewer.SetIsVerticalScrollChainingEnabled(this,false);
 
 		//	ScrollViewer.SetVerticalScrollMode(this, ScrollMode.Auto); //DependencyObjectExtensions.FindDescendant<ScrollViewer>(this).AllowFocusOnInteraction= false;
 		}
@@ -140,6 +140,7 @@ namespace COTG.Views
 
 		public void SetPlus(bool set)
         {
+			App.QueueOnUIThreadIdle( ()=>{
             (var tp, var tvi) = GetViewItem();
             if(tvi!=null)
             {
@@ -164,6 +165,7 @@ namespace COTG.Views
 					}
                 }
             }
+			});
         }
 
         public (TabPage tabPage, TabViewItem tabViewItem) GetViewItem()
@@ -239,9 +241,10 @@ namespace COTG.Views
         {
 
 			this.InitializeComponent();
-			IsTabStop = true;
-			TabFocusNavigation = KeyboardNavigationMode.Cycle;
-			AllowFocusOnInteraction = true; tabPages.Add(this);
+		//	IsTabStop = true;
+			TabFocusNavigation = KeyboardNavigationMode.Once;
+		//	AllowFocusOnInteraction = true;
+			tabPages.Add(this);
 			
         }
         static public List<TabPage> tabPages = new List<TabPage>();

@@ -91,7 +91,7 @@ namespace COTG.Game
 			scroll.VerticalScrollMode = ScrollMode.Enabled;
 			scroll.HorizontalScrollMode = ScrollMode.Enabled;
 			scroll.ZoomMode = ZoomMode.Enabled;
-			scroll.IsTabStop = true;
+			//scroll.IsTabStop = true;
 			var msg = new ContentDialog()
 			{
 				Title = "Return Reinforcements",

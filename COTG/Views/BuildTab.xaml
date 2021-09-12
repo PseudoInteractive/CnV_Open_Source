@@ -13,7 +13,6 @@
 			  xmlns:view="using:COTG.Views"
 			  mc:Ignorable="d"
 			  Tag="Build"
-			  TabNavigation="Once"
 			  IsTabStop="True"
 			  FontFamily="Tw Cen MT Condensed">
 

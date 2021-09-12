@@ -277,7 +277,7 @@ namespace COTG.JSON
 
 						if (cid == City.build)
 						{
-							// every 4 seconds commands will only be queud on changes
+							// every 3 seconds commands will only be queud on changes
 							delay = 4000;
 							// process pending queue first if appropriate
 							//	ququeCount= City.buildQueue.count;
@@ -286,6 +286,17 @@ namespace COTG.JSON
 							//{
 							//	queueValid = true;
 							////	Log(cotgQ.ToString());
+							//}
+							//var lg = cotgQ.Length;
+							//if(lg > 0)
+							//{
+							//	var bt = 0;
+							//	// Wait for the first only
+							//	for(int i = 0;i < lg;++i)
+							//		bt += cotgQ[i].buildTime;
+							//	bt -= 8;
+							//	delay = (bt * 1000).Clamp(5 * 1000,15 * 60 * 1000);
+							//	Log("Delay " + delay / 1000.0f);
 							//}
 
 						}
@@ -299,10 +310,11 @@ namespace COTG.JSON
 							{
 								var bt = 0;
 								// skip the first
-								for (int i = 1; i < lg; ++i)
+								for (int i = 0; i < lg; ++i)
 									bt += cotgQ[i].buildTime;
+								bt =  bt*3/4 - 8; // wait for 3/4 of the time minus 8 seconds
 								delay = (bt * 1000).Clamp(5 * 1000, 15 * 60 * 1000);
-								Log("Delay " + delay / 1000);
+								Log("Delay " + delay / 1000.0f);
 							}
 
 							//pollPaused = true;
@@ -384,6 +396,7 @@ namespace COTG.JSON
 									var endPoint = cotgQ.Length + commandsToQueue;
 									bool anyBuildsPending = false;
 									bool hasAny=false;
+									
 									while (offset < queue.count && cotgQ.Length < endPoint)
 									{
 										var i = queue.v[offset];
@@ -556,7 +569,7 @@ namespace COTG.JSON
 										//										City.buildQueue.Add(i);
 										cotgQ.Add(i);
 
-										await IssueCommand( i,cid );
+										await IssueCommand( i,cid ).ConfigureAwait(false);
 										--commandsToQueue;
 										hasAny =true;
 										//	if (validCount > 0 && cotgQ.Length >= City.safeBuildQueueLength)
@@ -568,24 +581,37 @@ namespace COTG.JSON
 									if (hasAny)
 									{
 										
-											if (cid == City.build)
+
+										if(cid == City.build)
 												City.BuildingsOrQueueChanged();
 
 											SaveNeeded();
+											if(delay > 1 * 30 * 1000)
+												delay = 1 * 30 * 1000;
+											// active city needs to update rapidly
+											//if((cid == City.build) && delay > 2000)
+											//	delay = 2000;
 									}
 									else
 									{
-										Trace($"Nothing to do.. {queue.count}");
+										Trace($"Nothing to do {cid==City.build} {city.nameAndRemarks}.. {queue.count}");
 										// nothing queued
 										// no progress :( wait a minute
 										if (cid == City.build)
 										{
-
+											if(delay < 1 * 10 * 1000)
+											{
+												Log($"Short delay: {city} {delay/1000f} {queue.count}");
+												delay = 1 * 10 * 1000;
+											}
 										}
 										else
 										{
-											if (delay < 1 * 60 * 1000)
-												delay = 1 * 60 * 1000;
+											if (delay < 1 * 20 * 1000)
+											{
+												Log($"Short delay: {city} {delay/1000f} {queue.count}");
+												delay = 1 * 20 * 1000;
+											}
 										}
 									}
 
@@ -620,7 +646,7 @@ namespace COTG.JSON
 
 								if (destroyMe)
 								{
-									Log("Queue Done!");
+									Log($"Queue Done! {cid==City.build} {city.nameAndRemarks}");
 									SaveNeeded();
 									Dispose();
 									return;
@@ -650,6 +676,7 @@ namespace COTG.JSON
 				cancellationTokenSource = new();
 				try
 				{
+					Log( $"Delay:{cid==City.build} {delay/1000.0f} {city.nameAndRemarks} bq:{city.buildQueue.count} xq:{queue.count}");
 					await Task.Delay(delay, cancellationTokenSource.Token).ConfigureAwait(false);
 
 				}
@@ -1094,11 +1121,19 @@ namespace COTG.JSON
 		}
 
 
-		static public async Task IssueCommand(BuildQueueItem q,int cid)
+		static public Task IssueCommand(BuildQueueItem q,int cid)
 		{
 			var t0 = JSClient.ServerTimeMs();
 			var json = $"{{\"bt\":{(q.isBuild?0:q.isDemo?3:q.isUpgrade?1:2)},\"pa\":{0},\"slvl\":{q.slvl},\"elvl\":{q.elvl},\"bid\":\"{AMath.RandomDigits(10)}\",\"brep\":{q.bid},\"ds\":{t0},\"de\":{t0+100},\"btype\":{q.proto},\"bspot\":{q.bspot}}}";
-			var rv= await new BuildEx(json,cid).Send(false);
+			//if(process)
+			//{
+			//	await new BuildEx(json,cid).Post(false);
+
+			//}
+			//else
+			{
+				return new BuildEx(json,cid).Send(false);
+			}
 //			Assert(rv==true);
 			//if(qFirst)
 			//{

@@ -10,7 +10,7 @@
 			  xmlns:tk="using:Microsoft.Toolkit.Uwp.UI.Controls"
 			  xmlns:winui="using:Microsoft.UI.Xaml.Controls"
 			  xmlns:storage="using:Windows.Storage"
-			  TabNavigation="Once"
+			  
 			  IsTabStop="True"
                mc:Ignorable="d">
 

@@ -11,7 +11,7 @@
                xmlns:views="using:COTG.Views"
 
 			   TabNavigation="Once"
-			  IsTabStop="True"
+			
                mc:Ignorable="d">
 	<views:UserTab.Resources>
 
@@ -43,7 +43,7 @@
 			<Button Margin="4" Content="Clear Queue" Click="ClearQueue" Style="{StaticResource ButtonSmall}" />
 			<Button Margin="4" Content="Cancel Selected" Click="ClearSelected" Style="{StaticResource ButtonSmall}" />
 		</StackPanel>
-		<winui:TreeView Grid.Row="1" x:Name="zoom"  CanReorderItems="False"  SelectionMode="Multiple" IsTabStop="True"  BorderThickness="1" 
+		<winui:TreeView Grid.Row="1" x:Name="zoom"  CanReorderItems="False"  SelectionMode="Multiple" BorderThickness="1" 
  TabNavigation="Once" CanDragItems="False" AllowDrop="False" ItemTemplate="{StaticResource BuildTabTemplate}" 
 						ItemsSource="{x:Bind cities}" ItemInvoked="zoom_ItemInvoked" 
 						>

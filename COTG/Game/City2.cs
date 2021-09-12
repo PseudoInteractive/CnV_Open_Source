@@ -23,7 +23,10 @@ namespace COTG.Game
 
 	public partial class City
 	{
+
 		private static Building[] postQueueBuildingCache = new Building[citySpotCount];
+
+
 		public static City cachedCity;
 		static int postQueueBuildingCount = -1;
 		public static void BuildingsOrQueueChanged()
@@ -42,7 +45,8 @@ namespace COTG.Game
 				//{
 				//var  buildingsCache = buildings;
 				//}
-				var rv = postQueueBuildingCache;
+				var rv = new Building[citySpotCount];
+				postQueueBuildingCache = rv;
 				//
 				// copy current buildings
 				//

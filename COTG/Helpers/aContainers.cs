@@ -51,7 +51,7 @@ namespace COTG
 		{
 			if (CollectionChanged != null)
 			{
-				App.DispatchOnUIThreadIdle(() =>
+				App.QueueOnUIThreadIdle(() =>
 
 				   //  Assert(App.IsOnUIThread());
 				   CollectionChanged(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset)));

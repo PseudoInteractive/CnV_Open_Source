@@ -13,8 +13,7 @@
 			  xmlns:view="using:COTG.Views"
 			  mc:Ignorable="d"
 			  Tag="Raid"
-			  TabNavigation="Once"
-			  IsTabStop="True"
+			 
 			  FontFamily="Tw Cen MT Condensed">
 
 	<Grid x:Name="cityBaseGrid" >
@@ -33,7 +32,7 @@
 							ColumnDataOperationsMode="Flyout"
 							Grid.Row="3"
 							Padding="16,16,16,16"
-							IsTabStop="True"
+							
 							TabFocusNavigation="Once"
 							UserGroupMode="Auto"
 							AlternationStep="2"

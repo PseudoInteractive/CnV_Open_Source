@@ -10,7 +10,7 @@
       xmlns:local="using:COTG.Views"
       Background="{x:Null}"
       Tag="DefenseHistory"
-			   TabNavigation="Once"
+			 
 			  IsTabStop="True"
       mc:Ignorable="d">
 

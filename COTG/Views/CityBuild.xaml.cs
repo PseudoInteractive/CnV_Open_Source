@@ -1230,7 +1230,7 @@ namespace COTG.Views
 
 			if (!isRight && (action != Action.none))
 			{
-				ElementSoundPlayer.Play(action == Action.destroy ? ElementSoundKind.GoBack : ElementSoundKind.Focus);
+			//	ElementSoundPlayer.Play(action == Action.destroy ? ElementSoundKind.GoBack : ElementSoundKind.Focus);
 				await PerformAction(action, cc, quickBuildId, false);
 				if (action != Action.moveStart && action != Action.moveEnd)
 					lastQuickBuildActionBSpot = bspot;

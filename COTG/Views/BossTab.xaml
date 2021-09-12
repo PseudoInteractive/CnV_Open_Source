@@ -13,7 +13,6 @@
       xmlns:telerikGrid="using:Telerik.UI.Xaml.Controls.Grid"
       xmlns:local="using:COTG.Views"
         Tag="Boss"
-	TabNavigation="Once"
 			  IsTabStop="True"
     mc:Ignorable="d">
     <Grid>
@@ -79,7 +78,6 @@
                         							Margin="4,14,8,16"
 
                         AutoGenerateColumns="False"
-								 AllowFocusOnInteraction="True"
 
                         CanUserChooseColumns="True"
                         ColumnResizeHandleDisplayMode="OnColumnHeaderActionFlyoutOpen"

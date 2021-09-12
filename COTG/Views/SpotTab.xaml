@@ -42,8 +42,7 @@
                        ColumnResizeHandleDisplayMode="OnColumnHeaderActionFlyoutOpen"
                                     ColumnDataOperationsMode="Flyout"
                         PointerPressed="gridPointerPress"
-						AllowFocusOnInteraction="True"
-                        ItemsSource="{x:Bind spotMRU, Mode=OneWay}"
+				        ItemsSource="{x:Bind spotMRU, Mode=OneWay}"
 													Margin="4,4,8,16"
 
                         RowHeight="{StaticResource MediumGridRowHeight}"

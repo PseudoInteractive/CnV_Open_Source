@@ -130,7 +130,8 @@ namespace COTG.Views
 		{
 			if (items.Count > 0 && visible)
 			{
-				App.DispatchOnUIThreadLow(() =>
+				App.QueueOnUIThreadIdle(() =>
+				
 				{
 
 					listView.ScrollIntoView(items.Last());
@@ -710,17 +711,19 @@ namespace COTG.Views
 		//        fly.ShowAt(date, e.GetPosition(date));
 		//    });
 		//}
-
+		static ChatTab hasFocus;
 		private void input_GotFocus(object sender, RoutedEventArgs e)
 		{
 			SetPlus(false);
+			hasFocus = this;
 		}
 
 		private void inputPointerOver(object sender, PointerRoutedEventArgs e)
 		{
 			//           Log("Tapped");
 			//   listView.Focus(FocusState.Programmatic);
-			App.DispatchOnUIThread(() => input.Focus(FocusState.Programmatic));
+		//	if(input.Focus(FocusState.)
+			App.QueueOnUIThreadIdle(() => input.Focus(FocusState.Programmatic));
 		}
 
 

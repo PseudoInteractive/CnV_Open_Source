@@ -435,7 +435,9 @@ namespace COTG.Services
 
 		public override void ProcessJson(JsonDocument json)
 		{
-			Log($"Sent buildex {json?.RootElement.ToString()}");
+			var city = City.GetOrAddCity(cid);
+			var root = json.RootElement;
+			city.LoadCityData(root);
 		}
 
 	}
@@ -1016,7 +1018,7 @@ namespace COTG.Services
 
 				}
 			}
-			App.DispatchOnUIThreadIdle(()
+			App.QueueOnUIThreadIdle(()
 				=>
 			{
 				MainPage.instance.rWood.Text = $"Wood: {(rWood * 0.001).RoundToInt():N0} k/h";

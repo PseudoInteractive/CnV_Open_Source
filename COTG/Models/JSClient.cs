@@ -500,9 +500,14 @@ namespace COTG
 				//	//Opacity = 0.5,
 
 				//};
+			//	var env =await App.createWebEnvironmentTask;
+			//	env.NewBrowserVersionAvailable+=Env_NewBrowserVersionAvailable;
 				await view.EnsureCoreWebView2Async();
 
 				coreWebView = view.CoreWebView2;
+#if DEBUG
+				coreWebView.OpenDevToolsWindow();
+#endif
 				coreWebView.Settings.UserAgent = userAgent;
 				coreWebView.Settings.IsWebMessageEnabled=true;
 				coreWebView.Settings.IsPasswordAutosaveEnabled=true;
@@ -512,9 +517,9 @@ namespace COTG
 				coreWebView.Settings.IsStatusBarEnabled=false;
 				coreWebView.Settings.AreBrowserAcceleratorKeysEnabled=false;
 				coreWebView.Settings.AreDefaultContextMenusEnabled=false;
-				
+				coreWebView.Environment.NewBrowserVersionAvailable+=Environment_NewBrowserVersionAvailable;
 //				coreWebView.Settings.AreBrowserAcceleratorKeysEnabled=false;
-				//coreWebView.AddWebResourceRequestedFilter("*jsfunctions/game.js",ResourceContext:CoreWebView2WebResourceContext.Script);
+//coreWebView.AddWebResourceRequestedFilter("*jsfunctions/game.js",ResourceContext:CoreWebView2WebResourceContext.Script);
 				coreWebView.AddWebResourceRequestedFilter(jsFunctionMask,ResourceContext: CoreWebView2WebResourceContext.Script);
 				coreWebView.WebResourceRequested += View_WebResourceRequested;
 				coreWebView.WebMessageReceived +=CoreWebView_WebMessageReceived;
@@ -537,6 +542,7 @@ namespace COTG
 				view.GotFocus += View_GotFocus;
 				view.LostFocus += View_LostFocus; ;
 				view.AllowFocusOnInteraction=false;
+				view.CoreWebView2.ProcessFailed+=CoreWebView2_ProcessFailed;
 				
 				//   view.CacheMode = CacheMode.
 				//Grid.Se SetAlignLeftWithPanel(view, true);
@@ -576,6 +582,23 @@ namespace COTG
 			return;
 
 
+
+		}
+
+		private static void Environment_NewBrowserVersionAvailable(CoreWebView2Environment sender,object args)
+		{
+			Log(args.ToString());
+		}
+
+		private static void Env_NewBrowserVersionAvailable(CoreWebView2Environment sender,object args)
+		{
+			Log(args.ToString());
+		}
+
+
+		private static void CoreWebView2_ProcessFailed(CoreWebView sender,CoreWebView2ProcessFailedEventArgs args)
+		{
+			App.DoYesNoBox("The internet is broken", "Please restart");
 
 		}
 
@@ -1539,7 +1562,7 @@ namespace COTG
 
 
 					WorldViewSettings.playerSettings.Clear();
-					if(wo.TryGetProperty("p",out var p))
+					if(wo.TryGetProperty("p",out var p) && p.ValueKind == JsonValueKind.Object)
 					{
 						foreach(var pset in p.EnumerateObject())
 						{
@@ -2367,6 +2390,7 @@ private static async void ShowCouncillorsMissingDialog()
 							   }
 						   case "keyDown":
 							   {
+								   Log("Key");
 								   //   Log($"Keydown: {jsp.Value.ToString()}");
 								   VirtualKey key = default;
 								   switch (jsp.Value.GetString("key"))
@@ -2384,6 +2408,7 @@ private static async void ShowCouncillorsMissingDialog()
 							   }
 						   case "keyUp":
 							   {
+								   Log("Key");
 								   VirtualKey key = default;
 								   switch (jsp.Value.GetString("key"))
 								   {

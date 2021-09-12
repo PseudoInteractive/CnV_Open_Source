@@ -547,7 +547,7 @@ namespace COTG.Game
 
 		public static void GridPressed(object sender, PointerRoutedEventArgs e)
 		{
-			(sender as RadDataGrid).Focus();
+			//(sender as RadDataGrid).Focus();
 			e.KeyModifiers.UpdateKeyModifiers();
 
 			var hit = Spot.HitTest(sender, e);
@@ -1570,7 +1570,7 @@ namespace COTG.Game
 			if (changed)
 			{
 				focus = cid;
-				App.DispatchOnUIThreadIdle(UpdateFocusText);
+				App.QueueOnUIThreadIdle(UpdateFocusText);
 			}
 			if (bringIntoView)
 				cid.BringCidIntoWorldView(lazyMove, false);
@@ -2001,7 +2001,7 @@ namespace COTG.Game
 					//AApp.AddItem(flyout, "Add as Fake (3)", (_, _) => AttackTab.AddTarget(cid, 3));
 					//AApp.AddItem(flyout, "Add as Fake (4)", (_, _) => AttackTab.AddTarget(cid, 3));
 				}
-				if (cid != City.build)
+				//if (cid != City.build)
 				{
 					aSetup.AddItem("Set target hub", (_, _) => CitySettings.SetTargetHub(City.build, cid));
 					aSetup.AddItem("Set source hub", (_, _) => CitySettings.SetSourceHub(City.build, cid));
@@ -2228,7 +2228,7 @@ namespace COTG.Game
 			//          instance.Dispatcher.RunAsync(DispatcherQueuePriority.Low, () =>
 			//           {
 			//   await Task.Delay(200);
-			App.DispatchOnUIThreadIdle(() =>
+			App.QueueOnUIThreadIdle(() =>
 			{
 
 				{

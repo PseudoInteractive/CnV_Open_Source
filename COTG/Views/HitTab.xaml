@@ -10,7 +10,7 @@
       xmlns:local="using:COTG.Views"
       Background="{x:Null}"
       Tag="Hits"
-			   TabNavigation="Once"
+			   
 			  IsTabStop="True"
       mc:Ignorable="d">
     <Grid>
@@ -22,9 +22,6 @@
         <telerikGrid:RadDataGrid Grid.Row="1"
 								 x:Name="historyGrid"
                     IsTabStop="True"
-								 TabFocusNavigation="Cycle"
-								 TabNavigation="Cycle"
-                      AllowFocusOnInteraction="True"
 								 ScrollViewer.IsScrollInertiaEnabled="False"
 								 ScrollViewer.IsVerticalScrollChainingEnabled="False"
 								 ScrollViewer.IsHorizontalScrollChainingEnabled="False"

@@ -14708,13 +14708,6 @@ function outer() {
             }
         }
         var e0F, k7F;
-        function C0V(a6g) {
-            a6g = Number(a6g);
-            var E6g = a6g % +A5y;
-            var k2g = (a6g - E6g) / (A5y ^ 0);
-            e5F(a6g);
-            H4F(E6g, k2g, 1);
-        }
         if (typeof document.hidden !== "undefined") {
             e0F = __s[+X2R];
             k7F = __s[6806];
@@ -15254,15 +15247,6 @@ function outer() {
             });
         }
         var r4F = 0;
-        function t8F(W0T, i0T) {
-            var M0T = $("#city_map")
-                .panzoom("getMatrix");
-            var G0T = W0T * (1 / M0T[0]);
-            var C0T = i0T * ((1) / M0T['3' >>
-                77007616]);
-            E6k.R6();
-            return { y: C0T, x: G0T };
-        }
         $(function () {
             E6k.R6();
             $.widget(__s[2615], $.ui.selectmenu, {
@@ -17440,7 +17424,6 @@ function outer() {
                 var X5U = ppdt["r"];
                 ppdt[__s[301]] = 0;
                 var z5U = Number(ppdt.lcit);
-                n9F();
                 getCity(z5U);
                 if (ppdt[__s[5060]])
                     if (Object.keys(ppdt[__s[5060]])
@@ -17526,15 +17509,11 @@ function outer() {
             city.tq = [];
             b9 = 0;
             g2 = 0;
-            $("#city_map")
-                .css(__s[+H2p], __s[+A2p]);
             $(__s[G2p << 1694282592])
                 .css({ 'filter': '' });
             $(__s[+G2p])
                 .removeClass(__s[r2p & 2147483647]);
             n2 = 0;
-            $("#city_map")
-                .css(__s[H2p - 0], __s[+A2p]);
             W9();
             $(__s[+b2p])
                 .show();
@@ -19268,29 +19247,6 @@ function outer() {
             w2v = w2v.base64Encode();
             return w2v;
         };
-        function e5F(c8D) {
-            var y8D = c8D % (A5y | 0);
-            var D8D = (c8D - y8D) / +A5y;
-            y8D = Math.floor(y8D);
-            D8D = Math.floor(D8D);
-            var p8D = $("#city_map")
-                .panzoom("getMatrix");
-            var Y8D = document.getElementById("city_map");
-            var q8D = Y8D
-                .clientWidth;
-            var N8D = Y8D.clientHeight;
-            var m8D = q8D / (3);
-            var a8D = N8D / 3;
-            var E8D = m8D - (1280);
-            var k9D = a8D - (1280);
-            var e9D = E8D + ((10) - y8D) * (+G5y * p8D[3]);
-            var F8D = k9D + (10 - D8D) * (96 * p8D[3]);
-            $("#city_map")
-                .panzoom("pan", e9D, F8D);
-            E6k.y6();
-            p8D = $("#city_map")
-                .panzoom("getMatrix");
-        }
         function getContinent(Q5T, T5T) {
             var I5T = Math.floor(T5T / 100);
             var v5T = Math.floor(Q5T / 100);
@@ -24355,15 +24311,9 @@ function outer() {
                     .val(city.x);
                 $(__s[k8R >> 379378464])
                     .val(city.y);
-                if ($("#city_map")
-                    .css("display") != "none")
-                    e5F(+bspotHall);
-                else if ($("#cvs")
+                if ($("#cvs")
                     .css("display") != "none")
                     O8(cid);
-                else if ($("#content")
-                    .css("display") != "none")
-                    o7F(city.x, city.y);
             });
             $(__s[832])
                 .click(function () {
@@ -35997,15 +35947,6 @@ function outer() {
             }
         }
         var c0F = 0;
-        function R4F(x0T) {
-            var O0T = x0T / (100);
-            var T0T = [];
-            T0T.clientX = 837;
-            T0T.clientY = 340;
-            $("#city_map")
-                .panzoom("zoom", O0T, { silent: !"", focal: T0T });
-            localStorage.setItem(__s[92], x0T);
-        }
         function I8F() {
             var K4Z = 0;
             var V4Z = 0;
@@ -38179,15 +38120,6 @@ function outer() {
             }
         }
         var j0F = 0;
-        function G8F(Q0T) {
-            var l0T = Q0T / 100;
-            var v0T = [];
-            E6k.R6();
-            v0T.clientX = 837;
-            v0T.clientY = "340" | 256;
-            $("#content")
-                .panzoom("zoom", l0T, { focal: v0T, silent: !!{} });
-        }
         $(document)
             .ready(function () {
             E6k.y6();
@@ -44620,7 +44552,6 @@ function outer() {
                     .val();
                 var p96 = Y96 % (R5y << 668956064);
                 var N96 = (Y96 - p96) / (R5y | 65536);
-                o7F(p96, N96);
             }
             else {
                 SetViewMode(viewModeRegion);
@@ -47027,8 +46958,7 @@ function outer() {
                             slvl: E9g,
                             pa: 0
                         };
-                        var H0w = _s(p8R <<
-                            1591465440) + b2() + __s[+z8R];
+                        var H0w = "X2U11s33S" + b2() + "ccJx1e2";
                         var e0w = a6.ccazzx.encrypt(JSON.stringify(s0w), H0w, 256 & E6k
                             .s6s);
                         N6();
@@ -49574,12 +49504,6 @@ function outer() {
             });
             $(__s[n1R & 2147483647])
                 .off("click");
-            $(__s[n1R & 2147483647])
-                .click(function () {
-                var d1g = $(this)
-                    .attr(__s[4491]);
-                C0V(d1g);
-            });
             $(__s[5339])
                 .off("click");
             $(__s[5339])
@@ -50730,7 +50654,7 @@ function outer() {
                                     ds: L5w,
                                     elvl: 0
                                 };
-                                var Q5w = __s[+p8R] + b2() + __s[z8R - 0];
+                                var Q5w = "X2U11s33S" + b2() + __s[z8R - 0];
                                 var l5w = a6.ccazzx.encrypt(JSON.stringify(T5w), Q5w, +256);
                                 N6();
                                 ++bqInFlight;
@@ -55559,21 +55483,6 @@ function outer() {
                 return H3T;
             }
         }
-        function o7F(Z8D, U8D) {
-            var P8D = document.getElementById('worldcanv');
-            E6k.R6();
-            if (P8D) {
-                Z8D = Math.floor(Z8D);
-                U8D = Math.floor(U8D);
-                var g8D = $("#content")
-                    .panzoom("getMatrix");
-                var B8D = Z8D * (m6p - 0) / (1 / g8D[0]) * -(1) + ("864" >>
-                    1177972608) + (g8D[0] - 1) * 10 * ('126.65' * 1);
-                var R8D = U8D * (m6p * 1) / (1 / g8D[3]) * -(1) + 302 + (g8D[3] - (1)) * (10) * +"126.65";
-                $("#content")
-                    .panzoom("pan", B8D, R8D);
-            }
-        }
         $("#buildingMoveButton")
             .click(function (A8g) {
             if (!(A8g.originalEvent === "bad")) {
@@ -55595,8 +55504,6 @@ function outer() {
             .click(function () {
             if (g2 == 1) {
                 g2 = 0;
-                $("#city_map")
-                    .css(__s[+H2p], __s[A2p << 1548779072]);
                 $(__s[+G2p])
                     .css({ 'filter': '' });
                 $(__s[G2p << 84693696])
@@ -55608,8 +55515,6 @@ function outer() {
             if (t9g.keyCode == e2y << 1271319744)
                 if (g2 == 1) {
                     g2 = 0;
-                    $("#city_map")
-                        .css(__s[H2p ^ 0], __s[+A2p]);
                     $(__s[+G2p])
                         .css({ 'filter': '' });
                     $(__s[G2p - 0])
@@ -55620,8 +55525,6 @@ function outer() {
                         .css("display");
                     if (n2 != "none") {
                         n2 = 0;
-                        $("#city_map")
-                            .css(__s[+H2p], __s[A2p << 2139481536]);
                         W9();
                         $(__s[+b2p])
                             .show();
@@ -56836,101 +56739,6 @@ function outer() {
                 .css("display", "none");
             r5V();
         });
-        function x1F() {
-            var U2g = $("#city_map")
-                .panzoom("getMatrix");
-            var M2g = window.event || arguments.callee.caller.arguments[0];
-            $(__s[6938])
-                .blur();
-            C0F();
-            var r2g = document.getElementById("city_map");
-            var C2g = r2g.getBoundingClientRect();
-            var W2g = t8F(M2g.clientX - C2g.left, M2g.clientY - C2g.top);
-            var x2g = Math.floor(W2g.x / +G5y);
-            var o2g = Math
-                .floor(W2g.y / 96);
-            var V2g = x2g;
-            var S2g = o2g;
-            var L2g = x2g;
-            var X2g = o2g;
-            var n2g = x2g;
-            var K2g = o2g;
-            var O2g = S2g * +A5y + V2g;
-            h8 = x2g;
-            S8 = o2g;
-            n2 = $("#quickBuildMenu")
-                .css("display");
-            var Z2g = "," + O2g + ",";
-            var g2g = O2g;
-            var P2g = city
-                .bd[0]["bl"];
-            var T2g = D5F(Number(O2g));
-            var f2g = city["bd"][O2g][_s(+m1R)];
-            if (n2 == "none" && (T2g == "w" || city["bd"][0]["bl"] ==
-                (0) && (T2g == __s[g4p >> 799281920] || T2g == __s[G2k - 0]))) {
-                r0V();
-                d2 = 0;
-                S0V();
-            }
-            else if (T2g == 'l' || T2g == __s[g4p & 2147483647] || T2g == __s[+G2k]) {
-                d2 =
-                    X2g * (A5y & 2147483647) + L2g;
-                var I2g = X2g * (A5y - 0) + L2g;
-                n2 = $("#quickBuildMenu")
-                    .css("display");
-                var v2g = city.bd[d2].bid;
-                if (v2g == (0) || v2g == undefined || v2g ==
-                    "undefined")
-                    for (var l2g = 0; l2g < city.bq.length; l2g++)
-                        if (city.bq[l2g])
-                            if (city.bq[l2g][__s[+m54]]) {
-                                var b2g = city.bq[l2g][__s[m54 >> 275263264]];
-                                if (b2g == d2)
-                                    v2g =
-                                        1;
-                            }
-                if (n2 == "none" && v2g == (0) && g2 == 1)
-                    Z0V(v4F, I2g);
-                if (n2 == "none" && v2g == 0 && g2 == 0)
-                    N4F(d2);
-                if (n2 == "none" && v2g != 0 && g2 == 0) {
-                    var Q2g = city.bd[Number(I2g)].bid;
-                    var i2g = L2(Q2g);
-                    if (i2g != 0)
-                        Q2g = i2g;
-                    e3F(Number(I2g));
-                    var t2g = city.bd[Number(I2g)].bl;
-                    var J2g = Math.ceil(city.bd[Number(I2g)].bu / (Number(city
-                        .cs) / 100));
-                    var h2g = Math.ceil(city.bd[Number(I2g)].bd / (Number(city.cs) / (100)));
-                    if (bam[_s(+Q5y)][Q2g])
-                        for (var l2g in city.bq) {
-                            var G2g = city.bq[l2g].bspot;
-                            var z2g = city.bq[l2g].slvl;
-                            var d2g = city.bq[l2g]
-                                .elvl;
-                            if (G2g == I2g && z2g < d2g)
-                                t2g++;
-                            if (G2g == I2g && z2g > d2g)
-                                t2g--;
-                        }
-                    else if (t2g != "0" <<
-                        435412160)
-                        Q2g = L2(Q2g);
-                    buildingInfo(Q2g, t2g, J2g, h2g, I2g);
-                }
-                else {
-                    var I2g = X2g * (A5y - 0) + L2g;
-                    E6 = $(__s[4118])
-                        .val();
-                    var v2g = city.bd[I2g].bid;
-                    var A2g = b1F(E6, I2g);
-                    if (n2 != "none" && (v2g == 0 ||
-                        v2g == 476) && A2g == !![])
-                        buildOp(E6, I2g, 0);
-                }
-            }
-        }
         $(__s[6492])
             .click(function () {
             $(__s[6595])
@@ -57482,8 +57290,6 @@ function outer() {
                 R8g = 1;
             if (Y8g == 1) {
                 g2 = 0;
-                $("#city_map")
-                    .css(__s[+H2p], __s[A2p >> 1593854240]);
                 $(__s[G2p >> 525645312])
                     .css({ 'filter': '' });
                 $(__s[+G2p])
@@ -57559,8 +57365,6 @@ function outer() {
                         X1F(Z8g, d2);
                         z1F(U8g, p8g);
                         g2 = 0;
-                        $("#city_map")
-                            .css(__s[+H2p], __s[+A2p]);
                         $(__s[G2p >> 428377376])
                             .css({ 'filter': "" });
                         $(__s[G2p - 0])
@@ -57977,19 +57781,6 @@ function outer() {
                 });
             });
         });
-        function R7V(r8D, A8D) {
-            var V5k = '0.35714285714285715';
-            var n8D = document.getElementById('worldcanv');
-            if (n8D) {
-                r8D = Math.floor(r8D);
-                A8D = Math.floor(A8D);
-                var f8D = (r8D * (m6p * 1) / +V5k - 864) * -(1) + +'2279.7' + (r8y -
-                    0);
-                var K8D = (A8D * (m6p * 1) / +V5k - 302) * -(1) + '2279.7' * 1 - +r8y;
-                $("#content")
-                    .panzoom("pan", f8D, K8D);
-            }
-        }
         var X4F = +z7R + t4F * +c8y;
         var L4F = X4p ^ 0;
         function v6F(r92) {
@@ -59541,75 +59332,6 @@ function outer() {
             });
         }
         var O5F = L0R << 690497984;
-        $(document)
-            .ready(function () {
-            E6k.y6();
-            var Y9D = $("#content")
-                .panzoom({ maxScale: 64 / 4.22166666666667 });
-            $("#content")
-                .panzoom("zoom", 64 / 4.22166666666667);
-            Y9D.parent()
-                .on(__s[3159], function (N9D) {
-                N9D.preventDefault();
-                var q9D = N9D.delta || N9D.originalEvent
-                    .wheelDelta;
-                var c9D = q9D ? q9D < 0 : N9D.originalEvent.deltaY > 0;
-                var F9D = c9D * (100);
-                Y9D.panzoom("zoom", c9D, { increment: "0.4" * 1, focal: N9D });
-                E6k.y6();
-                var m9D = $("#content")
-                    .panzoom("getMatrix");
-                var F9D = Number(m9D[3]) * 100;
-                $(__s[1593])
-                    .slider(__s[+Q7y], "value", F9D);
-            });
-            $(__s[1593])
-                .slider({
-                value: 280,
-                orientation: __s[2531],
-                step: 10,
-                min: +u6y,
-                slide: function (E9D, a9D) {
-                    E6k.R6();
-                    G8F(a9D.value);
-                },
-                max: 64 / 4.22166666666667 * 100
-            });
-            $(__s[5058])
-                .slider({
-                value: 100,
-                orientation: __s[2531],
-                step: 1,
-                min: 10,
-                slide: function (e0T, k0T) {
-                    E6k.R6();
-                    R4F(k0T.value);
-                },
-                max: 160
-            });
-            $(__s[330])
-                .slider({
-                max: 100,
-                step: 1,
-                slide: function (u0T, s0T) {
-                    O5F = s0T.value;
-                    n0V(s0T.value);
-                },
-                value: L0R * 1,
-                min: 0
-            });
-            $(__s[2779])
-                .slider({
-                max: +e2R,
-                value: 100,
-                step: 1,
-                min: 0,
-                slide: function (j0T, H0T) {
-                    y4F(H0T
-                        .value);
-                }
-            });
-        });
         function z7V() { }
         function Y5V(e11) {
             $(__s[2225])
@@ -64101,6 +63823,8 @@ function outer() {
         let Z1FTimeout = 1;
         let nextPoll = 0;
         function DoPoll2(delay) {
+            if (delay < 1000)
+                console.log("doPoll2  " + delay);
             let desiredTime = Date.now() + delay;
             if (Z1FTimeout != 0) {
                 if (desiredTime < nextPoll) {
@@ -64215,7 +63939,7 @@ function outer() {
                 }
                 finally {
                     Z1FTimeout = 0;
-                    DoPoll2(idleMinutes < 2 ? 2000 : idleMinutes < 10 ? 3000 : idleMinutes < 20 ? 6000 : 12000);
+                    DoPoll2(idleMinutes < 2 ? 3000 : idleMinutes < 10 ? 5000 : idleMinutes < 20 ? 6000 : 12000);
                 }
         }
         function s6F() {
@@ -65725,11 +65449,6 @@ function outer() {
             },
             items_name: function (r1i) { return artifacts[r1i]["n"]; }
         };
-        function n9F() {
-            $("#city_map")
-                .panzoom({ maxScale: +"1.6", minScale: +"0.25" });
-            return;
-        }
         function y0F(z0D) {
             E6k.R6();
             switch (z0D) {
@@ -69062,6 +68781,7 @@ function postppdt() {
             top: mainMapDiv.clientTop,
             timeoffset: (ServerDate.getTime() - Date.now()),
             agent: navigator.userAgent,
+            cookie: document.cookie,
             ppdt: ppdt
         };
         let wrapper = { jsvars: creds };

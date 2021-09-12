@@ -625,6 +625,7 @@ namespace COTG.Views
 				{
 					if(eventName!=null)
 						JSClient.PostMouseEventToJS( (int)(AGame.nativeToDip/ShellPage.webViewScale.X * mousePosition.X) + canvasBaseX, (int)(AGame.nativeToDip/ShellPage.webViewScale.Y * mousePosition.Y) + canvasBaseY, eventName, button );
+					Log("JsMouse");
 					return true;
 				}
 			}

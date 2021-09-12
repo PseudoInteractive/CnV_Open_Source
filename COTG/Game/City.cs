@@ -765,7 +765,8 @@ namespace COTG.Game
 				else
 				{
 					//Assert(false);
-					buildQueue.Clear();
+					Log($"No Queue {this}");
+					//buildQueue.Clear();
 				}
 			}
 
@@ -1799,7 +1800,7 @@ namespace COTG.Game
 		//}
 		public static void SyncCityBox()
 		{
-			App.DispatchOnUIThreadIdle(() =>
+			App.QueueOnUIThreadIdle(() =>
 			{
 				var _build = City.GetBuild();
 				if (_build != ShellPage.instance.cityBox.SelectedItem)
@@ -2304,7 +2305,7 @@ namespace COTG.Game
 		public static void NotifyChange()
 		{
 
-			App.DispatchOnUIThreadIdle(async () =>
+			App.QueueOnUIThreadIdle(async () =>
 		   {
 				//               Log("CityListChange");
 

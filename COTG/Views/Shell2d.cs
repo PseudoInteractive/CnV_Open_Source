@@ -159,13 +159,20 @@ namespace COTG.Views
 	//		Log($"!Focus0: {hasKeyboardFocus} w{webviewHasFocus} w2{webviewHasFocus2}");
 			if (webviewHasFocus)
 				return;
-			if ( Interlocked.CompareExchange(ref hasKeyboardFocus, 1, 0) == 0)
+			if ( Interlocked.CompareExchange(ref hasKeyboardFocus, 2, 0) == 0)
 			{
-				App.DispatchOnUIThread(() =>
+				// set to 0
+				//	Log($"!Focus1: {hasKeyboardFocus} w{webviewHasFocus} w2{webviewHasFocus2}");
+				App.QueueOnUIThreadIdle( () =>
 				{
-					//	Log($"!Focus1: {hasKeyboardFocus} w{webviewHasFocus} w2{webviewHasFocus2}");
-					hasKeyboardFocus = 0;
-					keyboardProxy.Focus(FocusState.Programmatic);
+					if(hasKeyboardFocus==2)
+					{
+						// back to 0 temporarily 
+						hasKeyboardFocus = 0;
+				//	Log("Focus: " + webviewHasFocus + webviewHasFocus2);
+						keyboardProxy.Focus(FocusState.Programmatic);
+					//	App.cursorDefault.Set();
+					}
 					//	Log($"!Focus2: {hasKeyboardFocus} w{webviewHasFocus} w2{webviewHasFocus2}");
 				});
 			}

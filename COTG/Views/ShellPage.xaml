@@ -14,7 +14,7 @@
       x:Name="shellPage"
       Loaded="OnLoaded"
       mc:Ignorable="d"
-	  IsTabStop="True"
+	
 >
 	
 	<Page.Resources>
@@ -50,6 +50,10 @@
 						Grid.RowSpan="5"
 						Grid.ColumnSpan="2"
 						Canvas.ZIndex="10"
+						AllowFocusOnInteraction="False"
+						AllowDrop="False"
+						
+					
 						Grid.Row="1" />
 
 
@@ -154,7 +158,6 @@
 								<Slider x:Name="eventTimeTravelSlider"
                                         ValueChanged="EventTimeTravelSliderChanged"
                                         TickFrequency="10"
-                                    AllowFocusOnInteraction="True"
                                     IsTabStop="True"
                                         StepFrequency="10"
                                     SmallChange="10" LargeChange="60"
@@ -176,7 +179,7 @@
 				<AppBarButton Click="{x:Bind helpers:NavStack.ForwardClick}" Icon="Forward" Label="Forward" RightTapped="ForwardRightTapped" Style="{StaticResource AppBarButtonRevealStyle}"
                            ToolTipService.ToolTip="Move forward in city history&#x0a;This is only useful after you have pressed 'Back'&#x0a;Right click to view forward history" />
 
-				<AppBarToggleButton x:Name="webFocus" Click="webFocus_Click" Icon="Caption" Label="HTML"
+				<AppBarToggleButton x:Name="webFocus" Click="webFocus_Click" Icon="Caption" Label="HTML" IsTabStop="False" AllowFocusOnInteraction="False"
                            ToolTipService.ToolTip="If there are COTG stuffs that are not behaving, click here to hide the native windows and focus on HTML" />
 
 				<AppBarButton x:Name="Fresh"
@@ -249,7 +252,7 @@
 			<Frame x:Name="shellFrame" TabFocusNavigation="Once" IsNavigationStackEnabled="False"  x:FieldModifier="public" />
 			<Frame x:Name="spotFrame" TabFocusNavigation="Once" Grid.Row="1" IsNavigationStackEnabled="False" />
 			<tk:GridSplitter
-				IsTabStop="True"
+			
 				CursorBehavior="ChangeOnSplitterHover"
 				GripperCursor="SizeWestEast"
                         Background="Transparent"
@@ -273,7 +276,7 @@
 				<ColumnDefinition />
 				<ColumnDefinition />
 			</Grid.ColumnDefinitions>
-			<Frame x:Name="chatTabFrame" x:FieldModifier="public" Grid.Column ="1" Grid.Row="1" IsNavigationStackEnabled="False" Margin="12,12,16,0" IsTabStop="True" TabFocusNavigation="Once" >
+			<Frame x:Name="chatTabFrame" x:FieldModifier="public" Grid.Column ="1" Grid.Row="1" IsNavigationStackEnabled="False" Margin="12,12,16,0" TabFocusNavigation="Once" >
 				<!--<Frame.Resources>
 					<winui:TeachingTip x:Key="ChatTip0"
                                 Title="Chat Window"
@@ -296,7 +299,7 @@
 			<tk:GridSplitter
                         Background="Transparent"
                     Grid.Row="1"
-										 				IsTabStop="True"
+										 				
 				CursorBehavior="ChangeOnSplitterHover"
 				GripperCursor="SizeWestEast"
                         Grid.Column="1"
@@ -313,7 +316,7 @@
 			<tk:GridSplitter
                     Grid.Row="1"
                     Background="Transparent" Tapped="chatResizeTapped"
-										 				IsTabStop="True"
+										 				
 				CursorBehavior="ChangeOnSplitterHover"
 				GripperCursor="SizeAll"
                     Grid.Column="1"
@@ -355,8 +358,8 @@
 		<tk:GridSplitter
                         Background="Transparent"
                     Grid.RowSpan="5"
-									 				IsTabStop="True"
-				CursorBehavior="ChangeOnSplitterHover"
+									 				
+			CursorBehavior="ChangeOnSplitterHover"
 				GripperCursor="SizeWestEast"
                         Grid.Column="1"
                         HorizontalAlignment="Right"

@@ -10,7 +10,7 @@
                xmlns:tg="using:Telerik.UI.Xaml.Controls.Grid"
                Background="{x:Null}"
       Tag="Incoming"
-			   TabNavigation="Once"
+			
 			  IsTabStop="True"
       mc:Ignorable="d">
 	<Grid>

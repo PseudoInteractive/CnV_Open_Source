@@ -94,7 +94,7 @@ namespace COTG.JSON
 				var city = City.Get(cid);
 				if (autoFind)
 					sourceHub = targetHub = await FindBestHub(cid);
-				dialog.Title = $"Set Trade settings for {city.nameAndRemarks} cities";
+				dialog.Title = $"Set Trade settings for {city.nameAndRemarks}";
 				await settings.InitTradeSettings(City.Get(cid),sourceHub.GetValueOrDefault(), (city.isHubOrStorage&&!targetExplicit) ? 0 : targetHub.GetValueOrDefault() );
 				var rv = await dialog.ShowAsync2();
 				if (rv == ContentDialogResult.Primary)
@@ -177,7 +177,7 @@ namespace COTG.JSON
 				if (spot.is7Point)
 					split[90] = "8]"; // hack!  townhall to level 8
 
-				if (reqHub.HasValue || reqFilter.Any)
+				if ((reqHub.HasValue || reqFilter.Any)&&reqHub.GetValueOrDefault() != cid)
 				{
 					split[32] = "0"; // use the different city all requests
 					
@@ -209,7 +209,7 @@ namespace COTG.JSON
 					SetResourceScalar(2, req, __s.storage, Resources.zero, ref split[35], ref reqResources);
 					SetResourceScalar(3, req, __s.storage, Resources.zero, ref split[36], ref reqResources);
 				}
-				if (targetHub.HasValue || sendFilter.Any )
+				if ((targetHub.HasValue || sendFilter.Any )&&targetHub.GetValueOrDefault() != cid)
 				{
 					var cid = targetHub?.ToString() ?? "0";
 					split[41] = "0"; // use a different city for all sends

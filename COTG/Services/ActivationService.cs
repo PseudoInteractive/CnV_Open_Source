@@ -21,6 +21,8 @@ using Microsoft.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls;
 using COTG.JSON;
 using Windows.System;
+using Microsoft.Web.WebView2.Core;
+
 
 namespace COTG.Services
 {
@@ -105,8 +107,14 @@ namespace COTG.Services
             var t0= ThemeSelectorService.InitializeAsync();
             var t1= WindowManagerService.Current.InitializeAsync();
 			await Task.WhenAll(t0, t1);
-            Window.Current.Closed += async (a,b)=> await TabPage.CloseAllTabWindows();
-        }
+            Window.Current.Closed += async (a,b)=>
+			{
+				Debug.Log("Closed!");
+				await TabPage.CloseAllTabWindows(); };
+		//	App.webEnvironment = await CoreWebView2Environment.CreateAsync();
+		//	App.webController = await App.webEnvironment.CreateCoreWebView2ControllerAsync();
+		//	App.webCore = App.webController.CoreWebView2;
+		}
 
         private async Task HandleActivationAsync(object activationArgs)
         {

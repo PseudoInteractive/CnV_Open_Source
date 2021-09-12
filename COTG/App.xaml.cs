@@ -144,7 +144,7 @@ namespace COTG
 
 		}
 
-	//	public static Windows.Foundation.IAsyncOperation<CoreWebView2Environment> createWebEnvironmentTask;
+//		public static Windows.Foundation.IAsyncOperation<CoreWebView2Environment> createWebEnvironmentTask;
 
 		public static async void App_CloseRequested(object sender, SystemNavigationCloseRequestedPreviewEventArgs e)
 		{
@@ -174,7 +174,8 @@ namespace COTG
 					{
 					}
 				}
-			//	ShellPage.instance.NukeWebView();
+				
+				await ShellPage.instance.SuspendWebView();
 			
 			}
 			catch(Exception ext)
@@ -393,8 +394,18 @@ namespace COTG
 				Services.StoreHelper.instance.DownloadAndInstallAllUpdatesAsync();
 			}
 
-		//	createWebEnvironmentTask =  CoreWebView2Environment.CreateAsync();
-			
+			try
+			{
+				var str = CoreWebView2Environment.GetAvailableBrowserVersionString();
+				Log(str);
+	//			createWebEnvironmentTask =  CoreWebView2Environment.CreateAsync();
+
+			}
+			catch(Exception ex)
+			{
+				Windows.System.Launcher.LaunchUriAsync(new ("https://go.microsoft.com/fwlink/p/?LinkId=2124703"));
+				LogEx(ex);
+			}
 
 			await ActivationService.ActivateAsync(args);
 			// if (!args.PrelaunchActivated)
@@ -763,6 +774,10 @@ namespace COTG
 			return new ActivationService(this, null, new Lazy<UIElement>(CreateShell));
 		}
 
+		//public static CoreWebView2Environment webEnvironment;
+		//public static CoreWebView2Controller webController;
+		//public static CoreWebView2   webCore;
+
 		private UIElement CreateShell()
 		{
 			return new Views.ShellPage();
@@ -822,8 +837,9 @@ namespace COTG
 		public static Task<T>
 			DispatchOnUIThreadTask<T>(  Func<Task<T>> func, DispatcherQueuePriority priority = DispatcherQueuePriority.Low)
 		{
+
 			var d = GlobalDispatcher();
-			
+		
 			return d.EnqueueAsync<T>(func, priority);
 
 			//var idle = priority == DispatcherQueuePriority.Idle;
@@ -1005,12 +1021,19 @@ namespace COTG
 
 		public static void DispatchOnUIThreadIdle(Windows.System.DispatcherQueueHandler action)
 		{
-			DispatchOnUIThreadLow(action,  false);
+			DispatchOnUIThread(action,DispatcherQueuePriority.Low);
 //			var d = GlobalDispatcher();
 //			d.TryRunIdleAsync((_)=> action() );
 		}
 
-	public static void DispatchOnUIThreadLow(DispatcherQueueHandler action, bool alwaysQueue = false)
+		public static void QueueOnUIThreadIdle(Windows.System.DispatcherQueueHandler action)
+		{
+			DispatchOnUIThread(action,priority: DispatcherQueuePriority.Low,alwaysQueue: true);
+			//			var d = GlobalDispatcher();
+			//			d.TryRunIdleAsync((_)=> action() );
+		}
+
+		public static void DispatchOnUIThreadLow(DispatcherQueueHandler action, bool alwaysQueue = false)
 	{
 		var d = GlobalDispatcher();
 		// run it immediately if we can
@@ -1689,15 +1712,15 @@ namespace COTG
 			});
 		}
 
-		public static void Focus(this Telerik.UI.Xaml.Controls.Grid.RadDataGrid ob)
-		{
-			if (ob != null)
-			{
-			//	ShellPage.instance.commandBar.Focus(FocusState.Programmatic);
+		//public static void Focus(this Telerik.UI.Xaml.Controls.Grid.RadDataGrid ob)
+		//{
+		//	if (ob != null)
+		//	{
+		//	//	ShellPage.instance.commandBar.Focus(FocusState.Programmatic);
 
-				App.DispatchOnUIThreadLow(() => ob.Focus(FocusState.Programmatic));
-			}
-		}
+		//		App.DispatchOnUIThreadLow(() => ob.Focus(FocusState.Programmatic));
+		//	}
+		//}
 		//public static void Focus(this Windows.UI.Xaml.Controls.Control ob)
 		//{
 		//	if (ob != null)

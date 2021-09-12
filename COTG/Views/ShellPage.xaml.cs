@@ -593,14 +593,34 @@ namespace COTG.Views
 			}
 			await task0;
 		}
-		public void NukeWebView()
+		public async Task SuspendWebView()
 		{
 			if(webView!=null)
 			{
 				var _w = webView;
-				webView=null;
+				if(!webView.CoreWebView2.IsSuspended)
+				{
+					webView.Visibility = Visibility.Collapsed;
+					await webView.CoreWebView2.TrySuspendAsync();
+
+				}
 			//	grid.Children.Remove(_w);
-				_w.Close();
+	//			_w.Close();
+				//webView = null;
+			}
+		}
+		public async Task ResumeWebView()
+		{
+			if(webView!=null)
+			{
+				if(webView.CoreWebView2.IsSuspended)
+				{
+					webView.Visibility = Visibility.Visible;
+					webView.CoreWebView2.Resume();
+					
+				}
+				//	grid.Children.Remove(_w);
+			//	_w.Close();
 				//webView = null;
 			}
 		}
