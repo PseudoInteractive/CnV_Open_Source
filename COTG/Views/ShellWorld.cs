@@ -334,6 +334,7 @@ namespace COTG.Views
 		private static void CoreInputSource_PointerEntered(object sender, PointerEventArgs args)
 		{
 			isOverPopup = false;
+			args.KeyModifiers.UpdateKeyModifiers();
 			ShellPage.TakeKeyboardFocus();
 		}
 
@@ -415,6 +416,7 @@ namespace COTG.Views
 		}
 		private static void Canvas_PointerExited(object sender, PointerEventArgs e)
 		{
+			e.KeyModifiers.UpdateKeyModifiers();
 			Gesture.ProcessPointerExited(e.CurrentPoint);
 		//	PointerInfo(e);
 	//		Log("pointer Exit " + isOverPopup);
@@ -457,7 +459,8 @@ namespace COTG.Views
 		}
 		private static void Canvas_PointerReleased(object sender, PointerEventArgs e)
 		{
-			if (!isFocused)
+			e.KeyModifiers.UpdateKeyModifiers();
+			if(!isFocused)
 				return;
 			
 			//if (JSClient.IsCityView())
@@ -465,7 +468,6 @@ namespace COTG.Views
 			//	e.Handled = false;
 			//	return;
 			//}
-			e.KeyModifiers.UpdateKeyModifiers();
 
 			var pointerPoint = e.CurrentPoint;
 			var gestureResult = Gesture.ProcessRelased(pointerPoint);
@@ -637,13 +639,15 @@ namespace COTG.Views
 
 		private static void Canvas_PointerPressed(object sender, PointerEventArgs e)
 		{
+			e.KeyModifiers.UpdateKeyModifiers();
+
 			//if (CityBuild.menuOpen)
 			//{
 			//	App.DispatchOnUIThreadLow(() => ShellPage.instance.buildMenu.IsOpen = false); // light dismiss
 			//	return;
 			//}
 
-			if (!isFocused)
+			if(!isFocused)
 				return;
 		
 			Assert(isOverPopup == false);
@@ -825,6 +829,7 @@ namespace COTG.Views
 
 		private static void Canvas_PointerWheelChanged(object sender, PointerEventArgs e)
 		{
+			e.KeyModifiers.UpdateKeyModifiers();
 			//PointerInfo(e);
 			//if (ShellPage.IsCityView())
 			//{

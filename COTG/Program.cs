@@ -44,7 +44,7 @@ namespace COTG
 						if (int.TryParse(s["w"], out int _w))
 							JSClient.world = _w;
 						if (int.TryParse(s["n"], out int _n)) // new instance
-							key = Guid.NewGuid().ToString();
+							key = "cotgaMulti" + DateTimeOffset.UtcNow.UtcTicks;
 
 					}
 				}

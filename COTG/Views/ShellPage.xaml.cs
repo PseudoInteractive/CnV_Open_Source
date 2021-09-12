@@ -203,10 +203,10 @@ namespace COTG.Views
 		public static bool isHitTestVisible = false;
 		public static bool canvasVisible;
 		public static bool isFocused => isHitTestVisible && App.isForeground && canvasVisible;
-		private async void OnLoaded(object sender, RoutedEventArgs e)
+		private void OnLoaded(object sender, RoutedEventArgs e)
 		{
-			SystemNavigationManagerPreview.GetForCurrentView().CloseRequested += App.App_CloseRequested; ;
-
+	//		SystemNavigationManagerPreview.GetForCurrentView().CloseRequested += App.App_CloseRequested; ;
+			
 			CityBuild.Initialize();
 			// Grid.SetColumn(webView, 0);
 			Grid.SetRow(CityBuild.instance, 1);
@@ -236,7 +236,7 @@ namespace COTG.Views
 			// Placement.LayoutUpdated += Placement_LayoutUpdated; grid.Children.Add(img);
 
 			// Grid.SetRowSpan(img, 4); Grid.SetColumnSpan(img, 4); Canvas.SetZIndex(img, 12);
-			await JSClient.Initialize(grid,webView);
+			JSClient.Initialize(grid,webView);
 			// foreach (var i in webView.KeyboardAccelerators) i.IsEnabled = false;
 			// webView.AllowFocusOnInteraction = false; c.hitTest.Margin= webView.Margin = new
 			// Thickness(0, 0, 11, 0);
@@ -346,6 +346,12 @@ namespace COTG.Views
 			//	SetWebViewHasFocus(true);
 				//ShellPage.canvas.IsHitTestVisible = false;
 				//ShellPage.canvas.Visibility = Visibility.Collapsed;
+				var instances = Windows.ApplicationModel.AppInstance.GetInstances();
+				if(instances.Count > 1)
+				{
+					App.DoYesNoBox("More than one window is open", "If this is intentional, please ignore, if not, close some (they may already be closing) or restart your computer" );
+				}
+				
 			}));
 
 			//Task.Delay(5000).ContinueWith((_) =>
@@ -593,37 +599,7 @@ namespace COTG.Views
 			}
 			await task0;
 		}
-		public async Task SuspendWebView()
-		{
-			if(webView!=null)
-			{
-				var _w = webView;
-				if(!webView.CoreWebView2.IsSuspended)
-				{
-					webView.Visibility = Visibility.Collapsed;
-					await webView.CoreWebView2.TrySuspendAsync();
-
-				}
-			//	grid.Children.Remove(_w);
-	//			_w.Close();
-				//webView = null;
-			}
-		}
-		public async Task ResumeWebView()
-		{
-			if(webView!=null)
-			{
-				if(webView.CoreWebView2.IsSuspended)
-				{
-					webView.Visibility = Visibility.Visible;
-					webView.CoreWebView2.Resume();
-					
-				}
-				//	grid.Children.Remove(_w);
-			//	_w.Close();
-				//webView = null;
-			}
-		}
+		
 		public static void RefreshAndReloadWorldData()
 		{
 			using var work = new WorkScope("Refresh..");

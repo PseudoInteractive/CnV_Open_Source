@@ -1951,7 +1951,7 @@ namespace COTG.Game
 				{
 					if (_cityName == null)
 					{
-						await JSClient.FetchCity(cid);
+						JSClient.FetchCity(cid);
 					}
 
 				}

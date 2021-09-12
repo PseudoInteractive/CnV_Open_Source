@@ -73,7 +73,7 @@
 			</tg:RadDataGrid.Columns>
 		</tg:RadDataGrid>
 		<tk:WrapPanel Orientation="Horizontal" HorizontalAlignment="Stretch" >
-            <Border  Margin="12" Background="#FF103030" VerticalAlignment="Center">
+            <Border  Margin="12" VerticalAlignment="Center">
                 <TextBlock x:Name="sendAtUI"  VerticalAlignment="Center" Text="{x:Bind arriveAt,Mode=OneWay,Converter={StaticResource DateTimeConverter}}"
                            Width="100" HorizontalAlignment="Center" FontSize="14" HorizontalTextAlignment="Center" PointerPressed="SendAtTapped"
                            ToolTipService.ToolTip="Time at which the defense should arrive. They will leave immediately if there is not enough time, otherwise they will wait and schedule their arrival for this time." />

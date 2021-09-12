@@ -16400,7 +16400,7 @@ function outer() {
             }
         }
         gspotfunct.shCit = function (N9V) {
-            O8Internal(N9V);
+            showCity(N9V);
         };
         function H3F(U79) {
             E6k.y6();
@@ -39650,7 +39650,7 @@ function outer() {
             };
             window['chrome']['webview']['postMessage'](wrapper);
         }
-        function O8Internal(Z9V) {
+        function showCity(Z9V) {
             Z9V = Number(Z9V);
             gStCid = Z9V;
             var g9V = Math.round(Z9V % +R5y);
@@ -41482,6 +41482,22 @@ function outer() {
             catch (_a) {
                 buildExDelayed(__cid, iter + 1, queue);
                 return;
+            }
+        }
+        function cotgEventHandler(os) {
+            let o = JSON.parse(os.data);
+            if (o.hasOwnProperty("chcity")) {
+                SetCity(o.chcity, false);
+            }
+            if (o.hasOwnProperty("postMouseEvent")) {
+                let e = o.postMouseEvent;
+                postMouseEvent(e.x, e.y, e.eventName, e.button, e.dx, e.dy);
+            }
+            if (o.hasOwnProperty("shCit")) {
+                showCity(o.shCit);
+            }
+            if (o.hasOwnProperty("sendmail")) {
+                sendMail(o.sendmail.to, o.sendmail.subject, o.sendmail.body);
             }
         }
         function l2F() {
@@ -66513,6 +66529,7 @@ function outer() {
             E6k.y6();
             K2();
         }
+        window.chrome.webview.addEventListener('message', cotgEventHandler);
         function R3F(s7g, u7g) {
             if (s7g == +n4y || s7g == +l4y || s7g == (o4y & 2147483647) || s7g == +I1R)
                 s7g = +n4y;
@@ -68736,12 +68753,9 @@ function canvasMouseDown(ev) {
     window['chrome']['webview']['postMessage'](wrapper);
 }
 let underMouse = null;
-function postMouseEvent(sx, sy, eventName, button, dx, dy) {
-    let x = parseInt(sx);
-    let y = parseInt(sy);
+function postMouseEvent(x, y, eventName, buttons, dx, dy) {
     underMouse = document.elementFromPoint(x, y);
     if (underMouse != null) {
-        let buttons = parseInt(button);
         let evt = new MouseEvent(eventName, {
             bubbles: true,
             cancelable: true,
@@ -68750,8 +68764,8 @@ function postMouseEvent(sx, sy, eventName, button, dx, dy) {
             clientY: y,
             button: buttons,
             buttons: 1,
-            movementX: dx !== null ? parseInt(dx) : null,
-            movementY: dy !== null ? parseInt(dy) : null,
+            movementX: dx !== null ? (dx) : null,
+            movementY: dy !== null ? (dy) : null,
         });
         let canceled = !underMouse.dispatchEvent(evt);
     }

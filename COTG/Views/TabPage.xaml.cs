@@ -550,10 +550,7 @@ namespace COTG.Views
 
         public static async Task CloseAllTabWindows()
         {
-            while(tabWindows.Any())
-            {
-                await tabWindows.First().CloseAsync();
-            }
+			await Task.WhenAll(tabWindows.Select( a=>a.CloseAsync().AsTask() ));
         }
 
         private void Tabs_TabDragStarting(TabView sender, TabViewTabDragStartingEventArgs args)

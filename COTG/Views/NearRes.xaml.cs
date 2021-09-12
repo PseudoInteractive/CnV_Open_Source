@@ -52,21 +52,22 @@ namespace COTG.Views
 
 		public BitmapImage targetIcon => target.icon;
 		public string targetName => target.nameAndRemarks;
+		public static bool useRatio => SettingsPage.nearResAsRatio;
 
-
-		public Resources des = new Resources() { wood = 1000000, stone = 1000000, food = 1000000, iron = 1000000 };
+		public Resources des = new Resources() { wood = 100000, stone = 100000, food = 100000, iron = 100000 };
 		public Resources willHave => target.res.Add(target.tradeInfo.inc);
 		
 
 		public ResSource selected = ResSource.dummy;
 
-		public Resources send;
+//		public Resources send;
+		public readonly ref Resources reserve => ref SettingsPage.nearResCartReserve;
 
-		public Resources reserve = new Resources(100000,100000,100000,100000);
-		public int reserveCarts { get; set; } = 100;
-		public int reserveShips { get; set; } = 0;
+		//	public Resources reserve = new Resources(100000,100000,100000,100000);
+		public static int reserveCarts =>SettingsPage.nearResCartReserve;
+		public static int reserveShips => SettingsPage.nearResShipReserve;
 
-		public int GetTransport(City city) => viaWater ? (city.shipsHome-reserveShips).Max0() * 10000 : (city.cartsHome-reserveCarts).Max0() * 1000;
+		public int GetTransport(City city) => viaWater ? (city.shipsHome-SettingsPage.nearResShipReserve).Max0() * 10000 : (city.cartsHome-SettingsPage.nearResCartReserve).Max0() * 1000;
 
 
 		public void RefreshSupportByRes()
@@ -119,8 +120,8 @@ namespace COTG.Views
 					if (city.tradeInfo != CityTradeInfo.invalid)
 					{
 						ct = city.tradeInfo;
-						ct.resDest.Clear();
-						ct.resSource.Clear();
+						AUtil.Clear( out ct.resDest );
+						AUtil.Clear( out ct.resSource );
 					}
 					else
 					{
@@ -160,9 +161,8 @@ namespace COTG.Views
 						{
 							var toCid = int.Parse(to.Name);
 							var cTo = City.GetOrAddCity(toCid);
-							cTo.tradeInfo.resSource.AddIfAbsent(cid);
-
-							ct.resDest.AddIfAbsent(toCid);
+							AUtil.AddIfAbsent(ref cTo.tradeInfo.resSource,cid);
+							AUtil.AddIfAbsent(ref ct.resDest,toCid);
 
 						}
 					}
@@ -172,8 +172,8 @@ namespace COTG.Views
 						{
 							var toCid = int.Parse(to.Name);
 							var cTo = City.GetOrAddCity(toCid);
-							cTo.tradeInfo.resDest.Add(cid);
-							ct.resSource.Add(toCid);
+							AUtil.AddIfAbsent(ref cTo.tradeInfo.resDest,cid);
+							AUtil.AddIfAbsent(ref ct.resSource, toCid);
 
 						}
 					}
@@ -213,8 +213,10 @@ namespace COTG.Views
 				Trace($"Update {DateTime.Now}");
 				await UpdateTradeStuff();
 
+				int shipReserve = SettingsPage.nearResShipReserve;
+				int cartReserve = SettingsPage.nearResCartReserve;
 
-				if (resetValuesPending)
+				if(resetValuesPending)
 				{
 					resetValuesPending = false;
 					supporters.Clear();
@@ -224,9 +226,14 @@ namespace COTG.Views
 				{
 				
 
-					var r = des;// des.Sub(target.res.Add(target.tradeInfo.inc));
+					var r = SettingsPage.nearResSend;// des.Sub(target.res.Add(target.tradeInfo.inc));
+					
+					var reserve = SettingsPage.nearResReserve;
 					r.ClampToPositive();
-					des = r;
+					//views: SettingsPage.nearResSend = r;
+					if(useRatio)
+						r = r*((1<<30)/r.sum);
+
 					List<ResSource> s = new List<ResSource>();
 					//                supportGrid.ItemsSource = null;
 					{
@@ -239,12 +246,12 @@ namespace COTG.Views
 							var ti = city.tradeInfo;
 							if (viaWater)
 							{
-								if (!city.ComputeShipTravelTime(target.cid, out dt) || dt.TotalHours > filterTime || city.shipsHome < filterShipsHome + reserveShips || city.res.Sub(reserve).sum < filterResHome)
+								if (!city.ComputeShipTravelTime(target.cid, out dt) || dt.TotalHours > filterTime || city.shipsHome < filterShipsHome + cartReserve || city.res.Sub(reserve).sum < filterResHome)
 									continue;
 							}
 							else
 							{
-								if (!city.ComputeCartTravelTime(target.cid, out dt) || dt.TotalHours > filterTime || city.cartsHome < filterCartsHome + reserveCarts || city.res.Sub(reserve).sum < filterResHome)
+								if (!city.ComputeCartTravelTime(target.cid, out dt) || dt.TotalHours > filterTime || city.cartsHome < filterCartsHome + shipReserve || city.res.Sub(reserve).sum < filterResHome)
 									continue;
 
 							}
@@ -275,20 +282,26 @@ namespace COTG.Views
 						{
 							var info = sup.info;
 							var city = sup.city;
-							var shipping = viaWater ? (city.shipsHome - reserveShips).Max0() * 10000 : (city.cartsHome - reserveCarts).Max0() * 1000;
-							var send = sup.city.res.Sub(reserve).Max(0).Min(r);
-							var sum = send.sum;
-
-							if (shipping < sum)
+							var shipping = GetTransport( city);//, viaWater ? (city.shipsHome - shipReserve).Max0() * 10000 : (city.cartsHome - cartReserve).Max0() * 1000;
+							var send = r;
+							if(shipping < r.sum)
 							{
-								var ratio = shipping / (double)sum;
-
-								send = send.Scale(ratio);
+								send *= (shipping / (double)r.sum);
 							}
+							send = send.Min(sup.city.res.SubSat(SettingsPage.nearResReserve));
+							Assert( send.sum <= shipping);
+	
+
+							//if (shipping < sum)
+							//{
+
+							//	send *= (shipping / (double)sum);
+							//}
 							sup.res = send;
 							sup.initialized = true;
 						}
-						r = r.Sub(sup.res);
+						if(!useRatio)
+							r = r.Sub(sup.res);
 						App.DispatchOnUIThreadIdle(() =>
 						{
 							supporters.OnPropertyChanged(sup);
@@ -407,7 +420,7 @@ namespace COTG.Views
 			var city = supporter.city;
 			var res = supporter.city.res.Sub(reserve).Max(0);
 			var viaWater = NearRes.instance.viaWater;
-			var shipping = viaWater ? (city.shipsHome - reserveShips).Max0() * 10000 : (city.cartsHome - reserveCarts).Max0() * 1000;
+			var shipping = GetTransport(city);//viaWater ? (city.shipsHome - SettingsPage.nearResShipReserve).Max0() * 10000 : (city.cartsHome - SettingsPage.nearResCartReserve).Max0() * 1000;
 			if (shipping > res.sum)
 			{
 				supporter.res = res;  // we can send all of it
@@ -513,13 +526,18 @@ namespace COTG.Views
 		private void NumberBox_ValueChanged(Microsoft.UI.Xaml.Controls.NumberBox sender, Microsoft.UI.Xaml.Controls.NumberBoxValueChangedEventArgs args)
 		{
 			supporters.Clear();
-			ItemValueChanged(sender,args);
-
+			DebouceItemChanged.Go();
+		
 		}
+		Debounce DebouceItemChanged = new (async ()=>
+		{
+			await instance.DoRefresh();
+			supporters.NotifyReset();
+		});
+
 		private async void ItemValueChanged(Microsoft.UI.Xaml.Controls.NumberBox sender, Microsoft.UI.Xaml.Controls.NumberBoxValueChangedEventArgs args)
 		{
-			await DoRefresh();
-			supporters.NotifyReset();
+			DebouceItemChanged.Go();
 		}
 
 		//private async void ToggleSwitch_IsEnabledChanged(object sender, DependencyPropertyChangedEventArgs e)
@@ -684,8 +702,8 @@ namespace COTG.Views
 	public class CityTradeInfo
 	{
 		public static CityTradeInfo invalid = new CityTradeInfo();
-		public List<int> resSource = new List<int>();
-		public List<int> resDest = new List<int>();
+		public int[] resSource = Array.Empty<int>();
+		public int[] resDest = Array.Empty<int>();
 
 		
 		//public Resources res;

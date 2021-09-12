@@ -19,7 +19,7 @@
 		</StackPanel>
 		<Border
                     Style="{StaticResource BorderReveal}">
-			<tk:WrapPanel x:Name="continentsPanel" x:FieldModifier="public"  />
+			<tk:WrapPanel  x:Name="continentsPanel" x:FieldModifier="public"  />
 		</Border>
 		<StackPanel Orientation="Horizontal">
 			<TextBlock Text="Tags" VerticalAlignment="Center" Margin="8,0"  />

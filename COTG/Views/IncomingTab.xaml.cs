@@ -244,7 +244,7 @@ namespace COTG.Views
 							}
 							else
 							{
-								tab.refresh.Go();
+								tab.refresh.Go(throttled: true,runAgainIfStarted: false);
 							}
 						}
 					}

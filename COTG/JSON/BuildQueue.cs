@@ -21,6 +21,7 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.Toolkit;
 using static COTG.Debug;
 using static COTG.JSON.BuildQueue;
+using static COTG.Game.City;
 using Windows.Storage;
 using ContentDialog = Windows.UI.Xaml.Controls.ContentDialog;
 using ContentDialogResult = Windows.UI.Xaml.Controls.ContentDialogResult;
@@ -568,8 +569,14 @@ namespace COTG.JSON
 										//									if (cid == City.build)
 										//										City.buildQueue.Add(i);
 										cotgQ.Add(i);
-
-										await IssueCommand( i,cid ).ConfigureAwait(false);
+										if(i.bid==bidCastle)
+										{
+											await Post.Send("/includes/nCb.php",$"type={bidCastle}&spot={i.bspot}&cid={cid}&bt={JSClient.ServerTimeMs()}").ConfigureAwait(false);
+										}
+										else
+										{
+											await IssueCommand( i,cid ).ConfigureAwait(false);
+										}
 										--commandsToQueue;
 										hasAny =true;
 										//	if (validCount > 0 && cotgQ.Length >= City.safeBuildQueueLength)

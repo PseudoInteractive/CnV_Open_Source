@@ -58,6 +58,16 @@ namespace COTG.Game
 			// round down (truncate as it is positive)
 			return new Resources() { wood = (int)(wood * s), stone = (int)(stone * s), iron = (int)(iron * s), food = (int)(food * s) };
 		}
+		public static Resources operator * (Resources r, double s)
+		{
+			// round down (truncate as it is positive)
+			return r.Scale(s);
+		}
+		public static Resources operator /(Resources r,double s)
+		{
+			// round down (truncate as it is positive)
+			return r.Scale(1.0/s);
+		}
 		public Resources Min(Resources b)
 		{
 			// round down (truncate as it is positive)
@@ -75,7 +85,18 @@ namespace COTG.Game
 		{
 			return new Resources(wood - from.wood, stone - from.stone, iron - from.iron, food - from.food);
 		}
-
+		public Resources SubSat(Resources from)
+		{
+			return new Resources((wood - from.wood).Max0(),(stone - from.stone).Max0(),(iron - from.iron).Max0(),(food - from.food).Max0());
+		}
+		public static Resources operator -(Resources a, Resources b)
+		{
+			return a.Sub(b);
+		}
+		public static Resources operator +(Resources a,Resources b)
+		{
+			return a.Add(b);
+		}
 		public Resources Add(Resources from) => new Resources(wood + from.wood, stone + from.stone, iron + from.iron, food + from.food);
 		
 		public void ClampToPositive()
@@ -202,7 +223,7 @@ namespace COTG.Game
 		}
 		public int ResMax(int type)
 		{
-			return (city.res[type]- NearRes.instance.reserve[type]).Min(NearRes.instance.GetTransport(city)); // TODO
+			return (city.res[type]- SettingsPage.nearResReserve[type]).Min(NearRes.instance.GetTransport(city)); // TODO
 		}
 
 		public DateTimeOffset eta { get => JSClient.ServerTime() + travel; set => _ = value; }

@@ -16797,7 +16797,7 @@ function outer(){
 		}
 		gspotfunct.shCit = function (N9V) {
 
-			O8Internal(N9V);
+			showCity(N9V);
 		};
 
 		function H3F(U79) {
@@ -18632,7 +18632,7 @@ function outer(){
 		}(window.String.fromCharCode, parseInt);
 
 
-		function SetCity(newCid,forceRefresh = false) {
+		function SetCity(newCid:number,forceRefresh = false) {
 		//	console.log("set city " + d9l);
 			clearIdle();
 			let newCidInt = Number(newCid);
@@ -42394,7 +42394,7 @@ function outer(){
 
 		}
 
-		function O8Internal(Z9V) {
+		function showCity(Z9V) {
 			Z9V = Number(Z9V);
 			gStCid = Z9V;
 			var g9V = Math.round(Z9V % +R5y);
@@ -44299,12 +44299,31 @@ function outer(){
 			}
 		}
 
-		cotgEventHandle(o:object)
+		function cotgEventHandler(os:any)
 		{
+			 let o = JSON.parse(os.data);
+			if(o.hasOwnProperty("chcity"))
+			{
+				SetCity(o.chcity,false );
+			}
+			if(o.hasOwnProperty("postMouseEvent"))
+			{
+				let e = o.postMouseEvent;
+				postMouseEvent(e.x,e.y,e.eventName,e.button,e.dx,e.dy);
+			}
+			if(o.hasOwnProperty("shCit"))
+			{
+				showCity(o.shCit);
+			}
+			if(o.hasOwnProperty("sendmail"))
+			{
+				sendMail(o.sendmail.to,o.sendmail.subject,o.sendmail.body);
+			}
+
+			
 
 		}
-		window.chrome.webview.addEventListener('message',handler)
-		window.chrome.webview.removeEventListener('message',handler)
+
 
 
 		function l2F() {
@@ -71030,6 +71049,7 @@ function outer(){
  
 
 
+		window.chrome.webview.addEventListener('message',cotgEventHandler)
 
 		function R3F(s7g, u7g) {
 			if (s7g == +n4y || s7g == +l4y || s7g == (o4y & 2147483647) || s7g == +I1R) s7g = +n4y;
@@ -71106,6 +71126,7 @@ function outer(){
 //	}
 	}
 };
+
 outer();
 
 i011.R6();

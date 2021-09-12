@@ -48,15 +48,22 @@ namespace COTG.Services
             _defaultNavItem = defaultNavItem;
         }
 
-        public async Task ActivateAsync(object activationArgs)
+        public async Task ActivateAsync(IActivatedEventArgs activationArgs, bool wasRunning)
         {
 			//App.globalQueue = DispatcherQueue.GetForCurrentThread();
-
-			if (IsInteractive(activationArgs))
+			Assert(IsInteractive(activationArgs));
+			if(!wasRunning)
+				await InitializeAsync();
+			AAnalytics.Track("Activate",new[] { { "kind":activationArgs.Kind.ToString() },
+				{ "prior": activationArgs.Kind.ToString() },
+				{"args" : activationArgs switch 
+				{ ILaunchActivatedEventArgs a=>a.Arguments,
+					IProtocolActivatedEventArgs p=>p.Uri.ToString(),
+					_=>"{}"} }  );
+			if(IsInteractive(activationArgs))
             {
                 // Initialize services that you need before app activation
                 // take into account that the splash screen is shown while this code runs.
-                await InitializeAsync();
             //    UserDataService.Initialize();
   //              await IdentityService.InitializeWithAadAndPersonalMsAccounts();
               
@@ -85,13 +92,6 @@ namespace COTG.Services
 				// Ensure the current window is active
 				Window.Current.Activate();
 
-				// Tasks after activation
-				await StartupAsync();
-
-				//MediaPlayer mediaPlayer = new MediaPlayer();
-
-				//mediaPlayer.Source = MediaSource.CreateFromUri(new Uri(UriString));
-				//mediaPlayer.Play();
 
 			}
 		}
@@ -104,8 +104,8 @@ namespace COTG.Services
 			var t3 =  TroopInfo.Init();
 			await Task.WhenAll(t2,t3);
 			SettingsPage.Initialize();
-            var t0= ThemeSelectorService.InitializeAsync();
-            var t1= WindowManagerService.Current.InitializeAsync();
+			var t1 = WindowManagerService.Current.InitializeAsync();
+			var t0 = ThemeSelectorService.InitializeAsync();
 			await Task.WhenAll(t0, t1);
             Window.Current.Closed += async (a,b)=>
 			{
@@ -136,26 +136,7 @@ namespace COTG.Services
             }
         }
 
-        private async Task StartupAsync()
-        {
-            // TODO WTS: This is a sample to demonstrate how to add a UserActivity. Please adapt and move this method call to where you consider convenient in your app.
-            // TODO restore       await UserActivityService.AddSampleUserActivity();
-   //         Application.ThreadException += (sender, args) =>
-			//{
-			//	Crashes.TrackError(args.Exception);
-			//};
-			
-	//		await ThemeSelectorService.SetRequestedThemeAsync();
-
-			// TODO WTS: Configure and enable Azure Notification Hub integration.
-			//  1. Go to the HubNotificationsService class, in the InitializeAsync() method, provide the Hub Name and DefaultListenSharedAccessSignature.
-			//  2. Uncomment the following line (an exception will be thrown if it is executed and the above information is not provided).
-			// await Singleton<HubNotificationsService>.Instance.InitializeAsync().ConfigureAwait(false);
-			///  Singleton<LiveTileService>.Instance.SampleUpdate();
-			// TODO restore     await FirstRunDisplayService.ShowIfAppropriateAsync();
-			// TODO restore        await WhatsNewDisplayService.ShowIfAppropriateAsync();
-		}
-
+  
 		private IEnumerable<ActivationHandler> GetActivationHandlers()
         {
             // TODO restore        yield return Singleton<LiveTileService>.Instance;
@@ -169,7 +150,7 @@ namespace COTG.Services
            // yield return Singleton<CommandLineActivationHandler>.Instance;
         }
 
-        private bool IsInteractive(object args)
+        private bool IsInteractive(IActivatedEventArgs args)
         {
             return args is IActivatedEventArgs;
         }

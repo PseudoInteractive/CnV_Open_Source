@@ -34,7 +34,7 @@ namespace COTG.Game
 
 		public static void ProcessTask() 
 		{
-			OutgoingUpdateDebounce.Go();
+			OutgoingUpdateDebounce.Go(throttled: true,runAgainIfStarted: false);
 		}
 		public static Debounce OutgoingUpdateDebounce = new(_Process) { throttled = true, debounceDelay = 1000, throttleDelay = 2000 };
 
@@ -457,7 +457,7 @@ namespace COTG.Game
                                 reportsOutgoing.AddRange(reportParts[i]);
                         // App.DispatchOnUIThread(() =>
                         // We should do this on the Render Thread
-                        page.SetHistory((reportsOutgoing.OrderByDescending((atk) => atk.time.Ticks)).ToArray());
+                        page.SetHistory((reportsOutgoing.OrderByDescending((atk) => atk.time.UtcTicks)).ToArray());
                             defKilled = 0;
                             atkKilled = 0;
                             myDefKilled = 0;

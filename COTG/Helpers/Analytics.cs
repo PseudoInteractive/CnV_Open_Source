@@ -12,10 +12,12 @@ namespace COTG
 
 	public static class AAnalytics
 	{
+		public static bool initialized;
 		// Todo: Batch these and dispatch in a background thread
 		public static void Track(string e, IDictionary<string, string> properties = null)
 		{
-			Analytics.TrackEvent(e, properties);
+			if(initialized)
+				Analytics.TrackEvent(e, properties);
 		}
 	}
 }

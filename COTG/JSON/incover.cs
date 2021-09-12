@@ -72,11 +72,11 @@ namespace COTG.Game
 
 		public static void Process(bool fetch)
 		{
-			IncomingUpdateDebounce.Go();
+			IncomingUpdateDebounce.Go(throttled: true,runAgainIfStarted: false);
 		}
 		public static void ProcessTask()
 		{
-			IncomingUpdateDebounce.Go();
+			IncomingUpdateDebounce.Go(throttled: true,runAgainIfStarted: false);
 		}
 
 		public async static Task DoProcess()
@@ -944,7 +944,7 @@ namespace COTG.Game
 								//	App.CopyTextToClipboard(killNote);
 								// App.DispatchOnUIThread(() =>
 								// We should do this on the Render Thread
-								defPage.SetHistory((reportsIncoming.OrderByDescending((atk) => atk.time.Ticks)).ToArray());
+								defPage.SetHistory((reportsIncoming.OrderByDescending((atk) => atk.time.UtcTicks)).ToArray());
 							}
 							if (fetchReports)
 								Note.Show($"Complete: {reportsIncoming.Count + incCount} attacks, {fetched} fetched {killNote}");

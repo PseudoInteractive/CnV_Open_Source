@@ -52,7 +52,7 @@
 						Canvas.ZIndex="10"
 						AllowFocusOnInteraction="False"
 						AllowDrop="False"
-						
+						AllowFocusWhenDisabled="False"
 					
 						Grid.Row="1" />
 

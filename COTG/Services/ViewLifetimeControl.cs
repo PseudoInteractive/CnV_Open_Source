@@ -65,7 +65,7 @@ namespace COTG.Services
         {
             Dispatcher = newWindow.Dispatcher;
             _window = newWindow;
-            Id = ApplicationView.GetApplicationViewIdForWindow(_window);
+			Id = ApplicationView.GetApplicationViewIdForWindow(_window);
             RegisterForEvents();
         }
 

@@ -1576,7 +1576,7 @@ namespace COTG.Game
 			nextUpdateTick = tick + 1000 * 60 * 2; // 2 every min 
 			lastUpdatedContinent = continentId;
 
-			UpdateRegionDebounce.Go();
+			UpdateRegionDebounce.Go(throttled:true,runAgainIfStarted:false);
 
 		}
 

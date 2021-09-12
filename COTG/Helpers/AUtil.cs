@@ -169,6 +169,11 @@ namespace COTG
 			}
 		}
 
+		internal static void Clear<T>(out T[] resDest)
+		{
+			resDest = Array.Empty<T>();
+		}
+
 		public static string fileTimeFormat = "yyyy_MM_dd_HH_mm_ss";
 		public static string fileTimeFormatMinute = "yyyy_MM_dd_HH_mm";
 		public static string fileTimeFormatLegacy = "yyyy_MM_dd_H_mm_ss";
@@ -327,6 +332,10 @@ namespace COTG
 			}
 			result[lg] = a;
 			return result;
+		}
+		public static void AddIfAbsent<T>(ref T[] l,T a) where T : IEquatable<T>
+		{
+			l = ArrayAppendIfAbsent(l,a);
 		}
 
 		public static T[] ArrayRemoveDuplicates<T>(this T[] l) where T : IEquatable<T>

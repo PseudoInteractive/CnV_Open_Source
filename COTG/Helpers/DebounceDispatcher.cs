@@ -16,8 +16,10 @@ namespace COTG
 			public int debounceDelay = 250;
 			public int throttleDelay = 750;
 			public bool runOnUiThead;
-			public bool throttled;
 			int nextCall = Environment.TickCount;
+			
+			public TaskCompletionSource<bool> complete;
+		
 			enum State
 			{
 				idle,
@@ -31,7 +33,7 @@ namespace COTG
 			{
 				func = _func;
 			}
-			public void Go()
+			public void Go(bool throttled = false,bool runAgainIfStarted=true)
 			{
 				switch (state)
 				{
@@ -54,7 +56,8 @@ namespace COTG
 					}
 					case State.running:
 					{
-						state = State.pending; // we are already in the inner loop, leave the current one running
+						if(runAgainIfStarted)
+							state = State.pending; // we are already in the inner loop, tell the current one to restart once done
 						return;
 					}
 				default:
@@ -64,7 +67,7 @@ namespace COTG
 					}
 				}
 				state = State.pending;
-			var next = Environment.TickCount + debounceDelay;
+				var next = Environment.TickCount + debounceDelay;
 				nextCall = nextCall.Max( Environment.TickCount + debounceDelay );
 				Task.Run(async () =>
 			   {

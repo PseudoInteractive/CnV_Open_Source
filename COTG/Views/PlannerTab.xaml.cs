@@ -26,13 +26,13 @@ namespace COTG.Views
 		{
 			if (visible)
 			{
-				await CityBuild._IsPlanner(true,false);
+			//	await CityBuild._IsPlanner(true,false);
 				statsDirty = true;
-				BuildingsChanged(City.GetBuild(),false);
+			//	BuildingsChanged(City.GetBuild(),false);
 			}
 			else
 			{
-				await CityBuild._IsPlanner( false,false );
+				//await CityBuild._IsPlanner( false,false );
 
 			}
 			await base.VisibilityChanged(visible, longTerm: longTerm);
@@ -652,12 +652,12 @@ namespace COTG.Views
 			PlannerTab.instance.Close();
 		}
 
-		public override void Close()
-		{ 
-			base.Close();
-			CityBuild._IsPlanner(false);
+		//public override void Close()
+		//{ 
+		//	base.Close();
+		//	CityBuild._IsPlanner(false);
 
-		}
+		//}
 
 		private void RotateCenterClick(object sender, RoutedEventArgs e)
 		{

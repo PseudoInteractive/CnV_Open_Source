@@ -23,7 +23,6 @@
 						   ToolTipService.ToolTip="If export boxes below are checked, this hub will be set as the target hub" />
 				
 			</StackPanel>
-		<Border Style="{StaticResource BorderReveal}">
 			<StackPanel Style="{StaticResource StackPanelReveal}">
 				<!--<ToggleSwitch Header="Request Resources" OnContent="Set" OffContent="Ignore" IsOn="{x:Bind applyRequested}" />-->
 				<tk:WrapPanel Orientation="Horizontal" Margin="4" >
@@ -53,9 +52,7 @@
 										 />
 				</tk:WrapPanel>
 			</StackPanel>
-		</Border>
-		<Border Style="{StaticResource BorderReveal}" Margin="2,8,2,2">
-			<StackPanel Style="{StaticResource StackPanelReveal}" >
+			<StackPanel Style="{StaticResource StackPanelReveal}" Margin="2,8,2,2">
 				<!--<ToggleSwitch Header="Send Resources" OnContent="Set" OffContent="Ignore" IsOn="{x:Bind applySend}" />-->
 				<tk:WrapPanel  Orientation="Horizontal" >
 					<winui:NumberBox Header="Wood Limit"
@@ -84,7 +81,6 @@
 										 />
 				</tk:WrapPanel>
 			</StackPanel>
-		</Border>
 		<StackPanel Style="{StaticResource StackPanelReveal}" >
 			<Border Style="{StaticResource BorderReveal}">
 				<tk:WrapPanel  Orientation="Horizontal">

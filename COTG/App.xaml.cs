@@ -96,6 +96,8 @@ namespace COTG
 			   typeof(Analytics), typeof(Crashes));
 			await Task.WhenAll(  Crashes.SetEnabledAsync(true),
 								Analytics.SetEnabledAsync(true) );
+			AAnalytics.initialized=true;
+
 			bool didAppCrash = await Crashes.HasCrashedInLastSessionAsync();
 			if (didAppCrash)
 			{
@@ -146,37 +148,21 @@ namespace COTG
 
 //		public static Windows.Foundation.IAsyncOperation<CoreWebView2Environment> createWebEnvironmentTask;
 
-		public static async void App_CloseRequested(object sender, SystemNavigationCloseRequestedPreviewEventArgs e)
-		{
-			Log("Close");
-			state = State.closing;
-			await TabPage.CloseAllTabWindows();
-		}
+		
 
 		private async void App_Suspending(object sender, SuspendingEventArgs e)
 		{
+			AAnalytics.Track("Suspend");
+
 			Log("Suspend");
 			var deferral = e.SuspendingOperation.GetDeferral();
 
 			try
 			{
-				if (isForeground == true)
-				{
-					isForeground = false;
+				await SwtichToBackground();
 
-					//TODO: Save application state and stop any background activity
-					try
-					{
-					
-						await SaveState();
-					}
-					catch (Exception ex)
-					{
-					}
-				}
-				
-				await ShellPage.instance.SuspendWebView();
-			
+				await JSClient.SuspendWebView();
+
 			}
 			catch(Exception ext)
 			{
@@ -186,6 +172,24 @@ namespace COTG
 			{
 				
 				deferral.Complete();
+			}
+		}
+
+		private static async Task SwtichToBackground()
+		{
+			if(isForeground == true)
+			{
+				isForeground = false;
+
+				//TODO: Save application state and stop any background activity
+				try
+				{
+
+					await SaveState();
+				}
+				catch(Exception ex)
+				{
+				}
 			}
 		}
 
@@ -199,22 +203,22 @@ namespace COTG
 
 
 		// can only be called from UI thread
-		private static CoreVirtualKeyStates GetKeyState(VirtualKey key)
-		{
-			var window = CoreWindow.GetForCurrentThread();
-			if (window == null)
-			{
-				Assert(false);
-				return CoreVirtualKeyStates.None;
-			}
+		//private static CoreVirtualKeyStates GetKeyState(VirtualKey key)
+		//{
+		//	var window = CoreWindow.GetForCurrentThread();
+		//	if (window == null)
+		//	{
+		//		Assert(false);
+		//		return CoreVirtualKeyStates.None;
+		//	}
 
-			return window.GetAsyncKeyState(key);
-		}
-		public static bool IsKeyDown(VirtualKey key)
-		{
-			var state = GetKeyState(key);
-			return (state & CoreVirtualKeyStates.Down) == CoreVirtualKeyStates.Down;
-		}
+		//	return window.GetAsyncKeyState(key);
+		//}
+		//public static bool IsKeyDown(VirtualKey key)
+		//{
+		//	var state = GetKeyState(key);
+		//	return (state & CoreVirtualKeyStates.Down) == CoreVirtualKeyStates.Down;
+		//}
 
 		// can be called from any thread
 		public static bool IsKeyPressedControl()
@@ -281,7 +285,6 @@ namespace COTG
 			OnKeyDown(key);
 
 		}
-
 		public static void OnKeyDown(VirtualKey key)
 		{
 			switch (key)
@@ -309,7 +312,8 @@ namespace COTG
 			var t = DateTimeOffset.UtcNow;
 			var dt = t - activeStart;
 			activeStart = t;
-		//	AAnalytics.Track("Foreground", new Dictionary<string, string> { { "time", dt.TotalSeconds.RoundToInt().ToString() } });
+			AAnalytics.Track("Foreground", new Dictionary<string, string> { { "time", dt.TotalSeconds.RoundToInt().ToString() } });
+			JSClient.ResumeWebView();
 
 			//if (ShellPage.canvas != null)
 			//    ShellPage.canvas.Paused = false;
@@ -407,12 +411,11 @@ namespace COTG
 				LogEx(ex);
 			}
 
-			await ActivationService.ActivateAsync(args);
 			// if (!args.PrelaunchActivated)
 
-			OnLaunchedOrActivated(args);
+			await OnLaunchedOrActivated(args);
 		}
-		private void OnLaunchedOrActivated(IActivatedEventArgs args)
+		private async Task OnLaunchedOrActivated(IActivatedEventArgs args)
 		{
 			this.DebugSettings.FailFastOnErrors = false;
 #if TRACE || DEBUG
@@ -426,16 +429,26 @@ namespace COTG
 #else
             this.DebugSettings.IsBindingTracingEnabled = false;
 #endif
+			var wasRunning = args.PreviousExecutionState != ApplicationExecutionState.Running && args.PreviousExecutionState != ApplicationExecutionState.Suspended;
+			
+			await ActivationService.ActivateAsync(args,wasRunning);
+			
+			if(!wasRunning)
+				return;
+
+			//			CoreApplication.MainView.HostedViewClosing+=MainView_HostedViewClosing; ;
+				CoreApplication.MainView.CoreWindow.Closed+=CoreWindow_Closed;
 			//if(args!=null)
 			//	SystemInformation.TrackAppUse(args);
-			if (processingTasksStarted == false)
-			{
-				processingTasksStarted = true;
+				if(processingTasksStarted == false)
+				{
+					processingTasksStarted = true;
 
-				Task.Run(ProcessThrottledTasks);
-				Task.Run(ProcessIdleTasks);
+					Task.Run(ProcessThrottledTasks);
+					Task.Run(ProcessIdleTasks);
+				}
+			
 			}
-
 			SystemInformation.Instance.TrackAppUse(args);
 #if DEBUG
 			var coreTitleBar = CoreApplication.GetCurrentView().TitleBar;
@@ -458,6 +471,24 @@ namespace COTG
 			// Set XAML element as a draggable region.
 			//          Window.Current.SetTitleBar(ShellPage.instance.AppTitleBar);
 		}
+
+		private void CoreWindow_Closed(CoreWindow sender,CoreWindowEventArgs args)
+		{
+			Log("Close");
+			state = State.closing;
+			JSClient.CloseWebView();
+			TabPage.CloseAllTabWindows();
+		}
+
+		private async void MainView_HostedViewClosing(CoreApplicationView sender,HostedViewClosingEventArgs args)
+		{
+			var defer = args.GetDeferral();
+			Log("Close");
+			state = State.closing;
+			JSClient.CloseWebView();
+			await TabPage.CloseAllTabWindows();
+		}
+
 
 		protected override async void OnActivated(IActivatedEventArgs args)
 		{
@@ -495,8 +526,8 @@ namespace COTG
 
 				return;
 			}
-			await ActivationService.ActivateAsync(args);
-			OnLaunchedOrActivated(args);
+			
+			await OnLaunchedOrActivated(args);
 
 
 
@@ -546,26 +577,38 @@ namespace COTG
 		public static void SetupCoreWindowInputHooks()
 		{
 
-			foreach (var view in CoreApplication.Views)
+			Assert(CoreApplication.Views.Count==1);
+
+			var window = CoreApplication.MainView.CoreWindow;
 			{
 				//Log($"{view.TitleBar.ToString()} {view.IsMain} ");
-				var window = view.CoreWindow;
-				window.PointerMoved -= OnPointerMoved;
-				window.PointerPressed -= OnPointerPressed; ;
-
-				window.KeyDown -= OnKeyDown;
-				window.KeyUp -= OnKeyUp;
-
+			
 				window.PointerMoved += OnPointerMoved;
 				window.PointerPressed += OnPointerPressed; ;
-
+				window.PointerExited+=Window_PointerExited;
+				window.PointerEntered+=Window_PointerEntered;
 				window.KeyDown += OnKeyDown;
 				window.KeyUp += OnKeyUp;
 
 			}
 		}
+
+		private static void Window_PointerEntered(CoreWindow sender,PointerEventArgs args)
+		{
+			args.KeyModifiers.UpdateKeyModifiers();
+			Log("Pointer enter");
+		}
+
+		private static void Window_PointerExited(CoreWindow sender,PointerEventArgs args)
+		{
+			args.KeyModifiers.UpdateKeyModifiers();
+			Log("Pointer exit");
+		}
+
 		public static void OnPointerPressed(CoreWindow sender, PointerEventArgs e)
 		{
+			e.KeyModifiers.UpdateKeyModifiers();
+
 			var prop = e.CurrentPoint.Properties.PointerUpdateKind;
 			if (OnPointerPressed(prop))
 				e.Handled = true;
@@ -625,6 +668,8 @@ namespace COTG
 
 		private static void OnPointerMoved(CoreWindow sender, PointerEventArgs args)
 		{
+			args.KeyModifiers.UpdateKeyModifiers();
+
 			// reset timer if active
 			InputRecieved();
 		}
@@ -778,21 +823,18 @@ namespace COTG
 		//public static CoreWebView2Controller webController;
 		//public static CoreWebView2   webCore;
 
-		private UIElement CreateShell()
-		{
-			return new Views.ShellPage();
-		}
 		private async void App_EnteredBackground(object sender, EnteredBackgroundEventArgs e)
 		{
 			Log("Enter Background");
-
-			isForeground = false;
 			var deferral = e.GetDeferral();
+
+
 			try
 			{
 				// only save if we have c
 
-				await SaveState();
+				await SwtichToBackground();
+			
 
 				var t = DateTimeOffset.UtcNow;
 				var dt = t - activeStart;
@@ -816,9 +858,10 @@ namespace COTG
 		{
 			Log("Resume");
 		//	isForeground = true;
+			AAnalytics.Track("Resume");
 
 			activeStart = DateTimeOffset.UtcNow;
-
+			JSClient.ResumeWebView();
 			//         Singleton<SuspendAndResumeService>.Instance.ResumeApp();
 		}
 
@@ -1490,13 +1533,13 @@ namespace COTG
 			// is this thread safe?
 			if(ShellPage.coreInputSource != null)
 			{				
-				ShellPage.coreInputSource.Dispatcher.TryRunAsync(CoreDispatcherPriority.Normal,() =>
+				ShellPage.coreInputSource.DispatcherQueue.EnqueueAsync(() =>
 				
-					ShellPage.coreInputSource.PointerCursor = type);
-			}
-		
+					ShellPage.coreInputSource.PointerCursor = type,DispatcherQueuePriority.Low);
 
-			App.DispatchOnUIThread( () =>
+			}
+
+			App.QueueOnUIThreadIdle( () =>
 				CoreWindow.GetForCurrentThread().PointerCursor = type);
 		}
 

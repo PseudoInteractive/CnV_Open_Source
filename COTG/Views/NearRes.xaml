@@ -1,4 +1,4 @@
-﻿<local:UserTab
+﻿<views:UserTab
     x:Class="COTG.Views.NearRes"
     Tag="NearRes"
      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
@@ -7,20 +7,17 @@
       xmlns:game="using:COTG.Game"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       xmlns:cotg="using:COTG"
-      xmlns:my="using:Microsoft.UI.Xaml.Controls"
+	xmlns:winui="using:Microsoft.UI.Xaml.Controls"
       xmlns:tk="using:Microsoft.Toolkit.Uwp.UI.Controls"
-      xmlns:local="using:COTG.Views"
+	xmlns:views="using:COTG.Views"
     mc:Ignorable="d">
 	<Grid>
-		<Grid.Resources>
-			<ResourceDictionary Source="ms-appx:///Microsoft.UI.Xaml/DensityStyles/Compact.xaml" />
-		</Grid.Resources>
 		<Grid.RowDefinitions>
 			<RowDefinition Height="auto" />
 			<RowDefinition Height="3*" />
 			<RowDefinition Height="auto" />
 		</Grid.RowDefinitions>
-		<StackPanel Orientation="Vertical">
+		<StackPanel Orientation="Vertical" >
 
 			<Border Style="{StaticResource BorderReveal}">
 				<tk:WrapPanel Orientation="Horizontal" HorizontalAlignment="Stretch" >
@@ -32,22 +29,24 @@
 
 			<Border Style="{StaticResource BorderReveal}">
 				<StackPanel Orientation="Vertical">
-					<TextBlock Text="Send" />
+						<ToggleSwitch Margin="4,4,4,4" Header="Resources to Send" OnContent="Ratio" OffContent="Absolute" IsOn="{x:Bind views:SettingsPage.nearResAsRatio}"
+									  FontSize="{StaticResource LargeFontSize}" ToolTipService.ToolTip="Ratio means send as much res as possible in given ratio of wood, stone, iron and food, absolute means limit the total sent to a fixed amount" />
+
 					<tk:WrapPanel Orientation="Horizontal" HorizontalAlignment="Stretch" >
 
-						<my:NumberBox Value="{x:Bind des.wood,Mode=TwoWay}" Style="{StaticResource RightAlignNumberBox}"
+						<winui:NumberBox Value="{x:Bind views:SettingsPage.nearResSend.wood,Mode=TwoWay}" Style="{StaticResource RightAlignNumberBox}"
 							ValidationMode="InvalidInputOverwritten"
                           ValueChanged="NumberBox_ValueChanged" AcceptsExpression="True"
                           Header="Wood"  Margin="6,0,6,0" LargeChange="1000000" SmallChange="100000"  />
-						<my:NumberBox Value="{x:Bind des.stone,Mode=TwoWay}" Style="{StaticResource RightAlignNumberBox}"
+						<winui:NumberBox Value="{x:Bind views:SettingsPage.nearResSend.stone,Mode=TwoWay}" Style="{StaticResource RightAlignNumberBox}"
                           ValidationMode="InvalidInputOverwritten"
 						  ValueChanged="NumberBox_ValueChanged"
                           Header="Stone"  Margin="6,0,6,0" LargeChange="1000000" AcceptsExpression="True" SmallChange="100000"  />
-						<my:NumberBox Value="{x:Bind des.iron,Mode=TwoWay}" Style="{StaticResource RightAlignNumberBox}"
+						<winui:NumberBox Value="{x:Bind views:SettingsPage.nearResSend.iron,Mode=TwoWay}" Style="{StaticResource RightAlignNumberBox}"
 							ValidationMode="InvalidInputOverwritten"
 									  ValueChanged="NumberBox_ValueChanged"
                           Header="Iron"  Margin="6,0,6,0"  LargeChange="1000000" AcceptsExpression="True" SmallChange="100000" />
-						<my:NumberBox Value="{x:Bind des.food,Mode=TwoWay}" Style="{StaticResource RightAlignNumberBox}"
+						<winui:NumberBox Value="{x:Bind views:SettingsPage.nearResSend.food,Mode=TwoWay}" Style="{StaticResource RightAlignNumberBox}"
                           ValidationMode="InvalidInputOverwritten"
 							  ValueChanged="NumberBox_ValueChanged"
                           Header="Food"  Margin="6,0,6,0"  LargeChange="1000000" AcceptsExpression="True" SmallChange="100000"  />
@@ -55,38 +54,42 @@
 					</tk:WrapPanel >
 				</StackPanel>
 			</Border>
-			<Border Style="{StaticResource BorderReveal}">
-			<StackPanel Orientation="Vertical">
+			<StackPanel Orientation="Vertical" Style="{StaticResource StackPanelReveal}">
 				<TextBlock Text="Reserve" />
 				<tk:WrapPanel Orientation="Horizontal" HorizontalAlignment="Stretch" >
 
-					<my:NumberBox Value="{x:Bind reserve.wood,Mode=TwoWay}" Style="{StaticResource RightAlignNumberBox}"
+						<winui:NumberBox Value="{x:Bind views:SettingsPage.nearResReserve.wood,Mode=TwoWay}" Style="{StaticResource RightAlignNumberBox}"
 							ValidationMode="InvalidInputOverwritten"
                           ValueChanged="NumberBox_ValueChanged" AcceptsExpression="True"
+									 ToolTipService.ToolTip="Cities will leave at least this wood much at home"
                           Header="Wood"  Margin="6,0,6,0" LargeChange="2000000" SmallChange="500000" />
-						<my:NumberBox Value="{x:Bind reserve.stone,Mode=TwoWay}" Style="{StaticResource RightAlignNumberBox}"
+						<winui:NumberBox Value="{x:Bind views:SettingsPage.nearResReserve.stone,Mode=TwoWay}" Style="{StaticResource RightAlignNumberBox}"
                           ValidationMode="InvalidInputOverwritten"
 						  ValueChanged="NumberBox_ValueChanged"
+									 ToolTipService.ToolTip="Cities will leave at least this much stone at home"
                           Header="Stone"  Margin="6,0,6,0" LargeChange="2000000" AcceptsExpression="True" SmallChange="500000"  />
-					<my:NumberBox Value="{x:Bind reserve.iron,Mode=TwoWay}" Style="{StaticResource RightAlignNumberBox}"
+						<winui:NumberBox Value="{x:Bind views:SettingsPage.nearResReserve.iron,Mode=TwoWay}" Style="{StaticResource RightAlignNumberBox}"
 							ValidationMode="InvalidInputOverwritten"
+									 ToolTipService.ToolTip="Cities will leave at least this much iron at home"
 									  ValueChanged="NumberBox_ValueChanged"
                           Header="Iron"  Margin="6,0,6,0"  LargeChange="2000000" AcceptsExpression="True" SmallChange="500000"  />
-					<my:NumberBox Value="{x:Bind reserve.food,Mode=TwoWay}" Style="{StaticResource RightAlignNumberBox}"
+						<winui:NumberBox Value="{x:Bind views:SettingsPage.nearResReserve.food,Mode=TwoWay}" Style="{StaticResource RightAlignNumberBox}"
                           ValidationMode="InvalidInputOverwritten"
 							  ValueChanged="NumberBox_ValueChanged"
+									 ToolTipService.ToolTip="Cities will leave at least this food at home"
                           Header="Food"  Margin="6,0,6,0"  LargeChange="2000000" AcceptsExpression="True" SmallChange="500000"  />
-						<my:NumberBox Value="{x:Bind reserveCarts,Mode=TwoWay}" Style="{StaticResource RightAlignNumberBox}"
+						<winui:NumberBox Value="{x:Bind views:SettingsPage.nearResCartReserve,Mode=TwoWay}" Style="{StaticResource RightAlignNumberBox}"
                           ValidationMode="InvalidInputOverwritten"
 							  ValueChanged="NumberBox_ValueChanged"
+										 ToolTipService.ToolTip="Cities will keep at least this many carts at home"
                           Header="Carts"  Margin="6,0,6,0"  LargeChange="5000" AcceptsExpression="True" SmallChange="500"  />
-						<my:NumberBox Value="{x:Bind reserveShips,Mode=TwoWay}" Style="{StaticResource RightAlignNumberBox}"
+						<winui:NumberBox Value="{x:Bind views:SettingsPage.nearResShipReserve,Mode=TwoWay}" Style="{StaticResource RightAlignNumberBox}"
                           ValidationMode="InvalidInputOverwritten"
+										 ToolTipService.ToolTip="Cities will keep at least this many ships at home"
 							  ValueChanged="NumberBox_ValueChanged"
                           Header="Ships"  Margin="6,0,6,0"  LargeChange="200" AcceptsExpression="True" SmallChange="40" />
 					</tk:WrapPanel >
 			</StackPanel>
-			</Border>
 			<!--<Border Style="{StaticResource BorderReveal}">
 				<StackPanel Orientation="Vertical">
 					<TextBlock Text="Incoming.." />
@@ -118,19 +121,19 @@
 					<ToggleSwitch Header="Send Via" IsOn="{x:Bind viaWater,Mode=TwoWay}" VerticalAlignment="Center" Margin="12"
                           OffContent="Land" OnContent="Water"  HorizontalAlignment="Center" 
                     />
-					<my:NumberBox Value="{x:Bind _filterTime,Mode=TwoWay}" Style="{StaticResource RightAlignNumberBox}" 
+					<winui:NumberBox Value="{x:Bind _filterTime,Mode=TwoWay}" Style="{StaticResource RightAlignNumberBox}" 
                           Header="Max Time (hrs)"  Margin="6,0,6,0" AcceptsExpression="True" SmallChange="1.0"
 							ValueChanged="NumberBox_ValueChanged"
                           />
-					<my:NumberBox Value="{x:Bind filterResHome,Mode=TwoWay}" Style="{StaticResource RightAlignNumberBox}"
+					<winui:NumberBox Value="{x:Bind filterResHome,Mode=TwoWay}" Style="{StaticResource RightAlignNumberBox}"
 				    ValidationMode="InvalidInputOverwritten"
 								  ValueChanged="NumberBox_ValueChanged"
                           Header="Filter Res"  Margin="6,0,6,0" AcceptsExpression="True" SmallChange="1000"  />
-					<my:NumberBox Value="{x:Bind filterCartsHome,Mode=TwoWay}" Style="{StaticResource RightAlignNumberBox}"
+					<winui:NumberBox Value="{x:Bind filterCartsHome,Mode=TwoWay}" Style="{StaticResource RightAlignNumberBox}"
                 ValidationMode="InvalidInputOverwritten"
 								  ValueChanged="NumberBox_ValueChanged"
                           Header="Filter Carts"  Margin="6,0,6,0" AcceptsExpression="True" SmallChange="100" />
-					<my:NumberBox Value="{x:Bind filterShipsHome,Mode=TwoWay}" Style="{StaticResource RightAlignNumberBox}"
+					<winui:NumberBox Value="{x:Bind filterShipsHome,Mode=TwoWay}" Style="{StaticResource RightAlignNumberBox}"
                         ValidationMode="InvalidInputOverwritten"
 								  ValueChanged="NumberBox_ValueChanged"
                           Header="Filter Ships"  Margin="6,0,6,0" AcceptsExpression="True" SmallChange="10" />
@@ -139,7 +142,7 @@
 		</StackPanel>
 		<tk:DataGrid x:Name="supportGrid" x:FieldModifier="public"
                         AutoGenerateColumns="False"
-                        ItemsSource="{x:Bind local:NearRes.supporters, Mode=OneWay}"
+                        ItemsSource="{x:Bind views:NearRes.supporters, Mode=OneWay}"
                         RowHeight="{StaticResource ShortGridRowHeight}"
                      Grid.Row="1"
 					 					 RowHeaderStyle="{StaticResource DataGridColumnHeaderStyle}"
@@ -290,19 +293,19 @@
 			<StackPanel Orientation="Vertical" >
 			<tk:WrapPanel Orientation="Horizontal" HorizontalAlignment="Stretch" >
 
-				<my:NumberBox Value="{x:Bind sendWood,Mode=TwoWay}" Style="{StaticResource RightAlignNumberBox}" 
+				<winui:NumberBox Value="{x:Bind sendWood,Mode=TwoWay}" Style="{StaticResource RightAlignNumberBox}" 
                           Header="Wood"  Margin="6,0,6,0" AcceptsExpression="True" SmallChange="100000" LargeChange="1000000"
 							ValueChanged="ItemValueChanged"
                           />
-				<my:NumberBox Value="{x:Bind sendStone,Mode=TwoWay}" Style="{StaticResource RightAlignNumberBox}" 
+				<winui:NumberBox Value="{x:Bind sendStone,Mode=TwoWay}" Style="{StaticResource RightAlignNumberBox}" 
                           Header="Stone"  Margin="6,0,6,0" AcceptsExpression="True" SmallChange="100000" LargeChange="1000000"
 							ValueChanged="ItemValueChanged"
                           />
-				<my:NumberBox Value="{x:Bind sendIron,Mode=TwoWay}" Style="{StaticResource RightAlignNumberBox}" 
+				<winui:NumberBox Value="{x:Bind sendIron,Mode=TwoWay}" Style="{StaticResource RightAlignNumberBox}" 
                           Header="Iron"  Margin="6,0,6,0" AcceptsExpression="True" SmallChange="100000" LargeChange="1000000"
 							ValueChanged="ItemValueChanged"
                           />
-				<my:NumberBox Value="{x:Bind sendFood,Mode=TwoWay}" Style="{StaticResource RightAlignNumberBox}" 
+				<winui:NumberBox Value="{x:Bind sendFood,Mode=TwoWay}" Style="{StaticResource RightAlignNumberBox}" 
                           Header="Food"  Margin="6,0,6,0" AcceptsExpression="True" SmallChange="100000" LargeChange="1000000"
 							ValueChanged="ItemValueChanged"
                           />
@@ -330,4 +333,4 @@
 			</StackPanel>
 		</Border>
 	</Grid>
-</local:UserTab>
+</views:UserTab>

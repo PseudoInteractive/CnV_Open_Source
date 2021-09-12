@@ -748,7 +748,7 @@ declare function onKeyDown(ev: KeyboardEvent): void;
 declare function onKeyUp(ev: KeyboardEvent): void;
 declare function canvasMouseDown(ev: MouseEvent): void;
 declare let underMouse: Element;
-declare function postMouseEvent(sx: string, sy: string, eventName: string, button: string, dx: string, dy: string): void;
+declare function postMouseEvent(x: number, y: number, eventName: string, buttons: number, dx: number, dy: number): void;
 declare function postppdt(): void;
 declare function GetDate(jq: string): Date;
 declare function viewcity(cid: string): void;

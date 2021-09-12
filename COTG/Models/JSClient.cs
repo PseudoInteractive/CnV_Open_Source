@@ -206,10 +206,10 @@ namespace COTG
 		public static int ppss;
 		public static bool isSub => subId != 0;
 
-		public static long GameTimeMs()
-		{
-			return (long)((DateTimeOffset.UtcNow - launchTime).TotalMilliseconds) + gameMSAtStart;
-		}
+		//public static long GameTimeMs()
+		//{
+		//	return (long)((DateTimeOffset.UtcNow - launchTime).TotalMilliseconds) + gameMSAtStart;
+		//}
 		public static DateTimeOffset ServerTime()
 		{
 			return (DateTimeOffset.UtcNow + gameTOffset);
@@ -437,9 +437,55 @@ namespace COTG
 		}
 
 		private const string jsFunctionMask = "*jsfunctions/*";
-
-		internal static async Task Initialize(Windows.UI.Xaml.Controls.Grid panel, WebView _view)
+		public static async Task SuspendWebView()
 		{
+			if(view is not null && (view.CoreWebView2 is not null))
+			{
+
+				if(!view.CoreWebView2.IsSuspended)
+				{
+					view.Visibility = Visibility.Collapsed;
+					await view.CoreWebView2.TrySuspendAsync();
+
+				}
+				//	grid.Children.Remove(_w);
+				//			_w.Close();
+				//webView = null;
+			}
+		}
+		public static void ResumeWebView()
+		{
+			if(view is not null && (view.CoreWebView2 is not null))
+			{
+				view.Visibility = Visibility.Visible;
+				if(view.CoreWebView2.IsSuspended)
+				{
+					view.CoreWebView2.Resume();
+
+				}
+				//	grid.Children.Remove(_w);
+				//	_w.Close();
+				//view = null;
+			}
+		}
+
+		public static void CloseWebView()
+		{
+			if(view is not null )
+			{
+
+				var v =view;
+				coreWebView = null;
+				view = null;
+				v.Visibility = Visibility.Collapsed;
+				ShellPage.instance.grid.Children.Remove(ShellPage.instance.webView);
+				ShellPage.instance.webView = null;
+				v.Close();
+			}
+		}
+		internal static void Initialize(Windows.UI.Xaml.Controls.Grid panel, WebView _view)
+		{
+
 
 
 			httpFilter = new HttpBaseProtocolFilter();
@@ -494,19 +540,30 @@ namespace COTG
 				//	//HorizontalAlignment = HorizontalAlignment.Stretch,
 				//	//VerticalAlignment = VerticalAlignment.Stretch,
 				//	//CacheMode=new BitmapCache()
-					
-					
+
+
 				//	Name = "cotgView",
 				//	//Opacity = 0.5,
 
 				//};
-			//	var env =await App.createWebEnvironmentTask;
-			//	env.NewBrowserVersionAvailable+=Env_NewBrowserVersionAvailable;
-				await view.EnsureCoreWebView2Async();
+				LoadJsStrings();
 
+				//	var env =await App.createWebEnvironmentTask;
+				//	env.NewBrowserVersionAvailable+=Env_NewBrowserVersionAvailable;
+				view.CoreWebView2Initialized+=(_view, _args)=>{
+					if(_args.Exception is not null)
+					{
+						Log(_args.Exception);
+						AAnalytics.Track("WebViewEx", new []{"Ex:",_args.Exception.Message } );
+						Windows.System.Launcher.LaunchUriAsync(new("https://go.microsoft.com/fwlink/p/?LinkId=2124703"));
+
+						return;
+					}
 				coreWebView = view.CoreWebView2;
 #if DEBUG
 				coreWebView.OpenDevToolsWindow();
+#else
+				coreWebView.AreDevToolsEnabled=false;
 #endif
 				coreWebView.Settings.UserAgent = userAgent;
 				coreWebView.Settings.IsWebMessageEnabled=true;
@@ -541,7 +598,7 @@ namespace COTG
 				//	webViewBrush = new WebViewBrush() { Stretch = Stretch.Fill };
 				view.GotFocus += View_GotFocus;
 				view.LostFocus += View_LostFocus; ;
-				view.AllowFocusOnInteraction=false;
+				
 				view.CoreWebView2.ProcessFailed+=CoreWebView2_ProcessFailed;
 				
 				//   view.CacheMode = CacheMode.
@@ -555,8 +612,7 @@ namespace COTG
 					httpsHost = new Uri($"https://w{world}.crownofthegods.com");
 					//       view.Source = new Uri($"https://w{world}.crownofthegods.com?s={subId}");
 				}
-				await LoadJsStrings();
-
+				
 				// else
 				view.Source = new Uri("https://www.crownofthegods.com/home");
 				if (isSub)
@@ -571,7 +627,9 @@ namespace COTG
 				{
 					
 				}
-				//	App.SetupCoreWindowInputHooks();
+					//	App.SetupCoreWindowInputHooks();
+				};
+				view.EnsureCoreWebView2Async();
 
 			}
 			catch (Exception e)
@@ -585,19 +643,23 @@ namespace COTG
 
 		}
 
+	
+
 		private static void Environment_NewBrowserVersionAvailable(CoreWebView2Environment sender,object args)
 		{
+			AAnalytics.Track("NewBrowser");
 			Log(args.ToString());
 		}
 
-		private static void Env_NewBrowserVersionAvailable(CoreWebView2Environment sender,object args)
-		{
-			Log(args.ToString());
-		}
 
 
 		private static void CoreWebView2_ProcessFailed(CoreWebView sender,CoreWebView2ProcessFailedEventArgs args)
 		{
+			AAnalytics.Track("WebViewFail",new[] {
+				{"Kind:",args.ProcessFailedKind.ToString() },
+				{"Reason:",args.Reason.ToString() },
+				{"Desc:",args.ProcessDescription },
+			});
 			App.DoYesNoBox("The internet is broken", "Please restart");
 
 		}
@@ -928,7 +990,7 @@ namespace COTG
 
 		public static void PostMouseEventToJS(int x, int y, string eventName, int button, int dx = 0, int dy = 0)
 		{
-			App.DispatchOnUIThreadLow(() => view.ExecuteScriptAsync($"postMouseEvent({x},{y},\"{eventName}\",{button},{dx},{dy})") );
+			App.DispatchOnUIThreadLow(() => coreWebView.PostWebMessageAsString($"{{\"postMouseEvent\":{{\"x\":{x},\"y\":{y},\"eventName\":\"{eventName}\",\"button\":{button},\"dx\":{dx},\"dy\":{dy}}}}}") );
 		}
 
 		//        public static void Refresh(object ob,RoutedEventArgs args)
@@ -1056,14 +1118,14 @@ namespace COTG
 
 								//	var wasPlanner = CityBuild.isPlanner;
 
-								if (CityBuild.isPlanner)
-								{
-									//	var b = City.GetBuild();
-									//	b.BuildingsCacheToShareString();
-									//		await b.SaveLayout();
-									//					CityBuild.isPlanner = false;
-									await CityBuild._IsPlanner(false, true);
-								}
+								//if (CityBuild.isPlanner)
+								//{
+								//	//	var b = City.GetBuild();
+								//	//	b.BuildingsCacheToShareString();
+								//	//		await b.SaveLayout();
+								//	//					CityBuild.isPlanner = false;
+								//	await CityBuild._IsPlanner(false, true);
+								//}
 								City.build = cid;
 							//	Assert(pid == Player.activeId);
 								//Cosmos.PublishPlayerInfo(JSClient.jsBase.pid, City.build, JSClient.jsBase.token, JSClient.jsBase.cookies); // broadcast change
@@ -1312,11 +1374,11 @@ namespace COTG
 
 		}
 
-		public static Task FetchCity(int cityId)
+		public static void FetchCity(int cityId)
 		{
-			return App.DispatchOnUIThreadTask(async () =>
+			App.DispatchOnUIThreadLow( () =>
 			{
-				await ExecuteScriptAsync("shCit", (cityId) );
+				coreWebView.PostWebMessageAsString($"{{\"shCit\":{cityId}}}" );
 				//int x = cityId%65536;
 				//int y = cityId/65536;
 				//var spotInfo = TileData.instance.GetSpotType(x, y);
@@ -1324,7 +1386,7 @@ namespace COTG
 
 			});
 		}
-		public static IAsyncOperation<string> ExecuteScriptAsync(string func,  string arg0) => view.ExecuteScriptAsync($"{func}(\"{arg0}\")");
+		public static IAsyncOperation<string> ExecuteScriptAsync(string func,  string arg0) => view?.ExecuteScriptAsync($"{func}(\"{arg0}\")");
 		public static IAsyncOperation<string> ExecuteScriptAsync(string func,int arg0) => view.ExecuteScriptAsync($"{func}({arg0})");
 
 		static string FormatJSArg<T>(T a) => a switch 
@@ -1736,9 +1798,8 @@ namespace COTG
 						if (World.GetInfoFromCid(cid).player != thisPid)
 						{
 							Note.Show($"Invalid City, was it lost? {cid.CidToString()}");
-							App.DispatchOnUIThreadLow(() =>
-							 ExecuteScriptAsync("chcity",  (cid) ));
-
+							ChangeCityJS(cid);
+							
 							await Task.Delay(2000);
 							continue;
 
@@ -2063,8 +2124,8 @@ private static async void ShowCouncillorsMissingDialog()
 		}
 
 		static ConcurrentDictionary<string, BitmapImage> imageCache = new ConcurrentDictionary<string, BitmapImage>();
-		private static long gameMSAtStart;
-		private static DateTimeOffset launchTime;
+	//	private static long gameMSAtStart;
+//		private static DateTimeOffset launchTime;
 
 		public static BitmapImage GetImage(string dir, string name)
 		{
@@ -2187,7 +2248,7 @@ private static async void ShowCouncillorsMissingDialog()
 		static void ChangeCityJS(int cityId)
 		{
 			App.DispatchOnUIThreadLow(() =>
-							ExecuteScriptAsync("chcity",(cityId) ));
+							coreWebView.PostWebMessageAsString($"{{\"chcity\":{cityId}}}") );
 
 		}
 		static async Task<bool> ChangeCityJSWait(int cityId)
@@ -2279,7 +2340,7 @@ private static async void ShowCouncillorsMissingDialog()
 							   var timeOffsetSecondsRounded = Math.Round(timeOffset / (1000.0 * 60*30)) * 60 * 30.0f; // round to nearest half hour
 							   gameTOffset = TimeSpan.FromSeconds(timeOffsetSecondsRounded);
 							   gameTOffsetSeconds = (int)timeOffsetSecondsRounded;
-							   gameTOffsetMs = (long)timeOffsetSecondsRounded*1000;
+							//   gameTOffsetMs = (long)timeOffsetSecondsRounded*1000;
 							   var str = timeOffsetSecondsRounded >= 0 ? " +" : " ";
 							   str += $"{gameTOffset.Hours:D2}:{gameTOffset.Minutes:D2}";
 							   Helpers.JSON.timeZoneString = str;
@@ -2298,8 +2359,8 @@ private static async void ShowCouncillorsMissingDialog()
 							   NavStack.Push(cid);
 							   AGame.cameraC = cid.CidToWorldV();
 							   //Note.L("cid=" + cid.CidToString());
-							   gameMSAtStart = jso.GetAsInt64("time");
-							   launchTime = DateTimeOffset.UtcNow;
+							   //gameMSAtStart = jso.GetAsInt64("time");
+							   //launchTime = DateTimeOffset.UtcNow;
 							   //    Log(jsVars.ToString());
 							   //  SettingsPage.secSessionId = jso.GetAsString("s");
 							   //		AGame.clientTL.X = jso.GetAsFloat("left");
@@ -3079,7 +3140,7 @@ private static async void ShowCouncillorsMissingDialog()
 		}
 
 		public static TimeSpan gameTOffset;
-		public static long gameTOffsetMs;
+	//	public static long gameTOffsetMs;
 		public static int gameTOffsetSeconds;
 
 		//        public static async void TestGet()

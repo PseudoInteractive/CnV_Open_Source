@@ -114,7 +114,7 @@ namespace COTG.Helpers
                     double a => a,
                     string a => a,
                     bool a => a,
-                    DateTimeOffset a => a.ToUniversalTime().Ticks,
+                    DateTimeOffset a => a.UtcTicks,
 					SmallTime a => a.secondsI,
                     TimeSpan a => a,
                     Guid a => a,

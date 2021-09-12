@@ -900,16 +900,13 @@ function canvasMouseDown(ev: MouseEvent ) {
 
 // i.e. "click"
 let underMouse : Element = null;
-function postMouseEvent(sx: string,sy:string, eventName:string,button : string, dx:string, dy:string)
+function postMouseEvent(x: number,y: number,eventName: string,buttons: number,dx: number,dy: number)
 {
-	let x = parseInt(sx);
-	let y = parseInt(sy);
 	//if(eventName === "mousedown")
 		underMouse = document.elementFromPoint(x,y);
 
 	if(underMouse != null)
 	{
-		let buttons = parseInt(button);
 		let evt = new MouseEvent(eventName, {
 			bubbles: true,
 			cancelable: true,
@@ -918,8 +915,8 @@ function postMouseEvent(sx: string,sy:string, eventName:string,button : string, 
 			clientY:y,
 			button:buttons,
 			buttons:1,
-			movementX: dx!==null? parseInt(dx):null,
-			movementY: dy!==null? parseInt(dy):null,
+			movementX: dx!==null? (dx):null,
+			movementY: dy!==null? (dy):null,
 		  });
 	  let canceled = !underMouse.dispatchEvent(evt);
 	}

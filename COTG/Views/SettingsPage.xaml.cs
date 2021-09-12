@@ -41,6 +41,8 @@ namespace COTG.Views
 		//       private static IdentityService IdentityService => Singleton<IdentityService>.Instance;
 
 
+		public static bool nearResAsRatio=true;
+
 		public static bool? syncIncoming = null;
 		public static bool? syncOutgoing = null;
 		public static float tabZoom = 0.5f;
@@ -138,8 +140,11 @@ namespace COTG.Views
 			true,true,true,true };
 
 		public static int raidIntervals;
+		public static int nearResCartReserve = 100;
+		public static int nearResShipReserve = 0;
 		public static Resources nearResReserve = new Resources(100000, 100000, 100000, 100000);
-		
+		public static Resources nearResSend = new Resources(100000,100000,100000,100000);
+
 		public float uiMusic
 		{
 			get => musicVolume;

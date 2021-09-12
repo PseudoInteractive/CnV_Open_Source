@@ -2072,8 +2072,7 @@ namespace COTG.Views
 			{
 				var i = sender as FrameworkElement;
 				var city = i.DataContext as City;
-				JSClient.ExecuteScriptAsync("sendmail", city.playerName, SettingsPage.attackPlanName + " " + plan.attackTime.FormatDateForFileName(), 
-					playerCommands[city.pid].Replace("<", "&lt;").Replace(">", "&gt;").Replace("\n","<br />") );//.Replace("\n", "&#10;&#10;") });
+				JSClient.coreWebView.PostWebMessageAsString($"{{\"sendmail\":{{\"to\":\"{city.playerName}\",\"subject\":\"{SettingsPage.attackPlanName+ " " + plan.attackTime.FormatDateForFileName()}\",\"body\":{COTG.Helpers.JSON.JavaScriptStringEncode(playerCommands[city.pid].Replace("<", "&lt;").Replace(">", "&gt;").Replace("\n","<br />"),true)}}}");//.Replace("\n", "&#10;&#10;") });
 			}
 			catch(Exception ex)
 			{

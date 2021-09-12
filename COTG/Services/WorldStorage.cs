@@ -41,11 +41,11 @@ namespace COTG.Services
 
 		public static DateTimeOffset GetLastWriteUTC( ZipArchiveEntry e)
 		{
-			return new DateTimeOffset(e.LastWriteTime.Ticks, TimeSpan.Zero).FromServerTime();
+			return new DateTimeOffset(e.LastWriteTime.UtcTicks, TimeSpan.Zero).FromServerTime();
 		}
 		public static DateTimeOffset GetLastWriteServer(ZipArchiveEntry e)
 		{
-			return new DateTimeOffset(e.LastWriteTime.Ticks, TimeSpan.Zero);
+			return new DateTimeOffset(e.LastWriteTime.UtcTicks, TimeSpan.Zero);
 		}
 
 		//const string workStr = "Combining Heatmaps";

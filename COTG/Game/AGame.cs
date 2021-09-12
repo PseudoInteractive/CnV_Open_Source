@@ -1030,7 +1030,7 @@ namespace COTG
 		internal static Material darkFontMaterial;
 		public static BitmapFont.BitmapFont bfont;
 		public static float parallaxGain;
-		const float lineTileGain = 1.0f / 64.0f;
+		const float lineTileGain = 1.5f / 64.0f;
 
 		const float actionAnimationGain = 64.0f;
 		const float drawActionLength = 32;
