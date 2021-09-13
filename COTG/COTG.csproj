@@ -308,6 +308,7 @@
     <Compile Include="Models\CityTapCommand.cs" />
     <Compile Include="Models\JsNative.cs" />
     <Compile Include="Models\JSPopup.cs" />
+    <Compile Include="Note.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Services\Avatarslate.cs" />
     <Compile Include="Services\Blobs.cs" />
@@ -798,7 +799,6 @@
     <None Include="JS\jquery-migrate1_4_1" />
     <None Include="JS\jquery3_5_1" />
     <None Include="JS\jquerymigrate" />
-    <EmbeddedResource Include="Notes\fixes.md" />
     <None Include="JS\index.htm" />
     <Content Include="JS\DHRUVCC.js" />
     <None Include="Content\Effects\Macros.fxh" />
@@ -885,6 +885,7 @@
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Connected Services\" />
+    <Content Include=".vscode\launch.json" />
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>

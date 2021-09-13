@@ -61,7 +61,7 @@ namespace COTG.Views
 		public ResSource selected = ResSource.dummy;
 
 //		public Resources send;
-		public readonly ref Resources reserve => ref SettingsPage.nearResCartReserve;
+		public Resources reserve => SettingsPage.nearResReserve;
 
 		//	public Resources reserve = new Resources(100000,100000,100000,100000);
 		public static int reserveCarts =>SettingsPage.nearResCartReserve;

@@ -625,7 +625,7 @@ namespace COTG.Views
 			RefreshX();
 		}
 
-		public static Debounce RefreshTabs = new(_RefreshTabs) { throttled=true };
+		public static Debounce RefreshTabs = new(_RefreshTabs) {  };
 		public static Task _RefreshTabs()
 		{
 			// fall through from shift-refresh. Shift refresh does both

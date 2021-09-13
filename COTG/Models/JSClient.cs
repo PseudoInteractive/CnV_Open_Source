@@ -536,6 +536,7 @@ namespace COTG
 				//var environment= await App.createWebEnvironmentTask;
 
 				view = _view;
+//				view.po
 				//{
 				//	//HorizontalAlignment = HorizontalAlignment.Stretch,
 				//	//VerticalAlignment = VerticalAlignment.Stretch,
@@ -554,12 +555,15 @@ namespace COTG
 					if(_args.Exception is not null)
 					{
 						Log(_args.Exception);
-						AAnalytics.Track("WebViewEx", new []{"Ex:",_args.Exception.Message } );
+						AAnalytics.Track("WebViewEx",new Dictionary<string,string>
+					   {{"Ex",_args.Exception.Message } } );
 						Windows.System.Launcher.LaunchUriAsync(new("https://go.microsoft.com/fwlink/p/?LinkId=2124703"));
 
 						return;
 					}
+				
 				coreWebView = view.CoreWebView2;
+					view.CharacterReceived +=View_CharacterReceived;
 #if DEBUG
 				coreWebView.OpenDevToolsWindow();
 #else
@@ -627,8 +631,9 @@ namespace COTG
 				{
 					
 				}
-					//	App.SetupCoreWindowInputHooks();
 				};
+					//	App.SetupCoreWindowInputHooks();
+				
 				view.EnsureCoreWebView2Async();
 
 			}
@@ -643,7 +648,10 @@ namespace COTG
 
 		}
 
-	
+		private static void View_CharacterReceived(UIElement sender,Windows.UI.Xaml.Input.CharacterReceivedRoutedEventArgs args)
+		{
+			Log("Character recieved");
+		}
 
 		private static void Environment_NewBrowserVersionAvailable(CoreWebView2Environment sender,object args)
 		{
@@ -655,7 +663,7 @@ namespace COTG
 
 		private static void CoreWebView2_ProcessFailed(CoreWebView sender,CoreWebView2ProcessFailedEventArgs args)
 		{
-			AAnalytics.Track("WebViewFail",new[] {
+			AAnalytics.Track("WebViewFail",new Dictionary<string,string> {
 				{"Kind:",args.ProcessFailedKind.ToString() },
 				{"Reason:",args.Reason.ToString() },
 				{"Desc:",args.ProcessDescription },
@@ -737,14 +745,17 @@ namespace COTG
 		
 		private static void View_LostFocus(object sender, RoutedEventArgs e)
 		{
+			Log($"!Focus2: {ShellPage.hasKeyboardFocus} w{ShellPage.webviewHasFocus} w2{ShellPage.webviewHasFocus2}");
 			ShellPage.webviewHasFocus2 = false;
 			ShellPage.hasKeyboardFocus = 0;
 		}
 
 		private static void View_GotFocus(object sender, RoutedEventArgs e)
 		{
+			Log($"!Focus3: {ShellPage.hasKeyboardFocus} w{ShellPage.webviewHasFocus} w2{ShellPage.webviewHasFocus2}");
 			ShellPage.webviewHasFocus2 = true;
 			ShellPage.hasKeyboardFocus = 0;
+
 		}
 
 		//public static void ClearAllCookies(string domain= "https://crownofthegods.com")

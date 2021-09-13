@@ -66,7 +66,7 @@ namespace COTG.Game
 			public string note => $"{Player.IdToName(targetCid.CidToPid())} attacker: {Player.IdToName(sourceCid.CidToPid())} to {targetCid.CidToContinent()} {first.Format()} first: {intel}) to {City.Get(targetCid).nameAndRemarks} at {first.Format()}{( count>1?$" and {count-1} others":"")}";
 		}
 
-		static Debounce IncomingUpdateDebounce = new(DoProcess) { throttled = true, debounceDelay = 1000, throttleDelay = 2000 };
+		static Debounce IncomingUpdateDebounce = new(DoProcess) {  debounceDelay = 1000, throttleDelay = 2000 };
 
 
 

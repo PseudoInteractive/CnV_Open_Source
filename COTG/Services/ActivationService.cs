@@ -51,15 +51,18 @@ namespace COTG.Services
         public async Task ActivateAsync(IActivatedEventArgs activationArgs, bool wasRunning)
         {
 			//App.globalQueue = DispatcherQueue.GetForCurrentThread();
-			Assert(IsInteractive(activationArgs));
+			Debug.Assert(IsInteractive(activationArgs));
 			if(!wasRunning)
 				await InitializeAsync();
-			AAnalytics.Track("Activate",new[] { { "kind":activationArgs.Kind.ToString() },
-				{ "prior": activationArgs.Kind.ToString() },
-				{"args" : activationArgs switch 
+
+
+
+			AAnalytics.Track("Activate",new Dictionary<string,string> { { "kind",activationArgs.Kind.ToString() },
+				{ "prior", activationArgs.Kind.ToString() },
+				{"args" , activationArgs switch 
 				{ ILaunchActivatedEventArgs a=>a.Arguments,
 					IProtocolActivatedEventArgs p=>p.Uri.ToString(),
-					_=>"{}"} }  );
+					_=>"{}"} } }  );
 			if(IsInteractive(activationArgs))
             {
                 // Initialize services that you need before app activation
@@ -109,14 +112,34 @@ namespace COTG.Services
 			await Task.WhenAll(t0, t1);
             Window.Current.Closed += async (a,b)=>
 			{
-				Debug.Log("Closed!");
-				await TabPage.CloseAllTabWindows(); };
-		//	App.webEnvironment = await CoreWebView2Environment.CreateAsync();
-		//	App.webController = await App.webEnvironment.CreateCoreWebView2ControllerAsync();
-		//	App.webCore = App.webController.CoreWebView2;
+				Debug.Log("Window!!Closed!");
+				await TabPage.CloseAllTabWindows(); 
+			};
+
+			var display = Windows.Graphics.Display.DisplayInformation.GetForCurrentView();
+			var colorInfo = display.GetAdvancedColorInfo();
+			AGame.colorKind = colorInfo.CurrentAdvancedColorKind;
+			display.AdvancedColorInfoChanged+= (a,__)=> 
+			{
+				AGame.colorKind = a.GetAdvancedColorInfo().CurrentAdvancedColorKind;
+			};
+
+			//if(AGame.colorKind != Windows.Graphics.Display.AdvancedColorKind.HighDynamicRange)
+			//{
+			//	if(colorInfo.IsAdvancedColorKindAvailable(Windows.Graphics.Display.AdvancedColorKind.HighDynamicRange))
+			//	{
+			//		if(!SettingsPage.askedToHdr)
+			//		{
+			//			SettingsPage.askedToHdr=true;
+			//			App.DoYesNoBox("HDR Available", "Tip: You can enable HDR for your monitor in Settings", "Thank you", null,null );
+			//		}
+
+			//	}	
+			//}
+		
 		}
 
-        private async Task HandleActivationAsync(object activationArgs)
+        private async Task HandleActivationAsync(IActivatedEventArgs activationArgs)
         {
             var activationHandler = GetActivationHandlers()
                                                 .FirstOrDefault(h => h.CanHandle(activationArgs));
@@ -164,4 +187,5 @@ namespace COTG.Services
             }
         }
     }
-}
+
+	}

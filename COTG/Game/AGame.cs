@@ -89,6 +89,9 @@ namespace COTG
 	}
 	public class AGame : Microsoft.Xna.Framework.Game
 	{
+		static public Windows.Graphics.Display.AdvancedColorKind colorKind;
+
+
 		const float parallaxBaseGain = 2.0f / 1024.0f;
 		public const float zBase = 0;
 		public const float zLand = 0;
@@ -255,6 +258,7 @@ namespace COTG
 			_graphics = new GraphicsDeviceManager(this)
 			{
 				PreferredBackBufferFormat = SurfaceFormat.Bgra32,
+	//			PreferredBackBufferFormat = SurfaceFormat.Color,
 				PreferMultiSampling = false,
 				PreferredDepthStencilFormat = DepthFormat.None,
 
@@ -713,7 +717,7 @@ namespace COTG
 
 		public static void LoadWorldBackground()
 		{
-			worldBackground = LoadMaterial($"Art/world{(JSClient.world switch { 23 => "23", _ => "22" })}");
+			worldBackground = LoadMaterial($"Art/world{((JSClient.world&1) switch { 1 => "23", _ => "22" })}");
 
 		}
 		protected override async void LoadContent()

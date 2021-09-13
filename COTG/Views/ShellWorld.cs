@@ -333,7 +333,9 @@ namespace COTG.Views
 
 		private static void CoreInputSource_PointerEntered(object sender, PointerEventArgs args)
 		{
+			Log($"!Focus11: {hasKeyboardFocus} w{webviewHasFocus} w2{webviewHasFocus2}");
 			isOverPopup = false;
+			hasKeyboardFocus=0;
 			args.KeyModifiers.UpdateKeyModifiers();
 			ShellPage.TakeKeyboardFocus();
 		}
@@ -426,6 +428,8 @@ namespace COTG.Views
 			//    e.Handled = false;
 			//    return;
 			//}
+			Log($"!FocusExit: {hasKeyboardFocus} w{webviewHasFocus} w2{webviewHasFocus2}");
+			hasKeyboardFocus=0;
 
 
 			ClearHover();
@@ -903,6 +907,7 @@ namespace COTG.Views
 
 		private static void Canvas_PointerMoved(object sender, PointerEventArgs e)
 		{
+		//	App.cursorDefault.Set();
 			App.InputRecieved(); // prevent idle timer;
 			//	PointerInfo(e);
 			e.KeyModifiers.UpdateKeyModifiers();

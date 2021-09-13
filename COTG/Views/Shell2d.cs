@@ -96,6 +96,7 @@ namespace COTG.Views
 
 			if (priorView != viewMode || webviewHasFocus != priorWebviewHasFocus)
 			{
+				Log($"!Focus5: {hasKeyboardFocus} w{webviewHasFocus} w2{webviewHasFocus2}");
 				hasKeyboardFocus = 0;
 				if (!leaveZoom && priorView != viewMode)
 				{
@@ -148,6 +149,7 @@ namespace COTG.Views
 
 		public static void SetWebViewHasFocus(bool _webviewHasFocus)
 		{
+			Log($"!Focu92: {hasKeyboardFocus} w{webviewHasFocus} w2{webviewHasFocus2}");
 			SetViewMode(viewMode, _webviewHasFocus);
 		}
 
@@ -156,21 +158,23 @@ namespace COTG.Views
 			//if (hasKeyboardFocus) return; //Trace($"Take focus {hasKeyboardFocus}"); Set this
 			// early, it gets set again once the asyn executes
 			//	Assert(webviewHasFocus == webviewHasFocus2);
-	//		Log($"!Focus0: {hasKeyboardFocus} w{webviewHasFocus} w2{webviewHasFocus2}");
+			
+			Log($"!Focus0: {hasKeyboardFocus} w{webviewHasFocus} w2{webviewHasFocus2}");
 			if (webviewHasFocus)
 				return;
-			if ( Interlocked.CompareExchange(ref hasKeyboardFocus, 2, 0) == 0)
+			if ( Interlocked.CompareExchange(ref hasKeyboardFocus, 1, 0) == 0)
 			{
 				// set to 0
 				//	Log($"!Focus1: {hasKeyboardFocus} w{webviewHasFocus} w2{webviewHasFocus2}");
 				App.QueueOnUIThreadIdle( () =>
 				{
-					if(hasKeyboardFocus==2)
+				//	if(hasKeyboardFocus==2)
 					{
+						Log($"!Focus8: {hasKeyboardFocus} w{webviewHasFocus} w2{webviewHasFocus2}");
 						// back to 0 temporarily 
 						hasKeyboardFocus = 0;
 				//	Log("Focus: " + webviewHasFocus + webviewHasFocus2);
-						keyboardProxy.Focus(FocusState.Programmatic);
+					//	keyboardProxy.Focus(FocusState.Programmatic);
 					//	App.cursorDefault.Set();
 					}
 					//	Log($"!Focus2: {hasKeyboardFocus} w{webviewHasFocus} w2{webviewHasFocus2}");
@@ -259,9 +263,9 @@ namespace COTG.Views
 
 		private void KeyboardProxy_GotFocus(object sender, RoutedEventArgs e)
 		{
-		//	Log($"!FocusGot: {hasKeyboardFocus} w{webviewHasFocus} w2{webviewHasFocus2}");
-
-			hasKeyboardFocus = 1;
+			//	Log($"!FocusGot: {hasKeyboardFocus} w{webviewHasFocus} w2{webviewHasFocus2}");
+			Log($"!Focus9: {hasKeyboardFocus} w{webviewHasFocus} w2{webviewHasFocus2}");
+//			hasKeyboardFocus = 1;
 		
 			//Log("Get focus");
 			//	Trace($"Got focus {hasKeyboardFocus}");
@@ -341,7 +345,7 @@ namespace COTG.Views
 		private void KeyboardProxy_LostFocus(object sender, RoutedEventArgs e)
 		{
 			//	Log($"!FocusLost: {hasKeyboardFocus} w{webviewHasFocus} w2{webviewHasFocus2}");
-
+			Log($"!Focus10: {hasKeyboardFocus} w{webviewHasFocus} w2{webviewHasFocus2}");
 			// Trace($"Lost focus {hasKeyboardFocus}");
 			hasKeyboardFocus = 0;
 			// CityBuild.ClearAction();
