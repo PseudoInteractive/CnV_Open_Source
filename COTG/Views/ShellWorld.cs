@@ -60,7 +60,7 @@ namespace COTG.Views
 				coreInputSource.PointerMoved += Canvas_PointerMoved;
 				coreInputSource.PointerPressed += Canvas_PointerPressed;
 				coreInputSource.PointerReleased += Canvas_PointerReleased;
-				coreInputSource.PointerEntered += CoreInputSource_PointerEntered;
+				coreInputSource.PointerEntered += Canvas_PointerEntered;
 				coreInputSource.PointerExited += Canvas_PointerExited;
 				coreInputSource.PointerCaptureLost += CoreInputSource_PointerCaptureLost;
 
@@ -331,13 +331,14 @@ namespace COTG.Views
 		
 		}
 
-		private static void CoreInputSource_PointerEntered(object sender, PointerEventArgs args)
+		private static void Canvas_PointerEntered(object sender, PointerEventArgs args)
 		{
-			Log($"!Focus11: {hasKeyboardFocus} w{webviewHasFocus} w2{webviewHasFocus2}");
-			isOverPopup = false;
-			hasKeyboardFocus=0;
-			args.KeyModifiers.UpdateKeyModifiers();
-			ShellPage.TakeKeyboardFocus();
+			isMouseOver=true;
+			UpdateMousePosition(args);
+//			Log($"!Focus11: {hasKeyboardFocus} w{webviewHasFocus} w2{webviewHasFocus2}");
+			hasKeyboardFocus=false;
+//			args.KeyModifiers.UpdateKeyModifiers();
+			ShellPage.UpdateFocus(); 
 		}
 
 
@@ -418,19 +419,21 @@ namespace COTG.Views
 		}
 		private static void Canvas_PointerExited(object sender, PointerEventArgs e)
 		{
-			e.KeyModifiers.UpdateKeyModifiers();
+			isMouseOver=false;
+			UpdateMousePosition(e);
+
+//			e.KeyModifiers.UpdateKeyModifiers();
 			Gesture.ProcessPointerExited(e.CurrentPoint);
 		//	PointerInfo(e);
 	//		Log("pointer Exit " + isOverPopup);
-			isOverPopup = false;
 			//if (ShellPage.IsCityView())
 			//{
 			//    e.Handled = false;
 			//    return;
 			//}
-			Log($"!FocusExit: {hasKeyboardFocus} w{webviewHasFocus} w2{webviewHasFocus2}");
-			hasKeyboardFocus=0;
-
+		//	Log($"!FocusExit: {hasKeyboardFocus} w{webviewHasFocus} w2{webviewHasFocus2}");
+		//	hasKeyboardFocus=0;
+			UpdateFocus();
 
 			ClearHover();
 		}
@@ -463,7 +466,7 @@ namespace COTG.Views
 		}
 		private static void Canvas_PointerReleased(object sender, PointerEventArgs e)
 		{
-			e.KeyModifiers.UpdateKeyModifiers();
+			UpdateMousePosition(e);
 			if(!isFocused)
 				return;
 			
@@ -488,7 +491,7 @@ namespace COTG.Views
 			mousePositionC = mousePosition.ScreenToCamera();
 			mousePositionW = mousePositionC.InverseProject();
 
-			var wasOverPopup = isOverPopup;
+		//	var wasOverPopup = isOverPopup;
 			int jsButton = 0;
 			//if(isOverPopup)
 			//{
@@ -621,19 +624,31 @@ namespace COTG.Views
 			};
 		}
 
-		static public bool isOverPopup;
-		private static bool TryPostJSMouseEvent(string eventName, int button)
-		{
-			foreach (var popup in AGame.popups)
+		static public bool forceAllowWebFocus;
+		public static  bool isOverPopup{
+			get{
+		
+			foreach(var popup in AGame.popups)
 			{
 				// should this be in DIPS or pixels?
-				if (popup.Contains(mousePosition))
+				if(popup.Contains(mousePosition))
 				{
-					if(eventName!=null)
-						JSClient.PostMouseEventToJS( (int)(AGame.nativeToDip/ShellPage.webViewScale.X * mousePosition.X) + canvasBaseX, (int)(AGame.nativeToDip/ShellPage.webViewScale.Y * mousePosition.Y) + canvasBaseY, eventName, button );
-					Log("JsMouse");
 					return true;
 				}
+
+			}
+			return false;
+	
+			}
+		}
+
+
+		private static bool TryPostJSMouseEvent(string eventName, int button)
+		{
+			if(isOverPopup)
+			{		JSClient.PostMouseEventToJS( (int)(AGame.nativeToDip/ShellPage.webViewScale.X * mousePosition.X) + canvasBaseX, (int)(AGame.nativeToDip/ShellPage.webViewScale.Y * mousePosition.Y) + canvasBaseY, eventName, button );
+					Log("JsMouse");
+				return true;
 			}
 			return false;
 		}
@@ -643,8 +658,7 @@ namespace COTG.Views
 
 		private static void Canvas_PointerPressed(object sender, PointerEventArgs e)
 		{
-			e.KeyModifiers.UpdateKeyModifiers();
-
+			UpdateMousePosition(e);
 			//if (CityBuild.menuOpen)
 			//{
 			//	App.DispatchOnUIThreadLow(() => ShellPage.instance.buildMenu.IsOpen = false); // light dismiss
@@ -704,10 +718,10 @@ namespace COTG.Views
 					_=>0
 				}))
 			{
-				//				isOverPopup = true;
 				e.Handled = true;
 				Gesture.Reset();
-				ShellPage.SetWebViewHasFocus(true);
+//				ShellPage.SetWebViewHasFocus(true);
+
 
 			}
 			else
@@ -716,13 +730,13 @@ namespace COTG.Views
 				if (IsCityView())
 				{
 					CityBuild.PointerDown(cc);
+				
 				}
 
-				TakeKeyboardFocus();
 			}
 
-			//	ClearHover();
-			//  e.Handled = false;
+			ShellPage.UpdateFocus();            //	ClearHover();
+												//  e.Handled = false;
 
 		}
 
@@ -732,7 +746,7 @@ namespace COTG.Views
 		{
 			//e.KeyModifiers.UpdateKeyModifiers();
 
-			Assert(isOverPopup == false);
+		//	Assert(isOverPopup == false);
 			//            canvas.CapturePointer(e.Pointer);
 			//	var point = e.CurrentPoint;
 			{
@@ -759,8 +773,7 @@ namespace COTG.Views
 
 			//  if (ShellPage.IsCityView())
 			// The app pas priority over back and forward events
-			
-			TakeKeyboardFocus();
+			ShellPage.UpdateFocus();
 			//  e.Handled = false;
 			Gesture.Reset();
 		}
@@ -833,7 +846,15 @@ namespace COTG.Views
 
 		private static void Canvas_PointerWheelChanged(object sender, PointerEventArgs e)
 		{
-			e.KeyModifiers.UpdateKeyModifiers();
+			var point = e.CurrentPoint.Position;
+			var scroll = e.CurrentPoint.Properties.MouseWheelDelta;
+			HandleWheel( point,scroll);
+		}
+
+		public  static bool HandleWheel(Windows.Foundation.Point point,int scroll)
+		{
+			UpdateMousePosition(point);
+
 			//PointerInfo(e);
 			//if (ShellPage.IsCityView())
 			//{
@@ -841,17 +862,19 @@ namespace COTG.Views
 			//    return;
 			//}
 
-			var pt = e.CurrentPoint;
 
 			// wheel over javascript
-			if (TryPostJSMouseEvent(null, 0))
+			if(TryPostJSMouseEvent(null,0))
 			{
 				//				isOverPopup = true;
-				e.Handled = true;
-				ShellPage.SetWebViewHasFocus(true);
-				return;
+			//	e.Handled = true;
+				ShellPage.UpdateFocus();
+
+				//				ShellPage.SetWebViewHasFocus(true);
+				return true;
 			}
-			DoZoom(pt.Properties.MouseWheelDelta,false);
+			DoZoom(scroll,false);
+			return false;
 		}
 
 		static async void DoZoom(float delta,bool skipPan)
@@ -904,13 +927,33 @@ namespace COTG.Views
 				ShellPage.SetViewMode(_viewMode);
 			}
 		}
+		public static void UpdateMousePosition(PointerEventArgs e)
+		{
+			UpdateMousePosition(e.CurrentPoint.Position);
+		}
+		public static void UpdateMousePosition(PointerRoutedEventArgs e)
+		{
+			UpdateMousePosition(e.GetCurrentPoint(canvas).Position);
+		}
+		public static void UpdateMousePosition(Windows.Foundation.Point point)
+		{
+			var pointC = GetCanvasPosition(point);
+			mousePosition = pointC;
+			//Note.Show($"{pointC.X} {pointC.Y}");
 
+			//			var windowsPosition = e.CurrentPoint.Position;
+			//			mousePosition = GetCanvasPosition(windowsPosition);
+			mousePositionC = mousePosition.ScreenToCamera();
+			mousePositionW = mousePositionC.InverseProject();
+
+		}
 		private static void Canvas_PointerMoved(object sender, PointerEventArgs e)
 		{
 		//	App.cursorDefault.Set();
 			App.InputRecieved(); // prevent idle timer;
 			//	PointerInfo(e);
-			e.KeyModifiers.UpdateKeyModifiers();
+			UpdateMousePosition(e.CurrentPoint.Position);
+			UpdateFocus();
 			if (!isFocused)
 				return;
 		//	var priorMouseC = mousePosition;

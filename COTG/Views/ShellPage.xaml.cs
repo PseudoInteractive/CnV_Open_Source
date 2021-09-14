@@ -200,9 +200,10 @@ namespace COTG.Views
 			// instance.status.Label=text );
 		}
 
-		public static bool isHitTestVisible = false;
+		public static bool isHitTestVisible => !ShellPage.isOverPopup && !forceAllowWebFocus&& canvasVisible;
+		public static bool _isHitTestVisible;
 		public static bool canvasVisible;
-		public static bool isFocused => isHitTestVisible && App.isForeground && canvasVisible;
+		public static bool isFocused => isHitTestVisible && App.isForeground ;
 		private void OnLoaded(object sender, RoutedEventArgs e)
 		{
 	//		SystemNavigationManagerPreview.GetForCurrentView().CloseRequested += App.App_CloseRequested; ;
@@ -1327,12 +1328,16 @@ namespace COTG.Views
 
 		private void webFocus_Click(object sender, RoutedEventArgs e)
 		{
-			var hasFocus = !webviewHasFocus;
+			forceAllowWebFocus = !forceAllowWebFocus;
+			//var hasFocus = !webviewHasFocus;
+			webFocus.IsChecked = forceAllowWebFocus;
+			//CityBuild.instance.Visibility = hasFocus ? Visibility.Collapsed : Visibility.Visible;
+			//canvasVisible = !hasFocus;
+			//isHitTestVisible = !hasFocus;
+			//SetWebViewHasFocus(hasFocus);
+			ShellPage.hasKeyboardFocus=false;
+			ShellPage.UpdateFocus();
 
-			CityBuild.instance.Visibility = hasFocus ? Visibility.Collapsed : Visibility.Visible;
-			canvasVisible = !hasFocus;
-			isHitTestVisible = !hasFocus;
-			SetWebViewHasFocus(hasFocus);
 		}
 
 		//private void FriendListSubmitted(ComboBox sender, ComboBoxTextSubmittedEventArgs args)

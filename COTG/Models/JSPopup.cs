@@ -96,7 +96,9 @@ namespace COTG.Models
 			if (AGame.popups.Length == 0)
 			{
 				// ensure that the webview does not have focus
-				ShellPage.SetWebViewHasFocus(false);
+	//			ShellPage.SetWebViewHasFocus(false);
+				ShellPage.UpdateFocus();
+
 			}
 		}
 

@@ -564,10 +564,10 @@ namespace COTG
 				
 				coreWebView = view.CoreWebView2;
 					view.CharacterReceived +=View_CharacterReceived;
-#if DEBUG
+#if false
 				coreWebView.OpenDevToolsWindow();
 #else
-				coreWebView.AreDevToolsEnabled=false;
+				coreWebView.Settings.AreDevToolsEnabled=false;
 #endif
 				coreWebView.Settings.UserAgent = userAgent;
 				coreWebView.Settings.IsWebMessageEnabled=true;
@@ -575,6 +575,10 @@ namespace COTG
 				coreWebView.Settings.IsScriptEnabled=true;
 				coreWebView.Settings.IsPinchZoomEnabled =false;
 				coreWebView.Settings.IsZoomControlEnabled=false;
+				coreWebView.Settings.AreDefaultScriptDialogsEnabled=false;
+					coreWebView.Settings.IsStatusBarEnabled=false;
+					coreWebView.Settings.IsBuiltInErrorPageEnabled=false;
+					coreWebView.Settings.AreHostObjectsAllowed=false;
 				coreWebView.Settings.IsStatusBarEnabled=false;
 				coreWebView.Settings.AreBrowserAcceleratorKeysEnabled=false;
 				coreWebView.Settings.AreDefaultContextMenusEnabled=false;
@@ -584,16 +588,22 @@ namespace COTG
 				coreWebView.AddWebResourceRequestedFilter(jsFunctionMask,ResourceContext: CoreWebView2WebResourceContext.Script);
 				coreWebView.WebResourceRequested += View_WebResourceRequested;
 				coreWebView.WebMessageReceived +=CoreWebView_WebMessageReceived;
-				//	view.EffectiveViewportChanged += View_EffectiveViewportChanged;
-				//	view.AddHandler(WebView.KeyDownEvent, new KeyEventHandler(webViewKeyDownHandler), true);
-				//	view.AddHandler(WebView.PointerPressedEvent, new PointerEventHandler(pointerEventHandler), true);
-				//	view.UnsafeContentWarningDisplaying += View_UnsafeContentWarningDisplaying;
-				//	view.UnsupportedUriSchemeIdentified += View_UnsupportedUriSchemeIdentified;
+					//	view.EffectiveViewportChanged += View_EffectiveViewportChanged;
+					//	view.AddHandler(WebView.KeyDownEvent, new KeyEventHandler(webViewKeyDownHandler), true);
+					//	view.AddHandler(WebView.PointerPressedEvent, new PointerEventHandler(pointerEventHandler), true);
+					//	view.UnsafeContentWarningDisplaying += View_UnsafeContentWarningDisplaying;
+					//	view.UnsupportedUriSchemeIdentified += View_UnsupportedUriSchemeIdentified;
 
-				//	view.UnviewableContentIdentified += View_UnviewableContentIdentified;
-				//	view.ScriptNotify += View_ScriptNotify;
-				//	view.DOMContentLoaded += View_DOMContentLoaded;
-				//	view.NavigationFailed += View_NavigationFailed;
+					//	view.UnviewableContentIdentified += View_UnviewableContentIdentified;
+					//	view.ScriptNotify += View_ScriptNotify;
+					//	view.DOMContentLoaded += View_DOMContentLoaded;
+					//	view.NavigationFailed += View_NavigationFailed;
+					view.PointerEntered+=View_PointerEntered;
+					view.PointerExited+=View_PointerExited;
+					view.PointerMoved+=View_PointerMoved;
+					view.PointerPressed+=View_PointerPressed;
+					view.KeyDown+=View_KeyDown;
+					view.PreviewKeyDown+=View_PreviewKeyDown;
 				view.NavigationStarting+=View_NavigationStarting;
 				view.NavigationCompleted+=View_NavigationCompleted; ;
 				//	view.NavigationCompleted+=View_NavigationCompleted;
@@ -646,6 +656,43 @@ namespace COTG
 
 
 
+		}
+
+		private static void View_KeyDown(object sender,Windows.UI.Xaml.Input.KeyRoutedEventArgs e)
+		{
+			Log("KeyDown");
+
+		}
+
+		private static void View_PreviewKeyDown(object sender,Windows.UI.Xaml.Input.KeyRoutedEventArgs e)
+		{
+			Log("PreviewPointerKeyDown");
+		}
+
+		private static void View_PointerPressed(object sender,Windows.UI.Xaml.Input.PointerRoutedEventArgs e)
+		{
+			Log("PointerPressed");
+		}
+
+		private static void View_PointerMoved(object sender,Windows.UI.Xaml.Input.PointerRoutedEventArgs e)
+		{
+		//	Log("PointerMoved");
+//			ShellPage.UpdateMousePosition(e);
+//			ShellPage.UpdateFocus();
+		}
+
+		private static void View_PointerExited(object sender,Windows.UI.Xaml.Input.PointerRoutedEventArgs e)
+		{
+	//		Log("PointerExited");
+	//		ShellPage.UpdateMousePosition(e);
+	//		ShellPage.UpdateFocus();
+		}
+
+		private static void View_PointerEntered(object sender,Windows.UI.Xaml.Input.PointerRoutedEventArgs e)
+		{
+			Log("PointerEntered");
+	//		ShellPage.UpdateMousePosition(e);
+	//		ShellPage.UpdateFocus();
 		}
 
 		private static void View_CharacterReceived(UIElement sender,Windows.UI.Xaml.Input.CharacterReceivedRoutedEventArgs args)
@@ -745,16 +792,16 @@ namespace COTG
 		
 		private static void View_LostFocus(object sender, RoutedEventArgs e)
 		{
-			Log($"!Focus2: {ShellPage.hasKeyboardFocus} w{ShellPage.webviewHasFocus} w2{ShellPage.webviewHasFocus2}");
-			ShellPage.webviewHasFocus2 = false;
-			ShellPage.hasKeyboardFocus = 0;
+		//	Log($"!Focus2: {ShellPage.hasKeyboardFocus} w{ShellPage.webviewHasFocus} w2{ShellPage.webviewHasFocus2}");
+	//		ShellPage.webviewHasFocus2 = false;
+			ShellPage.hasKeyboardFocus = false;
 		}
 
 		private static void View_GotFocus(object sender, RoutedEventArgs e)
 		{
-			Log($"!Focus3: {ShellPage.hasKeyboardFocus} w{ShellPage.webviewHasFocus} w2{ShellPage.webviewHasFocus2}");
+//			Log($"!Focus3: {ShellPage.hasKeyboardFocus} w{ShellPage.webviewHasFocus} w2{ShellPage.webviewHasFocus2}");
 			ShellPage.webviewHasFocus2 = true;
-			ShellPage.hasKeyboardFocus = 0;
+			ShellPage.hasKeyboardFocus = false;
 
 		}
 
@@ -2520,7 +2567,7 @@ private static async void ShowCouncillorsMissingDialog()
 									   if (c.x > 0 && c.y > 0)
 										   ShellPage.Canvas_PointerPressedJS(c.x, c.y, kind);
 								   }
-								   ShellPage.SetWebViewHasFocus(false);
+								   ShellPage.UpdateFocus();
 								   break;
 							   }
 						   //case "cityinfo":
@@ -2976,7 +3023,7 @@ private static async void ShowCouncillorsMissingDialog()
 
 					   GetWorldInfo.Send();
 					   ShellPage.canvasVisible = true;
-					   ShellPage.isHitTestVisible = true;
+					//   ShellPage.isHitTestVisible = true;
 					   ///                   await GetCitylistOverview();
 					   Task.Delay(3000).ContinueWith( (_)=> City.UpdateSenatorInfo() );  // no async
 					   TileData.Ctor(false);
@@ -3001,7 +3048,7 @@ private static async void ShowCouncillorsMissingDialog()
 					   properties.Set("alliance", Alliance.myId).Set("world", JSClient.world).Set("sub", JSClient.isSub).Set("UserId", Player.myName);
 					   AppCenter.SetCustomProperties(properties);
 					   AAnalytics.Track("GotCreds", new Dictionary<string, string>() { { "World", JSClient.world.ToString() }, { "sub", JSClient.isSub.ToString() }, { "UserId", Player.myName } } );
-
+				ShellPage.UpdateFocus();
 					   }
 					   if (SystemInformation.Instance.IsAppUpdated)
 					   {

@@ -56,7 +56,7 @@ namespace COTG
 					}
 					case State.running:
 					{
-						if(runAgainIfStarted)
+						if(runAgainIfStarted && !throttled)
 							state = State.pending; // we are already in the inner loop, tell the current one to restart once done
 						return;
 					}

@@ -1,7 +1,9 @@
 ﻿using COTG.Draw;
 using COTG.Game;
 
+using System;
 using System.Threading;
+using System.Threading.Tasks;
 
 using Windows.System;
 using Windows.UI.Xaml;
@@ -33,10 +35,10 @@ namespace COTG.Views
 		//public static int cachedTopOffset = 0;
 		//public static int cachedXOffset = 0;
 		static public SwapChainPanel canvas;
-		public static int hasKeyboardFocus;
+		public static bool hasKeyboardFocus;
 		public static KeyboardProxy keyboardProxy;
 		public static ViewMode viewMode;
-		public static bool webviewHasFocus=true;
+		public static bool webviewHasFocus=>webviewHasFocus2;
 		private const int bottomMargin = 0;
 		private const int cotgPopupLeft = 438;
 		private const int cotgPopupRight = cotgPopupLeft + cotgPopupWidth;
@@ -86,18 +88,18 @@ namespace COTG.Views
 			//          _grid.ColumnDefinitions[1].Width = new GridLength(_grid.ColumnDefinitions[1].Width.Value-delta))));
 		}
 
-		public static void SetViewMode(ViewMode _viewMode, bool? pwebviewHasFocus = null, bool leaveZoom = false)
+		public static void SetViewMode(ViewMode _viewMode,  bool leaveZoom = false)
 		{
-			var _webviewHasFocus = pwebviewHasFocus.HasValue ? pwebviewHasFocus.Value : webviewHasFocus;
+		//	var _webviewHasFocus = pwebviewHasFocus.HasValue ? pwebviewHasFocus.Value : webviewHasFocus;
 			var priorView = viewMode;
-			var priorWebviewHasFocus = webviewHasFocus;
+		//	var priorWebviewHasFocus = webviewHasFocus;
 			viewMode = _viewMode;
-			webviewHasFocus = _webviewHasFocus;
+		//	webviewHasFocus = _webviewHasFocus;
 
-			if (priorView != viewMode || webviewHasFocus != priorWebviewHasFocus)
+			if (priorView != viewMode )
 			{
-				Log($"!Focus5: {hasKeyboardFocus} w{webviewHasFocus} w2{webviewHasFocus2}");
-				hasKeyboardFocus = 0;
+				//Log($"!Focus5: {hasKeyboardFocus}");
+				//hasKeyboardFocus = 0;
 				if (!leaveZoom && priorView != viewMode)
 				{
 					if (viewMode == ViewMode.world)
@@ -117,70 +119,117 @@ namespace COTG.Views
 					}
 				}
 
-				ShellPage.isOverPopup = false;// reset
-											  //var isWorld = IsWorldView();
-				ShellPage.isHitTestVisible = !webviewHasFocus;
-				
-				App.DispatchOnUIThreadLow(() =>
-				{
-					instance.webFocus.IsChecked = webviewHasFocus;
-					//	Log($"!FocusWeb: {hasKeyboardFocus} w{webviewHasFocus} w2{webviewHasFocus2}");
-					ShellPage.isOverPopup = false;// reset again in case it changed
-					ShellPage.canvas.IsHitTestVisible = ShellPage.isHitTestVisible;
-					ShellPage.canvas.Visibility = !ShellPage.canvasVisible ? Visibility.Collapsed : Visibility.Visible;
-					AGame.UpdateMusic();
+				//	ShellPage.isOverPopup = false;// reset
+				//var isWorld = IsWorldView();
+				//				ShellPage.isHitTestVisible = !webviewHasFocus;
+			//	UpdateFocus();
+				//App.DispatchOnUIThreadLow(() =>
+				//{
+				//	//	instance.webFocus.IsChecked = webviewHasFocus;
+				//	//	Log($"!FocusWeb: {hasKeyboardFocus} w{webviewHasFocus} w2{webviewHasFocus2}");
+				//	//		ShellPage.isOverPopup = false;// reset again in case it changed
+				//	ShellPage.canvas.IsHitTestVisible = ShellPage.isOverPopup
+				//	ShellPage.canvas.Visibility = !ShellPage.canvasVisible ? Visibility.Collapsed : Visibility.Visible;
+				//	AGame.UpdateMusic();
 					
-					if (!webviewHasFocus && priorWebviewHasFocus)
-					{
-						TakeKeyboardFocus();
-					}
-				});
+				//	if (!webviewHasFocus && priorWebviewHasFocus)
+				//	{
+				//		TakeKeyboardFocus();
+				//	}
+				//});
 			}
 		}
+		public static void UpdateFocus()
+		{
+			
+	//		Log($"!Focu92: {ShellPage.isHitTestVisible} o{ShellPage.isMouseOver}");
+
+			updateFocus.Go(runAgainIfStarted:false);
+		}
+
+		static Debounce updateFocus = new(()=>{
+			var wantVisible = ShellPage.isHitTestVisible;
+			var note =0;
+			if(ShellPage.canvas.IsHitTestVisible!= wantVisible)
+			{
+				_isHitTestVisible=wantVisible;
+				ShellPage.canvas.IsHitTestVisible = wantVisible;
+				if(!wantVisible)
+					JSClient.view.Focus(FocusState.Programmatic);
+				note|=1;	
+			}
+
+			ShellPage.canvas.Visibility = ShellPage.forceAllowWebFocus ? Visibility.Collapsed : Visibility.Visible;
+			if(wantVisible  && 
+				mousePosition.X >= 0 && mousePosition.Y >= 0 && 
+				mousePosition.X <= canvas.ActualWidth && mousePosition.Y <= canvas.ActualHeight )
+			{
+				if(keyboardProxy.FocusState == FocusState.Unfocused)
+				{
+					if(JSClient.view is not null && App.IsKeyPressedShift())
+					{
+						var f = JSClient.view.Focus(FocusState.Pointer);
+						Assert(f);
+					}
+					{
+						var f = keyboardProxy.Focus(FocusState.Programmatic);
+						Assert(f);
+					}
+					note|=2;
+				}
+			}
+			if(note!=0)
+				Note.Show($"!Focu{note}: {wantVisible} f{ShellPage.canvas.IsHitTestVisible} o{ShellPage.isMouseOver}");
+
+
+			return Task.CompletedTask;
+		}) {runOnUiThead=true,debounceDelay=100,throttleDelay=100 };
+
+		private static bool isMouseOver;
 
 		public static void SetViewModeCity()
 		{
-			SetViewMode(ViewMode.city, webviewHasFocus);
+			SetViewMode(ViewMode.city);
 		}
 
-		public static void SetViewModeRegion() => SetViewMode(ViewMode.region, webviewHasFocus);
+		public static void SetViewModeRegion() => SetViewMode(ViewMode.region);
 
-		public static void SetViewModeWorld() => SetViewMode(ViewMode.world, webviewHasFocus);
+		public static void SetViewModeWorld() => SetViewMode(ViewMode.world);
 
-		public static void SetWebViewHasFocus(bool _webviewHasFocus)
-		{
-			Log($"!Focu92: {hasKeyboardFocus} w{webviewHasFocus} w2{webviewHasFocus2}");
-			SetViewMode(viewMode, _webviewHasFocus);
-		}
+		//public static void SetWebViewHasFocus(bool _webviewHasFocus)
+		//{
+		//	Log($"!Focu92: {hasKeyboardFocus} w{webviewHasFocus} w2{webviewHasFocus2}");
+		//	SetViewMode(viewMode, _webviewHasFocus);
+		//}
 
-		public static void TakeKeyboardFocus()
-		{
-			//if (hasKeyboardFocus) return; //Trace($"Take focus {hasKeyboardFocus}"); Set this
-			// early, it gets set again once the asyn executes
-			//	Assert(webviewHasFocus == webviewHasFocus2);
+		//public static void TakeKeyboardFocus()
+		//{
+		//	//if (hasKeyboardFocus) return; //Trace($"Take focus {hasKeyboardFocus}"); Set this
+		//	// early, it gets set again once the asyn executes
+		//	//	Assert(webviewHasFocus == webviewHasFocus2);
 			
-			Log($"!Focus0: {hasKeyboardFocus} w{webviewHasFocus} w2{webviewHasFocus2}");
-			if (webviewHasFocus)
-				return;
-			if ( Interlocked.CompareExchange(ref hasKeyboardFocus, 1, 0) == 0)
-			{
-				// set to 0
-				//	Log($"!Focus1: {hasKeyboardFocus} w{webviewHasFocus} w2{webviewHasFocus2}");
-				App.QueueOnUIThreadIdle( () =>
-				{
-				//	if(hasKeyboardFocus==2)
-					{
-						Log($"!Focus8: {hasKeyboardFocus} w{webviewHasFocus} w2{webviewHasFocus2}");
-						// back to 0 temporarily 
-						hasKeyboardFocus = 0;
-				//	Log("Focus: " + webviewHasFocus + webviewHasFocus2);
-					//	keyboardProxy.Focus(FocusState.Programmatic);
-					//	App.cursorDefault.Set();
-					}
-					//	Log($"!Focus2: {hasKeyboardFocus} w{webviewHasFocus} w2{webviewHasFocus2}");
-				});
-			}
-		}
+		//	Log($"!Focus0: {hasKeyboardFocus} w{webviewHasFocus} w2{webviewHasFocus2}");
+		//	if (webviewHasFocus)
+		//		return;
+		//	if ( Interlocked.CompareExchange(ref hasKeyboardFocus, 1, 0) == 0)
+		//	{
+		//		// set to 0
+		//		//	Log($"!Focus1: {hasKeyboardFocus} w{webviewHasFocus} w2{webviewHasFocus2}");
+		//		App.QueueOnUIThreadIdle( () =>
+		//		{
+		//		//	if(hasKeyboardFocus==2)
+		//			{
+		//				Log($"!Focus8: {hasKeyboardFocus} w{webviewHasFocus} w2{webviewHasFocus2}");
+		//				// back to 0 temporarily 
+		//				hasKeyboardFocus = 0;
+		//		//	Log("Focus: " + webviewHasFocus + webviewHasFocus2);
+		//			//	keyboardProxy.Focus(FocusState.Programmatic);
+		//			//	App.cursorDefault.Set();
+		//			}
+		//			//	Log($"!Focus2: {hasKeyboardFocus} w{webviewHasFocus} w2{webviewHasFocus2}");
+		//		});
+		//	}
+		//}
 
 		//CanvasStrokeStyle defaultStrokeStyle = new CanvasStrokeStyle() { CustomDashStyle=new float[] { 2, 6 },
 		//    DashCap=CanvasCapStyle.Triangle,
@@ -216,6 +265,7 @@ namespace COTG.Views
 				Visibility = Visibility.Visible,
 				// IsTabStop = true, UseSharedDevice = true, TargetElapsedTime =
 				// TimeSpan.FromSeconds(1.0f / 60.0f),
+				
 				Margin = new Thickness(0, canvasBaseY, 0, 0),
 				// IsFixedTimeStep = false
 			};
@@ -226,13 +276,17 @@ namespace COTG.Views
 				Background = null,
 				IsTabStop = true
 			};
+
+			canvas.Children.Add(keyboardProxy);
 			keyboardProxy.AddHandler(KeyDownEvent, new KeyEventHandler(KeyboardProxy_KeyDown), true);
-			keyboardProxy.LostFocus += KeyboardProxy_LostFocus;
-			keyboardProxy.GotFocus += KeyboardProxy_GotFocus;
+			//keyboardProxy.LostFocus += KeyboardProxy_LostFocus;
+			//keyboardProxy.GotFocus += KeyboardProxy_GotFocus;
+		//	keyboardProxy.PointerWheelChanged+=KeyboardProxy_PointerWheelChanged;
+			canvas.PointerWheelChanged += KeyboardProxy_PointerWheelChanged;
+			//canvas.AddHandler(canvas.Children.Add(keyboardProxy);)
 //			GettingFocusEvent
 	//		keyboardProxy.AddHandler(GettingFocusEvent, KeyboardProxy_GettingFocus, true);
 	//		keyboardProxy.AddHandler(LostFocusEvent, KeyboardProxy_LostFocus, true);
-			canvas.Children.Add(keyboardProxy);
 			
 			//canvasHitTest = new Rectangle()
 			//{
@@ -255,21 +309,18 @@ namespace COTG.Views
 			return (canvas, null);
 		}
 
+		private void KeyboardProxy_PointerWheelChanged(object sender,PointerRoutedEventArgs e)
+		{
+			var pt = e.GetCurrentPoint(canvas);
+			HandleWheel(pt.Position,pt.Properties.MouseWheelDelta);
+		}
 
 		private void Canvas_CompositionScaleChanged(SwapChainPanel sender, object args)
 		{
 			Log(canvas.CompositionScaleX);
 		}
 
-		private void KeyboardProxy_GotFocus(object sender, RoutedEventArgs e)
-		{
-			//	Log($"!FocusGot: {hasKeyboardFocus} w{webviewHasFocus} w2{webviewHasFocus2}");
-			Log($"!Focus9: {hasKeyboardFocus} w{webviewHasFocus} w2{webviewHasFocus2}");
-//			hasKeyboardFocus = 1;
-		
-			//Log("Get focus");
-			//	Trace($"Got focus {hasKeyboardFocus}");
-		}
+	
 
 		private void KeyboardProxy_KeyDown(object sender, Windows.UI.Xaml.Input.KeyRoutedEventArgs e)
 		{
@@ -342,13 +393,22 @@ namespace COTG.Views
 			// });
 		}
 
-		private void KeyboardProxy_LostFocus(object sender, RoutedEventArgs e)
-		{
-			//	Log($"!FocusLost: {hasKeyboardFocus} w{webviewHasFocus} w2{webviewHasFocus2}");
-			Log($"!Focus10: {hasKeyboardFocus} w{webviewHasFocus} w2{webviewHasFocus2}");
-			// Trace($"Lost focus {hasKeyboardFocus}");
-			hasKeyboardFocus = 0;
-			// CityBuild.ClearAction();
-		}
+		//private void KeyboardProxy_LostFocus(object sender, RoutedEventArgs e)
+		//{
+		//	//	Log($"!FocusLost: {hasKeyboardFocus} w{webviewHasFocus} w2{webviewHasFocus2}");
+		//	Note.Show($"!Focus10: {hasKeyboardFocus} w{webviewHasFocus} w2{webviewHasFocus2}");
+		//	// Trace($"Lost focus {hasKeyboardFocus}");
+		//	hasKeyboardFocus = false;
+		//	// CityBuild.ClearAction();
+		//}
+		//private void KeyboardProxy_GotFocus(object sender,RoutedEventArgs e)
+		//{
+		//	//	Log($"!FocusGot: {hasKeyboardFocus} w{webviewHasFocus} w2{webviewHasFocus2}");
+		//	Note.Show($"!Focus9: {hasKeyboardFocus} w{webviewHasFocus} w2{webviewHasFocus2}");
+		//	//			hasKeyboardFocus = 1;
+		//	ShellPage.hasKeyboardFocus = true;
+		//	//Log("Get focus");
+		//	//	Trace($"Got focus {hasKeyboardFocus}");
+		//}
 	}
 }

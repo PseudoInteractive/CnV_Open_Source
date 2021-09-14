@@ -10,7 +10,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		ext\CotgKey.pfx = ext\CotgKey.pfx
 	EndProjectSection
 EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "CnVShared", "..\CnVShared\CnVShared.shproj", "{20495982-B366-4586-92F3-CA5CA1BF985B}"
+EndProject
 Global
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		..\CnVShared\CnVShared.projitems*{20495982-b366-4586-92f3-ca5ca1bf985b}*SharedItemsImports = 13
+		..\CnVShared\CnVShared.projitems*{813f59c4-ec96-48ef-83e4-e3c7e671e368}*SharedItemsImports = 4
+	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
 		Release|x64 = Release|x64

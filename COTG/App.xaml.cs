@@ -158,6 +158,8 @@ namespace COTG
 				await SwtichToBackground();
 
 				await JSClient.SuspendWebView();
+				if(Debugger.IsAttached)
+					JSClient.CloseWebView();;
 
 			}
 			catch(Exception ext)
@@ -358,8 +360,8 @@ namespace COTG
 			}
 		}
 
-		static int lastInputTick;
-		public static void InputRecieved() => lastInputTick = Environment.TickCount;
+		public static int lastInputTick;
+		public static void InputRecieved() => App.lastInputTick = Environment.TickCount;
 
 		private static ConcurrentQueue<Action> idleTasks = new ConcurrentQueue<Action>();
 		private static ConcurrentQueue<Func<Task>> throttledTasks = new ConcurrentQueue<Func<Task>>();
@@ -581,34 +583,37 @@ namespace COTG
 			
 				window.PointerMoved += OnPointerMoved;
 				window.PointerPressed += OnPointerPressed; ;
-				window.PointerExited+=Window_PointerExited;
-				window.PointerEntered+=Window_PointerEntered;
+			//	window.PointerExited+=Window_PointerExited;
+			///	window.PointerEntered+=Window_PointerEntered;
 				window.KeyDown += OnKeyDown;
 				window.KeyUp += OnKeyUp;
 
 			}
 		}
 
-		private static void Window_PointerEntered(CoreWindow sender,PointerEventArgs args)
-		{
-			args.KeyModifiers.UpdateKeyModifiers();
-			Log("Pointer enter");
-		}
+		//private static void Window_PointerEntered(CoreWindow sender,PointerEventArgs args)
+		//{
+		//	args.KeyModifiers.UpdateKeyModifiers();
+		//	Log("Pointer enter");
+		//	ShellPage.UpdateFocus();
 
-		private static void Window_PointerExited(CoreWindow sender,PointerEventArgs args)
-		{
-			args.KeyModifiers.UpdateKeyModifiers();
-			Log("Pointer exit");
-		}
+		//}
+
+		//private static void Window_PointerExited(CoreWindow sender,PointerEventArgs args)
+		//{
+		//	args.KeyModifiers.UpdateKeyModifiers();
+		//	Log("Pointer exit");
+		//	ShellPage.UpdateFocus();
+		//}
 
 		public static void OnPointerPressed(CoreWindow sender, PointerEventArgs e)
 		{
-			e.KeyModifiers.UpdateKeyModifiers();
+		//	ShellPage.UpdateMousePosition(e);
 
 			var prop = e.CurrentPoint.Properties.PointerUpdateKind;
 			if (OnPointerPressed(prop))
 				e.Handled = true;
-
+		//	ShellPage.UpdateFocus();
 		}
 
 		// Uses Task Await
@@ -664,10 +669,11 @@ namespace COTG
 
 		private static void OnPointerMoved(CoreWindow sender, PointerEventArgs args)
 		{
-			args.KeyModifiers.UpdateKeyModifiers();
+		//	ShellPage.UpdateMousePosition(args);
+//			args.KeyModifiers.UpdateKeyModifiers();
 
 			// reset timer if active
-			InputRecieved();
+		//	InputRecieved();
 		}
 
 		private static async void ProcessIdleTasks()
