@@ -5,7 +5,7 @@
 			  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 			  xmlns:tg="using:Telerik.UI.Xaml.Controls.Grid"
 			  xmlns:tgCore="using:Telerik.Data.Core"
-			  xmlns:tk="using:Microsoft.Toolkit.Uwp.UI.Controls"
+			  xmlns:tk="using:CommunityToolkit.WinUI"
 			  xmlns:winui="using:Microsoft.UI.Xaml.Controls"
 			  xmlns:model="using:COTG.Models"
 			  xmlns:game="using:COTG.Game"
@@ -31,7 +31,6 @@
 							ColumnResizeHandleDisplayMode="OnColumnHeaderActionFlyoutOpen"
 							ColumnDataOperationsMode="Flyout"
 							Grid.Row="3"
-							Padding="16,16,16,16"
 							
 							TabFocusNavigation="Once"
 							UserGroupMode="Auto"

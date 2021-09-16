@@ -10,7 +10,7 @@
 	  xmlns:tg="using:Telerik.UI.Xaml.Controls.Grid"
       xmlns:tgCore="using:Telerik.Data.Core"
       xmlns:my="using:Microsoft.UI.Xaml.Controls"
-      xmlns:tk="using:Microsoft.Toolkit.Uwp.UI.Controls"
+      xmlns:tk="using:CommunityToolkit.WinUI"
       xmlns:views="using:COTG.Views"
     mc:Ignorable="d">
     <Grid>
@@ -32,14 +32,14 @@
                         PointerPressed="gridPointerPress"
 						AllowFocusOnInteraction="True"
                         ItemsSource="{x:Bind views:NearDefenseTab.defendants, Mode=OneWay}"
-													Margin="4,4,8,16"
+													
                         UserGroupMode="Disabled"
                         RowHeight="{StaticResource MediumGridRowHeight}"
                         AlternationStep="2"
                         SelectionMode="Extended"
                         SelectionUnit="Row"
                         GroupPanelPosition="Bottom"
-						FontFamily="Tw Cen MT Condensed"
+						
 						ScrollViewer.ZoomMode="Enabled"
 						>
 

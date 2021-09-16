@@ -10,16 +10,16 @@ using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using System.Web;
 
-using Windows.UI.Xaml;
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
+using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Controls.Primitives;
 using static COTG.Game.City;
 using static COTG.Debug;
 using COTG.Helpers;
 using COTG.JSON;
-using Microsoft.Toolkit.Uwp.UI.Controls;
+using CommunityToolkit.WinUI;
 using System.Text.RegularExpressions;
 using System.ComponentModel;
 using static COTG.Game.City;
@@ -28,7 +28,7 @@ namespace COTG.Views
 
 //	record ab(string a=null, string b=null);
 
-	public sealed partial class ShareString : Windows.UI.Xaml.Controls.ContentDialog, INotifyPropertyChanged
+	public sealed partial class ShareString : Microsoft.UI.Xaml.Controls.ContentDialog, INotifyPropertyChanged
 	{
 		#region PropertyChanged
 		public void OnPropertyChanged(string propertyName = "") => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
@@ -517,13 +517,13 @@ namespace COTG.Views
 
 		private void CollapsedDisable(object sender, EventArgs e)
 		{
-			var exp = sender as Microsoft.Toolkit.Uwp.UI.Controls.Expander;
+			var exp = sender as CommunityToolkit.WinUI.Expander;
 			Assert(exp!=null);
 			exp.Header = exp.Header as string + " - No Change";
 		}
 		private void ExpandedEnable(object sender, EventArgs e)
 		{
-			var exp = sender as Microsoft.Toolkit.Uwp.UI.Controls.Expander;
+			var exp = sender as CommunityToolkit.WinUI.Expander;
 			Assert(exp!=null);
 			exp.Header = (exp.Header as string).Replace( " - No Change", "");
 		}

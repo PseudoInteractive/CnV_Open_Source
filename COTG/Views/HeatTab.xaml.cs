@@ -9,15 +9,15 @@ using System.Runtime.InteropServices.WindowsRuntime;
 
 using Windows.Foundation;
 using Windows.Foundation.Collections;
-using Windows.UI.Xaml;
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Navigation;
-using Microsoft.Toolkit.Uwp.UI;
+using Microsoft.UI.Xaml.Controls.Primitives;
+using Microsoft.UI.Xaml.Data;
+using Microsoft.UI.Xaml.Input;
+using Microsoft.UI.Xaml.Media;
+using Microsoft.UI.Xaml.Navigation;
+using CommunityToolkit.WinUI;
 using static COTG.Debug;
 using System.Threading.Tasks;
 using static COTG.AUtil;
@@ -25,7 +25,7 @@ using static COTG.AUtil;
 
 namespace COTG.Views
 {
-	class HeatmapTemplateSelector : Windows.UI.Xaml.Controls.DataTemplateSelector
+	class HeatmapTemplateSelector : Microsoft.UI.Xaml.Controls.DataTemplateSelector
 	{
 		public DataTemplate dayTemplate { get; set; }
 		public DataTemplate deltaTemplate { get; set; }

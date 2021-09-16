@@ -5,14 +5,14 @@ using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 
-using Windows.UI.Xaml;
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Windows.UI.Xaml.Input;
+using Microsoft.UI.Xaml.Input;
 
 using static COTG.Debug;
 // The Content Dialog item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
-using ContentDialog = Windows.UI.Xaml.Controls.ContentDialog;
-using ContentDialogResult = Windows.UI.Xaml.Controls.ContentDialogResult;
+using ContentDialog = Microsoft.UI.Xaml.Controls.ContentDialog;
+using ContentDialogResult = Microsoft.UI.Xaml.Controls.ContentDialogResult;
 using System.Collections.ObjectModel;
 
 namespace COTG.Views
@@ -133,7 +133,7 @@ namespace COTG.Views
 		}
 
 
-		private void date_SelectedDatesChanged(Windows.UI.Xaml.Controls.CalendarView sender, Windows.UI.Xaml.Controls.CalendarViewSelectedDatesChangedEventArgs args)
+		private void date_SelectedDatesChanged(Microsoft.UI.Xaml.Controls.CalendarView sender, Microsoft.UI.Xaml.Controls.CalendarViewSelectedDatesChangedEventArgs args)
 		{
 			if (pauseChange == 0)
 			{
@@ -164,7 +164,7 @@ namespace COTG.Views
 			PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 		}
 
-		private void ComboBox_SelectionChanged(object sender, Windows.UI.Xaml.Controls.SelectionChangedEventArgs e)
+		private void ComboBox_SelectionChanged(object sender, Microsoft.UI.Xaml.Controls.SelectionChangedEventArgs e)
 		{
 			if (recentTimesBox.SelectedItem != null )
 			{
@@ -179,7 +179,7 @@ namespace COTG.Views
 
 
 
-		private void Time_KeyDown(object sender, Windows.UI.Xaml.Input.KeyRoutedEventArgs e)
+		private void Time_KeyDown(object sender, Microsoft.UI.Xaml.Input.KeyRoutedEventArgs e)
 		{
 			if (e.Key == Windows.System.VirtualKey.Enter)
 			{
@@ -214,7 +214,7 @@ namespace COTG.Views
 				TimeFromUI();
 		}
 
-		private void ContentDialog_PrimaryButtonClick(ContentDialog sender, Windows.UI.Xaml.Controls.ContentDialogButtonClickEventArgs args)
+		private void ContentDialog_PrimaryButtonClick(ContentDialog sender, Microsoft.UI.Xaml.Controls.ContentDialogButtonClickEventArgs args)
 		{
 			AddRecentTime(dateTime);
 		}

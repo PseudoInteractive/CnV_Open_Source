@@ -202,7 +202,7 @@ namespace COTG.Game
 		
 		public string Send => "Send"; // make shift button column
 		public string name => city.nameAndRemarks;
-		public Windows.UI.Xaml.Media.Imaging.BitmapImage icon => city.icon;
+		public Microsoft.UI.Xaml.Media.Imaging.BitmapImage icon => city.icon;
 		public int cid => city.cid;
 	
 		public TimeSpan travel { get; set; }

@@ -6,7 +6,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Windows.UI.Xaml.Media.Imaging;
+using Microsoft.UI.Xaml.Media.Imaging;
 
 using TroopTypeCounts = COTG.Game.TroopTypeCounts;
 //COTG.DArray<COTG.Game.TroopTypeCount>;
@@ -24,7 +24,7 @@ namespace COTG.Game
 //        public string SendOrLocked => (city.cid&1)==0  ? "Sieged" : "Send";
         public string Send => "Send"; // make shift button column
         public string name => city.nameAndRemarks;
-        public Windows.UI.Xaml.Media.Imaging.BitmapImage icon => city.icon;
+        public Microsoft.UI.Xaml.Media.Imaging.BitmapImage icon => city.icon;
         public int cid => city.cid;
         public string raidReturn => city.raidReturn;
         public int tsHome => NearDefenseTab.includeOffense ? city.tsHome : city.tsDefCityHome;

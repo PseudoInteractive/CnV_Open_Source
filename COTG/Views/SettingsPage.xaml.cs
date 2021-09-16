@@ -14,12 +14,12 @@ using COTG.JSON;
 using COTG.Models;
 using COTG.Services;
 using static COTG.Debug;
-using Microsoft.Toolkit.Uwp.UI;
+using CommunityToolkit.WinUI;
 using Windows.ApplicationModel;
 using Windows.Globalization.NumberFormatting;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Navigation;
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Navigation;
 using System.Text.RegularExpressions;
 using System.Reflection;
 namespace COTG.Views
@@ -397,7 +397,7 @@ namespace COTG.Views
 		//	pinned = await folder.ReadAsync(pinsFileName, Array.Empty<int>());
 		//}
 
-		public static void UpdateZoom(object sender = null, Windows.UI.Xaml.Controls.Primitives.RangeBaseValueChangedEventArgs e = null)
+		public static void UpdateZoom(object sender = null, Microsoft.UI.Xaml.Controls.Primitives.RangeBaseValueChangedEventArgs e = null)
 		{
 			var chatZoom = SettingsPage.chatZoom.Squared()  + 0.75f;
 			var tabZoom = SettingsPage.tabZoom.Squared()  + 0.75f;

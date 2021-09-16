@@ -13,21 +13,21 @@ using Telerik.UI.Xaml.Controls.Grid;
 using Telerik.UI.Xaml.Controls.Grid.Commands;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Navigation;
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Controls.Primitives;
+using Microsoft.UI.Xaml.Data;
+using Microsoft.UI.Xaml.Input;
+using Microsoft.UI.Xaml.Media;
+using Microsoft.UI.Xaml.Navigation;
 
 using static COTG.Debug;
 
 namespace COTG.Views
 {
 
-    public sealed partial class DonationTab : UserTab, INotifyPropertyChanged
-    {
+    public sealed partial class DonationTab : UserTab, Microsoft.UI.Xaml.Data.INotifyPropertyChanged
+	{
         public static DonationTab instance;
         public static int reserveCarts=800;
         public static float reserveCartsPCT =0.0625f;
@@ -118,7 +118,20 @@ namespace COTG.Views
             var newSel = it as City;
             blessedGrid.ItemsSource = BlessedCity.GetForCity(newSel);
         }
-    }
+
+		event Microsoft.UI.Xaml.Data.PropertyChangedEventHandler Microsoft.UI.Xaml.Data.INotifyPropertyChanged.PropertyChanged
+		{
+			add
+			{
+				throw new NotImplementedException();
+			}
+
+			remove
+			{
+				throw new NotImplementedException();
+			}
+		}
+	}
 
 public class BlessedTapCommand : DataGridCommand
 {

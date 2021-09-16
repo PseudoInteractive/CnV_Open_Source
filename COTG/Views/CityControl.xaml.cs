@@ -6,26 +6,26 @@ using System.Runtime.InteropServices.WindowsRuntime;
 
 using Windows.Foundation;
 using Windows.Foundation.Collections;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Navigation;
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Controls.Primitives;
+using Microsoft.UI.Xaml.Data;
+using Microsoft.UI.Xaml.Input;
+using Microsoft.UI.Xaml.Media;
+using Microsoft.UI.Xaml.Navigation;
 using COTG.Game;
 using System.ComponentModel;
-using Windows.UI.Xaml.Media.Imaging;
-using Microsoft.Toolkit.Uwp.UI;
+using Microsoft.UI.Xaml.Media.Imaging;
+using CommunityToolkit.WinUI;
 // The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234236
 
 namespace COTG.Views
 {
-	public sealed partial class CityControl : UserControl, INotifyPropertyChanged
+	public sealed partial class CityControl : UserControl, Microsoft.UI.Xaml.Data.INotifyPropertyChanged
 	{
 		#region PropertyChanged
 		public void OnPropertyChanged(string propertyName = "") => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-		public event PropertyChangedEventHandler PropertyChanged;
+		public event Microsoft.UI.Xaml.Data.PropertyChangedEventHandler PropertyChanged;
 		#endregion
 
 		public City city;

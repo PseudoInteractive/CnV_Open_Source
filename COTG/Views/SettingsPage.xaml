@@ -7,8 +7,8 @@
 			   xmlns:cotg="using:COTG"
 			   xmlns:views="using:COTG.Views"
 			   xmlns:game="using:COTG.Game"
-			   xmlns:xaml="using:Windows.UI.Xaml"
-			   xmlns:wct="using:Microsoft.Toolkit.Uwp.UI.Controls"
+			   xmlns:xaml="using:Microsoft.UI.Xaml"
+			   xmlns:wct="using:CommunityToolkit.WinUI"
 			   xmlns:controls="using:Microsoft.UI.Xaml.Controls"
 			   mc:Ignorable="d"
 			   

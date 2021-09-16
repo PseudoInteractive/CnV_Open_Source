@@ -4,7 +4,6 @@ using COTG.Views;
 //using ZLogger;
 
 //using Cysharp.Text;
-using Microsoft.Toolkit.Uwp.UI.Controls;
 
 using System;
 using System.Text.RegularExpressions;
@@ -17,8 +16,11 @@ using System.Threading.Tasks;
 //using Microsoft.Extensions.DependencyInjection;
 //using Microsoft.Extensions.Logging;
 //using Microsoft.Extensions.Options;
-//using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Input;
+//using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Input;
+using CommunityToolkit.WinUI;
+using CommunityToolkit.WinUI.Notifications;
+using CommunityToolkit.WinUI.UI.Controls;
 
 using static COTG.Debug;
 
@@ -244,7 +246,7 @@ namespace COTG
 		//		App.DispatchOnUIThreadLow(() => ob.Focus(FocusState.Programmatic));
 		//	}
 		//}
-		//public static void Focus(this Windows.UI.Xaml.Controls.Control ob)
+		//public static void Focus(this Microsoft.UI.Xaml.Controls.Control ob)
 		//{
 		//	if (ob != null)
 		//	{

@@ -8,12 +8,12 @@ using System.Threading.Tasks;
 
 using Telerik.UI.Xaml.Controls.Grid;
 
-using Windows.UI.Xaml;
+using Microsoft.UI.Xaml;
 
 using static COTG.Game.Enum;
 namespace COTG.Styles
 {
-		public class ReportKillStyleSelector : Windows.UI.Xaml.Controls.StyleSelector
+		public class ReportKillStyleSelector : Microsoft.UI.Xaml.Controls.StyleSelector
 		{
 			public Style attackerWinStyle { get; set; }
 
@@ -45,7 +45,7 @@ namespace COTG.Styles
 
 
 		}
-		public class ReportTypeStyleSelector : Windows.UI.Xaml.Controls.StyleSelector
+		public class ReportTypeStyleSelector : Microsoft.UI.Xaml.Controls.StyleSelector
 		{
 			public Style pendingStyle { get; set; }
 

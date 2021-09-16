@@ -9,7 +9,7 @@ using static COTG.BuildingDef;
 using COTG;
 using COTG.JSON;
 using Microsoft.Toolkit.HighPerformance;
-using Windows.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Controls;
 using static COTG.Debug;
 using static COTG.Draw.CityView;
 using static COTG.Game.City;

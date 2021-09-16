@@ -25,7 +25,7 @@ using COTG.Views;
 using COTG.Services;
 using SharpDX.Direct2D1;
 using COTG.Helpers;
-using Windows.UI.Xaml.Media.Imaging;
+using Microsoft.UI.Xaml.Media.Imaging;
 using MessagePack;
 
 namespace CnVDiscord

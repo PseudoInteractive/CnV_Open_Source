@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Windows.UI.Xaml.Media.Imaging;
-using Windows.UI.Xaml.Media;
+using Microsoft.UI.Xaml.Media.Imaging;
+using Microsoft.UI.Xaml.Media;
 using static COTG.Views.CityBuild;
-using Windows.UI.Xaml;
+using Microsoft.UI.Xaml;
 using Action = COTG.Views.CityBuild.Action;
 namespace COTG.Views
 {
@@ -90,7 +90,7 @@ namespace COTG.Views
 
 	//	}
 	//}
-	public class BuildingButton : Windows.UI.Xaml.Controls.Button
+	public class BuildingButton : Microsoft.UI.Xaml.Controls.Button
 	{
 		/// <summary>
 		/// Identifies the <see cref="Image id"/> dependency property.
@@ -117,7 +117,7 @@ namespace COTG.Views
 			Height = 64;
 		}
 	}
-	public class BuildingRect : Windows.UI.Xaml.Controls.Canvas
+	public class BuildingRect : Microsoft.UI.Xaml.Controls.Canvas
 	{
 		/// <summary>
 		/// Identifies the <see cref="Image bid"/> dependency property.

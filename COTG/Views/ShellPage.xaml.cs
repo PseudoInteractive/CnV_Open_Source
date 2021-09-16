@@ -7,7 +7,7 @@ using Cysharp.Text;
 
 using DiscordCnV;
 
-using Microsoft.Toolkit.Uwp.UI.Controls;
+using CommunityToolkit.WinUI;
 using System.Numerics;
 using System;
 using System.Collections.Generic;
@@ -21,12 +21,12 @@ using Windows.Graphics.Display;
 using Windows.System;
 using Windows.UI.Core;
 using Windows.UI.Core.Preview;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Input;
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Controls.Primitives;
+using Microsoft.UI.Xaml.Input;
 using Windows.Web.Http;
-using Windows.UI.Xaml.Media;
+using Microsoft.UI.Xaml.Media;
 using static COTG.Debug;
 
 using WinUI = Microsoft.UI.Xaml.Controls;
@@ -1078,7 +1078,7 @@ namespace COTG.Views
 			*/
 		}
 
-		//private static void ContinentFilterClosing(Windows.UI.Xaml.Controls.Primitives.FlyoutBase sender, Windows.UI.Xaml.Controls.Primitives.FlyoutBaseClosingEventArgs args)
+		//private static void ContinentFilterClosing(Microsoft.UI.Xaml.Controls.Primitives.FlyoutBase sender, Microsoft.UI.Xaml.Controls.Primitives.FlyoutBaseClosingEventArgs args)
 		//{
 		//	var menu = (sender as MenuFlyout);
 		//	var any = false;

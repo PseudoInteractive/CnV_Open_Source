@@ -16,11 +16,11 @@ using System.Threading.Tasks;
 
 using Windows.System;
 using Windows.UI.Core;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Media.Imaging;
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls.Primitives;
+using Microsoft.UI.Xaml.Input;
+using Microsoft.UI.Xaml.Media;
+using Microsoft.UI.Xaml.Media.Imaging;
 
 using static COTG.Debug;
 using static COTG.Draw.CityView;
@@ -28,12 +28,12 @@ using static COTG.Game.City;
 using static COTG.Views.CityBuild;
 using static COTG.BuildingDef;
 using Action = COTG.Views.CityBuild.Action;
-using ContentDialog = Windows.UI.Xaml.Controls.ContentDialog;
-using ContentDialogResult = Windows.UI.Xaml.Controls.ContentDialogResult;
+using ContentDialog = Microsoft.UI.Xaml.Controls.ContentDialog;
+using ContentDialogResult = Microsoft.UI.Xaml.Controls.ContentDialogResult;
 
 namespace COTG.Views
 {
-	public sealed partial class CityBuild : Windows.UI.Xaml.Controls.UserControl
+	public sealed partial class CityBuild : Microsoft.UI.Xaml.Controls.UserControl
 	{
 		public static bool testFlag;
 		public static int quickBuildId;
@@ -469,21 +469,21 @@ namespace COTG.Views
 			instance.cvsGroups.Source = groups;
 		}
 
-		public static Windows.UI.Xaml.Controls.Flyout buildMenu;
+		public static Microsoft.UI.Xaml.Controls.Flyout buildMenu;
 
 		public static CityBuild Initialize()
 		{
 			instance = new CityBuild();
-			buildMenu = new Windows.UI.Xaml.Controls.Flyout()
+			buildMenu = new Microsoft.UI.Xaml.Controls.Flyout()
 			{
-				LightDismissOverlayMode = Windows.UI.Xaml.Controls.LightDismissOverlayMode.Off,
+				LightDismissOverlayMode = Microsoft.UI.Xaml.Controls.LightDismissOverlayMode.Off,
 				ShowMode = FlyoutShowMode.Standard,
 				Content = instance
 			};
 			
 
 	//		buildMenu.Closed += BuildMenu_Closed;
-			Style s = new Windows.UI.Xaml.Style { TargetType = typeof(Windows.UI.Xaml.Controls.FlyoutPresenter) };
+			Style s = new Microsoft.UI.Xaml.Style { TargetType = typeof(Microsoft.UI.Xaml.Controls.FlyoutPresenter) };
 			s.Setters.Add(new Setter(MinHeightProperty, "300"));
 			s.Setters.Add(new Setter(MinWidthProperty, "300"));
 			s.Setters.Add(new Setter(MaxWidthProperty, "600"));
@@ -941,7 +941,7 @@ namespace COTG.Views
 			isSingleClickAction = true;
 		}
 
-		private void quickBuild_SelectionChanged(object sender, Windows.UI.Xaml.Controls.SelectionChangedEventArgs e)
+		private void quickBuild_SelectionChanged(object sender, Microsoft.UI.Xaml.Controls.SelectionChangedEventArgs e)
 		{
 			//var sel = quickBuild.SelectedItem  as QuickBuildItem;
 			//if (sel != null )
@@ -1327,7 +1327,7 @@ namespace COTG.Views
 
 		}
 
-		public async void ItemClick(object sender, Windows.UI.Xaml.Controls.ItemClickEventArgs e)
+		public async void ItemClick(object sender, Microsoft.UI.Xaml.Controls.ItemClickEventArgs e)
 		{
 			contextMenuResultSelected = true;
 			var bi = e.ClickedItem as BuildMenuItem;

@@ -8,7 +8,7 @@
       xmlns:cotg="using:COTG"
       xmlns:my="using:Microsoft.UI.Xaml.Controls"
       xmlns:tg="using:Telerik.UI.Xaml.Controls.Grid"
-      xmlns:tk="using:Microsoft.Toolkit.Uwp.UI.Controls"
+      xmlns:tk="using:CommunityToolkit.WinUI"
       xmlns:telerikGrid="using:Telerik.UI.Xaml.Controls.Grid"
       xmlns:local="using:COTG.Views"
         Tag="Donation"
@@ -55,8 +55,7 @@
         <telerikGrid:RadDataGrid x:Name="donationGrid"
                                  x:FieldModifier="public"
                         Grid.Row="2"
-								 							Margin="4,4,8,16"
-
+								 							
                                  AllowFocusOnInteraction="True"
                         AutoGenerateColumns="False"
             CanUserChooseColumns="True"
@@ -138,8 +137,7 @@
             </telerikGrid:RadDataGrid>
         <telerikGrid:RadDataGrid x:Name="blessedGrid" x:FieldModifier="public"
                         Grid.Row="3"
-								 							Margin="4,4,14,16"
-
+								 
                         AllowFocusOnInteraction="True"
                         AutoGenerateColumns="False"
                         CanUserChooseColumns="True"

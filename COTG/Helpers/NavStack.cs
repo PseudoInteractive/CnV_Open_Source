@@ -5,10 +5,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Windows.Input;
 
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Input;
+
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Input;
 
 using static COTG.Debug;
 
@@ -179,15 +179,7 @@ namespace COTG.Helpers
 				} while (delta > 0);
 			}
 		}
-		event EventHandler ICommand.CanExecuteChanged
-		{
-			add
-			{
-			}
 
-			remove
-			{
-			}
-		}
+		public event EventHandler<object> CanExecuteChanged;
 	}
 }

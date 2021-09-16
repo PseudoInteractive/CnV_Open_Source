@@ -18,16 +18,32 @@ Global
 		..\CnVShared\CnVShared.projitems*{813f59c4-ec96-48ef-83e4-e3c7e671e368}*SharedItemsImports = 4
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|arm64 = Debug|arm64
 		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
+		Release|arm64 = Release|arm64
 		Release|x64 = Release|x64
+		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{813F59C4-EC96-48EF-83E4-E3C7E671E368}.Debug|arm64.ActiveCfg = Debug|Any CPU
+		{813F59C4-EC96-48EF-83E4-E3C7E671E368}.Debug|arm64.Build.0 = Debug|Any CPU
+		{813F59C4-EC96-48EF-83E4-E3C7E671E368}.Debug|arm64.Deploy.0 = Debug|Any CPU
 		{813F59C4-EC96-48EF-83E4-E3C7E671E368}.Debug|x64.ActiveCfg = Debug|x64
 		{813F59C4-EC96-48EF-83E4-E3C7E671E368}.Debug|x64.Build.0 = Debug|x64
 		{813F59C4-EC96-48EF-83E4-E3C7E671E368}.Debug|x64.Deploy.0 = Debug|x64
+		{813F59C4-EC96-48EF-83E4-E3C7E671E368}.Debug|x86.ActiveCfg = Debug|Win32
+		{813F59C4-EC96-48EF-83E4-E3C7E671E368}.Debug|x86.Build.0 = Debug|Win32
+		{813F59C4-EC96-48EF-83E4-E3C7E671E368}.Debug|x86.Deploy.0 = Debug|Win32
+		{813F59C4-EC96-48EF-83E4-E3C7E671E368}.Release|arm64.ActiveCfg = Release|Any CPU
+		{813F59C4-EC96-48EF-83E4-E3C7E671E368}.Release|arm64.Build.0 = Release|Any CPU
+		{813F59C4-EC96-48EF-83E4-E3C7E671E368}.Release|arm64.Deploy.0 = Release|Any CPU
 		{813F59C4-EC96-48EF-83E4-E3C7E671E368}.Release|x64.ActiveCfg = Release|x64
 		{813F59C4-EC96-48EF-83E4-E3C7E671E368}.Release|x64.Build.0 = Release|x64
 		{813F59C4-EC96-48EF-83E4-E3C7E671E368}.Release|x64.Deploy.0 = Release|x64
+		{813F59C4-EC96-48EF-83E4-E3C7E671E368}.Release|x86.ActiveCfg = Release|Win32
+		{813F59C4-EC96-48EF-83E4-E3C7E671E368}.Release|x86.Build.0 = Release|Win32
+		{813F59C4-EC96-48EF-83E4-E3C7E671E368}.Release|x86.Deploy.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -7,10 +7,10 @@ using System.Text;
 using System.Threading.Tasks;
 using COTG.Views;
 using Microsoft.UI.Xaml.Controls;
-using Windows.UI.Xaml;
+using Microsoft.UI.Xaml;
 using System.Text.RegularExpressions;
-using Windows.UI.Xaml.Media.Imaging;
-using Windows.UI.Xaml.Media;
+using Microsoft.UI.Xaml.Media.Imaging;
+using Microsoft.UI.Xaml.Media;
 using static COTG.Debug;
 using COTG.Helpers;
 
@@ -68,7 +68,7 @@ namespace COTG.Models
 					ShellPage.JSPointToScreen(x1, y1));
 
 
-				//	var canvas = new Windows.UI.Xaml.Controls.Canvas();
+				//	var canvas = new Microsoft.UI.Xaml.Controls.Canvas();
 				//	canvas.Width = pop.x1 - x0;
 				//	canvas.Height = pop.y1 - y0;
 
@@ -78,7 +78,7 @@ namespace COTG.Models
 
 				//	const int tipMarginX = 32;
 				//	const int tipMarginY = 32;
-				////	canvas.Background = new Windows.UI.Xaml.Media.Brush();
+				////	canvas.Background = new Microsoft.UI.Xaml.Media.Brush();
 				//	var tt = new TeachingTip()
 				//	 {
 				//		 Title = pop.id,
@@ -136,7 +136,7 @@ namespace COTG.Models
 			//					bitmap.UriSource = new Uri( match.Groups[1].Value);
 			//					var brush = new ImageBrush() { ImageSource = bitmap, Stretch = Stretch.None
 			//					};
-			//					var image = new Windows.UI.Xaml.Shapes.Rectangle() { Fill=brush };
+			//					var image = new Microsoft.UI.Xaml.Shapes.Rectangle() { Fill=brush };
 
 			//					var px = regexPX.Matches(backgroundPositions[backId]);
 			//					if (px.Count > 0)

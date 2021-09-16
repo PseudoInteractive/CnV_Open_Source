@@ -16,15 +16,15 @@ using System.Threading.Tasks;
 using System.Web;
 
 using Windows.System.Threading;
-using Windows.UI.Xaml;
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.Toolkit;
 using static COTG.Debug;
 using static COTG.JSON.BuildQueue;
 using static COTG.Game.City;
 using Windows.Storage;
-using ContentDialog = Windows.UI.Xaml.Controls.ContentDialog;
-using ContentDialogResult = Windows.UI.Xaml.Controls.ContentDialogResult;
+using ContentDialog = Microsoft.UI.Xaml.Controls.ContentDialog;
+using ContentDialogResult = Microsoft.UI.Xaml.Controls.ContentDialogResult;
 using Cysharp.Text;
 using Windows.System;
 

@@ -17,7 +17,7 @@
 					<Color x:Key="SystemChromeAltHighColor">#FF4F1A1A</Color>
 					<Color x:Key="SystemRevealListLowColor">#FF3A0A0A</Color>
 					<Color x:Key="SystemRevealListMediumColor">#FF4F1A1A</Color>
-					<AcrylicBrush x:Key="SystemControlAcrylicWindowBrush" BackgroundSource="HostBackdrop" TintColor="{ThemeResource SystemChromeAltHighColor}" TintOpacity="0.8" FallbackColor="{ThemeResource SystemChromeMediumColor}" />
+					<AcrylicBrush x:Key="SystemControlAcrylicWindowBrush" TintColor="{ThemeResource SystemChromeAltHighColor}" TintOpacity="0.8" FallbackColor="{ThemeResource SystemChromeMediumColor}" />
 
 					<!-- Override system generated accent colors -->
 					<Color x:Key="SystemAccentColorDark1">#FF6C3C8F</Color>

@@ -2,7 +2,6 @@
     x:Class="COTG.Views.SpotTab"
      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-      xmlns:behaviors="using:COTG.Behaviors"
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:game="using:COTG.Game"
       xmlns:gridCommands="using:Telerik.UI.Xaml.Controls.Grid.Commands"
@@ -12,7 +11,7 @@
       xmlns:my="using:Microsoft.UI.Xaml.Controls"
       xmlns:tdd="using:Telerik.Data.Core"
       xmlns:tg="using:Telerik.UI.Xaml.Controls.Grid"
-      xmlns:tk="using:Microsoft.Toolkit.Uwp.UI.Controls"
+      xmlns:tk="using:Toolkit.Uwp.UI.Controls"
       xmlns:tl="using:Telerik.UI.Xaml.Controls"
       xmlns:telerikCore="using:Telerik.Data.Core"
       xmlns:local="using:COTG.Views"
@@ -43,14 +42,12 @@
                                     ColumnDataOperationsMode="Flyout"
                         PointerPressed="gridPointerPress"
 				        ItemsSource="{x:Bind spotMRU, Mode=OneWay}"
-													Margin="4,4,8,16"
-
+													
                         RowHeight="{StaticResource MediumGridRowHeight}"
                         AlternationStep="2"
                         SelectionMode="Extended"
                         SelectionUnit="Row"
                         GroupPanelPosition="Bottom"
-						FontFamily="Tw Cen MT Condensed"
 						ScrollViewer.ZoomMode="Enabled"
 						>
 							  

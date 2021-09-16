@@ -11,11 +11,11 @@ using System.Web;
 
 using Windows.UI.Popups;
 using Microsoft.UI.Xaml.Controls;
-using ContentDialog = Windows.UI.Xaml.Controls.ContentDialog;
-using ContentDialogResult = Windows.UI.Xaml.Controls.ContentDialogResult;
+using ContentDialog = Microsoft.UI.Xaml.Controls.ContentDialog;
+using ContentDialogResult = Microsoft.UI.Xaml.Controls.ContentDialogResult;
 using static COTG.Debug;
 using static COTG.Views.SettingsPage;
-using Windows.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Controls;
 using COTG.Helpers;
 
 namespace COTG.JSON

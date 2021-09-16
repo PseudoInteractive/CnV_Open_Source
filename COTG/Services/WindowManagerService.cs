@@ -6,7 +6,7 @@ using Windows.System;
 using Windows.ApplicationModel.Core;
 using Windows.UI.Core;
 using Windows.UI.ViewManagement;
-using Windows.UI.Xaml;
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 
 namespace COTG.Services
@@ -71,7 +71,7 @@ namespace COTG.Services
                 viewControl = ViewLifetimeControl.CreateForCurrentView();
                 viewControl.Title = windowTitle;
                 viewControl.StartViewInUse();
-                var frame = new Windows.UI.Xaml.Controls.Frame();
+                var frame = new Microsoft.UI.Xaml.Controls.Frame();
                 frame.IsNavigationStackEnabled = false;
                 frame.RequestedTheme = ThemeSelectorService.Theme;
                 frame.Navigate(pageType, viewControl);

@@ -9,7 +9,7 @@
       xmlns:my="using:Microsoft.UI.Xaml.Controls"
     	xmlns:tgCore="using:Telerik.Data.Core"
       xmlns:tg="using:Telerik.UI.Xaml.Controls.Grid"
-      xmlns:tk="using:Microsoft.Toolkit.Uwp.UI.Controls"
+      xmlns:tk="using:CommunityToolkit.WinUI"
       xmlns:telerikGrid="using:Telerik.UI.Xaml.Controls.Grid"
       xmlns:local="using:COTG.Views"
         Tag="Boss"
@@ -22,8 +22,7 @@
         </Grid.RowDefinitions>
         <telerikGrid:RadDataGrid x:Name="cityGrid"
                                  x:FieldModifier="public"
-								 							Margin="4,4,8,16"
-
+								 							
                         Grid.Row="0"
                         AutoGenerateColumns="False"
                         CanUserChooseColumns="True"
@@ -75,7 +74,6 @@
         </telerikGrid:RadDataGrid>
         <telerikGrid:RadDataGrid x:Name="bossGrid" x:FieldModifier="public"
                         Grid.Row="1"
-                        							Margin="4,14,8,16"
 
                         AutoGenerateColumns="False"
 

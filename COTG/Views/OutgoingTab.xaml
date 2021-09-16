@@ -10,7 +10,7 @@
       xmlns:my="using:Microsoft.UI.Xaml.Controls"
       xmlns:tdd="using:Telerik.Data.Core"
       xmlns:tg="using:Telerik.UI.Xaml.Controls.Grid"
-      xmlns:tk="using:Microsoft.Toolkit.Uwp.UI.Controls"
+      xmlns:tk="using:CommunityToolkit.WinUI"
       xmlns:tl="using:Telerik.UI.Xaml.Controls"
       xmlns:local="using:COTG.Views"
       Background="{x:Null}"
@@ -33,8 +33,7 @@
                         CanUserChooseColumns="True"
 						IsTabStop="True"
 						TabFocusNavigation="Once"
-						Margin="4,4,8,16"
-                        ColumnResizeHandleDisplayMode="OnColumnHeaderActionFlyoutOpen"
+						ColumnResizeHandleDisplayMode="OnColumnHeaderActionFlyoutOpen"
                         FontSize="{StaticResource MediumFontSize}"
                         RowHeight="{StaticResource MediumGridRowHeight}"
                         PointerPressed="gridPointerPress"
@@ -123,7 +122,7 @@
                                     GridLinesThickness="1"
 IsTabStop="True"
 						TabFocusNavigation="Once"
-													Margin="4,4,8,16"
+											
 
                                     Grid.Row="2"
                                     FontSize="{StaticResource MediumFontSize}"

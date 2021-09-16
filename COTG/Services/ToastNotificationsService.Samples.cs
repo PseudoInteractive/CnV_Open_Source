@@ -1,4 +1,4 @@
-﻿using Microsoft.Toolkit.Uwp.Notifications;
+﻿using CommunityToolkit.WinUI.Notifications;
 
 using System;
 
@@ -15,7 +15,7 @@ namespace COTG.Services
             // Create the toast content
             var content = new ToastContent()
             {
-                // More about the Launch property at https://docs.microsoft.com/dotnet/api/microsoft.toolkit.uwp.notifications.toastcontent
+                // More about the Launch property at https://docs.microsoft.com/dotnet/api/CommunityToolkit.WinUI.notifications.toastcontent
                 Launch = "IncomingActivationParams",
 
                 Visual = new ToastVisual()
@@ -40,7 +40,7 @@ namespace COTG.Services
 
                     Buttons =
                     {
-                        // More about Toast Buttons at https://docs.microsoft.com/dotnet/api/microsoft.toolkit.uwp.notifications.toastbutton
+                        // More about Toast Buttons at https://docs.microsoft.com/dotnet/api/CommunityToolkit.WinUI.notifications.toastbutton
                         new ToastButton("Okay", tag+"Okay")
                         {
                             ActivationType = ToastActivationType.Foreground,
@@ -89,7 +89,7 @@ namespace COTG.Services
 			// Create the toast content
 			var content = new ToastContent()
 			{
-				// More about the Launch property at https://docs.microsoft.com/dotnet/api/microsoft.toolkit.uwp.notifications.toastcontent
+				// More about the Launch property at https://docs.microsoft.com/dotnet/api/CommunityToolkit.WinUI.notifications.toastcontent
 				Launch = "SpotChangeActivationParams",
 				Audio = new ToastAudio()
 				{
@@ -117,7 +117,7 @@ namespace COTG.Services
 
                     Buttons =
                     {
-                        // More about Toast Buttons at https://docs.microsoft.com/dotnet/api/microsoft.toolkit.uwp.notifications.toastbutton
+                        // More about Toast Buttons at https://docs.microsoft.com/dotnet/api/CommunityToolkit.WinUI.notifications.toastbutton
                         new ToastButton("OK", "incomingNotification")
                         {
                             ActivationType = ToastActivationType.Foreground,

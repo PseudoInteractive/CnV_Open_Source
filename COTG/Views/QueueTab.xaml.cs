@@ -10,9 +10,9 @@ using System.Linq;
 using System.Threading.Tasks;
 
 //using Microsoft.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Controls;
 using COTG.Views;
-//using Windows.UI.Xaml.Media;
+//using Microsoft.UI.Xaml.Media;
 
 using static COTG.Debug;
 using static COTG.Game.City;
@@ -202,7 +202,7 @@ namespace COTG.Views
 
 		//}
 
-		private void ClearQueue(object sender, Windows.UI.Xaml.RoutedEventArgs e)
+		private void ClearQueue(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
 		{
 			CityBuild.ClearQueue();
 
@@ -243,7 +243,7 @@ namespace COTG.Views
 
 		//}
 
-		private void ClearSelected(object sender, Windows.UI.Xaml.RoutedEventArgs e)
+		private void ClearSelected(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
 		{
 			var sel = zoom.SelectedNodes;
 			var removedCitites = new List<BuildItemView>();
@@ -293,7 +293,7 @@ namespace COTG.Views
 		
 		}
 
-		private void DoTheStuff(object sender, Windows.UI.Xaml.RoutedEventArgs e)
+		private void DoTheStuff(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
 		{
 			City.GetBuild().DoTheStuff();
 
@@ -917,7 +917,7 @@ namespace COTG.Views
 			return (matches,missingOverlayBuildings,extraBuildings, missingOverlayBuildings.Min(extraBuildings) > badBuildingThreshold);
 		}
 		
-		private async void MoveStuff(object sender, Windows.UI.Xaml.RoutedEventArgs e)
+		private async void MoveStuff(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
 		{
 			var cid = City.build;
 			if (!await App.LockUiSema(cid))
@@ -1068,7 +1068,7 @@ namespace COTG.Views
 		}
 		private static (int x, int y) RandomSpotForBuilding(City city) => IdToXY(city.FindFreeSpot());
 
-		//private async void SplatAll(object sender, Windows.UI.Xaml.RoutedEventArgs e)
+		//private async void SplatAll(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
 		//{
 		//	if (App.uiSema.CurrentCount == 0)
 		//	{
@@ -1106,7 +1106,7 @@ namespace COTG.Views
 	{
 		static readonly List<BuildItemView> pool = new();
 		public const int size = 32;
-		public Windows.UI.Xaml.Media.ImageBrush brush { get; set; }
+		public Microsoft.UI.Xaml.Media.ImageBrush brush { get; set; }
 		public int cid; // owner
 		public BuildQueueItem item;
 		public string building { get; set; }

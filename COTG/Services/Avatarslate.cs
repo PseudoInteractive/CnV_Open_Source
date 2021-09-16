@@ -1,12 +1,12 @@
 ﻿//using Microsoft.Toolkit.Services.MicrosoftTranslator;
-//using Microsoft.Toolkit.Uwp.UI.Controls;
+//using CommunityToolkit.WinUI;
 //using System;
 //using System.Collections.Generic;
 //using System.Linq;
 //using System.Text;
 //using System.Threading.Tasks;
 //using System.Windows.Input;
-//using Windows.UI.Xaml.Controls;
+//using Microsoft.UI.Xaml.Controls;
 //using static COTG.Debug;
 
 //namespace COTG.Services

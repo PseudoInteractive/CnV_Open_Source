@@ -11,8 +11,8 @@ using Telerik.UI.Xaml.Controls.Grid;
 using Telerik.UI.Xaml.Controls.Input;
 using Windows.Foundation;
 using Windows.UI.Input;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media.Imaging;
+using Microsoft.UI.Xaml.Input;
+using Microsoft.UI.Xaml.Media.Imaging;
 using COTG.Views;
 using TroopTypeCounts = COTG.Game.TroopTypeCounts;
 //COTG.DArray<COTG.Game.TroopTypeCount>;
@@ -23,21 +23,21 @@ using static COTG.Game.TroopTypeCountHelper;
 using static COTG.Debug;
 using System.ComponentModel;
 using System.Diagnostics;
-using Windows.UI.Xaml;
+using Microsoft.UI.Xaml;
 using Windows.System;
-//using Windows.UI.Xaml.Controls;
+//using Microsoft.UI.Xaml.Controls;
 using COTG.JSON;
 using System.Text.Json;
 using Windows.Web.Http;
 using static COTG.Game.Enum;
 using Windows.ApplicationModel.DataTransfer;
 using static COTG.Views.ShellPage;
-using ContentDialog = Windows.UI.Xaml.Controls.ContentDialog;
-using ContentDialogResult = Windows.UI.Xaml.Controls.ContentDialogResult;
-using MenuFlyoutItem = Windows.UI.Xaml.Controls.MenuFlyoutItem;
-using MenuFlyout = Windows.UI.Xaml.Controls.MenuFlyout;
-using ToggleMenuFlyoutItem = Windows.UI.Xaml.Controls.ToggleMenuFlyoutItem;
-using MenuFlyoutSubItem = Windows.UI.Xaml.Controls.MenuFlyoutSubItem;
+using ContentDialog = Microsoft.UI.Xaml.Controls.ContentDialog;
+using ContentDialogResult = Microsoft.UI.Xaml.Controls.ContentDialogResult;
+using MenuFlyoutItem = Microsoft.UI.Xaml.Controls.MenuFlyoutItem;
+using MenuFlyout = Microsoft.UI.Xaml.Controls.MenuFlyout;
+using ToggleMenuFlyoutItem = Microsoft.UI.Xaml.Controls.ToggleMenuFlyoutItem;
+using MenuFlyoutSubItem = Microsoft.UI.Xaml.Controls.MenuFlyoutSubItem;
 using System.Collections.ObjectModel;
 using Cysharp.Text;
 using DiscordCnV;
@@ -1534,7 +1534,7 @@ namespace COTG.Game
 		}
 		public static bool operator ==(Spot a, int cid) => a.cid == cid;
 		public static bool operator !=(Spot a, int cid) => a.cid != cid;
-		//public void ShowCity(object sender, Windows.UI.Xaml.RoutedEventArgs e)
+		//public void ShowCity(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
 		//{
 		//	JSClient.CitySwitch(cid, false);
 

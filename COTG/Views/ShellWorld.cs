@@ -2,8 +2,6 @@
 using COTG.Helpers;
 using COTG.Services;
 
-using Microsoft.Graphics.Canvas;
-using Microsoft.Graphics.Canvas.UI.Xaml;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,10 +9,10 @@ using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 using Windows.UI.Core;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Input;
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Controls.Primitives;
+using Microsoft.UI.Xaml.Input;
 using static COTG.Debug;
 using static COTG.AGame;
 using Microsoft.Xna.Framework.Input;

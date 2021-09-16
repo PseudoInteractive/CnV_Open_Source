@@ -2,7 +2,7 @@
 
 using Microsoft.UI.Xaml.Controls;
 
-using Windows.UI.Xaml;
+using Microsoft.UI.Xaml;
 
 namespace COTG.Helpers
 {

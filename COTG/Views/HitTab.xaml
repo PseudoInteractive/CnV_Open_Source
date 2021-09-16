@@ -28,8 +28,7 @@
 								 ScrollViewer.IsZoomChainingEnabled="True"
 								 ScrollViewer.IsZoomInertiaEnabled="False"
 								 ScrollViewer.ZoomMode="Enabled"
-								 							Margin="4,4,8,16"
-
+								 							
                         AutoGenerateColumns="False"
                         CanUserChooseColumns="True"
                         ColumnResizeHandleDisplayMode="OnColumnHeaderActionFlyoutOpen"

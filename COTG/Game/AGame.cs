@@ -15,8 +15,8 @@ using System.Linq;
 using System.Numerics;
 
 using Windows.UI.Core;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
 
 using static COTG.Debug;
 using static COTG.Game.Enum;
@@ -285,7 +285,7 @@ namespace COTG
 		static public void Create(SwapChainPanel swapChainPanel)
 		{
 			canvas = swapChainPanel;
-			canvas.CompositeMode = (UWindows.UI.Xaml.Media.ElementCompositeMode.MinBlend);
+			canvas.CompositeMode = (UMicrosoft.UI.Xaml.Media.ElementCompositeMode.MinBlend);
 			instance = MonoGame.Framework.XamlGame<AGame>.Create(() => new AGame() { }, "", Helper.CoreWindow, swapChainPanel);
 		}
 

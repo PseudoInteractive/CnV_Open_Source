@@ -20,7 +20,7 @@ using System.Text.Json;
 using System.Threading.Tasks;
 
 using Windows.Storage;
-using Windows.UI.Xaml.Media.Imaging;
+using Microsoft.UI.Xaml.Media.Imaging;
 
 using static COTG.Debug;
 using static COTG.Game.WorldViewSettings;

@@ -33,7 +33,7 @@
 	  <Type Name="Microsoft.UI.Xaml.Controls.TabView">
       <Event Name="TabCloseRequested" Dynamic="Required"/>
     </Type>
-	<Type Name="System.Collections.Generic.IList{Windows.UI.Xaml.Automation.Peers.AutomationPeer}" 
+	<Type Name="System.Collections.Generic.IList{Microsoft.UI.Xaml.Automation.Peers.AutomationPeer}" 
 	 MarshalObject="Public" Dynamic="Required All" />
 
 	 <Namespace Name="System.Configuration" Serialize="Required PublicAndInternal"  />

@@ -6,7 +6,7 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 
-using Windows.UI.Xaml;
+using Microsoft.UI.Xaml;
 
 using static COTG.Debug;
 using static COTG.Game.City;

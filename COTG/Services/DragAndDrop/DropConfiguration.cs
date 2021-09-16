@@ -7,7 +7,7 @@ using COTG.Models;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Storage;
 using Windows.Storage.Streams;
-using Windows.UI.Xaml;
+using Microsoft.UI.Xaml;
 
 namespace COTG.Services.DragAndDrop
 {

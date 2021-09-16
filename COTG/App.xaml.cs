@@ -24,7 +24,6 @@ using System.Windows.Input;
 //using Microsoft.Extensions.Logging;
 //using Microsoft.Extensions.Options;
 using Windows.ApplicationModel;
-using Windows.ApplicationModel.Activation;
 using Windows.ApplicationModel.Core;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Foundation.Collections;
@@ -34,24 +33,23 @@ using DispatcherQueueHandler = Windows.System.DispatcherQueueHandler;
 using Windows.UI.Core;
 using Windows.UI.Core.Preview;
 using Windows.UI.Input;
-using Windows.UI.Xaml;
-//using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using ContentDialog = Windows.UI.Xaml.Controls.ContentDialog;
-using ContentDialogResult = Windows.UI.Xaml.Controls.ContentDialogResult;
-using MenuFlyoutItem = Windows.UI.Xaml.Controls.MenuFlyoutItem;
-using MenuFlyout = Windows.UI.Xaml.Controls.MenuFlyout;
-using ToggleMenuFlyoutItem = Windows.UI.Xaml.Controls.ToggleMenuFlyoutItem;
-using MenuFlyoutSubItem = Windows.UI.Xaml.Controls.MenuFlyoutSubItem;
+using Microsoft.UI.Xaml;
+//using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Controls.Primitives;
+using ContentDialog = Microsoft.UI.Xaml.Controls.ContentDialog;
+using ContentDialogResult = Microsoft.UI.Xaml.Controls.ContentDialogResult;
+using MenuFlyoutItem = Microsoft.UI.Xaml.Controls.MenuFlyoutItem;
+using MenuFlyout = Microsoft.UI.Xaml.Controls.MenuFlyout;
+using ToggleMenuFlyoutItem = Microsoft.UI.Xaml.Controls.ToggleMenuFlyoutItem;
+using MenuFlyoutSubItem = Microsoft.UI.Xaml.Controls.MenuFlyoutSubItem;
 using static COTG.Debug;
-using Microsoft.Toolkit.Uwp.Helpers;
+using Microsoft.Toolkit.Helpers;
 using Microsoft.AppCenter.Analytics;
 using System.Collections.Generic;
 using System.Net;
 using Nito.AsyncEx;
-using Microsoft.Toolkit.Uwp.UI;
-using Windows.UI.Xaml.Controls;
-using Microsoft.Toolkit.Uwp;
+using Microsoft.UI.Xaml.Controls;
+using CommunityToolkit.WinUI;
 using Microsoft.AppCenter;
 using Microsoft.Web.WebView2.Core;
 
@@ -335,7 +333,7 @@ namespace COTG
 
 		}
 
-		private void OnAppUnhandledException(object sender, Windows.UI.Xaml.UnhandledExceptionEventArgs e)
+		private void OnAppUnhandledException(object sender, Microsoft.UI.Xaml.UnhandledExceptionEventArgs e)
 		{
 #if TRACE
 			System.Diagnostics.Debug.WriteLine($"Unhandled Exception: " + e.Message);
@@ -414,7 +412,7 @@ namespace COTG
 
 			await OnLaunchedOrActivated(args);
 		}
-		private async Task OnLaunchedOrActivated(IActivatedEventArgs args)
+		private async Task OnLaunchedOrActivated(Windows.ApplicationModel.Activation.IActivatedEventArgs args)
 		{
 			this.DebugSettings.FailFastOnErrors = false;
 #if TRACE || DEBUG
@@ -489,7 +487,7 @@ namespace COTG
 		}
 
 
-		protected override async void OnActivated(IActivatedEventArgs args)
+		protected override async void OnActivated(Windows.ApplicationModel.Activation.IActivatedEventArgs args)
 		{
 			var activation = args as IActivatedEventArgs;
 			globalQueue = DispatcherQueue.GetForCurrentThread();

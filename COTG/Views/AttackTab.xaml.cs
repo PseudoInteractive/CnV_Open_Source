@@ -2,7 +2,6 @@
 using COTG.Game;
 using COTG.Helpers;
 
-using Microsoft.Toolkit.Uwp.UI.Controls;
 using Microsoft.UI.Xaml.Controls;
 // The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234236
 using Nito.AsyncEx;
@@ -20,9 +19,9 @@ using System.Threading.Tasks;
 
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Storage;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Input;
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Input;
 
 using static COTG.Debug;
 using static COTG.Game.AttackPlan;
@@ -238,7 +237,7 @@ namespace COTG.Views
 			}
 
 		}
-		private void Sorting(object sender, Microsoft.Toolkit.Uwp.UI.Controls.DataGridColumnEventArgs e)
+		private void Sorting(object sender, CommunityToolkit.WinUI.DataGridColumnEventArgs e)
 		{
 			var dg = sender as DataGrid;
 			var cities = dg == attackGrid ? attacksUI : targetsUI;

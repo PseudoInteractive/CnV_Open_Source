@@ -2,10 +2,10 @@
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
-using Windows.UI.Xaml;
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Windows.UI.Xaml.Navigation;
+using Microsoft.UI.Xaml.Navigation;
 using Windows.Web.Http;
 using WebView = Microsoft.UI.Xaml.Controls.WebView2;
 using static COTG.Debug;
@@ -15,7 +15,7 @@ using COTG.Services;
 
 namespace COTG.Views
 {
-    public sealed partial class WebViewPage :Windows.UI.Xaml.Controls.Page, INotifyPropertyChanged
+    public sealed partial class WebViewPage :Microsoft.UI.Xaml.Controls.Page, INotifyPropertyChanged
     {
         // TODO WTS: Set the URI of the page to show by default
     //    public static Uri DefaultUrl;// = "https://docs.microsoft.com/windows/apps/";

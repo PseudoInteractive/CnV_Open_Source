@@ -15,17 +15,17 @@ using System.Web;
 
 using Windows.Foundation;
 using Windows.Foundation.Collections;
-using Windows.UI.Xaml;
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Navigation;
+using Microsoft.UI.Xaml.Controls.Primitives;
+using Microsoft.UI.Xaml.Data;
+using Microsoft.UI.Xaml.Input;
+using Microsoft.UI.Xaml.Media;
+using Microsoft.UI.Xaml.Navigation;
 using static COTG.Debug;
 // The Content Dialog item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
-using ContentDialog = Windows.UI.Xaml.Controls.ContentDialog;
-using ContentDialogResult = Windows.UI.Xaml.Controls.ContentDialogResult;
+using ContentDialog = Microsoft.UI.Xaml.Controls.ContentDialog;
+using ContentDialogResult = Microsoft.UI.Xaml.Controls.ContentDialogResult;
 namespace COTG.Views
 {
     public sealed partial class CityRename : ContentDialog
@@ -35,7 +35,7 @@ namespace COTG.Views
             this.InitializeComponent();
         }
 
-        private void ContentDialog_PrimaryButtonClick(ContentDialog sender, Windows.UI.Xaml.Controls.ContentDialogButtonClickEventArgs args)
+        private void ContentDialog_PrimaryButtonClick(ContentDialog sender, Microsoft.UI.Xaml.Controls.ContentDialogButtonClickEventArgs args)
         {
         }
 
@@ -187,7 +187,7 @@ namespace COTG.Views
 
 					   var result = await nameDialog.ShowAsync2();
 					   bool wantSplat = false;
-					   if (result == Windows.UI.Xaml.Controls.ContentDialogResult.Primary)
+					   if (result == Microsoft.UI.Xaml.Controls.ContentDialogResult.Primary)
 					   {
 						   if (!SettingsPage.useSuggested)
 							   lastName = nameDialog.name.Text;
@@ -249,7 +249,7 @@ namespace COTG.Views
 			return false;
 		}
 
-		//public static async Task ApplyTags(int cid,  Microsoft.Toolkit.Uwp.UI.Controls.WrapPanel tagControls)
+		//public static async Task ApplyTags(int cid,  CommunityToolkit.WinUI.WrapPanel tagControls)
 		//{
 		//	City city = City.GetOrAddCity(cid);
 		//	await GetCity.Post(cid); // need to fetch notes

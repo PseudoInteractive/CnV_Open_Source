@@ -5,8 +5,8 @@
     xmlns:local="using:COTG.Views"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:wuxdata="using:Windows.UI.Xaml.Data"
-    xmlns:tk="using:Microsoft.Toolkit.Uwp.UI.Controls"
+    xmlns:wuxdata="using:Microsoft.UI.Xaml.Data"
+    xmlns:tk="using:CommunityToolkit.WinUI"
     xmlns:winui="using:Microsoft.UI.Xaml.Controls"
     mc:Ignorable="d"
  >

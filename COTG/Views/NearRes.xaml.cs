@@ -8,23 +8,22 @@ using Telerik.UI.Xaml.Controls.Grid;
 using Telerik.UI.Xaml.Controls.Grid.Commands;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Navigation;
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Controls.Primitives;
+using Microsoft.UI.Xaml.Data;
+using Microsoft.UI.Xaml.Input;
+using Microsoft.UI.Xaml.Media;
+using Microsoft.UI.Xaml.Navigation;
 using static COTG.Game.Enum;
 using static COTG.Debug;
 using COTG.Helpers;
-using System.ComponentModel;
 using COTG.Services;
-using Microsoft.Toolkit.Uwp.UI.Controls;
+using CommunityToolkit.WinUI;
 using System.Threading.Tasks;
 using System.Web;
 using System.Text;
-using Windows.UI.Xaml.Media.Imaging;
+using Microsoft.UI.Xaml.Media.Imaging;
 using Microsoft.AppCenter.Analytics;
 
 namespace COTG.Views
@@ -476,7 +475,7 @@ namespace COTG.Views
 		}
 
 
-		private void supportGrid_Sorting(object sender, Microsoft.Toolkit.Uwp.UI.Controls.DataGridColumnEventArgs e)
+		private void supportGrid_Sorting(object sender, CommunityToolkit.WinUI.DataGridColumnEventArgs e)
 		{
 			var dg = supportGrid;
 			var tag = e.Column.Tag?.ToString();

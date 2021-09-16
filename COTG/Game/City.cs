@@ -6,8 +6,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Collections.Concurrent;
 using static COTG.Debug;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Media.Imaging;
+using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Media.Imaging;
 using COTG.Helpers;
 using System.Text.Json;
 using static COTG.Game.Enum;
@@ -2182,7 +2182,7 @@ namespace COTG.Game
 	}
 	public class BuildingCount
 	{
-		public Windows.UI.Xaml.Media.ImageBrush brush { get; set; }
+		public Microsoft.UI.Xaml.Media.ImageBrush brush { get; set; }
 		public int count { get; set; }
 
 	}

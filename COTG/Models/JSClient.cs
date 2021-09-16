@@ -7,13 +7,13 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using static COTG.Debug;
 using Windows.Web.Http.Filters;
-using Windows.UI.Xaml;
+using Microsoft.UI.Xaml;
 using Windows.System;
 using System.Text.Json;
 using COTG.Game;
 using System.Threading;
 using COTG.Helpers;
-using Windows.UI.Xaml.Media.Imaging;
+using Microsoft.UI.Xaml.Media.Imaging;
 using System.Collections.Concurrent;
 using Windows.Storage.Streams;
 using COTG.Services;
@@ -22,15 +22,13 @@ using System.Numerics;
 using COTG.JSON;
 using static COTG.Game.Enum;
 using Windows.UI.Input;
-using Microsoft.Graphics.Canvas;
 using Windows.Graphics.Imaging;
 using System.Text.Json.Serialization;
 using COTG.DB;
 using Microsoft.AppCenter;
 
-using ContentDialog = Windows.UI.Xaml.Controls.ContentDialog;
-using ContentDialogResult = Windows.UI.Xaml.Controls.ContentDialogResult;
-using Microsoft.Toolkit.Uwp.Helpers;
+using ContentDialog = Microsoft.UI.Xaml.Controls.ContentDialog;
+using ContentDialogResult = Microsoft.UI.Xaml.Controls.ContentDialogResult;
 using System.Text;
 using System.Web;
 using Windows.Security.Cryptography.Certificates;
@@ -38,7 +36,7 @@ using Windows.Foundation;
 using Windows.Web.Http.Headers;
 using DiscordCnV;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.Toolkit.Uwp.UI;
+using Microsoft.Toolkit.Helpers;
 using static COTG.Game.City;
 using Microsoft.Web.WebView2.Core;
 using Microsoft.Web;
@@ -486,7 +484,7 @@ namespace COTG
 				v.Close();
 			}
 		}
-		internal static void Initialize(Windows.UI.Xaml.Controls.Grid panel,WebView2 _view)
+		internal static void Initialize(Microsoft.UI.Xaml.Controls.Grid panel,WebView2 _view)
 		{
 
 
@@ -661,25 +659,25 @@ namespace COTG
 
 		}
 
-		private static void View_KeyDown(object sender,Windows.UI.Xaml.Input.KeyRoutedEventArgs e)
+		private static void View_KeyDown(object sender,Microsoft.UI.Xaml.Input.KeyRoutedEventArgs e)
 		{
 			Log("KeyDown");
 
 		}
 
-		private static void View_PreviewKeyDown(object sender,Windows.UI.Xaml.Input.KeyRoutedEventArgs e)
+		private static void View_PreviewKeyDown(object sender,Microsoft.UI.Xaml.Input.KeyRoutedEventArgs e)
 		{
 			Log("PreviewPointerKeyDown");
 		}
 
-		private static void View_PointerPressed(object sender,Windows.UI.Xaml.Input.PointerRoutedEventArgs e)
+		private static void View_PointerPressed(object sender,Microsoft.UI.Xaml.Input.PointerRoutedEventArgs e)
 		{
 			Log("PointerPressed");
 			ShellPage.UpdateMousePosition(e);
 			ShellPage.UpdateFocus();
 		}
 
-		private static void View_PointerMoved(object sender,Windows.UI.Xaml.Input.PointerRoutedEventArgs e)
+		private static void View_PointerMoved(object sender,Microsoft.UI.Xaml.Input.PointerRoutedEventArgs e)
 		{
 			Log("PointerMoved");
 			//			ShellPage.UpdateMousePosition(e);
@@ -688,7 +686,7 @@ namespace COTG
 			ShellPage.UpdateFocus();
 		}
 
-		private static void View_PointerExited(object sender,Windows.UI.Xaml.Input.PointerRoutedEventArgs e)
+		private static void View_PointerExited(object sender,Microsoft.UI.Xaml.Input.PointerRoutedEventArgs e)
 		{
 			Log("PointerExited");
 			//		ShellPage.UpdateMousePosition(e);
@@ -697,7 +695,7 @@ namespace COTG
 			ShellPage.UpdateFocus();
 		}
 
-		private static void View_PointerEntered(object sender,Windows.UI.Xaml.Input.PointerRoutedEventArgs e)
+		private static void View_PointerEntered(object sender,Microsoft.UI.Xaml.Input.PointerRoutedEventArgs e)
 		{
 			//			Log("PointerEntered");
 			//		ShellPage.UpdateMousePosition(e);
@@ -706,7 +704,7 @@ namespace COTG
 			ShellPage.UpdateFocus();
 		}
 
-		private static void View_CharacterReceived(UIElement sender,Windows.UI.Xaml.Input.CharacterReceivedRoutedEventArgs args)
+		private static void View_CharacterReceived(UIElement sender,Microsoft.UI.Xaml.Input.CharacterReceivedRoutedEventArgs args)
 		{
 			Log("Character recieved");
 		}
@@ -827,7 +825,7 @@ namespace COTG
 		//}
 		//private static void View_EffectiveViewportChanged(FrameworkElement sender, EffectiveViewportChangedEventArgs args)
 		//{
-		//	var scrollView = sender as Windows.UI.Xaml.Controls.ScrollViewer;
+		//	var scrollView = sender as Microsoft.UI.Xaml.Controls.ScrollViewer;
 		//	if (scrollView != null)
 		//	{
 		//		Log(args);
@@ -848,36 +846,7 @@ namespace COTG
 
 		//		 });
 		//		}
-		static async Task<CanvasBitmap> CreateAplhaMaskFromBitmap(IRandomAccessStream source, ICanvasResourceCreator canvas)
-		{
-
-			BitmapDecoder decoder = await BitmapDecoder.CreateAsync(source);
-			var transform = new BitmapTransform();
-			transform.ScaledHeight = decoder.PixelHeight / 4;
-			transform.ScaledWidth = decoder.PixelWidth / 4;
-			PixelDataProvider pixelData = await decoder.GetPixelDataAsync(
-				BitmapPixelFormat.Bgra8,
-				BitmapAlphaMode.Straight,
-				transform,
-				ExifOrientationMode.IgnoreExifOrientation,
-				ColorManagementMode.DoNotColorManage);
-			Log(decoder, decoder.BitmapPixelFormat.ToString());
-			Log(decoder, decoder.BitmapAlphaMode.ToString());
-			// no extract alpha
-			var pixels = pixelData.DetachPixelData();
-			var size = transform.ScaledWidth * transform.ScaledHeight;
-			var alphas = new byte[size];
-			int other = 0;
-			for (int i = 0; i < size; ++i)
-			{
-				if (pixels[i * 4 + 3] != 0)
-					++other;
-				pixels[i * 4 + 3] = (byte)(255 - pixels[i * 4 + 3]);
-			}
-			Log(other);
-			return CanvasBitmap.CreateFromBytes(canvas, pixels, (int)transform.ScaledWidth, (int)transform.ScaledHeight, Windows.Graphics.DirectX.DirectXPixelFormat.R8G8B8A8UIntNormalized);
-
-		}
+		
 
 		//private static void pointerEventHandler(object sender, PointerRoutedEventArgs e)
 		//{
@@ -2004,7 +1973,7 @@ private static async void ShowCouncillorsMissingDialog()
 		//	//            customValidationArgs.Reject();
 		//}
 		////	static HttpResponseMessage resp;
-		////	private static async void GetMe(Windows.UI.Xaml.Controls.WebViewWebResourceRequestedEventArgs args, Deferral def)
+		////	private static async void GetMe(Microsoft.UI.Xaml.Controls.WebViewWebResourceRequestedEventArgs args, Deferral def)
 		////	{
 		////		var client = new HttpClient(httpFilter);
 		////		//	var headers = httpClient.DefaultRequestHeaders;
@@ -2249,20 +2218,7 @@ private static async void ShowCouncillorsMissingDialog()
 
 		
 
-		static private void View_DOMContentLoaded(WebView2 sender, Windows.UI.Xaml.Controls.WebViewDOMContentLoadedEventArgs args)
-		{
-			//if (args.Uri.ToString() == "https://www.crownofthegods.com/home/")
-			//{
-			//	SetSessionCookie();
-			//}
 
-			//Log($"Dom loaded {args.Uri}");
-			//if (urlMatch.IsMatch(args.Uri.Host))
-			//{
-			//    Log("Match Regex!");
-			//    await AddJSPluginAsync();
-			//}
-		}
 
 		static DispatcherTimer presenceTimer;
 		class WaitOnCityDataData
@@ -3107,7 +3063,7 @@ private static async void ShowCouncillorsMissingDialog()
 		{
 
 			var dialog = new WhatsNewDialog();
-			dialog.DefaultButton = Windows.UI.Xaml.Controls.ContentDialogButton.Primary;
+			dialog.DefaultButton = Microsoft.UI.Xaml.Controls.ContentDialogButton.Primary;
 			dialog.fixesText.Text = new StreamReader((typeof(Fixes).Assembly).GetManifestResourceStream($"COTG.Notes.fixes.md")).ReadToEnd();
 			
 			var result = await dialog.ShowAsync2();
@@ -3190,23 +3146,7 @@ private static async void ShowCouncillorsMissingDialog()
 			*/
 		}
 
-		static private async void View_UnviewableContentIdentified(WebView2 sender, Windows.UI.Xaml.Controls.WebViewUnviewableContentIdentifiedEventArgs args)
-		{
-			if (await Windows.System.Launcher.LaunchUriAsync(args.Uri))
-			{
-				Note.Show($"Launched {args.Uri}");
-			}
-			else
-			{
-				Note.Show($"Failed to launch {args.Uri}");
-			}
-		}
-
-		static private void View_UnsupportedUriSchemeIdentified(WebView2 sender, Windows.UI.Xaml.Controls.WebViewUnsupportedUriSchemeIdentifiedEventArgs args)
-		{
-			Exception("UnsupportedUriScheme");
-		}
-
+		
 		static private void View_UnsafeContentWarningDisplaying(WebView2 sender, object args)
 		{
 			Exception("Unsafe");

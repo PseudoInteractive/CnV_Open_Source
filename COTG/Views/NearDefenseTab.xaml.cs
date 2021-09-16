@@ -8,27 +8,27 @@ using Telerik.UI.Xaml.Controls.Grid;
 using Telerik.UI.Xaml.Controls.Grid.Commands;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Navigation;
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Controls.Primitives;
+using Microsoft.UI.Xaml.Data;
+using Microsoft.UI.Xaml.Input;
+using Microsoft.UI.Xaml.Media;
+using Microsoft.UI.Xaml.Navigation;
 using static COTG.Game.Enum;
 using static COTG.Debug;
 using COTG.Helpers;
 using System.ComponentModel;
 using COTG.Services;
-using Microsoft.Toolkit.Uwp.UI.Controls;
+using CommunityToolkit.WinUI;
 using System.Threading.Tasks;
 using static COTG.Game.TroopTypeCountHelper;
 
 namespace COTG.Views
 {
 
-    public sealed partial class NearDefenseTab : UserTab,INotifyPropertyChanged
-    {
+    public sealed partial class NearDefenseTab : UserTab, Microsoft.UI.Xaml.Data.INotifyPropertyChanged
+	{
         public static NearDefenseTab instance;
         public static bool IsVisible() => instance.isVisible;
         public bool waitReturn { get; set; }
@@ -231,7 +231,7 @@ namespace COTG.Views
 
       
 
-        public event PropertyChangedEventHandler PropertyChanged;
+        public event Microsoft.UI.Xaml.Data.PropertyChangedEventHandler PropertyChanged;
         public void OnPropertyChanged(string propertyName) {
 
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
@@ -401,7 +401,7 @@ namespace COTG.Views
 		}
 
 
-		private void supportGrid_Sorting(object sender, Microsoft.Toolkit.Uwp.UI.Controls.DataGridColumnEventArgs e)
+		private void supportGrid_Sorting(object sender, CommunityToolkit.WinUI.DataGridColumnEventArgs e)
         {
             var dg = supportGrid;
             var tag = e.Column.Tag?.ToString();

@@ -6,10 +6,10 @@ using System.Threading;
 using System.Threading.Tasks;
 
 using Windows.System;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Shapes;
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Input;
+using Microsoft.UI.Xaml.Shapes;
 
 using static COTG.Debug;
 using static COTG.Game.City;
@@ -368,7 +368,7 @@ App.QueueOnUIThread( ()=>
 
 	
 
-		private void KeyboardProxy_KeyDown(object sender, Windows.UI.Xaml.Input.KeyRoutedEventArgs e)
+		private void KeyboardProxy_KeyDown(object sender, Microsoft.UI.Xaml.Input.KeyRoutedEventArgs e)
 		{
 			if(isHitTestVisible)
 			App.InputRecieved();

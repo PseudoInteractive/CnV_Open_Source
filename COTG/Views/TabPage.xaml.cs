@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 using COTG.Game;
 
-using Microsoft.Toolkit.Uwp.UI;
+using CommunityToolkit.WinUI;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
 
@@ -16,14 +16,14 @@ using Windows.ApplicationModel.DataTransfer;
 using Windows.Foundation.Metadata;
 using Windows.UI.ViewManagement;
 using Windows.UI.WindowManagement;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Hosting;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Navigation;
-using Microsoft.Toolkit.Uwp.UI;
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Hosting;
+using Microsoft.UI.Xaml.Input;
+using Microsoft.UI.Xaml.Navigation;
+using CommunityToolkit.WinUI;
 using static COTG.Debug;
-using Windows.UI.Xaml.Media;
+using Microsoft.UI.Xaml.Media;
 using SymbolIconSource = Microsoft.UI.Xaml.Controls.SymbolIconSource;
 using Microsoft.Xna.Framework.Input;
 

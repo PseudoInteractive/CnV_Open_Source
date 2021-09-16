@@ -5,26 +5,26 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
-using Windows.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Controls;
 using System.Diagnostics.Contracts;
 using System.Collections.Generic;
 using Telerik.UI.Xaml.Controls.Grid;
 using static COTG.Debug;
 using Windows.ApplicationModel.Core;
 using Windows.UI.Core;
-using Windows.UI.Xaml;
+using Microsoft.UI.Xaml;
 using Telerik.Core.Data;
 using Telerik.Data.Core;
 using Telerik.Data;
 using System.Collections.Specialized;
 using Windows.Foundation;
-using Microsoft.Toolkit.Uwp;
-using Windows.UI.Xaml.Input;
+using CommunityToolkit.WinUI;
+using Microsoft.UI.Xaml.Input;
 using COTG.Services;
 using System.Collections;
 using Windows.UI.Input;
 using COTG.Helpers;
-using Windows.UI.Xaml.Navigation;
+using Microsoft.UI.Xaml.Navigation;
 using System.Linq;
 using System.Threading.Tasks;
 using static COTG.Game.Enum;
@@ -404,7 +404,7 @@ namespace COTG.Views
 		}
 
 		//      static Dungeon lastTooltip;
-		//private void DungeonPointerMoved(object sender, Windows.UI.Xaml.Input.PointerRoutedEventArgs e)
+		//private void DungeonPointerMoved(object sender, Microsoft.UI.Xaml.Input.PointerRoutedEventArgs e)
 		//{
 		//          var physicalPoint = e.GetCurrentPoint(sender as RadDataGrid);
 		//          var point = new Point { X = physicalPoint.Position.X, Y = physicalPoint.Position.Y };

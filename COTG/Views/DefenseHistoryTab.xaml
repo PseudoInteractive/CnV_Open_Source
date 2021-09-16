@@ -18,7 +18,7 @@
         
         <telerikGrid:RadDataGrid x:Name="historyGrid"
 AllowFocusOnInteraction="True"
-								 							Margin="4,4,8,16"
+								 							
 
 								 IsTabStop="True"
                         AutoGenerateColumns="False"

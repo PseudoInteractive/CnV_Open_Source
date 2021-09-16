@@ -16,13 +16,12 @@ using static COTG.Game.Enum;
 using COTG.Views;
 using System.Globalization;
 using COTG.JSON;
-using Microsoft.Graphics.Canvas;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.IO;
 using Microsoft.UI.Xaml.Controls;
-using Windows.UI.Xaml;
-using ContentDialog = Windows.UI.Xaml.Controls.ContentDialog;
-using ContentDialogResult = Windows.UI.Xaml.Controls.ContentDialogResult;
+using Microsoft.UI.Xaml;
+using ContentDialog = Microsoft.UI.Xaml.Controls.ContentDialog;
+using ContentDialogResult = Microsoft.UI.Xaml.Controls.ContentDialogResult;
 using TroopTypeCounts = COTG.Game.TroopTypeCounts;
 //COTG.DArray<COTG.Game.TroopTypeCount>;
 using TroopTypeCountsRef = COTG.Game.TroopTypeCounts;
@@ -1125,7 +1124,7 @@ namespace COTG.Services
 			public string ts { get; set; }
 		};
 
-		public static async Task SendRein(int cid, int rcid, TroopTypeCounts tsSend, DateTimeOffset departAt, DateTimeOffset arrival, float travelTime, int splits, Windows.UI.Xaml.UIElement uie)
+		public static async Task SendRein(int cid, int rcid, TroopTypeCounts tsSend, DateTimeOffset departAt, DateTimeOffset arrival, float travelTime, int splits, Microsoft.UI.Xaml.UIElement uie)
 		{
 			var tttv = new List<tt_tv>();
 			tsSend.ForEach((t =>
