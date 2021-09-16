@@ -1018,7 +1018,7 @@ namespace COTG.Services
 
 				}
 			}
-			App.QueueOnUIThreadIdle(()
+			App.QueueOnUIThread(()
 				=>
 			{
 				MainPage.instance.rWood.Text = $"Wood: {(rWood * 0.001).RoundToInt():N0} k/h";

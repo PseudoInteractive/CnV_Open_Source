@@ -130,7 +130,7 @@ namespace COTG.Views
 		{
 			if (items.Count > 0 && visible)
 			{
-				App.QueueOnUIThreadIdle(() =>
+				App.QueueOnUIThread(() =>
 				
 				{
 
@@ -723,7 +723,7 @@ namespace COTG.Views
 			//           Log("Tapped");
 			//   listView.Focus(FocusState.Programmatic);
 		//	if(input.Focus(FocusState.)
-			App.QueueOnUIThreadIdle(() => input.Focus(FocusState.Programmatic));
+			App.QueueOnUIThread(() => input.Focus(FocusState.Programmatic));
 		}
 
 

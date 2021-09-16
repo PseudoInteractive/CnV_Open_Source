@@ -140,7 +140,7 @@ namespace COTG.Views
 
 		public void SetPlus(bool set)
         {
-			App.QueueOnUIThreadIdle( ()=>{
+			App.QueueOnUIThread( ()=>{
             (var tp, var tvi) = GetViewItem();
             if(tvi!=null)
             {

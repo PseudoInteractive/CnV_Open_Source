@@ -19,6 +19,15 @@ namespace COTG.Views
 {
 	public class KeyboardProxy : Control
 	{
+		protected override void OnKeyDown(KeyRoutedEventArgs e)
+		{
+			Log("keydown");
+		}
+		protected override void OnPreviewKeyDown(KeyRoutedEventArgs e)
+		{
+			Log("preview keydown");
+			base.OnPreviewKeyDown(e);
+		}
 	}
 
 	public partial class ShellPage
@@ -144,48 +153,82 @@ namespace COTG.Views
 			
 	//		Log($"!Focu92: {ShellPage.isHitTestVisible} o{ShellPage.isMouseOver}");
 
-			updateFocus.Go(runAgainIfStarted:false);
+			updateCanvasVisibility.Go(runAgainIfStarted:true);
 		}
 
-		static Debounce updateFocus = new(()=>{
+		static Debounce updateCanvasVisibility = new(()=>
+		{
 			var wantVisible = ShellPage.isHitTestVisible;
-			var note =0;
+			var isOverCanvas = isMouseOverCanvas;
+			var note = 0;
 			if(ShellPage.canvas.IsHitTestVisible!= wantVisible)
 			{
 				_isHitTestVisible=wantVisible;
 				ShellPage.canvas.IsHitTestVisible = wantVisible;
-				if(!wantVisible)
-					JSClient.view.Focus(FocusState.Programmatic);
-				note|=1;	
+				//if(!wantVisible)
+				//	JSClient.view.Focus(FocusState.Programmatic);
+				TakeFocusIfAppropriate();
+				note|=1;
 			}
 
-			ShellPage.canvas.Visibility = ShellPage.forceAllowWebFocus ? Visibility.Collapsed : Visibility.Visible;
-			if(wantVisible  && 
-				mousePosition.X >= 0 && mousePosition.Y >= 0 && 
-				mousePosition.X <= canvas.ActualWidth && mousePosition.Y <= canvas.ActualHeight )
+			
+			if(note!=0)
+				Note.Show($"!Focu{note}: {wantVisible} f{canvas.IsHitTestVisible} o{isOverCanvas}");
+
+
+			return Task.CompletedTask;
+		}) {
+			runOnUiThead=true,
+			debounceDelay=100,
+			throttleDelay=100 };
+
+		static void TakeFocusIfAppropriate()
+		{
+			takeFocusIfAppropriate.Go();
+		}
+		static Debounce takeFocusIfAppropriate = new(() =>
+		{
+				var isOverCanvas = isMouseOverCanvas;
+			var note = 0;
+			if(isOverCanvas)
 			{
-				if(keyboardProxy.FocusState == FocusState.Unfocused)
+				if(FocusManager.GetFocusedElement() != keyboardProxy)
 				{
 					if(JSClient.view is not null && App.IsKeyPressedShift())
 					{
-						var f = JSClient.view.Focus(FocusState.Pointer);
+						var f = JSClient.view.Focus(FocusState.Programmatic);
 						Assert(f);
 					}
+					else if( App.IsKeyPressedControl())
 					{
-						var f = keyboardProxy.Focus(FocusState.Programmatic);
-						Assert(f);
+						TabPage.mainTabs.Focus(FocusState.Programmatic);
 					}
+App.QueueOnUIThread( ()=>
+					{
+								var f = keyboardProxy.Focus(FocusState.Programmatic);
+								Assert(f);
+					} );
 					note|=2;
 				}
 			}
 			if(note!=0)
-				Note.Show($"!Focu{note}: {wantVisible} f{ShellPage.canvas.IsHitTestVisible} o{ShellPage.isMouseOver}");
-
-
+				Note.Show($"!Focu{note}: f{canvas.IsHitTestVisible} o{isOverCanvas}");
 			return Task.CompletedTask;
-		}) {runOnUiThead=true,debounceDelay=100,throttleDelay=100 };
 
-		private static bool isMouseOver;
+		})
+		{
+			runOnUiThead=true,
+			debounceDelay=100,
+			throttleDelay=100
+		};
+
+		private static bool IsMouseInCanvas()
+		{
+			return 
+							mousePosition.X >= 0 && mousePosition.Y >= 0 &&
+							mousePosition.X <= canvas.ActualWidth && mousePosition.Y <= canvas.ActualHeight;
+		}
+		private static bool isMouseOverCanvas => IsMouseInCanvas() && isHitTestVisible;
 
 		public static void SetViewModeCity()
 		{
@@ -278,10 +321,12 @@ namespace COTG.Views
 			};
 
 			canvas.Children.Add(keyboardProxy);
-			keyboardProxy.AddHandler(KeyDownEvent, new KeyEventHandler(KeyboardProxy_KeyDown), true);
+//			canvas.PreviewKeyDown+=KeyboardProxy_KeyDown;
+			canvas.KeyDown += KeyboardProxy_KeyDown;
+		//	keyboardProxy.AddHandler(KeyDownEvent,new KeyEventHandler(KeyboardProxy_KeyDown),true);
 			//keyboardProxy.LostFocus += KeyboardProxy_LostFocus;
 			//keyboardProxy.GotFocus += KeyboardProxy_GotFocus;
-		//	keyboardProxy.PointerWheelChanged+=KeyboardProxy_PointerWheelChanged;
+			//	keyboardProxy.PointerWheelChanged+=KeyboardProxy_PointerWheelChanged;
 			canvas.PointerWheelChanged += KeyboardProxy_PointerWheelChanged;
 			//canvas.AddHandler(canvas.Children.Add(keyboardProxy);)
 //			GettingFocusEvent
@@ -309,6 +354,7 @@ namespace COTG.Views
 			return (canvas, null);
 		}
 
+	
 		private void KeyboardProxy_PointerWheelChanged(object sender,PointerRoutedEventArgs e)
 		{
 			var pt = e.GetCurrentPoint(canvas);
@@ -324,6 +370,7 @@ namespace COTG.Views
 
 		private void KeyboardProxy_KeyDown(object sender, Windows.UI.Xaml.Input.KeyRoutedEventArgs e)
 		{
+			if(isHitTestVisible)
 			App.InputRecieved();
 			//if (CityBuild.menuOpen)
 			//{

@@ -278,6 +278,7 @@ namespace COTG
 
 		static void OnKeyDown(CoreWindow sender, KeyEventArgs args)
 		{
+			Note.Show("Key!");
 			var key = args.VirtualKey;
 	
 			OnKeyDown(key);
@@ -583,12 +584,24 @@ namespace COTG
 			
 				window.PointerMoved += OnPointerMoved;
 				window.PointerPressed += OnPointerPressed; ;
-			//	window.PointerExited+=Window_PointerExited;
-			///	window.PointerEntered+=Window_PointerEntered;
+				window.PointerExited+=Window_PointerExited; ;
+				window.PointerEntered+=Window_PointerEntered; ;
 				window.KeyDown += OnKeyDown;
 				window.KeyUp += OnKeyUp;
 
 			}
+		}
+
+		private static void Window_PointerEntered(CoreWindow sender,PointerEventArgs args)
+		{
+			ShellPage.UpdateMousePosition(args,ShellPage.instance);
+			ShellPage.UpdateFocus();
+		}
+
+		private static void Window_PointerExited(CoreWindow sender,PointerEventArgs args)
+		{
+			ShellPage.UpdateMousePosition(args, ShellPage.instance);
+			ShellPage.UpdateFocus();
 		}
 
 		//private static void Window_PointerEntered(CoreWindow sender,PointerEventArgs args)
@@ -669,11 +682,13 @@ namespace COTG
 
 		private static void OnPointerMoved(CoreWindow sender, PointerEventArgs args)
 		{
-		//	ShellPage.UpdateMousePosition(args);
-//			args.KeyModifiers.UpdateKeyModifiers();
+			//	ShellPage.UpdateMousePosition(args);
+			//			args.KeyModifiers.UpdateKeyModifiers();
 
 			// reset timer if active
-		//	InputRecieved();
+			//	InputRecieved();
+			ShellPage.UpdateMousePosition(args,ShellPage.instance);
+			ShellPage.UpdateFocus();
 		}
 
 		private static async void ProcessIdleTasks()
@@ -1071,7 +1086,7 @@ namespace COTG
 //			d.TryRunIdleAsync((_)=> action() );
 		}
 
-		public static void QueueOnUIThreadIdle(Windows.System.DispatcherQueueHandler action)
+		public static void QueueOnUIThread(Windows.System.DispatcherQueueHandler action)
 		{
 			DispatchOnUIThread(action,priority: DispatcherQueuePriority.Low,alwaysQueue: true);
 			//			var d = GlobalDispatcher();
@@ -1542,7 +1557,7 @@ namespace COTG
 					ShellPage.coreInputSource.PointerCursor = type,DispatcherQueuePriority.Low);
 
 			}
-			App.QueueOnUIThreadIdle( () =>
+			App.QueueOnUIThread( () =>
 				CoreWindow.GetForCurrentThread().PointerCursor = type);
 		}
 

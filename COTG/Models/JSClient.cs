@@ -27,7 +27,7 @@ using Windows.Graphics.Imaging;
 using System.Text.Json.Serialization;
 using COTG.DB;
 using Microsoft.AppCenter;
-using WebView = Microsoft.UI.Xaml.Controls.WebView2;
+
 using ContentDialog = Windows.UI.Xaml.Controls.ContentDialog;
 using ContentDialogResult = Windows.UI.Xaml.Controls.ContentDialogResult;
 using Microsoft.Toolkit.Uwp.Helpers;
@@ -41,7 +41,10 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.Toolkit.Uwp.UI;
 using static COTG.Game.City;
 using Microsoft.Web.WebView2.Core;
+using Microsoft.Web;
 using CoreWebView = Microsoft.Web.WebView2.Core.CoreWebView2;
+using COTG.CnVChat;
+
 namespace COTG
 {
 	/// <summary>
@@ -62,7 +65,7 @@ namespace COTG
 
 		//        public static JsonDocument ppdt;
 		public static JSClient instance = new JSClient();
-		public static WebView view;
+		public static WebView2 view;
 		public static CoreWebView coreWebView;
 		//public static WebViewBrush webViewBrush; 
 		public static HttpBaseProtocolFilter httpFilter;
@@ -483,7 +486,7 @@ namespace COTG
 				v.Close();
 			}
 		}
-		internal static void Initialize(Windows.UI.Xaml.Controls.Grid panel, WebView _view)
+		internal static void Initialize(Windows.UI.Xaml.Controls.Grid panel,WebView2 _view)
 		{
 
 
@@ -589,8 +592,8 @@ namespace COTG
 				coreWebView.WebResourceRequested += View_WebResourceRequested;
 				coreWebView.WebMessageReceived +=CoreWebView_WebMessageReceived;
 					//	view.EffectiveViewportChanged += View_EffectiveViewportChanged;
-					//	view.AddHandler(WebView.KeyDownEvent, new KeyEventHandler(webViewKeyDownHandler), true);
-					//	view.AddHandler(WebView.PointerPressedEvent, new PointerEventHandler(pointerEventHandler), true);
+					//	view.AddHandler(WebView2.KeyDownEvent, new KeyEventHandler(webViewKeyDownHandler), true);
+					//	view.AddHandler(WebView2.PointerPressedEvent, new PointerEventHandler(pointerEventHandler), true);
 					//	view.UnsafeContentWarningDisplaying += View_UnsafeContentWarningDisplaying;
 					//	view.UnsupportedUriSchemeIdentified += View_UnsupportedUriSchemeIdentified;
 
@@ -602,8 +605,8 @@ namespace COTG
 					view.PointerExited+=View_PointerExited;
 					view.PointerMoved+=View_PointerMoved;
 					view.PointerPressed+=View_PointerPressed;
-					view.KeyDown+=View_KeyDown;
-					view.PreviewKeyDown+=View_PreviewKeyDown;
+				//	view.KeyDown+=View_KeyDown;
+				//	view.PreviewKeyDown+=View_PreviewKeyDown;
 				view.NavigationStarting+=View_NavigationStarting;
 				view.NavigationCompleted+=View_NavigationCompleted; ;
 				//	view.NavigationCompleted+=View_NavigationCompleted;
@@ -672,27 +675,35 @@ namespace COTG
 		private static void View_PointerPressed(object sender,Windows.UI.Xaml.Input.PointerRoutedEventArgs e)
 		{
 			Log("PointerPressed");
+			ShellPage.UpdateMousePosition(e);
+			ShellPage.UpdateFocus();
 		}
 
 		private static void View_PointerMoved(object sender,Windows.UI.Xaml.Input.PointerRoutedEventArgs e)
 		{
-		//	Log("PointerMoved");
-//			ShellPage.UpdateMousePosition(e);
-//			ShellPage.UpdateFocus();
+			Log("PointerMoved");
+			//			ShellPage.UpdateMousePosition(e);
+			//			ShellPage.UpdateFocus();
+			ShellPage.UpdateMousePosition(e);
+			ShellPage.UpdateFocus();
 		}
 
 		private static void View_PointerExited(object sender,Windows.UI.Xaml.Input.PointerRoutedEventArgs e)
 		{
-	//		Log("PointerExited");
-	//		ShellPage.UpdateMousePosition(e);
-	//		ShellPage.UpdateFocus();
+			Log("PointerExited");
+			//		ShellPage.UpdateMousePosition(e);
+			//		ShellPage.UpdateFocus();
+			ShellPage.UpdateMousePosition(e);
+			ShellPage.UpdateFocus();
 		}
 
 		private static void View_PointerEntered(object sender,Windows.UI.Xaml.Input.PointerRoutedEventArgs e)
 		{
-			Log("PointerEntered");
-	//		ShellPage.UpdateMousePosition(e);
-	//		ShellPage.UpdateFocus();
+			//			Log("PointerEntered");
+			//		ShellPage.UpdateMousePosition(e);
+			//		ShellPage.UpdateFocus();
+			ShellPage.UpdateMousePosition(e);
+			ShellPage.UpdateFocus();
 		}
 
 		private static void View_CharacterReceived(UIElement sender,Windows.UI.Xaml.Input.CharacterReceivedRoutedEventArgs args)
@@ -759,7 +770,7 @@ namespace COTG
 		//	args.NewWindow.Settings.UserAgent = userAgent;
 		//}
 
-		private static void View_NavigationCompleted(WebView sender,CoreWebView2NavigationCompletedEventArgs args)
+		private static void View_NavigationCompleted(WebView2 sender,CoreWebView2NavigationCompletedEventArgs args)
 		{
 			Log("Nav complete: " + args);
 			if(hasMainPageLoaded)
@@ -2056,7 +2067,7 @@ private static async void ShowCouncillorsMissingDialog()
 
 		////	}
 
-		private static void View_NavigationStarting(WebView sender,CoreWebView2NavigationStartingEventArgs args)
+		private static void View_NavigationStarting(WebView2 sender,CoreWebView2NavigationStartingEventArgs args)
 		{
 
 			try
@@ -2131,7 +2142,7 @@ private static async void ShowCouncillorsMissingDialog()
 																		 //   headers.Add("Accept", @"*/*");
 																		 //                            httpClient.DefaultRequestHeaders.Clear();
 							httpClient.DefaultRequestHeaders.AcceptLanguage.TryParseAdd("en-US,en;q=0.5");
-							//    httpClient.DefaultRequestHeaders.UserAgent.ParseAdd(@"Mozilla/5.0 (Windows NT 10.0; Win64; x64; WebView/3.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.102 Safari/537.36 Edge/18.19631");
+							//    httpClient.DefaultRequestHeaders.UserAgent.ParseAdd(@"Mozilla/5.0 (Windows NT 10.0; Win64; x64; WebView2/3.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.102 Safari/537.36 Edge/18.19631");
 							//    httpClient.DefaultRequestHeaders.Add("Access-Control-Allow-Credentials", "true");
 							httpClient.DefaultRequestHeaders.Accept.TryParseAdd("*/*");
 							// httpClient.DefaultRequestHeaders.TryAppendWithoutValidation("X-Requested-With", "XMLHttpRequest");
@@ -2238,7 +2249,7 @@ private static async void ShowCouncillorsMissingDialog()
 
 		
 
-		static private void View_DOMContentLoaded(WebView sender, Windows.UI.Xaml.Controls.WebViewDOMContentLoadedEventArgs args)
+		static private void View_DOMContentLoaded(WebView2 sender, Windows.UI.Xaml.Controls.WebViewDOMContentLoadedEventArgs args)
 		{
 			//if (args.Uri.ToString() == "https://www.crownofthegods.com/home/")
 			//{
@@ -2565,9 +2576,12 @@ private static async void ShowCouncillorsMissingDialog()
 								   {
 									   var c = ShellPage.JSPointToScreen(x, y);
 									   if (c.x > 0 && c.y > 0)
+									   {
 										   ShellPage.Canvas_PointerPressedJS(c.x, c.y, kind);
+									
+									   }
 								   }
-								   ShellPage.UpdateFocus();
+								   
 								   break;
 							   }
 						   //case "cityinfo":
@@ -3015,8 +3029,9 @@ private static async void ShowCouncillorsMissingDialog()
 
 				   if (gotCreds)
 				   {
-					  
 
+					   CnVChatClient.instance = new();
+					   CnVChatClient.instance.Initialize();
 					   ShellPage.SetViewModeCity();
 
 					   APlayfab.Login();
@@ -3175,7 +3190,7 @@ private static async void ShowCouncillorsMissingDialog()
 			*/
 		}
 
-		static private async void View_UnviewableContentIdentified(WebView sender, Windows.UI.Xaml.Controls.WebViewUnviewableContentIdentifiedEventArgs args)
+		static private async void View_UnviewableContentIdentified(WebView2 sender, Windows.UI.Xaml.Controls.WebViewUnviewableContentIdentifiedEventArgs args)
 		{
 			if (await Windows.System.Launcher.LaunchUriAsync(args.Uri))
 			{
@@ -3187,12 +3202,12 @@ private static async void ShowCouncillorsMissingDialog()
 			}
 		}
 
-		static private void View_UnsupportedUriSchemeIdentified(WebView sender, Windows.UI.Xaml.Controls.WebViewUnsupportedUriSchemeIdentifiedEventArgs args)
+		static private void View_UnsupportedUriSchemeIdentified(WebView2 sender, Windows.UI.Xaml.Controls.WebViewUnsupportedUriSchemeIdentifiedEventArgs args)
 		{
 			Exception("UnsupportedUriScheme");
 		}
 
-		static private void View_UnsafeContentWarningDisplaying(WebView sender, object args)
+		static private void View_UnsafeContentWarningDisplaying(WebView2 sender, object args)
 		{
 			Exception("Unsafe");
 		}

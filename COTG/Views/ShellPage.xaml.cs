@@ -241,9 +241,9 @@ namespace COTG.Views
 			// foreach (var i in webView.KeyboardAccelerators) i.IsEnabled = false;
 			// webView.AllowFocusOnInteraction = false; c.hitTest.Margin= webView.Margin = new
 			// Thickness(0, 0, 11, 0);
-	//		grid.Children.Add(webView);
+			//		grid.Children.Add(webView);
 
-
+			FocusManager.GotFocus+=FocusManager_GotFocus;
 			
 			//c.hitTest.Fill = JSClient.webViewBrush;
 			//				var visual = ElementCompositionPreview.GetElementVisual(c.canvas);
@@ -359,6 +359,11 @@ namespace COTG.Views
 			//{
 			//	DGame.Startup();
 			//});
+		}
+
+		private void FocusManager_GotFocus(object sender,FocusManagerGotFocusEventArgs e)
+		{
+			Note.Show($"Focus!!: {e.NewFocusedElement}");
 		}
 
 		//void GetPlacement()
@@ -1335,6 +1340,8 @@ namespace COTG.Views
 			//canvasVisible = !hasFocus;
 			//isHitTestVisible = !hasFocus;
 			//SetWebViewHasFocus(hasFocus);
+			ShellPage.canvas.Visibility = ShellPage.forceAllowWebFocus ? Visibility.Collapsed : Visibility.Visible;
+
 			ShellPage.hasKeyboardFocus=false;
 			ShellPage.UpdateFocus();
 

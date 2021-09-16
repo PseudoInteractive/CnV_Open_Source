@@ -26,9 +26,11 @@ using COTG.Services;
 using SharpDX.Direct2D1;
 using COTG.Helpers;
 using Windows.UI.Xaml.Media.Imaging;
+using MessagePack;
 
 namespace CnVDiscord
 {
+
 	public static class Discord
 	{
 		public static Dictionary<string, string> avatarUrls = new();
@@ -265,6 +267,32 @@ namespace CnVDiscord
 				await e.Context.RespondAsync("", embed: embed).ConfigureAwait(false);
 			}
 		}
+		//[MessagePackObject]
+		//struct CnvSnowflake
+		//{
+		//	[Key(0)]
+		//	public long Id;
+		//}
+
+		//[MessagePackObject]
+		//struct CnvMessage :CnvSnowflake
+		//{
+		//	[Key(100)] // Note that if we use numbers for keys, we need to ensure that they don't conflict with keys from parent classes
+		//			   // we will just reserve 0..99 for the snowflake object
+		//			   // Alternatively we could use strings for properties (and again ensure no conflicts) but this is less efficient
+		//			   // Simular to JSON property names, MessagePack id's must never be reused as you version and update objects
+		//			   // For backwards compat Id's that used to exist will be ignored in newer objects and keys that do not yet exist will have default values
+
+		//	internal List<CnvAttachment> _attachments = new List<CnvAttachment>();  // now we need CnvAttachment too :(
+
+
+		//	[Key(101)]
+		//	internal List<CnvReaction> _reactions = new List<CnvReaction>();
+
+
+
+		//}
+		
 
 		public static string DisplayName(DiscordUser user)
 		{

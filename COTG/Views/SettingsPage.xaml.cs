@@ -104,7 +104,6 @@ namespace COTG.Views
 		public static bool returnRaidsBeforeSend;
 		public static float flagScale=0.25f;
 		public static float iconScale = 0.5f;
-		public static int[] raidCarrySteps;
 
 		public static bool[] includeRaiders = new[] {
 				false, false,true,true,
@@ -284,7 +283,23 @@ namespace COTG.Views
 		public static float raidCarryMax = 2.00f;
 		public static int intialStorehouses=1;
 		public static int intialMarkets = 1;
-		
+		public static int raidCarryMinPercent
+		{
+			get => (raidCarryMin*100.0).RoundToInt();
+			set => raidCarryMin = value*(0.01f);
+		}
+		public static int raidCarryTargetPercent
+		{
+			get => (raidCarryTarget*100.0).RoundToInt();
+			set => raidCarryTarget = value*(0.01f);
+		}
+		public static int raidCarryMaxPercent
+		{
+			get => (raidCarryMax*100.0).RoundToInt();
+			set => raidCarryMax = value*(0.01f);
+		}
+
+
 		public static bool IsThemeWinter()
 		{
 			return theme == Theme.louWinter;

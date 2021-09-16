@@ -37,33 +37,8 @@ namespace COTG.Views
 		{
 			Dungeon.Initialize();
 			instance = new();
-			if (raidCarrySteps == null)
-			{
-				raidCarrySteps = new int[raidStepCount];
-				int put = 85;
-				for (int i = 0; i < raidStepCount / 3 + 2; ++i)
-				{
-					raidCarrySteps[i] = put;
-					put += 5;
-				}
-				for (int i = raidStepCount / 3 + 2; i < raidStepCount * 2 / 3; ++i)
-				{
-					raidCarrySteps[i] = put;
-					put += 15;
-				}
-				for (int i = 2 * raidStepCount / 3; i < raidStepCount; ++i)
-				{
-					raidCarrySteps[i] = put;
-					put += 25;
-				}
-			}
-			instance.raidCarryMinBox.ItemsSource = raidCarrySteps;
-			instance.raidCarryMaxBox.ItemsSource = raidCarrySteps;
-			instance.raidCarryTargetBox.ItemsSource = raidCarrySteps;
-
-			instance.raidCarryTargetBox.SelectedIndex = raidCarrySteps.IndexOfClosest((raidCarryTarget * 100).RoundToInt());
-			instance.raidCarryMinBox.SelectedIndex = raidCarrySteps.IndexOfClosest((raidCarryMin * 100).RoundToInt());
-			instance.raidCarryMaxBox.SelectedIndex = raidCarrySteps.IndexOfClosest((raidCarryMax * 100).RoundToInt());
+			
+		
 		}
 		static void AddStep()
 		{
@@ -161,53 +136,53 @@ namespace COTG.Views
 			}
 		}
 
-		private void RaidCarrySubmitted(ComboBox sender, ComboBoxTextSubmittedEventArgs args)
-		{
-			//     Log("Submit: " + args.Text);
-			if (args.Text.TryParseInt(out var _raidCarry))
-			{
-				var v = _raidCarry;
-				var bestId = raidCarrySteps.IndexOfClosest(v);
+		//private void RaidCarrySubmitted(ComboBox sender, ComboBoxTextSubmittedEventArgs args)
+		//{
+		//	//     Log("Submit: " + args.Text);
+		//	if (args.Text.TryParseInt(out var _raidCarry))
+		//	{
+		//		var v = _raidCarry;
+		//		var bestId = raidCarrySteps.IndexOfClosest(v);
 
-				Log($"Add raid step {v}");
+		//		Log($"Add raid step {v}");
 
-				raidCarrySteps[bestId] = v;
+		//		raidCarrySteps[bestId] = v;
 
-				//raidSteps;
-				switch (sender.Name)
-				{
-					case nameof(raidCarryMaxBox):
-						SetCarry(ref SettingsPage.raidCarryMax, _raidCarry, 2, true);
-						break;
-					case nameof(raidCarryMinBox):
-						SetCarry(ref SettingsPage.raidCarryMin, _raidCarry, 0, true);
-						break;
-					default:
-						SetCarry(ref SettingsPage.raidCarryTarget, _raidCarry, 1, true);
-						break;
-				}
+		//		//raidSteps;
+		//		switch (sender.Name)
+		//		{
+		//			case nameof(raidCarryMaxBox):
+		//				SetCarry(ref SettingsPage.raidCarryMax, _raidCarry, 2, true);
+		//				break;
+		//			case nameof(raidCarryMinBox):
+		//				SetCarry(ref SettingsPage.raidCarryMin, _raidCarry, 0, true);
+		//				break;
+		//			default:
+		//				SetCarry(ref SettingsPage.raidCarryTarget, _raidCarry, 1, true);
+		//				break;
+		//		}
 
-				args.Handled = true;
-			}
-			else
-			{
+		//		args.Handled = true;
+		//	}
+		//	else
+		//	{
 				
-				Assert(false);
-			}
-		}
+		//		Assert(false);
+		//	}
+		//}
 
-		private static void UpdateCarryBox(ComboBox box, float carry, bool sourceUpdated, bool textUpdated)
-		{
-			if(sourceUpdated)
-				box.ItemsSource = raidCarrySteps;
-			var vI = (carry * 100).RoundToInt();
-			var i = raidCarrySteps.IndexOfClosest(vI);
-			if (i != box.SelectedIndex)
-				box.SelectedIndex = i;
-			if (textUpdated)
-				box.Text = vI.ToString();
+		//private static void UpdateCarryBox(ComboBox box, float carry, bool sourceUpdated, bool textUpdated)
+		//{
+		//	if(sourceUpdated)
+		//		box.ItemsSource = raidCarrySteps;
+		//	var vI = (carry * 100).RoundToInt();
+		//	var i = raidCarrySteps.IndexOfClosest(vI);
+		//	if (i != box.SelectedIndex)
+		//		box.SelectedIndex = i;
+		//	if (textUpdated)
+		//		box.Text = vI.ToString();
 
-		}
+		//}
 
 		public static async Task UpdateRaidPlans()
 		{
@@ -215,59 +190,59 @@ namespace COTG.Views
 			 await City.GetOrAddCity(openCity).ShowDungeons();
 			// tell UI that list data has changed
 		}
-		private static bool SetCarry(ref float val, int src, int id, bool sourceUpdated)
-		{
-			bool rv=sourceUpdated;
-			var newVal = src * 0.01f;
-			if ((newVal - val).Abs() <= 1.0f / 128.0f)
-			{
-				// no need to force update
-			}
-			else
-			{
-				val = newVal;
-				EnsureCarryRanges(id);
-				UpdateRaidPlans();
-				rv = true;
-			}
-			if (rv)
-			{
-				UpdateCarryBox(instance.raidCarryMaxBox, raidCarryMax, sourceUpdated,id==2);
-				UpdateCarryBox(instance.raidCarryMinBox, raidCarryMin, sourceUpdated,id==0);
-				UpdateCarryBox(instance.raidCarryTargetBox, raidCarryTarget, sourceUpdated,id==1);
-			}
+		//private static bool SetCarry(ref float val, int src, int id, bool sourceUpdated)
+		//{
+		//	bool rv=sourceUpdated;
+		//	var newVal = src * 0.01f;
+		//	if ((newVal - val).Abs() <= 1.0f / 128.0f)
+		//	{
+		//		// no need to force update
+		//	}
+		//	else
+		//	{
+		//		val = newVal;
+		//		EnsureCarryRanges(id);
+		//		UpdateRaidPlans();
+		//		rv = true;
+		//	}
+		//	if (rv)
+		//	{
+		//		UpdateCarryBox(instance.raidCarryMaxBox, raidCarryMax, sourceUpdated,id==2);
+		//		UpdateCarryBox(instance.raidCarryMinBox, raidCarryMin, sourceUpdated,id==0);
+		//		UpdateCarryBox(instance.raidCarryTargetBox, raidCarryTarget, sourceUpdated,id==1);
+		//	}
 
-			return rv;
-		}
+		//	return rv;
+		//}
 
-		private void RaidCarrySelChanged(object sender, object _)
-		{
-			var box = sender as ComboBox;
-			//   Log("Sel update");
-			var sel = box.SelectedIndex;
-			if (sel != -1 )
-			{
+		//private void RaidCarrySelChanged(object sender, object _)
+		//{
+		//	var box = sender as ComboBox;
+		//	//   Log("Sel update");
+		//	var sel = box.SelectedIndex;
+		//	if (sel != -1 )
+		//	{
 
-				switch( box.Name )
-				{
-					case nameof(raidCarryMaxBox):
-						SetCarry(ref SettingsPage.raidCarryMax, raidCarrySteps[sel], 2,false);
-						break;
-					case nameof(raidCarryMinBox):
-						SetCarry(ref SettingsPage.raidCarryMin, raidCarrySteps[sel], 0, false) ;
-						break;
-					default:
-						SetCarry(ref SettingsPage.raidCarryTarget, raidCarrySteps[sel], 1, false);
-						break;
-				}
+		//		switch( box.Name )
+		//		{
+		//			case nameof(raidCarryMaxBox):
+		//				SetCarry(ref SettingsPage.raidCarryMax, raidCarrySteps[sel], 2,false);
+		//				break;
+		//			case nameof(raidCarryMinBox):
+		//				SetCarry(ref SettingsPage.raidCarryMin, raidCarrySteps[sel], 0, false) ;
+		//				break;
+		//			default:
+		//				SetCarry(ref SettingsPage.raidCarryTarget, raidCarrySteps[sel], 1, false);
+		//				break;
+		//		}
 						
 
-			}
-			else
-			{
-				Trace("No selectected");
-			}
-		}
+		//	}
+		//	else
+		//	{
+		//		Trace("No selectected");
+		//	}
+		//}
 
 		private void IncludeButtonClick(object sender, RoutedEventArgs e)
 		{
@@ -303,5 +278,9 @@ namespace COTG.Views
 			Raiding.UpdateTS(true, true);
 		}
 
+		private void RaidCarrySelChanged(Microsoft.UI.Xaml.Controls.NumberBox sender,Microsoft.UI.Xaml.Controls.NumberBoxValueChangedEventArgs args)
+		{
+			UpdateRaidPlans();
+		}
 	}
 }

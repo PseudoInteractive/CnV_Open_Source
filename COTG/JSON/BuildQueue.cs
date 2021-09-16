@@ -601,14 +601,14 @@ namespace COTG.JSON
 									}
 									else
 									{
-										Trace($"Nothing to do {cid==City.build} {city.nameAndRemarks}.. {queue.count}");
+								//		Trace($"Nothing to do {cid==City.build} {city.nameAndRemarks}.. {queue.count}");
 										// nothing queued
 										// no progress :( wait a minute
 										if (cid == City.build)
 										{
 											if(delay < 1 * 10 * 1000)
 											{
-												Log($"Short delay: {city} {delay/1000f} {queue.count}");
+//												Log($"Short delay: {city} {delay/1000f} {queue.count}");
 												delay = 1 * 10 * 1000;
 											}
 										}
@@ -616,7 +616,7 @@ namespace COTG.JSON
 										{
 											if (delay < 1 * 20 * 1000)
 											{
-												Log($"Short delay: {city} {delay/1000f} {queue.count}");
+	//											Log($"Short delay: {city} {delay/1000f} {queue.count}");
 												delay = 1 * 20 * 1000;
 											}
 										}

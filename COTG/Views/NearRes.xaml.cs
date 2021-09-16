@@ -232,7 +232,7 @@ namespace COTG.Views
 					r.ClampToPositive();
 					//views: SettingsPage.nearResSend = r;
 					if(useRatio)
-						r = r*((1<<30)/r.sum);
+						r = r*((1<<30)/r.sum.Max(1));
 
 					List<ResSource> s = new List<ResSource>();
 					//                supportGrid.ItemsSource = null;
@@ -286,7 +286,7 @@ namespace COTG.Views
 							var send = r;
 							if(shipping < r.sum)
 							{
-								send *= (shipping / (double)r.sum);
+								send *= (shipping / (double)r.sum.Max(1));
 							}
 							send = send.Min(sup.city.res.SubSat(SettingsPage.nearResReserve));
 							Assert( send.sum <= shipping);
@@ -427,7 +427,7 @@ namespace COTG.Views
 			}
 			else
 			{
-				var ratio = shipping / (float)res.sum;
+				var ratio = shipping / (float)res.sum.Max(1);
 
 				supporter.res = res.Scale(ratio);
 
@@ -568,7 +568,7 @@ namespace COTG.Views
 			}
 			if( sumOther > transport )
 			{
-				var scale = transport / (double)sumOther;
+				var scale = transport / (double)sumOther.Max(1);
 				for (int i = 0; i < 4; ++i)
 				{
 					if (i == id)

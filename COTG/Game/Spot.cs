@@ -1570,7 +1570,7 @@ namespace COTG.Game
 			if (changed)
 			{
 				focus = cid;
-				App.QueueOnUIThreadIdle(UpdateFocusText);
+				App.QueueOnUIThread(UpdateFocusText);
 			}
 			if (bringIntoView)
 				cid.BringCidIntoWorldView(lazyMove, false);
@@ -2228,7 +2228,7 @@ namespace COTG.Game
 			//          instance.Dispatcher.RunAsync(DispatcherQueuePriority.Low, () =>
 			//           {
 			//   await Task.Delay(200);
-			App.QueueOnUIThreadIdle(() =>
+			App.QueueOnUIThread(() =>
 			{
 
 				{
