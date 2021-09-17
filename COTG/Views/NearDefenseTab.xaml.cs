@@ -23,11 +23,12 @@ using COTG.Services;
 using CommunityToolkit.WinUI;
 using System.Threading.Tasks;
 using static COTG.Game.TroopTypeCountHelper;
+using CommunityToolkit.WinUI.UI.Controls;
 
 namespace COTG.Views
 {
 
-    public sealed partial class NearDefenseTab : UserTab, Microsoft.UI.Xaml.Data.INotifyPropertyChanged
+    public sealed partial class NearDefenseTab : UserTab, INotifyPropertyChanged
 	{
         public static NearDefenseTab instance;
         public static bool IsVisible() => instance.isVisible;
@@ -231,7 +232,7 @@ namespace COTG.Views
 
       
 
-        public event Microsoft.UI.Xaml.Data.PropertyChangedEventHandler PropertyChanged;
+        public event PropertyChangedEventHandler PropertyChanged;
         public void OnPropertyChanged(string propertyName) {
 
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
@@ -401,7 +402,7 @@ namespace COTG.Views
 		}
 
 
-		private void supportGrid_Sorting(object sender, CommunityToolkit.WinUI.DataGridColumnEventArgs e)
+		private void supportGrid_Sorting(object sender,DataGridColumnEventArgs e)
         {
             var dg = supportGrid;
             var tag = e.Column.Tag?.ToString();

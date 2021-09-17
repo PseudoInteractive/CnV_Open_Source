@@ -24,13 +24,14 @@ using static COTG.Debug;
 using Microsoft.UI.Xaml.Documents;
 using COTG.Game;
 using System.Text.Json;
-using Windows.UI;
+using Microsoft.UI;
 using COTG.Services;
 using System.Threading.Tasks;
 using System.Text;
 using CnVDiscord;
 using Microsoft.UI.Xaml.Media.Imaging;
 using System.Collections.ObjectModel;
+using CommunityToolkit.WinUI.UI.Controls;
 
 // The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234236
 

@@ -23,6 +23,7 @@ using CommunityToolkit.WinUI.Notifications;
 using CommunityToolkit.WinUI.UI.Controls;
 
 using static COTG.Debug;
+using Microsoft.UI.Xaml.Controls;
 
 namespace COTG
 {
@@ -260,7 +261,14 @@ namespace COTG
 		public static void ProcessTooltipsOnPointerMoved(object sender, PointerRoutedEventArgs e)
 		{
 			var info = Spot.HitTest(sender, e);
-			var str = info.column?.Column?.Tip ?? string.Empty;
+			var ctrl = info.column?.Column;
+			var str =string.Empty;
+			if(ctrl != null)
+			{
+				var _str = ToolTipService.GetToolTip(ctrl) as string;
+				if(_str != null)
+					str = _str;
+			}
 			ShowTip(str);
 		}
 		public static void ShowTip(string str)

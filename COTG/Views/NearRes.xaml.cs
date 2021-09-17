@@ -25,6 +25,8 @@ using System.Web;
 using System.Text;
 using Microsoft.UI.Xaml.Media.Imaging;
 using Microsoft.AppCenter.Analytics;
+using System.ComponentModel;
+using CommunityToolkit.WinUI.UI.Controls;
 
 namespace COTG.Views
 {
@@ -475,7 +477,7 @@ namespace COTG.Views
 		}
 
 
-		private void supportGrid_Sorting(object sender, CommunityToolkit.WinUI.DataGridColumnEventArgs e)
+		private void supportGrid_Sorting(object sender,DataGridColumnEventArgs e)
 		{
 			var dg = supportGrid;
 			var tag = e.Column.Tag?.ToString();

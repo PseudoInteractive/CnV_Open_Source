@@ -10,7 +10,7 @@
 	  xmlns:tg="using:Telerik.UI.Xaml.Controls.Grid"
       xmlns:tgCore="using:Telerik.Data.Core"
       xmlns:my="using:Microsoft.UI.Xaml.Controls"
-      xmlns:tk="using:CommunityToolkit.WinUI"
+      xmlns:tk="using:CommunityToolkit.WinUI.UI.Controls"
       xmlns:views="using:COTG.Views"
     mc:Ignorable="d">
     <Grid>

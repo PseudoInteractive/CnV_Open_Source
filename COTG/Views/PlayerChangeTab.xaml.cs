@@ -18,6 +18,8 @@ using COTG.Helpers;
 using Microsoft.Toolkit;
 using CommunityToolkit.WinUI;
 using COTG.Game;
+using CommunityToolkit.WinUI.UI.Controls;
+
 namespace COTG.Views
 {
 	public class PlayerChanges
@@ -70,7 +72,7 @@ namespace COTG.Views
 
 		}
 
-		private void playerChangesSorting(object sender, CommunityToolkit.WinUI.DataGridColumnEventArgs e)
+		private void playerChangesSorting(object sender, DataGridColumnEventArgs e)
 		{
 				var dg = sender as DataGrid;
 				var cities = changes;

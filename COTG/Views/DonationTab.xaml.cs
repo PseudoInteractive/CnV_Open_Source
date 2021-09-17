@@ -26,7 +26,7 @@ using static COTG.Debug;
 namespace COTG.Views
 {
 
-    public sealed partial class DonationTab : UserTab, Microsoft.UI.Xaml.Data.INotifyPropertyChanged
+    public sealed partial class DonationTab : UserTab, INotifyPropertyChanged
 	{
         public static DonationTab instance;
         public static int reserveCarts=800;
@@ -119,7 +119,7 @@ namespace COTG.Views
             blessedGrid.ItemsSource = BlessedCity.GetForCity(newSel);
         }
 
-		event Microsoft.UI.Xaml.Data.PropertyChangedEventHandler Microsoft.UI.Xaml.Data.INotifyPropertyChanged.PropertyChanged
+		event PropertyChangedEventHandler INotifyPropertyChanged.PropertyChanged
 		{
 			add
 			{

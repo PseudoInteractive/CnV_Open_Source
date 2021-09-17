@@ -30,6 +30,7 @@ using Microsoft.UI.Xaml.Media;
 using static COTG.Debug;
 
 using WinUI = Microsoft.UI.Xaml.Controls;
+using CommunityToolkit.WinUI.UI.Controls;
 
 namespace COTG.Views
 {

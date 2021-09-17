@@ -8,7 +8,7 @@
       xmlns:cotg="using:COTG"
       xmlns:my="using:Microsoft.UI.Xaml.Controls"
       xmlns:tg="using:Telerik.UI.Xaml.Controls.Grid"
-      xmlns:tk="using:CommunityToolkit.WinUI"
+      xmlns:tk="using:CommunityToolkit.WinUI.UI.Controls"
       xmlns:telerikGrid="using:Telerik.UI.Xaml.Controls.Grid"
       xmlns:local="using:COTG.Views"
         Tag="Donation"

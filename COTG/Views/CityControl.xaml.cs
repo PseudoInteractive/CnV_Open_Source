@@ -17,15 +17,18 @@ using COTG.Game;
 using System.ComponentModel;
 using Microsoft.UI.Xaml.Media.Imaging;
 using CommunityToolkit.WinUI;
+using CommunityToolkit.WinUI.Helpers;
+using CommunityToolkit.WinUI.UI;
+
 // The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234236
 
 namespace COTG.Views
 {
-	public sealed partial class CityControl : UserControl, Microsoft.UI.Xaml.Data.INotifyPropertyChanged
+	public sealed partial class CityControl : UserControl,INotifyPropertyChanged
 	{
 		#region PropertyChanged
 		public void OnPropertyChanged(string propertyName = "") => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-		public event Microsoft.UI.Xaml.Data.PropertyChangedEventHandler PropertyChanged;
+		public event PropertyChangedEventHandler PropertyChanged;
 		#endregion
 
 		public City city;

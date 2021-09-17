@@ -7,7 +7,7 @@
                xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                xmlns:cotg="using:COTG"
 			   xmlns:winui="using:Microsoft.UI.Xaml.Controls"
-  			   xmlns:tk="using:CommunityToolkit.WinUI"
+  			   xmlns:tk="using:CommunityToolkit.WinUI.UI.Controls"
                xmlns:views="using:COTG.Views"
 
 			   TabNavigation="Once"

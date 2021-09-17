@@ -6,7 +6,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
 using Microsoft.Xna;
-
+using SpriteVertices = Microsoft.Xna.SpriteVertices;
 namespace COTG.Draw
 {
 	public class Mesh
@@ -84,7 +84,7 @@ namespace COTG.Draw
 			me.vertexBR.TextureCoordinate.Y = texCoordBR.Y;
 		}
 
-		public static void Set(this SpriteVertices me, float x, float y, float w, float h, Color color, Vector2 texCoordTL, Vector2 texCoordBR, float depth)
+		public static void Set(this Microsoft.Xna.SpriteVertices me, float x, float y, float w, float h, Color color, Vector2 texCoordTL, Vector2 texCoordBR, float depth)
 		{
 			me.vertexTL.Position.X = x;
 			me.vertexTL.Position.Y = y;

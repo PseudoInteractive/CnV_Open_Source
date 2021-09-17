@@ -78,7 +78,7 @@ namespace COTG.Draw
 		/// if there is none available grow the pool and initialize new items.
 		/// </summary>
 		/// <returns></returns>
-		public SpriteVertices CreateBatchItem(int layer, Material material)
+		public Microsoft.Xna.SpriteVertices CreateBatchItem(int layer, Material material)
 		{
 			var list = CreateBatchItemList(layer, material);
 			var rv = SpriteBatchItemList.Alloc();

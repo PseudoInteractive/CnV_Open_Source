@@ -36,12 +36,13 @@ using Windows.Foundation;
 using Windows.Web.Http.Headers;
 using DiscordCnV;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.Toolkit.Helpers;
+using CommunityToolkit.WinUI.Notifications;
 using static COTG.Game.City;
 using Microsoft.Web.WebView2.Core;
 using Microsoft.Web;
 using CoreWebView = Microsoft.Web.WebView2.Core.CoreWebView2;
 using COTG.CnVChat;
+using CommunityToolkit.WinUI.Helpers;
 
 namespace COTG
 {
@@ -572,9 +573,9 @@ namespace COTG
 #endif
 				coreWebView.Settings.UserAgent = userAgent;
 				coreWebView.Settings.IsWebMessageEnabled=true;
-				coreWebView.Settings.IsPasswordAutosaveEnabled=true;
+//				coreWebView.Settings.IsPasswordAutosaveEnabled=true;
 				coreWebView.Settings.IsScriptEnabled=true;
-				coreWebView.Settings.IsPinchZoomEnabled =false;
+	//			coreWebView.Settings.IsPinchZoomEnabled =false;
 				coreWebView.Settings.IsZoomControlEnabled=false;
 				coreWebView.Settings.AreDefaultScriptDialogsEnabled=false;
 					coreWebView.Settings.IsStatusBarEnabled=false;

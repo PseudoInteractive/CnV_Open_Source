@@ -166,7 +166,9 @@ namespace COTG.Views
 							++SpotTab.silenceSelectionChanges;
 							try
 							{
-								defenderGrid.SelectItems(sel);
+								defenderGrid.DeselectAll();
+								foreach(var i in sel)
+									defenderGrid.SelectItem(i);
 									if (sel.Length == 1)
 									{
 										defenderGrid.ScrollItemIntoView(sel[0]);

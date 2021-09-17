@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 using Telerik.UI.Xaml.Controls.Grid;
 using Telerik.UI.Xaml.Controls.Input;
 using Windows.Foundation;
-using Windows.UI.Input;
+//using Windows.UI.Input;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media.Imaging;
 using COTG.Views;
@@ -42,6 +42,7 @@ using System.Collections.ObjectModel;
 using Cysharp.Text;
 using DiscordCnV;
 using Windows.UI.Core;
+using Microsoft.UI.Input;
 
 namespace COTG.Game
 {
@@ -576,7 +577,7 @@ namespace COTG.Game
 		
 
 
-		public async void ProcessClick(string column, PointerPoint pt, UIElement uie, VirtualKeyModifiers modifiers)
+		public async void ProcessClick(string column,PointerPoint pt, UIElement uie, VirtualKeyModifiers modifiers)
 		{
 			modifiers.UpdateKeyModifiers();
 			//    Note.Show($"{this} {column} {pt.Position}");

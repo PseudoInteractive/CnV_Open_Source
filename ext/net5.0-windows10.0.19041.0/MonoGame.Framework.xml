@@ -4409,6 +4409,16 @@
             Negative Z face in the cube map.
             </summary>
         </member>
+        <member name="F:Microsoft.Xna.Framework.Graphics.DefaultColorProcessors.ZeroTransparentPixels">
+            <summary>
+            Zeroes RGB of pixels having zero alpha(standard XNA behavior)
+            </summary>
+        </member>
+        <member name="F:Microsoft.Xna.Framework.Graphics.DefaultColorProcessors.PremultiplyAlpha">
+            <summary>
+            Premultiplies RGB of pixels by its alpha
+            </summary>
+        </member>
         <member name="T:Microsoft.Xna.Framework.Graphics.AlphaTestEffect">
             <summary>
             Built-in effect that supports alpha testing.
@@ -8329,11 +8339,25 @@
             <typeparam name="T"></typeparam>
             <param name="data">Destination array for the texture data</param>
         </member>
+        <member name="M:Microsoft.Xna.Framework.Graphics.Texture2D.FromFile(Microsoft.Xna.Framework.Graphics.GraphicsDevice,System.String,System.Action{System.Byte[]})">
+            <summary>
+            Creates a <see cref="T:Microsoft.Xna.Framework.Graphics.Texture2D"/> from a file, supported formats bmp, gif, jpg, png, tif and dds (only for simple textures).
+            May work with other formats, but will not work with tga files.
+            This internally calls <see cref="M:Microsoft.Xna.Framework.Graphics.Texture2D.FromStream(Microsoft.Xna.Framework.Graphics.GraphicsDevice,System.IO.Stream,System.Action{System.Byte[]})"/>.
+            </summary>
+            <param name="graphicsDevice">The graphics device to use to create the texture.</param>
+            <param name="path">The path to the image file.</param>
+            <param name="colorProcessor">Function that is applied to the data in RGBA format before the texture is sent to video memory. Could be null(no processing then).</param>
+            <returns>The <see cref="T:Microsoft.Xna.Framework.Graphics.Texture2D"/> created from the given file.</returns>
+            <remarks>Note that different image decoders may generate slight differences between platforms, but perceptually 
+            the images should be identical.
+            </remarks>
+        </member>
         <member name="M:Microsoft.Xna.Framework.Graphics.Texture2D.FromFile(Microsoft.Xna.Framework.Graphics.GraphicsDevice,System.String)">
             <summary>
             Creates a <see cref="T:Microsoft.Xna.Framework.Graphics.Texture2D"/> from a file, supported formats bmp, gif, jpg, png, tif and dds (only for simple textures).
             May work with other formats, but will not work with tga files.
-            This internally calls <see cref="M:Microsoft.Xna.Framework.Graphics.Texture2D.FromStream(Microsoft.Xna.Framework.Graphics.GraphicsDevice,System.IO.Stream)"/>.
+            This internally calls <see cref="M:Microsoft.Xna.Framework.Graphics.Texture2D.FromStream(Microsoft.Xna.Framework.Graphics.GraphicsDevice,System.IO.Stream,System.Action{System.Byte[]})"/>.
             </summary>
             <param name="graphicsDevice">The graphics device to use to create the texture.</param>
             <param name="path">The path to the image file.</param>
@@ -8341,6 +8365,19 @@
             <remarks>Note that different image decoders may generate slight differences between platforms, but perceptually 
             the images should be identical.  This call does not premultiply the image alpha, but areas of zero alpha will
             result in black color data.
+            </remarks>
+        </member>
+        <member name="M:Microsoft.Xna.Framework.Graphics.Texture2D.FromStream(Microsoft.Xna.Framework.Graphics.GraphicsDevice,System.IO.Stream,System.Action{System.Byte[]})">
+            <summary>
+            Creates a <see cref="T:Microsoft.Xna.Framework.Graphics.Texture2D"/> from a stream, supported formats bmp, gif, jpg, png, tif and dds (only for simple textures).
+            May work with other formats, but will not work with tga files.
+            </summary>
+            <param name="graphicsDevice">The graphics device to use to create the texture.</param>
+            <param name="stream">The stream from which to read the image data.</param>
+            <param name="colorProcessor">Function that is applied to the data in RGBA format before the texture is sent to video memory. Could be null(no processing then).</param>
+            <returns>The <see cref="T:Microsoft.Xna.Framework.Graphics.Texture2D"/> created from the image stream.</returns>
+            <remarks>Note that different image decoders may generate slight differences between platforms, but perceptually 
+            the images should be identical.
             </remarks>
         </member>
         <member name="M:Microsoft.Xna.Framework.Graphics.Texture2D.FromStream(Microsoft.Xna.Framework.Graphics.GraphicsDevice,System.IO.Stream)">
@@ -9303,6 +9340,20 @@
             {X:[<see cref="P:Microsoft.Xna.Framework.Graphics.Viewport.X"/>] Y:[<see cref="P:Microsoft.Xna.Framework.Graphics.Viewport.Y"/>] Width:[<see cref="P:Microsoft.Xna.Framework.Graphics.Viewport.Width"/>] Height:[<see cref="P:Microsoft.Xna.Framework.Graphics.Viewport.Height"/>] MinDepth:[<see cref="P:Microsoft.Xna.Framework.Graphics.Viewport.MinDepth"/>] MaxDepth:[<see cref="P:Microsoft.Xna.Framework.Graphics.Viewport.MaxDepth"/>]}
             </summary>
             <returns>A <see cref="T:System.String"/> representation of this <see cref="T:Microsoft.Xna.Framework.Graphics.Viewport"/>.</returns>
+        </member>
+        <member name="T:Microsoft.Xna.Framework.Graphics.SwapChainRenderTarget">
+            <summary>
+            A swap chain used for rendering to a secondary GameWindow.
+            </summary>
+            <remarks>
+            This is an extension and not part of stock XNA.
+            It is currently implemented for Windows and DirectX only.
+            </remarks>
+        </member>
+        <member name="M:Microsoft.Xna.Framework.Graphics.SwapChainRenderTarget.Present">
+            <summary>
+            Displays the contents of the active back buffer to the screen.
+            </summary>
         </member>
         <member name="T:Microsoft.Xna.Framework.Graphics.ImmutableVertexInputLayout">
             <summary>
@@ -10724,36 +10775,6 @@
             <param name="playerIndex">Player index of the keyboard.</param>
             <returns>Current keyboard state.</returns>
         </member>
-        <member name="M:Microsoft.Xna.Framework.Input.KeyboardInput.Show(System.String,System.String,System.String,System.Boolean)">
-            <summary>
-            Displays the keyboard input interface asynchronously.
-            </summary>
-            <param name="title">Title of the dialog box.</param>
-            <param name="description">Description of the dialog box.</param>
-            <param name="defaultText">Default text displayed in the input area.</param>
-            <param name="usePasswordMode">If password mode is enabled, the characters entered are not displayed.</param>
-            <returns>Text entered by the player. Null if back was used.</returns>
-            <exception cref="T:System.Exception">Thrown when the message box is already visible</exception>
-            <example>
-            <code>
-            var name = await KeyboardInput.Show("Name", "What's your name?", "Player");
-            </code>
-            </example>
-        </member>
-        <member name="M:Microsoft.Xna.Framework.Input.KeyboardInput.Cancel(System.String)">
-            <summary>
-            Hides the keyboard input interface and returns the parameter as the result of <see cref="M:Microsoft.Xna.Framework.Input.KeyboardInput.Show(System.String,System.String,System.String,System.Boolean)"/>
-            </summary>
-            <param name="result">Result to return</param>
-            <exception cref="T:System.Exception">Thrown when the keyboard input is not visible</exception>
-            <example>
-            <code>
-            var nameTask = KeyboardInput.Show("Name", "What's your name?", "Player");
-            KeyboardInput.Cancel("John Doe");
-            var name = await nameTask;
-            </code>
-            </example>
-        </member>
         <member name="T:Microsoft.Xna.Framework.Input.KeyboardState">
             <summary>
             Holds the state of keystrokes by a keyboard.
@@ -11706,11 +11727,6 @@
             Allows reading position and button click information from mouse.
             </summary>
         </member>
-        <member name="P:Microsoft.Xna.Framework.Input.Mouse.WindowHandle">
-            <summary>
-            Gets or sets the window handle for current mouse processing.
-            </summary> 
-        </member>
         <member name="M:Microsoft.Xna.Framework.Input.Mouse.GetState(Microsoft.Xna.Framework.GameWindow)">
             <summary>
             This API is an extension to XNA.
@@ -11725,19 +11741,6 @@
             for the primary window
             </summary>
             <returns>Current state of the mouse.</returns>
-        </member>
-        <member name="M:Microsoft.Xna.Framework.Input.Mouse.SetPosition(System.Int32,System.Int32)">
-            <summary>
-            Sets mouse cursor's relative position to game-window.
-            </summary>
-            <param name="x">Relative horizontal position of the cursor.</param>
-            <param name="y">Relative vertical position of the cursor.</param>
-        </member>
-        <member name="M:Microsoft.Xna.Framework.Input.Mouse.SetCursor(Microsoft.Xna.Framework.Input.MouseCursor)">
-            <summary>
-            Sets the cursor image to the specified MouseCursor.
-            </summary>
-            <param name="cursor">Mouse cursor to use for the cursor image.</param>
         </member>
         <member name="T:Microsoft.Xna.Framework.Input.MouseCursor">
             <summary>
@@ -11804,7 +11807,7 @@
             Gets the hand cursor, usually used for web links.
             </summary>
         </member>
-        <member name="M:Microsoft.Xna.Framework.Input.MouseCursor.FromTexture2D(Microsoft.Xna.Framework.Graphics.Texture2D,System.Int32,System.Int32)">
+        <member name="P:Microsoft.Xna.Framework.Input.MouseCursor.Handle">
             <summary>
             Creates a mouse cursor from the specified texture.
             </summary>
@@ -13809,76 +13812,6 @@
             Gets the width of this video, in pixels.
             </summary>
         </member>
-        <member name="P:Microsoft.Xna.Framework.Media.VideoPlayer.IsDisposed">
-            <summary>
-            Gets a value that indicates whether the object is disposed.
-            </summary>
-        </member>
-        <member name="P:Microsoft.Xna.Framework.Media.VideoPlayer.IsLooped">
-            <summary>
-            Gets a value that indicates whether the player is playing video in a loop.
-            </summary>
-        </member>
-        <member name="P:Microsoft.Xna.Framework.Media.VideoPlayer.IsMuted">
-            <summary>
-            Gets or sets the muted setting for the video player.
-            </summary>
-        </member>
-        <member name="P:Microsoft.Xna.Framework.Media.VideoPlayer.PlayPosition">
-            <summary>
-            Gets the play position within the currently playing video.
-            </summary>
-        </member>
-        <member name="P:Microsoft.Xna.Framework.Media.VideoPlayer.State">
-            <summary>
-            Gets the media playback state, MediaState.
-            </summary>
-        </member>
-        <member name="P:Microsoft.Xna.Framework.Media.VideoPlayer.Video">
-            <summary>
-            Gets the Video that is currently playing.
-            </summary>
-        </member>
-        <member name="P:Microsoft.Xna.Framework.Media.VideoPlayer.Volume">
-            <summary>
-            Video player volume, from 0.0f (silence) to 1.0f (full volume relative to the current device volume).
-            </summary>
-        </member>
-        <member name="M:Microsoft.Xna.Framework.Media.VideoPlayer.GetTexture">
-            <summary>
-            Retrieves a Texture2D containing the current frame of video being played.
-            </summary>
-            <returns>The current frame of video.</returns>
-            <exception cref="T:System.InvalidOperationException">Thrown if no video is set on the player</exception>
-            <exception cref="T:System.InvalidOperationException">Thrown if the platform was unable to get a texture in a reasonable amount of time. Often the platform specific media code is running
-            in a different thread or process. Note: This may be a change from XNA behaviour</exception>
-        </member>
-        <member name="M:Microsoft.Xna.Framework.Media.VideoPlayer.Pause">
-            <summary>
-            Pauses the currently playing video.
-            </summary>
-        </member>
-        <member name="M:Microsoft.Xna.Framework.Media.VideoPlayer.Play(Microsoft.Xna.Framework.Media.Video)">
-            <summary>
-            Plays a Video.
-            </summary>
-            <param name="video">Video to play.</param>
-        </member>
-        <member name="M:Microsoft.Xna.Framework.Media.VideoPlayer.Resume">
-            <summary>
-            Resumes a paused video.
-            </summary>
-        </member>
-        <member name="M:Microsoft.Xna.Framework.Media.VideoPlayer.Stop">
-            <summary>
-            Stops playing a video.
-            </summary>
-        </member>
-        <member name="M:Microsoft.Xna.Framework.Media.VideoPlayer.Dispose">
-            <summary>
-            Immediately releases the unmanaged resources used by this object.
-            </summary>
-        </member>
         <member name="T:Microsoft.Xna.Framework.Media.VideoSoundtrackType">
             <summary>
             Type of sounds in a video
@@ -13897,6 +13830,22 @@
         <member name="F:Microsoft.Xna.Framework.Media.VideoSoundtrackType.MusicAndDialog">
             <summary>
             This video contains music and dialog.
+            </summary>
+        </member>
+        <member name="T:Microsoft.Xna.Framework.Media.MediaManagerState">
+            <summary>
+            This class provides a way for the MediaManager to be initialised exactly once, 
+            regardless of how many different places need it, and which is called first.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Xna.Framework.Media.MediaManagerState.CheckStartup">
+            <summary>
+            Ensures that the MediaManager has been initialised. Must be called from UI thread.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Xna.Framework.Media.MediaManagerState.CheckShutdown">
+            <summary>
+            Ensures that the MediaManager has been shutdown. Must be called from UI thread.
             </summary>
         </member>
         <member name="M:Microsoft.Xna.Framework.PlaneHelper.ClassifyPoint(Microsoft.Xna.Framework.Vector3@,Microsoft.Xna.Framework.Plane@)">
@@ -17533,6 +17482,11 @@
             <param name="divider">Divisor scalar on the right of the div sign.</param>
             <returns>The result of dividing a vector by a scalar.</returns>
         </member>
+        <member name="M:Microsoft.Xna.Framework.InputEvents.#ctor(Microsoft.UI.Xaml.Window,Microsoft.UI.Xaml.UIElement,Microsoft.Xna.Framework.Input.Touch.TouchQueue)">
+            <summary>
+            Sets the cursor of <see cref="T:Windows.UI.Core.CoreIndependentInputSource"/> thread
+            </summary>
+        </member>
         <member name="F:Microsoft.Xna.Framework.InputKeyEventArgs.Key">
             <summary>
             The key that was either pressed or released.
@@ -17543,11 +17497,6 @@
             Create a new keyboard input event
             </summary>
             <param name="key">The key involved in this event</param>
-        </member>
-        <member name="M:Microsoft.Xna.Framework.InputEvents.#ctor(Windows.UI.Core.CoreWindow,Windows.UI.Xaml.UIElement,Microsoft.Xna.Framework.Input.Touch.TouchQueue)">
-            <summary>
-            Sets the cursor of <see cref="T:Windows.UI.Core.CoreIndependentInputSource"/> thread
-            </summary>
         </member>
         <member name="M:MonoGame.Framework.Utilities.ByteBufferPool.Get(System.Int32)">
             <summary>
@@ -20478,11 +20427,6 @@
             MonoGame WebGL platform.
             </summary>
         </member>
-        <member name="F:MonoGame.Framework.Utilities.MonoGamePlatform.PSVita">
-            <summary>
-            MonoGame PSVita platform.
-            </summary>
-        </member>
         <member name="F:MonoGame.Framework.Utilities.MonoGamePlatform.XboxOne">
             <summary>
             MonoGame Xbox One platform.
@@ -22963,13 +22907,23 @@
             This dictionary is used to resolve byte values for a given character.
             </summary>
         </member>
+        <member name="M:MonoGame.Framework.Utilities.TimerHelper.GetCurrentResolution">
+            <summary>
+            Returns the current timer resolution in milliseconds
+            </summary>
+        </member>
+        <member name="M:MonoGame.Framework.Utilities.TimerHelper.SleepForNoMoreThan(System.Double)">
+            <summary>
+            Sleeps as long as possible without exceeding the specified period
+            </summary>
+        </member>
         <member name="T:MonoGame.Framework.XamlGame`1">
             <summary>
             Static class for initializing a Game object for a XAML application.
             </summary>
             <typeparam name="T">A class derived from Game with a public parameterless constructor.</typeparam>
         </member>
-        <member name="M:MonoGame.Framework.XamlGame`1.Create(System.String,Windows.UI.Core.CoreWindow,Windows.UI.Xaml.Controls.SwapChainPanel)">
+        <member name="M:MonoGame.Framework.XamlGame`1.Create(System.String,Microsoft.UI.Xaml.Window,Microsoft.UI.Xaml.Controls.SwapChainPanel)">
             <summary>
             Creates your Game class initializing it to work within a XAML application window.
             </summary>
@@ -22978,7 +22932,7 @@
             <param name="swapChainPanel">The XAML SwapChainPanel to which we render the scene and receive input events.</param>
             <returns>Returns an instance of T generated with default parameterless T constructor</returns>
         </member>
-        <member name="M:MonoGame.Framework.XamlGame`1.Create(System.Func{`0},System.String,Windows.UI.Core.CoreWindow,Windows.UI.Xaml.Controls.SwapChainPanel)">
+        <member name="M:MonoGame.Framework.XamlGame`1.Create(System.Func{`0},System.String,Microsoft.UI.Xaml.Window,Microsoft.UI.Xaml.Controls.SwapChainPanel)">
             <summary>
             Creates your Game class initializing it with <paramref name="gameConstructor"/> to work within a XAML application window.
             </summary>

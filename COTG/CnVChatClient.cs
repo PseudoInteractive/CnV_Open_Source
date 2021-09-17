@@ -16,7 +16,6 @@ using CnVShared;
 using System.Threading;
 using DSharpPlus.Entities;
 using System.Net.Http;
-using Grpc.Net.Client.Web;
 
 namespace COTG.CnVChat
 {
@@ -43,7 +42,7 @@ namespace COTG.CnVChat
 			// Connect to the server using gRPC channel.
 			channel = GrpcChannel.ForAddress("https://localhost:5001",new GrpcChannelOptions()	{
 //				HttpHandler = new GrpcWebHandler(new HttpClientHandler())
-				HttpHandler = new WinHttpHandler()
+			//	HttpHandler = new WinHttpHandler()
 			});
 		//	channel = GrpcChannel.ForAddress("http://localhost:5000");
 

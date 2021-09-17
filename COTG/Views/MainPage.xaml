@@ -5,7 +5,7 @@
 			  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 			  xmlns:tg="using:Telerik.UI.Xaml.Controls.Grid"
 			  xmlns:tgCore="using:Telerik.Data.Core"
-			  xmlns:tk="using:CommunityToolkit.WinUI"
+			  xmlns:tk="using:CommunityToolkit.WinUI.UI.Controls"
 			  xmlns:winui="using:Microsoft.UI.Xaml.Controls"
 			  xmlns:model="using:COTG.Models"
 			  xmlns:game="using:COTG.Game"
@@ -74,23 +74,21 @@
 					<tg:DataGridTextColumn Header= "+" 
 										   PropertyName="dungeonsToggle"
 										   CellContentStyle="{StaticResource CenterAlignLink}"
-										   Tip="Tap to expend or collapse dungeons" />
+										   winui:ToolTipService.ToolTip="Tap to expend or collapse dungeons" />
 					<tg:DataGridImageColumn PropertyName="icon"
 											Header="I"
 											SizeMode="Fixed"
 											Width="32"
-											HeaderTip="Click to switch to this city"
-											Tip="Click to switch to this city"
+											winui:ToolTipService.ToolTip="Click to switch to this city"
 											 />
 					<tg:DataGridTextColumn PropertyName="nameAndRemarks"
-										   Tip="Click to raid from this city without switching cities (fast)"
+										   winui:ToolTipService.ToolTip="Click to raid from this city without switching cities (fast)"
 										   Header="Name"
 										   CellContentStyle="{StaticResource LeftAlign}"
 										   SizeMode="Auto"
 										    />
 					<tg:DataGridTextColumn PropertyName="xy"
-										   HeaderTip="City Coordinates"
-										   Tip="Click to view this city"
+										   winui:ToolTipService.ToolTip="Click to view this city"
 										   CellContentStyle="{StaticResource CenterAlignLink}"
 										    />
 					<tg:DataGridNumericalColumn PropertyName="cont"
@@ -100,44 +98,44 @@
 												 />
 					<tg:DataGridNumericalColumn PropertyName="tsTotal"
 												CellContentStyle="{StaticResource RightAlign}"
-												Tip="TS enlisted in city"
+												winui:ToolTipService.ToolTip="TS enlisted in city"
 												CellContentFormat="{}{0,7:N0}"
-												DefaultSortOrder="Descending"
+												SortDirection="Descending"
 												SizeMode="Auto"
 												 />
 					<tg:DataGridNumericalColumn PropertyName="tsRaid"
 												CellContentStyle="{StaticResource RightAlign}"
 												CellContentFormat="{}{0,7:N0}"
-												DefaultSortOrder="Descending"
+												SortDirection="Descending"
 												SizeMode="Auto"
-												Tip="TS of Troops at home that can raid" />
+												winui:ToolTipService.ToolTip="TS of Troops at home that can raid" />
 				<tg:DataGridNumericalColumn PropertyName="raidIdle"
 										
 												CellContentStyle="{StaticResource RightAlign}"
 												CellContentFormat="{}{0,3:P1}"
-												DefaultSortOrder="Descending"
+												SortDirection="Descending"
 												SizeMode="Auto"
-												Tip="% raiding troops idle" />
+												winui:ToolTipService.ToolTip="% raiding troops idle" />
 				<tg:DataGridNumericalColumn PropertyName="tsHome"
 												CellContentStyle="{StaticResource RightAlign}"
-												DefaultSortOrder="Descending"
-												Tip="TS of Troops at home (including non raiding troops)"
+												SortDirection="Descending"
+												winui:ToolTipService.ToolTip="TS of Troops at home (including non raiding troops)"
 												CellContentFormat="{}{0,7:N0}"
 												SizeMode="Auto"
 												IsVisible="False"/>
 				<tg:DataGridTextColumn PropertyName="raidReturn"
-												Tip="Click here to bring troops home asap"
+												winui:ToolTipService.ToolTip="Click here to bring troops home asap"
 												CellContentStyle="{StaticResource RightAlignLink}"
 												CellContentFormat="{}{0,6:N0}"
 												SizeMode="Auto"/>
 				<tg:DataGridNumericalColumn PropertyName="raidCarry"
-												Tip="% of loot carried per raid&#x0a;Click here to bring troops home after the next raid"
+												winui:ToolTipService.ToolTip="% of loot carried per raid&#x0a;Click here to bring troops home after the next raid"
 												CellContentStyle="{StaticResource RightAlignLink}"
 												CellContentFormat="{}{0,5:N1}"
 												SizeMode="Auto"
 												 />
 					<tg:DataGridNumericalColumn PropertyName="points"
-												Tip="City score"
+												winui:ToolTipService.ToolTip="City score"
 												SizeMode="Auto"
 												CellContentStyle="{StaticResource RightAlign}"
 												CellContentFormat="{}{0,6:N0}"
@@ -212,7 +210,7 @@
 					<!--<Button.Resources>
 						<winui:TeachingTip x:Key="TipResetRaids1"
 						   x:FieldModifier="public"
-						   Title="Reset Raids Tip"
+						   Title="Reset Raids winui:ToolTipService.ToolTip"
 						  
 						   Subtitle="Resetting raids is used bring troops home if their carry% is too low (which means that you are taking more raids losses) or the % idle troops in a city is high (this typically occurs while your cities are not full and still recruiting, i.e. for early cities or after a battle.  By bringing raids home you can consoldate your raids).  Warning: it can take some time for all troops to return, only use this button if you will be around about 1 hour after the reset to set them raiding again">
 						</winui:TeachingTip>

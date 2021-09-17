@@ -27,6 +27,7 @@ using static COTG.Debug;
 using static COTG.Game.AttackPlan;
 using static COTG.Game.Enum;
 using System.Linq;
+using CommunityToolkit.WinUI.UI.Controls;
 
 namespace COTG.Views
 {
@@ -237,7 +238,7 @@ namespace COTG.Views
 			}
 
 		}
-		private void Sorting(object sender, CommunityToolkit.WinUI.DataGridColumnEventArgs e)
+		private void Sorting(object sender,DataGridColumnEventArgs e)
 		{
 			var dg = sender as DataGrid;
 			var cities = dg == attackGrid ? attacksUI : targetsUI;

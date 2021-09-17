@@ -8,7 +8,7 @@
 				  xmlns:cotg="using:COTG"
 	xmlns:views="using:COTG.Views"
 	  xmlns:model="using:COTG.Models"
-	xmlns:tk="using:CommunityToolkit.WinUI"
+	xmlns:tk="using:CommunityToolkit.WinUI.UI.Controls"
 			  xmlns:winui="using:Microsoft.UI.Xaml.Controls"
 	 xmlns:game="using:COTG.Game"
 	xmlns:tg="using:Telerik.UI.Xaml.Controls.Grid"
@@ -46,21 +46,21 @@
 				<tg:DataGridTextColumn PropertyName="dispatch"
 										   CellContentStyle="{StaticResource CenterAlignLink}"
 											   SizeMode="Auto"
-										   Tip="Click here to send raids" />
+										   winui:ToolTipService.ToolTip="Click here to send raids" />
 
 				<tg:DataGridTextColumn PropertyName="plan"
 										   CellContentStyle="{StaticResource LeftAlignLink}"
 											   SizeMode="Auto"
-										   Tip="Click here to send raids" />
+										   winui:ToolTipService.ToolTip="Click here to send raids" />
 				<tg:DataGridNumericalColumn PropertyName="distance"
 												CellContentStyle="{StaticResource RightAlign}"
 												  SizeMode="Auto"
-												Tip="Distance to dungeon" />
+												winui:ToolTipService.ToolTip="Distance to dungeon" />
 				<tg:DataGridNumericalColumn PropertyName="level"
 												  SizeMode="Auto"
 												CellContentStyle="{StaticResource RightAlign}" />
 				<tg:DataGridNumericalColumn PropertyName="completion"
-												Tip="How worn out the dungeon is&#x0a;When this reaches 0 the dungeon disappears and troops stop raiding&#x0a;Prefering dungeons with lower completion is a way to prevent raid carry from falling too far, a form of auto reseting raids"
+												winui:ToolTipService.ToolTip="How worn out the dungeon is&#x0a;When this reaches 0 the dungeon disappears and troops stop raiding&#x0a;Prefering dungeons with lower completion is a way to prevent raid carry from falling too far, a form of auto reseting raids"
 												CellContentFormat="{}{0,7:N3}"
 												  SizeMode="Auto"
 												CellContentStyle="{StaticResource RightAlign}" />

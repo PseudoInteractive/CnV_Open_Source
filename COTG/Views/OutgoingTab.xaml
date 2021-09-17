@@ -10,7 +10,7 @@
       xmlns:my="using:Microsoft.UI.Xaml.Controls"
       xmlns:tdd="using:Telerik.Data.Core"
       xmlns:tg="using:Telerik.UI.Xaml.Controls.Grid"
-      xmlns:tk="using:CommunityToolkit.WinUI"
+      xmlns:tk="using:CommunityToolkit.WinUI.UI.Controls"
       xmlns:tl="using:Telerik.UI.Xaml.Controls"
       xmlns:local="using:COTG.Views"
       Background="{x:Null}"

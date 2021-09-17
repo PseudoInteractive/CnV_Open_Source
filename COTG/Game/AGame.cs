@@ -32,12 +32,12 @@ using XVector3 = Microsoft.Xna.Framework.Vector3;
 using XVector4 = Microsoft.Xna.Framework.Vector4;
 
 using Microsoft.Xna.Framework.Input;
-using Microsoft.Xna.Framework.Media;
 using Layer = COTG.Draw.Layer;
 using BitmapFont;
 using System.Threading.Tasks;
 using static COTG.Views.AttackTab;
 using static COTG.JSON.GetIO;
+using Microsoft.Xna.Framework.Media;
 
 namespace COTG
 {
@@ -46,9 +46,9 @@ namespace COTG
 
 	public static partial class Helper
 	{
-		public static bool IsKeyPressed(this Keys key) => AGame.keyboardState.IsKeyDown(key);
+	//	public static bool IsKeyPressed(this Keys key) => AGame.keyboardState.IsKeyDown(key);
 
-		public static bool WasKeyPressed(this Keys key) => AGame.keyboardState.IsKeyDown(key) && !AGame.priorKeyboardState.IsKeyDown(key);
+	//	public static bool WasKeyPressed(this Keys key) => AGame.keyboardState.IsKeyDown(key) && !AGame.priorKeyboardState.IsKeyDown(key);
 
 		static public CoreWindow CoreWindow => Window.Current.CoreWindow;
 		static public UIElement CoreContent => Window.Current.Content;
@@ -285,8 +285,8 @@ namespace COTG
 		static public void Create(SwapChainPanel swapChainPanel)
 		{
 			canvas = swapChainPanel;
-			canvas.CompositeMode = (UMicrosoft.UI.Xaml.Media.ElementCompositeMode.MinBlend);
-			instance = MonoGame.Framework.XamlGame<AGame>.Create(() => new AGame() { }, "", Helper.CoreWindow, swapChainPanel);
+			canvas.CompositeMode = (Microsoft.UI.Xaml.Media.ElementCompositeMode.MinBlend);
+			instance = MonoGame.Framework.XamlGame<AGame>.Create(() => new AGame() { }, "",Microsoft.UI.Xaml.Window.Current, swapChainPanel);
 		}
 
 		protected override void Initialize()
@@ -325,8 +325,8 @@ namespace COTG
 		}
 		//		public static MouseState mouseState;
 		//		public static MouseState priorMouseState;
-		public static KeyboardState keyboardState;
-		public static KeyboardState priorKeyboardState;
+	//	public static KeyboardState keyboardState;
+//		public static KeyboardState priorKeyboardState;
 
 		const float viewHoverZGain = 1.0f / 64.0f;
 		const float viewHoverElevationKt = 24.0f;
@@ -404,13 +404,13 @@ namespace COTG
 
 
 				//	priorMouseState = mouseState;
-				priorKeyboardState = keyboardState;
-				keyboardState = Keyboard._nextKeyboardState;
-				App.canvasKeyModifiers = UWindows.System.VirtualKeyModifiers.None;
-				if ((keyboardState.IsKeyDown(Keys.LeftShift) | keyboardState.IsKeyDown(Keys.RightShift)))
-					App.canvasKeyModifiers |= UWindows.System.VirtualKeyModifiers.Shift;
-				if ((keyboardState.IsKeyDown(Keys.LeftControl) | keyboardState.IsKeyDown(Keys.RightControl)))
-					App.canvasKeyModifiers |= UWindows.System.VirtualKeyModifiers.Control;
+			//	priorKeyboardState = keyboardState;
+			//	keyboardState = Keyboard._nextKeyboardState;
+			//	App.canvasKeyModifiers = UWindows.System.VirtualKeyModifiers.None;
+				//if ((keyboardState.IsKeyDown(Keys.LeftShift) | keyboardState.IsKeyDown(Keys.RightShift)))
+				//	App.canvasKeyModifiers |= UWindows.System.VirtualKeyModifiers.Shift;
+				//if ((keyboardState.IsKeyDown(Keys.LeftControl) | keyboardState.IsKeyDown(Keys.RightControl)))
+				//	App.canvasKeyModifiers |= UWindows.System.VirtualKeyModifiers.Control;
 
 				////	ShellPage.CanvasCheckKeys();
 				//	if ( keyboardState.GetPressedKeyCount() > priorKeyboardState.GetPressedKeyCount() )
@@ -444,7 +444,7 @@ namespace COTG
 					else
 					{
 					//	ShellPage.coreInputSource.Dispatcher.CurrentPriority = CoreDispatcherPriority.Low;
-						ShellPage.coreInputSource.Dispatcher.ProcessEvents(CoreProcessEventsOption.ProcessAllIfPresent);
+						//ShellPage.coreInputSource.Dispatcher.ProcessEvents(CoreProcessEventsOption.ProcessAllIfPresent);
 						//ShellPage.Gesture.Tick();
 					}
 
@@ -660,7 +660,7 @@ namespace COTG
 
 		//}
 		public static bool readyToLoad;
-		public static Song[] music;
+		public static Microsoft.Xna.Framework.Media.Song[] music;
 	//	bool inputInitialized;
 
 		const int musicCount = 7;

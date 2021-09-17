@@ -8,8 +8,7 @@ using System.IO;
 
 using DSharpPlus;
 using DSharpPlus.Entities;
-using DSharpPlus.CommandsNext;
-using DSharpPlus.CommandsNext.Exceptions;
+
 using DSharpPlus.EventArgs;
 
 using Microsoft.Xna.Framework;
@@ -18,15 +17,16 @@ using System.Reflection;
 using static CnVDiscord.PlayerHooks;
 using Microsoft.Extensions.Logging;
 using static COTG.Debug;
-using DSharpPlus.CommandsNext.Converters;
 using COTG;
 using Microsoft.Extensions.Azure;
 using COTG.Views;
 using COTG.Services;
-using SharpDX.Direct2D1;
+
 using COTG.Helpers;
 using Microsoft.UI.Xaml.Media.Imaging;
 using MessagePack;
+using DSharpPlus.CommandsNext;
+using DSharpPlus.CommandsNext.Exceptions;
 
 namespace CnVDiscord
 {
@@ -44,7 +44,7 @@ namespace CnVDiscord
 	//	public static DiscordGuild guild;
 		public static DiscordChannel chatChannel;
 		public static DiscordClient DiscordBot { get; set; }
-		public static CommandsNextExtension DiscordCommands { get; set; }
+		//public static CommandsNextExtension DiscordCommands { get; set; }
 		public static ConfigFile Config = new();
 		public static bool IsAllianceConnected => Config.ChatID != 0;
 		public async static void Initialize()

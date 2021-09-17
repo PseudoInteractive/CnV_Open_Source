@@ -1,14 +1,25 @@
-﻿using COTG.Game;
+﻿using CommunityToolkit.WinUI;
+using CommunityToolkit.WinUI.Helpers;
+
+using COTG.Game;
 using COTG.Helpers;
 using COTG.Services;
 using COTG.Views;
 
+using Microsoft.AppCenter;
+using Microsoft.AppCenter.Analytics;
 using Microsoft.AppCenter.Crashes;
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
+//using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Controls.Primitives;
+using Microsoft.Web.WebView2.Core;
 //using ZLogger;
 
 //using Cysharp.Text;
 using System;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Numerics;
 using System.Runtime.InteropServices;
@@ -23,35 +34,27 @@ using System.Windows.Input;
 //using Microsoft.Extensions.DependencyInjection;
 //using Microsoft.Extensions.Logging;
 //using Microsoft.Extensions.Options;
+using CommunityToolkit.WinUI.Helpers;
+using DispatcherQueue = Microsoft.UI.Dispatching.DispatcherQueue;
 using Windows.ApplicationModel;
+using Windows.ApplicationModel.Activation;
 using Windows.ApplicationModel.Core;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Foundation.Collections;
 using Windows.Globalization.NumberFormatting;
 using Windows.System;
-using DispatcherQueueHandler = Windows.System.DispatcherQueueHandler;
 using Windows.UI.Core;
-using Windows.UI.Core.Preview;
 using Windows.UI.Input;
-using Microsoft.UI.Xaml;
-//using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Controls.Primitives;
+using Microsoft.UI.Dispatching;
+using static COTG.Debug;
+using DispatcherQueueHandler = Microsoft.UI.Dispatching.DispatcherQueueHandler;
+using DispatcherQueuePriority= Microsoft.UI.Dispatching.DispatcherQueuePriority;
 using ContentDialog = Microsoft.UI.Xaml.Controls.ContentDialog;
 using ContentDialogResult = Microsoft.UI.Xaml.Controls.ContentDialogResult;
-using MenuFlyoutItem = Microsoft.UI.Xaml.Controls.MenuFlyoutItem;
 using MenuFlyout = Microsoft.UI.Xaml.Controls.MenuFlyout;
-using ToggleMenuFlyoutItem = Microsoft.UI.Xaml.Controls.ToggleMenuFlyoutItem;
+using MenuFlyoutItem = Microsoft.UI.Xaml.Controls.MenuFlyoutItem;
 using MenuFlyoutSubItem = Microsoft.UI.Xaml.Controls.MenuFlyoutSubItem;
-using static COTG.Debug;
-using Microsoft.Toolkit.Helpers;
-using Microsoft.AppCenter.Analytics;
-using System.Collections.Generic;
-using System.Net;
-using Nito.AsyncEx;
-using Microsoft.UI.Xaml.Controls;
-using CommunityToolkit.WinUI;
-using Microsoft.AppCenter;
-using Microsoft.Web.WebView2.Core;
+using ToggleMenuFlyoutItem = Microsoft.UI.Xaml.Controls.ToggleMenuFlyoutItem;
 
 namespace COTG
 {
@@ -118,7 +121,7 @@ namespace COTG
 
 
 			//	ServicePointManager.ServerCertificateValidationCallback = (sender, certificate, chain, sslPolicyErrors) => { Log(certificate.ToString()); return true; };
-			InitializeComponent();
+		//	InitializeComponent();
 			instance = this;
 
 			UnhandledException += OnAppUnhandledException;
@@ -127,10 +130,6 @@ namespace COTG
 
 			
 
-		  EnteredBackground += App_EnteredBackground;
-			LeavingBackground += App_LeavingBackground;
-			Resuming += App_Resuming;
-			Suspending += App_Suspending;
 
 			// TODO WTS: Add your app in the app center and set your secret here. More at https://docs.microsoft.com/appcenter/sdk/getting-started/uwp
 
@@ -144,32 +143,6 @@ namespace COTG
 
 		
 
-		private async void App_Suspending(object sender, SuspendingEventArgs e)
-		{
-			AAnalytics.Track("Suspend");
-
-			Log("Suspend");
-			var deferral = e.SuspendingOperation.GetDeferral();
-
-			try
-			{
-				await SwtichToBackground();
-
-				await JSClient.SuspendWebView();
-				if(Debugger.IsAttached)
-					JSClient.CloseWebView();;
-
-			}
-			catch(Exception ext)
-			{
-
-			}
-			finally
-			{
-				
-				deferral.Complete();
-			}
-		}
 
 		private static async Task SwtichToBackground()
 		{
@@ -226,7 +199,7 @@ namespace COTG
 		}
 		public static bool IsEscDown()
 		{
-			return Microsoft.Xna.Framework.Input.Keys.Escape.IsKeyPressed();
+			return false;//Microsoft.Xna.Framework.Input.Keys.Escape.IsKeyPressed();
 		}
 		public static bool IsKeyPressedShift()
 		{
@@ -366,9 +339,11 @@ namespace COTG
 		private static ConcurrentQueue<Func<Task>> throttledTasks = new ConcurrentQueue<Func<Task>>();
 
 		static DateTimeOffset activeStart = DateTimeOffset.UtcNow;
-		protected override async void OnLaunched(LaunchActivatedEventArgs args)
+		protected override async void OnLaunched(Microsoft.UI.Xaml.LaunchActivatedEventArgs args)
 		{
+			try
 			{
+			
 
 
 				//var view = DisplayInformation.GetForCurrentView();
@@ -384,12 +359,12 @@ namespace COTG
 				//ApplicationView.PreferredLaunchViewSize = new Size(bounds.Width, bounds.Height);
 				//ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.PreferredLaunchViewSize;
 		
-			}
+			
 			//App.globalDispatcher = CoreWindow.GetForCurrentThread().Dispatcher;
-			globalQueue = DispatcherQueue.GetForCurrentThread();
+			globalQueue =  Microsoft.UI.Dispatching.DispatcherQueue.GetForCurrentThread();
 			CoreApplication.EnablePrelaunch(false);
 
-			if (args.Kind == ActivationKind.Launch)
+			if (args.UWPLaunchActivatedEventArgs.Kind == Windows.ApplicationModel.Activation.ActivationKind.Launch)
 			{
 				// do this asynchronously
 				Services.StoreHelper.instance.DownloadAndInstallAllUpdatesAsync();
@@ -410,10 +385,16 @@ namespace COTG
 
 			// if (!args.PrelaunchActivated)
 
-			await OnLaunchedOrActivated(args);
+			await OnLaunchedOrActivated(args.UWPLaunchActivatedEventArgs);
+			}
+			catch(Exception e)
+			{
+				Log(e);
+			}
 		}
 		private async Task OnLaunchedOrActivated(Windows.ApplicationModel.Activation.IActivatedEventArgs args)
 		{
+				try{
 			this.DebugSettings.FailFastOnErrors = false;
 #if TRACE || DEBUG
 //			this.DebugSettings.FailFastOnErrors = true;
@@ -427,10 +408,16 @@ namespace COTG
             this.DebugSettings.IsBindingTracingEnabled = false;
 #endif
 			var wasRunning = args.PreviousExecutionState == ApplicationExecutionState.Running || args.PreviousExecutionState == ApplicationExecutionState.Suspended;
-			
+
+			if(!wasRunning)
+			{
+				var window = Window.Current;
+				window.VisibilityChanged += Window_VisibilityChanged;
+				window.Closed+=Window_Closed;
+			}
 			await ActivationService.ActivateAsync(args,wasRunning);
 			
-			if(!wasRunning)
+			if(wasRunning)
 				return;
 
 			//			CoreApplication.MainView.HostedViewClosing+=MainView_HostedViewClosing; ;
@@ -460,13 +447,72 @@ namespace COTG
 			//titleBar.ButtonForegroundColor = color;
 			titleBar.ButtonBackgroundColor = color;
 			titleBar.InactiveBackgroundColor = titleBar.ButtonInactiveBackgroundColor = colorInactive;
-//				titleBar.InactiveForegroundColor =  titleBar.ButtonInactiveForegroundColor = colorInactive;
-			//titleBar.ButtonInactiveBackgroundColor = Windows.UI.Colors.Transparent;
-			//  UpdateTitleBarLayout(coreTitleBar);
+				//				titleBar.InactiveForegroundColor =  titleBar.ButtonInactiveForegroundColor = colorInactive;
+				//titleBar.ButtonInactiveBackgroundColor = Windows.UI.Colors.Transparent;
+				//  UpdateTitleBarLayout(coreTitleBar);
 #endif
 
-			// Set XAML element as a draggable region.
-			//          Window.Current.SetTitleBar(ShellPage.instance.AppTitleBar);
+
+				// Set XAML element as a draggable region.
+				//          Window.Current.SetTitleBar(ShellPage.instance.AppTitleBar);
+			}
+			catch(Exception e)
+			{
+				Log(e);
+			}
+		}
+
+		private void Window_Closed(object sender,WindowEventArgs args)
+		{
+			AAnalytics.Track("Suspend");
+
+			Log("Suspend");
+	///		var deferral = e.SuspendingOperation.GetDeferral();
+
+			//try
+			//{
+			//	await SwtichToBackground();
+
+			//	await JSClient.SuspendWebView();
+			//	if(Debugger.IsAttached)
+			//		JSClient.CloseWebView(); ;
+
+			//}
+			//catch(Exception ext)
+			//{
+
+			//}
+			//finally
+			//{
+
+			//	deferral.Complete();
+			//}
+		}
+
+		private async void Window_VisibilityChanged(object sender,WindowVisibilityChangedEventArgs args)
+		{
+			
+			if(isForeground != args.Visible)
+			{
+				isForeground = args.Visible;
+
+				//TODO: Save application state and stop any background activity
+				if(!isForeground)
+				{
+					try
+					{
+
+						await SaveState();
+					}
+					catch(Exception ex)
+					{
+					}
+				}
+			}
+
+
+
+			//			throw new NotImplementedException();
 		}
 
 		private void CoreWindow_Closed(CoreWindow sender,CoreWindowEventArgs args)
@@ -477,99 +523,99 @@ namespace COTG
 			TabPage.CloseAllTabWindows();
 		}
 
-		private async void MainView_HostedViewClosing(CoreApplicationView sender,HostedViewClosingEventArgs args)
-		{
-			var defer = args.GetDeferral();
-			Log("Close");
-			state = State.closing;
-			JSClient.CloseWebView();
-			await TabPage.CloseAllTabWindows();
-		}
+		//private async void MainView_HostedViewClosing(CoreApplicationView sender,HostedViewClosingEventArgs args)
+		//{
+		//	var defer = args.GetDeferral();
+		//	Log("Close");
+		//	state = State.closing;
+		//	JSClient.CloseWebView();
+		//	await TabPage.CloseAllTabWindows();
+		//}
 
 
-		protected override async void OnActivated(Windows.ApplicationModel.Activation.IActivatedEventArgs args)
-		{
-			var activation = args as IActivatedEventArgs;
-			globalQueue = DispatcherQueue.GetForCurrentThread();
-			if (activation != null && activation.PreviousExecutionState == ApplicationExecutionState.Running)
-			{
-				Window.Current.Activate();
-				//	isForeground = true;
+		//protected override async void OnActivated(IActivatedEventArgs args)
+		//{
+		//	var activation = args as IActivatedEventArgs;
+		//	globalQueue = Microsoft.UI.Dispatching.DispatcherQueue.GetForCurrentThread();
+		//	if (activation != null && activation.PreviousExecutionState == ApplicationExecutionState.Running)
+		//	{
+		//		Window.Current.Activate();
+		//		//	isForeground = true;
 
-				// Todo:  Handle arguments and stuff
-				// Ensure the current window is active
-				if (args is ToastNotificationActivatedEventArgs toastActivationArgs)
-				{
-					// Obtain the arguments from the notification
-					var toastArgs = System.Web.HttpUtility.ParseQueryString(toastActivationArgs.Argument);
-					// Obtain any user input (text boxes, menu selections) from the notification
-					ValueSet userInput = toastActivationArgs.UserInput;
-					foreach (var op in toastArgs.AllKeys)
-					{
-						if (op == "incomingNotification")
-						{
-							Task.Delay(3000).ContinueWith(async (_) =>
-							{
-								while (IncomingTab.instance == null)
-									await Task.Delay(500);
-								App.DispatchOnUIThreadLow(IncomingTab.instance.Show);
+		//		// Todo:  Handle arguments and stuff
+		//		// Ensure the current window is active
+		//		if (args is ToastNotificationActivatedEventArgs toastActivationArgs)
+		//		{
+		//			// Obtain the arguments from the notification
+		//			var toastArgs = System.Web.HttpUtility.ParseQueryString(toastActivationArgs.Argument);
+		//			// Obtain any user input (text boxes, menu selections) from the notification
+		//			ValueSet userInput = toastActivationArgs.UserInput;
+		//			foreach (var op in toastArgs.AllKeys)
+		//			{
+		//				if (op == "incomingNotification")
+		//				{
+		//					Task.Delay(3000).ContinueWith(async (_) =>
+		//					{
+		//						while (IncomingTab.instance == null)
+		//							await Task.Delay(500);
+		//						App.DispatchOnUIThreadLow(IncomingTab.instance.Show);
 
-							});
-						}
-					}
-					// TODO: Show the corresponding content
-				}
+		//					});
+		//				}
+		//			}
+		//			// TODO: Show the corresponding content
+		//		}
 
 
-				return;
-			}
+		//		return;
+		//	}
 			
-			await OnLaunchedOrActivated(args);
+		//	await OnLaunchedOrActivated(args);
 
 
 
-			//var configuration = new ConfigurationBuilder()
-			//                                .AddJsonFile("appsettings.json", false, true)
-			//                                .Build();
+		//	//var configuration = new ConfigurationBuilder()
+		//	//                                .AddJsonFile("appsettings.json", false, true)
+		//	//                                .Build();
 
 
 
 
-			//    CreateDefaultBuilder(args)
-			//        .ConfigureWebHostDefaults(webBuilder =>
-			//        {
-			//            webBuilder.UseStartup<Startup>();
-			//        }).Build().Run();
+		//	//    CreateDefaultBuilder(args)
+		//	//        .ConfigureWebHostDefaults(webBuilder =>
+		//	//        {
+		//	//            webBuilder.UseStartup<Startup>();
+		//	//        }).Build().Run();
 
 
-			//ILogger logger;
+		//	//ILogger logger;
 
-			//using (var serviceProvider = new ServiceCollection()
-			//    .AddLogging(cfg =>
-			//    {
-			//        cfg.AddConfiguration(configuration.GetSection("Logging"));
-			//        cfg.AddConsole();
-			//    })
-			//    .BuildServiceProvider())
-			//{
-			//    logger = serviceProvider.GetService<ILogger<App>>();
-			//}
+		//	//using (var serviceProvider = new ServiceCollection()
+		//	//    .AddLogging(cfg =>
+		//	//    {
+		//	//        cfg.AddConfiguration(configuration.GetSection("Logging"));
+		//	//        cfg.AddConsole();
+		//	//    })
+		//	//    .BuildServiceProvider())
+		//	//{
+		//	//    logger = serviceProvider.GetService<ILogger<App>>();
+		//	//}
 
-			//logger.LogInformation("logger information");
-			//logger.LogWarning("logger warning");
-
-
-			//using (var listener = new LoggerTraceListener(logger))
-			//{
-			//    System.Diagnostics.Trace.Listeners.Add(listener);
-			//    TraceSources.Instance.InitLoggerTraceListener(listener);
-
-			//    TraceLover.DoSomething();
-			//    TraceSourceLover.DoSomething();
-			//}
+		//	//logger.LogInformation("logger information");
+		//	//logger.LogWarning("logger warning");
 
 
-		}
+		//	//using (var listener = new LoggerTraceListener(logger))
+		//	//{
+		//	//    System.Diagnostics.Trace.Listeners.Add(listener);
+		//	//    TraceSources.Instance.InitLoggerTraceListener(listener);
+
+		//	//    TraceLover.DoSomething();
+		//	//    TraceSourceLover.DoSomething();
+		//	//}
+
+
+		//}
 
 		public static void SetupCoreWindowInputHooks()
 		{
@@ -580,27 +626,27 @@ namespace COTG
 			{
 				//Log($"{view.TitleBar.ToString()} {view.IsMain} ");
 			
-				window.PointerMoved += OnPointerMoved;
+			//	window.PointerMoved += OnPointerMoved;
 				window.PointerPressed += OnPointerPressed; ;
-				window.PointerExited+=Window_PointerExited; ;
-				window.PointerEntered+=Window_PointerEntered; ;
+			//	window.PointerExited+=Window_PointerExited; ;
+			//	window.PointerEntered+=Window_PointerEntered; ;
 				window.KeyDown += OnKeyDown;
 				window.KeyUp += OnKeyUp;
 
 			}
 		}
 
-		private static void Window_PointerEntered(CoreWindow sender,PointerEventArgs args)
-		{
-			ShellPage.UpdateMousePosition(args,ShellPage.instance);
-			ShellPage.UpdateFocus();
-		}
+		//private static void Window_PointerEntered(CoreWindow sender,PointerEventArgs args)
+		//{
+		//	ShellPage.UpdateMousePosition(args,ShellPage.instance);
+		//	ShellPage.UpdateFocus();
+		//}
 
-		private static void Window_PointerExited(CoreWindow sender,PointerEventArgs args)
-		{
-			ShellPage.UpdateMousePosition(args, ShellPage.instance);
-			ShellPage.UpdateFocus();
-		}
+		//private static void Window_PointerExited(CoreWindow sender,PointerEventArgs args)
+		//{
+		//	ShellPage.UpdateMousePosition(args, ShellPage.instance);
+		//	ShellPage.UpdateFocus();
+		//}
 
 		//private static void Window_PointerEntered(CoreWindow sender,PointerEventArgs args)
 		//{
@@ -678,16 +724,16 @@ namespace COTG
 		}
 
 
-		private static void OnPointerMoved(CoreWindow sender, PointerEventArgs args)
-		{
-			//	ShellPage.UpdateMousePosition(args);
-			//			args.KeyModifiers.UpdateKeyModifiers();
+		//private static void OnPointerMoved(CoreWindow sender, PointerEventArgs args)
+		//{
+		//	//	ShellPage.UpdateMousePosition(args);
+		//	//			args.KeyModifiers.UpdateKeyModifiers();
 
-			// reset timer if active
-			//	InputRecieved();
-			ShellPage.UpdateMousePosition(args,ShellPage.instance);
-			ShellPage.UpdateFocus();
-		}
+		//	// reset timer if active
+		//	//	InputRecieved();
+		//	ShellPage.UpdateMousePosition(args,ShellPage.instance);
+		//	ShellPage.UpdateFocus();
+		//}
 
 		private static async void ProcessIdleTasks()
 		{
@@ -891,14 +937,98 @@ namespace COTG
 		//{
 		//	await ActivationService.ActivateFromShareTargetAsync(args);
 		//}
+		public static Task<T> EnqueueAsync<T>( DispatcherQueue dispatcher,Func<Task<T>> function,DispatcherQueuePriority priority = 0)
+		{
+			//IL_0032: Unknown result type (might be due to invalid IL or missing references)
+			if(dispatcher.HasThreadAccess)
+			{
+				try
+				{
+					Task<T> task = function();
+					if(task != null)
+					{
+						return task;
+					}
+
+					return Task.FromException<T>(new InvalidOperationException("The Task returned by function cannot be null."));
+				}
+				catch(Exception exception)
+				{
+					return Task.FromException<T>(exception);
+				}
+			}
+
+			return TryEnqueueAsync(dispatcher,function,priority);
+			static Task<T> TryEnqueueAsync(DispatcherQueue dispatcher,Func<Task<T>> function,DispatcherQueuePriority priority)
+			{
+				//IL_0019: Unknown result type (might be due to invalid IL or missing references)
+				//IL_0021: Unknown result type (might be due to invalid IL or missing references)
+				//IL_002b: Expected O, but got Unknown
+				Func<Task<T>> function2 = function;
+				TaskCompletionSource<T> taskCompletionSource = new TaskCompletionSource<T>();
+				if(!dispatcher.TryEnqueue(priority,async () =>
+				{
+					
+					taskCompletionSource.SetResult(await function2());
+
+				}))
+				{
+					taskCompletionSource.SetException(new InvalidOperationException("Failed to enqueue the operation"));
+				}
+
+				return taskCompletionSource.Task;
+			}
+		}
+		public static Task<T> EnqueueAsync<T>( DispatcherQueue dispatcher,Func<T> function,DispatcherQueuePriority priority = 0)
+		{
+	//		DispatcherQueueExtensions
+			//IL_0020: Unknown result type (might be due to invalid IL or missing references)
+			if(dispatcher.HasThreadAccess)
+			{
+				try
+				{
+					return Task.FromResult(function());
+				}
+				catch(Exception exception)
+				{
+					return Task.FromException<T>(exception);
+				}
+			}
+
+			return TryEnqueueAsync(dispatcher,function,priority);
+			static Task<T> TryEnqueueAsync(DispatcherQueue dispatcher,Func<T> function,DispatcherQueuePriority priority)
+			{
+				//IL_0019: Unknown result type (might be due to invalid IL or missing references)
+				//IL_0021: Unknown result type (might be due to invalid IL or missing references)
+				//IL_002b: Expected O, but got Unknown
+				Func<T> function2 = function;
+				TaskCompletionSource<T> taskCompletionSource = new TaskCompletionSource<T>();
+				if(!dispatcher.TryEnqueue(priority,(DispatcherQueueHandler)(object)(DispatcherQueueHandler)delegate
+				{
+					try
+					{
+						taskCompletionSource.SetResult(function2());
+					}
+					catch(Exception exception2)
+					{
+						taskCompletionSource.SetException(exception2);
+					}
+				}))
+				{
+					taskCompletionSource.SetException(new InvalidOperationException("Failed to enqueue the operation"));
+				}
+
+				return taskCompletionSource.Task;
+			}
+		}
 
 		public static Task<T>
-			DispatchOnUIThreadTask<T>(  Func<Task<T>> func, DispatcherQueuePriority priority = DispatcherQueuePriority.Low)
+			DispatchOnUIThreadTask<T>(  Func<Task<T>> func,Microsoft.UI.Dispatching.DispatcherQueuePriority priority = Microsoft.UI.Dispatching.DispatcherQueuePriority.Low)
 		{
 
 			var d = GlobalDispatcher();
-		
-			return d.EnqueueAsync<T>(func, priority);
+	
+			return EnqueueAsync<T>(d,func, priority);
 
 			//var idle = priority == DispatcherQueuePriority.Idle;
 			//if (useCurrentThreadIfPossible&& !idle && d.HasThreadAccess)
@@ -942,40 +1072,102 @@ namespace COTG
 			//	return await taskCompletionSource.Task;
 			//}
 		}
+		public static Task EnqueueAsync(DispatcherQueue dispatcher,Action function,DispatcherQueuePriority priority = 0)
+		{
+			//IL_0020: Unknown result type (might be due to invalid IL or missing references)
+			if(dispatcher.HasThreadAccess)
+			{
+				try
+				{
+					function();
+					return Task.CompletedTask;
+				}
+				catch(Exception exception)
+				{
+					return Task.FromException(exception);
+				}
+			}
 
+			return TryEnqueueAsync(dispatcher,function,priority);
+			static Task TryEnqueueAsync(DispatcherQueue dispatcher,Action function,DispatcherQueuePriority priority)
+			{
+				//IL_0019: Unknown result type (might be due to invalid IL or missing references)
+				//IL_0021: Unknown result type (might be due to invalid IL or missing references)
+				//IL_002b: Expected O, but got Unknown
+				Action function2 = function;
+				TaskCompletionSource<object?> taskCompletionSource = new TaskCompletionSource<object>();
+				if(!dispatcher.TryEnqueue(priority,(DispatcherQueueHandler)(object)(DispatcherQueueHandler)delegate
+				{
+					try
+					{
+						function2();
+						taskCompletionSource.SetResult(null);
+					}
+					catch(Exception exception2)
+					{
+						taskCompletionSource.SetException(exception2);
+					}
+				}))
+				{
+					taskCompletionSource.SetException(new InvalidOperationException("Failed to enqueue the operation"));
+				}
+
+				return taskCompletionSource.Task;
+			}
+		}
 		// There is no TaskCompletionSource<void> so we use a bool that we throw away.
 		public static Task DispatchOnUIThreadTask(
-	  Func<Task> func, DispatcherQueuePriority priority = DispatcherQueuePriority.Low, bool useCurrentThreadIfPossible = true)
+	  Func<Task> func,DispatcherQueuePriority priority = DispatcherQueuePriority.Low, bool useCurrentThreadIfPossible = true)
 		{
 			var d = GlobalDispatcher();
-			return d.EnqueueAsync(func, priority);
+			return EnqueueAsync(d,func, priority);
+		}
+		public static Task DispatchOnUIThreadTask(
+	  Action func,DispatcherQueuePriority priority = DispatcherQueuePriority.Low,bool useCurrentThreadIfPossible = true)
+		{
+			var d = GlobalDispatcher();
+			return EnqueueAsync(d,func,priority);
+		}
+		public static Task EnqueueAsync(DispatcherQueue dispatcher,Func<Task> function,DispatcherQueuePriority priority = 0)
+		{
+			//IL_0032: Unknown result type (might be due to invalid IL or missing references)
+			if(dispatcher.HasThreadAccess)
+			{
+				try
+				{
+					Task task = function();
+					if(task != null)
+					{
+						return task;
+					}
 
-			//var idle = priority == DispatcherQueuePriority.Idle;
+					return Task.FromException(new InvalidOperationException("The Task returned by function cannot be null."));
+				}
+				catch(Exception exception)
+				{
+					return Task.FromException(exception);
+				}
+			}
 
-			//if (useCurrentThreadIfPossible&&!idle && d.HasThreadAccess)
-			//{
-			//	await func();
-			//}
-			//else
-			//{
-			//	var taskCompletionSource = new TaskCompletionSource<bool>();
-			//	{
-			//		await d.TryEnqueue(priority, async () =>
-			//			{
-			//				try
-			//				{
-			//					await func();
-			//					taskCompletionSource.SetResult(true);
-			//				}
-			//				catch (Exception ex)
-			//				{
-			//					LogEx(ex);
-			//					taskCompletionSource.SetResult(false);
-			//				}
-			//			});
-			//	}
-			//	await taskCompletionSource.Task;
-			//}
+			return TryEnqueueAsync(dispatcher,function,priority);
+			static Task TryEnqueueAsync(DispatcherQueue dispatcher,Func<Task> function,DispatcherQueuePriority priority)
+			{
+				//IL_0019: Unknown result type (might be due to invalid IL or missing references)
+				//IL_0021: Unknown result type (might be due to invalid IL or missing references)
+				//IL_002b: Expected O, but got Unknown
+				Func<Task> function2 = function;
+				TaskCompletionSource<object> taskCompletionSource = new TaskCompletionSource<object>();
+				if(!dispatcher.TryEnqueue(priority,async ()=>
+				{
+					await function2();
+					taskCompletionSource.SetResult(null);
+				}))
+				{
+					taskCompletionSource.SetException(new InvalidOperationException("Failed to enqueue the operation"));
+				}
+
+				return taskCompletionSource.Task;
+			}
 		}
 		public static SemaphoreSlim uiSema = new SemaphoreSlim(1);
 
@@ -1077,14 +1269,14 @@ namespace COTG
 			d.TryEnqueue( priority, action);
 	}
 
-		public static void DispatchOnUIThreadIdle(Windows.System.DispatcherQueueHandler action)
+		public static void DispatchOnUIThreadIdle(DispatcherQueueHandler action)
 		{
 			DispatchOnUIThread(action,DispatcherQueuePriority.Low);
 //			var d = GlobalDispatcher();
 //			d.TryRunIdleAsync((_)=> action() );
 		}
 
-		public static void QueueOnUIThread(Windows.System.DispatcherQueueHandler action)
+		public static void QueueOnUIThread(DispatcherQueueHandler action)
 		{
 			DispatchOnUIThread(action,priority: DispatcherQueuePriority.Low,alwaysQueue: true);
 			//			var d = GlobalDispatcher();
@@ -1138,8 +1330,8 @@ namespace COTG
 
 
 	// We only have 1 UI thread here
-	public static DispatcherQueue GlobalDispatcher() => globalQueue;
-		public static DispatcherQueue globalQueue;
+	public static Microsoft.UI.Dispatching.DispatcherQueue GlobalDispatcher() => globalQueue;
+		public static Microsoft.UI.Dispatching.DispatcherQueue globalQueue;
 		public static bool IsOnUIThread() => globalQueue.HasThreadAccess;
 		//public static bool IsKeyPressedControl()
 		//{
@@ -1207,9 +1399,9 @@ namespace COTG
 		}
 
 
-		public static VirtualKeyModifiers canvasKeyModifiers;
+//		public static VirtualKeyModifiers canvasKeyModifiers;
 		// HTML control messs wit this
-		public static VirtualKeyModifiers keyModifiers => canvasKeyModifiers;
+//		public static VirtualKeyModifiers keyModifiers => canvasKeyModifiers;
 
 		public static bool isShuttingDown => state == State.closing;
 
@@ -1231,6 +1423,16 @@ namespace COTG
 		public static CoreCursor cursorMoveEnd = new(CoreCursorType.SizeNorthwestSoutheast,0);
 		public static CoreCursor cursorLayout = new(CoreCursorType.Pin,0);
 		public static CoreCursor cursorDestroy = new(CoreCursorType.UniversalNo,0);
+		internal static VirtualKeyModifiers keyModifiers
+		{
+			get
+			{
+				var rv = shiftPressed ? VirtualKeyModifiers.Shift : default;
+				if( controlPressed)
+					rv |= VirtualKeyModifiers.Control;
+				return rv;
+			}
+		}
 
 		public async static Task<int> DoYesNoBox(string title, string text, string yes="Yes", string no = "No", string cancel ="Cancel" )
 		{
@@ -1290,14 +1492,14 @@ namespace COTG
 		}
 		public static void HideFlyout(object sender)
 		{
-			var but = sender as Button;
-			Assert(but != null);
-			if (but != null)
-			{
-				var fly = but.FindParent<FlyoutPresenter>();
-				Assert(fly != null);
-				fly?.ContextFlyout?.Hide();
-			}
+			//var but = sender as Button;
+			//Assert(but != null);
+			//if (but != null)
+			//{
+			//	var fly = but.FindParent<FlyoutPresenter>();
+			//	Assert(fly != null);
+			//	fly?.ContextFlyout?.Hide();
+			//}
 
 		}
 	}
@@ -1548,13 +1750,13 @@ namespace COTG
 		public static void Set(this CoreCursor type)
 		{
 			// is this thread safe?
-			if(ShellPage.coreInputSource != null)
-			{				
-				ShellPage.coreInputSource.DispatcherQueue.EnqueueAsync(() =>
+			//if(ShellPage.coreInputSource != null)
+			//{				
+			//	ShellPage.coreInputSource.DispatcherQueue.EnqueueAsync(() =>
 				
-					ShellPage.coreInputSource.PointerCursor = type,DispatcherQueuePriority.Low);
+			//		ShellPage.coreInputSource.PointerCursor = type,DispatcherQueuePriority.Low);
 
-			}
+			//}
 			App.QueueOnUIThread( () =>
 				CoreWindow.GetForCurrentThread().PointerCursor = type);
 		}

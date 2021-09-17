@@ -1,24 +1,40 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
+  <Sdk Name="Microsoft.Build.CentralPackageVersions" Version="2.0.1" />
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
     <TargetFramework>net5.0-windows10.0.19041.0</TargetFramework>
     <TargetPlatformMinVersion>10.0.17763.0</TargetPlatformMinVersion>
+    <EnablePreviewMsixTooling>true</EnablePreviewMsixTooling>
+    <PublishProfile>Properties\PublishProfiles\win10-$(Platform).pubxml</PublishProfile>
+    <DefineConstants>MSIX</DefineConstants>
     <RootNamespace>cotg</RootNamespace>
-    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <ApplicationManifest>Package.appxmanifest</ApplicationManifest>
     <Platforms>x86;x64;arm64</Platforms>
     <RuntimeIdentifiers>win10-x86;win10-x64;win10-arm64</RuntimeIdentifiers>
     <UseWinUI>true</UseWinUI>
     <SupportedOSPlatformVersion>10.0.18362.0</SupportedOSPlatformVersion>
     <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+    <LangVersion>preview</LangVersion>
     <EnableDefaultPageItems>false</EnableDefaultPageItems>
+    <StartupObject>COTG.Program</StartupObject>
   </PropertyGroup>
+  <ItemGroup>
+    <EmbeddedResource Remove="AppPackages\**" />
+    <EmbeddedResource Remove="BundleArtifacts\**" />
+    <EmbeddedResource Remove="EventHandlers\**" />
+    <None Remove="AppPackages\**" />
+    <None Remove="BundleArtifacts\**" />
+    <None Remove="EventHandlers\**" />
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Azure.Core" Version="1.19.0" />
     <PackageReference Include="Azure.Data.Tables" Version="12.2.0" />
     <PackageReference Include="Azure.Storage.Blobs" Version="12.10.0" />
+    <PackageReference Include="CommunityToolkit.WinUI.Notifications" Version="7.0.3" />
     <PackageReference Include="CommunityToolkit.WinUI.UI.Controls" Version="7.0.3" />
     <PackageReference Include="DSharpPlus" Version="4.1.0" />
+    <PackageReference Include="DSharpPlus.CommandsNext" Version="4.1.0" />
     <PackageReference Include="Enums.NET" Version="4.0.0" />
     <PackageReference Include="Grpc.Net.Client" Version="2.40.0-pre1" />
     <PackageReference Include="MagicOnion.Client" Version="4.3.1" />
@@ -26,23 +42,16 @@
     <PackageReference Include="Microsoft.AppCenter.Analytics" Version="4.3.0" />
     <PackageReference Include="Microsoft.AppCenter.Crashes" Version="4.3.0" />
     <PackageReference Include="Microsoft.Services.Store.Engagement" Version="10.1901.28001" />
-    <PackageReference Include="Microsoft.Toolkit.HighPerformance" Version="7.1.0-rc1" />
-    <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.0.0-experimental1" />
-    <PackageReference Include="Microsoft.WindowsAppSDK.Foundation" Version="1.0.0-experimental1" />
-    <PackageReference Include="Microsoft.WindowsAppSDK.WinUI" Version="1.0.0-experimental1" />
-    <PackageReference Include="Microsoft.WindowsAppSDK.InteractiveExperiences" Version="1.0.0-experimental1" />
+    <PackageReference Include="Microsoft.Toolkit.HighPerformance" Version="7.1.0-rc2" />
+    <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.0.0-preview1" />
     <PackageReference Include="Nito.AsyncEx.Coordination" Version="5.1.0" />
     <PackageReference Include="Nito.AsyncEx.Tasks" Version="5.1.0" />
     <PackageReference Include="PlayFabAllSDK" Version="1.101.210913" />
+    <PackageReference Include="SharpDX" Version="4.2.0" />
     <PackageReference Include="Standart.Hash.xxHash" Version="3.1.0" />
     <PackageReference Include="System.Text.Json" Version="6.0.0-rc.1.21451.13" />
     <PackageReference Include="Telerik.WinUI.Controls.Trial" Version="0.5.0" />
     <PackageReference Include="ZString" Version="2.4.2" />
-  </ItemGroup>
-  <ItemGroup>
-    <PRIResource Include="Strings\en-us\Resources.resw">
-      <SubType>Designer</SubType>
-    </PRIResource>
   </ItemGroup>
   <ItemGroup>
     <Content Include="JS\funky" />
@@ -57,11 +66,9 @@
     <Compile Include="Activation\ShareTargetActivationHandler.cs" />
     <Compile Include="Activation\WebToAppLinkActivationHandler.cs" />
     <Compile Include="CnVChatClient.cs" />
-    <Compile Include="CnVDiscord\BotCommands.cs" />
     <Compile Include="CnVDiscord\Bridge.cs" />
     <Compile Include="CnVDiscord\ConfigFile.cs" />
     <Compile Include="CnVDiscord\Discord.cs" />
-    <Compile Include="CnVDiscord\HelpFormatter.cs" />
     <Compile Include="CnVDiscord\Logs.cs" />
     <Compile Include="CnVDiscord\PlayerHooks.cs" />
     <Compile Include="CnVDiscord\ServerBroadcastEventArgs.cs" />
@@ -148,6 +155,7 @@
     <Compile Include="Models\JsNative.cs" />
     <Compile Include="Models\JSPopup.cs" />
     <Compile Include="Note.cs" />
+    <Compile Include="Program.cs" />
     <Compile Include="Services\Avatarslate.cs" />
     <Compile Include="Services\Blobs.cs" />
     <Compile Include="Services\ChatStorage.cs" />
@@ -323,9 +331,10 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
+    <ApplicationDefinition Include="Activation\App.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </ApplicationDefinition>
     <Page Include="Styles\BattleReport.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -665,12 +674,25 @@
     <Compile Include="JSON\ofdf.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Activation\App.xaml.cs">
+      <DependentUpon>App.xaml</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
     <Folder Include="Content\Art\City\COTG\" />
     <Folder Include="Content\Art\Tiles\" />
     <Folder Include="Content\Audio\" />
-    <Folder Include="EventHandlers\" />
     <Folder Include="Shader\" />
   </ItemGroup>
+<ItemGroup>
+  <Reference Include="Cyotek.Drawing.BitmapFont, Version=1.0.0.0, Culture=neutral, processorArchitecture=AMD64">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\ext\Cyotek.Drawing.BitmapFont.dll</HintPath>
+    </Reference>
+  <Reference Include="MonoGame.Framework">
+    <HintPath>..\ext\net5.0-windows10.0.19041.0\MonoGame.Framework.dll</HintPath>
+  </Reference>
+    </ItemGroup>
   <PropertyGroup>
     <SignAssembly>true</SignAssembly>
   </PropertyGroup>
@@ -682,13 +704,14 @@
   </PropertyGroup>
   <PropertyGroup>
     <PostBuildEvent />
-    <StartupObject>COTG.Program</StartupObject>
+    <StartupObject></StartupObject>
     <DebugType>portable</DebugType>
     <GenerateDocumentationFile>True</GenerateDocumentationFile>
     <RunAnalyzersDuringLiveAnalysis>False</RunAnalyzersDuringLiveAnalysis>
     <EnableNETAnalyzers>True</EnableNETAnalyzers>
     <AnalysisLevel>preview</AnalysisLevel>
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+    <IsPublishable>False</IsPublishable>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x86'">
     <Optimize>False</Optimize>

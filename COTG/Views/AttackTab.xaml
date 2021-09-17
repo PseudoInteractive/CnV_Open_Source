@@ -7,7 +7,7 @@
 			  xmlns:cotg="using:COTG"
 			  xmlns:game="using:COTG.Game"
 			  xmlns:view="using:COTG.Views"
-			  xmlns:tk="using:CommunityToolkit.WinUI"
+			  xmlns:tk="using:CommunityToolkit.WinUI.UI.Controls"
 			  xmlns:winui="using:Microsoft.UI.Xaml.Controls"
 			  xmlns:storage="using:Windows.Storage"
 			  

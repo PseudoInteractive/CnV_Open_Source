@@ -1920,11 +1920,6 @@
             <param name="obj">The <see cref="T:Microsoft.Xna.Framework.Color"/> to compare.</param>
             <returns><c>true</c> if the instances are equal; <c>false</c> otherwise.</returns>
         </member>
-        <member name="P:Microsoft.Xna.Framework.Color.TransparentBlack">
-            <summary>
-            TransparentBlack color (R:0,G:0,B:0,A:0).
-            </summary>
-        </member>
         <member name="P:Microsoft.Xna.Framework.Color.Transparent">
             <summary>
             Transparent color (R:0,G:0,B:0,A:0).
@@ -2795,6 +2790,18 @@
             <summary>
             Virtual property to allow a derived ContentManager to have it's assets reloaded
             </summary>
+        </member>
+        <member name="M:Microsoft.Xna.Framework.Content.ContentManager.UnloadAsset(System.String)">
+            <summary>
+            Unloads a single asset.
+            </summary>
+            <param name="assetName">The name of the asset to unload. This cannot be null.</param>
+        </member>
+        <member name="M:Microsoft.Xna.Framework.Content.ContentManager.UnloadAssets(System.Collections.Generic.IList{System.String})">
+            <summary>
+            Unloads a set of assets.
+            </summary>
+            <param name="assetNames">The names of the assets to unload.</param>
         </member>
         <member name="M:Microsoft.Xna.Framework.Content.ContentReaderExtensions.GetGraphicsDevice(Microsoft.Xna.Framework.Content.ContentReader)">
             <summary>
@@ -3951,6 +3958,12 @@
             Gets or sets a bool that enables usage of Alt+F4 for window closing on desktop platforms. Value is true by default.
             </summary>
         </member>
+        <member name="P:Microsoft.Xna.Framework.GameWindow.Position">
+            <summary>
+            The location of this window on the desktop, eg: global coordinate space
+            which stretches across all screens.
+            </summary>
+        </member>
         <member name="P:Microsoft.Xna.Framework.GameWindow.CurrentOrientation">
             <summary>
             The display orientation on a mobile device.
@@ -4405,6 +4418,16 @@
         <member name="F:Microsoft.Xna.Framework.Graphics.CubeMapFace.NegativeZ">
             <summary>
             Negative Z face in the cube map.
+            </summary>
+        </member>
+        <member name="F:Microsoft.Xna.Framework.Graphics.DefaultColorProcessors.ZeroTransparentPixels">
+            <summary>
+            Zeroes RGB of pixels having zero alpha(standard XNA behavior)
+            </summary>
+        </member>
+        <member name="F:Microsoft.Xna.Framework.Graphics.DefaultColorProcessors.PremultiplyAlpha">
+            <summary>
+            Premultiplies RGB of pixels by its alpha
             </summary>
         </member>
         <member name="T:Microsoft.Xna.Framework.Graphics.AlphaTestEffect">
@@ -5721,11 +5744,6 @@
             <summary>
             Returns a handle to internal device object. Valid only on DirectX platforms.
             For usage, convert this to SharpDX.Direct3D11.Device.
-            </summary>
-        </member>
-        <member name="M:Microsoft.Xna.Framework.Graphics.GraphicsDevice.CreateDeviceIndependentResources">
-            <summary>
-            Creates resources not tied the active graphics device.
             </summary>
         </member>
         <member name="M:Microsoft.Xna.Framework.Graphics.GraphicsDevice.CreateDeviceResources">
@@ -8327,11 +8345,25 @@
             <typeparam name="T"></typeparam>
             <param name="data">Destination array for the texture data</param>
         </member>
+        <member name="M:Microsoft.Xna.Framework.Graphics.Texture2D.FromFile(Microsoft.Xna.Framework.Graphics.GraphicsDevice,System.String,System.Action{System.Byte[]})">
+            <summary>
+            Creates a <see cref="T:Microsoft.Xna.Framework.Graphics.Texture2D"/> from a file, supported formats bmp, gif, jpg, png, tif and dds (only for simple textures).
+            May work with other formats, but will not work with tga files.
+            This internally calls <see cref="M:Microsoft.Xna.Framework.Graphics.Texture2D.FromStream(Microsoft.Xna.Framework.Graphics.GraphicsDevice,System.IO.Stream,System.Action{System.Byte[]})"/>.
+            </summary>
+            <param name="graphicsDevice">The graphics device to use to create the texture.</param>
+            <param name="path">The path to the image file.</param>
+            <param name="colorProcessor">Function that is applied to the data in RGBA format before the texture is sent to video memory. Could be null(no processing then).</param>
+            <returns>The <see cref="T:Microsoft.Xna.Framework.Graphics.Texture2D"/> created from the given file.</returns>
+            <remarks>Note that different image decoders may generate slight differences between platforms, but perceptually 
+            the images should be identical.
+            </remarks>
+        </member>
         <member name="M:Microsoft.Xna.Framework.Graphics.Texture2D.FromFile(Microsoft.Xna.Framework.Graphics.GraphicsDevice,System.String)">
             <summary>
             Creates a <see cref="T:Microsoft.Xna.Framework.Graphics.Texture2D"/> from a file, supported formats bmp, gif, jpg, png, tif and dds (only for simple textures).
             May work with other formats, but will not work with tga files.
-            This internally calls <see cref="M:Microsoft.Xna.Framework.Graphics.Texture2D.FromStream(Microsoft.Xna.Framework.Graphics.GraphicsDevice,System.IO.Stream)"/>.
+            This internally calls <see cref="M:Microsoft.Xna.Framework.Graphics.Texture2D.FromStream(Microsoft.Xna.Framework.Graphics.GraphicsDevice,System.IO.Stream,System.Action{System.Byte[]})"/>.
             </summary>
             <param name="graphicsDevice">The graphics device to use to create the texture.</param>
             <param name="path">The path to the image file.</param>
@@ -8339,6 +8371,19 @@
             <remarks>Note that different image decoders may generate slight differences between platforms, but perceptually 
             the images should be identical.  This call does not premultiply the image alpha, but areas of zero alpha will
             result in black color data.
+            </remarks>
+        </member>
+        <member name="M:Microsoft.Xna.Framework.Graphics.Texture2D.FromStream(Microsoft.Xna.Framework.Graphics.GraphicsDevice,System.IO.Stream,System.Action{System.Byte[]})">
+            <summary>
+            Creates a <see cref="T:Microsoft.Xna.Framework.Graphics.Texture2D"/> from a stream, supported formats bmp, gif, jpg, png, tif and dds (only for simple textures).
+            May work with other formats, but will not work with tga files.
+            </summary>
+            <param name="graphicsDevice">The graphics device to use to create the texture.</param>
+            <param name="stream">The stream from which to read the image data.</param>
+            <param name="colorProcessor">Function that is applied to the data in RGBA format before the texture is sent to video memory. Could be null(no processing then).</param>
+            <returns>The <see cref="T:Microsoft.Xna.Framework.Graphics.Texture2D"/> created from the image stream.</returns>
+            <remarks>Note that different image decoders may generate slight differences between platforms, but perceptually 
+            the images should be identical.
             </remarks>
         </member>
         <member name="M:Microsoft.Xna.Framework.Graphics.Texture2D.FromStream(Microsoft.Xna.Framework.Graphics.GraphicsDevice,System.IO.Stream)">
@@ -8497,6 +8542,11 @@
         <member name="F:Microsoft.Xna.Framework.Graphics.PrimitiveType.LineStrip">
             <summary>
             Renders the vertices as a single polyline; the count may be any positive integer.
+            </summary>
+        </member>
+        <member name="F:Microsoft.Xna.Framework.Graphics.PrimitiveType.PointList">
+            <summary>
+            Renders the vertices as individual points; the count may be any positive integer.
             </summary>
         </member>
         <member name="M:Microsoft.Xna.Framework.Graphics.VertexBuffer.GraphicsDeviceResetting">
@@ -9296,6 +9346,20 @@
             {X:[<see cref="P:Microsoft.Xna.Framework.Graphics.Viewport.X"/>] Y:[<see cref="P:Microsoft.Xna.Framework.Graphics.Viewport.Y"/>] Width:[<see cref="P:Microsoft.Xna.Framework.Graphics.Viewport.Width"/>] Height:[<see cref="P:Microsoft.Xna.Framework.Graphics.Viewport.Height"/>] MinDepth:[<see cref="P:Microsoft.Xna.Framework.Graphics.Viewport.MinDepth"/>] MaxDepth:[<see cref="P:Microsoft.Xna.Framework.Graphics.Viewport.MaxDepth"/>]}
             </summary>
             <returns>A <see cref="T:System.String"/> representation of this <see cref="T:Microsoft.Xna.Framework.Graphics.Viewport"/>.</returns>
+        </member>
+        <member name="T:Microsoft.Xna.Framework.Graphics.SwapChainRenderTarget">
+            <summary>
+            A swap chain used for rendering to a secondary GameWindow.
+            </summary>
+            <remarks>
+            This is an extension and not part of stock XNA.
+            It is currently implemented for Windows and DirectX only.
+            </remarks>
+        </member>
+        <member name="M:Microsoft.Xna.Framework.Graphics.SwapChainRenderTarget.Present">
+            <summary>
+            Displays the contents of the active back buffer to the screen.
+            </summary>
         </member>
         <member name="T:Microsoft.Xna.Framework.Graphics.ImmutableVertexInputLayout">
             <summary>
@@ -12410,12 +12474,6 @@
             Used to disable emitting of hold gestures.
             </summary>
         </member>
-        <member name="T:Microsoft.Xna.Framework.Input.Touch.TouchQueue">
-            <summary>
-            Stores touches to apply them once a frame for platforms that dispatch touches asynchronously
-            while user code is running.
-            </summary>
-        </member>
         <member name="T:Microsoft.Xna.Framework.Input.NamespaceDoc">
             <summary>
             Provides functionality to handle input from keyboards, mice, gamepads, etc.
@@ -13890,6 +13948,22 @@
         <member name="F:Microsoft.Xna.Framework.Media.VideoSoundtrackType.MusicAndDialog">
             <summary>
             This video contains music and dialog.
+            </summary>
+        </member>
+        <member name="T:Microsoft.Xna.Framework.Media.MediaManagerState">
+            <summary>
+            This class provides a way for the MediaManager to be initialised exactly once, 
+            regardless of how many different places need it, and which is called first.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Xna.Framework.Media.MediaManagerState.CheckStartup">
+            <summary>
+            Ensures that the MediaManager has been initialised. Must be called from UI thread.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Xna.Framework.Media.MediaManagerState.CheckShutdown">
+            <summary>
+            Ensures that the MediaManager has been shutdown. Must be called from UI thread.
             </summary>
         </member>
         <member name="M:Microsoft.Xna.Framework.PlaneHelper.ClassifyPoint(Microsoft.Xna.Framework.Vector3@,Microsoft.Xna.Framework.Plane@)">
@@ -17537,11 +17611,6 @@
             </summary>
             <param name="key">The key involved in this event</param>
         </member>
-        <member name="P:Microsoft.Xna.Framework.InputEvents.CoreCursor">
-            <summary>
-            Sets the cursor of <see cref="T:Windows.UI.Core.CoreIndependentInputSource"/> thread
-            </summary>
-        </member>
         <member name="M:MonoGame.Framework.Utilities.ByteBufferPool.Get(System.Int32)">
             <summary>
             Get a buffer that is at least as big as size.
@@ -20471,11 +20540,6 @@
             MonoGame WebGL platform.
             </summary>
         </member>
-        <member name="F:MonoGame.Framework.Utilities.MonoGamePlatform.PSVita">
-            <summary>
-            MonoGame PSVita platform.
-            </summary>
-        </member>
         <member name="F:MonoGame.Framework.Utilities.MonoGamePlatform.XboxOne">
             <summary>
             MonoGame Xbox One platform.
@@ -22956,30 +23020,15 @@
             This dictionary is used to resolve byte values for a given character.
             </summary>
         </member>
-        <member name="T:MonoGame.Framework.XamlGame`1">
+        <member name="M:MonoGame.Framework.Utilities.TimerHelper.GetCurrentResolution">
             <summary>
-            Static class for initializing a Game object for a XAML application.
+            Returns the current timer resolution in milliseconds
             </summary>
-            <typeparam name="T">A class derived from Game with a public parameterless constructor.</typeparam>
         </member>
-        <member name="M:MonoGame.Framework.XamlGame`1.Create(System.String,Windows.UI.Core.CoreWindow,Windows.UI.Xaml.Controls.SwapChainPanel)">
+        <member name="M:MonoGame.Framework.Utilities.TimerHelper.SleepForNoMoreThan(System.Double)">
             <summary>
-            Creates your Game class initializing it to work within a XAML application window.
+            Sleeps as long as possible without exceeding the specified period
             </summary>
-            <param name="launchParameters">The command line arguments from launch.</param>
-            <param name="window">The core window object.</param>
-            <param name="swapChainPanel">The XAML SwapChainPanel to which we render the scene and receive input events.</param>
-            <returns>Returns an instance of T generated with default parameterless T constructor</returns>
-        </member>
-        <member name="M:MonoGame.Framework.XamlGame`1.Create(System.Func{`0},System.String,Windows.UI.Core.CoreWindow,Windows.UI.Xaml.Controls.SwapChainPanel)">
-            <summary>
-            Creates your Game class initializing it with <paramref name="gameConstructor"/> to work within a XAML application window.
-            </summary>
-            <param name="gameConstructor">The method to construct T</param>
-            <param name="launchParameters">The command line arguments from launch.</param>
-            <param name="window">The core window object.</param>
-            <param name="swapChainPanel">The XAML SwapChainPanel to which we render the scene and receive input events.</param>
-            <returns>Returns an instance of T generated with <paramref name="gameConstructor"/></returns>
         </member>
         <member name="M:StbImageWriteSharp.CRuntime.frexp(System.Double,System.Int32*)">
             <summary>

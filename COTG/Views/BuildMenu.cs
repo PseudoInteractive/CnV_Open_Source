@@ -8,6 +8,8 @@ using Microsoft.UI.Xaml.Media;
 using static COTG.Views.CityBuild;
 using Microsoft.UI.Xaml;
 using Action = COTG.Views.CityBuild.Action;
+using Microsoft.UI;
+
 namespace COTG.Views
 {
 	public enum BuildPhase
@@ -41,7 +43,7 @@ namespace COTG.Views
 		{
 			action = Action.invalid;
 			bid = -1;
-			textColor = Windows.UI.Colors.Black;
+			textColor = Colors.Black;
 
 		}
 		public BuildMenuItem(int _bid)

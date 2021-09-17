@@ -14,8 +14,8 @@ using Telerik.UI.Xaml.Controls.Grid;
 using Windows.ApplicationModel.Core;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Foundation.Metadata;
-using Windows.UI.ViewManagement;
-using Windows.UI.WindowManagement;
+//using Windows.UI.ViewManagement;
+//using Windows.UI.WindowManagement;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Hosting;
@@ -26,6 +26,8 @@ using static COTG.Debug;
 using Microsoft.UI.Xaml.Media;
 using SymbolIconSource = Microsoft.UI.Xaml.Controls.SymbolIconSource;
 using Microsoft.Xna.Framework.Input;
+using Microsoft.UI;
+using Microsoft.UI.Windowing;
 
 namespace COTG.Views
 {
@@ -310,7 +312,7 @@ namespace COTG.Views
                 if (RootAppWindow != null)
                 {
 					Tabs.TabItemsChanged -= Tabs_TabItemsChanged;
-					RootAppWindow.CloseAsync();
+//					RootAppWindow.CloseAsync();
 					
                 }
             //    else
@@ -352,7 +354,7 @@ namespace COTG.Views
             else
             {
                 // Secondary
-                RootAppWindow.Frame.DragRegionVisuals.Remove(CustomDragRegion);
+              //  RootAppWindow.Frame.DragRegionVisuals.Remove(CustomDragRegion);
             }
             RemoveTabsOnClose();
            Assert( Tabs.TabItems.Count==0);
@@ -438,25 +440,31 @@ namespace COTG.Views
             }
             else
             {
-                // Secondary AppWindows --- keep track of the window
-                RootAppWindow = window;
-                window.Closed += Window_Closed;
-                // Extend into the titlebar
-                window.TitleBar.ExtendsContentIntoTitleBar = true;
-                window.TitleBar.ButtonBackgroundColor = Windows.UI.Colors.Transparent;
-                window.TitleBar.ButtonInactiveBackgroundColor = Windows.UI.Colors.Transparent;
+    //            // Secondary AppWindows --- keep track of the window
+    //            RootAppWindow = window;
+				//window.Closing+=Window_Closing; ;
+    //            // Extend into the titlebar
+    //            window.TitleBar.ExtendsContentIntoTitleBar = true;
+    //            window.TitleBar.ButtonBackgroundColor = Colors.Transparent;
+    //            window.TitleBar.ButtonInactiveBackgroundColor = Colors.Transparent;
 
-                // Due to a bug in AppWindow, we cannot follow the same pattern as CoreWindow when setting the min width.
-                // Instead, set a hardcoded number. 
-            //    CustomDragRegion.MinWidth = 188;
+    //            // Due to a bug in AppWindow, we cannot follow the same pattern as CoreWindow when setting the min width.
+    //            // Instead, set a hardcoded number. 
+    //        //    CustomDragRegion.MinWidth = 188;
 
-                window.Frame.DragRegionVisuals.Add(CustomDragRegion);
-				Tabs.TabItemsChanged += Tabs_TabItemsChanged;
+    //            window.Frame.DragRegionVisuals.Add(CustomDragRegion);
+				//Tabs.TabItemsChanged += Tabs_TabItemsChanged;
 			}
 			
         }
 
-        public TabPage AddChatTabs()
+		private void Window_Closing(AppWindow sender,AppWindowClosingEventArgs args)
+		{
+			tabPages.Remove(this);
+			RemoveTabsOnClose();
+		}
+
+		public TabPage AddChatTabs()
         {
             var selectIt = true;
             while (AddAnyChatTab(selectIt))
@@ -466,11 +474,6 @@ namespace COTG.Views
             return this;
         }
 
-        private void Window_Closed(AppWindow sender, AppWindowClosedEventArgs args)
-        {
-            tabPages.Remove(this);
-            RemoveTabsOnClose();
-        }
 
         //private void CoreTitleBar_LayoutMetricsChanged(CoreApplicationViewTitleBar sender, object args)
         //{
@@ -526,31 +529,31 @@ namespace COTG.Views
                 return;
             }
 
-            AppWindow newWindow = await AppWindow.TryCreateAsync();
-			newWindow.PersistedStateId = $"tabWindow{tabWindows.Count}";
-            tabWindows.Add(newWindow);
+   //         AppWindow newWindow = await AppWindow.TryCreateAsync();
+			//newWindow.PersistedStateId = $"tabWindow{tabWindows.Count}";
+   //         tabWindows.Add(newWindow);
 
-            newWindow.Closed += (sender,b)=> tabWindows.Remove(sender);
+   //         newWindow.Closed += (sender,b)=> tabWindows.Remove(sender);
 
-            var newPage = new TabPage();
-            newPage.SetupWindow(newWindow);
-            Tabs.TabItems.Remove(args.Tab);
-            var ut = args.Tab.Content as UserTab;
-            ut.XamlTreeChanged(null);
-            newWindow.RequestMoveAdjacentToCurrentView();
-            ElementCompositionPreview.SetAppWindowContent(newWindow, newPage);
+   //         var newPage = new TabPage();
+   //         newPage.SetupWindow(newWindow);
+   //         Tabs.TabItems.Remove(args.Tab);
+   //         var ut = args.Tab.Content as UserTab;
+   //         ut.XamlTreeChanged(null);
+   //         newWindow.RequestMoveAdjacentToCurrentView();
+   //         ElementCompositionPreview.SetAppWindowContent(newWindow, newPage);
 
-            newPage.Add(args.Tab);
+   //         newPage.Add(args.Tab);
 
-            ut.XamlTreeChanged(newPage);
+   //         ut.XamlTreeChanged(newPage);
 
-            await newWindow.TryShowAsync();
+   //         await newWindow.TryShowAsync();
 
         }
 
         public static async Task CloseAllTabWindows()
         {
-			await Task.WhenAll(tabWindows.Select( a=>a.CloseAsync().AsTask() ));
+		//	await Task.WhenAll(tabWindows.Select( a=>a.CloseAsync().AsTask() ));
         }
 
         private void Tabs_TabDragStarting(TabView sender, TabViewTabDragStartingEventArgs args)

@@ -8,10 +8,10 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       xmlns:model="using:COTG.Models"
       xmlns:cotg="using:COTG"
-      xmlns:my="using:Microsoft.UI.Xaml.Controls"
+	xmlns:winui="using:Microsoft.UI.Xaml.Controls"
       xmlns:tdd="using:Telerik.Data.Core"
       xmlns:tg="using:Telerik.UI.Xaml.Controls.Grid"
-      xmlns:tk="using:Toolkit.Uwp.UI.Controls"
+      xmlns:tk="using:CommunityToolkit.WinUI.UI.Controls"
       xmlns:tl="using:Telerik.UI.Xaml.Controls"
       xmlns:telerikCore="using:Telerik.Data.Core"
       xmlns:local="using:COTG.Views"
@@ -64,7 +64,7 @@
                                        />
                <tg:DataGridBooleanColumn PropertyName="pinned"
                                          IsVisible="True"
-                                         Tip="Hold down shift to toggle pinned status for all selected spots"
+                                         winui:ToolTipService.ToolTip="Hold down shift to toggle pinned status for all selected spots"
                                       SizeMode="Fixed"
                                           Width="32" />
 

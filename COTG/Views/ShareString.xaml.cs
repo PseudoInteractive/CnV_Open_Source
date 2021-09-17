@@ -23,6 +23,8 @@ using CommunityToolkit.WinUI;
 using System.Text.RegularExpressions;
 using System.ComponentModel;
 using static COTG.Game.City;
+using CommunityToolkit.WinUI.UI.Controls;
+
 namespace COTG.Views
 {
 
@@ -517,13 +519,13 @@ namespace COTG.Views
 
 		private void CollapsedDisable(object sender, EventArgs e)
 		{
-			var exp = sender as CommunityToolkit.WinUI.Expander;
+			var exp = sender as Expander;
 			Assert(exp!=null);
 			exp.Header = exp.Header as string + " - No Change";
 		}
 		private void ExpandedEnable(object sender, EventArgs e)
 		{
-			var exp = sender as CommunityToolkit.WinUI.Expander;
+			var exp = sender as Expander;
 			Assert(exp!=null);
 			exp.Header = (exp.Header as string).Replace( " - No Change", "");
 		}

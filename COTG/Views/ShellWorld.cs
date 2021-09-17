@@ -8,7 +8,7 @@ using System.Linq;
 using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
-using Windows.UI.Core;
+//using Windows.UI.Core;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
@@ -22,13 +22,15 @@ using COTG.Draw;
 using static COTG.Helpers.AString;
 using Cysharp.Text;
 using EnumsNET;
+using Microsoft.UI.Input;
+using Microsoft.UI.Dispatching;
 
 namespace COTG.Views
 {
 
 	public partial class ShellPage
 	{
-		public static CoreIndependentInputSource coreInputSource;
+		public static InputPointerSource coreInputSource;
 
 		public static Vector2 mousePosition;
 		public static Vector2 mousePositionC; // in camera space
@@ -49,7 +51,7 @@ namespace COTG.Views
 
 		//	var workItemHandler = new WorkItemHandler((action) =>
 			//{
-				var inputDevices = CoreInputDeviceTypes.Mouse | CoreInputDeviceTypes.Pen | CoreInputDeviceTypes.Touch;
+				var inputDevices = InputPointerSourceDeviceKinds.Mouse | InputPointerSourceDeviceKinds.Pen | InputPointerSourceDeviceKinds.Touch;
 			//	Log(canvas.ManipulationMode);
 			//	canvas.ManipulationMode = ManipulationModes.All;
 				coreInputSource = canvas.CreateCoreIndependentInputSource(inputDevices);
@@ -72,7 +74,7 @@ namespace COTG.Views
 
 		}
 
-		public static Windows.System.DispatcherQueueHandler RightClick((int x, int y) cc, int cid)
+		public static DispatcherQueueHandler RightClick((int x, int y) cc, int cid)
 		{
 			return () =>
 			{
@@ -92,9 +94,9 @@ namespace COTG.Views
 			};
 		}
 
-		private static void CoreInputSource_InputEnabled(object sender, InputEnabledEventArgs args) {
-			LogJson(args);
-		}
+		//private static void CoreInputSource_InputEnabled(object sender, InputEnabledEventArgs args) {
+		//	LogJson(args);
+		//}
 		[Flags]
 		public enum GestureAction
 		{
@@ -140,7 +142,7 @@ namespace COTG.Views
 				lastStretch = 0;
 
 			}
-			public static (Vector2 c,bool process) ProcessPressed(Windows.UI.Input.PointerPoint point)
+			public static (Vector2 c,bool process) ProcessPressed(PointerPoint point)
 			{
 				var c = GetCanvasPosition(point.Position);
 					var id = point.PointerId;
@@ -193,7 +195,7 @@ namespace COTG.Views
 
 			//}
 			
-			public static void ProcessPointerExited(Windows.UI.Input.PointerPoint point)
+			public static void ProcessPointerExited(PointerPoint point)
 			{
 					var id = point.PointerId;
 					var index = (points.FindIndex(p => p.id == id));
@@ -204,7 +206,7 @@ namespace COTG.Views
 					Reset();
 			}
 
-			public static (Vector2 c, Vector3 delta, GestureAction action) ProcessMoved(Windows.UI.Input.PointerPoint point)
+			public static (Vector2 c, Vector3 delta, GestureAction action) ProcessMoved(PointerPoint point)
 			{
 				var pointC = GetCanvasPosition(point.Position);
 				var id = point.PointerId;
@@ -289,7 +291,7 @@ namespace COTG.Views
 
 			}
 			
-			public static (Vector2 c, GestureAction action) ProcessRelased(Windows.UI.Input.PointerPoint point)
+			public static (Vector2 c, GestureAction action) ProcessRelased(PointerPoint point)
 			{
 				var c = GetCanvasPosition(point.Position);
 
@@ -309,7 +311,7 @@ namespace COTG.Views
 					if (currentGesture != GestureAction.none)
 						result=(rv, GestureAction.none);
 					else if (maxPoints > 1 ||
-						point.Properties.PointerUpdateKind == Windows.UI.Input.PointerUpdateKind.RightButtonReleased)
+						point.Properties.PointerUpdateKind == PointerUpdateKind.RightButtonReleased)
 						result = (rv, GestureAction.rightClick);
 					
 					Reset();
@@ -414,7 +416,7 @@ namespace COTG.Views
 
 		static void PointerInfo(PointerEventArgs args, [System.Runtime.CompilerServices.CallerMemberName] string memberName = "")
 		{
-			Log($"{memberName} : f:{args.CurrentPoint.FrameId} id:{args.CurrentPoint.PointerId} C:{args.CurrentPoint.IsInContact} t:{args.CurrentPoint.PointerDevice.PointerDeviceType} <{args.CurrentPoint.Position.X},{args.CurrentPoint.Position.Y}> ");
+			Log($"{memberName} : f:{args.CurrentPoint.FrameId} id:{args.CurrentPoint.PointerId} C:{args.CurrentPoint.IsInContact} t:{args.CurrentPoint.PointerDeviceType} <{args.CurrentPoint.Position.X},{args.CurrentPoint.Position.Y}> ");
 		}
 		private static void Canvas_PointerExited(object sender, PointerEventArgs e)
 		{
@@ -480,8 +482,8 @@ namespace COTG.Views
 			// why do this trigger gestures?
 			switch (pointerPoint.Properties.PointerUpdateKind)
 			{
-				case Windows.UI.Input.PointerUpdateKind.XButton1Released:
-				case Windows.UI.Input.PointerUpdateKind.XButton2Released:
+				case PointerUpdateKind.XButton1Released:
+				case PointerUpdateKind.XButton2Released:
 					return;
 			}
 			mousePosition = gestureResult.c;
@@ -691,12 +693,12 @@ namespace COTG.Views
 			{
 				switch (properties.PointerUpdateKind)
 				{
-					case Windows.UI.Input.PointerUpdateKind.XButton1Pressed:
+					case PointerUpdateKind.XButton1Pressed:
 						e.Handled = true;
 						NavStack.Back(true);
 						ClearHover();
 						return;
-					case Windows.UI.Input.PointerUpdateKind.XButton2Pressed:
+					case PointerUpdateKind.XButton2Pressed:
 						e.Handled = true;
 						NavStack.Forward(true);
 						ClearHover();
@@ -710,10 +712,10 @@ namespace COTG.Views
 			if (TryPostJSMouseEvent("click",
 				properties.PointerUpdateKind switch
 				{
-					Windows.UI.Input.PointerUpdateKind.LeftButtonPressed => 0,
-					Windows.UI.Input.PointerUpdateKind.MiddleButtonPressed => 1,
+					PointerUpdateKind.LeftButtonPressed => 0,
+					PointerUpdateKind.MiddleButtonPressed => 1,
 					
-					Windows.UI.Input.PointerUpdateKind.RightButtonPressed => 2,
+					PointerUpdateKind.RightButtonPressed => 2,
 					_=>0
 				}))
 			{

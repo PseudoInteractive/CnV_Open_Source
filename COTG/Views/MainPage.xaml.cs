@@ -100,19 +100,19 @@ namespace COTG.Views
         }
 
 		
-		static RadDataGrid GetGrid(PointerRoutedEventArgs e)
-		{
-			var a = e.OriginalSource as FrameworkElement;
-			while(a != null)
-			{
-				if (a is DataGridCellsPanel panel)
-					return panel.Owner;
-				if (a is DataGridRootPanel root)
-					return root.Owner;
-				a = a.Parent as FrameworkElement; 
-			}
-			return null;
-		}
+		//static RadDataGrid GetGrid(PointerRoutedEventArgs e)
+		//{
+		//	var a = e.OriginalSource as FrameworkElement;
+		//	while(a != null)
+		//	{
+		//		if (a is DataGridCellsPanel panel)
+		//			return panel.Owner;
+		//		if (a is DataGridRootPanel root)
+		//			return root.Owner;
+		//		a = a.Parent as FrameworkElement; 
+		//	}
+		//	return null;
+		//}
    
 
         public static List<int> GetContextCids(object sender)

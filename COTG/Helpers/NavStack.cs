@@ -11,11 +11,24 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Input;
 
 using static COTG.Debug;
+using System.Windows.Input;
 
 namespace COTG.Helpers
 {
-	public class NavStack : ICommand
+	public class NavStack:System.Windows.Input.ICommand
 	{
+		event EventHandler ICommand.CanExecuteChanged
+		{
+			add
+			{
+			//	throw new NotImplementedException();
+			}
+
+			remove
+			{
+			//	throw new NotImplementedException();
+			}
+		}
 
 		public static void Push(int cid)
 		{
@@ -156,12 +169,12 @@ namespace COTG.Helpers
 
 		public static NavStack instance = new NavStack();
 
-		bool ICommand.CanExecute(object parameter)
+		public bool CanExecute(object parameter)
 		{
 			return true;
 		}
 
-		void ICommand.Execute(object parameter)
+		public void Execute(object parameter)
 		{
 			var delta = (int)parameter;
 			if (delta < 0)
@@ -180,6 +193,16 @@ namespace COTG.Helpers
 			}
 		}
 
-		public event EventHandler<object> CanExecuteChanged;
+		//bool ICommand.CanExecute(object parameter)
+		//{
+		//	throw new NotImplementedException();
+		//}
+
+		//void ICommand.Execute(object parameter)
+		//{
+		//	throw new NotImplementedException();
+		//}
+
+	//	public event EventHandler<object> CanExecuteChanged;
 	}
 }

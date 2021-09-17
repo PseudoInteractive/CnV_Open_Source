@@ -9,7 +9,7 @@
       xmlns:my="using:Microsoft.UI.Xaml.Controls"
     	xmlns:tgCore="using:Telerik.Data.Core"
       xmlns:tg="using:Telerik.UI.Xaml.Controls.Grid"
-      xmlns:tk="using:CommunityToolkit.WinUI"
+      xmlns:tk="using:CommunityToolkit.WinUI.UI.Controls"
       xmlns:telerikGrid="using:Telerik.UI.Xaml.Controls.Grid"
       xmlns:local="using:COTG.Views"
         Tag="Boss"

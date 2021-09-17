@@ -5,7 +5,7 @@
 			  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 			  xmlns:tg="using:Telerik.UI.Xaml.Controls.Grid"
 			  xmlns:tgCore="using:Telerik.Data.Core"
-			  xmlns:tk="using:CommunityToolkit.WinUI"
+			  xmlns:tk="using:CommunityToolkit.WinUI.UI.Controls"
 			  xmlns:winui="using:Microsoft.UI.Xaml.Controls"
 			  xmlns:model="using:COTG.Models"
 			  xmlns:game="using:COTG.Game"

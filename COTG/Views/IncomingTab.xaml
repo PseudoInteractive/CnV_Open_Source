@@ -6,7 +6,7 @@
                xmlns:game="using:COTG.Game"
                xmlns:local="using:COTG.Views"
 			   xmlns:winui="using:Microsoft.UI.Xaml.Controls"  
-               xmlns:tk="using:CommunityToolkit.WinUI"
+               xmlns:tk="using:CommunityToolkit.WinUI.UI.Controls"
                xmlns:tg="using:Telerik.UI.Xaml.Controls.Grid"
                Background="{x:Null}"
       Tag="Incoming"
