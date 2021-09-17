@@ -14,30 +14,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Azure.Core" Version="1.19.0" />
-    <PackageReference Include="Azure.Data.Tables" Version="12.2.0" />
-    <PackageReference Include="Azure.Storage.Blobs" Version="12.10.0" />
-    <PackageReference Include="CommunityToolkit.WinUI.UI.Controls" Version="7.0.3" />
-    <PackageReference Include="DSharpPlus" Version="4.1.0" />
-    <PackageReference Include="Enums.NET" Version="4.0.0" />
-    <PackageReference Include="Grpc.Net.Client" Version="2.40.0-pre1" />
-    <PackageReference Include="MagicOnion.Client" Version="4.3.1" />
-    <PackageReference Include="Microsoft.AppCenter" Version="4.3.0" />
-    <PackageReference Include="Microsoft.AppCenter.Analytics" Version="4.3.0" />
-    <PackageReference Include="Microsoft.AppCenter.Crashes" Version="4.3.0" />
-    <PackageReference Include="Microsoft.Services.Store.Engagement" Version="10.1901.28001" />
-    <PackageReference Include="Microsoft.Toolkit.HighPerformance" Version="7.1.0-rc1" />
     <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.0.0-experimental1" />
     <PackageReference Include="Microsoft.WindowsAppSDK.Foundation" Version="1.0.0-experimental1" />
     <PackageReference Include="Microsoft.WindowsAppSDK.WinUI" Version="1.0.0-experimental1" />
     <PackageReference Include="Microsoft.WindowsAppSDK.InteractiveExperiences" Version="1.0.0-experimental1" />
-    <PackageReference Include="Nito.AsyncEx.Coordination" Version="5.1.0" />
-    <PackageReference Include="Nito.AsyncEx.Tasks" Version="5.1.0" />
-    <PackageReference Include="PlayFabAllSDK" Version="1.101.210913" />
-    <PackageReference Include="Standart.Hash.xxHash" Version="3.1.0" />
-    <PackageReference Include="System.Text.Json" Version="6.0.0-rc.1.21451.13" />
-    <PackageReference Include="Telerik.WinUI.Controls.Trial" Version="0.5.0" />
-    <PackageReference Include="ZString" Version="2.4.2" />
   </ItemGroup>
   <ItemGroup>
     <PRIResource Include="Strings\en-us\Resources.resw">
@@ -323,6 +303,9 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="App.xaml.cs">
+      <DependentUpon>App.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -658,6 +641,10 @@
     <MonoGameContentReference Include="Content\cotg.mgcb" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="App.config" />
+    <EmbeddedResource Include="appsettings.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
     <None Include="COTG_TemporaryKey.pfx" />
     <None Include="JS\pack.js" />
   </ItemGroup>
@@ -688,26 +675,6 @@
     <RunAnalyzersDuringLiveAnalysis>False</RunAnalyzersDuringLiveAnalysis>
     <EnableNETAnalyzers>True</EnableNETAnalyzers>
     <AnalysisLevel>preview</AnalysisLevel>
-    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x86'">
-    <Optimize>False</Optimize>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <Optimize>False</Optimize>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|arm64'">
-    <Optimize>False</Optimize>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x86'">
-    <Optimize>True</Optimize>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <Optimize>True</Optimize>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|arm64'">
-    <Optimize>True</Optimize>
   </PropertyGroup>
   <ProjectExtensions />
-  <Import Project="..\..\CnVShared\CnVShared.projitems" Label="Shared" />
 </Project>

@@ -57,7 +57,7 @@
 				<telerikGrid:DataGridNumericalColumn PropertyName="homeTroopsAttack"
 												Header="Attack"
 												 CellContentFormat="{}{0,7:N0}"
-												DefaultSortOrder="Descending"
+												SortDirection="Descending"
                                                 CellContentStyle="{StaticResource RightAlign}"
                                         />
 				<telerikGrid:DataGridNumericalColumn  PropertyName="cont"

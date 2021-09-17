@@ -68,23 +68,20 @@
 											Header="I"
 											SizeMode="Fixed"
 											Width="32"
-											HeaderTip="Click to switch to this city"
-											Tip="Click to switch to this city"
+											winui:ToolTipService.ToolTip="Click to switch to this city"
 											 />
 				<tg:DataGridTextColumn PropertyName="nameAndRemarks"
-										   Tip="Click to raid from this city without switching cities (fast)"
+										   winui:ToolTipService.ToolTip="Click to raid from this city without switching cities (fast)"
 										   Header="Name"
 										   CellContentStyle="{StaticResource LeftAlign}"
 										   SizeMode="Auto"
 										    />
 				<tg:DataGridTextColumn PropertyName="bStage"
-										   HeaderTip="Building Stage"
-										   Tip="Click 'Do all the stuff'"
+										   winui:ToolTipService.ToolTip="Click 'Do all the stuff'"
 										   CellContentStyle="{StaticResource CenterAlignLink}"
 										    />
 				<tg:DataGridTextColumn PropertyName="xy"
-										   HeaderTip="City Coordinates"
-										   Tip="Click to view this city"
+										   winui:ToolTipService.ToolTip="Click to view this city"
 										   CellContentStyle="{StaticResource CenterAlignLink}"
 										    />
 				<tg:DataGridNumericalColumn PropertyName="cont"
@@ -95,48 +92,43 @@
 				
 
 				<tg:DataGridBooleanColumn PropertyName="isBuilding"
-										   HeaderTip="Building"
-										   Tip="Building if checked, stalled if not"
+										   winui:ToolTipService.ToolTip="Building if checked, stalled if not"
 										   CellContentStyle="{StaticResource CenterAlignLink}"
 										    />
 				<tg:DataGridBooleanColumn PropertyName="AutoTowers"
-										   HeaderTip="Tower build"
-										   Tip="Towers are set to autobuild?"
+										   winui:ToolTipService.ToolTip="Towers are set to autobuild?"
 										    />
 				<tg:DataGridBooleanColumn PropertyName="AutoWalls"
-										   HeaderTip="Wall build"
-										   Tip="Walls are set to autobuild?"
+										   winui:ToolTipService.ToolTip="Walls are set to autobuild?"
 										 
 										    />
 				<!--<tg:DataGridTextColumn PropertyName="buildingStr"
 										   HeaderTip="Buildings"
-										   Tip="Number of buildings"
+										   winui:ToolTipService.ToolTip="Number of buildings"
 										   CellContentStyle="{StaticResource CenterAlignLink}"
 										    />-->
 				<tg:DataGridNumericalColumn PropertyName="Buildings"
-										   HeaderTip="Building Count"
-										   Tip="May or may not include queued buildings"
+										   winui:ToolTipService.ToolTip="May or may not include queued buildings"
 										   CellContentStyle="{StaticResource RightAlign}"
 										    />
 				<tg:DataGridNumericalColumn PropertyName="points"
-												Tip="City score"
+												winui:ToolTipService.ToolTip="City score"
 												SizeMode="Auto"
 												CellContentStyle="{StaticResource RightAlign}"
 												CellContentFormat="{}{0,6:N0}"
 												 />
 				<tg:DataGridNumericalColumn PropertyName="constructionSpeed"
 											Header="cs"
-											HeaderTip="Construction Speed"
-												Tip="Construction Speed"
+												winui:ToolTipService.ToolTip="Construction Speed"
 												SizeMode="Auto"
 												CellContentStyle="{StaticResource RightAlign}"
 												CellContentFormat="{}{0,4:N0}"
 												 />
 				<tg:DataGridNumericalColumn PropertyName="tsTotal"
 												CellContentStyle="{StaticResource RightAlign}"
-												Tip="TS enlisted in city"
+												winui:ToolTipService.ToolTip="TS enlisted in city"
 												CellContentFormat="{}{0,7:N0}"
-												DefaultSortOrder="Descending"
+												SortDirection="Descending"
 												SizeMode="Auto"
 												 />
 				<tg:DataGridTextColumn PropertyName="remarks"
@@ -156,13 +148,13 @@
 											  SizeMode="Auto"
 											   />
 				<tg:DataGridBooleanColumn PropertyName="bcBlocked"
-										  Tip="Buildings that can't build, maybe?"
+										  winui:ToolTipService.ToolTip="Buildings that can't build, maybe?"
 											Header="??" />
 				<tg:DataGridBooleanColumn PropertyName="bcTowers"
-										  Tip="Buildings has towers"
+										  winui:ToolTipService.ToolTip="Buildings has towers"
 											Header="twr" />
 				<tg:DataGridBooleanColumn PropertyName="ministersOn"
-										  Tip="Ministers On. Might need to visit city to update"
+										  winui:ToolTipService.ToolTip="Ministers On. Might need to visit city to update"
 											Header="mnO" />
 			</tg:RadDataGrid.Columns>
 
