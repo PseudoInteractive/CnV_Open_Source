@@ -72,10 +72,10 @@ namespace COTG.Services
               
                 // Do not repeat app initialization when the Window already has content,
                 // just ensure that the window is active
-                if (Window.Current.Content == null)
+                if (App.window.Content == null)
                 {
-                    // Create a Shell or Frame to act as the navigation context
-                    Window.Current.Content = _shell?.Value ?? new Frame();
+					// Create a Shell or Frame to act as the navigation context
+					App.window.Content = _shell?.Value ?? new Frame();
                 }
             }
 
@@ -93,7 +93,7 @@ namespace COTG.Services
 				}
 
 				// Ensure the current window is active
-				Window.Current.Activate();
+				App.window.Activate();
 
 
 			}
@@ -107,15 +107,17 @@ namespace COTG.Services
 			var t3 =  TroopInfo.Init();
 			await Task.WhenAll(t2,t3);
 			SettingsPage.Initialize();
-			var t1 = WindowManagerService.Current.InitializeAsync();
-			var t0 = ThemeSelectorService.InitializeAsync();
-			await Task.WhenAll(t0, t1);
-            Window.Current.Closed += async (a,b)=>
-			{
-				Debug.Log("Window!!Closed!");
-				await TabPage.CloseAllTabWindows(); 
-			};
+			App.StartAnalytics();
 
+//			var t1 = WindowManagerService.Current.InitializeAsync();
+			var t0 = ThemeSelectorService.InitializeAsync();
+			await Task.WhenAll(t0);
+   //         Window.Current.Closed += async (a,b)=>
+			//{
+			//	Debug.Log("Window!!Closed!");
+			//	await TabPage.CloseAllTabWindows(); 
+			//};
+			// thread??
 			var display = Windows.Graphics.Display.DisplayInformation.GetForCurrentView();
 			var colorInfo = display.GetAdvancedColorInfo();
 			AGame.colorKind = colorInfo.CurrentAdvancedColorKind;

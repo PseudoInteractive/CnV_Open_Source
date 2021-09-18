@@ -50,8 +50,8 @@ namespace COTG
 
 	//	public static bool WasKeyPressed(this Keys key) => AGame.keyboardState.IsKeyDown(key) && !AGame.priorKeyboardState.IsKeyDown(key);
 
-		static public CoreWindow CoreWindow => Window.Current.CoreWindow;
-		static public UIElement CoreContent => Window.Current.Content;
+		//static public CoreWindow CoreWindow => Window.Current.CoreWindow;
+		//static public UIElement CoreContent => Window.Current.Content;
 		public static bool TryGetValue<T>(this List<T> l, Func<T, bool> pred, out T var)
 		{
 			foreach (var i in l)
@@ -286,7 +286,7 @@ namespace COTG
 		{
 			canvas = swapChainPanel;
 			canvas.CompositeMode = (Microsoft.UI.Xaml.Media.ElementCompositeMode.MinBlend);
-			instance = MonoGame.Framework.XamlGame<AGame>.Create(() => new AGame() { }, "",Microsoft.UI.Xaml.Window.Current, swapChainPanel);
+			instance = MonoGame.Framework.XamlGame<AGame>.Create(() => new AGame() { }, "",App.window, swapChainPanel);
 		}
 
 		protected override void Initialize()

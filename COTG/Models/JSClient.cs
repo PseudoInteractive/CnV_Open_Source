@@ -737,7 +737,7 @@ namespace COTG
 				
 				//WebViewPage.DefaultUrl = new Uri(args.Uri);
 				WebViewPage.instance = null;
-				var w = await WindowManagerService.Current.TryShowAsStandaloneAsync<WebViewPage>("overview");
+				await WindowManagerService.Current.TryShowAsStandaloneAsync<WebViewPage>("overview");
 				while(WebViewPage.instance == null || WebViewPage.instance.webView==null)
 				{
 					await Task.Delay(1000);

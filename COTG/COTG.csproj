@@ -1,12 +1,12 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-  <Sdk Name="Microsoft.Build.CentralPackageVersions" Version="2.0.1" />
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
     <TargetFramework>net5.0-windows10.0.19041.0</TargetFramework>
     <TargetPlatformMinVersion>10.0.17763.0</TargetPlatformMinVersion>
     <EnablePreviewMsixTooling>true</EnablePreviewMsixTooling>
+    <WindowsPackageType>MSIX</WindowsPackageType>
     <PublishProfile>Properties\PublishProfiles\win10-$(Platform).pubxml</PublishProfile>
-    <DefineConstants>MSIX</DefineConstants>
+    <DefineConstants>DISABLE_XAML_GENERATED_MAIN</DefineConstants>
     <RootNamespace>cotg</RootNamespace>
     <ApplicationManifest>Package.appxmanifest</ApplicationManifest>
     <Platforms>x86;x64;arm64</Platforms>
@@ -205,7 +205,6 @@
     <Compile Include="Services\UserActivityService.cs" />
     <Compile Include="Services\UserActivityService.Sample.cs" />
     <Compile Include="Services\UserDataService.cs" />
-    <Compile Include="Services\ViewLifetimeControl.cs" />
     <Compile Include="Services\WhatsNewDisplayService.cs" />
     <Compile Include="Services\WindowManagerService.cs" />
     <Compile Include="Services\WorldStorage.cs" />
@@ -262,9 +261,6 @@
     </Compile>
     <Compile Include="Views\DefenseHistoryTab.xaml.cs">
       <DependentUpon>DefenseHistoryTab.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\FirstRunDialog.xaml.cs">
-      <DependentUpon>FirstRunDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Fixes.xaml.cs">
       <DependentUpon>Fixes.xaml</DependentUpon>

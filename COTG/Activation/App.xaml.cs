@@ -43,7 +43,7 @@ using Windows.ApplicationModel.DataTransfer;
 using Windows.Foundation.Collections;
 using Windows.Globalization.NumberFormatting;
 using Windows.System;
-using Windows.UI.Core;
+//using Windows.UI.Core;
 using Windows.UI.Input;
 using Microsoft.UI.Dispatching;
 using static COTG.Debug;
@@ -55,6 +55,7 @@ using MenuFlyout = Microsoft.UI.Xaml.Controls.MenuFlyout;
 using MenuFlyoutItem = Microsoft.UI.Xaml.Controls.MenuFlyoutItem;
 using MenuFlyoutSubItem = Microsoft.UI.Xaml.Controls.MenuFlyoutSubItem;
 using ToggleMenuFlyoutItem = Microsoft.UI.Xaml.Controls.ToggleMenuFlyoutItem;
+using Microsoft.UI.Input;
 
 namespace COTG
 {
@@ -216,11 +217,11 @@ namespace COTG
 		{
 			return IsKeyPressedShift() && IsKeyPressedControl();
 		}
-		static void OnKeyUp(CoreWindow sender, KeyEventArgs args)
-		{
-			var key = args.VirtualKey;
-			OnKeyUp(key);
-		}
+		//static void OnKeyUp(CoreWindow sender, KeyEventArgs args)
+		//{
+		//	var key = args.VirtualKey;
+		//	OnKeyUp(key);
+		//}
 
 		public static bool shiftPressed;
 		public static bool controlPressed;
@@ -247,14 +248,14 @@ namespace COTG
 
 		//static bool webViewInFront = false;
 
-		static void OnKeyDown(CoreWindow sender, KeyEventArgs args)
-		{
-			Note.Show("Key!");
-			var key = args.VirtualKey;
+		//static void OnKeyDown(CoreWindow sender, KeyEventArgs args)
+		//{
+		//	Note.Show("Key!");
+		//	var key = args.VirtualKey;
 	
-			OnKeyDown(key);
+		//	OnKeyDown(key);
 
-		}
+		//}
 		public static void OnKeyDown(VirtualKey key)
 		{
 			switch (key)
@@ -337,32 +338,32 @@ namespace COTG
 
 		private static ConcurrentQueue<Action> idleTasks = new ConcurrentQueue<Action>();
 		private static ConcurrentQueue<Func<Task>> throttledTasks = new ConcurrentQueue<Func<Task>>();
-
+		public static Window window;
 		static DateTimeOffset activeStart = DateTimeOffset.UtcNow;
 		protected override async void OnLaunched(Microsoft.UI.Xaml.LaunchActivatedEventArgs args)
 		{
 			try
 			{
-			
+
+				window= new();
+
+			//var view = DisplayInformation.GetForCurrentView();
+
+			//// Get the screen resolution (APIs available from 14393 onward).
+			//var resolution = new Size(view.ScreenWidthInRawPixels, view.ScreenHeightInRawPixels);
+
+			//// Calculate the screen size in effective pixels. 
+			//// Note the height of the Windows Taskbar is ignored here since the app will only be given the maxium available size.
+			//var scale = view.ResolutionScale == ResolutionScale.Invalid ? 1 : view.RawPixelsPerViewPixel;
+			//var bounds = new Size(resolution.Width / scale, resolution.Height / scale);
+
+			//ApplicationView.PreferredLaunchViewSize = new Size(bounds.Width, bounds.Height);
+			//ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.PreferredLaunchViewSize;
 
 
-				//var view = DisplayInformation.GetForCurrentView();
-
-				//// Get the screen resolution (APIs available from 14393 onward).
-				//var resolution = new Size(view.ScreenWidthInRawPixels, view.ScreenHeightInRawPixels);
-
-				//// Calculate the screen size in effective pixels. 
-				//// Note the height of the Windows Taskbar is ignored here since the app will only be given the maxium available size.
-				//var scale = view.ResolutionScale == ResolutionScale.Invalid ? 1 : view.RawPixelsPerViewPixel;
-				//var bounds = new Size(resolution.Width / scale, resolution.Height / scale);
-
-				//ApplicationView.PreferredLaunchViewSize = new Size(bounds.Width, bounds.Height);
-				//ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.PreferredLaunchViewSize;
-		
-			
 			//App.globalDispatcher = CoreWindow.GetForCurrentThread().Dispatcher;
 			globalQueue =  Microsoft.UI.Dispatching.DispatcherQueue.GetForCurrentThread();
-			CoreApplication.EnablePrelaunch(false);
+			//CoreApplication.EnablePrelaunch(false);
 
 			if (args.UWPLaunchActivatedEventArgs.Kind == Windows.ApplicationModel.Activation.ActivationKind.Launch)
 			{
@@ -394,7 +395,10 @@ namespace COTG
 		}
 		private async Task OnLaunchedOrActivated(Windows.ApplicationModel.Activation.IActivatedEventArgs args)
 		{
-				try{
+			Trace("Hello2");
+
+			try
+			{
 			this.DebugSettings.FailFastOnErrors = false;
 #if TRACE || DEBUG
 //			this.DebugSettings.FailFastOnErrors = true;
@@ -411,7 +415,7 @@ namespace COTG
 
 			if(!wasRunning)
 			{
-				var window = Window.Current;
+			//	var window = Window.Current;
 				window.VisibilityChanged += Window_VisibilityChanged;
 				window.Closed+=Window_Closed;
 			}
@@ -421,7 +425,7 @@ namespace COTG
 				return;
 
 			//			CoreApplication.MainView.HostedViewClosing+=MainView_HostedViewClosing; ;
-				CoreApplication.MainView.CoreWindow.Closed+=CoreWindow_Closed;
+			//	CoreApplication.MainView.CoreWindow.Closed+=CoreWindow_Closed;
 			//if(args!=null)
 			//	SystemInformation.TrackAppUse(args);
 				if(processingTasksStarted == false)
@@ -435,18 +439,18 @@ namespace COTG
 			
 			SystemInformation.Instance.TrackAppUse(args);
 #if DEBUG
-			var coreTitleBar = CoreApplication.GetCurrentView().TitleBar;
-			coreTitleBar.ExtendViewIntoTitleBar = false;
-			var titleBar = Windows.UI.ViewManagement.ApplicationView.GetForCurrentView().TitleBar;
+//			var coreTitleBar = CoreApplication.GetCurrentView().TitleBar;
+//			coreTitleBar.ExtendViewIntoTitleBar = false;
+//			var titleBar = Windows.UI.ViewManagement.ApplicationView.GetForCurrentView().TitleBar;
 
 
-			var color = Windows.UI.Color.FromArgb(0xFF, 0x20, 0x0, 0x35);
-			var colorInactive = Windows.UI.Color.FromArgb(0xFF, 0x00, 0x0, 0x35);
-			titleBar.BackgroundColor = color;
+	//		var color = Windows.UI.Color.FromArgb(0xFF, 0x20, 0x0, 0x35);
+	//		var colorInactive = Windows.UI.Color.FromArgb(0xFF, 0x00, 0x0, 0x35);
+	//		titleBar.BackgroundColor = color;
 			//titleBar.ForegroundColor = color;
 			//titleBar.ButtonForegroundColor = color;
-			titleBar.ButtonBackgroundColor = color;
-			titleBar.InactiveBackgroundColor = titleBar.ButtonInactiveBackgroundColor = colorInactive;
+//			titleBar.ButtonBackgroundColor = color;
+//			titleBar.InactiveBackgroundColor = titleBar.ButtonInactiveBackgroundColor = colorInactive;
 				//				titleBar.InactiveForegroundColor =  titleBar.ButtonInactiveForegroundColor = colorInactive;
 				//titleBar.ButtonInactiveBackgroundColor = Windows.UI.Colors.Transparent;
 				//  UpdateTitleBarLayout(coreTitleBar);
@@ -515,13 +519,13 @@ namespace COTG
 			//			throw new NotImplementedException();
 		}
 
-		private void CoreWindow_Closed(CoreWindow sender,CoreWindowEventArgs args)
-		{
-			Log("Close");
-			state = State.closing;
-			JSClient.CloseWebView();
-			TabPage.CloseAllTabWindows();
-		}
+		//private void CoreWindow_Closed(CoreWindow sender,CoreWindowEventArgs args)
+		//{
+		//	Log("Close");
+		//	state = State.closing;
+		//	JSClient.CloseWebView();
+		//	TabPage.CloseAllTabWindows();
+		//}
 
 		//private async void MainView_HostedViewClosing(CoreApplicationView sender,HostedViewClosingEventArgs args)
 		//{
@@ -617,24 +621,24 @@ namespace COTG
 
 		//}
 
-		public static void SetupCoreWindowInputHooks()
-		{
+		//public static void SetupCoreWindowInputHooks()
+		//{
 
-			Assert(CoreApplication.Views.Count==1);
+		//	Assert(CoreApplication.Views.Count==1);
 
-			var window = CoreApplication.MainView.CoreWindow;
-			{
-				//Log($"{view.TitleBar.ToString()} {view.IsMain} ");
+		//	var window = CoreApplication.MainView.CoreWindow;
+		//	{
+		//		//Log($"{view.TitleBar.ToString()} {view.IsMain} ");
 			
-			//	window.PointerMoved += OnPointerMoved;
-				window.PointerPressed += OnPointerPressed; ;
-			//	window.PointerExited+=Window_PointerExited; ;
-			//	window.PointerEntered+=Window_PointerEntered; ;
-				window.KeyDown += OnKeyDown;
-				window.KeyUp += OnKeyUp;
+		//	//	window.PointerMoved += OnPointerMoved;
+		//		window.PointerPressed += OnPointerPressed; ;
+		//	//	window.PointerExited+=Window_PointerExited; ;
+		//	//	window.PointerEntered+=Window_PointerEntered; ;
+		//		window.KeyDown += OnKeyDown;
+		//		window.KeyUp += OnKeyUp;
 
-			}
-		}
+		//	}
+		//}
 
 		//private static void Window_PointerEntered(CoreWindow sender,PointerEventArgs args)
 		//{
@@ -663,15 +667,15 @@ namespace COTG
 		//	ShellPage.UpdateFocus();
 		//}
 
-		public static void OnPointerPressed(CoreWindow sender, PointerEventArgs e)
-		{
-		//	ShellPage.UpdateMousePosition(e);
+		//public static void OnPointerPressed(CoreWindow sender, PointerEventArgs e)
+		//{
+		////	ShellPage.UpdateMousePosition(e);
 
-			var prop = e.CurrentPoint.Properties.PointerUpdateKind;
-			if (OnPointerPressed(prop))
-				e.Handled = true;
-		//	ShellPage.UpdateFocus();
-		}
+		//	var prop = e.CurrentPoint.Properties.PointerUpdateKind;
+		//	if (OnPointerPressed(prop))
+		//		e.Handled = true;
+		////	ShellPage.UpdateFocus();
+		//}
 
 		// Uses Task Await
 		static async void ProcessThrottledTasks()
@@ -702,18 +706,18 @@ namespace COTG
 		{
 			throttledTasks.Enqueue(a);
 		}
-		public static bool OnPointerPressed(PointerUpdateKind prop)
+		public static bool OnPointerPressed(Microsoft.UI.Input.PointerUpdateKind prop)
 		{
 			var rv = false;
 			switch (prop)
 			{
-				case PointerUpdateKind.XButton1Pressed:
+				case Microsoft.UI.Input.PointerUpdateKind.XButton1Pressed:
 					NavStack.Back(true);
 
 					Log("XButton1");
 					rv = true;
 					break;
-				case PointerUpdateKind.XButton2Pressed:
+				case Microsoft.UI.Input.PointerUpdateKind.XButton2Pressed:
 					NavStack.Forward(true);
 					Log("XButton2");
 					rv = true;
@@ -1417,12 +1421,12 @@ namespace COTG
 		//	}
 		//}
 
-		public static CoreCursor cursorDefault = new(CoreCursorType.Arrow,0);
-		public static CoreCursor cursorQuickBuild = new(CoreCursorType.Cross,0);
-		public static CoreCursor cursorMoveStart = new(CoreCursorType.SizeNortheastSouthwest,0);
-		public static CoreCursor cursorMoveEnd = new(CoreCursorType.SizeNorthwestSoutheast,0);
-		public static CoreCursor cursorLayout = new(CoreCursorType.Pin,0);
-		public static CoreCursor cursorDestroy = new(CoreCursorType.UniversalNo,0);
+		public static InputSystemCursor cursorDefault = InputSystemCursor.Create(InputSystemCursorShape.Arrow);
+		public static InputSystemCursor cursorQuickBuild = InputSystemCursor.Create(InputSystemCursorShape.Cross);
+		public static InputSystemCursor cursorMoveStart = InputSystemCursor.Create(InputSystemCursorShape.SizeNortheastSouthwest);
+		public static InputSystemCursor cursorMoveEnd = InputSystemCursor.Create(InputSystemCursorShape.SizeNorthSouth);
+		public static InputSystemCursor cursorLayout = InputSystemCursor.Create(InputSystemCursorShape.Pin);
+		public static InputSystemCursor cursorDestroy = InputSystemCursor.Create(InputSystemCursorShape.UniversalNo);
 		internal static VirtualKeyModifiers keyModifiers
 		{
 			get
@@ -1747,7 +1751,7 @@ namespace COTG
 		}
 
 		// must be on the right thread for this
-		public static void Set(this CoreCursor type)
+		public static void Set(this InputCursor c) 
 		{
 			// is this thread safe?
 			//if(ShellPage.coreInputSource != null)
@@ -1757,8 +1761,7 @@ namespace COTG
 			//		ShellPage.coreInputSource.PointerCursor = type,DispatcherQueuePriority.Low);
 
 			//}
-			App.QueueOnUIThread( () =>
-				CoreWindow.GetForCurrentThread().PointerCursor = type);
+		//	App.QueueOnUIThread( () =>	CoreWindow.GetForCurrentThread().PointerCursor = type);
 		}
 
 	}

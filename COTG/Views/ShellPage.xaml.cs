@@ -207,6 +207,7 @@ namespace COTG.Views
 		public static bool isFocused => isHitTestVisible && App.isForeground ;
 		private void OnLoaded(object sender, RoutedEventArgs e)
 		{
+			Trace("Hello");
 	//		SystemNavigationManagerPreview.GetForCurrentView().CloseRequested += App.App_CloseRequested; ;
 			
 			CityBuild.Initialize();
@@ -332,7 +333,7 @@ namespace COTG.Views
 			SystemNavigationManager.GetForCurrentView().BackRequested += ShellPage_BackRequested;
 			// PointerPressed+= PointerPressedCB; HomeButtonTip.IsOpen = true;
 
-			App.SetupCoreWindowInputHooks();
+			//App.SetupCoreWindowInputHooks();
 			var displayInformation = DisplayInformation.GetForCurrentView();
 			var screenSize = new Size(displayInformation.ScreenWidthInRawPixels,
 									  displayInformation.ScreenHeightInRawPixels);

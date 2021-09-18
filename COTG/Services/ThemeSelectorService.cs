@@ -31,46 +31,43 @@ namespace COTG.Services
 
         public static async Task SetRequestedThemeAsync()
         {
-            foreach (var view in CoreApplication.Views)
-            {
-                await view.Dispatcher.TryRunAsync(CoreDispatcherPriority.Normal, () =>
-                {
-                    if (Window.Current.Content is FrameworkElement frameworkElement)
+            App.QueueOnUIThread( ()=>
+				{    if (App.window.Content is FrameworkElement frameworkElement)
                     {
                         frameworkElement.RequestedTheme = Theme;
                     }
                 });
-            }
         }
-		public static Debounce RefreshXaml = new(_RefreshXaml) { debounceDelay = 100, throttleDelay = 100 };
-		public static async Task _RefreshXaml()
-		{
-			var theme = Theme;
-			var tempTheme = theme == ElementTheme.Light ? ElementTheme.Dark : ElementTheme.Light;
-			await App.DispatchOnUIThreadTask(()=>
-			{
-				foreach (var view in CoreApplication.Views)
-				{
-					if (Window.Current.Content is FrameworkElement frameworkElement)
-					{
-						frameworkElement.RequestedTheme = tempTheme;
-					}
-				}
-				return Task.CompletedTask;
-			}	);
-			await Task.Delay(200);
-			await App.DispatchOnUIThreadTask(() =>
-			{
-				foreach (var view in CoreApplication.Views)
-				{
-					if (Window.Current.Content is FrameworkElement frameworkElement)
-					{
-						frameworkElement.RequestedTheme = Theme;
-					}
-				}
-				return Task.CompletedTask;
-			});
-		}
+
+		//public static Debounce RefreshXaml = new(_RefreshXaml) { debounceDelay = 100, throttleDelay = 100 };
+		//public static async Task _RefreshXaml()
+		//{
+		//	var theme = Theme;
+		//	var tempTheme = theme == ElementTheme.Light ? ElementTheme.Dark : ElementTheme.Light;
+		//	await App.DispatchOnUIThreadTask(()=>
+		//	{
+		//		foreach (var view in CoreApplication.Views)
+		//		{
+		//			if (Window.Current.Content is FrameworkElement frameworkElement)
+		//			{
+		//				frameworkElement.RequestedTheme = tempTheme;
+		//			}
+		//		}
+		//		return Task.CompletedTask;
+		//	}	);
+		//	await Task.Delay(200);
+		//	await App.DispatchOnUIThreadTask(() =>
+		//	{
+		//		foreach (var view in CoreApplication.Views)
+		//		{
+		//			if (Window.Current.Content is FrameworkElement frameworkElement)
+		//			{
+		//				frameworkElement.RequestedTheme = Theme;
+		//			}
+		//		}
+		//		return Task.CompletedTask;
+		//	});
+		//}
 
 
 		private static async Task<ElementTheme> LoadThemeFromSettingsAsync()
