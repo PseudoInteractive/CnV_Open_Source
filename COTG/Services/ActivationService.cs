@@ -118,13 +118,7 @@ namespace COTG.Services
 			//	await TabPage.CloseAllTabWindows(); 
 			//};
 			// thread??
-			var display = Windows.Graphics.Display.DisplayInformation.GetForCurrentView();
-			var colorInfo = display.GetAdvancedColorInfo();
-			AGame.colorKind = colorInfo.CurrentAdvancedColorKind;
-			display.AdvancedColorInfoChanged+= (a,__)=> 
-			{
-				AGame.colorKind = a.GetAdvancedColorInfo().CurrentAdvancedColorKind;
-			};
+			
 
 			//if(AGame.colorKind != Windows.Graphics.Display.AdvancedColorKind.HighDynamicRange)
 			//{

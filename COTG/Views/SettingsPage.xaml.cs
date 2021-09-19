@@ -366,17 +366,19 @@ namespace COTG.Views
 				// incomingWatch = st.Read(nameof(incomingWatch), Array.Empty<string>() );
 				//    autoBuildOn = st.Read(nameof(autoBuildOn)+'2', -1) switch {  0 => false, 1 => true, _ => null };
 				// AttackTab.time = st.Read("attacktime", DateTime.UtcNow.Date);
-				SetSoundOn(soundOn);
-				ElementSoundPlayer.Volume = volume;
-				SetSpatialOn(spatialOn);
+				App.DispatchOnUIThread( ()=>
+				{
+					SetSoundOn(soundOn);
+					ElementSoundPlayer.Volume = volume;
+					SetSpatialOn(spatialOn);
+				});
 				if (raidCarryMin > 90)
 					raidCarryMin = 1.15f; // error!
 				if (raidCarryMax > 90)
 					raidCarryMax = 1.75f; // error!
 				if (raidCarryMax <= raidCarryMin)
 					raidCarryMax = raidCarryMin*1.75f; // error!
-
-				UpdateZoom();
+				App.DispatchOnUIThread(()=>	UpdateZoom() );
 				//	DungeonView.Initialize();
 			
 			}

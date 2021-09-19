@@ -22,7 +22,7 @@ namespace COTG
 		// You may find the `AppInstance.GetActivatedEventArgs()` useful for your app-defined logic.
 		[global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.UI.Xaml.Markup.Compiler"," 1.0.0.0")]
 		[global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-		[global::System.MTAThreadAttribute]
+		[global::System.STAThreadAttribute]
 		public static void Main(string[] _args)
 		{
 			//Debug.Trace("Start");
@@ -94,8 +94,8 @@ namespace COTG
 						{
 							try
 							{
-								//	var context = new global::Microsoft.UI.Dispatching.DispatcherQueueSynchronizationContext(global::Microsoft.UI.Dispatching.DispatcherQueue.GetForCurrentThread());
-								//	global::System.Threading.SynchronizationContext.SetSynchronizationContext(context);
+								var context = new global::Microsoft.UI.Dispatching.DispatcherQueueSynchronizationContext(global::Microsoft.UI.Dispatching.DispatcherQueue.GetForCurrentThread());
+								global::System.Threading.SynchronizationContext.SetSynchronizationContext(context);
 								new App();
 							}
 							catch(Exception ex)

@@ -56,6 +56,7 @@ using MenuFlyoutItem = Microsoft.UI.Xaml.Controls.MenuFlyoutItem;
 using MenuFlyoutSubItem = Microsoft.UI.Xaml.Controls.MenuFlyoutSubItem;
 using ToggleMenuFlyoutItem = Microsoft.UI.Xaml.Controls.ToggleMenuFlyoutItem;
 using Microsoft.UI.Input;
+using Microsoft.UI.Xaml.Hosting;
 
 namespace COTG
 {
@@ -399,7 +400,26 @@ namespace COTG
 
 			try
 			{
-			this.DebugSettings.FailFastOnErrors = false;
+				{
+					var grid = new Grid();
+					var _compositor = ElementCompositionPreview.GetElementVisual(grid).Compositor;
+				//	var _imageLoader = ImageLoaderFactory.CreateImageLoader(_compositor);
+
+					//Create surface brush and load image
+			//		CompositionSurfaceBrush surfaceBrush = _compositor.CreateSurfaceBrush();
+				//	surfaceBrush.Surface = await _imageLoader.LoadImageFromUriAsync(new Uri("ms-appx:///Assets/cat.jpg"));
+
+					//Create sprite visual
+					var visual = _compositor.CreateSpriteVisual();
+					//visual.Brush = surfaceBrush;
+					//visual.Size = new Vector2(270,200);
+
+					//Create drop shadow
+					var shadow = _compositor.CreateDropShadow();
+					Assert(shadow!=null);
+				}
+
+				this.DebugSettings.FailFastOnErrors = false;
 #if TRACE || DEBUG
 //			this.DebugSettings.FailFastOnErrors = true;
 #endif
