@@ -215,7 +215,7 @@
                                                  Height="11"
                          HorizontalAlignment="Stretch"
                          VerticalAlignment="Top"
-                           Background="Transparent"
+                           Background="{x:Null}"
                     >
             <tk:GridSplitter.Element>
                 <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE76F;"

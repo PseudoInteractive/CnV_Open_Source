@@ -13,15 +13,15 @@
       xmlns:winui="using:Microsoft.UI.Xaml.Controls"
       x:Name="shellPage"
       Loaded="OnLoaded"
+	  Background="{x:Null}"
       mc:Ignorable="d"
 	
 >
-	
 	<Page.Resources>
-		<ResourceDictionary Source="ms-appx:///Microsoft.UI.Xaml/DensityStyles/Compact.xaml" />
+		<XamlControlsResources xmlns="using:Microsoft.UI.Xaml.Controls"/>
 	</Page.Resources>
 
-	<Grid x:Name="grid"  x:FieldModifier="public" >
+<Grid x:Name="grid"  x:FieldModifier="public" >
 		<Grid.Resources>
 			<Style x:Key="TimeFlyoutStyle"
                TargetType="FlyoutPresenter">
@@ -31,6 +31,7 @@
                     Value="Stretch" />
 			</Style>
 		</Grid.Resources>
+
 		<Grid.RowDefinitions>
 			<RowDefinition Height="40" />
 			<RowDefinition />
@@ -46,7 +47,7 @@
 		</Grid.ColumnDefinitions>
 
 
-		<winui:WebView2 x:Name="webView" x:FieldModifier="public"
+		<!--<winui:WebView2 x:Name="webView" x:FieldModifier="public"
 						Grid.RowSpan="5"
 						Grid.ColumnSpan="2"
 						Canvas.ZIndex="10"
@@ -54,7 +55,7 @@
 						AllowDrop="False"
 						AllowFocusWhenDisabled="False"
 					
-						Grid.Row="1" />
+						Grid.Row="1" />-->
 
 
 		<CommandBar Grid.ColumnSpan="2" TabFocusNavigation="Once" UseSystemFocusVisuals="True" x:Name="commandBar" x:FieldModifier="public"   >
@@ -93,7 +94,7 @@
 									  IsTextScaleFactorEnabled="False"
 										 RightTapped="FilterRightTapped"
 									  Click="{x:Bind views:ShellPage.ContinentFilterClick}"
-									  Style="{ThemeResource DropDownButtonRevealStyle}"
+									
 									 ToolTipService.ToolTip="Yet another Continent filter.  Uncheck all to show everything"  />
 
 					<Button x:Name="HomeButton" Click="BuildHomeClick" RightTapped="BuildHomeRightTapped" Margin="4" Style="{ThemeResource ButtonRevealStyle}"
@@ -255,7 +256,7 @@
 			
 				CursorBehavior="ChangeOnSplitterHover"
 				GripperCursor="SizeWestEast"
-                        Background="Transparent"
+                        Background="{x:Null}"
                         VerticalAlignment="Top"
                         HorizontalAlignment="Stretch"
                         Height="11"
@@ -297,7 +298,7 @@
 			</Frame>
 			<!-- Chat Width resizer -->
 			<tk:GridSplitter
-                        Background="Transparent"
+                        Background="{x:Null}"
                     Grid.Row="1"
 										 				
 				CursorBehavior="ChangeOnSplitterHover"
@@ -315,7 +316,7 @@
 			<!-- Chat Height resizer -->
 			<tk:GridSplitter
                     Grid.Row="1"
-                    Background="Transparent" Tapped="chatResizeTapped"
+                    Background="{x:Null}" Tapped="chatResizeTapped"
 										 				
 				CursorBehavior="ChangeOnSplitterHover"
 				GripperCursor="SizeAll"
@@ -356,7 +357,7 @@
 			<tk:MarkdownTextBlock x:Name="infoMD" x:FieldModifier="public" Text="TBA" Background="{x:Null}"/>
 		</winui:InfoBar>-->
 		<tk:GridSplitter
-                        Background="Transparent"
+                        Background="{x:Null}"
                     Grid.RowSpan="5"
 									 				
 			CursorBehavior="ChangeOnSplitterHover"

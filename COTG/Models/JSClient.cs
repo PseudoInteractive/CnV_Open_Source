@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using static COTG.Debug;
 using Windows.Web.Http.Filters;
 using Microsoft.UI.Xaml;
-using Windows.System;
+//using Windows.System;
 using System.Text.Json;
 using COTG.Game;
 using System.Threading;
@@ -26,13 +26,14 @@ using Windows.Graphics.Imaging;
 using System.Text.Json.Serialization;
 using COTG.DB;
 using Microsoft.AppCenter;
-
+using VirtualKey = Windows.System.VirtualKey;
+using VirtualKeyModifiers = Windows.System.VirtualKeyModifiers;
 using ContentDialog = Microsoft.UI.Xaml.Controls.ContentDialog;
 using ContentDialogResult = Microsoft.UI.Xaml.Controls.ContentDialogResult;
 using System.Text;
 using System.Web;
 using Windows.Security.Cryptography.Certificates;
-using Windows.Foundation;
+//using Windows.Foundation;
 using Windows.Web.Http.Headers;
 using DiscordCnV;
 using Microsoft.UI.Xaml.Controls;
@@ -41,8 +42,9 @@ using static COTG.Game.City;
 using Microsoft.Web.WebView2.Core;
 using Microsoft.Web;
 using CoreWebView = Microsoft.Web.WebView2.Core.CoreWebView2;
-using COTG.CnVChat;
+//using COTG.CnVChat;
 using CommunityToolkit.WinUI.Helpers;
+using Microsoft.UI.Dispatching;
 
 namespace COTG
 {
@@ -480,8 +482,8 @@ namespace COTG
 				coreWebView = null;
 				view = null;
 				v.Visibility = Visibility.Collapsed;
-				ShellPage.instance.grid.Children.Remove(ShellPage.instance.webView);
-				ShellPage.instance.webView = null;
+				//ShellPage.instance.grid.Children.Remove(ShellPage.instance.webView);
+				//ShellPage.instance.webView = null;
 				v.Close();
 			}
 		}
@@ -571,7 +573,7 @@ namespace COTG
 #else
 				coreWebView.Settings.AreDevToolsEnabled=false;
 #endif
-				coreWebView.Settings.UserAgent = userAgent;
+//				coreWebView.Settings.UserAgent = userAgent;
 				coreWebView.Settings.IsWebMessageEnabled=true;
 //				coreWebView.Settings.IsPasswordAutosaveEnabled=true;
 				coreWebView.Settings.IsScriptEnabled=true;
@@ -582,7 +584,7 @@ namespace COTG
 					coreWebView.Settings.IsBuiltInErrorPageEnabled=false;
 					coreWebView.Settings.AreHostObjectsAllowed=false;
 				coreWebView.Settings.IsStatusBarEnabled=false;
-				coreWebView.Settings.AreBrowserAcceleratorKeysEnabled=false;
+			//	coreWebView.Settings.AreBrowserAcceleratorKeysEnabled=false;
 				coreWebView.Settings.AreDefaultContextMenusEnabled=false;
 				coreWebView.Environment.NewBrowserVersionAvailable+=Environment_NewBrowserVersionAvailable;
 //				coreWebView.Settings.AreBrowserAcceleratorKeysEnabled=false;
@@ -722,8 +724,8 @@ namespace COTG
 		{
 			AAnalytics.Track("WebViewFail",new Dictionary<string,string> {
 				{"Kind:",args.ProcessFailedKind.ToString() },
-				{"Reason:",args.Reason.ToString() },
-				{"Desc:",args.ProcessDescription },
+			//	{"Reason:",args.Reason.ToString() },
+			//	{"Desc:",args.ProcessDescription },
 			});
 			App.DoYesNoBox("The internet is broken", "Please restart");
 
@@ -743,12 +745,12 @@ namespace COTG
 					await Task.Delay(1000);
 				}
 				var view = WebViewPage.instance.webView;
-				await view.Dispatcher.TryRunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal,   async ()=>
+				view.DispatcherQueue.TryEnqueue( DispatcherQueuePriority.Normal,  async ()=>
 				{
 					await view.EnsureCoreWebView2Async();
 
 					args.NewWindow = view.CoreWebView2;
-					view.CoreWebView2.Settings.UserAgent = userAgent;
+//					view.CoreWebView2.Settings.UserAgent = userAgent;
 					view.Source = new Uri(args.Uri);
 					args.Handled = true;
 					defer.Complete();
@@ -1425,8 +1427,8 @@ namespace COTG
 
 			});
 		}
-		public static IAsyncOperation<string> ExecuteScriptAsync(string func,  string arg0) => view?.ExecuteScriptAsync($"{func}(\"{arg0}\")");
-		public static IAsyncOperation<string> ExecuteScriptAsync(string func,int arg0) => view.ExecuteScriptAsync($"{func}({arg0})");
+		public static Windows.Foundation.IAsyncOperation<string> ExecuteScriptAsync(string func,  string arg0) => view?.ExecuteScriptAsync($"{func}(\"{arg0}\")");
+		public static Windows.Foundation.IAsyncOperation<string> ExecuteScriptAsync(string func,int arg0) => view.ExecuteScriptAsync($"{func}({arg0})");
 
 		static string FormatJSArg<T>(T a) => a switch 
 		{
@@ -1435,9 +1437,9 @@ namespace COTG
 			string s => '\"' + s.Replace("\"", "\\\"") + '\"' ,
 			_ => '\"'+a.ToString()+'\"' };
 
-		public static IAsyncOperation<string> ExecuteScriptAsync<T0>(string func,T0 arg0) => view.ExecuteScriptAsync($"{func}({FormatJSArg(arg0)})");
-		public static IAsyncOperation<string> ExecuteScriptAsync<T0,T1>(string func,T0 arg0,T1 arg1) => view.ExecuteScriptAsync($"{func}({FormatJSArg(arg0)},{FormatJSArg(arg1)})");
-		public static IAsyncOperation<string> ExecuteScriptAsync<T0, T1, T2>(string func,T0 arg0,T1 arg1, T2 arg2) =>
+		public static Windows.Foundation.IAsyncOperation<string> ExecuteScriptAsync<T0>(string func,T0 arg0) => view.ExecuteScriptAsync($"{func}({FormatJSArg(arg0)})");
+		public static Windows.Foundation.IAsyncOperation<string> ExecuteScriptAsync<T0,T1>(string func,T0 arg0,T1 arg1) => view.ExecuteScriptAsync($"{func}({FormatJSArg(arg0)},{FormatJSArg(arg1)})");
+		public static Windows.Foundation.IAsyncOperation<string> ExecuteScriptAsync<T0, T1, T2>(string func,T0 arg0,T1 arg1, T2 arg2) =>
 			view.ExecuteScriptAsync($"{func}({FormatJSArg(arg0)},{FormatJSArg(arg1)},{FormatJSArg(arg2)})");
 
 
@@ -2448,7 +2450,7 @@ private static async void ShowCouncillorsMissingDialog()
 						   case "sub":
 							   {
 								   var i = jsp.Value.GetAsInt();
-								   App.DispatchOnUIThread(() => Launcher.LaunchUriAsync(new Uri($"{App.appLink}:launch?w={world}&s={i}&n=1&p={HttpUtility.UrlEncode(Player.myName, Encoding.UTF8)}")));
+								   App.DispatchOnUIThread(() => Windows.System.Launcher.LaunchUriAsync(new Uri($"{App.appLink}:launch?w={world}&s={i}&n=1&p={HttpUtility.UrlEncode(Player.myName, Encoding.UTF8)}")));
 								   break;
 							   }
 						   case "shcit":
@@ -2987,8 +2989,8 @@ private static async void ShowCouncillorsMissingDialog()
 				   if (gotCreds)
 				   {
 
-					   CnVChatClient.instance = new();
-					   CnVChatClient.instance.Initialize();
+//					   CnVChatClient.instance = new();
+//					   CnVChatClient.instance.Initialize();
 					   ShellPage.SetViewModeCity();
 
 					   APlayfab.Login();

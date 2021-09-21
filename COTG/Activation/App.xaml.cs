@@ -15,7 +15,7 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
 using Microsoft.Web.WebView2.Core;
 //using ZLogger;
-
+using CoreCursor = Windows.UI.Core.CoreCursor;
 //using Cysharp.Text;
 using System;
 using System.Collections.Concurrent;
@@ -27,6 +27,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using PointerUpdateKind = Windows.UI.Input.PointerUpdateKind;
 //using Microsoft.AppCenter;
 //using Microsoft.AppCenter.Analytics;
 //using Microsoft.AppCenter.Crashes;
@@ -34,7 +35,7 @@ using System.Windows.Input;
 //using Microsoft.Extensions.DependencyInjection;
 //using Microsoft.Extensions.Logging;
 //using Microsoft.Extensions.Options;
-using CommunityToolkit.WinUI.Helpers;
+using Microsoft.UI.Input.Experimental;
 using DispatcherQueue = Microsoft.UI.Dispatching.DispatcherQueue;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
@@ -44,7 +45,7 @@ using Windows.Foundation.Collections;
 using Windows.Globalization.NumberFormatting;
 using Windows.System;
 //using Windows.UI.Core;
-using Windows.UI.Input;
+//using Windows.UI.Input;
 using Microsoft.UI.Dispatching;
 using static COTG.Debug;
 using DispatcherQueueHandler = Microsoft.UI.Dispatching.DispatcherQueueHandler;
@@ -57,6 +58,7 @@ using MenuFlyoutSubItem = Microsoft.UI.Xaml.Controls.MenuFlyoutSubItem;
 using ToggleMenuFlyoutItem = Microsoft.UI.Xaml.Controls.ToggleMenuFlyoutItem;
 using Microsoft.UI.Input;
 using Microsoft.UI.Xaml.Hosting;
+//using Windows.UI.Core;
 
 namespace COTG
 {
@@ -726,18 +728,18 @@ namespace COTG
 		{
 			throttledTasks.Enqueue(a);
 		}
-		public static bool OnPointerPressed(Microsoft.UI.Input.PointerUpdateKind prop)
+		public static bool OnPointerPressed(PointerUpdateKind prop)
 		{
 			var rv = false;
 			switch (prop)
 			{
-				case Microsoft.UI.Input.PointerUpdateKind.XButton1Pressed:
+				case PointerUpdateKind.XButton1Pressed:
 					NavStack.Back(true);
 
 					Log("XButton1");
 					rv = true;
 					break;
-				case Microsoft.UI.Input.PointerUpdateKind.XButton2Pressed:
+				case PointerUpdateKind.XButton2Pressed:
 					NavStack.Forward(true);
 					Log("XButton2");
 					rv = true;
@@ -901,7 +903,7 @@ namespace COTG
 		//}
 		private ActivationService CreateActivationService()
 		{
-			return new ActivationService(this, null, new Lazy<UIElement>(()=> new Views.ShellPage()));
+			return new ActivationService();//this, null, new Lazy<UIElement>(()=> new Views.ShellPage()));
 		}
 
 		//public static CoreWebView2Environment webEnvironment;
@@ -1441,12 +1443,12 @@ namespace COTG
 		//	}
 		//}
 
-		public static InputSystemCursor cursorDefault = InputSystemCursor.Create(InputSystemCursorShape.Arrow);
-		public static InputSystemCursor cursorQuickBuild = InputSystemCursor.Create(InputSystemCursorShape.Cross);
-		public static InputSystemCursor cursorMoveStart = InputSystemCursor.Create(InputSystemCursorShape.SizeNortheastSouthwest);
-		public static InputSystemCursor cursorMoveEnd = InputSystemCursor.Create(InputSystemCursorShape.SizeNorthSouth);
-		public static InputSystemCursor cursorLayout = InputSystemCursor.Create(InputSystemCursorShape.Pin);
-		public static InputSystemCursor cursorDestroy = InputSystemCursor.Create(InputSystemCursorShape.UniversalNo);
+		public static CoreCursor cursorDefault;// = CoreCursor.Create(CoreCursorShape.Arrow);
+		public static CoreCursor cursorQuickBuild;// = CoreCursor.Create(CoreCursorShape.Cross);
+		public static CoreCursor cursorMoveStart;// = CoreCursor.Create(CoreCursorShape.SizeNortheastSouthwest);
+		public static CoreCursor cursorMoveEnd;// = CoreCursor.Create(CoreCursorShape.SizeNorthSouth);
+		public static CoreCursor cursorLayout;// = CoreCursor.Create(CoreCursorShape.Pin);
+		public static CoreCursor cursorDestroy;// = CoreCursor.Create(CoreCursorShape.UniversalNo);
 		internal static VirtualKeyModifiers keyModifiers
 		{
 			get
@@ -1771,7 +1773,7 @@ namespace COTG
 		}
 
 		// must be on the right thread for this
-		public static void Set(this InputCursor c) 
+		public static void Set(this CoreCursor c) 
 		{
 			// is this thread safe?
 			//if(ShellPage.coreInputSource != null)

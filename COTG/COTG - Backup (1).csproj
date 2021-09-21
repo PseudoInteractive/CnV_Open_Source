@@ -1,10 +1,12 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
+    <EnablePreviewMsixTooling>true</EnablePreviewMsixTooling>
+    <ApplicationManifest>Package.appxmanifest</ApplicationManifest>
     <TargetFramework>net5.0-windows10.0.19041.0</TargetFramework>
     <TargetPlatformMinVersion>10.0.17763.0</TargetPlatformMinVersion>
     <PublishProfile>Properties\PublishProfiles\win10-$(Platform).pubxml</PublishProfile>
-    <DefineConstants></DefineConstants>
+    <DefineConstants>DISABLE_XAML_GENERATED_MAIN</DefineConstants>
     <RootNamespace>cotg</RootNamespace>
     <Platforms>x86;x64;arm64</Platforms>
     <RuntimeIdentifiers>win10-x86;win10-x64;win10-arm64</RuntimeIdentifiers>
@@ -28,10 +30,8 @@
     <PackageReference Include="Azure.Core" Version="1.19.0" />
     <PackageReference Include="Azure.Data.Tables" Version="12.2.0" />
     <PackageReference Include="Azure.Storage.Blobs" Version="12.10.0" />
-    <PackageReference Include="CommunityToolkit.WinUI" Version="7.0.3" />
     <PackageReference Include="CommunityToolkit.WinUI.Notifications" Version="7.0.3" />
     <PackageReference Include="CommunityToolkit.WinUI.UI" Version="7.0.3" />
-    <PackageReference Include="CommunityToolkit.WinUI.UI.Animations" Version="7.0.3" />
     <PackageReference Include="CommunityToolkit.WinUI.UI.Behaviors" Version="7.0.3" />
     <PackageReference Include="CommunityToolkit.WinUI.UI.Controls" Version="7.0.3" />
     <PackageReference Include="CommunityToolkit.WinUI.UI.Controls.Core" Version="7.0.3" />
@@ -51,10 +51,8 @@
     <PackageReference Include="Microsoft.AppCenter.Analytics" Version="4.3.0" />
     <PackageReference Include="Microsoft.AppCenter.Crashes" Version="4.3.0" />
     <PackageReference Include="Microsoft.ProjectReunion" Version="0.8.3" />
-    <PackageReference Include="Microsoft.ProjectReunion.WinUI" Version="0.8.3" />
     <PackageReference Include="Microsoft.Services.Store.Engagement" Version="10.1901.28001" />
     <PackageReference Include="Microsoft.Toolkit.HighPerformance" Version="7.1.0-rc2" />
-    <PackageReference Include="Microsoft.Windows.CppWinRT" Version="2.0.210913.7" />
     <PackageReference Include="Nito.AsyncEx.Coordination" Version="5.1.0" />
     <PackageReference Include="Nito.AsyncEx.Tasks" Version="5.1.0" />
     <PackageReference Include="PlayFabAllSDK" Version="1.101.210913" />
@@ -76,6 +74,7 @@
     <Compile Include="Activation\SchemeActivationHandler.cs" />
     <Compile Include="Activation\ShareTargetActivationHandler.cs" />
     <Compile Include="Activation\WebToAppLinkActivationHandler.cs" />
+    <Compile Include="CnVChatClient.cs" />
     <Compile Include="CnVDiscord\Bridge.cs" />
     <Compile Include="CnVDiscord\ConfigFile.cs" />
     <Compile Include="CnVDiscord\Discord.cs" />
@@ -165,6 +164,7 @@
     <Compile Include="Models\JsNative.cs" />
     <Compile Include="Models\JSPopup.cs" />
     <Compile Include="Note.cs" />
+    <Compile Include="Program.cs" />
     <Compile Include="Services\Avatarslate.cs" />
     <Compile Include="Services\Blobs.cs" />
     <Compile Include="Services\ChatStorage.cs" />
@@ -336,7 +336,7 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <ApplicationDefinition Include="Activation\App.xaml">
+    <ApplicationDefinition Include="App.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </ApplicationDefinition>
@@ -522,12 +522,6 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <Manifest Remove="Package.appxmanifest" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Remove="Package.appxmanifest" />
-  </ItemGroup>
-  <ItemGroup>
      <Manifest Include="$(ApplicationManifest)" />
   </ItemGroup>
   <ItemGroup>
@@ -685,7 +679,7 @@
     <Compile Include="JSON\ofdf.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Activation\App.xaml.cs">
+    <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
   </ItemGroup>
@@ -723,7 +717,6 @@
     <AnalysisLevel>preview</AnalysisLevel>
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
     <IsPublishable>False</IsPublishable>
-    <NoWin32Manifest>true</NoWin32Manifest>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x86'">
     <Optimize>False</Optimize>
@@ -744,7 +737,5 @@
     <Optimize>True</Optimize>
   </PropertyGroup>
   <ProjectExtensions />
-  <ItemGroup>
-    <ReunionWin32Manifest Remove="Package.appxmanifest" />
-  </ItemGroup>
+  <Import Project="..\..\CnVShared\CnVShared.projitems" Label="Shared" />
 </Project>

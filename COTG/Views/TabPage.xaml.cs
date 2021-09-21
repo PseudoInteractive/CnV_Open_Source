@@ -21,13 +21,12 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Hosting;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Navigation;
-using CommunityToolkit.WinUI;
 using static COTG.Debug;
 using Microsoft.UI.Xaml.Media;
 using SymbolIconSource = Microsoft.UI.Xaml.Controls.SymbolIconSource;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.UI;
-using Microsoft.UI.Windowing;
+//using Microsoft.UI.Windowing;
 
 namespace COTG.Views
 {
@@ -233,10 +232,10 @@ namespace COTG.Views
 	}
     public sealed partial class TabPage : Page
     {
-        public static List<AppWindow> tabWindows = new List<AppWindow>();
+        public static List<Window> tabWindows = new ();
         public static TabPage mainTabs;
 		public static TabPage secondaryTabs;
-		AppWindow RootAppWindow = null;
+		Window RootAppWindow = null;
 
         private const string DataIdentifier = "ChatTabItem";
         public TabPage()
@@ -415,7 +414,7 @@ namespace COTG.Views
             return new SymbolIcon() { Symbol=Symbol.Comment }; // whisper
         }
 
-        void SetupWindow(AppWindow window)
+        void SetupWindow(Window window)
         {
 			Tabs.TabItemsChanged -= Tabs_TabItemsChanged;
 
@@ -458,11 +457,11 @@ namespace COTG.Views
 			
         }
 
-		private void Window_Closing(AppWindow sender,AppWindowClosingEventArgs args)
-		{
-			tabPages.Remove(this);
-			RemoveTabsOnClose();
-		}
+		//private void Window_Closing(AppWindow sender,AppWindowClosingEventArgs args)
+		//{
+		//	tabPages.Remove(this);
+		//	RemoveTabsOnClose();
+		//}
 
 		public TabPage AddChatTabs()
         {

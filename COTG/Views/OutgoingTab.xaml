@@ -183,7 +183,7 @@ IsTabStop="True"
         </tg:RadDataGrid>
         <tk:GridSplitter
                     Grid.Row="2"
-                    Background="Transparent"
+                    Background="{x:Null}"
 									 				IsTabStop="True"
 				CursorBehavior="ChangeOnSplitterHover"
 				GripperCursor="SizeNorthSouth"

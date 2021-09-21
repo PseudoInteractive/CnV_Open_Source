@@ -4,15 +4,12 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
+    xmlns:winui="using:Microsoft.UI.Xaml.Controls"
     mc:Ignorable="d"
     TabFocusNavigation="Cycle"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-	<Page.Resources>
-		<ResourceDictionary Source="ms-appx:///Microsoft.UI.Xaml/DensityStyles/Compact.xaml" />
-	</Page.Resources>
 	<Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch" TabFocusNavigation="Cycle">
-		<muxc:TabView x:Name="Tabs" x:FieldModifier="public"
+		<winui:TabView x:Name="Tabs" x:FieldModifier="public"
                       TabWidthMode="SizeToContent"
                              VerticalAlignment="Stretch"
                              HorizontalAlignment="Stretch"
@@ -31,14 +28,14 @@
                              TabStripDrop="Tabs_TabStripDrop"
 
                              TabDragStarting="Tabs_TabDragStarting">
-			<muxc:TabView.TabStripHeader>
-				<Grid x:Name="ShellTitlebarInset"  Background="Transparent" />
-			</muxc:TabView.TabStripHeader>
-			<muxc:TabView.TabStripFooter>
-				<Grid x:Name="CustomDragRegion"  Background="Transparent">
+			<winui:TabView.TabStripHeader>
+				<Grid x:Name="ShellTitlebarInset"  Background="{x:Null}" />
+			</winui:TabView.TabStripHeader>
+			<winui:TabView.TabStripFooter>
+				<Grid x:Name="CustomDragRegion"  Background="{x:Null}">
 					<TextBlock x:Name="tip" x:FieldModifier="public" VerticalAlignment="Center" HorizontalAlignment="Center" Tapped="tip_Tapped" TabFocusNavigation="Cycle" />
 				</Grid>
-			</muxc:TabView.TabStripFooter>
-		</muxc:TabView>
+			</winui:TabView.TabStripFooter>
+		</winui:TabView>
 	</Grid>
 </Page>

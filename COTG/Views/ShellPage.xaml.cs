@@ -19,8 +19,8 @@ using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.Graphics.Display;
 using Windows.System;
-using Windows.UI.Core;
-using Windows.UI.Core.Preview;
+//using Windows.UI.Core;
+//using Windows.UI.Core.Preview;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
@@ -239,7 +239,7 @@ namespace COTG.Views
 			// Placement.LayoutUpdated += Placement_LayoutUpdated; grid.Children.Add(img);
 
 			// Grid.SetRowSpan(img, 4); Grid.SetColumnSpan(img, 4); Canvas.SetZIndex(img, 12);
-			JSClient.Initialize(grid,webView);
+			JSClient.Initialize(grid,new WebView2());
 			// foreach (var i in webView.KeyboardAccelerators) i.IsEnabled = false;
 			// webView.AllowFocusOnInteraction = false; c.hitTest.Margin= webView.Margin = new
 			// Thickness(0, 0, 11, 0);
@@ -330,7 +330,7 @@ namespace COTG.Views
 			cityListBox.SelectionChanged += CityListBox_SelectionChanged;
 			cityBox.SelectionChanged += CityBox_SelectionChanged;
 
-			SystemNavigationManager.GetForCurrentView().BackRequested += ShellPage_BackRequested;
+			//SystemNavigationManager.GetForCurrentView().BackRequested += ShellPage_BackRequested;
 			// PointerPressed+= PointerPressedCB; HomeButtonTip.IsOpen = true;
 
 			//App.SetupCoreWindowInputHooks();
@@ -438,7 +438,7 @@ namespace COTG.Views
 		//	}
 
 		//}
-		private void ShellPage_BackRequested(object sender, BackRequestedEventArgs e)
+		private void ShellPage_BackRequested(object sender,Windows.UI.Core.BackRequestedEventArgs e)
 		{
 			Log("Back!!");
 			NavStack.Back(true);

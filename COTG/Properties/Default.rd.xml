@@ -29,10 +29,6 @@
 			 Dynamic="Required All" />
 
     <Type Name="Windows.Foundation.TypedEventHandler{Microsoft.UI.Xaml.Controls.TabView,Microsoft.UI.Xaml.Controls.TabViewTabCloseRequestedEventArgs}" MarshalObject="Public" />
-
-	  <Type Name="Microsoft.UI.Xaml.Controls.TabView">
-      <Event Name="TabCloseRequested" Dynamic="Required"/>
-    </Type>
 	<Type Name="System.Collections.Generic.IList{Microsoft.UI.Xaml.Automation.Peers.AutomationPeer}" 
 	 MarshalObject="Public" Dynamic="Required All" />
 

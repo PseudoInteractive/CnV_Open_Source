@@ -24,13 +24,17 @@ using Cysharp.Text;
 using EnumsNET;
 using Microsoft.UI.Input;
 using Microsoft.UI.Dispatching;
-
+using PointerEventArgs = Microsoft.UI.Input.Experimental.ExpPointerEventArgs;
+using PointerPoint = Microsoft.UI.Input.Experimental.ExpPointerPoint;
+using PointerUpdateKind = Windows.UI.Input.PointerUpdateKind;
+using Windows.UI.Core;
+//using InputPointerSource = ;//Microsoft.UI.Input.Experimental.expin;
 namespace COTG.Views
 {
 
 	public partial class ShellPage
 	{
-		public static InputPointerSource coreInputSource;
+		public static Microsoft.UI.Input.Experimental.ExpIndependentPointerInputObserver coreInputSource;
 
 		public static Vector2 mousePosition;
 		public static Vector2 mousePositionC; // in camera space
@@ -49,30 +53,30 @@ namespace COTG.Views
 		public static void SetupCoreInput()
 		{
 
-		//	var workItemHandler = new WorkItemHandler((action) =>
+			//	var workItemHandler = new WorkItemHandler((action) =>
 			//{
-				var inputDevices = InputPointerSourceDeviceKinds.Mouse | InputPointerSourceDeviceKinds.Pen | InputPointerSourceDeviceKinds.Touch;
-			//	Log(canvas.ManipulationMode);
-			//	canvas.ManipulationMode = ManipulationModes.All;
-				coreInputSource = canvas.CreateCoreIndependentInputSource(inputDevices);
+			var inputDevices = CoreInputDeviceTypes.Mouse | CoreInputDeviceTypes.Pen | CoreInputDeviceTypes.Touch;
+										 //	Log(canvas.ManipulationMode);
+										 //	canvas.ManipulationMode = ManipulationModes.All;
+			coreInputSource = canvas.CreateCoreIndependentInputSource(inputDevices);
 
 			//	coreInputSource.InputEnabled += CoreInputSource_InputEnabled;
-				coreInputSource.PointerMoved += Canvas_PointerMoved;
-				coreInputSource.PointerPressed += Canvas_PointerPressed;
-				coreInputSource.PointerReleased += Canvas_PointerReleased;
-				coreInputSource.PointerEntered += Canvas_PointerEntered;
-				coreInputSource.PointerExited += Canvas_PointerExited;
-				coreInputSource.PointerCaptureLost += CoreInputSource_PointerCaptureLost;
+			coreInputSource.PointerMoved += Canvas_PointerMoved;
+			coreInputSource.PointerPressed += Canvas_PointerPressed;
+			coreInputSource.PointerReleased += Canvas_PointerReleased;
+			coreInputSource.PointerEntered += Canvas_PointerEntered;
+			coreInputSource.PointerExited += Canvas_PointerExited;
+			coreInputSource.PointerCaptureLost += CoreInputSource_PointerCaptureLost;
 
-				coreInputSource.PointerWheelChanged += Canvas_PointerWheelChanged;
+			coreInputSource.PointerWheelChanged += Canvas_PointerWheelChanged;
 			//coreInputSource.PointerCursor = 
 			//			coreInputSource.Dispatcher.ProcessEvents(CoreProcessEventsOption.ProcessUntilQuit);
 			//				coreInputSource.IsInputEnabled = true;
 			App.cursorDefault.Set();
-			//		};
-			//	var inputWorker = ThreadPool.RunAsync(workItemHandler, WorkItemPriority.High, WorkItemOptions.TimeSliced);
+//		};
+	//	var inputWorker = ThreadPool.RunAsync(workItemHandler,WorkItemPriority.High,WorkItemOptions.TimeSliced);
 
-		}
+	}
 
 		public static DispatcherQueueHandler RightClick((int x, int y) cc, int cid)
 		{
@@ -416,22 +420,22 @@ namespace COTG.Views
 
 		static void PointerInfo(PointerEventArgs args, [System.Runtime.CompilerServices.CallerMemberName] string memberName = "")
 		{
-			Log($"{memberName} : f:{args.CurrentPoint.FrameId} id:{args.CurrentPoint.PointerId} C:{args.CurrentPoint.IsInContact} t:{args.CurrentPoint.PointerDeviceType} <{args.CurrentPoint.Position.X},{args.CurrentPoint.Position.Y}> ");
+			Log($"{memberName} : f:{args.CurrentPoint.FrameId} id:{args.CurrentPoint.PointerId} C:{args.CurrentPoint.IsInContact} l{args.CurrentPoint.Position.X},{args.CurrentPoint.Position.Y}> ");
 		}
-		private static void Canvas_PointerExited(object sender, PointerEventArgs e)
+		private static void Canvas_PointerExited(object sender,PointerEventArgs e)
 		{
 			UpdateMousePosition(e);
-//			e.KeyModifiers.UpdateKeyModifiers();
+			//			e.KeyModifiers.UpdateKeyModifiers();
 			Gesture.ProcessPointerExited(e.CurrentPoint);
-		//	PointerInfo(e);
-	//		Log("pointer Exit " + isOverPopup);
+			//	PointerInfo(e);
+			//		Log("pointer Exit " + isOverPopup);
 			//if (ShellPage.IsCityView())
 			//{
 			//    e.Handled = false;
 			//    return;
 			//}
-		//	Log($"!FocusExit: {hasKeyboardFocus} w{webviewHasFocus} w2{webviewHasFocus2}");
-		//	hasKeyboardFocus=0;
+			//	Log($"!FocusExit: {hasKeyboardFocus} w{webviewHasFocus} w2{webviewHasFocus2}");
+			//	hasKeyboardFocus=0;
 			UpdateFocus();
 
 			ClearHover();
@@ -482,8 +486,8 @@ namespace COTG.Views
 			// why do this trigger gestures?
 			switch (pointerPoint.Properties.PointerUpdateKind)
 			{
-				case PointerUpdateKind.XButton1Released:
-				case PointerUpdateKind.XButton2Released:
+				case Windows.UI.Input.PointerUpdateKind.XButton1Released:
+				case Windows.UI.Input.PointerUpdateKind.XButton2Released:
 					return;
 			}
 			mousePosition = gestureResult.c;
@@ -567,7 +571,7 @@ namespace COTG.Views
 							App.DispatchOnUIThreadLow(RightClick( cc, cid));
 							break;
 						}
-					//case Windows.UI.Input.PointerUpdateKind.MiddleButtonReleased:
+					//case GestureAction.rightClick:
 					//	{
 					//		App.DispatchOnUIThreadLow(() =>
 					//		{
@@ -577,22 +581,22 @@ namespace COTG.Views
 					//			var text = spot.ToTsv();
 					//			Note.Show($"Copied to clipboard: {text}");
 					//			App.CopyTextToClipboard(text);
-					//			spot.SelectMe(true, App.keyModifiers);
+					//			spot.SelectMe(true,App.keyModifiers);
 
 					//		});
 					//		break;
 					//	}
-					//case Windows.UI.Input.PointerUpdateKind.XButton1Released:
-					//    {
-					//        NavStack.Back();
-					//    }
-					//    break;
-					//case Windows.UI.Input.PointerUpdateKind.XButton2Released:
-					//    {
-					//        NavStack.Forward();
+					//case GestureAction.back:
+					//	{
+					//		NavStack.Back();
+					//	}
+					//	break;
+					//case GestureAction.forward:
+					//	{
+					//		NavStack.Forward();
 
-					//        break;
-					//    }
+					//		break;
+					//	}
 					default:
 						break;
 				}

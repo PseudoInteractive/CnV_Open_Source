@@ -110,7 +110,7 @@
 									  FontSize="{StaticResource MediumFontSize}"
 									  IsTextScaleFactorEnabled="False"
 									  Click="IncludeButtonClick"
-									  Style="{ThemeResource DropDownButtonRevealStyle}"
+									 
 									  HorizontalContentAlignment="Center" />
 			<ComboBox x:Name="intervals"
 						  Header="Intervals"

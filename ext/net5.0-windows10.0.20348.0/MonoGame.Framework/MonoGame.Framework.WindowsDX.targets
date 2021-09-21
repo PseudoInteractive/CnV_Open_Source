@@ -1,0 +1,6 @@
+<Project>
+  <PropertyGroup>
+    <MonoGamePlatform>WindowsStoreApp</MonoGamePlatform>
+  </PropertyGroup>
+</Project>
+

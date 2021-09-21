@@ -58,12 +58,8 @@
     <Content Include="Images\Wide310x150Logo.scale-200.png" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.WindowsAppSDK" Version="[1.0.0-preview1]">
-      <IncludeAssets>build</IncludeAssets>
-    </PackageReference>
-    <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="[10.0.20348.19]">
-      <IncludeAssets>build</IncludeAssets>
-    </PackageReference>
+    <PackageReference Include="Microsoft.ProjectReunion" Version="0.8.3" />
+    <PackageReference Include="Microsoft.ProjectReunion.WinUI" Version="0.8.3" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\COTG\COTG.csproj" />

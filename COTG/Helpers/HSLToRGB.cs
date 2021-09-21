@@ -5,7 +5,7 @@ using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 
-using Windows.UI;
+//using Windows.UI;
 
 namespace COTG.Helpers
 {
@@ -146,7 +146,7 @@ namespace COTG.Helpers
 
         // Return H,S,L in range of 0-1
 
-        public static void ToHSV(Color rgb, out float h, out float s, out float l)
+        public static void ToHSV(Microsoft.Xna.Framework.Color rgb, out float h, out float s, out float l)
 
         {
 

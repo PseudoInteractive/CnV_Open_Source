@@ -22,7 +22,7 @@ using Microsoft.UI.Xaml.Controls;
 using COTG.JSON;
 using Windows.System;
 using Microsoft.Web.WebView2.Core;
-
+using Microsoft.UI.Xaml.Media;
 
 namespace COTG.Services
 {
@@ -31,22 +31,22 @@ namespace COTG.Services
     internal class ActivationService
     {
 		
-		private readonly App _app;
-        private readonly Type _defaultNavItem;
-        private Lazy<UIElement> _shell;
+//		private readonly App _app;
+   //    private readonly Type _defaultNavItem;
+   //     private Lazy<UIElement> _shell;
 
-        private object _lastActivationArgs;
+  //      private object _lastActivationArgs;
 
 //        private IdentityService IdentityService => Singleton<IdentityService>.Instance;
 
        // private UserDataService UserDataService => Singleton<UserDataService>.Instance;
 
-        public ActivationService(App app, Type defaultNavItem, Lazy<UIElement> shell = null)
-        {
-            _app = app;
-            _shell = shell;
-            _defaultNavItem = defaultNavItem;
-        }
+        //public ActivationService(App app, Type defaultNavItem, Lazy<UIElement> shell = null)
+        //{
+        //    _app = app;
+        //    _shell = shell;
+        //    _defaultNavItem = defaultNavItem;
+        //}
 
         public async Task ActivateAsync(IActivatedEventArgs activationArgs, bool wasRunning)
         {
@@ -75,14 +75,14 @@ namespace COTG.Services
                 if (App.window.Content == null)
                 {
 					// Create a Shell or Frame to act as the navigation context
-					App.window.Content = _shell?.Value ?? new Frame();
+					await App.DispatchOnUIThreadTask( () => App.window.Content = new ShellPage() );
                 }
             }
 
             // Depending on activationArgs one of ActivationHandlers or DefaultActivationHandler
             // will navigate to the first page
             await HandleActivationAsync(activationArgs);
-            _lastActivationArgs = activationArgs;
+          //  _lastActivationArgs = activationArgs;
 
 			if (IsInteractive(activationArgs))
 			{
@@ -91,7 +91,7 @@ namespace COTG.Services
 				{
 					//        await Singleton<SuspendAndResumeService>.Instance.RestoreSuspendAndResumeData();
 				}
-
+				App.instance.Resources["TabViewBackground"] = new SolidColorBrush();
 				// Ensure the current window is active
 				App.window.Activate();
 
@@ -145,14 +145,14 @@ namespace COTG.Services
                 await activationHandler.HandleAsync(activationArgs);
             }
 
-            if (IsInteractive(activationArgs) && _defaultNavItem!=null)
-            {
-                //var defaultHandler = new DefaultActivationHandler(_defaultNavItem);
-                //if (defaultHandler.CanHandle(activationArgs))
-                //{
-                //    await defaultHandler.HandleAsync(activationArgs);
-                //}
-            }
+            //if (IsInteractive(activationArgs) && _defaultNavItem!=null)
+            //{
+            //    //var defaultHandler = new DefaultActivationHandler(_defaultNavItem);
+            //    //if (defaultHandler.CanHandle(activationArgs))
+            //    //{
+            //    //    await defaultHandler.HandleAsync(activationArgs);
+            //    //}
+            //}
         }
 
   

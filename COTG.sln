@@ -16,9 +16,6 @@ Project("{C7167F0D-BC9F-4E6E-AFE1-012C56B48DB5}") = "COTG (Package)", "COTG (Pac
 	EndProjectSection
 EndProject
 Global
-	GlobalSection(SharedMSBuildProjectFiles) = preSolution
-		..\CnVShared\CnVShared.projitems*{813f59c4-ec96-48ef-83e4-e3c7e671e368}*SharedItemsImports = 5
-	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Debug|ARM = Debug|ARM
@@ -41,7 +38,6 @@ Global
 		{813F59C4-EC96-48EF-83E4-E3C7E671E368}.Debug|arm64.Deploy.0 = Debug|Any CPU
 		{813F59C4-EC96-48EF-83E4-E3C7E671E368}.Debug|x64.ActiveCfg = Debug|x64
 		{813F59C4-EC96-48EF-83E4-E3C7E671E368}.Debug|x64.Build.0 = Debug|x64
-		{813F59C4-EC96-48EF-83E4-E3C7E671E368}.Debug|x64.Deploy.0 = Debug|x64
 		{813F59C4-EC96-48EF-83E4-E3C7E671E368}.Debug|x86.ActiveCfg = Debug|Win32
 		{813F59C4-EC96-48EF-83E4-E3C7E671E368}.Debug|x86.Build.0 = Debug|Win32
 		{813F59C4-EC96-48EF-83E4-E3C7E671E368}.Debug|x86.Deploy.0 = Debug|Win32
