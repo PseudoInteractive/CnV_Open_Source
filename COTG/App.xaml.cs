@@ -398,28 +398,10 @@ namespace COTG
 		}
 		private async Task OnLaunchedOrActivated(Windows.ApplicationModel.Activation.IActivatedEventArgs args)
 		{
-			Trace("Hello2");
 
 			try
 			{
-				{
-					var grid = new Grid();
-					var _compositor = ElementCompositionPreview.GetElementVisual(grid).Compositor;
-				//	var _imageLoader = ImageLoaderFactory.CreateImageLoader(_compositor);
-
-					//Create surface brush and load image
-			//		CompositionSurfaceBrush surfaceBrush = _compositor.CreateSurfaceBrush();
-				//	surfaceBrush.Surface = await _imageLoader.LoadImageFromUriAsync(new Uri("ms-appx:///Assets/cat.jpg"));
-
-					//Create sprite visual
-					var visual = _compositor.CreateSpriteVisual();
-					//visual.Brush = surfaceBrush;
-					//visual.Size = new Vector2(270,200);
-
-					//Create drop shadow
-					var shadow = _compositor.CreateDropShadow();
-					Assert(shadow!=null);
-				}
+				
 
 				this.DebugSettings.FailFastOnErrors = false;
 #if TRACE || DEBUG
@@ -1671,13 +1653,13 @@ namespace COTG
 		}
 		public static void CopyXamlRoomFrom(this FlyoutBase target, UIElement source)
 		{
-			if (source != null & source.XamlRoot != null)
-				target.XamlRoot = source.XamlRoot;
+		//	if (source != null & source.XamlRoot != null)
+		//		target.XamlRoot = source.XamlRoot;
 		}
 		public static void CopyXamlRoomFrom(this UIElement target, UIElement source)
 		{
-			if (source != null & source.XamlRoot != null)
-				target.XamlRoot = source.XamlRoot;
+		//	if (source != null & source.XamlRoot != null)
+		//		target.XamlRoot = source.XamlRoot;
 		}
 		public static MenuFlyoutItem CreateMenuItem(string text, Action command, object context = null)
 		{

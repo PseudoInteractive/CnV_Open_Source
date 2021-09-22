@@ -240,7 +240,10 @@ namespace COTG.Views
         private const string DataIdentifier = "ChatTabItem";
         public TabPage()
         {
-
+			//App.instance.Resources["TabViewButtonBackground"] = new SolidColorBrush();
+			//App.instance.Resources["TabViewButtonForeground"] = new SolidColorBrush();
+			//App.instance.Resources["OverlayCornerRadius"] = 1.0;
+	//		App.instance.Resources["TopCornerRadiusFilterConverter"] = new 
 			this.InitializeComponent();
 		//	IsTabStop = true;
 			TabFocusNavigation = KeyboardNavigationMode.Once;

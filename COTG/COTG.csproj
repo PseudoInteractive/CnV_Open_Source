@@ -3,25 +3,32 @@
     <OutputType>WinExe</OutputType>
     <TargetFramework>net5.0-windows10.0.19041.0</TargetFramework>
     <TargetPlatformMinVersion>10.0.17763.0</TargetPlatformMinVersion>
-    <PublishProfile>Properties\PublishProfiles\win10-$(Platform).pubxml</PublishProfile>
-    <DefineConstants></DefineConstants>
-    <RootNamespace>cotg</RootNamespace>
-    <Platforms>x86;x64;arm64</Platforms>
-    <RuntimeIdentifiers>win10-x86;win10-x64;win10-arm64</RuntimeIdentifiers>
+    <RootNamespace>COTG</RootNamespace>
+    <Platforms>x64</Platforms>
+    <MonoGamePlatform>WindowsStoreApp</MonoGamePlatform>
+    <RuntimeIdentifiers>win10-x64</RuntimeIdentifiers>
     <UseWinUI>true</UseWinUI>
     <SupportedOSPlatformVersion>10.0.18362.0</SupportedOSPlatformVersion>
     <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
-    <LangVersion>preview</LangVersion>
     <EnableDefaultPageItems>false</EnableDefaultPageItems>
+    <LangVersion>preview</LangVersion>
     <StartupObject>COTG.Program</StartupObject>
+    <PackageCertificateThumbprint>5DC3522778776B8DC772B28B915990F3B4487888</PackageCertificateThumbprint>
+    <AppxPackageSigningEnabled>True</AppxPackageSigningEnabled>
+    <GenerateAppInstallerFile>False</GenerateAppInstallerFile>
+    <AppxPackageSigningTimestampDigestAlgorithm>SHA256</AppxPackageSigningTimestampDigestAlgorithm>
+    <AppxAutoIncrementPackageRevision>True</AppxAutoIncrementPackageRevision>
+    <GenerateTestArtifacts>True</GenerateTestArtifacts>
+    <AppxBundle>Always</AppxBundle>
+    <AppxBundlePlatforms>x64</AppxBundlePlatforms>
+    <HoursBetweenUpdateChecks>0</HoursBetweenUpdateChecks>
+    <AppxSymbolPackageEnabled>True</AppxSymbolPackageEnabled>
   </PropertyGroup>
   <ItemGroup>
     <EmbeddedResource Remove="AppPackages\**" />
     <EmbeddedResource Remove="BundleArtifacts\**" />
-    <EmbeddedResource Remove="EventHandlers\**" />
     <None Remove="AppPackages\**" />
     <None Remove="BundleArtifacts\**" />
-    <None Remove="EventHandlers\**" />
   </ItemGroup>
 
   <ItemGroup>
@@ -47,18 +54,24 @@
     <PackageReference Include="Enums.NET" Version="4.0.0" />
     <PackageReference Include="Grpc.Net.Client" Version="2.40.0-pre1" />
     <PackageReference Include="MagicOnion.Client" Version="4.3.1" />
-    <PackageReference Include="Microsoft.AppCenter" Version="4.3.0" />
-    <PackageReference Include="Microsoft.AppCenter.Analytics" Version="4.3.0" />
-    <PackageReference Include="Microsoft.AppCenter.Crashes" Version="4.3.0" />
+    <PackageReference Include="Microsoft.AppCenter" Version="4.4.0" />
+    <PackageReference Include="Microsoft.AppCenter.Analytics" Version="4.4.0" />
+    <PackageReference Include="Microsoft.AppCenter.Crashes" Version="4.4.0" />
     <PackageReference Include="Microsoft.ProjectReunion" Version="0.8.3" />
+    <PackageReference Include="Microsoft.ProjectReunion.Foundation" Version="0.8.3" />
     <PackageReference Include="Microsoft.ProjectReunion.WinUI" Version="0.8.3" />
     <PackageReference Include="Microsoft.Services.Store.Engagement" Version="10.1901.28001" />
     <PackageReference Include="Microsoft.Toolkit.HighPerformance" Version="7.1.0-rc2" />
-    <PackageReference Include="Microsoft.Windows.CppWinRT" Version="2.0.210913.7" />
+    <PackageReference Include="MonoGame.Content.Builder.Task" Version="3.8.1.1941-develop" />
     <PackageReference Include="Nito.AsyncEx.Coordination" Version="5.1.0" />
     <PackageReference Include="Nito.AsyncEx.Tasks" Version="5.1.0" />
     <PackageReference Include="PlayFabAllSDK" Version="1.101.210913" />
     <PackageReference Include="SharpDX" Version="4.2.0" />
+    <PackageReference Include="SharpDX.D3DCompiler" Version="4.2.0" />
+    <PackageReference Include="SharpDX.Direct2D1" Version="4.2.0" />
+    <PackageReference Include="SharpDX.Direct3D11" Version="4.2.0" />
+    <PackageReference Include="SharpDX.DXGI" Version="4.2.0" />
+    <PackageReference Include="SharpGen.Runtime.COM" Version="2.0.0-beta.9" />
     <PackageReference Include="Standart.Hash.xxHash" Version="3.1.0" />
     <PackageReference Include="System.Text.Json" Version="6.0.0-rc.1.21451.13" />
     <PackageReference Include="Telerik.WinUI.Controls.Trial" Version="0.5.0" />
@@ -336,10 +349,6 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <ApplicationDefinition Include="Activation\App.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </ApplicationDefinition>
     <Page Include="Styles\BattleReport.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -522,13 +531,6 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <Manifest Remove="Package.appxmanifest" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Remove="Package.appxmanifest" />
-  </ItemGroup>
-  <ItemGroup>
-     <Manifest Include="$(ApplicationManifest)" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Helpers\ResourceExtensions.cs" />
@@ -685,12 +687,12 @@
     <Compile Include="JSON\ofdf.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Activation\App.xaml.cs">
-      <DependentUpon>App.xaml</DependentUpon>
-    </Compile>
+	<Compile Include="App.xaml.cs">
+	  <DependentUpon>App.xaml</DependentUpon>
+	</Compile>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Content\Art\City\COTG\" />
+	  <Folder Include="Content\Art\City\COTG\" />
     <Folder Include="Content\Art\Tiles\" />
     <Folder Include="Content\Audio\" />
     <Folder Include="Shader\" />
@@ -725,26 +727,11 @@
     <IsPublishable>False</IsPublishable>
     <NoWin32Manifest>true</NoWin32Manifest>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x86'">
-    <Optimize>False</Optimize>
-  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <Optimize>False</Optimize>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|arm64'">
-    <Optimize>False</Optimize>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x86'">
-    <Optimize>True</Optimize>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <Optimize>True</Optimize>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|arm64'">
-    <Optimize>True</Optimize>
-  </PropertyGroup>
   <ProjectExtensions />
-  <ItemGroup>
-    <ReunionWin32Manifest Remove="Package.appxmanifest" />
-  </ItemGroup>
 </Project>

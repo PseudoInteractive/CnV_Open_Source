@@ -17482,11 +17482,6 @@
             <param name="divider">Divisor scalar on the right of the div sign.</param>
             <returns>The result of dividing a vector by a scalar.</returns>
         </member>
-        <member name="M:Microsoft.Xna.Framework.InputEvents.#ctor(Microsoft.UI.Xaml.Window,Microsoft.UI.Xaml.UIElement,Microsoft.Xna.Framework.Input.Touch.TouchQueue)">
-            <summary>
-            Sets the cursor of <see cref="T:Windows.UI.Core.CoreIndependentInputSource"/> thread
-            </summary>
-        </member>
         <member name="F:Microsoft.Xna.Framework.InputKeyEventArgs.Key">
             <summary>
             The key that was either pressed or released.

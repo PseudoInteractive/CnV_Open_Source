@@ -75,7 +75,12 @@ namespace COTG.Services
                 if (App.window.Content == null)
                 {
 					// Create a Shell or Frame to act as the navigation context
-					await App.DispatchOnUIThreadTask( () => App.window.Content = new ShellPage() );
+				//	App.instance.Resources["TabViewBackground"] = new SolidColorBrush();
+				//	App.instance.Resources["TabViewButtonBackground"] = new SolidColorBrush();
+				//	App.instance.Resources["TabViewButtonForeground"] = new SolidColorBrush();
+				//	App.instance.Resources["OverlayCornerRadius"] = 1.0;
+				//	App.instance.Resources["TopCornerRadiusFilterConverter"] = new object();
+					App.window.Content = new ShellPage();
                 }
             }
 
@@ -91,7 +96,6 @@ namespace COTG.Services
 				{
 					//        await Singleton<SuspendAndResumeService>.Instance.RestoreSuspendAndResumeData();
 				}
-				App.instance.Resources["TabViewBackground"] = new SolidColorBrush();
 				// Ensure the current window is active
 				App.window.Activate();
 

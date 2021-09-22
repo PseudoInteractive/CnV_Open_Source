@@ -8,8 +8,10 @@
     mc:Ignorable="d"
     TabFocusNavigation="Cycle"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-	<Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch" TabFocusNavigation="Cycle">
-		<winui:TabView x:Name="Tabs" x:FieldModifier="public"
+	<Page.Resources>
+		<ResourceDictionary Source="ms-appx:///Microsoft.UI.Xaml/DensityStyles/Compact.xaml" />
+	</Page.Resources>
+	<winui:TabView x:Name="Tabs" x:FieldModifier="public"
                       TabWidthMode="SizeToContent"
                              VerticalAlignment="Stretch"
                              HorizontalAlignment="Stretch"
@@ -26,7 +28,6 @@
                              TabDroppedOutside="Tabs_TabDroppedOutside"
                              TabStripDragOver="Tabs_TabStripDragOver"
                              TabStripDrop="Tabs_TabStripDrop"
-
                              TabDragStarting="Tabs_TabDragStarting">
 			<winui:TabView.TabStripHeader>
 				<Grid x:Name="ShellTitlebarInset"  Background="{x:Null}" />
@@ -37,5 +38,4 @@
 				</Grid>
 			</winui:TabView.TabStripFooter>
 		</winui:TabView>
-	</Grid>
 </Page>

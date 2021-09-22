@@ -14,14 +14,12 @@
       x:Name="shellPage"
       Loaded="OnLoaded"
 	  Background="{x:Null}"
-      mc:Ignorable="d"
-	
+      mc:Ignorable="d"	
 >
 	<Page.Resources>
-		<XamlControlsResources xmlns="using:Microsoft.UI.Xaml.Controls"/>
+		<ResourceDictionary Source="ms-appx:///Microsoft.UI.Xaml/DensityStyles/Compact.xaml" />
 	</Page.Resources>
-
-<Grid x:Name="grid"  x:FieldModifier="public" >
+	<Grid x:Name="grid"  x:FieldModifier="public" >
 		<Grid.Resources>
 			<Style x:Key="TimeFlyoutStyle"
                TargetType="FlyoutPresenter">
@@ -47,17 +45,14 @@
 		</Grid.ColumnDefinitions>
 
 
-		<!--<winui:WebView2 x:Name="webView" x:FieldModifier="public"
+		<winui:WebView2 x:Name="webView" x:FieldModifier="public"
 						Grid.RowSpan="5"
 						Grid.ColumnSpan="2"
 						Canvas.ZIndex="10"
 						AllowFocusOnInteraction="False"
 						AllowDrop="False"
-						AllowFocusWhenDisabled="False"
-					
-						Grid.Row="1" />-->
-
-
+						AllowFocusWhenDisabled="False"					
+						Grid.Row="1" />
 		<CommandBar Grid.ColumnSpan="2" TabFocusNavigation="Once" UseSystemFocusVisuals="True" x:Name="commandBar" x:FieldModifier="public"   >
 			<CommandBar.Content   >
 				<StackPanel Orientation="Horizontal" VerticalAlignment="Center">
@@ -69,11 +64,11 @@
 					</ComboBox>
 
 					<ComboBox x:Name="cityBox" x:FieldModifier="public" 
-                      Width="200"
-							  IsEditable="True"
+                    Width="200"
+					IsEditable="True"
 					TextSubmitted="CitySubmitted"
                  
-                      ItemsSource="{x:Bind game:City.emptyCitySource, Mode=OneTime}"
+                    ItemsSource="{x:Bind game:City.emptyCitySource, Mode=OneTime}"
                       VerticalAlignment="Center" ToolTipService.ToolTip="'Build City'- the city that you would build if you were building a city"
                       Margin="4" >
 						<ComboBox.ItemTemplate>
@@ -86,7 +81,7 @@
 						</ComboBox.ItemTemplate>
 					</ComboBox>
 					<TextBox x:Name="coords" Margin="4" Width="100" TextAlignment="Center"  Text="000:000" VerticalAlignment="Center" x:FieldModifier="public" KeyDown="coords_KeyDown"/>
-					<winui:DropDownButton x:Name="ContinentFilter"  x:FieldModifier="public"
+					<Button x:Name="ContinentFilter"  x:FieldModifier="public"
 									  Content="Cont/Tags"
 									  Margin="2"
 									  FontSize="{StaticResource MediumFontSize}"
@@ -118,22 +113,12 @@
 					<Button x:Name="focus" Margin="4" Width="140"  VerticalAlignment="Center" x:FieldModifier="public"
                             Style="{ThemeResource ButtonRevealStyle}" Click="HomeClick" RightTapped="HomeRightTapped" FontFamily="Tw Cen MT Condensed"
                             ToolTipService.ToolTip="Spot with Focus.&#x0a;Click to re-center or swith to this city&#x0a;Right clck for menu" Visibility="Collapsed"/>
-					<winui:ProgressRing x:Name="progress" IsActive="False" />
+					<!--<winui:ProgressBar x:Name="progress" Value="0.5" />-->
 					<TextBlock x:Name="work" x:FieldModifier="public" Margin="6" VerticalAlignment="Center"  />
 
 				</StackPanel>
 			</CommandBar.Content>
 			<CommandBar.SecondaryCommands>
-				
-				<!--<AppBarElementContainer>
-					<ComboBox x:Name="friendListBox" x:FieldModifier="public"
-							  Visibility="Collapsed"
-                     SelectionChanged="friendListBox_SelectionChanged"
-                      Width="120"
-                     
-                      VerticalAlignment="Center" ToolTipService.ToolTip="Friends"
-                      Margin="4" />
-				</AppBarElementContainer>-->
 				<AppBarElementContainer>
 					<ComboBox x:Name="cityListBox" x:FieldModifier="public"
                      IsEditable="True"
@@ -296,7 +281,7 @@
                                 Subtitle="Click on the language icon to translate outgoing. You can repeat multi times for more languages"></winui:TeachingTip>
 				</Frame.Resources>-->
 			</Frame>
-			<!-- Chat Width resizer -->
+			 <!--Chat Width resizer--> 
 			<tk:GridSplitter
                         Background="{x:Null}"
                     Grid.Row="1"
@@ -313,7 +298,7 @@
                     Foreground="White"  IsHitTestVisible="False"    />
 				</tk:GridSplitter.Element>
 			</tk:GridSplitter>
-			<!-- Chat Height resizer -->
+			 <!--Chat Height resizer--> 
 			<tk:GridSplitter
                     Grid.Row="1"
                     Background="{x:Null}" Tapped="chatResizeTapped"
@@ -347,14 +332,15 @@
                               
                                   Canvas.ZIndex="55"
                                   StackMode="Replace" />
-		<!---
-		<winui:InfoBar x:Name="infoBar"
+		
+		<!--<winui:InfoBar x:Name="infoBar"
                                   Grid.Row="1"
                                   Grid.Column="1"
 					   x:FieldModifier="public"
 					   Title=":o" Canvas.ZIndex="35"
                                >
-			<tk:MarkdownTextBlock x:Name="infoMD" x:FieldModifier="public" Text="TBA" Background="{x:Null}"/>
+			<Button></Button>
+			--><!--<tk:MarkdownTextBlock x:Name="infoMD" x:FieldModifier="public" Text="TBA" Background="{x:Null}"/>--><!--
 		</winui:InfoBar>-->
 		<tk:GridSplitter
                         Background="{x:Null}"

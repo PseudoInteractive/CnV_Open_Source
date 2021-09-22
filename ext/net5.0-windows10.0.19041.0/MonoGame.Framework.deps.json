@@ -8,7 +8,7 @@
     ".NETCoreApp,Version=v5.0": {
       "MonoGame.Framework/1.0.0": {
         "dependencies": {
-          "Microsoft.WindowsAppSDK.WinUI": "1.0.0-experimental1",
+          "Microsoft.ProjectReunion": "0.8.4",
           "SharpDX": "4.2.0",
           "SharpDX.DXGI": "4.2.0",
           "SharpDX.Direct2D1": "4.2.0",
@@ -16,6 +16,9 @@
           "SharpDX.MediaFoundation": "4.2.0",
           "SharpDX.XAudio2": "4.2.0",
           "SharpDX.XInput": "4.2.0",
+          "SharpGen.Runtime.COM": "2.0.0-beta.9",
+          "Vortice.DXGI": "2.0.0.0",
+          "Vortice.WinUI": "2.0.0.0",
           "runtimepack.Microsoft.Windows.SDK.NET.Ref": "10.0.19041.19"
         },
         "runtime": {
@@ -36,19 +39,37 @@
       },
       "Microsoft.NETCore.Platforms/1.1.0": {},
       "Microsoft.NETCore.Targets/1.1.0": {},
+      "Microsoft.ProjectReunion/0.8.4": {
+        "dependencies": {
+          "Microsoft.ProjectReunion.DWrite": "0.8.4",
+          "Microsoft.ProjectReunion.Foundation": "0.8.4",
+          "Microsoft.ProjectReunion.InteractiveExperiences": "0.8.4",
+          "Microsoft.ProjectReunion.WinUI": "0.8.4"
+        }
+      },
+      "Microsoft.ProjectReunion.DWrite/0.8.4": {},
+      "Microsoft.ProjectReunion.Foundation/0.8.4": {
+        "runtime": {
+          "lib/net5.0-windows/Microsoft.ApplicationModel.Resources.Projection.dll": {
+            "assemblyVersion": "0.8.0.0",
+            "fileVersion": "0.8.0.0"
+          }
+        }
+      },
+      "Microsoft.ProjectReunion.InteractiveExperiences/0.8.4": {},
+      "Microsoft.ProjectReunion.WinUI/0.8.4": {
+        "runtime": {
+          "lib/net5.0-windows10.0.18362.0/Microsoft.WinUI.dll": {
+            "assemblyVersion": "3.0.0.0",
+            "fileVersion": "3.0.0.2109"
+          }
+        }
+      },
       "Microsoft.Win32.Primitives/4.3.0": {
         "dependencies": {
           "Microsoft.NETCore.Platforms": "1.1.0",
           "Microsoft.NETCore.Targets": "1.1.0",
           "System.Runtime": "4.3.0"
-        }
-      },
-      "Microsoft.WindowsAppSDK.WinUI/1.0.0-experimental1": {
-        "runtime": {
-          "lib/net5.0-windows10.0.18362.0/Microsoft.WinUI.dll": {
-            "assemblyVersion": "3.0.0.0",
-            "fileVersion": "3.0.0.2108"
-          }
         }
       },
       "NETStandard.Library/1.6.1": {
@@ -230,6 +251,25 @@
           "lib/netstandard1.1/SharpDX.XInput.dll": {
             "assemblyVersion": "4.2.0.0",
             "fileVersion": "4.2.0.0"
+          }
+        }
+      },
+      "SharpGen.Runtime/2.0.0-beta.9": {
+        "runtime": {
+          "lib/net5.0/SharpGen.Runtime.dll": {
+            "assemblyVersion": "2.0.0.0",
+            "fileVersion": "2.0.0.0"
+          }
+        }
+      },
+      "SharpGen.Runtime.COM/2.0.0-beta.9": {
+        "dependencies": {
+          "SharpGen.Runtime": "2.0.0-beta.9"
+        },
+        "runtime": {
+          "lib/netstandard2.0/SharpGen.Runtime.COM.dll": {
+            "assemblyVersion": "2.0.0.0",
+            "fileVersion": "2.0.0.0"
           }
         }
       },
@@ -793,6 +833,30 @@
           "System.Threading": "4.3.0",
           "System.Xml.ReaderWriter": "4.3.0"
         }
+      },
+      "Vortice.DXGI/2.0.0.0": {
+        "runtime": {
+          "Vortice.DXGI.dll": {
+            "assemblyVersion": "2.0.0.0",
+            "fileVersion": "2.0.16.6466"
+          }
+        }
+      },
+      "Vortice.WinUI/2.0.0.0": {
+        "runtime": {
+          "Vortice.WinUI.dll": {
+            "assemblyVersion": "2.0.0.0",
+            "fileVersion": "2.0.16.6466"
+          }
+        }
+      },
+      "Vortice.DirectX/2.0.0.0": {
+        "runtime": {
+          "Vortice.DirectX.dll": {
+            "assemblyVersion": "2.0.0.0",
+            "fileVersion": "2.0.16.6466"
+          }
+        }
       }
     }
   },
@@ -821,19 +885,47 @@
       "path": "microsoft.netcore.targets/1.1.0",
       "hashPath": "microsoft.netcore.targets.1.1.0.nupkg.sha512"
     },
+    "Microsoft.ProjectReunion/0.8.4": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-qInJ7k37gRCl8xWyHCKYfL+NCze/C1F0A0qFZdtEuuu2OlgXQE/0Yvdj+LSs56jQz1yA9CfdngxH+gkS7VflDQ==",
+      "path": "microsoft.projectreunion/0.8.4",
+      "hashPath": "microsoft.projectreunion.0.8.4.nupkg.sha512"
+    },
+    "Microsoft.ProjectReunion.DWrite/0.8.4": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-UFZdgnrnJMuOgnt4+kYZ29/8uL8wMFz8ibRFYByCYuYT+emKCZWnJy38TJY1R5iMuChOKkaOeP1KE8IOakz92Q==",
+      "path": "microsoft.projectreunion.dwrite/0.8.4",
+      "hashPath": "microsoft.projectreunion.dwrite.0.8.4.nupkg.sha512"
+    },
+    "Microsoft.ProjectReunion.Foundation/0.8.4": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-BuVgkal7kF1xg1dXuKEpCnwgtivrk1+GXx8PfiPEWNRZMqmuOcfz2Zikgm/WrN/waFAr4shqQgmb8nYL/E1twQ==",
+      "path": "microsoft.projectreunion.foundation/0.8.4",
+      "hashPath": "microsoft.projectreunion.foundation.0.8.4.nupkg.sha512"
+    },
+    "Microsoft.ProjectReunion.InteractiveExperiences/0.8.4": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-KakSLC80fWJKu/XuBx0DtgnhRKHL4ZaC97Ws5qWF4SLuGKVGJciXsZhp5QfMpxjd/O/5v/047NM68qr+Cr8gWA==",
+      "path": "microsoft.projectreunion.interactiveexperiences/0.8.4",
+      "hashPath": "microsoft.projectreunion.interactiveexperiences.0.8.4.nupkg.sha512"
+    },
+    "Microsoft.ProjectReunion.WinUI/0.8.4": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-iN22j8fdvQZCC9etwrmCODmcPeSXFRbFp5ZIzrQ4Mlqgc3O/vXQxvEQrUy7u2OXRl9ftXDpCAKpBOHWMdqQadw==",
+      "path": "microsoft.projectreunion.winui/0.8.4",
+      "hashPath": "microsoft.projectreunion.winui.0.8.4.nupkg.sha512"
+    },
     "Microsoft.Win32.Primitives/4.3.0": {
       "type": "package",
       "serviceable": true,
       "sha512": "sha512-9ZQKCWxH7Ijp9BfahvL2Zyf1cJIk8XYLF6Yjzr2yi0b2cOut/HQ31qf1ThHAgCc3WiZMdnWcfJCgN82/0UunxA==",
       "path": "microsoft.win32.primitives/4.3.0",
       "hashPath": "microsoft.win32.primitives.4.3.0.nupkg.sha512"
-    },
-    "Microsoft.WindowsAppSDK.WinUI/1.0.0-experimental1": {
-      "type": "package",
-      "serviceable": true,
-      "sha512": "sha512-0IKpmhXQJ3nSyAhu5Td8CWqmbqgLr53KxRJTbIGvXcX10rlw0gFr2bL9kjkVD5KsOioOWLMESEtnHKlQcHXkVA==",
-      "path": "microsoft.windowsappsdk.winui/1.0.0-experimental1",
-      "hashPath": "microsoft.windowsappsdk.winui.1.0.0-experimental1.nupkg.sha512"
     },
     "NETStandard.Library/1.6.1": {
       "type": "package",
@@ -1002,6 +1094,20 @@
       "sha512": "sha512-mH3soea+aVUaTuFrkwx+zohklDvCczcgtuTiZJbOCyS5GZ/F9se4BsRJ86xTA9baf0drXYbZQj152PN7lnjiwg==",
       "path": "sharpdx.xinput/4.2.0",
       "hashPath": "sharpdx.xinput.4.2.0.nupkg.sha512"
+    },
+    "SharpGen.Runtime/2.0.0-beta.9": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-FFbM9kkmV79tp02etSmqBeUxxtQkvIcn1WTP4kTHSBo/UfHNjtj64fTPnWuscLuY9cL8QX/HsTlCT9xYpLf/Eg==",
+      "path": "sharpgen.runtime/2.0.0-beta.9",
+      "hashPath": "sharpgen.runtime.2.0.0-beta.9.nupkg.sha512"
+    },
+    "SharpGen.Runtime.COM/2.0.0-beta.9": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-pmmx1mFo/OImruk5xZWyeE0Bk8WJUYzAwvtQCxblQVccX9z1+3q1hidmZizy2c/Gwyc4PGSWf/PX/fJyh+G+9A==",
+      "path": "sharpgen.runtime.com/2.0.0-beta.9",
+      "hashPath": "sharpgen.runtime.com.2.0.0-beta.9.nupkg.sha512"
     },
     "System.AppContext/4.3.0": {
       "type": "package",
@@ -1373,6 +1479,21 @@
       "sha512": "sha512-5zJ0XDxAIg8iy+t4aMnQAu0MqVbqyvfoUVl1yDV61xdo3Vth45oA2FoY4pPkxYAH5f8ixpmTqXeEIya95x0aCQ==",
       "path": "system.xml.xdocument/4.3.0",
       "hashPath": "system.xml.xdocument.4.3.0.nupkg.sha512"
+    },
+    "Vortice.DXGI/2.0.0.0": {
+      "type": "reference",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "Vortice.WinUI/2.0.0.0": {
+      "type": "reference",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "Vortice.DirectX/2.0.0.0": {
+      "type": "reference",
+      "serviceable": false,
+      "sha512": ""
     }
   }
 }

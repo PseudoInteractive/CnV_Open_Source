@@ -8,6 +8,14 @@
       "allowLocalNetworkLoopbackProperty": false,
       "doNotLaunchApp": false,
       "nativeDebugging": true
+    },
+    "Mixed": {
+      "commandName": "Project",
+      "hotReloadEnabled": false,
+      "nativeDebugging": true
+    },
+    "Msix": {
+      "commandName": "MsixPackage"
     }
   }
 }

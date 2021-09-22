@@ -1,0 +1,97 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Vortice.WinUI</name>
+    </assembly>
+    <members>
+        <member name="T:Vortice.WinUI.WinUI">
+            <summary>
+            Functions
+            </summary>
+        </member>
+        <member name="T:Vortice.WinUI.IDesktopWindowXamlSourceNative">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>IDesktopWindowXamlSourceNative</unmanaged>
+            <unmanaged-short>IDesktopWindowXamlSourceNative</unmanaged-short>
+        </member>
+        <member name="P:Vortice.WinUI.IDesktopWindowXamlSourceNative.WindowHandle">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>HRESULT IDesktopWindowXamlSourceNative::get_WindowHandle([Out] HWND* hWnd)</unmanaged>
+            <unmanaged-short>IDesktopWindowXamlSourceNative::get_WindowHandle</unmanaged-short>
+        </member>
+        <member name="M:Vortice.WinUI.IDesktopWindowXamlSourceNative.AttachToWindow(System.IntPtr)">
+            <summary>
+            No documentation.
+            </summary>
+            <param name = "parentWnd">No documentation.</param>
+            <returns>No documentation.</returns>
+            <unmanaged>HRESULT IDesktopWindowXamlSourceNative::AttachToWindow([In] HWND parentWnd)</unmanaged>
+            <unmanaged-short>IDesktopWindowXamlSourceNative::AttachToWindow</unmanaged-short>
+        </member>
+        <member name="M:Vortice.WinUI.IDesktopWindowXamlSourceNative.GetWindowHandle">
+            <summary>
+            No documentation.
+            </summary>
+            <returns>No documentation.</returns>
+            <unmanaged>HRESULT IDesktopWindowXamlSourceNative::get_WindowHandle([Out] HWND* hWnd)</unmanaged>
+            <unmanaged-short>IDesktopWindowXamlSourceNative::get_WindowHandle</unmanaged-short>
+        </member>
+        <member name="M:Vortice.WinUI.IDesktopWindowXamlSourceNative.PreTranslateMessage(Vortice.Win32.NativeMessage@)">
+            <summary>
+            No documentation.
+            </summary>
+            <param name = "message">No documentation.</param>
+            <returns>No documentation.</returns>
+            <unmanaged>HRESULT IDesktopWindowXamlSourceNative::PreTranslateMessage([In] const MSG* message, [Out] BOOL* result)</unmanaged>
+            <unmanaged-short>IDesktopWindowXamlSourceNative::PreTranslateMessage</unmanaged-short>
+        </member>
+        <member name="T:Vortice.WinUI.IWindowNative">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>IWindowNative</unmanaged>
+            <unmanaged-short>IWindowNative</unmanaged-short>
+        </member>
+        <member name="P:Vortice.WinUI.IWindowNative.WindowHandle">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>HRESULT IWindowNative::get_WindowHandle([Out] HWND* hWnd)</unmanaged>
+            <unmanaged-short>IWindowNative::get_WindowHandle</unmanaged-short>
+        </member>
+        <member name="M:Vortice.WinUI.IWindowNative.GetWindowHandle">
+            <summary>
+            No documentation.
+            </summary>
+            <returns>No documentation.</returns>
+            <unmanaged>HRESULT IWindowNative::get_WindowHandle([Out] HWND* hWnd)</unmanaged>
+            <unmanaged-short>IWindowNative::get_WindowHandle</unmanaged-short>
+        </member>
+        <member name="T:Vortice.WinUI.IXamlRootNative">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>IXamlRootNative</unmanaged>
+            <unmanaged-short>IXamlRootNative</unmanaged-short>
+        </member>
+        <member name="P:Vortice.WinUI.IXamlRootNative.HostWindow">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>HRESULT IXamlRootNative::get_HostWindow([Out] HWND* hWnd)</unmanaged>
+            <unmanaged-short>IXamlRootNative::get_HostWindow</unmanaged-short>
+        </member>
+        <member name="M:Vortice.WinUI.IXamlRootNative.GetHostWindow">
+            <summary>
+            No documentation.
+            </summary>
+            <returns>No documentation.</returns>
+            <unmanaged>HRESULT IXamlRootNative::get_HostWindow([Out] HWND* hWnd)</unmanaged>
+            <unmanaged-short>IXamlRootNative::get_HostWindow</unmanaged-short>
+        </member>
+    </members>
+</doc>

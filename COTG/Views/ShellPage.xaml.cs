@@ -72,7 +72,8 @@ namespace COTG.Views
 		   {
 			   if (!workQueue.Any())
 			   {
-				   instance.progress.IsActive = true;
+			//	   instance.progress.Value = 1;
+// FIX
 				   workStarted = DateTime.UtcNow;
 				   instance.work.Text = desc;
 				   instance.work.Visibility = Visibility.Visible;
@@ -113,8 +114,10 @@ namespace COTG.Views
 				}
 				if (!workQueue.Any())
 				{
-					instance.progress.IsActive = false;
-					instance.work.Visibility = Visibility.Collapsed;
+					//					instance.progress.Value = 0;
+
+					// FIX
+										instance.work.Visibility = Visibility.Collapsed;
 				}
 				else
 				{
@@ -207,7 +210,7 @@ namespace COTG.Views
 		public static bool isFocused => isHitTestVisible && App.isForeground ;
 		private void OnLoaded(object sender, RoutedEventArgs e)
 		{
-			Trace("Hello");
+
 	//		SystemNavigationManagerPreview.GetForCurrentView().CloseRequested += App.App_CloseRequested; ;
 			
 			CityBuild.Initialize();
@@ -239,13 +242,13 @@ namespace COTG.Views
 			// Placement.LayoutUpdated += Placement_LayoutUpdated; grid.Children.Add(img);
 
 			// Grid.SetRowSpan(img, 4); Grid.SetColumnSpan(img, 4); Canvas.SetZIndex(img, 12);
-			JSClient.Initialize(grid,new WebView2());
+			JSClient.Initialize(grid,webView);
 			// foreach (var i in webView.KeyboardAccelerators) i.IsEnabled = false;
 			// webView.AllowFocusOnInteraction = false; c.hitTest.Margin= webView.Margin = new
 			// Thickness(0, 0, 11, 0);
 			//		grid.Children.Add(webView);
 
-			FocusManager.GotFocus+=FocusManager_GotFocus;
+		//	FocusManager.GotFocus+=FocusManager_GotFocus;
 			
 			//c.hitTest.Fill = JSClient.webViewBrush;
 			//				var visual = ElementCompositionPreview.GetElementVisual(c.canvas);
@@ -302,9 +305,17 @@ namespace COTG.Views
 			/// we pass this as an argument to let the page know that it is a programmatic navigation
 			// Services.NavigationService.Navigate<Views.DefenseHistoryTab>(this); ChatTab.Ctor();
 			{
-				ChatTab.Ctor();
-				ChatTab.tabPage = CreateTabPage(chatTabFrame);
+				try
+				{
+					ChatTab.Ctor();
+					ChatTab.tabPage = CreateTabPage(chatTabFrame);
 
+
+				}
+				catch(Exception __ex)
+				{
+					Debug.LogEx(__ex);
+				}
 				UserTab.InitUserTabs();
 
 				{
@@ -334,9 +345,9 @@ namespace COTG.Views
 			// PointerPressed+= PointerPressedCB; HomeButtonTip.IsOpen = true;
 
 			//App.SetupCoreWindowInputHooks();
-			var displayInformation = DisplayInformation.GetForCurrentView();
-			var screenSize = new Size(displayInformation.ScreenWidthInRawPixels,
-									  displayInformation.ScreenHeightInRawPixels);
+			//var displayInformation = DisplayInformation.GetForCurrentView();
+			//var screenSize = new Size(displayInformation.ScreenWidthInRawPixels,
+			//						  displayInformation.ScreenHeightInRawPixels);
 			//	ShellPage.webclientSpan.x = (screenSize.Width * .715625f* SettingsPage.htmlZoom * 2).RoundToInt();
 			//	ShellPage.webclientSpan.y = (screenSize.Height * 0.89236111111111116f * SettingsPage.htmlZoom*2).RoundToInt();
 		//	await UpdateWebViewScale();

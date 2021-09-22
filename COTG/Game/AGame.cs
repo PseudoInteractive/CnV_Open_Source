@@ -284,13 +284,13 @@ namespace COTG
 
 		static public void Create(SwapChainPanel swapChainPanel)
 		{
-			var display = Windows.Graphics.Display.DisplayInformation.GetForCurrentView();
-			var colorInfo = display.GetAdvancedColorInfo();
-			AGame.colorKind = colorInfo.CurrentAdvancedColorKind;
-			display.AdvancedColorInfoChanged+= (a,__) =>
-			{
-				AGame.colorKind = a.GetAdvancedColorInfo().CurrentAdvancedColorKind;
-			};
+			//var display = Windows.Graphics.Display.DisplayInformation.GetForCurrentView();
+			//var colorInfo = display.GetAdvancedColorInfo();
+			//AGame.colorKind = colorInfo.CurrentAdvancedColorKind;
+			//display.AdvancedColorInfoChanged+= (a,__) =>
+			//{
+			//	AGame.colorKind = a.GetAdvancedColorInfo().CurrentAdvancedColorKind;
+			//};
 			canvas = swapChainPanel;
 			canvas.CompositeMode = (Microsoft.UI.Xaml.Media.ElementCompositeMode.MinBlend);
 			instance = MonoGame.Framework.XamlGame<AGame>.Create(() => new AGame() { }, "",App.window, swapChainPanel);
