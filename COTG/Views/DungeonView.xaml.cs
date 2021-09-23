@@ -27,7 +27,6 @@ namespace COTG.Views
 {
 	public sealed partial class DungeonView : ContentDialog
 	{
-		public const int raidStepCount = 15;
 
 		ResetableCollection<Dungeon> items = new();
 
@@ -70,7 +69,11 @@ namespace COTG.Views
 				}
 				return;
 			}
-			await AApp.popupSema.WaitAsync();
+			if( AApp.popupSema.IsLocked() )
+			{
+				Assert(false);
+				return;
+			}
 			try
 			{
 				await App.DispatchOnUIThreadTask(async () =>
@@ -93,13 +96,16 @@ namespace COTG.Views
 					   hasRunOnce = true;
 					   Task.Delay(1000).ContinueWith( (_)=> App.DispatchOnUIThreadLow(()=>instance.items.NotifyReset()));
 				   }
-				   await instance.ShowAsync();
+				   await instance.ShowAsync2();
 			   });
+			}
+			catch(Exception ex)
+			{
+				Log(ex);
 			}
 			finally
 			{
-				openCity = 0;
-				AApp.popupSema.Release();
+				openCity=0;
 			}
 		}
 

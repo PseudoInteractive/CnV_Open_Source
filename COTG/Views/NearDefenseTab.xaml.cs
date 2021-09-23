@@ -367,7 +367,6 @@ namespace COTG.Views
 							PrimaryButtonText = "Yes",
 							CloseButtonText = "Cancel"
 						};
-						msg.CopyXamlRoomFrom(text);
 						ElementSoundPlayer.Play(ElementSoundKind.Show);
 
 						if (await msg.ShowAsync2() != ContentDialogResult.Primary)

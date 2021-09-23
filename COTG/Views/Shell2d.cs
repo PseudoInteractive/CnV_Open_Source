@@ -203,11 +203,11 @@ namespace COTG.Views
 					{
 						TabPage.mainTabs.Focus(FocusState.Programmatic);
 					}
-App.QueueOnUIThread( ()=>
+//App.QueueOnUIThread( ()=>
 					{
 								var f = keyboardProxy.Focus(FocusState.Programmatic);
 								Assert(f);
-					} );
+					} //);
 					note|=2;
 				}
 			}
@@ -351,6 +351,7 @@ App.QueueOnUIThread( ()=>
 			//canvasHitTest.Stretch = Stretch.Fill;
 			//  SetupCoreInput();
 			canvas.CompositionScaleChanged += Canvas_CompositionScaleChanged;
+		///	SetupCoreInput();
 			return (canvas, null);
 		}
 

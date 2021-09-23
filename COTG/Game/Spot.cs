@@ -44,6 +44,7 @@ using Cysharp.Text;
 using DiscordCnV;
 using Windows.UI.Core;
 using Microsoft.UI.Input;
+using Microsoft.UI.Xaml.Controls.Primitives;
 
 namespace COTG.Game
 {
@@ -806,7 +807,7 @@ namespace COTG.Game
 					str = $"{City.shareStringStart}{(World.GetInfoFromCid(cid).isWater ? ';' : ':')}{str.Substring(18)}";
 					App.CopyTextToClipboard(str);
 
-					Launcher.LaunchUriAsync(new Uri($"https://cotgopt.com/?map={str}"));
+					Launcher.LaunchUriAsync(new Uri($"https://cotgopt.com/?map={str}",UriKind.Absolute));
 				});
 			}
 		}
@@ -2348,5 +2349,11 @@ namespace COTG.Game
 			};
 		}
 		public static string CellText(this DataGridCellInfo cell) => (cell?.Column as DataGridTypedColumn)?.PropertyName ?? string.Empty;
+		public static Windows.Foundation.Point Show(this Microsoft.UI.Xaml.Controls.Flyout me,Windows.Foundation.Point sc,UIElement element)
+		{
+			me.CopyXamlRoomFrom(element);
+			me.ShowAt(element,new FlyoutShowOptions() { Position = new Windows.Foundation.Point(sc.X,sc.Y),Placement = FlyoutPlacementMode.Auto,ShowMode=FlyoutShowMode.TransientWithDismissOnPointerMoveAway });
+			return sc;
+		}
 	}
 }

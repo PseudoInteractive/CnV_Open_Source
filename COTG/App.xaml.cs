@@ -58,6 +58,7 @@ using MenuFlyoutSubItem = Microsoft.UI.Xaml.Controls.MenuFlyoutSubItem;
 using ToggleMenuFlyoutItem = Microsoft.UI.Xaml.Controls.ToggleMenuFlyoutItem;
 using Microsoft.UI.Input;
 using Microsoft.UI.Xaml.Hosting;
+using Nito.AsyncEx;
 //using Windows.UI.Core;
 
 namespace COTG
@@ -383,7 +384,7 @@ namespace COTG
 			}
 			catch(Exception ex)
 			{
-				Windows.System.Launcher.LaunchUriAsync(new ("https://go.microsoft.com/fwlink/p/?LinkId=2124703"));
+				Windows.System.Launcher.LaunchUriAsync(new ("https://go.microsoft.com/fwlink/p/?LinkId=2124703",UriKind.Absolute));
 				LogEx(ex);
 			}
 
@@ -1180,7 +1181,7 @@ namespace COTG
 		public static SemaphoreSlim uiSema = new SemaphoreSlim(1);
 
 
-		public static bool isUISemaLocked => uiSema.CurrentCount != 1;
+		public static bool isUISemaLocked => uiSema.IsLocked();
 		public static async Task<T>
 			DispatchOnUIThreadExclusive<T>(int cid,Func<Task<T>> func, DispatcherQueuePriority priority = DispatcherQueuePriority.Low)
 		{
@@ -1558,10 +1559,11 @@ namespace COTG
 
 		public static SemaphoreSlim popupSema = new SemaphoreSlim(1);
 
-		public static async Task<ContentDialogResult> ShowAsync2(this ContentDialog dialog)
+		public static async Task<ContentDialogResult> ShowAsync2(this ContentDialog dialog,UIElement xamlRootSource = null)
 		{
+			CopyXamlRoomFrom(dialog,xamlRootSource);
 
-			await popupSema.WaitAsync().ConfigureAwait(true);
+			await popupSema.WaitAsync();//.ConfigureAwait(true);
 			try
 			{
 				var result = await dialog.ShowAsync();
@@ -1575,7 +1577,7 @@ namespace COTG
 		}
 
 
-		
+
 
 
 
@@ -1653,13 +1655,15 @@ namespace COTG
 		}
 		public static void CopyXamlRoomFrom(this FlyoutBase target, UIElement source)
 		{
-		//	if (source != null & source.XamlRoot != null)
-		//		target.XamlRoot = source.XamlRoot;
+			if(source?.XamlRoot is not null) 
+				target.XamlRoot = source.XamlRoot;
 		}
 		public static void CopyXamlRoomFrom(this UIElement target, UIElement source)
 		{
-		//	if (source != null & source.XamlRoot != null)
-		//		target.XamlRoot = source.XamlRoot;
+			if (source?.XamlRoot is not null)
+				target.XamlRoot = source.XamlRoot;
+			else
+				target.XamlRoot = App.window.Content.XamlRoot;
 		}
 		public static MenuFlyoutItem CreateMenuItem(string text, Action command, object context = null)
 		{
@@ -1767,6 +1771,8 @@ namespace COTG
 			//}
 		//	App.QueueOnUIThread( () =>	CoreWindow.GetForCurrentThread().PointerCursor = type);
 		}
+
+		public static bool IsLocked(this SemaphoreSlim sema) => sema.CurrentCount==0;
 
 	}
 }

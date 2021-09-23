@@ -553,11 +553,10 @@ namespace COTG.Views
             };
 			//ElementSoundPlayer.Play(ElementSoundKind.Show);
 
-			msg.CopyXamlRoomFrom(sender as UIElement);
-            panel.Children.Add(removeAttacks);
+			panel.Children.Add(removeAttacks);
             panel.Children.Add(removeTargets);
 
-            var result = await msg.ShowAsync2();
+            var result = await msg.ShowAsync2(this);
             if (result == ContentDialogResult.Primary)
             {
                 if (removeAttacks.IsChecked.GetValueOrDefault())

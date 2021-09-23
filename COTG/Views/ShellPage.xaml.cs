@@ -357,14 +357,17 @@ namespace COTG.Views
 		//		ShellPage.SetupCoreInput();
 				var sz = canvas.ActualSize;
 				AGame.SetClientSpan(sz.X, sz.Y);
+//				SetupCoreInput();
+
 			//	SetWebViewHasFocus(true);
-				//ShellPage.canvas.IsHitTestVisible = false;
-				//ShellPage.canvas.Visibility = Visibility.Collapsed;
+			//ShellPage.canvas.IsHitTestVisible = false;
+			//ShellPage.canvas.Visibility = Visibility.Collapsed;
 				var instances = Windows.ApplicationModel.AppInstance.GetInstances();
-				if(instances.Count > 1)
-				{
-					App.DoYesNoBox("More than one window is open", "If this is intentional, please ignore, if not, close some (they may already be closing) or restart your computer" );
-				}
+				//Assert(instances.Count==1);
+				//if(instances.Count > 1)
+				//{
+				//	App.DoYesNoBox("More than one window is open", "If this is intentional, please ignore, if not, close some (they may already be closing) or restart your computer" );
+				//}
 				
 			}));
 
@@ -665,7 +668,7 @@ namespace COTG.Views
 		{
 			if (JSClient.world == 0)
 			{
-				JSClient.view.Source = new Uri("https://www.crownofthegods.com/home");
+				JSClient.view.Source = new Uri("https://www.crownofthegods.com/home/");
 			}
 			else
 			{

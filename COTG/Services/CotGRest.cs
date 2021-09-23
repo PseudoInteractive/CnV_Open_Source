@@ -1190,8 +1190,7 @@ namespace COTG.Services
 										};
 										//ElementSoundPlayer.Play(ElementSoundKind.Show);
 
-										content.CopyXamlRoomFrom(uie);
-										return await content.ShowAsync2();
+										return await content.ShowAsync2(uie);
 									});
 									if (result == ContentDialogResult.Primary)
 									{

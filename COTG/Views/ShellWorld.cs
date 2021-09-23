@@ -27,7 +27,8 @@ using Microsoft.UI.Dispatching;
 using PointerEventArgs = Microsoft.UI.Input.Experimental.ExpPointerEventArgs;
 using PointerPoint = Microsoft.UI.Input.Experimental.ExpPointerPoint;
 using PointerUpdateKind = Windows.UI.Input.PointerUpdateKind;
-using Windows.UI.Core;
+//using Windows.UI.Core;
+using Microsoft.UI.Input.Experimental;
 //using InputPointerSource = ;//Microsoft.UI.Input.Experimental.expin;
 namespace COTG.Views
 {
@@ -55,7 +56,9 @@ namespace COTG.Views
 
 			//	var workItemHandler = new WorkItemHandler((action) =>
 			//{
-			var inputDevices = CoreInputDeviceTypes.Mouse | CoreInputDeviceTypes.Pen | CoreInputDeviceTypes.Touch;
+		//	canvas.DispatcherQueue.TryEnqueue( ()=>
+			{
+			var inputDevices = Windows.UI.Core.CoreInputDeviceTypes.Mouse;// | Windows.UI.Core.CoreInputDeviceTypes.Pen | Windows.UI.Core.CoreInputDeviceTypes.Touch;
 										 //	Log(canvas.ManipulationMode);
 										 //	canvas.ManipulationMode = ManipulationModes.All;
 			coreInputSource = canvas.CreateCoreIndependentInputSource(inputDevices);
@@ -69,10 +72,11 @@ namespace COTG.Views
 			coreInputSource.PointerCaptureLost += CoreInputSource_PointerCaptureLost;
 
 			coreInputSource.PointerWheelChanged += Canvas_PointerWheelChanged;
-			//coreInputSource.PointerCursor = 
-			//			coreInputSource.Dispatcher.ProcessEvents(CoreProcessEventsOption.ProcessUntilQuit);
-			//				coreInputSource.IsInputEnabled = true;
-			App.cursorDefault.Set();
+				//coreInputSource.PointerCursor = 
+				//			coreInputSource.Dispatcher.ProcessEvents(CoreProcessEventsOption.ProcessUntilQuit);
+				//				coreInputSource.IsInputEnabled = true;
+				//		App.cursorDefault.Set();
+			}//);
 //		};
 	//	var inputWorker = ThreadPool.RunAsync(workItemHandler,WorkItemPriority.High,WorkItemOptions.TimeSliced);
 
@@ -329,13 +333,13 @@ namespace COTG.Views
 
 
 
-		private static void CoreInputSource_PointerCaptureLost(object sender, PointerEventArgs args)
+		private static void CoreInputSource_PointerCaptureLost(Microsoft.UI.Input.Experimental.ExpPointerInputObserver sender, PointerEventArgs args)
 		{
 			Log("pointer lost");
 		
 		}
 
-		private static void Canvas_PointerEntered(object sender, PointerEventArgs args)
+		private static void Canvas_PointerEntered(Microsoft.UI.Input.Experimental.ExpPointerInputObserver sender, PointerEventArgs args)
 		{
 			UpdateMousePosition(args);
 			TakeFocusIfAppropriate();
@@ -422,7 +426,7 @@ namespace COTG.Views
 		{
 			Log($"{memberName} : f:{args.CurrentPoint.FrameId} id:{args.CurrentPoint.PointerId} C:{args.CurrentPoint.IsInContact} l{args.CurrentPoint.Position.X},{args.CurrentPoint.Position.Y}> ");
 		}
-		private static void Canvas_PointerExited(object sender,PointerEventArgs e)
+		private static void Canvas_PointerExited(Microsoft.UI.Input.Experimental.ExpPointerInputObserver sender,PointerEventArgs e)
 		{
 			UpdateMousePosition(e);
 			//			e.KeyModifiers.UpdateKeyModifiers();
@@ -467,7 +471,7 @@ namespace COTG.Views
 			var serverTime = JSClient.ServerTime() + TimeSpan.FromMinutes(e.NewValue);
 			eventTimeTravelText.Text = $"Attack Time Travel:\t\t{dt.Hours}:{dt.Minutes},\t\tT:{serverTime.Format()}";
 		}
-		private static void Canvas_PointerReleased(object sender, PointerEventArgs e)
+		private static void Canvas_PointerReleased(Microsoft.UI.Input.Experimental.ExpPointerInputObserver sender, PointerEventArgs e)
 		{
 			UpdateMousePosition(e);
 			if(!isFocused)
@@ -659,7 +663,7 @@ namespace COTG.Views
 	
 
 
-		private static void Canvas_PointerPressed(object sender, PointerEventArgs e)
+		private static void Canvas_PointerPressed(Microsoft.UI.Input.Experimental.ExpPointerInputObserver sender, PointerEventArgs e)
 		{
 			UpdateMousePosition(e);
 			ShellPage.UpdateFocus();            //	ClearHover();
@@ -847,7 +851,7 @@ namespace COTG.Views
 		}
 
 
-		private static void Canvas_PointerWheelChanged(object sender, PointerEventArgs e)
+		private static void Canvas_PointerWheelChanged(Microsoft.UI.Input.Experimental.ExpPointerInputObserver sender, PointerEventArgs e)
 		{
 			var point = e.CurrentPoint.Position;
 			var scroll = e.CurrentPoint.Properties.MouseWheelDelta;
@@ -958,7 +962,7 @@ namespace COTG.Views
 			mousePositionW = mousePositionC.InverseProject();
 
 		}
-		private static void Canvas_PointerMoved(object sender, PointerEventArgs e)
+		private static void Canvas_PointerMoved(Microsoft.UI.Input.Experimental.ExpPointerInputObserver sender,ExpPointerEventArgs e)
 		{
 		//	App.cursorDefault.Set();
 			App.InputRecieved(); // prevent idle timer;

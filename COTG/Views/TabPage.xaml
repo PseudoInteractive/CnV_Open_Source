@@ -18,7 +18,7 @@
                              AddTabButtonClick="Tabs_AddTabButtonClick"
                              TabCloseRequested="Tabs_TabCloseRequested"
                              AllowDropTabs="True"
-                      TabFocusNavigation="Cycle"
+                      TabFocusNavigation="Once"
                       IsTabStop="True"
                         FontSize="{StaticResource MediumFontSize}"
                       SelectionChanged="Tabs_SelectionChanged"
@@ -29,13 +29,13 @@
                              TabStripDragOver="Tabs_TabStripDragOver"
                              TabStripDrop="Tabs_TabStripDrop"
                              TabDragStarting="Tabs_TabDragStarting">
-			<winui:TabView.TabStripHeader>
-				<Grid x:Name="ShellTitlebarInset"  Background="{x:Null}" />
-			</winui:TabView.TabStripHeader>
-			<winui:TabView.TabStripFooter>
-				<Grid x:Name="CustomDragRegion"  Background="{x:Null}">
-					<TextBlock x:Name="tip" x:FieldModifier="public" VerticalAlignment="Center" HorizontalAlignment="Center" Tapped="tip_Tapped" TabFocusNavigation="Cycle" />
-				</Grid>
-			</winui:TabView.TabStripFooter>
-		</winui:TabView>
+		<winui:TabView.TabStripHeader>
+			<Grid x:Name="ShellTitlebarInset"  Background="{x:Null}" />
+		</winui:TabView.TabStripHeader>
+		<winui:TabView.TabStripFooter>
+			<Grid x:Name="CustomDragRegion"  Background="{x:Null}">
+				<TextBlock x:Name="tip" x:FieldModifier="public" VerticalAlignment="Center" HorizontalAlignment="Center" Tapped="tip_Tapped" TabFocusNavigation="Cycle" />
+			</Grid>
+		</winui:TabView.TabStripFooter>
+	</winui:TabView>
 </Page>

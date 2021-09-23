@@ -144,7 +144,7 @@
    - You can click on the notice or find the Setup hyperlink in the debug tab to run setup
 ### 2021/5/3
   - **New** 
-   - Q key is not a shortcut for Layout build
+   - Q key is now a shortcut for Layout build
   - **New**
    - Added Recruit Senator command to War context menu
   - **Update**

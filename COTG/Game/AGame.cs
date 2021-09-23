@@ -448,12 +448,12 @@ namespace COTG
 						ShellPage.SetupCoreInput();
 
 					}
-					else
-					{
-					//	ShellPage.coreInputSource.Dispatcher.CurrentPriority = CoreDispatcherPriority.Low;
-						//ShellPage.coreInputSource.Dispatcher.ProcessEvents(CoreProcessEventsOption.ProcessAllIfPresent);
-						//ShellPage.Gesture.Tick();
-					}
+					//else
+					//{
+					////	ShellPage.coreInputSource.Dispatcher.CurrentPriority = CoreDispatcherPriority.Low;
+					//	//ShellPage.coreInputSource.Dispatcher.ProcessEvents(CoreProcessEventsOption.ProcessAllIfPresent);
+					//	//ShellPage.Gesture.Tick();
+					//}
 
 				}
 				if (!faulted && App.isForeground)
@@ -592,7 +592,7 @@ namespace COTG
 		public static double nativeToDip = 1;
 		public static void SetClientSpan(double dx, double dy)
 		{
-			dipToNative = UWindows.Graphics.Display.DisplayInformation.GetForCurrentView().RawPixelsPerViewPixel;
+			dipToNative = instance.GraphicsDevice.PresentationParameters.SwapChainPanel.XamlRoot.RasterizationScale;
 			nativeToDip = 1.0 / dipToNative;
 			//clientSpan.X = MathF.Round( (float)((dx* dipToNative+3) / 4))*4.0f;
 			//clientSpan.Y = MathF.Round((float)((dy* dipToNative+3) /4))*4.0f;

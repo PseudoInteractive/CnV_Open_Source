@@ -101,8 +101,7 @@ namespace COTG.Game
 				CloseButtonText = "Cancel"
 
 			};
-			msg.CopyXamlRoomFrom(uie);
-			var result = await msg.ShowAsync2();
+			var result = await msg.ShowAsync2(uie);
 			if (result == ContentDialogResult.Primary)
 			{
 				ShellPage.WorkStart("Return..");

@@ -17,8 +17,6 @@
           "SharpDX.XAudio2": "4.2.0",
           "SharpDX.XInput": "4.2.0",
           "SharpGen.Runtime.COM": "2.0.0-beta.9",
-          "Vortice.DXGI": "2.0.0.0",
-          "Vortice.WinUI": "2.0.0.0",
           "runtimepack.Microsoft.Windows.SDK.NET.Ref": "10.0.19041.19"
         },
         "runtime": {
@@ -833,30 +831,6 @@
           "System.Threading": "4.3.0",
           "System.Xml.ReaderWriter": "4.3.0"
         }
-      },
-      "Vortice.DXGI/2.0.0.0": {
-        "runtime": {
-          "Vortice.DXGI.dll": {
-            "assemblyVersion": "2.0.0.0",
-            "fileVersion": "2.0.16.6466"
-          }
-        }
-      },
-      "Vortice.WinUI/2.0.0.0": {
-        "runtime": {
-          "Vortice.WinUI.dll": {
-            "assemblyVersion": "2.0.0.0",
-            "fileVersion": "2.0.16.6466"
-          }
-        }
-      },
-      "Vortice.DirectX/2.0.0.0": {
-        "runtime": {
-          "Vortice.DirectX.dll": {
-            "assemblyVersion": "2.0.0.0",
-            "fileVersion": "2.0.16.6466"
-          }
-        }
       }
     }
   },
@@ -1479,21 +1453,6 @@
       "sha512": "sha512-5zJ0XDxAIg8iy+t4aMnQAu0MqVbqyvfoUVl1yDV61xdo3Vth45oA2FoY4pPkxYAH5f8ixpmTqXeEIya95x0aCQ==",
       "path": "system.xml.xdocument/4.3.0",
       "hashPath": "system.xml.xdocument.4.3.0.nupkg.sha512"
-    },
-    "Vortice.DXGI/2.0.0.0": {
-      "type": "reference",
-      "serviceable": false,
-      "sha512": ""
-    },
-    "Vortice.WinUI/2.0.0.0": {
-      "type": "reference",
-      "serviceable": false,
-      "sha512": ""
-    },
-    "Vortice.DirectX/2.0.0.0": {
-      "type": "reference",
-      "serviceable": false,
-      "sha512": ""
     }
   }
 }

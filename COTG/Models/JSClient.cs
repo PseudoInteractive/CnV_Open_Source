@@ -62,8 +62,8 @@ namespace COTG
 		//public static string userAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.114 Safari/537.36";
 
 		//public static string userAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.114 Safari/537.36";
-		public static string userAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.114 Safari/537.36 Edg/91.0.864.54";
-
+		//public static string userAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.114 Safari/537.36 Edg/91.0.864.54";
+		public static string userAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/93.0.4577.82 Safari/537.36 Edg/93.0.961.52";
 		//        public static JsonDocument ppdt;
 		public static JSClient instance = new JSClient();
 		public static WebView2 view;
@@ -561,31 +561,31 @@ namespace COTG
 						Log(_args.Exception);
 						AAnalytics.Track("WebViewEx",new Dictionary<string,string>
 					   {{"Ex",_args.Exception.Message } } );
-						Windows.System.Launcher.LaunchUriAsync(new("https://go.microsoft.com/fwlink/p/?LinkId=2124703"));
+						Windows.System.Launcher.LaunchUriAsync(new("https://go.microsoft.com/fwlink/p/?LinkId=2124703",UriKind.Absolute));
 
 						return;
 					}
 				
 				coreWebView = view.CoreWebView2;
 					view.CharacterReceived +=View_CharacterReceived;
-#if false
-				coreWebView.OpenDevToolsWindow();
+					coreWebView.Settings.AreDevToolsEnabled=true;
+#if DEBUG
+//					coreWebView.OpenDevToolsWindow();
 #else
-				coreWebView.Settings.AreDevToolsEnabled=false;
+//				coreWebView.Settings.AreDevToolsEnabled=true;
 #endif
-//				coreWebView.Settings.UserAgent = userAgent;
+			//	coreWebView.Settings.UserAgent = userAgent;
 				coreWebView.Settings.IsWebMessageEnabled=true;
-//				coreWebView.Settings.IsPasswordAutosaveEnabled=true;
+			//	coreWebView.Settings.IsPasswordAutosaveEnabled=true;
 				coreWebView.Settings.IsScriptEnabled=true;
 	//			coreWebView.Settings.IsPinchZoomEnabled =false;
 				coreWebView.Settings.IsZoomControlEnabled=false;
-				coreWebView.Settings.AreDefaultScriptDialogsEnabled=false;
-					coreWebView.Settings.IsStatusBarEnabled=false;
-					coreWebView.Settings.IsBuiltInErrorPageEnabled=false;
+				coreWebView.Settings.AreDefaultScriptDialogsEnabled=true;
+					coreWebView.Settings.IsStatusBarEnabled=true;
+					coreWebView.Settings.IsBuiltInErrorPageEnabled=true;
 					coreWebView.Settings.AreHostObjectsAllowed=false;
-				coreWebView.Settings.IsStatusBarEnabled=false;
 			//	coreWebView.Settings.AreBrowserAcceleratorKeysEnabled=false;
-				coreWebView.Settings.AreDefaultContextMenusEnabled=false;
+				coreWebView.Settings.AreDefaultContextMenusEnabled=true;
 				coreWebView.Environment.NewBrowserVersionAvailable+=Environment_NewBrowserVersionAvailable;
 //				coreWebView.Settings.AreBrowserAcceleratorKeysEnabled=false;
 //coreWebView.AddWebResourceRequestedFilter("*jsfunctions/game.js",ResourceContext:CoreWebView2WebResourceContext.Script);
@@ -627,18 +627,18 @@ namespace COTG
 				if (isSub)
 				{
 
-					httpsHost = new Uri($"https://w{world}.crownofthegods.com");
+					httpsHost = new Uri($"https://w{world}.crownofthegods.com",UriKind.Absolute);
 					//       view.Source = new Uri($"https://w{world}.crownofthegods.com?s={subId}");
 				}
 				
 				// else
-				view.Source = new Uri("https://www.crownofthegods.com/home");
+				view.Source = new Uri("https://www.crownofthegods.com/home.php",UriKind.Absolute);
 				if (isSub)
 				{
 					Task.Delay(5000).ContinueWith(_ =>
 					{
 						AAnalytics.Track("LaunchSub");
-						App.DispatchOnUIThread(() => view.Source = new Uri($"https://w{world}.crownofthegods.com?s=1"));
+						App.DispatchOnUIThread(() => view.Source = new Uri($"https://w{world}.crownofthegods.com?s=1",UriKind.Absolute));
 					});
 				}
 				else
@@ -2450,7 +2450,7 @@ private static async void ShowCouncillorsMissingDialog()
 						   case "sub":
 							   {
 								   var i = jsp.Value.GetAsInt();
-								   App.DispatchOnUIThread(() => Windows.System.Launcher.LaunchUriAsync(new Uri($"{App.appLink}:launch?w={world}&s={i}&n=1&p={HttpUtility.UrlEncode(Player.myName, Encoding.UTF8)}")));
+								   App.DispatchOnUIThread(() => Windows.System.Launcher.LaunchUriAsync(new Uri($"{App.appLink}:launch?w={world}&s={i}&n=1&p={HttpUtility.UrlEncode(Player.myName, Encoding.UTF8)}",UriKind.Absolute)));
 								   break;
 							   }
 						   case "shcit":

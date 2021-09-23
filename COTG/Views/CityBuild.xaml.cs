@@ -1283,15 +1283,15 @@ namespace COTG.Views
 			int bspot = XYToId(cc);
 			var b = city.postQueueBuildings[bspot];
 
-			if (!isRight)
+			if(!isRight)
 			{
-				if (IsWaterSpot(bspot) && !testFlag)
+				if(IsWaterSpot(bspot) && !testFlag)
 				{
 					Note.Show("There is water here. :(");
 					return;
 				}
 				isSingleClickAction = true;
-				if (CityBuild.IsWallSpot(bspot))
+				if(CityBuild.IsWallSpot(bspot))
 				{
 					bspot = 0;
 					cc = (span0, span0);
@@ -1300,10 +1300,10 @@ namespace COTG.Views
 				}
 			}
 			var d = b.def;
-			if (d.bid != 0)
-				JSClient.ExecuteScriptAsync("exBuildingInfo", d.bid, b.bl, bspot );
+			if(d.bid != 0)
+				JSClient.ExecuteScriptAsync("exBuildingInfo",d.bid,b.bl,bspot);
 
-			CityView.SetSelectedBuilding(cc, isSingleClickAction);
+			CityView.SetSelectedBuilding(cc,isSingleClickAction);
 
 			var type = isRight ? MenuType.quickBuild :
 
@@ -1313,7 +1313,7 @@ namespace COTG.Views
 				b.bl == 0 ? MenuType.res :
 				d.bid == bidTownHall ? isPlanner ? MenuType.townhallPlanner : MenuType.townhall :
 				MenuType.buliding;
-			UpdateBuildMenuType(type, bspot);
+			UpdateBuildMenuType(type,bspot);
 
 			//				ShellPage.instance.buildMenu.IsOpen = true;
 			var sc = ShellPage.CanvasToScreen(ShellPage.mousePosition);
@@ -1322,10 +1322,11 @@ namespace COTG.Views
 			//Canvas.SetTop(bm, sc.Y - buildToolSpan / 2 + 41);
 			//		ShellPage.instance.buildMenuCanvas.Visibility = Visibility.Visible;
 			//bm.ContentMenuBackgroundStyle = new Style( typeof(Rectangle) ) {  (Style)Application.Current.Resources[isRight? "ContentMenuStyle" : "ContentMenu2Style"];
-
-			buildMenu.ShowAt(ShellPage.instance.grid, new FlyoutShowOptions() { Position = new Windows.Foundation.Point(sc.X, sc.Y), Placement = FlyoutPlacementMode.Top });
+			sc=buildMenu.Show(sc, ShellPage.instance.grid);
 
 		}
+
+		
 
 		public async void ItemClick(object sender, Microsoft.UI.Xaml.Controls.ItemClickEventArgs e)
 		{
