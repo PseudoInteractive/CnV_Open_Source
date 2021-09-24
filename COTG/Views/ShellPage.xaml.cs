@@ -1305,6 +1305,7 @@ namespace COTG.Views
 				MainPage.ToggleInfoBoxes(raidInfoVisible);
 				//   Task.Delay(200).ContinueWith((_) => City.gridCitySource.NotifyReset());
 				//UpdateWebViewScale();
+				UpdateHtmlOffsets();
 			});
 		}
 
@@ -1318,19 +1319,19 @@ namespace COTG.Views
 		}
 		public static Task UpdateHtmlOffsets()
 		{
-			var zoom = SettingsPage.htmlZoom;
+			var zoom = SettingsPage.webZoom;
 			var leftOffset = (popupLeftOffset*zoom).RoundToInt();
 			var topOffset = (popupTopOffset*zoom).RoundToInt();
 
 			
 			var canvasScaledX = (zoom * canvasBaseXUnscaled).RoundToInt();
-			var canvasYOffset = (zoom * canvasHtmlYOffset).RoundToInt();
+			var canvasScaledY = (zoom * canvasBaseYUnscaled).RoundToInt();
 			//var canvasScaledY = canvasTitleYOffset+ canvasYOffset;
 
 //			instance.grid.ColumnDefinitions[0].Width = new(canvasScaledX);
 //			instance.grid.RowDefinitions[0].Height = new(canvasYOffset);
 			leftOffset = (leftOffset-canvasScaledX).Max0();
-			topOffset = (topOffset-canvasYOffset).Max0();
+			topOffset = (topOffset-canvasScaledY).Max0();
 			if(leftOffset > topOffset)
 				leftOffset =0;
 			else
@@ -1351,8 +1352,8 @@ namespace COTG.Views
 						}
 
 						var _canvasBaseX = leftOffset + canvasScaledX;
-						var _canvasBaseY = canvasTitleYOffset+canvasYOffset+topOffset;//.RoundToInt();
-					//	if(canvasBaseX != _canvasBaseX || canvasBaseY != _canvasBaseY)
+						var _canvasBaseY = canvasScaledY+topOffset;//.RoundToInt();
+						if(canvasBaseX != _canvasBaseX || canvasBaseY != _canvasBaseY)
 						{
 							canvasBaseX = _canvasBaseX;
 							canvasBaseY = _canvasBaseY;

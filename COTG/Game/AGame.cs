@@ -398,7 +398,7 @@ namespace COTG
 							//					_graphics.ApplyChanges();
 							var pre = new PresentationParameters()
 							{
-								BackBufferFormat = SurfaceFormat.Bgra32,
+								BackBufferFormat = _graphics.PreferredBackBufferFormat,
 								DepthStencilFormat = DepthFormat.None,
 								SwapChainPanel = canvas,
 								RenderTargetUsage = RenderTargetUsage.DiscardContents,
@@ -1268,9 +1268,9 @@ namespace COTG
 
 						lightPositionParameter.SetValue(new Microsoft.Xna.Framework.Vector3(cc.X, cc.Y, lightZDay * (pixelScale / 64.0f)));
 						lightGainsParameter.SetValue(new Microsoft.Xna.Framework.Vector4(0.25f, 1.20f, 0.4f, 1.1875f));
-						lightAmbientParameter.SetValue(new XVector4(.493f, .456f, .619f, 1f) * 0.75f);
-						lightColorParameter.SetValue(new XVector4(1f, 1.0f, 1.0f, 0.95f) * 1.0f);
-						lightSpecularParameter.SetValue(new XVector4(1.0f, 1.0f, 1.0f, 1.0f) * 0.75f);
+						lightAmbientParameter.SetValue(new XVector4(.563f,.476f,.669f,1f) * 0.5f);
+						lightColorParameter.SetValue(new XVector4(1f,1.0f,1.0f,1f) * 1.25f);
+						lightSpecularParameter.SetValue(new XVector4(1.0f,1.0f,1.0f,1.0f) * 1.0f);
 					}
 					cameraReferencePositionParameter.SetValue(new Microsoft.Xna.Framework.Vector3(halfSpan.X, halfSpan.Y, lightZ0));
 					//					defaultEffect.Parameters["DiffuseColor"].SetValue(new Microsoft.Xna.Framework.Vector4(1, 1, 1, 1));

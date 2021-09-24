@@ -233,7 +233,7 @@ namespace COTG.Views
 		{
 
 			
-			return canvas.IsLocalPointInBounds(mousePosition.X,mousePosition.Y);
+			return canvas.IsLocalPointInBounds(mousePosition.X,mousePosition.Y) && !IsMouseOverChat();
 		}
 		private static bool IsMouseOverChat()
 		{
@@ -324,7 +324,7 @@ namespace COTG.Views
 				// IsTabStop = true, UseSharedDevice = true, TargetElapsedTime =
 				// TimeSpan.FromSeconds(1.0f / 60.0f),
 				
-				Margin = new Thickness(0, canvasBaseY, 0, 0),
+				Margin = new Thickness(0, canvasBaseYUnscaled, 0, 0),
 				// IsFixedTimeStep = false
 			};
 			//keyboardProxy = new KeyboardProxy()

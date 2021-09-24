@@ -764,9 +764,10 @@ namespace COTG.Game
 				}
 				else
 				{
-					//Assert(false);
-					Log($"No Queue {this}");
-					//buildQueue.Clear();
+					var sum = buildQueue.Sum(a=>a.buildTime);
+					Assert(sum <= 32 );
+					Trace($"No Queue {this} was {sum}");
+					buildQueue.Clear();
 				}
 			}
 

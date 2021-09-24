@@ -35,7 +35,7 @@
 				<ResourceDictionary Source="/Styles/TextBlock.xaml" />
 				<ResourceDictionary Source="/Styles/Page.xaml" />
 				<ResourceDictionary Source="/Styles/BattleReport.xaml" />
-				<!--<ResourceDictionary Source="/Styles/SharedResources.xaml" />-->
+				<ResourceDictionary Source="/Styles/SharedResources.xaml" />
 
 
 

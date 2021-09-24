@@ -567,7 +567,7 @@ namespace COTG
 					}
 				
 				coreWebView = view.CoreWebView2;
-					view.CharacterReceived +=View_CharacterReceived;
+//					view.CharacterReceived +=View_CharacterReceived;
 					coreWebView.Settings.AreDevToolsEnabled=true;
 #if DEBUG
 //					coreWebView.OpenDevToolsWindow();
@@ -603,10 +603,10 @@ namespace COTG
 					//	view.ScriptNotify += View_ScriptNotify;
 					//	view.DOMContentLoaded += View_DOMContentLoaded;
 					//	view.NavigationFailed += View_NavigationFailed;
-					view.PointerEntered+=View_PointerEntered;
-					view.PointerExited+=View_PointerExited;
-					view.PointerMoved+=View_PointerMoved;
-					view.PointerPressed+=View_PointerPressed;
+					//view.PointerEntered+=View_PointerEntered;
+					//view.PointerExited+=View_PointerExited;
+					//view.PointerMoved+=View_PointerMoved;
+					//view.PointerPressed+=View_PointerPressed;
 				//	view.KeyDown+=View_KeyDown;
 				//	view.PreviewKeyDown+=View_PreviewKeyDown;
 				view.NavigationStarting+=View_NavigationStarting;

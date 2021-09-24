@@ -51,14 +51,14 @@ namespace COTG.Views
 		//private static bool _isLoggedIn;
 		//private static bool _isBusy;
 		public static float renderScale=1.0f;
-		public static float htmlZoom = 0.75f;
+		public static float webZoom = 0.75f;
 		public static float HtmlZoom
 		{
-			get => htmlZoom;
+			get => webZoom;
 			set {
-				if(htmlZoom != value)
+				if(webZoom != value)
 				{
-					htmlZoom = value;
+					webZoom = value;
 					ShellPage.UpdateHtmlOffsets();
 				}
 			}

@@ -305,7 +305,7 @@ namespace COTG.JSON
 						{
 							//var gotBQ = false;
 							//var gotBuildings = false;
-							delay = 10 * 1000; // 10s default
+							delay = 4 * 1000; // 10s default
 							var lg = cotgQ.Length;
 							if (lg > 0)
 							{
@@ -314,8 +314,8 @@ namespace COTG.JSON
 								for (int i = 0; i < lg; ++i)
 									bt += cotgQ[i].buildTime;
 								bt =  bt*3/4 - 8; // wait for 3/4 of the time minus 8 seconds
-								delay = (bt * 1000).Clamp(5 * 1000, 15 * 60 * 1000);
-								Log("Delay " + delay / 1000.0f);
+								delay = (bt * 1000).Clamp(3 * 1000, 30 * 60 * 1000);
+								Trace("Delay " + delay / 1000.0f);
 							}
 
 							//pollPaused = true;
@@ -374,10 +374,10 @@ namespace COTG.JSON
 							// this is either 1..+ can send commands normally
 							//                0 can send unblocking commands
 							//               -1  unblock un progress
-							var isBlocked = spaceInQueue == 0 && cotgQ[0].pa == false;
+							var isBlocked = false;//spaceInQueue == 0 && cotgQ[0].pa == false;
 							int commandsToQueue = isBlocked ? 1 : spaceInQueue.Min(queue.count);
 							if (isBlocked)
-								Note.Show($"Blocked! {city.nameMarkdown} ");
+								Trace($"Blocked! {city.nameMarkdown} ");
 
 							// queue.count goes through here if the player cancels the queue so that this can be deleted
 							if (commandsToQueue > 0 || queue.count == 0)
@@ -591,10 +591,10 @@ namespace COTG.JSON
 
 										if(cid == City.build)
 										{
-											App.QueueOnUIThread( ()=>JSClient.coreWebView.PostWebMessageAsString($"{{\"poll\":100}}") );
+										//	App.QueueOnUIThread( ()=>JSClient.coreWebView.PostWebMessageAsString($"{{\"poll\":100}}") );
 											City.BuildingsOrQueueChanged();
-											if(delay > 500)
-												delay = 500;
+											if(delay > 1000)
+												delay = 1000;
 										}
 										SaveNeeded();
 											if(delay > 1 * 30 * 1000)
@@ -684,11 +684,14 @@ namespace COTG.JSON
 				//				if(delay > 60*1000 )
 				//		if(city.cid!= City.build)
 				//			Trace($"iterate: Q {queue.count} delay {delay} city {city.nameAndRemarks}");
-				cancellationTokenSource = new();
 				try
 				{
-					Log( $"Delay:{cid==City.build} {delay/1000.0f} {city.nameAndRemarks} bq:{city.buildQueue.count} xq:{queue.count}");
-					await Task.Delay(delay, cancellationTokenSource.Token).ConfigureAwait(false);
+				//	Trace( $"Delay:{cid==City.build} {delay/1000.0f} {city.nameAndRemarks} bq:{city.buildQueue.count} xq:{queue.count}");
+
+					cancellationTokenSource = new();
+					await Task.Delay(300).ConfigureAwait(false);
+					if(delay > 300)
+						await Task.Delay(delay-300, cancellationTokenSource.Token).ConfigureAwait(false);
 
 				}
 				catch (TaskCanceledException tex)
@@ -956,7 +959,7 @@ namespace COTG.JSON
 
 					SaveNeeded();
 
-					cityBuildQueue.Process(100);
+					cityBuildQueue.Process(300);
 					if(cityBuildQueue.cancellationTokenSource != null)
 						cityBuildQueue.cancellationTokenSource.Cancel();
 					if (a.bid == City.bidCastle && a.slvl == 0)
