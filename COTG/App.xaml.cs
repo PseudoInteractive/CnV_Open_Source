@@ -343,14 +343,14 @@ namespace COTG
 
 		private static ConcurrentQueue<Action> idleTasks = new ConcurrentQueue<Action>();
 		private static ConcurrentQueue<Func<Task>> throttledTasks = new ConcurrentQueue<Func<Task>>();
-		public static Window window;
+		public static DesktopWindow window;
 		static DateTimeOffset activeStart = DateTimeOffset.UtcNow;
 		protected override async void OnLaunched(Microsoft.UI.Xaml.LaunchActivatedEventArgs args)
 		{
 			try
 			{
 
-				Windows.UI.ViewManagement.ApplicationView.PreferredLaunchWindowingMode =Windows.UI.ViewManagement.ApplicationViewWindowingMode.Maximized;// new Size(bounds.Width, bounds.Height);
+			//	Windows.UI.ViewManagement.ApplicationView.PreferredLaunchWindowingMode =Windows.UI.ViewManagement.ApplicationViewWindowingMode.Maximized;// new Size(bounds.Width, bounds.Height);
 //				Windows.UI.ViewManagement.ApplicationView.GetForCurrentView().TryEnterViewModeAsync(Windows.UI.ViewManagement.ApplicationViewMode.CompactOverlay);
 				
 				window= new();
@@ -365,10 +365,11 @@ namespace COTG
 				//var scale = view.ResolutionScale == ResolutionScale.Invalid ? 1 : view.RawPixelsPerViewPixel;
 				//var bounds = new Size(resolution.Width / scale, resolution.Height / scale);
 				window.Title = "Crown of the Gods (sort of)";
-				
+//				window.SetTitleBar
 			//ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.PreferredLaunchViewSize;
-
-
+	//		window.ExtendsContentIntoTitleBar = true;
+			//	window.ExtendsContentIntoTitleBar = true;
+				//window.Maximize();
 			//App.globalDispatcher = CoreWindow.GetForCurrentThread().Dispatcher;
 			globalQueue =  window.DispatcherQueue;
 			//CoreApplication.EnablePrelaunch(false);
@@ -401,6 +402,19 @@ namespace COTG
 				Log(e);
 			}
 		}
+
+		private void Content_PreviewKeyUp(object sender,Microsoft.UI.Xaml.Input.KeyRoutedEventArgs e)
+		{
+			OnKeyUp(e.Key);
+		}
+
+		private void Content_PreviewKeyDown(object sender,Microsoft.UI.Xaml.Input.KeyRoutedEventArgs e)
+		{
+			OnKeyDown(e.Key);
+		}
+
+		
+
 		private async Task OnLaunchedOrActivated(Windows.ApplicationModel.Activation.IActivatedEventArgs args)
 		{
 
@@ -433,10 +447,14 @@ namespace COTG
 			if(wasRunning)
 				return;
 
-			//			CoreApplication.MainView.HostedViewClosing+=MainView_HostedViewClosing; ;
-			//	CoreApplication.MainView.CoreWindow.Closed+=CoreWindow_Closed;
-			//if(args!=null)
-			//	SystemInformation.TrackAppUse(args);
+			window.Content.PreviewKeyUp+=Content_PreviewKeyUp;
+			window.Content.PreviewKeyDown+=Content_PreviewKeyDown; ;
+			window.Maximize();
+
+				//			CoreApplication.MainView.HostedViewClosing+=MainView_HostedViewClosing; ;
+				//	CoreApplication.MainView.CoreWindow.Closed+=CoreWindow_Closed;
+				//if(args!=null)
+				//	SystemInformation.TrackAppUse(args);
 				if(processingTasksStarted == false)
 				{
 					processingTasksStarted = true;
@@ -1777,6 +1795,13 @@ namespace COTG
 		}
 
 		public static bool IsLocked(this SemaphoreSlim sema) => sema.CurrentCount==0;
-
+		public static bool IsLocalPointInBounds(this FrameworkElement e,int x,int y)
+		{
+			return x >=0 && y >= 0 && x < e.ActualWidth && y < e.ActualHeight;
+		}
+		public static bool IsLocalPointInBounds(this FrameworkElement e,double x,double y)
+		{
+			return x >=0 && y >= 0 && x < e.ActualWidth && y < e.ActualHeight;
+		}
 	}
 }

@@ -47,11 +47,22 @@ namespace COTG.Views
 		public static bool? syncOutgoing = null;
 		public static float tabZoom = 0.5f;
 		public static float chatZoom = 0.5f;
-		public static float htmlZoom = 0.25f;
 		public static string attackPlanName = "PlanB";
 		//private static bool _isLoggedIn;
 		//private static bool _isBusy;
 		public static float renderScale=1.0f;
+		public static float htmlZoom = 0.75f;
+		public static float HtmlZoom
+		{
+			get => htmlZoom;
+			set {
+				if(htmlZoom != value)
+				{
+					htmlZoom = value;
+					ShellPage.UpdateHtmlOffsets();
+				}
+			}
+		}
 		public static Lighting lighting = Lighting.day;
 		//        private static UserData _user;
 		public static bool fetchFullHistory = false;
@@ -64,7 +75,7 @@ namespace COTG.Views
 		public static string exportPlayer = string.Empty;
 		public static string exportAlliance = string.Empty;
 		public static bool drawBuildingOverlays=true;
-
+		public static float raidTroopFraction = 1;
 		public static float returnRaidsBias = 1.0f;
 		public static bool setShareString = true;
 		public static bool autoBuildCabins = true;

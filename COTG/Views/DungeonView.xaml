@@ -155,9 +155,9 @@
 			<winui:NumberBox  x:Name="raidFraction"
 								  Header="Use fraction"
 								  Margin="6,2,6,2"
-								  Value="{x:Bind game:Raiding.troopFraction,Mode=TwoWay}"
+								  Value="{x:Bind views:SettingsPage.raidTroopFraction,Mode=TwoWay}"
 								  ValueChanged="SomethingChanged"
-							  NumberFormatter="{x:Bind cotg:App.percentFormatter}"
+							ToolTipService.ToolTip="0.5 means leave half of the raiding troops at home"
 								  Style="{StaticResource NumberBoxPercent}" />
 			<winui:NumberBox  
 						  Header="Min Progress"

@@ -474,14 +474,14 @@ namespace COTG.Views
 			//var regionC = (cameraC + c0 - c1) * 64.0f;
 			//    ShellPage.SetJSCamera(regionC);
 		}
-		public static (int x, int y) JSPointToScreen((int x, int y) c) => JSPointToScreen(c.x, c.y);
-		public static (int x, int y) JSPointToScreen(int x, int y)
-		{
-			var dipToNative = AGame.dipToNative;
-			return ((dipToNative * (x * ShellPage.webViewScale.X - ShellPage.canvasBaseX)).RoundToInt(),
-					(dipToNative * (y * ShellPage.webViewScale.Y - ShellPage.canvasBaseY)).RoundToInt());
+		//public static (int x, int y) JSPointToScreen((int x, int y) c) => JSPointToScreen(c.x, c.y);
+		//public static (int x, int y) JSPointToScreen(int x, int y)
+		//{
+		//	var dipToNative = AGame.dipToNative;
+		//	return ((dipToNative * (x * ShellPage.webViewScale.X - ShellPage.canvasBaseX)).RoundToInt(),
+		//			(dipToNative * (y * ShellPage.webViewScale.Y - ShellPage.canvasBaseY)).RoundToInt());
 
-		}
+		//}
 		public static void ClearHover()
 		{
 			if(!IsCityView())
@@ -726,15 +726,15 @@ namespace COTG.Views
 		}
 
 
-		private static bool TryPostJSMouseEvent(string eventName, int button)
-		{
-			if(isOverPopup)
-			{		JSClient.PostMouseEventToJS( (int)(AGame.nativeToDip/ShellPage.webViewScale.X * mousePosition.X) + canvasBaseX, (int)(AGame.nativeToDip/ShellPage.webViewScale.Y * mousePosition.Y) + canvasBaseY, eventName, button );
-					Log("JsMouse");
-				return true;
-			}
-			return false;
-		}
+		//private static bool TryPostJSMouseEvent(string eventName, int button)
+		//{
+		//	if(isOverPopup)
+		//	{		JSClient.PostMouseEventToJS( (int)(AGame.nativeToDip/ShellPage.webViewScale.X * mousePosition.X) + canvasBaseX, (int)(AGame.nativeToDip/ShellPage.webViewScale.Y * mousePosition.Y) + canvasBaseY, eventName, button );
+		//			Log("JsMouse");
+		//		return true;
+		//	}
+		//	return false;
+		//}
 
 	
 
@@ -794,23 +794,23 @@ namespace COTG.Views
 				//    e.Handled = false;
 				//    return;
 			}
-			if (TryPostJSMouseEvent("click",
-				point.PointerUpdateKind switch
-				{
-					PointerUpdateKind.LeftButtonPressed => 0,
-					PointerUpdateKind.MiddleButtonPressed => 1,
+//			if (TryPostJSMouseEvent("click",
+//				point.PointerUpdateKind switch
+//				{
+//					PointerUpdateKind.LeftButtonPressed => 0,
+//					PointerUpdateKind.MiddleButtonPressed => 1,
 					
-					PointerUpdateKind.RightButtonPressed => 2,
-					_=>0
-				}))
-			{
-//				e.Handled = true;
-				Gesture.Reset();
-//				ShellPage.SetWebViewHasFocus(true);
+//					PointerUpdateKind.RightButtonPressed => 2,
+//					_=>0
+//				}))
+//			{
+////				e.Handled = true;
+//				Gesture.Reset();
+////				ShellPage.SetWebViewHasFocus(true);
 
 
-			}
-			else
+//			}
+//			else
 			{
 				// only needs for pen and touch
 				if (IsCityView())
@@ -949,14 +949,14 @@ namespace COTG.Views
 
 
 			// wheel over javascript
-			if(TryPostJSMouseEvent(null,0))
-			{
-				//				isOverPopup = true;
-			//	e.Handled = true;
+			//if(TryPostJSMouseEvent(null,0))
+			//{
+			//	//				isOverPopup = true;
+			////	e.Handled = true;
 
-				//				ShellPage.SetWebViewHasFocus(true);
-				return true;
-			}
+			//	//				ShellPage.SetWebViewHasFocus(true);
+			//	return true;
+			//}
 			DoZoom(scroll,false);
 			return false;
 		}
@@ -1065,11 +1065,11 @@ namespace COTG.Views
 			//var props = point.Properties;
 			if (gestureResult.action == GestureAction.hover)
 			{
-				if (TryPostJSMouseEvent(null, 0))
-				{
-					// mouse over popup
-				}
-				else
+				//if (TryPostJSMouseEvent(null, 0))
+				//{
+				//	// mouse over popup
+				//}
+				//else
 				{
 
 					var cont = Continent.GetPackedIdFromC(c);

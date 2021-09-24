@@ -1,8 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net5.0-windows10.0.19041.0</TargetFramework>
-    <TargetPlatformMinVersion>10.0.17763.0</TargetPlatformMinVersion>
+    <TargetFramework>net5.0-windows10.0.20348.0</TargetFramework>
+    <TargetPlatformMinVersion>10.0.18362.0</TargetPlatformMinVersion>
     <RootNamespace>COTG</RootNamespace>
     <Platforms>x64</Platforms>
     <MonoGamePlatform>WindowsStoreApp</MonoGamePlatform>
@@ -27,17 +27,15 @@
   <ItemGroup>
     <EmbeddedResource Remove="AppPackages\**" />
     <EmbeddedResource Remove="BundleArtifacts\**" />
-    <EmbeddedResource Remove="Content\Art\**" />
+    <EmbeddedResource Remove="Content\Art\Tiles\**" />
     <EmbeddedResource Remove="Content\Audio\**" />
     <EmbeddedResource Remove="Content\bin\**" />
-    <EmbeddedResource Remove="Content\Effects\**" />
     <EmbeddedResource Remove="Content\obj\**" />
     <None Remove="AppPackages\**" />
     <None Remove="BundleArtifacts\**" />
-    <None Remove="Content\Art\**" />
+    <None Remove="Content\Art\Tiles\**" />
     <None Remove="Content\Audio\**" />
     <None Remove="Content\bin\**" />
-    <None Remove="Content\Effects\**" />
     <None Remove="Content\obj\**" />
   </ItemGroup>
 
@@ -75,6 +73,7 @@
     <PackageReference Include="MonoGame.Content.Builder.Task" Version="3.8.1.1941-develop" />
     <PackageReference Include="Nito.AsyncEx.Coordination" Version="5.1.0" />
     <PackageReference Include="Nito.AsyncEx.Tasks" Version="5.1.0" />
+    <PackageReference Include="PInvoke.SHCore" Version="0.7.104" />
     <PackageReference Include="PlayFabAllSDK" Version="1.101.210913" />
     <PackageReference Include="SharpDX" Version="4.2.0" />
     <PackageReference Include="SharpDX.D3DCompiler" Version="4.2.0" />
@@ -87,6 +86,8 @@
     <PackageReference Include="System.Text.Json" Version="6.0.0-rc.1.21451.13" />
     <PackageReference Include="Telerik.WinUI.Controls.Trial" Version="0.5.0" />
     <PackageReference Include="ZString" Version="2.4.2" />
+	<PackageReference Include="PInvoke.User32" Version="0.7.104" />
+	<PackageReference Include="PInvoke.Kernel32" Version="0.7.104" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="JS\funky" />
@@ -271,6 +272,8 @@
     <Compile Include="Views\ContinentTagFilter.xaml.cs">
       <DependentUpon>ContinentTagFilter.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\DesktopWindow.cs" />
+    <Compile Include="Views\DisplayInformation.cs" />
     <Compile Include="Views\DungeonView.xaml.cs">
       <DependentUpon>DungeonView.xaml</DependentUpon>
     </Compile>
@@ -363,10 +366,6 @@
     <Page Include="Styles\BattleReport.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Styles\CommandBar.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
     </Page>
     <Page Include="Styles\Page.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -546,6 +545,31 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
+    <None Remove="Content\Art\bgr_all_cities_destroyed.png" />
+    <None Remove="Content\Art\bgr_tablet_scr_closed.png" />
+    <None Remove="Content\Art\circlegradient.png" />
+    <None Remove="Content\Art\circlegradient.xcf" />
+    <None Remove="Content\Art\City\baseland_n.dds" />
+    <None Remove="Content\Art\City\basewater_n.dds" />
+    <None Remove="Content\Art\City\building_set5_n.dds" />
+    <None Remove="Content\Art\City\land.dds" />
+    <None Remove="Content\Art\City\land.jpg" />
+    <None Remove="Content\Art\City\land.psd" />
+    <None Remove="Content\Art\City\texture_bg_tile_big_city.jpg" />
+    <None Remove="Content\Art\City\Winter\baseland_n.dds" />
+    <None Remove="Content\Art\City\Winter\basewater_n.dds" />
+    <None Remove="Content\Art\City\Winter\building_set5_n.dds" />
+    <None Remove="Content\Art\lineDraw.dds" />
+    <None Remove="Content\Art\lineDraw2 - Copy.dds" />
+    <None Remove="Content\Art\lineDraw2.dds" />
+    <None Remove="Content\Art\quad.dds" />
+    <None Remove="Content\Art\quad2.dds" />
+    <None Remove="Content\Art\quadGradient.png" />
+    <None Remove="Content\Art\sky.dds" />
+    <None Remove="Content\Art\Sphere64.png" />
+    <None Remove="Content\Art\world22.dds" />
+    <None Remove="Content\Art\world22.png" />
+    <None Remove="Content\Art\world23.png" />
     <None Remove="Content\Fonts\File.spritefont" />
     <None Remove="Content\Fonts\perpb.fnt" />
     <None Remove="Content\Fonts\perpb_0.png" />
@@ -554,6 +578,7 @@
     <None Remove="Content\Fonts\tra.fnt" />
     <None Remove="Content\PERTILI.TTF" />
     <None Remove="Package.appxmanifest" />
+    <None Remove="Styles\CommandBar.xaml" />
   </ItemGroup>
   <ItemGroup>
     <AppxManifest Include="Package.appxmanifest" />
@@ -595,9 +620,6 @@
 	<Compile Include="App.xaml.cs">
 	  <DependentUpon>App.xaml</DependentUpon>
 	</Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Shader\" />
   </ItemGroup>
 <ItemGroup>
   <Reference Include="Cyotek.Drawing.BitmapFont, Version=1.0.0.0, Culture=neutral, processorArchitecture=AMD64">

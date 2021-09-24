@@ -63,7 +63,7 @@ namespace COTG.Models
 				var y1 = pop.y1;
 				// maybe a date?
 				//	if(y1-y0 > 180) // random guess
-				var c1 = ShellPage.JSPointToScreen(x1,y1);
+			//	var c1 = ShellPage.JSPointToScreen(x1,y1);
 				maxX = maxX.Max(x0.Max(x1));
 				maxY = maxY.Max(y0.Max(y1));
 

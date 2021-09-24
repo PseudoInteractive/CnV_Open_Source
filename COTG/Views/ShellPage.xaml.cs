@@ -31,6 +31,7 @@ using static COTG.Debug;
 
 using WinUI = Microsoft.UI.Xaml.Controls;
 using CommunityToolkit.WinUI.UI.Controls;
+using System.Reflection;
 
 namespace COTG.Views
 {
@@ -61,7 +62,9 @@ namespace COTG.Views
 
 		public static TextBlock gridTip;
 
-//		public static ScrollViewer webView;
+		
+
+		//		public static ScrollViewer webView;
 
 		private static DateTime workStarted;
 		private static readonly List<string> workQueue = new List<string>();
@@ -72,7 +75,7 @@ namespace COTG.Views
 		   {
 			   if (!workQueue.Any())
 			   {
-			//	   instance.progress.Value = 1;
+				   instance.progress.IsActive = true;
 // FIX
 				   workStarted = DateTime.UtcNow;
 				   instance.work.Text = desc;
@@ -114,7 +117,7 @@ namespace COTG.Views
 				}
 				if (!workQueue.Any())
 				{
-					//					instance.progress.Value = 0;
+					instance.progress.IsActive=false;
 
 					// FIX
 										instance.work.Visibility = Visibility.Collapsed;
@@ -295,10 +298,10 @@ namespace COTG.Views
 			KeyboardAccelerators.Add(BuildKeyboardAccelerator(VirtualKey.Right, NavStack.ForwardInvoked, VirtualKeyModifiers.Menu));
 			// KeyboardAccelerators.Add(BuildKeyboardAccelerator(VirtualKey.GoForward, NavStack.ForwardInvoked));
 
-			KeyboardAccelerators.Add(BuildKeyboardAccelerator(VirtualKey.F5, Refresh_Invoked));
-			KeyboardAccelerators.Add(BuildKeyboardAccelerator(VirtualKey.F2, LayoutAccelerator_Invoked));
-			KeyboardAccelerators.Add(BuildKeyboardAccelerator(VirtualKey.F3, LayoutAccelerator_Invoked));
-			KeyboardAccelerators.Add(BuildKeyboardAccelerator(VirtualKey.F4, LayoutAccelerator_Invoked));
+			KeyboardAccelerators.Add(BuildKeyboardAccelerator(VirtualKey.F5, Refresh_Invoked,VirtualKeyModifiers.Control));
+			KeyboardAccelerators.Add(BuildKeyboardAccelerator(VirtualKey.F2, LayoutAccelerator_Invoked,VirtualKeyModifiers.Control));
+			KeyboardAccelerators.Add(BuildKeyboardAccelerator(VirtualKey.F3, LayoutAccelerator_Invoked,VirtualKeyModifiers.Control));
+			KeyboardAccelerators.Add(BuildKeyboardAccelerator(VirtualKey.F4, LayoutAccelerator_Invoked,VirtualKeyModifiers.Control));
 			IsLoggedIn = true;// IdentityService.IsLoggedIn();
 			IsAuthorized = true;// IsLoggedIn && IdentityService.IsAuthorized();
 								// grid.hor
@@ -351,6 +354,8 @@ namespace COTG.Views
 			//	ShellPage.webclientSpan.y = (screenSize.Height * 0.89236111111111116f * SettingsPage.htmlZoom*2).RoundToInt();
 		//	await UpdateWebViewScale();
 			AGame.Create(canvas);
+			typeof(Telerik.UI.Xaml.Controls.RadDataForm).Assembly.GetType("Telerik.UI.Xaml.Controls.TelerikLicense").GetField("messageDisplayed",BindingFlags.NonPublic|BindingFlags.Static).SetValue(null,true,BindingFlags.Static|BindingFlags.NonPublic,null,null);
+			
 			Task.Delay(500).ContinueWith((_) => App.DispatchOnUIThreadIdle(() =>
 			{
 		//		ShellPage.SetupCoreInput();
@@ -368,6 +373,8 @@ namespace COTG.Views
 				//{
 				//	App.DoYesNoBox("More than one window is open", "If this is intentional, please ignore, if not, close some (they may already be closing) or restart your computer" );
 				//}
+			//	App.window.Content.XamlRoot.Content.GetVisualInternal
+
 
 			}));
 
@@ -1261,8 +1268,8 @@ namespace COTG.Views
 			}
 		}
 
-		public static Vector2 webViewScale = new(1,1);
-		internal static bool webviewHasFocus2=true;
+//		public static Vector2 webViewScale = new(1,1);
+//		internal static bool webviewHasFocus2=true;
 
 		private  void SetLayout(int viewToggle)
 		{
@@ -1301,10 +1308,29 @@ namespace COTG.Views
 			});
 		}
 
+		static int popupLeftOffset, popupTopOffset;
+
 		public static Task UpdateWebViewOffsets(int leftOffset, int topOffset)
 		{
-			leftOffset = (leftOffset-canvasBaseXUnscaled).Max0();
-			topOffset = (topOffset-canvasBaseYUnscaled).Max0();
+			popupLeftOffset  = leftOffset;
+			popupTopOffset = topOffset;
+			return UpdateHtmlOffsets();
+		}
+		public static Task UpdateHtmlOffsets()
+		{
+			var zoom = SettingsPage.htmlZoom;
+			var leftOffset = (popupLeftOffset*zoom).RoundToInt();
+			var topOffset = (popupTopOffset*zoom).RoundToInt();
+
+			
+			var canvasScaledX = (zoom * canvasBaseXUnscaled).RoundToInt();
+			var canvasYOffset = (zoom * canvasHtmlYOffset).RoundToInt();
+			//var canvasScaledY = canvasTitleYOffset+ canvasYOffset;
+
+//			instance.grid.ColumnDefinitions[0].Width = new(canvasScaledX);
+//			instance.grid.RowDefinitions[0].Height = new(canvasYOffset);
+			leftOffset = (leftOffset-canvasScaledX).Max0();
+			topOffset = (topOffset-canvasYOffset).Max0();
 			if(leftOffset > topOffset)
 				leftOffset =0;
 			else
@@ -1319,32 +1345,20 @@ namespace COTG.Views
 				{
 					try
 					{
-						var _canvasBaseX = leftOffset + canvasBaseXUnscaled;
-					//	var scale = webView.C
-					//	var scale = JSClient.coreWebView.core;
-					//var spanXY = int.Parse(await JSClient.view.ExecuteScriptAsync("(document.body.clientWidth+document.body.clientHeight*65536).toString()" ));
-					//var spanY = spanXY>>16;
-					//var spanX = spanXY&0xffff;
-					////					var _webViewScale = new Vector2( 
-					////						(float)(JSClient.view.ActualWidth / spanX),
-					////						(float)(JSClient.view.ActualHeight/ spanY));
-						//var displayWidth =   grid.ColumnDefinitions.Take(2).Sum(a=>a.ActualWidth);
-						//var displayHeight = grid.RowDefinitions.Skip(1).SkipLast(1).Sum((a) => a.ActualHeight) + canvasBaseYUnscaled- canvasHtmlYOffset;
-						//var _webViewScale = new Vector2((float)displayWidth / spanX,
-						//								(float)displayHeight/ spanY );
-						//AGame.SetClientSpan(grid.ColumnDefinitions[1].ActualWidth,displayHeight);
-						//if((_webViewScale - webViewScale).Length() <= (1.0f / 64f) )
-						//	return;
-						//webViewScale = _webViewScale;
-						//canvasBaseX = (canvasBaseXUnscaled);//.RoundToInt();
-						
-						var _canvasBaseY = canvasBaseYUnscaled+topOffset;//.RoundToInt();
-						if(canvasBaseX != _canvasBaseX || canvasBaseY != _canvasBaseY)
+						if(JSClient.view != null)
+						{
+							JSClient.view.ExecuteScriptAsync($"document.body.style.zoom={zoom};");
+						}
+
+						var _canvasBaseX = leftOffset + canvasScaledX;
+						var _canvasBaseY = canvasTitleYOffset+canvasYOffset+topOffset;//.RoundToInt();
+					//	if(canvasBaseX != _canvasBaseX || canvasBaseY != _canvasBaseY)
 						{
 							canvasBaseX = _canvasBaseX;
 							canvasBaseY = _canvasBaseY;
 							instance.grid.ColumnDefinitions[0].Width = new GridLength(canvasBaseX, GridUnitType.Pixel);
-							canvas.Margin = new Thickness(0, canvasBaseY, 0, 0);
+						//	instance.grid.RowDefinitions[0].Height = new(canvasYOffset);
+							canvas.Margin = new Thickness(0,canvasBaseY, 0, 0);
 						}
 						
 					}
@@ -1367,7 +1381,6 @@ namespace COTG.Views
 			//isHitTestVisible = !hasFocus;
 			//SetWebViewHasFocus(hasFocus);
 			ShellPage.canvas.Visibility = ShellPage.forceAllowWebFocus ? Visibility.Collapsed : Visibility.Visible;
-
 			ShellPage.hasKeyboardFocus=false;
 			ShellPage.UpdateFocus();
 

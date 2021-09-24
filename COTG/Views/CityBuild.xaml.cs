@@ -1408,9 +1408,7 @@ namespace COTG.Views
 			buildMenu.Hide();
 
 		}
-		private void StackPanel_AccessKeyInvoked(UIElement sender, AccessKeyInvokedEventArgs args)
-		{
-		}
+	
 
 		public static void ProcessKey(VirtualKey key)
 		{

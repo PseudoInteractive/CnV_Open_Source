@@ -489,7 +489,7 @@ namespace COTG
 		}
 		internal static void Initialize(Microsoft.UI.Xaml.Controls.Grid panel,WebView2 _view)
 		{
-
+			LoadJsStrings();
 
 
 			httpFilter = new HttpBaseProtocolFilter();
@@ -663,55 +663,55 @@ namespace COTG
 
 		}
 
-		private static void View_KeyDown(object sender,Microsoft.UI.Xaml.Input.KeyRoutedEventArgs e)
-		{
-			Log("KeyDown");
+		//private static void View_KeyDown(object sender,Microsoft.UI.Xaml.Input.KeyRoutedEventArgs e)
+		//{
+		//	Log("KeyDown");
 
-		}
+		//}
 
-		private static void View_PreviewKeyDown(object sender,Microsoft.UI.Xaml.Input.KeyRoutedEventArgs e)
-		{
-			Log("PreviewPointerKeyDown");
-		}
+		//private static void View_PreviewKeyDown(object sender,Microsoft.UI.Xaml.Input.KeyRoutedEventArgs e)
+		//{
+		//	Log("PreviewPointerKeyDown");
+		//}
 
-		private static void View_PointerPressed(object sender,Microsoft.UI.Xaml.Input.PointerRoutedEventArgs e)
-		{
-			Log("PointerPressed");
-			ShellPage.UpdateMousePosition(e);
-			ShellPage.UpdateFocus();
-		}
+		//private static void View_PointerPressed(object sender,Microsoft.UI.Xaml.Input.PointerRoutedEventArgs e)
+		//{
+		//	Log("PointerPressed");
+		//	ShellPage.UpdateMousePosition(e);
+		//	ShellPage.UpdateFocus();
+		//}
 
-		private static void View_PointerMoved(object sender,Microsoft.UI.Xaml.Input.PointerRoutedEventArgs e)
-		{
-			Log("PointerMoved");
-			//			ShellPage.UpdateMousePosition(e);
-			//			ShellPage.UpdateFocus();
-			ShellPage.UpdateMousePosition(e);
-			ShellPage.UpdateFocus();
-		}
+		//private static void View_PointerMoved(object sender,Microsoft.UI.Xaml.Input.PointerRoutedEventArgs e)
+		//{
+		//	Log("PointerMoved");
+		//	//			ShellPage.UpdateMousePosition(e);
+		//	//			ShellPage.UpdateFocus();
+		//	ShellPage.UpdateMousePosition(e);
+		//	ShellPage.UpdateFocus();
+		//}
 
-		private static void View_PointerExited(object sender,Microsoft.UI.Xaml.Input.PointerRoutedEventArgs e)
-		{
-			Log("PointerExited");
-			//		ShellPage.UpdateMousePosition(e);
-			//		ShellPage.UpdateFocus();
-			ShellPage.UpdateMousePosition(e);
-			ShellPage.UpdateFocus();
-		}
+		//private static void View_PointerExited(object sender,Microsoft.UI.Xaml.Input.PointerRoutedEventArgs e)
+		//{
+		//	Log("PointerExited");
+		//	//		ShellPage.UpdateMousePosition(e);
+		//	//		ShellPage.UpdateFocus();
+		//	ShellPage.UpdateMousePosition(e);
+		//	ShellPage.UpdateFocus();
+		//}
 
-		private static void View_PointerEntered(object sender,Microsoft.UI.Xaml.Input.PointerRoutedEventArgs e)
-		{
-			//			Log("PointerEntered");
-			//		ShellPage.UpdateMousePosition(e);
-			//		ShellPage.UpdateFocus();
-			ShellPage.UpdateMousePosition(e);
-			ShellPage.UpdateFocus();
-		}
+		//private static void View_PointerEntered(object sender,Microsoft.UI.Xaml.Input.PointerRoutedEventArgs e)
+		//{
+		//	//			Log("PointerEntered");
+		//	//		ShellPage.UpdateMousePosition(e);
+		//	//		ShellPage.UpdateFocus();
+		//	ShellPage.UpdateMousePosition(e);
+		//	ShellPage.UpdateFocus();
+		//}
 
-		private static void View_CharacterReceived(UIElement sender,Microsoft.UI.Xaml.Input.CharacterReceivedRoutedEventArgs args)
-		{
-			Log("Character recieved");
-		}
+		//private static void View_CharacterReceived(UIElement sender,Microsoft.UI.Xaml.Input.CharacterReceivedRoutedEventArgs args)
+		//{
+		//	Log("Character recieved");
+		//}
 
 		private static void Environment_NewBrowserVersionAvailable(CoreWebView2Environment sender,object args)
 		{
@@ -813,7 +813,7 @@ namespace COTG
 		private static void View_GotFocus(object sender, RoutedEventArgs e)
 		{
 //			Log($"!Focus3: {ShellPage.hasKeyboardFocus} w{ShellPage.webviewHasFocus} w2{ShellPage.webviewHasFocus2}");
-			ShellPage.webviewHasFocus2 = true;
+			//ShellPage.webviewHasFocus2 = true;
 			ShellPage.hasKeyboardFocus = false;
 
 		}
@@ -2533,14 +2533,14 @@ private static async void ShowCouncillorsMissingDialog()
 										_ => PointerUpdateKind.Other };
 
 								  // App.OnPointerPressed(kind);
-								   {
-									   var c = ShellPage.JSPointToScreen(x, y);
-									   if (c.x > 0 && c.y > 0)
-									   {
-										   ShellPage.Canvas_PointerPressedJS(c.x, c.y, kind);
+								   //{
+									  // var c = ShellPage.JSPointToScreen(x, y);
+									  // if (c.x > 0 && c.y > 0)
+									  // {
+										 //  ShellPage.Canvas_PointerPressedJS(c.x, c.y, kind);
 									
-									   }
-								   }
+									  // }
+								   //}
 								   
 								   break;
 							   }

@@ -9,7 +9,12 @@
     TabFocusNavigation="Cycle"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 	<Page.Resources>
-		<ResourceDictionary Source="ms-appx:///Microsoft.UI.Xaml/DensityStyles/Compact.xaml" />
+		<ResourceDictionary>
+			<ResourceDictionary.MergedDictionaries>
+				<ResourceDictionary Source="ms-appx:///Microsoft.UI.Xaml/DensityStyles/Compact.xaml" />
+				<ResourceDictionary Source="ms-appx:///Telerik.WinUI.Controls/DensityStyles/Compact.xaml" />
+			</ResourceDictionary.MergedDictionaries>
+		</ResourceDictionary>
 	</Page.Resources>
 	<winui:TabView x:Name="Tabs" x:FieldModifier="public"
                       TabWidthMode="SizeToContent"

@@ -88,5 +88,16 @@ namespace COTG.Views
 		
 			}
 		}
+
+		private void AutoSuggestBox_CharacterReceived(UIElement sender,CharacterReceivedRoutedEventArgs args)
+		{
+			if(args.Character==(char)27 )
+			{
+				suggestBox.Text = name;
+				OnPropertyChanged();
+				args.Handled=true;
+				
+			}
+		}
 	}
 }

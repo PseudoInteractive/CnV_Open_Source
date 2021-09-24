@@ -68164,8 +68164,8 @@ function outer(){
 		let Z1FTimeout = 1;
 		let nextPoll = 0;
 		function DoPoll2(delay) {
-		  if(delay < 1000)
-				console.log("doPoll2  " +delay);
+		 // if(delay < 1000)
+		//		console.log("doPoll2  " +delay);
 			let desiredTime = Date.now() + delay;
 			if (Z1FTimeout != 0) {
 				if (desiredTime < nextPoll) {

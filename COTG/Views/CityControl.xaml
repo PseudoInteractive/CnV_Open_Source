@@ -22,12 +22,13 @@
 		<Image Source= "{x:Bind icon, Mode=OneWay}" Grid.Column="1" Tapped="Image_Tapped" RightTapped="Image_RightTapped" HorizontalAlignment="Center"
                      Stretch="Uniform" VerticalAlignment="Center"  />
 			   
-		<AutoSuggestBox Grid.Column="2" Text="{x:Bind name}" 
+		<AutoSuggestBox x:Name="suggestBox"
+						Grid.Column="2" Text="{x:Bind name}" 
 						PlaceholderText="None"
 						TextChanged="{x:Bind views:PlayerGroup.CityNameSuggest_TextChanged}"
-						
+						SuggestionChosen="CityName_SuggestionChosen"
 						AutomationProperties.Name="cityBoxName"
-						ToolTipService.ToolTip="Enter City Name to Search.."
+						ToolTipService.ToolTip="Enter characters to search.."
 						/>
 		<CheckBox Grid.Column="3" x:Name="onlyMine" Content="Only Mine" ToolTipService.ToolTip="if unchecked, includes all cities, to specify someone else's city add the '- [playerName]' to the end, note this may be slow"  IsChecked="True" />
 	</Grid>

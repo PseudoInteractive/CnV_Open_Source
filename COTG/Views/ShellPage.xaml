@@ -17,7 +17,12 @@
       mc:Ignorable="d"	
 >
 	<Page.Resources>
-		<ResourceDictionary Source="ms-appx:///Microsoft.UI.Xaml/DensityStyles/Compact.xaml" />
+		<ResourceDictionary>
+			<ResourceDictionary.MergedDictionaries>
+				<ResourceDictionary Source="ms-appx:///Microsoft.UI.Xaml/DensityStyles/Compact.xaml" />
+				<ResourceDictionary Source="ms-appx:///Telerik.WinUI.Controls/DensityStyles/Compact.xaml" />
+			</ResourceDictionary.MergedDictionaries>
+		</ResourceDictionary>
 	</Page.Resources>
 	<Grid x:Name="grid"  x:FieldModifier="public" >
 		<Grid.Resources>
@@ -113,7 +118,7 @@
 					<Button x:Name="focus" Margin="4" Width="140"  VerticalAlignment="Center" x:FieldModifier="public"
                             Style="{ThemeResource ButtonRevealStyle}" Click="HomeClick" RightTapped="HomeRightTapped" FontFamily="Tw Cen MT Condensed"
                             ToolTipService.ToolTip="Spot with Focus.&#x0a;Click to re-center or swith to this city&#x0a;Right clck for menu" Visibility="Collapsed"/>
-					<!--<winui:ProgressBar x:Name="progress" Value="0.5" />-->
+					<winui:ProgressRing x:Name="progress" IsActive="False" />
 					<TextBlock x:Name="work" x:FieldModifier="public" Margin="6" VerticalAlignment="Center"  />
 
 				</StackPanel>

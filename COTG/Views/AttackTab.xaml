@@ -123,7 +123,7 @@
                 ToolTipService.ToolTip="Open a prior plan or revert to a prior state of this plan"
                 Click="OpenPlanClick0">
 					<Button.Flyout>
-						<Flyout x:Name="HideMe1">
+						<Flyout x:Name="HideMe1" ShowMode="TransientWithDismissOnPointerMoveAway" >
 						
 								<ListView x:Name="openListView" 
 										  Header="Select Plan.."
@@ -146,7 +146,7 @@
                     ToolTipService.ToolTip="Start a new plan"
                     Click="NewPlanClick0">
 					<Button.Flyout>
-						<Flyout x:Name="HideMe0">
+						<Flyout x:Name="HideMe0" ShowMode="TransientWithDismissOnPointerMoveAway" >
 							<StackPanel>
 								<CheckBox x:Name="clearPlan" Content="Clear Existing" IsChecked="True" ToolTipService.ToolTip="If set, attackers and targes willl be removed" />
 								<TextBox x:Name="newPlanName" 
@@ -182,7 +182,7 @@
                     ToolTipService.ToolTip="Extracts coordinates from the clipboard and adds attacks"
                     Style="{StaticResource ButtonSmall}">
 					<Button.Flyout>
-						<Flyout x:Name="addAttackFlyout">
+						<Flyout x:Name="addAttackFlyout" ShowMode="TransientWithDismissOnPointerMoveAway" >
 							<StackPanel>
 								<CheckBox x:Name="UpdateExisting" Content="Update Existing" IsChecked="True" />
 								<Button Content="Add" Click="AddAttacksFromClipboard" 

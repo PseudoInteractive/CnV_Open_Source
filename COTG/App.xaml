@@ -33,10 +33,9 @@
 				<ResourceDictionary Source="/Styles/_FontSizes.xaml" />
 				<ResourceDictionary Source="/Styles/_Thickness.xaml" />
 				<ResourceDictionary Source="/Styles/TextBlock.xaml" />
-				<ResourceDictionary Source="/Styles/CommandBar.xaml" />
 				<ResourceDictionary Source="/Styles/Page.xaml" />
 				<ResourceDictionary Source="/Styles/BattleReport.xaml" />
-				<ResourceDictionary Source="/Styles/SharedResources.xaml" />
+				<!--<ResourceDictionary Source="/Styles/SharedResources.xaml" />-->
 
 
 

@@ -295,7 +295,7 @@ namespace COTG
 			//};
 			canvas = swapChainPanel;
 //			canvas.CompositeMode = (Microsoft.UI.Xaml.Media.ElementCompositeMode.SourceOver);
-			canvas.CompositeMode = (Microsoft.UI.Xaml.Media.ElementCompositeMode.MinBlend);
+			//canvas.CompositeMode = (Microsoft.UI.Xaml.Media.ElementCompositeMode.MinBlend);
 			instance = MonoGame.Framework.XamlGame<AGame>.Create(() => new AGame() { }, "",App.window, swapChainPanel);
 		}
 
@@ -1067,7 +1067,7 @@ namespace COTG
 		}
 
 		private const int textBoxCullSlop = 80;
-
+		static byte clearCounter=10;
 		//	static CanvasTextAntialiasing canvasTextAntialiasing = CanvasTextAntialiasing.Grayscale;
 		//	static CanvasTextRenderingParameters canvasTextRenderingParameters = new CanvasTextRenderingParameters(CanvasTextRenderingMode.NaturalSymmetric, CanvasTextGridFit.Disable);
 		protected override void Draw(GameTime gameTime)
@@ -1205,7 +1205,10 @@ namespace COTG
 
 				// funky logic
 				//if (wantLight)
-	//			GraphicsDevice.Clear(new Color(0,0,0,0)); // black transparent
+				if(--clearCounter > 0)
+				{
+					GraphicsDevice.Clear(new Color(0,0,0,0)); // black transparent
+				}
 				//								   //ds.TextAntialiasing = canvasTextAntialiasing;
 				//								   //ds.TextRenderingParameters = canvasTextRenderingParameters;
 				//								   // prevent MSAA gaps
@@ -1253,7 +1256,7 @@ namespace COTG
 						var l = ShellPage.mousePosition;//.InverseProject();
 						lightPositionParameter.SetValue(new Microsoft.Xna.Framework.Vector3(l.X, l.Y, lightZ0));
 						lightGainsParameter.SetValue(new Microsoft.Xna.Framework.Vector4(0.25f, 1.25f, 0.375f, 1.0625f));
-						lightAmbientParameter.SetValue(new XVector4(.463f, .576f, .769f, 1f) * 0.25f);
+						lightAmbientParameter.SetValue(new XVector4(.493f, .576f, .639f, 1f) * 0.25f);
 						lightColorParameter.SetValue(new XVector4(1.0f, 1.0f, 1.0f, 1.0f) * 1.25f);
 						lightSpecularParameter.SetValue(new XVector4(1.0f, 1.0f, 1.0f, 1.0f) * 1.25f);
 					}
@@ -1265,9 +1268,9 @@ namespace COTG
 
 						lightPositionParameter.SetValue(new Microsoft.Xna.Framework.Vector3(cc.X, cc.Y, lightZDay * (pixelScale / 64.0f)));
 						lightGainsParameter.SetValue(new Microsoft.Xna.Framework.Vector4(0.25f, 1.20f, 0.4f, 1.1875f));
-						lightAmbientParameter.SetValue(new XVector4(.463f, .576f, .769f, 1f) * 0.5f);
-						lightColorParameter.SetValue(new XVector4(1f, 1.0f, 1.0f, 1f) * 1.25f);
-						lightSpecularParameter.SetValue(new XVector4(1.0f, 1.0f, 1.0f, 1.0f) * 1.0f);
+						lightAmbientParameter.SetValue(new XVector4(.493f, .456f, .619f, 1f) * 0.75f);
+						lightColorParameter.SetValue(new XVector4(1f, 1.0f, 1.0f, 0.95f) * 1.0f);
+						lightSpecularParameter.SetValue(new XVector4(1.0f, 1.0f, 1.0f, 1.0f) * 0.75f);
 					}
 					cameraReferencePositionParameter.SetValue(new Microsoft.Xna.Framework.Vector3(halfSpan.X, halfSpan.Y, lightZ0));
 					//					defaultEffect.Parameters["DiffuseColor"].SetValue(new Microsoft.Xna.Framework.Vector4(1, 1, 1, 1));

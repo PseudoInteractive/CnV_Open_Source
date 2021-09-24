@@ -47,6 +47,7 @@
 							IsTextScaleFactorEnabled="False"
 							GroupPanelPosition="Bottom"
 							SelectionUnit="Row"
+						
 							Tag="Raid"
 					
 					
@@ -189,7 +190,7 @@
 						Style="{StaticResource ButtonSmall}"
 						ToolTipService.ToolTip="Resets all with raid carry less than 90% (configurable in settings) or idle troops greater than 25% (configurable in settings)"  >
 					<Button.Flyout >
-						<Flyout ShowMode="TransientWithDismissOnPointerMoveAway">
+						<Flyout ShowMode="TransientWithDismissOnPointerMoveAway" >
 							<StackPanel>
 								<Button Content="Bad ones Fast"
 									ToolTipService.ToolTip="Returns all selected raids with carry less than 90% (configurable in settings) or idle troops greater than 25% (configurable in settings)" 

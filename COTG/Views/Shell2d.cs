@@ -39,6 +39,9 @@ namespace COTG.Views
 		public const int canvasHtmlYOffset = 55;
 		public const int canvasBaseYUnscaled = 95;
 
+//		public static int canvasScaledX = 420;
+//		public static int canvasScaledY = 95;
+
 		public static int canvasBaseX = 420;
 		public static int canvasBaseY = 95;
 		//public static int cachedTopOffset = 0;
@@ -47,7 +50,7 @@ namespace COTG.Views
 		public static bool hasKeyboardFocus;
 	//	public static KeyboardProxy keyboardProxy;
 		public static ViewMode viewMode;
-		public static bool webviewHasFocus=>webviewHasFocus2;
+//		public static bool webviewHasFocus=>webviewHasFocus2;
 		private const int bottomMargin = 0;
 		private const int cotgPopupLeft = 438;
 		private const int cotgPopupRight = cotgPopupLeft + cotgPopupWidth;
@@ -212,10 +215,10 @@ namespace COTG.Views
 					note|=2;
 				}
 			}
-#if DEBUG
-			if(note!=0)
-				Note.Show($"!Focu{note}: f{canvas.IsHitTestVisible} o{isOverCanvas}");
-#endif 
+//#if DEBUG
+//			if(note!=0)
+//				Note.Show($"!Focu{note}: f{canvas.IsHitTestVisible} o{isOverCanvas}");
+//#endif 
 			return Task.CompletedTask;
 
 		})
@@ -225,11 +228,18 @@ namespace COTG.Views
 			throttleDelay=100
 		};
 
+		
 		private static bool IsMouseInCanvas()
 		{
-			return 
-							mousePosition.X >= 0 && mousePosition.Y >= 0 &&
-							mousePosition.X <= canvas.ActualWidth && mousePosition.Y <= canvas.ActualHeight;
+
+			
+			return canvas.IsLocalPointInBounds(mousePosition.X,mousePosition.Y);
+		}
+		private static bool IsMouseOverChat()
+		{
+			var xf = canvas.TransformToVisual(ChatTab.tabPage );
+			var pt = xf.TransformPoint(new(mousePosition.X,mousePosition.Y));
+			return ChatTab.tabPage.IsLocalPointInBounds(pt.X,pt.Y);
 		}
 		private static bool isMouseOverCanvas => IsMouseInCanvas() && isHitTestVisible;
 

@@ -422,27 +422,27 @@ namespace COTG.Views
 		//      }
 	}
 
-	public class BuildCustomDataBindingCompleteCommand : DataGridCommand
-	{
-		public BuildCustomDataBindingCompleteCommand()
-		{
-			this.Id = CommandId.DataBindingComplete;
-		}
+	//public class BuildCustomDataBindingCompleteCommand : DataGridCommand
+	//{
+	//	public BuildCustomDataBindingCompleteCommand()
+	//	{
+	//		this.Id = CommandId.DataBindingComplete;
+	//	}
 
-		public override bool CanExecute(object parameter)
-		{
-			var context = parameter as DataBindingCompleteEventArgs;
-			// put your custom logic here
-			return true;
-		}
+	//	public override bool CanExecute(object parameter)
+	//	{
+	//		var context = parameter as DataBindingCompleteEventArgs;
+	//		// put your custom logic here
+	//		return true;
+	//	}
 
-		static T TryGetValue<T>(object o) => o == null ? default : (T)o;
-		public override void Execute(object parameter)
-		{
-			var context = parameter as DataBindingCompleteEventArgs;
+	//	static T TryGetValue<T>(object o) => o == null ? default : (T)o;
+	//	public override void Execute(object parameter)
+	//	{
+	//		var context = parameter as DataBindingCompleteEventArgs;
 
-		}
+	//	}
 
 
-	}
+	//}
 }

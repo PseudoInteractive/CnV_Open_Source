@@ -61,7 +61,7 @@
 						   Margin="4">
 				<Slider Height="128" Header="Font Size" Value="{x:Bind views:SettingsPage.tabZoom, Mode=TwoWay}" Maximum="1.0" TickFrequency="0.125"  StepFrequency="0.0625" SmallChange="0.0625" Margin="8" TickPlacement="Outside" Orientation="Vertical" ToolTipService.ToolTip="Must restart to see changes" ValueChanged="{x:Bind views:SettingsPage.UpdateZoom}" />
 				<Slider Height="128" Header="Chat Font Size" Value="{x:Bind views:SettingsPage.chatZoom, Mode=TwoWay}" Maximum="1.0" TickFrequency="0.125"  StepFrequency="0.0625" SmallChange="0.0625" Margin="8" TickPlacement="Outside" Orientation="Vertical" ToolTipService.ToolTip="Must restart to see changes" ValueChanged="{x:Bind views:SettingsPage.UpdateZoom}" />
-				<!--<Slider Height="128" Header="HTML Zoom" Value="{x:Bind views:SettingsPage.htmlZoom, Mode=TwoWay}" Maximum="1.0" TickFrequency="0.125"  StepFrequency="0.0625" SmallChange="0.0625" Margin="8" TickPlacement="Outside" Orientation="Vertical" ToolTipService.ToolTip="Zooms COTG HTML, requires a restart"  />-->
+				<Slider Height="128" Header="HTML Zoom" Value="{x:Bind views:SettingsPage.HtmlZoom, Mode=TwoWay}" Maximum="1.25" TickFrequency="0.125"  StepFrequency="0.0625" SmallChange="0.0625" Margin="8" TickPlacement="Outside" Orientation="Vertical" ToolTipService.ToolTip="Zooms COTG HTML, requires a restart"  />
 
 			</wct:WrapPanel>
 
@@ -159,7 +159,7 @@
 						Style="{ThemeResource ButtonRevealStyle}"
 						Margin="4">
 					<Button.Flyout>
-						<Flyout>
+						<Flyout ShowMode="TransientWithDismissOnPointerMoveAway" >
 							<StackPanel Orientation="Vertical">
 								<controls:NumberBox x:Name="CastlesCont"
 									NumberFormatter="{x:Bind cotg:App.formatterInt,Mode=OneTime}"
@@ -181,7 +181,7 @@
 						Style="{ThemeResource ButtonRevealStyle}"
 								ToolTipService.ToolTip="Exports AllianceRankings to the clipboard in a spreadsheet format" >	
 					<Button.Flyout>
-						<Flyout>
+						<Flyout ShowMode="TransientWithDismissOnPointerMoveAway" >
 							<StackPanel Orientation="Vertical" Width="300" >
 								<wct:WrapPanel Orientation="Horizontal" Margin="4">
 									<controls:NumberBox x:Name="exportRanksCont"
@@ -215,7 +215,7 @@
 						Style="{ThemeResource ButtonRevealStyle}"
 						Margin="4" >
 					<Button.Flyout>
-						<Flyout x:Name="exportTSFlyout">
+						<Flyout x:Name="exportTSFlyout" ShowMode="TransientWithDismissOnPointerMoveAway" >
 							<StackPanel Orientation="Vertical" Width="300" >
 								<wct:WrapPanel Orientation="Horizontal" Margin="4">
 									<controls:NumberBox 

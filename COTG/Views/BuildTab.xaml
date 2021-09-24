@@ -55,10 +55,10 @@
 							Tag="Raid"
 							>
 	
-			<tg:RadDataGrid.Commands>
+			<!--<tg:RadDataGrid.Commands>
 				<view:BuildCustomDataBindingCompleteCommand />
 				<model:CityGridToggleColumnVisibilityCommand />
-			</tg:RadDataGrid.Commands>
+			</tg:RadDataGrid.Commands>-->
 			
 
 			<tg:RadDataGrid.Columns>
