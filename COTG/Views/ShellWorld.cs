@@ -63,12 +63,12 @@ namespace COTG.Views
 										 //	canvas.ManipulationMode = ManipulationModes.All;
 			coreInputSource = canvas.CreateCoreIndependentInputSource(inputDevices);
 
-			//	coreInputSource.InputEnabled += CoreInputSource_InputEnabled;
-			coreInputSource.PointerMoved += Canvas_PointerMoved;
-			coreInputSource.PointerPressed += Canvas_PointerPressed;
-			coreInputSource.PointerReleased += Canvas_PointerReleased;
-			coreInputSource.PointerEntered += Canvas_PointerEntered;
-			coreInputSource.PointerExited += Canvas_PointerExited;
+				//	coreInputSource.InputEnabled += CoreInputSource_InputEnabled;
+			coreInputSource.PointerMoved+=CoreInputSource_PointerMoved; ;
+				coreInputSource.PointerPressed+=CoreInputSource_PointerPressed; ;
+				coreInputSource.PointerReleased+=CoreInputSource_PointerReleased; ;
+				coreInputSource.PointerEntered+=CoreInputSource_PointerEntered; ;
+				coreInputSource.PointerExited+=CoreInputSource_PointerExited; ;
 			coreInputSource.PointerCaptureLost += CoreInputSource_PointerCaptureLost;
 
 			coreInputSource.PointerWheelChanged += Canvas_PointerWheelChanged;
@@ -81,6 +81,75 @@ namespace COTG.Views
 	//	var inputWorker = ThreadPool.RunAsync(workItemHandler,WorkItemPriority.High,WorkItemOptions.TimeSliced);
 
 	}
+
+		private static void CoreInputSource_PointerExited(ExpPointerInputObserver sender,PointerEventArgs args)
+		{
+			Canvas_PointerExited(args.CurrentPoint.Position, args.CurrentPoint.PointerId);
+		}
+
+		private static void CoreInputSource_PointerEntered(ExpPointerInputObserver sender,PointerEventArgs args)
+		{
+			Canvas_PointerEntered(args.CurrentPoint.Position);
+		}
+
+		private static void CoreInputSource_PointerReleased(ExpPointerInputObserver sender,PointerEventArgs args)
+		{
+			var point = args.CurrentPoint;
+			Canvas_PointerReleased((point.Position, point.PointerId, point.IsInContact, point.Timestamp, point.Properties.PointerUpdateKind), args.KeyModifiers);
+
+		}
+
+		private static void CoreInputSource_PointerPressed(ExpPointerInputObserver sender,PointerEventArgs args)
+		{
+			var point = args.CurrentPoint;
+			Canvas_PointerPressed((point.Position, point.PointerId, point.IsInContact, point.Timestamp, point.Properties.PointerUpdateKind));
+
+		}
+
+		private static void CoreInputSource_PointerMoved(ExpPointerInputObserver sender,PointerEventArgs e)
+		{
+			var point = e.CurrentPoint;
+			Canvas_PointerMoved((point.Position,point.PointerId,point.IsInContact,point.Timestamp,point.Properties.PointerUpdateKind));
+		}
+
+		public static void SetupNonCoreInput()
+		{
+			canvas.PointerMoved+=KeyboardProxy_PointerMoved;
+			canvas.PointerPressed+=KeyboardProxy_PointerPressed;
+			canvas.PointerReleased+=KeyboardProxy_PointerReleased;
+			canvas.PointerEntered+=KeyboardProxy_PointerEntered;
+			canvas.PointerExited +=KeyboardProxy_PointerExited;
+		}
+
+		private static void KeyboardProxy_PointerExited(object sender,PointerRoutedEventArgs e)
+		{
+			var point = e.GetCurrentPoint(canvas);
+			Canvas_PointerExited(point.Position, point.PointerId);
+		}
+
+		private static void KeyboardProxy_PointerEntered(object sender,PointerRoutedEventArgs e)
+		{
+			Canvas_PointerEntered(e.GetCurrentPoint(canvas).Position);
+		}
+
+		private static void KeyboardProxy_PointerReleased(object sender,PointerRoutedEventArgs e)
+		{
+			var point = e.GetCurrentPoint(canvas);
+			Canvas_PointerReleased((point.Position, point.PointerId, point.IsInContact, point.Timestamp, point.Properties.PointerUpdateKind),e.KeyModifiers);
+
+		}
+
+		private static void KeyboardProxy_PointerPressed(object sender,PointerRoutedEventArgs e)
+		{
+			var point = e.GetCurrentPoint(canvas);
+			Canvas_PointerPressed((point.Position, point.PointerId, point.IsInContact, point.Timestamp, point.Properties.PointerUpdateKind));
+		}
+
+		private static void KeyboardProxy_PointerMoved(object sender,PointerRoutedEventArgs e)
+		{
+			var point = e.GetCurrentPoint(canvas);
+			Canvas_PointerMoved((point.Position, point.PointerId, point.IsInContact, point.Timestamp, point.Properties.PointerUpdateKind));
+		}
 
 		public static DispatcherQueueHandler RightClick((int x, int y) cc, int cid)
 		{
@@ -150,7 +219,8 @@ namespace COTG.Views
 				lastStretch = 0;
 
 			}
-			public static (Vector2 c,bool process) ProcessPressed(PointerPoint point)
+			public static (Vector2 c,bool process) ProcessPressed((Windows.Foundation.Point Position, uint PointerId,
+																			bool IsInContact, ulong Timestamp, PointerUpdateKind PointerUpdateKind) point)
 			{
 				var c = GetCanvasPosition(point.Position);
 					var id = point.PointerId;
@@ -203,9 +273,9 @@ namespace COTG.Views
 
 			//}
 			
-			public static void ProcessPointerExited(PointerPoint point)
+			public static void ProcessPointerExited(uint PointerId)
 			{
-					var id = point.PointerId;
+					var id = PointerId;
 					var index = (points.FindIndex(p => p.id == id));
 					if (index == -1)
 					{
@@ -214,7 +284,8 @@ namespace COTG.Views
 					Reset();
 			}
 
-			public static (Vector2 c, Vector3 delta, GestureAction action) ProcessMoved(PointerPoint point)
+			public static (Vector2 c, Vector3 delta, GestureAction action) ProcessMoved((Windows.Foundation.Point Position, uint PointerId,
+																			bool IsInContact, ulong Timestamp, PointerUpdateKind PointerUpdateKind) point)
 			{
 				var pointC = GetCanvasPosition(point.Position);
 				var id = point.PointerId;
@@ -229,7 +300,7 @@ namespace COTG.Views
 				// should not happen
 				if (!point.IsInContact)
 				{
-					Assert(false);
+					//Assert(false);
 					Reset();
 					return (pointC, new Vector3(), GestureAction.hover); // this is a mouse move without a press
 				}
@@ -299,7 +370,8 @@ namespace COTG.Views
 
 			}
 			
-			public static (Vector2 c, GestureAction action) ProcessRelased(PointerPoint point)
+			public static (Vector2 c, GestureAction action) ProcessRelased((Windows.Foundation.Point Position, uint PointerId, 
+																			bool IsInContact,ulong Timestamp, PointerUpdateKind PointerUpdateKind) point)
 			{
 				var c = GetCanvasPosition(point.Position);
 
@@ -319,7 +391,7 @@ namespace COTG.Views
 					if (currentGesture != GestureAction.none)
 						result=(rv, GestureAction.none);
 					else if (maxPoints > 1 ||
-						point.Properties.PointerUpdateKind == PointerUpdateKind.RightButtonReleased)
+						point.PointerUpdateKind == PointerUpdateKind.RightButtonReleased)
 						result = (rv, GestureAction.rightClick);
 					
 					Reset();
@@ -339,7 +411,7 @@ namespace COTG.Views
 		
 		}
 
-		private static void Canvas_PointerEntered(Microsoft.UI.Input.Experimental.ExpPointerInputObserver sender, PointerEventArgs args)
+		private static void Canvas_PointerEntered(Windows.Foundation.Point args)
 		{
 			UpdateMousePosition(args);
 			TakeFocusIfAppropriate();
@@ -426,11 +498,11 @@ namespace COTG.Views
 		{
 			Log($"{memberName} : f:{args.CurrentPoint.FrameId} id:{args.CurrentPoint.PointerId} C:{args.CurrentPoint.IsInContact} l{args.CurrentPoint.Position.X},{args.CurrentPoint.Position.Y}> ");
 		}
-		private static void Canvas_PointerExited(Microsoft.UI.Input.Experimental.ExpPointerInputObserver sender,PointerEventArgs e)
+		private static void Canvas_PointerExited(Windows.Foundation.Point Point, uint PointerId)
 		{
-			UpdateMousePosition(e);
+			UpdateMousePosition(Point);
 			//			e.KeyModifiers.UpdateKeyModifiers();
-			Gesture.ProcessPointerExited(e.CurrentPoint);
+			Gesture.ProcessPointerExited(PointerId);
 			//	PointerInfo(e);
 			//		Log("pointer Exit " + isOverPopup);
 			//if (ShellPage.IsCityView())
@@ -471,9 +543,13 @@ namespace COTG.Views
 			var serverTime = JSClient.ServerTime() + TimeSpan.FromMinutes(e.NewValue);
 			eventTimeTravelText.Text = $"Attack Time Travel:\t\t{dt.Hours}:{dt.Minutes},\t\tT:{serverTime.Format()}";
 		}
-		private static void Canvas_PointerReleased(Microsoft.UI.Input.Experimental.ExpPointerInputObserver sender, PointerEventArgs e)
+		private static void Canvas_PointerReleased((Windows.Foundation.Point Position, uint PointerId,
+																			bool IsInContact, ulong Timestamp, PointerUpdateKind PointerUpdateKind
+																			) point,
+			Windows.System.VirtualKeyModifiers keyModifiers)
 		{
-			UpdateMousePosition(e);
+			
+			UpdateMousePosition(point.Position);
 			if(!isFocused)
 				return;
 			
@@ -483,12 +559,12 @@ namespace COTG.Views
 			//	return;
 			//}
 
-			var pointerPoint = e.CurrentPoint;
-			var gestureResult = Gesture.ProcessRelased(pointerPoint);
+	//		var pointerPoint = e.CurrentPoint;
+			var gestureResult = Gesture.ProcessRelased(point);
 			if (gestureResult.action == GestureAction.none)
 				return;
 			// why do this trigger gestures?
-			switch (pointerPoint.Properties.PointerUpdateKind)
+			switch (point.PointerUpdateKind)
 			{
 				case Windows.UI.Input.PointerUpdateKind.XButton1Released:
 				case Windows.UI.Input.PointerUpdateKind.XButton2Released:
@@ -563,8 +639,8 @@ namespace COTG.Views
 								else
 								{
 									// check to see if it needs to go to the webview
-									Spot.ProcessCoordClick(cid, cid != City.build, e.KeyModifiers, true); ;
-									e.Handled = true;
+									Spot.ProcessCoordClick(cid, cid != City.build, keyModifiers, true); ;
+									//e.Handled = true;
 								}
 							}
 							break;
@@ -663,9 +739,10 @@ namespace COTG.Views
 	
 
 
-		private static void Canvas_PointerPressed(Microsoft.UI.Input.Experimental.ExpPointerInputObserver sender, PointerEventArgs e)
+		private static void Canvas_PointerPressed((Windows.Foundation.Point Position, uint PointerId,
+																			bool IsInContact, ulong Timestamp, PointerUpdateKind PointerUpdateKind) point)
 		{
-			UpdateMousePosition(e);
+			UpdateMousePosition(point.Position);
 			ShellPage.UpdateFocus();            //	ClearHover();
 												//  e.Handled = false;
 												//if (CityBuild.menuOpen)
@@ -679,9 +756,9 @@ namespace COTG.Views
 		
 			Assert(isOverPopup == false);
 			//            canvas.CapturePointer(e.Pointer);
-			var point = e.CurrentPoint;
+			//var point = e.CurrentPoint;
 
-			var properties = point.Properties;
+//			var properties = point.Properties;
 			var gestureResponse = Gesture.ProcessPressed(point);
 			if (!gestureResponse.process)
 				return;
@@ -699,15 +776,15 @@ namespace COTG.Views
 			//  if (JSClient.IsCityView())
 			// The app pas priority over back and forward events
 			{
-				switch (properties.PointerUpdateKind)
+				switch (point.PointerUpdateKind)
 				{
 					case PointerUpdateKind.XButton1Pressed:
-						e.Handled = true;
+		//				e.Handled = true;
 						NavStack.Back(true);
 						ClearHover();
 						return;
 					case PointerUpdateKind.XButton2Pressed:
-						e.Handled = true;
+			//			e.Handled = true;
 						NavStack.Forward(true);
 						ClearHover();
 						return;
@@ -718,7 +795,7 @@ namespace COTG.Views
 				//    return;
 			}
 			if (TryPostJSMouseEvent("click",
-				properties.PointerUpdateKind switch
+				point.PointerUpdateKind switch
 				{
 					PointerUpdateKind.LeftButtonPressed => 0,
 					PointerUpdateKind.MiddleButtonPressed => 1,
@@ -727,7 +804,7 @@ namespace COTG.Views
 					_=>0
 				}))
 			{
-				e.Handled = true;
+//				e.Handled = true;
 				Gesture.Reset();
 //				ShellPage.SetWebViewHasFocus(true);
 
@@ -962,17 +1039,18 @@ namespace COTG.Views
 			mousePositionW = mousePositionC.InverseProject();
 
 		}
-		private static void Canvas_PointerMoved(Microsoft.UI.Input.Experimental.ExpPointerInputObserver sender,ExpPointerEventArgs e)
+		private static void Canvas_PointerMoved((Windows.Foundation.Point Position, uint PointerId,
+																			bool IsInContact, ulong Timestamp, PointerUpdateKind PointerUpdateKind) point)
 		{
 		//	App.cursorDefault.Set();
 			App.InputRecieved(); // prevent idle timer;
 			//	PointerInfo(e);
-			UpdateMousePosition(e.CurrentPoint.Position);
+			UpdateMousePosition(point.Position);
 			UpdateFocus();
 			if (!isFocused)
 				return;
 		//	var priorMouseC = mousePosition;
-			var gestureResult = Gesture.ProcessMoved(e.CurrentPoint);
+			var gestureResult = Gesture.ProcessMoved(point);
 			if (gestureResult.action == GestureAction.none)
 				return;
 			
@@ -1258,7 +1336,7 @@ namespace COTG.Views
 						}
 					}
 				}
-				e.Handled = false;
+//				e.Handled = false;
 
 			}
 			else if(gestureResult.action==GestureAction.rightClick)
@@ -1269,7 +1347,7 @@ namespace COTG.Views
 			}
 			else
 			{
-				e.Handled = true;
+	//			e.Handled = true;
 				if (gestureResult.action.HasFlag(GestureAction.zoom))
 				{
 					DoZoom(gestureResult.delta.Z * 0.75f, gestureResult.action.HasFlag(GestureAction.pan));

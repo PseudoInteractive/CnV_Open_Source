@@ -44319,6 +44319,11 @@ function outer(){
 			{
 				sendMail(o.sendmail.to,o.sendmail.subject,o.sendmail.body);
 			}
+			if(o.hasOwnProperty("poll"))
+			{
+				DoPoll2(o.poll);
+
+			}
 
 			
 
@@ -69828,24 +69833,24 @@ function outer(){
 		//				.slider(__s[+Q7y], "value", K5g);
 		//		}
 		//	});
-			V5g.on(__s[3052], function (q5g, c5g, P5g, F5g) {
-				if (F5g) {
-					var B5g = P5g.input.split(E6k
-						.o55(+m8y));
-					var R5g = B5g[4];
-					var U5g = B5g[5];
-					var N5g = P5g['4' >>
-						989550016];
-					var p5g = P5g[5];
-					U5g = U5g.substring(0, U5g.length - 1);
-					var y5g = Number(R5g) + Number(U5g);
-					var D5g = Number(
-						N5g) + Number(p5g);
-					var Y5g = Math.abs(y5g - D5g);
-					if (Y5g <= 10) x1F();
-				} else
-					x1F();
-			});
+			//V5g.on(__s[3052], function (q5g, c5g, P5g, F5g) {
+			//	if (F5g) {
+			//		var B5g = P5g.input.split(E6k
+			//			.o55(+m8y));
+			//		var R5g = B5g[4];
+			//		var U5g = B5g[5];
+			//		var N5g = P5g['4' >>
+			//			989550016];
+			//		var p5g = P5g[5];
+			//		U5g = U5g.substring(0, U5g.length - 1);
+			//		var y5g = Number(R5g) + Number(U5g);
+			//		var D5g = Number(
+			//			N5g) + Number(p5g);
+			//		var Y5g = Math.abs(y5g - D5g);
+			//		if (Y5g <= 10) x1F();
+			//	} else
+			//		x1F();
+			//});
 		//	$("#city_map")
 		//		.panzoom("zoom", a9y * 1);
 		//	$(__s[Z8R << 1232783360])

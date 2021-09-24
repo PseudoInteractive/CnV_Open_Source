@@ -106,6 +106,7 @@ namespace COTG.Views
 			finally
 			{
 				openCity=0;
+				SettingsPage.SaveAll();
 			}
 		}
 

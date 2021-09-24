@@ -546,10 +546,10 @@ namespace COTG
 				//	//VerticalAlignment = VerticalAlignment.Stretch,
 				//	//CacheMode=new BitmapCache()
 
-
+			//	view.CompositeMode = Microsoft.UI.Xaml.Media.ElementCompositeMode.SourceOver;
 				//	Name = "cotgView",
 				//	//Opacity = 0.5,
-
+				
 				//};
 				LoadJsStrings();
 
@@ -575,6 +575,7 @@ namespace COTG
 //				coreWebView.Settings.AreDevToolsEnabled=true;
 #endif
 			//	coreWebView.Settings.UserAgent = userAgent;
+				
 				coreWebView.Settings.IsWebMessageEnabled=true;
 			//	coreWebView.Settings.IsPasswordAutosaveEnabled=true;
 				coreWebView.Settings.IsScriptEnabled=true;

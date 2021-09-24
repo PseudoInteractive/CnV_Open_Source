@@ -50,8 +50,10 @@ namespace COTG.Models
 			//}
 			//existingPopups = null;
 			//existingPopups = new TeachingTip[popups.Length];
-			AGame.popups = new Span2i[popups.Length];
+			//AGame.popups = new Span2i[popups.Length];
 			int put = 0;
+			var maxX = 0;
+			var maxY = 0;
 			foreach (var pop in popups)
 			{
 				// All controls should be relative to this 
@@ -60,12 +62,16 @@ namespace COTG.Models
 				var x1 = pop.x1;
 				var y1 = pop.y1;
 				// maybe a date?
-			//	if(y1-y0 > 180) // random guess
+				//	if(y1-y0 > 180) // random guess
+				var c1 = ShellPage.JSPointToScreen(x1,y1);
+				maxX = maxX.Max(x0.Max(x1));
+				maxY = maxY.Max(y0.Max(y1));
+
 
 				var scale =  AGame.dipToNative; // ShellPage.webViewScale *
-				AGame.popups[put] = new Span2i(
-					ShellPage.JSPointToScreen(x0, y0),
-					ShellPage.JSPointToScreen(x1, y1));
+				//AGame.popups[put] = new Span2i(
+				//	ShellPage.JSPointToScreen(x0, y0),
+				//	ShellPage.JSPointToScreen(x1, y1));
 
 
 				//	var canvas = new Microsoft.UI.Xaml.Controls.Canvas();
@@ -93,11 +99,12 @@ namespace COTG.Models
 				//	existingPopups[put] = tt;
 				++put;
 			}
+			ShellPage.UpdateWebViewOffsets(maxX,maxY);
 			if (AGame.popups.Length == 0)
 			{
 				// ensure that the webview does not have focus
 	//			ShellPage.SetWebViewHasFocus(false);
-				ShellPage.UpdateFocus();
+//				ShellPage.UpdateFocus();
 
 			}
 		}

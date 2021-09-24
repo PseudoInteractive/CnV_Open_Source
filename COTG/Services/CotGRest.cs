@@ -61,8 +61,8 @@ namespace COTG.Services
 
 			try
 			{
-				
-					var json = JsonDocument.Parse(await AsArray(resp), jsonParseOptions);
+					var a = await AsArray(resp);
+					var json = JsonDocument.Parse(a, jsonParseOptions);
 					ProcessJson(json);
 					return true;
 				
@@ -110,6 +110,7 @@ namespace COTG.Services
 		//}
 		private static async Task<byte[]> AsArray(HttpResponseMessage resp)
 		{
+			await resp.Content.BufferAllAsync();
 			var buffer = await resp.Content.ReadAsBufferAsync();
 
 			return (buffer).ToArray();

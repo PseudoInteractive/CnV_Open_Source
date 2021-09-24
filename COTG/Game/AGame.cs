@@ -273,6 +273,8 @@ namespace COTG
 		{
 			var inf = e.GraphicsDeviceInformation;
 			inf.GraphicsProfile = GraphicsProfile.HiDef;
+			inf.PresentationParameters.PresentationInterval= PresentInterval.One;
+		//	inf.PresentationParameters.IsFullScreen= true;
 			inf.PresentationParameters.SwapChainPanel = canvas;
 			inf.PresentationParameters.RenderTargetUsage = RenderTargetUsage.DiscardContents;
 			if (clientSpan.X > 0 && clientSpan.Y > 0)
@@ -292,6 +294,7 @@ namespace COTG
 			//	AGame.colorKind = a.GetAdvancedColorInfo().CurrentAdvancedColorKind;
 			//};
 			canvas = swapChainPanel;
+//			canvas.CompositeMode = (Microsoft.UI.Xaml.Media.ElementCompositeMode.SourceOver);
 			canvas.CompositeMode = (Microsoft.UI.Xaml.Media.ElementCompositeMode.MinBlend);
 			instance = MonoGame.Framework.XamlGame<AGame>.Create(() => new AGame() { }, "",App.window, swapChainPanel);
 		}
@@ -1202,10 +1205,10 @@ namespace COTG
 
 				// funky logic
 				//if (wantLight)
-				GraphicsDevice.Clear(new Color()); // black transparent
-												   //ds.TextAntialiasing = canvasTextAntialiasing;
-												   //ds.TextRenderingParameters = canvasTextRenderingParameters;
-												   // prevent MSAA gaps
+	//			GraphicsDevice.Clear(new Color(0,0,0,0)); // black transparent
+				//								   //ds.TextAntialiasing = canvasTextAntialiasing;
+				//								   //ds.TextRenderingParameters = canvasTextRenderingParameters;
+				//								   // prevent MSAA gaps
 				GraphicsDevice.BlendState = BlendState.AlphaBlend;
 				//	GraphicsDevice.DepthStencilState = DepthStencilState.None;
 
@@ -2226,18 +2229,18 @@ namespace COTG
 
 
 				}
-				if (popups.Length > 0)
-				{
-					var color = isFocused ? new Color(135, 235, 255, 255) : new Color(255, 255, 255, 255);
-					foreach (var pop in popups)
-					{
-						Vector2 c0 = new Vector2(pop.c0.X, pop.c0.Y).ScreenToCamera();
-						Vector2 c1 = new Vector2(pop.c1.X, pop.c1.Y).ScreenToCamera();
-						draw.AddQuad(Layer.webView, quadTexture, c0, c1, color, ConstantDepth, 0);/// c0.CToDepth(),(c1.X,c0.Y).CToDepth(), (c0.X,c1.Y).CToDepth(), c1.CToDepth() );
+				//if (popups.Length > 0)
+				//{
+				//	var color = isFocused ? new Color(135, 235, 255, 255) : new Color(255, 255, 255, 255);
+				//	foreach (var pop in popups)
+				//	{
+				//		Vector2 c0 = new Vector2(pop.c0.X, pop.c0.Y).ScreenToCamera();
+				//		Vector2 c1 = new Vector2(pop.c1.X, pop.c1.Y).ScreenToCamera();
+				//		draw.AddQuad(Layer.webView, quadTexture, c0, c1, color, ConstantDepth, 0);/// c0.CToDepth(),(c1.X,c0.Y).CToDepth(), (c0.X,c1.Y).CToDepth(), c1.CToDepth() );
 
-					}
+				//	}
 
-				}
+				//}
 				draw.End();
 
 			}

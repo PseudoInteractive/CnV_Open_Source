@@ -27,8 +27,18 @@
   <ItemGroup>
     <EmbeddedResource Remove="AppPackages\**" />
     <EmbeddedResource Remove="BundleArtifacts\**" />
+    <EmbeddedResource Remove="Content\Art\**" />
+    <EmbeddedResource Remove="Content\Audio\**" />
+    <EmbeddedResource Remove="Content\bin\**" />
+    <EmbeddedResource Remove="Content\Effects\**" />
+    <EmbeddedResource Remove="Content\obj\**" />
     <None Remove="AppPackages\**" />
     <None Remove="BundleArtifacts\**" />
+    <None Remove="Content\Art\**" />
+    <None Remove="Content\Audio\**" />
+    <None Remove="Content\bin\**" />
+    <None Remove="Content\Effects\**" />
+    <None Remove="Content\obj\**" />
   </ItemGroup>
 
   <ItemGroup>
@@ -57,11 +67,11 @@
     <PackageReference Include="Microsoft.AppCenter" Version="4.4.0" />
     <PackageReference Include="Microsoft.AppCenter.Analytics" Version="4.4.0" />
     <PackageReference Include="Microsoft.AppCenter.Crashes" Version="4.4.0" />
-    <PackageReference Include="Microsoft.ProjectReunion" Version="0.8.3" />
-    <PackageReference Include="Microsoft.ProjectReunion.Foundation" Version="0.8.3" />
-    <PackageReference Include="Microsoft.ProjectReunion.WinUI" Version="0.8.3" />
+    <PackageReference Include="Microsoft.ProjectReunion" Version="0.8.4" />
+    <PackageReference Include="Microsoft.ProjectReunion.Foundation" Version="0.8.4" />
+    <PackageReference Include="Microsoft.ProjectReunion.WinUI" Version="0.8.4" />
     <PackageReference Include="Microsoft.Services.Store.Engagement" Version="10.1901.28001" />
-    <PackageReference Include="Microsoft.Toolkit.HighPerformance" Version="7.1.0-rc2" />
+    <PackageReference Include="Microsoft.Toolkit.HighPerformance" Version="7.1.0" />
     <PackageReference Include="MonoGame.Content.Builder.Task" Version="3.8.1.1941-develop" />
     <PackageReference Include="Nito.AsyncEx.Coordination" Version="5.1.0" />
     <PackageReference Include="Nito.AsyncEx.Tasks" Version="5.1.0" />
@@ -72,7 +82,7 @@
     <PackageReference Include="SharpDX.Direct3D11" Version="4.2.0" />
     <PackageReference Include="SharpDX.DXGI" Version="4.2.0" />
     <PackageReference Include="SharpDX.MediaFoundation" Version="4.2.0" />
-    <PackageReference Include="SharpGen.Runtime.COM" Version="2.0.0-beta.9" />
+    <PackageReference Include="SharpGen.Runtime.COM" Version="2.0.0-beta.10" />
     <PackageReference Include="Standart.Hash.xxHash" Version="3.1.0" />
     <PackageReference Include="System.Text.Json" Version="6.0.0-rc.1.21451.13" />
     <PackageReference Include="Telerik.WinUI.Controls.Trial" Version="0.5.0" />
@@ -536,83 +546,30 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
+    <None Remove="Content\Fonts\File.spritefont" />
+    <None Remove="Content\Fonts\perpb.fnt" />
+    <None Remove="Content\Fonts\perpb_0.png" />
+    <None Remove="Content\Fonts\perpetua.fnt" />
+    <None Remove="Content\Fonts\perpetua_0.png" />
+    <None Remove="Content\Fonts\tra.fnt" />
+    <None Remove="Content\PERTILI.TTF" />
+    <None Remove="Package.appxmanifest" />
+  </ItemGroup>
+  <ItemGroup>
+    <AppxManifest Include="Package.appxmanifest" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Helpers\ResourceExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Content\Effects\AlphaAdd.fxh" />
-    <Content Include="Content\Art\City\building_set5.png" />
-    <Content Include="Content\Art\City\build_details_gloss_overlay.png" />
-    <Content Include="Content\Art\City\decal_building_invalid.png" />
-    <Content Include="Content\Art\City\decal_building_valid.png" />
-    <Content Include="Content\Art\City\decal_building_valid_multi.png" />
-    <Content Include="Content\Art\City\decal_move_building.png" />
-    <Content Include="Content\Art\City\decal_select_building.png" />
-    <Content Include="Content\Art\City\Winter\building_set5.png" />
-    <Content Include="Content\Art\Sphere64.png" />
-    <Content Include="Content\Effects\Ava.fx" />
-    <None Include="Content\Effects\AnimatedSprite.fxh" />
-    <None Include="Content\Effects\darkFont.fxh" />
-    <None Include="Content\Effects\Constants.fxh" />
-    <None Include="Content\Effects\font.fxh" />
-    <None Include="Content\Effects\lit.fxh" />
-    <None Include="Content\Effects\NoTexture.fxh" />
-    <None Include="Content\Effects\sdf.fxh" />
-    <None Include="Content\Effects\unlit.fxh" />
     <None Include="JS\alasstylesheet.css" />
-    <Content Include="Content\Art\Icons\blessed.png" />
-    <Content Include="Content\Art\Icons\castle0.png" />
-    <Content Include="Content\Art\Icons\castle0w.png" />
-    <Content Include="Content\Art\Icons\castle1.png" />
-    <Content Include="Content\Art\Icons\castle1w.png" />
-    <Content Include="Content\Art\Icons\castle2.png" />
-    <Content Include="Content\Art\Icons\castle2w.png" />
-    <Content Include="Content\Art\Icons\city0.png" />
-    <Content Include="Content\Art\Icons\city0w.png" />
-    <Content Include="Content\Art\Icons\city1.png" />
-    <Content Include="Content\Art\Icons\city1w.png" />
-    <Content Include="Content\Art\Icons\city2.png" />
-    <Content Include="Content\Art\Icons\city2w.png" />
-    <Content Include="Content\Art\Icons\cityll0.png" />
-    <Content Include="Content\Art\Icons\cityll1.png" />
-    <Content Include="Content\Art\Icons\cityll2.png" />
-    <None Include="Content\Art\lineDraw.dds" />
-    <Content Include="Content\Art\Icons\temple0.png" />
-    <Content Include="Content\Art\Icons\temple0w.png" />
-    <Content Include="Content\Art\Icons\temple1.png" />
-    <Content Include="Content\Art\Icons\temple1w.png" />
-    <Content Include="Content\Art\Icons\temple2.png" />
-    <Content Include="Content\Art\Icons\temple2w.png" />
-    <Content Include="Content\Art\Icons\troops0.png" />
-    <Content Include="Content\Art\Icons\troops1.png" />
-    <Content Include="Content\Art\Icons\troops10.png" />
-    <Content Include="Content\Art\Icons\troops11.png" />
-    <Content Include="Content\Art\Icons\troops12.png" />
-    <Content Include="Content\Art\Icons\troops13.png" />
-    <Content Include="Content\Art\Icons\troops14.png" />
-    <Content Include="Content\Art\Icons\troops15.png" />
-    <Content Include="Content\Art\Icons\troops16.png" />
-    <Content Include="Content\Art\Icons\troops17.png" />
-    <Content Include="Content\Art\Icons\troops2.png" />
-    <Content Include="Content\Art\Icons\troops3.png" />
-    <Content Include="Content\Art\Icons\troops4.png" />
-    <Content Include="Content\Art\Icons\troops5.png" />
-    <Content Include="Content\Art\Icons\troops6.png" />
-    <Content Include="Content\Art\Icons\troops7.png" />
-    <Content Include="Content\Art\Icons\troops8.png" />
-    <Content Include="Content\Art\Icons\troops9.png" />
     <None Include="JS\jquery1_12_4" />
     <None Include="JS\jquery-migrate1_4_1" />
     <None Include="JS\jquery3_5_1" />
     <None Include="JS\jquerymigrate" />
     <None Include="JS\index.htm" />
     <Content Include="JS\DHRUVCC.js" />
-    <None Include="Content\Effects\Macros.fxh" />
-    <None Include="Content\Effects\Structures.fxh" />
-    <EmbeddedResource Include="Content\Fonts\tra.fnt" />
     <Content Include="JSON\buildingDef.json" />
-    <None Include="Content\Effects\WorldSpace.fxh" />
     <None Include="CotgKey.pfx" />
     <None Include="JSON\poll2.json" />
     <Content Include="JSON\Troops.json" />
@@ -640,9 +597,6 @@
 	</Compile>
   </ItemGroup>
   <ItemGroup>
-	  <Folder Include="Content\Art\City\COTG\" />
-    <Folder Include="Content\Art\Tiles\" />
-    <Folder Include="Content\Audio\" />
     <Folder Include="Shader\" />
   </ItemGroup>
 <ItemGroup>
@@ -682,4 +636,10 @@
     <Optimize>True</Optimize>
   </PropertyGroup>
   <ProjectExtensions />
+  <ItemGroup>
+    <Content Remove="cnvCover.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Content\Fonts\tra.fnt" />
+  </ItemGroup>
 </Project>

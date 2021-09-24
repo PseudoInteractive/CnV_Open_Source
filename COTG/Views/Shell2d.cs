@@ -45,7 +45,7 @@ namespace COTG.Views
 		//public static int cachedXOffset = 0;
 		static public SwapChainPanel canvas;
 		public static bool hasKeyboardFocus;
-		public static KeyboardProxy keyboardProxy;
+	//	public static KeyboardProxy keyboardProxy;
 		public static ViewMode viewMode;
 		public static bool webviewHasFocus=>webviewHasFocus2;
 		private const int bottomMargin = 0;
@@ -64,38 +64,38 @@ namespace COTG.Views
 
 		public static bool IsWorldView() => viewMode == ViewMode.world;
 
-		public static void NotifyCotgPopup(int cotgPopupOpen)
-		{
-			//JSClient.CaptureWebPage(canvas);
-			//	cotgPopupOpen = 0;
-			//var hasPopup = (cotgPopupOpen & 127) != 0;
-			//var hasLongWindow = cotgPopupOpen >= 128;
-			//var leftOffset = hasPopup ? cotgPopupRight - canvasBaseX : 0;
-			//var topOffset = hasLongWindow ? webclientSpan.y * 65 / 100 : canvasBaseY;
+		//public static void NotifyCotgPopup(int cotgPopupOpen)
+		//{
+		//	//JSClient.CaptureWebPage(canvas);
+		//	//	cotgPopupOpen = 0;
+		//	var hasPopup = (cotgPopupOpen & 127) != 0;
+		//	var hasLongWindow = cotgPopupOpen >= 128;
+		//	var leftOffset = hasPopup ? cotgPopupRight - canvasBaseX : 0;
+		//	var topOffset = hasLongWindow ? webclientSpan.y * 65 / 100 : canvasBaseY;
 
-			//// temp
-			//leftOffset = 0;
-			//topOffset = canvasBaseY;
+		//	// temp
+		//	leftOffset = 0;
+		//	topOffset = canvasBaseY;
 
-			//if (leftOffset == cachedXOffset && cachedTopOffset == topOffset)
-			//	return;
-			//cachedTopOffset = topOffset;
-			//cachedXOffset = leftOffset;
-			////	var _canvas = canvas;
-			// var _in = canvasHitTest;
+		//	if(leftOffset == cachedXOffset && cachedTopOffset == topOffset)
+		//		return;
+		//	cachedTopOffset = topOffset;
+		//	cachedXOffset = leftOffset;
+		//	//	var _canvas = canvas;
+		//	var _in = canvasHitTest;
 
-			//  App.DispatchOnUIThreadLow(() => _grid.Margin = new Thickness(0, topOffset, 0, bottomMargin));
-			//App.DispatchOnUIThreadLow(() =>
-			//{
-			//	_canvas.Margin = new Thickness(leftOffset , topOffset, 0, 0);
-			//	//Canvas.SetLeft(_canvas, leftOffset);
-			//	//Canvas.SetTop(_canvas, topOffset);
-			//	//RemakeRenderTarget();
-			//});
-			//            _grid.Dispatcher.RunAsync(Windows.UI.Core.DispatcherQueuePriority.Normal, () =>
-			//            AUtil.Nop( (_grid.ColumnDefinitions[0].Width = new GridLength(leftOffset),
-			//          _grid.ColumnDefinitions[1].Width = new GridLength(_grid.ColumnDefinitions[1].Width.Value-delta))));
-		}
+		//	App.DispatchOnUIThreadLow(() => _grid.Margin = new Thickness(0,topOffset,0,bottomMargin));
+		//	App.DispatchOnUIThreadLow(() =>
+		//	{
+		//		_canvas.Margin = new Thickness(leftOffset,topOffset,0,0);
+		//		//Canvas.SetLeft(_canvas, leftOffset);
+		//		//Canvas.SetTop(_canvas, topOffset);
+		//		//RemakeRenderTarget();
+		//	});
+		//	_grid.Dispatcher.RunAsync(Windows.UI.Core.DispatcherQueuePriority.Normal,() =>
+		//   AUtil.Nop((_grid.ColumnDefinitions[0].Width = new GridLength(leftOffset),
+		// _grid.ColumnDefinitions[1].Width = new GridLength(_grid.ColumnDefinitions[1].Width.Value-delta))));
+		//}
 
 		public static void SetViewMode(ViewMode _viewMode,  bool leaveZoom = false)
 		{
@@ -186,33 +186,36 @@ namespace COTG.Views
 		{
 			takeFocusIfAppropriate.Go();
 		}
-		static Debounce takeFocusIfAppropriate = new(() =>
+		static  Debounce takeFocusIfAppropriate = new( () =>
 		{
 				var isOverCanvas = isMouseOverCanvas;
 			var note = 0;
 			if(isOverCanvas)
 			{
-				if(FocusManager.GetFocusedElement() != keyboardProxy)
+			//	if(canvas.FocusState == FocusState.Unfocused)
 				{
-					if(JSClient.view is not null && App.IsKeyPressedShift())
+					//if(JSClient.view is not null && App.IsKeyPressedShift())
 					{
 						var f = JSClient.view.Focus(FocusState.Programmatic);
 						Assert(f);
 					}
-					else if( App.IsKeyPressedControl())
+					//else if( App.IsKeyPressedControl())
 					{
-						TabPage.mainTabs.Focus(FocusState.Programmatic);
+					 var f= TabPage.mainTabs.Focus(FocusState.Programmatic);
+						Assert(f);
 					}
 //App.QueueOnUIThread( ()=>
 					{
-								var f = keyboardProxy.Focus(FocusState.Programmatic);
+								var f = canvas.Focus(FocusState.Programmatic);
 								Assert(f);
 					} //);
 					note|=2;
 				}
 			}
+#if DEBUG
 			if(note!=0)
 				Note.Show($"!Focu{note}: f{canvas.IsHitTestVisible} o{isOverCanvas}");
+#endif 
 			return Task.CompletedTask;
 
 		})
@@ -303,25 +306,27 @@ namespace COTG.Views
 			canvas = new SwapChainPanel()
 			{
 				// DpiScale = SettingsPage.dpiScale != 0 ? SettingsPage.dpiScale : (dpiLimit / DisplayInformation.GetForCurrentView().LogicalDpi).Min(1.0f),
-				Name = "Region",
+				Name = "DX",
 				IsHitTestVisible = false,
 				Visibility = Visibility.Visible,
+			//	Background=null,
+				IsTabStop=true,
 				// IsTabStop = true, UseSharedDevice = true, TargetElapsedTime =
 				// TimeSpan.FromSeconds(1.0f / 60.0f),
 				
 				Margin = new Thickness(0, canvasBaseY, 0, 0),
 				// IsFixedTimeStep = false
 			};
-			keyboardProxy = new KeyboardProxy()
-			{
-				AllowFocusOnInteraction = true,
-				TabFocusNavigation = KeyboardNavigationMode.Once,
-				Background = null,
-				IsTabStop = true
-			};
+			//keyboardProxy = new KeyboardProxy()
+			//{
+			//	AllowFocusOnInteraction = true,
+			//	TabFocusNavigation = KeyboardNavigationMode.Once,
+			//	Background = null,
+			//	IsTabStop = true
+			//};
 
-			canvas.Children.Add(keyboardProxy);
-//			canvas.PreviewKeyDown+=KeyboardProxy_KeyDown;
+			//canvas.Children.Add(keyboardProxy);
+			//			canvas.PreviewKeyDown+=KeyboardProxy_KeyDown;
 			canvas.KeyDown += KeyboardProxy_KeyDown;
 		//	keyboardProxy.AddHandler(KeyDownEvent,new KeyEventHandler(KeyboardProxy_KeyDown),true);
 			//keyboardProxy.LostFocus += KeyboardProxy_LostFocus;
@@ -351,6 +356,8 @@ namespace COTG.Views
 			//canvasHitTest.Stretch = Stretch.Fill;
 			//  SetupCoreInput();
 			canvas.CompositionScaleChanged += Canvas_CompositionScaleChanged;
+			SetupNonCoreInput();
+			
 		///	SetupCoreInput();
 			return (canvas, null);
 		}

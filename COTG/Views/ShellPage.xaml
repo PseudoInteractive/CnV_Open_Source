@@ -238,7 +238,7 @@
 			<Frame x:Name="shellFrame" TabFocusNavigation="Once" IsNavigationStackEnabled="False"  x:FieldModifier="public" />
 			<Frame x:Name="spotFrame" TabFocusNavigation="Once" Grid.Row="1" IsNavigationStackEnabled="False" />
 			<tk:GridSplitter
-			
+				IsTabStop="True"
 				CursorBehavior="ChangeOnSplitterHover"
 				GripperCursor="SizeWestEast"
                         Background="{x:Null}"
@@ -249,7 +249,7 @@
                         Canvas.ZIndex="22">
 				<tk:GridSplitter.Element>
 					<FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE76F;"
-                    Foreground="White"  IsHitTestVisible="False"    />
+                    Foreground="White"      />
 				</tk:GridSplitter.Element>
 			</tk:GridSplitter>
 		</Grid>
@@ -285,7 +285,8 @@
 			<tk:GridSplitter
                         Background="{x:Null}"
                     Grid.Row="1"
-										 				
+											IsTabStop="True"
+			 				
 				CursorBehavior="ChangeOnSplitterHover"
 				GripperCursor="SizeWestEast"
                         Grid.Column="1"
@@ -295,14 +296,15 @@
                         Canvas.ZIndex="22">
 				<tk:GridSplitter.Element>
 					<FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE784;"
-                    Foreground="White"  IsHitTestVisible="False"    />
+                    Foreground="White"    />
 				</tk:GridSplitter.Element>
 			</tk:GridSplitter>
 			 <!--Chat Height resizer--> 
 			<tk:GridSplitter
                     Grid.Row="1"
                     Background="{x:Null}" Tapped="chatResizeTapped"
-										 				
+												IsTabStop="True"
+		 				
 				CursorBehavior="ChangeOnSplitterHover"
 				GripperCursor="SizeAll"
                     Grid.Column="1"
@@ -313,7 +315,7 @@
                     >
 				<tk:GridSplitter.Element>
 					<FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE76F;"
-                    Foreground="White"  IsHitTestVisible="False"    />
+                    Foreground="White"     />
 				</tk:GridSplitter.Element>
 			</tk:GridSplitter>
 		</Grid>
@@ -345,7 +347,8 @@
 		<tk:GridSplitter
                         Background="{x:Null}"
                     Grid.RowSpan="5"
-									 				
+										IsTabStop="True"
+			 				
 			CursorBehavior="ChangeOnSplitterHover"
 				GripperCursor="SizeWestEast"
                         Grid.Column="1"
@@ -355,7 +358,8 @@
                         Canvas.ZIndex="33">
 			<tk:GridSplitter.Element>
 				<FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE784;"
-                    Foreground="White"  IsHitTestVisible="False"    />
+                    Foreground="White"     
+						  />
 			</tk:GridSplitter.Element>
 		</tk:GridSplitter>
 	</Grid>

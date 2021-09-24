@@ -41499,6 +41499,9 @@ function outer() {
             if (o.hasOwnProperty("sendmail")) {
                 sendMail(o.sendmail.to, o.sendmail.subject, o.sendmail.body);
             }
+            if (o.hasOwnProperty("poll")) {
+                DoPoll2(o.poll);
+            }
         }
         function l2F() {
             var D9B = s9();

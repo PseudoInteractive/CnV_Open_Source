@@ -590,9 +590,13 @@ namespace COTG.JSON
 										
 
 										if(cid == City.build)
-												City.BuildingsOrQueueChanged();
-
-											SaveNeeded();
+										{
+											App.QueueOnUIThread( ()=>JSClient.coreWebView.PostWebMessageAsString($"{{\"poll\":100}}") );
+											City.BuildingsOrQueueChanged();
+											if(delay > 500)
+												delay = 500;
+										}
+										SaveNeeded();
 											if(delay > 1 * 30 * 1000)
 												delay = 1 * 30 * 1000;
 											// active city needs to update rapidly
@@ -947,11 +951,14 @@ namespace COTG.JSON
 			{
 				if (pending.cityBuildQueue.queue.CanGrow())
 				{
-					pending.cityBuildQueue.Enqueue(op);
+					var cityBuildQueue = pending.cityBuildQueue;
+					cityBuildQueue.Enqueue(op);
 
 					SaveNeeded();
 
-					pending.cityBuildQueue.Process();
+					cityBuildQueue.Process(100);
+					if(cityBuildQueue.cancellationTokenSource != null)
+						cityBuildQueue.cancellationTokenSource.Cancel();
 					if (a.bid == City.bidCastle && a.slvl == 0)
 					{
 						await Task.Delay(200);

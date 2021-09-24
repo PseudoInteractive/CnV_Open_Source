@@ -220,7 +220,7 @@ namespace COTG.Views
 			Grid.SetColumnSpan(CityBuild.instance, 1);
 			Canvas.SetZIndex(CityBuild.instance, 13);
 			var c = CreateCanvasControl();
-
+			
 			// canvas.ContextFlyout = CityFlyout;
 			grid.Children.Add(c.canvas);
 			// grid.Children.Add(c.hitTest);
@@ -322,13 +322,12 @@ namespace COTG.Views
 					var tabPage = CreateTabPage(shellFrame);
 					TabPage.secondaryTabs = CreateTabPage(spotFrame);
 					TabPage.mainTabs = tabPage;
-					MainPage.instance.ShowOrAdd( true);
-					MainPage.instance.ShowOrAdd( false);
-					MainPage.instance.ShowOrAdd(false);
+				//	MainPage.instance.ShowOrAdd( false);
+				//	MainPage.instance.ShowOrAdd(false);
 					// tabPage.AddTab(HeatTab.instance, false);
 				}
 				ChatTab.tabPage.AddChatTabs();
-				SpotTab.instance.ShowOrAdd( true);
+			
 
 
 			};
@@ -357,18 +356,19 @@ namespace COTG.Views
 		//		ShellPage.SetupCoreInput();
 				var sz = canvas.ActualSize;
 				AGame.SetClientSpan(sz.X, sz.Y);
-//				SetupCoreInput();
-
-			//	SetWebViewHasFocus(true);
-			//ShellPage.canvas.IsHitTestVisible = false;
-			//ShellPage.canvas.Visibility = Visibility.Collapsed;
-				var instances = Windows.ApplicationModel.AppInstance.GetInstances();
+				//				SetupCoreInput();
+				MainPage.instance.ShowOrAdd(true);
+				SpotTab.instance.ShowOrAdd(true);
+				//	SetWebViewHasFocus(true);
+				//ShellPage.canvas.IsHitTestVisible = false;
+				//ShellPage.canvas.Visibility = Visibility.Collapsed;
+				//			var instances = Windows.ApplicationModel.AppInstance.GetInstances();
 				//Assert(instances.Count==1);
 				//if(instances.Count > 1)
 				//{
 				//	App.DoYesNoBox("More than one window is open", "If this is intentional, please ignore, if not, close some (they may already be closing) or restart your computer" );
 				//}
-				
+
 			}));
 
 			//Task.Delay(5000).ContinueWith((_) =>
@@ -1301,50 +1301,60 @@ namespace COTG.Views
 			});
 		}
 
-		public Task UpdateWebViewScale()
+		public static Task UpdateWebViewOffsets(int leftOffset, int topOffset)
 		{
-			
+			leftOffset = (leftOffset-canvasBaseXUnscaled).Max0();
+			topOffset = (topOffset-canvasBaseYUnscaled).Max0();
+			if(leftOffset > topOffset)
+				leftOffset =0;
+			else
+				topOffset=0;
 			//	if (!Alliance.alliancesFetched)
 			//		return;
+			if(canvas != null && instance.grid != null)
+			{
 
 				return App.DispatchOnUIThreadTask(async ()
 					=>
 				{
 					try
 					{
-
+						var _canvasBaseX = leftOffset + canvasBaseXUnscaled;
 					//	var scale = webView.C
 					//	var scale = JSClient.coreWebView.core;
-						//var spanXY = int.Parse(await JSClient.view.ExecuteScriptAsync("(document.body.clientWidth+document.body.clientHeight*65536).toString()" ));
-						//var spanY = spanXY>>16;
-						//var spanX = spanXY&0xffff;
-						////					var _webViewScale = new Vector2( 
-						////						(float)(JSClient.view.ActualWidth / spanX),
-						////						(float)(JSClient.view.ActualHeight/ spanY));
-						var displayWidth =   grid.ColumnDefinitions.Take(2).Sum(a=>a.ActualWidth);
-						var displayHeight = grid.RowDefinitions.Skip(1).SkipLast(1).Sum((a) => a.ActualHeight) + canvasBaseYUnscaled- canvasHtmlYOffset;
+					//var spanXY = int.Parse(await JSClient.view.ExecuteScriptAsync("(document.body.clientWidth+document.body.clientHeight*65536).toString()" ));
+					//var spanY = spanXY>>16;
+					//var spanX = spanXY&0xffff;
+					////					var _webViewScale = new Vector2( 
+					////						(float)(JSClient.view.ActualWidth / spanX),
+					////						(float)(JSClient.view.ActualHeight/ spanY));
+						//var displayWidth =   grid.ColumnDefinitions.Take(2).Sum(a=>a.ActualWidth);
+						//var displayHeight = grid.RowDefinitions.Skip(1).SkipLast(1).Sum((a) => a.ActualHeight) + canvasBaseYUnscaled- canvasHtmlYOffset;
 						//var _webViewScale = new Vector2((float)displayWidth / spanX,
 						//								(float)displayHeight/ spanY );
-						AGame.SetClientSpan(grid.ColumnDefinitions[1].ActualWidth,displayHeight);
+						//AGame.SetClientSpan(grid.ColumnDefinitions[1].ActualWidth,displayHeight);
 						//if((_webViewScale - webViewScale).Length() <= (1.0f / 64f) )
 						//	return;
 						//webViewScale = _webViewScale;
 						//canvasBaseX = (canvasBaseXUnscaled);//.RoundToInt();
-						//canvasBaseY = (canvasTitleYOffset + canvasBaseYUnscaled-canvasTitleYOffset);//.RoundToInt();
-						//if (canvas != null && grid != null)
-						//{
-						////	App.DispatchOnUIThreadIdle(() =>
-						////	{
-						//		grid.ColumnDefinitions[0].Width = new GridLength(ShellPage.canvasBaseX, GridUnitType.Pixel);
-						//		canvas.Margin = new Thickness(0, canvasBaseY, 0, 0);
-						////	});
-						//}
+						
+						var _canvasBaseY = canvasBaseYUnscaled+topOffset;//.RoundToInt();
+						if(canvasBaseX != _canvasBaseX || canvasBaseY != _canvasBaseY)
+						{
+							canvasBaseX = _canvasBaseX;
+							canvasBaseY = _canvasBaseY;
+							instance.grid.ColumnDefinitions[0].Width = new GridLength(canvasBaseX, GridUnitType.Pixel);
+							canvas.Margin = new Thickness(0, canvasBaseY, 0, 0);
+						}
+						
 					}
 					catch (Exception ex)
 					{
 						LogEx(ex);
 					}
 				});
+			}
+			return Task.CompletedTask;
 		}
 
 		private void webFocus_Click(object sender, RoutedEventArgs e)
