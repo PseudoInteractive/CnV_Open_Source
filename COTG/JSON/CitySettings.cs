@@ -51,10 +51,11 @@ namespace COTG.JSON
 				{
 					if (cid == hub)
 						continue;
-					if (!hub.CanReachByTrade(cid))
+					var reachable = hub.CanReachByTrade(cid);
+					if(!reachable.reachable)
 						continue;
 
-					var d = hub.DistanceToCid(cid);
+					var d = hub.DistanceToCid(cid) * 256.0f/( (reachable.viaWater? (City.Get(cid).shipsHome+128) : (City.Get(cid).CartsHome*1.0f/64) + 128) );
 					if (d < bestDist)
 					{
 						bestDist = d;

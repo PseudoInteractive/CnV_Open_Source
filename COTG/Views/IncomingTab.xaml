@@ -21,9 +21,9 @@
 		</Grid.RowDefinitions>
 		<tk:WrapPanel>
 			<winui:RadioButtons SelectedIndex="{x:Bind typeFilter,Mode=TwoWay}" MaxColumns="3" SelectionChanged="filterChanged" >
-					<x:String>Alliance</x:String>
-					<x:String>Watched</x:String>
-					<x:String>Me</x:String>
+				<x:String>Alliance</x:String>
+				<x:String>Watched</x:String>
+				<x:String>Me</x:String>
 			</winui:RadioButtons>
 			<ToggleSwitch IsOn="{x:Bind includeInternal,Mode=TwoWay}" Header="Internal" OffContent="Exclude" OnContent="Include" Toggled="filterChanged" />
 			<Button Content="To Sheet" Click="ExportSheetsClick" />
@@ -31,6 +31,7 @@
 		</tk:WrapPanel>
 		<tg:RadDataGrid x:Name="defenderGrid"
 						Grid.Row="1"
+													Margin="4,4,8,16"
 
                         x:FieldModifier="public"
 						IsTabStop="True"
@@ -154,7 +155,8 @@
 						TabFocusNavigation="Once"
                                     ItemsSource="{x:Bind game:Army.empty}"
                                     CanUserChooseColumns="True"
-							
+							Margin="4,4,8,16"
+
 						GridLinesThickness="1"
                                     FontSize="{StaticResource MediumFontSize}"
                                     HorizontalAlignment="Stretch"
@@ -201,12 +203,173 @@
                                                    CellContentFormat="{}{0:dd',' HH':'mm':'ss}"
                                                    CellContentStyle="{StaticResource CenterAlign}" />
 
-				
+				<tg:DataGridTemplateColumn Header="Troops">
+					<tg:DataGridTemplateColumn.CellDecorationStyle>
+						<Style TargetType="Rectangle">
+							<Setter Property="Fill" Value="Gray" />
+						</Style>
+					</tg:DataGridTemplateColumn.CellDecorationStyle>
+					<tg:DataGridTemplateColumn.CellContentTemplate>
+						<DataTemplate x:DataType="game:Army">
+							<StackPanel Orientation="Vertical"
+                                                    Width="Auto">
+								<StackPanel Orientation="Horizontal"
+                                                        Height="54">
+									<StackPanel Orientation="Vertical"
+                                                            Width="Auto">
+										<Image Source="{Binding i0}"
+                                                           HorizontalAlignment="Center"
+                                                           Height="32" />
+										<TextBlock Text="{Binding c0}"
+                                                               FontSize="{StaticResource MediumFontSize}"
+                                                               HorizontalAlignment="Center"
+                                                               Height="22" />
+									</StackPanel>
+									<StackPanel Orientation="Vertical"
+                                                            Width="Auto">
+										<Image Source="{Binding i1}"
+                                                           HorizontalAlignment="Center"
+                                                           Height="32" />
+										<TextBlock Text="{Binding c1}"
+                                                               FontSize="{StaticResource MediumFontSize}"
+                                                               HorizontalAlignment="Center"
+                                                               Height="22" />
+									</StackPanel>
+									<StackPanel Orientation="Vertical"
+                                                            Width="Auto">
+										<Image Source="{Binding i2}"
+                                                           HorizontalAlignment="Center"
+                                                           Height="32" />
+										<TextBlock Text="{Binding c2}"
+                                                               FontSize="{StaticResource MediumFontSize}"
+                                                               HorizontalAlignment="Center"
+                                                               Height="22" />
+									</StackPanel>
+									<StackPanel Orientation="Vertical"
+                                                            Width="Auto">
+										<Image Source="{Binding i3}"
+                                                           HorizontalAlignment="Center"
+                                                           Height="32" />
+										<TextBlock Text="{Binding c3}"
+                                                               FontSize="{StaticResource MediumFontSize}"
+                                                               HorizontalAlignment="Center"
+                                                               Height="22" />
+									</StackPanel>
+								</StackPanel>
+								<TextBlock Text="{Binding ts}"
+                                                       FontSize="{StaticResource MediumFontSize}"
+                                                       HorizontalAlignment="Center"
+                                                       Height="22" />
+							</StackPanel>
+						</DataTemplate>
+					</tg:DataGridTemplateColumn.CellContentTemplate>
+				</tg:DataGridTemplateColumn>
+				<tg:DataGridTemplateColumn Header="Total Def">
+					<tg:DataGridTemplateColumn.CellDecorationStyle>
+						<Style TargetType="Rectangle">
+							<Setter Property="Fill" Value="Gray" />
+						</Style>
+					</tg:DataGridTemplateColumn.CellDecorationStyle>
+					<tg:DataGridTemplateColumn.CellContentTemplate>
+						<DataTemplate>
+							<StackPanel Orientation="Vertical"
+                                                    Width="Auto">
+								<StackPanel Orientation="Horizontal"
+                                                        Height="54">
+									<StackPanel Orientation="Vertical"
+                                                            Width="Auto">
+										<Image Source="{Binding si0}"
+                                                           HorizontalAlignment="Center"
+                                                           Height="32" />
+										<TextBlock Text="{Binding sc0}"
+                                                               FontSize="{StaticResource MediumFontSize}"
+                                                               HorizontalAlignment="Center"
+                                                               Height="22" />
+									</StackPanel>
+									<StackPanel Orientation="Vertical"
+                                                            Width="Auto">
+										<Image Source="{Binding si1}"
+                                                           HorizontalAlignment="Center"
+                                                           Height="32" />
+										<TextBlock Text="{Binding sc1}"
+                                                               FontSize="{StaticResource MediumFontSize}"
+                                                               HorizontalAlignment="Center"
+                                                               Height="22" />
+									</StackPanel>
+									<StackPanel Orientation="Vertical"
+                                                            Width="Auto">
+										<Image Source="{Binding si2}"
+                                                           HorizontalAlignment="Center"
+                                                           Height="32" />
+										<TextBlock Text="{Binding sc2}"
+                                                               FontSize="{StaticResource MediumFontSize}"
+                                                               HorizontalAlignment="Center"
+                                                               Height="22" />
+									</StackPanel>
+									<StackPanel Orientation="Vertical"
+                                                            Width="Auto">
+										<Image Source="{Binding si3}"
+                                                           HorizontalAlignment="Center"
+                                                           Height="32" />
+										<TextBlock Text="{Binding sc3}"
+                                                               FontSize="{StaticResource MediumFontSize}"
+                                                               HorizontalAlignment="Center"
+                                                               Height="22" />
+									</StackPanel>
+									<StackPanel Orientation="Vertical"
+                                                            Width="Auto">
+										<Image Source="{Binding si4}"
+                                                           HorizontalAlignment="Center"
+                                                           Height="32" />
+										<TextBlock Text="{Binding sc4}"
+                                                               FontSize="{StaticResource MediumFontSize}"
+                                                               HorizontalAlignment="Center"
+                                                               Height="22" />
+									</StackPanel>
+									<StackPanel Orientation="Vertical"
+                                                            Width="Auto">
+										<Image Source="{Binding si5}"
+                                                           HorizontalAlignment="Center"
+                                                           Height="32" />
+										<TextBlock Text="{Binding sc5}"
+                                                               FontSize="{StaticResource MediumFontSize}"
+                                                               HorizontalAlignment="Center"
+                                                               Height="22" />
+									</StackPanel>
+									<StackPanel Orientation="Vertical"
+                                                            Width="Auto">
+										<Image Source="{Binding si6}"
+                                                           HorizontalAlignment="Center"
+                                                           Height="32" />
+										<TextBlock Text="{Binding sc6}"
+                                                               FontSize="{StaticResource MediumFontSize}"
+                                                               HorizontalAlignment="Center"
+                                                               Height="22" />
+									</StackPanel>
+									<StackPanel Orientation="Vertical"
+                                                            Width="Auto">
+										<Image Source="{Binding si7}"
+                                                           HorizontalAlignment="Center"
+                                                           Height="32" />
+										<TextBlock Text="{Binding sc7}"
+                                                               FontSize="{StaticResource MediumFontSize}"
+                                                               HorizontalAlignment="Center"
+                                                               Height="22" />
+									</StackPanel>
+								</StackPanel>
+								<TextBlock Text="{Binding dTS}"
+                                                       FontSize="{StaticResource MediumFontSize}"
+                                                       HorizontalAlignment="Center"
+                                                       Height="22" />
+							</StackPanel>
+						</DataTemplate>
+					</tg:DataGridTemplateColumn.CellContentTemplate>
+				</tg:DataGridTemplateColumn>
 			</tg:RadDataGrid.Columns>
 		</tg:RadDataGrid>
 		<tk:GridSplitter
                     Grid.Row="2"
-                    Background="{x:Null}"
+                    Background="Transparent"
                         VerticalAlignment="Top"
 									 				IsTabStop="True"
 				CursorBehavior="ChangeOnSplitterHover"

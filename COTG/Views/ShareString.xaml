@@ -38,14 +38,14 @@
 				<RowDefinition Height="*"/>
 			</Grid.RowDefinitions>
 			<tk:Expander Grid.Row="2" x:Name="expandShareString"  
-                           Header="ShareString (Layout)"
-							 BorderThickness="1"
-                           HorizontalContentAlignment="Stretch"
-                           IsExpanded="True"
-						 ToolTipService.ToolTip="Expand to set Layout, if collapsed, layout is not changed"
-                           ExpandDirection="Down"
-						 Collapsed="CollapsedDisable"
-						 Expanded="ExpandedEnable" >
+                        Header="ShareString (Layout)"
+						BorderThickness="1"
+                        HorizontalContentAlignment="Stretch"
+                        IsExpanded="True"
+						ToolTipService.ToolTip="Expand to set Layout, if collapsed, layout is not changed"
+                        ExpandDirection="Down"
+						Collapsed="CollapsedDisable"
+						Expanded="ExpandedEnable" >
 				<StackPanel Orientation="Vertical">
 					<TextBox x:Name="shareString" Header="ShareString" TextWrapping="Wrap" AcceptsReturn="False" IsSpellCheckEnabled="False" MinWidth="500" />
 					<Border Style="{StaticResource BorderReveal}">
@@ -107,10 +107,7 @@
 						 Text="{x:Bind views:SettingsPage.VRTRatio, Mode=TwoWay}"
 						 Header="V/R/T Ratio (if applicable)" />
 					</StackPanel>
-
-
 					<tk:WrapPanel x:Name="tagsPanel" x:FieldModifier="public">
-
 					</tk:WrapPanel>
 				</StackPanel>
 			</tk:Expander>

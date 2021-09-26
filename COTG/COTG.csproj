@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net5.0-windows10.0.20348.0</TargetFramework>
+    <TargetFramework>net6.0-windows10.0.20348.0</TargetFramework>
     <TargetPlatformMinVersion>10.0.18362.0</TargetPlatformMinVersion>
     <RootNamespace>COTG</RootNamespace>
     <Platforms>x64</Platforms>
@@ -27,12 +27,14 @@
   <ItemGroup>
     <EmbeddedResource Remove="AppPackages\**" />
     <EmbeddedResource Remove="BundleArtifacts\**" />
+    <EmbeddedResource Remove="Content\Art\Anim\**" />
     <EmbeddedResource Remove="Content\Art\Tiles\**" />
     <EmbeddedResource Remove="Content\Audio\**" />
     <EmbeddedResource Remove="Content\bin\**" />
     <EmbeddedResource Remove="Content\obj\**" />
     <None Remove="AppPackages\**" />
     <None Remove="BundleArtifacts\**" />
+    <None Remove="Content\Art\Anim\**" />
     <None Remove="Content\Art\Tiles\**" />
     <None Remove="Content\Audio\**" />
     <None Remove="Content\bin\**" />
@@ -71,8 +73,8 @@
     <PackageReference Include="Microsoft.Services.Store.Engagement" Version="10.1901.28001" />
     <PackageReference Include="Microsoft.Toolkit.HighPerformance" Version="7.1.0" />
     <PackageReference Include="MonoGame.Content.Builder.Task" Version="3.8.1.1941-develop" />
-    <PackageReference Include="Nito.AsyncEx.Coordination" Version="5.1.0" />
-    <PackageReference Include="Nito.AsyncEx.Tasks" Version="5.1.0" />
+    <PackageReference Include="Nito.AsyncEx.Coordination" Version="5.1.2" />
+    <PackageReference Include="Nito.AsyncEx.Tasks" Version="5.1.2" />
     <PackageReference Include="PInvoke.SHCore" Version="0.7.104" />
     <PackageReference Include="PlayFabAllSDK" Version="1.101.210913" />
     <PackageReference Include="SharpDX" Version="4.2.0" />
@@ -439,10 +441,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\QueueTab.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
+	  <Page Include="Views\QueueTab.xaml">
+		  <SubType>Designer</SubType>
+		  <Generator>MSBuild:Compile</Generator>
+	  </Page>
     <Page Include="Views\DonationTab.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -627,7 +629,7 @@
       <HintPath>..\ext\Cyotek.Drawing.BitmapFont.dll</HintPath>
     </Reference>
   <Reference Include="MonoGame.Framework">
-    <HintPath>..\ext\net5.0-windows10.0.19041.0\MonoGame.Framework.dll</HintPath>
+    <HintPath>..\ext\net6.0-windows10.0.20348.0\MonoGame.Framework.dll</HintPath>
   </Reference>
     </ItemGroup>
   <PropertyGroup>

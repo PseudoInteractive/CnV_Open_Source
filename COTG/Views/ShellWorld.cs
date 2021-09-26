@@ -978,7 +978,7 @@ namespace COTG.Views
 					if (!skipPan)
 					{
 						cBase = (City.build.CidToWorldV() - cameraC) * cameraZoom;
-						cameraC += 0.25f * (City.build.CidToWorldV() - cameraC); // nudge towards center
+						CameraC += 0.25f * (City.build.CidToWorldV() - cameraC); // nudge towards center
 					}
 				}
 			}
@@ -993,7 +993,7 @@ namespace COTG.Views
 				// when zooming in in city mode, constrain to city
 				var c0 = cBase / cameraZoom;
 				var c1 = cBase / newZoom;
-				cameraC += c0 - c1;
+				CameraC += c0 - c1;
 			}
 
 
@@ -1358,9 +1358,9 @@ namespace COTG.Views
 					var dr = gestureResult.delta;
 					{
 						dr *= 1.0f / cameraZoomLag;
-						cameraC += dr.ToV2();
+						CameraC += dr.ToV2();
 						// instant
-						cameraCLag = cameraC;
+						cameraCLag = CameraC;
 						if (IsCityView())
 						{
 							AutoSwitchCityView();

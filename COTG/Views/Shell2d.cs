@@ -44,6 +44,7 @@ namespace COTG.Views
 
 		public static int canvasBaseX = 420;
 		public static int canvasBaseY = 95;
+		public static int htmlShift = 0;
 		//public static int cachedTopOffset = 0;
 		//public static int cachedXOffset = 0;
 		static public SwapChainPanel canvas;
@@ -166,7 +167,7 @@ namespace COTG.Views
 			var note = 0;
 			if(ShellPage.canvas.IsHitTestVisible!= wantVisible)
 			{
-				_isHitTestVisible=wantVisible;
+			//	_isHitTestVisible=wantVisible;
 				ShellPage.canvas.IsHitTestVisible = wantVisible;
 				//if(!wantVisible)
 				//	JSClient.view.Focus(FocusState.Programmatic);
@@ -175,8 +176,8 @@ namespace COTG.Views
 			}
 
 			
-			if(note!=0)
-				Note.Show($"!Focu{note}: {wantVisible} f{canvas.IsHitTestVisible} o{isOverCanvas}");
+			//if(note!=0)
+			//	Note.Show($"!Focu{note}: {wantVisible} f{canvas.IsHitTestVisible} o{isOverCanvas}");
 
 
 			return Task.CompletedTask;

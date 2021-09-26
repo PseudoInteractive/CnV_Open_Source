@@ -398,7 +398,7 @@ namespace COTG
 							//					_graphics.ApplyChanges();
 							var pre = new PresentationParameters()
 							{
-								BackBufferFormat = _graphics.PreferredBackBufferFormat,
+								BackBufferFormat = SurfaceFormat.Bgra32,//_graphics.PreferredBackBufferFormat,
 								DepthStencilFormat = DepthFormat.None,
 								SwapChainPanel = canvas,
 								RenderTargetUsage = RenderTargetUsage.DiscardContents,
@@ -1011,16 +1011,40 @@ namespace COTG
 
 
 
+		public static int activeContinent;
+		public static Vector2 lightWC;
+		public static Vector2 CameraC{ 
+			get => cameraC;
+			set	{
+			cameraC = value;
+			var continent = World.XYToPackedContinent(value);
+			if(continent != activeContinent)
+			{
+				activeContinent=continent;
+				var span = new Span2i();
+				foreach(var city in City.myCities)
+				{
+					var cc = city.cid.ToWorldXY();
+					span += cc;
 
+				}
+				if(span.Any())
+				{
+					lightWC = span.MidV;
+				}
+
+			}
+		}
+		}
 		//public static Vector2 shadowOffset = new Vector2(6.0f, 6.0f);
 		//public static Vector2 halfShadowOffset = new Vector2(3.0f, 3.0f);
-		public static void SetCameraCNoLag(Vector2 c) => cameraCLag = cameraC = c;
+		public static void SetCameraCNoLag(Vector2 c) => cameraCLag = CameraC = c;
 //		static DateTimeOffset lastDrawTime;
 		public static bool tileSetsPending;
 		private const float smallRectSpan = 4;
 		public const float lightZ0 = 460f;
 		public const float lightZDay = 1500;
-		public static Vector2 cameraLightC;
+		//public static Vector2 cameraLightC;
 		static SamplerState fontFilter = new SamplerState()
 		{
 			Filter = TextureFilter.Linear,
@@ -1093,7 +1117,7 @@ namespace COTG
 				var gain = 1.0f - MathF.Exp(-4.0f * dt);
 				cameraCLag += (cameraC - cameraCLag) * gain;
 				cameraZoomLag += (cameraZoom - cameraZoomLag) * gain;
-				cameraLightC = (ShellPage.mousePositionC);
+				//cameraLightC = (ShellPage.mousePositionC);
 				//                cameraZoomLag += (cameraZoom
 				// smooth ease towards target
 				eventTimeOffsetLag += (ShellPage.instance.eventTimeOffset - eventTimeOffsetLag) * gain;
@@ -1262,13 +1286,11 @@ namespace COTG
 					}
 					else
 					{
-						var x = (((int)cameraCLag.X) / 100) * 100 + 50;
-						var y = (((int)cameraCLag.Y) / 100) * 100 + 50;
-						var cc = new Vector2(x, y).WToCamera().CameraToScreen();
+						var cc = lightWC.WToCamera().CameraToScreen();
 
 						lightPositionParameter.SetValue(new Microsoft.Xna.Framework.Vector3(cc.X, cc.Y, lightZDay * (pixelScale / 64.0f)));
 						lightGainsParameter.SetValue(new Microsoft.Xna.Framework.Vector4(0.25f, 1.20f, 0.4f, 1.1875f));
-						lightAmbientParameter.SetValue(new XVector4(.563f,.476f,.669f,1f) * 0.5f);
+						lightAmbientParameter.SetValue(new XVector4(.563f,.476f,.669f,1f) * 1.0f);
 						lightColorParameter.SetValue(new XVector4(1f,1.0f,1.0f,1f) * 1.25f);
 						lightSpecularParameter.SetValue(new XVector4(1.0f,1.0f,1.0f,1.0f) * 1.0f);
 					}
@@ -2924,7 +2946,7 @@ namespace COTG
 
 					}
 				done:
-					AGame.cameraC = newC;
+					AGame.CameraC = newC;
 					ShellPage.SetJSCamera();
 					if (cid != City.build && (!City.CanVisit(cid) || !Spot.CanChangeCity(cid)))
 						ShellPage.EnsureNotCityView();

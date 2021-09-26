@@ -215,7 +215,7 @@ namespace COTG.JSON
 		public static ConcurrentDictionary<int, CityBuildQueue> all = new ConcurrentDictionary<int, CityBuildQueue>();
 		void RemoveAt(int id)
 		{
-			QueueTab.RemoveOp(queue[id], cid);
+			QueueTab.RemoveOp(cid);
 			queue.RemoveAt(id);
 		}
 		public static SemaphoreSlim queueLock = new SemaphoreSlim(1);
@@ -454,19 +454,7 @@ namespace COTG.JSON
 											else
 											{
 
-												if (i.def.bid == City.bidCastle)
-												{
-													//	Log($"Castle  {city.nameAndRemarks}");
-													// TODO: check res
-													// cannot queue if there is no room, even if there is a demo in progress
-													if (counts.count >= counts.max || city.stone < 20 * 1000 || city.buildings[City.bspotTownHall].bl < 8)
-													{
-														Trace("Waiting for space or stone or level for castle");
-														// leave it in the queue
-														++offset;
-														continue;
-													}
-												}
+												
 
 												// is there a building in the way?
 												// wait for the demo
@@ -488,6 +476,19 @@ namespace COTG.JSON
 														++offset;
 													}
 													continue;
+												}
+												if(i.def.bid == City.bidCastle)
+												{
+													//	Log($"Castle  {city.nameAndRemarks}");
+													// TODO: check res
+													// cannot queue if there is no room, even if there is a demo in progress
+													if(counts.count >= counts.max || city.stone < 20 * 1000 || city.buildings[City.bspotTownHall].bl < 8)
+													{
+														Trace("Waiting for space or stone or level for castle");
+														// leave it in the queue
+														++offset;
+														continue;
+													}
 												}
 											}
 											// is building
@@ -800,6 +801,14 @@ namespace COTG.JSON
 
 
 		}
+		public static IEnumerable<BuildQueueItem> TryGetBuildQueue(int cid)
+		{
+			if(all.TryGetValue(cid,out var rv))
+			{
+				return rv.queue;
+			}
+			return Array.Empty<BuildQueueItem>();
+		}
 
 		public static async Task<CityBuildQueueLock> Get(int cid)
 		{
@@ -861,7 +870,6 @@ namespace COTG.JSON
 			queue.Add(op);
 			if (cid == City.build)
 				CityView.BuildingsOrQueueChanged();
-			QueueTab.AddOp(op, cid);
 		}
 
 		public void Dispose()
@@ -972,20 +980,10 @@ namespace COTG.JSON
 
 		}
 
-		public static void CancelBuildOp(int cid, in BuildQueueItem i)
+		public static void CancelBuildOp(int cid)
 		{
-			if (!CityBuildQueue.all.TryGetValue(cid, out var cq))
-				return;
-			var q = cq.queue;
-			for (int iter = 0; iter < q.count; ++iter)
-			{
-				if (q[iter] == i)
-				{
-					q.RemoveAt(iter);
-
-				}
-			}
-			QueueTab.RemoveOp(i, cid);
+			
+			QueueTab.RemoveOp( cid);
 			// if its empty it will be removed next iteration
 			CityView.BuildingsOrQueueChanged();
 		}

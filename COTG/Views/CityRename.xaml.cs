@@ -215,27 +215,32 @@ namespace COTG.Views
 						{
 							await ShareString.Touch().ShowNoLock(City.build);
 						}
-						
-						//if (SettingsPage.setHub)
-						//{
-						//	await HubSettings.Show(cid);
-						//}
-						var rv = true;
+
+					//if (SettingsPage.setHub)
+					//{
+					//	await HubSettings.Show(cid);
+					//}
+					await CitySettings.SetCitySettings(cid,
+						autoBuildOn: SettingsPage.autoBuildOn,
+						autoWalls: (SettingsPage.autoWallLevel == 10) ? true : null,
+						autoTowers: (SettingsPage.autoTowerLevel == 10) ? true : null);
+
+					var rv = true;
 						if (SettingsPage.autoBuildCabins && allowSplat)
 						{
 							// are there any cabins here already?
 							rv = await QueueTab.DoTheStuff(city, false, false);
 						}
-
-						await CitySettings.SetCitySettings(cid,
-							autoBuildOn: SettingsPage.autoBuildOn,
-							autoWalls: (SettingsPage.autoWallLevel == 10) ? true : null,
-							autoTowers: (SettingsPage.autoTowerLevel == 10) ? true : null							);
-
-					if (SettingsPage.clearRes && !city.leaveMe)
+						else
 					{
-						await city.ClearResUI();
+						if(SettingsPage.clearRes && !city.leaveMe)
+						{
+							await city.ClearResUI();
+						}
+
 					}
+
+
 					return rv;
 					}
 					return result != ContentDialogResult.Secondary;

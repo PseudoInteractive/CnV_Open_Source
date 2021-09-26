@@ -569,16 +569,16 @@ namespace COTG
 
         public static float DistanceToCid(this int a, int cid) => Distance(a.CidToWorld(), cid.CidToWorld());
 		public static double DistanceToCidD(this int a, int cid) => DistanceD(a.CidToWorld(), cid.CidToWorld());
-		public static bool CanReachByTrade(this int hub, int cid1)
+		public static (bool reachable, bool viaWater) CanReachByTrade(this int hub, int cid1)
 		{
 			if (hub.CidToContinent() == cid1.CidToContinent())
 			{
-				return (City.Get(hub).carts > 0);
+				return ((City.Get(hub).carts > 0),true);
 			}
 			if (!City.Get(cid1).isOnWater)
-				return false;
+				return (false,true);
 
-			return (City.Get(hub).ships > 0);
+			return ((City.Get(hub).ships > 0),false);
 		}
 		public static float DistanceToCid(this (int x, int y) a, int cid) => Distance(a, cid.CidToWorld());
 		public static double DistanceToCidD(this (int x, int y) a, int cid) => DistanceD(a, cid.CidToWorld());

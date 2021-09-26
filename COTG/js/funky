@@ -12068,6 +12068,10 @@ function outer() {
                 d8(1);
                 Y6F();
             }
+            setTimeout(() => {
+                document.body.style.background = "#000022FF";
+                document.getElementById("city_map").style.background = "#000022FF";
+            }, 500);
         });
         function L0V() {
             $(__s[2251])

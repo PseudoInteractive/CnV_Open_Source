@@ -4,7 +4,6 @@
       xmlns:App="using:COTG"
       xmlns:game="using:COTG.Game"
       xmlns:helpers="using:COTG.Helpers"
-      xmlns:converters="using:CommunityToolkit.WinUI.Converters"
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       xmlns:tk="using:CommunityToolkit.WinUI.UI.Controls"
@@ -34,7 +33,6 @@
                     Value="Stretch" />
 			</Style>
 		</Grid.Resources>
-
 		<Grid.RowDefinitions>
 			<RowDefinition Height="40" />
 			<RowDefinition />
@@ -48,7 +46,61 @@
 			<ColumnDefinition Width="2*" />
 			<ColumnDefinition Width="1*" />
 		</Grid.ColumnDefinitions>
+		<!-- Overlay grid for sizing -->
+		<Grid Grid.RowSpan="6" Grid.ColumnSpan="3" Canvas.ZIndex="33" >
+			
+			<Grid.RowDefinitions>
+				<RowDefinition Height="3*" />
+				<RowDefinition Height="1*" />
+				<RowDefinition Height="1*" />
+				<RowDefinition Height="1*" />
+				<RowDefinition Height="1*" />
+				<RowDefinition Height="1*" />
+				<RowDefinition Height="3*"/>
+			</Grid.RowDefinitions>
+			
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="30" />
+				<ColumnDefinition Width="*" />
+				<ColumnDefinition Width="30" />
+			</Grid.ColumnDefinitions>
+			
+			<Rectangle PointerEntered="LayoutEnter(0)" RadiusX="4" RadiusY="4"
+					   IsTabStop="True"
+					   Margin="0,4,0,4"
+					   IsHitTestVisible="True"
+					   StrokeThickness="2"
+					   Stroke="#80800040"	 Grid.Row="1" />
+			
+			<Rectangle PointerEntered="LayoutEnter(1)" RadiusX="8" RadiusY="8"
+					   Margin="0,4,0,4"
+					   IsHitTestVisible="True"
+					   IsTabStop="True" 
+					   StrokeThickness="2" Stroke="#80600050"	 Grid.Row="2" />
+			
+			<Rectangle PointerEntered="LayoutEnter(2)" RadiusX="4" RadiusY="8"
+					   IsTabStop="True"
+					   IsHitTestVisible="True"
+					   Margin="0,4,0,4"
+					   StrokeThickness="2"
+					   Stroke="#80400060" Grid.Row="3" />
+			
+			<Rectangle PointerEntered="LayoutEnter(3)"  IsTabStop="True"
+					   IsHitTestVisible="True"
+					   RadiusX="4" RadiusY="4"
+					   Margin="0,4,0,4"
+					   StrokeThickness="1"
+					   Stroke="#80200070"	 Grid.Row="4" />
 
+			<Rectangle PointerEntered="LayoutEnter(4)"
+					   StrokeThickness="3"
+					   RadiusX="4" RadiusY="4"
+					   Margin="0,4,0,4"
+					   IsTabStop="True"
+					   IsHitTestVisible="True"
+					   Stroke="#80000070"	 Grid.Row="5" />
+
+		</Grid>
 
 		<winui:WebView2 x:Name="webView" x:FieldModifier="public"
 						Grid.RowSpan="5"
@@ -61,11 +113,13 @@
 		<CommandBar Grid.ColumnSpan="2" TabFocusNavigation="Once" UseSystemFocusVisuals="True" x:Name="commandBar" x:FieldModifier="public"   >
 			<CommandBar.Content   >
 				<StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-					<ComboBox x:Name="windowLayout" SelectedIndex="0" SelectionChanged="windowLayout_SelectionChanged" VerticalAlignment="Center" Margin="4"
+					<ComboBox x:Name="windowLayout" SelectedIndex="2" SelectionChanged="windowLayout_SelectionChanged" VerticalAlignment="Center" Margin="4"
                            ToolTipService.ToolTip="Select a view layout" >
-						<x:String>Default</x:String>
-						<x:String>Visual</x:String>
-						<x:String>Numbers</x:String>
+						<x:String>L2</x:String>
+						<x:String>L1</x:String>
+						<x:String>C</x:String>
+						<x:String>R1</x:String>
+						<x:String>R2</x:String>
 					</ComboBox>
 
 					<ComboBox x:Name="cityBox" x:FieldModifier="public" 

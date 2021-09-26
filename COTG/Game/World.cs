@@ -209,7 +209,8 @@ namespace COTG.Game
 		{
 			return c.y * continentCountX + c.x;
 		}
-
+		public static int XYToPackedContinent(this Vector2 c) => XYToPackedContinent((c.X.RoundToInt(),c.Y.RoundToInt()));
+	
 		public const int spanSquared = span * span;
 		public const int outSize = 2400;
 		public const uint typeMask = 0xfu;

@@ -46,6 +46,7 @@ using CoreWebView = Microsoft.Web.WebView2.Core.CoreWebView2;
 using CommunityToolkit.WinUI.Helpers;
 using Microsoft.UI.Dispatching;
 
+
 namespace COTG
 {
 	/// <summary>
@@ -63,7 +64,8 @@ namespace COTG
 
 		//public static string userAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.114 Safari/537.36";
 		//public static string userAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.114 Safari/537.36 Edg/91.0.864.54";
-		public static string userAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/93.0.4577.82 Safari/537.36 Edg/93.0.961.52";
+//		public static string userAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/93.0.4577.82 Safari/537.36 Edg/93.0.961.52";
+		public static string userAgent;// = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.61 Safari/537.36 Edg/94.0.992.31";
 		//        public static JsonDocument ppdt;
 		public static JSClient instance = new JSClient();
 		public static WebView2 view;
@@ -931,6 +933,14 @@ namespace COTG
 			{
 				var req = args.Request;
 				var str = req.Uri.ToString();
+				if(userAgent.IsNullOrEmpty())
+				{
+					userAgent = args.Request.Headers.GetHeader("User-Agent" );
+					if(!userAgent.IsNullOrEmpty())
+					{
+						App.QueueOnUIThread( () => UserAgent.SetUserAgent(JSClient.userAgent) );
+					}
+				}
 				if (str.Contains("/jsfunctions/phaser.js"))
 				{
 					//var a = args.GetDeferral();
@@ -977,11 +987,8 @@ namespace COTG
 						//headers.AppendHeader("Content-Encoding","text/json");
 						cookies = args.Request.Headers.GetHeader("Cookie");
 					    
-						
-
 						args.Response = jsFunkyEtc;
 
-	
 						hasMainPageLoaded=true;
 						//	coreWebView.RemoveWebResourceRequestedFilter(,)
 						//					string host = args.Request.RequestUri.Host;
@@ -2386,7 +2393,7 @@ private static async void ShowCouncillorsMissingDialog()
 							   var cid = jso.GetAsInt("cid");
 							   City.build = City.focus = cid;
 							   NavStack.Push(cid);
-							   AGame.cameraC = cid.CidToWorldV();
+							   AGame.CameraC = cid.CidToWorldV();
 							   //Note.L("cid=" + cid.CidToString());
 							   //gameMSAtStart = jso.GetAsInt64("time");
 							   //launchTime = DateTimeOffset.UtcNow;

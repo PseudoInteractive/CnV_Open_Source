@@ -20,6 +20,7 @@ using static COTG.Views.CityBuild;
 using static COTG.Views.ShellPage;
 using static COTG.Views.QueueTab;
 using EnumsNET;
+using Microsoft.UI.Xaml;
 
 namespace COTG.Views
 {
@@ -67,8 +68,7 @@ namespace COTG.Views
 		//	var cur = groups.View.CurrentItem;
 		//	Log(cur?.ToString());
 		//}
-		public ObservableCollection<BuildItemView> cities { get; set; } = new ObservableCollection<BuildItemView>();
-
+		public DumbCollection<BuildItemView> cities {get;set;} = new();
 
 		public static void AddOp(BuildQueueItem item, int cid)
 		{
@@ -77,106 +77,67 @@ namespace COTG.Views
 				return;
 			}
 
-			App.DispatchOnUIThreadIdle(() =>
+	//		await App.DispatchOnUIThreadTask(() =>
 			{
 				BuildItemView view = null;
 				foreach (var c in instance.cities)
 				{
 					if (c.cid == cid)
 					{
-						view = c;
-						break;
+						return;
 					}
 				}
 				if (view == null)
 				{
-					view = BuildItemView.Rent().Ctor(cid);
-					instance.cities.Add(view);
+					instance.cities.Add(new BuildItemView(cid));
 				}
-				view.queue.Add(BuildItemView.Rent().Ctor(item, cid));
-			});
+				
+			}//);
 		}
 
 		public static void Clear(int cid)
 		{
-			App.DispatchOnUIThreadIdle(() =>
-			{
 				foreach (var c in instance.cities)
 				{
 					if (c.cid == cid)
 					{
-
 						instance.cities.Remove(c);
-						c.queue.Clear();
 						break;
 					}
 				}
-			});
-
+	
 
 		}
 
 
-		public static void RemoveOp(BuildQueueItem item, int cid)
+		public static void RemoveOp( int cid)
 		{
 			if (!IsVisible())
 			{
 				return;
 			}
-
-			App.DispatchOnUIThreadIdle(() =>
+			if(CityBuildQueue.TryGetBuildQueue(cid).Any() )
+				return;
+			foreach (var c in instance.cities)
 			{
-				BuildItemView view = null;
-				foreach (var c in instance.cities)
+				if (c.cid == cid)
 				{
-					if (c.cid == cid)
-					{
-						view = c;
-						break;
-					}
+					instance.cities.Remove(c);
+					break;
 				}
-				if (view == null)
-				{
-					return; // missing
-				}
-
-				int id = 0;
-				foreach (var q in view.queue)
-				{
-					if ((q.item.bspot == item.bspot) && // is this enough for a match?
-							(q.item.slvl == item.slvl))
-					{
-
-						view.queue.RemoveAt(id);
-						break;
-					}
-					++id;
-				}
-				if (!view.queue.Any())
-				{
-					instance.cities.Remove(view);
-				}
-			});
-
+			}
 		}
-		public static void RebuildAll(City city)
+		public static void RebuildAll()
 		{
-			var stage = city.UpdateBuildStage();
-			App.DispatchOnUIThreadLow(() =>
-			{
-				instance.cities.Clear();
-				instance.stage.Text = $"Stage: {city.buildStage.AsString()}";
+			var build = City.GetBuild();
+			//build.UpdateBuildStage();
+			//instance.stage.Text = $"Stage: {build.buildStage.AsString()}";
+			instance.cities.Clear();
 				foreach (var city in CityBuildQueue.all.Values)
 				{
-					var view = BuildItemView.Rent().Ctor(city.cid);
+					var view = new BuildItemView(city.cid);
 					instance.cities.Add(view);
-					foreach (var q in city.queue)
-					{
-						view.queue.Add(BuildItemView.Rent().Ctor(q, city.cid));
-					}
-
 				}
-			});
 		}
 		override public Task VisibilityChanged(bool visible, bool longTerm)
 		{
@@ -184,11 +145,11 @@ namespace COTG.Views
 
 			if (visible)
 			{
-				RebuildAll(City.GetBuild());
+				RebuildAll();
 			}
 			else
 			{
-				App.DispatchOnUIThreadLow(cities.Clear);
+				cities.Clear();
 			}
 			return base.VisibilityChanged(visible, longTerm: longTerm);
 
@@ -278,10 +239,9 @@ namespace COTG.Views
 			}
 			foreach (var op in removedOps)
 			{
-				BuildQueue.CancelBuildOp(op.cid, op.item); ;
+				BuildQueue.CancelBuildOp(op.cid); ;
 			}
 		}
-
 		private void zoom_ItemInvoked(TreeView sender, TreeViewItemInvokedEventArgs args)
 		{
 			var ob = args.InvokedItem;
@@ -818,6 +778,10 @@ namespace COTG.Views
 			}
 			city.NotifyChange();
 			BuildTab.GetBuildInfo();
+			if(SettingsPage.clearRes && !city.leaveMe)
+			{
+				await city.ClearResUI();
+			}
 			return true;
 
 		}
@@ -1104,54 +1068,42 @@ namespace COTG.Views
 	}
 	public class BuildItemView
 	{
-		static readonly List<BuildItemView> pool = new();
-		public const int size = 32;
 		public Microsoft.UI.Xaml.Media.ImageBrush brush { get; set; }
 		public int cid; // owner
-		public BuildQueueItem item;
-		public string building { get; set; }
 		public string text { get; set; }
-		public ObservableCollection<BuildItemView> queue { get; set; } = new ObservableCollection<BuildItemView>();
-		public bool isCity => item.isNop;
-		public bool isOp => !isCity;
+		public BuildItem[] queue => CityBuildQueue.TryGetBuildQueue(cid).Select( a => new BuildItem(a) ).ToArray();
+		public bool isCity => true;
+		public bool isOp => false;
 
-		public BuildItemView Ctor(BuildQueueItem _item, int _cid)
-		{
-			cid = _cid;
-			item = _item;
-			brush = CityBuild.BuildingBrush(item.bid, size / 128.0f);
-			var op = item.elvl == 0 ? "Destroy" : item.slvl == 0 ? "Build" : item.slvl > item.elvl ? "Downgrade" : "Upgrade";
-			text = op + BuildingDef.all[item.bid].Bn;
-			return this;
-		}
-		public BuildItemView Ctor(int _cid)
+		public BuildItemView(int _cid)
 		{
 			var city = City.GetOrAdd(_cid);
 			cid = _cid;
 			brush = CityBuild.BrushFromImage(city.icon);
 			text = City.GetOrAdd(_cid).nameAndRemarks;
-			item = BuildQueueItem.nop;
-			return this;
 		}
-		public void Return()
-		{
-			text = null;
-			brush = null;
-			cid = 0;
-			queue.Clear();
-			pool.Add(this);
-		}
-		public static BuildItemView Rent()
-		{
-			if (pool.Any())
-			{
-				int i = pool.Count - 1;
-				var rv = pool[i];
-				pool.RemoveAt(i);
-				return rv;
-			}
-			return new BuildItemView();
+	}
+	public class BuildItem
+	{
+		public const int size = 32;
+		public Microsoft.UI.Xaml.Media.ImageBrush brush { get; set; }
+		public string text { get; set; }
 
+		public BuildItem(BuildQueueItem item)
+		{
+			brush = CityBuild.BuildingBrush(item.bid,size / 128.0f);
+			var op = item.elvl == 0 ? "Destroy" : item.slvl == 0 ? "Build" : item.slvl > item.elvl ? "Downgrade" : "Upgrade";
+			text = op + BuildingDef.all[item.bid].Bn;
+		}
+	}
+	class BuildItemTemplateSelector:Microsoft.UI.Xaml.Controls.DataTemplateSelector
+	{
+		public DataTemplate buildItemViewTemplate { get; set; }
+		public DataTemplate buildItemTemplate { get; set; }
+
+		protected override DataTemplate SelectTemplateCore(object item)
+		{
+			return item is BuildItem ? buildItemTemplate : buildItemViewTemplate;
 		}
 	}
 
@@ -1490,6 +1442,7 @@ namespace COTG.Game
 		}
 		public  async Task ClearResUI()
 		{
+			var asked = false;
 			if(isLayoutCustom)
 			{
 				for (int r = 1; r <= City.citySpan; ++r)
@@ -1508,6 +1461,14 @@ namespace COTG.Game
 								
 								if (postQueueBuildings[City.XYToId(c)].isRes )
 								{
+									if(asked==false)
+									{
+										asked = true;
+										if(await App.DoYesNoBox("Clear Res?","Would you like to clear out the resources?") != 1)
+										{
+											return;
+										}
+									}
 									await Demolish(City.XYToId(c), false);
 								}
 							}
@@ -1574,5 +1535,5 @@ namespace COTG.Game
 	//		}
 	//	}
 	//}
-
+	
 }

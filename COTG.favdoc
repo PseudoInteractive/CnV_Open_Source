@@ -1,6 +1,18 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Favorites xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-  <folders />
+  <folders>
+    <Folder>
+      <name>rendering</name>
+      <folders />
+      <favorites>
+        <Favorite>
+          <name>lit.fxh</name>
+          <path>COTG\Content\Effects\lit.fxh</path>
+          <absolutePath>C:\Source\COTG\COTG\Content\Effects\lit.fxh</absolutePath>
+        </Favorite>
+      </favorites>
+    </Folder>
+  </folders>
   <favorites>
     <Favorite>
       <name>JSClient.cs</name>

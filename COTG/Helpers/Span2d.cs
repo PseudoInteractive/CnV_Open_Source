@@ -105,6 +105,12 @@ namespace COTG.Helpers
 			this.c0 = (c0x,c0y);
 			this.c1 = (c1x, c1y);
 		}
+		public void Clear()
+		{
+			c0 = (int.MaxValue,int.MaxValue);
+			c1 = (int.MinValue, int.MinValue);
+		}
+		public bool Any() => c1.X >= c0.X & c1.Y >= c0.Y;
 		public bool Contains( (int X, int Y) v)
 		{
 			return c0.X <= v.X & c0.Y <= v.Y &
@@ -128,5 +134,18 @@ namespace COTG.Helpers
 					c1.Y > s.c0.Y;
 
 		}
+		public static Span2i operator + (Span2i a, (int X, int Y) v)
+		{
+			return new Span2i(
+				a.c0.X.Min(v.X),
+				a.c0.Y.Min(v.Y),
+				a.c1.X.Max(v.X),
+				a.c1.Y.Max(v.Y));
+		}
+		public (int X, int Y) Mid => ((c0.X+c1.X)/2,(c0.Y+c1.Y)/2);
+		
+		public Vector2 MidV => new((c0.X+c1.X)*0.5f, (c0.Y+ c1.Y)*0.5f);
+		
+
 	}
 }

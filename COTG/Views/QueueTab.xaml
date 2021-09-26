@@ -15,7 +15,7 @@
                mc:Ignorable="d">
 	<views:UserTab.Resources>
 
-		<DataTemplate x:Key="BuildTabTemplate" x:DataType="views:BuildItemView">
+		<DataTemplate x:Key="BuildItemViewTemplate" x:DataType="views:BuildItemView">
 			<winui:TreeViewItem ItemsSource="{x:Bind queue}">
 				<StackPanel Orientation="Horizontal" Margin="4" MinWidth="200">
 					<Canvas Background="{x:Bind brush}" Width="32" Height="32" />
@@ -24,7 +24,19 @@
 			</winui:TreeViewItem>
 		</DataTemplate>
 
-
+		<DataTemplate x:Key="BuildItemTemplate" x:DataType="views:BuildItem">
+			<winui:TreeViewItem HasUnrealizedChildren="False" >
+				<StackPanel Orientation="Horizontal" Margin="4" MinWidth="200">
+					<Canvas Background="{x:Bind brush}" Width="32" Height="32"  />
+					<TextBlock Text="{x:Bind text}"
+							   	/>
+				</StackPanel>
+			</winui:TreeViewItem>
+		</DataTemplate>
+		
+		<views:BuildItemTemplateSelector x:Key="BuildItemTemplateSelector"
+        buildItemTemplate="{StaticResource BuildItemTemplate}"
+        buildItemViewTemplate="{StaticResource BuildItemViewTemplate}" />
 
 	</views:UserTab.Resources>
 
@@ -36,7 +48,6 @@
 			<RowDefinition Height="*"/>
 		</Grid.RowDefinitions>
 		<StackPanel Orientation="Horizontal" BorderThickness="2" >
-			<TextBlock x:Name="stage"  />
 			<Button Margin="4" Content="Do the stuff" Click="DoTheStuff" Style="{StaticResource ButtonSmall}" ToolTipService.ToolTip="Does all the things and all of the stuff" />
 			<Button Margin="4" Content="Move Stuff" Click="MoveStuff" Style="{StaticResource ButtonSmall}" ToolTipService.ToolTip="Moves existing buildings to their corresponding positions in the layout" />
 			<!--<Button Margin="4" Content="Do the places" Click="SplatAll" Style="{StaticResource ButtonSmall}" ToolTipService.ToolTip="Does all the things and all of the stuff in all of the places" />-->
@@ -44,7 +55,8 @@
 			<Button Margin="4" Content="Cancel Selected" Click="ClearSelected" Style="{StaticResource ButtonSmall}" />
 		</StackPanel>
 		<winui:TreeView Grid.Row="1" x:Name="zoom"  CanReorderItems="False"  SelectionMode="Multiple" BorderThickness="1" 
- TabNavigation="Once" CanDragItems="False" AllowDrop="False" ItemTemplate="{StaticResource BuildTabTemplate}" 
+						ItemTemplateSelector="{StaticResource BuildItemTemplateSelector}"
+ TabNavigation="Once" CanDragItems="False" AllowDrop="False" 
 						ItemsSource="{x:Bind cities}" ItemInvoked="zoom_ItemInvoked" 
 						>
 		</winui:TreeView>

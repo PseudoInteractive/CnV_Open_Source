@@ -192,13 +192,18 @@ namespace COTG.Views
 		{
 			instance = this;
 			InitializeComponent();
-			Initialize();
 			
 		}
-
-		private void Initialize()
+		public enum Layout
 		{
+			l2,
+			l1,
+			c,
+			r1,
+			r2,
 		}
+		public static Layout layout = Layout.c;
+		public static bool rightTabsVisible => layout>=Layout.c;
 
 		public static void SetHeaderText(string text)
 		{
@@ -208,7 +213,7 @@ namespace COTG.Views
 		}
 
 		public static bool isHitTestVisible => !ShellPage.isOverPopup && !forceAllowWebFocus&& canvasVisible;
-		public static bool _isHitTestVisible;
+		//public static bool _isHitTestVisible;
 		public static bool canvasVisible;
 		public static bool isFocused => isHitTestVisible && App.isForeground ;
 		private void OnLoaded(object sender, RoutedEventArgs e)
@@ -307,33 +312,7 @@ namespace COTG.Views
 								// grid.hor
 			/// we pass this as an argument to let the page know that it is a programmatic navigation
 			// Services.NavigationService.Navigate<Views.DefenseHistoryTab>(this); ChatTab.Ctor();
-			{
-				try
-				{
-					ChatTab.Ctor();
-					ChatTab.tabPage = CreateTabPage(chatTabFrame);
-
-
-				}
-				catch(Exception __ex)
-				{
-					Debug.LogEx(__ex);
-				}
-				UserTab.InitUserTabs();
-
-				{
-					var tabPage = CreateTabPage(shellFrame);
-					TabPage.secondaryTabs = CreateTabPage(spotFrame);
-					TabPage.mainTabs = tabPage;
-				//	MainPage.instance.ShowOrAdd( false);
-				//	MainPage.instance.ShowOrAdd(false);
-					// tabPage.AddTab(HeatTab.instance, false);
-				}
-				ChatTab.tabPage.AddChatTabs();
-			
-
-
-			};
+			TabPage.Initialize();
 
 			// refreshAccelerator.Invoked += (_, __) => view?.Refresh();
 			// testMenu.Items.Add(MenuAction(MainPage.ShowTipRaiding1,"TipRaiding1"));
@@ -384,10 +363,10 @@ namespace COTG.Views
 			//});
 		}
 
-		private void FocusManager_GotFocus(object sender,FocusManagerGotFocusEventArgs e)
-		{
-			Note.Show($"Focus!!: {e.NewFocusedElement}");
-		}
+		//private void FocusManager_GotFocus(object sender,FocusManagerGotFocusEventArgs e)
+		//{
+		//	Note.Show($"Focus!!: {e.NewFocusedElement}");
+		//}
 
 		//void GetPlacement()
 		//{
@@ -1264,37 +1243,53 @@ namespace COTG.Views
 			if (MainPage.instance != null)
 			{
 				var viewToggle = windowLayout.SelectedIndex;
-				SetLayout(viewToggle);
+				SetLayout( (Layout)viewToggle);
 			}
 		}
 
 //		public static Vector2 webViewScale = new(1,1);
 //		internal static bool webviewHasFocus2=true;
 
-		private  void SetLayout(int viewToggle)
+		private  void SetLayout(Layout viewToggle)
 		{
-			App.DispatchOnUIThreadIdle(async () =>
+			if(viewToggle == layout)
+				return;
+			layout = viewToggle;
+			UpdateHtmlOffsets();
+
+			App.DispatchOnUIThreadIdle( () =>
 			{
 				//			   UpdateCanvasMarginForWebview(webViewScale);
 				//scroll.ChangeView(null, null, 0.5f);
 				var raidInfoVisible = true;
 				switch (viewToggle)
 				{
-					case 0:
-						grid.ColumnDefinitions[1].Width = new GridLength(2, GridUnitType.Star);
-						grid.ColumnDefinitions[2].Width = new GridLength(1, GridUnitType.Star);
+					case Layout.l2:
+						grid.ColumnDefinitions[1].Width = new GridLength(1,GridUnitType.Star);
+						grid.ColumnDefinitions[2].Width = new GridLength(0,GridUnitType.Star);
+						// JSClient.view.Scale = new Vector3(1.0f, 1.0f, 1.0f);
+						break;
+					case Layout.l1:
+						grid.ColumnDefinitions[1].Width = new GridLength(1,GridUnitType.Star);
+						grid.ColumnDefinitions[2].Width = new GridLength(0,GridUnitType.Star);
 						// JSClient.view.Scale = new Vector3(1.0f, 1.0f, 1.0f);
 						break;
 
-					case 1:
+					case Layout.c:
 						// grid.ColumnDefinitions[0].Width = new GridLength(410*3/4, GridUnitType.Pixel);
 						grid.ColumnDefinitions[1].Width = new GridLength(2, GridUnitType.Star);
-						grid.ColumnDefinitions[2].Width = new GridLength(160);
+						grid.ColumnDefinitions[2].Width = new GridLength(1,GridUnitType.Star);
 						raidInfoVisible = false;
 						// JSClient.view.Scale = new Vector3(0.75f, 0.75f, 1.0f);
 						break;
 
-					case 2:
+					case Layout.r1:
+						// grid.ColumnDefinitions[0].Width = new GridLength(410*3/4, GridUnitType.Pixel);
+						grid.ColumnDefinitions[1].Width = new GridLength(2,GridUnitType.Star);
+						grid.ColumnDefinitions[2].Width = new GridLength(1,GridUnitType.Star);
+						raidInfoVisible = false;
+						break;
+					case Layout.r2:
 						// grid.ColumnDefinitions[0].Width = new GridLength(410 * 3 / 4, GridUnitType.Pixel);
 						grid.ColumnDefinitions[1].Width = new GridLength(1, GridUnitType.Star);
 						grid.ColumnDefinitions[2].Width = new GridLength(2, GridUnitType.Star);
@@ -1305,7 +1300,6 @@ namespace COTG.Views
 				MainPage.ToggleInfoBoxes(raidInfoVisible);
 				//   Task.Delay(200).ContinueWith((_) => City.gridCitySource.NotifyReset());
 				//UpdateWebViewScale();
-				UpdateHtmlOffsets();
 			});
 		}
 
@@ -1319,19 +1313,17 @@ namespace COTG.Views
 		}
 		public static Task UpdateHtmlOffsets()
 		{
-			var zoom = SettingsPage.webZoom;
-			var leftOffset = (popupLeftOffset*zoom).RoundToInt();
-			var topOffset = (popupTopOffset*zoom).RoundToInt();
 
-			
+			var zoom = SettingsPage.webZoom;
+
 			var canvasScaledX = (zoom * canvasBaseXUnscaled).RoundToInt();
 			var canvasScaledY = (zoom * canvasBaseYUnscaled).RoundToInt();
-			//var canvasScaledY = canvasTitleYOffset+ canvasYOffset;
+			htmlShift = layout switch { Layout.r1 or Layout.r2 or Layout.l1 => -canvasScaledX, _ => 0 };
 
-//			instance.grid.ColumnDefinitions[0].Width = new(canvasScaledX);
-//			instance.grid.RowDefinitions[0].Height = new(canvasYOffset);
-			leftOffset = (leftOffset-canvasScaledX).Max0();
-			topOffset = (topOffset-canvasScaledY).Max0();
+			var leftOffset = ((popupLeftOffset*zoom).RoundToInt()-canvasScaledX).Max0();
+			var topOffset = ((popupTopOffset*zoom).RoundToInt()-canvasScaledY).Max0();
+
+			// only need 1 to avoid collisions
 			if(leftOffset > topOffset)
 				leftOffset =0;
 			else
@@ -1340,8 +1332,7 @@ namespace COTG.Views
 			//		return;
 			if(canvas != null && instance.grid != null)
 			{
-
-				return App.DispatchOnUIThreadTask(async ()
+				return App.DispatchOnUIThreadTask( ()
 					=>
 				{
 					try
@@ -1351,12 +1342,13 @@ namespace COTG.Views
 							JSClient.view.ExecuteScriptAsync($"document.body.style.zoom={zoom};");
 						}
 
-						var _canvasBaseX = leftOffset + canvasScaledX;
-						var _canvasBaseY = canvasScaledY+topOffset;//.RoundToInt();
+						var _canvasBaseX = leftOffset + canvasScaledX + htmlShift;
+						var _canvasBaseY = topOffset +canvasScaledY;//.RoundToInt();
 						if(canvasBaseX != _canvasBaseX || canvasBaseY != _canvasBaseY)
 						{
 							canvasBaseX = _canvasBaseX;
 							canvasBaseY = _canvasBaseY;
+							instance.webView.Margin= new(htmlShift,0,0,0);
 							instance.grid.ColumnDefinitions[0].Width = new GridLength(canvasBaseX, GridUnitType.Pixel);
 						//	instance.grid.RowDefinitions[0].Height = new(canvasYOffset);
 							canvas.Margin = new Thickness(0,canvasBaseY, 0, 0);
@@ -1410,53 +1402,71 @@ namespace COTG.Views
 			flyout.ShowAt(chatGrid, e.GetPosition(chatGrid));
 		}
 
-//		private async void CookieClick(object sender, RoutedEventArgs e)
-//		{
-//			var content = new StackPanel();
-//			var text = new TextBox() { Header = "remember_me", PlaceholderText="01245..." };
-////			var text2 = new TextBox() { Header = "sec_session_id", PlaceholderText = "06..." };
-//			var clear  = new CheckBox() { Content = "Clear Cookie", IsChecked=false };
+		private PointerEventHandler LayoutEnter(object offset)
+		{
+			
+			void fn(object sender,PointerRoutedEventArgs e) {
+			
+				LayoutEnter2((Layout)offset);
+			}
+			
+			return  fn;
+	
+		}
 
-//			AAnalytics.Track("CookieClick");
-//			content.Children.Add(text);
-//	//		content.Children.Add(text2);
-//			content.Children.Add(clear);
+		private void LayoutEnter2(Layout layout)
+		{
+			SetLayout(layout);
 
-//			var dialog = new ContentDialog()
-//			{
-//				Title = "Cookie",
-//				Content = content,
-//				PrimaryButtonText = "Apply",
-//				CloseButtonText = "Cancel"
-//			};
-//			var rv = await dialog.ShowAsync();
-//			if (rv == ContentDialogResult.Primary)
-//			{
-//				if( clear.IsChecked.GetValueOrDefault())
-//				{
-//					JSClient.httpFilter.ClearAuthenticationCache();
-//					Microsft.UI.Xaml.WebView2.ClearTemporaryWebDataAsync();
-//					JSClient.ClearAllCookies();
-//				}
-//				else if(!text.Text.IsNullOrEmpty()) 
-//				{
-//					JSClient.SetCookie("remember_me", text.Text);
-//					//	JSClient.SetCookie("_ttw", "2ebd127595739638f691d800afb6d9a2cb44f03b");
-//					//	JSClient.SetCookie("CotG", "a%3A4%3A%7Bi%3A0%3Bs%3A5%3A%2239311%22%3Bi%3A1%3Bs%3A40%3A%220578a77365184184d96859fd54cb78925d962139%22%3Bi%3A2%3Bi%3A1626898500%3Bi%3A3%3Bi%3A0%3B%7D");
-//					//	_ttw = 062667a5a7767056ae099f43a2f6d4e24fd015fb; expires = Mon, 20 - Sep - 2021 19:44:58 GMT; Max - Age = 7776000; path =/; domain =.crownofthegods.com; secure; httponly
+		}
 
-//					//				WebView.ClearTemporaryWebDataAsync();
-//		//			JSClient.SetCookie("sec_session_id", text2.Text);
-//				}
-//			//	SettingsPage.secSessionId = text2.Text;
-//			//	SettingsPage.SaveAll();
+		//		private async void CookieClick(object sender, RoutedEventArgs e)
+		//		{
+		//			var content = new StackPanel();
+		//			var text = new TextBox() { Header = "remember_me", PlaceholderText="01245..." };
+		////			var text2 = new TextBox() { Header = "sec_session_id", PlaceholderText = "06..." };
+		//			var clear  = new CheckBox() { Content = "Clear Cookie", IsChecked=false };
+
+		//			AAnalytics.Track("CookieClick");
+		//			content.Children.Add(text);
+		//	//		content.Children.Add(text2);
+		//			content.Children.Add(clear);
+
+		//			var dialog = new ContentDialog()
+		//			{
+		//				Title = "Cookie",
+		//				Content = content,
+		//				PrimaryButtonText = "Apply",
+		//				CloseButtonText = "Cancel"
+		//			};
+		//			var rv = await dialog.ShowAsync();
+		//			if (rv == ContentDialogResult.Primary)
+		//			{
+		//				if( clear.IsChecked.GetValueOrDefault())
+		//				{
+		//					JSClient.httpFilter.ClearAuthenticationCache();
+		//					Microsft.UI.Xaml.WebView2.ClearTemporaryWebDataAsync();
+		//					JSClient.ClearAllCookies();
+		//				}
+		//				else if(!text.Text.IsNullOrEmpty()) 
+		//				{
+		//					JSClient.SetCookie("remember_me", text.Text);
+		//					//	JSClient.SetCookie("_ttw", "2ebd127595739638f691d800afb6d9a2cb44f03b");
+		//					//	JSClient.SetCookie("CotG", "a%3A4%3A%7Bi%3A0%3Bs%3A5%3A%2239311%22%3Bi%3A1%3Bs%3A40%3A%220578a77365184184d96859fd54cb78925d962139%22%3Bi%3A2%3Bi%3A1626898500%3Bi%3A3%3Bi%3A0%3B%7D");
+		//					//	_ttw = 062667a5a7767056ae099f43a2f6d4e24fd015fb; expires = Mon, 20 - Sep - 2021 19:44:58 GMT; Max - Age = 7776000; path =/; domain =.crownofthegods.com; secure; httponly
+
+		//					//				WebView.ClearTemporaryWebDataAsync();
+		//		//			JSClient.SetCookie("sec_session_id", text2.Text);
+		//				}
+		//			//	SettingsPage.secSessionId = text2.Text;
+		//			//	SettingsPage.SaveAll();
 
 
-//				await App.DoYesNoBox("Cookie set","Cookies", "Okay", null, "Okay");
-//				if(!clear.IsChecked.GetValueOrDefault())
-//					JSClient.view.Refresh();
-//			}
-//		}
+		//				await App.DoYesNoBox("Cookie set","Cookies", "Okay", null, "Okay");
+		//				if(!clear.IsChecked.GetValueOrDefault())
+		//					JSClient.view.Refresh();
+		//			}
+		//		}
 
 		private void FilterRightTapped(object sender, RightTappedRoutedEventArgs e)
 		{
