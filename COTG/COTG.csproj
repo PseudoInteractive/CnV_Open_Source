@@ -84,7 +84,6 @@
     <PackageReference Include="SharpDX.DXGI" Version="4.2.0" />
     <PackageReference Include="SharpDX.MediaFoundation" Version="4.2.0" />
     <PackageReference Include="SharpGen.Runtime.COM" Version="2.0.0-beta.10" />
-    <PackageReference Include="Standart.Hash.xxHash" Version="3.1.0" />
     <PackageReference Include="System.Text.Json" Version="6.0.0-rc.1.21451.13" />
     <PackageReference Include="Telerik.WinUI.Controls.Trial" Version="0.5.0" />
     <PackageReference Include="ZString" Version="2.4.2" />
@@ -155,6 +154,7 @@
     <Compile Include="Helpers\DebounceDispatcher.cs" />
     <Compile Include="Helpers\DiscordIds.cs" />
     <Compile Include="Helpers\FloatN.cs" />
+    <Compile Include="Helpers\Hash.cs" />
     <Compile Include="Helpers\HSLToRGB.cs" />
     <Compile Include="Helpers\NullableBool.cs" />
     <Compile Include="Helpers\Sort.cs" />

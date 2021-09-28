@@ -38,7 +38,7 @@ namespace COTG.Views
 		public static StorageFolder folder;
 		public static AttackTab instance;
 		
-        public static bool IsVisible() => instance.isVisible;
+        public static bool IsVisible() => instance.isFocused;
 
         public static DumbCollection<City> attacksUI = new ();
         public static DumbCollection<City> targetsUI = new ();

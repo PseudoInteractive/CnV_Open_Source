@@ -39,7 +39,7 @@ namespace COTG.Views
 		public event PropertyChangedEventHandler PropertyChanged;
 		public void OnPropertyChanged(string propertyName) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 
-		public static bool IsVisible() => instance.isVisible;
+		public static bool IsVisible() => instance.isFocused;
 
 
 		public QueueTab()

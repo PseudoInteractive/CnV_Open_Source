@@ -491,7 +491,7 @@ namespace COTG
 		}
 		internal static void Initialize(Microsoft.UI.Xaml.Controls.Grid panel,WebView2 _view)
 		{
-			LoadJsStrings();
+			
 
 
 			httpFilter = new HttpBaseProtocolFilter();
@@ -553,7 +553,7 @@ namespace COTG
 				//	//Opacity = 0.5,
 				
 				//};
-				LoadJsStrings();
+				
 
 				//	var env =await App.createWebEnvironmentTask;
 				//	env.NewBrowserVersionAvailable+=Env_NewBrowserVersionAvailable;
@@ -567,8 +567,8 @@ namespace COTG
 
 						return;
 					}
-				
-				coreWebView = view.CoreWebView2;
+					LoadJsStrings();
+					coreWebView = view.CoreWebView2;
 //					view.CharacterReceived +=View_CharacterReceived;
 					coreWebView.Settings.AreDevToolsEnabled=true;
 #if DEBUG

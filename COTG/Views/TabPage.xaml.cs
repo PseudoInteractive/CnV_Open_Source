@@ -16,6 +16,7 @@ using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Navigation;
 using static COTG.Debug;
 using SymbolIconSource = Microsoft.UI.Xaml.Controls.SymbolIconSource;
+using System.Linq;
 //using Microsoft.UI.Windowing;
 
 namespace COTG.Views
@@ -55,7 +56,7 @@ namespace COTG.Views
 		{
 			var grid = sender as RadDataGrid;
 			Assert(grid != null);
-			if(!isActive)
+			if(!isOpen)
 				return;
 
 			if(SpotTab.silenceSelectionChanges == 0)
@@ -87,35 +88,11 @@ namespace COTG.Views
 			}
 
 		}
-		public bool isVisible
-		{
-			get {
-				if(!_isVisible)
-					return false;
-				foreach(var i in GetTabPages())
-				{
-					if(ShellPage.rightTabsVisible ||object.ReferenceEquals(a,ChatTab.tabPage))
-						return true;
-				}
-				return false;
-			}
-			set {
-				if(_isVisible!=value)
-				{
-					var wasVisible = isVisible;
-					_isVisible=value;
-					if(isVisible != wasVisible)
-					{
-						VisibilityChanged(isVisible,false);
-					}
-				}
-			}
-		}
 		public virtual Task VisibilityChanged(bool visible,bool longTerm)
 		{
 			if(visible)
 			{
-				Assert(isVisible);
+				Assert(isFocused);
 			}
 			Log($"VisibilityChanged: {visible} {this}");
 			return Task.CompletedTask;
@@ -130,9 +107,9 @@ namespace COTG.Views
 		//	}
 		//}
 		// If this is not an xaml island, the newXamlRoot will be null
-		public virtual void XamlTreeChanged(TabPage newPage) { } // The tab was dragged somewhere else
-		public bool _isVisible;
-		public bool isActive; // if this is set, the tab exists on 1 tab page
+	//	public virtual void XamlTreeChanged(TabPage newPage) { } // The tab was dragged somewhere else
+		public bool isFocused; // if set, the tab is open/focused/visible.  There is one focused tab per page
+		public bool isOpen; // if this is set, the tab exists on 1 tab page
 		public bool hasAnnouncedActive; // true after active has been called at least once
 										//User pressed F5 or refresh button
 
@@ -143,20 +120,23 @@ namespace COTG.Views
 			if(refresh == null)
 				refresh = new(_Refresh);// { throttled = true };
 										//	ScrollViewer.SetIsVerticalScrollChainingEnabled(this,false);
-
+			this.Width = 500;
+			this.Height = 500;
 			//	ScrollViewer.SetVerticalScrollMode(this, ScrollMode.Auto); //DependencyObjectExtensions.FindDescendant<ScrollViewer>(this).AllowFocusOnInteraction= false;
 		}
 		public Task VisibilityMaybeChanged()
 		{
-			return VisibilityChanged(isVisible,longTerm: false);
+			return VisibilityChanged(isFocused,longTerm: false);
 
 		}
 		protected virtual async Task _Refresh()
 		{
-			if(isVisible && isActive)
+			if(isFocused && isOpen)
 			{
+				isFocused=false;
 				await VisibilityChanged(false,longTerm: false);  // close enough default behaviour
 
+				isFocused=true;
 				await VisibilityChanged(true,longTerm: false);  // close enough default behaviour
 			}
 		}
@@ -221,13 +201,13 @@ namespace COTG.Views
 
 		public void Show()
 		{
-			if(!isActive)
+			if(!isOpen)
 			{
 				ShowOrAdd(true);
 			}
 			else
 			{
-				if(!isVisible)
+				if(!isFocused)
 					TabPage.Show(this);
 				//    else
 				//      tab.Refresh();
@@ -236,14 +216,14 @@ namespace COTG.Views
 		}
 		public virtual void Close()
 		{
-			if(!isActive)
+			if(!isOpen)
 				return;
 			TabPage.Close(this);
 		}
 		public void ShowOrAdd(bool selectMe = true,bool onlyIfClosed = false)
 
 		{
-			if(onlyIfClosed && isActive)
+			if(onlyIfClosed && isOpen)
 				return;
 
 			// already here?
@@ -255,18 +235,10 @@ namespace COTG.Views
 				return;
 			}
 
-			var vi = new TabViewItem()
-			{
-				Header = Tag as string,
-				IconSource = TabPage.GetIconForTab(this),
-				Content = this
-			};
-			var page = defaultPage;
-			page.Add(vi);
-			if(selectMe)
-				page.Tabs.SelectedItem = vi;
+			defaultPage.Add(this,selectMe);
 		}
 
+		
 	}
 	public sealed partial class TabPage:Page
 	{
@@ -275,29 +247,50 @@ namespace COTG.Views
 		public static TabPage secondaryTabs;
 		const Window RootAppWindow = null;
 		static public TabPage[] tabPages;
+		static public UserTab[][] hiddenTabs;
 
+		static TabPage CreateTabView(Frame frame)
+		{
+			frame.Navigate(typeof(TabPage));
+			return frame.Content as TabPage;
+
+		}
 		public static void Initialize()
 		{
+		
+
 			try
 			{
 				ChatTab.Ctor();
 
-				mainTabs = CreateTabPage(ShellPage.shellFrame); ;
-				secondaryTabs = CreateTabPage(ShellPage.spotFrame);
-				ChatTab.tabPage = CreateTabPage(ShellPage.chatTabFrame);
+				mainTabs = CreateTabView(ShellPage.instance.shellTabs);
+				secondaryTabs = CreateTabView(ShellPage.instance.spotTabs);
+				ChatTab.tabPage = CreateTabView(ShellPage.instance.chatTabs);
 				tabPages = new[] { mainTabs,secondaryTabs,ChatTab.tabPage };
 
 				UserTab.InitUserTabs();
-				ChatTab.tabPage.AddChatTabs();
+				
 
 			}
 			catch(Exception __ex)
 			{
 				Debug.LogEx(__ex);
 			}
-
 		}
 
+		public void Add(UserTab me,bool selectMe)
+		{
+			me.isOpen = true;
+			var vi = new TabViewItem()
+			{
+				Header = me.Tag as string,
+				IconSource = TabPage.GetIconForTab(me),
+				Content = me
+			};
+			Tabs.TabItems.Add(vi );
+			if(selectMe)
+				this.Tabs.SelectedIndex= 0;
+		}
 		private const string DataIdentifier = "ChatTabItem";
 		public TabPage()
 		{
@@ -307,19 +300,63 @@ namespace COTG.Views
 			//		App.instance.Resources["TopCornerRadiusFilterConverter"] = new 
 			this.InitializeComponent();
 			//	IsTabStop = true;
-			TabFocusNavigation = KeyboardNavigationMode.Once;
+		//	TabFocusNavigation = KeyboardNavigationMode.Once;
 			//	AllowFocusOnInteraction = true;
 
 
 		}
 
 		// chat tab is never hidden
-		public bool visible => (ShellPage.rightTabsVisible || object.ReferenceEquals(this,ChatTab.tabPage));
-
+		public static bool IsBigEnoughToSee( FrameworkElement e) => e.ActualHeight > 10 && e.ActualWidth > 10;
+	//	public bool shouldBeVisible=> (ShellPage.rightTabsVisible || object.ReferenceEquals(this,ChatTab.tabPage));
 		public static void LayoutChanged()
 		{
-			// leave chat
+			var rightVisible = ShellPage.rightTabsVisible;
+			bool[] pagesVisible= {
+				rightVisible && IsBigEnoughToSee(mainTabs),
+				rightVisible&&IsBigEnoughToSee(secondaryTabs),
+				true || IsBigEnoughToSee(ChatTab.tabPage)			// leave chat for now
+				};
+			var pageCount = tabPages.Length;
+			if(hiddenTabs == null)
+				hiddenTabs = new UserTab[pageCount][];
+			
+			Assert(pageCount == pagesVisible.Length);
+			for(int pageId=0;pageId<pageCount;++pageId)
+			{
+				ref var hidden = ref hiddenTabs[pageId];
+					hiddenTabs[pageId] = Array.Empty<UserTab>();
 
+				var hiddenTab = hiddenTabs[pageId];
+				var page = tabPages[pageId];
+				var visibleNow = pagesVisible[pageId];
+				if(visibleNow == page.isVisible )
+				{
+					// leave it, maybe resize columns
+				}
+				else
+				{
+					page.isVisible = visibleNow;
+					if(visibleNow)
+					{
+						page.RemoveAllTabs();
+						var first= true;
+						foreach( var i in hiddenTabs[pageId])
+						{
+							page.Add(i,first);
+							first = false;
+						}
+						hiddenTabs[pageId] = null;
+					}
+					else
+					{
+						hiddenTabs[pageId] = page.Tabs.TabItems.Select(a => (a as TabViewItem).Content as UserTab).
+							OrderByDescending(a=>a.isFocused).ToArray();  //replace
+						page.RemoveAllTabs();
+					}
+
+				}
+			}
 		}
 
 		public static bool Show(UserTab tab)
@@ -329,7 +366,7 @@ namespace COTG.Views
 			{
 				foreach(TabViewItem ti in tabPage.Tabs.TabItems)
 				{
-					if(ti.Content == tab)
+					if(ti.Content.AsObject() == tab)
 					{
 						if(tabPage.Tabs.SelectedItem!=ti)
 							tabPage.Tabs.SelectedItem=(ti);
@@ -344,7 +381,6 @@ namespace COTG.Views
 			bool rv = false;
 			if(App.isShuttingDown)
 				return false;
-
 			foreach(var tabPage in tabPages)
 			{
 				foreach(TabViewItem ti in tabPage.Tabs.TabItems)
@@ -352,13 +388,15 @@ namespace COTG.Views
 					if(ti.Content == tab)
 					{
 						tabPage.RemoveTab(ti);
-						return true;
-
+						break;
 					}
 				}
 			}
+
 			return rv;
 		}
+
+		
 		public static (TabPage page, bool found) Get(UserTab tab)
 		{
 			bool rv = false;
@@ -374,67 +412,45 @@ namespace COTG.Views
 			}
 			return (mainTabs, false);
 		}
-		private void Tabs_TabItemsChanged(TabView sender,Windows.Foundation.Collections.IVectorChangedEventArgs args)
-		{
-			// If there are no more tabs, close the window.
-			if(sender.TabItems.Count == 0)
-			{
-				if(RootAppWindow != null)
-				{
-					Tabs.TabItemsChanged -= Tabs_TabItemsChanged;
-					//					RootAppWindow.CloseAsync();
+		//private void Tabs_TabItemsChanged(TabView sender,Windows.Foundation.Collections.IVectorChangedEventArgs args)
+		//{
+		//	// If there are no more Tabs, close the window.
+		//	if(sender.TabItems.Count == 0)
+		//	{
+		//		if(RootAppWindow != null)
+		//		{
+		//			//Tabs.TabItemsChanged -= Tabs_TabItemsChanged;
+		//			//					RootAppWindow.CloseAsync();
 
-				}
-				//    else
-				//    {
-				//        Window.Current.Close();
-				//    }
-			}
-		}
+		//		}
+		//		//    else
+		//		//    {
+		//		//        Window.Current.Close();
+		//		//    }
+		//	}
+		//}
 
-		protected override void OnNavigatedTo(NavigationEventArgs e)
+	
+		void RemoveAllTabs()
 		{
-			base.OnNavigatedTo(e);
-
-			SetupWindow(null);
-		}
-		void RemoveTabsOnClose()
-		{
-			Tabs.TabItemsChanged -= Tabs_TabItemsChanged;
 			if(App.isShuttingDown)
 				return;
 
 			var _tab = Tabs;
 			while(_tab.TabItems.Count > 0)
 			{
+				
 				RemoveTab(_tab.TabItems[0] as TabViewItem);
 			}
 		}
 
-		protected override void OnNavigatingFrom(NavigatingCancelEventArgs e)
-		{
-			base.OnNavigatingFrom(e);
-			if(RootAppWindow == null)
-			{
 
-				//            var coreTitleBar = CoreApplication.GetCurrentView().TitleBar;
-				//              coreTitleBar.LayoutMetricsChanged -= CoreTitleBar_LayoutMetricsChanged;
-
-			}
-			else
-			{
-				// Secondary
-				//  RootAppWindow.Frame.DragRegionVisuals.Remove(CustomDragRegion);
-			}
-			RemoveTabsOnClose();
-			Assert(Tabs.TabItems.Count==0);
-		}
 
 		bool AddAnyChatTab(bool selectIt)
 		{
 			foreach(var tab in ChatTab.all)
 			{
-				if(tab.isActive)
+				if(tab.isOpen)
 					continue;
 
 				tab.ShowOrAdd(selectIt);
@@ -468,6 +484,8 @@ namespace COTG.Views
 			{ "Heat", "\uF738" },
 			{ "PlayerChange", "\uE822" }
 		};
+		public bool isVisible=true;
+
 		public static Microsoft.UI.Xaml.Controls.IconSource GetIconForTab(UserTab tab)
 		{
 			if(tabSymbolIcons.TryGetValue(tab.Tag as string,out var symbol))
@@ -485,48 +503,7 @@ namespace COTG.Views
 			return new SymbolIcon() { Symbol=Symbol.Comment }; // whisper
 		}
 
-		void SetupWindow(Window window)
-		{
-			Tabs.TabItemsChanged -= Tabs_TabItemsChanged;
-
-			if(window == null)
-			{
-				// Main Window -- add some default items
-
-
-				Tabs.SelectedIndex = 0;
-
-				// Extend into the titlebar
-				// var coreTitleBar = CoreApplication.GetCurrentView().TitleBar;
-				//coreTitleBar.ExtendViewIntoTitleBar = true;
-
-				//                coreTitleBar.LayoutMetricsChanged += CoreTitleBar_LayoutMetricsChanged;
-
-				//var titleBar = ApplicationView.GetForCurrentView().TitleBar;
-				//titleBar.ButtonBackgroundColor = Windows.UI.Colors.Transparent;
-				//titleBar.ButtonInactiveBackgroundColor = Windows.UI.Colors.Transparent;
-
-				//Window.Current.SetTitleBar(CustomDragRegion);
-			}
-			else
-			{
-				//            // Secondary AppWindows --- keep track of the window
-				//            RootAppWindow = window;
-				//window.Closing+=Window_Closing; ;
-				//            // Extend into the titlebar
-				//            window.TitleBar.ExtendsContentIntoTitleBar = true;
-				//            window.TitleBar.ButtonBackgroundColor = Colors.Transparent;
-				//            window.TitleBar.ButtonInactiveBackgroundColor = Colors.Transparent;
-
-				//            // Due to a bug in AppWindow, we cannot follow the same pattern as CoreWindow when setting the min width.
-				//            // Instead, set a hardcoded number. 
-				//        //    CustomDragRegion.MinWidth = 188;
-
-				//            window.Frame.DragRegionVisuals.Add(CustomDragRegion);
-				//Tabs.TabItemsChanged += Tabs_TabItemsChanged;
-			}
-
-		}
+		
 
 		//private void Window_Closing(AppWindow sender,AppWindowClosingEventArgs args)
 		//{
@@ -547,7 +524,7 @@ namespace COTG.Views
 
 		//private void CoreTitleBar_LayoutMetricsChanged(CoreApplicationViewTitleBar sender, object args)
 		//{
-		//    // To ensure that the tabs in the titlebar are not occluded by shell
+		//    // To ensure that the Tabs in the titlebar are not occluded by shell
 		//    // content, we must ensure that we account for left and right overlays.
 		//    // In LTR layouts, the right inset includes the caption buttons and the
 		//    // drag region, which is flipped in RTL. 
@@ -570,22 +547,7 @@ namespace COTG.Views
 		//    CustomDragRegion.Height = ShellTitlebarInset.Height = sender.Height;
 		//}
 
-		public void Add(TabViewItem tab)
-		{
-			Tabs.TabItems.Add(tab);
-			var ut = tab.Content as UserTab;
-			if(ut != null)
-			{
-				//      Assert(!ut.isActive);
-				ut.isActive = true;
-				//   ut.XamlTreeChanged( (RootAppWindow != null) ? XamlRoot : null);
-			}
-			else
-			{
-				Assert(false);
-			}
-
-		}
+		
 
 		// Create a new Window once the Tab is dragged outside.
 		private async void Tabs_TabDroppedOutside(TabView sender,TabViewTabDroppedOutsideEventArgs args)
@@ -729,18 +691,18 @@ namespace COTG.Views
 			var menu = new MenuFlyout();
 			foreach(var tab in UserTab.userTabs)
 			{
-				if(!tab.isActive)
+				if(!tab.isOpen)
 					menu.Items.Add(AddTabMenuItem(tab));
 			}
 
 			foreach(var tab in ChatTab.all)
 			{
-				if(tab.isActive)
+				if(tab.isOpen)
 					continue;
 				menu.Items.Add(AddTabMenuItem(tab));
 			}
 			if(menu.Items.Count == 0)
-				menu.Items.Add(new MenuFlyoutItem() { Text = "All the tabs are open" });
+				menu.Items.Add(new MenuFlyoutItem() { Text = "All the Tabs are open" });
 			menu.CopyXamlRoomFrom(sender);
 
 			menu.ShowAt(_sender);
@@ -760,8 +722,8 @@ namespace COTG.Views
 			view.TabItems.Remove(tab);
 			if(itab != null)
 			{
-				itab._isVisible = false;
-				itab.isActive = false;
+				itab.isFocused = false;
+				itab.isOpen = false;
 				itab.VisibilityChanged(false,longTerm: true);
 				itab.Close();
 			}
@@ -787,9 +749,9 @@ namespace COTG.Views
 				var userControl = (tab as TabViewItem).Content as UserTab;
 				if(userControl != null)
 				{
-					if(userControl._isVisible)
+					if(userControl.isFocused)
 					{
-						userControl._isVisible = false;
+						userControl.isFocused = false;
 						await userControl.VisibilityChanged(false,longTerm: false);
 					}
 				}
@@ -799,12 +761,11 @@ namespace COTG.Views
 				var userControl = (tab as TabViewItem).Content as UserTab;
 				if(userControl != null)
 				{
-					if(!userControl._isVisible)
+					if(!userControl.isFocused)
 					{
-						if(ShellPage.rightTabsVisible || !object.ReferenceEquals(ChatTab.tabPage))
 						{
-							userControl._isVisible = true;
-							userControl.VisibilityMaybeChanged();
+							userControl.isFocused = true;
+							userControl.VisibilityChanged(true,false);
 						}
 					}
 				}

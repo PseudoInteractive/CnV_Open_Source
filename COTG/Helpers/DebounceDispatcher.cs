@@ -7,6 +7,9 @@ using System.Threading.Tasks;
 using static COTG.Debug;
 
 using Windows.UI.Core;
+using System.Collections.Concurrent;
+using System.Runtime.CompilerServices;
+using Microsoft.UI.Dispatching;
 
 namespace COTG
 {
@@ -112,6 +115,40 @@ namespace COTG
 			   });
 
 			}
+		static ConcurrentDictionary<ulong,CancellationTokenSource> _tokens = new ();
+		public static void Q(DispatcherQueueHandler action,int ms=200,
+			bool runOnUIThread=false,
+			[CallerFilePath] string uniqueKey = "",
+			[CallerLineNumber] int uniqueNumber = 0)
 
+		{
+			var key = uniqueKey.XxHash() + (ulong)uniqueNumber;
+
+
+			var token = _tokens.AddOrUpdate(key,
+				(key) => //key not found - create new
+				{
+					return new CancellationTokenSource();
+				},
+				(key,existingToken) => //key found - cancel task and recreate
+				{
+					existingToken.Cancel(); //cancel previous
+					return new CancellationTokenSource();
+				}
+			);
+
+			Task.Delay(ms,token.Token).ContinueWith(task =>
+			{
+				if(!task.IsCanceled)
+				{
+					_tokens.TryRemove(key,out _);
+					if(runOnUIThread)
+						App.DispatchOnUIThread(action);
+					else
+						action();
+				}
+			},token.Token).ConfigureAwait(false);
+		}
 	}
+	
 }

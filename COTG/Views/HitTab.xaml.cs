@@ -29,7 +29,7 @@ namespace COTG.Views
         public static HitTab instance;
 		public override TabPage defaultPage => TabPage.secondaryTabs;
 
-		public static bool IsVisible() => instance.isVisible;
+		public static bool IsVisible() => instance.isFocused;
         public Army[] history { get; set; } = Army.empty;
         public void SetHistory(Army[] _history)
         {

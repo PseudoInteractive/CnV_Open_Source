@@ -135,7 +135,7 @@ namespace COTG.Views
         }
 
 
-		public static bool IsVisible() => instance.isVisible;
+		public static bool IsVisible() => instance.isFocused;
 
 		static Debounce selChanged = new Debounce(SelChanged) { runOnUiThead = true };
 
@@ -148,7 +148,7 @@ namespace COTG.Views
 				if (SettingsPage.fetchFullHistory)
 				{
 					var tab = HitTab.instance;
-					if (!instance.isVisible)
+					if (!instance.isFocused)
 					{
 						tab.ShowOrAdd(true, onlyIfClosed: true);
 
@@ -165,7 +165,7 @@ namespace COTG.Views
 
         private void defenderGrid_SelectionChanged(object sender, DataGridSelectionChangedEventArgs e)
 		{
-			if (!isActive)
+			if (!isOpen)
 				return;
 
 			var sel = attackerGrid.SelectedItem as Spot;

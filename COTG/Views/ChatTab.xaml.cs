@@ -155,7 +155,7 @@ namespace COTG.Views
 			try
 			{
 
-				if (!isActive)
+				if (!isOpen)
 				{
 					ShowOrAdd(true, false);
 				}
@@ -239,7 +239,7 @@ namespace COTG.Views
 		public static void L(string s)
 		{
 
-			if (debug == null || !debug.isActive)
+			if (debug == null || !debug.isOpen)
 				return;
 			//              await _logSemaphore.WaitAsync();
 			// try

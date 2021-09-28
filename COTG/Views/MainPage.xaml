@@ -13,10 +13,10 @@
 			  xmlns:views="using:COTG.Views"
 			  mc:Ignorable="d"
 			  Tag="Raid"
-			 
+			
 			  FontFamily="Tw Cen MT Condensed">
 
-	<Grid x:Name="cityBaseGrid" >
+	<Grid x:Name="cityBaseGrid"  >
 		
 		<Grid.RowDefinitions 
 						>

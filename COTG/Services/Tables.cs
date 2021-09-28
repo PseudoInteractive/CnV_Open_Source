@@ -8,7 +8,6 @@ using Azure;
 using Azure.Data.Tables;
 using Azure.Data.Tables.Models;
 using System.Globalization;
-using Standart.Hash.xxHash;
 using static COTG.Debug;
 using COTG.Game;
 using System.Runtime.InteropServices;
@@ -178,8 +177,7 @@ namespace COTG.Services
 		}
 		public static ulong Hash64(this string a)
 		{
-			var span = MemoryMarshal.AsBytes(a.AsSpan());
-			return xxHash64.ComputeHash(span, span.Length);
+			return a.XxHash();
 		}
 		static public async Task<bool> TryAddChatMessage(string message)
 		{

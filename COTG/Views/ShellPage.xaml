@@ -294,8 +294,8 @@
 				<RowDefinition Height="3*"/>
 				<RowDefinition Height="*"/>
 			</Grid.RowDefinitions>
-			<Frame x:Name="shellFrame" TabFocusNavigation="Once" IsNavigationStackEnabled="False"  x:FieldModifier="public" />
-			<Frame x:Name="spotFrame" TabFocusNavigation="Once" Grid.Row="1" IsNavigationStackEnabled="False" />
+			<Frame x:Name="shellTabs"  TabFocusNavigation="Once" IsNavigationStackEnabled="False" x:FieldModifier="public" />
+			<Frame x:Name="spotTabs" TabFocusNavigation="Once" Grid.Row="1" IsNavigationStackEnabled="False" x:FieldModifier="public" />
 			<tk:GridSplitter
 				IsTabStop="True"
 				CursorBehavior="ChangeOnSplitterHover"
@@ -321,26 +321,8 @@
 				<ColumnDefinition />
 				<ColumnDefinition />
 			</Grid.ColumnDefinitions>
-			<Frame x:Name="chatTabFrame" x:FieldModifier="public" Grid.Column ="1" Grid.Row="1" IsNavigationStackEnabled="False" Margin="12,12,16,0" TabFocusNavigation="Once" >
-				<!--<Frame.Resources>
-					<winui:TeachingTip x:Key="ChatTip0"
-                                Title="Chat Window"
-                                   IsLightDismissEnabled="True"
-								
-									   Subtitle="Drag up to view chat"></winui:TeachingTip>
-					<winui:TeachingTip x:Key="ChatTip1"
-                                   IsLightDismissEnabled="True"
-                                Title="Translate Incoming"
-                               
-                                Subtitle="Right click on a message and select a language to translate"></winui:TeachingTip>
-					<winui:TeachingTip x:Key="ChatTip2"
-                                Title="Translate Outgoing"
-                                   IsLightDismissEnabled="True"
-                              
-                                Subtitle="Click on the language icon to translate outgoing. You can repeat multi times for more languages"></winui:TeachingTip>
-				</Frame.Resources>-->
-			</Frame>
-			 <!--Chat Width resizer--> 
+			<Frame x:Name="chatTabs" x:FieldModifier="public" Grid.Column ="1" Grid.Row="1"  Margin="12,12,16,0" IsNavigationStackEnabled="False" TabFocusNavigation="Once" />
+			<!--Chat Width resizer--> 
 			<tk:GridSplitter
                         Background="{x:Null}"
                     Grid.Row="1"

@@ -362,11 +362,11 @@ namespace COTG.Views
 		//} // The tab was dragged somewhere else
 
 
-		public static bool IsVisible() => instance.isVisible;
+		public static bool IsVisible() => instance.isFocused;
 
 		private void SelectionChanged(object sender, DataGridSelectionChangedEventArgs e)
 		{
-			if (!isActive)
+			if (!isOpen)
 				return;
 
 			if (SpotTab.silenceSelectionChanges == 0)

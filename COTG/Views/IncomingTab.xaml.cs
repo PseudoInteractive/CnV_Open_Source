@@ -137,7 +137,7 @@ namespace COTG.Views
 		{
 			get
 			{
-				if (!instance.isVisible)
+				if (!instance.isFocused)
 					return null;
 				var items =  instance.defenderGrid.SelectedItems;
 				if (items.Count == 1)
@@ -217,13 +217,13 @@ namespace COTG.Views
 			return base.VisibilityChanged(visible, longTerm: longTerm);
 
         }
-        public static bool IsVisible() => instance.isVisible;
+        public static bool IsVisible() => instance.isFocused;
 
 
 
 		private void defenderGrid_SelectionChanged(object sender, DataGridSelectionChangedEventArgs e)
         {
-			if (!isActive)
+			if (!isOpen)
 				return;
 			if (SpotTab.silenceSelectionChanges == 0)
 			{
@@ -239,7 +239,7 @@ namespace COTG.Views
 						if (SettingsPage.fetchFullHistory)
 						{
 							var tab = DefenseHistoryTab.instance;
-							if (!tab.isVisible)
+							if (!tab.isFocused)
 							{
 								tab.ShowOrAdd(true, onlyIfClosed:true);
 

@@ -23,6 +23,9 @@ namespace COTG
 
 	public static partial class AUtil
 	{
+		
+		public static object AsObject(this object a) => a;
+		
 		public const string emptyJson = "{}";
 		public const string defaultTimeSpanFormat = "h':'mm':'ss";
 		public const string defaultTimeFormat = "HH':'mm':'ss";

@@ -46,7 +46,7 @@ namespace COTG.Views
 	
 		}
 
-		public static bool IsVisible() => instance.isVisible;
+		public static bool IsVisible() => instance.isFocused;
         public event PropertyChangedEventHandler PropertyChanged;
         public void OnPropertyChanged(string propertyName) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 
@@ -100,18 +100,14 @@ namespace COTG.Views
 
         }
 
-        public override void XamlTreeChanged(TabPage newPage)
-        {
-            base.XamlTreeChanged(newPage);
-        }
-
+        
    
 
      
 
         private void donationGrid_SelectionChanged(object sender, DataGridSelectionChangedEventArgs e)
         {
-			if (!isActive)
+			if (!isOpen)
 				return;
 
 			var it = e.AddedItems.FirstOrDefault();

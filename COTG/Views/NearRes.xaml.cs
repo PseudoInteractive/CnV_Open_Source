@@ -34,7 +34,7 @@ namespace COTG.Views
 	public sealed partial class NearRes : UserTab, INotifyPropertyChanged
 	{
 		public static NearRes instance;
-		public static bool IsVisible() => instance.isVisible;
+		public static bool IsVisible() => instance.isFocused;
 		bool _viaWater;
 		public bool viaWater { get =>_viaWater;
 			set {
@@ -382,10 +382,10 @@ namespace COTG.Views
 
 		private void supportGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
 		{
-			if (!isActive)
+			if (!isOpen)
 				return;
 
-			if (isVisible)
+			if (isFocused)
 				RefreshSupportByRes();
 		}
 

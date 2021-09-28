@@ -20,7 +20,7 @@ namespace COTG.Views
 	public sealed partial class PlannerTab : UserTab
 	{
 		public static PlannerTab instance;
-		public static bool IsVisible() => instance.isVisible;
+		public static bool IsVisible() => instance.isFocused;
 
 		public  override async Task VisibilityChanged(bool visible, bool longTerm)
 		{

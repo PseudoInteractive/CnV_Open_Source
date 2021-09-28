@@ -51,7 +51,7 @@ namespace COTG.Views
 		//private static bool _isLoggedIn;
 		//private static bool _isBusy;
 		public static float renderScale=1.0f;
-		public static float webZoom = 0.75f;
+		public static float webZoom = 0.875f;
 		public static float HtmlZoom
 		{
 			get => webZoom;

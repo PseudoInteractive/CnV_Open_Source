@@ -335,14 +335,15 @@ namespace COTG.Views
 			AGame.Create(canvas);
 			typeof(Telerik.UI.Xaml.Controls.RadDataForm).Assembly.GetType("Telerik.UI.Xaml.Controls.TelerikLicense").GetField("messageDisplayed",BindingFlags.NonPublic|BindingFlags.Static).SetValue(null,true,BindingFlags.Static|BindingFlags.NonPublic,null,null);
 			
-			Task.Delay(500).ContinueWith((_) => App.DispatchOnUIThreadIdle(() =>
+			Task.Delay(4500).ContinueWith((_) => App.DispatchOnUIThreadIdle(() =>
 			{
 		//		ShellPage.SetupCoreInput();
 				var sz = canvas.ActualSize;
 				AGame.SetClientSpan(sz.X, sz.Y);
 				//				SetupCoreInput();
-				MainPage.instance.ShowOrAdd(true);
-				SpotTab.instance.ShowOrAdd(true);
+				//MainPage.instance.ShowOrAdd(true);
+				//SpotTab.instance.ShowOrAdd(true);
+				ChatTab.tabPage.AddChatTabs();
 				//	SetWebViewHasFocus(true);
 				//ShellPage.canvas.IsHitTestVisible = false;
 				//ShellPage.canvas.Visibility = Visibility.Collapsed;
@@ -352,7 +353,7 @@ namespace COTG.Views
 				//{
 				//	App.DoYesNoBox("More than one window is open", "If this is intentional, please ignore, if not, close some (they may already be closing) or restart your computer" );
 				//}
-			//	App.window.Content.XamlRoot.Content.GetVisualInternal
+				//	App.window.Content.XamlRoot.Content.GetVisualInternal
 
 
 			}));
@@ -480,11 +481,7 @@ namespace COTG.Views
 
 		//}
 
-		private TabPage CreateTabPage(Frame frame)
-		{
-			frame.Navigate(typeof(TabPage));
-			return frame.Content as TabPage;
-		}
+		
 
 		// private void OnLoggedIn(object sender, EventArgs e) { IsLoggedIn = true; IsAuthorized =
 		// true;// IsLoggedIn && IdentityService.IsAuthorized(); IsBusy = false; }
@@ -640,7 +637,7 @@ namespace COTG.Views
 			City.UpdateSenatorInfo();
 			foreach (var tab in UserTab.userTabs)
 			{
-				if(tab.isVisible)
+				if(tab.isFocused)
 					tab.refresh.Go();
 			}
 			JSClient.CityRefresh();
@@ -1250,15 +1247,16 @@ namespace COTG.Views
 //		public static Vector2 webViewScale = new(1,1);
 //		internal static bool webviewHasFocus2=true;
 
-		private  void SetLayout(Layout viewToggle)
+		private  async void SetLayout(Layout viewToggle)
 		{
 			if(viewToggle == layout)
 				return;
 			layout = viewToggle;
-			UpdateHtmlOffsets();
-
+			
+			
 			App.DispatchOnUIThreadIdle( () =>
 			{
+				UpdateHtmlOffsets();
 				//			   UpdateCanvasMarginForWebview(webViewScale);
 				//scroll.ChangeView(null, null, 0.5f);
 				var raidInfoVisible = true;
@@ -1297,21 +1295,27 @@ namespace COTG.Views
 						break;
 				}
 
-				MainPage.ToggleInfoBoxes(raidInfoVisible);
+				//MainPage.ToggleInfoBoxes(raidInfoVisible);
 				//   Task.Delay(200).ContinueWith((_) => City.gridCitySource.NotifyReset());
 				//UpdateWebViewScale();
 			});
 		}
+//		static Debounce layoutChanged = new(TabPage.LayoutChanged){ runOnUiThead = true};
 
 		static int popupLeftOffset, popupTopOffset;
 
-		public static Task UpdateWebViewOffsets(int leftOffset, int topOffset)
+		public static void UpdateWebViewOffsets(int leftOffset, int topOffset)
 		{
+			App.DispatchOnUIThread( ()=>
+			{
 			popupLeftOffset  = leftOffset;
 			popupTopOffset = topOffset;
-			return UpdateHtmlOffsets();
+
+				UpdateHtmlOffsets();
+			});
+
 		}
-		public static Task UpdateHtmlOffsets()
+		public static void UpdateHtmlOffsets()
 		{
 
 			var zoom = SettingsPage.webZoom;
@@ -1332,8 +1336,7 @@ namespace COTG.Views
 			//		return;
 			if(canvas != null && instance.grid != null)
 			{
-				return App.DispatchOnUIThreadTask( ()
-					=>
+				//				return App.DispatchOnUIThreadTask( ()	=>
 				{
 					try
 					{
@@ -1349,19 +1352,19 @@ namespace COTG.Views
 							canvasBaseX = _canvasBaseX;
 							canvasBaseY = _canvasBaseY;
 							instance.webView.Margin= new(htmlShift,0,0,0);
-							instance.grid.ColumnDefinitions[0].Width = new GridLength(canvasBaseX, GridUnitType.Pixel);
-						//	instance.grid.RowDefinitions[0].Height = new(canvasYOffset);
-							canvas.Margin = new Thickness(0,canvasBaseY, 0, 0);
+							instance.grid.ColumnDefinitions[0].Width = new GridLength(canvasBaseX,GridUnitType.Pixel);
+							//	instance.grid.RowDefinitions[0].Height = new(canvasYOffset);
+							canvas.Margin = new Thickness(0,canvasBaseY,0,0);
 						}
-						
+
 					}
-					catch (Exception ex)
+					catch(Exception ex)
 					{
 						LogEx(ex);
 					}
-				});
+				}
 			}
-			return Task.CompletedTask;
+			Debounce.Q( TabPage.LayoutChanged,200,true );
 		}
 
 		private void webFocus_Click(object sender, RoutedEventArgs e)

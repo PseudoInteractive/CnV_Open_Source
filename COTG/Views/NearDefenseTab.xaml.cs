@@ -31,7 +31,7 @@ namespace COTG.Views
     public sealed partial class NearDefenseTab : UserTab, INotifyPropertyChanged
 	{
         public static NearDefenseTab instance;
-        public static bool IsVisible() => instance.isVisible;
+        public static bool IsVisible() => instance.isFocused;
         public bool waitReturn { get; set; }
 		public bool sendViaWater { get; set; }
 
@@ -255,7 +255,7 @@ namespace COTG.Views
 
         private void supportGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-			if(isVisible)
+			if(isFocused)
 	            RefreshSupportByType();
         }
         public void RefreshSupportByType()

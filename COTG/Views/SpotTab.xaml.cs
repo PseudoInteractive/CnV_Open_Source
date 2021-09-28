@@ -52,7 +52,7 @@ namespace COTG.Views
 			selectedGrid.ProcessTooltips();
 			spotGrids.Add(selectedGrid);
 		}
-        public static bool IsVisible() => instance.isVisible;
+        public static bool IsVisible() => instance.isFocused;
 
         public static int silenceSelectionChanges;
 

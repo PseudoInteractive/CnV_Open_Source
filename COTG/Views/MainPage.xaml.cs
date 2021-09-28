@@ -302,7 +302,7 @@ namespace COTG.Views
         //} // The tab was dragged somewhere else
 
 
-        public static bool IsVisible() => instance.isVisible;
+        public static bool IsVisible() => instance.isFocused;
 
 		static string[] raidingTips =
 		{

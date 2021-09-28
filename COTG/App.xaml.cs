@@ -95,16 +95,25 @@ namespace COTG
 			});
 			AppCenter.LogLevel = System.Diagnostics.Debugger.IsAttached ? Microsoft.AppCenter.LogLevel.Warn : Microsoft.AppCenter.LogLevel.Error;
 			AppCenter.Start("0b4c4039-3680-41bf-b7d7-685eb68e21d2",
-			   typeof(Analytics), typeof(Crashes));
-			await Task.WhenAll(  Crashes.SetEnabledAsync(true),
+			   typeof(Analytics)
+#if CRASHES
+			   , typeof(Crashes)
+#endif
+			   );
+			await Task.WhenAll(
+#if CRASHES
+					Crashes.SetEnabledAsync(true),
+#endif
 								Analytics.SetEnabledAsync(true) );
 			AAnalytics.initialized=true;
 
+#if CRASHES
 			bool didAppCrash = await Crashes.HasCrashedInLastSessionAsync();
 			if (didAppCrash)
 			{
 				ErrorReport crashReport = await Crashes.GetLastSessionCrashReportAsync();
 			}
+#endif
 		}
 		public App()
 		{
@@ -130,7 +139,7 @@ namespace COTG
 			instance = this;
 
 			UnhandledException += OnAppUnhandledException;
-
+			TaskScheduler.UnobservedTaskException+=TaskScheduler_UnobservedTaskException;
 			FocusVisualKind = FocusVisualKind.Reveal;
 			
 
@@ -145,9 +154,15 @@ namespace COTG
 
 		}
 
-//		public static Windows.Foundation.IAsyncOperation<CoreWebView2Environment> createWebEnvironmentTask;
+		private void TaskScheduler_UnobservedTaskException(object sender,UnobservedTaskExceptionEventArgs e)
+		{
+			LogEx(e.Exception);
+			e.SetObserved();
+		}
 
-		
+		//		public static Windows.Foundation.IAsyncOperation<CoreWebView2Environment> createWebEnvironmentTask;
+
+
 
 
 		private static async Task SwtichToBackground()
@@ -325,7 +340,10 @@ namespace COTG
 			{
 				try
 				{
+#if CRASHES
+
 					Crashes.TrackError(e.Exception);
+#endif
 					AAnalytics.Track("UnhandledException", new Dictionary<string, string> { { "message", e.Message.Truncate(120) } });
 				}
 				catch (Exception ex2)
@@ -968,90 +986,90 @@ namespace COTG
 		//{
 		//	await ActivationService.ActivateFromShareTargetAsync(args);
 		//}
-		public static Task<T> EnqueueAsync<T>( DispatcherQueue dispatcher,Func<Task<T>> function,DispatcherQueuePriority priority = 0)
-		{
-			//IL_0032: Unknown result type (might be due to invalid IL or missing references)
-			if(dispatcher.HasThreadAccess)
-			{
-				try
-				{
-					Task<T> task = function();
-					if(task != null)
-					{
-						return task;
-					}
+		//public static Task<T> EnqueueAsync<T>( DispatcherQueue dispatcher,Func<Task<T>> function,DispatcherQueuePriority priority = 0)
+		//{
+		//	//IL_0032: Unknown result type (might be due to invalid IL or missing references)
+		//	if(dispatcher.HasThreadAccess)
+		//	{
+		//		try
+		//		{
+		//			Task<T> task = function();
+		//			if(task != null)
+		//			{
+		//				return task;
+		//			}
 
-					return Task.FromException<T>(new InvalidOperationException("The Task returned by function cannot be null."));
-				}
-				catch(Exception exception)
-				{
-					return Task.FromException<T>(exception);
-				}
-			}
+		//			return Task.FromException<T>(new InvalidOperationException("The Task returned by function cannot be null."));
+		//		}
+		//		catch(Exception exception)
+		//		{
+		//			return Task.FromException<T>(exception);
+		//		}
+		//	}
 
-			return TryEnqueueAsync(dispatcher,function,priority);
-			static Task<T> TryEnqueueAsync(DispatcherQueue dispatcher,Func<Task<T>> function,DispatcherQueuePriority priority)
-			{
-				//IL_0019: Unknown result type (might be due to invalid IL or missing references)
-				//IL_0021: Unknown result type (might be due to invalid IL or missing references)
-				//IL_002b: Expected O, but got Unknown
-				Func<Task<T>> function2 = function;
-				TaskCompletionSource<T> taskCompletionSource = new TaskCompletionSource<T>();
-				if(!dispatcher.TryEnqueue(priority,async () =>
-				{
+		//	return TryEnqueueAsync(dispatcher,function,priority);
+		//	static Task<T> TryEnqueueAsync(DispatcherQueue dispatcher,Func<Task<T>> function,DispatcherQueuePriority priority)
+		//	{
+		//		//IL_0019: Unknown result type (might be due to invalid IL or missing references)
+		//		//IL_0021: Unknown result type (might be due to invalid IL or missing references)
+		//		//IL_002b: Expected O, but got Unknown
+		//		Func<Task<T>> function2 = function;
+		//		TaskCompletionSource<T> taskCompletionSource = new TaskCompletionSource<T>();
+		//		if(!dispatcher.TryEnqueue(priority,async () =>
+		//		{
 					
-					taskCompletionSource.SetResult(await function2());
+		//			taskCompletionSource.SetResult(await function2());
 
-				}))
-				{
-					taskCompletionSource.SetException(new InvalidOperationException("Failed to enqueue the operation"));
-				}
+		//		}))
+		//		{
+		//			taskCompletionSource.SetException(new InvalidOperationException("Failed to enqueue the operation"));
+		//		}
 
-				return taskCompletionSource.Task;
-			}
-		}
-		public static Task<T> EnqueueAsync<T>( DispatcherQueue dispatcher,Func<T> function,DispatcherQueuePriority priority = 0)
-		{
-	//		DispatcherQueueExtensions
-			//IL_0020: Unknown result type (might be due to invalid IL or missing references)
-			if(dispatcher.HasThreadAccess)
-			{
-				try
-				{
-					return Task.FromResult(function());
-				}
-				catch(Exception exception)
-				{
-					return Task.FromException<T>(exception);
-				}
-			}
+		//		return taskCompletionSource.Task;
+		//	}
+		//}
+	//	public static Task<T> EnqueueAsync<T>( DispatcherQueue dispatcher,Func<T> function,DispatcherQueuePriority priority = 0)
+	//	{
+	////		DispatcherQueueExtensions
+	//		//IL_0020: Unknown result type (might be due to invalid IL or missing references)
+	//		if(dispatcher.HasThreadAccess)
+	//		{
+	//			try
+	//			{
+	//				return Task.FromResult(function());
+	//			}
+	//			catch(Exception exception)
+	//			{
+	//				return Task.FromException<T>(exception);
+	//			}
+	//		}
 
-			return TryEnqueueAsync(dispatcher,function,priority);
-			static Task<T> TryEnqueueAsync(DispatcherQueue dispatcher,Func<T> function,DispatcherQueuePriority priority)
-			{
-				//IL_0019: Unknown result type (might be due to invalid IL or missing references)
-				//IL_0021: Unknown result type (might be due to invalid IL or missing references)
-				//IL_002b: Expected O, but got Unknown
-				Func<T> function2 = function;
-				TaskCompletionSource<T> taskCompletionSource = new TaskCompletionSource<T>();
-				if(!dispatcher.TryEnqueue(priority,(DispatcherQueueHandler)(object)(DispatcherQueueHandler)delegate
-				{
-					try
-					{
-						taskCompletionSource.SetResult(function2());
-					}
-					catch(Exception exception2)
-					{
-						taskCompletionSource.SetException(exception2);
-					}
-				}))
-				{
-					taskCompletionSource.SetException(new InvalidOperationException("Failed to enqueue the operation"));
-				}
+	//		return TryEnqueueAsync(dispatcher,function,priority);
+	//		static Task<T> TryEnqueueAsync(DispatcherQueue dispatcher,Func<T> function,DispatcherQueuePriority priority)
+	//		{
+	//			//IL_0019: Unknown result type (might be due to invalid IL or missing references)
+	//			//IL_0021: Unknown result type (might be due to invalid IL or missing references)
+	//			//IL_002b: Expected O, but got Unknown
+	//			Func<T> function2 = function;
+	//			TaskCompletionSource<T> taskCompletionSource = new TaskCompletionSource<T>();
+	//			if(!dispatcher.TryEnqueue(priority,(DispatcherQueueHandler)(object)(DispatcherQueueHandler)delegate
+	//			{
+	//				try
+	//				{
+	//					taskCompletionSource.SetResult(function2());
+	//				}
+	//				catch(Exception exception2)
+	//				{
+	//					taskCompletionSource.SetException(exception2);
+	//				}
+	//			}))
+	//			{
+	//				taskCompletionSource.SetException(new InvalidOperationException("Failed to enqueue the operation"));
+	//			}
 
-				return taskCompletionSource.Task;
-			}
-		}
+	//			return taskCompletionSource.Task;
+	//		}
+	//	}
 
 		public static Task<T>
 			DispatchOnUIThreadTask<T>(  Func<Task<T>> func,Microsoft.UI.Dispatching.DispatcherQueuePriority priority = Microsoft.UI.Dispatching.DispatcherQueuePriority.Low)
@@ -1059,7 +1077,7 @@ namespace COTG
 
 			var d = GlobalDispatcher();
 	
-			return EnqueueAsync<T>(d,func, priority);
+			return DispatcherQueueExtensions.EnqueueAsync<T>(d,func, priority);
 
 			//var idle = priority == DispatcherQueuePriority.Idle;
 			//if (useCurrentThreadIfPossible&& !idle && d.HasThreadAccess)
@@ -1103,103 +1121,103 @@ namespace COTG
 			//	return await taskCompletionSource.Task;
 			//}
 		}
-		public static Task EnqueueAsync(DispatcherQueue dispatcher,Action function,DispatcherQueuePriority priority = 0)
-		{
-			//IL_0020: Unknown result type (might be due to invalid IL or missing references)
-			if(dispatcher.HasThreadAccess)
-			{
-				try
-				{
-					function();
-					return Task.CompletedTask;
-				}
-				catch(Exception exception)
-				{
-					return Task.FromException(exception);
-				}
-			}
+		//public static Task EnqueueAsync(DispatcherQueue dispatcher,Action function,DispatcherQueuePriority priority = 0)
+		//{
+		//	//IL_0020: Unknown result type (might be due to invalid IL or missing references)
+		//	if(dispatcher.HasThreadAccess)
+		//	{
+		//		try
+		//		{
+		//			function();
+		//			return Task.CompletedTask;
+		//		}
+		//		catch(Exception exception)
+		//		{
+		//			return Task.FromException(exception);
+		//		}
+		//	}
 
-			return TryEnqueueAsync(dispatcher,function,priority);
-			static Task TryEnqueueAsync(DispatcherQueue dispatcher,Action function,DispatcherQueuePriority priority)
-			{
-				//IL_0019: Unknown result type (might be due to invalid IL or missing references)
-				//IL_0021: Unknown result type (might be due to invalid IL or missing references)
-				//IL_002b: Expected O, but got Unknown
-				Action function2 = function;
-				TaskCompletionSource<object?> taskCompletionSource = new TaskCompletionSource<object>();
-				if(!dispatcher.TryEnqueue(priority,(DispatcherQueueHandler)(object)(DispatcherQueueHandler)delegate
-				{
-					try
-					{
-						function2();
-						taskCompletionSource.SetResult(null);
-					}
-					catch(Exception exception2)
-					{
-						taskCompletionSource.SetException(exception2);
-					}
-				}))
-				{
-					taskCompletionSource.SetException(new InvalidOperationException("Failed to enqueue the operation"));
-				}
+		//	return TryEnqueueAsync(dispatcher,function,priority);
+		//	static Task TryEnqueueAsync(DispatcherQueue dispatcher,Action function,DispatcherQueuePriority priority)
+		//	{
+		//		//IL_0019: Unknown result type (might be due to invalid IL or missing references)
+		//		//IL_0021: Unknown result type (might be due to invalid IL or missing references)
+		//		//IL_002b: Expected O, but got Unknown
+		//		Action function2 = function;
+		//		TaskCompletionSource<object?> taskCompletionSource = new TaskCompletionSource<object>();
+		//		if(!dispatcher.TryEnqueue(priority,(DispatcherQueueHandler)(object)(DispatcherQueueHandler)delegate
+		//		{
+		//			try
+		//			{
+		//				function2();
+		//				taskCompletionSource.SetResult(null);
+		//			}
+		//			catch(Exception exception2)
+		//			{
+		//				taskCompletionSource.SetException(exception2);
+		//			}
+		//		}))
+		//		{
+		//			taskCompletionSource.SetException(new InvalidOperationException("Failed to enqueue the operation"));
+		//		}
 
-				return taskCompletionSource.Task;
-			}
-		}
+		//		return taskCompletionSource.Task;
+		//	}
+		//}
 		// There is no TaskCompletionSource<void> so we use a bool that we throw away.
 		public static Task DispatchOnUIThreadTask(
 	  Func<Task> func,DispatcherQueuePriority priority = DispatcherQueuePriority.Low, bool useCurrentThreadIfPossible = true)
 		{
 			var d = GlobalDispatcher();
-			return EnqueueAsync(d,func, priority);
+			return DispatcherQueueExtensions.EnqueueAsync(d,func, priority);
 		}
 		public static Task DispatchOnUIThreadTask(
 	  Action func,DispatcherQueuePriority priority = DispatcherQueuePriority.Low,bool useCurrentThreadIfPossible = true)
 		{
 			var d = GlobalDispatcher();
-			return EnqueueAsync(d,func,priority);
+			return DispatcherQueueExtensions.EnqueueAsync(d,func,priority);
 		}
-		public static Task EnqueueAsync(DispatcherQueue dispatcher,Func<Task> function,DispatcherQueuePriority priority = 0)
-		{
-			//IL_0032: Unknown result type (might be due to invalid IL or missing references)
-			if(dispatcher.HasThreadAccess)
-			{
-				try
-				{
-					Task task = function();
-					if(task != null)
-					{
-						return task;
-					}
+		//public static Task EnqueueAsync(DispatcherQueue dispatcher,Func<Task> function,DispatcherQueuePriority priority = 0)
+		//{
+		//	//IL_0032: Unknown result type (might be due to invalid IL or missing references)
+		//	if(dispatcher.HasThreadAccess)
+		//	{
+		//		try
+		//		{
+		//			Task task = function();
+		//			if(task != null)
+		//			{
+		//				return task;
+		//			}
 
-					return Task.FromException(new InvalidOperationException("The Task returned by function cannot be null."));
-				}
-				catch(Exception exception)
-				{
-					return Task.FromException(exception);
-				}
-			}
+		//			return Task.FromException(new InvalidOperationException("The Task returned by function cannot be null."));
+		//		}
+		//		catch(Exception exception)
+		//		{
+		//			return Task.FromException(exception);
+		//		}
+		//	}
 
-			return TryEnqueueAsync(dispatcher,function,priority);
-			static Task TryEnqueueAsync(DispatcherQueue dispatcher,Func<Task> function,DispatcherQueuePriority priority)
-			{
-				//IL_0019: Unknown result type (might be due to invalid IL or missing references)
-				//IL_0021: Unknown result type (might be due to invalid IL or missing references)
-				//IL_002b: Expected O, but got Unknown
-				Func<Task> function2 = function;
-				TaskCompletionSource<object> taskCompletionSource = new TaskCompletionSource<object>();
-				if(!dispatcher.TryEnqueue(priority,async ()=>
-				{
-					await function2();
-					taskCompletionSource.SetResult(null);
-				}))
-				{
-					taskCompletionSource.SetException(new InvalidOperationException("Failed to enqueue the operation"));
-				}
+		//	return TryEnqueueAsync(dispatcher,function,priority);
+		//	static Task TryEnqueueAsync(DispatcherQueue dispatcher,Func<Task> function,DispatcherQueuePriority priority)
+		//	{
+		//		//IL_0019: Unknown result type (might be due to invalid IL or missing references)
+		//		//IL_0021: Unknown result type (might be due to invalid IL or missing references)
+		//		//IL_002b: Expected O, but got Unknown
+		//		Func<Task> function2 = function;
+		//		TaskCompletionSource<object> taskCompletionSource = new TaskCompletionSource<object>();
+		//		if(!dispatcher.TryEnqueue(priority,async ()=>
+		//		{
+		//			await function2();
+		//			taskCompletionSource.SetResult(null);
+		//		}))
+		//		{
+		//			taskCompletionSource.SetException(new InvalidOperationException("Failed to enqueue the operation"));
+		//		}
 
-				return taskCompletionSource.Task;
-			}
-		}
+		//		return taskCompletionSource.Task;
+		//	}
+		//}
 		public static SemaphoreSlim uiSema = new SemaphoreSlim(1);
 
 

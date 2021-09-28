@@ -24,7 +24,7 @@ namespace COTG.Views
     public sealed partial class BossTab : UserTab
     {
         public static BossTab instance;
-        public static bool IsVisible() => instance.isVisible;
+        public static bool IsVisible() => instance.isFocused;
 
 
 
@@ -73,7 +73,7 @@ namespace COTG.Views
         }
         private void CityGrid_SelectionChanged(object sender, DataGridSelectionChangedEventArgs e)
         {
-			if (!isActive)
+			if (!isOpen)
 				return;
 
             var it = e.AddedItems.FirstOrDefault();

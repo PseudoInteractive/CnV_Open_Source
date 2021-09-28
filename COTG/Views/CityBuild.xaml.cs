@@ -631,7 +631,7 @@ namespace COTG.Views
 				{
 					App.DispatchOnUIThreadLow(() =>
 				   {
-					   if (PlannerTab.instance.isVisible)
+					   if (PlannerTab.instance.isFocused)
 					   {
 						   PlannerTab.instance.Close();
 					   }

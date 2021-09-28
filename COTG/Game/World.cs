@@ -1419,7 +1419,7 @@ namespace COTG.Game
 				
 				var task = App.DispatchOnUIThreadTask(() =>
 			   {
-				   if (HeatTab.instance.isVisible)
+				   if (HeatTab.instance.isFocused)
 				   {
 					   if (rawPrior0 == null || (data == null || data1 == null))
 					   {
@@ -1505,7 +1505,7 @@ namespace COTG.Game
 							   PlayerChangeTab.changes.Set( ch.players.Values.OrderByDescending(a => a.activity) );
 							   PlayerChangeTab.changes.NotifyReset();
 							   var tab = PlayerChangeTab.instance;
-							   if (!tab.isVisible)
+							   if (!tab.isFocused)
 							   {
 								   tab.ShowOrAdd(true, false);
 							   }

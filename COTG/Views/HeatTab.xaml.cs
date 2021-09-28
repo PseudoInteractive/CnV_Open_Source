@@ -39,7 +39,7 @@ namespace COTG.Views
 	public sealed partial class HeatTab : UserTab
 	{
 		public static HeatTab instance;
-		public static bool IsVisible() => instance.isVisible;
+		public static bool IsVisible() => instance.isFocused;
 		public HeatTab()
 		{
 			instance = this;
@@ -199,7 +199,7 @@ namespace COTG.Views
 			World.ClearHeatmap();
 			App.DispatchOnUIThreadLow(() =>
 		   {
-			   if (HeatTab.instance.isVisible)
+			   if (HeatTab.instance.isFocused)
 			   {
 				   HeatTab.instance.header.Text = "Please load and select a date range to see changes";
 

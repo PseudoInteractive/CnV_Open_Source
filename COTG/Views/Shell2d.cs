@@ -389,8 +389,12 @@ namespace COTG.Views
 
 		private void KeyboardProxy_KeyDown(object sender, Microsoft.UI.Xaml.Input.KeyRoutedEventArgs e)
 		{
-			if(isHitTestVisible)
+
 			App.InputRecieved();
+
+			if(!isHitTestVisible)
+				return;
+
 			//if (CityBuild.menuOpen)
 			//{
 			//	// todo:  Handle naviation menu items and selection

@@ -1960,7 +1960,7 @@ namespace COTG.Game
 				}
 				{
 					var sel = Spot.GetSelectedForContextMenu(cid, false);
-					if (AttackTab.instance.isVisible)
+					if (AttackTab.instance.isFocused)
 					{
 						var multiString = sel.Count > 1 ? $" _x {sel.Count} selected" : "";
 						var afly = AApp.AddSubMenu(flyout, "Attack Planner");
@@ -2118,13 +2118,13 @@ namespace COTG.Game
 		{
 			var tab = NearRes.instance;
 			tab.target = (City)this;
-			if (!tab.isActive)
+			if (!tab.isOpen)
 			{
 				tab.ShowOrAdd(true);
 			}
 			else
 			{
-				if (!tab.isVisible)
+				if (!tab.isFocused)
 					TabPage.Show(tab);
 				else
 					tab.refresh.Go();

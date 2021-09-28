@@ -1211,7 +1211,7 @@ namespace COTG.Views
 															sb.AppendLine(city.remarks.AsSpan().Wrap(20));
 														if(city.hasAcademy.GetValueOrDefault())
 															sb.AppendLine("Has Academy");
-														if ( NearRes.instance.isVisible)
+														if ( NearRes.instance.isFocused)
 														{
 															sb.AppendLine($"Carts:{AUtil.Format((city.cartsHome, city.carts))}");
 															if (city.ships > 0)
