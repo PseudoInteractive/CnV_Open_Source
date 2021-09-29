@@ -26,11 +26,11 @@ namespace COTG.Services
 		private static DateTimeOffset date;
 
 		public static string ArchiveName(int entryId) => entryId.ToString("D6");
-        public static async Task SaveWorldData(MemoryOwner<uint> data)
+        public static async Task SaveWorldData(uint[] data)
         {
 			try
             {
-				await HeatMap.AddSnapshot(SmallTime.serverNow,World.FilterForCompression(data.Span),true);
+				await HeatMap.AddSnapshot(SmallTime.serverNow,World.FilterForCompression(data),true);
 			}
 			catch (Exception e)
 			{

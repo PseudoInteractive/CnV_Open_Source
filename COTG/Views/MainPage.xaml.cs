@@ -421,48 +421,67 @@ namespace COTG.Views
 			using var work = new ShellPage.WorkScope("Auto Raid..");
 
 			var sel = Spot.GetSelectedForContextMenu(0, false, onlyMine: true);
-			int totalSent = 0;
-			float minRaidIdle = 0.0625f;
-			for (int pass=0;pass<8;++pass)
+			if(sel.Count <= 1)
 			{
-
-				await Raiding.UpdateTS(true);
-				int counter = 0;
-				int processed = 0;
-				int max = sel.Count;
-				foreach (var cid in sel)
+				if(await App.DoYesNoBox($"{sel.Count} selected","Select all?",cancel:null) == 1)
 				{
-					++counter;
-					if (counter % 16 == 0)
-					{
-						Note.ShowTip($"Auto Raid pass {pass}: {counter}/{max}..");
-					}
-					var c = City.Get(cid);
-					var city = Spot.GetOrAdd(cid);
-					if(city.raidIdle >= minRaidIdle )
-					{
-						if( await ScanDungeons.Post(cid, city.commandSlots == 0, true) )
-						{
-							++processed;
-							++totalSent;
-						}
-					}
-
+					cityGrid.SelectAll();
+					await Task.Delay(200);
+					sel = Spot.GetSelectedForContextMenu(0,false,onlyMine: true);
 				}
-				if (processed == 0)
-					break;
-				Note.Show($"Pass {pass} sent {processed} cities to raid");
-
-				// On second and further passes only send if they are all home
-				// not ideal but it helps
-				if (SettingsPage.raidIntervals != 0)
-					minRaidIdle = 15.0f / 16.0f;
 			}
-			Note.ShowTip($"Auto Raid: Completed: {sel.Count}/{sel.Count}");
-			Note.Show($"Sent {totalSent.Min(sel.Count)} Raids (from {sel.Count} selected)");
+			var totalSent1=0;
+			for(int iter0=0;iter0<4;++iter0)
+			{
+				int totalSent = 0;
+				float minRaidIdle = 0.0625f;
+				for (int pass=0;pass<8;++pass)
+				{
+
+					await Raiding.UpdateTS(true);
+					int counter = 0;
+					int processed = 0;
+					int max = sel.Count;
+					foreach (var cid in sel)
+					{
+						++counter;
+						if (counter % 16 == 0)
+						{
+							Note.ShowTip($"Auto Raid pass {iter0} {pass}: {counter}/{max}..");
+						}
+						var c = City.Get(cid);
+						var city = Spot.GetOrAdd(cid);
+						if(city.raidIdle >= minRaidIdle )
+						{
+							if( await ScanDungeons.Post(cid, city.commandSlots == 0, true) )
+							{
+								++processed;
+								++totalSent;
+							}
+						}
+
+					}
+					if (processed == 0)
+						break;
+					Note.Show($"Pass {pass} sent {processed} cities to raid");
+
+					// On second and further passes only send if they are all home
+					// not ideal but it helps
+					if (SettingsPage.raidIntervals != 0)
+						minRaidIdle = 15.0f / 16.0f;
+				}
+				Note.ShowTip($"Auto Raid Pass {iter0} {sel.Count}/{sel.Count}");
+				Note.Show($"Sent {totalSent.Min(sel.Count)} Raids (from {sel.Count} selected)");
+				totalSent1 += totalSent;
+				if(totalSent == 0)
+					break;
+				ShellPage.WorkUpdate($"Delaying for pass {iter0}...");
+				await Task.Delay(3000);
+			}
+			Note.Show($"Total Sent {totalSent1.Min(sel.Count)} Raids (from {sel.Count} selected)");
 
 		}
-		
+
 		private void SelectAll(object sender, RoutedEventArgs e)
 		{
 			cityGrid.SelectAll();

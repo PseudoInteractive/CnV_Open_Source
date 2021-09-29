@@ -222,7 +222,7 @@ namespace COTG.Views
 			public static (Vector2 c,bool process) ProcessPressed((Windows.Foundation.Point Position, uint PointerId,
 																			bool IsInContact, ulong Timestamp, PointerUpdateKind PointerUpdateKind) point)
 			{
-				var c = GetCanvasPosition(point.Position);
+				var c = CanvasPointFromDip(point.Position);
 					var id = point.PointerId;
 					var pointer = (points.Find(p => p.id == id));
 					Assert(pointer == null);
@@ -287,7 +287,7 @@ namespace COTG.Views
 			public static (Vector2 c, Vector3 delta, GestureAction action) ProcessMoved((Windows.Foundation.Point Position, uint PointerId,
 																			bool IsInContact, ulong Timestamp, PointerUpdateKind PointerUpdateKind) point)
 			{
-				var pointC = GetCanvasPosition(point.Position);
+				var pointC = CanvasPointFromDip(point.Position);
 				var id = point.PointerId;
 					var index = (points.FindIndex(p => p.id == id));
 				if (index == -1)
@@ -373,7 +373,7 @@ namespace COTG.Views
 			public static (Vector2 c, GestureAction action) ProcessRelased((Windows.Foundation.Point Position, uint PointerId, 
 																			bool IsInContact,ulong Timestamp, PointerUpdateKind PointerUpdateKind) point)
 			{
-				var c = GetCanvasPosition(point.Position);
+				var c = CanvasPointFromDip(point.Position);
 
 					var id = point.PointerId;
 					var index = (points.FindIndex(p => p.id == id));
@@ -448,18 +448,18 @@ namespace COTG.Views
 		// //   App.(() => FocusManager.TryFocusAsync(canvas,FocusState.Programmatic));
 		//}
 
-		public static Vector2 GetCanvasPosition(Windows.Foundation.Point screenC)
+		public static Vector2 CanvasPointFromDip(Windows.Foundation.Point screenC)
 		{
 			return new Vector2((float)(screenC.X*dipToNative), (float)(screenC.Y*dipToNative) );
 		}
-		public static Vector2 GetCanvasPosition( int x , int y )
-		{
-			return new Vector2((float)(x * dipToNative), (float)(y * dipToNative));
-		}
-		public static Windows.Foundation.Point CanvasToScreen(Vector2 point)
-		{
-			return new Windows.Foundation.Point((point.X*nativeToDip)+ canvasBaseX, (point.Y*nativeToDip)+ canvasBaseY);
-		}
+		//public static Vector2 GetCanvasPosition( int x , int y )
+		//{
+		//	return new Vector2((float)(x * dipToNative), (float)(y * dipToNative));
+		//}
+		//public static Windows.Foundation.Point CanvasToScreen(Vector2 point)
+		//{
+		//	return new Windows.Foundation.Point((point.X*nativeToDip)+ canvasBaseX, (point.Y*nativeToDip)+ canvasBaseY);
+		//}
 		// to device independant position
 		public static Windows.Foundation.Point CanvasToDIP(Vector2 point)
 		{
@@ -1017,11 +1017,13 @@ namespace COTG.Views
 		}
 		public static void UpdateMousePosition(PointerEventArgs e, UIElement source)
 		{
-			var gt = source.TransformToVisual(canvas);
-			var pt = gt.TransformPoint( e.CurrentPoint.Position);
+			var pt0 = e.CurrentPoint.Position;
+			var pt = pt0.TransformPoint(source,canvas);
 
 			UpdateMousePosition(pt);
 		}
+
+		
 
 		public static void UpdateMousePosition(PointerRoutedEventArgs e)
 		{
@@ -1029,7 +1031,7 @@ namespace COTG.Views
 		}
 		public static void UpdateMousePosition(Windows.Foundation.Point point)
 		{
-			var pointC = GetCanvasPosition(point);
+			var pointC = CanvasPointFromDip(point);
 			mousePosition = pointC;
 			//Note.Show($"{pointC.X} {pointC.Y}");
 
@@ -1376,5 +1378,13 @@ namespace COTG.Views
 			}
 		}
 
+	}
+	public static class ShellHelper
+	{
+		public static Windows.Foundation.Point TransformPoint(this Windows.Foundation.Point pt0,UIElement source,UIElement target)
+		{
+			var gt = source.TransformToVisual(target);
+			return gt.TransformPoint(pt0);
+		}
 	}
 }

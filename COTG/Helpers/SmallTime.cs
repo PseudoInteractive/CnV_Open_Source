@@ -13,14 +13,14 @@ namespace COTG
 	public struct SmallTime : IEquatable<SmallTime>, IComparable<SmallTime>
 	{
 		public static DateTimeOffset ToDateTime(uint seconds) => DateTimeOffset.FromUnixTimeSeconds((seconds));
-		public static uint ToSeconds(DateTimeOffset source) => (uint)(source.ToUnixTimeSeconds() );
+		public static uint ToSeconds(DateTimeOffset source) =>source.ToUnixTimeSeconds().AsUInt();
 
 
-		public static readonly DateTimeOffset t0 = new DateTimeOffset(1970, 1, 1, 0, 0, 0, 0, TimeSpan.Zero);
+//		public static readonly DateTimeOffset t0 = new DateTimeOffset(1970, 1, 1, 0, 0, 0, 0, TimeSpan.Zero);
 
 		internal const uint t0Seconds = 0;
 		// legacy
-		internal readonly int secondsI => (int)seconds;
+		internal readonly int secondsI => seconds.AsInt();
 		internal uint seconds;
 		internal static SmallTime zero = new SmallTime(0);
 

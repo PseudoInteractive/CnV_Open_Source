@@ -198,7 +198,7 @@ namespace COTG.JSON
 
 		
 	}
-	public class CityBuildQueue : IDisposable
+	public class ExtendedQueue : IDisposable
 	{
 		//public static DispatcherQueueController _queueController;
 		//public static DispatcherQueue _queue;
@@ -210,9 +210,9 @@ namespace COTG.JSON
 
 		public bool isRunning;
 		public int cid;
-		public DArray<BuildQueueItem> queue = new(128); // extra large
+		public DArray<BuildQueueItem> queue = new(128); // extra large - why?
 		public CancellationTokenSource cancellationTokenSource;
-		public static ConcurrentDictionary<int, CityBuildQueue> all = new ConcurrentDictionary<int, CityBuildQueue>();
+		public static ConcurrentDictionary<int, ExtendedQueue> all = new ConcurrentDictionary<int, ExtendedQueue>();
 		void RemoveAt(int id)
 		{
 			QueueTab.RemoveOp(cid);
@@ -237,7 +237,7 @@ namespace COTG.JSON
 		//private static void Tick(DispatcherQueueTimer sender, object args)
 		//{
 		//}
-		public static City cityQueueInUse;
+		public static City cityQueueInUse; // only one city is processing at once
 
 		public async void Process(int initialDelay = 1000)
 		{
@@ -389,7 +389,7 @@ namespace COTG.JSON
 								var destroyMe = false;
 
 								int offset = 0;
-								await queueLock.WaitAsync().ConfigureAwait(false);
+								await queueLock.WaitAsync().ConfigureAwait(false);  // lock before modify
 								try
 								{
 									// up to 16
@@ -706,7 +706,10 @@ namespace COTG.JSON
 				{
 					var c = cancellationTokenSource;
 					cancellationTokenSource = null;
-					c.Dispose();
+					if(c!= null)
+					{
+						c.Dispose();
+					}
 				}
 			}
 		}
@@ -784,8 +787,8 @@ namespace COTG.JSON
 
 		public static async Task UnblockQueue(int cid)
 		{
-			await queueLock.WaitAsync().ConfigureAwait(false);
-			try
+			//await queueLock.WaitAsync().ConfigureAwait(false);
+			//try
 			{
 				if (all.TryGetValue(cid, out var rv))
 				{
@@ -794,9 +797,9 @@ namespace COTG.JSON
 
 				}
 			}
-			finally
+			//finally
 			{
-				queueLock.Release();
+			//	queueLock.Release();
 			}
 
 
@@ -813,25 +816,8 @@ namespace COTG.JSON
 		public static async Task<CityBuildQueueLock> Get(int cid)
 		{
 			await queueLock.WaitAsync().ConfigureAwait(false);
-			for (; ; )
-			{
-
-				try
-				{
-					if (all.TryGetValue(cid, out var rv))
-						return new CityBuildQueueLock(rv);
-					rv = new CityBuildQueue() { cid = cid };
-					if (all.TryAdd(cid, rv))
-						return new CityBuildQueueLock(rv);
-					else
-						return new CityBuildQueueLock(all[cid]); // someone else added
-				}
-				catch (Exception e)
-				{
-					LogEx(e);
-				}
-				await Task.Delay(500).ConfigureAwait(false);
-			}
+			return new CityBuildQueueLock( 
+				all.GetOrAdd(cid, (_cid)=> new ExtendedQueue() { cid = _cid } ));
 		}
 
 
@@ -884,9 +870,9 @@ namespace COTG.JSON
 	}
 	public class CityBuildQueueLock : IDisposable
 	{
-		public CityBuildQueue cityBuildQueue;
+		public ExtendedQueue cityBuildQueue;
 
-		public CityBuildQueueLock(CityBuildQueue cityBuildQueue)
+		public CityBuildQueueLock(ExtendedQueue cityBuildQueue)
 		{
 			this.cityBuildQueue = cityBuildQueue;
 		}
@@ -894,7 +880,10 @@ namespace COTG.JSON
 		public void Dispose()
 		{
 			if (cityBuildQueue != null)
-				CityBuildQueue.queueLock.Release();
+			{
+				cityBuildQueue=null;
+				ExtendedQueue.queueLock.Release();
+			}
 		}
 	}
 	public static class BuildQueue
@@ -958,7 +947,7 @@ namespace COTG.JSON
 				}
 
 			}
-			using (var pending = await CityBuildQueue.Get(cid).ConfigureAwait(false))
+			using (var pending = await ExtendedQueue.Get(cid).ConfigureAwait(false))
 			{
 				if (pending.cityBuildQueue.queue.CanGrow())
 				{
@@ -966,14 +955,17 @@ namespace COTG.JSON
 					cityBuildQueue.Enqueue(op);
 
 					SaveNeeded();
-
-					cityBuildQueue.Process(300);
+					// if it is waiting, wake it up
 					if(cityBuildQueue.cancellationTokenSource != null)
-						cityBuildQueue.cancellationTokenSource.Cancel();
-					if (a.bid == City.bidCastle && a.slvl == 0)
-					{
-						await Task.Delay(200);
-					}
+						cityBuildQueue.cancellationTokenSource.Cancel();  // unblock on queue
+
+					// wake it up
+					cityBuildQueue.Process(300);
+
+					//if (a.bid == City.bidCastle && a.slvl == 0)
+					//{
+					//	await Task.Delay(200);
+					//}
 				}
 			}
 
@@ -993,7 +985,7 @@ namespace COTG.JSON
 		{
 			if (cid == -1)
 				cid = City.build;
-			if (CityBuildQueue.all.TryGetValue(cid, out var q))
+			if (ExtendedQueue.all.TryGetValue(cid, out var q))
 			{
 				q.queue.Clear();
 				QueueTab.Clear(cid);
@@ -1009,12 +1001,40 @@ namespace COTG.JSON
 		}
 
 		// Where should this go?
-		static internal async Task ShutDown(object sender, Windows.ApplicationModel.SuspendingEventArgs e)
+		static internal void ShutDown()
+		{
+			if(!initialized)
+				return;
+			var _saveTimer = saveTimer;
+			saveTimer = null;
+			_saveTimer.Cancel();
+			SaveAll().Wait();
+
+		}
+		static internal async Task SaveAll()
 		{
 			if (!initialized)
 				return;
-			saveTimer.Cancel();
-			await SaveTimerGo(true, true); // flush pending saves if any
+			Log("SaveQ");
+			if(ExtendedQueue.all.Any())
+			{
+				Log("SaveQWait0");
+				await ExtendedQueue.queueLock.WaitAsync();  // shut down
+				Log("SaveQWait1");
+				try
+				{
+					var str = Serialize();
+					await SaveBuildQueue(str); // No wait...
+				}
+				finally
+				{
+					ExtendedQueue.queueLock.Release();
+					Log("SaveQDone");
+				}
+				//Log($"SaveQueue: {str}");
+
+
+			}
 		}
 		static internal void SaveTimer_Tick(ThreadPoolTimer timer)
 		{
@@ -1035,17 +1055,21 @@ namespace COTG.JSON
 
 			try
 			{
-				if (CityBuildQueue.all.Any())
+				if (ExtendedQueue.all.Any())
 				{
-					await CityBuildQueue.queueLock.WaitAsync().ConfigureAwait(awaitContext);
+					await ExtendedQueue.queueLock.WaitAsync().ConfigureAwait(awaitContext); // save
+					
 					try
 					{
-						var str = Serialize();
-						await SaveBuildQueue(str).ConfigureAwait(awaitContext);
+						if(!App.isShuttingDown)
+						{
+							var str = Serialize();
+							await SaveBuildQueue(str).ConfigureAwait(awaitContext);
+						}
 					}
 					finally
 					{
-						CityBuildQueue.queueLock.Release();
+						ExtendedQueue.queueLock.Release();
 					}
 					//Log($"SaveQueue: {str}");
 
@@ -1168,7 +1192,7 @@ namespace COTG.JSON
 			sb.Append("{");
 			bool isFirst = true;
 
-			foreach (var city in CityBuildQueue.all.Values)
+			foreach (var city in ExtendedQueue.all.Values)
 			{
 				if (isFirst)
 				{
@@ -1221,19 +1245,26 @@ namespace COTG.JSON
 						var cid = int.Parse(jsCity.Name);
 						if (!cid.AsCity().isMine)
 							continue;
-						using (var cq = await CityBuildQueue.Get(cid))
+						using (var cq = await ExtendedQueue.Get(cid))
 						{
-							foreach (var d in jsCity.Value.EnumerateArray())
+							if(cq!=null)
 							{
-								if (cq.cityBuildQueue.queue.CanGrow())
+								foreach (var d in jsCity.Value.EnumerateArray())
 								{
+									if (cq.cityBuildQueue.queue.CanGrow())
+									{
 
-									var op = new BuildQueueItem(d[2].GetByte(), d[3].GetByte(), d[1].GetInt16(), d[0].GetInt16());
-									cq.cityBuildQueue.Enqueue(op);
+										var op = new BuildQueueItem(d[2].GetByte(), d[3].GetByte(), d[1].GetInt16(), d[0].GetInt16());
+										cq.cityBuildQueue.Enqueue(op);
+									}
 								}
+								Log($"{cid} {cq.cityBuildQueue.queue.count}");
+								cq.cityBuildQueue.Process(AMath.random.Next(3 * 1024, 6 * 1024)); // wait 1 - 3 seconds.
 							}
-							Log($"{cid} {cq.cityBuildQueue.queue.count}");
-							cq.cityBuildQueue.Process(AMath.random.Next(3 * 1024, 6 * 1024)); // wait 1 - 3 seconds.
+							else
+							{
+
+							}
 						}
 					}
 				}

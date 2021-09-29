@@ -59,6 +59,7 @@ using ToggleMenuFlyoutItem = Microsoft.UI.Xaml.Controls.ToggleMenuFlyoutItem;
 using Microsoft.UI.Input;
 using Microsoft.UI.Xaml.Hosting;
 using Nito.AsyncEx;
+using COTG.JSON;
 //using Windows.UI.Core;
 
 namespace COTG
@@ -132,8 +133,6 @@ namespace COTG
 			//    Log(e);
 			//}
 			
-
-
 			//	ServicePointManager.ServerCertificateValidationCallback = (sender, certificate, chain, sslPolicyErrors) => { Log(certificate.ToString()); return true; };
 		//	InitializeComponent();
 			instance = this;
@@ -142,10 +141,6 @@ namespace COTG
 			TaskScheduler.UnobservedTaskException+=TaskScheduler_UnobservedTaskException;
 			FocusVisualKind = FocusVisualKind.Reveal;
 			
-
-			
-
-
 			// TODO WTS: Add your app in the app center and set your secret here. More at https://docs.microsoft.com/appcenter/sdk/getting-started/uwp
 
 			// Deferred execution until used. Check https://msdn.microsoft.com/library/dd642331(v=vs.110).aspx for further info on Lazy<T> class.
@@ -162,10 +157,7 @@ namespace COTG
 
 		//		public static Windows.Foundation.IAsyncOperation<CoreWebView2Environment> createWebEnvironmentTask;
 
-
-
-
-		private static async Task SwtichToBackground()
+		private static void SwitchToBackground()
 		{
 			if(isForeground == true)
 			{
@@ -175,7 +167,14 @@ namespace COTG
 				try
 				{
 
-					await SaveState();
+					SaveState();
+
+					var t = DateTimeOffset.UtcNow;
+					var dt = t - activeStart;
+					activeStart = t;
+
+					AAnalytics.Track("Background",new Dictionary<string,string> { { "time",dt.TotalSeconds.RoundToInt().ToString() } });
+					SystemInformation.Instance.AddToAppUptime(dt);
 				}
 				catch(Exception ex)
 				{
@@ -183,12 +182,12 @@ namespace COTG
 			}
 		}
 
-		private static async Task SaveState()
+		private static void SaveState()
 		{
-
-			await JSON.BuildQueue.SaveIfNeeded();
+			var t0 = BuildQueue.SaveAll();
+			var t1 = AttackTab.SaveAttacksBlock();
 			SettingsPage.SaveAll();
-			await AttackTab.SaveAttacksBlock();
+	//		Task.WhenAll(t0,t1).Wait(); todo
 		}
 
 
@@ -296,16 +295,19 @@ namespace COTG
 			InputRecieved();
 		}
 
-		private void App_LeavingBackground(object sender, LeavingBackgroundEventArgs e)
+		private void SwitchToForeground()
 		{
-			Log("LeavingBackground");
-			isForeground = true;
-			var t = DateTimeOffset.UtcNow;
-			var dt = t - activeStart;
-			activeStart = t;
-			AAnalytics.Track("Foreground", new Dictionary<string, string> { { "time", dt.TotalSeconds.RoundToInt().ToString() } });
-			JSClient.ResumeWebView();
+			Log("Foreground");
+			if(!isForeground)
+			{
+				isForeground = true;
+				var t = DateTimeOffset.UtcNow;
+				var dt = t - activeStart;
+				activeStart = t;
+				AAnalytics.Track("Foreground", new Dictionary<string, string> { { "time", dt.TotalSeconds.RoundToInt().ToString() } });
+				JSClient.ResumeWebView();
 
+			}
 			//if (ShellPage.canvas != null)
 			//    ShellPage.canvas.Paused = false;
 		}
@@ -373,8 +375,35 @@ namespace COTG
 				
 				window= new();
 				//	window.
+				
 				//var view = DisplayInformation.GetForCurrentView();
+				var uwpArgs = AppInstance.GetActivatedEventArgs();//args.UWPLaunchActivatedEventArgs;
+				if(uwpArgs.Kind == Windows.ApplicationModel.Activation.ActivationKind.Protocol) 
+				{
+					var eventArgs = uwpArgs as ProtocolActivatedEventArgs;
+					Log("Args!! "+eventArgs.Uri);
+					var s = System.Web.HttpUtility.ParseQueryString(eventArgs.Uri.Query);
 
+					Debug.Log(s);
+					// format $"cotg:launch?w={world}&s=1&n=1"
+					// are / chars inserted?
+					//  if (s.Length >= 3)
+					{
+						if(AMath.TryParseInt(s["s"],out int _s))
+							JSClient.subId = _s;
+						
+						var n = s["p"];
+						if(n!=null)
+							Player.subOwner = n;
+						
+						if(AMath.TryParseInt(s["w"],out int _w))
+							JSClient.world = _w;
+
+//						if(AMath.TryParseInt(s["n"],out int _n)) // new instance
+//							key = "cotgaMulti" + DateTimeOffset.UtcNow.UtcTicks;
+
+					}
+				}
 				//// Get the screen resolution (APIs available from 14393 onward).
 				//var resolution = new Size(view.ScreenWidthInRawPixels, view.ScreenHeightInRawPixels);
 
@@ -390,9 +419,8 @@ namespace COTG
 				//window.Maximize();
 			//App.globalDispatcher = CoreWindow.GetForCurrentThread().Dispatcher;
 			globalQueue =  window.DispatcherQueue;
-			//CoreApplication.EnablePrelaunch(false);
-
-			if (args.UWPLaunchActivatedEventArgs.Kind == Windows.ApplicationModel.Activation.ActivationKind.Launch)
+				//CoreApplication.EnablePrelaunch(false);
+			if (uwpArgs.Kind == Windows.ApplicationModel.Activation.ActivationKind.Launch)
 			{
 				// do this asynchronously
 				Services.StoreHelper.instance.DownloadAndInstallAllUpdatesAsync();
@@ -419,6 +447,20 @@ namespace COTG
 			{
 				Log(e);
 			}
+		}
+
+		private void Window_Closing(object sender,WindowClosingEventArgs e)
+		{
+			Trace("Closing!");
+//			state = State.closing;
+//			SwitchToBackground();
+		}
+
+		private void Window_Closed(object sender,WindowEventArgs args)
+		{
+			Trace("Closed!");
+			state = State.closing;
+			SwitchToBackground();
 		}
 
 		private void Content_PreviewKeyUp(object sender,Microsoft.UI.Xaml.Input.KeyRoutedEventArgs e)
@@ -459,8 +501,10 @@ namespace COTG
 			//	var window = Window.Current;
 				window.VisibilityChanged += Window_VisibilityChanged;
 				window.Closed+=Window_Closed;
+				window.Closing+=Window_Closing;
+				window.Activated+=Window_Activated;
 			}
-			await ActivationService.ActivateAsync(args,wasRunning);
+				await ActivationService.ActivateAsync(args,wasRunning);
 			
 			if(wasRunning)
 				return;
@@ -511,55 +555,24 @@ namespace COTG
 			}
 		}
 
-		private void Window_Closed(object sender,WindowEventArgs args)
+		private void Window_Activated(object sender,WindowActivatedEventArgs args)
 		{
-			AAnalytics.Track("Suspend");
-
-			Log("Suspend");
-	///		var deferral = e.SuspendingOperation.GetDeferral();
-
-			//try
-			//{
-			//	await SwtichToBackground();
-
-			//	await JSClient.SuspendWebView();
-			//	if(Debugger.IsAttached)
-			//		JSClient.CloseWebView(); ;
-
-			//}
-			//catch(Exception ext)
-			//{
-
-			//}
-			//finally
-			//{
-
-			//	deferral.Complete();
-			//}
+			Trace("Activated");
+		//	SwitchToForeground();
 		}
 
-		private async void Window_VisibilityChanged(object sender,WindowVisibilityChangedEventArgs args)
+		private void Window_VisibilityChanged(object sender,WindowVisibilityChangedEventArgs args)
 		{
-			
-			if(isForeground != args.Visible)
-			{
-				isForeground = args.Visible;
-
-				//TODO: Save application state and stop any background activity
-				if(!isForeground)
+				Trace($"Visibility!!: {args.Visible}");
+				if(!args.Visible)
 				{
-					try
-					{
-
-						await SaveState();
-					}
-					catch(Exception ex)
-					{
-					}
+					SwitchToBackground();
 				}
-			}
-
-
+				else
+				{
+					SwitchToForeground();
+				}
+			
 
 			//			throw new NotImplementedException();
 		}
@@ -933,47 +946,16 @@ namespace COTG
 		//public static CoreWebView2Controller webController;
 		//public static CoreWebView2   webCore;
 
-		private async void App_EnteredBackground(object sender, EnteredBackgroundEventArgs e)
-		{
-			Log("Enter Background");
-			var deferral = e.GetDeferral();
+		//private void App_Resuming(object sender, object e)
+		//{
+		//	Log("Resume");
+		////	isForeground = true;
+		//	AAnalytics.Track("Resume");
 
-
-			try
-			{
-				// only save if we have c
-
-				await SwtichToBackground();
-			
-
-				var t = DateTimeOffset.UtcNow;
-				var dt = t - activeStart;
-				activeStart = t;
-			
-				AAnalytics.Track("Background", new Dictionary<string, string> { { "time", dt.TotalSeconds.RoundToInt().ToString() } });
-				SystemInformation.Instance.AddToAppUptime(dt);
-
-			}
-			catch
-			{
-			}
-			finally
-			{
-				deferral.Complete();
-			}
-
-		}
-
-		private void App_Resuming(object sender, object e)
-		{
-			Log("Resume");
-		//	isForeground = true;
-			AAnalytics.Track("Resume");
-
-			activeStart = DateTimeOffset.UtcNow;
-			JSClient.ResumeWebView();
-			//         Singleton<SuspendAndResumeService>.Instance.ResumeApp();
-		}
+		//	activeStart = DateTimeOffset.UtcNow;
+		//	JSClient.ResumeWebView();
+		//	//         Singleton<SuspendAndResumeService>.Instance.ResumeApp();
+		//}
 
 		//protected override async void OnBackgroundActivated(BackgroundActivatedEventArgs args)
 		//{

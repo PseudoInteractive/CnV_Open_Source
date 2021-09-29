@@ -217,7 +217,7 @@ namespace COTG.Game
 			foreach (var i in buildQueue) // COTG Queue
 				yield return i;
 
-			if (CityBuildQueue.all.TryGetValue(cid, out var q))
+			if (ExtendedQueue.all.TryGetValue(cid, out var q))
 			{
 				var count = q.queue.count;
 				var data = q.queue.v;
@@ -233,7 +233,7 @@ namespace COTG.Game
 		{
 			var rv = buildQueue.count;
 
-			if (CityBuildQueue.all.TryGetValue(cid, out var q))
+			if (ExtendedQueue.all.TryGetValue(cid, out var q))
 			{
 				rv += q.queue.count;
 			}
@@ -304,7 +304,7 @@ namespace COTG.Game
 			foreach (var i in buildQueue)
 				action(i);
 
-			if (CityBuildQueue.all.TryGetValue(cid, out var q))
+			if (ExtendedQueue.all.TryGetValue(cid, out var q))
 			{
 				var count = q.queue.count;
 				var data = q.queue.v;
@@ -730,7 +730,7 @@ namespace COTG.Game
 					//}
 				}
 			}
-			if ((this != CityBuildQueue.cityQueueInUse))
+			if ((this != ExtendedQueue.cityQueueInUse))
 			{
 				if (jse.TryGetProperty("bq", out var bq))
 				{

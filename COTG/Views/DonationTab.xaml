@@ -107,17 +107,12 @@
                                                      CellContentStyle="{StaticResource RightAlign}"
                                             
                                              IsVisible="False" />
-                    <telerikGrid:DataGridNumericalColumn  PropertyName="Stone"
+				<telerikGrid:DataGridNumericalColumn  PropertyName="Stone"
                                             CellContentFormat="{}{0,7:N0}"
                                            
                                             CellContentStyle="{StaticResource RightAlign}"
                                              />
-                    <telerikGrid:DataGridNumericalColumn  PropertyName="CartsHome"
-                                            CellContentFormat="{}{0,5:N0}"
-                                            CellContentStyle="{StaticResource RightAlign}"
-                                            SizeMode="Auto"
-                                             />
-                    <telerikGrid:DataGridNumericalColumn  PropertyName="Carts"
+				<telerikGrid:DataGridNumericalColumn  PropertyName="Carts"
                                             
                                            CellContentFormat="{}{0,5:N0}"
                                                       IsVisible="False"

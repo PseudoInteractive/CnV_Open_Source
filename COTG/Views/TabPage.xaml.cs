@@ -120,8 +120,8 @@ namespace COTG.Views
 			if(refresh == null)
 				refresh = new(_Refresh);// { throttled = true };
 										//	ScrollViewer.SetIsVerticalScrollChainingEnabled(this,false);
-			this.Width = 500;
-			this.Height = 500;
+//			this.Width = 500;
+//			this.Height = 500;
 			//	ScrollViewer.SetVerticalScrollMode(this, ScrollMode.Auto); //DependencyObjectExtensions.FindDescendant<ScrollViewer>(this).AllowFocusOnInteraction= false;
 		}
 		public Task VisibilityMaybeChanged()
@@ -289,7 +289,7 @@ namespace COTG.Views
 			};
 			Tabs.TabItems.Add(vi );
 			if(selectMe)
-				this.Tabs.SelectedIndex= 0;
+				this.Tabs.SelectedItem= vi;
 		}
 		private const string DataIdentifier = "ChatTabItem";
 		public TabPage()
@@ -325,7 +325,6 @@ namespace COTG.Views
 			for(int pageId=0;pageId<pageCount;++pageId)
 			{
 				ref var hidden = ref hiddenTabs[pageId];
-					hiddenTabs[pageId] = Array.Empty<UserTab>();
 
 				var hiddenTab = hiddenTabs[pageId];
 				var page = tabPages[pageId];
@@ -341,10 +340,13 @@ namespace COTG.Views
 					{
 						page.RemoveAllTabs();
 						var first= true;
+						if(hiddenTabs[pageId] != null )
+						{
 						foreach( var i in hiddenTabs[pageId])
 						{
 							page.Add(i,first);
 							first = false;
+						}
 						}
 						hiddenTabs[pageId] = null;
 					}

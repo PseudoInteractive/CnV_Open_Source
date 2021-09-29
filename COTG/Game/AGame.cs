@@ -304,11 +304,7 @@ namespace COTG
 			instance = this;
 			base.Initialize();
 
-
-
 		}
-
-
 
 		public static Material CreateFromBytes(byte[] pixels, int x, int y, SurfaceFormat format, EffectPass effect = null)
 		{

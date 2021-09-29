@@ -65,7 +65,7 @@ namespace COTG.Game
 							rv.DangerousGetReferenceAt(q.bspot) = q.Apply(rv.DangerousGetReferenceAt(q.bspot));
 						}
 
-						if (CityBuildQueue.all.TryGetValue(City.build, out var bq))
+						if (ExtendedQueue.all.TryGetValue(City.build, out var bq))
 						{
 							var count = bq.queue.count;
 							var data = bq.queue.v;

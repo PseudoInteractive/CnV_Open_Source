@@ -1638,7 +1638,7 @@ namespace COTG.Game
 		{
 			try
 			{
-				await CityBuildQueue.processLock.WaitAsync();
+				await ExtendedQueue.processLock.WaitAsync();
 
 				if (!IsBuild(cid))
 				{
@@ -1716,7 +1716,7 @@ namespace COTG.Game
 			}
 			finally
 			{
-				CityBuildQueue.processLock.Release();
+				ExtendedQueue.processLock.Release();
 
 			}
 

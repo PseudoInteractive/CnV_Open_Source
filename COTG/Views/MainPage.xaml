@@ -75,6 +75,8 @@
 					<tg:DataGridTextColumn Header= "+" 
 										   PropertyName="dungeonsToggle"
 										   CellContentStyle="{StaticResource CenterAlignLink}"
+										   SizeMode="Fixed"
+											Width="20"
 										   winui:ToolTipService.ToolTip="Tap to expend or collapse dungeons" />
 					<tg:DataGridImageColumn PropertyName="icon"
 											Header="I"
@@ -91,6 +93,7 @@
 					<tg:DataGridTextColumn PropertyName="xy"
 										   winui:ToolTipService.ToolTip="Click to view this city"
 										   CellContentStyle="{StaticResource CenterAlignLink}"
+										    SizeMode="Auto"
 										    />
 					<tg:DataGridNumericalColumn PropertyName="cont"
 												

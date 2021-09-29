@@ -480,5 +480,6 @@ namespace COTG.Views
 		//	//Log("Get focus");
 		//	//	Trace($"Got focus {hasKeyboardFocus}");
 		//}
+
 	}
 }

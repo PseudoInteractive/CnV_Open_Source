@@ -1316,13 +1316,15 @@ namespace COTG.Views
 			UpdateBuildMenuType(type,bspot);
 
 			//				ShellPage.instance.buildMenu.IsOpen = true;
-			var sc = ShellPage.CanvasToScreen(ShellPage.mousePosition);
+
+			var sc = ShellPage.CanvasToDIP(ShellPage.mousePosition).TransformPoint(ShellPage.canvas,ShellPage.instance.grid);
+			
 			//var bm = ShellPage.instance.buildMenu;
 			//Canvas.SetLeft(bm, sc.X - buildToolSpan / 2 - 1);
 			//Canvas.SetTop(bm, sc.Y - buildToolSpan / 2 + 41);
 			//		ShellPage.instance.buildMenuCanvas.Visibility = Visibility.Visible;
 			//bm.ContentMenuBackgroundStyle = new Style( typeof(Rectangle) ) {  (Style)Application.Current.Resources[isRight? "ContentMenuStyle" : "ContentMenu2Style"];
-			sc=buildMenu.Show(sc, ShellPage.instance.grid);
+			sc =buildMenu.Show(sc, ShellPage.instance.grid);
 
 		}
 

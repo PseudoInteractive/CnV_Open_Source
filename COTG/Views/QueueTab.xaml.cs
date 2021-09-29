@@ -116,7 +116,7 @@ namespace COTG.Views
 			{
 				return;
 			}
-			if(CityBuildQueue.TryGetBuildQueue(cid).Any() )
+			if(ExtendedQueue.TryGetBuildQueue(cid).Any() )
 				return;
 			foreach (var c in instance.cities)
 			{
@@ -133,7 +133,7 @@ namespace COTG.Views
 			//build.UpdateBuildStage();
 			//instance.stage.Text = $"Stage: {build.buildStage.AsString()}";
 			instance.cities.Clear();
-				foreach (var city in CityBuildQueue.all.Values)
+				foreach (var city in ExtendedQueue.all.Values)
 				{
 					var view = new BuildItemView(city.cid);
 					instance.cities.Add(view);
@@ -1071,7 +1071,7 @@ namespace COTG.Views
 		public Microsoft.UI.Xaml.Media.ImageBrush brush { get; set; }
 		public int cid; // owner
 		public string text { get; set; }
-		public BuildItem[] queue => CityBuildQueue.TryGetBuildQueue(cid).Select( a => new BuildItem(a) ).ToArray();
+		public BuildItem[] queue => ExtendedQueue.TryGetBuildQueue(cid).Select( a => new BuildItem(a) ).ToArray();
 		public bool isCity => true;
 		public bool isOp => false;
 

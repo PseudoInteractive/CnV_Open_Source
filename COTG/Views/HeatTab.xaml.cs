@@ -308,11 +308,11 @@ namespace COTG.Views
 					for (int counter = 0; counter < 256; ++counter)
 					{
 						++deltaOffset;
-						var id = delta.changes.Span[deltaOffset * 2 % delta.changes.Length];
+						var id = delta.changes[deltaOffset * 2 % delta.changes.Length];
 						if (!Spot.TestContinentFilterPacked(World.PackedIdToPackedContinent(id)))
 							continue;
 
-						var change = ChangeInfo.GetChangeDesc(World.rawPrior0.Span[(int)id], World.rawPrior1.Span[(int)id]);
+						var change = ChangeInfo.GetChangeDesc(World.rawPrior0[(int)id], World.rawPrior1[(int)id]);
 						if (change == null)
 							continue;
 						Note.Show(change);

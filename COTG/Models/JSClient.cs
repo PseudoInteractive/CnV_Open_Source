@@ -1203,7 +1203,7 @@ namespace COTG
 							}
 
 							if (wantUnblock)
-								CityBuildQueue.UnblockQueue(cid);
+								ExtendedQueue.UnblockQueue(cid);
 
 						}
 						city.SetFocus(scrollIntoUI, select);

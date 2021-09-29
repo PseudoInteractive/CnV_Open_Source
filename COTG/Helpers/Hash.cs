@@ -47,7 +47,7 @@ namespace COTG
 		{
 			fixed(char* c = s)
 			{
-				var len = (ulong)s.Length * 2;
+				var len = (ulong)s.Length * 2; // 2 bytes, really?
 				var p = (byte*)c;
 				var bEnd = p + len;
 

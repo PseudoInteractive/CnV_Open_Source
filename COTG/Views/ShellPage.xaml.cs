@@ -205,12 +205,12 @@ namespace COTG.Views
 		public static Layout layout = Layout.c;
 		public static bool rightTabsVisible => layout>=Layout.c;
 
-		public static void SetHeaderText(string text)
-		{
-			// if(instance!=null && instance.navigationView!=null)
-			// instance.Dispatcher.RunAsync(DispatcherQueuePriority.Low, () =>
-			// instance.status.Label=text );
-		}
+		//public static void SetHeaderText(string text)
+		//{
+		//	// if(instance!=null && instance.navigationView!=null)
+		//	// instance.Dispatcher.RunAsync(DispatcherQueuePriority.Low, () =>
+		//	// instance.status.Label=text );
+		//}
 
 		public static bool isHitTestVisible => !ShellPage.isOverPopup && !forceAllowWebFocus&& canvasVisible;
 		//public static bool _isHitTestVisible;
@@ -341,8 +341,8 @@ namespace COTG.Views
 				var sz = canvas.ActualSize;
 				AGame.SetClientSpan(sz.X, sz.Y);
 				//				SetupCoreInput();
-				//MainPage.instance.ShowOrAdd(true);
-				//SpotTab.instance.ShowOrAdd(true);
+				MainPage.instance.ShowOrAdd(true);
+				SpotTab.instance.ShowOrAdd(true);
 				ChatTab.tabPage.AddChatTabs();
 				//	SetWebViewHasFocus(true);
 				//ShellPage.canvas.IsHitTestVisible = false;
@@ -1349,11 +1349,17 @@ namespace COTG.Views
 						var _canvasBaseY = topOffset +canvasScaledY;//.RoundToInt();
 						if(canvasBaseX != _canvasBaseX || canvasBaseY != _canvasBaseY)
 						{
+
 							canvasBaseX = _canvasBaseX;
 							canvasBaseY = _canvasBaseY;
+							var initialWidth0 = instance.grid.ColumnDefinitions[0].ActualWidth;
+							var initialWidth1 = instance.grid.ColumnDefinitions[1].ActualWidth;
+							var initialMargin = instance.webView.Margin.Left;
 							instance.webView.Margin= new(htmlShift,0,0,0);
+							var delta = -htmlShift + (canvasBaseX - initialWidth0);
+							var newWidth1 = initialWidth1 - delta;
 							instance.grid.ColumnDefinitions[0].Width = new GridLength(canvasBaseX,GridUnitType.Pixel);
-							//	instance.grid.RowDefinitions[0].Height = new(canvasYOffset);
+							instance.grid.ColumnDefinitions[1].Width = new GridLength(newWidth1,GridUnitType.Pixel);//	instance.grid.RowDefinitions[0].Height = new(canvasYOffset);
 							canvas.Margin = new Thickness(0,canvasBaseY,0,0);
 						}
 

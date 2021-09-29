@@ -408,18 +408,14 @@ namespace COTG.BinaryMemory
 			return rv;
 		}
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public MemoryOwner<uint> ReadPackedUints()
+		public uint[] ReadPackedUints()
 		{
 			var count = Read7BitEncoded();
-			var rv = MemoryOwner<uint>.Allocate((int)count);
-			var span = rv.Span;
+			var rv = new uint[count];
 			for(int i=0;i<count;++i)
 			{
-				 span[i] = Read7BitEncoded();
-				if(span[i] != 0)
-				{
-					int q = 0;
-				}
+				rv[i] = Read7BitEncoded();
+				
 			}
 			return rv;
 		}

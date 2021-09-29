@@ -389,6 +389,30 @@ namespace COTG
 			Assert(v <=byte.MaxValue);
 			return (byte)v;
 		}
+		public static uint AsUInt(this long v)
+		{
+			Assert(v >= uint.MinValue);
+			Assert(v <=uint.MaxValue);
+			return (uint)v;
+		}
+		public static int AsInt(this long v)
+		{
+			Assert(v >= int.MinValue);
+			Assert(v <=int.MaxValue);
+			return (int)v;
+		}
+		public static int AsInt(this uint v)
+		{
+			Assert(v >= int.MinValue);
+			Assert(v <=int.MaxValue);
+			return (int)v;
+		}
+		public static uint AsUInt(this int v)
+		{
+			Assert(v >= uint.MinValue);
+			Assert(v <=uint.MaxValue);
+			return (uint)v;
+		}
 		public static short AsShort(this int v)
 		{
 			Assert(v >= short.MinValue);

@@ -648,16 +648,15 @@ namespace COTG.Views
 
 		private void Done(object sender, RoutedEventArgs e)
 		{
-		//	CityBuild._IsPlanner(false);
 			PlannerTab.instance.Close();
 		}
 
-		//public override void Close()
-		//{ 
-		//	base.Close();
-		//	CityBuild._IsPlanner(false);
+		public override void Close()
+		{ 
+			base.Close();
+			CityBuild._IsPlanner(false);
 
-		//}
+		}
 
 		private void RotateCenterClick(object sender, RoutedEventArgs e)
 		{

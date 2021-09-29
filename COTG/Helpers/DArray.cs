@@ -267,7 +267,13 @@ namespace COTG
 		{
 			return $"DArray<{typeof(T)}>{count}";
 		}
-
+		public T[] ToArray()
+		{
+			var m = new T[count];
+			for(int i = 0;i < count;++i)
+				m[i] = this[i];
+			return m;
+		}
 		//internal void Sort()
 		//{
 		//	v.SortSmall();

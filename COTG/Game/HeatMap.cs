@@ -35,7 +35,7 @@ namespace COTG.Game
 	}
 	public class HeatMapItem : INotifyPropertyChanged
 	{
-
+		public uint[] a;
 	
 		public SmallTime t;
 		public string desc { get; set; }
@@ -85,6 +85,7 @@ namespace COTG.Game
 		public static ResetableCollection<HeatMapDay> days = new() ;
 		public ResetableCollection<HeatMapDelta> deltas { get; set; } = new(); //  ResetableCollection<HeatMapDelta>.empty; // only valid in heatMapDay
 
+		
 		public HeatMapDay(SmallTime t) : base(t)
 		{
 			desc = dateStr + " ..click to load";
@@ -101,7 +102,7 @@ namespace COTG.Game
 
 		public Azure.ETag eTag; // server version, if our version is not equal to the version on azure we discard current work and fetch the latest
 
-		public MemoryOwner<uint> snapshot = MemoryOwner<uint>.Empty; // 600*600
+		public uint[] snapshot = Array.Empty<uint>(); // 600*600
 		private int deltaCount => hasDeltas ? deltas.Count : 0;
 
 		public bool hasDeltas
@@ -132,7 +133,7 @@ namespace COTG.Game
 			}
 			else
 			{
-				desc = dateStr + new ChangeInfo().ComputeDeltas(prior.snapshot.Span, snapshot.Span).ToString();
+				desc = dateStr + new ChangeInfo().ComputeDeltas(prior.snapshot, snapshot).ToString();
 			}
 
 			NotifyChange(nameof(desc));
@@ -150,14 +151,16 @@ namespace COTG.Game
 			Assert(isLoaded);
 			if (!isLoaded)
 				return;
-			var snap1 = snapshot.Clone();
+			var snap0 = new uint[snapshot.Length];
+			var snap1 = snapshot.ToArray();
+			
 			if (hasDeltas)
 			{
 				foreach (var delta in deltas)
 				{
-					using var snap0 = snap1.Clone();
-					HeatMap.ApplyDelta(snap1.Span, delta.changes.Span);
-					delta.desc = delta.timeStr + new ChangeInfo().ComputeDeltas(snap1.Span, snap0.Span).ToString();
+					MemoryExtensions.CopyTo(snap1, snap0.AsSpan() );
+					HeatMap.ApplyDelta(snap1, delta.changes);
+					delta.desc = delta.timeStr + new ChangeInfo().ComputeDeltas(snap1, snap0).ToString();
 					delta.NotifyChange(nameof(delta.desc));
 				}
 			}
@@ -174,7 +177,7 @@ namespace COTG.Game
 
 
 					o.Write(t);
-					o.WritePackedUints(snapshot.Span);
+					o.WritePackedUints(snapshot);
 
 					int dCount = deltaCount;
 					o.Write7BitEncoded(dCount);
@@ -185,7 +188,7 @@ namespace COTG.Game
 						var d = deltas[i];
 						Assert(d.t.Date() == this.t.Date());
 						o.Write(d.t);
-						o.WritePackedUints(d.changes.Span);
+						o.WritePackedUints(d.changes);
 					}
 					return (int)(o.Position - pData);
 				}
@@ -222,6 +225,12 @@ namespace COTG.Game
 						}
 
 					}
+
+					// data is corrupt?
+					if(!deltas.Any())
+					{
+						deltas.Add(HeatMapDelta.pending);
+					}
 					deltas.NotifyReset();
 				}
 				//NotifyChange();
@@ -236,7 +245,7 @@ namespace COTG.Game
 		//		deltas.Clear();
 		//	}
 		//}
-		public bool AddSnapshot(SmallTime t, MemoryOwner<uint> newSnap)
+		public bool AddSnapshot(SmallTime t, uint[] newSnap)
 		{
 			Trace($"Add Snapshot: {desc} [{t}] [{this.t}]");
 			if (snapshot.Length == 0)
@@ -253,12 +262,12 @@ namespace COTG.Game
 			if (t >= this.t)
 			{
 				// simple operation, add to head
-				var delta = HeatMap.ComputeDelta(snapshot.Span, newSnap.Span);
+				var delta = HeatMap.ComputeDelta(snapshot, newSnap);
 				// only create a snapshot of there is enought space
 				if (delta.Length < HeatMap.minDeltasPerSnapshot * 2)
 				{
 				//	Trace("Ignoring small delta");
-					newSnap.Dispose();
+				
 					return false;
 				}
 				if (!hasDeltas)
@@ -273,52 +282,7 @@ namespace COTG.Game
 			}
 			else
 			{
-
-				using var temp = snapshot.Clone();
-				var tSpan = temp.Span;
-
-				int deltaCount = this.deltaCount;
-				
-				int offset;
-				for (offset = 0; offset < deltaCount; ++offset)
-				{
-					if (deltas[offset].t <= t)
-						break;
-					HeatMap.ApplyDelta(tSpan, deltas[offset].changes.Span);
-				}
-				var newDelta = HeatMap.ComputeDelta(tSpan, newSnap.Span);
-				if (newDelta.Length < HeatMap.minDeltasPerSnapshot * 2)
-				{
-					Trace($"Ignoring small delta {newDelta.Length}");
-					newSnap.Dispose();
-					return false;
-				}
-				if (offset < deltaCount)
-				{
-					HeatMap.ApplyDelta(tSpan, deltas[offset].changes.Span);
-					var newDelta1 = HeatMap.ComputeDelta(tSpan, newSnap.Span);
-				
-					if (newDelta1.Length < HeatMap.minDeltasPerSnapshot * 2)
-					{
-						Trace($"Ignoring small delta {deltas[offset].changes.Length} => {newDelta1.Length}");
-						newSnap.Dispose();
-						newDelta1.Dispose();
-						return false;
-					}
-					Trace($"ChangeDelta {deltas[offset].changes.Length} => {newDelta1.Length}" );
-					deltas[offset].changes = newDelta1;/// HeatMap.ComputeDelta(temp,newSnap);
-				}
-
-				newSnap.Dispose();
-				if (!hasDeltas)
-					deltas.Clear();
-
-				deltas.Insert(offset, new HeatMapDelta(t, newDelta));
-				for (int i = 0; i < deltas.Count - 1; ++i)
-				{
-					Assert(deltas[i].t >= deltas[i + 1].t);
-				}
-				return true;
+				return false;
 			}
 		}
 		public bool IsLoadingOrLoaded()
@@ -488,13 +452,13 @@ namespace COTG.Game
 
 	public class HeatMapDelta : HeatMapItem
 	{
-		internal static HeatMapDelta pending = new(0, MemoryOwner<uint>.Empty);
+		internal static HeatMapDelta pending = new(0, Array.Empty<uint>());
 
-		public MemoryOwner<uint> changes;
+		public uint[] changes;
 		public string timeStr => t.ToString("HH':'mm':'ss");
 
 
-		public HeatMapDelta(SmallTime t, MemoryOwner<uint> deltas) : base(t)
+		public HeatMapDelta(SmallTime t, uint[] deltas) : base(t)
 		{
 			this.changes = deltas;
 
@@ -534,7 +498,7 @@ namespace COTG.Game
 		{
 			
 			var buffer = RentBuffer(day.UncompressedSizeEstimate());
-			byte[] compressedBuffer = null;
+			//byte[] compressedBuffer = null;
 			//	BinaryData data;
 			try
 			{
@@ -578,15 +542,15 @@ namespace COTG.Game
 			}
 			finally
 			{
-				if (compressedBuffer != null)
-					ArrayPool<byte>.Shared.Return(compressedBuffer);
+				//if (compressedBuffer != null)
+				//	ArrayPool<byte>.Shared.Return(compressedBuffer);
 				if (buffer != null)
 					ArrayPool<byte>.Shared.Return(buffer);
 			}
 
 
 		}
-		public static async Task<MemoryOwner<uint>> GetSnapshot(SmallTime t)
+		public static async Task<uint[]> GetSnapshot(SmallTime t)
 		{
 	//		using var _ = await mutex.LockAsync();
 			var day = GetDay(t, false);
@@ -599,14 +563,14 @@ namespace COTG.Game
 			await day.LoadInternal();
 
 			Assert(day.isLoaded);
-			var rv = day.snapshot.Clone();
+			var rv = day.snapshot.ToArray();
 			if (day.hasDeltas)
 			{
 				foreach (var d in day.deltas)
 				{
 					if (d.t < t)
 						break;
-					ApplyDelta(rv.Span, d.changes.Span);
+					ApplyDelta(rv, d.changes);
 
 				}
 			}
@@ -673,9 +637,9 @@ namespace COTG.Game
 
 
 
-		public static async Task<(HeatMapDay day, bool modified)> AddSnapshot(SmallTime t, MemoryOwner<uint> isSnap, bool uploadIfChanged)
+		public static async Task<(HeatMapDay day, bool modified)> AddSnapshot(SmallTime t, uint[] isSnap, bool uploadIfChanged)
 		{
-			using var _ = await mutex.LockAsync();
+			using var ___ = await mutex.LockAsync();
 			var day =await (GetDay(t,true)).LoadInternal();
 			if (day != null)
 			{
@@ -692,16 +656,18 @@ namespace COTG.Game
 			return (null, false);
 		}
 
-		public static MemoryOwner<uint> ComputeDelta(Span<uint> d0, Span<uint> d1)
+		public static unsafe uint[] ComputeDelta(Span<uint> d0,Span<uint> d1)
 		{
-			var rv = new DArray<uint>(World.spanSquared);
-			int count = d0.Length;
+			var count = spanSquared;
 			Assert(d1.Length == count);
-			for (int i = 0; i < count; ++i)
+			Assert(d0.Length == count);
+		
+			List<uint> rv = new();
+			for(var i = 0;i < count;++i)
 			{
 				var c0 = d0[i];
 				var c1 = d1[i];
-				if (c0 == c1)
+				if(c0 == c1)
 				{
 					continue;
 				}
@@ -709,13 +675,12 @@ namespace COTG.Game
 				rv.Add(c0 ^ c1);
 
 			}
-			var m = MemoryOwner<uint>.Allocate(rv.count);
-			for (int i = 0; i < rv.count; ++i)
-				m.Span[i] = rv[i];
-			return m;
+			return rv.ToArray();
 		}
 
-		public static void ApplyDelta(Span<uint> d, ReadOnlySpan<uint> delta)
+		
+
+		public static void ApplyDelta(Span<uint> d,Span<uint> delta)
 		{
 
 			var count = delta.Length / 2;
@@ -727,6 +692,7 @@ namespace COTG.Game
 
 			}
 		}
+		
 
 	}
 	public class CityCounts
