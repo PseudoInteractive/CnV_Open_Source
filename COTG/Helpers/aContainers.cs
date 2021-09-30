@@ -51,12 +51,20 @@ namespace COTG
 		{
 			if (CollectionChanged != null)
 			{
-				App.QueueOnUIThread(() =>
+				App.QueueOnUIThread(() =>{
 
 				   //  Assert(App.IsOnUIThread());
-				   CollectionChanged(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset)));
-			}
+				try
+				{
+					CollectionChanged(this,new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
 
+
+				}
+				catch(Exception __ex)
+				{
+					Debug.LogEx(__ex);
+				} }			);
+			}
         }
 
         public void Set(IEnumerable<T> src)
@@ -108,11 +116,19 @@ namespace COTG
 			if(CollectionChanged!=null)
 	            App.DispatchOnUIThreadLow( ()=>
 				{
-					var id = IndexOf( item );
-					if(id != -1)
-						CollectionChanged.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add,item, id ));
-					else
-						CollectionChanged.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
+					try
+					{
+						var id = IndexOf(item);
+						if(id != -1)
+							CollectionChanged.Invoke(this,new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add,item,id));
+						else
+							CollectionChanged.Invoke(this,new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
+
+					}
+					catch(Exception __ex)
+					{
+						Debug.LogEx(__ex);
+					}
 				});
         }
         public new void Insert(int id, T item)
@@ -121,11 +137,19 @@ namespace COTG
 			if (CollectionChanged != null)
 				App.DispatchOnUIThreadLow(() =>
 				{
-					var id = IndexOf(item);
-					if (id != -1)
-						CollectionChanged.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, item, id));
-					else
-						CollectionChanged.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
+					try
+					{
+						var id = IndexOf(item);
+						if(id != -1)
+							CollectionChanged.Invoke(this,new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add,item,id));
+						else
+							CollectionChanged.Invoke(this,new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
+
+					}
+					catch(Exception __ex)
+					{
+						Debug.LogEx(__ex);
+					}
 				});
         }
         public new void RemoveAt(int id)
@@ -136,10 +160,18 @@ namespace COTG
 			if (CollectionChanged != null)
 				App.DispatchOnUIThreadLow(() =>
 				{
-					if (id <= Count)
-						CollectionChanged.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, item, id));
-					else
-						CollectionChanged.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
+					try
+					{
+						if(id <= Count)
+							CollectionChanged.Invoke(this,new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove,item,id));
+						else
+							CollectionChanged.Invoke(this,new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
+
+					}
+					catch(Exception __ex)
+					{
+						Debug.LogEx(__ex);
+					}
 				});
         }
         public new void Remove(T i)

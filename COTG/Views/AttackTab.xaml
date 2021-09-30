@@ -402,11 +402,10 @@
 				GripperCursor="SizeNorthSouth"
                          HorizontalAlignment="Stretch"
                          VerticalAlignment="Top"
-                         Background="{x:Null}">
+                         Background="transparent">
 			<tk:GridSplitter.Element>
 				<FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}"
-                          Glyph="&#xE76F;"
-                          IsHitTestVisible="False" />
+                          Glyph="&#xE76F;" />
 			</tk:GridSplitter.Element>
 		</tk:GridSplitter>
 		<Grid Grid.Row="2">

@@ -14192,35 +14192,42 @@ function outer(){
 							B1g * (100));
 						var Z1g = Number(h1g) - Number(f1g);
 						var g1g = Q2(Number(Z1g));
-						if (Z1g > 100) {
+						if (Z1g > 100) { // time left is > 1 s
 						
 							// build speedup?
 		
 							if (city.itu && city.itu[6] && city.itu[6] > 0) { // build speedup
 								DoPoll2(200);
-								// callDelay = 600;
+								callDelay = 200;
 							}
+							//if(callDelay > Z1g+50 )
+							//	callDelay=Z1g+50;
 							UpdateBuildProgressBar(J1g, A1g, n1g, g1g);
 							//   console.log("progress " + callDelay);
 						}
 						else {
 							// this building is complete
 							//    console.log("done!");
-							//city.bd[J1g].bid = V1g;  // insert thebuilding into the map
-							//city.bd[J1g].bl = P1g;
-							//$(__s[6875]) // remove from queue
-							//	.first()
-							//	.remove();
-							//city.bq.splice(0, 1);
+							city.bd[J1g].bid = V1g;  // insert thebuilding into the map
+							if(city.bq[0].elvl)
+								city.bd[J1g].bl=city.bq[0].elvl;
+							$(__s[6875]) // remove from queue
+								.first()
+								.remove();
+							city.bq.splice(0, 1);
 						    
-							//h9(J1g, n1g);
-							//updateBuildQueue();
+							h9(J1g, n1g);
+							updateBuildQueue();
 							//redrawCity();
 	   // this one is complete
-							 DoPoll2(300);
-							//  callDelay = 200;
-								clearTimeout(i8);
-								callDelay = 0;
+							let delay = Z1g+100;
+								if( delay < 1000)
+									delay = 1000;
+  						
+								DoPoll2(delay + 300);
+								callDelay=delay;
+							//	clearTimeout(i8);
+							//	callDelay = 0;
 						}
 
 					}

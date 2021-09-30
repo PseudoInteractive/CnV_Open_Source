@@ -183,7 +183,7 @@ IsTabStop="True"
         </tg:RadDataGrid>
         <tk:GridSplitter
                     Grid.Row="2"
-                    Background="{x:Null}"
+                    Background="transparent"
 									 				IsTabStop="True"
 				CursorBehavior="ChangeOnSplitterHover"
 				GripperCursor="SizeNorthSouth"
@@ -194,7 +194,7 @@ IsTabStop="True"
                     >
             <tk:GridSplitter.Element>
                 <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE76F;"
-                    Foreground="White"  IsHitTestVisible="False"    />
+                 />
             </tk:GridSplitter.Element>
         </tk:GridSplitter>
     </Grid>

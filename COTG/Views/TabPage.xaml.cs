@@ -94,7 +94,7 @@ namespace COTG.Views
 			{
 				Assert(isFocused);
 			}
-			Log($"VisibilityChanged: {visible} {this}");
+//			Log($"VisibilityChanged: {visible} {this}");
 			return Task.CompletedTask;
 
 		}

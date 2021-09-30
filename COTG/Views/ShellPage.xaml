@@ -13,6 +13,7 @@
       x:Name="shellPage"
       Loaded="OnLoaded"
 	  Background="{x:Null}"
+	  Margin="0"
       mc:Ignorable="d"	
 >
 	<Page.Resources>
@@ -23,7 +24,7 @@
 			</ResourceDictionary.MergedDictionaries>
 		</ResourceDictionary>
 	</Page.Resources>
-	<Grid x:Name="grid"  x:FieldModifier="public" >
+	<Grid Margin="0" x:Name="grid"  x:FieldModifier="public" >
 		<Grid.Resources>
 			<Style x:Key="TimeFlyoutStyle"
                TargetType="FlyoutPresenter">
@@ -47,113 +48,10 @@
 			<ColumnDefinition Width="1*" />
 		</Grid.ColumnDefinitions>
 		<!-- Overlay grid for sizing -->
-		<Grid Grid.RowSpan="6" Grid.ColumnSpan="3" Canvas.ZIndex="33" >
-			
-			<Grid.RowDefinitions>
-				<RowDefinition Height="4*" />
-				<RowDefinition Height="1*" />
-				<RowDefinition Height="1*" />
-				<RowDefinition Height="1*" />
-				<RowDefinition Height="1*" />
-				<RowDefinition Height="1*" />
-				<RowDefinition Height="4*"/>
-			</Grid.RowDefinitions>
-			
-			<Grid.ColumnDefinitions>
-				<ColumnDefinition Width="15" />
-				<ColumnDefinition Width="*" />
-				<ColumnDefinition Width="15" />
-			</Grid.ColumnDefinitions>
-			
-			<Rectangle PointerPressed="LayoutEnter(0)" RadiusX="4" RadiusY="4"
-					   IsTabStop="True"
-					   Margin="0,4,0,4"
-					   IsHitTestVisible="True"
-					   StrokeThickness="2"
-					   Stroke="#F0800040"	 Grid.Row="1" />
-			
-			<Rectangle PointerPressed="LayoutEnter(1)" RadiusX="4" RadiusY="4"
-					   Margin="0,4,0,4"
-					   IsHitTestVisible="True"
-					   IsTabStop="True" 
-					   StrokeThickness="2" Stroke="#F0600050"	 Grid.Row="2" />
-			
-			<Rectangle PointerPressed="LayoutEnter(2)" RadiusX="4" RadiusY="4"
-					   IsTabStop="True"
-					   IsHitTestVisible="True"
-					   Margin="0,4,0,4"
-					   StrokeThickness="2"
-					   Stroke="#F0400060" Grid.Row="3" />
-			
-			<Rectangle PointerPressed="LayoutEnter(3)"  IsTabStop="True"
-					   IsHitTestVisible="True"
-					   RadiusX="4" RadiusY="4"
-					   Margin="0,4,0,4"
-					   StrokeThickness="2"
-					   Stroke="#F0200070"	 Grid.Row="4" />
+		
 
-			<Rectangle PointerPressed="LayoutEnter(4)"
-					   StrokeThickness="2"
-					   RadiusX="4" RadiusY="4"
-					   Margin="0,4,0,4"
-					   IsTabStop="True"
-					   IsHitTestVisible="True"
-					   Stroke="#F0000070"	 Grid.Row="5" />
-			
-			<!-- Right -->
-
-			<Rectangle PointerPressed="LayoutEnter(0)" RadiusX="4" RadiusY="4"
-					   IsTabStop="True"
-					   Grid.Column="2"
-					   Margin="0,4,0,4"
-					   IsHitTestVisible="True"
-					   StrokeThickness="2"
-					   Stroke="#F0800040"	 Grid.Row="1" />
-
-			<Rectangle PointerPressed="LayoutEnter(1)" RadiusX="4" RadiusY="4"
-					   Margin="0,4,0,4"
-					   Grid.Column="2"
-					   IsHitTestVisible="True"
-					   IsTabStop="True" 
-					   StrokeThickness="2" 
-					   Stroke="#F0600050"	 Grid.Row="2" />
-
-			<Rectangle PointerPressed="LayoutEnter(2)" RadiusX="4" RadiusY="4"
-					   IsTabStop="True"
-					   IsHitTestVisible="True"
-					   Grid.Column="2"
-					   Margin="0,4,0,4"
-					   StrokeThickness="2"
-					   Stroke="#F0400060" Grid.Row="3" />
-
-			<Rectangle PointerPressed="LayoutEnter(3)"  IsTabStop="True"
-					   IsHitTestVisible="True"
-					   RadiusX="4" RadiusY="4"
-					   Grid.Column="2"
-					   Margin="0,4,0,4"
-					   StrokeThickness="2"
-					   Stroke="#F0200070"	 Grid.Row="4" />
-
-			<Rectangle PointerPressed="LayoutEnter(4)"
-					   StrokeThickness="2"
-					   RadiusX="4" RadiusY="4"
-					   Grid.Column="2"
-					   Margin="0,4,0,4"
-					   IsTabStop="True"
-					   IsHitTestVisible="True"
-					   Stroke="#F0000070"	 Grid.Row="5" />
-
-		</Grid>
-
-		<winui:WebView2 x:Name="webView" x:FieldModifier="public"
-						Grid.RowSpan="5"
-						Grid.ColumnSpan="2"
-						Canvas.ZIndex="10"
-						AllowFocusOnInteraction="False"
-						AllowDrop="False"
-						AllowFocusWhenDisabled="False"					
-						Grid.Row="1" />
-		<CommandBar Grid.ColumnSpan="2" TabFocusNavigation="Once" UseSystemFocusVisuals="True" x:Name="commandBar" x:FieldModifier="public"   >
+		
+		<CommandBar Grid.ColumnSpan="2" TabFocusNavigation="Once" UseSystemFocusVisuals="True" x:Name="commandBar" x:FieldModifier="public"  >
 			<CommandBar.Content   >
 				<StackPanel Orientation="Horizontal" VerticalAlignment="Center">
 					<ComboBox x:Name="windowLayout" SelectedIndex="2" SelectionChanged="windowLayout_SelectionChanged" VerticalAlignment="Center" Margin="4"
@@ -166,13 +64,13 @@
 					</ComboBox>
 
 					<ComboBox x:Name="cityBox" x:FieldModifier="public" 
-                    Width="200"
-					IsEditable="True"
-					TextSubmitted="CitySubmitted"
-                 
-                    ItemsSource="{x:Bind game:City.emptyCitySource, Mode=OneTime}"
-                      VerticalAlignment="Center" ToolTipService.ToolTip="'Build City'- the city that you would build if you were building a city"
-                      Margin="4" >
+                 Width="200"
+		  IsEditable="True"
+TextSubmitted="CitySubmitted"
+            
+                 ItemsSource="{x:Bind game:City.emptyCitySource, Mode=OneTime}"
+                 VerticalAlignment="Center" ToolTipService.ToolTip="'Build City'- the city that you would build if you were building a city"
+                 Margin="4" >
 						<ComboBox.ItemTemplate>
 							<DataTemplate x:Name="SingleLineDataTemplate" x:DataType="game:City">
 								<StackPanel Orientation="Horizontal" Height="32" >
@@ -240,7 +138,7 @@
 						<Flyout FlyoutPresenterStyle="{StaticResource TimeFlyoutStyle}">
 							<Grid>
 								<Grid.RowDefinitions>
-									
+
 								</Grid.RowDefinitions>
 								<TextBlock Grid.Row="1" x:Name="eventTimeTravelText">Preview Time</TextBlock>
 								<Slider x:Name="eventTimeTravelSlider"
@@ -332,6 +230,139 @@
 				<AppBarButton Label="Settings" Icon="Setting" Click="ShowSettings" Style="{StaticResource AppBarButtonRevealStyle}"/>
 			</CommandBar.PrimaryCommands>
 		</CommandBar>
+
+		<Grid Margin="0" x:Name="layoutGrid" Grid.RowSpan="6" Grid.ColumnSpan="3" Canvas.ZIndex="33" >
+
+			<Grid.RowDefinitions>
+				<RowDefinition Height="2*" />
+				<RowDefinition Height="1*" />
+				<RowDefinition Height="1*" />
+				<RowDefinition Height="1*" />
+				<RowDefinition Height="1*" />
+				<RowDefinition Height="1*" />
+				<RowDefinition Height="2*"/>
+			</Grid.RowDefinitions>
+
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="15" />
+				<ColumnDefinition Width="*" />
+				<ColumnDefinition Width="15" />
+			</Grid.ColumnDefinitions>
+
+			<Button Name="layout0"
+					Click="LayoutEnterX(0)"
+					Margin="0,3,0,3"
+					Padding="3"
+					Background="Transparent"
+					CornerRadius="3"
+					BorderBrush="#C0700040"
+					ToolTipService.ToolTip="Legacy Layout"
+					Grid.Row="1" 
+					/>
+
+			<Button Name="layout1"
+					Click="LayoutEnterX(1)" 
+					Background="Transparent"
+					Margin="0,3,0,3"
+					Padding="3"
+					CornerRadius="3"
+					ToolTipService.ToolTip="Max View Layout"
+					Grid.Row="2" 
+					BorderBrush="#C0602050"	  
+					/>
+
+			<Button Name="layout2"
+					Click="LayoutEnterX(2)" 
+					Background="Transparent"
+					Margin="0,3,0,3"
+					Padding="3"
+					CornerRadius="3"
+					ToolTipService.ToolTip="Busy Layout"				 
+					BorderBrush="#C0400060" 
+					Grid.Row="3"
+					/>
+
+			<Button Name="layout3"
+					Click="LayoutEnterX(3)" 
+					Background="Transparent"
+					Margin="0,3,0,3"
+					Padding="3"
+					CornerRadius="3"
+   					ToolTipService.ToolTip="Task Layout"
+					BorderBrush="#C0202070"	 
+					Grid.Row="4"
+					/>
+
+			<Button Name="layout4"
+					Click="LayoutEnterX(4)" 
+					Background="Transparent"
+					Margin="0,3,0,3"
+					Padding="3"
+					CornerRadius="3"
+   					ToolTipService.ToolTip="Geek Sheet Layout"
+					IsHitTestVisible="True"
+					BorderBrush="#C0000080"
+					Grid.Row="5"
+					/>
+
+			<!-- Right -->
+
+			<Button Click="LayoutEnterX(0)"
+					Margin="0,3,0,3"
+					Padding="3"
+					Background="Transparent"
+			CornerRadius="3"
+			BorderBrush="#C0700040"
+			ToolTipService.ToolTip="Legacy Layout"
+			Grid.Row="1" 
+			Grid.Column="2"
+			/>
+
+			<Button Click="LayoutEnterX(1)" 
+			Background="Transparent"
+						Margin="0,3,0,3"
+					Padding="3"
+			CornerRadius="3"
+			ToolTipService.ToolTip="Max View Layout"
+			Grid.Row="2" 
+			BorderBrush="#C0602050"	  
+			Grid.Column="2"
+			/>
+
+			<Button Click="LayoutEnterX(2)" 
+			Background="Transparent"
+					Margin="0,3,0,3"
+					Padding="3"
+					CornerRadius="3"
+				ToolTipService.ToolTip="Busy Layout"				 
+			BorderBrush="#C0400060" 
+			Grid.Row="3"
+			Grid.Column="2"
+			/>
+
+			<Button Click="LayoutEnterX(3)" 
+			Background="Transparent"
+					Margin="0,3,0,3"
+					Padding="3"
+					CornerRadius="3"
+					ToolTipService.ToolTip="Task Layout"
+		 	 BorderBrush="#C0202070"
+			Grid.Row="4"
+			Grid.Column="2"
+			/>
+			<Button Click="LayoutEnterX(4)" 
+			Background="Transparent"
+					Margin="0,3,0,3"
+					Padding="3"
+					CornerRadius="3"
+					ToolTipService.ToolTip="Geek Sheet Layout"
+			
+			BorderBrush="#C0000080"
+			Grid.Row="5"
+			Grid.Column="2"
+			/>
+
+		</Grid>
 		<Grid Grid.Column="2" Grid.RowSpan="6" Margin="0,0,0,0">
 			<Grid.RowDefinitions>
 				<RowDefinition Height="3*"/>
@@ -343,7 +374,6 @@
 				IsTabStop="True"
 				CursorBehavior="ChangeOnSplitterHover"
 				GripperCursor="SizeWestEast"
-                        Background="{x:Null}"
                         VerticalAlignment="Top"
                         HorizontalAlignment="Stretch"
                         Height="11"
@@ -351,7 +381,7 @@
                         Canvas.ZIndex="22">
 				<tk:GridSplitter.Element>
 					<FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE76F;"
-                    Foreground="White"      />
+                       />
 				</tk:GridSplitter.Element>
 			</tk:GridSplitter>
 		</Grid>
@@ -365,7 +395,7 @@
 				<ColumnDefinition />
 			</Grid.ColumnDefinitions>
 			<Frame x:Name="chatTabs" x:FieldModifier="public" Grid.Column ="1" Grid.Row="1"  Margin="12,12,16,0" IsNavigationStackEnabled="False" TabFocusNavigation="Once" />
-			<!--Chat Width resizer--> 
+			<!--Chat Width resizer-->
 			<tk:GridSplitter
                         Background="{x:Null}"
                     Grid.Row="1"
@@ -380,13 +410,13 @@
                         Canvas.ZIndex="22">
 				<tk:GridSplitter.Element>
 					<FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE784;"
-                    Foreground="White"    />
+               />
 				</tk:GridSplitter.Element>
 			</tk:GridSplitter>
-			 <!--Chat Height resizer--> 
+			<!--Chat Height resizer-->
 			<tk:GridSplitter
                     Grid.Row="1"
-                    Background="{x:Null}" Tapped="chatResizeTapped"
+                     Tapped="chatResizeTapped"
 												IsTabStop="True"
 		 				
 				CursorBehavior="ChangeOnSplitterHover"
@@ -399,7 +429,7 @@
                     >
 				<tk:GridSplitter.Element>
 					<FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE76F;"
-                    Foreground="White"     />
+                        />
 				</tk:GridSplitter.Element>
 			</tk:GridSplitter>
 		</Grid>
@@ -418,7 +448,7 @@
                               
                                   Canvas.ZIndex="55"
                                   StackMode="Replace" />
-		
+
 		<!--<winui:InfoBar x:Name="infoBar"
                                   Grid.Row="1"
                                   Grid.Column="1"
@@ -426,8 +456,19 @@
 					   Title=":o" Canvas.ZIndex="35"
                                >
 			<Button></Button>
-			--><!--<tk:MarkdownTextBlock x:Name="infoMD" x:FieldModifier="public" Text="TBA" Background="{x:Null}"/>--><!--
+			-->
+		<!--<tk:MarkdownTextBlock x:Name="infoMD" x:FieldModifier="public" Text="TBA" Background="{x:Null}"/>-->
+		<!--
 		</winui:InfoBar>-->
+		<winui:WebView2 x:Name="webView" x:FieldModifier="public"
+						Grid.RowSpan="5"
+						Grid.ColumnSpan="2"
+						Canvas.ZIndex="10"
+						AllowFocusOnInteraction="False"
+						AllowDrop="False"
+						AllowFocusWhenDisabled="False"					
+						Grid.Row="1" />
+		
 		<tk:GridSplitter
                         Background="{x:Null}"
                     Grid.RowSpan="5"
@@ -442,7 +483,7 @@
                         Canvas.ZIndex="22">
 			<tk:GridSplitter.Element>
 				<FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE784;"
-                    Foreground="White"     
+                 
 						  />
 			</tk:GridSplitter.Element>
 		</tk:GridSplitter>

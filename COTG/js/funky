@@ -15217,13 +15217,25 @@ function outer() {
                         if (Z1g > 100) {
                             if (city.itu && city.itu[6] && city.itu[6] > 0) {
                                 DoPoll2(200);
+                                callDelay = 200;
                             }
                             UpdateBuildProgressBar(J1g, A1g, n1g, g1g);
                         }
                         else {
-                            DoPoll2(300);
-                            clearTimeout(i8);
-                            callDelay = 0;
+                            city.bd[J1g].bid = V1g;
+                            if (city.bq[0].elvl)
+                                city.bd[J1g].bl = city.bq[0].elvl;
+                            $(__s[6875])
+                                .first()
+                                .remove();
+                            city.bq.splice(0, 1);
+                            h9(J1g, n1g);
+                            updateBuildQueue();
+                            let delay = Z1g + 100;
+                            if (delay < 1000)
+                                delay = 1000;
+                            DoPoll2(delay + 300);
+                            callDelay = delay;
                         }
                     }
                     else {

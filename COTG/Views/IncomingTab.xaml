@@ -379,7 +379,7 @@
                         HorizontalAlignment="Stretch">
 			<tk:GridSplitter.Element>
 				<FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE76F;"
-                    Foreground="White"  IsHitTestVisible="False" />
+                   />
 			</tk:GridSplitter.Element>
 		</tk:GridSplitter>
 	</Grid>

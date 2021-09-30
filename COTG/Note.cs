@@ -24,6 +24,7 @@ using CommunityToolkit.WinUI.UI.Controls;
 
 using static COTG.Debug;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml;
 
 namespace COTG
 {
@@ -123,9 +124,18 @@ namespace COTG
 					//}
 					//if (!useInfoBar)
 					{
-						var textBlock = new MarkdownTextBlock() { Text = s, Background = null };
-						textBlock.LinkClicked += MarkDownLinkClicked;
-						ShellPage.inAppNote.Show(textBlock, timeout);
+						try
+						{
+							var textBlock = new MarkdownTextBlock() { Text = s,Background = null };
+							textBlock.TableCellPadding = new Thickness(0, 0,0,0); // hack!
+							textBlock.LinkClicked += MarkDownLinkClicked;
+							ShellPage.inAppNote.Show(textBlock,timeout);
+
+						}
+						catch(Exception __ex)
+						{
+							Debug.LogEx(__ex);
+						}
 
 						//ShellPage.instance.infoBar.IsOpen = false;
 					}

@@ -6,7 +6,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:winui="using:Microsoft.UI.Xaml.Controls"
     mc:Ignorable="d"
-    TabFocusNavigation="Cycle"
+    TabFocusNavigation="Once"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 	<Page.Resources>
 		<ResourceDictionary>
@@ -39,7 +39,7 @@
 		</winui:TabView.TabStripHeader>
 		<winui:TabView.TabStripFooter>
 			<Grid x:Name="CustomDragRegion"  Background="{x:Null}">
-				<TextBlock x:Name="tip" x:FieldModifier="public" VerticalAlignment="Center" HorizontalAlignment="Center" Tapped="tip_Tapped" TabFocusNavigation="Cycle" />
+				<TextBlock x:Name="tip" x:FieldModifier="public" VerticalAlignment="Center" HorizontalAlignment="Center" Tapped="tip_Tapped" TabFocusNavigation="Once" />
 			</Grid>
 		</winui:TabView.TabStripFooter>
 	</winui:TabView>

@@ -18,6 +18,25 @@
 	<x:Double x:Key="TeachingTipMaxWidth">680</x:Double>
 	<SolidColorBrush x:Key="HyperLinkBrush" Color="MediumPurple" />
 
+
+	<Style TargetType="Grid" >
+		<Setter Property="TabFocusNavigation" Value="Once" />
+	</Style>
+	<Style TargetType="tk:GridSplitter" >
+		<Setter Property="TabFocusNavigation" Value="Once" />
+	</Style>
+	<Style TargetType="StackPanel" >
+		<Setter Property="TabFocusNavigation" Value="Once" />
+	</Style>
+	<Style TargetType="winui:TreeViewItem" >
+		<Setter Property="TabFocusNavigation" Value="Once" />
+	</Style>
+	<Style TargetType="winui:TreeView" >
+		<Setter Property="TabFocusNavigation" Value="Once" />
+	</Style>
+	<Style TargetType="winui:TabViewItem" >
+		<Setter Property="TabFocusNavigation" Value="Once" />
+	</Style>
 	<Style TargetType="HyperlinkButton" >
 		<Setter Property="Foreground" Value="{StaticResource HyperLinkBrush}" />
 		<Setter Property="FontFamily" Value="Tw Cen MT Condensed"/>
@@ -30,8 +49,8 @@
 		<Setter Property="FontFamily" Value="Tw Cen MT Condensed"/>
 	</Style>
 	<Style TargetType="Button" BasedOn="{StaticResource ButtonRevealStyle}">
-		<Setter Property="VerticalAlignment" Value="Center"/>
-		<Setter Property="HorizontalAlignment" Value="Center"/>
+		<Setter Property="VerticalAlignment" Value="Stretch"/>
+		<Setter Property="HorizontalAlignment" Value="Stretch"/>
 		<Setter Property="FontFamily" Value="Tw Cen MT Condensed"/>
 		<Setter Property="FontSize" Value="{StaticResource SmallFontSize}" />
 		<Setter Property="Margin" Value="2"/>

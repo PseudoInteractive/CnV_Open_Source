@@ -409,10 +409,14 @@ namespace COTG.Game
 				//	}
 				catch (Exception e)
 				{
-					Assert(isLoaded);
+				//	Assert(isLoaded);
 					if (loadState == AzureLoadState.loading)
 					{
 						Assert(false);
+						loadState = AzureLoadState.failed;
+					}
+					else
+					{
 						loadState = AzureLoadState.failed;
 					}
 					LogEx(e,false);

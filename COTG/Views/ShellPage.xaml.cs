@@ -933,6 +933,7 @@ namespace COTG.Views
 			}
 		}
 
+
 		private void CityBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
 		{
 			var sel = cityBox.SelectedItem as City;
@@ -1411,23 +1412,26 @@ namespace COTG.Views
 			flyout.ShowAt(chatGrid, e.GetPosition(chatGrid));
 		}
 
-		private PointerEventHandler LayoutEnter(object offset)
-		{
-			
-			void fn(object sender,PointerRoutedEventArgs e) {
-			
-				LayoutEnter2((Layout)offset);
-			}
-			
-			return  fn;
 	
-		}
 
-		private void LayoutEnter2(Layout layout)
+		private RoutedEventHandler LayoutEnterX(object offset)
 		{
-			SetLayout(layout);
+
+			void fn(object sender,RoutedEventArgs e)
+			{
+				var s = sender as Button;
+				foreach(Button b in layoutGrid.Children)
+				{
+					b.IsEnabled=true;
+				}
+				s.IsEnabled=false;
+				SetLayout((Layout)offset);
+			}
+
+			return fn;
 
 		}
+
 
 		//		private async void CookieClick(object sender, RoutedEventArgs e)
 		//		{

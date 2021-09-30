@@ -81,23 +81,45 @@ namespace COTG.Views
 		
 		private void CityName_SuggestionChosen(AutoSuggestBox sender,AutoSuggestBoxSuggestionChosenEventArgs args)
 		{
+			
 			if(Spot.TryGet(args.SelectedItem as string,!onlyMine.IsChecked.GetValueOrDefault(),out var _city))
 			{
 				this.city = _city;
 				OnPropertyChanged();
 		
 			}
-		}
-
-		private void AutoSuggestBox_CharacterReceived(UIElement sender,CharacterReceivedRoutedEventArgs args)
-		{
-			if(args.Character==(char)27 )
+			else
 			{
-				suggestBox.Text = name;
+				this.city = null;
+				sender.Text = string.Empty;
 				OnPropertyChanged();
-				args.Handled=true;
-				
+
 			}
 		}
+
+		private void suggestBox_QuerySubmitted(AutoSuggestBox sender,AutoSuggestBoxQuerySubmittedEventArgs args)
+		{
+				if(args.ChosenSuggestion != null)
+				{
+				}
+				else
+			{
+				this.city = null;
+				sender.Text = string.Empty; 
+				OnPropertyChanged();
+
+			}
+		}
+
+		//private void AutoSuggestBox_CharacterReceived(UIElement sender,CharacterReceivedRoutedEventArgs args)
+		//{
+		//	if(args.Character==(char)27 )
+		//	{
+		//		suggestBox.Text = name;
+		//		OnPropertyChanged();
+		//		args.Handled=true;
+
+		//	}
+		//}
 	}
 }

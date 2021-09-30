@@ -129,7 +129,7 @@ namespace COTG.Views
 
         public bool IsClosing { get; set; }
 
-        public event EventHandler<WindowClosingEventArgs> Closing;
+        public event Func<bool> WantClose;
         public event EventHandler<WindowMovingEventArgs> Moving;
         public event EventHandler<WindowSizingEventArgs> Sizing;
         public event EventHandler<WindowDpiChangedEventArgs> DpiChanged;
@@ -228,11 +228,11 @@ namespace COTG.Views
         private IntPtr _hwnd = IntPtr.Zero;
         Orientation _currentOrientation;
 
-        private void OnClosing()
-        {
-            WindowClosingEventArgs windowClosingEventArgs = new(this);
-            Closing.Invoke(this, windowClosingEventArgs);
-        }
+        //private void OnClosing()
+        //{
+        //    WindowClosingEventArgs windowClosingEventArgs = new(this);
+        //    Closing.Invoke(this, windowClosingEventArgs);
+        //}
 
         private void OnWindowMoving()
         {
@@ -351,16 +351,13 @@ namespace COTG.Views
                     break;
 
                 case PInvoke.User32.WindowMessage.WM_CLOSE:
-
+					Debug.Trace("Wm_CLOSE");
                     //If there is a Closing event handler and the close message wasn't send via
                     //this event (that set IsClosing=true), the message is ignored. 
-                    if (this.Closing is not null)
+                    if (this.WantClose is not null)
                     {
-                        if (IsClosing == false)
-                        {
-                            OnClosing();
-                        }
-                        return IntPtr.Zero;
+						if(WantClose() == false )
+	                        return IntPtr.Zero;
                     }
                     break;
 

@@ -26,6 +26,7 @@
 						Grid.Column="2" Text="{x:Bind name}" 
 						PlaceholderText="None"
 						TextChanged="{x:Bind views:PlayerGroup.CityNameSuggest_TextChanged}"
+						QuerySubmitted="suggestBox_QuerySubmitted"
 						SuggestionChosen="CityName_SuggestionChosen"
 						AutomationProperties.Name="cityBoxName"
 						ToolTipService.ToolTip="Enter characters to search.."

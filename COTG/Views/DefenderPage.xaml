@@ -352,7 +352,7 @@
         </tg:RadDataGrid>
         <tk:GridSplitter
                     Grid.Row="1"
-                    Background="{x:Null}"
+                    Background="transparent"
                         VerticalAlignment="Top"
                     Canvas.ZIndex="22"
                         Height="11"
@@ -360,7 +360,7 @@
                     >
             <tk:GridSplitter.Element>
                 <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE76F;"
-                    Foreground="White"  IsHitTestVisible="False"    />
+                       />
             </tk:GridSplitter.Element>
         </tk:GridSplitter>
     </Grid>

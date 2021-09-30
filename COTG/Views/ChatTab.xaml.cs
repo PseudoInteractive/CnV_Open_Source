@@ -302,18 +302,26 @@ namespace COTG.Views
 
 		private void Paste(string s, bool afterInput)
 		{
-			if (afterInput)
-				input.Text = input.Text + s;
-			else
+			try
 			{
-				var text = input.Text;
-				if (!text.IsNullOrEmpty() && s[0] == '/' && text[0] == '/') // strip other whispers
+				if(afterInput)
+					input.Text = input.Text + s;
+				else
 				{
-					var index = text.IndexOf(' ', 3);
-					if (index >= 0)
-						text = text.Substring(index);
+					var text = input.Text;
+					if(!text.IsNullOrEmpty() && s[0] == '/' && text[0] == '/') // strip other whispers
+					{
+						var index = text.IndexOf(' ',3);
+						if(index >= 0)
+							text = text.Substring(index);
+					}
+					input.Text = s + text;
 				}
-				input.Text = s + text;
+
+			}
+			catch(Exception __ex)
+			{
+				Debug.LogEx(__ex);
 			}
 		}
 

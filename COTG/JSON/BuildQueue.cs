@@ -1163,7 +1163,7 @@ namespace COTG.JSON
 		static public Task IssueCommand(BuildQueueItem q,int cid)
 		{
 			var t0 = JSClient.ServerTimeMs();
-			var json = $"{{\"bt\":{(q.isBuild?0:q.isDemo?3:q.isUpgrade?1:2)},\"pa\":{0},\"slvl\":{q.slvl},\"elvl\":{q.elvl},\"bid\":\"{AMath.RandomDigits(10)}\",\"brep\":{q.bid},\"ds\":{t0},\"de\":{t0+100},\"btype\":{q.proto},\"bspot\":{q.bspot}}}";
+			var json = $"{{\"bt\":{(q.isBuild?0:q.isDemo?3:q.isUpgrade?1:2)},\"pa\":{0},\"slvl\":{q.slvl},\"elvl\":{q.elvl},\"bid\":\"{AMath.RandomDigits(10)}\",\"brep\":{q.bid},\"ds\":{t0},\"de\":{t0+2000},\"btype\":{q.proto},\"bspot\":{q.bspot}}}";
 			//if(process)
 			//{
 			//	await new BuildEx(json,cid).Post(false);

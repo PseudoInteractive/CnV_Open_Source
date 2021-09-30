@@ -71,6 +71,7 @@ namespace COTG
 			init,
 			active,
 			closing,
+			closed,
 		}
 		public static State state;
 		private Lazy<ActivationService> _activationService;
@@ -157,7 +158,7 @@ namespace COTG
 
 		//		public static Windows.Foundation.IAsyncOperation<CoreWebView2Environment> createWebEnvironmentTask;
 
-		private static void SwitchToBackground()
+		private static async Task SwitchToBackground()
 		{
 			if(isForeground == true)
 			{
@@ -167,7 +168,7 @@ namespace COTG
 				try
 				{
 
-					SaveState();
+					var t0 = SaveState();
 
 					var t = DateTimeOffset.UtcNow;
 					var dt = t - activeStart;
@@ -175,6 +176,7 @@ namespace COTG
 
 					AAnalytics.Track("Background",new Dictionary<string,string> { { "time",dt.TotalSeconds.RoundToInt().ToString() } });
 					SystemInformation.Instance.AddToAppUptime(dt);
+					await t0;
 				}
 				catch(Exception ex)
 				{
@@ -182,12 +184,12 @@ namespace COTG
 			}
 		}
 
-		private static void SaveState()
+		private static Task SaveState()
 		{
 			var t0 = BuildQueue.SaveAll();
 			var t1 = AttackTab.SaveAttacksBlock();
 			SettingsPage.SaveAll();
-	//		Task.WhenAll(t0,t1).Wait(); todo
+			return Task.WhenAll(t0,t1);
 		}
 
 
@@ -449,17 +451,28 @@ namespace COTG
 			}
 		}
 
-		private void Window_Closing(object sender,WindowClosingEventArgs e)
+		private bool Window_Closing() //object sender,WindowClosingEventArgs e)
 		{
 			Trace("Closing!");
-//			state = State.closing;
-//			SwitchToBackground();
+			if(state == State.closed)
+				return true;
+			if( state == State.closing)
+				return false;
+			state = State.closing;
+			
+			SwitchToBackground().ContinueWith( (_)=> 
+				{
+				state = State.closed;
+				App.DispatchOnUIThread(window.Close);
+			});
+			return false;
+
 		}
 
 		private void Window_Closed(object sender,WindowEventArgs args)
 		{
 			Trace("Closed!");
-			state = State.closing;
+			Assert( state == State.closed);
 			SwitchToBackground();
 		}
 
@@ -501,7 +514,7 @@ namespace COTG
 			//	var window = Window.Current;
 				window.VisibilityChanged += Window_VisibilityChanged;
 				window.Closed+=Window_Closed;
-				window.Closing+=Window_Closing;
+				window.WantClose+=Window_Closing;
 				window.Activated+=Window_Activated;
 			}
 				await ActivationService.ActivateAsync(args,wasRunning);
@@ -561,12 +574,12 @@ namespace COTG
 		//	SwitchToForeground();
 		}
 
-		private void Window_VisibilityChanged(object sender,WindowVisibilityChangedEventArgs args)
+		private async void Window_VisibilityChanged(object sender,WindowVisibilityChangedEventArgs args)
 		{
 				Trace($"Visibility!!: {args.Visible}");
 				if(!args.Visible)
 				{
-					SwitchToBackground();
+					await SwitchToBackground();
 				}
 				else
 				{
