@@ -76,7 +76,7 @@
     <PackageReference Include="Nito.AsyncEx.Coordination" Version="5.1.2" />
     <PackageReference Include="Nito.AsyncEx.Tasks" Version="5.1.2" />
     <PackageReference Include="PInvoke.SHCore" Version="0.7.104" />
-    <PackageReference Include="PlayFabAllSDK" Version="1.101.210913" />
+    <PackageReference Include="PlayFabAllSDK" Version="1.102.210927" />
     <PackageReference Include="SharpDX" Version="4.2.0" />
     <PackageReference Include="SharpDX.D3DCompiler" Version="4.2.0" />
     <PackageReference Include="SharpDX.Direct2D1" Version="4.2.0" />
@@ -604,12 +604,13 @@
     <None Include="Package.StoreAssociation.xml" />
     <None Include="JS\jquery" />
     <Content Include="Properties\Default.rd.xml" />
+    <None Include="Properties\PublishProfiles\win10-x64.pubxml" />
     <None Include="SignatureKey.snk" />
     <None Include="SignaturePubKey.snk" />
     <None Include="Wiki\wiki.md" />
   </ItemGroup>
   <ItemGroup>
-    <MonoGameContentReference Include="Content\cotg.mgcb" />
+	  <MonoGameContentReference Include="Content\cotg.mgcb" />
   </ItemGroup>
   <ItemGroup>
     <None Include="COTG_TemporaryKey.pfx" />
@@ -624,10 +625,9 @@
 	</Compile>
   </ItemGroup>
 <ItemGroup>
-  <Reference Include="Cyotek.Drawing.BitmapFont, Version=1.0.0.0, Culture=neutral, processorArchitecture=AMD64">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\ext\Cyotek.Drawing.BitmapFont.dll</HintPath>
-    </Reference>
+  <Reference Include="Cyotek.Drawing.BitmapFont">
+    <HintPath>..\ext\Cyotek.Drawing.BitmapFont.dll</HintPath>
+  </Reference>
   <Reference Include="MonoGame.Framework">
     <HintPath>..\ext\net6.0-windows10.0.20348.0\MonoGame.Framework.dll</HintPath>
   </Reference>
@@ -650,7 +650,7 @@
     <EnableNETAnalyzers>True</EnableNETAnalyzers>
     <AnalysisLevel>preview</AnalysisLevel>
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
-    <IsPublishable>False</IsPublishable>
+    <IsPublishable>True</IsPublishable>
     <NoWin32Manifest>true</NoWin32Manifest>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">

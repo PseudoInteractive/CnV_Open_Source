@@ -13874,8 +13874,8 @@ function outer(){
 			ppdt.opt[j6y << 736021440] = Number($(__s[2940])
 				.val());
 			ppdt.opt[+F8y] = Number(O5F);
-			ppdt.opt[+A8y] = $(__s[2779])
-				.slider("value");
+			//ppdt.opt[+A8y] = $(__s[2779])
+			//	.slider("value");
 			N6();
 			var t49 = $.post("/includes/" + __s[3964], { a: JSON.stringify(ppdt.opt) });
 			E9();
@@ -57241,7 +57241,7 @@ function outer(){
 						.off("click");
 					$(__s["5861" | 1])
 						.click(function () {
-							newWin = window.open("", __s[266]);
+						//	newWin = window.open("", __s[266]);
 							E6k.y6();
 							var s92 = $(this)
 								.attr("a");
@@ -61520,8 +61520,8 @@ function outer(){
 			ppdt.opt[j6y - 0] = Number($(__s[2940])
 				.val());
 			ppdt.opt[+F8y] = Number(O5F);
-			ppdt.opt[+A8y] = $(__s[2779])
-				.slider("value");
+			//ppdt.opt[+A8y] = $(__s[2779])
+			//	.slider("value");
 			N6();
 			var L49 = $.post("/includes/" + __s[3964], { a: JSON.stringify(ppdt.opt) });
 			E9();
@@ -69614,17 +69614,17 @@ function outer(){
 					__s[M3p ^ 0])
 					.prop(__s[286], !![]);
 				if (ppdt.opt[F8y - 0]) {
-					$(__s[330])
-						.slider(__s[+Q7y], "value", Number(ppdt.opt[+F8y]));
-					$(__s[1970])
-						.text(Number(ppdt.opt[F8y ^ 0]) + __s[o9y * 1]);
+					//$(__s[330])
+					//	.slider(__s[+Q7y], "value", Number(ppdt.opt[+F8y]));
+					//$(__s[1970])
+					//	.text(Number(ppdt.opt[F8y ^ 0]) + __s[o9y * 1]);
 				}
-				if (ppdt.opt[+A8y]) {
-					$(__s[2779])
-						.slider(__s[+Q7y], "value", Number(ppdt.opt[A8y * 1]));
-					$(__s[5989])
-						.text(Number(ppdt.opt[A8y | 10]) + __s[o9y & 2147483647]);
-				}
+				//if (ppdt.opt[+A8y]) {
+				//	$(__s[2779])
+				//		.slider(__s[+Q7y], "value", Number(ppdt.opt[A8y * 1]));
+				//	$(__s[5989])
+				//		.text(Number(ppdt.opt[A8y | 10]) + __s[o9y & 2147483647]);
+				//}
 				E9();
 			}
 		}

@@ -84,7 +84,6 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Compressed
 /build:Art/circlegradient.png
-
 #begin Art/City/baseland.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -97,6 +96,7 @@
 /processorParam:TextureFormat=Compressed
 /build:Art/City/baseland.png
 
+
 #begin Art/City/baseland_n.dds
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -108,7 +108,6 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=NoChange
 /build:Art/City/baseland_n.dds
-
 #begin Art/City/baseWater.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -120,7 +119,6 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Compressed
 /build:Art/City/baseWater.png
-
 #begin Art/City/basewater_n.dds
 /importer:TextureImporter
 /processor:TextureProcessor

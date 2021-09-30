@@ -10,6 +10,7 @@ using Color = Microsoft.Xna.Framework.Color;
 using RectangleF = System.Drawing.RectangleF;
 using static COTG.Debug;
 using System.Collections.Generic;
+using BitmapFont;
 
 namespace COTG.Draw
 {

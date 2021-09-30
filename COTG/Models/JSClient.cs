@@ -77,7 +77,6 @@ namespace COTG
 		public static ConcurrentBag<HttpClient> clientPool;
 		public static SemaphoreSlim clientPoolSema = new SemaphoreSlim(clientCount);
 		static HttpClient _downloadImageClient;
-		static bool hasCouncilors;
 		static bool councillorsChecked;
 		public static int spanX;
 		public static int spanY;
@@ -229,9 +228,9 @@ namespace COTG
 			return (uint)(DateTimeOffset.UtcNow.ToUnixTimeSeconds() + gameTOffsetSeconds);
 		}
 		// timestamp - ServerTime all in in MS 
-		public static uint ServerTimeOffsetSeonds(uint t) // t is COTG server time in MS
+		public static int ServerTimeOffsetSeonds(uint t) // t is COTG server time in MS
 		{
-			return (t - ServerTimeSeconds());
+			return (int)(t - ServerTimeSeconds());
 		}
 		//public static int ServerTimeOffsetSeconds(long t)
 		//{
@@ -569,16 +568,16 @@ namespace COTG
 					}
 					LoadJsStrings();
 					coreWebView = view.CoreWebView2;
-//					view.CharacterReceived +=View_CharacterReceived;
-					coreWebView.Settings.AreDevToolsEnabled=true;
+					//					view.CharacterReceived +=View_CharacterReceived;
 #if DEBUG
-//					coreWebView.OpenDevToolsWindow();
+					coreWebView.Settings.AreDevToolsEnabled=true;
+					//					coreWebView.OpenDevToolsWindow();
 #else
-//				coreWebView.Settings.AreDevToolsEnabled=true;
+				coreWebView.Settings.AreDevToolsEnabled=false;
 #endif
-			//	coreWebView.Settings.UserAgent = userAgent;
-				
-				coreWebView.Settings.IsWebMessageEnabled=true;
+					//	coreWebView.Settings.UserAgent = userAgent;
+
+					coreWebView.Settings.IsWebMessageEnabled=true;
 			//	coreWebView.Settings.IsPasswordAutosaveEnabled=true;
 				coreWebView.Settings.IsScriptEnabled=true;
 	//			coreWebView.Settings.IsPinchZoomEnabled =false;
@@ -586,7 +585,7 @@ namespace COTG
 				coreWebView.Settings.AreDefaultScriptDialogsEnabled=true;
 					coreWebView.Settings.IsStatusBarEnabled=true;
 					coreWebView.Settings.IsBuiltInErrorPageEnabled=true;
-					coreWebView.Settings.AreHostObjectsAllowed=false;
+					coreWebView.Settings.AreHostObjectsAllowed=true;
 			//	coreWebView.Settings.AreBrowserAcceleratorKeysEnabled=false;
 				coreWebView.Settings.AreDefaultContextMenusEnabled=true;
 				coreWebView.Environment.NewBrowserVersionAvailable+=Environment_NewBrowserVersionAvailable;
@@ -638,10 +637,13 @@ namespace COTG
 				view.Source = new Uri("https://www.crownofthegods.com/home.php",UriKind.Absolute);
 				if (isSub)
 				{
+					Note.ShowTip("Loading Sub, please wait.");
+					ShellPage.WorkStart("Finding Sub.");
 					Task.Delay(5000).ContinueWith(_ =>
 					{
 						AAnalytics.Track("LaunchSub");
 						App.DispatchOnUIThread(() => view.Source = new Uri($"https://w{world}.crownofthegods.com?s=1",UriKind.Absolute));
+						ShellPage.WorkEnd("Finding Sub.");
 					});
 				}
 				else
@@ -787,6 +789,7 @@ namespace COTG
 
 		private static void View_PermissionRequested(CoreWebView sender,CoreWebView2PermissionRequestedEventArgs args)
 		{
+			args.State = CoreWebView2PermissionState.Allow;
 			switch(args.PermissionKind)
 			{
 				case CoreWebView2PermissionKind.ClipboardRead:
