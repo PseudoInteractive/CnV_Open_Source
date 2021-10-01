@@ -92,7 +92,7 @@ namespace COTG.Views
 		{
 			if(visible)
 			{
-				Assert(isFocused);
+		//		Assert(isFocused);
 			}
 //			Log($"VisibilityChanged: {visible} {this}");
 			return Task.CompletedTask;
@@ -118,7 +118,7 @@ namespace COTG.Views
 		public UserTab()
 		{
 			if(refresh == null)
-				refresh = new(_Refresh);// { throttled = true };
+				refresh = new(_Refresh) { debounceDelay = 500};// { throttled = true };
 										//	ScrollViewer.SetIsVerticalScrollChainingEnabled(this,false);
 //			this.Width = 500;
 //			this.Height = 500;
@@ -140,7 +140,14 @@ namespace COTG.Views
 				await VisibilityChanged(true,longTerm: false);  // close enough default behaviour
 			}
 		}
-
+		public static  void SetupDataGrid(RadDataGrid grid)
+		{
+			grid.GridLinesVisibility= Telerik.UI.Xaml.Controls.Primitives.GridLinesVisibility.Both;
+			grid.ProcessTooltips();
+			grid.ListenForNestedPropertyChange=false;
+			grid.FontSize = SettingsPage.smallFontSize;
+			grid.RowHeight = SettingsPage.mediumGridRowHeight;
+		}
 		public void SetPlus(bool set)
 		{
 			App.QueueOnUIThread(() =>
@@ -309,8 +316,10 @@ namespace COTG.Views
 		// chat tab is never hidden
 		public static bool IsBigEnoughToSee( FrameworkElement e) => e.ActualHeight > 10 && e.ActualWidth > 10;
 	//	public bool shouldBeVisible=> (ShellPage.rightTabsVisible || object.ReferenceEquals(this,ChatTab.tabPage));
-		public static void LayoutChanged()
+		public static async void LayoutChanged()
 		{
+			await Task.Delay(200);
+
 			var rightVisible = ShellPage.rightTabsVisible;
 			bool[] pagesVisible= {
 				rightVisible && IsBigEnoughToSee(mainTabs),
@@ -324,7 +333,7 @@ namespace COTG.Views
 			Assert(pageCount == pagesVisible.Length);
 			for(int pageId=0;pageId<pageCount;++pageId)
 			{
-				ref var hidden = ref hiddenTabs[pageId];
+	//			ref var hidden = ref hiddenTabs[pageId];
 
 				var hiddenTab = hiddenTabs[pageId];
 				var page = tabPages[pageId];
@@ -342,11 +351,12 @@ namespace COTG.Views
 						var first= true;
 						if(hiddenTabs[pageId] != null )
 						{
-						foreach( var i in hiddenTabs[pageId])
-						{
-							page.Add(i,first);
-							first = false;
-						}
+							foreach( var i in hiddenTabs[pageId])
+							{
+								page.Add(i,first);
+								first = false;
+								i.refresh.Go();
+							}
 						}
 						hiddenTabs[pageId] = null;
 					}

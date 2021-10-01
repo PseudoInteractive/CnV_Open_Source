@@ -36,8 +36,10 @@ namespace COTG
 			{
 				func = _func;
 			}
-			public void Go(bool throttled = false,bool runAgainIfStarted=true)
+			public void Go(bool throttled = false,bool runAgainIfStarted=true, int delayOverride=0)
 			{
+				if(delayOverride == 0)
+					delayOverride = debounceDelay;
 				switch (state)
 				{
 					case State.idle:
@@ -50,7 +52,7 @@ namespace COTG
 						break;
 					case  State.pending:
 						{
-							var nextT = Environment.TickCount + debounceDelay;
+							var nextT = Environment.TickCount +delayOverride;
 							if (nextT - nextCall > 0)
 							{
 								nextCall = nextT;
@@ -70,8 +72,8 @@ namespace COTG
 					}
 				}
 				state = State.pending;
-				var next = Environment.TickCount + debounceDelay;
-				nextCall = nextCall.Max( Environment.TickCount + debounceDelay );
+				var next = Environment.TickCount + delayOverride;
+				nextCall = nextCall.Max( Environment.TickCount + delayOverride);
 				Task.Run(async () =>
 			   {
 

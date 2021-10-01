@@ -683,14 +683,6 @@ namespace COTG.Views
 			OnPropertyChanged(propertyName);
 		}
 
-		private async void TestPost2(object sender, RoutedEventArgs e)
-		{
-		}
-
-		private async void TestGoCity(object sender, RoutedEventArgs e)
-		{
-			await GetCity.Post(City.focus);
-		}
 
 		//private async void GetWorldInfo(object sender, RoutedEventArgs e)
 		//{
@@ -1255,51 +1247,17 @@ namespace COTG.Views
 			layout = viewToggle;
 			
 			
-			App.DispatchOnUIThreadIdle( () =>
-			{
-				UpdateHtmlOffsets();
+			
 				//			   UpdateCanvasMarginForWebview(webViewScale);
 				//scroll.ChangeView(null, null, 0.5f);
-				var raidInfoVisible = true;
-				switch (viewToggle)
-				{
-					case Layout.l2:
-						grid.ColumnDefinitions[1].Width = new GridLength(1,GridUnitType.Star);
-						grid.ColumnDefinitions[2].Width = new GridLength(0,GridUnitType.Star);
-						// JSClient.view.Scale = new Vector3(1.0f, 1.0f, 1.0f);
-						break;
-					case Layout.l1:
-						grid.ColumnDefinitions[1].Width = new GridLength(1,GridUnitType.Star);
-						grid.ColumnDefinitions[2].Width = new GridLength(0,GridUnitType.Star);
-						// JSClient.view.Scale = new Vector3(1.0f, 1.0f, 1.0f);
-						break;
-
-					case Layout.c:
-						// grid.ColumnDefinitions[0].Width = new GridLength(410*3/4, GridUnitType.Pixel);
-						grid.ColumnDefinitions[1].Width = new GridLength(2, GridUnitType.Star);
-						grid.ColumnDefinitions[2].Width = new GridLength(1,GridUnitType.Star);
-						raidInfoVisible = false;
-						// JSClient.view.Scale = new Vector3(0.75f, 0.75f, 1.0f);
-						break;
-
-					case Layout.r1:
-						// grid.ColumnDefinitions[0].Width = new GridLength(410*3/4, GridUnitType.Pixel);
-						grid.ColumnDefinitions[1].Width = new GridLength(2,GridUnitType.Star);
-						grid.ColumnDefinitions[2].Width = new GridLength(1,GridUnitType.Star);
-						raidInfoVisible = false;
-						break;
-					case Layout.r2:
-						// grid.ColumnDefinitions[0].Width = new GridLength(410 * 3 / 4, GridUnitType.Pixel);
-						grid.ColumnDefinitions[1].Width = new GridLength(1, GridUnitType.Star);
-						grid.ColumnDefinitions[2].Width = new GridLength(2, GridUnitType.Star);
-						// JSClient.view.Scale = new Vector3(0.75f, 0.75f, 1.0f);
-						break;
-				}
+				//var raidInfoVisible = true;
+				
+				UpdateHtmlOffsets();
 
 				//MainPage.ToggleInfoBoxes(raidInfoVisible);
 				//   Task.Delay(200).ContinueWith((_) => City.gridCitySource.NotifyReset());
 				//UpdateWebViewScale();
-			});
+			
 		}
 //		static Debounce layoutChanged = new(TabPage.LayoutChanged){ runOnUiThead = true};
 
@@ -1307,19 +1265,59 @@ namespace COTG.Views
 
 		public static void UpdateWebViewOffsets(int leftOffset, int topOffset)
 		{
-			App.DispatchOnUIThread( ()=>
-			{
 			popupLeftOffset  = leftOffset;
 			popupTopOffset = topOffset;
-
-				UpdateHtmlOffsets();
-			});
+			UpdateHtmlOffsets();
 
 		}
 		public static void UpdateHtmlOffsets()
 		{
+			Debounce.Q(runOnUIThread:true,action: ()=>{
+			float szC;
+			switch(layout)
+			{
+				case Layout.l2:
+						szC = 1;
+						//instance.grid.ColumnDefinitions[1].Width = new GridLength(1,GridUnitType.Star);
+						//instance.grid.ColumnDefinitions[2].Width = new GridLength(0,GridUnitType.Star);
+						// JSClient.view.Scale = new Vector3(1.0f, 1.0f, 1.0f);
+						break;
+					case Layout.l1:
+						szC =  1;
+						//instance.grid.ColumnDefinitions[1].Width = new GridLength(1,GridUnitType.Star);
+						//instance.grid.ColumnDefinitions[2].Width = new GridLength(0,GridUnitType.Star);
+					// JSClient.view.Scale = new Vector3(1.0f, 1.0f, 1.0f);
+					break;
 
-			var zoom = SettingsPage.webZoom;
+				case Layout.c:
+						// grid.ColumnDefinitions[0].Width = new GridLength(410*3/4, GridUnitType.Pixel);
+						szC  = 0.667f; 
+						//instance.grid.ColumnDefinitions[1].Width = new GridLength(2,GridUnitType.Star);
+						//instance.grid.ColumnDefinitions[2].Width = new GridLength(1,GridUnitType.Star);
+					//raidInfoVisible = false;
+					// JSClient.view.Scale = new Vector3(0.75f, 0.75f, 1.0f);
+					break;
+
+				case Layout.r1:
+						szC  = 0.667f;
+						// grid.ColumnDefinitions[0].Width = new GridLength(410*3/4, GridUnitType.Pixel);
+						//instance.grid.ColumnDefinitions[1].Width = new GridLength(2,GridUnitType.Star);
+						//instance.grid.ColumnDefinitions[2].Width = new GridLength(1,GridUnitType.Star);
+					//raidInfoVisible = false;
+					break;
+				case Layout.r2:
+						szC  = 0.333f;
+						// grid.ColumnDefinitions[0].Width = new GridLength(410 * 3 / 4, GridUnitType.Pixel);
+						//instance.grid.ColumnDefinitions[1].Width = new GridLength(1,GridUnitType.Star);
+						//instance.grid.ColumnDefinitions[2].Width = new GridLength(2,GridUnitType.Star);
+					// JSClient.view.Scale = new Vector3(0.75f, 0.75f, 1.0f);
+					break;
+					default:
+						szC  = 0.5f;
+						break;
+
+				}
+				var zoom = SettingsPage.webZoom;
 
 			var canvasScaledX = (zoom * canvasBaseXUnscaled).RoundToInt();
 			var canvasScaledY = (zoom * canvasBaseYUnscaled).RoundToInt();
@@ -1338,7 +1336,7 @@ namespace COTG.Views
 			if(canvas != null && instance.grid != null)
 			{
 				//				return App.DispatchOnUIThreadTask( ()	=>
-				{
+				
 					try
 					{
 						if(JSClient.view != null)
@@ -1348,7 +1346,7 @@ namespace COTG.Views
 
 						var _canvasBaseX = leftOffset + canvasScaledX + htmlShift;
 						var _canvasBaseY = topOffset +canvasScaledY;//.RoundToInt();
-						if(canvasBaseX != _canvasBaseX || canvasBaseY != _canvasBaseY)
+					//	if(canvasBaseX != _canvasBaseX || canvasBaseY != _canvasBaseY)
 						{
 
 							canvasBaseX = _canvasBaseX;
@@ -1358,9 +1356,11 @@ namespace COTG.Views
 							var initialMargin = instance.webView.Margin.Left;
 							instance.webView.Margin= new(htmlShift,0,0,0);
 							var delta = -htmlShift + (canvasBaseX - initialWidth0);
-							var newWidth1 = initialWidth1 - delta;
+							var newWidth1 = ((instance.grid.ActualWidth-canvasScaledX)*szC -(_canvasBaseX-canvasScaledX) ).RoundToInt();
+							
 							instance.grid.ColumnDefinitions[0].Width = new GridLength(canvasBaseX,GridUnitType.Pixel);
 							instance.grid.ColumnDefinitions[1].Width = new GridLength(newWidth1,GridUnitType.Pixel);//	instance.grid.RowDefinitions[0].Height = new(canvasYOffset);
+							instance.grid.RowDefinitions[5].Height = new (40*zoom);//new GridLength(newWidth1,GridUnitType.Pixel);//	instance.grid.RowDefinitions[0].Height = 
 							canvas.Margin = new Thickness(0,canvasBaseY,0,0);
 						}
 
@@ -1369,9 +1369,10 @@ namespace COTG.Views
 					{
 						LogEx(ex);
 					}
+					TabPage.LayoutChanged();
 				}
-			}
-			Debounce.Q( TabPage.LayoutChanged,200,true );
+			});
+			
 		}
 
 		private void webFocus_Click(object sender, RoutedEventArgs e)

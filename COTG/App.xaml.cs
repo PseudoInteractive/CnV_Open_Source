@@ -333,7 +333,7 @@ namespace COTG
 
 		private void OnAppUnhandledException(object sender, Microsoft.UI.Xaml.UnhandledExceptionEventArgs e)
 		{
-#if TRACE
+#if DEBUG
 			System.Diagnostics.Debug.WriteLine($"Unhandled Exception: " + e.Message);
 			System.Diagnostics.Debug.WriteLine(e.Exception.StackTrace);
 #endif
@@ -496,7 +496,7 @@ namespace COTG
 				
 
 				this.DebugSettings.FailFastOnErrors = false;
-#if TRACE || DEBUG
+#if  DEBUG
 //			this.DebugSettings.FailFastOnErrors = true;
 #endif
 			this.DebugSettings.EnableFrameRateCounter = false;

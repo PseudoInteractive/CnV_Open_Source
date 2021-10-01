@@ -551,14 +551,21 @@
     <None Remove="Content\Art\bgr_tablet_scr_closed.png" />
     <None Remove="Content\Art\circlegradient.png" />
     <None Remove="Content\Art\circlegradient.xcf" />
+    <None Remove="Content\Art\City\baseland.png" />
     <None Remove="Content\Art\City\baseland_n.dds" />
+    <None Remove="Content\Art\City\baseWater.png" />
     <None Remove="Content\Art\City\basewater_n.dds" />
     <None Remove="Content\Art\City\building_set5_n.dds" />
+    <None Remove="Content\Art\City\city_walls.png" />
     <None Remove="Content\Art\City\land.dds" />
     <None Remove="Content\Art\City\land.jpg" />
     <None Remove="Content\Art\City\land.psd" />
     <None Remove="Content\Art\City\texture_bg_tile_big_city.jpg" />
+    <None Remove="Content\Art\City\walls_water2.png" />
+    <None Remove="Content\Art\City\water_water.png" />
+    <None Remove="Content\Art\City\Winter\baseland.png" />
     <None Remove="Content\Art\City\Winter\baseland_n.dds" />
+    <None Remove="Content\Art\City\Winter\basewater.png" />
     <None Remove="Content\Art\City\Winter\basewater_n.dds" />
     <None Remove="Content\Art\City\Winter\building_set5_n.dds" />
     <None Remove="Content\Art\lineDraw.dds" />
@@ -655,9 +662,11 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <Optimize>False</Optimize>
+    <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <Optimize>True</Optimize>
+    <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ProjectExtensions />
   <ItemGroup>

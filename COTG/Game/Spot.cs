@@ -466,6 +466,7 @@ namespace COTG.Game
 		public BitmapImage icon => ImageHelper.FromImages(isBlessed ? "Icons/blessed.png" :
 			 ($"{(isTemple ? "Icons/temple" : isCastle ? "Icons/castle" : "Icons/city")}{GetSize()}{(isOnWater ? "w" : "")}.png"));
 		public int cont => cid.CidToContinent();
+		public int packedContinent => cid.CidToPackedContinent();
 
 		public static bool operator ==(Spot left, Spot right)
 		{

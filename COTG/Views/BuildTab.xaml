@@ -26,6 +26,7 @@
 		</Grid.RowDefinitions>
 
 		<tg:RadDataGrid x:Name="cityGrid"
+						Loaded="OnLoaded"
 							x:FieldModifier="public"
 							ColumnResizeHandleDisplayMode="OnColumnHeaderActionFlyoutOpen"
 							ColumnDataOperationsMode="Flyout"

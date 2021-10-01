@@ -27,11 +27,12 @@
 			</Grid.RowDefinitions>
 	
 		<tg:RadDataGrid x:Name="cityGrid"
+						Loaded="OnLoaded"
 							x:FieldModifier="public"
 							ColumnResizeHandleDisplayMode="OnColumnHeaderActionFlyoutOpen"
 							ColumnDataOperationsMode="Flyout"
 							Grid.Row="3"
-							
+							 
 							TabFocusNavigation="Once"
 							UserGroupMode="Auto"
 							AlternationStep="2"
@@ -39,7 +40,6 @@
 							AutoGenerateColumns="False"
 							SelectionMode="Extended"
 							CanUserChooseColumns="True"
-							RowHeight="{StaticResource GridRowHeight}"
 							UserFilterMode="Auto"
 							PointerPressed="{x:Bind game:Spot.GridPressed}"
 							PointerExited="{x:Bind game:Spot.GridExited}"
@@ -47,7 +47,7 @@
 							IsTextScaleFactorEnabled="False"
 							GroupPanelPosition="Bottom"
 							SelectionUnit="Row"
-						
+						UserSortMode="Auto"
 							Tag="Raid"
 					
 					

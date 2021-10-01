@@ -410,19 +410,32 @@ namespace COTG.Views
 		//	pinned = await folder.ReadAsync(pinsFileName, Array.Empty<int>());
 		//}
 
+		[NonSerialized]
+		public static float mediumFontSize = 12;
+		[NonSerialized]
+		public static float largeFontSize = 20;
+		[NonSerialized]
+		public static float smallFontSize = 12;
+		[NonSerialized] 
+		public static float gridRowHeight = 34;
+		[NonSerialized]
+		public static float mediumGridRowHeight = 30;
+		[NonSerialized] 
+		public static float shortGridRowHeight = 28;
+
 		public static void UpdateZoom(object sender = null, Microsoft.UI.Xaml.Controls.Primitives.RangeBaseValueChangedEventArgs e = null)
 		{
 			var chatZoom = SettingsPage.chatZoom.Squared()  + 0.75f;
 			var tabZoom = SettingsPage.tabZoom.Squared()  + 0.75f;
-
-			App.instance.Resources["SmallFontSize"] = tabZoom * 12.0;
-			App.instance.Resources["LargeFontSize"] = tabZoom * 20.0;
-			App.instance.Resources["MediumFontSize"] = tabZoom * 12.0;
+			float AsFloat(object d) => (float)(double)d;
+			smallFontSize = AsFloat(App.instance.Resources["SmallFontSize"] = tabZoom * 12.0);
+			largeFontSize = AsFloat(App.instance.Resources["LargeFontSize"] = tabZoom * 20.0);
+			mediumFontSize = AsFloat(App.instance.Resources["MediumFontSize"] = tabZoom * 12.0);
 			App.instance.Resources["ChatFontSize"] = chatZoom * 12.0;
 
-			App.instance.Resources["GridRowHeight"] = tabZoom * 34.0;
-			App.instance.Resources["MediumGridRowHeight"] = tabZoom * 30.0;
-			App.instance.Resources["ShortGridRowHeight"] = tabZoom * 28.0;
+			gridRowHeight = AsFloat(App.instance.Resources["GridRowHeight"] = tabZoom * 34.0);
+			mediumGridRowHeight = AsFloat(App.instance.Resources["MediumGridRowHeight"] = tabZoom * 30.0);
+			shortGridRowHeight = AsFloat(App.instance.Resources["ShortGridRowHeight"] = tabZoom * 28.0);
 
 			App.instance.Resources["ChatFontSize"] = chatZoom * 12.0;
 			App.instance.Resources["ChatFontImageHeight"] = chatZoom * 32.0;

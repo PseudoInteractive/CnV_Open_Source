@@ -93,7 +93,7 @@ namespace COTG
 			// System.Diagnostics.Debug.WriteLine(new StackTrace());
 		}
 
-		[Conditional("TRACE")]
+		[Conditional("DEBUG")]
 		public static void Trace(string s,
 		[System.Runtime.CompilerServices.CallerMemberName] string memberName = "",
 		[System.Runtime.CompilerServices.CallerFilePath] string sourceFilePath = "",
@@ -106,7 +106,7 @@ namespace COTG
 			// System.Diagnostics.Debug.WriteLine(new StackTrace());
 		}
 
-		[Conditional("TRACE")]
+		[Conditional("DEBUG")]
 		public static void Trace<T>(T o,
 	   [System.Runtime.CompilerServices.CallerMemberName] string memberName = "",
 	   [System.Runtime.CompilerServices.CallerFilePath] string sourceFilePath = "",
@@ -146,7 +146,7 @@ namespace COTG
 			// System.Diagnostics.Debug.WriteLine(new StackTrace());
 		}
 
-		// [Conditional("TRACE")]
+		// [Conditional("DEBUG")]
 		public static void LogEx(Exception e, bool report = true, string extra = null,
 		string eventName = "HandledException",
 		[System.Runtime.CompilerServices.CallerMemberName] string memberName = "",
@@ -182,7 +182,7 @@ namespace COTG
 			}
 
 			var msg = $"{eventName} {extra ?? string.Empty} {e.Message}";
-#if TRACE
+#if DEBUG
 			System.Diagnostics.Trace.WriteLine($"{sourceFilePath}({sourceLineNumber}): {timeStamp}: {memberName} : Exception: {msg} {e.StackTrace}");
 			var stackTrace = new StackTrace(e, true);
 			DumpStack(stackTrace);
@@ -201,7 +201,7 @@ namespace COTG
 		[System.Runtime.CompilerServices.CallerLineNumber] int sourceLineNumber = 0)
 		{
 
-#if TRACE
+#if DEBUG
 			System.Diagnostics.Trace.WriteLine($"{sourceFilePath}({sourceLineNumber}): {timeStamp}: {memberName} : Exception: {s}");
 			DumpStack(new StackTrace(1, true));
 			// logger.ZLogError($"{s}\nCaller {memberName}, {sourceFilePath}:{sourceLineNumber}");
@@ -221,7 +221,7 @@ namespace COTG
 
 			var str = $"{sourceFilePath}({sourceLineNumber}): {timeStamp}: {memberName} : Assert";
 			Note.Show(str);
-#if TRACE
+#if DEBUG
 
 			System.Diagnostics.Trace.WriteLine(str);
 			var stack = new StackTrace(1, true);

@@ -70,14 +70,15 @@ namespace COTG.Views
 			spotGrids.Add(cityGrid);
 
 		}
-
-		//private void CityGrid_CurrentItemChanged(object sender, EventArgs e)
-		//{
-		//	           Log("Current item " + sender.ToString());
-		//}
-
-		private void ColumnHeaderTap()
+		private void OnLoaded(object sender,RoutedEventArgs e)
 		{
+			SetupDataGrid(cityGrid);
+
+			//private void CityGrid_CurrentItemChanged(object sender, EventArgs e)
+			//{
+			//	           Log("Current item " + sender.ToString());
+			//}
+
 
 		}
 

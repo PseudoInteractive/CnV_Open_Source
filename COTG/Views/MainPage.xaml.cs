@@ -62,6 +62,14 @@ namespace COTG.Views
             instance = this;
             InitializeComponent();
 
+			
+			//dungeonGrid.ProcessTooltips();
+			
+
+		}
+
+		private void OnLoaded(object sender,RoutedEventArgs e)
+		{
 			spotGrids.Add(cityGrid);
 
 			cityGrid.SelectionChanged += SpotSelectionChanged;
@@ -74,19 +82,19 @@ namespace COTG.Views
 			//c = new MenuFlyoutItem() { Text = "Home Please" };
 			//c.Click += ReturnFastClick;
 			//cityMenuFlyout.Items.Add(c);
-	//		cityGrid.tab
-		//	cityGrid.OnKey = Spot.OnKeyDown;
+			//		cityGrid.tab
+			//	cityGrid.OnKey = Spot.OnKeyDown;
 
 			//cityGrid.ContextFlyout = cityMenuFlyout;
 
 			//     cityGrid.SelectionChanged += CityGrid_SelectionChanged;
 			cityGrid.CurrentItemChanged += CityGrid_CurrentItemChanged;
 			cityGrid.ProcessTooltips();
-			//dungeonGrid.ProcessTooltips();
+			SetupDataGrid(cityGrid);
 			
-
 		}
 
+		
 		private void CityGrid_CurrentItemChanged(object sender, EventArgs e)
         {
             Log("Current item " + sender.ToString());
@@ -433,12 +441,13 @@ namespace COTG.Views
 			var totalSent1=0;
 			for(int iter0=0;iter0<4;++iter0)
 			{
+				ShellPage.WorkUpdate($"Update Raids {iter0}...");
 				int totalSent = 0;
 				float minRaidIdle = 0.0625f;
 				for (int pass=0;pass<8;++pass)
 				{
 
-					await Raiding.UpdateTS(true);
+					await Task.WhenAll(Raiding.UpdateTS(true), RaidOverview.Send() );
 					int counter = 0;
 					int processed = 0;
 					int max = sel.Count;

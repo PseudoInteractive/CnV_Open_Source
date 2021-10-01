@@ -12,6 +12,22 @@
         </Favorite>
       </favorites>
     </Folder>
+    <Folder>
+      <name>xaml</name>
+      <folders />
+      <favorites>
+        <Favorite>
+          <name>SettingsPage.xaml.cs</name>
+          <path>COTG\Views\SettingsPage.xaml.cs</path>
+          <absolutePath>C:\Source\COTG\COTG\Views\SettingsPage.xaml.cs</absolutePath>
+          <position>
+            <line>36</line>
+            <column>30</column>
+            <lineHash>muJv8i4Cc1edlMIUBtt+M+edvdctP0g84b5YH9vlM7g=</lineHash>
+          </position>
+        </Favorite>
+      </favorites>
+    </Folder>
   </folders>
   <favorites>
     <Favorite>

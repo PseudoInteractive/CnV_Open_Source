@@ -138,7 +138,8 @@ TextSubmitted="CitySubmitted"
 						<Flyout FlyoutPresenterStyle="{StaticResource TimeFlyoutStyle}">
 							<Grid>
 								<Grid.RowDefinitions>
-
+									<RowDefinition/>
+									<RowDefinition/>
 								</Grid.RowDefinitions>
 								<TextBlock Grid.Row="1" x:Name="eventTimeTravelText">Preview Time</TextBlock>
 								<Slider x:Name="eventTimeTravelSlider"
