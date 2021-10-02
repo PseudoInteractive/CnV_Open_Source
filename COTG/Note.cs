@@ -33,17 +33,23 @@ namespace COTG
 		static bool initialized = false;
 		static Note()
 		{
+			//markDownText = new();
+			//markDownText.TableCellPadding = new Thickness(0,0,0,0); // hack!
+			//markDownText.ListMargin = new Thickness(0,0,0,0); // hack!
+			//markDownText.Background = null;
+
 		}
 
-		private static void InAppNote_Closed(object sender, InAppNotificationClosedEventArgs e)
-		{
-			currentPriority = Priority.none;
-			if (e.DismissKind == InAppNotificationDismissKind.User)
-			{
-				cancellationTokenSource.Cancel();
-				cancellationTokenSource = new CancellationTokenSource();
-			}
-		}
+		//private static void InAppNote_Closed(object sender, InAppNotificationClosedEventArgs e)
+		//{
+		//	markDownText.Text = string.Empty;
+		//	currentPriority = Priority.none;
+		//	if (e.DismissKind == InAppNotificationDismissKind.User)
+		//	{
+		//		cancellationTokenSource.Cancel();
+		//		cancellationTokenSource = new CancellationTokenSource();
+		//	}
+		//}
 
 		// [Conditional("TRACE")]
 		public static void L(string s)
@@ -57,66 +63,67 @@ namespace COTG
 			medium, // if one is active wait
 			high // if one is active cancel it
 		}
-		static Priority currentPriority;
-		static DateTime nextInAppNote = new DateTime(0);
-		static CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
+	//	static Priority currentPriority;
+	//	static DateTime nextInAppNote = new DateTime(0);
+		//static MarkdownTextBlock markDownText;
+	//	static CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
 		public static async void Show(string s, Priority priority=Priority.medium, bool useInfoBar = false, int timeout = 5000)
 		{
 			const int noteDelay = 2;
 			const int noteDelayHigh = 5;
 			if(ShellPage.instance != null)
 			{
-				if (!initialized)
-				{
-					initialized = true;
-					App.DispatchOnUIThread(() =>
-					{
-						ShellPage.inAppNote.Closed += InAppNote_Closed;
-						//		ShellPage.instance.infoBar.CloseButtonClick += InfoBar_CloseButtonClick;
-						//		ShellPage.instance.infoMD.LinkClicked += MarkDownLinkClicked;
-					});
-				}
+				//if (!initialized)
+				//{
+				//	initialized = true;
+				//	App.DispatchOnUIThread(() =>
+				//	{
+				//		ShellPage.inAppNote.Closed += InAppNote_Closed;
+				//		//		ShellPage.instance.infoBar.CloseButtonClick += InfoBar_CloseButtonClick;
+				//		//		ShellPage.instance.infoMD.LinkClicked += MarkDownLinkClicked;
+				//	});
+				//}
 				App.DispatchOnUIThreadLow(() =>
 				{
 					ChatTab.L(s);
 				});
 
-				var now = DateTime.UtcNow;
-				var next = nextInAppNote;
-				var _priority = priority;
-				if (now >= next || ((priority >= Priority.high)))
-				{
-					// all clear
-					nextInAppNote = now + TimeSpan.FromSeconds((priority >= Priority.high) ? noteDelayHigh : noteDelay);
-				}
-				else
-				{
-					if (priority == Priority.low)
-						return;
-					var wait = (next - now);
-					if (wait.TotalSeconds >= 20.0f && priority < Priority.high)
-						return;
+				//var now = DateTime.UtcNow;
+				//var next = nextInAppNote;
+				//var _priority = priority;
+				//if (now >= next || ((priority >= Priority.high)))
+				//{
+				//	// all clear
+				//	nextInAppNote = now + TimeSpan.FromSeconds(;
+				//}
+				//else
+				//{
+				//	if (priority == Priority.low)
+				//		return;
+				//	var wait = (next - now);
+				//	if (wait.TotalSeconds >= 20.0f && priority < Priority.high)
+				//		return;
 
-					nextInAppNote = next + TimeSpan.FromSeconds(noteDelay);
+				//	nextInAppNote = next + TimeSpan.FromSeconds(noteDelay);
 
-					try
-					{
-						await Task.Delay(wait, cancellationTokenSource.Token);
+				//	try
+				//	{
+				//		await Task.Delay(wait, cancellationTokenSource.Token);
 
-					}
-					catch (Exception _exception)
-					{
-						Log(_exception.Message);
-						return;
-					}
+				//	}
+				//	catch (Exception _exception)
+				//	{
+				//		Log(_exception.Message);
+				//		return;
+				//	}
 
-				}
+				//}
 
-				App.DispatchOnUIThreadLow(() =>
+			//	App.DispatchOnUIThreadLow(() =>
 				{
 					//ChatTab.L(s);
-					var wasOpen = false;
-					currentPriority = _priority;
+					
+				//	currentPriority = _priority;
 					//if (ShellPage.instance.infoBar.IsOpen)
 					//{
 					//	wasOpen = true;
@@ -126,10 +133,25 @@ namespace COTG
 					{
 						try
 						{
-							var textBlock = new MarkdownTextBlock() { Text = s,Background = null };
-							textBlock.TableCellPadding = new Thickness(0, 0,0,0); // hack!
-							textBlock.LinkClicked += MarkDownLinkClicked;
-							ShellPage.inAppNote.Show(textBlock,timeout);
+							//	var textBlock = markDownText;
+							if(ShellPage.instance.noteText.StartsWith(s))
+							{
+								return;
+							}
+							else
+							{
+								ShellPage.instance.noteText =  s + '\n' + ShellPage.instance.noteText;
+
+							}
+							//var textNull = ShellPage.instance.noteText.Length == 0;
+							Debounce.Q( runOnUIThread:true,action: ()=> ShellPage.instance.InAppNote.Text = ShellPage.instance.noteText);
+							Debounce.Q(ms: ((priority >= Priority.high) ? noteDelayHigh : noteDelay)*1000, 
+								runOnUIThread: true,
+								action: () =>
+							{
+								ShellPage.instance.noteText = string.Empty;
+								ShellPage.instance.InAppNote.Text = ShellPage.instance.noteText;
+							});
 
 						}
 						catch(Exception __ex)
@@ -152,17 +174,18 @@ namespace COTG
 					//		ShellPage.instance.infoBar.IsOpen = true;
 					//	}
 					//}
-				});
+				}
+			
 
 
 			}
 		}
 
-		private static void InfoBar_CloseButtonClick(Microsoft.UI.Xaml.Controls.InfoBar sender, object args)
-		{
-			cancellationTokenSource.Cancel();
-			cancellationTokenSource = new CancellationTokenSource();
-		}
+		//private static void InfoBar_CloseButtonClick(Microsoft.UI.Xaml.Controls.InfoBar sender, object args)
+		//{
+		//	cancellationTokenSource.Cancel();
+		//	cancellationTokenSource = new CancellationTokenSource();
+		//}
 
 		static Regex regexCoordsTag = new Regex(@" ?\<coords\>(\d{1,3}:\d{1,3})\<\/coords\>", RegexOptions.CultureInvariant | RegexOptions.Compiled);
 		static Regex regexPlayer = new Regex(@" ?\<player\>(\w+)\<\/player\>", RegexOptions.CultureInvariant | RegexOptions.Compiled);

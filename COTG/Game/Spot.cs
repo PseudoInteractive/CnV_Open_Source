@@ -1781,7 +1781,7 @@ namespace COTG.Game
 
 		public async Task SuperRaid()
 		{
-			await Post.Send("overview/rcallall.php", "a=" + cid, World.CidToPlayerOrMe(cid));
+			await Post.Get("overview/rcallall.php", "a=" + cid, World.CidToPlayerOrMe(cid));
 			await Post.SendEncrypted("includes/UrOA.php", "{\"a\":" + cid + ",\"c\":0,\"b\":2}", "Rx3x5DdAxxerx3", World.CidToPlayerOrMe(cid));
 		}
 

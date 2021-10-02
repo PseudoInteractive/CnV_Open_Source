@@ -809,10 +809,10 @@ namespace COTG.Views
 					   }
 				   }
 				   if (sli != null)
-					   await Post.Send("includes/sLi.php", sli, pid);
+					   await Post.Get("includes/sLi.php", sli, pid);
 				   Note.Show($"Adding {addedCityLists} citylists, updating {cgs.Count} cities...");
 				   foreach (var it in cgs)
-					   await Post.Send("includes/cgS.php", it, pid);
+					   await Post.Get("includes/cgS.php", it, pid);
 				   Note.Show($"Added {addedCityLists} citylists, updated {cgs.Count} cities");
 				   //   JSClient.GetCitylistOverview();
 				   //			   Note.Show($"Successfully added continent citylists :)");

@@ -45,7 +45,7 @@ using CoreWebView = Microsoft.Web.WebView2.Core.CoreWebView2;
 //using COTG.CnVChat;
 using CommunityToolkit.WinUI.Helpers;
 using Microsoft.UI.Dispatching;
-
+using Windows.UI.ViewManagement;
 
 namespace COTG
 {
@@ -73,9 +73,9 @@ namespace COTG
 		//public static WebViewBrush webViewBrush; 
 		public static HttpBaseProtocolFilter httpFilter;
 	//	public static HttpCookieManager cookieManager;
-		const int clientCount = 6;
-		public static ConcurrentBag<HttpClient> clientPool;
-		public static SemaphoreSlim clientPoolSema = new SemaphoreSlim(clientCount);
+//		const int clientCount = 6;
+	//	public static ConcurrentBag<HttpClient> clientPool;
+	//	public static SemaphoreSlim clientPoolSema = new SemaphoreSlim(clientCount);
 		static HttpClient _downloadImageClient;
 		static bool councillorsChecked;
 		public static int spanX;
@@ -518,7 +518,7 @@ namespace COTG
 			//	  HttpBaseProtocolFilter.CreateForUser( User.GetDefault());
 			//                         httpFilter.ServerCredential =
 
-		//	httpFilter.MaxConnectionsPerServer = 10;
+			httpFilter.MaxConnectionsPerServer = 10;
 			//  httpFilter.ServerCustomValidationRequested += HttpFilter_ServerCustomValidationRequested;
 			httpFilter.CacheControl.ReadBehavior = HttpCacheReadBehavior.NoCache;
 			httpFilter.CacheControl.WriteBehavior = HttpCacheWriteBehavior.NoCache;
@@ -742,14 +742,20 @@ namespace COTG
 			try
 			{
 				
-				//WebViewPage.DefaultUrl = new Uri(args.Uri);
-				WebViewPage.instance = null;
-				await WindowManagerService.Current.TryShowAsStandaloneAsync<WebViewPage>("overview");
-				while(WebViewPage.instance == null || WebViewPage.instance.webView==null)
-				{
-					await Task.Delay(1000);
-				}
-				var view = WebViewPage.instance.webView;
+				var webView = new WebViewPage();
+				TabPage.Show(webView);
+	//			f.Content = webView;
+				
+				//w.
+
+				////WebViewPage.DefaultUrl = new Uri(args.Uri);
+				//WebViewPage.instance = null;
+				//await WindowManagerService.Current.TryShowAsStandaloneAsync<WebViewPage>("overview");
+				//while(WebViewPage.instance == null || WebViewPage.instance.webView==null)
+				//{
+				//	await Task.Delay(1000);
+				//}
+				var view = webView.webView;
 				view.DispatcherQueue.TryEnqueue( DispatcherQueuePriority.Normal,  async ()=>
 				{
 					await view.EnsureCoreWebView2Async();
@@ -2112,10 +2118,10 @@ private static async void ShowCouncillorsMissingDialog()
 
 
 
-						clientPool = new ConcurrentBag<HttpClient>();
-						for (int i = 0; i < clientCount; ++i)
+					//	clientPool = new ConcurrentBag<HttpClient>();
+					//	for (int i = 0; i < clientCount; ++i)
 						{
-							var httpClient = new HttpClient(httpFilter); // reset
+							httpClient = new HttpClient(httpFilter); // reset
 																		 //   httpClient = new HttpClient(); // reset
 																		 //                        var headers = httpClient.DefaultRequestHeaders;
 																		 //     headers.TryAppendWithoutValidation("Content-Type",@"application/x-www-form-urlencoded; charset=UTF-8");
@@ -2142,8 +2148,8 @@ private static async void ShowCouncillorsMissingDialog()
 							//httpClient.DefaultRequestHeaders.TryAppendWithoutValidation("Sec-Fetch-Site", "same-origin");
 							//httpClient.DefaultRequestHeaders.TryAppendWithoutValidation("Sec-Fetch-Mode", "cors");
 							//httpClient.DefaultRequestHeaders.TryAppendWithoutValidation("Sec-Fetch-Dest", "empty");
-
-							clientPool.Add(httpClient);
+							
+						//	clientPool.Add(httpClient);
 
 
 						}
@@ -2336,12 +2342,12 @@ private static async void ShowCouncillorsMissingDialog()
 							   Log(token);
 							Log(cookies);
 							  // Log(s);
-							   for (int i = 0; i < clientCount; ++i)
-							   {
-								   await clientPoolSema.WaitAsync();//.ConfigureAwait(false);
-								//   httpFilter.CookieManager.SetCookie(new HttpCookie)
+							 //  for (int i = 0; i < clientCount; ++i)
+							 //  {
+								//   await clientPoolSema.WaitAsync();//.ConfigureAwait(false);
+								////   httpFilter.CookieManager.SetCookie(new HttpCookie)
 
-							   }
+							 //  }
 								   //HTTPCook
 								   // {
 
@@ -2354,13 +2360,13 @@ private static async void ShowCouncillorsMissingDialog()
 								   {
 									   {
 										   //    var clients = clientPool.ToArray();
-										   foreach (var httpClient in clientPool)
-										   {
-												  // httpClient.DefaultRequestHeaders.Cookie = "sec_session_id="+s;
+//										   foreach (var httpClient in clientPool)
+//										   {
+//												  // httpClient.DefaultRequestHeaders.Cookie = "sec_session_id="+s;
 
-//											   		if (subId == 0)
-											   		//  httpClient.DefaultRequestHeaders.TryAppendWithoutValidation("Cookie",cookies);//"sec_session_id=" + s);
-										   }
+////											   		if (subId == 0)
+//											   		//  httpClient.DefaultRequestHeaders.TryAppendWithoutValidation("Cookie",cookies);//"sec_session_id=" + s);
+//										   }
 									   }
 								   }
 								   catch (Exception _ex)
@@ -2373,7 +2379,7 @@ private static async void ShowCouncillorsMissingDialog()
 								   break;
 							   }
 
-							   clientPoolSema.Release(clientCount);
+							//   clientPoolSema.Release(clientCount);
 
 							   var timeOffset = jso.GetAsInt64("timeoffset");
 							   var timeOffsetSecondsRounded = Math.Round(timeOffset / (1000.0 * 60*30)) * 60 * 30.0f; // round to nearest half hour
@@ -3169,6 +3175,7 @@ private static async void ShowCouncillorsMissingDialog()
 		public static TimeSpan gameTOffset;
 	//	public static long gameTOffsetMs;
 		public static int gameTOffsetSeconds;
+		internal static HttpClient httpClient;
 
 		//        public static async void TestGet()
 		//        {

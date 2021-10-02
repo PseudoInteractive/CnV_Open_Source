@@ -263,7 +263,7 @@ namespace COTG.BinaryMemory
         public ulong Read7BitEncoded64()
         {
             ulong result = 0;
-            int shift = 0;
+            int	shift = 0;
 
             do
             {
@@ -392,21 +392,21 @@ namespace COTG.BinaryMemory
             position += count;
         }
 
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public uint[] ReadUints()
-		{
-			Assert(false);// optimize
-			var count = Read7BitEncoded();
-			var byteCount = count * sizeof(uint);
-			uint[] rv = new uint[count];
-			fixed (uint* pData = rv)
-			{
-				Buffer.MemoryCopy(position, pData, byteCount, byteCount);
-			}
+		//[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		//public uint[] ReadUints()
+		//{
+		//	Assert(false);// optimize
+		//	var count = Read7BitEncoded();
+		//	var byteCount = count * sizeof(uint);
+		//	uint[] rv = new uint[count];
+		//	fixed (uint* pData = rv)
+		//	{
+		//		Buffer.MemoryCopy(position, pData, byteCount, byteCount);
+		//	}
 
-			position += byteCount;
-			return rv;
-		}
+		//	position += byteCount;
+		//	return rv;
+		//}
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public uint[] ReadPackedUints()
 		{

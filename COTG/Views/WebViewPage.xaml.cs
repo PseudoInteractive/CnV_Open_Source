@@ -15,7 +15,7 @@ using COTG.Services;
 
 namespace COTG.Views
 {
-    public sealed partial class WebViewPage :Microsoft.UI.Xaml.Controls.Page, INotifyPropertyChanged
+    public sealed partial class WebViewPage : UserTab, INotifyPropertyChanged
     {
         // TODO WTS: Set the URI of the page to show by default
     //    public static Uri DefaultUrl;// = "https://docs.microsoft.com/windows/apps/";
@@ -176,7 +176,7 @@ namespace COTG.Views
 		private void CoreWebView2_PermissionRequested(Microsoft.Web.WebView2.Core.CoreWebView2 sender,Microsoft.Web.WebView2.Core.CoreWebView2PermissionRequestedEventArgs args)
 		{
 			Log("Permission " + args.PermissionKind);
-//			args.PermissionKindAllow();
+			args.State = CoreWebView2PermissionState.Allow;
 		}
 
 		private void WebView_NavigationCompleted(WebView sender,Microsoft.Web.WebView2.Core.CoreWebView2NavigationCompletedEventArgs args)
@@ -218,13 +218,13 @@ namespace COTG.Views
 
         private void OnPropertyChanged(string propertyName) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 
-		protected override void OnNavigatedFrom(NavigationEventArgs e)
-		{
-            Assert(instance == this);
-            instance = null;
-			base.OnNavigatedFrom(e);
+		//protected override void OnNavigatedFrom(NavigationEventArgs e)
+		//{
+  //          Assert(instance == this);
+  //          instance = null;
+		//	base.OnNavigatedFrom(e);
 
-		}
+		//}
 
 
 

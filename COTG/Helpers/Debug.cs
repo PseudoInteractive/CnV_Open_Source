@@ -21,14 +21,15 @@ namespace COTG
 		public static string timeStamp => DateTimeOffset.UtcNow.FormatTimePrecise();
 
 		// {1D7815D0-4DCD-4655-8798-D18196D4DE0F}
-		private static Guid CotgDebug = new Guid(0x1d7815d0, 0x4dcd, 0x4655, 0x87, 0x98, 0xd1, 0x81, 0x96, 0xd4, 0xde, 0xf);
+	//	private static Guid CotgDebug = new Guid(0x1d7815d0, 0x4dcd, 0x4655, 0x87, 0x98, 0xd1, 0x81, 0x96, 0xd4, 0xde, 0xf);
 
 		// static LoggingChannel channel;
-		private static readonly Random random = new Random();
+		//private static readonly Random random = new Random();
 
 		// public static ILogger logger; static LoggingSession session;
 		static Debug()
 		{
+			System.Diagnostics.Trace.AutoFlush=false;
 			// var now = new DateTime(2000, 12, 12); Console.SetOut(Console.Error);
 
 			//session = new LoggingSession("CotgS");
@@ -63,7 +64,7 @@ namespace COTG
 					var __f = __s.GetFrame(i);
 					if (__f != null)
 					{
-						System.Diagnostics.Debug.Write($"{__f.GetFileName()}({__f.GetFileLineNumber()}): {__f.GetMethod()},{__f.GetFileColumnNumber()}\n");
+						System.Diagnostics.Trace.Write($"{__f.GetFileName()}({__f.GetFileLineNumber()}): {__f.GetMethod()},{__f.GetFileColumnNumber()}\n");
 					}
 				}
 			}
@@ -71,12 +72,12 @@ namespace COTG
 			{
 			}
 			//  var __f = __s.GetFrames();
-			//	System.Diagnostics.Debug.WriteLine(__s.ToString());
+			//	System.Diagnostics.Trace.WriteLine(__s.ToString());
 			//for (int i = 0; i<defaultStackDepth && i < __s.FrameCount; ++i)
 			//{
 			//    var __f = __s.GetFrame(i);
 			//    if(__f != null)
-			//    System.Diagnostics.Debug.WriteLine($"{__f.GetFileName()}({__f.GetFileLineNumber()}): {__f.GetMethod()},{__f.GetFileColumnNumber()}");
+			//    System.Diagnostics.Trace.WriteLine($"{__f.GetFileName()}({__f.GetFileLineNumber()}): {__f.GetMethod()},{__f.GetFileColumnNumber()}");
 
 			//}
 		}
@@ -88,9 +89,9 @@ namespace COTG
 		[System.Runtime.CompilerServices.CallerFilePath] string sourceFilePath = "",
 		[System.Runtime.CompilerServices.CallerLineNumber] int sourceLineNumber = 0)
 		{
-			System.Diagnostics.Debug.Write($"{sourceFilePath}({sourceLineNumber}): {timeStamp}: {memberName}\n{s}\n");
+			System.Diagnostics.Trace.Write($"{sourceFilePath}({sourceLineNumber}): {timeStamp}: {memberName}\n{s}\n");
 			DumpStack(new StackTrace(1, true));
-			// System.Diagnostics.Debug.WriteLine(new StackTrace());
+			// System.Diagnostics.Trace.WriteLine(new StackTrace());
 		}
 
 		[Conditional("DEBUG")]
@@ -103,7 +104,7 @@ namespace COTG
 			Note.Show(s);
 			System.Diagnostics.Trace.Write(msg);
 			DumpStack(new StackTrace(1, true));
-			// System.Diagnostics.Debug.WriteLine(new StackTrace());
+			// System.Diagnostics.Trace.WriteLine(new StackTrace());
 		}
 
 		[Conditional("DEBUG")]
@@ -117,7 +118,7 @@ namespace COTG
 			Note.Show(s);
 			System.Diagnostics.Trace.Write(msg);
 			DumpStack(new StackTrace(1, true));
-			// System.Diagnostics.Debug.WriteLine(new StackTrace());
+			// System.Diagnostics.Trace.WriteLine(new StackTrace());
 		}
 
 		[Conditional("DEBUG")]
@@ -128,9 +129,9 @@ namespace COTG
 		{
 			var str = $"{sourceFilePath}({sourceLineNumber}): {timeStamp}: {memberName}\n{s}\n";
 
-			System.Diagnostics.Debug.Write(str);
+			System.Diagnostics.Trace.Write(str);
 			DumpStack(new StackTrace(1, true));
-			//  System.Diagnostics.Debug.WriteLine(new StackTrace());
+			//  System.Diagnostics.Trace.WriteLine(new StackTrace());
 			//Note.Show(str);
 		}
 
@@ -140,10 +141,10 @@ namespace COTG
 		[System.Runtime.CompilerServices.CallerFilePath] string sourceFilePath = "",
 		[System.Runtime.CompilerServices.CallerLineNumber] int sourceLineNumber = 0)
 		{
-			System.Diagnostics.Debug.WriteLine($"{sourceFilePath}({sourceLineNumber}): {timeStamp}: {memberName}");
-			System.Diagnostics.Debug.WriteLine(System.Text.Json.JsonSerializer.Serialize<T>(s, Json.jsonSerializerOptions));
+			System.Diagnostics.Trace.WriteLine($"{sourceFilePath}({sourceLineNumber}): {timeStamp}: {memberName}");
+			System.Diagnostics.Trace.WriteLine(System.Text.Json.JsonSerializer.Serialize<T>(s, Json.jsonSerializerOptions));
 			DumpStack(new StackTrace(1, true));
-			// System.Diagnostics.Debug.WriteLine(new StackTrace());
+			// System.Diagnostics.Trace.WriteLine(new StackTrace());
 		}
 
 		// [Conditional("DEBUG")]
@@ -186,8 +187,11 @@ namespace COTG
 			System.Diagnostics.Trace.WriteLine($"{sourceFilePath}({sourceLineNumber}): {timeStamp}: {memberName} : Exception: {msg} {e.StackTrace}");
 			var stackTrace = new StackTrace(e, true);
 			DumpStack(stackTrace);
-			if(report) 
+			if(report)
+			{
+				System.Diagnostics.Trace.Flush();
 				BreakDebugger(stackTrace,msg);
+			}
 #endif
 
 
@@ -212,6 +216,7 @@ namespace COTG
 		public static void Assert(bool v,
 			[System.Runtime.CompilerServices.CallerMemberName] string memberName = "",
 	   [System.Runtime.CompilerServices.CallerFilePath] string sourceFilePath = "",
+	   [System.Runtime.CompilerServices.CallerArgumentExpression("v")] string exp = "",
 	   [System.Runtime.CompilerServices.CallerLineNumber] int sourceLineNumber = 0)
 		{
 			if (v)
@@ -219,7 +224,7 @@ namespace COTG
 				return;
 			}
 
-			var str = $"{sourceFilePath}({sourceLineNumber}): {timeStamp}: {memberName} : Assert";
+			var str = $"{sourceFilePath}({sourceLineNumber}): {timeStamp}: {memberName} : Assert({exp})";
 			Note.Show(str);
 #if DEBUG
 
@@ -239,6 +244,7 @@ namespace COTG
 			if (System.Diagnostics.Debugger.IsAttached && breakCounter > 0)
 			{
 				--breakCounter;
+				System.Diagnostics.Trace.Flush();
 					System.Diagnostics.Debugger.Break(); ;
 			}
 		}

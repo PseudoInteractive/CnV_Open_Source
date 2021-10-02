@@ -197,7 +197,7 @@ namespace COTG.Views
 						   if (IsNew(lastName))
 							   lastName = string.Empty;
 						   city.BuildStageDirty();
-						   await Post.Send("includes/nnch.php", $"a={HttpUtility.UrlEncode(lastName, Encoding.UTF8)}&cid={cid}", World.CidToPlayerOrMe(cid));
+						   await Post.Get("includes/nnch.php", $"a={HttpUtility.UrlEncode(lastName, Encoding.UTF8)}&cid={cid}", World.CidToPlayerOrMe(cid));
 						   //if (SettingsPage.applyTags)
 						   //{
 						   // await ApplyTags(cid, nameDialog.tagsPanel);

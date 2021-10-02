@@ -41,7 +41,7 @@ namespace COTG.JSON
 
 		}
 
-		public static async Task<int> FindBestHub(int cid)
+		public static async Task<int> FindBestHub(int cid, bool onlyOffContinent)
 		{
 			await NearRes.UpdateTradeStuffifNeeded();
 			int reqHub = 0;
@@ -53,6 +53,8 @@ namespace COTG.JSON
 						continue;
 					var reachable = hub.CanReachByTrade(cid);
 					if(!reachable.reachable)
+						continue;
+					if(onlyOffContinent && cid.CidToContinent() != hub.CidToContinent() )
 						continue;
 
 					var d = hub.DistanceToCid(cid) * 256.0f/( (reachable.viaWater? (City.Get(cid).shipsHome+128) : (City.Get(cid).CartsHome*1.0f/64) + 128) );
@@ -71,35 +73,42 @@ namespace COTG.JSON
 			SetTradeSettings(cid, autoFind: true,reqFilter:ResourceFilter._true, targetFilter: ResourceFilter._true);
 		}
 
-		public static async void SetTradeSettings(int _cid, int ? sourceHub = null, ResourceFilter reqFilter = default, int? targetHub = null, ResourceFilter targetFilter = default,bool autoFind=false)
+		public static async Task SetTradeSettings(int _cid, int ? sourceHub = null, ResourceFilter reqFilter = default, int? targetHub = null, ResourceFilter targetFilter = default,bool autoFind=false)
 		{
 
-			var settings = new ResSettings();
-			var dialog = new ContentDialog()
-			{
-				Content = settings,
-				PrimaryButtonText = "Apply",
-				SecondaryButtonText = "Skip",
-				CloseButtonText = "Cancel"
-			};
-	//		if (sourceHub.HasValue)
-				settings.reqFilter = reqFilter;
-	//		if (targetHub.HasValue)
-				settings.sendFilter = targetFilter;
-//			settings.applyRequested = sourceHub.HasValue || autofind;
-//			settings.applySend = targetHub.HasValue || autoFind;
+			
+
+		
 			var targetExplicit = targetHub.HasValue;
 			foreach (var __cid in Spot.GetSelectedForContextMenu(_cid, false, onlyMine: true))
 			{
 				var cid = __cid;
 				var city = City.Get(cid);
+				
 				if (autoFind)
-					sourceHub = targetHub = await FindBestHub(cid);
+				{
+					sourceHub = targetHub = await FindBestHub(cid, await App.DoYesNoBox("Find Hub", "Off Continent?",cancel:null ) == 1);
+				}
+				var settings = new ResSettings();
+				settings.InitTradeSettings(city,sourceHub.GetValueOrDefault(),targetHub.GetValueOrDefault());
+				settings.reqFilter = reqFilter;
+				settings.sendFilter = targetFilter;
+
+				var dialog = new ContentDialog()
+				{
+					Content = settings,
+					PrimaryButtonText = "Apply",
+					SecondaryButtonText = "Skip",
+					CloseButtonText = "Cancel"
+				};
+
 				dialog.Title = $"Set Trade settings for {city.nameAndRemarks}";
-				await settings.InitTradeSettings(City.Get(cid),sourceHub.GetValueOrDefault(), (city.isHubOrStorage&&!targetExplicit) ? 0 : targetHub.GetValueOrDefault() );
+			//	await settings.InitTradeSettings(city,, (city.isHubOrStorage&&!targetExplicit) ? 0 : targetHub.GetValueOrDefault() );
 				var rv = await dialog.ShowAsync2();
 				if (rv == ContentDialogResult.Primary)
 				{
+					reqFilter = settings.reqFilter;
+					targetFilter = settings.sendFilter;
 					// does this change threads?
 					await SetCitySettings(cid,reqHub:sourceHub,targetHub:targetHub, req:  settings.req, max:settings.max, 
 						cartReserve:settings.cartReserve,
@@ -340,7 +349,7 @@ namespace COTG.JSON
 		}
 		public static Task SetFoodWarning(int cid, int warn)
 		{
-			return Post.Send("includes/svFW.php", $"a={warn}&cid={cid}");
+			return Post.Get("includes/svFW.php", $"a={warn}&cid={cid}");
 		}
 
 		public static async void SetFoodWarnings(int cid)
@@ -378,7 +387,7 @@ namespace COTG.JSON
                 {
 					var args2 = string.Join(',', mo.split);
 					city.SetMinisterOptions(args2);
-                    await Post.Send("includes/mnio.php", $"a={HttpUtility.UrlEncode(args2, Encoding.UTF8)}&b={cid}", World.CidToPlayerOrMe(cid));
+                    await Post.Get("includes/mnio.php", $"a={HttpUtility.UrlEncode(args2, Encoding.UTF8)}&b={cid}", World.CidToPlayerOrMe(cid));
                     // find closest hub
                     Note.Show($"Set Minister options settings",Note.Priority.low);
                 }

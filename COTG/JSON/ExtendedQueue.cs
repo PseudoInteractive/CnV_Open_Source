@@ -20,7 +20,7 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.Toolkit;
 using static COTG.Debug;
-using static COTG.JSON.BuildQueue;
+using static COTG.BuildQueue;
 using static COTG.Game.City;
 using Windows.Storage;
 using ContentDialog = Microsoft.UI.Xaml.Controls.ContentDialog;
@@ -28,7 +28,7 @@ using ContentDialogResult = Microsoft.UI.Xaml.Controls.ContentDialogResult;
 using Cysharp.Text;
 using Windows.System;
 
-namespace COTG.JSON
+namespace COTG
 {
 	//	public struct BuildQueueItem
 	//	{
@@ -84,6 +84,8 @@ namespace COTG.JSON
 
 		public BuildQueueItem(byte slvl, byte elvl, short bid, short bspot, ushort buildTime = 0, bool pa = true)
 		{
+			Assert(elvl < 11);
+
 			if (pa)
 				elvl |= 0x10;
 			this.slvl = slvl;
@@ -309,13 +311,24 @@ namespace COTG.JSON
 							var lg = cotgQ.Length;
 							if (lg > 0)
 							{
-								var bt = 0;
-								// skip the first
-								for (int i = 0; i < lg; ++i)
-									bt += cotgQ[i].buildTime;
-								bt =  bt*3/4 - 8; // wait for 3/4 of the time minus 8 seconds
-								delay = (bt * 1000).Clamp(3 * 1000, 30 * 60 * 1000);
-								Trace("Delay " + delay / 1000.0f);
+								var anyPa=false;
+								{ 
+									var bt = 0;
+									// skip the first
+									for (int i = 0; i < lg; ++i)
+									{
+										bt += cotgQ[i].buildTime;
+										anyPa |=cotgQ[i].pa;
+									}
+									bt =  bt*3/4 - 4; // wait for 3/4 of the time minus 8 seconds
+									delay = (bt * 1000).Clamp(3 * 1000, 30 * 60 * 1000);
+									Trace("Delay " + delay / 1000.0f);
+									if(anyPa==false)
+									{ 
+										delay = delay.Max(10*1000);
+										Trace("nothing is paid");
+									}
+								}
 							}
 
 							//pollPaused = true;
@@ -374,7 +387,7 @@ namespace COTG.JSON
 							// this is either 1..+ can send commands normally
 							//                0 can send unblocking commands
 							//               -1  unblock un progress
-							var isBlocked = false;//spaceInQueue == 0 && cotgQ[0].pa == false;
+							var isBlocked = spaceInQueue == 0 && cotgQ[0].pa == false;
 							int commandsToQueue = isBlocked ? 1 : spaceInQueue.Min(queue.count);
 							if (isBlocked)
 								Trace($"Blocked! {city.nameMarkdown} ");
@@ -479,7 +492,7 @@ namespace COTG.JSON
 												}
 												if(i.def.bid == City.bidCastle)
 												{
-													//	Log($"Castle  {city.nameAndRemarks}");
+													//	Log($"Castle  {city.nameMarkdown}");
 													// TODO: check res
 													// cannot queue if there is no room, even if there is a demo in progress
 													if(counts.count >= counts.max || city.stone < 20 * 1000 || city.buildings[City.bspotTownHall].bl < 8)
@@ -563,21 +576,40 @@ namespace COTG.JSON
 
 											}
 										}
-										++validCount;
-
+										
 										// issue this command
-										RemoveAt(offset);
 										//									if (cid == City.build)
 										//										City.buildQueue.Add(i);
-										cotgQ.Add(i);
 										if(i.bid==bidCastle)
 										{
-											await Post.Send("/includes/nCb.php",$"type={bidCastle}&spot={i.bspot}&cid={cid}&bt={JSClient.ServerTimeMs()}").ConfigureAwait(false);
+											var a = await Post.SendForText("/includes/nCb.php",$"type={bidCastle}&spot={i.bspot}&cid={cid}&bt={JSClient.ServerTimeMs()}").ConfigureAwait(false);
+											if(a==null || a.Length <= 4)
+											{
+												Assert(false);
+												// error!
+												++offset;
+												continue;
+											}
+
 										}
 										else
 										{
-											await IssueCommand( i,cid ).ConfigureAwait(false);
+											var de =(JSClient.ServerTimeSeconds()+2 + cotgQ.Sum(q=>q.buildTime));
+											
+											var ok = await IssueCommand( i,cid,de*1000).ConfigureAwait(false);
+											if(!ok)
+											{
+												Assert(false);
+												++offset;
+												continue;
+
+											}
 										}
+										++validCount;
+
+										RemoveAt(offset);
+									//	cotgQ.Add(i);
+
 										--commandsToQueue;
 										hasAny =true;
 										//	if (validCount > 0 && cotgQ.Length >= City.safeBuildQueueLength)
@@ -597,6 +629,7 @@ namespace COTG.JSON
 											if(delay > 1000)
 												delay = 1000;
 										}
+										Post.Get("/includes/bqSt.php", $"a={cid}",onlyHeaders:true);
 										SaveNeeded();
 											if(delay > 1 * 30 * 1000)
 												delay = 1 * 30 * 1000;
@@ -606,7 +639,7 @@ namespace COTG.JSON
 									}
 									else
 									{
-								//		Trace($"Nothing to do {cid==City.build} {city.nameAndRemarks}.. {queue.count}");
+										Trace($"Nothing to do {cid==City.build} {city.nameMarkdown}.. {queue.count} dt: {delay/1000}");
 										// nothing queued
 										// no progress :( wait a minute
 										if (cid == City.build)
@@ -642,7 +675,7 @@ namespace COTG.JSON
 									{
 										//	Trace("Queue invalid");
 									}
-									//	Log($"Next in {delay / 1000.0f} {City.GetOrAdd(cid).nameAndRemarks}");
+									Trace($"Next in {delay / 1000.0f} {City.GetOrAdd(cid).nameMarkdown}");
 
 
 
@@ -658,14 +691,22 @@ namespace COTG.JSON
 
 								if (destroyMe)
 								{
-									Log($"Queue Done! {cid==City.build} {city.nameAndRemarks}");
+									Log($"Queue Done! {cid==City.build} {city.nameMarkdown} dt {delay/1000}");
 									SaveNeeded();
 									Dispose();
 									return;
 
 								}
 							}
+							else
+							{
+								Trace($"No space {city} Q:{cotgQ.Length} XQ:{queue.Length}");
+							}
 						} // buildings loaded
+						else
+						{
+							Trace($"{city} buildings not loaded");
+						}
 					}
 					catch (Exception _exception)
 					{
@@ -684,10 +725,10 @@ namespace COTG.JSON
 				}
 				//				if(delay > 60*1000 )
 				//		if(city.cid!= City.build)
-				//			Trace($"iterate: Q {queue.count} delay {delay} city {city.nameAndRemarks}");
+				//			Trace($"iterate: Q {queue.count} delay {delay} city {city.nameMarkdown}");
 				try
 				{
-				//	Trace( $"Delay:{cid==City.build} {delay/1000.0f} {city.nameAndRemarks} bq:{city.buildQueue.count} xq:{queue.count}");
+				//	Trace( $"Delay:{cid==City.build} {delay/1000.0f} {city.nameMarkdown} bq:{city.buildQueue.count} xq:{queue.count}");
 
 					cancellationTokenSource = new();
 					await Task.Delay(300).ConfigureAwait(false);
@@ -838,6 +879,7 @@ namespace COTG.JSON
 
 				JSClient.JSInvoke($"buildex(\"{sb.ToString()}\")");
 				sb.Dispose();
+				
 				CityView.BuildingsOrQueueChanged();
 				return;
 			}
@@ -933,7 +975,7 @@ namespace COTG.JSON
 
 				   var dialog = new ContentDialog()
 				   {
-					   Title = $"Castle {City.GetOrAddCity(cid).nameAndRemarks}?",
+					   Title = $"Castle {City.GetOrAddCity(cid).nameMarkdown}?",
 					   Content = "Building a Castle allows you to plunder, scout, assault and siege other cities, but it also makes your own city vulnerable to attacks from other players. Building a Castle will exponentially increase the maximum army size of your city, and is an irreversible action.",
 					   PrimaryButtonText = "Yes",
 					   SecondaryButtonText = "Cancel"
@@ -977,7 +1019,8 @@ namespace COTG.JSON
 			
 			QueueTab.RemoveOp( cid);
 			// if its empty it will be removed next iteration
-			CityView.BuildingsOrQueueChanged();
+			if(cid==City.build)
+				CityView.BuildingsOrQueueChanged();
 		}
 
 
@@ -990,7 +1033,10 @@ namespace COTG.JSON
 				q.queue.Clear();
 				QueueTab.Clear(cid);
 				SaveNeeded();
-				CityView.BuildingsOrQueueChanged();
+				if(cid == City.build)
+				{
+					CityView.BuildingsOrQueueChanged();
+				}
 			}
 		}
 		public static async Task SaveIfNeeded()
@@ -1042,16 +1088,17 @@ namespace COTG.JSON
 		}
 		static internal async Task SaveTimerGo(bool force, bool awaitContext)
 		{
+			await Post.Get("overview/bcounc.php").ConfigureAwait(false);
 			if (buildActionCounter == 0)
 			{
 				return;
 			}
-			if (force)
+			//if (force)
 				buildActionCounter = 0;
-			else
-				--buildActionCounter;
-			if (buildActionCounter > 0)
-				return;
+		//	else
+		//	--buildActionCounter;
+		//	if (buildActionCounter > 0)
+			//	return;
 
 			try
 			{
@@ -1073,12 +1120,13 @@ namespace COTG.JSON
 					}
 					//Log($"SaveQueue: {str}");
 
-
+				
 				}
 				else
 				{
 					//	Cosmos.ClearBuildQueue();
 				}
+
 			}
 			catch (Exception ex)
 			{
@@ -1160,19 +1208,28 @@ namespace COTG.JSON
 		}
 
 
-		static public Task IssueCommand(BuildQueueItem q,int cid)
+		static public async Task<bool> IssueCommand(BuildQueueItem q,int cid, long t0)
 		{
-			var t0 = JSClient.ServerTimeMs();
-			var json = $"{{\"bt\":{(q.isBuild?0:q.isDemo?3:q.isUpgrade?1:2)},\"pa\":{0},\"slvl\":{q.slvl},\"elvl\":{q.elvl},\"bid\":\"{AMath.RandomDigits(10)}\",\"brep\":{q.bid},\"ds\":{t0},\"de\":{t0+2000},\"btype\":{q.proto},\"bspot\":{q.bspot}}}";
+			var json = $"{{\"bt\":{(q.isBuild?0:q.isDemo?3:q.isUpgrade?1:2)},\"pa\":{0},\"slvl\":{q.slvl},\"elvl\":{q.elvl},\"bid\":\"{AMath.RandomDigits(10)}\",\"brep\":{q.bid},\"ds\":{t0},\"de\":{t0+1000},\"btype\":{q.proto},\"bspot\":{q.bspot}}}";
+			var encoded = Aes.Encode(json,$"X2U11s33S{World.CidToPlayerOrMe(cid)}ccJx1e2");
+			//var encoded = Aes.Encode(json, $"XTR977sW{World.CidToPlayer(cid)}sss2x2");
+			var args = $"cid={cid}&a=" + HttpUtility.UrlEncode(encoded,Encoding.UTF8);
+			var response = await Post.SendForJson("includes/nBuu.php",args);
+			if(response == null)
+				return false;
+			City.Get(cid).LoadCityData(response.RootElement);
+
+			return true;;
+
 			//if(process)
 			//{
 			//	await new BuildEx(json,cid).Post(false);
 
 			//}
 			//else
-			{
-				return new BuildEx(json,cid).Send(false);
-			}
+			//{
+			//	return new BuildEx(json,cid).Send(false);
+			//}
 //			Assert(rv==true);
 			//if(qFirst)
 			//{
@@ -1274,7 +1331,7 @@ namespace COTG.JSON
 				}
 			}
 
-			saveTimer = ThreadPoolTimer.CreatePeriodicTimer(SaveTimer_Tick, TimeSpan.FromSeconds(60));
+			saveTimer = ThreadPoolTimer.CreatePeriodicTimer(SaveTimer_Tick, TimeSpan.FromSeconds(3*60));
 		}
 	}
 }

@@ -1006,7 +1006,6 @@ namespace COTG
 		}
 
 
-
 		public static int activeContinent;
 		public static Vector2 lightWC;
 		public static Vector2 CameraC

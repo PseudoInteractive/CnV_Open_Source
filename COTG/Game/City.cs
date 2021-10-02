@@ -205,7 +205,7 @@ namespace COTG.Game
 		//public Building GetBuiding((int x, int y) xy) => buildings[XYToId(xy)];
 		//	public Building GetBuiding( int bspot) => buildings[bspot];
 		public Building[] postQueuebuildingsCache = Emptybuildings;
-		public DArray<BuildQueueItem> buildQueue = DArray<BuildQueueItem>.Rent();// fixed size to improve threading behaviour and performance
+		public DArray<BuildQueueItem> buildQueue = DArray<BuildQueueItem>.Rent(18);// fixed size to improve threading behaviour and performance
 																				 //public static ManualResetEventSlim buildQUpdated = new();
 		public const int buildQMax = 16; // this should depend on ministers
 										 //	public static bool buildQueueFull => buildQueue.count >= buildQMax && !SettingsPage.extendedBuild;
@@ -730,7 +730,7 @@ namespace COTG.Game
 					//}
 				}
 			}
-			if ((this != ExtendedQueue.cityQueueInUse))
+		//	if ((this != ExtendedQueue.cityQueueInUse))
 			{
 				if (jse.TryGetProperty("bq", out var bq))
 				{
@@ -754,7 +754,9 @@ namespace COTG.Game
 								pa: js.GetAsInt64("pa") == 1));
 
 						}
-						CityView.BuildingsOrQueueChanged();
+						if(cid == City.build)
+							CityView.BuildingsOrQueueChanged();
+						Trace($"{nameMarkdown} got BQ {buildQueue.Length}");
 					}
 					else
 					{
@@ -766,10 +768,14 @@ namespace COTG.Game
 				{
 					var sum = buildQueue.Sum(a=>a.buildTime);
 					//Assert(sum <= 32 );
-					Trace($"No Queue {this} was {sum}");
+					Trace($"No Queue {nameMarkdown} was {buildQueue.Length} dt: {sum}s");
 				//	buildQueue.Clear();
 				}
 			}
+			//else
+			//{
+			//	Trace($"Skipped fetch bq {nameMarkdown}");
+			//}
 
 
 			TryGetBuildings(jse);
@@ -965,7 +971,7 @@ namespace COTG.Game
 		public Task SetMinistersOnAsync(bool on)
 		{
 			ministersOn = on;
-			return Post.Send("includes/coOO.php", $"a={cid}&b={(on ? 1 : 0)}");
+			return Post.Get("includes/coOO.php", $"a={cid}&b={(on ? 1 : 0)}");
 		}
 		public void SetMinistersOn(bool on) => SetMinistersOnAsync(on);
 

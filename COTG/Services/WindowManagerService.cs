@@ -21,40 +21,42 @@ namespace COTG.Services
 
         public static WindowManagerService Current => _current ?? (_current = new WindowManagerService());
 
-  //      // Contains all the opened secondary views.
-  //      public ObservableCollection<ViewLifetimeControl> SecondaryViews { get; } = new ObservableCollection<ViewLifetimeControl>();
+		//      // Contains all the opened secondary views.
+		//      public ObservableCollection<ViewLifetimeControl> SecondaryViews { get; } = new ObservableCollection<ViewLifetimeControl>();
 
-  //      public int MainViewId { get; private set; }
+		//      public int MainViewId { get; private set; }
 
-  //      public CoreDispatcher MainDispatcher { get; private set; }
+		//      public CoreDispatcher MainDispatcher { get; private set; }
 
-  //      public async Task InitializeAsync()
-  //      {
-  //          await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
-  //          {
-  //              MainViewId = ApplicationView.GetForCurrentView().Id;
-  //              MainDispatcher = Window.Current.Dispatcher;
-  //          });
+		//      public async Task InitializeAsync()
+		//      {
+		//          await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+		//          {
+		//              MainViewId = ApplicationView.GetForCurrentView().Id;
+		//              MainDispatcher = Window.Current.Dispatcher;
+		//          });
 		//}
 
-        // Displays a view as a standalone
-        // You can use the resulting ViewLifeTileControl to interact with the new window.
-        //public async Task<ViewLifetimeControl> TryShowAsStandaloneAsync<PageType>(string windowTitle)
-        //{
-        //    ViewLifetimeControl viewControl = await CreateViewLifetimeControlAsync(windowTitle, typeof(PageType) );
-        //    SecondaryViews.Add(viewControl);
-        //    viewControl.StartViewInUse();
-	
-        //    await ApplicationViewSwitcher.TryShowAsStandaloneAsync(viewControl.Id, ViewSizePreference.UseMore, ApplicationView.GetForCurrentView().Id, ViewSizePreference.UseMore);
-        //    viewControl.StopViewInUse();
-        //    return viewControl;
-        //}
+		//Displays a view as a standalone
 
-		public Task TryShowAsStandaloneAsync<PageType>(string windowTitle)
-		{
-			return Task.CompletedTask;
+		// You can use the resulting ViewLifeTileControl to interact with the new window.
 
-		}
+		//public async Task<ViewLifetimeControl> TryShowAsStandaloneAsync<PageType>(string windowTitle)
+		//{
+		//	ViewLifetimeControl viewControl = await CreateViewLifetimeControlAsync(windowTitle,typeof(PageType));
+		//	SecondaryViews.Add(viewControl);
+		//	viewControl.StartViewInUse();
+
+		//	await ApplicationViewSwitcher.TryShowAsStandaloneAsync(viewControl.Id,ViewSizePreference.UseMore,ApplicationView.GetForCurrentView().Id,ViewSizePreference.UseMore);
+		//	viewControl.StopViewInUse();
+		//	return viewControl;
+		//}
+
+		//public Task TryShowAsStandaloneAsync<PageType>(string windowTitle)
+		//{
+		//	return Task.CompletedTask;
+
+		//}
 		//// Displays a view in the specified view mode
 		//public async Task<ViewLifetimeControl> TryShowAsViewModeAsync(string windowTitle, Type pageType, ApplicationViewMode viewMode = ApplicationViewMode.Default)
 		//{

@@ -35,7 +35,7 @@ namespace COTG.Services
 	{
 		silenceError=1,
 		track=1<<1, // only if eventName is not empty
-		onlyHeaders=1<<2,
+		//onlyHeaders=1<<2,
 	}
 	public class RestAPI
 	{
@@ -61,7 +61,7 @@ namespace COTG.Services
 
 			try
 			{
-					var a = await AsArray(resp);
+					var a = await AsArray(resp).ConfigureAwait(false);
 					var json = JsonDocument.Parse(a, jsonParseOptions);
 					ProcessJson(json);
 					return true;
@@ -110,7 +110,6 @@ namespace COTG.Services
 		//}
 		private static async Task<byte[]> AsArray(HttpResponseMessage resp)
 		{
-			await resp.Content.BufferAllAsync();
 			var buffer = await resp.Content.ReadAsBufferAsync();
 
 			return (buffer).ToArray();
@@ -137,7 +136,7 @@ namespace COTG.Services
 
 			try
 			{
-				return JsonDocument.Parse(await AsArray(resp));
+				return JsonDocument.Parse(await AsArray(resp).ConfigureAwait(false));
 
 			}
 			catch (Exception e)
@@ -151,7 +150,7 @@ namespace COTG.Services
 		{
 			try
 			{
-				return JsonSerializer.Deserialize<T>(await AsArray(resp), Json.jsonSerializerOptions);
+				return JsonSerializer.Deserialize<T>(await AsArray(resp).ConfigureAwait(false), Json.jsonSerializerOptions);
 
 			}
 			catch (Exception e)
@@ -184,11 +183,11 @@ namespace COTG.Services
 		{
 			while (JSClient.jsVars == null)
 			{
-				await Task.Delay(400);
+				await Task.Delay(400).ConfigureAwait(false);
 			}
 			try
 			{
-				return await AcceptAndProcess(await Send(except),except);
+				return await AcceptAndProcess(await Send(except),except).ConfigureAwait(false);
 
 			}
 			catch (Exception e)
@@ -202,44 +201,47 @@ namespace COTG.Services
 		public const string nullPost = "a=0";
 		private static readonly JsonDocumentOptions jsonParseOptions = new() { AllowTrailingCommas = true };
 
-		public Task<HttpResponseMessage> Send(bool except=false)
+		public Task<HttpResponseMessage> Send(bool except=false,bool headersOnly = false)
 		{
-			return Send(GetPostContent(), except);
+			return Send(GetPostContent(), except, headersOnly);
 		}
-		async public Task<HttpResponseMessage> Send(string postContent, bool except=true)
+		async public Task<HttpResponseMessage> Send(string postContent, bool except=true, bool headersOnly = false)
 		{
-			HttpClient client = null;
-			await JSClient.clientPoolSema.WaitAsync().ConfigureAwait(false);
+			
+		
 			try
 			{
+				//await JSClient.clientPoolSema.WaitAsync().ConfigureAwait(false);
 
 
-				for (; ; )
-				{
-					if (JSClient.clientPool.TryTake(out client))
-					{
-						break;
-					}
-					Assert(false);
-					await Task.Delay(128).ConfigureAwait(false);
-				}
+				//for (; ; )
+				//{
+				//	if (JSClient.clientPool.TryTake(out client))
+				//	{
+				//		break;
+				//	}
+				//	Assert(false);
+				//	await Task.Delay(128).ConfigureAwait(false);
+				//}
 				//				HttpResponseMessage resp;
+				
 				var uri = new Uri(JSClient.httpsHost, localPath);
-				using (var req = new HttpRequestMessage(HttpMethod.Post, uri))
 				{
+					var req = new HttpRequestMessage(HttpMethod.Post,uri);
 					req.Content = new HttpStringContent(postContent,
 								Windows.Storage.Streams.UnicodeEncoding.Utf8,
 								"application/x-www-form-urlencoded");
 					//req.TransportInformation.
 					req.Content.Headers.TryAppendWithoutValidation("Content-Encoding", JSClient.PlayerToken(pid));
-					req.Headers.Cookie.ParseAdd(JSClient.cookies); 
+					req.Headers.Cookie.ParseAdd(JSClient.cookies);
 
 					//                req.Headers.Append("Sec-Fetch-Site", "same-origin");
 					//    req.Headers.Append("Sec-Fetch-Mode", "cors");
 					//    req.Headers.Append("Sec-Fetch-Dest", "empty");
 
-
-					var respT = client.SendRequestAsync(req,restFlags.HasFlag(RestFlags.onlyHeaders)? HttpCompletionOption.ResponseHeadersRead: HttpCompletionOption.ResponseContentRead);
+					HttpClient client = JSClient.httpClient;
+					var respT = client.SendRequestAsync(req,headersOnly? HttpCompletionOption.ResponseHeadersRead: HttpCompletionOption.ResponseContentRead);
+					req =null;
 					//     Log($"res: {resp.GetType()} {resp.Succeeded} {resp}");
 					//     Log($"req: {resp.RequestMessage.ToString()}");
 					//   if (resp.ExtendedError != null)
@@ -270,10 +272,10 @@ namespace COTG.Services
 			}
 			finally
 			{
-				if (client != null)
-					JSClient.clientPool.Add(client);
-				client = null;
-				JSClient.clientPoolSema.Release();
+				//if (client != null)
+				//	JSClient.clientPool.Add(client);
+				//client = null;
+				//JSClient.clientPoolSema.Release();
 			}
 			return null;
 
@@ -483,7 +485,7 @@ namespace COTG.Services
 					});
 					if (tid != 0) // if recruiting
 					{
-						await Post.Send("includes/cTrp.php", $"cid={cid}&a={tid}");
+						await Post.Get("includes/cTrp.php", $"cid={cid}&a={tid}");
 					}
 
 					// dismisss
@@ -494,7 +496,7 @@ namespace COTG.Services
 						var encoded = Aes.Encode("{\"5\":" + count + "}", magic);
 						var urle = $"cid={cid}&a=" + HttpUtility.UrlEncode(encoded, Encoding.UTF8);
 
-						await Post.Send("includes/dTp.php", urle);
+						await Post.Get("includes/dTp.php", urle);
 
 					}
 				}
@@ -1043,18 +1045,18 @@ namespace COTG.Services
 
 		// Does not wait for full response and does not parse json
 		// postContent is xml uri encoded
-		async public static Task Send(string url, string postContent, int _pid = -1, bool except = true)
+		async public static Task Get(string url, string postContent = nullPost, int _pid = -1, bool except = true, bool onlyHeaders=false)
 		{
 			var p = new Post(url, _pid);
-			await p.Send(postContent, except);
+			await p.Send(postContent, except,onlyHeaders);
 
 		}
-		async public static Task<HttpResponseMessage> SendForResponse(string url, string postContent, int _pid = -1, bool except=false)
+		async public static Task<HttpResponseMessage> SendForResponse(string url, string postContent = nullPost, int _pid = -1, bool except=false)
 		{
 			var p = new Post(url, _pid);
 			return await p.Send(postContent, except);
 		}
-		async public static Task<bool> SendForOkay(string url, string postContent, int _pid = -1, bool except = false)
+		async public static Task<bool> SendForOkay(string url, string postContent = nullPost, int _pid = -1, bool except = false)
 		{
 			var p = new Post(url, _pid);
 
@@ -1069,8 +1071,17 @@ namespace COTG.Services
 
 		async public static Task<JsonDocument> SendForJson(string url, string postContent = nullPost, int _pid = -1, bool except = false)
 		{
-			var p = new Post(url, _pid);
-			return await AcceptJson(await p.Send(postContent, except), except);
+
+			try
+			{
+				var p = new Post(url,_pid);
+				return await AcceptJson(await p.Send(postContent,except),except);
+			}
+			catch(Exception ex)
+			{
+				LogEx(ex);
+				return null;
+			}
 		}
 		async public static Task<string> SendForText(string url, string postContent = nullPost, int _pid = -1, bool except=false)
 		{
@@ -1225,17 +1236,18 @@ namespace COTG.Services
 	{
 		async static public Task<TileData> Get()
 		{
-			HttpClient client = null;
+			//HttpClient client = null;
 			try
 			{
-				await JSClient.clientPoolSema.WaitAsync();
-				for (; ; )
-				{
-					if (JSClient.clientPool.TryTake(out client))
-						break;
-					Assert(false);
-					await Task.Delay(128);
-				}
+				//await JSClient.clientPoolSema.WaitAsync().ConfigureAwait(false);
+				//for (; ; )
+				//{
+				//	if (JSClient.clientPool.TryTake(out client))
+				//		break;
+				//	Assert(false);
+				//	await Task.Delay(128);
+				//}
+				var client = JSClient.httpClient;
 				var buff = await client.GetBufferAsync(new Uri(JSClient.httpsHost, $"maps/newmap/rmap6.json?a={HttpUtility.UrlEncode(DateTime.Now.ToString("R"))}"));
 				/*
 				 * GET /maps/newmap/rmap6.json?a=Sat%20Mar%2013%202021%2014:24:01%20GMT-0800%20(Pacific%20Standard%20Time) HTTP/1.1
@@ -1279,9 +1291,9 @@ namespace COTG.Services
 			}
 			finally
 			{
-				if (client != null)
-					JSClient.clientPool.Add(client);
-				JSClient.clientPoolSema.Release();
+				//if (client != null)
+				//	JSClient.clientPool.Add(client);
+				//JSClient.clientPoolSema.Release();
 			}
 			return null;
 

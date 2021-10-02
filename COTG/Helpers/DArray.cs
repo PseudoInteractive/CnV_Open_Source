@@ -40,13 +40,14 @@ namespace COTG
 		}
 		public static DArray<T> freePool;
 		DArray<T> freePoolNext; // linked list
-		public static DArray<T> Rent()
+		public static DArray<T> Rent(int size=0)
 		{
 			for (; ; )
 			{
 
 				var rv = freePool;
-				if (rv != null)
+				// Todo iterate to find the right size
+				if (rv != null && rv.Length >= size)
 				{
 					var next = freePool.freePoolNext;
 					if (object.ReferenceEquals(Interlocked.CompareExchange(ref freePool, next, rv), rv))
@@ -56,7 +57,7 @@ namespace COTG
 				}
 				else
 				{
-					return new DArray<T>();
+					return new DArray<T>(size);
 				}
 			}
 		}

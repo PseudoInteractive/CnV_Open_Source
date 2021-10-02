@@ -47,6 +47,8 @@ namespace COTG.Game
 				//}
 				var rv = new Building[citySpotCount];
 				postQueueBuildingCache = rv;
+				var buildQueue= this.buildQueue.span;
+
 				//
 				// copy current buildings
 				//
@@ -85,6 +87,10 @@ namespace COTG.Game
 			}
 		}
 		public int postQueueTownHallLevel => CityBuild.isPlanner switch { true => 10, _ => postQueueBuildings[bspotTownHall].bl };
+
+		public int anyRequestHub=> tradeInfo is not null ? tradeInfo.resSource.Where(a=>a!=0).FirstOrDefault() : 0;
+		public int anySendHub => tradeInfo is not null ? tradeInfo.resDest.Where(a => a!=0).FirstOrDefault() : 0;
+
 		//	public int postQueueBuildingCount => postQueueBuildings.Count(c => c.requiresBuildingSlot);
 
 		public async Task<bool> BuildWallDialogue()

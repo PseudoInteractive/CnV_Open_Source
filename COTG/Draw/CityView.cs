@@ -131,6 +131,7 @@ namespace COTG.Draw
 			{
 				int iAlpha = (int)(alpha * 255f);
 				var postBuildings = build.postQueueBuildings;
+				var buildings = build.buildings;
 				buildCityOrigin = build.cid.CidToWorldV();
 				// draw each building tile
 				var city = City.GetBuild();
@@ -154,8 +155,8 @@ namespace COTG.Draw
 						Building cur, next;//,overlay;
 						if(!CityBuild.isPlanner)
 						{
-							cur = city.buildings[bspot];
-							next = city.postQueueBuildings[bspot];
+							cur = buildings[bspot];
+							next = postBuildings[bspot];
 							//					overlay = city.BuildingFromOverlay(id);
 						}
 						else

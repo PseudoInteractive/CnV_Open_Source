@@ -326,7 +326,7 @@ namespace COTG.Game
             Note.Show($"{City.Get(cid).nameMarkdown} Home Please");
             if (cid != 0)
             {
-                await Post.Send("overview/rcallall.php", "a=" + cid, World.CidToPlayerOrMe(cid));
+                await Post.Get("overview/rcallall.php", "a=" + cid, World.CidToPlayerOrMe(cid));
                 if (updateUI)
                 {
                    // await JSClient.PollCity(cid);
@@ -378,7 +378,7 @@ namespace COTG.Game
                 if (cid != 0)
                 {
                     ++counter;
-                    await Post.Send("overview/rcallall.php", "a=" + cid, World.CidToPlayerOrMe(cid));
+                    await Post.Get("overview/rcallall.php", "a=" + cid, World.CidToPlayerOrMe(cid));
                 //    await JSClient.PollCity(cid);
                 }
             }

@@ -156,7 +156,8 @@ namespace COTG.Views
 
 		// private UserDataService UserDataService => Singleton<UserDataService>.Instance;
 
-		public static InAppNotification inAppNote => instance.InAppNote;
+//		public static InAppNotification inAppNote => instance.InAppNote;
+		public string noteText  = string.Empty;
 
 		public bool IsBackEnabled
 		{
@@ -201,9 +202,11 @@ namespace COTG.Views
 			c,
 			r1,
 			r2,
+			chat,
 		}
 		public static Layout layout = Layout.c;
 		public static bool rightTabsVisible => layout>=Layout.c;
+		public static bool htmlVisible => layout is not ( Layout.l1 or  Layout.r2 or Layout.r1 );
 
 		//public static void SetHeaderText(string text)
 		//{
@@ -1239,7 +1242,6 @@ namespace COTG.Views
 
 //		public static Vector2 webViewScale = new(1,1);
 //		internal static bool webviewHasFocus2=true;
-
 		private  async void SetLayout(Layout viewToggle)
 		{
 			if(viewToggle == layout)
@@ -1274,46 +1276,40 @@ namespace COTG.Views
 		{
 			Debounce.Q(runOnUIThread:true,action: ()=>{
 			float szC;
+			var chatX = 3;
+			var chatY = 4;
 			switch(layout)
 			{
 				case Layout.l2:
 						szC = 1;
-						//instance.grid.ColumnDefinitions[1].Width = new GridLength(1,GridUnitType.Star);
-						//instance.grid.ColumnDefinitions[2].Width = new GridLength(0,GridUnitType.Star);
-						// JSClient.view.Scale = new Vector3(1.0f, 1.0f, 1.0f);
+						// default chat
 						break;
 					case Layout.l1:
 						szC =  1;
-						//instance.grid.ColumnDefinitions[1].Width = new GridLength(1,GridUnitType.Star);
-						//instance.grid.ColumnDefinitions[2].Width = new GridLength(0,GridUnitType.Star);
-					// JSClient.view.Scale = new Vector3(1.0f, 1.0f, 1.0f);
-					break;
+						// small chat
+						chatY =5;
+						break;
 
 				case Layout.c:
-						// grid.ColumnDefinitions[0].Width = new GridLength(410*3/4, GridUnitType.Pixel);
 						szC  = 0.667f; 
-						//instance.grid.ColumnDefinitions[1].Width = new GridLength(2,GridUnitType.Star);
-						//instance.grid.ColumnDefinitions[2].Width = new GridLength(1,GridUnitType.Star);
-					//raidInfoVisible = false;
-					// JSClient.view.Scale = new Vector3(0.75f, 0.75f, 1.0f);
 					break;
-
-				case Layout.r1:
+					case Layout.chat:
 						szC  = 0.667f;
-						// grid.ColumnDefinitions[0].Width = new GridLength(410*3/4, GridUnitType.Pixel);
-						//instance.grid.ColumnDefinitions[1].Width = new GridLength(2,GridUnitType.Star);
-						//instance.grid.ColumnDefinitions[2].Width = new GridLength(1,GridUnitType.Star);
-					//raidInfoVisible = false;
-					break;
-				case Layout.r2:
+						chatX = 1;
+						chatY = 1;
+						break;
+					case Layout.r1:
+						szC  = 0.667f;
+						break;
+					case Layout.r2:
 						szC  = 0.333f;
-						// grid.ColumnDefinitions[0].Width = new GridLength(410 * 3 / 4, GridUnitType.Pixel);
-						//instance.grid.ColumnDefinitions[1].Width = new GridLength(1,GridUnitType.Star);
-						//instance.grid.ColumnDefinitions[2].Width = new GridLength(2,GridUnitType.Star);
-					// JSClient.view.Scale = new Vector3(0.75f, 0.75f, 1.0f);
-					break;
+						// small chat
+						chatY =5;
+						break;
 					default:
-						szC  = 0.5f;
+						// not used
+						Assert(false);
+						szC = 0.5f;
 						break;
 
 				}
@@ -1321,7 +1317,7 @@ namespace COTG.Views
 
 			var canvasScaledX = (zoom * canvasBaseXUnscaled).RoundToInt();
 			var canvasScaledY = (zoom * canvasBaseYUnscaled).RoundToInt();
-			htmlShift = layout switch { Layout.r1 or Layout.r2 or Layout.l1 => -canvasScaledX, _ => 0 };
+			htmlShift = htmlVisible ? 0 : -canvasScaledX;
 
 			var leftOffset = ((popupLeftOffset*zoom).RoundToInt()-canvasScaledX).Max0();
 			var topOffset = ((popupTopOffset*zoom).RoundToInt()-canvasScaledY).Max0();
@@ -1339,14 +1335,29 @@ namespace COTG.Views
 				
 					try
 					{
+
 						if(JSClient.view != null)
 						{
 							JSClient.view.ExecuteScriptAsync($"document.body.style.zoom={zoom};");
 						}
 
-						var _canvasBaseX = leftOffset + canvasScaledX + htmlShift;
-						var _canvasBaseY = topOffset +canvasScaledY;//.RoundToInt();
-					//	if(canvasBaseX != _canvasBaseX || canvasBaseY != _canvasBaseY)
+						// has it not been modified
+						if( instance.chatGrid.ColumnDefinitions[0].Width is { GridUnitType:GridUnitType.Star, Value:3 or 1 } &&
+							instance.chatGrid.RowDefinitions[0].Height is { GridUnitType: GridUnitType.Star, Value: 5 or 3 or 4 or 2 or 1 } )
+						{
+							instance.chatGrid.ColumnDefinitions[0].Width = new(chatX, GridUnitType.Star);
+							instance.chatGrid.ColumnDefinitions[1].Width = new(6-chatX,GridUnitType.Star);
+							instance.chatGrid.RowDefinitions[0].Height = new(chatY,GridUnitType.Star);
+							instance.chatGrid.RowDefinitions[1].Height = new(6-chatY,GridUnitType.Star);
+
+						}
+						{
+
+						}
+
+						var _canvasBaseX = (leftOffset + canvasScaledX + htmlShift).Max0();
+						var _canvasBaseY = (topOffset +canvasScaledY).Max0();
+																	//	if(canvasBaseX != _canvasBaseX || canvasBaseY != _canvasBaseY)
 						{
 
 							canvasBaseX = _canvasBaseX;
@@ -1356,7 +1367,7 @@ namespace COTG.Views
 							var initialMargin = instance.webView.Margin.Left;
 							instance.webView.Margin= new(htmlShift,0,0,0);
 							var delta = -htmlShift + (canvasBaseX - initialWidth0);
-							var newWidth1 = ((instance.grid.ActualWidth-canvasScaledX)*szC -(_canvasBaseX-canvasScaledX) ).RoundToInt();
+							var newWidth1 = ((instance.grid.ActualWidth-canvasScaledX)*szC -(_canvasBaseX-canvasScaledX) ).RoundToInt().Max0();
 							
 							instance.grid.ColumnDefinitions[0].Width = new GridLength(canvasBaseX,GridUnitType.Pixel);
 							instance.grid.ColumnDefinitions[1].Width = new GridLength(newWidth1,GridUnitType.Pixel);//	instance.grid.RowDefinitions[0].Height = new(canvasYOffset);
@@ -1364,12 +1375,12 @@ namespace COTG.Views
 							canvas.Margin = new Thickness(0,canvasBaseY,0,0);
 						}
 
+						TabPage.LayoutChanged();
 					}
 					catch(Exception ex)
 					{
 						LogEx(ex);
 					}
-					TabPage.LayoutChanged();
 				}
 			});
 			
@@ -1406,11 +1417,15 @@ namespace COTG.Views
 
 		private void chatResizeTapped(object sender, TappedRoutedEventArgs e)
 		{
+//			var height = new( chatGrid.RowDefinitions[0].Height.Value switch { 1=>2,2=>3,3=>4,4=>5,_=>1});
 			var flyout = new MenuFlyout();
-			flyout.AddItem("Tall", () => chatGrid.RowDefinitions[1].Height = new GridLength(chatGrid.ActualHeight * 0.875f));
-			flyout.AddItem("Medium", () => chatGrid.RowDefinitions[1].Height = new GridLength(chatGrid.ActualHeight * (1.0f / 3.0f)));
-			flyout.AddItem("Small", () => chatGrid.RowDefinitions[1].Height = new GridLength(chatGrid.ActualHeight * (1.0f / 32.0f)));
-			flyout.ShowAt(chatGrid, e.GetPosition(chatGrid));
+			flyout.AddItem("Tall",() =>{ chatGrid.RowDefinitions[0].Height = new GridLength(1,GridUnitType.Star);
+				chatGrid.RowDefinitions[1].Height = new GridLength(5,GridUnitType.Star);});
+			flyout.AddItem("Medium",() =>{ chatGrid.RowDefinitions[0].Height = new GridLength(4,GridUnitType.Star);
+				chatGrid.RowDefinitions[1].Height = new GridLength(2,GridUnitType.Star);});
+			flyout.AddItem("Small",() => {chatGrid.RowDefinitions[0].Height = new GridLength(5,GridUnitType.Star);
+				chatGrid.RowDefinitions[1].Height = new GridLength(1,GridUnitType.Star);});
+			flyout.ShowAt(chatGrid,e.GetPosition(chatGrid));
 		}
 
 	

@@ -146,14 +146,21 @@ namespace COTG.Views
 
 			Assert(cid == City.build);
 
-		//	var sel = Spot.GetSelectedForContextMenu(cid,false, onlyMine: true);
-			
+			//	var sel = Spot.GetSelectedForContextMenu(cid,false, onlyMine: true);
+
+			var city = City.GetOrAdd(cid);
 
 			bool setResources = false;
 			bool setLayout = false;
 			bool setTags = false;
-			var bestHub = await CitySettings.FindBestHub(cid);
-			var rv = await App.DispatchOnUIThreadTask(async () =>
+			var bestReqHub = city.anyRequestHub;
+			if( bestReqHub == 0)
+				bestReqHub =   await CitySettings.FindBestHub(cid,false);
+			var bestSendHub = city.anySendHub;
+			if(bestSendHub == 0 && !city.isHubOrStorage )
+				bestSendHub =   await CitySettings.FindBestHub(cid,false);
+
+			var rv =  await App.DispatchOnUIThreadTask(async () =>
 			{
 			try
 				{
@@ -168,12 +175,11 @@ namespace COTG.Views
 
 					//	PlannerTeachingTip.Show();
 					// todo: copy text 
-					var city = City.GetOrAdd(cid);
 
 				//	if (CityBuild.isPlanner)
 				//		city.BuildingsCacheToShareString();
 
-					await res.InitTradeSettings(city,bestHub,city.isHubOrStorage ? 0 : bestHub);
+					await res.InitTradeSettings(city,bestReqHub, bestSendHub);
 
 			//		res.applyRequested = true;
 			//		res.applySend = true;
@@ -189,6 +195,8 @@ namespace COTG.Views
 					setResources = expandResources.IsExpanded;
 					setLayout = expandShareString.IsExpanded;
 					setTags = expandTags.IsExpanded;
+					
+
 					return result;
 				}
 				catch (Exception ex)
@@ -227,7 +235,7 @@ namespace COTG.Views
 						//}
 				//	foreach (var ci in sel)
 					{
-						var city = City.GetOrAdd(cid);
+						
 						if ( setTags)
 						{
 							await SetCityTags(cid);
@@ -249,10 +257,12 @@ namespace COTG.Views
 						var sendFilter = (!city.isHubOrStorage) ? res.sendFilter : ResourceFilter._null;
 						//			await CitySettings.SetTradeResourcesSettings(city.cid,req,max);
 
-						await CitySettings.SetCitySettings(cid,reqHub: bestHub,targetHub:bestHub,
+						await CitySettings.SetCitySettings(cid,
+							reqHub:res.sourceHub.city switch 
+								{City a=>a.cid,_ => 0 },targetHub: res.targetHub.city switch { null => 0,var a=> a.cid } ,
 							 setRecruit:setTags && SettingsPage.setRecruit,
 							 cartReserve: res.cartReserve,
-						shipReserve: res.shipReserve,
+							shipReserve: res.shipReserve,
 							 req:res.req,max:res.max,
 							reqFilter:reqFilter,sendFilter:sendFilter);
 
@@ -514,7 +524,7 @@ namespace COTG.Views
 			city.tags = tags;
 			city.remarks = TagHelper.ApplyTags(tags, city.remarks);
 			//		Post.Send("includes/sNte.php", $"a={HttpUtility.UrlEncode(tags, Encoding.UTF8)}&b=&cid={cid}");
-			await Post.Send("includes/sNte.php", $"a={HttpUtility.UrlEncode(city.remarks, Encoding.UTF8)}&b={HttpUtility.UrlEncode(city.notes, Encoding.UTF8)}&cid={cid}", World.CidToPlayerOrMe(cid));
+			await Post.Get("includes/sNte.php", $"a={HttpUtility.UrlEncode(city.remarks, Encoding.UTF8)}&b={HttpUtility.UrlEncode(city.notes, Encoding.UTF8)}&cid={cid}", World.CidToPlayerOrMe(cid));
 		}
 
 		private void CollapsedDisable(object sender, EventArgs e)

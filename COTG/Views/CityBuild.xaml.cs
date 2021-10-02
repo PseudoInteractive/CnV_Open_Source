@@ -476,8 +476,9 @@ namespace COTG.Views
 			instance = new CityBuild();
 			buildMenu = new Microsoft.UI.Xaml.Controls.Flyout()
 			{
-				LightDismissOverlayMode = Microsoft.UI.Xaml.Controls.LightDismissOverlayMode.Off,
-				ShowMode = FlyoutShowMode.Standard,
+				LightDismissOverlayMode = Microsoft.UI.Xaml.Controls.LightDismissOverlayMode.On,
+			//	ShowMode = FlyoutShowMode.Standard,
+			
 				Content = instance
 			};
 			
@@ -1204,16 +1205,16 @@ namespace COTG.Views
 
 		public static async void Click((int x, int y) cc, bool isRight)
 		{
-			//if (CityBuild.menuOpen)
-			//{
-			//	if (ShellPage.instance.buildMenu.IsOpen)
-			//	{
-			//		ShellPage.instance.buildMenu.IsOpen = false;
-			//		//				ShellPage.instance.buildMenuCanvas.Visibility = Visibility.Collapsed;
-			//		//	Assert(false);
-			//	//	return;
-			//	}
-			//}
+			if(CityBuild.menuOpen)
+			{
+				if(buildMenu.IsOpen)
+				{
+					buildMenu.Hide();
+					//				ShellPage.instance.buildMenuCanvas.Visibility = Visibility.Collapsed;
+					//	Assert(false);
+					return;
+				}
+			}
 			//while( CityBuild.menuOpen )
 			//{
 			//	await Task.Delay(200).ConfigureAwait(true);

@@ -32,9 +32,9 @@ namespace COTG.Game
 		
 		static async Task Return(Reinforcement order)
         {
-            await Post.Send("overview/reinreca.php", "a=" + order.order, order.sourceCid.CidToPid() );
+            await Post.Get("overview/reinreca.php", "a=" + order.order, order.sourceCid.CidToPid() );
             await Task.Delay(1000);
-            await Post.Send("overview/reinreca.php", "a=" + order.order, order.sourceCid.CidToPid());
+            await Post.Get("overview/reinreca.php", "a=" + order.order, order.sourceCid.CidToPid());
         }
         
 		internal static async void ShowReturnDialog(int cid,UIElement uie)

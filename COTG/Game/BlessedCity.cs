@@ -97,7 +97,7 @@ namespace COTG.Game
 			var _sender = senderCity.cid;
 			for (int i = 0; i < count; ++i)
 			{
-				await Post.Send("includes/sndTtr.php", $"cid={_sender}&f=" + HttpUtility.UrlEncode(Aes.Encode(reqF, secret), Encoding.UTF8), pid);
+				await Post.Get("includes/sndTtr.php", $"cid={_sender}&f=" + HttpUtility.UrlEncode(Aes.Encode(reqF, secret), Encoding.UTF8), pid);
 				await Task.Delay(450);
 			}
         }

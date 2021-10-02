@@ -1,7 +1,7 @@
 ﻿<Page x:Class="COTG.Views.ShellPage"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-      xmlns:App="using:COTG"
+	  xmlns:cotg="using:COTG"
       xmlns:game="using:COTG.Game"
       xmlns:helpers="using:COTG.Helpers"
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -241,7 +241,8 @@ TextSubmitted="CitySubmitted"
 				<RowDefinition Height="1*" />
 				<RowDefinition Height="1*" />
 				<RowDefinition Height="1*" />
-				<RowDefinition Height="2*"/>
+				<RowDefinition Height="1*"/>
+				<RowDefinition Height="1*"/>
 			</Grid.RowDefinitions>
 
 			<Grid.ColumnDefinitions>
@@ -308,7 +309,7 @@ TextSubmitted="CitySubmitted"
 
 			<!-- Right -->
 
-			<Button Click="LayoutEnterX(0)"
+			<!--<Button Click="LayoutEnterX(0)"
 					Margin="0,3,0,3"
 					Padding="3"
 					Background="Transparent"
@@ -360,7 +361,18 @@ TextSubmitted="CitySubmitted"
 			
 			BorderBrush="#C0000080"
 			Grid.Row="5"
-			Grid.Column="2"
+			Grid.Column="2"	/>-->
+					
+					<Button Click="LayoutEnterX(5)" 
+Background="Transparent"
+		Margin="0,3,0,3"
+		Padding="3"
+		CornerRadius="3"
+		ToolTipService.ToolTip="Geek Sheet Layout"
+
+BorderBrush="#C0404000"
+Grid.Row="6"
+Grid.Column="0"
 			/>
 
 		</Grid>
@@ -388,12 +400,12 @@ TextSubmitted="CitySubmitted"
 		</Grid>
 		<Grid x:Name="chatGrid" Grid.Column="1" Grid.Row="2" Grid.RowSpan="3" Canvas.ZIndex="20" Background="{x:Null}" >
 			<Grid.RowDefinitions>
-				<RowDefinition Height="8*"/>
 				<RowDefinition Height="4*"/>
+				<RowDefinition Height="2*"/>
 			</Grid.RowDefinitions>
 			<Grid.ColumnDefinitions>
-				<ColumnDefinition />
-				<ColumnDefinition />
+				<ColumnDefinition Width="3*"/>
+				<ColumnDefinition Width="3*"/>
 			</Grid.ColumnDefinitions>
 			<Frame x:Name="chatTabs" x:FieldModifier="public" Grid.Column ="1" Grid.Row="1"  Margin="12,12,16,0" IsNavigationStackEnabled="False" TabFocusNavigation="Once" />
 			<!--Chat Width resizer-->
@@ -434,21 +446,22 @@ TextSubmitted="CitySubmitted"
 				</tk:GridSplitter.Element>
 			</tk:GridSplitter>
 		</Grid>
-		<tk:InAppNotification x:Name="InAppNote"
+		<tk:MarkdownTextBlock x:Name="InAppNote"
                                   Grid.Row="1"
-                              HorizontalAlignment="Left"
+                             ScrollViewer.VerticalScrollMode="Auto"
+							  HorizontalAlignment="Left"
                               VerticalAlignment="Top"
-							  VerticalOffset="0"
+							  LinkClicked="{x:Bind cotg:Note.MarkDownLinkClicked}"
 								Margin="0,48,0,0"
-
-                              HorizontalOffset="64"
-                                  Grid.Column="1"
+								Background="#04040004"
+								
+							  Grid.Column="1"
                               IsTabStop="False"
-                             
-                                  AnimationDuration="00:00:00.3000"
+                             MaxHeight="200"
+							  IsHitTestVisible="False"
+                                 x:FieldModifier="public"
                               
-                                  Canvas.ZIndex="55"
-                                  StackMode="Replace" />
+                                  Canvas.ZIndex="55" />
 
 		<!--<winui:InfoBar x:Name="infoBar"
                                   Grid.Row="1"

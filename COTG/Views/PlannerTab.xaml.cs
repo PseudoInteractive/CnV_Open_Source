@@ -13,7 +13,7 @@ using static COTG.Game.City;
 using static COTG.Game.Enum;
 using static COTG.BuildingDef;
 using System.Buffers;
-using static System.Buffers.ArrayPool<COTG.Building>;
+//using static System.Buffers.ArrayPool<COTG.Building>;
 
 namespace COTG.Views
 {
