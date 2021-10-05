@@ -15228,12 +15228,11 @@ function outer() {
                                 .remove();
                             city.bq.splice(0, 1);
                             h9(J1g, n1g);
-                            updateBuildQueue();
                             let delay = Z1g + 100;
-                            if (delay < 1000)
-                                delay = 1000;
-                            DoPoll2(delay + 300);
-                            callDelay = delay;
+                            if (delay < 100)
+                                delay = 100;
+                            DoPoll2(delay);
+                            clearTimeout(i8);
                         }
                     }
                     else {

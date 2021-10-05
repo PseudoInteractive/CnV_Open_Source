@@ -126,7 +126,7 @@ namespace COTG.Views
 		public static string[] chatToId = { nameof(world), "whisper", nameof(alliance), nameof(officer) };
 		//        public DumbCollection<ChatEntry> logEntries = new DumbCollection<ChatEntry>(new ChatEntry[] { new ChatEntry("Hello") });
 		// public DumbCollection<ChatEntryGroup> Groups { get; set; } = new DumbCollection<ChatEntryGroup>();// new[] { new ChatEntryGroup() {time=AUtil.dateTimeZero} });
-		public DumbCollection<ChatEntry> items { get; set; } = new ();
+		public NotifyCollection<ChatEntry> items { get; set; } = new ();
 		override public Task VisibilityChanged(bool visible, bool longTerm)
 		{
 			if (items.Count > 0 && visible)

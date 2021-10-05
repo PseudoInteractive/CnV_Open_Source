@@ -21,17 +21,20 @@ namespace COTG
 			public bool runOnUiThead;
 			int nextCall = Environment.TickCount;
 			
-			public TaskCompletionSource<bool> complete;
+//			public TaskCompletionSource<bool> complete;
 		
-			enum State
+			enum State : int
 			{
 				idle,
 				pending,
 				running,
-
-
-			};
-			State state;
+			}
+		// needed to Atomic operations
+			int _state;
+			State state { 
+			get=> (State)_state;
+			set=> _state = (int)value;
+		}
 			public Debounce(Func<Task> _func)
 			{
 				func = _func;
@@ -45,6 +48,7 @@ namespace COTG
 					case State.idle:
 						if(throttled)
 						{
+						// cooldown
 							var dt = nextCall - Environment.TickCount;
 							if (dt > 0)
 								return;
@@ -52,6 +56,7 @@ namespace COTG
 						break;
 					case  State.pending:
 						{
+						// delay further
 							var nextT = Environment.TickCount +delayOverride;
 							if (nextT - nextCall > 0)
 							{
@@ -63,6 +68,7 @@ namespace COTG
 					{
 						if(runAgainIfStarted && !throttled)
 							state = State.pending; // we are already in the inner loop, tell the current one to restart once done
+						
 						return;
 					}
 				default:
@@ -71,8 +77,14 @@ namespace COTG
 						return;
 					}
 				}
-				state = State.pending;
-				var next = Environment.TickCount + delayOverride;
+				
+				if(Interlocked.CompareExchange( ref _state,(int)State.pending,(int)State.idle)	!= (int)State.idle)
+				{
+					// another task got to it first
+					// try again
+					Go(throttled,runAgainIfStarted,delayOverride);
+					return;				
+				}
 				nextCall = nextCall.Max( Environment.TickCount + delayOverride);
 				Task.Run(async () =>
 			   {
@@ -95,7 +107,9 @@ namespace COTG
 					   }
 					   try
 					   {
+						   
 						   state = State.running;
+						   
 						   if (runOnUiThead)
 							   await App.DispatchOnUIThreadTask(func).ConfigureAwait(false);
 						   else
@@ -105,7 +119,9 @@ namespace COTG
 					   {
 						   COTG.Debug.LogEx(ex);
 					   }
+					   
 					   nextCall = Environment.TickCount + throttleDelay;
+					   // someone might have changed us back to pending
 					   if (state == State.running)
 					   {
 						   state = State.idle;
@@ -117,15 +133,20 @@ namespace COTG
 			   });
 
 			}
-		static ConcurrentDictionary<ulong,CancellationTokenSource> _tokens = new ();
+
+
+		static ConcurrentDictionary<long,CancellationTokenSource> _tokens = new ();
 		public static void Q(DispatcherQueueHandler action,int ms=200,
 			bool runOnUIThread=false,
+			long hash=0L,
 			[CallerFilePath] string uniqueKey = "",
 			[CallerLineNumber] int uniqueNumber = 0)
 
 		{
-			var key = uniqueKey.XxHash() + (ulong)uniqueNumber;
+			Assert(uniqueNumber != 0);
+			Assert(uniqueKey.Length > 1);
 
+			var key = hash==0L? ((long)uniqueKey.XxHash() + (long)uniqueNumber) : hash;
 
 			var token = _tokens.AddOrUpdate(key,
 				(key) => //key not found - create new

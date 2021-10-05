@@ -88,6 +88,7 @@ namespace COTG.Game
         }
 		public async void SendDonation(int woodToSend,int stoneToSend, int sendType)
         {
+			App.UpdateKeyStates();
 			var pid = World.CidToPlayerOrMe(senderCity.cid);
 
 			var secret = $"JJx452Tdd{pid}sRAssa";

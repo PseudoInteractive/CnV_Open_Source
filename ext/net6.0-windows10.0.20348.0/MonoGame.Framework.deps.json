@@ -11,7 +11,6 @@
           "Microsoft.ProjectReunion": "0.8.4",
           "SharpDX": "4.2.0",
           "SharpDX.DXGI": "4.2.0",
-          "SharpDX.Direct2D1": "4.2.0",
           "SharpDX.Direct3D11": "4.2.0",
           "SharpDX.MediaFoundation": "4.2.0",
           "SharpDX.XAudio2": "4.2.0",
@@ -172,19 +171,6 @@
         },
         "runtime": {
           "lib/netstandard1.1/SharpDX.dll": {
-            "assemblyVersion": "4.2.0.0",
-            "fileVersion": "4.2.0.0"
-          }
-        }
-      },
-      "SharpDX.Direct2D1/4.2.0": {
-        "dependencies": {
-          "NETStandard.Library": "1.6.1",
-          "SharpDX": "4.2.0",
-          "SharpDX.DXGI": "4.2.0"
-        },
-        "runtime": {
-          "lib/netstandard1.1/SharpDX.Direct2D1.dll": {
             "assemblyVersion": "4.2.0.0",
             "fileVersion": "4.2.0.0"
           }
@@ -1026,13 +1012,6 @@
       "sha512": "sha512-3pv0LFMvfK/dv1qISJnn8xBeeT6R/FRvr0EV4KI2DGsL84Qlv6P7isWqxGyU0LCwlSVCJN3jgHJ4Bl0KI2PJww==",
       "path": "sharpdx/4.2.0",
       "hashPath": "sharpdx.4.2.0.nupkg.sha512"
-    },
-    "SharpDX.Direct2D1/4.2.0": {
-      "type": "package",
-      "serviceable": true,
-      "sha512": "sha512-Qs8LzDMaQf1u3KB8ArHu9pDv6itZ++QXs99a/bVAG+nKr0Hx5NG4mcN5vsfE0mVR2TkeHfeUm4PksRah6VUPtA==",
-      "path": "sharpdx.direct2d1/4.2.0",
-      "hashPath": "sharpdx.direct2d1.4.2.0.nupkg.sha512"
     },
     "SharpDX.Direct3D11/4.2.0": {
       "type": "package",

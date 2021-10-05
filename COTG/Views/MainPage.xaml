@@ -27,7 +27,7 @@
 			</Grid.RowDefinitions>
 	
 		<tg:RadDataGrid x:Name="cityGrid"
-						Loaded="OnLoaded"
+					
 							x:FieldModifier="public"
 							ColumnResizeHandleDisplayMode="OnColumnHeaderActionFlyoutOpen"
 							ColumnDataOperationsMode="Flyout"
@@ -45,9 +45,7 @@
 							PointerExited="{x:Bind game:Spot.GridExited}"
 							FontSize="{StaticResource SmallFontSize}"
 							IsTextScaleFactorEnabled="False"
-							GroupPanelPosition="Bottom"
 							SelectionUnit="Row"
-						UserSortMode="Auto"
 							Tag="Raid"
 					
 					

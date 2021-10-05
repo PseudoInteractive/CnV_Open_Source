@@ -27,6 +27,7 @@ using ContentDialog = Microsoft.UI.Xaml.Controls.ContentDialog;
 using ContentDialogResult = Microsoft.UI.Xaml.Controls.ContentDialogResult;
 using Cysharp.Text;
 using Windows.System;
+using System.Diagnostics;
 
 namespace COTG
 {
@@ -70,6 +71,8 @@ namespace COTG
 		upgrade,
 		downgrade,
 	}
+
+	[DebuggerDisplay($"{{{nameof(GetDebuggerDisplay)}(),nq}}")]
 	public readonly struct BuildQueueItem : IEquatable<BuildQueueItem>
 	{
 		//	public static MemoryPool<BuildQueueItem> pool = MemoryPool<BuildQueueItem>.Shared;
@@ -92,7 +95,7 @@ namespace COTG
 			this.elvlAndPA = elvl;
 			this.bid = bid;
 			this.bspot = bspot;
-			this.buildTime = buildTime;
+			this.buildTime = (ushort)(((int)buildTime).Max(1));
 		}
 
 		public void Deconstruct(out byte slvl, out byte elvl, out short bspot, out  ushort buildTime, out bool pa)
@@ -154,10 +157,11 @@ namespace COTG
 
 		public readonly bool Equals(BuildQueueItem other)
 		{
-			return slvl == other.slvl &&
-				   elvl == other.elvl &&
-				   bid == other.bid &&
-				   bspot == other.bspot;
+			return (bid == other.bid) &
+				(bspot == other.bspot) &
+				(buildTime==other.buildTime)&
+				(slvl == other.slvl) &
+				(elvlAndPA == other.elvlAndPA);
 		}
 
 
@@ -191,14 +195,17 @@ namespace COTG
 			}
 			else
 			{
-				if (slvl != 0)
-					Assert(b.id == BuildingDef.BidToId(bid));
+			//	if (slvl != 0)
+			//		Assert(b.id == BuildingDef.BidToId(bid));
 				id = BuildingDef.BidToId(bid);
 			}
 			return new Building(id, elvl);
 		}
 
-		
+		private string GetDebuggerDisplay()
+		{
+			return ToString();
+		}
 	}
 	public class ExtendedQueue : IDisposable
 	{
@@ -625,11 +632,20 @@ namespace COTG
 										if(cid == City.build)
 										{
 										//	App.QueueOnUIThread( ()=>JSClient.coreWebView.PostWebMessageAsString($"{{\"poll\":100}}") );
-											City.BuildingsOrQueueChanged();
+											city.BuildingsOrQueueChanged();
 											if(delay > 1000)
 												delay = 1000;
+										
+
 										}
-										Post.Get("/includes/bqSt.php", $"a={cid}",onlyHeaders:true);
+										// sort
+										Debounce.Q(hash:cid*111+123, action: ()=>{
+											// sort queue
+											Post.Get("/includes/bqSt.php", $"a={cid}",onlyHeaders:true);
+											if(cid == City.build)
+												App.DispatchOnUIThreadIdle(()=>JSClient.coreWebView.PostWebMessageAsString("{\"poll\":100}"));
+										});
+
 										SaveNeeded();
 											if(delay > 1 * 30 * 1000)
 												delay = 1 * 30 * 1000;
@@ -1039,12 +1055,12 @@ namespace COTG
 				}
 			}
 		}
-		public static async Task SaveIfNeeded()
-		{
-			if (!initialized)
-				return;
-			await SaveTimerGo(true, true);
-		}
+		//public static async Task SaveIfNeeded()
+		//{
+		//	if (!initialized)
+		//		return;
+		//	await SaveTimerGo(true, true);
+		//}
 
 		// Where should this go?
 		static internal void ShutDown()
@@ -1088,7 +1104,7 @@ namespace COTG
 		}
 		static internal async Task SaveTimerGo(bool force, bool awaitContext)
 		{
-			await Post.Get("overview/bcounc.php").ConfigureAwait(false);
+			Post.Get("overview/bcounc.php",onlyHeaders:true);
 			if (buildActionCounter == 0)
 			{
 				return;

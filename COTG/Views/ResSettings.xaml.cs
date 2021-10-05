@@ -40,6 +40,9 @@ namespace COTG.Views
 		public int? cartReserve; // todo
 		public int? shipReserve;
 
+		public int? ReqHub => reqHub.city?.cid;
+		public int? SendHub => sendHub.city?.cid;
+
 		public TradeSettings _TradeSettingsSel;
 		public static TradeSettings[] tradeSettingsItemsSource;
 		public TradeSettings tradeSettingsSel
@@ -69,12 +72,12 @@ namespace COTG.Views
 			}
 		}
 
-		public async Task InitTradeSettings(City city, int _sourceHub, int _targetHub)
+		public async Task InitTradeSettings(City city, int? _sourceHub, int? _targetHub)
 		{
 			var curSettings = await CitySettings.GetTradeResourcesSettings(city.cid);
 
-			sourceHub.city = _sourceHub != 0 ? City.Get(_sourceHub) : null;
-			targetHub.city = _targetHub != 0 ? City.Get(_targetHub) : null;
+			reqHub.city = _sourceHub.GetValueOrDefault() == 0? null : City.Get(_sourceHub.Value);
+			sendHub.city = _targetHub.GetValueOrDefault()==0?null:City.Get(_targetHub.Value);
 			cartReserve = curSettings.cartReserve;
 			shipReserve = curSettings.shipReserve;
 			if (curSettings.req.isNonZero)
@@ -111,8 +114,8 @@ namespace COTG.Views
 			}
 
 			OnPropertyChanged();
-			sourceHub.OnPropertyChanged();
-			targetHub.OnPropertyChanged();
+			reqHub.OnPropertyChanged();
+			sendHub.OnPropertyChanged();
 		}
 		public ResSettings()
 		{

@@ -80,8 +80,10 @@ namespace COTG.Services
 				//	App.instance.Resources["TabViewButtonForeground"] = new SolidColorBrush();
 				//	App.instance.Resources["OverlayCornerRadius"] = 1.0;
 				//	App.instance.Resources["TopCornerRadiusFilterConverter"] = new object();
+					
 					App.window.Content = new ShellPage();
-                }
+
+				}
             }
 
             // Depending on activationArgs one of ActivationHandlers or DefaultActivationHandler

@@ -89,11 +89,13 @@ TextSubmitted="CitySubmitted"
 									  IsTextScaleFactorEnabled="False"
 										 RightTapped="FilterRightTapped"
 									  Click="{x:Bind views:ShellPage.ContinentFilterClick}"
-									
+									AccessKey="F"
 									 ToolTipService.ToolTip="Yet another Continent filter.  Uncheck all to show everything"  />
 
 					<Button x:Name="HomeButton" Click="BuildHomeClick" RightTapped="BuildHomeRightTapped" Margin="4" Style="{ThemeResource ButtonRevealStyle}"
-                            ToolTipService.ToolTip="&#x0a;Click to switch between region view and city view&#x0a;Right clck for menu" >
+                            ToolTipService.ToolTip="&#x0a;Click to switch between region view and city view&#x0a;Right clck for menu"
+							AccessKey="H" 
+							>
 						<!--<Button.Resources>
 							<winui:TeachingTip x:Key="HomeButtonTip" Title="Home Button" x:FieldModifier="public"
                                    IsLightDismissEnabled="True" PreferredPlacement="Right" 
@@ -103,11 +105,14 @@ TextSubmitted="CitySubmitted"
 
 					</Button>
 					<Button Click="PriorCityClick" Margin="4" Style="{ThemeResource ButtonRevealStyle}"
-                            ToolTipService.ToolTip="Switch to prior city in the current city list" >
+                            ToolTipService.ToolTip="Switch to prior city in the current city list"
+							AccessKey="Left"
+							>
 						<SymbolIcon Symbol="Previous"/>
 					</Button>
 					<Button Click="NextCityClick" Margin="4" Style="{ThemeResource ButtonRevealStyle}"
-                            ToolTipService.ToolTip="Switch to next city in the current city list" >
+                            ToolTipService.ToolTip="Switch to next city in the current city list" 
+							AccessKey="Right" >
 						<SymbolIcon Symbol="Next"/>
 					</Button>
 					<Button x:Name="focus" Margin="4" Width="140"  VerticalAlignment="Center" x:FieldModifier="public"
@@ -128,6 +133,7 @@ TextSubmitted="CitySubmitted"
                       DisplayMemberPath="name"
                       ItemsSource="{x:Bind game:CityList.selections, Mode=OneTime}"
                       VerticalAlignment="Center" ToolTipService.ToolTip="Active City List"
+							  
                       Margin="4" />
 				</AppBarElementContainer>
 				<AppBarButton Label="Time"
@@ -161,9 +167,9 @@ TextSubmitted="CitySubmitted"
 			</CommandBar.SecondaryCommands>
 			<CommandBar.PrimaryCommands>
 
-				<AppBarButton Click="{x:Bind helpers:NavStack.BackClick}"  Icon="Back" Label="Back" RightTapped="BackRightTapped" Style="{StaticResource AppBarButtonRevealStyle}"
+				<AppBarButton Click="{x:Bind helpers:NavStack.BackClick}" AccessKey="Backspace"  Icon="Back" Label="Back" RightTapped="BackRightTapped" Style="{StaticResource AppBarButtonRevealStyle}"
                           ToolTipService.ToolTip="Switch to most recently visited city&#x0a;Right click to view history"  />
-				<AppBarButton Click="{x:Bind helpers:NavStack.ForwardClick}" Icon="Forward" Label="Forward" RightTapped="ForwardRightTapped" Style="{StaticResource AppBarButtonRevealStyle}"
+				<AppBarButton Click="{x:Bind helpers:NavStack.ForwardClick}" Icon="Forward" Label="Forward" AccessKey="Space" RightTapped="ForwardRightTapped" Style="{StaticResource AppBarButtonRevealStyle}"
                            ToolTipService.ToolTip="Move forward in city history&#x0a;This is only useful after you have pressed 'Back'&#x0a;Right click to view forward history" />
 
 				<AppBarToggleButton x:Name="webFocus" Click="webFocus_Click" Icon="Caption" Label="HTML" IsTabStop="False" AllowFocusOnInteraction="False"
@@ -176,6 +182,10 @@ TextSubmitted="CitySubmitted"
                           Style="{StaticResource AppBarButtonRevealStyle}"
                                ToolTipService.ToolTip="When in doubt, refresh - Right click to refresh world data"
                               Icon="RepeatAll">
+					<AppBarButton.KeyboardAccelerators>
+						<KeyboardAccelerator 
+								 Key="F5" />
+					</AppBarButton.KeyboardAccelerators>
 					<!--<AppBarButton.Resources>
 						<winui:TeachingTip x:Key="RefreshTip"
                                 IsLightDismissEnabled="True" 
@@ -231,7 +241,14 @@ TextSubmitted="CitySubmitted"
 				<AppBarButton Label="Settings" Icon="Setting" Click="ShowSettings" Style="{StaticResource AppBarButtonRevealStyle}"/>
 			</CommandBar.PrimaryCommands>
 		</CommandBar>
-
+		<SwapChainPanel x:Name="_canvas" Grid.Column="1" Grid.Row="1" Grid.RowSpan="4"
+						BorderThickness="0"
+						IsTabStop="True"
+						AllowFocusOnInteraction="True"
+						Margin="0,95,0,0"
+						IsHitTestVisible="False"
+						Canvas.ZIndex="12" />
+		
 		<Grid Margin="0" x:Name="layoutGrid" Grid.RowSpan="6" Grid.ColumnSpan="3" Canvas.ZIndex="33" >
 
 			<Grid.RowDefinitions>
@@ -452,8 +469,8 @@ Grid.Column="0"
 							  HorizontalAlignment="Left"
                               VerticalAlignment="Top"
 							  LinkClicked="{x:Bind cotg:Note.MarkDownLinkClicked}"
-								Margin="0,48,0,0"
-								Background="#04040004"
+								Margin="20,80,0,0"
+								Background="#48004000"
 								
 							  Grid.Column="1"
                               IsTabStop="False"

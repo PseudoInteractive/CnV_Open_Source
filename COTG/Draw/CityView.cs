@@ -38,7 +38,7 @@ namespace COTG.Draw
 			AUtil.UnsafeCopy(CityView.baseAnimationOffsets, CityView.animationOffsets);
 		}
 
-		public static void BuildingsOrQueueChanged() => City.BuildingsOrQueueChanged();
+		public static void BuildingsOrQueueChanged() => City.GetBuild().BuildingsOrQueueChanged();
 		const int atlasTileSize = 128;
 		const int atlasColumns = 4;
 		static public (int x, int y) BidToAtlas(int bid)
@@ -67,7 +67,7 @@ namespace COTG.Draw
 		public static Material decalSelectEmpty;
 		public static Vector2 half2 = new Vector2(0.5f, 0.5f);
 
-		public static float zHover => 1.0f / 64.0f * Views.SettingsPage.parallax;
+		public static float zHover => 4.0f / 64.0f * Views.SettingsPage.parallax;
 
 		public static (int x, int y) selected = invalidXY;
 		public static (int x, int y) hovered = invalidXY;
@@ -177,7 +177,9 @@ namespace COTG.Draw
 
 						var cs = CityPointToQuad(cx,cy);
 
-						float blendT = ((animationT - animationOffsets[bspot])*0.325f).Frac();
+						var dt = (animationT - animationOffsets[bspot]);
+						float blendT = ((dt)*0.325f).Frac();
+						
 						if(cur.id==next.id)
 						{
 							if(next.bl != cur.bl)
@@ -217,11 +219,12 @@ namespace COTG.Draw
 									bl = cur.bl;
 									fontA = t.Bezier(1,1,0);// prior number out	
 								}
-								DrawBuilding(iAlpha,zBase,fontScale,cs,cur,Layer.tileCity,(int)(alpha*fontA*255f),bl,bidOverride);
+								var bonus = (dt*0.5f).Abs().Saturate().Bezier(0,1,0,0);
+								DrawBuilding(iAlpha,zBase,fontScale*(1.0f + bonus*(1.0f/16.0f)),cs,cur,Layer.tileCity,(int)(alpha*fontA*255f),bl,bidOverride);
 								if(blendOp > 0)
 								{
 									// upgrade
-									draw.AddQuad(Layer.tileCity + 2,(next.bl > cur.bl) ? decalBuildingValid : decalSelectEmpty,cs.c0,cs.c1,new Color(iAlpha,iAlpha,iAlpha,iAlpha / 2).Scale(blendOp),PlanetDepth,zHover);
+									draw.AddQuad(Layer.tileCity + 2,(next.bl > cur.bl) ? decalBuildingValid : decalSelectEmpty,cs.c0,cs.c1,new Color(iAlpha,iAlpha,iAlpha,iAlpha / 2).Scale(blendOp),PlanetDepth,zHover+bonus*(1.0f/32.0f) );
 								}
 							}
 							else
@@ -265,8 +268,9 @@ namespace COTG.Draw
 
 							DrawBuilding(iAlpha,zBase,fontScale,cs,bd,Layer.tileCity,-1,-1,bidOverride);
 						}
+
 						// draw overlays
-						if(build.isLayoutCustom && SettingsPage.drawBuildingOverlays)
+						if(build.isLayoutCustom && SettingsPage.drawBuildingOverlays && IsBuildingSpot(bspot) )
 						{
 							int bid, currentBid;
 							//	BuildingDef bd;

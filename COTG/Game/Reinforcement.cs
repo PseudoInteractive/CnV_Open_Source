@@ -39,6 +39,7 @@ namespace COTG.Game
         
 		internal static async void ShowReturnDialog(int cid,UIElement uie)
         {
+			App.UpdateKeyStates();
 
 			var showAll = App.IsKeyPressedShift();
 

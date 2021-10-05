@@ -311,7 +311,7 @@ namespace COTG.Views
 						await GetCity.Post(City.build);
 
 					
-					City.gridCitySource.NotifyReset();
+					City.gridCitySource.NotifyReset(true);
 					
 				}
 

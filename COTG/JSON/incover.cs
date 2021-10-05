@@ -12,13 +12,14 @@ using System.Threading.Tasks;
 using static COTG.Game.Enum;
 using static COTG.Debug;
 using Windows.UI.ViewManagement;
-using Windows.Web.Http;
+using System.Net.Http;
 using System.Text.Json;
 using TroopTypeCountsRef = COTG.Game.TroopTypeCounts;
 using static COTG.Game.TroopTypeCountHelper;
 //COTG.DArrayRef<COTG.Game.TroopTypeCount>;
 using TroopTypeCounts = COTG.Game.TroopTypeCounts;
 using DiscordCnV;
+using System.Text;
 //COTG.DArray<COTG.Game.TroopTypeCount>;
 
 namespace COTG.Game
@@ -522,12 +523,12 @@ namespace COTG.Game
 																					  for (int i = 0; i < 4; ++i) // retry up to 4 times;
 																				  {
 
-																						  var post = new HttpStringContent(
-																										JsonSerializer.Serialize(message), Windows.Storage.Streams.UnicodeEncoding.Utf8,
+																						  var post = new StringContent(
+																										JsonSerializer.Serialize(message), Encoding.UTF8,
 																										 "application/json");
 
 																						  var result = await client.PostAsync(DGame.discordIncomingHook, post);
-																						  if (result.StatusCode == HttpStatusCode.TooManyRequests)
+																						  if (result.StatusCode == System.Net.HttpStatusCode.TooManyRequests)
 																						  {
 																							  await Task.Delay(2000); // wait 2 seconds
 																					  }

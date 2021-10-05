@@ -28,7 +28,7 @@ using Windows.System;
 //using Microsoft.UI.Xaml.Controls;
 using COTG.JSON;
 using System.Text.Json;
-using Windows.Web.Http;
+using System.Net.Http;
 using static COTG.Game.Enum;
 using Windows.ApplicationModel.DataTransfer;
 using static COTG.Views.ShellPage;
@@ -45,6 +45,7 @@ using DiscordCnV;
 using Windows.UI.Core;
 using Microsoft.UI.Input;
 using Microsoft.UI.Xaml.Controls.Primitives;
+using System.Net.Http.Json;
 
 namespace COTG.Game
 {
@@ -552,15 +553,22 @@ namespace COTG.Game
 		public static void GridPressed(object sender, PointerRoutedEventArgs e)
 		{
 			//(sender as RadDataGrid).Focus();
-			e.KeyModifiers.UpdateKeyModifiers();
+			try
+			{
+				e.KeyModifiers.UpdateKeyModifiers();
 
-			var hit = Spot.HitTest(sender, e);
-			var spot = hit.spot;
-			//	uiPress = spot != null ? spot.cid : 0;
-			uiPressColumn = hit.column.CellText();
-			// The UIElement returned will be the RadDataGrid
-			if (spot != null)
-				spot.ProcessClick(uiPressColumn, hit.pt, hit.uie, e.KeyModifiers);
+				var hit = Spot.HitTest(sender,e);
+				var spot = hit.spot;
+				//	uiPress = spot != null ? spot.cid : 0;
+				uiPressColumn = hit.column.CellText();
+				// The UIElement returned will be the RadDataGrid
+				if(spot != null)
+					spot.ProcessClick(uiPressColumn,hit.pt,hit.uie,e.KeyModifiers);
+			}
+			catch(Exception ex)
+			{
+				Log(ex);
+			}
 		}
 		public static void ProcessPointerExited()
 		{
@@ -1442,7 +1450,7 @@ namespace COTG.Game
 					}
 					if (!uiInSync)
 					{
-						selected.SyncList<int,object>(sel1, (cid,spot)=> City.Get(cid)==spot,(cid)=>City.Get(cid) );
+						selected.SyncList<int,object>(sel1, (cid,spot)=> cid== ((Spot)spot).cid,(cid)=>City.Get(cid) );
 						
 						
 					}
@@ -2189,11 +2197,11 @@ namespace COTG.Game
 
 				var message = new DGame.Message() { username = "Cord Claim", content = $"{xy} claimed by {Player.myName}", avatar_url = "" };
 
-				var content = new HttpStringContent(
-						  JsonSerializer.Serialize(message, Json.jsonSerializerOptions), Windows.Storage.Streams.UnicodeEncoding.Utf8,
-						   "application/json");
+				//var content =  JsonContent.Create(message);
+				//, Json.jsonSerializerOptions), Encoding.UTF8,
+					//	   "application/json");
 
-				var result = await client.PostAsync(DGame.discordHook, content);
+				var result = await client.PostAsJsonAsync(DGame.discordHook, message);
 				result.EnsureSuccessStatusCode();
 			}
 			catch (Exception ex)

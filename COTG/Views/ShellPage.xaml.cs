@@ -25,7 +25,7 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
 using Microsoft.UI.Xaml.Input;
-using Windows.Web.Http;
+using System.Net.Http;
 using Microsoft.UI.Xaml.Media;
 using static COTG.Debug;
 
@@ -193,7 +193,7 @@ namespace COTG.Views
 		{
 			instance = this;
 			InitializeComponent();
-			
+			RequestedTheme = ElementTheme.Dark; // default theme
 		}
 		public enum Layout
 		{
@@ -235,17 +235,7 @@ namespace COTG.Views
 			// canvas.ContextFlyout = CityFlyout;
 			grid.Children.Add(c.canvas);
 			// grid.Children.Add(c.hitTest);
-			Grid.SetColumn(c.canvas, 1);
-			//Grid.SetColumn(c.hitTest, 0);
-			Grid.SetRow(c.canvas, 1);
-			//Grid.SetRow(c.hitTest, 1);
-			Grid.SetRowSpan(c.canvas, 4);
-			//Grid.SetRowSpan(c.hitTest, 5);
-			Grid.SetColumnSpan(c.canvas, 1);
-			//Grid.SetColumnSpan(c.hitTest, 2);
-			c.canvas.BorderThickness = new Thickness(0, 0, 0, 0);
-			// c.hitTest.BorderThickness = new Thickness(0, 0, 0, 0);
-			Canvas.SetZIndex(c.canvas, 12);
+		
 			// Canvas.SetZIndex(c.hitTest, 13); Task.Run(SetupCanvasInput);//
 			// Task.Run(SetupCanvasInput); Placement.SizeChanged += Placement_SizeChanged; var img =
 			// new Image() { Opacity=0.5f, Source = new SvgImageSource(new
@@ -451,6 +441,7 @@ namespace COTG.Views
 
 		private void Refresh_Invoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
 		{
+			sender.Modifiers.UpdateKeyModifiers();
 			Refresh();
 
 			Note.Show("Refresh");
@@ -459,7 +450,8 @@ namespace COTG.Views
 
 		private void LayoutAccelerator_Invoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
 		{
-			switch (args.KeyboardAccelerator.Key)
+			sender.Modifiers.UpdateKeyModifiers();
+			switch(args.KeyboardAccelerator.Key)
 			{
 				case VirtualKey.F2:
 					this.windowLayout.SelectedIndex= 0;
@@ -637,7 +629,7 @@ namespace COTG.Views
 		public static Task _RefreshTabs()
 		{
 			// fall through from shift-refresh. Shift refresh does both
-			City.UpdateSenatorInfo();
+		//	City.UpdateSenatorInfo();
 			foreach (var tab in UserTab.userTabs)
 			{
 				if(tab.isFocused)
@@ -1445,6 +1437,11 @@ namespace COTG.Views
 			}
 
 			return fn;
+
+		}
+
+		private void HomeButton_AccessKeyInvoked(UIElement sender,AccessKeyInvokedEventArgs args)
+		{
 
 		}
 

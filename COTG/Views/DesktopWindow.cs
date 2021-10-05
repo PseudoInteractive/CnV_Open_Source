@@ -380,26 +380,26 @@ namespace COTG.Views
                         OnWindowDpiChanged((int)dpi);
                     }
                     break;
-                //case PInvoke.User32.WindowMessage.WM_DISPLAYCHANGE:
-                //    if (this.OrientationChanged is not null)
-                //    {
-                //        var newOrinetation = GetWindowOrientationWin32(hWnd);
-                //        if (newOrinetation != _currentOrientation)
-                //        {
-                //            _currentOrientation = newOrinetation;
-                //            OnWindowOrientationChanged(newOrinetation);
-                //        }
-                //    }
-                //    break;
-                ////This don't work.
-                //case PInvoke.User32.WindowMessage.WM_KEYDOWN:
-                //    if (this.KeyDown is not null)
-                //    {
-                //        int value = (int)wParam;
-                //        OnWindowKeyDown(value);
-                //    }
-                //    break;
-            }
+				//case PInvoke.User32.WindowMessage.WM_DISPLAYCHANGE:
+				//    if (this.OrientationChanged is not null)
+				//    {
+				//        var newOrinetation = GetWindowOrientationWin32(hWnd);
+				//        if (newOrinetation != _currentOrientation)
+				//        {
+				//            _currentOrientation = newOrinetation;
+				//            OnWindowOrientationChanged(newOrinetation);
+				//        }
+				//    }
+				//    break;
+				////This don't work.
+				case PInvoke.User32.WindowMessage.WM_KEYDOWN:
+					if(this.KeyDown is not null)
+					{
+						int value = (int)wParam;
+						OnWindowKeyDown(value);
+					}
+					break;
+			}
             return CallWindowProc(oldWndProc, hWnd, Msg, wParam, lParam);
         }
 

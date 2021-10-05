@@ -36,9 +36,9 @@ namespace COTG.Views
     {
 		public override TabPage defaultPage => TabPage.secondaryTabs;
 
-		public DumbCollection<Spot> spotMRU { get; } = new DumbCollection<Spot>();
+		public NotifyCollection<Spot> spotMRU { get; } = new NotifyCollection<Spot>();
 
-        public static DumbCollection<Spot> SpotMRU => instance.spotMRU;
+        public static NotifyCollection<Spot> SpotMRU => instance.spotMRU;
         public static int disableSelection;
 		static bool loaded;
         public static SpotTab instance;

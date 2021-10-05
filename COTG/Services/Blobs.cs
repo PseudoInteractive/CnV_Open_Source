@@ -493,91 +493,34 @@ namespace COTG.Services
 		{
 			try
 			{
-				BlobContainerClient container = await GetSnapshotContainer(); 
-				
+				BlobContainerClient container = await GetSnapshotContainer();
+
 				var res = await container.GetBlobClient(str).DownloadAsync();
 				//if (res.GetRawResponse().Status != 200)
 				//{
 				//	return day;
 				//}
+				var mem = await AMem.ReadCompressedAsync(res.Value.Content);
+				//using var deflate = new GZipStream(res.Value.Content, CompressionMode.Decompress);
+				//byte[] readBuffer = ArrayPool<byte>.Shared.Rent(snapShotBufferSize);
+				//var readOffset = 0;
+				//for (; ; )
+				//{
 
-				using var deflate = new GZipStream(res.Value.Content, CompressionMode.Decompress);
-				byte[] readBuffer = ArrayPool<byte>.Shared.Rent(snapShotBufferSize);
-				var readOffset = 0;
-				for (; ; )
-				{
-
-					var readSize = deflate.Read(readBuffer, readOffset, snapShotBufferSize - readOffset);
-					if (readSize < snapShotBufferSize)
-					{
-						break;
-					}
-					readOffset += readSize;
-					var _readBuffer = readBuffer;
-					snapShotBufferSize *= 2;
-					readBuffer = ArrayPool<byte>.Shared.Rent(snapShotBufferSize);
-					for (int i = 0; i < readOffset; ++i)
-						readBuffer[i] = _readBuffer[i];
-					ArrayPool<byte>.Shared.Return(_readBuffer);
-				}
-				var snap = new Snapshot();
-				unsafe
-				{
-					fixed (byte* pData = readBuffer)
-					{
-
-						var r = new Reader(pData);
-						snap.time = r.ReadInt32();
-						var playerCount = r.ReadInt32();
-						snap.playerStats = new();
-						for(int i =0;i<playerCount;++i)
-						{
-							var ps = new PlayerStats();
-							
-							ps.pid = r.ReadInt32();
-							snap.playerStats.Add(ps.pid, ps);
-
-							ps.reputation = r.ReadInt32();
-							ps.offensiveRep = r.ReadInt32();
-							ps.defensiveRep = r.ReadInt32();
-							ps.unitKills = r.ReadInt32();
-							ps.alliance = r.ReadInt32();
-							ps.raiding = r.ReadInt32();
-							var continentCount = r.ReadInt32();
-							for(int pc=0;pc<continentCount;++pc)
-							{
-								var perC = new ContinentPlayerStats();
-								perC.continent = r.ReadInt32();
-								perC.cities = r.ReadInt32();
-								perC.score = r.ReadInt32();
-							}
-
-						}
-						var allianceCount = r.ReadInt32();
-						for(int ia=0;ia<allianceCount;++ia)
-						{
-							var al = new AllianceStats();
-							al.aid = r.ReadInt32();
-							al.reputation = r.ReadInt32();
-							snap.allianceStats.Add(al.aid,al);
-							var perContinentCount = r.ReadInt32();
-							for(int i=0;i<perContinentCount;++i)
-							{
-								ContinentAllianceStats cas = new();
-								al.perContinent.Add(cas);
-								cas.continent = r.ReadInt32();
-								cas.cities = r.ReadInt32();
-								cas.score = r.ReadInt32();
-								cas.military = r.ReadInt32();
-
-							}
-
-						}
-					}
-
-				}
-				ArrayPool<byte>.Shared.Return(readBuffer);
-				return snap;
+				//	var readSize = deflate.Read(readBuffer, readOffset, snapShotBufferSize - readOffset);
+				//	if (readSize < snapShotBufferSize)
+				//	{
+				//		break;
+				//	}
+				//	readOffset += readSize;
+				//	var _readBuffer = readBuffer;
+				//	snapShotBufferSize *= 2;
+				//	readBuffer = ArrayPool<byte>.Shared.Rent(snapShotBufferSize);
+				//	for (int i = 0; i < readOffset; ++i)
+				//		readBuffer[i] = _readBuffer[i];
+				//	ArrayPool<byte>.Shared.Return(_readBuffer);
+				//}
+				return Load(mem);
 			}
 			catch (Azure.RequestFailedException r)
 			{
@@ -592,69 +535,137 @@ namespace COTG.Services
 			return null;
 		}
 
+		private static Snapshot Load(BinaryData mem)
+		{
+			var snap = new Snapshot();
+			unsafe
+			{
+				//					fixed (byte* pData = readBuffer)
+				{
+
+					var r = new Reader(mem);
+					snap.time = r.ReadInt32();
+					var playerCount = r.ReadInt32();
+					snap.playerStats = new();
+					for(int i = 0;i<playerCount;++i)
+					{
+						var ps = new PlayerStats();
+
+						ps.pid = r.ReadInt32();
+						snap.playerStats.Add(ps.pid,ps);
+
+						ps.reputation = r.ReadInt32();
+						ps.offensiveRep = r.ReadInt32();
+						ps.defensiveRep = r.ReadInt32();
+						ps.unitKills = r.ReadInt32();
+						ps.alliance = r.ReadInt32();
+						ps.raiding = r.ReadInt32();
+						var continentCount = r.ReadInt32();
+						for(int pc = 0;pc<continentCount;++pc)
+						{
+							var perC = new ContinentPlayerStats();
+							perC.continent = r.ReadInt32();
+							perC.cities = r.ReadInt32();
+							perC.score = r.ReadInt32();
+						}
+
+					}
+					var allianceCount = r.ReadInt32();
+					for(int ia = 0;ia<allianceCount;++ia)
+					{
+						var al = new AllianceStats();
+						al.aid = r.ReadInt32();
+						al.reputation = r.ReadInt32();
+						snap.allianceStats.Add(al.aid,al);
+						var perContinentCount = r.ReadInt32();
+						for(int i = 0;i<perContinentCount;++i)
+						{
+							ContinentAllianceStats cas = new();
+							al.perContinent.Add(cas);
+							cas.continent = r.ReadInt32();
+							cas.cities = r.ReadInt32();
+							cas.score = r.ReadInt32();
+							cas.military = r.ReadInt32();
+
+						}
+
+					}
+				}
+
+			}
+			//				ArrayPool<byte>.Shared.Return(readBuffer);
+			return snap;
+		}
+
 		public static async Task<TSSnapshot> LoadTSSnapshot(string str)
 		{
 			try
 			{
-				BlobContainerClient container = await GetTSSnapshotContainer(); 
-				
+				BlobContainerClient container = await GetTSSnapshotContainer();
+
 				var res = await container.GetBlobClient(str).DownloadAsync();
 				//if (res.GetRawResponse().Status != 200)
 				//{
 				//	return day;
 				//}
 
-				using var deflate = new GZipStream(res.Value.Content, CompressionMode.Decompress);
-				byte[] readBuffer = ArrayPool<byte>.Shared.Rent(snapShotBufferSize);
-				var readOffset = 0;
-				for (; ; )
-				{
+				using var deflate = new GZipStream(res.Value.Content,CompressionMode.Decompress);
+				var mem = await AMem.ReadCompressedAsync(res.Value.Content);
+				//byte[] readBuffer = ArrayPool<byte>.Shared.Rent(snapShotBufferSize);
+				//var readOffset = 0;
+				//for (; ; )
+				//{
 
-					var readSize = deflate.Read(readBuffer, readOffset, snapShotBufferSize - readOffset);
-					if (readSize < snapShotBufferSize)
-					{
-						break;
-					}
-					readOffset += readSize;
-					var _readBuffer = readBuffer;
-					snapShotBufferSize *= 2;
-					readBuffer = ArrayPool<byte>.Shared.Rent(snapShotBufferSize);
-					for (int i = 0; i < readOffset; ++i)
-						readBuffer[i] = _readBuffer[i];
-					ArrayPool<byte>.Shared.Return(_readBuffer);
-				}
-				var snap = new TSSnapshot();
-				unsafe
+				//	var readSize = deflate.Read(readBuffer, readOffset, snapShotBufferSize - readOffset);
+				//	if (readSize < snapShotBufferSize)
+				//	{
+				//		break;
+				//	}
+				//	readOffset += readSize;
+				//	var _readBuffer = readBuffer;
+				//	snapShotBufferSize *= 2;
+				//	readBuffer = ArrayPool<byte>.Shared.Rent(snapShotBufferSize);
+				//	for (int i = 0; i < readOffset; ++i)
+				//		readBuffer[i] = _readBuffer[i];
+				//	ArrayPool<byte>.Shared.Return(_readBuffer);
+				//}
+				return Read(mem);
+				static TSSnapshot Read(BinaryData mem)
 				{
-					fixed (byte* pData = readBuffer)
+					var snap = new TSSnapshot();
+					//unsafe
 					{
-						var r = new Reader(pData);
-						snap.time = r.ReadInt32();
-						var contCount = r.ReadInt32();
-						for (int i = 0; i < contCount; ++i)
+						//fixed (byte* pData = readBuffer)
+
 						{
-							var cont = new TSContinentStats();
-							snap.continents.Add(cont);
-							cont.continent = r.ReadInt32();
-							int players = r.ReadInt32();
-							for(int pID=0; pID < players;++pID)
+							var r = new Reader(mem);
+							snap.time = r.ReadInt32();
+							var contCount = r.ReadInt32();
+							for(int i = 0;i < contCount;++i)
 							{
-								var p = new TSContinentPlayerStats();
-								cont.players.Add(p);
-								p.pid = r.ReadInt32();
-								p.score = r.ReadInt32();
-								p.cities = r.ReadInt32();
-								p.tsTotal = r.ReadInt32();
-								p.tsOff = r.ReadInt32();
-								p.tsDef = r.ReadInt32();
+								var cont = new TSContinentStats();
+								snap.continents.Add(cont);
+								cont.continent = r.ReadInt32();
+								int players = r.ReadInt32();
+								for(int pID = 0;pID < players;++pID)
+								{
+									var p = new TSContinentPlayerStats();
+									cont.players.Add(p);
+									p.pid = r.ReadInt32();
+									p.score = r.ReadInt32();
+									p.cities = r.ReadInt32();
+									p.tsTotal = r.ReadInt32();
+									p.tsOff = r.ReadInt32();
+									p.tsDef = r.ReadInt32();
 
+								}
 							}
 						}
+
 					}
 
+					return snap;
 				}
-				ArrayPool<byte>.Shared.Return(readBuffer);
-				return snap;
 			}
 			catch (Azure.RequestFailedException r)
 			{
@@ -666,7 +677,9 @@ namespace COTG.Services
 			{
 				return null;
 			}
-			return null;
+		
+
+			
 		}
 
 		//for (; ; )

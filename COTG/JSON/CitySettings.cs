@@ -40,11 +40,12 @@ namespace COTG.JSON
 			return result;
 
 		}
+		public static async Task<int?> FindBestHubWithChoice(int cid,string title) => await CitySettings.FindBestHub(cid,await App.DoYesNoBox(title,"Off Continent?",cancel: null) == 1);
 
-		public static async Task<int> FindBestHub(int cid, bool onlyOffContinent)
+		public static async Task<int?> FindBestHub(int cid, bool onlyOffContinent)
 		{
 			await NearRes.UpdateTradeStuffifNeeded();
-			int reqHub = 0;
+			int? reqHub = null;
 			var bestDist = 4096f;
 			var hubs = GetHubs();
 				foreach (var hub in hubs)
@@ -87,7 +88,7 @@ namespace COTG.JSON
 				
 				if (autoFind)
 				{
-					sourceHub = targetHub = await FindBestHub(cid, await App.DoYesNoBox("Find Hub", "Off Continent?",cancel:null ) == 1);
+					sourceHub = targetHub = await FindBestHubWithChoice(cid, "Find Hub" );
 				}
 				var settings = new ResSettings();
 				settings.InitTradeSettings(city,sourceHub.GetValueOrDefault(),targetHub.GetValueOrDefault());
@@ -110,7 +111,7 @@ namespace COTG.JSON
 					reqFilter = settings.reqFilter;
 					targetFilter = settings.sendFilter;
 					// does this change threads?
-					await SetCitySettings(cid,reqHub:sourceHub,targetHub:targetHub, req:  settings.req, max:settings.max, 
+					await SetCitySettings(cid,reqHub: settings.ReqHub,settings.SendHub, req:  settings.req, max:settings.max, 
 						cartReserve:settings.cartReserve,
 						shipReserve:settings.shipReserve,
 						reqFilter: settings.reqFilter, 

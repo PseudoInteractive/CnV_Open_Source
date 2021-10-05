@@ -17,7 +17,7 @@ namespace COTG.Draw
     /// <summary>
     /// Helper class for drawing text strings and sprites in one or more optimized batches.
     /// </summary>
-	public class Material : IEqualityComparer<Material>
+	public class Material : IEquatable<Material>
 	{
 		public readonly int _sortingKey = System.Threading.Interlocked.Increment(ref _lastSortingKey);
 		private static int _lastSortingKey;
@@ -51,15 +51,14 @@ namespace COTG.Draw
 		public int Width => texture switch { Texture2D t => t.Width, Texture3D t => t.Width, _ => 1 };
 		public int Height => texture switch { Texture2D t => t.Height, Texture3D t => t.Height, _ => 1 };
 
-		bool IEqualityComparer<Material>.Equals(Material x, Material y)
+	
+
+		public override	int GetHashCode()
 		{
-			return x._sortingKey == y._sortingKey;
+			return _sortingKey;
 		}
 
-		int IEqualityComparer<Material>.GetHashCode(Material obj)
-		{
-			return obj._sortingKey;
-		}
+		public bool Equals(Material b) =>   _sortingKey == b._sortingKey;
 	}
 	public class SpriteBatch : GraphicsResource
 	{

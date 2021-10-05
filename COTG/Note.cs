@@ -69,7 +69,7 @@ namespace COTG
 	//	static CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
 		public static async void Show(string s, Priority priority=Priority.medium, bool useInfoBar = false, int timeout = 5000)
 		{
-			const int noteDelay = 2;
+			const int noteDelay = 3;
 			const int noteDelayHigh = 5;
 			if(ShellPage.instance != null)
 			{
@@ -140,11 +140,13 @@ namespace COTG
 							}
 							else
 							{
-								ShellPage.instance.noteText =  s + '\n' + ShellPage.instance.noteText;
+								ShellPage.instance.noteText =  s + "\n\n" + ShellPage.instance.noteText;
 
 							}
 							//var textNull = ShellPage.instance.noteText.Length == 0;
-							Debounce.Q( runOnUIThread:true,action: ()=> ShellPage.instance.InAppNote.Text = ShellPage.instance.noteText);
+							// update on screen
+							Debounce.Q( runOnUIThread:true,action: ()=> ShellPage.instance.InAppNote.Text = ShellPage.instance.noteText, ms:100);
+							
 							Debounce.Q(ms: ((priority >= Priority.high) ? noteDelayHigh : noteDelay)*1000, 
 								runOnUIThread: true,
 								action: () =>
@@ -293,16 +295,23 @@ namespace COTG
 		static string lastTip;
 		public static void ProcessTooltipsOnPointerMoved(object sender, PointerRoutedEventArgs e)
 		{
-			var info = Spot.HitTest(sender, e);
-			var ctrl = info.column?.Column;
-			var str =string.Empty;
-			if(ctrl != null)
+			try
 			{
-				var _str = ToolTipService.GetToolTip(ctrl) as string;
-				if(_str != null)
-					str = _str;
+				var info = Spot.HitTest(sender,e);
+				var ctrl = info.column?.Column;
+				var str = string.Empty;
+				if(ctrl != null)
+				{
+					var _str = ToolTipService.GetToolTip(ctrl) as string;
+					if(_str != null)
+						str = _str;
+				}
+				ShowTip(str);
 			}
-			ShowTip(str);
+			catch(Exception ex)
+			{
+				Log(ex);
+			}
 		}
 		public static void ShowTip(string str)
 		{

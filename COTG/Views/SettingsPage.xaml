@@ -28,6 +28,11 @@
 						   Style="{ThemeResource ButtonRevealStyle}"
 						   ToolTipService.ToolTip="Launches a second instance of the app. It is best not to run two instances with the same player and world"
 					   FontSize="12" Click="LaunchTapped" />
+				<Button    Content="Display Scale"
+						   Style="{ThemeResource ButtonRevealStyle}"
+						   ToolTipService.ToolTip="Launches display settings page to set display scale (if things don't look right, set this to 100%)"
+					   FontSize="12" Click="DisplayTapped" />
+
 			</StackPanel>
 			
 			<wct:WrapPanel Orientation="Horizontal"

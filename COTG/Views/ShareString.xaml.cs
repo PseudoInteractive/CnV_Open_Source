@@ -149,20 +149,24 @@ namespace COTG.Views
 			//	var sel = Spot.GetSelectedForContextMenu(cid,false, onlyMine: true);
 
 			var city = City.GetOrAdd(cid);
-
+			if(city.tradeInfo == null)
+				await NearRes.UpdateTradeStuff();
+		
 			bool setResources = false;
 			bool setLayout = false;
 			bool setTags = false;
-			var bestReqHub = city.anyRequestHub;
-			if( bestReqHub == 0)
-				bestReqHub =   await CitySettings.FindBestHub(cid,false);
-			var bestSendHub = city.anySendHub;
-			if(bestSendHub == 0 && !city.isHubOrStorage )
-				bestSendHub =   await CitySettings.FindBestHub(cid,false);
-
-			var rv =  await App.DispatchOnUIThreadTask(async () =>
+			var bestReqHub = city.AnyHub(true);
+			if(bestReqHub == 0)
 			{
-			try
+				bestReqHub =   await CitySettings.FindBestHubWithChoice(cid,"Find Request Hub");
+			}
+			var bestSendHub = city.AnyHub(false);
+			if(bestSendHub == 0 && !city.isHubOrStorage)
+				bestSendHub =   await CitySettings.FindBestHubWithChoice(cid,"Find Send Hub");
+
+			var rv = await App.DispatchOnUIThreadTask(async () =>
+			{
+				try
 				{
 					Assert(App.uiSema.CurrentCount == 0);
 
@@ -176,13 +180,13 @@ namespace COTG.Views
 					//	PlannerTeachingTip.Show();
 					// todo: copy text 
 
-				//	if (CityBuild.isPlanner)
-				//		city.BuildingsCacheToShareString();
+					//	if (CityBuild.isPlanner)
+					//		city.BuildingsCacheToShareString();
 
-					await res.InitTradeSettings(city,bestReqHub, bestSendHub);
+					await res.InitTradeSettings(city,bestReqHub,bestSendHub);
 
-			//		res.applyRequested = true;
-			//		res.applySend = true;
+					//		res.applyRequested = true;
+					//		res.applySend = true;
 
 					SetFromSS(city.shareString,false);
 					res.sendFilter = ResourceFilter._true;
@@ -195,11 +199,11 @@ namespace COTG.Views
 					setResources = expandResources.IsExpanded;
 					setLayout = expandShareString.IsExpanded;
 					setTags = expandTags.IsExpanded;
-					
+
 
 					return result;
 				}
-				catch (Exception ex)
+				catch(Exception ex)
 				{
 					LogEx(ex);
 				}
@@ -210,7 +214,7 @@ namespace COTG.Views
 
 			try
 			{
-				if (rv == ContentDialogResult.Primary)
+				if(rv == ContentDialogResult.Primary)
 				{
 
 					//if ( applyTags.IsOn)
@@ -219,24 +223,24 @@ namespace COTG.Views
 					//	//		Post.Send("includes/sNte.php", $"a={HttpUtility.UrlEncode(tags, Encoding.UTF8)}&b=&cid={cid}");
 					//	await Post.Send("includes/sNte.php", $"a={HttpUtility.UrlEncode(city.remarks, Encoding.UTF8)}&b={HttpUtility.UrlEncode(city.notes, Encoding.UTF8)}&cid={city.cid}", World.CidToPlayerOrMe(city.cid));
 					//}
-					 SettingsPage.defaultReq = res.req;
-					 SettingsPage.defaultSend = res.max;
+					SettingsPage.defaultReq = res.req;
+					SettingsPage.defaultSend = res.max;
 
-						//if(sel.Count > 1)
-						//{
-						//	var x = await App.DoYesNoBox("Set Selected Cities?", $"{sel.Count} cities selected",yes:"All", no:"Just this" );
-						//	if (x == -1)
-						//		return;
-						//	if (x == 0)
-						//	{
-						//		sel.Clear();
-						//		sel.Add(cid);
-						//	}
-						//}
-				//	foreach (var ci in sel)
+					//if(sel.Count > 1)
+					//{
+					//	var x = await App.DoYesNoBox("Set Selected Cities?", $"{sel.Count} cities selected",yes:"All", no:"Just this" );
+					//	if (x == -1)
+					//		return;
+					//	if (x == 0)
+					//	{
+					//		sel.Clear();
+					//		sel.Add(cid);
+					//	}
+					//}
+					//	foreach (var ci in sel)
 					{
-						
-						if ( setTags)
+
+						if(setTags)
 						{
 							await SetCityTags(cid);
 							//await CitySettings.SetCitySettings(City.build, setRecruit: true);
@@ -258,20 +262,20 @@ namespace COTG.Views
 						//			await CitySettings.SetTradeResourcesSettings(city.cid,req,max);
 
 						await CitySettings.SetCitySettings(cid,
-							reqHub:res.sourceHub.city switch 
-								{City a=>a.cid,_ => 0 },targetHub: res.targetHub.city switch { null => 0,var a=> a.cid } ,
-							 setRecruit:setTags && SettingsPage.setRecruit,
+							reqHub: res.reqHub.city switch
+							{ City a => a.cid, _ => 0 },targetHub: res.sendHub.city switch { null => 0, var a => a.cid },
+							 setRecruit: setTags && SettingsPage.setRecruit,
 							 cartReserve: res.cartReserve,
 							shipReserve: res.shipReserve,
-							 req:res.req,max:res.max,
-							reqFilter:reqFilter,sendFilter:sendFilter);
+							 req: res.req,max: res.max,
+							reqFilter: reqFilter,sendFilter: sendFilter);
 
-						if (setLayout)
+						if(setLayout)
 						{
 							city.SetShareString(GetShareStringWithJson(),true);
 						}
 					}
-					if (SettingsPage.autoRearrangeShareStrings && setLayout && City.Get(cid).isLayoutCustom )
+					if(SettingsPage.autoRearrangeShareStrings && setLayout && City.Get(cid).isLayoutCustom)
 					{
 						await PlannerTab.SmartRearrange(City.GetBuild(),true);
 					}
@@ -282,12 +286,13 @@ namespace COTG.Views
 
 				}
 			}
-			catch (Exception ex)
+			catch(Exception ex)
 			{
 
 				LogEx(ex);
 			}
 		}
+
 
 		public ShareStringMeta GetMeta()
 		{
@@ -565,7 +570,7 @@ namespace COTG.Views
 	public class ShareStringItem
 	{
 		public string path { get; set; } = string.Empty;
-		public static DumbCollection<ShareStringItem> all = new();
+		public static NotifyCollection<ShareStringItem> all = new();
 		public string shareString { get; set; }
 		[JsonIgnore]
 		public string label
@@ -591,7 +596,7 @@ namespace COTG.Views
 
 		public string shareStringWithJson;
 		[JsonIgnore]
-		public DumbCollection<ShareStringItem> children { get; set; } = new();
+		public NotifyCollection<ShareStringItem> children { get; set; } = new();
 		// group items
 		public ShareStringItem(string _path, bool _isPath)
 		{

@@ -323,7 +323,7 @@ namespace COTG.Game
 			//buildQInSync = false;
 			Draw.CityView.ClearSelectedBuilding();
 			//	CityBuild.ClearAction();
-			City.BuildingsOrQueueChanged();
+		//	City.BuildingsOrQueueChanged();
 
 			//if (CityBuild.menuOpen)
 			//{
@@ -740,23 +740,37 @@ namespace COTG.Game
 					//{
 					if (bq.ValueKind == JsonValueKind.Array)
 					{
-						int count = bq.GetArrayLength();
-						buildQueue.ClearKeepBuffer();
-						for (int i = 0; i < count; ++i)
+						var count = bq.GetArrayLength();
+						var prior = buildQueue.v;
+						var priorLength = buildQueue.Length;
+						var changedSize = count!=priorLength;
+						if(changedSize)
 						{
-							var js = bq[i];
-							buildQueue.Add(new BuildQueueItem(
+							buildQueue.Resize(count);
+						}
+						int put=0;
+						var anyChanged=false;
+						foreach(var js in bq.EnumerateArray())
+						{
+							var n = new BuildQueueItem(
 								js.GetAsByte("slvl"),
 								js.GetAsByte("elvl"),
 								js.GetAsShort("brep"),
 								js.GetAsShort("bspot"),
-								buildTime: ((js.GetAsInt64("de") - js.GetAsInt64("ds")) / 1000).ClampToU16(),
-								pa: js.GetAsInt64("pa") == 1));
-
+								buildTime: ((long)(js.GetAsInt("btime")+500 ) / 1000).ClampToU16(),
+								pa: js.GetAsInt64("pa") == 1);
+							if(changedSize || buildQueue[put] != n )
+							{
+								anyChanged = true;
+								buildQueue[put] = n;
+							}
+							++put;
 						}
-						if(cid == City.build)
-							CityView.BuildingsOrQueueChanged();
+						if( anyChanged)
+						{
+						BuildingsOrQueueChanged();
 						Trace($"{nameMarkdown} got BQ {buildQueue.Length}");
+						}
 					}
 					else
 					{
@@ -1495,7 +1509,7 @@ namespace COTG.Game
 		public bool? MinistersOn { get => ministersOn; set=>ministersOn=value; }
 
 		public Resources res => new Resources(wood, stone, iron, food);
-		public static ResetableCollection<City> gridCitySource = new ResetableCollection<City>();
+		public static NotifyCollection<City> gridCitySource = new NotifyCollection<City>();
 		public static AsyncLock cityGridLock = new();
 		public static City[] emptyCitySource = Array.Empty<City>();
 		internal CityTradeInfo tradeInfo = CityTradeInfo.invalid;
@@ -2345,7 +2359,7 @@ namespace COTG.Game
 			   //   if (MainPage.IsVisible())
 			   {
 				   using var _ = await cityGridLock.LockAsync();
-				   City.gridCitySource.Set(l);
+				   City.gridCitySource.Set(l,true);
 			   }
 			   //if (IncomingTab.instance.isVisible)
 				//   IncomingTab.instance.refresh.Go();

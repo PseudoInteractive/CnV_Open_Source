@@ -1,4 +1,7 @@
-﻿using Azure.Storage.Blobs.Models;
+﻿
+global using ByteMemory = Microsoft.Toolkit.HighPerformance.Buffers.MemoryOwner<byte>;
+
+using Azure.Storage.Blobs.Models;
 
 using COTG.BinaryMemory;
 using COTG.Services;
@@ -82,8 +85,8 @@ namespace COTG.Game
 	public class HeatMapDay : HeatMapItem
 	{
 		// key is lastUpdated.Date
-		public static ResetableCollection<HeatMapDay> days = new() ;
-		public ResetableCollection<HeatMapDelta> deltas { get; set; } = new(); //  ResetableCollection<HeatMapDelta>.empty; // only valid in heatMapDay
+		public static NotifyCollection<HeatMapDay> days = new() ;
+		public NotifyCollection<HeatMapDelta> deltas { get; set; } = new(); //  ResetableCollection<HeatMapDelta>.empty; // only valid in heatMapDay
 
 		
 		public HeatMapDay(SmallTime t) : base(t)
@@ -174,8 +177,6 @@ namespace COTG.Game
 				{
 					var o = new Writer(pData);
 
-
-
 					o.Write(t);
 					o.WritePackedUints(snapshot);
 
@@ -190,16 +191,16 @@ namespace COTG.Game
 						o.Write(d.t);
 						o.WritePackedUints(d.changes);
 					}
-					return (int)(o.Position - pData);
+					return (int)(o.position - pData);
 				}
 			}
 
 		}
-		internal unsafe void Read(byte[] data)
+		internal unsafe void Read(BinaryData data)
 		{
-			fixed (byte* pData = data)
+	//		fixed (byte* pData = data)
 			{
-				var r = new Reader(pData);
+				var r = new Reader(data);
 				t = r.ReadSmallTime();
 				if (snapshot.Length > 0)
 				{
@@ -351,29 +352,12 @@ namespace COTG.Game
 						//	return day;
 						//}
 
-						using var deflate = new GZipStream(res.Value.Content, CompressionMode.Decompress);
-						byte[] readBuffer = ArrayPool<byte>.Shared.Rent(HeatMap.bufferSize);
-						var readOffset = 0;
-						for (; ; )
-						{
-
-							var readSize = deflate.Read(readBuffer, readOffset, HeatMap.bufferSize - readOffset);
-							if (readSize < HeatMap.bufferSize)
-							{
-								break;
-							}
-							readOffset += readSize;
-							var _readBuffer = readBuffer;
-							HeatMap.bufferSize *= 2;
-							readBuffer = ArrayPool<byte>.Shared.Rent(HeatMap.bufferSize);
-							for (int i = 0; i < readOffset; ++i)
-								readBuffer[i] = _readBuffer[i];
-							ArrayPool<byte>.Shared.Return(_readBuffer);
-						}
+						
+						var readBuffer = await AMem.ReadCompressedAsync(res.Value.Content);
 
 						Read(readBuffer);
 						Assert(snapshot.Length > 0);
-						ArrayPool<byte>.Shared.Return(readBuffer);
+//						ArrayPool<byte>.Shared.Return(readBuffer);
 						eTag = res.Value.Details.ETag;
 						loadState = AzureLoadState.loaded;
 					}
@@ -431,6 +415,7 @@ namespace COTG.Game
 			}
 			return isLoadedOrDoesNotExist ? this : null; 
 		}
+
 
 		// stored in reverse order, 0 is most recent
 		public HeatMapDay GetLater()

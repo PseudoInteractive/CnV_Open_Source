@@ -65,17 +65,8 @@ namespace COTG.Views
 				{
 
 					var sel = grid.SelectedItems;
-					var newSel = new HashSet<int>();
-					foreach(Spot s in sel)
-					{
-						newSel.Add(s.cid);
+					Spot.selected =new HashSet<int>( sel.Select(a=> ((Spot)a).cid ));
 
-					}
-
-
-					//          Spot.selected.EnterWriteLock();
-
-					Spot.selected = newSel;
 				}
 				catch(Exception ex)
 				{
@@ -143,11 +134,21 @@ namespace COTG.Views
 		public static  void SetupDataGrid(RadDataGrid grid)
 		{
 			grid.GridLinesVisibility= Telerik.UI.Xaml.Controls.Primitives.GridLinesVisibility.Both;
-			grid.ProcessTooltips();
-			grid.ListenForNestedPropertyChange=false;
+		//	grid.ProcessTooltips();
+		//	grid.ListenForNestedPropertyChange=false;
 			grid.FontSize = SettingsPage.smallFontSize;
 			grid.RowHeight = SettingsPage.mediumGridRowHeight;
 		}
+
+		public void SetupCityDataGrid(RadDataGrid grid)
+		{
+			Assert(!spotGrids.Contains(grid));
+			spotGrids.Add(grid);
+			grid.SelectionChanged += SpotSelectionChanged;
+			grid.ProcessTooltips();
+			SetupDataGrid(grid);
+		}
+
 		public void SetPlus(bool set)
 		{
 			App.QueueOnUIThread(() =>
@@ -397,7 +398,7 @@ namespace COTG.Views
 			{
 				foreach(TabViewItem ti in tabPage.Tabs.TabItems)
 				{
-					if(ti.Content == tab)
+					if(ti.Content.AsObject() == tab)
 					{
 						tabPage.RemoveTab(ti);
 						break;
@@ -409,21 +410,21 @@ namespace COTG.Views
 		}
 
 		
-		public static (TabPage page, bool found) Get(UserTab tab)
-		{
-			bool rv = false;
-			foreach(var tabPage in tabPages)
-			{
-				foreach(TabViewItem ti in tabPage.Tabs.TabItems)
-				{
-					if(ti.Content == tab)
-					{
-						return (tabPage, true);
-					}
-				}
-			}
-			return (mainTabs, false);
-		}
+		//public static (TabPage page, bool found) Get(UserTab tab)
+		//{
+		//	bool rv = false;
+		//	foreach(var tabPage in tabPages)
+		//	{
+		//		foreach(TabViewItem ti in tabPage.Tabs.TabItems)
+		//		{
+		//			if(ti.Content == tab)
+		//			{
+		//				return (tabPage, true);
+		//			}
+		//		}
+		//	}
+		//	return (mainTabs, false);
+		//}
 		//private void Tabs_TabItemsChanged(TabView sender,Windows.Foundation.Collections.IVectorChangedEventArgs args)
 		//{
 		//	// If there are no more Tabs, close the window.
@@ -483,6 +484,7 @@ namespace COTG.Views
 			{ "Planner", Symbol.Map },
 			{ "NearRes", Symbol.Favorite },
 			{ "officer" ,Symbol.Admin },
+			{ "WebView", Symbol.World },
 		};
 
 		static Dictionary<string,string> tabFontIcons = new Dictionary<string,string> {

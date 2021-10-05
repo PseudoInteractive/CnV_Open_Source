@@ -2,11 +2,10 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Windows.Web.Http;
+using System.Net.Http;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using static COTG.Debug;
-using Windows.Web.Http.Filters;
 using Microsoft.UI.Xaml;
 //using Windows.System;
 using System.Text.Json;
@@ -34,7 +33,7 @@ using System.Text;
 using System.Web;
 using Windows.Security.Cryptography.Certificates;
 //using Windows.Foundation;
-using Windows.Web.Http.Headers;
+using System.Net.Http.Headers;
 using DiscordCnV;
 using Microsoft.UI.Xaml.Controls;
 using CommunityToolkit.WinUI.Notifications;
@@ -46,6 +45,7 @@ using CoreWebView = Microsoft.Web.WebView2.Core.CoreWebView2;
 using CommunityToolkit.WinUI.Helpers;
 using Microsoft.UI.Dispatching;
 using Windows.UI.ViewManagement;
+using System.Runtime;
 
 namespace COTG
 {
@@ -71,7 +71,7 @@ namespace COTG
 		public static WebView2 view;
 		public static CoreWebView coreWebView;
 		//public static WebViewBrush webViewBrush; 
-		public static HttpBaseProtocolFilter httpFilter;
+		public static HttpClientHandler  httpFilter;
 	//	public static HttpCookieManager cookieManager;
 //		const int clientCount = 6;
 	//	public static ConcurrentBag<HttpClient> clientPool;
@@ -493,35 +493,35 @@ namespace COTG
 			
 
 
-			httpFilter = new HttpBaseProtocolFilter();
-			httpFilter.AutomaticDecompression = true;
-
+			httpFilter = new();
+		//	httpFilter.AutomaticDecompression = true;
 			httpFilter.AllowAutoRedirect = true;
 		//	httpFilter.UseProxy = false;
 
-			httpFilter.MaxVersion = HttpVersion.Http20;
+			//httpFilter.http MaxVersion = HttpVersion.Http20;
 		//	httpFilter.ServerCustomValidationRequested += ServerCustomValidationRequested;
 			//httpFilter.IgnorableServerCertificateErrors.Add(ChainValidationResult.Untrusted);
 			//httpFilter.IgnorableServerCertificateErrors.Add(ChainValidationResult.Expired);
 
-			httpFilter.IgnorableServerCertificateErrors.Add(Windows.Security.Cryptography.Certificates.ChainValidationResult.WrongUsage);
-			httpFilter.IgnorableServerCertificateErrors.Add(Windows.Security.Cryptography.Certificates.ChainValidationResult.Expired);
-			httpFilter.IgnorableServerCertificateErrors.Add(Windows.Security.Cryptography.Certificates.ChainValidationResult.Untrusted);
-			httpFilter.IgnorableServerCertificateErrors.Add(Windows.Security.Cryptography.Certificates.ChainValidationResult.IncompleteChain);
-			httpFilter.IgnorableServerCertificateErrors.Add(Windows.Security.Cryptography.Certificates.ChainValidationResult.RevocationInformationMissing);
-			httpFilter.IgnorableServerCertificateErrors.Add(Windows.Security.Cryptography.Certificates.ChainValidationResult.RevocationFailure);
+			//httpFilter.IgnorableServerCertificateErrors.Add(Windows.Security.Cryptography.Certificates.ChainValidationResult.WrongUsage);
+			//httpFilter.IgnorableServerCertificateErrors.Add(Windows.Security.Cryptography.Certificates.ChainValidationResult.Expired);
+			//httpFilter.IgnorableServerCertificateErrors.Add(Windows.Security.Cryptography.Certificates.ChainValidationResult.Untrusted);
+			//httpFilter.IgnorableServerCertificateErrors.Add(Windows.Security.Cryptography.Certificates.ChainValidationResult.IncompleteChain);
+			//httpFilter.IgnorableServerCertificateErrors.Add(Windows.Security.Cryptography.Certificates.ChainValidationResult.RevocationInformationMissing);
+			//httpFilter.IgnorableServerCertificateErrors.Add(Windows.Security.Cryptography.Certificates.ChainValidationResult.RevocationFailure);
 
-			httpFilter.AllowUI = true;
-			httpFilter.CookieUsageBehavior = HttpCookieUsageBehavior.NoCookies;
+			//httpFilter.AllowUI = true;
+		//	httpFilter.CookieUsageBehavior = HttpCookieUsageBehavior.NoCookies;
 
 
 			//	  HttpBaseProtocolFilter.CreateForUser( User.GetDefault());
 			//                         httpFilter.ServerCredential =
 
-			httpFilter.MaxConnectionsPerServer = 10;
+			//httpFilter.MaxConnectionsPerServer = 10;
 			//  httpFilter.ServerCustomValidationRequested += HttpFilter_ServerCustomValidationRequested;
-			httpFilter.CacheControl.ReadBehavior = HttpCacheReadBehavior.NoCache;
-			httpFilter.CacheControl.WriteBehavior = HttpCacheWriteBehavior.NoCache;
+	//		httpFilter.CacheControl.ReadBehavior = HttpCacheReadBehavior.NoCache;
+	//		httpFilter.CacheControl.WriteBehavior = HttpCacheWriteBehavior.NoCache;
+			httpClient = new HttpClient(httpFilter);
 			
 
 			//cookieManager = httpFilter.CookieManager;
@@ -743,7 +743,7 @@ namespace COTG
 			{
 				
 				var webView = new WebViewPage();
-				TabPage.Show(webView);
+				webView.ShowOrAdd(true);
 	//			f.Content = webView;
 				
 				//w.
@@ -761,7 +761,7 @@ namespace COTG
 					await view.EnsureCoreWebView2Async();
 
 					args.NewWindow = view.CoreWebView2;
-//					view.CoreWebView2.Settings.UserAgent = userAgent;
+			//		view.CoreWebView2.Settings.UserAgent = userAgent;
 					view.Source = new Uri(args.Uri);
 					args.Handled = true;
 					defer.Complete();
@@ -995,7 +995,16 @@ namespace COTG
 						//headers.AppendHeader("Content-Type","application/x-javascript");
 						//headers.AppendHeader("Content-Encoding","text/json");
 						cookies = args.Request.Headers.GetHeader("Cookie");
-					    
+					    App.QueueOnUIThread(()=>
+						{
+							foreach(var s in cookies.Split(';',StringSplitOptions.RemoveEmptyEntries|StringSplitOptions.TrimEntries))
+							{
+								var vv= s.Split('=',StringSplitOptions.RemoveEmptyEntries|StringSplitOptions.TrimEntries);
+								Assert(vv.Length == 2);
+								httpFilter.CookieContainer.Add(new System.Net.Cookie(vv[0],vv[1],"/","crownofthegods.com"));
+							}
+						});
+//						httpFilter.CookieContainer.SetCookies(new Uri("https://crownofthegods.com"),cookies));
 						args.Response = jsFunkyEtc;
 
 						hasMainPageLoaded=true;
@@ -1007,7 +1016,7 @@ namespace COTG
 						//   var respTask = httpClient.SendRequestAsync(reqMsg).AsTask();
 
 						//	var asm = typeof(JSClient).Assembly;
-						//var newContent = new Windows.Web.Http.HttpStringContent(js, Windows.Storage.Streams.UnicodeEncoding.Utf8, "text/json");
+						//var newContent = new System.Net.Http.HttpStringContent(js, Windows.Storage.Streams.UnicodeEncoding.Utf8, "text/json");
 					//	args.Response = coreWebView.Environment.CreateWebResourceResponse(stream,(int)HttpStatusCode.Ok,"OK",null);//"text/json");
 
 
@@ -2121,7 +2130,7 @@ private static async void ShowCouncillorsMissingDialog()
 					//	clientPool = new ConcurrentBag<HttpClient>();
 					//	for (int i = 0; i < clientCount; ++i)
 						{
-							httpClient = new HttpClient(httpFilter); // reset
+						//	httpClient = new HttpClient(httpFilter); // reset
 																		 //   httpClient = new HttpClient(); // reset
 																		 //                        var headers = httpClient.DefaultRequestHeaders;
 																		 //     headers.TryAppendWithoutValidation("Content-Type",@"application/x-www-form-urlencoded; charset=UTF-8");
@@ -2136,13 +2145,15 @@ private static async void ShowCouncillorsMissingDialog()
 							httpClient.DefaultRequestHeaders.Accept.TryParseAdd("*/*");
 							// httpClient.DefaultRequestHeaders.TryAppendWithoutValidation("X-Requested-With", "XMLHttpRequest");
 							//    httpClient.DefaultRequestHeaders.Referer = new Uri(httpsHost, "/overview.php?s=0");// new Uri($"https://w{world}.crownofthegods.com");
-							httpClient.DefaultRequestHeaders.Referer = new Uri(httpsHost, $"/overview.php?s={subId}");// new Uri                                                       //             req.Headers.TryAppendWithoutValidation("Origin", $"https://w{world}.crownofthegods.com");
+							httpClient.DefaultRequestHeaders.Referrer = new Uri(httpsHost, $"/overview.php?s={subId}");// new Uri                                                       //             req.Headers.TryAppendWithoutValidation("Origin", $"https://w{world}.crownofthegods.com");
 							if (subId != 0)
-								httpClient.DefaultRequestHeaders.TryAppendWithoutValidation("pp-ss", subId.ToString());
+								httpClient.DefaultRequestHeaders.TryAddWithoutValidation("pp-ss", subId.ToString());
 
 							//httpClient.DefaultRequestHeaders.TryAppendWithoutValidation("Origin", $"https://w{world}.crownofthegods.com");
 							//   Log($"Built headers {httpClient.DefaultRequestHeaders.ToString() }");
-							httpClient.DefaultRequestHeaders.UserAgent.TryParseAdd(userAgent);
+						//	httpFilter.CookieContainer.SetCookies(uri,cookies);// = coreWebView.CookieManager;
+
+								httpClient.DefaultRequestHeaders.UserAgent.TryParseAdd(userAgent);
 							//httpClient.DefaultRequestHeaders.TryAppendWithoutValidation("Pragma", "no-cache");
 
 							//httpClient.DefaultRequestHeaders.TryAppendWithoutValidation("Sec-Fetch-Site", "same-origin");
@@ -2719,15 +2730,16 @@ private static async void ShowCouncillorsMissingDialog()
 									   city.isOnWater |= jso.GetAsInt("water") != 0;  // Use Or in case the data is imcomplete or missing, in which case we get it from world data, if that is not incomplete or missing ;)
 									   city.isTemple = jso.GetAsInt("plvl") != 0;
 
-
-									 //  cid.BringCidIntoWorldView(true,false);
+									   //if(City.focus != cid)
+										  // cid.BringCidIntoWorldView(true,false);
 									   if (city._cityName != name)
 									   {
 										   city._cityName = name;
 										   if (cid == Spot.focus)
 											   App.DispatchOnUIThreadLow(() => ShellPage.instance.focus.Content = city.nameAndRemarks);
 									   }
-									   //     city.SetFocus(true);
+									   if(City.focus != cid)
+										   city.SetFocus(true);
 									   if (city.isNotClassified )
 									   {
 										   if (App.IsKeyPressedControl() && (Alliance.wantsIntel || Player.isAvatarOrTest) )
@@ -3051,6 +3063,13 @@ private static async void ShowCouncillorsMissingDialog()
 
 					   App.state = App.State.active;
 					   CnVDiscord.Discord.Initialize();
+
+					 //  System.GC.Collect(2,GCCollectionMode.Default,true);
+
+					   // give some time for initial pressure to come down
+					   await Task.Delay(1000);
+					   System.GC.Collect(2,GCCollectionMode.Default,true,true);
+					 //  GCSettings.LatencyMode = GCLatencyMode.SustainedLowLatency;
 
 				   }
 			   }

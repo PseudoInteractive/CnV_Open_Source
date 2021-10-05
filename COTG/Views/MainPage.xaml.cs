@@ -68,11 +68,13 @@ namespace COTG.Views
 
 		}
 
-		private void OnLoaded(object sender,RoutedEventArgs e)
+		protected override void OnApplyTemplate()
 		{
-			spotGrids.Add(cityGrid);
+			
+			base.OnApplyTemplate();
 
-			cityGrid.SelectionChanged += SpotSelectionChanged;
+			
+			
 			//        var rand = new Random();
 
 			//cityMenuFlyout = new MenuFlyout();
@@ -89,8 +91,8 @@ namespace COTG.Views
 
 			//     cityGrid.SelectionChanged += CityGrid_SelectionChanged;
 			cityGrid.CurrentItemChanged += CityGrid_CurrentItemChanged;
-			cityGrid.ProcessTooltips();
-			SetupDataGrid(cityGrid);
+			
+			SetupCityDataGrid(cityGrid);
 			
 		}
 
@@ -261,7 +263,7 @@ namespace COTG.Views
 					if (City.build != 0)
 						await GetCity.Post(City.build);
 
-					City.gridCitySource.NotifyReset();
+					City.gridCitySource.NotifyReset(true);
 				}
              //  if (cityGrid.ItemsSource == App.emptyCityList )
              //     cityGrid.ItemsSource = City.gridCitySource;
@@ -527,6 +529,8 @@ namespace COTG.Views
 
 		
 
+
+
 		//      static Dungeon lastTooltip;
 		//private void DungeonPointerMoved(object sender, Microsoft.UI.Xaml.Input.PointerRoutedEventArgs e)
 		//{
@@ -568,7 +572,7 @@ namespace COTG.Views
 		}
 		public override void Execute(object parameter)
         {
-			App.DispatchOnUIThreadLow(() =>
+		//	App.DispatchOnUIThreadLow(() =>
 		   {
 			   var context = parameter as DataBindingCompleteEventArgs;
 				// put your custom logic here
@@ -579,7 +583,7 @@ namespace COTG.Views
 			   MainPage.instance.tsRaid.Text = $"TS Home: {GetValue<double>(view,2):N0}";
 			   MainPage.instance.castles.Text = $"Castles: {GetValue<double>(view,3)}";
 			   MainPage.instance.water.Text = $"On Water: {GetValue<double>(view,4)}";
-		   });
+		   }//);
         }
 		
 

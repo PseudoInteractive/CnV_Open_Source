@@ -418,6 +418,7 @@ namespace COTG.Views
 
 		private async void FlipHClick(object sender, RoutedEventArgs e)
 		{
+			App.UpdateKeyStates();
 			Assert(CityBuild.isPlanner);
 			await CityBuild._IsPlanner(true);
 			var city = GetBuild();
@@ -426,6 +427,8 @@ namespace COTG.Views
 		}
 		private async void FlipVClick(object sender, RoutedEventArgs e)
 		{
+			App.UpdateKeyStates();
+
 			Assert(CityBuild.isPlanner);
 			await CityBuild._IsPlanner(true);
 			var city = GetBuild();

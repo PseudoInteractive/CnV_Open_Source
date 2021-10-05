@@ -1013,6 +1013,10 @@ namespace COTG.Views
 			Windows.System.Launcher.LaunchUriAsync(new Uri($"{App.appLink}:launch?n=1"));
 		}
 
-		
+		private void DisplayTapped(object sender,RoutedEventArgs e)
+		{
+			Windows.System.Launcher.LaunchUriAsync(new Uri($"ms-settings:display"));
+
+		}
 	}
 }

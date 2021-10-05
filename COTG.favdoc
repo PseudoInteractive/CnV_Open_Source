@@ -10,12 +10,38 @@
           <path>COTG\Content\Effects\lit.fxh</path>
           <absolutePath>C:\Source\COTG\COTG\Content\Effects\lit.fxh</absolutePath>
         </Favorite>
+        <Favorite>
+          <name>AGame.cs</name>
+          <path>COTG\Game\AGame.cs</path>
+          <absolutePath>C:\Source\COTG\COTG\Game\AGame.cs</absolutePath>
+        </Favorite>
+        <Favorite>
+          <name>CityView.cs</name>
+          <path>COTG\Draw\CityView.cs</path>
+          <absolutePath>C:\Source\COTG\COTG\Draw\CityView.cs</absolutePath>
+          <position>
+            <line>133</line>
+            <column>49</column>
+            <lineHash>b/rSGSndQnwwi1aN4p1KhYfeo/w+mMTQXVVQIhMEbCE=</lineHash>
+          </position>
+        </Favorite>
       </favorites>
     </Folder>
     <Folder>
-      <name>xaml</name>
-      <folders />
+      <name>ui</name>
+      <folders>
+        <Folder>
+          <name>Xaml</name>
+          <folders />
+          <favorites />
+        </Folder>
+      </folders>
       <favorites>
+        <Favorite>
+          <name>App.xaml.cs</name>
+          <path>COTG\App.xaml.cs</path>
+          <absolutePath>C:\Source\COTG\COTG\App.xaml.cs</absolutePath>
+        </Favorite>
         <Favorite>
           <name>SettingsPage.xaml.cs</name>
           <path>COTG\Views\SettingsPage.xaml.cs</path>
@@ -26,19 +52,60 @@
             <lineHash>muJv8i4Cc1edlMIUBtt+M+edvdctP0g84b5YH9vlM7g=</lineHash>
           </position>
         </Favorite>
+        <Favorite>
+          <name>CityBuild.xaml.cs</name>
+          <path>COTG\Views\CityBuild.xaml.cs</path>
+          <absolutePath>C:\Source\COTG\COTG\Views\CityBuild.xaml.cs</absolutePath>
+          <position>
+            <line>404</line>
+            <column>40</column>
+            <lineHash>SI3vINxyqOlo/XJ6ictmLlZ+FtCcnlN67KddSlRnQGA=</lineHash>
+          </position>
+        </Favorite>
+      </favorites>
+    </Folder>
+    <Folder>
+      <name>game</name>
+      <folders />
+      <favorites>
+        <Favorite>
+          <name>City.cs</name>
+          <path>COTG\Game\City.cs</path>
+          <absolutePath>C:\Source\COTG\COTG\Game\City.cs</absolutePath>
+        </Favorite>
+        <Favorite>
+          <name>City2.cs</name>
+          <path>COTG\Game\City2.cs</path>
+          <absolutePath>C:\Source\COTG\COTG\Game\City2.cs</absolutePath>
+        </Favorite>
+        <Favorite>
+          <name>HeatMap.cs</name>
+          <path>COTG\Game\HeatMap.cs</path>
+          <absolutePath>C:\Source\COTG\COTG\Game\HeatMap.cs</absolutePath>
+          <position>
+            <line>202</line>
+            <column>19</column>
+            <lineHash>z4q9zdoXX8yrDPpSPmP9iUBp0BSJxuPI+oTrF9uXxHU=</lineHash>
+          </position>
+        </Favorite>
+      </favorites>
+    </Folder>
+    <Folder>
+      <name>Web</name>
+      <folders />
+      <favorites>
+        <Favorite>
+          <name>JSClient.cs</name>
+          <path>COTG\Models\JSClient.cs</path>
+          <absolutePath>C:\Source\COTG\COTG\Models\JSClient.cs</absolutePath>
+          <position>
+            <line>500</line>
+            <column>3</column>
+            <lineHash>vevbrGI2+oAHOTsYrEF81cHyuntIdK0olal244B472U=</lineHash>
+          </position>
+        </Favorite>
       </favorites>
     </Folder>
   </folders>
-  <favorites>
-    <Favorite>
-      <name>JSClient.cs</name>
-      <path>COTG\Models\JSClient.cs</path>
-      <absolutePath>C:\Source\COTG\COTG\Models\JSClient.cs</absolutePath>
-      <position>
-        <line>500</line>
-        <column>3</column>
-        <lineHash>vevbrGI2+oAHOTsYrEF81cHyuntIdK0olal244B472U=</lineHash>
-      </position>
-    </Favorite>
-  </favorites>
+  <favorites />
 </Favorites>

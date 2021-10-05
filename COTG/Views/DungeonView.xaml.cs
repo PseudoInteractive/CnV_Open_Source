@@ -28,7 +28,7 @@ namespace COTG.Views
 	public sealed partial class DungeonView : ContentDialog
 	{
 
-		ResetableCollection<Dungeon> items = new();
+		NotifyCollection<Dungeon> items = new();
 
 		public static int openCity;
 		public static DungeonView instance;
@@ -65,7 +65,7 @@ namespace COTG.Views
 			{
 				if (city.CidOr0() == openCity && dungeons!=null)
 				{
-					App.DispatchOnUIThreadLow(() => instance.items.Set(dungeons));
+					App.DispatchOnUIThreadLow(() => instance.items.Set(dungeons,true));
 				}
 				return;
 			}
@@ -82,7 +82,7 @@ namespace COTG.Views
 				   {
 					   openCity = city.CidOr0();
 					   instance.Title = city.nameAndRemarks;
-					   instance.items.Set(dungeons);
+					   instance.items.Set(dungeons,true);
 					   instance.dungeonGrid.Visibility = Visibility.Visible;
 				   }
 				   else

@@ -68,7 +68,7 @@ namespace COTG.Views
 		//	var cur = groups.View.CurrentItem;
 		//	Log(cur?.ToString());
 		//}
-		public DumbCollection<BuildItemView> cities {get;set;} = new();
+		public NotifyCollection<BuildItemView> cities {get;set;} = new();
 
 		public static void AddOp(BuildQueueItem item, int cid)
 		{

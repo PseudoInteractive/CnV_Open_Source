@@ -57,7 +57,7 @@ namespace COTG.Views
 	public sealed partial class PlayerChangeTab : UserTab
 	{
 		public static PlayerChangeTab instance;
-		public static ResetableCollection<PlayerChanges> changes = new();
+		public static NotifyCollection<PlayerChanges> changes = new();
 
 		public override TabPage defaultPage => TabPage.secondaryTabs;
 

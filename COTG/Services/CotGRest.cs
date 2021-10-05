@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Windows.Web.Http;
+using System.Net.Http;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using Windows.Web.Http.Headers;
-using Windows.Web.Http.Filters;
+using System.Net.Http.Headers;
+using System.Net.Http.Json;
 using static COTG.Debug;
 using System.Web;
 using COTG.Game;
@@ -58,7 +58,6 @@ namespace COTG.Services
 
 		public virtual async Task<bool> AcceptAndProcess(HttpResponseMessage resp, bool except)
 		{
-
 			try
 			{
 					var a = await AsArray(resp).ConfigureAwait(false);
@@ -110,9 +109,7 @@ namespace COTG.Services
 		//}
 		private static async Task<byte[]> AsArray(HttpResponseMessage resp)
 		{
-			var buffer = await resp.Content.ReadAsBufferAsync();
-
-			return (buffer).ToArray();
+			return await resp.Content.ReadAsByteArrayAsync().ConfigureAwait(false);
 		}
 
 		public static async Task<string> AcceptText(HttpResponseMessage resp, bool except=false)
@@ -228,19 +225,19 @@ namespace COTG.Services
 				var uri = new Uri(JSClient.httpsHost, localPath);
 				{
 					var req = new HttpRequestMessage(HttpMethod.Post,uri);
-					req.Content = new HttpStringContent(postContent,
-								Windows.Storage.Streams.UnicodeEncoding.Utf8,
+					req.Content = new StringContent(postContent,
+								Encoding.UTF8,
 								"application/x-www-form-urlencoded");
 					//req.TransportInformation.
-					req.Content.Headers.TryAppendWithoutValidation("Content-Encoding", JSClient.PlayerToken(pid));
-					req.Headers.Cookie.ParseAdd(JSClient.cookies);
+					req.Content.Headers.TryAddWithoutValidation("Content-Encoding", JSClient.PlayerToken(pid));
+				//	req.Headers.Cookie.ParseAdd(JSClient.cookies);
 
 					//                req.Headers.Append("Sec-Fetch-Site", "same-origin");
 					//    req.Headers.Append("Sec-Fetch-Mode", "cors");
 					//    req.Headers.Append("Sec-Fetch-Dest", "empty");
 
 					HttpClient client = JSClient.httpClient;
-					var respT = client.SendRequestAsync(req,headersOnly? HttpCompletionOption.ResponseHeadersRead: HttpCompletionOption.ResponseContentRead);
+					var respT = client.SendAsync(req,headersOnly? HttpCompletionOption.ResponseHeadersRead: HttpCompletionOption.ResponseContentRead);
 					req =null;
 					//     Log($"res: {resp.GetType()} {resp.Succeeded} {resp}");
 					//     Log($"req: {resp.RequestMessage.ToString()}");
@@ -610,16 +607,9 @@ namespace COTG.Services
 			{
 				var msg = new ScanDungeons(_cid);
 				var resp = await msg.Send(false);
-				var buff = await resp.Content.ReadAsBufferAsync();
+				var buff = await resp.Content.ReadAsByteArrayAsync();
 
-				var temp = new byte[buff.Length - 1];
-
-				using (var dataReader = Windows.Storage.Streams.DataReader.FromBuffer(buff))
-				{
-					dataReader.ReadByte(); // for some reason, the first two are '\n'
-					dataReader.ReadBytes(temp);
-				}
-				var dec2 = Encoding.UTF8.GetString(temp);
+				var dec2 = Encoding.UTF8.GetString(buff);
 				if (!dec2.IsNullOrEmpty())
 				{
 					var temps = Aes.Decode(dec2, secret);
@@ -721,7 +711,7 @@ namespace COTG.Services
 			}
 			if (!changed.IsNullOrEmpty())
 			{
-				changed.NotifyChange(nameof(Spot.tsHome), nameof(Spot.tsRaid), nameof(Spot.tsTotal));
+				changed.NotifyChange("");
 			}
 			//  Log("Got JS for troop overview");
 			//  Log(json.ToString());
@@ -1063,7 +1053,7 @@ namespace COTG.Services
 			var result = await p.Send(postContent, except);
 			if (result == null)
 				return false;
-			if (result.StatusCode == HttpStatusCode.Ok)
+			if (result.StatusCode == System.Net.HttpStatusCode.OK)
 				return true;
 			Log($"HTTP: {result.StatusCode} url:{url} post:{postContent}");
 			return false;
@@ -1248,7 +1238,8 @@ namespace COTG.Services
 				//	await Task.Delay(128);
 				//}
 				var client = JSClient.httpClient;
-				var buff = await client.GetBufferAsync(new Uri(JSClient.httpsHost, $"maps/newmap/rmap6.json?a={HttpUtility.UrlEncode(DateTime.Now.ToString("R"))}"));
+				return  await client.GetFromJsonAsync<TileData>(new Uri(JSClient.httpsHost, $"maps/newmap/rmap6.json?a={HttpUtility.UrlEncode(DateTime.Now.ToString("R"))}"));
+	//			return JsonSerializer.Deserialize<TileData>(byte);
 				/*
 				 * GET /maps/newmap/rmap6.json?a=Sat%20Mar%2013%202021%2014:24:01%20GMT-0800%20(Pacific%20Standard%20Time) HTTP/1.1
 			  Host: w23.crownofthegods.com
@@ -1266,23 +1257,23 @@ namespace COTG.Services
 			  Cookie: _ga=GA1.2.1055797043.1609264074; _fbp=fb.1.1609264074502.2131400288; __gads=ID=bb534c2c262b5eb1-227ecd5a79c5009f:T=1609264077:RT=1609264077:S=ALNI_MbiRMZeGoatJbQVm5gpAomH5vSxRw; MicrosoftApplicationsTelemetryDeviceId=112453f2-6422-4887-88c6-12e528008f71; MicrosoftApplicationsTelemetryFirstLaunchTime=2021-02-28T01:02:30.235Z; remember_me=c50f0c70cd; _gid=GA1.2.991235873.1615674212; _gat=1; sec_session_id=4fr7soo40b1255mi6f1hjspee3
 			  */
 
-				if (buff != null)
-				{
-					var temp = new byte[buff.Length];
+				//if (buff != null)
+				//{
+				//	var temp = new byte[buff.Length];
 
-					using (var dataReader = Windows.Storage.Streams.DataReader.FromBuffer(buff))
-					{
-						dataReader.ReadBytes(temp);
-					}
+				//	using (var dataReader = Windows.Storage.Streams.DataReader.FromBuffer(buff))
+				//	{
+				//		dataReader.ReadBytes(temp);
+				//	}
 
-					// Log("Hello!");
-					return JsonSerializer.Deserialize<TileData>(temp);
-					// Log("Helllo!");
-				}
-				else
-				{
-					Log("Error!");
-				};
+				//	// Log("Hello!");
+				//	return JsonSerializer.Deserialize<TileData>(temp);
+				//	// Log("Helllo!");
+				//}
+				//else
+				//{
+				//	Log("Error!");
+				//};
 			}
 			catch (Exception e)
 			{

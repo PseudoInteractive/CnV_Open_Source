@@ -7,6 +7,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 	xmlns:views="using:COTG.Views"
 	Loaded="OnLoaded"
+	Tag="WebView"
     mc:Ignorable="d">
 	<Grid>
 		<Grid.Resources>
@@ -86,36 +87,6 @@
 			   
 			      />
 
-        <StackPanel Visibility="{x:Bind IsLoadingVisibility, Mode=OneWay}"
-                    HorizontalAlignment="Center"
-                    VerticalAlignment="Center">
-            <ProgressRing IsActive="{x:Bind IsLoading, Mode=OneWay}" />
-            <TextBlock x:Uid="WebView_Loading" />
-        </StackPanel>
-        <StackPanel Visibility="{x:Bind FailedMesageVisibility, Mode=OneWay}"
-                    HorizontalAlignment="Center"
-                    VerticalAlignment="Center">
-            <TextBlock HorizontalAlignment="Center" x:Uid="WebView_FailedMessage" TextWrapping="WrapWholeWords" />
-            <HyperlinkButton Click="OnRetry" x:Uid="WebView_Retry" HorizontalAlignment="Center" />
-        </StackPanel>
 
-        <Grid VerticalAlignment="Bottom" Background="{ThemeResource SystemControlChromeHighAcrylicElementMediumBrush }">
-            <StackPanel Orientation="Horizontal">
-                <Button IsEnabled="{x:Bind IsBackEnabled, Mode=OneWay}" Style="{StaticResource BrowserButtonStyle}" Click="OnGoBack" x:Uid="WebView_BrowserBackButton">
-                    <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE72B;" />
-                </Button>
-                <Button IsEnabled="{x:Bind IsForwardEnabled, Mode=OneWay}" Style="{StaticResource BrowserButtonStyle}" Click="OnGoForward" x:Uid="WebView_BrowserForwardButton">
-                    <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE72A;" />
-                </Button>
-            </StackPanel >
-            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                <Button Style="{StaticResource BrowserButtonStyle}" Click="OnRefresh" x:Uid="WebView_RefreshBrowserButton">
-                    <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE72C;" />
-                </Button>
-                <Button Style="{StaticResource BrowserButtonStyle}" Click="OnOpenInBrowser" x:Uid="WebView_OpenInBrowserButton">
-                    <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE774;" />
-                </Button>
-            </StackPanel>
-        </Grid>
     </Grid>
 </views:UserTab>

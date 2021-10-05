@@ -1501,8 +1501,7 @@ namespace COTG.Game
 						   var ch = new ChangeInfo().ComputeDeltas(data, data1);
 						   sb.Append(ch.ToString());
 						   {
-							   PlayerChangeTab.changes.Set( ch.players.Values.OrderByDescending(a => a.activity) );
-							   PlayerChangeTab.changes.NotifyReset();
+							   PlayerChangeTab.changes.Set( ch.players.Values.OrderByDescending(a => a.activity),true );
 							   var tab = PlayerChangeTab.instance;
 							   if (!tab.isFocused)
 							   {

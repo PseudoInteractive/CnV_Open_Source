@@ -42,7 +42,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Azure.Core" Version="1.19.0" />
+    <PackageReference Include="Azure.Core" Version="1.20.0" />
     <PackageReference Include="Azure.Data.Tables" Version="12.2.0" />
     <PackageReference Include="Azure.Storage.Blobs" Version="12.10.0" />
     <PackageReference Include="CommunityToolkit.WinUI" Version="7.0.3" />
@@ -79,11 +79,11 @@
     <PackageReference Include="PlayFabAllSDK" Version="1.102.210927" />
     <PackageReference Include="SharpDX" Version="4.2.0" />
     <PackageReference Include="SharpDX.D3DCompiler" Version="4.2.0" />
-    <PackageReference Include="SharpDX.Direct2D1" Version="4.2.0" />
     <PackageReference Include="SharpDX.Direct3D11" Version="4.2.0" />
     <PackageReference Include="SharpDX.DXGI" Version="4.2.0" />
     <PackageReference Include="SharpDX.MediaFoundation" Version="4.2.0" />
     <PackageReference Include="SharpGen.Runtime.COM" Version="2.0.0-beta.10" />
+    <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="6.0.0-rc.1.21451.13" />
     <PackageReference Include="System.Text.Json" Version="6.0.0-rc.1.21451.13" />
     <PackageReference Include="Telerik.WinUI.Controls.Trial" Version="0.5.0" />
     <PackageReference Include="ZString" Version="2.4.2" />
@@ -156,6 +156,7 @@
     <Compile Include="Helpers\FloatN.cs" />
     <Compile Include="Helpers\Hash.cs" />
     <Compile Include="Helpers\HSLToRGB.cs" />
+    <Compile Include="Helpers\Memory.cs" />
     <Compile Include="Helpers\NullableBool.cs" />
     <Compile Include="Helpers\Sort.cs" />
     <Compile Include="Helpers\JSON.cs" />
@@ -164,6 +165,7 @@
     <Compile Include="Helpers\NavStack.cs" />
     <Compile Include="Helpers\SmallTime.cs" />
     <Compile Include="Helpers\Span2d.cs" />
+    <Compile Include="Helpers\Streams.cs" />
     <Compile Include="Helpers\Strings.cs" />
     <Compile Include="Helpers\TeachingTips.cs" />
     <Compile Include="Helpers\Ticks.cs" />
@@ -547,6 +549,8 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
+    <None Remove="cnvCover.png" />
+    <None Remove="cnvCover2.png" />
     <None Remove="Content\Art\bgr_all_cities_destroyed.png" />
     <None Remove="Content\Art\bgr_tablet_scr_closed.png" />
     <None Remove="Content\Art\circlegradient.png" />

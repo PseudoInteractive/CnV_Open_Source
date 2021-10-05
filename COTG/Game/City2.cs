@@ -27,20 +27,23 @@ namespace COTG.Game
 		private static Building[] postQueueBuildingCache = new Building[citySpotCount];
 
 
-		public static City cachedCity;
+		public static int cachedCity;
 		static int postQueueBuildingCount = -1;
-		public static void BuildingsOrQueueChanged()
+		public  void BuildingsOrQueueChanged()
 		{
-			cachedCity = null;
-			postQueueBuildingCount = -1;
+			if(cachedCity==cid)
+			{
+				cachedCity = 0;
+				postQueueBuildingCount = -1;
+			}
 		}
 		public Building[] postQueueBuildings
 		{
 			get
 			{
-				if (cachedCity == this)
+				if (cachedCity == cid)
 					return postQueueBuildingCache;
-				cachedCity = this;
+				cachedCity = cid;
 				//if (!CityBuild.isPlanner)
 				//{
 				//var  buildingsCache = buildings;
@@ -88,8 +91,22 @@ namespace COTG.Game
 		}
 		public int postQueueTownHallLevel => CityBuild.isPlanner switch { true => 10, _ => postQueueBuildings[bspotTownHall].bl };
 
-		public int anyRequestHub=> tradeInfo is not null ? tradeInfo.resSource.Where(a=>a!=0).FirstOrDefault() : 0;
-		public int anySendHub => tradeInfo is not null ? tradeInfo.resDest.Where(a => a!=0).FirstOrDefault() : 0;
+		public int? AnyHub(bool requestHub)
+		{
+			if(tradeInfo == null)
+			{
+				Assert(false);
+				return null;
+			}
+			foreach(var i in requestHub ? tradeInfo.resSource : tradeInfo.resDest)
+			{
+				if(i !=0)
+					return i;
+			}
+			return null;
+
+		}
+		
 
 		//	public int postQueueBuildingCount => postQueueBuildings.Count(c => c.requiresBuildingSlot);
 

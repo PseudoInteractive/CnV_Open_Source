@@ -68,7 +68,7 @@ namespace COTG.Views
 		public static Spot selected => instance.attackerGrid.SelectedItem as Spot;
 		private void gridPointerPress(object sender, PointerRoutedEventArgs e)
         {
-            (var hit, var column, var pointerPoint,_) = Spot.HitTest(sender, e);
+       //     (var hit, var column, var pointerPoint,_) = Spot.HitTest(sender, e);
             //if (hit != null)
             //    defenderGrid.ShowRowDetailsForItem(hit);
 

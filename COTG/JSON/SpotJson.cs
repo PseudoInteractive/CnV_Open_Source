@@ -3,7 +3,7 @@ using System.Text.Json.Serialization;
 using System;
 using System.Linq;
 using System.Collections.Generic;
-using Windows.Web.Http;
+using System.Net.Http;
 using System.Text;
 using TroopTypeCounts = COTG.Game.TroopTypeCounts;
 //COTG.DArray<COTG.Game.TroopTypeCount>;
@@ -65,28 +65,28 @@ namespace COTG.DB
 	//		}
 	//		return rv;
 	//	}
-		public static string Serialize(HttpCookieManager cookieManager)
-		{
-			var cookies = cookieManager.GetCookies(new Uri("https://crownofthegods.com"));
-			var sb = new StringBuilder();
+	//	public static string Serialize(HttpCookieManager cookieManager)
+	//	{
+	//		var cookies = cookieManager.GetCookies(new Uri("https://crownofthegods.com"));
+	//		var sb = new StringBuilder();
 
-			bool isFirst = true;
-			foreach (var c in cookies)
-			{
-				if(isFirst)
-				{
-					isFirst = false;
-				}
-				else
-				{
-					sb.Append(';');
-				}
-				sb.Append(c.Name);
-				sb.Append('=');
-				sb.Append(c.Value);
-			}
-			return sb.ToString();
-		}
+	//		bool isFirst = true;
+	//		foreach (var c in cookies)
+	//		{
+	//			if(isFirst)
+	//			{
+	//				isFirst = false;
+	//			}
+	//			else
+	//			{
+	//				sb.Append(';');
+	//			}
+	//			sb.Append(c.Name);
+	//			sb.Append('=');
+	//			sb.Append(c.Value);
+	//		}
+	//		return sb.ToString();
+	//	}
 	}
 
 //	public sealed class SpotDB

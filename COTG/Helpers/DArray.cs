@@ -133,6 +133,11 @@ namespace COTG
 		{
 			if (size <= v.Length)
 				return;
+			if(size==0)
+			{
+				Clear();
+				return;
+			}
 			//size = size.Max(16);
 			var _v = v;
 			var wasLeased = arrayLeased;
@@ -146,8 +151,15 @@ namespace COTG
 			if (wasLeased)
 				pool.Return(_v);
 		}
+		public void Resize(int _size)
+		{
+			
+			count = _size;
+			GrowBuffer(_size);
 
-		public bool CanGrow() => count < v.Length;
+		}
+
+			public bool CanGrow() => count < v.Length;
 
 		//static public implicit operator DArray<T>(T[] e)
 		//{

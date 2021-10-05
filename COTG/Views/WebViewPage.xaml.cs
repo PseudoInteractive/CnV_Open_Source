@@ -3,10 +3,9 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
 using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
-using Windows.Web.Http;
+using System.Net.Http;
 using WebView = Microsoft.UI.Xaml.Controls.WebView2;
 using static COTG.Debug;
 using Windows.System;
@@ -19,7 +18,7 @@ namespace COTG.Views
     {
         // TODO WTS: Set the URI of the page to show by default
     //    public static Uri DefaultUrl;// = "https://docs.microsoft.com/windows/apps/";
-        public static WebViewPage instance;
+     //   public static WebViewPage instance;
      //   public WebView WebView => webView;
         
 
@@ -82,7 +81,7 @@ namespace COTG.Views
         }
 
         public string stringTable;
-		internal static CoreWebView2WebResourceRequest post;
+//		internal static CoreWebView2WebResourceRequest post;
 
 	
 
@@ -131,7 +130,7 @@ namespace COTG.Views
             InitializeComponent();
             IsLoading = true;
      //       Assert(instance == null);
-            instance = this;
+         //   instance = this;
 			//webView.CoreWebView2.ContentLoading += WebView_ContentLoading;
 			//webView.CoreWebView2.IsWeb += WebView_ScriptNotify;
 			//		webView.DOMContentLoaded += WebView_DOMContentLoaded;

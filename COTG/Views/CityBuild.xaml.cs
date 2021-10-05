@@ -483,7 +483,7 @@ namespace COTG.Views
 			};
 			
 
-	//		buildMenu.Closed += BuildMenu_Closed;
+			buildMenu.Closed += BuildMenu_Closed;
 			Style s = new Microsoft.UI.Xaml.Style { TargetType = typeof(Microsoft.UI.Xaml.Controls.FlyoutPresenter) };
 			s.Setters.Add(new Setter(MinHeightProperty, "300"));
 			s.Setters.Add(new Setter(MinWidthProperty, "300"));
@@ -539,13 +539,10 @@ namespace COTG.Views
 
 		}
 
-		private static void BuildMenu_Closed(object sender, object e)
+		private static async void BuildMenu_Closed(object sender, object e)
 		{
-			if (!contextMenuResultSelected)
-			{
-				RevertToLastAction();  // player aborted
-
-			}
+			await Task.Delay(50).ConfigureAwait(false);
+			menuOpen = false;
 		}
 
 		public CityBuild()
@@ -1207,13 +1204,15 @@ namespace COTG.Views
 		{
 			if(CityBuild.menuOpen)
 			{
+				CityBuild.menuOpen = false;
 				if(buildMenu.IsOpen)
 				{
 					buildMenu.Hide();
 					//				ShellPage.instance.buildMenuCanvas.Visibility = Visibility.Collapsed;
 					//	Assert(false);
-					return;
+					
 				}
+				return;
 			}
 			//while( CityBuild.menuOpen )
 			//{
@@ -1319,12 +1318,13 @@ namespace COTG.Views
 			//				ShellPage.instance.buildMenu.IsOpen = true;
 
 			var sc = ShellPage.CanvasToDIP(ShellPage.mousePosition).TransformPoint(ShellPage.canvas,ShellPage.instance.grid);
-			
+
 			//var bm = ShellPage.instance.buildMenu;
 			//Canvas.SetLeft(bm, sc.X - buildToolSpan / 2 - 1);
 			//Canvas.SetTop(bm, sc.Y - buildToolSpan / 2 + 41);
 			//		ShellPage.instance.buildMenuCanvas.Visibility = Visibility.Visible;
 			//bm.ContentMenuBackgroundStyle = new Style( typeof(Rectangle) ) {  (Style)Application.Current.Resources[isRight? "ContentMenuStyle" : "ContentMenu2Style"];
+			menuOpen=true;
 			sc =buildMenu.Show(sc, ShellPage.instance.grid);
 
 		}

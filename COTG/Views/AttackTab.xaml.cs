@@ -40,8 +40,8 @@ namespace COTG.Views
 		
         public static bool IsVisible() => instance.isFocused;
 
-        public static DumbCollection<City> attacksUI = new ();
-        public static DumbCollection<City> targetsUI = new ();
+        public static NotifyCollection<City> attacksUI = new ();
+        public static NotifyCollection<City> targetsUI = new ();
 		public static AttackPlanCity[] attacks => AttackPlan.plan.attacks;
 		public static AttackPlanCity[] targets => AttackPlan.plan.targets;
 		
@@ -311,7 +311,7 @@ namespace COTG.Views
 
 
 
-		private static void SyncList(AttackPlanCity[] s,DumbCollection<City> ui)
+		private static void SyncList(AttackPlanCity[] s,NotifyCollection<City> ui)
 		{
 			int iter = ui.Count;
 			while (--iter >= 0)
@@ -685,6 +685,7 @@ namespace COTG.Views
 		public static async Task AddAttacksFromString(string text,bool updateExisting)
 		{
 			using var __lock = await instance.TouchLists();
+			App.UpdateKeyStates();
 
 			try
 			{

@@ -270,28 +270,28 @@
        - Or on track pad either pinch the track pad or do a two finger scroll. I really don't know.
      - When done press F5 or refresh button and things will mostly adjust
 ### 2021/8/08
-     - **Fix**
+   - **Fix**
         - Attack Planner failed to load in release builds
 ### 2021/8/16
-     - **Fix**
-        - City stats show in raid tab
-     - **Update**
-        - Hubs will ask to build sorc tower to 10 when their score >= 2000 (configuarable)
-     - **Update**
-        - DoTheStuff will warn when a layout is very different from the current building setup and would require many moves to fix
-        - You may want to select a new layout or open planner and select "Use Buildings"
-     - **Update**
-        - For every 8 or so moves performed during a operation, DoTheStuff will warn you, allowing you to stop
-     - **Update**
-        - Use Buildings is available from the Planner tab
-     - **Fix**
-        - Attack planner will add newlines to the plans that get emailed out
+   - **Fix**
+      - City stats show in raid tab
+   - **Update**
+      - Hubs will ask to build sorc tower to 10 when their score >= 2000 (configuarable)
+   - **Update**
+      - DoTheStuff will warn when a layout is very different from the current building setup and would require many moves to fix
+      - You may want to select a new layout or open planner and select "Use Buildings"
+   - **Update**
+      - For every 8 or so moves performed during a operation, DoTheStuff will warn you, allowing you to stop
+   - **Update**
+      - Use Buildings is available from the Planner tab
+   - **Fix**
+      - Attack planner will add newlines to the plans that get emailed out
             - Why are HTML newlines so temperamental?
-     - **New**
-        - Right click on the continent/tag filter to clear it
-          - tlgger request
+   - **New**
+      - Right click on the continent/tag filter to clear it
+        - tlgger request
 ### 2021/8/21
-    - **Fix**
+   - **Fix**
         - The number of milliseconds since Unix was started is now to big to fit in an integer, this caused ministers to think that they were expired.
             - Changed the date at which Unix was started.
     - **New**
@@ -300,7 +300,25 @@
     - **Fix**
         - Boss tab has fewer focus issues
 ### 2021/8/31
-    - **Fix**
+   - **Fix**
         - Launching a second instance works
-    - **New**
+   - **New**
         - Figgis requested new Tags:  HLT, Portal and Jumper
+
+
+### 2021/10/04
+   - **Update**
+    - Switch to Chromium based web view.
+        - Cookie functionality is no longer necessary
+        - There are layer issues.  
+            - Web content cannot be both behind and in front of native content
+            - Previously we subdivided the display when COTG web dialogs appeared
+            - This no longer works, it requires further investigation
+   - **Update**
+     - There have been many changes to the client infrastructure to align with the future CnV server.
+      - Still compatible with COTG
+      - There Might be regressions
+      - Good luck.
+
+## Welcome ChuckoBuck to the dev team!
+   - ChuckoBuck is a programmer, currently working on Discord integration.

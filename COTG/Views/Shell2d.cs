@@ -200,13 +200,13 @@ namespace COTG.Views
 				{
 					//if(JSClient.view is not null && App.IsKeyPressedShift())
 					{
-						var f = JSClient.view.Focus(FocusState.Programmatic);
-						Assert(f);
+				//		var f = JSClient.view.Focus(FocusState.Programmatic);
+				//		Assert(f);
 					}
 					//else if( App.IsKeyPressedControl())
 					{
-					 var f= TabPage.mainTabs.Focus(FocusState.Programmatic);
-						Assert(f);
+				//	 var f= TabPage.mainTabs.Focus(FocusState.Programmatic);
+				//		Assert(f);
 					}
 //App.QueueOnUIThread( ()=>
 					{
@@ -234,13 +234,13 @@ namespace COTG.Views
 		{
 
 			
-			return canvas.IsLocalPointInBounds(mousePosition.X,mousePosition.Y) && !IsMouseOverChat();
+			return canvas.IsLocalPointOver(mousePosition.X,mousePosition.Y) && !IsMouseOverChat();
 		}
 		private static bool IsMouseOverChat()
 		{
 			var xf = canvas.TransformToVisual(ChatTab.tabPage );
 			var pt = xf.TransformPoint(new(mousePosition.X,mousePosition.Y));
-			return ChatTab.tabPage.IsLocalPointInBounds(pt.X,pt.Y);
+			return ChatTab.tabPage.IsLocalPointOver(pt.X,pt.Y);
 		}
 		private static bool isMouseOverCanvas => IsMouseInCanvas() && isHitTestVisible;
 
@@ -314,20 +314,22 @@ namespace COTG.Views
 			//Assert((-0.5f).FloorToInt() == -1);
 			const float dpiLimit = 96.0f;
 
-			canvas = new SwapChainPanel()
-			{
-				// DpiScale = SettingsPage.dpiScale != 0 ? SettingsPage.dpiScale : (dpiLimit / DisplayInformation.GetForCurrentView().LogicalDpi).Min(1.0f),
-				Name = "DX",
-				IsHitTestVisible = false,
-				Visibility = Visibility.Visible,
-			//	Background=null,
-				IsTabStop=true,
-				// IsTabStop = true, UseSharedDevice = true, TargetElapsedTime =
-				// TimeSpan.FromSeconds(1.0f / 60.0f),
+			canvas = _canvas;
+			
+			//{
+			//	// DpiScale = SettingsPage.dpiScale != 0 ? SettingsPage.dpiScale : (dpiLimit / DisplayInformation.GetForCurrentView().LogicalDpi).Min(1.0f),
+			//	Name = "DX",
+			//	IsHitTestVisible = false,
+			//	Visibility = Visibility.Visible,
+			////	Background=null,
+			//	IsTabStop=true,
+			//	AllowFocusOnInteraction=true,
+			//	// IsTabStop = true, UseSharedDevice = true, TargetElapsedTime =
+			//	// TimeSpan.FromSeconds(1.0f / 60.0f),
 				
-				Margin = new Thickness(0, canvasBaseYUnscaled, 0, 0),
-				// IsFixedTimeStep = false
-			};
+			//	Margin = new Thickness(0, canvasBaseYUnscaled, 0, 0),
+			//	// IsFixedTimeStep = false
+			//};
 			//keyboardProxy = new KeyboardProxy()
 			//{
 			//	AllowFocusOnInteraction = true,
@@ -389,6 +391,7 @@ namespace COTG.Views
 
 		private void KeyboardProxy_KeyDown(object sender, Microsoft.UI.Xaml.Input.KeyRoutedEventArgs e)
 		{
+			App.UpdateKeyStates();
 
 			App.InputRecieved();
 

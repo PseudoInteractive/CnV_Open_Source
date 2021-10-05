@@ -12,9 +12,9 @@ namespace COTG.BinaryMemory
     /// An UNSAFE binary memory writer. This class can be used to write binary data to a pointer.
     /// </summary>
     /// <remarks>Use this class only if you are sure that you won't write over the memory border.</remarks>
-    public   unsafe partial struct Writer
+   unsafe public  sealed class Writer
     {
-        private byte* position;
+        public byte* position;
 
         /// <summary>
         /// Initializes an UNSAFE binary memory writer.
@@ -92,8 +92,15 @@ namespace COTG.BinaryMemory
         /// <summary>
         /// The position of the writer.
         /// </summary>
-        public byte* Position => position;
+  //      unsafe public byte* Position { get 
 
+		//	{
+		//		fixed( uint* pData = data)
+		//		{
+		//			return pData + position;
+		//		}
+		//		}
+		//}
         /// <summary>
         /// Writes a boolean.
         /// </summary>

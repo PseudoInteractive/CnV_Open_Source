@@ -58,24 +58,42 @@ namespace COTG.Views
 			//{
 		//	canvas.DispatcherQueue.TryEnqueue( ()=>
 			{
-			var inputDevices = Windows.UI.Core.CoreInputDeviceTypes.Mouse;// | Windows.UI.Core.CoreInputDeviceTypes.Pen | Windows.UI.Core.CoreInputDeviceTypes.Touch;
-										 //	Log(canvas.ManipulationMode);
-										 //	canvas.ManipulationMode = ManipulationModes.All;
-			coreInputSource = canvas.CreateCoreIndependentInputSource(inputDevices);
+				try
+				{
+					var inputDevices = Windows.UI.Core.CoreInputDeviceTypes.Mouse;// | Windows.UI.Core.CoreInputDeviceTypes.Pen | Windows.UI.Core.CoreInputDeviceTypes.Touch;
+																				  //	Log(canvas.ManipulationMode);
+																				  //	canvas.ManipulationMode = ManipulationModes.All;
+					coreInputSource = canvas.CreateCoreIndependentInputSource(inputDevices);
+				}
+				catch(Exception ex)
+				{
+					Log(ex);
+				}
 
-				//	coreInputSource.InputEnabled += CoreInputSource_InputEnabled;
-			coreInputSource.PointerMoved+=CoreInputSource_PointerMoved; ;
-				coreInputSource.PointerPressed+=CoreInputSource_PointerPressed; ;
-				coreInputSource.PointerReleased+=CoreInputSource_PointerReleased; ;
-				coreInputSource.PointerEntered+=CoreInputSource_PointerEntered; ;
-				coreInputSource.PointerExited+=CoreInputSource_PointerExited; ;
-			coreInputSource.PointerCaptureLost += CoreInputSource_PointerCaptureLost;
+				coreInputSource.DispatcherQueue.TryEnqueue(DispatcherQueuePriority.Normal,() =>{
+					try
+					{
+						//	coreInputSource.InputEnabled += CoreInputSource_InputEnabled;
+						coreInputSource.PointerMoved+=CoreInputSource_PointerMoved; ;
+						coreInputSource.PointerPressed+=CoreInputSource_PointerPressed; ;
+						coreInputSource.PointerReleased+=CoreInputSource_PointerReleased; ;
+						coreInputSource.PointerEntered+=CoreInputSource_PointerEntered; ;
+						coreInputSource.PointerExited+=CoreInputSource_PointerExited; ;
+						coreInputSource.PointerCaptureLost += CoreInputSource_PointerCaptureLost;
 
-			coreInputSource.PointerWheelChanged += Canvas_PointerWheelChanged;
-				//coreInputSource.PointerCursor = 
-				//			coreInputSource.Dispatcher.ProcessEvents(CoreProcessEventsOption.ProcessUntilQuit);
-				//				coreInputSource.IsInputEnabled = true;
-				//		App.cursorDefault.Set();
+						coreInputSource.PointerWheelChanged += Canvas_PointerWheelChanged;
+
+
+					}
+					catch(Exception __ex)
+					{
+						Debug.LogEx(__ex);
+					}				
+					//coreInputSource.PointerCursor = 
+					//			coreInputSource.Dispatcher.ProcessEvents(CoreProcessEventsOption.ProcessUntilQuit);
+					//				coreInputSource.IsInputEnabled = true;
+					//		App.cursorDefault.Set();
+				});
 			}//);
 //		};
 	//	var inputWorker = ThreadPool.RunAsync(workItemHandler,WorkItemPriority.High,WorkItemOptions.TimeSliced);
@@ -628,7 +646,7 @@ namespace COTG.Views
 							//}
 							//else
 							{
-								if (IsCityView() && (cid == City.build))
+								if (IsCityView() && (cid == City.build) )
 								{
 									App.DispatchOnUIThreadLow(() =>
 									{
@@ -813,7 +831,7 @@ namespace COTG.Views
 //			else
 			{
 				// only needs for pen and touch
-				if (IsCityView())
+				if (IsCityView()  )
 				{
 					CityBuild.PointerDown(cc);
 				

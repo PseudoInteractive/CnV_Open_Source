@@ -35,7 +35,7 @@ namespace COTG.Views
         public bool waitReturn { get; set; }
 		public bool sendViaWater { get; set; }
 
-		public static ResetableCollection<City> defendants = new();
+		public static NotifyCollection<City> defendants = new();
 
         public static bool includeOffense;
         public float filterTime=6;
@@ -48,7 +48,7 @@ namespace COTG.Views
         public int _filterTSTotal { get => filterTSTotal; set { filterTSTotal = value; refresh.Go(); } }
         public int _filterTSHome { get => filterTSHome; set { filterTSHome = value; refresh.Go(); } } // need at this this many ts at home to be considered for def
         public DateTimeOffset arriveAt { get; set; } = AUtil.dateTimeZero;
-        public static DumbCollection<Supporter> supporters = new DumbCollection<Supporter>();
+        public static NotifyCollection<Supporter> supporters = new NotifyCollection<Supporter>();
         public static SupportByTroopType [] supportByTroopTypeEmpty = Array.Empty<SupportByTroopType>();
         public static int[] splitArray = { 1, 2, 3, 4, 5 };
         public static bool Include(TroopTypeCount tt) => includeOffense || tt.isDef;
@@ -181,12 +181,12 @@ namespace COTG.Views
                     if (portal)
                     {
                         if(onlyHome)
-                            supporters.Set(s.OrderByDescending(a => a.tsHome));
+                            supporters.Set(s.OrderByDescending(a => a.tsHome),true);
                         else
-                            supporters.Set(s.OrderByDescending(a => a.tsTotal));
+                            supporters.Set(s.OrderByDescending(a => a.tsTotal),true);
                     }
                     else
-                        supporters.Set(s.OrderBy(a => a.travel - a.validTargets ));
+                        supporters.Set(s.OrderBy(a => a.travel - a.validTargets ),true);
 					
 					defendants.NotifyReset();
                 }

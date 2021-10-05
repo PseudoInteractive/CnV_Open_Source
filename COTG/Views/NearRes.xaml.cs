@@ -49,7 +49,7 @@ namespace COTG.Views
 		public int filterCartsHome { get; set; } = 100; // need at this this many ts at home to be considered for def
 		public int filterShipsHome { get; set; } = 10; // need at this this many ts at home to be considered for def
 		public DateTimeOffset arriveAt { get; set; } = AUtil.dateTimeZero;
-		public static DumbCollection<ResSource> supporters = new DumbCollection<ResSource>();
+		public static NotifyCollection<ResSource> supporters = new NotifyCollection<ResSource>();
 
 		public BitmapImage targetIcon => target.icon;
 		public string targetName => target.nameAndRemarks;
@@ -310,7 +310,7 @@ namespace COTG.Views
 						});
 
 					}
-					supporters.Set(s);
+					supporters.Set(s,true);
 
 					//	supportGrid.ItemsSource = supporters;
 
@@ -441,6 +441,8 @@ namespace COTG.Views
 
 		private async void SendClick(object sender, RoutedEventArgs e)
 		{
+			App.UpdateKeyStates();
+
 			var text = sender as FrameworkElement;
 			var s = text.DataContext as ResSource;
 			var city = s.city;
@@ -448,7 +450,8 @@ namespace COTG.Views
 			var cid = city.cid;
 			var secret = $"JJx452Tdd{pid}sRAssa";
 			var reqF = $"{{\"a\":{s.res.wood},\"b\":{s.res.stone},\"c\":{s.res.iron},\"d\":{s.res.food},\"cid\":{s.city.cid},\"rcid\":{target.cid},\"t\":\"{(viaWater?2:1)}\"}}"; // t==1 is land, t==2 is water
-			int count = App.IsKeyPressedShiftAndControl() ? 4 : 1;
+			int count = App.IsKeyPressedShiftAndControl() ? 8 : 1;
+			Trace(count.ToString());
 			string res = string.Empty;
 			for (int j = 0; j < count; ++j)
 			{

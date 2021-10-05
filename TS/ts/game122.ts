@@ -14217,16 +14217,16 @@ function outer(){
 							city.bq.splice(0, 1);
 						    
 							h9(J1g, n1g);
-							updateBuildQueue();
+							//updateBuildQueue();
 							//redrawCity();
 	   // this one is complete
 							let delay = Z1g+100;
-								if( delay < 1000)
-									delay = 1000;
+								if( delay < 100)
+									delay = 100;
   						
-								DoPoll2(delay + 300);
-								callDelay=delay;
-							//	clearTimeout(i8);
+								DoPoll2(delay);
+							//	callDelay=delay;
+								clearTimeout(i8);
 							//	callDelay = 0;
 						}
 

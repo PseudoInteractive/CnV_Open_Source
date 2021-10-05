@@ -1,6 +1,5 @@
 ﻿using COTG.Game;
 using COTG.Views;
-
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -8,329 +7,224 @@ using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
-
 using Windows.System;
-
 using static COTG.Debug;
+
 namespace COTG
 {
-
-    // All updates should happen on the UI thread atomically and synchronously which will reduce the need for synchronization
-    // we do not track individual properties
-    public class DumbCollection<T> : List<T>, INotifyCollectionChanged, INotifyPropertyChanged
-    {
-        public event NotifyCollectionChangedEventHandler CollectionChanged;
-		public void OnPropertyChanged(T city, string propertyName = "") => PropertyChanged?.Invoke(city, new PropertyChangedEventArgs(propertyName));
-		public void OnPropertyChanged( string propertyName = "") => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-		public event PropertyChangedEventHandler PropertyChanged;
-
-
-		public DumbCollection(IList<T> collection)
-        {
-            Set(collection);
-        }
-
-        public DumbCollection()
-        {
-        }
-
-
-
-		//public void NotifyChange(T changedItem)
-		//{
-		//    var dummy = PropertyChanged;
-		//    PropertyChanged?.Invoke(changedItem, new PropertyChangedEventArgs(string.Empty));
-
-		//    //            CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Replace, changedItem, changedItem));
-		//}
-
-
-		public void NotifyReset()
-		{
-			if (CollectionChanged != null)
-			{
-				App.QueueOnUIThread(() =>{
-
-				   //  Assert(App.IsOnUIThread());
-				try
-				{
-					CollectionChanged(this,new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
-
-
-				}
-				catch(Exception __ex)
-				{
-					Debug.LogEx(__ex);
-				} }			);
-			}
-        }
-
-        public void Set(IEnumerable<T> src)
-        {
-			if (Count>0)
-				base.Clear();
-			else
-			{
-
-				if (src==null)
-				{
-					return;
-				}
-			}
-			
-			if (src != null)
-			{
-				base.AddRange(src);
-			}
-			//App.DispatchOnUIThreadLow(() =>
-   //         {
-   //             // catch for thread safety
-               
-                NotifyReset();
-			//   });
-			
-        }
-        public new void Clear()
-        {
-            Set(null);
-        }
-
-
-		//       public void OnPropertyChanged(string propertyName) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-
-		//public new Task AddAsync(T item)
-		//{
-		//	int id = Count;
-		//	base.Add(item);
-		//	if (CollectionChanged != null)
-		//		return App.DispatchOnUIThreadTask(() => CollectionChanged.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, item, id)));
-		//	else
-		//		return Task.CompletedTask;
-		//}
-
-		public new void Add(T item)
-        {
-            base.Add(item);
-			if(CollectionChanged!=null)
-	            App.DispatchOnUIThreadLow( ()=>
-				{
-					try
-					{
-						var id = IndexOf(item);
-						if(id != -1)
-							CollectionChanged.Invoke(this,new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add,item,id));
-						else
-							CollectionChanged.Invoke(this,new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
-
-					}
-					catch(Exception __ex)
-					{
-						Debug.LogEx(__ex);
-					}
-				});
-        }
-        public new void Insert(int id, T item)
-        {
-            base.Insert(id, item);
-			if (CollectionChanged != null)
-				App.DispatchOnUIThreadLow(() =>
-				{
-					try
-					{
-						var id = IndexOf(item);
-						if(id != -1)
-							CollectionChanged.Invoke(this,new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add,item,id));
-						else
-							CollectionChanged.Invoke(this,new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
-
-					}
-					catch(Exception __ex)
-					{
-						Debug.LogEx(__ex);
-					}
-				});
-        }
-        public new void RemoveAt(int id)
-        {
-            var item = base[id];
-            base.RemoveAt(id);
-			var count = Count;
-			if (CollectionChanged != null)
-				App.DispatchOnUIThreadLow(() =>
-				{
-					try
-					{
-						if(id <= Count)
-							CollectionChanged.Invoke(this,new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove,item,id));
-						else
-							CollectionChanged.Invoke(this,new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
-
-					}
-					catch(Exception __ex)
-					{
-						Debug.LogEx(__ex);
-					}
-				});
-        }
-        public new void Remove(T i)
-        {
-            var index = IndexOf(i);
-            if (index >= 0)
-            {
-                RemoveAt(index);
-            }
-        }
-
-
-    }
-
-	// A List that allows manual reset notifications to be sent for large scale changes
-	// does not support find grained changes, any changes should be promoted to a reset
-	public class ResetableCollection<T> : List<T>, INotifyCollectionChanged, INotifyPropertyChanged
+	public class NotifyCollection<T> : List<T>, INotifyCollectionChanged,INotifyPropertyChanged
 	{
 		public event NotifyCollectionChangedEventHandler CollectionChanged;
-		public void OnPropertyChanged(T city, string propertyName = "") => PropertyChanged?.Invoke(city, new PropertyChangedEventArgs(propertyName));
-		public void OnPropertyChanged(string propertyName = "") => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+		public void OnPropertyChanged(T city,string propertyName = "") => PropertyChanged?.Invoke(city,new PropertyChangedEventArgs(propertyName));
+		public void OnPropertyChanged(string propertyName = "") => PropertyChanged?.Invoke(this,new PropertyChangedEventArgs(propertyName));
 		public event PropertyChangedEventHandler PropertyChanged;
 
+		protected long lastHash;
 
-		public static ResetableCollection<T> empty = new();
-
-		public void NotifyReset(T[] changed = null)
+		public static long GetHashCode(IEnumerable<T> v)
 		{
-			App.DispatchOnUIThreadIdle(() =>
+			var hash = 0;
+			foreach(var i in v)
 			{
-				OnPropertyChanged();
-				//  Assert(App.IsOnUIThread());
-				if (CollectionChanged != null)
+				hash = hash*13 + RuntimeHelpers.GetHashCode(v);
+			}
+			return hash;
+		}
+
+
+		public void NotifyReset(bool itemsChanged)
+		{
+			
+			var newHash = GetHashCode(this);
+			var hashChanged = newHash != lastHash;
+			if( !hashChanged && !itemsChanged )
+				return;
+			lastHash= newHash;
+
+			if(CollectionChanged != null)
+			{
+				App.DispatchOnUIThreadIdle(() =>
 				{
-					if (changed != null)
+					try
 					{
-						CollectionChanged(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset, changed as IList ));
+						if(itemsChanged)
+							OnPropertyChanged();
+					//  Assert(App.IsOnUIThread());
+						if( hashChanged)
+						{
+							CollectionChanged(this,new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
+						}
+
 					}
-					else
+					catch(Exception __ex)
 					{
-						CollectionChanged(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
+						Debug.LogEx(__ex);
 					}
-				}
-		});
+				});
+			}
 
 		}
-		public Task NotifyResetAsync(T[] changed = null)
+
+		public void NotifyInsert(int id,T added)
 		{
-			return App.DispatchOnUIThreadTask(  () =>
+			if(CollectionChanged != null)
 			{
-				OnPropertyChanged();
-				//  Assert(App.IsOnUIThread());
-				if (CollectionChanged != null)
+				App.DispatchOnUIThreadIdle(() =>
 				{
-					if (changed != null)
+					try
 					{
-						CollectionChanged(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset, changed as IList));
+						//  Assert(App.IsOnUIThread());
+						try
+						{
+							CollectionChanged(this,new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add,added,id));
+
+
+						}
+						catch(Exception __ex)
+						{
+							Debug.LogEx(__ex);
+						}
+
 					}
-					else
+					catch(Exception __ex)
 					{
-						CollectionChanged(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
-					}
-				}
-				return Task.CompletedTask;
-			});
+						Debug.LogEx(__ex);
+					}				
+				});
+			}
+		}
 
-		}
-		public void NotifyItemsChanged()
-		{
-			App.DispatchOnUIThreadIdle(() =>
-			{
-				foreach(var i in this)
-					OnPropertyChanged(i);
-			});
-
-		}
-		public void NotifyAdd( T added )
-		{
-			App.DispatchOnUIThreadLow(() =>
-			{
-				//  Assert(App.IsOnUIThread());
-				if (CollectionChanged != null)
-				{
-					CollectionChanged(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, added));
-				}
-			});
-		}
 		public void NotifyAdd(IList<T> added)
 		{
-			App.DispatchOnUIThreadLow(() =>
+			if(CollectionChanged != null)
 			{
-				//  Assert(App.IsOnUIThread());
-				if (CollectionChanged != null)
+				App.DispatchOnUIThreadIdle( () =>
 				{
-					CollectionChanged(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, added as IList));
-				}
-			});
-			
+					//  Assert(App.IsOnUIThread());
+					try
+					{
+						CollectionChanged(this,new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add,added as IList));
+
+
+					}
+					catch(Exception __ex)
+					{
+						Debug.LogEx(__ex);
+					}				
+				});
+			}
+
 		}
-		public void NotifyRemove(T removed)
+		public void NotifyRemoveAt(int id,T removed)
 		{
-			App.DispatchOnUIThreadLow(() =>
+			if(CollectionChanged != null )
 			{
-				//  Assert(App.IsOnUIThread());
-				if (CollectionChanged != null)
+				var _count = Count;
+				App.DispatchOnUIThreadIdle(() =>
 				{
-					CollectionChanged(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, removed));
-				}
-			});
+					try
+					{
+						if(id <= _count)
+							CollectionChanged.Invoke(this,new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove,removed,id));
+						else
+						{
+							NotifyReset();
+						}
+					}
+					catch(Exception __ex)
+					{
+						Debug.LogEx(__ex);
+					}
+				});
+			}
 		}
+		
 		public void NotifyRemove(IList<T> removed)
 		{
-			App.DispatchOnUIThreadLow(() =>
+			if(CollectionChanged != null)
 			{
-				//  Assert(App.IsOnUIThread());
-				if (CollectionChanged != null)
+				App.DispatchOnUIThreadIdle(() =>
 				{
-					CollectionChanged(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, removed as IList));
-				}
-			});
-		}
-		//public void NotifyMove(T moved, int oldIndex, int newIndex)
-		//{
-		//	App.DispatchOnUIThreadSneakyLow(() =>
-		//	{
-		//		//  Assert(App.IsOnUIThread());
-		//		if (CollectionChanged != null)
-		//		{
-		//			CollectionChanged(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Move,moved,newIndex, oldIndex ));
-		//		}
-		//	});
-		//}
-		public void Set( IEnumerable<T> src)
-		{
-			Clear();
-			base.AddRange(src);
-			NotifyReset();
-		}
-		public new void AddRange(IEnumerable<T> src)
-		{
-			Assert(false);
-			base.AddRange(src);
-			if (src is IList<T> _src)
-			{
-				NotifyAdd(_src);
+					try
+					{
+						CollectionChanged(this,new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove,removed as IList));
+
+
+					}
+					catch(Exception __ex)
+					{
+						Debug.LogEx(__ex);
+					}			
+				});
 			}
-			else
+		}
+		public void Add(T item,bool notify)
+		{
+			var id = Count;
+			base.Add(item);
+			if(notify)
+				NotifyInsert(id,item);
+		}
+		public  void Insert(int id,T item,bool notify)
+		{
+			base.Insert(id,item);
+			if(notify && CollectionChanged != null)
 			{
-				Assert(false);
-				NotifyReset();
+				NotifyInsert(id,item);
+			}
+		}
+		public void RemoveAt(int id,bool notify)
+		{
+			var item = base[id];
+			base.RemoveAt(id);
+			if(notify)
+				NotifyRemoveAt(id,item);
+		}
+		public void Remove(T i,bool notify)
+		{
+			var index = IndexOf(i);
+			if(index >= 0)
+			{
+				RemoveAt(index);
+				if(notify)
+					NotifyRemoveAt(index,i);
 			}
 		}
 
+		public void Set(IEnumerable<T> src,bool notify)
+		{
+			if(src.SequenceEqual(this))
+				return;
+
+			base.Clear();
+			if(!src.IsNullOrEmpty() )
+				base.AddRange(src);
+			if(notify)
+				NotifyReset();
+		}
+		public void Clear(bool notify)
+		{
+			Set(null,notify);
+		}
+		// do not use these
+		private new void Clear() { }
+		private new void Add(T a) { }
+		private new void Insert(int a,T b) { }
+		private new void Remove(T a) { }
+		private new void RemoveAt(int a) { }
+		private new void AddRange(IEnumerable<T>   a) { }
 	}
-	public class ACollection<T> : ObservableCollection<T>
-	{
-		public void NotifyReset() => OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
-		public void NotifyPropertyChange() => OnPropertyChanged(new PropertyChangedEventArgs(string.Empty));
-	}
+
+
+
+	//public class ACollection<T> : ObservableCollection<T>
+	//{
+	//	public void NotifyReset() => OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
+	//	public void NotifyPropertyChange() => OnPropertyChanged(new PropertyChangedEventArgs(string.Empty));
+	//}
 	public static class DumbHelpers
     {
         public static void NotifyChange(this HashSet<City> items, params string[] memberName)
