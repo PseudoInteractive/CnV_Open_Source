@@ -119,7 +119,7 @@ namespace COTG.Services
 					var dt = currentT - lastWritten;
 					if (dt.TotalMinutes > minTimeBetweenSnapshots)
 					{
-						COTG.Debug.Trace("Snapshot");
+					//	COTG.Debug.Trace("Snapshot");
 						// take a snapshot
 						var snap = await Snapshot.GetStats();
 						using (var mem = new MemoryStream())
@@ -215,7 +215,7 @@ namespace COTG.Services
 					var dt = currentT - lastWritten;
 					if (dt.TotalMinutes > minTimeBetweenSnapshots)
 					{
-						COTG.Debug.Trace("Snapshot");
+					//	COTG.Debug.Trace("Snapshot");
 						// take a snapshot
 						var snap = await TSSnapshot.GetStats();
 						using (var mem = new MemoryStream())

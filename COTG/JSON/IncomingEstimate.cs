@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-using static COTG.Game.Enum;
+using static COTG.Game.Troops;
 
 namespace COTG.Game
 {

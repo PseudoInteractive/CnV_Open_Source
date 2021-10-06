@@ -15,7 +15,7 @@ using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
-using static COTG.Game.Enum;
+using static COTG.Game.Troops;
 using static COTG.Debug;
 using COTG.Helpers;
 using System.ComponentModel;
@@ -76,10 +76,9 @@ namespace COTG.Views
 				{
 					var focus = Spot.GetFocus();
 					if (focus.isCityOrCastle)
-						defendants.Add(focus);
+						defendants.Add(focus,true);
 					else
-						defendants.Add(City.GetBuild());
-					defendants.NotifyReset();
+						defendants.Add(City.GetBuild(),true);
 				}
 
 				var viaWater = sendViaWater && defendants.Any(d => d.isOnWater);
@@ -124,7 +123,7 @@ namespace COTG.Views
 							}
 
 						// re-use if possible
-						var supporter = supporters.Find((a) => a.city == city);
+						var supporter = supporters.c.Find((a) => a.city == city);
 						if (supporter == null)
 						{
 							supporter = new Supporter() { city = city };
@@ -195,7 +194,7 @@ namespace COTG.Views
             }
             else
             {
-                supporters.Clear();
+				supporters.Clear(true);
 				App.DispatchOnUIThreadLow( ()=>
 				
                 troopTypeGrid.ItemsSource=supportByTroopTypeEmpty
@@ -422,13 +421,13 @@ namespace COTG.Views
                 if (e.Column.SortDirection == null)
                 {
                     e.Column.SortDirection = DataGridSortDirection.Descending;
-                    supporters.SortSmall(comparer);
+                    supporters.c.SortSmall(comparer);
                     supporters.NotifyReset();
                 }
                 else if(e.Column.SortDirection == DataGridSortDirection.Descending)
                 {
                     e.Column.SortDirection = DataGridSortDirection.Ascending;
-                    supporters.SortSmall((b, a) => comparer(a,b) ); // swap order of comparison
+                    supporters.c.SortSmall((b, a) => comparer(a,b) ); // swap order of comparison
                     supporters.NotifyReset();
                 }
                 else

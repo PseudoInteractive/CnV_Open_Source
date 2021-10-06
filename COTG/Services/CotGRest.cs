@@ -12,7 +12,7 @@ using static COTG.Debug;
 using System.Web;
 using COTG.Game;
 using COTG.Helpers;
-using static COTG.Game.Enum;
+using static COTG.Game.Troops;
 using COTG.Views;
 using System.Globalization;
 using COTG.JSON;
@@ -26,6 +26,8 @@ using TroopTypeCounts = COTG.Game.TroopTypeCounts;
 //COTG.DArray<COTG.Game.TroopTypeCount>;
 using TroopTypeCountsRef = COTG.Game.TroopTypeCounts;
 using static COTG.Game.TroopTypeCountHelper;
+using System.Net;
+
 //COTG.DArrayRef<COTG.Game.TroopTypeCount>;
 
 namespace COTG.Services
@@ -109,7 +111,9 @@ namespace COTG.Services
 		//}
 		private static async Task<byte[]> AsArray(HttpResponseMessage resp)
 		{
-			return await resp.Content.ReadAsByteArrayAsync().ConfigureAwait(false);
+			var rv = await resp.Content.ReadAsByteArrayAsync().ConfigureAwait(false);
+			resp.Dispose();
+			return rv;
 		}
 
 		public static async Task<string> AcceptText(HttpResponseMessage resp, bool except=false)
@@ -118,7 +122,7 @@ namespace COTG.Services
 			try
 			{
 				var buff = await resp.Content.ReadAsStringAsync();
-
+				resp.Dispose();
 				return buff;
 			}
 			catch (Exception e)
@@ -133,6 +137,7 @@ namespace COTG.Services
 
 			try
 			{
+	
 				return JsonDocument.Parse(await AsArray(resp).ConfigureAwait(false));
 
 			}
@@ -225,6 +230,7 @@ namespace COTG.Services
 				var uri = new Uri(JSClient.httpsHost, localPath);
 				{
 					var req = new HttpRequestMessage(HttpMethod.Post,uri);
+					req.Version= HttpVersion.Version20;;
 					req.Content = new StringContent(postContent,
 								Encoding.UTF8,
 								"application/x-www-form-urlencoded");
@@ -674,7 +680,7 @@ namespace COTG.Services
 
 						var split = type.Split('_', StringSplitOptions.RemoveEmptyEntries);
 						Assert(split.Length == 2);
-						var tE = Game.Enum.ttNameWithCapsAndGuard.IndexOf(split[0]);
+						var tE = Game.Troops.ttNameWithCapsAndGuard.IndexOf(split[0]);
 						if (tE < 0) // Guard
 							tE = 0;
 						var ttc = new TroopTypeCount(tE, count);
@@ -764,7 +770,7 @@ namespace COTG.Services
 							{
 								//					var count = int.Parse(str.Substring(0, tcEnd), NumberStyles.Any);
 								var typeS = str.Substring(tcEnd + 1);
-								var tE = Game.Enum.ttNameWithCapsAndBatteringRam.IndexOf(typeS);
+								var tE = Game.Troops.ttNameWithCapsAndBatteringRam.IndexOf(typeS);
 								Add(ref re.troops, new TroopTypeCount(tE, count));
 							}
 							else
@@ -1038,19 +1044,19 @@ namespace COTG.Services
 		async public static Task Get(string url, string postContent = nullPost, int _pid = -1, bool except = true, bool onlyHeaders=false)
 		{
 			var p = new Post(url, _pid);
-			await p.Send(postContent, except,onlyHeaders);
+			using var ___ =  await p.Send(postContent, except,onlyHeaders);
 
 		}
-		async public static Task<HttpResponseMessage> SendForResponse(string url, string postContent = nullPost, int _pid = -1, bool except=false)
-		{
-			var p = new Post(url, _pid);
-			return await p.Send(postContent, except);
-		}
+		//async public static Task<HttpResponseMessage> SendForResponse(string url, string postContent = nullPost, int _pid = -1, bool except=false)
+		//{
+		//	var p = new Post(url, _pid);
+		//	return await p.Send(postContent, except);
+		//}
 		async public static Task<bool> SendForOkay(string url, string postContent = nullPost, int _pid = -1, bool except = false)
 		{
 			var p = new Post(url, _pid);
-
-			var result = await p.Send(postContent, except);
+			
+			using var result = await p.Send(postContent, except);
 			if (result == null)
 				return false;
 			if (result.StatusCode == System.Net.HttpStatusCode.OK)

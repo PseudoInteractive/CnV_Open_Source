@@ -194,6 +194,7 @@ namespace COTG.Views
 					Title = city.nameAndRemarks;
 					SetCheckboxesFromTags(city.remarks);
 					Bindings.Update();
+					OnPropertyChanged();
 
 					var result = await this.ShowAsync2();
 					setResources = expandResources.IsExpanded;
@@ -536,7 +537,7 @@ namespace COTG.Views
 		{
 			var exp = sender as Expander;
 			Assert(exp!=null);
-			exp.Header = exp.Header as string + " - No Change";
+			exp.Header =( exp.Header as string) + " - No Change";
 		}
 		private void ExpandedEnable(object sender, EventArgs e)
 		{
@@ -661,21 +662,18 @@ namespace COTG.Views
 			for (int i = 0; i < dir.Length - 1; ++i)
 			{
 				pathSoFar = pathSoFar + '~' + dir[i];
-				var parent = myList.Find((a) => a.label == dir[i]);
+				var parent = myList.c.Find((a) => a.label == dir[i]);
 				if (parent == null)
 				{
 					parent = new ShareStringItem(pathSoFar, true);
-					myList.Add(parent);
+					myList.Add(parent,false);
 				}
 				myList = parent.children;
 			}
-			var existing = myList.Find(a => a.path == path);
-			// replace
-			if (existing != null)
-				myList.Remove(existing);
-
-			myList.Add(this);
-			all.NotifyReset();
+			myList.Remove( a=>a.path==path ,false);
+		
+			myList.Add(this,false);
+			all.NotifyReset(true);
 		}
 		
 

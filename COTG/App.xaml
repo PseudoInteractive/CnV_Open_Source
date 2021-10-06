@@ -11,17 +11,23 @@
 			<ResourceDictionary.MergedDictionaries>
 				<XamlControlsResources xmlns="using:Microsoft.UI.Xaml.Controls" />
 
-				<ColorPaletteResources Accent="#FF56207D" AltHigh="#FF400000" AltLow="#FF2F982F" AltMedium="#FF404040" AltMediumHigh="#FF606060" AltMediumLow="#FF505050" BaseHigh="#FFFFFFFF" BaseLow="#FF4F1A1A" BaseMedium="#FF699B4F" BaseMediumHigh="#FFCAA6A6" BaseMediumLow="#FF405252" ChromeAltLow="#FFCAA6A6" ChromeBlackHigh="#FF000000" ChromeBlackLow="#FFCAA6A6" ChromeBlackMedium="#FF404040" ChromeBlackMediumLow="#FF606060" ChromeDisabledHigh="#FF4F1A1A" ChromeDisabledLow="#FFB18A8A" ChromeGray="#FFF0FFF0" ChromeHigh="#FF446E6E" ChromeLow="#FF330505" ChromeMedium="#FF3A0A0A" ChromeMediumLow="#80481515" ChromeWhite="#FFFFFFFF" ListLow="#FF3A0A0A" ListMedium="#FF4F1A1A" />
+				<ColorPaletteResources Accent="#FF56207D" AltHigh="#B0400000" AltLow="#B000F000" AltMedium="#B0404040" AltMediumHigh="#B0606060" AltMediumLow="#B0505050" BaseHigh="#FFFFFFFF" BaseLow="#804F1A1A" BaseMedium="#80B1FA8A" BaseMediumHigh="#80CAA6A6" BaseMediumLow="#80405252" ChromeAltLow="#FFCAA6A6" ChromeBlackHigh="#FF000000" ChromeBlackLow="#FFCAA6A6" ChromeBlackMedium="#FF404040" ChromeBlackMediumLow="#FF606060" ChromeDisabledHigh="#FF4F1A1A" ChromeDisabledLow="#FFB18A8A" ChromeGray="#7F103F10" ChromeHigh="#FF246E2E" ChromeLow="#A0330505" ChromeMedium="#A03A0A0A" ChromeMediumLow="#80481515" ChromeWhite="#FFFFFFFF" ListLow="#FF3A0A0A" ListMedium="#FF4F1A1A" />
 				<ResourceDictionary>
-					
+					<Color x:Key="SystemChromeAltMediumHighColor">#CC0E210F</Color>
+					<Color x:Key="SystemChromeAltHighColor">#FF4F1A1A</Color>
+					<Color x:Key="SystemRevealListLowColor">#FF3A0A0A</Color>
+					<Color x:Key="SystemRevealListMediumColor">#FF4F1A1A</Color>
+					<AcrylicBrush x:Key="SystemControlAcrylicWindowBrush" TintColor="{ThemeResource SystemChromeAltHighColor}" TintOpacity="0.8" FallbackColor="{ThemeResource SystemChromeMediumColor}" />
+
 					<!-- Override system generated accent colors -->
-					<Color x:Key="SystemAccentColorDark1">#FF8845B8</Color>
-					<Color x:Key="SystemAccentColorDark2">#FF7942A0</Color>
-					<Color x:Key="SystemAccentColorDark3">#FF654180</Color>
-					<Color x:Key="SystemAccentColorLight3">#FF993DCE</Color>
-					<Color x:Key="SystemAccentColorLight2">#FFAB46C9</Color>
-					<Color x:Key="SystemAccentColorLight1">#FF903AB6</Color>
-					<Color x:Key="RegionColor">#FF143415</Color>
+					<Color x:Key="SystemAccentColorDark1">#FF6C3C8F</Color>
+					<Color x:Key="SystemAccentColorDark2">#FF8257A1</Color>
+					<Color x:Key="SystemAccentColorDark3">#FF9873B4</Color>
+					<Color x:Key="SystemAccentColorLight3">#FF9B15E8</Color>
+					<Color x:Key="SystemAccentColorLight2">#FF9F23C4</Color>
+					<Color x:Key="SystemAccentColorLight1">#FF8420B0</Color>
+					<Color x:Key="RegionColor">#FF0E250F</Color>
+					<SolidColorBrush x:Key="RegionBrush" Color="{StaticResource RegionColor}" />
 				</ResourceDictionary>
 				<ResourceDictionary Source="/Styles/_Colors.xaml" />
 				<ResourceDictionary Source="/Styles/_FontSizes.xaml" />
@@ -30,8 +36,6 @@
 				<ResourceDictionary Source="/Styles/Page.xaml" />
 				<ResourceDictionary Source="/Styles/BattleReport.xaml" />
 				<ResourceDictionary Source="/Styles/SharedResources.xaml" />
-
-
 
 
 			</ResourceDictionary.MergedDictionaries>

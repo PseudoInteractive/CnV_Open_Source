@@ -69,117 +69,124 @@ namespace COTG
 	//	static CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
 		public static async void Show(string s, Priority priority=Priority.medium, bool useInfoBar = false, int timeout = 5000)
 		{
-			const int noteDelay = 3;
-			const int noteDelayHigh = 5;
-			if(ShellPage.instance != null)
+			try
 			{
-				//if (!initialized)
-				//{
-				//	initialized = true;
-				//	App.DispatchOnUIThread(() =>
-				//	{
-				//		ShellPage.inAppNote.Closed += InAppNote_Closed;
-				//		//		ShellPage.instance.infoBar.CloseButtonClick += InfoBar_CloseButtonClick;
-				//		//		ShellPage.instance.infoMD.LinkClicked += MarkDownLinkClicked;
-				//	});
-				//}
-				App.DispatchOnUIThreadLow(() =>
+				const int noteDelay = 3;
+				const int noteDelayHigh = 5;
+				if(ShellPage.instance != null)
 				{
-					ChatTab.L(s);
-				});
-
-				//var now = DateTime.UtcNow;
-				//var next = nextInAppNote;
-				//var _priority = priority;
-				//if (now >= next || ((priority >= Priority.high)))
-				//{
-				//	// all clear
-				//	nextInAppNote = now + TimeSpan.FromSeconds(;
-				//}
-				//else
-				//{
-				//	if (priority == Priority.low)
-				//		return;
-				//	var wait = (next - now);
-				//	if (wait.TotalSeconds >= 20.0f && priority < Priority.high)
-				//		return;
-
-				//	nextInAppNote = next + TimeSpan.FromSeconds(noteDelay);
-
-				//	try
-				//	{
-				//		await Task.Delay(wait, cancellationTokenSource.Token);
-
-				//	}
-				//	catch (Exception _exception)
-				//	{
-				//		Log(_exception.Message);
-				//		return;
-				//	}
-
-				//}
-
-			//	App.DispatchOnUIThreadLow(() =>
-				{
-					//ChatTab.L(s);
-					
-				//	currentPriority = _priority;
-					//if (ShellPage.instance.infoBar.IsOpen)
+					//if (!initialized)
 					//{
-					//	wasOpen = true;
-					//	ShellPage.instance.infoBar.IsOpen = false;
+					//	initialized = true;
+					//	App.DispatchOnUIThread(() =>
+					//	{
+					//		ShellPage.inAppNote.Closed += InAppNote_Closed;
+					//		//		ShellPage.instance.infoBar.CloseButtonClick += InfoBar_CloseButtonClick;
+					//		//		ShellPage.instance.infoMD.LinkClicked += MarkDownLinkClicked;
+					//	});
 					//}
-					//if (!useInfoBar)
+					App.DispatchOnUIThreadLow(() =>
 					{
-						try
-						{
-							//	var textBlock = markDownText;
-							if(ShellPage.instance.noteText.StartsWith(s))
-							{
-								return;
-							}
-							else
-							{
-								ShellPage.instance.noteText =  s + "\n\n" + ShellPage.instance.noteText;
+						ChatTab.L(s);
+					});
 
-							}
-							//var textNull = ShellPage.instance.noteText.Length == 0;
-							// update on screen
-							Debounce.Q( runOnUIThread:true,action: ()=> ShellPage.instance.InAppNote.Text = ShellPage.instance.noteText, ms:100);
-							
-							Debounce.Q(ms: ((priority >= Priority.high) ? noteDelayHigh : noteDelay)*1000, 
-								runOnUIThread: true,
-								action: () =>
-							{
-								ShellPage.instance.noteText = string.Empty;
-								ShellPage.instance.InAppNote.Text = ShellPage.instance.noteText;
-							});
-
-						}
-						catch(Exception __ex)
-						{
-							Debug.LogEx(__ex);
-						}
-
-						//ShellPage.instance.infoBar.IsOpen = false;
-					}
+					//var now = DateTime.UtcNow;
+					//var next = nextInAppNote;
+					//var _priority = priority;
+					//if (now >= next || ((priority >= Priority.high)))
+					//{
+					//	// all clear
+					//	nextInAppNote = now + TimeSpan.FromSeconds(;
+					//}
 					//else
 					//{
-					//	var textBlock = new MarkdownTextBlock() { Text = s, Background = null };
-					//	ShellPage.instance.infoMD.Text = s;
-					//	if (wasOpen)
+					//	if (priority == Priority.low)
+					//		return;
+					//	var wait = (next - now);
+					//	if (wait.TotalSeconds >= 20.0f && priority < Priority.high)
+					//		return;
+
+					//	nextInAppNote = next + TimeSpan.FromSeconds(noteDelay);
+
+					//	try
 					//	{
-					//		Task.Delay(500).ContinueWith((_) => ShellPage.instance.infoBar.IsOpen = true, TaskScheduler.FromCurrentSynchronizationContext());
+					//		await Task.Delay(wait, cancellationTokenSource.Token);
+
 					//	}
-					//	else
+					//	catch (Exception _exception)
 					//	{
-					//		ShellPage.instance.infoBar.IsOpen = true;
+					//		Log(_exception.Message);
+					//		return;
 					//	}
+
 					//}
+
+					//	App.DispatchOnUIThreadLow(() =>
+					{
+						//ChatTab.L(s);
+
+						//	currentPriority = _priority;
+						//if (ShellPage.instance.infoBar.IsOpen)
+						//{
+						//	wasOpen = true;
+						//	ShellPage.instance.infoBar.IsOpen = false;
+						//}
+						//if (!useInfoBar)
+						{
+							try
+							{
+								//	var textBlock = markDownText;
+								if(ShellPage.instance.noteText.StartsWith(s))
+								{
+									return;
+								}
+								else
+								{
+									ShellPage.instance.noteText =  s + "\n\n" + ShellPage.instance.noteText;
+
+								}
+								//var textNull = ShellPage.instance.noteText.Length == 0;
+								// update on screen
+								Debounce.Q(runOnUIThread: true,action: () => ShellPage.instance.InAppNote.Text = ShellPage.instance.noteText,ms: 100);
+
+								Debounce.Q(ms: ((priority >= Priority.high) ? noteDelayHigh : noteDelay)*1000,
+									runOnUIThread: true,
+									action: () =>
+								{
+									ShellPage.instance.noteText = string.Empty;
+									ShellPage.instance.InAppNote.Text = ShellPage.instance.noteText;
+								});
+
+							}
+							catch(Exception __ex)
+							{
+								Debug.LogEx(__ex);
+							}
+
+							//ShellPage.instance.infoBar.IsOpen = false;
+						}
+						//else
+						//{
+						//	var textBlock = new MarkdownTextBlock() { Text = s, Background = null };
+						//	ShellPage.instance.infoMD.Text = s;
+						//	if (wasOpen)
+						//	{
+						//		Task.Delay(500).ContinueWith((_) => ShellPage.instance.infoBar.IsOpen = true, TaskScheduler.FromCurrentSynchronizationContext());
+						//	}
+						//	else
+						//	{
+						//		ShellPage.instance.infoBar.IsOpen = true;
+						//	}
+						//}
+					}
+
+
+
 				}
-			
-
-
+			}
+			catch(Exception ex)
+			{
+				LogEx(ex);
 			}
 		}
 
@@ -315,7 +322,7 @@ namespace COTG
 		}
 		public static void ShowTip(string str)
 		{
-			if (str != lastTip)
+			if (str != lastTip && TabPage.mainTabs?.tip is not null )
 			{
 				lastTip = str;
 				App.DispatchOnUIThreadLow(() =>

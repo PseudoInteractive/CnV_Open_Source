@@ -5,7 +5,7 @@ using COTG.Helpers;
 
 using Windows.ApplicationModel.Core;
 using Windows.Storage;
-using Windows.UI.Core;
+//using Windows.UI.Core;
 using Microsoft.UI.Xaml;
 
 namespace COTG.Services

@@ -91,19 +91,19 @@ namespace COTG.Game
 		}
 		public int postQueueTownHallLevel => CityBuild.isPlanner switch { true => 10, _ => postQueueBuildings[bspotTownHall].bl };
 
-		public int? AnyHub(bool requestHub)
+		public int AnyHub(bool requestHub)
 		{
 			if(tradeInfo == null)
 			{
 				Assert(false);
-				return null;
+				return 0;
 			}
 			foreach(var i in requestHub ? tradeInfo.resSource : tradeInfo.resDest)
 			{
 				if(i !=0)
 					return i;
 			}
-			return null;
+			return 0;
 
 		}
 		

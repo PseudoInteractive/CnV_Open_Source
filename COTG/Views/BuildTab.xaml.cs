@@ -11,7 +11,7 @@ using System.Collections.Generic;
 using Telerik.UI.Xaml.Controls.Grid;
 using static COTG.Debug;
 using Windows.ApplicationModel.Core;
-using Windows.UI.Core;
+//using Windows.UI.Core;
 using Microsoft.UI.Xaml;
 using Telerik.Core.Data;
 using Telerik.Data.Core;
@@ -22,12 +22,12 @@ using CommunityToolkit.WinUI;
 using Microsoft.UI.Xaml.Input;
 using COTG.Services;
 using System.Collections;
-using Windows.UI.Input;
+//using Windows.UI.Input;
 using COTG.Helpers;
 using Microsoft.UI.Xaml.Navigation;
 using System.Linq;
 using System.Threading.Tasks;
-using static COTG.Game.Enum;
+using static COTG.Game.Troops;
 using Microsoft.UI.Xaml.Controls;
 using Telerik.UI.Xaml.Controls.Grid.Commands;
 using System.Threading;
@@ -60,27 +60,20 @@ namespace COTG.Views
 			Assert(instance == null);
 			instance = this;
 			InitializeComponent();
-			cityGrid.SelectionChanged += SpotSelectionChanged;
+
+			
+
+			//			cityGrid.SelectionChanged += SpotSelectionChanged;
 			//cityGrid.OnKey = Spot.OnKeyDown;
 
 			//cityGrid.CurrentItemChanged += CityGrid_CurrentItemChanged;
 
 
-			cityGrid.ProcessTooltips();
-			spotGrids.Add(cityGrid);
+			//			cityGrid.ProcessTooltips();
+			//			spotGrids.Add(cityGrid);
 
 		}
-		private void OnLoaded(object sender,RoutedEventArgs e)
-		{
-			SetupDataGrid(cityGrid);
 
-			//private void CityGrid_CurrentItemChanged(object sender, EventArgs e)
-			//{
-			//	           Log("Current item " + sender.ToString());
-			//}
-
-
-		}
 
 
 		
@@ -311,7 +304,7 @@ namespace COTG.Views
 						await GetCity.Post(City.build);
 
 					
-					City.gridCitySource.NotifyReset(true);
+					City.gridCitySource.NotifyReset();
 					
 				}
 

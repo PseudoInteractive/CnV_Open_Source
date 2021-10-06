@@ -23,7 +23,7 @@ namespace COTG
 
 	public static partial class AUtil
 	{
-		
+		public static Microsoft.Extensions.ObjectPool.StringBuilderPooledObjectPolicy stringBuilderPool = new() { InitialCapacity=2,MaximumRetainedCapacity=2};
 		public static object AsObject(this object a) => a;
 		
 		public const string emptyJson = "{}";

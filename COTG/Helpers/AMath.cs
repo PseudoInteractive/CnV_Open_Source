@@ -597,12 +597,12 @@ namespace COTG
 		{
 			if (hub.CidToContinent() == cid1.CidToContinent())
 			{
-				return ((City.Get(hub).carts > 0),true);
+				return ((City.Get(hub).carts > 0),false);
 			}
-			if (!City.Get(cid1).isOnWater)
+			if (!City.Get(cid1).isOnWater || !City.Get(hub).isOnWater )
 				return (false,true);
 
-			return ((City.Get(hub).ships > 0),false);
+			return ((City.Get(hub).ships > 0),true);
 		}
 		public static float DistanceToCid(this (int x, int y) a, int cid) => Distance(a, cid.CidToWorld());
 		public static double DistanceToCidD(this (int x, int y) a, int cid) => DistanceD(a, cid.CidToWorld());

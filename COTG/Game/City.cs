@@ -10,7 +10,7 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media.Imaging;
 using COTG.Helpers;
 using System.Text.Json;
-using static COTG.Game.Enum;
+using static COTG.Game.Troops;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using COTG.Services;
@@ -1536,7 +1536,7 @@ namespace COTG.Game
 			else
 			{
 				var dist = cid.DistanceToCidD(target);
-				t = TimeSpan.FromMinutes(dist * Enum.cartTravel);
+				t = TimeSpan.FromMinutes(dist * Troops.cartTravel);
 				return true;
 
 			}
@@ -1551,7 +1551,7 @@ namespace COTG.Game
 
 
 			var dist = cid.DistanceToCidD(target);
-			t = TimeSpan.FromMinutes(dist * Enum.shipTravel + 60);
+			t = TimeSpan.FromMinutes(dist * Troops.shipTravel + 60);
 
 			return true;
 

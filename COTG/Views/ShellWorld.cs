@@ -56,25 +56,19 @@ namespace COTG.Views
 
 			//	var workItemHandler = new WorkItemHandler((action) =>
 			//{
-		//	canvas.DispatcherQueue.TryEnqueue( ()=>
-			{
+			
 				try
 				{
 					var inputDevices = Windows.UI.Core.CoreInputDeviceTypes.Mouse;// | Windows.UI.Core.CoreInputDeviceTypes.Pen | Windows.UI.Core.CoreInputDeviceTypes.Touch;
 																				  //	Log(canvas.ManipulationMode);
 																				  //	canvas.ManipulationMode = ManipulationModes.All;
 					coreInputSource = canvas.CreateCoreIndependentInputSource(inputDevices);
-				}
-				catch(Exception ex)
-				{
-					Log(ex);
-				}
-
-				coreInputSource.DispatcherQueue.TryEnqueue(DispatcherQueuePriority.Normal,() =>{
-					try
+				
+			//	canvas.DispatcherQueue.TryEnqueue(DispatcherQueuePriority.Normal,() =>{
+					//	coreInputSource.InputEnabled += CoreInputSource_InputEnabled;
+				//	try
 					{
-						//	coreInputSource.InputEnabled += CoreInputSource_InputEnabled;
-						coreInputSource.PointerMoved+=CoreInputSource_PointerMoved; ;
+						coreInputSource.PointerMoved+=CoreInputSource_PointerMoved;
 						coreInputSource.PointerPressed+=CoreInputSource_PointerPressed; ;
 						coreInputSource.PointerReleased+=CoreInputSource_PointerReleased; ;
 						coreInputSource.PointerEntered+=CoreInputSource_PointerEntered; ;
@@ -82,20 +76,28 @@ namespace COTG.Views
 						coreInputSource.PointerCaptureLost += CoreInputSource_PointerCaptureLost;
 
 						coreInputSource.PointerWheelChanged += Canvas_PointerWheelChanged;
-
+						//coreInputSource.PointerCursor = 
+						//			coreInputSource.Dispatcher.ProcessEvents(CoreProcessEventsOption.ProcessUntilQuit);
+						//				coreInputSource.IsInputEnabled = true;
+						//		App.cursorDefault.Set();
 
 					}
-					catch(Exception __ex)
-					{
-						Debug.LogEx(__ex);
-					}				
-					//coreInputSource.PointerCursor = 
-					//			coreInputSource.Dispatcher.ProcessEvents(CoreProcessEventsOption.ProcessUntilQuit);
-					//				coreInputSource.IsInputEnabled = true;
-					//		App.cursorDefault.Set();
-				});
-			}//);
-//		};
+				//	catch(Exception __ex)
+				//	{
+				//		Debug.LogEx(__ex);
+				//	}
+				
+			//	);
+		}
+				catch(Exception ex)
+				{
+					Log(ex);
+				} ;
+
+		//	});
+
+			//}//);
+//		
 	//	var inputWorker = ThreadPool.RunAsync(workItemHandler,WorkItemPriority.High,WorkItemOptions.TimeSliced);
 
 	}
@@ -124,7 +126,7 @@ namespace COTG.Views
 
 		}
 
-		private static void CoreInputSource_PointerMoved(ExpPointerInputObserver sender,PointerEventArgs e)
+		public static void CoreInputSource_PointerMoved(ExpPointerInputObserver sender,Microsoft.UI.Input.Experimental.ExpPointerEventArgs e)
 		{
 			var point = e.CurrentPoint;
 			Canvas_PointerMoved((point.Position,point.PointerId,point.IsInContact,point.Timestamp,point.Properties.PointerUpdateKind));
@@ -432,7 +434,7 @@ namespace COTG.Views
 		private static void Canvas_PointerEntered(Windows.Foundation.Point args)
 		{
 			UpdateMousePosition(args);
-			TakeFocusIfAppropriate();
+			TakeFocus();
 
 			//			Log($"!Focus11: {hasKeyboardFocus} w{webviewHasFocus} w2{webviewHasFocus2}");
 			hasKeyboardFocus=false;
@@ -1066,6 +1068,7 @@ namespace COTG.Views
 			App.InputRecieved(); // prevent idle timer;
 			//	PointerInfo(e);
 			UpdateMousePosition(point.Position);
+			TakeFocusIfAppropriate();
 			UpdateFocus();
 			if (!isFocused)
 				return;

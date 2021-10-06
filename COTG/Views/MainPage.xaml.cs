@@ -11,7 +11,7 @@ using System.Collections.Generic;
 using Telerik.UI.Xaml.Controls.Grid;
 using static COTG.Debug;
 using Windows.ApplicationModel.Core;
-using Windows.UI.Core;
+//using Windows.UI.Core;
 using Microsoft.UI.Xaml;
 using Telerik.Core.Data;
 using Telerik.Data.Core;
@@ -22,12 +22,12 @@ using CommunityToolkit.WinUI;
 using Microsoft.UI.Xaml.Input;
 using COTG.Services;
 using System.Collections;
-using Windows.UI.Input;
+//using Windows.UI.Input;
 using COTG.Helpers;
 using Microsoft.UI.Xaml.Navigation;
 using System.Linq;
 using System.Threading.Tasks;
-using static COTG.Game.Enum;
+using static COTG.Game.Troops;
 using Microsoft.UI.Xaml.Controls;
 using Telerik.UI.Xaml.Controls.Grid.Commands;
 using System.Threading;
@@ -64,37 +64,11 @@ namespace COTG.Views
 
 			
 			//dungeonGrid.ProcessTooltips();
-			
+
 
 		}
 
-		protected override void OnApplyTemplate()
-		{
-			
-			base.OnApplyTemplate();
-
-			
-			
-			//        var rand = new Random();
-
-			//cityMenuFlyout = new MenuFlyout();
-			//var c = new MenuFlyoutItem() { Text = "Home Whenever" };
-			//c.Click += ReturnSlowClick;
-			//cityMenuFlyout.Items.Add(c);
-			//c = new MenuFlyoutItem() { Text = "Home Please" };
-			//c.Click += ReturnFastClick;
-			//cityMenuFlyout.Items.Add(c);
-			//		cityGrid.tab
-			//	cityGrid.OnKey = Spot.OnKeyDown;
-
-			//cityGrid.ContextFlyout = cityMenuFlyout;
-
-			//     cityGrid.SelectionChanged += CityGrid_SelectionChanged;
-			cityGrid.CurrentItemChanged += CityGrid_CurrentItemChanged;
-			
-			SetupCityDataGrid(cityGrid);
-			
-		}
+	
 
 		
 		private void CityGrid_CurrentItemChanged(object sender, EventArgs e)
@@ -263,7 +237,7 @@ namespace COTG.Views
 					if (City.build != 0)
 						await GetCity.Post(City.build);
 
-					City.gridCitySource.NotifyReset(true);
+					City.gridCitySource.NotifyReset();
 				}
              //  if (cityGrid.ItemsSource == App.emptyCityList )
              //     cityGrid.ItemsSource = City.gridCitySource;
@@ -486,8 +460,11 @@ namespace COTG.Views
 				totalSent1 += totalSent;
 				if(totalSent == 0)
 					break;
-				ShellPage.WorkUpdate($"Delaying for pass {iter0}...");
-				await Task.Delay(3000);
+				for(int i=0;i<5;++i)
+				{
+					ShellPage.WorkUpdate($"Delaying for pass {iter0}... {5-i}s");
+					await Task.Delay(5000);
+				}
 			}
 			Note.Show($"Total Sent {totalSent1.Min(sel.Count)} Raids (from {sel.Count} selected)");
 
@@ -528,6 +505,8 @@ namespace COTG.Views
 		}
 
 		
+
+
 
 
 

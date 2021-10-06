@@ -11,11 +11,11 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Input;
 
 using static COTG.Debug;
+//using System.Windows.Input;
 using System.Windows.Input;
-
 namespace COTG.Helpers
 {
-	public class NavStack:System.Windows.Input.ICommand
+	public class NavStack:ICommand
 	{
 		event EventHandler ICommand.CanExecuteChanged
 		{

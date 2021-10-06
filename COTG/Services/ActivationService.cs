@@ -9,7 +9,7 @@ using COTG.Views;
 
 using Microsoft.AppCenter;
 using Microsoft.AppCenter.Analytics;
-using Microsoft.AppCenter.Crashes;
+//using Microsoft.AppCenter.Crashes;
 
 using Windows.ApplicationModel.Activation;
 using Windows.Media.Core;
@@ -109,22 +109,31 @@ namespace COTG.Services
         {
 			// TODO restore       await Singleton<LiveTileService>.Instance.EnableQueueAsync().ConfigureAwait(false);
 			// TODO restore       await Singleton<BackgroundTaskService>.Instance.RegisterBackgroundTasksAsync().ConfigureAwait(false);
-			var t2 =  BuildingDef.Init();
-			var t3 =  TroopInfo.Init();
-			await Task.WhenAll(t2,t3);
-			SettingsPage.Initialize();
-			App.StartAnalytics();
+			try
+			{
+				var t2 = BuildingDef.Init();
+				var t3 = TroopInfo.Init();
+				var t4 = App.StartAnalyticsAsync();
+				SettingsPage.Initialize();
 
-//			var t1 = WindowManagerService.Current.InitializeAsync();
-			var t0 = ThemeSelectorService.InitializeAsync();
-			await Task.WhenAll(t0);
-   //         Window.Current.Closed += async (a,b)=>
+
+				await Task.WhenAll(t2,t3,t4);
+			}
+			catch(Exception ex)
+			{
+				Debug.LogEx(ex);
+			}
+
+			//			var t1 = WindowManagerService.Current.InitializeAsync();
+			//	var t0 = ThemeSelectorService.InitializeAsync();
+			//	await Task.WhenAll(t0);
+			//         Window.Current.Closed += async (a,b)=>
 			//{
 			//	Debug.Log("Window!!Closed!");
 			//	await TabPage.CloseAllTabWindows(); 
 			//};
 			// thread??
-			
+
 
 			//if(AGame.colorKind != Windows.Graphics.Display.AdvancedColorKind.HighDynamicRange)
 			//{
@@ -138,7 +147,7 @@ namespace COTG.Services
 
 			//	}	
 			//}
-		
+
 		}
 
         private async Task HandleActivationAsync(IActivatedEventArgs activationArgs)

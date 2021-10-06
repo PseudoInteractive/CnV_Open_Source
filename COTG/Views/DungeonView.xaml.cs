@@ -18,7 +18,7 @@ using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
 using COTG.Services;
 using static COTG.Debug;
-using static COTG.Game.Enum;
+using static COTG.Game.Troops;
 using static COTG.Views.SettingsPage;
 using COTG.Helpers;
 // The Content Dialog item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
@@ -94,7 +94,7 @@ namespace COTG.Views
 				   if (!hasRunOnce && city != null)
 				   {
 					   hasRunOnce = true;
-					   Task.Delay(1000).ContinueWith( (_)=> App.DispatchOnUIThreadLow(()=>instance.items.NotifyReset()));
+					   Task.Delay(1000).ContinueWith( (_)=> App.DispatchOnUIThreadLow(()=>instance.items.NotifyReset(true)));
 				   }
 				   await instance.ShowAsync2();
 			   });

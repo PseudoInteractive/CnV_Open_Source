@@ -11,7 +11,7 @@ using System.Threading;
 using Windows.ApplicationModel.Core;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
-using Windows.UI.Core;
+//using Windows.UI.Core;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
@@ -108,17 +108,22 @@ namespace COTG.Views
 
 	public sealed partial class ChatTab : UserTab
 	{
-		public static ChatTab alliance = new ChatTab() { Tag = nameof(alliance) };
-		public static ChatTab world = new ChatTab() { Tag = nameof(world) };
-		public static ChatTab officer = new ChatTab() { Tag = nameof(officer) };
-		// public static ChatTab whisper = new ChatTab() { Tag = nameof(whisper) };
-		public static ChatTab debug = new ChatTab() { Tag = nameof(debug) };
+		public static ChatTab alliance;// = new ChatTab() { Tag = nameof(alliance) };
+		public static ChatTab world;// = new ChatTab() { Tag = nameof(world) };
+		public static ChatTab officer;// = new ChatTab() { Tag = nameof(officer) };
+									  // public static ChatTab whisper = new ChatTab() { Tag = nameof(whisper) };
+		public static ChatTab debug;// = new ChatTab() { Tag = nameof(debug) };
 
 		public static ChatTab[] all = Array.Empty<ChatTab>();
 		public static ChatTab[] Ctor()
 		{
+		alliance = new ChatTab() { Tag = nameof(alliance) };
+		  world = new ChatTab() { Tag = nameof(world) };
+			officer = new ChatTab() { Tag = nameof(officer) };
+		// public static ChatTab whisper = new ChatTab() { Tag = nameof(whisper) };
+			debug = new ChatTab() { Tag = nameof(debug) };
 
-			all = new ChatTab[] { alliance, world, officer, debug };
+		all = new ChatTab[] { alliance, world, officer, debug };
 			return all;
 		}
 		public string whisperTarget; // null if no target
@@ -134,7 +139,8 @@ namespace COTG.Views
 				App.QueueOnUIThread(() =>
 				
 				{
-
+					items.ClearHash();
+					items.NotifyReset();
 					listView.ScrollIntoView(items.Last());
 					input.Focus(FocusState.Programmatic);
 				});
@@ -142,9 +148,12 @@ namespace COTG.Views
 
 			return base.VisibilityChanged(visible, longTerm: longTerm);
 		}
+
+	
+
 		public override TabPage defaultPage => ChatTab.tabPage;
 		//public ChatEntry lastChat = new ChatEntry(null, string.Empty, DateTimeOffset.MinValue, 0);
-		public void Post(ChatEntry entry, bool isNew) // if is new, this message is fresh.  Otherwise loaded from archives
+		public void Post(ChatEntry entry, bool isNew, bool notify=true) // if is new, this message is fresh.  Otherwise loaded from archives
 		{
 			// duplicate?
 			//if (lastChat.player == entry.player
@@ -176,7 +185,9 @@ namespace COTG.Views
 					if (count >= maxItems)
 					{
 						for (int i = 0; i < 32; ++i)
-							items.RemoveAt(0);
+							items.RemoveAt(0,false);
+						if(notify)
+							items.NotifyReset();
 					}
 				}
 				var insert = items.Count;
@@ -192,7 +203,7 @@ namespace COTG.Views
 							return;
 					}
 				}
-				items.Insert(insert, entry);
+				items.Insert(insert, entry,notify);
 				var text = entry.text;
 				if (isNew)
 				{
@@ -219,7 +230,8 @@ namespace COTG.Views
 		{
 			// Todo: batch these
 			foreach (var entry in entries)
-				Post(entry,false);
+				Post(entry,false,false);
+			items.NotifyReset();
 		}
 
 

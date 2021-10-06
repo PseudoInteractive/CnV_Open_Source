@@ -13,7 +13,6 @@
 			  xmlns:views="using:COTG.Views"
 			  mc:Ignorable="d"
 			  Tag="Raid"
-			
 			  FontFamily="Tw Cen MT Condensed">
 
 	<Grid x:Name="cityBaseGrid"  >
@@ -32,7 +31,8 @@
 							ColumnResizeHandleDisplayMode="OnColumnHeaderActionFlyoutOpen"
 							ColumnDataOperationsMode="Flyout"
 							Grid.Row="3"
-							 
+						Loaded="DataGridLoaded"
+							 GroupPanelPosition="Bottom"
 							TabFocusNavigation="Once"
 							UserGroupMode="Auto"
 							AlternationStep="2"
@@ -47,9 +47,10 @@
 							IsTextScaleFactorEnabled="False"
 							SelectionUnit="Row"
 							Tag="Raid"
-					
+							
 					
 							>
+
 
 				<tg:RadDataGrid.Commands>
 					<views:CustomDataBindingCompleteCommand />

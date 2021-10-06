@@ -351,7 +351,7 @@ namespace COTG.Views
                     break;
 
                 case PInvoke.User32.WindowMessage.WM_CLOSE:
-					Debug.Trace("Wm_CLOSE");
+				//	Debug.Trace("Wm_CLOSE");
                     //If there is a Closing event handler and the close message wasn't send via
                     //this event (that set IsClosing=true), the message is ignored. 
                     if (this.WantClose is not null)

@@ -19,7 +19,7 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 
 using static COTG.Debug;
-using static COTG.Game.Enum;
+using static COTG.Game.Troops;
 using static COTG.CanvasHelpers;
 
 
@@ -231,7 +231,7 @@ namespace COTG
 		static readonly Color focusColor = Color.Maroon;
 		static readonly Color pinnedColor = Color.Teal;
 		static readonly Color black0Alpha = new Color() { A = 0,R = 0,G = 0,B = 0 };
-		public static Material[] troopImages = new Material[Game.Enum.ttCount];
+		public static Material[] troopImages = new Material[Game.Troops.ttCount];
 		static Vector2 troopImageOriginOffset;
 		const int maxTextLayouts = 1024;
 		public static bool initialized => canvas != null;
@@ -268,7 +268,7 @@ namespace COTG
 			Content.RootDirectory = "Content";
 			//	IsMouseVisible = true;
 		}
-
+		public static int renderFrame;
 		private void _graphics_PreparingDeviceSettings(object sender,PreparingDeviceSettingsEventArgs e)
 		{
 			var inf = e.GraphicsDeviceInformation;
@@ -442,9 +442,9 @@ namespace COTG
 
 				if(App.isForeground)
 				{
-					if(ShellPage.coreInputSource == null)
+					if(renderFrame >= 5 && ShellPage.coreInputSource==null)
 					{
-						ShellPage.SetupCoreInput();
+					//	ShellPage.SetupCoreInput();
 
 					}
 					//else
@@ -837,7 +837,7 @@ namespace COTG
 				//				quadTexture = new Material(Content.Load<Texture2D>("Art/quad"), sdfEffect);
 				quadTexture = new Material(null,sdfEffect);
 				whiteMaterial = new Material(null,noTextureEffect);
-				for(int i = 0;i < COTG.Game.Enum.ttCount;++i)
+				for(int i = 0;i < COTG.Game.Troops.ttCount;++i)
 				{
 
 					troopImages[i] = LoadMaterial($"Art/icons/troops{i}");
@@ -1101,7 +1101,7 @@ namespace COTG
 				return;
 			if(!App.isForeground)
 				return;
-
+			++renderFrame;
 			underMouse = null;
 			bestUnderMouseScore = 8;
 

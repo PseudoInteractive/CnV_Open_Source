@@ -15,7 +15,7 @@ using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
-using static COTG.Game.Enum;
+using static COTG.Game.Troops;
 using static COTG.Debug;
 using COTG.Helpers;
 using COTG.Services;
@@ -220,8 +220,9 @@ namespace COTG.Views
 				if(resetValuesPending)
 				{
 					resetValuesPending = false;
-					supporters.Clear();
+					supporters.Clear(true);
 				}
+
 				//supportGrid.ItemsSource = null;
 				if (target != null && target.isCityOrCastle)
 				{
@@ -259,7 +260,7 @@ namespace COTG.Views
 
 
 							// re-use if possible
-							var supporter = supporters.Find((a) => a.city == city);
+							var supporter = supporters.c.Find((a) => a.city == city);
 							if (supporter == null)
 							{
 								supporter = new ResSource() { city = city };
@@ -303,11 +304,11 @@ namespace COTG.Views
 						}
 						if(!useRatio)
 							r = r.Sub(sup.res);
-						App.DispatchOnUIThreadIdle(() =>
-						{
-							supporters.OnPropertyChanged(sup);
-							sup.OnPropertyChanged(string.Empty);
-						});
+						//App.DispatchOnUIThreadIdle(() =>
+						//{
+						//	supporters.OnPropertyChanged(sup);
+						//	sup.OnPropertyChanged(string.Empty);
+						//});
 
 					}
 					supporters.Set(s,true);
@@ -342,7 +343,7 @@ namespace COTG.Views
 			}
 			else
 			{
-				supporters.Clear();
+				supporters.Clear(true);
 				selected = ResSource.dummy;
 			}
 			return base.VisibilityChanged(visible, longTerm: longTerm);
@@ -500,13 +501,13 @@ namespace COTG.Views
 				if (e.Column.SortDirection == null)
 				{
 					e.Column.SortDirection = DataGridSortDirection.Descending;
-					supporters.SortSmall(comparer);
+					supporters.c.SortSmall(comparer);
 					supporters.NotifyReset();
 				}
 				else if (e.Column.SortDirection == DataGridSortDirection.Descending)
 				{
 					e.Column.SortDirection = DataGridSortDirection.Ascending;
-					supporters.SortSmall((b, a) => comparer(a, b)); // swap order of comparison
+					supporters.c.SortSmall((b, a) => comparer(a, b)); // swap order of comparison
 					supporters.NotifyReset();
 				}
 				else
@@ -529,7 +530,7 @@ namespace COTG.Views
 
 		private void NumberBox_ValueChanged(Microsoft.UI.Xaml.Controls.NumberBox sender, Microsoft.UI.Xaml.Controls.NumberBoxValueChangedEventArgs args)
 		{
-			supporters.Clear();
+			supporters.Clear(false);
 			DebouceItemChanged.Go();
 		
 		}

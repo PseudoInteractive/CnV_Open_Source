@@ -9,7 +9,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
-using static COTG.Game.Enum;
+using static COTG.Game.Troops;
 using static COTG.Debug;
 using TroopTypeCounts = COTG.Game.TroopTypeCounts;
 //COTG.DArray<COTG.Game.TroopTypeCount>;
@@ -142,7 +142,7 @@ namespace COTG.Game
 											}
 											if (defTS > 0)
 											{
-												Set(ref army.sumDef, new TroopTypeCount(Game.Enum.ttGuard, defTS));
+												Set(ref army.sumDef, new TroopTypeCount(Game.Troops.ttGuard, defTS));
 												target._tsHome = defTS;
 												//	spot._tsHome = val.GetAsInt("8");
 
@@ -356,7 +356,7 @@ namespace COTG.Game
                                                                     int counter = 0;
                                                                     foreach (var t in ttle.EnumerateArray())
                                                                     {
-                                                                        defTSLeft += t.GetInt32() * Game.Enum.ttTs[counter];
+                                                                        defTSLeft += t.GetInt32() * Game.Troops.ttTs[counter];
                                                                         ++counter;
                                                                     }
                                                                 //  Assert(defTS > 0);

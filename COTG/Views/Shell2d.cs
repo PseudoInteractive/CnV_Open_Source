@@ -171,7 +171,7 @@ namespace COTG.Views
 				ShellPage.canvas.IsHitTestVisible = wantVisible;
 				//if(!wantVisible)
 				//	JSClient.view.Focus(FocusState.Programmatic);
-				TakeFocusIfAppropriate();
+				TakeFocus();
 				note|=1;
 			}
 
@@ -186,8 +186,14 @@ namespace COTG.Views
 			debounceDelay=100,
 			throttleDelay=100 };
 
+		static bool forceFocus;
 		static void TakeFocusIfAppropriate()
 		{
+			takeFocusIfAppropriate.Go();
+		}
+		static void TakeFocus()
+		{
+			forceFocus=true;;
 			takeFocusIfAppropriate.Go();
 		}
 		static  Debounce takeFocusIfAppropriate = new( () =>
@@ -196,17 +202,18 @@ namespace COTG.Views
 			var note = 0;
 			if(isOverCanvas)
 			{
-			//	if(canvas.FocusState == FocusState.Unfocused)
+				if((canvas.FocusState is FocusState.Unfocused ) || forceFocus)
 				{
+					forceFocus=false;
 					//if(JSClient.view is not null && App.IsKeyPressedShift())
-					{
+			{
 				//		var f = JSClient.view.Focus(FocusState.Programmatic);
 				//		Assert(f);
 					}
 					//else if( App.IsKeyPressedControl())
 					{
-				//	 var f= TabPage.mainTabs.Focus(FocusState.Programmatic);
-				//		Assert(f);
+					 var f= ChatTab.tabPage.Focus(FocusState.Programmatic);
+						Assert(f);
 					}
 //App.QueueOnUIThread( ()=>
 					{

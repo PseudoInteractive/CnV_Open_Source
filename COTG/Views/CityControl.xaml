@@ -23,7 +23,7 @@
                      Stretch="Uniform" VerticalAlignment="Center"  />
 			   
 		<AutoSuggestBox x:Name="suggestBox"
-						Grid.Column="2" Text="{x:Bind name}" 
+						Grid.Column="2" Text="{x:Bind name,Mode=OneWay}" 
 						PlaceholderText="None"
 						TextChanged="{x:Bind views:PlayerGroup.CityNameSuggest_TextChanged}"
 						QuerySubmitted="suggestBox_QuerySubmitted"

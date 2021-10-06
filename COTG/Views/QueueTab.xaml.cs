@@ -89,7 +89,7 @@ namespace COTG.Views
 				}
 				if (view == null)
 				{
-					instance.cities.Add(new BuildItemView(cid));
+					instance.cities.Add(new BuildItemView(cid),true);
 				}
 				
 			}//);
@@ -97,19 +97,10 @@ namespace COTG.Views
 
 		public static void Clear(int cid)
 		{
-				foreach (var c in instance.cities)
-				{
-					if (c.cid == cid)
-					{
-						instance.cities.Remove(c);
-						break;
-					}
-				}
-	
-
+			instance.cities.Remove( c=>c.cid == cid,true);
 		}
 
-
+		
 		public static void RemoveOp( int cid)
 		{
 			if (!IsVisible())
@@ -120,9 +111,9 @@ namespace COTG.Views
 				return;
 			foreach (var c in instance.cities)
 			{
-				if (c.cid == cid)
+				if(c.cid == cid)
 				{
-					instance.cities.Remove(c);
+					instance.cities.Remove(c,true);
 					break;
 				}
 			}
@@ -132,12 +123,7 @@ namespace COTG.Views
 			var build = City.GetBuild();
 			//build.UpdateBuildStage();
 			//instance.stage.Text = $"Stage: {build.buildStage.AsString()}";
-			instance.cities.Clear();
-				foreach (var city in ExtendedQueue.all.Values)
-				{
-					var view = new BuildItemView(city.cid);
-					instance.cities.Add(view);
-				}
+			instance.cities.Set(ExtendedQueue.all.Values.Select(a=> new BuildItemView(a.cid)),true );
 		}
 		override public Task VisibilityChanged(bool visible, bool longTerm)
 		{
@@ -149,7 +135,7 @@ namespace COTG.Views
 			}
 			else
 			{
-				cities.Clear();
+				cities.Clear(true);
 			}
 			return base.VisibilityChanged(visible, longTerm: longTerm);
 

@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using COTG.Helpers;
 using static COTG.Debug;
-using static COTG.Game.Enum;
+using static COTG.Game.Troops;
 using System.Text.Json;
 using COTG.Views;
 

@@ -8,7 +8,7 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using System.Web;
 using static COTG.Debug;
-using static COTG.Game.Enum;
+using static COTG.Game.Troops;
 using COTG.Services;
 using COTG.Views;
 using System.Text.Encodings.Web;

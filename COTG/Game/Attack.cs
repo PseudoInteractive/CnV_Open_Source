@@ -8,7 +8,7 @@ using System.Text;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using COTG.Views;
-using static COTG.Game.Enum;
+using static COTG.Game.Troops;
 
 namespace COTG.Game
 {

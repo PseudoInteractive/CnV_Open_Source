@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace COTG.Game
 {
-    public static class Enum
+    public static class Troops
     {
 
 		public const byte ttPending = 0;

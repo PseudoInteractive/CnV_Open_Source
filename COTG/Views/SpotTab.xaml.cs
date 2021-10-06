@@ -11,7 +11,7 @@ using System.Collections.Generic;
 using Telerik.UI.Xaml.Controls.Grid;
 using static COTG.Debug;
 using Windows.ApplicationModel.Core;
-using Windows.UI.Core;
+//using Windows.UI.Core;
 using Microsoft.UI.Xaml;
 using Telerik.Core.Data;
 using Telerik.Data.Core;
@@ -23,7 +23,7 @@ using Microsoft.UI.Xaml.Input;
 using COTG.Services;
 using System.Collections;
 using COTG.JSON;
-using Windows.UI.Input;
+//using Windows.UI.Input;
 using Telerik.UI.Xaml.Controls.Input;
 using COTG.Helpers;
 using Microsoft.UI.Xaml.Navigation;
@@ -46,18 +46,20 @@ namespace COTG.Views
         {
             Assert(instance == null);
             instance = this;
-            this.InitializeComponent();
-            selectedGrid.SelectionChanged += SpotSelectionChanged;
-		//	selectedGrid.OnKey = Spot.OnKeyDown;
-			selectedGrid.ProcessTooltips();
-			spotGrids.Add(selectedGrid);
+			this.InitializeComponent();
+			
+			//			selectedGrid.SelectionChanged += SpotSelectionChanged;
+			//	selectedGrid.OnKey = Spot.OnKeyDown;
+			//			selectedGrid.ProcessTooltips();
+			//			spotGrids.Add(selectedGrid);
 		}
         public static bool IsVisible() => instance.isFocused;
 
         public static int silenceSelectionChanges;
 
 
-        private void gridPointerPress(object sender, PointerRoutedEventArgs e)
+
+		private void gridPointerPress(object sender, PointerRoutedEventArgs e)
         {
             try
             {
@@ -183,12 +185,12 @@ namespace COTG.Views
 
                 App.DispatchOnUIThreadLow(() =>
            {
-               var id = SpotMRU.IndexOf(spot);
+               var id = SpotMRU.c.IndexOf(spot);
                if (id != 0)
                {
                    if (id > 0)
                    {
-                       SpotMRU.RemoveAt(id);
+                       SpotMRU.RemoveAt(id,true);
                    }
                    else if (SpotMRU.Count >= SettingsPage.mruSize)
                    {
@@ -198,14 +200,14 @@ namespace COTG.Views
                        {
                            if (!Spot.selected.Contains(SpotMRU[counter].cid) && SpotMRU[counter].pinned == false)
                            {
-                               SpotMRU.RemoveAt(counter);
+                               SpotMRU.RemoveAt(counter,true);
                                break;
                            }
 
                        }
                    }
 
-                   SpotMRU.Insert(0, spot);
+                   SpotMRU.Insert(0, spot,true);
 
                }
 
@@ -244,6 +246,8 @@ namespace COTG.Views
 				Spot.GetOrAdd(cid).SetPinned(pinned);
 			}
 		}
+
+	
 		//      public static void ToggleSelected(Spot rv)
 		//      {
 		//          var isSelected = rv.ToggleSelected();

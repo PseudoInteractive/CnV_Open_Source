@@ -4,7 +4,7 @@
 using COTG.Views;
 
 using Microsoft.AppCenter.Analytics;
-using Microsoft.AppCenter.Crashes;
+//using Microsoft.AppCenter.Crashes;
 
 using System;
 using System.Collections.Generic;
@@ -55,9 +55,11 @@ namespace COTG
 
 		private const int defaultStackDepth = 4;
 		private static int breakCounter = 8;
-
+		[Conditional("DEBUG")]
 		private static void DumpStack(StackTrace __s)
 		{
+			System.Diagnostics.Debug.Indent();
+			var sb = AUtil.stringBuilderPool.Create();
 			try
 			{
 				for (int i = 0; i < defaultStackDepth.Min(__s.FrameCount); ++i)
@@ -65,13 +67,17 @@ namespace COTG
 					var __f = __s.GetFrame(i);
 					if (__f != null)
 					{
-						System.Diagnostics.Debug.Write($"{__f.GetFileName()}({__f.GetFileLineNumber()}): {__f.GetMethod()},{__f.GetFileColumnNumber()}\n");
+						sb.AppendLine($"{__f.GetFileName()}({__f.GetFileLineNumber()}): {__f.GetMethod()},{__f.GetFileColumnNumber()}");
 					}
 				}
+				System.Diagnostics.Debug.WriteLine(sb.ToString(),"Stack");
 			}
 			catch (Exception)
 			{
 			}
+			AUtil.stringBuilderPool.Return(sb);
+			System.Diagnostics.Debug.Unindent();
+
 			//  var __f = __s.GetFrames();
 			//	System.Diagnostics.Debug.WriteLine(__s.ToString());
 			//for (int i = 0; i<defaultStackDepth && i < __s.FrameCount; ++i)
@@ -90,7 +96,7 @@ namespace COTG
 		[System.Runtime.CompilerServices.CallerFilePath] string sourceFilePath = "",
 		[System.Runtime.CompilerServices.CallerLineNumber] int sourceLineNumber = 0)
 		{
-			System.Diagnostics.Debug.Write($"{sourceFilePath}({sourceLineNumber}): {timeStamp}: {memberName}\n{s}\n");
+			System.Diagnostics.Debug.WriteLine($"\n{sourceFilePath}({sourceLineNumber}): {timeStamp}: {memberName}\n{s}","Log");
 			DumpStack(new StackTrace(1, true));
 			// System.Diagnostics.Debug.WriteLine(new StackTrace());
 		}
@@ -100,9 +106,9 @@ namespace COTG
 		[System.Runtime.CompilerServices.CallerFilePath] string sourceFilePath = "",
 		[System.Runtime.CompilerServices.CallerLineNumber] int sourceLineNumber = 0)
 		{
-			string msg = $"{App.dispatches0}-{App.dispatches1}! {sourceFilePath}({sourceLineNumber}): {timeStamp}: {memberName}\n{s}\n";
+			string msg = $"\n{App.dispatches0}-{App.dispatches1}!\n{sourceFilePath}({sourceLineNumber}): {timeStamp}: {memberName}\n{s}";
 			Note.Show(s);
-			System.Diagnostics.Debug.Write(msg);
+			System.Diagnostics.Debug.WriteLine(msg,"Trace");
 			DumpStack(new StackTrace(1, true));
 			// System.Diagnostics.Debug.WriteLine(new StackTrace());
 		}
@@ -114,9 +120,9 @@ namespace COTG
 	   [System.Runtime.CompilerServices.CallerLineNumber] int sourceLineNumber = 0)
 		{
 			var s = o.ToString();
-			string msg = $"{sourceFilePath}({sourceLineNumber}): {timeStamp}: {memberName}\n{s}\n";
+			string msg = $"\n{sourceFilePath}({sourceLineNumber}): {timeStamp}: {memberName}\n{s}";
 			Note.Show(s);
-			System.Diagnostics.Debug.Write(msg);
+			System.Diagnostics.Debug.WriteLine(msg,"TraceO");
 			DumpStack(new StackTrace(1, true));
 			// System.Diagnostics.Debug.WriteLine(new StackTrace());
 		}
@@ -127,9 +133,9 @@ namespace COTG
 		[System.Runtime.CompilerServices.CallerFilePath] string sourceFilePath = "",
 		[System.Runtime.CompilerServices.CallerLineNumber] int sourceLineNumber = 0)
 		{
-			var str = $"{sourceFilePath}({sourceLineNumber}): {timeStamp}: {memberName}\n{s}\n";
+			var str = $"\n{sourceFilePath}({sourceLineNumber}): {timeStamp}: {memberName}\n{s}";
 
-			System.Diagnostics.Debug.Write(str);
+			System.Diagnostics.Debug.WriteLine(str,"LogO");
 			DumpStack(new StackTrace(1, true));
 			//  System.Diagnostics.Debug.WriteLine(new StackTrace());
 			//Note.Show(str);
@@ -169,11 +175,13 @@ namespace COTG
 					try
 					{
 						AAnalytics.Track(eventName, dic);
+#if CRASH
 						Crashes.TrackError(e, dic);
+#endif
 					}
 					catch (Exception ex2)
 					{
-						App.RegisterException(ex2.Message);
+					//	App.RegisterException(ex2.Message);
 					}
 				}
 				else
@@ -184,7 +192,7 @@ namespace COTG
 
 			var msg = $"{eventName} {extra ?? string.Empty} {e.Message}";
 #if DEBUG
-			System.Diagnostics.Debug.WriteLine($"{sourceFilePath}({sourceLineNumber}): {timeStamp}: {memberName} : Exception: {msg} {e.StackTrace}");
+			System.Diagnostics.Debug.WriteLine($"\n{sourceFilePath}({sourceLineNumber}): {timeStamp}: {memberName} : Exception: {msg} {e.StackTrace}","Ex");
 			var stackTrace = new StackTrace(e, true);
 			DumpStack(stackTrace);
 			if(report)
@@ -206,13 +214,13 @@ namespace COTG
 		{
 
 #if DEBUG
-			System.Diagnostics.Debug.WriteLine($"{sourceFilePath}({sourceLineNumber}): {timeStamp}: {memberName} : Exception: {s}");
+			System.Diagnostics.Debug.WriteLine($"\n{sourceFilePath}({sourceLineNumber}): {timeStamp}: {memberName} : Exception: {s}","Exeption");
 			DumpStack(new StackTrace(1, true));
 			// logger.ZLogError($"{s}\nCaller {memberName}, {sourceFilePath}:{sourceLineNumber}");
 #endif
 			Note.Show(s);
 		}
-
+		[Conditional("DEBUG")]
 		public static void Assert(bool v,
 			[System.Runtime.CompilerServices.CallerMemberName] string memberName = "",
 	   [System.Runtime.CompilerServices.CallerFilePath] string sourceFilePath = "",
@@ -224,11 +232,11 @@ namespace COTG
 				return;
 			}
 
-			var str = $"{sourceFilePath}({sourceLineNumber}): {timeStamp}: {memberName} : Assert({exp})";
+			var str = $"\n{sourceFilePath}({sourceLineNumber}): {timeStamp}: {memberName} : Assert({exp})";
 			Note.Show(str);
 #if DEBUG
 
-			System.Diagnostics.Debug.WriteLine(str);
+			System.Diagnostics.Debug.WriteLine(str,"Assert");
 			var stack = new StackTrace(1, true);
 			DumpStack(stack);
 			if (App.RegisterException($"{sourceFilePath}({sourceLineNumber})"))

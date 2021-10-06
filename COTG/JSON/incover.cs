@@ -9,9 +9,9 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
-using static COTG.Game.Enum;
+using static COTG.Game.Troops;
 using static COTG.Debug;
-using Windows.UI.ViewManagement;
+//using Windows.UI.ViewManagement;
 using System.Net.Http;
 using System.Text.Json;
 using TroopTypeCountsRef = COTG.Game.TroopTypeCounts;
@@ -377,7 +377,7 @@ namespace COTG.Game
 																  var str = tt.GetAsString();
 																  int firstSpace = str.IndexOf(' ');
 
-																  var ttype = Game.Enum.ttNameWithCapsAndBatteringRam.IndexOf(str.Substring(firstSpace + 1));
+																  var ttype = Game.Troops.ttNameWithCapsAndBatteringRam.IndexOf(str.Substring(firstSpace + 1));
 																  if (ttype != -1)
 																  {
 																	  Add(ref ttl, new TroopTypeCount()

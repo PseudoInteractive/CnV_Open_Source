@@ -62,7 +62,7 @@ namespace COTG.Game
                 string rv = "Troops Home/Total";
                 foreach (var ttc in city.troopsTotal.Enumerate())
                 {
-                    rv += $"\n{Enum.ttNameWithCaps[ttc.type]}: {city.troopsHome.GetCount(ttc.type),4:N0}/{ttc.count,4:N0}";
+                    rv += $"\n{Troops.ttNameWithCaps[ttc.type]}: {city.troopsHome.GetCount(ttc.type),4:N0}/{ttc.count,4:N0}";
                 }
                 return rv;
             }
@@ -91,7 +91,7 @@ namespace COTG.Game
         public int type;
 
         public BitmapImage icon => ImageHelper.FromImages($"Icons/troops{type}.png");
-        public string troopType => Enum.ttNameWithCaps[type];
+        public string troopType => Troops.ttNameWithCaps[type];
         public int send { get => supporter.tSend.GetCount(type); set => Set(ref supporter.tSend,new TroopTypeCount( type,value) ); }
         public int home { get => supporter.city.troopsHome.GetCount(type); }
         public int total { get => supporter.city.troopsTotal.GetCount(type); }

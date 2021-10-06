@@ -44,7 +44,7 @@ namespace COTG.Views
 	//    public LogEntryStruct(string _t) { t =_t; }
 	//}
 	// TODO WTS: Change the icons and titles for all NavigationViewItems in ShellPage.xaml.
-	public sealed partial class ShellPage : Page, INotifyPropertyChanged
+	public  partial class ShellPage : Page, INotifyPropertyChanged
 	{
 		public const int canvasZDefault = 11;
 		public const int canvasZBack = 0;
@@ -233,7 +233,7 @@ namespace COTG.Views
 			var c = CreateCanvasControl();
 			
 			// canvas.ContextFlyout = CityFlyout;
-			grid.Children.Add(c.canvas);
+		//	grid.Children.Add(c.canvas);
 			// grid.Children.Add(c.hitTest);
 		
 			// Canvas.SetZIndex(c.hitTest, 13); Task.Run(SetupCanvasInput);//
@@ -432,12 +432,12 @@ namespace COTG.Views
 		//	}
 
 		//}
-		private void ShellPage_BackRequested(object sender,Windows.UI.Core.BackRequestedEventArgs e)
-		{
-			Log("Back!!");
-			NavStack.Back(true);
-			//e.Handled = true;
-		}
+		//private void ShellPage_BackRequested(object sender,Microsoft.UI.Core.BackRequestedEventArgs e)
+		//{
+		//	Log("Back!!");
+		//	NavStack.Back(true);
+		//	//e.Handled = true;
+		//}
 
 		private void Refresh_Invoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
 		{
@@ -635,6 +635,7 @@ namespace COTG.Views
 				if(tab.isFocused)
 					tab.refresh.Go();
 			}
+			City.gridCitySource.ClearHash();
 			JSClient.CityRefresh();
 		//	instance.UpdateWebViewScale();
 			return Task.CompletedTask;
@@ -1428,11 +1429,32 @@ namespace COTG.Views
 			void fn(object sender,RoutedEventArgs e)
 			{
 				var s = sender as Button;
-				foreach(Button b in layoutGrid.Children)
+				int id=-1;
+				for(int i=0;i<2;++i)
 				{
-					b.IsEnabled=true;
+					int counter = 0;
+					foreach(Button b in (i==0? leftLayoutGrid:rightLayoutGrid).Children)
+					{
+						{
+							if(s!= b)
+							{
+								b.IsEnabled=true;
+							}
+							else
+							{
+								id = counter;
+							}
+							++counter;
+						}
+					}
 				}
-				s.IsEnabled=false;
+				if(id != -1)
+				{
+					if(id< leftLayoutGrid.Children.Count)
+						(leftLayoutGrid.Children[id] as Button).IsEnabled=false;
+					if(id< rightLayoutGrid.Children.Count)
+						(rightLayoutGrid.Children[id] as Button).IsEnabled=false;
+				}
 				SetLayout((Layout)offset);
 			}
 
@@ -1440,10 +1462,7 @@ namespace COTG.Views
 
 		}
 
-		private void HomeButton_AccessKeyInvoked(UIElement sender,AccessKeyInvokedEventArgs args)
-		{
-
-		}
+		
 
 
 		//		private async void CookieClick(object sender, RoutedEventArgs e)

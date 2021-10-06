@@ -402,9 +402,9 @@ namespace COTG
 							// queue.count goes through here if the player cancels the queue so that this can be deleted
 							if (commandsToQueue > 0 || queue.count == 0)
 							{
-								commandBuilder.Clear();
+							//	commandBuilder.Clear();
 								int validCount = 0;
-								commandBuilder.Append($"{{\"{cid}\":[");
+							//	commandBuilder.Append($"{{\"{cid}\":[");
 								var qFirst = true;
 								var destroyMe = false;
 
@@ -946,10 +946,10 @@ namespace COTG
 	}
 	public static class BuildQueue
 	{
-		static ThreadPoolTimer saveTimer;
+		static System.Timers.Timer saveTimer;
 		public static byte buildActionCounter; // needs to be saved to disc
 		public static void SaveNeeded() => buildActionCounter = 3;
-		public static Utf8ValueStringBuilder commandBuilder = ZString.CreateUtf8StringBuilder();
+//		public static Utf8ValueStringBuilder commandBuilder = ZString.CreateUtf8StringBuilder();
 
 		public static StorageFolder folder => ApplicationData.Current.LocalFolder;
 		static string fileName => $"buildQueue{JSClient.world}_{Player.myName}.json";
@@ -1069,7 +1069,8 @@ namespace COTG
 				return;
 			var _saveTimer = saveTimer;
 			saveTimer = null;
-			_saveTimer.Cancel();
+			_saveTimer.Stop();
+			
 			SaveAll().Wait();
 
 		}
@@ -1098,7 +1099,8 @@ namespace COTG
 
 			}
 		}
-		static internal void SaveTimer_Tick(ThreadPoolTimer timer)
+
+		static internal void SaveTimer_Tick(object sender,System.Timers.ElapsedEventArgs e)
 		{
 			SaveTimerGo(false, false);
 		}
@@ -1347,8 +1349,13 @@ namespace COTG
 				}
 			}
 
-			saveTimer = ThreadPoolTimer.CreatePeriodicTimer(SaveTimer_Tick, TimeSpan.FromSeconds(3*60));
+			saveTimer = new System.Timers.Timer(3*60*1000);
+			saveTimer.Elapsed+= SaveTimer_Tick;
+			saveTimer.AutoReset = true;
+			saveTimer.Start();
 		}
+
+		
 	}
 }
 

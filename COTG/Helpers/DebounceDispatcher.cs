@@ -165,10 +165,17 @@ namespace COTG
 				if(!task.IsCanceled)
 				{
 					_tokens.TryRemove(key,out _);
-					if(runOnUIThread)
-						App.DispatchOnUIThread(action);
-					else
-						action();
+					try
+					{
+						if(runOnUIThread)
+							App.DispatchOnUIThread(action);
+						else
+							action();
+					}
+					catch(Exception ex)
+					{
+						LogEx(ex, extra:$"{uniqueKey}({uniqueNumber}): {ex.ToString()}");
+					}
 				}
 			},token.Token).ConfigureAwait(false);
 		}

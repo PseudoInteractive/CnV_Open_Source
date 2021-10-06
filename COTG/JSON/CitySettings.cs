@@ -9,7 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Web;
 
-using Windows.UI.Popups;
+//using Windows.UI.Popups;
 using Microsoft.UI.Xaml.Controls;
 using ContentDialog = Microsoft.UI.Xaml.Controls.ContentDialog;
 using ContentDialogResult = Microsoft.UI.Xaml.Controls.ContentDialogResult;
@@ -40,13 +40,13 @@ namespace COTG.JSON
 			return result;
 
 		}
-		public static async Task<int?> FindBestHubWithChoice(int cid,string title) => await CitySettings.FindBestHub(cid,await App.DoYesNoBox(title,"Off Continent?",cancel: null) == 1);
+		public static async Task<int> FindBestHubWithChoice(int cid,string title) => await CitySettings.FindBestHub(cid,await App.DoYesNoBox(title,"Find one from another Continent?",cancel: null) == 1);
 
-		public static async Task<int?> FindBestHub(int cid, bool onlyOffContinent)
+		public static async Task<int> FindBestHub(int cid, bool onlyOffContinent)
 		{
 			await NearRes.UpdateTradeStuffifNeeded();
-			int? reqHub = null;
-			var bestDist = 4096f;
+			int reqHub =0;
+			var bestDist =float.MaxValue;
 			var hubs = GetHubs();
 				foreach (var hub in hubs)
 				{
@@ -55,7 +55,7 @@ namespace COTG.JSON
 					var reachable = hub.CanReachByTrade(cid);
 					if(!reachable.reachable)
 						continue;
-					if(onlyOffContinent && cid.CidToContinent() != hub.CidToContinent() )
+					if(onlyOffContinent && (cid.CidToContinent() == hub.CidToContinent()) )
 						continue;
 
 					var d = hub.DistanceToCid(cid) * 256.0f/( (reachable.viaWater? (City.Get(cid).shipsHome+128) : (City.Get(cid).CartsHome*1.0f/64) + 128) );
@@ -91,9 +91,10 @@ namespace COTG.JSON
 					sourceHub = targetHub = await FindBestHubWithChoice(cid, "Find Hub" );
 				}
 				var settings = new ResSettings();
-				settings.InitTradeSettings(city,sourceHub.GetValueOrDefault(),targetHub.GetValueOrDefault());
 				settings.reqFilter = reqFilter;
 				settings.sendFilter = targetFilter;
+				settings.InitTradeSettings(city,sourceHub.GetValueOrDefault(),targetHub.GetValueOrDefault());
+				
 
 				var dialog = new ContentDialog()
 				{

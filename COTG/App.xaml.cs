@@ -1,14 +1,18 @@
-﻿using CommunityToolkit.WinUI;
+﻿global using System.Linq;
+global using COTG.Game;
+global using COTG.Views;
+global using System;
+global using static COTG.Debug;
+
+using CommunityToolkit.WinUI;
 using CommunityToolkit.WinUI.Helpers;
 
-using COTG.Game;
 using COTG.Helpers;
 using COTG.Services;
-using COTG.Views;
 
 using Microsoft.AppCenter;
 using Microsoft.AppCenter.Analytics;
-using Microsoft.AppCenter.Crashes;
+//using Microsoft.AppCenter.Crashes;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 //using Microsoft.UI.Xaml.Controls;
@@ -17,7 +21,6 @@ using Microsoft.Web.WebView2.Core;
 //using ZLogger;
 using CoreCursor = Windows.UI.Core.CoreCursor;
 //using Cysharp.Text;
-using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -47,7 +50,6 @@ using Windows.System;
 //using Windows.UI.Core;
 //using Windows.UI.Input;
 using Microsoft.UI.Dispatching;
-using static COTG.Debug;
 using DispatcherQueueHandler = Microsoft.UI.Dispatching.DispatcherQueueHandler;
 using DispatcherQueuePriority= Microsoft.UI.Dispatching.DispatcherQueuePriority;
 using ContentDialog = Microsoft.UI.Xaml.Controls.ContentDialog;
@@ -87,28 +89,31 @@ namespace COTG
 		public static App instance;
 		public static string appLink = "cotg";
 
-		public static async void StartAnalytics()
+		public static  Task StartAnalyticsAsync()
 		{
-			if (AppCenter.Configured)
-			{
-				return;
-			}
-			AppCenter.SetMaxStorageSizeAsync(16 * 1024 * 1024).ContinueWith((storageTask) => {
-				// The storageTask.Result is false when the size cannot be honored.
-			});
-			AppCenter.LogLevel = System.Diagnostics.Debugger.IsAttached ? Microsoft.AppCenter.LogLevel.Warn : Microsoft.AppCenter.LogLevel.Error;
+			//if (AppCenter.Configured)
+			//{
+			//	return;
+			//}
+			//AppCenter.SetMaxStorageSizeAsync(16 * 1024 * 1024).ContinueWith((storageTask) => {
+			//	// The storageTask.Result is false when the size cannot be honored.
+			//});
+			
+		//	AppCenter.Configure("0b4c4039-3680-41bf-b7d7-685eb68e21d2");
+			AppCenter.LogLevel = System.Diagnostics.Debugger.IsAttached ? Microsoft.AppCenter.LogLevel.Warn : Microsoft.AppCenter.LogLevel.None;
 			AppCenter.Start("0b4c4039-3680-41bf-b7d7-685eb68e21d2",
 			   typeof(Analytics)
 #if CRASHES
 			   , typeof(Crashes)
 #endif
 			   );
-			await Task.WhenAll(
+			AAnalytics.initialized=true;
+			return  Task.WhenAll(
 #if CRASHES
 					Crashes.SetEnabledAsync(true),
 #endif
 								Analytics.SetEnabledAsync(true) );
-			AAnalytics.initialized=true;
+			
 
 #if CRASHES
 			bool didAppCrash = await Crashes.HasCrashedInLastSessionAsync();
@@ -120,6 +125,8 @@ namespace COTG
 		}
 		public App()
 		{
+
+//			ShutdownMode= Shut
 
 
 
@@ -134,12 +141,13 @@ namespace COTG
 			//{
 			//    Log(e);
 			//}
-			
+
 			//	ServicePointManager.ServerCertificateValidationCallback = (sender, certificate, chain, sslPolicyErrors) => { Log(certificate.ToString()); return true; };
-		//	InitializeComponent();
+			//	InitializeComponent();
 			instance = this;
 
 			UnhandledException += OnAppUnhandledException;
+			//Microsoft.Extensions.Hosting.Host.Cre
 			TaskScheduler.UnobservedTaskException+=TaskScheduler_UnobservedTaskException;
 			FocusVisualKind = FocusVisualKind.Reveal;
 			
@@ -148,24 +156,14 @@ namespace COTG
 			// Deferred execution until used. Check https://msdn.microsoft.com/library/dd642331(v=vs.110).aspx for further info on Lazy<T> class.
 			_activationService = new Lazy<ActivationService>(CreateActivationService);
 			//	UserAgent.SetUserAgent(JSClient.userAgent);  // set webview useragent
-			{
-				Task.Run(async () =>
-				{
-					await Task.Delay(10_000).ConfigureAwait(false);
-					for(;;)
-					{
-						await Task.Delay(2000);//.ConfigureAwait(false);
-						Assert( IsOnUIThread());
-						App.DispatchOnUIThread(()=>Note.ShowTip($"{FocusManager.GetFocusedElement()}"));
-					}
-				});
-			}
+			
 		}
 
 		private void TaskScheduler_UnobservedTaskException(object sender,UnobservedTaskExceptionEventArgs e)
 		{
-			LogEx(e.Exception);
 			e.SetObserved();
+			LogEx(e.Exception);
+			
 		}
 
 		//		public static Windows.Foundation.IAsyncOperation<CoreWebView2Environment> createWebEnvironmentTask;
@@ -266,13 +264,13 @@ namespace COTG
 
 		public static void OnKeyUp(VirtualKey key)
 		{
-			Trace("KeyUp" + key);
+		//	Trace("KeyUp" + key);
 			switch (key)
 			{
 				case VirtualKey.Shift:
 				case VirtualKey.LeftShift:
 				case VirtualKey.RightShift:
-					Trace("Shift Up");
+			//		Trace("Shift Up");
 				//	shiftPressed = false;
 					break;
 				case VirtualKey.Control:
@@ -298,7 +296,7 @@ namespace COTG
 		//}
 		public static void OnKeyDown(VirtualKey key)
 		{
-			Trace("KeyDown" + key);
+			//Trace("KeyDown" + key);
 
 			switch(key)
 			{
@@ -340,30 +338,22 @@ namespace COTG
 		}
 
 		static public int storageFull = 0;
-		static ConcurrentDictionary<string, int> exceptions = new();
+		static ConcurrentHashSet<string> exceptions = new();
 		public static bool RegisterException(string message)
 		{
-			if (exceptions.TryGetValue(message, out var i))
-			{
-				exceptions.TryUpdate(message, i + 1, i);
-				return false;
-			}
-			else
-			{
-				exceptions.TryAdd(message, 1);
-				return true;
-			}
-
+			return exceptions.Add( message);
+			
 		}
 
 		private void OnAppUnhandledException(object sender, Microsoft.UI.Xaml.UnhandledExceptionEventArgs e)
 		{
+			e.Handled = true;
 #if DEBUG
 			System.Diagnostics.Debug.WriteLine($"Unhandled Exception: " + e.Message);
 			System.Diagnostics.Debug.WriteLine(e.Exception.StackTrace);
 #endif
 
-			e.Handled = true;
+			
 
 			if (RegisterException(e.Message))
 			{
@@ -378,7 +368,8 @@ namespace COTG
 				catch (Exception ex2)
 				{
 
-					RegisterException(ex2.Message);
+				//	LogEx(ex2);
+//					RegisterException(ex2.Message);
 
 
 				}
@@ -547,9 +538,9 @@ namespace COTG
 			if(wasRunning)
 				return;
 
-			window.Content.PreviewKeyUp+=Content_PreviewKeyUp;
-			window.Content.PreviewKeyDown+=Content_PreviewKeyDown; ;
-				window.KeyDown+=Window_KeyDown;
+		//	window.Content.PreviewKeyUp+=Content_PreviewKeyUp;
+		//	window.Content.PreviewKeyDown+=Content_PreviewKeyDown; ;
+		//		window.KeyDown+=Window_KeyDown;
 				window.Maximize();
 
 				//			CoreApplication.MainView.HostedViewClosing+=MainView_HostedViewClosing; ;
@@ -596,7 +587,7 @@ namespace COTG
 
 		private void Window_KeyDown(object sender,WindowKeyDownEventArgs e)
 		{
-			Trace("KeyDown "+e.Key);
+//			Trace("KeyDown "+e.Key);
 		}
 
 		//private void Window_Activated(object sender,WindowActivatedEventArgs args)
@@ -879,7 +870,7 @@ namespace COTG
 		{
 			foreach (var i in idleTasks)
 			{
-				if (i.IsEqual(a) )
+				if (i==a )
 					return;
 			}
 
@@ -890,7 +881,7 @@ namespace COTG
 		{
 			foreach (var i in idleTasks)
 			{
-				if (i.IsEqual(a) )
+				if (i == a )
 					return;
 			}
 
@@ -1061,19 +1052,27 @@ namespace COTG
 		
 	public static void DispatchOnUIThread(DispatcherQueueHandler action, DispatcherQueuePriority priority= DispatcherQueuePriority.Normal, bool alwaysQueue = false)
 	{
-		var d = GlobalDispatcher();
-		// run it immediately if we can
-		if (d.HasThreadAccess && !alwaysQueue)
-		{
-			++dispatches0;
-			action();
+			try
+			{
+				var d = GlobalDispatcher();
+				// run it immediately if we can
+				if(d.HasThreadAccess && !alwaysQueue)
+				{
+					++dispatches0;
+					action();
+				}
+				else
+				{
+					++dispatches1;
+					d.TryEnqueue(priority,action);
+				}
+			}
+			catch(Exception ex)
+			{
+				LogEx(ex);
+			}
 		}
-		else
-		{
-			++dispatches1;
-			d.TryEnqueue( priority, action);
-		}
-	}
+
 
 		public static void DispatchOnUIThreadIdle(DispatcherQueueHandler action)
 		{
@@ -1091,18 +1090,27 @@ namespace COTG
 
 	public static void DispatchOnUIThreadLow(DispatcherQueueHandler action, bool alwaysQueue = false)
 	{
-		var d = GlobalDispatcher();
-		// run it immediately if we can
-		if (d.HasThreadAccess && !alwaysQueue)
-		{
-				++dispatches0;
-				action();
-		}
-		else
-		{
-				++dispatches1;
-				d.TryEnqueue(action);
-		}
+			try
+			{
+				var d = GlobalDispatcher();
+				// run it immediately if we can
+				if(d.HasThreadAccess && !alwaysQueue)
+				{
+					++dispatches0;
+					action();
+				}
+				else
+				{
+					++dispatches1;
+					d.TryEnqueue(action);
+				}
+
+			}
+			catch(Exception __ex)
+			{
+				Debug.LogEx(__ex);
+			}
+		
 	}
 
 	//public static int pendingDispatch;
@@ -1246,10 +1254,9 @@ namespace COTG
 			}
 		}
 
-		public async static Task<int> DoYesNoBox(string title, string text, string yes="Yes", string no = "No", string cancel ="Cancel" )
+		public static Task<int> DoYesNoBox(string title, string text, string yes="Yes", string no = "No", string cancel ="Cancel" )
 		{
-			
-			return await DispatchOnUIThreadTask(async () =>
+			return DispatchOnUIThreadTask(async () =>
 		   {
 				 return await DoYesNoBoxUI(title, text,yes,no,cancel);
 		   });
@@ -1391,7 +1398,7 @@ namespace COTG
 			if(App.shiftPressed!= mod.IsShift())
 			{
 				App.shiftPressed = mod.IsShift();
-				Trace($"Shift: {App.shiftPressed}");
+		//		Trace($"Shift: {App.shiftPressed}");
 			}
 			App.controlPressed = mod.IsControl();
 		}

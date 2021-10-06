@@ -10,7 +10,7 @@ using Microsoft.UI.Xaml;
 
 using static COTG.Debug;
 using static COTG.Game.City;
-using static COTG.Game.Enum;
+using static COTG.Game.Troops;
 using static COTG.BuildingDef;
 using System.Buffers;
 //using static System.Buffers.ArrayPool<COTG.Building>;

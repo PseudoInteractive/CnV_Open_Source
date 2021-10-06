@@ -158,8 +158,8 @@ namespace COTG.Game
 					return 0;
 				var d = cid.CidToWorld().DistanceToCidD(distanceReference.cid);
 				var tt = distanceReference.GetAttackTroopType();
-				var rv = d * (Enum.ttTravel[tt]*100) / (60f * Enum.ttSpeedBonus[tt]);
-				if (Enum.IsTTNaval(tt))
+				var rv = d * (Troops.ttTravel[tt]*100) / (60f * Troops.ttSpeedBonus[tt]);
+				if (Troops.IsTTNaval(tt))
 					rv += 1.0f;
 				return (float)rv;
 			}

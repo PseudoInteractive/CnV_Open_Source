@@ -1,61 +1,68 @@
-﻿using COTG.Game;
-using COTG.Views;
-using System;
+﻿
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
-using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using Windows.System;
-using static COTG.Debug;
 
 namespace COTG
 {
-	public class NotifyCollection<T> : List<T>, INotifyCollectionChanged,INotifyPropertyChanged
+	public class NotifyCollection<T> :IReadOnlyCollection<T>, IEnumerable, IEnumerable<T>, INotifyCollectionChanged,INotifyPropertyChanged where T : class
 	{
-		public event NotifyCollectionChangedEventHandler CollectionChanged;
+		public List<T> c = new();
+		T [] cache;
+		public NotifyCollection()
+		{
+
+		}
+		bool hasNotifications => (CollectionChanged is not null | PropertyChanged is not null);
+		public event NotifyCollectionChangedEventHandler? CollectionChanged;
 		public void OnPropertyChanged(T city,string propertyName = "") => PropertyChanged?.Invoke(city,new PropertyChangedEventArgs(propertyName));
 		public void OnPropertyChanged(string propertyName = "") => PropertyChanged?.Invoke(this,new PropertyChangedEventArgs(propertyName));
-		public event PropertyChangedEventHandler PropertyChanged;
+		public event PropertyChangedEventHandler? PropertyChanged;
 
-		protected long lastHash;
+		protected long lastDataHash;
 
-		public static long GetHashCode(IEnumerable<T> v)
+		public int Count => c.Count;
+		public T  this[int id] => c[id];
+
+		public void ClearHash() => lastDataHash=-1L;
+
+		public static long GetDataHash(IEnumerable<T> v)
 		{
 			var hash = 0;
 			foreach(var i in v)
 			{
-				hash = hash*13 + RuntimeHelpers.GetHashCode(v);
+				hash = hash*13 + RuntimeHelpers.GetHashCode(i);
 			}
 			return hash;
 		}
 
 
-		public void NotifyReset(bool itemsChanged)
+		public void NotifyReset(bool itemsChanged=true)
 		{
 			
-			var newHash = GetHashCode(this);
-			var hashChanged = newHash != lastHash;
-			if( !hashChanged && !itemsChanged )
-				return;
-			lastHash= newHash;
-
-			if(CollectionChanged != null)
+			var newHash = GetDataHash(c);
+			var hashChanged = newHash != lastDataHash;
+		//	if( !hashChanged && !itemsChanged )
+		//		return;
+			lastDataHash= newHash;
+		//	if(hasNotifications)
 			{
-				App.DispatchOnUIThreadIdle(() =>
-				{
+					Debounce.Q( hash: RuntimeHelpers.GetHashCode(this)*11,runOnUIThread:true,action: ()=> {
 					try
 					{
-						if(itemsChanged)
+			//			if(itemsChanged)
 							OnPropertyChanged();
 					//  Assert(App.IsOnUIThread());
 						if( hashChanged)
 						{
-							CollectionChanged(this,new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
+							if(CollectionChanged is not null)
+								CollectionChanged(this,new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
 						}
 
 					}
@@ -72,28 +79,17 @@ namespace COTG
 		{
 			if(CollectionChanged != null)
 			{
-				App.DispatchOnUIThreadIdle(() =>
-				{
-					try
+				var _count = Count;
+					if(_count == Count)
 					{
-						//  Assert(App.IsOnUIThread());
-						try
-						{
-							CollectionChanged(this,new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add,added,id));
-
-
-						}
-						catch(Exception __ex)
-						{
-							Debug.LogEx(__ex);
-						}
-
+						NotifyChange(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add,added,id),true);
 					}
-					catch(Exception __ex)
+					else
 					{
-						Debug.LogEx(__ex);
-					}				
-				});
+						NotifyReset();
+					}
+
+				
 			}
 		}
 
@@ -101,38 +97,41 @@ namespace COTG
 		{
 			if(CollectionChanged != null)
 			{
-				App.DispatchOnUIThreadIdle( () =>
-				{
-					//  Assert(App.IsOnUIThread());
-					try
-					{
-						CollectionChanged(this,new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add,added as IList));
-
-
-					}
-					catch(Exception __ex)
-					{
-						Debug.LogEx(__ex);
-					}				
-				});
+				NotifyChange(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add,added),true);
 			}
 
 		}
 		public void NotifyRemoveAt(int id,T removed)
 		{
-			if(CollectionChanged != null )
-			{
 				var _count = Count;
+						if(_count == Count)
+						{
+							NotifyChange(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove,removed,id),true);
+						}
+						else
+						{
+							NotifyReset(true);				
+						}
+					
+			
+
+		}
+
+		public void NotifyChange(NotifyCollectionChangedEventArgs args, bool sizeChanged)
+		{
+			if(hasNotifications)
+			{
 				App.DispatchOnUIThreadIdle(() =>
 				{
 					try
 					{
-						if(id <= _count)
-							CollectionChanged.Invoke(this,new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove,removed,id));
-						else
-						{
-							NotifyReset();
-						}
+
+						if(sizeChanged)
+							OnPropertyChanged();
+
+						CollectionChanged(this,args);
+
+
 					}
 					catch(Exception __ex)
 					{
@@ -141,81 +140,95 @@ namespace COTG
 				});
 			}
 		}
-		
 		public void NotifyRemove(IList<T> removed)
 		{
-			if(CollectionChanged != null)
+			NotifyChange(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove,removed as IList),true);
+		}
+
+		public void Remove(Predicate<T>  pred, bool notify)
+		{
+			int id = c.FindIndex(pred);
+			if(id >= 0)
 			{
-				App.DispatchOnUIThreadIdle(() =>
-				{
-					try
-					{
-						CollectionChanged(this,new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove,removed as IList));
-
-
-					}
-					catch(Exception __ex)
-					{
-						Debug.LogEx(__ex);
-					}			
-				});
+				RemoveAt(id, notify);
 			}
+		}
+
+		public void SortSmall(Comparison<T> cmp)
+		{
+			c.SortSmall(cmp);
+			NotifyReset(true);
+
 		}
 		public void Add(T item,bool notify)
 		{
 			var id = Count;
-			base.Add(item);
+			c.Add(item);
 			if(notify)
+			{
 				NotifyInsert(id,item);
+			}
 		}
 		public  void Insert(int id,T item,bool notify)
 		{
-			base.Insert(id,item);
-			if(notify && CollectionChanged != null)
+			c.Insert(id,item);
+			notify=true;
+			if(notify && hasNotifications)
 			{
 				NotifyInsert(id,item);
 			}
 		}
 		public void RemoveAt(int id,bool notify)
 		{
-			var item = base[id];
-			base.RemoveAt(id);
-			if(notify)
+			var item = c[id];
+			c.RemoveAt(id);
+			if(notify && hasNotifications)
 				NotifyRemoveAt(id,item);
 		}
 		public void Remove(T i,bool notify)
 		{
-			var index = IndexOf(i);
+			var index = c.IndexOf(i);
 			if(index >= 0)
 			{
-				RemoveAt(index);
-				if(notify)
-					NotifyRemoveAt(index,i);
+				RemoveAt(index,notify);
 			}
 		}
 
-		public void Set(IEnumerable<T> src,bool notify)
+		public void Set(IEnumerable<T> src,bool notify, bool itemsChanged=true)
 		{
-			if(src.SequenceEqual(this))
-				return;
+		//	if(notify == )
+		//	if(src.SequenceEqual(this))
+		//		return;
 
-			base.Clear();
+			c.Clear();
 			if(!src.IsNullOrEmpty() )
-				base.AddRange(src);
-			if(notify)
-				NotifyReset();
+				c.AddRange(src);
+			if(notify && hasNotifications)
+				NotifyReset(itemsChanged);
 		}
+
 		public void Clear(bool notify)
 		{
-			Set(null,notify);
+			Set(null,notify,true);
 		}
 		// do not use these
-		private new void Clear() { }
-		private new void Add(T a) { }
-		private new void Insert(int a,T b) { }
-		private new void Remove(T a) { }
-		private new void RemoveAt(int a) { }
-		private new void AddRange(IEnumerable<T>   a) { }
+		
+
+		public IEnumerator<T> GetEnumerator()
+		{
+			return c.GetEnumerator();
+			cache = c.ToArray();
+			return cache.AsEnumerable<T>().GetEnumerator();
+		}
+//		IEnumerator IEnumerable.GetEnumerator() => c.ToArray().GetEnumerator();
+		//IEnumerator IEnumerable.GetEnumerator() => c.GetEnumerator();
+		 IEnumerator IEnumerable.GetEnumerator()
+		{
+			return c.GetEnumerator();
+			cache = c.ToArray();
+			return cache.GetEnumerator();
+		}
+		
 	}
 
 

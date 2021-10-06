@@ -33,7 +33,18 @@
         <Folder>
           <name>Xaml</name>
           <folders />
-          <favorites />
+          <favorites>
+            <Favorite>
+              <name>ShellPage.xaml</name>
+              <path>COTG\Views\ShellPage.xaml</path>
+              <absolutePath>C:\Source\COTG\COTG\Views\ShellPage.xaml</absolutePath>
+              <position>
+                <line>102</line>
+                <column>34</column>
+                <lineHash>uTAlfHIBpEOeCJj0KFo+h7/cCGAe96OIJEf2Pxpvqfs=</lineHash>
+              </position>
+            </Favorite>
+          </favorites>
         </Folder>
       </folders>
       <favorites>
@@ -60,6 +71,16 @@
             <line>404</line>
             <column>40</column>
             <lineHash>SI3vINxyqOlo/XJ6ictmLlZ+FtCcnlN67KddSlRnQGA=</lineHash>
+          </position>
+        </Favorite>
+        <Favorite>
+          <name>ShellPage.xaml.cs</name>
+          <path>COTG\Views\ShellPage.xaml.cs</path>
+          <absolutePath>C:\Source\COTG\COTG\Views\ShellPage.xaml.cs</absolutePath>
+          <position>
+            <line>1431</line>
+            <column>13</column>
+            <lineHash>PKsTqEMSf5aLzSGHKBFVWLJ+d8omX6yyRALh7h5BV8U=</lineHash>
           </position>
         </Favorite>
       </favorites>

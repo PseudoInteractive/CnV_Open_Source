@@ -17,7 +17,7 @@ using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
-using static COTG.Game.Enum;
+using static COTG.Game.Troops;
 using static COTG.Game.Spot;
 
 namespace COTG.Views

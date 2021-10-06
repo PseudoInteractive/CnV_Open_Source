@@ -29,7 +29,7 @@ using Windows.System;
 using COTG.JSON;
 using System.Text.Json;
 using System.Net.Http;
-using static COTG.Game.Enum;
+using static COTG.Game.Troops;
 using Windows.ApplicationModel.DataTransfer;
 using static COTG.Views.ShellPage;
 using ContentDialog = Microsoft.UI.Xaml.Controls.ContentDialog;
@@ -42,7 +42,7 @@ using System.Collections.ObjectModel;
 using PointerPoint = Microsoft.UI.Input.Experimental.ExpPointerPoint;
 using Cysharp.Text;
 using DiscordCnV;
-using Windows.UI.Core;
+//using Windows.UI.Core;
 using Microsoft.UI.Input;
 using Microsoft.UI.Xaml.Controls.Primitives;
 using System.Net.Http.Json;
@@ -285,7 +285,7 @@ namespace COTG.Game
 				{
 					sb.Append(separator);
 				}
-				sb.AppendFormat("{0:N0} {1}", tt.count, Enum.ttNameWithCaps[tt.type]);
+				sb.AppendFormat("{0:N0} {1}", tt.count, Troops.ttNameWithCaps[tt.type]);
 			}
 
 			return sb.ToString();
@@ -1224,7 +1224,7 @@ namespace COTG.Game
 				if (c > 0)
 				{
 					var ch = troopsHome[tt];
-					rv += $"{sep}{ch:N0}/{c:N0} {Enum.ttNameWithCaps[tt]}";
+					rv += $"{sep}{ch:N0}/{c:N0} {Troops.ttNameWithCaps[tt]}";
 					sep = separator;
 				}
 			}
@@ -2109,13 +2109,9 @@ namespace COTG.Game
 		}
 		public void DefendMe()
 		{
-			NearDefenseTab.defendants.Clear();
-			var cids = GetSelectedForContextMenu(cid, false);
-			foreach (var city in cids)
-			{
-				NearDefenseTab.defendants.Add(City.Get(city));
-			}
-			NearDefenseTab.defendants.NotifyReset();
+			var cids = GetSelectedForContextMenu(cid,false);
+
+			NearDefenseTab.defendants.Set(cids.Select(a=>City.Get(a)),true);
 
 			var tab = NearDefenseTab.instance;
 			tab.ShowOrAdd(true);

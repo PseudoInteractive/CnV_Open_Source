@@ -92,7 +92,7 @@ namespace COTG.Game
 		public HeatMapDay(SmallTime t) : base(t)
 		{
 			desc = dateStr + " ..click to load";
-			deltas.Add(HeatMapDelta.pending);
+			deltas.Add(HeatMapDelta.pending,true);
 		}
 
 
@@ -113,7 +113,7 @@ namespace COTG.Game
 			get
 			{
 				Assert(deltas.Count != 0);
-				return deltas.Count != 1 || deltas[0] != HeatMapDelta.pending;
+				return deltas.Count != 1 || deltas.c[0] != HeatMapDelta.pending;
 			}
 		}
 		public int UncompressedSizeEstimate()
@@ -211,14 +211,14 @@ namespace COTG.Game
 				Assert(deltas.Count > 0);
 				if (dCount > 0)
 				{
-					deltas.Clear();
+					deltas.Clear(false);
 					for (int i = 0; i < dCount; ++i)
 					{
 						var t = r.ReadSmallTime();
 						var ds = r.ReadPackedUints();
 						if (t.Date() == this.t.Date())
 						{
-							deltas.Add(new HeatMapDelta(t, ds));
+							deltas.Add(new HeatMapDelta(t, ds),false);
 						}
 						else
 						{
@@ -230,7 +230,7 @@ namespace COTG.Game
 					// data is corrupt?
 					if(!deltas.Any())
 					{
-						deltas.Add(HeatMapDelta.pending);
+						deltas.Add(HeatMapDelta.pending,false);
 					}
 					deltas.NotifyReset();
 				}
@@ -272,9 +272,9 @@ namespace COTG.Game
 					return false;
 				}
 				if (!hasDeltas)
-					deltas.Clear();
+					deltas.Clear(true);
 
-				deltas.Insert(0, new HeatMapDelta(this.t, delta));
+				deltas.Insert(0, new HeatMapDelta(this.t, delta),true);
 				this.t = t;
 				//var prior = snapshot;
 				snapshot = newSnap;
@@ -420,7 +420,7 @@ namespace COTG.Game
 		// stored in reverse order, 0 is most recent
 		public HeatMapDay GetLater()
 		{
-			var id = HeatMapDay.days.IndexOf(this);
+			var id = HeatMapDay.days.c.IndexOf(this);
 			if (id > 0)
 				return HeatMapDay.days[id - 1];
 			else
@@ -429,7 +429,7 @@ namespace COTG.Game
 		}
 		public HeatMapDay GetEarlier()
 		{
-			var id = HeatMapDay.days.IndexOf(this);
+			var id = HeatMapDay.days.c.IndexOf(this);
 			if (id >= 0 && id + 1 < HeatMapDay.days.Count)
 				return HeatMapDay.days[id + 1];
 			else
@@ -593,7 +593,7 @@ namespace COTG.Game
 				day = new(t);
 			
 				//day.deltas.Add(new HeatMapDelta( t , Array.Empty<uint>() ) );
-				HeatMapDay.days.Insert(i, day);
+				HeatMapDay.days.Insert(i, day,true);
 			//	HeatTab.DaysChanged();
 			}
 			return day;

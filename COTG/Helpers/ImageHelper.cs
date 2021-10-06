@@ -12,19 +12,19 @@ namespace COTG.Helpers
 {
     public static class ImageHelper
     {
-        public static async Task<BitmapImage> ImageFromStringAsync(string data)
-        {
-            var byteArray = Convert.FromBase64String(data);
-            var image = new BitmapImage();
-            using (var stream = new InMemoryRandomAccessStream())
-            {
-                await stream.WriteAsync(byteArray.AsBuffer());
-                stream.Seek(0);
-                await image.SetSourceAsync(stream);
-            }
+        //public static async Task<BitmapImage> ImageFromStringAsync(string data)
+        //{
+        //    var byteArray = Convert.FromBase64String(data);
+        //    var image = new BitmapImage();
+        //    using (var stream = new InMemoryRandomAccessStream())
+        //    {
+        //        await stream.WriteAsync(byteArray.AsBuffer());
+        //        stream.Seek(0);
+        //        await image.SetSourceAsync(stream);
+        //    }
 
-            return image;
-        }
+        //    return image;
+        //}
         static Dictionary<string, BitmapImage> assetsCache = new Dictionary<string, BitmapImage>();
         static Dictionary<string, BitmapImage> imagesCache = new Dictionary<string, BitmapImage>();
         

@@ -114,6 +114,7 @@ namespace COTG.Views
 //			this.Width = 500;
 //			this.Height = 500;
 			//	ScrollViewer.SetVerticalScrollMode(this, ScrollMode.Auto); //DependencyObjectExtensions.FindDescendant<ScrollViewer>(this).AllowFocusOnInteraction= false;
+			Margin= new(8);
 		}
 		public Task VisibilityMaybeChanged()
 		{
@@ -138,15 +139,22 @@ namespace COTG.Views
 		//	grid.ListenForNestedPropertyChange=false;
 			grid.FontSize = SettingsPage.smallFontSize;
 			grid.RowHeight = SettingsPage.mediumGridRowHeight;
+			
 		}
 
 		public void SetupCityDataGrid(RadDataGrid grid)
 		{
-			Assert(!spotGrids.Contains(grid));
+			// damn, there should be a better way to check for this
+			if(spotGrids.Contains(grid))
+				return;
 			spotGrids.Add(grid);
 			grid.SelectionChanged += SpotSelectionChanged;
 			grid.ProcessTooltips();
 			SetupDataGrid(grid);
+		}
+		protected void DataGridLoaded(object sender,RoutedEventArgs e)
+		{
+			SetupCityDataGrid(sender as RadDataGrid);
 		}
 
 		public void SetPlus(bool set)
@@ -788,11 +796,11 @@ namespace COTG.Views
 
 
 
-		private void tip_Tapped(object sender,TappedRoutedEventArgs e)
-		{
-			if(TabPage.mainTabs.Visibility == Visibility.Collapsed)
-				TabPage.mainTabs.Visibility = Visibility.Visible;
-		}
+		//private void tip_Tapped(object sender,TappedRoutedEventArgs e)
+		//{
+		//	if(TabPage.mainTabs.Visibility == Visibility.Collapsed)
+		//		TabPage.mainTabs.Visibility = Visibility.Visible;
+		//}
 
 		//private void NewTabKeyboardAccelerator_Invoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
 		//{

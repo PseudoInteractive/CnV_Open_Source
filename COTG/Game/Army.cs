@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 using Telerik.UI.Xaml.Controls.Grid;
 using Windows.Foundation;
 using Microsoft.UI.Xaml.Input;
-using static COTG.Game.Enum;
+using static COTG.Game.Troops;
 using Microsoft.UI.Xaml.Media.Imaging;
 using Windows.System;
 using System.Text.Json.Serialization;
@@ -650,7 +650,7 @@ namespace COTG.Game
 				for (int i = 0; i < ttCount; ++i)
 				{
 					if (!ttIsDef[i])
-						rv += Enum.ttTs[i] * counts[i];
+						rv += Troops.ttTs[i] * counts[i];
 				}
 			}
 			return rv;
@@ -662,7 +662,7 @@ namespace COTG.Game
 			{
 				for (int i = 0; i < ttCount; ++i)
 				{
-						rv += Enum.ttTs[i] * counts[i];
+						rv += Troops.ttTs[i] * counts[i];
 				}
 			}
 			return rv;
@@ -703,7 +703,7 @@ namespace COTG.Game
 		{
 			unsafe
 			{
-				return Enum.TTTs(type, counts[type]);
+				return Troops.TTTs(type, counts[type]);
 			}
 		}
 		public readonly int GetCount(int type)
@@ -716,7 +716,7 @@ namespace COTG.Game
 		// combined TS
 		public readonly int TSRaid()
 		{	
-			return Raiding.GetTroops(this, true, true).Sum((tt) => tt.count * Enum.ttTs[tt.type]);
+			return Raiding.GetTroops(this, true, true).Sum((tt) => tt.count * Troops.ttTs[tt.type]);
 		}
 		public readonly int TSDef()
 		{
@@ -726,7 +726,7 @@ namespace COTG.Game
 				for (int i = 0; i < ttCount; ++i)
 				{
 					if (ttIsDef[i])
-						rv += Enum.ttTs[i] * counts[i];
+						rv += Troops.ttTs[i] * counts[i];
 				}
 			}
 			return rv;
@@ -740,7 +740,7 @@ namespace COTG.Game
 				{
 					var c = counts[i];
 					if (c > 0 && pred(new TroopTypeCount(i, c)))
-						rv += Enum.ttTs[i] * c;
+						rv += Troops.ttTs[i] * c;
 				}
 			}
 			return rv;
@@ -784,7 +784,7 @@ namespace COTG.Game
 		
 		public readonly double TravelTimeMinutes(double distance)
 		{
-			return Enum.TroopTravelMinutes(type, distance);
+			return Troops.TroopTravelMinutes(type, distance);
 		}
 
 		public TroopTypeCount(ref TroopTypeCount b)
@@ -800,22 +800,22 @@ namespace COTG.Game
 
         internal readonly string Format(string delimiter)
         {
-            return count > 0?  $"{delimiter}{count:N0} {Enum.ttNameWithCaps[type]}" : (delimiter + Enum.ttNameWithCaps[type]);
+            return count > 0?  $"{delimiter}{count:N0} {Troops.ttNameWithCaps[type]}" : (delimiter + Troops.ttNameWithCaps[type]);
         }
         [JsonIgnore]
-        public readonly bool isSenator => type == Enum.ttSenator;
+        public readonly bool isSenator => type == Troops.ttSenator;
         [JsonIgnore]
-        public readonly bool isArt  =>  Enum.ttArtillery[type];
+        public readonly bool isArt  =>  Troops.ttArtillery[type];
         [JsonIgnore]
-        public readonly bool isNaval => Enum.ttNavy[type];
+        public readonly bool isNaval => Troops.ttNavy[type];
         [JsonIgnore]
-        public readonly bool isDef => Enum.ttIsDef[type];
+        public readonly bool isDef => Troops.ttIsDef[type];
 		[JsonIgnore]
-		public readonly bool isSE => Enum.ttSE[type];
+		public readonly bool isSE => Troops.ttSE[type];
 
 
 		[JsonIgnore]
-        public readonly int ts => Enum.ttTs[type] * count;
+        public readonly int ts => Troops.ttTs[type] * count;
 		///        public static void SortByTS(in TroopTypeCounts l) => Array.Sort(l.v);
 
 		// Sort greatest TS to least TS
@@ -964,10 +964,10 @@ namespace COTG.Game
 
 					sb.Append(firstSeparater);
 					if (c > 0)
-						sb.AppendFormat("{0:N0} {1}", c, Enum.ttNameWithCaps[tt]);
+						sb.AppendFormat("{0:N0} {1}", c, Troops.ttNameWithCaps[tt]);
 					else
 					{
-						sb.Append(Enum.ttNameWithCaps[tt]);
+						sb.Append(Troops.ttNameWithCaps[tt]);
 					}
 					if (furtherSeparator != (char)0)
 						firstSeparater = furtherSeparator;
@@ -1051,7 +1051,7 @@ namespace COTG.Game
         // approximation using players speed bonus
         public static double TravelTimeMinutes(this byte tt,int cid0, int cid1)
         {
-			return Enum.TroopTravelMinutes(tt, cid0.DistanceToCid(cid1) );
+			return Troops.TroopTravelMinutes(tt, cid0.DistanceToCid(cid1) );
         }
 
 

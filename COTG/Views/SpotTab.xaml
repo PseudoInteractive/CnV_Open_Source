@@ -19,7 +19,7 @@
         Tag="Recent"
     mc:Ignorable="d">
 
-    <Grid>
+    <Grid >
 		<Grid.RowDefinitions>
 			<RowDefinition Height="auto"/>
 			<RowDefinition Height="*"/>
@@ -37,7 +37,7 @@
                         CanUserChooseColumns="True"
 								 IsTabStop="True"
 								 TabFocusNavigation="Once"
-								 
+								 Loaded="DataGridLoaded"
                        ColumnResizeHandleDisplayMode="OnColumnHeaderActionFlyoutOpen"
                                     ColumnDataOperationsMode="Flyout"
                         PointerPressed="gridPointerPress"

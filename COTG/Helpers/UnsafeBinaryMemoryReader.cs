@@ -43,7 +43,7 @@ namespace COTG.BinaryMemory
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public unsafe ref T Read<T>() where T : unmanaged
 		{
-			var sz = Marshal.SizeOf<T>();
+			var sz = sizeof(T);
 			Assert(position+sz <= end);
 			var _r = position;
 			position += sz;
@@ -55,7 +55,7 @@ namespace COTG.BinaryMemory
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public readonly unsafe ref readonly T Peek<T>(int byteOffset) where T : unmanaged
 		{
-			var sz = Marshal.SizeOf<T>();
+			var sz = sizeof(T);
 			Assert(position+sz <= end);
 			
 			return ref *(T*)&data[byteOffset];

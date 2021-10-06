@@ -7,7 +7,7 @@ using Cysharp.Text;
 using EnumsNET;
 
 using static COTG.StringList;
-using static COTG.Game.Enum;
+using static COTG.Game.Troops;
 using COTG.Services;
 
 namespace COTG.Game
@@ -20,36 +20,36 @@ namespace COTG.Game
 	public  enum Tags 
 	{
 		// Ones with more than 1 flag should come first
-		VRT = (1 << Enum.ttRanger) | (1 << Enum.ttTriari) | (1 << Enum.ttVanquisher),
-		RT = (1 << Enum.ttRanger)| (1 << Enum.ttTriari),
-		VT = (1 << Enum.ttVanquisher) | (1 << Enum.ttTriari),
+		VRT = (1 << Troops.ttRanger) | (1 << Troops.ttTriari) | (1 << Troops.ttVanquisher),
+		RT = (1 << Troops.ttRanger)| (1 << Troops.ttTriari),
+		VT = (1 << Troops.ttVanquisher) | (1 << Troops.ttTriari),
 		[IsAlias]
 		ranger=RT,
 		[IsAlias]
 		triari=RT, // todo: fix this
-		Vanq = 1 << Enum.ttVanquisher,
+		Vanq = 1 << Troops.ttVanquisher,
 		[IsAlias]
 		Vanquisher = Vanq,
-		Priest = 1 << Enum.ttPriestess,
+		Priest = 1 << Troops.ttPriestess,
 		[IsAlias]
 		Priestess = Priest,
-		Prae = 1 << Enum.ttPraetor,
+		Prae = 1 << Troops.ttPraetor,
 		[IsAlias]
 		Praetor = Prae,
-		Sorc = 1 << Enum.ttSorcerer,
+		Sorc = 1 << Troops.ttSorcerer,
 		[IsAlias]
 		Sorceress = Sorc,
 		[IsAlias]
 		Mage = Sorc,
-		Horse = 1 << Enum.ttHorseman,
+		Horse = 1 << Troops.ttHorseman,
 		[IsAlias]
 		Knight =  Horse,
-		Druid = 1 << Enum.ttDruid,
-		Arb = 1 << Enum.ttArbalist,
+		Druid = 1 << Troops.ttDruid,
+		Arb = 1 << Troops.ttArbalist,
 		[IsAlias]
 		Arbalist = Arb,
-		Scout = 1 << Enum.ttScout,
-		Scorp = 1 << Enum.ttScorpion,
+		Scout = 1 << Troops.ttScout,
+		Scorp = 1 << Troops.ttScorpion,
 		[IsAlias]
 		Scorpion = Scorp,
 		[IsAlias]
@@ -58,11 +58,11 @@ namespace COTG.Game
 		catapult = Scorp,
 		[IsAlias]
 		cataram = Scorp,
-		Stinger = 1 << Enum.ttStinger,
+		Stinger = 1 << Troops.ttStinger,
 		[IsAlias]
 		Sloop = Stinger,
-		Galley = 1 << Enum.ttGalley,
-		Warship = 1 << Enum.ttWarship,
+		Galley = 1 << Troops.ttGalley,
+		Warship = 1 << Troops.ttWarship,
 		HLT = 1<<20,
 		Shipper= 1 << 21,
 		[IsAlias]

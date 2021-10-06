@@ -25,7 +25,7 @@ using Microsoft.UI.Xaml.Input;
 
 using static COTG.Debug;
 using static COTG.Game.AttackPlan;
-using static COTG.Game.Enum;
+using static COTG.Game.Troops;
 using System.Linq;
 using CommunityToolkit.WinUI.UI.Controls;
 
@@ -265,13 +265,13 @@ namespace COTG.Views
 				if (e.Column.SortDirection == null)
 				{
 					e.Column.SortDirection = DataGridSortDirection.Descending;
-					cities.SortSmall(comparer);
+					cities.c.SortSmall(comparer);
 					cities.NotifyReset();
 				}
 				else if (e.Column.SortDirection == DataGridSortDirection.Descending)
 				{
 					e.Column.SortDirection = DataGridSortDirection.Ascending;
-					cities.SortSmall((b, a) => comparer(a, b)); // swap order of comparison
+					cities.c.SortSmall((b, a) => comparer(a, b)); // swap order of comparison
 					cities.NotifyReset();
 				}
 				else
@@ -317,14 +317,15 @@ namespace COTG.Views
 			while (--iter >= 0)
 			{
 				if (!s.Contains(ui[iter].cid))
-					ui.RemoveAt(iter);
+					ui.RemoveAt(iter,false);
 			}
 			foreach (var i in s)
 			{
 				var cid = i.cid;
 				if (!ui.Any(b => b.cid == cid))
-					ui.Add(i.city);
+					ui.Add(i.city,false);
 			}
+			ui.NotifyReset();
 		}
 		internal static void SyncUIGrids()
 		{
@@ -2193,7 +2194,7 @@ namespace COTG.Views
 
 		public override string ToString() => name;
 
-		public static TroopTypeItemSource[] all = Game.Enum.ttNameWithCaps.Select( (a,i) => new TroopTypeItemSource() { name = a, TroopType = (byte)i} ).ToArray();
+		public static TroopTypeItemSource[] all = Game.Troops.ttNameWithCaps.Select( (a,i) => new TroopTypeItemSource() { name = a, TroopType = (byte)i} ).ToArray();
 	}
 
 }

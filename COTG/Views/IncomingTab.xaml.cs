@@ -28,7 +28,7 @@ using Telerik.UI.Xaml.Controls.Input;
 using COTG.Helpers;
 using Microsoft.UI.Xaml.Navigation;
 using Telerik.UI.Xaml.Controls.Grid.Commands;
-using static COTG.Game.Enum;
+using static COTG.Game.Troops;
 using System.Threading.Tasks;
 using System.Linq;
 

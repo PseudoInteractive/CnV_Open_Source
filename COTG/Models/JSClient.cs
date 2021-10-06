@@ -12,6 +12,7 @@ using System.Text.Json;
 using COTG.Game;
 using System.Threading;
 using COTG.Helpers;
+using Microsoft.UI.Input.Experimental;
 using Microsoft.UI.Xaml.Media.Imaging;
 using System.Collections.Concurrent;
 using Windows.Storage.Streams;
@@ -19,8 +20,8 @@ using COTG.Services;
 using COTG.Views;
 using System.Numerics;
 using COTG.JSON;
-using static COTG.Game.Enum;
-using Windows.UI.Input;
+using static COTG.Game.Troops;
+//using Windows.UI.Input;
 using Windows.Graphics.Imaging;
 using System.Text.Json.Serialization;
 using COTG.DB;
@@ -44,8 +45,10 @@ using CoreWebView = Microsoft.Web.WebView2.Core.CoreWebView2;
 //using COTG.CnVChat;
 using CommunityToolkit.WinUI.Helpers;
 using Microsoft.UI.Dispatching;
-using Windows.UI.ViewManagement;
+//using Windows.UI.ViewManagement;
 using System.Runtime;
+using PointerUpdateKind = Windows.UI.Input.PointerUpdateKind;
+using System.Net;
 
 namespace COTG
 {
@@ -136,7 +139,7 @@ namespace COTG
 				if (_genericClient == null)
 				{
 					_genericClient = new HttpClient();
-
+					_genericClient.DefaultRequestVersion = HttpVersion.Version20;
 				}
 				return _genericClient;
 			}
@@ -236,7 +239,7 @@ namespace COTG
 		//{
 		//	return (int)(t - ServerTimeSeconds());
 		//}
-		public static long ServerTimeMs() => (DateTimeOffset.UtcNow.ToUnixTimeMilliseconds() + gameTOffsetSeconds*1000l);
+		public static long ServerTimeMs() => (DateTimeOffset.UtcNow.ToUnixTimeMilliseconds() + gameTOffsetSeconds*1000L);
 
 		//public static DateTimeOffset ServerToLocal(DateTimeOffset t)
 		//{
@@ -405,7 +408,7 @@ namespace COTG
 
 		//}
 		//	static string secSessionId;
-		static CoreWebView2WebResourceResponse jsFunkyEtc;
+		static string jsFunkyEtc;
 
 		static async Task LoadJsStrings()
 		{
@@ -415,29 +418,30 @@ namespace COTG
 
 			var jsf = await t0+ await t1+ await t2;
 
-			var stream = new Windows.Storage.Streams.InMemoryRandomAccessStream();
-			// Create the data writer object backed by the in-memory stream.
-			using(var dataWriter = new Windows.Storage.Streams.DataWriter(stream))
-			{
-				var js = "const cityAtlas = " +
+			//var stream = new Windows.Storage.Streams.InMemoryRandomAccessStream();
+			//// Create the data writer object backed by the in-memory stream.
+			//using(var dataWriter = new Windows.Storage.Streams.DataWriter(stream))
+			//{
+				jsFunkyEtc = "const cityAtlas = " +
 				  (SettingsPage.IsThemeWinter() ?
 						  "'ms-appx-web:///Content/Art/City/Winter/building_set5.png'\n" :
 					   "'/images/city128/building_set5.png'\n") +
 					   jsf;
 
-				dataWriter.WriteString(js);
-				await dataWriter.StoreAsync();
-				await dataWriter.FlushAsync();
-				dataWriter.DetachStream();
-			}
+		//		dataWriter.WriteString(js);
+		//		await dataWriter.StoreAsync();
+		//		await dataWriter.FlushAsync();
+		//		dataWriter.DetachStream();
+		//	}
 
-			stream.Seek(0);
-			var Response = coreWebView.Environment.CreateWebResourceResponse(stream,200,"Ok","");
-			var headers = Response.Headers;
-			headers.AppendHeader("Content-Type","text/javascript");
-		//	headers.AppendHeader("Content-Encoding","text/json");
-		//	headers.("Content-Encoding","text/json");
-			jsFunkyEtc =Response;
+		//	stream.Seek(0);
+			
+		//	var Response = coreWebView.Environment.CreateWebResourceResponse(stream,200,"Ok","");
+		//	var headers = Response.Headers;
+		//	headers.AppendHeader("Content-Type","text/javascript");
+		////	headers.AppendHeader("Content-Encoding","text/json");
+		////	headers.("Content-Encoding","text/json");
+		//	jsFunkyEtc = js;
 
 		}
 
@@ -494,12 +498,12 @@ namespace COTG
 
 
 			httpFilter = new();
-		//	httpFilter.AutomaticDecompression = true;
-			httpFilter.AllowAutoRedirect = true;
-		//	httpFilter.UseProxy = false;
+			//	httpFilter.AutomaticDecompression = true;
+			//	httpFilter.AllowAutoRedirect = true;
+			//	httpFilter.UseProxy = false;
 
 			//httpFilter.http MaxVersion = HttpVersion.Http20;
-		//	httpFilter.ServerCustomValidationRequested += ServerCustomValidationRequested;
+			//	httpFilter.ServerCustomValidationRequested += ServerCustomValidationRequested;
 			//httpFilter.IgnorableServerCertificateErrors.Add(ChainValidationResult.Untrusted);
 			//httpFilter.IgnorableServerCertificateErrors.Add(ChainValidationResult.Expired);
 
@@ -511,7 +515,9 @@ namespace COTG
 			//httpFilter.IgnorableServerCertificateErrors.Add(Windows.Security.Cryptography.Certificates.ChainValidationResult.RevocationFailure);
 
 			//httpFilter.AllowUI = true;
-		//	httpFilter.CookieUsageBehavior = HttpCookieUsageBehavior.NoCookies;
+			//	httpFilter.CookieUsageBehavior = HttpCookieUsageBehavior.NoCookies;
+
+			httpFilter.AutomaticDecompression=DecompressionMethods.All;
 
 
 			//	  HttpBaseProtocolFilter.CreateForUser( User.GetDefault());
@@ -519,10 +525,11 @@ namespace COTG
 
 			//httpFilter.MaxConnectionsPerServer = 10;
 			//  httpFilter.ServerCustomValidationRequested += HttpFilter_ServerCustomValidationRequested;
-	//		httpFilter.CacheControl.ReadBehavior = HttpCacheReadBehavior.NoCache;
-	//		httpFilter.CacheControl.WriteBehavior = HttpCacheWriteBehavior.NoCache;
+			//		httpFilter.CacheControl.ReadBehavior = HttpCacheReadBehavior.NoCache;
+			//		httpFilter.CacheControl.WriteBehavior = HttpCacheWriteBehavior.NoCache;
 			httpClient = new HttpClient(httpFilter);
-			
+			httpClient.DefaultRequestVersion = HttpVersion.Version20;
+
 
 			//cookieManager = httpFilter.CookieManager;
 			if(!JSClient.isSub)
@@ -568,7 +575,7 @@ namespace COTG
 					}
 					LoadJsStrings();
 					coreWebView = view.CoreWebView2;
-					//					view.CharacterReceived +=View_CharacterReceived;
+							//			view.CharacterReceived +=View_CharacterReceived;
 #if DEBUG
 					coreWebView.Settings.AreDevToolsEnabled=true;
 					//					coreWebView.OpenDevToolsWindow();
@@ -583,11 +590,11 @@ namespace COTG
 	//			coreWebView.Settings.IsPinchZoomEnabled =false;
 				coreWebView.Settings.IsZoomControlEnabled=false;
 				coreWebView.Settings.AreDefaultScriptDialogsEnabled=true;
-					coreWebView.Settings.IsStatusBarEnabled=true;
+					coreWebView.Settings.IsStatusBarEnabled=false;
 					coreWebView.Settings.IsBuiltInErrorPageEnabled=true;
-					coreWebView.Settings.AreHostObjectsAllowed=true;
-			//	coreWebView.Settings.AreBrowserAcceleratorKeysEnabled=false;
-				coreWebView.Settings.AreDefaultContextMenusEnabled=true;
+					coreWebView.Settings.AreHostObjectsAllowed=false;
+		//	coreWebView.Settings.AreBrowserAcceleratorKeysEnabled=false;
+				coreWebView.Settings.AreDefaultContextMenusEnabled=false;
 				coreWebView.Environment.NewBrowserVersionAvailable+=Environment_NewBrowserVersionAvailable;
 //				coreWebView.Settings.AreBrowserAcceleratorKeysEnabled=false;
 //coreWebView.AddWebResourceRequestedFilter("*jsfunctions/game.js",ResourceContext:CoreWebView2WebResourceContext.Script);
@@ -1002,10 +1009,31 @@ namespace COTG
 								var vv= s.Split('=',StringSplitOptions.RemoveEmptyEntries|StringSplitOptions.TrimEntries);
 								Assert(vv.Length == 2);
 								httpFilter.CookieContainer.Add(new System.Net.Cookie(vv[0],vv[1],"/","crownofthegods.com"));
-							}
+								}
 						});
-//						httpFilter.CookieContainer.SetCookies(new Uri("https://crownofthegods.com"),cookies));
-						args.Response = jsFunkyEtc;
+					//						httpFilter.CookieContainer.SetCookies(new Uri("https://crownofthegods.com"),cookies));
+					using(var stream = new Windows.Storage.Streams.InMemoryRandomAccessStream())
+					{
+					// Create the data writer object backed by the in-memory stream.
+					using(var dataWriter = new Windows.Storage.Streams.DataWriter(stream))
+					{
+						dataWriter.WriteString(jsFunkyEtc);
+						await dataWriter.StoreAsync();
+						await dataWriter.FlushAsync();
+						dataWriter.DetachStream();
+					}
+
+					stream.Seek(0);
+
+					var Response = coreWebView.Environment.CreateWebResourceResponse(stream,200,"Ok","");
+					var headers = Response.Headers;
+					headers.AppendHeader("Content-Type","text/javascript");
+						args.Response = Response;
+					}
+				
+					//	headers.AppendHeader("Content-Encoding","text/json");
+					//	headers.("Content-Encoding","text/json");
+				
 
 						hasMainPageLoaded=true;
 						//	coreWebView.RemoveWebResourceRequestedFilter(,)
@@ -1330,7 +1358,7 @@ namespace COTG
 			try
 			{
 				ShellPage.SetViewMode(viewMode);
-				App.DispatchOnUIThreadLow(() => ExecuteScriptAsync("setviewmode", ( viewMode == ShellPage.ViewMode.city ? "c" : "r" )));
+			//	App.DispatchOnUIThreadLow(() => ExecuteScriptAsync("setviewmode", ( viewMode == ShellPage.ViewMode.city ? "c" : "r" )));
 
 			}
 			catch (Exception e)
@@ -2139,10 +2167,10 @@ private static async void ShowCouncillorsMissingDialog()
 																		 //    headers.Accept.TryParseAdd(new HttpMediaTypeHeaderValue(@"application/json"));
 																		 //   headers.Add("Accept", @"*/*");
 																		 //                            httpClient.DefaultRequestHeaders.Clear();
-							httpClient.DefaultRequestHeaders.AcceptLanguage.TryParseAdd("en-US,en;q=0.5");
+						//	httpClient.DefaultRequestHeaders.AcceptLanguage.TryParseAdd("en-US,en;q=0.5");
 							//    httpClient.DefaultRequestHeaders.UserAgent.ParseAdd(@"Mozilla/5.0 (Windows NT 10.0; Win64; x64; WebView2/3.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.102 Safari/537.36 Edge/18.19631");
 							//    httpClient.DefaultRequestHeaders.Add("Access-Control-Allow-Credentials", "true");
-							httpClient.DefaultRequestHeaders.Accept.TryParseAdd("*/*");
+						//	httpClient.DefaultRequestHeaders.Accept.TryParseAdd("*/*");
 							// httpClient.DefaultRequestHeaders.TryAppendWithoutValidation("X-Requested-With", "XMLHttpRequest");
 							//    httpClient.DefaultRequestHeaders.Referer = new Uri(httpsHost, "/overview.php?s=0");// new Uri($"https://w{world}.crownofthegods.com");
 							httpClient.DefaultRequestHeaders.Referrer = new Uri(httpsHost, $"/overview.php?s={subId}");// new Uri                                                       //             req.Headers.TryAppendWithoutValidation("Origin", $"https://w{world}.crownofthegods.com");
@@ -3103,7 +3131,7 @@ private static async void ShowCouncillorsMissingDialog()
 
 			var dialog = new WhatsNewDialog();
 			dialog.DefaultButton = Microsoft.UI.Xaml.Controls.ContentDialogButton.Primary;
-			dialog.fixesText.Text = new StreamReader((typeof(Fixes).Assembly).GetManifestResourceStream($"COTG.Notes.fixes.md")).ReadToEnd();
+			dialog.fixesText.Text = new StreamReader((typeof(Fixes).Assembly).GetManifestResourceStream($"COTG.Wiki.fixes.md")).ReadToEnd();
 			
 			var result = await dialog.ShowAsync2();
 		}

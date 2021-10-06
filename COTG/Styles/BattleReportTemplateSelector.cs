@@ -10,7 +10,7 @@ using Telerik.UI.Xaml.Controls.Grid;
 
 using Microsoft.UI.Xaml;
 
-using static COTG.Game.Enum;
+using static COTG.Game.Troops;
 namespace COTG.Styles
 {
 		public class ReportKillStyleSelector : Microsoft.UI.Xaml.Controls.StyleSelector
