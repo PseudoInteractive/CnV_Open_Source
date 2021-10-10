@@ -44,6 +44,16 @@
                 <lineHash>uTAlfHIBpEOeCJj0KFo+h7/cCGAe96OIJEf2Pxpvqfs=</lineHash>
               </position>
             </Favorite>
+            <Favorite>
+              <name>App.xaml</name>
+              <path>COTG\App.xaml</path>
+              <absolutePath>C:\Source\COTG\COTG\App.xaml</absolutePath>
+              <position>
+                <line>1</line>
+                <column>1</column>
+                <lineHash>PWLjiC8/zXA1euIohbM0H2LcEn8Tot71A39Tojzu2HE=</lineHash>
+              </position>
+            </Favorite>
           </favorites>
         </Folder>
       </folders>
@@ -93,11 +103,21 @@
           <name>City.cs</name>
           <path>COTG\Game\City.cs</path>
           <absolutePath>C:\Source\COTG\COTG\Game\City.cs</absolutePath>
+          <position>
+            <line>1</line>
+            <column>1</column>
+            <lineHash>+C3wS7Ft5DyHeLCyPV9r1wsaOWkxFdQYa1IzhmbnvNw=</lineHash>
+          </position>
         </Favorite>
         <Favorite>
           <name>City2.cs</name>
           <path>COTG\Game\City2.cs</path>
           <absolutePath>C:\Source\COTG\COTG\Game\City2.cs</absolutePath>
+          <position>
+            <line>1</line>
+            <column>1</column>
+            <lineHash>+C3wS7Ft5DyHeLCyPV9r1wsaOWkxFdQYa1IzhmbnvNw=</lineHash>
+          </position>
         </Favorite>
         <Favorite>
           <name>HeatMap.cs</name>

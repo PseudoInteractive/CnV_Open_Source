@@ -87,7 +87,7 @@ namespace COTG
 		night,
 		none,
 	}
-	public class AGame:Microsoft.Xna.Framework.Game
+	public partial class AGame:Microsoft.Xna.Framework.Game
 	{
 		static public Windows.Graphics.Display.AdvancedColorKind colorKind;
 

@@ -896,7 +896,7 @@ namespace COTG
 				JSClient.JSInvoke($"buildex(\"{sb.ToString()}\")");
 				sb.Dispose();
 				
-				CityView.BuildingsOrQueueChanged();
+				City.Get(cid).BuildingsOrQueueChanged();
 				return;
 			}
 
@@ -912,8 +912,7 @@ namespace COTG
 				return;
 			}
 			queue.Add(op);
-			if (cid == City.build)
-				CityView.BuildingsOrQueueChanged();
+				City.Get(cid).BuildingsOrQueueChanged();
 		}
 
 		public void Dispose()
@@ -1035,8 +1034,7 @@ namespace COTG
 			
 			QueueTab.RemoveOp( cid);
 			// if its empty it will be removed next iteration
-			if(cid==City.build)
-				CityView.BuildingsOrQueueChanged();
+			City.Get(cid).BuildingsOrQueueChanged();
 		}
 
 
@@ -1049,10 +1047,7 @@ namespace COTG
 				q.queue.Clear();
 				QueueTab.Clear(cid);
 				SaveNeeded();
-				if(cid == City.build)
-				{
-					CityView.BuildingsOrQueueChanged();
-				}
+				City.Get(cid).BuildingsOrQueueChanged();
 			}
 		}
 		//public static async Task SaveIfNeeded()

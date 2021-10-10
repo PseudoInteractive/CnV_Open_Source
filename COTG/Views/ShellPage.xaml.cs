@@ -327,16 +327,14 @@ namespace COTG.Views
 		//	await UpdateWebViewScale();
 			AGame.Create(canvas);
 			typeof(Telerik.UI.Xaml.Controls.RadDataForm).Assembly.GetType("Telerik.UI.Xaml.Controls.TelerikLicense").GetField("messageDisplayed",BindingFlags.NonPublic|BindingFlags.Static).SetValue(null,true,BindingFlags.Static|BindingFlags.NonPublic,null,null);
-			
+
 			Task.Delay(4500).ContinueWith((_) => App.DispatchOnUIThreadIdle(() =>
 			{
-		//		ShellPage.SetupCoreInput();
+				//		ShellPage.SetupCoreInput();
 				var sz = canvas.ActualSize;
-				AGame.SetClientSpan(sz.X, sz.Y);
+				AGame.SetClientSpan(sz.X,sz.Y);
 				//				SetupCoreInput();
-				MainPage.instance.ShowOrAdd(true);
-				SpotTab.instance.ShowOrAdd(true);
-				ChatTab.tabPage.AddChatTabs();
+			//	TabPage.ShowTabs();
 				//	SetWebViewHasFocus(true);
 				//ShellPage.canvas.IsHitTestVisible = false;
 				//ShellPage.canvas.Visibility = Visibility.Collapsed;
@@ -357,6 +355,7 @@ namespace COTG.Views
 			//});
 		}
 
+		
 		//private void FocusManager_GotFocus(object sender,FocusManagerGotFocusEventArgs e)
 		//{
 		//	Note.Show($"Focus!!: {e.NewFocusedElement}");

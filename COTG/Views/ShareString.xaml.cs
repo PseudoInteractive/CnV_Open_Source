@@ -662,7 +662,7 @@ namespace COTG.Views
 			for (int i = 0; i < dir.Length - 1; ++i)
 			{
 				pathSoFar = pathSoFar + '~' + dir[i];
-				var parent = myList.c.Find((a) => a.label == dir[i]);
+				var parent = myList.c.FirstOrDefault((a) => a.label == dir[i]);
 				if (parent == null)
 				{
 					parent = new ShareStringItem(pathSoFar, true);

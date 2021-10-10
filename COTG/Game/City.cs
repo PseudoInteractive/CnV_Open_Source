@@ -316,14 +316,15 @@ namespace COTG.Game
 				}
 			}
 		}
-		public static void CitySwitched()
+		public void SetAsBuildCity()
 		{
+			build = cid;
 			AUtil.UnsafeCopy(CityView.baseAnimationOffsets, CityView.animationOffsets);
 			//buildQueue.ClearKeepBuffer();
 			//buildQInSync = false;
 			Draw.CityView.ClearSelectedBuilding();
 			//	CityBuild.ClearAction();
-		//	City.BuildingsOrQueueChanged();
+			BuildingsOrQueueChanged();
 
 			//if (CityBuild.menuOpen)
 			//{
@@ -896,8 +897,7 @@ namespace COTG.Game
 						Log("error BD bad");
 					}
 
-					if (cid == City.build)
-						CityView.BuildingsOrQueueChanged();
+					BuildingsOrQueueChanged();
 					UpdateBuildStage();
 				}
 				return true;

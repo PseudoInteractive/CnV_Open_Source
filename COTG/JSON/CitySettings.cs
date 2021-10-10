@@ -40,7 +40,7 @@ namespace COTG.JSON
 			return result;
 
 		}
-		public static async Task<int> FindBestHubWithChoice(int cid,string title) => await CitySettings.FindBestHub(cid,await App.DoYesNoBox(title,"Find one from another Continent?",cancel: null) == 1);
+		public static async Task<int> FindBestHubWithChoice(int cid,string title) => await CitySettings.FindBestHub(cid,await App.DoYesNoBox(title,"Find one from another Continent?",yes:"Off Continent", no:"Same Continent", cancel: null) == 1);
 
 		public static async Task<int> FindBestHub(int cid, bool onlyOffContinent)
 		{

@@ -22,6 +22,8 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
 using System.Text.RegularExpressions;
 using System.Reflection;
+using System.IO;
+
 namespace COTG.Views
 {
 	public enum Theme
@@ -974,7 +976,7 @@ namespace COTG.Views
 		private void VersionTapped(object sender, RoutedEventArgs e)
 		{
 			instance.Hide();
-			JSClient.ShowWhatsNew();
+			ShowWhatsNew();
 		}
 
 		private void ExportRanks(object sender, RoutedEventArgs e)
@@ -1017,6 +1019,16 @@ namespace COTG.Views
 		{
 			Windows.System.Launcher.LaunchUriAsync(new Uri($"ms-settings:display"));
 
+		}
+
+		public static async void ShowWhatsNew()
+		{
+
+			var dialog = new WhatsNewDialog();
+			dialog.DefaultButton = Microsoft.UI.Xaml.Controls.ContentDialogButton.Primary;
+			dialog.fixesText.Text = new StreamReader((typeof(Fixes).Assembly).GetManifestResourceStream($"COTG.Wiki.fixes.md")).ReadToEnd();
+
+			var result = await dialog.ShowAsync2();
 		}
 	}
 }

@@ -6,7 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using static COTG.Debug;
 
-using Windows.UI.Core;
+//using Windows.UI.Core;
 using System.Collections.Concurrent;
 using System.Runtime.CompilerServices;
 using Microsoft.UI.Dispatching;

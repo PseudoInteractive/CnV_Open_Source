@@ -23,6 +23,7 @@
     <AppxBundlePlatforms>x64</AppxBundlePlatforms>
     <HoursBetweenUpdateChecks>0</HoursBetweenUpdateChecks>
     <AppxSymbolPackageEnabled>True</AppxSymbolPackageEnabled>
+    <TieredCompilation>true</TieredCompilation>
   </PropertyGroup>
   <ItemGroup>
     <EmbeddedResource Remove="AppPackages\**" />
@@ -45,6 +46,7 @@
     <PackageReference Include="Azure.Core" Version="1.20.0" />
     <PackageReference Include="Azure.Data.Tables" Version="12.2.0" />
     <PackageReference Include="Azure.Storage.Blobs" Version="12.10.0" />
+    <PackageReference Include="CommunityToolkit.Mvvm" Version="7.0.3" />
     <PackageReference Include="CommunityToolkit.WinUI" Version="7.0.3" />
     <PackageReference Include="CommunityToolkit.WinUI.Notifications" Version="7.0.3" />
     <PackageReference Include="CommunityToolkit.WinUI.UI" Version="7.0.3" />
@@ -71,6 +73,7 @@
     <PackageReference Include="Microsoft.ProjectReunion" Version="0.8.4" />
     <PackageReference Include="Microsoft.ProjectReunion.Foundation" Version="0.8.4" />
     <PackageReference Include="Microsoft.ProjectReunion.WinUI" Version="0.8.4" />
+    <PackageReference Include="Microsoft.Toolkit" Version="7.1.0" />
     <PackageReference Include="Microsoft.Toolkit.HighPerformance" Version="7.1.0" />
     <PackageReference Include="MonoGame.Content.Builder.Task" Version="3.8.1.1941-develop" />
     <PackageReference Include="Nito.AsyncEx.Coordination" Version="5.1.2" />
@@ -83,6 +86,7 @@
     <PackageReference Include="SharpDX.DXGI" Version="4.2.0" />
     <PackageReference Include="SharpDX.MediaFoundation" Version="4.2.0" />
     <PackageReference Include="SharpGen.Runtime.COM" Version="2.0.0-beta.10" />
+    <PackageReference Include="System.Collections.Immutable" Version="6.0.0-rc.1.21451.13" />
     <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="6.0.0-rc.1.21451.13" />
     <PackageReference Include="System.Text.Json" Version="6.0.0-rc.1.21451.13" />
     <PackageReference Include="Telerik.WinUI.Controls.Trial" Version="0.5.0" />
@@ -127,6 +131,7 @@
     <Compile Include="Game\Dungeon.cs" />
     <Compile Include="Game\Enums.cs" />
     <Compile Include="Game\Faith.cs" />
+    <Compile Include="Game\GameSetup.cs" />
     <Compile Include="Game\HeatMap.cs" />
     <Compile Include="Game\Overview.cs" />
     <Compile Include="Game\Player.cs" />
@@ -359,6 +364,7 @@
     <Compile Include="Views\TroopBox.xaml.cs">
       <DependentUpon>TroopBox.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\UserTab.cs" />
     <Compile Include="Views\WebViewPage.xaml.cs">
       <DependentUpon>WebViewPage.xaml</DependentUpon>
     </Compile>

@@ -25,15 +25,11 @@ namespace COTG
 		public int count;
 		public int Length => count;
 		public int Count => count;
-		public bool arrayLeased;
+		public bool arrayLeased => v.Length>0;
 
 		public DArray(int maxSize)
 		{
-			if (maxSize != 0)
-			{
-				arrayLeased = true;
-				v = pool.Rent(maxSize);
-			}
+			Resize(maxSize);
 		}
 		public DArray()
 		{
@@ -57,6 +53,7 @@ namespace COTG
 				}
 				else
 				{
+					// 
 					return new DArray<T>(size);
 				}
 			}
@@ -64,7 +61,7 @@ namespace COTG
 
 		public void Return()
 		{
-			Clear();
+			ClearKeepBuffer();
 			for (; ; )
 			{
 				var rv = freePool;
@@ -141,7 +138,6 @@ namespace COTG
 			//size = size.Max(16);
 			var _v = v;
 			var wasLeased = arrayLeased;
-			arrayLeased = true;
 			v = pool.Rent(size);
 			for (int i = 0; i < count; ++i)
 			{
@@ -153,13 +149,11 @@ namespace COTG
 		}
 		public void Resize(int _size)
 		{
-			
-			count = _size;
 			GrowBuffer(_size);
-
+			count = _size;
 		}
 
-			public bool CanGrow() => count < v.Length;
+		public bool CanGrow(int add=1) => count+add <= v.Length;
 
 		//static public implicit operator DArray<T>(T[] e)
 		//{
@@ -196,7 +190,6 @@ namespace COTG
 		{
 			if (arrayLeased)
 			{
-				arrayLeased = false;
 				var _v = v;
 				v = Array.Empty<T>();
 				pool.Return(_v);

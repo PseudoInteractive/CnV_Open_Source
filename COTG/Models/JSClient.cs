@@ -1221,7 +1221,7 @@ namespace COTG
 								//	//					CityBuild.isPlanner = false;
 								//	await CityBuild._IsPlanner(false, true);
 								//}
-								City.build = cid;
+							
 							//	Assert(pid == Player.activeId);
 								//Cosmos.PublishPlayerInfo(JSClient.jsBase.pid, City.build, JSClient.jsBase.token, JSClient.jsBase.cookies); // broadcast change
 
@@ -1233,7 +1233,7 @@ namespace COTG
 								//	}
 								//}
 
-								City.CitySwitched();
+								city.SetAsBuildCity();
 								//if (wasPlanner)
 								//{
 								//	await GetCity.Post(cid);
@@ -3045,59 +3045,7 @@ private static async void ShowCouncillorsMissingDialog()
 
 				   if (gotCreds)
 				   {
-
-//					   CnVChatClient.instance = new();
-//					   CnVChatClient.instance.Initialize();
-					   ShellPage.SetViewModeCity();
-
-					   APlayfab.Login();
-
-					   GetWorldInfo.Send();
-					   ShellPage.canvasVisible = true;
-					//   ShellPage.isHitTestVisible = true;
-					   ///                   await GetCitylistOverview();
-					   Task.Delay(3000).ContinueWith( (_)=> City.UpdateSenatorInfo() );  // no async
-					   TileData.Ctor(false);
-					   //if (TipsSeen.instance.refresh == false
-					   //||TipsSeen.instance.chat0==false
-					   //|| TipsSeen.instance.chat1 == false
-					   //|| TipsSeen.instance.chat2 == false)
-					   //    App.QueueIdleTask(ShellPage.ShowTipRefresh);
-					   // await RaidOverview.Send();
-					   App.QueueIdleTask(IncomingOverview.ProcessTask, 1000);
-					   App.QueueIdleTask(OutgoingOverview.ProcessTask, 1000);
-
-					   SetStayAlive(SettingsPage.stayAlive);
-					   //{
-					   //    //var now = DateTime.UtcNow;
-					   //    //if (now.Day <= 28 && now.Month==11)
-					   //    {
-					   AppCenter.SetUserId(Player.myName);
-					   //AppCenter.Analytics.Properties.put("UserId", "your user Id");
-				   {
-					   CustomProperties properties = new CustomProperties();
-					   properties.Set("alliance", Alliance.myId).Set("world", JSClient.world).Set("sub", JSClient.isSub).Set("UserId", Player.myName);
-					   AppCenter.SetCustomProperties(properties);
-					   AAnalytics.Track("GotCreds", new Dictionary<string, string>() { { "World", JSClient.world.ToString() }, { "sub", JSClient.isSub.ToString() }, { "UserId", Player.myName } } );
-				ShellPage.UpdateFocus();
-					   }
-					   if (SystemInformation.Instance.IsAppUpdated)
-					   {
-						   App.DispatchOnUIThreadLow(ShowWhatsNew);
-					   }
-
-					   // 
-					  // Friend.LoadAll();
-
-					   App.state = App.State.active;
-					   CnVDiscord.Discord.Initialize();
-
-					 //  System.GC.Collect(2,GCCollectionMode.Default,true);
-
-					   // give some time for initial pressure to come down
-					   await Task.Delay(1000);
-					   System.GC.Collect(2,GCCollectionMode.Default,true,true);
-					 //  GCSettings.LatencyMode = GCLatencyMode.SustainedLowLatency;
+					   AGame.InitializeForWorld();
 
 				   }
 			   }
@@ -3124,94 +3072,87 @@ private static async void ShowCouncillorsMissingDialog()
 			   }
 		   });
 		}
-		
-		
-		public static async void ShowWhatsNew()
-		{
 
-			var dialog = new WhatsNewDialog();
-			dialog.DefaultButton = Microsoft.UI.Xaml.Controls.ContentDialogButton.Primary;
-			dialog.fixesText.Text = new StreamReader((typeof(Fixes).Assembly).GetManifestResourceStream($"COTG.Wiki.fixes.md")).ReadToEnd();
-			
-			var result = await dialog.ShowAsync2();
-		}
-		private static async void PresenceTimer_Tick(object sender, object e)
-		{
-			/*
-			var players = await Cosmos.GetPlayersInfo();
-			var changed = false;
-			int put = 0;
-			int validCount = 0;
-			foreach (var _p in players)
-			{
-				var pid = int.Parse(_p.id);
-				if (pid == Player.myId || Friend.all.Any(a =>a.pid==pid) || Player.isAvatarOrTest )
-					++validCount;
-			}
-			var presence = new PlayerPresence[validCount];
-			foreach (var _p in players)
-			{
-				var p = new PlayerPresence(_p);
-				int priorCid;
-				var pid = p.pid;
-				if (!(pid == Player.myId || Friend.all.Any(a => a.pid == pid)||Player.isAvatarOrTest))
-					continue;
+		
 
-				var priorIndex = PlayerPresence.all.IndexOf( ( a) => a.pid == pid );
-				if (priorIndex == -1)
-				{
-					changed = true;
-					priorCid = 0;
-				}
-				else
-				{
-					if (PlayerPresence.all[priorIndex].token != p.token)
-						changed = true; // need to refresh token
-					priorCid = PlayerPresence.all[priorIndex].cid;
-				}
+		
+		//private static async void PresenceTimer_Tick(object sender, object e)
+		//{
+		//	/*
+		//	var players = await Cosmos.GetPlayersInfo();
+		//	var changed = false;
+		//	int put = 0;
+		//	int validCount = 0;
+		//	foreach (var _p in players)
+		//	{
+		//		var pid = int.Parse(_p.id);
+		//		if (pid == Player.myId || Friend.all.Any(a =>a.pid==pid) || Player.isAvatarOrTest )
+		//			++validCount;
+		//	}
+		//	var presence = new PlayerPresence[validCount];
+		//	foreach (var _p in players)
+		//	{
+		//		var p = new PlayerPresence(_p);
+		//		int priorCid;
+		//		var pid = p.pid;
+		//		if (!(pid == Player.myId || Friend.all.Any(a => a.pid == pid)||Player.isAvatarOrTest))
+		//			continue;
+
+		//		var priorIndex = PlayerPresence.all.IndexOf( ( a) => a.pid == pid );
+		//		if (priorIndex == -1)
+		//		{
+		//			changed = true;
+		//			priorCid = 0;
+		//		}
+		//		else
+		//		{
+		//			if (PlayerPresence.all[priorIndex].token != p.token)
+		//				changed = true; // need to refresh token
+		//			priorCid = PlayerPresence.all[priorIndex].cid;
+		//		}
 				
-			//	Player.myIds.Add(pid);
-			// TODO:  restore this functionality when it works again
-				if (pid != Player.myId)
-				{
-					if (p.cid != priorCid)
-					{
-						if (p.cid == City.build && priorCid != City.build)
-							Note.Show($"{p.name } has joined you in {p.cid.CidToStringMD()}");
-						if (p.cid != City.build && priorCid == City.build)
-							Note.Show($"{p.name } has left {p.cid.CidToStringMD()}");
+		//	//	Player.myIds.Add(pid);
+		//	// TODO:  restore this functionality when it works again
+		//		if (pid != Player.myId)
+		//		{
+		//			if (p.cid != priorCid)
+		//			{
+		//				if (p.cid == City.build && priorCid != City.build)
+		//					Note.Show($"{p.name } has joined you in {p.cid.CidToStringMD()}");
+		//				if (p.cid != City.build && priorCid == City.build)
+		//					Note.Show($"{p.name } has left {p.cid.CidToStringMD()}");
 
-					}
-				}
-				presence[put++] = p;
+		//			}
+		//		}
+		//		presence[put++] = p;
 			
-			}
-			PlayerPresence.all = presence;
+		//	}
+		//	PlayerPresence.all = presence;
 
-			if(changed)
-			{
-				App.(() =>
-				{
-					// Update menu
-					ShellPage.instance.friendListBox.SelectedIndex = -1;
-					ShellPage.instance.friendListBox.Items.Clear();
-					int counter = 0;
-					int sel = -1;
-					foreach (var p in PlayerPresence.all)
-					{
-						ShellPage.instance.friendListBox.Items.Add(p.name);
-						if (p.pid == Player.activeId)
-							sel = counter;
-						++counter;
-						// reset menu, TOTO:  Keep track of active selection
-					}
+		//	if(changed)
+		//	{
+		//		App.(() =>
+		//		{
+		//			// Update menu
+		//			ShellPage.instance.friendListBox.SelectedIndex = -1;
+		//			ShellPage.instance.friendListBox.Items.Clear();
+		//			int counter = 0;
+		//			int sel = -1;
+		//			foreach (var p in PlayerPresence.all)
+		//			{
+		//				ShellPage.instance.friendListBox.Items.Add(p.name);
+		//				if (p.pid == Player.activeId)
+		//					sel = counter;
+		//				++counter;
+		//				// reset menu, TOTO:  Keep track of active selection
+		//			}
 
-					ShellPage.instance.friendListBox.SelectedIndex = sel;
-					ShellPage.instance.friendListBox.Visibility = PlayerPresence.all.Length > 1 ? Visibility.Visible : Visibility.Collapsed;
-				});
-			}
-			*/
-		}
+		//			ShellPage.instance.friendListBox.SelectedIndex = sel;
+		//			ShellPage.instance.friendListBox.Visibility = PlayerPresence.all.Length > 1 ? Visibility.Visible : Visibility.Collapsed;
+		//		});
+		//	}
+		//	*/
+		//}
 
 		
 		static private void View_UnsafeContentWarningDisplaying(WebView2 sender, object args)

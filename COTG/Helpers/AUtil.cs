@@ -4,6 +4,7 @@ using Microsoft.Toolkit.HighPerformance.Buffers;
 
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -540,7 +541,14 @@ namespace COTG
 
 			return new string(chars);
 		}
-
+		public static int FindIndex<T>(in this ImmutableArray<T> a,Predicate<T> b) 
+		{
+			int ld = a.Length;
+			for(int i = 0;i < a.Length;++i)
+				if(b(a[i]) )
+					return i;
+			return -1;
+		}
 	}
 
 	//public ref struct SemaLockRef

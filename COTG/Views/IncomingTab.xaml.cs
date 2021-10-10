@@ -11,7 +11,7 @@ using System.Collections.Generic;
 using Telerik.UI.Xaml.Controls.Grid;
 using static COTG.Debug;
 using Windows.ApplicationModel.Core;
-using Windows.UI.Core;
+//using Windows.UI.Core;
 using Microsoft.UI.Xaml;
 using Telerik.Core.Data;
 using Telerik.Data.Core;

@@ -376,9 +376,9 @@ namespace COTG.Views
 			if(wasWritten)
 				city.SaveShareStringFromLayout();
 
+			city.BuildingsOrQueueChanged();
 			if(city.cid == City.build)
 			{
-				CityView.BuildingsOrQueueChanged();
 				statsDirty = true;
 				PleaseRefresh.Go();
 			}

@@ -611,7 +611,7 @@ namespace COTG.Views
 					///	build.ShareStringToBuildingsCache();
 
 				}
-				//	BuildingsOrQueueChanged();
+				City.GetBuild().BuildingsOrQueueChanged();
 
 				if (syncPlannerTab && !PlannerTab.IsVisible())
 					App.DispatchOnUIThreadLow(() => PlannerTab.instance.Show());

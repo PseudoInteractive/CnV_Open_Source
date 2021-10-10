@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 
 namespace COTG
 {
@@ -42,6 +43,7 @@ namespace COTG
 					// Perform no work at all if the first comparison fails - i.e. never assign an element to itself!
 				}
 			}
+	
 
 		public static void SortSmall<T>(this IList<T> a)
 		{

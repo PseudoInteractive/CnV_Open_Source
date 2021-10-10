@@ -123,7 +123,7 @@ namespace COTG.Views
 							}
 
 						// re-use if possible
-						var supporter = supporters.c.Find((a) => a.city == city);
+						var supporter = supporters.c.FirstOrDefault((a) => a.city == city);
 						if (supporter == null)
 						{
 							supporter = new Supporter() { city = city };

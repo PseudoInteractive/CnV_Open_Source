@@ -10,6 +10,9 @@
 		<ResourceDictionary>
 			<ResourceDictionary.MergedDictionaries>
 				<XamlControlsResources xmlns="using:Microsoft.UI.Xaml.Controls" />
+				<ResourceDictionary Source="ms-appx:///Microsoft.UI.Xaml/DensityStyles/Compact.xaml" />
+				<ResourceDictionary Source="ms-appx:///Telerik.WinUI.Controls/Themes/Generic.xaml"/>
+				<ResourceDictionary Source="ms-appx:///Telerik.WinUI.Controls/DensityStyles/Compact.xaml" />
 
 				<ColorPaletteResources Accent="#FF56207D" AltHigh="#B0400000" AltLow="#B000F000" AltMedium="#B0404040" AltMediumHigh="#B0606060" AltMediumLow="#B0505050" BaseHigh="#FFFFFFFF" BaseLow="#804F1A1A" BaseMedium="#80B1FA8A" BaseMediumHigh="#80CAA6A6" BaseMediumLow="#80405252" ChromeAltLow="#FFCAA6A6" ChromeBlackHigh="#FF000000" ChromeBlackLow="#FFCAA6A6" ChromeBlackMedium="#FF404040" ChromeBlackMediumLow="#FF606060" ChromeDisabledHigh="#FF4F1A1A" ChromeDisabledLow="#FFB18A8A" ChromeGray="#7F103F10" ChromeHigh="#FF246E2E" ChromeLow="#A0330505" ChromeMedium="#A03A0A0A" ChromeMediumLow="#80481515" ChromeWhite="#FFFFFFFF" ListLow="#FF3A0A0A" ListMedium="#FF4F1A1A" />
 				<ResourceDictionary>

@@ -38,7 +38,6 @@ namespace COTG.Draw
 			AUtil.UnsafeCopy(CityView.baseAnimationOffsets, CityView.animationOffsets);
 		}
 
-		public static void BuildingsOrQueueChanged() => City.GetBuild().BuildingsOrQueueChanged();
 		const int atlasTileSize = 128;
 		const int atlasColumns = 4;
 		static public (int x, int y) BidToAtlas(int bid)

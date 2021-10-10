@@ -1,35 +1,44 @@
 ﻿
+using Microsoft.UI.Xaml.Data;
+
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
-using Windows.System;
+
+using CommunityToolkit.WinUI.UI;
 
 namespace COTG
 {
-	public class NotifyCollection<T> :IReadOnlyCollection<T>, IEnumerable, IEnumerable<T>, INotifyCollectionChanged,INotifyPropertyChanged where T : class
+	public class NotifyCollection< T> :AdvancedCollectionView<T>, INotifyCollectionChanged,INotifyPropertyChanged where T : class
 	{
-		public List<T> c = new();
-		T [] cache;
-		public NotifyCollection()
-		{
-
-		}
-		bool hasNotifications => (CollectionChanged is not null | PropertyChanged is not null);
-		public event NotifyCollectionChangedEventHandler? CollectionChanged;
+		bool hasNotifications =>true;
+	//	public event NotifyCollectionChangedEventHandler? CollectionChanged;
 		public void OnPropertyChanged(T city,string propertyName = "") => PropertyChanged?.Invoke(city,new PropertyChangedEventArgs(propertyName));
 		public void OnPropertyChanged(string propertyName = "") => PropertyChanged?.Invoke(this,new PropertyChangedEventArgs(propertyName));
-		public event PropertyChangedEventHandler? PropertyChanged;
-
+		public object _lock;
 		protected long lastDataHash;
 
-		public int Count => c.Count;
-		public T  this[int id] => c[id];
+		//		public int Count => c.Length;
+		public NotifyCollection()
+		{
+			_lock = new();
+			BindingOperations..
+		}
+		//	public bool IsReadOnly => true;
 
+		//		T IList<T>.this[int index] { get => c[index]; set=> Assert(false); }
+
+		//	T IList<T>.this[int index] { get => ((IList<T>)c)[index]; set => ((IList<T>)c)[index]=value; }
+
+		//	public T this[int id]  { get => c.IList<T>[id]; set=> Assert(false); }
+
+		//public ref readonly T itemRef(int id) => ref  c.ItemRef(id);
 		public void ClearHash() => lastDataHash=-1L;
 
 		public static long GetDataHash(IEnumerable<T> v)
@@ -48,15 +57,15 @@ namespace COTG
 			
 			var newHash = GetDataHash(c);
 			var hashChanged = newHash != lastDataHash;
-		//	if( !hashChanged && !itemsChanged )
-		//		return;
+	//		if( !hashChanged && !itemsChanged )
+	//			return;
 			lastDataHash= newHash;
-		//	if(hasNotifications)
+			if(hasNotifications)
 			{
-					Debounce.Q( hash: RuntimeHelpers.GetHashCode(this)*11,runOnUIThread:true,action: ()=> {
+					Debounce.Q( hash: RuntimeHelpers.GetHashCode(this)*113,runOnUIThread:true,action: ()=> {
 					try
 					{
-			//			if(itemsChanged)
+						if(itemsChanged)
 							OnPropertyChanged();
 					//  Assert(App.IsOnUIThread());
 						if( hashChanged)
@@ -82,7 +91,8 @@ namespace COTG
 				var _count = Count;
 					if(_count == Count)
 					{
-						NotifyChange(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add,added,id),true);
+					NotifyReset();
+//					NotifyChange(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add,added,id),true);
 					}
 					else
 					{
@@ -93,14 +103,14 @@ namespace COTG
 			}
 		}
 
-		public void NotifyAdd(IList<T> added)
-		{
-			if(CollectionChanged != null)
-			{
-				NotifyChange(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add,added),true);
-			}
+		//public void NotifyAdd(IList<T> added)
+		//{
+		//	if(CollectionChanged != null)
+		//	{
+		//		NotifyChange(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add,added),true);
+		//	}
 
-		}
+		//}
 		public void NotifyRemoveAt(int id,T removed)
 		{
 				var _count = Count;
@@ -147,32 +157,30 @@ namespace COTG
 
 		public void Remove(Predicate<T>  pred, bool notify)
 		{
-			int id = c.FindIndex(pred);
+			int id = FindIndex(pred);
 			if(id >= 0)
 			{
-				RemoveAt(id, notify);
+				base.RemoveItem(id);
 			}
 		}
 
 		public void SortSmall(Comparison<T> cmp)
 		{
-			c.SortSmall(cmp);
+			Sort.SortSmall(this, cmp);
 			NotifyReset(true);
 
 		}
 		public void Add(T item,bool notify)
 		{
-			var id = Count;
-			c.Add(item);
-			if(notify)
-			{
-				NotifyInsert(id,item);
-			}
+	//		if(notify)
+				base.Add(item);
+//			Insert(Count,item,notify);
+			
 		}
 		public  void Insert(int id,T item,bool notify)
 		{
-			c.Insert(id,item);
-			notify=true;
+			base.InsertItem(id,item);
+			
 			if(notify && hasNotifications)
 			{
 				NotifyInsert(id,item);
@@ -181,13 +189,13 @@ namespace COTG
 		public void RemoveAt(int id,bool notify)
 		{
 			var item = c[id];
-			c.RemoveAt(id);
+			base.RemoveAt(id);
 			if(notify && hasNotifications)
 				NotifyRemoveAt(id,item);
 		}
 		public void Remove(T i,bool notify)
 		{
-			var index = c.IndexOf(i);
+			var index = base.IndexOf(i);
 			if(index >= 0)
 			{
 				RemoveAt(index,notify);
@@ -196,14 +204,15 @@ namespace COTG
 
 		public void Set(IEnumerable<T> src,bool notify, bool itemsChanged=true)
 		{
-		//	if(notify == )
-		//	if(src.SequenceEqual(this))
-		//		return;
+			//	if(notify == )
+			//	if(src.SequenceEqual(this))
+			//		return;
 
-			c.Clear();
+			base.Clear();
 			if(!src.IsNullOrEmpty() )
-				c.AddRange(src);
-			if(notify && hasNotifications)
+				base.AddRange(src);
+		
+			if(notify || itemsChanged)
 				NotifyReset(itemsChanged);
 		}
 
@@ -212,23 +221,39 @@ namespace COTG
 			Set(null,notify,true);
 		}
 		// do not use these
-		
 
+		 record struct EnumeratorProxy :IEnumerator< T>  
+		{
+			 NotifyCollection<T> c;
+			public EnumeratorProxy(NotifyCollection<T> c) { this .c =c; e = c.c.GetEnumerator();}
+			ImmutableArray<T>.Enumerator e;
+			public T Current => e.Current;
+			object IEnumerator.Current => e.Current;
+
+
+			public void Dispose(){ }
+			public bool MoveNext() => e.MoveNext();
+			public void Reset() => e = c.c.GetEnumerator();
+		}
 		public IEnumerator<T> GetEnumerator()
 		{
-			return c.GetEnumerator();
-			cache = c.ToArray();
-			return cache.AsEnumerable<T>().GetEnumerator();
+			return new EnumeratorProxy(this);
 		}
 //		IEnumerator IEnumerable.GetEnumerator() => c.ToArray().GetEnumerator();
 		//IEnumerator IEnumerable.GetEnumerator() => c.GetEnumerator();
 		 IEnumerator IEnumerable.GetEnumerator()
 		{
-			return c.GetEnumerator();
-			cache = c.ToArray();
-			return cache.GetEnumerator();
+			return  new c.IList<T>.EnumeratorProxy(this);
 		}
-		
+
+		public int IndexOf(T item) => c.IndexOf(item);
+		public void Insert(int index,T item) => Assert(false);
+		public void RemoveAt(int index) => Assert(false);
+		public void Add(T item) => Assert(false); 
+		public void Clear() => Assert(false); 
+		public bool Contains(T item) => c.Contains(item);
+		public void CopyTo(T[] array,int arrayIndex) => c.CopyTo(array,arrayIndex);
+		public bool Remove(T item) { Assert(false); return false; } 
 	}
 
 
