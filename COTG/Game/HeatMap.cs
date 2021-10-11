@@ -1,5 +1,4 @@
 ﻿
-global using ByteMemory = Microsoft.Toolkit.HighPerformance.Buffers.MemoryOwner<byte>;
 
 using Azure.Storage.Blobs.Models;
 
@@ -201,7 +200,7 @@ namespace COTG.Game
 			}
 
 		}
-		internal unsafe void Read(BinaryData data)
+		internal unsafe void Read(ByteOwner data)
 		{
 	//		fixed (byte* pData = data)
 			{
@@ -359,15 +358,17 @@ namespace COTG.Game
 						eTag = res.Value.Details.ETag;
 						loadState = AzureLoadState.loaded;
 
-						var content = res.Value.Content;
-
-						var readBuffer = await AMem.ReadCompressedAsync(content).ConfigureAwait(false);
-						await content.DisposeAsync().ConfigureAwait(false);
-						if(readBuffer != null)
+					
+						var readBuffer = AMem.ReadCompressed(res.Value.Content);
+						if(readBuffer.Length > 0)
 						{
 							Read(readBuffer);
 							Assert(snapshot.Length > 0);
 							//						ArrayPool<byte>.Shared.Return(readBuffer);
+						}
+						else
+						{
+							Assert(false);
 						}
 					}
 					return this;

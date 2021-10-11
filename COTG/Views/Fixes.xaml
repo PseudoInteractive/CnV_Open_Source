@@ -14,7 +14,7 @@
 	<Grid>
 		<ScrollViewer 
                   Margin="12"
-                  BorderBrush="{ThemeResource SystemControlBackgroundBaseLowRevealBorderBrush}"
+                  BorderBrush="{ThemeResource SystemControlBackgroundBaseMediumHighRevealBorderBrush}"
                   BorderThickness="2"
                   HorizontalScrollBarVisibility="Disabled"
 		ZoomMode="Enabled"

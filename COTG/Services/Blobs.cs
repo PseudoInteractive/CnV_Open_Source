@@ -285,7 +285,11 @@ namespace COTG.Services
 			{
 				var t = bi.Name.ParseFileTime();
 				if (t >= t0 && t <= t1)
-					snaps.Add(await LoadSnapshot(bi.Name));
+				{
+					var snap = await LoadSnapshot(bi.Name);
+					if(snap is not null)
+						snaps.Add(snap);
+				}
 			}
 			if(snaps.IsNullOrEmpty())
 			{
@@ -344,7 +348,11 @@ namespace COTG.Services
 			{
 				var t = bi.Name.ParseFileTime();
 				if (t >= t0 && t <= t1)
-					snaps.Add(await LoadTSSnapshot(bi.Name));
+				{
+					var i = await LoadTSSnapshot(bi.Name);
+					if(i != null)
+						snaps.Add(i);
+				}
 			}
 			if (snaps.IsNullOrEmpty())
 			{
@@ -500,7 +508,7 @@ namespace COTG.Services
 				//{
 				//	return day;
 				//}
-				var mem = await AMem.ReadCompressedAsync(res.Value.Content);
+				var mem = AMem.ReadCompressed(res.Value.Content);
 				//using var deflate = new GZipStream(res.Value.Content, CompressionMode.Decompress);
 				//byte[] readBuffer = ArrayPool<byte>.Shared.Rent(snapShotBufferSize);
 				//var readOffset = 0;
@@ -532,10 +540,9 @@ namespace COTG.Services
 			{
 				return null;
 			}
-			return null;
 		}
 
-		private static Snapshot Load(BinaryData mem)
+		private static Snapshot Load(ByteOwner mem)
 		{
 			var snap = new Snapshot();
 			unsafe
@@ -610,7 +617,7 @@ namespace COTG.Services
 				//}
 
 				using var deflate = new GZipStream(res.Value.Content,CompressionMode.Decompress);
-				var mem = await AMem.ReadCompressedAsync(res.Value.Content);
+				var mem = AMem.ReadCompressed(res.Value.Content);
 				//byte[] readBuffer = ArrayPool<byte>.Shared.Rent(snapShotBufferSize);
 				//var readOffset = 0;
 				//for (; ; )
@@ -630,7 +637,7 @@ namespace COTG.Services
 				//	ArrayPool<byte>.Shared.Return(_readBuffer);
 				//}
 				return Read(mem);
-				static TSSnapshot Read(BinaryData mem)
+				static TSSnapshot Read(ByteOwner mem)
 				{
 					var snap = new TSSnapshot();
 					//unsafe
@@ -677,9 +684,6 @@ namespace COTG.Services
 			{
 				return null;
 			}
-		
-
-			
 		}
 
 		//for (; ; )

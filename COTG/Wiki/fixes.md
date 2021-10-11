@@ -319,6 +319,12 @@
       - Still compatible with COTG
       - There Might be regressions
       - Good luck.
+   - **Update** 
+     - Settings page "HTML Scale" works in real time
+   - **New**
+     - Buttons along sides of screen switch between various layouts
+   - **Note**
+      - If the Web View is missing, please download and install this [Web Stuff](https://go.microsoft.com/fwlink/p/?LinkId=2124703)  
 
 ## Welcome ChuckoBuck to the dev team!
    - ChuckoBuck is a programmer, currently working on Discord integration.

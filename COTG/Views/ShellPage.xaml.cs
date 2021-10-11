@@ -32,6 +32,7 @@ using static COTG.Debug;
 using WinUI = Microsoft.UI.Xaml.Controls;
 using CommunityToolkit.WinUI.UI.Controls;
 using System.Reflection;
+using CommunityToolkit.WinUI.Helpers;
 
 namespace COTG.Views
 {
@@ -327,6 +328,11 @@ namespace COTG.Views
 		//	await UpdateWebViewScale();
 			AGame.Create(canvas);
 			typeof(Telerik.UI.Xaml.Controls.RadDataForm).Assembly.GetType("Telerik.UI.Xaml.Controls.TelerikLicense").GetField("messageDisplayed",BindingFlags.NonPublic|BindingFlags.Static).SetValue(null,true,BindingFlags.Static|BindingFlags.NonPublic,null,null);
+			if(true || SystemInformation.Instance.IsAppUpdated)
+			{
+				App.DispatchOnUIThreadLow(SettingsPage.ShowWhatsNew);
+			}
+
 
 			Task.Delay(4500).ContinueWith((_) => App.DispatchOnUIThreadIdle(() =>
 			{

@@ -1024,11 +1024,19 @@ namespace COTG.Views
 		public static async void ShowWhatsNew()
 		{
 
-			var dialog = new WhatsNewDialog();
-			dialog.DefaultButton = Microsoft.UI.Xaml.Controls.ContentDialogButton.Primary;
-			dialog.fixesText.Text = new StreamReader((typeof(Fixes).Assembly).GetManifestResourceStream($"COTG.Wiki.fixes.md")).ReadToEnd();
+			try
+			{
+				var dialog = new WhatsNewDialog();
+				dialog.DefaultButton = Microsoft.UI.Xaml.Controls.ContentDialogButton.Primary;
+				dialog.fixesText.Text = new StreamReader((typeof(Fixes).Assembly).GetManifestResourceStream($"COTG.Wiki.fixes.md")).ReadToEnd();
 
-			var result = await dialog.ShowAsync2();
+				var result = await dialog.ShowAsync2();
+
+			}
+			catch(Exception __ex)
+			{
+				Debug.LogEx(__ex);
+			}
 		}
 	}
 }

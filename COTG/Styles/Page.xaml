@@ -24,6 +24,7 @@
 	</Style>
 	<Style TargetType="tk:GridSplitter" >
 		<Setter Property="TabFocusNavigation" Value="Once" />
+		<Setter Property="Background" Value="{x:Null}"/>
 	</Style>
 	<Style TargetType="StackPanel" >
 		<Setter Property="TabFocusNavigation" Value="Once" />
@@ -91,28 +92,28 @@
         <Setter Property="BorderThickness" Value="1" />
 		<Setter Property="Margin" Value="2"/>
 		<Setter Property="Padding" Value="4"/>
-        <Setter Property="BorderBrush" Value="{ThemeResource SystemControlBackgroundBaseLowRevealBorderBrush}"/>
+        <Setter Property="BorderBrush" Value="{ThemeResource SystemControlBackgroundBaseMediumHighRevealBorderBrush}"/>
     </Style>
 	<Style TargetType="StackPanel" x:Key="StackPanelReveal" >
         <Setter Property="BorderThickness" Value="1" />
 		<Setter Property="Margin" Value="4"/>
 		<Setter Property="Padding" Value="4"/>
-        <Setter Property="BorderBrush" Value="{ThemeResource SystemControlBackgroundBaseLowRevealBorderBrush}"/>
+        <Setter Property="BorderBrush" Value="{ThemeResource SystemControlBackgroundBaseMediumHighRevealBorderBrush}"/>
     </Style>
 	<Style TargetType="tk:Expander">
 		<Setter Property="BorderThickness" Value="1" />
 		<Setter Property="Margin" Value="4" />
-		<Setter Property="BorderBrush" Value="{ThemeResource SystemControlBackgroundBaseLowRevealBorderBrush}"/>
+		<Setter Property="BorderBrush" Value="{ThemeResource SystemControlBackgroundBaseMediumHighRevealBorderBrush}"/>
 	</Style>
 	<Style TargetType="TextBox">
 		<Setter Property="FontFamily" Value="Tw Cen MT Condensed"/>
 		<Setter Property="FontSize" Value="{StaticResource SmallFontSize}" />
-		<Setter Property="BorderBrush" Value="{ThemeResource SystemControlBackgroundBaseLowRevealBorderBrush}"/>
+		<Setter Property="BorderBrush" Value="{ThemeResource SystemControlBackgroundBaseMediumHighRevealBorderBrush}"/>
 	</Style>
 	<Style TargetType="TextBox" x:Key="TextBoxReveal" >
 		<Setter Property="FontFamily" Value="Tw Cen MT Condensed"/>
 		<Setter Property="FontSize" Value="{StaticResource MediumFontSize}" />
-		<Setter Property="BorderBrush" Value="{ThemeResource SystemControlBackgroundBaseLowRevealBorderBrush}"/>
+		<Setter Property="BorderBrush" Value="{ThemeResource SystemControlBackgroundBaseMediumHighRevealBorderBrush}"/>
     </Style>
     <Style x:Key="TextBlockSmall" TargetType="TextBlock">
         <Setter Property="FontFamily" Value="Tw Cen MT Condensed"/>
@@ -133,7 +134,7 @@
 		<Setter Property="FontSize" Value="{StaticResource SmallFontSize}" />
         <Setter Property="IsTextScaleFactorEnabled" Value="False"/>
 		<Setter Property="BorderThickness" Value="1" />
-        <Setter Property="BorderBrush" Value="{ThemeResource SystemControlBackgroundBaseLowRevealBorderBrush}"/>       
+        <Setter Property="BorderBrush" Value="{ThemeResource SystemControlBackgroundBaseMediumHighRevealBorderBrush}"/>       
     </Style>
     <Style x:Key="NumberBoxSmall" TargetType="winui:NumberBox">
 		<Setter Property="FontSize" Value="{StaticResource SmallFontSize}" />
@@ -143,7 +144,7 @@
 		<Setter Property="SmallChange" Value="1"/>
 		<Setter Property="LargeChange" Value="10"/>
 		<Setter Property="BorderThickness" Value="1" />
-        <Setter Property="BorderBrush" Value="{ThemeResource SystemControlBackgroundBaseLowRevealBorderBrush}"/>
+        <Setter Property="BorderBrush" Value="{ThemeResource SystemControlBackgroundBaseMediumHighRevealBorderBrush}"/>
         <Setter Property="AcceptsExpression" Value="True" />
 		<Setter Property="VerticalAlignment" Value="Center" />
 		<Setter Property="Margin" Value="2" />

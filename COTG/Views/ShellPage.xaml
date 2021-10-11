@@ -156,7 +156,7 @@
 			<Button Click="LayoutEnterX(5)" 
 				Style="{StaticResource layoutButton}"
 
-		ToolTipService.ToolTip="Geek Sheet Layout"
+		ToolTipService.ToolTip="Chat"
 
 BorderBrush="#C0404000"
 Grid.Row="6"
@@ -198,11 +198,12 @@ Grid.Column="0"
 					<StackPanel Orientation="Horizontal" VerticalAlignment="Center">
 						<winui:ComboBox x:Name="windowLayout" SelectedIndex="2" SelectionChanged="windowLayout_SelectionChanged" AccessKey="1" VerticalAlignment="Center" Margin="4"
                            ToolTipService.ToolTip="Select a view layout" >
-							<x:String>L2</x:String>
-							<x:String>L1</x:String>
-							<x:String>C</x:String>
-							<x:String>R1</x:String>
-							<x:String>R2</x:String>
+							<x:String>Legacy</x:String>
+							<x:String>View</x:String>
+							<x:String>Default</x:String>
+							<x:String>Task</x:String>
+							<x:String>Numbers</x:String>
+							<x:String>Chat</x:String>
 						</winui:ComboBox>
 
 						<winui:ComboBox x:Name="cityBox" x:FieldModifier="public" 
@@ -408,6 +409,7 @@ TextSubmitted="CitySubmitted"
                         HorizontalAlignment="Stretch"
                         Height="11"
                         Grid.Row="1"
+				Background="#80808080"
                         Canvas.ZIndex="22">
 				<tk:GridSplitter.Element>
 					<FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE76F;"

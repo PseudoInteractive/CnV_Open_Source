@@ -72,7 +72,7 @@
 					</Border>
 					<Border  Style="{StaticResource BorderReveal}">
 						<winui:TreeView x:Name="shareStrings" SelectionMode="Single" IsTabStop="True" BorderThickness="1" 
-							BorderBrush="{ThemeResource SystemControlBackgroundBaseLowRevealBorderBrush}"
+							BorderBrush="{ThemeResource SystemControlBackgroundBaseMediumHighRevealBorderBrush}"
 						TabNavigation="Once" CanDragItems="False" AllowDrop="False" ItemTemplate="{StaticResource ShareItemTemplate}"
 						ItemsSource="{x:Bind views:ShareStringItem.all}" ItemInvoked="ShareItemInvoked"
 						>

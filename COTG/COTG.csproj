@@ -599,6 +599,7 @@
     <None Remove="Content\PERTILI.TTF" />
     <None Remove="Package.appxmanifest" />
     <None Remove="Styles\CommandBar.xaml" />
+    <None Remove="Wiki\fixes.md" />
   </ItemGroup>
   <ItemGroup>
     <AppxManifest Include="Package.appxmanifest" />
@@ -625,7 +626,7 @@
     <None Include="Properties\PublishProfiles\win10-x64.pubxml" />
     <None Include="SignatureKey.snk" />
     <None Include="SignaturePubKey.snk" />
-    <None Include="Wiki\wiki.md" />
+    <Resource Include="Wiki\wiki.md" />
   </ItemGroup>
   <ItemGroup>
 	  <MonoGameContentReference Include="Content\cotg.mgcb" />
@@ -689,5 +690,6 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Content\Fonts\tra.fnt" />
+    <EmbeddedResource Include="Wiki\fixes.md" />
   </ItemGroup>
 </Project>

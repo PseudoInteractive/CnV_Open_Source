@@ -126,7 +126,7 @@
 				GripperCursor="SizeNorthSouth"            Height="11"
                          HorizontalAlignment="Stretch"
                          VerticalAlignment="Top"
-                           Background="transparent"
+                          
                     >
             <tk:GridSplitter.Element>
                 <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE76F;"

@@ -56,10 +56,6 @@ namespace COTG
 				AAnalytics.Track("GotCreds",new Dictionary<string,string>() { { "World",JSClient.world.ToString() },{ "sub",JSClient.isSub.ToString() },{ "UserId",Player.myName } });
 				ShellPage.UpdateFocus();
 			}
-			if(SystemInformation.Instance.IsAppUpdated)
-			{
-				App.DispatchOnUIThreadLow(SettingsPage.ShowWhatsNew);
-			}
 
 			// 
 			// Friend.LoadAll();

@@ -603,259 +603,266 @@ namespace COTG.Game
 		public void LoadCityData(JsonElement jse)
 		{
 
-			if (cid != jse.GetInt("cid"))
+			try
 			{
-				Note.Show($"City bad? {nameMarkdown}");
-				return;
-			}
-			if (jse.TryGetProperty("citn", out var citn))
-				_cityName = citn.GetString();
-
-			type = typeCity;
-			// In rare cases, this changes
-			pid = jse.GetAsInt("pid");
-			Assert(pid != 0);
-
-
-			//if (jse.TryGetProperty("ble", out var ble))
-			//{
-			//	Log(ble.ToString());
-			//}
-			if (jse.TryGetProperty("w", out var isOnWataer))
-			{
-				var i = isOnWataer.GetAsInt();
-				if (i == 1)
-					isOnWater = true;
-				else if (i == 0)
-					isOnWater = false;
-			}
-
-			if (jse.TryGetProperty("r", out var r))
-			{
-				if (r.TryGetProperty("1", out var w))
+				if(cid != jse.GetInt("cid"))
 				{
-					wood = w.GetAsFloat("r").RoundToInt();
+					Note.Show($"City bad? {nameMarkdown}");
+					return;
 				}
-				if (r.TryGetProperty("2", out var s))
-				{
-					stone = s.GetAsFloat("r").RoundToInt();
-				}
-				if (r.TryGetProperty("3", out var _i))
-				{
-					iron = _i.GetAsFloat("r").RoundToInt();
-				}
-				if (r.TryGetProperty("4", out var f))
-				{
-					food = f.GetAsFloat("r").RoundToInt();
-				}
-			}
-			// carts?
-			if (jse.TryGetProperty("crth", out var crth))
-			{
-				cartsHome = crth.GetAsUShort();
-			}
-			if (jse.TryGetProperty("crt", out var crt))
-			{
-				carts = crt.GetAsUShort();
-			}
-			if (jse.TryGetProperty("shph", out var shph))
-			{
-				shipsHome = crth.GetAsUShort();
-			}
-			if (jse.TryGetProperty("shp", out var shp))
-			{
-				ships = shp.GetAsUShort();
-			}
-			if (jse.TryGetProperty("coof", out var coof))
-			{
-				ministersOn = coof.GetAsInt() != 0;
-			}
-			if (jse.TryGetProperty("mo", out var p))
-			{
-				SetMinisterOptions(p.ToString());
-			}
+				if(jse.TryGetProperty("citn",out var citn))
+					_cityName = citn.GetString();
 
-			if (jse.TryGetProperty("cn", out var cn))
-			{
-				remarks = cn[0].GetAsString();
-				notes = cn[1].GetAsString();
-				this.UpdateTags();
+				type = typeCity;
+				// In rare cases, this changes
+				pid = jse.GetAsInt("pid");
+				Assert(pid != 0);
 
-			}
-			if (jse.TryGetProperty("OGA", out var oga))
-			{
-				try
+
+				//if (jse.TryGetProperty("ble", out var ble))
+				//{
+				//	Log(ble.ToString());
+				//}
+				if(jse.TryGetProperty("w",out var isOnWataer))
 				{
-					foreach (var attack in oga.EnumerateArray())
+					var i = isOnWataer.GetAsInt();
+					if(i == 1)
+						isOnWater = true;
+					else if(i == 0)
+						isOnWater = false;
+				}
+
+				if(jse.TryGetProperty("r",out var r))
+				{
+					if(r.TryGetProperty("1",out var w))
 					{
-						int id = attack[0].GetAsInt();
-						if (id == 5) // Raid
-							continue;
-						if (id == 4) // reinforce
-							continue;
-						Trace($"{id} {attack[1].GetAsString()} {attack[5].GetAsString()} {attack[6].GetAsString()}");
+						wood = w.GetAsFloat("r").RoundToInt();
+					}
+					if(r.TryGetProperty("2",out var s))
+					{
+						stone = s.GetAsFloat("r").RoundToInt();
+					}
+					if(r.TryGetProperty("3",out var _i))
+					{
+						iron = _i.GetAsFloat("r").RoundToInt();
+					}
+					if(r.TryGetProperty("4",out var f))
+					{
+						food = f.GetAsFloat("r").RoundToInt();
+					}
+				}
+				// carts?
+				if(jse.TryGetProperty("crth",out var crth))
+				{
+					cartsHome = crth.GetAsUShort();
+				}
+				if(jse.TryGetProperty("crt",out var crt))
+				{
+					carts = crt.GetAsUShort();
+				}
+				if(jse.TryGetProperty("shph",out var shph))
+				{
+					shipsHome = crth.GetAsUShort();
+				}
+				if(jse.TryGetProperty("shp",out var shp))
+				{
+					ships = shp.GetAsUShort();
+				}
+				if(jse.TryGetProperty("coof",out var coof))
+				{
+					ministersOn = coof.GetAsInt() != 0;
+				}
+				if(jse.TryGetProperty("mo",out var p))
+				{
+					SetMinisterOptions(p.ToString());
+				}
+
+				if(jse.TryGetProperty("cn",out var cn))
+				{
+					remarks = cn[0].GetAsString();
+					notes = cn[1].GetAsString();
+					this.UpdateTags();
+
+				}
+				if(jse.TryGetProperty("OGA",out var oga))
+				{
+					try
+					{
+						foreach(var attack in oga.EnumerateArray())
+						{
+							int id = attack[0].GetAsInt();
+							if(id == 5) // Raid
+								continue;
+							if(id == 4) // reinforce
+								continue;
+							Trace($"{id} {attack[1].GetAsString()} {attack[5].GetAsString()} {attack[6].GetAsString()}");
+						}
+
+					}
+					catch(Exception ex)
+					{
+						LogEx(ex,eventName: "OGA");
 					}
 
 				}
-				catch (Exception ex)
+				if(jse.TryGetProperty("cs",out var cs))
 				{
-					LogEx(ex, eventName: "OGA");
+					constructionSpeed = cs.GetAsFloat();
 				}
-
-			}
-			if (jse.TryGetProperty("cs", out var cs))
-			{
-				constructionSpeed = cs.GetAsFloat();
-			}
-			if (!shareStringLoaded)
-			{
-				if (jse.TryGetProperty("sts", out var sts))
+				if(!shareStringLoaded)
 				{
-					
-					var s = sts.GetString();
-					//	Log(s);
-					s = s.Replace("&#34;", "\"");
-					//	Log(s);
-
-					SetShareString(s,false);
-				}
-
-			}
-		
-			if (tradeInfo != CityTradeInfo.invalid)
-			{
-				if (jse.TryGetProperty("incRes", out var ir))
-				{
-					tradeInfo.inc[0] = ir[0].GetAsInt();
-					tradeInfo.inc[1] = ir[1].GetAsInt();
-					tradeInfo.inc[2] = ir[2].GetAsInt();
-					tradeInfo.inc[3] = ir[3].GetAsInt();
-					//if (NearRes.IsVisible())
-					//{
-					//	App.DispatchOnUIThreadLow( ()=> NearRes.instance.Refresh() );
-					//}
-				}
-			}
-		//	if ((this != ExtendedQueue.cityQueueInUse))
-			{
-				if (jse.TryGetProperty("bq", out var bq))
-				{
-
-					//	Log($"BQ: {(cid == City.build)} {nameAndRemarks} {bq.ToString()}");
-					//if (cid == cityQueueInUse)
-					//{
-					if (bq.ValueKind == JsonValueKind.Array)
+					if(jse.TryGetProperty("sts",out var sts))
 					{
-						var count = bq.GetArrayLength();
-						var prior = buildQueue.v;
-						var priorLength = buildQueue.Length;
-						var changedSize = count!=priorLength;
-						if(changedSize)
+
+						var s = sts.GetString();
+						//	Log(s);
+						s = s.Replace("&#34;","\"");
+						//	Log(s);
+
+						SetShareString(s,false);
+					}
+
+				}
+
+				if(tradeInfo != CityTradeInfo.invalid)
+				{
+					if(jse.TryGetProperty("incRes",out var ir))
+					{
+						tradeInfo.inc[0] = ir[0].GetAsInt();
+						tradeInfo.inc[1] = ir[1].GetAsInt();
+						tradeInfo.inc[2] = ir[2].GetAsInt();
+						tradeInfo.inc[3] = ir[3].GetAsInt();
+						//if (NearRes.IsVisible())
+						//{
+						//	App.DispatchOnUIThreadLow( ()=> NearRes.instance.Refresh() );
+						//}
+					}
+				}
+				//	if ((this != ExtendedQueue.cityQueueInUse))
+				{
+					if(jse.TryGetProperty("bq",out var bq))
+					{
+
+						//	Log($"BQ: {(cid == City.build)} {nameAndRemarks} {bq.ToString()}");
+						//if (cid == cityQueueInUse)
+						//{
+						if(bq.ValueKind == JsonValueKind.Array)
 						{
-							buildQueue.Resize(count);
-						}
-						int put=0;
-						var anyChanged=false;
-						foreach(var js in bq.EnumerateArray())
-						{
-							var n = new BuildQueueItem(
-								js.GetAsByte("slvl"),
-								js.GetAsByte("elvl"),
-								js.GetAsShort("brep"),
-								js.GetAsShort("bspot"),
-								buildTime: ((long)(js.GetAsInt("btime")+500 ) / 1000).ClampToU16(),
-								pa: js.GetAsInt64("pa") == 1);
-							if(changedSize || buildQueue[put] != n )
+							var count = bq.GetArrayLength();
+							var prior = buildQueue.v;
+							var priorLength = buildQueue.Length;
+							var changedSize = count!=priorLength;
+							if(changedSize)
 							{
-								anyChanged = true;
-								buildQueue[put] = n;
+								buildQueue.Resize(count);
 							}
-							++put;
-						}
-						if( anyChanged)
-						{
-						BuildingsOrQueueChanged();
-					
-						}
-					}
-					else
-					{
-						Assert(false);
-					}
-					//}
-				}
-				else
-				{
-					var sum = buildQueue.Sum(a=>a.buildTime);
-					//Assert(sum <= 32 );
-					Trace($"No Queue {nameMarkdown} was {buildQueue.Length} dt: {sum}s");
-				//	buildQueue.Clear();
-				}
-			}
-			//else
-			//{
-			//	Trace($"Skipped fetch bq {nameMarkdown}");
-			//}
+							int put = 0;
+							var anyChanged = false;
+							foreach(var js in bq.EnumerateArray())
+							{
+								var n = new BuildQueueItem(
+									js.GetAsByte("slvl"),
+									js.GetAsByte("elvl"),
+									js.GetAsShort("brep"),
+									js.GetAsShort("bspot"),
+									buildTime: ((long)(js.GetAsInt("btime")+500) / 1000).ClampToU16(),
+									pa: js.GetAsInt64("pa") == 1);
+								if(changedSize || buildQueue[put] != n)
+								{
+									anyChanged = true;
+									buildQueue[put] = n;
+								}
+								++put;
+							}
+							if(anyChanged)
+							{
+								BuildingsOrQueueChanged();
 
-
-			TryGetBuildings(jse);
-			if (jse.TryGetProperty("comm", out var comm))
-			{
-				activeCommands = comm.GetByte();
-			}
-
-			//  troopsHome = TroopTypeCount.empty;
-			//  troopsTotal = TroopTypeCount.empty;
-
-
-
-			if (jse.TryGetProperty("tc", out var tc))
-			{
-				Set(ref troopsTotal, tc);
-				_tsTotal = troopsTotal.TS();
-			}
-
-			if (jse.TryGetProperty("th", out var th))
-			{
-				Set(ref troopsHome, th);
-				_tsHome = troopsHome.TS();
-
-
-
-			}
-			if (jse.TryGetProperty("trintr", out var trintr))
-			{
-				if (trintr.ValueKind == JsonValueKind.Array && trintr.GetArrayLength() > 0)
-				{
-					var l = new List<Reinforcement>();
-
-					foreach (var rein in trintr.EnumerateArray())
-					{
-						if (rein.ValueKind == JsonValueKind.Object)
-						{
-							var re = new Reinforcement();
-							re.targetCid = cid;
-							re.sourceCid = rein.GetAsInt("c");
-							re.order = rein.GetAsInt64("o");
-							Set2(ref re.troops, rein.GetProperty("tr"));
-							l.Add(re);
+							}
 						}
 						else
 						{
-							Assert(rein.ValueKind == JsonValueKind.Array && rein.GetArrayLength() == 0);
+							Assert(false);
 						}
+						//}
 					}
-					reinforcementsIn = l.ToArray();
+					else
+					{
+						var sum = buildQueue.Sum(a => a.buildTime);
+						//Assert(sum <= 32 );
+						Trace($"No Queue {nameMarkdown} was {buildQueue.Length} dt: {sum}s");
+						//	buildQueue.Clear();
+					}
+				}
+				//else
+				//{
+				//	Trace($"Skipped fetch bq {nameMarkdown}");
+				//}
+
+
+				TryGetBuildings(jse);
+				if(jse.TryGetProperty("comm",out var comm))
+				{
+					activeCommands = comm.GetByte();
 				}
 
+				//  troopsHome = TroopTypeCount.empty;
+				//  troopsTotal = TroopTypeCount.empty;
+
+
+
+				if(jse.TryGetProperty("tc",out var tc))
+				{
+					Set(ref troopsTotal,tc);
+					_tsTotal = troopsTotal.TS();
+				}
+
+				if(jse.TryGetProperty("th",out var th))
+				{
+					Set(ref troopsHome,th);
+					_tsHome = troopsHome.TS();
+
+
+
+				}
+				if(jse.TryGetProperty("trintr",out var trintr))
+				{
+					if(trintr.ValueKind == JsonValueKind.Array && trintr.GetArrayLength() > 0)
+					{
+						var l = new List<Reinforcement>();
+
+						foreach(var rein in trintr.EnumerateArray())
+						{
+							if(rein.ValueKind == JsonValueKind.Object)
+							{
+								var re = new Reinforcement();
+								re.targetCid = cid;
+								re.sourceCid = rein.GetAsInt("c");
+								re.order = rein.GetAsInt64("o");
+								Set2(ref re.troops,rein.GetProperty("tr"));
+								l.Add(re);
+							}
+							else
+							{
+								Assert(rein.ValueKind == JsonValueKind.Array && rein.GetArrayLength() == 0);
+							}
+						}
+						reinforcementsIn = l.ToArray();
+					}
+
+				}
+
+
+				//lastUpdateTick = Environment.TickCount;
+
+				//            if(COTG.Views.MainPage.cache.cities.Count!=0)
+				// one off change
+				NotifyChange();
 			}
-
-
-			//lastUpdateTick = Environment.TickCount;
-
-			//            if(COTG.Views.MainPage.cache.cities.Count!=0)
-			// one off change
-			NotifyChange();
+			catch(Exception ex)
+			{
+				LogEx(ex);
+			}
 
 
 			//   OnPropertyChangedUI(String.Empty);// COTG.Views.MainPage.CityChange(this);

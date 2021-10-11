@@ -16,21 +16,36 @@ namespace COTG.BinaryMemory
 	/// <remarks>Use this class only if you are sure that you won't read over the memory border.</remarks>
 	public unsafe ref struct Reader 
     {
+		MemoryOwner<byte> memoryOwner;
 		MemoryHandle memoryHandle;
+
+
 
 		private byte* data;
 		int position; // read point
 		int end; // end point (not currently used)
 		
-        public Reader(BinaryData mem)
+        public Reader(MemoryOwner<byte> memoryOwner)
         {
-			var memory = mem.ToMemory();
+			this.memoryOwner	= memoryOwner;
+			var memory = memoryOwner.Memory;
 			memoryHandle = memory.Pin();
 			end = memory.Length;
 			data = (byte*)memoryHandle.Pointer;
 			position=0;
 			//data = mem.DangerousGetArray().Array;
         }
+		public void Dispose()
+		{
+			if(data != null)
+			{
+				data= null;
+
+				memoryHandle.Dispose();
+			
+				AMem.SafeDispose(ref memoryOwner);
+			}			
+		}
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public  ref readonly byte ReadByte()
 		{

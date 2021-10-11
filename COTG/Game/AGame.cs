@@ -297,6 +297,9 @@ namespace COTG
 			//			canvas.CompositeMode = (Microsoft.UI.Xaml.Media.ElementCompositeMode.SourceOver);
 			//canvas.CompositeMode = (Microsoft.UI.Xaml.Media.ElementCompositeMode.MinBlend);
 			instance = MonoGame.Framework.XamlGame<AGame>.Create(() => new AGame() { },"",App.window,swapChainPanel);
+
+			canvas.SizeChanged += AGame.Canvas_SizeChanged;
+
 		}
 
 		protected override void Initialize()
@@ -598,6 +601,8 @@ namespace COTG
 			clientSpan.X = (float)(dx * dipToNative);
 			clientSpan.Y = (float)(dy * dipToNative);
 			halfSpan = clientSpan * 0.5f;
+
+			resolutionDirtyCounter = 10;
 		}
 		public static int resolutionDirtyCounter;
 
@@ -632,7 +637,7 @@ namespace COTG
 			//	Log(canvas.CompositionScaleX);
 
 
-			resolutionDirtyCounter = 10;
+			
 		}
 
 		//class Disposer
