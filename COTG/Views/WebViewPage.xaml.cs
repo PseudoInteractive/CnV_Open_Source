@@ -14,7 +14,7 @@ using COTG.Services;
 
 namespace COTG.Views
 {
-    public sealed partial class WebViewPage : UserTab, INotifyPropertyChanged
+    public sealed partial class WebViewPage : UserTab
     {
         // TODO WTS: Set the URI of the page to show by default
     //    public static Uri DefaultUrl;// = "https://docs.microsoft.com/windows/apps/";
@@ -95,35 +95,9 @@ namespace COTG.Views
             webView.Reload();
         }
 
-        public bool IsBackEnabled
-        {
-            get { return webView.CanGoBack; }
-        }
+       
 
-        public bool IsForwardEnabled
-        {
-            get { return webView.CanGoForward; }
-        }
-
-        private void OnGoBack(object sender, RoutedEventArgs e)
-        {
-            webView.GoBack();
-        }
-
-        private void OnGoForward(object sender, RoutedEventArgs e)
-        {
-            webView.GoForward();
-        }
-
-        private void OnRefresh(object sender, RoutedEventArgs e)
-        {
-            webView.Reload();
-        }
-
-        private async void OnOpenInBrowser(object sender, RoutedEventArgs e)
-        {
-            await Windows.System.Launcher.LaunchUriAsync(webView.Source);
-        }
+      
 
         public WebViewPage()
         {
@@ -169,21 +143,12 @@ namespace COTG.Views
 	private void WebView_CoreWebView2Initialized(WebView sender,CoreWebView2InitializedEventArgs args)
 		{
 		webView.CoreWebView2.PermissionRequested+=CoreWebView2_PermissionRequested;
-			webView.NavigationCompleted+=WebView_NavigationCompleted;
 		}
 
 		private void CoreWebView2_PermissionRequested(Microsoft.Web.WebView2.Core.CoreWebView2 sender,Microsoft.Web.WebView2.Core.CoreWebView2PermissionRequestedEventArgs args)
 		{
 			Log("Permission " + args.PermissionKind);
 			args.State = CoreWebView2PermissionState.Allow;
-		}
-
-		private void WebView_NavigationCompleted(WebView sender,Microsoft.Web.WebView2.Core.CoreWebView2NavigationCompletedEventArgs args)
-		{
-			IsLoading = false;
-			OnPropertyChanged(nameof(IsBackEnabled));
-			OnPropertyChanged(nameof(IsForwardEnabled));
-
 		}
 
         
@@ -215,8 +180,7 @@ namespace COTG.Views
             OnPropertyChanged(propertyName);
         }
 
-        private void OnPropertyChanged(string propertyName) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-
+       
 		//protected override void OnNavigatedFrom(NavigationEventArgs e)
 		//{
   //          Assert(instance == this);

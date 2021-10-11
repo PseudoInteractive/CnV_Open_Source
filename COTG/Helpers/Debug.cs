@@ -4,8 +4,9 @@
 using COTG.Views;
 
 using Microsoft.AppCenter.Analytics;
-//using Microsoft.AppCenter.Crashes;
-
+#if CRASH
+using Microsoft.AppCenter.Crashes;
+#endif
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;

@@ -110,7 +110,7 @@ namespace COTG.Views
 					else if (e.Column.SortDirection == DataGridSortDirection.Descending)
 					{
 						e.Column.SortDirection = DataGridSortDirection.Ascending;
-						cities.c.SortSmall((b, a) => comparer(a, b)); // swap order of comparison
+						cities.SortSmall((b, a) => comparer(a, b)); // swap order of comparison
 						cities.NotifyReset();
 					}
 					else

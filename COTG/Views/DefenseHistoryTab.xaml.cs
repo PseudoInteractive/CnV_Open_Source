@@ -34,7 +34,7 @@ using System.Threading.Tasks;
 namespace COTG.Views
 {
  
-    public sealed partial class DefenseHistoryTab : UserTab, INotifyPropertyChanged
+    public sealed partial class DefenseHistoryTab : UserTab
     {
 		public override  TabPage defaultPage => TabPage.secondaryTabs;
 		public Army[] history { get; set; } = Army.empty;
@@ -89,7 +89,6 @@ namespace COTG.Views
 
 
 
-        public event PropertyChangedEventHandler PropertyChanged;
 
         private void Set<T>(ref T storage, T value, [CallerMemberName] string propertyName = null)
         {
@@ -101,8 +100,7 @@ namespace COTG.Views
             OnPropertyChanged(propertyName);
         }
 
-        public void OnPropertyChanged(string propertyName) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-
+      
         public static bool IsVisible() => instance.isFocused;
 
     }

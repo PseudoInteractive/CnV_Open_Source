@@ -39,7 +39,7 @@ namespace COTG.Views
 
 
 
-    public sealed partial class MainPage : UserTab, INotifyPropertyChanged
+    public sealed partial class MainPage : UserTab
     {
         public static MainPage instance;
      
@@ -200,8 +200,6 @@ namespace COTG.Views
             
         //}
    
-        public event PropertyChangedEventHandler PropertyChanged;
-        public void OnPropertyChanged(string propertyName) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 
         private void Set<T>(ref T storage, T value, [CallerMemberName] string propertyName = null)
         {

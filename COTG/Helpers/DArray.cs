@@ -29,7 +29,7 @@ namespace COTG
 
 		public DArray(int maxSize)
 		{
-			Resize(maxSize);
+			GrowBuffer(maxSize);
 		}
 		public DArray()
 		{

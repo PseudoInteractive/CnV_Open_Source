@@ -575,13 +575,8 @@ namespace COTG
 					}
 					LoadJsStrings();
 					coreWebView = view.CoreWebView2;
-							//			view.CharacterReceived +=View_CharacterReceived;
-#if DEBUG
-					coreWebView.Settings.AreDevToolsEnabled=true;
-					//					coreWebView.OpenDevToolsWindow();
-#else
-				coreWebView.Settings.AreDevToolsEnabled=false;
-#endif
+					//			view.CharacterReceived +=View_CharacterReceived;
+					coreWebView.Settings.AreDevToolsEnabled=System.Diagnostics.Debugger.IsAttached;
 					//	coreWebView.Settings.UserAgent = userAgent;
 
 					coreWebView.Settings.IsWebMessageEnabled=true;
@@ -1961,7 +1956,7 @@ namespace COTG
 
 			}
 			MainPage.CheckTipRaiding();
-
+			City.CitiesChanged();
 			// Log($"PPDT: c:{cUpdated}, clc:{clChanged}");
 
 			// Log(ppdt.ToString());
@@ -2753,7 +2748,7 @@ private static async void ShowCouncillorsMissingDialog()
 									   if (blessed != city.isBlessed)
 									   {
 										   city.isBlessed = blessed;
-										   App.DispatchOnUIThreadLow(() => city.OnPropertyChanged(nameof(City.icon)));
+										   city.OnPropertyChanged(nameof(City.icon));
 									   }
 									   city.isOnWater |= jso.GetAsInt("water") != 0;  // Use Or in case the data is imcomplete or missing, in which case we get it from world data, if that is not incomplete or missing ;)
 									   city.isTemple = jso.GetAsInt("plvl") != 0;
@@ -2953,7 +2948,7 @@ private static async void ShowCouncillorsMissingDialog()
 								   //{
 									  //CitySwitch(cid,true);
 								   //}
-								   //City.CitiesChanged();
+								  
 								   break;
 							   }
 						   case "restoreglobals":

@@ -32,7 +32,7 @@ using CommunityToolkit.WinUI.UI.Controls;
 namespace COTG.Views
 {
 
-	public sealed partial class AttackTab : UserTab, INotifyPropertyChanged
+	public sealed partial class AttackTab : UserTab
     {
 		public static AsyncLock asyncLock = new ();
 		public static StorageFolder folder;
@@ -60,9 +60,8 @@ namespace COTG.Views
 		}
 
 
-		public event PropertyChangedEventHandler PropertyChanged;
-        public void OnPropertyChanged(string propertyName="") => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 		
+
 		static Dictionary<int, string> attackStrings = new();
 		static Dictionary<int, string> playerCommands = new();
 
@@ -265,13 +264,13 @@ namespace COTG.Views
 				if (e.Column.SortDirection == null)
 				{
 					e.Column.SortDirection = DataGridSortDirection.Descending;
-					cities.c.SortSmall(comparer);
+					cities.SortSmall(comparer);
 					cities.NotifyReset();
 				}
 				else if (e.Column.SortDirection == DataGridSortDirection.Descending)
 				{
 					e.Column.SortDirection = DataGridSortDirection.Ascending;
-					cities.c.SortSmall((b, a) => comparer(a, b)); // swap order of comparison
+					cities.SortSmall((b, a) => comparer(a, b)); // swap order of comparison
 					cities.NotifyReset();
 				}
 				else

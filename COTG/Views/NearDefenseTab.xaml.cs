@@ -28,7 +28,7 @@ using CommunityToolkit.WinUI.UI.Controls;
 namespace COTG.Views
 {
 
-    public sealed partial class NearDefenseTab : UserTab, INotifyPropertyChanged
+    public sealed partial class NearDefenseTab : UserTab
 	{
         public static NearDefenseTab instance;
         public static bool IsVisible() => instance.isFocused;
@@ -231,11 +231,6 @@ namespace COTG.Views
 
       
 
-        public event PropertyChangedEventHandler PropertyChanged;
-        public void OnPropertyChanged(string propertyName) {
-
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
         private void Coord_Tapped(object sender, TappedRoutedEventArgs e)
         {
             var image = sender as FrameworkElement;
@@ -421,13 +416,13 @@ namespace COTG.Views
                 if (e.Column.SortDirection == null)
                 {
                     e.Column.SortDirection = DataGridSortDirection.Descending;
-                    supporters.c.SortSmall(comparer);
+                    supporters.SortSmall(comparer);
                     supporters.NotifyReset();
                 }
                 else if(e.Column.SortDirection == DataGridSortDirection.Descending)
                 {
                     e.Column.SortDirection = DataGridSortDirection.Ascending;
-                    supporters.c.SortSmall((b, a) => comparer(a,b) ); // swap order of comparison
+                    supporters.SortSmall((b, a) => comparer(a,b) ); // swap order of comparison
                     supporters.NotifyReset();
                 }
                 else

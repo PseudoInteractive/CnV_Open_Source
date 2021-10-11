@@ -26,7 +26,7 @@ using static COTG.Debug;
 namespace COTG.Views
 {
 
-    public sealed partial class DonationTab : UserTab, INotifyPropertyChanged
+    public sealed partial class DonationTab : UserTab
 	{
         public static DonationTab instance;
         public static int reserveCarts=800;
@@ -47,9 +47,7 @@ namespace COTG.Views
 		}
 
 		public static bool IsVisible() => instance.isFocused;
-        public event PropertyChangedEventHandler PropertyChanged;
-        public void OnPropertyChanged(string propertyName) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-
+      
        // List<BlessedCity> blessedGridSource = new List<BlessedCity>();
         public async override Task VisibilityChanged(bool visible, bool longTerm)
 		{
@@ -115,18 +113,7 @@ namespace COTG.Views
             blessedGrid.ItemsSource = BlessedCity.GetForCity(newSel);
         }
 
-		event PropertyChangedEventHandler INotifyPropertyChanged.PropertyChanged
-		{
-			add
-			{
-				throw new NotImplementedException();
-			}
-
-			remove
-			{
-				throw new NotImplementedException();
-			}
-		}
+		
 	}
 
 public class BlessedTapCommand : DataGridCommand

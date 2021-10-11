@@ -24,10 +24,17 @@ using CommunityToolkit.WinUI.UI;
 
 namespace COTG.Views
 {
-	public sealed partial class CityControl : UserControl,INotifyPropertyChanged
+	public sealed partial class CityControl : UserControl,IANotifyPropertyChanged
 	{
 		#region PropertyChanged
-		public void OnPropertyChanged(string propertyName = "") => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+		public void CallPropertyChanged(string member = null)
+		{
+			PropertyChanged?.Invoke(this,new PropertyChangedEventArgs(member));
+		}
+		public void OnPropertyChanged(string member = null)
+		{
+			if(PropertyChanged is not null) ((IANotifyPropertyChanged)this).IOnPropertyChanged();
+		}
 		public event PropertyChangedEventHandler PropertyChanged;
 		#endregion
 

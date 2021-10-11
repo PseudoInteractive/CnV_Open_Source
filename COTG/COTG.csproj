@@ -66,8 +66,8 @@
     <PackageReference Include="Enums.NET" Version="4.0.0" />
     <PackageReference Include="Grpc.Net.Client" Version="2.40.0" />
     <PackageReference Include="MagicOnion.Client" Version="4.3.1" />
-    <PackageReference Include="Microsoft.AppCenter" Version="4.4.0" />
     <PackageReference Include="Microsoft.AppCenter.Analytics" Version="4.4.0" />
+    <PackageReference Include="Microsoft.AppCenter.Crashes" Version="4.4.0" />
     <PackageReference Include="Microsoft.DependencyValidation.Analyzers" Version="0.11.0" />
     <PackageReference Include="Microsoft.Extensions.ObjectPool" Version="6.0.0-rc.1.21452.15" />
     <PackageReference Include="Microsoft.ProjectReunion" Version="0.8.4" />
@@ -147,6 +147,7 @@
     <Compile Include="Game\World.cs" />
     <Compile Include="Game\WorldViewSettings.cs" />
     <Compile Include="GlobalSuppressions2.cs" />
+    <Compile Include="GlobalUsing.cs" />
     <Compile Include="Helpers\aContainers.cs" />
     <Compile Include="Helpers\AES.cs" />
     <Compile Include="Helpers\AMath.cs" />
@@ -673,13 +674,13 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <Optimize>False</Optimize>
     <WarningLevel>4</WarningLevel>
-    <DefineConstants></DefineConstants>
+    <DefineConstants>CRASHES</DefineConstants>
     <Deterministic>True</Deterministic>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <Optimize>True</Optimize>
     <WarningLevel>4</WarningLevel>
-    <DefineConstants></DefineConstants>
+    <DefineConstants>CRASHES</DefineConstants>
     <Deterministic>True</Deterministic>
   </PropertyGroup>
   <ProjectExtensions />

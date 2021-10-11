@@ -55,7 +55,7 @@ namespace COTG.Game
 	//  public  void Ctor(int id);
 	//}
 	[DebuggerDisplay("{" + nameof(GetDebuggerDisplay) + "(),nq}")]
-	public abstract class Spot : IEquatable<Spot>, INotifyPropertyChanged
+	public abstract class Spot : IEquatable<Spot>, IANotifyPropertyChanged
 	{
 		public static ConcurrentDictionary<int, City> allSpots = new ConcurrentDictionary<int, City>(); // keyed by cid
 		public static HashSet<int> selected = new HashSet<int>();
@@ -116,8 +116,15 @@ namespace COTG.Game
 		public static int focus; // city that has focus (selected, but not necessarily building.  IF you click a city once, it goes to this state
 
 		public virtual event PropertyChangedEventHandler PropertyChanged;
-		public void OnPropertyChanged(string propertyName = "") => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+		public void CallPropertyChanged(string members = null)
+		{
+			PropertyChanged?.Invoke(this,new PropertyChangedEventArgs(members));
+		}
 
+		public void OnPropertyChanged(string members = "")
+		{
+			if(PropertyChanged is not null) ((IANotifyPropertyChanged)this).IOnPropertyChanged(null,(cid == focus || cid==build));
+		}
 		public bool isFriend => Player.IsFriend(pid); // this is set if it is one of our cities or our ally cities that we can visit
 
 		internal static City GetFocus()
@@ -455,7 +462,7 @@ namespace COTG.Game
 				SettingsPage.pinned = SettingsPage.pinned.ArrayAppendIfAbsent(cid);
 			else
 				SettingsPage.pinned = SettingsPage.pinned.Where(a => a != cid).ToArray();
-			App.DispatchOnUIThreadIdle(() => OnPropertyChanged(nameof(pinned)));
+			OnPropertyChanged(nameof(pinned));
 		}  // pinned in MRU
 		public byte claim; // only if this is under attack
 		public byte shipyards { get; set; }

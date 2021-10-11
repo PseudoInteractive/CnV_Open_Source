@@ -11006,7 +11006,7 @@ function outer(){
 				document.body.style.background="#000022FF";
 
 				document.getElementById("city_map").style.background="#000022FF";
-	},500);
+	},1500);
 			});
 
 		//    function j4V() { E6k.y6(); if (tileMap.getTile(234, 284, citiesLayer) == null); }

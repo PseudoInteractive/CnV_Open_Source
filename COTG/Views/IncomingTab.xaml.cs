@@ -35,7 +35,7 @@ using System.Linq;
 namespace COTG.Views
 {
 
-    public sealed partial class IncomingTab : UserTab, INotifyPropertyChanged
+    public sealed partial class IncomingTab : UserTab
     {
 		public int typeFilter { get; set; }
 		public static Spot lastSelected;
@@ -119,8 +119,7 @@ namespace COTG.Views
 
 
 
-        public event PropertyChangedEventHandler PropertyChanged;
-
+ 
         private void Set<T>(ref T storage, T value, [CallerMemberName] string propertyName = null)
         {
             if (Equals(storage, value))
@@ -131,8 +130,7 @@ namespace COTG.Views
             OnPropertyChanged(propertyName);
         }
 
-        public void OnPropertyChanged(string propertyName) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-
+        
 		public static Spot selected
 		{
 			get

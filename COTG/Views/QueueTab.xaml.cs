@@ -26,7 +26,7 @@ namespace COTG.Views
 {
 
 	
-	public sealed partial class QueueTab : UserTab, INotifyPropertyChanged
+	public sealed partial class QueueTab : UserTab
 	{
 		public const int movesPerConfirm = 8;
 
@@ -36,8 +36,6 @@ namespace COTG.Views
 		public static QueueTab instance;
 		private const int badBuildingThreshold = 10;
 
-		public event PropertyChangedEventHandler PropertyChanged;
-		public void OnPropertyChanged(string propertyName) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 
 		public static bool IsVisible() => instance.isFocused;
 

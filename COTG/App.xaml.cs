@@ -1,9 +1,4 @@
-﻿global using System.Linq;
-global using COTG.Game;
-global using COTG.Views;
-global using System;
-global using static COTG.Debug;
-
+﻿
 using CommunityToolkit.WinUI;
 using CommunityToolkit.WinUI.Helpers;
 
@@ -12,7 +7,9 @@ using COTG.Services;
 
 using Microsoft.AppCenter;
 using Microsoft.AppCenter.Analytics;
-//using Microsoft.AppCenter.Crashes;
+#if CRASHES
+using Microsoft.AppCenter.Crashes;
+#endif
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 //using Microsoft.UI.Xaml.Controls;
@@ -63,6 +60,7 @@ using Microsoft.UI.Xaml.Hosting;
 using Nito.AsyncEx;
 using COTG.JSON;
 using Microsoft.UI.Xaml.Input;
+using System;
 //using Windows.UI.Core;
 
 namespace COTG
@@ -89,7 +87,7 @@ namespace COTG
 		public static App instance;
 		public static string appLink = "cotg";
 
-		public static  Task StartAnalyticsAsync()
+		public static async Task StartAnalyticsAsync()
 		{
 			//if (AppCenter.Configured)
 			//{
@@ -100,7 +98,7 @@ namespace COTG
 			//});
 			
 		//	AppCenter.Configure("0b4c4039-3680-41bf-b7d7-685eb68e21d2");
-			AppCenter.LogLevel = System.Diagnostics.Debugger.IsAttached ? Microsoft.AppCenter.LogLevel.Warn : Microsoft.AppCenter.LogLevel.None;
+		//	AppCenter.LogLevel = System.Diagnostics.Debugger.IsAttached ? Microsoft.AppCenter.LogLevel.Warn : Microsoft.AppCenter.LogLevel.None;
 			AppCenter.Start("0b4c4039-3680-41bf-b7d7-685eb68e21d2",
 			   typeof(Analytics)
 #if CRASHES
@@ -108,11 +106,11 @@ namespace COTG
 #endif
 			   );
 			AAnalytics.initialized=true;
-			return  Task.WhenAll(
-#if CRASHES
-					Crashes.SetEnabledAsync(true),
-#endif
-								Analytics.SetEnabledAsync(true) );
+//			await  Task.WhenAll(
+//#if CRASHES
+//					Crashes.SetEnabledAsync(true),
+//#endif
+//								Analytics.SetEnabledAsync(true) );
 			
 
 #if CRASHES
@@ -120,6 +118,7 @@ namespace COTG
 			if (didAppCrash)
 			{
 				ErrorReport crashReport = await Crashes.GetLastSessionCrashReportAsync();
+				Log(crashReport);
 			}
 #endif
 		}

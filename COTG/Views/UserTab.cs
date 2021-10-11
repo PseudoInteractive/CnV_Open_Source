@@ -6,15 +6,25 @@ using Telerik.UI.Xaml.Controls.Grid;
 //using Windows.UI.ViewManagement;
 //using Windows.UI.WindowManagement;
 using Microsoft.UI.Xaml;
+using System.ComponentModel;
 //using Microsoft.UI.Windowing;
 
 namespace COTG.Views
 {
-	public class UserTab:UserControl
+	public class UserTab:UserControl, IANotifyPropertyChanged
 	{
 		public virtual TabPage defaultPage => TabPage.mainTabs;
 		public static List<RadDataGrid> spotGrids = new();
 
+		public event PropertyChangedEventHandler PropertyChanged;
+		public void CallPropertyChanged(string members = null)
+		{
+			PropertyChanged?.Invoke(this,new PropertyChangedEventArgs(members));
+		}
+		public void OnPropertyChanged(string member = null)
+		{
+			if(PropertyChanged is not null) ((IANotifyPropertyChanged)this).IOnPropertyChanged();
+		}
 
 		public static UserTab[] userTabs;
 		public static void InitUserTabs()

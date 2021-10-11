@@ -39,7 +39,7 @@ namespace COTG.Views
 
 
 
-	public sealed partial class BuildTab : UserTab, INotifyPropertyChanged
+	public sealed partial class BuildTab : UserTab
 	{
 		private const string workStr = "Refreshing build states..";
 		public static BuildTab instance;
@@ -146,8 +146,6 @@ namespace COTG.Views
 	
 
 
-		public event PropertyChangedEventHandler PropertyChanged;
-		public void OnPropertyChanged(string propertyName) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 
 		private void Set<T>(ref T storage, T value, [CallerMemberName] string propertyName = null)
 		{

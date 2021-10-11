@@ -12071,7 +12071,7 @@ function outer() {
             setTimeout(() => {
                 document.body.style.background = "#000022FF";
                 document.getElementById("city_map").style.background = "#000022FF";
-            }, 500);
+            }, 1500);
         });
         function L0V() {
             $(__s[2251])

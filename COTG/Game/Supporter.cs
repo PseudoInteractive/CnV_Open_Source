@@ -16,7 +16,7 @@ using static COTG.Game.TroopTypeCountHelper;
 
 namespace COTG.Game
 {
-    public class Supporter : INotifyPropertyChanged
+    public class Supporter : IANotifyPropertyChanged
     {
         public City city;
         public string xy => city.xy;
@@ -68,9 +68,15 @@ namespace COTG.Game
             }
 
         }
-
-        public virtual event PropertyChangedEventHandler PropertyChanged;
-        public void OnPropertyChanged(string propertyName) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+		public void OnPropertyChanged(string member = null)
+		{
+			if(PropertyChanged is not null) ((IANotifyPropertyChanged)this).IOnPropertyChanged();
+		}
+		public virtual event PropertyChangedEventHandler PropertyChanged;
+		public void CallPropertyChanged(string members = null)
+		{
+			PropertyChanged?.Invoke(this,new PropertyChangedEventArgs(members));
+		}
 		public void NotifyChange(string member = "")
 		{
 			App.DispatchOnUIThreadIdle(() =>

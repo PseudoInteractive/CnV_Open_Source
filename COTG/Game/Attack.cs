@@ -9,6 +9,7 @@ using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using COTG.Views;
 using static COTG.Game.Troops;
+using static COTG.AUtil;
 
 namespace COTG.Game
 {
@@ -217,10 +218,18 @@ namespace COTG.Game
 		public static AttackPlanCity Get(int cid) => AttackPlan.Get(cid);
 		
 	}
-	public sealed class AttackPlan : INotifyPropertyChanged
+	public sealed class AttackPlan : IANotifyPropertyChanged
 	{
 		#region PropertyChanged
-		public void OnPropertyChanged(string propertyName = "") => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+		public void CallPropertyChanged(string members = null)
+		{
+			PropertyChanged?.Invoke(this,new PropertyChangedEventArgs(members));
+		}
+		public void OnPropertyChanged(string member = null)
+		{
+			if(PropertyChanged is not null) ((IANotifyPropertyChanged)this).IOnPropertyChanged();
+		}
+
 		public event PropertyChangedEventHandler PropertyChanged;
 		#endregion
 
@@ -337,7 +346,7 @@ namespace COTG.Game
 					}
 	
 					// for UI
-					App.DispatchOnUIThreadLow( ()=>cur.city.OnPropertyChanged() );
+					cur.city.OnPropertyChanged();
 					// can this be done on a background thread?
 					// Todo:  hasAcademy
 					

@@ -278,13 +278,13 @@ namespace COTG
 					try
 					{
 						await GetCity.Post(cid).ConfigureAwait(false);
-
+							
 
 						//	var queueValid = false;
 						// what if someone modifies this while in use?
 						cityQueueInUse = city;
 						var cotgQ = city.buildQueue;
-
+						Trace($"{city.nameMarkdown} got BQ {cotgQ.Length}");
 						if (cid == City.build)
 						{
 							// every 3 seconds commands will only be queud on changes
@@ -641,9 +641,10 @@ namespace COTG
 										// sort
 										Debounce.Q(hash:cid*111+123, action: ()=>{
 											// sort queue
-											Post.Get("/includes/bqSt.php", $"a={cid}",onlyHeaders:true);
-											if(cid == City.build)
-												App.DispatchOnUIThreadIdle(()=>JSClient.coreWebView.PostWebMessageAsString("{\"poll\":100}"));
+											Post.Get("/includes/bqSt.php", $"a={cid}",onlyHeaders:true).ContinueWith( (_) => Post.Get("/includes/poll2.php",$"world={JSClient.world}&cid={cid}&ai=0&ss={JSClient.ppss}",onlyHeaders:true) );
+								//		{ world: E51, cid: cid, ai: allyiance, ss: s });  // /includes/poll2.php,onlyHeaders: true) );
+
+										App.DispatchOnUIThreadIdle(()=>JSClient.coreWebView.PostWebMessageAsString("{\"poll\":100}"));
 										});
 
 										SaveNeeded();
@@ -870,10 +871,10 @@ namespace COTG
 			return Array.Empty<BuildQueueItem>();
 		}
 
-		public static async Task<CityBuildQueueLock> Get(int cid)
+		public static  ExtendedQueue Get(int cid)
 		{
-			await queueLock.WaitAsync().ConfigureAwait(false);
-			return new CityBuildQueueLock( 
+		//	await queueLock.WaitAsync().ConfigureAwait(false);
+			return ( 
 				all.GetOrAdd(cid, (_cid)=> new ExtendedQueue() { cid = _cid } ));
 		}
 
@@ -881,24 +882,24 @@ namespace COTG
 
 		public void Enqueue(BuildQueueItem op)
 		{
-			if (cid == City.build && !SettingsPage.extendedBuild)
-			{
-				// build immediately
-				var sb = ZString.CreateUtf8StringBuilder();
+			//if (cid == City.build && !SettingsPage.extendedBuild)
+			//{
+			//	// build immediately
+			//	var sb = ZString.CreateUtf8StringBuilder();
 
 
-				sb.Append($"{{\"{cid}\":[");
-				var qFirst = true;
-				Serialize(ref sb, op, ref qFirst);
-				sb.Append("]}");
+			//	sb.Append($"{{\"{cid}\":[");
+			//	var qFirst = true;
+			//	Serialize(ref sb, op, ref qFirst);
+			//	sb.Append("]}");
 
 
-				JSClient.JSInvoke($"buildex(\"{sb.ToString()}\")");
-				sb.Dispose();
+			//	JSClient.JSInvoke($"buildex(\"{sb.ToString()}\")");
+			//	sb.Dispose();
 				
-				City.Get(cid).BuildingsOrQueueChanged();
-				return;
-			}
+			//	City.Get(cid).BuildingsOrQueueChanged();
+			//	return;
+			//}
 
 			if (!op.isValid)
 			{
@@ -906,11 +907,11 @@ namespace COTG
 				return;
 			}
 			CityView.animationOffsets[op.bspot] = AGame.animationT;// * CityView.animationRate; // start animation
-			if (op.bid == 0)
-			{
-				Trace($"Bad queueop {op}");
-				return;
-			}
+			//if (op.bid == 0)
+			//{
+			//	Trace($"Bad queueop {op}");
+			//	return;
+			//}
 			queue.Add(op);
 				City.Get(cid).BuildingsOrQueueChanged();
 		}
@@ -956,74 +957,81 @@ namespace COTG
 		public static bool initialized => saveTimer != null;
 		public static async Task Enqueue(this int cid, BuildQueueItem b)
 		{
-			var a = b;
-			if (a.elvl > a.slvl)
-				Assert(a.elvl == a.slvl + 1);
-			if (a.elvl < a.slvl && a.elvl != 0)
+			try
 			{
-				if (a.elvl != a.slvl - 1)
+				var a = b;
+				if(a.elvl > a.slvl)
+					Assert(a.elvl == a.slvl + 1);
+				if(a.elvl < a.slvl && a.elvl != 0)
 				{
-					Note.Show($"Bad downgrade? {a.slvl} => {a.elvl}");
-					Assert(false);
+					if(a.elvl != a.slvl - 1)
+					{
+						Note.Show($"Bad downgrade? {a.slvl} => {a.elvl}");
+						Assert(false);
+						return;
+					}
+				}
+				Assert(initialized);
+				var op = new BuildQueueItem(a.slvl,a.elvl,a.bid,a.bspot);
+				if(a.bid == City.bidTemple && a.slvl == 0)
+				{
+					Assert(cid == City.build);
+					await JSClient.JSInvokeTask($"buildTemple({a.bspot.ToString()})");
 					return;
 				}
-			}
-			Assert(initialized);
-			var op = new BuildQueueItem(a.slvl, a.elvl,a.bid, a.bspot);
-			if (a.bid == City.bidTemple && a.slvl == 0)
-			{
-				Assert(cid == City.build);
-				await JSClient.JSInvokeTask($"buildTemple({a.bspot.ToString()})" );
-				return;
-			}
-			if (a.bid == City.bidTemple && a.elvl == 0)
-			{
-				Assert(cid == City.build);
-				Trace("Invalid temple demo");
-				return;
-			}
-			if (a.bid == City.bidCastle && a.slvl == 0)
-			{
-				Assert(cid == City.build);
-				var result = await App.DispatchOnUIThreadTask(async () =>
-			   {
-
-				   var dialog = new ContentDialog()
+				if(a.bid == City.bidTemple && a.elvl == 0)
+				{
+					Assert(cid == City.build);
+					Trace("Invalid temple demo");
+					return;
+				}
+				if(a.bid == City.bidCastle && a.slvl == 0)
+				{
+					Assert(cid == City.build);
+					var result = await App.DispatchOnUIThreadTask(async () =>
 				   {
-					   Title = $"Castle {City.GetOrAddCity(cid).nameMarkdown}?",
-					   Content = "Building a Castle allows you to plunder, scout, assault and siege other cities, but it also makes your own city vulnerable to attacks from other players. Building a Castle will exponentially increase the maximum army size of your city, and is an irreversible action.",
-					   PrimaryButtonText = "Yes",
-					   SecondaryButtonText = "Cancel"
-				   };
-				   return await dialog.ShowAsync2();
-			   });
 
-				if (result != ContentDialogResult.Primary)
+					   var dialog = new ContentDialog()
+					   {
+						   Title = $"Castle {City.GetOrAddCity(cid).nameMarkdown}?",
+						   Content = "Building a Castle allows you to plunder, scout, assault and siege other cities, but it also makes your own city vulnerable to attacks from other players. Building a Castle will exponentially increase the maximum army size of your city, and is an irreversible action.",
+						   PrimaryButtonText = "Yes",
+						   SecondaryButtonText = "Cancel"
+					   };
+					   return await dialog.ShowAsync2();
+				   });
+
+					if(result != ContentDialogResult.Primary)
+					{
+						return;
+					}
+
+				}
+				var cityBuildQueue = ExtendedQueue.Get(cid);
 				{
-					return;
+					if(cityBuildQueue.queue.CanGrow())
+					{
+						cityBuildQueue.Enqueue(op);
+
+						SaveNeeded();
+						// if it is waiting, wake it up
+						if(cityBuildQueue.cancellationTokenSource != null)
+							cityBuildQueue.cancellationTokenSource.Cancel();  // unblock on queue
+
+						// wake it up
+						cityBuildQueue.Process(300);
+
+						//if (a.bid == City.bidCastle && a.slvl == 0)
+						//{
+						//	await Task.Delay(200);
+						//}
+					}
 				}
 
 			}
-			using (var pending = await ExtendedQueue.Get(cid).ConfigureAwait(false))
+			catch(Exception __ex)
 			{
-				if (pending.cityBuildQueue.queue.CanGrow())
-				{
-					var cityBuildQueue = pending.cityBuildQueue;
-					cityBuildQueue.Enqueue(op);
-
-					SaveNeeded();
-					// if it is waiting, wake it up
-					if(cityBuildQueue.cancellationTokenSource != null)
-						cityBuildQueue.cancellationTokenSource.Cancel();  // unblock on queue
-
-					// wake it up
-					cityBuildQueue.Process(300);
-
-					//if (a.bid == City.bidCastle && a.slvl == 0)
-					//{
-					//	await Task.Delay(200);
-					//}
-				}
+				Debug.LogEx(__ex);
 			}
 
 
@@ -1071,27 +1079,35 @@ namespace COTG
 		}
 		static internal async Task SaveAll()
 		{
-			if (!initialized)
-				return;
-			Log("SaveQ");
-			if(ExtendedQueue.all.Any())
+			try
 			{
-				Log("SaveQWait0");
-				await ExtendedQueue.queueLock.WaitAsync();  // shut down
-				Log("SaveQWait1");
-				try
+				if(!initialized)
+					return;
+				Log("SaveQ");
+				if(ExtendedQueue.all.Any())
 				{
-					var str = Serialize();
-					await SaveBuildQueue(str); // No wait...
-				}
-				finally
-				{
-					ExtendedQueue.queueLock.Release();
-					Log("SaveQDone");
-				}
-				//Log($"SaveQueue: {str}");
+					Log("SaveQWait0");
+					await ExtendedQueue.queueLock.WaitAsync();  // shut down
+					Log("SaveQWait1");
+					try
+					{
+						var str = Serialize();
+						await SaveBuildQueue(str); // No wait...
+					}
+					finally
+					{
+						ExtendedQueue.queueLock.Release();
+						Log("SaveQDone");
+					}
+					//Log($"SaveQueue: {str}");
 
 
+				}
+
+			}
+			catch(Exception __ex)
+			{
+				Debug.LogEx(__ex);
 			}
 		}
 
@@ -1101,11 +1117,7 @@ namespace COTG
 		}
 		static internal async Task SaveTimerGo(bool force, bool awaitContext)
 		{
-			Post.Get("overview/bcounc.php",onlyHeaders:true);
-			if (buildActionCounter == 0)
-			{
-				return;
-			}
+		
 			//if (force)
 				buildActionCounter = 0;
 		//	else
@@ -1115,6 +1127,12 @@ namespace COTG
 
 			try
 			{
+				Post.Get("overview/bcounc.php",onlyHeaders: true);
+				if(buildActionCounter == 0)
+				{
+					return;
+				}
+
 				if (ExtendedQueue.all.Any())
 				{
 					await ExtendedQueue.queueLock.WaitAsync().ConfigureAwait(awaitContext); // save
@@ -1300,54 +1318,64 @@ namespace COTG
 				Assert(false);
 				return;
 			}
-			var data = await LoadBuildQueue();
-			if (!data.IsNullOrEmpty())
+			try
 			{
-				//	await CityBuildQueue.throttle.WaitAsync();
-				// Todo:  Ensure no building occurs yet
-				// Load from JSon, too bad we can't do UTF8
-				try
+				var data = await LoadBuildQueue();
+				if(!data.IsNullOrEmpty())
 				{
-
-					var js = JsonDocument.Parse(data);
-					foreach (var jsCity in js.RootElement.EnumerateObject())
+					//	await CityBuildQueue.throttle.WaitAsync();
+					// Todo:  Ensure no building occurs yet
+					// Load from JSon, too bad we can't do UTF8
+					try
 					{
-						var cid = int.Parse(jsCity.Name);
-						if (!cid.AsCity().isMine)
-							continue;
-						using (var cq = await ExtendedQueue.Get(cid))
+
+						var js = JsonDocument.Parse(data);
+						foreach(var jsCity in js.RootElement.EnumerateObject())
 						{
-							if(cq!=null)
+							var cid = int.Parse(jsCity.Name);
+							if(!cid.AsCity().isMine)
+								continue;
+							var cq =  ExtendedQueue.Get(cid);
 							{
-								foreach (var d in jsCity.Value.EnumerateArray())
+								if(cq!=null)
 								{
-									if (cq.cityBuildQueue.queue.CanGrow())
+									foreach(var d in jsCity.Value.EnumerateArray())
 									{
+										if(cq.queue.CanGrow())
+										{
 
-										var op = new BuildQueueItem(d[2].GetByte(), d[3].GetByte(), d[1].GetInt16(), d[0].GetInt16());
-										cq.cityBuildQueue.Enqueue(op);
+											var op = new BuildQueueItem(d[2].GetByte(),d[3].GetByte(),d[1].GetInt16(),d[0].GetInt16());
+											cq.Enqueue(op);
+										}
 									}
+									Log($"{cid} {cq.queue.count}");
+									cq.Process(AMath.random.Next(3 * 1024,6 * 1024)); // wait 1 - 3 seconds.
 								}
-								Log($"{cid} {cq.cityBuildQueue.queue.count}");
-								cq.cityBuildQueue.Process(AMath.random.Next(3 * 1024, 6 * 1024)); // wait 1 - 3 seconds.
-							}
-							else
-							{
+								else
+								{
 
+								}
 							}
 						}
 					}
+					finally
+					{
+						//	CityBuildQueue.throttle.Release();
+					}
+
 				}
-				finally
-				{
-					//	CityBuildQueue.throttle.Release();
-				}
+			}
+	catch(Exception __ex)
+			{
+				Debug.LogEx(__ex);
+			
 			}
 
 			saveTimer = new System.Timers.Timer(3*60*1000);
 			saveTimer.Elapsed+= SaveTimer_Tick;
 			saveTimer.AutoReset = true;
 			saveTimer.Start();
+			saveTimer.Enabled=true;
 		}
 
 		

@@ -38,7 +38,7 @@ namespace COTG.Game
 	//	// bd:  time to demo?
 	//}
 
-	public sealed partial class City : Spot
+	public sealed partial class City : Spot, IANotifyPropertyChanged
 	{
 
 		public const short bidTownHall = 455;
@@ -99,6 +99,11 @@ namespace COTG.Game
 			get => plan.attackType;
 			set => planWritable.attackType = value; // Todo:  Throw exception if not present
 		}
+		//public void CallPropertyChanged(string members = null)
+		//{
+		//	PropertyChanged?.Invoke(this,new PropertyChangedEventArgs(members));
+		//}
+
 		public byte TroopType
 		{
 			get
@@ -770,7 +775,7 @@ namespace COTG.Game
 						if( anyChanged)
 						{
 						BuildingsOrQueueChanged();
-						Trace($"{nameMarkdown} got BQ {buildQueue.Length}");
+					
 						}
 					}
 					else
@@ -1189,10 +1194,7 @@ namespace COTG.Game
 
 		public void NotifyChange(string member = "")
 		{
-			App.DispatchOnUIThreadIdle(() =>
-	   {
 		   OnPropertyChanged(member);
-	   });
 			if (NearDefenseTab.IsVisible())
 			{
 				foreach (var i in NearDefenseTab.supporters)

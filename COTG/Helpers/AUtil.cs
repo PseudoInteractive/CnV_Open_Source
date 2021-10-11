@@ -5,6 +5,7 @@ using Microsoft.Toolkit.HighPerformance.Buffers;
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -549,6 +550,65 @@ namespace COTG
 					return i;
 			return -1;
 		}
+		public static ImmutableArray<IANotifyPropertyChanged> propertyChanges = ImmutableArray<IANotifyPropertyChanged>.Empty;
+		//public void OnPropertyChanged(string member = null)
+		//{
+		//	if(PropertyChanged is not null) ((IANotifyPropertyChanged)this).IOnPropertyChanged();
+		//}
+		static Task ProcessChanges()
+		{
+			try
+			{
+				var counter = propertyChanges.Length/8 + 2;
+				for(;;)
+				{
+					var i = propertyChanges.FirstOrDefault();
+					if(i == null)
+						break;
+					propertyChanges=propertyChanges.RemoveAt(0);
+					i.CallPropertyChanged();
+					if(--counter <= 0)
+						break;
+				}
+						
+
+			}
+			catch(Exception __ex)
+			{
+				Debug.LogEx(__ex);
+			}
+			if(propertyChanges.Any())
+				ChangesDebounce.Go();
+			return Task.CompletedTask;
+
+		}
+		public static Debounce ChangesDebounce = new(ProcessChanges) { runOnUiThead = true,debounceDelay=300,throttleDelay=1000 };
+
+	}
+	
+
+	public interface IANotifyPropertyChanged:INotifyPropertyChanged
+	{
+		public void CallPropertyChanged(string members = null);
+		//{
+		//	PropertyChanged?.Invoke(this,new PropertyChangedEventArgs(members));
+		//}
+		
+		public void IOnPropertyChanged(string members = null, bool addHead=false)
+		{
+		//	if( ((INotifyPropertyChanged)this).PropertyChanged is not null)
+			{
+				if(!AUtil.propertyChanges.Contains(this))
+				{
+					if(addHead)
+						AUtil.propertyChanges=AUtil.propertyChanges.Insert(0,this);
+					else
+						AUtil.propertyChanges=AUtil.propertyChanges.Add(this); 
+					AUtil.ChangesDebounce.Go();
+				}
+			}
+		}
+		
 	}
 
 	//public ref struct SemaLockRef

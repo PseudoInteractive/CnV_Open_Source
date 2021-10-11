@@ -36,7 +36,7 @@ namespace COTG.Game
 		doesNotExist,
 		failed,
 	}
-	public class HeatMapItem : INotifyPropertyChanged
+	public class HeatMapItem : IANotifyPropertyChanged
 	{
 		public uint[] a;
 	
@@ -50,14 +50,19 @@ namespace COTG.Game
 		}
 
 	public virtual event PropertyChangedEventHandler PropertyChanged;
-		public void OnPropertyChanged(string propertyName) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+		public void CallPropertyChanged(string members = null)
+		{
+			PropertyChanged?.Invoke(this,new PropertyChangedEventArgs(members));
+		}
+		public void OnPropertyChanged(string member = null)
+		{
+			if(PropertyChanged is not null) ((IANotifyPropertyChanged)this).IOnPropertyChanged();
+		}
 		public void NotifyChange(string member = "")
 		{
-			App.DispatchOnUIThreadLow(() =>
-			{
+			
 				OnPropertyChanged(member);
 
-			});
 		}
 
 		public override bool Equals(object obj)
@@ -327,7 +332,7 @@ namespace COTG.Game
 				if (loadState == AzureLoadState.none)
 					loadState = AzureLoadState.loading;
 			
-				var cont = await Blobs.GetChangesContainer();
+				var cont = await Blobs.GetChangesContainer().ConfigureAwait(false);
 				if (cont == null)
 					return null;
 				var str = dateStr;
@@ -336,7 +341,7 @@ namespace COTG.Game
 				{
 					// If etag changes it should be reloaded 
 					// This might get loaded more than once if called again before prior load has completed but thats not fatal
-					var res = await  cont.GetBlobClient(str).DownloadAsync(default, isLoaded? new BlobRequestConditions() { IfNoneMatch = eTag } : null );
+					var res = await  cont.GetBlobClient(str).DownloadAsync(default, isLoaded? new BlobRequestConditions() { IfNoneMatch = eTag } : null ).ConfigureAwait(false);
 					var status = res.GetRawResponse().Status;
 					if ( status >= 300)
 					{
@@ -351,15 +356,19 @@ namespace COTG.Game
 						//{
 						//	return day;
 						//}
-
-						
-						var readBuffer = await AMem.ReadCompressedAsync(res.Value.Content);
-
-						Read(readBuffer);
-						Assert(snapshot.Length > 0);
-//						ArrayPool<byte>.Shared.Return(readBuffer);
 						eTag = res.Value.Details.ETag;
 						loadState = AzureLoadState.loaded;
+
+						var content = res.Value.Content;
+
+						var readBuffer = await AMem.ReadCompressedAsync(content).ConfigureAwait(false);
+						await content.DisposeAsync().ConfigureAwait(false);
+						if(readBuffer != null)
+						{
+							Read(readBuffer);
+							Assert(snapshot.Length > 0);
+							//						ArrayPool<byte>.Shared.Return(readBuffer);
+						}
 					}
 					return this;
 				}

@@ -1,0 +1,958 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<DirectedGraph DataVirtualized="True" Layout="Sugiyama" xmlns="http://schemas.microsoft.com/vs/2009/dgml">
+  <Nodes>
+    <Node Id="(@89 @90 Type=Debug Member=(Name=Trace OverloadingParameters=[@111,@111,@111,@104]))" Category="CodeSchema_Method" Bounds="981.708333333333,55.96,63.3433333333332,25.96" CodeSchemaProperty_IsPublic="True" CodeSchemaProperty_IsStatic="True" CommonLabel="Trace" Icon="CodeSchema_Method" Label="Trace" SourceLocation="(Assembly=file:///C:/Source/COTG/COTG/Helpers/Debug.cs StartLineNumber=109 StartCharacterOffset=0 EndLineNumber=109 EndCharacterOffset=0)">
+      <Category Ref="CallStackEntry" />
+      <Category Ref="CodeSchema_SourceLocation" />
+    </Node>
+    <Node Id="(@89 @90 Type=ExtendedQueue Member=(Name=Process OverloadingParameters=[@104]))" Category="CodeSchema_Method" Bounds="975.415,0,75.9299999999999,25.96" CodeSchemaProperty_IsPublic="True" CommonLabel="Process" Icon="CodeSchema_Method" Label="Process" SourceLocation="(Assembly=file:///C:/Source/COTG/COTG/JSON/ExtendedQueue.cs StartLineNumber=286 StartCharacterOffset=0 EndLineNumber=286 EndCharacterOffset=0)">
+      <Category Ref="CallStackEntry" />
+      <Category Ref="CodeSchema_SourceLocation" />
+    </Node>
+    <Node Id="(@89 Namespace=COTG.Services Type=RestAPI Member=(Name=AsArray OverloadingParameters=[(@103 Namespace=System.Net.Http Type=HttpResponseMessage)]))" Category="CodeSchema_Method" Bounds="819.116666666667,432.0775,76.8333333333334,25.96" CodeSchemaProperty_IsPrivate="True" CodeSchemaProperty_IsStatic="True" CommonLabel="AsArray" Icon="CodeSchema_Method" Label="AsArray" SourceLocation="(Assembly=file:///C:/Source/COTG/COTG/Services/CotGRest.cs StartLineNumber=113 StartCharacterOffset=0 EndLineNumber=113 EndCharacterOffset=0)">
+      <Category Ref="CallStackEntry" />
+      <Category Ref="CodeSchema_SourceLocation" />
+    </Node>
+    <Node Id="(Name=CommunityToolkit.WinUI.UI.Controls.MarkdownTextBlock.RenderMarkdown @87 @47 @2)" Category="CodeSchema_CallStackUnresolvedMethod" Bounds="0,-2064.21131685647,129.99,25.96" Label="RenderMarkdown">
+      <Category Ref="CallStackEntry" />
+    </Node>
+    <Node Id="(Name=RtlUserThreadStart @6 @2)" Category="CodeSchema_CallStackUnresolvedMethod" Bounds="0,2132.79618314354,135.036666666667,25.96" Label="RtlUserThreadStart">
+      <Category Ref="CallStackEntry" />
+    </Node>
+    <Node Id="(Name=System.Net.Security.SslStream.ReadAsyncInternal&lt;System.Net.Security.AsyncReadWriteAdapter&gt; @130 Type=System.Threading.Tasks.ValueTask&lt;int&gt; OverloadingParameters=[(Type=System.Net.Security.AsyncReadWriteAdapter Name=adapter),(Type=System.Memory&lt;byte&gt; Name=buffer)] @2)" Category="CodeSchema_CallStackUnresolvedMethod" Bounds="9.7566656812032,2468.55678314354,133.553333333333,25.96" Label="ReadAsyncInternal">
+      <Category Ref="CallStackEntry" />
+    </Node>
+    <Node Id="@10" Category="CodeSchema_CallStackUnresolvedMethod" Bounds="0,-609.248716856467,105.523333333333,25.96" Label="NWDrawTree">
+      <Category Ref="CallStackEntry" />
+    </Node>
+    <Node Id="@100" Category="CodeSchema_Method" Bounds="215.600007120768,1741.07548314353,77.8666666666667,25.96" CodeSchemaProperty_IsExternal="True" CodeSchemaProperty_IsProtected="True" CommonLabel="Dispose" Icon="CodeSchema_Method" IsOverloaded="True" Label="Dispose">
+      <Category Ref="CallStackEntry" />
+      <Category Ref="ExternalCallStackEntry" />
+    </Node>
+    <Node Id="@101" Category="CodeSchema_Method" Bounds="463.6,316.7825,77.8666666666667,25.96" CodeSchemaProperty_IsExternal="True" CodeSchemaProperty_IsProtected="True" CommonLabel="Dispose" Icon="CodeSchema_Method" IsOverloaded="True" Label="Dispose">
+      <Category Ref="CallStackEntry" />
+      <Category Ref="ExternalCallStackEntry" />
+    </Node>
+    <Node Id="@102" Category="CodeSchema_Method" Bounds="828.3,316.7825,58.4666666666667,25.96" CodeSchemaProperty_IsPublic="True" CommonLabel="Post" Icon="CodeSchema_Method" Label="Post" SourceLocation="(Assembly=file:///C:/Source/COTG/COTG/Services/CotGRest.cs StartLineNumber=191 StartCharacterOffset=0 EndLineNumber=191 EndCharacterOffset=0)">
+      <Category Ref="CallStackEntry" />
+      <Category Ref="CodeSchema_SourceLocation" />
+    </Node>
+    <Node Id="@105" Category="CodeSchema_Method" Bounds="571.993333333333,316.7825,159.08,25.96" CodeSchemaProperty_IsPublic="True" CodeSchemaProperty_IsStatic="True" CommonLabel="ReadCompressedAsync" Icon="CodeSchema_Method" Label="ReadCompressedAsync" SourceLocation="(Assembly=file:///C:/Source/COTG/COTG/Helpers/Memory.cs StartLineNumber=49 StartCharacterOffset=0 EndLineNumber=49 EndCharacterOffset=0)">
+      <Category Ref="CallStackEntry" />
+      <Category Ref="CodeSchema_SourceLocation" />
+    </Node>
+    <Node Id="@106" Category="CodeSchema_Method" Bounds="790.658333333333,374.43,133.75,25.96" CodeSchemaProperty_IsPublic="True" CodeSchemaProperty_IsVirtual="True" CommonLabel="AcceptAndProcess" Icon="CodeSchema_Method" Label="AcceptAndProcess" SourceLocation="(Assembly=file:///C:/Source/COTG/COTG/Services/CotGRest.cs StartLineNumber=64 StartCharacterOffset=0 EndLineNumber=64 EndCharacterOffset=0)">
+      <Category Ref="CallStackEntry" />
+      <Category Ref="CodeSchema_SourceLocation" />
+    </Node>
+    <Node Id="@108" Category="CodeSchema_Method" Bounds="29.908332824707,2412.59668314354,93.25,25.96" CodeSchemaProperty_IsExternal="True" CodeSchemaProperty_IsPublic="True" CommonLabel="ReadAsync" Icon="CodeSchema_Method" IsOverloaded="True" Label="ReadAsync">
+      <Category Ref="CallStackEntry" />
+      <Category Ref="ExternalCallStackEntry" />
+    </Node>
+    <Node Id="@11" Category="CodeSchema_CallStackUnresolvedMethod" Bounds="0,-1896.33101685647,125.77,25.96" Label="SetEffectiveValue">
+      <Category Ref="CallStackEntry" />
+    </Node>
+    <Node Id="@110" Category="CodeSchema_Method" Bounds="0,-2288.05171685647,79.7933333333333,25.96" CodeSchemaProperty_IsPrivate="True" CommonLabel="Update_" Icon="CodeSchema_Method" Label="Update_" SourceLocation="(Assembly=file:///C:/Source/COTG/COTG/obj/x64/Debug/net6.0-windows10.0.20348.0/Views/ChatTab.g.cs StartLineNumber=245 StartCharacterOffset=0 EndLineNumber=245 EndCharacterOffset=0)">
+      <Category Ref="CallStackEntry" />
+      <Category Ref="CodeSchema_SourceLocation" />
+    </Node>
+    <Node Id="@112" Category="CodeSchema_Method" Bounds="0,-2344.01181685647,99.71,25.96" CodeSchemaProperty_IsPrivate="True" CommonLabel="Update_text" Icon="CodeSchema_Method" Label="Update_text" SourceLocation="(Assembly=file:///C:/Source/COTG/COTG/obj/x64/Debug/net6.0-windows10.0.20348.0/Views/ChatTab.g.cs StartLineNumber=289 StartCharacterOffset=0 EndLineNumber=289 EndCharacterOffset=0)">
+      <Category Ref="CallStackEntry" />
+      <Category Ref="CodeSchema_SourceLocation" />
+    </Node>
+    <Node Id="@113" Category="CodeSchema_Method" Bounds="0,-2455.93201685647,322.66,25.96" CodeSchemaProperty_IsExternal="True" CodeSchemaProperty_IsPrivate="True" CommonLabel="global::Microsoft.UI.Xaml.IDependencyObject.SetValue" Icon="CodeSchema_Method" Label="global::Microsoft.UI.Xaml.IDependencyObject.SetValue">
+      <Category Ref="CallStackEntry" />
+      <Category Ref="ExternalCallStackEntry" />
+    </Node>
+    <Node Id="@115" Category="CodeSchema_Method" Bounds="0,-2399.97191685647,394.246666666667,25.96" CodeSchemaProperty_IsPublic="True" CodeSchemaProperty_IsStatic="True" CommonLabel="Set_CommunityToolkit_WinUI_UI_Controls_MarkdownTextBlock_Text" Icon="CodeSchema_Method" Label="Set_CommunityToolkit_WinUI_UI_Controls_MarkdownTextBlock_Text" SourceLocation="(Assembly=file:///C:/Source/COTG/COTG/obj/x64/Debug/net6.0-windows10.0.20348.0/Views/ChatTab.g.cs StartLineNumber=60 StartCharacterOffset=0 EndLineNumber=60 EndCharacterOffset=0)">
+      <Category Ref="CallStackEntry" />
+      <Category Ref="CodeSchema_SourceLocation" />
+    </Node>
+    <Node Id="@117" Category="CodeSchema_Method" Bounds="0,-2511.89211685647,160.343333333333,25.96" CodeSchemaProperty_IsExternal="True" CodeSchemaProperty_IsPublic="True" CodeSchemaProperty_IsStatic="True" CommonLabel="MarshalDelegateInvoke" Icon="CodeSchema_Method" Label="MarshalDelegateInvoke">
+      <Category Ref="CallStackEntry" />
+      <Category Ref="ExternalCallStackEntry" />
+    </Node>
+    <Node Id="@119" Category="CodeSchema_Method" Bounds="155.164991861979,2300.67648314354,64.7366666666667,25.96" CodeSchemaProperty_IsExternal="True" CodeSchemaProperty_IsPublic="True" CommonLabel="Close" Icon="CodeSchema_Method" IsOverloaded="True" Label="Close">
+      <Category Ref="CallStackEntry" />
+      <Category Ref="ExternalCallStackEntry" />
+    </Node>
+    <Node Id="@12" Category="CodeSchema_CallStackUnresolvedMethod" Bounds="0,-1672.49061685647,81.37,25.96" Label="SetValue">
+      <Category Ref="CallStackEntry" />
+    </Node>
+    <Node Id="@120" Category="CodeSchema_Method" Bounds="600.455,244.8625,102.156666666667,25.96" CodeSchemaProperty_IsPublic="True" CommonLabel="LoadInternal" Icon="CodeSchema_Method" Label="LoadInternal" SourceLocation="(Assembly=file:///C:/Source/COTG/COTG/Game/HeatMap.cs StartLineNumber=357 StartCharacterOffset=0 EndLineNumber=357 EndCharacterOffset=0)">
+      <Category Ref="CallStackEntry" />
+      <Category Ref="CodeSchema_SourceLocation" />
+    </Node>
+    <Node Id="@122" Category="CodeSchema_CallStackUnresolvedMethod" Bounds="35.7566699727376,2356.63658314354,81.5533333333333,25.96" Label="FillAsync">
+      <Category Ref="CallStackEntry" />
+    </Node>
+    <Node Id="@123" Category="CodeSchema_CallStackUnresolvedMethod" Bounds="592.976666666667,115.295,117.113333333333,25.96" Label="SaveWorldData" SourceLocation="(Assembly=file:///C:/Source/COTG/COTG/Services/WorldStorage.cs StartLineNumber=33 StartCharacterOffset=0 EndLineNumber=33 EndCharacterOffset=0)">
+      <Category Ref="CallStackEntry" />
+      <Category Ref="CodeSchema_SourceLocation" />
+    </Node>
+    <Node Id="@124" Category="CodeSchema_CallStackUnresolvedMethod" Bounds="75.600003306071,2188.75628314353,77.8666666666667,25.96" Label="Dispose">
+      <Category Ref="CallStackEntry" />
+    </Node>
+    <Node Id="@125" Category="CodeSchema_CallStackUnresolvedMethod" Bounds="28.8516690190633,2300.67648314354,95.3633333333333,25.96" Label="DrainAsync">
+      <Category Ref="CallStackEntry" />
+    </Node>
+    <Node Id="@127" Category="CodeSchema_CallStackUnresolvedMethod" Bounds="0,1908.95578314354,70.8133333333333,25.96" Label="wmain" SourceLocation="(Assembly=file:///D:/workspace/_work/1/s/src/native/corehost/corehost.cpp StartLineNumber=301 StartCharacterOffset=0 EndLineNumber=301 EndCharacterOffset=0)">
+      <Category Ref="CallStackEntry" />
+      <Category Ref="CodeSchema_SourceLocation" />
+    </Node>
+    <Node Id="@129" Category="CodeSchema_CallStackUnresolvedMethod" Bounds="0,1852.99568314354,82.5466666666667,25.96" Label="exe_start" SourceLocation="(Assembly=file:///D:/workspace/_work/1/s/src/native/corehost/corehost.cpp StartLineNumber=233 StartCharacterOffset=0 EndLineNumber=233 EndCharacterOffset=0)">
+      <Category Ref="CallStackEntry" />
+      <Category Ref="CodeSchema_SourceLocation" />
+    </Node>
+    <Node Id="@13" Category="CodeSchema_CallStackUnresolvedMethod" Bounds="0,-721.168916856468,81.4933333333333,25.96" Label="Measure">
+      <Category Ref="CallStackEntry" />
+    </Node>
+    <Node Id="@131" Category="CodeSchema_CallStackUnresolvedMethod" Bounds="793.766666666667,172.9425,127.533333333333,25.96" Label="VisibilityChanged" SourceLocation="(Assembly=file:///C:/Source/COTG/COTG/Views/MainPage.xaml.cs StartLineNumber=235 StartCharacterOffset=0 EndLineNumber=235 EndCharacterOffset=0)">
+      <Category Ref="CallStackEntry" />
+      <Category Ref="CodeSchema_SourceLocation" />
+    </Node>
+    <Node Id="@132" Category="CodeSchema_CallStackUnresolvedMethod" Bounds="813.913333333333,244.8625,87.24,25.96" Label="UpdateTS" SourceLocation="(Assembly=file:///C:/Source/COTG/COTG/Game/Raiding.cs StartLineNumber=280 StartCharacterOffset=0 EndLineNumber=280 EndCharacterOffset=0)">
+      <Category Ref="CallStackEntry" />
+      <Category Ref="CodeSchema_SourceLocation" />
+    </Node>
+    <Node Id="@135" Category="CodeSchema_CallStackUnresolvedMethod" Bounds="0,-2008.25121685647,114.103333333333,25.96" Label="Do_Abi_Invoke">
+      <Category Ref="CallStackEntry" />
+    </Node>
+    <Node Id="@136" Category="CodeSchema_CallStackUnresolvedMethod" Bounds="597.945,172.9425,107.176666666667,25.96" Label="AddSnapshot" SourceLocation="(Assembly=file:///C:/Source/COTG/COTG/Game/HeatMap.cs StartLineNumber=636 StartCharacterOffset=0 EndLineNumber=636 EndCharacterOffset=0)">
+      <Category Ref="CallStackEntry" />
+      <Category Ref="CodeSchema_SourceLocation" />
+    </Node>
+    <Node Id="@138" Category="CodeSchema_CallStackUnresolvedMethod" Bounds="0,1573.19518314353,101.93,25.96" Label="execute_app" SourceLocation="(Assembly=file:///D:/workspace/_work/1/s/src/native/corehost/fxr/fx_muxer.cpp StartLineNumber=144 StartCharacterOffset=0 EndLineNumber=144 EndCharacterOffset=0)">
+      <Category Ref="CallStackEntry" />
+      <Category Ref="CodeSchema_SourceLocation" />
+    </Node>
+    <Node Id="@139" Category="CodeSchema_CallStackUnresolvedMethod" Bounds="0,-1336.73001685647,121.43,25.96" Label="ProcessBindings" SourceLocation="(Assembly=file:///C:/Source/COTG/COTG/obj/x64/Debug/net6.0-windows10.0.20348.0/Views/ChatTab.g.cs StartLineNumber=192 StartCharacterOffset=0 EndLineNumber=192 EndCharacterOffset=0)">
+      <Category Ref="CallStackEntry" />
+      <Category Ref="CodeSchema_SourceLocation" />
+    </Node>
+    <Node Id="@14" Category="CodeSchema_CallStackUnresolvedMethod" Bounds="0,-1728.45071685647,81.37,25.96" Label="SetValue">
+      <Category Ref="CallStackEntry" />
+    </Node>
+    <Node Id="@140" Category="CodeSchema_CallStackUnresolvedMethod" Bounds="0,1797.03558314353,166.35,25.96" Label="hostfxr_main_startupinfo" SourceLocation="(Assembly=file:///D:/workspace/_work/1/s/src/native/corehost/fxr/hostfxr.cpp StartLineNumber=60 StartCharacterOffset=0 EndLineNumber=60 EndCharacterOffset=0)">
+      <Category Ref="CallStackEntry" />
+      <Category Ref="CodeSchema_SourceLocation" />
+    </Node>
+    <Node Id="@141" Category="CodeSchema_CallStackUnresolvedMethod" Bounds="0,-1280.76991685647,175.983333333333,25.96" Label="Do_Abi_ProcessBindings_1">
+      <Category Ref="CallStackEntry" />
+    </Node>
+    <Node Id="@142" Category="CodeSchema_CallStackUnresolvedMethod" Bounds="0,1741.07548314353,76.7366666666667,25.96" Label="execute" SourceLocation="(Assembly=file:///D:/workspace/_work/1/s/src/native/corehost/fxr/fx_muxer.cpp StartLineNumber=576 StartCharacterOffset=0 EndLineNumber=576 EndCharacterOffset=0)">
+      <Category Ref="CallStackEntry" />
+      <Category Ref="CodeSchema_SourceLocation" />
+    </Node>
+    <Node Id="@143" Category="CodeSchema_CallStackUnresolvedMethod" Bounds="0,1629.15528314353,168.356666666667,25.96" Label="read_config_and_execute" SourceLocation="(Assembly=file:///D:/workspace/_work/1/s/src/native/corehost/fxr/fx_muxer.cpp StartLineNumber=531 StartCharacterOffset=0 EndLineNumber=531 EndCharacterOffset=0)">
+      <Category Ref="CallStackEntry" />
+      <Category Ref="CodeSchema_SourceLocation" />
+    </Node>
+    <Node Id="@144" Category="CodeSchema_CallStackUnresolvedMethod" Bounds="0,1685.11538314353,186.67,25.96" Label="handle_exec_host_command" SourceLocation="(Assembly=file:///D:/workspace/_work/1/s/src/native/corehost/fxr/fx_muxer.cpp StartLineNumber=1015 StartCharacterOffset=0 EndLineNumber=1015 EndCharacterOffset=0)">
+      <Category Ref="CallStackEntry" />
+      <Category Ref="CodeSchema_SourceLocation" />
+    </Node>
+    <Node Id="@15" Category="CodeSchema_CallStackUnresolvedMethod" Bounds="0,-273.488116856466,103.143333333333,25.96" Label="WindowProc">
+      <Category Ref="CallStackEntry" />
+    </Node>
+    <Node Id="@16" Category="CodeSchema_CallStackUnresolvedMethod" Bounds="0,-1560.57041685647,106.28,25.96" Label="SetValueCore">
+      <Category Ref="CallStackEntry" />
+    </Node>
+    <Node Id="@18" Category="CodeSchema_CallStackUnresolvedMethod" Bounds="0,230.152783143535,179.67,25.96" Label="Callback_DispatchNextItem">
+      <Category Ref="CallStackEntry" />
+    </Node>
+    <Node Id="@19" Category="CodeSchema_CallStackUnresolvedMethod" Bounds="0,286.112883143534,157.426666666667,25.96" Label="Callback_RunCoreLoop">
+      <Category Ref="CallStackEntry" />
+    </Node>
+    <Node Id="@20" Category="CodeSchema_CallStackUnresolvedMethod" Bounds="0,342.072983143534,180.086666666667,25.96" Label="Callback_OnGroupDispatch">
+      <Category Ref="CallStackEntry" />
+    </Node>
+    <Node Id="@21" Category="CodeSchema_CallStackUnresolvedMethod" Bounds="0,398.033083143534,219.246666666667,25.96" Label="NoContext_GroupDispatchHandler">
+      <Category Ref="CallStackEntry" />
+    </Node>
+    <Node Id="@22" Category="CodeSchema_CallStackUnresolvedMethod" Bounds="0,453.993183143534,249.033333333333,25.96" Label="NoContext_HighPriorityDispatchHandler">
+      <Category Ref="CallStackEntry" />
+    </Node>
+    <Node Id="@23" Category="CodeSchema_CallStackUnresolvedMethod" Bounds="0,118.232583143535,120.806666666667,25.96" Label="ImportAdapter$">
+      <Category Ref="CallStackEntry" />
+    </Node>
+    <Node Id="@24" Category="CodeSchema_CallStackUnresolvedMethod" Bounds="0,174.192683143534,146.806666666667,25.96" Label="Callback_OnDispatch">
+      <Category Ref="CallStackEntry" />
+    </Node>
+    <Node Id="@25" Category="CodeSchema_CallStackUnresolvedMethod" Bounds="0,6.31238314353461,109.996666666667,25.96" Label="TimerCallback">
+      <Category Ref="CallStackEntry" />
+    </Node>
+    <Node Id="@26" Category="CodeSchema_CallStackUnresolvedMethod" Bounds="0,-105.607816856466,71,25.96" Label="Invoke">
+      <Category Ref="CallStackEntry" />
+    </Node>
+    <Node Id="@27" Category="CodeSchema_CallStackUnresolvedMethod" Bounds="0,-49.6477168564656,123.483333333333,25.96" Label="InvokeDelegates">
+      <Category Ref="CallStackEntry" />
+    </Node>
+    <Node Id="@29" Category="CodeSchema_CallStackUnresolvedMethod" Bounds="0,1125.51438314353,138.096666666667,25.96" Label="NtUserGetMessage">
+      <Category Ref="CallStackEntry" />
+    </Node>
+    <Node Id="@3" Category="CodeSchema_CallStackUnresolvedMethod" Bounds="0,2076.83608314354,146.633333333333,25.96" Label="BaseThreadInitThunk">
+      <Category Ref="CallStackEntry" />
+    </Node>
+    <Node Id="@31" Category="CodeSchema_CallStackUnresolvedMethod" Bounds="0,1405.31488314353,135.843333333333,25.96" Label="00007ff81b6196bb">
+      <Category Ref="CallStackEntry" />
+    </Node>
+    <Node Id="@32" Category="CodeSchema_CallStackUnresolvedMethod" Bounds="0,1461.27498314353,133.556666666667,25.96" Label="00007ff81b6199ec">
+      <Category Ref="CallStackEntry" />
+    </Node>
+    <Node Id="@33" Category="CodeSchema_CallStackUnresolvedMethod" Bounds="0,1517.23508314353,178.9,25.96" Label="corehost_main + 263 bytes">
+      <Category Ref="CallStackEntry" />
+    </Node>
+    <Node Id="@36" Category="CodeSchema_CallStackUnresolvedMethod" Bounds="829.155,0,56.7566666666667,25.96" Label="Run">
+      <Category Ref="CallStackEntry" />
+    </Node>
+    <Node Id="@39" Category="CodeSchema_CallStackUnresolvedMethod" Bounds="0,1964.91588314354,177.263333333333,25.96" Label="[Inline Frame] invoke_main" SourceLocation="(Assembly=file:///d:/a01/_work/2/s/src/vctools/crt/vcstartup/src/startup/exe_common.inl StartLineNumber=281 StartCharacterOffset=0 EndLineNumber=281 EndCharacterOffset=0)">
+      <Category Ref="CallStackEntry" />
+      <Category Ref="CodeSchema_SourceLocation" />
+    </Node>
+    <Node Id="@40" Category="CodeSchema_CallStackUnresolvedMethod" Bounds="0,2020.87598314354,171.143333333333,25.96" Label="__scrt_common_main_seh" SourceLocation="(Assembly=file:///d:/a01/_work/2/s/src/vctools/crt/vcstartup/src/startup/exe_common.inl StartLineNumber=281 StartCharacterOffset=0 EndLineNumber=281 EndCharacterOffset=0)">
+      <Category Ref="CallStackEntry" />
+      <Category Ref="CodeSchema_SourceLocation" />
+    </Node>
+    <Node Id="@42" Category="CodeSchema_CallStackUnresolvedMethod" Bounds="769.651666666667,57.6475,175.763333333333,25.96" Label="AnonymousMethod__11_0" SourceLocation="(Assembly=file:///C:/Source/COTG/COTG/Helpers/DebounceDispatcher.cs StartLineNumber=116 StartCharacterOffset=0 EndLineNumber=116 EndCharacterOffset=0)">
+      <Category Ref="CallStackEntry" />
+      <Category Ref="CodeSchema_SourceLocation" />
+    </Node>
+    <Node Id="@43" Category="CodeSchema_CallStackUnresolvedMethod" Bounds="563.651666666667,57.6475,175.763333333333,25.96" Label="AnonymousMethod__79_0" SourceLocation="(Assembly=file:///C:/Source/COTG/COTG/Game/World.cs StartLineNumber=1242 StartCharacterOffset=0 EndLineNumber=1242 EndCharacterOffset=0)">
+      <Category Ref="CallStackEntry" />
+      <Category Ref="CodeSchema_SourceLocation" />
+    </Node>
+    <Node Id="@44" Category="CodeSchema_CallStackUnresolvedMethod" Bounds="817.446666666667,115.295,80.1733333333333,25.96" Label="_Refresh" SourceLocation="(Assembly=file:///C:/Source/COTG/COTG/Views/UserTab.cs StartLineNumber=121 StartCharacterOffset=0 EndLineNumber=121 EndCharacterOffset=0)">
+      <Category Ref="CallStackEntry" />
+      <Category Ref="CodeSchema_SourceLocation" />
+    </Node>
+    <Node Id="@46" Category="CodeSchema_CallStackUnresolvedMethod" Bounds="-5.08626300188553E-07,2244.71638314354,153.066666666667,25.96" Label="DrainOnDisposeAsync">
+      <Category Ref="CallStackEntry" />
+    </Node>
+    <Node Id="@48" Category="CodeSchema_CallStackUnresolvedMethod" Bounds="0,957.634083143534,159.04,25.96" Label="DispatchClientMessage">
+      <Category Ref="CallStackEntry" />
+    </Node>
+    <Node Id="@49" Category="CodeSchema_CallStackUnresolvedMethod" Bounds="0,1181.47448314354,112.476666666667,25.96" Label="GetMessageW">
+      <Category Ref="CallStackEntry" />
+    </Node>
+    <Node Id="@5" Category="CodeSchema_CallStackUnresolvedMethod" Bounds="0,1013.59418314353,100.473333333333,25.96" Label="__fnDWORD">
+      <Category Ref="CallStackEntry" />
+    </Node>
+    <Node Id="@50" Category="CodeSchema_CallStackUnresolvedMethod" Bounds="0,901.673983143534,181.956666666667,25.96" Label="UserCallWinProcCheckWow">
+      <Category Ref="CallStackEntry" />
+    </Node>
+    <Node Id="@51" Category="CodeSchema_CallStackUnresolvedMethod" Bounds="292.165,244.8625,64.7366666666667,25.96" Label="Close">
+      <Category Ref="CallStackEntry" />
+    </Node>
+    <Node Id="@52" Category="CodeSchema_CallStackUnresolvedMethod" Bounds="317.600007120768,1797.03558314353,77.8666666666667,25.96" Label="Dispose">
+      <Category Ref="CallStackEntry" />
+    </Node>
+    <Node Id="@54" Category="CodeSchema_CallStackUnresolvedMethod" Bounds="0,509.953283143534,76.53,25.96" Label="Execute">
+      <Category Ref="CallStackEntry" />
+    </Node>
+    <Node Id="@55" Category="CodeSchema_CallStackUnresolvedMethod" Bounds="0,621.873483143534,171.716666666667,25.96" Label="Callback_OnDispatchCore">
+      <Category Ref="CallStackEntry" />
+    </Node>
+    <Node Id="@56" Category="CodeSchema_CallStackUnresolvedMethod" Bounds="0,677.833583143534,157.426666666667,25.96" Label="Callback_RunCoreLoop">
+      <Category Ref="CallStackEntry" />
+    </Node>
+    <Node Id="@57" Category="CodeSchema_CallStackUnresolvedMethod" Bounds="0,789.753783143534,79.35,25.96" Label="DoWork">
+      <Category Ref="CallStackEntry" />
+    </Node>
+    <Node Id="@58" Category="CodeSchema_CallStackUnresolvedMethod" Bounds="0,733.793683143534,121.596666666667,25.96" Label="OnUserDispatch">
+      <Category Ref="CallStackEntry" />
+    </Node>
+    <Node Id="@59" Category="CodeSchema_CallStackUnresolvedMethod" Bounds="0,845.713883143535,103.143333333333,25.96" Label="WindowProc">
+      <Category Ref="CallStackEntry" />
+    </Node>
+    <Node Id="@60" Category="CodeSchema_CallStackUnresolvedMethod" Bounds="0,565.913383143533,120.806666666667,25.96" Label="ImportAdapter$">
+      <Category Ref="CallStackEntry" />
+    </Node>
+    <Node Id="@61" Category="CodeSchema_CallStackUnresolvedMethod" Bounds="0,-1616.53051685647,81.37,25.96" Label="SetValue">
+      <Category Ref="CallStackEntry" />
+    </Node>
+    <Node Id="@62" Category="CodeSchema_CallStackUnresolvedMethod" Bounds="0,-217.528016856465,170.91,25.96" Label="DispatchQueuedMessage">
+      <Category Ref="CallStackEntry" />
+    </Node>
+    <Node Id="@63" Category="CodeSchema_CallStackUnresolvedMethod" Bounds="0,-1784.41081685647,81.37,25.96" Label="SetValue">
+      <Category Ref="CallStackEntry" />
+    </Node>
+    <Node Id="@64" Category="CodeSchema_CallStackUnresolvedMethod" Bounds="0,-1840.37091685647,147.866666666667,25.96" Label="UpdateEffectiveValue">
+      <Category Ref="CallStackEntry" />
+    </Node>
+    <Node Id="@65" Category="CodeSchema_CallStackUnresolvedMethod" Bounds="0,-833.089116856468,106.403333333333,25.96" Label="MeasureCore">
+      <Category Ref="CallStackEntry" />
+    </Node>
+    <Node Id="@66" Category="CodeSchema_CallStackUnresolvedMethod" Bounds="0,-665.208816856467,110.263333333333,25.96" Label="UpdateLayout">
+      <Category Ref="CallStackEntry" />
+    </Node>
+    <Node Id="@67" Category="CodeSchema_CallStackUnresolvedMethod" Bounds="0,-777.129016856468,121.796666666667,25.96" Label="MeasureInternal">
+      <Category Ref="CallStackEntry" />
+    </Node>
+    <Node Id="@68" Category="CodeSchema_CallStackUnresolvedMethod" Bounds="0,-497.328516856467,63.3666666666667,25.96" Label="Draw">
+      <Category Ref="CallStackEntry" />
+    </Node>
+    <Node Id="@69" Category="CodeSchema_CallStackUnresolvedMethod" Bounds="0,-441.368416856466,72.5366666666667,25.96" Label="OnTick">
+      <Category Ref="CallStackEntry" />
+    </Node>
+    <Node Id="@7" Category="CodeSchema_CallStackUnresolvedMethod" Bounds="0,1069.55428314353,218.173333333333,25.96" Label="KiUserCallbackDispatcherContinue">
+      <Category Ref="CallStackEntry" />
+    </Node>
+    <Node Id="@70" Category="CodeSchema_CallStackUnresolvedMethod" Bounds="0,-329.448216856466,252.08,25.96" Label="OnReentrancyProtectedWindowMessage">
+      <Category Ref="CallStackEntry" />
+    </Node>
+    <Node Id="@71" Category="CodeSchema_CallStackUnresolvedMethod" Bounds="0,-385.408316856466,56.7,25.96" Label="Tick">
+      <Category Ref="CallStackEntry" />
+    </Node>
+    <Node Id="@72" Category="CodeSchema_CallStackUnresolvedMethod" Bounds="0,-1952.29111685647,161.37,25.96" Label="NotifyPropertyChanged">
+      <Category Ref="CallStackEntry" />
+    </Node>
+    <Node Id="@73" Category="CodeSchema_CallStackUnresolvedMethod" Bounds="0,-1392.69011685647,81.37,25.96" Label="SetValue">
+      <Category Ref="CallStackEntry" />
+    </Node>
+    <Node Id="@74" Category="CodeSchema_CallStackUnresolvedMethod" Bounds="0,-1448.65021685647,121.673333333333,25.96" Label="SetValueInternal">
+      <Category Ref="CallStackEntry" />
+    </Node>
+    <Node Id="@75" Category="CodeSchema_CallStackUnresolvedMethod" Bounds="0,-1504.61031685647,147.866666666667,25.96" Label="UpdateEffectiveValue">
+      <Category Ref="CallStackEntry" />
+    </Node>
+    <Node Id="@76" Category="CodeSchema_CallStackUnresolvedMethod" Bounds="0,1237.43458314353,217.783333333333,25.96" Label="RunDesktopWindowMessageLoop">
+      <Category Ref="CallStackEntry" />
+    </Node>
+    <Node Id="@77" Category="CodeSchema_CallStackUnresolvedMethod" Bounds="0,1293.39468314353,104.296666666667,25.96" Label="StartDesktop">
+      <Category Ref="CallStackEntry" />
+    </Node>
+    <Node Id="@78" Category="CodeSchema_CallStackUnresolvedMethod" Bounds="0,1349.35478314353,60.4,25.96" Label="Start">
+      <Category Ref="CallStackEntry" />
+    </Node>
+    <Node Id="@79" Category="CodeSchema_CallStackUnresolvedMethod" Bounds="0,-889.049216856468,179.47,25.96" Label="MeasureOverrideFromCore">
+      <Category Ref="CallStackEntry" />
+    </Node>
+    <Node Id="@80" Category="CodeSchema_CallStackUnresolvedMethod" Bounds="0,-1224.80981685647,278.32,25.96" Label="SetupContainerContentChangingAfterPrepare">
+      <Category Ref="CallStackEntry" />
+    </Node>
+    <Node Id="@81" Category="CodeSchema_CallStackUnresolvedMethod" Bounds="0,-1112.88961685647,84.2,25.96" Label="Generate">
+      <Category Ref="CallStackEntry" />
+    </Node>
+    <Node Id="@82" Category="CodeSchema_CallStackUnresolvedMethod" Bounds="0,-945.009316856469,127.16,25.96" Label="MeasureOverride">
+      <Category Ref="CallStackEntry" />
+    </Node>
+    <Node Id="@83" Category="CodeSchema_CallStackUnresolvedMethod" Bounds="0,-1168.84971685647,198.493333333333,25.96" Label="PrepareContainerViaItemsHost">
+      <Category Ref="CallStackEntry" />
+    </Node>
+    <Node Id="@84" Category="CodeSchema_CallStackUnresolvedMethod" Bounds="0,-1056.92951685647,104.956666666667,25.96" Label="RunGenerate">
+      <Category Ref="CallStackEntry" />
+    </Node>
+    <Node Id="@85" Category="CodeSchema_CallStackUnresolvedMethod" Bounds="0,-1000.96941685647,126.393333333333,25.96" Label="RunVirtualization">
+      <Category Ref="CallStackEntry" />
+    </Node>
+    <Node Id="@86" Category="CodeSchema_CallStackUnresolvedMethod" Bounds="0,-161.567916856466,71,25.96" Label="Invoke">
+      <Category Ref="CallStackEntry" />
+    </Node>
+    <Node Id="@88" Category="CodeSchema_CallStackUnresolvedMethod" Bounds="0,62.2724831435348,76.53,25.96" Label="Execute">
+      <Category Ref="CallStackEntry" />
+    </Node>
+    <Node Id="@9" Category="CodeSchema_CallStackUnresolvedMethod" Bounds="0,-553.288616856467,132.103333333333,25.96" Label="NWDrawMainTree">
+      <Category Ref="CallStackEntry" />
+    </Node>
+    <Node Id="@93" Category="CodeSchema_Method" Bounds="0,-2120.17141685647,62.58,25.96" CodeSchemaProperty_IsPrivate="True" CodeSchemaProperty_IsStatic="True" CommonLabel="Main" Icon="CodeSchema_Method" Label="Main" SourceLocation="(Assembly=file:///C:/Source/COTG/COTG/obj/x64/Debug/net6.0-windows10.0.20348.0/App.g.i.cs StartLineNumber=25 StartCharacterOffset=0 EndLineNumber=25 EndCharacterOffset=0)">
+      <Category Ref="CallStackEntry" />
+      <Category Ref="CodeSchema_SourceLocation" />
+    </Node>
+    <Node Id="@95" Category="CodeSchema_Method" Bounds="0,-2232.09161685647,294.376666666667,25.96" CodeSchemaProperty_IsExternal="True" CodeSchemaProperty_IsPrivate="True" CommonLabel="global::Microsoft.UI.Xaml.IApplicationStatics.Start" Icon="CodeSchema_Method" Label="global::Microsoft.UI.Xaml.IApplicationStatics.Start">
+      <Category Ref="CallStackEntry" />
+      <Category Ref="ExternalCallStackEntry" />
+    </Node>
+    <Node Id="@96" Category="CodeSchema_Method" Bounds="0,-2176.13151685647,60.4,25.96" CodeSchemaProperty_IsExternal="True" CodeSchemaProperty_IsPublic="True" CodeSchemaProperty_IsStatic="True" CommonLabel="Start" Icon="CodeSchema_Method" Label="Start">
+      <Category Ref="CallStackEntry" />
+      <Category Ref="ExternalCallStackEntry" />
+    </Node>
+    <Node Id="@98" Category="CodeSchema_Method" Bounds="355.6,316.7825,77.8666666666667,25.96" CodeSchemaProperty_IsExternal="True" CodeSchemaProperty_IsProtected="True" CommonLabel="Dispose" Icon="CodeSchema_Method" IsOverloaded="True" Label="Dispose">
+      <Category Ref="CallStackEntry" />
+      <Category Ref="ExternalCallStackEntry" />
+    </Node>
+  </Nodes>
+  <Links>
+    <Link Source="(@89 @90 Type=ExtendedQueue Member=(Name=Process OverloadingParameters=[@104]))" Target="(@89 @90 Type=Debug Member=(Name=Trace OverloadingParameters=[@111,@111,@111,@104]))" Category="CallStackDirectCall" Bounds="1013.38000488281,25.9599990844727,0,21" />
+    <Link Source="(Name=RtlUserThreadStart @6 @2)" Target="@3" Category="CallStackDirectCall" Bounds="68.8632624286471,2111.74815594952,2.18090170818125,21.0480271940201" />
+    <Link Source="@10" Target="@66" Category="CallStackDirectCall" Bounds="53.3113904877463,-630.256877477247,0.889729301256573,21.0081606207798" />
+    <Link Source="@100" Target="@52" Category="CallStackDirectCall" Bounds="278.19234034867,1767.03548314353,46.7914915015805,25.6711425840938" />
+    <Link Source="@101" Target="@52" Category="CallStackDirectCall" Bounds="358.696980470798,342.742496948242,142.556119450335,1445.33654638618" />
+    <Link Source="@102" Target="@106" Category="CallStackDirectCall" Bounds="857.533325195313,342.742492675781,0,22.6875" />
+    <Link Source="@105" Target="@52" Category="CallStackDirectCall" Bounds="360.879149201853,342.742496948242,288.067418998977,1445.46665745585" />
+    <Link Source="@106" Target="(@89 Namespace=COTG.Services Type=RestAPI Member=(Name=AsArray OverloadingParameters=[(@103 Namespace=System.Net.Http Type=HttpResponseMessage)]))" Category="CallStackDirectCall" Bounds="857.533325195313,400.390014648438,0,22.6875" />
+    <Link Source="@108" Target="(Name=System.Net.Security.SslStream.ReadAsyncInternal&lt;System.Net.Security.AsyncReadWriteAdapter&gt; @130 Type=System.Threading.Tasks.ValueTask&lt;int&gt; OverloadingParameters=[(Type=System.Net.Security.AsyncReadWriteAdapter Name=adapter),(Type=System.Memory&lt;byte&gt; Name=buffer)] @2)" Category="CallStackDirectCall" Bounds="76.5333325351619,2438.55668314354,1.78942272555105E-07,21.0001000000002" />
+    <Link Source="@11" Target="@72" Category="CallStackDirectCall" Bounds="67.0137274325814,-1917.75454192224,6.81447578132857,21.4235250657712" />
+    <Link Source="@110" Target="@112" Category="CallStackDirectCall" Bounds="42.2065118361118,-2309.19102377042,3.76182788602436,21.1393069139458" />
+    <Link Source="@112" Target="@115" Category="CallStackDirectCall" Bounds="84.014034145162,-2370.81505019369,70.537177408831,26.8032333372139" />
+    <Link Source="@113" Target="@73" Category="CallStackIndirectCall" Bounds="-10.1342153549194,-2429.97192382813,103.705176353455,1031.91516113281" />
+    <Link Source="@115" Target="@113" Category="CallStackDirectCall" Bounds="174.481750824608,-2422.39027468884,14.3392837875528,22.4183578323668" />
+    <Link Source="@117" Target="(Name=CommunityToolkit.WinUI.UI.Controls.MarkdownTextBlock.RenderMarkdown @87 @47 @2)" Category="CallStackDirectCall" Bounds="-10.1342153549194,-2485.93212890625,54.6189031600952,418.115478515625" />
+    <Link Source="@119" Target="@51" Category="CallStackDirectCall" Bounds="188.037292480469,279.796600341797,134.826232910156,2020.87991333008" />
+    <Link Source="@12" Target="@14" Category="CallStackDirectCall" Bounds="40.685,-1693.49071685647,0,21.0001000000002" />
+    <Link Source="@120" Target="@105" Category="CallStackDirectCall" Bounds="651.533325195313,270.822509765625,0,36.9599914550781" />
+    <Link Source="@122" Target="@108" Category="CallStackDirectCall" Bounds="76.5333343230433,2382.59658314354,1.43153825149511E-06,21.0000999999997" />
+    <Link Source="@123" Target="@136" Category="CallStackDirectCall" Bounds="651.533325195313,141.255004882813,0,22.6875" />
+    <Link Source="@124" Target="@46" Category="CallStackDirectCall" Bounds="90.4034503716657,2214.71628314353,15.3157481672926,22.5544924467881" />
+    <Link Source="@125" Target="@122" Category="CallStackDirectCall" Bounds="76.5333359069357,2326.63648314353,3.57884559321064E-07,21.0001000000007" />
+    <Link Source="@127" Target="@129" Category="CallStackDirectCall" Bounds="36.7674457455699,1887.90662892291,2.20672177904736,21.0491542206255" />
+    <Link Source="@129" Target="@140" Category="CallStackDirectCall" Bounds="50.9924659534204,1830.19980819814,17.0690394287549,22.7958749453974" />
+    <Link Source="@13" Target="@13" Category="CallStackDirectCall" Bounds="20.3733329772949,-751.1689453125,40.7439880371094,30" />
+    <Link Source="@13" Target="@67" Category="CallStackDirectCall" Bounds="45.4208654857062,-742.70132101196,7.75398598418199,21.532404155492" />
+    <Link Source="@131" Target="@132" Category="CallStackDirectCall" Bounds="857.533325195313,198.902496337891,0,36.9600067138672" />
+    <Link Source="@132" Target="@102" Category="CallStackIndirectCall" Bounds="857.533325195313,270.822509765625,0,36.9599914550781" Label="Async Call" LabelBounds="861.533333333333,281.3225,53.61,15.96" />
+    <Link Source="@135" Target="@117" Category="CallStackDirectCall" Bounds="-10.1342153549194,-2482.85571289063,46.1609869003296,474.6044921875" />
+    <Link Source="@136" Target="@120" Category="CallStackIndirectCall" Bounds="651.533325195313,198.902496337891,0,36.9600067138672" Label="Async Call" LabelBounds="655.533333333333,209.4025,53.6099999999999,15.96" />
+    <Link Source="@138" Target="@33" Category="CallStackDirectCall" Bounds="59.8916334406121,1550.61069132726,15.5318551530342,22.5844918162743" />
+    <Link Source="@139" Target="@110" Category="CallStackDirectCall" Bounds="-10.1342153549194,-2257.15234375,31.0631875991821,920.42236328125" />
+    <Link Source="@14" Target="@63" Category="CallStackDirectCall" Bounds="40.685,-1749.45081685647,0,21.0001000000002" />
+    <Link Source="@140" Target="@142" Category="CallStackDirectCall" Bounds="54.3864923365534,1774.06093872238,18.3955574483231,22.9746444211555" />
+    <Link Source="@141" Target="@139" Category="CallStackDirectCall" Bounds="70.9852163037119,-1302.67990816611,10.6796008159859,21.9099913096416" />
+    <Link Source="@142" Target="@144" Category="CallStackDirectCall" Bounds="51.1179054987392,1717.49608078948,23.1608083151155,23.5794023540577" />
+    <Link Source="@143" Target="@138" Category="CallStackDirectCall" Bounds="63.262387052344,1606.89466354863,13.2120810865622,22.2606195949056" />
+    <Link Source="@144" Target="@143" Category="CallStackDirectCall" Bounds="87.7555601388386,1663.99716553437,3.45554206016871,21.1182176091643" />
+    <Link Source="@15" Target="@70" Category="CallStackDirectCall" Bounds="68.844669514529,-298.081488450201,32.7273788580215,24.5933715937348" />
+    <Link Source="@16" Target="@61" Category="CallStackDirectCall" Bounds="45.529229023489,-1581.78547947571,4.72182152860078,21.2150626192417" />
+    <Link Source="@18" Target="@24" Category="CallStackDirectCall" Bounds="79.7503099640915,208.788107443457,6.27334886008266,21.3646757000779" />
+    <Link Source="@19" Target="@18" Category="CallStackDirectCall" Bounds="81.2930148087656,264.940136964906,4.20793074738326,21.1727461786278" />
+    <Link Source="@20" Target="@19" Category="CallStackDirectCall" Bounds="83.1272915135025,320.893901780611,4.28803722369898,21.179081362923" />
+    <Link Source="@21" Target="@20" Category="CallStackDirectCall" Bounds="97.5572711559862,376.527993968326,7.52446200150753,21.5050891752071" />
+    <Link Source="@22" Target="@21" Category="CallStackDirectCall" Bounds="115.392560011897,432.69033259665,5.66958340219047,21.3028505468836" />
+    <Link Source="@23" Target="@88" Category="CallStackDirectCall" Bounds="46.7108228138232,96.6013842612264,8.55750242147844,21.6311988823087" />
+    <Link Source="@24" Target="@23" Category="CallStackDirectCall" Bounds="65.455240244119,152.95913821417,4.93273035755374,21.2335449293646" />
+    <Link Source="@25" Target="@27" Category="CallStackDirectCall" Bounds="56.5624561041409,-14.7523575861194,2.53835444040129,21.064740729654" />
+    <Link Source="@26" Target="@86" Category="CallStackDirectCall" Bounds="35.5,-126.607916856466,0,21.0001000000002" />
+    <Link Source="@27" Target="@26" Category="CallStackDirectCall" Bounds="45.4079230932897,-71.4992668243489,10.2469632900441,21.8515499678832" />
+    <Link Source="@29" Target="@7" Category="CallStackDirectCall" Bounds="78.3352639618823,1102.83374752767,16.2275415697919,22.6806356158609" />
+    <Link Source="@3" Target="@40" Category="CallStackDirectCall" Bounds="76.1592259187052,2055.62763281157,4.64455136460188,21.208450331967" />
+    <Link Source="@31" Target="@93" Category="CallStackIndirectCall" Bounds="-10.1342153549194,-2088.61962890625,47.2098455429077,3493.9345703125" />
+    <Link Source="@32" Target="@31" Category="CallStackDirectCall" Bounds="67.0435306197332,1440.27300527433,0.42909611247633,21.0019778692013" />
+    <Link Source="@33" Target="@32" Category="CallStackDirectCall" Bounds="75.4164920918938,1495.57640759159,8.77479262108326,21.6586755519409" />
+    <Link Source="@36" Target="@42" Category="CallStackDirectCall" Bounds="857.533325195313,25.9599990844727,0,22.6875" />
+    <Link Source="@36" Target="@43" Category="CallStackDirectCall" Bounds="706.583618164063,20.9214553833008,122.571411132813,34.3006439208984" />
+    <Link Source="@39" Target="@127" Category="CallStackDirectCall" Bounds="53.954854791599,1941.43711639464,22.3312209987111,23.4787667488959" />
+    <Link Source="@40" Target="@39" Category="CallStackDirectCall" Bounds="86.2814366635037,1999.86245778797,1.14905776773176,21.0135253555709" />
+    <Link Source="@42" Target="@44" Category="CallStackDirectCall" Bounds="857.533325195313,83.6074981689453,0,22.6875" />
+    <Link Source="@43" Target="@123" Category="CallStackDirectCall" Bounds="651.533325195313,83.6074981689453,0,22.6875" />
+    <Link Source="@44" Target="@131" Category="CallStackDirectCall" Bounds="857.533325195313,141.255004882813,0,22.6875" />
+    <Link Source="@46" Target="@125" Category="CallStackDirectCall" Bounds="76.5333334883241,2270.67638314354,1.07365369217405E-06,21.0001000000002" />
+    <Link Source="@48" Target="@50" Category="CallStackDirectCall" Bounds="82.1777716384829,936.451047712098,4.33741685567414,21.1830354314366" />
+    <Link Source="@49" Target="@29" Category="CallStackDirectCall" Bounds="59.2096253789158,1160.24745811224,4.85914411609208,21.2270250312979" />
+    <Link Source="@5" Target="@48" Category="CallStackDirectCall" Bounds="57.0289645122149,991.568270717021,11.5259289307274,22.0259124265133" />
+    <Link Source="@50" Target="@59" Category="CallStackDirectCall" Bounds="65.8939261534683,879.032448693544,15.9439922532773,22.6415344499902" />
+    <Link Source="@51" Target="@100" Category="CallStackDirectCall" Bounds="255.561209933033,270.822506408691,68.3648640328557,1461.26281026674" />
+    <Link Source="@51" Target="@101" Category="CallStackDirectCall" Bounds="355.506615069929,270.357099764586,106.556981521712,43.0538039492395" />
+    <Link Source="@51" Target="@124" Category="CallStackDirectCall" Bounds="124.740173339844,270.822509765625,198.759643554688,1909.83227539063" />
+    <Link Source="@51" Target="@98" Category="CallStackDirectCall" Bounds="337.1668237622,270.822506408691,38.4557427885514,39.5105236792002" />
+    <Link Source="@52" Target="@119" Category="CallStackDirectCall" Bounds="194.751966448004,1822.99558314353,157.425849667111,469.148458289772" />
+    <Link Source="@52" Target="@51" Category="CallStackDirectCall" Bounds="324.986446377477,279.820594382821,31.279295052891,1517.21498876071" />
+    <Link Source="@54" Target="@22" Category="CallStackDirectCall" Bounds="58.2711585546368,484.851708523614,38.6892204789797,25.1015746199196" />
+    <Link Source="@55" Target="@60" Category="CallStackDirectCall" Bounds="70.0341274547803,600.065655864633,9.91989369898224,21.8078272789007" />
+    <Link Source="@56" Target="@55" Category="CallStackDirectCall" Bounds="80.3706230808499,656.761007963546,2.69055183355664,21.0725751799879" />
+    <Link Source="@57" Target="@58" Category="CallStackDirectCall" Bounds="44.5745778539829,768.17378473064,8.14583068665647,21.5799984128942" />
+    <Link Source="@58" Target="@56" Category="CallStackDirectCall" Bounds="64.953735128541,712.365055020594,6.86013557557034,21.4286281229403" />
+    <Link Source="@59" Target="@57" Category="CallStackDirectCall" Bounds="44.3059467496179,824.517048192845,4.5062764326137,21.1968349506898" />
+    <Link Source="@60" Target="@54" Category="CallStackDirectCall" Bounds="46.7108228138233,544.282184261226,8.55750242147819,21.6311988823078" />
+    <Link Source="@61" Target="@12" Category="CallStackDirectCall" Bounds="40.685,-1637.53061685647,0,21.0001000000002" />
+    <Link Source="@62" Target="@15" Category="CallStackDirectCall" Bounds="64.0924464937142,-239.82939306307,13.5032811556885,22.3013762066044" />
+    <Link Source="@63" Target="@64" Category="CallStackDirectCall" Bounds="48.3969834787047,-1806.67356127962,13.2272663468391,22.2627444231516" />
+    <Link Source="@64" Target="@11" Category="CallStackDirectCall" Bounds="67.1909122125224,-1861.5414578276,4.17974938386507,21.1705409711294" />
+    <Link Source="@65" Target="@79" Category="CallStackDirectCall" Bounds="61.6756091125641,-855.553040209831,14.6654848694493,22.4639233533633" />
+    <Link Source="@66" Target="@13" Category="CallStackDirectCall" Bounds="46.3239583227442,-686.492302410638,5.47109350585035,21.2834855541702" />
+    <Link Source="@67" Target="@65" Category="CallStackDirectCall" Bounds="56.2132177582337,-798.213053594554,2.89986620397038,21.0840367380862" />
+    <Link Source="@68" Target="@9" Category="CallStackDirectCall" Bounds="39.6551019089196,-519.659495586368,13.7147453390687,22.3309787299012" />
+    <Link Source="@69" Target="@68" Category="CallStackDirectCall" Bounds="33.4817662505668,-462.398574459154,1.72307184240774,21.0301576026874" />
+    <Link Source="@7" Target="@5" Category="CallStackDirectCall" Bounds="70.409065103113,1045.75599170332,25.0272864283056,23.7982914402146" />
+    <Link Source="@70" Target="@71" Category="CallStackDirectCall" Bounds="58.8187489507672,-354.974798193759,44.5619598757003,25.5265813372934" />
+    <Link Source="@71" Target="@69" Category="CallStackDirectCall" Bounds="30.1866651715538,-406.497185702866,2.98406709689119,21.0888688463997" />
+    <Link Source="@72" Target="@135" Category="CallStackIndirectCall" Bounds="66.0349109985119,-1974.00027534161,9.16831418931541,21.7091584851414" />
+    <Link Source="@73" Target="@73" Category="CallStackDirectCall" Bounds="20.3425006866455,-1422.69006347656,40.6823253631592,30" />
+    <Link Source="@73" Target="@74" Category="CallStackDirectCall" Bounds="45.3591988190395,-1414.22252101196,7.75398598418194,21.532404155492" />
+    <Link Source="@74" Target="@75" Category="CallStackDirectCall" Bounds="63.8744513263319,-1469.88711011257,4.9701932628904,21.2368932560964" />
+    <Link Source="@75" Target="@16" Category="CallStackDirectCall" Bounds="61.0977929326658,-1526.17399068023,8.01250636987297,21.5636738237608" />
+    <Link Source="@76" Target="@49" Category="CallStackDirectCall" Bounds="74.6186763618023,1213.98915965482,22.0599980717076,23.4454234887166" />
+    <Link Source="@77" Target="@76" Category="CallStackDirectCall" Bounds="65.3100050720664,1269.71416517821,24.0119571697013,23.6805179653209" />
+    <Link Source="@78" Target="@77" Category="CallStackDirectCall" Bounds="35.2909374119536,1327.73327927328,8.48025600583763,21.6215038702535" />
+    <Link Source="@79" Target="@82" Category="CallStackDirectCall" Bounds="73.457466459262,-910.895919387268,10.2108556756163,21.8467025307995" />
+    <Link Source="@80" Target="@141" Category="CallStackIndirectCall" Bounds="105.933445664456,-1248.16794206293,21.3580093067353,23.3581252064591" />
+    <Link Source="@81" Target="@83" Category="CallStackDirectCall" Bounds="55.3552253004075,-1136.59286458003,24.2058466045598,23.7032477235623" />
+    <Link Source="@82" Target="@85" Category="CallStackDirectCall" Bounds="63.3472308315877,-966.009628007612,0.143854626324909,21.0003111511436" />
+    <Link Source="@83" Target="@80" Category="CallStackDirectCall" Bounds="108.504603422796,-1191.52261513252,16.1713604251034,22.6728982760524" />
+    <Link Source="@84" Target="@81" Category="CallStackDirectCall" Bounds="46.1484149979148,-1078.08051377716,3.92265375464282,21.1509969206863" />
+    <Link Source="@85" Target="@84" Category="CallStackDirectCall" Bounds="56.6575031988822,-1022.13019510933,4.05303555402685,21.1607782528595" />
+    <Link Source="@86" Target="@62" Category="CallStackDirectCall" Bounds="47.0871111738544,-184.854019125043,20.7872616172372,23.2861022685766" />
+    <Link Source="@88" Target="@25" Category="CallStackDirectCall" Bounds="42.146313054599,40.8951358960445,6.39230947183206,21.3773472474903" />
+    <Link Source="@9" Target="@10" Category="CallStackDirectCall" Bounds="57.9238694807161,-574.532269475392,5.04516867027601,21.243652618925" />
+    <Link Source="@93" Target="@96" Category="CallStackDirectCall" Bounds="30.628096797145,-2141.17322366573,0.409076635354261,21.001806809255" />
+    <Link Source="@95" Target="@78" Category="CallStackIndirectCall" Bounds="-10.1342153549194,-2206.13159179688,150.16383266449,3549.80334472656" />
+    <Link Source="@96" Target="@95" Category="CallStackDirectCall" Bounds="57.3355584901861,-2202.24800013985,54.5982557545593,26.116483283382" />
+    <Link Source="@98" Target="@52" Category="CallStackDirectCall" Bounds="357.097519223196,342.742496948242,37.1026079415024,1445.29605029744" />
+  </Links>
+  <Categories>
+    <Category Id="CallStackDirectCall" Label="Call Stack direct call" CanBeDataDriven="True" CanLinkedNodesBeDataDriven="True" IncomingActionLabel="Call Stack direct call" OutgoingActionLabel="Call Stack direct call" />
+    <Category Id="CallStackEntry" Label="Call Stack Entry" CanBeDataDriven="True" IsProviderRoot="False" NavigationActionLabel="Call Stack Entry" />
+    <Category Id="CallStackIndirectCall" Label="Call Stack indirect call" CanBeDataDriven="True" CanLinkedNodesBeDataDriven="True" IncomingActionLabel="Call Stack indirect call" OutgoingActionLabel="Call Stack indirect call" />
+    <Category Id="CodeSchema_CallStackUnresolvedMethod" Label="Unresolved Method" CanBeDataDriven="True" DefaultAction="Microsoft.AllOutBoundLinks" IsProviderRoot="False" NavigationActionLabel="Unresolved Method" />
+    <Category Id="CodeSchema_Member" Label="Member" CanBeDataDriven="True" DefaultAction="Microsoft.Contains" Icon="CodeSchema_Field" NavigationActionLabel="Members" />
+    <Category Id="CodeSchema_Method" Label="Method" BasedOn="CodeSchema_Member" CanBeDataDriven="True" DefaultAction="Link:Forward:CodeSchema_Calls" Icon="CodeSchema_Method" NavigationActionLabel="Methods" />
+    <Category Id="CodeSchema_SourceLocation" Label="Source Location" Icon="File" />
+    <Category Id="ExternalCallStackEntry" Label="External Call Stack Entry" CanBeDataDriven="True" IsProviderRoot="False" NavigationActionLabel="External Call Stack Entry" />
+  </Categories>
+  <Properties>
+    <Property Id="Bounds" DataType="System.Windows.Rect" />
+    <Property Id="CanBeDataDriven" Label="CanBeDataDriven" Description="CanBeDataDriven" DataType="System.Boolean" />
+    <Property Id="CanLinkedNodesBeDataDriven" Label="CanLinkedNodesBeDataDriven" Description="CanLinkedNodesBeDataDriven" DataType="System.Boolean" />
+    <Property Id="CodeSchemaProperty_IsExternal" Label="Is External" Description="Flag indicating whether this node is considered external" DataType="System.Boolean" />
+    <Property Id="CodeSchemaProperty_IsPrivate" Label="Is Private" Description="Flag to indicate the scope is Private" DataType="System.Boolean" />
+    <Property Id="CodeSchemaProperty_IsProtected" Label="Is Protected" Description="Flag to indicate the scope is Protected" DataType="System.Boolean" />
+    <Property Id="CodeSchemaProperty_IsPublic" Label="Is Public" Description="Flag to indicate the scope is Public" DataType="System.Boolean" />
+    <Property Id="CodeSchemaProperty_IsStatic" Label="Is Static" Description="Flag to indicate the member is a static member" DataType="System.Boolean" />
+    <Property Id="CodeSchemaProperty_IsVirtual" Label="Is Virtual" Description="Flag to indicate the method can be overridden" DataType="System.Boolean" />
+    <Property Id="CommonLabel" DataType="System.String" />
+    <Property Id="DataVirtualized" Label="Data Virtualized" Description="If true, the graph can contain nodes and links that represent data for virtualized nodes/links (i.e. not actually created in the graph)." DataType="System.Boolean" />
+    <Property Id="DefaultAction" Label="DefaultAction" Description="DefaultAction" DataType="System.String" />
+    <Property Id="Expression" DataType="System.String" />
+    <Property Id="GroupLabel" DataType="System.String" />
+    <Property Id="Icon" Label="Icon" DataType="System.String" />
+    <Property Id="IncomingActionLabel" Label="IncomingActionLabel" Description="IncomingActionLabel" DataType="System.String" />
+    <Property Id="IsEnabled" DataType="System.Boolean" />
+    <Property Id="IsOverloaded" Label="IsOverloaded" Description="IsOverloaded" DataType="System.Boolean" />
+    <Property Id="IsProviderRoot" Label="IsProviderRoot" Description="IsProviderRoot" DataType="System.Boolean" />
+    <Property Id="Label" Label="Label" Description="Displayable label of an Annotatable object" DataType="System.String" />
+    <Property Id="LabelBounds" DataType="System.Windows.Rect" />
+    <Property Id="Layout" DataType="System.String" />
+    <Property Id="NavigationActionLabel" Label="NavigationActionLabel" Description="NavigationActionLabel" DataType="System.String" />
+    <Property Id="OutgoingActionLabel" Label="OutgoingActionLabel" Description="OutgoingActionLabel" DataType="System.String" />
+    <Property Id="SourceLocation" Label="Start Line Number" DataType="Microsoft.VisualStudio.GraphModel.CodeSchema.SourceLocation" />
+    <Property Id="TargetType" DataType="System.Type" />
+    <Property Id="Value" DataType="System.String" />
+    <Property Id="ValueLabel" DataType="System.String" />
+    <Property Id="Visibility" Label="Visibility" Description="Defines whether a node in the graph is visible or not" DataType="System.Windows.Visibility" />
+  </Properties>
+  <QualifiedNames>
+    <Name Id="ArrayRank" Label="Array Rank" ValueType="System.String" />
+    <Name Id="Assembly" Label="Assembly" ValueType="Uri" />
+    <Name Id="GenericArguments" Label="Generic Arguments" ValueType="Microsoft.VisualStudio.GraphModel.GraphNodeIdCollection" />
+    <Name Id="GenericParameterCount" Label="Generic Parameter Count" ValueType="System.String" />
+    <Name Id="IsUnresolved" Label="Is Unresolved" ValueType="System.String" />
+    <Name Id="Member" Label="Member" ValueType="System.Object" />
+    <Name Id="Name" Label="Name" ValueType="System.String" />
+    <Name Id="Namespace" Label="Namespace" ValueType="System.String" />
+    <Name Id="OverloadingParameters" Label="Parameter" ValueType="Microsoft.VisualStudio.GraphModel.GraphNodeIdCollection" Formatter="NameValueNoEscape" />
+    <Name Id="ParameterIdentifier" Label="Parameter Identifier" ValueType="System.String" />
+    <Name Id="ParentType" Label="Parent Type" ValueType="System.Object" />
+    <Name Id="Type" Label="Type" ValueType="System.Object" />
+  </QualifiedNames>
+  <IdentifierAliases>
+    <Alias n="1" Uri="Assembly=kernel32.dll" />
+    <Alias n="2" Id="IsUnresolved=True" />
+    <Alias n="3" Id="(Name=BaseThreadInitThunk @1 @2)" />
+    <Alias n="4" Uri="Assembly=user32.dll" />
+    <Alias n="5" Id="(Name=__fnDWORD @4 @2)" />
+    <Alias n="6" Uri="Assembly=ntdll.dll" />
+    <Alias n="7" Id="(Name=KiUserCallbackDispatcherContinue @6 @2)" />
+    <Alias n="8" Uri="Assembly=Microsoft.ui.xaml.dll" />
+    <Alias n="9" Id="(Name=CCoreServices::NWDrawMainTree @8 @2)" />
+    <Alias n="10" Id="(Name=CCoreServices::NWDrawTree @8 @2)" />
+    <Alias n="11" Id="(Name=CDependencyObject::SetEffectiveValue @8 @2)" />
+    <Alias n="12" Id="(Name=CFrameworkElement::SetValue @8 @2)" />
+    <Alias n="13" Id="(Name=CUIElement::Measure @8 @2)" />
+    <Alias n="14" Id="(Name=CUIElement::SetValue @8 @2)" />
+    <Alias n="15" Id="(Name=CXcpDispatcher::WindowProc @8 @2)" />
+    <Alias n="16" Id="(Name=DirectUI::DependencyObject::SetValueCore @8 @2)" />
+    <Alias n="17" Uri="Assembly=CoreMessagingXP.dll" />
+    <Alias n="18" Id="(Name=Microsoft::CoreUI::Dispatch::Dispatcher::Callback_DispatchNextItem @17 @2)" />
+    <Alias n="19" Id="(Name=Microsoft::CoreUI::Dispatch::EventLoop::Callback_RunCoreLoop @17 @2)" />
+    <Alias n="20" Id="(Name=Microsoft::CoreUI::Dispatch::SystemCoreMessaging::Callback_OnGroupDispatch @17 @2)" />
+    <Alias n="21" Id="(Name=Microsoft::CoreUI::Dispatch::SystemCoreMessaging::NoContext_GroupDispatchHandler @17 @2)" />
+    <Alias n="22" Id="(Name=Microsoft::CoreUI::Dispatch::SystemCoreMessaging::NoContext_HighPriorityDispatchHandler @17 @2)" />
+    <Alias n="23" Id="(Name=Microsoft::CoreUI::Dispatch::TimeoutHandler::ImportAdapter$ @17 @2)" />
+    <Alias n="24" Id="(Name=Microsoft::CoreUI::Dispatch::TimeoutManager::Callback_OnDispatch @17 @2)" />
+    <Alias n="25" Id="(Name=Microsoft::UI::Dispatching::DispatcherQueueTimer::TimerCallback @17 @2)" />
+    <Alias n="26" Id="(Name=&quot;Microsoft::WRL::Details::DelegateArgTraits&lt;long ( Windows::Foundation::ITypedEventHandler_impl&lt;Windows::Foundation::Internal::AggregateType&lt;Microsoft::UI::Dispatching::DispatcherQueueTimer *,Microsoft::UI::Dispatching::IDispatcherQueueTimer *&gt;,IInspectable *&gt;::*)(Microsoft::UI::Dispatching::IDispatcherQueueTimer *,IInspectable *)&gt;::DelegateInvokeHelper&lt;Microsoft::WRL::Implements&lt;Microsoft::WRL::RuntimeClassFlags&lt;2&gt;,Windows::Foundation::ITypedEventHandler&lt;Microsoft::UI::Dispatching::DispatcherQueueTimer *,IInspectable *&gt;,Microsoft::WRL::FtmBase&gt;,&lt;lambda_82cf8073f4f042d1a68771c460cb9f49&gt;,-1,Microsoft::UI::Dispatching::IDispatcherQueueTimer *,IInspectable *&gt;::Invoke&quot; @17 @2)" />
+    <Alias n="27" Id="(Name=&quot;Microsoft::WRL::InvokeTraits&lt;-2&gt;::InvokeDelegates&lt;&lt;lambda_1e854da9c9ccd42f6138c3b007a32877&gt;,Windows::Foundation::ITypedEventHandler&lt;Microsoft::UI::Dispatching::DispatcherQueueTimer *,IInspectable *&gt; &gt;&quot; @17 @2)" />
+    <Alias n="28" Uri="Assembly=win32u.dll" />
+    <Alias n="29" Id="(Name=NtUserGetMessage @28 @2)" />
+    <Alias n="30" Uri="Assembly=hostpolicy.dll" />
+    <Alias n="31" Id="(Name=00007ff81b6196bb @30 @2)" />
+    <Alias n="32" Id="(Name=00007ff81b6199ec @30 @2)" />
+    <Alias n="33" Id="(Name=&quot;corehost_main() + 263 bytes&quot; @30 @2)" />
+    <Alias n="34" Uri="Assembly=System.Private.CoreLib.dll" />
+    <Alias n="35" Id="Type=System.Threading.Tasks.Task" />
+    <Alias n="36" Id="(Name=&quot;[Async] System.Threading.Tasks.Task.Run&quot; @34 OverloadingParameters=[(@35 Name=completingTask)] @2)" />
+    <Alias n="37" Uri="Assembly=COTG.exe" />
+    <Alias n="38" Id="Type=int" />
+    <Alias n="39" Id="(Name=&quot;[Inline Frame] invoke_main&quot; @37 @38 @2)" />
+    <Alias n="40" Id="(Name=__scrt_common_main_seh @37 @38 @2)" />
+    <Alias n="41" Uri="Assembly=COTG.dll" />
+    <Alias n="42" Id="(Name=&quot;[Async] COTG.Debounce.Go.AnonymousMethod__11_0&quot; @41 @35 @2)" />
+    <Alias n="43" Id="(Name=&quot;[Async] COTG.Game.World.Decode.AnonymousMethod__79_0&quot; @41 @35 @2)" />
+    <Alias n="44" Id="(Name=&quot;[Async] COTG.Views.UserTab._Refresh&quot; @41 @35 @2)" />
+    <Alias n="45" Uri="Assembly=System.Net.Http.dll" />
+    <Alias n="46" Id="(Name=System.Net.Http.HttpConnection.HttpContentReadStream.DrainOnDisposeAsync @45 @35 @2)" />
+    <Alias n="47" Id="Type=void" />
+    <Alias n="48" Id="(Name=DispatchClientMessage @4 @47 @2)" />
+    <Alias n="49" Id="(Name=GetMessageW @4 @47 @2)" />
+    <Alias n="50" Id="(Name=UserCallWinProcCheckWow @4 @47 @2)" />
+    <Alias n="51" Id="(Name=System.IO.Stream.Close @34 @47 @2)" />
+    <Alias n="52" Id="(Name=System.IO.Stream.Dispose @34 @47 @2)" />
+    <Alias n="53" Uri="Assembly=CoreMessaging.dll" />
+    <Alias n="54" Id="(Name=CFlat::SehSafe::Execute&lt;&lt;lambda_72be19825923cb708ba996fdf6b354f1&gt;&gt; @53 @47 @2)" />
+    <Alias n="55" Id="(Name=Microsoft::CoreUI::BatchAgnosticDispatchGroup::Callback_OnDispatchCore @53 @47 @2)" />
+    <Alias n="56" Id="(Name=Microsoft::CoreUI::Dispatch::EventLoop::Callback_RunCoreLoop @53 @47 @2)" />
+    <Alias n="57" Id="(Name=Microsoft::CoreUI::Dispatch::UserAdapter::DoWork @53 @47 @2)" />
+    <Alias n="58" Id="(Name=Microsoft::CoreUI::Dispatch::UserAdapter::OnUserDispatch @53 @47 @2)" />
+    <Alias n="59" Id="(Name=Microsoft::CoreUI::Dispatch::UserAdapter::WindowProc @53 @47 @2)" />
+    <Alias n="60" Id="(Name=Microsoft::CoreUI::DispatchGroupHandler::ImportAdapter$ @53 @47 @2)" />
+    <Alias n="61" Id="(Name=CControl::SetValue @8 @47 @2)" />
+    <Alias n="62" Id="(Name=CDeferredInvoke::DispatchQueuedMessage @8 @47 @2)" />
+    <Alias n="63" Id="(Name=CDependencyObject::SetValue @8 @47 @2)" />
+    <Alias n="64" Id="(Name=CDependencyObject::UpdateEffectiveValue @8 @47 @2)" />
+    <Alias n="65" Id="(Name=CFrameworkElement::MeasureCore @8 @47 @2)" />
+    <Alias n="66" Id="(Name=CLayoutManager::UpdateLayout @8 @47 @2)" />
+    <Alias n="67" Id="(Name=CUIElement::MeasureInternal @8 @47 @2)" />
+    <Alias n="68" Id="(Name=CWindowRenderTarget::Draw @8 @47 @2)" />
+    <Alias n="69" Id="(Name=CXcpBrowserHost::OnTick @8 @47 @2)" />
+    <Alias n="70" Id="(Name=CXcpDispatcher::OnReentrancyProtectedWindowMessage @8 @47 @2)" />
+    <Alias n="71" Id="(Name=CXcpDispatcher::Tick @8 @47 @2)" />
+    <Alias n="72" Id="(Name=DirectUI::DependencyObject::NotifyPropertyChanged @8 @47 @2)" />
+    <Alias n="73" Id="(Name=DirectUI::DependencyObject::SetValue @8 @47 @2)" />
+    <Alias n="74" Id="(Name=DirectUI::DependencyObject::SetValueInternal @8 @47 @2)" />
+    <Alias n="75" Id="(Name=DirectUI::DependencyObject::UpdateEffectiveValue @8 @47 @2)" />
+    <Alias n="76" Id="(Name=DirectUI::FrameworkApplication::RunDesktopWindowMessageLoop @8 @47 @2)" />
+    <Alias n="77" Id="(Name=DirectUI::FrameworkApplication::StartDesktop @8 @47 @2)" />
+    <Alias n="78" Id="(Name=DirectUI::FrameworkApplicationFactory::Start @8 @47 @2)" />
+    <Alias n="79" Id="(Name=DirectUI::FrameworkElement::MeasureOverrideFromCore @8 @47 @2)" />
+    <Alias n="80" Id="(Name=DirectUI::ListViewBase::SetupContainerContentChangingAfterPrepare @8 @47 @2)" />
+    <Alias n="81" Id="(Name=DirectUI::ModernCollectionBasePanel::Generate @8 @47 @2)" />
+    <Alias n="82" Id="(Name=DirectUI::ModernCollectionBasePanel::MeasureOverride @8 @47 @2)" />
+    <Alias n="83" Id="(Name=DirectUI::ModernCollectionBasePanel::PrepareContainerViaItemsHost @8 @47 @2)" />
+    <Alias n="84" Id="(Name=DirectUI::ModernCollectionBasePanel::RunGenerate @8 @47 @2)" />
+    <Alias n="85" Id="(Name=DirectUI::ModernCollectionBasePanel::RunVirtualization @8 @47 @2)" />
+    <Alias n="86" Id="(Name=&quot;Microsoft::WRL::Details::DelegateArgTraits&lt;long (__cdecl ABI::Windows::Foundation::ITypedEventHandler_impl&lt;ABI::Windows::Foundation::Internal::AggregateType&lt;ABI::Microsoft::UI::Dispatching::DispatcherQueueTimer *,ABI::Microsoft::UI::Dispatching::IDispatcherQueueTimer *&gt;,IInspectable *&gt;::*)(ABI::Microsoft::UI::Dispatching::IDispatcherQueueTimer *,IInspectable *)&gt;::DelegateInvokeHelper&lt;Microsoft::WRL::Implements&lt;Microsoft::WRL::RuntimeClassFlags&lt;2&gt;,ABI::Windows::Foundation::ITypedEventHandler&lt;ABI::Microsoft::UI::Dispatching::DispatcherQueueTimer *,IInspectable *&gt;,Microsoft::WRL::FtmBase&gt;,&lt;lambda_3e1276e0d827edcdd41a81b89b1d2778&gt; &amp;,1,ABI::Microsoft::UI::Dispatching::IDispatcherQueueTimer *,IInspectable *&gt;::Invoke&quot; @8 @47 @2)" />
+    <Alias n="87" Uri="Assembly=CommunityToolkit.WinUI.UI.Controls.Markdown.dll" />
+    <Alias n="88" Id="(Name=CFlat::SehSafe::Execute&lt;&lt;lambda_654db17c35df07198786f0867aa10de6&gt;&gt; @17 @47 @2)" />
+    <Alias n="89" Uri="Assembly=$(VsSolutionUri)/COTG/bin/x64/Debug/net6.0-windows10.0.20348.0/COTG.dll" />
+    <Alias n="90" Id="Namespace=COTG" />
+    <Alias n="91" Uri="Assembly=$(ProgramFilesUri)/dotnet/packs/Microsoft.NETCore.App.Ref/6.0.0-rc.1.21451.13/ref/net6.0/System.Runtime.dll" />
+    <Alias n="92" Id="Namespace=System" />
+    <Alias n="93" Id="(@89 @90 Type=Program Member=(Name=Main OverloadingParameters=[(@91 @92 Type=(Name=String ArrayRank=1 ParentType=String))]))" />
+    <Alias n="94" Uri="Assembly=file:///C:/Users/Avatar/.nuget/packages/microsoft.projectreunion.winui/0.8.4/lib/net5.0-windows10.0.18362.0/Microsoft.WinUI.dll" />
+    <Alias n="95" Id="(@94 Namespace=ABI.Microsoft.UI.Xaml Type=IApplicationStatics Member=(Name=global::Microsoft.UI.Xaml.IApplicationStatics.Start OverloadingParameters=[(@94 Namespace=Microsoft.UI.Xaml Type=ApplicationInitializationCallback)]))" />
+    <Alias n="96" Id="(@94 Namespace=Microsoft.UI.Xaml Type=Application Member=(Name=Start OverloadingParameters=[(@94 Namespace=Microsoft.UI.Xaml Type=ApplicationInitializationCallback)]))" />
+    <Alias n="97" Uri="Assembly=file:///C:/Users/Avatar/.nuget/packages/azure.storage.blobs/12.10.0/lib/netstandard2.0/Azure.Storage.Blobs.dll" />
+    <Alias n="98" Id="(@97 Namespace=Azure.Core.Pipeline Type=(Name=RetriableStreamImpl ParentType=RetriableStream) Member=(Name=Dispose OverloadingParameters=[(@91 @92 Type=Boolean)]))" />
+    <Alias n="99" Uri="Assembly=$(ProgramFilesUri)/dotnet/packs/Microsoft.NETCore.App.Ref/6.0.0-rc.1.21451.13/ref/net6.0/System.IO.Compression.dll" />
+    <Alias n="100" Id="(@99 Namespace=System.IO.Compression Type=DeflateStream Member=(Name=Dispose OverloadingParameters=[(@91 @92 Type=Boolean)]))" />
+    <Alias n="101" Id="(@99 Namespace=System.IO.Compression Type=GZipStream Member=(Name=Dispose OverloadingParameters=[(@91 @92 Type=Boolean)]))" />
+    <Alias n="102" Id="(@89 Namespace=COTG.Services Type=RestAPI Member=(Name=Post OverloadingParameters=[(@91 @92 Type=Boolean)]))" />
+    <Alias n="103" Uri="Assembly=$(ProgramFilesUri)/dotnet/packs/Microsoft.NETCore.App.Ref/6.0.0-rc.1.21451.13/ref/net6.0/System.Net.Http.dll" />
+    <Alias n="104" Id="(@91 @92 Type=Int32)" />
+    <Alias n="105" Id="(@89 @90 Type=AMem Member=(Name=ReadCompressedAsync OverloadingParameters=[(@91 Namespace=System.IO Type=Stream)]))" />
+    <Alias n="106" Id="(@89 Namespace=COTG.Services Type=RestAPI Member=(Name=AcceptAndProcess OverloadingParameters=[(@103 Namespace=System.Net.Http Type=HttpResponseMessage),(@91 @92 Type=Boolean)]))" />
+    <Alias n="107" Uri="Assembly=$(ProgramFilesUri)/dotnet/packs/Microsoft.NETCore.App.Ref/6.0.0-rc.1.21451.13/ref/net6.0/System.Net.Security.dll" />
+    <Alias n="108" Id="(@107 Namespace=System.Net.Security Type=SslStream Member=(Name=ReadAsync OverloadingParameters=[(@91 @92 Type=(Name=Memory GenericParameterCount=1 GenericArguments=[(@91 @92 Type=Byte)])),(@91 Namespace=System.Threading Type=CancellationToken)]))" />
+    <Alias n="109" Id="Namespace=COTG.Views" />
+    <Alias n="110" Id="(@89 @109 Type=(Name=ChatTab_obj4_Bindings ParentType=ChatTab) Member=(Name=Update_ OverloadingParameters=[(@89 @109 Type=ChatEntry),@104]))" />
+    <Alias n="111" Id="(@91 @92 Type=String)" />
+    <Alias n="112" Id="(@89 @109 Type=(Name=ChatTab_obj4_Bindings ParentType=ChatTab) Member=(Name=Update_text OverloadingParameters=[@111,@104]))" />
+    <Alias n="113" Id="(@94 Namespace=ABI.Microsoft.UI.Xaml Type=IDependencyObject Member=(Name=global::Microsoft.UI.Xaml.IDependencyObject.SetValue OverloadingParameters=[(@94 Namespace=Microsoft.UI.Xaml Type=DependencyProperty),(@91 @92 Type=Object)]))" />
+    <Alias n="114" Uri="Assembly=file:///C:/Users/Avatar/.nuget/packages/communitytoolkit.winui.ui.controls.markdown/7.0.3/lib/net5.0-windows10.0.18362/CommunityToolkit.WinUI.UI.Controls.Markdown.dll" />
+    <Alias n="115" Id="(@89 @109 Type=(Name=XamlBindingSetters ParentType=ChatTab) Member=(Name=Set_CommunityToolkit_WinUI_UI_Controls_MarkdownTextBlock_Text OverloadingParameters=[(@114 Namespace=CommunityToolkit.WinUI.UI.Controls Type=MarkdownTextBlock),@111,@111]))" />
+    <Alias n="116" Uri="Assembly=file:///C:/Users/Avatar/.nuget/packages/microsoft.windows.sdk.net.ref/10.0.20348.19/lib/WinRT.Runtime.dll" />
+    <Alias n="117" Id="(@116 Namespace=WinRT Type=ComWrappersSupport Member=(Name=MarshalDelegateInvoke GenericParameterCount=1 OverloadingParameters=[(@91 @92 Type=IntPtr),(@91 @92 Type=(Name=Action GenericParameterCount=1 GenericArguments=[(ParameterIdentifier=0)]))]))" />
+    <Alias n="118" Uri="Assembly=file:///C:/Users/Avatar/.nuget/packages/azure.core/1.20.0/lib/net5.0/Azure.Core.dll" />
+    <Alias n="119" Id="(@118 Namespace=Azure.Core.Pipeline Type=ReadTimeoutStream Member=Close)" />
+    <Alias n="120" Id="(@89 Namespace=COTG.Game Type=HeatMapDay Member=LoadInternal)" />
+    <Alias n="121" Id="Type=bool" />
+    <Alias n="122" Id="(Name=System.Net.Http.HttpConnection.FillAsync @45 Type=System.Threading.Tasks.ValueTask OverloadingParameters=[(@121 Name=async)] @2)" />
+    <Alias n="123" Id="(Name=&quot;[Async] COTG.Services.WorldStorage.SaveWorldData&quot; @41 @35 OverloadingParameters=[(Type=&quot;uint[]&quot; Name=data)] @2)" />
+    <Alias n="124" Id="(Name=System.Net.Http.HttpConnection.HttpContentReadStream.Dispose @45 @47 OverloadingParameters=[(@121 Name=disposing)] @2)" />
+    <Alias n="125" Id="(Name=System.Net.Http.HttpConnection.ContentLengthReadStream.DrainAsync @45 Type=System.Threading.Tasks.ValueTask&lt;bool&gt; OverloadingParameters=[(@38 Name=maxDrainBytes)] @2)" />
+    <Alias n="126" Id="(Type=&quot;const wchar_t * *&quot; Name=argv)" />
+    <Alias n="127" Id="(Name=wmain @37 @38 OverloadingParameters=[(Name=argc),@126] @2)" />
+    <Alias n="128" Id="(Type=&quot;const int&quot; Name=argc)" />
+    <Alias n="129" Id="(Name=exe_start @37 @38 OverloadingParameters=[@128,@126] @2)" />
+    <Alias n="130" Uri="Assembly=System.Net.Security.dll" />
+    <Alias n="131" Id="(Name=&quot;[Async] COTG.Views.MainPage.VisibilityChanged&quot; @41 @35 OverloadingParameters=[(@121 Name=visible),(@121 Name=longTerm)] @2)" />
+    <Alias n="132" Id="(Name=&quot;[Async] COTG.Game.Raiding.UpdateTS&quot; @41 @35 OverloadingParameters=[(@121 Name=force),(@121 Name=updateRaids)] @2)" />
+    <Alias n="133" Uri="Assembly=Microsoft.WinUI.dll" />
+    <Alias n="134" Id="Type=System.IntPtr" />
+    <Alias n="135" Id="(Name=ABI.Microsoft.UI.Xaml.PropertyChangedCallback.Do_Abi_Invoke @133 @38 OverloadingParameters=[(@134 Name=thisPtr),(@134 Name=d),(@134 Name=e)] @2)" />
+    <Alias n="136" Id="(Name=&quot;[Async] COTG.Game.HeatMap.AddSnapshot&quot; @41 Type=&quot;System.Threading.Tasks.Task&lt;(COTG.Game.HeatMapDay day, bool modified)&gt;&quot; OverloadingParameters=[(Type=COTG.SmallTime Name=t),(Type=&quot;uint[]&quot; Name=isSnap),(@121 Name=uploadIfChanged)] @2)" />
+    <Alias n="137" Uri="Assembly=hostfxr.dll" />
+    <Alias n="138" Id="(Name=execute_app @137 @38 OverloadingParameters=[(Name=impl_dll_dir),(Type=&quot;corehost_init_t *&quot; Name=init),@128,@126] @2)" />
+    <Alias n="139" Id="(Name=COTG.Views.ChatTab.ChatTab_obj4_Bindings.ProcessBindings @41 @47 OverloadingParameters=[(Type=&quot;object {COTG.Views.ChatEntry}&quot; Name=item),(@38 Name=itemIndex),(@38 Name=phase),(@38 Name=nextPhase)] @2)" />
+    <Alias n="140" Id="(Name=hostfxr_main_startupinfo @137 @38 OverloadingParameters=[@128,@126,(Type=&quot;const wchar_t *&quot; Name=host_path),(Type=&quot;const wchar_t *&quot; Name=dotnet_root),(Type=&quot;const wchar_t *&quot; Name=app_path)] @2)" />
+    <Alias n="141" Id="(Name=ABI.Microsoft.UI.Xaml.Markup.IDataTemplateComponent.Do_Abi_ProcessBindings_1 @133 @38 OverloadingParameters=[(@134 Name=thisPtr),(@134 Name=item),(@38 Name=itemIndex),(@38 Name=phase),(Type=int* Name=nextPhase)] @2)" />
+    <Alias n="142" Id="(Name=fx_muxer_t::execute @137 @38 OverloadingParameters=[(Type=&quot;const std::wstring&quot; Name=host_command),@128,@126,(Type=&quot;const host_startup_info_t &amp;&quot; Name=host_info),(Type=&quot;wchar_t *&quot; Name=result_buffer),(@38 Name=buffer_size),(Type=&quot;int *&quot; Name=required_buffer_size)] @2)" />
+    <Alias n="143" Id="(Name=&quot;`anonymous namespace'::read_config_and_execute&quot; @137 @38 OverloadingParameters=[(Type=&quot;const std::wstring &amp;&quot; Name=host_command),(Name=host_info),(Name=app_candidate),(Name=opts),(@38 Name=new_argc),(Type=&quot;const wchar_t * *&quot; Name=new_argv),(Type=host_mode_t Name=mode),(Type=&quot;const bool&quot; Name=is_sdk_command),(Type=&quot;wchar_t *&quot; Name=out_buffer),(@38 Name=buffer_size),(Type=&quot;int *&quot; Name=required_buffer_size)] @2)" />
+    <Alias n="144" Id="(Name=fx_muxer_t::handle_exec_host_command @137 @38 OverloadingParameters=[(Type=&quot;const std::wstring &amp;&quot; Name=host_command),(Type=&quot;const host_startup_info_t &amp;&quot; Name=host_info),(Type=&quot;const std::wstring &amp;&quot; Name=app_candidate),(Type=&quot;const std::unordered_map&lt;enum known_options,std::vector&lt;std::wstring,std::allocator&lt;std::wstring&gt;&gt;,known_options_hash,std::equal_to&lt;enum known_options&gt;,std::allocator&lt;std::pair&lt;enum known_options const ,std::vector&lt;std::wstring,std::allocator&lt;std::wstring&gt;&gt;&gt;&gt;&gt; &amp;&quot; Name=opts),(@38 Name=argc),@126,(@38 Name=argoff),(Type=host_mode_t Name=mode),(Type=&quot;const bool&quot; Name=is_sdk_command),(Type=&quot;wchar_t *&quot; Name=result_buffer),(@38 Name=buffer_size),(Type=&quot;int *&quot; Name=required_buffer_size)] @2)" />
+  </IdentifierAliases>
+  <Styles>
+    <Style TargetType="Link" GroupLabel="Current Call Stack Link" ValueLabel="True" Visibility="Hidden">
+      <Condition Expression="HasCategory('CurrentCallStackCall')" />
+      <Setter Property="Stroke" Value="#FFD93701" />
+      <Setter Property="Weight" Value="1" />
+    </Style>
+    <Style TargetType="Link" GroupLabel="Call Stack Indirect Link" ValueLabel="True" Visibility="Hidden">
+      <Condition Expression="HasCategory('CallStackIndirectCall')" />
+      <Setter Property="Stroke" Value="#FFB8B8B8" />
+      <Setter Property="StrokeDashArray" Value="4 1" />
+    </Style>
+    <Style TargetType="Link" GroupLabel="Call Stack Direct Link" ValueLabel="True" Visibility="Hidden">
+      <Condition Expression="HasCategory('CallStackDirectCall')" />
+      <Setter Property="Stroke" Value="#FFB8B8B8" />
+    </Style>
+    <Style TargetType="Node" GroupLabel="Current Call Stack (no source)" ValueLabel="True">
+      <Condition Expression="HasCategory('CurrentCallStackEntry') And !HasCategory('CodeSchema_SourceLocation')" />
+      <Setter Property="Background" Value="Transparent" />
+      <Setter Property="Foreground" Value="#FFA5A5A5" />
+      <Setter Property="Stroke" Value="#FF0072C6" />
+    </Style>
+    <Style TargetType="Node" GroupLabel="External And Current" ValueLabel="True" Visibility="Hidden">
+      <Condition Expression="HasCategory('ExternalCallStackEntry') And HasCategory('CurrentCallStackEntry')" />
+      <Setter Property="Background" Value="#FFFFF8F0" />
+      <Setter Property="Stroke" Value="#FFCE5100" />
+    </Style>
+    <Style TargetType="Node" GroupLabel="Current Call Stack (source)" ValueLabel="True">
+      <Condition Expression="HasCategory('CurrentCallStackEntry') And !HasCategory('QueryResult')" />
+      <Setter Property="Background" Value="#FFFFE3C6" />
+      <Setter Property="Stroke" Value="#FFD93701" />
+    </Style>
+    <Style TargetType="Node" GroupLabel="External Call Stack" ValueLabel="True">
+      <Condition Expression="HasCategory('ExternalCallStackEntry')" />
+      <Setter Property="Background" Value="#FFF7F7F7" />
+      <Setter Property="StrokeDashArray" Value="1 3" />
+      <Setter Property="Foreground" Value="#FF717171" />
+      <Setter Property="Stroke" Value="#FFA5A5A5" />
+    </Style>
+    <Style TargetType="Node" GroupLabel="Results" ValueLabel="True">
+      <Condition Expression="HasCategory('QueryResult')" />
+      <Setter Property="Background" Value="#FFBCFFBE" />
+    </Style>
+    <Style TargetType="Node" GroupLabel="Test Project" ValueLabel="Test Project">
+      <Condition Expression="HasCategory('CodeMap_TestProject')" />
+      <Setter Property="Icon" Value="CodeMap_TestProject" />
+      <Setter Property="Background" Value="#FF307A69" />
+    </Style>
+    <Style TargetType="Node" GroupLabel="Web Project" ValueLabel="Web Project">
+      <Condition Expression="HasCategory('CodeMap_WebProject')" />
+      <Setter Property="Icon" Value="CodeMap_WebProject" />
+    </Style>
+    <Style TargetType="Node" GroupLabel="Windows Store Project" ValueLabel="Windows Store Project">
+      <Condition Expression="HasCategory('CodeMap_WindowsStoreProject')" />
+      <Setter Property="Icon" Value="CodeMap_WindowsStoreProject" />
+    </Style>
+    <Style TargetType="Node" GroupLabel="Phone Project" ValueLabel="Phone Project">
+      <Condition Expression="HasCategory('CodeMap_PhoneProject')" />
+      <Setter Property="Icon" Value="CodeMap_PhoneProject" />
+    </Style>
+    <Style TargetType="Node" GroupLabel="Portable Library" ValueLabel="Portable Library">
+      <Condition Expression="HasCategory('CodeMap_PortableLibraryProject')" />
+      <Setter Property="Icon" Value="CodeMap_PortableLibraryProject" />
+    </Style>
+    <Style TargetType="Node" GroupLabel="WPF Project" ValueLabel="WPF Project">
+      <Condition Expression="HasCategory('CodeMap_WpfProject')" />
+      <Setter Property="Icon" Value="CodeMap_WpfProject" />
+    </Style>
+    <Style TargetType="Node" GroupLabel="VSIX Project" ValueLabel="VSIX Project">
+      <Condition Expression="HasCategory('CodeMap_VsixProject')" />
+      <Setter Property="Icon" Value="CodeMap_VsixProject" />
+    </Style>
+    <Style TargetType="Node" GroupLabel="Modeling Project" ValueLabel="Modeling Project">
+      <Condition Expression="HasCategory('CodeMap_ModelingProject')" />
+      <Setter Property="Icon" Value="CodeMap_ModelingProject" />
+    </Style>
+    <Style TargetType="Node" GroupLabel="Assembly" ValueLabel="Has category">
+      <Condition Expression="HasCategory('CodeSchema_Assembly')" />
+      <Setter Property="Background" Value="#FF094167" />
+      <Setter Property="Stroke" Value="#FF094167" />
+      <Setter Property="Icon" Value="CodeSchema_Assembly" />
+    </Style>
+    <Style TargetType="Node" GroupLabel="Namespace" ValueLabel="Has category">
+      <Condition Expression="HasCategory('CodeSchema_Namespace')" />
+      <Setter Property="Background" Value="#FF0E619A" />
+      <Setter Property="Stroke" Value="#FF0E619A" />
+      <Setter Property="Icon" Value="CodeSchema_Namespace" />
+    </Style>
+    <Style TargetType="Node" GroupLabel="Interface" ValueLabel="Has category">
+      <Condition Expression="HasCategory('CodeSchema_Interface')" />
+      <Setter Property="Background" Value="#FF1382CE" />
+      <Setter Property="Stroke" Value="#FF1382CE" />
+      <Setter Property="Icon" Value="CodeSchema_Interface" />
+    </Style>
+    <Style TargetType="Node" GroupLabel="Struct" ValueLabel="Has category">
+      <Condition Expression="HasCategory('CodeSchema_Struct')" />
+      <Setter Property="Background" Value="#FF1382CE" />
+      <Setter Property="Stroke" Value="#FF1382CE" />
+      <Setter Property="Icon" Value="CodeSchema_Struct" />
+    </Style>
+    <Style TargetType="Node" GroupLabel="Enumeration" ValueLabel="Has category">
+      <Condition Expression="HasCategory('CodeSchema_Enum')" />
+      <Setter Property="Background" Value="#FF1382CE" />
+      <Setter Property="Stroke" Value="#FF1382CE" />
+      <Setter Property="Icon" Value="CodeSchema_Enum" />
+      <Setter Property="LayoutSettings" Value="List" />
+    </Style>
+    <Style TargetType="Node" GroupLabel="Delegate" ValueLabel="Has category">
+      <Condition Expression="HasCategory('CodeSchema_Delegate')" />
+      <Setter Property="Background" Value="#FF1382CE" />
+      <Setter Property="Stroke" Value="#FF1382CE" />
+      <Setter Property="Icon" Value="CodeSchema_Delegate" />
+    </Style>
+    <Style TargetType="Node" GroupLabel="Class" ValueLabel="Has category">
+      <Condition Expression="HasCategory('CodeSchema_Type')" />
+      <Setter Property="Background" Value="#FF0E70C0" />
+      <Setter Property="Stroke" Value="#FF0E70C0" />
+      <Setter Property="Icon" Value="CodeSchema_Class" />
+    </Style>
+    <Style TargetType="Node" GroupLabel="Property" ValueLabel="Has category">
+      <Condition Expression="HasCategory('CodeSchema_Property')" />
+      <Setter Property="Background" Value="#FFE0E0E0" />
+      <Setter Property="Stroke" Value="#FFE0E0E0" />
+      <Setter Property="Icon" Value="CodeSchema_Property" />
+    </Style>
+    <Style TargetType="Node" GroupLabel="Method" ValueLabel="Has category">
+      <Condition Expression="HasCategory('CodeSchema_Method') Or HasCategory('CodeSchema_CallStackUnresolvedMethod')" />
+      <Setter Property="Background" Value="#FFE0E0E0" />
+      <Setter Property="Stroke" Value="#FFE0E0E0" />
+      <Setter Property="Icon" Value="CodeSchema_Method" />
+      <Setter Property="LayoutSettings" Value="List" />
+    </Style>
+    <Style TargetType="Node" GroupLabel="Event" ValueLabel="Has category">
+      <Condition Expression="HasCategory('CodeSchema_Event')" />
+      <Setter Property="Background" Value="#FFE0E0E0" />
+      <Setter Property="Stroke" Value="#FFE0E0E0" />
+      <Setter Property="Icon" Value="CodeSchema_Event" />
+    </Style>
+    <Style TargetType="Node" GroupLabel="Field" ValueLabel="Has category">
+      <Condition Expression="HasCategory('CodeSchema_Field')" />
+      <Setter Property="Background" Value="#FFE0E0E0" />
+      <Setter Property="Stroke" Value="#FFE0E0E0" />
+      <Setter Property="Icon" Value="CodeSchema_Field" />
+    </Style>
+    <Style TargetType="Node" GroupLabel="Out Parameter" ValueLabel="Has category">
+      <Condition Expression="CodeSchemaProperty_IsOut = 'True'" />
+      <Setter Property="Icon" Value="CodeSchema_OutParameter" />
+    </Style>
+    <Style TargetType="Node" GroupLabel="Parameter" ValueLabel="Has category">
+      <Condition Expression="HasCategory('CodeSchema_Parameter')" />
+      <Setter Property="Icon" Value="CodeSchema_Parameter" />
+    </Style>
+    <Style TargetType="Node" GroupLabel="Local Variable" ValueLabel="Has category">
+      <Condition Expression="HasCategory('CodeSchema_LocalExpression')" />
+      <Setter Property="Icon" Value="CodeSchema_LocalExpression" />
+    </Style>
+    <Style TargetType="Node" GroupLabel="Externals" ValueLabel="Has category">
+      <Condition Expression="HasCategory('Externals')" />
+      <Setter Property="Background" Value="#FF424242" />
+      <Setter Property="Stroke" Value="#FF424242" />
+    </Style>
+    <Style TargetType="Link" GroupLabel="Inherits From" ValueLabel="True">
+      <Condition Expression="HasCategory('InheritsFrom')" />
+      <Setter Property="Stroke" Value="#FF00A600" />
+      <Setter Property="StrokeDashArray" Value="2 0" />
+      <Setter Property="DrawArrow" Value="true" />
+    </Style>
+    <Style TargetType="Link" GroupLabel="Implements" ValueLabel="True">
+      <Condition Expression="HasCategory('Implements')" />
+      <Setter Property="Stroke" Value="#8000A600" />
+      <Setter Property="StrokeDashArray" Value="2 2" />
+      <Setter Property="DrawArrow" Value="true" />
+    </Style>
+    <Style TargetType="Link" GroupLabel="Calls" ValueLabel="True">
+      <Condition Expression="HasCategory('CodeSchema_Calls')" />
+      <Setter Property="Stroke" Value="#FFFF00FF" />
+      <Setter Property="StrokeDashArray" Value="2 0" />
+      <Setter Property="DrawArrow" Value="true" />
+    </Style>
+    <Style TargetType="Link" GroupLabel="Function Pointer" ValueLabel="True">
+      <Condition Expression="HasCategory('CodeSchema_FunctionPointer')" />
+      <Setter Property="Stroke" Value="#FFFF00FF" />
+      <Setter Property="StrokeDashArray" Value="2 2" />
+      <Setter Property="DrawArrow" Value="true" />
+    </Style>
+    <Style TargetType="Link" GroupLabel="Field Read" ValueLabel="True">
+      <Condition Expression="HasCategory('CodeSchema_FieldRead')" />
+      <Setter Property="Stroke" Value="#FF00AEEF" />
+      <Setter Property="StrokeDashArray" Value="2 2" />
+      <Setter Property="DrawArrow" Value="true" />
+    </Style>
+    <Style TargetType="Link" GroupLabel="Field Write" ValueLabel="True">
+      <Condition Expression="HasCategory('CodeSchema_FieldWrite')" />
+      <Setter Property="Stroke" Value="#FF00AEEF" />
+      <Setter Property="DrawArrow" Value="true" />
+      <Setter Property="IsHidden" Value="false" />
+    </Style>
+    <Style TargetType="Link" GroupLabel="Inherits From" ValueLabel="True" Visibility="Hidden">
+      <Condition Expression="HasCategory('InheritsFrom') And Target.HasCategory('CodeSchema_Class')" />
+      <Setter Property="TargetDecorator" Value="OpenArrow" />
+    </Style>
+    <Style TargetType="Link" GroupLabel="Implements" ValueLabel="True" Visibility="Hidden">
+      <Condition Expression="HasCategory('Implements') And Target.HasCategory('CodeSchema_Interface')" />
+      <Setter Property="TargetDecorator" Value="OpenArrow" />
+    </Style>
+    <Style TargetType="Link" GroupLabel="Comment Link" ValueLabel="True" Visibility="Hidden">
+      <Condition Expression="Source.HasCategory('Comment')" />
+      <Setter Property="Stroke" Value="#FFE5C365" />
+    </Style>
+    <Style TargetType="Node" GroupLabel="Cursor Location Changed" ValueLabel="True" Visibility="Hidden">
+      <Condition Expression="IsCursorLocation" />
+      <Setter Property="IndicatorWest" Value="WestIndicator" />
+    </Style>
+    <Style TargetType="Node" GroupLabel="Disabled Breakpoint Location Changed" ValueLabel="True" Visibility="Hidden">
+      <Condition Expression="DisabledBreakpointCount" />
+      <Setter Property="IndicatorWest" Value="WestIndicator" />
+    </Style>
+    <Style TargetType="Node" GroupLabel="Enabled Breakpoint Location Changed" ValueLabel="True" Visibility="Hidden">
+      <Condition Expression="EnabledBreakpointCount" />
+      <Setter Property="IndicatorWest" Value="WestIndicator" />
+    </Style>
+    <Style TargetType="Node" GroupLabel="Instruction Pointer Location Changed" ValueLabel="True" Visibility="Hidden">
+      <Condition Expression="IsInstructionPointerLocation" />
+      <Setter Property="IndicatorWest" Value="WestIndicator" />
+    </Style>
+    <Style TargetType="Node" GroupLabel="Current Callstack Changed" ValueLabel="True" Visibility="Hidden">
+      <Condition Expression="IsCurrentCallstackFrame" />
+      <Setter Property="IndicatorWest" Value="WestIndicator" />
+    </Style>
+    <Style TargetType="Link" GroupLabel="Return" ValueLabel="True" Visibility="Hidden">
+      <Condition Expression="HasCategory('CodeSchema_ReturnTypeLink')" />
+    </Style>
+    <Style TargetType="Link" GroupLabel="References" ValueLabel="True" Visibility="Hidden">
+      <Condition Expression="HasCategory('References')" />
+    </Style>
+    <Style TargetType="Link" GroupLabel="Uses Attribute" ValueLabel="True" Visibility="Hidden">
+      <Condition Expression="HasCategory('CodeSchema_AttributeUse')" />
+    </Style>
+    <Style TargetType="Node" GroupLabel="Solution Folder" ValueLabel="True" Visibility="Hidden">
+      <Condition Expression="HasCategory('CodeMap_SolutionFolder')" />
+      <Setter Property="Background" Value="#FFDEBA83" />
+    </Style>
+    <Style TargetType="Link" GroupLabel="Project Reference" ValueLabel="Project Reference">
+      <Condition Expression="HasCategory('CodeMap_ProjectReference')" />
+      <Setter Property="Stroke" Value="#9A9A9A" />
+      <Setter Property="StrokeDashArray" Value="2 2" />
+      <Setter Property="DrawArrow" Value="true" />
+    </Style>
+    <Style TargetType="Link" GroupLabel="External Reference" ValueLabel="External Reference">
+      <Condition Expression="HasCategory('CodeMap_ExternalReference')" />
+      <Setter Property="Stroke" Value="#9A9A9A" />
+      <Setter Property="StrokeDashArray" Value="2 2" />
+      <Setter Property="DrawArrow" Value="true" />
+    </Style>
+    <Style TargetType="Node" GroupLabel="Comment" ValueLabel="Has comment">
+      <Condition Expression="HasCategory('Comment')" />
+      <Setter Property="Background" Value="#FFFFFACD" />
+      <Setter Property="Stroke" Value="#FFE5C365" />
+      <Setter Property="StrokeThickness" Value="1" />
+      <Setter Property="NodeRadius" Value="2" />
+      <Setter Property="MaxWidth" Value="250" />
+    </Style>
+  </Styles>
+  <Paths>
+    <Path Id="ProgramFilesUri" Value="file:///C:/Program Files" />
+    <Path Id="VsSolutionUri" Value="file:///C:/Source/COTG" />
+  </Paths>
+</DirectedGraph>

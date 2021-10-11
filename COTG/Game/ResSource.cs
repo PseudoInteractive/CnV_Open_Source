@@ -185,8 +185,19 @@ namespace COTG.Game
 			return new(r.wood,r.stone,r.iron,r.food);
 		}
 	}
-	public class ResSource : INotifyPropertyChanged
+	public class ResSource : IANotifyPropertyChanged
 	{
+		public virtual event PropertyChangedEventHandler PropertyChanged;
+		public void OnPropertyChanged(string member = null)
+		{
+			if(PropertyChanged is not null) ((IANotifyPropertyChanged)this).IOnPropertyChanged();
+		}
+		public void CallPropertyChanged(string members = null)
+		{
+			PropertyChanged?.Invoke(this,new PropertyChangedEventArgs(members));
+		}
+
+
 		public static ResSource dummy=new ResSource();
 		public City city;
 		public bool initialized;
@@ -215,11 +226,8 @@ namespace COTG.Game
 		public void NotifyChange(string member = "")
 		{
 			
-			App.QueueOnUIThread(() =>
-			{
-				NearRes.supporters.OnPropertyChanged(this);
+				NearRes.supporters.OnPropertyChanged();
 				OnPropertyChanged(member);
-			});
 		}
 		public int ResMax(int type)
 		{
@@ -228,9 +236,8 @@ namespace COTG.Game
 
 		public DateTimeOffset eta { get => JSClient.ServerTime() + travel; set => _ = value; }
 
-		public virtual event PropertyChangedEventHandler PropertyChanged;
-		public void OnPropertyChanged(string propertyName) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+		
 
 	}
-	
+
 }
