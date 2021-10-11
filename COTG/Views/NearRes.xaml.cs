@@ -85,11 +85,12 @@ namespace COTG.Views
 				selected = ResSource.dummy;
 				selectedCommands.Visibility = Visibility.Collapsed;
 			}
-			OnPropertyChanged(nameof(targetIcon));
-			OnPropertyChanged(nameof(sendWood));
-			OnPropertyChanged(nameof(sendStone));
-			OnPropertyChanged(nameof(sendIron));
-			OnPropertyChanged(nameof(sendFood));
+			OnPropertyChanged();
+			//OnPropertyChanged(nameof(targetIcon));
+			//OnPropertyChanged(nameof(sendWood));
+			//OnPropertyChanged(nameof(sendStone));
+			//OnPropertyChanged(nameof(sendIron));
+			//OnPropertyChanged(nameof(sendFood));
 
 		}
 

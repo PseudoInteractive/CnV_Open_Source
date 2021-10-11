@@ -226,7 +226,6 @@ namespace COTG.Game
 		public void NotifyChange(string member = "")
 		{
 			
-				NearRes.supporters.OnPropertyChanged();
 				OnPropertyChanged(member);
 		}
 		public int ResMax(int type)

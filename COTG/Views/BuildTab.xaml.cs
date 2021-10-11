@@ -235,8 +235,6 @@ namespace COTG.Views
 				if (changes.Any())
 				{
 
-					App.DispatchOnUIThreadIdle(() =>
-						{
 							if (changes.Count > 8)
 							{
 								City.gridCitySource.NotifyReset();
@@ -249,7 +247,7 @@ namespace COTG.Views
 									city.OnPropertyChanged(nameof(city.isBuilding));
 								}
 							}
-						});
+						
 				}
 		
 

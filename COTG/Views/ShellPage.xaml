@@ -463,6 +463,7 @@ TextSubmitted="CitySubmitted"
 				</tk:GridSplitter.Element>
 			</tk:GridSplitter>
 		</Grid>
+		
 		<tk:MarkdownTextBlock x:Name="InAppNote"
                                   Grid.Row="1"
                              ScrollViewer.VerticalScrollMode="Auto"

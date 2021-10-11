@@ -32,15 +32,15 @@ namespace COTG
 		{
 			try
 			{
-				var counter = maxCollectionChanges/8 + 2;
+				var counter = collectionChanges.Length/8 + 2;
 				do
 				{
-					(var i,var change) = collectionChanges.FirstOrDefault();
+					(var change,var i) = collectionChanges.FirstOrDefault();
 					if(i == default)
 						break;
 					collectionChanges = collectionChanges.RemoveAt(0);
 				
-					i.PropertyChanged?.Invoke(i,new(i,"Count") );
+					i.PropertyChanged?.Invoke(i,new("Count") );
 					i.CollectionChanged?.Invoke(i,change);
 				} while(--counter>0);
 

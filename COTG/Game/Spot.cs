@@ -2144,7 +2144,7 @@ namespace COTG.Game
 		}
 		public void BuildStageDirty()
 		{
-			App.DispatchOnUIThreadIdle(() => OnPropertyChanged(nameof(City.buildStage)));
+			OnPropertyChanged(nameof(City.buildStage));
 		}
 		public async void ShowIncoming()
 		{
