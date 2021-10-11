@@ -54,7 +54,7 @@ namespace COTG
 			return Task.CompletedTask;
 
 		}
-		static Debounce ChangesDebounce = new(ProcessChanges) { runOnUiThead = true, debounceDelay=300,throttleDelay=1000}; 
+		static Debounce ChangesDebounce = new(ProcessChanges) { runOnUiThread = true, debounceDelay=300,throttleDelay=1000}; 
 		
 
 		bool hasNotifications => (CollectionChanged is not null | PropertyChanged is not null);

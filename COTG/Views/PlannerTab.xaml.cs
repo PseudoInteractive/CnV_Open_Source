@@ -367,7 +367,7 @@ namespace COTG.Views
 		{
 			return (cc.x >= span0) && (cc.y>=span0) && (cc.x <= span1) && (cc.y <= span1);
 		}
-		public static Debounce PleaseRefresh = new (PlannerTab.UpdateStats) { runOnUiThead = true };
+		public static Debounce PleaseRefresh = new (PlannerTab.UpdateStats) { runOnUiThread = true };
 
 		internal static void BuildingsChanged(City city, bool wasWritten=true)
 		{

@@ -111,7 +111,8 @@
 										   winui:ToolTipService.ToolTip="Number of buildings"
 										   CellContentStyle="{StaticResource CenterAlignLink}"
 										    />-->
-				<tg:DataGridNumericalColumn PropertyName="Buildings"
+				<tg:DataGridNumericalColumn PropertyName="BuildingCountCache"
+											Header="Bldgs"
 										   winui:ToolTipService.ToolTip="May or may not include queued buildings"
 										   CellContentStyle="{StaticResource RightAlign}"
 											 SizeMode="Auto"

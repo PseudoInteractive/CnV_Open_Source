@@ -329,7 +329,7 @@ namespace COTG.Views
 			}
 			if (city.buildStage == City.BuildStage.cabins || city.buildStage == BuildStage.townHall)
 			{
-				if (bc.cabins >= SettingsPage.startCabinCount || bc.buildings >= city.buildingLimit - 2)
+				if (bc.cabins >= SettingsPage.startCabinCount || bc.buildingCount >= bc.buildingLimit - 2)
 				{
 					Note.Show($"Building {city.buildStage.AsString()} - {city}");
 					return true;
@@ -471,7 +471,7 @@ namespace COTG.Views
 										}
 										
 
-										if (bc.buildings >= city.buildingLimit)
+										if (bc.buildingCount >= bc.buildingLimit)
 											goto done;
 										if (city.postQueueBuildings[City.XYToId(c)].isEmpty && (city.GetLayoutBid(c) == 0))
 										{
@@ -502,9 +502,9 @@ namespace COTG.Views
 					{
 						//var c = RandomCitySpot();
 						var message = string.Empty;
-						var buildingLimit = city.buildingLimit;// !city.hasCastleInLayout ? 100 : bc.hasCastle ? 100 : 99;
+						var buildingLimit = bc.buildingLimit;// !city.hasCastleInLayout ? 100 : bc.hasCastle ? 100 : 99;
 
-						if (bc.buildings < buildingLimit)
+						if (bc.buildingCount < buildingLimit)
 						{
 							switch (await App.DoYesNoBox("Building Placement", $"Would you like to place buildings for {city.nameAndRemarks}?"))
 							{
@@ -522,7 +522,7 @@ namespace COTG.Views
 									bc = city.GetBuildingCounts();
 								}
 							}
-							if (bc.forums == 0 && bc.ports==0 && bc.buildings < buildingLimit)
+							if (bc.forums == 0 && bc.ports==0 && bc.buildingCount < buildingLimit)
 							{
 								var bid = bidMarketplace;
 								var bd = FindPendingOverlayBuildingsOfType(city, SettingsPage.intialMarkets, bid);
@@ -533,7 +533,7 @@ namespace COTG.Views
 								}
 								foreach(var b in bd)
 								{
-									if (bc.buildings >= buildingLimit)
+									if (bc.buildingCount >= buildingLimit)
 										break;
 									message += $"Adding Forum or Port";
 									await city.SmartBuild(b, bid, true, false);
@@ -542,7 +542,7 @@ namespace COTG.Views
 							}
 							{
 								// why + 4?
-								var bd = FindPendingOverlayBuildingsOfType(city, buildingLimit + 4 - bc.buildings, bidSorcTower, bidAcademy, bidBlacksmith, bidShipyard, bidTrainingGround, bidStable);
+								var bd = FindPendingOverlayBuildingsOfType(city, buildingLimit + 4 - bc.buildingCount, bidSorcTower, bidAcademy, bidBlacksmith, bidShipyard, bidTrainingGround, bidStable);
 								if (bd.Any())
 								{
 
@@ -558,7 +558,7 @@ namespace COTG.Views
 											break;
 									
 
-										if (bc.buildings >= buildingLimit)
+										if (bc.buildingCount >= buildingLimit)
 											break;
 										var bid = city.GetLayoutBid(i);
 										//
@@ -590,7 +590,7 @@ namespace COTG.Views
 									message += $"Adding Barracks";
 									foreach (var i in bd)
 									{
-										if (bc.buildings >= buildingLimit)
+										if (bc.buildingCount >= buildingLimit)
 											break;
 										var xx = await CheckMoveSlots();
 										if (xx == -1)
@@ -610,13 +610,13 @@ namespace COTG.Views
 
 								}
 							}
-							if (bc.buildings < buildingLimit)
+							if (bc.buildingCount < buildingLimit)
 							{
 								// do the rest
 								var todo = FindPendingOverlayBuildings(city);
 								foreach(var c in todo)
 								{
-									if (bc.buildings >= buildingLimit)
+									if (bc.buildingCount >= buildingLimit)
 										break;
 									var xx = await CheckMoveSlots();
 									if (xx == -1)

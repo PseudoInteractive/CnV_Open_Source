@@ -14,7 +14,7 @@
     PrimaryButtonText="Apply"
     CloseButtonText="Cancel"
     PrimaryButtonClick="ContentDialog_PrimaryButtonClick"
-    BorderBrush="{ThemeResource SystemControlBackgroundBaseMediumHighRevealBorderBrush}"
+    BorderBrush="{ThemeResource SystemControlBackgroundAccentRevealBorderBrush}"
     >
 
 	<Grid>

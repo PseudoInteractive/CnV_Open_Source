@@ -5,6 +5,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 	xmlns:controls="using:CommunityToolkit.WinUI.UI.Controls"
+	xmlns:cotg="using:COTG"
     Title="Whats New"
 	Opened="ContentDialog_Opened"
     PrimaryButtonText="Done"
@@ -17,6 +18,7 @@
 		<ScrollViewer x:Name="scrollView" x:FieldModifier="public" >
 		        <controls:MarkdownTextBlock x:Name="fixesText" x:FieldModifier="public" WrapCodeBlock="True"
                                   Margin="6" Background="{x:Null}" TextWrapping="WrapWholeWords"
+											LinkClicked="{x:Bind cotg:Note.MarkDownLinkClicked}"
                                    />
 		
 	</ScrollViewer>

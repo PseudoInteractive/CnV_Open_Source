@@ -6,7 +6,7 @@
     <RootNamespace>COTG</RootNamespace>
     <Platforms>x64</Platforms>
     <MonoGamePlatform>WindowsStoreApp</MonoGamePlatform>
-    <RuntimeIdentifiers>win10-x64</RuntimeIdentifiers>
+    <RuntimeIdentifier>win10-x64</RuntimeIdentifier>
     <UseWinUI>true</UseWinUI>
     <SupportedOSPlatformVersion>10.0.18362.0</SupportedOSPlatformVersion>
     <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
@@ -20,6 +20,9 @@
     <AppxAutoIncrementPackageRevision>True</AppxAutoIncrementPackageRevision>
     <GenerateTestArtifacts>True</GenerateTestArtifacts>
     <AppxBundle>Always</AppxBundle>
+	<SelfContained>true</SelfContained>
+	<PublishSingleFile>False</PublishSingleFile>
+    <PublishReadyToRun>False</PublishReadyToRun>
     <AppxBundlePlatforms>x64</AppxBundlePlatforms>
     <HoursBetweenUpdateChecks>0</HoursBetweenUpdateChecks>
     <AppxSymbolPackageEnabled>True</AppxSymbolPackageEnabled>
@@ -33,6 +36,7 @@
     <EmbeddedResource Remove="Content\Audio\**" />
     <EmbeddedResource Remove="Content\bin\**" />
     <EmbeddedResource Remove="Content\obj\**" />
+    <EmbeddedResource Remove="Properties\PublishProfiles\**" />
     <None Remove="AppPackages\**" />
     <None Remove="BundleArtifacts\**" />
     <None Remove="Content\Art\Anim\**" />
@@ -40,6 +44,7 @@
     <None Remove="Content\Audio\**" />
     <None Remove="Content\bin\**" />
     <None Remove="Content\obj\**" />
+    <None Remove="Properties\PublishProfiles\**" />
   </ItemGroup>
 
   <ItemGroup>
@@ -623,7 +628,6 @@
     <None Include="Package.StoreAssociation.xml" />
     <None Include="JS\jquery" />
     <Content Include="Properties\Default.rd.xml" />
-    <None Include="Properties\PublishProfiles\win10-x64.pubxml" />
     <None Include="SignatureKey.snk" />
     <None Include="SignaturePubKey.snk" />
     <Resource Include="Wiki\wiki.md" />

@@ -61,7 +61,7 @@ namespace COTG.Views
 				if(webZoom != value)
 				{
 					webZoom = value;
-					ShellPage.UpdateHtmlOffsets();
+					ShellPage.updateHtmlOffsets.Go(false);
 				}
 			}
 		}
@@ -1009,16 +1009,29 @@ namespace COTG.Views
 
 		}
 
-		private void LaunchTapped(object sender, RoutedEventArgs e)
+		private async void LaunchTapped(object sender, RoutedEventArgs e)
 		{
-			HideMe();
-			Windows.System.Launcher.LaunchUriAsync(new Uri($"{App.appLink}:launch?n=1"));
+			try
+			{
+				HideMe();
+				await Windows.System.Launcher.LaunchUriAsync(new Uri($"{App.appLink}:launch?n=1"));
+			}
+			catch(Exception ex)
+			{
+				LogEx(ex);
+			}
 		}
 
-		private void DisplayTapped(object sender,RoutedEventArgs e)
+		private async void DisplayTapped(object sender,RoutedEventArgs e)
 		{
-			Windows.System.Launcher.LaunchUriAsync(new Uri($"ms-settings:display"));
-
+			try
+			{
+				await Windows.System.Launcher.LaunchUriAsync(new Uri($"ms-settings:display"));
+			}
+			catch(Exception ex)
+			{
+				LogEx(ex);
+			}
 		}
 
 		public static async void ShowWhatsNew()

@@ -670,7 +670,7 @@ namespace COTG
 		//	renderTarget = new CanvasRenderTarget(canvas, (float)(clientSpan.X), (float)(clientSpan.Y), canvas.Dpi, Windows.Graphics.DirectX.DirectXPixelFormat.B8G8R8A8UIntNormalized, CanvasAlphaMode.Premultiplied);
 
 		//}
-		public static bool readyToLoad;
+		public static bool contentLoadingStarted;
 		public static Microsoft.Xna.Framework.Media.Song[] music;
 		//	bool inputInitialized;
 
@@ -682,7 +682,7 @@ namespace COTG
 			{
 				if(music == null)
 				{
-					if(!readyToLoad)
+					if(!contentLoadingStarted)
 						return;
 					music = new Song[musicCount];
 					for(int i = 0;i < musicCount;++i)
@@ -735,6 +735,8 @@ namespace COTG
 		{
 			try
 			{
+				contentLoadingStarted = true;
+
 				avaEffect = Content.Load<Effect>("Effects/Ava");
 				defaultEffect = EffectPass("AlphaBlend");
 				alphaAddEffect = EffectPass("AlphaAdd");
@@ -747,7 +749,7 @@ namespace COTG
 				noTextureEffect = EffectPass("NoTexture");
 				worldSpaceEffect = EffectPass("WorldSpace");
 
-				readyToLoad = true;
+				
 
 				using var srgb = new SRGBLoadScope();
 
@@ -2245,7 +2247,7 @@ namespace COTG
 						var city = City.GetBuild();
 						if(city != null)
 						{
-							var counts = city.GetTownHallAndBuildingCount();
+							var counts = city.GetTownHallAndBuildingCount(false);
 
 							DrawTextBox($"{counts.buildingCount}/{counts.townHallLevel * 10}",c,tipTextFormatRight,Color.White.Scale(alpha),(byte)(alpha * 192.0f).RoundToInt(),Layer.overlay,11,11,ConstantDepth,0,0.5f);
 						}

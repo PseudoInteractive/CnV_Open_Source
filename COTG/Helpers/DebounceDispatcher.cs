@@ -18,7 +18,7 @@ namespace COTG
 			public Func<Task> func;
 			public int debounceDelay = 250;
 			public int throttleDelay = 750;
-			public bool runOnUiThead;
+			public bool runOnUiThread;
 			int nextCall = Environment.TickCount;
 			
 //			public TaskCompletionSource<bool> complete;
@@ -110,7 +110,7 @@ namespace COTG
 						   
 						   state = State.running;
 						   
-						   if (runOnUiThead)
+						   if (runOnUiThread)
 							   await App.DispatchOnUIThreadTask(func).ConfigureAwait(false);
 						   else
 							   await func().ConfigureAwait(false);

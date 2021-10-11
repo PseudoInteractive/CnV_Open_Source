@@ -16,8 +16,7 @@
 	<x:Double x:Key="ContentDialogMaxHeight">800</x:Double>
 	<x:Double x:Key="TeachingTipMaxHeight">800</x:Double>
 	<x:Double x:Key="TeachingTipMaxWidth">680</x:Double>
-	<SolidColorBrush x:Key="HyperLinkBrush" Color="MediumPurple" />
-
+	<SolidColorBrush x:Key="HyperLinkBrush" Color="Red" />
 
 	<Style TargetType="Grid" >
 		<Setter Property="TabFocusNavigation" Value="Once" />
@@ -43,9 +42,9 @@
 		<Setter Property="FontFamily" Value="Tw Cen MT Condensed"/>
 		<Setter Property="FontSize" Value="{StaticResource SmallFontSize}" />
 	</Style>
-	<!--<Style TargetType="tk:MarkdownTextBlock">
-		<Setter Property="LinkForeground" Value="{StaticResource HyperLinkBrush}" />
-	</Style>-->
+	<Style TargetType="tk:MarkdownTextBlock">
+		<Setter Property="LinkForeground" Value="#FF8000FF" />
+	</Style>
 	<Style TargetType="Page">
 		<Setter Property="FontFamily" Value="Tw Cen MT Condensed"/>
 	</Style>
@@ -92,28 +91,28 @@
         <Setter Property="BorderThickness" Value="1" />
 		<Setter Property="Margin" Value="2"/>
 		<Setter Property="Padding" Value="4"/>
-        <Setter Property="BorderBrush" Value="{ThemeResource SystemControlBackgroundBaseMediumHighRevealBorderBrush}"/>
+        <Setter Property="BorderBrush" Value="{ThemeResource SystemControlBackgroundAccentRevealBorderBrush}"/>
     </Style>
 	<Style TargetType="StackPanel" x:Key="StackPanelReveal" >
         <Setter Property="BorderThickness" Value="1" />
 		<Setter Property="Margin" Value="4"/>
 		<Setter Property="Padding" Value="4"/>
-        <Setter Property="BorderBrush" Value="{ThemeResource SystemControlBackgroundBaseMediumHighRevealBorderBrush}"/>
+        <Setter Property="BorderBrush" Value="{ThemeResource SystemControlBackgroundAccentRevealBorderBrush}"/>
     </Style>
 	<Style TargetType="tk:Expander">
 		<Setter Property="BorderThickness" Value="1" />
 		<Setter Property="Margin" Value="4" />
-		<Setter Property="BorderBrush" Value="{ThemeResource SystemControlBackgroundBaseMediumHighRevealBorderBrush}"/>
+		<Setter Property="BorderBrush" Value="{ThemeResource SystemControlBackgroundAccentRevealBorderBrush}"/>
 	</Style>
 	<Style TargetType="TextBox">
 		<Setter Property="FontFamily" Value="Tw Cen MT Condensed"/>
 		<Setter Property="FontSize" Value="{StaticResource SmallFontSize}" />
-		<Setter Property="BorderBrush" Value="{ThemeResource SystemControlBackgroundBaseMediumHighRevealBorderBrush}"/>
+		<Setter Property="BorderBrush" Value="{ThemeResource SystemControlBackgroundAccentRevealBorderBrush}"/>
 	</Style>
 	<Style TargetType="TextBox" x:Key="TextBoxReveal" >
 		<Setter Property="FontFamily" Value="Tw Cen MT Condensed"/>
 		<Setter Property="FontSize" Value="{StaticResource MediumFontSize}" />
-		<Setter Property="BorderBrush" Value="{ThemeResource SystemControlBackgroundBaseMediumHighRevealBorderBrush}"/>
+		<Setter Property="BorderBrush" Value="{ThemeResource SystemControlBackgroundAccentRevealBorderBrush}"/>
     </Style>
     <Style x:Key="TextBlockSmall" TargetType="TextBlock">
         <Setter Property="FontFamily" Value="Tw Cen MT Condensed"/>
@@ -134,7 +133,7 @@
 		<Setter Property="FontSize" Value="{StaticResource SmallFontSize}" />
         <Setter Property="IsTextScaleFactorEnabled" Value="False"/>
 		<Setter Property="BorderThickness" Value="1" />
-        <Setter Property="BorderBrush" Value="{ThemeResource SystemControlBackgroundBaseMediumHighRevealBorderBrush}"/>       
+        <Setter Property="BorderBrush" Value="{ThemeResource SystemControlBackgroundAccentRevealBorderBrush}"/>       
     </Style>
     <Style x:Key="NumberBoxSmall" TargetType="winui:NumberBox">
 		<Setter Property="FontSize" Value="{StaticResource SmallFontSize}" />
@@ -144,7 +143,7 @@
 		<Setter Property="SmallChange" Value="1"/>
 		<Setter Property="LargeChange" Value="10"/>
 		<Setter Property="BorderThickness" Value="1" />
-        <Setter Property="BorderBrush" Value="{ThemeResource SystemControlBackgroundBaseMediumHighRevealBorderBrush}"/>
+        <Setter Property="BorderBrush" Value="{ThemeResource SystemControlBackgroundAccentRevealBorderBrush}"/>
         <Setter Property="AcceptsExpression" Value="True" />
 		<Setter Property="VerticalAlignment" Value="Center" />
 		<Setter Property="Margin" Value="2" />

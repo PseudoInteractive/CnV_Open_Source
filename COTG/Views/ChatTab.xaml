@@ -3,6 +3,7 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:COTG.Views"
+    xmlns:cotg="using:COTG"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:wuxdata="using:Microsoft.UI.Xaml.Data"
@@ -39,8 +40,8 @@ sent or received, and those values are bound in the DataTemplate.-->
 					<winui:HyperlinkButton x:Name="sender" Grid.Column="2" Foreground="{Binding Converter={StaticResource hyperlinkColorConverter}, Mode=OneTime}" VerticalAlignment="Center" HorizontalAlignment="Center" Content="{x:Bind player, Mode=OneTime}"  Tapped ="HyperlinkButton_Tapped" RightTapped="HyperlinkButton_RightTapped" FontSize="{ThemeResource ChatFontSize}"  Margin="2,0,4,0" Padding="2,0,4,0"  />
 					<winui:Image Grid.Column="1" Stretch="Fill" MaxHeight="{StaticResource ChatImageHeight}"  Source="{x:Bind avatar}" Margin="2,0,2,0" VerticalAlignment="Center"/>
 					<tk:MarkdownTextBlock Grid.Column="3" x:Name="message" Text="{x:Bind text,Mode=OneTime}"  FontSize="{StaticResource ChatFontSize}" Margin="0,0,0,0"  Padding="0,0,0,0"    
-                                               InlineCodeBackground="Black" VerticalAlignment="Center" TableCellPadding="0,0,0,0" IsTextSelectionEnabled="True"
-                                              TextWrapping="Wrap" LinkClicked="MarkdownTextBlock_LinkClicked"  />
+                                             InlineCodeBackground="Black" VerticalAlignment="Center" TableCellPadding="0,0,0,0" IsTextSelectionEnabled="True"
+                                              TextWrapping="Wrap" LinkClicked="{x:Bind cotg:Note.MarkDownLinkClicked}"  />
                     </Grid>
                 
             </DataTemplate>

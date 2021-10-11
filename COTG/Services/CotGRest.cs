@@ -236,8 +236,11 @@ namespace COTG.Services
 								"application/x-www-form-urlencoded");
 					//req.TransportInformation.
 					req.Content.Headers.TryAddWithoutValidation("Content-Encoding", JSClient.PlayerToken(pid));
-				//	req.Headers.Cookie.ParseAdd(JSClient.cookies);
-
+	//				if(JSClient.cookies!=null)
+	//				{
+	//					req.Headers["Cookies"] = JSClient.cookies;
+	////					req.Headers.Cookie.ParseAdd(JSClient.cookies);
+	//				}
 					//                req.Headers.Append("Sec-Fetch-Site", "same-origin");
 					//    req.Headers.Append("Sec-Fetch-Mode", "cors");
 					//    req.Headers.Append("Sec-Fetch-Dest", "empty");

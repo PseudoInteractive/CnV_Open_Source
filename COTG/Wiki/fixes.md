@@ -324,7 +324,9 @@
    - **New**
      - Buttons along sides of screen switch between various layouts
    - **Note**
-      - If the Web View is missing, please download and install this [Web Stuff](https://go.microsoft.com/fwlink/p/?LinkId=2124703)  
-
+     - If the Web View is missing, please download and install this [Web Stuff](https://go.microsoft.com/fwlink/p/?LinkId=2124703)  
+   - **Note**
+     - Some things are slow the first time you do them, for example clicking on an url in chat might take 5 seconds the first time.
+       - this may be because something is doing important stuff.
 ## Welcome ChuckoBuck to the dev team!
    - ChuckoBuck is a programmer, currently working on Discord integration.

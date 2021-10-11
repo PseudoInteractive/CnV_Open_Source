@@ -16,7 +16,7 @@
 			   Title="Settings"
 			   FullSizeDesired="True"
 			   UseSystemFocusVisuals="True"
-			   BorderBrush="{ThemeResource SystemControlBackgroundBaseMediumHighRevealBorderBrush}"
+			   BorderBrush="{ThemeResource SystemControlBackgroundAccentRevealBorderBrush}"
 			   Background="Black"
 			   Margin="4">
 	<ScrollViewer ZoomMode="Enabled">
@@ -292,7 +292,7 @@
 						   Style="{ThemeResource SubtitleTextBlockStyle}"
 						   Margin="4,4,4,4" />
 			<StackPanel Orientation="Vertical"
-						   Margin="4" BorderThickness="1" BorderBrush="{ThemeResource SystemControlBackgroundBaseMediumHighRevealBorderBrush}">
+						   Margin="4" BorderThickness="1" BorderBrush="{ThemeResource SystemControlBackgroundAccentRevealBorderBrush}">
 				
 					<Button Content="Update Citylists"
 						Click="UpdateCityLists"

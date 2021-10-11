@@ -182,7 +182,7 @@ namespace COTG.Views
 
 			return Task.CompletedTask;
 		}) {
-			runOnUiThead=true,
+			runOnUiThread=true,
 			debounceDelay=100,
 			throttleDelay=100 };
 
@@ -231,7 +231,7 @@ namespace COTG.Views
 
 		})
 		{
-			runOnUiThead=true,
+			runOnUiThread=true,
 			debounceDelay=100,
 			throttleDelay=100
 		};

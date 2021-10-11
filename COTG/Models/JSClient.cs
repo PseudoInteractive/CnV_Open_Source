@@ -492,12 +492,130 @@ namespace COTG
 				v.Close();
 			}
 		}
+		private static async void WebViewException(Exception ex)
+		{
+			Log(ex);
+			AAnalytics.Track("WebViewEx",new Dictionary<string,string>
+					   {{"Ex",ex.Message } });
+
+			if( await App.DoYesNoBox("Some is wrong with Webview","Download the webview?", cancel:null) == 1)
+			{
+				await Windows.System.Launcher.LaunchUriAsync(new Uri("https://go.microsoft.com/fwlink/p/?LinkId=2124703",UriKind.Absolute));
+			}
+			else
+			{
+				await App.DoYesNoBox("Some is wrong with Webview","Maybe Restart",yes:"Close",no:null,cancel:null);
+			}
+
+		}
+		private static async void CoreWebView2Initialized(WebView2 sender,CoreWebView2InitializedEventArgs _args)
+		{
+
+			try
+			{
+				if(_args.Exception is not null)
+				{
+					WebViewException(_args.Exception);
+					return;
+				}
+
+				coreWebView = view.CoreWebView2;
+				//			view.CharacterReceived +=View_CharacterReceived;
+				coreWebView.Settings.AreDevToolsEnabled=System.Diagnostics.Debugger.IsAttached;
+				//	coreWebView.Settings.UserAgent = userAgent;
+
+				coreWebView.Settings.IsWebMessageEnabled=true;
+				//	coreWebView.Settings.IsPasswordAutosaveEnabled=true;
+				coreWebView.Settings.IsScriptEnabled=true;
+				//			coreWebView.Settings.IsPinchZoomEnabled =false;
+				coreWebView.Settings.IsZoomControlEnabled=false;
+				coreWebView.Settings.AreDefaultScriptDialogsEnabled=true;
+				coreWebView.Settings.IsStatusBarEnabled=false;
+				coreWebView.Settings.IsBuiltInErrorPageEnabled=true;
+				coreWebView.Settings.AreHostObjectsAllowed=false;
+				//	coreWebView.Settings.AreBrowserAcceleratorKeysEnabled=false;
+				coreWebView.Settings.AreDefaultContextMenusEnabled=false;
+				coreWebView.Environment.NewBrowserVersionAvailable+=Environment_NewBrowserVersionAvailable;
+				//				coreWebView.Settings.AreBrowserAcceleratorKeysEnabled=false;
+				//coreWebView.AddWebResourceRequestedFilter("*jsfunctions/game.js",ResourceContext:CoreWebView2WebResourceContext.Script);
+				coreWebView.AddWebResourceRequestedFilter(jsFunctionMask,ResourceContext: CoreWebView2WebResourceContext.Script);
+				coreWebView.WebResourceRequested += View_WebResourceRequested;
+				coreWebView.WebMessageReceived +=CoreWebView_WebMessageReceived;
+				//	view.EffectiveViewportChanged += View_EffectiveViewportChanged;
+				//	view.AddHandler(WebView2.KeyDownEvent, new KeyEventHandler(webViewKeyDownHandler), true);
+				//	view.AddHandler(WebView2.PointerPressedEvent, new PointerEventHandler(pointerEventHandler), true);
+				//	view.UnsafeContentWarningDisplaying += View_UnsafeContentWarningDisplaying;
+				//	view.UnsupportedUriSchemeIdentified += View_UnsupportedUriSchemeIdentified;
+
+				//	view.UnviewableContentIdentified += View_UnviewableContentIdentified;
+				//	view.ScriptNotify += View_ScriptNotify;
+				//	view.DOMContentLoaded += View_DOMContentLoaded;
+				//	view.NavigationFailed += View_NavigationFailed;
+				//view.PointerEntered+=View_PointerEntered;
+				//view.PointerExited+=View_PointerExited;
+				//view.PointerMoved+=View_PointerMoved;
+				//view.PointerPressed+=View_PointerPressed;
+				//	view.KeyDown+=View_KeyDown;
+				//	view.PreviewKeyDown+=View_PreviewKeyDown;
+				view.NavigationStarting+=View_NavigationStarting;
+				view.NavigationCompleted+=View_NavigationCompleted; ;
+				//	view.NavigationCompleted+=View_NavigationCompleted;
+				coreWebView.PermissionRequested+=View_PermissionRequested; ;
+				coreWebView.NewWindowRequested+=CoreWebView_NewWindowRequested; ;
+				//	webViewBrush = new WebViewBrush() { Stretch = Stretch.Fill };
+				view.GotFocus += View_GotFocus;
+				view.LostFocus += View_LostFocus; ;
+
+				view.CoreWebView2.ProcessFailed+=CoreWebView2_ProcessFailed;
+
+				//   view.CacheMode = CacheMode.
+				//Grid.Se SetAlignLeftWithPanel(view, true);
+				//RelativePanel.SetAlignRightWithPanel(view, true);
+				///	RelativePanel.SetAlignTopWithPanel(view, true);
+				//		RelativePanel.SetAlignBottomWithPanel(view, true);
+				//if(isSub)
+				//{
+				//	// this is not really needed?  It gets updated later
+				//	httpsHost = new Uri($"https://w{world}.crownofthegods.com",UriKind.Absolute);
+				//	//       view.Source = new Uri($"https://w{world}.crownofthegods.com?s={subId}");
+				//}
+
+				// else
+				if(isSub)
+				{
+					Note.ShowTip("Loading Sub, please wait.");
+					ShellPage.WorkStart("Finding Sub.");
+					AAnalytics.Track("LaunchSub");
+
+					while(!AGame.contentLoadingStarted)
+					{
+						await Task.Delay(500);
+					}
+
+					view.Source = new Uri($"https://w{world}.crownofthegods.com?s=1",UriKind.Absolute);
+					ShellPage.WorkEnd("Finding Sub.");
+
+				}
+				else
+				{
+					view.Source = new Uri("https://www.crownofthegods.com/home.php",UriKind.Absolute);
+				}
+			}
+			catch(Exception ex)
+			{
+				WebViewException(ex);
+			}
+		}
 		internal static void Initialize(Microsoft.UI.Xaml.Controls.Grid panel,WebView2 _view)
 		{
-			
+			try
+			{
+
+				LoadJsStrings(); // let it run async
 
 
-			httpFilter = new();
+
+				httpFilter = new();
 			//	httpFilter.AutomaticDecompression = true;
 			//	httpFilter.AllowAutoRedirect = true;
 			//	httpFilter.UseProxy = false;
@@ -543,118 +661,8 @@ namespace COTG
 				//	}
 				//}
 			}
-			try
-			{
-				//var environment= await App.createWebEnvironmentTask;
-
 				view = _view;
-//				view.po
-				//{
-				//	//HorizontalAlignment = HorizontalAlignment.Stretch,
-				//	//VerticalAlignment = VerticalAlignment.Stretch,
-				//	//CacheMode=new BitmapCache()
-
-			//	view.CompositeMode = Microsoft.UI.Xaml.Media.ElementCompositeMode.SourceOver;
-				//	Name = "cotgView",
-				//	//Opacity = 0.5,
-				
-				//};
-				
-
-				//	var env =await App.createWebEnvironmentTask;
-				//	env.NewBrowserVersionAvailable+=Env_NewBrowserVersionAvailable;
-				view.CoreWebView2Initialized+=(_view, _args)=>{
-					if(_args.Exception is not null)
-					{
-						Log(_args.Exception);
-						AAnalytics.Track("WebViewEx",new Dictionary<string,string>
-					   {{"Ex",_args.Exception.Message } } );
-						Windows.System.Launcher.LaunchUriAsync(new("https://go.microsoft.com/fwlink/p/?LinkId=2124703",UriKind.Absolute));
-
-						return;
-					}
-					LoadJsStrings();
-					coreWebView = view.CoreWebView2;
-					//			view.CharacterReceived +=View_CharacterReceived;
-					coreWebView.Settings.AreDevToolsEnabled=System.Diagnostics.Debugger.IsAttached;
-					//	coreWebView.Settings.UserAgent = userAgent;
-
-					coreWebView.Settings.IsWebMessageEnabled=true;
-			//	coreWebView.Settings.IsPasswordAutosaveEnabled=true;
-				coreWebView.Settings.IsScriptEnabled=true;
-	//			coreWebView.Settings.IsPinchZoomEnabled =false;
-				coreWebView.Settings.IsZoomControlEnabled=false;
-				coreWebView.Settings.AreDefaultScriptDialogsEnabled=true;
-					coreWebView.Settings.IsStatusBarEnabled=false;
-					coreWebView.Settings.IsBuiltInErrorPageEnabled=true;
-					coreWebView.Settings.AreHostObjectsAllowed=false;
-		//	coreWebView.Settings.AreBrowserAcceleratorKeysEnabled=false;
-				coreWebView.Settings.AreDefaultContextMenusEnabled=false;
-				coreWebView.Environment.NewBrowserVersionAvailable+=Environment_NewBrowserVersionAvailable;
-//				coreWebView.Settings.AreBrowserAcceleratorKeysEnabled=false;
-//coreWebView.AddWebResourceRequestedFilter("*jsfunctions/game.js",ResourceContext:CoreWebView2WebResourceContext.Script);
-				coreWebView.AddWebResourceRequestedFilter(jsFunctionMask,ResourceContext: CoreWebView2WebResourceContext.Script);
-				coreWebView.WebResourceRequested += View_WebResourceRequested;
-				coreWebView.WebMessageReceived +=CoreWebView_WebMessageReceived;
-					//	view.EffectiveViewportChanged += View_EffectiveViewportChanged;
-					//	view.AddHandler(WebView2.KeyDownEvent, new KeyEventHandler(webViewKeyDownHandler), true);
-					//	view.AddHandler(WebView2.PointerPressedEvent, new PointerEventHandler(pointerEventHandler), true);
-					//	view.UnsafeContentWarningDisplaying += View_UnsafeContentWarningDisplaying;
-					//	view.UnsupportedUriSchemeIdentified += View_UnsupportedUriSchemeIdentified;
-
-					//	view.UnviewableContentIdentified += View_UnviewableContentIdentified;
-					//	view.ScriptNotify += View_ScriptNotify;
-					//	view.DOMContentLoaded += View_DOMContentLoaded;
-					//	view.NavigationFailed += View_NavigationFailed;
-					//view.PointerEntered+=View_PointerEntered;
-					//view.PointerExited+=View_PointerExited;
-					//view.PointerMoved+=View_PointerMoved;
-					//view.PointerPressed+=View_PointerPressed;
-				//	view.KeyDown+=View_KeyDown;
-				//	view.PreviewKeyDown+=View_PreviewKeyDown;
-				view.NavigationStarting+=View_NavigationStarting;
-				view.NavigationCompleted+=View_NavigationCompleted; ;
-				//	view.NavigationCompleted+=View_NavigationCompleted;
-				coreWebView.PermissionRequested+=View_PermissionRequested; ;
-				coreWebView.NewWindowRequested+=CoreWebView_NewWindowRequested; ;
-				//	webViewBrush = new WebViewBrush() { Stretch = Stretch.Fill };
-				view.GotFocus += View_GotFocus;
-				view.LostFocus += View_LostFocus; ;
-				
-				view.CoreWebView2.ProcessFailed+=CoreWebView2_ProcessFailed;
-				
-				//   view.CacheMode = CacheMode.
-				//Grid.Se SetAlignLeftWithPanel(view, true);
-				//RelativePanel.SetAlignRightWithPanel(view, true);
-				///	RelativePanel.SetAlignTopWithPanel(view, true);
-				//		RelativePanel.SetAlignBottomWithPanel(view, true);
-				if (isSub)
-				{
-
-					httpsHost = new Uri($"https://w{world}.crownofthegods.com",UriKind.Absolute);
-					//       view.Source = new Uri($"https://w{world}.crownofthegods.com?s={subId}");
-				}
-				
-				// else
-				view.Source = new Uri("https://www.crownofthegods.com/home.php",UriKind.Absolute);
-				if (isSub)
-				{
-					Note.ShowTip("Loading Sub, please wait.");
-					ShellPage.WorkStart("Finding Sub.");
-					Task.Delay(5000).ContinueWith(_ =>
-					{
-						AAnalytics.Track("LaunchSub");
-						App.DispatchOnUIThread(() => view.Source = new Uri($"https://w{world}.crownofthegods.com?s=1",UriKind.Absolute));
-						ShellPage.WorkEnd("Finding Sub.");
-					});
-				}
-				else
-				{
-					
-				}
-				};
-					//	App.SetupCoreWindowInputHooks();
-				
+				view.CoreWebView2Initialized+=CoreWebView2Initialized;
 				view.EnsureCoreWebView2Async();
 
 			}
@@ -663,11 +671,13 @@ namespace COTG
 				LogEx(e);
 			}
 
-			return;
+			
 
 
 
 		}
+
+		
 
 		//private static void View_KeyDown(object sender,Microsoft.UI.Xaml.Input.KeyRoutedEventArgs e)
 		//{
@@ -999,12 +1009,16 @@ namespace COTG
 						cookies = args.Request.Headers.GetHeader("Cookie");
 					    App.QueueOnUIThread(()=>
 						{
-							foreach(var s in cookies.Split(';',StringSplitOptions.RemoveEmptyEntries|StringSplitOptions.TrimEntries))
-							{
-								var vv= s.Split('=',StringSplitOptions.RemoveEmptyEntries|StringSplitOptions.TrimEntries);
-								Assert(vv.Length == 2);
-								httpFilter.CookieContainer.Add(new System.Net.Cookie(vv[0],vv[1],"/","crownofthegods.com"));
-								}
+							var cookieContainer = new CookieContainer();
+							cookieContainer.SetCookies(new Uri("https://crownofthegods.com"),cookies.Replace(';',','));
+
+							//foreach(var s in cookies.Split(';',StringSplitOptions.RemoveEmptyEntries|StringSplitOptions.TrimEntries))
+							//{
+							//	var vv= s.Split('=',StringSplitOptions.RemoveEmptyEntries|StringSplitOptions.TrimEntries);
+							//	Assert(vv.Length == 2);
+							//	cookieContainer.Add(new System.Net.Cookie(vv[0],vv[1],"/","crownofthegods.com"));
+							//}
+							httpFilter.CookieContainer = cookieContainer;//.SetCookies(new Uri("https://crownofthegods.com",UriKind.Absolute),cookies);
 						});
 					//						httpFilter.CookieContainer.SetCookies(new Uri("https://crownofthegods.com"),cookies));
 					using(var stream = new Windows.Storage.Streams.InMemoryRandomAccessStream())
@@ -2119,7 +2133,7 @@ private static async void ShowCouncillorsMissingDialog()
 
 
 					// once we have the world id we can load the background
-					AGame.LoadWorldBackground();
+					
 					try
 					{
 
@@ -2187,10 +2201,12 @@ private static async void ShowCouncillorsMissingDialog()
 
 
 						}
+						httpClient = new HttpClient(httpFilter);
+						httpClient.DefaultRequestVersion = HttpVersion.Version20;
 						//cookieManager = new HttpBaseProtocolFilter().CookieManager;
 						//  clientPool.CompleteAdding();
-						
 
+						AGame.LoadWorldBackground();
 
 					}
 					catch (Exception e)

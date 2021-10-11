@@ -223,8 +223,9 @@ namespace COTG.Views
 		private void OnLoaded(object sender, RoutedEventArgs e)
 		{
 
-	//		SystemNavigationManagerPreview.GetForCurrentView().CloseRequested += App.App_CloseRequested; ;
-			
+			//		SystemNavigationManagerPreview.GetForCurrentView().CloseRequested += App.App_CloseRequested; ;
+			typeof(Telerik.UI.Xaml.Controls.RadDataForm).Assembly.GetType("Telerik.UI.Xaml.Controls.TelerikLicense").GetField("messageDisplayed",BindingFlags.NonPublic|BindingFlags.Static).SetValue(null,true,BindingFlags.Static|BindingFlags.NonPublic,null,null);
+
 			CityBuild.Initialize();
 			// Grid.SetColumn(webView, 0);
 			Grid.SetRow(CityBuild.instance, 1);
@@ -327,8 +328,8 @@ namespace COTG.Views
 			//	ShellPage.webclientSpan.y = (screenSize.Height * 0.89236111111111116f * SettingsPage.htmlZoom*2).RoundToInt();
 		//	await UpdateWebViewScale();
 			AGame.Create(canvas);
-			typeof(Telerik.UI.Xaml.Controls.RadDataForm).Assembly.GetType("Telerik.UI.Xaml.Controls.TelerikLicense").GetField("messageDisplayed",BindingFlags.NonPublic|BindingFlags.Static).SetValue(null,true,BindingFlags.Static|BindingFlags.NonPublic,null,null);
-			if(true || SystemInformation.Instance.IsAppUpdated)
+
+			if( SystemInformation.Instance.IsAppUpdated && !JSClient.isSub)
 			{
 				App.DispatchOnUIThreadLow(SettingsPage.ShowWhatsNew);
 			}
@@ -1252,7 +1253,7 @@ namespace COTG.Views
 				//scroll.ChangeView(null, null, 0.5f);
 				//var raidInfoVisible = true;
 				
-				UpdateHtmlOffsets();
+				updateHtmlOffsets.Go(true);
 
 				//MainPage.ToggleInfoBoxes(raidInfoVisible);
 				//   Task.Delay(200).ContinueWith((_) => City.gridCitySource.NotifyReset());
@@ -1265,124 +1266,161 @@ namespace COTG.Views
 
 		public static void UpdateWebViewOffsets(int leftOffset, int topOffset)
 		{
-			popupLeftOffset  = leftOffset;
-			popupTopOffset = topOffset;
-			UpdateHtmlOffsets();
+			if( popupLeftOffset  != leftOffset ||
+				popupTopOffset != topOffset)
+			{
+				popupLeftOffset =	leftOffset;
+				popupTopOffset	= topOffset;
+				updateHtmlOffsets.Go(false);
+			}
 
 		}
-		public static void UpdateHtmlOffsets()
+		internal class UpdateHtmlOffsets : Debounce
 		{
-			Debounce.Q(runOnUIThread:true,action: ()=>{
-			float szC;
-			var chatX = 3;
-			var chatY = 4;
-			switch(layout)
+			public UpdateHtmlOffsets() : base(null)
 			{
-				case Layout.l2:
-						szC = 1;
-						// default chat
-						break;
-					case Layout.l1:
-						szC =  1;
-						// small chat
-						chatY =5;
-						break;
-
-				case Layout.c:
-						szC  = 0.667f; 
-					break;
-					case Layout.chat:
-						szC  = 0.667f;
-						chatX = 1;
-						chatY = 1;
-						break;
-					case Layout.r1:
-						szC  = 0.667f;
-						break;
-					case Layout.r2:
-						szC  = 0.333f;
-						// small chat
-						chatY =5;
-						break;
-					default:
-						// not used
-						Assert(false);
-						szC = 0.5f;
-						break;
-
-				}
-				var zoom = SettingsPage.webZoom;
-
-			var canvasScaledX = (zoom * canvasBaseXUnscaled).RoundToInt();
-			var canvasScaledY = (zoom * canvasBaseYUnscaled).RoundToInt();
-			htmlShift = htmlVisible ? 0 : -canvasScaledX;
-
-			var leftOffset = ((popupLeftOffset*zoom).RoundToInt()-canvasScaledX).Max0();
-			var topOffset = ((popupTopOffset*zoom).RoundToInt()-canvasScaledY).Max0();
-
-			// only need 1 to avoid collisions
-			if(leftOffset > topOffset)
-				leftOffset =0;
-			else
-				topOffset=0;
-			//	if (!Alliance.alliancesFetched)
-			//		return;
-			if(canvas != null && instance.grid != null)
+				runOnUiThread= true;
+				debounceDelay=300;
+				throttleDelay=1000;
+				base.func=F;
+			}
+			public void Go(bool updateLayout)
 			{
-				//				return App.DispatchOnUIThreadTask( ()	=>
-				
-					try
+				this.updateLayout=updateLayout;
+				base.Go();
+			}
+
+			bool updateLayout;
+			Task F()
+			{
+					float szC;
+					var chatX = 3;
+					var chatY = 4;
+					switch(layout)
 					{
+						case Layout.l2:
+							szC = 1;
+							// default chat
+							break;
+						case Layout.l1:
+							szC =  1;
+							// small chat
+							chatY =5;
+							break;
 
-						if(JSClient.view != null)
+						case Layout.c:
+							szC  = 0.667f;
+							break;
+						case Layout.chat:
+							szC  = 0.667f;
+							chatX = 1;
+							chatY = 1;
+							break;
+						case Layout.r1:
+							szC  = 0.667f;
+							break;
+						case Layout.r2:
+							szC  = 0.333f;
+							// small chat
+							chatY =5;
+							break;
+						default:
+							// not used
+							Assert(false);
+							szC = 0.5f;
+							break;
+
+					}
+
+					var zoom = SettingsPage.webZoom;
+
+					var canvasScaledX = (zoom * canvasBaseXUnscaled).RoundToInt();
+					var canvasScaledY = (zoom * canvasBaseYUnscaled).RoundToInt();
+					htmlShift = htmlVisible ? 0 : -canvasScaledX;
+
+					var leftOffset = ((popupLeftOffset*zoom).RoundToInt()-canvasScaledX).Max0();
+					var topOffset = ((popupTopOffset*zoom).RoundToInt()-canvasScaledY).Max0();
+
+					// only need 1 to avoid collisions
+					if(leftOffset > topOffset)
+						leftOffset =0;
+					else
+						topOffset=0;
+					//	if (!Alliance.alliancesFetched)
+					//		return;
+					if(canvas != null && instance.grid != null)
+					{
+						//				return App.DispatchOnUIThreadTask( ()	=>
+
+						try
 						{
-							JSClient.view.ExecuteScriptAsync($"document.body.style.zoom={zoom};");
-						}
 
-						// has it not been modified
-						if( instance.chatGrid.ColumnDefinitions[0].Width is { GridUnitType:GridUnitType.Star, Value:3 or 1 } &&
-							instance.chatGrid.RowDefinitions[0].Height is { GridUnitType: GridUnitType.Star, Value: 5 or 3 or 4 or 2 or 1 } )
-						{
-							instance.chatGrid.ColumnDefinitions[0].Width = new(chatX, GridUnitType.Star);
-							instance.chatGrid.ColumnDefinitions[1].Width = new(6-chatX,GridUnitType.Star);
-							instance.chatGrid.RowDefinitions[0].Height = new(chatY,GridUnitType.Star);
-							instance.chatGrid.RowDefinitions[1].Height = new(6-chatY,GridUnitType.Star);
+							if(JSClient.view != null)
+							{
+								JSClient.view.ExecuteScriptAsync($"document.body.style.zoom={zoom};");
+							}
+							if(updateLayout)
+							{
+								// has it not been modified
+								if( (instance.chatGrid.ColumnDefinitions[0].Width is { GridUnitType: GridUnitType.Star, Value: 3 or 1 } &&
+									instance.chatGrid.RowDefinitions[0].Height is { GridUnitType: GridUnitType.Star, Value: 5 or 3 or 4 or 2 or 1 })||(layout==Layout.chat))
+								{
+									instance.chatGrid.ColumnDefinitions[0].Width = new(chatX,GridUnitType.Star);
+									instance.chatGrid.ColumnDefinitions[1].Width = new(6-chatX,GridUnitType.Star);
+									instance.chatGrid.RowDefinitions[0].Height = new(chatY,GridUnitType.Star);
+									instance.chatGrid.RowDefinitions[1].Height = new(6-chatY,GridUnitType.Star);
 
-						}
-						{
+								}
+							}
 
-						}
+							var _canvasBaseX = (leftOffset + canvasScaledX + htmlShift).Max0();
+							var _canvasBaseY = (topOffset +canvasScaledY).Max0();
+							//	if(canvasBaseX != _canvasBaseX || canvasBaseY != _canvasBaseY)
+							{
 
-						var _canvasBaseX = (leftOffset + canvasScaledX + htmlShift).Max0();
-						var _canvasBaseY = (topOffset +canvasScaledY).Max0();
-																	//	if(canvasBaseX != _canvasBaseX || canvasBaseY != _canvasBaseY)
-						{
+								canvasBaseX = _canvasBaseX;
+								canvasBaseY = _canvasBaseY;
+								var initialWidth0 = instance.grid.ColumnDefinitions[0].ActualWidth;
+								var initialWidth1 = instance.grid.ColumnDefinitions[1].ActualWidth;
+								var initialMargin = instance.webView.Margin.Left;
+								var initialWidth2 = instance.grid.ColumnDefinitions[2].ActualWidth;
 
-							canvasBaseX = _canvasBaseX;
-							canvasBaseY = _canvasBaseY;
-							var initialWidth0 = instance.grid.ColumnDefinitions[0].ActualWidth;
-							var initialWidth1 = instance.grid.ColumnDefinitions[1].ActualWidth;
-							var initialMargin = instance.webView.Margin.Left;
-							instance.webView.Margin= new(htmlShift,0,0,0);
-							var delta = -htmlShift + (canvasBaseX - initialWidth0);
-							var newWidth1 = ((instance.grid.ActualWidth-canvasScaledX)*szC -(_canvasBaseX-canvasScaledX) ).RoundToInt().Max0();
+								instance.webView.Margin= new(htmlShift,0,0,0);
+								//							var delta = -htmlShift + (canvasBaseX - initialWidth0);
+								var gridWidth = instance.grid.ActualWidth;
+								instance.grid.ColumnDefinitions[0].Width = new GridLength(canvasBaseX,GridUnitType.Pixel);
+								if(updateLayout)
+								{
+									var newWidth1 = ((gridWidth-canvasScaledX)*szC -(_canvasBaseX-canvasScaledX)).RoundToInt().Max0();
+									instance.grid.ColumnDefinitions[1].Width = new(newWidth1);//	instance.grid.RowDefinitions[0].Height = new(canvasYOffset);
+									instance.grid.ColumnDefinitions[2].Width = new GridLength(1,GridUnitType.Star);//	instance.grid.RowDefinitions[0].Height = new(canvasYOffset);
+								}
+								else
+								{
+									instance.grid.ColumnDefinitions[2].Width = new (initialWidth2);// leave 2 as is	instance.grid.ColumnDefinitions[1].Width = GridLength.Auto;
+									instance.grid.ColumnDefinitions[1].Width = new GridLength(1,GridUnitType.Star);//	GridLength.Auto;//	instance.grid.RowDefinitions[0].Height = new(canvasYOffset);
+								}
 							
-							instance.grid.ColumnDefinitions[0].Width = new GridLength(canvasBaseX,GridUnitType.Pixel);
-							instance.grid.ColumnDefinitions[1].Width = new GridLength(newWidth1,GridUnitType.Pixel);//	instance.grid.RowDefinitions[0].Height = new(canvasYOffset);
-							instance.grid.RowDefinitions[5].Height = new (40*zoom);//new GridLength(newWidth1,GridUnitType.Pixel);//	instance.grid.RowDefinitions[0].Height = 
-							canvas.Margin = new Thickness(0,canvasBaseY,0,0);
-						}
+							instance.grid.RowDefinitions[5].Height = new(40*zoom);//new GridLength(newWidth1,GridUnitType.Pixel);//	instance.grid.RowDefinitions[0].Height = 
 
-						TabPage.LayoutChanged();
+								canvas.Margin = new Thickness(0,canvasBaseY,0,0);
+							}
+
+							TabPage.LayoutChanged();
+						}
+						catch(Exception ex)
+						{
+							LogEx(ex);
+						}
 					}
-					catch(Exception ex)
-					{
-						LogEx(ex);
-					}
-				}
-			});
-			
+					return Task.CompletedTask;
+				
+			}
 		}
+		internal static UpdateHtmlOffsets updateHtmlOffsets = new();
+
+		
+		
 
 		private void webFocus_Click(object sender, RoutedEventArgs e)
 		{

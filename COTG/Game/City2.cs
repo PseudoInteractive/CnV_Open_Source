@@ -29,14 +29,17 @@ namespace COTG.Game
 
 		public static int cachedCity;
 		static int postQueueBuildingCount = -1;
+		static int postQueueTownHallLevel = -1;
 		public  void BuildingsOrQueueChanged()
 		{
 			if(cachedCity==cid)
 			{
 				cachedCity = 0;
 				postQueueBuildingCount = -1;
+				postQueueTownHallLevel=-1;
 			}
 		}
+		
 		public Building[] postQueueBuildings
 		{
 			get
@@ -57,7 +60,7 @@ namespace COTG.Game
 				//
 				for (var i = 0; i < citySpotCount; ++i)
 				{
-					rv.DangerousGetReferenceAt(i) = buildings.DangerousGetReferenceAt(i);
+					rv[i] = buildings[i];
 				}
 				if (!CityBuild.isPlanner)
 				{
@@ -67,7 +70,7 @@ namespace COTG.Game
 					{
 						foreach (var q in buildQueue)
 						{
-							rv.DangerousGetReferenceAt(q.bspot) = q.Apply(rv.DangerousGetReferenceAt(q.bspot));
+							rv[q.bspot] = q.Apply(rv[q.bspot]);
 						}
 
 						if (ExtendedQueue.all.TryGetValue(City.build, out var bq))
@@ -77,7 +80,7 @@ namespace COTG.Game
 
 							for (int i = 0; i < count; ++i)
 							{
-								rv.DangerousGetReferenceAt(data[i].bspot) = data[i].Apply(rv.DangerousGetReferenceAt(data[i].bspot));
+								rv[data[i].bspot] = data[i].Apply(rv[data[i].bspot]);
 							}
 						}
 
@@ -85,11 +88,12 @@ namespace COTG.Game
 
 					}
 				}
+				
 				//postQueuebuildingsCache = rv;
 				return rv;
 			}
 		}
-		public int postQueueTownHallLevel => CityBuild.isPlanner switch { true => 10, _ => postQueueBuildings[bspotTownHall].bl };
+	//	public int postQueueTownHallLevel => CityBuild.isPlanner switch { true => 10, _ => postQueueBuildings[bspotTownHall].bl };
 
 		public int AnyHub(bool requestHub)
 		{
@@ -255,7 +259,7 @@ namespace COTG.Game
 					}
 					else
 					{
-						var counts = GetTownHallAndBuildingCount();
+						var counts = GetTownHallAndBuildingCount(true);
 						var usesSpot = !buildDef.isTower && bid != bidWall;
 						if ((counts.buildingCount == counts.townHallLevel * 10 && counts.townHallLevel < 10 && usesSpot) || buildDef.Thl > counts.townHallLevel)
 						{
@@ -600,7 +604,7 @@ namespace COTG.Game
 					}
 				}
 			}
-			var counts = GetTownHallAndBuildingCount();
+			var counts = GetTownHallAndBuildingCount(true);
 
 			// case 1:  nothing here, or res. if res, demo first, then Add building
 			if (b.id == 0 || b.isRes)

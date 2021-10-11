@@ -187,34 +187,38 @@ namespace COTG.Views
 			{
 				getBuildState = 1;
 				var js = await Post.SendForJson("overview/bcounc.php").ConfigureAwait(false);
-				var changes = new List<int>();
-				foreach (var ci in js.RootElement.EnumerateArray())
+				//var changes = new List<int>();
+				//var getCities = new List<Task>();
+				foreach(var ci in js.RootElement.EnumerateArray())
 				{
-
 					var cid = ci[0].GetAsInt();
 					var city = City.GetOrAddCity(cid);
 					var filter = city.testContinentAndTagFilter;
-					if (!city.buildingsLoaded && filter)
-					{
-						GetCity.Post(cid);
-						getBuildState = 2; // need to restart
-					}
+					if(!filter)
+						continue;
 
+					
+					
 					city.points = (ushort)ci[2].GetAsInt();
 					var isBuilding = (ci[4].GetAsFloat() != 0) || (city.buildStage == BuildStage.complete) || (city.buildStage == BuildStage.leave);
-					if (ci[3].GetAsFloat() != 0)
+					//if (ci[3].GetAsFloat() != 0)
+					//{
+					//	//	Log($"3!: {city.nameAndRemarks}");
+					//}
+					if(!city.buildingsLoaded )
 					{
-						//	Log($"3!: {city.nameAndRemarks}");
+						await GetCity.Post(cid);
+						city.OnPropertyChanged();
 					}
-					if (ci[5].GetAsFloat() != 0)
-					{
-						//	Log($"5!: {city.nameAndRemarks}");
-					}
+
+					//if(ci[5].GetAsFloat() != 0)
+					//{
+					//	//	Log($"5!: {city.nameAndRemarks}");
+					//}
 					if (isBuilding != city.isBuilding)
 					{
 						city.isBuilding = isBuilding;
-						if (filter)
-							changes.Add(city.cid);
+						city.OnPropertyChanged();
 					}
 
 					city.wood = ci[8].GetAsInt();
@@ -232,23 +236,9 @@ namespace COTG.Views
 
 
 				}
-				if (changes.Any())
-				{
+				
 
-							if (changes.Count > 8)
-							{
-								City.gridCitySource.NotifyReset();
-							}
-							else
-							{
-								foreach (var cid in changes)
-								{
-									var city = City.Get(cid);
-									city.OnPropertyChanged(nameof(city.isBuilding));
-								}
-							}
-						
-				}
+			
 		
 
 				if(firstTime==true)

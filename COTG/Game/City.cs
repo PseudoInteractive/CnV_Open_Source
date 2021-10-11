@@ -329,7 +329,7 @@ namespace COTG.Game
 			//buildQInSync = false;
 			Draw.CityView.ClearSelectedBuilding();
 			//	CityBuild.ClearAction();
-			BuildingsOrQueueChanged();
+			//BuildingsOrQueueChanged();
 
 			//if (CityBuild.menuOpen)
 			//{
@@ -877,6 +877,7 @@ namespace COTG.Game
 				{
 					commandSlots = 5;
 					isCastle = false;
+					var anyChanged = false;
 					if (eBd.ValueKind == JsonValueKind.Array && eBd.GetArrayLength() == citySpotCount)
 					{
 						if(object.ReferenceEquals(buildings , Emptybuildings) 	)
@@ -894,7 +895,11 @@ namespace COTG.Game
 							}
 							else
 							{
-								buildings[put] = new Building(bi, bl);
+								if(buildings[put].id != bi || buildings[put].bl != bl)
+								{
+									anyChanged=true;
+									buildings[put] = new Building(bi, bl);
+								}
 							}
 							if (bid == bidCastle)
 							{
@@ -908,9 +913,14 @@ namespace COTG.Game
 					{
 						Log("error BD bad");
 					}
-
+					
 					BuildingsOrQueueChanged();
-					UpdateBuildStage();
+					
+					if(anyChanged)
+					{
+						UpdateBuildStage();
+						OnPropertyChanged();
+					}
 				}
 				return true;
 			}
@@ -1603,32 +1613,27 @@ namespace COTG.Game
 		
 		public string dungeonsToggle =>  "+";
 
-		public bool isBuilding { get; internal set; }
+		public bool? isBuilding { get; internal set; }
 		public bool autoWalls;
 		public bool autoTowers;
 		public byte autobuildCabinLevel = (byte)SettingsPage.cottageLevel;
-		public byte buildingLimit;
-		public byte buildingCount;
+		public sbyte buildingCountCache=-1;
 		public bool wantCastle;
 		public bool wantSorcTower;
-	//	public int Buildings => buildingCount;
+		public int BuildingCountCache => buildingCountCache;
 
 		public BuildStage buildStage;
-		void SetBuildStage(BuildStage _stage, int _buildingLimit)
+		void SetBuildStage(BuildStage _stage)
 		{
 			buildStage = _stage;
-			buildingLimit = (byte)_buildingLimit;
-			if (_stage == BuildStage.complete || _stage == BuildStage.leave)
-				isBuilding = true;
 		}
 
-		void SetBuildStage(BuildInfo info) => SetBuildStage(info.stage, info.buildingLimit);
+		void SetBuildStage(BuildInfo info) => SetBuildStage(info.stage);
 		
 		public BuildingCount UpdateBuildStage()
 		{
 			var bc = GetBuildingCounts();
-			buildingCount = (byte)bc.buildings;
-			buildingLimit = (byte)bc.maxBuildings;
+			buildingCountCache = (sbyte)bc.buildingCount;
 			SetBuildStage(GetBuildStage(bc));
 			return bc;
 		}
@@ -1873,7 +1878,7 @@ namespace COTG.Game
 			public int storeHouses;
 			public int cabins;
 			public int townHallLevel;
-			public int buildings;
+			public int buildingCount;
 			public int sorcTowers;
 			public int sorcTowerLevel;
 			public int academies;
@@ -1896,7 +1901,7 @@ namespace COTG.Game
 			public int scoutpostCount;
 			public int unfinishedTowerCount;
 			internal int towerCount;
-			public readonly int maxBuildings => townHallLevel * 10;
+			public readonly int buildingLimit => townHallLevel * 10;
 
 			public int GetMainMilitaryBid()
 			{
@@ -1970,7 +1975,7 @@ namespace COTG.Game
 				}
 				else
 				{
-					++rv.buildings;
+					++rv.buildingCount;
 					if (bdef.isCabin)
 					{
 						++rv.cabins;
@@ -2071,7 +2076,7 @@ namespace COTG.Game
 				return new BuildInfo(BuildStage.noLayout, buildingLimit);
 
 
-			if (bc.buildings < 8)
+			if (bc.buildingCount < 8)
 				return new BuildInfo(BuildStage.setup, buildingLimit);
 
 			if ( bc.unfinishedCabins > 0)
@@ -2080,13 +2085,13 @@ namespace COTG.Game
 			{
 				return new BuildInfo(BuildStage.townHall, buildingLimit);
 			}
-			if (bc.cabins +4 >= bc.buildings )
+			if (bc.cabins +4 >= bc.buildingCount )
 			{
 				return new BuildInfo(BuildStage.cabinsDone,buildingLimit);
 			}
 
 
-			var underLimit = bc.buildings < buildingLimit;
+			var underLimit = bc.buildingCount < buildingLimit;
 			if (bc.cabins+2 >= SettingsPage.startCabinCount || underLimit )
 			{
 				if (bc.unfinishedBuildings > 0 || underLimit)
@@ -2095,7 +2100,7 @@ namespace COTG.Game
 					return new BuildInfo(BuildStage.preTeardown, buildingLimit);
 			}
 
-			if (bc.cabins > 0 || bc.buildings < 100 || !IsLayoutComplete(this) )
+			if (bc.cabins > 0 || bc.buildingCount < 100 || !IsLayoutComplete(this) )
 				return new BuildInfo(BuildStage.teardown,buildingLimit);
 
 			return new BuildInfo(BuildStage.complete,buildingLimit);
@@ -2111,34 +2116,29 @@ namespace COTG.Game
 			public int max => townHallLevel * 10;
 			public int count => buildingCount;
 		}
-		public TownHallAndBuildingCount GetTownHallAndBuildingCount()
+		public TownHallAndBuildingCount GetTownHallAndBuildingCount(bool forceUpdate)
 		{
-			if (postQueueBuildingCount < 0)
+			if ( (postQueueBuildingCount < 0 )||(cachedCity!=cid) )
 			{
-				postQueueBuildingCount = 0;
+				if(!forceUpdate && (cachedCity!=cid) )
+				{
+					return new TownHallAndBuildingCount() { townHallLevel = -1,buildingCount = -1 };
+				}
+				var bd = postQueueBuildings;
 				if(CityBuild.isPlanner)
 				{
-					var pb = GetLayoutBuildingCounts();
-					postQueueBuildingCount = pb.buildings;
+					// we need the above statement to refresh the cache
+					// we will use them later
+					bd = GetLayoutBuildings();
 				}
-				else
+				postQueueBuildingCount=0;
+				for(var i = 1;i < citySpotCount-1;++i)
 				{
-					foreach(var bi in postQueueBuildings)
-					{
-						if(bi.id == 0 || bi.bl == 0)
-							continue;
-						var bd = bi.def;
-						if(bd.isTower || bd.isWall)
-						{
-							continue;
-						}
-						if(bd.isTownHall)
-						{
-							continue;
-						}
+					var b = bd[i];
+					if(b.isTownHall)
+						postQueueTownHallLevel = b.bl;
+					else if(b.bl > 0 && !b.isTower )
 						++postQueueBuildingCount;
-					}
-
 				}
 			}
 			return new TownHallAndBuildingCount() { townHallLevel = postQueueTownHallLevel, buildingCount = postQueueBuildingCount };

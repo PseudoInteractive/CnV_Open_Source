@@ -177,8 +177,9 @@ namespace COTG.Draw
 						var cs = CityPointToQuad(cx,cy);
 
 						var dt = (animationT - animationOffsets[bspot]);
-						float blendT = ((dt)*0.325f).Frac();
-						
+						float blendT = ((dt)*0.333f).Frac();
+						var bonus = (dt).Abs().Saturate().Bezier(0,1,0,0);
+
 						if(cur.id==next.id)
 						{
 							if(next.bl != cur.bl)
@@ -218,12 +219,13 @@ namespace COTG.Draw
 									bl = cur.bl;
 									fontA = t.Bezier(1,1,0);// prior number out	
 								}
-								var bonus = (dt*0.5f).Abs().Saturate().Bezier(0,1,0,0);
-								DrawBuilding(iAlpha,zBase,fontScale*(1.0f + bonus*(1.0f/16.0f)),cs,cur,Layer.tileCity,(int)(alpha*fontA*255f),bl,bidOverride);
+								var z = bonus*(1.0f/64.0f);
+								DrawBuilding(iAlpha,z*0.25f,fontScale,cs,cur,Layer.tileCity,(int)(alpha*fontA*255f),bl,bidOverride);
 								if(blendOp > 0)
 								{
 									// upgrade
-									draw.AddQuad(Layer.tileCity + 2,(next.bl > cur.bl) ? decalBuildingValid : decalSelectEmpty,cs.c0,cs.c1,new Color(iAlpha,iAlpha,iAlpha,iAlpha / 2).Scale(blendOp),PlanetDepth,zHover+bonus*(1.0f/32.0f) );
+									
+									draw.AddQuad(Layer.tileCity + 2,(next.bl > cur.bl) ? decalBuildingValid : decalSelectEmpty,cs.c0,cs.c1,new Color(iAlpha,iAlpha,iAlpha,iAlpha / 2).Scale(blendOp),(z,z,z,z) );
 								}
 							}
 							else
@@ -259,13 +261,14 @@ namespace COTG.Draw
 								var t = (blendT - 0.25f) *(1.0f/0.75f); // building fades in, hammer fades out 1 seconds
 								blendOp = t.Bezier(1,1,0);
 							}
+							var z = bonus*(1.0f/64.0f);
 
 							if(blendOp > 0)
 							{
-								draw.AddQuad(Layer.tileCity + 2,blendMat,cs.c0,cs.c1,(new Color(iAlpha,iAlpha,iAlpha,iAlpha)).Scale(blendOp),PlanetDepth,zHover);
+								draw.AddQuad(Layer.tileCity + 2,blendMat,cs.c0,cs.c1,(new Color(iAlpha,iAlpha,iAlpha,iAlpha)).Scale(blendOp),(z,z,z,z) );
 							}
 
-							DrawBuilding(iAlpha,zBase,fontScale,cs,bd,Layer.tileCity,-1,-1,bidOverride);
+							DrawBuilding(iAlpha,z*0.25f,fontScale,cs,bd,Layer.tileCity,-1,-1,bidOverride);
 						}
 
 						// draw overlays
@@ -320,9 +323,9 @@ namespace COTG.Draw
 							var off = (AMath.BSpotToRandom((cx, cy)) + animationT * 0.3245f);
 							var cScale = new Vector2(off.Wave().Lerp(0.8f,1.0f),off.WaveC().Lerp(0.8f,1.0f));
 
-							draw.AddQuad(Layer.tileCity + 1,buildingShadows,_c0+shadowOffset,_c1+shadowOffset,new Vector2(u0,v0),new Vector2(u0 + duDt,v0 + dvDt),new Color(0,0,0,iAlpha*7/8).Scale(cScale),(zBase, zBase, zBase, zBase)); // shader does the z transform
+							draw.AddQuad(Layer.tileCity + 3,buildingShadows,_c0+shadowOffset,_c1+shadowOffset,new Vector2(u0,v0),new Vector2(u0 + duDt,v0 + dvDt),new Color(0,0,0,iAlpha*7/8).Scale(cScale),zZero); // shader does the z transform
 
-							draw.AddQuad(Layer.tileCity+2,buildingAtlas,_c0,_c1,new Vector2(u0,v0),new Vector2(u0 + duDt,v0 + dvDt),iAlpha.AlphaToAll().Scale(cScale),(zBase, zBase, zBase, zBase)); // shader does the z transform
+							draw.AddQuad(Layer.tileCity+4,buildingAtlas,_c0,_c1,new Vector2(u0,v0),new Vector2(u0 + duDt,v0 + dvDt),iAlpha.AlphaToAll().Scale(cScale),zZero); // shader does the z transform
 
 						}
 					}
@@ -522,13 +525,13 @@ namespace COTG.Draw
 				
 			}
 		}
-
+		static (float,float,float,float) zZero = (0,0,0,0);
 		public static void DrawSprite( (int x, int y) cc, Material mat, float animFreq)
 		{
 			var off = (animationT * animFreq);
 			var cScale = new Vector2(off.Wave().Lerp(0.8f, 1.0f), off.WaveC().Lerp(0.8f, 1.0f));
 			var cs = CityPointToQuad(cc.x, cc.y, 1.2f);
-			draw.AddQuad(Layer.tileCity + 2, mat, cs.c0, cs.c1, new Color( cityDrawAlpha, cityDrawAlpha, cityDrawAlpha, cityDrawAlpha / 2).Scale(cScale), PlanetDepth, zHover);
+			draw.AddQuad(Layer.tileCity + 2, mat, cs.c0, cs.c1, new Color( cityDrawAlpha, cityDrawAlpha, cityDrawAlpha, cityDrawAlpha / 2).Scale(cScale),zZero);
 		}
 
 		public static void DrawBuilding((int x, int y) cc,int iAlpha, int bid, float randomValue, Material overlay=null)
@@ -541,7 +544,7 @@ namespace COTG.Draw
 
 			var off = randomValue;
 			var cScale = new Vector2(off.Wave().Lerp(0.8f, 1.0f), off.WaveC().Lerp(0.8f, 1.0f));
-			draw.AddQuad(Layer.tileCity, buildingAtlas, cs.c0, cs.c1, new Vector2(u0, v0), new Vector2(u0 + duDt, v0 + dvDt), iAlpha.AlphaToAll().Scale(cScale), (zBase, zBase, zBase, zBase)); // shader does the z transform
+			draw.AddQuad(Layer.tileCity, buildingAtlas, cs.c0, cs.c1, new Vector2(u0, v0), new Vector2(u0 + duDt, v0 + dvDt), iAlpha.AlphaToAll().Scale(cScale),zZero); // shader does the z transform
 			if(overlay!=null)
 				draw.AddQuad(Layer.tileCity + 2, overlay, cs.c0, cs.c1, new Color(iAlpha, iAlpha, iAlpha, iAlpha / 2).Scale(cScale), PlanetDepth, zHover);
 		}

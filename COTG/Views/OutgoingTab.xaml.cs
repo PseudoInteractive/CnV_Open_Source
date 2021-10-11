@@ -137,7 +137,7 @@ namespace COTG.Views
 
 		public static bool IsVisible() => instance.isFocused;
 
-		static Debounce selChanged = new Debounce(SelChanged) { runOnUiThead = true };
+		static Debounce selChanged = new Debounce(SelChanged) { runOnUiThread = true };
 
 		static Task SelChanged()
 		{
