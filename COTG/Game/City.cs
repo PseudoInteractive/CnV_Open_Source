@@ -485,7 +485,7 @@ namespace COTG.Game
 		public string shareString
 		{
 			get => shareStringWithoutJson + shareStringJson;
-			set => SetShareString(value);
+		//	set => SetShareString(value);
 		}
 
 		//public byte[] plannerOverlay =null; // for building
@@ -938,13 +938,13 @@ namespace COTG.Game
 		int shareStringSavedHash;
 		bool shareStringLoaded; // this is only allowed to load once, or 0 times if switched to
 
-		public void SetShareString(string s, bool save=true)
+		public Task<bool> SetShareString(string s, bool save=true)
 		{
 			(var _layout, var _shareStringJson) = ShareString.SplitShareString(s);
-			SetShareString(_layout,_shareStringJson,save);
+			return SetShareString(_layout,_shareStringJson,save);
 		}
 		
-		public void SetShareString(string _layout,string _shareStringJson,bool save = true)
+		public Task<bool> SetShareString(string _layout,string _shareStringJson,bool save = true)
 		{
 			shareStringLoaded=true;
 			Assert(emptyLayout.GetHashCode() == emptyLayoutHashCode);
@@ -959,7 +959,7 @@ namespace COTG.Game
 				var hash = GetShareStringHash(_layout,_shareStringJson);
 
 				if(hash == shareStringSavedHash)
-					return;
+					return AUtil.completedTaskTrue;
 
 				shareStringJson = _shareStringJson;
 
@@ -973,7 +973,7 @@ namespace COTG.Game
 					layout = emptyLayout;
 				shareStringSavedHash = hash;
 				if(save)
-					SaveLayout();
+					return SaveLayout();
 				//	if (CityBuild.isPlanner)
 				//		ShareStringToBuildingsCache();
 				
@@ -982,6 +982,7 @@ namespace COTG.Game
 			{
 				LogEx(ex);
 			}
+			return AUtil.completedTaskTrue;
 		}
 		//public void SetShareStringJson(string s,bool save)
 		//{
@@ -1107,9 +1108,9 @@ namespace COTG.Game
 			//sb.Append("[/ShareString]");
 			return anyValid ? sb.ToString() : string.Empty;
 		}
-		public void SaveShareStringFromLayout()
+		public Task<bool> SaveShareStringFromLayout()
 		{
-			SetShareString( LayoutToShareString(layout,isOnWater), shareStringJson );
+			return SetShareString( LayoutToShareString(layout,isOnWater), shareStringJson );
 		}
 
 
@@ -1118,11 +1119,11 @@ namespace COTG.Game
 
 		//	public (string ss, string json) splitShareString => ShareString.SplitShareString(layout);
 
-		public async Task<bool> SaveLayout()
+		public  Task<bool> SaveLayout()
 		{
 			Note.Show("Saved layout");
 			var post = $"cid={cid}&a=" + System.Web.HttpUtility.UrlEncode(shareString, Encoding.UTF8);
-			return await Post.SendForOkay("/includes/pSs.php", post, World.CidToPlayerOrMe(cid));
+			return Post.SendForOkay("/includes/pSs.php", post, World.CidToPlayerOrMe(cid));
 		//	Assert(rv == true);
 		}
 
@@ -1209,7 +1210,7 @@ namespace COTG.Game
 		//  static List<City> dummies = new List<City>();
 
 
-		public void NotifyChange(string member = "")
+		public void NotifyChange(string member = null)
 		{
 		   OnPropertyChanged(member);
 			if (NearDefenseTab.IsVisible())

@@ -635,17 +635,19 @@ namespace COTG
 											city.BuildingsOrQueueChanged();
 											if(delay > 1000)
 												delay = 1000;
-										
 
+											App.DispatchOnUIThreadIdle( () => {
+												// sort queue
+												//			Post.Get("/includes/bqSt.php", $"cid={cid}",onlyHeaders:true).ContinueWith( (_) => Post.Get("/includes/poll2.php",$"world={JSClient.world}&cid={cid}&ai=0&ss={JSClient.ppss}",onlyHeaders:true) );
+
+
+												JSClient.coreWebView.PostWebMessageAsString("{\"poll\":100}");
+											});
 										}
+										Post.Get("/includes/bqSt.php",$"cid={cid}",onlyHeaders: true).ContinueWith(
+												(_) => Post.Get("/overview/mconv.php",$"a={cid}",onlyHeaders: true));
 										// sort
-										Debounce.Q(hash:cid*111+123, action: ()=>{
-											// sort queue
-											Post.Get("/includes/bqSt.php", $"a={cid}",onlyHeaders:true).ContinueWith( (_) => Post.Get("/includes/poll2.php",$"world={JSClient.world}&cid={cid}&ai=0&ss={JSClient.ppss}",onlyHeaders:true) );
-								//		{ world: E51, cid: cid, ai: allyiance, ss: s });  // /includes/poll2.php,onlyHeaders: true) );
-
-										App.DispatchOnUIThreadIdle(()=>JSClient.coreWebView.PostWebMessageAsString("{\"poll\":100}"));
-										});
+										
 
 										SaveNeeded();
 											if(delay > 1 * 30 * 1000)
@@ -717,7 +719,7 @@ namespace COTG
 							}
 							else
 							{
-								Trace($"No space {city} Q:{cotgQ.Length} XQ:{queue.Length}");
+								Trace($"No space {city} Q:{cotgQ.Length} XQ:{queue.Length} dt:{delay/1000}");
 							}
 						} // buildings loaded
 						else

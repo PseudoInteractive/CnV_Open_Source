@@ -645,8 +645,8 @@ namespace COTG
 			//  httpFilter.ServerCustomValidationRequested += HttpFilter_ServerCustomValidationRequested;
 			//		httpFilter.CacheControl.ReadBehavior = HttpCacheReadBehavior.NoCache;
 			//		httpFilter.CacheControl.WriteBehavior = HttpCacheWriteBehavior.NoCache;
-			httpClient = new HttpClient(httpFilter);
-			httpClient.DefaultRequestVersion = HttpVersion.Version20;
+			//httpClient = new HttpClient(httpFilter);
+			//httpClient.DefaultRequestVersion = HttpVersion.Version20;
 
 
 			//cookieManager = httpFilter.CookieManager;
@@ -801,6 +801,7 @@ namespace COTG
 			{
 				coreWebView.WebResourceRequested-=View_WebResourceRequested; //-= View_WebResourceRequested1;
 				coreWebView.RemoveWebResourceRequestedFilter(jsFunctionMask,ResourceContext: CoreWebView2WebResourceContext.Script);
+			
 			}
 		}
 
@@ -1009,16 +1010,7 @@ namespace COTG
 						cookies = args.Request.Headers.GetHeader("Cookie");
 					    App.QueueOnUIThread(()=>
 						{
-							var cookieContainer = new CookieContainer();
-							cookieContainer.SetCookies(new Uri("https://crownofthegods.com"),cookies.Replace(';',','));
-
-							//foreach(var s in cookies.Split(';',StringSplitOptions.RemoveEmptyEntries|StringSplitOptions.TrimEntries))
-							//{
-							//	var vv= s.Split('=',StringSplitOptions.RemoveEmptyEntries|StringSplitOptions.TrimEntries);
-							//	Assert(vv.Length == 2);
-							//	cookieContainer.Add(new System.Net.Cookie(vv[0],vv[1],"/","crownofthegods.com"));
-							//}
-							httpFilter.CookieContainer = cookieContainer;//.SetCookies(new Uri("https://crownofthegods.com",UriKind.Absolute),cookies);
+							SetupHttpFilter();
 						});
 					//						httpFilter.CookieContainer.SetCookies(new Uri("https://crownofthegods.com"),cookies));
 					using(var stream = new Windows.Storage.Streams.InMemoryRandomAccessStream())
@@ -2114,51 +2106,75 @@ private static async void ShowCouncillorsMissingDialog()
 					return;
 				}
 
-				var uri = new Uri(args.Uri);
-				//if (args.Uri.ToString().StartsWith("https://www.crownofthegods.com/?email"))
-				//{
-				//	GetMe(args.Uri);
-				//	return;
-				//}
-				Log($"Nav start {uri}");
+			var uri = new Uri(args.Uri);
+			//if (args.Uri.ToString().StartsWith("https://www.crownofthegods.com/?email"))
+			//{
+			//	GetMe(args.Uri);
+			//	return;
+			//}
+			Log($"Nav start {uri}");
+
+
+			var match = urlMatch.Match(uri.Host);
+
+			if(match.Groups.Count == 2 && (uri.LocalPath == "/" || uri.Fragment.Contains('&')))
+			{
+				//if (httpFilter != null)
+				//	Debug.Fatal();  // Todo
+				world = int.Parse(match.Groups[1].ToString());
+
+
+				// once we have the world id we can load the background
+
+
+					httpsHostString = $"https://{uri.Host}";
+					httpsHost = new Uri(httpsHostString);
+
+
+
+				
+					}
+			}
+			catch(Exception ex)
+			{
+				LogEx(ex);
+			}
+		}
+		static void SetupHttpFilter()
+		{
+			try
+			{
+			{
+				//if (httpFilter != null)
+				//	Debug.Fatal();  // Todo
 				
 
-				var match = urlMatch.Match(uri.Host);
+				// once we have the world id we can load the background
 
-				if (match.Groups.Count == 2 && (uri.LocalPath == "/" || uri.Fragment.Contains('&')))
+				try
 				{
-					//if (httpFilter != null)
-					//	Debug.Fatal();  // Todo
-					world = int.Parse(match.Groups[1].ToString());
 
-
-					// once we have the world id we can load the background
 					
-					try
-					{
+					//httpFilter = 
 
-						httpsHostString = $"https://{uri.Host}";
-						httpsHost = new Uri(httpsHostString);
-						//httpFilter = 
-						
-						//						if (subId == 0)
+					//						if (subId == 0)
 					//	httpFilter.CookieUsageBehavior = HttpCookieUsageBehavior.NoCookies;// HttpCookieUsageBehavior.Default;
-						//						httpFilter.IgnorableServerCertificateErrors.Add(Windows.Security.Cryptography.Certificates.ChainValidationResult.IncompleteChain);
-						//						                    httpFilter.IgnorableServerCertificateErrors.Add(Windows.Security.Cryptography.Certificates.ChainValidationResult.InvalidCertificateAuthorityPolicy);
-						//          httpFilter.IgnorableServerCertificateErrors.Add(Windows.Security.Cryptography.Certificates.ChainValidationResult.OtherErrors);
-						//      httpFilter.IgnorableServerCertificateErrors.Add(Windows.Security.Cryptography.Certificates.ChainValidationResult.BasicConstraintsError);
-						//     httpFilter.IgnorableServerCertificateErrors.Add(Windows.Security.Cryptography.Certificates.ChainValidationResult.InvalidSignature);
-						//					httpFilter.IgnorableServerCertificateErrors.Add(Windows.Security.Cryptography.Certificates.ChainValidationResult.RevocationInformationMissing);
-						//					httpFilter.IgnorableServerCertificateErrors.Add(Windows.Security.Cryptography.Certificates.ChainValidationResult.RevocationFailure);
-						//						                httpFilter.IgnorableServerCertificateErrors.Add(Windows.Security.Cryptography.Certificates.ChainValidationResult.Revoked);
-						//		httpFilter.IgnorableServerCertificateErrors.Add(Windows.Security.Cryptography.Certificates.ChainValidationResult.WrongUsage);
-						//		httpFilter.IgnorableServerCertificateErrors.Add(Windows.Security.Cryptography.Certificates.ChainValidationResult.Expired);
-						//		httpFilter.IgnorableServerCertificateErrors.Add(Windows.Security.Cryptography.Certificates.ChainValidationResult.Untrusted);
+					//						httpFilter.IgnorableServerCertificateErrors.Add(Windows.Security.Cryptography.Certificates.ChainValidationResult.IncompleteChain);
+					//						                    httpFilter.IgnorableServerCertificateErrors.Add(Windows.Security.Cryptography.Certificates.ChainValidationResult.InvalidCertificateAuthorityPolicy);
+					//          httpFilter.IgnorableServerCertificateErrors.Add(Windows.Security.Cryptography.Certificates.ChainValidationResult.OtherErrors);
+					//      httpFilter.IgnorableServerCertificateErrors.Add(Windows.Security.Cryptography.Certificates.ChainValidationResult.BasicConstraintsError);
+					//     httpFilter.IgnorableServerCertificateErrors.Add(Windows.Security.Cryptography.Certificates.ChainValidationResult.InvalidSignature);
+					//					httpFilter.IgnorableServerCertificateErrors.Add(Windows.Security.Cryptography.Certificates.ChainValidationResult.RevocationInformationMissing);
+					//					httpFilter.IgnorableServerCertificateErrors.Add(Windows.Security.Cryptography.Certificates.ChainValidationResult.RevocationFailure);
+					//						                httpFilter.IgnorableServerCertificateErrors.Add(Windows.Security.Cryptography.Certificates.ChainValidationResult.Revoked);
+					//		httpFilter.IgnorableServerCertificateErrors.Add(Windows.Security.Cryptography.Certificates.ChainValidationResult.WrongUsage);
+					//		httpFilter.IgnorableServerCertificateErrors.Add(Windows.Security.Cryptography.Certificates.ChainValidationResult.Expired);
+					//		httpFilter.IgnorableServerCertificateErrors.Add(Windows.Security.Cryptography.Certificates.ChainValidationResult.Untrusted);
 
-						//                        "Success", "Revoked", "InvalidSignature", "InvalidCertificateAuthorityPolicy", "BasicConstraintsError", "UnknownCriticalExtension", "OtherErrors""Success", "Revoked", "InvalidSignature", "InvalidCertificateAuthorityPolicy", "BasicConstraintsError", "UnknownCriticalExtension", "OtherErrors"
-						//                       httpFilter.AllowUI = true;
+					//                        "Success", "Revoked", "InvalidSignature", "InvalidCertificateAuthorityPolicy", "BasicConstraintsError", "UnknownCriticalExtension", "OtherErrors""Success", "Revoked", "InvalidSignature", "InvalidCertificateAuthorityPolicy", "BasicConstraintsError", "UnknownCriticalExtension", "OtherErrors"
+					//                       httpFilter.AllowUI = true;
 
-						//                        httpFilter.User.
+					//                        httpFilter.User.
 
 
 
@@ -2166,70 +2182,75 @@ private static async void ShowCouncillorsMissingDialog()
 
 					//	clientPool = new ConcurrentBag<HttpClient>();
 					//	for (int i = 0; i < clientCount; ++i)
-						{
+					{
 						//	httpClient = new HttpClient(httpFilter); // reset
-																		 //   httpClient = new HttpClient(); // reset
-																		 //                        var headers = httpClient.DefaultRequestHeaders;
-																		 //     headers.TryAppendWithoutValidation("Content-Type",@"application/x-www-form-urlencoded; charset=UTF-8");
-																		 // headers.TryAppendWithoutValidation("Accept-Encoding","gzip, deflate, br");
-																		 //                        headers.TryAppendWithoutValidation("X-Requested-With", "XMLHttpRequest");
-																		 //    headers.Accept.TryParseAdd(new HttpMediaTypeHeaderValue(@"application/json"));
-																		 //   headers.Add("Accept", @"*/*");
-																		 //                            httpClient.DefaultRequestHeaders.Clear();
+						//   httpClient = new HttpClient(); // reset
+						//                        var headers = httpClient.DefaultRequestHeaders;
+						//     headers.TryAppendWithoutValidation("Content-Type",@"application/x-www-form-urlencoded; charset=UTF-8");
+						// headers.TryAppendWithoutValidation("Accept-Encoding","gzip, deflate, br");
+						//                        headers.TryAppendWithoutValidation("X-Requested-With", "XMLHttpRequest");
+						//    headers.Accept.TryParseAdd(new HttpMediaTypeHeaderValue(@"application/json"));
+						//   headers.Add("Accept", @"*/*");
+						//                            httpClient.DefaultRequestHeaders.Clear();
 						//	httpClient.DefaultRequestHeaders.AcceptLanguage.TryParseAdd("en-US,en;q=0.5");
-							//    httpClient.DefaultRequestHeaders.UserAgent.ParseAdd(@"Mozilla/5.0 (Windows NT 10.0; Win64; x64; WebView2/3.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.102 Safari/537.36 Edge/18.19631");
-							//    httpClient.DefaultRequestHeaders.Add("Access-Control-Allow-Credentials", "true");
+						//    httpClient.DefaultRequestHeaders.UserAgent.ParseAdd(@"Mozilla/5.0 (Windows NT 10.0; Win64; x64; WebView2/3.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.102 Safari/537.36 Edge/18.19631");
+						//    httpClient.DefaultRequestHeaders.Add("Access-Control-Allow-Credentials", "true");
 						//	httpClient.DefaultRequestHeaders.Accept.TryParseAdd("*/*");
-							// httpClient.DefaultRequestHeaders.TryAppendWithoutValidation("X-Requested-With", "XMLHttpRequest");
-							//    httpClient.DefaultRequestHeaders.Referer = new Uri(httpsHost, "/overview.php?s=0");// new Uri($"https://w{world}.crownofthegods.com");
-							httpClient.DefaultRequestHeaders.Referrer = new Uri(httpsHost, $"/overview.php?s={subId}");// new Uri                                                       //             req.Headers.TryAppendWithoutValidation("Origin", $"https://w{world}.crownofthegods.com");
-							if (subId != 0)
-								httpClient.DefaultRequestHeaders.TryAddWithoutValidation("pp-ss", subId.ToString());
-
-							//httpClient.DefaultRequestHeaders.TryAppendWithoutValidation("Origin", $"https://w{world}.crownofthegods.com");
-							//   Log($"Built headers {httpClient.DefaultRequestHeaders.ToString() }");
-						//	httpFilter.CookieContainer.SetCookies(uri,cookies);// = coreWebView.CookieManager;
-
-								httpClient.DefaultRequestHeaders.UserAgent.TryParseAdd(userAgent);
+						// httpClient.DefaultRequestHeaders.TryAppendWithoutValidation("X-Requested-With", "XMLHttpRequest");
+						//    httpClient.DefaultRequestHeaders.Referer = new Uri(httpsHost, "/overview.php?s=0");// new Uri($"https://w{world}.crownofthegods.com");
+					
 							//httpClient.DefaultRequestHeaders.TryAppendWithoutValidation("Pragma", "no-cache");
+							var cookieContainer = new CookieContainer();
+							//cookieContainer.SetCookies(new Uri("https://crownofthegods.com"),cookies.Replace(';',','));
+
+							foreach(var s in cookies.Split(';',StringSplitOptions.RemoveEmptyEntries|StringSplitOptions.TrimEntries))
+							{
+								var vv = s.Split('=',StringSplitOptions.RemoveEmptyEntries|StringSplitOptions.TrimEntries);
+								Assert(vv.Length == 2);
+								cookieContainer.Add(new System.Net.Cookie(vv[0],vv[1],"/","crownofthegods.com"));
+							}
+
+							httpFilter.CookieContainer = cookieContainer;//.SetCookies(new Uri("https://crownofthegods.com",UriKind.Absolute),cookies);
 
 							//httpClient.DefaultRequestHeaders.TryAppendWithoutValidation("Sec-Fetch-Site", "same-origin");
 							//httpClient.DefaultRequestHeaders.TryAppendWithoutValidation("Sec-Fetch-Mode", "cors");
 							//httpClient.DefaultRequestHeaders.TryAppendWithoutValidation("Sec-Fetch-Dest", "empty");
-							
-						//	clientPool.Add(httpClient);
+
+							//	clientPool.Add(httpClient);
 
 
 						}
 						httpClient = new HttpClient(httpFilter);
-						httpClient.DefaultRequestVersion = HttpVersion.Version20;
+					httpClient.DefaultRequestVersion = HttpVersion.Version20;
+						httpClient.DefaultRequestHeaders.Referrer = new Uri(httpsHost,$"/overview.php?s={subId}");// new Uri                                                       //             req.Headers.TryAppendWithoutValidation("Origin", $"https://w{world}.crownofthegods.com");
+						if(subId != 0)
+							httpClient.DefaultRequestHeaders.TryAddWithoutValidation("pp-ss",subId.ToString());
+
+						//httpClient.DefaultRequestHeaders.TryAppendWithoutValidation("Origin", $"https://w{world}.crownofthegods.com");
+						//   Log($"Built headers {httpClient.DefaultRequestHeaders.ToString() }");
+						//	httpFilter.CookieContainer.SetCookies(uri,cookies);// = coreWebView.CookieManager;
+
+						httpClient.DefaultRequestHeaders.UserAgent.TryParseAdd(userAgent);
 						//cookieManager = new HttpBaseProtocolFilter().CookieManager;
 						//  clientPool.CompleteAdding();
 
 						AGame.LoadWorldBackground();
 
-					}
-					catch (Exception e)
-					{
-
-						LogEx(e);
-					}
-
 				}
-				else if (args.Uri.ToString().StartsWith( "https://www.crownofthegods.com"))
+				catch(Exception e)
 				{
-				//	if(!JSClient.isSub)
-					//	SetSessionCookie();
+
+					LogEx(e);
 				}
+
+			}
 			}
 			catch (Exception e)
 			{
 				LogEx(e);
-			}
-
-
-
-		}
+	
+	}
+}
 
 		static ConcurrentDictionary<string, BitmapImage> imageCache = new ConcurrentDictionary<string, BitmapImage>();
 	//	private static long gameMSAtStart;

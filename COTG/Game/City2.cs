@@ -255,7 +255,7 @@ namespace COTG.Game
 					{
 
 						layoutWritable[id] = BidToLayout(bid).c;
-						PlannerTab.BuildingsChanged(this);
+						await PlannerTab.BuildingsChanged(this);
 					}
 					else
 					{
@@ -360,7 +360,7 @@ namespace COTG.Game
 					if (isPlanner)
 					{
 						layoutWritable[id] = BidToLayout(0).c;
-						PlannerTab.BuildingsChanged(this);
+						await PlannerTab.BuildingsChanged(this);
 					}
 					else
 					{
@@ -982,13 +982,14 @@ namespace COTG.Game
 					if (!dryRun)
 					{
 						AUtil.Swap(ref bds[b], ref bds[a]);
+						var postBuildings = postQueueBuildings;
+						AUtil.Swap(ref postBuildings[b],ref postBuildings[a]);
+
 						{
 							rv = await Move(a, b);
 
 							//	await Task.Delay(200);
-
 							--Player.moveSlots;
-							BuildingsOrQueueChanged();
 							await Task.Delay(200);
 						}
 						
@@ -1004,8 +1005,8 @@ namespace COTG.Game
 
 				if (!dryRun)
 				{
-					layoutWritable[b] = layoutWritable[a];
-					PlannerTab.BuildingsChanged(this);
+					AUtil.Swap(ref layoutWritable[b], ref layoutWritable[a]);
+					await PlannerTab.BuildingsChanged(this);
 
 				}
 				return true;
@@ -1055,6 +1056,8 @@ namespace COTG.Game
 					{
 
 						AUtil.Swap(ref bds[a], ref bds[b]);
+						var postBuildings = postQueueBuildings;
+						AUtil.Swap(ref postBuildings[b],ref postBuildings[a]);
 
 						{
 							var scratch = FindAnyFreeSpot(a);
@@ -1073,7 +1076,7 @@ namespace COTG.Game
 								Note.Show("Failed to move for some reason?  Was the city building?");
 								return false;
 							}
-							BuildingsOrQueueChanged();
+							//BuildingsOrQueueChanged();
 							await Task.Delay(200);
 
 						}
@@ -1093,7 +1096,7 @@ namespace COTG.Game
 				if (!dryRun)
 				{
 					AUtil.Swap(ref layoutWritable[a], ref layoutWritable[b]);
-					PlannerTab.BuildingsChanged(this);
+					return await PlannerTab.BuildingsChanged(this);
 				}
 				return true;
 

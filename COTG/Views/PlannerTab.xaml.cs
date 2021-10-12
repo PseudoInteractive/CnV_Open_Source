@@ -28,6 +28,7 @@ namespace COTG.Views
 			{
 			//	await CityBuild._IsPlanner(true,false);
 				statsDirty = true;
+				PleaseRefresh.Go();
 			//	BuildingsChanged(City.GetBuild(),false);
 			}
 			else
@@ -369,19 +370,27 @@ namespace COTG.Views
 		}
 		public static Debounce PleaseRefresh = new (PlannerTab.UpdateStats) { runOnUiThread = true };
 
-		internal static void BuildingsChanged(City city, bool wasWritten=true)
+		internal static async Task<bool> BuildingsChanged(City city, bool wasWritten=true)
 		{
 			Assert(City.emptyLayout.GetHashCode() == City.emptyLayoutHashCode);
 
-			if(wasWritten)
-				city.SaveShareStringFromLayout();
+			//Assert(CityBuild.isPlanner);
 
-			city.BuildingsOrQueueChanged();
-			if(city.cid == City.build)
+			if( CityBuild.isPlanner)
 			{
-				statsDirty = true;
-				PleaseRefresh.Go();
+				
+				if(city.cid == City.build)
+				{
+					statsDirty = true;
+					PleaseRefresh.Go();
+				}
+				
 			}
+			if(wasWritten)
+			{
+				return await city.SaveShareStringFromLayout();
+			}
+			return true;
 		}
 
 		private void ShareStringClick(object sender, RoutedEventArgs e)
@@ -389,10 +398,8 @@ namespace COTG.Views
 			ShareString.Show(City.build);
 
 		}
-		public async Task Rotate(City city,bool center, bool outer)
+		public void Rotate(City city,bool center, bool outer)
 		{
-			Assert(CityBuild.isPlanner);
-			await CityBuild._IsPlanner(true);
 			//	if (layout == null)
 			//		return;
 			city.TouchLayoutForWrite();

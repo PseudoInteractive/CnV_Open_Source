@@ -121,9 +121,9 @@ namespace COTG.Game
 			PropertyChanged?.Invoke(this,new PropertyChangedEventArgs(members));
 		}
 
-		public void OnPropertyChanged(string members = "")
+		public void OnPropertyChanged(string members = null)
 		{
-			if(PropertyChanged is not null) ((IANotifyPropertyChanged)this).IOnPropertyChanged(null,(cid == focus || cid==build));
+			if(PropertyChanged is not null) ((IANotifyPropertyChanged)this).IOnPropertyChanged(null,(cid ==City.focus || cid ==City.build ));
 		}
 		public bool isFriend => Player.IsFriend(pid); // this is set if it is one of our cities or our ally cities that we can visit
 

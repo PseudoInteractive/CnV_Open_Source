@@ -216,15 +216,13 @@ namespace COTG.Services
 				//await JSClient.clientPoolSema.WaitAsync().ConfigureAwait(false);
 
 
-				//for (; ; )
-				//{
-				//	if (JSClient.clientPool.TryTake(out client))
-				//	{
-				//		break;
-				//	}
-				//	Assert(false);
-				//	await Task.Delay(128).ConfigureAwait(false);
-				//}
+				for (; ; )
+				{
+					if(JSClient.httpClient!=null)
+						break;
+					Assert(false);
+					await Task.Delay(128).ConfigureAwait(false);
+				}
 				//				HttpResponseMessage resp;
 				
 				var uri = new Uri(JSClient.httpsHost, localPath);

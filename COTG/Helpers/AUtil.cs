@@ -25,6 +25,8 @@ namespace COTG
 
 	public static partial class AUtil
 	{
+		public static Task<bool> completedTaskTrue = Task.FromResult(true);
+		public static Task<bool> completedTaskFalse = Task.FromResult(false);
 		public static Microsoft.Extensions.ObjectPool.StringBuilderPooledObjectPolicy stringBuilderPool = new() { InitialCapacity=2,MaximumRetainedCapacity=2};
 		public static object AsObject(this object a) => a;
 		

@@ -741,7 +741,7 @@ namespace COTG.Views
 					}
 				}
 
-				foreach (var bdi in build.postQueueBuildings)
+				foreach (var bdi in CityBuild.isPlanner ? build.GetLayoutBuildings() : build.postQueueBuildings)
 				{
 					var id = bdi.id;
 					if (id == 0 || !bdi.isBuilding)

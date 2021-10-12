@@ -221,13 +221,14 @@ namespace COTG.Game
 
 			}
 
-             city.NotifyChange(nameof(city.tsRaid));
+           
 			
             if(Raid.test)
             {
                 await Task.Delay(1000);
                 await city.SuperRaid();
             }
+			Task.Delay(2000).ContinueWith( _=> city.NotifyChange());
 			return true;
         }
 
