@@ -1121,7 +1121,7 @@ namespace COTG.Game
 
 		public  Task<bool> SaveLayout()
 		{
-			Note.Show("Saved layout");
+		//	Note.Show("Saved layout");
 			var post = $"cid={cid}&a=" + System.Web.HttpUtility.UrlEncode(shareString, Encoding.UTF8);
 			return Post.SendForOkay("/includes/pSs.php", post, World.CidToPlayerOrMe(cid));
 		//	Assert(rv == true);
@@ -1942,7 +1942,7 @@ namespace COTG.Game
 		public BuildingCount GetBuildingCounts(Building [] buildings )
 		{
 			BuildingCount rv = new();
-
+			int bspot=0;
 			foreach (var bd in buildings)
 			{
 				// not res or empty
@@ -1952,12 +1952,12 @@ namespace COTG.Game
 				var bid = bd.bid;
 				if (bid == bidCastle)
 					rv.hasCastle = true;
-				if (bdef.isTownHall)
+				if (bspot == bspotTownHall)
 				{
 					rv.townHallLevel = bd.bl;
 				}
 
-				else if (bdef.isWall)
+				else if (bspot == bspotWall)
 				{
 					rv.wallLevel = bd.bl;
 				}
@@ -2023,6 +2023,8 @@ namespace COTG.Game
 					++rv.shipyards;
 				else if (bid == bidBlacksmith)
 					++rv.blacksmiths;
+
+				++bspot;
 			}
 
 			//Log($"{rv.cabins} cabins, {rv.buildings} {rv.townHallLevel}");

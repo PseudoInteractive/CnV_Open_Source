@@ -195,6 +195,7 @@ namespace COTG.Views
 			instance = this;
 			InitializeComponent();
 			RequestedTheme = ElementTheme.Dark; // default theme
+			
 		}
 		public enum Layout
 		{

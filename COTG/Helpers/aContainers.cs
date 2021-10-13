@@ -52,8 +52,10 @@ namespace COTG
 			if(collectionChanges.Any())
 				ChangesDebounce.Go();
 			return Task.CompletedTask;
-
 		}
+
+
+
 		static Debounce ChangesDebounce = new(ProcessChanges) { runOnUiThread = true, debounceDelay=300,throttleDelay=1000}; 
 		
 

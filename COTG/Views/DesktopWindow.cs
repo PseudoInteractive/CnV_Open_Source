@@ -98,34 +98,34 @@ namespace COTG.Views
 
         public enum Placement { Center, TopLeftCorner, BottomLeftCorner } //Future: align to the top corner, etc..
 
-        public int Width
-        {
-            get
-            {
-                return DisplayInformation.ConvertPixelToEpx(_hwnd, GetWidthWin32(_hwnd));
-            }
-            set
-            {
-                SetWindowWidthWin32(_hwnd, DisplayInformation.ConvertEpxToPixel(_hwnd, value));
-            }
-        }
+        //public int Width
+        //{
+        //    get
+        //    {
+        //        return DisplayInformation.ConvertPixelToEpx(_hwnd, GetWidthWin32(_hwnd));
+        //    }
+        //    set
+        //    {
+        //        SetWindowWidthWin32(_hwnd, DisplayInformation.ConvertEpxToPixel(_hwnd, value));
+        //    }
+        //}
 
-        public int Height
-        {
-            get
-            {
-                return DisplayInformation.ConvertPixelToEpx(_hwnd,GetHeightWin32(_hwnd));
-            }
-            set
-            {
-                SetWindowHeightWin32(_hwnd, DisplayInformation.ConvertEpxToPixel(_hwnd, value));
-            }
-        }
+        //public int Height
+        //{
+        //    get
+        //    {
+        //        return DisplayInformation.ConvertPixelToEpx(_hwnd,GetHeightWin32(_hwnd));
+        //    }
+        //    set
+        //    {
+        //        SetWindowHeightWin32(_hwnd, DisplayInformation.ConvertEpxToPixel(_hwnd, value));
+        //    }
+        //}
         
-        public int MinWidth { get; set; } = -1;
-        public int MinHeight { get; set; } = -1;
-        public int MaxWidth { get; set; } = -1;
-        public int MaxHeight { get; set; } = -1;
+        //public int MinWidth { get; set; } = -1;
+        //public int MinHeight { get; set; } = -1;
+        //public int MaxWidth { get; set; } = -1;
+        //public int MaxHeight { get; set; } = -1;
 
         public bool IsClosing { get; set; }
 
@@ -169,20 +169,20 @@ namespace COTG.Views
             }
         }
 
-        public void SetWindowPlacement(int topExp, int leftExp)
-        {
-            SetWindowPlacementWin32(_hwnd, DisplayInformation.ConvertEpxToPixel(_hwnd, topExp),
-                                           DisplayInformation.ConvertEpxToPixel(_hwnd, leftExp));
-        }
+        //public void SetWindowPlacement(int topExp, int leftExp)
+        //{
+        //    SetWindowPlacementWin32(_hwnd, DisplayInformation.ConvertEpxToPixel(_hwnd, topExp),
+        //                                   DisplayInformation.ConvertEpxToPixel(_hwnd, leftExp));
+        //}
 
-        public WindowPosition GetWindowPosition()
-        {
-            //windowPosition comes in pixels(Win32), so you need to convert into epx
-            WindowPosition windowPosition = GetWindowPositionWin32(_hwnd);
+        //public WindowPosition GetWindowPosition()
+        //{
+        //    //windowPosition comes in pixels(Win32), so you need to convert into epx
+        //    WindowPosition windowPosition = GetWindowPositionWin32(_hwnd);
 
-            return new(DisplayInformation.ConvertPixelToEpx(_hwnd, windowPosition.Top),
-                       DisplayInformation.ConvertPixelToEpx(_hwnd, windowPosition.Left));
-        }
+        //    return new(DisplayInformation.ConvertPixelToEpx(_hwnd, windowPosition.Top),
+        //               DisplayInformation.ConvertPixelToEpx(_hwnd, windowPosition.Left));
+        //}
                 
         public string Icon
         {
@@ -341,14 +341,14 @@ namespace COTG.Views
         {
             switch (Msg)
             {
-                case PInvoke.User32.WindowMessage.WM_GETMINMAXINFO:
-                    MINMAXINFO minMaxInfo = Marshal.PtrToStructure<MINMAXINFO>(lParam);
-                    if (MinWidth >= 0) minMaxInfo.ptMinTrackSize.x = DisplayInformation.ConvertEpxToPixel(hWnd, MinWidth);
-                    if (MinHeight >= 0) minMaxInfo.ptMinTrackSize.y = DisplayInformation.ConvertEpxToPixel(hWnd, MinHeight);
-                    if (MaxWidth > 0) minMaxInfo.ptMaxTrackSize.x = DisplayInformation.ConvertEpxToPixel(hWnd, MaxWidth);
-                    if (MaxHeight > 0) minMaxInfo.ptMaxTrackSize.y = DisplayInformation.ConvertEpxToPixel(hWnd, MaxHeight);
-                    Marshal.StructureToPtr(minMaxInfo, lParam, true);
-                    break;
+                //case PInvoke.User32.WindowMessage.WM_GETMINMAXINFO:
+                //    MINMAXINFO minMaxInfo = Marshal.PtrToStructure<MINMAXINFO>(lParam);
+                //    if (MinWidth >= 0) minMaxInfo.ptMinTrackSize.x = DisplayInformation.ConvertEpxToPixel(hWnd, MinWidth);
+                //    if (MinHeight >= 0) minMaxInfo.ptMinTrackSize.y = DisplayInformation.ConvertEpxToPixel(hWnd, MinHeight);
+                //    if (MaxWidth > 0) minMaxInfo.ptMaxTrackSize.x = DisplayInformation.ConvertEpxToPixel(hWnd, MaxWidth);
+                //    if (MaxHeight > 0) minMaxInfo.ptMaxTrackSize.y = DisplayInformation.ConvertEpxToPixel(hWnd, MaxHeight);
+                //    Marshal.StructureToPtr(minMaxInfo, lParam, true);
+                //    break;
 
                 case PInvoke.User32.WindowMessage.WM_CLOSE:
 				//	Debug.Trace("Wm_CLOSE");
@@ -367,19 +367,19 @@ namespace COTG.Views
                 //        OnWindowMoving();
                 //    }
                 //    break;
-                case PInvoke.User32.WindowMessage.WM_SIZING:
-                    if (this.Sizing is not null)
-                    {
-                        OnWindowSizing();
-                    }
-                    break;
-                case PInvoke.User32.WindowMessage.WM_DPICHANGED:
-                    if(this.DpiChanged is not null)
-                    {
-                        uint dpi = HiWord(wParam);
-                        OnWindowDpiChanged((int)dpi);
-                    }
-                    break;
+                //case PInvoke.User32.WindowMessage.WM_SIZING:
+                //    if (this.Sizing is not null)
+                //    {
+                //        OnWindowSizing();
+                //    }
+                //    break;
+                //case PInvoke.User32.WindowMessage.WM_DPICHANGED:
+                //    if(this.DpiChanged is not null)
+                //    {
+                //        uint dpi = HiWord(wParam);
+                //        OnWindowDpiChanged((int)dpi);
+                //    }
+                //    break;
 				//case PInvoke.User32.WindowMessage.WM_DISPLAYCHANGE:
 				//    if (this.OrientationChanged is not null)
 				//    {
@@ -392,13 +392,13 @@ namespace COTG.Views
 				//    }
 				//    break;
 				////This don't work.
-				case PInvoke.User32.WindowMessage.WM_KEYDOWN:
-					if(this.KeyDown is not null)
-					{
-						int value = (int)wParam;
-						OnWindowKeyDown(value);
-					}
-					break;
+				//case PInvoke.User32.WindowMessage.WM_KEYDOWN:
+				//	if(this.KeyDown is not null)
+				//	{
+				//		int value = (int)wParam;
+				//		OnWindowKeyDown(value);
+				//	}
+				//	break;
 			}
             return CallWindowProc(oldWndProc, hWnd, Msg, wParam, lParam);
         }

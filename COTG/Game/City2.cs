@@ -28,7 +28,7 @@ namespace COTG.Game
 
 
 		public static int cachedCity;
-		static int postQueueBuildingCount = -1;
+		public static int postQueueBuildingCount = -1;
 		static int postQueueTownHallLevel = -1;
 		public  void BuildingsOrQueueChanged()
 		{

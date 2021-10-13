@@ -68,22 +68,16 @@
     <PackageReference Include="DSharpPlus" Version="4.1.0" />
     <PackageReference Include="DSharpPlus.CommandsNext" Version="4.1.0" />
     <PackageReference Include="Enums.NET" Version="4.0.0" />
-    <PackageReference Include="Grpc.Net.Client" Version="2.40.0" />
-    <PackageReference Include="MagicOnion.Client" Version="4.3.1" />
     <PackageReference Include="Microsoft.AppCenter.Analytics" Version="4.4.0" />
     <PackageReference Include="Microsoft.AppCenter.Crashes" Version="4.4.0" />
-    <PackageReference Include="Microsoft.DependencyValidation.Analyzers" Version="0.11.0" />
     <PackageReference Include="Microsoft.Extensions.ObjectPool" Version="6.0.0-rc.2.21480.10" />
-    <PackageReference Include="Microsoft.ProjectReunion" Version="0.8.4" />
-    <PackageReference Include="Microsoft.ProjectReunion.Foundation" Version="0.8.4" />
-    <PackageReference Include="Microsoft.ProjectReunion.WinUI" Version="0.8.4" />
+    <PackageReference Include="Microsoft.ProjectReunion" Version="0.8.5" />
     <PackageReference Include="Microsoft.Toolkit" Version="7.1.0" />
     <PackageReference Include="Microsoft.Toolkit.HighPerformance" Version="7.1.0" />
-    <PackageReference Include="Microsoft.Windows.CsWinRT" Version="1.3.5" />
+	<PackageReference Include="Microsoft.Windows.CsWinRT" Version="1.3.5" />
     <PackageReference Include="MonoGame.Content.Builder.Task" Version="3.8.1.1941-develop" />
     <PackageReference Include="Nito.AsyncEx.Coordination" Version="5.1.2" />
     <PackageReference Include="Nito.AsyncEx.Tasks" Version="5.1.2" />
-    <PackageReference Include="PInvoke.SHCore" Version="0.7.104" />
     <PackageReference Include="PlayFabAllSDK" Version="1.103.211012" />
     <PackageReference Include="SharpDX" Version="4.2.0" />
     <PackageReference Include="SharpDX.D3DCompiler" Version="4.2.0" />
@@ -96,8 +90,7 @@
     <PackageReference Include="System.Text.Json" Version="6.0.0-rc.2.21480.5" />
     <PackageReference Include="Telerik.WinUI.Controls.Trial" Version="0.5.0" />
     <PackageReference Include="ZString" Version="2.4.2" />
-	<PackageReference Include="PInvoke.User32" Version="0.7.104" />
-	<PackageReference Include="PInvoke.Kernel32" Version="0.7.104" />
+    <PackageReference Include="PInvoke.User32" Version="0.7.104" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="JS\funky" />
@@ -287,8 +280,8 @@
     <Compile Include="Views\ContinentTagFilter.xaml.cs">
       <DependentUpon>ContinentTagFilter.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\DesktopWindow.cs" />
-    <Compile Include="Views\DisplayInformation.cs" />
+	<Compile Include="Views\DesktopWindow.cs" />
+	<Compile Include="Views\DisplayInformation.cs" />
     <Compile Include="Views\DungeonView.xaml.cs">
       <DependentUpon>DungeonView.xaml</DependentUpon>
     </Compile>
@@ -605,6 +598,7 @@
     <None Remove="Package.appxmanifest" />
     <None Remove="Styles\CommandBar.xaml" />
     <None Remove="Wiki\fixes.md" />
+    <None Remove="Win32Native.txt" />
   </ItemGroup>
   <ItemGroup>
     <AppxManifest Include="Package.appxmanifest" />
@@ -691,6 +685,9 @@
   <ProjectExtensions />
   <ItemGroup>
     <Content Remove="cnvCover.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <AdditionalFiles Include="Win32Native.txt" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Content\Fonts\tra.fnt" />

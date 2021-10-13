@@ -5,11 +5,14 @@ using CommunityToolkit.WinUI.Helpers;
 using COTG.Helpers;
 using COTG.Services;
 
+using WinRT;
 using Microsoft.AppCenter;
 using Microsoft.AppCenter.Analytics;
 #if CRASHES
 using Microsoft.AppCenter.Crashes;
 #endif
+
+
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 //using Microsoft.UI.Xaml.Controls;
@@ -125,15 +128,14 @@ namespace COTG
 		public App()
 		{
 
-//			ShutdownMode= Shut
-
-
-
+			//			ShutdownMode= Shut
+			RequestedTheme = ApplicationTheme.Dark;
+	
 			//try
 			//{
 			//    {
 
-			//        ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.Maximized;
+			// ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.Maximized;
 			//    }
 			//}
 			//catch (Exception e)
@@ -182,10 +184,12 @@ namespace COTG
 					var t = DateTimeOffset.UtcNow;
 					var dt = t - activeStart;
 					activeStart = t;
+					Trace("Finished!1");
 
 					AAnalytics.Track("Background",new Dictionary<string,string> { { "time",dt.TotalSeconds.RoundToInt().ToString() } });
 					SystemInformation.Instance.AddToAppUptime(dt);
 					await t0;
+					Trace("Finished!");
 				}
 				catch(Exception ex)
 				{
@@ -392,7 +396,7 @@ namespace COTG
 				
 				window= new();
 				//	window.
-				
+
 				//var view = DisplayInformation.GetForCurrentView();
 				var uwpArgs = AppInstance.GetActivatedEventArgs();//args.UWPLaunchActivatedEventArgs;
 				if(uwpArgs.Kind == Windows.ApplicationModel.Activation.ActivationKind.Protocol) 
@@ -487,7 +491,7 @@ namespace COTG
 		private void Window_Closed(object sender,WindowEventArgs args)
 		{
 			Trace("Closed!");
-			Assert( state == State.closed);
+			Assert(state == State.closed);
 			SwitchToBackground();
 		}
 
@@ -523,8 +527,7 @@ namespace COTG
             this.DebugSettings.IsBindingTracingEnabled = false;
 #endif
 			var wasRunning = args.PreviousExecutionState == ApplicationExecutionState.Running || args.PreviousExecutionState == ApplicationExecutionState.Suspended;
-
-			if(!wasRunning)
+				if(!wasRunning)
 			{
 			//	var window = Window.Current;
 				window.VisibilityChanged += Window_VisibilityChanged;
@@ -536,11 +539,10 @@ namespace COTG
 			
 			if(wasRunning)
 				return;
-
 		//	window.Content.PreviewKeyUp+=Content_PreviewKeyUp;
 		//	window.Content.PreviewKeyDown+=Content_PreviewKeyDown; ;
 		//		window.KeyDown+=Window_KeyDown;
-				window.Maximize();
+						window.Maximize();
 
 				//			CoreApplication.MainView.HostedViewClosing+=MainView_HostedViewClosing; ;
 				//	CoreApplication.MainView.CoreWindow.Closed+=CoreWindow_Closed;
@@ -584,10 +586,7 @@ namespace COTG
 			}
 		}
 
-		private void Window_KeyDown(object sender,WindowKeyDownEventArgs e)
-		{
-//			Trace("KeyDown "+e.Key);
-		}
+	
 
 		//private void Window_Activated(object sender,WindowActivatedEventArgs args)
 		//{

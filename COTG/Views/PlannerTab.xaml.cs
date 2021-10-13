@@ -382,6 +382,7 @@ namespace COTG.Views
 				if(city.cid == City.build)
 				{
 					statsDirty = true;
+					City.postQueueBuildingCount=-1;
 					PleaseRefresh.Go();
 				}
 				

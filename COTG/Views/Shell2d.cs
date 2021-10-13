@@ -354,10 +354,10 @@ namespace COTG.Views
 			//	keyboardProxy.PointerWheelChanged+=KeyboardProxy_PointerWheelChanged;
 			canvas.PointerWheelChanged += KeyboardProxy_PointerWheelChanged;
 			//canvas.AddHandler(canvas.Children.Add(keyboardProxy);)
-//			GettingFocusEvent
-	//		keyboardProxy.AddHandler(GettingFocusEvent, KeyboardProxy_GettingFocus, true);
-	//		keyboardProxy.AddHandler(LostFocusEvent, KeyboardProxy_LostFocus, true);
-			
+			//			GettingFocusEvent
+			//		keyboardProxy.AddHandler(GettingFocusEvent, KeyboardProxy_GettingFocus, true);
+			//		keyboardProxy.AddHandler(LostFocusEvent, KeyboardProxy_LostFocus, true);
+		//	canvas.ProcessKeyboardAccelerators+=Canvas_ProcessKeyboardAccelerators;
 			//canvasHitTest = new Rectangle()
 			//{
 			//	Name="webDrawer",
@@ -381,7 +381,11 @@ namespace COTG.Views
 			return (canvas, null);
 		}
 
-	
+		private void Canvas_ProcessKeyboardAccelerators(UIElement sender,ProcessKeyboardAcceleratorEventArgs args)
+		{
+			Log($"Key!!Canvas {args.Key} {args}");
+		}
+
 		private void KeyboardProxy_PointerWheelChanged(object sender,PointerRoutedEventArgs e)
 		{
 			var pt = e.GetCurrentPoint(canvas);

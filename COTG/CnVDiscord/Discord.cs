@@ -24,7 +24,6 @@ using COTG.Services;
 
 using COTG.Helpers;
 using Microsoft.UI.Xaml.Media.Imaging;
-using MessagePack;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Exceptions;
 
