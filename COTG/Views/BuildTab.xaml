@@ -27,17 +27,13 @@
 
 		<tg:RadDataGrid x:Name="cityGrid"
 							x:FieldModifier="public"
-							ColumnResizeHandleDisplayMode="OnColumnHeaderActionFlyoutOpen"
-							ColumnDataOperationsMode="Flyout"
+			
 							Grid.Row="3"
+						ColumnResizeHandleDisplayMode="None"
+							ColumnDataOperationsMode="Inline"
 							IsTabStop="True"
 							TabFocusNavigation="Once"
-						AllowFocusOnInteraction="True"
-						ScrollViewer.ZoomMode="Enabled"
-						ScrollViewer.IsScrollInertiaEnabled="False"
-						ScrollViewer.IsVerticalScrollChainingEnabled="False"
-						ScrollViewer.IsZoomChainingEnabled="True"
-						
+					
 							UserGroupMode="Auto"
 							AlternationStep="2"
 							ItemsSource="{x:Bind game:City.gridCitySource, Mode=OneWay}"
@@ -68,11 +64,13 @@
 											Header="I"
 											SizeMode="Fixed"
 											Width="32"
+										CanUserResize="False"
 											winui:ToolTipService.ToolTip="Click to switch to this city"
 											 />
 				<tg:DataGridTextColumn PropertyName="nameAndRemarks"
 										   winui:ToolTipService.ToolTip="Click to raid from this city without switching cities (fast)"
 										   Header="Name"
+									   CanUserResize="True"
 										   CellContentStyle="{StaticResource LeftAlign}"
 										   SizeMode="Auto"
 										    />
@@ -84,49 +82,65 @@
 				<tg:DataGridTextColumn PropertyName="xy"
 										   winui:ToolTipService.ToolTip="Click to view this city"
 										   CellContentStyle="{StaticResource CenterAlignLink}"
-									    SizeMode="Auto"
+   										   SizeMode="Fixed"
+										CanUserResize="False"
+										  Width="64"
+
 										    />
 				<tg:DataGridNumericalColumn PropertyName="cont"
 												
 												CellContentStyle="{StaticResource CenterAlign}"
-												SizeMode="Auto"
+												SizeMode="Fixed"
+										CanUserResize="False"
+											Width="48"
 												 />
 				
 
 				<tg:DataGridBooleanColumn PropertyName="isBuilding"
 										   winui:ToolTipService.ToolTip="Building if checked, stalled if not"
 										   CellContentStyle="{StaticResource CenterAlignLink}"
-										   SizeMode="Auto"
+										CanUserResize="False"
+										   SizeMode="Fixed"
+										  Width="32"
 										    />
 				<tg:DataGridBooleanColumn PropertyName="AutoTowers"
 										   winui:ToolTipService.ToolTip="Towers are set to autobuild?"
-										   SizeMode="Auto"
+										CanUserResize="False"
+										   SizeMode="Fixed"
+										  Width="32"
 										    />
 				<tg:DataGridBooleanColumn PropertyName="AutoWalls"
 										   winui:ToolTipService.ToolTip="Walls are set to autobuild?"
-										  SizeMode="Auto"
+										CanUserResize="False"
+										   SizeMode="Fixed"
+										  Width="32"
 										    />
 				<!--<tg:DataGridTextColumn PropertyName="buildingStr"
 										   HeaderTip="Buildings"
 										   winui:ToolTipService.ToolTip="Number of buildings"
 										   CellContentStyle="{StaticResource CenterAlignLink}"
 										    />-->
-				<tg:DataGridNumericalColumn PropertyName="BuildingCountCache"
-											Header="Bldgs"
+				<tg:DataGridNumericalColumn PropertyName="Bldgs"
 										   winui:ToolTipService.ToolTip="May or may not include queued buildings"
 										   CellContentStyle="{StaticResource RightAlign}"
-											 SizeMode="Auto"
+										CanUserResize="False"
+											 SizeMode="Fixed"
+											Width="48"
 										    />
 				<tg:DataGridNumericalColumn PropertyName="points"
 												winui:ToolTipService.ToolTip="City score"
-												SizeMode="Auto"
+											 SizeMode="Fixed"
+											Width="56"
+										CanUserResize="False"
 												CellContentStyle="{StaticResource RightAlign}"
 												CellContentFormat="{}{0,6:N0}"
 												 />
 				<tg:DataGridNumericalColumn PropertyName="constructionSpeed"
 											Header="cs"
-												winui:ToolTipService.ToolTip="Construction Speed"
-												SizeMode="Auto"
+											 SizeMode="Fixed"
+											Width="56"
+										CanUserResize="False"
+													winui:ToolTipService.ToolTip="Construction Speed"
 												CellContentStyle="{StaticResource RightAlign}"
 												CellContentFormat="{}{0,4:N0}"
 												 />

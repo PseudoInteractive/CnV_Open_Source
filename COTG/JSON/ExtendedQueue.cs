@@ -247,6 +247,13 @@ namespace COTG
 		//{
 		//}
 		public static City cityQueueInUse; // only one city is processing at once
+		public static Debounce pollDebounce = new(RequstPoll) {debounceDelay=50,throttleDelay=1500,runOnUiThread=true};
+
+		static Task RequstPoll()
+		{
+			JSClient.coreWebView.PostWebMessageAsString("{\"poll\":100}");
+			return Task.CompletedTask;
+		}
 
 		public async void Process(int initialDelay = 1000)
 		{
@@ -292,6 +299,7 @@ namespace COTG
 							// process pending queue first if appropriate
 							//	ququeCount= City.buildQueue.count;
 							//	await City.buildQUpdated;
+							pollDebounce.Go();
 							//if (City.buildQInSync)
 							//{
 							//	queueValid = true;
@@ -635,21 +643,18 @@ namespace COTG
 											city.BuildingsOrQueueChanged();
 											if(delay > 1000)
 												delay = 1000;
-
-											App.DispatchOnUIThreadIdle( () => {
-												// sort queue
-												//			Post.Get("/includes/bqSt.php", $"cid={cid}",onlyHeaders:true).ContinueWith( (_) => Post.Get("/includes/poll2.php",$"world={JSClient.world}&cid={cid}&ai=0&ss={JSClient.ppss}",onlyHeaders:true) );
-
-
-												JSClient.coreWebView.PostWebMessageAsString("{\"poll\":100}");
-											});
+											App.DispatchOnUIThreadIdle( () => JSClient.coreWebView.PostWebMessageAsString("{\"poll\":200}") );
+											//	pollDebounce.Go();
 										}
-										Post.Get("/includes/bqSt.php",$"cid={cid}",onlyHeaders: true).ContinueWith(
-												(_) => Post.Get("/overview/mconv.php",$"a={cid}",onlyHeaders: true));
-										// sort
-										
+									//	Post.Get("/includes/bqSt.php",$"cid={cid}",onlyHeaders: true).ContinueWith(
+									//			(_) => Post.Get("/overview/mconv.php",$"a={cid}",onlyHeaders: true));
+									var js = await Post.SendForJson("/overview/mconv.php",$"a={cid}");
+								//	Log(js.RootElement);
 
-										SaveNeeded();
+			// sort
+
+
+			SaveNeeded();
 											if(delay > 1 * 30 * 1000)
 												delay = 1 * 30 * 1000;
 											// active city needs to update rapidly

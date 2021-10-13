@@ -61,7 +61,6 @@ namespace COTG.Views
             Assert(instance == null);
             instance = this;
             InitializeComponent();
-
 			
 			//dungeonGrid.ProcessTooltips();
 

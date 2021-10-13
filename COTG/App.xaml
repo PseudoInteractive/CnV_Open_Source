@@ -14,8 +14,8 @@
 				<ResourceDictionary Source="ms-appx:///Telerik.WinUI.Controls/Themes/Generic.xaml"/>
 				<ResourceDictionary Source="ms-appx:///Telerik.WinUI.Controls/DensityStyles/Compact.xaml" />
 				<ColorPaletteResources Accent="#FF361F70" 
-									   BaseHigh="#FFFFFFFF" BaseLow="#FF380E0E" BaseMedium="#FFA68484" BaseMediumHigh="#FFC1A2A2" BaseMediumLow="#FF6F4949" ChromeAltLow="#FFC1A2A2" ChromeBlackHigh="#FF000000" ChromeBlackLow="#FFC1A2A2" ChromeBlackMedium="#FF000000" ChromeBlackMediumLow="#FF000000" ChromeDisabledHigh="#FF380E0E" ChromeDisabledLow="#FFA68484" ChromeGray="#FF8A6767" ChromeHigh="#FF8A6767" ChromeLow="#FF2A0303" ChromeMedium="#FF2D0606" ChromeMediumLow="#FF340B0B" ChromeWhite="#FFFFFFFF" ListLow="#FF2D0606" ListMedium="#FF380E0E" 					
-					AltHigh="#B0100020" AltLow="#B0003000" AltMedium="#B0110030" AltMediumHigh="#B0102010" AltMediumLow="#B0050505"		 />
+									   BaseHigh="#FFFFFFFF" BaseLow="#FF380E0E" BaseMedium="#FFA68484" BaseMediumHigh="#FFC1A2A2" BaseMediumLow="#FF6F4949" ChromeAltLow="#FFC1A2A2" ChromeBlackHigh="#FF505050" ChromeBlackLow="#FFC1A2A2" ChromeBlackMedium="#FF303030" ChromeBlackMediumLow="#FF202020" ChromeDisabledHigh="#FF380E0E" ChromeDisabledLow="#FFA68484" ChromeGray="#FF8A6767" ChromeHigh="#FF8A6767" ChromeLow="#FF2A0303" ChromeMedium="#FF2D0606" ChromeMediumLow="#FF340B0B" ChromeWhite="#FFFFFFFF" ListLow="#FF2D0606" ListMedium="#FF380E0E" 					
+					AltHigh="#80200040" AltLow="#80003000" AltMedium="#80110030" AltMediumHigh="#80102010" AltMediumLow="#80051505"		 />
 				<ResourceDictionary>
 					<Color x:Key="SystemChromeAltMediumHighColor">#CC051A05</Color>
 					<Color x:Key="SystemChromeAltHighColor">#FF380E0E</Color>
@@ -31,7 +31,7 @@
 					<Color x:Key="SystemAccentColorLight1">#FF2B1A66</Color>
 					<Color x:Key="SystemAccentColorLight2">#FF21145B</Color>
 					<Color x:Key="SystemAccentColorLight3">#FF160F51</Color>
-					<Color x:Key="RegionColor">#FF051A05</Color>
+					<Color x:Key="RegionColor">#FF153A35</Color>
 					<SolidColorBrush x:Key="RegionBrush" Color="{StaticResource RegionColor}" />
 				</ResourceDictionary>
 

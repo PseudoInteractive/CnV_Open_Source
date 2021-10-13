@@ -16,7 +16,7 @@
 	<x:Double x:Key="ContentDialogMaxHeight">800</x:Double>
 	<x:Double x:Key="TeachingTipMaxHeight">800</x:Double>
 	<x:Double x:Key="TeachingTipMaxWidth">680</x:Double>
-	<SolidColorBrush x:Key="HyperLinkBrush" Color="Red" />
+	<SolidColorBrush x:Key="HyperLinkBrush" Color="#FFA080FF" />
 
 	<Style TargetType="Grid" >
 		<Setter Property="TabFocusNavigation" Value="Once" />

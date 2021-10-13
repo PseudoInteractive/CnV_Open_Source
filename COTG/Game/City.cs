@@ -1621,7 +1621,7 @@ namespace COTG.Game
 		public sbyte buildingCountCache=-1;
 		public bool wantCastle;
 		public bool wantSorcTower;
-		public int BuildingCountCache => buildingCountCache;
+		public int Bldgs => buildingCountCache; // for DataGrid
 
 		public BuildStage buildStage;
 		void SetBuildStage(BuildStage _stage)

@@ -71,7 +71,7 @@ namespace COTG.JSON
 
 		public static async void SetClosestHub(int cid)
 		{
-			SetTradeSettings(cid, autoFind: true,reqFilter:ResourceFilter._true, targetFilter: ResourceFilter._true);
+			SetTradeSettings(cid, autoFind: true,reqFilter:ResourceFilter._true,  targetFilter: (City.Get(cid).isHubOrStorage ? ResourceFilter._null:ResourceFilter._true));
 		}
 
 		public static async Task SetTradeSettings(int _cid, int ? sourceHub = null, ResourceFilter reqFilter = default, int? targetHub = null, ResourceFilter targetFilter = default,bool autoFind=false)

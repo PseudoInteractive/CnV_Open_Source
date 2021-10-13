@@ -1317,7 +1317,7 @@ namespace COTG.Views
 							chatY = 1;
 							break;
 						case Layout.r1:
-							szC  = 0.667f;
+							szC  = 0.56f;
 							break;
 						case Layout.r2:
 							szC  = 0.333f;

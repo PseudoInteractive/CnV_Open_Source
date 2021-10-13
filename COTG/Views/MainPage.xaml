@@ -28,12 +28,11 @@
 		<tg:RadDataGrid x:Name="cityGrid"
 					
 							x:FieldModifier="public"
-							ColumnResizeHandleDisplayMode="OnColumnHeaderActionFlyoutOpen"
-							ColumnDataOperationsMode="Flyout"
+							ColumnResizeHandleDisplayMode="None"
+							ColumnDataOperationsMode="Inline"
 							Grid.Row="3"
-						Loaded="DataGridLoaded"
+							Loaded="DataGridLoaded"
 							 GroupPanelPosition="Bottom"
-							TabFocusNavigation="Once"
 							UserGroupMode="Auto"
 							AlternationStep="2"
 							ItemsSource="{x:Bind game:City.gridCitySource, Mode=OneWay}"
@@ -46,6 +45,7 @@
 							FontSize="{StaticResource SmallFontSize}"
 							IsTextScaleFactorEnabled="False"
 							SelectionUnit="Row"
+						
 							Tag="Raid"
 							
 					
@@ -76,11 +76,15 @@
 										   CellContentStyle="{StaticResource CenterAlignLink}"
 										   SizeMode="Fixed"
 											Width="20"
+										   CanUserFilter="False"
+										CanUserResize="False"
 										   winui:ToolTipService.ToolTip="Tap to expend or collapse dungeons" />
 					<tg:DataGridImageColumn PropertyName="icon"
 											Header="I"
 											SizeMode="Fixed"
+										   CanUserFilter="False"
 											Width="32"
+										CanUserResize="False"
 											winui:ToolTipService.ToolTip="Click to switch to this city"
 											 />
 					<tg:DataGridTextColumn PropertyName="nameAndRemarks"
@@ -92,13 +96,18 @@
 					<tg:DataGridTextColumn PropertyName="xy"
 										   winui:ToolTipService.ToolTip="Click to view this city"
 										   CellContentStyle="{StaticResource CenterAlignLink}"
-										    SizeMode="Auto"
+										   CanUserFilter="False"
+											SizeMode="Fixed"
+											Width="48"
+										CanUserResize="False"
 										    />
 					<tg:DataGridNumericalColumn PropertyName="cont"
 												
 												CellContentStyle="{StaticResource CenterAlign}"
-												SizeMode="Auto"
-												 />
+												SizeMode="Fixed"
+											Width="48"
+										CanUserResize="False"
+											 />
 					<tg:DataGridNumericalColumn PropertyName="tsTotal"
 												CellContentStyle="{StaticResource RightAlign}"
 												winui:ToolTipService.ToolTip="TS enlisted in city"
@@ -129,6 +138,7 @@
 				<tg:DataGridTextColumn PropertyName="raidReturn"
 												winui:ToolTipService.ToolTip="Click here to bring troops home asap"
 												CellContentStyle="{StaticResource RightAlignLink}"
+										   CanUserFilter="False"
 												CellContentFormat="{}{0,6:N0}"
 												SizeMode="Auto"/>
 				<tg:DataGridNumericalColumn PropertyName="raidCarry"

@@ -27,6 +27,7 @@
                       IsTabStop="True"
                         FontSize="{StaticResource MediumFontSize}"
                       SelectionChanged="Tabs_SelectionChanged"
+				   CornerRadius="3"
 
                              CanDragTabs="True"
                              CanReorderTabs="True"
@@ -37,6 +38,7 @@
 		<winui:TabView.TabStripHeader>
 			<Grid x:Name="ShellTitlebarInset"  Background="{x:Null}" />
 		</winui:TabView.TabStripHeader>
+		
 		<winui:TabView.TabStripFooter>
 			<Grid x:Name="CustomDragRegion"  Background="{x:Null}">
 				<TextBlock x:Name="tip" x:FieldModifier="public" VerticalAlignment="Center" HorizontalAlignment="Center" TabFocusNavigation="Once" />
