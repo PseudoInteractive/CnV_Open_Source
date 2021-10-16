@@ -330,7 +330,7 @@ namespace COTG.Game
 			Draw.CityView.ClearSelectedBuilding();
 			//	CityBuild.ClearAction();
 			//BuildingsOrQueueChanged();
-
+			OnPropertyChanged();
 			//if (CityBuild.menuOpen)
 			//{
 			//	App.DispatchOnUIThreadSneakyLow(() =>
@@ -754,6 +754,7 @@ namespace COTG.Game
 							var changedSize = count!=priorLength;
 							if(changedSize)
 							{
+								Assert(count < buildQueue.v.Length);
 								buildQueue.Resize(count);
 							}
 							int put = 0;
@@ -1618,7 +1619,7 @@ namespace COTG.Game
 		public bool autoWalls;
 		public bool autoTowers;
 		public byte autobuildCabinLevel = (byte)SettingsPage.cottageLevel;
-		public sbyte buildingCountCache=-1;
+		public sbyte buildingCountCache = -1;
 		public bool wantCastle;
 		public bool wantSorcTower;
 		public int Bldgs => buildingCountCache; // for DataGrid
@@ -1626,7 +1627,22 @@ namespace COTG.Game
 		public BuildStage buildStage;
 		void SetBuildStage(BuildStage _stage)
 		{
-			buildStage = _stage;
+			if(	buildStage != _stage )
+			{
+				buildStage = _stage;
+				if(BuildTab.IsVisible())
+					OnPropertyChanged();
+			}
+		}
+		void SetBuildingCount(int _count)
+		{
+			var count = (sbyte)_count;
+			if(buildingCountCache != count)
+			{
+				buildingCountCache = count;
+				if(BuildTab.IsVisible())
+					OnPropertyChanged();
+			}
 		}
 
 		void SetBuildStage(BuildInfo info) => SetBuildStage(info.stage);
@@ -1634,7 +1650,7 @@ namespace COTG.Game
 		public BuildingCount UpdateBuildStage()
 		{
 			var bc = GetBuildingCounts();
-			buildingCountCache = (sbyte)bc.buildingCount;
+			SetBuildingCount(bc.buildingCount);
 			SetBuildStage(GetBuildStage(bc));
 			return bc;
 		}
@@ -1728,58 +1744,82 @@ namespace COTG.Game
 		//}
 
 
-	
 
+		public Building GetBuildingPostQueue(int bspot)
+		{
+			return GetBuildingPostQueue(bspot,buildQueue.span,this.GetExtendedBuildQueue());
+		}
 
 		// this is the actual building, ignores planner buildings
-		public Building GetBuildingPostQueue(int bspot, in DArray<BuildQueueItem> q)
+		public Building GetBuildingPostQueue(int bspot, in Span<BuildQueueItem> q0, in Span<BuildQueueItem> q1)
 		{
 			var rv = buildings[bspot];
-			if (q != null)
+			foreach(var i in q0)
 			{
-				foreach (var i in q)
+
+				if (i.bspot == bspot)
 				{
-					if (i.bspot == bspot)
-					{
-					 rv= i.Apply(rv);
-					}
+				 rv= i.Apply(rv);
 				}
 			}
+			foreach(var i in q1)
+			{
+
+				if(i.bspot == bspot)
+				{
+					rv= i.Apply(rv);
+				}
+			}
+
 			return rv;
 		}
-		public static void GetPostQueue(ref Building rv, int bspot, in BuildQueueItem[] q, int qSize)
+		public Building GetBuildingPostQueue(int bspot,in Span<BuildQueueItem> q0)
 		{
-			for (int i = 0; i < qSize; ++i)
+			var rv = buildings[bspot];
+			foreach(var i in q0)
 			{
-				if (q[i].bspot == bspot)
+
+				if(i.bspot == bspot)
 				{
-					rv = q[i].Apply(rv);
-					
+					rv= i.Apply(rv);
 				}
 			}
+			
+			return rv;
+		}
+		public static Building ApplyQueue(Building rv,int bspot,in Span<BuildQueueItem> q0)
+		{
+			foreach(var i in q0)
+			{
+				rv= i.Apply(rv);
+			}
+			return rv;
 		}
 
 		public (int max, int count) CountBuildingsWithoutQueue()
 		{
 			var max = -1;
 			var count = 0;
-			foreach (var bi in buildings)
+			var bds = buildings;
+			foreach(var bspot in CityBuild.buildingSpots)
 			{
+				var bi = bds[bspot];
 				if (bi.id == 0 || bi.bl == 0)
 					continue;
+#if DEBUG
 				var bd = bi.def;
 				if (bd.isTower || bd.isWall)
 				{
-					continue;
+					Assert(false);
 				}
 				if (bd.isTownHall)
 				{
-					max = bi.bl * 10;
-					continue;
+					Assert(false);
 				}
+#endif
 				++count;
 			}
-			return (max, count);
+			return (bds[bspotTownHall].bl*10, count);
 		}
 
 
@@ -1939,12 +1979,13 @@ namespace COTG.Game
 
 		public BuildingCount GetBuildingCounts() => GetBuildingCounts(postQueueBuildings );
 
-		public BuildingCount GetBuildingCounts(Building [] buildings )
+		public BuildingCount GetBuildingCounts(Building [] buildings, bool recurse=true )
 		{
 			BuildingCount rv = new();
-			int bspot=0;
-			foreach (var bd in buildings)
+			rv.wallLevel = buildings[0].bl;
+			for(int bspot = 2;bspot<citySpotCount-2;++bspot)
 			{
+				var bd = buildings[bspot];
 				// not res or empty
 				if (!bd.isBuilding)
 					continue;
@@ -1956,10 +1997,9 @@ namespace COTG.Game
 				{
 					rv.townHallLevel = bd.bl;
 				}
-
 				else if (bspot == bspotWall)
 				{
-					rv.wallLevel = bd.bl;
+					Assert(false);
 				}
 				else if (bdef.isTower )
 				{
@@ -1976,6 +2016,8 @@ namespace COTG.Game
 				}
 				else
 				{
+					Assert(bd.requiresBuildingSlot);
+					Assert(bd.id != 0);
 					++rv.buildingCount;
 					if (bdef.isCabin)
 					{
@@ -2024,9 +2066,20 @@ namespace COTG.Game
 				else if (bid == bidBlacksmith)
 					++rv.blacksmiths;
 
-				++bspot;
+				
 			}
-
+			//if(rv.buildingCount == 42)
+			//{
+			//	Trace("wtf");
+			//}
+			//if(rv.buildingCount > 100)
+			//{
+			//	Trace("wtf2");
+			//	if(recurse)
+			//	{
+			//		var rv2 = GetBuildingCounts(buildings,false);
+			//	}
+			//}
 			//Log($"{rv.cabins} cabins, {rv.buildings} {rv.townHallLevel}");
 			return rv;
 		}
@@ -2134,15 +2187,22 @@ namespace COTG.Game
 					// we will use them later
 					bd = GetLayoutBuildings();
 				}
-				postQueueBuildingCount=0;
+				var count = 0;
+
 				for(var i = 1;i < citySpotCount-1;++i)
 				{
 					var b = bd[i];
-					if(b.isTownHall)
-						postQueueTownHallLevel = b.bl;
-					else if(b.bl > 0 && !b.isTower )
-						++postQueueBuildingCount;
+					if(i == bspotTownHall)
+					{
+					 // nothing
+					}
+					else if(b.bl > 0 && !b.isTower)
+						++count;
 				}
+				postQueueBuildingCount= count;
+				SetBuildingCount(count);
+
+				postQueueTownHallLevel  = bd[bspotTownHall].bl;
 			}
 			return new TownHallAndBuildingCount() { townHallLevel = postQueueTownHallLevel, buildingCount = postQueueBuildingCount };
 		}

@@ -39,7 +39,6 @@
 								 TabFocusNavigation="Once"
 								 Loaded="DataGridLoaded"
                        ColumnResizeHandleDisplayMode="OnColumnHeaderActionFlyoutOpen"
-                                    ColumnDataOperationsMode="Flyout"
                         PointerPressed="gridPointerPress"
 				        ItemsSource="{x:Bind spotMRU, Mode=OneWay}"
 													

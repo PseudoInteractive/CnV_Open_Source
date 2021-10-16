@@ -137,13 +137,11 @@
     <value>TwoPaneView</value>
     <comment>Navigation view item name for TwoPaneView</comment>
   </data>
-	<data name="DefenseTitle.Text"
-		  xml:space="preserve">
+  <data name="DefenseTitle.Text" xml:space="preserve">
     <value>Defense</value>
     <comment>Title for DefensePaneViewPage</comment>
   </data>
-	<data name="Shell_Defense.Content"
-		  xml:space="preserve">
+  <data name="Shell_Defense.Content" xml:space="preserve">
     <value>Defense Report History</value>
     <comment>Incoming Report History</comment>
   </data>
@@ -171,7 +169,7 @@
     <value>retry</value>
     <comment>Retry button for WebView</comment>
   </data>
-    <data name="WebView_BrowserBackButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">    
+  <data name="WebView_BrowserBackButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
     <value>Back</value>
     <comment>WebView back button automation name property for WebView</comment>
   </data>
@@ -231,11 +229,11 @@
     <value>Light</value>
     <comment>Light theme text for Settings</comment>
   </data>
-  <data name="ExceptionEnumToBooleanConverterValueMustBeAnEnum" xml:space="preserve">   
+  <data name="ExceptionEnumToBooleanConverterValueMustBeAnEnum" xml:space="preserve">
     <value>value must be an Enum!</value>
     <comment>Value must be an Enum in enum to boolean converter</comment>
   </data>
-  <data name="ExceptionEnumToBooleanConverterParameterMustBeAnEnumName" xml:space="preserve">   
+  <data name="ExceptionEnumToBooleanConverterParameterMustBeAnEnumName" xml:space="preserve">
     <value>parameter must be an Enum name!</value>
     <comment>Parameter must be an Enum name in enum to boolean converter</comment>
   </data>
@@ -332,25 +330,20 @@ Suspendisse dui purus, scelerisque at, vulputate vitae, pretium mattis, nunc. Ma
     <value>Log in</value>
     <comment>Shell LogIn button automation name property</comment>
   </data>
-    <data name="Shell_LogIn.Text" xml:space="preserve">
+  <data name="Shell_LogIn.Text" xml:space="preserve">
     <value>Log in</value>
-    <comment></comment>
   </data>
   <data name="Shell_LogOut.Content" xml:space="preserve">
     <value>Log out</value>
-    <comment></comment>
   </data>
   <data name="DialogAuthenticationTitle" xml:space="preserve">
     <value>Application Authentication</value>
-    <comment></comment>
   </data>
   <data name="DialogNoNetworkAvailableContent" xml:space="preserve">
     <value>ApplicatioThere is no internet connection, please connect to the internet and try again.</value>
-    <comment></comment>
   </data>
   <data name="DialogStatusUnknownErrorContent" xml:space="preserve">
     <value>Something went wrong during the login, please try again.</value>
-    <comment></comment>
   </data>
   <data name="Settings_User.Text" xml:space="preserve">
     <value>User</value>

@@ -33,6 +33,7 @@
 							Grid.Row="3"
 							Loaded="DataGridLoaded"
 							 GroupPanelPosition="Bottom"
+						FrozenColumnCount="3"
 							UserGroupMode="Auto"
 							AlternationStep="2"
 							ItemsSource="{x:Bind game:City.gridCitySource, Mode=OneWay}"

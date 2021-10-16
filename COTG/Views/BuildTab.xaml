@@ -33,21 +33,21 @@
 							ColumnDataOperationsMode="Inline"
 							IsTabStop="True"
 							TabFocusNavigation="Once"
-					
+					FrozenColumnCount="2"
 							UserGroupMode="Auto"
 							AlternationStep="2"
 							ItemsSource="{x:Bind game:City.gridCitySource, Mode=OneWay}"
 							AutoGenerateColumns="False"
 							SelectionMode="Extended"
 							CanUserChooseColumns="True"
-							RowHeight="{StaticResource GridRowHeight}"
 							UserFilterMode="Auto"
+							RowHeight="{StaticResource GridRowHeight}"
 							PointerPressed="{x:Bind game:Spot.GridPressed}"
 							PointerExited="{x:Bind game:Spot.GridExited}"
 							FontSize="{StaticResource SmallFontSize}"
-							Loaded="DataGridLoaded"
 							GroupPanelPosition="Bottom"
 							SelectionUnit="Row"
+							Loaded="DataGridLoaded"
 							Tag="Raid"
 							>
 	
@@ -97,7 +97,7 @@
 				
 
 				<tg:DataGridBooleanColumn PropertyName="isBuilding"
-										   winui:ToolTipService.ToolTip="Building if checked, stalled if not"
+										   winui:ToolTipService.ToolTip="If checked, this city is either complete or it is building.  Otherwise it is idle and possibly not complete"
 										   CellContentStyle="{StaticResource CenterAlignLink}"
 										CanUserResize="False"
 										   SizeMode="Fixed"

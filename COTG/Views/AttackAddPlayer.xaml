@@ -15,6 +15,8 @@
                 QueryIcon="Find" 
                 Width="300" HorizontalAlignment="Left" />
 		<winui:RadioButtons x:Name="troopType" SelectedIndex="0" MaxColumns="2" >
+			<winui:RadioButtons.Items>
+				
 			<x:String>Vanq</x:String>
 			<x:String>Sorc</x:String>
 			<x:String>Druid</x:String>
@@ -23,6 +25,7 @@
 			<x:String>SE</x:String>
 			<x:String>Ballista</x:String>
 			<x:String>Unknown</x:String>
+			</winui:RadioButtons.Items>
 		</winui:RadioButtons>
 		<winui:NumberBox x:Name="cont" Value="22" Header="Continent" Style="{StaticResource NumberBoxSmall}" />
 		<StackPanel Orientation="Horizontal">

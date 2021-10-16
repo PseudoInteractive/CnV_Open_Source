@@ -34,6 +34,13 @@
 				If you name everything the same - well, then I hate you - Please stop making it difficult to attack the right city."<LineBreak/>
 			</TextBlock>
 		</StackPanel>
+		<winui:RadioButtons Header="City Name Type" x:Name="cityType" SelectionChanged="cityType_SelectionChanged"	 >
+			<winui:RadioButtons.Items>
+				<x:String>Normal</x:String>
+				<x:String>Hub</x:String>
+				<x:String>Storage</x:String>
+			</winui:RadioButtons.Items>
+			</winui:RadioButtons>
 
 
 		<ToggleSwitch Grid.Row="1" IsOn="{x:Bind local:SettingsPage.useSuggested, Mode=TwoWay}" OnContent="Suggested" OffContent="Current"/>

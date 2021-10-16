@@ -2205,9 +2205,10 @@ private static async void ShowCouncillorsMissingDialog()
 
 							foreach(var s in cookies.Split(';',StringSplitOptions.RemoveEmptyEntries|StringSplitOptions.TrimEntries))
 							{
-								var vv = s.Split('=',StringSplitOptions.RemoveEmptyEntries|StringSplitOptions.TrimEntries);
-								Assert(vv.Length == 2);
-								cookieContainer.Add(new System.Net.Cookie(vv[0],vv[1],"/","crownofthegods.com"));
+								var vEq = s.IndexOf('=');
+								if(vEq== -1)
+									continue;
+								cookieContainer.Add(new System.Net.Cookie( s.Substring(0,vEq).Trim(), s.Substring(vEq+1).Trim(),"/","crownofthegods.com"));
 							}
 
 							httpFilter.CookieContainer = cookieContainer;//.SetCookies(new Uri("https://crownofthegods.com",UriKind.Absolute),cookies);

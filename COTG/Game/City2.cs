@@ -172,38 +172,43 @@ namespace COTG.Game
 			return false;
 		}
 
-		public async Task Build(int id, int bid, bool dryRun, bool wantUI)
+		public async Task Build(int id, int bid, bool dryRun, bool verbose)
 		{
 			var sel = GetBuildingOrLayout(id);
-			if (bid != bidWall && !sel.isEmpty && !SettingsPage.extendedBuild) // special case, wall upgrade from level is allowed as a synonym for build
+			if(bid==0)
 			{
-				Status("Spot is occupied", dryRun);
+				StatusIf("Trying to build [nothing]?",dryRun,verbose);
+				return;
 			}
-			else
+			//if (bid != bidWall && !sel.isEmpty && !SettingsPage.extendedBuild) // special case, wall upgrade from level is allowed as a synonym for build
+			//{
+			//	StatusIf("Spot is occupied", dryRun,verbose);
+			//}
+			//else
 			{
 				var buildDef = BuildingDef.all[bid];
 				if (IsWallSpot(id) && !testFlag)
 				{
-					Status("Walls go here", dryRun);
+					StatusIf("Walls go here", dryRun,verbose);
 					return;
 				}
 				if (IsWaterSpot(id) && !testFlag)
 				{
-					Status("There is water here :(", dryRun);
+					StatusIf("There is water here :(", dryRun,verbose);
 					return;
 				}
 				if (IsTowerSpot(id))
 				{
 					if (!buildDef.isTower)
 					{
-						Status("This looks like a nice place for a tower.", dryRun);
+						StatusIf("This looks like a nice place for a tower.", dryRun,verbose);
 						return;
 					}
 					else
 					{
 						if (postQueueBuildings[bspotWall].bl == 0)
 						{
-							Status("Please build a wall first", dryRun);
+							StatusIf("Please build a wall first", dryRun,verbose);
 							if (!dryRun)
 							{
 
@@ -223,14 +228,14 @@ namespace COTG.Game
 				{
 					if (buildDef.isTower)
 					{
-						Status("This does not looks like a nice place for a tower.", dryRun);
+						StatusIf("This does not looks like a nice place for a tower.", dryRun,verbose);
 						return;
 					}
 					if (IsShoreSpot(id))
 					{
 						if (!buildDef.isShoreBuilding && !CityBuild.testFlag)
 						{
-							Status("Ports and Shipyards go here", dryRun);
+							StatusIf("Ports and Shipyards go here", dryRun,verbose);
 							return;
 						}
 					}
@@ -238,7 +243,7 @@ namespace COTG.Game
 					{
 						if (buildDef.isShoreBuilding && !CityBuild.testFlag)
 						{
-							Status("Please put this on the shore", dryRun);
+							StatusIf("Please put this on the shore", dryRun,verbose);
 							return;
 						}
 					}
@@ -247,7 +252,7 @@ namespace COTG.Game
 
 				if (dryRun)
 				{
-					DrawBuilding(IdToXY(id), cityDrawAlpha, bid, AGame.animationT * 0.3247f);
+					DrawBuilding(IdToXY(id), cityDrawAlpha, bid, AGame.animationT * 0.65f);
 				}
 				else
 				{
@@ -259,23 +264,23 @@ namespace COTG.Game
 					}
 					else
 					{
-						var counts = GetTownHallAndBuildingCount(true);
-						var usesSpot = !buildDef.isTower && bid != bidWall;
-						if ((counts.buildingCount == counts.townHallLevel * 10 && counts.townHallLevel < 10 && usesSpot) || buildDef.Thl > counts.townHallLevel)
-						{
-							if (!await UpgradeTownHallDialogue(((counts.buildingCount) / 10 + 1).Max(buildDef.Thl)))
-								return;
+						////var counts = GetTownHallAndBuildingCount(true);
+						////var usesSpot = !buildDef.isTower && bid != bidWall;
+						////if ((counts.buildingCount == counts.townHallLevel * 10 && counts.townHallLevel < 10 && usesSpot) || buildDef.Thl > counts.townHallLevel)
+						////{
+						////	if (!await UpgradeTownHallDialogue(((counts.buildingCount) / 10 + 1).Max(buildDef.Thl)))
+						////		return;
 
-						}
-						else if (counts.townHallLevel == 10 && counts.buildingCount >= 100 && usesSpot)
-						{
-							if (!dryRun && bid != bidCottage && wantUI)
-							{
-								int toRemove = await FindBuildingToRemoveUI();
-								if (toRemove != -1)
-									await Demolish(toRemove, dryRun);
-							}
-						}
+						////}
+						//else if (counts.townHallLevel == 10 && counts.buildingCount >= 100 && usesSpot)
+						//{
+						//	if (!dryRun && bid != bidCottage && wantUI)
+						//	{
+						//		int toRemove = await FindBuildingToRemoveUI();
+						//		if (toRemove != -1)
+						//			await Demolish(toRemove, dryRun);
+						//	}
+						//}
 						await Enqueue(0, 1, bid, id);
 
 					}
@@ -285,12 +290,9 @@ namespace COTG.Game
 
 
 
-		public Task Build((int x, int y) cc, int bid, bool dryRun, bool wantRemoveUI)
+		public Task Build((int x, int y) cc, int bid, bool dryRun, bool verbose)
 		{
-			if (bid != 0)
-				return Build(XYToId(cc), bid, dryRun, wantRemoveUI);
-			else
-				return Task.CompletedTask;
+				return Build(XYToId(cc), bid,dryRun: dryRun,verbose:verbose);
 		}
 		public async Task Downgrade((int x, int y) building, bool dryRun)
 		{
@@ -430,7 +432,7 @@ namespace COTG.Game
 				return;
 			}
 			var id = XYToId(target);
-			var sel = postQueueBuildings[id];
+			var sel = GetBuildingPostQueue(id);
 			if (sel.isRes)
 			{
 				Note.Show("Cannot upgrade Res");
@@ -493,7 +495,7 @@ namespace COTG.Game
 
 		}
 
-		public async Task<int> FindBuildingToRemoveUI()
+		public async Task<int> FindBuildingToRemoveUI(bool showUI, bool dryRun)
 		{
 			var toRemove = -1;
 			if (SettingsPage.demoBuildingOnBuildIfFull != false)
@@ -503,10 +505,18 @@ namespace COTG.Game
 				{
 					if (SettingsPage.demoBuildingOnBuildIfFull == null)
 					{
-						var xy = await App.DoYesNoBoxSticky($"Demo {postQueueBuildings[bd].name} to make room?");
-						SettingsPage.demoBuildingOnBuildIfFull = xy.sticky;
-						if (!xy.rv)
+						Status($"Maybe destory {postQueueBuildings[bd].name} to make room...",dryRun);
+						if(showUI && !dryRun )
+						{
+							var xy = await App.DoYesNoBoxSticky($"Demo {postQueueBuildings[bd].name} to make room?");
+							SettingsPage.demoBuildingOnBuildIfFull = xy.sticky;
+							if(!xy.rv)
+								bd = -1;
+						}
+						else
+						{
 							bd = -1;
+						}
 					}
 					if (bd != -1)
 					{
@@ -523,10 +533,18 @@ namespace COTG.Game
 					{
 						if (SettingsPage.demoCottageOnBuildIfFull == null)
 						{
-							var xy = await App.DoYesNoBoxSticky($"Demo cabin to make room?");
-							SettingsPage.demoCottageOnBuildIfFull = xy.sticky;
-							if (!xy.rv)
-								bd = -1;
+							Status($"Maybe destory {postQueueBuildings[bd].name} to make room...",dryRun);
+							if(showUI && !dryRun)
+							{
+								var xy = await App.DoYesNoBoxSticky($"Demo cabin to make room?");
+								SettingsPage.demoCottageOnBuildIfFull = xy.sticky;
+								if(!xy.rv)
+									bd = -1;
+							}
+							else
+							{
+								bd=-1;
+							}
 						}
 						if (bd != -1)
 						{
@@ -539,8 +557,11 @@ namespace COTG.Game
 			return toRemove;
 		}
 
-		public async Task<int> SmartBuild((int x, int y) cc, int desBid, bool searchForSpare, bool dryRun = false, bool demoExtraBuildings = false, bool wantDemoUI = false)
+		public async Task<int> SmartBuild((int x, int y) cc, int desBid, bool searchForSpare, bool dryRun = false, 
+					
+						bool wantDemoUI = false )
 		{
+			Assert(!CityBuild.isPlanner);
 			int rv = 0;
 			var bspot = XYToId(cc);
 			var b = GetBuildingOrLayout(bspot);
@@ -561,6 +582,7 @@ namespace COTG.Game
 			var takeScore = 0;
 			var putTo = -1;
 			var putScore = 0;
+			var postBuildings = postQueueBuildings;
 
 			if (searchForSpare && !isPlanner && isLayoutCustom && usesSpot)
 			{
@@ -568,7 +590,7 @@ namespace COTG.Game
 				for (int xy = 1; xy < City.citySpotCount - 1; ++xy)
 				{
 					var overlayBid = GetLayoutBid(xy);
-					var xyBuilding = postQueueBuildings[xy].def.bid;
+					var xyBuilding = postBuildings[xy].def.bid;
 
 					if (overlayBid != xyBuilding)
 					{
@@ -590,7 +612,7 @@ namespace COTG.Game
 						//do they want what we have?
 						if (overlayBid == curBid && curBid != 0)
 						{
-							var score = (xyBuilding == desBid) ? 4 : (xyBuilding == 0) ? 3 : postQueueBuildings[xy].isBuilding ? 2 : 1;
+							var score = (xyBuilding == desBid) ? 4 : (xyBuilding == 0) ? 3 : postBuildings[xy].isBuilding ? 2 : 1;
 							if (!HasBuildOps(xy))
 								score += 8;
 							if (score > putScore)
@@ -657,22 +679,11 @@ namespace COTG.Game
 					{
 						if (!desB.isCabin && desBid != 0)
 						{
-							int bestSpot = -1;
-							if (wantDemoUI && !dryRun)
-							{
-								bestSpot = await FindBuildingToRemoveUI();
+							int bestSpot = await FindBuildingToRemoveUI(showUI: wantDemoUI,dryRun:dryRun);
 
-							}
-							else
-							{
-								// Is there a cabin to remove?
-								bestSpot = demoExtraBuildings ? FindExtraBuilding() : -1;
-								if (bestSpot == -1)
-									bestSpot = FindCabinToDemo();
-							}
 							if (bestSpot != -1)
 							{
-								Status("Will Demolish something to make room", dryRun);
+								Status($"Will Demolish {postBuildings[bestSpot]} to make room", dryRun);
 
 								await Demolish(bestSpot, dryRun);
 								//break;
@@ -689,7 +700,7 @@ namespace COTG.Game
 
 					}
 					//if (counts.buildingCount < 100)
-					await Build(cc, desBid == 0 ? bidCottage : desBid, dryRun, false);
+					await Build(cc, desBid == 0 ? bidCottage : desBid, dryRun:dryRun,verbose:true);
 
 				}
 				else
@@ -707,7 +718,7 @@ namespace COTG.Game
 						if (counts.buildingCount < 100) // can we put a cabin here?
 						{
 							Status($"No building is wanted here, how about a cottage instead?", dryRun);
-							await Build(cc, bidCottage, dryRun, false);
+							await Build(cc, bidCottage, dryRun,verbose: false);
 							++rv;
 						}
 						else
@@ -785,9 +796,9 @@ namespace COTG.Game
 								if (counts.buildingCount >= 100)
 								{
 
-									if (demoExtraBuildings)
+									if (wantDemoUI)
 									{
-										int bestSpot = FindExtraBuilding();
+										int bestSpot =await FindBuildingToRemoveUI(showUI: wantDemoUI,dryRun:dryRun);
 										if (bestSpot != -1)
 										{
 											await Demolish(bestSpot, dryRun);
@@ -797,22 +808,7 @@ namespace COTG.Game
 
 									}
 
-									if (counts.buildingCount >= 100 && desBid != bidCottage)
-									{
-										var bestSpot = FindCabinToDemo();
-										if (bestSpot != -1)
-										{
-											Status("Will Demolish a Cottage to make room", dryRun);
-
-											await Demolish(bestSpot, dryRun);
-											//break;
-											--counts.buildingCount;
-
-											++rv;
-
-										}
-
-									}
+									
 								}
 
 
@@ -823,9 +819,9 @@ namespace COTG.Game
 
 								// build the correct building
 								if (dryRun)
-									DrawSprite(hovered, decalBuildingInvalid, .31f);
+									DrawSprite(hovered, decalBuildingInvalid, .5f);
 
-								await Build(cc, desBid, dryRun, wantDemoUI);
+								await Build(cc, desBid, dryRun, verbose:true);
 								++rv;
 							}
 						}

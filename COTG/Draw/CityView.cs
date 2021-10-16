@@ -107,7 +107,19 @@ namespace COTG.Draw
 				Note.Show(s);
 			}
 		}
-
+		public static void StatusIf(string s,bool dryRun,bool condition)
+		{
+			if(!condition)
+				return;
+			if(dryRun)
+			{
+				Status(s);
+			}
+			else
+			{
+				Note.Show(s);
+			}
+		}
 		// Dry Run can be accessed on conditional and directly
 		public static void Status(string s)
 		{
@@ -178,7 +190,7 @@ namespace COTG.Draw
 
 						var dt = (animationT - animationOffsets[bspot]);
 						float blendT = ((dt)*0.333f).Frac();
-						var bonus = (dt).Abs().Saturate().Bezier(0,1,0,0);
+						var bonus = (dt*1.333f).Abs().Saturate().Bezier(0,1,0,0);
 
 						if(cur.id==next.id)
 						{

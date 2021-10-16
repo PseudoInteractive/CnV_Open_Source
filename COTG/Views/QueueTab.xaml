@@ -57,7 +57,7 @@
 		<winui:TreeView Grid.Row="1" x:Name="zoom"  CanReorderItems="False"  SelectionMode="Multiple" BorderThickness="1" 
 						ItemTemplateSelector="{StaticResource BuildItemTemplateSelector}"
  TabNavigation="Once" CanDragItems="False" AllowDrop="False" 
-						ItemsSource="{x:Bind cities}" ItemInvoked="zoom_ItemInvoked" 
+						 ItemInvoked="zoom_ItemInvoked" 
 						>
 		</winui:TreeView>
 

@@ -40,7 +40,6 @@
                         AlternationStep="2"
                         SelectionMode="Single"
 
-                        ColumnDataOperationsMode="Flyout"
                         SelectionUnit="Row"
                         UserSortMode="Auto">
             <telerikGrid:RadDataGrid.Commands  >

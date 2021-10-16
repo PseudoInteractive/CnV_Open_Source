@@ -45,6 +45,101 @@ namespace COTG.Views
 		static Regex regexHubName = new Regex(@"([^\d]*)(\d+)([^\d]+)(0{1,3})(\d{1,2})\b(.*)", RegexOptions.CultureInvariant | RegexOptions.Compiled);
 		static Regex regexStorageName = new Regex(@"([^\d]*)(\d+)([^\d]+)(0{1,3})(\d{1,2})0(\d{1,2})\b(.*)", RegexOptions.CultureInvariant | RegexOptions.Compiled);
 
+		static string ChooseName(int type, City city)
+		{
+			switch(type)
+			{
+				case 0:
+				case 2:
+					{
+						var closestScore = float.MaxValue;
+						City closestHub = null;
+						string name = $"{city.cont:00} 1001"; // default
+						
+						// normal or storage
+						foreach(var v in City.myCities)
+						{
+							if(v.cont != city.cont || v._cityName == null )
+								continue;
+							var match = regexCityName.Match(v._cityName);
+							bool hasLeadingZero = match.Groups[4].Value.IsNullOrEmpty() && !match.Groups[5].Value.IsNullOrEmpty();
+							if(match.Success )
+							{
+								if(v.isHub)
+								{
+									var score = city.cid.DistanceToCid(v.cid);
+									if(score < closestScore)
+									{
+										var pre = match.Groups[1].Value;
+										var mid = match.Groups[3].Value;
+										//var cluster = match.Groups[4].Value;
+										//	var leadingZeros = match.Groups[4].Value;
+										var num = match.Groups[6].Value;
+										var post = match.Groups[7].Value;
+										//string numStr;
+
+										num.TryParseInt(out var numV);
+
+										//								if(num.StartsWith("0"))
+
+
+										closestScore = score;
+										if(type == 2) // storage
+										{
+											name = pre + city.cont.ToString("00") + mid + ((hasLeadingZero ? numV * 1000 : numV*1000) + 1).ToString() + post;
+										}
+										else
+										{
+											name = pre + city.cont.ToString("00") + mid + ((hasLeadingZero ? numV * 1000 : numV*1000) + 1).ToString() + post;
+										}
+										closestHubCluster = numV;
+									}
+								}
+							}
+							else
+							{
+								Assert(false);
+							}
+						}
+						break; // normal
+					}
+			}
+				// find closest hub for cluster #
+				var closestScore = float.MaxValue;
+				City closestHub = null;
+				foreach(var v in City.myCities)
+				{
+					if(v.cont != city.cont || v._cityName == null)
+						continue;
+					var match = regexCityName.Match(v._cityName);
+					bool hasLeadingZero = match.Groups[4].Value.IsNullOrEmpty() && !match.Groups[5].Value.IsNullOrEmpty();
+					if(match.Success && (v.isHub))
+					{
+						var score = city.cid.DistanceToCid(v.cid);
+						if(score < closestScore)
+						{
+							var pre = match.Groups[1].Value;
+							var mid = match.Groups[3].Value;
+							//var cluster = match.Groups[4].Value;
+							//	var leadingZeros = match.Groups[4].Value;
+							var num = match.Groups[6].Value;
+							var post = match.Groups[7].Value;
+							//string numStr;
+
+							num.TryParseInt(out var numV);
+
+							//								if(num.StartsWith("0"))
+
+
+							closestScore = score;
+							name = pre + city.cont.ToString("00") + mid + ((hasLeadingZero ? numV * 1000 : numV*1000) + 1).ToString() + post;
+							closestHubCluster = numV;
+						}
+					}
+				}
+			}
+
+		}
 
 		static string lastName = string.Empty;
 		public static async Task<bool> RenameDialog(int cid, bool allowSplat)
@@ -115,7 +210,7 @@ namespace COTG.Views
 
 
 								closestScore = score;
-								name = pre + city.cont.ToString("00") + mid + ((hasLeadingZero ? numV * 1000 : numV) + 1).ToString() + post;
+								name = pre + city.cont.ToString("00") + mid + ((hasLeadingZero ? numV * 1000 : numV*1000) + 1).ToString() + post;
 								closestHubCluster = numV;
 							}
 						}
@@ -229,7 +324,7 @@ namespace COTG.Views
 						if (SettingsPage.autoBuildCabins && allowSplat)
 						{
 							// are there any cabins here already?
-							rv = await QueueTab.DoTheStuff(city, false, false);
+							rv = await COTG.DoTheStuff.Go(city, false, false);
 						}
 						else
 					{
@@ -279,6 +374,11 @@ namespace COTG.Views
 		public static bool IsNewOrCaptured(City city)
 		{
 			return IsNew(city._cityName) || city._cityName == "lawless city" || city._cityName == "*Lawless City";
+		}
+
+		private void cityType_SelectionChanged(object sender,SelectionChangedEventArgs e)
+		{
+
 		}
 	}
 }

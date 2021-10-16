@@ -2,11 +2,4 @@
     <x:String x:Key="font">"Tw Cen MT Condensed"</x:String>
 	
 
-	<Style TargetType="Control">
-        <Setter Property="IsTextScaleFactorEnabled" Value="False"/>
-    </Style>
-    <Style TargetType="ContentPresenter">
-        <Setter Property="IsTextScaleFactorEnabled" Value="False"/>
-    </Style>
-	<x:String x:Key="fontStretch">Condensed</x:String>
 </ResourceDictionary>

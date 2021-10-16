@@ -138,7 +138,6 @@
                         CanUserChooseColumns="True"
 								 IsTabStop="True"
                         ColumnResizeHandleDisplayMode="OnColumnHeaderActionFlyoutOpen"
-                        ColumnDataOperationsMode="Flyout"
                         UserGroupMode="Disabled"
                         FontSize="{StaticResource MediumFontSize}"
                         

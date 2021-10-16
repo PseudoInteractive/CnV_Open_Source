@@ -448,9 +448,11 @@ namespace COTG.Views
 
 		private void Refresh_Invoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
 		{
+			WorkStart("Refresh");
 			sender.Modifiers.UpdateKeyModifiers();
 			Refresh();
 
+			WorkEnd("Refresh");
 			Note.Show("Refresh");
 			// args.Handled = true;
 		}
@@ -619,12 +621,19 @@ namespace COTG.Views
 			TileData.Ctor(true);
 		}
 
-		public async Task RefreshX()
+		public static async Task RefreshX()
 		{
-			Note.Show("Refresh All");
-			await RefreshWorldData();
-			
+			WorkStart("Refresh All");
+			var t = RefreshWorldData();
+
+			foreach(var city in City.allSpots)
+				city.Value.OnPropertyChanged();
+			NotifyCollectionBase.ResetAll(true);
+
 			RefreshTabs.Go();
+			await t;
+
+			WorkEnd("Refresh All");
 		}
 
 		public void RefreshX(object sender, RightTappedRoutedEventArgs e)
@@ -648,27 +657,32 @@ namespace COTG.Views
 			return Task.CompletedTask;
 		}
 
-		
-
-		private static void Refresh()
+		private static void OnRefresh()
 		{
-			if (JSClient.world == 0)
+			if(JSClient.world == 0)
 			{
 				JSClient.view.Source = new Uri("https://www.crownofthegods.com/home/");
+				return;
+			}
+
+			
+			if(App.IsKeyPressedShift())
+			{
+				RefreshX();
 			}
 			else
 			{
-				if (App.IsKeyPressedShift())
-				{
-					RefreshWorldData();
-				}
-				else
-				{
-					Note.Show("Refresh UI");
-				}
-				// fall through from shift-refresh. Shift refresh does both
-				RefreshTabs.Go();
+				Refresh();
 			}
+		}
+
+		private static void Refresh()
+		{
+			foreach(var city in City.myCities)
+				city.OnPropertyChanged();
+			NotifyCollectionBase.ResetAll(false);
+			Note.Show("Refresh UI");
+			RefreshTabs.Go();
 		}
 
 		public event PropertyChangedEventHandler PropertyChanged;

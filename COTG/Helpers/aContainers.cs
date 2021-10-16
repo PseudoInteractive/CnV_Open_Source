@@ -18,15 +18,36 @@ using System;
 
 namespace COTG
 {
-	public class NotifyCollection< T> :ICollection<T>, IEnumerable<T>, IEnumerable, IList<T>, IReadOnlyCollection<T>, IReadOnlyList<T>, ICollection, IList, INotifyPropertyChanged, INotifyCollectionChanged where T : class
+	public class NotifyCollectionBase: INotifyPropertyChanged, INotifyCollectionChanged 
 	{
-		public ImmutableArray<T> c = ImmutableArray<T>.Empty;
+		public static ImmutableArray<NotifyCollectionBase> all = ImmutableArray<NotifyCollectionBase>.Empty;
 
-	//	static ImmutableArray<NotifyCollection<T>> propertyChanges = ImmutableArray<NotifyCollection<T>>.Empty;
-		static ImmutableArray<(NotifyCollectionChangedEventArgs change, NotifyCollection<T> c)> collectionChanges = ImmutableArray<(NotifyCollectionChangedEventArgs change, NotifyCollection<T> c)>.Empty;
+		public bool hasNotifications => (CollectionChanged is not null | PropertyChanged is not null);
+		public event NotifyCollectionChangedEventHandler? CollectionChanged;
+		//	public void OnPropertyChanged(T city,string propertyName = "") => PropertyChanged?.Invoke(city,new PropertyChangedEventArgs(propertyName));
 
-
+		public event PropertyChangedEventHandler? PropertyChanged;
+		//public object _lock;
 		
+
+		public NotifyCollectionBase()
+		{
+			all = all.Add(this);
+		}
+		public void Dispose()
+		{
+			all = all.Remove(this);  // TODO Async
+		}
+
+		public static void ResetAll(bool clearHash)
+		{
+			foreach(var col in NotifyCollectionBase.all)
+			{
+				col.NotifyReset();
+			}
+		}
+
+	static ImmutableArray<(NotifyCollectionChangedEventArgs change, NotifyCollectionBase c)> collectionChanges = ImmutableArray<(NotifyCollectionChangedEventArgs change, NotifyCollectionBase c)>.Empty;
 
 		static Task ProcessChanges()
 		{
@@ -35,12 +56,12 @@ namespace COTG
 				var counter = collectionChanges.Length/8 + 2;
 				do
 				{
-					(var change,var i) = collectionChanges.FirstOrDefault();
+					(var change, var i) = collectionChanges.FirstOrDefault();
 					if(i == default)
 						break;
 					collectionChanges = collectionChanges.RemoveAt(0);
-				
-					i.PropertyChanged?.Invoke(i,new("Count") );
+
+					i.PropertyChanged?.Invoke(i,new("Count"));
 					i.CollectionChanged?.Invoke(i,change);
 				} while(--counter>0);
 
@@ -54,18 +75,94 @@ namespace COTG
 			return Task.CompletedTask;
 		}
 
+		public void NotifyChange(NotifyCollectionChangedEventArgs args,bool sizeChanged)
+		{
 
 
-		static Debounce ChangesDebounce = new(ProcessChanges) { runOnUiThread = true, debounceDelay=300,throttleDelay=1000}; 
-		
+			if(hasNotifications)
+			{
+				if(CollectionChanged!=null)
+				{
 
-		bool hasNotifications => (CollectionChanged is not null | PropertyChanged is not null);
-		public event NotifyCollectionChangedEventHandler? CollectionChanged;
-		//	public void OnPropertyChanged(T city,string propertyName = "") => PropertyChanged?.Invoke(city,new PropertyChangedEventArgs(propertyName));
-		
-		public event PropertyChangedEventHandler? PropertyChanged;
-		//public void OnCollce(string propertyName = "") => PropertyChanged?.Invoke(this,new PropertyChangedEventArgs(propertyName));
-		
+					try
+					{
+
+
+						int counter = 0;
+						foreach(var i in collectionChanges)
+						{
+							if(i.c==this)
+							{
+								switch(i.change.Action)
+								{
+									case NotifyCollectionChangedAction.Add:
+									case NotifyCollectionChangedAction.Remove:
+									case NotifyCollectionChangedAction.Replace:
+									case NotifyCollectionChangedAction.Move:
+										collectionChanges=collectionChanges.SetItem(counter,(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset), this));
+										goto dontAdd;
+
+									case NotifyCollectionChangedAction.Reset:
+										goto dontAdd;
+
+									default:
+										break;
+								}
+								++counter;
+							}
+							break;
+						}
+						collectionChanges=collectionChanges.Add(((args), this));
+					dontAdd:
+
+						ChangesDebounce.Go();
+
+					}
+					catch(Exception __ex)
+					{
+						Debug.LogEx(__ex);
+					}
+
+				}
+			}
+		}
+
+	
+
+	
+
+		public void NotifyReset(bool itemsChanged = true, bool skipHashCheck=false)
+		{
+
+			var newHash = GetDataHash();
+			var hashChanged = newHash != lastDataHash;
+			if(!hashChanged && !skipHashCheck )
+				return;
+			lastDataHash= newHash;
+			if(hasNotifications)
+			{
+				NotifyChange(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset),itemsChanged);
+			}
+
+		}
+		protected long lastDataHash;
+		static Debounce ChangesDebounce = new(ProcessChanges) { runOnUiThread = true,debounceDelay=300,throttleDelay=1000 };
+		public void ClearHash() => lastDataHash=-1L;
+
+		public virtual long GetDataHash()
+		{
+			Assert(false);
+			return  RuntimeHelpers.GetHashCode(this);
+		}
+
+	}
+
+
+	public class NotifyCollection< T> :NotifyCollectionBase, ICollection<T>, IEnumerable<T>, IEnumerable, IList<T>, IReadOnlyCollection<T>, IReadOnlyList<T>, ICollection, IList where T : class
+	{
+
+		public ImmutableArray<T> c = ImmutableArray<T>.Empty;
+
 
 		public int Count => ((ICollection<T>)c).Count;
 
@@ -80,17 +177,8 @@ namespace COTG
 		object IList.this[int index] { get => ((IList)c)[index]; set => ((IList)c)[index]=value; }
 		public T this[int index] { get => ((IList<T>)c)[index]; set => ((IList<T>)c)[index]=value; }
 
-	
-	//	public event NotifyCollectionChangedEventHandler? CollectionChanged;
-			public object _lock;
-		protected long lastDataHash;
 
-		//		public int Count => c.Length;
-		public NotifyCollection()
-		{
-			_lock = new();
-			
-		}
+
 		//	public bool IsReadOnly => true;
 
 		//		T IList<T>.this[int index] { get => c[index]; set=> Assert(false); }
@@ -100,9 +188,9 @@ namespace COTG
 		//	public T this[int id]  { get => c.IList<T>[id]; set=> Assert(false); }
 
 		//public ref readonly T itemRef(int id) => ref  c.ItemRef(id);
-		public void ClearHash() => lastDataHash=-1L;
 
-		public long GetDataHash()
+
+		public override long GetDataHash()
 		{
 			var hash = 0;
 			foreach(var i in c)
@@ -113,39 +201,7 @@ namespace COTG
 		}
 
 
-		public void NotifyReset(bool itemsChanged=true)
-		{
-			
-			var newHash = GetDataHash();
-			var hashChanged = newHash != lastDataHash;
-			if( !hashChanged  )
-				return;
-			lastDataHash= newHash;
-			if(hasNotifications)
-			{
-				NotifyChange(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset),itemsChanged);
-			}
-
-		}
-
-		public void NotifyInsert(int id,T added)
-		{
-			if(CollectionChanged != null)
-			{
-				var _count = Count;
-					if(_count == Count)
-					{
-	//				NotifyReset();
-					NotifyChange(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add,added,id),true);
-					}
-					else
-					{
-						NotifyReset();
-					}
-
-				
-			}
-		}
+		
 
 		//public void NotifyAdd(IList<T> added)
 		//{
@@ -157,73 +213,45 @@ namespace COTG
 		//}
 		public void NotifyRemoveAt(int id,T removed)
 		{
-				var _count = Count;
-						if(_count == Count)
-						{
-							NotifyChange(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove,removed,id),true);
-						}
-						else
-						{
-							NotifyReset(true);				
-						}
-					
-			
-
-		}
-
-		public void NotifyChange(NotifyCollectionChangedEventArgs args, bool sizeChanged)
-		{
-			
-
 			if(hasNotifications)
 			{
-				if(CollectionChanged!=null)
+
+				var _count = Count;
+				if(_count == Count)
 				{
-				
-					try
-					{
-
-						
-						int counter=0;
-						foreach(var i in collectionChanges)
-						{
-							if( i.c==this)
-							{ switch(i.change.Action)
-							{
-							case NotifyCollectionChangedAction.Add:
-							case NotifyCollectionChangedAction.Remove:
-							case NotifyCollectionChangedAction.Replace:
-							case NotifyCollectionChangedAction.Move:
-										collectionChanges=collectionChanges.SetItem(counter,( new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset), this));
-								goto dontAdd;
-									
-							case NotifyCollectionChangedAction.Reset:
-								goto dontAdd;
-									
-								default:
-								break;
-							}
-								++counter;
-							}
-							break;
-						}
-						collectionChanges=collectionChanges.Add(((args), this));
-						dontAdd:
-
-						ChangesDebounce.Go();
-
-					}
-					catch(Exception __ex)
-					{
-						Debug.LogEx(__ex);
-					}
-				
+					NotifyChange(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove,removed,id),true);
+				}
+				else
+				{
+					NotifyReset(true);
 				}
 			}
 		}
+		public void NotifyInsert(int id,T added)
+		{
+			if(hasNotifications)
+			{
+				var _count = Count;
+				if(_count == Count)
+				{
+					//				NotifyReset();
+					NotifyChange(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add,added,id),true);
+				}
+				else
+				{
+					NotifyReset();
+				}
+
+
+			}
+		}
+
 		public void NotifyRemove(IList<T> removed)
 		{
-			NotifyChange(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove,removed as IList),true);
+			if(hasNotifications)
+			{
+				NotifyChange(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove,removed as IList),true);
+			}
 		}
 
 		public void Remove(Predicate< T>  pred, bool notify)
@@ -253,7 +281,7 @@ namespace COTG
 		{
 			c=c.Insert(id,item);
 			
-			if(notify && hasNotifications)
+			if(notify )
 			{
 				NotifyInsert(id,item);
 			}
@@ -300,14 +328,9 @@ namespace COTG
 //		 IEnumerator IEnumerable.GetEnumerator()
 	
 
-		public int IndexOf(T item) => c.IndexOf(item);
-		public void Insert(int index,T item) => Assert(false);
-		public void RemoveAt(int index) => Assert(false);
 		//public int Add(T item) => Assert(false); 
-		public void Clear() => Assert(false); 
 		public bool Contains(T item) => c.Contains(item);
 		public void CopyTo(T[] array,int arrayIndex) => c.CopyTo(array,arrayIndex);
-		public bool Remove(T item) { Assert(false); return false; }
 
 		public void CopyTo(Array array,int index) => ((ICollection)c).CopyTo(array,index);
 		//public bool Contains(T value) => ((IList<T>)c).Contains(value);
@@ -315,12 +338,19 @@ namespace COTG
 		//public void Insert(int index,T value) => Insert(index,value,true);
 		// void Remove(T value) => ((IList<T>)c).Remove(value);
 		public IEnumerator<T> GetEnumerator() => ((IEnumerable<T>)c).GetEnumerator();
+		public void RemoveAt(int index) => Assert(false);
 		IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable)c).GetEnumerator();
 		 int IList.Add(object value) => ((IList)c).Add(value);
 		 bool IList.Contains(object value) => ((IList)c).Contains(value);
 		 int IList.IndexOf(object value) => ((IList)c).IndexOf(value);
-		 void IList.Insert(int index,object value) => Assert(false);
-		 void IList.Remove(object value) => Assert(false);
+		void IList.Insert(int index,object value) => Assert(false);
+		void IList.Remove(object value) => Assert(false);
+		public void Clear() => Assert(false);
+		public bool Remove(T item) { Assert(false); return false; }
+
+		public int IndexOf(T item) => c.IndexOf(item);
+		public void Insert(int index,T item) => Assert(false);
+
 	}
 
 

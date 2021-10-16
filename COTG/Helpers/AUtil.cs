@@ -299,6 +299,26 @@ namespace COTG
 			l.Add(a);
 			return true;
 		}
+		public static bool AddIfAbsentNE<T>(this List<T> l,T a) 
+		{
+			foreach(var i in l)
+			{
+				if(i.Equals(a))
+				{
+					return false;
+				}
+			}
+			l.Add(a);
+			return true;
+		}
+
+		public static bool AddIfAbsent<T>(ref this ImmutableArray<T> l,T a) where T : IEquatable<T>
+		{
+			if(l.Contains(a))
+				return false;
+			l = l.Add(a);
+			return true;
+		}
 
 		public static T[] ArrayAppend<T>(this T[] l, T a)
 		{

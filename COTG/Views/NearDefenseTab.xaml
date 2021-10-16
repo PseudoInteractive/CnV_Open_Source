@@ -28,7 +28,6 @@
 								 TabFocusNavigation="Once"
 								 
                        ColumnResizeHandleDisplayMode="OnColumnHeaderActionFlyoutOpen"
-                                    ColumnDataOperationsMode="Flyout"
                         PointerPressed="gridPointerPress"
 						AllowFocusOnInteraction="True"
                         ItemsSource="{x:Bind views:NearDefenseTab.defendants, Mode=OneWay}"

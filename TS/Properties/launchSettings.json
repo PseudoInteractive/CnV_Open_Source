@@ -1,7 +1,8 @@
 {
   "profiles": {
     "TS": {
-      "commandName": "Project"
+      "commandName": "Project",
+      "jsWebView2Debugging": true
     }
   }
 }

@@ -40,7 +40,7 @@ namespace COTG.JSON
 			return result;
 
 		}
-		public static async Task<int> FindBestHubWithChoice(int cid,string title) => await CitySettings.FindBestHub(cid,await App.DoYesNoBox(title,"Find one from another Continent?",yes:"Off Continent", no:"Same Continent", cancel: null) == 1);
+		public static async Task<int> FindBestHubWithChoice(int cid,string title) => await CitySettings.FindBestHub(cid,City.Get(cid).isOnWater && await App.DoYesNoBox(title,"Find one from another Continent?",yes:"Off Continent", no:"Same Continent", cancel: null) == 1);
 
 		public static async Task<int> FindBestHub(int cid, bool onlyOffContinent)
 		{
@@ -58,7 +58,7 @@ namespace COTG.JSON
 					if(onlyOffContinent && (cid.CidToContinent() == hub.CidToContinent()) )
 						continue;
 
-					var d = hub.DistanceToCid(cid) * 256.0f/( (reachable.viaWater? (City.Get(cid).shipsHome+128) : (City.Get(cid).CartsHome*1.0f/64) + 128) );
+					var d = hub.DistanceToCid(cid) * 256.0f/( reachable.viaWater? (City.Get(hub).shipsHome+128) : (City.Get(hub).CartsHome*1.0f/64 + 128)  );
 					if (d < bestDist)
 					{
 						bestDist = d;

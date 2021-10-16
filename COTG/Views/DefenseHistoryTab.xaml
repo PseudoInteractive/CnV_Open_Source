@@ -31,7 +31,6 @@ AllowFocusOnInteraction="True"
                         RowHeight="{StaticResource ShortGridRowHeight}"
                         AlternationStep="2"
                         SelectionMode="Single"
-                        ColumnDataOperationsMode="Flyout"
                         SelectionUnit="Row"
 								 						ScrollViewer.ZoomMode="Enabled"
 

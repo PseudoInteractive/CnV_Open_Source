@@ -6,7 +6,7 @@
     xmlns:tk="using:CommunityToolkit.WinUI.UI.Controls"
 	xmlns:COTG="using:COTG"
     xmlns:winui="using:Microsoft.UI.Xaml.Controls"
-    xmlns:gridPrimitives="using:Telerik.UI.Xaml.Controls.Grid.Primitives"
+    xmlns:telerikGrid="using:Telerik.UI.Xaml.Controls.Grid"
     >
 	
     <x:Double x:Key="ContentDialogMaxWidth">1024</x:Double>
@@ -93,6 +93,19 @@
 		<Setter Property="Padding" Value="4"/>
         <Setter Property="BorderBrush" Value="{ThemeResource SystemControlBackgroundAccentRevealBorderBrush}"/>
     </Style>
+	<Style TargetType="telerikGrid:RadDataGrid" >
+		<Setter Property="BorderThickness" Value="1" />
+		<Setter Property="Margin" Value="2"/>
+		<Setter Property="Padding" Value="4"/>
+		<Setter Property="BorderBrush" Value="{ThemeResource SystemControlBackgroundAccentRevealBorderBrush}"/>
+		<Setter Property="ColumnDataOperationsMode" Value="Inline" />
+		<Setter Property="UserGroupMode" Value ="auto" />
+		<Setter Property="AlternationStep" Value="2" />
+		<Setter Property="CanUserChooseColumns" Value ="True" />
+		<Setter Property="FontSize" Value="{StaticResource SmallFontSize}" />
+		<Setter Property="UserFilterMode" Value="Auto" />
+		<Setter Property="SelectionUnit" Value="Row" />
+	</Style>
 	<Style TargetType="StackPanel" x:Key="StackPanelReveal" >
         <Setter Property="BorderThickness" Value="1" />
 		<Setter Property="Margin" Value="4"/>

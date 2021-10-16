@@ -167,7 +167,7 @@ namespace COTG.Views
 		//  ] => 2
 		//  on refresh complete 2 => -1
 		static int getBuildState;
-		static public async void GetBuildInfo()
+		static public async Task GetBuildInfo()
 		{
 			// Refreshing
 			if (getBuildState == 1 || getBuildState == 2)
@@ -197,19 +197,18 @@ namespace COTG.Views
 					if(!filter)
 						continue;
 
-					
-					
+					if(!city.buildingsLoaded)
+					{
+						await GetCity.Post(cid).ConfigureAwait(false);
+						city.OnPropertyChanged();
+					}
+
 					city.points = (ushort)ci[2].GetAsInt();
 					var isBuilding = (ci[4].GetAsFloat() != 0) || (city.buildStage == BuildStage.complete) || (city.buildStage == BuildStage.leave);
 					//if (ci[3].GetAsFloat() != 0)
 					//{
 					//	//	Log($"3!: {city.nameAndRemarks}");
 					//}
-					if(!city.buildingsLoaded )
-					{
-						await GetCity.Post(cid);
-						city.OnPropertyChanged();
-					}
 
 					//if(ci[5].GetAsFloat() != 0)
 					//{
@@ -230,16 +229,17 @@ namespace COTG.Views
 
 					//city.b12 = ci[12].GetAsInt();
 					//city.b13 = ci[13].GetAsInt();
-					city.bcBlocked = (ci[15].GetAsInt() == 1) &&
+					var _blocked = (ci[15].GetAsInt() == 1) &&
 										 ((ci[14].GetAsInt() == 1 && ci[16].GetAsInt() == 1) ||
 										  (ci[3].GetAsFloat() == 0 && ci[5].GetAsFloat() == 0));
 
+					if( city.bcBlocked != _blocked)
+					{
+						city.bcBlocked = _blocked;
+						city.OnPropertyChanged();
+					}
 
 				}
-				
-
-			
-		
 
 				if(firstTime==true)
 				{
@@ -290,11 +290,19 @@ namespace COTG.Views
 						await GetCity.Post(City.build);
 
 					
-					City.gridCitySource.NotifyReset();
-					
+				//	City.gridCitySource.NotifyReset();
+		
 				}
 
-				GetBuildInfo();
+				Task.Run( GetBuildInfo).ContinueWith(async (_)=>
+				{
+					foreach(var c in City.myCities)
+					{
+						if(c.testContinentAndTagFilter)
+							c.OnPropertyChanged();
+					}
+					City.gridCitySource.NotifyReset(true,true);
+				} );
 				//  if (cityGrid.ItemsSource == App.emptyCityList )
 				//     cityGrid.ItemsSource = City.gridCitySource;
 			}

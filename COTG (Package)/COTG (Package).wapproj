@@ -16,10 +16,11 @@
   </PropertyGroup>
   <Import Project="$(WapProjPath)\Microsoft.DesktopBridge.props" />
   <PropertyGroup>
+    <DotNetVersion>net6.0</DotNetVersion>
     <ProjectGuid>e468cd1e-2b87-4604-9d22-291015b36c9f</ProjectGuid>
     <TargetPlatformVersion>10.0.22000.0</TargetPlatformVersion>
+    <MonoGamePlatform>WindowsStoreApp</MonoGamePlatform>
     <TargetPlatformMinVersion>10.0.18362.0</TargetPlatformMinVersion>
-    <AssetTargetFallback>net5.0-windows$(TargetPlatformVersion);$(AssetTargetFallback)</AssetTargetFallback>
     <DefaultLanguage>en-US</DefaultLanguage>
     <EntryPointProjectUniqueName>..\COTG\COTG.csproj</EntryPointProjectUniqueName>
     <PackageCertificateThumbprint>5DC3522778776B8DC772B28B915990F3B4487888</PackageCertificateThumbprint>
@@ -84,10 +85,19 @@
   <ItemGroup>
     <ProjectReference Include="..\COTG\COTG.csproj">
       <SkipGetTargetFrameworkProperties>True</SkipGetTargetFrameworkProperties>
+      <ExcludeAssets>Content\</ExcludeAssets>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.ProjectReunion" Version="0.8.5" />
+    <PackageReference Include="Microsoft.ProjectReunion" Version="[0.8.4]">
+      <IncludeAssets>build</IncludeAssets>
+      <ExcludeAssets>Microsoft.ProjectReunion.InteractiveExperiences</ExcludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.ProjectReunion.WinUI" Version="[0.8.4]">
+      <IncludeAssets>build</IncludeAssets>
+      <ExcludeAssets>Microsoft.ProjectReunion.InteractiveExperiences</ExcludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.22000.194" />
   </ItemGroup>
   <Import Project="$(WapProjPath)\Microsoft.DesktopBridge.targets" />
 </Project>

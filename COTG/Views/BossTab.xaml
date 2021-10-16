@@ -77,9 +77,7 @@
 
                         AutoGenerateColumns="False"
 
-                        CanUserChooseColumns="True"
-                        ColumnResizeHandleDisplayMode="OnColumnHeaderActionFlyoutOpen"
-                        ColumnDataOperationsMode="Flyout"
+                    
                         UserGroupMode="Disabled"
                         FontSize="{StaticResource MediumFontSize}"
                         ItemsSource="{x:Bind game:Boss.all, Mode=OneTime}"

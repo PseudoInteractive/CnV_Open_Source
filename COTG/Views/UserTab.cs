@@ -15,6 +15,7 @@ namespace COTG.Views
 	{
 		public virtual TabPage defaultPage => TabPage.mainTabs;
 		public static List<RadDataGrid> spotGrids = new();
+		public static List<RadDataGrid> dataGrids = new();
 
 		public event PropertyChangedEventHandler PropertyChanged;
 		public void CallPropertyChanged(string members = null)
@@ -133,6 +134,8 @@ namespace COTG.Views
 		}
 		public static  void SetupDataGrid(RadDataGrid grid)
 		{
+			if(!dataGrids.AddIfAbsentNE(grid))
+				return;
 			grid.GridLinesVisibility= Telerik.UI.Xaml.Controls.Primitives.GridLinesVisibility.Both;
 		//	grid.ProcessTooltips();
 		//	grid.ListenForNestedPropertyChange=false;
@@ -149,6 +152,7 @@ namespace COTG.Views
 			spotGrids.Add(grid);
 			grid.SelectionChanged += SpotSelectionChanged;
 			grid.ProcessTooltips();
+			
 			SetupDataGrid(grid);
 		}
 		protected void DataGridLoaded(object sender,RoutedEventArgs e)

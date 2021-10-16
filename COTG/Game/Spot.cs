@@ -1654,7 +1654,7 @@ namespace COTG.Game
 		{
 			try
 			{
-				await ExtendedQueue.processLock.WaitAsync();
+				await App.uiSema.WaitAsync();
 
 				if (!IsBuild(cid))
 				{
@@ -1732,7 +1732,7 @@ namespace COTG.Game
 			}
 			finally
 			{
-				ExtendedQueue.processLock.Release();
+				App.uiSema.Release();
 
 			}
 
@@ -2095,7 +2095,7 @@ namespace COTG.Game
 		{
 			await App.DispatchOnUIThreadExclusive(cid, async () =>
 			 {
-				 await QueueTab.DoTheStuff(this as City, true, true);
+				 await COTG.DoTheStuff.Go(this as City, true, true);
 			 });
 		}
 		public static async void InfoClick(int _cid)

@@ -17,7 +17,7 @@ using static COTG.Debug;
 namespace COTG
 {
 	[DebuggerDisplay("{" + nameof(GetDebuggerDisplay) + "(),nq}")]
-	public class DArray<T> : IDisposable, IEnumerable<T> where T : struct
+	public class DArray<T> : IDisposable, IEnumerable<T> where T : struct, IEquatable<T>
 	{
 		static ArrayPool<T> pool = ArrayPool<T>.Shared;
 
@@ -248,6 +248,15 @@ namespace COTG
 			}
 		}
 
+		internal bool Remove(T op)
+		{
+			var id = IndexOf(op);
+			if(id == -1)
+				return false;
+			RemoveAt(id);
+			return true;
+		}
+
 		internal void RemoveAt(int offset)
 		{
 			if (offset < 0 || offset >= count)
@@ -279,6 +288,24 @@ namespace COTG
 			for(int i = 0;i < count;++i)
 				m[i] = this[i];
 			return m;
+		}
+		public int IndexOf( T a)
+		{
+			var _count = count;
+			var _v = v;
+			for(int i = 0;i<_count;++i)
+			{
+				if(_v[i].Equals(a) && i < count && v[i].Equals(a) )
+				{
+					return i;
+				}
+			}
+			return -1;
+		}
+		internal Span<T> Slice(int offset,int length)
+		{
+			return new Span<T>(v,offset,length);
+
 		}
 		//internal void Sort()
 		//{

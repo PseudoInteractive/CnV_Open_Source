@@ -233,8 +233,12 @@ namespace COTG.Views
 					await RaidOverview.Send();
 					if (City.build != 0)
 						await GetCity.Post(City.build);
-
-					City.gridCitySource.NotifyReset();
+					foreach(var c in City.myCities)
+					{
+						if(c.testContinentAndTagFilter)
+							c.OnPropertyChanged();
+					}
+					City.gridCitySource.NotifyReset(true,true);
 				}
              //  if (cityGrid.ItemsSource == App.emptyCityList )
              //     cityGrid.ItemsSource = City.gridCitySource;

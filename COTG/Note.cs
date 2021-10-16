@@ -255,7 +255,7 @@ namespace COTG
 		{
 			try
 			{
-				await ShellPage.instance.RefreshX();
+				await ShellPage.RefreshX();
 			}
 			catch (Exception ex)
 			{
