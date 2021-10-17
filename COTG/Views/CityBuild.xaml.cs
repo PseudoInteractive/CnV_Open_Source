@@ -1570,7 +1570,7 @@ namespace COTG.Views
 			var a = await App.DoYesNoBox("No Layout","Would you like to set a layout?");
 			if(a== 1)
 			{
-				await ShareString.Show(City.build);
+				await ShareString.Show(City.build,SetupFlags.layout);
 			}
 			else if(a==-1)
 			{

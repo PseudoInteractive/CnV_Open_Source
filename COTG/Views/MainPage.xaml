@@ -28,7 +28,6 @@
 		<tg:RadDataGrid x:Name="cityGrid"
 					
 							x:FieldModifier="public"
-							ColumnResizeHandleDisplayMode="None"
 							ColumnDataOperationsMode="Inline"
 							Grid.Row="3"
 							Loaded="DataGridLoaded"
@@ -46,7 +45,7 @@
 							FontSize="{StaticResource SmallFontSize}"
 							IsTextScaleFactorEnabled="False"
 							SelectionUnit="Row"
-						
+							ColumnResizeHandleDisplayMode ="None"
 							Tag="Raid"
 							
 					
@@ -110,6 +109,7 @@
 										CanUserResize="False"
 											 />
 					<tg:DataGridNumericalColumn PropertyName="tsTotal"
+												Header="TS"
 												CellContentStyle="{StaticResource RightAlign}"
 												winui:ToolTipService.ToolTip="TS enlisted in city"
 												CellContentFormat="{}{0,7:N0}"
@@ -117,13 +117,14 @@
 												SizeMode="Auto"
 												 />
 					<tg:DataGridNumericalColumn PropertyName="tsRaid"
+												Header="Raid"
 												CellContentStyle="{StaticResource RightAlign}"
 												CellContentFormat="{}{0,7:N0}"
 												SortDirection="Descending"
 												SizeMode="Auto"
 												winui:ToolTipService.ToolTip="TS of Troops at home that can raid" />
 				<tg:DataGridNumericalColumn PropertyName="raidIdle"
-										
+												Header="%Idle"
 												CellContentStyle="{StaticResource RightAlign}"
 												CellContentFormat="{}{0,3:P1}"
 												SortDirection="Descending"

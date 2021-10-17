@@ -163,7 +163,7 @@ namespace COTG.Views
 
 						if (SettingsPage.setShareString)
 						{
-							await ShareString.Touch().ShowNoLock(cid);
+							await ShareString.ShowNoLock(cid,SetupFlags.all);
 						}
 
 					//if (SettingsPage.setHub)

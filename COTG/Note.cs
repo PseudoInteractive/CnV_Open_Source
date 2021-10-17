@@ -30,7 +30,7 @@ namespace COTG
 {
 	public static class Note
 	{
-		static bool initialized = false;
+	
 		static Note()
 		{
 			//markDownText = new();
@@ -272,12 +272,7 @@ namespace COTG
 				}
 				await Task.Delay(1000);
 			}
-
-			await 	App.DispatchOnUIThreadExclusive(cid, async () =>
-			{
-				return await CityRename.RenameDialog(cid, true);
-
-			});
+			await ShareString.Show(cid);
 		}
 
 		//public static void Focus(this Telerik.UI.Xaml.Controls.Grid.RadDataGrid ob)

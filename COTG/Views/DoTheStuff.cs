@@ -45,7 +45,8 @@ namespace COTG;
 
 			if(allowRename && (city.buildStage == BuildStage._new|| (city.autobuildCabinLevel==0&&(await App.DoYesNoBox("Autobuild Off?","Maybe you want Setup?")==1))))
 			{
-				return await CityRename.RenameDialog(cid,false);
+				await ShareString.Show(cid);
+				return true;
 			}
 
 			Assert(city.isBuild);
@@ -54,7 +55,7 @@ namespace COTG;
 			{
 				//				if (!city.isBuild)
 				//				await JSClient.ChangeCity(city.cid, false);
-				await ShareString.Touch().ShowNoLock(cid);
+				await ShareString.ShowNoLock(cid,SetupFlags.all);
 				bc=city.UpdateBuildStage();
 
 				if(city.buildStage == BuildStage.noLayout)
@@ -74,7 +75,7 @@ namespace COTG;
 				{
 					case -1: return false;
 					case 0:
-						await ShareString.Touch().ShowNoLock(cid);
+						await ShareString.ShowNoLock(cid,SetupFlags.layout);
 						return false;
 					default: break; // continue along
 				}

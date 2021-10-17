@@ -54,6 +54,7 @@ namespace COTG.Views
 		//private static bool _isBusy;
 		public static float renderScale=1.0f;
 		public static float webZoom = 0.875f;
+		public static float webZoomSmall = 0.5f;
 		public static float HtmlZoom
 		{
 			get => webZoom;
@@ -61,6 +62,17 @@ namespace COTG.Views
 				if(webZoom != value)
 				{
 					webZoom = value;
+					ShellPage.updateHtmlOffsets.Go(false);
+				}
+			}
+		}
+		public static float HtmlZoomSmall
+		{
+			get => webZoomSmall;
+			set {
+				if(webZoomSmall != value)
+				{
+					webZoomSmall = value;
 					ShellPage.updateHtmlOffsets.Go(false);
 				}
 			}

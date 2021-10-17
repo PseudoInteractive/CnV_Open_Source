@@ -201,7 +201,9 @@ namespace COTG.Views
 					{
 						await GetCity.Post(cid).ConfigureAwait(false);
 						city.OnPropertyChanged();
+
 					}
+					city.UpdateBuildStage();
 
 					city.points = (ushort)ci[2].GetAsInt();
 					var isBuilding = (ci[4].GetAsFloat() != 0) || (city.buildStage == BuildStage.complete) || (city.buildStage == BuildStage.leave);

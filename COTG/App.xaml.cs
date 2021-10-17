@@ -1252,6 +1252,8 @@ namespace COTG
 			}
 		}
 
+		public static bool isPopupOpen => AApp.popupSema.IsLocked();
+
 		public static Task<int> DoYesNoBox(string title, string text, string yes="Yes", string no = "No", string cancel ="Cancel" )
 		{
 			return DispatchOnUIThreadTask(async () =>
@@ -1369,6 +1371,7 @@ namespace COTG
 
 		public static async Task<ContentDialogResult> ShowAsync2(this ContentDialog dialog,UIElement xamlRootSource = null)
 		{
+			Assert(App.globalQueue.HasThreadAccess);
 			CopyXamlRoomFrom(dialog,xamlRootSource);
 
 			await popupSema.WaitAsync();//.ConfigureAwait(true);
@@ -1384,6 +1387,32 @@ namespace COTG
 			}
 		}
 
+		public static Task<bool> ShowAsync2(this TeachingTip dialog,UIElement xamlRootSource = null)
+		{
+			Assert(App.globalQueue.HasThreadAccess);
+			TaskCompletionSource<bool> result = new TaskCompletionSource<bool>();
+			var rv = result.Task;
+			App.DispatchOnUIThreadLow(() =>
+		   {
+			   CopyXamlRoomFrom(dialog,xamlRootSource);
+			   if(dialog.Target is null)
+				   dialog.TailVisibility=TeachingTipTailVisibility.Collapsed;
+
+			   dialog.CloseButtonClick+= (_tt,_) =>
+			   {
+				   _tt.IsOpen=false;
+				   result.TrySetResult(false);
+			   };
+			   dialog.ActionButtonClick+= (_tt,_) =>
+			   {
+				   _tt.IsOpen=false;
+				   result.TrySetResult(true);
+			   };
+			   dialog.IsOpen=true;
+		   });
+
+			return rv;
+		}
 
 
 

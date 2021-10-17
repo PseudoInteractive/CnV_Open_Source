@@ -426,36 +426,55 @@ namespace COTG
 			return (ushort)v;
 		}
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] 
 		public static float Frac(this float f) => f - MathF.Floor(f);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static float Max(this float f, float m)
         {
             return (f >= m ? f : m);
         }
-        public static byte Max(this byte f, byte m)
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static double Max(this double f,double m)
+		{
+			return (f >= m ? f : m);
+		}
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static byte Max(this byte f, byte m)
         {
             return (f >= m ? f : m);
         }
-        public static float Max0(this float f)
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static float Max0(this float f)
         {
             return (f >= 0 ? f : 0);
         }
-        public static int Max0(this int f)
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static int Max0(this int f)
         {
             return (f >= 0 ? f : 0);
         }
-        public static int Max(this int f, int m)
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static int Max(this int f, int m)
         {
             return (f >= m ? f : m);
         }
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static float Max(this float f, int m)
 		{
 			return (f >= m ? f : m);
 		}
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static int Min(this int f, int min)
         {
             return (f <=min ? f : min);
         }
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static float Min(this float f, int min)
+		{
+			return (f <= min ? f : min);
+		}
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static double Min(this double f,double min)
 		{
 			return (f <= min ? f : min);
 		}
@@ -469,6 +488,8 @@ namespace COTG
 		{
 			return Min(Min(a, b), Min(c, d));
 		}
+		
+
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static float Min(this float a, float b, float c, float d, float e)
 		{

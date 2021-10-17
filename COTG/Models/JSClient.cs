@@ -534,7 +534,7 @@ namespace COTG
 				coreWebView.Settings.IsBuiltInErrorPageEnabled=true;
 				coreWebView.Settings.AreHostObjectsAllowed=false;
 				//	coreWebView.Settings.AreBrowserAcceleratorKeysEnabled=false;
-				coreWebView.Settings.AreDefaultContextMenusEnabled=false;
+				coreWebView.Settings.AreDefaultContextMenusEnabled=true;
 				coreWebView.Environment.NewBrowserVersionAvailable+=Environment_NewBrowserVersionAvailable;
 				//				coreWebView.Settings.AreBrowserAcceleratorKeysEnabled=false;
 				//coreWebView.AddWebResourceRequestedFilter("*jsfunctions/game.js",ResourceContext:CoreWebView2WebResourceContext.Script);

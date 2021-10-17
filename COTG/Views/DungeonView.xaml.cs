@@ -69,7 +69,7 @@ namespace COTG.Views
 				}
 				return;
 			}
-			if( AApp.popupSema.IsLocked() )
+			if( App.isPopupOpen )
 			{
 				Assert(false);
 				return;

@@ -23,11 +23,18 @@ using System.ComponentModel;
 
 namespace COTG.Views
 {
-	public sealed partial class ResSettings : UserControl, INotifyPropertyChanged
+	public sealed partial class ResSettings : UserControl, IANotifyPropertyChanged
 	{
 
 		#region PropertyChanged
-		public void OnPropertyChanged(string propertyName = "") => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+		public void CallPropertyChanged(string member = null)
+		{
+			PropertyChanged?.Invoke(this,new PropertyChangedEventArgs(member));
+		}
+		public void OnPropertyChanged(string member = null)
+		{
+			if(PropertyChanged is not null) ((IANotifyPropertyChanged)this).IOnPropertyChanged();
+		}
 		public event PropertyChangedEventHandler PropertyChanged;
 		#endregion
 

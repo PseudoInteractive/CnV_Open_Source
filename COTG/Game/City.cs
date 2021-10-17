@@ -2163,7 +2163,7 @@ namespace COTG.Game
 		}
 		public bool IsNew()
 		{
-			return CityRename.IsNew(this) && points <= 60;
+			return ShareString.IsNew(this) && points <= 60;
 		}
 		public struct TownHallAndBuildingCount
 		{

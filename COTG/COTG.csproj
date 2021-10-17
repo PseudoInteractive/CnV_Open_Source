@@ -294,9 +294,6 @@
     <Compile Include="Views\CityControl.xaml.cs">
       <DependentUpon>CityControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\CityRename.xaml.cs">
-      <DependentUpon>CityRename.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Views\ContinentTagFilter.xaml.cs">
       <DependentUpon>ContinentTagFilter.xaml</DependentUpon>
     </Compile>
@@ -448,10 +445,6 @@
     <Page Include="Views\CityControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Views\CityRename.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\ContinentTagFilter.xaml">
       <SubType>Designer</SubType>
@@ -619,6 +612,7 @@
     <None Remove="Strings\en-us\Resources.resw" />
     <None Remove="Package.appxmanifest" />
     <None Remove="Styles\CommandBar.xaml" />
+    <None Remove="Views\CityRename.xaml" />
     <None Remove="Wiki\fixes.md" />
     <None Remove="Win32Native.txt" />
   </ItemGroup>

@@ -205,6 +205,7 @@ namespace COTG.Views
 			r1,
 			r2,
 			chat,
+			count,
 		}
 		public static Layout layout = Layout.c;
 		public static bool rightTabsVisible => layout>=Layout.c;
@@ -321,7 +322,7 @@ namespace COTG.Views
 			//SystemNavigationManager.GetForCurrentView().BackRequested += ShellPage_BackRequested;
 			// PointerPressed+= PointerPressedCB; HomeButtonTip.IsOpen = true;
 			this.ProcessKeyboardAccelerators+=ShellPage_ProcessKeyboardAccelerators;
-			this.PointerPressed
+			this.PointerPressed+=ShellPage_PointerPressed;
 			//App.SetupCoreWindowInputHooks();
 			//var displayInformation = DisplayInformation.GetForCurrentView();
 			//var screenSize = new Size(displayInformation.ScreenWidthInRawPixels,
@@ -364,9 +365,34 @@ namespace COTG.Views
 			//});
 		}
 
+		static void AdjustLayout(int delta)
+		{
+			layout+=delta;
+			if(layout >= Layout.count)
+				layout = 0;
+			if(layout < 0)
+				layout = (Layout)(Layout.count-1);
+			updateHtmlOffsets.Go(true);
+		}
+		private void ShellPage_PointerPressed(object sender,PointerRoutedEventArgs e)
+		{
+			if(e.GetCurrentPoint(this).Properties.IsMiddleButtonPressed)
+			{
+				AdjustLayout(1);
+			}
+		}
+
 		private void ShellPage_ProcessKeyboardAccelerators(UIElement sender,ProcessKeyboardAcceleratorEventArgs args)
 		{
 			Trace($"{sender} {args.Key} {args.Modifiers}");
+			if( args.Key == VirtualKey.F4)
+			{
+				AdjustLayout(-1);
+			}
+			if(args.Key == VirtualKey.F5)
+			{
+				AdjustLayout(1);
+			}
 		}
 
 

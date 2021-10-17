@@ -1955,7 +1955,7 @@ namespace COTG.Game
 					aSetup.AddItem("Setup...", (_, _) => Spot.InfoClick(cid));
 					aSetup.AddItem("Find Hub", (_, _) => CitySettings.SetClosestHub(cid));
 					aSetup.AddItem("Set Recruit", (_, _) => CitySettings.SetRecruitFromTag(cid));
-					aSetup.AddItem("Change...", (_, _) => ShareString.Show(cid));
+					aSetup.AddItem("Change...", (_, _) => ShareString.Show(cid,default));
 					//aSetup.AddItem("Remove Castle", (_, _) => 
 					//{
 					//	CityBuild.
@@ -2105,11 +2105,8 @@ namespace COTG.Game
 			//	foreach (var cid in cids)
 			//	{
 			//		var _cid = cid;
-			await App.DispatchOnUIThreadExclusive(_cid, async () =>
-			  {
-				  return await CityRename.RenameDialog(_cid, true);
+				   await ShareString.Show(_cid);
 
-			  });
 			//	{
 			//		break;
 			//	}

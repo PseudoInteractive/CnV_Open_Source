@@ -39,7 +39,7 @@
 
 
 		<ToggleSwitch Grid.Row="1" x:Name="useSuggested" OnContent="Suggested" OffContent="Current"/>
-		<winui:RadioButtons Header="City Name Type" x:Name="cityType" Grid.Row="2"  >
+		<winui:RadioButtons Header="City Name Type" x:Name="cityType" Grid.Row="2" MaxColumns="4"  >
 			<x:String>Normal</x:String>
 			<x:String>Hub</x:String>
 			<x:String>Storage</x:String>
