@@ -12,7 +12,7 @@
     "Mixed": {
       "commandName": "Project",
       "hotReloadEnabled": false,
-      "nativeDebugging": true
+      "nativeDebugging": false
     },
     "Msix": {
       "commandName": "MsixPackage"

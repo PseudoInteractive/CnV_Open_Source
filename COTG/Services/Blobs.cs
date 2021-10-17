@@ -109,11 +109,11 @@ namespace COTG.Services
 				for (; ; )
 				{
 
-					var container = await GetSnapshotContainer();
+					var container = await GetSnapshotContainer().ConfigureAwait(false);
 					if (container == null)
 						return;
 
-					var info = await container.GetPropertiesAsync();
+					var info = await container.GetPropertiesAsync().ConfigureAwait(false);
 					var lastWritten = info.Value.LastModified;// + TimeSpan.FromHours(12) + TimeSpan.FromMinutes(AMath.random.Next(60)-30);
 					var currentT = DateTimeOffset.UtcNow;
 					var dt = currentT - lastWritten;
@@ -175,8 +175,8 @@ namespace COTG.Services
 								mem.Flush();
 								mem.Seek(0, SeekOrigin.Begin);
 								var str = snap.time.dateTime.FormatFileTime();
-								await container.UploadBlobAsync(str, mem);
-								await container.SetMetadataAsync(new Dictionary<string, string>() { { "last", str } });
+								await container.UploadBlobAsync(str, mem).ConfigureAwait(false);
+								await container.SetMetadataAsync(new Dictionary<string, string>() { { "last", str } }).ConfigureAwait(false);
 
 							}
 							catch (Exception ex)
@@ -190,7 +190,7 @@ namespace COTG.Services
 
 					var nextSnapShot = lastWritten + TimeSpan.FromMinutes(AMath.random.Next(minTimeBetweenSnapshots, maxTimeBetweenSnapshots));
 
-					await Task.Delay((nextSnapShot - currentT));
+					await Task.Delay((nextSnapShot - currentT)).ConfigureAwait(false);
 				}
 			} catch(Exception ex)
 			{
@@ -204,12 +204,12 @@ namespace COTG.Services
 			{
 				for (; ; )
 				{
-					var container = await GetTSSnapshotContainer();
+					var container = await GetTSSnapshotContainer().ConfigureAwait(false);
 					if (container == null)
 					{
 						return;
 					}
-					var info = await container.GetPropertiesAsync();
+					var info = await container.GetPropertiesAsync().ConfigureAwait(false);
 					var lastWritten = info.Value.LastModified;// + TimeSpan.FromHours(12) + TimeSpan.FromMinutes(AMath.random.Next(60)-30);
 					var currentT = DateTimeOffset.UtcNow;
 					var dt = currentT - lastWritten;
@@ -217,7 +217,7 @@ namespace COTG.Services
 					{
 					//	COTG.Debug.Trace("Snapshot");
 						// take a snapshot
-						var snap = await TSSnapshot.GetStats();
+						var snap = await TSSnapshot.GetStats().ConfigureAwait(false);
 						using (var mem = new MemoryStream())
 						{
 							using (var deflate = new GZipStream(mem, CompressionLevel.Optimal, true))
@@ -247,8 +247,8 @@ namespace COTG.Services
 								mem.Flush();
 								mem.Seek(0, SeekOrigin.Begin);
 								var str = snap.time.dateTime.FormatFileTime();
-								await container.UploadBlobAsync(str, mem);
-								await container.SetMetadataAsync(new Dictionary<string, string>() { { "last", str } });
+								await container.UploadBlobAsync(str, mem).ConfigureAwait(false);
+								await container.SetMetadataAsync(new Dictionary<string, string>() { { "last", str } }).ConfigureAwait(false);
 
 							}
 							catch (Exception ex)
@@ -262,7 +262,7 @@ namespace COTG.Services
 
 					var nextSnapShot = lastWritten + TimeSpan.FromMinutes(AMath.random.Next(minTimeBetweenSnapshots, maxTimeBetweenSnapshots));
 
-					await Task.Delay((nextSnapShot - currentT));
+					await Task.Delay((nextSnapShot - currentT)).ConfigureAwait(false);
 				}
 			}
 			catch(Exception ex)

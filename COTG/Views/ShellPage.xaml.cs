@@ -320,14 +320,15 @@ namespace COTG.Views
 
 			//SystemNavigationManager.GetForCurrentView().BackRequested += ShellPage_BackRequested;
 			// PointerPressed+= PointerPressedCB; HomeButtonTip.IsOpen = true;
-
+			this.ProcessKeyboardAccelerators+=ShellPage_ProcessKeyboardAccelerators;
+			this.PointerPressed
 			//App.SetupCoreWindowInputHooks();
 			//var displayInformation = DisplayInformation.GetForCurrentView();
 			//var screenSize = new Size(displayInformation.ScreenWidthInRawPixels,
 			//						  displayInformation.ScreenHeightInRawPixels);
 			//	ShellPage.webclientSpan.x = (screenSize.Width * .715625f* SettingsPage.htmlZoom * 2).RoundToInt();
 			//	ShellPage.webclientSpan.y = (screenSize.Height * 0.89236111111111116f * SettingsPage.htmlZoom*2).RoundToInt();
-		//	await UpdateWebViewScale();
+			//	await UpdateWebViewScale();
 			AGame.Create(canvas);
 
 			if( SystemInformation.Instance.IsAppUpdated && !JSClient.isSub)
@@ -363,7 +364,12 @@ namespace COTG.Views
 			//});
 		}
 
-		
+		private void ShellPage_ProcessKeyboardAccelerators(UIElement sender,ProcessKeyboardAcceleratorEventArgs args)
+		{
+			Trace($"{sender} {args.Key} {args.Modifiers}");
+		}
+
+
 		//private void FocusManager_GotFocus(object sender,FocusManagerGotFocusEventArgs e)
 		//{
 		//	Note.Show($"Focus!!: {e.NewFocusedElement}");

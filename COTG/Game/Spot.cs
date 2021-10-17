@@ -1740,6 +1740,7 @@ namespace COTG.Game
 
 		public bool isHubOrStorage => HasTag(Tags.Hub) || HasTag(Tags.Storage);
 		public bool isHub => HasTag(Tags.Hub);
+		public bool isStorage => HasTag(Tags.Storage);
 		public bool is7Point => HasTag(Tags.SevenPoint);
 
 		public async void ReturnAtBatch(object sender, RoutedEventArgs e)

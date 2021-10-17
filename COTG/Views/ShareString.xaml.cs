@@ -30,7 +30,7 @@ namespace COTG.Views
 
 //	record ab(string a=null, string b=null);
 
-	public sealed partial class ShareString : Microsoft.UI.Xaml.Controls.ContentDialog, INotifyPropertyChanged
+	public sealed partial class ShareString : TeachingTip, INotifyPropertyChanged
 	{
 		#region PropertyChanged
 		public void OnPropertyChanged(string propertyName = "") => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
@@ -273,14 +273,14 @@ namespace COTG.Views
 
 						if(setLayout)
 						{
-							city.SetShareString(GetShareStringWithJson(),true);
+							await city.SetShareString(GetShareStringWithJson(),true);
 						}
 					}
-					if(SettingsPage.autoRearrangeShareStrings && setLayout && City.Get(cid).isLayoutCustom)
+					if(SettingsPage.autoRearrangeShareStrings && setLayout && city.isLayoutCustom)
 					{
-						await PlannerTab.SmartRearrange(City.GetBuild(),true);
+						await PlannerTab.SmartRearrange(city,true);
 					}
-					City.Get(cid).BuildStageDirty();
+					city.BuildStageDirty();
 				}
 				else
 				{
@@ -544,6 +544,11 @@ namespace COTG.Views
 			var exp = sender as Expander;
 			Assert(exp!=null);
 			exp.Header = (exp.Header as string).Replace( " - No Change", "");
+		}
+
+		private void TeachingTip_Closed(TeachingTip sender,TeachingTipClosedEventArgs args)
+		{
+
 		}
 	}
 

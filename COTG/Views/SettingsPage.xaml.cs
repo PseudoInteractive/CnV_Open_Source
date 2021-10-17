@@ -98,7 +98,7 @@ namespace COTG.Views
 		public static bool showDungeonsInRegionView = false;
 		public static bool applyTags=true;
 		public static bool setHub = true;
-		public static bool useSuggested = true;
+		
 
 		public static bool wantRaidRepeat=true;
 		public static bool clearOnlyCenterRes;

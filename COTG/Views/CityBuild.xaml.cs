@@ -614,7 +614,7 @@ namespace COTG.Views
 				City.GetBuild().BuildingsOrQueueChanged();
 
 				if (syncPlannerTab && !PlannerTab.IsVisible())
-					App.DispatchOnUIThreadLow(() => PlannerTab.instance.Show());
+					await App.DispatchOnUIThreadTask(() => PlannerTab.instance.Show());
 			}
 			else
 			{
@@ -627,7 +627,7 @@ namespace COTG.Views
 
 				if (syncPlannerTab && PlannerTab.IsVisible())
 				{
-					App.DispatchOnUIThreadLow(() =>
+					await App.DispatchOnUIThreadTask(() =>
 				   {
 					   if (PlannerTab.instance.isFocused)
 					   {
@@ -1334,6 +1334,7 @@ namespace COTG.Views
 			var bi = e.ClickedItem as BuildMenuItem;
 			lastQuickBuildActionBSpot = -1; // reset
 			lastBuildToolTipSpot=-1;
+
 			if (bi != null)
 			{
 				if (bi.isBuilding)
@@ -1360,13 +1361,9 @@ namespace COTG.Views
 					//			var items = ShellPage.instance.buildMenu.Items;
 					if (bi.action == Action.layout && !City.GetBuild().isLayoutCustom)
 					{
-						Note.Show("Please assign a layout");
 						//		JSClient.JSInvoke("showLayout", null);
-						await ShareString.Show(City.build);
-						SetAction(bi.action);
-						ClearSelectedBuilding();
-						//						App.( ()=> PlannerTeachingTip.Show(nameof(PlannerTeachingTip)));
-
+						// Dont await on this, just close the menu, we'll activate nex time
+						var _ = ShowShareStringMaybe();
 
 					}
 					else
@@ -1557,13 +1554,30 @@ namespace COTG.Views
 			}
 			else
 			{
-				if (!GetBuild().isLayoutCustom)
-					await ShareString.Show(City.build);
+				if(!GetBuild().isLayoutCustom)
+				{
+					if(!await ShowShareStringMaybe())
+						return;
+				}
+
 				await CityBuild._IsPlanner(true, true);
 
 			}
 		}
 
+		private static async Task<bool> ShowShareStringMaybe()
+		{
+			var a = await App.DoYesNoBox("No Layout","Would you like to set a layout?");
+			if(a== 1)
+			{
+				await ShareString.Show(City.build);
+			}
+			else if(a==-1)
+			{
+				return false;
+			}
+			return true;
+		}
 
 		private async void Settings_ExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
 		{

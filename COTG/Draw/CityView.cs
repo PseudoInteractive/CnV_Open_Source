@@ -190,7 +190,7 @@ namespace COTG.Draw
 
 						var dt = (animationT - animationOffsets[bspot]);
 						float blendT = ((dt)*0.333f).Frac();
-						var bonus = (dt*1.333f).Abs().Saturate().Bezier(0,1,0,0);
+						var bonus = (dt).Abs().Saturate().Bezier(0,1,0,0);
 
 						if(cur.id==next.id)
 						{
@@ -231,8 +231,8 @@ namespace COTG.Draw
 									bl = cur.bl;
 									fontA = t.Bezier(1,1,0);// prior number out	
 								}
-								var z = bonus*(1.0f/64.0f);
-								DrawBuilding(iAlpha,z*0.25f,fontScale,cs,cur,Layer.tileCity,(int)(alpha*fontA*255f),bl,bidOverride);
+								var z = bonus*(0.5f/64.0f);
+								DrawBuilding(iAlpha,z*0.5f,fontScale,cs,cur,Layer.tileCity,(int)(alpha*fontA*255f),bl,bidOverride);
 								if(blendOp > 0)
 								{
 									// upgrade
@@ -273,14 +273,14 @@ namespace COTG.Draw
 								var t = (blendT - 0.25f) *(1.0f/0.75f); // building fades in, hammer fades out 1 seconds
 								blendOp = t.Bezier(1,1,0);
 							}
-							var z = bonus*(1.0f/64.0f);
+							var z = bonus*(0.5f/64.0f);
 
 							if(blendOp > 0)
 							{
 								draw.AddQuad(Layer.tileCity + 2,blendMat,cs.c0,cs.c1,(new Color(iAlpha,iAlpha,iAlpha,iAlpha)).Scale(blendOp),(z,z,z,z) );
 							}
 
-							DrawBuilding(iAlpha,z*0.25f,fontScale,cs,bd,Layer.tileCity,-1,-1,bidOverride);
+							DrawBuilding(iAlpha,z*0.5f,fontScale,cs,bd,Layer.tileCity,-1,-1,bidOverride);
 						}
 
 						// draw overlays

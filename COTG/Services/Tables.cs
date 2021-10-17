@@ -223,7 +223,7 @@ namespace COTG.Services
 			try
 			{
 
-				var entities = tableClient.QueryAsync<ShareStringDB>();
+				var entities = tableClient.QueryAsync<ShareStringDB>().ConfigureAwait(false);
 
 				//			.Select(x => new CustomerEntity() { PartitionKey = x.PartitionKey, RowKey = x.RowKey, Email = x.Email });
 

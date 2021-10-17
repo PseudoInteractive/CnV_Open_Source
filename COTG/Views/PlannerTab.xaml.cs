@@ -27,7 +27,6 @@ namespace COTG.Views
 			if (visible)
 			{
 			//	await CityBuild._IsPlanner(true,false);
-				statsDirty = true;
 				PleaseRefresh.Go();
 			//	BuildingsChanged(City.GetBuild(),false);
 			}
@@ -180,7 +179,6 @@ namespace COTG.Views
 			//SetShareStrongFromLayout();
 			if (!IsVisible())
 			  return Task.CompletedTask;
-			statsDirty = false;
 			// recruit speeds
 			var city = City.GetBuild();
 			var bds = city.GetLayoutBuildings();
@@ -363,7 +361,7 @@ namespace COTG.Views
 			return Task.CompletedTask;
 
 		}
-		static bool statsDirty;
+	
 		public static bool IsValidCityCoord((int x, int y) cc)
 		{
 			return (cc.x >= span0) && (cc.y>=span0) && (cc.x <= span1) && (cc.y <= span1);
@@ -381,7 +379,6 @@ namespace COTG.Views
 				
 				if(city.cid == City.build)
 				{
-					statsDirty = true;
 					City.postQueueBuildingCount=-1;
 					PleaseRefresh.Go();
 				}
@@ -428,7 +425,7 @@ namespace COTG.Views
 		{
 			App.UpdateKeyStates();
 			Assert(CityBuild.isPlanner);
-			await CityBuild._IsPlanner(true);
+			//await CityBuild._IsPlanner(true);
 			var city = GetBuild();
 			city.FlipLayoutH(true,App.IsKeyPressedControl());
 		//	PlannerTab.BuildingsChanged(city,true);
@@ -438,7 +435,7 @@ namespace COTG.Views
 			App.UpdateKeyStates();
 
 			Assert(CityBuild.isPlanner);
-			await CityBuild._IsPlanner(true);
+			//await CityBuild._IsPlanner(true);
 			var city = GetBuild();
 			city.FlipLayoutV(true,App.IsKeyPressedControl());
 			//PlannerTab.BuildingsChanged(city,true);

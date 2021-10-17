@@ -25,6 +25,15 @@ namespace COTG
 
 	public static partial class AUtil
 	{
+		// converts to an character 0..9 then A..Z etc.
+		// numbers beyond 72 don't work
+		
+		public static char BeyondHex(int a)
+		{
+			Assert(a <= 10+26+26+14);
+			return a switch {  < 10 => (char)('0'+a), < 10+26 => (char)('A'+a-10), < 10+26+26 => (char)('a'+a-10-26), < 10+26+26+14 => (char)('"'+a-10-26-26), _ => '!' };
+		}
+
 		public static Task<bool> completedTaskTrue = Task.FromResult(true);
 		public static Task<bool> completedTaskFalse = Task.FromResult(false);
 		public static Microsoft.Extensions.ObjectPool.StringBuilderPooledObjectPolicy stringBuilderPool = new() { InitialCapacity=2,MaximumRetainedCapacity=2};

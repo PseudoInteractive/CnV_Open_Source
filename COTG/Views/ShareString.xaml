@@ -1,4 +1,4 @@
-﻿<ContentDialog
+﻿<TeachingTip
     x:Class="COTG.Views.ShareString"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -9,110 +9,83 @@
 	xmlns:winui="using:Microsoft.UI.Xaml.Controls"
     mc:Ignorable="d"
 	 xmlns:cotg="using:COTG"
-   xmlns:game="using:COTG.Game"
+	  xmlns:game="using:COTG.Game"
 	 xmlns:views="using:COTG.Views"
-    Title="City Planner String"
-    PrimaryButtonText="Done"
-    SecondaryButtonText="Cancel"
-    PrimaryButtonClick="ContentDialog_PrimaryButtonClick"
-    SecondaryButtonClick="ContentDialog_SecondaryButtonClick">
-	<ContentDialog.Resources>
-
-
+	    Title="City Planner String"
+    ActionButtonContent="Apply"
+    ActionButtonClick="ContentDialog_PrimaryButtonClick"
+    CloseButtonClick="ContentDialog_SecondaryButtonClick"
+    CloseButtonContent="Cancel"
+	Closed="TeachingTip_Closed"	>>
+	<TeachingTip.Resources>
 		<DataTemplate x:Key="ShareItemTemplate" x:DataType="views:ShareStringItem" >
 			<winui:TreeViewItem ItemsSource="{x:Bind children}" >
 				<StackPanel Orientation="Horizontal" Margin="4">
-
 					<TextBlock Text="{x:Bind label}"/>
 				</StackPanel>
 			</winui:TreeViewItem>
 		</DataTemplate>
-
-
-	</ContentDialog.Resources>
-	<ScrollViewer ZoomMode="Enabled">
+	</TeachingTip.Resources>
+	<TeachingTip.HeroContent>
 		<Grid>
-			<Grid.RowDefinitions>
-				<RowDefinition Height="auto"/>
-				<RowDefinition Height="auto"/>
-				<RowDefinition Height="*"/>
-			</Grid.RowDefinitions>
-			<tk:Expander Grid.Row="2" x:Name="expandShareString"  
-                        Header="ShareString (Layout)"
-						BorderThickness="1"
-                        HorizontalContentAlignment="Stretch"
-                        IsExpanded="True"
-						ToolTipService.ToolTip="Expand to set Layout, if collapsed, layout is not changed"
-                        ExpandDirection="Down"
-						Collapsed="CollapsedDisable"
-						Expanded="ExpandedEnable" >
-				<StackPanel Orientation="Vertical">
-					<TextBox x:Name="shareString" Header="ShareString" TextWrapping="Wrap" AcceptsReturn="False" IsSpellCheckEnabled="False" MinWidth="500" />
-					<Border Style="{StaticResource BorderReveal}">
-						<tk:WrapPanel  Orientation="Horizontal">
-							<TextBox x:Name="title" Header="Title" TextChanged="title_TextChanged"  />
-							<TextBox x:Name="path" Header="path"  />
-							<TextBox x:Name="description" Header="Description" TextWrapping="Wrap" AcceptsReturn="False" HorizontalAlignment="Stretch" />
-						</tk:WrapPanel>
-					</Border>
-					<Border  Style="{StaticResource BorderReveal}">
-						<tk:WrapPanel  Orientation="Horizontal">
-							<Button Content="Share" Click="ShareClick" Style="{StaticResource ButtonMedium}" />
-							<Button Content="Use buildings" Click="UseBuildingsClick" Style="{StaticResource ButtonMedium}" />
-							<Button Content="From Clipboard" Click="FromClipboardClick" Style="{StaticResource ButtonMedium}" />
-							<Button Content="To Clipboard" Click="ToClipboardClick" Style="{StaticResource ButtonMedium}" />
-							<Button Content="Clear" Click="ClearClick" Style="{StaticResource ButtonMedium}" />
-
-							<ToggleSwitch x:Name="setLayout" Header="Set Layout" OffContent="Leave" OnContent="Apply" IsOn="True" ToolTipService.ToolTip="If on, the cities layout is set to the share string above, otherwise it is left as is"  />
-
-							<ToggleSwitch Header="Rearrange" OffContent="Skip" OnContent="Smart" IsOn="{x:Bind views:SettingsPage.autoRearrangeShareStrings, Mode=TwoWay}" ToolTipService.ToolTip="Moves buildings whose positions don't matter to where existing corresponding buildings are located or to locations without res nodes"  />
-							<ToggleSwitch Header="Trade Setings" OffContent="Skip" OnContent="Embed" IsOn="{x:Bind views:SettingsPage.embedTradeInShareStrings, Mode=TwoWay}" ToolTipService.ToolTip="This effects sharing, if on, trade settings will embedded in the layout, shared with it and applied with it"  />
-
-						</tk:WrapPanel>
-					</Border>
-					<Border  Style="{StaticResource BorderReveal}">
-						<winui:TreeView x:Name="shareStrings" SelectionMode="Single" IsTabStop="True" BorderThickness="1" 
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="auto" />
+				<ColumnDefinition Width="*" />
+			</Grid.ColumnDefinitions>
+			<StackPanel>
+				<ToggleSwitch 
+				Header="Name"
+				IsOn="{Binding IsOpen, Mode=TwoWay, ElementName=NameBlade}"
+				OnContent="Apply"
+				OffContent="Skip" />
+			</StackPanel>
+			<tk:BladeView Grid.Column="1">
+				<tk:BladeItem x:Name="NameBlade" Header="Name" ></tk:BladeItem>
+				<tk:BladeItem x:Name="LayoutBlade" Header="ShareString" >
+					<StackPanel Orientation="Vertical">
+						<Border  Style="{StaticResource BorderReveal}">
+							<tk:WrapPanel  Orientation="Horizontal">
+								<TextBox x:Name="title" Header="Title" TextChanged="title_TextChanged"  />
+								<TextBox x:Name="path" Header="path"  />
+								<TextBox x:Name="description" Header="Description" TextWrapping="Wrap" AcceptsReturn="False" HorizontalAlignment="Stretch" />
+							</tk:WrapPanel>
+						</Border>
+						<Border  Style="{StaticResource BorderReveal}">
+							<tk:WrapPanel  Orientation="Horizontal">
+								<Button Content="Share" Click="ShareClick" Style="{StaticResource ButtonMedium}" />
+								<Button Content="Use buildings" Click="UseBuildingsClick" Style="{StaticResource ButtonMedium}" />
+								<Button Content="From Clipboard" Click="FromClipboardClick" Style="{StaticResource ButtonMedium}" />
+								<Button Content="To Clipboard" Click="ToClipboardClick" Style="{StaticResource ButtonMedium}" />
+								<Button Content="Clear" Click="ClearClick" Style="{StaticResource ButtonMedium}" />
+								<ToggleSwitch x:Name="setLayout" Header="Set Layout" OffContent="Leave" OnContent="Apply" IsOn="True" ToolTipService.ToolTip="If on, the cities layout is set to the share string above, otherwise it is left as is"  />
+								<ToggleSwitch Header="Rearrange" OffContent="Skip" OnContent="Smart" IsOn="{x:Bind views:SettingsPage.autoRearrangeShareStrings, Mode=TwoWay}" ToolTipService.ToolTip="Moves buildings whose positions don't matter to where existing corresponding buildings are located or to locations without res nodes"  />
+								<ToggleSwitch Header="Trade Setings" OffContent="Skip" OnContent="Embed" IsOn="{x:Bind views:SettingsPage.embedTradeInShareStrings, Mode=TwoWay}" ToolTipService.ToolTip="This effects sharing, if on, trade settings will embedded in the layout, shared with it and applied with it"  />
+							</tk:WrapPanel>
+						</Border>
+						<Border  Style="{StaticResource BorderReveal}">
+							<winui:TreeView x:Name="shareStrings" SelectionMode="Single" IsTabStop="True" BorderThickness="1" 
 							BorderBrush="{ThemeResource SystemControlBackgroundAccentRevealBorderBrush}"
 						TabNavigation="Once" CanDragItems="False" AllowDrop="False" ItemTemplate="{StaticResource ShareItemTemplate}"
 						ItemsSource="{x:Bind views:ShareStringItem.all}" ItemInvoked="ShareItemInvoked"
-						>
-						</winui:TreeView>
-					</Border>
-
-				</StackPanel>
-			</tk:Expander>
-			<tk:Expander Grid.Row="0" x:Name="expandResources"
-						 Header="Trade Settings"
-	 						 ToolTipService.ToolTip="Expand to set trade resources settings, if collapsed, trade settings are not changed"
-                           HorizontalContentAlignment="Stretch"
-                           IsExpanded="True"
-                         Collapsed="CollapsedDisable"
-						 Expanded="ExpandedEnable"  
-						 ExpandDirection="Down">
+						></winui:TreeView>
+						</Border>
+					</StackPanel>
+				</tk:BladeItem>
+				<tk:BladeItem x:Name="ResourceBlade" Header="Trade Settings" >
 					<views:ResSettings x:Name="res" />
-			</tk:Expander>
-			<tk:Expander Grid.Row="1" x:Name="expandTags"
-						 Header="Tags"
-						 Collapsed="CollapsedDisable"
-						 Expanded="ExpandedEnable"
-	 						 ToolTipService.ToolTip="Expand to set tags, if collapsed, tags and recruit are not changed"
-                           HorizontalContentAlignment="Stretch"
-                           IsExpanded="{x:Bind views:SettingsPage.shareStringApplyTags, Mode=TwoWay}"
-                           ExpandDirection="Down">
-
-				<StackPanel>
-					<StackPanel Orientation="Horizontal">
-						<ToggleSwitch x:Name="setRecruit" Header="Recruit" OffContent="Leave" OnContent="From Tags" ToolTipService.ToolTip="If set, the city will be set to recruit troops based on the tags" IsOn="{x:Bind views:SettingsPage.setRecruit}"  />
-						<TextBox 
+				</tk:BladeItem>
+				<tk:BladeItem x:Name="TagsBlade" Header="Tags" >
+					<StackPanel>
+						<StackPanel Orientation="Horizontal">
+							<ToggleSwitch x:Name="setRecruit" Header="Recruit" OffContent="Leave" OnContent="From Tags" ToolTipService.ToolTip="If set, the city will be set to recruit troops based on the tags" IsOn="{x:Bind views:SettingsPage.setRecruit}"  />
+							<TextBox 
 						 Text="{x:Bind views:SettingsPage.VRTRatio, Mode=TwoWay}"
 						 Header="V/R/T Ratio (if applicable)" />
+						</StackPanel>
+						<tk:WrapPanel x:Name="tagsPanel" x:FieldModifier="public"></tk:WrapPanel>
 					</StackPanel>
-					<tk:WrapPanel x:Name="tagsPanel" x:FieldModifier="public">
-					</tk:WrapPanel>
-				</StackPanel>
-			</tk:Expander>
-
-
+				</tk:BladeItem>
+		</tk:BladeView>
 		</Grid>
-	</ScrollViewer>
-</ContentDialog>
+	</TeachingTip.HeroContent>
+</TeachingTip>

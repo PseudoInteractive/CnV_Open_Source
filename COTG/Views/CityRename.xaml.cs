@@ -45,102 +45,9 @@ namespace COTG.Views
 		static Regex regexHubName = new Regex(@"([^\d]*)(\d+)([^\d]+)(0{1,3})(\d{1,2})\b(.*)", RegexOptions.CultureInvariant | RegexOptions.Compiled);
 		static Regex regexStorageName = new Regex(@"([^\d]*)(\d+)([^\d]+)(0{1,3})(\d{1,2})0(\d{1,2})\b(.*)", RegexOptions.CultureInvariant | RegexOptions.Compiled);
 
-		static string ChooseName(int type, City city)
-		{
-			switch(type)
-			{
-				case 0:
-				case 2:
-					{
-						var closestScore = float.MaxValue;
-						City closestHub = null;
-						string name = $"{city.cont:00} 1001"; // default
-						
-						// normal or storage
-						foreach(var v in City.myCities)
-						{
-							if(v.cont != city.cont || v._cityName == null )
-								continue;
-							var match = regexCityName.Match(v._cityName);
-							bool hasLeadingZero = match.Groups[4].Value.IsNullOrEmpty() && !match.Groups[5].Value.IsNullOrEmpty();
-							if(match.Success )
-							{
-								if(v.isHub)
-								{
-									var score = city.cid.DistanceToCid(v.cid);
-									if(score < closestScore)
-									{
-										var pre = match.Groups[1].Value;
-										var mid = match.Groups[3].Value;
-										//var cluster = match.Groups[4].Value;
-										//	var leadingZeros = match.Groups[4].Value;
-										var num = match.Groups[6].Value;
-										var post = match.Groups[7].Value;
-										//string numStr;
-
-										num.TryParseInt(out var numV);
-
-										//								if(num.StartsWith("0"))
-
-
-										closestScore = score;
-										if(type == 2) // storage
-										{
-											name = pre + city.cont.ToString("00") + mid + ((hasLeadingZero ? numV * 1000 : numV*1000) + 1).ToString() + post;
-										}
-										else
-										{
-											name = pre + city.cont.ToString("00") + mid + ((hasLeadingZero ? numV * 1000 : numV*1000) + 1).ToString() + post;
-										}
-										closestHubCluster = numV;
-									}
-								}
-							}
-							else
-							{
-								Assert(false);
-							}
-						}
-						break; // normal
-					}
-			}
-				// find closest hub for cluster #
-				var closestScore = float.MaxValue;
-				City closestHub = null;
-				foreach(var v in City.myCities)
-				{
-					if(v.cont != city.cont || v._cityName == null)
-						continue;
-					var match = regexCityName.Match(v._cityName);
-					bool hasLeadingZero = match.Groups[4].Value.IsNullOrEmpty() && !match.Groups[5].Value.IsNullOrEmpty();
-					if(match.Success && (v.isHub))
-					{
-						var score = city.cid.DistanceToCid(v.cid);
-						if(score < closestScore)
-						{
-							var pre = match.Groups[1].Value;
-							var mid = match.Groups[3].Value;
-							//var cluster = match.Groups[4].Value;
-							//	var leadingZeros = match.Groups[4].Value;
-							var num = match.Groups[6].Value;
-							var post = match.Groups[7].Value;
-							//string numStr;
-
-							num.TryParseInt(out var numV);
-
-							//								if(num.StartsWith("0"))
-
-
-							closestScore = score;
-							name = pre + city.cont.ToString("00") + mid + ((hasLeadingZero ? numV * 1000 : numV*1000) + 1).ToString() + post;
-							closestHubCluster = numV;
-						}
-					}
-				}
-			}
-
-		}
-
+		
+			
+		
 		static string lastName = string.Empty;
 		public static async Task<bool> RenameDialog(int cid, bool allowSplat)
 		{
@@ -149,155 +56,103 @@ namespace COTG.Views
 				Assert(cid == City.build);
 				var city = City.GetOrAddCity(cid);
 				var nameDialog = new CityRename();
-				
-				bool isNew = IsNewOrCaptured(city)||city._cityName.IsNullOrEmpty();
-				if(!isNew)
+
+				var result = await App.DispatchOnUIThreadTask(async () =>
 				{
-					var match = regexCityName.Match(city._cityName);
-					if (!match.Success)
-						isNew = true;
-				}
-				var name = (isNew || city._cityName == null) ? null : city._cityName;
-				
 					
-				
-					//bool? isHub;
-				//if (await city.TouchTags() == 0)
-				//{
-				//	isHub = await App.DoYesNoBox("A Hub?", "Is this a hub?", "Hub", "City", "Whatever") switch { 1=> true,0=>false,_=>null };
-				//}
-				//else
-				//{
-				//	isHub = city.isHub;
-				//}
-
-				// foreach (var tag in TagHelper.tags)
-				// {
-				//if (tag.isAlias)
-				//	continue;
-				//  var check = new ToggleButton() { IsChecked = city.HasTag(tag.id), Content = tag.s };
-				//  nameDialog.tagsPanel.Children.Add(check);
-				// }
-				int closestHubCluster = 1;
-
-				if (isNew)
-				{
-					// find closest hub for cluster #
-					var closestScore = float.MaxValue;
-					City closestHub = null;
-					foreach (var v in City.myCities)
+				bool isNew = IsNewOrCaptured(city)||city._cityName.IsNullOrEmpty() ;
+				nameDialog.useSuggested.IsOn = isNew;
+				nameDialog.current.Text = city._cityName;
+					// is this needed?
+					void ChooseName()
 					{
-						if (v.cont != city.cont || v._cityName == null)
-							continue;
-						var match = regexCityName.Match(v._cityName);
-						bool hasLeadingZero = match.Groups[4].Value.IsNullOrEmpty() && !match.Groups[5].Value.IsNullOrEmpty();
-						if (match.Success && (v.isHub ))
+						string name0 = $"{city.cont:00} 1";
+						string name1 = ""; // default
+						var format = (int a) => a.ToString("D3");
+						var type = nameDialog.cityType.SelectedIndex;
+						switch(type)
 						{
-							var score = city.cid.DistanceToCid(v.cid);
-							if (score < closestScore)
-							{
-								var pre = match.Groups[1].Value;
-								var mid = match.Groups[3].Value;
-								//var cluster = match.Groups[4].Value;
-								//	var leadingZeros = match.Groups[4].Value;
-								var num = match.Groups[6].Value;
-								var post = match.Groups[7].Value;
-								//string numStr;
-
-								num.TryParseInt(out var numV);
-
-								//								if(num.StartsWith("0"))
-
-
-								closestScore = score;
-								name = pre + city.cont.ToString("00") + mid + ((hasLeadingZero ? numV * 1000 : numV*1000) + 1).ToString() + post;
-								closestHubCluster = numV;
-							}
-						}
-					}
-				}
-			
-				 
-				if (name.IsNullOrEmpty())
-					name = city.isHub ? $"{city.cont:00} 00{closestHubCluster}" : $"{city.cont:00} {closestHubCluster}001";
-
-					{
-						var match = regexCityName.Match(name);
-						if (match.Success)
-						{
-							try
-							{
-								Assert(match.Groups.Count == 8);
-								//var cont = match.Groups[2].Value;
-								//cont.TryParseInt(out var contV);
-
-								//// new cont?
-								//if (contV != city.cont)
-								//{
-								//	var lastCity = City.myCities.LastOrDefault((v) => v.cont == city.cont);
-								//	if (lastCity != null)
-								//	{
-								//		name = IsNewOrCaptured(lastCity) ? $"{city.cont:00} 0001" : lastCity.cityNameOrNull;
-								//		match = regexCityName.Match(name);
-								//		cont = match.Groups[2].Value;
-								//		cont.TryParseInt(out contV);
-								//	}
-								//	else
-								//	{
-								//		name = $"{city.cont:00} 0001";
-
-								//	}
-
-								//}
-
-								var pre = match.Groups[1].Value;
-
-								var mid = match.Groups[3].Value;
-								var cluster = match.Groups[4].Value;
-								var leadingZeros = match.Groups[5].Value;
-								var num = match.Groups[6].Value;
-								var post = match.Groups[7].Value;
-								num.TryParseInt(out var numV);
-								var cont = $"{city.cont:00}";
-								for (; ; )
+							case 0:
+							case 2:
 								{
+									var closestScore = float.MaxValue;
+									City closestHub = null;
 
-									name = pre + cont + mid + (cluster.IsNullOrEmpty()? string.Empty : closestHubCluster.ToString())+ leadingZeros + numV.ToString() + post;
-									if (!City.myCities.Any((v) => v._cityName == name && v != city))
-										break;
-									++numV;
+									// normal or storage
+									foreach(var v in City.myCities)
+									{
+										if(v.cont != city.cont || v._cityName == null)
+											continue;
+										var match = regexCityName.Match(v._cityName);
+										bool hasLeadingZero = match.Groups[4].Value.IsNullOrEmpty() && !match.Groups[5].Value.IsNullOrEmpty();
+										if(match.Success)
+										{
+											if(v.isHub)
+											{
+												var score = city.cid.DistanceToCid(v.cid);
+												if(score < closestScore)
+												{
+													var pre = match.Groups[1].Value;
+													var mid = match.Groups[3].Value;
+													//var cluster = match.Groups[4].Value;
+													var leadingZeros = match.Groups[5].Value;
+													var num = match.Groups[6].Value;
+													var post = match.Groups[7].Value;
+													//string numStr;
+
+													num.TryParseInt(out var numV);
+
+													//								if(num.StartsWith("0"))
+
+													format = type == 0 ? (int a) => a.ToString("D3") : (a) => "0"+AUtil.BeyondHex(a);
+													closestScore = score;
+													name0 = pre + city.cont.ToString("00") + mid + (type==2 ? "0" : "")+ numV;
+													name1 = post;
+												}
+											}
+										}
+										else
+										{
+										//	Assert(false);
+										}
+									}
+									break; // normal
 								}
-							}
-							catch (Exception ex)
-							{
-								LogEx(ex);
-							}
+							default:
+								// hub
+								name0 = $"{city.cont:00} 001";
+								name1 = ""; // default
+								format = (a) => AUtil.BeyondHex(a).ToString();
+								break;
 						}
+						for(int uid = 1;;++uid)
+						{
+							var name = name0 + format(uid) + name1;
+							if(!City.myCities.Any((v) => v._cityName == name && v != city))
+							{
+								nameDialog.suggested.Text = name;
+								break;
+							}
+						} // u
+
 					}
-					var result = await App.DispatchOnUIThreadTask(async () =>
-				   {
-					   nameDialog.name.Text = city._cityName;
-					   nameDialog.suggested.Text = name;
-					   //	ElementSoundPlayer.Play(ElementSoundKind.Show);
+					// does this trigger it?
+					nameDialog.cityType.SelectedIndex = city.isHub ? 1 : city.isStorage ? 2 : 0;
+					nameDialog.cityType.SelectionChanged+= (_,_)=> ChooseName();
+
 
 					   var result = await nameDialog.ShowAsync2();
-					   bool wantSplat = false;
 					   if (result == Microsoft.UI.Xaml.Controls.ContentDialogResult.Primary)
 					   {
-						   if (!SettingsPage.useSuggested)
-							   lastName = nameDialog.name.Text;
+						   if (!nameDialog.useSuggested.IsOn)
+							city._cityName = nameDialog.current.Text;
 						   else
-							   lastName = nameDialog.suggested.Text;
-						   city._cityName = lastName;
-						   if (IsNew(lastName))
-							   lastName = string.Empty;
+							city._cityName = nameDialog.suggested.Text;
+
+							city.OnPropertyChanged();
 						   city.BuildStageDirty();
 						   await Post.Get("includes/nnch.php", $"a={HttpUtility.UrlEncode(lastName, Encoding.UTF8)}&cid={cid}", World.CidToPlayerOrMe(cid));
-						   //if (SettingsPage.applyTags)
-						   //{
-						   // await ApplyTags(cid, nameDialog.tagsPanel);
-						   //}
-						   Note.Show($"Set name to {lastName}");
+						   Note.Show($"Set name to {city._cityName}");
 
 					   }
 					   return result;
@@ -308,7 +163,7 @@ namespace COTG.Views
 
 						if (SettingsPage.setShareString)
 						{
-							await ShareString.Touch().ShowNoLock(City.build);
+							await ShareString.Touch().ShowNoLock(cid);
 						}
 
 					//if (SettingsPage.setHub)
@@ -320,20 +175,20 @@ namespace COTG.Views
 						autoWalls: (SettingsPage.autoWallLevel == 10) ? true : null,
 						autoTowers: (SettingsPage.autoTowerLevel == 10) ? true : null);
 
-					var rv = true;
+						var rv = true;
 						if (SettingsPage.autoBuildCabins && allowSplat)
 						{
 							// are there any cabins here already?
 							rv = await COTG.DoTheStuff.Go(city, false, false);
 						}
 						else
-					{
-						if(SettingsPage.clearRes && !city.leaveMe)
 						{
-							await city.ClearResUI();
-						}
+							if(SettingsPage.clearRes && !city.leaveMe)
+							{
+								await city.ClearResUI();
+							}
 
-					}
+						}
 
 
 					return rv;
@@ -347,6 +202,11 @@ namespace COTG.Views
 				COTG.Debug.LogEx(e);
 			}
 			return false;
+		}
+
+		private static void CityType_SelectionChanged(object sender,SelectionChangedEventArgs e)
+		{
+			throw new NotImplementedException();
 		}
 
 		//public static async Task ApplyTags(int cid,  CommunityToolkit.WinUI.WrapPanel tagControls)
