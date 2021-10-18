@@ -64,26 +64,28 @@
 				<tk:BladeItem x:Name="NameBlade" Header="Name" IsOpen="False"  >
 					<Grid>
 						<Grid.RowDefinitions>
-							<RowDefinition/>
-							<RowDefinition/>
-							<RowDefinition/>
+							<RowDefinition Height="auto"/>
+							<RowDefinition Height="auto"/>
 						</Grid.RowDefinitions>
-						<StackPanel Grid.Row="0" VerticalAlignment="Stretch" >
-							<TextBox  x:Name="suggested" Header="Suggested" x:FieldModifier="public" />
-							<TextBox  x:Name="current" Header="Custom" x:FieldModifier="public"   />
-							<TextBlock Style="{StaticResource BodyTextStyle}" MaxLines="8" MaxHeight="256"  TextWrapping="Wrap" >
+						<winui:Border Grid.Row="0" Style="{StaticResource BorderReveal}">
+							<StackPanel  >
+								<TextBox  x:Name="suggested" Header="Suggested" x:FieldModifier="public" />
+								<TextBox  x:Name="current" Header="Custom" x:FieldModifier="public"   />
+								<TextBlock Style="{StaticResource BodyTextStyle}" MaxLines="8" MaxHeight="256"  TextWrapping="Wrap" >
 				Try to avoid '-'<LineBreak/>		
 				If you name hubs 22 001, 22 004... cites will wind up like 22 1003, 22 4005... where 1 and 4 are hub cluster #'s (the # of the closest hub)
 				cities will sort in order of continents, hubs, then clusters of cities for each hub.<LineBreak/>
 				A hub cluster # is chosen based on the closest hub and offered as the suggestion.<LineBreak/></TextBlock>
-						</StackPanel>
-						<ToggleSwitch Grid.Row="1" x:Name="useSuggested" OnContent="Suggested" OffContent="Custom"/>
-						<winui:RadioButtons Header="City Name Type" x:Name="cityType" Grid.Row="2" MaxColumns="4"  >
-							<x:String>Normal</x:String>
-							<x:String>Hub</x:String>
-							<x:String>Storage</x:String>
-						</winui:RadioButtons>
-						<tk:WrapPanel Grid.Row="3">
+								<ToggleSwitch  x:Name="useSuggested" OnContent="Suggested" OffContent="Custom"/>
+								<winui:RadioButtons Header="City Name Type" x:Name="cityType" Grid.Row="2" MaxColumns="4" VerticalAlignment="Top"  >
+									<x:String>Normal</x:String>
+									<x:String>Hub</x:String>
+									<x:String>Storage</x:String>
+								</winui:RadioButtons>
+							</StackPanel>
+						</winui:Border>
+						<winui:Border Grid.Row="1" Style="{StaticResource BorderReveal}">
+							<tk:WrapPanel>
 							<winui:NumberBox Header="Cottage Level"
 										Value="{x:Bind views:SettingsPage.cottageLevel, Mode=TwoWay}"
 										Width="100"
@@ -106,6 +108,7 @@
 							<winui:NumberBox Header="Storehouses" Value="{x:Bind views:SettingsPage.intialStorehouses,Mode=TwoWay}" Style="{StaticResource NumberBoxSmall}" ToolTipService.ToolTip="The number of storehouses to start a city with" />
 							<winui:NumberBox Header="Markets" Value="{x:Bind views:SettingsPage.intialStorehouses,Mode=TwoWay}" Style="{StaticResource NumberBoxSmall}" ToolTipService.ToolTip="The number of markets to start a city with" />
 						</tk:WrapPanel>
+						</winui:Border>
 					</Grid>
 				</tk:BladeItem>
 				<tk:BladeItem x:Name="LayoutBlade" Header="ShareString" IsOpen="False"  >
@@ -121,6 +124,7 @@
 						</Border>
 						<Border  Style="{StaticResource BorderReveal}">
 							<tk:WrapPanel  Orientation="Horizontal">
+								<Button Content="Share" Click="ShareClick" Style="{StaticResource ButtonMedium}" />
 								<Button Content="Use buildings" Click="UseBuildingsClick" Style="{StaticResource ButtonMedium}" />
 								<Button Content="From Clipboard" Click="FromClipboardClick" Style="{StaticResource ButtonMedium}" />
 								<Button Content="To Clipboard" Click="ToClipboardClick" Style="{StaticResource ButtonMedium}" />

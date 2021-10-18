@@ -15,7 +15,7 @@
   <Identity
     Name="33626dsw.15864FAB9E7D2"
     Publisher="CN=BE72B2C5-14F0-4AD5-84D4-EAA91D8D0812"
-    Version="1.0.364.0" />
+    Version="1.0.368.0" />
 
 
   <Properties>
@@ -75,12 +75,5 @@
     <rescap:Capability Name="runFullTrust" />
   </Capabilities>
 
-  <genTemplate:Metadata>
-    <genTemplate:Item Name="generator" Value="Windows Template Studio"/>
-    <genTemplate:Item Name="wizardVersion" Version="v0.22.20149.1" />
-    <genTemplate:Item Name="templatesVersion" Version="v0.22.20149.1" />
-    <genTemplate:Item Name="projectType" Value="SplitView" />
-    <genTemplate:Item Name="framework" Value="CodeBehind" />
-    <genTemplate:Item Name="platform" Value="Uwp" />
-  </genTemplate:Metadata>
+ 
 </Package>

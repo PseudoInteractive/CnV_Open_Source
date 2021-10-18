@@ -202,6 +202,7 @@ namespace COTG.Views
 			rightClick=2,
 			zoom=4,
 			pan = 8,
+			middleClick = 16,
 			hover = 64, // mouse only
 		}
 		public static class Gesture
@@ -406,14 +407,16 @@ namespace COTG.Views
 					var rv = GetAveragePosition();
 					
 					{
-						
-					var result = (rv, GestureAction.leftClick);
-					if (currentGesture != GestureAction.none)
-						result=(rv, GestureAction.none);
-					else if (maxPoints > 1 ||
-						point.PointerUpdateKind == PointerUpdateKind.RightButtonReleased)
-						result = (rv, GestureAction.rightClick);
+
+					var result = (rv, (maxPoints > 1 ? GestureAction.rightClick :
+						(currentGesture switch {
+						GestureAction.leftClick => GestureAction.leftClick,
+						GestureAction.rightClick => GestureAction.rightClick,
+						GestureAction.middleClick => GestureAction.middleClick,
+						_ => GestureAction.none })));
+
 					
+
 					Reset();
 					return result;
 						// Actions trump presses
@@ -707,25 +710,25 @@ namespace COTG.Views
 			}
 		}
 
-		private static Windows.System.DispatcherQueueHandler HandleRight( (int x, int y) cc, int cid)
-		{
-			return () =>
-			{
-				if (IsCityView() && (cid == City.build))
-				{
-					CityBuild.Click(cc, true);
-				}
-				else
-				{
+		//private static Windows.System.DispatcherQueueHandler HandleRight( (int x, int y) cc, int cid)
+		//{
+		//	return () =>
+		//	{
+		//		if (IsCityView() && (cid == City.build))
+		//		{
+		//			CityBuild.Click(cc, true);
+		//		}
+		//		else
+		//		{
 
-					var spot = Spot.GetOrAdd(cid);
-					if (!App.IsKeyPressedShiftOrControl())
-						spot.SetFocus(true, true, false);
-					spot.ShowContextMenu(canvas, CanvasToDIP(mousePosition));
-					// }
-				}
-			};
-		}
+		//			var spot = Spot.GetOrAdd(cid);
+		//			if (!App.IsKeyPressedShiftOrControl())
+		//				spot.SetFocus(true, true, false);
+		//			spot.ShowContextMenu(canvas, CanvasToDIP(mousePosition));
+		//			// }
+		//		}
+		//	};
+		//}
 
 		static public bool forceAllowWebFocus;
 		public static  bool isOverPopup{
@@ -818,22 +821,19 @@ namespace COTG.Views
 //				point.PointerUpdateKind switch
 //				{
 //					PointerUpdateKind.LeftButtonPressed => 0,
-//					PointerUpdateKind.MiddleButtonPressed => 1,
-					
+//					PointerUpdateKind.MiddleButtonPressed => 1,				
 //					PointerUpdateKind.RightButtonPressed => 2,
 //					_=>0
 //				}))
 //			{
-////				e.Handled = true;
+//				e.Handled = true;
 //				Gesture.Reset();
-////				ShellPage.SetWebViewHasFocus(true);
-
-
+//				ShellPage.SetWebViewHasFocus(true);
 //			}
 //			else
 			{
 				// only needs for pen and touch
-				if (IsCityView()  )
+				if (IsCityView())
 				{
 					CityBuild.PointerDown(cc);
 				
@@ -1362,12 +1362,7 @@ namespace COTG.Views
 //				e.Handled = false;
 
 			}
-			else if(gestureResult.action==GestureAction.rightClick)
-			{
-				var cid = c.WorldToCid();
-				
-				App.DispatchOnUIThreadLow(RightClick(cc, cid));
-			}
+			
 			else
 			{
 	//			e.Handled = true;

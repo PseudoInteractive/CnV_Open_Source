@@ -259,6 +259,9 @@ namespace COTG.Views
 						   var sendFilter = (!city.isHubOrStorage) ? res.sendFilter : ResourceFilter._null;
 						   //			await CitySettings.SetTradeResourcesSettings(city.cid,req,max);
 						   await CitySettings.SetCitySettings(cid,
+							   autoBuildOn: SettingsPage.autoBuildOn.GetValueOrDefault() ? true : null,
+								autoWalls: (SettingsPage.autoWallLevel == 10) ? true : null,
+								autoTowers: (SettingsPage.autoTowerLevel == 10) ? true : null,
 								  reqHub: (setTrade ? res.reqHub.city switch { City a => a.cid, _ => 0 } : null),
 								  targetHub: (setTrade ? res.sendHub.city switch { null => 0, var a => a.cid } : null),
 								   setRecruit: setTags && SettingsPage.setRecruit,
@@ -390,7 +393,7 @@ namespace COTG.Views
 			var tags = meta.notes ?? string.Empty;
 
 			description.Text = meta.desc ?? string.Empty;
-			title.Text = path.title;
+			shareTitle.Text = path.title;
 			this.path.Text = CombinePath(path);
 
 			if(setRes)
@@ -480,7 +483,7 @@ namespace COTG.Views
 						shareString.Text = i.shareString.Replace("\n","",StringComparison.Ordinal).Replace("\r","",StringComparison.Ordinal);
 						description.Text = i.desc;
 						path.Text = i.path;
-						title.Text = i.label;
+						shareTitle.Text = i.label;
 						SetCheckboxesFromTags(i.tags);
 					}
 				}
@@ -525,7 +528,7 @@ namespace COTG.Views
 		private void title_TextChanged(object sender,TextChangedEventArgs e)
 		{
 			var ss = DecomposePath(path.Text);
-			ss.title = title.Text;
+			ss.title = shareTitle.Text;
 			ss.root = Player.myName;
 
 			path.Text = CombinePath(ss);
@@ -583,7 +586,7 @@ namespace COTG.Views
 		{
 			if(tradeStale)
 			{
-				tradeStale=true;
+				tradeStale=false;
 				var city = City.Get(cid);
 				if(city.tradeInfo == null)
 					await NearRes.UpdateTradeStuff().ConfigureAwait(false);
@@ -626,11 +629,11 @@ namespace COTG.Views
 			{
 				var city = City.Get(cid);
 				if(city.isHub)
-					type = 1;
+					cityType.SelectedIndex = 1;
 				else if(city.isStorage)
-					type = 2;
+					cityType.SelectedIndex = 2;
 				else
-					type =1;
+					cityType.SelectedIndex =1;
 				bool isNew = IsNewOrCaptured(city)||city._cityName.IsNullOrEmpty();
 				useSuggested.IsOn = isNew;
 				current.Text = city._cityName;
@@ -674,9 +677,9 @@ namespace COTG.Views
 
 												//								if(num.StartsWith("0"))
 
-												format = type == 0 ? (int a) => a.ToString("D3") : (a) => "0"+AUtil.BeyondHex(a);
+												format = type == 0 ? (int a) => a.ToString("D3") : (a) => AUtil.BeyondHex(a).ToString();
 												closestScore = score;
-												name0 = pre + city.cont.ToString("00") + mid + (type==2 ? "0" : "")+ numV;
+												name0 = pre + city.cont.ToString("00") + mid + (type==2 ? "0" : "") + num;
 												name1 = post;
 											}
 										}
@@ -690,7 +693,7 @@ namespace COTG.Views
 							}
 						default:
 							// hub
-							name0 = $"{city.cont:00} 001";
+							name0 = $"{city.cont:00} 00";
 							name1 = ""; // default
 							format = (a) => AUtil.BeyondHex(a).ToString();
 							break;
@@ -708,6 +711,7 @@ namespace COTG.Views
 				}
 				// does this trigger it?
 				cityType.SelectedIndex = city.isHub ? 1 : city.isStorage ? 2 : 0;
+				ChooseName();
 				cityType.SelectionChanged+= (_,_) => ChooseName();
 
 

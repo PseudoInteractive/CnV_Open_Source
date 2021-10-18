@@ -329,4 +329,9 @@
      - Some things are slow the first time you do them, for example clicking on an url in chat might take 5 seconds the first time.
 
 ## Welcome ChuckoBuck to the dev team!
-   - ChuckoBuck is a programmer, currently working on Discord integration.
+ - ChuckoBuck is a programmer, currently working on Discord integration.
+
+### 2021/10/17
+ - Revamp Setup/Set Name etc experience
+ - Using the Upgrade Tool on a temple would queue it, but it wouldn't go
+ - Middle mouse button toggles layout

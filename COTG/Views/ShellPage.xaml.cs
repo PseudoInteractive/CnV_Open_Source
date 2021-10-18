@@ -1328,7 +1328,7 @@ namespace COTG.Views
 			{
 				runOnUiThread= true;
 				debounceDelay=300;
-				throttleDelay=1000;
+				throttleDelay=700;
 				base.func=F;
 			}
 			public void Go(bool updateLayout)

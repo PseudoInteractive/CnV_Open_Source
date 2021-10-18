@@ -33,10 +33,9 @@ namespace COTG.Helpers
 			if (backup)
 				await SaveAsync<T>(folder, $"{name}___{JSClient.ServerTime().FormatFileTimeToMinute()}___", content, false);
 			await FileIO.WriteTextAsync(file, fileContent);
-		
-
 		}
 
+		static StorageFolder userFolder => ApplicationData.Current.LocalFolder;
 
 		public static Regex regexBackupDatePostFix = new Regex(@"__(?:_\d{1,4})*___", RegexOptions.CultureInvariant | RegexOptions.Compiled);
 

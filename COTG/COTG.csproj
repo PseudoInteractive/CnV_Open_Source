@@ -66,6 +66,12 @@
     <PackageReference Include="DSharpPlus" Version="4.1.0" />
     <PackageReference Include="DSharpPlus.CommandsNext" Version="4.1.0" />
     <PackageReference Include="Enums.NET" Version="4.0.0" />
+    <PackageReference Include="MessagePack" Version="2.3.85" />
+    <PackageReference Include="MessagePack.MSBuild.Tasks" Version="2.3.85">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="MessagePackAnalyzer" Version="2.3.85" />
     <PackageReference Include="Microsoft.AppCenter.Analytics" Version="4.4.0" />
     <PackageReference Include="Microsoft.AppCenter.Crashes" Version="4.4.0" />
     <PackageReference Include="Microsoft.DependencyValidation.Analyzers" Version="0.11.0" />
@@ -141,6 +147,7 @@
     <Compile Include="Game\BlessedCity.cs" />
     <Compile Include="Game\City.cs" />
     <Compile Include="Game\City2.cs" />
+    <Compile Include="Game\CityCustom.cs" />
     <Compile Include="Game\Dungeon.cs" />
     <Compile Include="Game\Enums.cs" />
     <Compile Include="Game\Faith.cs" />

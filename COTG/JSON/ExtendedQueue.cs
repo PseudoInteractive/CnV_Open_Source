@@ -1026,16 +1026,18 @@ namespace COTG;
 				}
 				Assert(initialized);
 				var op = new BuildQueueItem(a.slvl,a.elvl,a.bid,a.bspot);
-				if(a.bid == City.bidTemple && a.slvl == 0)
+				if(a.bid == City.bidTemple)
 				{
-					Assert(cid == City.build);
-					await JSClient.JSInvokeTask($"buildTemple({a.bspot.ToString()})");
-					return;
-				}
-				if(a.bid == City.bidTemple && a.elvl == 0)
-				{
-					Assert(cid == City.build);
-					Trace("Invalid temple demo");
+					if(a.slvl == 0)
+					{
+						Assert(cid == City.build);
+						await JSClient.JSInvokeTask($"buildTemple({a.bspot.ToString()})");
+					}
+					else
+					{
+						Trace("Invalid temple op");
+
+					}
 					return;
 				}
 				if(a.bid == City.bidCastle && a.slvl == 0)

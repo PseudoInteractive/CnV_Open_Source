@@ -723,13 +723,13 @@ namespace COTG.Game
 				ShowContextMenu(uie, pt.Position);
 
 			}
-			else if (pt.Properties.IsMiddleButtonPressed)
-			{
-				var text = ToTsv();
-				Note.Show($"Copied to clipboard: {text}");
-				App.CopyTextToClipboard(text);
-				SetFocus(false);
-			}
+			//else if (pt.Properties.IsMiddleButtonPressed)
+			//{
+			//	var text = ToTsv();
+			//	Note.Show($"Copied to clipboard: {text}");
+			//	App.CopyTextToClipboard(text);
+			//	SetFocus(false);
+			//}
 			else
 			{
 				// if shift or conntrol is pressed normal processing takes place

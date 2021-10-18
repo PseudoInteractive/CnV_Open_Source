@@ -205,6 +205,7 @@ namespace COTG.Views
 
 		//public static string secSessionId;
 		public static int mruSize = 32;
+		[NonSerialized]
 		public static int[] pinned = Array.Empty<int>();
 
 		public static bool isPinnedLoaded => pinned != null; 
