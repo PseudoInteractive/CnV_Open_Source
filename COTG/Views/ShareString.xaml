@@ -65,7 +65,7 @@
 					OnContent="Update"
 					OffContent="Skip" />
 			</StackPanel>
-			<tk:BladeView Grid.Column="1"   x:Name="bladeView"  >
+			<tk:BladeView Grid.Column="1"   x:Name="bladeView"   >
 				<tk:BladeItem x:Name="NameBlade" Header="Name" IsOpen="False"  >
 						<Border Grid.Row="0" Style="{StaticResource BorderReveal}">
 							<StackPanel  >
@@ -143,7 +143,7 @@
 					</StackPanel>
 					</ScrollViewer>
 				</tk:BladeItem>
-				<tk:BladeItem x:Name="TradeBlade" Header="Trade Settings" IsOpen="False" >
+				<tk:BladeItem x:Name="TradeBlade" Header="Trade Settings" IsOpen="False"   >
 					<views:ResSettings x:Name="res" />
 				</tk:BladeItem>
 				<tk:BladeItem x:Name="TagsBlade" Header="Tags" IsOpen="False">

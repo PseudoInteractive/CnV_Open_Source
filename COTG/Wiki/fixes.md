@@ -31,8 +31,7 @@
  - **Update** City lists are sorted by name and remarks.
    - Previously they were only sorted by name.
 ### 2021/3/11
- - **update** extended build queues are disabled by default.  To enable them, set "Build Queue" in the settings page to 'Unlimited'
- - **fix** world map and region view in W23
+ - **update** extended build queues are disabled by default.  To enable them, set "Build Queue" in the settings page to 'Unlimited'- **fix** world map and region view in W23
  - **fix** sharing layouts
  - **update** Each chat tab now has a "copy to clipboard" button.  If messages are selected, it will copy then, otherwise it will copy all messages in the tab
    - If you are submitting a bug report, please switch to the "Debug" tab, copy all messages and paste this in with the bug report, thanks!
@@ -345,3 +344,5 @@
 
 ### 2021/10/19
   - Workaround for raid return not working as expected (note that return fast has been temporarily replaced by a normal return rather than a recall, which basically sets the raids to "raid once")
+  - **Fix**
+    - Setup window was too large.

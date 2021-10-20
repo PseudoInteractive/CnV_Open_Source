@@ -188,8 +188,8 @@ namespace COTG.Views
 					   TagsBlade.IsOpen=false;
 					   TradeBlade.IsOpen=false;
 					   AutobuildBlade.IsOpen=false;
-					   HeroGrid.Width = ShellPage.instance.grid.Width.Min(1500);
-					   HeroGrid.Height = ShellPage.instance.grid.Height.Min(1000);
+					   HeroGrid.Width = (ShellPage.instance.grid.ActualWidth-256).Min(1200);
+					   HeroGrid.Height = (ShellPage.instance.grid.ActualHeight - 200).Min(1000);
 					   //			onComplete.IsOn = CityBuild.isPlanner;
 					   shareStrings.SelectedItem = null;
 					   // remove them all
@@ -476,6 +476,7 @@ namespace COTG.Views
 							await SetupTradeDefaults();
 							TradeBlade.IsOpen=true;
 						}
+						NameBlade.IsOpen=true;
 						AutobuildBlade.IsOpen=true;
 
 						SetFromSS(i.shareStringWithJson,setTags: setTags,setRes: setRes);
@@ -601,7 +602,7 @@ namespace COTG.Views
 				{
 					bestReqHub =   await CitySettings.FindBestHubWithChoice(cid,"Find Request Hub",isHubOrStorage ? null : false).ConfigureAwait(false);
 					if( !isHubOrStorage)
-						bestSendHub =   await CitySettings.FindBestHubWithChoice(cid,"Find Send Hub").ConfigureAwait(false);
+						bestSendHub =   await CitySettings.FindBestHubWithChoice(cid,"Find Send Hub",false).ConfigureAwait(false);
 				}
 				else
 				{

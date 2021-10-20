@@ -289,7 +289,6 @@
 			</wct:WrapPanel>
 
 			<TextBlock Text="City Lists"
-						   Style="{ThemeResource SubtitleTextBlockStyle}"
 						   Margin="4,4,4,4" />
 			<StackPanel Orientation="Vertical"
 						   Margin="4" BorderThickness="1" BorderBrush="{ThemeResource SystemControlBackgroundAccentRevealBorderBrush}">
@@ -382,9 +381,8 @@
 
 
 			</StackPanel>
-			<StackPanel Style="{StaticResource StackPanelReveal}">
+			<!--<StackPanel Style="{StaticResource StackPanelReveal}">
 				<TextBlock x:Uid="Settings_Theme"
-						   Style="{ThemeResource SubtitleTextBlockStyle}"
 						   Margin="4,4,4,4" />
 				<StackPanel Margin="4">
 					<RadioButton x:Uid="Settings_Theme_Light"
@@ -406,10 +404,10 @@
 						</RadioButton.CommandParameter>
 					</RadioButton>
 				</StackPanel>
-			</StackPanel>
+			</StackPanel>-->
 			<StackPanel Style="{StaticResource StackPanelReveal}">
 				<TextBlock Text="Audio Settings"
-						   Style="{ThemeResource SubtitleTextBlockStyle}"
+						  
 						   Margin="4,4,4,4" />
 				<StackPanel Margin="4">
 					<ToggleSwitch  Header="UI Sounds"

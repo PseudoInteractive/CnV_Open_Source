@@ -44,7 +44,7 @@ namespace COTG.JSON
 			await CitySettings.FindBestHub(cid,
 				offContinent is not null ? offContinent.Value 
 				: City.Get(cid).isOnWater 
-					&& (await App.DoYesNoBox(title,"Find one from another Continent?",yes:"Off Continent", no:"Same Continent", cancel: null)) == 1);
+					&& ((await App.DoYesNoBox(title,"Find one from another Continent?",yes:"Off Continent", no:"Same Continent", cancel: null)) == 1) );
 
 		public static async Task<int> FindBestHub(int cid, bool onlyOffContinent)
 		{

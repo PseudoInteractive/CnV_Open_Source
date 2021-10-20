@@ -421,17 +421,17 @@ namespace COTG.Views
 		public static string pinsFileName => $"pinned{JSClient.world}";
 		public static Task SavePinned()
 		{
-			//if(CityCustom.loaded)
-			//	return folder.SaveAsync(pinsFileName, AMessagePack.Serialize(CityCustom.all));
+			if(CityCustom.loaded)
+				return folder.SaveAsync(pinsFileName,AMessagePack.Serialize(CityCustom.all));
 			return Task.CompletedTask;
 		}
 		public async static Task LoadPinned()
 		{
-			//if (!CityCustom.loaded)
-			//{
-			//	CityCustom.all = AMessagePack.Deserialize<ImmutableHashSet<CityCustom>>(await folder.ReadAsync(pinsFileName) , ()=> ImmutableHashSet<CityCustom>.Empty );
-			//	CityCustom.loaded = true;
-			//}
+			if(!CityCustom.loaded)
+			{
+				CityCustom.loaded = true;
+				CityCustom.all = AMessagePack.Deserialize<ImmutableHashSet<CityCustom>>(await folder.ReadAsync(pinsFileName),() => ImmutableHashSet<CityCustom>.Empty);
+			}
 		}
 
 		[NonSerialized]
