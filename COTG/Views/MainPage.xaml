@@ -13,7 +13,7 @@
 			  xmlns:views="using:COTG.Views"
 			  mc:Ignorable="d"
 			  Tag="Raid"
-			  FontFamily="Tw Cen MT Condensed">
+			  FontFamily="Bahnschrift">
 
 	<Grid x:Name="cityBaseGrid"  >
 		
@@ -57,16 +57,12 @@
 					<model:CityGridToggleColumnVisibilityCommand />
 				</tg:RadDataGrid.Commands>
 				<tg:RadDataGrid.AggregateDescriptors>
-					<tgCore:PropertyAggregateDescriptor PropertyName="cont"
-														Function="Count" />
-					<tgCore:PropertyAggregateDescriptor PropertyName="tsTotal"
-														Function="Sum" />
-					<tgCore:PropertyAggregateDescriptor PropertyName="tsRaid"
-														Function="Sum" />
-					<tgCore:PropertyAggregateDescriptor PropertyName="isCastle"
-														Function="Sum" />
-					<tgCore:PropertyAggregateDescriptor PropertyName="isOnWater"
-														Function="Sum" />
+					<tgCore:PropertyAggregateDescriptor PropertyName="cont"	Function="Count" />
+					<tgCore:PropertyAggregateDescriptor PropertyName="tsTotal"	Function="Sum" />
+					<tgCore:PropertyAggregateDescriptor PropertyName="tsRaid"	Function="Sum" />
+					<tgCore:PropertyAggregateDescriptor PropertyName="isCastle"		Function="Sum" />
+					<tgCore:PropertyAggregateDescriptor PropertyName="isOnWater"	Function="Sum" />
+					<tgCore:PropertyAggregateDescriptor PropertyName="points"	Function="Sum" />
 				</tg:RadDataGrid.AggregateDescriptors>
 
 				<tg:RadDataGrid.Columns>
@@ -101,28 +97,47 @@
 											Width="48"
 										CanUserResize="False"
 										    />
-					<tg:DataGridNumericalColumn PropertyName="cont"
+				<tg:DataGridNumericalColumn PropertyName="cont"
 												
 												CellContentStyle="{StaticResource CenterAlign}"
 												SizeMode="Fixed"
 											Width="48"
 										CanUserResize="False"
-											 />
-					<tg:DataGridNumericalColumn PropertyName="tsTotal"
+									>
+							<tg:DataGridNumericalColumn.AggregatesTemplate>
+								<DataTemplate>
+										<TextBlock Text="{Binding [0].Value}" TextAlignment="Center" />
+								</DataTemplate>
+							</tg:DataGridNumericalColumn.AggregatesTemplate>
+						</tg:DataGridNumericalColumn>
+				<tg:DataGridNumericalColumn PropertyName="tsTotal"
 												Header="TS"
 												CellContentStyle="{StaticResource RightAlign}"
 												winui:ToolTipService.ToolTip="TS enlisted in city"
 												CellContentFormat="{}{0,7:N0}"
 												SortDirection="Descending"
 												SizeMode="Auto"
-												 />
-					<tg:DataGridNumericalColumn PropertyName="tsRaid"
+												 >
+					<tg:DataGridNumericalColumn.AggregatesTemplate>
+						<DataTemplate>
+							<TextBlock Text="{Binding [1].Value, Converter={StaticResource IntConverter} }" TextAlignment="Right" />
+						</DataTemplate>
+					</tg:DataGridNumericalColumn.AggregatesTemplate>
+				</tg:DataGridNumericalColumn>
+				<tg:DataGridNumericalColumn PropertyName="tsRaid"
 												Header="Raid"
 												CellContentStyle="{StaticResource RightAlign}"
 												CellContentFormat="{}{0,7:N0}"
 												SortDirection="Descending"
 												SizeMode="Auto"
-												winui:ToolTipService.ToolTip="TS of Troops at home that can raid" />
+												winui:ToolTipService.ToolTip="TS of Troops at home that can raid">
+					<tg:DataGridNumericalColumn.AggregatesTemplate>
+						<DataTemplate>
+							<TextBlock Text="{Binding [2].Value, Converter={StaticResource IntConverter} }" TextAlignment="Right" />
+						</DataTemplate>
+					</tg:DataGridNumericalColumn.AggregatesTemplate>
+				
+				</tg:DataGridNumericalColumn>
 				<tg:DataGridNumericalColumn PropertyName="raidIdle"
 												Header="%Idle"
 												CellContentStyle="{StaticResource RightAlign}"
@@ -149,13 +164,19 @@
 												CellContentFormat="{}{0,5:N1}"
 												SizeMode="Auto"
 												 />
-					<tg:DataGridNumericalColumn PropertyName="points"
+				<tg:DataGridNumericalColumn PropertyName="points"
 												winui:ToolTipService.ToolTip="City score"
 												SizeMode="Auto"
 												CellContentStyle="{StaticResource RightAlign}"
 												CellContentFormat="{}{0,6:N0}"
-												 />
-					<tg:DataGridTextColumn PropertyName="remarks"
+												 >
+					<tg:DataGridNumericalColumn.AggregatesTemplate>
+						<DataTemplate>
+							<TextBlock Text="{Binding [5].Value, Converter={StaticResource IntConverter} }" TextAlignment="Right" />
+						</DataTemplate>
+					</tg:DataGridNumericalColumn.AggregatesTemplate>
+				</tg:DataGridNumericalColumn>
+				<tg:DataGridTextColumn PropertyName="remarks"
 										   CellContentStyle="{StaticResource LeftAlign}"
 										   SizeMode="Auto"
 										   IsVisible="False" />
@@ -163,14 +184,26 @@
 										   CellContentStyle="{StaticResource LeftAlign}"
 										   SizeMode="Auto"
 										   IsVisible="False" />
-					<tg:DataGridBooleanColumn PropertyName="isCastle"
+				<tg:DataGridBooleanColumn PropertyName="isCastle"
 											  IsVisible="False"
 											  SizeMode="Auto"
-											   />
-					<tg:DataGridBooleanColumn PropertyName="isOnWater"
+											   >
+					<tg:DataGridBooleanColumn.AggregatesTemplate>
+						<DataTemplate>
+							<TextBlock Text="{Binding [3].Value, Converter={StaticResource IntConverter} }" TextAlignment="Right" />
+						</DataTemplate>
+					</tg:DataGridBooleanColumn.AggregatesTemplate>
+				</tg:DataGridBooleanColumn>
+				<tg:DataGridBooleanColumn PropertyName="isOnWater"
 											  IsVisible="False"
 											  SizeMode="Auto"
-											   />
+											   >
+					<tg:DataGridBooleanColumn.AggregatesTemplate>
+						<DataTemplate>
+							<TextBlock Text="{Binding [4].Value, Converter={StaticResource IntConverter} }" TextAlignment="Right" />
+						</DataTemplate>
+					</tg:DataGridBooleanColumn.AggregatesTemplate>
+					</tg:DataGridBooleanColumn>
 					<tg:DataGridNumericalColumn PropertyName="carryCapacity"
 												CellContentStyle="{StaticResource RightAlign}"
 												CellContentFormat="{}{0,8:N0}"

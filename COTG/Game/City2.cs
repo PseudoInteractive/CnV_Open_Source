@@ -95,13 +95,10 @@ namespace COTG.Game
 		}
 	//	public int postQueueTownHallLevel => CityBuild.isPlanner switch { true => 10, _ => postQueueBuildings[bspotTownHall].bl };
 
-		public int AnyHub(bool requestHub)
+		public async Task<int> AnyHub(bool requestHub)
 		{
-			if(tradeInfo == null)
-			{
-				Assert(false);
-				return 0;
-			}
+			await NearRes.UpdateTradeStuffIfNeeded();
+			
 			foreach(var i in requestHub ? tradeInfo.resSource : tradeInfo.resDest)
 			{
 				if(i !=0)
@@ -561,7 +558,6 @@ namespace COTG.Game
 					
 						bool wantDemoUI = false )
 		{
-			Assert(!CityBuild.isPlanner);
 			int rv = 0;
 			var bspot = XYToId(cc);
 			var b = GetBuildingOrLayout(bspot);

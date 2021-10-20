@@ -67,10 +67,10 @@ namespace COTG.Views
             instance = this;
 
             InitializeComponent();
+			SetupDataGrid(historyGrid);
+			//            historyGrid.ContextFlyout = cityMenuFlyout;
 
-            //            historyGrid.ContextFlyout = cityMenuFlyout;
-        
-        }
+		}
         override public Task VisibilityChanged(bool visible, bool longTerm)
 		{
          //   historyGrid.ItemsSource = Array.Empty<Army>();

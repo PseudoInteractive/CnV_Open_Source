@@ -187,6 +187,7 @@ namespace COTG.Views
 					   LayoutBlade.IsOpen=false;
 					   TagsBlade.IsOpen=false;
 					   TradeBlade.IsOpen=false;
+					   AutobuildBlade.IsOpen=false;
 					   HeroGrid.Width = ShellPage.instance.grid.Width.Min(1500);
 					   HeroGrid.Height = ShellPage.instance.grid.Height.Min(1000);
 					   //			onComplete.IsOn = CityBuild.isPlanner;
@@ -221,7 +222,7 @@ namespace COTG.Views
 						   var setTags = TagsBlade.IsOpen;
 						   var setTrade = TradeBlade.IsOpen;
 						   var setName = NameBlade.IsOpen;
-
+						   var autobuild = AutobuildBlade.IsOpen;
 						   if(setTags)
 						   {
 							   await SetCityTags(cid);
@@ -259,9 +260,9 @@ namespace COTG.Views
 						   var sendFilter = (!city.isHubOrStorage) ? res.sendFilter : ResourceFilter._null;
 						   //			await CitySettings.SetTradeResourcesSettings(city.cid,req,max);
 						   await CitySettings.SetCitySettings(cid,
-							   autoBuildOn: SettingsPage.autoBuildOn.GetValueOrDefault() ? true : null,
-								autoWalls: (SettingsPage.autoWallLevel == 10) ? true : null,
-								autoTowers: (SettingsPage.autoTowerLevel == 10) ? true : null,
+							   autoBuildOn: autobuild&&SettingsPage.autoBuildOn.GetValueOrDefault() ? true : null,
+								autoWalls: autobuild&&(SettingsPage.autoWallLevel == 10) ? true : null,
+								autoTowers: autobuild&&(SettingsPage.autoTowerLevel == 10) ? true : null,
 								  reqHub: (setTrade ? res.reqHub.city switch { City a => a.cid, _ => 0 } : null),
 								  targetHub: (setTrade ? res.sendHub.city switch { null => 0, var a => a.cid } : null),
 								   setRecruit: setTags && SettingsPage.setRecruit,
@@ -284,7 +285,8 @@ namespace COTG.Views
 						   city.BuildStageDirty();
 
 						   city.OnPropertyChanged();
-						   await COTG.DoTheStuff.Go(city,false,false);
+						   if(autobuild)
+							   await COTG.DoTheStuff.Go(city,false,false);
 					   }
 					   return result;
 				   }
@@ -474,7 +476,7 @@ namespace COTG.Views
 							await SetupTradeDefaults();
 							TradeBlade.IsOpen=true;
 						}
-
+						AutobuildBlade.IsOpen=true;
 
 						SetFromSS(i.shareStringWithJson,setTags: setTags,setRes: setRes);
 					}
@@ -588,20 +590,25 @@ namespace COTG.Views
 			{
 				tradeStale=false;
 				var city = City.Get(cid);
-				if(city.tradeInfo == null)
-					await NearRes.UpdateTradeStuff().ConfigureAwait(false);
+				await NearRes.UpdateTradeStuffIfNeeded().ConfigureAwait(false);
+				var tags = await TagsFromCheckboxes();
+				var isHubOrStorage = tags.HasFlag(Tags.Hub) | tags.HasFlag(Tags.Storage);
 
-
-				var bestReqHub = city.AnyHub(true);
-				if(bestReqHub == 0)
+				var bestReqHub = await city.AnyHub(true);
+				var bestSendHub = await city.AnyHub(false);
+				var hasAnyHubs = (bestReqHub!=0)||(bestSendHub!=0);
+				if(!hasAnyHubs)
 				{
-					bestReqHub =   await CitySettings.FindBestHubWithChoice(cid,"Find Request Hub").ConfigureAwait(false);
+					bestReqHub =   await CitySettings.FindBestHubWithChoice(cid,"Find Request Hub",isHubOrStorage ? null : false).ConfigureAwait(false);
+					if( !isHubOrStorage)
+						bestSendHub =   await CitySettings.FindBestHubWithChoice(cid,"Find Send Hub").ConfigureAwait(false);
 				}
-				var bestSendHub = city.AnyHub(false);
-				if(bestSendHub == 0 && !city.isHubOrStorage)
-					bestSendHub =   await CitySettings.FindBestHubWithChoice(cid,"Find Send Hub").ConfigureAwait(false);
+				else
+				{
 
-				await res.InitTradeSettings(city,bestReqHub,bestSendHub);
+				}
+
+				await res.InitTradeSettings(city,bestReqHub,bestSendHub,ResourceFilter._true,isHubOrStorage ? ResourceFilter._null : ResourceFilter._true);
 				OnPropertyChanged();
 			}
 		}
@@ -623,100 +630,105 @@ namespace COTG.Views
 			return IsNew(city._cityName) || city._cityName == "lawless city" || city._cityName == "*Lawless City";
 		}
 
-		private void toggleName_Toggled(object sender,RoutedEventArgs e)
+		void ChooseName(object sender,SelectionChangedEventArgs e)
+		{
+			var city = City.Get(cid);
+			string name0 = $"{city.cont:00} 1";
+			string name1 = ""; // default
+			var format = (int a) => a.ToString("D3");
+			var type = cityType.SelectedIndex;
+			switch(type)
+			{
+				case 0:
+				case 2:
+					{
+						var closestScore = float.MaxValue;
+
+						// normal or storage
+						foreach(var v in City.myCities)
+						{
+							if(v.cont != city.cont || v._cityName == null)
+								continue;
+							var match = regexCityName.Match(v._cityName);
+							bool hasLeadingZero = match.Groups[4].Value.IsNullOrEmpty() && !match.Groups[5].Value.IsNullOrEmpty();
+							if(match.Success)
+							{
+								if(v.isHub)
+								{
+									var score = city.cid.DistanceToCid(v.cid);
+									if(score < closestScore)
+									{
+										var pre = match.Groups[1].Value;
+										var mid = match.Groups[3].Value;
+										//var cluster = match.Groups[4].Value;
+										var leadingZeros = match.Groups[5].Value;
+										var num = match.Groups[6].Value;
+										var post = match.Groups[7].Value;
+										//string numStr;
+
+										//num.TryParseInt(out var numV);
+
+										//								if(num.StartsWith("0"))
+
+										format = type == 0 ? (int a) => a.ToString("D3") : (a) => AUtil.BeyondHex(a).ToString();
+										closestScore = score;
+										name0 = pre + city.cont.ToString("00") + mid + (type==2 ? "0" : "") + num;
+										name1 = post;
+									}
+								}
+							}
+							else
+							{
+								//	Assert(false);
+							}
+						}
+						break; // normal
+					}
+				default:
+					// hub
+					name0 = $"{city.cont:00} 00";
+					name1 = ""; // default
+					format = (a) => AUtil.BeyondHex(a).ToString();
+					break;
+			}
+			for(int uid = 1;;++uid)
+			{
+				var name = name0 + format(uid) + name1;
+				if(!City.myCities.Any((v) => v._cityName == name && v != city))
+				{
+					suggested.Text = name;
+					break;
+				}
+			} // u
+
+		}
+
+		private async void toggleName_Toggled(object sender,RoutedEventArgs e)
 		{
 			if(toggleName.IsOn)
 			{
 				var city = City.Get(cid);
-				if(city.isHub)
+				var tags = await TagsFromCheckboxes();
+				cityType.SelectionChanged-= ChooseName;
+				
+				if(tags.HasFlag(Tags.Hub) )
 					cityType.SelectedIndex = 1;
-				else if(city.isStorage)
+				else if(tags.HasFlag(Tags.Storage))
 					cityType.SelectedIndex = 2;
 				else
-					cityType.SelectedIndex =1;
+					cityType.SelectedIndex =0;
 				bool isNew = IsNewOrCaptured(city)||city._cityName.IsNullOrEmpty();
 				useSuggested.IsOn = isNew;
 				current.Text = city._cityName;
 				// is this needed?
-				void ChooseName()
-				{
-					string name0 = $"{city.cont:00} 1";
-					string name1 = ""; // default
-					var format = (int a) => a.ToString("D3");
-					var type = cityType.SelectedIndex;
-					switch(type)
-					{
-						case 0:
-						case 2:
-							{
-								var closestScore = float.MaxValue;
-							
-								// normal or storage
-								foreach(var v in City.myCities)
-								{
-									if(v.cont != city.cont || v._cityName == null)
-										continue;
-									var match = regexCityName.Match(v._cityName);
-									bool hasLeadingZero = match.Groups[4].Value.IsNullOrEmpty() && !match.Groups[5].Value.IsNullOrEmpty();
-									if(match.Success)
-									{
-										if(v.isHub)
-										{
-											var score = city.cid.DistanceToCid(v.cid);
-											if(score < closestScore)
-											{
-												var pre = match.Groups[1].Value;
-												var mid = match.Groups[3].Value;
-												//var cluster = match.Groups[4].Value;
-												var leadingZeros = match.Groups[5].Value;
-												var num = match.Groups[6].Value;
-												var post = match.Groups[7].Value;
-												//string numStr;
 
-												//num.TryParseInt(out var numV);
-
-												//								if(num.StartsWith("0"))
-
-												format = type == 0 ? (int a) => a.ToString("D3") : (a) => AUtil.BeyondHex(a).ToString();
-												closestScore = score;
-												name0 = pre + city.cont.ToString("00") + mid + (type==2 ? "0" : "") + num;
-												name1 = post;
-											}
-										}
-									}
-									else
-									{
-										//	Assert(false);
-									}
-								}
-								break; // normal
-							}
-						default:
-							// hub
-							name0 = $"{city.cont:00} 00";
-							name1 = ""; // default
-							format = (a) => AUtil.BeyondHex(a).ToString();
-							break;
-					}
-					for(int uid = 1;;++uid)
-					{
-						var name = name0 + format(uid) + name1;
-						if(!City.myCities.Any((v) => v._cityName == name && v != city))
-						{
-							suggested.Text = name;
-							break;
-						}
-					} // u
-
-				}
-				// does this trigger it?
-				cityType.SelectedIndex = city.isHub ? 1 : city.isStorage ? 2 : 0;
-				ChooseName();
-				cityType.SelectionChanged+= (_,_) => ChooseName();
-
+				ChooseName(null,null);	
+				cityType.SelectionChanged+= ChooseName;
 
 			}
 		}
+
+		
 	}
 
 

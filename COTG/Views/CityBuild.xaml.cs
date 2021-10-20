@@ -1589,6 +1589,9 @@ namespace COTG.Views
 		private async void Abandon_ExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
 		{
 			buildMenu.Hide();
+			App.DispatchOnUIThreadLow(() =>
+						JSClient.coreWebView.PostWebMessageAsString($"{{\"temple\":{City.build}}}"));
+			return;
 			var cid = City.build;
 			await App.DispatchOnUIThreadExclusive(cid, async () =>
 			{

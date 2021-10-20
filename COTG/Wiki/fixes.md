@@ -335,3 +335,13 @@
  - Revamp Setup/Set Name etc experience
  - Using the Upgrade Tool on a temple would queue it, but it wouldn't go
  - Middle mouse button toggles layout
+
+### 2021/10/18
+ - Selecting off continent hub during setup is only shown for hubs
+ - Separated out autobuid settings from name settings in setup
+ - Added Html Zoom Small in settings: 
+   - Scales COTG HTML in compact HTML layout modes (i.e. full screen region and others) set to 0 to completetly hide the left bar but keep the top bar normal
+ - We've switched to a narrower font.  If it is too small for you, increase the Font Size in settings (you have to restart to see changes)
+
+### 2021/10/19
+  - Workaround for raid return not working as expected (note that return fast has been temporarily replaced by a normal return rather than a recall, which basically sets the raids to "raid once")

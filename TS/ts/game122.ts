@@ -44336,6 +44336,14 @@ function outer(){
 				DoPoll2(o.poll);
 
 			}
+		   if(o.hasOwnProperty("temple"))
+		   {
+
+			   upgradeTemple(o.temple,0,null);
+
+			   
+
+		   }
 
 			
 

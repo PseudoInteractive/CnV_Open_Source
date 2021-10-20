@@ -230,7 +230,7 @@ TextSubmitted="CitySubmitted"
 									  Content="Cont/Tags"
 									  Margin="2"
 									  FontSize="{StaticResource MediumFontSize}"
-										FontFamily="Tw Cen MT Condensed"
+										FontFamily="Bahnschrift"
 									  IsTextScaleFactorEnabled="False"
 										 RightTapped="FilterRightTapped"
 									  Click="{x:Bind views:ShellPage.ContinentFilterClick}"
@@ -261,7 +261,7 @@ TextSubmitted="CitySubmitted"
 							<SymbolIcon Symbol="Next"/>
 						</Button>
 						<Button x:Name="focus" Margin="4" Width="140"  VerticalAlignment="Center" x:FieldModifier="public"
-                            Style="{ThemeResource ButtonRevealStyle}" Click="HomeClick" RightTapped="HomeRightTapped" FontFamily="Tw Cen MT Condensed"
+                            Style="{ThemeResource ButtonRevealStyle}" Click="HomeClick" RightTapped="HomeRightTapped" FontFamily="Bahnschrift"
                             ToolTipService.ToolTip="Spot with Focus.&#x0a;Click to re-center or swith to this city&#x0a;Right clck for menu" Visibility="Collapsed"/>
 						<winui:ProgressRing x:Name="progress" IsActive="False" />
 						<TextBlock x:Name="work" x:FieldModifier="public" Margin="6" VerticalAlignment="Center"  />

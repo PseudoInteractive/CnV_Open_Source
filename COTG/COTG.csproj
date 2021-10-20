@@ -47,6 +47,7 @@
     <None Remove="Content\bin\**" />
     <None Remove="Content\obj\**" />
     <None Remove="Properties\PublishProfiles\**" />
+    <Content Remove="@(Content)" />
   </ItemGroup>
 
   <ItemGroup>
@@ -67,6 +68,7 @@
     <PackageReference Include="DSharpPlus.CommandsNext" Version="4.1.0" />
     <PackageReference Include="Enums.NET" Version="4.0.0" />
     <PackageReference Include="MessagePack" Version="2.3.85" />
+    <PackageReference Include="MessagePack.Experimental" Version="2.3.85" />
     <PackageReference Include="MessagePack.MSBuild.Tasks" Version="2.3.85">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -84,10 +86,10 @@
     <PackageReference Include="Microsoft.Extensions.Options" Version="6.0.0-rc.2.21480.5" />
     <PackageReference Include="Microsoft.Extensions.Primitives" Version="6.0.0-rc.2.21480.5" />
     <PackageReference Include="Microsoft.Graphics.Win2D" Version="1.0.0.28-preview2" />
-    <PackageReference Include="Microsoft.Toolkit" Version="7.1.0" />
-    <PackageReference Include="Microsoft.Toolkit.Diagnostics" Version="7.1.0" />
-    <PackageReference Include="Microsoft.Toolkit.HighPerformance" Version="7.1.0" />
-    <PackageReference Include="Microsoft.Toolkit.Mvvm" Version="7.1.0" />
+    <PackageReference Include="Microsoft.Toolkit" Version="7.1.1" />
+    <PackageReference Include="Microsoft.Toolkit.Diagnostics" Version="7.1.1" />
+    <PackageReference Include="Microsoft.Toolkit.HighPerformance" Version="7.1.1" />
+    <PackageReference Include="Microsoft.Toolkit.Mvvm" Version="7.1.1" />
     <PackageReference Include="Microsoft.Windows.CsWinRT" Version="1.3.5" />
     <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.22000.194" />
     <PackageReference Include="MonoGame.Content.Builder.Task" Version="3.8.1.1941-develop" />
@@ -171,6 +173,7 @@
     <Compile Include="Helpers\aContainers.cs" />
     <Compile Include="Helpers\AES.cs" />
     <Compile Include="Helpers\AMath.cs" />
+    <Compile Include="Helpers\AMessagePack.cs" />
     <Compile Include="Helpers\Analytics.cs" />
     <Compile Include="Helpers\aParallelFor.cs" />
     <Compile Include="Helpers\AString.cs" />
@@ -195,6 +198,7 @@
     <Compile Include="Helpers\Strings.cs" />
     <Compile Include="Helpers\TeachingTips.cs" />
     <Compile Include="Helpers\Ticks.cs" />
+    <Compile Include="Helpers\Time.cs" />
     <Compile Include="Helpers\UMath.cs" />
     <Compile Include="Helpers\UnsafeBinaryMemoryReader.cs" />
     <Compile Include="Helpers\UnsafeBinaryMemoryWriter.cs" />

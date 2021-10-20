@@ -40,11 +40,15 @@ namespace COTG.JSON
 			return result;
 
 		}
-		public static async Task<int> FindBestHubWithChoice(int cid,string title) => await CitySettings.FindBestHub(cid,City.Get(cid).isOnWater && await App.DoYesNoBox(title,"Find one from another Continent?",yes:"Off Continent", no:"Same Continent", cancel: null) == 1);
+		public static async Task<int> FindBestHubWithChoice(int cid,string title, bool?offContinent=null) => 
+			await CitySettings.FindBestHub(cid,
+				offContinent is not null ? offContinent.Value 
+				: City.Get(cid).isOnWater 
+					&& (await App.DoYesNoBox(title,"Find one from another Continent?",yes:"Off Continent", no:"Same Continent", cancel: null)) == 1);
 
 		public static async Task<int> FindBestHub(int cid, bool onlyOffContinent)
 		{
-			await NearRes.UpdateTradeStuffifNeeded();
+			await NearRes.UpdateTradeStuffIfNeeded();
 			int reqHub =0;
 			var bestDist =float.MaxValue;
 			var hubs = GetHubs();
@@ -80,7 +84,7 @@ namespace COTG.JSON
 			
 
 		
-			var targetExplicit = targetHub.HasValue;
+		//	var targetExplicit = targetHub.HasValue;
 			foreach (var __cid in Spot.GetSelectedForContextMenu(_cid, false, onlyMine: true))
 			{
 				var cid = __cid;
@@ -90,10 +94,17 @@ namespace COTG.JSON
 				{
 					sourceHub = targetHub = await FindBestHubWithChoice(cid, "Find Hub" );
 				}
+
+				if(cid == sourceHub || cid == targetHub)
+					continue;
+
+				var _sourceHub = sourceHub is not null ? sourceHub.Value :  await city.AnyHub(true);
+				var _targetHub = targetHub is not null ? targetHub.Value : await city.AnyHub(false);
+
+
+
 				var settings = new ResSettings();
-				settings.reqFilter = reqFilter;
-				settings.sendFilter = targetFilter;
-				settings.InitTradeSettings(city,sourceHub.GetValueOrDefault(),targetHub.GetValueOrDefault());
+				settings.InitTradeSettings(city,_sourceHub,_targetHub,reqFilter,targetFilter);
 				
 
 				var dialog = new ContentDialog()
@@ -125,14 +136,14 @@ namespace COTG.JSON
 			}
 		}
 
-		public static int? FilterTargetHub( City me, int hub)
-		{
-			return me.isHubOrStorage ? 0 : hub;
-		}
-		public static int? FilterTargetHub(int me, int hub)
-		{
-			return FilterTargetHub(City.Get(me), hub);
-		}
+		//public static int? FilterTargetHub( City me, int hub)
+		//{
+		//	return me.isHubOrStorage ? 0 : hub;
+		//}
+		//public static int? FilterTargetHub(int me, int hub)
+		//{
+		//	return FilterTargetHub(City.Get(me), hub);
+		//}
 
 
 
@@ -594,7 +605,7 @@ namespace COTG.JSON
 
 		public static async void SetTargetHub(int cid, int targetHub)
         {
-			SetTradeSettings(cid, sourceHub: targetHub, targetHub: targetHub, targetFilter: ResourceFilter._true);
+			SetTradeSettings(cid, sourceHub: null, targetHub: targetHub, targetFilter: ResourceFilter._true);
 //			SetTradeSettings(cid, targetHub: targetHub);
 
 			//var targets = Spot.GetSelectedForContextMenu(cid, false, targetHub, onlyMine: true);

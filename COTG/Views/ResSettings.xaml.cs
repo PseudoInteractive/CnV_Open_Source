@@ -79,10 +79,11 @@ namespace COTG.Views
 			}
 		}
 
-		public async Task InitTradeSettings(City city, int _sourceHub, int _targetHub)
+		public async Task InitTradeSettings(City city, int _sourceHub, int _targetHub,ResourceFilter reqFilter,ResourceFilter targetFilter) 
 		{
 			var curSettings = await CitySettings.GetTradeResourcesSettings(city.cid);
-
+			this.reqFilter = reqFilter;
+			this.sendFilter = targetFilter;
 			reqHub.city = _sourceHub == 0? null : City.Get(_sourceHub);
 			sendHub.city = _targetHub==0?null:City.Get(_targetHub);
 			cartReserve = curSettings.cartReserve;

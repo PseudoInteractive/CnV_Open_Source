@@ -164,7 +164,7 @@
 			<tk:DataGrid.CellStyle >
 				<Style TargetType="tk:DataGridCell">
 					<Setter Property="Margin" Value="0" />
-					<Setter Property="FontFamily" Value="Tw Cen MT Condensed"/>
+					<Setter Property="FontFamily" Value="Bahnschrift"/>
 					<Setter Property="FontSize" Value="{StaticResource SmallFontSize}" />
 					<Setter Property="IsTextScaleFactorEnabled" Value="False"/>
 				</Style>
@@ -202,7 +202,7 @@
                                         Binding="{Binding travel, Converter={StaticResource TimeConverter},Mode=OneWay}"
                                         IsReadOnly="True" Tag="travel"
 										FontSize="{StaticResource SmallFontSize}"
-										FontFamily="Tw Cen MT Condensed"
+										FontFamily="Bahnschrift"
 										
 
                                              />
@@ -211,13 +211,13 @@
                                         IsReadOnly="True" Tag="carts"
                                             CellStyle="{StaticResource CellCenter}"
 										FontSize="{StaticResource SmallFontSize}"
-		   							   FontFamily="Tw Cen MT Condensed"
+		   							   FontFamily="Bahnschrift"
 
                                              />
 				<tk:DataGridTextColumn  Header="Ships" 
                                         Binding="{Binding shipsHome, Converter={StaticResource IntConverter},Mode=OneWay}"
                                         FontSize="{StaticResource SmallFontSize}"
-										FontFamily="Tw Cen MT Condensed"
+										FontFamily="Bahnschrift"
 										IsReadOnly="True" Tag="ships"
                                             CellStyle="{StaticResource CellCenter}"
                                              />
@@ -226,12 +226,12 @@
                                         Binding="{Binding name, Mode=OneWay }"
                                         IsReadOnly="True"
 										FontSize="{StaticResource SmallFontSize}"
-		   							   FontFamily="Tw Cen MT Condensed"
+		   							   FontFamily="Bahnschrift"
                                             CellStyle="{StaticResource CellLeft}" />
 
 				<tk:DataGridTextColumn Header="Send Res" Binding="{Binding totalRes,Converter={StaticResource IntConverter}, Mode=OneTime}"
                                        FontSize="{StaticResource SmallFontSize}"
-		   							   FontFamily="Tw Cen MT Condensed"
+		   							   FontFamily="Bahnschrift"
 
 									   CellStyle="{StaticResource CellRight}" IsReadOnly="True"  Tag="resSend"
                                         />
@@ -278,7 +278,7 @@
 				<tk:DataGridTextColumn Header="ETA"
                                        CellStyle="{StaticResource CellCenter}"
 										FontSize="{StaticResource SmallFontSize}"
-		   							   FontFamily="Tw Cen MT Condensed"
+		   							   FontFamily="Bahnschrift"
                                        IsReadOnly="False"
                                        ToolTipService.ToolTip="Time at which res will arrive"
                                        Binding="{Binding eta,Converter={StaticResource DateTimeConverter},Mode=OneWay}"

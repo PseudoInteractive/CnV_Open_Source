@@ -39,19 +39,21 @@
 	</Style>
 	<Style TargetType="HyperlinkButton" >
 		<Setter Property="Foreground" Value="{StaticResource HyperLinkBrush}" />
-		<Setter Property="FontFamily" Value="Tw Cen MT Condensed"/>
+		<Setter Property="FontFamily" Value="Bahnschrift"/>
 		<Setter Property="FontSize" Value="{StaticResource SmallFontSize}" />
 	</Style>
 	<Style TargetType="tk:MarkdownTextBlock">
 		<Setter Property="LinkForeground" Value="#FF8000FF" />
 	</Style>
 	<Style TargetType="Page">
-		<Setter Property="FontFamily" Value="Tw Cen MT Condensed"/>
+		<Setter Property="FontFamily" Value="Bahnschrift"/>
 	</Style>
 	<Style TargetType="Button" BasedOn="{StaticResource ButtonRevealStyle}">
 		<Setter Property="VerticalAlignment" Value="Stretch"/>
 		<Setter Property="HorizontalAlignment" Value="Stretch"/>
-		<Setter Property="FontFamily" Value="Tw Cen MT Condensed"/>
+		<Setter Property="FontFamily" Value="Bahnschrift"/>
+		<Setter Property="FontStretch" Value="Condensed" />
+		<Setter Property="FontWeight" Value="Light" />
 		<Setter Property="FontSize" Value="{StaticResource SmallFontSize}" />
 		<Setter Property="Margin" Value="2"/>
 	</Style>
@@ -59,7 +61,9 @@
 	<Style x:Key="ButtonSmall" TargetType="Button" BasedOn="{StaticResource ButtonRevealStyle}">
 		<Setter Property="VerticalAlignment" Value="Center"/>
 		<Setter Property="HorizontalAlignment" Value="Center"/>
-		<Setter Property="FontFamily" Value="Tw Cen MT Condensed"/>
+		<Setter Property="FontFamily" Value="Bahnschrift"/>
+		<Setter Property="FontStretch" Value="Condensed" />
+		<Setter Property="FontWeight" Value="Light" />
 		<Setter Property="FontSize" Value="{StaticResource SmallFontSize}" />
 		<Setter Property="Margin" Value="2"/>
 		<Setter Property="IsTextScaleFactorEnabled" Value="False"/>
@@ -74,11 +78,11 @@
 		<Setter Property="Margin" Value="4"/>
 	</Style>
 	<Style TargetType="TextBlock">
-        <Setter Property="FontFamily" Value="Tw Cen MT Condensed"/>
+        <Setter Property="FontFamily" Value="Bahnschrift"/>
 		<Setter Property="FontSize" Value="{StaticResource SmallFontSize}" />
 	</Style>
 	<Style TargetType="CheckBox">
-		<Setter Property="FontFamily" Value="Tw Cen MT Condensed"/>
+		<Setter Property="FontFamily" Value="Bahnschrift"/>
 		<Setter Property="FontSize" Value="{StaticResource SmallFontSize}" />
 		<Setter Property="IsTextScaleFactorEnabled" Value="False"/>
 	</Style>
@@ -117,39 +121,43 @@
 		<Setter Property="BorderBrush" Value="{ThemeResource SystemControlBackgroundAccentRevealBorderBrush}"/>
 	</Style>
 	<Style TargetType="TextBox">
-		<Setter Property="FontFamily" Value="Tw Cen MT Condensed"/>
+		<Setter Property="FontFamily" Value="Bahnschrift"/>
+		<Setter Property="FontStretch" Value="Condensed" />
+		<Setter Property="FontWeight" Value="Light" />
 		<Setter Property="FontSize" Value="{StaticResource SmallFontSize}" />
 		<Setter Property="BorderBrush" Value="{ThemeResource SystemControlBackgroundAccentRevealBorderBrush}"/>
 	</Style>
 	<Style TargetType="TextBox" x:Key="TextBoxReveal" >
-		<Setter Property="FontFamily" Value="Tw Cen MT Condensed"/>
+		<Setter Property="FontFamily" Value="Bahnschrift"/>
+		<Setter Property="FontStretch" Value="Condensed" />
+		<Setter Property="FontWeight" Value="Light" />
 		<Setter Property="FontSize" Value="{StaticResource MediumFontSize}" />
 		<Setter Property="BorderBrush" Value="{ThemeResource SystemControlBackgroundAccentRevealBorderBrush}"/>
     </Style>
     <Style x:Key="TextBlockSmall" TargetType="TextBlock">
-        <Setter Property="FontFamily" Value="Tw Cen MT Condensed"/>
+        <Setter Property="FontFamily" Value="Bahnschrift"/>
         <Setter Property="FontSize" Value="{StaticResource SmallFontSize}" />
-		<Setter Property="IsTextScaleFactorEnabled" Value="False"/>
+		<Setter Property="FontStretch" Value="Condensed" />
+		<Setter Property="FontWeight" Value="Light" />
 	</Style>
-	<Style x:Key="TextBlockLarge" TargetType="TextBlock">
-		<Setter Property="FontFamily" Value="Tw Cen MT Condensed"/>
+	<Style x:Key="TextBlockLarge" TargetType="TextBlock" BasedOn="{StaticResource TextBlockSmall}" >
 		<Setter Property="FontSize" Value="{StaticResource LargeFontSize}" />
 	</Style>
-	<Style x:Key="TextBlockMedium" TargetType="TextBlock">
-		<Setter Property="FontFamily" Value="Tw Cen MT Condensed"/>
+	<Style x:Key="TextBlockMedium" TargetType="TextBlock" BasedOn="{StaticResource TextBlockSmall}" >
 		<Setter Property="FontSize" Value="{StaticResource MediumFontSize}" />
-		<Setter Property="IsTextScaleFactorEnabled" Value="False"/>
 	</Style>
 	<Style x:Key="TextBoxSmall" BasedOn="{StaticResource TextBoxReveal}" TargetType="TextBox">
-        <Setter Property="FontFamily" Value="Tw Cen MT Condensed"/>
+        <Setter Property="FontFamily" Value="Bahnschrift"/>
+		
 		<Setter Property="FontSize" Value="{StaticResource SmallFontSize}" />
-        <Setter Property="IsTextScaleFactorEnabled" Value="False"/>
+		<Setter Property="FontStretch" Value="Condensed" />
+		<Setter Property="FontWeight" Value="Light" />
 		<Setter Property="BorderThickness" Value="1" />
         <Setter Property="BorderBrush" Value="{ThemeResource SystemControlBackgroundAccentRevealBorderBrush}"/>       
     </Style>
     <Style x:Key="NumberBoxSmall" TargetType="winui:NumberBox">
 		<Setter Property="FontSize" Value="{StaticResource SmallFontSize}" />
-		<Setter Property="FontFamily" Value="Tw Cen MT Condensed"/>
+		<Setter Property="FontFamily" Value="Bahnschrift"/>
 		<Setter Property="IsTextScaleFactorEnabled" Value="False"/>
         <Setter Property="SpinButtonPlacementMode" Value="Compact"/>
 		<Setter Property="SmallChange" Value="1"/>
@@ -200,7 +208,7 @@
 
 
 	<Style BasedOn="{StaticResource ToggleButtonRevealStyle}" TargetType="ToggleButton">
-		<Setter Property="FontFamily" Value="Tw Cen MT Condensed"/>
+		<Setter Property="FontFamily" Value="Bahnschrift"/>
 		<Setter Property="FontSize" Value="{StaticResource MediumFontSize}" />
         <Setter Property="IsTextScaleFactorEnabled" Value="False"/>
         <Setter Property="Margin" Value="4"/>
@@ -293,11 +301,12 @@
     </Style>
 	<Style TargetType="tk:DataGrid">
 		<Setter Property="RowHeight" Value="{StaticResource ShortGridRowHeight}" />
-		<Setter Property="FontFamily" Value="Tw Cen MT Condensed" />
+		<Setter Property="FontFamily" Value="Bahnschrift" />
 		<Setter Property="FontSize" Value="{StaticResource SmallFontSize}" />
 		<Setter Property="RowStyle" Value="{StaticResource DataGridRowStyle}" />
 		<Setter Property="RowHeaderStyle" Value="{StaticResource DataGridColumnHeaderStyle}"/>
 		<Setter Property="FontStretch" Value="Condensed" />
+		<Setter Property="FontWeight" Value="Light" />
 		<Setter Property="CanUserSortColumns" Value="True" />
 		<Setter Property="ClipboardCopyMode" Value="IncludeHeader" />
 		<Setter Property="SelectionMode" Value="Extended" />

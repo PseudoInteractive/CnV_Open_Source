@@ -136,12 +136,15 @@ namespace COTG.Views
 		{
 			if(!dataGrids.AddIfAbsentNE(grid))
 				return;
+			grid.FontStretch = Windows.UI.Text.FontStretch.Condensed;
+			grid.FontWeight = Microsoft.UI.Text.FontWeights.Light;
 			grid.GridLinesVisibility= Telerik.UI.Xaml.Controls.Primitives.GridLinesVisibility.Both;
 		//	grid.ProcessTooltips();
 		//	grid.ListenForNestedPropertyChange=false;
 			grid.FontSize = SettingsPage.smallFontSize;
 			grid.RowHeight = SettingsPage.mediumGridRowHeight;
-			
+			grid.ProcessTooltips();
+
 		}
 
 		public void SetupCityDataGrid(RadDataGrid grid)
@@ -151,7 +154,6 @@ namespace COTG.Views
 				return;
 			spotGrids.Add(grid);
 			grid.SelectionChanged += SpotSelectionChanged;
-			grid.ProcessTooltips();
 			
 			SetupDataGrid(grid);
 		}

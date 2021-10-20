@@ -34,6 +34,44 @@ namespace COTG.Helpers
 				await SaveAsync<T>(folder, $"{name}___{JSClient.ServerTime().FormatFileTimeToMinute()}___", content, false);
 			await FileIO.WriteTextAsync(file, fileContent);
 		}
+		public static async Task SaveAsync(this StorageFolder folder,string name,byte[] fileContent)
+		{
+			var file = await folder.CreateFileAsync(GetFileName(name),CreationCollisionOption.ReplaceExisting);
+			// don't block on this save
+			await FileIO.WriteBytesAsync(file,fileContent);
+		}
+		public static async Task<StorageFile> OpenForRead(StorageFolder folder,string fileName)
+		{
+			for(;;)
+			{
+
+				try
+				{
+					return await folder.GetFileAsync(fileName);
+
+				}
+				catch(Exception ex)
+				{
+					LogEx(ex);
+				}
+				await Task.Delay(1000);
+			}
+
+		}
+		public static async Task<byte[]> ReadAsync(this StorageFolder folder,string name)
+		{
+			var fileName = GetFileName(name);
+
+			if(!File.Exists(Path.Combine(folder.Path,fileName)))
+			{
+				return Array.Empty<byte>();
+			}
+
+			var file = await OpenForRead(folder,fileName);
+			return await ReadBytesAsync(file);
+
+		}
+
 
 		static StorageFolder userFolder => ApplicationData.Current.LocalFolder;
 
@@ -63,6 +101,7 @@ namespace COTG.Helpers
 			}
 
 			var file = await folder.GetFileAsync(fileName);
+			
 			var fileContent = await FileIO.ReadTextAsync(file);
 			if (fileContent.IsNullOrEmpty())
 				return (_default,string.Empty);
@@ -79,6 +118,7 @@ namespace COTG.Helpers
             }
 
             var file = await folder.GetFileAsync(fileName);
+
             var fileContent = await FileIO.ReadTextAsync(file);
 			if (fileContent.IsNullOrEmpty())
 				return _default;
@@ -214,13 +254,12 @@ namespace COTG.Helpers
         {
             if (file != null)
             {
-                using (IRandomAccessStream stream = await file.OpenReadAsync())
+                using (var stream = await file.OpenSequentialReadAsync())
                 {
-                    using (var reader = new DataReader(stream.GetInputStreamAt(0)))
+                    using (var reader = new DataReader(stream))
                     {
-                        await reader.LoadAsync((uint)stream.Size);
-                        var bytes = new byte[stream.Size];
-                        reader.ReadBytes(bytes);
+						var bytes = new byte[reader.UnconsumedBufferLength];
+					    reader.ReadBytes(bytes);
                         return bytes;
                     }
                 }

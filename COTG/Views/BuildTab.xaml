@@ -14,7 +14,8 @@
 			  mc:Ignorable="d"
 			  Tag="Build"
 			  IsTabStop="True"
-			  FontFamily="Tw Cen MT Condensed">
+			  FontStretch="Condensed"		             
+			  FontFamily="Bahnschrift">
 
 	<Grid x:Name="cityBaseGrid">
 

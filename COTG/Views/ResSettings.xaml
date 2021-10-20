@@ -84,10 +84,10 @@
 		<StackPanel Style="{StaticResource StackPanelReveal}" >
 			<Border Style="{StaticResource BorderReveal}">
 				<tk:WrapPanel  Orientation="Horizontal">
-					<CheckBox  Content="Request Wood" IsThreeState="True" IsChecked="{x:Bind reqFilter.wood, Mode=TwoWay}" ToolTipService.ToolTip="Checked:  Wood is requested from the source hub Off: City does not request wood In between: Leave wood source hub as is" />
-					<CheckBox  Content="Request Stone" IsThreeState="True" IsChecked="{x:Bind reqFilter.stone, Mode=TwoWay}" ToolTipService.ToolTip="[Checked]:  Stone is requested from the source hub  [Off]: City does not request stone.  [In between]: Leave stone source hub as is" />
-					<CheckBox  Content="Request Iron" IsThreeState="True" IsChecked="{x:Bind reqFilter.iron, Mode=TwoWay}" ToolTipService.ToolTip="Checked:  Iron is requested from the source hub Off: City does not request iron In between: Leave iron source hub as is" />
-					<CheckBox  Content="Request Food" IsThreeState="True" IsChecked="{x:Bind reqFilter.food, Mode=TwoWay}" ToolTipService.ToolTip="Checked:  Food is requested from the source hub Off: City does not request food In between: Leave food source hub as is" />
+					<CheckBox  Content="Request Wood" IsThreeState="True" IsChecked="{x:Bind reqFilter.wood, Mode=TwoWay}" ToolTipService.ToolTip="Checked:  Wood is requested from the source hub Off: City does not request wood [Box]: Leave wood source hub as is" />
+					<CheckBox  Content="Request Stone" IsThreeState="True" IsChecked="{x:Bind reqFilter.stone, Mode=TwoWay}" ToolTipService.ToolTip="[Checked]:  Stone is requested from the source hub  [Off]: City does not request stone.  [Box]: Leave stone source hub as is" />
+					<CheckBox  Content="Request Iron" IsThreeState="True" IsChecked="{x:Bind reqFilter.iron, Mode=TwoWay}" ToolTipService.ToolTip="Checked:  Iron is requested from the source hub Off: City does not request iron [Box]: Leave iron source hub as is" />
+					<CheckBox  Content="Request Food" IsThreeState="True" IsChecked="{x:Bind reqFilter.food, Mode=TwoWay}" ToolTipService.ToolTip="Checked:  Food is requested from the source hub Off: City does not request food [Box]: Leave food source hub as is" />
 				</tk:WrapPanel  >
 			</Border>
 			<Border Style="{StaticResource BorderReveal}">

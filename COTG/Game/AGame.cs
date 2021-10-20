@@ -212,7 +212,7 @@ namespace COTG
 		public static float bmFontScale = 0.125f;
 		public static Texture2D fontTexture;
 		static readonly Color attackColor = Color.White;
-		static Color ShadowColor(float alpha,bool highlight = false) => new Color(highlight ? 128 : 0,highlight ? 128 : 0,highlight ? 192 : 32,(int)(200 * alpha));
+		static Color ShadowColor(float alpha,bool highlight = false) => new Color(highlight ? 32 : 0,highlight ? 0 : 0,highlight ? 0 : 32,(int)(220 * alpha));
 		static readonly Color defenseColor = new Color(255,20,160,160);
 		static readonly Color defenseArrivedColor = new Color(255,20,255,160);
 		static readonly Color artColor = Color.DarkBlue;
@@ -221,7 +221,11 @@ namespace COTG
 		static readonly Color siegeColor = Color.DarkOrange;
 		static readonly Color assaultColor = CColor(55,94,190,242);
 		static readonly Color tradeColor = Color.DarkGreen;
-		static readonly Color tradeColorHover = Color.DarkBlue;
+		static readonly Color tradeColorHover = Color.Green;
+		
+		static readonly Color tradeColor1 = Color.DarkRed;
+		static readonly Color tradeColorHover1 = Color.Red;
+		
 		static readonly Color defaultAttackColor = Color.Maroon;// (0xFF8B008B);// Color.DarkMagenta;
 		static readonly Color raidColor = Color.Yellow;
 		//        static readonly Color shadowColor = new Color(128, 0, 0, 0);
@@ -974,8 +978,8 @@ namespace COTG
 			var y1 = c0.Y.Max(c1.Y);
 			var y0 = c0.Y.Min(c1.Y);
 			// todo: cull on diagonals
-			return x1 <= -halfSpan.X | x0 >= halfSpan.X |
-					y1 <= -halfSpan.Y | y0 >= halfSpan.Y;
+			return (x1 <= -halfSpan.X) | (x0 >= halfSpan.X) |
+					(y1 <= -halfSpan.Y) | (y0 >= halfSpan.Y);
 		}
 		public static bool IsCulledWC((int x, int y) c)
 		{
@@ -997,8 +1001,8 @@ namespace COTG
 			var y1 = c0.Y;
 			var y0 = c0.Y;
 			// todo: cull on diagonals
-			return x1 + pad <= -halfSpan.X | x0 - pad >= halfSpan.X |
-					y1 + pad <= -halfSpan.Y | y0 - pad >= halfSpan.Y;
+			return (x1 + pad <= -halfSpan.X) | (x0 - pad >= halfSpan.X) |
+					(y1 + pad <= -halfSpan.Y) | (y0 - pad >= halfSpan.Y);
 		}
 		public static bool IsCulled(Vector2 c0)
 		{
@@ -1008,8 +1012,8 @@ namespace COTG
 			var y1 = c0.Y;
 			var y0 = c0.Y;
 			// todo: cull on diagonals
-			return x1 <= -halfSpan.X | x0 >= halfSpan.X |
-					y1 <= -halfSpan.Y | y0 >= halfSpan.Y;
+			return (x1 <= -halfSpan.X) | (x0 >= halfSpan.X) |
+					(y1 <= -halfSpan.Y) | (y0 >= halfSpan.Y);
 		}
 
 
@@ -1137,8 +1141,8 @@ namespace COTG
 
 				//{
 				//	var i = (int)(animationT / 4.0f);
-				//	var stretchCount = FontStretch.UltraExpanded - FontStretch.UltraCondensed+1;
-				//	fontStretch = FontStretch.UltraCondensed + (i % stretchCount);
+				//	var stretchCount = FontStretch.UltraExpanded - FontStretch.Condensed+1;
+				//	fontStretch = FontStretch.Condensed + (i % stretchCount);
 				//	tipTextFormat.FontStretch = fontStretch;
 				//	tipTextFormatCentered.FontStretch = fontStretch;
 				//}
@@ -1902,32 +1906,34 @@ namespace COTG
 
 							if(NearRes.IsVisible())
 							{
+								var sendOffset = new Vector2(0.125f*pixelScale,0.125f*pixelScale);
 								foreach(var city in City.friendCities)
 								{
-									if(!city.testContinentFilter)
-										continue;
+								//	if(!city.testContinentFilter)
+								//		continue;
 									var wc = city.cid.CidToWorld();
-									if(IsCulledWC(wc))
-										continue;
 									var cc = wc.WToCamera();
-									for(int r = 0;r < 4;++r)
+									if (!IsCulledWC(wc))
 									{
-										var xT0 = (r+0.5f) / 4.0f;
-										var xT1 = (r+1.375f) / 4.0f;
-										var yt0 = 0.0f;
-										var yt1 = (city.res[r] * (1.0f / (512 * 128))).Min(1.0f);
-										var color = r switch { 0 => new Color(150,75,0,255), 1 => new Color(128,128,128,255), 2 => new Color(24,124,168,255), _ => new Color(192,192,0,255) };
-										if(yt1 < 0.125f)
+										for (int r = 0; r < 4; ++r)
 										{
-											yt1 = 0.25f;
-											color = new Color(255,0,0,255);
+											var xT0 = (r + 0.5f) / 4.0f;
+											var xT1 = (r + 1.375f) / 4.0f;
+											var yt0 = 0.0f;
+											var yt1 = (city.res[r] * (1.0f / (512 * 128))).Min(1.0f);
+											var color = r switch { 0 => new Color(150, 75, 0, 255), 1 => new Color(128, 128, 128, 255), 2 => new Color(24, 124, 168, 255), _ => new Color(192, 192, 0, 255) };
+											if (yt1 < 0.125f)
+											{
+												yt1 = 0.25f;
+												color = new Color(255, 0, 0, 255);
+											}
+
+											var c0 = new Vector2(cc.X + (xT0 * 0.8f - 0.5f) * pixelScale, cc.Y + (0.25f - yt1 * 0.5f) * pixelScale);
+											var c1 = new Vector2(cc.X + (xT1 * 0.8f - 0.5f) * pixelScale, cc.Y + 0.25f * pixelScale);
+											DrawRect(Layer.actionOverlay, c0, c1, color, zLabels);
+											DrawRect(Layer.action, c0, c1, CColor(a: 192), 0);
+
 										}
-
-										var c0 = new Vector2(cc.X +(xT0*0.8f-0.5f) * pixelScale,cc.Y + (0.25f - yt1 * 0.5f) * pixelScale);
-										var c1 = new Vector2(cc.X + (xT1 * 0.8f - 0.5f) * pixelScale,cc.Y + 0.25f * pixelScale);
-										DrawRect(Layer.actionOverlay,c0,c1,color,zLabels);
-										DrawRect(Layer.action,c0,c1,CColor(a: 192),0);
-
 									}
 
 									var ti = city.tradeInfo;
@@ -1936,18 +1942,26 @@ namespace COTG
 									var cityHover = city.isHover;
 									try
 									{
+										
 										foreach(var toCid in ti.resDest)
 										{
 											var c1 = toCid.CidToWorld();
 											//	var t = (tick * city.cid.CidToRandom().Lerp(1.375f / 512.0f, 1.75f / 512f));
 											//	var r = t.Ramp();
-											var hover = cityHover | Spot.IsHover(toCid);
-											DrawAction(c1.WToCamera(),cc,hover ? tradeColorHover : tradeColor,lineThickness,hover);
-
-
+											var hover = cityHover;// | Spot.IsHover(toCid);
+											DrawAction(cc - sendOffset, c1.WToCamera()- sendOffset, hover ? tradeColorHover : tradeColor,lineThickness,hover);
 										}
+										foreach (var toCid in ti.resSource)
+										{
+											var c1 = toCid.CidToWorld();
+											//	var t = (tick * city.cid.CidToRandom().Lerp(1.375f / 512.0f, 1.75f / 512f));
+											//	var r = t.Ramp();
+											var hover = cityHover;// | Spot.IsHover(toCid);
+											DrawAction( c1.WToCamera()+ sendOffset, cc + sendOffset, hover ? tradeColorHover1 : tradeColor1, lineThickness, hover);
+										}
+
 									}
-									catch(Exception ex)
+									catch (Exception ex)
 									{
 										LogEx(ex);
 									}

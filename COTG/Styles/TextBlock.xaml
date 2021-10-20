@@ -7,7 +7,7 @@
 	<!--  Common texts  -->
 	<Style x:Key="PageTitleStyle" TargetType="TextBlock">
 		<Setter Property="VerticalAlignment" Value="Center" />
-		<Setter Property="FontFamily" Value="Tw Cen MT Condensed"/>
+		<Setter Property="FontFamily" Value="Bahnschrift"/>
 		<Setter Property="FontSize" Value="{StaticResource  LargeFontSize}" />
 		<Setter Property="TextWrapping" Value="Wrap" />
 		<Setter Property="IsTextScaleFactorEnabled" Value="False"/>
@@ -15,7 +15,7 @@
     </Style>
 
 	<Style x:Key="BodyTextStyle" TargetType="TextBlock">
-		<Setter Property="FontFamily" Value="Tw Cen MT Condensed"/>
+		<Setter Property="FontFamily" Value="Bahnschrift"/>
 		<Setter Property="FontSize" Value="{StaticResource MediumFontSize}" />
 		<Setter Property="TextWrapping" Value="Wrap" />
         <Setter Property="IsTextScaleFactorEnabled" Value="False"/>
@@ -34,7 +34,7 @@
 
 	<Style x:Key="ListSubTitleStyle" TargetType="TextBlock">
 		<Setter Property="FontSize" Value="{StaticResource MediumFontSize}" />
-		<Setter Property="FontFamily" Value="Tw Cen MT Condensed"/>
+		<Setter Property="FontFamily" Value="Bahnschrift"/>
 		<Setter Property="MaxLines" Value="1" />
 		<Setter Property="TextTrimming" Value="CharacterEllipsis" />
         <Setter Property="IsTextScaleFactorEnabled" Value="False"/>
@@ -45,7 +45,7 @@
 		x:Key="DetailSubTitleStyle"
 		BasedOn="{StaticResource BaseTextBlockStyle}"
 		TargetType="TextBlock">
-		<Setter Property="FontFamily" Value="Tw Cen MT Condensed"/>
+		<Setter Property="FontFamily" Value="Bahnschrift"/>
 		<Setter Property="FontSize" Value="{StaticResource MediumFontSize}" />
         
     </Style>
@@ -54,7 +54,7 @@
 		x:Key="DetailBodyBaseMediumStyle"
 		BasedOn="{StaticResource BaseTextBlockStyle}"
 		TargetType="TextBlock">
-		<Setter Property="FontFamily" Value="Tw Cen MT Condensed"/>
+		<Setter Property="FontFamily" Value="Bahnschrift"/>
 		<Setter Property="FontSize" Value="{StaticResource MediumFontSize}" />
 		<Setter Property="Foreground" Value="{ThemeResource SystemControlForegroundBaseMediumBrush}" />
 	</Style>
@@ -69,22 +69,24 @@
     <Style
 		x:Key="CellTextStyle"
 		TargetType="tk:DataGridCell">
-		<Setter Property="FontFamily" Value="Tw Cen MT Condensed"/>
+		<Setter Property="FontFamily" Value="Bahnschrift"/>
 		<Setter Property="FontSize" Value="{StaticResource SmallFontSize}" />
 		<Setter Property="Height" Value="{StaticResource ShortGridRowHeight}" />
 		<Setter Property="MinHeight" Value="{StaticResource ShortGridRowHeight}" />
 		<Setter Property="FontStretch" Value="Condensed" />
+		<Setter Property="FontWeight" Value="Light" />
 		<Setter Property="IsTextScaleFactorEnabled" Value="False"/>
     </Style>
 	<Style
 		x:Key="DataGridRowStyle"
 		TargetType="tk:DataGridRow">
 		<Setter Property="Padding" Value="0,0,0,0"/>
-		<Setter Property="FontFamily" Value="Tw Cen MT Condensed"/>
+		<Setter Property="FontFamily" Value="Bahnschrift"/>
 		<Setter Property="FontSize" Value="{StaticResource SmallFontSize}" />
 		<Setter Property="Height" Value="{StaticResource ShortGridRowHeight}" />
 		<Setter Property="MinHeight" Value="{StaticResource ShortGridRowHeight}" />
 		<Setter Property="FontStretch" Value="Condensed" />
+		<Setter Property="FontWeight" Value="Light" />
 		<Setter Property="IsTextScaleFactorEnabled" Value="False"/>
 	</Style>
 	<Style
@@ -95,9 +97,10 @@
 	</Style>
 	<Style
 		TargetType="tk:DataGridCell">
-		<Setter Property="FontFamily" Value="Tw Cen MT Condensed"/>
+		<Setter Property="FontFamily" Value="Bahnschrift"/>
 		<Setter Property="FontSize" Value="{StaticResource SmallFontSize}" />
 		<Setter Property="FontStretch" Value="Condensed" />
+		<Setter Property="FontWeight" Value="Light" />
 		<Setter Property="IsTextScaleFactorEnabled" Value="False"/>
 	</Style>
 	
@@ -113,7 +116,7 @@
 		x:Key="DetailBodyStyle"
 		BasedOn="{StaticResource BaseTextBlockStyle}"
 		TargetType="TextBlock">
-		<Setter Property="FontFamily" Value="Tw Cen MT Condensed"/>
+		<Setter Property="FontFamily" Value="Bahnschrift"/>
 		<Setter Property="FontSize" Value="{StaticResource MediumFontSize}" />
 	</Style>
 

@@ -270,11 +270,11 @@
                      AutoGenerateColumns="False"
                      ItemsSource="{x:Bind view:AttackTab.attacksUI, Mode=OneWay}"
                      RowHeight="{StaticResource ShortGridRowHeight}"
-                     FontFamily="Tw Cen MT Condensed"
+                     FontFamily="Bahnschrift"
+					 FontStretch="Condensed"
 		             FontSize = "{StaticResource SmallFontSize}"
 				      RowStyle="{StaticResource DataGridRowStyle}"
 					 RowHeaderStyle="{StaticResource DataGridColumnHeaderStyle}"
-					 FontStretch="Condensed"
 					 ColumnWidth="SizeToCells"
 					 
 					 CanUserSortColumns="True"
@@ -341,7 +341,7 @@
 									   Tag="name"
 									   IsReadOnly="True"
 									   FontSize="{StaticResource SmallFontSize}"
-		   							   FontFamily="Tw Cen MT Condensed"
+		   							   FontFamily="Bahnschrift"
 
                                        Binding="{Binding nameAndRemarks, Mode=OneTime}" />
 
@@ -349,12 +349,12 @@
 				<tk:DataGridTextColumn Header="ts"
 
                                        FontSize="{StaticResource SmallFontSize}"
-		   							   FontFamily="Tw Cen MT Condensed"
+		   							   FontFamily="Bahnschrift"
                                        Binding="{Binding tsTotal, Mode=OneTime}" />
 
 				<tk:DataGridComboBoxColumn Header="Intel"
 									   FontSize="{StaticResource SmallFontSize}"
-		   							   FontFamily="Tw Cen MT Condensed"
+		   							   FontFamily="Bahnschrift"
                                        Binding="{Binding TroopType, Mode=TwoWay}"
 									   ItemsSource="{x:Bind view:TroopTypeItemSource.all, Mode=OneTime}"
 										   DisplayMemberPath="name"
@@ -366,7 +366,7 @@
 
 				<tk:DataGridTextColumn Header="Sen"
 									   FontSize="{StaticResource SmallFontSize}"
-		   							   FontFamily="Tw Cen MT Condensed"
+		   							   FontFamily="Bahnschrift"
                                        Binding="{Binding senForAttack, Mode=OneWay}" />
 
 				<tk:DataGridTemplateColumn Header="Remove">
@@ -383,12 +383,12 @@
 				<tk:DataGridTextColumn Header="Alliance"
 													   IsReadOnly="True"
                                        FontSize="{StaticResource SmallFontSize}"
-		   							   FontFamily="Tw Cen MT Condensed"
+		   							   FontFamily="Bahnschrift"
 
 									   Binding="{Binding alliance, Mode=OneTime}" />
 				<tk:DataGridTextColumn Header="Points"
 									   FontSize="{StaticResource SmallFontSize}"
-		   							   FontFamily="Tw Cen MT Condensed"
+		   							   FontFamily="Bahnschrift"
 
                                        Binding="{Binding points, Mode=OneTime}" IsReadOnly="True" />
 			</tk:DataGrid.Columns>
@@ -500,7 +500,7 @@
 					RowStyle="{StaticResource DataGridRowStyle}"
                      AutoGenerateColumns="False"
 					 CanUserSortColumns="True"
-                      FontFamily="Tw Cen MT Condensed"
+                      FontFamily="Bahnschrift"
 		             FontSize = "{StaticResource SmallFontSize}"
 			       FontStretch="Condensed"
 			 IsTextScaleFactorEnabled="False"

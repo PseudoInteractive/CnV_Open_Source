@@ -46,6 +46,11 @@
 					OnContent="Update"
 							Toggled="toggleName_Toggled"
 					OffContent="Skip" />
+				<ToggleSwitch x:Name="toggleAutobuild"
+					Header="Autobuild"
+					IsOn="{Binding IsOpen, Mode=TwoWay, ElementName=AutobuildBlade}"
+					OnContent="Build"
+					OffContent="Skip" />
 				<ToggleSwitch x:Name="toggleTrade"
 					Header="Trade"
 					IsOn="{Binding IsOpen, Mode=TwoWay, ElementName=TradeBlade }"
@@ -62,15 +67,10 @@
 			</StackPanel>
 			<tk:BladeView Grid.Column="1"   x:Name="bladeView"  >
 				<tk:BladeItem x:Name="NameBlade" Header="Name" IsOpen="False"  >
-					<Grid>
-						<Grid.RowDefinitions>
-							<RowDefinition Height="auto"/>
-							<RowDefinition Height="auto"/>
-						</Grid.RowDefinitions>
-						<winui:Border Grid.Row="0" Style="{StaticResource BorderReveal}">
+						<Border Grid.Row="0" Style="{StaticResource BorderReveal}">
 							<StackPanel  >
 								<TextBox  x:Name="suggested" Header="Suggested" x:FieldModifier="public" />
-								<TextBox  x:Name="current" Header="Custom" x:FieldModifier="public"   />
+								<TextBox  x:Name="current" Header="Other" x:FieldModifier="public"   />
 								<TextBlock Style="{StaticResource BodyTextStyle}" MaxLines="8" MaxHeight="256"  TextWrapping="Wrap" >
 				Try to avoid '-'<LineBreak/>		
 				If you name hubs 22 001, 22 004... cites will wind up like 22 1003, 22 4005... where 1 and 4 are hub cluster #'s (the # of the closest hub)
@@ -83,8 +83,10 @@
 									<x:String>Storage</x:String>
 								</winui:RadioButtons>
 							</StackPanel>
-						</winui:Border>
-						<winui:Border Grid.Row="1" Style="{StaticResource BorderReveal}">
+						</Border>
+						</tk:BladeItem>
+				<tk:BladeItem x:Name="AutobuildBlade" Header="Autobuild" IsOpen="False"  >
+							<winui:Border Grid.Row="1" Style="{StaticResource BorderReveal}">
 							<tk:WrapPanel>
 							<winui:NumberBox Header="Cottage Level"
 										Value="{x:Bind views:SettingsPage.cottageLevel, Mode=TwoWay}"
@@ -97,7 +99,6 @@
 					  ToolTipService.ToolTip="Checked: Turn on autobuild, Unchecked; Turn off autobuild, Kind of checked: Leave it"
 							  IsChecked="{x:Bind views:SettingsPage.autoBuildOn, Mode=TwoWay}" />
 							<ToggleSwitch Header="Clear Res" IsOn="{x:Bind local:SettingsPage.clearRes, Mode=TwoWay}" OnContent="Clear" OffContent="Leave" />
-							<ToggleSwitch Header="ShareString" IsOn="{x:Bind local:SettingsPage.setShareString, Mode=TwoWay}" OnContent="Set" OffContent="Skip" ToolTipService.ToolTip="If set, you will be able to set the sharestring when you are done here" />
 							<ToggleSwitch Header="Place Cabins" IsOn="{x:Bind local:SettingsPage.autoBuildCabins, Mode=TwoWay}" OnContent="Build" OffContent="Skip" ToolTipService.ToolTip="If set, cabins will be places when setup is complete" />
 							<winui:NumberBox Header="Cabins" Value="{x:Bind views:SettingsPage.startCabinCount,Mode=TwoWay}" Style="{StaticResource NumberBoxSmall}" ToolTipService.ToolTip="The number of cabins to place if PlaceCabins is set" />
 							<winui:NumberBox Header="TS Castle" Value="{x:Bind views:SettingsPage.tsForCastle, Mode=TwoWay}" Style="{StaticResource NumberBoxSmall}" ToolTipService.ToolTip="When a city has this many TS or more, it will start its castle" />
@@ -106,10 +107,10 @@
 							<winui:NumberBox Header="TowerLevel" Value="{x:Bind views:SettingsPage.autoTowerLevel,Mode=TwoWay}" Style="{StaticResource NumberBoxSmall}" ToolTipService.ToolTip="How high to automatically build towers during 'do the stuff'.  Towers are placed right before the clastle.  If set to 10, autobuild is turned on. Values other than 1 or 10 are not guaranteed" />
 							<winui:NumberBox Header="Scout Towers" Value="{x:Bind views:SettingsPage.scoutpostCount,Mode=TwoWay}" Style="{StaticResource NumberBoxSmall}" ToolTipService.ToolTip="The number of scout towers to place.  They are placed with the castle  during 'do the stuff'" />
 							<winui:NumberBox Header="Storehouses" Value="{x:Bind views:SettingsPage.intialStorehouses,Mode=TwoWay}" Style="{StaticResource NumberBoxSmall}" ToolTipService.ToolTip="The number of storehouses to start a city with" />
-							<winui:NumberBox Header="Markets" Value="{x:Bind views:SettingsPage.intialStorehouses,Mode=TwoWay}" Style="{StaticResource NumberBoxSmall}" ToolTipService.ToolTip="The number of markets to start a city with" />
+							<winui:NumberBox Header="Markets" Value="{x:Bind views:SettingsPage.intialMarkets,Mode=TwoWay}" Style="{StaticResource NumberBoxSmall}" ToolTipService.ToolTip="The number of markets to start a city with" />
 						</tk:WrapPanel>
 						</winui:Border>
-					</Grid>
+					
 				</tk:BladeItem>
 				<tk:BladeItem x:Name="LayoutBlade" Header="ShareString" IsOpen="False"  >
 					<ScrollViewer HorizontalScrollMode="Disabled" VerticalScrollMode="Enabled" >

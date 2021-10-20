@@ -61,7 +61,6 @@ namespace COTG.Views
 			instance = this;
 			InitializeComponent();
 
-			
 
 			//			cityGrid.SelectionChanged += SpotSelectionChanged;
 			//cityGrid.OnKey = Spot.OnKeyDown;
@@ -200,8 +199,9 @@ namespace COTG.Views
 					if(!city.buildingsLoaded)
 					{
 						await GetCity.Post(cid).ConfigureAwait(false);
+						
+						
 						city.OnPropertyChanged();
-
 					}
 					city.UpdateBuildStage();
 

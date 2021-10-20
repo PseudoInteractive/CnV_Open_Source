@@ -55,6 +55,7 @@ namespace COTG.Views
             instance = this;
 
             InitializeComponent();
+			SetupDataGrid(defenderGrid);
 //			spotGrids.Add(defenderGrid);
 
 			//defenderGrid.OnKey = Spot.OnKeyDown;

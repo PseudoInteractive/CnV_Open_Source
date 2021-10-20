@@ -42,8 +42,9 @@ namespace COTG.Views
             Assert(instance == null);
             instance = this;
             this.InitializeComponent();
+			SetupDataGrid(donationGrid);
 		//	spotGrids.Add(donationGrid);
-	
+
 		}
 
 		public static bool IsVisible() => instance.isFocused;

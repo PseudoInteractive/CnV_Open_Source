@@ -27,6 +27,7 @@ using Microsoft.UI.Xaml.Media.Imaging;
 using Microsoft.AppCenter.Analytics;
 using System.ComponentModel;
 using CommunityToolkit.WinUI.UI.Controls;
+using static COTG.Debounce;
 
 namespace COTG.Views
 {
@@ -94,24 +95,21 @@ namespace COTG.Views
 
 		}
 
-		public static SmallTime lastUpdated;
 		static bool updating = false;
 		static bool resetValuesPending;
-		public static async Task UpdateTradeStuffifNeeded()
-		{
-			if(SmallTime.serverNow.secondsI >  lastUpdated.secondsI + 60 && (updating ==false) )
-			{
-				await UpdateTradeStuff();
-			}
-		}
 
-		public static async Task UpdateTradeStuff()
+		
+
+		static DebounceTask UpdateTradeStuffDebounce = new(UpdateTradeStuffFunc) { debounceDelay=50,throttleDelay=5000 };
+		public static Task UpdateTradeStuffIfNeeded() => UpdateTradeStuffDebounce.Go();
+
+
+		static async Task UpdateTradeStuffFunc()
 		{
-			lastUpdated = SmallTime.serverNow;
-//			updating = true;
 			try
 			{
-				var data = await Post.SendForJson("overview/tcounc.php");
+				Trace("Trade Stuff update start");
+				var data = await Post.SendForJson("overview/tcounc.php").ConfigureAwait(false);
 				//	Trace(data.RootElement.ToString());
 				foreach (var js in data.RootElement[0].EnumerateArray())
 				{
@@ -124,6 +122,7 @@ namespace COTG.Views
 						ct = city.tradeInfo;
 						AUtil.Clear( out ct.resDest );
 						AUtil.Clear( out ct.resSource );
+						Assert(ct.resDest.Length == 0);
 					}
 					else
 					{
@@ -157,25 +156,25 @@ namespace COTG.Views
 					var cid = city.GetAsInt("28");
 
 					var ct = City.GetOrAdd(cid).tradeInfo;
-					if (city.TryGetProperty("22", out var sendTo))
+					if (city.TryGetProperty("22", out var inFrom))
 					{
-						foreach (var to in sendTo.EnumerateObject())
-						{
-							var toCid = int.Parse(to.Name);
-							var cTo = City.GetOrAddCity(toCid);
-							AUtil.AddIfAbsent(ref cTo.tradeInfo.resSource,cid);
-							AUtil.AddIfAbsent(ref ct.resDest,toCid);
-
-						}
-					}
-					if (city.TryGetProperty("23", out var sendFrom))
-					{
-						foreach (var to in sendFrom.EnumerateObject())
+						foreach (var to in inFrom.EnumerateObject())
 						{
 							var toCid = int.Parse(to.Name);
 							var cTo = City.GetOrAddCity(toCid);
 							AUtil.AddIfAbsent(ref cTo.tradeInfo.resDest,cid);
-							AUtil.AddIfAbsent(ref ct.resSource, toCid);
+							//AUtil.AddIfAbsent(ref ct.resDest,toCid);
+
+						}
+					}
+					if (city.TryGetProperty("23", out var outTo))
+					{
+						foreach (var to in outTo.EnumerateObject())
+						{
+							var toCid = int.Parse(to.Name);
+							var cTo = City.GetOrAddCity(toCid);
+							AUtil.AddIfAbsent(ref cTo.tradeInfo.resSource,cid);
+						//	AUtil.AddIfAbsent(ref ct.resSource, toCid);
 
 						}
 					}
@@ -195,7 +194,7 @@ namespace COTG.Views
 				//	}
 				//}
 
-
+				Trace("Trade Stuff updated");
 			} catch(Exception ex)
 			{
 				Log(ex);
@@ -213,7 +212,8 @@ namespace COTG.Views
 			try
 			{
 				Trace($"Update {DateTime.Now}");
-				await UpdateTradeStuff();
+
+				await UpdateTradeStuffDebounce.Go();
 
 				int shipReserve = SettingsPage.nearResShipReserve;
 				int cartReserve = SettingsPage.nearResCartReserve;
@@ -266,11 +266,7 @@ namespace COTG.Views
 							{
 								supporter = new ResSource() { city = city };
 							}
-							if (city.tradeInfo == null)
-							{
-								Assert(false);
-								continue;
-							}
+							
 							supporter.info = city.tradeInfo;
 							s.Add(supporter);
 

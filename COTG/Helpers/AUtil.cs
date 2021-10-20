@@ -613,7 +613,7 @@ namespace COTG
 			return Task.CompletedTask;
 
 		}
-		public static Debounce ChangesDebounce = new(ProcessChanges) { runOnUiThread = true,debounceDelay=300,throttleDelay=1000 };
+		public static Debounce ChangesDebounce = new(ProcessChanges) { runOnUiThread = true,debounceDelay=300,throttleDelay=300 };
 
 	}
 	

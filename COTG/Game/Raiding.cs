@@ -295,7 +295,7 @@ namespace COTG.Game
         //        await RestAPI.troopsOverview.Post();
         //    }
         //}
-        public static async void ReturnSlow(int cid, bool updateUI )
+        public static async Task ReturnSlow(int cid, bool updateUI )
         {
             Note.Show($"{City.Get(cid).nameMarkdown} End Raids");
      
@@ -322,28 +322,29 @@ namespace COTG.Game
 				Note.Show($"Return {City.Get(cid).nameAndRemarks} at {at.Format()}");
 			}
         }
-        public static async Task ReturnFast(int cid, bool updateUI)
+        public static Task ReturnFast(int cid, bool updateUI)
         {
-            Note.Show($"{City.Get(cid).nameMarkdown} Home Please");
-            if (cid != 0)
-            {
-                await Post.Get("overview/rcallall.php", "a=" + cid, World.CidToPlayerOrMe(cid));
-                if (updateUI)
-                {
-                   // await JSClient.PollCity(cid);
-                    await JSClient.CitySwitch(cid,true,false,false);
-                    NavStack.Push(cid);
-                    //// await JSClient.PollCity(cid);
-                    ////  await Task.Delay(300); // this might not be useful.
-                    ////  ScanDungeons.Post(cid, true);
-                }
-                if(NearDefenseTab.IsVisible())
-                {
+			return ReturnSlow(cid,updateUI);
+            //Note.Show($"{City.Get(cid).nameMarkdown} Home Please");
+            //if (cid != 0)
+            //{
+            //    await Post.Get("overview/rcallall.php", "a=" + cid, World.CidToPlayerOrMe(cid));
+            //    if (updateUI)
+            //    {
+            //       // await JSClient.PollCity(cid);
+            //        await JSClient.CitySwitch(cid,true,false,false);
+            //        NavStack.Push(cid);
+            //        //// await JSClient.PollCity(cid);
+            //        ////  await Task.Delay(300); // this might not be useful.
+            //        ////  ScanDungeons.Post(cid, true);
+            //    }
+            //    if(NearDefenseTab.IsVisible())
+            //    {
 
-                //    await JSClient.PollCity(cid);
-                    await RaidOverview.Send(); 
-                }
-            }
+            //    //    await JSClient.PollCity(cid);
+            //        await RaidOverview.Send(); 
+            //    }
+            //}
         }
         public static async Task ReturnSlowBatch(IEnumerable<int>  cids)
         {
@@ -360,33 +361,50 @@ namespace COTG.Game
 			}
             Note.Show($"Issued End Raids on {counter} cities");
             ShellPage.ShowTipRefresh();
-            await UpdateTS(true, true);
+			await RaidOverview.Send();
+			await UpdateTS(true, true);
         }
 
-		private static Task ReturnSlow(int cid)
+		private static  Task ReturnSlow(int cid)
 		{
-			var json = "{\"a\":" + cid + ",\"c\":0,\"b\":1}";
+			var json = "{\"a\":" + cid + ",\"c\":0,\"b\":\"1\"}";
 			return Post.SendEncrypted("includes/UrOA.php", json, "Rx3x5DdAxxerx3", World.CidToPlayerOrMe(cid));
+			
+			// e== depart time
+			// a== cid
+			// c=="date" means return at 
+			// d==0 for depart time
+			// b==1 no repeat
+			// b==2 repeat
+			// 
+
+			//var json = "{\"a\":" + cid + ",\"c\":0,\"b\":1}";
+			//var a = await Post.SendForOkay("includes/UrPO.php", $"a={cid}&d=0&b=1&c=0&e=0" );
+			//Assert(a);
+
+
 		}
 
-		public static async Task ReturnFastBatch(IEnumerable<int> cids)
+		public static Task ReturnFastBatch(IEnumerable<int> cids)
         {
-			using var work = new ShellPage.WorkScope("Home Please..");
+			return ReturnSlowBatch(cids);
 
-			int counter = 0;
-            foreach (var cid in cids)
-            {
-                if (cid != 0)
-                {
-                    ++counter;
-                    await Post.Get("overview/rcallall.php", "a=" + cid, World.CidToPlayerOrMe(cid));
-                //    await JSClient.PollCity(cid);
-                }
-            }
-            Note.Show($"Issued Home Please on {counter} cities");
-            ShellPage.ShowTipRefresh();
-            await RaidOverview.Send();
-            await UpdateTS(true,true);
+			//using var work = new ShellPage.WorkScope("Home Please..");
+
+			//int counter = 0;
+   //         foreach (var cid in cids)
+   //         {
+   //             if (cid != 0)
+   //             {
+   //                 ++counter;
+   //                 await Post.Get("overview/rcallall.php", "a=" + cid, World.CidToPlayerOrMe(cid));
+   //             //    await JSClient.PollCity(cid);
+   //             }
+   //         }
+   //         Note.Show($"Issued Home Please on {counter} cities");
+   //         ShellPage.ShowTipRefresh();
+   //         await RaidOverview.Send();
+   //         await UpdateTS(true,true);
         }
     }
 }

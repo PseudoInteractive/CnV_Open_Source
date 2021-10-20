@@ -459,6 +459,11 @@ namespace COTG
             return (f >= m ? f : m);
         }
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static long Max(this long f,long m)
+		{
+			return (f >= m ? f : m);
+		}
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static float Max(this float f, int m)
 		{
 			return (f >= m ? f : m);

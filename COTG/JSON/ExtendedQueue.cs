@@ -452,7 +452,7 @@ namespace COTG;
 											// Todo:  check res
 											if(city.buildings[City.bspotWall].bl == 0)
 											{
-												var bw = city.GetBuildingPostQueue(i.bspot,cotgQ.span,queue.Slice(0,offset));
+												var bw = city.GetBuildingPostQueue(bspotWall,cotgQ.span,queue.Slice(0,offset));
 												// wait for wall to build first
 												// is there a wall queued?
 												var wallPending = bw.bl > 0;

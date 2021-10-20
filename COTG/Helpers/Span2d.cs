@@ -48,8 +48,8 @@ namespace COTG.Helpers
         }
         public bool Contains(Vector2 v)
         {
-            return c0.X <= v.X & c0.Y <= v.Y &
-                c1.X >= v.X & c1.Y >= v.Y;
+            return (c0.X <= v.X) & (c0.Y <= v.Y) &
+                (c1.X >= v.X) & (c1.Y >= v.Y);
         }
         public void Union(Vector2 v)
         {
@@ -110,28 +110,28 @@ namespace COTG.Helpers
 			c0 = (int.MaxValue,int.MaxValue);
 			c1 = (int.MinValue, int.MinValue);
 		}
-		public bool Any() => c1.X >= c0.X & c1.Y >= c0.Y;
+		public bool Any() => (c1.X >= c0.X) & (c1.Y >= c0.Y);
 		public bool Contains( (int X, int Y) v)
 		{
-			return c0.X <= v.X & c0.Y <= v.Y &
-				c1.X > v.X & c1.Y > v.Y;
+			return (c0.X <= v.X) & (c0.Y <= v.Y) &
+				(c1.X > v.X) & (c1.Y > v.Y);
 		}
 		public bool Contains(Vector2 v)
 		{
-			return c0.X <= v.X & c0.Y <= v.Y &
-				c1.X > v.X & c1.Y > v.Y;
+			return (c0.X <= v.X) & (c0.Y <= v.Y) &
+				(c1.X > v.X) & (c1.Y > v.Y);
 		}
 		public bool Overlaps((int X, int Y) v, int r)
 		{
-			return c0.X-r <= v.X & c0.Y-r <= v.Y &
-				c1.X+r > v.X & c1.Y+r > v.Y;
+			return (c0.X-r <= v.X) & (c0.Y-r <= v.Y) &
+				(c1.X+r > v.X) & (c1.Y + r > v.Y);
 		}
 		public bool Overlaps(Span2i s)
 		{
-			return c0.X < s.c1.X &
-					c1.X > s.c0.X &
-				   c0.Y < s.c1.Y &
-					c1.Y > s.c0.Y;
+			return (c0.X < s.c1.X) &
+					(c1.X > s.c0.X) &
+				   (c0.Y < s.c1.Y) &
+					(c1.Y > s.c0.Y);
 
 		}
 		public static Span2i operator + (Span2i a, (int X, int Y) v)

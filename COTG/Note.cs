@@ -147,7 +147,8 @@ namespace COTG
 								}
 								//var textNull = ShellPage.instance.noteText.Length == 0;
 								// update on screen
-								Debounce.Q(runOnUIThread: true,action: () => ShellPage.instance.InAppNote.Text = ShellPage.instance.noteText,ms: 100);
+								Debounce.Q(runOnUIThread: true,action: async () => 
+								ShellPage.instance.InAppNote.Text = ShellPage.instance.noteText,ms: 100);
 
 								Debounce.Q(ms: ((priority >= Priority.high) ? noteDelayHigh : noteDelay)*1000,
 									runOnUIThread: true,
@@ -155,6 +156,7 @@ namespace COTG
 								{
 									ShellPage.instance.noteText = string.Empty;
 									ShellPage.instance.InAppNote.Text = ShellPage.instance.noteText;
+									return Task.CompletedTask;
 								});
 
 							}

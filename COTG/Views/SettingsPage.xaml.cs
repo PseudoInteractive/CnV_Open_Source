@@ -23,6 +23,9 @@ using Microsoft.UI.Xaml.Navigation;
 using System.Text.RegularExpressions;
 using System.Reflection;
 using System.IO;
+using MessagePack;
+using Windows.Storage;
+using System.Collections.Immutable;
 
 namespace COTG.Views
 {
@@ -53,8 +56,11 @@ namespace COTG.Views
 		//private static bool _isLoggedIn;
 		//private static bool _isBusy;
 		public static float renderScale=1.0f;
+		
 		public static float webZoom = 0.875f;
 		public static float webZoomSmall = 0.5f;
+
+
 		public static float HtmlZoom
 		{
 			get => webZoom;
@@ -91,7 +97,6 @@ namespace COTG.Views
 		public static bool drawBuildingOverlays=true;
 		public static float raidTroopFraction = 1;
 		public static float returnRaidsBias = 1.0f;
-		public static bool setShareString = true;
 		public static bool autoBuildCabins = true;
 		public static bool autoRearrangeShareStrings= true;
 		public static ResourcesNullable defaultReq = new (200000,220000,200000,250000);
@@ -360,7 +365,7 @@ namespace COTG.Views
 			}
 			try
 			{
-
+				LoadPinned();
 				//reqWood = st.Read(nameof(reqWood), 160000);
 				//reqStone = st.Read(nameof(reqWood), 205000);
 				//reqIron = st.Read(nameof(reqIron), 100000);
@@ -413,17 +418,21 @@ namespace COTG.Views
 				LogEx(e);
 			}
 		}
-		//public static string pinsFileName => $"pinned{JSClient.world}";
-		//public static void SavePinned()
-		//{
-		//	if(isPinnedLoaded)
-		//		folder.SaveAsync(pinsFileName, pinned, false);
-		//}
-		//public static async void ReadSeen()
-		//{
-		//	Assert(!isPinnedLoaded);
-		//	pinned = await folder.ReadAsync(pinsFileName, Array.Empty<int>());
-		//}
+		public static string pinsFileName => $"pinned{JSClient.world}";
+		public static Task SavePinned()
+		{
+			//if(CityCustom.loaded)
+			//	return folder.SaveAsync(pinsFileName, AMessagePack.Serialize(CityCustom.all));
+			return Task.CompletedTask;
+		}
+		public async static Task LoadPinned()
+		{
+			//if (!CityCustom.loaded)
+			//{
+			//	CityCustom.all = AMessagePack.Deserialize<ImmutableHashSet<CityCustom>>(await folder.ReadAsync(pinsFileName) , ()=> ImmutableHashSet<CityCustom>.Empty );
+			//	CityCustom.loaded = true;
+			//}
+		}
 
 		[NonSerialized]
 		public static float mediumFontSize = 12;
@@ -465,6 +474,7 @@ namespace COTG.Views
 				return;
 			try
 			{
+				SavePinned(); // not awaited, this could lead to corruption
 				var props = typeof(SettingsPage).GetFields(System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.DeclaredOnly);
 				var st = App.Settings();
 				//if (SpotTab.instance.spotMRU.Count>0)
@@ -898,7 +908,6 @@ namespace COTG.Views
 				SaveAll();
 				Note.Show("Updated incoming watch list");
 				IncomingOverview.ProcessTask();
-				SettingsPage.SaveAll();
 			}
 		}
 
@@ -947,7 +956,7 @@ namespace COTG.Views
 		{
 			App.DispatchOnUIThreadLow(async () =>
 			{
-				ElementSoundPlayer.Play(ElementSoundKind.Show);
+				ElementSoundPlayer.Play(ElementSoundKind.Hide);
 				if (instance == null)
 					instance = new SettingsPage();
 				//shown = true;
@@ -1046,7 +1055,7 @@ namespace COTG.Views
 				LogEx(ex);
 			}
 		}
-
+		static StorageFolder folder => ApplicationData.Current.LocalFolder;
 		public static async void ShowWhatsNew()
 		{
 

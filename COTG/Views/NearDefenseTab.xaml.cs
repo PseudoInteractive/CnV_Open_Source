@@ -226,8 +226,9 @@ namespace COTG.Views
             Assert(instance == null);
             instance = this;
             this.InitializeComponent();
-      
-        }
+			SetupDataGrid(defendantGrid);
+
+		}
 
       
 

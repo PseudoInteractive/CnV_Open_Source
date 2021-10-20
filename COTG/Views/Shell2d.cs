@@ -44,7 +44,7 @@ namespace COTG.Views
 
 		public static int canvasBaseX = 420;
 		public static int canvasBaseY = 95;
-		public static int htmlShift = 0;
+	//	public static int htmlShift = 0;
 		//public static int cachedTopOffset = 0;
 		//public static int cachedXOffset = 0;
 		static public SwapChainPanel canvas;

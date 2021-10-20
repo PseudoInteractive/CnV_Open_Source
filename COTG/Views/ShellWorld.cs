@@ -408,14 +408,12 @@ namespace COTG.Views
 					
 					{
 
-					var result = (rv, (maxPoints > 1 ? GestureAction.rightClick :
-						(currentGesture switch {
-						GestureAction.leftClick => GestureAction.leftClick,
-						GestureAction.rightClick => GestureAction.rightClick,
-						GestureAction.middleClick => GestureAction.middleClick,
-						_ => GestureAction.none })));
-
-					
+					var result = (rv, point.PointerUpdateKind == PointerUpdateKind.MiddleButtonReleased ? GestureAction.middleClick : GestureAction.leftClick);
+					if(currentGesture != GestureAction.none)
+						result=(rv, GestureAction.none);
+					else if(maxPoints > 1 ||
+						point.PointerUpdateKind == PointerUpdateKind.RightButtonReleased)
+						result = (rv, GestureAction.rightClick);
 
 					Reset();
 					return result;
@@ -707,6 +705,7 @@ namespace COTG.Views
 			}
 			else
 			{
+				// middle click des nothing
 			}
 		}
 

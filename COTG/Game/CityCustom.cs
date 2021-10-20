@@ -1,19 +1,32 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using mes
+using MessagePack;
 namespace COTG
 {
 
-	[mess]
-	internal struct CityCustom
+	[MessagePackObject]
+	internal struct CityCustom:IEquatable<CityCustom>
 	{
-		[Serializable]
+		[Key(0)]
+		public int cid;
+		[Key(1)]
 		public bool pinned;
-		[Serializable]
-		public bool pinned;
+
+		public static ImmutableHashSet<CityCustom> all = ImmutableHashSet<CityCustom>.Empty;
+		public static bool loaded;
+
+		public bool Equals(CityCustom other)
+		{
+			return cid == other.cid;
+		}
+
+		public override int GetHashCode() => cid;
+		public override string ToString() => $"{City.Get(cid)}: pinned={pinned}";
 	}
+	
 
 }

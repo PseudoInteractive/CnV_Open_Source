@@ -21,6 +21,7 @@
     <TargetPlatformVersion>10.0.22000.0</TargetPlatformVersion>
     <MonoGamePlatform>WindowsStoreApp</MonoGamePlatform>
     <TargetPlatformMinVersion>10.0.18362.0</TargetPlatformMinVersion>
+	<SelfContained>true</SelfContained>
     <DefaultLanguage>en-US</DefaultLanguage>
     <EntryPointProjectUniqueName>..\COTG\COTG.csproj</EntryPointProjectUniqueName>
     <PackageCertificateThumbprint>5DC3522778776B8DC772B28B915990F3B4487888</PackageCertificateThumbprint>
@@ -81,9 +82,10 @@
     <Content Include="Assets\Wide310x150Logo.scale-200.png" />
     <Content Include="Assets\Wide310x150Logo.scale-400.png" />
     <Content Include="Package.StoreAssociation.xml" />
+	
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\COTG\COTG.csproj">
+    <ProjectReference Include="..\COTG\COTG.csproj" Exclude="..\COTG\Content\**" >
       <SkipGetTargetFrameworkProperties>True</SkipGetTargetFrameworkProperties>
       <ExcludeAssets>Content\</ExcludeAssets>
     </ProjectReference>

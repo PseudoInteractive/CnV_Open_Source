@@ -61,6 +61,7 @@ namespace COTG.Views
 		private bool _isLoggedIn;
 		private bool _isAuthorized;
 
+		public static float webZoomCurrent = 1;
 		public static TextBlock gridTip;
 
 		
@@ -684,6 +685,7 @@ namespace COTG.Views
 					tab.refresh.Go();
 			}
 			City.gridCitySource.ClearHash();
+
 			JSClient.CityRefresh();
 		//	instance.UpdateWebViewScale();
 			return Task.CompletedTask;
@@ -1343,6 +1345,7 @@ namespace COTG.Views
 					float szC;
 					var chatX = 3;
 					var chatY = 4;
+					
 					switch(layout)
 					{
 						case Layout.l2:
@@ -1379,11 +1382,11 @@ namespace COTG.Views
 
 					}
 
-					var zoom = SettingsPage.webZoom;
-
+					float zoom = htmlVisible || SettingsPage.webZoomSmall <= 0 ? SettingsPage.webZoom : SettingsPage.webZoomSmall;
 					var canvasScaledX = (zoom * canvasBaseXUnscaled).RoundToInt();
 					var canvasScaledY = (zoom * canvasBaseYUnscaled).RoundToInt();
-					htmlShift = htmlVisible ? 0 : -canvasScaledX;
+
+					var htmlShift = htmlVisible||SettingsPage.webZoomSmall>0 ? 0 : -canvasScaledX;
 
 					var leftOffset = ((popupLeftOffset*zoom).RoundToInt()-canvasScaledX).Max0();
 					var topOffset = ((popupTopOffset*zoom).RoundToInt()-canvasScaledY).Max0();
@@ -1402,8 +1405,9 @@ namespace COTG.Views
 						try
 						{
 
-							if(JSClient.view != null)
+							if(JSClient.view != null && zoom != webZoomCurrent )
 							{
+								webZoomCurrent= zoom;
 								JSClient.view.ExecuteScriptAsync($"document.body.style.zoom={zoom};");
 							}
 							if(updateLayout)

@@ -45,7 +45,7 @@ namespace COTG;
 
 			if(allowRename && (city.buildStage == BuildStage._new|| (city.autobuildCabinLevel==0&&(await App.DoYesNoBox("Autobuild Off?","Maybe you want Setup?")==1))))
 			{
-				await ShareString.Show(cid);
+				await ShareString.ShowNoLock(cid).ConfigureAwait(false);
 				return true;
 			}
 

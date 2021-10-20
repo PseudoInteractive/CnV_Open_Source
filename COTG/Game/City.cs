@@ -2432,6 +2432,8 @@ namespace COTG.Game
 			   {
 				   using var _ = await cityGridLock.LockAsync();
 				   City.gridCitySource.Set(l,true);
+				   foreach(var i in UserTab.spotGrids)
+					   i.DeselectAll();
 			   }
 			   //if (IncomingTab.instance.isVisible)
 				//   IncomingTab.instance.refresh.Go();
