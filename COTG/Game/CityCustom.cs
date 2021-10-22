@@ -9,7 +9,7 @@ namespace COTG
 {
 
 	[MessagePackObject]
-	internal struct CityCustom:IEquatable<CityCustom>
+	public struct CityCustom:IEquatable<CityCustom>
 	{
 		[Key(0)]
 		public int cid;

@@ -23,8 +23,10 @@ namespace COTG
 			.WithResolver(defaultResolver);
 		public static byte[] Serialize<T>(T data)
 		{
-				return MessagePackSerializer.Serialize(data, defaultOptions);
+				return MessagePackSerializer.Serialize(data,defaultOptions);
+			
 		}
+
 
 		public static T Deserialize<T>(ReadOnlyMemory<byte> data, Func<T> _default)
 		{

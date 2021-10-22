@@ -40,6 +40,22 @@ namespace COTG.Helpers
 			// don't block on this save
 			await FileIO.WriteBytesAsync(file,fileContent);
 		}
+		public static async Task SaveMessagePack<T>(this StorageFolder folder,string name, T data)
+		{
+			try
+			{
+				var bytes = AMessagePack.Serialize(data);
+
+				var file = await folder.CreateFileAsync(GetFileName(name),CreationCollisionOption.ReplaceExisting);
+				// don't block on this save
+				await FileIO.WriteBytesAsync(file,bytes);
+			}
+			catch(Exception ex)
+			{
+				LogEx(ex);
+			}
+
+		}
 		public static async Task<StorageFile> OpenForRead(StorageFolder folder,string fileName)
 		{
 			for(;;)

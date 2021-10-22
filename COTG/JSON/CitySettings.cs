@@ -20,6 +20,7 @@ using COTG.Helpers;
 
 namespace COTG.JSON
 {
+
     public class CitySettings
     {
 		static HashSet<int> GetHubs()

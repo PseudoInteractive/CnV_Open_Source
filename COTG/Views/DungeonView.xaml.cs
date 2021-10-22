@@ -54,6 +54,7 @@ namespace COTG.Views
 		public static void Close()
 		{
 			instance.Hide();
+			SettingsPage.SaveAll();
 		}
 		static bool hasRunOnce;
 		public static async Task Show(City city, List<Dungeon> dungeons)
