@@ -76,18 +76,35 @@ namespace COTG.Helpers
 		}
 		public static async Task<byte[]> ReadAsync(this StorageFolder folder,string name)
 		{
-			var fileName = GetFileName(name);
-
-			if(!File.Exists(Path.Combine(folder.Path,fileName)))
+			try
 			{
+				var fileName = GetFileName(name);
+
+				if(!File.Exists(Path.Combine(folder.Path,fileName)))
+				{
+					return Array.Empty<byte>();
+				}
+
+				var file = await OpenForRead(folder,fileName);
+				return await ReadBytesAsync(file);
+
+			}
+			catch(Exception __ex)
+			{
+				Debug.LogEx(__ex);
 				return Array.Empty<byte>();
 			}
-
-			var file = await OpenForRead(folder,fileName);
-			return await ReadBytesAsync(file);
-
 		}
 
+		public static async Task<T> ReadMessagePack< T>(this StorageFolder folder,string name,  Func<T> _default =null)
+		{
+			return AMessagePack.Deserialize<T>(await ReadAsync(folder,name), _default );
+		}
+
+		//public static async Task<TCollection<T>> ReadMessagePack<TCollection,T>(this StorageFolder folder,string name,Func<TCollection<T>> _default = null)
+		//{
+		//	return AMessagePack.Deserialize<T>(await ReadAsync(folder,name),_default);
+		//}
 
 		static StorageFolder userFolder => ApplicationData.Current.LocalFolder;
 

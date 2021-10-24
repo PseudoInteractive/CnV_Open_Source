@@ -41,12 +41,16 @@ namespace COTG.JSON
 			return result;
 
 		}
-		public static async Task<int> FindBestHubWithChoice(int cid,string title, bool?offContinent=null) => 
-			await CitySettings.FindBestHub(cid,
-				offContinent is not null ? offContinent.Value 
-				: City.Get(cid).isOnWater 
-					&& ((await App.DoYesNoBox(title,"Find one from another Continent?",yes:"Off Continent", no:"Same Continent", cancel: null)) == 1) );
 
+			
+		public static async Task<int> FindBestHubWithChoice(int cid,string title,bool? offContinent = null, bool?isHubOrStorage=null)
+		{
+			var city = cid.AsCity();
+			isHubOrStorage ??= city.isHubOrStorage;
+			offContinent ??= (city.isHubOrStorage && city.isOnWater) ? (await App.DoYesNoBox(title,"Find one from another Continent?",yes: "Off Continent",no: "Same Continent",cancel: null)) == 1 : false;
+			return await CitySettings.FindBestHub(cid,
+				offContinent);
+		}
 		public static async Task<int> FindBestHub(int cid, bool onlyOffContinent)
 		{
 			await NearRes.UpdateTradeStuffIfNeeded();

@@ -600,9 +600,9 @@ namespace COTG.Views
 				var hasAnyHubs = (bestReqHub!=0)||(bestSendHub!=0);
 				if(!hasAnyHubs)
 				{
-					bestReqHub =   await CitySettings.FindBestHubWithChoice(cid,"Find Request Hub",isHubOrStorage ? null : false).ConfigureAwait(false);
+					bestReqHub =   await CitySettings.FindBestHubWithChoice(cid,"Find Request Hub",null,isHubOrStorage).ConfigureAwait(false);
 					if( !isHubOrStorage)
-						bestSendHub =   await CitySettings.FindBestHubWithChoice(cid,"Find Send Hub",false).ConfigureAwait(false);
+						bestSendHub =   await CitySettings.FindBestHub(cid,"Find Send Hub",false).ConfigureAwait(false);
 				}
 				else
 				{

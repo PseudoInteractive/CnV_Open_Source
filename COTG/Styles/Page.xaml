@@ -109,10 +109,23 @@
 		<Setter Property="AlternationStep" Value="2" />
 		<Setter Property="CanUserChooseColumns" Value ="True" />
 		<Setter Property="FontSize" Value="{StaticResource SmallFontSize}" />
+		<Setter Property="FontWeight" Value="Light" />
+		<Setter Property="FontStretch" Value="ExtraCondensed" />
 		<Setter Property="UserFilterMode" Value="Auto" />
 		<Setter Property="SelectionUnit" Value="Row" />
 		<Setter Property="ColumnResizeHandleDisplayMode" Value="Always" />
 	</Style>
+	
+	<Style TargetType="telerikGrid:DataGridColumn"  x:Key="DataGridColumnDefault" >
+		<Setter Property="SizeMode" Value="Auto" />
+		<Setter Property="SortDirection" Value="Descending" />
+	</Style>
+	<Style TargetType="telerikGrid:DataGridTextColumn" BasedOn="{StaticResource DataGridColumnDefault}" >
+	</Style>
+	<Style TargetType="telerikGrid:DataGridNumericalColumn" BasedOn="{StaticResource DataGridColumnDefault}" >
+	</Style>
+	<Style TargetType="telerikGrid:DataGridComboBoxColumn" BasedOn="{StaticResource DataGridColumnDefault}" ></Style>
+	
 	<Style TargetType="StackPanel" x:Key="StackPanelReveal" >
         <Setter Property="BorderThickness" Value="1" />
 		<Setter Property="Margin" Value="4"/>

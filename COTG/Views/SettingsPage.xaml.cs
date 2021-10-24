@@ -418,11 +418,12 @@ namespace COTG.Views
 				LogEx(e);
 			}
 		}
+
 		public static string pinsFileName => $"pinned{JSClient.world}";
 		public static Task SavePinned()
 		{
-			if(CityCustom.loaded)
-				return folder.SaveAsync(pinsFileName,AMessagePack.Serialize(CityCustom.all));
+			//if(CityCustom.loaded)
+			//	return folder.SaveMessagePack(pinsFileName,CityCustom.all);
 			return Task.CompletedTask;
 		}
 		public async static Task LoadPinned()
@@ -430,7 +431,7 @@ namespace COTG.Views
 			if(!CityCustom.loaded)
 			{
 				CityCustom.loaded = true;
-				CityCustom.all = AMessagePack.Deserialize<ImmutableHashSet<CityCustom>>(await folder.ReadAsync(pinsFileName),() => ImmutableHashSet<CityCustom>.Empty);
+	//			CityCustom.all = AMessagePack.Deserialize<ImmutableHashSet<CityCustom>>(await folder.ReadAsync(pinsFileName),() => ImmutableHashSet<CityCustom>.Empty);
 			}
 		}
 

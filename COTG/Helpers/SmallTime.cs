@@ -93,10 +93,19 @@ namespace COTG
 		{
 			return seconds.CompareTo(other.seconds);
 		}
+		static public bool operator >=(SmallTime t0,SmallTime t1) => t0.seconds >= t1.seconds;
+		static public bool operator <=(SmallTime t0,SmallTime t1) => t0.seconds <= t1.seconds;
+		static public bool operator > (SmallTime t0,SmallTime t1) => t0.seconds > t1.seconds;
+		static public bool operator < (SmallTime t0,SmallTime t1) => t0.seconds < t1.seconds;
+		static public bool operator ==(SmallTime t0,SmallTime t1) => t0.seconds == t1.seconds;
+		static public bool operator !=(SmallTime t0,SmallTime t1) => t0.seconds != t1.seconds;
 
+		// This is == even if the times are not exactly equal (both results are rounded to the nearest second)
+		static public bool operator >(SmallTime t0,DateTimeOffset t1) => t0.seconds > t1.ToUnixTimeSeconds();
+		static public bool operator <(SmallTime t0,DateTimeOffset t1) => t0.seconds < t1.ToUnixTimeSeconds();
 
 		//		public  static implicit operator int (SmallTime t) => (int)t.seconds;
 	}
-	
+
 
 }

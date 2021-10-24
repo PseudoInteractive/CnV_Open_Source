@@ -137,7 +137,7 @@
                         AutoGenerateColumns="False"
                         CanUserChooseColumns="True"
 								 IsTabStop="True"
-                        ColumnResizeHandleDisplayMode="OnColumnHeaderActionFlyoutOpen"
+                        ColumnResizeHandleDisplayMode="Always"
                         UserGroupMode="Disabled"
                         FontSize="{StaticResource MediumFontSize}"
                         

@@ -38,10 +38,10 @@
 								 IsTabStop="True"
 								 TabFocusNavigation="Once"
 								 Loaded="DataGridLoaded"
-                       ColumnResizeHandleDisplayMode="OnColumnHeaderActionFlyoutOpen"
+                       ColumnResizeHandleDisplayMode="Always"
                         PointerPressed="gridPointerPress"
 				        ItemsSource="{x:Bind spotMRU, Mode=OneWay}"
-													
+										
                         RowHeight="{StaticResource MediumGridRowHeight}"
                         AlternationStep="2"
                         SelectionMode="Extended"

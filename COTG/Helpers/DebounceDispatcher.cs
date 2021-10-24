@@ -11,6 +11,7 @@ using System.Collections.Concurrent;
 using System.Runtime.CompilerServices;
 using Microsoft.UI.Dispatching;
 using System.Collections.Immutable;
+using CommunityToolkit.WinUI.UI;
 
 namespace COTG
 {
@@ -112,7 +113,8 @@ namespace COTG
 				   {
 
 					   state = State.running;
-
+					    a = new();
+					   DispatcherQueueTimerExtensions.
 					   if(runOnUiThread)
 						   await App.DispatchOnUIThreadTask(func).ConfigureAwait(false);
 					   else

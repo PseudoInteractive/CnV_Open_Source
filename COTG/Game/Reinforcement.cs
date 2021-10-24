@@ -36,15 +36,16 @@ namespace COTG.Game
             await Task.Delay(1000);
             await Post.Get("overview/reinreca.php", "a=" + order.order, order.sourceCid.CidToPid());
         }
-        
-		internal static async void ShowReturnDialog(int cid,UIElement uie)
+		
+
+		internal static async void ShowReinforcements(int _cid, UIElement uie)
         {
 			App.UpdateKeyStates();
 
-			var showAll = App.IsKeyPressedShift();
-
+			var showAll = _cid == 0;
+			
             await Services.ReinforcementsOverview.instance.Post();
-            var _spot = Spot.GetOrAdd(cid);
+            var _spot = _cid == 0 ? null: Spot.GetOrAdd(_cid);
 			var scroll = new ScrollViewer();
 			
 			var panel = new StackPanel();
@@ -64,7 +65,7 @@ namespace COTG.Game
 
 			foreach (var s in spots)
 			{
-				foreach (var reIn in s.reinforcementsIn.OrderBy(a=> Player.IdToName(a.sourceCid)) )
+				foreach (var reIn in s.reinforcementsIn.OrderBy(a=> Player.IdToName(a.sourceCid.CidToPid())) )
 				{
 					var other = Spot.GetOrAdd(reIn.sourceCid);
 					var me = Spot.GetOrAdd(reIn.targetCid);
@@ -75,18 +76,22 @@ namespace COTG.Game
 				}
 			}
             panel.Children.Add(new TextBlock() { Text="\nDeployed Reinforcements:" });
-//			List<>
-			foreach (var s in spots)
+			//			List<>
+			var reinOut = spots.SelectMany(s => s.reinforcementsOut).GroupBy(s=>s.targetCid).GroupBy(s=>s.Key.CidToPid());
+			foreach (var pid in reinOut.OrderBy(s => Player.IdToName(s.Key) ) )
 			{
-				foreach (var reIn in s.reinforcementsOut.OrderBy( a => a.targetCid.ZCurveEncodeCid() ) )
+				foreach(var cid in pid.OrderBy(s => s.Key.ZCurveEncodeCid()))
 				{
-					var other = Spot.GetOrAdd(reIn.targetCid);
-					var me = Spot.GetOrAdd(reIn.sourceCid);
-					var content = showAll ? $"{other.xy} {other.playerName} {other.nameAndRemarks} {other.IncomingInfo()} <- {me.xy} {me.nameAndRemarks} {me.IncomingInfo()} {reIn.troops.Format(":", ' ', ',')}"
-						: $"{other.xy} {other.playerName} {other.nameAndRemarks} {other.IncomingInfo()} {reIn.troops.Format(":", ' ', ',')}";
+					foreach(var reIn in cid.OrderBy(a => a.time))
+					{
+						var other = Spot.GetOrAdd(reIn.targetCid);
+						var me = Spot.GetOrAdd(reIn.sourceCid);
+						var content = showAll ? $"{other.xy} {other.playerName} {other.nameAndRemarks} {other.IncomingInfo()} <- {me.xy} {me.nameAndRemarks} {me.IncomingInfo()} {reIn.troops.Format(":",' ',',')}"
+							: $"{other.xy} {other.playerName} {other.nameAndRemarks} {other.IncomingInfo()} {reIn.troops.Format(":",' ',',')}";
 
-					panel.Children.Add(new CheckBox() { Content = content, IsChecked = false });
-					orders.Add(reIn);
+						panel.Children.Add(new CheckBox() { Content = content,IsChecked = false });
+						orders.Add(reIn);
+					}
 				}
 			}
 			scroll.VerticalScrollMode = ScrollMode.Enabled;

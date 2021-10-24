@@ -32,13 +32,17 @@ namespace COTG
 		{
 			try
 			{
-				return MessagePackSerializer.Deserialize<T>(data, defaultOptions);
+				if(data.Length>0)
+					return MessagePackSerializer.Deserialize<T>(data, defaultOptions);
+				else
+					Log("Empty MessagePack " + typeof(T) + " " + _default.ToString() );
+
 			}
 			catch(Exception ex)
 			{
 				LogEx(ex);
-				return _default != null ? _default() : default;
 			}
-		} 
+			return _default is not null ? _default() : default;
+		}
 	}
 }

@@ -39,7 +39,7 @@
 						TabFocusNavigation="Once"
                         AutoGenerateColumns="False"
                         CanUserChooseColumns="True"
-                        ColumnResizeHandleDisplayMode="OnColumnHeaderActionFlyoutOpen"
+                        ColumnResizeHandleDisplayMode="Always"
                         FontSize="{StaticResource MediumFontSize}"
                         RowHeight="{StaticResource GridRowHeight}"
                                 IsTextScaleFactorEnabled="False"
@@ -160,7 +160,7 @@
                                     FontSize="{StaticResource MediumFontSize}"
                                     HorizontalAlignment="Stretch"
                                     RowHeight="74"
-                                    ColumnResizeHandleDisplayMode="OnColumnHeaderActionFlyoutOpen"
+                                    ColumnResizeHandleDisplayMode="Always"
                                     Tapped="ArmyTapped"
                                     UserGroupMode="Disabled"
                                     AlternationStep="2"
@@ -169,7 +169,7 @@
 				<tg:DataGridTimeColumn
                                                    PropertyName="time"
                                                    CellContentFormat="{}{0:dd',' HH':'mm':'ss}"
-
+Width=""
                                                    CellContentStyle="{StaticResource CenterAlign}" />
 				<tg:DataGridTextColumn PropertyName="sXY"
 

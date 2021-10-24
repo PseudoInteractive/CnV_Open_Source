@@ -388,7 +388,7 @@ namespace COTG.Game
 																  }
 																  else
 																  {
-																	  Assert(false);
+																//	  Assert(false);
 																  }
 
 															  }

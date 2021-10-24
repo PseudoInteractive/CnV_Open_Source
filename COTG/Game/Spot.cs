@@ -478,7 +478,7 @@ namespace COTG.Game
 
 		public static bool operator ==(Spot left, Spot right)
 		{
-			return EqualityComparer<Spot>.Default.Equals(left, right);
+			return left is null ? (right is null ? true : false) : left.Equals( right);
 		}
 
 		public static bool operator !=(Spot left, Spot right)
@@ -2038,7 +2038,8 @@ namespace COTG.Game
 			//	if (Raid.test)
 					aWar.AddItem("Recruit Sen", (_, _) => Recruit.Send(cid, ttSenator, 1, true));
 				aWar.AddItem("Send Defence", (_, _) => JSDefend(cid));
-				aWar.AddItem("Show Reinforcements", (_, _) => Reinforcement.ShowReturnDialog(cid, uie));
+				aWar.AddItem("Show Reinforcements", (_, _) => Reinforcement.ShowReinforcements(cid,uie));
+				aWar.AddItem("Show All Reinforcements",(_,_) => Reinforcement.ShowReinforcements(0,uie));
 				aExport.AddItem("Defense Sheet", ExportToDefenseSheet);
 				AApp.AddItem(flyout, "Send Res", (_, _) => Spot.JSSendRes(cid));
 				AApp.AddItem(flyout, "Near Res", ShowNearRes);

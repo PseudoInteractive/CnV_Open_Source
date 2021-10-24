@@ -27,7 +27,7 @@
 								 IsTabStop="True"
 								 TabFocusNavigation="Once"
 								 
-                       ColumnResizeHandleDisplayMode="OnColumnHeaderActionFlyoutOpen"
+                       ColumnResizeHandleDisplayMode="Always"
                         PointerPressed="gridPointerPress"
 						AllowFocusOnInteraction="True"
                         ItemsSource="{x:Bind views:NearDefenseTab.defendants, Mode=OneWay}"

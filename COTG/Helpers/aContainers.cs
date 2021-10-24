@@ -56,7 +56,7 @@ namespace COTG
 				var counter = collectionChanges.Length/8 + 2;
 				do
 				{
-					(var change, var i) = collectionChanges.FirstOrDefault();
+					(var change,var i) = collectionChanges.FirstOrDefault();
 					if(i == default)
 						break;
 					collectionChanges = collectionChanges.RemoveAt(0);
@@ -351,6 +351,22 @@ namespace COTG
 		public int IndexOf(T item) => c.IndexOf(item);
 		public void Insert(int index,T item) => Assert(false);
 
+
+	//	public void SyncWith( IEnumerable<T> from )
+	//	{
+	//		int iter = Count;
+	//		while(--iter >= 0)
+	//		{
+	//			var b = to[iter];
+	//			if(!from.Any(a => EqualityComparer<T>.Default.Equals(a,b)))
+	//				to.RemoveAt(iter);
+	//		}
+	//		foreach(var b in from)
+	//		{
+	//			if(!to.Any(a => EqualityComparer<T>.Default.Equals(a,b)))
+	//				to.Add(b);
+	//		}
+	//	}
 	}
 
 
@@ -384,21 +400,7 @@ namespace COTG
                }
           
         }
-		public static void SyncList<T>(this IEnumerable<T> from, IList<T> to)
-		{
-			int iter = to.Count;
-			while (--iter >= 0)
-			{
-				var b = to[iter];
-				if (!from.Any(a => EqualityComparer<T>.Default.Equals(a, b)))
-					to.RemoveAt(iter);
-			}
-			foreach (var b in from)
-			{
-				if (!to.Any(a => EqualityComparer<T>.Default.Equals(a,b)))
-					to.Add(b);
-			}
-		}
+		
 		public static void SyncList<T>(this HashSet<T> from, IList<T> to)
 		{
 			int iter = to.Count;
