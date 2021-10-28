@@ -116,14 +116,14 @@ namespace COTG
 //								Analytics.SetEnabledAsync(true) );
 			
 
-#if CRASHES
-			bool didAppCrash = await Crashes.HasCrashedInLastSessionAsync();
-			if (didAppCrash)
-			{
-				ErrorReport crashReport = await Crashes.GetLastSessionCrashReportAsync();
-				Log(crashReport);
-			}
-#endif
+//#if CRASHES
+//			bool didAppCrash = await Crashes.HasCrashedInLastSessionAsync();
+//			if (didAppCrash)
+//			{
+//				ErrorReport crashReport = await Crashes.GetLastSessionCrashReportAsync();
+//				Log(crashReport);
+//			}
+//#endif
 		}
 		public App()
 		{
@@ -267,7 +267,7 @@ namespace COTG
 
 		public static void OnKeyUp(VirtualKey key)
 		{
-		//	Trace("KeyUp" + key);
+			Trace("KeyUp" + key);
 			switch (key)
 			{
 				case VirtualKey.Shift:
@@ -299,7 +299,7 @@ namespace COTG
 		//}
 		public static void OnKeyDown(VirtualKey key)
 		{
-			//Trace("KeyDown" + key);
+			Trace("KeyDown" + key);
 
 			switch(key)
 			{
@@ -539,9 +539,9 @@ namespace COTG
 			
 			if(wasRunning)
 				return;
-		//	window.Content.PreviewKeyUp+=Content_PreviewKeyUp;
-		//	window.Content.PreviewKeyDown+=Content_PreviewKeyDown; ;
-		//		window.KeyDown+=Window_KeyDown;
+			window.Content.PreviewKeyUp+=Content_PreviewKeyUp;
+			window.Content.PreviewKeyDown+=Content_PreviewKeyDown; ;
+//			window.KeyDown+=Window_KeyDown;
 						window.Maximize();
 
 				//			CoreApplication.MainView.HostedViewClosing+=MainView_HostedViewClosing; ;
@@ -1008,17 +1008,13 @@ namespace COTG
 		{
 			Log($"Lock sema: {uiSema.CurrentCount}");
 			Assert(City.CanVisit(cid));
-			if (App.isUISemaLocked)
+			if(App.isUISemaLocked)
 			{
-				var i = await App.DoYesNoBox("Busy", "Wait for process to finish?");
-				if (i != 1)
+				var i = await App.DoYesNoBox("Busy","Wait for process to finish?");
+				if(i != 1)
 					return false;
-				await uiSema.WaitAsync();
 			}
-			else
-			{
-				await uiSema.WaitAsync();
-			}
+			await uiSema.WaitAsync();
 			try
 			{
 				if (!await JSClient.CitySwitch(cid, isLocked:true))

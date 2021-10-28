@@ -138,6 +138,7 @@ namespace COTG.Views
 				return;
 			grid.FontStretch = Windows.UI.Text.FontStretch.Condensed;
 			grid.FontWeight = Microsoft.UI.Text.FontWeights.Light;
+			
 			grid.GridLinesVisibility= Telerik.UI.Xaml.Controls.Primitives.GridLinesVisibility.Both;
 		//	grid.ProcessTooltips();
 		//	grid.ListenForNestedPropertyChange=false;

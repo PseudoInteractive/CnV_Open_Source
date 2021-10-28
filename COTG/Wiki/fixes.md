@@ -1,4 +1,5 @@
-﻿### 2021/2/12
+﻿
+### 2021/2/12
  - **Fix** Ports and Shipyards work with layouts
  - **New** Clicking on the top border of the chat tab allows you to toggle between predefined sizes
  - **Fix** Castles issue warning on upgrade

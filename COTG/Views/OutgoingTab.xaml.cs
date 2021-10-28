@@ -130,7 +130,7 @@ namespace COTG.Views
             //});
 
             if (visible)
-                OutgoingOverview.OutgoingUpdateDebounce.Go(throttled: true,runAgainIfStarted: false);
+                OutgoingOverview.OutgoingUpdateDebounce.Go();
             return base.VisibilityChanged(visible, longTerm: longTerm);
 
         }
@@ -156,7 +156,7 @@ namespace COTG.Views
 					}
 					else
 					{
-						tab.refresh.Go(throttled: true,runAgainIfStarted: false);
+						tab.refresh.Go();
 					}
 				}
 			}
@@ -180,7 +180,7 @@ namespace COTG.Views
 					return;
 				lastSelected = sel;
 
-				selChanged.Go(throttled: true,runAgainIfStarted: false);
+				selChanged.Go(/*throttled: true,runAgainIfStarted: false*/);
 
 			}
 		}

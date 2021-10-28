@@ -602,7 +602,7 @@ namespace COTG.Views
 				{
 					bestReqHub =   await CitySettings.FindBestHubWithChoice(cid,"Find Request Hub",null,isHubOrStorage).ConfigureAwait(false);
 					if( !isHubOrStorage)
-						bestSendHub =   await CitySettings.FindBestHub(cid,"Find Send Hub",false).ConfigureAwait(false);
+						bestSendHub =   await CitySettings.FindBestHub(cid,false).ConfigureAwait(false);
 				}
 				else
 				{

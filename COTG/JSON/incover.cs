@@ -52,7 +52,7 @@ namespace COTG.Game
 		static DateTime lastIncomingNotification = DateTime.UtcNow;
 		static int lastPersonalIncomingCount = 0;
 		static int lastWatchIncomingCount = 0;
-		static bool hasRun;
+		public static bool hasRun;
 
 		const string work = "fetch incoming";
 		struct IncomingInfo
@@ -73,11 +73,11 @@ namespace COTG.Game
 
 		public static void Process(bool fetch)
 		{
-			IncomingUpdateDebounce.Go(throttled: true,runAgainIfStarted: false);
+			IncomingUpdateDebounce.Go();
 		}
 		public static void ProcessTask()
 		{
-			IncomingUpdateDebounce.Go(throttled: true,runAgainIfStarted: false);
+			IncomingUpdateDebounce.Go();
 		}
 
 		public async static Task DoProcess()
@@ -104,7 +104,7 @@ namespace COTG.Game
 					} while (World.initialized);
 				}
 
-
+			//	Debounce.Q(ShellPage.WorkStart(work));
 
 
 				{
@@ -119,9 +119,6 @@ namespace COTG.Game
 							break;
 						await Task.Delay(1000);
 					}
-					var _hasRun = hasRun;
-					if (hasRun == false)
-						hasRun = true;
 					var watch = SettingsPage.incomingWatch;
 					IncomingInfo personalIncoming = new IncomingInfo() { count = 0, first = new DateTimeOffset(2050, 1, 1, 1, 1, 1, TimeSpan.Zero) };
 					IncomingInfo watchIncoming = new IncomingInfo() { count = 0, first = new DateTimeOffset(2050, 1, 1, 1, 1, 1, TimeSpan.Zero) };
@@ -959,18 +956,17 @@ namespace COTG.Game
 					});
 				}
 			}
+			
 			catch (Exception exception)
 			{
 				LogEx(exception);
 				if (fetchReports)
 					ShellPage.WorkEnd(work);
 			}
-
-
-
 			finally
 			{
 				updateInProgress = false;
+				hasRun = true;
 
 			}
 

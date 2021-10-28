@@ -34,6 +34,12 @@ namespace COTG
 		}
 		// needed to Atomic operations
 		int _state;
+		/// <summary>
+		/// If set, 
+		/// </summary>
+		public bool throttled;
+		public bool runAgainIfStarted=true;
+		TaskCompletionSource taskCompletionSource;
 		State state
 		{
 			get => (State)_state;
@@ -43,7 +49,7 @@ namespace COTG
 		{
 			func = _func;
 		}
-		public void Go(bool throttled = false,bool runAgainIfStarted = true,int delayOverride = 0)
+		public void Go(int delayOverride = 0)
 		{
 			if(delayOverride == 0)
 				delayOverride = debounceDelay;
@@ -86,7 +92,7 @@ namespace COTG
 			{
 				// another task got to it first
 				// try again
-				Go(throttled,runAgainIfStarted,delayOverride);
+				Go(delayOverride);
 				return;
 			}
 			nextCall = nextCall.Max(ATime.TickCount + delayOverride);
@@ -113,8 +119,7 @@ namespace COTG
 				   {
 
 					   state = State.running;
-					    a = new();
-					   DispatcherQueueTimerExtensions.
+					   
 					   if(runOnUiThread)
 						   await App.DispatchOnUIThreadTask(func).ConfigureAwait(false);
 					   else
@@ -126,6 +131,11 @@ namespace COTG
 				   }
 
 				   nextCall = ATime.TickCount + throttleDelay;
+				   var t = taskCompletionSource;
+				   taskCompletionSource=null;
+				   if(t!=null)
+					   t.TrySetResult(); 
+
 				   // someone might have changed us back to pending
 				   if(state == State.running)
 				   {
@@ -137,12 +147,29 @@ namespace COTG
 
 		   });
 		}
-			static ConcurrentDictionary<long,Debounce> debouceCache = new();
-			public static void Q(Func<Task> action,int ms = 200,
-				bool runOnUIThread = false,
-				long hash = 0L,
-				[CallerFilePath] string uniqueKey = "",
-				[CallerLineNumber] int uniqueNumber = 0)
+
+		public Task GoAsync(int delayOverride = 0)
+		{
+			if(taskCompletionSource == null)
+			{
+				Interlocked.CompareExchange(ref taskCompletionSource,new(),null);
+			}
+			Go(delayOverride);
+			var rv = taskCompletionSource;
+			if(rv!=null)
+				return rv.Task;
+			else
+				return Task.CompletedTask;
+		}
+
+		static ConcurrentDictionary<long,Debounce> debouceCache = new();
+		public static void Q(Func<Task> action,int ms = 200,
+			bool runOnUIThread = false,
+
+			long hash = 0L,
+			[CallerFilePath] string uniqueKey = "",
+			[CallerLineNumber] int uniqueNumber = 0
+			)
 
 			{
 				Assert(uniqueNumber != 0);
@@ -160,6 +187,8 @@ namespace COTG
 			}
 		
 	}
+
+	// these will return immediately in the throttle phase, if this is not desired set the throttle delay to 0
 	public class DebounceTask
 	{
 			public Func<Task> func;

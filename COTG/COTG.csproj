@@ -71,6 +71,7 @@
     </PackageReference>
     <PackageReference Include="MessagePack.ReactiveProperty" Version="2.3.85" />
     <PackageReference Include="MessagePackAnalyzer" Version="2.3.85" />
+    <PackageReference Include="Microsoft.AppCenter" Version="4.4.0" />
     <PackageReference Include="Microsoft.AppCenter.Analytics" Version="4.4.0" />
     <PackageReference Include="Microsoft.AppCenter.Crashes" Version="4.4.0" />
     <PackageReference Include="Microsoft.DependencyValidation.Analyzers" Version="0.11.0" />
@@ -79,10 +80,12 @@
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="6.0.0-rc.2.21480.5" />
     <PackageReference Include="Microsoft.Extensions.Logging" Version="6.0.0-rc.2.21480.5" />
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="6.0.0-rc.2.21480.5" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Configuration" Version="6.0.0-rc.2.21480.5" />
     <PackageReference Include="Microsoft.Extensions.ObjectPool" Version="6.0.0-rc.2.21480.10" />
     <PackageReference Include="Microsoft.Extensions.Options" Version="6.0.0-rc.2.21480.5" />
     <PackageReference Include="Microsoft.Extensions.Primitives" Version="6.0.0-rc.2.21480.5" />
     <PackageReference Include="Microsoft.Graphics.Win2D" Version="1.0.0.28-preview2" />
+    <PackageReference Include="Microsoft.NETCore.Platforms" Version="6.0.0-rc.2.21480.5" />
     <PackageReference Include="Microsoft.Toolkit" Version="7.1.1" />
     <PackageReference Include="Microsoft.Toolkit.Diagnostics" Version="7.1.1" />
     <PackageReference Include="Microsoft.Toolkit.HighPerformance" Version="7.1.1" />
@@ -92,7 +95,7 @@
     <PackageReference Include="MonoGame.Content.Builder.Task" Version="3.8.1.1941-develop" />
     <PackageReference Include="Nito.AsyncEx.Coordination" Version="5.1.2" />
     <PackageReference Include="Nito.AsyncEx.Tasks" Version="5.1.2" />
-    <PackageReference Include="PlayFabAllSDK" Version="1.103.211012" />
+    <PackageReference Include="PlayFabAllSDK" Version="1.104.211025" />
     <PackageReference Include="SharpDX" Version="4.2.0" />
     <PackageReference Include="SharpDX.D3DCompiler" Version="4.2.0" />
     <PackageReference Include="SharpDX.Direct3D11" Version="4.2.0" />
@@ -102,6 +105,7 @@
     <PackageReference Include="System.Collections.Immutable" Version="6.0.0-rc.2.21480.5" />
     <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="6.0.0-rc.2.21480.5" />
     <PackageReference Include="System.Text.Json" Version="6.0.0-rc.2.21480.5" />
+    <PackageReference Include="System.Threading.Tasks.Dataflow" Version="6.0.0-rc.2.21480.5" />
     <PackageReference Include="Telerik.WinUI.Controls.Trial" Version="0.5.0" />
     <PackageReference Include="ZString" Version="2.4.2" />
     <PackageReference Include="PInvoke.User32" Version="0.7.104" />
@@ -695,7 +699,6 @@
     <None Remove="Assets\Wide310x150Logo.scale-200.png" />
     <None Remove="Assets\Wide310x150Logo.scale-400.png" />
     <None Remove="cnvCover.png" />
-    <None Remove="cnvCover2.png" />
     <None Remove="Content\Art\bgr_all_cities_destroyed.png" />
     <None Remove="Content\Art\bgr_tablet_scr_closed.png" />
     <None Remove="Content\Art\circlegradient.png" />

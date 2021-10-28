@@ -91,6 +91,7 @@ namespace COTG.Views
 		// Todo:  Queue updates with tasks
 		public static void WorkUpdate(string desc)
 		{
+			
 			App.DispatchOnUIThreadLow(() =>
 			{
 				instance.work.Text = desc;
@@ -311,7 +312,6 @@ namespace COTG.Views
 			/// we pass this as an argument to let the page know that it is a programmatic navigation
 			// Services.NavigationService.Navigate<Views.DefenseHistoryTab>(this); ChatTab.Ctor();
 			TabPage.Initialize();
-
 			// refreshAccelerator.Invoked += (_, __) => view?.Refresh();
 			// testMenu.Items.Add(MenuAction(MainPage.ShowTipRaiding1,"TipRaiding1"));
 			// testMenu.Items.Add(MenuAction(MainPage.ShowTipRaiding2, "TipRaiding2"));
@@ -386,13 +386,18 @@ namespace COTG.Views
 		private void ShellPage_ProcessKeyboardAccelerators(UIElement sender,ProcessKeyboardAcceleratorEventArgs args)
 		{
 			Trace($"{sender} {args.Key} {args.Modifiers}");
-			if( args.Key == VirtualKey.F4)
+			args.Modifiers.UpdateKeyModifiers();
+			if( args.Key == VirtualKey.F3)
 			{
 				AdjustLayout(-1);
 			}
-			if(args.Key == VirtualKey.F5)
+			if(args.Key == VirtualKey.F4)
 			{
 				AdjustLayout(1);
+			}
+			if(args.Key == VirtualKey.F5)
+			{
+				OnRefresh();
 			}
 		}
 
@@ -1396,6 +1401,7 @@ namespace COTG.Views
 						leftOffset =0;
 					else
 						topOffset=0;
+					instance.AddHandler(PointerMovedEvent,new PointerEventHandler(ProcessPointerMoved),true);
 					//	if (!Alliance.alliancesFetched)
 					//		return;
 					if(canvas != null && instance.grid != null)
@@ -1611,5 +1617,18 @@ namespace COTG.Views
 		{
 			ContinentTagFilter.Show(true);
 		}
+
+		protected override void OnKeyboardAcceleratorInvoked(KeyboardAcceleratorInvokedEventArgs args) => base.OnKeyboardAcceleratorInvoked(args);
+		protected override void OnProcessKeyboardAccelerators(ProcessKeyboardAcceleratorEventArgs args) => base.OnProcessKeyboardAccelerators(args);
+		protected override void OnPointerEntered(PointerRoutedEventArgs e) => base.OnPointerEntered(e);
+		protected override void OnPointerPressed(PointerRoutedEventArgs e) => base.OnPointerPressed(e);
+		protected override void OnPointerMoved(PointerRoutedEventArgs e) => base.OnPointerMoved(e);
+		protected override void OnPreviewKeyDown(KeyRoutedEventArgs e) => base.OnPreviewKeyDown(e);
+		static void ProcessPointerMoved(object sender,PointerRoutedEventArgs e)
+		{
+			var c = e.GetCurrentPoint(null);
+			mouseScreenC = c.Position;
+		}
+		static Point mouseScreenC;
 	}
 }

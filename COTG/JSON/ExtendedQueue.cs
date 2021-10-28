@@ -747,7 +747,7 @@ namespace COTG;
 							if(anyPa==false)
 							{
 								delay = delay.Max(10*1000);
-								Trace("nothing is paid");
+								Trace($"- nothing is paid {city}  q:{cotgQ.count} ext:{queue.count} dt:{delay / 1000.0f}");
 							}
 						}
 
@@ -893,7 +893,8 @@ namespace COTG;
 			{
 				if(all.TryGetValue(cid,out var rv))
 				{
-					if(rv.cancellationTokenSource != null)
+					var cancelToken = rv.cancellationTokenSource;
+					if(cancelToken!=null)
 						rv.cancellationTokenSource.Cancel();
 
 				}

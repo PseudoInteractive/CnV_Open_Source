@@ -34,7 +34,7 @@ namespace COTG.Game
 
 		public static void ProcessTask() 
 		{
-			OutgoingUpdateDebounce.Go(throttled: true,runAgainIfStarted: false);
+			OutgoingUpdateDebounce.Go();
 		}
 		public static Debounce OutgoingUpdateDebounce = new(_Process) {  debounceDelay = 1000, throttleDelay = 2000 };
 

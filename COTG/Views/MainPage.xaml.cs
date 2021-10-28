@@ -238,7 +238,7 @@ namespace COTG.Views
 						if(c.testContinentAndTagFilter)
 							c.OnPropertyChanged();
 					}
-					City.gridCitySource.NotifyReset(true,true);
+			//		City.gridCitySource.NotifyReset(true,true);
 				}
              //  if (cityGrid.ItemsSource == App.emptyCityList )
              //     cityGrid.ItemsSource = City.gridCitySource;

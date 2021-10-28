@@ -15,20 +15,38 @@ using CommunityToolkit.WinUI.UI;
 using System.Collections.Concurrent;
 using System.Linq;
 using System;
+using Windows.Foundation.Collections;
+using Windows.Foundation;
 
 namespace COTG
 {
-	public class NotifyCollectionBase: INotifyPropertyChanged, INotifyCollectionChanged 
+	public class NotifyCollectionBase: INotifyPropertyChanged, INotifyCollectionChanged , ICollectionView, ICollectionViewFactory
 	{
 		public static ImmutableArray<NotifyCollectionBase> all = ImmutableArray<NotifyCollectionBase>.Empty;
 
 		public bool hasNotifications => (CollectionChanged is not null | PropertyChanged is not null);
+
+		public IObservableVector<object> CollectionGroups { get; }
+		public object CurrentItem { get; }
+		public int CurrentPosition { get; }
+		public bool HasMoreItems { get; }
+		public bool IsCurrentAfterLast { get; }
+		public bool IsCurrentBeforeFirst { get; }
+		public int Count { get; }
+		public bool IsReadOnly { get; }
+
+		public object this[int index] { get; set; }
+
 		public event NotifyCollectionChangedEventHandler? CollectionChanged;
 		//	public void OnPropertyChanged(T city,string propertyName = "") => PropertyChanged?.Invoke(city,new PropertyChangedEventArgs(propertyName));
 
 		public event PropertyChangedEventHandler? PropertyChanged;
+		public event EventHandler<object> CurrentChanged;
+		public event CurrentChangingEventHandler CurrentChanging;
+		public event VectorChangedEventHandler<object> VectorChanged;
+
 		//public object _lock;
-		
+
 
 		public NotifyCollectionBase()
 		{
@@ -43,7 +61,7 @@ namespace COTG
 		{
 			foreach(var col in NotifyCollectionBase.all)
 			{
-				col.NotifyReset();
+				col.NotifyReset(true,clearHash);
 			}
 		}
 
@@ -57,12 +75,18 @@ namespace COTG
 				do
 				{
 					(var change,var i) = collectionChanges.FirstOrDefault();
-					if(i == default)
+					if(i ==default)
 						break;
 					collectionChanges = collectionChanges.RemoveAt(0);
-
-					i.PropertyChanged?.Invoke(i,new("Count"));
-					i.CollectionChanged?.Invoke(i,change);
+					try
+					{
+						i.PropertyChanged?.Invoke(i,new("Count"));
+						i.CollectionChanged?.Invoke(i,change);
+					}catch(Exception ex)
+					{
+						LogEx(ex);
+						i.CollectionChanged?.Invoke(new(NotifyCollectionChangedAction.Reset));
+					}
 				} while(--counter>0);
 
 			}
@@ -155,6 +179,24 @@ namespace COTG
 			return  RuntimeHelpers.GetHashCode(this);
 		}
 
+		public ICollectionView CreateView() => this; // is this okay?
+		public bool MoveCurrentTo(object item) => throw new NotImplementedException();
+		public bool MoveCurrentToPosition(int index) => throw new NotImplementedException();
+		public bool MoveCurrentToFirst() => throw new NotImplementedException();
+		public bool MoveCurrentToLast() => throw new NotImplementedException();
+		public bool MoveCurrentToNext() => throw new NotImplementedException();
+		public bool MoveCurrentToPrevious() => throw new NotImplementedException();
+		public IAsyncOperation<LoadMoreItemsResult> LoadMoreItemsAsync(uint count) => throw new NotImplementedException();
+		public int IndexOf(object item) => throw new NotImplementedException();
+		public void Insert(int index,object item) => throw new NotImplementedException();
+		public void RemoveAt(int index) => throw new NotImplementedException();
+		public void Add(object item) => throw new NotImplementedException();
+		public void Clear() => throw new NotImplementedException();
+		public bool Contains(object item) => throw new NotImplementedException();
+		public void CopyTo(object[] array,int arrayIndex) => throw new NotImplementedException();
+		public bool Remove(object item) => throw new NotImplementedException();
+		public IEnumerator<object> GetEnumerator() => throw new NotImplementedException();
+		IEnumerator IEnumerable.GetEnumerator() => throw new NotImplementedException();
 	}
 
 
@@ -203,19 +245,12 @@ namespace COTG
 
 		
 
-		//public void NotifyAdd(IList<T> added)
-		//{
-		//	if(CollectionChanged != null)
-		//	{
-		//		NotifyChange(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add,added),true);
-		//	}
-
-		//}
 		public void NotifyRemoveAt(int id,T removed)
 		{
 			if(hasNotifications)
 			{
-
+				Assert(id >= 0);
+				Assert(id < Count);
 				var _count = Count;
 				if(_count == Count)
 				{
@@ -234,6 +269,8 @@ namespace COTG
 				var _count = Count;
 				if(_count == Count)
 				{
+					Assert(id >=0);
+					Assert(id <= Count);
 					//				NotifyReset();
 					NotifyChange(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add,added,id),true);
 				}
@@ -246,13 +283,6 @@ namespace COTG
 			}
 		}
 
-		public void NotifyRemove(IList<T> removed)
-		{
-			if(hasNotifications)
-			{
-				NotifyChange(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove,removed as IList),true);
-			}
-		}
 
 		public void Remove(Predicate< T>  pred, bool notify)
 		{
@@ -293,12 +323,12 @@ namespace COTG
 			if(notify && hasNotifications)
 				NotifyRemoveAt(id,item);
 		}
-		public void Remove(T i,bool notify)
+		public void Remove(T i)
 		{
 			var index = c.IndexOf(i);
 			if(index >= 0)
 			{
-				RemoveAt(index,notify);
+				RemoveAt(index,true);
 			}
 		}
 

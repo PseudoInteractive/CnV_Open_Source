@@ -65,7 +65,7 @@ namespace COTG.Views
 				if (OutgoingOverview.updateInProgress == false)
 				{
 					// avaiting on this would take too long
-					OutgoingOverview.OutgoingUpdateDebounce.Go(throttled: true,runAgainIfStarted: false);
+					OutgoingOverview.OutgoingUpdateDebounce.Go();
 				}
 			}
             return base.VisibilityChanged(visible, longTerm: longTerm);

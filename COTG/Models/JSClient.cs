@@ -1207,6 +1207,7 @@ namespace COTG
 								}
 							}
 							bool wantUnblock = false;
+							// this blocks if we can't change the city
 							if (!isLocked)
 								await App.uiSema.WaitAsync();
 							try

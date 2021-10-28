@@ -51,7 +51,7 @@ namespace COTG
 				AppCenter.SetUserId(Player.myName);
 				//AppCenter.Analytics.Properties.put("UserId", "your user Id");
 				CustomProperties properties = new CustomProperties();
-				properties.Set("alliance",Alliance.myId).Set("world",JSClient.world).Set("sub",JSClient.isSub).Set("UserId",Player.myName);
+				properties.Set("alliance",Alliance.myId).Set("allianceName",Alliance.my.name).Set("world",JSClient.world).Set("sub",JSClient.isSub).Set("playerId",Player.myId).Set("UserId",Player.myName);
 				AppCenter.SetCustomProperties(properties);
 				AAnalytics.Track("GotCreds",new Dictionary<string,string>() { { "World",JSClient.world.ToString() },{ "sub",JSClient.isSub.ToString() },{ "UserId",Player.myName } });
 				ShellPage.UpdateFocus();

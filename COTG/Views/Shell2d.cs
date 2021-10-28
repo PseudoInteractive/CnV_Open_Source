@@ -17,18 +17,18 @@ using static COTG.Views.CityBuild;
 
 namespace COTG.Views
 {
-	public class KeyboardProxy : Control
-	{
-		protected override void OnKeyDown(KeyRoutedEventArgs e)
-		{
-			Log("keydown");
-		}
-		protected override void OnPreviewKeyDown(KeyRoutedEventArgs e)
-		{
-			Log("preview keydown");
-			base.OnPreviewKeyDown(e);
-		}
-	}
+	//public class KeyboardProxy : Control
+	//{
+	//	protected override void OnKeyDown(KeyRoutedEventArgs e)
+	//	{
+	//		Log("keydown");
+	//	}
+	//	protected override void OnPreviewKeyDown(KeyRoutedEventArgs e)
+	//	{
+	//		Log("preview keydown");
+	//		base.OnPreviewKeyDown(e);
+	//	}
+	//}
 
 	public partial class ShellPage
 	{
@@ -157,7 +157,7 @@ namespace COTG.Views
 			
 	//		Log($"!Focu92: {ShellPage.isHitTestVisible} o{ShellPage.isMouseOver}");
 
-			updateCanvasVisibility.Go(runAgainIfStarted:true);
+			updateCanvasVisibility.Go();
 		}
 
 		static Debounce updateCanvasVisibility = new(()=>
@@ -348,7 +348,7 @@ namespace COTG.Views
 			//canvas.Children.Add(keyboardProxy);
 			//			canvas.PreviewKeyDown+=KeyboardProxy_KeyDown;
 			canvas.KeyDown += KeyboardProxy_KeyDown;
-		//	keyboardProxy.AddHandler(KeyDownEvent,new KeyEventHandler(KeyboardProxy_KeyDown),true);
+			canvas.AddHandler(KeyDownEvent,new KeyEventHandler(KeyboardProxy_KeyDown2),true);
 			//keyboardProxy.LostFocus += KeyboardProxy_LostFocus;
 			//keyboardProxy.GotFocus += KeyboardProxy_GotFocus;
 			//	keyboardProxy.PointerWheelChanged+=KeyboardProxy_PointerWheelChanged;
@@ -379,6 +379,12 @@ namespace COTG.Views
 			
 		///	SetupCoreInput();
 			return (canvas, null);
+		}
+
+		private void KeyboardProxy_KeyDown2(object sender,KeyRoutedEventArgs e)
+		{
+			Log($"Key!!Canvas {e.Key} {e}");
+
 		}
 
 		private void Canvas_ProcessKeyboardAccelerators(UIElement sender,ProcessKeyboardAcceleratorEventArgs args)
@@ -464,7 +470,7 @@ namespace COTG.Views
 					break;
 
 				case Windows.System.VirtualKey.F10:
-					if (Player.isAvatarOrTest || (App.IsKeyPressedShift() && App.IsKeyPressedControl()))
+					if (Player.isAvatarOrTest  || (App.IsKeyPressedShift() && App.IsKeyPressedControl()))
 					{
 						CityBuild.testFlag ^= true;
 						Note.Show("Test: " + testFlag);

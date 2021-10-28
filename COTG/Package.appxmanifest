@@ -59,7 +59,7 @@
       <Extensions>
         <uap:Extension Category="windows.protocol">
           <uap:Protocol Name="cotg" DesiredView="useMore">
-            <uap:Logo>cnvCover.png</uap:Logo>
+            <uap:Logo>cnvCover2.png</uap:Logo>
             <uap:DisplayName>Crown of the Gods A</uap:DisplayName>
           </uap:Protocol>
         </uap:Extension>

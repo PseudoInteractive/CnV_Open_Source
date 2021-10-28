@@ -1256,7 +1256,7 @@ namespace COTG.Game
 				await Task.Delay(1000);
 			}
 			if (!isDrawingHeatMap)
-				DrawPixels(raw);
+				Task.Run( () => DrawPixels(raw) );
 
 			state = State.completed;
 			// Queue up another one
@@ -1575,12 +1575,12 @@ namespace COTG.Game
 			nextUpdateTick = tick + 1000 * 60 * 2; // 2 every min 
 			lastUpdatedContinent = continentId;
 
-			UpdateRegionDebounce.Go(throttled:true,runAgainIfStarted:false);
+			UpdateRegionDebounce.Go();
 
 		}
 
 
-		static Debounce UpdateRegionDebounce = new(DoUpdateRegion) { debounceDelay = 1000, throttleDelay = 1500 };
+		static Debounce UpdateRegionDebounce = new(DoUpdateRegion) {/* throttled=true,runAgainIfStarted=false, */debounceDelay = 1000, throttleDelay = 1500 };
 		public static async Task DoUpdateRegion()
 		{
 			

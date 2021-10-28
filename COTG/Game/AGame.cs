@@ -2722,6 +2722,7 @@ namespace COTG
 		public static bool IsValid(this (int x, int y) c) => c.x != int.MinValue || c.y != int.MinValue;
 		public static (int x, int y) invalidXY = (int.MinValue, int.MinValue);
 
+		
 		public static string IncomingInfo(this City city)
 		{
 			if(!city.incoming.Any())
@@ -2730,17 +2731,21 @@ namespace COTG
 			var sieged = false;
 			var hasSen = false;
 			var hasArt = false;
+			var any = false;
 			foreach(var i in city.incoming)
 			{
 				if(i.isAttack)
 				{
+					any = true;
 					ts += i.ts;
 					sieged |= i.isSiege;
 					hasSen |= i.hasSenator;
 					hasArt |= i.hasArt;
 				}
 			}
-			return $"({(sieged ? ((hasArt&&hasSen ? "SA " : hasArt ? "A " : hasSen ? "S " : "n ") + ((hasSen||city.claim>0) ? city.claim.ToString("00") + "% " : "")) : "i ") } { (ts ==0 ? "?" : (ts + 999) / 1000) }kTs)";
+			if(!any)
+				return string.Empty;
+			return $"({(sieged ? ((hasArt&&hasSen ? "SgAr " : hasArt ? "Ar " : hasSen ? "Sg " : "Si ") + ((hasSen||city.claim>0) ? city.claim.ToString("00") + "% " : "")) : "i ") } { (ts ==0 ? "?" : (ts + 999) / 1000) }kTs)";
 		}
 		public static bool IsDark(this Color color) => ((int)color.R + color.G + color.B) < (int)color.A * 3 / 2;
 

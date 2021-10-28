@@ -249,12 +249,12 @@ namespace COTG.Views
 							var ti = city.tradeInfo;
 							if (viaWater)
 							{
-								if (!city.ComputeShipTravelTime(target.cid, out dt) || dt.TotalHours > filterTime || city.shipsHome < filterShipsHome + cartReserve || city.res.Sub(reserve).sum < filterResHome)
+								if (!city.ComputeShipTravelTime(target.cid, out dt) || dt.TotalHours > filterTime || city.shipsHome < filterShipsHome + shipReserve|| city.res.Sub(reserve).sum < filterResHome)
 									continue;
 							}
 							else
 							{
-								if (!city.ComputeCartTravelTime(target.cid, out dt) || dt.TotalHours > filterTime || city.cartsHome < filterCartsHome + shipReserve || city.res.Sub(reserve).sum < filterResHome)
+								if (!city.ComputeCartTravelTime(target.cid, out dt) || dt.TotalHours > filterTime || city.cartsHome < filterCartsHome + cartReserve  || city.res.Sub(reserve).sum < filterResHome)
 									continue;
 
 							}

@@ -1095,7 +1095,39 @@ namespace COTG.Game
 			}
 
 		}
+		[Flags]
+		public enum IncomingFlags
+		{
+			incoming = 1<<0,
+			sen = 1<<1,
+			art = 1<<2,
+			sieged = 1<<3, // otherwise incoming such as assuault
+		}
 
+		public IncomingFlags incomingFlags
+		{
+			get {
+				if(!incoming.Any())
+					return default;
+
+				IncomingFlags rv = default;
+
+				foreach(var i in incoming)
+				{
+					if(i.isAttack)
+					{
+						rv |= IncomingFlags.incoming;
+						if(i.isSiege)
+							rv |= IncomingFlags.sieged;
+						if(i.hasSenator)
+							rv |= IncomingFlags.sen;
+						if(i.hasArt)
+							rv |= IncomingFlags.art;
+					}
+				}
+				return rv;
+			}
+		}
 	}
 
 }

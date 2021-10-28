@@ -106,7 +106,13 @@ namespace COTG.Game
 		public static bool alliancesFetched;
 		public static SortedList<byte, byte> diplomacy = new SortedList<byte, byte>(); // small Dictionary
 		public static Alliance none = new Alliance() { id = 0, name = "No Alliance" };
+		enum AllianceInitializationStage
+			{
+			none,
 
+			complete
+
+		}
 		public static async void Ctor(JsonDocument _aldt)
 		{
 			Log("Fetch Aldt");
@@ -133,8 +139,8 @@ namespace COTG.Game
 					myId = my.id = element.GetAsInt("id");
 					my.name = element.GetString("n");
 
-					_all.Add(my.id, my);
-					_nameToId.Add(my.name, my.id);
+					_all.TryAdd(my.id, my);
+					_nameToId.TryAdd(my.name, my.id);
 
 					// all.Add(my.id, my); nameToId.Add(my.name, my.id);
 
@@ -153,8 +159,8 @@ namespace COTG.Game
 								alliance.name = aname;
 								alliance.id = allianceId;
 
-								_all.Add(allianceId, alliance);
-								_nameToId.Add(aname, allianceId);
+								_all.TryAdd(allianceId, alliance);
+								_nameToId.TryAdd(aname, allianceId);
 
 								var good = _diplomacy.TryAdd(allianceId, relationship);
 								Assert(good == true);
@@ -181,6 +187,7 @@ namespace COTG.Game
 			all = new Dictionary<int, Alliance>(_all);
 			diplomacyFetched = true;
 
+			 // wait for player info to be fetched
 			for (; ; )
 			{
 				if (!Player.all.IsNullOrEmpty())
@@ -188,7 +195,7 @@ namespace COTG.Game
 					break;
 				}
 
-				await Task.Delay(1000);
+				await Task.Delay(300);
 			}
 			Assert(!Player.all.IsNullOrEmpty());
 			var alliances = new List<string>();
@@ -203,7 +210,7 @@ namespace COTG.Game
 						{
 							var alName = alliance.GetAsString("1");
 							// var al = alName == my.name ? my : new Alliance() { name = alName }; Log(alName);
-							alliances.Add(alName);
+							alliances.Add(alName); // no id :(
 						}
 					}
 				}
@@ -212,6 +219,7 @@ namespace COTG.Game
 				{
 					var alName = _al;
 					// var al = _al;
+					// does this not get a complete list of allianceas?
 					using (var jsa = await Post.SendForJson("includes/gAd.php", "a=" + HttpUtility.UrlEncode(alName)))
 					{
 						if (jsa != null)
@@ -220,8 +228,8 @@ namespace COTG.Game
 							if (all.TryGetValue(id, out var al) == false)
 							{
 								al = new Alliance() { id = id, name = alName };
-								_all.Add(id, al);
-								_nameToId.Add(alName, id);
+								_all.TryAdd(id, al);
+								_nameToId.TryAdd(alName, id);
 							}
 
 							// _all.Add(id, al); _nameToId.Add(alName, id);

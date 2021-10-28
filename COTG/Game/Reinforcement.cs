@@ -40,100 +40,110 @@ namespace COTG.Game
 
 		internal static async void ShowReinforcements(int _cid, UIElement uie)
         {
-			App.UpdateKeyStates();
-
-			var showAll = _cid == 0;
-			
-            await Services.ReinforcementsOverview.instance.Post();
-            var _spot = _cid == 0 ? null: Spot.GetOrAdd(_cid);
-			var scroll = new ScrollViewer();
-			
-			var panel = new StackPanel();
-			scroll.Content = panel;
-			//pid = _spot.pid;
-            
-            
-			ElementSoundPlayer.Play(ElementSoundKind.Show);
-
-			var spots = !showAll ? new[] { _spot } : City.myCities.OrderBy(a => a.cid.ZCurveEncodeCid() ).ToArray();
-			
-            var orders = new List<Reinforcement>();
-			
-			panel.Children.Add(new TextBlock() { Text= "For info related to other players reinforcements in a city, please visit the city" });
-			
-			panel.Children.Add(new TextBlock() { Text = showAll ? "All Incoming Reinforcements" : "Reinforcements Here:" });
-
-			foreach (var s in spots)
+			try
 			{
-				foreach (var reIn in s.reinforcementsIn.OrderBy(a=> Player.IdToName(a.sourceCid.CidToPid())) )
+				App.UpdateKeyStates();
+
+				var showAll = _cid == 0;
+
+				await Services.ReinforcementsOverview.instance.Post();
+				var _spot = _cid == 0 ? null : Spot.GetOrAdd(_cid);
+				var scroll = new ScrollViewer();
+
+				var panel = new StackPanel();
+				scroll.Content = panel;
+				//pid = _spot.pid;
+
+
+				ElementSoundPlayer.Play(ElementSoundKind.Show);
+
+				var spots = !showAll ? new[] { _spot } : City.myCities.OrderBy(a => a.cid.ZCurveEncodeCid()).ToArray();
+
+				var orders = new List<Reinforcement>();
+
+				panel.Children.Add(new TextBlock() { Text= "For info related to other players reinforcements in a city, please visit the city" });
+
+				panel.Children.Add(new TextBlock() { Text = showAll ? "All Incoming Reinforcements" : "Reinforcements Here:" });
+
+				foreach(var s in spots)
 				{
-					var other = Spot.GetOrAdd(reIn.sourceCid);
-					var me = Spot.GetOrAdd(reIn.targetCid);
-					var content = showAll ? $"{other.xy} {other.playerName} {other.nameAndRemarks} {other.IncomingInfo() } -> {me.xy} {me.nameAndRemarks} {me.IncomingInfo()} {reIn.troops.Format(":", ' ', ',')}"
-						: $"{other.xy} {other.playerName} {other.nameAndRemarks} {other.IncomingInfo() } {reIn.troops.Format(":", ' ', ',')}";
-					panel.Children.Add(new CheckBox() { Content = content, IsChecked = false });
-					orders.Add(reIn);
-				}
-			}
-            panel.Children.Add(new TextBlock() { Text="\nDeployed Reinforcements:" });
-			//			List<>
-			var reinOut = spots.SelectMany(s => s.reinforcementsOut).GroupBy(s=>s.targetCid).GroupBy(s=>s.Key.CidToPid());
-			foreach (var pid in reinOut.OrderBy(s => Player.IdToName(s.Key) ) )
-			{
-				foreach(var cid in pid.OrderBy(s => s.Key.ZCurveEncodeCid()))
-				{
-					foreach(var reIn in cid.OrderBy(a => a.time))
+					foreach(var reIn in s.reinforcementsIn.OrderBy(a => Player.IdToName(a.sourceCid.CidToPid())))
 					{
-						var other = Spot.GetOrAdd(reIn.targetCid);
-						var me = Spot.GetOrAdd(reIn.sourceCid);
-						var content = showAll ? $"{other.xy} {other.playerName} {other.nameAndRemarks} {other.IncomingInfo()} <- {me.xy} {me.nameAndRemarks} {me.IncomingInfo()} {reIn.troops.Format(":",' ',',')}"
-							: $"{other.xy} {other.playerName} {other.nameAndRemarks} {other.IncomingInfo()} {reIn.troops.Format(":",' ',',')}";
-
+						var other = Spot.GetOrAdd(reIn.sourceCid);
+						var me = Spot.GetOrAdd(reIn.targetCid);
+						var content = showAll ? $"{other.xy} {other.playerName} {other.nameAndRemarks} {other.IncomingInfo() } -> {me.xy} {me.nameAndRemarks} {me.IncomingInfo()} {reIn.troops.Format(":",' ',',')}"
+							: $"{other.xy} {other.playerName} {other.nameAndRemarks} {other.IncomingInfo() } {reIn.troops.Format(":",' ',',')}";
 						panel.Children.Add(new CheckBox() { Content = content,IsChecked = false });
 						orders.Add(reIn);
 					}
 				}
-			}
-			scroll.VerticalScrollMode = ScrollMode.Enabled;
-			scroll.HorizontalScrollMode = ScrollMode.Enabled;
-			scroll.ZoomMode = ZoomMode.Enabled;
-			//scroll.IsTabStop = true;
-			var msg = new ContentDialog()
-			{
-				Title = "Return Reinforcements",
-				Content = scroll,
-				IsPrimaryButtonEnabled = true,
-				PrimaryButtonText = "Go",
-				CloseButtonText = "Cancel"
-
-			};
-			var result = await msg.ShowAsync2(uie);
-			if (result == ContentDialogResult.Primary)
-			{
-				ShellPage.WorkStart("Return..");
-				int counter = 0;
-				foreach (var check in panel.Children)
+				panel.Children.Add(new TextBlock() { Text="\nDeployed Reinforcements:" });
+				//			List<>
+				var byFlags = spots.SelectMany(s => s.reinforcementsOut).GroupBy(s => s.targetCid.AsCity().incomingFlags);
+				foreach(var flagGroup in byFlags.OrderByDescending(s => (int)s.Key))
 				{
-					if (!(check is CheckBox c))
-						continue;
-					if (c.IsChecked.GetValueOrDefault())
+					foreach(var reIn in flagGroup.OrderBy(s => s.targetCid.AsCity().incomingFlags).ThenBy(s => Player.IdToName(s.targetCid.CidToPid())).ThenBy(a => a.time))
 					{
-						await Return(orders[counter]);
+					//	foreach(var reIn in cid)
+						{
+							var other = Spot.GetOrAdd(reIn.targetCid);
+							var me = Spot.GetOrAdd(reIn.sourceCid);
+							var content = showAll ? $"{other.xy} {other.playerName} {other.nameAndRemarks} {other.IncomingInfo()} <- {me.xy} {me.nameAndRemarks} {me.IncomingInfo()} {reIn.troops.Format(":",' ',',')}"
+								: $"{other.xy} {other.playerName} {other.nameAndRemarks} {other.IncomingInfo()} {reIn.troops.Format(":",' ',',')}";
+
+							panel.Children.Add(new CheckBox() { Content = content,IsChecked = false });
+							orders.Add(reIn);
+						}
+					}
+				}
+				scroll.VerticalScrollMode = ScrollMode.Enabled;
+				scroll.HorizontalScrollMode = ScrollMode.Enabled;
+				scroll.ZoomMode = ZoomMode.Enabled;
+				//scroll.IsTabStop = true;
+				var msg = new ContentDialog()
+				{
+					Title = "Return Reinforcements",
+					Content = scroll,
+					IsPrimaryButtonEnabled = true,
+					PrimaryButtonText = "Go",
+					CloseButtonText = "Cancel"
+
+				};
+				var result = await msg.ShowAsync2(uie);
+				if(result == ContentDialogResult.Primary)
+				{
+					ShellPage.WorkStart("Return..");
+					int counter = 0;
+					foreach(var check in panel.Children)
+					{
+						if(!(check is CheckBox c))
+							continue;
+						if(c.IsChecked.GetValueOrDefault())
+						{
+							await Return(orders[counter]);
+						}
+
+						++counter;
+						ShellPage.WorkUpdate($"Return.. {counter}");
+					}
+					if(counter > 0)
+					{
+						await Task.Delay(400);
+						await Services.ReinforcementsOverview.instance.Post();
 					}
 
-					++counter;
-					ShellPage.WorkUpdate($"Return.. {counter}");
+					ShellPage.WorkEnd("Return..");
 				}
-				if (counter > 0)
-				{
-					await Task.Delay(400);
-					await Services.ReinforcementsOverview.instance.Post();
-				}
-
-				ShellPage.WorkEnd("Return..");
 			}
+			catch(Exception __ex)
+			{
+				Debug.LogEx(__ex);
+			}
+
+
 		}
-    }
+
+	}
     public static class ReinforcementHelper
     {
         public static int TS(this Reinforcement[] that)
