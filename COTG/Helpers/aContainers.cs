@@ -20,22 +20,13 @@ using Windows.Foundation;
 
 namespace COTG
 {
-	public class NotifyCollectionBase: INotifyPropertyChanged, INotifyCollectionChanged , ICollectionView, ICollectionViewFactory
+	public class NotifyCollectionBase: INotifyPropertyChanged, INotifyCollectionChanged 
 	{
 		public static ImmutableArray<NotifyCollectionBase> all = ImmutableArray<NotifyCollectionBase>.Empty;
 
 		public bool hasNotifications => (CollectionChanged is not null | PropertyChanged is not null);
 
-		public IObservableVector<object> CollectionGroups { get; }
-		public object CurrentItem { get; }
-		public int CurrentPosition { get; }
-		public bool HasMoreItems { get; }
-		public bool IsCurrentAfterLast { get; }
-		public bool IsCurrentBeforeFirst { get; }
-		public int Count { get; }
-		public bool IsReadOnly { get; }
 
-		public object this[int index] { get; set; }
 
 		public event NotifyCollectionChangedEventHandler? CollectionChanged;
 		//	public void OnPropertyChanged(T city,string propertyName = "") => PropertyChanged?.Invoke(city,new PropertyChangedEventArgs(propertyName));
@@ -85,7 +76,7 @@ namespace COTG
 					}catch(Exception ex)
 					{
 						LogEx(ex);
-						i.CollectionChanged?.Invoke(new(NotifyCollectionChangedAction.Reset));
+						i.CollectionChanged?.Invoke(i,new(NotifyCollectionChangedAction.Reset));
 					}
 				} while(--counter>0);
 
@@ -179,7 +170,6 @@ namespace COTG
 			return  RuntimeHelpers.GetHashCode(this);
 		}
 
-		public ICollectionView CreateView() => this; // is this okay?
 		public bool MoveCurrentTo(object item) => throw new NotImplementedException();
 		public bool MoveCurrentToPosition(int index) => throw new NotImplementedException();
 		public bool MoveCurrentToFirst() => throw new NotImplementedException();
@@ -190,13 +180,13 @@ namespace COTG
 		public int IndexOf(object item) => throw new NotImplementedException();
 		public void Insert(int index,object item) => throw new NotImplementedException();
 		public void RemoveAt(int index) => throw new NotImplementedException();
-		public void Add(object item) => throw new NotImplementedException();
+	//	public void Add(object item) => throw new NotImplementedException();
 		public void Clear() => throw new NotImplementedException();
 		public bool Contains(object item) => throw new NotImplementedException();
 		public void CopyTo(object[] array,int arrayIndex) => throw new NotImplementedException();
 		public bool Remove(object item) => throw new NotImplementedException();
 		public IEnumerator<object> GetEnumerator() => throw new NotImplementedException();
-		IEnumerator IEnumerable.GetEnumerator() => throw new NotImplementedException();
+	//	IEnumerator IEnumerable.GetEnumerator() => throw new NotImplementedException();
 	}
 
 
@@ -250,7 +240,7 @@ namespace COTG
 			if(hasNotifications)
 			{
 				Assert(id >= 0);
-				Assert(id < Count);
+				Assert(id <= Count);
 				var _count = Count;
 				if(_count == Count)
 				{
@@ -323,13 +313,15 @@ namespace COTG
 			if(notify && hasNotifications)
 				NotifyRemoveAt(id,item);
 		}
-		public void Remove(T i)
+		public bool Remove(T id, bool notify)
 		{
-			var index = c.IndexOf(i);
+			var index = c.IndexOf(id);
 			if(index >= 0)
 			{
-				RemoveAt(index,true);
+				RemoveAt(index,notify);
+				return true;
 			}
+			return false;
 		}
 
 		public void Set(IEnumerable<T> src,bool notify, bool itemsChanged=true)

@@ -43,6 +43,9 @@ namespace COTG.Views
 		public static Vector2 lastMousePressPosition;
 		public static DateTimeOffset lastMousePressTime;
 
+		public static bool mouseOverCanvas;
+
+
 		public float eventTimeOffset;
 		public static string toolTip;
 		public static string contToolTip;
@@ -143,6 +146,10 @@ namespace COTG.Views
 
 		private static void KeyboardProxy_PointerExited(object sender,PointerRoutedEventArgs e)
 		{
+			Assert(mouseOverCanvas== true);
+			mouseOverCanvas = false;
+			Trace("MouseExcited");
+
 			var point = e.GetCurrentPoint(canvas);
 			Canvas_PointerExited(point.Position, point.PointerId);
 		}
@@ -434,6 +441,10 @@ namespace COTG.Views
 
 		private static void Canvas_PointerEntered(Windows.Foundation.Point args)
 		{
+			Assert(mouseOverCanvas== false);
+			mouseOverCanvas = true;
+			Trace("MouseEnterred");
+
 			UpdateMousePosition(args);
 			TakeFocus();
 

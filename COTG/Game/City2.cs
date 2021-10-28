@@ -830,9 +830,22 @@ namespace COTG.Game
 							}
 							else
 							{
-								if (!await MoveBuilding(bspot, FindAnyFreeSpot(bspot), dryRun))
-									return -1;
+								if(!dryRun)
+								{
+									var move = isPlanner ? 1 : await App.DoYesNoBox($"{b.name} in the way :(",$"What do you want to do with {b.name}?","Move it" ," Demo", "Forget it");
+									if(move == -1)
+										return -1; 
+									else if(move == 1)
+									{
+										if(!await MoveBuilding(bspot,FindAnyFreeSpot(bspot),dryRun))
+											return -1;
+									}
+									else
 
+									{
+										await Demolish(bspot,dryRun);
+									}
+								}
 								Status($"Found an unneeded {desName}, will move it to the right spot for you", dryRun);
 
 								if (!await MoveBuilding(takeFrom, bspot, dryRun))
