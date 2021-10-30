@@ -65,7 +65,7 @@ namespace COTG.Game
 
 				panel.Children.Add(new TextBlock() { Text = showAll ? "All Incoming Reinforcements" : "Reinforcements Here:" });
 
-				foreach(var s in spots)
+				foreach(var s in spots.OrderByDescending(s=>s.incomingFlags)) 
 				{
 					foreach(var reIn in s.reinforcementsIn.OrderBy(a => Player.IdToName(a.sourceCid.CidToPid())))
 					{
@@ -82,7 +82,7 @@ namespace COTG.Game
 				var byFlags = spots.SelectMany(s => s.reinforcementsOut).GroupBy(s => s.targetCid.AsCity().incomingFlags);
 				foreach(var flagGroup in byFlags.OrderByDescending(s => (int)s.Key))
 				{
-					foreach(var reIn in flagGroup.OrderBy(s => s.targetCid.AsCity().incomingFlags).ThenBy(s => Player.IdToName(s.targetCid.CidToPid())).ThenBy(a => a.time))
+					foreach(var reIn in flagGroup.OrderByDescending(s => s.targetCid.AsCity().incomingFlags).ThenBy(s => Player.IdToName(s.targetCid.CidToPid())).ThenBy(a => a.time))
 					{
 					//	foreach(var reIn in cid)
 						{

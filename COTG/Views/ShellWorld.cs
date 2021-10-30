@@ -107,16 +107,21 @@ namespace COTG.Views
 
 		private static void CoreInputSource_PointerExited(ExpPointerInputObserver sender,PointerEventArgs args)
 		{
+			args.KeyModifiers.UpdateKeyModifiers();
 			Canvas_PointerExited(args.CurrentPoint.Position, args.CurrentPoint.PointerId);
 		}
 
 		private static void CoreInputSource_PointerEntered(ExpPointerInputObserver sender,PointerEventArgs args)
 		{
+			args.KeyModifiers.UpdateKeyModifiers();
+
 			Canvas_PointerEntered(args.CurrentPoint.Position);
 		}
 
 		private static void CoreInputSource_PointerReleased(ExpPointerInputObserver sender,PointerEventArgs args)
 		{
+			args.KeyModifiers.UpdateKeyModifiers();
+
 			var point = args.CurrentPoint;
 			Canvas_PointerReleased((point.Position, point.PointerId, point.IsInContact, point.Timestamp, point.Properties.PointerUpdateKind), args.KeyModifiers);
 
@@ -125,6 +130,7 @@ namespace COTG.Views
 		private static void CoreInputSource_PointerPressed(ExpPointerInputObserver sender,PointerEventArgs args)
 		{
 			var point = args.CurrentPoint;
+			args.KeyModifiers.UpdateKeyModifiers();
 			Canvas_PointerPressed((point.Position, point.PointerId, point.IsInContact, point.Timestamp, point.Properties.PointerUpdateKind));
 
 		}
@@ -132,6 +138,7 @@ namespace COTG.Views
 		public static void CoreInputSource_PointerMoved(ExpPointerInputObserver sender,Microsoft.UI.Input.Experimental.ExpPointerEventArgs e)
 		{
 			var point = e.CurrentPoint;
+			e.KeyModifiers.UpdateKeyModifiers();
 			Canvas_PointerMoved((point.Position,point.PointerId,point.IsInContact,point.Timestamp,point.Properties.PointerUpdateKind));
 		}
 
@@ -146,9 +153,11 @@ namespace COTG.Views
 
 		private static void KeyboardProxy_PointerExited(object sender,PointerRoutedEventArgs e)
 		{
+			e.KeyModifiers.UpdateKeyModifiers();
+
 			Assert(mouseOverCanvas== true);
 			mouseOverCanvas = false;
-			Trace("MouseExcited");
+			//Trace("MouseExcited");
 
 			var point = e.GetCurrentPoint(canvas);
 			Canvas_PointerExited(point.Position, point.PointerId);
@@ -156,11 +165,15 @@ namespace COTG.Views
 
 		private static void KeyboardProxy_PointerEntered(object sender,PointerRoutedEventArgs e)
 		{
+			e.KeyModifiers.UpdateKeyModifiers();
+
 			Canvas_PointerEntered(e.GetCurrentPoint(canvas).Position);
 		}
 
 		private static void KeyboardProxy_PointerReleased(object sender,PointerRoutedEventArgs e)
 		{
+			e.KeyModifiers.UpdateKeyModifiers();
+
 			var point = e.GetCurrentPoint(canvas);
 			Canvas_PointerReleased((point.Position, point.PointerId, point.IsInContact, point.Timestamp, point.Properties.PointerUpdateKind),e.KeyModifiers);
 
@@ -169,11 +182,15 @@ namespace COTG.Views
 		private static void KeyboardProxy_PointerPressed(object sender,PointerRoutedEventArgs e)
 		{
 			var point = e.GetCurrentPoint(canvas);
+			e.KeyModifiers.UpdateKeyModifiers();
+
 			Canvas_PointerPressed((point.Position, point.PointerId, point.IsInContact, point.Timestamp, point.Properties.PointerUpdateKind));
 		}
 
 		private static void KeyboardProxy_PointerMoved(object sender,PointerRoutedEventArgs e)
 		{
+			e.KeyModifiers.UpdateKeyModifiers();
+
 			var point = e.GetCurrentPoint(canvas);
 			Canvas_PointerMoved((point.Position, point.PointerId, point.IsInContact, point.Timestamp, point.Properties.PointerUpdateKind));
 		}
@@ -441,9 +458,9 @@ namespace COTG.Views
 
 		private static void Canvas_PointerEntered(Windows.Foundation.Point args)
 		{
-			Assert(mouseOverCanvas== false);
+		//	Assert(mouseOverCanvas== false);
 			mouseOverCanvas = true;
-			Trace("MouseEnterred");
+		//	Trace("MouseEnterred");
 
 			UpdateMousePosition(args);
 			TakeFocus();
@@ -580,7 +597,7 @@ namespace COTG.Views
 																			) point,
 			Windows.System.VirtualKeyModifiers keyModifiers)
 		{
-			
+			keyModifiers.UpdateKeyModifiers();
 			UpdateMousePosition(point.Position);
 			if(!isFocused)
 				return;
@@ -775,6 +792,7 @@ namespace COTG.Views
 		private static void Canvas_PointerPressed((Windows.Foundation.Point Position, uint PointerId,
 																			bool IsInContact, ulong Timestamp, PointerUpdateKind PointerUpdateKind) point)
 		{
+
 			UpdateMousePosition(point.Position);
 			ShellPage.UpdateFocus();            //	ClearHover();
 												//  e.Handled = false;
@@ -1076,6 +1094,7 @@ namespace COTG.Views
 		{
 		//	App.cursorDefault.Set();
 			App.InputRecieved(); // prevent idle timer;
+			mouseOverCanvas = true;
 			//	PointerInfo(e);
 			UpdateMousePosition(point.Position);
 			TakeFocusIfAppropriate();

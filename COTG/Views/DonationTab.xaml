@@ -66,7 +66,7 @@
 							PointerExited="{x:Bind game:Spot.GridExited}"
                         FontSize="{StaticResource MediumFontSize}"
                         ItemsSource="{x:Bind game:City.emptyCitySource, Mode=OneTime}"
-                        RowHeight="{StaticResource GridRowHeight}"
+                        RowHeight="{StaticResource MediumGridRowHeight}"
                         AlternationStep="2"
                         SelectionMode="Single"
                         SelectionUnit="Row"
@@ -141,7 +141,7 @@
                         UserGroupMode="Disabled"
                         FontSize="{StaticResource MediumFontSize}"
                         
-                        RowHeight="{StaticResource GridRowHeight}"
+                        RowHeight="{StaticResource MediumGridRowHeight}"
                         AlternationStep="2"
                         SelectionMode="Single"
                         SelectionUnit="Row"

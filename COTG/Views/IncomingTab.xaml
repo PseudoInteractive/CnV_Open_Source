@@ -41,7 +41,7 @@
                         CanUserChooseColumns="True"
                         ColumnResizeHandleDisplayMode="Always"
                         FontSize="{StaticResource MediumFontSize}"
-                        RowHeight="{StaticResource GridRowHeight}"
+                        RowHeight="{StaticResource MediumGridRowHeight}"
                                 IsTextScaleFactorEnabled="False"
 
                         PointerPressed="gridPointerPress"

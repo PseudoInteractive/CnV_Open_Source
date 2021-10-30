@@ -64,6 +64,7 @@ using Nito.AsyncEx;
 using COTG.JSON;
 using Microsoft.UI.Xaml.Input;
 using System;
+using Microsoft.Extensions.DependencyInjection;
 //using Windows.UI.Core;
 
 namespace COTG
@@ -125,12 +126,35 @@ namespace COTG
 //			}
 //#endif
 		}
+
+		/// <summary>
+		/// Gets the <see cref="IServiceProvider"/> instance to resolve application services.
+		/// </summary>
+		public IServiceProvider services;// { get; }
+
+		/// <summary>
+		/// Configures the services for the application.
+		/// </summary>
+		private static IServiceProvider ConfigureServices()
+		{
+			var services = new ServiceCollection();
+
+			//services.AddSingleton<IFilesService,FilesService>();
+			//services.AddSingleton<ISettingsService,SettingsService>();
+			//services.AddSingleton<IClipboardService,ClipboardService>();
+			//services.AddSingleton<IShareService,ShareService>();
+			//services.AddSingleton<IEmailService,EmailService>();
+
+			return services.BuildServiceProvider();
+		}
+		//			ShutdownMode= Shut
+
 		public App()
 		{
+			services = ConfigureServices();
 
-			//			ShutdownMode= Shut
-			RequestedTheme = ApplicationTheme.Dark;
-	
+		InitializeComponent();
+		RequestedTheme = ApplicationTheme.Dark;
 			//try
 			//{
 			//    {
@@ -157,6 +181,7 @@ namespace COTG
 			// Deferred execution until used. Check https://msdn.microsoft.com/library/dd642331(v=vs.110).aspx for further info on Lazy<T> class.
 			_activationService = new Lazy<ActivationService>(CreateActivationService);
 			//	UserAgent.SetUserAgent(JSClient.userAgent);  // set webview useragent
+
 			
 		}
 
@@ -267,7 +292,7 @@ namespace COTG
 
 		public static void OnKeyUp(VirtualKey key)
 		{
-			Trace("KeyUp" + key);
+			//Trace("KeyUp" + key);
 			switch (key)
 			{
 				case VirtualKey.Shift:
@@ -299,14 +324,14 @@ namespace COTG
 		//}
 		public static void OnKeyDown(VirtualKey key)
 		{
-			Trace("KeyDown" + key);
+			///Trace("KeyDown" + key);
 
 			switch(key)
 			{
 				case VirtualKey.Shift:
 				case VirtualKey.LeftShift:
 				case VirtualKey.RightShift:
-					Trace("Shift Down");
+					//Trace("Shift Down");
 
 					shiftPressed = true;
 					break;
@@ -540,7 +565,6 @@ namespace COTG
 			if(wasRunning)
 				return;
 			window.Content.PreviewKeyUp+=Content_PreviewKeyUp;
-			window.Content.PreviewKeyDown+=Content_PreviewKeyDown; ;
 //			window.KeyDown+=Window_KeyDown;
 						window.Maximize();
 

@@ -9,10 +9,10 @@
     d:DesignHeight="300"
     d:DesignWidth="400">
 
-	<Grid Height="{StaticResource GridRowHeight}">
+	<Grid Height="{StaticResource MediumGridRowHeight}">
 		<Grid.ColumnDefinitions>
 			<ColumnDefinition Width="*" />
-			<ColumnDefinition Width="{StaticResource GridRowHeight}" />
+			<ColumnDefinition Width="{StaticResource MediumGridRowHeight}" />
 			<ColumnDefinition Width="6*" />
 			<ColumnDefinition Width="auto" />
 		</Grid.ColumnDefinitions>

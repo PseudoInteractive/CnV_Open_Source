@@ -50,7 +50,7 @@ namespace COTG
 		//		cancellationTokenSource = new CancellationTokenSource();
 		//	}
 		//}
-
+		// /* TODO: Hello [Avatar, 10/29/2021] */:
 		// [Conditional("TRACE")]
 		public static void L(string s)
 		{

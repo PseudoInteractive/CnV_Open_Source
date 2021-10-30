@@ -36,7 +36,7 @@
 							SelectionUnit="Row"
 							AlternationStep="2"
 							FontSize="{StaticResource MediumFontSize}"
-							RowHeight="{StaticResource GridRowHeight}"
+							RowHeight="{StaticResource MediumGridRowHeight}"
 							Tag="Dungeons"
                               AutoGenerateColumns="False">
 			<tg:RadDataGrid.Commands>

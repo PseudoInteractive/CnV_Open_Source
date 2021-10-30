@@ -40,6 +40,10 @@ namespace COTG.Views
 	// TODO WTS: Change the URL for your privacy policy in the Resource File, currently set to https://YourPrivacyUrlGoesHere
 	public sealed partial class SettingsPage : ContentDialog, INotifyPropertyChanged
 	{
+		private const double largeFontSizeBase = 20.0;
+		private const double mediumFontSizeBase = 14.0;
+		private const double smallFontSizeBase = 12.0;
+		private const double chatFontSizeBase = 14.0;
 		internal static SettingsPage instance;
 		//      private static UserDataService UserDataService => Singleton<UserDataService>.Instance;
 
@@ -436,13 +440,13 @@ namespace COTG.Views
 		}
 
 		[NonSerialized]
-		public static float mediumFontSize = 12;
+		public static float mediumFontSize = 14;
 		[NonSerialized]
 		public static float largeFontSize = 20;
 		[NonSerialized]
 		public static float smallFontSize = 12;
 		[NonSerialized] 
-		public static float gridRowHeight = 34;
+		public static float mediumGridRowHeight = 34;
 		[NonSerialized]
 		public static float mediumGridRowHeight = 30;
 		[NonSerialized] 
@@ -453,16 +457,16 @@ namespace COTG.Views
 			var chatZoom = SettingsPage.chatZoom.Squared()  + 0.75f;
 			var tabZoom = SettingsPage.tabZoom.Squared()  + 0.75f;
 			float AsFloat(object d) => (float)(double)d;
-			smallFontSize = AsFloat(App.instance.Resources["SmallFontSize"] = tabZoom * 12.0);
+			smallFontSize = AsFloat(App.instance.Resources["SmallFontSize"] = tabZoom * smallFontSizeBase);
 			largeFontSize = AsFloat(App.instance.Resources["LargeFontSize"] = tabZoom * 20.0);
-			mediumFontSize = AsFloat(App.instance.Resources["MediumFontSize"] = tabZoom * 12.0);
+			mediumFontSize = AsFloat(App.instance.Resources["MediumFontSize"] = tabZoom * mediumFontSizeBase);
 			App.instance.Resources["ChatFontSize"] = chatZoom * 12.0;
 
-			gridRowHeight = AsFloat(App.instance.Resources["GridRowHeight"] = tabZoom * 34.0);
-			mediumGridRowHeight = AsFloat(App.instance.Resources["MediumGridRowHeight"] = tabZoom * 30.0);
-			shortGridRowHeight = AsFloat(App.instance.Resources["ShortGridRowHeight"] = tabZoom * 28.0);
+			largeGridRowHeight = AsFloat(App.instance.Resources["LargeGridRowHeight"] = tabZoom * (largeFontSizeBase*2.25));
+			mediumGridRowHeight = AsFloat(App.instance.Resources["MediumGridRowHeight"] = tabZoom * (mediumFontSizeBase*2.25));
+			shortGridRowHeight = AsFloat(App.instance.Resources["ShortGridRowHeight"] = tabZoom * (smallFontSizeBase*2.25) );
 
-			App.instance.Resources["ChatFontSize"] = chatZoom * 12.0;
+			App.instance.Resources["ChatFontSize"] = chatZoom * chatFontSizeBase;
 			App.instance.Resources["ChatFontImageHeight"] = chatZoom * 32.0;
 			
 

@@ -1115,6 +1115,7 @@ namespace COTG.Game
 			sen = 1<<1,
 			art = 1<<2,
 			sieged = 1<<3, // otherwise incoming such as assuault
+			claim = 1<<4,
 		}
 
 		public IncomingFlags incomingFlags

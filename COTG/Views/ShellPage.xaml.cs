@@ -385,19 +385,22 @@ namespace COTG.Views
 
 		private void ShellPage_ProcessKeyboardAccelerators(UIElement sender,ProcessKeyboardAcceleratorEventArgs args)
 		{
-			Trace($"{sender} {args.Key} {args.Modifiers}");
+		//	Trace($"{sender} {args.Key} {args.Modifiers}");
 			args.Modifiers.UpdateKeyModifiers();
 			if( args.Key == VirtualKey.F3)
 			{
 				AdjustLayout(-1);
+				args.Handled=true;
 			}
 			if(args.Key == VirtualKey.F4)
 			{
 				AdjustLayout(1);
+				args.Handled=true;
 			}
 			if(args.Key == VirtualKey.F5)
 			{
 				OnRefresh();
+				args.Handled=true;
 			}
 		}
 

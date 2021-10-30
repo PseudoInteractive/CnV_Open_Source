@@ -42,7 +42,7 @@
 							SelectionMode="Extended"
 							CanUserChooseColumns="True"
 							UserFilterMode="Auto"
-							RowHeight="{StaticResource GridRowHeight}"
+							RowHeight="{StaticResource SmallGridRowHeight}"
 							PointerPressed="{x:Bind game:Spot.GridPressed}"
 							PointerExited="{x:Bind game:Spot.GridExited}"
 							FontSize="{StaticResource SmallFontSize}"
