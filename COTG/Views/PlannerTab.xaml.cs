@@ -376,12 +376,7 @@ namespace COTG.Views
 
 			if( CityBuild.isPlanner)
 			{
-				
-				if(city.cid == City.build)
-				{
-					City.postQueueBuildingCount=-1;
-					PleaseRefresh.Go();
-				}
+				city.BuildingsOrQueueChanged();
 				
 			}
 			if(wasWritten)

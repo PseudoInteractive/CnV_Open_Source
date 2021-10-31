@@ -31,12 +31,13 @@
                         PointerPressed="{x:Bind game:Spot.GridPressed}"
 							PointerExited="{x:Bind game:Spot.GridExited}"
                         FontSize="{StaticResource MediumFontSize}"
-                        ItemsSource="{x:Bind game:City.emptyCitySource, Mode=OneTime}"
+                        ItemsSource="{x:Bind local:BossTab.cities, Mode=OneTime}"
                         RowHeight="{StaticResource MediumGridRowHeight}"
                         AlternationStep="2"
                         SelectionMode="Single"
                         SelectionUnit="Row"
 								 IsTabStop="True"
+
                         GroupPanelPosition="Bottom"
                         SelectionChanged="CityGrid_SelectionChanged"
                         >
@@ -80,8 +81,10 @@
                     
                         UserGroupMode="Disabled"
                         FontSize="{StaticResource MediumFontSize}"
+								 
                         ItemsSource="{x:Bind game:Boss.all, Mode=OneTime}"
-                        RowHeight="{StaticResource MediumGridRowHeight}"
+
+						RowHeight="{StaticResource MediumGridRowHeight}"
                         AlternationStep="2"
                         SelectionMode="Single"
                                IsTabStop="True"

@@ -37,16 +37,27 @@ namespace COTG.Views
         public static int reserveWood = 0;
         public static int reserveStone = 0;
 		public static bool proportionateToWhatsNeeded = true;
-        public DonationTab()
+
+		NotifyCollection<City> donationGridSource = new();
+
+		public DonationTab()
         {
             Assert(instance == null);
             instance = this;
             this.InitializeComponent();
 			SetupDataGrid(donationGrid);
-		//	spotGrids.Add(donationGrid);
-
+			//	spotGrids.Add(donationGrid);
+			City.cityListChanged += CityListChanged;
 		}
 
+		private static void CityListChanged(IList<City> l)
+		{
+			var reserveCartsFilter = DonationTab.reserveCarts;
+			if(DonationTab.IsVisible())
+			{
+				instance.donationGridSource.Set( l.Where((city) => city.cartsHome >= reserveCartsFilter).OrderBy(a => a.cont) );
+			}
+		}
 		public static bool IsVisible() => instance.isFocused;
       
        // List<BlessedCity> blessedGridSource = new List<BlessedCity>();

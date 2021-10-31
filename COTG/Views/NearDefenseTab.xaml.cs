@@ -93,10 +93,9 @@ namespace COTG.Views
 					var task1 = RaidOverview.Send();
 					await task0;
 					await task1;
-					List<Supporter> s = new List<Supporter>();
+					NotifyCollection<Supporter> s = new();
 					//                supportGrid.ItemsSource = null;
 					{
-						using var _ = await City.cityGridLock.LockAsync();
 					foreach (var city in City.gridCitySource)
 					{
 						Assert(city is City);
@@ -129,7 +128,7 @@ namespace COTG.Views
 							supporter = new Supporter() { city = city };
 						}
 						var troops = (onlyHome ? city.troopsHome : city.troopsTotal);
-						s.Add(supporter);
+						s.Add(supporter,true);
 						supporter.tSend.Clear();
 						supporter.validTargets = validCount;
 						if (viaWater)

@@ -26,7 +26,7 @@ namespace COTG.Views
         public static BossTab instance;
         public static bool IsVisible() => instance.isFocused;
 
-
+		public static NotifyCollection<City> cities = new();
 
         public override Task VisibilityChanged(bool visible, bool longTerm)
 		{
@@ -36,13 +36,13 @@ namespace COTG.Views
 			   {
 				   bossGrid.ItemsSource = null;
 				   bossGrid.ItemsSource = Boss.all;
-				   cityGrid.ItemsSource = City.myCities.Where(c => c.testContinentAndTagFilter && c.homeTroopsAttack > 50 * 1000.0f).
-					   OrderBy((c) => -c.homeTroopsAttack).ToArray();
+				   cities.Set( City.myCities.Where(c => c.testContinentAndTagFilter && c.homeTroopsAttack > 50 * 1000.0f).
+					   OrderBy((c) => -c.homeTroopsAttack) );
+				   cities.NotifyReset();
 			   }
 			   else
 			   {
 				   bossGrid.ItemsSource = null;
-				   cityGrid.ItemsSource = City.emptyCitySource;
 
 			   }
 		   });

@@ -412,6 +412,7 @@ namespace COTG.Views
 
 		public static void KeyboardProxy_KeyDown(object sender, Microsoft.UI.Xaml.Input.KeyRoutedEventArgs e)
 		{
+			App.UpdateKeyStates();
 
 			if(!mouseOverCanvas)
 				return;

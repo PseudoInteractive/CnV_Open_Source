@@ -76,19 +76,19 @@ namespace COTG.Views
 
 
 		
-		private void CityGrid_PointerPress(object sender, PointerRoutedEventArgs e)
-		{
-			Spot.GridPressed(sender, e);
-		}
-		private void cityGrid_PointerExited(object sender, PointerRoutedEventArgs e)
-		{
-			Spot.ProcessPointerExited();
-			//if (string.Empty!=lastTip)
-			//{
-			//    lastTip = string.Empty;
-			//    TabPage.mainTabs.tip.Text = string.Empty;
-			//}
-		}
+		//private void CityGrid_PointerPress(object sender, PointerRoutedEventArgs e)
+		//{
+		//	Spot.GridPressed(sender, e);
+		//}
+		//private void cityGrid_PointerExited(object sender, PointerRoutedEventArgs e)
+		//{
+		//	Spot.ProcessPointerExited();
+		//	//if (string.Empty!=lastTip)
+		//	//{
+		//	//    lastTip = string.Empty;
+		//	//    TabPage.mainTabs.tip.Text = string.Empty;
+		//	//}
+		//}
 
 
 	

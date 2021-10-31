@@ -36,12 +36,10 @@
     <EmbeddedResource Remove="BundleArtifacts\**" />
     <EmbeddedResource Remove="Content\bin\**" />
     <EmbeddedResource Remove="Content\obj\**" />
-    <EmbeddedResource Remove="Properties\PublishProfiles\**" />
     <None Remove="AppPackages\**" />
     <None Remove="BundleArtifacts\**" />
     <None Remove="Content\bin\**" />
     <None Remove="Content\obj\**" />
-    <None Remove="Properties\PublishProfiles\**" />
   </ItemGroup>
 
   <ItemGroup>

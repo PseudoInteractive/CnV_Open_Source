@@ -27,6 +27,7 @@ using static Cysharp.Text.ZString;
 using Nito.AsyncEx;
 using static COTG.BuildingDef;
 using System.Buffers;
+using System.Diagnostics;
 
 namespace COTG.Game
 {
@@ -37,7 +38,8 @@ namespace COTG.Game
 	//	// bu:  time to upgrade
 	//	// bd:  time to demo?
 	//}
-
+	///
+	[DebuggerDisplay($"{{{nameof(GetDebuggerDisplay)}(),nq}}")]
 	public sealed partial class City : Spot, IANotifyPropertyChanged
 	{
 
@@ -103,6 +105,9 @@ namespace COTG.Game
 		//{
 		//	PropertyChanged?.Invoke(this,new PropertyChangedEventArgs(members));
 		//}
+
+		public static Action<City[]> cityListChanged;
+
 
 		public byte TroopType
 		{
@@ -1531,8 +1536,7 @@ namespace COTG.Game
 
 		public Resources res => new Resources(wood, stone, iron, food);
 		public static NotifyCollection<City> gridCitySource = new NotifyCollection<City>();
-		public static AsyncLock cityGridLock = new();
-		public static City[] emptyCitySource = Array.Empty<City>();
+		public static City[] changedemptyCitySource = Array.Empty<City>();
 		internal CityTradeInfo tradeInfo = CityTradeInfo.invalid;
 		public CityTradeInfo GetTradeInfo()
 		{
@@ -1620,6 +1624,7 @@ namespace COTG.Game
 		public bool autoTowers;
 		public byte autobuildCabinLevel = (byte)SettingsPage.cottageLevel;
 		public sbyte buildingCountCache = -1;
+		public byte townHallLevelCache = 0;
 		public bool wantCastle;
 		public bool wantSorcTower;
 		public int Bldgs => buildingCountCache; // for DataGrid
@@ -1641,7 +1646,7 @@ namespace COTG.Game
 			{
 				buildingCountCache = count;
 				if(BuildTab.IsVisible())
-					OnPropertyChanged();
+					OnPropertyChanged(nameof(Bldgs));
 			}
 		}
 
@@ -2018,17 +2023,21 @@ namespace COTG.Game
 				{
 					Assert(bd.requiresBuildingSlot);
 					Assert(bd.id != 0);
-					++rv.buildingCount;
-					if (bdef.isCabin)
+					if(bd.id != 0)
 					{
-						++rv.cabins;
-						if (bd.bl < autobuildCabinLevel)
-							++rv.unfinishedCabins;
-					}
-					else
-					{
-						if (bd.bl < 10)
-							++rv.unfinishedBuildings;
+
+						++rv.buildingCount;
+						if(bdef.isCabin)
+						{
+							++rv.cabins;
+							if(bd.bl < autobuildCabinLevel)
+								++rv.unfinishedCabins;
+						}
+						else
+						{
+							if(bd.bl < 10)
+								++rv.unfinishedBuildings;
+						}
 					}
 				}
 				if (bd.bid == bidStorehouse)
@@ -2174,9 +2183,9 @@ namespace COTG.Game
 		}
 		public TownHallAndBuildingCount GetTownHallAndBuildingCount(bool forceUpdate)
 		{
-			if ( (postQueueBuildingCount < 0 )||(cachedCity!=cid) )
+			if ( buildingCountCache < 0 )
 			{
-				if(!forceUpdate && (cachedCity!=cid) )
+				if(!forceUpdate && (postQueueBuildingCache==null ))
 				{
 					return new TownHallAndBuildingCount() { townHallLevel = -1,buildingCount = -1 };
 				}
@@ -2199,12 +2208,11 @@ namespace COTG.Game
 					else if(b.bl > 0 && !b.isTower)
 						++count;
 				}
-				postQueueBuildingCount= count;
 				SetBuildingCount(count);
 
-				postQueueTownHallLevel  = bd[bspotTownHall].bl;
+				townHallLevelCache  = bd[bspotTownHall].bl;
 			}
-			return new TownHallAndBuildingCount() { townHallLevel = postQueueTownHallLevel, buildingCount = postQueueBuildingCount };
+			return new TownHallAndBuildingCount() { townHallLevel = townHallLevelCache, buildingCount = buildingCountCache };
 		}
 
 		public bool AutoWalls
@@ -2399,51 +2407,48 @@ namespace COTG.Game
 		{
 
 			App.QueueOnUIThread(async () =>
-		   {
+			{
 				//               Log("CityListChange");
 
 				var selectedCityList = CityList.box.SelectedItem as CityList;
-			   IList<City> l;
-			   if (selectedCityList == null || selectedCityList.id == -1) // "all"
+				City[] l;
+				if(selectedCityList == null || selectedCityList.id == -1) // "all"
 				{
-				   l = City.myCities;
-			   }
-			   else
-			   {
-				   var cityList = selectedCityList;// CityList.Find(selectedCityList);
+					l = City.myCities;
+				}
+				else
+				{
+					var cityList = selectedCityList;// CityList.Find(selectedCityList);
 					var filtered = new List<City>();
-				   foreach (var cid in cityList.cities)
-				   {
-					   if (City.TryGet(cid, out var c))
-					   {
-						   filtered.Add(c);
-					   }
-				   }
-				   l = filtered;
-			   }
-			   l = l.Where(a => a.testContinentAndTagFilter).OrderBy((a) => a, new CityComparer()).ToArray();
-			   ShellPage.instance.cityBox.ItemsSource = l;
-			   SyncCityBox();
-			   var reserveCartsFilter = DonationTab.reserveCarts;
-			   if (DonationTab.IsVisible())
-				   DonationTab.instance.donationGrid.ItemsSource = l.Where((city) => city.cartsHome >= reserveCartsFilter)
-					   .OrderBy(a=>a.cont).ToArray();
-			   //   if (MainPage.IsVisible())
-			   {
-				   using var _ = await cityGridLock.LockAsync();
-				   City.gridCitySource.Set(l,true);
-				   foreach(var i in UserTab.spotGrids)
-					   i.DeselectAll();
-			   }
-			   //if (IncomingTab.instance.isVisible)
+					foreach(var cid in cityList.cities)
+					{
+						if(City.TryGet(cid,out var c))
+						{
+							filtered.Add(c);
+						}
+					}
+					l =  cityList.cities.Select(cid=> cid.AsCity() ).ToArray();
+				}
+				l = l.Where(a => a.testContinentAndTagFilter).OrderBy((a) => a,new CityComparer()).ToArray();
+				ShellPage.instance.cityBox.ItemsSource = l;
+				City.gridCitySource.Set(l,true);
+				Spot.selected = Spot.selected.Where(cid => City.TestContinentAndFlagFilter(cid)).ToHashSet(); // filter selected
+				SyncCityBox();
+				cityListChanged?.Invoke(l);
+				//   if (MainPage.IsVisible())
+				
+				
+					
+				
+				//if (IncomingTab.instance.isVisible)
 				//   IncomingTab.instance.refresh.Go();
 
 
 
-		   });
+			});
 		}
 
-
+		
 	}
 
 }

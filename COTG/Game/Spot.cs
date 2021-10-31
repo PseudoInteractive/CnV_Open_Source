@@ -95,7 +95,8 @@ namespace COTG.Game
 		public bool testContinentAndTagFilter => TestContinentFilter(cid) & testTagFilter;
 
 		public static bool TestContinentFilter(int cid) => (continentFilter & ContinentFilterFlag(World.CidToPackedContinent(cid))) != 0;
-
+		public static bool TestContinentAndFlagFilter(int cid) => cid.AsCity().testContinentAndTagFilter;
+		
 		// slow
 		public static bool TryGet(string nameAndRemarks,bool mine,out City spot) 
 		{
@@ -123,7 +124,7 @@ namespace COTG.Game
 
 		public void OnPropertyChanged(string members = null)
 		{
-			if(PropertyChanged is not null) ((IANotifyPropertyChanged)this).IOnPropertyChanged(null,(cid ==City.focus || cid ==City.build ));
+			if(PropertyChanged is not null) ((IANotifyPropertyChanged)this).IOnPropertyChanged(members,(cid ==City.focus || cid ==City.build ));
 		}
 		public bool isFriend => Player.IsFriend(pid); // this is set if it is one of our cities or our ally cities that we can visit
 

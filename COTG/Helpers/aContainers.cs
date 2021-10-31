@@ -32,12 +32,18 @@ namespace COTG
 		//	public void OnPropertyChanged(T city,string propertyName = "") => PropertyChanged?.Invoke(city,new PropertyChangedEventArgs(propertyName));
 
 		public event PropertyChangedEventHandler? PropertyChanged;
-		public event EventHandler<object> CurrentChanged;
-		public event CurrentChangingEventHandler CurrentChanging;
-		public event VectorChangedEventHandler<object> VectorChanged;
+	
 
 		//public object _lock;
 
+		public object[] GetObservors()
+		{
+			if(CollectionChanged is not null)
+			{
+				return CollectionChanged.GetInvocationList().Select(i => i.Target).ToArray();
+			}
+			return Array.Empty<object>();
+		}
 
 		public NotifyCollectionBase()
 		{
@@ -166,7 +172,7 @@ namespace COTG
 
 		public virtual long GetDataHash()
 		{
-			Assert(false);
+		//	Assert(false);
 			return  RuntimeHelpers.GetHashCode(this);
 		}
 
@@ -222,7 +228,7 @@ namespace COTG
 		//public ref readonly T itemRef(int id) => ref  c.ItemRef(id);
 
 
-		public override long GetDataHash()
+		public static long GetDataHash(IEnumerable<T> c)
 		{
 			var hash = 0;
 			foreach(var i in c)
@@ -324,18 +330,39 @@ namespace COTG
 			return false;
 		}
 
-		public void Set(IEnumerable<T> src,bool notify, bool itemsChanged=true)
-		{
-			//	if(notify == )
-			//	if(src.SequenceEqual(this))
-			//		return;
 
-			c=c.Clear();
-			if(!src.IsNullOrEmpty() )
-				c=c.AddRange(src);
-		
-			if(notify || itemsChanged)
-				NotifyReset(itemsChanged);
+		public void Set(IEnumerable<T> src,bool notify=true, bool itemsChanged=true)
+		{
+			if( src == null)
+			{
+				if(c.Any())
+				{
+					c= c.Clear();
+					NotifyReset();
+				}
+
+			}
+			else
+			{ 
+				// no change
+				var newHash = GetDataHash(src);
+				if(newHash == lastDataHash)
+					return;
+
+				var prior = c;
+				c= src.ToImmutableArray();
+				
+				if(notify )
+				{
+					// check for trivial simplifications
+					if(prior.Length == c.Length + 1 )
+					{
+						// todo
+					}
+					NotifyReset(itemsChanged);
+				}
+			}
+				
 		}
 
 		public void Clear(bool notify)
@@ -372,23 +399,31 @@ namespace COTG
 
 		public int IndexOf(T item) => c.IndexOf(item);
 		public void Insert(int index,T item) => Assert(false);
+		internal void ItemContentChanged()
+		{
+			foreach(var i in c)
+			{
+				if(i is IANotifyPropertyChanged changed)
+					changed.IOnPropertyChanged();
+			}
+		}
 
 
-	//	public void SyncWith( IEnumerable<T> from )
-	//	{
-	//		int iter = Count;
-	//		while(--iter >= 0)
-	//		{
-	//			var b = to[iter];
-	//			if(!from.Any(a => EqualityComparer<T>.Default.Equals(a,b)))
-	//				to.RemoveAt(iter);
-	//		}
-	//		foreach(var b in from)
-	//		{
-	//			if(!to.Any(a => EqualityComparer<T>.Default.Equals(a,b)))
-	//				to.Add(b);
-	//		}
-	//	}
+		//	public void SyncWith( IEnumerable<T> from )
+		//	{
+		//		int iter = Count;
+		//		while(--iter >= 0)
+		//		{
+		//			var b = to[iter];
+		//			if(!from.Any(a => EqualityComparer<T>.Default.Equals(a,b)))
+		//				to.RemoveAt(iter);
+		//		}
+		//		foreach(var b in from)
+		//		{
+		//			if(!to.Any(a => EqualityComparer<T>.Default.Equals(a,b)))
+		//				to.Add(b);
+		//		}
+		//	}
 	}
 
 

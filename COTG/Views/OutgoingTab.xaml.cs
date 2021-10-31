@@ -86,22 +86,21 @@ namespace COTG.Views
 
 
 
+		NotifyCollection<City> attackerSource = new();
 
 
 
-        public static void NotifyOutgoingUpdated()
+		public static void NotifyOutgoingUpdated()
         {
             if (OutgoingTab.IsVisible())
             {
                 try
                 {
-                    App.DispatchOnUIThreadLow(() =>
-                    {
-                        instance.attackerGrid.ItemsSource = Spot.defendersO.Where( w => w.testContinentFilter 
+					instance.attackerSource.Set( Spot.defendersO.Where( w => w.testContinentFilter 
 																					&& (instance.includeInternal || !w.IsAllyOrNap() ) 
-																					&& (!instance.onlyMine ||w.HasIncomingFrom(Player.activeId))).OrderBy(w=>w.firstIncoming).ToArray();
-                    });
-                }
+																					&& (!instance.onlyMine ||w.HasIncomingFrom(Player.activeId))).OrderBy(w=>w.firstIncoming) );
+					instance.attackerSource.ItemContentChanged();
+				}
                 catch (Exception e)
                 {
                     LogEx(e);

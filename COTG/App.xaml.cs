@@ -565,6 +565,7 @@ namespace COTG
 			if(wasRunning)
 				return;
 			window.Content.PreviewKeyUp+=Content_PreviewKeyUp;
+			window.Content.PreviewKeyDown+=Content_PreviewKeyDown; ;
 //			window.KeyDown+=Window_KeyDown;
 						window.Maximize();
 

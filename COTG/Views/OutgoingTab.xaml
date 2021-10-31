@@ -41,7 +41,7 @@
                         AlternationStep="2"
                         SelectionMode="Single"
 						ScrollViewer.ZoomMode="Enabled"
-
+ItemsSource="{x:Bind attackerSource,Mode=OneWay}"
                         AllowFocusOnInteraction="True"
                         SelectionChanged="defenderGrid_SelectionChanged"
                         UserGroupMode="Enabled"

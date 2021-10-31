@@ -308,6 +308,7 @@ namespace COTG
 			l.Add(a);
 			return true;
 		}
+		// May not be IEquatable<>
 		public static bool AddIfAbsentNE<T>(this List<T> l,T a) 
 		{
 			foreach(var i in l)

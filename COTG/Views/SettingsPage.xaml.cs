@@ -446,7 +446,7 @@ namespace COTG.Views
 		[NonSerialized]
 		public static float smallFontSize = 12;
 		[NonSerialized] 
-		public static float mediumGridRowHeight = 34;
+		public static float largeGridRowHeight = 34;
 		[NonSerialized]
 		public static float mediumGridRowHeight = 30;
 		[NonSerialized] 

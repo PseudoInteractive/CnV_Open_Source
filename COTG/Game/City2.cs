@@ -24,73 +24,76 @@ namespace COTG.Game
 	public partial class City
 	{
 
-		private static Building[] postQueueBuildingCache = new Building[citySpotCount];
+		private Building[] postQueueBuildingCache = null;// = new Building[citySpotCount];
 
 
-		public static int cachedCity;
-		public static int postQueueBuildingCount = -1;
-		static int postQueueTownHallLevel = -1;
+	//	public object postQueueBuildingLock = new();
+	//	public static int cachedCity;
+	//	public static int postQueueBuildingCount = -1;
+	//	static int postQueueTownHallLevel = -1;
 		public  void BuildingsOrQueueChanged()
 		{
-			if(cachedCity==cid)
-			{
-				cachedCity = 0;
-				postQueueBuildingCount = -1;
-				postQueueTownHallLevel=-1;
-			}
+			postQueueBuildingCache =null;
+			buildingCountCache = -1;
+			townHallLevelCache=0;
 		}
 		
 		public Building[] postQueueBuildings
 		{
-			get
-			{
-				if (cachedCity == cid)
-					return postQueueBuildingCache;
-				cachedCity = cid;
-				//if (!CityBuild.isPlanner)
-				//{
-				//var  buildingsCache = buildings;
-				//}
-				var rv = new Building[citySpotCount];
-				postQueueBuildingCache = rv;
-				var buildQueue= this.buildQueue.span;
-
-				//
-				// copy current buildings
-				//
-				for (var i = 0; i < citySpotCount; ++i)
+			get {
+				var rv = postQueueBuildingCache;
+				if(rv is not null)
+					return rv;
+				//lock(postQueueBuildingLock)
 				{
-					rv[i] = buildings[i];
-				}
-				if (!CityBuild.isPlanner)
-				{
-					//
-					// Apply queue
-					//
-					{
-						foreach (var q in buildQueue)
-						{
-							rv[q.bspot] = q.Apply(rv[q.bspot]);
-						}
-
-						if (ExtendedQueue.all.TryGetValue(City.build, out var bq))
-						{
-							var count = bq.queue.count;
-							var data = bq.queue.v;
-
-							for (int i = 0; i < count; ++i)
-							{
-								rv[data[i].bspot] = data[i].Apply(rv[data[i].bspot]);
-							}
-						}
-
-
-
-					}
-				}
+				//	if(cachedCity == cid)
+				//		return postQueueBuildingCache;
+					//if (!CityBuild.isPlanner)
+					//{
+					//var  buildingsCache = buildings;
+					//}
+					rv = new Building[citySpotCount];
+					postQueueBuildingCache = rv;
 				
-				//postQueuebuildingsCache = rv;
-				return rv;
+					var buildQueue = this.buildQueue.span;
+
+					//
+					// copy current buildings
+					//
+					for(var i = 0;i < citySpotCount;++i)
+					{
+						rv[i] = buildings[i];
+					}
+					if(!CityBuild.isPlanner)
+					{
+						//
+						// Apply queue
+						//
+						{
+							foreach(var q in buildQueue)
+							{
+								rv[q.bspot] = q.Apply(rv[q.bspot]);
+							}
+
+							if(ExtendedQueue.all.TryGetValue(City.build,out var bq))
+							{
+								var count = bq.queue.count;
+								var data = bq.queue.v;
+
+								for(int i = 0;i < count;++i)
+								{
+									rv[data[i].bspot] = data[i].Apply(rv[data[i].bspot]);
+								}
+							}
+
+
+
+						}
+					}
+				//	cachedCity = cid;
+				//	postQueuebuildingsCache = rv;
+					return rv;
+				}
 			}
 		}
 	//	public int postQueueTownHallLevel => CityBuild.isPlanner switch { true => 10, _ => postQueueBuildings[bspotTownHall].bl };

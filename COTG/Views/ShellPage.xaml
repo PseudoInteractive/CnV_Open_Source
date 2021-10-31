@@ -213,7 +213,7 @@ Grid.Column="0"
 		  IsEditable="True"
 TextSubmitted="CitySubmitted"
             
-                 ItemsSource="{x:Bind game:City.emptyCitySource, Mode=OneTime}"
+                 
                  VerticalAlignment="Center" ToolTipService.ToolTip="'Build City'- the city that you would build if you were building a city"
                  Margin="4" >
 							<winui:ComboBox.ItemTemplate>
