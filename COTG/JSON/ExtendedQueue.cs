@@ -78,7 +78,7 @@ namespace COTG;
 		public readonly bool pa => (elvlAndPA & 0x10) != 0;
 
 
-		public BuildQueueItem(byte slvl,byte elvl,short bid,short bspot,ushort buildTime = 0,bool pa = true)
+		public BuildQueueItem(byte slvl,byte elvl,short bid,short bspot,ushort buildTime = 0,bool pa=false)
 		{
 			Assert(elvl < 11);
 
@@ -109,7 +109,6 @@ namespace COTG;
 		public readonly string buildingName => def.Bn;
 		public readonly int proto => def.Proto;
 		public readonly bool isBuild => slvl == 0 && elvl != 0;
-		public readonly static BuildQueueItem nop = new BuildQueueItem(255,255,0,0,0);
 		internal readonly bool isValid => bid != City.bidTownHall || slvl != 0;
 
 		internal readonly bool isBuilding => !isRes;

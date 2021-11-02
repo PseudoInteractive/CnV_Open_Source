@@ -302,10 +302,10 @@ namespace COTG.Views
 			KeyboardAccelerators.Add(BuildKeyboardAccelerator(VirtualKey.Right, NavStack.ForwardInvoked, VirtualKeyModifiers.Menu));
 			// KeyboardAccelerators.Add(BuildKeyboardAccelerator(VirtualKey.GoForward, NavStack.ForwardInvoked));
 
-			KeyboardAccelerators.Add(BuildKeyboardAccelerator(VirtualKey.F5, Refresh_Invoked,VirtualKeyModifiers.Control));
-			KeyboardAccelerators.Add(BuildKeyboardAccelerator(VirtualKey.F2, LayoutAccelerator_Invoked,VirtualKeyModifiers.Control));
-			KeyboardAccelerators.Add(BuildKeyboardAccelerator(VirtualKey.F3, LayoutAccelerator_Invoked,VirtualKeyModifiers.Control));
-			KeyboardAccelerators.Add(BuildKeyboardAccelerator(VirtualKey.F4, LayoutAccelerator_Invoked,VirtualKeyModifiers.Control));
+//			KeyboardAccelerators.Add(BuildKeyboardAccelerator(VirtualKey.F5, Refresh_Invoked,VirtualKeyModifiers.Control));
+	//		KeyboardAccelerators.Add(BuildKeyboardAccelerator(VirtualKey.F2, LayoutAccelerator_Invoked,VirtualKeyModifiers.Control));
+	//		KeyboardAccelerators.Add(BuildKeyboardAccelerator(VirtualKey.F3, LayoutAccelerator_Invoked,VirtualKeyModifiers.Control));
+	//		KeyboardAccelerators.Add(BuildKeyboardAccelerator(VirtualKey.F4, LayoutAccelerator_Invoked,VirtualKeyModifiers.Control));
 			IsLoggedIn = true;// IdentityService.IsLoggedIn();
 			IsAuthorized = true;// IsLoggedIn && IdentityService.IsAuthorized();
 								// grid.hor
@@ -322,8 +322,8 @@ namespace COTG.Views
 
 			//SystemNavigationManager.GetForCurrentView().BackRequested += ShellPage_BackRequested;
 			// PointerPressed+= PointerPressedCB; HomeButtonTip.IsOpen = true;
-			this.ProcessKeyboardAccelerators+=ShellPage_ProcessKeyboardAccelerators;
-			this.PointerPressed+=ShellPage_PointerPressed;
+		//	this.ProcessKeyboardAccelerators+=ShellPage_ProcessKeyboardAccelerators;
+			//this.PointerPressed+=ShellPage_PointerPressed;
 			//App.SetupCoreWindowInputHooks();
 			//var displayInformation = DisplayInformation.GetForCurrentView();
 			//var screenSize = new Size(displayInformation.ScreenWidthInRawPixels,
@@ -366,7 +366,7 @@ namespace COTG.Views
 			//});
 		}
 
-		static void AdjustLayout(int delta)
+		public static void AdjustLayout(int delta)
 		{
 			layout+=delta;
 			if(layout >= Layout.count)
@@ -375,34 +375,34 @@ namespace COTG.Views
 				layout = (Layout)(Layout.count-1);
 			updateHtmlOffsets.Go(true);
 		}
-		private void ShellPage_PointerPressed(object sender,PointerRoutedEventArgs e)
-		{
-			if(e.GetCurrentPoint(this).Properties.IsMiddleButtonPressed)
-			{
-				AdjustLayout(1);
-			}
-		}
+		//private void ShellPage_PointerPressed(object sender,PointerRoutedEventArgs e)
+		//{
+		//	if(e.GetCurrentPoint(this).Properties.IsMiddleButtonPressed)
+		//	{
+		//		AdjustLayout(1);
+		//	}
+		//}
 
-		private void ShellPage_ProcessKeyboardAccelerators(UIElement sender,ProcessKeyboardAcceleratorEventArgs args)
-		{
-		//	Trace($"{sender} {args.Key} {args.Modifiers}");
-			args.Modifiers.UpdateKeyModifiers();
-			if( args.Key == VirtualKey.F3)
-			{
-				AdjustLayout(-1);
-				args.Handled=true;
-			}
-			if(args.Key == VirtualKey.F4)
-			{
-				AdjustLayout(1);
-				args.Handled=true;
-			}
-			if(args.Key == VirtualKey.F5)
-			{
-				OnRefresh();
-				args.Handled=true;
-			}
-		}
+		//private void ShellPage_ProcessKeyboardAccelerators(UIElement sender,ProcessKeyboardAcceleratorEventArgs args)
+		//{
+		////	Trace($"{sender} {args.Key} {args.Modifiers}");
+		//	args.Modifiers.UpdateKeyModifiers();
+		//	if( args.Key == VirtualKey.F3)
+		//	{
+		//		AdjustLayout(-1);
+		//		args.Handled=true;
+		//	}
+		//	if(args.Key == VirtualKey.F4)
+		//	{
+		//		AdjustLayout(1);
+		//		args.Handled=true;
+		//	}
+		//	if(args.Key == VirtualKey.F5)
+		//	{
+		//		OnRefresh();
+		//		args.Handled=true;
+		//	}
+		//}
 
 
 		//private void FocusManager_GotFocus(object sender,FocusManagerGotFocusEventArgs e)
@@ -699,7 +699,7 @@ namespace COTG.Views
 			return Task.CompletedTask;
 		}
 
-		private static void OnRefresh()
+		public static void OnRefresh()
 		{
 			if(JSClient.world == 0)
 			{

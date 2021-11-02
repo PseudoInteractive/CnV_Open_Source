@@ -30,14 +30,16 @@ namespace COTG.Views
 
     public sealed partial class NearDefenseTab : UserTab
 	{
+
         public static NearDefenseTab instance;
         public static bool IsVisible() => instance.isFocused;
         public bool waitReturn { get; set; }
 		public bool sendViaWater { get; set; }
 
 		public static NotifyCollection<City> defendants = new();
+		public static NotifyCollection<Supporter> supporters = new();
 
-        public static bool includeOffense;
+		public static bool includeOffense;
         public float filterTime=6;
         public int filterTSTotal=10000;
         public int filterTSHome;
@@ -48,7 +50,6 @@ namespace COTG.Views
         public int _filterTSTotal { get => filterTSTotal; set { filterTSTotal = value; refresh.Go(); } }
         public int _filterTSHome { get => filterTSHome; set { filterTSHome = value; refresh.Go(); } } // need at this this many ts at home to be considered for def
         public DateTimeOffset arriveAt { get; set; } = AUtil.dateTimeZero;
-        public static NotifyCollection<Supporter> supporters = new NotifyCollection<Supporter>();
         public static SupportByTroopType [] supportByTroopTypeEmpty = Array.Empty<SupportByTroopType>();
         public static int[] splitArray = { 1, 2, 3, 4, 5 };
         public static bool Include(TroopTypeCount tt) => includeOffense || tt.isDef;
@@ -93,7 +94,7 @@ namespace COTG.Views
 					var task1 = RaidOverview.Send();
 					await task0;
 					await task1;
-					NotifyCollection<Supporter> s = new();
+					var s = new List<Supporter>();
 					//                supportGrid.ItemsSource = null;
 					{
 					foreach (var city in City.gridCitySource)
@@ -128,7 +129,7 @@ namespace COTG.Views
 							supporter = new Supporter() { city = city };
 						}
 						var troops = (onlyHome ? city.troopsHome : city.troopsTotal);
-						s.Add(supporter,true);
+						s.Add(supporter);
 						supporter.tSend.Clear();
 						supporter.validTargets = validCount;
 						if (viaWater)

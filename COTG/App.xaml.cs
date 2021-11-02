@@ -292,6 +292,7 @@ namespace COTG
 
 		public static void OnKeyUp(VirtualKey key)
 		{
+			App.UpdateKeyStates();
 			//Trace("KeyUp" + key);
 			switch (key)
 			{
@@ -307,7 +308,15 @@ namespace COTG
 
 				//	controlPressed = false;
 					break;
-
+				case VirtualKey.F3:
+					ShellPage.AdjustLayout(-1);
+					break;
+				case VirtualKey.F4:
+					ShellPage.AdjustLayout(1);
+					break;
+				case VirtualKey.F5:
+					ShellPage.OnRefresh();
+					break;
 			}
 			InputRecieved();
 		}
@@ -325,7 +334,7 @@ namespace COTG
 		public static void OnKeyDown(VirtualKey key)
 		{
 			///Trace("KeyDown" + key);
-
+			App.UpdateKeyStates();
 			switch(key)
 			{
 				case VirtualKey.Shift:
@@ -523,6 +532,7 @@ namespace COTG
 		private void Content_PreviewKeyUp(object sender,Microsoft.UI.Xaml.Input.KeyRoutedEventArgs e)
 		{
 			OnKeyUp(e.Key);
+			
 		}
 
 		private void Content_PreviewKeyDown(object sender,Microsoft.UI.Xaml.Input.KeyRoutedEventArgs e)

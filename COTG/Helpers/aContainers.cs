@@ -20,8 +20,17 @@ using Windows.Foundation;
 
 namespace COTG
 {
-	public class NotifyCollectionBase: INotifyPropertyChanged, INotifyCollectionChanged 
+	public abstract class NotifyCollectionBase: INotifyPropertyChanged, INotifyCollectionChanged 
 	{
+		public static long GetDataHash<T>(IEnumerable<T> c)
+		{
+			var hash = 0;
+			foreach(var i in c)
+			{
+				hash = hash*13 + RuntimeHelpers.GetHashCode(i);
+			}
+			return hash;
+		}
 		public static ImmutableArray<NotifyCollectionBase> all = ImmutableArray<NotifyCollectionBase>.Empty;
 
 		public bool hasNotifications => (CollectionChanged is not null | PropertyChanged is not null);
@@ -148,16 +157,14 @@ namespace COTG
 			}
 		}
 
-	
+		public abstract long GetCurrentHashData();
 
-	
-
-		public void NotifyReset(bool itemsChanged = true, bool skipHashCheck=false)
+		public void NotifyResetWithHash(long newHash, bool itemsChanged = true,bool skipHashCheck = false)
 		{
 
-			var newHash = GetDataHash();
+//			var newHash = GetDataHash(c);
 			var hashChanged = newHash != lastDataHash;
-			if(!hashChanged && !skipHashCheck )
+			if(!hashChanged && !skipHashCheck)
 				return;
 			lastDataHash= newHash;
 			if(hasNotifications)
@@ -166,15 +173,23 @@ namespace COTG
 			}
 
 		}
+
+
+		public void NotifyReset(bool itemsChanged = true,bool skipHashCheck = false)
+		{
+			NotifyResetWithHash(GetCurrentHashData(),itemsChanged,skipHashCheck);
+		}
+
+
 		protected long lastDataHash;
 		static Debounce ChangesDebounce = new(ProcessChanges) { runOnUiThread = true,debounceDelay=300,throttleDelay=1000 };
 		public void ClearHash() => lastDataHash=-1L;
 
-		public virtual long GetDataHash()
-		{
-		//	Assert(false);
-			return  RuntimeHelpers.GetHashCode(this);
-		}
+		//public virtual long GetDataHash()
+		//{
+		////	Assert(false);
+		//	return  RuntimeHelpers.GetHashCode(this);
+		//}
 
 		public bool MoveCurrentTo(object item) => throw new NotImplementedException();
 		public bool MoveCurrentToPosition(int index) => throw new NotImplementedException();
@@ -198,7 +213,7 @@ namespace COTG
 
 	public class NotifyCollection< T> :NotifyCollectionBase, ICollection<T>, IEnumerable<T>, IEnumerable, IList<T>, IReadOnlyCollection<T>, IReadOnlyList<T>, ICollection, IList where T : class
 	{
-
+		
 		public ImmutableArray<T> c = ImmutableArray<T>.Empty;
 
 
@@ -227,6 +242,10 @@ namespace COTG
 
 		//public ref readonly T itemRef(int id) => ref  c.ItemRef(id);
 
+		public new void NotifyReset(bool itemsChanged = true,bool skipHashCheck = false)
+		{
+			base.NotifyResetWithHash(GetDataHash(c),itemsChanged,skipHashCheck);
+		}
 
 		public static long GetDataHash(IEnumerable<T> c)
 		{
@@ -237,9 +256,11 @@ namespace COTG
 			}
 			return hash;
 		}
+		public override long GetCurrentHashData()
+		{
+			return GetDataHash(c);
+		}
 
-
-		
 
 		public void NotifyRemoveAt(int id,T removed)
 		{
@@ -348,7 +369,6 @@ namespace COTG
 				var newHash = GetDataHash(src);
 				if(newHash == lastDataHash)
 					return;
-
 				var prior = c;
 				c= src.ToImmutableArray();
 				

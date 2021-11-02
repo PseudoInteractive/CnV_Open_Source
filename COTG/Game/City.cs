@@ -894,7 +894,8 @@ namespace COTG.Game
 							var bid = bdi.GetAsInt("bid");
 							var bl = bdi.GetAsByte("bl");
 							var bi = BuildingDef.BidToId(bid);
-
+							if(bi== 0)
+								Assert(bl==0);
 							if ((put == 0) && (bid == 0))
 							{
 								buildings[put] = new Building(BuildingDef.BidToId(bidWall), (byte)bl);
@@ -1624,7 +1625,6 @@ namespace COTG.Game
 		public bool autoTowers;
 		public byte autobuildCabinLevel = (byte)SettingsPage.cottageLevel;
 		public sbyte buildingCountCache = -1;
-		public byte townHallLevelCache = 0;
 		public bool wantCastle;
 		public bool wantSorcTower;
 		public int Bldgs => buildingCountCache; // for DataGrid
@@ -1984,7 +1984,7 @@ namespace COTG.Game
 
 		public BuildingCount GetBuildingCounts() => GetBuildingCounts(postQueueBuildings );
 
-		public BuildingCount GetBuildingCounts(Building [] buildings, bool recurse=true )
+		public BuildingCount GetBuildingCounts(Building [] buildings)
 		{
 			BuildingCount rv = new();
 			rv.wallLevel = buildings[0].bl;
@@ -2196,23 +2196,41 @@ namespace COTG.Game
 					// we will use them later
 					bd = GetLayoutBuildings();
 				}
-				var count = 0;
 
-				for(var i = 1;i < citySpotCount-1;++i)
+
+				//var count0 =-1;
+				//for(var i = 1;i < citySpotCount-1;++i)
+				//{
+				//	var b = bd[i];
+				//	if(!b.requiresBuildingSlot)
+				//		continue;
+				//	if(b.bl == 0)
+				//	{
+				//		Assert(b.id == 0);
+				//		continue;
+				//	}
+				//	if(b.id==0)
+				//	{
+				//		Assert(false);
+				//		continue;
+				//	}
+				//	++count0;
+				//}
+
+
+					var count = 0;
+
+				foreach(var i in CityBuild.buildingSpots)
 				{
 					var b = bd[i];
-					if(i == bspotTownHall)
-					{
-					 // nothing
-					}
-					else if(b.bl > 0 && !b.isTower)
+					if(b.id !=0 && b.bl > 0 )
 						++count;
 				}
+				//Assert(count==count0);
 				SetBuildingCount(count);
 
-				townHallLevelCache  = bd[bspotTownHall].bl;
 			}
-			return new TownHallAndBuildingCount() { townHallLevel = townHallLevelCache, buildingCount = buildingCountCache };
+			return new TownHallAndBuildingCount() { townHallLevel = postQueueBuildings[bspotTownHall].bl, buildingCount = buildingCountCache };
 		}
 
 		public bool AutoWalls
@@ -2231,6 +2249,8 @@ namespace COTG.Game
 	}
 	public static class CityHelpers
 	{
+		
+
 		public static int CidOr0(this City c) => c != null ? c.cid : 0;
 		public static City AsCity(this int cid) => City.Get(cid);
 		public static bool TestContinentFilter(this int cid) => Spot.TestContinentFilter(cid);

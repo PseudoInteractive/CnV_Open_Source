@@ -343,7 +343,7 @@ namespace COTG.Views
 			//}
 			menuType = _menuType;
 			var city = City.GetBuild();
-			var townHallLevel = city.postQueueBuildings[City.bspotTownHall].bl;
+			//var townHallLevel = city.postQueueBuildings[City.bspotTownHall].bl;
 
 			instance.TogglePlanner.Label = isPlanner ? "Build" : "Planner";
 

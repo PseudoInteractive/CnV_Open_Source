@@ -101,7 +101,7 @@ namespace COTG.Game
 					{
 
 						await Task.Delay(1000);
-					} while (World.initialized);
+					} while (!World.initialized);
 				}
 
 			//	Debounce.Q(ShellPage.WorkStart(work));
@@ -115,7 +115,7 @@ namespace COTG.Game
 
 					for (; ; )
 					{
-						if (!Alliance.all.IsNullOrEmpty())
+						if (Alliance.all.Any())
 							break;
 						await Task.Delay(1000);
 					}

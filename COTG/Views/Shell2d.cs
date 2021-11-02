@@ -169,7 +169,7 @@ namespace COTG.Views
 				ShellPage.canvas.IsHitTestVisible = wantVisible;
 				//if(!wantVisible)
 				//	JSClient.view.Focus(FocusState.Programmatic);
-				TakeFocus();
+			//	TakeFocus();
 			//	note|=1;
 			}
 
@@ -200,26 +200,26 @@ namespace COTG.Views
 			var note = 0;
 			if(isOverCanvas)
 			{
-				if((canvas.FocusState is FocusState.Unfocused ) || forceFocus)
-				{
-					forceFocus=false;
-					//if(JSClient.view is not null && App.IsKeyPressedShift())
-			{
-				//		var f = JSClient.view.Focus(FocusState.Programmatic);
-				//		Assert(f);
-					}
-					//else if( App.IsKeyPressedControl())
-					{
-					 var f= ChatTab.tabPage.Focus(FocusState.Programmatic);
-						Assert(f);
-					}
-//App.QueueOnUIThread( ()=>
-					{
-								var f = canvas.Focus(FocusState.Programmatic);
-								Assert(f);
-					} //);
-					note|=2;
-				}
+//				if((canvas.FocusState is FocusState.Unfocused ) || forceFocus)
+//				{
+//					forceFocus=false;
+//					//if(JSClient.view is not null && App.IsKeyPressedShift())
+//			{
+//				//		var f = JSClient.view.Focus(FocusState.Programmatic);
+//				//		Assert(f);
+//					}
+//					//else if( App.IsKeyPressedControl())
+//					{
+//					 var f= ChatTab.tabPage.Focus(FocusState.Programmatic);
+//						Assert(f);
+//					}
+////App.QueueOnUIThread( ()=>
+//					{
+//								var f = canvas.Focus(FocusState.Programmatic);
+//								Assert(f);
+//					} //);
+//					note|=2;
+//				}
 			}
 //#if DEBUG
 //			if(note!=0)
@@ -389,10 +389,10 @@ namespace COTG.Views
 
 		//}
 
-		private void Canvas_ProcessKeyboardAccelerators(UIElement sender,ProcessKeyboardAcceleratorEventArgs args)
-		{
-			Log($"Key!!Canvas {args.Key} {args}");
-		}
+		//private void Canvas_ProcessKeyboardAccelerators(UIElement sender,ProcessKeyboardAcceleratorEventArgs args)
+		//{
+		//	Log($"Key!!Canvas {args.Key} {args}");
+		//}
 
 		private void KeyboardProxy_PointerWheelChanged(object sender,PointerRoutedEventArgs e)
 		{

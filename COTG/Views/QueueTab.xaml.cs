@@ -485,6 +485,25 @@ namespace COTG.Views
 			}
 			return rv;
 		}
+		internal static Building FindFirstUnfinishedBuilding(City city)
+		{
+			List<(int x, int y)> rv = new();
+
+			// search from center outwards
+			for(var cy = span0;cy <= span1;++cy)
+			{
+				for(var cx = span0;cx <= span1;++cx)
+				{
+					var c = (cx, cy);// (int x, int y) c = RandCitySpot();
+					var b = city.postQueueBuildings[City.XYToId(c)];
+					if(b.isBuilding && !b.isCabin && b.bl < 10 )
+					{
+						return b;
+					}
+				}
+			}
+			return default;
+		}
 		internal  static (int x, int y) RandomSpotForBuilding(City city) => IdToXY(city.FindFreeSpot());
 
 		//private async void SplatAll(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)

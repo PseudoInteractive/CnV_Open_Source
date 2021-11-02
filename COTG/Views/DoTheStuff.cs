@@ -405,6 +405,10 @@ namespace COTG;
 							}
 
 						}
+						else
+						{
+						Note.Show($"Main buildings still building (i.e. {QueueTab.FindFirstUnfinishedBuilding(city)})");
+					}
 						Assert(city.isBuild);
 
 						break;

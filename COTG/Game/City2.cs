@@ -35,7 +35,6 @@ namespace COTG.Game
 		{
 			postQueueBuildingCache =null;
 			buildingCountCache = -1;
-			townHallLevelCache=0;
 		}
 		
 		public Building[] postQueueBuildings
@@ -63,6 +62,7 @@ namespace COTG.Game
 					for(var i = 0;i < citySpotCount;++i)
 					{
 						rv[i] = buildings[i];
+						rv[i].AssertValid();
 					}
 					if(!CityBuild.isPlanner)
 					{
@@ -73,6 +73,8 @@ namespace COTG.Game
 							foreach(var q in buildQueue)
 							{
 								rv[q.bspot] = q.Apply(rv[q.bspot]);
+								rv[q.bspot].AssertValid();
+
 							}
 
 							if(ExtendedQueue.all.TryGetValue(City.build,out var bq))
@@ -83,6 +85,8 @@ namespace COTG.Game
 								for(int i = 0;i < count;++i)
 								{
 									rv[data[i].bspot] = data[i].Apply(rv[data[i].bspot]);
+									rv[data[i].bspot].AssertValid();
+
 								}
 							}
 
@@ -96,7 +100,9 @@ namespace COTG.Game
 				}
 			}
 		}
-	//	public int postQueueTownHallLevel => CityBuild.isPlanner switch { true => 10, _ => postQueueBuildings[bspotTownHall].bl };
+
+		
+		//	public int postQueueTownHallLevel => CityBuild.isPlanner switch { true => 10, _ => postQueueBuildings[bspotTownHall].bl };
 
 		public async Task<int> AnyHub(bool requestHub)
 		{
@@ -341,9 +347,9 @@ namespace COTG.Game
 				}
 			}
 		}
-		public async Task Demolish(int id, bool dryRun)
+		public async Task Demolish(int bspot, bool dryRun)
 		{
-			var sel = GetBuildingOrLayout(id);
+			var sel = GetBuildingOrLayout(bspot);
 			if (sel.isEmpty)
 			{
 				Status("Already destroyed", dryRun);
@@ -361,17 +367,17 @@ namespace COTG.Game
 				{
 					if (isPlanner)
 					{
-						layoutWritable[id] = BidToLayout(0).c;
+						layoutWritable[bspot] = BidToLayout(0).c;
 						await PlannerTab.BuildingsChanged(this);
 					}
 					else
 					{
-						await Enqueue(new BuildQueueItem(sel.bl, 0, sel.bid, (short)id));
+						await Enqueue(new BuildQueueItem(sel.bl, 0, sel.bid, (short)bspot));
 					}
 				}
 				else
 				{
-					DrawSprite(IdToXY(id), decalBuildingInvalid, 0.312f);
+					DrawSprite(IdToXY(bspot), decalBuildingInvalid, 0.312f);
 				}
 			}
 		}
@@ -398,8 +404,10 @@ namespace COTG.Game
 		}
 		public async Task<int> EnqueueUpgrade(int elvl, int spot)
 		{
+
 			int rv = 0;
 			var b = postQueueBuildings[spot];
+			Assert(elvl >= b.bl);
 			var bid = b.bid;
 			Assert(bid != 0);
 			for (var level = b.bl; level < elvl.Min(10); ++level)

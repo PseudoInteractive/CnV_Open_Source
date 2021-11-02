@@ -25,14 +25,12 @@ AllowFocusOnInteraction="True"
                         CanUserChooseColumns="True"
                         ColumnResizeHandleDisplayMode="Always"
 					    FontSize="{StaticResource MediumFontSize}"
-                               IsTextScaleFactorEnabled="False"
                          GroupPanelPosition="Bottom"
                         ItemsSource="{x:Bind history, Mode=OneWay}"
                         RowHeight="{StaticResource ShortGridRowHeight}"
                         AlternationStep="2"
                         SelectionMode="Single"
                         SelectionUnit="Row"
-								 						ScrollViewer.ZoomMode="Enabled"
 
                         UserSortMode="Auto">
             

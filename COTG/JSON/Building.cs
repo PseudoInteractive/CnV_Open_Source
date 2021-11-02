@@ -27,7 +27,7 @@ namespace COTG
 		public readonly bool isCabin => id == BuildingDef.idCabin;
 		public readonly bool isTemple => id == BuildingDef.BidToId(City.bidTemple);
 
-		public readonly void AssertValid() => COTG.Debug.Assert( isRes || bl!=0 );
+		public readonly void AssertValid() => COTG.Debug.Assert(bid== City.bidWall || (id==0 ? bl==0 : (isRes||bl!=0)));
 		public readonly bool isMilitary => def.isMilitary;
 		public readonly bool isBarracks => def.isBarracks;
 
@@ -52,6 +52,7 @@ namespace COTG
 		//	[J("rbt", NullValueHandling = N.Ignore)] public Dictionary<string, Rb> Rbt { get; set; }
 		//	[J("rb", NullValueHandling = N.Ignore)] public Rb[] Rb { get; set; }
 		//	[J("rtt", NullValueHandling = N.Ignore)] public Rbb[] Rtt { get; set; }
+	
 	}
 
 	//struct BuildingArrayPoolPolicy:IPooledObjectPolicy<Building[]>
