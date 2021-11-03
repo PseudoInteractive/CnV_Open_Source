@@ -308,6 +308,8 @@ namespace COTG
 			l.Add(a);
 			return true;
 		}
+
+
 		// May not be IEquatable<>
 		public static bool AddIfAbsentNE<T>(this List<T> l,T a) 
 		{
@@ -322,13 +324,15 @@ namespace COTG
 			return true;
 		}
 
-		public static bool AddIfAbsent<T>(ref this ImmutableArray<T> l,T a) where T : IEquatable<T>
+		public static bool AddIfAbsent<T>(ref this ImmutableArray<T> l,T a)
 		{
 			if(l.Contains(a))
 				return false;
 			l = l.Add(a);
 			return true;
 		}
+
+		
 
 		public static T[] ArrayAppend<T>(this T[] l, T a)
 		{

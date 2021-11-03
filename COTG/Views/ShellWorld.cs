@@ -789,7 +789,7 @@ namespace COTG.Views
 	
 
 
-		private static void Canvas_PointerPressed((Windows.Foundation.Point Position, uint PointerId,
+		public static void Canvas_PointerPressed((Windows.Foundation.Point Position, uint PointerId,
 																			bool IsInContact, ulong Timestamp, PointerUpdateKind PointerUpdateKind) point)
 		{
 
@@ -876,6 +876,7 @@ namespace COTG.Views
 
 		public static void Canvas_PointerPressedJS(int x, int y, Windows.UI.Input.PointerUpdateKind kind)
 		{
+			App.UpdateKeyStates();
 			//e.KeyModifiers.UpdateKeyModifiers();
 
 		//	Assert(isOverPopup == false);
@@ -1079,8 +1080,8 @@ namespace COTG.Views
 		}
 		public static void UpdateMousePosition(Windows.Foundation.Point point)
 		{
-			var pointC = CanvasPointFromDip(point);
-			mousePosition = pointC;
+			mousePosition = point.ToVector2();
+			
 			//Note.Show($"{pointC.X} {pointC.Y}");
 
 			//			var windowsPosition = e.CurrentPoint.Position;

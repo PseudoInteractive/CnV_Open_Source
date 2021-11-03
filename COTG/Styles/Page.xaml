@@ -105,7 +105,7 @@
 		<Setter Property="BorderThickness" Value="1" />
 		<Setter Property="BorderBrush" Value="{ThemeResource SystemControlBackgroundAccentRevealBorderBrush}"/>
 		<Setter Property="ColumnDataOperationsMode" Value="Inline" />
-		<Setter Property="UserGroupMode" Value ="auto" />
+		<Setter Property="UserGroupMode" Value ="Auto" />
 		<Setter Property="AlternationStep" Value="2" />
 		<Setter Property="CanUserChooseColumns" Value ="True" />
 		<Setter Property="FontSize" Value="{StaticResource SmallFontSize}" />

@@ -20,9 +20,9 @@
 	<Grid x:Name="cityBaseGrid">
 
 		<Grid.RowDefinitions>
-			<RowDefinition Height="auto" />
-			<RowDefinition Height="auto" />
-			<RowDefinition Height="auto" />
+			<RowDefinition Height="Auto" />
+			<RowDefinition Height="Auto" />
+			<RowDefinition Height="Auto" />
 			<RowDefinition Height="*" />
 		</Grid.RowDefinitions>
 
@@ -49,7 +49,7 @@
 							GroupPanelPosition="Bottom"
 							SelectionUnit="Row"
 							Loaded="DataGridLoaded"
-							Tag="Raid"
+							
 							>
 	
 			<!--<tg:RadDataGrid.Commands>

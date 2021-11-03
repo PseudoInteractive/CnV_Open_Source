@@ -64,7 +64,8 @@ namespace COTG
 		{
 			all = await Json.FromContent<Dictionary<int, BuildingDef>>("buildingDef");
 			byte counter = 0;
-			idToBid = new BuildingDef[byte.MaxValue];
+			
+			idToBid = new BuildingDef[256];
 		//	prototypes = new Dictionary<int, BuildingDef>();
 			foreach (var i in all)
 			{
@@ -88,7 +89,7 @@ namespace COTG
 			for (; ; )
 			{
 				idToBid[counter] = idToBid[0]; // The first building is null
-				if (++counter == byte.MaxValue)
+				if(counter++ >= idToBid.Length)
 					break;
 			}
 			idCabin = BidToId(City.bidCottage);

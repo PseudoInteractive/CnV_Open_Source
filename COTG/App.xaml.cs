@@ -66,6 +66,9 @@ using Microsoft.UI.Xaml.Input;
 using System;
 using Microsoft.Extensions.DependencyInjection;
 //using Windows.UI.Core;
+using System.Runtime.InteropServices;
+using Microsoft.UI;
+using WinRT;
 
 namespace COTG
 {
@@ -101,9 +104,9 @@ namespace COTG
 			//	// The storageTask.Result is false when the size cannot be honored.
 			//});
 			
-		//	AppCenter.Configure("0b4c4039-3680-41bf-b7d7-685eb68e21d2");
+			AppCenter.Configure("0b4c4039-3680-41bf-b7d7-685eb68e21d2");
 		//	AppCenter.LogLevel = System.Diagnostics.Debugger.IsAttached ? Microsoft.AppCenter.LogLevel.Warn : Microsoft.AppCenter.LogLevel.None;
-			AppCenter.Start("0b4c4039-3680-41bf-b7d7-685eb68e21d2",
+			AppCenter.Start(
 			   typeof(Analytics)
 #if CRASHES
 			   , typeof(Crashes)
@@ -151,6 +154,7 @@ namespace COTG
 
 		public App()
 		{
+			Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense("NTI5MjE3QDMxMzkyZTMzMmUzMFZNeEhhNVA0S1B4blBBVjJvWCtRS1NDanJJVnJpSEljWndpbXduU3Z2dVk9");
 			services = ConfigureServices();
 
 		InitializeComponent();
@@ -333,7 +337,7 @@ namespace COTG
 		//}
 		public static void OnKeyDown(VirtualKey key)
 		{
-			///Trace("KeyDown" + key);
+			Trace("KeyDown" + key);
 			App.UpdateKeyStates();
 			switch(key)
 			{
@@ -400,7 +404,7 @@ namespace COTG
 
 					Crashes.TrackError(e.Exception);
 #endif
-					AAnalytics.Track("UnhandledException", new Dictionary<string, string> { { "message", e.Message.Truncate(120) } });
+					AAnalytics.Track("UnhandledException", new Dictionary<string, string> { { "message", e.Message.Truncate(64) } });
 				}
 				catch (Exception ex2)
 				{
@@ -430,7 +434,8 @@ namespace COTG
 				
 				window= new();
 				//	window.
-
+				
+				
 				//var view = DisplayInformation.GetForCurrentView();
 				var uwpArgs = AppInstance.GetActivatedEventArgs();//args.UWPLaunchActivatedEventArgs;
 				if(uwpArgs.Kind == Windows.ApplicationModel.Activation.ActivationKind.Protocol) 
@@ -537,6 +542,7 @@ namespace COTG
 
 		private void Content_PreviewKeyDown(object sender,Microsoft.UI.Xaml.Input.KeyRoutedEventArgs e)
 		{
+			Trace("PreviewKeyDown");
 			OnKeyDown(e.Key);
 		}
 
@@ -1173,9 +1179,6 @@ namespace COTG
 	//	else
 	//		await d.RunAsync(DispatcherQueuePriority.Low, action);
 	//}
-
-
-
 
 
 	// We only have 1 UI thread here

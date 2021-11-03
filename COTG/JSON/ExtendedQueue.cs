@@ -249,6 +249,7 @@ namespace COTG;
 			JSClient.coreWebView.PostWebMessageAsString("{\"poll\":100}");
 			return Task.CompletedTask;
 		}
+	static string pollResult;
 
 		public async void Process(int initialDelay = 1000)
 		{
@@ -285,12 +286,11 @@ namespace COTG;
 				//				Post.Get("/overview/mconv.php",$"a={cid}");
 					for(int i = 0;i<3;++i)
 					{
-						bool gotCity = false;
-						await GetCity.Post(cid, (_jse,_city)=> { if(_jse.TryGetProperty("bq",out _)) gotCity=true; } ).ConfigureAwait(false);
-						if(gotCity)
+						var gotBQ = await city.DoPoll();
+						if(gotBQ)
 							break;
 						Trace($"{city.nameMarkdown} failed to get BQ {i} bq:{city.buildQueue.Length} eq:{queue.Length}");
-						await Post.Get("/includes/poll2.php",$"cid={cid}&ai=0&ss={JSClient.ppss}",onlyHeaders: true);
+						//Trace(pollResult);
 						await Task.Delay(500);
 					}
 				//	var queueValid = false;
@@ -726,12 +726,14 @@ namespace COTG;
 					if(cid != City.build)
 					{
 						await Task.Delay(1200).ConfigureAwait(false);
-						Post.Get("/includes/poll2.php",$"cid={cid}&ai=0&ss={JSClient.ppss}", onlyHeaders:true);
-						
+					Debounce.Q(uniqueNumber: cid*113,debounceT: 200,throttleT: 4000,action: async () =>
+					{
+						await city.DoPoll();
 
-						// todo:  Read city data
-						//var cotgQ = city.buildQueue;
-						var anyPa = false;
+					});
+					// todo:  Read city data
+					//var cotgQ = city.buildQueue;
+					var anyPa = false;
 						{
 							var bt = 0;
 							// skip the first
@@ -814,78 +816,80 @@ namespace COTG;
 			}
 		}
 
-		//private static bool GetBQInfo(ref int delay, City city)
-		//{
-		//	var lg = city.buildQueue.Length;
-		//	if (lg > 0)
-		//	{
-		//		delay = delay.Max(JSClient.ServerTimeOffsetMs(city.buildQueue[ (lg-2).Max(0) ].de ).Min(15*60*1000) ); 
-		//	}
-		//	try
-		//	{
-		//		if (jsCity.TryGetProperty("bq", out var bq))
-		//		{
-		//			if (bq.ValueKind == JsonValueKind.Array )
-		//			{
-		//				result = true;
+	
 
-		//				//{
-		//				//	var delays = new float[cotgQLength*2];
-		//				//	var put = 0;
-		//				//	foreach (var cmd in bq.EnumerateArray())
-		//				//	{
-		//				//		delays[put++] = JSClient.ServerTimeOffset(cmd.GetAsInt64("ds"));
-		//				//		delays[put++] = JSClient.ServerTimeOffset(cmd.GetAsInt64("de"));
-		//				//	}
-		//				//	ShellPage.debugTip = delays.ToArrayString();
-		//				//	Log(delays.ToArrayString());
-		//				//}
-		//				if (cotgQLength > 0)
-		//				{
-		//					if (delay > 15 * 60 * 1000) /// never more than 15 minutes please
-		//					{
-		//						//	Assert(false);
+	//private static bool GetBQInfo(ref int delay, City city)
+	//{
+	//	var lg = city.buildQueue.Length;
+	//	if (lg > 0)
+	//	{
+	//		delay = delay.Max(JSClient.ServerTimeOffsetMs(city.buildQueue[ (lg-2).Max(0) ].de ).Min(15*60*1000) ); 
+	//	}
+	//	try
+	//	{
+	//		if (jsCity.TryGetProperty("bq", out var bq))
+	//		{
+	//			if (bq.ValueKind == JsonValueKind.Array )
+	//			{
+	//				result = true;
 
-		//						delay = 15 * 60 * 1000;
-		//					}
+	//				//{
+	//				//	var delays = new float[cotgQLength*2];
+	//				//	var put = 0;
+	//				//	foreach (var cmd in bq.EnumerateArray())
+	//				//	{
+	//				//		delays[put++] = JSClient.ServerTimeOffset(cmd.GetAsInt64("ds"));
+	//				//		delays[put++] = JSClient.ServerTimeOffset(cmd.GetAsInt64("de"));
+	//				//	}
+	//				//	ShellPage.debugTip = delays.ToArrayString();
+	//				//	Log(delays.ToArrayString());
+	//				//}
+	//				if (cotgQLength > 0)
+	//				{
+	//					if (delay > 15 * 60 * 1000) /// never more than 15 minutes please
+	//					{
+	//						//	Assert(false);
 
-		//				//	if ((City.safeBuildQueueLength > cotgQLength))
-		//					{
-		//						cotgQ = new DArray<BuildQueueItem>(128);
-		//						foreach (var cmd in bq.EnumerateArrayOrObject())
-		//						{
-		//							cotgQ.Add(new BuildQueueItem(
-		//										 cmd.GetAsByte("slvl"),
-		//										 cmd.GetAsByte("elvl"),
-		//										 cmd.GetAsUShort("brep"),
-		//										 cmd.GetAsUShort("bspot")
-		//										 ));
+	//						delay = 15 * 60 * 1000;
+	//					}
+
+	//				//	if ((City.safeBuildQueueLength > cotgQLength))
+	//					{
+	//						cotgQ = new DArray<BuildQueueItem>(128);
+	//						foreach (var cmd in bq.EnumerateArrayOrObject())
+	//						{
+	//							cotgQ.Add(new BuildQueueItem(
+	//										 cmd.GetAsByte("slvl"),
+	//										 cmd.GetAsByte("elvl"),
+	//										 cmd.GetAsUShort("brep"),
+	//										 cmd.GetAsUShort("bspot")
+	//										 ));
 
 
-		//						}
-		//					}
-		//				}
-		//			}
-		//			else if (bq.ValueKind == JsonValueKind.Object)
-		//			{ 
-		//			}
-		//			else
-		//			{
-		//				Assert(false);
+	//						}
+	//					}
+	//				}
+	//			}
+	//			else if (bq.ValueKind == JsonValueKind.Object)
+	//			{ 
+	//			}
+	//			else
+	//			{
+	//				Assert(false);
 
-		//			}
-		//		}
+	//			}
+	//		}
 
-		//	}
-		//	catch (Exception _exception)
-		//	{
-		//		COTG.Debug.LogEx(_exception);
-		//	}
-		//	return result;
+	//	}
+	//	catch (Exception _exception)
+	//	{
+	//		COTG.Debug.LogEx(_exception);
+	//	}
+	//	return result;
 
-		//}
+	//}
 
-		public static async Task UnblockQueue(int cid)
+	public static async Task UnblockQueue(int cid)
 		{
 			//await queueLock.WaitAsync().ConfigureAwait(false);
 			//try

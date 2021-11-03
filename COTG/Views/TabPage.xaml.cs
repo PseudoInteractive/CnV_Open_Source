@@ -261,6 +261,7 @@ namespace COTG.Views
 			{ "AttackPlanner", Symbol.Audio },
 			{ "world", Symbol.Microphone },
 			{ "Build", Symbol.Repair },
+			{ "Reinforcements", Symbol.AddFriend },
 			{ "Planner", Symbol.Map },
 			{ "NearRes", Symbol.Favorite },
 			{ "officer" ,Symbol.Admin },

@@ -119,23 +119,23 @@ namespace COTG;
 					await city.DowngradeTo((0, 0),1); // downgrade town hall
 				}
 			}
-			if((bc.sorcTowers == 0 || bc.sorcTowerLevel != 10) && (city.tsTotal > SettingsPage.tsForSorcTower || (!city.isMilitary && city.points> SettingsPage.scoreForSorcTower)) && city.HasOverlayBuildingOfType(bidSorcTower))
+		if((bc.sorcTowers == 0 || bc.sorcTowerLevel != 10) && (city.tsTotal > SettingsPage.tsForSorcTower || (!city.isMilitary && city.points> SettingsPage.scoreForSorcTower)) && city.FindOverlayBuildingsOfType(bidSorcTower).Count == 1)
+		{
+			var c = FindValidBuildingOfType(city,bidSorcTower);
+
+			if(c.bl == 0)
 			{
-				var c = FindValidBuildingOfType(city,bidSorcTower);
-
-				if(c.bl == 0)
-				{
-					if(await city.SmartBuild((c.x, c.y),bidSorcTower,searchForSpare: true,wantDemoUI: true) != -1)
-						c.bl = 1;
+				if(await city.SmartBuild((c.x, c.y),bidSorcTower,searchForSpare: true,wantDemoUI: true) != -1)
+					c.bl = 1;
 
 
 
-				}
-				// raise to level 10
-				if(c.bl != 0) // did it work?
-					await city.EnqueueUpgrade(10,XYToId((c.x, c.y)));
 			}
-			Assert(city.isBuild);
+			// raise to level 10
+			if(c.bl != 0) // did it work?
+				await city.EnqueueUpgrade(10,XYToId((c.x, c.y)));
+		}
+		Assert(city.isBuild);
 			if(!bc.hasWall && bc.hasCastle && !city.is7Point)
 			{
 				await city.Enqueue(0,1,bidWall,bspotWall);

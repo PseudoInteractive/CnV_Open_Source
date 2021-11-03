@@ -14,7 +14,7 @@
 			<ColumnDefinition Width="*" />
 			<ColumnDefinition Width="{StaticResource MediumGridRowHeight}" />
 			<ColumnDefinition Width="6*" />
-			<ColumnDefinition Width="auto" />
+			<ColumnDefinition Width="Auto" />
 		</Grid.ColumnDefinitions>
 
 		<TextBlock Text="{x:Bind Label}" Style="{StaticResource TextBlockMedium}" />

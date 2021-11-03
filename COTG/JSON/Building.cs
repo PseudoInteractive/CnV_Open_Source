@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Buffers;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -11,6 +12,7 @@ using COTG.Game;
 
 namespace COTG
 {
+	[DebuggerDisplay($"{{{nameof(GetDebuggerDisplay)}(),nq}}")]
 	public readonly struct Building
 	{
 		public readonly byte id; // this is pretranslated from the buildingDefs definitions to pack it into a byte
@@ -40,8 +42,15 @@ namespace COTG
 			this.id = id;
 			this.bl = bl;
 		}
-	//	public static ArrayPool<Building> pool = ArrayPool<Building>.Create(City.citySpotCount,64);
-	//	public static Building[] Rent() => pool.Rent(City.citySpotCount);
+
+		private string GetDebuggerDisplay()
+		{
+			return ToString();
+		}
+		public override string ToString() => (bl > 0 ? $"{name}[{bl}]" : name);
+
+		//	public static ArrayPool<Building> pool = ArrayPool<Building>.Create(City.citySpotCount,64);
+		//	public static Building[] Rent() => pool.Rent(City.citySpotCount);
 		//[J("bu")] public long Bu { get; set; }
 		//	[J("bd")] public long Bd { get; set; }
 		//	[J("rt")] public long Rt { get; set; }
@@ -52,7 +61,7 @@ namespace COTG
 		//	[J("rbt", NullValueHandling = N.Ignore)] public Dictionary<string, Rb> Rbt { get; set; }
 		//	[J("rb", NullValueHandling = N.Ignore)] public Rb[] Rb { get; set; }
 		//	[J("rtt", NullValueHandling = N.Ignore)] public Rbb[] Rtt { get; set; }
-	
+
 	}
 
 	//struct BuildingArrayPoolPolicy:IPooledObjectPolicy<Building[]>

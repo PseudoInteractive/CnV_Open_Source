@@ -112,7 +112,9 @@ namespace COTG.Game
 
 	public static class TagHelper
 	{
-		public static TagInfo Get(this Tags tag) => new TagInfo() { v = tag, s = tag.AsString() };
+		public static TagInfo Get(this Tags tag) => new TagInfo() { v = tag,s = tag.AsString() };
+		public static Tags TroopTypeTag(int tt) => (Tags)(1<<tt);
+		public static bool HasTroopTypeTag(this Tags _t,int tt) {return _t.HasFlag(TroopTypeTag(tt));}
 		public const Tags TroopMask = (Tags)((1 << ttCount) - 1);
 		public const Tags MilitaryTroopMask = TroopMask & (Tags)(~((1 << ttSenator)|(1<<ttGuard)) );
 		public static Tags Troops(this Tags tag) => tag & TroopMask;

@@ -29,8 +29,12 @@ namespace COTG
 		public readonly SmallTime Date()
 		{
 			return new SmallTime( (uint)new DateTimeOffset(dateTime.Date,TimeSpan.Zero).ToUnixTimeSeconds());
+	
 		}
-		public readonly string Format() => dateTime.Format();
+
+		public string FormatIfLaterThanNow() => this > SmallTime.serverNow ? $" @{Format()}" : "";
+
+	public readonly string Format() => dateTime.Format();
 		public readonly string FormatDateForFileName() => dateTime.FormatDateForFileName();
 
 

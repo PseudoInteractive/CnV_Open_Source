@@ -7,6 +7,8 @@ using Telerik.UI.Xaml.Controls.Grid;
 //using Windows.UI.WindowManagement;
 using Microsoft.UI.Xaml;
 using System.ComponentModel;
+using Syncfusion.UI.Xaml.DataGrid;
+
 //using Microsoft.UI.Windowing;
 
 namespace COTG.Views
@@ -14,8 +16,9 @@ namespace COTG.Views
 	public class UserTab:UserControl, IANotifyPropertyChanged
 	{
 		public virtual TabPage defaultPage => TabPage.mainTabs;
-		public static List<RadDataGrid> spotGrids = new();
-		public static List<RadDataGrid> dataGrids = new();
+		public static ImmutableArray<RadDataGrid> spotGrids = ImmutableArray<RadDataGrid>.Empty;
+		public static ImmutableArray<RadDataGrid> dataGrids = ImmutableArray<RadDataGrid>.Empty;
+		public static ImmutableArray<SfDataGrid> spotSfGrids = ImmutableArray<SfDataGrid>.Empty;
 
 		public event PropertyChangedEventHandler PropertyChanged;
 		public void CallPropertyChanged(string members = null)
@@ -43,6 +46,7 @@ namespace COTG.Views
 				new QueueTab(),
 				new BuildTab(),
 				new SpotTab(),
+				new ReinforcementsTab(),
 				new OutgoingTab(),
 				new HitTab(),
 				new NearDefenseTab(),
@@ -134,7 +138,7 @@ namespace COTG.Views
 		}
 		public static  void SetupDataGrid(RadDataGrid grid)
 		{
-			if(!dataGrids.AddIfAbsentNE(grid))
+			if(!AUtil.AddIfAbsent(ref dataGrids,grid))
 				return;
 			grid.FontStretch = Windows.UI.Text.FontStretch.Condensed;
 			grid.FontWeight = Microsoft.UI.Text.FontWeights.Light;
@@ -151,16 +155,28 @@ namespace COTG.Views
 		public void SetupCityDataGrid(RadDataGrid grid)
 		{
 			// damn, there should be a better way to check for this
-			if(spotGrids.Contains(grid))
+			if(!AUtil.AddIfAbsent(ref spotGrids,grid) )
 				return;
-			spotGrids.Add(grid);
 			grid.SelectionChanged += SpotSelectionChanged;
 			
 			SetupDataGrid(grid);
 		}
+		public void SetupCityDataGrid(SfDataGrid grid)
+		{
+			// damn, there should be a better way to check for this
+			if(!AUtil.AddIfAbsent(ref spotSfGrids,grid))
+				return;
+//			grid.SelectionChanged += SpotSelectionChanged;
+
+//			SetupDataGrid(grid);
+		}
 		protected void DataGridLoaded(object sender,RoutedEventArgs e)
 		{
-			SetupCityDataGrid(sender as RadDataGrid);
+			if(sender is RadDataGrid rad)
+				SetupCityDataGrid(rad);
+			else if(sender is SfDataGrid sf)
+				SetupCityDataGrid(sf);
+
 		}
 
 		public void SetPlus(bool set)

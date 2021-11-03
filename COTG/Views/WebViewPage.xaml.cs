@@ -165,8 +165,6 @@ namespace COTG.Views
   //          }
   //      }
 
-	
-
         public event PropertyChangedEventHandler PropertyChanged;
 
         private void Set<T>(ref T storage, T value, [CallerMemberName]string propertyName = null)

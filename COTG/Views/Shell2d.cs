@@ -347,7 +347,8 @@ namespace COTG.Views
 			//			canvas.PreviewKeyDown+=KeyboardProxy_KeyDown;
 		//	canvas.KeyDown += KeyboardProxy_KeyDown;
 			App.window.Content.PreviewKeyDown+=ShellPage.KeyboardProxy_KeyDown; ;
-//			App.window.Content.PreviewKeyUp+=ShellPage.KeyboardProxy_KeyUp;
+			canvas.PreviewKeyDown+=ShellPage.KeyboardProxy_KeyDown2; ;
+			//			App.window.Content.PreviewKeyUp+=ShellPage.KeyboardProxy_KeyUp;
 			App.window.Content.AddHandler(PointerWheelChangedEvent,new PointerEventHandler( KeyboardProxy_PointerWheelChanged),true);
 			//			canvas.AddHandler(KeyDownEvent,new KeyEventHandler(KeyboardProxy_KeyDown2),true);
 			//keyboardProxy.LostFocus += KeyboardProxy_LostFocus;
@@ -401,6 +402,10 @@ namespace COTG.Views
 				var pt = e.GetCurrentPoint(canvas);
 				HandleWheel(pt.Position,pt.Properties.MouseWheelDelta);
 			}
+			else
+			{
+				Log("Mouse not over");
+			}
 		}
 
 		private void Canvas_CompositionScaleChanged(SwapChainPanel sender, object args)
@@ -408,15 +413,26 @@ namespace COTG.Views
 			Log(canvas.CompositionScaleX);
 		}
 
-	
+
+		public static void KeyboardProxy_KeyDown2(object sender,Microsoft.UI.Xaml.Input.KeyRoutedEventArgs e)
+		{
+			Trace("PreviewKeyDown2");
+		}
+
 
 		public static void KeyboardProxy_KeyDown(object sender, Microsoft.UI.Xaml.Input.KeyRoutedEventArgs e)
 		{
+			Trace("PreviewKeyDown");
+
 			App.UpdateKeyStates();
 
-			if(!mouseOverCanvas)
-				return;
 
+
+			if(!mouseOverCanvas)
+			{
+				return;
+				Log("Mouse not over");
+			}
 			App.InputRecieved();
 
 			if(!isHitTestVisible)

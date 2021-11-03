@@ -1876,7 +1876,7 @@ namespace COTG.Game
 		public string nameMarkdown => $"[{nameAndRemarks}](/c/{cid.CidToString()})";
 		public Tags tags;
 		public bool isMilitary => tags.MilitaryTroops()!=0;
-
+		public bool wantTriari => tags.HasTroopTypeTag(ttTriari);
 		public static bool OnKeyDown(object _spot, VirtualKey key)
 		{
 			var spot = _spot as Spot;
@@ -2300,7 +2300,7 @@ namespace COTG.Game
 				{
 					var sc = new sndnc() { cid = _cid, rcid = rcid, type = 5, snd = bySea ? 2 : 1, tr = @"[{'tt':17,'tv':1}]" };
 					var magic = "Sx2xxresa" + _pid.ToString() + "sa2dT123ol";
-					var txt = await Post.SendEncryptedForText("includes/sndNC.php", JsonSerializer.Serialize(sc, Json.jsonSerializerOptions), magic, _pid, false);
+					var txt = await Post.SendEncryptedForText("includes/sndNC.php",JsonSerializer.Serialize(sc,Json.jsonSerializerOptions),magic,_pid,false);
 					var tr = txt.Trim();
 					if (tr.Length > 0 && tr[0] == '{')
 					{

@@ -10,6 +10,7 @@
       xmlns:views="using:COTG.Views"
       xmlns:models="using:COTG.Models"
       xmlns:winui="using:Microsoft.UI.Xaml.Controls"
+		xmlns:developerTools="using:CommunityToolkit.WinUI.DeveloperTools"
       x:Name="shellPage"
 		RequestedTheme="Dark"   
 	  Loaded="OnLoaded"
@@ -265,7 +266,7 @@ TextSubmitted="CitySubmitted"
                             ToolTipService.ToolTip="Spot with Focus.&#x0a;Click to re-center or swith to this city&#x0a;Right clck for menu" Visibility="Collapsed"/>
 						<winui:ProgressRing x:Name="progress" IsActive="False" />
 						<TextBlock x:Name="work" x:FieldModifier="public" Margin="6" VerticalAlignment="Center"  />
-
+						
 					</StackPanel>
 				</winui:CommandBar.Content>
 				<winui:CommandBar.SecondaryCommands>
@@ -524,5 +525,6 @@ TextSubmitted="CitySubmitted"
 			</tk:GridSplitter.Element>
 		</tk:GridSplitter>
 	</Grid>
+		<developerTools:FocusTracker x:Name="focusTracker" Canvas.ZIndex="80" HorizontalAlignment="Right" />
 	</Grid>
 </winui:Page>

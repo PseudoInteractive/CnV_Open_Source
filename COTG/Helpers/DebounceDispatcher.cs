@@ -22,7 +22,7 @@ namespace COTG
 		public int throttleDelay = 750;
 		public bool runOnUiThread;
 		TickT nextCall;
-
+		public int throttleOrDebounceDelay => throttleDelay == -1 ? debounceDelay : throttleDelay;
 	
  		//			public TaskCompletionSource<bool> complete;
 
@@ -95,7 +95,7 @@ namespace COTG
 				Go(delayOverride);
 				return;
 			}
-			nextCall = nextCall.Max(ATime.TickCount + delayOverride);
+			nextCall = nextCall.Max(ATime.TickCount + throttleOrDebounceDelay);
 			Task.Run(async () =>
 		   {
 
@@ -130,12 +130,15 @@ namespace COTG
 					   COTG.Debug.LogEx(ex);
 				   }
 
-				   nextCall = ATime.TickCount + throttleDelay;
+				   nextCall = ATime.TickCount + throttleOrDebounceDelay;
+				   
 				   var t = taskCompletionSource;
-				   taskCompletionSource=null;
-				   if(t!=null)
-					   t.TrySetResult(); 
-
+				   if(t!= null)
+				   {
+					   taskCompletionSource=new();
+					   if(t!=null)
+						   t.TrySetResult();
+				   }
 				   // someone might have changed us back to pending
 				   if(state == State.running)
 				   {
@@ -163,7 +166,7 @@ namespace COTG
 		}
 
 		static ConcurrentDictionary<long,Debounce> debouceCache = new();
-		public static void Q(Func<Task> action,int ms = 200,
+		public static void Q(Func<Task> action,int debounceT = 200,int throttleT = -1,
 			bool runOnUIThread = false,
 
 			long hash = 0L,
@@ -180,7 +183,7 @@ namespace COTG
 				var token = debouceCache.GetOrAdd(key,
 					(_key) => //key not found - create new
 
-						new Debounce(action) { debounceDelay = ms,throttleDelay = ms,runOnUiThread = runOnUIThread }
+						new Debounce(action) { debounceDelay = debounceT,throttleDelay = throttleT,runOnUiThread = runOnUIThread }
 					);
 				token.Go();
 

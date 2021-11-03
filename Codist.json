@@ -1,0 +1,8 @@
+{
+  "Version": "5.12.0",
+  "SpecialHighlightOptions": "None",
+  "QuickInfoOptions": "Attributes, BaseType, Declaration, SymbolLocation, Interfaces, Parameter, InterfaceImplementations, TypeParameters, MethodOverload, InterfaceMembers, OverrideDefaultDocumentation, Color, Selection, ClickAndGo, AlternativeStyle",
+  "SmartBarOptions": "Default, ManualDisplaySmartBar",
+  "NaviBarOptions": "SymbolToolTip, LineOfCode, Default, RegionInMember, BaseClassMember",
+  "DeveloperOptions": "None, ShowDocumentContentType, ShowSyntaxClassificationInfo"
+}

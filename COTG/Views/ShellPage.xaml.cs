@@ -45,7 +45,7 @@ namespace COTG.Views
 	//    public LogEntryStruct(string _t) { t =_t; }
 	//}
 	// TODO WTS: Change the icons and titles for all NavigationViewItems in ShellPage.xaml.
-	public  partial class ShellPage : Page, INotifyPropertyChanged
+	public partial class ShellPage:Page, INotifyPropertyChanged
 	{
 		public const int canvasZDefault = 11;
 		public const int canvasZBack = 0;
@@ -64,7 +64,7 @@ namespace COTG.Views
 		public static float webZoomCurrent = 1;
 		public static TextBlock gridTip;
 
-		
+
 
 		//		public static ScrollViewer webView;
 
@@ -75,10 +75,10 @@ namespace COTG.Views
 		{
 			App.DispatchOnUIThreadLow(() =>
 		   {
-			   if (!workQueue.Any())
+			   if(!workQueue.Any())
 			   {
 				   instance.progress.IsActive = true;
-// FIX
+				   // FIX
 				   workStarted = DateTime.UtcNow;
 				   instance.work.Text = desc;
 				   instance.work.Visibility = Visibility.Visible;
@@ -91,7 +91,7 @@ namespace COTG.Views
 		// Todo:  Queue updates with tasks
 		public static void WorkUpdate(string desc)
 		{
-			
+
 			App.DispatchOnUIThreadLow(() =>
 			{
 				instance.work.Text = desc;
@@ -102,13 +102,13 @@ namespace COTG.Views
 		{
 			App.DispatchOnUIThreadLow(() =>
 			{
-				if (!workQueue.Any())
+				if(!workQueue.Any())
 				{
 					Log("End end called too often");
 				}
 				else
 				{
-					if (DateTime.UtcNow - workStarted > TimeSpan.FromMinutes(5))
+					if(DateTime.UtcNow - workStarted > TimeSpan.FromMinutes(5))
 					{
 						Log("rogue work item");
 						workQueue.Clear();
@@ -118,12 +118,12 @@ namespace COTG.Views
 						workQueue.Remove(desc);
 					}
 				}
-				if (!workQueue.Any())
+				if(!workQueue.Any())
 				{
 					instance.progress.IsActive=false;
 
 					// FIX
-										instance.work.Visibility = Visibility.Collapsed;
+					instance.work.Visibility = Visibility.Collapsed;
 				}
 				else
 				{
@@ -133,14 +133,14 @@ namespace COTG.Views
 			});
 		}
 
-		public class WorkScope : IDisposable
+		public class WorkScope:IDisposable
 		{
 			private readonly string task;
 
 			// passing null results in a Scope with no effect
 			public WorkScope(string _task)
 			{
-				if (_task != null)
+				if(_task != null)
 				{
 					this.task = WorkStart(_task);
 				}
@@ -148,7 +148,7 @@ namespace COTG.Views
 
 			public void Dispose()
 			{
-				if (task != null)
+				if(task != null)
 				{
 					WorkEnd(task);
 				}
@@ -159,37 +159,37 @@ namespace COTG.Views
 
 		// private UserDataService UserDataService => Singleton<UserDataService>.Instance;
 
-//		public static InAppNotification inAppNote => instance.InAppNote;
-		public string noteText  = string.Empty;
+		//		public static InAppNotification inAppNote => instance.InAppNote;
+		public string noteText = string.Empty;
 
 		public bool IsBackEnabled
 		{
 			get { return _isBackEnabled; }
-			set { Set(ref _isBackEnabled, value); }
+			set { Set(ref _isBackEnabled,value); }
 		}
 
 		public WinUI.NavigationViewItem Selected
 		{
 			get { return _selected; }
-			set { Set(ref _selected, value); }
+			set { Set(ref _selected,value); }
 		}
 
 		public bool IsBusy
 		{
 			get { return _isBusy; }
-			set { Set(ref _isBusy, value); }
+			set { Set(ref _isBusy,value); }
 		}
 
 		public bool IsLoggedIn
 		{
 			get { return _isLoggedIn; }
-			set { Set(ref _isLoggedIn, value); }
+			set { Set(ref _isLoggedIn,value); }
 		}
 
 		public bool IsAuthorized
 		{
 			get { return _isAuthorized; }
-			set { Set(ref _isAuthorized, value); }
+			set { Set(ref _isAuthorized,value); }
 		}
 
 		public ShellPage()
@@ -197,7 +197,7 @@ namespace COTG.Views
 			instance = this;
 			InitializeComponent();
 			RequestedTheme = ElementTheme.Dark; // default theme
-			
+
 		}
 		public enum Layout
 		{
@@ -211,7 +211,7 @@ namespace COTG.Views
 		}
 		public static Layout layout = Layout.c;
 		public static bool rightTabsVisible => layout>=Layout.c;
-		public static bool htmlVisible => layout is not ( Layout.l1 or  Layout.r2 or Layout.r1 );
+		public static bool htmlVisible => layout is not (Layout.l1 or  Layout.r2 or Layout.r1);
 
 		//public static void SetHeaderText(string text)
 		//{
@@ -223,8 +223,8 @@ namespace COTG.Views
 		public static bool isHitTestVisible => !ShellPage.isOverPopup && !forceAllowWebFocus&& canvasVisible;
 		//public static bool _isHitTestVisible;
 		public static bool canvasVisible;
-		public static bool isFocused => isHitTestVisible && App.isForeground ;
-		private void OnLoaded(object sender, RoutedEventArgs e)
+		public static bool isFocused => isHitTestVisible && App.isForeground;
+		private void OnLoaded(object sender,RoutedEventArgs e)
 		{
 
 			//		SystemNavigationManagerPreview.GetForCurrentView().CloseRequested += App.App_CloseRequested; ;
@@ -232,16 +232,19 @@ namespace COTG.Views
 
 			CityBuild.Initialize();
 			// Grid.SetColumn(webView, 0);
-			Grid.SetRow(CityBuild.instance, 1);
-			Grid.SetRowSpan(CityBuild.instance, 5);
-			Grid.SetColumnSpan(CityBuild.instance, 1);
-			Canvas.SetZIndex(CityBuild.instance, 13);
+			Grid.SetRow(CityBuild.instance,1);
+			Grid.SetRowSpan(CityBuild.instance,5);
+			Grid.SetColumnSpan(CityBuild.instance,1);
+			Canvas.SetZIndex(CityBuild.instance,13);
 			var c = CreateCanvasControl();
-			
+
+			#if DEBUG
+			focusTracker.IsActive = true;// Visibility.Collapsed;
+			#endif
 			// canvas.ContextFlyout = CityFlyout;
-		//	grid.Children.Add(c.canvas);
+			//	grid.Children.Add(c.canvas);
 			// grid.Children.Add(c.hitTest);
-		
+
 			// Canvas.SetZIndex(c.hitTest, 13); Task.Run(SetupCanvasInput);//
 			// Task.Run(SetupCanvasInput); Placement.SizeChanged += Placement_SizeChanged; var img =
 			// new Image() { Opacity=0.5f, Source = new SvgImageSource(new
@@ -255,8 +258,8 @@ namespace COTG.Views
 			// Thickness(0, 0, 11, 0);
 			//		grid.Children.Add(webView);
 
-		//	FocusManager.GotFocus+=FocusManager_GotFocus;
-			
+			//	FocusManager.GotFocus+=FocusManager_GotFocus;
+
 			//c.hitTest.Fill = JSClient.webViewBrush;
 			//				var visual = ElementCompositionPreview.GetElementVisual(c.canvas);
 			//			var webVisual = ElementCompositionPreview.GetElementVisual(view);
@@ -269,13 +272,13 @@ namespace COTG.Views
 			// 0); Grid.SetRowSpan(shellFrame, 6); shellFrame.Margin = new Thickness(13, 0, 0, 0);
 			// Canvas.SetZIndex(shellFrame, 3);
 
-	//		Grid.SetColumn(webView, 0);
-	//		Grid.SetRow(webView, 1);
-	//		Grid.SetRowSpan(webView, 5);
-	//		Grid.SetColumnSpan(webView, 2);
-	//		Canvas.SetZIndex(webView, 10);
-			
-	//		webView.Scale = new Vector3(SettingsPage.htmlZoom.Squared() * 2.0f + 0.5f);
+			//		Grid.SetColumn(webView, 0);
+			//		Grid.SetRow(webView, 1);
+			//		Grid.SetRowSpan(webView, 5);
+			//		Grid.SetColumnSpan(webView, 2);
+			//		Canvas.SetZIndex(webView, 10);
+
+			//		webView.Scale = new Vector3(SettingsPage.htmlZoom.Squared() * 2.0f + 0.5f);
 
 
 			//var splitter = new GridSplitter();
@@ -296,16 +299,16 @@ namespace COTG.Views
 			// Keyboard accelerators are added here to avoid showing 'Alt + left' tooltip on the
 			// page. More info on tracking issue https://github.com/Microsoft/microsoft-ui-xaml/issues/8
 
-			KeyboardAccelerators.Add(BuildKeyboardAccelerator(VirtualKey.Left, NavStack.BackInvoked, VirtualKeyModifiers.Menu));
+			KeyboardAccelerators.Add(BuildKeyboardAccelerator(VirtualKey.Left,NavStack.BackInvoked,VirtualKeyModifiers.Menu));
 			// KeyboardAccelerators.Add(BuildKeyboardAccelerator(VirtualKey.GoBack,NavStack.BackInvoked));
 
-			KeyboardAccelerators.Add(BuildKeyboardAccelerator(VirtualKey.Right, NavStack.ForwardInvoked, VirtualKeyModifiers.Menu));
+			KeyboardAccelerators.Add(BuildKeyboardAccelerator(VirtualKey.Right,NavStack.ForwardInvoked,VirtualKeyModifiers.Menu));
 			// KeyboardAccelerators.Add(BuildKeyboardAccelerator(VirtualKey.GoForward, NavStack.ForwardInvoked));
 
-//			KeyboardAccelerators.Add(BuildKeyboardAccelerator(VirtualKey.F5, Refresh_Invoked,VirtualKeyModifiers.Control));
-	//		KeyboardAccelerators.Add(BuildKeyboardAccelerator(VirtualKey.F2, LayoutAccelerator_Invoked,VirtualKeyModifiers.Control));
-	//		KeyboardAccelerators.Add(BuildKeyboardAccelerator(VirtualKey.F3, LayoutAccelerator_Invoked,VirtualKeyModifiers.Control));
-	//		KeyboardAccelerators.Add(BuildKeyboardAccelerator(VirtualKey.F4, LayoutAccelerator_Invoked,VirtualKeyModifiers.Control));
+			//			KeyboardAccelerators.Add(BuildKeyboardAccelerator(VirtualKey.F5, Refresh_Invoked,VirtualKeyModifiers.Control));
+			//		KeyboardAccelerators.Add(BuildKeyboardAccelerator(VirtualKey.F2, LayoutAccelerator_Invoked,VirtualKeyModifiers.Control));
+			//		KeyboardAccelerators.Add(BuildKeyboardAccelerator(VirtualKey.F3, LayoutAccelerator_Invoked,VirtualKeyModifiers.Control));
+			//		KeyboardAccelerators.Add(BuildKeyboardAccelerator(VirtualKey.F4, LayoutAccelerator_Invoked,VirtualKeyModifiers.Control));
 			IsLoggedIn = true;// IdentityService.IsLoggedIn();
 			IsAuthorized = true;// IsLoggedIn && IdentityService.IsAuthorized();
 								// grid.hor
@@ -322,7 +325,7 @@ namespace COTG.Views
 
 			//SystemNavigationManager.GetForCurrentView().BackRequested += ShellPage_BackRequested;
 			// PointerPressed+= PointerPressedCB; HomeButtonTip.IsOpen = true;
-		//	this.ProcessKeyboardAccelerators+=ShellPage_ProcessKeyboardAccelerators;
+			//	this.ProcessKeyboardAccelerators+=ShellPage_ProcessKeyboardAccelerators;
 			//this.PointerPressed+=ShellPage_PointerPressed;
 			//App.SetupCoreWindowInputHooks();
 			//var displayInformation = DisplayInformation.GetForCurrentView();
@@ -333,7 +336,7 @@ namespace COTG.Views
 			//	await UpdateWebViewScale();
 			AGame.Create(canvas);
 
-			if( SystemInformation.Instance.IsAppUpdated && !JSClient.isSub)
+			if(SystemInformation.Instance.IsAppUpdated && !JSClient.isSub)
 			{
 				App.DispatchOnUIThreadLow(SettingsPage.ShowWhatsNew);
 			}
@@ -345,7 +348,7 @@ namespace COTG.Views
 				var sz = canvas.ActualSize;
 				AGame.SetClientSpan(sz.X,sz.Y);
 				//				SetupCoreInput();
-			//	TabPage.ShowTabs();
+				//	TabPage.ShowTabs();
 				//	SetWebViewHasFocus(true);
 				//ShellPage.canvas.IsHitTestVisible = false;
 				//ShellPage.canvas.Visibility = Visibility.Collapsed;
@@ -487,7 +490,7 @@ namespace COTG.Views
 		//	//e.Handled = true;
 		//}
 
-		private void Refresh_Invoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
+		private void Refresh_Invoked(KeyboardAccelerator sender,KeyboardAcceleratorInvokedEventArgs args)
 		{
 			WorkStart("Refresh");
 			sender.Modifiers.UpdateKeyModifiers();
@@ -498,7 +501,7 @@ namespace COTG.Views
 			// args.Handled = true;
 		}
 
-		private void LayoutAccelerator_Invoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
+		private void LayoutAccelerator_Invoked(KeyboardAccelerator sender,KeyboardAcceleratorInvokedEventArgs args)
 		{
 			sender.Modifiers.UpdateKeyModifiers();
 			switch(args.KeyboardAccelerator.Key)
@@ -526,7 +529,7 @@ namespace COTG.Views
 
 		//}
 
-		
+
 
 		// private void OnLoggedIn(object sender, EventArgs e) { IsLoggedIn = true; IsAuthorized =
 		// true;// IsLoggedIn && IdentityService.IsAuthorized(); IsBusy = false; }
@@ -613,7 +616,7 @@ namespace COTG.Views
 		//    NavigationService.GoBack();
 		//}
 
-		private static KeyboardAccelerator BuildKeyboardAccelerator(VirtualKey key, TypedEventHandler<KeyboardAccelerator, KeyboardAcceleratorInvokedEventArgs> OnKeyboardAcceleratorInvoked, VirtualKeyModifiers modifiers = VirtualKeyModifiers.None)
+		private static KeyboardAccelerator BuildKeyboardAccelerator(VirtualKey key,TypedEventHandler<KeyboardAccelerator,KeyboardAcceleratorInvokedEventArgs> OnKeyboardAcceleratorInvoked,VirtualKeyModifiers modifiers = VirtualKeyModifiers.None)
 		{
 			var keyboardAccelerator = new KeyboardAccelerator() { Key = key };
 			keyboardAccelerator.Modifiers = modifiers;
@@ -633,7 +636,7 @@ namespace COTG.Views
 
 		//}
 
-		public void Refresh(object o, RoutedEventArgs e)
+		public void Refresh(object o,RoutedEventArgs e)
 		{
 			Refresh();
 		}
@@ -643,18 +646,18 @@ namespace COTG.Views
 			World.lastUpdatedContinent = -1;
 			using var work = new WorkScope("Refresh..");
 			var task0 = TileData.Ctor(false);
-			if (World.completed)
+			if(World.completed)
 			{
 				await GetWorldInfo.Send();
 			}
 			await task0;
 		}
-		
+
 		public static void RefreshAndReloadWorldData()
 		{
 			using var work = new WorkScope("Refresh..");
 			World.lastUpdatedContinent = -1;
-			if (World.completed)
+			if(World.completed)
 			{
 				GetWorldInfo.Send();
 			}
@@ -677,17 +680,17 @@ namespace COTG.Views
 			WorkEnd("Refresh All");
 		}
 
-		public void RefreshX(object sender, RightTappedRoutedEventArgs e)
+		public void RefreshX(object sender,RightTappedRoutedEventArgs e)
 		{
 			RefreshX();
 		}
 
-		public static Debounce RefreshTabs = new(_RefreshTabs) {  };
+		public static Debounce RefreshTabs = new(_RefreshTabs) { };
 		public static Task _RefreshTabs()
 		{
 			// fall through from shift-refresh. Shift refresh does both
-		//	City.UpdateSenatorInfo();
-			foreach (var tab in UserTab.userTabs)
+			//	City.UpdateSenatorInfo();
+			foreach(var tab in UserTab.userTabs)
 			{
 				if(tab.isFocused)
 					tab.refresh.Go();
@@ -695,7 +698,7 @@ namespace COTG.Views
 			City.gridCitySource.ClearHash();
 
 			JSClient.CityRefresh();
-		//	instance.UpdateWebViewScale();
+			//	instance.UpdateWebViewScale();
 			return Task.CompletedTask;
 		}
 
@@ -707,7 +710,7 @@ namespace COTG.Views
 				return;
 			}
 
-			
+
 			if(App.IsKeyPressedShift())
 			{
 				RefreshX();
@@ -729,11 +732,11 @@ namespace COTG.Views
 
 		public event PropertyChangedEventHandler PropertyChanged;
 
-		private void OnPropertyChanged(string propertyName) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+		private void OnPropertyChanged(string propertyName) => PropertyChanged?.Invoke(this,new PropertyChangedEventArgs(propertyName));
 
-		private void Set<T>(ref T storage, T value, [CallerMemberName] string propertyName = null)
+		private void Set<T>(ref T storage,T value,[CallerMemberName] string propertyName = null)
 		{
-			if (Equals(storage, value))
+			if(Equals(storage,value))
 			{
 				return;
 			}
@@ -757,33 +760,33 @@ namespace COTG.Views
 
 		//static short[] bidMap = new short[] { 448, 446, 464, 461, 479, 447, 504, 445, 465, 483, 449, 481, 460, 466, 462, 500, 463, 482, 477, 502, 467, 488, 489, 490, 491, 496, 498, bidTownHall, 467 };
 
-//		public static (int x, int y) webclientSpan;
+		//		public static (int x, int y) webclientSpan;
 
-		private async void ShowBuildings(object sender, object e)
+		private async void ShowBuildings(object sender,object e)
 		{
 			try
 			{
 				var build = City.GetBuild();
 				int bCount = 0;
-				var bdd = new Dictionary<int, int>();
+				var bdd = new Dictionary<int,int>();
 
-				void ProcessBuilding(BuildingDef bd, bool add = true)
+				void ProcessBuilding(BuildingDef bd,bool add = true)
 				{
-					if (bd.bid == City.bidTownHall || bd.bid == City.bidWall)
+					if(bd.bid == City.bidTownHall || bd.bid == City.bidWall)
 					{
 						return;
 					}
 
 					var id = bd.refId;
-					if (!bdd.TryGetValue(id, out var counter))
+					if(!bdd.TryGetValue(id,out var counter))
 					{
-						bdd.Add(id, 0);
+						bdd.Add(id,0);
 						counter = 0;
 					}
-					if (add)
+					if(add)
 					{
 						bdd[id] = counter + 1;
-						if (!bd.isTower)
+						if(!bd.isTower)
 						{
 							++bCount;
 						}
@@ -791,17 +794,17 @@ namespace COTG.Views
 					else
 					{
 						bdd[id] = counter - 1;
-						if (!bd.isTower)
+						if(!bd.isTower)
 						{
 							--bCount;
 						}
 					}
 				}
 
-				foreach (var bdi in CityBuild.isPlanner ? build.GetLayoutBuildings() : build.postQueueBuildings)
+				foreach(var bdi in CityBuild.isPlanner ? build.GetLayoutBuildings() : build.postQueueBuildings)
 				{
 					var id = bdi.id;
-					if (id == 0 || !bdi.isBuilding)
+					if(id == 0 || !bdi.isBuilding)
 					{
 						continue;
 					}
@@ -812,15 +815,15 @@ namespace COTG.Views
 
 				{
 					var bd = new List<BuildingCount>();
-					foreach (var i in bdd)
+					foreach(var i in bdd)
 					{
-						if (i.Value > 0)
+						if(i.Value > 0)
 						{
 							var bdf = BuildingDef.all[i.Key];
-							bd.Add(new BuildingCount() { count = i.Value, brush = CityBuild.BuildingBrush(bdf.bid, 0.5f) });
+							bd.Add(new BuildingCount() { count = i.Value,brush = CityBuild.BuildingBrush(bdf.bid,0.5f) });
 						}
 					}
-					bd.Add(new BuildingCount() { count = bCount, brush = CityBuild.BuildingBrush(City.bidTownHall, 0.5f) });
+					bd.Add(new BuildingCount() { count = bCount,brush = CityBuild.BuildingBrush(City.bidTownHall,0.5f) });
 
 					// var button = sender as Button; button.Focus(FocusState.Programmatic);
 					App.DispatchOnUIThreadLow(() =>
@@ -860,7 +863,7 @@ namespace COTG.Views
 			// spawn); button.Flyout.ShowAt(button, new FlyoutShowOptions() {
 			// Placement=FlyoutPlacementMode.Full, ShowMode=FlyoutShowMode.Transient }); //
 			// ,ExclusionRect=avoid });
-			catch (Exception ex)
+			catch(Exception ex)
 			{
 				LogEx(ex);
 			}
@@ -897,7 +900,7 @@ namespace COTG.Views
 		//{
 		//}
 
-		private void FlyoutClosing(FlyoutBase sender, FlyoutBaseClosingEventArgs args)
+		private void FlyoutClosing(FlyoutBase sender,FlyoutBaseClosingEventArgs args)
 		{
 			// Log("Why is this closing?");
 		}
@@ -957,12 +960,12 @@ namespace COTG.Views
 		//    }
 		//}
 
-		private void TipTest(object sender, RoutedEventArgs e)
+		private void TipTest(object sender,RoutedEventArgs e)
 		{
 			ShowTipRefresh();
 		}
 
-		private void ShowSettings(object sender, RoutedEventArgs e)
+		private void ShowSettings(object sender,RoutedEventArgs e)
 		{
 			SettingsPage.Show();
 		}
@@ -970,13 +973,13 @@ namespace COTG.Views
 		public static ComboBox CityListBox => instance.cityListBox;
 
 		// private DumbCollection<CityList> cityListSelections => CityList.selections;
-		private void CityListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+		private void CityListBox_SelectionChanged(object sender,SelectionChangedEventArgs e)
 		{
-			if (e.AddedItems.Any())
+			if(e.AddedItems.Any())
 			{
 				var newSel = e.AddedItems?.FirstOrDefault();
 				var priorSel = e.RemovedItems?.FirstOrDefault();
-				if (newSel != priorSel && priorSel != null)
+				if(newSel != priorSel && priorSel != null)
 				{
 					// Log("City Sel changed");
 					CityList.NotifyChange();
@@ -985,12 +988,12 @@ namespace COTG.Views
 		}
 
 
-		private void CityBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+		private void CityBox_SelectionChanged(object sender,SelectionChangedEventArgs e)
 		{
 			var sel = cityBox.SelectedItem as City;
-			if (sel != null && sel.cid != City.build)
+			if(sel != null && sel.cid != City.build)
 			{
-				JSClient.CitySwitch(sel.cid, false);
+				JSClient.CitySwitch(sel.cid,false);
 				NavStack.Push(sel.cid);
 			}
 		}
@@ -999,9 +1002,9 @@ namespace COTG.Views
 		{
 			var items = ShellPage.instance.cityBox.ItemsSource as City[];
 			City newSel;
-			if (items.Length <= 1)
+			if(items.Length <= 1)
 			{
-				if (items.Length == 0)
+				if(items.Length == 0)
 				{
 					return;
 				}
@@ -1010,13 +1013,13 @@ namespace COTG.Views
 			}
 			else
 			{
-				int id = Array.IndexOf(items, City.GetBuild()) + delta;
-				if (id < 0)
+				int id = Array.IndexOf(items,City.GetBuild()) + delta;
+				if(id < 0)
 				{
 					id += items.Length;
 				}
 
-				if (id >= items.Length)
+				if(id >= items.Length)
 				{
 					id -= items.Length;
 				}
@@ -1024,87 +1027,87 @@ namespace COTG.Views
 				newSel = items[id];
 			}
 			//newSel.SetBuild(true);
-			JSClient.CitySwitch(newSel.cid, false);
+			JSClient.CitySwitch(newSel.cid,false);
 			// ElementSoundPlayer.Play(delta > 0 ? ElementSoundKind.MoveNext : ElementSoundKind.MovePrevious);
 			NavStack.Push(newSel.cid);
 		}
 
-		private void PriorCityClick(object sender, RoutedEventArgs e)
+		private void PriorCityClick(object sender,RoutedEventArgs e)
 		{
 			ChangeCityClick(-1);
 		}
 
-		private void NextCityClick(object sender, RoutedEventArgs e)
+		private void NextCityClick(object sender,RoutedEventArgs e)
 		{
 			ChangeCityClick(+1);
 		}
 
-		private void BackRightTapped(object sender, RightTappedRoutedEventArgs e)
+		private void BackRightTapped(object sender,RightTappedRoutedEventArgs e)
 		{
 			var menu = new MenuFlyout();
 			bool any = false;
-			for (int i = 1; i < 25; ++i)
+			for(int i = 1;i < 25;++i)
 			{
 				var str = NavStack.GetSpotName(-i);
-				if (str == null)
+				if(str == null)
 				{
 					break;
 				}
 
 				any = true;
-				menu.Items.Add(AApp.CreateMenuItem(str, NavStack.instance, -i));
+				menu.Items.Add(AApp.CreateMenuItem(str,NavStack.instance,-i));
 			}
-			if (!any)
+			if(!any)
 			{
-				menu.Items.Add(AApp.CreateMenuItem("no more :(", () => { }));
+				menu.Items.Add(AApp.CreateMenuItem("no more :(",() => { }));
 			}
 
 			menu.ShowAt(sender as FrameworkElement);
 		}
 
-		private void ForwardRightTapped(object sender, RightTappedRoutedEventArgs e)
+		private void ForwardRightTapped(object sender,RightTappedRoutedEventArgs e)
 		{
 			var menu = new MenuFlyout();
 			bool any = false;
-			for (int i = 1; i < 25; ++i)
+			for(int i = 1;i < 25;++i)
 			{
 				var str = NavStack.GetSpotName(i);
-				if (str == null)
+				if(str == null)
 				{
 					break;
 				}
 
 				any = true;
-				menu.Items.Add(AApp.CreateMenuItem(str, NavStack.instance, i));
+				menu.Items.Add(AApp.CreateMenuItem(str,NavStack.instance,i));
 			}
-			if (!any)
+			if(!any)
 			{
-				menu.Items.Add(AApp.CreateMenuItem("this is the most recent :(", () => { }));
+				menu.Items.Add(AApp.CreateMenuItem("this is the most recent :(",() => { }));
 			}
 
 			menu.ShowAt(sender as FrameworkElement);
 		}
 
-		private void coords_KeyDown(object sender, KeyRoutedEventArgs e)
+		private void coords_KeyDown(object sender,KeyRoutedEventArgs e)
 		{
 			var str = sender as TextBox;
 			Assert(str != null);
-			if (str != null)
+			if(str != null)
 			{
-				if (e.Key == Windows.System.VirtualKey.Enter)
+				if(e.Key == Windows.System.VirtualKey.Enter)
 				{
 					var cid = str.Text.FromCoordinate();
-					if (cid > 0)
+					if(cid > 0)
 					{
 						NavStack.Push(cid);
-						SpotTab.TouchSpot(cid, App.keyModifiers);
-						JSClient.CitySwitch(cid, false);
+						SpotTab.TouchSpot(cid,App.keyModifiers);
+						JSClient.CitySwitch(cid,false);
 					}
 				}
 			}
 		}
 
-		public static void ContinentFilterClick(object sender, RoutedEventArgs e)
+		public static void ContinentFilterClick(object sender,RoutedEventArgs e)
 		{
 			ContinentTagFilter.Show();
 			/*
@@ -1180,50 +1183,50 @@ namespace COTG.Views
 		//	}
 		//}
 
-		private void HomeClick(object sender, RoutedEventArgs e)
+		private void HomeClick(object sender,RoutedEventArgs e)
 		{
-			if (Spot.focus == 0)
+			if(Spot.focus == 0)
 			{
 				return;
 			}
 
-			if (Spot.focus.BringCidIntoWorldView(false, false) && City.IsBuild(Spot.focus)) // first just focus
+			if(Spot.focus.BringCidIntoWorldView(false,false) && City.IsBuild(Spot.focus)) // first just focus
 			{
 				return;
 			}
-			Spot.ProcessCoordClick(Spot.focus, false, App.keyModifiers, true); // then normal click
+			Spot.ProcessCoordClick(Spot.focus,false,App.keyModifiers,true); // then normal click
 		}
 
-		private void HomeRightTapped(object sender, RightTappedRoutedEventArgs e)
+		private void HomeRightTapped(object sender,RightTappedRoutedEventArgs e)
 		{
 			var ui = sender as UIElement;
-			Spot.GetFocus()?.ShowContextMenu(ui, e.GetPosition(ui));
+			Spot.GetFocus()?.ShowContextMenu(ui,e.GetPosition(ui));
 		}
 
-		private void BuildHomeClick(object sender, RoutedEventArgs e)
+		private void BuildHomeClick(object sender,RoutedEventArgs e)
 		{
-			if (City.build == 0)
+			if(City.build == 0)
 			{
 				return;
 			}
 
-			Spot.ProcessCoordClick(City.build, false, App.keyModifiers, true); // then normal click
+			Spot.ProcessCoordClick(City.build,false,App.keyModifiers,true); // then normal click
 		}
 
-		private void BuildHomeRightTapped(object sender, RightTappedRoutedEventArgs e)
+		private void BuildHomeRightTapped(object sender,RightTappedRoutedEventArgs e)
 		{
 			var ui = sender as UIElement;
-			City.GetBuild()?.ShowContextMenu(ui, e.GetPosition(ui));
+			City.GetBuild()?.ShowContextMenu(ui,e.GetPosition(ui));
 		}
 
-		private void CityListSubmitted(ComboBox sender, ComboBoxTextSubmittedEventArgs args)
+		private void CityListSubmitted(ComboBox sender,ComboBoxTextSubmittedEventArgs args)
 		{
 			var text = args.Text.ToLower();
 			var items = CityList.selections;
-			foreach (var it in items)
+			foreach(var it in items)
 			{
 				// its good
-				if (it.name == text)
+				if(it.name == text)
 				{
 					return;
 				}
@@ -1239,9 +1242,9 @@ namespace COTG.Views
 			//	}
 			//}
 			// try contains
-			foreach (var it in items)
+			foreach(var it in items)
 			{
-				if (it.name.ToLower().Contains(text))
+				if(it.name.ToLower().Contains(text))
 				{
 					sender.Text = it.name;
 					sender.SelectedItem = it;
@@ -1251,15 +1254,15 @@ namespace COTG.Views
 			// todo!
 		}
 
-		private void CitySubmitted(ComboBox sender, ComboBoxTextSubmittedEventArgs args)
+		private void CitySubmitted(ComboBox sender,ComboBoxTextSubmittedEventArgs args)
 		{
 			var text = args.Text.ToLower();
 
 			var items = City.gridCitySource;
-			foreach (var it in items)
+			foreach(var it in items)
 			{
 				// its good
-				if (it.nameAndRemarks == text)
+				if(it.nameAndRemarks == text)
 				{
 					return;
 				}
@@ -1275,9 +1278,9 @@ namespace COTG.Views
 			//	}
 			//}
 			// try contains
-			foreach (var it in items)
+			foreach(var it in items)
 			{
-				if (it.nameAndRemarks.ToLower().Contains(text))
+				if(it.nameAndRemarks.ToLower().Contains(text))
 				{
 					sender.Text = it.nameAndRemarks;
 					sender.SelectedItem = it;
@@ -1287,52 +1290,52 @@ namespace COTG.Views
 			// todo!
 		}
 
-		private void windowLayout_SelectionChanged(object sender, SelectionChangedEventArgs e)
+		private void windowLayout_SelectionChanged(object sender,SelectionChangedEventArgs e)
 		{
-			if (MainPage.instance != null)
+			if(MainPage.instance != null)
 			{
 				var viewToggle = windowLayout.SelectedIndex;
-				SetLayout( (Layout)viewToggle);
+				SetLayout((Layout)viewToggle);
 			}
 		}
 
-//		public static Vector2 webViewScale = new(1,1);
-//		internal static bool webviewHasFocus2=true;
-		private  async void SetLayout(Layout viewToggle)
+		//		public static Vector2 webViewScale = new(1,1);
+		//		internal static bool webviewHasFocus2=true;
+		private async void SetLayout(Layout viewToggle)
 		{
 			if(viewToggle == layout)
 				return;
 			layout = viewToggle;
-			
-			
-			
-				//			   UpdateCanvasMarginForWebview(webViewScale);
-				//scroll.ChangeView(null, null, 0.5f);
-				//var raidInfoVisible = true;
-				
-				updateHtmlOffsets.Go(true);
 
-				//MainPage.ToggleInfoBoxes(raidInfoVisible);
-				//   Task.Delay(200).ContinueWith((_) => City.gridCitySource.NotifyReset());
-				//UpdateWebViewScale();
-			
+
+
+			//			   UpdateCanvasMarginForWebview(webViewScale);
+			//scroll.ChangeView(null, null, 0.5f);
+			//var raidInfoVisible = true;
+
+			updateHtmlOffsets.Go(true);
+
+			//MainPage.ToggleInfoBoxes(raidInfoVisible);
+			//   Task.Delay(200).ContinueWith((_) => City.gridCitySource.NotifyReset());
+			//UpdateWebViewScale();
+
 		}
-//		static Debounce layoutChanged = new(TabPage.LayoutChanged){ runOnUiThead = true};
+		//		static Debounce layoutChanged = new(TabPage.LayoutChanged){ runOnUiThead = true};
 
 		static int popupLeftOffset, popupTopOffset;
 
-		public static void UpdateWebViewOffsets(int leftOffset, int topOffset)
+		public static void UpdateWebViewOffsets(int leftOffset,int topOffset)
 		{
-			if( popupLeftOffset  != leftOffset ||
+			if(popupLeftOffset  != leftOffset ||
 				popupTopOffset != topOffset)
 			{
-				popupLeftOffset =	leftOffset;
-				popupTopOffset	= topOffset;
+				popupLeftOffset =   leftOffset;
+				popupTopOffset  = topOffset;
 				updateHtmlOffsets.Go(false);
 			}
 
 		}
-		internal class UpdateHtmlOffsets : Debounce
+		internal class UpdateHtmlOffsets:Debounce
 		{
 			public UpdateHtmlOffsets() : base(null)
 			{
@@ -1350,139 +1353,139 @@ namespace COTG.Views
 			bool updateLayout;
 			Task F()
 			{
-					float szC;
-					var chatX = 3;
-					var chatY = 4;
-					
-					switch(layout)
+				float szC;
+				var chatX = 3;
+				var chatY = 4;
+
+				switch(layout)
+				{
+					case Layout.l2:
+						szC = 1;
+						// default chat
+						break;
+					case Layout.l1:
+						szC =  1;
+						// small chat
+						chatY =5;
+						break;
+
+					case Layout.c:
+						szC  = 0.667f;
+						break;
+					case Layout.chat:
+						szC  = 0.667f;
+						chatX = 1;
+						chatY = 1;
+						break;
+					case Layout.r1:
+						szC  = 0.56f;
+						break;
+					case Layout.r2:
+						szC  = 0.333f;
+						// small chat
+						chatY =5;
+						break;
+					default:
+						// not used
+						Assert(false);
+						szC = 0.5f;
+						break;
+
+				}
+
+				float zoom = htmlVisible || SettingsPage.webZoomSmall <= 0 ? SettingsPage.webZoom : SettingsPage.webZoomSmall;
+				var canvasScaledX = (zoom * canvasBaseXUnscaled).RoundToInt();
+				var canvasScaledY = (zoom * canvasBaseYUnscaled).RoundToInt();
+
+				var htmlShift = htmlVisible||SettingsPage.webZoomSmall>0 ? 0 : -canvasScaledX;
+
+				var leftOffset = ((popupLeftOffset*zoom).RoundToInt()-canvasScaledX).Max0();
+				var topOffset = ((popupTopOffset*zoom).RoundToInt()-canvasScaledY).Max0();
+
+				// only need 1 to avoid collisions
+				if(leftOffset > topOffset)
+					leftOffset =0;
+				else
+					topOffset=0;
+				instance.AddHandler(PointerMovedEvent,new PointerEventHandler(ProcessPointerMoved),true);
+				//	if (!Alliance.alliancesFetched)
+				//		return;
+				if(canvas != null && instance.grid != null)
+				{
+					//				return App.DispatchOnUIThreadTask( ()	=>
+
+					try
 					{
-						case Layout.l2:
-							szC = 1;
-							// default chat
-							break;
-						case Layout.l1:
-							szC =  1;
-							// small chat
-							chatY =5;
-							break;
 
-						case Layout.c:
-							szC  = 0.667f;
-							break;
-						case Layout.chat:
-							szC  = 0.667f;
-							chatX = 1;
-							chatY = 1;
-							break;
-						case Layout.r1:
-							szC  = 0.56f;
-							break;
-						case Layout.r2:
-							szC  = 0.333f;
-							// small chat
-							chatY =5;
-							break;
-						default:
-							// not used
-							Assert(false);
-							szC = 0.5f;
-							break;
+						if(JSClient.view != null && zoom != webZoomCurrent)
+						{
+							webZoomCurrent= zoom;
+							JSClient.view.ExecuteScriptAsync($"document.body.style.zoom={zoom};");
+						}
+						if(updateLayout)
+						{
+							// has it not been modified
+							if((instance.chatGrid.ColumnDefinitions[0].Width is { GridUnitType: GridUnitType.Star, Value: 3 or 1 } &&
+								instance.chatGrid.RowDefinitions[0].Height is { GridUnitType: GridUnitType.Star, Value: 5 or 3 or 4 or 2 or 1 })||(layout==Layout.chat))
+							{
+								instance.chatGrid.ColumnDefinitions[0].Width = new(chatX,GridUnitType.Star);
+								instance.chatGrid.ColumnDefinitions[1].Width = new(6-chatX,GridUnitType.Star);
+								instance.chatGrid.RowDefinitions[0].Height = new(chatY,GridUnitType.Star);
+								instance.chatGrid.RowDefinitions[1].Height = new(6-chatY,GridUnitType.Star);
 
-					}
+							}
+						}
 
-					float zoom = htmlVisible || SettingsPage.webZoomSmall <= 0 ? SettingsPage.webZoom : SettingsPage.webZoomSmall;
-					var canvasScaledX = (zoom * canvasBaseXUnscaled).RoundToInt();
-					var canvasScaledY = (zoom * canvasBaseYUnscaled).RoundToInt();
-
-					var htmlShift = htmlVisible||SettingsPage.webZoomSmall>0 ? 0 : -canvasScaledX;
-
-					var leftOffset = ((popupLeftOffset*zoom).RoundToInt()-canvasScaledX).Max0();
-					var topOffset = ((popupTopOffset*zoom).RoundToInt()-canvasScaledY).Max0();
-
-					// only need 1 to avoid collisions
-					if(leftOffset > topOffset)
-						leftOffset =0;
-					else
-						topOffset=0;
-					instance.AddHandler(PointerMovedEvent,new PointerEventHandler(ProcessPointerMoved),true);
-					//	if (!Alliance.alliancesFetched)
-					//		return;
-					if(canvas != null && instance.grid != null)
-					{
-						//				return App.DispatchOnUIThreadTask( ()	=>
-
-						try
+						var _canvasBaseX = (leftOffset + canvasScaledX + htmlShift).Max0();
+						var _canvasBaseY = (topOffset +canvasScaledY).Max0();
+						//	if(canvasBaseX != _canvasBaseX || canvasBaseY != _canvasBaseY)
 						{
 
-							if(JSClient.view != null && zoom != webZoomCurrent )
-							{
-								webZoomCurrent= zoom;
-								JSClient.view.ExecuteScriptAsync($"document.body.style.zoom={zoom};");
-							}
+							canvasBaseX = _canvasBaseX;
+							canvasBaseY = _canvasBaseY;
+							var initialWidth0 = instance.grid.ColumnDefinitions[0].ActualWidth;
+							var initialWidth1 = instance.grid.ColumnDefinitions[1].ActualWidth;
+							var initialMargin = instance.webView.Margin.Left;
+							var initialWidth2 = instance.grid.ColumnDefinitions[2].ActualWidth;
+
+							instance.webView.Margin= new(htmlShift,0,0,0);
+							//							var delta = -htmlShift + (canvasBaseX - initialWidth0);
+							var gridWidth = instance.grid.ActualWidth;
+							instance.grid.ColumnDefinitions[0].Width = new GridLength(canvasBaseX,GridUnitType.Pixel);
 							if(updateLayout)
 							{
-								// has it not been modified
-								if( (instance.chatGrid.ColumnDefinitions[0].Width is { GridUnitType: GridUnitType.Star, Value: 3 or 1 } &&
-									instance.chatGrid.RowDefinitions[0].Height is { GridUnitType: GridUnitType.Star, Value: 5 or 3 or 4 or 2 or 1 })||(layout==Layout.chat))
-								{
-									instance.chatGrid.ColumnDefinitions[0].Width = new(chatX,GridUnitType.Star);
-									instance.chatGrid.ColumnDefinitions[1].Width = new(6-chatX,GridUnitType.Star);
-									instance.chatGrid.RowDefinitions[0].Height = new(chatY,GridUnitType.Star);
-									instance.chatGrid.RowDefinitions[1].Height = new(6-chatY,GridUnitType.Star);
-
-								}
+								var newWidth1 = ((gridWidth-canvasScaledX)*szC -(_canvasBaseX-canvasScaledX)).RoundToInt().Max0();
+								instance.grid.ColumnDefinitions[1].Width = new(newWidth1);//	instance.grid.RowDefinitions[0].Height = new(canvasYOffset);
+								instance.grid.ColumnDefinitions[2].Width = new GridLength(1,GridUnitType.Star);//	instance.grid.RowDefinitions[0].Height = new(canvasYOffset);
+							}
+							else
+							{
+								instance.grid.ColumnDefinitions[2].Width = new(initialWidth2);// leave 2 as is	instance.grid.ColumnDefinitions[1].Width = GridLength.Auto;
+								instance.grid.ColumnDefinitions[1].Width = new GridLength(1,GridUnitType.Star);//	GridLength.Auto;//	instance.grid.RowDefinitions[0].Height = new(canvasYOffset);
 							}
 
-							var _canvasBaseX = (leftOffset + canvasScaledX + htmlShift).Max0();
-							var _canvasBaseY = (topOffset +canvasScaledY).Max0();
-							//	if(canvasBaseX != _canvasBaseX || canvasBaseY != _canvasBaseY)
-							{
-
-								canvasBaseX = _canvasBaseX;
-								canvasBaseY = _canvasBaseY;
-								var initialWidth0 = instance.grid.ColumnDefinitions[0].ActualWidth;
-								var initialWidth1 = instance.grid.ColumnDefinitions[1].ActualWidth;
-								var initialMargin = instance.webView.Margin.Left;
-								var initialWidth2 = instance.grid.ColumnDefinitions[2].ActualWidth;
-
-								instance.webView.Margin= new(htmlShift,0,0,0);
-								//							var delta = -htmlShift + (canvasBaseX - initialWidth0);
-								var gridWidth = instance.grid.ActualWidth;
-								instance.grid.ColumnDefinitions[0].Width = new GridLength(canvasBaseX,GridUnitType.Pixel);
-								if(updateLayout)
-								{
-									var newWidth1 = ((gridWidth-canvasScaledX)*szC -(_canvasBaseX-canvasScaledX)).RoundToInt().Max0();
-									instance.grid.ColumnDefinitions[1].Width = new(newWidth1);//	instance.grid.RowDefinitions[0].Height = new(canvasYOffset);
-									instance.grid.ColumnDefinitions[2].Width = new GridLength(1,GridUnitType.Star);//	instance.grid.RowDefinitions[0].Height = new(canvasYOffset);
-								}
-								else
-								{
-									instance.grid.ColumnDefinitions[2].Width = new (initialWidth2);// leave 2 as is	instance.grid.ColumnDefinitions[1].Width = GridLength.Auto;
-									instance.grid.ColumnDefinitions[1].Width = new GridLength(1,GridUnitType.Star);//	GridLength.Auto;//	instance.grid.RowDefinitions[0].Height = new(canvasYOffset);
-								}
-							
 							instance.grid.RowDefinitions[5].Height = new(40*zoom);//new GridLength(newWidth1,GridUnitType.Pixel);//	instance.grid.RowDefinitions[0].Height = 
 
-								canvas.Margin = new Thickness(0,canvasBaseY,0,0);
-							}
+							canvas.Margin = new Thickness(0,canvasBaseY,0,0);
+						}
 
-							TabPage.LayoutChanged();
-						}
-						catch(Exception ex)
-						{
-							LogEx(ex);
-						}
+						TabPage.LayoutChanged();
 					}
-					return Task.CompletedTask;
-				
+					catch(Exception ex)
+					{
+						LogEx(ex);
+					}
+				}
+				return Task.CompletedTask;
+
 			}
 		}
 		internal static UpdateHtmlOffsets updateHtmlOffsets = new();
 
-		
-		
 
-		private void webFocus_Click(object sender, RoutedEventArgs e)
+
+
+		private void webFocus_Click(object sender,RoutedEventArgs e)
 		{
 			forceAllowWebFocus = !forceAllowWebFocus;
 			//var hasFocus = !webviewHasFocus;
@@ -1511,20 +1514,20 @@ namespace COTG.Views
 		//	}
 		//}
 
-		private void chatResizeTapped(object sender, TappedRoutedEventArgs e)
+		private void chatResizeTapped(object sender,TappedRoutedEventArgs e)
 		{
-//			var height = new( chatGrid.RowDefinitions[0].Height.Value switch { 1=>2,2=>3,3=>4,4=>5,_=>1});
+			//			var height = new( chatGrid.RowDefinitions[0].Height.Value switch { 1=>2,2=>3,3=>4,4=>5,_=>1});
 			var flyout = new MenuFlyout();
-			flyout.AddItem("Tall",() =>{ chatGrid.RowDefinitions[0].Height = new GridLength(1,GridUnitType.Star);
-				chatGrid.RowDefinitions[1].Height = new GridLength(5,GridUnitType.Star);});
-			flyout.AddItem("Medium",() =>{ chatGrid.RowDefinitions[0].Height = new GridLength(4,GridUnitType.Star);
-				chatGrid.RowDefinitions[1].Height = new GridLength(2,GridUnitType.Star);});
-			flyout.AddItem("Small",() => {chatGrid.RowDefinitions[0].Height = new GridLength(5,GridUnitType.Star);
-				chatGrid.RowDefinitions[1].Height = new GridLength(1,GridUnitType.Star);});
+			flyout.AddItem("Tall",() => { chatGrid.RowDefinitions[0].Height = new GridLength(1,GridUnitType.Star);
+				chatGrid.RowDefinitions[1].Height = new GridLength(5,GridUnitType.Star); });
+			flyout.AddItem("Medium",() => { chatGrid.RowDefinitions[0].Height = new GridLength(4,GridUnitType.Star);
+				chatGrid.RowDefinitions[1].Height = new GridLength(2,GridUnitType.Star); });
+			flyout.AddItem("Small",() => { chatGrid.RowDefinitions[0].Height = new GridLength(5,GridUnitType.Star);
+				chatGrid.RowDefinitions[1].Height = new GridLength(1,GridUnitType.Star); });
 			flyout.ShowAt(chatGrid,e.GetPosition(chatGrid));
 		}
 
-	
+
 
 		private RoutedEventHandler LayoutEnterX(object offset)
 		{
@@ -1532,11 +1535,11 @@ namespace COTG.Views
 			void fn(object sender,RoutedEventArgs e)
 			{
 				var s = sender as Button;
-				int id=-1;
-				for(int i=0;i<2;++i)
+				int id = -1;
+				for(int i = 0;i<2;++i)
 				{
 					int counter = 0;
-					foreach(Button b in (i==0? leftLayoutGrid:rightLayoutGrid).Children)
+					foreach(Button b in (i==0 ? leftLayoutGrid : rightLayoutGrid).Children)
 					{
 						{
 							if(s!= b)
@@ -1565,7 +1568,7 @@ namespace COTG.Views
 
 		}
 
-		
+
 
 
 		//		private async void CookieClick(object sender, RoutedEventArgs e)
@@ -1616,7 +1619,7 @@ namespace COTG.Views
 		//			}
 		//		}
 
-		private void FilterRightTapped(object sender, RightTappedRoutedEventArgs e)
+		private void FilterRightTapped(object sender,RightTappedRoutedEventArgs e)
 		{
 			ContinentTagFilter.Show(true);
 		}
@@ -1626,12 +1629,11 @@ namespace COTG.Views
 		protected override void OnPointerEntered(PointerRoutedEventArgs e) => base.OnPointerEntered(e);
 		protected override void OnPointerPressed(PointerRoutedEventArgs e) => base.OnPointerPressed(e);
 		protected override void OnPointerMoved(PointerRoutedEventArgs e) => base.OnPointerMoved(e);
-		protected override void OnPreviewKeyDown(KeyRoutedEventArgs e) => base.OnPreviewKeyDown(e);
+		protected override void OnPreviewKeyDown(KeyRoutedEventArgs e)  { Trace("KeyDown"); base.OnPreviewKeyDown(e); }
 		static void ProcessPointerMoved(object sender,PointerRoutedEventArgs e)
 		{
-			var c = e.GetCurrentPoint(null);
-			mouseScreenC = c.Position;
+			var c = e.GetCurrentPoint(canvas);
+			UpdateMousePosition( c.Position );
 		}
-		static Point mouseScreenC;
 	}
 }

@@ -71,9 +71,6 @@
     <PackageReference Include="MessagePackAnalyzer" Version="2.3.85" />
     <PackageReference Include="Microsoft.AppCenter" Version="4.4.0" />
     <PackageReference Include="Microsoft.AppCenter.Analytics" Version="4.4.0" />
-    <PackageReference Include="Microsoft.AppCenter.Crashes" Version="4.4.0" />
-    <PackageReference Include="Microsoft.ApplicationInsights" Version="2.20.0-beta1" />
-    <PackageReference Include="Microsoft.ApplicationInsights.WorkerService" Version="2.20.0-beta1" />
     <PackageReference Include="Microsoft.AspNetCore.AzureKeyVault.HostingStartup" Version="2.0.4" />
     <PackageReference Include="Microsoft.DependencyValidation.Analyzers" Version="0.11.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration" Version="6.0.0-rc.2.21480.5" />
@@ -94,7 +91,6 @@
     <PackageReference Include="Microsoft.Toolkit.HighPerformance" Version="7.1.1" />
     <PackageReference Include="Microsoft.Toolkit.Mvvm" Version="7.1.1" />
     <PackageReference Include="Microsoft.Windows.CsWinRT" Version="1.3.5" />
-    <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.22489-preview" />
     <PackageReference Include="MonoGame.Content.Builder.Task" Version="3.8.1.1941-develop" />
     <PackageReference Include="Nito.AsyncEx.Coordination" Version="5.1.2" />
     <PackageReference Include="Nito.AsyncEx.Tasks" Version="5.1.2" />
@@ -105,12 +101,18 @@
     <PackageReference Include="SharpDX.DXGI" Version="4.2.0" />
     <PackageReference Include="SharpDX.MediaFoundation" Version="4.2.0" />
     <PackageReference Include="SharpGen.Runtime.COM" Version="2.0.0-beta.10" />
+    <PackageReference Include="Syncfusion.Chart.WinUI" Version="19.3.0.48" />
+    <PackageReference Include="Syncfusion.Grid.WinUI" Version="19.3.0.48" />
+    <PackageReference Include="Syncfusion.Licensing" Version="19.3.0.48" />
+    <PackageReference Include="Syncfusion.Scheduler.WinUI" Version="19.3.0.48" />
     <PackageReference Include="System.Collections.Immutable" Version="6.0.0-rc.2.21480.5" />
+    <PackageReference Include="System.Memory.Data" Version="6.0.0-rc.2.21480.5" />
     <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="6.0.0-rc.2.21480.5" />
     <PackageReference Include="System.Text.Json" Version="6.0.0-rc.2.21480.5" />
     <PackageReference Include="System.Threading.Tasks.Dataflow" Version="6.0.0-rc.2.21480.5" />
     <PackageReference Include="Telerik.WinUI.Controls.Trial" Version="0.5.0" />
-    <PackageReference Include="ZString" Version="2.4.2" />
+    <PackageReference Include="Vanara.PInvoke.User32" Version="3.3.14" />
+    <PackageReference Include="ZString" Version="2.4.3" />
     <PackageReference Include="PInvoke.User32" Version="0.7.104" />
   </ItemGroup>
 	<ItemGroup>
@@ -456,6 +458,7 @@
     <Compile Include="Views\QuickBuild.xaml.cs">
       <DependentUpon>QuickBuild.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\ReinforcementsTab.xaml.cs" />
     <Compile Include="Views\ResSettings.xaml.cs">
       <DependentUpon>ResSettings.xaml</DependentUpon>
     </Compile>
@@ -629,6 +632,9 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\ReinforcementsTab.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\ResSettings.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -797,6 +803,7 @@
     <None Remove="Views\CityRename.xaml" />
     <None Remove="Views\DefenderPage.xaml" />
     <None Remove="Views\DefendTab.xaml" />
+    <None Remove="Views\ReinforcementsTab.xaml" />
     <None Remove="Wiki\fixes.md" />
     <None Remove="Win32Native.txt" />
   </ItemGroup>
@@ -867,22 +874,23 @@
     <IsPublishable>True</IsPublishable>
     <ProduceReferenceAssembly>True</ProduceReferenceAssembly>
     <EnforceCodeStyleInBuild>True</EnforceCodeStyleInBuild>
-    <ImplicitUsings>enable</ImplicitUsings>
+    <ImplicitUsings>disable</ImplicitUsings>
     <DocumentationFile>C:\Source\CotGL\doc.xml</DocumentationFile>
     <Authors>Pseudo</Authors>
     <UserSecretsId>250689c0-8ee0-49a5-b4f4-7e7d910d2828</UserSecretsId>
     <ApplicationInsightsResourceId>/subscriptions/2a698fb0-55b8-4561-b722-2015b2c78d9c/resourceGroups/appcenter-export-Alliances/providers/microsoft.insights/components/AppCenterExport-Alliances</ApplicationInsightsResourceId>
+    <Nullable>warnings</Nullable>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <Optimize>False</Optimize>
     <WarningLevel>4</WarningLevel>
-    <DefineConstants>CRASHES</DefineConstants>
+    <DefineConstants></DefineConstants>
     <Deterministic>True</Deterministic>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <Optimize>True</Optimize>
     <WarningLevel>4</WarningLevel>
-    <DefineConstants>CRASHES</DefineConstants>
+    <DefineConstants></DefineConstants>
     <Deterministic>True</Deterministic>
   </PropertyGroup>
   <ProjectExtensions />

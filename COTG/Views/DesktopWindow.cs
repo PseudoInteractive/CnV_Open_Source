@@ -374,13 +374,13 @@ namespace COTG.Views
 				//        OnWindowSizing();
 				//    }
 				//    break;
-				//case PInvoke.User32.WindowMessage.WM_DPICHANGED:
-				//    if(this.DpiChanged is not null)
-				//    {
-				//        uint dpi = HiWord(wParam);
-				//        OnWindowDpiChanged((int)dpi);
-				//    }
-				//    break;
+				case PInvoke.User32.WindowMessage.WM_DPICHANGED:
+					if (this.DpiChanged is not null)
+					{
+						uint dpi = HiWord(wParam);
+						OnWindowDpiChanged((int)dpi);
+					}
+					break;
 				//case PInvoke.User32.WindowMessage.WM_DISPLAYCHANGE:
 				//    if (this.OrientationChanged is not null)
 				//    {

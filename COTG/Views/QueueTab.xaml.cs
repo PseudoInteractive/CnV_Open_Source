@@ -356,26 +356,6 @@ namespace COTG.Views
 
 
 
-		internal static List<(int x, int y)> FindOverlayBuildingsOfType(City city, int bid, int max= 100)
-		{
-			List<(int x, int y)> rv = new();
-			for (var cy = span0; cy <= span1; ++cy)
-			{
-				for (var cx = span0; cx <= span1; ++cx)
-				{
-					if (rv.Count > max)
-						return rv;
-
-					var c = (cx, cy);
-					if (bid == city.GetLayoutBid(c))
-					{
-						rv.Add(c);
-
-					}
-				}
-			}
-			return rv;
-		}
 
 		internal static (int x, int y, int bl) FindValidBuildingOfType(City city, int bid)
 		{
@@ -590,6 +570,27 @@ namespace COTG.Game
 
 	public partial class City
 	{
+		internal List<(int x, int y)> FindOverlayBuildingsOfType(int bid,int max = 100)
+		{
+			List<(int x, int y)> rv = new();
+			for(var cy = span0;cy <= span1;++cy)
+			{
+				for(var cx = span0;cx <= span1;++cx)
+				{
+					if(rv.Count > max)
+						return rv;
+
+					var c = (cx, cy);
+					if(bid == this.GetLayoutBid(c))
+					{
+						rv.Add(c);
+
+					}
+				}
+			}
+			return rv;
+		}
+
 		public  bool leaveMe => HasTag(Tags.LeaveMe);
 
 		//public async Task<BuildInfo> GetBuildStage()
@@ -993,6 +994,8 @@ namespace COTG.Game
 		{
 			return Alliance.IsAllyOrNap(allianceId);
 		}
+
+		
 	}
 	//public class BuildItemTemplateSelector : Microsoft.UI.Xaml.Controls.DataTemplateSelector
 

@@ -16,6 +16,7 @@ using static COTG.Game.City;
 using static COTG.Views.CityBuild;
 using static COTG.BuildingDef;
 using COTG.Views;
+using COTG.Services;
 
 namespace COTG.Game
 {
@@ -1151,6 +1152,20 @@ namespace COTG.Game
 					}
 				}
 				return rv;
+			}
+		}
+		public async Task<bool> DoPoll()
+		{
+			var pollResult = (await Post.SendForJson("/includes/poll2.php",$"cid={cid}&ai=0&ss={JSClient.cotgS}")).RootElement;
+			if(pollResult.TryGetProperty("city",out var cjs))
+			{
+				LoadCityData(cjs);
+				return cjs.TryGetProperty("bq", out var _); // did we get a build queue?
+			}
+			else
+			{
+				Assert(false);
+				return false;
 			}
 		}
 	}

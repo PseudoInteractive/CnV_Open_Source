@@ -894,9 +894,9 @@ namespace COTG.Services
 	public class RaidOverview : OverviewApi
 	{
 		public static RaidOverview inst = new RaidOverview();
-		public static Task Send() => inst.Post();
+		public static Task<bool> Send() => inst.Post();
 
-		public static Task SendMaybe()
+		public static Task<bool> SendMaybe()
 		{
 			var t = DateTimeOffset.UtcNow;
 			if (t - lastFetched <= TimeSpan.FromMinutes(5))
@@ -904,7 +904,7 @@ namespace COTG.Services
 				lastFetched = t;
 				return inst.Post();
 			}
-			return Task.CompletedTask;
+			return AUtil.completedTaskTrue;
 		}
 		public RaidOverview() : base("overview/graid.php") { }
 		public static DateTimeOffset lastFetched = AUtil.dateTimeZero;

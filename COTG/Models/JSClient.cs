@@ -49,6 +49,7 @@ using Microsoft.UI.Dispatching;
 using System.Runtime;
 using PointerUpdateKind = Windows.UI.Input.PointerUpdateKind;
 using System.Net;
+using Microsoft.UI.Xaml.Input;
 
 namespace COTG
 {
@@ -83,6 +84,7 @@ namespace COTG
 		static bool councillorsChecked;
 		public static int spanX;
 		public static int spanY;
+		public static string cotgS;
 		public static string cookies;
 		// hack:  resources for web load
 		//		static string jsFunkyEtc;
@@ -542,8 +544,8 @@ namespace COTG
 				coreWebView.WebResourceRequested += View_WebResourceRequested;
 				coreWebView.WebMessageReceived +=CoreWebView_WebMessageReceived;
 				//	view.EffectiveViewportChanged += View_EffectiveViewportChanged;
-				//	view.AddHandler(WebView2.KeyDownEvent, new KeyEventHandler(webViewKeyDownHandler), true);
-				//	view.AddHandler(WebView2.PointerPressedEvent, new PointerEventHandler(pointerEventHandler), true);
+				view.AddHandler(WebView2.KeyDownEvent, new KeyEventHandler(webViewKeyDownHandler), true);
+				//view.AddHandler(WebView2.PointerPressedEvent, new PointerEventHandler(pointerEventHandler), true);
 				//	view.UnsafeContentWarningDisplaying += View_UnsafeContentWarningDisplaying;
 				//	view.UnsupportedUriSchemeIdentified += View_UnsupportedUriSchemeIdentified;
 
@@ -874,55 +876,55 @@ namespace COTG
 
 		//		 });
 		//		}
-		
+
 
 		//private static void pointerEventHandler(object sender, PointerRoutedEventArgs e)
 		//{
 		//	Note.Show("Pointer " + e.GetCurrentPoint(sender as UIElement).Properties.PointerUpdateKind + e.KeyModifiers + e.ToString());
 		//}
 
-		//private static void webViewKeyDownHandler(object sender, KeyRoutedEventArgs e)
-		//{
-		//	Note.Show("Key " + e.Key + e.ToString());
-		//}
+		private static void webViewKeyDownHandler(object sender,KeyRoutedEventArgs e)
+		{
+			Trace("Key " + e.Key + e.ToString());
+		}
 
-//		private async static void View_NewWindowRequested(CoreWebView sender,CoreWebView2NewWindowRequestedEventArgs args)
-//		{
-////			args.Handled = true;
-//			var uri = new Uri(args.Uri);
-//			//if (WebViewPage.instance != null)
-//			//{
-//			//    WebViewPage.instance.Focus(FocusState.Programmatic);
-//			//    return;
-//			//}
+		//		private async static void View_NewWindowRequested(CoreWebView sender,CoreWebView2NewWindowRequestedEventArgs args)
+		//		{
+		////			args.Handled = true;
+		//			var uri = new Uri(args.Uri);
+		//			//if (WebViewPage.instance != null)
+		//			//{
+		//			//    WebViewPage.instance.Focus(FocusState.Programmatic);
+		//			//    return;
+		//			//}
 
-//			Trace(args.Uri);
-//			//          Trace(httpsHost.Host);
-//			if ((httpsHost != null && uri.Host == httpsHost.Host))
-//			{
-//				Log(uri.ToString());
-//				if (App.IsKeyPressedShift())
-//				{
+		//			Trace(args.Uri);
+		//			//          Trace(httpsHost.Host);
+		//			if ((httpsHost != null && uri.Host == httpsHost.Host))
+		//			{
+		//				Log(uri.ToString());
+		//				if (App.IsKeyPressedShift())
+		//				{
 
-//					Launcher.LaunchUriAsync(uri, new LauncherOptions() { DisplayApplicationPicker = true });
-//				}
-//				else
-//				{
-//					WebViewPage.DefaultUrl = uri;
-//					await WindowManagerService.Current.TryShowAsStandaloneAsync<WebViewPage>("overview");
-//				}
-//			}
-//			else if (args.Uri.OriginalString.StartsWith("https://accounts.google.com/o/oauth2/auth?"))
-//			{
-//				WebViewPage.post =uri;
-//				await WindowManagerService.Current.TryShowAsStandaloneAsync<WebViewPage>("login");
-//			}
-//			//			else if (httpsHost != null && args.)
-//			else
-//			{
-//				Launcher.LaunchUriAsync(uri);
-//			}
-//		}
+		//					Launcher.LaunchUriAsync(uri, new LauncherOptions() { DisplayApplicationPicker = true });
+		//				}
+		//				else
+		//				{
+		//					WebViewPage.DefaultUrl = uri;
+		//					await WindowManagerService.Current.TryShowAsStandaloneAsync<WebViewPage>("overview");
+		//				}
+		//			}
+		//			else if (args.Uri.OriginalString.StartsWith("https://accounts.google.com/o/oauth2/auth?"))
+		//			{
+		//				WebViewPage.post =uri;
+		//				await WindowManagerService.Current.TryShowAsStandaloneAsync<WebViewPage>("login");
+		//			}
+		//			//			else if (httpsHost != null && args.)
+		//			else
+		//			{
+		//				Launcher.LaunchUriAsync(uri);
+		//			}
+		//		}
 
 		//private static string GetJsString(string asm)
 		//{
@@ -937,12 +939,12 @@ namespace COTG
 		//	view.Source = new Uri("https://www.crownofthegods.com/home");
 
 
-//		const string webResourceFilter = "webResourceFilter";
+		//		const string webResourceFilter = "webResourceFilter";
 		//}
 
-//		HTTP/1.1 200 OK
-//static readonly string headers=
-//			@"Content-Type: application/x-javascript Content-Encoding: gzip
+		//		HTTP/1.1 200 OK
+		//static readonly string headers=
+		//			@"Content-Type: application/x-javascript Content-Encoding: gzip
 
 
 
@@ -2410,6 +2412,7 @@ private static async void ShowCouncillorsMissingDialog()
 							   var token = jso.GetString("token");
 							   var raidSecret = jso.GetString("raid");
 							   var agent = jso.GetString("agent");
+								   cotgS = jso.GetString("s");
 							 //  var cookie = jso.GetString("cookie");
 							   //   Log(jsVars.cookie);
 							   Log(token);
@@ -2621,16 +2624,15 @@ private static async void ShowCouncillorsMissingDialog()
 										4 => PointerUpdateKind.XButton2Pressed,
 										_ => PointerUpdateKind.Other };
 
-								  // App.OnPointerPressed(kind);
-								   //{
-									  // var c = ShellPage.JSPointToScreen(x, y);
-									  // if (c.x > 0 && c.y > 0)
-									  // {
-										 //  ShellPage.Canvas_PointerPressedJS(c.x, c.y, kind);
-									
-									  // }
-								   //}
-								   
+								   App.OnPointerPressed(kind);
+								   {
+									   var c = view.TransformToVisual(ShellPage.canvas).TransformPoint(new(x,y));
+									  	ShellPage.Canvas_PointerPressed((c, 0, true, (ulong)Environment.TickCount64*1000, kind));
+
+											
+									  
+								   }
+
 								   break;
 							   }
 						   //case "cityinfo":

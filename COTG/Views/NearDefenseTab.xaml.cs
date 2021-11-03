@@ -90,10 +90,11 @@ namespace COTG.Views
 
 					var onlyHome = this.onlyHome;
 					// Dispatch both and then wait for results in parallel
-					var task0 = RestAPI.troopsOverview.Post();
-					var task1 = RaidOverview.Send();
-					await task0;
-					await task1;
+					var task0 = RestAPI.troopsOverview.Post().ConfigureAwait(false);
+					var task1 = RaidOverview.Send().ConfigureAwait(false);
+					var result0 = await task0;
+					var result1 = await task1;
+					// should we abort on failure?
 					var s = new List<Supporter>();
 					//                supportGrid.ItemsSource = null;
 					{
@@ -383,6 +384,7 @@ namespace COTG.Views
 				var ts = supporter.tSend.DividedBy(def.Count);
 				var cid = d.cid;
 				await Post.SendRein(supporter.cid, cid, ts, departAt, _arriveAt, hours, supporter.split, text);
+				Trace($"Sent {ts} from {supporter.cid.AsCity()} to {cid.AsCity()} @{_arriveAt.ToString()}");
 				await Task.Delay(500);
 			}
 
