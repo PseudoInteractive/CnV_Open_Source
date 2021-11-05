@@ -266,7 +266,7 @@ TextSubmitted="CitySubmitted"
                             ToolTipService.ToolTip="Spot with Focus.&#x0a;Click to re-center or swith to this city&#x0a;Right clck for menu" Visibility="Collapsed"/>
 						<winui:ProgressRing x:Name="progress" IsActive="False" />
 						<TextBlock x:Name="work" x:FieldModifier="public" Margin="6" VerticalAlignment="Center"  />
-						
+						<TextBlock x:Name="Focus" Visibility="Collapsed"/>
 					</StackPanel>
 				</winui:CommandBar.Content>
 				<winui:CommandBar.SecondaryCommands>

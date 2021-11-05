@@ -214,7 +214,7 @@ namespace COTG.Views
 			foreach (var d in defendants)
 			{
 
-				if (city.ComputeTravelTime(d.cid, onlyHome, includeOffense, false, false, viaWater, filterTime, ref hours))
+				if (city.ComputeTravelTime(d.cid, onlyHome, includeOffense,includeOffense,includeOffense, viaWater, filterTime, ref hours))
 				{
 					rv.Add(d);
 				}

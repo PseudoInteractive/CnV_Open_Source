@@ -89,7 +89,7 @@ namespace COTG
 			for (; ; )
 			{
 				idToBid[counter] = idToBid[0]; // The first building is null
-				if(counter++ >= idToBid.Length)
+				if(counter++ >= 255)
 					break;
 			}
 			idCabin = BidToId(City.bidCottage);

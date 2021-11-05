@@ -33,6 +33,7 @@ namespace COTG
 			Assert(a <= 10+26+26+14);
 			return a switch {  < 10 => (char)('0'+a), < 10+26 => (char)('A'+a-10), < 10+26+26 => (char)('a'+a-10-26), < 10+26+26+14 => (char)('"'+a-10-26-26), _ => '!' };
 		}
+		public static string StringIfNotNull<T>(T f,Func<string,T> GetStr) => f is null ? string.Empty : GetStr(f);
 
 		public static Task<bool> completedTaskTrue = Task.FromResult(true);
 		public static Task<bool> completedTaskFalse = Task.FromResult(false);

@@ -44,5 +44,7 @@ namespace COTG
 			}
 			return _default is not null ? _default() : default;
 		}
+
+		internal static T Deserialize<T>(object p) => throw new NotImplementedException();
 	}
 }

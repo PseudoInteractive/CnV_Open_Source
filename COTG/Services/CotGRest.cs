@@ -27,6 +27,7 @@ using TroopTypeCounts = COTG.Game.TroopTypeCounts;
 using TroopTypeCountsRef = COTG.Game.TroopTypeCounts;
 using static COTG.Game.TroopTypeCountHelper;
 using System.Net;
+using Nito.AsyncEx;
 
 //COTG.DArrayRef<COTG.Game.TroopTypeCount>;
 
@@ -58,6 +59,7 @@ namespace COTG.Services
 
 		public int pid = -1;
 
+		public static AsyncLock httpClientLock = new();
 		public virtual async Task<bool> AcceptAndProcess(HttpResponseMessage resp, bool except)
 		{
 			try
@@ -227,8 +229,8 @@ namespace COTG.Services
 				
 				var uri = new Uri(JSClient.httpsHost, localPath);
 				{
-					var req = new HttpRequestMessage(HttpMethod.Post,uri);
-					req.Version= HttpVersion.Version20;;
+					var req = new HttpRequestMessage(HttpMethod.Post,uri){ VersionPolicy=HttpVersionPolicy.RequestVersionOrHigher,Version= HttpVersion.Version20};
+					
 					req.Content = new StringContent(postContent,
 								Encoding.UTF8,
 								"application/x-www-form-urlencoded");

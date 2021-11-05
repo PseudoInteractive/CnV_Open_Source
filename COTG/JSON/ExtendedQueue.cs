@@ -683,7 +683,7 @@ namespace COTG;
 							Trace($"No space {city} Q:{cotgQ.Length} XQ:{queue.Length} isBlocked:{isBlocked}");
 						}
 
-						await Post.Get("/overview/mconv.php",$"a={cid}",onlyHeaders: true).ConfigureAwait(false); ;
+					//	await Post.Get("/overview/mconv.php",$"a={cid}",onlyHeaders: true).ConfigureAwait(false); ;
 
 						//if(cid != City.build)
 						//{
@@ -728,7 +728,7 @@ namespace COTG;
 						await Task.Delay(1200).ConfigureAwait(false);
 					Debounce.Q(uniqueNumber: cid*113,debounceT: 200,throttleT: 4000,action: async () =>
 					{
-						await city.DoPoll();
+						await city.DoPoll().ConfigureAwait(false);
 
 					});
 					// todo:  Read city data

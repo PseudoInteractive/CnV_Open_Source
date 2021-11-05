@@ -76,6 +76,7 @@ namespace COTG
 		public static CoreWebView coreWebView;
 		//public static WebViewBrush webViewBrush; 
 		public static HttpClientHandler  httpFilter;
+		
 	//	public static HttpCookieManager cookieManager;
 //		const int clientCount = 6;
 	//	public static ConcurrentBag<HttpClient> clientPool;
@@ -561,6 +562,7 @@ namespace COTG
 				//	view.PreviewKeyDown+=View_PreviewKeyDown;
 				view.NavigationStarting+=View_NavigationStarting;
 				view.NavigationCompleted+=View_NavigationCompleted; ;
+				view.PointerMoved +=View_PointerMoved;
 				//	view.NavigationCompleted+=View_NavigationCompleted;
 				coreWebView.PermissionRequested+=View_PermissionRequested; ;
 				coreWebView.NewWindowRequested+=CoreWebView_NewWindowRequested; ;
@@ -608,6 +610,12 @@ namespace COTG
 				WebViewException(ex);
 			}
 		}
+
+		private static void View_PointerMoved(object sender,PointerRoutedEventArgs e)
+		{
+			throw new NotImplementedException();
+		}
+
 		internal static void Initialize(Microsoft.UI.Xaml.Controls.Grid panel,WebView2 _view)
 		{
 			try
@@ -618,26 +626,27 @@ namespace COTG
 
 
 				httpFilter = new();
-			//	httpFilter.AutomaticDecompression = true;
-			//	httpFilter.AllowAutoRedirect = true;
-			//	httpFilter.UseProxy = false;
+	//			httpFilter.version = HttpVersion.Http30;
+					httpFilter.AutomaticDecompression = DecompressionMethods.All;
+					httpFilter.AllowAutoRedirect = true;
+				//	httpFilter.UseProxy = false;
 
-			//httpFilter.http MaxVersion = HttpVersion.Http20;
-			//	httpFilter.ServerCustomValidationRequested += ServerCustomValidationRequested;
-			//httpFilter.IgnorableServerCertificateErrors.Add(ChainValidationResult.Untrusted);
-			//httpFilter.IgnorableServerCertificateErrors.Add(ChainValidationResult.Expired);
+				//httpFilter.http MaxVersion = HttpVersion.Http20;
+				//	httpFilter.ServerCustomValidationRequested += ServerCustomValidationRequested;
+				//httpFilter.IgnorableServerCertificateErrors.Add(ChainValidationResult.Untrusted);
+				//httpFilter.IgnorableServerCertificateErrors.Add(ChainValidationResult.Expired);
 
-			//httpFilter.IgnorableServerCertificateErrors.Add(Windows.Security.Cryptography.Certificates.ChainValidationResult.WrongUsage);
-			//httpFilter.IgnorableServerCertificateErrors.Add(Windows.Security.Cryptography.Certificates.ChainValidationResult.Expired);
-			//httpFilter.IgnorableServerCertificateErrors.Add(Windows.Security.Cryptography.Certificates.ChainValidationResult.Untrusted);
-			//httpFilter.IgnorableServerCertificateErrors.Add(Windows.Security.Cryptography.Certificates.ChainValidationResult.IncompleteChain);
-			//httpFilter.IgnorableServerCertificateErrors.Add(Windows.Security.Cryptography.Certificates.ChainValidationResult.RevocationInformationMissing);
-			//httpFilter.IgnorableServerCertificateErrors.Add(Windows.Security.Cryptography.Certificates.ChainValidationResult.RevocationFailure);
+				//httpFilter.IgnorableServerCertificateErrors.Add(Windows.Security.Cryptography.Certificates.ChainValidationResult.WrongUsage);
+				//httpFilter.IgnorableServerCertificateErrors.Add(Windows.Security.Cryptography.Certificates.ChainValidationResult.Expired);
+				//httpFilter.IgnorableServerCertificateErrors.Add(Windows.Security.Cryptography.Certificates.ChainValidationResult.Untrusted);
+				//httpFilter.IgnorableServerCertificateErrors.Add(Windows.Security.Cryptography.Certificates.ChainValidationResult.IncompleteChain);
+				//httpFilter.IgnorableServerCertificateErrors.Add(Windows.Security.Cryptography.Certificates.ChainValidationResult.RevocationInformationMissing);
+				//httpFilter.IgnorableServerCertificateErrors.Add(Windows.Security.Cryptography.Certificates.ChainValidationResult.RevocationFailure);
 
-			//httpFilter.AllowUI = true;
-			//	httpFilter.CookieUsageBehavior = HttpCookieUsageBehavior.NoCookies;
+				//httpFilter.AllowUI = true;
+				//	httpFilter.CookieUsageBehavior = HttpCookieUsageBehavior.NoCookies;
 
-			httpFilter.AutomaticDecompression=DecompressionMethods.All;
+				httpFilter.AutomaticDecompression=DecompressionMethods.All;
 
 
 			//	  HttpBaseProtocolFilter.CreateForUser( User.GetDefault());
@@ -757,6 +766,7 @@ namespace COTG
 			{
 				
 				var webView = new WebViewPage();
+				var view = new WebView2();
 				webView.ShowOrAdd(true);
 	//			f.Content = webView;
 				
@@ -769,7 +779,7 @@ namespace COTG
 				//{
 				//	await Task.Delay(1000);
 				//}
-				var view = webView.webView;
+			//	var view = webView.webView;
 				view.DispatcherQueue.TryEnqueue( DispatcherQueuePriority.Normal,  async ()=>
 				{
 					await view.EnsureCoreWebView2Async();

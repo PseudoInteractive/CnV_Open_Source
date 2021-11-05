@@ -280,6 +280,9 @@ namespace COTG.Views
 
 			//		webView.Scale = new Vector3(SettingsPage.htmlZoom.Squared() * 2.0f + 0.5f);
 
+			#if DEBUG
+			KeyboardFocus.Init(Focus);
+			#endif
 
 			//var splitter = new GridSplitter();
 			//grid.Children.Add(splitter);

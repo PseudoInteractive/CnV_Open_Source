@@ -155,7 +155,7 @@ namespace COTG
 		public App()
 		{
 			Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense("NTI5MjE3QDMxMzkyZTMzMmUzMFZNeEhhNVA0S1B4blBBVjJvWCtRS1NDanJJVnJpSEljWndpbXduU3Z2dVk9");
-			services = ConfigureServices();
+//			services = ConfigureServices();
 
 		InitializeComponent();
 		RequestedTheme = ApplicationTheme.Dark;

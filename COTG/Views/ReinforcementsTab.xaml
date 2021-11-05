@@ -35,9 +35,7 @@
 					   AutoGenerateColumns="True"
 							Loaded="DataGridLoaded"
 					>
-			<dataGrid:SfDataGrid.GroupColumnDescriptions>
-				<dataGrid:GroupColumnDescription ColumnName="_Source" />
-			</dataGrid:SfDataGrid.GroupColumnDescriptions>
+			
 			<dataGrid:SfDataGrid.Columns>
 				<sf:GridImageColumn MappingName="icon"
 											HeaderText="I"
@@ -63,9 +61,7 @@
 							SelectionUnit="Row"
 							Loaded="DataGridLoaded"
 					  >
-			<dataGrid:SfDataGrid.GroupColumnDescriptions>
-				<dataGrid:GroupColumnDescription ColumnName="_Target" />
-			</dataGrid:SfDataGrid.GroupColumnDescriptions>
+
 		
 		</sf:SfDataGrid>
 	</Grid>

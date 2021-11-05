@@ -14,12 +14,24 @@ using System.Runtime.InteropServices.WindowsRuntime;
 using COTG.Game;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Microsoft.Toolkit.Mvvm.ComponentModel;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
 
 namespace COTG.Views
 {
+
+	public class ReinforceMentVM : ObservableObject, IEquatable<ReinforceMentVM>
+	{
+		public Reinforcement r;
+
+		public bool Equals(ReinforceMentVM other)
+		{
+			return r.Equals(other);
+		}
+	}
+
 	public sealed partial class ReinforcementsTab:UserTab
 	{
 		public override TabPage defaultPage => TabPage.secondaryTabs;

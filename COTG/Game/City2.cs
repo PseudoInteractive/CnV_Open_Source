@@ -1156,7 +1156,7 @@ namespace COTG.Game
 		}
 		public async Task<bool> DoPoll()
 		{
-			var pollResult = (await Post.SendForJson("/includes/poll2.php",$"cid={cid}&ai=0&ss={JSClient.cotgS}")).RootElement;
+			var pollResult = (await Post.SendForJson("/includes/poll2.php",$"cid={cid}&ai=0&ss={JSClient.cotgS}").ConfigureAwait(false) ).RootElement;
 			if(pollResult.TryGetProperty("city",out var cjs))
 			{
 				LoadCityData(cjs);

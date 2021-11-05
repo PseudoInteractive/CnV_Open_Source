@@ -19,7 +19,8 @@ using COTG.Helpers;
 namespace COTG.Game;
 
 //"trintr"
-public class Reinforcement
+[Serializable]
+public class Reinforcement:IEquatable<Reinforcement>
 {
 
 
@@ -148,6 +149,11 @@ public class Reinforcement
 		}
 
 
+	}
+
+	public bool Equals(Reinforcement other)
+	{
+		return order == other.order;
 	}
 }
 	
