@@ -33,6 +33,8 @@ using WinUI = Microsoft.UI.Xaml.Controls;
 using CommunityToolkit.WinUI.UI.Controls;
 using System.Reflection;
 using CommunityToolkit.WinUI.Helpers;
+using COTG.Helpers;
+using System.Collections.ObjectModel;
 
 namespace COTG.Views
 {
@@ -50,6 +52,14 @@ namespace COTG.Views
 		public const int canvasZDefault = 11;
 		public const int canvasZBack = 0;
 
+		class LayoutItem
+		{
+			public string name { get; set; }
+			public int id { get; set; }
+
+		}
+
+		ObservableCollection<LayoutItem> layoutOptions { get; set; } = new();
 		//private readonly KeyboardAccelerator _altLeftKeyboardAccelerator = BuildKeyboardAccelerator(VirtualKey.Left, VirtualKeyModifiers.Menu);
 		//private readonly KeyboardAccelerator _backKeyboardAccelerator = BuildKeyboardAccelerator(VirtualKey.GoBack);
 		//private readonly KeyboardAccelerator _forwardKeyboardAccelerator = BuildKeyboardAccelerator(VirtualKey.GoForward);
@@ -71,6 +81,8 @@ namespace COTG.Views
 		private static DateTime workStarted;
 		private static readonly List<string> workQueue = new List<string>();
 
+		protected override void OnKeyDown(KeyRoutedEventArgs e) => Trace($"Key: {e.Key} {e.OriginalKey} {e.OriginalSource.ToString()}");
+		protected override void OnPreviewKeyDown(KeyRoutedEventArgs e) => Trace($"KeyP: {e.Key} {e.OriginalKey} {e.OriginalSource.ToString()}");
 		public static string WorkStart(string desc)
 		{
 			App.DispatchOnUIThreadLow(() =>
@@ -133,27 +145,7 @@ namespace COTG.Views
 			});
 		}
 
-		public class WorkScope:IDisposable
-		{
-			private readonly string task;
-
-			// passing null results in a Scope with no effect
-			public WorkScope(string _task)
-			{
-				if(_task != null)
-				{
-					this.task = WorkStart(_task);
-				}
-			}
-
-			public void Dispose()
-			{
-				if(task != null)
-				{
-					WorkEnd(task);
-				}
-			}
-		}
+		
 
 		// private IdentityService IdentityService => Singleton<IdentityService>.Instance;
 
@@ -208,6 +200,7 @@ namespace COTG.Views
 			r2,
 			chat,
 			count,
+			first = l2,
 		}
 		public static Layout layout = Layout.c;
 		public static bool rightTabsVisible => layout>=Layout.c;
@@ -238,9 +231,7 @@ namespace COTG.Views
 			Canvas.SetZIndex(CityBuild.instance,13);
 			var c = CreateCanvasControl();
 
-			#if DEBUG
-			focusTracker.IsActive = true;// Visibility.Collapsed;
-			#endif
+			
 			// canvas.ContextFlyout = CityFlyout;
 			//	grid.Children.Add(c.canvas);
 			// grid.Children.Add(c.hitTest);
@@ -280,9 +271,6 @@ namespace COTG.Views
 
 			//		webView.Scale = new Vector3(SettingsPage.htmlZoom.Squared() * 2.0f + 0.5f);
 
-			#if DEBUG
-			KeyboardFocus.Init(Focus);
-			#endif
 
 			//var splitter = new GridSplitter();
 			//grid.Children.Add(splitter);
@@ -308,10 +296,18 @@ namespace COTG.Views
 			KeyboardAccelerators.Add(BuildKeyboardAccelerator(VirtualKey.Right,NavStack.ForwardInvoked,VirtualKeyModifiers.Menu));
 			// KeyboardAccelerators.Add(BuildKeyboardAccelerator(VirtualKey.GoForward, NavStack.ForwardInvoked));
 
+			for(var i = Layout.first;i< Layout.count;++i)
+			{
+				KeyboardAccelerators.Add(BuildKeyboardAccelerator( VirtualKey.Number0+(int)i,LayoutAccelerator_Invoked,VirtualKeyModifiers.Control));
+				layoutOptions.Add(new() { id = (int)i,name=i.ToString() });
+			}
+
 			//			KeyboardAccelerators.Add(BuildKeyboardAccelerator(VirtualKey.F5, Refresh_Invoked,VirtualKeyModifiers.Control));
-			//		KeyboardAccelerators.Add(BuildKeyboardAccelerator(VirtualKey.F2, LayoutAccelerator_Invoked,VirtualKeyModifiers.Control));
-			//		KeyboardAccelerators.Add(BuildKeyboardAccelerator(VirtualKey.F3, LayoutAccelerator_Invoked,VirtualKeyModifiers.Control));
-			//		KeyboardAccelerators.Add(BuildKeyboardAccelerator(VirtualKey.F4, LayoutAccelerator_Invoked,VirtualKeyModifiers.Control));
+			KeyboardAccelerators.Add(BuildKeyboardAccelerator(VirtualKey.R,instance.Refresh_Invoked,VirtualKeyModifiers.Control));
+
+			KeyboardAccelerators.Add(BuildKeyboardAccelerator(VirtualKey.Number1,KeyboardAccelerator));
+
+			//				KeyboardAccelerators.Add(BuildKeyboardAccelerator(VirtualKey.F4, LayoutAccelerator_Invoked));
 			IsLoggedIn = true;// IdentityService.IsLoggedIn();
 			IsAuthorized = true;// IsLoggedIn && IdentityService.IsAuthorized();
 								// grid.hor
@@ -343,6 +339,10 @@ namespace COTG.Views
 			{
 				App.DispatchOnUIThreadLow(SettingsPage.ShowWhatsNew);
 			}
+#if DEBUG
+			KeyboardFocus.Start(Focus,canvas.XamlRoot);
+			mouseOverCanvasBox.Visibility = Visibility.Visible;
+#endif
 
 
 			Task.Delay(4500).ContinueWith((_) => App.DispatchOnUIThreadIdle(() =>
@@ -507,21 +507,10 @@ namespace COTG.Views
 		private void LayoutAccelerator_Invoked(KeyboardAccelerator sender,KeyboardAcceleratorInvokedEventArgs args)
 		{
 			sender.Modifiers.UpdateKeyModifiers();
-			switch(args.KeyboardAccelerator.Key)
-			{
-				case VirtualKey.F2:
-					this.windowLayout.SelectedIndex= 0;
-					args.Handled = true;
-					break;
-				case VirtualKey.F3:
-					this.windowLayout.SelectedIndex = 1;
-					args.Handled = true;
-					break;
-				case VirtualKey.F4:
-					this.windowLayout.SelectedIndex= 2;
-					args.Handled = true;
-					break;
-			}
+			Trace($"Accel: {sender.Key} {sender.ScopeOwner}");
+			var layout = args.KeyboardAccelerator.Key - VirtualKey.Number0;
+			this.windowLayout.SelectedIndex= layout;
+			
 		}
 
 		//public static MenuFlyoutItem MenuAction( Action a, string text)
@@ -623,7 +612,7 @@ namespace COTG.Views
 		{
 			var keyboardAccelerator = new KeyboardAccelerator() { Key = key };
 			keyboardAccelerator.Modifiers = modifiers;
-			keyboardAccelerator.Invoked += OnKeyboardAcceleratorInvoked;
+			keyboardAccelerator.Invoked +=OnKeyboardAcceleratorInvoked;
 			return keyboardAccelerator;
 		}
 
@@ -670,7 +659,7 @@ namespace COTG.Views
 
 		public static async Task RefreshX()
 		{
-			WorkStart("Refresh All");
+			using var work = new WorkScope("Refresh All");
 			var t = RefreshWorldData();
 
 			foreach(var city in City.allSpots)
@@ -680,7 +669,6 @@ namespace COTG.Views
 			RefreshTabs.Go();
 			await t;
 
-			WorkEnd("Refresh All");
 		}
 
 		public void RefreshX(object sender,RightTappedRoutedEventArgs e)
@@ -726,10 +714,10 @@ namespace COTG.Views
 
 		private static void Refresh()
 		{
+			using var s = new WorkScope("Refresh...");
 			foreach(var city in City.myCities)
 				city.OnPropertyChanged();
 			NotifyCollectionBase.ResetAll(false);
-			Note.Show("Refresh UI");
 			RefreshTabs.Go();
 		}
 
@@ -985,7 +973,7 @@ namespace COTG.Views
 				if(newSel != priorSel && priorSel != null)
 				{
 					// Log("City Sel changed");
-					CityList.NotifyChange();
+					CityList.NotifyChange(false);
 				}
 			}
 		}
@@ -1627,16 +1615,47 @@ namespace COTG.Views
 			ContinentTagFilter.Show(true);
 		}
 
-		protected override void OnKeyboardAcceleratorInvoked(KeyboardAcceleratorInvokedEventArgs args) => base.OnKeyboardAcceleratorInvoked(args);
-		protected override void OnProcessKeyboardAccelerators(ProcessKeyboardAcceleratorEventArgs args) => base.OnProcessKeyboardAccelerators(args);
-		protected override void OnPointerEntered(PointerRoutedEventArgs e) => base.OnPointerEntered(e);
-		protected override void OnPointerPressed(PointerRoutedEventArgs e) => base.OnPointerPressed(e);
-		protected override void OnPointerMoved(PointerRoutedEventArgs e) => base.OnPointerMoved(e);
-		protected override void OnPreviewKeyDown(KeyRoutedEventArgs e)  { Trace("KeyDown"); base.OnPreviewKeyDown(e); }
+//	protected override void OnKeyboardAcceleratorInvoked(KeyboardAcceleratorInvokedEventArgs args) => base.OnKeyboardAcceleratorInvoked(args);
+//		protected override void OnProcessKeyboardAccelerators(ProcessKeyboardAcceleratorEventArgs args) => base.OnProcessKeyboardAccelerators(args);
+	//	protected override void OnPointerEntered(PointerRoutedEventArgs e) => base.OnPointerEntered(e);
+	//	protected override void OnPointerPressed(PointerRoutedEventArgs e) => base.OnPointerPressed(e);
+	//	protected override void OnPointerMoved(PointerRoutedEventArgs e) => base.OnPointerMoved(e);
+
+		private void shellPage_ProcessKeyboardAccelerators(UIElement sender,ProcessKeyboardAcceleratorEventArgs args)
+		{
+			Trace($"Accel2 {args.Key} {sender.ToString()}");
+		}
+
 		static void ProcessPointerMoved(object sender,PointerRoutedEventArgs e)
 		{
 			var c = e.GetCurrentPoint(canvas);
 			UpdateMousePosition( c.Position );
+		}
+	}
+	public struct WorkScope : IDisposable
+	{
+		private readonly string desc;
+
+		// passing null results in a Scope with no effect
+		public WorkScope(string _desc)
+		{
+			if(_desc != null)
+			{
+				this.desc = ShellPage.WorkStart(_desc);
+			}
+			else
+			{
+				this.desc = null;
+			}
+		}
+
+		public void Dispose()
+		{
+			if(desc != null)
+			{
+				ShellPage.WorkEnd(desc);
+				Note.Show(desc + " complete");
+			}
 		}
 	}
 }

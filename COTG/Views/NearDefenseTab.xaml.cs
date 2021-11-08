@@ -132,6 +132,7 @@ namespace COTG.Views
 						var troops = (onlyHome ? city.troopsHome : city.troopsTotal);
 						s.Add(supporter);
 						supporter.tSend.Clear();
+
 						supporter.validTargets = validCount;
 						if (viaWater)
 						{
@@ -388,8 +389,10 @@ namespace COTG.Views
 				await Task.Delay(500);
 			}
 
+			supporter.tSend.Clear();
+			supporter.OnPropertyChanged();
 
-        }
+		}
 		private void gridPointerPress(object sender, PointerRoutedEventArgs e)
 		{
 

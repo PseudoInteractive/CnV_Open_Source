@@ -27,9 +27,9 @@ public class Reinforcement:IEquatable<Reinforcement>
 	public SmallTime time;  // arrival
 	public DateTimeOffset _Time { get => time.dateTime; }
 	public int sourceCid;
-	public City _Source { get => sourceCid.AsCity(); }
+	public string _Source { get => sourceCid.AsCity().nameAndRemarks; }
 	public int targetCid;
-	public City _Target { get => targetCid.AsCity(); }
+	public string _Target { get => targetCid.AsCity().nameAndRemarks; }
 	//static int pid;
 
 	public long order;
@@ -37,13 +37,14 @@ public class Reinforcement:IEquatable<Reinforcement>
 	public TroopTypeCountsRef troops = new();
 	public string _Troops { get => troops.Format(":",' ',','); }
 
-	static async Task Return(Reinforcement order)
+	public async Task ReturnAsync()
 	{
-		await Post.Get("overview/reinreca.php","a=" + order.order,order.sourceCid.CidToPid());
+		await Post.Get("overview/reinreca.php","a=" + order,sourceCid.CidToPid());
 		await Task.Delay(1000);
-		await Post.Get("overview/reinreca.php","a=" + order.order,order.sourceCid.CidToPid());
+		await Post.Get("overview/reinreca.php","a=" + order,sourceCid.CidToPid());
 	}
 
+	public string sReturn => "Return";
 
 	internal static async void ShowReinforcements(int _cid,UIElement uie)
 	{
@@ -91,7 +92,8 @@ public class Reinforcement:IEquatable<Reinforcement>
 
 					}
 				}
-				tab.reinforcementsIn.Set(toAdd);
+				tab.reinforcementsIn.Set(toAdd,true,true);
+				
 			}
 			//			List<>
 			var byFlags = spots.SelectMany(s => s.reinforcementsOut).GroupBy(s => s.targetCid.AsCity().incomingFlags);
@@ -110,7 +112,7 @@ public class Reinforcement:IEquatable<Reinforcement>
 						toAdd.Add(reIn);
 					}
 				}
-				tab.reinforcementsIn.Set(toAdd);
+				tab.reinforcementsIn.Set(toAdd,true,true);
 			}
 			//}
 			//	var result = await msg.ShowAsync2(uie);

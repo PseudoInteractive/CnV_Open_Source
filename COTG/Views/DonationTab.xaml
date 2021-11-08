@@ -56,14 +56,14 @@
                                  x:FieldModifier="public"
                         Grid.Row="2"
 								 							
-                                 AllowFocusOnInteraction="True"
+                        AllowFocusOnInteraction="True"
                         AutoGenerateColumns="False"
-            CanUserChooseColumns="True"
-								 IsTabStop="True"
+                        CanUserChooseColumns="True"
+						IsTabStop="True"
                         ColumnResizeHandleDisplayMode="Always"
                         UserGroupMode="Enabled"
                         PointerPressed="{x:Bind game:Spot.GridPressed}"
-							PointerExited="{x:Bind game:Spot.GridExited}"
+						PointerExited="{x:Bind game:Spot.GridExited}"
                         FontSize="{StaticResource MediumFontSize}"
                         ItemsSource="{x:Bind donationGridSource}"
                         RowHeight="{StaticResource MediumGridRowHeight}"
@@ -156,47 +156,42 @@
                                                 CellContentStyle="{StaticResource CenterAlignLink}"
                                                 
                                         />
-                <telerikGrid:DataGridTextColumn  PropertyName="travelTime"
-                                                      Header="Travel"
-                                                      CellContentStyle="{StaticResource RightAlign}"
+				<telerikGrid:DataGridTextColumn  PropertyName="Pri"
+                                                      CellContentStyle="{StaticResource CenterAlign}"
                                              />
-                <telerikGrid:DataGridNumericalColumn  PropertyName="cont"
+				<telerikGrid:DataGridDateColumn PropertyName="blessedUntil"
+                                                    
+                                                CellContentFormat="{}{0:MM/dd',' HH':'mm}"
+
+                                                CellContentStyle="{StaticResource CenterAlign}"
+                                        />
+				<telerikGrid:DataGridTextColumn PropertyName="notes" CellContentStyle="{StaticResource LeftAlign}"
+                         />
+			
+				
+				<telerikGrid:DataGridNumericalColumn  PropertyName="cont"
                                                       
                                                       CellContentStyle="{StaticResource CenterAlign}"
                                              />
-               
-              
-               
-                <telerikGrid:DataGridNumericalColumn  PropertyName="wood"
+				<telerikGrid:DataGridNumericalColumn  PropertyName="wood"
                                                       CellContentStyle="{StaticResource RightAlign}"
                                             CellContentFormat="{}{0,9:N0}"
                                                       
                                              />
-                <telerikGrid:DataGridNumericalColumn  PropertyName="stone"
+				<telerikGrid:DataGridNumericalColumn  PropertyName="stone"
                                                       CellContentStyle="{StaticResource RightAlign}"
                                             CellContentFormat="{}{0,9:N0}"
                                                       
+                                             />
+				<telerikGrid:DataGridTextColumn  PropertyName="travelTime"
+                                                      Header="Travel"
+                                                      CellContentStyle="{StaticResource RightAlign}"
                                              />
 				<telerikGrid:DataGridNumericalColumn  PropertyName="level"
                                                       
                                                       CellContentStyle="{StaticResource CenterAlign}"
                                             CellContentFormat="{}{0,2:N0}"
                                              />
-                <telerikGrid:DataGridNumericalColumn  PropertyName="pri"
-                                                      
-                                                      CellContentStyle="{StaticResource CenterAlign}"
-                                            CellContentFormat="{}{0,2:N0}"
-                                             />
-                <telerikGrid:DataGridTextColumn PropertyName="notes" CellContentStyle="{StaticResource LeftAlign}"
-                         />
-			
-				<telerikGrid:DataGridDateColumn PropertyName="blessedUntil"
-                                                    
-                                                
-                                                                                       CellContentFormat="{}{0:dd',' HH':'mm':'ss}"
-
-                                                CellContentStyle="{StaticResource CenterAlign}"
-                                        />
 				<telerikGrid:DataGridTextColumn PropertyName="xy"
                                                 
                                                 CellContentStyle="{StaticResource CenterAlignLink}"

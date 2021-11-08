@@ -142,13 +142,11 @@
 									ToolTipService.ToolTip="When attacks are scheduled and raids are asked to return before departure, they will come home this many hours before departure"
 									 LargeChange="1"
 									 Style="{StaticResource NumberBoxSmall}" />
-
-				<ToggleSwitch  Header="Build Queue"
-							   IsOn="{x:Bind views:SettingsPage.extendedBuild, Mode=TwoWay}" ToolTipService.ToolTip="Unlimited is required for 'Do the stuff', only set this to 'normal' if you are running into build queue issues"
-							   Margin="4"
-							   OnContent="Unlimited"
-							   OffContent="Normal" />
-
+				<controls:NumberBox Header="NotificationDuration"
+									Value="{x:Bind views:SettingsPage.notificationDuration, Mode=TwoWay }"
+									SmallChange="1"
+									ToolTipService.ToolTip="Specifies how long notications delays last on screen, regardless of durations you can click on the notifications to dismiss them"
+									/>
 				<CheckBox Content="Demo cabins if full" IsChecked="{x:Bind views:SettingsPage.demoCottageOnBuildIfFull,Mode=TwoWay}" ToolTipService.ToolTip="If On, cabins will be automatically destroyed when you place a building into a city with 100 buildings"  />
 
 				<CheckBox Content="Clear only center res" IsChecked="{x:Bind views:SettingsPage.clearOnlyCenterRes,Mode=TwoWay}" ToolTipService.ToolTip="If clear res is used, this will determine if all nodes are cleared vs only nodes in the center part"  />

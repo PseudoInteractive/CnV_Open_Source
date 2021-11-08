@@ -18,10 +18,12 @@ using System;
 using Windows.Foundation.Collections;
 using Windows.Foundation;
 
+using ChangeCollection = System.Collections.Immutable.ImmutableArray<(System.Collections.Specialized.NotifyCollectionChangedEventArgs change, COTG.NotifyCollectionBase c)>;
 namespace COTG
 {
 	public abstract class NotifyCollectionBase: INotifyPropertyChanged, INotifyCollectionChanged 
 	{
+	public static AsyncReaderWriterLock _lock = new();
 		public static long GetDataHash<T>(IEnumerable<T> c)
 		{
 			var hash = 0;
@@ -70,30 +72,37 @@ namespace COTG
 				col.NotifyReset(true,clearHash);
 			}
 		}
-
-	static ImmutableArray<(NotifyCollectionChangedEventArgs change, NotifyCollectionBase c)> collectionChanges = ImmutableArray<(NotifyCollectionChangedEventArgs change, NotifyCollectionBase c)>.Empty;
+		static ChangeCollection collectionChanges = ImmutableArray<(NotifyCollectionChangedEventArgs change, NotifyCollectionBase c)>.Empty;
 
 		static Task ProcessChanges()
 		{
 			try
 			{
+				int before = collectionChanges.Length;
 				var counter = collectionChanges.Length/8 + 2;
 				do
 				{
-					(var change,var i) = collectionChanges.FirstOrDefault();
-					if(i ==default)
+					if(!collectionChanges.Any())
 						break;
-					collectionChanges = collectionChanges.RemoveAt(0);
-					try
-					{
-						i.PropertyChanged?.Invoke(i,new("Count"));
-						i.CollectionChanged?.Invoke(i,change);
-					}catch(Exception ex)
-					{
-						LogEx(ex);
-						i.CollectionChanged?.Invoke(i,new(NotifyCollectionChangedAction.Reset));
-					}
-				} while(--counter>0);
+
+						try
+						{
+
+							(var change, var i) = collectionChanges[0];
+							collectionChanges = collectionChanges.RemoveAt(0);
+						
+							i.PropertyChanged?.Invoke(i,new("Count"));
+							i.CollectionChanged?.Invoke(i,change);
+						} 
+						catch(Exception ex)
+						{
+							LogEx(ex);
+							//i.CollectionChanged?.Invoke(i,new(NotifyCollectionChangedAction.Reset));
+							// that didn't work, try another
+						}
+				} while(--counter>0) ;
+
+				var after = collectionChanges.Length;
 
 			}
 			catch(Exception __ex)
@@ -105,56 +114,73 @@ namespace COTG
 			return Task.CompletedTask;
 		}
 
+		
+
 		public void NotifyChange(NotifyCollectionChangedEventArgs args,bool sizeChanged)
 		{
 
 
-			if(hasNotifications)
-			{
-				if(CollectionChanged!=null)
-				{
-
-					try
-					{
+			if(!hasNotifications)
+				return;
 
 
-						int counter = 0;
-						foreach(var i in collectionChanges)
+			Note.ShowQuiet($"CollectionChanges: {args.Action} {args.NewItems.CollectionToString()} {args.OldItems.CollectionToString()}");
+
+
+			ImmutableInterlocked.Update(ref collectionChanges,(ch) =>
+					   {
+						   try
+						   {
+
+							   for(int counter = 0;counter< ch.Length;++counter)
+							   {
+								   var c = ch[counter].c;
+								   if(c!=this)
+									   continue;
+
+								   var args0 = ch[counter].change;
+
+								   // can't get worse
+								   if(args0.Action == NotifyCollectionChangedAction.Replace)
+									   return ch;
+
+								   if(args0.Action == args.Action && args0.Action == NotifyCollectionChangedAction.Add)
+								   {
+
+									   if(args0.NewStartingIndex+args0.NewItems.Count == args.NewStartingIndex)
+									   {
+										   var list = new ArrayList(args0.NewItems);
+										   list.AddRange(args.NewItems);
+										   return ch.SetItem(counter,(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add,list,args0.NewStartingIndex), this));
+									   }
+									   else if(args.NewStartingIndex+args.NewItems.Count == args0.NewStartingIndex)
+									   {
+										   var list = new ArrayList(args.NewItems);
+										   list.AddRange(args0.NewItems);
+										   return ch.SetItem(counter,(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add,list,args.NewStartingIndex), this));
+									   }
+								   }
+								   // unknown or incompatible change
+								   return ch.SetItem(counter,(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset), this));
+
+							   }
+
+							   return ch.Add((args, this));
+						   }
+						   catch(Exception __ex)
+						   {
+							   Debug.LogEx(__ex);
+							   return ch;
+						   }
+					   } );
+						if(collectionChanges.Any())
 						{
-							if(i.c==this)
-							{
-								switch(i.change.Action)
-								{
-									case NotifyCollectionChangedAction.Add:
-									case NotifyCollectionChangedAction.Remove:
-									case NotifyCollectionChangedAction.Replace:
-									case NotifyCollectionChangedAction.Move:
-										collectionChanges=collectionChanges.SetItem(counter,(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset), this));
-										goto dontAdd;
-
-									case NotifyCollectionChangedAction.Reset:
-										goto dontAdd;
-
-									default:
-										break;
-								}
-								++counter;
-							}
-							break;
+							ChangesDebounce.Go();
 						}
-						collectionChanges=collectionChanges.Add(((args), this));
-					dontAdd:
+			
 
-						ChangesDebounce.Go();
-
-					}
-					catch(Exception __ex)
-					{
-						Debug.LogEx(__ex);
-					}
-
-				}
-			}
+				
+			
 		}
 
 		public abstract long GetCurrentHashData();
@@ -162,7 +188,6 @@ namespace COTG
 		public void NotifyResetWithHash(long newHash, bool itemsChanged = true,bool skipHashCheck = false)
 		{
 
-//			var newHash = GetDataHash(c);
 			var hashChanged = newHash != lastDataHash;
 			if(!hashChanged && !skipHashCheck)
 				return;
@@ -271,6 +296,7 @@ namespace COTG
 				var _count = Count;
 				if(_count == Count)
 				{
+					lastDataHash = GetCurrentHashData();
 					NotifyChange(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove,removed,id),true);
 				}
 				else
@@ -288,7 +314,8 @@ namespace COTG
 				{
 					Assert(id >=0);
 					Assert(id <= Count);
-					//				NotifyReset();
+					lastDataHash = GetCurrentHashData();
+
 					NotifyChange(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add,added,id),true);
 				}
 				else
@@ -364,7 +391,10 @@ namespace COTG
 
 			}
 			else
-			{ 
+			{
+				if(itemsChanged)
+					ItemContentChanged();
+
 				// no change
 				var newHash = GetDataHash(src);
 				if(newHash == lastDataHash)
@@ -381,6 +411,7 @@ namespace COTG
 					}
 					NotifyReset(itemsChanged);
 				}
+
 			}
 				
 		}

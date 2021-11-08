@@ -445,7 +445,7 @@ namespace COTG.Views
             {
 				folder = await ApplicationData.Current.LocalFolder.CreateFolderAsync("attacks", CreationCollisionOption.OpenIfExists);
 
-				using var work = new ShellPage.WorkScope("load attacks");
+				using var work = new WorkScope("load attacks");
 				(plan,lastSave) = await folder.ReadAsyncForBackup<AttackPlan>(SettingsPage.attackPlanName, plan);
 				// if we just loaded a backup, strip the backup info from the name
 				SettingsPage.attackPlanName = SettingsStorageExtensions.regexBackupDatePostFix.Replace(SettingsPage.attackPlanName,"");
@@ -843,7 +843,7 @@ namespace COTG.Views
 
 			using var _ = await TouchLists();
 			
-			using var work = new ShellPage.WorkScope("Adding attacks...");
+			using var work = new WorkScope("Adding attacks...");
 
             int duplicates = 0;
             var reals = 0;
@@ -898,7 +898,7 @@ namespace COTG.Views
 		//{
 		//	try
 		//	{
-		//		using var work = new ShellPage.WorkScope("Adding attacks...");
+		//		using var work = new WorkScope("Adding attacks...");
 
 		//		using var _ = await instance.TouchLists();
 		//		if( cids.All( cid=> attacks.Contains(City.Get(cid) ) ))
@@ -1372,7 +1372,7 @@ namespace COTG.Views
 						Note.Show("No reals");
 						return;
 					}
-					using var work = new ShellPage.WorkScope($"Planning.. (pass {ignoreIterator})");
+					using var work = new WorkScope($"Planning.. (pass {ignoreIterator})");
 
 
 					//var maxSEFakes =readable.attackSEMaxFakes;

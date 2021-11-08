@@ -63,16 +63,20 @@ namespace COTG
 			medium, // if one is active wait
 			high // if one is active cancel it
 		}
+		public static Task ShowQuiet(string s,Priority priority = Priority.medium,bool useInfoBar = false,int timeout = 5000)
+		{
+			return Show(s,priority,useInfoBar,timeout,false);
+		}
 	//	static Priority currentPriority;
 	//	static DateTime nextInAppNote = new DateTime(0);
-		//static MarkdownTextBlock markDownText;
+	//static MarkdownTextBlock markDownText;
 	//	static CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
-		public static async void Show(string s, Priority priority=Priority.medium, bool useInfoBar = false, int timeout = 5000)
+		public static async Task Show(string s, Priority priority=Priority.medium, bool useInfoBar = false, int timeout = 5000, bool showDebugOutput=true)
 		{
 			try
 			{
-				const int noteDelay = 3;
-				const int noteDelayHigh = 5;
+				int noteDelay = SettingsPage.notificationDuration;
+				 int noteDelayHigh = noteDelay+3;
 				if(ShellPage.instance != null)
 				{
 					//if (!initialized)
@@ -85,11 +89,13 @@ namespace COTG
 					//		//		ShellPage.instance.infoMD.LinkClicked += MarkDownLinkClicked;
 					//	});
 					//}
-					App.DispatchOnUIThreadLow(() =>
+					if(showDebugOutput)
 					{
-						ChatTab.L(s);
-					});
-
+						App.DispatchOnUIThreadLow(() =>
+						{
+							ChatTab.L(s);
+						});
+					}
 					//var now = DateTime.UtcNow;
 					//var next = nextInAppNote;
 					//var _priority = priority;

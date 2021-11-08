@@ -906,7 +906,7 @@ namespace COTG.Game
 			if(!Alliance.wantsIntel && !isMine)
 			{
 				// todo
-				
+				//return;
 
 			}
 
@@ -1749,7 +1749,7 @@ namespace COTG.Game
 			(var at, var okay) = await Views.DateTimePicker.ShowAsync("Return By:");
 			if (!okay)
 				return; // aborted
-			using var work = new ShellPage.WorkScope("Return At..");
+			using var work = new WorkScope("Return At..");
 
 			var cids = MainPage.GetContextCids(cid);
 			foreach (var _cid in cids)

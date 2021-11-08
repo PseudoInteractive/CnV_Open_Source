@@ -419,10 +419,24 @@ namespace COTG.Views
 			Trace("PreviewKeyDown2");
 		}
 
-
-		public static void KeyboardProxy_KeyDown(object sender, Microsoft.UI.Xaml.Input.KeyRoutedEventArgs e)
+		public static void KeyboardAccelerator(KeyboardAccelerator acc,KeyboardAcceleratorInvokedEventArgs args)
 		{
-			Trace("PreviewKeyDown");
+			Trace("AccelKeyDown " + acc.Key + " " + mouseOverCanvas);
+			if(!mouseOverCanvas)
+				return;
+			App.UpdateKeyStates();
+
+			KeyDown(acc.Key);
+		}
+		public static void KeyboardProxy_KeyDown(object sender,Microsoft.UI.Xaml.Input.KeyRoutedEventArgs e)
+		{
+			Trace("PreviewKeyDown " + e.Key);
+			KeyDown(e.Key);
+		}
+
+		public static void KeyDown(VirtualKey key)
+		{
+			Trace("SomeKeyDown " + key);
 
 			App.UpdateKeyStates();
 
@@ -448,7 +462,6 @@ namespace COTG.Views
 			//	return;
 
 			//}
-			var key = e.Key;
 			if (!IsCityView())
 			{
 				switch (key)

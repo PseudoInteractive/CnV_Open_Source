@@ -26,74 +26,87 @@ namespace COTG.Helpers
 	using Microsoft.UI.Xaml.Media;
 	using Microsoft.UI.Xaml.Shapes;
 
-	namespace COTG
+
+	public class KeyboardFocus
 	{
-		public class KeyboardFocus
+		public static KeyboardFocus instance;
+		/// <summary>
+		/// Defines the <see cref="IsActive"/> dependency property.
+		public string controlName => focusedControl.StringIfNotNull((f) => f.Name);
+		public string controlType => focusedControl.StringIfNotNull((f) => f.GetType().Name);
+		public string controlAutomationName => focusedControl.StringIfNotNull((f) => AutomationProperties.GetName(f));
+		public string parentsString;
+		public FrameworkElement focusedControl;
+		public TextBlock display;
+		public XamlRoot extraXamlRoot;
+
+		public string GetFocusDescription() => $"{controlName }:{controlType} {controlAutomationName} {GetParentsString()}";
+		public static KeyboardFocus Start(TextBlock _display, XamlRoot _extraXamlRoot)
 		{
-			public KeyboardAccelerator instance = new();
-			/// <summary>
-			/// Defines the <see cref="IsActive"/> dependency property.
-			public string controlName => AUtil.StringIfNotNull(f,(f) => f.Name);
-			public string controlType => AUtil.StringIfNotNull(f,(f) => f.GetType().Name);
-			public  string controlAutomationName => AUtil.StringIfNotNull(f,(f)=>AutomationProperties.GetName(f));
-			public  string parentsString;
-			public  FrameworkElement focusedControl;
-			public TextBlock display;
+			instance=new();
+			instance.display = _display;
+			_display.Visibility = Visibility.Visible;
+			// Get currently focused control once when we start
 
+			var focused = FocusManager.GetFocusedElement(_extraXamlRoot) as FrameworkElement;
+			if(focused is null)
+				focused = FocusManager.GetFocusedElement()  as FrameworkElement;
+			instance.FocusOnControl(focused as FrameworkElement);
+			instance.extraXamlRoot = _extraXamlRoot;
+			// Then use FocusManager event from 1809 to listen to updates
+
+			FocusManager.GotFocus -= instance.FocusManager_GotFocus;
+			FocusManager.GotFocus += instance.FocusManager_GotFocus;
+
+			return instance;
+
+		}
 		
-			public string GetFocusDescription() => $"{controlName }:{controlType} {controlAutomationName} {GetParentsString()}";
-			public void Start(TextBlock _display )
-			{
-				display = _display;
-				// Get currently focused control once when we start
-				
-				FocusOnControl(FocusManager.GetFocusedElement() as FrameworkElement);
-				
+		private void Stop()
+		{
+			FocusManager.GotFocus -= FocusManager_GotFocus;
+			ClearContent();
+		}
 
-				// Then use FocusManager event from 1809 to listen to updates
-				FocusManager.GotFocus += FocusManager_GotFocus;
-				display.Visibility = Visibility.Collapsed;
-			}
+		private void FocusManager_GotFocus(object sender,FocusManagerGotFocusEventArgs e)
+		{
+			FocusOnControl(e.NewFocusedElement as FrameworkElement);
+		}
 
-			private void Stop()
+		private void ClearContent()
+		{
+			ClearDisplay();
+		}
+
+		private void ClearDisplay() => display.Text = "[None]";
+		private void FocusOnControl(FrameworkElement focusedControl)
+		{
+			if(focusedControl == this.focusedControl)
+				return;
+			this.focusedControl=focusedControl;
+			Trace($"Focus on {focusedControl?.Name}");
+			if(focusedControl == null)
 			{
-				FocusManager.GotFocus -= FocusManager_GotFocus;
 				ClearContent();
+				return;
 			}
 
-			private void FocusManager_GotFocus(object sender,FocusManagerGotFocusEventArgs e)
-			{
-				FocusOnControl(e.NewFocusedElement as FrameworkElement);
-			}
+			display.Text = GetFocusDescription();
+		}
 
-			private void ClearContent()
-			{
-				ClearDisplay();
-			}
+		public string GetParentsString()
+		{
 
-			private void ClearDisplay() => display.Text = "[None]";
-			private  void FocusOnControl(FrameworkElement focusedControl)
+			var element = focusedControl;
+			string name = string.Empty;
+			if(element is null)
+				return name;
+
+			for(;;)
 			{
-				this.focusedControl=focusedControl;
-				if(focusedControl == null)
+				try
 				{
-					ClearContent();
-					return;
-				}
-
-				display.Text = GetFocusDescription();
-			}
-
-			public void GetParentsString()
-			{
-
-				var element = focusedControl;
-				if(element is null)
-					return name;
-				string name = string.Empty;
-				for(;;)
-				{
-					var parent = VisualTreeHelper.GetParent(element) as FrameworkElement;
+					var parent = element.Parent as FrameworkElement;
 
 					if(parent == null)
 					{
@@ -106,9 +119,16 @@ namespace COTG.Helpers
 					}
 
 					element = parent;
+					if(element == null)
+						break;
 				}
-				return name;
+				catch(Exception ex)
+				{
+					break;
+				}
 			}
+			return name;
 		}
 	}
 }
+

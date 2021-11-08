@@ -24,7 +24,7 @@
                              TabCloseRequested="Tabs_TabCloseRequested"
                              AllowDropTabs="True"
                       TabFocusNavigation="Once"
-                      IsTabStop="True"
+                      
                         FontSize="{StaticResource MediumFontSize}"
                       SelectionChanged="Tabs_SelectionChanged"
 				   CornerRadius="3"

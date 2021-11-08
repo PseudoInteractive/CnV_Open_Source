@@ -348,7 +348,7 @@ namespace COTG.Game
         }
         public static async Task ReturnSlowBatch(IEnumerable<int>  cids)
         {
-			using var work = new ShellPage.WorkScope("Home Slow Please..");
+			using var work = new WorkScope("Home Slow Please..");
 			int counter = 0;
             foreach (var cid in cids)
             {
@@ -389,7 +389,7 @@ namespace COTG.Game
         {
 			return ReturnSlowBatch(cids);
 
-			//using var work = new ShellPage.WorkScope("Home Please..");
+			//using var work = new WorkScope("Home Please..");
 
 			//int counter = 0;
    //         foreach (var cid in cids)

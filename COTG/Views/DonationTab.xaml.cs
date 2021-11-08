@@ -38,6 +38,7 @@ namespace COTG.Views
         public static int reserveStone = 0;
 		public static bool proportionateToWhatsNeeded = true;
 
+		public string[] priorityNames = { "NA","Low","Medium","High","Do Not Send" };
 		NotifyCollection<City> donationGridSource = new();
 
 		public DonationTab()
@@ -50,14 +51,15 @@ namespace COTG.Views
 			City.cityListChanged += CityListChanged;
 		}
 
-		private static void CityListChanged(IList<City> l)
+		private static void CityListChanged(IEnumerable<City> l)
 		{
 			var reserveCartsFilter = DonationTab.reserveCarts;
 			if(DonationTab.IsVisible())
 			{
-				instance.donationGridSource.Set( l.Where((city) => city.cartsHome >= reserveCartsFilter).OrderBy(a => a.cont) );
+				instance.donationGridSource.Set( l.Where((city) => city.cartsHome >= reserveCartsFilter).OrderBy(a=>a.cont).ThenByDescending(a => a.cartsHome) );
 			}
 		}
+		
 		public static bool IsVisible() => instance.isFocused;
       
        // List<BlessedCity> blessedGridSource = new List<BlessedCity>();
@@ -87,11 +89,14 @@ namespace COTG.Views
                     city.hasAcademy = detail.Academy == "Y";
                     city.sorcTower = detail.Sorc_tower == "Y";
                 }
+				CityListChanged(City.gridCitySource);
 
-                App.DispatchOnUIThread(()=>
+
+				CityList.NotifyChange(true);
+				App.DispatchOnUIThread(()=>
                 {
-                    CityList.NotifyChange();
                     blessedGrid.ItemsSource = BlessedCity.GetForCity(null);
+
 				///	donationGrid.ItemsSource = City.gridCitySource;
 				}
 				); // many items changed
@@ -102,11 +107,11 @@ namespace COTG.Views
                 App.DispatchOnUIThreadLow(() =>
                 {
                     blessedGrid.ItemsSource = null;
-                    donationGrid.ItemsSource = null;
+                //    donationGrid.ItemsSource = null;
                 });
-                   BlessedCity.senderCity = null;
+                BlessedCity.senderCity = null;
             }
-           await  base.VisibilityChanged(visible, longTerm: longTerm);
+           await base.VisibilityChanged(visible, longTerm: longTerm);
 
         }
 

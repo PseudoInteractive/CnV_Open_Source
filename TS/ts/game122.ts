@@ -44316,7 +44316,7 @@ function outer(){
 			 let o = JSON.parse(os.data);
 			if(o.hasOwnProperty("chcity"))
 			{
-				SetCity(o.chcity,false );
+				SetCity(o.chcity,true );
 			}
 			if(o.hasOwnProperty("postMouseEvent"))
 			{

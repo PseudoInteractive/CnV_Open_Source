@@ -241,7 +241,7 @@ namespace COTG.Helpers
             }
             catch (Exception e) // not stored properly
             {
-                COTG.Debug.LogEx(e);
+                Debug.LogEx(e);
             }
             return _default;
 

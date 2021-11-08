@@ -229,7 +229,7 @@ namespace COTG.Services
 				
 				var uri = new Uri(JSClient.httpsHost, localPath);
 				{
-					var req = new HttpRequestMessage(HttpMethod.Post,uri){ VersionPolicy=HttpVersionPolicy.RequestVersionOrHigher,Version= HttpVersion.Version20};
+					var req = new HttpRequestMessage(HttpMethod.Post,uri);
 					
 					req.Content = new StringContent(postContent,
 								Encoding.UTF8,
@@ -246,7 +246,7 @@ namespace COTG.Services
 					//    req.Headers.Append("Sec-Fetch-Dest", "empty");
 
 					HttpClient client = JSClient.httpClient;
-					var respT = client.SendAsync(req,headersOnly? HttpCompletionOption.ResponseHeadersRead: HttpCompletionOption.ResponseContentRead);
+					var respT = client.SendAsync(req,headersOnly? HttpCompletionOption.ResponseHeadersRead: HttpCompletionOption.ResponseContentRead).ConfigureAwait(false);
 					req =null;
 					//     Log($"res: {resp.GetType()} {resp.Succeeded} {resp}");
 					//     Log($"req: {resp.RequestMessage.ToString()}");

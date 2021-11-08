@@ -39,7 +39,6 @@
                         SelectionUnit="Row"
                         GroupPanelPosition="Bottom"
 						
-						ScrollViewer.ZoomMode="Enabled"
 						>
 
 			<tg:RadDataGrid.Columns>

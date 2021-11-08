@@ -51,8 +51,8 @@ namespace COTG.Views
 		public static string contToolTip;
 		public static string debugTip;
 		public static int lastCont;
-		
-
+		public static DispatcherQueueController _queuecontroller;
+///ivate static InputPointerSource _inputPointerSource;
 
 		public static void SetupCoreInput()
 		{
@@ -62,29 +62,42 @@ namespace COTG.Views
 			
 				try
 				{
-					var inputDevices = Windows.UI.Core.CoreInputDeviceTypes.Mouse;// | Windows.UI.Core.CoreInputDeviceTypes.Pen | Windows.UI.Core.CoreInputDeviceTypes.Touch;
-																				  //	Log(canvas.ManipulationMode);
-																				  //	canvas.ManipulationMode = ManipulationModes.All;
-					coreInputSource = canvas.CreateCoreIndependentInputSource(inputDevices);
 				
-			//	canvas.DispatcherQueue.TryEnqueue(DispatcherQueuePriority.Normal,() =>{
-					//	coreInputSource.InputEnabled += CoreInputSource_InputEnabled;
-				//	try
+		
+			_queuecontroller = DispatcherQueueController.CreateOnDedicatedThread();
+				_queuecontroller.DispatcherQueue.TryEnqueue(DispatcherQueuePriority.High,
+					() =>
 					{
-						coreInputSource.PointerMoved+=CoreInputSource_PointerMoved;
-						coreInputSource.PointerPressed+=CoreInputSource_PointerPressed; ;
-						coreInputSource.PointerReleased+=CoreInputSource_PointerReleased; ;
-						coreInputSource.PointerEntered+=CoreInputSource_PointerEntered; ;
-						coreInputSource.PointerExited+=CoreInputSource_PointerExited; ;
-						coreInputSource.PointerCaptureLost += CoreInputSource_PointerCaptureLost;
+						try
+						{
+							// Set up the pointer input source to receive pen input for the swap chain panel.
+							coreInputSource = canvas.CreateCoreIndependentInputSource(Windows.UI.Core.CoreInputDeviceTypes.Mouse);
 
-						coreInputSource.PointerWheelChanged += Canvas_PointerWheelChanged;
-						//coreInputSource.PointerCursor = 
-						//			coreInputSource.Dispatcher.ProcessEvents(CoreProcessEventsOption.ProcessUntilQuit);
-						//				coreInputSource.IsInputEnabled = true;
-						//		App.cursorDefault.Set();
 
-					}
+							//	Log(canvas.ManipulationMode);
+							//	canvas.ManipulationMode = ManipulationModes.All;
+							coreInputSource.PointerMoved+=CoreInputSource_PointerMoved;
+							coreInputSource.PointerPressed+=CoreInputSource_PointerPressed; ;
+							coreInputSource.PointerReleased+=CoreInputSource_PointerReleased; ;
+							coreInputSource.PointerEntered+=CoreInputSource_PointerEntered; ;
+							coreInputSource.PointerExited+=CoreInputSource_PointerExited; ;
+							coreInputSource.PointerCaptureLost += CoreInputSource_PointerCaptureLost;
+
+							coreInputSource.PointerWheelChanged += Canvas_PointerWheelChanged;
+
+
+						}
+						catch(Exception __ex)
+						{
+							Debug.LogEx(__ex);
+						}
+
+					//coreInputSource.PointerCursor = 
+					//			coreInputSource.Dispatcher.ProcessEvents(CoreProcessEventsOption.ProcessUntilQuit);
+					//				coreInputSource.IsInputEnabled = true;
+					//		App.cursorDefault.Set();
+
+				});
 				//	catch(Exception __ex)
 				//	{
 				//		Debug.LogEx(__ex);
@@ -126,7 +139,7 @@ namespace COTG.Views
 			Canvas_PointerReleased((point.Position, point.PointerId, point.IsInContact, point.Timestamp, point.Properties.PointerUpdateKind), args.KeyModifiers);
 
 		}
-
+//		public static PointerUpdateKind GetPointerUpdateKind()
 		private static void CoreInputSource_PointerPressed(ExpPointerInputObserver sender,PointerEventArgs args)
 		{
 			var point = args.CurrentPoint;
@@ -157,8 +170,8 @@ namespace COTG.Views
 
 			Assert(mouseOverCanvas== true);
 			mouseOverCanvas = false;
-			//Trace("MouseExcited");
-
+			instance.OnPropertyChanged("mouseOverCanvas");
+			
 			var point = e.GetCurrentPoint(canvas);
 			Canvas_PointerExited(point.Position, point.PointerId);
 		}
@@ -458,10 +471,14 @@ namespace COTG.Views
 
 		private static void Canvas_PointerEntered(Windows.Foundation.Point args)
 		{
-		//	Assert(mouseOverCanvas== false);
-			mouseOverCanvas = true;
-		//	Trace("MouseEnterred");
+			//	Assert(mouseOverCanvas== false);
+			if(!mouseOverCanvas)
+			{
+				mouseOverCanvas = true;
+				instance.OnPropertyChanged("mouseOverCanvas");
 
+				Trace("MouseEnterred");
+			}
 			UpdateMousePosition(args);
 			TakeFocus();
 
@@ -1093,9 +1110,14 @@ namespace COTG.Views
 		private static void Canvas_PointerMoved((Windows.Foundation.Point Position, uint PointerId,
 																			bool IsInContact, ulong Timestamp, PointerUpdateKind PointerUpdateKind) point)
 		{
+			
+		if(!mouseOverCanvas)
+			Trace("Mouse Moved Canvas");
 		//	App.cursorDefault.Set();
 			App.InputRecieved(); // prevent idle timer;
 			mouseOverCanvas = true;
+			instance.OnPropertyChanged("mouseOverCanvas");
+
 			//	PointerInfo(e);
 			UpdateMousePosition(point.Position);
 			TakeFocusIfAppropriate();

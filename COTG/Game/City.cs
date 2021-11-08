@@ -889,13 +889,14 @@ namespace COTG.Game
 						if(object.ReferenceEquals(buildings , Emptybuildings) 	)
 							buildings = new Building[citySpotCount];
 						int put = 0;
-						foreach (var bdi in eBd.EnumerateArray())
+						foreach(var bdi in eBd.EnumerateArray())
 						{
 							var bid = bdi.GetAsInt("bid");
-							var bl = bdi.GetAsByte("bl");
 							var bi = BuildingDef.BidToId(bid);
-							if(bi== 0)
-								Assert(bl==0);
+							var bl = bi == 0 ? (byte)0 : bdi.GetAsByte("bl"); // these are bonus spots like temple extras and farms
+
+							
+
 							if ((put == 0) && (bid == 0))
 							{
 								buildings[put] = new Building(BuildingDef.BidToId(bidWall), (byte)bl);
@@ -1778,6 +1779,39 @@ namespace COTG.Game
 
 			return rv;
 		}
+		public bool WillHaveBuilding(int bid, bool includeExtendedQueue)
+		{
+			int id = BidToId(bid);
+			foreach(var i in buildings)
+			{
+				if(i.id == id)
+				{
+					return true;
+				}
+			}
+			foreach(var i in buildQueue)
+			{
+				if(i.isBuild && i.bid == bid)
+					return true;
+			}
+			if(includeExtendedQueue)
+			{
+				if(ExtendedQueue.all.TryGetValue(cid,out var q))
+				{
+					var count = q.queue.count;
+					var data = q.queue.v;
+
+					for(int i = 0;i < count;++i)
+					{
+						//semi safe
+						if(data[i].bid == bid && data[i].isBuild)
+							return true;
+					}
+				}
+			}
+
+			return false;
+		}
 		public Building GetBuildingPostQueue(int bspot,in Span<BuildQueueItem> q0)
 		{
 			var rv = buildings[bspot];
@@ -1904,6 +1938,7 @@ namespace COTG.Game
 			preTeardown,
 			teardown,
 			complete,
+			completeX,
 			pending,
 			count,
 		}
@@ -2165,8 +2200,10 @@ namespace COTG.Game
 					return new BuildInfo(BuildStage.preTeardown, buildingLimit);
 			}
 
-			if (bc.cabins > 0 || bc.buildingCount < 100 || !IsLayoutComplete(this) )
+			if (bc.cabins > 0 || bc.buildingCount < 100  )
 				return new BuildInfo(BuildStage.teardown,buildingLimit);
+			if( !IsLayoutComplete(this))
+				return new BuildInfo(BuildStage.completeX,buildingLimit);
 
 			return new BuildInfo(BuildStage.complete,buildingLimit);
 		}
@@ -2423,7 +2460,7 @@ namespace COTG.Game
 		}
 
 		public static ComboBox box => ShellPage.instance.cityListBox;
-		public static void NotifyChange()
+		public static void NotifyChange(bool itemsChanged)
 		{
 
 			App.QueueOnUIThread(async () =>
@@ -2451,7 +2488,8 @@ namespace COTG.Game
 				}
 				l = l.Where(a => a.testContinentAndTagFilter).OrderBy((a) => a,new CityComparer()).ToArray();
 				ShellPage.instance.cityBox.ItemsSource = l;
-				City.gridCitySource.Set(l,true);
+				City.gridCitySource.Set(l,true,itemsChanged);
+				// todo change this
 				Spot.selected = Spot.selected.Where(cid => City.TestContinentAndFlagFilter(cid)).ToHashSet(); // filter selected
 				SyncCityBox();
 				cityListChanged?.Invoke(l);

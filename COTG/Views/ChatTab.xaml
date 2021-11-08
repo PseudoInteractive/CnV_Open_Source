@@ -57,8 +57,8 @@ sent or received, and those values are bound in the DataTemplate.-->
 			</Button>
 			<TextBox x:Name="input" x:FieldModifier="public" Grid.Column="2" HorizontalAlignment="Stretch"  Canvas.ZIndex="99" VerticalAlignment="Center" KeyDown="input_KeyDown" PlaceholderText="Please enter message" IsTabStop="True" TabFocusNavigation="Once" Margin="4"  GotFocus="input_GotFocus" PointerEntered="inputPointerOver"  IsSpellCheckEnabled="True" IsTextPredictionEnabled="True" PreventKeyboardDisplayOnProgrammaticFocus="True" TextWrapping="Wrap" FontSize="{ThemeResource ChatFontSize}"  />
 		</Grid>
-		<winui:ListView x:Name="listView" x:FieldModifier="public" Margin="0" Padding="0" ItemTemplate="{StaticResource MessageViewTemplate}" SelectionMode="Extended" IsMultiSelectCheckBoxEnabled="False" 
-                   ItemsSource="{x:Bind items,Mode=OneWay}" >
+		<winui:ListView x:Name="listView" x:FieldModifier="public" Margin="0" Padding="0" ItemTemplate="{StaticResource MessageViewTemplate}" SelectionMode="Extended"
+                   ItemsSource="{x:Bind items,Mode=OneWay}"   >
 
 
 			<!-- The ItemsStackPanel must be edited to update the following two properties -->

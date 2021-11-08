@@ -403,7 +403,7 @@ namespace COTG.Views
 		}
 		public async void AutoRaid(object sender, RoutedEventArgs e)
 		{
-			using var work = new ShellPage.WorkScope("Auto Raid..");
+			using var work = new WorkScope("Auto Raid..");
 
 			var sel = Spot.GetSelectedForContextMenu(0, false, onlyMine: true);
 			if(sel.Count <= 1)
@@ -483,7 +483,7 @@ namespace COTG.Views
 
 		private async void ReturnRaidsForOutgoing(object sender, RoutedEventArgs e)
 		{
-			using var work = new ShellPage.WorkScope("Return For Outgoing..");
+			using var work = new WorkScope("Return For Outgoing..");
 			var counter = OutgoingOverview.outgoingCounter+1;
 			OutgoingOverview.OutgoingUpdateDebounce.Go();
 

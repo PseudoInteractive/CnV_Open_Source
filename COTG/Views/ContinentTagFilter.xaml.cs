@@ -125,7 +125,7 @@ namespace COTG.Views
 					}
 					ShellPage.instance.ContinentFilter.Content = label;
 					//	ExportCastles.instance.ContinentFilter.Content = label;
-					CityList.NotifyChange();
+					CityList.NotifyChange(false);
 					ShellPage.RefreshTabs.Go();
 
 				}

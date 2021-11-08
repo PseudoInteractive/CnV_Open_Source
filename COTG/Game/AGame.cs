@@ -449,9 +449,9 @@ namespace COTG
 
 				if(App.isForeground)
 				{
-					if(renderFrame >= 5 && ShellPage.coreInputSource==null)
+					if(renderFrame >= 5 && ShellPage._queuecontroller==null)
 					{
-					//	ShellPage.SetupCoreInput();
+		//				ShellPage.SetupCoreInput();
 
 					}
 					//else
@@ -1390,7 +1390,7 @@ namespace COTG
 					//else
 					{
 						nameColor = new Color() { A = intAlpha,G = 255,B = 255,R = 255 };
-						nameColorOutgoing = new Color() { A = intAlpha,G = 128,B = 212,R = 255 };
+						nameColorOutgoing = new Color() { A = intAlpha,G = 255,B = 182,R = 222 };
 						nameColorHover = new Color() { A = intAlpha,G = 255,B = 255,R = 140 };
 						myNameColor = new Color() { A = intAlpha,G = 255,B = 150,R = 170 };
 						nameColorIncoming = new Color() { A = intAlpha,G = 190,B = 190,R = 255 };

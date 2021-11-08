@@ -34,7 +34,7 @@ using PointerUpdateKind = Windows.UI.Input.PointerUpdateKind;
 //using Microsoft.AppCenter;
 //using Microsoft.AppCenter.Analytics;
 //using Microsoft.AppCenter.Crashes;
-//using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Configuration;
 //using Microsoft.Extensions.DependencyInjection;
 //using Microsoft.Extensions.Logging;
 //using Microsoft.Extensions.Options;
@@ -81,6 +81,8 @@ namespace COTG
 			closing,
 			closed,
 		}
+		static IConfigurationRoot configuration;
+
 		public static State state;
 		private Lazy<ActivationService> _activationService;
 		public static bool isForeground;
@@ -96,14 +98,14 @@ namespace COTG
 
 		public static async Task StartAnalyticsAsync()
 		{
-			//if (AppCenter.Configured)
-			//{
-			//	return;
-			//}
+			if(AppCenter.Configured)
+			{
+				return;
+			}
 			//AppCenter.SetMaxStorageSizeAsync(16 * 1024 * 1024).ContinueWith((storageTask) => {
 			//	// The storageTask.Result is false when the size cannot be honored.
 			//});
-			
+
 			AppCenter.Configure("0b4c4039-3680-41bf-b7d7-685eb68e21d2");
 		//	AppCenter.LogLevel = System.Diagnostics.Debugger.IsAttached ? Microsoft.AppCenter.LogLevel.Warn : Microsoft.AppCenter.LogLevel.None;
 			AppCenter.Start(
@@ -112,22 +114,23 @@ namespace COTG
 			   , typeof(Crashes)
 #endif
 			   );
-			AAnalytics.initialized=true;
-//			await  Task.WhenAll(
-//#if CRASHES
-//					Crashes.SetEnabledAsync(true),
-//#endif
-//								Analytics.SetEnabledAsync(true) );
-			
 
-//#if CRASHES
-//			bool didAppCrash = await Crashes.HasCrashedInLastSessionAsync();
-//			if (didAppCrash)
-//			{
-//				ErrorReport crashReport = await Crashes.GetLastSessionCrashReportAsync();
-//				Log(crashReport);
-//			}
-//#endif
+			AAnalytics.initialized=true;
+			await Task.WhenAll(
+#if CRASHES
+					Crashes.SetEnabledAsync(true),
+#endif
+								Analytics.SetEnabledAsync(true));
+
+
+			//#if CRASHES
+			//			bool didAppCrash = await Crashes.HasCrashedInLastSessionAsync();
+			//			if (didAppCrash)
+			//			{
+			//				ErrorReport crashReport = await Crashes.GetLastSessionCrashReportAsync();
+			//				Log(crashReport);
+			//			}
+			//#endif
 		}
 
 		/// <summary>
@@ -200,6 +203,7 @@ namespace COTG
 
 		private static async Task SwitchToBackground()
 		{
+			Trace("Background");
 			if(isForeground == true)
 			{
 				isForeground = false;
@@ -304,23 +308,15 @@ namespace COTG
 				case VirtualKey.LeftShift:
 				case VirtualKey.RightShift:
 			//		Trace("Shift Up");
-				//	shiftPressed = false;
+					shiftPressed = false;
 					break;
 				case VirtualKey.Control:
 				case VirtualKey.LeftControl:
 				case VirtualKey.RightControl:
 
-				//	controlPressed = false;
+					controlPressed = false;
 					break;
-				case VirtualKey.F3:
-					ShellPage.AdjustLayout(-1);
-					break;
-				case VirtualKey.F4:
-					ShellPage.AdjustLayout(1);
-					break;
-				case VirtualKey.F5:
-					ShellPage.OnRefresh();
-					break;
+				
 			}
 			InputRecieved();
 		}
@@ -386,34 +382,35 @@ namespace COTG
 			
 		}
 
-		private void OnAppUnhandledException(object sender, Microsoft.UI.Xaml.UnhandledExceptionEventArgs e)
+		private void OnAppUnhandledException(object sender,Microsoft.UI.Xaml.UnhandledExceptionEventArgs e)
 		{
 			e.Handled = true;
+			try
+			{
 #if DEBUG
-			System.Diagnostics.Debug.WriteLine($"Unhandled Exception: " + e.Message);
-			System.Diagnostics.Debug.WriteLine(e.Exception.StackTrace);
+				System.Diagnostics.Debug.WriteLine($"Unhandled Exception: " + e.Message);
+				System.Diagnostics.Debug.WriteLine(e.Exception.StackTrace);
 #endif
 
-			
 
-			if (RegisterException(e.Message))
-			{
-				try
+
+				if(RegisterException(e.Message))
 				{
 #if CRASHES
 
 					Crashes.TrackError(e.Exception);
 #endif
-					AAnalytics.Track("UnhandledException", new Dictionary<string, string> { { "message", e.Message.Truncate(64) } });
+					AAnalytics.Track("UnhandledException",new Dictionary<string,string> { { "message",e.Message.Truncate(64) } });
 				}
-				catch (Exception ex2)
-				{
+			
+			}
+			catch(Exception ex2)
+			{
 
-				//	LogEx(ex2);
-//					RegisterException(ex2.Message);
+				//LogEx(ex2);
+				//					RegisterException(ex2.Message);
 
 
-				}
 			}
 		}
 
@@ -424,14 +421,37 @@ namespace COTG
 		private static ConcurrentQueue<Func<Task>> throttledTasks = new ConcurrentQueue<Func<Task>>();
 		public static DesktopWindow window;
 		static DateTimeOffset activeStart = DateTimeOffset.UtcNow;
+		//private static Microsoft.Extensions.Configuration.IConfigurationRoot BuildConfig()
+		//{
+		//	var devEnvironmentVariable = Environment.GetEnvironmentVariable("NETCORE_ENVIRONMENT");
+
+		//	var isDevelopment = string.IsNullOrEmpty(devEnvironmentVariable) ||
+		//						devEnvironmentVariable.ToLower() == "development";
+
+		//	var builder = new ConfigurationBuilder();
+		//	// tell the builder to look for the appsettings.json file
+		//	builder
+		//		.AddJsonFile("appsettings.json",optional: false,reloadOnChange: false);
+
+		//	//only add secrets in development
+		//	if(isDevelopment)
+		//	{
+		//		builder.AddUserSecrets<Program>();
+		//	}
+
+		//	return builder.Build();
+		//}
+
 		protected override async void OnLaunched(Microsoft.UI.Xaml.LaunchActivatedEventArgs args)
 		{
 			try
 			{
-
-			//	Windows.UI.ViewManagement.ApplicationView.PreferredLaunchWindowingMode =Windows.UI.ViewManagement.ApplicationViewWindowingMode.Maximized;// new Size(bounds.Width, bounds.Height);
-//				Windows.UI.ViewManagement.ApplicationView.GetForCurrentView().TryEnterViewModeAsync(Windows.UI.ViewManagement.ApplicationViewMode.CompactOverlay);
 				
+
+
+				//	Windows.UI.ViewManagement.ApplicationView.PreferredLaunchWindowingMode =Windows.UI.ViewManagement.ApplicationViewWindowingMode.Maximized;// new Size(bounds.Width, bounds.Height);
+				//				Windows.UI.ViewManagement.ApplicationView.GetForCurrentView().TryEnterViewModeAsync(Windows.UI.ViewManagement.ApplicationViewMode.CompactOverlay);
+
 				window= new();
 				//	window.
 				
@@ -1661,5 +1681,47 @@ namespace COTG
 		{
 			return x >=0 && y >= 0 && x < e.ActualWidth && y < e.ActualHeight;
 		}
+
+
+	//	static void LoadConfig()
+		//{
+		//	var config = BuildConfig();
+
+		//	// Get the Google Spreadsheet Config Values
+		//	var serviceAccount = config["GOOGLE_SERVICE_ACCOUNT"];
+		//	var documentId = config["GOOGLE_SPREADSHEET_ID"];
+		//	var jsonCredsPath = config["GOOGLE_JSON_CREDS_PATH"];
+
+		//	// In this case the json creds file is stored locally, but you can store this however you want to (Azure Key Vault, HSM, etc)
+		//	var jsonCredsContent = File.ReadAllText(jsonCredsPath);
+
+		//	// Create a new SheetHelper class
+		//	var sheetHelper = new SheetHelper(documentId,serviceAccount,"");
+		//	sheetHelper.Init(jsonCredsContent);
+
+		//	// Get all the rows for the first 2 columns in the spreadsheet
+		//	var rows = sheetHelper.GetRows(new SheetRange("",1,1,2));
+
+		//	// Write all the values from the result set
+		//	foreach(var row in rows)
+		//	{
+		//		foreach(var col in row)
+		//		{
+		//			Console.Write($"{col}\t");
+		//		}
+		//		Console.Write("\n");
+		//	}
+
+		//	// export a csv file from the current spreadsheet and tab
+		//	var exporter = new SheetExporter(sheetHelper);
+
+		//	var filepath = @"output.csv";
+
+		//	using(var stream = new FileStream(filepath,FileMode.Create))
+		//	{
+		//		var range = new SheetRange("",1,1,2);
+		//		exporter.ExportAsCsv(range,stream);
+		//	}
+		//}
 	}
 }

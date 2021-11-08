@@ -312,7 +312,7 @@ namespace COTG.Game
 			}
 			else if (sel.bl == 0)
 			{
-				Status("Already destoryed", dryRun);
+				Status("Already destroyed", dryRun);
 				return;
 
 			}

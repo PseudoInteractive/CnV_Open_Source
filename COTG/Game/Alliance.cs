@@ -121,7 +121,7 @@ namespace COTG.Game
 				Log("Already got aldt"); // should not happen
 				return;
 			}
-			using var work = new Views.ShellPage.WorkScope("fetch alliances");
+			using var work = new Views.WorkScope("fetch alliances");
 
 			var _all = new Dictionary<int, Alliance>();
 			var _nameToId = new Dictionary<string, int>();

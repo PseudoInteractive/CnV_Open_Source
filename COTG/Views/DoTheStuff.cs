@@ -63,7 +63,7 @@ namespace COTG;
 			}
 
 			Assert(city.isBuild);
-			if(city.buildStage == City.BuildStage.complete)
+			if((city.buildStage == City.BuildStage.complete)||(city.buildStage == City.BuildStage.completeX))
 			{
 				Note.Show($"Complete: {city}");
 				return true;
@@ -516,7 +516,10 @@ namespace COTG;
 				case City.BuildStage.complete:
 					Note.Show("Complete :)");
 					break;
-				default:
+			case City.BuildStage.completeX:
+					Note.Show("Complete (with some different buildings between layout and city)");
+					break;
+			default:
 					Assert(false);
 					break;
 			}

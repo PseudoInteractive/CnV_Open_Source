@@ -35,7 +35,7 @@
                         Grid.Row="1"
 						AutoGenerateColumns="False"
                         CanUserChooseColumns="True"
-								 IsTabStop="True"
+								
 								 TabFocusNavigation="Once"
 								 Loaded="DataGridLoaded"
                        ColumnResizeHandleDisplayMode="Always"
@@ -47,7 +47,6 @@
                         SelectionMode="Extended"
                         SelectionUnit="Row"
                         GroupPanelPosition="Bottom"
-						ScrollViewer.ZoomMode="Enabled"
 						>
 							  
             <tg:RadDataGrid.Columns>

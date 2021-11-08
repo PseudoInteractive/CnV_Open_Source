@@ -308,6 +308,7 @@ namespace COTG.Views
 						//});
 
 					}
+					supporters.ItemContentChanged();
 					supporters.Set(s,true);
 
 					//	supportGrid.ItemsSource = supporters;
@@ -335,7 +336,7 @@ namespace COTG.Views
 				if (target == null)
 					target = Spot.GetFocus();
 
-				DoRefresh();
+				DoRefresh(true);
 				
 			}
 			else

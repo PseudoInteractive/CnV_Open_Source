@@ -33,10 +33,24 @@
 							FontSize="{StaticResource SmallFontSize}"
 							SelectionUnit="Row"
 					   AutoGenerateColumns="True"
+					   AutoGenerateColumnsMode="SmartReset"
+					    AllowFiltering="True" 
+                        AllowSorting="True" 
+                        ShowGroupDropArea="True"
+					   AllowDraggingColumns="True"
+					   ColumnWidthMode="SizeToHeader"
+					   
 							Loaded="DataGridLoaded"
 					>
 			
 			<dataGrid:SfDataGrid.Columns>
+				<dataGrid:GridTemplateColumn MappingName="sReturn" HeaderText="Return">
+					<dataGrid:GridTemplateColumn.CellTemplate>
+						<DataTemplate>
+							<Button  Content="Click" Width="160" Height="30" Command="{Binding Path=ReturnClick,ElementName=sfDataGrid}" CommandParameter="{Binding}"/>
+						</DataTemplate>
+					</dataGrid:GridTemplateColumn.CellTemplate>
+				</dataGrid:GridTemplateColumn>
 				<sf:GridImageColumn MappingName="icon"
 											HeaderText="I"
 											Width="32"

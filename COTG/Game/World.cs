@@ -1307,17 +1307,17 @@ namespace COTG.Game
 				case World.typeCity:
 					{
 
-						if (data.player == 0)
-						{
-							return (null, false, false, false, null); // lawless
-						}
-						else
+						//if (data.player == 0)
+						//{
+						//	return ("Lawless", false, false, false, null); // lawless
+						//}
+						//else
 						{
 							var spot = Spot.GetOrAdd(c.WorldToCid());
 							{
 								var isMine = spot.isMine;
 								var player = Player.all.GetValueOrDefault(data.player, Player._default);
-								return (isMine ? spot.cityName : player.name, isMine, spot.incoming.Any(), !isMine && (data.player == Player.viewHover), spot);
+								return (data.player == 0 ? "Lawless" : isMine ? spot.cityName : player.name, isMine, spot.incoming.Any(), !isMine && (data.player == Player.viewHover), spot);
 							}
 						}
 
@@ -1329,7 +1329,7 @@ namespace COTG.Game
 
 		//public static async void DumpCities(int x0, int y0, int x1, int y1, string allianceName, bool onlyCastles, bool onlyOnWater)
 		//{
-		//	using var scope = new ShellPage.WorkScope("Export Castles...");
+		//	using var scope = new WorkScope("Export Castles...");
 		//	var sb = new StringBuilder();
 		//	allianceName = allianceName.ToLower();
 		//	sb.Append("Coords\tplayer\tclassification\tWater\tBig\tCastle\tTemple\nalliance\n");

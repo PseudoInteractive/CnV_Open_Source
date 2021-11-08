@@ -287,6 +287,11 @@ namespace COTG.Views
 						   city.OnPropertyChanged();
 						   if(autobuild)
 							   await COTG.DoTheStuff.Go(city,false,false);
+							if(cid == City.build)
+							{
+							   JSClient.CityRefresh();
+
+							}
 					   }
 					   return result;
 				   }
@@ -729,7 +734,10 @@ namespace COTG.Views
 			}
 		}
 
-		
+		private void NameBlade_VisibilityChanged(object sender,Visibility e)
+		{
+			//ChooseName(_,_);
+		}
 	}
 
 

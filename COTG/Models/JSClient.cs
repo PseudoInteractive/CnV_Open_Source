@@ -1959,7 +1959,7 @@ namespace COTG
 						CitySwitch(cid, true);
 					}
 				}
-				CityList.NotifyChange();
+				CityList.NotifyChange(true);
 				
 				if (!ppdtInitialized)
 				{
@@ -2400,6 +2400,7 @@ private static async void ShowCouncillorsMissingDialog()
 		private static void CoreWebView_WebMessageReceived(CoreWebView sender,CoreWebView2WebMessageReceivedEventArgs args)
 		{
 			var eValue = args.WebMessageAsJson;
+			App.UpdateKeyStates();
 			Task.Run(async () =>
 		   {
 		   try
@@ -2636,9 +2637,11 @@ private static async void ShowCouncillorsMissingDialog()
 
 								   App.OnPointerPressed(kind);
 								   {
-									   var c = view.TransformToVisual(ShellPage.canvas).TransformPoint(new(x,y));
-									  	ShellPage.Canvas_PointerPressed((c, 0, true, (ulong)Environment.TickCount64*1000, kind));
-
+									   App.DispatchOnUIThread(() =>
+									{
+										var c = view.TransformToVisual(ShellPage.canvas).TransformPoint(new(x,y));
+										ShellPage.Canvas_PointerPressed((c, 0, true, (ulong)Environment.TickCount64*1000, kind));
+									});
 											
 									  
 								   }

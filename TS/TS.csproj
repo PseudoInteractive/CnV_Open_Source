@@ -8,12 +8,16 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="node_modules\**" />
     <Compile Remove="Properties\**" />
     <Compile Remove="Ref\**" />
+    <EmbeddedResource Remove="node_modules\**" />
     <EmbeddedResource Remove="Properties\**" />
     <EmbeddedResource Remove="Ref\**" />
+    <None Remove="node_modules\**" />
     <None Remove="Properties\**" />
     <None Remove="Ref\**" />
+    <TypeScriptCompile Remove="node_modules\**" />
     <TypeScriptCompile Remove="Properties\**" />
     <TypeScriptCompile Remove="Ref\**" />
   </ItemGroup>
@@ -39,12 +43,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="node_modules\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="Microsoft.DependencyValidation.Analyzers" Version="0.11.0" />
-    <PackageReference Include="Microsoft.TypeScript.MSBuild" Version="4.4.2">
+    <PackageReference Include="Microsoft.TypeScript.MSBuild" Version="4.5.1-rc">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>

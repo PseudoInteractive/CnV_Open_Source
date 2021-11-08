@@ -66,7 +66,7 @@ namespace COTG.Views
 			{
 				if (city.CidOr0() == openCity && dungeons!=null)
 				{
-					App.DispatchOnUIThreadLow(() => instance.items.Set(dungeons,true));
+					instance.items.Set(dungeons,true);
 				}
 				return;
 			}

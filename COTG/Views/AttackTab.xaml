@@ -11,7 +11,7 @@
 			  xmlns:winui="using:Microsoft.UI.Xaml.Controls"
 			  xmlns:storage="using:Windows.Storage"
 			  
-			  IsTabStop="True"
+			
                mc:Ignorable="d">
 
 	<Grid>
@@ -397,7 +397,7 @@
 		<tk:GridSplitter Grid.Row="2"
                          ResizeDirection="Rows"
                          Height="11"
-						 				IsTabStop="True"
+						 			
 							CursorBehavior="ChangeOnSplitterHover"
 				GripperCursor="SizeNorthSouth"
                          HorizontalAlignment="Stretch"

@@ -157,7 +157,6 @@
                      AlternatingRowBackground="#FF301030"
                      SelectionChanged="supportGrid_SelectionChanged"
 			
-					 ScrollViewer.ZoomMode="Enabled"
 					 
                      >
 

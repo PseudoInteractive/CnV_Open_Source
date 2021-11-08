@@ -1,37 +1,14 @@
-﻿using COTG.Game;
-using COTG.Models;
-using System;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
-
-using Microsoft.UI.Xaml.Controls;
-using System.Diagnostics.Contracts;
-using System.Collections.Generic;
-using Telerik.UI.Xaml.Controls.Grid;
-using static COTG.Debug;
-using Windows.ApplicationModel.Core;
+﻿using COTG.Services;
 //using Windows.UI.Core;
 using Microsoft.UI.Xaml;
-using Telerik.Core.Data;
-using Telerik.Data.Core;
-using Telerik.Data;
-using System.Collections.Specialized;
-using Windows.Foundation;
-using CommunityToolkit.WinUI;
-using Microsoft.UI.Xaml.Input;
-using COTG.Services;
-using System.Collections;
+
+using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 //using Windows.UI.Input;
-using COTG.Helpers;
-using Microsoft.UI.Xaml.Navigation;
-using System.Linq;
 using System.Threading.Tasks;
-using static COTG.Game.Troops;
-using Microsoft.UI.Xaml.Controls;
-using Telerik.UI.Xaml.Controls.Grid.Commands;
-using System.Threading;
-using Telerik.UI.Xaml.Controls.Grid.Primitives;
+
+using Telerik.UI.Xaml.Controls.Grid;
+
 using static COTG.Game.City;
 
 namespace COTG.Views
@@ -39,7 +16,7 @@ namespace COTG.Views
 
 
 
-	public sealed partial class BuildTab : UserTab
+	public sealed partial class BuildTab:UserTab
 	{
 		private const string workStr = "Refreshing build states..";
 		public static BuildTab instance;
@@ -75,7 +52,7 @@ namespace COTG.Views
 
 
 
-		
+
 		//private void CityGrid_PointerPress(object sender, PointerRoutedEventArgs e)
 		//{
 		//	Spot.GridPressed(sender, e);
@@ -91,7 +68,7 @@ namespace COTG.Views
 		//}
 
 
-	
+
 
 
 
@@ -141,14 +118,14 @@ namespace COTG.Views
 
 		//}
 
-	
-	
 
 
 
-		private void Set<T>(ref T storage, T value, [CallerMemberName] string propertyName = null)
+
+
+		private void Set<T>(ref T storage,T value,[CallerMemberName] string propertyName = null)
 		{
-			if (Equals(storage, value))
+			if(Equals(storage,value))
 			{
 				return;
 			}
@@ -169,20 +146,20 @@ namespace COTG.Views
 		static public async Task GetBuildInfo()
 		{
 			// Refreshing
-			if (getBuildState == 1 || getBuildState == 2)
+			if(getBuildState == 1 || getBuildState == 2)
 			{
 				getBuildState = 2;
 				return;
 			}
 			var firstTime = false;
 
-			if (getBuildState == 0)
+			if(getBuildState == 0)
 			{
 				firstTime = true;
 				ShellPage.WorkStart(workStr);
 
 			}
-			for (; ; )
+			for(;;)
 			{
 				getBuildState = 1;
 				var js = await Post.SendForJson("overview/bcounc.php").ConfigureAwait(false);
@@ -199,14 +176,16 @@ namespace COTG.Views
 					if(!city.buildingsLoaded)
 					{
 						await GetCity.Post(cid).ConfigureAwait(false);
-						
-						
+
+
 						city.OnPropertyChanged();
 					}
 					city.UpdateBuildStage();
 
 					city.points = (ushort)ci[2].GetAsInt();
-					var isBuilding = (ci[4].GetAsFloat() != 0) || (city.buildStage == BuildStage.complete) || (city.buildStage == BuildStage.leave);
+					var isBuilding = (ci[4].GetAsFloat() != 0) || (city.buildStage == BuildStage.complete)||
+					(city.buildStage == BuildStage.completeX)
+								|| (city.buildStage == BuildStage.leave);
 					//if (ci[3].GetAsFloat() != 0)
 					//{
 					//	//	Log($"3!: {city.nameAndRemarks}");
@@ -216,7 +195,7 @@ namespace COTG.Views
 					//{
 					//	//	Log($"5!: {city.nameAndRemarks}");
 					//}
-					if (isBuilding != city.isBuilding)
+					if(isBuilding != city.isBuilding)
 					{
 						city.isBuilding = isBuilding;
 						city.OnPropertyChanged();
@@ -235,7 +214,7 @@ namespace COTG.Views
 										 ((ci[14].GetAsInt() == 1 && ci[16].GetAsInt() == 1) ||
 										  (ci[3].GetAsFloat() == 0 && ci[5].GetAsFloat() == 0));
 
-					if( city.bcBlocked != _blocked)
+					if(city.bcBlocked != _blocked)
 					{
 						city.bcBlocked = _blocked;
 						city.OnPropertyChanged();
@@ -250,61 +229,61 @@ namespace COTG.Views
 
 				}
 
-				if (getBuildState != 2)
+				if(getBuildState != 2)
 					break;
 			}
 			getBuildState = -1;
-					/*
+			/*
 0:		 17236203,  // cid
 1:		"22+1001+-+Vanq",
 2:		8808, // score
 3:		0.00027777777777778,   ??
 4:		0.5, // queue length (hours)
-		0,
-		1,  // has buildings
-		0,  // has towers
-		460411, // stone
-		460549,
-		1,
-		1,
-		1,
-		1,
-		1,
-		0,
-		0
-				 */
+0,
+1,  // has buildings
+0,  // has towers
+460411, // stone
+460549,
+1,
+1,
+1,
+1,
+1,
+0,
+0
+		 */
 			//	City.AllCityDataDirty();
 		}
 
 
-		override public async Task VisibilityChanged(bool visible, bool longTerm)
+		override public async Task VisibilityChanged(bool visible,bool longTerm)
 		{
 			//   Log("Vis change" + visible);
 
-			if (visible)
+			if(visible)
 			{
 
-				if (JSClient.ppdtInitialized)
+				if(JSClient.ppdtInitialized)
 				{
-				//	await Raiding.UpdateTS(true, false);
-				//	await RaidOverview.Send();
-					if (City.build != 0)
+					//	await Raiding.UpdateTS(true, false);
+					//	await RaidOverview.Send();
+					if(City.build != 0)
 						await GetCity.Post(City.build);
 
-					
-				//	City.gridCitySource.NotifyReset();
-		
+
+					//	City.gridCitySource.NotifyReset();
+
 				}
 
-				Task.Run( GetBuildInfo).ContinueWith(async (_)=>
-				{
-					foreach(var c in City.myCities)
-					{
-						if(c.testContinentAndTagFilter)
-							c.OnPropertyChanged();
-					}
-					City.gridCitySource.NotifyReset(true,true);
-				} );
+				Task.Run(GetBuildInfo).ContinueWith(async (_) =>
+			   {
+				   foreach(var c in City.myCities)
+				   {
+					   if(c.testContinentAndTagFilter)
+						   c.OnPropertyChanged();
+				   }
+				   City.gridCitySource.NotifyReset(true,true);
+			   });
 				//  if (cityGrid.ItemsSource == App.emptyCityList )
 				//     cityGrid.ItemsSource = City.gridCitySource;
 			}
@@ -312,11 +291,11 @@ namespace COTG.Views
 			{
 				//        cityGrid.ItemsSource = null;
 			}
-			await base.VisibilityChanged(visible, longTerm: longTerm);
-		//	if(visible)
-		//	{
-		//		App.DispatchOnUIThreadLow(() => Spot.SyncUISelection(true, City.GetBuild() ));
-		//	}
+			await base.VisibilityChanged(visible,longTerm: longTerm);
+			//	if(visible)
+			//	{
+			//		App.DispatchOnUIThreadLow(() => Spot.SyncUISelection(true, City.GetBuild() ));
+			//	}
 		}
 		//private void BuildCityContextFlyout(TabPage newPage)
 		//{
@@ -354,19 +333,19 @@ namespace COTG.Views
 
 		public static bool IsVisible() => instance.isFocused;
 
-		private void SelectionChanged(object sender, DataGridSelectionChangedEventArgs e)
+		private void SelectionChanged(object sender,DataGridSelectionChangedEventArgs e)
 		{
-			if (!isOpen)
+			if(!isOpen)
 				return;
 
-			if (SpotTab.silenceSelectionChanges == 0)
+			if(SpotTab.silenceSelectionChanges == 0)
 			{
 				try
 				{
 
 					var sel = cityGrid.SelectedItems;
 					var newSel = new HashSet<int>();
-					foreach (Spot s in sel)
+					foreach(Spot s in sel)
 					{
 						newSel.Add(s.cid);
 
@@ -376,7 +355,7 @@ namespace COTG.Views
 
 					Spot.selected = newSel;
 				}
-				catch (Exception ex)
+				catch(Exception ex)
 				{
 					LogEx(ex);
 				}
@@ -387,7 +366,7 @@ namespace COTG.Views
 			}
 		}
 
-		private void SelectAll(object sender, RoutedEventArgs e)
+		private void SelectAll(object sender,RoutedEventArgs e)
 		{
 			cityGrid.SelectAll();
 

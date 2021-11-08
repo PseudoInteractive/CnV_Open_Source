@@ -559,7 +559,7 @@ namespace COTG.Views
 		public static bool attacksAlwaysVisible;
 		public static float penaltyForWrongDungeonType = 6;
 		public static ushort scoreForSorcTower = 2000;
-
+		public static int notificationDuration = 3;
 		//public string VersionDescription
 		//{
 		//	get { return _versionDescription; }
@@ -711,7 +711,7 @@ namespace COTG.Views
 			App.DispatchOnUIThreadLow( async () =>
 			   {
 				   var pid = Player.activeId;
-				   using var work = new ShellPage.WorkScope("update citylists");
+				   using var work = new WorkScope("update citylists");
 				   var cityListCount = CityList.all.Length;
 				   string sli = null;
 				   var cgs = new List<string>();
@@ -883,7 +883,7 @@ namespace COTG.Views
 			var cy = cont / 10;
 			var cx = cont - cy * 10;
 			int x0 = cx * 100, y0 = cy * 100, x1 = (cx + 1) * 100, y1 = (cy + 1) * 100;
-			using (new ShellPage.WorkScope("Shrine Finder"))
+			using (new WorkScope("Shrine Finder"))
 				for (int x = x0; x < x1; ++x)
 				{
 					ShellPage.WorkUpdate($"Shrine Finder {cont}:  {x - x0}%");

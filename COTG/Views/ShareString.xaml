@@ -66,17 +66,17 @@
 					OffContent="Skip" />
 			</StackPanel>
 			<tk:BladeView Grid.Column="1"   x:Name="bladeView"   >
-				<tk:BladeItem x:Name="NameBlade" Header="Name" IsOpen="False"  >
+				<tk:BladeItem x:Name="NameBlade" Header="Name" IsOpen="False" VisibilityChanged="NameBlade_VisibilityChanged"	  >
 						<Border Grid.Row="0" Style="{StaticResource BorderReveal}">
 							<StackPanel  >
 								<TextBox  x:Name="suggested" Header="Suggested" x:FieldModifier="public" />
-								<TextBox  x:Name="current" Header="Other" x:FieldModifier="public"   />
+								<TextBox  x:Name="current" Header="Prior" x:FieldModifier="public"   />
 								<TextBlock Style="{StaticResource BodyTextStyle}" MaxLines="8" MaxHeight="256"  TextWrapping="Wrap" >
 				Try to avoid '-'<LineBreak/>		
 				If you name hubs 22 001, 22 004... cites will wind up like 22 1003, 22 4005... where 1 and 4 are hub cluster #'s (the # of the closest hub)
 				cities will sort in order of continents, hubs, then clusters of cities for each hub.<LineBreak/>
 				A hub cluster # is chosen based on the closest hub and offered as the suggestion.<LineBreak/></TextBlock>
-								<ToggleSwitch  x:Name="useSuggested" OnContent="Suggested" OffContent="Custom"/>
+								<ToggleSwitch  x:Name="useSuggested" OnContent="Suggested" OffContent="Prior"/>
 								<winui:RadioButtons Header="City Name Type" x:Name="cityType" Grid.Row="2" MaxColumns="4" VerticalAlignment="Top"  >
 									<x:String>Normal</x:String>
 									<x:String>Hub</x:String>

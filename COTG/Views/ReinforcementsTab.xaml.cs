@@ -46,5 +46,16 @@ namespace COTG.Views
 			instance = this;
 			this.InitializeComponent();
 		}
+		public void ReturnClick(object obj)
+		{
+			var r = (obj as Reinforcement);
+			Assert(r!=null);
+			r.ReturnAsync();
+		}
+
+		private void reinIn_CellTapped(object sender,Syncfusion.UI.Xaml.DataGrid.GridCellTappedEventArgs e)
+		{
+
+		}
 	}
 }

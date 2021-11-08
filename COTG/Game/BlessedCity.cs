@@ -24,13 +24,16 @@ namespace COTG.Game
         public DateTimeOffset blessedUntil { get; set; }
         public int wood { get; set; }
         public int stone { get; set; }
-        public int pri { get; set; }
+		public int pri;
+		public string Pri => DonationTab.instance.priorityNames[pri];
+
 		public int level { get; set; }
 		public string notes { get; set; }
 		public float travelMinutes; // distance to sending city
 		public string travelTime => TimeSpan.FromMinutes(travelMinutes).Format();
 
-		public float sortScore => travelMinutes - (pri==4? 0.0625f : (pri+1.0f).Squared() )* (60*6.0f); // todo: refine this, also take into acccount resources needed
+		public int priToScore => pri == 4 ? 0 : pri+1;
+		public float sortScore => (float)-(priToScore*1e20f - (JSClient.ServerTime() - blessedUntil).TotalHours - travelMinutes ); // todo: refine this, also take into acccount resources needed
         public static async void Refresh()
         {
             try

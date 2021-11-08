@@ -273,7 +273,7 @@ namespace COTG.Views
 		}
 		internal static(int x, int y)[] FindPendingOverlayBuildings(City city)
 		{
-			List<(int x, int y)> rv = new();
+			List<( (int x, int y) c, int bid)> rv = new();
 			for (int r = 1; r <= City.citySpan; ++r)
 			{
 				for (var y = -r; y <= r; ++y)
@@ -294,14 +294,14 @@ namespace COTG.Views
 							}
 							if ((bid != 0) && (city.postQueueBuildings[id].bid != bid))
 							{
-								rv.Add(c);
+								rv.Add((c, bid));
 
 							}
 						}
 					}
 				}
 			}
-			return rv.OrderBy( (a) => GetSpotCost(city,a) ).ToArray();
+			return  rv.OrderBy( a => a.bid ).ThenBy(a=>GetSpotCost(city,a.c)).Select( a=> a.c ).ToArray();
 		}
 		internal static (int matches,int missingOverlayBuildings,int extraBuildings, bool isBad) CountBadBuildings(City city)
 		{

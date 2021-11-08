@@ -32,9 +32,13 @@ namespace COTG
 		{
 			if (bid != 0)
 			{
-				if (BuildingDef.buildingsToSharestring.TryGetValue((bid - BuildingDef.sharestringBuildingOffset).AsByte(), out var o))
+				var off = bid - BuildingDef.sharestringBuildingOffset;
+				if(off <= 255)
 				{
-					return (o, o != (byte)'-' );
+					if(BuildingDef.buildingsToSharestring.TryGetValue((off).AsByte(),out var o))
+					{
+						return (o, o != (byte)'-');
+					}
 				}
 
 			}

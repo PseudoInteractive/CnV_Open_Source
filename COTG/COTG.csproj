@@ -45,7 +45,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Azure.Core" Version="1.20.0" />
+    <PackageReference Include="Azure.Core" Version="1.21.0" />
     <PackageReference Include="Azure.Data.Tables" Version="12.2.1" />
     <PackageReference Include="Azure.Storage.Blobs" Version="12.11.0-beta.1" />
     <PackageReference Include="CommunityToolkit.WinUI" Version="7.0.3" />
@@ -61,6 +61,7 @@
     <PackageReference Include="DSharpPlus" Version="4.1.0" />
     <PackageReference Include="DSharpPlus.CommandsNext" Version="4.1.0" />
     <PackageReference Include="Enums.NET" Version="4.0.0" />
+    <PackageReference Include="GoogleSheetsWrapper" Version="1.0.27" />
     <PackageReference Include="MessagePack" Version="2.3.85" />
     <PackageReference Include="MessagePack.Annotations" Version="2.3.85" />
     <PackageReference Include="MessagePack.Experimental" Version="2.3.85" />
@@ -105,10 +106,6 @@
     <PackageReference Include="SharpDX.DXGI" Version="4.2.0" />
     <PackageReference Include="SharpDX.MediaFoundation" Version="4.2.0" />
     <PackageReference Include="SharpGen.Runtime.COM" Version="2.0.0-beta.10" />
-    <PackageReference Include="StyleCop.Analyzers" Version="1.2.0-beta.354">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
     <PackageReference Include="Syncfusion.Chart.WinUI" Version="19.3.0.48" />
     <PackageReference Include="Syncfusion.Core.WinUI" Version="19.3.0.48" />
     <PackageReference Include="Syncfusion.Grid.WinUI" Version="19.3.0.48" />
@@ -324,6 +321,7 @@
     <Compile Include="JSON\TradeSettings.cs" />
     <Compile Include="JSON\TroopInfo.cs" />
     <Compile Include="Models\CityTapCommand.cs" />
+    <Compile Include="Models\GoogleSheets.cs" />
     <Compile Include="Models\JsNative.cs" />
     <Compile Include="Models\JSPopup.cs" />
     <Compile Include="Note.cs" />
@@ -832,6 +830,7 @@
     <None Include="JS\index.htm" />
     <Content Include="JS\DHRUVCC.js" />
     <Content Include="JSON\buildingDef.json" />
+    <Content Include="Resources\Icon1.ico" />
     <None Include="CotgKey.pfx" />
     <None Include="JSON\poll2.json" />
     <Content Include="JSON\Troops.json" />
@@ -886,7 +885,7 @@
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
     <IsPublishable>True</IsPublishable>
     <ProduceReferenceAssembly>True</ProduceReferenceAssembly>
-    <EnforceCodeStyleInBuild>True</EnforceCodeStyleInBuild>
+    <EnforceCodeStyleInBuild>False</EnforceCodeStyleInBuild>
     <ImplicitUsings>disable</ImplicitUsings>
     <DocumentationFile>C:\Source\CotGL\doc.xml</DocumentationFile>
     <Authors>Pseudo</Authors>
@@ -894,17 +893,18 @@
     <ApplicationInsightsResourceId>/subscriptions/2a698fb0-55b8-4561-b722-2015b2c78d9c/resourceGroups/appcenter-export-Alliances/providers/microsoft.insights/components/AppCenterExport-Alliances</ApplicationInsightsResourceId>
     <Nullable>warnings</Nullable>
     <PackageIcon>cnvCover2.png</PackageIcon>
+    <ApplicationIcon>Resources\Icon1.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <Optimize>False</Optimize>
     <WarningLevel>4</WarningLevel>
-    <DefineConstants></DefineConstants>
+    <DefineConstants>DISABLE_XAML_GENERATED_BREAK_ON_UNHANDLED_EXCEPTION</DefineConstants>
     <Deterministic>True</Deterministic>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <Optimize>True</Optimize>
     <WarningLevel>4</WarningLevel>
-    <DefineConstants></DefineConstants>
+    <DefineConstants>DISABLE_XAML_GENERATED_BREAK_ON_UNHANDLED_EXCEPTION</DefineConstants>
     <Deterministic>True</Deterministic>
   </PropertyGroup>
   <ProjectExtensions />
@@ -928,9 +928,6 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Resources\" />
   </ItemGroup>
   <ItemGroup>
     <None Update="cnvCover2.png">

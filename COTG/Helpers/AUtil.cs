@@ -5,6 +5,7 @@ using Microsoft.Toolkit.HighPerformance.Buffers;
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Collections;
 using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
@@ -27,13 +28,27 @@ namespace COTG
 	{
 		// converts to an character 0..9 then A..Z etc.
 		// numbers beyond 72 don't work
-		
+		public static string CollectionToString(this IEnumerable collection)
+		{
+			if(collection==null)
+				return "{0}";
+
+			var rv = string.Empty;
+				
+			foreach(var i in collection)
+			{
+				rv = rv + $"{{{i}}}";
+			}
+			return rv;
+		}
 		public static char BeyondHex(int a)
 		{
+		
 			Assert(a <= 10+26+26+14);
 			return a switch {  < 10 => (char)('0'+a), < 10+26 => (char)('A'+a-10), < 10+26+26 => (char)('a'+a-10-26), < 10+26+26+14 => (char)('"'+a-10-26-26), _ => '!' };
 		}
-		public static string StringIfNotNull<T>(T f,Func<string,T> GetStr) => f is null ? string.Empty : GetStr(f);
+		public static string StringIfNotNull<T>(this T f,Func<T,string> GetStr) => f is null ? string.Empty : GetStr(f);
+		public static string StringOfEmpty(this string f) => f ??string.Empty;
 
 		public static Task<bool> completedTaskTrue = Task.FromResult(true);
 		public static Task<bool> completedTaskFalse = Task.FromResult(false);
@@ -596,7 +611,8 @@ namespace COTG
 		{
 			try
 			{
-				var counter = propertyChanges.Length/8 + 2;
+				var changeCount = propertyChanges.Length;
+				var counter = changeCount/4 + 2;
 				for(;;)
 				{
 					var i = propertyChanges.FirstOrDefault();
@@ -607,7 +623,6 @@ namespace COTG
 					if(--counter <= 0)
 						break;
 				}
-						
 
 			}
 			catch(Exception __ex)
@@ -635,6 +650,8 @@ namespace COTG
 		{
 		//	if( ((INotifyPropertyChanged)this).PropertyChanged is not null)
 			{
+				Note.ShowQuiet($"PropChange: {this} {members}");
+
 				if(!AUtil.propertyChanges.Contains(this))
 				{
 					if(addHead)
