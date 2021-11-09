@@ -1905,6 +1905,7 @@ namespace COTG.Game
 		{
 
 			//   SelectMe(false) ;
+			var me = this as City;
 			var flyout = new MenuFlyout();
 			var aMisc = flyout.AddSubMenu("Misc..");
 			var aExport = flyout.AddSubMenu("Import/Export..");
@@ -1957,13 +1958,14 @@ namespace COTG.Game
 					aSetup.AddItem("Find Hub", (_, _) => CitySettings.SetClosestHub(cid));
 					aSetup.AddItem("Set Recruit", (_, _) => CitySettings.SetRecruitFromTag(cid));
 					aSetup.AddItem("Change...", (_, _) => ShareString.Show(cid,default));
+					aSetup.AddItem("Move Stuff", (_,_)=> me.MoveStuffLocked());
 					//aSetup.AddItem("Remove Castle", (_, _) => 
 					//{
 					//	CityBuild.
 
 					//}
 					//   AApp.AddItem(flyout, "Clear Res", (_, _) => JSClient.ClearCenterRes(cid) );
-					aSetup.AddItem("Clear Res", (this as City).ClearRes);
+					aSetup.AddItem("Clear Res",me.ClearRes);
 
 
 					aExport.AddItem("Troops to Sheets", CopyForSheets);
@@ -2048,7 +2050,7 @@ namespace COTG.Game
 				{
 					AApp.AddItem(flyout, "Do the stuff", (_, _) => DoTheStuff());
 					AApp.AddItem(flyout, "Food Warnings", (_, _) => CitySettings.SetFoodWarnings(cid));
-					flyout.AddItem("Ministers", (this as City).ministersOn.IsTrueOrNull, (this as City).SetMinistersOn);
+					flyout.AddItem("Ministers",me.ministersOn.IsTrueOrNull, (this as City).SetMinistersOn);
 				}
 			}
 			else if (this.isDungeon || this.isBoss)

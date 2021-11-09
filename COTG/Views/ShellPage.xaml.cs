@@ -301,12 +301,14 @@ namespace COTG.Views
 				KeyboardAccelerators.Add(BuildKeyboardAccelerator( VirtualKey.Number0+(int)i,LayoutAccelerator_Invoked,VirtualKeyModifiers.Control));
 				layoutOptions.Add(new() { id = (int)i,name=i.ToString() });
 			}
+			
 
 			//			KeyboardAccelerators.Add(BuildKeyboardAccelerator(VirtualKey.F5, Refresh_Invoked,VirtualKeyModifiers.Control));
 			KeyboardAccelerators.Add(BuildKeyboardAccelerator(VirtualKey.R,instance.Refresh_Invoked,VirtualKeyModifiers.Control));
-
-			KeyboardAccelerators.Add(BuildKeyboardAccelerator(VirtualKey.Number1,KeyboardAccelerator));
-
+			foreach(var k in GetBuildKeys())
+			{
+				KeyboardAccelerators.Add(BuildKeyboardAccelerator(k,KeyboardAccelerator));
+			}
 			//				KeyboardAccelerators.Add(BuildKeyboardAccelerator(VirtualKey.F4, LayoutAccelerator_Invoked));
 			IsLoggedIn = true;// IdentityService.IsLoggedIn();
 			IsAuthorized = true;// IsLoggedIn && IdentityService.IsAuthorized();

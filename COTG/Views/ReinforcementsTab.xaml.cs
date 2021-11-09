@@ -50,11 +50,17 @@ namespace COTG.Views
 		{
 			var r = (obj as Reinforcement);
 			Assert(r!=null);
+			Note.Show($"Returning {r.troopsString} from {r.targetCity} back to {r.sourceCity} ");
 			r.ReturnAsync();
 		}
 
 		private void reinIn_CellTapped(object sender,Syncfusion.UI.Xaml.DataGrid.GridCellTappedEventArgs e)
 		{
+			var r = e.Record as Reinforcement;
+			Assert(r != null);
+			Note.Show($"Returning {r.troopsString} from {r.targetCity} back to {r.sourceCity} ");
+			r.ReturnAsync();
+
 
 		}
 	}

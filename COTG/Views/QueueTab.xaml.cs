@@ -710,7 +710,7 @@ namespace COTG.Game
 			Note.Show($"Final Move slots: {Player.moveSlots}");
 			return;
 		error:
-			await App.DoYesNoBox("Move Stuff", "Failed, build operations in progress might be blocking?", "Okay", null);
+			await App.DoYesNoBox("Move Stuff", "Something did not move right.  Maybe a race condition?  Maybe try again to continue", "Okay", null);
 
 		}
 		public  string bStage

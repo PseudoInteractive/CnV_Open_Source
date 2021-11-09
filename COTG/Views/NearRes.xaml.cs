@@ -493,13 +493,13 @@ namespace COTG.Views
 				if (e.Column.SortDirection == null)
 				{
 					e.Column.SortDirection = DataGridSortDirection.Descending;
-					supporters.SortSmall(comparer);
+				//	supporters.SortSmall(comparer);
 					supporters.NotifyReset();
 				}
 				else if (e.Column.SortDirection == DataGridSortDirection.Descending)
 				{
 					e.Column.SortDirection = DataGridSortDirection.Ascending;
-					supporters.SortSmall((b, a) => comparer(a, b)); // swap order of comparison
+				//	supporters.SortSmall((b, a) => comparer(a, b)); // swap order of comparison
 					supporters.NotifyReset();
 				}
 				else

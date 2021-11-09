@@ -14,6 +14,7 @@ using Microsoft.UI.Xaml.Shapes;
 using static COTG.Debug;
 using static COTG.Game.City;
 using static COTG.Views.CityBuild;
+using System.Collections.Generic;
 
 namespace COTG.Views
 {
@@ -422,8 +423,17 @@ namespace COTG.Views
 		public static void KeyboardAccelerator(KeyboardAccelerator acc,KeyboardAcceleratorInvokedEventArgs args)
 		{
 			Trace("AccelKeyDown " + acc.Key + " " + mouseOverCanvas);
-			if(!mouseOverCanvas)
+			if(!mouseOverCanvas )
 				return;
+			// don't process if chat has focus
+				foreach(var tab in ChatTab.all)
+			{
+				if(tab.input.FocusState != FocusState.Unfocused)
+					return;
+			}
+
+
+			args.Handled=true;
 			App.UpdateKeyStates();
 
 			KeyDown(acc.Key);
@@ -431,9 +441,19 @@ namespace COTG.Views
 		public static void KeyboardProxy_KeyDown(object sender,Microsoft.UI.Xaml.Input.KeyRoutedEventArgs e)
 		{
 			Trace("PreviewKeyDown " + e.Key);
-			KeyDown(e.Key);
+			//KeyDown(e.Key);
 		}
-
+		public static HashSet<VirtualKey> GetBuildKeys()
+		{
+			var rv = new HashSet<VirtualKey>();
+			rv.UnionWith( new[] { VirtualKey.Up,VirtualKey.Down,VirtualKey.Left,VirtualKey.Right,VirtualKey.Space, VirtualKey.Enter, VirtualKey.F11, VirtualKey.F10,
+			VirtualKey.U,VirtualKey.D,VirtualKey.Escape,(VirtualKey)192, VirtualKey.F,VirtualKey.C,VirtualKey.R,VirtualKey.S,VirtualKey.A,VirtualKey.B,VirtualKey.I,VirtualKey.T,
+			VirtualKey.M,VirtualKey.V,VirtualKey.L, VirtualKey.E,VirtualKey.H,VirtualKey.W,VirtualKey.G,VirtualKey.Y,VirtualKey.Z,VirtualKey.K,
+			VirtualKey.X,VirtualKey.O,VirtualKey.P,VirtualKey.Q});
+			rv.UnionWith(Enumerable.Range(0,9).Select(x => (VirtualKey)(VirtualKey.Number0 + x)));
+			return rv;
+			
+		}
 		public static void KeyDown(VirtualKey key)
 		{
 			Trace("SomeKeyDown " + key);

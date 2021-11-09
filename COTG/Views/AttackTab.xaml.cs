@@ -244,34 +244,40 @@ namespace COTG.Views
 			var tag = e.Column.Tag != null? e.Column.Tag.ToString() : e.Column.Header.ToString();
 			//Use the Tag property to pass the bound column name for the sorting implementation
 			Comparison<City> comparer = null;
+			Func<City,long> cmpL = null;
+			Func<City,string> cmpS = null;
 			switch (tag)
 			{
-				case "ts": comparer = (a, b) => a.tsTotal.CompareTo(b.tsTotal); break;
-				case "Intel": comparer = (a, b) => a.TroopType.CompareTo(b.TroopType); break;
-				case "name": comparer = (a, b) => b.nameAndRemarks.CompareTo(a.nameAndRemarks); break;
-				case nameof(City.attackCluster): comparer = (a, b) => b.attackCluster.CompareTo(a.attackCluster); break;
-				case nameof(City.attackType): comparer = (a, b) => b.attackType.CompareTo(a.attackType); break;
-				case "Points": comparer = (a, b) => b.points.CompareTo(a.points); break;
-				case nameof(City.xy): comparer = (a, b) => CompareCid(a.cid,b.cid); break;
-				case "Water": comparer = (a, b) => a.isOnWater.CompareTo(b.isOnWater); break;
-				case "Player": comparer = (a, b) => a.playerName.CompareTo(b.playerName); break;
-				case "Alliance": comparer = (a, b) => a.alliance.CompareTo(b.alliance); break;
+				case "ts": cmpL = (a) => (long)a.tsTotal; break;
+				case "Intel": cmpL = (a)=> (long)a.TroopType; break;
+				case "name": cmpS = (a) => a.nameAndRemarks; break;
+				case nameof(City.attackCluster): cmpL = (a) => -(long)a.attackCluster; break;
+				case nameof(City.attackType): cmpL = (a) => -(long)a.attackType; break;
+				case "Points": cmpL = (a) => (long)-a.points; break;
+				case nameof(City.xy): cmpL = (a) => (long)a.cid.ZCurveEncodeCid(); break;
+				case "Water": cmpL = (a) => a.isOnWater ? 1l : 0l ; break;
+				case "Player": cmpS = (a) => a.playerName; break;
+				case "Alliance": cmpS = (a) => a.alliance; break;
 			}
 
-			if (comparer != null)
+			if (cmpL != null || cmpS != null)
 			{
 			
 				if (e.Column.SortDirection == null)
 				{
 					e.Column.SortDirection = DataGridSortDirection.Descending;
-					cities.SortSmall(comparer);
-					cities.NotifyReset();
+					if(cmpL != null)
+						cities.SortSmall(cmpL);
+					else
+						cities.SortSmall(cmpS);
 				}
 				else if (e.Column.SortDirection == DataGridSortDirection.Descending)
 				{
 					e.Column.SortDirection = DataGridSortDirection.Ascending;
-					cities.SortSmall((b, a) => comparer(a, b)); // swap order of comparison
-					cities.NotifyReset();
+					if(cmpL != null)
+						cities.SortSmallReverse(cmpL);
+					else
+						cities.SortSmallReverse(cmpS);
 				}
 				else
 				{

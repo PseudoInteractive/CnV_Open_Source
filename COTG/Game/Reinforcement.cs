@@ -27,12 +27,14 @@ public class Reinforcement:IEquatable<Reinforcement>
 	public SmallTime time;  // arrival
 	public DateTimeOffset _Time { get => time.dateTime; }
 	public int sourceCid;
-	public string _Source { get => sourceCid.AsCity().nameAndRemarks; }
 	public int targetCid;
-	public string _Target { get => targetCid.AsCity().nameAndRemarks; }
 	//static int pid;
 
+
 	public long order;
+	public string troopsString => troops.Format(":",' ',',');
+	public City sourceCity => sourceCid.AsCity();
+	public City targetCity => targetCid.AsCity();
 
 	public TroopTypeCountsRef troops = new();
 	public string _Troops { get => troops.Format(":",' ',','); }
@@ -63,7 +65,7 @@ public class Reinforcement:IEquatable<Reinforcement>
 
 			var spots = !showAll ? new[] { _spot } : City.myCities.OrderBy(a => a.cid.ZCurveEncodeCid()).ToArray();
 
-			var orders = new List<Reinforcement>();
+	//		var orders = new List<Reinforcement>();
 
 			if(showAll)
 			{
@@ -88,31 +90,33 @@ public class Reinforcement:IEquatable<Reinforcement>
 						//var me = Spot.GetOrAdd(reIn.targetCid);
 						//var content = showAll ? $"{other.xy} {other.playerName} {other.nameAndRemarks} {other.IncomingInfo() } -> {me.xy} {me.nameAndRemarks} {me.IncomingInfo()} {reIn.troops.Format(":",' ',',')}"
 						//	: $"{other.xy} {other.playerName} {other.nameAndRemarks} {other.IncomingInfo() } {reIn.troops.Format(":",' ',',')}{reIn.time.FormatIfLaterThanNow()}";
-						orders.Add(reIn);
+						toAdd.Add(reIn);
 
 					}
 				}
 				tab.reinforcementsIn.Set(toAdd,true,true);
 				
 			}
-			//			List<>
-			var byFlags = spots.SelectMany(s => s.reinforcementsOut).GroupBy(s => s.targetCid.AsCity().incomingFlags);
-			foreach(var flagGroup in byFlags.OrderByDescending(s => (int)s.Key))
 			{
+				//			List<>
+				var byFlags = spots.SelectMany(s => s.reinforcementsOut).GroupBy(s => s.targetCid.AsCity().incomingFlags);
 				var toAdd = new List<Reinforcement>();
-				foreach(var reIn in flagGroup.OrderByDescending(s => s.targetCid.AsCity().incomingFlags).ThenBy(s => Player.IdToName(s.targetCid.CidToPid())).ThenBy(a => a.time))
+				foreach(var flagGroup in byFlags.OrderByDescending(s => (int)s.Key))
 				{
-					//	foreach(var reIn in cid)
+					foreach(var reIn in flagGroup.OrderByDescending(s => s.targetCid.AsCity().incomingFlags).ThenBy(s => Player.IdToName(s.targetCid.CidToPid())).ThenBy(a => a.time))
 					{
-						//var other = Spot.GetOrAdd(reIn.targetCid);
-						//var me = Spot.GetOrAdd(reIn.sourceCid);
-						//var content = showAll ? $"{other.xy} {other.playerName} {other.nameAndRemarks} {other.IncomingInfo()} <- {me.xy} {me.nameAndRemarks} {me.IncomingInfo()} {reIn.troops.Format(":",' ',',')}"
-						//	: $"{other.xy} {other.playerName} {other.nameAndRemarks} {other.IncomingInfo()} {reIn.troops.Format(":",' ',',')}{reIn.time.FormatIfLaterThanNow()}";
+						//	foreach(var reIn in cid)
+						{
+							//var other = Spot.GetOrAdd(reIn.targetCid);
+							//var me = Spot.GetOrAdd(reIn.sourceCid);
+							//var content = showAll ? $"{other.xy} {other.playerName} {other.nameAndRemarks} {other.IncomingInfo()} <- {me.xy} {me.nameAndRemarks} {me.IncomingInfo()} {reIn.troops.Format(":",' ',',')}"
+							//	: $"{other.xy} {other.playerName} {other.nameAndRemarks} {other.IncomingInfo()} {reIn.troops.Format(":",' ',',')}{reIn.time.FormatIfLaterThanNow()}";
 
-						toAdd.Add(reIn);
+							toAdd.Add(reIn);
+						}
 					}
 				}
-				tab.reinforcementsIn.Set(toAdd,true,true);
+				tab.reinforcementsOut.Set(toAdd,true,true);
 			}
 			//}
 			//	var result = await msg.ShowAsync2(uie);

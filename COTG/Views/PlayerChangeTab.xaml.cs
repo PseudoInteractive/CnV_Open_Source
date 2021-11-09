@@ -104,14 +104,14 @@ namespace COTG.Views
 					if (e.Column.SortDirection == null)
 					{
 						e.Column.SortDirection = DataGridSortDirection.Descending;
-						cities.SortSmall(comparer);
-						cities.NotifyReset();
-					}
-					else if (e.Column.SortDirection == DataGridSortDirection.Descending)
+					//		cities.SortSmall(comparer);
+							cities.NotifyReset();
+				}
+				else if (e.Column.SortDirection == DataGridSortDirection.Descending)
 					{
 						e.Column.SortDirection = DataGridSortDirection.Ascending;
-						cities.SortSmall((b, a) => comparer(a, b)); // swap order of comparison
-						cities.NotifyReset();
+					//	cities.SortSmall((b, a) => comparer(a, b)); // swap order of comparison
+					cities.NotifyReset();
 					}
 					else
 					{

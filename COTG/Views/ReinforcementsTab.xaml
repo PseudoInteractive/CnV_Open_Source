@@ -23,23 +23,24 @@
 		
 		<sf:SfDataGrid x:Name="reinIn"
 							x:FieldModifier="public"
-			Grid.Row="1"
+							Grid.Row="1"
 							IsTabStop="True"
 							TabFocusNavigation="Once"
-					FrozenColumnCount="2"
+							FrozenColumnCount="2"
 							ItemsSource="{x:Bind reinforcementsIn, Mode=OneWay}"
 							SelectionMode="Extended"
 							RowHeight="{StaticResource ShortGridRowHeight}"
 							FontSize="{StaticResource SmallFontSize}"
 							SelectionUnit="Row"
-					   AutoGenerateColumns="True"
+					   AutoGenerateColumns="False"
 					   AutoGenerateColumnsMode="SmartReset"
 					    AllowFiltering="True" 
                         AllowSorting="True" 
+					   AllowEditing="false"
                         ShowGroupDropArea="True"
 					   AllowDraggingColumns="True"
 					   ColumnWidthMode="SizeToHeader"
-					   
+					   CellTapped="reinIn_CellTapped"
 							Loaded="DataGridLoaded"
 					>
 			
@@ -51,10 +52,8 @@
 						</DataTemplate>
 					</dataGrid:GridTemplateColumn.CellTemplate>
 				</dataGrid:GridTemplateColumn>
-				<sf:GridImageColumn MappingName="icon"
-											HeaderText="I"
-											Width="32"
-											 />
+				<sf:GridTextColumn MappingName="sourceCity" />
+				<sf:GridTextColumn MappingName="targetCity" />
 				
 				</dataGrid:SfDataGrid.Columns>
 		</sf:SfDataGrid>
@@ -75,8 +74,18 @@
 							SelectionUnit="Row"
 							Loaded="DataGridLoaded"
 					  >
+			<dataGrid:SfDataGrid.Columns>
+				<dataGrid:GridTemplateColumn MappingName="sReturn" HeaderText="Return">
+					<dataGrid:GridTemplateColumn.CellTemplate>
+						<DataTemplate>
+							<Button  Content="Click" Width="160" Height="30" Command="{Binding Path=ReturnClick,ElementName=sfDataGrid}" CommandParameter="{Binding}"/>
+						</DataTemplate>
+					</dataGrid:GridTemplateColumn.CellTemplate>
+				</dataGrid:GridTemplateColumn>
+				<sf:GridTextColumn MappingName="sourceCity" />
+				<sf:GridTextColumn MappingName="targetCity" />
+			</dataGrid:SfDataGrid.Columns>
 
-		
 		</sf:SfDataGrid>
 	</Grid>
 </view:UserTab>

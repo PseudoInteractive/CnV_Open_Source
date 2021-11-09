@@ -90,8 +90,30 @@ namespace COTG
 
 							(var change, var i) = collectionChanges[0];
 							collectionChanges = collectionChanges.RemoveAt(0);
-						
-							i.PropertyChanged?.Invoke(i,new("Count"));
+						switch(change.Action)
+						{
+							case NotifyCollectionChangedAction.Add:
+								Assert(change.NewItems is not null);
+								Assert(change.NewStartingIndex >= 0 );
+								Assert(change.OldStartingIndex==-1);
+								Assert(change.OldItems == null);
+								break;
+							case NotifyCollectionChangedAction.Remove:
+								Assert(change.NewItems is null);
+								Assert(change.NewStartingIndex == 0);
+								Assert(change.OldStartingIndex >=0 );
+								Assert(change.OldItems is not null);
+								break;
+							case NotifyCollectionChangedAction.Reset:
+								Assert(change.NewItems is null);
+								Assert(change.NewStartingIndex == -1);
+								Assert(change.OldStartingIndex==-1);
+								Assert(change.OldItems == null);
+								break;
+							default:
+								break;
+						}
+						i.PropertyChanged?.Invoke(i,new("Count"));
 							i.CollectionChanged?.Invoke(i,change);
 						} 
 						catch(Exception ex)
@@ -337,12 +359,7 @@ namespace COTG
 			}
 		}
 
-		public void SortSmall(Comparison<T> cmp)
-		{
-			Sort.SortSmall(this, cmp);
-			NotifyReset(true);
-
-		}
+		
 		public void Add(T item,bool notify)
 		{
 	//		if(notify)
@@ -475,6 +492,17 @@ namespace COTG
 		//				to.Add(b);
 		//		}
 		//	}
+		public void  SortSmall<TKey>(Func<T,TKey> cmp) 
+		{
+			Set(c.OrderBy(cmp));
+
+		}
+		public void SortSmallReverse<TKey>(Func<T,TKey> cmp)
+		{
+			Set(c.OrderByDescending(cmp));
+
+		}
+		public void SortSmall(Comparison<T> comparer) { Assert(false); }
 	}
 
 
@@ -486,7 +514,8 @@ namespace COTG
 	//}
 	public static class DumbHelpers
     {
-        public static void NotifyChange(this HashSet<City> items, params string[] memberName)
+		
+		public static void NotifyChange(this HashSet<City> items, params string[] memberName)
         {
             if (items.Count == 0)
                 return;

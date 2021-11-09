@@ -835,7 +835,7 @@ namespace COTG.Game
 				{
 					if(trintr.ValueKind == JsonValueKind.Array && trintr.GetArrayLength() > 0)
 					{
-						var l = new List<Reinforcement>();
+						var l = new List<Reinforcement>(reinforcementsIn.WhereNotMine());
 
 						foreach(var rein in trintr.EnumerateArray())
 						{
