@@ -446,23 +446,35 @@ namespace COTG.Views
 			int count = App.IsKeyPressedShiftAndControl() ? 8 : 1;
 			Trace(count.ToString());
 			string res = string.Empty;
-			for (int j = 0; j < count; ++j)
+			var asDonation = this.SendAsDontation.IsOn;
+			if(asDonation)
 			{
-				res = await Post.SendForText("includes/sndTr.php", $"cid={cid}&f=" + HttpUtility.UrlEncode(Aes.Encode(reqF, secret), Encoding.UTF8), pid);
-				if (int.TryParse(res.Trim(), out var i) && i == 10)
-				{
-					Note.Show($"Sent {s.res.Format()}");
-				}
-				else
-				{
-					Note.Show($"Something changed, please refresh and try again");
-				}
-				if (count == 1)
-					break;
-				await Task.Delay(450);
+				await BlessedCity.SendDonation(s.city.cid, target.cid, s.res.wood, s.res.stone, viaWater );
 			}
-			
+			else
+			{
+				for (int j = 0; j < count; ++j)
+				{
+
+					res = await Post.SendForText("includes/sndTr.php",
+						$"cid={cid}&f=" + HttpUtility.UrlEncode(Aes.Encode(reqF, secret), Encoding.UTF8), pid);
+					if (int.TryParse(res.Trim(), out var i) && i == 10)
+					{
+						Note.Show($"Sent {s.res.Format()}");
+					}
+					else
+					{
+						Note.Show($"Something changed, please refresh and try again");
+					}
+
+					if (count == 1)
+						break;
+					await Task.Delay(450);
+				}
+			}
+
 			s.res.Clear();
+			s.OnPropertyChanged();
 			App.DispatchOnUIThreadIdle(() =>
 			{
 				s.NotifyChange();

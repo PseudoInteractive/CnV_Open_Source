@@ -532,7 +532,7 @@ namespace COTG
 				coreWebView.Settings.IsScriptEnabled=true;
 				//			coreWebView.Settings.IsPinchZoomEnabled =false;
 				coreWebView.Settings.IsZoomControlEnabled=false;
-				coreWebView.Settings.AreDefaultScriptDialogsEnabled=true;
+				coreWebView.Settings.AreDefaultScriptDialogsEnabled=false;
 				coreWebView.Settings.IsStatusBarEnabled=false;
 				coreWebView.Settings.IsBuiltInErrorPageEnabled=true;
 				coreWebView.Settings.AreHostObjectsAllowed=false;
@@ -559,6 +559,7 @@ namespace COTG
 				//view.PointerMoved+=View_PointerMoved;
 				//view.PointerPressed+=View_PointerPressed;
 				//	view.KeyDown+=View_KeyDown;
+				coreWebView.ScriptDialogOpening+=CoreWebView_ScriptDialogOpening;
 				//	view.PreviewKeyDown+=View_PreviewKeyDown;
 				view.NavigationStarting+=View_NavigationStarting;
 				view.NavigationCompleted+=View_NavigationCompleted; ;
@@ -608,6 +609,28 @@ namespace COTG
 			catch(Exception ex)
 			{
 				WebViewException(ex);
+			}
+		}
+
+		private static async void CoreWebView_ScriptDialogOpening(CoreWebView sender,
+			CoreWebView2ScriptDialogOpeningEventArgs args)
+		{
+			var def = args.GetDeferral();
+			try
+			{
+				var rv = await App.DoYesNoBox(args.DefaultText, args.Message, args.Kind.ToString(), null, null);
+
+			}
+			catch (Exception ex)
+			{
+				LogEx(ex);
+
+			}
+			finally
+			{
+				args.Accept();
+				def.Complete();
+
 			}
 		}
 
@@ -1319,15 +1342,16 @@ namespace COTG
 		{
 			try
 			{
-
 				var p = JsonSerializer.Deserialize<AttackSenderScript>(cmd,Json.jsonSerializerOptions);
 				await CitySwitch(p.cid, false);
+				await Task.Delay(1000);
+				var test = HttpUtility.UrlEncode(cmd);
+				var str = "{\"openAttackSender\":" + COTG.Helpers.JSON.JavaScriptStringEncode(cmd,true) + "}";
 
 				await App.DispatchOnUIThreadTask(async () =>
 				{
-					await ExecuteScriptAsync("openAttackSender", cmd );
+					coreWebView.PostWebMessageAsString(str);
 				});
-				await Task.Delay(500);
 			}
 			catch (Exception e)
 			{
@@ -1495,7 +1519,7 @@ namespace COTG
 
 			});
 		}
-		public static Windows.Foundation.IAsyncOperation<string> ExecuteScriptAsync(string func,  string arg0) => view?.ExecuteScriptAsync($"{func}(\"{arg0}\")");
+		public static Windows.Foundation.IAsyncOperation<string> ExecuteScriptAsync(string func,  string arg0) => view?.ExecuteScriptAsync($"{func}(\"{HttpUtility.UrlEncode(arg0)}\")");
 		public static Windows.Foundation.IAsyncOperation<string> ExecuteScriptAsync(string func,int arg0) => view.ExecuteScriptAsync($"{func}({arg0})");
 
 		static string FormatJSArg<T>(T a) => a switch 

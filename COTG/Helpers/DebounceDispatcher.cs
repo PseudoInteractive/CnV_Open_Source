@@ -38,7 +38,6 @@ namespace COTG
 		/// If set, 
 		/// </summary>
 		public bool throttled;
-		public bool runAgainIfStarted=true;
 		TaskCompletionSource taskCompletionSource;
 		State state
 		{
@@ -76,7 +75,7 @@ namespace COTG
 					}
 				case State.running:
 					{
-						if(runAgainIfStarted && !throttled)
+						if( !throttled)
 							state = State.pending; // we are already in the inner loop, tell the current one to restart once done
 
 						return;
@@ -191,7 +190,31 @@ namespace COTG
 		
 	}
 
-	// these will return immediately in the throttle phase, if this is not desired set the throttle delay to 0
+	// 1 argument debounced
+	public class Debounce1<T> : Debounce
+	{
+		Task _func()
+		{
+			return func1(arg);
+		}
+		Func<T,Task> func1;
+		T arg;
+
+		public Debounce1(Func<T,Task> _func1) : base(null)
+		{
+			func1 = _func1;
+			func = _func;
+		}
+		// use Arg from Last Call
+		public void Go(T _arg,int delayOverride = 0)
+		{
+			arg = _arg;
+			base.Go(delayOverride);
+		}
+
+
+	}
+		// these will return immediately in the throttle phase, if this is not desired set the throttle delay to 0
 	public class DebounceTask
 	{
 			public Func<Task> func;

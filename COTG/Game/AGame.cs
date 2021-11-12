@@ -1907,32 +1907,46 @@ namespace COTG
 							if(NearRes.IsVisible())
 							{
 								var sendOffset = new Vector2(0.125f*pixelScale,0.125f*pixelScale);
+								var viewHover = Spot.viewHover;
+								var hasHover = viewHover != 0;
 								foreach(var city in City.friendCities)
 								{
+									var needsHover = (hasHover && !city.isHover);
 								//	if(!city.testContinentFilter)
 								//		continue;
 									var wc = city.cid.CidToWorld();
 									var cc = wc.WToCamera();
-									if (!IsCulledWC(wc))
+									if (!needsHover)
 									{
-										for (int r = 0; r < 4; ++r)
+										if (!IsCulledWC(wc))
 										{
-											var xT0 = (r + 0.5f) / 4.0f;
-											var xT1 = (r + 1.375f) / 4.0f;
-											var yt0 = 0.0f;
-											var yt1 = (city.res[r] * (1.0f / (512 * 128))).Min(1.0f);
-											var color = r switch { 0 => new Color(150, 75, 0, 255), 1 => new Color(128, 128, 128, 255), 2 => new Color(24, 124, 168, 255), _ => new Color(192, 192, 0, 255) };
-											if (yt1 < 0.125f)
+											for (int r = 0; r < 4; ++r)
 											{
-												yt1 = 0.25f;
-												color = new Color(255, 0, 0, 255);
+												var xT0 = (r + 0.5f) / 4.0f;
+												var xT1 = (r + 1.375f) / 4.0f;
+												var yt0 = 0.0f;
+												var yt1 = (city.res[r] * (1.0f / (512 * 128))).Min(1.0f);
+												var color = r switch
+												{
+													0 => new Color(150, 75, 0, 255),
+													1 => new Color(128, 128, 128, 255),
+													2 => new Color(24, 124, 168, 255),
+													_ => new Color(192, 192, 0, 255)
+												};
+												if (yt1 < 0.125f)
+												{
+													yt1 = 0.25f;
+													color = new Color(255, 0, 0, 255);
+												}
+
+												var c0 = new Vector2(cc.X + (xT0 * 0.8f - 0.5f) * pixelScale,
+													cc.Y + (0.25f - yt1 * 0.5f) * pixelScale);
+												var c1 = new Vector2(cc.X + (xT1 * 0.8f - 0.5f) * pixelScale,
+													cc.Y + 0.25f * pixelScale);
+												DrawRect(Layer.actionOverlay, c0, c1, color, zLabels);
+												DrawRect(Layer.action, c0, c1, CColor(a: 192), 0);
+
 											}
-
-											var c0 = new Vector2(cc.X + (xT0 * 0.8f - 0.5f) * pixelScale, cc.Y + (0.25f - yt1 * 0.5f) * pixelScale);
-											var c1 = new Vector2(cc.X + (xT1 * 0.8f - 0.5f) * pixelScale, cc.Y + 0.25f * pixelScale);
-											DrawRect(Layer.actionOverlay, c0, c1, color, zLabels);
-											DrawRect(Layer.action, c0, c1, CColor(a: 192), 0);
-
 										}
 									}
 
@@ -1945,6 +1959,8 @@ namespace COTG
 										
 										foreach(var toCid in ti.resDest)
 										{
+											if(needsHover && (toCid!=City.viewHover))
+												continue;
 											var c1 = toCid.CidToWorld();
 											//	var t = (tick * city.cid.CidToRandom().Lerp(1.375f / 512.0f, 1.75f / 512f));
 											//	var r = t.Ramp();
@@ -1953,6 +1969,9 @@ namespace COTG
 										}
 										foreach (var toCid in ti.resSource)
 										{
+											if(needsHover && (toCid!=City.viewHover))
+												continue;
+
 											var c1 = toCid.CidToWorld();
 											//	var t = (tick * city.cid.CidToRandom().Lerp(1.375f / 512.0f, 1.75f / 512f));
 											//	var r = t.Ramp();

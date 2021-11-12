@@ -222,6 +222,7 @@ namespace COTG.Views
 			//}
 		}
 
+        
 		static int CompareCid(int cid0, int cid1)
 		{
 			return cid0.ZCurveEncodeCid().CompareTo(cid1.ZCurveEncodeCid());
@@ -2078,7 +2079,15 @@ namespace COTG.Views
 			{
 				var i = sender as FrameworkElement;
 				var city = i.DataContext as City;
-				JSClient.coreWebView.PostWebMessageAsString($"{{\"sendmail\":{{\"to\":\"{city.playerName}\",\"subject\":\"{SettingsPage.attackPlanName+ " " + plan.attackTime.FormatDateForFileName()}\",\"body\":{COTG.Helpers.JSON.JavaScriptStringEncode(playerCommands[city.pid].Replace("<", "&lt;").Replace(">", "&gt;").Replace("\n","<br />"),true)}}}");//.Replace("\n", "&#10;&#10;") });
+				var time = plan.attackTime;
+				var commands = playerCommands[city.pid];
+			//	JSClient.view.InvokeScriptAsync("sendmail",new string[] { city.playerName,SettingsPage.attackPlanName + " " + plan.attackTime.FormatDateForFileName(),playerCommands[city.pid].Replace("<","&lt;").Replace(">","&gt;").Replace("\n","&#10;&#13;") });
+
+				JSClient.ExecuteScriptAsync("sendmail",city.playerName,SettingsPage.attackPlanName + " " + plan.attackTime.FormatDateForFileName(),
+	playerCommands[city.pid].Replace("<","&lt;").Replace(">","&gt;").Replace("\n","<br />"));//.Replace("\n", "&#10;&#10;") });
+
+
+	//			JSClient.coreWebView.PostWebMessageAsString($"{{\"sendmail\":{{\"to\":\"{city.playerName}\",\"subject\":\"{SettingsPage.attackPlanName+ " " + plan.attackTime.FormatDateForFileName()}\",\"body\"//{COTG.Helpers.JSON.JavaScriptStringEncode(commands.Replace("<", "&lt;").Replace(">", "&gt;").Replace("\n","<br />"),false)}}}");//.Replace("\n", "&#10;&#10;") });
 			}
 			catch(Exception ex)
 			{

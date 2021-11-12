@@ -44331,6 +44331,9 @@ function outer(){
 			{
 				sendMail(o.sendmail.to,o.sendmail.subject,o.sendmail.body);
 			}
+			if (o.hasOwnProperty("openAttackSender")) {
+				openAttackSender(o.openAttackSender);
+			}
 			if(o.hasOwnProperty("poll"))
 			{
 				DoPoll2(o.poll);

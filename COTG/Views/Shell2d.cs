@@ -15,6 +15,7 @@ using static COTG.Debug;
 using static COTG.Game.City;
 using static COTG.Views.CityBuild;
 using System.Collections.Generic;
+using CommunityToolkit.WinUI.UI;
 
 namespace COTG.Views
 {
@@ -197,41 +198,47 @@ namespace COTG.Views
 		}
 		static  Debounce takeFocusIfAppropriate = new( () =>
 		{
-				var isOverCanvas = isMouseOverCanvas;
+			var isOverCanvas = isMouseOverCanvas;
 			var note = 0;
 			if(isOverCanvas)
 			{
-//				if((canvas.FocusState is FocusState.Unfocused ) || forceFocus)
-//				{
-//					forceFocus=false;
-//					//if(JSClient.view is not null && App.IsKeyPressedShift())
-//			{
-//				//		var f = JSClient.view.Focus(FocusState.Programmatic);
-//				//		Assert(f);
-//					}
-//					//else if( App.IsKeyPressedControl())
-//					{
-//					 var f= ChatTab.tabPage.Focus(FocusState.Programmatic);
-//						Assert(f);
-//					}
-////App.QueueOnUIThread( ()=>
-//					{
-//								var f = canvas.Focus(FocusState.Programmatic);
-//								Assert(f);
-//					} //);
-//					note|=2;
-//				}
+				if((canvas.FocusState is FocusState.Unfocused) || forceFocus)
+				{
+					forceFocus=false;
+					//if(JSClient.view is not null && App.IsKeyPressedShift())
+					{
+						//		var f = JSClient.view.Focus(FocusState.Programmatic);
+						//		Assert(f);
+					}
+					//else if( App.IsKeyPressedControl())
+					//{
+					//	var f = ChatTab.tabPage.Focus(FocusState.Programmatic);
+					//	Assert(f);
+					//}
+					//App.QueueOnUIThread( ()=>
+					{
+						var f = canvas.Focus(FocusState.Programmatic);
+						if(!forceFocus)
+						{
+							if(!f)
+							{
+								Assert(false);
+							}
+						}
+					} //);
+					note|=2;
+				}
 			}
-//#if DEBUG
-//			if(note!=0)
-//				Note.Show($"!Focu{note}: f{canvas.IsHitTestVisible} o{isOverCanvas}");
-//#endif 
+#if DEBUG
+			if(note!=0)
+				Note.Show($"!Focu{note}: f{canvas.IsHitTestVisible} o{isOverCanvas}");
+#endif
 			return Task.CompletedTask;
 
 		})
 		{
 			runOnUiThread=true,
-			debounceDelay=100,
+			debounceDelay=50,
 			throttleDelay=100
 		};
 
@@ -417,33 +424,31 @@ namespace COTG.Views
 
 		public static void KeyboardProxy_KeyDown2(object sender,Microsoft.UI.Xaml.Input.KeyRoutedEventArgs e)
 		{
-			Trace("PreviewKeyDown2");
+			Log($"KeyDown2 {e.Key} handled:{e.Handled} mouse:{mouseOverCanvas}");
+			if(!e.Handled)
+			{
+				e.Handled=	DoKeyDown(e.Key);
+			}
 		}
 
 		public static void KeyboardAccelerator(KeyboardAccelerator acc,KeyboardAcceleratorInvokedEventArgs args)
 		{
-			Trace("AccelKeyDown " + acc.Key + " " + mouseOverCanvas);
-			if(!mouseOverCanvas )
-				return;
-			// don't process if chat has focus
-				foreach(var tab in ChatTab.all)
+			Log($"Accelerator {acc.Key} handled:{args.Handled} mouse:{mouseOverCanvas}");
+			if(args.Handled)
 			{
-				if(tab.input.FocusState != FocusState.Unfocused)
-					return;
+
+				return;
 			}
-
-
-			args.Handled=true;
-			App.UpdateKeyStates();
-
-			KeyDown(acc.Key);
+			args.Handled=DoKeyDown(acc.Key);
 		}
 		public static void KeyboardProxy_KeyDown(object sender,Microsoft.UI.Xaml.Input.KeyRoutedEventArgs e)
 		{
-			Trace("PreviewKeyDown " + e.Key);
+			Log($"KeyDown {e.Key} handled:{e.Handled} mouse:{mouseOverCanvas}"); 
 			//KeyDown(e.Key);
+			if(!e.Handled)
+				e.Handled= DoKeyDown(e.Key);
 		}
-		public static HashSet<VirtualKey> GetBuildKeys()
+		static HashSet<VirtualKey> GetBuildKeys()
 		{
 			var rv = new HashSet<VirtualKey>();
 			rv.UnionWith( new[] { VirtualKey.Up,VirtualKey.Down,VirtualKey.Left,VirtualKey.Right,VirtualKey.Space, VirtualKey.Enter, VirtualKey.F11, VirtualKey.F10,
@@ -454,9 +459,40 @@ namespace COTG.Views
 			return rv;
 			
 		}
-		public static void KeyDown(VirtualKey key)
+		public static HashSet<VirtualKey> buildKeys = GetBuildKeys();
+
+		public static Debounce1<VirtualKey> hotKeyDown = new(_KeyDown) { debounceDelay=0,throttleDelay=50, runOnUiThread=true,throttled=true };
+		public static bool DoKeyDown(VirtualKey key)
 		{
-			Trace("SomeKeyDown " + key);
+			Log($"DoKeyDown {key}");
+			if(!buildKeys.Contains(key))
+			{
+				Log("Not a build Key " + key);
+				return false;
+			}
+			if(!mouseOverCanvas)
+			{
+				Log("Not over canvas");
+				return false;
+			}
+			// don't process if chat has focus
+			foreach(var tab in ChatTab.all)
+			{
+				if(tab.input.FocusState != FocusState.Unfocused)
+				{
+					Log($"{tab.Name} {tab.input.Focus}");
+					return false;
+				}
+			}
+			App.UpdateKeyStates();
+
+			hotKeyDown.Go(key);
+			return true;
+		}
+
+		public static Task _KeyDown(VirtualKey key)
+		{
+			Log("SomeKeyDown " + key);
 
 			App.UpdateKeyStates();
 
@@ -464,13 +500,13 @@ namespace COTG.Views
 
 			if(!mouseOverCanvas)
 			{
-				return;
+				return Task.CompletedTask;
 				Log("Mouse not over");
 			}
 			App.InputRecieved();
 
 			if(!isHitTestVisible)
-				return;
+				return Task.CompletedTask;
 
 			//if (CityBuild.menuOpen)
 			//{
@@ -535,7 +571,7 @@ namespace COTG.Views
 					}
 					break;
 			}
-
+			return Task.CompletedTask;
 			// });
 		}
 

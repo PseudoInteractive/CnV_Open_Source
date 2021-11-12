@@ -98,6 +98,7 @@ namespace COTG
 			}
 			idCabin = BidToId(City.bidCottage);
 			idTownHall = BidToId(City.bidTownHall);
+			idCastle = BidToId(City.bidCastle);
 			//}
 			var ix = new byte[] {
 				 (byte)'-',(byte)(0),
@@ -153,6 +154,7 @@ namespace COTG
 		[JsonIgnore]
 		public bool isRes => IsBidRes(bid);
 
+		public static BuildingDef FromBid(int bid ) => all.GetValueOrDefault(bid);
 		public static bool IsBidRes(int bid) => (bid >= City.bidResStart) & (bid <= City.bidResEnd);
 
 		[JsonIgnore]
@@ -181,6 +183,10 @@ namespace COTG
 		public short refId; // reference ID, sometimes this offset 
 		[JsonIgnore]
 		public short bid; // building id
+
+		[JsonIgnore]
+		public static byte idCastle;
+
 		[JsonIgnore]
 		public bool isMilitary => Ts.Any(); // building id
 		[JsonIgnore]
@@ -204,7 +210,7 @@ namespace COTG
 		[J("ts")] public int[] Ts { get; set; }
 		[J("mt")] public int Mt { get; set; }
 		[J("sc")] public Dictionary<string, int> Sc { get; set; }
-		[J("bc")] public Dictionary<string, Bc> Bc { get; set; }
+		[J("bc")] public Dictionary<string, Bc> bc { get; set; }
 		[J("thl")] public int Thl { get; set; }
 		[J("cs")] public int[] Cs { get; set; }
 		[J("eff")] public Dictionary<string, int> Eff { get; set; }
@@ -222,6 +228,19 @@ namespace COTG
 		[J("faith")] public Dictionary<string, int> Faith { get; set; }
 
 		public bool isScoutpost => Warnt != null;
+
+		public long GetBuildTimeMeasure()
+		{
+			try
+			{
+				return bc["10"].Tu;
+			}
+			catch (Exception ex)
+			{
+				LogEx(ex);
+				return 0;
+			}
+		}
 	}
 
 	public struct Bc

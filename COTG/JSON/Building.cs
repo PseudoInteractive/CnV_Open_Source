@@ -37,6 +37,8 @@ namespace COTG
 		public readonly bool isWall => def.isWall;
 		public readonly bool isTownHall => id == BuildingDef.idTownHall;
 		public readonly bool requiresBuildingSlot => def.requiresBuildingSlot;
+		public bool isCastle => id== BuildingDef.idCastle;
+
 		public Building(byte id, byte bl)
 		{
 			this.id = id;

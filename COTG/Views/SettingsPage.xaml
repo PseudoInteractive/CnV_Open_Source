@@ -128,12 +128,12 @@
 							   OffContent="Drop connection on Idle" />
 				<controls:NumberBox Header="Reset Raids Carry %"
 									 Value="{x:Bind views:SettingsPage.resetRaidsCarry,Mode=TwoWay}"
-									 SmallChange="1"
+									 SmallChange="1" ToolTipService.ToolTip="When resetting raids, if [Min(carry%)] &lt;= [Reset Raids Carry %] raids are reset"
 									 LargeChange="5"
 									 Style="{StaticResource NumberBoxSmall}" />
 				<controls:NumberBox Header="Reset Raids Idle %"
 									 Value="{x:Bind views:SettingsPage.resetRaidsIdle,Mode=TwoWay}"
-									 SmallChange="1"
+									 SmallChange="1" ToolTipService.ToolTip="When resetting raids, if [idle troops]/[total troops] > [Reset Raids Idle %] raids are reset"
 									 LargeChange="5"
 									 Style="{StaticResource NumberBoxSmall}" />
 				<controls:NumberBox Header="Return Raids Offset"
@@ -147,12 +147,10 @@
 									SmallChange="1"
 									ToolTipService.ToolTip="Specifies how long notications delays last on screen, regardless of durations you can click on the notifications to dismiss them"
 									/>
-				<CheckBox Content="Demo cabins if full" IsChecked="{x:Bind views:SettingsPage.demoCottageOnBuildIfFull,Mode=TwoWay}" ToolTipService.ToolTip="If On, cabins will be automatically destroyed when you place a building into a city with 100 buildings"  />
+				<CheckBox IsThreeState="True"  Content="Demo cabins if full" IsChecked="{x:Bind views:SettingsPage.demoCottageOnBuildIfFull,Mode=TwoWay}"  ToolTipService.ToolTip="If On, cabins will be automatically destroyed when you place a building into a city with 100 buildings"  />
 
+				<CheckBox IsThreeState="True"  Content="Demo extra buildings if full" IsChecked="{x:Bind views:SettingsPage.demoBuildingOnBuildIfFull,Mode=TwoWay}" ToolTipService.ToolTip="If On, extra buildings will be automatically destroyed when you place a building into a city with 100 buildings"  />
 				<CheckBox Content="Clear only center res" IsChecked="{x:Bind views:SettingsPage.clearOnlyCenterRes,Mode=TwoWay}" ToolTipService.ToolTip="If clear res is used, this will determine if all nodes are cleared vs only nodes in the center part"  />
-
-
-				<CheckBox Content="Demo extra buildings if full" IsChecked="{x:Bind views:SettingsPage.demoBuildingOnBuildIfFull,Mode=TwoWay}" ToolTipService.ToolTip="If On, extra buildings will be automatically destroyed when you place a building into a city with 100 buildings"  />
 			</wct:WrapPanel>
 		
 			<wct:WrapPanel Orientation="Horizontal"

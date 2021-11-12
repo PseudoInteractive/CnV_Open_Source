@@ -6,6 +6,10 @@
     "storage1": {
       "type": "storage",
       "connectionId": "CnvStorage"
+    },
+    "appInsights1": {
+      "type": "appInsights",
+      "connectionId": "APPINSIGHTS_CONNECTIONSTRING"
     }
   }
 }

@@ -34,6 +34,14 @@ namespace COTG.Game
 		{
 			return World.GetInfo(cid.CidToWorld()).player;
 		}
+		public static int CidToAid(this int cid)
+		{
+			return Alliance.FromPlayer(World.GetInfo(cid.CidToWorld()).player);
+		}
+		public static bool? CidIsAlly(this int cid)
+		{
+			return Alliance.IsAllyOrNap(CidToAid(cid));
+		}
 
 		static internal uint SubStrAsInt(this string s, int start, int count)
 		{

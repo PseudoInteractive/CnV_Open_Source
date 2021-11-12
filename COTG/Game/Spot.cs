@@ -127,6 +127,7 @@ namespace COTG.Game
 			if(PropertyChanged is not null) ((IANotifyPropertyChanged)this).IOnPropertyChanged(members,(cid ==City.focus || cid ==City.build ));
 		}
 		public bool isFriend => Player.IsFriend(pid); // this is set if it is one of our cities or our ally cities that we can visit
+		public bool? isAlly => Alliance.alliancesFetched ? cid.CidIsAlly() : null; // this is set if it is one of our cities or our ally cities that we can visit
 
 		internal static City GetFocus()
 		{
@@ -169,8 +170,10 @@ namespace COTG.Game
 				}
 				if (outGoing!=OutGoing.none)
 				{
-					sb.Append("(!)");
+					sb.Append("(O)");
 				}
+				if(!isAlly.GetValueOrDefault())
+					sb.Append("(?)");
 
 				return sb.ToString();
 			}
@@ -578,6 +581,9 @@ namespace COTG.Game
 				Log(ex);
 			}
 		}
+
+		
+
 		public static void ProcessPointerExited()
 		{
 			ClearHover();
@@ -630,25 +636,7 @@ namespace COTG.Game
 						wantRaidScan = false;
 						break;
 					case nameof(icon):
-						if (City.CanVisit(cid))
-						{
-
-							var wasBuild = City.IsBuild(cid);
-
-							if (!await JSClient.CitySwitch(cid, false, true, false))
-								return;
-
-							if (wasBuild)
-							{
-								JSClient.ChangeView(ShellPage.viewMode.GetNext());
-
-							}
-
-						}
-						else
-						{
-							JSClient.ShowCity(cid, false, true, false);
-						}
+						if (!await DoClick()) return;
 						wantSelect = false;
 						wantRaidScan = false;
 						break;
@@ -719,7 +707,7 @@ namespace COTG.Game
 			}
 			else if (pt.Properties.IsRightButtonPressed)
 			{
-				if (!modifiers.IsShiftOrControl())
+				if (modifiers.IsShiftOrControl())
 					SetFocus(false, true, true);
 				ShowContextMenu(uie, pt.Position);
 
@@ -736,6 +724,28 @@ namespace COTG.Game
 				// if shift or conntrol is pressed normal processing takes place
 			}
 			SpotTab.TouchSpot(cid, modifiers);
+		}
+
+		public async Task<bool> DoClick()
+		{
+			if (City.CanVisit(cid))
+			{
+				var wasBuild = City.IsBuild(cid);
+
+				if (!await JSClient.CitySwitch(cid, false, true, false))
+					return false;
+
+				if (wasBuild)
+				{
+					JSClient.ChangeView(ShellPage.viewMode.GetNext());
+				}
+			}
+			else
+			{
+				JSClient.ShowCity(cid, false, true, false);
+			}
+
+			return true;
 		}
 
 		public async Task ShowDungeons()

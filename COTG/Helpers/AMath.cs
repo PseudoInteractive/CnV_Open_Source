@@ -60,6 +60,23 @@ namespace COTG
 		{
 			return int.TryParse(s, System.Globalization.NumberStyles.Any, NumberFormatInfo.InvariantInfo, out o);
         }
+		public static bool TryParseLong(this string s,out long o)
+		{
+			return long.TryParse(s,System.Globalization.NumberStyles.Any,NumberFormatInfo.InvariantInfo,out o);
+		}
+
+		public static long? ParseLong(this string s, long? _default = null)
+		{
+			if (TryParseLong(s, out var l))
+				return l;
+			return _default;
+		}
+		public static int? ParseInt(this string s,int? _default = null)
+		{
+			if(TryParseInt(s,out var l))
+				return l;
+			return _default;
+		}
 		public static bool TryParseIntChecked(this string s, out int o)
 		{
 			

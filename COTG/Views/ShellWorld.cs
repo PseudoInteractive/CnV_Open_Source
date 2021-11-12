@@ -168,7 +168,7 @@ namespace COTG.Views
 		{
 			e.KeyModifiers.UpdateKeyModifiers();
 
-			Assert(mouseOverCanvas== true);
+		//	Assert(mouseOverCanvas== true);
 			mouseOverCanvas = false;
 			instance.OnPropertyChanged("mouseOverCanvas");
 			
@@ -477,7 +477,7 @@ namespace COTG.Views
 				mouseOverCanvas = true;
 				instance.OnPropertyChanged("mouseOverCanvas");
 
-				Trace("MouseEnterred");
+//				Trace("MouseEnterred");
 			}
 			UpdateMousePosition(args);
 			TakeFocus();

@@ -56,11 +56,72 @@ namespace COTG.Views
 
 		private void reinIn_CellTapped(object sender,Syncfusion.UI.Xaml.DataGrid.GridCellTappedEventArgs e)
 		{
-			var r = e.Record as Reinforcement;
-			Assert(r != null);
-			Note.Show($"Returning {r.troopsString} from {r.targetCity} back to {r.sourceCity} ");
-			r.ReturnAsync();
 
+			try
+			{
+				Note.Show($"Cell Tap {e.Column.HeaderText??"NA"}  {e.RowColumnIndex} {e.RowColumnIndex} {e.Record.ToString} ");
+				switch(e.Column.HeaderText)
+				{
+					case "Return": 
+					{
+						var r = e.Record as Reinforcement;
+
+						r.ReturnAsync();
+						break;
+
+					}
+					case nameof(Reinforcement.sourceCity):
+					{
+
+						var r = (Reinforcement)e.Record;
+						var s = r.sourceCity;
+						s.DoClick();
+//						Spot.ProcessCoordClick(s.cid,true,)
+						//					r.ReturnAsync();
+						break;
+
+					}
+					case nameof(Reinforcement.targetCity):
+					{
+
+						var r = (Reinforcement)e.Record;
+						var s = r.targetCity;
+						s.DoClick();
+						//						Spot.ProcessCoordClick(s.cid,true,)
+						//					r.ReturnAsync();
+						break;
+
+					}
+				}
+			}
+			catch (Exception exception)
+			{
+				Log(exception);
+				throw;
+			}
+
+
+
+		}
+
+		private void CelNavigate(object sender,Syncfusion.UI.Xaml.Grids.CurrentCellRequestNavigateEventArgs e)
+		{
+			var uri = new Uri(e.NavigateText);
+
+			if (uri.AbsolutePath == Reinforcement.retUriS)
+			{
+				e.Handled=true;
+				var args = new WwwFormUrlDecoder(e.NavigateText);
+				
+	//			var args = Uri.Par
+				Reinforcement.ReturnAsync( args.GetFirstValueByName("order").ParseLong().GetValueOrDefault() , args.GetFirstValueByName("pid").ParseInt().GetValueOrDefault());
+				
+
+			}
+		}
+
+		private void CellToolTipOpening(object sender,Syncfusion.UI.Xaml.DataGrid.GridCellToolTipOpeningEventArgs e)
+		{
 
 		}
 	}

@@ -84,7 +84,7 @@ namespace COTG.Helpers
 			if(focusedControl == this.focusedControl)
 				return;
 			this.focusedControl=focusedControl;
-			Trace($"Focus on {focusedControl?.Name}");
+	//		Trace($"Focus on {focusedControl?.Name}");
 			if(focusedControl == null)
 			{
 				ClearContent();

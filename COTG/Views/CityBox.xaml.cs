@@ -24,7 +24,7 @@ using CommunityToolkit.WinUI.UI;
 
 namespace COTG.Views
 {
-	public sealed partial class CityControl : UserControl,IANotifyPropertyChanged
+	public sealed partial class CityBox:UserControl, IANotifyPropertyChanged
 	{
 		#region PropertyChanged
 		public void CallPropertyChanged(string member = null)
@@ -41,7 +41,7 @@ namespace COTG.Views
 		public City city;
 		public BitmapImage icon => city?.icon;
 		public string name => city != null ? city.nameAndRemarks : "None";
-		public CityControl()
+		public CityBox()
 		{
 			this.InitializeComponent();
 		}
@@ -52,7 +52,12 @@ namespace COTG.Views
   new PropertyMetadata(null)
 );
 
-		
+		public static readonly DependencyProperty CityProperty = DependencyProperty.Register(
+		  "City",
+		  typeof(City),
+		  typeof(CityBox),
+		  new PropertyMetadata(null)
+		);
 
 		public string Label
 		{
@@ -60,77 +65,40 @@ namespace COTG.Views
 			set { SetValue(LabelProperty,value); }
 		}
 
-		
+		public City City
+		{
+			get => city;
+			set => city = value;
+		}
 
 
-		private void TextBlock_Tapped(object sender, TappedRoutedEventArgs e)
+		private void TextBlock_Tapped(object sender,TappedRoutedEventArgs e)
 		{
 			var image = sender as FrameworkElement;
 			var cc = image.FindParent<CityControl>();
-			if (cc?.city != null)
-				JSClient.ShowCity(cc.city.cid, false, false, false);
+			if(cc?.city != null)
+				JSClient.ShowCity(cc.city.cid,false,false,false);
 
 		}
 
-		private void Image_Tapped(object sender, TappedRoutedEventArgs e)
+		private void Image_Tapped(object sender,TappedRoutedEventArgs e)
 		{
 			var image = sender as FrameworkElement;
 			var cc = image.FindParent<CityControl>();
-			if( cc?.city!=null)
-				Spot.ProcessCoordClick(cc.city.cid, false, App.keyModifiers, false);
+			if(cc?.city!=null)
+				Spot.ProcessCoordClick(cc.city.cid,false,App.keyModifiers,false);
 
 		}
 
-		private void Image_RightTapped(object sender, RightTappedRoutedEventArgs e)
+		private void Image_RightTapped(object sender,RightTappedRoutedEventArgs e)
 		{
 			var image = sender as FrameworkElement;
 			var cc = image.FindParent<CityControl>();
-			if (cc?.city != null)
-				cc.city.ShowContextMenu(image, e.GetPosition(image));
+			if(cc?.city != null)
+				cc.city.ShowContextMenu(image,e.GetPosition(image));
 		}
 
-		
-		private void CityName_SuggestionChosen(AutoSuggestBox sender,AutoSuggestBoxSuggestionChosenEventArgs args)
-		{
-			
-			if(Spot.TryGet(args.SelectedItem as string,!onlyMine.IsChecked.GetValueOrDefault(),out var _city))
-			{
-				this.city = _city;
-				OnPropertyChanged();
-		
-			}
-			else
-			{
-				this.city = null;
-				sender.Text = string.Empty;
-				OnPropertyChanged();
 
-			}
-		}
 
-		private void suggestBox_QuerySubmitted(AutoSuggestBox sender,AutoSuggestBoxQuerySubmittedEventArgs args)
-		{
-				if(args.ChosenSuggestion != null)
-				{
-				}
-				else
-			{
-				this.city = null;
-				sender.Text = string.Empty; 
-				OnPropertyChanged();
-
-			}
-		}
-
-		//private void AutoSuggestBox_CharacterReceived(UIElement sender,CharacterReceivedRoutedEventArgs args)
-		//{
-		//	if(args.Character==(char)27 )
-		//	{
-		//		suggestBox.Text = name;
-		//		OnPropertyChanged();
-		//		args.Handled=true;
-
-		//	}
-		//}
 	}
 }

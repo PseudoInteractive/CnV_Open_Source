@@ -18,32 +18,58 @@ using COTG.Helpers;
 
 namespace COTG.Game;
 
+using System.Net.Http;
+
 //"trintr"
 [Serializable]
-public class Reinforcement:IEquatable<Reinforcement>
+[System.Diagnostics.DebuggerDisplay($"{{{nameof(GetDebuggerDisplay)}(),nq}}")]
+public class Reinforcement : IEquatable<Reinforcement>
 {
 
 
 	public SmallTime time;  // arrival
-	public DateTimeOffset _Time { get => time.dateTime; }
+
+	public DateTimeOffset _Time
+	{
+		get => time.dateTime;
+	}
+
 	public int sourceCid;
+
 	public int targetCid;
 	//static int pid;
 
 
 	public long order;
-	public string troopsString => troops.Format(":",' ',',');
+	public string troopsString => troops.Format(":", ' ', ',');
 	public City sourceCity => sourceCid.AsCity();
 	public City targetCity => targetCid.AsCity();
 
+	public const string retUriS = "cmd://reinRet/";
+
+	public Uri retUri => new(new(retUriS),
+		new FormUrlEncodedContent(new KeyValuePair<string?,string?>[] {  new ("order", order.ToString()),  new ( "pid", sourceCity.pid.ToString() )
+ }).ToString()) ;
+	public string  retS => "Return";
+	
 	public TroopTypeCountsRef troops = new();
 	public string _Troops { get => troops.Format(":",' ',','); }
 
-	public async Task ReturnAsync()
+	public  Task ReturnAsync()
 	{
-		await Post.Get("overview/reinreca.php","a=" + order,sourceCid.CidToPid());
+		Log($"Return {this}");
+		return ReturnAsync(order, sourceCid.CidToPid());
+	}
+	public static async Task ReturnAsync(long order, int pid)
+	{
+		await Post.Get("overview/reinreca.php","a=" + pid);
 		await Task.Delay(1000);
-		await Post.Get("overview/reinreca.php","a=" + order,sourceCid.CidToPid());
+		await Post.Get("overview/reinreca.php","a=" + pid );
+	}
+	public void ReturnClick(object obj)
+	{
+		Note.Show($"Returning {troopsString} from {targetCity} back to {sourceCity} ");
+		ReturnAsync();
 	}
 
 	public string sReturn => "Return";
@@ -160,6 +186,16 @@ public class Reinforcement:IEquatable<Reinforcement>
 	public bool Equals(Reinforcement other)
 	{
 		return order == other.order;
+	}
+
+	private string GetDebuggerDisplay()
+	{
+		return ToString();
+	}
+
+	public override string ToString()
+	{
+		return $"{{{nameof(time)}={time.ToString()},  {nameof(sourceCity)}={sourceCity}, {nameof(targetCity)}={targetCity}, {nameof(troops)}={troops.ToString()}}}";
 	}
 }
 	

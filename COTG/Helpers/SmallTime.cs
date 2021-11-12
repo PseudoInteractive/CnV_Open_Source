@@ -32,7 +32,7 @@ namespace COTG
 	
 		}
 
-		public string FormatIfLaterThanNow() => this > SmallTime.serverNow ? $" @{Format()}" : "";
+		public string FormatIfLaterThanNow(string ifEarlierThanNow = "") => this > SmallTime.serverNow ? $" @{Format()}" : ifEarlierThanNow;
 
 	public readonly string Format() => dateTime.Format();
 		public readonly string FormatDateForFileName() => dateTime.FormatDateForFileName();

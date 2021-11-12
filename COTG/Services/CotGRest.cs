@@ -1112,6 +1112,11 @@ namespace COTG.Services
 			return await AcceptText(await p.Send("a=" + HttpUtility.UrlEncode(Aes.Encode(postContentJson, secret), Encoding.UTF8), except), except);
 		}
 
+		public static Task<string> CancelAttack(int cid, long order)
+		{
+			return SendForText("includes/cAtk.php", $"cid={cid}&oid={order}");
+
+		}
 		/*
         {
             "rcid": 21627422,

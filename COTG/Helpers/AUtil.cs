@@ -607,7 +607,7 @@ namespace COTG
 		//{
 		//	if(PropertyChanged is not null) ((IANotifyPropertyChanged)this).IOnPropertyChanged();
 		//}
-		static Task ProcessChanges()
+		static Task ProcessPropertyChanges()
 		{
 			try
 			{
@@ -634,7 +634,7 @@ namespace COTG
 			return Task.CompletedTask;
 
 		}
-		public static Debounce ChangesDebounce = new(ProcessChanges) { runOnUiThread = true,debounceDelay=300,throttleDelay=300 };
+		public static Debounce ChangesDebounce = new(ProcessPropertyChanges) { runOnUiThread = true,debounceDelay=100,throttleDelay=300 };
 
 	}
 	

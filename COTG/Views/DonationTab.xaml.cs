@@ -237,7 +237,7 @@ public class BlessedTapCommand : DataGridCommand
                                 }
                                 sender.wood -= wood;
                                     sender.stone -= stone;
-                                    i.SendDonation(wood, stone, useShips ? 2 : 1);
+                                    BlessedCity.SendDonation(sender.cid,i.cid,wood, stone, useShips);
                                     DonationTab.instance.blessedGrid.ItemsSource = null;
 								i.wood -= wood;
 								i.stone -= stone;

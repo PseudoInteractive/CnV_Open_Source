@@ -81,8 +81,8 @@ namespace COTG.Views
 		private static DateTime workStarted;
 		private static readonly List<string> workQueue = new List<string>();
 
-		protected override void OnKeyDown(KeyRoutedEventArgs e) => Trace($"Key: {e.Key} {e.OriginalKey} {e.OriginalSource.ToString()}");
-		protected override void OnPreviewKeyDown(KeyRoutedEventArgs e) => Trace($"KeyP: {e.Key} {e.OriginalKey} {e.OriginalSource.ToString()}");
+	//	protected override void OnKeyDown(KeyRoutedEventArgs e) => Trace($"Key: {e.Key} {e.OriginalKey} {e.OriginalSource.ToString()}");
+//		protected override void OnPreviewKeyDown(KeyRoutedEventArgs e) => Trace($"KeyP: {e.Key} {e.OriginalKey} {e.OriginalSource.ToString()}");
 		public static string WorkStart(string desc)
 		{
 			App.DispatchOnUIThreadLow(() =>
@@ -305,7 +305,7 @@ namespace COTG.Views
 
 			//			KeyboardAccelerators.Add(BuildKeyboardAccelerator(VirtualKey.F5, Refresh_Invoked,VirtualKeyModifiers.Control));
 			KeyboardAccelerators.Add(BuildKeyboardAccelerator(VirtualKey.R,instance.Refresh_Invoked,VirtualKeyModifiers.Control));
-			foreach(var k in GetBuildKeys())
+			foreach(var k in buildKeys)
 			{
 				KeyboardAccelerators.Add(BuildKeyboardAccelerator(k,KeyboardAccelerator));
 			}
@@ -509,7 +509,7 @@ namespace COTG.Views
 		private void LayoutAccelerator_Invoked(KeyboardAccelerator sender,KeyboardAcceleratorInvokedEventArgs args)
 		{
 			sender.Modifiers.UpdateKeyModifiers();
-			Trace($"Accel: {sender.Key} {sender.ScopeOwner}");
+			Log($"Accel: {sender.Key} {sender.ScopeOwner}");
 			var layout = args.KeyboardAccelerator.Key - VirtualKey.Number0;
 			this.windowLayout.SelectedIndex= layout;
 			
@@ -1623,10 +1623,10 @@ namespace COTG.Views
 	//	protected override void OnPointerPressed(PointerRoutedEventArgs e) => base.OnPointerPressed(e);
 	//	protected override void OnPointerMoved(PointerRoutedEventArgs e) => base.OnPointerMoved(e);
 
-		private void shellPage_ProcessKeyboardAccelerators(UIElement sender,ProcessKeyboardAcceleratorEventArgs args)
-		{
-			Trace($"Accel2 {args.Key} {sender.ToString()}");
-		}
+		//private void shellPage_ProcessKeyboardAccelerators(UIElement sender,ProcessKeyboardAcceleratorEventArgs args)
+		//{
+		//	Trace($"Accel2 {args.Key} {sender.ToString()}");
+		//}
 
 		static void ProcessPointerMoved(object sender,PointerRoutedEventArgs e)
 		{

@@ -74,7 +74,7 @@ namespace COTG
 		}
 		static ChangeCollection collectionChanges = ImmutableArray<(NotifyCollectionChangedEventArgs change, NotifyCollectionBase c)>.Empty;
 
-		static Task ProcessChanges()
+		static Task ProcessCollectionChanges()
 		{
 			try
 			{
@@ -229,7 +229,7 @@ namespace COTG
 
 
 		protected long lastDataHash;
-		static Debounce ChangesDebounce = new(ProcessChanges) { runOnUiThread = true,debounceDelay=300,throttleDelay=1000 };
+		static Debounce ChangesDebounce = new(ProcessCollectionChanges) { runOnUiThread = true,debounceDelay=100,throttleDelay=500 };
 		public void ClearHash() => lastDataHash=-1L;
 
 		//public virtual long GetDataHash()

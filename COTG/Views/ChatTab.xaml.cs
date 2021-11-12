@@ -153,6 +153,7 @@ namespace COTG.Views
 		//public ChatEntry lastChat = new ChatEntry(null, string.Empty, DateTimeOffset.MinValue, 0);
 		public void Post(ChatEntry entry, bool isNew, bool notify=true) // if is new, this message is fresh.  Otherwise loaded from archives
 		{
+		// this runs on the UI thread?
 			// duplicate?
 			//if (lastChat.player == entry.player
 			//	&& string.Equals(lastChat.text, entry.text, StringComparison.Ordinal)
@@ -175,19 +176,19 @@ namespace COTG.Views
 				//    activeGroup = new ChatEntryGroup() { time = entry.time };
 				//    Groups.Add(activeGroup);
 				//}
-				{
-					int count = items.Count;
+				//{
+				//	int count = items.Count;
 
-					//foreach (var g in Groups)
-					//    count += g.Items.Count;
-					if (count >= maxItems)
-					{
-						for (int i = 0; i < 32; ++i)
-							items.RemoveAt(0,false);
-						if(notify)
-							items.NotifyReset();
-					}
-				}
+				//	//foreach (var g in Groups)
+				//	//    count += g.Items.Count;
+				//	if (count >= maxItems)
+				//	{
+				//		for (int i = 0; i < 32; ++i)
+				//			items.RemoveAt(0,false);
+				//		if(notify)
+				//			items.NotifyReset();
+				//	}
+				//}
 				var insert = items.Count;
 				if (!isNew)
 				{

@@ -331,9 +331,10 @@ namespace COTG
 		//	OnKeyDown(key);
 
 		//}
-		public static void OnKeyDown(VirtualKey key)
+		public static bool OnKeyDown(VirtualKey key)
 		{
-			Trace("KeyDown" + key);
+			Log($"KeyDown {key} mouse:{ShellPage.mouseOverCanvas}");
+		
 			App.UpdateKeyStates();
 			switch(key)
 			{
@@ -353,6 +354,9 @@ namespace COTG
 
 			}
 			InputRecieved();
+
+			return ShellPage.DoKeyDown(key);
+
 		}
 		public static int dispatches0;
 		public static int dispatches1;
@@ -499,8 +503,9 @@ namespace COTG
 				//window.Maximize();
 			//App.globalDispatcher = CoreWindow.GetForCurrentThread().Dispatcher;
 			globalQueue =  window.DispatcherQueue;
-				//CoreApplication.EnablePrelaunch(false);
-			if (uwpArgs.Kind == Windows.ApplicationModel.Activation.ActivationKind.Launch)
+		//	keyQueue = globalQueue.CreateTimer();
+			//CoreApplication.EnablePrelaunch(false);
+				if (uwpArgs.Kind == Windows.ApplicationModel.Activation.ActivationKind.Launch)
 			{
 				// do this asynchronously
 				Services.StoreHelper.instance.DownloadAndInstallAllUpdatesAsync();
@@ -562,8 +567,9 @@ namespace COTG
 
 		private void Content_PreviewKeyDown(object sender,Microsoft.UI.Xaml.Input.KeyRoutedEventArgs e)
 		{
-			Trace("PreviewKeyDown");
-			OnKeyDown(e.Key);
+			Log($"PreviewKeyDown {e.Key} {e.Handled}");
+			if(!e.Handled)
+				e.Handled =OnKeyDown(e.Key);
 		}
 
 		
@@ -1560,6 +1566,7 @@ namespace COTG
 			else
 				target.XamlRoot = App.window.Content.XamlRoot;
 		}
+
 		public static MenuFlyoutItem CreateMenuItem(string text, Action command, object context = null)
 		{
 			var rv = new MenuFlyoutItem() { Text = text };

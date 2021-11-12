@@ -347,3 +347,36 @@
   - Workaround for raid return not working as expected (note that return fast has been temporarily replaced by a normal return rather than a recall, which basically sets the raids to "raid once")
   - **Fix**
     - Setup window was too large.
+## 
+## 1.0.371 [10/29/2020]
+### Updates:
+
+-   Added [War-\>Return all reinforcements] to city context menu
+
+    -   Shows reinforcements for all cites
+
+-   Reinforcements are sorted based on their source or target city’s incoming.
+
+    -   The following order is used:
+
+        -   Senator Sieges with Capture
+
+        -   Senators Sieges with no capture
+
+        -   Art
+
+        -   Naked Sieges
+
+        -   Unknown incoming
+
+        -   I do not remember the rest
+    -   The order in which buildings are built are now weighted by their construction time while doing teardown.  So for a shipper, you will get the ports earlier (when you have more CS)
+
+### Fixes:
+
+-   Various spreadsheet controls did not refresh their contents when doing a
+    refresh (control-r or the refresh button)
+
+-   Autobuild would occasionally try to build more than one castle
+-   Shrine Finder would not work if your internet connection was too fast (COTG would throttle you)
+-   Attack sender sends emails as it should

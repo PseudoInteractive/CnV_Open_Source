@@ -301,7 +301,7 @@ namespace COTG.Views
 					}
 				}
 			}
-			return  rv.OrderBy( a => a.bid ).ThenBy(a=>GetSpotCost(city,a.c)).Select( a=> a.c ).ToArray();
+			return  rv.OrderByDescending( a => BuildingDef.FromBid(a.bid).GetBuildTimeMeasure()*AMath.random.NextSingle() ).ThenBy(a=>GetSpotCost(city,a.c)).Select( a=> a.c ).ToArray();
 		}
 		internal static (int matches,int missingOverlayBuildings,int extraBuildings, bool isBad) CountBadBuildings(City city)
 		{
@@ -809,13 +809,11 @@ namespace COTG.Game
 
 
 			// first collect counts
-			for (var id = 1; id < City.citySpotCount - 1; ++id)
+			foreach(var id in buildingSpots)
 			{
-				if (!IsBuildingSpot(id))
-					continue;
-
+			
 				var bid = (short)GetLayoutBid(id);
-				if (bid != 0 && bid != bidTemple && bid != bidCastle)
+				if (bid != 0 && bid != bidTemple )
 				{
 					if (counts.TryGetValue(bid, out var c) == false)
 					{
@@ -830,7 +828,8 @@ namespace COTG.Game
 				}
 
 				var bl = postQueueBuildings[id];
-				if (!(bl.isRes || bl.isEmpty || bl.isTemple || bl.isCabin || bl.isTower))
+				Assert(!bl.isTower);
+				if (!(bl.isRes || bl.isEmpty || bl.isTemple || bl.isCabin || bl.isTower ))
 				{
 					bid = bl.bid;
 					if (counts.TryGetValue(bid, out var c) == false)
@@ -855,13 +854,14 @@ namespace COTG.Game
 
 				var oBid = (short)GetLayoutBid(id);
 				var bl = postQueueBuildings[id];
-				if (!(bl.isRes || bl.isEmpty || bl.isTemple || bl.isCabin || bl.isTower))
+				if (!(bl.isRes || bl.isEmpty || bl.isTemple || bl.isCabin || bl.isTower || bl.isCastle))
 				{
 					var bid = (short)bl.bid;
 					if (bid == oBid)
 						continue;
 					if (counts[bid] < 0)
 					{
+						Assert(bid != bidCastle);
 						if (bl.bl < bestLevel)
 						{
 							bestLevel = bl.bl;

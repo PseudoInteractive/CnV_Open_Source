@@ -18,8 +18,7 @@
 	  Margin="0"
       mc:Ignorable="d"	
 			IsTabStop="false"
-			ProcessKeyboardAccelerators="shellPage_ProcessKeyboardAccelerators"	
-
+		
 		
 >
 	<Page.Resources>
@@ -384,7 +383,7 @@ TextSubmitted="CitySubmitted"
 			<winui:SwapChainPanel x:Name="_canvas" Grid.Column="1" Grid.Row="1" Grid.RowSpan="4"
 						BorderThickness="0"
 						ScrollViewer.ZoomMode="Disabled"
-								  
+								  IsTabStop="True"
 							TabFocusNavigation="Once"
 					
 						Margin="0,95,0,0"

@@ -448,6 +448,8 @@ namespace COTG.Views
 		[NonSerialized] 
 		public static float largeGridRowHeight = 34;
 		[NonSerialized]
+		public static GridLength largeGridRowHeighL = new(largeGridRowHeight);
+		[NonSerialized]
 		public static float mediumGridRowHeight = 30;
 		[NonSerialized] 
 		public static float shortGridRowHeight = 28;
@@ -463,6 +465,7 @@ namespace COTG.Views
 			App.instance.Resources["ChatFontSize"] = chatZoom * 12.0;
 
 			largeGridRowHeight = AsFloat(App.instance.Resources["LargeGridRowHeight"] = tabZoom * (largeFontSizeBase*2.25));
+		
 			mediumGridRowHeight = AsFloat(App.instance.Resources["MediumGridRowHeight"] = tabZoom * (mediumFontSizeBase*2.25));
 			shortGridRowHeight = AsFloat(App.instance.Resources["ShortGridRowHeight"] = tabZoom * (smallFontSizeBase*2.25) );
 
@@ -895,7 +898,7 @@ namespace COTG.Views
 							await App.DispatchOnUIThreadTask( async () =>
 							  await JSClient.ExecuteScriptAsync("gStQuery", (cityId) )
 							  );
-							
+							await Task.Delay(100);
 						}
 					}
 				}

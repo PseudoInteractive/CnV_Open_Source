@@ -215,7 +215,7 @@ namespace COTG;
 							if(bc.cabins < SettingsPage.startCabinCount)
 							{
 								message = $"Adding {SettingsPage.startCabinCount - bc.cabins}";
-								var cabinsInLayout = FindPendingOverlayBuildingsOfType(city,100,bidCottage);
+								var cabinsInLayout = FindPendingOverlayBuildingsOfType(city,100,bidCottage).ToList();
 
 								// find a good spot for a cabin
 								for(var y = span0;y <= span1;++y)
@@ -505,7 +505,6 @@ namespace COTG;
 									Note.Show("Something unusual happened");
 									break;
 								}
-								count -= count;
 								bc = city.GetBuildingCounts();
 							}
 							Assert(city.isBuild);

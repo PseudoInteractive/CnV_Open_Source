@@ -39,6 +39,7 @@ namespace COTG.Views
 		public static Spot lastSelected;
 		bool includeInternal;
 		bool onlyMine;
+		
 
 		public static OutgoingTab instance;
         //        public static Report showingRowDetails;

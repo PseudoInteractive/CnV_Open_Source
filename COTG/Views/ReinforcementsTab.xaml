@@ -9,7 +9,7 @@
 	Tag="Reinforcements"
 	xmlns:dataGrid="using:Syncfusion.UI.Xaml.DataGrid"
 	xmlns:view="using:COTG.Views"
-	>
+	xmlns:game="using:COTG.Game" >
 
     <Grid>
 		<Grid.RowDefinitions>
@@ -25,6 +25,7 @@
 							x:FieldModifier="public"
 							Grid.Row="1"
 							IsTabStop="True"
+					   AllowResizingColumns="True"
 							TabFocusNavigation="Once"
 							FrozenColumnCount="2"
 							ItemsSource="{x:Bind reinforcementsIn, Mode=OneWay}"
@@ -48,14 +49,15 @@
 				<dataGrid:GridTemplateColumn MappingName="sReturn" HeaderText="Return">
 					<dataGrid:GridTemplateColumn.CellTemplate>
 						<DataTemplate>
-							<Button  Content="Click" Width="160" Height="30" Command="{Binding Path=ReturnClick,ElementName=sfDataGrid}" CommandParameter="{Binding}"/>
+							<Button  Content="Click" Width="160" Height="30" Command="{Binding Path= ReturnClick,ElementName=sfDataGrid}" CommandParameter="{Binding}"/>
 						</DataTemplate>
 					</dataGrid:GridTemplateColumn.CellTemplate>
 				</dataGrid:GridTemplateColumn>
 				<sf:GridTextColumn MappingName="sourceCity" />
 				<sf:GridTextColumn MappingName="targetCity" />
-				
-				</dataGrid:SfDataGrid.Columns>
+				<sf:GridTimeColumn MappingName="_Time" DisplayTimeFormat="{}{0:dd',' HH':'mm':'ss}" />
+				<sf:GridTextColumn MappingName="_Troops" ColumnWidthMode="Star"/>
+			</dataGrid:SfDataGrid.Columns>
 		</sf:SfDataGrid>
 		<TextBlock Grid.Row="2" Text="{x:Bind reinOutTitle, Mode=OneWay}" />
 		<sf:SfDataGrid 
@@ -67,23 +69,24 @@
 							TabFocusNavigation="Once"
 						FrozenColumnCount="2"
 							ItemsSource="{x:Bind reinforcementsOut, Mode=OneWay}"
-							AutoGenerateColumns="True"
+							AutoGenerateColumns="False"
 							SelectionMode="Extended"
 							RowHeight="{StaticResource ShortGridRowHeight}"
 							FontSize="{StaticResource SmallFontSize}"
 							SelectionUnit="Row"
+						CellToolTipOpening= "CellToolTipOpening"
+						CurrentCellRequestNavigate="CelNavigate"
+AllowTriStateSorting="True"
+			  CellTapped="reinIn_CellTapped"
+			
 							Loaded="DataGridLoaded"
 					  >
-			<dataGrid:SfDataGrid.Columns>
-				<dataGrid:GridTemplateColumn MappingName="sReturn" HeaderText="Return">
-					<dataGrid:GridTemplateColumn.CellTemplate>
-						<DataTemplate>
-							<Button  Content="Click" Width="160" Height="30" Command="{Binding Path=ReturnClick,ElementName=sfDataGrid}" CommandParameter="{Binding}"/>
-						</DataTemplate>
-					</dataGrid:GridTemplateColumn.CellTemplate>
-				</dataGrid:GridTemplateColumn>
-				<sf:GridTextColumn MappingName="sourceCity" />
-				<sf:GridTextColumn MappingName="targetCity" />
+			<dataGrid:SfDataGrid.Columns >
+				<sf:GridHyperlinkColumn HeaderText="Ret" ValueBinding="{Binding Path= RetUri}" DisplayBinding="{Binding  Path=RetS}" />
+				<sf:GridTimeColumn MappingName="_Time" DisplayTimeFormat="{}{0:dd',' HH':'mm':'ss}" />
+				<sf:GridTextColumn MappingName="sourceCity" Width ="200" />
+				<sf:GridTextColumn MappingName="targetCity" Width ="200" />
+				<sf:GridTextColumn MappingName="_Troops" ColumnWidthMode="Star"/>
 			</dataGrid:SfDataGrid.Columns>
 
 		</sf:SfDataGrid>
