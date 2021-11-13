@@ -495,8 +495,8 @@ namespace COTG.Views
 			App.DispatchOnUIThreadLow(() =>
 			{
 				SyncUIGrids();
-				attacksUI.NotifyReset();
-				targetsUI.NotifyReset();
+				attacksUI.NotifyReset(allItemsChanged:true);
+				targetsUI.NotifyReset(allItemsChanged:true);
 				foreach (var i in attacksUI)
 					i.OnPropertyChanged(string.Empty);
 				foreach (var i in targetsUI)

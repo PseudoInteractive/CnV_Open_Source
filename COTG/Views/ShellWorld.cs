@@ -609,12 +609,21 @@ namespace COTG.Views
 			var serverTime = JSClient.ServerTime() + TimeSpan.FromMinutes(e.NewValue);
 			eventTimeTravelText.Text = $"Attack Time Travel:\t\t{dt.Hours}:{dt.Minutes},\t\tT:{serverTime.Format()}";
 		}
+
+		/// <summary>
+		/// <inheritdoc 
+		///     cref="Bookmarks" />
+		/// />
+		/// </summary>
+		/// <param name="point"></param>
+		/// <param name="keyModifiers"></param>
 		private static void Canvas_PointerReleased((Windows.Foundation.Point Position, uint PointerId,
 																			bool IsInContact, ulong Timestamp, PointerUpdateKind PointerUpdateKind
 																			) point,
 			Windows.System.VirtualKeyModifiers keyModifiers)
 		{
-			keyModifiers.UpdateKeyModifiers();
+			
+			keyModifiers.UpdateKeyModifiers(); 
 			UpdateMousePosition(point.Position);
 			if(!isFocused)
 				return;

@@ -207,16 +207,16 @@ namespace COTG
 
 		public abstract long GetCurrentHashData();
 
-		public void NotifyResetWithHash(long newHash, bool itemsChanged = true,bool skipHashCheck = false)
+		public void NotifyResetWithHash(long newHash, bool countChanged = true,bool skipHashCheck = false)
 		{
-
+			
 			var hashChanged = newHash != lastDataHash;
 			if(!hashChanged && !skipHashCheck)
 				return;
 			lastDataHash= newHash;
 			if(hasNotifications)
 			{
-				NotifyChange(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset),itemsChanged);
+				NotifyChange(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset),countChanged);
 			}
 
 		}
@@ -289,9 +289,17 @@ namespace COTG
 
 		//public ref readonly T itemRef(int id) => ref  c.ItemRef(id);
 
-		public new void NotifyReset(bool itemsChanged = true,bool skipHashCheck = false)
+		public new void NotifyReset(bool countChanged = true,bool skipHashCheck = false, bool allItemsChanged=false)
 		{
-			base.NotifyResetWithHash(GetDataHash(c),itemsChanged,skipHashCheck);
+			if (allItemsChanged)
+			{
+				foreach (var i in c)
+				{
+					if(i is IANotifyPropertyChanged ia)
+					 ia.IOnPropertyChanged("", false);
+				}
+			}
+			base.NotifyResetWithHash(GetDataHash(c),countChanged,skipHashCheck);
 		}
 
 		public static long GetDataHash(IEnumerable<T> c)

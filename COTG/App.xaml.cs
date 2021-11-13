@@ -72,6 +72,9 @@ using WinRT;
 
 namespace COTG
 {
+	/// <summary>
+	/// App
+	/// </summary>
 	public sealed partial class App : Application
 	{
 		public enum State
@@ -1629,7 +1632,13 @@ namespace COTG
 			menu.Items.Add(rv);
 			return rv;
 		}
+		public static MenuFlyoutSubItem AddSubMenu(this MenuFlyoutSubItem menu,string text)
+		{
+			var rv = new MenuFlyoutSubItem() { Text = text };
 
+			menu.Items.Add(rv);
+			return rv;
+		}
 		public static void RemoveEmpy(this MenuFlyout menu)
 		{
 			for (int i = menu.Items.Count; --i >= 0;)

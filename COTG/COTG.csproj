@@ -219,6 +219,7 @@
     <Compile Include="Activation\SchemeActivationHandler.cs" />
     <Compile Include="Activation\ShareTargetActivationHandler.cs" />
     <Compile Include="Activation\WebToAppLinkActivationHandler.cs" />
+    <Compile Include="Bookmarks.cs" />
     <Compile Include="CnVDiscord\Bridge.cs" />
     <Compile Include="CnVDiscord\ConfigFile.cs" />
     <Compile Include="CnVDiscord\Discord.cs" />

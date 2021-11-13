@@ -192,7 +192,7 @@ namespace COTG.Draw
 						float blendT = ((dt)*0.333f).Frac();
 						var bonus = (dt).Abs().Saturate().Bezier(0,1,0,0);
 
-						if(cur.id==next.id)
+						if(cur.id==next.id || ((next.bl==cur.bl)&&(!cur.isRes)))
 						{
 							if(next.bl != cur.bl)
 							{
@@ -232,7 +232,7 @@ namespace COTG.Draw
 									fontA = t.Bezier(1,1,0);// prior number out	
 								}
 								var z = bonus*(0.5f/64.0f);
-								DrawBuilding(iAlpha,z*0.5f,fontScale,cs,cur,Layer.tileCity,(int)(alpha*fontA*255f),bl,bidOverride);
+								DrawBuilding(iAlpha,z*0.5f,fontScale,cs,next,Layer.tileCity,(int)(alpha*fontA*255f),bl,bidOverride);
 								if(blendOp > 0)
 								{
 									// upgrade

@@ -889,12 +889,7 @@ namespace COTG.Views
 						Status("Doesn't fit there", dryRun);
 						return;
 					}
-					if ((City.GetBuild().HasBuildOps(bspot) || City.GetBuild().HasBuildOps(source)) && !isPlanner)
-					{
-						Status($"Cannot move a building that is being rennovated", dryRun);
-						return;
-					}
-
+					
 
 					if (dryRun)
 					{

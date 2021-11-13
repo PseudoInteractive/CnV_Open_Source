@@ -84,8 +84,21 @@ namespace COTG.Game
 		 };
 	}
 
-	public class AttackPlanCity : IEquatable<AttackPlanCity>
+	public class AttackPlanCity : IEquatable<AttackPlanCity>,IANotifyPropertyChanged
 	{
+		#region PropertyChanged
+		public void CallPropertyChanged(string members = null)
+		{
+			PropertyChanged?.Invoke(this,new PropertyChangedEventArgs(members));
+		}
+		public void OnPropertyChanged(string member = null)
+		{
+			if(PropertyChanged is not null) ((IANotifyPropertyChanged)this).IOnPropertyChanged();
+		}
+
+		public event PropertyChangedEventHandler PropertyChanged;
+		#endregion
+
 		[JsonInclude]
 		public int cid; // spot that this refers to
 		[JsonInclude]

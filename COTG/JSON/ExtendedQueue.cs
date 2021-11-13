@@ -61,6 +61,7 @@ public enum BuildOp
 	demo,
 	upgrade,
 	downgrade,
+	move,
 }
 
 [DebuggerDisplay($"{{{nameof(GetDebuggerDisplay)}(),nq}}")]
@@ -102,10 +103,12 @@ public readonly struct BuildQueueItem:IEquatable<BuildQueueItem>
 	//public bool isBuild => slvl == 0;
 	public readonly BuildingDef def => BuildingDef.all[bid];
 	public readonly bool isRes => BuildingDef.IsBidRes(bid);
-	public readonly bool isDemo => elvl == 0;
+	public readonly bool isDemo => elvl == 0 && (slvl != 0 || BuildingDef.IsBidRes(bid) ); // red demo is 0=>0
 	public readonly bool isNop => slvl == 255; // special token for noop
 	public readonly string buildingName => def.Bn;
 	public readonly int proto => def.Proto;
+	public readonly bool isMovePart0 => (slvl == elvl)&&(!BuildingDef.IsBidRes(bid));  // move from is 0,0, swap is both
+
 	public readonly bool isBuild
 	{
 		get {
@@ -128,6 +131,7 @@ public readonly struct BuildQueueItem:IEquatable<BuildQueueItem>
 	public readonly bool isUpgrade => slvl < elvl && slvl != 0;
 	public readonly bool isDowngrade => slvl > elvl && elvl != 0;
 	public readonly BuildOp op =>
+		isMovePart0 ? BuildOp.move:
 		isDemo ? BuildOp.demo :
 		isBuild ? BuildOp.build :
 		isNop ? BuildOp.nop :
@@ -196,10 +200,11 @@ public readonly struct BuildQueueItem:IEquatable<BuildQueueItem>
 		{
 			id = 0;
 		}
-		else if(isBuild)
+		else if(isBuild || isMovePart0)
 		{
 			id = BuildingDef.BidToId(bid); // building id changes
 		}
+
 		else
 		{
 			// upgrade or downgrade
@@ -454,7 +459,41 @@ public class ExtendedQueue:IDisposable
 
 								// do we have to wait on this on?
 								// - towers before wall
-								if(i.isBuild)
+								if (i.isMovePart0)
+								{
+									Assert(offset+1 < queue.count);
+									var iNext = queue.v[offset+1];
+									if (iNext.elvl == 0 )
+									{
+										// move
+										if(!await DoMove(cid,i.bspot,iNext.bspot))
+											goto failed;
+									}
+									else
+									{
+										var scratch = city.FindAnyFreeSpot(i.bspot);
+										if (scratch == 0)
+										{
+											goto failed;
+										}
+
+										if(!await DoMove(cid,iNext.bspot,scratch))
+											goto failed;
+										if(!await DoMove(cid,i.bspot,iNext.bspot))
+											goto failed;
+										if(!await DoMove(cid,scratch,i.bspot))
+											goto failed;
+
+									}
+									RemoveAt(offset);
+									RemoveAt(offset);
+									continue;
+									failed:
+									offset += 2;
+									continue;
+
+								}
+								else if(i.isBuild)
 								{
 									anyBuildsPending = true;
 									if(i.def.isTower)

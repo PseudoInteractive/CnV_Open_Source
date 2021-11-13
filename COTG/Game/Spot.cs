@@ -49,6 +49,8 @@ using System.Net.Http.Json;
 
 namespace COTG.Game
 {
+	using DateTimePicker = Views.DateTimePicker;
+
 	//public interface IKeyedItem
 	//{
 	//  public  int GetKey();
@@ -707,7 +709,7 @@ namespace COTG.Game
 			}
 			else if (pt.Properties.IsRightButtonPressed)
 			{
-				if (modifiers.IsShiftOrControl())
+				if (!modifiers.IsShiftOrControl())
 					SetFocus(false, true, true);
 				ShowContextMenu(uie, pt.Position);
 
@@ -1660,93 +1662,91 @@ namespace COTG.Game
 		{
 			ShowReturnAt(true);
 		}
-		
+
 		public async Task ShowReturnAt(bool wantDialog)
 		{
-			try
+
+
+
+
+			if (!IsBuild(cid))
 			{
-				await App.uiSema.WaitAsync();
-
-				if (!IsBuild(cid))
-				{
-					await JSClient.CitySwitch(cid, lazyMove: true, false, false, waitOnChange: true);
-					await Task.Delay(1500);
-				}
-				App.DispatchOnUIThreadLow(async () =>
+				await App.DispatchOnUIThreadExclusive(cid, async () =>
 				{
 
-					DateTimeOffset? time = null;
-					var ogaStr = await JSClient.view.ExecuteScriptAsync("getOGA()");
-					var jsDoc = JsonDocument.Parse(ogaStr);
-					foreach (var i in jsDoc.RootElement.EnumerateArray())
+					try
 					{
-						try
+						DateTimeOffset? time = null;
+						var ogaStr = await JSClient.view.ExecuteScriptAsync("getOGA()");
+						var jsDoc = JsonDocument.Parse(ogaStr.Replace("\\\"","\"").Trim('"'));
+						foreach (var i in jsDoc.RootElement.EnumerateArray())
 						{
-							var type = i[0].GetAsInt();
-							if (type == 5) // raid
-								continue;
-							Trace(type);
-							var timing = i[6].GetAsString();
-							var id = timing.IndexOf("Departs:");
-							if (id == -1)
-								continue;
-							timing = timing.Substring(id + 9);
-							var t = JSClient.ServerTime(); ;
-							var today = timing.StartsWith("Today");
-							var tomorrow = timing.StartsWith("Tomorrow");
-							if (today || tomorrow)
+							try
 							{
-								timing = today ? timing.Substring(6) : timing.Substring(9);
-								var hr = int.Parse(timing.Substring(0, 2));
-								var min = int.Parse(timing.Substring(3, 2));
-								var sec = int.Parse(timing.Substring(6, 2));
-								t = new DateTimeOffset(t.Year, t.Month, t.Day, hr, min, sec, TimeSpan.Zero);
-								if (tomorrow)
-									t += TimeSpan.FromDays(1);
+								var type = i[0].GetAsInt();
+								if (type == 5) // raid
+									continue;
+								Trace(type);
+								var timing = i[6].GetAsString();
+								var id = timing.IndexOf("Departs:");
+								if (id == -1)
+									continue;
+								timing = timing.Substring(id + 9);
+								var t = JSClient.ServerTime();
+								;
+								var today = timing.StartsWith("Today");
+								var tomorrow = timing.StartsWith("Tomorrow");
+								if (today || tomorrow)
+								{
+									timing = today ? timing.Substring(6) : timing.Substring(9);
+									var hr = int.Parse(timing.Substring(0, 2));
+									var min = int.Parse(timing.Substring(3, 2));
+									var sec = int.Parse(timing.Substring(6, 2));
+									t = new DateTimeOffset(t.Year, t.Month, t.Day, hr, min, sec, TimeSpan.Zero);
+									if (tomorrow)
+										t += TimeSpan.FromDays(1);
+								}
+								else
+								{
+									t = timing.ParseDateTime(true);
+								}
+
+								Trace(t);
+								t -= TimeSpan.FromHours(SettingsPage.returnRaidsBias);
+								if (time == null || time > t)
+									time = t;
 							}
-							else
+							catch (Exception ex)
 							{
-								t = timing.ParseDateTime(true);
+								LogEx(ex);
 							}
-							Trace(t);
-							t -= TimeSpan.FromHours(SettingsPage.returnRaidsBias);
-							if (time == null || time > t)
-								time = t;
 						}
-						catch (Exception ex)
-						{
-							LogEx(ex);
-						}
-					}
 
 
-					if (wantDialog)
-					{
-						(time, var okay) = await Views.DateTimePicker.ShowAsync("Return By:", time);
-						if (!okay)
-							return; // aborted
+						if (wantDialog)
+						{
+							(time, var okay) = await DateTimePicker.ShowAsync("Return By:", time);
+							if (!okay)
+								return; // aborted
+						}
+
+						if (time != null)
+						{
+							await Raiding.ReturnAt(cid, time.Value);
+							Note.Show($"{City.Get(cid).nameMarkdown} end raids at {time.Value.Format()}");
+						}
+						else
+						{
+							Note.Show($"{City.Get(cid).nameMarkdown} no scheduled outgoing");
+						}
 					}
-					if (time != null)
+					catch (Exception ex)
 					{
-						await Raiding.ReturnAt(cid, time.Value);
-						Note.Show($"{City.Get(cid).nameMarkdown} end raids at {time.Value.Format()}");
-					}
-					else
-					{
-						Note.Show($"{City.Get(cid).nameMarkdown} no scheduled outgoing");
+						LogEx(ex);
 					}
 				});
-			}
-			catch (Exception ex)
-			{
-				LogEx(ex, eventName: "OGA");
-			}
-			finally
-			{
-				App.uiSema.Release();
 
 			}
-
 		}
 
 		public bool isHubOrStorage => HasTag(Tags.Hub) || HasTag(Tags.Storage);
@@ -1990,10 +1990,10 @@ namespace COTG.Game
 				}
 				{
 					var sel = Spot.GetSelectedForContextMenu(cid, false);
-					if (AttackTab.instance.isFocused)
 					{
 						var multiString = sel.Count > 1 ? $" _x {sel.Count} selected" : "";
-						var afly = AApp.AddSubMenu(flyout, "Attack Planner");
+						aWar.AddItem( "Cancel Attacks..", CancelAttacks);
+						var afly = aWar.AddSubMenu( "Attack Planner");
 						if (!Alliance.IsAllyOrNap(this.allianceId))
 						{
 							afly.AddItem("Add as Target" + multiString, (_, _) => AttackTab.AddTarget(sel));
@@ -2087,6 +2087,26 @@ namespace COTG.Game
 
 			//   flyout.XamlRoot = uie.XamlRoot;
 			flyout.ShowAt(uie, position);
+		}
+
+		private async void CancelAttacks(object sender, RoutedEventArgs e)
+		{
+			var ogaStr = await JSClient.view.ExecuteScriptAsync("getOGA()");
+			var js = JsonDocument.Parse(ogaStr.Replace("\\\"","\"").Trim('"'));
+			
+	
+			foreach(var (i,o) in new JsonArrayEnumerator(js.RootElement) )
+			{
+				if(o[2].TryGetInt64(out var xx))
+				{
+					await Post.CancelAttack(cid,xx);
+
+
+				}
+
+				Trace(i);
+				Trace(o);
+			}
 		}
 
 		public static async void CoordsToChat(int _cid)

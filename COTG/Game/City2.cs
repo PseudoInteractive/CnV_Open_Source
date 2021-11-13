@@ -419,6 +419,25 @@ namespace COTG.Game
 			return rv;
 
 		}
+		public async Task<int> EnqueueMove(short spotFrom, short spotTo)
+		{
+			var b = postQueueBuildings[spotFrom];
+			await Enqueue(new BuildQueueItem(b.bl,b.bl,b.bid,spotTo,0,true));
+			await Enqueue(new BuildQueueItem(0,0,0,spotFrom,0,true));
+
+			return 0;
+
+		}
+		public async Task<int> EnqueueSwap(short spotFrom,short spotTo)
+		{
+			var bFrom = postQueueBuildings[spotFrom];
+			var bTo = postQueueBuildings[spotTo];
+			await Enqueue(new BuildQueueItem(bFrom.bl,bFrom.bl,bFrom.bid,spotTo,0,true));
+			await Enqueue(new BuildQueueItem(bTo.bl,bTo.bl,bTo.bid,spotFrom,0,true));
+
+			return 0;
+
+		}
 		//private void Upgrade_Click(object sender, RoutedEventArgs e)
 		//{
 
@@ -608,8 +627,7 @@ namespace COTG.Game
 						{
 							// two points for ourbuilding is also needed there
 							var score = ((overlayBid == curBid) ? 2 : 1);
-							if (!HasBuildOps(xy))
-								score += 8;
+							
 							if (score > takeScore)
 							{
 								takeScore = score;
@@ -621,8 +639,6 @@ namespace COTG.Game
 						if (overlayBid == curBid && curBid != 0)
 						{
 							var score = (xyBuilding == desBid) ? 4 : (xyBuilding == 0) ? 3 : postBuildings[xy].isBuilding ? 2 : 1;
-							if (!HasBuildOps(xy))
-								score += 8;
 							if (score > putScore)
 							{
 								putScore = score;
@@ -660,7 +676,7 @@ namespace COTG.Game
 							return rv;
 						}
 					}
-					else if (takeScore > 0 && searchForSpare)
+					else if (takeScore > 0 && searchForSpare )
 					{
 						Status($"Found an unneeded {desName}, will move it to the right spot for you", dryRun);
 
@@ -888,9 +904,7 @@ namespace COTG.Game
 					if (bld.bl < bestLevel)
 					{
 						// is it not being modified?
-						if (HasBuildOps(spot))
-							continue;
-
+						
 						bestLevel = bld.bl;
 						bestSpot = spot;
 					}
@@ -926,8 +940,6 @@ namespace COTG.Game
 					continue;
 				if (build.GetLayoutBid(findSpotOffset) != 0)
 					continue;
-				if (HasBuildOps(findSpotOffset))
-					continue;
 				return findSpotOffset;
 			}
 			if (verbose)
@@ -945,23 +957,14 @@ namespace COTG.Game
 
 				if (overlayBid == xyBuilding || xyBuilding != bid)
 					continue;
-				if (HasBuildOps(xy) && !isPlanner)
-				{
-					Status($"{postQueueBuildings[xy].name} at {IdToXY(xy).bspotToString()} is desired, but it is being rennovated, please wait or cancel build ops for best resuts", dryRun);
-					rv = -1;
-					continue;
-				}
+			
 				return xy;
 			}
 			return rv;
 
 		}
 
-		public bool HasBuildOps(int bspot)
-		{
-			return (IterateQueue().Any(a => a.bspot == bspot));
-
-		}
+		
 
 		public async Task<bool> MoveBuilding(int a, int b, bool dryRun)
 		{
@@ -976,16 +979,7 @@ namespace COTG.Game
 			{
 				var bds = buildings;
 
-				if (HasBuildOps(a) && !isPlanner)
-				{
-					Status($"Cannot move a building that is being rennovated, please wait or cancel build ops on {bds[a].name} at {IdToXY(a).bspotToString()} or wait", dryRun);
-					return false;
-				}
-				if (HasBuildOps(b) && !isPlanner)
-				{
-					Status($"Cannot move a building to a spot that is being rennovated, please wait or cancel build ops on {bds[b].name} at {IdToXY(b).bspotToString()} or wait for best results", dryRun);
-					return false;
-				}
+				
 				if (Player.moveSlots <= 0 && !isPlanner)
 				{
 					Status($"No move spots", dryRun);
@@ -998,17 +992,7 @@ namespace COTG.Game
 					var rv = true;
 					if (!dryRun)
 					{
-						AUtil.Swap(ref bds[b], ref bds[a]);
-						var postBuildings = postQueueBuildings;
-						AUtil.Swap(ref postBuildings[b],ref postBuildings[a]);
-
-						{
-							rv = await Move(a, b);
-
-							//	await Task.Delay(200);
-							--Player.moveSlots;
-							await Task.Delay(200);
-						}
+						EnqueueMove((short)a,(short)b);
 						
 						// I hope that these operations are what I expect with references
 
@@ -1030,22 +1014,22 @@ namespace COTG.Game
 			}
 		}
 
-		async Task<bool> Move(int from, int to)
-		{
-			Assert(!isPlanner);
-			var s = await Services.Post.SendForText("includes/mBu.php", $"a={from}&b={to}&c={cid}", World.CidToPlayerOrMe(cid));
-			if ((int.TryParse(s.Trim(), System.Globalization.NumberStyles.Any, System.Globalization.NumberFormatInfo.InvariantInfo, out var i) &&
+		
 
-				(i >= City.bidMin && i <= City.bidMax)))
+		public static async Task<bool> DoMove(int cid,int @from, int to)
+		{
+			
+			var s = await Services.Post.SendForText("includes/mBu.php", $"a={to}&b={@from}&c={cid}", World.CidToPlayerOrMe(cid));
+			if(s.Trim().TryParseInt(out var i)&&(i >= City.bidMin && i <= City.bidMax))
 			{
+				--Player.moveSlots;
 				return true;
 			}
 			else
 			{
-				Trace($"Invalid Move {i}");
-				return false;
+				Trace($"Inalid Move {cid.AsCity()}: {from}<=>{to}");
 			}
-
+			return false;
 		}
 
 		public async Task<bool> SwapBuilding(int a, int b, bool dryRun)
@@ -1053,50 +1037,17 @@ namespace COTG.Game
 			if (!isPlanner)
 			{
 				var bds = buildings;
-				if (HasBuildOps(a) || HasBuildOps(b))
-				{
-					{
-						Status($"Cannot move a building that is being rennovated, please wait or cancel build ops on {bds[a].name} at {IdToXY(a).bspotToString()} for best results", dryRun);
-					}
-					if (HasBuildOps(b))
-					{
-						Status($"Cannot move a building that is being rennovated, please wait or cancel build ops on {bds[b].name} at {IdToXY(b).bspotToString()} for best results", dryRun);
-					}
-
-					return false;
-				}
+				
 				if (Player.moveSlots >= 3)
 				{
 					// I hope that these operations are what I expect with references
 					Status($"Swap {bds[b].name} and {bds[a].name} ({Player.moveSlots} moves left) ", dryRun);
 					if (!dryRun)
 					{
+						EnqueueSwap((short)a, (short) b);
+						
 
-						AUtil.Swap(ref bds[a], ref bds[b]);
-						var postBuildings = postQueueBuildings;
-						AUtil.Swap(ref postBuildings[b],ref postBuildings[a]);
-
-						{
-							var scratch = FindAnyFreeSpot(a);
-							if (scratch == 0)
-								return false;
-
-							--Player.moveSlots;
-							if (!await Move(a, scratch))
-								return false;
-							--Player.moveSlots;
-							if (!await Move(b, a))
-								return false;
-							--Player.moveSlots;
-							if (!await Move(scratch, b))
-							{
-								Note.Show("Failed to move for some reason?  Was the city building?");
-								return false;
-							}
-							//BuildingsOrQueueChanged();
-							await Task.Delay(200);
-
-						}
+						
 
 					}
 					return true;

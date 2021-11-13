@@ -107,32 +107,7 @@ namespace COTG.Helpers
 			yield break;
 
         }
-		static public IEnumerator<(int i,JsonElement jse) > EnumerateArrayOrObjectWithIndex(this JsonElement e)
-		{
-			int counter = 0;
-			if (e.ValueKind == JsonValueKind.Array)
-			{
-				foreach (var i in e.EnumerateArray())
-				{
-					yield return (counter++,i);
-				}
-			}
-			else if (e.ValueKind == JsonValueKind.Object)
-			{
-				foreach (var i in e.EnumerateObject())
-				{
-					int.TryParse(i.Name, out var o);
-					yield return (o,i.Value);
-				}
-			}
-			else
-			{
-				//          Log($"Not array or object {e.ToString()}");
-				Assert(false);
-			}
-			yield break;
-
-		}
+		
 
 		public static float GetAsFloat(this JsonElement js, string prop)
         {
@@ -437,6 +412,38 @@ namespace COTG.Helpers
 				sb.Append('"');
 
 			return sb.ToString();
+		}
+	}
+
+	public record JsonArrayEnumerator(JsonElement e)
+	{
+
+		
+		public IEnumerator<(int? i, JsonElement jse)>  GetEnumerator()
+		{
+			int counter = 0;
+			if(e.ValueKind == JsonValueKind.Array)
+			{
+				foreach(var i in e.EnumerateArray())
+				{
+					yield return (counter++, i);
+				}
+			}
+			else if(e.ValueKind == JsonValueKind.Object)
+			{
+				foreach(var i in e.EnumerateObject())
+				{
+					var rv = i.Name.ParseInt();
+					yield return (rv, i.Value);
+				}
+			}
+			else
+			{
+				//          Log($"Not array or object {e.ToString()}");
+				Assert(false);
+			}
+			yield break;
+
 		}
 	}
 

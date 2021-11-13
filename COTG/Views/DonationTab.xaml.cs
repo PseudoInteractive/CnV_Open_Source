@@ -56,7 +56,7 @@ namespace COTG.Views
 			var reserveCartsFilter = DonationTab.reserveCarts;
 			if(DonationTab.IsVisible())
 			{
-				instance.donationGridSource.Set( l.Where((city) => city.cartsHome >= reserveCartsFilter).OrderBy(a=>a.cont).ThenByDescending(a => a.cartsHome) );
+				instance.donationGridSource.Set( l.Where((city) => city.cartsHome >= reserveCartsFilter).OrderBy(a=>a.cont).ThenByDescending(a => (a.cartsHome*1000).Min(a.stone+a.wood) ) );
 			}
 		}
 		

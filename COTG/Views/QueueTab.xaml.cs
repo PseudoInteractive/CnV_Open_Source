@@ -642,8 +642,7 @@ namespace COTG.Game
 									var id = XYToId(c);
 									if (!IsBuildingSpot(id))
 										continue;
-									if (HasBuildOps(id))
-										continue;
+									
 									var bid = GetLayoutBid(id);
 									if (bid == 0)
 										continue;

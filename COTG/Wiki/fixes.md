@@ -352,31 +352,25 @@
 ### Updates:
 
 -   Added [War-\>Return all reinforcements] to city context menu
-
     -   Shows reinforcements for all cites
-
 -   Reinforcements are sorted based on their source or target city’s incoming.
 
     -   The following order is used:
-
         -   Senator Sieges with Capture
-
         -   Senators Sieges with no capture
-
         -   Art
-
         -   Naked Sieges
-
         -   Unknown incoming
-
         -   I do not remember the rest
     -   The order in which buildings are built are now weighted by their construction time while doing teardown.  So for a shipper, you will get the ports earlier (when you have more CS)
+    - Added [War] => [Cancel Attacks] to cancel all pending attacks at once
 
 ### Fixes:
 
 -   Various spreadsheet controls did not refresh their contents when doing a
-    refresh (control-r or the refresh button)
-
+    refresh (control-r or the refresh button) (or with shift for high powered refresh)
 -   Autobuild would occasionally try to build more than one castle
 -   Shrine Finder would not work if your internet connection was too fast (COTG would throttle you)
 -   Attack sender sends emails as it should
+-   Return for incoming works again
+-   A bunch more that hopefully worked.

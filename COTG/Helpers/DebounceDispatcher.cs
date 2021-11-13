@@ -111,7 +111,7 @@ namespace COTG
 					   }
 					   else
 					   {
-						   await Task.Delay( (int)(dt + 32) ).ConfigureAwait(false);
+						   await Task.Delay( ((int)(dt + 32)).Min(200) ).ConfigureAwait(false);
 					   }
 				   }
 				   try
@@ -184,7 +184,7 @@ namespace COTG
 
 						new Debounce(action) { debounceDelay = debounceT,throttleDelay = throttleT,runOnUiThread = runOnUIThread }
 					);
-				token.Go();
+				token.Go(debounceT);
 
 			}
 		
