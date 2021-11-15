@@ -5,7 +5,6 @@ using System;
 using System.Collections.Generic;
 using System.Text.Json;
 using System.Threading.Tasks;
-using System.Web;
 
 using static COTG.Debug;
 
@@ -220,7 +219,7 @@ namespace COTG.Game
 					var alName = _al;
 					// var al = _al;
 					// does this not get a complete list of allianceas?
-					using (var jsa = await Post.SendForJson("includes/gAd.php", "a=" + HttpUtility.UrlEncode(alName)))
+					using (var jsa = await Post.SendForJson("includes/gAd.php", "a=" + System.Web.HttpUtility.UrlEncode(alName)))
 					{
 						if (jsa != null)
 						{

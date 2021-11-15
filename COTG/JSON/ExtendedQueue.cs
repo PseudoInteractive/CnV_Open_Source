@@ -489,7 +489,10 @@ public class ExtendedQueue:IDisposable
 									RemoveAt(offset);
 									continue;
 									failed:
-									offset += 2;
+									Assert(false);
+//									offset += 2;
+									RemoveAt(offset);
+									RemoveAt(offset);
 									continue;
 
 								}
@@ -1090,6 +1093,8 @@ public static class BuildQueue
 			}
 			Assert(initialized);
 			var op = new BuildQueueItem(a.slvl,a.elvl,a.bid,a.bspot);
+			cid.AsCity().BuildingsOrQueueChanged();
+
 			if(a.bid == City.bidTemple)
 			{
 				if(a.slvl == 0)
@@ -1104,7 +1109,7 @@ public static class BuildQueue
 				}
 				return;
 			}
-			if(a.bid == City.bidCastle && a.slvl == 0)
+			if(a.bid == City.bidCastle && a.isBuild)
 			{
 				Assert(cid == City.build);
 				var result = await App.DispatchOnUIThreadTask(async () =>

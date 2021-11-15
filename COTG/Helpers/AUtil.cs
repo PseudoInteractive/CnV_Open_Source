@@ -41,6 +41,20 @@ namespace COTG
 			}
 			return rv;
 		}
+		public static string CollectionToString<T>(this IEnumerable<T> collection, string separator = ",", bool ignoreDefault=true)
+		{
+			var sep = string.Empty;
+			string rv=string.Empty;
+			foreach(var i in collection)
+			{
+				if (!ignoreDefault ||  (i is not null) )
+				{
+					rv = rv + sep + i.ToString();
+					sep = separator;
+				}
+			}
+			return rv;
+		}
 		public static char BeyondHex(int a)
 		{
 		
@@ -602,7 +616,22 @@ namespace COTG
 					return i;
 			return -1;
 		}
-		public static ImmutableArray<IANotifyPropertyChanged> propertyChanges = ImmutableArray<IANotifyPropertyChanged>.Empty;
+
+		public record struct PropertyChange(IANotifyPropertyChanged me, string member);
+
+		public class PropertyChangeComparer : IEqualityComparer<PropertyChange>
+		{
+			public bool Equals(PropertyChange x, PropertyChange y)
+			{
+				return Equals(x.me, y.me);
+			}
+
+			public int GetHashCode(PropertyChange obj)
+			{
+				return (obj.me != null ? obj.me.GetHashCode() : 0);
+			}
+		}
+		public static ImmutableArray<PropertyChange> propertyChanges = ImmutableArray<PropertyChange>.Empty;
 		//public void OnPropertyChanged(string member = null)
 		//{
 		//	if(PropertyChanged is not null) ((IANotifyPropertyChanged)this).IOnPropertyChanged();
@@ -616,10 +645,10 @@ namespace COTG
 				for(;;)
 				{
 					var i = propertyChanges.FirstOrDefault();
-					if(i == null)
+					if(i.me == null)
 						break;
 					propertyChanges=propertyChanges.RemoveAt(0);
-					i.CallPropertyChanged();
+					i.me.CallPropertyChanged(i.member);
 					if(--counter <= 0)
 						break;
 				}
@@ -646,19 +675,29 @@ namespace COTG
 		//	PropertyChanged?.Invoke(this,new PropertyChangedEventArgs(members));
 		//}
 		
-		public void IOnPropertyChanged(string members = null, bool addHead=false)
+		public void IOnPropertyChanged(string member = null, bool addHead=false)
 		{
 		//	if( ((INotifyPropertyChanged)this).PropertyChanged is not null)
 			{
-				Note.ShowQuiet($"PropChange: {this} {members}");
+				Note.ShowQuiet($"PropChange: {this} {member}");
 
-				if(!AUtil.propertyChanges.Contains(this))
+				var id = AUtil.propertyChanges.FindIndex(x => x.me == this);
+				if(id == -1)
 				{
 					if(addHead)
-						AUtil.propertyChanges=AUtil.propertyChanges.Insert(0,this);
+						AUtil.propertyChanges=AUtil.propertyChanges.Insert(0,new (this,member) );
 					else
-						AUtil.propertyChanges=AUtil.propertyChanges.Add(this); 
+						AUtil.propertyChanges=AUtil.propertyChanges.Add(new(this,member)); 
 					AUtil.ChangesDebounce.Go();
+				}
+				else
+				{
+					var ch = AUtil.propertyChanges[id];
+					if(ch.member == member)
+						return;
+
+					AUtil.propertyChanges = AUtil.propertyChanges.Replace(ch,new AUtil.PropertyChange(this,string.Empty), new AUtil.PropertyChangeComparer() );
+					
 				}
 			}
 		}

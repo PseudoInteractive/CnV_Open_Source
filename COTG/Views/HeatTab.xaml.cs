@@ -308,6 +308,8 @@ namespace COTG.Views
 					for (int counter = 0; counter < 256; ++counter)
 					{
 						++deltaOffset;
+						if (delta.changes.Length == 0)
+							break;
 						var id = delta.changes[deltaOffset * 2 % delta.changes.Length];
 						if (!Spot.TestContinentFilterPacked(World.PackedIdToPackedContinent(id)))
 							continue;

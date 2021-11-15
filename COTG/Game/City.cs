@@ -1840,7 +1840,7 @@ namespace COTG.Game
 			var max = -1;
 			var count = 0;
 			var bds = buildings;
-			foreach(var bspot in CityBuild.buildingSpots)
+			foreach(var bspot in CityBuild.buildingSpotsLand)
 			{
 				var bi = bds[bspot];
 				if (bi.id == 0 || bi.bl == 0)
@@ -2257,7 +2257,7 @@ namespace COTG.Game
 
 					var count = 0;
 
-				foreach(var i in CityBuild.buildingSpots)
+				foreach(var i in CityBuild.buildingSpotsLand)
 				{
 					var b = bd[i];
 					if(b.id !=0 && b.bl > 0 )
@@ -2280,8 +2280,6 @@ namespace COTG.Game
 			get => autoTowers;
 			set => CitySettings.SetAutoTowersOrWalls(cid, autoTowers: value);
 		}
-
-
 
 	}
 	public static class CityHelpers

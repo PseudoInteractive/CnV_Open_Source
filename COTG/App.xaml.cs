@@ -51,7 +51,7 @@ using Windows.System;
 //using Windows.UI.Input;
 using Microsoft.UI.Dispatching;
 using DispatcherQueueHandler = Microsoft.UI.Dispatching.DispatcherQueueHandler;
-using DispatcherQueuePriority= Microsoft.UI.Dispatching.DispatcherQueuePriority;
+using DispatcherQueuePriority = Microsoft.UI.Dispatching.DispatcherQueuePriority;
 using ContentDialog = Microsoft.UI.Xaml.Controls.ContentDialog;
 using ContentDialogResult = Microsoft.UI.Xaml.Controls.ContentDialogResult;
 using MenuFlyout = Microsoft.UI.Xaml.Controls.MenuFlyout;

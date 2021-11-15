@@ -58,8 +58,13 @@ namespace COTG.Views
 
 		public static bool IsShoreOrWaterSpot(ushort r) => shoreSpots.Contains(r) | waterSpots.Contains(r);
 
-		public static HashSet<ushort> buildingSpots = new HashSet<ushort>(Enumerable.Range(1, citySpotCount - 1).Select(a => (ushort)a).
+		public static HashSet<ushort> buildingSpotsLand = new HashSet<ushort>(Enumerable.Range(1, citySpotCount - 1).Select(a => (ushort)a).
 			Where(a => !(wallSpots.Contains(a) | innerTowerSpots.Contains(a) | outerTowerSpots.Contains(a) | (a == City.bspotTownHall))));
+
+		public static HashSet<ushort> buildingSpotsWater = new HashSet<ushort>(Enumerable.Range(1,citySpotCount - 1).Select(a => (ushort)a).
+			Where(a => !(wallSpots.Contains(a) | innerTowerSpots.Contains(a) |  waterSpots.Contains(a) | outerTowerSpots.Contains(a) | (a == City.bspotTownHall))));
+
+		public static HashSet<ushort> GetBuildingSpots(City city) => city.isOnWater ? buildingSpotsWater : buildingSpotsLand;
 
 		public enum SpotType
 		{
@@ -99,15 +104,15 @@ namespace COTG.Views
 				case SpotType.outerTower:
 					return outerTowerSpots;
 				case SpotType.shore: return shoreSpots;
-				case SpotType.building: return buildingSpots;
+				case SpotType.building: return buildingSpotsLand;
 				default:
-					return testFlag ? buildingSpots : emptySpotList; // how should this be properly handled?
+					return testFlag ? buildingSpotsLand : emptySpotList; // how should this be properly handled?
 			}
 		}
 
-		public static bool IsBuildingSpot(int spot) => buildingSpots.Contains((ushort)spot);
-		public static bool IsBuildingSpot(int spot, bool isWater) => buildingSpots.Contains((ushort)spot) && (!isWater || !(waterSpots.Contains((ushort)spot) || shoreSpots.Contains((ushort)spot)));
-		public static bool IsBuildingSpotOrTownHall(int spot) => buildingSpots.Contains((ushort)spot) | (spot == City.bspotTownHall);
+		public static bool IsBuildingSpot(int spot) => buildingSpotsLand.Contains((ushort)spot);
+		public static bool IsBuildingSpot(int spot, bool isWater) => buildingSpotsLand.Contains((ushort)spot) && (!isWater || !(waterSpots.Contains((ushort)spot) || shoreSpots.Contains((ushort)spot)));
+		public static bool IsBuildingSpotOrTownHall(int spot) => buildingSpotsLand.Contains((ushort)spot) | (spot == City.bspotTownHall);
 		public static bool IsBuildingSpot((int x, int y) cc) => IsBuildingSpot(XYToId(cc));
 		public static bool IsTowerSpot(int spot) => outerTowerSpots.Contains((ushort)spot) | innerTowerSpots.Contains((ushort)spot);
 		public static bool IsInnerTowerSpot(int spot) => innerTowerSpots.Contains((ushort)spot);

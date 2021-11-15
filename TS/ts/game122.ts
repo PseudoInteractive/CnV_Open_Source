@@ -61295,7 +61295,7 @@ function outer(){
 					A5y >> 1064978816);
 				var a8g = (d2 - N8g) / +A5y;
 				N6();
-				var P8g = $.post("/includes/" + __s[1341], { a: g8g, b: B8g, c: cid }); // "mBu.php",
+				var P8g = $.post("/includes/mBu.php", { a: g8g, b: B8g, c: cid }); // "mBu.php",
 				F6();
 				P8g.done(function (k9g) {
 					if (k9g == (1)) Y6(__s[6043]);

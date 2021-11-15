@@ -105,10 +105,12 @@ namespace COTG
 		public static void Trace(string s,
 		[System.Runtime.CompilerServices.CallerMemberName] string memberName = "",
 		[System.Runtime.CompilerServices.CallerFilePath] string sourceFilePath = "",
-		[System.Runtime.CompilerServices.CallerLineNumber] int sourceLineNumber = 0)
+		[System.Runtime.CompilerServices.CallerLineNumber] int sourceLineNumber = 0,
+			bool showNote=true,
+			bool outputDebug=true)
 		{
 			string msg = $"\n{App.dispatches0}-{App.dispatches1}!\n{sourceFilePath}({sourceLineNumber}): {timeStamp}: {memberName}\n{s}";
-			Note.Show(s);
+			Note.Show(s,showNote:showNote,showDebugOutput:outputDebug);
 			System.Diagnostics.Debug.WriteLine(msg,"Trace");
 			DumpStack(new StackTrace(1, true));
 			// System.Diagnostics.Debug.WriteLine(new StackTrace());
@@ -118,14 +120,11 @@ namespace COTG
 		public static void Trace<T>(T o,
 	   [System.Runtime.CompilerServices.CallerMemberName] string memberName = "",
 	   [System.Runtime.CompilerServices.CallerFilePath] string sourceFilePath = "",
-	   [System.Runtime.CompilerServices.CallerLineNumber] int sourceLineNumber = 0)
+	   [System.Runtime.CompilerServices.CallerLineNumber] int sourceLineNumber = 0,
+			bool showNote = true,
+			bool outputDebug = true)
 		{
-			var s = o.ToString();
-			string msg = $"\n{sourceFilePath}({sourceLineNumber}): {timeStamp}: {memberName}\n{s}";
-			Note.Show(s);
-			System.Diagnostics.Debug.WriteLine(msg,"TraceO");
-			DumpStack(new StackTrace(1, true));
-			// System.Diagnostics.Debug.WriteLine(new StackTrace());
+			Trace(o.ToString(), memberName, sourceFilePath, sourceLineNumber, showNote, outputDebug);
 		}
 
 		[Conditional("DEBUG")]

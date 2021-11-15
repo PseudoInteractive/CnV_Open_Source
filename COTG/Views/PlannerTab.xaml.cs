@@ -510,15 +510,23 @@ namespace COTG.Views
 			var hasInvalid = false;
 			int resHelpers = 0;
 			{
-				for(int id = 0;id < City.citySpotCount;++id)
+				if (city.isOnWater)
 				{
-					var bid = city.GetLayoutBid(id);
-					if(bid != 0 && bid != bidShipyard && bid != bidPort)
+					// Oops!
+
+				}
+				else
+				{
+					for (int id = 0; id < City.citySpotCount; ++id)
 					{
-						if(CityBuild.IsWaterSpot(id))
-							hasInvalid = true;
-						if(IsResHelper(bid))
-							++resHelpers;
+						var bid = city.GetLayoutBid(id);
+						if (bid != 0 && bid != bidShipyard && bid != bidPort)
+						{
+							if (CityBuild.IsWaterSpot(id))
+								hasInvalid = true;
+							if (IsResHelper(bid))
+								++resHelpers;
+						}
 					}
 				}
 			}

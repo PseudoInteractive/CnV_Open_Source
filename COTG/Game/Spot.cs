@@ -154,30 +154,40 @@ namespace COTG.Game
 					sb.Append(" - ");
 					sb.Append(remarks);
 				}
-				if (incoming.Length > 0)
+
+				sb.Append(statusString);
+				return sb.ToString();
+			}
+		}
+		public string statusString
+		{
+			get
+			{
+				string rv = string.Empty;
+				if(incoming.Length > 0)
 				{
 					var sieged = false;
 					var hasSen = false;
 					var hasArt = false;
-					foreach (var i in incoming)
+					foreach(var i in incoming)
 					{
-						if (i.isAttack)
+						if(i.isAttack)
 						{
 							sieged |= i.isSiege;
 							hasSen |= i.hasSenator;
 							hasArt |= i.hasArt;
 						}
 					}
-					sb.Append(sieged ? (hasArt && hasSen ? "(SA)" : hasArt ? "(A)" : hasSen ? "(S)" : "(n)") : "(i)");
+					rv += (sieged ? (hasArt && hasSen ? "(SA)" : hasArt ? "(A)" : hasSen ? "(S)" : "(n)") : "(i)");
 				}
-				if (outGoing!=OutGoing.none)
+				if(outGoing!=OutGoing.none)
 				{
-					sb.Append("(O)");
+					rv += "(O)";
 				}
 				if(!isAlly.GetValueOrDefault())
-					sb.Append("(?)");
+					rv += "(e)";
 
-				return sb.ToString();
+				return rv;
 			}
 		}
 		public string remarks { get; set; } = string.Empty; // only for city
@@ -1669,7 +1679,7 @@ namespace COTG.Game
 
 
 
-			if (!IsBuild(cid))
+			//if (!IsBuild(cid))
 			{
 				await App.DispatchOnUIThreadExclusive(cid, async () =>
 				{

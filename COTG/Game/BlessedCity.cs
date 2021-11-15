@@ -91,19 +91,27 @@ namespace COTG.Game
         }
 		public static async Task SendDonation(int senderCid,int targetCid, int woodToSend,int stoneToSend, bool useShips )
 		{
-			var sendType = useShips ? 2 : 1;
-			App.UpdateKeyStates();
-			var pid = World.CidToPlayerOrMe(senderCid);
-
-			var secret = $"JJx452Tdd{pid}sRAssa";
-            var reqF = $"{{\"a\":{woodToSend},\"b\":{stoneToSend},\"c\":0,\"d\":0,\"cid\":{senderCid},\"rcid\":{targetCid},\"t\":\"{sendType}\"}}"; // t==1 is land, t==2 is water
-			Note.Show($"Sent {woodToSend:N0} wood and {stoneToSend:N0} stone in {((woodToSend + stoneToSend + 999) / (sendType == 1 ? 1000 : 10000)):N0} {(sendType == 1 ? "carts" : "ships")} from {City.Get(senderCid).nameMarkdown}");
-			int count = App.IsKeyPressedShiftAndControl() ? 4 : 1;
-			var _sender = senderCity.cid;
-			for (int i = 0; i < count; ++i)
+			// Sender City might be null here
+			try
 			{
-				await Post.Get("includes/sndTtr.php", $"cid={_sender}&f=" + HttpUtility.UrlEncode(Aes.Encode(reqF, secret), Encoding.UTF8), pid);
-				await Task.Delay(450);
+				var sendType = useShips ? 2 : 1;
+				App.UpdateKeyStates();
+				var pid = World.CidToPlayerOrMe(senderCid);
+
+				var secret = $"JJx452Tdd{pid}sRAssa";
+				var reqF = $"{{\"a\":{woodToSend},\"b\":{stoneToSend},\"c\":0,\"d\":0,\"cid\":{senderCid},\"rcid\":{targetCid},\"t\":\"{sendType}\"}}"; // t==1 is land, t==2 is water
+				Note.Show($"Sent {woodToSend:N0} wood and {stoneToSend:N0} stone in {((woodToSend + stoneToSend + 999) / (sendType == 1 ? 1000 : 10000)):N0} {(sendType == 1 ? "carts" : "ships")} from {City.Get(senderCid).nameMarkdown}");
+				int count = App.IsKeyPressedShiftAndControl() ? 4 : 1;
+				var _sender = senderCid;
+				for (int i = 0; i < count; ++i)
+				{
+					await Post.Get("includes/sndTtr.php", $"cid={_sender}&f=" + HttpUtility.UrlEncode(Aes.Encode(reqF, secret), Encoding.UTF8), pid);
+					await Task.Delay(450);
+				}
+			}
+			catch (Exception e)
+			{
+				LogEx(e);
 			}
         }
 

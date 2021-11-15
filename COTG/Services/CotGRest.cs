@@ -745,58 +745,69 @@ namespace COTG.Services
 			int cityCount = 0;
 			int reinCount = 0;
 			int ts = 0;
-			foreach (var item in jsd.RootElement.EnumerateObject())
+			try
 			{
-				var cid = int.Parse(item.Name);
-				var spot = Spot.GetOrAdd(cid);
-				++cityCount;
-				foreach (var rein in item.Value[9].EnumerateArray())
+				if (jsd.RootElement.ValueKind == JsonValueKind.Object)
 				{
-					try
+					foreach (var item in jsd.RootElement.EnumerateObject())
 					{
-						var re = new Reinforcement();
-						re.targetCid = cid;
-						var targetCId = rein[1].GetAsInt();
-
-						Assert(targetCId == cid);
-						re.sourceCid = rein[15].GetAsInt();
-						Assert(re.sourceCid != targetCId);
-						// re.time = rein[9].ToString(
-						re.order = rein[10].GetAsInt64();
-						foreach (var ti in rein[8].EnumerateArray())
+						var cid = int.Parse(item.Name);
+						var spot = Spot.GetOrAdd(cid);
+						++cityCount;
+						foreach (var rein in item.Value[9].EnumerateArray())
 						{
-							var str = ti.GetAsString();
-							int tcEnd = 0;
-							while (IsDigitOrCommaOrMinus(str, tcEnd))
-								++tcEnd;
-							if (str.Substring(0, tcEnd).TryParseIntChecked(out var count))
+							try
 							{
-								//					var count = int.Parse(str.Substring(0, tcEnd), NumberStyles.Any);
-								var typeS = str.Substring(tcEnd + 1);
-								var tE = Game.Troops.ttNameWithCapsAndBatteringRam.IndexOf(typeS);
-								Add(ref re.troops, new TroopTypeCount(tE, count));
+								var re = new Reinforcement();
+								re.targetCid = cid;
+								var targetCId = rein[1].GetAsInt();
+
+								Assert(targetCId == cid);
+								re.sourceCid = rein[15].GetAsInt();
+								Assert(re.sourceCid != targetCId);
+								// re.time = rein[9].ToString(
+								re.order = rein[10].GetAsInt64();
+								foreach (var ti in rein[8].EnumerateArray())
+								{
+									var str = ti.GetAsString();
+									int tcEnd = 0;
+									while (IsDigitOrCommaOrMinus(str, tcEnd))
+										++tcEnd;
+									if (str.Substring(0, tcEnd).TryParseIntChecked(out var count))
+									{
+										//					var count = int.Parse(str.Substring(0, tcEnd), NumberStyles.Any);
+										var typeS = str.Substring(tcEnd + 1);
+										var tE = ttNameWithCapsAndBatteringRam.IndexOf(typeS);
+										Add(ref re.troops, new TroopTypeCount(tE, count));
+									}
+									else
+									{
+										Add(ref re.troops, new TroopTypeCount(0, -1));
+										Log("Bad string: " + ti.GetAsString());
+									}
+								}
+
+								ts += re.troops.TS();
+								spot.reinforcementsIn = spot.reinforcementsIn.ArrayAppend(re);
+								var source = Spot.GetOrAdd(re.sourceCid);
+								source.reinforcementsOut = source.reinforcementsOut.ArrayAppend(re);
+								++reinCount;
 							}
-							else
+							catch (Exception ex)
 							{
-								Add(ref re.troops, new TroopTypeCount(0, -1));
-								Log("Bad string: " + ti.GetAsString());
+								LogEx(ex);
+
 							}
+
 						}
-						ts += re.troops.TS();
-						spot.reinforcementsIn = spot.reinforcementsIn.ArrayAppend(re);
-						var source = Spot.GetOrAdd(re.sourceCid);
-						source.reinforcementsOut = source.reinforcementsOut.ArrayAppend(re);
-						++reinCount;
-					}
-					catch(Exception ex)
-					{
-						LogEx(ex);
+
 
 					}
-
 				}
-
-
+			}
+			catch (Exception e)
+			{
+				LogEx(e);
 			}
 			Note.Show($"Reinforcements updated {cityCount} cities reinforced with {reinCount} orders and {ts} TS");
 		}

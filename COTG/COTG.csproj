@@ -76,6 +76,7 @@
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="6.0.0" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="6.0.0" />
     <PackageReference Include="Microsoft.Extensions.Diagnostics.HealthChecks" Version="6.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="6.0.0" />
     <PackageReference Include="Microsoft.Extensions.Logging" Version="6.0.0" />
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="6.0.0" />
     <PackageReference Include="Microsoft.Extensions.Logging.Configuration" Version="6.0.0" />
@@ -100,11 +101,10 @@
     <PackageReference Include="SharpDX.DXGI" Version="4.2.0" />
     <PackageReference Include="SharpDX.MediaFoundation" Version="4.2.0" />
     <PackageReference Include="SharpGen.Runtime.COM" Version="2.0.0-beta.10" />
-    <PackageReference Include="Syncfusion.Chart.WinUI" Version="19.3.0.48" />
-    <PackageReference Include="Syncfusion.Core.WinUI" Version="19.3.0.48" />
-    <PackageReference Include="Syncfusion.Grid.WinUI" Version="19.3.0.48" />
-    <PackageReference Include="Syncfusion.Licensing" Version="19.3.0.48" />
-    <PackageReference Include="Syncfusion.Scheduler.WinUI" Version="19.3.0.48" />
+    <PackageReference Include="Syncfusion.Chart.WinUI" Version="19.3.0.53" />
+    <PackageReference Include="Syncfusion.Grid.WinUI" Version="19.3.0.53" />
+    <PackageReference Include="Syncfusion.Licensing" Version="19.3.0.53" />
+    <PackageReference Include="Syncfusion.Scheduler.WinUI" Version="19.3.0.53" />
     <PackageReference Include="System.Collections.Immutable" Version="6.0.0" />
     <PackageReference Include="System.Diagnostics.PerformanceCounter" Version="6.0.0" />
     <PackageReference Include="System.Drawing.Common" Version="6.0.0" />
@@ -212,6 +212,7 @@
     <Content Include="JS\J0EE" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Activation\ProtocolActivation.cs" />
     <Compile Include="Activation\ActivationHandler.cs" />
     <Compile Include="Activation\CommandLineActivationHandler.cs" />
     <Compile Include="Activation\SchemeActivationConfig.cs" />
@@ -227,6 +228,7 @@
     <Compile Include="CnVDiscord\PlayerHooks.cs" />
     <Compile Include="CnVDiscord\ServerBroadcastEventArgs.cs" />
     <Compile Include="CnVDiscord\Utils.cs" />
+    <Compile Include="Converters\CityConverters.cs" />
     <Compile Include="Converters\DateTimeFormatConverter.cs" />
     <Compile Include="Converters\IntConverter.cs" />
     <Compile Include="Draw\CityView.cs" />
@@ -316,11 +318,13 @@
     <Compile Include="JSON\TileSet.cs" />
     <Compile Include="JSON\TradeSettings.cs" />
     <Compile Include="JSON\TroopInfo.cs" />
+    <Compile Include="Models\ADataGrid.cs" />
     <Compile Include="Models\CityTapCommand.cs" />
     <Compile Include="Models\GoogleSheets.cs" />
     <Compile Include="Models\JsNative.cs" />
     <Compile Include="Models\JSPopup.cs" />
     <Compile Include="Note.cs" />
+    <Compile Include="Program.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
@@ -899,13 +903,13 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <Optimize>False</Optimize>
     <WarningLevel>4</WarningLevel>
-    <DefineConstants>DISABLE_XAML_GENERATED_BREAK_ON_UNHANDLED_EXCEPTION;CRASHES</DefineConstants>
+    <DefineConstants>DISABLE_XAML_GENERATED_BREAK_ON_UNHANDLED_EXCEPTION;DISABLE_XAML_GENERATED_MAIN;CRASHES</DefineConstants>
     <Deterministic>True</Deterministic>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <Optimize>True</Optimize>
     <WarningLevel>4</WarningLevel>
-    <DefineConstants>DISABLE_XAML_GENERATED_BREAK_ON_UNHANDLED_EXCEPTION;CRASHES</DefineConstants>
+    <DefineConstants>DISABLE_XAML_GENERATED_BREAK_ON_UNHANDLED_EXCEPTION;DISABLE_XAML_GENERATED_MAIN;CRASHES</DefineConstants>
     <Deterministic>True</Deterministic>
   </PropertyGroup>
   <ProjectExtensions />

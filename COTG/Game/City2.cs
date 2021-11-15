@@ -424,8 +424,10 @@ namespace COTG.Game
 			var b = postQueueBuildings[spotFrom];
 			await Enqueue(new BuildQueueItem(b.bl,b.bl,b.bid,spotTo,0,true));
 			await Enqueue(new BuildQueueItem(0,0,0,spotFrom,0,true));
+			Player.moveSlots -= 1;
 
-			return 0;
+
+			return 1;
 
 		}
 		public async Task<int> EnqueueSwap(short spotFrom,short spotTo)
@@ -434,6 +436,7 @@ namespace COTG.Game
 			var bTo = postQueueBuildings[spotTo];
 			await Enqueue(new BuildQueueItem(bFrom.bl,bFrom.bl,bFrom.bid,spotTo,0,true));
 			await Enqueue(new BuildQueueItem(bTo.bl,bTo.bl,bTo.bid,spotFrom,0,true));
+			Player.moveSlots -= 2;
 
 			return 0;
 
@@ -777,6 +780,7 @@ namespace COTG.Game
 										Status($"Swaping {b.def.Bn} and {desName} as they are mixed up ({Player.moveSlots} moves left)", dryRun);
 										if (!await SwapBuilding(bspot, putTo, dryRun))
 											return -1;
+										
 										// two way swap 
 										break;
 									}
@@ -980,12 +984,6 @@ namespace COTG.Game
 				var bds = buildings;
 
 				
-				if (Player.moveSlots <= 0 && !isPlanner)
-				{
-					Status($"No move spots", dryRun);
-					return false;
-				}
-				else
 				{
 					Status($"Move {bds[a].name} {IdToXY(a).bspotToString()} to {IdToXY(b).bspotToString()} ", dryRun);
 
@@ -1020,16 +1018,23 @@ namespace COTG.Game
 		{
 			
 			var s = await Services.Post.SendForText("includes/mBu.php", $"a={to}&b={@from}&c={cid}", World.CidToPlayerOrMe(cid));
-			if(s.Trim().TryParseInt(out var i)&&(i >= City.bidMin && i <= City.bidMax))
+			if(s.Trim().TryParseInt(out var i) && i > 10 )
 			{
-				--Player.moveSlots;
+			
 				return true;
 			}
 			else
 			{
-				Trace($"Inalid Move {cid.AsCity()}: {from}<=>{to}");
+				var isBuild = City.IsBuild(cid);
+				if (isBuild)
+				{
+					Trace(
+						$"*Invalid Move* Error code {i} (4 means out of move slots, you _might_ have {Player.moveSlots} left) at {cid.AsCity()}: {from}<=>{to}"
+						);
+				}
+
+				return false;
 			}
-			return false;
 		}
 
 		public async Task<bool> SwapBuilding(int a, int b, bool dryRun)
@@ -1038,24 +1043,17 @@ namespace COTG.Game
 			{
 				var bds = buildings;
 				
-				if (Player.moveSlots >= 3)
 				{
 					// I hope that these operations are what I expect with references
 					Status($"Swap {bds[b].name} and {bds[a].name} ({Player.moveSlots} moves left) ", dryRun);
 					if (!dryRun)
 					{
 						EnqueueSwap((short)a, (short) b);
-						
 
 						
 
 					}
 					return true;
-				}
-				else
-				{
-					Status("Note enough move spots (press shift F5 if this is not true)", dryRun);
-					return false;
 				}
 			}
 			else
@@ -1064,7 +1062,7 @@ namespace COTG.Game
 				if (!dryRun)
 				{
 					AUtil.Swap(ref layoutWritable[a], ref layoutWritable[b]);
-					return await PlannerTab.BuildingsChanged(this);
+					await PlannerTab.BuildingsChanged(this);
 				}
 				return true;
 

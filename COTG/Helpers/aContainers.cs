@@ -23,7 +23,7 @@ namespace COTG
 {
 	public abstract class NotifyCollectionBase: INotifyPropertyChanged, INotifyCollectionChanged 
 	{
-	public static AsyncReaderWriterLock _lock = new();
+	//public static AsyncReaderWriterLock _lock = new();
 		public static long GetDataHash<T>(IEnumerable<T> c)
 		{
 			var hash = 0;
@@ -35,7 +35,7 @@ namespace COTG
 		}
 		public static ImmutableArray<NotifyCollectionBase> all = ImmutableArray<NotifyCollectionBase>.Empty;
 
-		public bool hasNotifications => (CollectionChanged is not null | PropertyChanged is not null);
+		public bool hasNotifications => ((CollectionChanged is not null) | (PropertyChanged is not null) );
 
 
 

@@ -71,14 +71,23 @@ namespace COTG
 	//	static DateTime nextInAppNote = new DateTime(0);
 	//static MarkdownTextBlock markDownText;
 	//	static CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
-		public static async Task Show(string s, Priority priority=Priority.medium, bool useInfoBar = false, int timeout = 5000, bool showDebugOutput=true)
+		public static async Task Show(string s, Priority priority=Priority.medium, bool useInfoBar = false, int timeout = 5000, bool showDebugOutput=true, bool showNote=true)
 		{
 			try
 			{
-				int noteDelay = SettingsPage.notificationDuration;
-				 int noteDelayHigh = noteDelay+3;
-				if(ShellPage.instance != null)
+				if(showDebugOutput)
 				{
+					App.DispatchOnUIThreadLow(() =>
+					{
+						ChatTab.L(s);
+					});
+				}
+
+				if(showNote && ShellPage.instance != null)
+				{
+					int noteDelay = SettingsPage.notificationDuration;
+					int noteDelayHigh = noteDelay+3;
+
 					//if (!initialized)
 					//{
 					//	initialized = true;
@@ -89,13 +98,6 @@ namespace COTG
 					//		//		ShellPage.instance.infoMD.LinkClicked += MarkDownLinkClicked;
 					//	});
 					//}
-					if(showDebugOutput)
-					{
-						App.DispatchOnUIThreadLow(() =>
-						{
-							ChatTab.L(s);
-						});
-					}
 					//var now = DateTime.UtcNow;
 					//var next = nextInAppNote;
 					//var _priority = priority;

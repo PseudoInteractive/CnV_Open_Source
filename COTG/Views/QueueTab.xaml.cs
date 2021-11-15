@@ -808,7 +808,7 @@ namespace COTG.Game
 
 
 			// first collect counts
-			foreach(var id in buildingSpots)
+			foreach(var id in buildingSpotsLand)
 			{
 			
 				var bid = (short)GetLayoutBid(id);

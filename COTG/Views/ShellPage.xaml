@@ -55,7 +55,8 @@
 		</Grid.ColumnDefinitions>
 	
 		
-		<winui:Grid x:Name="leftLayoutGrid" Margin="0"  Grid.Column="0" Canvas.ZIndex="33" >
+		<Grid x:Name="leftLayoutGrid" Margin="0"  Grid.Column="0" Canvas.ZIndex="33"  Style="{StaticResource GridNoScroll}" >
+			
 			<Grid.RowDefinitions>
 				<RowDefinition Height="2*" />
 				<RowDefinition Height="1*" />
@@ -107,7 +108,7 @@
 					BorderBrush="#C0000080"
 					Grid.Row="5"
 					/>
-		</winui:Grid>
+		</Grid>
 		<Grid Grid.Column="2" x:Name="rightLayoutGrid" Margin="0" Canvas.ZIndex="33" >
 			<Grid.RowDefinitions>
 				<RowDefinition Height="2*" />
