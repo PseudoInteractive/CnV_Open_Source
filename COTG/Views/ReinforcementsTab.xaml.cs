@@ -22,8 +22,8 @@ namespace COTG.Views
 		public override TabPage defaultPage => TabPage.secondaryTabs;
 		public string reinInTitle;
 		public string reinOutTitle;
-		public NotifyCollection<Reinforcement> reinforcementsOut = new();
-		public NotifyCollection<Reinforcement> reinforcementsIn = new();
+		public NotifyCollection<City> reinforcementsOut = new();
+		public NotifyCollection<City> reinforcementsIn = new();
 		public static ReinforcementsTab instance;
 		public int targetCid;
 
@@ -35,15 +35,7 @@ namespace COTG.Views
 		
 		}
 
-		public void ReturnClick(object obj)
-		{
-			var r = (obj as Reinforcement);
-			Assert(r != null);
-			Note.Show($"Returning {r.troopsString} from {r.targetCity} back to {r.sourceCity} ");
-			r.ReturnAsync();
-			reinforcementsIn.Remove(r, true);
-			reinforcementsOut.Remove(r, true);
-		}
+		
 
 		public override async Task VisibilityChanged(bool visible, bool longTerm)
 		{
@@ -73,7 +65,7 @@ namespace COTG.Views
 
 			var tab = this;
 
-			var spots = !showAll ? new[] { _spot } : City.myCities.OrderBy(a => a.cid.ZCurveEncodeCid()).ToArray();
+			var spots = !showAll ? new[] { _spot } : City.myCities;
 
 			//		var orders = new List<Reinforcement>();
 
@@ -91,46 +83,14 @@ namespace COTG.Views
 
 			//tab. panel.Children.Add(new TextBlock() { Text = showAll ? "All Incoming Reinforcements" : "Reinforcements Here:" });
 			{
-				var toAdd = new List<Reinforcement>();
-				foreach (var s in spots.OrderByDescending(s => s.incomingFlags))
-				{
-					foreach (var reIn in s.reinforcementsIn.OrderBy(a => Player.IdToName(a.sourceCid.CidToPid())))
-					{
-						//var other = Spot.GetOrAdd(reIn.sourceCid);
-						//var me = Spot.GetOrAdd(reIn.targetCid);
-						//var content = showAll ? $"{other.xy} {other.playerName} {other.nameAndRemarks} {other.IncomingInfo() } -> {me.xy} {me.nameAndRemarks} {me.IncomingInfo()} {reIn.troops.Format(":",' ',',')}"
-						//	: $"{other.xy} {other.playerName} {other.nameAndRemarks} {other.IncomingInfo() } {reIn.troops.Format(":",' ',',')}{reIn.time.FormatIfLaterThanNow()}";
-						toAdd.Add(reIn);
-
-					}
-				}
-
-				tab.reinforcementsIn.Set(toAdd, true, true);
-
+				tab.reinforcementsIn.Set(spots.Where(s => s.reinforcementsIn.Any()).OrderByDescending(s => s.reinforcementSortScore)
+					.ToArray(), true, true,skipHashCheck:true);
 			}
 			{
-				//			List<>
-				var byFlags = spots.SelectMany(s => s.reinforcementsOut)
-					.GroupBy(s => s.targetCid.AsCity().incomingFlags);
-				var toAdd = new List<Reinforcement>();
-				foreach (var flagGroup in byFlags.OrderByDescending(s => (int) s.Key))
-				{
-					foreach (var reIn in flagGroup.OrderByDescending(s => s.targetCid.AsCity().incomingFlags)
-						         .ThenBy(s => Player.IdToName(s.targetCid.CidToPid())).ThenBy(a => a.time))
-					{
-						//	foreach(var reIn in cid)
-						{
-							//var other = Spot.GetOrAdd(reIn.targetCid);
-							//var me = Spot.GetOrAdd(reIn.sourceCid);
-							//var content = showAll ? $"{other.xy} {other.playerName} {other.nameAndRemarks} {other.IncomingInfo()} <- {me.xy} {me.nameAndRemarks} {me.IncomingInfo()} {reIn.troops.Format(":",' ',',')}"
-							//	: $"{other.xy} {other.playerName} {other.nameAndRemarks} {other.IncomingInfo()} {reIn.troops.Format(":",' ',',')}{reIn.time.FormatIfLaterThanNow()}";
-
-							toAdd.Add(reIn);
-						}
-					}
-				}
-
-				tab.reinforcementsOut.Set(toAdd, true, true);
+				tab.reinforcementsOut.Set(
+					spots.SelectMany(s => s.reinforcementsOut).
+						Select(s=>s.sourceCity).Distinct().
+						OrderByDescending(s=>s.reinforcementSortScore).ToArray(), true, true,skipHashCheck:true);
 			}
 			tab.OnPropertyChanged();
 			
@@ -154,39 +114,36 @@ namespace COTG.Views
 
 			try
 			{
-				Note.Show($"Cell Tap {e.Column.HeaderText??"NA"}  {e.RowColumnIndex} {e.RowColumnIndex} {e.Record.ToString} ");
-				switch(e.Column.HeaderText)
+			//	Note.Show($"Cell Tap {e.Column.HeaderText??"NA"}  {e.RowColumnIndex} {e.RowColumnIndex} {e.Record.ToString} ");
+			if (e.Record is City city)
+			{
+
+				switch (e.Column.MappingName)
 				{
-					case "Ret":
+					case nameof(City.cityName):
+					case nameof(City.iconUri):
+					case nameof(City.remarks):
+						city.DoClick();
+						break;
+				}
+
+				
+				return;
+			}
+				switch(e.Column.MappingName)
+				{
+					case nameof(Reinforcement.retUri):
 						{
 							var r = e.Record as Reinforcement;
-
+							Note.Show($"Returning {r.troopsString} from {r.targetCity} back to {r.sourceCity} ");
 							r.ReturnAsync();
+							AUtil.Remove(ref r.targetCity.reinforcementsIn,r);
+							AUtil.Remove(ref r.sourceCity.reinforcementsOut,r);
+							// Todo: refresh lists
 							break;
 
 						}
-					case nameof(Reinforcement.sourceCity):
-						{
-
-							var r = (Reinforcement)e.Record;
-							var s = r.sourceCity;
-							s.DoClick();
-							//						Spot.ProcessCoordClick(s.cid,true,)
-							//					r.ReturnAsync();
-							break;
-
-						}
-					case nameof(Reinforcement.targetCity):
-						{
-
-							var r = (Reinforcement)e.Record;
-							var s = r.targetCity;
-							s.DoClick();
-							//						Spot.ProcessCoordClick(s.cid,true,)
-							//					r.ReturnAsync();
-							break;
-
-						}
+					
 				}
 			}
 			catch(Exception exception)
@@ -214,8 +171,9 @@ namespace COTG.Views
 					e.Handled=true;
 					var args = new WwwFormUrlDecoder(subStr.Slice(returnReinforcement.Length).ToString());
 
+					Note.Show("ProtoClick");
 					//			var args = Uri.Par
-					Reinforcement.ReturnAsync(args.GetFirstValueByName("order").ParseLong().GetValueOrDefault(),args.GetFirstValueByName("pid").ParseInt().GetValueOrDefault());
+					//	Reinforcement.ReturnAsync(args.GetFirstValueByName("order").ParseLong().GetValueOrDefault(),args.GetFirstValueByName("pid").ParseInt().GetValueOrDefault());
 
 				}
 
@@ -225,7 +183,9 @@ namespace COTG.Views
 
 		private void CellToolTipOpening(object sender,Syncfusion.UI.Xaml.DataGrid.GridCellToolTipOpeningEventArgs e)
 		{
-
+			var tt = e.ToolTip;
+			var rec = e.Record;
+			int q = 0;
 		}
 
 		private bool hasLoaded;
@@ -236,12 +196,87 @@ namespace COTG.Views
 			if(!hasLoaded)
 			{
 				hasLoaded = true;
-				reinIn.AddCity(nameof(Reinforcement.sourceCity),"Source");
-				reinIn.AddCity(nameof(Reinforcement.targetCity),"Target");
-				reinOut.AddCity(nameof(Reinforcement.sourceCity),"Source");
-				reinOut.AddCity(nameof(Reinforcement.targetCity),"Target");
+				SetupReinforcementGrid( reinIn,false);
+				SetupReinforcementGrid(reinOut,true);
 			}
 
+		}
+
+		private ADataGrid.ChangeContextDisposable SetupGrid(SfDataGrid grid)
+		{
+			var _lock0 = grid.ChangeContext();
+			grid.ExpanderColumnWidth = 32;
+			grid.GridContextFlyoutOpening += ContextFlyoutOpening;
+			grid.RecordContextFlyout = new();
+			grid.CurrentCellRequestNavigate += CelNavigate;
+			grid.CellTapped += reinIn_CellTapped;
+			grid.CellToolTipOpening += CellToolTipOpening;
+
+
+			return _lock0;
+		}
+
+		private void SetupReinforcementGrid(SfDataGrid grid, bool isOutgoing)
+		{
+			using var _lock = SetupGrid(grid);
+			grid.SourceType = typeof(City);
+			
+			grid.AddCity(isOutgoing ? "Defender" : "Target");
+
+
+			
+			
+		
+			{
+				SfDataGrid child0 = new() { AutoGenerateRelations = false, AutoGenerateColumns = false};
+				using var _lock1 = SetupGrid(child0);
+				child0.SourceType = typeof(Reinforcement);
+				child0.AddHyperLink(nameof(Reinforcement.retUri), "Return");
+				child0.AddTime(nameof(Reinforcement.dateTime), "Arrival", nullText: "Arrived");
+				child0.AddText(nameof(Reinforcement._Troops), "Troops",
+					widthMode: Syncfusion.UI.Xaml.Grids.ColumnWidthMode.Star );
+				var details = new GridViewDefinition() { RelationalColumn=isOutgoing?nameof(City.reinforcementsOutSorted) : nameof(City.reinforcementsInSorted) , DataGrid=child0 } ;
+				grid.DetailsViewDefinition.Add( details );
+				{
+					SfDataGrid child1 = new() { AutoGenerateRelations = false, AutoGenerateColumns = false};
+					using var _lock2 = SetupGrid(child1);
+					child1.SourceType = typeof(City);
+					child1.AddCity(!isOutgoing ? "Defender" : "Target");
+					child0.DetailsViewDefinition.Add( 
+						new GridViewDefinition() { RelationalColumn=isOutgoing?nameof(Reinforcement.targetCities) : nameof(Reinforcement.sourceCities) , DataGrid=child1 } 
+					  );
+
+				}
+
+			}
+		}
+
+		private void ContextFlyoutOpening(object sender,GridContextFlyoutEventArgs e)
+		{
+			var flyout = e.ContextFlyout;
+			flyout.Items.Clear();
+
+			switch(e.ContextFlyoutType)
+			{
+				case ContextFlyoutType.RecordCell:
+				{
+					var info = e.ContextFlyoutInfo as GridRecordContextFlyoutInfo;
+					var column = info.DataGrid.Columns[e.RowColumnIndex.ColumnIndex];
+					if ( info.Record is City city)
+					{
+						city.AddToFlyout(flyout);
+						
+						break;
+					}
+
+					if ( info.Record is Reinforcement r)
+					{
+						flyout.AddItem("Return", () => r.ReturnAsync() );
+						break;
+					}
+					break;
+				}
+			}
 		}
 	}
 }

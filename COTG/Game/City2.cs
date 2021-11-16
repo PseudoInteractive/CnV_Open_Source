@@ -1103,6 +1103,9 @@ namespace COTG.Game
 				return rv;
 			}
 		}
+
+		public long reinforcementSortScore =>
+			(((long) incomingFlags) << 56) + ((long) pid << 32) + cid.ZCurveEncodeCid();
 		public async Task<bool> DoPoll()
 		{
 			var pollResult = (await Post.SendForJson("/includes/poll2.php",$"cid={cid}&ai=0&ss={JSClient.cotgS}").ConfigureAwait(false) ).RootElement;

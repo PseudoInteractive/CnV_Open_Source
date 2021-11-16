@@ -25,6 +25,7 @@ namespace COTG
 		internal static SmallTime zero = new SmallTime(0);
 
 		internal readonly DateTimeOffset dateTime => ToDateTime(seconds); // should we convert with localTimeError?
+		internal readonly DateTimeOffset? dateTimeNullable => !isZero ? ToDateTime(seconds) : null; // should we convert with localTimeError?
 
 		public readonly SmallTime Date()
 		{
@@ -32,7 +33,7 @@ namespace COTG
 	
 		}
 
-		public string FormatIfLaterThanNow(string ifEarlierThanNow = "") => this > SmallTime.serverNow ? $" @{Format()}" : ifEarlierThanNow;
+		public string FormatIfLaterThanNow(string ifEarlierThanNow = "") => this > SmallTime.serverNow ? Format() : ifEarlierThanNow;
 
 	public readonly string Format() => dateTime.Format();
 		public readonly string FormatDateForFileName() => dateTime.FormatDateForFileName();

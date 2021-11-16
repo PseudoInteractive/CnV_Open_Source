@@ -230,8 +230,8 @@ namespace COTG.Views
 				}
 			}
 #if DEBUG
-			if(note!=0)
-				Note.Show($"!Focu{note}: f{canvas.IsHitTestVisible} o{isOverCanvas}");
+		//	if(note!=0)
+		//		Note.Show($"!Focu{note}: f{canvas.IsHitTestVisible} o{isOverCanvas}");
 #endif
 			return Task.CompletedTask;
 

@@ -10,7 +10,7 @@ using Microsoft.UI.Xaml.Data;
 
 	public class CityIconConverter : IValueConverter	
 	{
-		public object Convert(object value, Type targetType, object parameter, string language) => (value as Spot)?.icon;
+		public object Convert(object value, Type targetType, object parameter, string language) => (value as Spot)?.iconUri;
 
 		public object ConvertBack(object value, Type targetType, object parameter, string language) => throw new InvalidOperationException(); 
 	}

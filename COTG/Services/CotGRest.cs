@@ -765,7 +765,8 @@ namespace COTG.Services
 								Assert(targetCId == cid);
 								re.sourceCid = rein[15].GetAsInt();
 								Assert(re.sourceCid != targetCId);
-								// re.time = rein[9].ToString(
+								re.time = rein[9].GetAsString().ParseDateTime();
+								re.isReturning = rein[0].GetAsInt() == 0;
 								re.order = rein[10].GetAsInt64();
 								foreach (var ti in rein[8].EnumerateArray())
 								{

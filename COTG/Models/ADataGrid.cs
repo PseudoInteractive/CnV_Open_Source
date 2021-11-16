@@ -6,7 +6,8 @@ namespace COTG;
 using Syncfusion.UI.Xaml.DataGrid;
 
 using Windows.Storage;
-
+using Converters;
+using Syncfusion.UI.Xaml.Grids;
 using DataGrid = Syncfusion.UI.Xaml.DataGrid.SfDataGrid;
 /// <summary>
 /// Tag is used to save/load the dataGrid
@@ -21,56 +22,80 @@ public static partial class ADataGrid
 		return rv;
 	}
 
-
-
-	public static void AddCity(this DataGrid grid,string cityMap,string headerText = null,bool wantImage = true,bool wantRemarks = true,bool wantStatus = true)
+	public ref struct ChangeContextDisposable
 	{
-		grid.SuspendNotifyListener();
-		grid.Columns.Suspend();
-		grid.View.BeginInit();
-		
+		DataGrid grid;
+
+		public ChangeContextDisposable(DataGrid dataGrid)
+		{
+			grid = dataGrid;
+			Assert(!dataGrid.IsListenerSuspended);
+			grid.SuspendNotifyListener();
+			grid.Columns.Suspend();
+			if(grid.View !=null)
+				grid.View.BeginInit();
+		}
+		public void Dispose()
+		{
+			grid.Columns.Resume();
+			grid.ResumeNotifyListener();
+			if(grid.View !=null)
+				grid.View.EndInit();
+		}
+	}
+
+	public static ChangeContextDisposable ChangeContext(this DataGrid grid) => new ChangeContextDisposable(grid);
+
+
+	public static void AddCity(this DataGrid grid,string headerText = null,bool wantImage = true,bool wantRemarks = true,bool wantStatus = true, bool expandLast=true)
+	{
+		Assert(grid.IsListenerSuspended);
 		try
 		{
-			if(wantImage)
+			if (wantImage)
+			{
+				var dim = SettingsPage.mediumGridRowHeight;
+				var imageDim = dim * 0.875f;
 				grid.Columns.Add(new GridImageColumn()
 				{
-					HeaderText="I",
-					UseBindingValue = true,Width = SettingsPage.mediumGridRowHeight,IsReadOnly = true,
-					DisplayBinding = new Binding()
-					{ Path=cityMap, Source = cityMap,Mode = BindingMode.OneTime,Converter = new CityIconConverter(),},
-					ValueBinding = new Binding()
-					{ Source = cityMap,Mode = BindingMode.OneTime,Converter = new CityIconConverter(),}
-				});
+					HeaderText = "Icon",
+					ImageHeight = imageDim,
+					ImageWidth = imageDim,
+					Width = dim,
 
+					IsReadOnly = true,
+					MappingName = nameof(City.iconUri)
+				});
+			}
 
 
 			grid.Columns.Add(new GridTextColumn()
 			{
-
-				UseBindingValue = true,IsReadOnly = true,
-				HeaderText = headerText ?? cityMap,
-				DisplayBinding = new Binding()
-				{ Source = cityMap,Mode = BindingMode.OneTime,Converter = new CityNameConverter() },
-				ValueBinding = new Binding()
-				{ Source = cityMap,Mode = BindingMode.OneTime,Converter = new CityNameConverter() }
+				HeaderText = headerText,
+				IsReadOnly = true,
+				ColumnWidthMode=ColumnWidthMode.Auto,
+				MappingName = nameof(City.cityName)
 			});
 			if(wantRemarks)
 				grid.Columns.Add(new GridTextColumn()
 				{
-					MappingName = "Remarks",
-					UseBindingValue = true,IsReadOnly = true,HeaderText = "Remarks",Width = 80,
-					DisplayBinding = new Binding()
-					{ Source = cityMap,Mode = BindingMode.OneTime,Converter = new CityRemarksConverter() }
+					IsReadOnly = true,
+					HeaderText = "Remarks",
+					Width = 100,
+					MappingName = nameof(City.remarks)
 				});
+			if (expandLast )
+				Assert(wantStatus);
+
 			if(wantStatus)
 				grid.Columns.Add(new GridTextColumn()
 				{
 					HeaderText = "Status",
-					UseBindingValue = true,IsReadOnly = true,
-					ValueBinding = new Binding()
-					{ Source = cityMap,Mode = BindingMode.OneTime,Converter = new CityStatusConverter() },
-					DisplayBinding = new Binding()
-					{ Source = cityMap,Mode = BindingMode.OneTime,Converter = new CityStatusConverter() }
+					Width = expandLast ? double.NaN : 40,
+					ColumnWidthMode = expandLast ? ColumnWidthMode.Star :ColumnWidthMode.None,
+					SetCellBoundToolTip = true,
+					IsReadOnly = true,
+					MappingName = nameof(City.statusString)
 				});
 		}
 		catch(Exception e)
@@ -79,11 +104,95 @@ public static partial class ADataGrid
 		}
 		finally
 		{
-			grid.Columns.Resume();
-			grid.View.EndInit();
-			grid.ResumeNotifyListener();
+		
 		}
 	}
+	public static bool AddTime(this DataGrid grid,string mapping,string headerText = null,bool readOnly=true,string nullText=null)
+	{
+
+		Assert(grid.IsListenerSuspended);
+
+		try
+		{
+
+			grid.Columns.Add(new GridTimeColumn()
+			{
+				HeaderText = headerText ?? mapping,
+				IsReadOnly = readOnly,
+				AllowNull=true,
+				DisplayTimeFormat="H:mm:ss",
+				PlaceholderText=nullText ?? "none",
+				MappingName = mapping
+			});
+			return true;
+		}
+		catch(Exception e)
+		{
+			LogEx(e);
+			return false;
+		}
+		finally
+		{
+
+		}
+	}
+	public static bool AddText(this DataGrid grid,string mapping,string headerText = null,ColumnWidthMode widthMode= ColumnWidthMode.Auto,double width = double.NaN, bool readOnly = true)
+	{
+
+		Assert(grid.IsListenerSuspended);
+
+		try
+		{
+
+			grid.Columns.Add(new GridTextColumn()
+			{
+				HeaderText = headerText ?? mapping,
+				Width=width,
+				ColumnWidthMode=widthMode,
+				UseBindingValue=false,
+				MappingName=mapping,
+				IsReadOnly = readOnly,
+			});
+
+			return true;
+		}
+		catch(Exception e)
+		{
+			LogEx(e);
+			return false;
+		}
+		
+	}
+	public static void AddHyperLink(this DataGrid grid,string mapping, string headerText = null,string displayMapping=null,string buttonStr=null)
+	{
+
+		Assert(grid.IsListenerSuspended);
+
+		try
+		{
+			headerText ??= mapping;
+			
+			grid.Columns.Add(new GridHyperlinkColumn()
+			{
+				HeaderText = headerText ,
+				UseBindingValue=true,
+				ValueBinding = new Binding()
+					{ Path = new(mapping),Mode = BindingMode.OneTime },
+				DisplayBinding = displayMapping is not null  
+				?new Binding() { Path = new(displayMapping),Mode = BindingMode.OneTime}
+				:new Binding() { Path = new(mapping),Mode = BindingMode.OneTime,Converter = new ConstStringConverter(),ConverterParameter=buttonStr??headerText },
+			});
+		}
+		catch(Exception e)
+		{
+			LogEx(e);
+		}
+		finally
+		{
+
+		}
+	}
+
 
 
 	public static class Statics

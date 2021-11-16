@@ -100,7 +100,7 @@ namespace COTG
 								break;
 							case NotifyCollectionChangedAction.Remove:
 								Assert(change.NewItems is null);
-								Assert(change.NewStartingIndex == 0);
+								Assert(change.NewStartingIndex == -1);
 								Assert(change.OldStartingIndex >=0 );
 								Assert(change.OldItems is not null);
 								break;
@@ -146,7 +146,7 @@ namespace COTG
 				return;
 
 
-			Note.ShowQuiet($"CollectionChanges: {args.Action} {args.NewItems.CollectionToString()} {args.OldItems.CollectionToString()}");
+			//Note.ShowQuiet($"CollectionChanges: {args.Action} {args.NewItems.CollectionToString()} {args.OldItems.CollectionToString()}");
 
 
 			ImmutableInterlocked.Update(ref collectionChanges,(ch) =>
@@ -404,7 +404,7 @@ namespace COTG
 		}
 
 
-		public void Set(IEnumerable<T> src,bool notify=true, bool itemsChanged=true)
+		public void Set(IEnumerable<T> src,bool notify=true, bool itemsChanged=true,bool skipHashCheck=false)
 		{
 			if( src == null)
 			{
@@ -422,7 +422,7 @@ namespace COTG
 
 				// no change
 				var newHash = GetDataHash(src);
-				if(newHash == lastDataHash)
+				if(newHash == lastDataHash && !skipHashCheck)
 					return;
 				var prior = c;
 				c= src.ToImmutableArray();

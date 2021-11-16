@@ -25,25 +25,29 @@ using System.Net.Http;
 [System.Diagnostics.DebuggerDisplay($"{{{nameof(GetDebuggerDisplay)}(),nq}}")]
 public class Reinforcement : IEquatable<Reinforcement>
 {
-
+	public long order;
 
 	public SmallTime time;  // arrival
 
-	public DateTimeOffset _Time
+	public string TimeString
 	{
-		get => time.dateTime;
+		get => isReturning ? (time.FormatIfLaterThanNow( "Home") + "(Returning)") : time.FormatIfLaterThanNow("Here");
 	}
-
+	public DateTimeOffset? dateTime
+	{
+		get => (time > SmallTime.serverNow) ? time.dateTime : null;
+	}
 	public int sourceCid;
 
 	public int targetCid;
 	//static int pid;
+	public bool isReturning;
 
-
-	public long order;
 	public string troopsString => troops.Format(":", ' ', ',');
 	public City sourceCity => sourceCid.AsCity();
 	public City targetCity => targetCid.AsCity();
+	public City[] sourceCities => new [] { sourceCid.AsCity() };
+	public City[] targetCities => new [] { targetCid.AsCity() };
 
 	public const string retUriS = @"cmd://";
 
@@ -52,24 +56,22 @@ public class Reinforcement : IEquatable<Reinforcement>
 	public string  retS => "Return";
 	
 	public TroopTypeCountsRef troops = new();
+	public City[] cities => new []{sourceCity, targetCity};
 	public string _Troops { get => troops.Format(":",' ',','); }
 
 	public  async Task ReturnAsync()
 	{
 		Log($"Return {this}");
-		await ReturnAsync(order,targetCid.CidToPid());
-		await ReturnAsync(order, sourceCid.CidToPid());
+		await ReturnAsync(order,sourceCid.CidToPid());
+		// should not be needed, but who knows?
+		if(targetCid.CidToPid()!=sourceCid.CidToPid())
+			await ReturnAsync(order,targetCid.CidToPid());
 	}
 	public static async Task ReturnAsync(long order, int pid)
 	{
 		await Post.Get("overview/reinreca.php","a=" + order,pid);
 		await Task.Delay(1000);
 		await Post.Get("overview/reinreca.php","a=" + order,pid );
-	}
-	public void ReturnClick(object obj)
-	{
-		Note.Show($"Returning {troopsString} from {targetCity} back to {sourceCity} ");
-		ReturnAsync();
 	}
 
 	public string sReturn => "Return";

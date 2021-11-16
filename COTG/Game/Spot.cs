@@ -65,7 +65,7 @@ namespace COTG.Game
 		public static City[] defendersO = Array.Empty<City>();
 		public static City[] attackersI = Array.Empty<City>();
 		public static City[] attackersO = Array.Empty<City>();
-
+		public City _City => this as City;
 		public static HashSet<City> allianceCitiesWithOutgoing
 		{
 			get
@@ -274,6 +274,11 @@ namespace COTG.Game
 
 		public Reinforcement[] reinforcementsIn = Array.Empty<Reinforcement>();
 		public Reinforcement[] reinforcementsOut = Array.Empty<Reinforcement>();
+
+		public Reinforcement[] reinforcementsInSorted =>
+			reinforcementsIn.OrderByDescending(r => r.sourceCity.reinforcementSortScore).ToArray();
+		public Reinforcement[] reinforcementsOutSorted =>
+			reinforcementsOut.OrderByDescending(r => r.targetCity.reinforcementSortScore).ToArray();
 
 		public string defString => GetDefString(", ");
 		public string GetDefString(string separator)
@@ -489,6 +494,8 @@ namespace COTG.Game
 		public ushort points { get; set; }
 		public BitmapImage icon => ImageHelper.FromImages(isBlessed ? "Icons/blessed.png" :
 			 ($"{(isTemple ? "Icons/temple" : isCastle ? "Icons/castle" : "Icons/city")}{GetSize()}{(isOnWater ? "w" : "")}.png"));
+		public string iconUri => ImageHelper.FromImagesLink(isBlessed ? "Icons/blessed.png" :
+			($"{(isTemple ? "Icons/temple" : isCastle ? "Icons/castle" : "Icons/city")}{GetSize()}{(isOnWater ? "w" : "")}.png"));
 		public int cont => cid.CidToContinent();
 		public int packedContinent => cid.CidToPackedContinent();
 
@@ -1921,20 +1928,17 @@ namespace COTG.Game
 			return false;
 		}
 
-		public async Task ShowContextMenu(UIElement uie, Windows.Foundation.Point position)
+		public void AddToFlyout(MenuFlyout flyout,bool useSelected=false )
 		{
-
-			//   SelectMe(false) ;
 			var me = this as City;
-			var flyout = new MenuFlyout();
 			var aMisc = flyout.AddSubMenu("Misc..");
 			var aExport = flyout.AddSubMenu("Import/Export..");
-			var aSetup = AApp.AddSubMenu(flyout, "Setup..");
-			var aWar = AApp.AddSubMenu(flyout, "War..");
-			if (this.isCityOrCastle)
+			var aSetup = AApp.AddSubMenu(flyout,"Setup..");
+			var aWar = AApp.AddSubMenu(flyout,"War..");
+			if(this.isCityOrCastle)
 			{
 				// Look - its my city!
-				if (this.isFriend)
+				if(this.isFriend)
 				{
 
 					//{
@@ -1950,35 +1954,35 @@ namespace COTG.Game
 					//	}
 					//}
 					// This one has multi select
-					var aRaid = AApp.AddSubMenu(flyout, "Raid..");
-					aRaid.AddItem($"Raid ..",()=>ScanDungeons.Post(cid,true,false) ) ;
+					var aRaid = AApp.AddSubMenu(flyout,"Raid..");
+					aRaid.AddItem($"Raid ..",() => ScanDungeons.Post(cid,true,false));
 
 					int count = 1;
-					if (uie == MainPage.CityGrid || uie == BuildTab.CityGrid || uie == NearDefenseTab.instance.supportGrid)
+					if(useSelected)
 					{
 						count = MainPage.GetContextCidCount(cid);
 					}
-					if (count > 1)
+					if(count > 1)
 					{
-						aRaid.AddItem($"End Raids x{count} selected", MainPage.ReturnSlowClick, cid);
-						aRaid.AddItem($"Return Asap x{count} selected", MainPage.ReturnFastClick, cid);
-						aRaid.AddItem($"Return At...x{count}", this.ReturnAtBatch);
+						aRaid.AddItem($"End Raids x{count} selected",MainPage.ReturnSlowClick,cid);
+						aRaid.AddItem($"Return Asap x{count} selected",MainPage.ReturnFastClick,cid);
+						aRaid.AddItem($"Return At...x{count}",this.ReturnAtBatch);
 
 					}
 					else
 					{
 
-						aRaid.AddItem("End Raids", this.ReturnSlowClick);
-						aRaid.AddItem("Return Asap", this.ReturnFastClick);
-						aRaid.AddItem("Return At...", this.ReturnAt);
+						aRaid.AddItem("End Raids",this.ReturnSlowClick);
+						aRaid.AddItem("Return Asap",this.ReturnFastClick);
+						aRaid.AddItem("Return At...",this.ReturnAt);
 					}
 
 
-					aSetup.AddItem("Setup...", (_, _) => Spot.InfoClick(cid));
-					aSetup.AddItem("Find Hub", (_, _) => CitySettings.SetClosestHub(cid));
-					aSetup.AddItem("Set Recruit", (_, _) => CitySettings.SetRecruitFromTag(cid));
-					aSetup.AddItem("Change...", (_, _) => ShareString.Show(cid,default));
-					aSetup.AddItem("Move Stuff", (_,_)=> me.MoveStuffLocked());
+					aSetup.AddItem("Setup...",(_,_) => Spot.InfoClick(cid));
+					aSetup.AddItem("Find Hub",(_,_) => CitySettings.SetClosestHub(cid));
+					aSetup.AddItem("Set Recruit",(_,_) => CitySettings.SetRecruitFromTag(cid));
+					aSetup.AddItem("Change...",(_,_) => ShareString.Show(cid,default));
+					aSetup.AddItem("Move Stuff",(_,_) => me.MoveStuffLocked());
 					//aSetup.AddItem("Remove Castle", (_, _) => 
 					//{
 					//	CityBuild.
@@ -1988,56 +1992,56 @@ namespace COTG.Game
 					aSetup.AddItem("Clear Res",me.ClearRes);
 
 
-					aExport.AddItem("Troops to Sheets", CopyForSheets);
+					aExport.AddItem("Troops to Sheets",CopyForSheets);
 				}
 				else
 				{
-					if (_cityName == null)
+					if(_cityName == null)
 					{
 						JSClient.FetchCity(cid);
 					}
 
 				}
 				{
-					var sel = Spot.GetSelectedForContextMenu(cid, false);
+					var sel = Spot.GetSelectedForContextMenu(cid,false);
 					{
 						var multiString = sel.Count > 1 ? $" _x {sel.Count} selected" : "";
-						aWar.AddItem( "Cancel Attacks..", CancelAttacks);
-						var afly = aWar.AddSubMenu( "Attack Planner");
-						if (!Alliance.IsAllyOrNap(this.allianceId))
+						aWar.AddItem("Cancel Attacks..",CancelAttacks);
+						var afly = aWar.AddSubMenu("Attack Planner");
+						if(!Alliance.IsAllyOrNap(this.allianceId))
 						{
-							afly.AddItem("Add as Target" + multiString, (_, _) => AttackTab.AddTarget(sel));
-							afly.AddItem("Ignore Player" + multiString, (_, _) => AttackTab.IgnorePlayer(cid.CidToPid()));
+							afly.AddItem("Add as Target" + multiString,(_,_) => AttackTab.AddTarget(sel));
+							afly.AddItem("Ignore Player" + multiString,(_,_) => AttackTab.IgnorePlayer(cid.CidToPid()));
 						}
-						if (!Alliance.IsEnemy(this.allianceId))
+						if(!Alliance.IsEnemy(this.allianceId))
 						{
-							afly.AddItem("Add as Attacker" + multiString, (_, _) =>
-						{
-							using var work = new WorkScope("Add as attackers..");
-
-							string s = string.Empty;
-							foreach (var id in sel)
+							afly.AddItem("Add as Attacker" + multiString,(_,_) =>
 							{
-								s = s + id.CidToString() + "\t";
-							}
-							AttackTab.AddAttacksFromString(s,false);
-							Note.Show($"Added attacker {s}");
+								using var work = new WorkScope("Add as attackers..");
 
-						});
+								string s = string.Empty;
+								foreach(var id in sel)
+								{
+									s = s + id.CidToString() + "\t";
+								}
+								AttackTab.AddAttacksFromString(s,false);
+								Note.Show($"Added attacker {s}");
+
+							});
 						};
 					}
 					//else
-					if (!Alliance.IsAllyOrNap(this.allianceId))
+					if(!Alliance.IsAllyOrNap(this.allianceId))
 					{
-						aWar.AddItem("Add funky Attack String", async (_, _) =>
-					   {
-						   using var work = new WorkScope("Add to attack string..");
+						aWar.AddItem("Add funky Attack String",async (_,_) =>
+						{
+							using var work = new WorkScope("Add to attack string..");
 
-						   foreach (var id in sel)
-						   {
-							   await JSClient.AddToAttackSender(id);
-						   }
-					   }
+							foreach(var id in sel)
+							{
+								await JSClient.AddToAttackSender(id);
+							}
+						}
 						);
 					}
 					//AApp.AddItem(flyout, "Add as Fake (2)", (_, _) => AttackTab.AddTarget(cid, 2));
@@ -2046,53 +2050,61 @@ namespace COTG.Game
 				}
 				//if (cid != City.build)
 				{
-					aSetup.AddItem("Set target hub", (_, _) => CitySettings.SetTargetHub(City.build, cid));
-					aSetup.AddItem("Set source hub", (_, _) => CitySettings.SetSourceHub(City.build, cid));
+					aSetup.AddItem("Set target hub",(_,_) => CitySettings.SetTargetHub(City.build,cid));
+					aSetup.AddItem("Set source hub",(_,_) => CitySettings.SetSourceHub(City.build,cid));
 					//if(Player.myName == "Avatar")
 					//    AApp.AddItem(flyout, "Set target hub I", (_, _) => CitySettings.SetOtherHubSettings(City.build, cid));
 				}
 
 
-				aWar.AddItem("Attack", (_, _) => Spot.JSAttack(cid));
-				aWar.AddItem("Near Defence", DefendMe);
-				if (incoming.Any())
-					aWar.AddItem("Incoming", ShowIncoming);
+				aWar.AddItem("Attack",(_,_) => Spot.JSAttack(cid));
+				aWar.AddItem("Near Defence",DefendMe);
+				if(incoming.Any())
+					aWar.AddItem("Incoming",ShowIncoming);
 
-			//	if (Raid.test)
-					aWar.AddItem("Recruit Sen", (_, _) => Recruit.Send(cid, ttSenator, 1, true));
-				aWar.AddItem("Send Defence", (_, _) => JSDefend(cid));
-				aWar.AddItem("Show Reinforcements", (_, _) => Reinforcement.ShowReinforcements(cid,uie));
-				aWar.AddItem("Show All Reinforcements",(_,_) => Reinforcement.ShowReinforcements(0,uie));
-				aExport.AddItem("Defense Sheet", ExportToDefenseSheet);
-				AApp.AddItem(flyout, "Send Res", (_, _) => Spot.JSSendRes(cid));
-				AApp.AddItem(flyout, "Near Res", ShowNearRes);
-				if (isFriend)
+				//	if (Raid.test)
+				aWar.AddItem("Recruit Sen",(_,_) => Recruit.Send(cid,ttSenator,1,true));
+				aWar.AddItem("Send Defence",(_,_) => JSDefend(cid));
+				aWar.AddItem("Show Reinforcements",(_,_) => Reinforcement.ShowReinforcements(cid,null));
+				aWar.AddItem("Show All Reinforcements",(_,_) => Reinforcement.ShowReinforcements(0,null));
+				aExport.AddItem("Defense Sheet",ExportToDefenseSheet);
+				AApp.AddItem(flyout,"Send Res",(_,_) => Spot.JSSendRes(cid));
+				AApp.AddItem(flyout,"Near Res",ShowNearRes);
+				if(isFriend)
 				{
-					AApp.AddItem(flyout, "Do the stuff", (_, _) => DoTheStuff());
-					AApp.AddItem(flyout, "Food Warnings", (_, _) => CitySettings.SetFoodWarnings(cid));
-					flyout.AddItem("Ministers",me.ministersOn.IsTrueOrNull, (this as City).SetMinistersOn);
+					AApp.AddItem(flyout,"Do the stuff",(_,_) => DoTheStuff());
+					AApp.AddItem(flyout,"Food Warnings",(_,_) => CitySettings.SetFoodWarnings(cid));
+					flyout.AddItem("Ministers",me.ministersOn.IsTrueOrNull,(this as City).SetMinistersOn);
 				}
 			}
-			else if (this.isDungeon || this.isBoss)
+			else if(this.isDungeon || this.isBoss)
 			{
-				AApp.AddItem(flyout, "Raid", (_, _) => Spot.JSRaid(cid));
+				AApp.AddItem(flyout,"Raid",(_,_) => Spot.JSRaid(cid));
 
 			}
-			else if (this.isEmpty && DGame.isValidForIncomingNotes)
+			else if(this.isEmpty && DGame.isValidForIncomingNotes)
 			{
-				AApp.AddItem(flyout, "Claim", this.DiscordClaim);
+				AApp.AddItem(flyout,"Claim",this.DiscordClaim);
 
 			}
-			aMisc.AddItem("Notify on Decay", DecayQuery);
-			if (Raid.test)
+			aMisc.AddItem("Notify on Decay",DecayQuery);
+			if(Raid.test)
 			{
-				aMisc.AddItem("Settle whenever water", (_, _) => TrySettle(City.build, cid, true));
-				aMisc.AddItem("Settle whenever land", (_, _) => TrySettle(City.build, cid, false));
+				aMisc.AddItem("Settle whenever water",(_,_) => TrySettle(City.build,cid,true));
+				aMisc.AddItem("Settle whenever land",(_,_) => TrySettle(City.build,cid,false));
 			}
-			aMisc.AddItem("Distance", (_, _) => ShowDistanceTo());
-			aMisc.AddItem("Select", (_, _) => SelectMe(true, App.keyModifiers));
-			aMisc.AddItem("Coords to Chat", () => CoordsToChat(cid));
+			aMisc.AddItem("Distance",(_,_) => ShowDistanceTo());
+			aMisc.AddItem("Select",(_,_) => SelectMe(true,App.keyModifiers));
+			aMisc.AddItem("Coords to Chat",() => CoordsToChat(cid));
 			flyout.RemoveEmpy();
+		}
+		public void ShowContextMenu(UIElement uie, Windows.Foundation.Point position)
+		{
+
+			//   SelectMe(false) ;
+			var me = this as City;
+			var flyout = new MenuFlyout();
+			AddToFlyout(flyout,uie == MainPage.CityGrid || uie == BuildTab.CityGrid );
 			flyout.CopyXamlRoomFrom(uie);
 
 			//   flyout.XamlRoot = uie.XamlRoot;

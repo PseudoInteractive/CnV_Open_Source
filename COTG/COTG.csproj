@@ -231,6 +231,7 @@
     <Compile Include="Converters\CityConverters.cs" />
     <Compile Include="Converters\DateTimeFormatConverter.cs" />
     <Compile Include="Converters\IntConverter.cs" />
+    <Compile Include="Converters\StringConverter.cs" />
     <Compile Include="Draw\CityView.cs" />
     <Compile Include="Draw\Layer.cs" />
     <Compile Include="Draw\SpriteAnim.cs" />

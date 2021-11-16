@@ -281,6 +281,16 @@ namespace COTG
 			}
 		}
 
+		public static bool TryParseTime(this string s, out DateTimeOffset result)
+		{
+			if(DateTimeOffset.TryParseExact(s, AUtil.defaultDateFormat,DateTimeFormatInfo.InvariantInfo,DateTimeStyles.AllowWhiteSpaces | DateTimeStyles.AssumeUniversal,out result))
+				return true;
+			if(DateTimeOffset.TryParse(s,DateTimeFormatInfo.InvariantInfo,DateTimeStyles.AllowWhiteSpaces | DateTimeStyles.AssumeUniversal,out result))
+				return true;
+			result = DateTimeOffset.FromUnixTimeSeconds(0);
+			return false;
+		}
+
 		public static string FormatDateForFileName(this DateTimeOffset m)=>	m.ToString("yyyy_MM_dd", CultureInfo.InvariantCulture);
 	
 		public static string FormatFull(this DateTimeOffset m) => m.ToString(fullDateFormat, CultureInfo.InvariantCulture);
@@ -453,7 +463,7 @@ namespace COTG
 		//	return -1;
 		//}
 
-		public static T[] ArrayRemove<T>(this T[] l, int index)
+		public static T[] ArrayRemoveAt<T>(this T[] l, int index)
 		{
 			if (l == null || l.Length <= 0)
 			{
@@ -473,6 +483,31 @@ namespace COTG
 			}
 			return result;
 		}
+		public static void Remove<T>(ref T[] l,T me) where T:IEquatable<T>
+		{
+			Restart:
+			for (int i = 0; i < l.Length; ++i)
+			{
+				if (me.Equals(l[i]))
+				{
+					l = ArrayRemoveAt(l, i);
+					goto Restart;
+				}
+			}
+		}
+		public static void Remove<T>(ref T[] l,Func<T,bool> equals) 
+		{
+			Restart:
+			for (int i = 0; i < l.Length; ++i)
+			{
+				if (equals(l[i]))
+				{
+					l = ArrayRemoveAt(l, i);
+					goto Restart;
+				}
+			}
+		}
+		
 //		public static T[] RemoveAll<T>(this T[] l, Func<T, bool> pred) => l.Where(pred).ToArray();
 
 		public static T[] ArrayClone<T>(this T[] l)
@@ -679,7 +714,7 @@ namespace COTG
 		{
 		//	if( ((INotifyPropertyChanged)this).PropertyChanged is not null)
 			{
-				Note.ShowQuiet($"PropChange: {this} {member}");
+			//	Note.ShowQuiet($"PropChange: {this} {member}");
 
 				var id = AUtil.propertyChanges.FindIndex(x => x.me == this);
 				if(id == -1)

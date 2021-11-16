@@ -29,11 +29,12 @@ namespace COTG.Views
 		bool TimeFromUI()
 		{
 			var rv = false;
+			var text = time.Text;
 			if (
 			
-				  DateTimeOffset.TryParseExact(time.Text, "HH", DateTimeFormatInfo.InvariantInfo, DateTimeStyles.AllowWhiteSpaces | DateTimeStyles.AssumeUniversal, out var result)||
-				  DateTimeOffset.TryParseExact(time.Text, "HH':'mm", DateTimeFormatInfo.InvariantInfo, DateTimeStyles.AllowWhiteSpaces | DateTimeStyles.AssumeUniversal, out result) ||
-				DateTimeOffset.TryParseExact(time.Text, AUtil.defaultTimeFormat, DateTimeFormatInfo.InvariantInfo, DateTimeStyles.AllowWhiteSpaces |
+				  DateTimeOffset.TryParseExact(text, "HH", DateTimeFormatInfo.InvariantInfo, DateTimeStyles.AllowWhiteSpaces | DateTimeStyles.AssumeUniversal, out var result)||
+				  DateTimeOffset.TryParseExact(text, "HH':'mm", DateTimeFormatInfo.InvariantInfo, DateTimeStyles.AllowWhiteSpaces | DateTimeStyles.AssumeUniversal, out result) ||
+				DateTimeOffset.TryParseExact(text, AUtil.defaultTimeFormat, DateTimeFormatInfo.InvariantInfo, DateTimeStyles.AllowWhiteSpaces |
 				DateTimeStyles.AssumeUniversal, out result) )
 				   
 			{
@@ -42,14 +43,14 @@ namespace COTG.Views
 
 			}
 			else if (
-				 DateTimeOffset.TryParseExact(time.Text, AUtil.defaultDateFormat, DateTimeFormatInfo.InvariantInfo, DateTimeStyles.AllowWhiteSpaces | DateTimeStyles.AssumeUniversal, out result))
+				 DateTimeOffset.TryParseExact(text, AUtil.defaultDateFormat, DateTimeFormatInfo.InvariantInfo, DateTimeStyles.AllowWhiteSpaces | DateTimeStyles.AssumeUniversal, out result))
 			{
 				// all except year
 				dateTime = new DateTimeOffset(dateTime.Year, result.Month, result.Day, result.Hour, result.Minute, result.Second, TimeSpan.Zero); // strip off timezone 
 				rv = true;
 			}
 			else if(  // anything goes
-				DateTimeOffset.TryParse(time.Text, DateTimeFormatInfo.InvariantInfo, DateTimeStyles.AllowWhiteSpaces | DateTimeStyles.AssumeUniversal, out result)
+				DateTimeOffset.TryParse(text, DateTimeFormatInfo.InvariantInfo, DateTimeStyles.AllowWhiteSpaces | DateTimeStyles.AssumeUniversal, out result)
   )
 			{
 				// includes date

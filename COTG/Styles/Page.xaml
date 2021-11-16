@@ -25,9 +25,7 @@
 		<Setter Property="AllowFocusOnInteraction" Value="False" />
 		<Setter Property="AllowFocusWhenDisabled" Value="False" />
 	</Style>
-	<Style TargetType="ScrollViewer" >
-		<Setter Property="Padding" Value="0,0,16,16" />
-	</Style>
+	
 	<Style TargetType="Grid" >
 		<Setter Property="TabFocusNavigation" Value="Once" />
 	</Style>
@@ -345,15 +343,21 @@
 		<Setter Property="ClipboardCopyMode" Value="IncludeHeader"/>
 		<Setter Property="AlternatingRowBackground" Value="#FF200020" />
 	</Style>
-	<Style TargetType="sf:SfDataGrid">
-		<Setter Property="RowHeight" Value="{StaticResource ShortGridRowHeight}" />
+	<Style TargetType="sf:SfDataGrid" x:Key="sfDataGridDefaults" >
+		<Setter Property="RowHeight" Value="{StaticResource MediumGridRowHeight}" />
 		<Setter Property="FontFamily" Value="Bahnschrift" />
 		<Setter Property="FontSize" Value="{StaticResource SmallFontSize}" />
 		<Setter Property="FontStretch" Value="Condensed" />
 		<Setter Property="FontWeight" Value="Light" />
 		<Setter Property="SelectionMode" Value="Extended" />
 		<Setter Property="GridLinesVisibility" Value="Both" />
+		<Setter Property="AutoGenerateColumns" Value="False"/>
+		<Setter Property="ExpanderColumnWidth" Value= "40" />
+		<Setter Property="ShowGroupDropArea" Value="True" />
 		<Setter Property="AllowSorting" Value="True" />
+		<Setter Property="AllowDraggingColumns" Value="True" />
+		<Setter Property="AllowResizingHiddenColumns" Value="True" />
+		<Setter Property="AllowResizingColumns" Value="True" />
 		<Setter Property="CanMaintainScrollPosition" Value="True" />
 		<Setter Property="AllowEditing" Value="false"/>
 		<Setter Property="ShowToolTip" Value="True" />
@@ -361,6 +365,9 @@
 		<Setter Property="AllowDraggingColumns" Value="True"/>
 		<Setter Property="ColumnWidthMode" Value="SizeToHeader"/>
 	</Style>
+	<Style TargetType="sf:SfDataGrid" BasedOn="{StaticResource sfDataGridDefaults}" />
+	<Style TargetType="sf:DetailsViewDataGrid" BasedOn="{StaticResource sfDataGridDefaults}" />
+
 	<converter:DateTimeConverter x:Key="DateTimeConverter" />
     <converter:IntConverter x:Key="IntConverter" />
 	<converter:TimeConverter x:Key="TimeConverter" />

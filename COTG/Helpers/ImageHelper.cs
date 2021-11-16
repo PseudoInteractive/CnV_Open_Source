@@ -36,8 +36,10 @@ namespace COTG.Helpers
             imagesCache.Add(fileName, image);
             return image;
         }
-        
-        public static async Task<StorageFile> LoadImageFileAsync()
+
+        public static string FromImagesLink(string fileName) => ($"ms-appx:///Content/Art/{fileName}");
+
+		public static async Task<StorageFile> LoadImageFileAsync()
         {
             var openPicker = new FileOpenPicker
             {

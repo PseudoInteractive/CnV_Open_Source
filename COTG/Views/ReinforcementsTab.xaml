@@ -25,34 +25,24 @@
 		<sf:SfDataGrid x:Name="reinIn"
 							x:FieldModifier="public"
 							Grid.Row="1"
-							IsTabStop="True"
 					   AllowResizingColumns="True"
-							TabFocusNavigation="Once"
-							FrozenColumnCount="2"
+							
+							FrozenColumnCount="1"
 							ItemsSource="{x:Bind reinforcementsIn, Mode=OneWay}"
 							SelectionMode="Extended"
-							RowHeight="{StaticResource ShortGridRowHeight}"
 							FontSize="{StaticResource SmallFontSize}"
 							SelectionUnit="Row"
 					   AutoGenerateColumns="False"
-					    AllowFiltering="True" 
-                        AllowSorting="True" 
-					   AllowEditing="false"
-                       ShowGroupDropArea="True"
+					   AllowEditing="False"
 					   AllowDraggingColumns="True"
 					   ColumnWidthMode="SizeToHeader"
-		               CurrentCellRequestNavigate="CelNavigate"
-					   CellTapped="reinIn_CellTapped"
+		              
 		               Loaded="DataGridLoaded"
 
 
 					>
 			
-			<dataGrid:SfDataGrid.Columns>
-				<sf:GridHyperlinkColumn HeaderText="Ret" ValueBinding="{Binding Path= retUri}" DisplayBinding="{Binding  Path=retS}" />
-				<sf:GridTimeColumn MappingName="_Time" DisplayTimeFormat="{}{0:dd',' HH':'mm':'ss}" />
-				<sf:GridTextColumn MappingName="_Troops" ColumnWidthMode="Star"/>
-			</dataGrid:SfDataGrid.Columns>
+	
 		</sf:SfDataGrid>
 		<TextBlock Grid.Row="2" Text="{x:Bind reinOutTitle, Mode=OneWay}" />
 		<sf:SfDataGrid 
@@ -66,22 +56,14 @@
 							ItemsSource="{x:Bind reinforcementsOut, Mode=OneWay}"
 							AutoGenerateColumns="False"
 							SelectionMode="Extended"
-							RowHeight="{StaticResource ShortGridRowHeight}"
 							FontSize="{StaticResource SmallFontSize}"
 							SelectionUnit="Row"
-						CellToolTipOpening= "CellToolTipOpening"
-						CurrentCellRequestNavigate="CelNavigate"
+						ColumnWidthMode="SizeToHeader"
 						AllowTriStateSorting="True"
-						 CellTapped="reinIn_CellTapped"
-			
+					
 							Loaded="DataGridLoaded"
 					  >
-			<dataGrid:SfDataGrid.Columns >
-				<sf:GridHyperlinkColumn HeaderText="Ret" ValueBinding="{Binding Path= retUri}" DisplayBinding="{Binding  Path=retS}" />
-				<sf:GridTimeColumn MappingName="_Time" DisplayTimeFormat="{}{0:dd',' HH':'mm':'ss}" />
-				<sf:GridTextColumn MappingName="_Troops" ColumnWidthMode="Star"/>
-			</dataGrid:SfDataGrid.Columns>
-
+	
 		</sf:SfDataGrid>
 	</Grid>
 </view:UserTab>
