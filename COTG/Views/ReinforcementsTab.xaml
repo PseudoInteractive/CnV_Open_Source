@@ -46,7 +46,6 @@
 		</sf:SfDataGrid>
 		<TextBlock Grid.Row="2" Text="{x:Bind reinOutTitle, Mode=OneWay}" />
 		<sf:SfDataGrid 
-					Padding="16"
 						Grid.Row="3" x:Name="reinOut"
 							x:FieldModifier="public"
 			

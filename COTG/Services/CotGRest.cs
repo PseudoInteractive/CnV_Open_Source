@@ -737,8 +737,8 @@ namespace COTG.Services
 			// This gets rid of all reinforcements except those that from other players 
 			foreach (var s in Spot.allSpots)
 			{
-				s.Value.reinforcementsIn = s.Value.reinforcementsIn.WhereNotMine() ;
-				s.Value.reinforcementsOut = s.Value.reinforcementsOut.WhereNotMine();
+				s.Value.SetReinforcementsIn( s.Value.reinforcementsIn.WhereNotMine() );
+				s.Value.SetReinforcementsOut(s.Value.reinforcementsOut.WhereNotMine() );
 			}
 			var jsd = json;
 			var changed = new HashSet<City>();
@@ -789,9 +789,9 @@ namespace COTG.Services
 								}
 
 								ts += re.troops.TS();
-								spot.reinforcementsIn = spot.reinforcementsIn.ArrayAppend(re);
+								spot.AppendReinforcementsIn(re);
 								var source = Spot.GetOrAdd(re.sourceCid);
-								source.reinforcementsOut = source.reinforcementsOut.ArrayAppend(re);
+								source.AppendReinforcementsOut(re);
 								++reinCount;
 							}
 							catch (Exception ex)

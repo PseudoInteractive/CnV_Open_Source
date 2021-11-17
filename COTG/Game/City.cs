@@ -214,7 +214,6 @@ namespace COTG.Game
 
 		//public Building GetBuiding((int x, int y) xy) => buildings[XYToId(xy)];
 		//	public Building GetBuiding( int bspot) => buildings[bspot];
-		public Building[] postQueuebuildingsCache = Emptybuildings;
 		public DArray<BuildQueueItem> buildQueue = DArray<BuildQueueItem>.Rent(18);// fixed size to improve threading behaviour and performance
 																				 //public static ManualResetEventSlim buildQUpdated = new();
 		public const int buildQMax = 16; // this should depend on ministers
@@ -853,7 +852,8 @@ namespace COTG.Game
 								Assert(rein.ValueKind == JsonValueKind.Array && rein.GetArrayLength() == 0);
 							}
 						}
-						reinforcementsIn = l.ToArray();
+
+						SetReinforcementsIn(l);
 					}
 
 				}
@@ -922,10 +922,10 @@ namespace COTG.Game
 						Log("error BD bad");
 					}
 					
-					BuildingsOrQueueChanged();
 					
 					if(anyChanged)
 					{
+						BuildingsOrQueueChanged();
 						UpdateBuildStage();
 						OnPropertyChanged();
 					}
@@ -2222,7 +2222,7 @@ namespace COTG.Game
 		{
 			if ( buildingCountCache < 0 )
 			{
-				if(!forceUpdate && (postQueueBuildingCache==null ))
+				if(!forceUpdate && !postQueueBuildingCacheValid )
 				{
 					return new TownHallAndBuildingCount() { townHallLevel = -1,buildingCount = -1 };
 				}

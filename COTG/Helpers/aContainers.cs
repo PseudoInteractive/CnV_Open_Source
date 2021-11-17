@@ -79,7 +79,8 @@ namespace COTG
 			try
 			{
 				int before = collectionChanges.Length;
-				var counter = collectionChanges.Length/8 + 2;
+				var counter = processAllCollectionChanges ? collectionChanges.Length : collectionChanges.Length/4 + 2;
+				processAllCollectionChanges = false;
 				do
 				{
 					if(!collectionChanges.Any())
@@ -229,7 +230,14 @@ namespace COTG
 
 
 		protected long lastDataHash;
-		static Debounce ChangesDebounce = new(ProcessCollectionChanges) { runOnUiThread = true,debounceDelay=100,throttleDelay=500 };
+		static DebounceTask ChangesDebounce = new(ProcessCollectionChanges) { runOnUiThread = true,debounceDelay=100,throttleDelay=500 };
+
+		public static Task ProcessAllCollectionChangesNow()
+		{
+			processAllCollectionChanges=true;
+			return ChangesDebounce.Go(0);
+		}
+		private static bool processAllCollectionChanges;
 		public void ClearHash() => lastDataHash=-1L;
 
 		//public virtual long GetDataHash()
@@ -263,6 +271,13 @@ namespace COTG
 		
 		public ImmutableArray<T> c = ImmutableArray<T>.Empty;
 
+		public NotifyCollection(IEnumerable<T> starting)
+		{
+			Set(starting);
+		}
+		public NotifyCollection()
+		{
+		}
 
 		public int Count => ((ICollection<T>)c).Count;
 
@@ -375,7 +390,7 @@ namespace COTG
 			
 		}
 
-		public void Add(T i) => Assert(false);
+		public void Add(T i) => Add(i, true);
 		public  void Insert(int id,T item,bool notify)
 		{
 			c=c.Insert(id,item);
@@ -470,8 +485,8 @@ namespace COTG
 		 int IList.IndexOf(object value) => ((IList)c).IndexOf(value);
 		void IList.Insert(int index,object value) => Assert(false);
 		void IList.Remove(object value) => Assert(false);
-		public void Clear() => Assert(false);
-		public bool Remove(T item) { Assert(false); return false; }
+		public void Clear() => Clear(true);
+		public bool Remove(T item) => Remove(item, true);
 
 		public int IndexOf(T item) => c.IndexOf(item);
 		public void Insert(int index,T item) => Assert(false);
@@ -511,6 +526,8 @@ namespace COTG
 
 		}
 		public void SortSmall(Comparison<T> comparer) { Assert(false); }
+
+		
 	}
 
 
@@ -523,6 +540,15 @@ namespace COTG
 	public static class DumbHelpers
     {
 		
+	    public static bool AnyNullable<T>(this IEnumerable<T> me)
+	    {
+		    return me is not null && me.Any();
+	    }
+	    public static int CountNullable<T>(this IEnumerable<T> me)
+	    {
+			return me is null ? 0 : me.Count();
+	    }
+
 		public static void NotifyChange(this HashSet<City> items, params string[] memberName)
         {
             if (items.Count == 0)

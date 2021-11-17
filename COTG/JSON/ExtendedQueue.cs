@@ -463,36 +463,57 @@ public class ExtendedQueue:IDisposable
 								{
 									Assert(offset+1 < queue.count);
 									var iNext = queue.v[offset+1];
+									
+									var bPrior0 = city.GetBuildingPostQueue(i.bspot,cotgQ.span,queue.Slice(0,offset));
+									var bPrior1 = city.GetBuildingPostQueue(iNext.bspot,cotgQ.span,queue.Slice(0,offset));
+
+									if ( bPrior0.bid != iNext.bid || bPrior1.bid != i.bid)
+									{
+										Trace("Move invalid");
+										goto removeOp;
+									}
+
+									if(!city.IsValidForMove(i.bspot,iNext.bid,false))
+										goto doItLater;
+									if(!city.IsValidForMove(iNext.bspot,i.bid,false))
+										goto doItLater;
+
 									if (iNext.elvl == 0 )
 									{
+									
 										// move
-										if(!await DoMove(cid,i.bspot,iNext.bspot))
-											goto failed;
+										if(!await DoMove(cid,iNext.bspot,i.bspot))
+											goto doItLater;
 									}
 									else
 									{
-										var scratch = city.FindAnyFreeSpot(i.bspot);
+										if(Player.moveSlots <= 3)
+											goto doItLater;
+										var scratch = city.FindAnyFreeSpotForMove(i.bspot);
 										if (scratch == 0)
 										{
-											goto failed;
+											goto doItLater;
 										}
 
+										Assert( city.IsValidForMove(scratch,0,false) );
+									
 										if(!await DoMove(cid,iNext.bspot,scratch))
-											goto failed;
+											goto removeOp;
 										if(!await DoMove(cid,i.bspot,iNext.bspot))
-											goto failed;
+											goto removeOp;
 										if(!await DoMove(cid,scratch,i.bspot))
-											goto failed;
+											goto removeOp;
 
 									}
+									removeOp:
 									RemoveAt(offset);
 									RemoveAt(offset);
 									continue;
-									failed:
-									Assert(false);
-//									offset += 2;
-									RemoveAt(offset);
-									RemoveAt(offset);
+									doItLater:
+								//	Assert(false);
+									offset += 2;
+//									RemoveAt(offset);
+//									RemoveAt(offset);
 									continue;
 
 								}
@@ -1093,7 +1114,7 @@ public static class BuildQueue
 			}
 			Assert(initialized);
 			var op = new BuildQueueItem(a.slvl,a.elvl,a.bid,a.bspot);
-			cid.AsCity().BuildingsOrQueueChanged();
+			
 
 			if(a.bid == City.bidTemple)
 			{
@@ -1107,6 +1128,7 @@ public static class BuildQueue
 					Trace("Invalid temple op");
 
 				}
+				cid.AsCity().BuildingsOrQueueChanged();
 				return;
 			}
 			if(a.bid == City.bidCastle && a.isBuild)

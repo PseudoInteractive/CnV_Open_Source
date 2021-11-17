@@ -140,18 +140,22 @@ public class Reinforcement : IEquatable<Reinforcement>
 	
     public static class ReinforcementHelper
     {
-        public static int TS(this Reinforcement[] that)
+        public static int TS(this IEnumerable<Reinforcement>? that)
         {
             var rv = 0;
-            foreach(var t in that)
+            if (that is not null)
             {
-                rv += t.troops.TS();
+	            foreach (var t in that)
+	            {
+		            rv += t.troops.TS();
+	            }
             }
+
             return rv;
         }
-		public static Reinforcement [] WhereNotMine(this Reinforcement[] me)
+		public static Reinforcement [] WhereNotMine(this IEnumerable<Reinforcement>? me)
 		{
-			if (me == null || me.Length == 0)
+			if (me == null || !me.Any() )
 				return Array.Empty<Reinforcement>();
 			return me.Where(r => !Player.IsMe(r.sourceCid.CidToPid())).ToArray();
 		}

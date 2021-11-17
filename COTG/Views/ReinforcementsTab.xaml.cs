@@ -57,10 +57,15 @@ namespace COTG.Views
 
 		public async Task Update()
 		{
+			reinforcementsIn.Clear();
+			reinforcementsOut.Clear();
+			var refreshTask = NotifyCollectionBase.ProcessAllCollectionChangesNow();
 			var _cid = targetCid;
 			var showAll = _cid == 0;
 			using var work = new WorkScope("Checking reinforcements..");
 			await Services.ReinforcementsOverview.instance.Post();
+			await refreshTask;
+			
 			var _spot = _cid == 0 ? null : Spot.GetOrAdd(_cid);
 
 			var tab = this;
@@ -83,15 +88,18 @@ namespace COTG.Views
 
 			//tab. panel.Children.Add(new TextBlock() { Text = showAll ? "All Incoming Reinforcements" : "Reinforcements Here:" });
 			{
-				tab.reinforcementsIn.Set(spots.Where(s => s.reinforcementsIn.Any()).OrderByDescending(s => s.reinforcementSortScore)
+				tab.reinforcementsIn.Set(spots.Where(s => s.reinforcementsIn.AnyNullable()).OrderByDescending(s => s.reinforcementSortScore)
 					.ToArray(), true, true,skipHashCheck:true);
 			}
 			{
 				tab.reinforcementsOut.Set(
-					spots.SelectMany(s => s.reinforcementsOut).
+					spots.Where(s=>s.reinforcementsOut.AnyNullable()).
+						SelectMany(s => s.reinforcementsOut).
 						Select(s=>s.sourceCity).Distinct().
 						OrderByDescending(s=>s.reinforcementSortScore).ToArray(), true, true,skipHashCheck:true);
 			}
+			
+
 			tab.OnPropertyChanged();
 			
 			//var memStream = new MemoryStream();
@@ -137,8 +145,10 @@ namespace COTG.Views
 							var r = e.Record as Reinforcement;
 							Note.Show($"Returning {r.troopsString} from {r.targetCity} back to {r.sourceCity} ");
 							r.ReturnAsync();
-							AUtil.Remove(ref r.targetCity.reinforcementsIn,r);
-							AUtil.Remove(ref r.sourceCity.reinforcementsOut,r);
+							if(r.targetCity.reinforcementsIn is not null)
+								r.targetCity.reinforcementsIn.Remove(r,true);
+							if(r.sourceCity.reinforcementsOut is not null)
+								r.sourceCity.reinforcementsOut.Remove(r,true);
 							// Todo: refresh lists
 							break;
 
@@ -210,12 +220,12 @@ namespace COTG.Views
 			grid.RecordContextFlyout = new();
 			grid.CurrentCellRequestNavigate += CelNavigate;
 			grid.CellTapped += reinIn_CellTapped;
+			grid.AllowFrozenGroupHeaders=false;
+			
 			grid.CellToolTipOpening += CellToolTipOpening;
-
-
+//			grid.LiveDataUpdateMode = Syncfusion.UI.Xaml.Data.LiveDataUpdateMode.AllowChildViewUpdate;
 			return _lock0;
 		}
-
 		private void SetupReinforcementGrid(SfDataGrid grid, bool isOutgoing)
 		{
 			using var _lock = SetupGrid(grid);
@@ -225,8 +235,6 @@ namespace COTG.Views
 
 
 			
-			
-		
 			{
 				SfDataGrid child0 = new() { AutoGenerateRelations = false, AutoGenerateColumns = false};
 				using var _lock1 = SetupGrid(child0);
@@ -235,21 +243,29 @@ namespace COTG.Views
 				child0.AddTime(nameof(Reinforcement.dateTime), "Arrival", nullText: "Arrived");
 				child0.AddText(nameof(Reinforcement._Troops), "Troops",
 					widthMode: Syncfusion.UI.Xaml.Grids.ColumnWidthMode.Star );
-				var details = new GridViewDefinition() { RelationalColumn=isOutgoing?nameof(City.reinforcementsOutSorted) : nameof(City.reinforcementsInSorted) , DataGrid=child0 } ;
-				grid.DetailsViewDefinition.Add( details );
+				{
+					var details = new GridViewDefinition() { RelationalColumn=isOutgoing?nameof(City.reinforcementsOutProp) : nameof(City.reinforcementsInProp) , DataGrid=child0 } ;
+					grid.DetailsViewDefinition.Add(details);
+				}
 				{
 					SfDataGrid child1 = new() { AutoGenerateRelations = false, AutoGenerateColumns = false};
 					using var _lock2 = SetupGrid(child1);
 					child1.SourceType = typeof(City);
 					child1.AddCity(!isOutgoing ? "Defender" : "Target");
-					child0.DetailsViewDefinition.Add( 
-						new GridViewDefinition() { RelationalColumn=isOutgoing?nameof(Reinforcement.targetCities) : nameof(Reinforcement.sourceCities) , DataGrid=child1 } 
-					  );
+					var details1 = new GridViewDefinition()
+					{
+						RelationalColumn = isOutgoing
+							? nameof(Reinforcement.targetCities)
+							: nameof(Reinforcement.sourceCities) ,
+						DataGrid = child1
+					};
+					child0.DetailsViewDefinition.Add(details1);
 
 				}
 
 			}
 		}
+
 
 		private void ContextFlyoutOpening(object sender,GridContextFlyoutEventArgs e)
 		{

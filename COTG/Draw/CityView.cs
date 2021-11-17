@@ -141,7 +141,7 @@ namespace COTG.Draw
 			try
 			{
 				int iAlpha = (int)(alpha * 255f);
-				var postBuildings = build.postQueueBuildings;
+				var postBuildings = build.postQueueBuildingsForRender;
 				var buildings = build.buildings;
 				buildCityOrigin = build.cid.CidToWorldV();
 				// draw each building tile

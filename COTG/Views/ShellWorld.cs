@@ -1276,7 +1276,7 @@ namespace COTG.Views
 															else
 																sb.Append("Attack Sent\n");
 														}
-														else if (city.reinforcementsIn.Length > 0)
+														else if (city.reinforcementsIn.AnyNullable() )
 														{
 															sb.AppendFormat("{0} def\n", city.tsDefMax);
 															int counter = 0;

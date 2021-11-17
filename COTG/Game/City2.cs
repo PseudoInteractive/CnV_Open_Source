@@ -26,7 +26,7 @@ namespace COTG.Game
 	{
 
 		private Building[] postQueueBuildingCache = null;// = new Building[citySpotCount];
-
+		private bool postQueueBuildingCacheValid;
 
 	//	public object postQueueBuildingLock = new();
 	//	public static int cachedCity;
@@ -34,16 +34,24 @@ namespace COTG.Game
 	//	static int postQueueTownHallLevel = -1;
 		public  void BuildingsOrQueueChanged()
 		{
-			postQueueBuildingCache =null;
+			postQueueBuildingCacheValid=false;
 			buildingCountCache = -1;
 		}
+
+		public Building[] postQueueBuildingsForRender=>
+				postQueueBuildingCache ?? buildings;
 		
 		public Building[] postQueueBuildings
 		{
 			get {
-				var rv = postQueueBuildingCache;
-				if(rv is not null)
-					return rv;
+
+				if (postQueueBuildingCacheValid)
+				{
+					Assert(postQueueBuildingCache != null);
+					return postQueueBuildingCache;
+				}
+
+				// Todo: SpinLock here?
 				//lock(postQueueBuildingLock)
 				{
 				//	if(cachedCity == cid)
@@ -52,8 +60,8 @@ namespace COTG.Game
 					//{
 					//var  buildingsCache = buildings;
 					//}
-					rv = new Building[citySpotCount];
-					postQueueBuildingCache = rv;
+					var rv = new Building[citySpotCount];
+					var buildings = this.buildings;
 				
 					var buildQueue = this.buildQueue.span;
 
@@ -95,8 +103,11 @@ namespace COTG.Game
 
 						}
 					}
+
 				//	cachedCity = cid;
-				//	postQueuebuildingsCache = rv;
+
+					postQueueBuildingCache = rv;
+					postQueueBuildingCacheValid=true;
 					return rv;
 				}
 			}
@@ -419,13 +430,49 @@ namespace COTG.Game
 			return rv;
 
 		}
+
+		public bool HasBuildOps(short bspot)
+		{
+			foreach (var i in IterateQueue())
+			{
+				if(i.bspot == bspot)
+					return true;
+			}
+			return false;
+		}
+
+
 		public async Task<int> EnqueueMove(short spotFrom, short spotTo)
 		{
 			var b = postQueueBuildings[spotFrom];
-			await Enqueue(new BuildQueueItem(b.bl,b.bl,b.bid,spotTo,0,true));
-			await Enqueue(new BuildQueueItem(0,0,0,spotFrom,0,true));
-			Player.moveSlots -= 1;
+			if (Player.moveSlots > 1 && IsValidForMove(spotTo, 0,true) && IsValidForMove(spotFrom, b.bid,true) )
+			{
+				if (await DoMove(cid, spotFrom,spotTo))
+				{
+					var empty = new Building(0, 0);
+					Assert(postQueueBuildings[spotTo] == buildings[spotTo]);
+					Assert(postQueueBuildings[spotFrom] == buildings[spotFrom]);
+					postQueueBuildings[spotTo] = b;
+					postQueueBuildings[spotFrom]=empty;
+					buildings[spotTo] = b;
+					buildings[spotFrom] = empty;
 
+				}
+				else
+				{
+					return 0;
+				}
+			}
+			else
+			{
+
+
+				await Enqueue(new BuildQueueItem(b.bl, b.bl, b.bid, spotTo, 0, true));
+				await Enqueue(new BuildQueueItem(0, 0, 0, spotFrom, 0, true));
+			}
+
+			Player.moveSlots -= 1;
+			
 
 			return 1;
 
@@ -434,11 +481,42 @@ namespace COTG.Game
 		{
 			var bFrom = postQueueBuildings[spotFrom];
 			var bTo = postQueueBuildings[spotTo];
-			await Enqueue(new BuildQueueItem(bFrom.bl,bFrom.bl,bFrom.bid,spotTo,0,true));
-			await Enqueue(new BuildQueueItem(bTo.bl,bTo.bl,bTo.bid,spotFrom,0,true));
-			Player.moveSlots -= 2;
+			if (Player.moveSlots > 3 && IsValidForMove(spotTo,bTo.bid,true) && IsValidForMove(spotFrom, bFrom.bid,true) )
+			{
+				var scratch = FindAnyFreeSpotForMove(spotTo);
+				if (scratch == 0)
+				{
+					Trace("No empty spots to temporarily move to");
+					return 0;
+				}
 
-			return 0;
+				Assert( IsValidForMove(scratch,0,true) );
+									
+				if(!await DoMove(cid,spotTo,scratch))
+					return 0;
+				if(!await DoMove(cid,spotFrom,spotTo))
+					return 0;
+				if(!await DoMove(cid,scratch,spotFrom))
+					return 0;
+				{
+					Assert(postQueueBuildings[spotTo] == buildings[spotTo]);
+					Assert(postQueueBuildings[spotFrom] == buildings[spotFrom]);
+					postQueueBuildings[spotTo]=bFrom;
+					postQueueBuildings[spotFrom]=bTo;
+					buildings[spotTo] = bFrom;
+					buildings[spotFrom] = bTo;
+
+				}
+			}
+			else
+			{
+				await Enqueue(new BuildQueueItem(bFrom.bl, bFrom.bl, bFrom.bid, spotTo, 0, true));
+				await Enqueue(new BuildQueueItem(bTo.bl, bTo.bl, bTo.bid, spotFrom, 0, true));
+			}
+
+			Player.moveSlots -= 3;
+
+			return 1;
 
 		}
 		//private void Upgrade_Click(object sender, RoutedEventArgs e)
@@ -840,7 +918,7 @@ namespace COTG.Game
 								}
 
 
-								var cb = FindAnyFreeSpot(bspot, !dryRun);
+								var cb = FindAnyFreeSpotForMove(bspot, !dryRun);
 								if (!await MoveBuilding(bspot, cb, dryRun))
 									return -1;
 
@@ -869,7 +947,7 @@ namespace COTG.Game
 										return -1; 
 									else if(move == 1)
 									{
-										if(!await MoveBuilding(bspot,FindAnyFreeSpot(bspot),dryRun))
+										if(!await MoveBuilding(bspot,FindAnyFreeSpotForMove(bspot),dryRun))
 											return -1;
 									}
 									else
@@ -918,14 +996,27 @@ namespace COTG.Game
 			return bestSpot;
 		}
 
-		public int FindAnyFreeSpot(int referenceBid, bool verbose = true)
+		public int FindAnyFreeSpotForMove(int referenceBid, bool verbose = true)
 		{
 			return FindFreeSpot(CityBuild.GetSpotType(referenceBid), verbose);
 		}
 		public ushort findSpotOffset;
+
+		public bool IsValidForMove(int bSpot, short bid, bool includeExtendedQueue)
+		{
+			if (buildings[bSpot].bid != bid)
+				return false;
+			foreach (var i in includeExtendedQueue ? IterateQueue() : buildQueue)
+			{
+				if(i.bspot == bSpot )
+					return false;
+			}
+			return true;
+		}
+
 		public int FindFreeSpot(SpotType type = SpotType.building, bool verbose = true)
 		{
-			var build = City.GetBuild();
+			var build = this;
 			var spots = CityBuild.GetSpots(type);
 			for (int iter = 0; iter <= City.citySpotCount; ++iter)
 			{
@@ -953,7 +1044,7 @@ namespace COTG.Game
 		public int FindSpare(int bid, bool dryRun)
 		{
 			var rv = 0;
-			var build = City.GetBuild();
+			var build = this;
 			for (int xy = 0; xy < City.citySpotCount; ++xy)
 			{
 				var overlayBid = build.GetLayoutBid(xy);
@@ -990,7 +1081,7 @@ namespace COTG.Game
 					var rv = true;
 					if (!dryRun)
 					{
-						EnqueueMove((short)a,(short)b);
+						await EnqueueMove((short)a,(short)b);
 						
 						// I hope that these operations are what I expect with references
 
@@ -1017,10 +1108,10 @@ namespace COTG.Game
 		public static async Task<bool> DoMove(int cid,int @from, int to)
 		{
 			
-			var s = await Services.Post.SendForText("includes/mBu.php", $"a={to}&b={@from}&c={cid}", World.CidToPlayerOrMe(cid));
+			var s = await Services.Post.SendForText("includes/mBu.php", $"a={@from}&b={to}&c={cid}", World.CidToPlayerOrMe(cid));
 			if(s.Trim().TryParseInt(out var i) && i > 10 )
 			{
-			
+				--Player.moveSlots;
 				return true;
 			}
 			else
@@ -1029,7 +1120,7 @@ namespace COTG.Game
 				if (isBuild)
 				{
 					Trace(
-						$"*Invalid Move* Error code {i} (4 means out of move slots, you _might_ have {Player.moveSlots} left) at {cid.AsCity()}: {from}<=>{to}"
+						$"*Invalid Move* Error code {i}  you _might_ have {Player.moveSlots} left) at {cid.AsCity()}: {from}<=>{to}"
 						);
 				}
 
@@ -1048,7 +1139,7 @@ namespace COTG.Game
 					Status($"Swap {bds[b].name} and {bds[a].name} ({Player.moveSlots} moves left) ", dryRun);
 					if (!dryRun)
 					{
-						EnqueueSwap((short)a, (short) b);
+						await EnqueueSwap((short)a, (short) b);
 
 						
 

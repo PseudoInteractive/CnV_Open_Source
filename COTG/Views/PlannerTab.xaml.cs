@@ -377,7 +377,7 @@ namespace COTG.Views
 			if( CityBuild.isPlanner)
 			{
 				city.BuildingsOrQueueChanged();
-				
+				PleaseRefresh.Go();
 			}
 			if(wasWritten)
 			{

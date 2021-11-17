@@ -1896,7 +1896,7 @@ namespace COTG
 												continue;
 											if(wantDetails || Spot.IsSelectedOrHovered(targetCid,true))
 											{
-												DrawTextBox($"{(city.tsDefMax.Max(city.tsHome) + 999) / 1000 }k Ts (#:{city.reinforcementsIn.Length})",c1,tipTextFormatCentered,Color.Cyan,textBackgroundOpacity,Layer.tileText);
+												DrawTextBox($"{(city.tsDefMax.Max(city.tsHome) + 999) / 1000 }k Ts (#:{city.reinforcementsIn.CountNullable()})",c1,tipTextFormatCentered,Color.Cyan,textBackgroundOpacity,Layer.tileText);
 											}
 
 										}

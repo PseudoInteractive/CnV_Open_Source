@@ -680,7 +680,7 @@ namespace COTG.Game
 									}
 									//	else if (pass == 1)
 									//	{
-									//		var spare = CityBuild.FindAnyFreeSpot(id);
+									//		var spare = CityBuild.FindAnyFreeSpotForMove(id);
 									//		if (!await MoveBuilding(id, spare, false)) 
 									//		{
 

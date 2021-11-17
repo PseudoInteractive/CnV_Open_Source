@@ -69,6 +69,8 @@ namespace COTG.Views
 			{
 
 
+				string label=null;
+
 				Spot.tagFilter = default;
 				// Write back tags
 				foreach (var tag in TagHelper.tagsWithoutAliases)
@@ -79,14 +81,15 @@ namespace COTG.Views
 						if (check.IsChecked.GetValueOrDefault())
 						{
 							Spot.tagFilter |= tag.v;
+							if(label == null)
+								label = $"{tag.s}+";
 						}
 
 					}
 				}
 				// Write back continents
 				{
-					var any = false;
-					int first = 0;
+					int first = -1;
 					Spot.continentFilter = 0;
 					for (int id = 0; id < World.continentCount; ++id)
 					{
@@ -94,35 +97,38 @@ namespace COTG.Views
 						var v = but.IsChecked;
 						if (v.GetValueOrDefault())
 						{
-							if (!any)
+							if (first == -1)
 							{
 								first = id;
 							}
 
-							any = true;
 							Spot.continentFilter |= Spot.ContinentFilterFlag(id);
 						}
 					}
-					string label;
-					if (!any)
-					{
-						Spot.continentFilter = Spot.continentFilterAll;
 
-						label = "Cont/Tag";
-					}
-					else
+					if ( label == null)
 					{
-						// is just one set?
-						var xy = World.PackedContinentToXY(first);
-						if ((Spot.continentFilter & (Spot.continentFilter - 1ul)) == 0)
+						if (first == -1 )
 						{
-							label = ZString.Format("{0}{1}", xy.y, xy.x);
+							Spot.continentFilter = Spot.continentFilterAll;
+
+							label = "Cont/Tag";
 						}
 						else
 						{
-							label = ZString.Format("{0}{1}+", xy.y, xy.x);
+							// is just one set?
+							var xy = World.PackedContinentToXY(first);
+							if ((Spot.continentFilter & (Spot.continentFilter - 1ul)) == 0)
+							{
+								label = ZString.Format("{0}{1}", xy.y, xy.x);
+							}
+							else
+							{
+								label = ZString.Format("{0}{1}+", xy.y, xy.x);
+							}
 						}
 					}
+
 					ShellPage.instance.ContinentFilter.Content = label;
 					//	ExportCastles.instance.ContinentFilter.Content = label;
 					CityList.NotifyChange(false);

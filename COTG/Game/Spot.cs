@@ -272,13 +272,37 @@ namespace COTG.Game
 		}
 		public int tsOff { get { var i = incomingOffTS; return (i > 0) ? i : troopsHome.TSOff(); } }
 
-		public Reinforcement[] reinforcementsIn = Array.Empty<Reinforcement>();
-		public Reinforcement[] reinforcementsOut = Array.Empty<Reinforcement>();
+		public NotifyCollection<Reinforcement>? reinforcementsIn = null;
+		public NotifyCollection<Reinforcement>? reinforcementsOut = null;
 
-		public Reinforcement[] reinforcementsInSorted =>
-			reinforcementsIn.OrderByDescending(r => r.sourceCity.reinforcementSortScore).ToArray();
-		public Reinforcement[] reinforcementsOutSorted =>
-			reinforcementsOut.OrderByDescending(r => r.targetCity.reinforcementSortScore).ToArray();
+		// need properties for UI
+		public NotifyCollection<Reinforcement>? reinforcementsInProp =>  reinforcementsIn;
+		public NotifyCollection<Reinforcement>? reinforcementsOutProp => reinforcementsOut;
+
+		public void SetReinforcementsOut(IEnumerable<Reinforcement> l)
+		{
+			AUtil.SetNullable(ref reinforcementsOut,
+				l.OrderByDescending(r => r.targetCity.reinforcementSortScore).ToArray());
+		}
+
+		public void AppendReinforcementsOut(Reinforcement r)
+		{
+			SetReinforcementsOut( reinforcementsOut.AppendNullable(r));
+		}
+		public void SetReinforcementsIn(IEnumerable<Reinforcement> l)
+		{
+			AUtil.SetNullable(ref reinforcementsIn,
+				l.OrderByDescending(r => r.sourceCity.reinforcementSortScore).ToArray());
+		}
+		public void AppendReinforcementsIn(Reinforcement r)
+		{
+			SetReinforcementsIn( reinforcementsIn.AppendNullable(r));
+		}
+
+		//public Reinforcement[] reinforcementsInSorted =>
+		//	reinforcementsIn.OrderByDescending(r => r.sourceCity.reinforcementSortScore).ToArray();
+		//public Reinforcement[] reinforcementsOutSorted =>
+		//	reinforcementsOut.OrderByDescending(r => r.targetCity.reinforcementSortScore).ToArray();
 
 		public string defString => GetDefString(", ");
 		public string GetDefString(string separator)
@@ -296,9 +320,13 @@ namespace COTG.Game
 			else
 			{
 				Add(ref all, troopsHome, (t => t.isDef || t.isSenator));
-				foreach (var i in reinforcementsIn)
+				if (reinforcementsIn.AnyNullable())
 				{
-					Add(ref all, i.troops); ;
+					foreach (var i in reinforcementsIn)
+					{
+						Add(ref all, i.troops);
+						;
+					}
 				}
 			}
 			bool first = true;

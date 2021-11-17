@@ -13,7 +13,7 @@ using COTG.Game;
 namespace COTG
 {
 	[DebuggerDisplay($"{{{nameof(GetDebuggerDisplay)}(),nq}}")]
-	public readonly struct Building
+	public readonly struct Building : IEquatable<Building>
 	{
 		public readonly byte id; // this is pretranslated from the buildingDefs definitions to pack it into a byte
 		public readonly byte bl; // building level
@@ -64,6 +64,15 @@ namespace COTG
 		//	[J("rb", NullValueHandling = N.Ignore)] public Rb[] Rb { get; set; }
 		//	[J("rtt", NullValueHandling = N.Ignore)] public Rbb[] Rtt { get; set; }
 
+		public bool Equals(Building other) => id == other.id && bl == other.bl;
+
+		public override bool Equals(object obj) => obj is Building other && Equals(other);
+
+		public override int GetHashCode() => (int)id + 256*(int)bl;
+
+		public static bool operator ==(Building left, Building right) => left.Equals(right);
+
+		public static bool operator !=(Building left, Building right) => !left.Equals(right);
 	}
 
 	//struct BuildingArrayPoolPolicy:IPooledObjectPolicy<Building[]>

@@ -483,6 +483,28 @@ namespace COTG
 			}
 			return result;
 		}
+		public static void SetNullable<T>(ref NotifyCollection<T>? l,IEnumerable<T> s)  where T: class
+		{
+			if ( s.Any())
+			{
+				if(l is null)
+					l = new();
+					
+				l.Set(s,skipHashCheck:true);
+			}
+			else if (l is not null)
+			{
+				l.Clear(true);
+				l = null;
+			}
+					
+		}
+		public static IEnumerable<T> AppendNullable<T>(this IEnumerable<T>? l,T s)
+		{
+			if (l is null)
+				return new [] {s};
+			return l.Append(s);
+		}
 		public static void Remove<T>(ref T[] l,T me) where T:IEquatable<T>
 		{
 			Restart:

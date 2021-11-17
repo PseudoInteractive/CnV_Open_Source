@@ -221,6 +221,7 @@ namespace COTG
 			public int debounceDelay = 250;
 			public int throttleDelay = 750;
 			public bool runOnUiThread;
+			public bool throttled;
 			TaskCompletionSource onComplete = null;
 			TickT nextCall;
 			TickT throttleEnd;
@@ -230,9 +231,9 @@ namespace COTG
 			{
 				func = _func;
 			}
-			public Task Go(int delayOverride = 0)
+			public Task Go(int delayOverride = -1)
 			{
-				if(delayOverride == 0)
+				if(delayOverride == -1)
 					delayOverride = debounceDelay;
 
 				var rv = onComplete;
@@ -241,14 +242,10 @@ namespace COTG
 				{
 					// pending
 					// delay further or if it is running, add a throttle timeout
-					var nextT = ATime.TickCount +delayOverride;
-					if(nextT - nextCall > 0)
-					{
-						nextCall = nextT;
-					}
+					nextCall = nextCall.Max( ATime.TickCount +delayOverride);
 					return rv.Task;
 				}
-				if(isInCooldown)
+				if(throttled && isInCooldown)
 					return Task.CompletedTask;
 
 				rv = new();
@@ -280,6 +277,13 @@ namespace COTG
 							await Task.Delay( (int)(dt + 32)).ConfigureAwait(false);
 						}
 					}
+					// this will be updated again when the task is complete
+					nextCall = nextCall.Max( ATime.TickCount + throttleDelay);
+					// Ready for next call
+					// We are not yet done, but a call incoming while we are processing should only be completed when that call completes
+					// There is a potential for overlap
+					var wait = onComplete;
+					onComplete = null;
 					try
 					{
 
@@ -292,14 +296,6 @@ namespace COTG
 					{
 						COTG.Debug.LogEx(ex);
 					}
-					throttleEnd = ATime.TickCount + throttleDelay;
-					var nextT = throttleEnd;
-					if(nextT - nextCall > 0)
-					{
-						nextT = throttleEnd;
-					}
-					var wait = onComplete;
-					onComplete = null;
 
 					// ready for next call..
 					// any
