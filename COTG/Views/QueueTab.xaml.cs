@@ -284,7 +284,7 @@ namespace COTG.Views
 						{
 							var c = (x, y);
 							var id = XYToId(c);
-							if (!IsBuildingSpot(id))
+							if (!city.IsBuildingSpot(id))
 								continue;
 
 							var bid = city.GetLayoutBid(id);
@@ -314,7 +314,7 @@ namespace COTG.Views
 				{
 					var c = (x, y);
 					var id = XYToId(c);
-					if (!IsBuildingSpot(id))
+					if (!city.IsBuildingSpot(id))
 						continue;
 					var pb = city.postQueueBuildings[id];
 					var pbid = (!pb.isBuilding || pb.isCabin) ? 0 : pb.bid;
@@ -808,7 +808,7 @@ namespace COTG.Game
 
 
 			// first collect counts
-			foreach(var id in buildingSpotsLand)
+			foreach(var id in buildingSpotsLandLocked)
 			{
 			
 				var bid = (short)GetLayoutBid(id);

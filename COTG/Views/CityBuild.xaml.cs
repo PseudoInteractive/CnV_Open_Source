@@ -50,6 +50,7 @@ namespace COTG.Views
 		public static HashSet<ushort> innerTowerSpots = new HashSet<ushort>(new ushort[] { 113, 117, 173, 257, 323, 327, 183, 267 });
 		public static HashSet<ushort> wallSpots = new HashSet<ushort>(new ushort[] { 1, 2, 4, 5, 6, 8, 9, 10, 11, 12, 14, 15, 16, 18, 19, 20, 21, 22, 23, 31, 39, 40, 41, 42, 43, 52, 61, 62, 73, 84, 94, 104, 105, 112, 114, 115, 116, 118, 125, 126, 132, 133, 139, 140, 146, 152, 153, 161, 162, 168, 188, 189, 194, 204, 209, 210, 211, 212, 213, 214, 215, 225, 226, 227, 228, 229, 230, 231, 236, 246, 251, 252, 272, 278, 279, 287, 288, 294, 300, 301, 307, 308, 314, 315, 322, 324, 325, 326, 328, 335, 336, 346, 356, 367, 378, 379, 388, 397, 398, 399, 400, 401, 409, 417, 418, 419, 420, 421, 422, 424, 425, 426, 428, 429, 430, 431, 432, 434, 435, 436, 438, 439, 440 });
 
+		public static HashSet<ushort> towerSpots = new(outerTowerSpots.Union(innerTowerSpots));
 
 		public static HashSet<ushort> shoreSpots = new HashSet<ushort>(new ushort[] { 416, 394, 372, 351, 331, 332, 376, 354 });
 		public static HashSet<ushort> waterSpots = new HashSet<ushort>(new ushort[] { 352, 353, 373, 374, 375, 395,396,397,
@@ -58,13 +59,12 @@ namespace COTG.Views
 
 		public static bool IsShoreOrWaterSpot(ushort r) => shoreSpots.Contains(r) | waterSpots.Contains(r);
 
-		public static HashSet<ushort> buildingSpotsLand = new HashSet<ushort>(Enumerable.Range(1, citySpotCount - 1).Select(a => (ushort)a).
+		public static HashSet<ushort> buildingSpotsLandLocked = new HashSet<ushort>(Enumerable.Range(1, citySpotCount - 1).Select(a => (ushort)a).
 			Where(a => !(wallSpots.Contains(a) | innerTowerSpots.Contains(a) | outerTowerSpots.Contains(a) | (a == City.bspotTownHall))));
 
-		public static HashSet<ushort> buildingSpotsWater = new HashSet<ushort>(Enumerable.Range(1,citySpotCount - 1).Select(a => (ushort)a).
+		public static HashSet<ushort> buildingSpotsExcludingWater = new HashSet<ushort>(Enumerable.Range(1,citySpotCount - 1).Select(a => (ushort)a).
 			Where(a => !(wallSpots.Contains(a) | innerTowerSpots.Contains(a) |  waterSpots.Contains(a) | outerTowerSpots.Contains(a) | (a == City.bspotTownHall))));
 
-		public static HashSet<ushort> GetBuildingSpots(City city) => city.isOnWater ? buildingSpotsWater : buildingSpotsLand;
 
 		public enum SpotType
 		{
@@ -79,42 +79,13 @@ namespace COTG.Views
 		}
 
 
-		public static SpotType GetSpotType(int a)
-		{
-			return a switch
-			{
-				_ when IsInnerTowerSpot(a) => SpotType.innerTower,
-				_ when IsOuterTowerSpot(a) => SpotType.outerTower,
-				_ when IsShoreSpot(a) => SpotType.shore,
-				_ when IsWaterSpot(a) => SpotType.water,
-				_ when IsBuildingSpot(a) => SpotType.building,
-				_ when (a == bspotTownHall) => SpotType.townHall,
-				_ when IsWallSpot(a) => SpotType.wall,
+		
 
-				_ => SpotType.invalid
-			};
-		}
-
-		public static HashSet<ushort> GetSpots(SpotType type)
-		{
-			switch (type)
-			{
-				case SpotType.innerTower:
-					return innerTowerSpots;
-				case SpotType.outerTower:
-					return outerTowerSpots;
-				case SpotType.shore: return shoreSpots;
-				case SpotType.building: return buildingSpotsLand;
-				default:
-					return testFlag ? buildingSpotsLand : emptySpotList; // how should this be properly handled?
-			}
-		}
-
-		public static bool IsBuildingSpot(int spot) => buildingSpotsLand.Contains((ushort)spot);
-		public static bool IsBuildingSpot(int spot, bool isWater) => buildingSpotsLand.Contains((ushort)spot) && (!isWater || !(waterSpots.Contains((ushort)spot) || shoreSpots.Contains((ushort)spot)));
-		public static bool IsBuildingSpotOrTownHall(int spot) => buildingSpotsLand.Contains((ushort)spot) | (spot == City.bspotTownHall);
-		public static bool IsBuildingSpot((int x, int y) cc) => IsBuildingSpot(XYToId(cc));
-		public static bool IsTowerSpot(int spot) => outerTowerSpots.Contains((ushort)spot) | innerTowerSpots.Contains((ushort)spot);
+		
+	//	public static bool IsBuildingSpot(int spot, bool isWater) => buildingSpotsLandLocked.Contains((ushort)spot) && (!isWater || !(waterSpots.Contains((ushort)spot) || shoreSpots.Contains((ushort)spot)));
+		public static bool IsBuildingSpotOrTownHall(int spot) => buildingSpotsLandLocked.Contains((ushort)spot) | (spot == City.bspotTownHall);
+		
+		public static bool IsTowerSpot(int spot) => towerSpots.Contains((ushort)spot);
 		public static bool IsInnerTowerSpot(int spot) => innerTowerSpots.Contains((ushort)spot);
 		public static bool IsOuterTowerSpot(int spot) => outerTowerSpots.Contains((ushort)spot);
 		public static bool IsTowerSpot((int x, int y) cc) => IsTowerSpot(XYToId(cc));
@@ -836,15 +807,15 @@ namespace COTG.Views
 				Status("Please select something in the city", dryRun);
 				return;
 			}
-			int bspot = XYToId(hovered);
-			var b = isPlanner ? build.GetLayoutBuilding(bspot) : build.buildings[bspot];
+			int targetSpot = XYToId(hovered);
+			var targetB = isPlanner ? build.GetLayoutBuilding(targetSpot) : build.buildings[targetSpot];
 
 			if (isStart)
 			{
-				if (b.isBuilding)
+				if (targetB.isBuilding)
 				{
 
-					Status($"Move {b.def.Bn} at {hovered.bspotToString()} to ... ", dryRun);
+					Status($"Move {targetB.def.Bn} at {hovered.bspotToString()} to ... ", dryRun);
 					if (!dryRun)
 					{
 						CityView.SetSelectedBuilding(hovered, _isSingleAction);
@@ -869,32 +840,27 @@ namespace COTG.Views
 			{
 				Assert(CanvasHelpers.IsValid(selected));
 
-				if (b.isRes)
+				if (targetB.isRes)
 				{
 					Status("Please select an empty spot", dryRun);
 				}
 				else
 				{
 					var source = XYToId(selected);
-
+					var sourceBid = build.postQueueBuildings[source].bid;
 					// Is this a valid transition
-					var bs1 = GetSpotType(bspot);
-
-					var bs0 = GetSpotType(XYToId(selected));
-					if (testFlag)
+					//var bs1 = GetSpotType(targetSpot);
+					var sourceSpotType = build.GetSpotTypeFromBid(sourceBid);
+					var validSpots = build.GetSpots(sourceSpotType);
+					if (!testFlag)
 					{
-						if (bs1 == SpotType.wall || bs1 == SpotType.invalid || bs1 == SpotType.water)
-							bs1 = SpotType.building;
-						if (bs0 == SpotType.wall || bs0 == SpotType.invalid || bs0 == SpotType.water)
-							bs0 = SpotType.building;
+						if(!validSpots.Contains((ushort)targetSpot))
+						{
+							Status("Doesn't go here", dryRun);
+							return;
+						}
+						
 					}
-
-					if (bs0 != bs1)
-					{
-						Status("Doesn't fit there", dryRun);
-						return;
-					}
-					
 
 					if (dryRun)
 					{
@@ -904,16 +870,16 @@ namespace COTG.Views
 
 					{
 
-						if (!b.isEmpty)
+						if (!targetB.isEmpty)
 						{
 							if (IsTowerSpot(selected))
 								Status("Cannot swap towers, please move them one at a time", dryRun);
 							else
-								await City.GetBuild().SwapBuilding(source, bspot, dryRun);
+								await City.GetBuild().SwapBuilding(source, targetSpot, dryRun);
 						}
 						else
 						{
-							await City.GetBuild().MoveBuilding(source, bspot, dryRun);
+							await City.GetBuild().MoveBuilding(source, targetSpot, dryRun);
 						}
 						if (!dryRun)
 						{
@@ -1282,11 +1248,11 @@ namespace COTG.Views
 
 			if(!isRight)
 			{
-				if(IsWaterSpot(bspot) && !testFlag)
-				{
-					Note.Show("There is water here. :(");
-					return;
-				}
+				//if(IsWaterSpot(bspot) && !testFlag)
+				//{
+				//	Note.Show("There is water here. :(");
+				//	return;
+				//}
 				isSingleClickAction = true;
 				if(CityBuild.IsWallSpot(bspot))
 				{

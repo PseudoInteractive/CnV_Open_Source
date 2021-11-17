@@ -113,7 +113,24 @@ namespace COTG.Game
 			}
 		}
 
-		
+		public HashSet<ushort> buildingSpots => isOnWater ? buildingSpotsExcludingWater : buildingSpotsLandLocked;
+		public HashSet<ushort> GetSpots(SpotType type)
+		{
+			switch (type)
+			{
+				case SpotType.innerTower:
+					return towerSpots;
+				case SpotType.outerTower:
+					return outerTowerSpots;
+				case SpotType.shore: return shoreSpots;
+				case SpotType.building: return buildingSpots;
+				default:
+					return testFlag ? buildingSpotsLandLocked : emptySpotList; // how should this be properly handled?
+			}
+		}
+		public bool IsBuildingSpot(int spot) => buildingSpots.Contains((ushort)spot);
+		public bool IsBuildingSpotOrWater(int spot) => buildingSpotsLandLocked.Contains((ushort)spot);
+		public bool IsBuildingSpot((int x, int y) cc) => IsBuildingSpot(XYToId(cc));
 		//	public int postQueueTownHallLevel => CityBuild.isPlanner switch { true => 10, _ => postQueueBuildings[bspotTownHall].bl };
 
 		public async Task<int> AnyHub(bool requestHub)
@@ -995,10 +1012,40 @@ namespace COTG.Game
 
 			return bestSpot;
 		}
-
-		public int FindAnyFreeSpotForMove(int referenceBid, bool verbose = true)
+		public SpotType GetSpotType(int a)
 		{
-			return FindFreeSpot(CityBuild.GetSpotType(referenceBid), verbose);
+			return a switch
+			{
+				_ when IsInnerTowerSpot(a) => SpotType.innerTower,
+				_ when IsOuterTowerSpot(a) => SpotType.outerTower,
+				_ when IsShoreSpot(a) => SpotType.shore,
+				_ when IsWaterSpot(a) => SpotType.water,
+				_ when IsBuildingSpot(a) => SpotType.building,
+				_ when (a == bspotTownHall) => SpotType.townHall,
+				_ when IsWallSpot(a) => SpotType.wall,
+
+				_ => SpotType.invalid
+			};
+		}
+		public SpotType GetSpotTypeFromBid(int bid)
+		{
+			var def = BuildingDef.FromBid(bid);
+			if (def.isTownHall)
+				return SpotType.townHall;
+			if (def.isWall)
+				return SpotType.wall;
+			if (def.isShoreBuilding)
+				return SpotType.shore;
+			if (def.isBarricade)
+				return SpotType.outerTower;
+			if (def.isPost)
+				return SpotType.innerTower;
+			return SpotType.building;
+
+		}
+		public int FindAnyFreeSpotForMove(int bSpot, bool verbose = true)
+		{
+			return FindFreeSpot(GetSpotType(bSpot), verbose);
 		}
 		public ushort findSpotOffset;
 
@@ -1017,7 +1064,7 @@ namespace COTG.Game
 		public int FindFreeSpot(SpotType type = SpotType.building, bool verbose = true)
 		{
 			var build = this;
-			var spots = CityBuild.GetSpots(type);
+			var spots = GetSpots(type);
 			for (int iter = 0; iter <= City.citySpotCount; ++iter)
 			{
 				// update and wrap

@@ -465,6 +465,9 @@ namespace COTG.Views
 		public static bool DoKeyDown(VirtualKey key)
 		{
 			Log($"DoKeyDown {key}");
+			App.UpdateKeyStates();
+			if(App.IsKeyPressedShiftOrControl())
+				return false;
 			if(!buildKeys.Contains(key))
 			{
 				Log("Not a build Key " + key);

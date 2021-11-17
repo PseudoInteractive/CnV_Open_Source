@@ -221,7 +221,7 @@ namespace COTG.Views
 			grid.CurrentCellRequestNavigate += CelNavigate;
 			grid.CellTapped += reinIn_CellTapped;
 			grid.AllowFrozenGroupHeaders=false;
-			
+			grid.ColumnWidthMode = Syncfusion.UI.Xaml.Grids.ColumnWidthMode.AutoLastColumnFill;
 			grid.CellToolTipOpening += CellToolTipOpening;
 //			grid.LiveDataUpdateMode = Syncfusion.UI.Xaml.Data.LiveDataUpdateMode.AllowChildViewUpdate;
 			return _lock0;
@@ -231,7 +231,7 @@ namespace COTG.Views
 			using var _lock = SetupGrid(grid);
 			grid.SourceType = typeof(City);
 			
-			grid.AddCity(isOutgoing ? "Defender" : "Target");
+			grid.AddCity(isOutgoing ? "Defender" : "Target", wantTroops:isOutgoing,wantDefense:!isOutgoing);
 
 
 			
@@ -251,7 +251,7 @@ namespace COTG.Views
 					SfDataGrid child1 = new() { AutoGenerateRelations = false, AutoGenerateColumns = false};
 					using var _lock2 = SetupGrid(child1);
 					child1.SourceType = typeof(City);
-					child1.AddCity(!isOutgoing ? "Defender" : "Target");
+					child1.AddCity(!isOutgoing ? "Defender" : "Target",wantTroops:!isOutgoing,wantDefense:isOutgoing);
 					var details1 = new GridViewDefinition()
 					{
 						RelationalColumn = isOutgoing

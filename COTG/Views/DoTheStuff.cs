@@ -230,7 +230,7 @@ namespace COTG;
 											cabinsInLayout.RemoveAt(0);
 										}
 
-										if(!IsBuildingSpot(c))
+										if(!city.IsBuildingSpot(c))
 										{
 											continue;
 										}

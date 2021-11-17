@@ -284,7 +284,7 @@ namespace COTG.Draw
 						}
 
 						// draw overlays
-						if(build.isLayoutCustom && SettingsPage.drawBuildingOverlays && IsBuildingSpot(bspot) )
+						if(build.isLayoutCustom && SettingsPage.drawBuildingOverlays && build.IsBuildingSpotOrWater(bspot) )
 						{
 							int bid, currentBid;
 							//	BuildingDef bd;

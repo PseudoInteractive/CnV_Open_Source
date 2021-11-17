@@ -47,7 +47,7 @@ public static partial class ADataGrid
 	public static ChangeContextDisposable ChangeContext(this DataGrid grid) => new ChangeContextDisposable(grid);
 
 
-	public static void AddCity(this DataGrid grid,string headerText = null,bool wantImage = true,bool wantRemarks = true,bool wantStatus = true, bool expandLast=true)
+	public static void AddCity(this DataGrid grid,string headerText = null,bool wantImage = true,bool wantRemarks = true,bool wantStatus = true, bool wantDefense=false,bool wantTroops=false)
 	{
 		Assert(grid.IsListenerSuspended);
 		try
@@ -81,22 +81,36 @@ public static partial class ADataGrid
 				{
 					IsReadOnly = true,
 					HeaderText = "Remarks",
-					Width = 100,
 					MappingName = nameof(City.remarks)
 				});
-			if (expandLast )
-				Assert(wantStatus);
+			
 
 			if(wantStatus)
 				grid.Columns.Add(new GridTextColumn()
 				{
 					HeaderText = "Status",
-					Width = expandLast ? double.NaN : 40,
-					ColumnWidthMode = expandLast ? ColumnWidthMode.Star :ColumnWidthMode.None,
-					SetCellBoundToolTip = true,
+					Width = 40,
 					IsReadOnly = true,
 					MappingName = nameof(City.statusString)
 				});
+			if (wantDefense)
+				grid.Columns.Add(new GridTextColumn()
+				{
+					HeaderText = "Total Defense",
+					IsReadOnly = true,
+					MappingName = nameof(City.defString)
+				});
+			if (wantTroops)
+			{
+				grid.Columns.Add(new GridTextColumn()
+				{
+					HeaderText = "Troops",
+					IsReadOnly = true,
+					MappingName = nameof(City.troopsString)
+				});
+			}
+
+			
 		}
 		catch(Exception e)
 		{
