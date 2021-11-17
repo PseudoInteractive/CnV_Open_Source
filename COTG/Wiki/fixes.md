@@ -373,4 +373,5 @@
 -   Shrine Finder would not work if your internet connection was too fast (COTG would throttle you)
 -   Attack sender sends emails as it should
 -   Return for incoming works again
--   A bunch more that hopefully worked.
+-   Rearrange less likely to put buildings in the moat
+-   You can move buildings in the moat back to land
