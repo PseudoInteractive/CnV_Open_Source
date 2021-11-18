@@ -29,6 +29,7 @@ Global
 		{D3C61EE9-9FAD-45BD-ACCE-F4E95AE32807}.Release|Any CPU.Deploy.0 = Release|x64
 		{D3C61EE9-9FAD-45BD-ACCE-F4E95AE32807}.Release|x64.ActiveCfg = Release|x64
 		{D3C61EE9-9FAD-45BD-ACCE-F4E95AE32807}.Release|x64.Build.0 = Release|x64
+		{D3C61EE9-9FAD-45BD-ACCE-F4E95AE32807}.Release|x64.Deploy.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -749,12 +749,19 @@ namespace COTG
 				}
 				else
 				{
-					var ch = AUtil.propertyChanges[id];
-					if(ch.member == member)
-						return;
+					try
+					{
+						var ch = AUtil.propertyChanges[id];
+						if (ch.member == member)
+							return;
 
-					AUtil.propertyChanges = AUtil.propertyChanges.Replace(ch,new AUtil.PropertyChange(this,string.Empty), new AUtil.PropertyChangeComparer() );
-					
+						AUtil.propertyChanges = AUtil.propertyChanges.Replace(ch,
+							new AUtil.PropertyChange(this, string.Empty), new AUtil.PropertyChangeComparer() );
+					}
+					catch (Exception ex)
+					{
+						LogEx(ex);
+					}
 				}
 			}
 		}

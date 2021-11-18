@@ -460,7 +460,7 @@ namespace COTG;
 								var sel = combo.SelectedIndex;
 								if(sel >= 0)
 									SettingsPage.cabinsToRemovePerSwap = cabinCounts[sel];
-								SettingsPage.SaveAll();
+							//	SettingsPage.SaveAll();
 								return 1;
 							}
 							if(res == ContentDialogResult.Secondary)

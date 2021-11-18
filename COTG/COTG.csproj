@@ -17,8 +17,7 @@
     <PackageCertificateThumbprint>5DC3522778776B8DC772B28B915990F3B4487888</PackageCertificateThumbprint>
     <AppxPackageSigningEnabled>True</AppxPackageSigningEnabled>
     <GenerateAppInstallerFile>False</GenerateAppInstallerFile>
-	  <PublishReadyToRun>true</PublishReadyToRun>
-  <TieredCompilation>true</TieredCompilation>
+    <TieredCompilation>true</TieredCompilation>
     <AppxPackageSigningTimestampDigestAlgorithm>SHA256</AppxPackageSigningTimestampDigestAlgorithm>
     <AppxAutoIncrementPackageRevision>True</AppxAutoIncrementPackageRevision>
     <GenerateTestArtifacts>True</GenerateTestArtifacts>
@@ -57,12 +56,10 @@
     <PackageReference Include="MessagePack" Version="2.3.85" />
     <PackageReference Include="MessagePack.Annotations" Version="2.3.85" />
     <PackageReference Include="MessagePack.Experimental" Version="2.3.85" />
-    <PackageReference Include="MessagePack.ImmutableCollection" Version="2.3.85" />
     <PackageReference Include="MessagePack.MSBuild.Tasks" Version="2.3.85">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="MessagePack.ReactiveProperty" Version="2.3.85" />
     <PackageReference Include="MessagePackAnalyzer" Version="2.3.85" />
     <PackageReference Include="Microsoft.AppCenter" Version="4.4.0" />
     <PackageReference Include="Microsoft.AppCenter.Analytics" Version="4.4.0" />
@@ -221,6 +218,7 @@
     <Compile Include="Activation\ShareTargetActivationHandler.cs" />
     <Compile Include="Activation\WebToAppLinkActivationHandler.cs" />
     <Compile Include="Bookmarks.cs" />
+    <Compile Include="CnVChatClient\CnVChatClient.cs" />
     <Compile Include="CnVDiscord\Bridge.cs" />
     <Compile Include="CnVDiscord\ConfigFile.cs" />
     <Compile Include="CnVDiscord\Discord.cs" />
@@ -689,41 +687,7 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <None Remove="Assets\BadgeLogo.scale-100.png" />
-    <None Remove="Assets\BadgeLogo.scale-200.png" />
-    <None Remove="Assets\BadgeLogo.scale-400.png" />
-    <None Remove="Assets\LargeTile.scale-100.png" />
-    <None Remove="Assets\LargeTile.scale-200.png" />
-    <None Remove="Assets\LargeTile.scale-400.png" />
-    <None Remove="Assets\protocolImage.png" />
-    <None Remove="Assets\SmallTile.scale-100.png" />
-    <None Remove="Assets\SmallTile.scale-200.png" />
-    <None Remove="Assets\SmallTile.scale-400.png" />
-    <None Remove="Assets\SplashScreen.scale-100.png" />
-    <None Remove="Assets\SplashScreen.scale-200.png" />
-    <None Remove="Assets\SplashScreen.scale-400.png" />
-    <None Remove="Assets\Square150x150Logo.scale-100.png" />
-    <None Remove="Assets\Square150x150Logo.scale-200.png" />
-    <None Remove="Assets\Square150x150Logo.scale-400.png" />
-    <None Remove="Assets\Square44x44Logo.altform-lightunplated_targetsize-16.png" />
-    <None Remove="Assets\Square44x44Logo.altform-lightunplated_targetsize-256.png" />
-    <None Remove="Assets\Square44x44Logo.altform-lightunplated_targetsize-48.png" />
-    <None Remove="Assets\Square44x44Logo.altform-unplated_targetsize-16.png" />
-    <None Remove="Assets\Square44x44Logo.altform-unplated_targetsize-256.png" />
-    <None Remove="Assets\Square44x44Logo.altform-unplated_targetsize-48.png" />
-    <None Remove="Assets\Square44x44Logo.scale-100.png" />
-    <None Remove="Assets\Square44x44Logo.scale-200.png" />
-    <None Remove="Assets\Square44x44Logo.scale-400.png" />
-    <None Remove="Assets\Square44x44Logo.targetsize-16.png" />
-    <None Remove="Assets\Square44x44Logo.targetsize-256.png" />
-    <None Remove="Assets\Square44x44Logo.targetsize-48.png" />
-    <None Remove="Assets\StoreLogo.scale-100.png" />
-    <None Remove="Assets\StoreLogo.scale-200.png" />
-    <None Remove="Assets\StoreLogo.scale-400.png" />
-    <None Remove="Assets\Wide310x150Logo.scale-100.png" />
-    <None Remove="Assets\Wide310x150Logo.scale-200.png" />
-    <None Remove="Assets\Wide310x150Logo.scale-400.png" />
-    <None Remove="cnvCover.png" />
+	<None Remove="cnvCover.png" />
     <None Remove="Content\Art\bgr_all_cities_destroyed.png" />
     <None Remove="Content\Art\bgr_tablet_scr_closed.png" />
     <None Remove="Content\Art\circlegradient.png" />
@@ -813,6 +777,8 @@
     <None Remove="Content\Fonts\perpetua_0.png" />
     <None Remove="Content\Fonts\tra.fnt" />
     <None Remove="Content\PERTILI.TTF" />
+    <None Remove="Properties\PublishProfiles\win10-x64.pubxml" />
+    <None Remove="Resources\Icon1.ico" />
     <None Remove="Strings\en-us\Resources.resw" />
     <None Remove="Package.appxmanifest" />
     <None Remove="Styles\CommandBar.xaml" />
@@ -836,7 +802,6 @@
     <None Include="JS\index.htm" />
     <Content Include="JS\DHRUVCC.js" />
     <Content Include="JSON\buildingDef.json" />
-    <Content Include="Resources\Icon1.ico" />
     <None Include="CotgKey.pfx" />
     <None Include="JSON\poll2.json" />
     <Content Include="JSON\Troops.json" />
@@ -868,7 +833,7 @@
     <HintPath>..\ext\Cyotek.Drawing.BitmapFont.dll</HintPath>
   </Reference>
   <Reference Include="MonoGame.Framework">
-    <HintPath>..\ext\net6.0-windows10.0.20348.0\MonoGame.Framework.dll</HintPath>
+    <HintPath>..\ext\net6.0-windows10.0.22000.0\MonoGame.Framework.dll</HintPath>
   </Reference>
     </ItemGroup>
   <PropertyGroup>
@@ -893,13 +858,8 @@
     <ProduceReferenceAssembly>True</ProduceReferenceAssembly>
     <EnforceCodeStyleInBuild>False</EnforceCodeStyleInBuild>
     <ImplicitUsings>disable</ImplicitUsings>
-    <DocumentationFile>C:\Source\CotGL\doc.xml</DocumentationFile>
-    <Authors>Pseudo</Authors>
-    <UserSecretsId>250689c0-8ee0-49a5-b4f4-7e7d910d2828</UserSecretsId>
-    <ApplicationInsightsResourceId>/subscriptions/2a698fb0-55b8-4561-b722-2015b2c78d9c/resourceGroups/appcenter-export-Alliances/providers/microsoft.insights/components/AppCenterExport-Alliances</ApplicationInsightsResourceId>
     <Nullable>warnings</Nullable>
     <PackageIcon>cnvCover2.png</PackageIcon>
-    <ApplicationIcon>Resources\Icon1.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <Optimize>False</Optimize>
@@ -915,7 +875,7 @@
   </PropertyGroup>
   <ProjectExtensions />
   <ItemGroup>
-    <Content Remove="cnvCover.png" />
+	  <Content Remove="cnvCover.png" />
   </ItemGroup>
   <ItemGroup>
     <AppxManifest Include="Package.appxmanifest">

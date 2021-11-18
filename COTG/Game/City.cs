@@ -2222,16 +2222,23 @@ namespace COTG.Game
 		{
 			if ( buildingCountCache < 0 )
 			{
-				if(!forceUpdate && !postQueueBuildingCacheValid )
+				if(!forceUpdate && !postQueueBuildingCacheValid && !CityBuild.isPlanner )
 				{
 					return new TownHallAndBuildingCount() { townHallLevel = -1,buildingCount = -1 };
 				}
-				var bd = postQueueBuildings;
+
+				Building[] bd;
 				if(CityBuild.isPlanner)
 				{
 					// we need the above statement to refresh the cache
 					// we will use them later
 					bd = GetLayoutBuildings();
+				}
+				else
+
+				{
+					bd = postQueueBuildings;
+
 				}
 
 

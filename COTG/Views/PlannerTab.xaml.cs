@@ -180,7 +180,9 @@ namespace COTG.Views
 			if (!IsVisible())
 			  return Task.CompletedTask;
 			// recruit speeds
+			
 			var city = City.GetBuild();
+			
 			var bds = city.GetLayoutBuildings();
 			var tsMultipler = 1;
 			var stTownHall = BuildingDef.all[bidTownHall].St[10];

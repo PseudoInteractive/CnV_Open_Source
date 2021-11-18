@@ -340,6 +340,7 @@ namespace COTG.Views
 			return theme == Theme.louWinter;
 		}
 		static bool loadedOnce;
+
 		public static void LoadAll()
 		{
 			///  fetchFullHistory = st.Read(nameof(fetchFullHistory),true ); // default is true
@@ -369,7 +370,7 @@ namespace COTG.Views
 			}
 			try
 			{
-				LoadPinned();
+			//	LoadPinned();
 				//reqWood = st.Read(nameof(reqWood), 160000);
 				//reqStone = st.Read(nameof(reqWood), 205000);
 				//reqIron = st.Read(nameof(reqIron), 100000);
@@ -423,21 +424,7 @@ namespace COTG.Views
 			}
 		}
 
-		public static string pinsFileName => $"pinned{JSClient.world}";
-		public static Task SavePinned()
-		{
-			//if(CityCustom.loaded)
-			//	return folder.SaveMessagePack(pinsFileName,CityCustom.all);
-			return Task.CompletedTask;
-		}
-		public async static Task LoadPinned()
-		{
-			if(!CityCustom.loaded)
-			{
-				CityCustom.loaded = true;
-	//			CityCustom.all = AMessagePack.Deserialize<ImmutableHashSet<CityCustom>>(await folder.ReadAsync(pinsFileName),() => ImmutableHashSet<CityCustom>.Empty);
-			}
-		}
+		
 
 		[NonSerialized]
 		public static float mediumFontSize = 14;
@@ -482,7 +469,7 @@ namespace COTG.Views
 				return;
 			try
 			{
-				SavePinned(); // not awaited, this could lead to corruption
+				CityCustom.Save(); // not awaited, this could lead to corruption
 				var props = typeof(SettingsPage).GetFields(System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.DeclaredOnly);
 				var st = App.Settings();
 				//if (SpotTab.instance.spotMRU.Count>0)

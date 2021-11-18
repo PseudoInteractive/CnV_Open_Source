@@ -46,7 +46,7 @@ namespace COTG.Helpers
 			{
 				var bytes = AMessagePack.Serialize(data);
 
-				var file = await folder.CreateFileAsync(GetFileName(name),CreationCollisionOption.ReplaceExisting);
+				var file = await folder.CreateFileAsync(name,CreationCollisionOption.ReplaceExisting);
 				// don't block on this save
 				await FileIO.WriteBytesAsync(file,bytes);
 			}

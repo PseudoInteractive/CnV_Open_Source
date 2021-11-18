@@ -23,8 +23,9 @@ namespace COTG
 		//					   CnVChatClient.instance.Initialize();
 		try
 		{
+			Assert( JSClient.world != 0);
 			ShellPage.SetViewModeCity();
-
+			
 			APlayfab.Login();
 
 			GetWorldInfo.Send();
@@ -67,6 +68,7 @@ namespace COTG
 
 			// give some time for initial pressure to come down
 			TabPage.ShowTabs();
+			CityCustom.Load();
 			await Task.Delay(1000);
 
 		//	System.GC.Collect(2,GCCollectionMode.Default,true,true);
