@@ -28,6 +28,8 @@ namespace COTG
 			
 			APlayfab.Login();
 
+			//CnVChatClient.CnVChatClient.Setup();
+
 			GetWorldInfo.Send();
 			ShellPage.canvasVisible = true;
 			//   ShellPage.isHitTestVisible = true;

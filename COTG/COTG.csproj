@@ -53,6 +53,8 @@
     <PackageReference Include="DSharpPlus.CommandsNext" Version="4.1.0" />
     <PackageReference Include="Enums.NET" Version="4.0.0" />
     <PackageReference Include="GoogleSheetsWrapper" Version="1.0.27" />
+    <PackageReference Include="Grpc.Net.Client" Version="2.41.0-pre1" />
+    <PackageReference Include="MagicOnion.Client" Version="4.3.1" />
     <PackageReference Include="MessagePack" Version="2.3.85" />
     <PackageReference Include="MessagePack.Annotations" Version="2.3.85" />
     <PackageReference Include="MessagePack.Experimental" Version="2.3.85" />
@@ -904,4 +906,5 @@
       <Generator>MSBuild:Compile</Generator>
     </None>
   </ItemGroup>
+  <Import Project="..\..\CnVShared\CnVShared.projitems" Label="Shared" />
 </Project>

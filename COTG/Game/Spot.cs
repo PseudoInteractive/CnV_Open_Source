@@ -184,7 +184,7 @@ namespace COTG.Game
 				{
 					rv += "(O)";
 				}
-				if(!isAlly.GetValueOrDefault())
+				if(isAlly == false )
 					rv += "(e)";
 
 				return rv;
