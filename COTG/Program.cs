@@ -49,7 +49,7 @@ namespace COTG
 			}
 			catch (Exception e2)
 			{
-				System.Diagnostics.Trace.WriteLine(e2.Message);
+				Console.WriteLine(e2.Message);
 				if (Debugger.IsAttached)
 				{
 					Debugger.Break();

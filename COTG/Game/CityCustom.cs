@@ -39,7 +39,7 @@ namespace COTG
 					Assert(JSClient.world != 0);
 					all = SettingsPage.pinned.Select( a => new CityCustom() { cid = a, pinned = true} )
 						.ToImmutableHashSet();
-					using (FileStream fs = new FileStream(pinsFileName, FileMode.Create))
+					using (FileStream fs = new FileStream(pinsFileName, FileMode.Truncate,FileAccess.Write,FileShare.ReadWrite, 64*1024,false))
 					{
 						AMessagePack.Serialize(fs,all);
 					}
@@ -58,7 +58,7 @@ namespace COTG
 				Assert(JSClient.world != 0);
 				try
 				{
-					using (FileStream fs = new FileStream(pinsFileName, FileMode.Open))
+					using (FileStream fs = new FileStream(pinsFileName, FileMode.OpenOrCreate, FileAccess.ReadWrite,FileShare.ReadWrite,64*1024,false))
 					{
 						CityCustom.all = (AMessagePack.Deserialize(fs,() => Array.Empty<CityCustom>() )).ToImmutableHashSet();
 						SettingsPage.pinned = CityCustom.all.Where(a=>a.pinned).Select(a=>a.cid).ToArray();

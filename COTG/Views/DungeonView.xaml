@@ -169,6 +169,16 @@
 						LargeChange="25"
 				
 						  Margin="6,2,6,2" ToolTipService.ToolTip="If a dungeons progress is lower than this number, it will be ignored.  This helps you avoid cases where your dungeons finish and your troops come home and sit idle waiting for you to log in, with nothing to do but drink your wine and smoke your weed (or do whatever it is you do when you are offline)" />
+			<winui:NumberBox  
+				Header="Min Idle"
+				ValueChanged="SomethingChanged"
+				Value="{x:Bind views:SettingsPage.raidSendMinIdle,Mode=TwoWay}"
+				FontSize="{StaticResource MediumFontSize}"
+				Style="{StaticResource RightAlignNumberBox}"
+				SmallChange="5"
+				LargeChange="25"
+				
+				Margin="6,2,6,2" ToolTipService.ToolTip="Only sends raids if there are at least this many idle in the city" />
 
 			<ToggleSwitch     Header="Off dungeons" Width="90"
 								  FontSize="{StaticResource MediumFontSize}"

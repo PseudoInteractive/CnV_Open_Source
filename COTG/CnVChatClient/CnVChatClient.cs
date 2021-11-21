@@ -14,7 +14,6 @@ using Grpc.Net.Client;
 using CnVShared;
 using System.Threading;
 using DSharpPlus.Entities;
-
 namespace CnVDiscord
 {
 	using COTG;
@@ -25,7 +24,7 @@ namespace CnVDiscord
 
 		private static CancellationTokenSource shutdownCancellation = new CancellationTokenSource();
 		private static ChannelBase channel;
-
+		private ICnVChatClientConnection connection;
 		public static Task Setup()
 		{
 			if(instance!=null)
@@ -38,30 +37,36 @@ namespace CnVDiscord
 			try
 			{
 				Assert(channel == null);
-				MessagePack.Resolvers.CompositeResolver.RegisterAndSetAsDefault(
-					MessagePack.Resolvers.GeneratedResolver.Instance,
-					MessagePack.Resolvers.BuiltinResolver.Instance,
-					// use PrimitiveObjectResolver
-					PrimitiveObjectResolver.Instance
-				);
 
 				// NOTE: Currently, CompositeResolver doesn't work on Unity IL2CPP build. Use StaticCompositeResolver instead of it.
-				var resolver = CompositeResolver.Create(BuiltinResolver.Instance, PrimitiveObjectResolver.Instance,
-					
-					MessagePack.Resolvers.GeneratedResolver.Instance
-					
+
+
+				var resolver = CompositeResolver.Create(StandardResolver.Instance
+					//		,GeneratedResolver.Instance);
 				);
-
-				MessagePackSerializer.DefaultOptions = MessagePackSerializer.DefaultOptions
-					.WithResolver(resolver);
-
+				
+			//	MessagePackSerializer.DefaultOptions = MessagePackSerializer.DefaultOptions.WithResolver(resolver);
+				
 				// Connect to the server using gRPC channel.
 				channel = GrpcChannel.ForAddress("https://localhost:5001");
 
-				var stream = await StreamingHubClient.ConnectAsync<ICnVChatClientConnection,ICnVChatClient>(channel,this, cancellationToken: shutdownCancellation.Token);
-				var a = await stream.JoinAsync(new(){ playerName=Player.myName,world=JSClient.world,alliance=Alliance.my.name,allianceRole="Newbie"}); // Todo store role somewhere
-				Log(a);
-				// Initialize gRPC channel provider when the application is loaded.
+				connection = await StreamingHubClient.ConnectAsync<ICnVChatClientConnection,ICnVChatClient>(channel,this, cancellationToken: shutdownCancellation.Token);
+				await Task.Delay(1000);
+				
+				await connection.JoinAsync(new(){ playerName=Player.myName,world=JSClient.world,alliance=Alliance.my.name,allianceRole="Newbie"}); // Todo store role somewhere
+			//	await Task.Delay(5000);
+			//if (a is null)
+			//{
+			//	Assert(false);
+			//}
+			//else
+			//{
+			//	foreach (var c in a)
+			//	{
+			//		Log(c.Get());
+			//	}
+			//}
+			// Initialize gRPC channel provider when the application is loaded.
 				//GrpcChannelProviderHost.Initialize(new DefaultGrpcChannelProvider(new GrpcCCoreChannelOptions(new[]
 				//{
 				//             // send keepalive ping every 5 second, default is 2 hours
@@ -73,13 +78,30 @@ namespace CnVDiscord
 			catch (Exception e)
 			{
 				LogEx(e);
-				throw;
 			}
 		}
 
-		public void OnReceiveMessages(CnVJsonMessagePack<DiscordMessage>[] message)
+		public async void JoinResponse(string[] channels)
 		{
-			throw new NotImplementedException();
+			Log("Got Channels");
+			foreach (var channel in channels)
+			{
+				Log( channel );
+				var c = CnVJsonMessagePackDiscordChannel.Get(channel);
+				// Todo:  Create channel
+
+				await connection.ConnectChannelAsync( new() { channelId = c.Id, lastRecieved=0 }); // todo:  Lastrecieved
+			}
+		}
+
+		public void OnReceiveMessages(string[] messages)
+		{
+			foreach (var message in messages)
+			{
+				Log(message);
+			}
+
+
 		}
 
 	}

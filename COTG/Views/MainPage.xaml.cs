@@ -420,7 +420,7 @@ namespace COTG.Views
 			{
 				ShellPage.WorkUpdate($"Update Raids {iter0}...");
 				int totalSent = 0;
-				float minRaidIdle = 0.0625f;
+				float minRaidIdle = SettingsPage.raidSendMinIdle*0.01f;
 				for (int pass=0;pass<8;++pass)
 				{
 
@@ -451,10 +451,10 @@ namespace COTG.Views
 						break;
 					Note.Show($"Pass {pass} sent {processed} cities to raid");
 
-					// On second and further passes only send if they are all home
+					// On second and further passes only send if a good number are home
 					// not ideal but it helps
 					if (SettingsPage.raidIntervals != 0)
-						minRaidIdle = 15.0f / 16.0f;
+						minRaidIdle = minRaidIdle.Max(4.0f / 16.0f);
 				}
 				Note.ShowTip($"Auto Raid Pass {iter0} {sel.Count}/{sel.Count}");
 				Note.Show($"Sent {totalSent.Min(sel.Count)} Raids (from {sel.Count} selected)");

@@ -115,7 +115,7 @@ namespace CnVDiscord
 				   if( playerToMember.TryGetValue(Player.myName.ToLower(), out var member))
 				   {
 					   var id = member.Id;
-					   Task.Run(() => CnVChatClient.Setup());
+					   
 				   }
 				   return Task.CompletedTask;
 			   }).ConfigureAwait(false);
