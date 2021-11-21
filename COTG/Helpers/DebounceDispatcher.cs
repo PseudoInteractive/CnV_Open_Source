@@ -235,6 +235,8 @@ namespace COTG
 			{
 				if(delayOverride == -1)
 					delayOverride = debounceDelay;
+				
+				Debug.Log("Go: " + (int)((nextCall-ATime.TickCount)*10) + " delay: " + delayOverride/100 ); 
 
 				var rv = onComplete;
 
@@ -242,11 +244,16 @@ namespace COTG
 				{
 					// pending
 					// delay further or if it is running, add a throttle timeout
-					nextCall = nextCall.Max( ATime.TickCount +delayOverride);
+					nextCall = nextCall.Max( ATime.TickCount +throttleDelay);
+					Debug.Log("next TickT: " + (int)((nextCall-ATime.TickCount)*0.1f) ); 
 					return rv.Task;
 				}
-				if(throttled && isInCooldown)
+
+				if (throttled && isInCooldown)
+				{
+					nextCall = nextCall.Max( ATime.TickCount+debounceDelay);
 					return Task.CompletedTask;
+				}
 
 				rv = new();
 				if(Interlocked.CompareExchange(ref onComplete,rv,null)  != null)
@@ -259,7 +266,8 @@ namespace COTG
 
 
 				nextCall = nextCall.Max(ATime.TickCount + delayOverride);
-			
+				Debug.Log("next Tick1: " + (int)((nextCall-ATime.TickCount)*10) ); 
+
 				Task.Run(async () =>
 				{
 
@@ -296,6 +304,7 @@ namespace COTG
 					{
 						COTG.Debug.LogEx(ex);
 					}
+					Debug.Log("next Tick2: " + (int)((nextCall-ATime.TickCount)*10) ); 
 
 					// ready for next call..
 					// any

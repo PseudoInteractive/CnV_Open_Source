@@ -15,6 +15,83 @@ using System.Web;
 
 namespace COTG.Services
 {
+	public class ATableService
+	{
+		public TableServiceClient tSC;
+		public ATableService(string _connectionString)
+		{
+			tSC=new TableServiceClient(_connectionString);
+		}
+
+		public ATableService(Uri uri,TableSharedKeyCredential tableSharedKeyCredential)
+		{
+			tSC = new(uri, tableSharedKeyCredential);
+		}
+
+		private const int httpStatusSuccessStart = 200;
+		private const int httpStatusSuccessEnd = 299;
+		public static bool IsHttpSuccess(int status) => status >= httpStatusSuccessStart && status <= httpStatusSuccessEnd;
+
+		public TableClient TableClient(string table) => tSC.GetTableClient(table);
+
+		public ATable<TTable> Table<TTable>(string table) where TTable : class, ITableEntity, new()
+		{
+			return new ATable<TTable>( TableClient(table) );
+		}
+	}
+
+	public class ATable<TTable> where TTable : class, ITableEntity, new()
+	{
+		public TableClient tableClient;
+		public ATable(TableClient tableClient) => this.tableClient=tableClient;
+
+		public async Task<bool> UpsertAsync(TTable entity,TableUpdateMode updateMode = TableUpdateMode.Merge)
+		{
+			try
+			{
+				var i = await tableClient.UpsertEntityAsync(entity,mode: updateMode).ConfigureAwait(false);
+				return ATableService.IsHttpSuccess(i.Status);
+			}
+			catch(Exception e)
+			{
+				LogEx(e);
+				return false;
+			}
+
+		}
+		public async Task<bool> AddAsync(TTable entity)
+		{
+			try
+			{
+				var i = await tableClient.AddEntityAsync(entity).ConfigureAwait(false);
+				return ATableService.IsHttpSuccess(i.Status);
+			}
+			catch(Exception e)
+			{
+				LogEx(e);
+				return false;
+			}
+
+		}
+		public async Task<TTable> GetAsync(string partition, string key)
+		{
+			try
+			{
+				return await tableClient.GetEntityAsync<TTable>(partition,key).ConfigureAwait(false);
+				
+			}
+			catch(Exception e)
+			{
+				LogEx(e);
+				return default;
+			}
+
+		}
+
+		internal IAsyncEnumerable<TTable> QueryAsync() => await tableClient.QueryAsync();
+	}
+
+
 	public class ShareStringDB : ITableEntity
 	{
 		public ShareStringDB()
@@ -34,9 +111,8 @@ namespace COTG.Services
 		public DateTimeOffset? Timestamp { get; set; }
 		public ETag ETag { get; set; }
 		public string s { get; set; }
-
-
 	}
+	
 	public class DiscordAllianceDB : ITableEntity
 	{
 		public string PartitionKey { get; set; }
@@ -74,28 +150,26 @@ namespace COTG.Services
 		static string tableNameDiscord => $"Discord{JSClient.world}";
 		const string storageUriCnV = "https://" + accountNameCnV + ".table.core.windows.net/";
 		static bool tableClientCnVInitialized;
-		static TableClient tableClientCnV;
+		static ATable<DiscordAllianceDB> tableDiscord;
 
 		const string accountName = "avata";
 		const string storageUri = "https://" + accountName + ".table.core.windows.net/";
 		const string storageAccountKey = "IWRPGlttorpK5DcHWin/GdA2VEcZKnHkr30lE0ZDvKLG0q1CjZONcAQYI2D26DENd7TIAxF8tPsE0mIk98BafA==";
 		
 		const string tableName = "sharestring";
+
 		static string incTableName => $"inc{JSClient.world}";
 		// DefaultEndpointsProtocol=https;AccountName=avata;AccountKey=IWRPGlttorpK5DcHWin/GdA2VEcZKnHkr30lE0ZDvKLG0q1CjZONcAQYI2D26DENd7TIAxF8tPsE0mIk98BafA==;EndpointSuffix=core.windows.net
-		static TableServiceClient serviceClient;
-		static TableClient tableClient;
-		static TableClient incTableClient;
+		static ATableService serviceClient;
+		static ATable<ShareStringDB> TableShareStrings;
+		static ATable<IncomingDB> incTableClient;
 
-		const int httpStatusSuccessStart = 200;
-		const int httpStatusSuccessEnd = 299;
-		public static bool IsHttpSuccess(int status) => status >=httpStatusSuccessStart && status <= httpStatusSuccessEnd;
 
-		static TableServiceClient GetServiceClient()
+		static ATableService GetServiceClient()
 		{
 			if(serviceClient == null)
 			{
-				serviceClient = new TableServiceClient(
+				serviceClient = new ATableService(
 					new Uri(storageUri),
 					new TableSharedKeyCredential(accountName, storageAccountKey));
 			}
@@ -104,60 +178,39 @@ namespace COTG.Services
 
 		static bool TouchT()
 		{
-			if (tableClient != null)
+			if (TableShareStrings != null)
 				return true;
 
 			var serviceClient = GetServiceClient();
-			tableClient = serviceClient.GetTableClient(tableName);
+			TableShareStrings = serviceClient.Table<ShareStringDB>(tableName);
 			return true;
 		}
-		static TableClient TouchIncT()
+		static ATable<IncomingDB> TouchIncT()
 		{
-			if (incTableClient == null)
-			{
-				Log("Create Table");
-				var serviceClient = GetServiceClient();
-				incTableClient = serviceClient.GetTableClient(incTableName);
-			}
-
-			return incTableClient;
+			return incTableClient = GetServiceClient().Table<IncomingDB>(incTableName);
 		}
 
-		static public async Task<TableClient> TouchCnV()
+		static public async Task<ATable<DiscordAllianceDB> > TouchCnV()
 		{
-			if (tableClientCnVInitialized)
-				return tableClientCnV;
-			int counter = 0;
-			while (!Alliance.alliancesFetched)
+			if (!tableClientCnVInitialized)
 			{
-				if (counter++ >= 64)
-					return null; // no alliance?
-				await Task.Delay(1000).ConfigureAwait(false);
+				tableClientCnVInitialized=true;
+				for (int counter = 0; counter < 32; ++counter)
+				{
+					if (Alliance.alliancesFetched)
+					{
+						tableDiscord = new ATableService(
+							new Uri(storageUriCnV),
+							new TableSharedKeyCredential(accountNameCnV, storageAccountKeyCnV)).Table<DiscordAllianceDB>(tableNameDiscord);
+						break;
+					}
+
+					await Task.Delay(1000).ConfigureAwait(false);
+				}
 			}
-
-			if (Alliance.my == null)
-				return null;
-
-			try
-			{
-				if (tableClientCnVInitialized)
-					return tableClientCnV;
-
-				tableClientCnVInitialized = true;
-
-				var serviceClientCnV = new TableServiceClient(
-					new Uri(storageUriCnV),
-					new TableSharedKeyCredential(accountNameCnV, storageAccountKeyCnV));
-
-				tableClientCnV = serviceClientCnV.GetTableClient(tableNameDiscord);
-				return tableClientCnV;
-			}
-			catch(Exception ex)
-			{
-				LogEx(ex);
-				return null;
-			}
+			return tableDiscord;
 		}
+
 		static public async Task<ulong> GetDiscordChatId()
 		{
 			try
@@ -166,8 +219,8 @@ namespace COTG.Services
 				if (tableClient == null)
 					return 0;
 
-				var entity = await tableClient.GetEntityAsync<DiscordAllianceDB>($"{Alliance.my.name} ChatInfo", "IDs").ConfigureAwait(false);
-				return (ulong)entity.Value.ChatID;
+				var entity = await tableClient.GetAsync($"{Alliance.my.name} ChatInfo", "IDs").ConfigureAwait(false);
+				return (ulong)entity.ChatID;
 			}
 			catch (Exception ex)
 			{
@@ -187,8 +240,7 @@ namespace COTG.Services
 				if (tableClient == null)
 					return false;
 				var hash = message.Hash64().ToString();
-				var i = await tableClient.AddEntityAsync(new TableEntity() { PartitionKey = $"{Alliance.my.name} ChatInfo", RowKey = hash }).ConfigureAwait(false);
-				return IsHttpSuccess(i.Status);
+				return await tableClient.AddAsync(new () { PartitionKey = $"{Alliance.my.name} ChatInfo", RowKey = hash }).ConfigureAwait(false);
 			}
 			catch (Exception ex)
 			{
@@ -206,14 +258,14 @@ namespace COTG.Services
 			{
 
 				var i = new ShareStringDB(part, key, s);
-				var r = await tableClient.UpsertEntityAsync(i, TableUpdateMode.Replace).ConfigureAwait(false);
+				var r = await TableShareStrings.UpsertAsync(i, TableUpdateMode.Replace).ConfigureAwait(false);
 				// todo
 			}
 			catch (Exception e)
 			{
 				LogEx(e);
 				serviceClient = null;
-				tableClient = null; // try recreating it.
+				TableShareStrings = null; // try recreating it.
 			}
 		}
 		public static async Task<List<ShareStringDB>> ReadShares(string part)
@@ -223,10 +275,11 @@ namespace COTG.Services
 			try
 			{
 
-				var entities = tableClient.QueryAsync<ShareStringDB>().ConfigureAwait(false);
+				var entities = TableShareStrings.QueryAsync().ConfigureAwait(false);
 
 				//			.Select(x => new CustomerEntity() { PartitionKey = x.PartitionKey, RowKey = x.RowKey, Email = x.Email });
 
+				return await entities.Select(IAsyncEnumerable.Create).ConfigureAwait(false);
 				var rv = new List<ShareStringDB>();
 				await foreach (var i in entities)
 				{
@@ -237,7 +290,7 @@ namespace COTG.Services
 			catch(Exception ex)
 			{
 				LogEx(ex);
-				tableClient = null; // try recreating it.
+				TableShareStrings = null; // try recreating it.
 				serviceClient = null;
 			}
 			return null;
@@ -265,7 +318,7 @@ namespace COTG.Services
 				var i = await tab.AddEntityAsync(ent).ConfigureAwait(false);
 				//	Log($"Created entry {orderId}");
 
-				return IsHttpSuccess(i.Status);
+				return ATableService.IsHttpSuccess(i.Status);
 				
 				//return false;
 			}
@@ -306,8 +359,6 @@ namespace COTG.Services
 			//	//		}
 			// //           return true;
 		}
-
-
 	}
 }
 

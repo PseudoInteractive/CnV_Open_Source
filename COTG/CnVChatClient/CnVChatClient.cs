@@ -49,8 +49,10 @@ namespace CnVDiscord
 				
 				// Connect to the server using gRPC channel.
 				channel = GrpcChannel.ForAddress("https://localhost:5001");
-
+				
 				connection = await StreamingHubClient.ConnectAsync<ICnVChatClientConnection,ICnVChatClient>(channel,this, cancellationToken: shutdownCancellation.Token);
+				if(connection == null)
+					return;
 				await Task.Delay(1000);
 				
 				await connection.JoinAsync(new(){ playerName=Player.myName,world=JSClient.world,alliance=Alliance.my.name,allianceRole="Newbie"}); // Todo store role somewhere
@@ -83,7 +85,7 @@ namespace CnVDiscord
 
 		public async void JoinResponse(string[] channels)
 		{
-			Log("Got Channels");
+			Log("Got Channels " + channels.Length);
 			foreach (var channel in channels)
 			{
 				Log( channel );

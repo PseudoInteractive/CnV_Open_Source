@@ -100,7 +100,7 @@ namespace COTG.Views
 
 		
 
-		static DebounceTask UpdateTradeStuffDebounce = new(UpdateTradeStuffFunc) { debounceDelay=50,throttleDelay=3000,throttled=true };
+		static DebounceTask UpdateTradeStuffDebounce = new(UpdateTradeStuffFunc) { debounceDelay=100,throttleDelay=3000,throttled=true };
 		public static Task UpdateTradeStuffIfNeeded() => UpdateTradeStuffDebounce.Go();
 
 

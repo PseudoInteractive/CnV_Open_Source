@@ -110,10 +110,12 @@ namespace COTG.Views
 		public static ChatTab world;// = new ChatTab() { Tag = nameof(world) };
 		public static ChatTab officer;// = new ChatTab() { Tag = nameof(officer) };
 									  // public static ChatTab whisper = new ChatTab() { Tag = nameof(whisper) };
-		public static ChatTab debug;// = new ChatTab() { Tag = nameof(debug) };
 
-		public static ChatTab[] all = Array.Empty<ChatTab>();
-		public static ChatTab[] Ctor()
+		public static ChatTab debug;// = new ChatTab() { Tag = nameof(debug) };
+		public static ImmutableDictionary<ulong,ChatTab> discordChatTabs =  ImmutableDictionary<ulong,ChatTab>.Empty;
+		public static ImmutableArray<ChatTab> all = ImmutableArray<ChatTab>.Empty;
+
+		public static void Ctor()
 		{
 		alliance = new ChatTab() { Tag = nameof(alliance) };
 		  world = new ChatTab() { Tag = nameof(world) };
@@ -121,8 +123,7 @@ namespace COTG.Views
 		// public static ChatTab whisper = new ChatTab() { Tag = nameof(whisper) };
 			debug = new ChatTab() { Tag = nameof(debug) };
 
-		all = new ChatTab[] { alliance, world, officer, debug };
-			return all;
+			all = (new ChatTab[] { alliance, world, officer, debug }).ToImmutableArray();
 		}
 		public string whisperTarget; // null if no target
 		public DateTimeOffset lastRead;
