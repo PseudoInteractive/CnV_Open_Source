@@ -305,7 +305,7 @@ namespace CnVDiscord
 		}
 		static Regex regexMention = new Regex(@"\<@(\w+)\>", RegexOptions.CultureInvariant | RegexOptions.Compiled);
 
-		private static async Task AddMessage(DiscordMessage message, bool isNew, bool notify)
+		public static async Task AddMessage(DiscordMessage message, bool isNew, bool notify)
 		{
 			try
 			{
@@ -351,7 +351,7 @@ namespace CnVDiscord
 					content = content.Replace(mention, mentionGame);
 				}
 				var chat = new ChatEntry(name, content, message.Timestamp.ToServerTime(), ChatEntry.typeAlliance);
-				App.DispatchOnUIThreadLow(() => ChatTab.alliance.Post(chat, isNew,notify));
+				App.DispatchOnUIThreadLow(() => ChatTab.Post(message.ChannelId, chat, isNew,notify));
 			}
 			catch (Exception ex)
 			{
@@ -411,10 +411,19 @@ namespace CnVDiscord
 			{
 				try
 				{
-					var name = args.player.name;
+					var player = args.player;
+					var name = player.name;
+					if ( args.discordChannelId != 0 )
+					{
+						CnVChatClient.instance.connection.SendMessageAsync(new(){channelId=args.discordChannelId,memberId=player.discordId,messageText=args.text});
+							return;
+					}
+
 					if (!await Tables.TryAddChatMessage(name + args.text))
 						return;
-					var user = playerToMember.GetValueOrDefault(name.ToLowerInvariant());
+					
+
+					//var user = playerToMember.GetValueOrDefault(name.ToLowerInvariant());
 					//DiscordMessageBuilder message;
 					var users = new List<IMention>();
 
@@ -431,19 +440,17 @@ namespace CnVDiscord
 					//}
 					//	sb.Append(':');
 					var embed = new DiscordEmbedBuilder();
-					var displayName = user != null ? user.DisplayName : name;
+					var displayName =  name;
 
-					if (user != null)
+					var avatarUrl = player.avatarUrl;//.Substring(0, player.avatarUrl.LastIndexOf('/'));
 					{
-						embed.WithAuthor(displayName,user.AvatarUrl);//,null,user.GetAvatarUrl(ImageFormat.Auto, 64));
-						embed.WithThumbnail(user.GetAvatarUrl(ImageFormat.Auto,64));
+						//DiscordUser user= null;
+						//user.GetAvatarUrl(ImageFormat.Auto, 64);
+						embed.WithAuthor(displayName,avatarUrl);//,null,user.GetAvatarUrl(ImageFormat.Auto, 64));
+				//		embed.WithThumbnail(avatarUrl,64,64);
 	//					sb.Append($"<img src=\"{user.AvatarUrl}\" alt=\"{user.DisplayName}\") width=\"32\" height=\"32\" > ");
 					}
-					else
-					{
-						embed.WithAuthor(displayName);//,null,user.GetAvatarUrl(ImageFormat.Auto, 64));
-					}
-
+					
 
 					var str = args.text;
 					for (; ; )
@@ -481,11 +488,19 @@ namespace CnVDiscord
 						str = str.Substring(f);
 					}
 					embed.WithDescription(sb.ToString());
-
-					var message = new DiscordMessageBuilder().WithAllowedMentions(users).WithEmbed(embed);
-					
-					var channel = chatChannel;
-					await DiscordBot.SendMessageAsync(channel, message).ConfigureAwait(false);
+					DiscordChannel? channel;
+					var messageBuilder = new DiscordMessageBuilder().WithAllowedMentions(users).WithEmbed(embed);
+					if ( args.discordChannelId != 0 )
+					{
+						channel = ChatTab.all.FirstOrDefault( a => a.discordChannel?.Id ==  args.discordChannelId)?.discordChannel;
+						
+					}
+					else
+					{
+						channel = chatChannel;
+					}
+					if(channel is not null)
+						await DiscordBot.SendMessageAsync(channel, messageBuilder).ConfigureAwait(false);
 
 				}
 				catch (Exception a)

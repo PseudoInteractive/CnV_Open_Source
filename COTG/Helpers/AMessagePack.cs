@@ -15,7 +15,7 @@ namespace COTG
 	{
 		public static IFormatterResolver defaultResolver = CompositeResolver.Create(
 					StandardResolver.Instance,
-					PrimitiveArrayResolver.Instance,
+				//	PrimitiveArrayResolver.Instance,
 					ImmutableCollectionResolver.Instance
 				
 		);

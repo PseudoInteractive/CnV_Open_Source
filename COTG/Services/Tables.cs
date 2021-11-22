@@ -15,81 +15,7 @@ using System.Web;
 
 namespace COTG.Services
 {
-	public class ATableService
-	{
-		public TableServiceClient tSC;
-		public ATableService(string _connectionString)
-		{
-			tSC=new TableServiceClient(_connectionString);
-		}
-
-		public ATableService(Uri uri,TableSharedKeyCredential tableSharedKeyCredential)
-		{
-			tSC = new(uri, tableSharedKeyCredential);
-		}
-
-		private const int httpStatusSuccessStart = 200;
-		private const int httpStatusSuccessEnd = 299;
-		public static bool IsHttpSuccess(int status) => status >= httpStatusSuccessStart && status <= httpStatusSuccessEnd;
-
-		public TableClient TableClient(string table) => tSC.GetTableClient(table);
-
-		public ATable<TTable> Table<TTable>(string table) where TTable : class, ITableEntity, new()
-		{
-			return new ATable<TTable>( TableClient(table) );
-		}
-	}
-
-	public class ATable<TTable> where TTable : class, ITableEntity, new()
-	{
-		public TableClient tableClient;
-		public ATable(TableClient tableClient) => this.tableClient=tableClient;
-
-		public async Task<bool> UpsertAsync(TTable entity,TableUpdateMode updateMode = TableUpdateMode.Merge)
-		{
-			try
-			{
-				var i = await tableClient.UpsertEntityAsync(entity,mode: updateMode).ConfigureAwait(false);
-				return ATableService.IsHttpSuccess(i.Status);
-			}
-			catch(Exception e)
-			{
-				LogEx(e);
-				return false;
-			}
-
-		}
-		public async Task<bool> AddAsync(TTable entity)
-		{
-			try
-			{
-				var i = await tableClient.AddEntityAsync(entity).ConfigureAwait(false);
-				return ATableService.IsHttpSuccess(i.Status);
-			}
-			catch(Exception e)
-			{
-				LogEx(e);
-				return false;
-			}
-
-		}
-		public async Task<TTable> GetAsync(string partition, string key)
-		{
-			try
-			{
-				return await tableClient.GetEntityAsync<TTable>(partition,key).ConfigureAwait(false);
-				
-			}
-			catch(Exception e)
-			{
-				LogEx(e);
-				return default;
-			}
-
-		}
-
-		internal IAsyncEnumerable<TTable> QueryAsync() => await tableClient.QueryAsync();
-	}
+	using CnVChat;
 
 
 	public class ShareStringDB : ITableEntity
@@ -220,6 +146,9 @@ namespace COTG.Services
 					return 0;
 
 				var entity = await tableClient.GetAsync($"{Alliance.my.name} ChatInfo", "IDs").ConfigureAwait(false);
+				if (entity is null)
+					return 0;
+
 				return (ulong)entity.ChatID;
 			}
 			catch (Exception ex)
@@ -279,9 +208,8 @@ namespace COTG.Services
 
 				//			.Select(x => new CustomerEntity() { PartitionKey = x.PartitionKey, RowKey = x.RowKey, Email = x.Email });
 
-				return await entities.Select(IAsyncEnumerable.Create).ConfigureAwait(false);
 				var rv = new List<ShareStringDB>();
-				await foreach (var i in entities)
+				await foreach (var i in entities.ConfigureAwait(false))
 				{
 					rv.Add(i);
 				}
@@ -315,10 +243,10 @@ namespace COTG.Services
 					return false;
 
 				var ent = new IncomingDB(date, orderId);
-				var i = await tab.AddEntityAsync(ent).ConfigureAwait(false);
+				var i = await tab.AddAsync(ent).ConfigureAwait(false);
 				//	Log($"Created entry {orderId}");
 
-				return ATableService.IsHttpSuccess(i.Status);
+				return i;
 				
 				//return false;
 			}

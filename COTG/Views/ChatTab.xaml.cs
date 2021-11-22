@@ -35,6 +35,8 @@ using CommunityToolkit.WinUI.UI.Controls;
 
 namespace COTG.Views
 {
+	using DSharpPlus.Entities;
+
 	public sealed class ChatEntry
 	{
 		public string player { get; set; }
@@ -114,11 +116,12 @@ namespace COTG.Views
 		public static ChatTab debug;// = new ChatTab() { Tag = nameof(debug) };
 		public static ImmutableDictionary<ulong,ChatTab> discordChatTabs =  ImmutableDictionary<ulong,ChatTab>.Empty;
 		public static ImmutableArray<ChatTab> all = ImmutableArray<ChatTab>.Empty;
-
+		public DiscordChannel discordChannel; // 0 if not a discord Id
+		
 		public static void Ctor()
 		{
-		alliance = new ChatTab() { Tag = nameof(alliance) };
-		  world = new ChatTab() { Tag = nameof(world) };
+			alliance = new ChatTab() { Tag = nameof(alliance) };
+			world = new ChatTab() { Tag = nameof(world) };
 			officer = new ChatTab() { Tag = nameof(officer) };
 		// public static ChatTab whisper = new ChatTab() { Tag = nameof(whisper) };
 			debug = new ChatTab() { Tag = nameof(debug) };
@@ -146,6 +149,13 @@ namespace COTG.Views
 			}
 
 			return base.VisibilityChanged(visible, longTerm: longTerm);
+		}
+
+		internal static void CreateChatTab(DiscordChannel channel)
+		{
+			var tab = new ChatTab() { discordChannel = channel, Tag = channel.Name};
+			all = all.Add(tab);
+			tab.ShowOrAdd();
 		}
 
 	
@@ -342,8 +352,8 @@ namespace COTG.Views
 			if (Tag is string s)
 			{
 				var isWhisperChannel = whisperTarget != null;
-				int id = isWhisperChannel ? 1 : chatToId.IndexOf(s);
-				if (id >= 0)
+				//int id = isWhisperChannel ? 1 : chatToId.IndexOf(s);
+				//if (id >= 0)
 				{
 					var sel = input.Text;
 					if ((e.Key == Windows.System.VirtualKey.Up) || (e.Key == Windows.System.VirtualKey.Down))
@@ -407,25 +417,49 @@ namespace COTG.Views
 								}
 							}
 							input.Text = "";
-							JSClient.SendChat(id + 1, str);
-
+							int cotgId = isWhisperChannel ? 1 : chatToId.IndexOf(s);
+							if ( cotgId >= 0)
 							{
-								var count = items.Count;
-								if (count > 0)
-								{
-									listView.ScrollIntoView(items.Last());
-								}
+								JSClient.SendChat(cotgId + 1, str);
 							}
+
+							if (discordChannel is not null)
+							{
+								Discord.OnChat( new()
+									{discordChannelId = discordChannel.Id, player = Player.me, text = str });
+							}
+
+							//{
+							//	var count = items.Count;
+							//	if (count > 0)
+							//	{
+							//		listView.ScrollIntoView(items.Last());
+							//	}
+							//}
 						}
 
 					}
 				}
-				else
-				{
-					Log("Invalid Chat: " + s);
-				}
 			}
 		}
+
+		internal static void Post(ulong channelId,ChatEntry chat,bool isNew,bool notify)
+		{
+			ChatTab t = null;
+			foreach (var tab in all)
+			{
+				if (tab.discordChannel?.Id == channelId)
+				{
+					t = tab;
+					break;
+				}
+			}
+			if(t ==null)
+				t = alliance;
+			t.Post(chat, isNew, notify);
+
+		}
+
 		public static ChatTab GetWhisperTab(string player, bool activate)
 		{
 			foreach (var w in all)
@@ -438,7 +472,7 @@ namespace COTG.Views
 				}
 			}
 			var ch = new ChatTab() { Tag = player, whisperTarget = player };
-			all = all.ArrayAppend(ch);
+			all = all.Add(ch);
 			ch.ShowOrAdd(activate, false);
 			return ch;
 		}

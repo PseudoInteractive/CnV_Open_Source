@@ -14,6 +14,7 @@ using System.Runtime;
 
 namespace COTG
 {
+	using CnVChat;
 	using CnVDiscord;
 
 	public partial class AGame
@@ -47,7 +48,10 @@ namespace COTG
 			App.QueueIdleTask(IncomingOverview.ProcessTask,1000);
 			App.QueueIdleTask(OutgoingOverview.ProcessTask,1000);
 
-			Task.Run(() => CnVChatClient.Setup());
+			Task.Run(async () =>
+			{
+				await CnVChatClient.Setup();
+			});
 
 			JSClient.SetStayAlive(SettingsPage.stayAlive);
 			//{

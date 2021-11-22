@@ -22,6 +22,7 @@ namespace CnVDiscord
 
 			public string text;
 			public CommandContext context;
+			public ulong discordChannelId;
 		}
 
 		public static System.Action<PlayerCommandEventArgs> PlayerCommand;

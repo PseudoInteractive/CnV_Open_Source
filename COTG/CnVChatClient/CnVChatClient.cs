@@ -16,21 +16,59 @@ using System.Threading;
 using DSharpPlus.Entities;
 namespace CnVDiscord
 {
+	using CnVChat;
 	using COTG;
 
 	class CnVChatClient:ICnVChatClient
 	{
-		static CnVChatClient instance;
+		public static CnVChatClient instance;
 
 		private static CancellationTokenSource shutdownCancellation = new CancellationTokenSource();
 		private static ChannelBase channel;
-		private ICnVChatClientConnection connection;
-		public static Task Setup()
+		public ICnVChatClientConnection connection;
+		public static async Task Setup()
 		{
 			if(instance!=null)
-				return Task.CompletedTask; // once is enough
+				return;
 			instance = new();
-			return instance.Initialize();
+			
+			await  instance.Initialize();
+
+			await foreach (var a in PlayerGameEntity.table.QueryAsync())
+				{
+					if ( a.playerName is not null)
+					{
+						try
+						{
+							var p = Player.all.FirstOrDefault(p =>
+								string.Compare(p.Value.name, a.playerName, StringComparison.OrdinalIgnoreCase) == 0).Value;
+						
+							if (p != null)
+							{
+								if(p.discordId != 0)
+								{
+									Trace($"Extra DiscordId: {a.playerName} discordId:{a.discordId} discordId1:{p.discordId}");
+								}
+								p.discordId = a.discordId;
+								p.avatarUrl = a.avatarURL;
+							}
+							else
+							{
+								Trace($"Missing {a.playerName} discordId:{a.discordId}");
+							}
+
+						}
+						catch (Exception e)
+						{
+							LogEx(e);
+						
+						}
+					}
+					else
+					{
+						Log(a.ToString());
+					}
+				}
 		}
 		public async Task Initialize()
 		{
@@ -53,8 +91,10 @@ namespace CnVDiscord
 				connection = await StreamingHubClient.ConnectAsync<ICnVChatClientConnection,ICnVChatClient>(channel,this, cancellationToken: shutdownCancellation.Token);
 				if(connection == null)
 					return;
-				await Task.Delay(1000);
-				
+				while (!Alliance.alliancesFetched)
+				{
+					await Task.Delay(1000);
+				}
 				await connection.JoinAsync(new(){ playerName=Player.myName,world=JSClient.world,alliance=Alliance.my.name,allianceRole="Newbie"}); // Todo store role somewhere
 			//	await Task.Delay(5000);
 			//if (a is null)
@@ -85,25 +125,34 @@ namespace CnVDiscord
 
 		public async void JoinResponse(string[] channels)
 		{
-			Log("Got Channels " + channels.Length);
-			foreach (var channel in channels)
-			{
-				Log( channel );
-				var c = CnVJsonMessagePackDiscordChannel.Get(channel);
-				// Todo:  Create channel
 
-				await connection.ConnectChannelAsync( new() { channelId = c.Id, lastRecieved=0 }); // todo:  Lastrecieved
-			}
+			Log("Got Channels " + channels.Length);
+			App.DispatchOnUIThread(async () =>
+			{
+				foreach (var channel in channels)
+				{
+					Log( channel );
+					var c = CnVJsonMessagePackDiscordChannel.Get(channel);
+					// Todo:  Create channel
+					ChatTab.CreateChatTab(c);
+
+					await connection.ConnectChannelAsync( new()
+						{ channelId = c.Id, lastRecieved = 0 }); // todo:  Lastrecieved
+				}
+			});
 		}
 
 		public void OnReceiveMessages(string[] messages)
 		{
-			foreach (var message in messages)
+			Log("Got Messages " + messages.Length);
+			App.DispatchOnUIThread(async () =>
 			{
-				Log(message);
-			}
+				foreach (var message in messages)
+				{
 
-
+					await Discord.AddMessage( CnVJsonMessagePackDiscordMessage.Get(message), false, true);
+				}
+			});
 		}
 
 	}

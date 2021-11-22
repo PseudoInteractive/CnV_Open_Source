@@ -18,6 +18,9 @@ namespace COTG.Game
         public static int myId;
 		public static int activeId;
 		public int points;
+		public string avatarUrl;
+		public ulong discordId;
+
 		public static HashSet<int> myIds = new HashSet<int>();
 		public static string myName;
 		public static string subOwner;
@@ -33,6 +36,7 @@ namespace COTG.Game
 			return Player.Get(attackPid).MoralePenalty(Player.Get(defendPid));
 		}
 
+		public static Player me => all[myIds.First()];
 		public static int myTitle;
         public static int viewHover; // in the view menu
 		public static int moveSlots=100;

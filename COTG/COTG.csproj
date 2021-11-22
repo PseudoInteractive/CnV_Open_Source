@@ -56,21 +56,18 @@
     <PackageReference Include="GoogleSheetsWrapper" Version="1.0.27" />
     <PackageReference Include="Grpc.Net.Client" Version="2.41.0-pre1" />
     <PackageReference Include="MagicOnion.Client" Version="4.3.1" />
-    <PackageReference Include="MessagePack" Version="2.3.85" />
-    <PackageReference Include="MessagePack.Experimental" Version="2.3.85" />
     <PackageReference Include="MessagePackAnalyzer" Version="2.3.85" />
     <PackageReference Include="Microsoft.AppCenter" Version="4.4.0" />
     <PackageReference Include="Microsoft.AppCenter.Analytics" Version="4.4.0" />
     <PackageReference Include="Microsoft.AppCenter.Crashes" Version="4.4.0" />
-    <PackageReference Include="Microsoft.AspNetCore.AzureKeyVault.HostingStartup" Version="2.0.4" />
     <PackageReference Include="Microsoft.DependencyValidation.Analyzers" Version="0.11.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration" Version="6.0.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="6.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="6.0.0" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="6.0.0" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="6.0.0" />
     <PackageReference Include="Microsoft.Extensions.Diagnostics.HealthChecks" Version="6.0.0" />
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="6.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="6.0.0" />
     <PackageReference Include="Microsoft.Extensions.Logging" Version="6.0.0" />
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="6.0.0" />
     <PackageReference Include="Microsoft.Extensions.Logging.Configuration" Version="6.0.0" />
@@ -114,8 +111,6 @@
   </ItemGroup>
 	<ItemGroup>
 		<PackageReference Include="Microsoft.ProjectReunion" Version="0.8.5" />
-		<PackageReference Include="Microsoft.ProjectReunion.Foundation" Version="0.8.5" />
-		<PackageReference Include="Microsoft.ProjectReunion.WinUI" Version="0.8.5" />
 		<Manifest Include="$(ApplicationManifest)" />
 	</ItemGroup>
   <ItemGroup>
@@ -321,11 +316,6 @@
     <Compile Include="Models\JSPopup.cs" />
     <Compile Include="Note.cs" />
     <Compile Include="Program.cs" />
-    <Compile Include="Properties\Resources.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Resources.resx</DependentUpon>
-    </Compile>
     <Compile Include="Services\Avatarslate.cs" />
     <Compile Include="Services\Blobs.cs" />
     <Compile Include="Services\ChatStorage.cs" />
@@ -885,12 +875,6 @@
   <ItemGroup>
     <EmbeddedResource Include="Content\Fonts\tra.fnt" />
     <EmbeddedResource Include="Wiki\fixes.md" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Update="Properties\Resources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <None Update="cnvCover2.png">
