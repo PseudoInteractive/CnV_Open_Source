@@ -9,7 +9,9 @@ using static COTG.Debug;
 
 namespace COTG.Game
 {
-    public class Player
+	using Microsoft.UI.Xaml.Media.Imaging;
+
+	public class Player
     {
 		public int id;
         public string name;
@@ -20,6 +22,7 @@ namespace COTG.Game
 		public int points;
 		public string avatarUrl;
 		public ulong discordId;
+		public BitmapImage avatarBrush;
 
 		public static HashSet<int> myIds = new HashSet<int>();
 		public static string myName;
@@ -50,6 +53,7 @@ namespace COTG.Game
 
 		public static object activePlayerName => IdToName(activeId);
 
+		public static Dictionary<ulong, Player> playerByDiscordIds = new();
 		public static Dictionary<int, Player> all = new Dictionary<int, Player>();
         public static Dictionary<string, int> nameToId = new Dictionary<string, int>();
         public static string IdToName(int id)
@@ -118,6 +122,8 @@ namespace COTG.Game
 		}
 		internal static Player FromNameOrNull(string player)
 		{
+			if(player is null)
+				return null;
 			if(nameToId.TryGetValue(player, out var p))
 				return all[p];
 			return null;

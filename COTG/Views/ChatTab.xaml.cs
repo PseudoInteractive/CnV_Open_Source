@@ -63,11 +63,7 @@ namespace COTG.Views
 		const int maxMessageLength = 32 * 1024;
 		static BitmapImage GetAvatar(string player)
 		{
-			if (player != null && CnVDiscord.Discord.avatarBrushes.TryGetValue(player.ToLowerInvariant(), out var url))
-			{
-				return url;
-			}
-			return null ;
+			return Player.FromNameOrNull(player)?.avatarBrush;
 		}
 		public ChatEntry(string _player, string _a, DateTimeOffset _time = default)
 		{
@@ -417,16 +413,20 @@ namespace COTG.Views
 								}
 							}
 							input.Text = "";
-							int cotgId = isWhisperChannel ? 1 : chatToId.IndexOf(s);
-							if ( cotgId >= 0)
-							{
-								JSClient.SendChat(cotgId + 1, str);
-							}
 
 							if (discordChannel is not null)
 							{
 								Discord.OnChat( new()
 									{discordChannelId = discordChannel.Id, player = Player.me, text = str });
+							}
+							else
+							{
+								int cotgId = isWhisperChannel ? 1 : chatToId.IndexOf(s);
+								if ( cotgId >= 0)
+								{
+									JSClient.SendChat(cotgId + 1, str);
+								}
+
 							}
 
 							//{

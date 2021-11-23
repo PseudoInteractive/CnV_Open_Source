@@ -21,51 +21,51 @@ namespace CnVDiscord
         {
         }
 
-        public static async void ReloadConfig()
-        {
-            await Discord.DiscordBot.DisconnectAsync();
+   //     public static async void ReloadConfig()
+   //     {
+   //         await Discord.DiscordBot.DisconnectAsync();
 
-			Discord.DiscordBot = new DiscordClient(new DiscordConfiguration
-			{
-				Token = Discord.Config.DiscordBotToken,
-				TokenType = TokenType.Bot,
-				MinimumLogLevel = Microsoft.Extensions.Logging.LogLevel.Warning
-			});
+			//Discord.DiscordBot = new DiscordClient(new DiscordConfiguration
+			//{
+			//	Token = Discord.Config.DiscordBotToken,
+			//	TokenType = TokenType.Bot,
+			//	MinimumLogLevel = Microsoft.Extensions.Logging.LogLevel.Warning
+			//});
 
-            await Discord.DiscordBot.ConnectAsync();
-        }
+   //         await Discord.DiscordBot.ConnectAsync();
+   //     }
 
-        public static async void OnPostInitialize(EventArgs args)
-        {
-            await Online();
-            //Bridge.AutoBC();
-        }
+   //     public static async void OnPostInitialize(EventArgs args)
+   //     {
+   //         await Online();
+   //         //Bridge.AutoBC();
+   //     }
 
-        public static async Task Online()
-        {
-            var chat = await Discord.DiscordBot.GetChannelAsync(Discord.Config.LogID);
-            await Discord.DiscordBot.SendMessageAsync(chat, $"✅ Server online!");
-        }
-        public async void OnServerCommand(CommandEventArgs args)
-        {
-            var chat = await Discord.DiscordBot.GetChannelAsync(Discord.Config.LogID);
+   //     public static async Task Online()
+   //     {
+   //         var chat = await Discord.DiscordBot.GetChannelAsync(Discord.Config.LogID);
+   //         await Discord.DiscordBot.SendMessageAsync(chat, $"✅ Server online!");
+   //     }
+   //     public async void OnServerCommand(CommandEventArgs args)
+   //     {
+   //         var chat = await Discord.DiscordBot.GetChannelAsync(Discord.Config.LogID);
 
-            await Discord.DiscordBot.SendMessageAsync(chat, "**Server:** " + args.Command);
-        }
-        //public async void OnPlayerCommand(TShockAPI.Hooks.PlayerCommandEventArgs args)
-        //{
-        //    if ((args.Player == null) || (args.Player == TSPlayer.Server))
-        //        return;
-        //    try
-        //    {
-        //        var logs = await Discord.DiscordBot.GetChannelAsync(Discord.Config.LogID);
-        //        await Discord.DiscordBot.SendMessageAsync(logs, "**" + args.Player.Name + ":** " + args.CommandText);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        TShock.Log.Error(ex.ToString());
-        //    }
-        //}
+   //         await Discord.DiscordBot.SendMessageAsync(chat, "**Server:** " + args.Command);
+   //     }
+   //     //public async void OnPlayerCommand(TShockAPI.Hooks.PlayerCommandEventArgs args)
+   //     //{
+   //     //    if ((args.Player == null) || (args.Player == TSPlayer.Server))
+   //     //        return;
+   //     //    try
+   //     //    {
+   //     //        var logs = await Discord.DiscordBot.GetChannelAsync(Discord.Config.LogID);
+   //     //        await Discord.DiscordBot.SendMessageAsync(logs, "**" + args.Player.Name + ":** " + args.CommandText);
+   //     //    }
+   //     //    catch (Exception ex)
+   //     //    {
+   //     //        TShock.Log.Error(ex.ToString());
+   //     //    }
+   //     //}
 
     }
 }

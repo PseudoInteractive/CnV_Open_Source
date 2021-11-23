@@ -16,6 +16,7 @@ using System.Threading;
 using DSharpPlus.Entities;
 namespace CnVDiscord
 {
+	using System.Net.Http;
 	using CnVChat;
 	using COTG;
 
@@ -51,6 +52,7 @@ namespace CnVDiscord
 								}
 								p.discordId = a.discordId;
 								p.avatarUrl = a.avatarURL;
+								Player.playerByDiscordIds.TryAdd(a.discordId, p);
 							}
 							else
 							{
@@ -84,9 +86,18 @@ namespace CnVDiscord
 				);
 				
 			//	MessagePackSerializer.DefaultOptions = MessagePackSerializer.DefaultOptions.WithResolver(resolver);
-				
+			var handler = new SocketsHttpHandler
+			{
+				PooledConnectionIdleTimeout = Timeout.InfiniteTimeSpan,
+				KeepAlivePingDelay = TimeSpan.FromSeconds(60),
+				KeepAlivePingTimeout = TimeSpan.FromSeconds(30),
+				EnableMultipleHttp2Connections = true
+			};
 				// Connect to the server using gRPC channel.
-				channel = GrpcChannel.ForAddress("https://localhost:5001");
+				channel = GrpcChannel.ForAddress("https://localhost:5001",new GrpcChannelOptions()
+				{
+					HttpHandler = handler
+				});
 				
 				connection = await StreamingHubClient.ConnectAsync<ICnVChatClientConnection,ICnVChatClient>(channel,this, cancellationToken: shutdownCancellation.Token);
 				if(connection == null)
@@ -95,27 +106,21 @@ namespace CnVDiscord
 				{
 					await Task.Delay(1000);
 				}
-				await connection.JoinAsync(new(){ playerName=Player.myName,world=JSClient.world,alliance=Alliance.my.name,allianceRole="Newbie"}); // Todo store role somewhere
-			//	await Task.Delay(5000);
-			//if (a is null)
-			//{
-			//	Assert(false);
-			//}
-			//else
-			//{
-			//	foreach (var c in a)
-			//	{
-			//		Log(c.Get());
-			//	}
-			//}
-			// Initialize gRPC channel provider when the application is loaded.
-				//GrpcChannelProviderHost.Initialize(new DefaultGrpcChannelProvider(new GrpcCCoreChannelOptions(new[]
-				//{
-				//             // send keepalive ping every 5 second, default is 2 hours
-				//             new ChannelOption("grpc.keepalive_time_ms", 5000),
-				//             // keepalive ping time out after 5 seconds, default is 20 seconds
-				//             new ChannelOption("grpc.keepalive_timeout_ms", 5 * 1000),
-				//})));
+				var channels = await connection.JoinAsync(new(){ playerName=Player.myName,world=JSClient.world,alliance=Alliance.my.name,allianceRole="Newbie"}); // Todo store role somewhere
+				Log("Got Channels " + channels.Length);
+				App.DispatchOnUIThread(async () =>
+				{
+					foreach (var channel in channels)
+					{
+						Log( channel );
+						var c = CnVJsonMessagePackDiscordChannel.Get(channel);
+						// Todo:  Create channel
+						ChatTab.CreateChatTab(c);
+
+						await connection.ConnectChannelAsync( new()
+							{ channelId = c.Id, lastRecieved = 0 }); // todo:  Lastrecieved
+					}
+				});
 			}
 			catch (Exception e)
 			{
@@ -123,34 +128,22 @@ namespace CnVDiscord
 			}
 		}
 
-		public async void JoinResponse(string[] channels)
-		{
+		//public async void JoinResponse(string[] channels)
+		//{
 
-			Log("Got Channels " + channels.Length);
+			
+		//}
+
+		public void OnReceiveMessages( ICnVChatClient.OnReceiveMessagesArgs messageArgs)
+		{
+			Log("Got Messages " + messageArgs.discordMessages.Length);
 			App.DispatchOnUIThread(async () =>
 			{
-				foreach (var channel in channels)
+				for(int i = 0;i<messageArgs.discordMessages.Length;++i)
 				{
-					Log( channel );
-					var c = CnVJsonMessagePackDiscordChannel.Get(channel);
-					// Todo:  Create channel
-					ChatTab.CreateChatTab(c);
-
-					await connection.ConnectChannelAsync( new()
-						{ channelId = c.Id, lastRecieved = 0 }); // todo:  Lastrecieved
-				}
-			});
-		}
-
-		public void OnReceiveMessages(string[] messages)
-		{
-			Log("Got Messages " + messages.Length);
-			App.DispatchOnUIThread(async () =>
-			{
-				foreach (var message in messages)
-				{
-
-					await Discord.AddMessage( CnVJsonMessagePackDiscordMessage.Get(message), false, true);
+					var message = CnVJsonMessagePackDiscordMessage.Get(messageArgs.discordMessages[i]);
+					var senderOverrides = messageArgs.senderOverrides;
+					await Discord.AddMessage(senderOverrides!=null? senderOverrides[i] : message.Author.Id,message , false, true);
 				}
 			});
 		}

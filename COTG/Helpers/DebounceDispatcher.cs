@@ -244,7 +244,7 @@ namespace COTG
 				{
 					// pending
 					// delay further or if it is running, add a throttle timeout
-					nextCall = nextCall.Max( ATime.TickCount +throttleDelay);
+				//	nextCall = nextCall.Max( ATime.TickCount +throttleDelay);
 					Debug.Log("next TickT: " + (int)((nextCall-ATime.TickCount)*0.1f) ); 
 					return rv.Task;
 				}
@@ -266,7 +266,7 @@ namespace COTG
 
 
 				nextCall = nextCall.Max(ATime.TickCount + delayOverride);
-				Debug.Log("next Tick1: " + (int)((nextCall-ATime.TickCount)*10) ); 
+				Debug.Log("next Tick1: " + (int)((nextCall-ATime.TickCount)*0.1f) ); 
 
 				Task.Run(async () =>
 				{
