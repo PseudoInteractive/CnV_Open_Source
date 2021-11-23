@@ -15,6 +15,7 @@ namespace COTG.Game
     {
 		public int id;
         public string name;
+        public string discordUserName;
         public ushort alliance;
         public byte title;
         public static int myId;
@@ -53,7 +54,8 @@ namespace COTG.Game
 
 		public static object activePlayerName => IdToName(activeId);
 
-		public static Dictionary<ulong, Player> playerByDiscordIds = new();
+		public static Dictionary<string, Player> playerByDiscordUserName = new();
+		public static Dictionary<ulong, Player> playerByDiscordId = new();
 		public static Dictionary<int, Player> all = new Dictionary<int, Player>();
         public static Dictionary<string, int> nameToId = new Dictionary<string, int>();
         public static string IdToName(int id)

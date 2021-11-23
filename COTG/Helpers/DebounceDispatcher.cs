@@ -224,8 +224,8 @@ namespace COTG
 			public bool throttled;
 			TaskCompletionSource onComplete = null;
 			TickT nextCall;
-			TickT throttleEnd;
-			public bool isInCooldown => (throttleEnd-ATime.TickCount) > 0;
+		//	TickT throttleEnd;
+			public bool isInCooldown => (nextCall-ATime.TickCount) > 0;
 
 			public DebounceTask(Func<Task> _func)
 			{

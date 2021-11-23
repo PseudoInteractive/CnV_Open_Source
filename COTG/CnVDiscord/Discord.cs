@@ -309,7 +309,7 @@ namespace CnVDiscord
 		{
 			try
 			{
-				if(!Player.playerByDiscordIds.TryGetValue(senderOverride,out var p))
+				if(!Player.playerByDiscordId.TryGetValue(senderOverride,out var p))
 					p = Player.me;
 				var name = p.name; // todo: use clients
 				if (p.avatarBrush is null && p.avatarUrl is not null )

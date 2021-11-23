@@ -18,6 +18,7 @@ namespace COTG
 	{
 		public static byte idCabin;
 		public static byte idTownHall;
+		public const byte layoutEmpty = (byte)'-';
 		public static byte BidToId(int bid)
 		{
 			if (bid == 0)
@@ -37,13 +38,13 @@ namespace COTG
 				{
 					if(BuildingDef.buildingsToSharestring.TryGetValue((off).AsByte(),out var o))
 					{
-						return (o, o != (byte)'-');
+						return (o, o != (layoutEmpty));
 					}
 				}
 
 			}
 
-			return ((byte)'-', false);
+			return (layoutEmpty, false);
 		}
 		public static short LayoutToBid(byte v) => (short)(BuildingDef.sharestringToBuldings.TryGetValue(v, out var c) && c != 0 ? (c + BuildingDef.sharestringBuildingOffset).AsShort() : (short) 0);
 
@@ -101,7 +102,7 @@ namespace COTG
 			idCastle = BidToId(City.bidCastle);
 			//}
 			var ix = new byte[] {
-				 (byte)'-',(byte)(0),
+				layoutEmpty,(byte)(0),
 				 (byte)',',(byte)0,//(452 - sharestringOffset),
 				 (byte)'.',(byte)0,//(454 - sharestringOffset),
 				 (byte)'1',(byte)(447 - sharestringBuildingOffset),

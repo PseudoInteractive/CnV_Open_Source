@@ -612,7 +612,7 @@ namespace COTG
 			window.Content.PreviewKeyUp+=Content_PreviewKeyUp;
 			window.Content.PreviewKeyDown+=Content_PreviewKeyDown; ;
 //			window.KeyDown+=Window_KeyDown;
-						window.Maximize();
+			//			window.Maximize();
 
 				//			CoreApplication.MainView.HostedViewClosing+=MainView_HostedViewClosing; ;
 				//	CoreApplication.MainView.CoreWindow.Closed+=CoreWindow_Closed;

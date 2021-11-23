@@ -455,13 +455,14 @@ namespace COTG.Game
 			var rv = new byte[citySpotCount];
 			for(int i = 0;i<citySpotCount;++i)
 			{
-				rv[i] = i==bspotTownHall ? (byte)'T' : (byte)'-';
+				rv[i] = i==bspotTownHall ? (byte)'T' : BuildingDef.layoutEmpty;
 
 			}
 			return rv;
 		}
 		internal bool isLayoutCustom => !object.ReferenceEquals(layout,emptyLayout);
 		internal bool isLayoutEmpty => object.ReferenceEquals(layout,emptyLayout);
+		internal bool IsLayoutEmpty(int bSpot) => layout[bSpot] == layoutEmpty;
 
 		// can have side effects
 		public byte[] TouchLayoutForWrite()
@@ -2220,6 +2221,18 @@ namespace COTG.Game
 		}
 		public TownHallAndBuildingCount GetTownHallAndBuildingCount(bool forceUpdate)
 		{
+			if (CityBuild.isPlanner)
+			{
+				int rv = 0;
+				foreach (var i in buildingSpots)
+				{
+					if(!IsLayoutEmpty(i))
+						++rv;
+				}
+
+				return new() {townHallLevel = 10, buildingCount = rv};
+			}
+
 			if ( buildingCountCache < 0 )
 			{
 				if(!forceUpdate && !postQueueBuildingCacheValid && !CityBuild.isPlanner )

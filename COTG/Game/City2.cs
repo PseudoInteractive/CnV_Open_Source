@@ -757,75 +757,85 @@ namespace COTG.Game
 				// Do we want a building here?
 				if (desBid != 0)
 				{
-					if (b.isRes || isPlanner)
+					if (isPlanner )
 					{
 
-						Status($"Destroying {b.def.Bn} to make way for {desName}", dryRun);
-
-
-						await Demolish(cc, dryRun);
-						++rv;
-						if (!dryRun)
-							await Task.Delay(400).ConfigureAwait(true);
-						if (takeScore > 0 && searchForSpare)
-						{
-							Status($"Please wait on demo, then spare {desName} can be moved into place", dryRun);
-							// wait for demo
-							return rv;
-						}
 					}
-					else if (takeScore > 0 && searchForSpare )
+					else
 					{
-						Status($"Found an unneeded {desName}, will move it to the right spot for you", dryRun);
-
-						if (!await MoveBuilding(takeFrom, bspot, dryRun))
-							return -1;
-						return rv;
-					}
-					if ((counts.townHallLevel < desB.Thl || (counts.buildingCount == counts.max && counts.townHallLevel < 10)))
-					{
-						var level = (counts.buildingCount / 10 + 1).Max(b.def.Thl).Min(10);
-						if (dryRun)
+						if (b.isRes)
 						{
-							Status($"Upgrade town hall to level {level}", dryRun);
 
-						}
-						else
-						{
-							if (!(await UpgradeTownHallDialogue(level)))
-								return rv;
-							++rv; // not exact
-						}
-					}
-					else if ( counts.buildingCount >= 100 && !desB.isTower && !desB.isWall)
-					{
-						if (!desB.isCabin && desBid != 0)
-						{
-							int bestSpot = await FindBuildingToRemoveUI(showUI: wantDemoUI,dryRun:dryRun);
+							Status($"Destroying {b.def.Bn} to make way for {desName}", dryRun);
 
-							if (bestSpot != -1)
+
+							await Demolish(cc, dryRun);
+							++rv;
+							if (!dryRun)
+								await Task.Delay(400).ConfigureAwait(true);
+							if (takeScore > 0 && searchForSpare)
 							{
-								Status($"Will Demolish {postBuildings[bestSpot]} to make room", dryRun);
-
-								await Demolish(bestSpot, dryRun);
-								//break;
-								--counts.buildingCount;
-								++rv;
-
+								Status($"Please wait on demo, then spare {desName} can be moved into place", dryRun);
+								// wait for demo
+								return rv;
 							}
 						}
-						else
+						else if (takeScore > 0 && searchForSpare )
 						{
-							Status("Don't want to demo a cabin to build a cabin", dryRun);
+							Status($"Found an unneeded {desName}, will move it to the right spot for you", dryRun);
+
+							if (!await MoveBuilding(takeFrom, bspot, dryRun))
+								return -1;
+							return rv;
 						}
 
+						if ((counts.townHallLevel < desB.Thl
+						     || (counts.buildingCount == counts.max && counts.townHallLevel < 10)))
+						{
+							var level = (counts.buildingCount / 10 + 1).Max(b.def.Thl).Min(10);
+							if (dryRun)
+							{
+								Status($"Upgrade town hall to level {level}", dryRun);
 
+							}
+							else
+							{
+								if (!(await UpgradeTownHallDialogue(level)))
+									return rv;
+								++rv; // not exact
+							}
+						}
+						else if ( counts.buildingCount >= 100 && !desB.isTower && !desB.isWall)
+						{
+							if (!desB.isCabin && desBid != 0)
+							{
+								int bestSpot = await FindBuildingToRemoveUI(showUI: wantDemoUI, dryRun: dryRun);
+
+								if (bestSpot != -1)
+								{
+									Status($"Will Demolish {postBuildings[bestSpot]} to make room", dryRun);
+
+									await Demolish(bestSpot, dryRun);
+									//break;
+									--counts.buildingCount;
+									++rv;
+
+								}
+							}
+							else
+							{
+								Status("Don't want to demo a cabin to build a cabin", dryRun);
+							}
+
+
+						}
 					}
+
 					//if (counts.buildingCount < 100)
 					await Build(cc, desBid == 0 ? bidCottage : desBid, dryRun:dryRun,verbose:true);
 
 				}
-				else
+				else if(!isPlanner)
 				{
 					Assert(!isPlanner);
 					// Nothing wanted here
@@ -916,29 +926,37 @@ namespace COTG.Game
 							}
 							else
 							{
-								if (counts.buildingCount >= 100)
+								if (!isPlanner)
 								{
-
-									if (wantDemoUI)
+									if (counts.buildingCount >= 100)
 									{
-										int bestSpot =await FindBuildingToRemoveUI(showUI: wantDemoUI,dryRun:dryRun);
-										if (bestSpot != -1)
+
+										if (wantDemoUI)
 										{
-											await Demolish(bestSpot, dryRun);
-											--counts.buildingCount;
-											++rv;
+											int bestSpot =
+												await FindBuildingToRemoveUI(showUI: wantDemoUI, dryRun: dryRun);
+											if (bestSpot != -1)
+											{
+												await Demolish(bestSpot, dryRun);
+												--counts.buildingCount;
+												++rv;
+											}
+
 										}
+
 
 									}
 
-									
+									var cb = FindAnyFreeSpotForMove(bspot, !dryRun);
+									if (!await MoveBuilding(bspot, cb, dryRun))
+										return -1;
 								}
+								else
+								{
+									 // planner, just replace whatever is here
+									await Demolish(cc, dryRun);
 
-
-								var cb = FindAnyFreeSpotForMove(bspot, !dryRun);
-								if (!await MoveBuilding(bspot, cb, dryRun))
-									return -1;
-
+								}
 
 								// build the correct building
 								if (dryRun)

@@ -52,7 +52,9 @@ namespace CnVDiscord
 								}
 								p.discordId = a.discordId;
 								p.avatarUrl = a.avatarURL;
-								Player.playerByDiscordIds.TryAdd(a.discordId, p);
+								p.discordUserName = a.discordUserName??p.name;
+								Player.playerByDiscordId.TryAdd(a.discordId, p);
+								Player.playerByDiscordUserName.TryAdd(p.discordUserName,p);
 							}
 							else
 							{
@@ -143,7 +145,16 @@ namespace CnVDiscord
 				{
 					var message = CnVJsonMessagePackDiscordMessage.Get(messageArgs.discordMessages[i]);
 					var senderOverrides = messageArgs.senderOverrides;
-					await Discord.AddMessage(senderOverrides!=null? senderOverrides[i] : message.Author.Id,message , false, true);
+					if(!Player.playerByDiscordUserName.TryGetValue(message.Author.Username,out var player))
+					{
+						player = null;
+					}
+					else
+					{
+						Console.WriteLine(
+							$"Missing discordName: {message.Author.Username} {message.Author.Id} HasOverride:{senderOverrides != null} ");
+					}
+					await Discord.AddMessage( (senderOverrides!=null? senderOverrides[i] : (player is not null ? player.discordId : message.Author.Id)),message, false, true);
 				}
 			});
 		}
