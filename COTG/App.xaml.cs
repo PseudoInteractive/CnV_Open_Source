@@ -374,7 +374,7 @@ namespace COTG
 				var dt = t - activeStart;
 				activeStart = t;
 				AAnalytics.Track("Foreground", new Dictionary<string, string> { { "time", dt.TotalSeconds.RoundToInt().ToString() } });
-				JSClient.ResumeWebView();
+			//	JSClient.ResumeWebView();
 
 			}
 			//if (ShellPage.canvas != null)
@@ -603,15 +603,14 @@ namespace COTG
 				window.WantClose+=Window_Closing;
 			//	window.Activated+=Window_Activated;
 			}
-				await ActivationService.ActivateAsync(args,wasRunning);
+			await ActivationService.ActivateAsync(args,wasRunning);
 			
 			if(wasRunning)
 				return;
 			window.Content.PreviewKeyUp+=Content_PreviewKeyUp;
 			window.Content.PreviewKeyDown+=Content_PreviewKeyDown; ;
 //			window.KeyDown+=Window_KeyDown;
-			window.Maximize();
-
+			
 				//			CoreApplication.MainView.HostedViewClosing+=MainView_HostedViewClosing; ;
 				//	CoreApplication.MainView.CoreWindow.Closed+=CoreWindow_Closed;
 				//if(args!=null)

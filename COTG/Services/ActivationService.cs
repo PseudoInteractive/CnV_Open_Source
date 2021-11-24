@@ -101,6 +101,7 @@ namespace COTG.Services
 				// Ensure the current window is active
 				App.window.Activate();
 
+				App.window.Maximize();
 
 			}
 		}

@@ -713,15 +713,15 @@ namespace COTG.Views
 
 
 
-		private Task Downgrade_Click(object sender, RoutedEventArgs e)
-		{
-			return City.GetBuild().Downgrade(selected, false);
-		}
+		//private Task Downgrade_Click(object sender, RoutedEventArgs e)
+		//{
+		//	return City.GetBuild().Downgrade(selected, false);
+		//}
 
-		private Task Destroy_Click(object sender, RoutedEventArgs e)
-		{
-			return City.GetBuild().Demolish(selected, false);
-		}
+		//private Task Destroy_Click(object sender, RoutedEventArgs e)
+		//{
+		//	return City.GetBuild().Demolish(selected, false);
+		//}
 
 		static int GetHash(string name, int x, int y, float scale)
 		{
@@ -1555,9 +1555,6 @@ namespace COTG.Views
 		private async void Abandon_ExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
 		{
 			buildMenu.Hide();
-			App.DispatchOnUIThreadLow(() =>
-						JSClient.coreWebView.PostWebMessageAsString($"{{\"temple\":{City.build}}}"));
-			return;
 			var cid = City.build;
 			await App.DispatchOnUIThreadExclusive(cid, async () =>
 			{

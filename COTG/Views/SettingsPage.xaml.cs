@@ -470,7 +470,7 @@ namespace COTG.Views
 				return;
 			try
 			{
-				CityCustom.Save(); // not awaited, this could lead to corruption
+				CityCustom.Save(); // synchronous
 				var props = typeof(SettingsPage).GetFields(System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.DeclaredOnly);
 				var st = App.Settings();
 				//if (SpotTab.instance.spotMRU.Count>0)

@@ -170,7 +170,7 @@ namespace COTG.Views
 
 		//	Assert(mouseOverCanvas== true);
 			mouseOverCanvas = false;
-			instance.OnPropertyChanged("mouseOverCanvas");
+			instance.mouseOverCanvasBox.IsChecked = mouseOverCanvas;
 			
 			var point = e.GetCurrentPoint(canvas);
 			Canvas_PointerExited(point.Position, point.PointerId);
@@ -475,7 +475,7 @@ namespace COTG.Views
 			if(!mouseOverCanvas)
 			{
 				mouseOverCanvas = true;
-				instance.OnPropertyChanged("mouseOverCanvas");
+				instance.mouseOverCanvasBox.IsChecked = mouseOverCanvas;
 
 //				Trace("MouseEnterred");
 			}
@@ -1124,9 +1124,10 @@ namespace COTG.Views
 			Trace("Mouse Moved Canvas");
 		//	App.cursorDefault.Set();
 			App.InputRecieved(); // prevent idle timer;
-			mouseOverCanvas = true;
-			instance.OnPropertyChanged("mouseOverCanvas");
+			mouseOverCanvas = true;		
+			instance.mouseOverCanvasBox.IsChecked = mouseOverCanvas;
 
+			
 			//	PointerInfo(e);
 			UpdateMousePosition(point.Position);
 			TakeFocusIfAppropriate();

@@ -198,7 +198,7 @@ namespace COTG.Views
 		}
 		static  Debounce takeFocusIfAppropriate = new( () =>
 		{
-			var isOverCanvas = isMouseOverCanvas;
+			var isOverCanvas = mouseOverCanvas && isHitTestVisible;
 			var note = 0;
 			if(isOverCanvas)
 			{
@@ -243,19 +243,13 @@ namespace COTG.Views
 		};
 
 		
-		private static bool IsMouseInCanvas()
-		{
-			return mouseOverCanvas;
-			
-		//	return canvas.IsLocalPointOver(mousePosition.X,mousePosition.Y) && !IsMouseOverChat();
-		}
-		private static bool IsMouseOverChat()
-		{
-			var xf = canvas.TransformToVisual(ChatTab.tabPage );
-			var pt = xf.TransformPoint(new(mousePosition.X,mousePosition.Y));
-			return ChatTab.tabPage.IsLocalPointOver(pt.X,pt.Y);
-		}
-		private static bool isMouseOverCanvas => IsMouseInCanvas() && isHitTestVisible;
+		
+		//private static bool IsMouseOverChat()
+		//{
+		//	var xf = canvas.TransformToVisual(ChatTab.tabPage );
+		//	var pt = xf.TransformPoint(new(mousePosition.X,mousePosition.Y));
+		//	return ChatTab.tabPage.IsLocalPointOver(pt.X,pt.Y);
+		//}
 
 		public static void SetViewModeCity()
 		{
@@ -479,17 +473,23 @@ namespace COTG.Views
 				return false;
 			}
 			// don't process if chat has focus
-			foreach(var tab in ChatTab.all)
-			{
-				if(tab.input.FocusState != FocusState.Unfocused)
-				{
-					Log($"{tab.Name} {tab.input.Focus}");
-					return false;
-				}
-			}
 			App.UpdateKeyStates();
 
 			hotKeyDown.Go(key);
+			return true;
+		}
+
+		internal static bool ChatTabHasFocus()
+		{
+			foreach (var tab in ChatTab.all)
+			{
+				if (tab.input.FocusState != FocusState.Unfocused)
+				{
+	//				Log($"{tab.Name} {tab.input.FocusState}");
+					return false;
+				}
+			}
+
 			return true;
 		}
 

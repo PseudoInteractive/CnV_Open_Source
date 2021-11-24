@@ -86,7 +86,7 @@ namespace COTG.Game
 
 							}
 
-							if(ExtendedQueue.all.TryGetValue(City.build,out var bq))
+							if(ExtendedQueue.all.TryGetValue(cid,out var bq))
 							{
 								var count = bq.queue.count;
 								var data = bq.queue.v;

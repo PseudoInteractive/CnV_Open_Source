@@ -263,7 +263,7 @@ TextSubmitted="CitySubmitted"
 						<winui:ProgressRing x:Name="progress" IsActive="False" />
 						<TextBlock x:Name="work" x:FieldModifier="public" Margin="6" VerticalAlignment="Center"  />
 						<TextBlock x:Name="Focus" Visibility="Collapsed" MaxWidth="200" />
-						<CheckBox x:Name="mouseOverCanvasBox" Visibility="Collapsed" IsChecked="{x:Bind views:ShellPage.mouseOverCanvas, Mode=OneWay}" x:FieldModifier="public" />
+						<CheckBox x:Name="mouseOverCanvasBox" Visibility="Collapsed"  x:FieldModifier="public" />
 					</StackPanel>
 				</winui:CommandBar.Content>
 				<winui:CommandBar.SecondaryCommands>

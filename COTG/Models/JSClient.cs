@@ -469,7 +469,8 @@ namespace COTG
 		{
 			if(view is not null && (view.CoreWebView2 is not null))
 			{
-				view.Visibility = Visibility.Visible;
+				if ( view.Visibility != Visibility.Visible)
+					view.Visibility = Visibility.Visible;
 				if(view.CoreWebView2.IsSuspended)
 				{
 					view.CoreWebView2.Resume();
