@@ -253,7 +253,6 @@
     <Compile Include="Game\World.cs" />
     <Compile Include="Game\WorldViewSettings.cs" />
     <Compile Include="GlobalSuppressions2.cs" />
-    <Compile Include="GlobalUsing.cs" />
     <Compile Include="JSON\Building.cs" />
     <Compile Include="JSON\BuildingDef.cs" />
     <Compile Include="JSON\CitySettings.cs" />
