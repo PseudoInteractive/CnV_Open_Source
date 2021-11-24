@@ -28,6 +28,7 @@ namespace COTG.Game
 		public static HashSet<int> myIds = new HashSet<int>();
 		public static string myName;
 		public static string subOwner;
+		public static int subOwnerId;
 
 		public float MoralePenalty(Player b)
 		{

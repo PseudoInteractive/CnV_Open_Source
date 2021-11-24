@@ -503,8 +503,7 @@ namespace COTG
 			//ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.PreferredLaunchViewSize;
 	//		window.ExtendsContentIntoTitleBar = true;
 			//	window.ExtendsContentIntoTitleBar = true;
-				//window.Maximize();
-			//App.globalDispatcher = CoreWindow.GetForCurrentThread().Dispatcher;
+	//App.globalDispatcher = CoreWindow.GetForCurrentThread().Dispatcher;
 			globalQueue =  window.DispatcherQueue;
 		//	keyQueue = globalQueue.CreateTimer();
 			//CoreApplication.EnablePrelaunch(false);
@@ -612,7 +611,7 @@ namespace COTG
 			window.Content.PreviewKeyUp+=Content_PreviewKeyUp;
 			window.Content.PreviewKeyDown+=Content_PreviewKeyDown; ;
 //			window.KeyDown+=Window_KeyDown;
-			//			window.Maximize();
+			window.Maximize();
 
 				//			CoreApplication.MainView.HostedViewClosing+=MainView_HostedViewClosing; ;
 				//	CoreApplication.MainView.CoreWindow.Closed+=CoreWindow_Closed;

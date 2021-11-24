@@ -374,13 +374,13 @@ namespace COTG.Views
 				//        OnWindowSizing();
 				//    }
 				//    break;
-				case PInvoke.User32.WindowMessage.WM_DPICHANGED:
-					if (this.DpiChanged is not null)
-					{
-						uint dpi = HiWord(wParam);
-						OnWindowDpiChanged((int)dpi);
-					}
-					break;
+				//case PInvoke.User32.WindowMessage.WM_DPICHANGED:
+				//	if (this.DpiChanged is not null)
+				//	{
+				//		uint dpi = HiWord(wParam);
+				//		OnWindowDpiChanged((int)dpi);
+				//	}
+				//	break;
 				//case PInvoke.User32.WindowMessage.WM_DISPLAYCHANGE:
 				//    if (this.OrientationChanged is not null)
 				//    {
@@ -393,19 +393,19 @@ namespace COTG.Views
 				//    }
 				//    break;
 				////This don't work.
-				case PInvoke.User32.WindowMessage.WM_KEYDOWN:
-					{
-						int value = (int)wParam;
-						OnWindowKeyDown(value);
-					}
-					break;
+				//case PInvoke.User32.WindowMessage.WM_KEYDOWN:
+				//	{
+				//		int value = (int)wParam;
+				//		OnWindowKeyDown(value);
+				//	}
+				//	break;
 
-				case PInvoke.User32.WindowMessage.WM_SYSKEYDOWN:
-					{
-						int value = (int)wParam;
-						Trace($"SysKey: {wParam} {lParam}");
-					}
-					break;
+				//case PInvoke.User32.WindowMessage.WM_SYSKEYDOWN:
+				//	{
+				//		int value = (int)wParam;
+				//		Trace($"SysKey: {wParam} {lParam}");
+				//	}
+				//	break;
 			}
             return CallWindowProc(oldWndProc, hWnd, Msg, wParam, lParam);
         }
