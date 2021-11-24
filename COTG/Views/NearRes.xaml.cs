@@ -697,13 +697,13 @@ namespace COTG.Views
 
 		private void ResSetMax(object sender, TappedRoutedEventArgs e)
 		{
-			Trace(e.OriginalSource.ToString());
+			//Trace(e.OriginalSource.ToString());
 
 		}
 
 		private void ResSetZero(object sender, RightTappedRoutedEventArgs e)
 		{
-			Trace(sender.ToString());
+			//Trace(sender.ToString());
 
 		}
 	}

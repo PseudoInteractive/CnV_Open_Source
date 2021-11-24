@@ -72,8 +72,7 @@ namespace COTG
 
 
 				
-				Trace("Pins");
-		
+				
 			}
 		}
 	}

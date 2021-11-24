@@ -67,7 +67,7 @@ namespace COTG.Views
 		}
 		internal static ShareString Touch()
 		{
-			Trace("touch");
+			Log("touch");
 			// todo: reentrancy
 			if(instance is not null)
 				return instance;
@@ -161,7 +161,7 @@ namespace COTG.Views
 		{
 			return App.DispatchOnUIThreadExclusive(cid,async () =>
 			{
-				Trace("enter");
+				Log("enter");
 				await ShowNoLock(cid,flags);
 			}
 			);
@@ -169,7 +169,7 @@ namespace COTG.Views
 		//		public static Nito.AsyncEx.AsyncLock showLock = new ();
 		public static Task<bool> ShowNoLock(int cid,SetupFlags flags = SetupFlags.all)
 		{
-			Trace("enter2");
+			Log("enter2");
 			Assert(App.uiSema.CurrentCount == 0);
 			Assert(cid == City.build);
 
@@ -183,7 +183,7 @@ namespace COTG.Views
 			{
 				this.cid = cid;
 				tradeStale=true;
-				Trace("enter3");
+				Log("enter3");
 
 				// could be on any thread
 				var city = City.GetOrAdd(cid);

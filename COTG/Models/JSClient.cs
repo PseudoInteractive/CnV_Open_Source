@@ -919,7 +919,7 @@ namespace COTG
 
 		private static void webViewKeyDownHandler(object sender,KeyRoutedEventArgs e)
 		{
-			Trace("Key " + e.Key + e.ToString());
+			Log("Key " + e.Key + e.ToString());
 		}
 
 		//		private async static void View_NewWindowRequested(CoreWebView sender,CoreWebView2NewWindowRequestedEventArgs args)
@@ -2564,7 +2564,7 @@ private static async void ShowCouncillorsMissingDialog()
 							   {
 									var city =City.GetOrAddCity( jsp.Value.GetAsInt("cid") );
 									var e = jsp.Value.GetAsInt("e");
-									Trace($"Build Command: {city.nameMarkdown} {e}, {jsp.Value.ToString()}");
+									Log($"Build Command: {city.nameMarkdown} {e}, {jsp.Value.ToString()}");
 									
 
 									break;

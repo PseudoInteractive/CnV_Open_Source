@@ -21,9 +21,7 @@
     <AppxPackageSigningTimestampDigestAlgorithm>SHA256</AppxPackageSigningTimestampDigestAlgorithm>
     <AppxAutoIncrementPackageRevision>True</AppxAutoIncrementPackageRevision>
     <GenerateTestArtifacts>True</GenerateTestArtifacts>
-<EnablePreviewMsixTooling>true</EnablePreviewMsixTooling>
 <PublishProfile>Properties\PublishProfiles\win10-$(Platform).pubxml</PublishProfile>	  
-	  <EnablePreviewMsixTooling>true</EnablePreviewMsixTooling>
 	      <AppxBundle>Always</AppxBundle>
 	<SelfContained>true</SelfContained>
 	<PublishSingleFile>False</PublishSingleFile>

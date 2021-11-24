@@ -382,7 +382,7 @@ namespace COTG.Views
 		{
 			var tv = sender as TreeViewItem;
 			//		ItemInvoked(tv.DataContext as HeatMapItem); 
-			Trace($"Key:  {sender} {e}");
+			//Trace($"Key:  {sender} {e}");
 			if (e.Key == Windows.System.VirtualKey.Enter || e.Key == Windows.System.VirtualKey.Space)
 				ItemInvoked(tv.DataContext as HeatMapItem);
 			//SelectionChanged();

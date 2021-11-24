@@ -8,13 +8,18 @@ using Telerik.UI.Xaml.Controls.Grid;
 using Microsoft.UI.Xaml;
 using System.ComponentModel;
 using Syncfusion.UI.Xaml.DataGrid;
+using Windows.Foundation;
 
 //using Microsoft.UI.Windowing;
 
 namespace COTG.Views
 {
+	using System.Collections;
+
 	public class UserTab:UserControl, IANotifyPropertyChanged
 	{
+
+		private const string returnReinforcement = nameof(returnReinforcement);
 		public virtual TabPage defaultPage => TabPage.mainTabs;
 		public static ImmutableArray<RadDataGrid> spotGrids = ImmutableArray<RadDataGrid>.Empty;
 		public static ImmutableArray<RadDataGrid> dataGrids = ImmutableArray<RadDataGrid>.Empty;
@@ -31,6 +36,8 @@ namespace COTG.Views
 		}
 
 		public static UserTab[] userTabs;
+
+
 		public static void InitUserTabs()
 		{
 
@@ -110,6 +117,7 @@ namespace COTG.Views
 
 		//		static DateTimeOffset nextCityRefresh = DateTimeOffset.UtcNow;
 		public Debounce refresh;
+
 		public UserTab()
 		{
 			if(refresh == null)
@@ -276,6 +284,138 @@ namespace COTG.Views
 			defaultPage.Add(this,selectMe);
 		}
 
+		protected void reinIn_CellTapped(object sender,Syncfusion.UI.Xaml.DataGrid.GridCellTappedEventArgs e)
+		{
+
+			try
+			{
+			//	Note.Show($"Cell Tap {e.Column.HeaderText??"NA"}  {e.RowColumnIndex} {e.RowColumnIndex} {e.Record.ToString} ");
+			if (e.Record is City city)
+			{
+
+				switch (e.Column.MappingName)
+				{
+					case nameof(City.cityName):
+					case nameof(City.iconUri):
+					case nameof(City.remarks):
+						city.DoClick();
+						break;
+				}
+
+				
+				return;
+			}
+				switch(e.Column.MappingName)
+				{
+					case nameof(Reinforcement.retUri):
+						{
+							var r = e.Record as Reinforcement;
+							Note.Show($"Returning {r.troopsString} from {r.targetCity} back to {r.sourceCity} ");
+							r.ReturnAsync();
+							if(r.targetCity.reinforcementsIn is not null)
+								r.targetCity.reinforcementsIn.Remove(r,true);
+							if(r.sourceCity.reinforcementsOut is not null)
+								r.sourceCity.reinforcementsOut.Remove(r,true);
+							// Todo: refresh lists
+							break;
+
+						}
+					
+				}
+			}
+			catch(Exception exception)
+			{
+				Log(exception);
+				throw;
+			}
+
+
+
+		}
+
+		protected void CelNavigate(object sender,Syncfusion.UI.Xaml.Grids.CurrentCellRequestNavigateEventArgs e)
+		{
+			var uri = new Uri(e.NavigateText);
+
+
+			if(uri.Scheme == ProtocolActivation.scheme && uri.LocalPath.StartsWith(ProtocolActivation.command))
+			{
+				var subStr = uri.LocalPath.AsSpan().Slice(ProtocolActivation.command.Length);
+				if(subStr.StartsWith(returnReinforcement.AsSpan(),StringComparison.Ordinal))
+				{
+					e.Handled=true;
+					var args = new WwwFormUrlDecoder(subStr.Slice(returnReinforcement.Length).ToString());
+
+					Note.Show("ProtoClick");
+					//			var args = Uri.Par
+					//	Reinforcement.ReturnAsync(args.GetFirstValueByName("order").ParseLong().GetValueOrDefault(),args.GetFirstValueByName("pid").ParseInt().GetValueOrDefault());
+
+				}
+
+
+			}
+		}
+
+		protected void CellToolTipOpening(object sender,Syncfusion.UI.Xaml.DataGrid.GridCellToolTipOpeningEventArgs e)
+		{
+			var tt = e.ToolTip;
+			var rec = e.Record;
+			int q = 0;
+		}
+
+		public ADataGrid.ChangeContextDisposable SetupGrid(SfDataGrid grid)
+		{
+			var _lock0 = grid.ChangeContext();
+			grid.ExpanderColumnWidth = 32;
+			grid.GridContextFlyoutOpening += ContextFlyoutOpening;
+			grid.RecordContextFlyout = new();
+			grid.CurrentCellRequestNavigate += CelNavigate;
+			grid.CellTapped += reinIn_CellTapped;
+			grid.AllowFrozenGroupHeaders=false;
+			grid.ColumnWidthMode = Syncfusion.UI.Xaml.Grids.ColumnWidthMode.AutoLastColumnFill;
+			grid.CellToolTipOpening += CellToolTipOpening;
+//			grid.LiveDataUpdateMode = Syncfusion.UI.Xaml.Data.LiveDataUpdateMode.AllowChildViewUpdate;
+			return _lock0;
+		}
+
+
+
+		protected void ContextFlyoutOpening(object sender,GridContextFlyoutEventArgs e)
+		{
+			var flyout = e.ContextFlyout;
+			flyout.Items.Clear();
+
+			switch(e.ContextFlyoutType)
+			{
+				case ContextFlyoutType.RecordCell:
+				{
+					var info = e.ContextFlyoutInfo as GridRecordContextFlyoutInfo;
+					var column = info.DataGrid.Columns[e.RowColumnIndex.ColumnIndex];
+					if ( info.Record is City city)
+					{
+						city.AddToFlyout(flyout);
+						
+						break;
+					}
+
+					if ( info.Record is Reinforcement r)
+					{
+						flyout.AddItem("Return", () => r.ReturnAsync() );
+						break;
+					}
+					break;
+				}
+			}
+		}
+
 		
+
+		public virtual IEnumerable<SfDataGrid> GetGrids()
+		{
+			yield break;
+		}
+
+
+
 	}
 }

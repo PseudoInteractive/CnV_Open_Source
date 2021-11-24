@@ -305,7 +305,7 @@ public class ExtendedQueue:IDisposable
 					var gotBQ = await city.DoPoll();
 					if(gotBQ)
 						break;
-					Trace($"{city.nameMarkdown} failed to get BQ {i} bq:{city.buildQueue.Length} eq:{queue.Length}");
+					Log($"{city.nameMarkdown} failed to get BQ {i} bq:{city.buildQueue.Length} eq:{queue.Length}");
 					//Trace(pollResult);
 					await Task.Delay(500);
 				}
@@ -314,7 +314,7 @@ public class ExtendedQueue:IDisposable
 				cityQueueInUse = city;
 
 
-				Trace($"{city.nameMarkdown} got BQ {cotgQ.Length}");
+				Log($"{city.nameMarkdown} got BQ {cotgQ.Length}");
 				if(cid == City.build)
 				{
 					// every 3 seconds commands will only be queud on changes
@@ -428,8 +428,8 @@ public class ExtendedQueue:IDisposable
 					var isBlocked = (cotgQ.Length == safeBuildQueueLength) && !cotgQ.Any(a => a.pa);
 					//	int commandsToQueue = isBlocked ? 1 : spaceInQueue.Min(queue.count);
 					var maxBuildCommands = isBlocked ? buildQMax : safeBuildQueueLength;
-					if(isBlocked)
-						Trace($"Blocked! {city.nameMarkdown} ");
+				//	if(isBlocked)
+				//		Trace($"Blocked! {city.nameMarkdown} ");
 					// queue.count goes through here if the player cancels the queue so that this can be deleted
 					if(maxBuildCommands > cotgQ.Length || queue.count == 0)
 					{
@@ -531,7 +531,7 @@ public class ExtendedQueue:IDisposable
 											var wallPending = bw.bl > 0;
 											if(!wallPending)
 											{
-												Trace($"Invalid tower (missing wall)");
+												Log($"Invalid tower (missing wall)");
 
 												// cancel this order
 												RemoveAt(offset);
@@ -582,7 +582,7 @@ public class ExtendedQueue:IDisposable
 											var counts = city.CountBuildingsWithoutQueue();
 											if(counts.count >= counts.max  || city.buildings[City.bspotTownHall].bl < 8)
 											{
-												Trace("Waiting for space or stone or level for castle");
+												Log("Waiting for space or stone or level for castle");
 												// leave it in the queue
 												++offset;
 												continue;
@@ -605,14 +605,14 @@ public class ExtendedQueue:IDisposable
 									// is build not yet queued?
 									if(i.elvl > 10)
 									{
-										Trace($"Invalid ugrade to level {i.elvl}");
+										Log($"Invalid ugrade to level {i.elvl}");
 										RemoveAt(offset);
 										continue;
 									}
 									else if(prior.bid != i.bid)
 									{
 
-										Trace($"Invalid ugrade {prior.bid} => {i.bid}");
+										Log($"Invalid ugrade {prior.bid} => {i.bid}");
 										// invalid command, discard it
 										RemoveAt(offset);
 										continue;
@@ -625,7 +625,7 @@ public class ExtendedQueue:IDisposable
 										{
 											// invalid command, discard it
 											RemoveAt(offset);
-											Trace($"Invalid ugrade {prior.bid} => {i.bid}");
+											Log($"Invalid ugrade {prior.bid} => {i.bid}");
 
 											continue;
 										}
@@ -637,7 +637,7 @@ public class ExtendedQueue:IDisposable
 									if(prior.bid != i.bid)
 									{
 										// invalid command, discard it
-										Trace($"Invalid demo  {prior.bid} => {i.bid}");
+										Log($"Invalid demo  {prior.bid} => {i.bid}");
 										RemoveAt(offset);
 										continue;
 									}
@@ -736,7 +736,7 @@ public class ExtendedQueue:IDisposable
 							{
 								//	if (!queue.Any())
 								{
-									Trace($"Queue Complete {city} ex:{queueLInitial} cotg:{cotgQLInitial}");
+									Log($"Queue Complete {city} ex:{queueLInitial} cotg:{cotgQLInitial}");
 									all.TryRemove(cid,out _);
 
 									Dispose();
@@ -764,7 +764,7 @@ public class ExtendedQueue:IDisposable
 					}
 					else
 					{
-						Trace($"No space {city} Q:{cotgQ.Length} XQ:{queue.Length} isBlocked:{isBlocked}");
+						Log($"No space {city} Q:{cotgQ.Length} XQ:{queue.Length} isBlocked:{isBlocked}");
 					}
 
 					//	await Post.Get("/overview/mconv.php",$"a={cid}",onlyHeaders: true).ConfigureAwait(false); ;
@@ -779,7 +779,7 @@ public class ExtendedQueue:IDisposable
 				} // buildings loaded
 				else
 				{
-					Trace($"{city} buildings not loaded");
+					Log($"{city} buildings not loaded");
 				}
 			}
 			catch(Exception _exception)
@@ -828,11 +828,11 @@ public class ExtendedQueue:IDisposable
 						}
 						bt =  bt/2 - 4; // wait for 3/4 of the time minus 8 seconds
 						delay = (bt * 1000).Clamp(3 * 1000,30 * 60 * 1000);
-						Trace($"Delay {city} q:{cotgQ.count} ext:{queue.count} dt:{delay / 1000.0f}");
+						Log($"Delay {city} q:{cotgQ.count} ext:{queue.count} dt:{delay / 1000.0f}");
 						if(anyPa==false)
 						{
 							delay = delay.Max(10*1000);
-							Trace($"- nothing is paid {city}  q:{cotgQ.count} ext:{queue.count} dt:{delay / 1000.0f}");
+							Log($"- nothing is paid {city}  q:{cotgQ.count} ext:{queue.count} dt:{delay / 1000.0f}");
 						}
 					}
 
@@ -845,7 +845,7 @@ public class ExtendedQueue:IDisposable
 							delay = 1 * 20 * 1000;
 						}
 
-						Trace($"Nothing changed, {city} q:{cotgQ.count} ext:{queue.count} dt:{delay / 1000.0f}");
+						Log($"Nothing changed, {city} q:{cotgQ.count} ext:{queue.count} dt:{delay / 1000.0f}");
 
 					}
 
@@ -866,7 +866,7 @@ public class ExtendedQueue:IDisposable
 					}
 					else
 					{
-						Trace($"Nothing to do {cid==City.build} {city.nameMarkdown}.. {queue.count} dt: {delay/1000}");
+						Log($"Nothing to do {cid==City.build} {city.nameMarkdown}.. {queue.count} dt: {delay/1000}");
 						// nothing queued
 						// no progress :( wait a minute
 						if(delay < 1 * 10 * 1000)
@@ -875,7 +875,7 @@ public class ExtendedQueue:IDisposable
 							delay = 1 * 10 * 1000;
 						}
 					}
-					Trace($"Build Q: {city} q:{cotgQ.count} ext:{queue.count} dt:{delay / 1000.0f}");
+					Log($"Build Q: {city} q:{cotgQ.count} ext:{queue.count} dt:{delay / 1000.0f}");
 				}
 				if(delay > 0)
 					await Task.Delay(delay,cancellationTokenSource.Token).ConfigureAwait(false);
@@ -1125,7 +1125,7 @@ public static class BuildQueue
 				}
 				else
 				{
-					Trace("Invalid temple op");
+					Log("Invalid temple op");
 
 				}
 				cid.AsCity().BuildingsOrQueueChanged();

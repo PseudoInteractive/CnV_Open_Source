@@ -48,7 +48,7 @@ namespace CnVDiscord
 							{
 								if(p.discordId != 0)
 								{
-									Trace($"Extra DiscordId: {a.playerName} discordId:{a.discordId} discordId1:{p.discordId}");
+									Log($"Extra DiscordId: {a.playerName} discordId:{a.discordId} discordId1:{p.discordId}");
 								}
 								p.discordId = a.discordId;
 								p.avatarUrl = a.avatarURL;
@@ -58,7 +58,7 @@ namespace CnVDiscord
 							}
 							else
 							{
-								Trace($"Missing {a.playerName} discordId:{a.discordId}");
+								Log($"Missing {a.playerName} discordId:{a.discordId}");
 							}
 
 						}

@@ -13,7 +13,7 @@ using static COTG.Game.City;
 
 namespace COTG.Views
 {
-
+	using Syncfusion.UI.Xaml.DataGrid;
 
 
 	public sealed partial class BuildTab:UserTab
@@ -29,7 +29,7 @@ namespace COTG.Views
 		//    Assert(rv != null);
 		//    return rv;
 		//}
-		public static RadDataGrid CityGrid => instance.cityGrid;
+		public static SfDataGrid CityGrid => instance.cityGrid;
 		//  static MenuFlyout cityMenuFlyout;
 		public BuildTab()
 		{

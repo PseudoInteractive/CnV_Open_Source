@@ -111,9 +111,9 @@ namespace COTG.Views
             if(cid != 0)
              cids.Add(cid);
 
-            if (Spot.TryGetGrid(out var grid))
+            if (Spot.TryGetSelected(out var selected))
             {
-                foreach (var sel in grid.SelectedItems)
+                foreach (var sel in selected)
                 {
                     if (sel is City city)
                     {

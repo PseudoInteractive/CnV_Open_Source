@@ -1121,7 +1121,7 @@ namespace COTG.Views
 		{
 			
 		if(!mouseOverCanvas)
-			Trace("Mouse Moved Canvas");
+			Log("Mouse Moved Canvas");
 		//	App.cursorDefault.Set();
 			App.InputRecieved(); // prevent idle timer;
 			mouseOverCanvas = true;		

@@ -206,7 +206,7 @@ namespace COTG
 
 		private static async Task SwitchToBackground()
 		{
-			Trace("Background");
+			Log("Background");
 			if(isForeground == true)
 			{
 				isForeground = false;
@@ -220,12 +220,12 @@ namespace COTG
 					var t = DateTimeOffset.UtcNow;
 					var dt = t - activeStart;
 					activeStart = t;
-					Trace("Finished!1");
+				//	Trace("Finished!1");
 
 					AAnalytics.Track("Background",new Dictionary<string,string> { { "time",dt.TotalSeconds.RoundToInt().ToString() } });
 					SystemInformation.Instance.AddToAppUptime(dt);
 					await t0;
-					Trace("Finished!");
+				   Log("Finished!");
 				}
 				catch(Exception ex)
 				{
@@ -537,7 +537,7 @@ namespace COTG
 
 		private bool Window_Closing() //object sender,WindowClosingEventArgs e)
 		{
-			Trace("Closing!");
+			Log("Closing!");
 			if(state == State.closed)
 				return true;
 			if( state == State.closing)
@@ -555,7 +555,7 @@ namespace COTG
 
 		private void Window_Closed(object sender,WindowEventArgs args)
 		{
-			Trace("Closed!");
+			Log("Closed!");
 			Assert(state == State.closed);
 			SwitchToBackground();
 		}
@@ -663,7 +663,7 @@ namespace COTG
 
 		private async void Window_VisibilityChanged(object sender,WindowVisibilityChangedEventArgs args)
 		{
-				Trace($"Visibility!!: {args.Visible}");
+				Log($"Visibility!!: {args.Visible}");
 				if(!args.Visible)
 				{
 					await SwitchToBackground();

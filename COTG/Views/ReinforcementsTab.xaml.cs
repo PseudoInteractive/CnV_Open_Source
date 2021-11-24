@@ -10,6 +10,7 @@ using Windows.Foundation;
 
 namespace COTG.Views
 {
+	using System.Collections;
 	using System.IO;
 	using System.Text;
 	using System.Threading.Tasks;
@@ -35,7 +36,12 @@ namespace COTG.Views
 		
 		}
 
-		
+		public override IEnumerable<SfDataGrid> GetGrids()
+		{
+			yield return reinIn;
+			yield return reinOut;
+		}
+
 
 		public override async Task VisibilityChanged(bool visible, bool longTerm)
 		{
@@ -53,6 +59,59 @@ namespace COTG.Views
 			}
 
 			await base.VisibilityChanged(visible, longTerm: longTerm);
+		}
+		void SetupReinforcementGrid(SfDataGrid grid, bool isOutgoing)
+		{
+			using var _lock = SetupGrid(grid);
+			grid.SourceType = typeof(City);
+			
+			grid.AddCity(isOutgoing ? "Defender" : "Target", wantTroops:isOutgoing,wantDefense:!isOutgoing);
+
+
+			
+			{
+				SfDataGrid child0 = new() { AutoGenerateRelations = false, AutoGenerateColumns = false};
+				using var _lock1 = SetupGrid(child0);
+				child0.SourceType = typeof(Reinforcement);
+				child0.AddHyperLink(nameof(Reinforcement.retUri), "Return");
+				child0.AddTime(nameof(Reinforcement.dateTime), "Arrival", nullText: "Arrived");
+				child0.AddText(nameof(Reinforcement._Troops), "Troops",
+					widthMode: Syncfusion.UI.Xaml.Grids.ColumnWidthMode.Star );
+				{
+					var details = new GridViewDefinition() { RelationalColumn=isOutgoing?nameof(City.reinforcementsOutProp) : nameof(City.reinforcementsInProp) , DataGrid=child0 } ;
+					grid.DetailsViewDefinition.Add(details);
+				}
+				{
+					SfDataGrid child1 = new() { AutoGenerateRelations = false, AutoGenerateColumns = false};
+					using var _lock2 = SetupGrid(child1);
+					child1.SourceType = typeof(City);
+					child1.AddCity(!isOutgoing ? "Defender" : "Target",wantTroops:!isOutgoing,wantDefense:isOutgoing);
+					var details1 = new GridViewDefinition()
+					{
+						RelationalColumn = isOutgoing
+							? nameof(Reinforcement.targetCities)
+							: nameof(Reinforcement.sourceCities) ,
+						DataGrid = child1
+					};
+					child0.DetailsViewDefinition.Add(details1);
+
+				}
+
+			}
+		}
+
+		private bool hasLoaded;
+
+		private void OnLoaded(object sender,Microsoft.UI.Xaml.RoutedEventArgs e)
+		{
+			if(!hasLoaded)
+			{
+				hasLoaded = true;
+				
+				SetupReinforcementGrid( reinIn,false);
+				SetupReinforcementGrid(reinOut,true);
+			}
+
 		}
 
 		public async Task Update()
@@ -115,184 +174,6 @@ namespace COTG.Views
 
 			//reinIn.Serialize(file);
 
-		}
-
-		private void reinIn_CellTapped(object sender,Syncfusion.UI.Xaml.DataGrid.GridCellTappedEventArgs e)
-		{
-
-			try
-			{
-			//	Note.Show($"Cell Tap {e.Column.HeaderText??"NA"}  {e.RowColumnIndex} {e.RowColumnIndex} {e.Record.ToString} ");
-			if (e.Record is City city)
-			{
-
-				switch (e.Column.MappingName)
-				{
-					case nameof(City.cityName):
-					case nameof(City.iconUri):
-					case nameof(City.remarks):
-						city.DoClick();
-						break;
-				}
-
-				
-				return;
-			}
-				switch(e.Column.MappingName)
-				{
-					case nameof(Reinforcement.retUri):
-						{
-							var r = e.Record as Reinforcement;
-							Note.Show($"Returning {r.troopsString} from {r.targetCity} back to {r.sourceCity} ");
-							r.ReturnAsync();
-							if(r.targetCity.reinforcementsIn is not null)
-								r.targetCity.reinforcementsIn.Remove(r,true);
-							if(r.sourceCity.reinforcementsOut is not null)
-								r.sourceCity.reinforcementsOut.Remove(r,true);
-							// Todo: refresh lists
-							break;
-
-						}
-					
-				}
-			}
-			catch(Exception exception)
-			{
-				Log(exception);
-				throw;
-			}
-
-
-
-		}
-
-		private const string returnReinforcement = nameof(returnReinforcement);
-
-		private void CelNavigate(object sender,Syncfusion.UI.Xaml.Grids.CurrentCellRequestNavigateEventArgs e)
-		{
-			var uri = new Uri(e.NavigateText);
-
-
-			if(uri.Scheme == ProtocolActivation.scheme && uri.LocalPath.StartsWith(ProtocolActivation.command))
-			{
-				var subStr = uri.LocalPath.AsSpan().Slice(ProtocolActivation.command.Length);
-				if(subStr.StartsWith(returnReinforcement.AsSpan(),StringComparison.Ordinal))
-				{
-					e.Handled=true;
-					var args = new WwwFormUrlDecoder(subStr.Slice(returnReinforcement.Length).ToString());
-
-					Note.Show("ProtoClick");
-					//			var args = Uri.Par
-					//	Reinforcement.ReturnAsync(args.GetFirstValueByName("order").ParseLong().GetValueOrDefault(),args.GetFirstValueByName("pid").ParseInt().GetValueOrDefault());
-
-				}
-
-
-			}
-		}
-
-		private void CellToolTipOpening(object sender,Syncfusion.UI.Xaml.DataGrid.GridCellToolTipOpeningEventArgs e)
-		{
-			var tt = e.ToolTip;
-			var rec = e.Record;
-			int q = 0;
-		}
-
-		private bool hasLoaded;
-
-
-		private void OnLoaded(object sender,Microsoft.UI.Xaml.RoutedEventArgs e)
-		{
-			if(!hasLoaded)
-			{
-				hasLoaded = true;
-				SetupReinforcementGrid( reinIn,false);
-				SetupReinforcementGrid(reinOut,true);
-			}
-
-		}
-
-		private ADataGrid.ChangeContextDisposable SetupGrid(SfDataGrid grid)
-		{
-			var _lock0 = grid.ChangeContext();
-			grid.ExpanderColumnWidth = 32;
-			grid.GridContextFlyoutOpening += ContextFlyoutOpening;
-			grid.RecordContextFlyout = new();
-			grid.CurrentCellRequestNavigate += CelNavigate;
-			grid.CellTapped += reinIn_CellTapped;
-			grid.AllowFrozenGroupHeaders=false;
-			grid.ColumnWidthMode = Syncfusion.UI.Xaml.Grids.ColumnWidthMode.AutoLastColumnFill;
-			grid.CellToolTipOpening += CellToolTipOpening;
-//			grid.LiveDataUpdateMode = Syncfusion.UI.Xaml.Data.LiveDataUpdateMode.AllowChildViewUpdate;
-			return _lock0;
-		}
-		private void SetupReinforcementGrid(SfDataGrid grid, bool isOutgoing)
-		{
-			using var _lock = SetupGrid(grid);
-			grid.SourceType = typeof(City);
-			
-			grid.AddCity(isOutgoing ? "Defender" : "Target", wantTroops:isOutgoing,wantDefense:!isOutgoing);
-
-
-			
-			{
-				SfDataGrid child0 = new() { AutoGenerateRelations = false, AutoGenerateColumns = false};
-				using var _lock1 = SetupGrid(child0);
-				child0.SourceType = typeof(Reinforcement);
-				child0.AddHyperLink(nameof(Reinforcement.retUri), "Return");
-				child0.AddTime(nameof(Reinforcement.dateTime), "Arrival", nullText: "Arrived");
-				child0.AddText(nameof(Reinforcement._Troops), "Troops",
-					widthMode: Syncfusion.UI.Xaml.Grids.ColumnWidthMode.Star );
-				{
-					var details = new GridViewDefinition() { RelationalColumn=isOutgoing?nameof(City.reinforcementsOutProp) : nameof(City.reinforcementsInProp) , DataGrid=child0 } ;
-					grid.DetailsViewDefinition.Add(details);
-				}
-				{
-					SfDataGrid child1 = new() { AutoGenerateRelations = false, AutoGenerateColumns = false};
-					using var _lock2 = SetupGrid(child1);
-					child1.SourceType = typeof(City);
-					child1.AddCity(!isOutgoing ? "Defender" : "Target",wantTroops:!isOutgoing,wantDefense:isOutgoing);
-					var details1 = new GridViewDefinition()
-					{
-						RelationalColumn = isOutgoing
-							? nameof(Reinforcement.targetCities)
-							: nameof(Reinforcement.sourceCities) ,
-						DataGrid = child1
-					};
-					child0.DetailsViewDefinition.Add(details1);
-
-				}
-
-			}
-		}
-
-
-		private void ContextFlyoutOpening(object sender,GridContextFlyoutEventArgs e)
-		{
-			var flyout = e.ContextFlyout;
-			flyout.Items.Clear();
-
-			switch(e.ContextFlyoutType)
-			{
-				case ContextFlyoutType.RecordCell:
-				{
-					var info = e.ContextFlyoutInfo as GridRecordContextFlyoutInfo;
-					var column = info.DataGrid.Columns[e.RowColumnIndex.ColumnIndex];
-					if ( info.Record is City city)
-					{
-						city.AddToFlyout(flyout);
-						
-						break;
-					}
-
-					if ( info.Record is Reinforcement r)
-					{
-						flyout.AddItem("Return", () => r.ReturnAsync() );
-						break;
-					}
-					break;
-				}
-			}
 		}
 	}
 }

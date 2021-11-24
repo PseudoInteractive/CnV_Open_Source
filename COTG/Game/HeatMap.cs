@@ -187,7 +187,7 @@ namespace COTG.Game
 					int dCount = deltaCount;
 					o.Write7BitEncoded(dCount);
 					
-					Trace($"Deltas: {dCount}");
+					Log($"Deltas: {dCount}");
 					for (int i = 0; i < dCount; ++i)
 					{
 						var d = deltas[i];
@@ -252,7 +252,7 @@ namespace COTG.Game
 		//}
 		public bool AddSnapshot(SmallTime t, uint[] newSnap)
 		{
-			Trace($"Add Snapshot: {desc} [{t}] [{this.t}]");
+			Log($"Add Snapshot: {desc} [{t}] [{this.t}]");
 			if (snapshot.Length == 0)
 			{
 				this.t = t;

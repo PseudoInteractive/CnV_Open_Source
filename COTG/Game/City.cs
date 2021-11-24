@@ -700,7 +700,6 @@ namespace COTG.Game
 								continue;
 							if(id == 4) // reinforce
 								continue;
-							Trace($"{id} {attack[1].GetAsString()} {attack[5].GetAsString()} {attack[6].GetAsString()}");
 						}
 
 					}
@@ -796,7 +795,7 @@ namespace COTG.Game
 					{
 						var sum = buildQueue.Sum(a => a.buildTime);
 						//Assert(sum <= 32 );
-						Trace($"No Queue {nameMarkdown} was {buildQueue.Length} dt: {sum}s");
+						Log($"No Queue {nameMarkdown} was {buildQueue.Length} dt: {sum}s");
 						//	buildQueue.Clear();
 					}
 				}

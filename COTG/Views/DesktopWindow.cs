@@ -265,7 +265,7 @@ namespace COTG.Views
         private void OnWindowKeyDown(int key)
         {
             WindowKeyDownEventArgs windowKeyDownEventArgs = new(this, key);
-			Trace("Window key " + key);
+		//	Trace("Window key " + key);
             KeyDown.Invoke(this, windowKeyDownEventArgs);
         }
 

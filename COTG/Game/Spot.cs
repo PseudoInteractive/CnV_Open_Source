@@ -1397,16 +1397,16 @@ namespace COTG.Game
 		}
 
 
-		public static bool TryGetGrid(out RadDataGrid grid)
+		public static bool TryGetSelected(out System.Collections.IEnumerable selected)
 		{
 
 			if (MainPage.IsVisible())
-				grid = MainPage.instance.cityGrid;
+				selected = MainPage.instance.cityGrid.SelectedItems;
 			else if (BuildTab.IsVisible())
-				grid = BuildTab.instance.cityGrid;
+				selected = BuildTab.instance.cityGrid.SelectedItems;
 			else
 			{
-				grid = null;
+				selected = null;
 				return false;
 			}
 
@@ -1756,7 +1756,6 @@ namespace COTG.Game
 									t = timing.ParseDateTime(true);
 								}
 
-								Trace(t);
 								t -= TimeSpan.FromHours(SettingsPage.returnRaidsBias);
 								if (time == null || time > t)
 									time = t;
@@ -2154,8 +2153,6 @@ namespace COTG.Game
 
 				}
 
-				Trace(i);
-				Trace(o);
 			}
 		}
 
@@ -2336,7 +2333,7 @@ namespace COTG.Game
 					if (MainPage.IsVisible())
 						MainPage.CityGrid.ScrollItemIntoView(City.GetOrAdd(cid));
 					if (BuildTab.IsVisible())
-						BuildTab.CityGrid.ScrollItemIntoView(City.GetOrAdd(cid));
+						BuildTab.CityGrid.CurrentItem = (City.GetOrAdd(cid));
 			// await Task.Delay(200);
 			//MainPage.CityGrid.SelectItem(this);
 			//var id = gridCitySource.IndexOf(this);
