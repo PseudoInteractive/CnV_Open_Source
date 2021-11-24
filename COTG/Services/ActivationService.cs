@@ -99,8 +99,9 @@ namespace COTG.Services
 					//        await Singleton<SuspendAndResumeService>.Instance.RestoreSuspendAndResumeData();
 				}
 				// Ensure the current window is active
+				await Task.Delay(100);
 				App.window.Activate();
-
+				await Task.Delay(100);
 				App.window.Maximize();
 
 			}

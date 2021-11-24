@@ -126,7 +126,7 @@ namespace CnVDiscord
 			}
 			catch (Exception e)
 			{
-				LogEx(e);
+				Log(e.ToString());
 			}
 		}
 
