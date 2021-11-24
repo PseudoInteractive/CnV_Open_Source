@@ -75,19 +75,29 @@ namespace COTG.Views
 			instance = ShellPage.instance.citySetup;
 
 
+			Reload();
+			return instance;
+		}
+
+		private static void Reload()
+		{
 			Task.Run(async () =>
 			{
+				using var defer = new NotifyCollectionDeferral(ShareStringItem.all);
+				ShareStringItem.all.Clear();
 				var shares = await Tables.ReadShares(Player.myName).ConfigureAwait(false);
-				App.DispatchOnUIThreadLow(() =>
+				await App.DispatchOnUIThreadTask( () =>
 				{
-					AddLayouts();
+					AddStaticLayouts();
 					foreach(var s in shares)
 					{
 						new ShareStringItem(s.s);
 					}
+
+					return Task.CompletedTask;
+
 				});
 			});
-			return instance;
 		}
 
 
@@ -857,14 +867,12 @@ namespace COTG.Views
 				if(parent == null)
 				{
 					parent = new ShareStringItem(pathSoFar,true);
-					myList.Add(parent,false);
+					myList.Add(parent);
 				}
 				myList = parent.children;
 			}
-			myList.Remove(a => a.path==path,false);
-
-			myList.Add(this,false);
-			all.NotifyReset(true);
+			myList.Remove(a => a.path==path);
+			myList.Add(this);
 		}
 
 

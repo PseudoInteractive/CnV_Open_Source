@@ -254,40 +254,6 @@
     <Compile Include="Game\WorldViewSettings.cs" />
     <Compile Include="GlobalSuppressions2.cs" />
     <Compile Include="GlobalUsing.cs" />
-    <Compile Include="Helpers\aContainers.cs" />
-    <Compile Include="Helpers\AES.cs" />
-    <Compile Include="Helpers\AMath.cs" />
-    <Compile Include="Helpers\AMessagePack.cs" />
-    <Compile Include="Helpers\Analytics.cs" />
-    <Compile Include="Helpers\aParallelFor.cs" />
-    <Compile Include="Helpers\AString.cs" />
-    <Compile Include="Helpers\AuthenticationHelper.cs" />
-    <Compile Include="Helpers\AUtil.cs" />
-    <Compile Include="Helpers\DArray.cs" />
-    <Compile Include="Helpers\DebounceDispatcher.cs" />
-    <Compile Include="Helpers\DiscordIds.cs" />
-    <Compile Include="Helpers\FloatN.cs" />
-    <Compile Include="Helpers\Hash.cs" />
-    <Compile Include="Helpers\HSLToRGB.cs" />
-    <Compile Include="Helpers\KeyboardFocus.cs" />
-    <Compile Include="Helpers\Memory.cs" />
-    <Compile Include="Helpers\NullableBool.cs" />
-    <Compile Include="Helpers\Sort.cs" />
-    <Compile Include="Helpers\JSON.cs" />
-    <Compile Include="Helpers\KeyFrame.cs" />
-    <Compile Include="Helpers\Morton.cs" />
-    <Compile Include="Helpers\NavStack.cs" />
-    <Compile Include="Helpers\SmallTime.cs" />
-    <Compile Include="Helpers\Span2d.cs" />
-    <Compile Include="Helpers\Streams.cs" />
-    <Compile Include="Helpers\Strings.cs" />
-    <Compile Include="Helpers\TeachingTips.cs" />
-    <Compile Include="Helpers\Ticks.cs" />
-    <Compile Include="Helpers\Time.cs" />
-    <Compile Include="Helpers\UMath.cs" />
-    <Compile Include="Helpers\UnsafeBinaryMemoryReader.cs" />
-    <Compile Include="Helpers\UnsafeBinaryMemoryWriter.cs" />
-    <Compile Include="Helpers\WindowHelper.cs" />
     <Compile Include="JSON\Building.cs" />
     <Compile Include="JSON\BuildingDef.cs" />
     <Compile Include="JSON\CitySettings.cs" />
@@ -318,15 +284,6 @@
     <Compile Include="Services\ChatStorage.cs" />
     <Compile Include="Services\Cosmos.cs" />
     <Compile Include="Services\CotGRest.cs" />
-    <Compile Include="Helpers\Debug.cs" />
-    <Compile Include="Helpers\DataRequestExtensions.cs" />
-    <Compile Include="Helpers\EnumToBooleanConverter.cs" />
-    <Compile Include="Helpers\IBackNavigationHandler.cs" />
-    <Compile Include="Helpers\ImageHelper.cs" />
-    <Compile Include="Helpers\NavHelper.cs" />
-    <Compile Include="Helpers\Restricted.cs" />
-    <Compile Include="Helpers\SettingsStorageExtensions.cs" />
-    <Compile Include="Helpers\ShareOperationExtensions.cs" />
     <Compile Include="Models\DragDropCompletedData.cs" />
     <Compile Include="Models\DragDropData.cs" />
     <Compile Include="Models\DragDropStartingData.cs" />
@@ -773,9 +730,6 @@
     <None Remove="Views\ReinforcementsTab.xaml" />
     <None Remove="Wiki\fixes.md" />
     <None Remove="Win32Native.txt" />
-  </ItemGroup>
-  <ItemGroup>
-	<Compile Include="Helpers\ResourceExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="JS\alasstylesheet.css" />

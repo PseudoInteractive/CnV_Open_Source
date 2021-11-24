@@ -4,7 +4,7 @@ namespace COTG.Views
 {
 	public partial class ShareString
 	{
-		private static void AddLayouts()
+		private static void AddStaticLayouts()
 		{
 
 			new ShareStringItem("funky~landoff~1 sec vanqs", "Vanqs", "180000 Vanqs @ 2 days", "[ShareString.1.3]:########################-------#-------#####--------#--------###---------#---------##---------#---------##------#######------##-----##GBGBG##-----##----##BGBGBGB##----##----#GBGBGBGBG#----##----#GBGBGBGBG#----#######GBGBTBGBG#######S--X#GBGBGBGBG#----##----#GBGBGBGBG#----##----##BGBGBGB##----##GGGGG##GBGBG##-----##BBBBBB#######------##GGGGGGJ--#---------##BBBBBB---#---------###GGGGZ---#--------#####B------#-------########################");
