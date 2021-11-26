@@ -43,7 +43,7 @@ namespace COTG
 					}
 					catch (Exception e)
 					{
-						LogEx(e);
+						Log(e);
 					}
 				});
 			}
@@ -56,6 +56,8 @@ namespace COTG
 				}
 			}
 		}
+
+	
 		//public static IHostBuilder CreateHostBuilder(string[] args) =>
 		//	Host.CreateDefaultBuilder(args)
 		//		.ConfigureServices((hostContext,services) =>

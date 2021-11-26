@@ -34,10 +34,12 @@
   <ItemGroup>
     <EmbeddedResource Remove="AppPackages\**" />
     <EmbeddedResource Remove="BundleArtifacts\**" />
+    <EmbeddedResource Remove="CnVDiscord\**" />
     <EmbeddedResource Remove="Content\bin\**" />
     <EmbeddedResource Remove="Content\obj\**" />
     <None Remove="AppPackages\**" />
     <None Remove="BundleArtifacts\**" />
+    <None Remove="CnVDiscord\**" />
     <None Remove="Content\bin\**" />
     <None Remove="Content\obj\**" />
   </ItemGroup>
@@ -77,6 +79,7 @@
     <PackageReference Include="Microsoft.Toolkit" Version="7.1.2" />
     <PackageReference Include="Microsoft.Toolkit.Diagnostics" Version="7.1.2" />
     <PackageReference Include="Microsoft.Toolkit.HighPerformance" Version="7.1.2" />
+    <PackageReference Include="Microsoft.Toolkit.Mvvm" Version="7.1.2" />
     <PackageReference Include="Microsoft.Windows.CsWinRT" Version="1.4.1" />
     <PackageReference Include="MonoGame.Content.Builder.Task" Version="3.8.1.1941-develop" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
@@ -209,10 +212,6 @@
     <Compile Include="Activation\WebToAppLinkActivationHandler.cs" />
     <Compile Include="Bookmarks.cs" />
     <Compile Include="CnVChatClient\CnVChatClient.cs" />
-    <Compile Include="CnVDiscord\Discord.cs" />
-    <Compile Include="CnVDiscord\PlayerHooks.cs" />
-    <Compile Include="CnVDiscord\ServerBroadcastEventArgs.cs" />
-    <Compile Include="CnVDiscord\Utils.cs" />
     <Compile Include="Converters\CityConverters.cs" />
     <Compile Include="Converters\DateTimeFormatConverter.cs" />
     <Compile Include="Converters\IntConverter.cs" />

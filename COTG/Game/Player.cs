@@ -28,7 +28,7 @@ namespace COTG.Game
 		public static HashSet<int> myIds = new HashSet<int>();
 		public static string myName;
 		public static string subOwner;
-		public static int subOwnerId;
+		public static int subOwnerId => NameToId(subOwner);
 
 		public float MoralePenalty(Player b)
 		{
@@ -46,16 +46,14 @@ namespace COTG.Game
         public static int viewHover; // in the view menu
 		public static int moveSlots=100;
 		public HashSet<int> cities = new();
-        public static bool isAvatar => subOwner == "Avatar";
-		public static bool isTest => subOwner == "KittyKat";
-		public static bool isAvatarOrTest => isAvatar||isTest;
+		public static bool isSpecial => myId == 2375;
 
 
 		public string allianceName => Alliance.IdToName(alliance);
 
-		public static object activePlayerName => IdToName(activeId);
+//		public static object activePlayerName => IdToName(activeId);
 
-		public static Dictionary<string, Player> playerByDiscordUserName = new();
+		public static Dictionary<string, Player> playerByDiscordUserName = new(); // case sensitive
 		public static Dictionary<ulong, Player> playerByDiscordId = new();
 		public static Dictionary<int, Player> all = new Dictionary<int, Player>();
         public static Dictionary<string, int> nameToId = new Dictionary<string, int>();
@@ -65,6 +63,7 @@ namespace COTG.Game
          }
         public static int NameToId(string name)
         {
+			
             return name!=null ? nameToId.GetValueOrDefault(name) : -1;
         }
         public static bool IsMe(int playerId)
@@ -76,6 +75,7 @@ namespace COTG.Game
 			return Player.myIds.Contains(playerId);
 		}
 		public static Player _default = new Player() { name = "!Zut!" };
+		public byte allianceRank;
 		internal bool isMe => id == myId;
 
 		public static Player Get(int id) => all.GetValueOrDefault(id, _default);
@@ -114,7 +114,6 @@ namespace COTG.Game
 			
             all = _all;
             nameToId = _nameToId;
-      //      Note.Show("Got Players");
 
 
         }

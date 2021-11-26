@@ -416,8 +416,7 @@ namespace COTG.Views
 
 							if (discordChannel is not null)
 							{
-								Discord.OnChat( new()
-									{discordChannelId = discordChannel.Id, player = Player.me, text = str });
+									CnVChatClient.instance.connection.SendMessageAsync(new(){channelId=discordChannel.Id,memberId=Player.me.discordId,messageText=str});
 							}
 							else
 							{
@@ -601,8 +600,8 @@ namespace COTG.Views
 							if (ch.type == 5 || ch.type == 4)
 							{
 
-								if (ch.type == 4)
-									PlayerHooks.PlayerChat?.Invoke(new PlayerHooks.PlayerChatEventArgs() { player = Player.FromName(ch.player), text = ch.text });
+								//if (ch.type == 4)
+								//	PlayerHooks.PlayerChat?.Invoke(new PlayerHooks.PlayerChatEventArgs() { player = Player.FromName(ch.player), text = ch.text });
 								ChatTab.alliance.Post(ch, true);
 							}
 							else

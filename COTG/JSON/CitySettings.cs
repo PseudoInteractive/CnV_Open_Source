@@ -47,7 +47,7 @@ namespace COTG.JSON
 		{
 			var city = cid.AsCity();
 			isHubOrStorage ??= city.isHubOrStorage;
-			offContinent ??= (city.isHubOrStorage && city.isOnWater) ? (await App.DoYesNoBox(title,"Find one from another Continent?",yes: "Off Continent",no: "Same Continent",cancel: null)) == 1 : false;
+			offContinent ??= (city.isHubOrStorage && city.isOnWater) ? (await App.DoYesNoBox(title,$"Find hub for {city} from another Continent?",yes: "Off Continent",no: "Same Continent",cancel: null)) == 1 : false;
 			return await CitySettings.FindBestHub(cid,
 				offContinent.GetValueOrDefault());
 		}

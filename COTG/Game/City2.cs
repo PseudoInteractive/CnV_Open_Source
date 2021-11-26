@@ -20,6 +20,7 @@ using COTG.Services;
 
 namespace COTG.Game
 {
+	using Syncfusion.UI.Xaml.DataGrid;
 
 
 	public partial class City
@@ -1276,6 +1277,58 @@ namespace COTG.Game
 				return false;
 			}
 		}
+		public void CityRowClick(GridCellTappedEventArgs e)
+		{
+			switch (e.Column.MappingName)
+			{
+				case nameof(icon):
+				case nameof(nameAndRemarks):
+				case nameof(cityName):
+				case nameof(iconUri):
+				case nameof(remarks):
+					DoClick();
+					break;
+				case nameof(bStage):
+					DoTheStuff();
+					break;
+				case nameof(xy):
+					ProcessCoordClick(cid, false, App.keyModifiers, false);
+					break;
+				case nameof(City.tsTotal):
+				case nameof(tsHome):
+				case nameof(tsRaid):
+					if (City.CanVisit(cid) && MainPage.IsVisible())
+					{
+						Raiding.UpdateTS(true, true);
+					}
+					break;
+				case nameof(City.raidReturn):
+					if (City.CanVisit(cid) && MainPage.IsVisible())
+					{
+						Raiding.ReturnFast(cid, true);
+					}
+					break;
+				case nameof(pinned):
+					var newSetting = !pinned;
+
+					SetPinned(newSetting);
+
+					return;
+				case nameof(City.AutoWalls):
+					AutoWalls = !autoWalls;
+					return;
+				case nameof(City.AutoTowers):
+					AutoTowers = !autoTowers;
+					return;
+				case nameof(City.raidCarry):
+					if (City.CanVisit(cid) && MainPage.IsVisible())
+					{
+						Raiding.ReturnSlow(cid, true);
+					}
+					break;
+			}
+		}
+
 	}
 
 }

@@ -418,7 +418,7 @@ namespace COTG.Views
 
 		public static void KeyboardProxy_KeyDown2(object sender,Microsoft.UI.Xaml.Input.KeyRoutedEventArgs e)
 		{
-			Log($"KeyDown2 {e.Key} handled:{e.Handled} mouse:{mouseOverCanvas}");
+//			Log($"KeyDown2 {e.Key} handled:{e.Handled} mouse:{mouseOverCanvas}");
 			if(!e.Handled)
 			{
 				e.Handled=	DoKeyDown(e.Key);
@@ -427,7 +427,7 @@ namespace COTG.Views
 
 		public static void KeyboardAccelerator(KeyboardAccelerator acc,KeyboardAcceleratorInvokedEventArgs args)
 		{
-			Log($"Accelerator {acc.Key} handled:{args.Handled} mouse:{mouseOverCanvas}");
+	///		Log($"Accelerator {acc.Key} handled:{args.Handled} mouse:{mouseOverCanvas}");
 			if(args.Handled)
 			{
 
@@ -437,7 +437,7 @@ namespace COTG.Views
 		}
 		public static void KeyboardProxy_KeyDown(object sender,Microsoft.UI.Xaml.Input.KeyRoutedEventArgs e)
 		{
-			Log($"KeyDown {e.Key} handled:{e.Handled} mouse:{mouseOverCanvas}"); 
+		//	Log($"KeyDown {e.Key} handled:{e.Handled} mouse:{mouseOverCanvas}"); 
 			//KeyDown(e.Key);
 			if(!e.Handled)
 				e.Handled= DoKeyDown(e.Key);
@@ -458,18 +458,18 @@ namespace COTG.Views
 		public static Debounce1<VirtualKey> hotKeyDown = new(_KeyDown) { debounceDelay=0,throttleDelay=50, runOnUiThread=true,throttled=true };
 		public static bool DoKeyDown(VirtualKey key)
 		{
-			Log($"DoKeyDown {key}");
+		//	Log($"DoKeyDown {key}");
 			App.UpdateKeyStates();
 			if(App.IsKeyPressedShiftOrControl())
 				return false;
 			if(!buildKeys.Contains(key))
 			{
-				Log("Not a build Key " + key);
+//				Log("Not a build Key " + key);
 				return false;
 			}
 			if(!mouseOverCanvas)
 			{
-				Log("Not over canvas");
+		//		Log("Not over canvas");
 				return false;
 			}
 			// don't process if chat has focus
@@ -495,7 +495,7 @@ namespace COTG.Views
 
 		public static Task _KeyDown(VirtualKey key)
 		{
-			Log("SomeKeyDown " + key);
+//			Log("SomeKeyDown " + key);
 
 			App.UpdateKeyStates();
 
@@ -504,7 +504,7 @@ namespace COTG.Views
 			if(!mouseOverCanvas)
 			{
 				return Task.CompletedTask;
-				Log("Mouse not over");
+		//		Log("Mouse not over");
 			}
 			App.InputRecieved();
 
@@ -558,7 +558,7 @@ namespace COTG.Views
 			switch (key)
 			{
 				case Windows.System.VirtualKey.F11:
-					if (Player.isAvatarOrTest)
+					if (Player.isSpecial)
 					{
 						Raid.test ^= true;
 						Note.Show("Test: " + Raid.test);
@@ -566,7 +566,7 @@ namespace COTG.Views
 					break;
 
 				case Windows.System.VirtualKey.F10:
-					if (Player.isAvatarOrTest  || (App.IsKeyPressedShift() && App.IsKeyPressedControl()))
+					if (Player.isSpecial  || (App.IsKeyPressedShift() && App.IsKeyPressedControl()))
 					{
 						CityBuild.testFlag ^= true;
 						Note.Show("Test: " + testFlag);

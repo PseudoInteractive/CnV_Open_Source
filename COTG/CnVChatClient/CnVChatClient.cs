@@ -17,8 +17,10 @@ using DSharpPlus.Entities;
 namespace CnVDiscord
 {
 	using System.Net.Http;
+	using System.Text.RegularExpressions;
 	using CnVChat;
 	using COTG;
+	using Microsoft.UI.Xaml.Media.Imaging;
 
 	class CnVChatClient:ICnVChatClient
 	{
@@ -58,7 +60,7 @@ namespace CnVDiscord
 							}
 							else
 							{
-								Log($"Missing {a.playerName} discordId:{a.discordId}");
+						//		Log($"Missing {a.playerName} discordId:{a.discordId}");
 							}
 
 						}
@@ -154,9 +156,66 @@ namespace CnVDiscord
 						Console.WriteLine(
 							$"Missing discordName: {message.Author.Username} {message.Author.Id} HasOverride:{senderOverrides != null} ");
 					}
-					await Discord.AddMessage( (senderOverrides!=null? senderOverrides[i] : (player is not null ? player.discordId : message.Author.Id)),message, false, true);
+					await AddMessage( (senderOverrides!=null? senderOverrides[i] : (player is not null ? player.discordId : message.Author.Id)),message, false, true);
 				}
 			});
+		}
+		public static string DisplayName(DiscordUser user)
+		{
+			return (user is DiscordMember member) ? member.DisplayName : user.Username;
+		}
+		static readonly Regex regexMention = new Regex(@"\<@(\w+)\>", RegexOptions.CultureInvariant | RegexOptions.Compiled);
+
+		public static async Task AddMessage(ulong senderOverride,DiscordMessage message, bool isNew, bool notify)
+		{
+			try
+			{
+				if(!Player.playerByDiscordId.TryGetValue(senderOverride,out var p))
+					p = Player.me;
+				var name = p.name; // todo: use clients
+				if (p.avatarBrush is null && p.avatarUrl is not null )
+				{
+					var url = p.avatarUrl;
+					
+
+					var _name = name; 
+					
+					await App.DispatchOnUIThreadTask( () =>
+						{
+							p.avatarBrush= new BitmapImage(new Uri(url));
+							return Task.CompletedTask;
+						})
+						;
+				}
+//				var avatarUrl = $"![Helpers Image]({p.avatarUrl})";
+
+				var content = message.Content;
+
+				foreach (var i in message.MentionedUsers)
+				{
+					var mention = i.Mention;
+					var displayName = DisplayName(i);
+					var mentionGame = $"[{displayName}](/p/{displayName})";
+					content = content.Replace(mention ,mentionGame );
+					if(content.Contains('!'))
+					{
+						int q = 0;
+					}
+					if (mention.Contains('!'))
+						mention = mention.Replace("!", "");
+					else
+						mention = regexMention.Replace(mention,"<@!$1>" );
+
+					content = content.Replace(mention, mentionGame);
+				}
+				var chat = new ChatEntry(name, content, message.Timestamp.ToServerTime(), ChatEntry.typeAlliance);
+				App.DispatchOnUIThreadLow(() => ChatTab.Post(message.ChannelId, chat, isNew,notify));
+			}
+			catch (Exception ex)
+			{
+				LogEx(ex);
+			}
+			return;
 		}
 
 	}

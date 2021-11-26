@@ -169,11 +169,13 @@ namespace COTG.Views
 			
 			SetupDataGrid(grid);
 		}
-		public void SetupCityDataGrid(SfDataGrid grid)
+		public ADataGrid.ChangeContextDisposable SetupCityDataGrid(SfDataGrid grid)
 		{
 			// damn, there should be a better way to check for this
-			if(!AUtil.AddIfAbsent(ref spotSfGrids,grid))
-				return;
+			var rv = SetupGrid(grid);
+
+			return rv;
+			
 //			grid.SelectionChanged += SpotSelectionChanged;
 
 //			SetupDataGrid(grid);
@@ -182,8 +184,10 @@ namespace COTG.Views
 		{
 			if(sender is RadDataGrid rad)
 				SetupCityDataGrid(rad);
-			else if(sender is SfDataGrid sf)
-				SetupCityDataGrid(sf);
+			else if (sender is SfDataGrid sf)
+			{
+				using var x = SetupCityDataGrid(sf);
+			}
 
 		}
 
@@ -284,7 +288,7 @@ namespace COTG.Views
 			defaultPage.Add(this,selectMe);
 		}
 
-		protected void reinIn_CellTapped(object sender,Syncfusion.UI.Xaml.DataGrid.GridCellTappedEventArgs e)
+		protected void SfCellTapped(object sender,Syncfusion.UI.Xaml.DataGrid.GridCellTappedEventArgs e)
 		{
 
 			try
@@ -292,17 +296,9 @@ namespace COTG.Views
 			//	Note.Show($"Cell Tap {e.Column.HeaderText??"NA"}  {e.RowColumnIndex} {e.RowColumnIndex} {e.Record.ToString} ");
 			if (e.Record is City city)
 			{
-
-				switch (e.Column.MappingName)
-				{
-					case nameof(City.cityName):
-					case nameof(City.iconUri):
-					case nameof(City.remarks):
-						city.DoClick();
-						break;
-				}
-
+				city.CityRowClick(e);
 				
+
 				return;
 			}
 				switch(e.Column.MappingName)
@@ -332,6 +328,7 @@ namespace COTG.Views
 
 
 		}
+
 
 		protected void CelNavigate(object sender,Syncfusion.UI.Xaml.Grids.CurrentCellRequestNavigateEventArgs e)
 		{
@@ -363,17 +360,44 @@ namespace COTG.Views
 			int q = 0;
 		}
 
-		public ADataGrid.ChangeContextDisposable SetupGrid(SfDataGrid grid)
+		static Type GetContainerType(object container)
+		{
+			if (container is NotifyCollection<City> )
+			{
+				return typeof(City);
+
+			}
+
+			if (container is NotifyCollectionBase)
+			{
+				var type = container.GetType();
+				Assert (type.IsGenericType);
+				Assert( type.GenericTypeArguments.Length == 1);
+				return type.GenericTypeArguments[0];
+
+			}
+
+			Assert(false); // Todo: Test
+			return typeof(object);
+		}
+
+		public ADataGrid.ChangeContextDisposable SetupGrid(SfDataGrid grid, Type sourceType=null)
 		{
 			var _lock0 = grid.ChangeContext();
-			grid.ExpanderColumnWidth = 32;
-			grid.GridContextFlyoutOpening += ContextFlyoutOpening;
-			grid.RecordContextFlyout = new();
-			grid.CurrentCellRequestNavigate += CelNavigate;
-			grid.CellTapped += reinIn_CellTapped;
-			grid.AllowFrozenGroupHeaders=false;
-			grid.ColumnWidthMode = Syncfusion.UI.Xaml.Grids.ColumnWidthMode.AutoLastColumnFill;
-			grid.CellToolTipOpening += CellToolTipOpening;
+			if (spotSfGrids.AddIfAbsent( grid))
+			{
+				grid.ExpanderColumnWidth = 32;
+				grid.GridContextFlyoutOpening += ContextFlyoutOpening;
+				grid.RecordContextFlyout = new();
+				grid.CurrentCellRequestNavigate += CelNavigate;
+				grid.CellTapped += SfCellTapped;
+				grid.AllowFrozenGroupHeaders = false;
+				grid.ColumnWidthMode = Syncfusion.UI.Xaml.Grids.ColumnWidthMode.AutoLastColumnFill;
+				grid.CellToolTipOpening += CellToolTipOpening;
+				if(sourceType is not null || grid.ItemsSource is not null)
+					grid.SourceType = sourceType ?? GetContainerType(grid.ItemsSource);
+			}
+
 //			grid.LiveDataUpdateMode = Syncfusion.UI.Xaml.Data.LiveDataUpdateMode.AllowChildViewUpdate;
 			return _lock0;
 		}
@@ -390,7 +414,7 @@ namespace COTG.Views
 				case ContextFlyoutType.RecordCell:
 				{
 					var info = e.ContextFlyoutInfo as GridRecordContextFlyoutInfo;
-					var column = info.DataGrid.Columns[e.RowColumnIndex.ColumnIndex];
+					var column = info?.DataGrid.Columns[e.RowColumnIndex.ColumnIndex];
 					if ( info.Record is City city)
 					{
 						city.AddToFlyout(flyout);

@@ -282,14 +282,17 @@ namespace COTG.Views
 			{
 				var c = CanvasPointFromDip(point.Position);
 					var id = point.PointerId;
+					// hack!  something here is broken
+					Reset();
 					var pointer = (points.Find(p => p.id == id));
 					Assert(pointer == null);
 					if (pointer == null)
 					{
 						if (points.Any())
 						{
-							// cull second touces that occur more than 1s after the initial touch
-							if (points[0].startTimestamp + 1UL * 1000UL * 1000UL < point.Timestamp)
+							// cull second touches that occur more than 1s after the initial touch
+							if ( (points[0].startTimestamp + 1UL * 1000UL * 1000UL < point.Timestamp) && 
+							     (points[0].startTimestamp + 10UL * 1000UL * 1000UL > point.Timestamp)) // only if less than 10s
 							{
 								return (c,false);
 							}
@@ -368,7 +371,7 @@ namespace COTG.Views
 					var c = GetAveragePosition();
 				var dc = c - cStart;
 				var stretch = GetStretch();
-			//	if (currentGesture == GestureAction.none)
+				if (currentGesture == GestureAction.none)
 				{
 					if (!currentGesture.HasFlag(GestureAction.zoom))
 					{

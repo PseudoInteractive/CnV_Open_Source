@@ -72,7 +72,7 @@ namespace COTG
 			// Friend.LoadAll();
 
 			App.state = App.State.active;
-			CnVDiscord.Discord.Initialize();
+		//	CnVDiscord.Discord.Initialize();
 
 			//  System.GC.Collect(2,GCCollectionMode.Default,true);
 

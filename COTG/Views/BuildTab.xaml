@@ -27,7 +27,7 @@
 
 		<sf:SfDataGrid x:Name="cityGrid"
 							x:FieldModifier="public"
-			
+							AllowFiltering="True"
 							Grid.Row="3"
 							IsTabStop="True"
 							TabFocusNavigation="Once"
@@ -36,11 +36,12 @@
 							AutoGenerateColumns="False"
 							SelectionMode="Extended"
 							RowHeight="{StaticResource ShortGridRowHeight}"
-							PointerPressed="{x:Bind game:Spot.GridPressed}"
-							PointerExited="{x:Bind game:Spot.GridExited}"
 							FontSize="{StaticResource SmallFontSize}"
 							SelectionUnit="Row"
+							ShowToolTip="True"
+							
 							Loaded="DataGridLoaded"
+							ScrollViewer.CanContentRenderOutsideBounds="True"
 							
 							>
 	
@@ -48,12 +49,28 @@
 				<view:BuildCustomDataBindingCompleteCommand />
 				<model:CityGridToggleColumnVisibilityCommand />
 			</sf:RadDataGrid.Commands>-->
-			
+			<sf:SfDataGrid.TableSummaryRows>
+				<sf:GridTableSummaryRow ShowSummaryInRow="False" TitleColumnCount="2" Position="Bottom"
+				                              Title=" {Building} cities of {Cities} are building">
+					<sf:GridSummaryRow.SummaryColumns>
+						<sf:GridSummaryColumn Name="Cities" 
+						                            Format=" {Count:d}"
+						                            MappingName="nameAndRemarks" 
+						                            SummaryType="CountAggregate" />
+						<sf:GridSummaryColumn Name="Building"
+						                            Format=" {Sum:d}"
+						                            MappingName="isBuilding"
+						                            SummaryType="CountAggregate" />
+					</sf:GridSummaryRow.SummaryColumns>
+				</sf:GridTableSummaryRow>
+			</sf:SfDataGrid.TableSummaryRows>
 
-			<sf:SfDataGrid.Columns>
+			<sf:SfDataGrid.Columns >
 
 			
 				<sf:GridImageColumn MappingName="icon"
+				                    AllowFiltering="False"
+									AllowSorting="False"
 											HeaderText="I"
 											Width="32"
 											winui:ToolTipService.ToolTip="Click to switch to this city"
@@ -61,30 +78,34 @@
 				<sf:GridTextColumn MappingName="nameAndRemarks"
 										   winui:ToolTipService.ToolTip="Click to raid from this city without switching cities (fast)"
 										   HeaderText="Name"
-										   CellStyle="{StaticResource LeftAlign}"
-										   ColumnWidthMode="Auto"
+										   TextAlignment="Left"
+										   Width="125"
 										    />
 				<sf:GridTextColumn MappingName="bStage"
-										   winui:ToolTipService.ToolTip="Click 'Do all the stuff'"
-										   CellStyle="{StaticResource CenterAlignLink}"
-									    ColumnWidthMode="Auto"
+									HeaderText="stage"	 
+				                   winui:ToolTipService.ToolTip="Click 'Do all the stuff'"
+										   CellStyle="{StaticResource SfLink}"
+										   TextAlignment="Center"
+									    ColumnWidthMode="SizeToHeader"
 										    />
 				<sf:GridTextColumn MappingName="xy"
 										   winui:ToolTipService.ToolTip="Click to view this city"
-										   CellStyle="{StaticResource CenterAlignLink}"
+										   CellStyle="{StaticResource SfLink}"
+										   TextAlignment="Center"
    										  Width="64"
 
 										    />
 				<sf:GridNumericColumn MappingName="cont"
-												
-												CellStyle="{StaticResource CenterAlign}"
+				                      TextAlignment="Center"
 											Width="48"
 												 />
 				
 
 				<sf:GridCheckBoxColumn MappingName="isBuilding"
-										   winui:ToolTipService.ToolTip="If checked, this city is either complete or it is building.  Otherwise it is idle and possibly not complete"
-										   CellStyle="{StaticResource CenterAlignLink}"
+										   ShowHeaderToolTip="True"
+											winui:ToolTipService.ToolTip="If checked, this city is either complete or it is building.  Otherwise it is idle and possibly not complete"
+										   CellStyle="{StaticResource SfLink}"
+										   TextAlignment="Center"
 										  Width="32"
 										    />
 				<sf:GridCheckBoxColumn MappingName="AutoTowers"
@@ -102,36 +123,36 @@
 										    />-->
 				<sf:GridNumericColumn MappingName="Bldgs"
 										   winui:ToolTipService.ToolTip="May or may not include queued buildings"
-										   CellStyle="{StaticResource RightAlign}"
+										   TextAlignment="Right"
 											Width="48"
 										    />
 				<sf:GridNumericColumn MappingName="points"
 												winui:ToolTipService.ToolTip="City score"
 											Width="56"
-												CellStyle="{StaticResource RightAlign}"
-												DisplayNumberFormat="{}{0,6:N0}"
+												DisplayNumberFormat="N0"
+												TextAlignment="Right"
 												 />
 				<sf:GridNumericColumn MappingName="constructionSpeed"
 											HeaderText="cs"
 											Width="56"
 													winui:ToolTipService.ToolTip="Construction Speed"
-												CellStyle="{StaticResource RightAlign}"
-											DisplayNumberFormat="{}{0,4:N0}"
+												TextAlignment="Right"
+											DisplayNumberFormat="N0"
 												 />
 				<sf:GridNumericColumn MappingName="tsTotal"
-												CellStyle="{StaticResource RightAlign}"
+												TextAlignment="Right"
 												winui:ToolTipService.ToolTip="TS enlisted in city"
-												DisplayNumberFormat="{}{0,7:N0}"
+												DisplayNumberFormat="N0"
 												AllowSorting="True"
 												
 												ColumnWidthMode="Auto"
 												 />
 				<sf:GridTextColumn MappingName="remarks"
-										   CellStyle="{StaticResource LeftAlign}"
+										   TextAlignment="Left"
 										   ColumnWidthMode="Auto"
 										   IsHidden="True" />
 				<sf:GridTextColumn MappingName="senny"
-										   CellStyle="{StaticResource LeftAlign}"
+										   TextAlignment="Left"
 										   ColumnWidthMode="Auto"
 										   IsHidden="True" />
 				<sf:GridCheckBoxColumn MappingName="isCastle"

@@ -142,7 +142,6 @@ namespace COTG.Game
 					_nameToId.TryAdd(my.name, my.id);
 
 					// all.Add(my.id, my); nameToId.Add(my.name, my.id);
-
 					if (element.TryGetProperty("d", out var dRoot))
 					{
 						foreach (var prop in dRoot.EnumerateObject())
@@ -174,6 +173,16 @@ namespace COTG.Game
 					{
 						Log("Alliance Error!");
 					}
+					if ( element.TryGetProperty("m", out var ms))
+					{
+						foreach (var m in ms.EnumerateArray())
+						{
+							var pid = m.GetAsInt("pid");
+							var r = m.GetAsInt("r");
+							Player.Get(pid).allianceRank = r.AsByte();
+						}
+					}
+
 				}
 			}
 			catch (Exception _e)

@@ -165,6 +165,14 @@
 		<Setter Property="FontStretch" Value="Condensed" />
 		<Setter Property="FontWeight" Value="Light" />
 	</Style>
+	<Style x:Key="SfTextCell" TargetType="sf:GridCell">
+		<Setter Property="FontFamily" Value="Bahnschrift"/>
+		<Setter Property="FontSize" Value="{StaticResource SmallFontSize}" />
+		<Setter Property="FontStretch" Value="Condensed" />
+		<Setter Property="FontWeight" Value="Light" />
+	</Style>
+	<Style  TargetType="sf:GridCell" BasedOn="{StaticResource SfTextCell}">
+	</Style>
 	<Style x:Key="TextBlockLarge" TargetType="TextBlock" BasedOn="{StaticResource TextBlockSmall}" >
 		<Setter Property="FontSize" Value="{StaticResource LargeFontSize}" />
 	</Style>
@@ -289,6 +297,12 @@
         <Setter Property="HorizontalAlignment"
                         Value="Center" />
     </Style>
+	<Style  x:Key="SfLink"
+	        BasedOn="{StaticResource SfTextCell }"
+	        TargetType="sf:GridCell">
+		<Setter Property="Foreground" Value="{StaticResource HyperLinkBrush}"/>
+		<Setter Property="SelectionForeground" Value="{ThemeResource HyperlinkPressedForegroundThemeBrush}"/>
+	</Style>
     <Style  x:Key="CellCenterLink"
             BasedOn="{StaticResource CellButtonTextStyle }"
                     TargetType="tk:DataGridCell"  >

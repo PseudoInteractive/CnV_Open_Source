@@ -2537,7 +2537,7 @@ private static async void ShowCouncillorsMissingDialog()
 
 
 							   UpdatePPDT(ppdt, Player.myId, pruneCities: true);
-							   if (Player.isAvatarOrTest)
+							   if (Player.isSpecial)
 								   Raid.test = true;
 							   World.RunWhenLoaded(() => App.DispatchOnUIThreadIdle(Spot.UpdateFocusText));
 
@@ -2844,7 +2844,7 @@ private static async void ShowCouncillorsMissingDialog()
 										   city.SetFocus(true);
 									   if (city.isNotClassified )
 									   {
-										   if (App.IsKeyPressedControl() && (Alliance.wantsIntel || Player.isAvatarOrTest) )
+										   if (App.IsKeyPressedControl() && (Alliance.wantsIntel || Player.isSpecial) )
 										   {
 											   city.Classify();
 										   }

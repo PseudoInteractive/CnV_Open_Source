@@ -41,7 +41,18 @@
 
 
 					>
-			
+		<sf:SfDataGrid.TableSummaryRows>
+			<sf:GridTableSummaryRow ShowSummaryInRow="False" TitleColumnCount="1" Position="Bottom"
+			                        Title="Reinforcements {Total}">
+				<sf:GridSummaryRow.SummaryColumns>
+					<sf:GridSummaryColumn Name="Total" 
+					                      Format=" {Count:d}"
+					                      MappingName="_cityName" 
+					                      SummaryType="CountAggregate" />
+				</sf:GridSummaryRow.SummaryColumns>
+			</sf:GridTableSummaryRow>
+		</sf:SfDataGrid.TableSummaryRows>
+
 	
 		</sf:SfDataGrid>
 		<TextBlock Grid.Row="2" Text="{x:Bind reinOutTitle, Mode=OneWay}" />
@@ -62,6 +73,17 @@
 					
 							Loaded="DataGridLoaded"
 					  >
+			<sf:SfDataGrid.TableSummaryRows>
+				<sf:GridTableSummaryRow ShowSummaryInRow="False" TitleColumnCount="1" Position="Bottom"
+				                        Title="Reinforcements {Total}">
+					<sf:GridSummaryRow.SummaryColumns>
+						<sf:GridSummaryColumn Name="Total" 
+						                      Format=" {Count:d}"
+						                      MappingName="_cityName" 
+						                      SummaryType="CountAggregate" />
+					</sf:GridSummaryRow.SummaryColumns>
+				</sf:GridTableSummaryRow>
+			</sf:SfDataGrid.TableSummaryRows>
 	
 		</sf:SfDataGrid>
 	</Grid>

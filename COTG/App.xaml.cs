@@ -69,9 +69,12 @@ using Microsoft.Extensions.DependencyInjection;
 using System.Runtime.InteropServices;
 using Microsoft.UI;
 using WinRT;
+using Microsoft.Toolkit.Mvvm.DependencyInjection;
 
 namespace COTG
 {
+	using Microsoft.Extensions.Hosting;
+
 	/// <summary>
 	/// App
 	/// </summary>
@@ -136,32 +139,12 @@ namespace COTG
 			//#endif
 		}
 
-		/// <summary>
-		/// Gets the <see cref="IServiceProvider"/> instance to resolve application services.
-		/// </summary>
-		public IServiceProvider services;// { get; }
-
-		/// <summary>
-		/// Configures the services for the application.
-		/// </summary>
-		private static IServiceProvider ConfigureServices()
-		{
-			var services = new ServiceCollection();
-
-			//services.AddSingleton<IFilesService,FilesService>();
-			//services.AddSingleton<ISettingsService,SettingsService>();
-			//services.AddSingleton<IClipboardService,ClipboardService>();
-			//services.AddSingleton<IShareService,ShareService>();
-			//services.AddSingleton<IEmailService,EmailService>();
-
-			return services.BuildServiceProvider();
-		}
-		//			ShutdownMode= Shut
-
+		
 		public App()
 		{
 			Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense("NTI5MjE3QDMxMzkyZTMzMmUzMFZNeEhhNVA0S1B4blBBVjJvWCtRS1NDanJJVnJpSEljWndpbXduU3Z2dVk9");
-//			services = ConfigureServices();
+			//			services = ConfigureServices();
+			UnhandledException+=App_UnhandledException;
 
 		InitializeComponent();
 		RequestedTheme = ApplicationTheme.Dark;
@@ -191,8 +174,26 @@ namespace COTG
 			// Deferred execution until used. Check https://msdn.microsoft.com/library/dd642331(v=vs.110).aspx for further info on Lazy<T> class.
 			_activationService = new Lazy<ActivationService>(CreateActivationService);
 			//	UserAgent.SetUserAgent(JSClient.userAgent);  // set webview useragent
+		//	Ioc.Default.ConfigureServices(ConfigureServices());
 
 			
+		}
+		 //private System.IServiceProvider ConfigureServices()
+		 //{
+			// Host.CreateDefaultBuilder().Build();
+   //         // TODO WTS: Register your services, viewmodels and pages here
+   //         var services = new ServiceCollection();
+			//services.AddLogging();
+
+   //         return services.BuildServiceProvider();
+   //     }
+
+		private void App_UnhandledException(object sender,Microsoft.UI.Xaml.UnhandledExceptionEventArgs e)
+		{
+			e.Handled=true;
+			System.Diagnostics.Debug.WriteLine($"Unhandled Exception: " + e.Message);
+			System.Diagnostics.Debug.WriteLine(e.Exception.StackTrace);
+
 		}
 
 		private void TaskScheduler_UnobservedTaskException(object sender,UnobservedTaskExceptionEventArgs e)

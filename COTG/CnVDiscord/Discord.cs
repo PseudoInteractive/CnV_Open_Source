@@ -46,129 +46,129 @@ namespace CnVDiscord
 		//public static CommandsNextExtension DiscordCommands { get; set; }
 	//	public static ConfigFile Config = new();
 	//	public static bool IsAllianceConnected => Config.ChatID != 0;
-		public async static void Initialize()
-		{
+		//public async static void Initialize()
+		//{
 
 
-		//	Config.ChatID = await Tables.GetDiscordChatId().ConfigureAwait(false);
-		//	if (Config.ChatID == 0)
-		//		return;
+		////	Config.ChatID = await Tables.GetDiscordChatId().ConfigureAwait(false);
+		////	if (Config.ChatID == 0)
+		////		return;
 
-		////	Color = new Color(Config.Messagecolor[0], Config.Messagecolor[1], Config.Messagecolor[2]);
+		//////	Color = new Color(Config.Messagecolor[0], Config.Messagecolor[1], Config.Messagecolor[2]);
 
 
 
-		//	DiscordBot = new DiscordClient(new DiscordConfiguration
-		//	{
-		//		Token = Config.DiscordBotToken,
-		//		TokenType = TokenType.Bot,
-		//		Intents = DiscordIntents.AllUnprivileged,
+		////	DiscordBot = new DiscordClient(new DiscordConfiguration
+		////	{
+		////		Token = Config.DiscordBotToken,
+		////		TokenType = TokenType.Bot,
+		////		Intents = DiscordIntents.AllUnprivileged,
 
-		//		MinimumLogLevel = LogLevel.Warning
-		//	});
+		////		MinimumLogLevel = LogLevel.Warning
+		////	});
 
-		//	await DiscordBot.ConnectAsync().ConfigureAwait(false);
+		////	await DiscordBot.ConnectAsync().ConfigureAwait(false);
 			
-			//DiscordBot.GuildDownloadCompleted += (_, args) =>
-			//{
-			//	return App.DispatchOnUIThreadTask(() =>
-			//	{
-			//		foreach (var g in args.Guilds)
-			//		{
-			//			foreach (var author in g.Value.Members.Values)
-			//			{
-			//				var nameLower = author.DisplayName.ToLower();
-			//				if (!avatarUrls.TryGetValue(nameLower, out var _))
-			//				{
-			//					var url = author.GetAvatarUrl(ImageFormat.Auto, 32);
-			//					avatarUrls.TryAdd(nameLower, $"![Helpers Image]({url})");
-			//					avatarBrushes.TryAdd(nameLower, new BitmapImage(new Uri(url)));
-			//				}
-			//			}
-			//		}
-			//		return Task.CompletedTask;
+		//	//DiscordBot.GuildDownloadCompleted += (_, args) =>
+		//	//{
+		//	//	return App.DispatchOnUIThreadTask(() =>
+		//	//	{
+		//	//		foreach (var g in args.Guilds)
+		//	//		{
+		//	//			foreach (var author in g.Value.Members.Values)
+		//	//			{
+		//	//				var nameLower = author.DisplayName.ToLower();
+		//	//				if (!avatarUrls.TryGetValue(nameLower, out var _))
+		//	//				{
+		//	//					var url = author.GetAvatarUrl(ImageFormat.Auto, 32);
+		//	//					avatarUrls.TryAdd(nameLower, $"![Helpers Image]({url})");
+		//	//					avatarBrushes.TryAdd(nameLower, new BitmapImage(new Uri(url)));
+		//	//				}
+		//	//			}
+		//	//		}
+		//	//		return Task.CompletedTask;
 
-			//	});
+		//	//	});
 				
 
-			//};
+		//	//};
 			
 
-			//DiscordBot.Ready += async (client, args) =>
-			//{
-			//	chatChannel = await DiscordBot.GetChannelAsync(Config.ChatID).ConfigureAwait(false);
-			//	var members = await chatChannel.Guild.GetAllMembersAsync().ConfigureAwait(false);
-			//	await App.DispatchOnUIThreadTask(() =>
-			//   {
-			//	   foreach (var i in members)
-			//	   {
-			//		   var nameLower = i.DisplayName.ToLowerInvariant();
-			//		   if (!avatarUrls.TryGetValue(nameLower, out var _))
-			//		   {
-			//			   var url = i.GetAvatarUrl(ImageFormat.Auto, 32);
-			//			   avatarUrls.TryAdd(nameLower, $"![Helpers Image]({url})");
-			//			   avatarBrushes.TryAdd(nameLower, new BitmapImage(new Uri(url)));
-			//		   }
+		//	//DiscordBot.Ready += async (client, args) =>
+		//	//{
+		//	//	chatChannel = await DiscordBot.GetChannelAsync(Config.ChatID).ConfigureAwait(false);
+		//	//	var members = await chatChannel.Guild.GetAllMembersAsync().ConfigureAwait(false);
+		//	//	await App.DispatchOnUIThreadTask(() =>
+		//	//   {
+		//	//	   foreach (var i in members)
+		//	//	   {
+		//	//		   var nameLower = i.DisplayName.ToLowerInvariant();
+		//	//		   if (!avatarUrls.TryGetValue(nameLower, out var _))
+		//	//		   {
+		//	//			   var url = i.GetAvatarUrl(ImageFormat.Auto, 32);
+		//	//			   avatarUrls.TryAdd(nameLower, $"![Helpers Image]({url})");
+		//	//			   avatarBrushes.TryAdd(nameLower, new BitmapImage(new Uri(url)));
+		//	//		   }
 
-			//		   playerToMember.TryAdd(nameLower, i);
-			//	   }
-			//	   if( playerToMember.TryGetValue(Player.myName.ToLower(), out var member))
-			//	   {
-			//		   var id = member.Id;
+		//	//		   playerToMember.TryAdd(nameLower, i);
+		//	//	   }
+		//	//	   if( playerToMember.TryGetValue(Player.myName.ToLower(), out var member))
+		//	//	   {
+		//	//		   var id = member.Id;
 					   
-			//	   }
-			//	   return Task.CompletedTask;
-			//   }).ConfigureAwait(false);
-			//	//			UserIdToMemeber = members.ToDictionary((a => a.Id), (a => a));
+		//	//	   }
+		//	//	   return Task.CompletedTask;
+		//	//   }).ConfigureAwait(false);
+		//	//	//			UserIdToMemeber = members.ToDictionary((a => a.Id), (a => a));
 
 
 
 
-			//	#region Hooks
-			//	//ServerApi.Hooks.ServerCommand.Register(this, Logs.OnServerCommand);
-			//	//ServerApi.Hooks.GamePostInitialize.Register(this, Utils.OnPostInitialize);
-			//	//ServerApi.Hooks.ServerBroadcast.Register(this, Bridge.OnBC);
-			//	//ServerApi.Hooks.NetGreetPlayer.Register(this, OnGreet);
-			//	//ServerApi.Hooks.WorldSave.Register(this, OnSave);
-			//	//GetDataHandlers.KillMe += Bridge.OnKill; 
-			//	PlayerHooks.PlayerCommand += Logs.OnPlayerCommand;
-			//	PlayerHooks.PlayerLogout += OnLogout;
-			//	PlayerHooks.PlayerChat += OnChat;
-			//	#endregion
+		//	//	#region Hooks
+		//	//	//ServerApi.Hooks.ServerCommand.Register(this, Logs.OnServerCommand);
+		//	//	//ServerApi.Hooks.GamePostInitialize.Register(this, Utils.OnPostInitialize);
+		//	//	//ServerApi.Hooks.ServerBroadcast.Register(this, Bridge.OnBC);
+		//	//	//ServerApi.Hooks.NetGreetPlayer.Register(this, OnGreet);
+		//	//	//ServerApi.Hooks.WorldSave.Register(this, OnSave);
+		//	//	//GetDataHandlers.KillMe += Bridge.OnKill; 
+		//	//	PlayerHooks.PlayerCommand += Logs.OnPlayerCommand;
+		//	//	PlayerHooks.PlayerLogout += OnLogout;
+		//	//	PlayerHooks.PlayerChat += OnChat;
+		//	//	#endregion
 
 
-			//	//if (Config.Commands )
-			//	//{
-			//	//	var ccfg = new CommandsNextConfiguration
-			//	//	{
-			//	//		StringPrefixes = new[] { Config.Prefix },
+		//	//	//if (Config.Commands )
+		//	//	//{
+		//	//	//	var ccfg = new CommandsNextConfiguration
+		//	//	//	{
+		//	//	//		StringPrefixes = new[] { Config.Prefix },
 
-			//	//		EnableDms = false,
+		//	//	//		EnableDms = false,
 
-			//	//		EnableMentionPrefix = false
-			//	//	};
+		//	//	//		EnableMentionPrefix = false
+		//	//	//	};
 
-			//	//	DiscordCommands = DiscordBot.UseCommandsNext(ccfg);
+		//	//	//	DiscordCommands = DiscordBot.UseCommandsNext(ccfg);
 
-			//	//	DiscordCommands.RegisterCommands<BotCommands>();
+		//	//	//	DiscordCommands.RegisterCommands<BotCommands>();
 
-			//	//	DiscordCommands.SetHelpFormatter<HelpFormatter>();
+		//	//	//	DiscordCommands.SetHelpFormatter<HelpFormatter>();
 
-			//	//	DiscordCommands.CommandExecuted += CommandExecuted;
-			//	//	DiscordCommands.CommandErrored += CommandErrored;
-			//	//}
-			//				;
+		//	//	//	DiscordCommands.CommandExecuted += CommandExecuted;
+		//	//	//	DiscordCommands.CommandErrored += CommandErrored;
+		//	//	//}
+		//	//				;
 		
-			//	DiscordBot.ClientErrored += ClientErrored;
-			//	DiscordBot.MessageCreated += OnMessageCreated;
-			//	var fetch = await chatChannel.GetMessagesAsync(messageFetchCount).ConfigureAwait(false);
-			//	foreach(var message in fetch)
-			//	{
-			//		await AddMessage(message,false,false).ConfigureAwait(false);
-			//	}
-			//	ChatTab.alliance.items.NotifyReset();
-			//};
-		}
+		//	//	DiscordBot.ClientErrored += ClientErrored;
+		//	//	DiscordBot.MessageCreated += OnMessageCreated;
+		//	//	var fetch = await chatChannel.GetMessagesAsync(messageFetchCount).ConfigureAwait(false);
+		//	//	foreach(var message in fetch)
+		//	//	{
+		//	//		await AddMessage(message,false,false).ConfigureAwait(false);
+		//	//	}
+		//	//	ChatTab.alliance.items.NotifyReset();
+		//	//};
+		//}
 
 		//protected void Dispose(bool disposing)
 		//{
@@ -385,16 +385,16 @@ namespace CnVDiscord
 		////        Logs.JoinLeave(TShock.Players[args.Who]);
 		////    }
 		//}
-		static void OnLogout(PlayerHooks.PlayerLogoutEventArgs args)
-		{
-			//    if (args.Player == null)
-			//        return;
+		//static void OnLogout(PlayerHooks.PlayerLogoutEventArgs args)
+		//{
+		//	//    if (args.Player == null)
+		//	//        return;
 
-			//    if (args.Player.ReceivedInfo)
-			//        Logs.JoinLeave(args.Player, false);
+		//	//    if (args.Player.ReceivedInfo)
+		//	//        Logs.JoinLeave(args.Player, false);
 
-			//    return;
-		}
+		//	//    return;
+		//}
 		//void OnSave(WorldSaveEventArgs args)
 		//{
 		//    if (Config.Chat)

@@ -5,9 +5,6 @@ using DSharpPlus.CommandsNext;
 namespace CnVDiscord
 {
 
-	public class GreetPlayerEventArgs
-	{
-	}
 	public class PlayerHooks
 	{
 		public class PlayerCommandEventArgs

@@ -586,6 +586,7 @@ namespace COTG.Game
 		{
 			e.KeyModifiers.UpdateKeyModifiers();
 			var grid = sender as RadDataGrid;
+			Assert(grid is not null);
 			var physicalPoint = e.GetCurrentPoint(grid);
 			var point = new Point { X = physicalPoint.Position.X, Y = physicalPoint.Position.Y };
 			var cell = grid.HitTestService.CellInfoFromPoint(point);
@@ -867,7 +868,7 @@ namespace COTG.Game
 			//Spot.GetOrAdd(cid).SelectMe(false,mod);
 			SpotTab.TouchSpot(cid, mod, true);
 
-			if (mod.IsShiftAndControl() && (Player.isAvatarOrTest || City.CanVisit(cid)) && (!AttackTab.IsVisible()) )
+			if (mod.IsShiftAndControl() && (Player.isSpecial || City.CanVisit(cid)) && (!AttackTab.IsVisible()) )
 			{
 				//     var spot = Spot.GetOrAdd(cid);
 				//     GetCity.Post(cid, spot.pid, (js, city) => Log(js));
@@ -1105,7 +1106,7 @@ namespace COTG.Game
 					}
 				}
 			}
-			if (!Player.isAvatarOrTest && !Alliance.wantsIntel)
+			if (!Player.isSpecial && !Alliance.wantsIntel)
 			{
 				classification = Classification.missing;
 				return true;
