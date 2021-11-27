@@ -1954,6 +1954,13 @@ namespace COTG.Game
 			}
 		}
 
+		public struct BuildingsByType
+		{
+			public ushort bid;
+			public Memory<ushort> bspots;
+
+		}
+
 		public struct BuildingCount
 		{
 			public int storeHouses;

@@ -55,7 +55,7 @@ namespace COTG.Views
             instance = this;
             this.InitializeComponent();
 
-			AUtil.AddIfAbsent(ref spotGrids, cityGrid);
+			AUtil.AddIfAbsent(ref spotGrids,new(rad: cityGrid));
 
 		}
 

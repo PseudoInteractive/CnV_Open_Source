@@ -59,7 +59,7 @@ namespace COTG.Views
 
 		}
 
-		ObservableCollection<LayoutItem> layoutOptions { get; set; } = new();
+		LayoutItem[] layoutOptions =  Enum.GetValues<Layout>().Select(a=>new LayoutItem(){name=a.ToString(),id=(int)a}).ToArray();
 		//private readonly KeyboardAccelerator _altLeftKeyboardAccelerator = BuildKeyboardAccelerator(VirtualKey.Left, VirtualKeyModifiers.Menu);
 		//private readonly KeyboardAccelerator _backKeyboardAccelerator = BuildKeyboardAccelerator(VirtualKey.GoBack);
 		//private readonly KeyboardAccelerator _forwardKeyboardAccelerator = BuildKeyboardAccelerator(VirtualKey.GoForward);
@@ -299,7 +299,6 @@ namespace COTG.Views
 			for(var i = Layout.first;i< Layout.count;++i)
 			{
 				KeyboardAccelerators.Add(BuildKeyboardAccelerator( VirtualKey.Number0+(int)i,LayoutAccelerator_Invoked,VirtualKeyModifiers.Control));
-				layoutOptions.Add(new() { id = (int)i,name=i.ToString() });
 			}
 			
 
@@ -1333,8 +1332,8 @@ namespace COTG.Views
 			public UpdateHtmlOffsets() : base(null)
 			{
 				runOnUiThread= true;
-				debounceDelay=300;
-				throttleDelay=700;
+				debounceDelay=200;
+				throttleDelay=400;
 				base.func=F;
 			}
 			public void Go(bool updateLayout)
@@ -1392,14 +1391,14 @@ namespace COTG.Views
 
 				var htmlShift = htmlVisible||SettingsPage.webZoomSmall>0 ? 0 : -canvasScaledX;
 
-				var leftOffset = ((popupLeftOffset*zoom).RoundToInt()-canvasScaledX).Max0();
-				var topOffset = ((popupTopOffset*zoom).RoundToInt()-canvasScaledY).Max0();
+				var popupLeftMargin = ((popupLeftOffset*zoom).RoundToInt()-canvasScaledX).Max0();
+				var popupTopMargin = ((popupTopOffset*zoom).RoundToInt()-canvasScaledY).Max0();
 
 				// only need 1 to avoid collisions
-				if(leftOffset > topOffset)
-					leftOffset =0;
+				if(popupLeftMargin > popupTopMargin)
+					popupLeftMargin =0;
 				else
-					topOffset=0;
+					popupTopMargin=0;
 				instance.AddHandler(PointerMovedEvent,new PointerEventHandler(ProcessPointerMoved),true);
 				//	if (!Alliance.alliancesFetched)
 				//		return;
@@ -1429,8 +1428,8 @@ namespace COTG.Views
 							}
 						}
 
-						var _canvasBaseX = (leftOffset + canvasScaledX + htmlShift).Max0();
-						var _canvasBaseY = (topOffset +canvasScaledY).Max0();
+						var _canvasBaseX = (popupLeftMargin + canvasScaledX + htmlShift).Max0();
+						var _canvasBaseY = (popupTopMargin + canvasScaledY).Max0();
 						//	if(canvasBaseX != _canvasBaseX || canvasBaseY != _canvasBaseY)
 						{
 

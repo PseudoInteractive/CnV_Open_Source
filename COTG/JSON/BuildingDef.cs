@@ -25,7 +25,7 @@ namespace COTG
 				return 0;
 			if (all.TryGetValue(bid, out var def))
 				return def.id;
-			if (!(bid >= 891 && bid <= 894))
+			if (!(bid >= 891 && bid <= 898))
 				Log("Bad building! " + bid); // farms an temples have extras
 			return 0;
 		}

@@ -35,7 +35,9 @@ namespace CnVDiscord
 				return;
 			instance = new();
 			
-			await  instance.Initialize();
+			// Any Magic Onion?
+			if(!await  instance.Initialize() ) 
+				return; 
 
 			await foreach (var a in PlayerGameEntity.table.QueryAsync())
 				{
@@ -76,7 +78,7 @@ namespace CnVDiscord
 					}
 				}
 		}
-		public async Task Initialize()
+		public async Task<bool> Initialize()
 		{
 			try
 			{
@@ -105,7 +107,7 @@ namespace CnVDiscord
 				
 				connection = await StreamingHubClient.ConnectAsync<ICnVChatClientConnection,ICnVChatClient>(channel,this, cancellationToken: shutdownCancellation.Token);
 				if(connection == null)
-					return;
+					return false;
 				while (!Alliance.alliancesFetched)
 				{
 					await Task.Delay(1000);
@@ -129,7 +131,9 @@ namespace CnVDiscord
 			catch (Exception e)
 			{
 				Log(e.ToString());
+				return false;
 			}
+			return true;
 		}
 
 		//public async void JoinResponse(string[] channels)

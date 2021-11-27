@@ -203,8 +203,8 @@ Grid.Column="0"
 			<winui:CommandBar Grid.ColumnSpan="2" TabFocusNavigation="Once" UseSystemFocusVisuals="True" x:Name="commandBar" x:FieldModifier="public"  >
 				<winui:CommandBar.Content   >
 					<StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-						<winui:ComboBox x:Name="windowLayout" SelectedIndex="2" SelectionChanged="windowLayout_SelectionChanged" AccessKey="1" VerticalAlignment="Center" Margin="4"
-                           ToolTipService.ToolTip="Select a view layout" ItemsSource="{x:Bind layoutOptions}" />
+						<winui:ComboBox x:Name="windowLayout" SelectedIndex="2" SelectionChanged="windowLayout_SelectionChanged"  VerticalAlignment="Center" Margin="4"
+                           ToolTipService.ToolTip="Select a view layout" ItemsSource="{x:Bind layoutOptions}" DisplayMemberPath="name" SelectedValuePath="id" />
 						<winui:ComboBox x:Name="cityBox" x:FieldModifier="public" 
                  Width="200"
 		  IsEditable="True"

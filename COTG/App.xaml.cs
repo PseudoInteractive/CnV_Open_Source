@@ -337,7 +337,7 @@ namespace COTG
 		//}
 		public static bool OnKeyDown(VirtualKey key)
 		{
-			Log($"KeyDown {key} mouse:{ShellPage.mouseOverCanvas}");
+			//Log($"KeyDown {key} mouse:{ShellPage.mouseOverCanvas}");
 		
 			App.UpdateKeyStates();
 			switch(key)
@@ -569,7 +569,7 @@ namespace COTG
 
 		private void Content_PreviewKeyDown(object sender,Microsoft.UI.Xaml.Input.KeyRoutedEventArgs e)
 		{
-			Log($"PreviewKeyDown {e.Key} {e.Handled}");
+		//	Log($"PreviewKeyDown {e.Key} {e.Handled}");
 			if(!e.Handled)
 				e.Handled =OnKeyDown(e.Key);
 		}

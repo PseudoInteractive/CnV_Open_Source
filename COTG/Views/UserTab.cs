@@ -21,9 +21,13 @@ namespace COTG.Views
 
 		private const string returnReinforcement = nameof(returnReinforcement);
 		public virtual TabPage defaultPage => TabPage.mainTabs;
-		public static ImmutableArray<RadDataGrid> spotGrids = ImmutableArray<RadDataGrid>.Empty;
+
+		public record struct DataGridProxy(RadDataGrid rad=null,SfDataGrid sf=null)
+		{
+		}
+		public static ImmutableArray<DataGridProxy> spotGrids = ImmutableArray<DataGridProxy>.Empty;
 		public static ImmutableArray<RadDataGrid> dataGrids = ImmutableArray<RadDataGrid>.Empty;
-		public static ImmutableArray<SfDataGrid> spotSfGrids = ImmutableArray<SfDataGrid>.Empty;
+		public static ImmutableArray<SfDataGrid> sfGrids = ImmutableArray<SfDataGrid>.Empty;
 
 		public event PropertyChangedEventHandler PropertyChanged;
 		public void CallPropertyChanged(string members = null)
@@ -148,9 +152,10 @@ namespace COTG.Views
 		{
 			if(!AUtil.AddIfAbsent(ref dataGrids,grid))
 				return;
+			grid.Padding = new (0,0,32,32);
 			grid.FontStretch = Windows.UI.Text.FontStretch.Condensed;
 			grid.FontWeight = Microsoft.UI.Text.FontWeights.Light;
-			
+			grid.UseSystemFocusVisuals=true;
 			grid.GridLinesVisibility= Telerik.UI.Xaml.Controls.Primitives.GridLinesVisibility.Both;
 		//	grid.ProcessTooltips();
 		//	grid.ListenForNestedPropertyChange=false;
@@ -163,7 +168,7 @@ namespace COTG.Views
 		public void SetupCityDataGrid(RadDataGrid grid)
 		{
 			// damn, there should be a better way to check for this
-			if(!AUtil.AddIfAbsent(ref spotGrids,grid) )
+			if(!AUtil.AddIfAbsent(ref spotGrids,new(rad:grid)) )
 				return;
 			grid.SelectionChanged += SpotSelectionChanged;
 			
@@ -173,6 +178,7 @@ namespace COTG.Views
 		{
 			// damn, there should be a better way to check for this
 			var rv = SetupGrid(grid);
+			spotGrids.AddIfAbsent( new(sf:grid));
 
 			return rv;
 			
@@ -355,9 +361,12 @@ namespace COTG.Views
 
 		protected void CellToolTipOpening(object sender,Syncfusion.UI.Xaml.DataGrid.GridCellToolTipOpeningEventArgs e)
 		{
-			var tt = e.ToolTip;
-			var rec = e.Record;
+///			var tt = e.ToolTip;
+//			var rec = e.Record;
 			int q = 0;
+			var tt = ToolTipService.GetToolTip(e.Column) as string;
+			if(tt != null)
+				e.ToolTip.Content = tt;
 		}
 
 		static Type GetContainerType(object container)
@@ -384,18 +393,24 @@ namespace COTG.Views
 		public ADataGrid.ChangeContextDisposable SetupGrid(SfDataGrid grid, Type sourceType=null)
 		{
 			var _lock0 = grid.ChangeContext();
-			if (spotSfGrids.AddIfAbsent( grid))
+			if (sfGrids.AddIfAbsent( grid))
 			{
+				grid.Margin = new (0,0,32,32);
+				
+				grid.FontStretch = Windows.UI.Text.FontStretch.Condensed;
 				grid.ExpanderColumnWidth = 32;
+				grid.FontSize = SettingsPage.smallFontSize;
 				grid.GridContextFlyoutOpening += ContextFlyoutOpening;
 				grid.RecordContextFlyout = new();
 				grid.CurrentCellRequestNavigate += CelNavigate;
 				grid.CellTapped += SfCellTapped;
-				grid.AllowFrozenGroupHeaders = false;
+//				grid.AllowFrozenGroupHeaders = false;
 				grid.ColumnWidthMode = Syncfusion.UI.Xaml.Grids.ColumnWidthMode.AutoLastColumnFill;
 				grid.CellToolTipOpening += CellToolTipOpening;
 				if(sourceType is not null || grid.ItemsSource is not null)
 					grid.SourceType = sourceType ?? GetContainerType(grid.ItemsSource);
+				grid.UseSystemFocusVisuals=true;
+
 			}
 
 //			grid.LiveDataUpdateMode = Syncfusion.UI.Xaml.Data.LiveDataUpdateMode.AllowChildViewUpdate;

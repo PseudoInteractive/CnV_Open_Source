@@ -393,7 +393,7 @@ namespace COTG;
 										break;
 
 									var bid = city.GetLayoutBid(c);
-									if(await city.SmartBuild(c,bid,searchForSpare: true,wantDemoUI: true) == -1)
+									if(await city.SmartBuild(IdToXY(c),bid,searchForSpare: true,wantDemoUI: true) == -1)
 									{
 										Note.Show("Something unusual happened");
 										break;
@@ -491,7 +491,7 @@ namespace COTG;
 								if(xx == 0)
 									break;
 
-								var c = todo[todoGet++];
+								var c = IdToXY(todo[todoGet++]);
 
 								var bid = city.GetLayoutBid(c);
 								if(bid == bidBarracks)

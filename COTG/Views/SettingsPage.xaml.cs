@@ -217,7 +217,7 @@ namespace COTG.Views
 		[NonSerialized]
 		public static int[] pinned = Array.Empty<int>();
 
-		public static bool isPinnedLoaded => pinned != null; 
+	//	public static bool isPinnedLoaded => pinned != null; 
 		public static int showAttacksLimit = 100;
 		public static int showAttacksLimit0 = 30;
 		[NonSerialized]

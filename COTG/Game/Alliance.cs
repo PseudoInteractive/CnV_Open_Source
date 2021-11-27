@@ -175,7 +175,7 @@ namespace COTG.Game
 					}
 					if ( element.TryGetProperty("m", out var ms))
 					{
-						foreach (var m in ms.EnumerateArray())
+						foreach (var m in ms.EnumerateArrayOrObject())
 						{
 							var pid = m.GetAsInt("pid");
 							var r = m.GetAsInt("r");

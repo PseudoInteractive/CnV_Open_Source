@@ -606,7 +606,7 @@ namespace COTG
 			clientSpan.Y = (float)(dy * dipToNative);
 			halfSpan = clientSpan * 0.5f;
 
-			resolutionDirtyCounter = 10;
+			resolutionDirtyCounter = 60;
 		}
 		public static int resolutionDirtyCounter;
 

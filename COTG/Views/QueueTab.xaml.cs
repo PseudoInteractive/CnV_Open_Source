@@ -24,8 +24,9 @@ using Microsoft.UI.Xaml;
 
 namespace COTG.Views
 {
+	using System.Collections;
 
-	
+
 	public sealed partial class QueueTab : UserTab
 	{
 		public const int movesPerConfirm = 8;
@@ -271,9 +272,10 @@ namespace COTG.Views
 				return 0;
 
 		}
-		internal static(int x, int y)[] FindPendingOverlayBuildings(City city)
+		internal static int[] FindPendingOverlayBuildings(City city)
 		{
-			List<( (int x, int y) c, int bid)> rv = new();
+			Dictionary<int,ALinq.BuildingStretchData<int> > data = new();
+			
 			for (int r = 1; r <= City.citySpan; ++r)
 			{
 				for (var y = -r; y <= r; ++y)
@@ -288,20 +290,33 @@ namespace COTG.Views
 								continue;
 
 							var bid = city.GetLayoutBid(id);
-							if (bid switch { bidCottage or bidWall or bidTownHall or (>= bidResStart and <= bidResEnd) => true, _ => false })
+							// filter out.  Note that most of these are filtered by IsBuildingSpot
+							if (bid switch { 0 or bidCottage or bidWall or bidTownHall or (>= bidResStart and <= bidResEnd) => true, _ => false })
 							{
 								continue;
 							}
-							if ((bid != 0) && (city.postQueueBuildings[id].bid != bid))
-							{
-								rv.Add((c, bid));
 
+							if (!data.TryGetValue(bid, out var d))
+							{
+								d = new( -32768f / MathF.Sqrt(BuildingDef.FromBid(bid).GetBuildTimeMeasure()));
+								data.Add(bid, d);
+							}
+						    d.totalCount++;
+							var currentBid = city.postQueueBuildings[id].bid;
+							if (currentBid == bid)
+							{
+								d.currentCount++; 
+							}
+							else
+							{
+								d.pending.Add(id);
 							}
 						}
 					}
 				}
 			}
-			return  rv.OrderByDescending( a => BuildingDef.FromBid(a.bid).GetBuildTimeMeasure()*AMath.random.NextSingle() ).ThenBy(a=>GetSpotCost(city,a.c)).Select( a=> a.c ).ToArray();
+
+			return data.StretchAndInterleave();
 		}
 		internal static (int matches,int missingOverlayBuildings,int extraBuildings, bool isBad) CountBadBuildings(City city)
 		{

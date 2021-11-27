@@ -49,6 +49,8 @@ using System.Net.Http.Json;
 
 namespace COTG.Game
 {
+	using Syncfusion.UI.Xaml.DataGrid;
+	using Syncfusion.UI.Xaml.Grids.ScrollAxis;
 	using DateTimePicker = Views.DateTimePicker;
 
 	//public interface IKeyedItem
@@ -1492,6 +1494,8 @@ namespace COTG.Game
 			//    SpotTab.SelectedToGrid();
 		}
 
+
+
 		public static void SyncUISelection(bool scrollIntoView, Spot spot = null)
 		{
 			++SpotTab.silenceSelectionChanges;
@@ -1501,7 +1505,7 @@ namespace COTG.Game
 				foreach (var grid in UserTab.spotGrids)
 				{
 					var uiInSync = false;
-					var sel1 = grid.SelectedItems;
+					var sel1 = grid.sf?.SelectedItems ?? grid.rad.SelectedItems;
 					if (selected.Count == sel1.Count)
 					{
 						uiInSync = true;
@@ -1522,7 +1526,23 @@ namespace COTG.Game
 					}
 					if ((scrollIntoView || !uiInSync) && (sel1.Any() || spot != null))
 					{
-						grid.ScrollItemIntoView(spot ?? (City.GetBuild().isSelected ? City.GetBuild() : sel1.First()));
+						var current = spot ?? (City.GetBuild().isSelected ? City.GetBuild() : null);
+						if (current != null && grid.sf is not null)
+						{
+							grid.sf.CurrentItem = current;
+
+						}
+
+						var any = current ?? sel1.First();
+						if (grid.rad is not null)
+							grid.rad.ScrollItemIntoView(any);
+						if (grid.sf is not null)
+						{
+							var rowIndex = grid.sf.ResolveToRowIndex(any);
+							var columnIndex = grid.sf.ResolveToStartColumnIndex();
+							if(rowIndex >= 0)
+								grid.sf.ScrollInView(new RowColumnIndex(rowIndex, columnIndex));
+						}
 					}
 				}
 				if (AttackTab.IsVisible() && spot != null )

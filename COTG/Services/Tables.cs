@@ -137,45 +137,45 @@ namespace COTG.Services
 			return tableDiscord;
 		}
 
-		static public async Task<ulong> GetDiscordChatId()
-		{
-			try
-			{
-				var tableClient = await TouchCnV().ConfigureAwait(false);
-				if (tableClient == null)
-					return 0;
+		//static public async Task<ulong> GetDiscordChatId()
+		//{
+		//	try
+		//	{
+		//		var tableClient = await TouchCnV().ConfigureAwait(false);
+		//		if (tableClient == null)
+		//			return 0;
 
-				var entity = await tableClient.GetAsync($"{Alliance.my.name} ChatInfo", "IDs").ConfigureAwait(false);
-				if (entity is null)
-					return 0;
+		//		var entity = await tableClient.GetAsync($"{Alliance.my.name} ChatInfo", "IDs").ConfigureAwait(false);
+		//		if (entity is null)
+		//			return 0;
 
-				return (ulong)entity.ChatID;
-			}
-			catch (Exception ex)
-			{
-				Log("Alliance has no chat id");
-				return 0;
-			}
-		}
-		public static ulong Hash64(this string a)
-		{
-			return a.XxHash();
-		}
-		static public async Task<bool> TryAddChatMessage(string message)
-		{
-			try
-			{
-				var tableClient = await TouchCnV().ConfigureAwait(false);
-				if (tableClient == null)
-					return false;
-				var hash = message.Hash64().ToString();
-				return await tableClient.AddAsync(new () { PartitionKey = $"{Alliance.my.name} ChatInfo", RowKey = hash }).ConfigureAwait(false);
-			}
-			catch (Exception ex)
-			{
-				return false;
-			}
-		}
+		//		return (ulong)entity.ChatID;
+		//	}
+		//	catch (Exception ex)
+		//	{
+		//		Log("Alliance has no chat id");
+		//		return 0;
+		//	}
+		//}
+		//public static ulong Hash64(this string a)
+		//{
+		//	return a.XxHash();
+		//}
+		//static public async Task<bool> TryAddChatMessage(string message)
+		//{
+		//	try
+		//	{
+		//		var tableClient = await TouchCnV().ConfigureAwait(false);
+		//		if (tableClient == null)
+		//			return false;
+		//		var hash = message.Hash64().ToString();
+		//		return await tableClient.AddAsync(new () { PartitionKey = $"{Alliance.my.name} ChatInfo", RowKey = hash }).ConfigureAwait(false);
+		//	}
+		//	catch (Exception ex)
+		//	{
+		//		return false;
+		//	}
+		//}
 
 
 		public static async void ShareShareString(string part, string key, string s)
