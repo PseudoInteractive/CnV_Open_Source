@@ -1182,7 +1182,7 @@ namespace COTG.Views
 				return;
 			}
 
-			if(Spot.focus.BringCidIntoWorldView(false,false) && City.IsBuild(Spot.focus)) // first just focus
+			if(Spot.focus.BringCidIntoWorldView(false) && City.IsBuild(Spot.focus)) // first just focus
 			{
 				return;
 			}
@@ -1315,7 +1315,8 @@ namespace COTG.Views
 		//		static Debounce layoutChanged = new(TabPage.LayoutChanged){ runOnUiThead = true};
 
 		static int popupLeftOffset, popupTopOffset;
-
+		public static int popupLeftMargin;
+		public static int popupTopMargin;
 		public static void UpdateWebViewOffsets(int leftOffset,int topOffset)
 		{
 			if(popupLeftOffset  != leftOffset ||
@@ -1332,8 +1333,8 @@ namespace COTG.Views
 			public UpdateHtmlOffsets() : base(null)
 			{
 				runOnUiThread= true;
-				debounceDelay=200;
-				throttleDelay=400;
+				debounceDelay=100;
+				throttleDelay=300;
 				base.func=F;
 			}
 			public void Go(bool updateLayout)
@@ -1391,8 +1392,8 @@ namespace COTG.Views
 
 				var htmlShift = htmlVisible||SettingsPage.webZoomSmall>0 ? 0 : -canvasScaledX;
 
-				var popupLeftMargin = ((popupLeftOffset*zoom).RoundToInt()-canvasScaledX).Max0();
-				var popupTopMargin = ((popupTopOffset*zoom).RoundToInt()-canvasScaledY).Max0();
+				popupLeftMargin = ((popupLeftOffset*zoom).RoundToInt()-canvasScaledX).Max0();
+				popupTopMargin = ((popupTopOffset*zoom).RoundToInt()-canvasScaledY).Max0();
 
 				// only need 1 to avoid collisions
 				if(popupLeftMargin > popupTopMargin)
@@ -1462,6 +1463,7 @@ namespace COTG.Views
 						}
 
 						TabPage.LayoutChanged();
+						AGame.wantFastRefresh = true;
 					}
 					catch(Exception ex)
 					{

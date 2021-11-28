@@ -73,7 +73,7 @@ namespace COTG.Draw
 	//	static Color textColor = new Color(0xf1, 0xd1, 0x1b, 0xff);
 		public static Vector2 CityPointToCC( float x, float y)
 		{
-			return new Vector2(x*cityTileGainX+ buildCityOrigin.X, y * cityTileGainY + buildCityOrigin.Y).WToCamera();
+			return new Vector2(x*cityTileGainX+ buildCityOrigin.X, y * cityTileGainY + buildCityOrigin.Y).WorldToCamera();
 		}
 		public static (Vector2 c0, Vector2 c1) CityPointToQuad(float x, float y, float additionalXScale = 1.0f,float yScale=1)
 		{
@@ -344,7 +344,7 @@ namespace COTG.Draw
 					var citySpan = new Vector2(0.5f,0.5f * yScale);
 					var city0 = buildCityOrigin - citySpan;
 					var city1 = buildCityOrigin + citySpan;
-					draw.AddQuad(Layer.tileCity - 2,city.isOnWater ? cityWallsWater : cityWallsLand,city0.WToCamera(),city1.WToCamera(),iAlpha.AlphaToAll(),(0f, 0f, 0f, 0f));
+					draw.AddQuad(Layer.tileCity - 2,city.isOnWater ? cityWallsWater : cityWallsLand,city0.WorldToCamera(),city1.WorldToCamera(),iAlpha.AlphaToAll(),(0f, 0f, 0f, 0f));
 
 					// draw overlays
 

@@ -177,7 +177,9 @@ namespace COTG
 													//		public static Vector2 clientC;
 													//		public static Vector2 clientCScreen;
 		public static Vector2 clientSpan;
-		public static Vector2 halfSpan;
+		public static Vector2 virtualSpan; // clientSpan without clipping
+		public static Vector2 projectionC;
+		public static Span2 clip;
 		static Army underMouse;
 		static float bestUnderMouseScore;
 		//   public static Vector2 cameraMid;
@@ -596,6 +598,8 @@ namespace COTG
 
 		public static double dipToNative = 1;
 		public static double nativeToDip = 1;
+		public static bool wantFastRefresh;
+
 		public static void SetClientSpan(double dx,double dy)
 		{
 			dipToNative = instance.GraphicsDevice.PresentationParameters.SwapChainPanel.XamlRoot.RasterizationScale;
@@ -604,10 +608,22 @@ namespace COTG
 			//clientSpan.Y = MathF.Round((float)((dy* dipToNative+3) /4))*4.0f;
 			clientSpan.X = (float)(dx * dipToNative);
 			clientSpan.Y = (float)(dy * dipToNative);
-			halfSpan = clientSpan * 0.5f;
-
-			resolutionDirtyCounter = 60;
+			virtualSpan.X = clientSpan.X + ShellPage.popupLeftMargin;
+			virtualSpan.Y = clientSpan.Y + ShellPage.popupTopMargin;
+			projectionC.X = clientSpan.X * 0.5f - ShellPage.popupLeftMargin * 0.5f;
+			projectionC.Y = clientSpan.Y * 0.5f - ShellPage.popupTopMargin  * 0.5f;
+            
+            clip.c0 = -(clientSpan-projectionC);
+            clip.c1 = projectionC;
+	
+           resolutionDirtyCounter = wantFastRefresh ? 2 : 30;
+           wantFastRefresh = false;
 		}
+
+		public static void PopupsChanged()
+		{
+		}
+
 		public static int resolutionDirtyCounter;
 
 		//public static void Canvas_LayoutUpdated(object sender, object e)
@@ -970,50 +986,29 @@ namespace COTG
 		//	const float dashLength = (dashD0 + dashD1) * lineThickness;
 		public static Draw.SpriteBatch draw;
 
-		public static bool IsCulled(Vector2 c0,Vector2 c1)
-		{
-			var x1 = c0.X.Max(c1.X);
-			var x0 = c0.X.Min(c1.X);
-
-			var y1 = c0.Y.Max(c1.Y);
-			var y0 = c0.Y.Min(c1.Y);
-			// todo: cull on diagonals
-			return (x1 <= -halfSpan.X) | (x0 >= halfSpan.X) |
-					(y1 <= -halfSpan.Y) | (y0 >= halfSpan.Y);
+		public static bool IsSegmentCulled(Vector2 c0,Vector2 c1)
+		{	
+			return !clip.OverlapsSegment(c0, c1 ); // Todo:  line segment overlaps?
 		}
 		public static bool IsCulledWC((int x, int y) c)
 		{
 			return !cullWC.Contains(c);
 		}
-		public static bool IsCulledWC((int x, int y) c0,(int x, int y) c1)
+		public static bool IsSegmentCulledWC((int x, int y) c0,(int x, int y) c1)
 		{
-			return !cullWC.Overlaps(new Span2i(c0,c1));
+			return !cullWC.OverlapsSegment(c0,c1);
 		}
-		public static bool IsCulledWC((int x, int y) c,int slopSpace)
+		public static bool IsSquareCulledWC((int x, int y) c,int slopSpace)
 		{
-			return !cullWC.Overlaps(c,slopSpace);
+			return !cullWC.OverlapsSquare(c,slopSpace);
 		}
-		public static bool IsCulled(Vector2 c0,float pad)
+		public static bool IsSquareCulled(Vector2 c0,float pad)
 		{
-			var x1 = c0.X;
-			var x0 = c0.X;
-
-			var y1 = c0.Y;
-			var y0 = c0.Y;
-			// todo: cull on diagonals
-			return (x1 + pad <= -halfSpan.X) | (x0 - pad >= halfSpan.X) |
-					(y1 + pad <= -halfSpan.Y) | (y0 - pad >= halfSpan.Y);
+			return !clip.OverlapsSquare(c0, pad);
 		}
 		public static bool IsCulled(Vector2 c0)
 		{
-			var x1 = c0.X;
-			var x0 = c0.X;
-
-			var y1 = c0.Y;
-			var y0 = c0.Y;
-			// todo: cull on diagonals
-			return (x1 <= -halfSpan.X) | (x0 >= halfSpan.X) |
-					(y1 <= -halfSpan.Y) | (y0 >= halfSpan.Y);
+			return !clip.Overlaps(c0);
 		}
 
 
@@ -1197,14 +1192,14 @@ namespace COTG
 
 
 				bulgeGain *= SettingsPage.planet * (1.0f - cityAlpha);
-				bulgeInputGain = 0.75f.Squared() / (AGame.halfSpan.X.Squared() + AGame.halfSpan.Y.Squared());
-				// workd space coords
-				var srcP0 = new Vector2((cameraCLag.X + 0.5f) * bSizeGain2 - halfSpan.X * bSizeGain2 * pixelScaleInverse,
-									  (cameraCLag.Y + 0.5f) * bSizeGain2 - halfSpan.Y * bSizeGain2 * pixelScaleInverse);
+				bulgeInputGain = 4*(0.75f.Squared()) / (virtualSpan.X.Squared() + virtualSpan.Y.Squared());
+				// world space coords
+				var srcP0 = new Vector2((cameraCLag.X + 0.5f) * bSizeGain2 - projectionC.X * bSizeGain2 * pixelScaleInverse,
+									  (cameraCLag.Y + 0.5f) * bSizeGain2 - projectionC.Y * bSizeGain2 * pixelScaleInverse);
 				var srcP1 = new Vector2(srcP0.X + clientSpan.X * bSizeGain2 * pixelScaleInverse,
 									   srcP0.Y + clientSpan.Y * bSizeGain2 * pixelScaleInverse);
-				var destP0 = -halfSpan;
-				var destP1 = halfSpan;
+				var destP0 = clip.c0;
+				var destP1 = clip.c1;
 
 				if(srcP0.X < 0)
 				{
@@ -1282,8 +1277,14 @@ namespace COTG
 				{
 					var viewport = GraphicsDevice.Viewport;
 
-
-					var proj = Matrix.CreateLookAt(new Microsoft.Xna.Framework.Vector3(0,0,cameraZ),Microsoft.Xna.Framework.Vector3.Zero,Microsoft.Xna.Framework.Vector3.Up) * Matrix.CreatePerspective(viewport.Width * 0.5f,-viewport.Height * 0.5f,0.5f,1.5f);
+					//var projCX = projectionC.X / clientSpan.X.Max(1);
+					//var projCY = projectionC.Y / clientSpan.Y.Max(1);
+					var proj = Matrix.CreateLookAt(new Microsoft.Xna.Framework.Vector3(0,0,cameraZ),
+						Microsoft.Xna.Framework.Vector3.Zero,Microsoft.Xna.Framework.Vector3.Up) *
+					           Matrix.CreatePerspectiveOffCenter(
+						           -projectionC.X*0.5f,(viewport.Width-projectionC.X)*0.5f,
+						           (viewport.Height-projectionC.Y)*0.5f,-  projectionC.Y*0.5f,
+						              0.5f,1.5f);
 					//					var proj = Matrix.CreateOrthographicOffCenter(480, 1680, 1680, 480, 0, -1);
 					worldMatrixParameter.SetValue(proj);
 
@@ -1298,7 +1299,7 @@ namespace COTG
 					}
 					else
 					{
-						var cc = lightWC.WToCamera().CameraToScreen();
+						var cc = lightWC.WorldToCamera().CameraToScreen();
 
 						lightPositionParameter.SetValue(new Microsoft.Xna.Framework.Vector3(cc.X,cc.Y,lightZDay));
 						lightGainsParameter.SetValue(new Microsoft.Xna.Framework.Vector4(0.25f,1.25f,0.375f,1.0625f));
@@ -1306,7 +1307,7 @@ namespace COTG
 						lightColorParameter.SetValue(new XVector4(1.1f,1.1f,0.9f,1f) * 1.25f);
 						lightSpecularParameter.SetValue(new XVector4(1.0f,1.0f,1.0f,1.0f) * 1.25f);
 					}
-					cameraReferencePositionParameter.SetValue(new Microsoft.Xna.Framework.Vector3(halfSpan.X,halfSpan.Y,lightZ0));
+					cameraReferencePositionParameter.SetValue(new Microsoft.Xna.Framework.Vector3(projectionC.X,projectionC.Y,lightZ0));
 					//					defaultEffect.Parameters["DiffuseColor"].SetValue(new Microsoft.Xna.Framework.Vector4(1, 1, 1, 1));
 					var gain1 = bulgeInputGain * bulgeGain * bulgeSpan;
 					var planetGains = new XVector4(bulgeGain,-gain1,MathF.Sqrt(gain1) * 2.0f,0);
@@ -1326,9 +1327,10 @@ namespace COTG
 				parallaxGain = SettingsPage.parallax * MathF.Sqrt(Math.Min(11.0f,cameraZoomLag / 64.0f)) * regionAlpha * (1 - cityAlpha);
 
 				{
-					var halfTiles = (clientSpan * (0.5f / cameraZoomLag));
-					var _c0 = (cameraCLag - halfTiles);
-					var _c1 = cameraCLag + halfTiles;
+					var wToCGain = (1.0f / cameraZoomLag);
+	//				var halfTiles = (clientSpan * (0.5f / cameraZoomLag));
+					var _c0 = cameraCLag + clip.c0*wToCGain;
+					var _c1 = cameraCLag + clip.c1*wToCGain;
 					cx0 = _c0.X.FloorToInt().Max(0);
 					cy0 = (_c0.Y.FloorToInt()).Max(0);
 					cx1 = (_c1.X.CeilToInt() + 1).Min(World.span);
@@ -1468,7 +1470,7 @@ namespace COTG
 
 
 											var wc = new Vector2(cx,cy);
-											var cc = wc.WToCamera();
+											var cc = wc.WorldToCamera();
 											if(isShadow == 1)
 											{
 
@@ -1689,8 +1691,8 @@ namespace COTG
 										if(!(showAll || isHover))
 											continue;
 										{
-											var c0 = cluster.topLeft.WToCamera();
-											var c1 = cluster.bottomRight.WToCamera();
+											var c0 = cluster.topLeft.WorldToCamera();
+											var c1 = cluster.bottomRight.WorldToCamera();
 											DrawRectOutlineShadow(Layer.effects+2,c0,c1,isHover ? new Color(128,64,64,220) : new Color(64,0,0,162),5,2);
 										}
 
@@ -1797,7 +1799,7 @@ namespace COTG
 
 											var targetCid = city.cid;
 											var c1 = targetCid.CidToCamera();
-											if(IsCulled(c1,cullSlopSpace))  // this is in pixel space - Should be normalized for screen resolution or world space (1 continent?)
+											if(IsSquareCulled(c1,cullSlopSpace))  // this is in pixel space - Should be normalized for screen resolution or world space (1 continent?)
 												continue;
 											var incAttacks = 0;
 											var incTs = 0;
@@ -1808,7 +1810,7 @@ namespace COTG
 											foreach(var i in city.incoming)
 											{
 												var c0 = i.sourceCid.CidToCamera();
-												if(IsCulled(c0,c1))
+												if(IsSegmentCulled(c0,c1))
 													continue;
 
 												Color c;
@@ -1915,7 +1917,7 @@ namespace COTG
 								//	if(!city.testContinentFilter)
 								//		continue;
 									var wc = city.cid.CidToWorld();
-									var cc = wc.WToCamera();
+									var cc = wc.WorldToCamera();
 									if (!needsHover)
 									{
 										if (!IsCulledWC(wc))
@@ -1965,7 +1967,7 @@ namespace COTG
 											//	var t = (tick * city.cid.CidToRandom().Lerp(1.375f / 512.0f, 1.75f / 512f));
 											//	var r = t.Ramp();
 											var hover = cityHover;// | Spot.IsHover(toCid);
-											DrawAction(cc - sendOffset, c1.WToCamera()- sendOffset, hover ? tradeColorHover : tradeColor,lineThickness,hover);
+											DrawAction(cc - sendOffset, c1.WorldToCamera()- sendOffset, hover ? tradeColorHover : tradeColor,lineThickness,hover);
 										}
 										foreach (var toCid in ti.resSource)
 										{
@@ -1976,7 +1978,7 @@ namespace COTG
 											//	var t = (tick * city.cid.CidToRandom().Lerp(1.375f / 512.0f, 1.75f / 512f));
 											//	var r = t.Ramp();
 											var hover = cityHover;// | Spot.IsHover(toCid);
-											DrawAction( c1.WToCamera()+ sendOffset, cc + sendOffset, hover ? tradeColorHover1 : tradeColor1, lineThickness, hover);
+											DrawAction( c1.WorldToCamera()+ sendOffset, cc + sendOffset, hover ? tradeColorHover1 : tradeColor1, lineThickness, hover);
 										}
 
 									}
@@ -1997,10 +1999,10 @@ namespace COTG
 										{
 											var wc0 = s.cid.CidToWorld();
 											var wc1 = s.rcid.CidToWorld();
-											if(!IsCulledWC(wc0,wc1))
+											if(!IsSegmentCulledWC(wc0,wc1))
 											{
-												var cc1 = wc1.WToCamera();
-												DrawAction(0.5f,1.0f,1.0f,wc0.WToCamera(),cc1,senatorColor,
+												var cc1 = wc1.WorldToCamera();
+												DrawAction(0.5f,1.0f,1.0f,wc0.WorldToCamera(),cc1,senatorColor,
 												troopImages[ttSenator],false,null,highlight: Spot.IsSelectedOrHovered(s.cid));
 												DrawFlag(s.rcid,SpriteAnim.flagGrey,Vector2.Zero);
 
@@ -2027,7 +2029,7 @@ namespace COTG
 								// Todo: clip thi
 								if(city.senatorInfo.Length != 0 && !(IncomingTab.IsVisible() || NearDefenseTab.IsVisible()))
 								{
-									var c = wc.WToCamera();
+									var c = wc.WorldToCamera();
 									var idle = 0;
 									var active = 0;
 									var recruiting = 0;
@@ -2065,9 +2067,9 @@ namespace COTG
 									}
 									if((MainPage.IsVisible() && SettingsPage.raidsVisible != 0) || SettingsPage.raidsVisible == 1)
 									{
-										if(IsCulledWC(wc,raidCullSlopSpace))
+										if(IsSquareCulledWC(wc,raidCullSlopSpace))
 											continue;
-										var c = wc.WToCamera();
+										var c = wc.WorldToCamera();
 										var t = (tick * city.cid.CidToRandom().Lerp(1.375f / 512.0f,1.75f / 512f));
 										var r = t.Ramp();
 										//ds.DrawRoundedSquareWithShadow(c,r, raidBrush);
@@ -2149,7 +2151,7 @@ namespace COTG
 											var span = pixelScale;
 											var cid = (cx, cy).WorldToCid();
 
-											var drawC = (new Vector2(cx,cy).WToCamera());
+											var drawC = (new Vector2(cx,cy).WorldToCamera());
 											drawC.Y += span * (isWinter ? 8.675f / 16.0f : 7.125f / 16.0f);
 											var z = zCities;
 											var scale = bmFontScale;
@@ -2190,7 +2192,7 @@ namespace COTG
 												spot.TouchClassification();
 											if(spot.troopsTotal.Any() || spot.isClassified)
 											{
-												var c1 = (cx, cy).WToCamera();
+												var c1 = (cx, cy).WorldToCamera();
 												var rand = spot.cid.CidToRandom();
 												var t = (tick * rand.Lerp(1.5f / 512.0f,1.75f / 512f)) + 0.25f;
 
@@ -2347,7 +2349,7 @@ namespace COTG
 			if(IsCulledWC(wc))
 				return;
 
-			var c = wc.WToCamera() + offset;
+			var c = wc.WorldToCamera() + offset;
 			var dv = AGame.shapeSizeGain * 48 * 4 * SettingsPage.flagScale;
 			float z = zLabels;
 
@@ -2404,7 +2406,7 @@ namespace COTG
 
 		private static void DrawTextBox(string text,Vector2 at,TextFormat format,Color color,Color backgroundColor,int layer = Layer.tileText,float _expandX = 0.0f,float _expandY = 0,DepthFunction depth = null,float zBias = -1,float scale = 0)
 		{
-			if(IsCulled(at,textBoxCullSlop))
+			if(IsSquareCulled(at,textBoxCullSlop))
 			{
 				return;
 			}
@@ -2479,7 +2481,7 @@ namespace COTG
 		private void DrawAction(float timeToArrival,float journeyTime,float rectSpan,Vector2 c0,Vector2 c1,Color color,
 		Material bitmap,bool applyStopDistance,Army army,float alpha = 1,float lineThickness = lineThickness,bool highlight = false)
 		{
-			if(IsCulled(c0,c1))
+			if(IsSegmentCulled(c0,c1))
 				return;
 			float progress;
 			if(timeToArrival <= 0.0f)
@@ -2596,7 +2598,7 @@ namespace COTG
 			var wc = cid.CidToWorld();
 			if(IsCulledWC(wc))
 				return;
-			var cc = wc.WToCamera();
+			var cc = wc.WorldToCamera();
 			var c0 = cc - halfSquareOffset;
 			var c1 = cc + halfSquareOffset;
 			DrawRectOutlineShadow(Layer.effects,c0,c1,col,thickness,expand);
@@ -2632,7 +2634,7 @@ namespace COTG
 			var wc = cid.CidToWorld();
 			if(IsCulledWC(wc))
 				return;
-			var cc = wc.WToCamera();
+			var cc = wc.WorldToCamera();
 			var c0 = cc - halfSquareOffset;
 			var c1 = cc + halfSquareOffset;
 			DrawDiamondShadow(Layer.effects,c0,c1,col,thickness,expand);
@@ -2687,7 +2689,7 @@ namespace COTG
 			if(IsCulledWC(wc))
 				return;
 
-			var c = wc.WToCamera();
+			var c = wc.WorldToCamera();
 
 			var rnd = cid.CidToRandom();
 
@@ -2884,11 +2886,11 @@ namespace COTG
 		//	public static Vector2 WToCp(this (float x, float y) c, float dz) => WToCp(new Vector2(c.x, c.y), dz);
 		public static Vector2 ScreenToCamera(this Vector2 s)
 		{
-			return s - AGame.halfSpan;
+			return s - AGame.projectionC;
 		}
 		public static Vector2 CameraToScreen(this Vector2 s)
 		{
-			return s + AGame.halfSpan;
+			return s + AGame.projectionC;
 		}
 		//	public static Vector2 WToCpSpan(this Vector2 c, float dz)
 		//{
@@ -2925,17 +2927,17 @@ namespace COTG
 
 		//}
 
-		public static Vector2 WToCamera(this Vector2 c)
+		public static Vector2 WorldToCamera(this Vector2 c)
 		{
 			return (c - AGame.cameraCLag) * AGame.pixelScale;
 		}
-		public static Vector2 WToCamera(this (int x, int y) c)
+		public static Vector2 WorldToCamera(this (int x, int y) c)
 		{
-			return new Vector2(c.x,c.y).WToCamera();
+			return new Vector2(c.x,c.y).WorldToCamera();
 		}
-		public static Vector2 WToCamera(this (float x, float y) c)
+		public static Vector2 WorldToCamera(this (float x, float y) c)
 		{
-			return new Vector2(c.x,c.y).WToCamera();
+			return new Vector2(c.x,c.y).WorldToCamera();
 		}
 		//	public static Vector2 WToCp(this (int x, int y) c, float z)
 		//{
@@ -2943,7 +2945,7 @@ namespace COTG
 		//}
 		public static Vector2 CidToCamera(this int c)
 		{
-			return c.ToWorldC().WToCamera();
+			return c.ToWorldC().WorldToCamera();
 		}
 		//public static Vector2 CidToCp(this int c, float z)
 		//{
@@ -2955,44 +2957,24 @@ namespace COTG
 			return (c.c0.CToDepth(dz), new Vector2(c.c1.X,c.c0.Y).CToDepth(dz),
 													new Vector2(c.c0.X,c.c1.Y).CToDepth(dz), c.c1.CToDepth(dz));
 		}
-		public static bool BringCidIntoWorldView(this int cid,bool lazy,bool allowZoomChange)
+		public static bool BringCidIntoWorldView(this int cid,bool lazy)
 		{
-			var v = cid.CidToWorldV();
-			var newC = v;
-			var dc = newC - AGame.cameraC;
+			var worldC = cid.ToWorldC();
+			var cc = WorldToCamera(worldC);
 			//	if (ShellPage.IsCityView())
 			//		lazy = false;
 			// only move if needed, heuristic is if any part is off screen
 			if(!lazy ||
-				(dc.X.Abs() + 0.5f) * AGame.pixelScale >= AGame.halfSpan.X ||
-				(dc.Y.Abs() + 0.5f) * AGame.pixelScale >= AGame.halfSpan.Y)
+			   !AGame.clip.ContainsSquare( cc,AGame.pixelScale*1.5f))
 			{
-				var thresh = lazy ? 0.75f : 0.25f;
-				// only move if moving more than about 1 city span
-				if(Vector2.Distance(AGame.cameraC,newC) >= thresh)
+				var thresh = 32;//lazy ? 0.5f : 0.5f;
+				// only move if moving more than about 64 pixels (should be fraction of screen?)
+				if(cc.LengthSquared() >= thresh.Squared() )
 				{
 					// try region view
-					if(allowZoomChange)
-					{
-						if((dc.X.Abs() + 0.5f) * AGame.cameraZoomRegionDefault <= AGame.halfSpan.X &&
-							(dc.Y.Abs() + 0.5f) * AGame.cameraZoomRegionDefault <= AGame.halfSpan.Y)
-						{
-
-							ShellPage.SetViewModeRegion();
-							goto done;
-						}
-
-						ShellPage.SetViewModeWorld();
-
-						if((dc.X.Abs() + 0.5f) * AGame.cameraZoomWorldDefault <= AGame.halfSpan.X &&
-						(dc.Y.Abs() + 0.5f) * AGame.cameraZoomWorldDefault <= AGame.halfSpan.Y)
-						{
-							goto done;
-						}
-
-					}
-				done:
-					AGame.CameraC = newC;
+					
+				
+					AGame.CameraC = worldC;
 					ShellPage.SetJSCamera();
 					if(cid != City.build && (!City.CanVisit(cid) || !Spot.CanChangeCity(cid)))
 						ShellPage.EnsureNotCityView();

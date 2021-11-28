@@ -851,7 +851,7 @@ namespace COTG.Game
 					}
 					else
 					{
-						cid.BringCidIntoWorldView(lazyMove, false);
+						cid.BringCidIntoWorldView(lazyMove);
 					}
 				}
 				else
@@ -1671,7 +1671,7 @@ namespace COTG.Game
 				App.QueueOnUIThread(UpdateFocusText);
 			}
 			if (bringIntoView)
-				cid.BringCidIntoWorldView(lazyMove, false);
+				cid.BringCidIntoWorldView(lazyMove);
 		}
 		public static int build; // city that has Build selection.  I.e. in city view, the city you are in
 		public static int lockedBuild; // 

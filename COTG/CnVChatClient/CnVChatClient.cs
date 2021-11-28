@@ -33,14 +33,15 @@ namespace CnVDiscord
 		{
 			if(instance!=null)
 				return;
+		
 			instance = new();
 			
 			// Any Magic Onion?
 			if(!await  instance.Initialize() ) 
 				return; 
-
+			// this contains 
 			await foreach (var a in PlayerGameEntity.table.QueryAsync())
-				{
+			{
 					if ( a.playerName is not null)
 					{
 						try
@@ -76,8 +77,9 @@ namespace CnVDiscord
 					{
 						Log(a.ToString());
 					}
-				}
+			}
 		}
+
 		public async Task<bool> Initialize()
 		{
 			try

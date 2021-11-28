@@ -1308,7 +1308,7 @@ namespace COTG
 						}
 					}
 					if (!lazyMove)
-						cid.BringCidIntoWorldView(lazyMove, false);
+						cid.BringCidIntoWorldView(lazyMove);
 				}
 				else
 				{
@@ -3064,7 +3064,7 @@ private static async void ShowCouncillorsMissingDialog()
 
 											   break;
 									   }
-									   City.build.BringCidIntoWorldView(false,false);
+									   City.build.BringCidIntoWorldView(false);
 									   ShellPage.AutoSwitchViewMode();
 								   }
 

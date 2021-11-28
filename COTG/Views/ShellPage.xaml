@@ -204,7 +204,14 @@ Grid.Column="0"
 				<winui:CommandBar.Content   >
 					<StackPanel Orientation="Horizontal" VerticalAlignment="Center">
 						<winui:ComboBox x:Name="windowLayout" SelectedIndex="2" SelectionChanged="windowLayout_SelectionChanged"  VerticalAlignment="Center" Margin="4"
-                           ToolTipService.ToolTip="Select a view layout" ItemsSource="{x:Bind layoutOptions}" DisplayMemberPath="name" SelectedValuePath="id" />
+                           ToolTipService.ToolTip="Select a view layout"  >
+							<ComboBoxItem Content="Legacy"/>
+							<ComboBoxItem Content="Max View"/>
+							<ComboBoxItem Content="Busy"/>
+							<ComboBoxItem Content="Task"/>
+							<ComboBoxItem Content="Sheets"/>
+							<ComboBoxItem Content="Chat"/>
+						</winui:ComboBox>
 						<winui:ComboBox x:Name="cityBox" x:FieldModifier="public" 
                  Width="200"
 		  IsEditable="True"
