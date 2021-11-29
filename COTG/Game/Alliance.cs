@@ -179,7 +179,7 @@ namespace COTG.Game
 						{
 							var pid = m.GetAsInt("pid");
 							var r = m.GetAsInt("r");
-							Player.Get(pid).allianceRank = r.AsByte();
+							Player.Get(pid).allianceRole = r.AsByte();
 						}
 					}
 

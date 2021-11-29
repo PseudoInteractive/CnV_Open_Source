@@ -6,16 +6,23 @@ using System.Threading.Tasks;
 using PlayFab.ClientModels;
 using PlayFab;
 using static COTG.Debug;
+using PlayFab.DataModels;
+
 /*
 
-  New World:  
-     - Add TitleId
-	 - 
- */
+New World:  
+- Add TitleId
+- 
+*/
 namespace COTG.Game
 {
+	using System.Globalization;
+	using EntityKey = PlayFab.DataModels.EntityKey;
+
 	public class APlayfab
 	{
+		private const int W0Id = 0xBE97E;
+		private const string W0IdString = "BE97E";
 		const int W24Id = 0x34B84;
 		const int W25Id = 0x16B25;
 		const string W24IdString = "34B84";
@@ -24,36 +31,134 @@ namespace COTG.Game
 		private const string defaultIdString = "1DBCE";
 		private const string W23IdString = "97E7D";
 
-		static string titleId => JSClient.world switch { 22 => W22IdString, 23 => W23IdString, 24=> W24IdString, 25=>W25IdString, _ => defaultIdString };
+		static string titleId => World.world switch { 0=> W0IdString, 22 => W22IdString, 23 => W23IdString, 24=> W24IdString, 25=>W25IdString, _ => defaultIdString };
 		static PlayFabAuthenticationContext authenticationContext;
-		static LoginResult login;
-		public static string GetClientId()
+		public static string GetCustomId(string playerName)
 		{
 			byte[] bytes = Encoding.UTF8.GetBytes(Player.myName);
 			string base64 = Convert.ToBase64String(bytes);
 			// pseudo encryption
 			return "!ab" + base64 + "!a";
 		}
-		public static string GetPlayerName()
-		{
-			return Player.myName;
-		}
+		
 		public static void OnError(PlayFabError error)
 		{
 			Log($"{error.Error}, {error.ErrorMessage}");
 		}
 
-		public static async Task Login()
+		static EntityKey titlePlayerEntityKey;
+		static EntityKey globalPlayerEntityKey;
+
+		static async Task SetPlayerData()
+		{
+			var data = new Dictionary<string, object>()
+			{
+				{"pid", 0},
+				{"discordId", 0},
+			};
+			var dataList = new List<SetObject>()
+			{
+				new SetObject()
+				{
+					ObjectName = "PlayerData",
+					DataObject = data
+					
+				},
+				// A free-tier customer may store up to 3 objects on each entity
+			};
+
+
+			var results = await PlayFabDataAPI.SetObjectsAsync(new SetObjectsRequest()
+			{
+				Entity = globalPlayerEntityKey, // Saved from GetEntityToken, or a specified key created from a titlePlayerId, CharacterId, etc
+				Objects = dataList,
+			});
+			Trace(results.Result.ProfileVersion); 
+
+		}
+
+		static async Task LoadPlayerData()
+		{
+			var getRequest = new GetObjectsRequest {Entity = globalPlayerEntityKey };
+			var result = await PlayFabDataAPI.GetObjectsAsync(getRequest);
+			if (result.Error is not null)
+			{
+				Log(result.Error.GenerateErrorReport());
+			}
+			else
+			{
+				var obs = result.Result.Objects;
+				foreach (var o in obs)
+				{
+					Log(o.Key);
+					Log(o.Value.EscapedDataObject);
+				}
+
+			}
+		}
+
+		public static void Init()
+		{
+			PlayFabSettings.staticSettings.TitleId = titleId;
+			PlayFabSettings.GlobalErrorHandler = OnError;
+		}
+
+		
+		// Sets Authentication Context and myPlayfabId
+		public static async Task<bool> Login( string email, string password)
+		{
+
+			var req = new LoginWithEmailAddressRequest()
+			{
+				TitleId = titleId,
+				Email = email,
+				Password = password,
+				InfoRequestParameters = new GetPlayerCombinedInfoRequestParams()
+				{
+					GetCharacterList = true,
+					GetPlayerProfile = true,
+					GetUserData = true,
+					GetTitleData = true,
+					GetUserAccountInfo = true,
+					ProfileConstraints = new PlayerProfileViewConstraints()
+					{
+						// And make sure that both AvatarUrl and LastLogin are included.
+						ShowAvatarUrl = true,
+						ShowLastLogin = true,
+						ShowDisplayName = true
+					}
+
+				}
+			};
+				var loginResult = await PlayFabClientAPI.LoginWithEmailAddressAsync(req);
+				if (loginResult.Error is not null)
+				{
+					Trace($"Failed to log in: {loginResult.Error.GenerateErrorReport()}");
+					return false;
+				}
+				var login = loginResult.Result;
+				authenticationContext = login.AuthenticationContext;
+				Player.myPlayfabId =ulong.Parse(login.PlayFabId, NumberStyles.AllowHexSpecifier);
+				return true;
+		}
+
+
+		// Sets Authentication Context and myPlayfabId
+		public static async Task<bool> Register(string playerName,string email,string password)
 		{
 			try
 			{
-				PlayFabSettings.staticSettings.TitleId = titleId;
-				PlayFabSettings.GlobalErrorHandler = OnError;
-				var req = new LoginWithCustomIDRequest()
+				Init();
+				//
+				// Make sure the user does not exist
+				// If we login with this id it means the user exists
+				var req = new RegisterPlayFabUserRequest()
 				{
-					CreateAccount = true,
-					CustomId = GetClientId(),
 					TitleId = titleId,
+					Username = playerName,
+					Email =  email,
+					Password = password,
+					RequireBothUsernameAndEmail = true,
 					InfoRequestParameters = new GetPlayerCombinedInfoRequestParams()
 					{
 						GetCharacterList = true,
@@ -71,46 +176,27 @@ namespace COTG.Game
 
 					}
 				};
-
-				var loginResult = await PlayFabClientAPI.LoginWithCustomIDAsync(req);
-				if (loginResult.Error != null)
+				var loginResult = await PlayFabClientAPI.RegisterPlayFabUserAsync(req);
+				if (loginResult.Error is not null)
 				{
-					Log($"!!! Failed to log in to PlayFab: {loginResult.Error.ErrorMessage}");
-					return;
+					Trace($"Failed to register: {loginResult.Error.GenerateErrorReport()}");
+					return false;
 				}
-				login = loginResult.Result;
 
+				var login = loginResult.Result;
 				authenticationContext = login.AuthenticationContext;
-				if (login.InfoResultPayload.AccountInfo.Username == null)
-				{
+				Player.myPlayfabId =ulong.Parse(login.PlayFabId, NumberStyles.AllowHexSpecifier);
 
-					var hr = await PlayFabClientAPI.AddUsernamePasswordAsync(new AddUsernamePasswordRequest()
-					{
-						AuthenticationContext = authenticationContext,
-						Username = GetPlayerName(),
-						Password = GetClientId(),
-						Email = $"{GetPlayerName()}@conquestandvirtue.com"
-					}
-
-				);
-					if (hr.Error != null)
-					{
-						Log($"!!! Failed AddUsernamePasswordAsync PlayFab: {hr.Error.ErrorMessage}");
-						//return;
-					}
-
-				}
-				if (login.InfoResultPayload.AccountInfo.TitleInfo.DisplayName == null)
-				{   // Set user data
+				{   // Set user Title Data
 					var hr = await PlayFabClientAPI.UpdateUserTitleDisplayNameAsync(new UpdateUserTitleDisplayNameRequest()
 					{
 						AuthenticationContext = authenticationContext,
-						DisplayName = GetPlayerName()
+						DisplayName = playerName // Same as Title name
 					});
 					if (hr.Error != null)
 					{
-						Log($"!!! Failed to UpdateUserTitleDisplayNameAsync PlayFab: {hr.Error.ErrorMessage}");
-						//return;
+						Trace($"Failed to Update DisplayName: {hr.Error.GenerateErrorReport()}");
+						// return;
 					}
 				}
 				//// wait until our alliance is fetched
@@ -195,13 +281,13 @@ namespace COTG.Game
 				//	//}
 
 				//}
+				return true;
 			}
 			catch (Exception _exception)
 			{
 				COTG.Debug.LogEx(_exception);
+				return false;
 			}
-
-
 		}
 	}
 }

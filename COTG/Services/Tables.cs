@@ -16,7 +16,26 @@ using System.Web;
 namespace COTG.Services
 {
 	using CnVChat;
+	public class PlayerGlobal : ITableEntity
+	{
+		public PlayerGlobal()
+		{
+		}
 
+		public PlayerGlobal(string partitionKey, string rowKey, string s)
+		{
+			this.PartitionKey = partitionKey;
+			this.RowKey = rowKey;
+			this.s = s;
+
+		}
+
+		public string PartitionKey { get; set; }
+		public string RowKey { get; set; }
+		public DateTimeOffset? Timestamp { get; set; }
+		public ETag ETag { get; set; }
+		public string s { get; set; }
+	}
 
 	public class ShareStringDB : ITableEntity
 	{

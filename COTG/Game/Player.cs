@@ -1,4 +1,9 @@
-﻿using System;
+﻿
+// We use the ids from Playfab
+global using PlayerId = System.Int32;
+
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -75,7 +80,11 @@ namespace COTG.Game
 			return Player.myIds.Contains(playerId);
 		}
 		public static Player _default = new Player() { name = "!Zut!" };
-		public byte allianceRank;
+		public byte allianceRole;
+		internal ulong playfabId;
+
+		public static ulong myPlayfabId; // the current players playfabId
+
 		internal bool isMe => id == myId;
 
 		public static Player Get(int id) => all.GetValueOrDefault(id, _default);

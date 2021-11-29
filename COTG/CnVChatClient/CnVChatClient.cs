@@ -39,45 +39,7 @@ namespace CnVDiscord
 			// Any Magic Onion?
 			if(!await  instance.Initialize() ) 
 				return; 
-			// this contains 
-			await foreach (var a in PlayerGameEntity.table.QueryAsync())
-			{
-					if ( a.playerName is not null)
-					{
-						try
-						{
-							var p = Player.all.FirstOrDefault(p =>
-								string.Compare(p.Value.name, a.playerName, StringComparison.OrdinalIgnoreCase) == 0).Value;
-						
-							if (p != null)
-							{
-								if(p.discordId != 0)
-								{
-									Log($"Extra DiscordId: {a.playerName} discordId:{a.discordId} discordId1:{p.discordId}");
-								}
-								p.discordId = a.discordId;
-								p.avatarUrl = a.avatarURL;
-								p.discordUserName = a.discordUserName??p.name;
-								Player.playerByDiscordId.TryAdd(a.discordId, p);
-								Player.playerByDiscordUserName.TryAdd(p.discordUserName,p);
-							}
-							else
-							{
-						//		Log($"Missing {a.playerName} discordId:{a.discordId}");
-							}
-
-						}
-						catch (Exception e)
-						{
-							LogEx(e);
-						
-						}
-					}
-					else
-					{
-						Log(a.ToString());
-					}
-			}
+			
 		}
 
 		public async Task<bool> Initialize()

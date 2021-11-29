@@ -88,6 +88,10 @@ namespace COTG.Views
 			}
 		}
 		public static Lighting lighting = Lighting.day;
+
+		public static string playerName = string.Empty;
+		public static string playerEmail = string.Empty;
+		public static string playerPassword = string.Empty;
 		//        private static UserData _user;
 		public static bool fetchFullHistory = false;
 		public static bool? autoBuildOn = true;

@@ -29,7 +29,6 @@ namespace COTG
 			Assert( JSClient.world != 0);
 			ShellPage.SetViewModeCity();
 			
-			APlayfab.Login();
 
 			//CnVChatClient.CnVChatClient.Setup();
 
