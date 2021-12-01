@@ -625,7 +625,7 @@ public class ExtendedQueue:IDisposable
 										{
 											// invalid command, discard it
 											RemoveAt(offset);
-											Log($"Invalid ugrade {prior.bid} => {i.bid}");
+											Log($"Invalid upgrade {prior.bid} => {i.bid} {prior.bl} to {i.slvl}");
 
 											continue;
 										}
@@ -737,8 +737,8 @@ public class ExtendedQueue:IDisposable
 								//	if (!queue.Any())
 								{
 									Log($"Queue Complete {city} ex:{queueLInitial} cotg:{cotgQLInitial}");
-									all.TryRemove(cid,out _);
-
+									var okay= all.TryRemove(cid,out _);
+									Assert(okay);
 									Dispose();
 									SaveNeeded();
 									return;
@@ -1385,8 +1385,12 @@ public static class BuildQueue
 		//var encoded = Aes.Encode(json, $"XTR977sW{World.CidToPlayer(cid)}sss2x2");
 		var args = $"cid={cid}&a=" + HttpUtility.UrlEncode(encoded,Encoding.UTF8);
 		var response = await Post.SendForJson("includes/nBuu.php",args);
-		if(response == null)
+		if (response == null)
+		{
+			Assert(false);
 			return false;
+		}
+
 		City.Get(cid).LoadCityData(response.RootElement);
 
 		return true; ;

@@ -11,7 +11,7 @@
 	<Grid Height="{StaticResource MediumGridRowHeight}">
 		<Grid.ColumnDefinitions>
 			<ColumnDefinition Width="Auto" />
-			<ColumnDefinition Width="{x:Bind views:SettingsPage.largeGridRowHeighL}" />
+			<ColumnDefinition Width="32" />
 		</Grid.ColumnDefinitions>
 		<TextBlock Text="{x:Bind Label}" Style="{StaticResource TextBlockMedium}" />
 		<Image Source= "{x:Bind icon, Mode=OneWay}" Grid.Column="1" Tapped="Image_Tapped" RightTapped="Image_RightTapped" HorizontalAlignment="Center"

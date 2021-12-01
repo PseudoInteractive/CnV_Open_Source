@@ -238,17 +238,11 @@
 						ToolTipService.ToolTip="Resets all with raid carry less than 90% (configurable in settings) or idle troops greater than 25% (configurable in settings)"  >
 					<Button.Flyout >
 						<MenuFlyout  >
-								<MenuFlyoutItem Text="Bad ones Fast"
-									ToolTipService.ToolTip="Returns all selected raids with carry less than 90% (configurable in settings) or idle troops greater than 25% (configurable in settings)" 
-									Click="ResetBadRaidsFast" />
-								<MenuFlyoutItem  Text="Bad ones Slow"
+								<MenuFlyoutItem  Text="Bad ones"
 									ToolTipService.ToolTip="Returns all selected raids with carry less than 90% (configurable in settings) or idle troops greater than 25% (configurable in settings)" 
 									Click="ResetBadRaidsSlow" />
-								<MenuFlyoutItem Text="Selected Fast"
-									ToolTipService.ToolTip="Return all selected raids as quickly as possible" 
-									Click="ResetRaidsFast"/>
 
-								<MenuFlyoutItem Text="Selected Whenever"
+								<MenuFlyoutItem Text="Selected"
 									ToolTipService.ToolTip="Return all selected raids once they are finished their current raid"
 									Click="ResetRaidsSlow"/>
 						</MenuFlyout>

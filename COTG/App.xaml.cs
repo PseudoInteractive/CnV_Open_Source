@@ -1323,6 +1323,10 @@ namespace COTG
 		   });
 		}
 
+		public static Task<int> MessageBox(string title, string text) => DoYesNoBox(title, text, "Okay", null, null);
+		public static Task<int> Failed( string text) => DoYesNoBox("Zut", text, "Close", null, null);
+		
+
 		public async static Task<int> DoYesNoBoxUI(string title, string text, string yes = "Yes", string no = "No", string cancel = "Cancel")
 		{
 		//	Assert(App.uiSema.CurrentCount == 0);

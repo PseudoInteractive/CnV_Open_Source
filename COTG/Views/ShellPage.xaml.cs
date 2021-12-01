@@ -346,7 +346,7 @@ namespace COTG.Views
 #endif
 
 
-			Task.Delay(4500).ContinueWith((_) => App.DispatchOnUIThreadIdle(() =>
+			Task.Delay(4500).ContinueWith((_) => App.DispatchOnUIThreadIdle(async  () =>
 			{
 				//		ShellPage.SetupCoreInput();
 				var sz = canvas.ActualSize;
@@ -364,6 +364,8 @@ namespace COTG.Views
 				//}
 				//	App.window.Content.XamlRoot.Content.GetVisualInternal
 
+				var signin = new Signin();
+				await signin.ShowAsync2();
 
 			}));
 

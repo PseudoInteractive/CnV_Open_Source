@@ -132,6 +132,7 @@ namespace COTG.Game
 		}
 		public bool isFriend => Player.IsFriend(pid); // this is set if it is one of our cities or our ally cities that we can visit
 		public bool? isAlly => Alliance.alliancesFetched ? cid.CidIsAlly() : null; // this is set if it is one of our cities or our ally cities that we can visit
+		public bool? isEnemy => Alliance.alliancesFetched ? cid.CidIsEnemy() : null; // this is set if it is one of our cities or our ally cities that we can visit
 
 		internal static City GetFocus()
 		{
@@ -186,7 +187,7 @@ namespace COTG.Game
 				{
 					rv += "(O)";
 				}
-				if(isAlly == false )
+				if(isEnemy == true )
 					rv += "(e)";
 
 				return rv;
@@ -522,8 +523,10 @@ namespace COTG.Game
 		public bool isBlessed { get; set; }
 		public float scoutRange { get; set; }
 		public ushort points { get; set; }
+		private const int iconHeight = 32;
+		private const int iconWidth = iconHeight;
 		public BitmapImage icon => ImageHelper.FromImages(isBlessed ? "Icons/blessed.png" :
-			 ($"{(isTemple ? "Icons/temple" : isCastle ? "Icons/castle" : "Icons/city")}{GetSize()}{(isOnWater ? "w" : "")}.png"));
+			 ($"{(isTemple ? "Icons/temple" : isCastle ? "Icons/castle" : "Icons/city")}{GetSize()}{(isOnWater ? "w" : "")}.png"), iconWidth,iconHeight);
 		public string iconUri => ImageHelper.FromImagesLink(isBlessed ? "Icons/blessed.png" :
 			($"{(isTemple ? "Icons/temple" : isCastle ? "Icons/castle" : "Icons/city")}{GetSize()}{(isOnWater ? "w" : "")}.png"));
 		public int cont => cid.CidToContinent();
@@ -2013,7 +2016,6 @@ namespace COTG.Game
 					if(count > 1)
 					{
 						aRaid.AddItem($"End Raids x{count} selected",MainPage.ReturnSlowClick,cid);
-						aRaid.AddItem($"Return Asap x{count} selected",MainPage.ReturnFastClick,cid);
 						aRaid.AddItem($"Return At...x{count}",this.ReturnAtBatch);
 
 					}
@@ -2021,7 +2023,6 @@ namespace COTG.Game
 					{
 
 						aRaid.AddItem("End Raids",this.ReturnSlowClick);
-						aRaid.AddItem("Return Asap",this.ReturnFastClick);
 						aRaid.AddItem("Return At...",this.ReturnAt);
 					}
 

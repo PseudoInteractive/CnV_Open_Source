@@ -463,31 +463,24 @@ namespace COTG.Game
 		public async Task<int> EnqueueMove(short spotFrom, short spotTo)
 		{
 			var b = postQueueBuildings[spotFrom];
-			if (Player.moveSlots > 1 && IsValidForMove(spotTo, 0,true) && IsValidForMove(spotFrom, b.bid,true) )
+			if (Player.moveSlots > 1 && IsValidForMove(spotTo, 0, true) && IsValidForMove(spotFrom, b.bid, true) )
 			{
-				if (await DoMove(cid, spotFrom,spotTo))
+				if (await DoMove(cid, spotFrom, spotTo))
 				{
 					var empty = new Building(0, 0);
 					Assert(postQueueBuildings[spotTo] == buildings[spotTo]);
 					Assert(postQueueBuildings[spotFrom] == buildings[spotFrom]);
 					postQueueBuildings[spotTo] = b;
-					postQueueBuildings[spotFrom]=empty;
+					postQueueBuildings[spotFrom] = empty;
 					buildings[spotTo] = b;
 					buildings[spotFrom] = empty;
-
-				}
-				else
-				{
-					return 0;
+					return 1;
 				}
 			}
-			else
-			{
 
-
-				await Enqueue(new BuildQueueItem(b.bl, b.bl, b.bid, spotTo, 0, true));
+			await Enqueue(new BuildQueueItem(b.bl, b.bl, b.bid, spotTo, 0, true));
 				await Enqueue(new BuildQueueItem(0, 0, 0, spotFrom, 0, true));
-			}
+			
 
 			Player.moveSlots -= 1;
 			

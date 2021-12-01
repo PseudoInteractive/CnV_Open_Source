@@ -2295,17 +2295,17 @@ private static async void ShowCouncillorsMissingDialog()
 	//	private static long gameMSAtStart;
 //		private static DateTimeOffset launchTime;
 
-		public static BitmapImage GetImage(string dir, string name)
-		{
-			return ImageHelper.FromImages(name);
-			//if (imageCache.TryGetValue(name, out var b))
-			//    return b;
-			//b = new BitmapImage();
-			//imageCache.TryAdd(name, b);
+		//public static BitmapImage GetImage(string dir, string name)
+		//{
+		//	return ImageHelper.FromImages(name);
+		//	//if (imageCache.TryGetValue(name, out var b))
+		//	//    return b;
+		//	//b = new BitmapImage();
+		//	//imageCache.TryAdd(name, b);
 
-			//await LoadImage(b,dir,name);
-			//return b;
-		}
+		//	//await LoadImage(b,dir,name);
+		//	//return b;
+		//}
 		//async static Task LoadImage(BitmapImage b, string dir, string name)
 		//{
 

@@ -86,8 +86,10 @@ namespace COTG.Services
 				try
 				{
 					changesContainer = new BlobContainerClient(connectionString, changesContainerName, GetClientOptions());
-
-					await changesContainer.CreateIfNotExistsAsync();
+					if (!await changesContainer.ExistsAsync())
+					{
+						await changesContainer.CreateIfNotExistsAsync();
+					}
 				}
 				catch (Exception ex)
 				{

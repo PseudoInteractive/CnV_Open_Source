@@ -613,8 +613,8 @@ namespace COTG
 			projectionC.X = clientSpan.X * 0.5f - ShellPage.popupLeftMargin * 0.5f;
 			projectionC.Y = clientSpan.Y * 0.5f - ShellPage.popupTopMargin  * 0.5f;
             
-            clip.c0 = -(clientSpan-projectionC);
-            clip.c1 = projectionC;
+            clip.c0 = -projectionC;
+            clip.c1 = clientSpan-projectionC;
 	
            resolutionDirtyCounter = wantFastRefresh ? 2 : 30;
            wantFastRefresh = false;
