@@ -55,6 +55,7 @@
     <PackageReference Include="Enums.NET" Version="4.0.0" />
     <PackageReference Include="GoogleSheetsWrapper" Version="1.0.27" />
     <PackageReference Include="Grpc.Net.Client" Version="2.41.0-pre1" />
+    <PackageReference Include="Humanizer.Core" Version="2.13.14" />
     <PackageReference Include="MagicOnion.Client" Version="4.3.1" />
     <PackageReference Include="MessagePackAnalyzer" Version="2.3.85" />
     <PackageReference Include="Microsoft.AppCenter" Version="4.4.0" />
