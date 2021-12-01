@@ -13,10 +13,10 @@
 >
 
     <Grid>
-	    <StackPanel Margin="0,10,10,0">
-		    <TextBox Header="Name" Text="{x:Bind views:SettingsPage.playerName, Mode=TwoWay }" PlaceholderText="Don't use 'Avatar'"  />
+	    <StackPanel >
+		    <TextBox Header="Name" Text="{x:Bind views:SettingsPage.playerName, Mode=TwoWay }" PlaceholderText="Please don't use 'Avatar'"  />
 		    <TextBox Header="Email" Text="{x:Bind views:SettingsPage.playerEmail, Mode=TwoWay }" PlaceholderText="Email..."  />
-		    <TextBox Header="Password" Text="{x:Bind views:SettingsPage.playerPassword, Mode=TwoWay }"  PlaceholderText="Password..."  />
+		    <TextBox Header="Password" Text="{x:Bind views:SettingsPage.playerPassword, Mode=TwoWay }"  PlaceholderText="Password... (not secure)"  />
 	    </StackPanel>
     </Grid>
 </ContentDialog>

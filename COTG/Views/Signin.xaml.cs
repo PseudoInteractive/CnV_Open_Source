@@ -36,8 +36,9 @@ namespace COTG.Views
 			this.InitializeComponent();
 		}
 
-		private async void RegisterRequest(ContentDialog sender, ContentDialogButtonClickEventArgs args)
+		private async void LoginRequest(ContentDialog sender, ContentDialogButtonClickEventArgs args)
 		{
+			SettingsPage.SaveAll();
 			var rv = await APlayfab.Login(SettingsPage.playerEmail,SettingsPage.playerPassword);
 			if (rv == false)
 			{
@@ -47,8 +48,10 @@ namespace COTG.Views
 			Success();
 		}
 
-		private async void LoginRequest(ContentDialog sender, ContentDialogButtonClickEventArgs args)
+		private async void RegisterRequest(ContentDialog sender, ContentDialogButtonClickEventArgs args)
 		{
+			SettingsPage.SaveAll();
+
 			var rv = await APlayfab.Register(SettingsPage.playerName,SettingsPage.playerEmail,SettingsPage.playerPassword);
 			if (rv == false)
 			{
