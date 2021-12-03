@@ -1,6 +1,5 @@
-﻿using COTG;
-using COTG.Game;
-using COTG.Helpers;
+﻿using CnV.Game;
+using CnV.Helpers;
 
 using Microsoft.UI.Xaml.Controls;
 // The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234236
@@ -23,14 +22,19 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 
-using static COTG.Debug;
-using static COTG.Game.AttackPlan;
-using static COTG.Game.Troops;
+using static CnV.Debug;
+using static CnV.Game.AttackPlan;
+using static CnV.Game.Troops;
 using System.Linq;
 using CommunityToolkit.WinUI.UI.Controls;
+using CnV;
 
-namespace COTG.Views
+namespace CnV.Views
 {
+	using Game;
+	using Helpers;
+	using AttackPlanCity = Game.AttackPlanCity;
+	using City = Game.City;
 
 	public sealed partial class AttackTab : UserTab
     {
@@ -98,7 +102,7 @@ namespace COTG.Views
 				//var time = SettingsPage.attackPlannerTime;
 
 				//atk.time = new string[] { time.Hour.ToString("00"), time.Minute.ToString("00"), time.Second.ToString("00"), time.ToString("MM/dd/yyyy") };
-				//            scripts[cluster.id]= System.Text.Json.JsonSerializer.Serialize(atk, Json.jsonSerializerOptions);
+				//            scripts[cluster.id]= System.Text.Json.JsonSerializer.Serialize(atk, JSON.jsonSerializerOptions);
 				//        }
 				attackStrings.Clear();
 				playerCommands.Clear();
@@ -154,7 +158,7 @@ namespace COTG.Views
 								}
 							}
 							atk.time = new string[] { time.Hour.ToString("00"), time.Minute.ToString("00"), time.Second.ToString("00"), time.ToString("MM/dd/yyyy") };
-							var scrpipt = System.Text.Json.JsonSerializer.Serialize(atk, Json.jsonSerializerOptions);
+							var scrpipt = System.Text.Json.JsonSerializer.Serialize(atk, JSON.jsonSerializerOptions);
 
 							attackStrings.Add(a.cid, scrpipt);
 
@@ -387,7 +391,7 @@ namespace COTG.Views
         }
         private void UpdateStats()
         {
-            App.DispatchOnUIThreadIdle(() =>
+            AppS.DispatchOnUIThreadIdle(() =>
             {
 				planName.Text = SettingsPage.attackPlanName;
 
@@ -457,7 +461,7 @@ namespace COTG.Views
 				// if we just loaded a backup, strip the backup info from the name
 				SettingsPage.attackPlanName = SettingsStorageExtensions.regexBackupDatePostFix.Replace(SettingsPage.attackPlanName,"");
 
-				// App.DispatchOnUIThreadLow(() =>
+				// AppS.DispatchOnUIThreadLow(() =>
 				//  {
 				var attacks = new List<City>();
 				foreach (var att in plan.attacks)
@@ -492,7 +496,7 @@ namespace COTG.Views
 
 		void DoRefresh()
 		{
-			App.DispatchOnUIThreadLow(() =>
+			AppS.DispatchOnUIThreadLow(() =>
 			{
 				SyncUIGrids();
 				attacksUI.NotifyReset(allItemsChanged:true);
@@ -508,7 +512,7 @@ namespace COTG.Views
 		{
             if (visible)
             {
-				App.DispatchOnUIThreadLow( UpdateArrivalUI );
+				AppS.DispatchOnUIThreadLow( UpdateArrivalUI );
 				using var _ = await TouchLists();
 				WritebackAttacks();
 				DoRefresh();
@@ -910,7 +914,7 @@ namespace COTG.Views
 		//		using var _ = await instance.TouchLists();
 		//		if( cids.All( cid=> attacks.Contains(City.Get(cid) ) ))
 		//		{
-		//			var rv = await App.DoYesNoBox("Already Here", "Remove?");
+		//			var rv = await AppS.DoYesNoBox("Already Here", "Remove?");
 		//			if( rv == 1)
 		//			{
 		//				int count = 0;
@@ -1050,7 +1054,7 @@ namespace COTG.Views
 			var allHere = cids.All(c => targets.Contains(c));
 			if( allHere )
 			{
-				var id = await App.DoYesNoBox("Already Here", "Remove?");
+				var id = await AppS.DoYesNoBox("Already Here", "Remove?");
 				if (id == 1)
 				{
 					int count = 0;
@@ -1163,8 +1167,8 @@ namespace COTG.Views
 				fakes.Clear();
 				category = TargetCategory.invalid;
 			}
-			public Span2 CalculateSpan() => new Span2(fakes.Append(real));
-			public Span2 CalculateSpanWithout(AttackPlanCity exclude) => new Span2(fakes.Where(a=>a!=exclude).Append(real));
+			public Span2 CalculateSpan() => AttackPlanHelper.SpanFromCities(fakes.Append(real));
+			public Span2 CalculateSpanWithout(AttackPlanCity exclude) => AttackPlanHelper.SpanFromCities(fakes.Where(a=>a!=exclude).Append(real));
 			public IEnumerable<AttackPlanCity> targets => fakes.Append(real);
 
 			public void UpdateSpan() => span = CalculateSpan();
@@ -1484,8 +1488,8 @@ namespace COTG.Views
 									foreach (var f0 in cluster0.fakes)
 									{
 										Assert(f0.attackType.GetCategory() == category);
-										var r0b = Span2.UnionWithout(cluster0.targets, f0).radius2;
-										var r1b = new Span2(cluster1.targets.Append(f0)).radius2;
+										var r0b = AttackPlanHelper.UnionWithout(cluster0.targets, f0).radius2;
+										var r1b = cluster1.targets.Append(f0).SpanFromCities().radius2;
 
 										//	var d1 = cluster1.span.Distance2(f0.cid.ToWorldC());
 										var score = (r0b + r1b) - (r0a + r1a);
@@ -1537,11 +1541,11 @@ namespace COTG.Views
 
 									foreach (var f0 in cluster0.fakes)
 									{
-										var span0b = Span2.UnionWithout(cluster0.targets, f0);
+										var span0b = AttackPlanHelper.UnionWithout(cluster0.targets, f0);
 										Assert(f0.attackType.GetCategory() == cluster0.category);
 										foreach (var f1 in cluster1.fakes)
 										{
-											var span1b = Span2.UnionWithout(cluster1.targets, f1);
+											var span1b = AttackPlanHelper.UnionWithout(cluster1.targets, f1);
 											Assert(f1.attackType.GetCategory() == cluster1.category);
 
 											var span0c = span0b + f1.cid.ToWorldC();
@@ -1982,7 +1986,7 @@ namespace COTG.Views
 				return;
 			using var _ = await TouchLists();
 			int counter = 0;
-			await App.DispatchOnUIThreadTask(()=>
+			await AppS.DispatchOnUIThreadTask(()=>
 			{
 				foreach (City sel in attackGrid.SelectedItems)
 				{
@@ -2009,7 +2013,7 @@ namespace COTG.Views
 				return;
 			using var _ = await TouchLists();
 			int counter = 0;
-			await App.DispatchOnUIThreadTask(() =>
+			await AppS.DispatchOnUIThreadTask(() =>
 			{
 				foreach (City sel in targetGrid.SelectedItems)
 				{
@@ -2046,7 +2050,7 @@ namespace COTG.Views
 					return;
 				}
 				var targetCid = selTargets.Count > 0 ? (selTargets[0] as City).cid : 0;
-				await App.DispatchOnUIThreadTask(() =>
+				await AppS.DispatchOnUIThreadTask(() =>
 			   {
 				   foreach (City atk in selAtk)
 				   {

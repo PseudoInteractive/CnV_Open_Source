@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace COTG.Views
+namespace CnV.Views
 {
 	public partial class ShareString
 	{

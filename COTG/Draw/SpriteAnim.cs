@@ -1,4 +1,4 @@
-﻿using COTG.Draw;
+﻿using CnV.Draw;
 
 using Microsoft.Xna.Framework.Graphics;
 
@@ -8,9 +8,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-using static COTG.Debug;
-namespace COTG
+using static CnV.Debug;
+namespace CnV
 {
+	using Draw;
+
 	public class SpriteAnim
 	{
 		public byte frameCount;

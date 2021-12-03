@@ -1,5 +1,5 @@
-﻿using COTG.Helpers;
-using COTG.Views;
+﻿using CnV.Helpers;
+using CnV.Views;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -8,15 +8,19 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.UI.Xaml.Media.Imaging;
 
-using TroopTypeCounts = COTG.Game.TroopTypeCounts;
+using TroopTypeCounts = CnV.Game.TroopTypeCounts;
 //COTG.DArray<COTG.Game.TroopTypeCount>;
-using TroopTypeCountsRef = COTG.Game.TroopTypeCounts;
-using static COTG.Game.TroopTypeCountHelper;
+using TroopTypeCountsRef = CnV.Game.TroopTypeCounts;
+using static CnV.Game.TroopTypeCountHelper;
+using CnV;
 //COTG.DArrayRef<COTG.Game.TroopTypeCount>;
 
-namespace COTG.Game
+namespace CnV.Game
 {
-    public class Supporter : IANotifyPropertyChanged
+	using Helpers;
+	using Views;
+
+	public class Supporter : IANotifyPropertyChanged
     {
         public City city;
         public string xy => city.xy;
@@ -33,7 +37,7 @@ namespace COTG.Game
 		public float travel;
 		public int validTargets { get; set; }
 		public string travelTime => TimeSpan.FromHours(travel).Format();
-		public TroopTypeCountsRef tSend = new();
+		public TroopTypeCounts tSend = new();
 		public int tsSend
         {
             get => tSend.TS();
@@ -41,13 +45,13 @@ namespace COTG.Game
         
 
        
-        public DateTimeOffset eta { get => JSClient.ServerTime() + TimeSpan.FromHours(travel);
+        public DateTimeOffset eta { get => CnVServer.ServerTime() + TimeSpan.FromHours(travel);
 			set {
 				NearDefenseTab.instance.arriveAt = value;
 				NearDefenseTab.instance.OnPropertyChanged(string.Empty);
 			}
 		}
-        public DateTimeOffset etaWings { get => JSClient.ServerTime() + 0.5f * TimeSpan.FromHours(travel); 
+        public DateTimeOffset etaWings { get => CnVServer.ServerTime() + 0.5f * TimeSpan.FromHours(travel); 
 			set
 			{
 					NearDefenseTab.instance.arriveAt = value;
@@ -79,7 +83,7 @@ namespace COTG.Game
 		}
 		public void NotifyChange(string member = "")
 		{
-			App.DispatchOnUIThreadIdle(() =>
+			AppS.DispatchOnUIThreadIdle(() =>
 			{
 				OnPropertyChanged(member);
 				

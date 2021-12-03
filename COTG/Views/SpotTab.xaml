@@ -1,20 +1,20 @@
 ﻿<local:UserTab
-    x:Class="COTG.Views.SpotTab"
+    x:Class="CnV.Views.SpotTab"
      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-      xmlns:game="using:COTG.Game"
+      xmlns:game="using:CnV.Game"
       xmlns:gridCommands="using:Telerik.UI.Xaml.Controls.Grid.Commands"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-      xmlns:model="using:COTG.Models"
-      xmlns:cotg="using:COTG"
+      xmlns:model="using:CnV.Modelsdels"
+      xmlns:cotg="using:CnV"
 	xmlns:winui="using:Microsoft.UI.Xaml.Controls"
       xmlns:tdd="using:Telerik.Data.Core"
       xmlns:tg="using:Telerik.UI.Xaml.Controls.Grid"
       xmlns:tk="using:CommunityToolkit.WinUI.UI.Controls"
       xmlns:tl="using:Telerik.UI.Xaml.Controls"
       xmlns:telerikCore="using:Telerik.Data.Core"
-      xmlns:local="using:COTG.Views"
+      xmlns:local="using:CnV.Views"
       Background="{x:Null}"
         Tag="Recent"
     mc:Ignorable="d">
@@ -27,7 +27,7 @@
 		<tk:WrapPanel Orientation="Horizontal"
 						  Grid.Row="0"
 						  VerticalAlignment="Center"
-						  TabFocusNavigation="Once">
+						  >
 			<Button Content="Toggle Selected" Style="{StaticResource ButtonSmall}" ToolTipService.ToolTip="Toggles on/off pinned status for selected items" Click="Button_Click"/>
 </tk:WrapPanel>	
         <tg:RadDataGrid x:Name="selectedGrid"
@@ -36,7 +36,7 @@
 						AutoGenerateColumns="False"
                         CanUserChooseColumns="True"
 								
-								 TabFocusNavigation="Once"
+								 
 								 Loaded="DataGridLoaded"
                        ColumnResizeHandleDisplayMode="Always"
                         PointerPressed="gridPointerPress"

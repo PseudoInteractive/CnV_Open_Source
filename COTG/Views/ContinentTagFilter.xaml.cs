@@ -1,4 +1,4 @@
-﻿using COTG.Game;
+﻿using CnV.Game;
 
 using Cysharp.Text;
 
@@ -21,8 +21,10 @@ using Microsoft.UI.Xaml.Navigation;
 
 // The Content Dialog item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
 
-namespace COTG.Views
+namespace CnV.Views
 {
+	using Game;
+
 	public sealed partial class ContinentTagFilter : ContentDialog
 	{
 		public static ContinentTagFilter instance;

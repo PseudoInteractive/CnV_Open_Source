@@ -1,6 +1,6 @@
-﻿using COTG.Game;
-using COTG.Helpers;
-using COTG.Services;
+﻿using CnV.Game;
+using CnV.Helpers;
+using CnV.Services;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -21,12 +21,14 @@ using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
 
-using static COTG.Debug;
+using static CnV.Debug;
 
-namespace COTG.Views
+namespace CnV.Views
 {
+	using Game;
+	using Services;
 
-    public sealed partial class DonationTab : UserTab
+	public sealed partial class DonationTab : UserTab
 	{
         public static DonationTab instance;
         public static int reserveCarts=800;
@@ -93,7 +95,7 @@ namespace COTG.Views
 
 
 				CityList.NotifyChange(true);
-				App.DispatchOnUIThread(()=>
+				AppS.DispatchOnUIThread(()=>
                 {
                     blessedGrid.ItemsSource = BlessedCity.GetForCity(null);
 
@@ -104,7 +106,7 @@ namespace COTG.Views
             else
             {
                 // Not listening
-                App.DispatchOnUIThreadLow(() =>
+                AppS.DispatchOnUIThreadLow(() =>
                 {
                     blessedGrid.ItemsSource = null;
                 //    donationGrid.ItemsSource = null;

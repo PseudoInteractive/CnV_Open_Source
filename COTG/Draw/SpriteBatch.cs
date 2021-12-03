@@ -8,11 +8,11 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
 using Color = Microsoft.Xna.Framework.Color;
 using RectangleF = System.Drawing.RectangleF;
-using static COTG.Debug;
+using static CnV.Debug;
 using System.Collections.Generic;
 using BitmapFont;
 
-namespace COTG.Draw
+namespace CnV.Draw
 {
     /// <summary>
     /// Helper class for drawing text strings and sprites in one or more optimized batches.

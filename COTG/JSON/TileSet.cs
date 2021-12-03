@@ -4,13 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-using static COTG.Debug;
+using static CnV.Debug;
 
-namespace COTG.JSON
+namespace CnV.GameData
 {
-	using COTG.Game;
-	using COTG.Services;
-	using COTG.Views;
+	using CnV.Game;
+	using CnV.Services;
+	using CnV.Views;
 
 
 	using Microsoft.Xna.Framework.Graphics;
@@ -106,7 +106,7 @@ namespace COTG.JSON
 					if(!present)
 					{
 						if (IsSpecialTile(tile))
-							Layer.bonus.data[off] = data;// << (put++ * 16);
+							JsonLayer.bonus.data[off] = data;// << (put++ * 16);
 						else
 							instance.layers[instance.layers.Length - 2].data[off] = data;
 
@@ -154,11 +154,11 @@ namespace COTG.JSON
 			var tileCount = instance.tilesets.Length - 1;
 			// remove names layer
 			instance.tilesets = instance.tilesets.Take(tileCount).ToArray();
-			if (Layer.bonus == null)
+			if (JsonLayer.bonus == null)
 			{
-				Layer.bonus = new() { wantShadow = true, id = Layer.idBonus, isBase = false, data = new ushort[World.spanSquared], width = World.span, height = World.span, name = "Bonus" };
+				JsonLayer.bonus = new() { wantShadow = true, id = JsonLayer.idBonus, isBase = false, data = new ushort[World.spanSquared], width = World.span, height = World.span, name = "Bonus" };
 			}
-			instance.layers = instance.layers.ArrayAppend(Layer.bonus);
+			instance.layers = instance.layers.ArrayAppend(JsonLayer.bonus);
 			//  await canvas.RunOnGameLoopThreadAsync( async () =>
 			if (prior != null)
 			{
@@ -253,7 +253,7 @@ namespace COTG.JSON
 			{
 				foreach (var layer in instance.layers)
 				{
-					if ( object.ReferenceEquals(layer,Layer.bonus) )
+					if ( object.ReferenceEquals(layer,JsonLayer.bonus) )
 						continue;
 					var tile = layer.data[i];
 					if (tile == 0)
@@ -269,7 +269,7 @@ namespace COTG.JSON
 						{
 							var data = (ushort)(tileOff | (tileId << 13));// << (put++ * 16);
 							if (IsSpecialTile(tile))
-								Layer.bonus.data[i] = data;
+								JsonLayer.bonus.data[i] = data;
 							else
 								layer.data[i] = data;
 							break;
@@ -288,7 +288,7 @@ namespace COTG.JSON
 		public static int Height() => instance.height;
 		public int height { get; set; }
 		public bool infinite { get; set; }
-		public Layer[] layers { get; set; }
+		public JsonLayer[] layers { get; set; }
 		public int nextlayerid { get; set; }
 		public int nextobjectid { get; set; }
 		public string orientation { get; set; }
@@ -424,9 +424,9 @@ namespace COTG.JSON
 
 
 
-	public sealed class Layer
+	public sealed class JsonLayer
 	{
-		public static Layer bonus;
+		public static JsonLayer bonus;
 		public const int idBonus = 7; // this layer is above all
 		[JsonIgnore]
 		public float z;

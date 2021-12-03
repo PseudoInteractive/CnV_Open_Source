@@ -7,7 +7,7 @@ using System.Text.Json;
 using J = System.Text.Json.Serialization.JsonPropertyNameAttribute;
 using System.Text.Json.Serialization;
 
-namespace COTG.JSON
+namespace CnV.GameData
 {
     public class gFRep2
     {

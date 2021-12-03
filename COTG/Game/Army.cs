@@ -1,5 +1,4 @@
-﻿using COTG.Helpers;
-using COTG.JSON;
+﻿using CnV.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,22 +8,25 @@ using System.Threading.Tasks;
 using Telerik.UI.Xaml.Controls.Grid;
 using Windows.Foundation;
 using Microsoft.UI.Xaml.Input;
-using static COTG.Game.Troops;
+using static CnV.Game.Troops;
 using Microsoft.UI.Xaml.Media.Imaging;
 using Windows.System;
 using System.Text.Json.Serialization;
 using System.Text.Json;
-using COTG.Views;
-using TroopTypeCounts = COTG.Game.TroopTypeCounts;//COTG.DArray<COTG.Game.TroopTypeCount>;
-using TroopTypeCountsRef = COTG.Game.TroopTypeCounts;
-using static COTG.Game.TroopTypeCountHelper;
+using CnV.Views;
+using TroopTypeCounts = CnV.Game.TroopTypeCounts;//COTG.DArray<COTG.Game.TroopTypeCount>;
+using TroopTypeCountsRef = CnV.Game.TroopTypeCounts;
+using static CnV.Game.TroopTypeCountHelper;
 
 using System.Runtime.InteropServices;
 using System.Collections;
 using Cysharp.Text;
-using static COTG.Game.TroopTypeCountHelper;
-namespace COTG.Game
+using CnV;
+
+namespace CnV.Game
 {
+	using Helpers;
+
 	public sealed class Army:IEquatable<Army>
 	{
 
@@ -52,8 +54,8 @@ namespace COTG.Game
 			_ => "unk"
         };
 
-		public TroopTypeCountsRef troops;
-		public TroopTypeCountsRef sumDef;
+		public TroopTypeCounts troops;
+		public TroopTypeCounts sumDef;
 		// todo
 		public bool isDefense => !isAttack;
         public string sXY => sourceCid.CidToString();
@@ -80,7 +82,7 @@ namespace COTG.Game
         public string sourceCN => Spot.GetOrAdd(sourceCid).cityName;
         public string targetCN => Spot.GetOrAdd(targetCid).cityName;
         public DateTimeOffset time { get; set; }
-		public bool arrived => time <= JSClient.ServerTime();
+		public bool arrived => time <= CnVServer.ServerTime();
 		public bool Arrived(DateTimeOffset serverTime) => time <= serverTime;
 		public DateTimeOffset spotted { get; set; }
         public float journeyTime => spotted == AUtil.dateTimeZero ? 2 * 60 * 60.0f : (float)(time - spotted).TotalSeconds;

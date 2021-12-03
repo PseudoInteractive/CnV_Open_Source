@@ -1,6 +1,6 @@
-﻿using COTG.Game;
-using COTG.Services;
-using COTG.Views;
+﻿using CnV.Game;
+using CnV.Services;
+using CnV.Views;
 
 using System;
 using System.Collections.Generic;
@@ -13,12 +13,12 @@ using System.Web;
 using Microsoft.UI.Xaml.Controls;
 using ContentDialog = Microsoft.UI.Xaml.Controls.ContentDialog;
 using ContentDialogResult = Microsoft.UI.Xaml.Controls.ContentDialogResult;
-using static COTG.Debug;
-using static COTG.Views.SettingsPage;
+using static CnV.Debug;
+using static CnV.Views.SettingsPage;
 using Microsoft.UI.Xaml.Controls;
-using COTG.Helpers;
+using CnV.Helpers;
 
-namespace COTG.JSON
+namespace CnV.GameData
 {
 
     public class CitySettings
@@ -47,7 +47,7 @@ namespace COTG.JSON
 		{
 			var city = cid.AsCity();
 			isHubOrStorage ??= city.isHubOrStorage;
-			offContinent ??= (city.isHubOrStorage && city.isOnWater) ? (await App.DoYesNoBox(title,$"Find hub for {city} from another Continent?",yes: "Off Continent",no: "Same Continent",cancel: null)) == 1 : false;
+			offContinent ??= (city.isHubOrStorage && city.isOnWater) ? (await AppS.DoYesNoBox(title,$"Find hub for {city} from another Continent?",yes: "Off Continent",no: "Same Continent",cancel: null)) == 1 : false;
 			return await CitySettings.FindBestHub(cid,
 				offContinent.GetValueOrDefault());
 		}
@@ -353,7 +353,7 @@ namespace COTG.JSON
 				}
 				if (rv == null || rv.Length != 99)
 				{
-					COTG.Debug.Log($"Invalid options");
+					CnV.Debug.Log($"Invalid options");
 					const string defaults = "[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10],[1,10]]";
 					rv = defaults.Split(',', StringSplitOptions.RemoveEmptyEntries);
 				}
@@ -407,12 +407,12 @@ namespace COTG.JSON
 					city.SetMinisterOptions(args2);
                     await Post.Get("includes/mnio.php", $"a={HttpUtility.UrlEncode(args2, Encoding.UTF8)}&b={cid}", World.CidToPlayerOrMe(cid));
                     // find closest hub
-                    Note.Show($"Set Minister options settings",Note.Priority.low);
+                    Note.Show($"Set Minister options settings",Priority.low);
                 }
             }
             catch (Exception e)
             {
-                COTG.Debug.LogEx(e);
+                CnV.Debug.LogEx(e);
                 Note.Show($"Set hub failed, restarting might fix it");
             }
         }
@@ -616,7 +616,7 @@ namespace COTG.JSON
 			//var targets = Spot.GetSelectedForContextMenu(cid, false, targetHub, onlyMine: true);
 			//bool? sendWood=null, sendStone = null, sendFood = null, sendIron = null;
 			//int? reserveCarts = null, reserveShips = null;
-			//var result = await App.DispatchOnUIThreadTask(async () =>
+			//var result = await AppS.DispatchOnUIThreadTask(async () =>
 			//{
 			//	var panel = new StackPanel();
 			//	panel.Children.Add(new TextBlock() 
@@ -672,7 +672,7 @@ namespace COTG.JSON
 			//		var city = City.Get(_cid);
 			//		if(city.isHubOrStorage)
 			//		{
-			//			var i = await App.DoYesNoBox("Hub Selected", $"Double checkin: Send resources from {city.nameAndRemarks}'s?");
+			//			var i = await AppS.DoYesNoBox("Hub Selected", $"Double checkin: Send resources from {city.nameAndRemarks}'s?");
 			//			if(i == 0)
 			//			{
 			//				continue;
@@ -708,7 +708,7 @@ namespace COTG.JSON
 		//public static async void SetSourceHub(int cid, int targetHub)
 		//{
 		//	var targets = Spot.GetSelectedForContextMenu(cid, false,targetHub);
-		//	var result = await App.DispatchOnUIThreadTask(async () =>
+		//	var result = await AppS.DispatchOnUIThreadTask(async () =>
 		//	{
 		//		var dialog = new ContentDialog()
 		//		{
@@ -736,7 +736,7 @@ namespace COTG.JSON
 
 			//		var targets = Spot.GetSelectedForContextMenu(cid, false, targetHub, onlyMine: true);
 			//bool? sendWood = null, sendStone = null, sendFood = null, sendIron = null;
-			//var result = await App.DispatchOnUIThreadTask(async () =>
+			//var result = await AppS.DispatchOnUIThreadTask(async () =>
 			//{
 			//	var panel = new StackPanel();
 			//	panel.Children.Add(new TextBlock()

@@ -1,5 +1,5 @@
-﻿using COTG.Draw;
-using COTG.Game;
+﻿using CnV.Draw;
+using CnV.Game;
 
 using System;
 using System.Threading;
@@ -11,14 +11,17 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Shapes;
 
-using static COTG.Debug;
-using static COTG.Game.City;
-using static COTG.Views.CityBuild;
+using static CnV.Debug;
+using static CnV.Game.City;
+using static CnV.Views.CityBuild;
 using System.Collections.Generic;
 using CommunityToolkit.WinUI.UI;
+using CnV;
 
-namespace COTG.Views
+namespace CnV.Views
 {
+	using Game;
+
 	//public class KeyboardProxy : Control
 	//{
 	//	protected override void OnKeyDown(KeyRoutedEventArgs e)
@@ -90,8 +93,8 @@ namespace COTG.Views
 		//	//	var _canvas = canvas;
 		//	var _in = canvasHitTest;
 
-		//	App.DispatchOnUIThreadLow(() => _grid.Margin = new Thickness(0,topOffset,0,bottomMargin));
-		//	App.DispatchOnUIThreadLow(() =>
+		//	AppS.DispatchOnUIThreadLow(() => _grid.Margin = new Thickness(0,topOffset,0,bottomMargin));
+		//	AppS.DispatchOnUIThreadLow(() =>
 		//	{
 		//		_canvas.Margin = new Thickness(leftOffset,topOffset,0,0);
 		//		//Canvas.SetLeft(_canvas, leftOffset);
@@ -138,7 +141,7 @@ namespace COTG.Views
 				//var isWorld = IsWorldView();
 				//				ShellPage.isHitTestVisible = !webviewHasFocus;
 			//	UpdateFocus();
-				//App.DispatchOnUIThreadLow(() =>
+				//AppS.DispatchOnUIThreadLow(() =>
 				//{
 				//	//	instance.webFocus.IsChecked = webviewHasFocus;
 				//	//	Log($"!FocusWeb: {hasKeyboardFocus} w{webviewHasFocus} w2{webviewHasFocus2}");
@@ -215,7 +218,7 @@ namespace COTG.Views
 					//	var f = ChatTab.tabPage.Focus(FocusState.Programmatic);
 					//	Assert(f);
 					//}
-					//App.QueueOnUIThread( ()=>
+					//AppS.QueueOnUIThread( ()=>
 					{
 						var f = canvas.Focus(FocusState.Programmatic);
 						if(!forceFocus)
@@ -514,7 +517,7 @@ namespace COTG.Views
 			//if (CityBuild.menuOpen)
 			//{
 			//	// todo:  Handle naviation menu items and selection
-			//	App.DispatchOnUIThreadLow(() =>
+			//	AppS.DispatchOnUIThreadLow(() =>
 			//	{
 			//		ShellPage.instance.buildMenu.IsOpen = false;
 			//	});
@@ -550,7 +553,7 @@ namespace COTG.Views
 			}
 			else
 			{
-				// App.DispatchOnUIThreadLow(() =>
+				// AppS.DispatchOnUIThreadLow(() =>
 				
 				ProcessKey(key);
 				

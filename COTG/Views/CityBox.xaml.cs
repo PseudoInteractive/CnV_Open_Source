@@ -13,17 +13,20 @@ using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
-using COTG.Game;
+using CnV.Game;
 using System.ComponentModel;
 using Microsoft.UI.Xaml.Media.Imaging;
 using CommunityToolkit.WinUI;
 using CommunityToolkit.WinUI.Helpers;
 using CommunityToolkit.WinUI.UI;
+using CnV;
 
 // The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234236
 
-namespace COTG.Views
+namespace CnV.Views
 {
+	using Game;
+
 	public sealed partial class CityBox:UserControl, IANotifyPropertyChanged
 	{
 		#region PropertyChanged

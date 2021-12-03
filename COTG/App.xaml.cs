@@ -2,8 +2,8 @@
 using CommunityToolkit.WinUI;
 using CommunityToolkit.WinUI.Helpers;
 
-using COTG.Helpers;
-using COTG.Services;
+using CnV.Helpers;
+using CnV.Services;
 
 using WinRT;
 using Microsoft.AppCenter;
@@ -12,6 +12,8 @@ using Microsoft.AppCenter.Analytics;
 using Microsoft.AppCenter.Crashes;
 #endif
 
+using System.Runtime.InteropServices.WindowsRuntime;
+using Windows.Storage;
 
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -61,7 +63,7 @@ using ToggleMenuFlyoutItem = Microsoft.UI.Xaml.Controls.ToggleMenuFlyoutItem;
 using Microsoft.UI.Input;
 using Microsoft.UI.Xaml.Hosting;
 using Nito.AsyncEx;
-using COTG.JSON;
+
 using Microsoft.UI.Xaml.Input;
 using System;
 using Microsoft.Extensions.DependencyInjection;
@@ -71,9 +73,14 @@ using Microsoft.UI;
 using WinRT;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
 
-namespace COTG
+namespace CnV
 {
+	using CnV;
+	using Game;
+	using Helpers;
 	using Microsoft.Extensions.Hosting;
+	using Services;
+	using Views;
 
 	/// <summary>
 	/// App
@@ -362,8 +369,6 @@ namespace COTG
 			return ShellPage.DoKeyDown(key);
 
 		}
-		public static int dispatches0;
-		public static int dispatches1;
 
 		private void SwitchToForeground()
 		{
@@ -383,12 +388,6 @@ namespace COTG
 		}
 
 		static public int storageFull = 0;
-		static ConcurrentHashSet<string> exceptions = new();
-		public static bool RegisterException(string message)
-		{
-			return exceptions.Add( message);
-			
-		}
 
 		private void OnAppUnhandledException(object sender,Microsoft.UI.Xaml.UnhandledExceptionEventArgs e)
 		{
@@ -402,7 +401,7 @@ namespace COTG
 
 
 
-				if(RegisterException(e.Message))
+				if(AppS.RegisterException(e.Message))
 				{
 #if CRASHES
 
@@ -461,6 +460,7 @@ namespace COTG
 				//				Windows.UI.ViewManagement.ApplicationView.GetForCurrentView().TryEnterViewModeAsync(Windows.UI.ViewManagement.ApplicationViewMode.CompactOverlay);
 
 				window= new();
+				AppS.window = window;
 				//	window.
 				
 				
@@ -504,7 +504,7 @@ namespace COTG
 	//		window.ExtendsContentIntoTitleBar = true;
 			//	window.ExtendsContentIntoTitleBar = true;
 	//App.globalDispatcher = CoreWindow.GetForCurrentThread().Dispatcher;
-			globalQueue =  window.DispatcherQueue;
+			AppS.globalQueue =  window.DispatcherQueue;
 		//	keyQueue = globalQueue.CreateTimer();
 			//CoreApplication.EnablePrelaunch(false);
 				if (uwpArgs.Kind == Windows.ApplicationModel.Activation.ActivationKind.Launch)
@@ -548,7 +548,7 @@ namespace COTG
 			SwitchToBackground().ContinueWith( (_)=> 
 				{
 				state = State.closed;
-				App.DispatchOnUIThread(window.Close);
+				AppS.DispatchOnUIThread(window.Close);
 			});
 			return false;
 
@@ -721,7 +721,7 @@ namespace COTG
 		//					{
 		//						while (IncomingTab.instance == null)
 		//							await Task.Delay(500);
-		//						App.DispatchOnUIThreadLow(IncomingTab.instance.Show);
+		//						AppS.DispatchOnUIThreadLow(IncomingTab.instance.Show);
 
 		//					});
 		//				}
@@ -854,7 +854,7 @@ namespace COTG
 				}
 				catch (Exception _exception)
 				{
-					COTG.Debug.LogEx(_exception);
+					Debug.LogEx(_exception);
 				}
 
 
@@ -921,7 +921,7 @@ namespace COTG
 						}
 						catch (Exception _exception)
 						{
-							COTG.Debug.LogEx(_exception);
+							Debug.LogEx(_exception);
 						}
 						await Task.Delay(1000).ConfigureAwait(false); // wait one second if idle
 					}
@@ -961,30 +961,6 @@ namespace COTG
 			return new ActivationService();//this, null, new Lazy<UIElement>(()=> new Views.ShellPage()));
 		}
 
-		public static Task<T>
-			DispatchOnUIThreadTask<T>(  Func<Task<T>> func,Microsoft.UI.Dispatching.DispatcherQueuePriority priority = Microsoft.UI.Dispatching.DispatcherQueuePriority.Low)
-		{
-
-			var d = GlobalDispatcher();
-	
-			return DispatcherQueueExtensions.EnqueueAsync<T>(d,func, priority);
-
-		
-		}
-		
-		// There is no TaskCompletionSource<void> so we use a bool that we throw away.
-		public static Task DispatchOnUIThreadTask(
-	  Func<Task> func,DispatcherQueuePriority priority = DispatcherQueuePriority.Low, bool useCurrentThreadIfPossible = true)
-		{
-			var d = GlobalDispatcher();
-			return DispatcherQueueExtensions.EnqueueAsync(d,func, priority);
-		}
-		public static Task DispatchOnUIThreadTask(
-	  Action func,DispatcherQueuePriority priority = DispatcherQueuePriority.Low,bool useCurrentThreadIfPossible = true)
-		{
-			var d = GlobalDispatcher();
-			return DispatcherQueueExtensions.EnqueueAsync(d,func,priority);
-		}
 		//public static Task EnqueueAsync(DispatcherQueue dispatcher,Func<Task> function,DispatcherQueuePriority priority = 0)
 		//{
 		//	//IL_0032: Unknown result type (might be due to invalid IL or missing references)
@@ -1026,77 +1002,7 @@ namespace COTG
 		//		return taskCompletionSource.Task;
 		//	}
 		//}
-		public static SemaphoreSlim uiSema = new SemaphoreSlim(1);
-
-
-		public static bool isUISemaLocked => uiSema.IsLocked();
-		public static async Task<T>
-			DispatchOnUIThreadExclusive<T>(int cid,Func<Task<T>> func, DispatcherQueuePriority priority = DispatcherQueuePriority.Low)
-		{
-			if (!await LockUiSema(cid))
-				return default;
-			try
-			{
-				return await DispatchOnUIThreadTask(func, priority);
-			}
-			finally
-			{
-				ReleaseUISema(cid);
-
-			}
-
-		}
 		
-		public static async Task
-			DispatchOnUIThreadExclusive(int cid, Func<Task> func, DispatcherQueuePriority priority = DispatcherQueuePriority.Low)
-		{
-			if (!await LockUiSema(cid).ConfigureAwait(false))
-				return ;
-
-			try
-			{
-				await DispatchOnUIThreadTask(func, priority);
-			}
-			finally
-			{
-				ReleaseUISema(cid);
-			}
-
-		}
-
-		public static void ReleaseUISema(int cid)
-		{
-			Log($"unlock sema: {uiSema.CurrentCount}");
-			Assert(City.lockedBuild == cid);
-			City.lockedBuild = 0;
-			uiSema.Release();
-		}
-
-		public static async Task<bool> LockUiSema(int cid)
-		{
-			Log($"Lock sema: {uiSema.CurrentCount}");
-			Assert(City.CanVisit(cid));
-			if(App.isUISemaLocked)
-			{
-				var i = await App.DoYesNoBox("Busy","Wait for process to finish?");
-				if(i != 1)
-					return false;
-			}
-			await uiSema.WaitAsync();
-			try
-			{
-				if (!await JSClient.CitySwitch(cid, isLocked:true))
-					throw new UIException("Sema");
-				City.lockedBuild = cid;
-			}
-			catch(Exception ex)
-			{
-				LogEx(ex);
-				uiSema.Release();
-				return false;
-			}
-			return true;
-		}
 		//public static async Task WaitWhileUiSemaBusy()
 		//{
 		//	Log($"Lock sema: {uiSema.CurrentCount}");
@@ -1112,68 +1018,7 @@ namespace COTG
 
 		//}
 		
-	public static void DispatchOnUIThread(DispatcherQueueHandler action, DispatcherQueuePriority priority= DispatcherQueuePriority.Normal, bool alwaysQueue = false)
-	{
-			try
-			{
-				var d = GlobalDispatcher();
-				// run it immediately if we can
-				if(d.HasThreadAccess && !alwaysQueue)
-				{
-					++dispatches0;
-					action();
-				}
-				else
-				{
-					++dispatches1;
-					d.TryEnqueue(priority,action);
-				}
-			}
-			catch(Exception ex)
-			{
-				LogEx(ex);
-			}
-		}
-
-
-		public static void DispatchOnUIThreadIdle(DispatcherQueueHandler action)
-		{
-			DispatchOnUIThread(action,DispatcherQueuePriority.Low);
-//			var d = GlobalDispatcher();
-//			d.TryRunIdleAsync((_)=> action() );
-		}
-
-		public static void QueueOnUIThread(DispatcherQueueHandler action)
-		{
-			DispatchOnUIThread(action,priority: DispatcherQueuePriority.Low,alwaysQueue: true);
-			//			var d = GlobalDispatcher();
-			//			d.TryRunIdleAsync((_)=> action() );
-		}
-
-	public static void DispatchOnUIThreadLow(DispatcherQueueHandler action, bool alwaysQueue = false)
-	{
-			try
-			{
-				var d = GlobalDispatcher();
-				// run it immediately if we can
-				if(d.HasThreadAccess && !alwaysQueue)
-				{
-					++dispatches0;
-					action();
-				}
-				else
-				{
-					++dispatches1;
-					d.TryEnqueue(action);
-				}
-
-			}
-			catch(Exception __ex)
-			{
-				Debug.LogEx(__ex);
-			}
-		
-	}
+	
 
 	//public static int pendingDispatch;
 	//public static int pendingDispatchMax=10;
@@ -1209,9 +1054,6 @@ namespace COTG
 
 
 	// We only have 1 UI thread here
-	public static Microsoft.UI.Dispatching.DispatcherQueue GlobalDispatcher() => globalQueue;
-		public static Microsoft.UI.Dispatching.DispatcherQueue globalQueue;
-		public static bool IsOnUIThread() => globalQueue.HasThreadAccess;
 		//public static bool IsKeyPressedControl()
 		//{
 		//    var window = CoreWindow.GetForCurrentThread();
@@ -1245,7 +1087,7 @@ namespace COTG
 
 		public static void CopyTextToClipboard(string s)
 		{
-			App.DispatchOnUIThread(() =>
+			AppS.DispatchOnUIThread(() =>
 		 {
 			 try
 			 {
@@ -1313,79 +1155,97 @@ namespace COTG
 			}
 		}
 
-		public static bool isPopupOpen => AApp.popupSema.IsLocked();
-
-		public static Task<int> DoYesNoBox(string title, string text, string yes="Yes", string no = "No", string cancel ="Cancel" )
+		public static ApplicationDataContainer Settings()
 		{
-			return DispatchOnUIThreadTask(async () =>
-		   {
-				 return await DoYesNoBoxUI(title, text,yes,no,cancel);
-		   });
+			var appData = ApplicationData.Current;
+			if (appData.RoamingStorageQuota > 4)
+				return appData.RoamingSettings;
+			else
+				return appData.LocalSettings;
 		}
 
-		public static Task<int> MessageBox(string title, string text) => DoYesNoBox(title, text, "Okay", null, null);
-		public static Task<int> Failed( string text) => DoYesNoBox("Zut", text, "Close", null, null);
+		public static async Task<byte[]> GetContent(string filename)
+		{
+			var uri = new Uri("ms-appx:///" + filename);
+			var file = await StorageFile.GetFileFromApplicationUriAsync(uri);
+	
+			var buffer = await FileIO.ReadBufferAsync(file);
+
+			return buffer.ToArray();
+		}
 		
+		public static SemaphoreSlim uiSema = new SemaphoreSlim(1);
 
-		public async static Task<int> DoYesNoBoxUI(string title, string text, string yes = "Yes", string no = "No", string cancel = "Cancel")
+		public static bool isUISemaLocked => uiSema.IsLocked();
+		public static async Task<T>
+			DispatchOnUIThreadExclusive<T>(int cid,Func<Task<T>> func, DispatcherQueuePriority priority = DispatcherQueuePriority.Low)
 		{
-		//	Assert(App.uiSema.CurrentCount == 0);
-			Assert(App.IsOnUIThread());
+			if (!await LockUiSema(cid))
+				return default;
+			try
+			{
+				return await AppS.DispatchOnUIThreadTask(func, priority);
+			}
+			finally
+			{
+				ReleaseUISema(cid);
 
-			var dialog = new ContentDialog()
-				{
-					Title = title ?? string.Empty,
-					Content = text ?? string.Empty,
-					PrimaryButtonText = yes ?? string.Empty,
-					IsSecondaryButtonEnabled = no is not null,
-					IsPrimaryButtonEnabled = yes is not null,
-					
-					SecondaryButtonText = no??string.Empty,
-					CloseButtonText = cancel ?? string.Empty
-			};
-				return (await dialog.ShowAsync2()) switch { ContentDialogResult.Primary => 1, ContentDialogResult.Secondary => 0, _ => -1 };
-		}
-		public async static Task<(bool rv, bool? sticky)> DoYesNoBoxSticky(string title, string yes = "Yes", string no = "No", string cancel = "Cancel")
-		{
-			return await DispatchOnUIThreadTask(async () => await DoYesNoBoxStickyUI(title,yes,no,cancel));
-		}
-		public async static Task<(bool rv,bool? sticky)> DoYesNoBoxStickyUI(string title,  string yes = "Yes", string no = "No", string cancel = "Cancel")
-		{
-			//	Assert(App.uiSema.CurrentCount == 0);
-				var check = new CheckBox() { Content = "Apply to all", IsChecked = false };
-
-				var dialog = new ContentDialog()
-				{
-					Title = title,
-					Content = check,
-					PrimaryButtonText = yes,
-					SecondaryButtonText = no,
-					CloseButtonText = cancel
-				};
-				var uc = (await dialog.ShowAsync2());
-				if (uc == ContentDialogResult.Primary || uc == ContentDialogResult.Secondary)
-				{
-					var rv = uc == ContentDialogResult.Primary;
-					return (rv, check.IsChecked.GetValueOrDefault() ? rv : null);
-				}
-				else
-				{
-					return (false, null);
-				}
-			
-		}
-		public static void HideFlyout(object sender)
-		{
-			//var but = sender as Button;
-			//Assert(but != null);
-			//if (but != null)
-			//{
-			//	var fly = but.FindParent<FlyoutPresenter>();
-			//	Assert(fly != null);
-			//	fly?.ContextFlyout?.Hide();
-			//}
+			}
 
 		}
+		
+		public static async Task
+			DispatchOnUIThreadExclusive(int cid, Func<Task> func, DispatcherQueuePriority priority = DispatcherQueuePriority.Low)
+		{
+			if (!await LockUiSema(cid).ConfigureAwait(false))
+				return ;
+
+			try
+			{
+				await AppS.DispatchOnUIThreadTask(func, priority);
+			}
+			finally
+			{
+				ReleaseUISema(cid);
+			}
+
+		}
+
+		public static void ReleaseUISema(int cid)
+		{
+			Log($"unlock sema: {uiSema.CurrentCount}");
+			Assert(SpotS.lockedBuild == cid);
+			SpotS.lockedBuild = 0;
+			uiSema.Release();
+		}
+
+		public delegate Task ChangeCity(int cid, bool isLocked);
+
+		public static async Task<bool> LockUiSema(int cid)
+		{
+			Log($"Lock sema: {uiSema.CurrentCount}");
+			if(isUISemaLocked)
+			{
+				var i = await AppS.DoYesNoBox("Busy","Wait for process to finish?");
+				if(i != 1)
+					return false;
+			}
+			await uiSema.WaitAsync();
+			try
+			{
+				if (!await JSClient.CitySwitch(cid, isLocked:true))
+					throw new UIException("Sema");
+				SpotS.lockedBuild = cid;
+			}
+			catch(Exception ex)
+			{
+				LogEx(ex);
+				uiSema.Release();
+				return false;
+			}
+			return true;
+		}
+
 	}
 
 
@@ -1432,54 +1292,6 @@ namespace COTG
 	{
 
 
-		public static SemaphoreSlim popupSema = new SemaphoreSlim(1);
-
-		public static async Task<ContentDialogResult> ShowAsync2(this ContentDialog dialog,UIElement xamlRootSource = null)
-		{
-			Assert(App.globalQueue.HasThreadAccess);
-			CopyXamlRoomFrom(dialog,xamlRootSource);
-
-			await popupSema.WaitAsync();//.ConfigureAwait(true);
-			try
-			{
-				var result = await dialog.ShowAsync();
-				return result;
-
-			}
-			finally
-			{
-				popupSema.Release();
-			}
-		}
-
-		public static Task<bool> ShowAsync2(this TeachingTip dialog,UIElement xamlRootSource = null)
-		{
-			Assert(App.globalQueue.HasThreadAccess);
-			TaskCompletionSource<bool> result = new TaskCompletionSource<bool>();
-			var rv = result.Task;
-			App.DispatchOnUIThreadLow(() =>
-		   {
-			   CopyXamlRoomFrom(dialog,xamlRootSource);
-			   if(dialog.Target is null)
-				   dialog.TailVisibility=TeachingTipTailVisibility.Collapsed;
-
-			   dialog.CloseButtonClick+= (_tt,_) =>
-			   {
-				   _tt.IsOpen=false;
-				   result.TrySetResult(false);
-			   };
-			   dialog.ActionButtonClick+= (_tt,_) =>
-			   {
-				   _tt.IsOpen=false;
-				   result.TrySetResult(true);
-			   };
-			   dialog.IsOpen=true;
-		   });
-
-			return rv;
-		}
-
-
 
 
 
@@ -1494,55 +1306,7 @@ namespace COTG
 			}
 			App.controlPressed = mod.IsControl();
 		}
-		public static string CidToStringMD(this int cid)
-		{
-			var coord = cid.CidToString();
-			return $"[{coord}](/c/{coord})";
-
-		}
-		public static string bspotToString(this (int x, int y) cc)
-		{
-			var coord = $"{(cc.x):000}:{(cc.y):000}"; ;
-			return coord;
-
-		}
-		public static string CidToCoords(this int cid)
-		{
-			var coord = cid.CidToString();
-			return $"<coords>{coord}</coords>";
-
-		}
-
-		public static string CidToString(this int cid)
-		{
-			return $"{(cid % 65536):000}:{(cid / 65536):000}";
-		}
-		public static int FromCoordinate(this string s)
-		{
-
-			return AUtil.DecodeCid(0, s);
-			//                var links = s.Split( new char[] { ' ','.',':',',',';'},StringSplitOptions.RemoveEmptyEntries);
-			//              return int.Parse(links[0]) | int.Parse(links[1]) * 65536;
-
-
-		}
-		// 20 bit mash
-
-
-		public static Vector2 ToWorldC(this int c)
-		{
-			var x = c % 65536;
-			var y = c >> 16;
-
-			return new Vector2(x, y);
-		}
-		public static (int X, int Y) ToWorldXY(this int c)
-		{
-			var x = c % 65536;
-			var y = c >> 16;
-
-			return (x, y);
-		}
+		
 		public static bool IsShift(this VirtualKeyModifiers mod)
 		{
 			return mod.HasFlag(VirtualKeyModifiers.Shift);
@@ -1559,18 +1323,7 @@ namespace COTG
 		{
 			return mod.HasFlag(VirtualKeyModifiers.Control) & mod.HasFlag(VirtualKeyModifiers.Shift);
 		}
-		public static void CopyXamlRoomFrom(this FlyoutBase target, UIElement source)
-		{
-			if(source?.XamlRoot is not null) 
-				target.XamlRoot = source.XamlRoot;
-		}
-		public static void CopyXamlRoomFrom(this UIElement target, UIElement source)
-		{
-			if (source?.XamlRoot is not null)
-				target.XamlRoot = source.XamlRoot;
-			else
-				target.XamlRoot = App.window.Content.XamlRoot;
-		}
+		
 
 		public static MenuFlyoutItem CreateMenuItem(string text, Action command, object context = null)
 		{
@@ -1682,10 +1435,9 @@ namespace COTG
 			//		ShellPage.coreInputSource.PointerCursor = type,DispatcherQueuePriority.Low);
 
 			//}
-		//	App.QueueOnUIThread( () =>	CoreWindow.GetForCurrentThread().PointerCursor = type);
+		//	AppS.QueueOnUIThread( () =>	CoreWindow.GetForCurrentThread().PointerCursor = type);
 		}
 
-		public static bool IsLocked(this SemaphoreSlim sema) => sema.CurrentCount==0;
 		public static bool IsLocalPointOver(this FrameworkElement e,int x,int y)
 		{
 			return x >=0 && y >= 0 && x < e.ActualWidth && y < e.ActualHeight;
@@ -1741,5 +1493,7 @@ namespace COTG
 		//		exporter.ExportAsCsv(range,stream);
 		//	}
 		//}
+
 	}
+
 }

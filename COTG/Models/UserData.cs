@@ -2,7 +2,7 @@
 
 using Microsoft.UI.Xaml.Media.Imaging;
 
-namespace COTG.Models
+namespace CnV.Models
 {
     public class UserData
     {

@@ -5,8 +5,9 @@ using System.Runtime.InteropServices;
 
 using WinRT;
 
-namespace COTG.Views
+namespace CnV
 {
+	using Views;
 
 	public class WindowPosition
     {

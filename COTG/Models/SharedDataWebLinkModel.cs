@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace COTG.Models
+namespace CnV.Models
 {
     public class SharedDataWebLinkModel : SharedDataModelBase
     {

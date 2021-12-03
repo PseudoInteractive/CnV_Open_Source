@@ -2,7 +2,7 @@
 
 using Windows.ApplicationModel.DataTransfer;
 
-namespace COTG.Models
+namespace CnV.Models
 {
     public class DragDropStartingData
     {

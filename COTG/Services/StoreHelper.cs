@@ -8,7 +8,7 @@ using Windows.Foundation;
 using Windows.Services.Store;
 using Windows.UI.Popups;
 
-namespace COTG.Services
+namespace CnV.Services
 {
 	public class StoreHelper
 	{

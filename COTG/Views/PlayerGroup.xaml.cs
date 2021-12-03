@@ -1,4 +1,4 @@
-﻿using COTG.Game;
+﻿using CnV.Game;
 
 using System;
 using System.Collections.Generic;
@@ -17,12 +17,14 @@ using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
 
-using static COTG.Debug;
+using static CnV.Debug;
 // The Content Dialog item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
 
-namespace COTG.Views
+namespace CnV.Views
 {
-    public sealed partial class PlayerGroup : ContentDialog
+	using Game;
+
+	public sealed partial class PlayerGroup : ContentDialog
     {
         public PlayerGroup()
         {
@@ -100,7 +102,7 @@ namespace COTG.Views
         // returns null on cancel
         public static async Task<string[]> ChooseNames(string title, string[] names)
         {
-			return await App.DispatchOnUIThreadTask(async () =>
+			return await AppS.DispatchOnUIThreadTask(async () =>
 			{
 				PlayerGroup pg = new PlayerGroup();
 				if (names != null)

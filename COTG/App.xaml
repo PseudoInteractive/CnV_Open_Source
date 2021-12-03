@@ -1,8 +1,8 @@
-﻿<Application x:Class="COTG.App"
+﻿<Application x:Class="CnV.App"
 	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	      RequestedTheme="Dark"   
-	xmlns:Custom="using:COTG.Views"
+	xmlns:Custom="using:CnV.Views"
 	xmlns:winui="using:Microsoft.UI.Xaml.Controls"	
 			
 			 >

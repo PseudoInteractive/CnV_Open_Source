@@ -1,4 +1,4 @@
-﻿using COTG.Models;
+﻿using CnV.Models;
 
 using Windows.ApplicationModel.DataTransfer;
 using Microsoft.UI.Xaml;
@@ -6,9 +6,11 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media.Imaging;
 using Microsoft.UI.Xaml.Controls;
 
-namespace COTG.Services.DragAndDrop
+namespace CnV.Services.DragAndDrop
 {
-    // For instructions on testing this service see https://github.com/Microsoft/WindowsTemplateStudio/blob/master/docs/UWP/features/drag-and-drop.md
+	using Models;
+
+	// For instructions on testing this service see https://github.com/Microsoft/WindowsTemplateStudio/blob/master/docs/UWP/features/drag-and-drop.md
     public class DragDropService
     {
         private static DependencyProperty configurationProperty = DependencyProperty.RegisterAttached(

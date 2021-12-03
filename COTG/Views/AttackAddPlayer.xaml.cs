@@ -1,4 +1,4 @@
-﻿using COTG.Game;
+﻿using CnV.Game;
 
 using System;
 using System.Collections.Generic;
@@ -17,11 +17,13 @@ using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
-using static COTG.Game.Troops;
-using static COTG.Game.Spot;
+using static CnV.Game.Troops;
+using static CnV.Game.Spot;
 
-namespace COTG.Views
+namespace CnV.Views
 {
+	using Game;
+
 	public sealed partial class AttackAddPlayer : ContentDialog
 	{
 		static AttackAddPlayer instance;
@@ -97,7 +99,7 @@ namespace COTG.Views
 						if (AttackTab.attacks.Any(a => a.cid==cid))
 							continue;
 						city.classification = baseClassification;
-						toAdd.Add(new AttackPlanCity(city, baseClassification == Classification.se ? AttackType.se
+						toAdd.Add(new AttackPlanCity(city, baseClassification == Spot.Classification.se ? AttackType.se
 							: ((wantAcademy.HasValue ? wantAcademy.Value : city.hasAcademy.GetValueOrDefault()) ? AttackType.senator : AttackType.assault)));
 
 					}

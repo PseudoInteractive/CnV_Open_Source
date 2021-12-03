@@ -7,7 +7,7 @@ using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
 using Microsoft.Xna;
 using SpriteVertices = Microsoft.Xna.SpriteVertices;
-namespace COTG.Draw
+namespace CnV.Draw
 {
 	public class Mesh
 	{

@@ -3,19 +3,24 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using COTG.Game;
-using COTG.Services;
-using COTG.Views;
+using CnV.Game;
+using CnV.Services;
+using CnV.Views;
 using System.Numerics;
-using COTG.JSON;
 using Microsoft.AppCenter;
 using CommunityToolkit.WinUI.Helpers;
 using System.Runtime;
 
-namespace COTG
+namespace CnV
 {
+	using CnV;
+
 	using CnVChat;
+
 	using CnVDiscord;
+	using Game;
+	using Services;
+	using Views;
 
 	public partial class AGame
 	{
@@ -26,6 +31,12 @@ namespace COTG
 		//					   CnVChatClient.instance.Initialize();
 		try
 		{
+			#if CNV
+			var signin = new Signin();
+			await signin.ShowAsync2();
+			#else
+			await APlayFab.SigninLegacy();
+			#endif
 			Assert( JSClient.world != 0);
 			ShellPage.SetViewModeCity();
 			
@@ -78,6 +89,7 @@ namespace COTG
 			// give some time for initial pressure to come down
 			TabPage.ShowTabs();
 			CityCustom.Load();
+
 			await Task.Delay(1000);
 
 		//	System.GC.Collect(2,GCCollectionMode.Default,true,true);

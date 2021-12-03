@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-using COTG.Helpers;
+using CnV.Helpers;
 
 using Windows.Storage;
 
-namespace COTG.Models
+namespace CnV.Models
 {
     public class ShareSourceData
     {

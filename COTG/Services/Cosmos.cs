@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 //using System.Collections.Generic;
 
 //using COTG.DB;
-using COTG.Game;
+using CnV.Game;
 using System.Threading;
 //using static COTG.Debug;
 //using Microsoft.Azure.Cosmos;
@@ -13,7 +13,7 @@ using System.Threading;
 //using System.Linq;
 //using Azure;
 
-namespace COTG.Services
+namespace CnV.Services
 {
 //	public class ShareStringDB : ITableEntity
 //	{

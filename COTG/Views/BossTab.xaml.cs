@@ -1,4 +1,4 @@
-﻿using COTG.Game;
+﻿using CnV.Game;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -15,13 +15,15 @@ using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
-using static COTG.Game.Troops;
-using static COTG.Debug;
+using static CnV.Game.Troops;
+using static CnV.Debug;
 using System.Threading.Tasks;
 
-namespace COTG.Views
+namespace CnV.Views
 {
-    public sealed partial class BossTab : UserTab
+	using Game;
+
+	public sealed partial class BossTab : UserTab
     {
         public static BossTab instance;
         public static bool IsVisible() => instance.isFocused;
@@ -30,7 +32,7 @@ namespace COTG.Views
 
         public override Task VisibilityChanged(bool visible, bool longTerm)
 		{
-			App.DispatchOnUIThreadLow(() =>
+			AppS.DispatchOnUIThreadLow(() =>
 		   {
 			   if (visible)
 			   {

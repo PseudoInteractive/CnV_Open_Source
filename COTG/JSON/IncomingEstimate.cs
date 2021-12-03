@@ -1,4 +1,4 @@
-﻿using COTG.Helpers;
+﻿using CnV.Helpers;
 
 using System;
 using System.Collections.Generic;
@@ -6,9 +6,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-using static COTG.Game.Troops;
+using static CnV.Game.Troops;
 
-namespace COTG.Game
+namespace CnV.Game
 {
 	public enum TravelType
 	{

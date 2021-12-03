@@ -1,4 +1,4 @@
-﻿using COTG.Game;
+﻿using CnV.Game;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -15,10 +15,10 @@ using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
-using static COTG.Game.Troops;
-using static COTG.Debug;
-using COTG.Helpers;
-using COTG.Services;
+using static CnV.Game.Troops;
+using static CnV.Debug;
+using CnV.Helpers;
+using CnV.Services;
 using CommunityToolkit.WinUI;
 using System.Threading.Tasks;
 using System.Web;
@@ -27,10 +27,12 @@ using Microsoft.UI.Xaml.Media.Imaging;
 using Microsoft.AppCenter.Analytics;
 using System.ComponentModel;
 using CommunityToolkit.WinUI.UI.Controls;
-using static COTG.Debounce;
+using static CnV.Debounce;
 
-namespace COTG.Views
+namespace CnV.Views
 {
+	using Game;
+	using Services;
 
 	public sealed partial class NearRes : UserTab
 	{
@@ -301,7 +303,7 @@ namespace COTG.Views
 						}
 						if(!useRatio)
 							r = r.Sub(sup.res);
-						//App.DispatchOnUIThreadIdle(() =>
+						//AppS.DispatchOnUIThreadIdle(() =>
 						//{
 						//	supporters.OnPropertyChanged(sup);
 						//	sup.OnPropertyChanged(string.Empty);
@@ -314,7 +316,7 @@ namespace COTG.Views
 					//	supportGrid.ItemsSource = supporters;
 
 				}
-				App.DispatchOnUIThreadIdle(() =>
+				AppS.DispatchOnUIThreadIdle(() =>
 				{
 					RefreshSupportByRes();
 					OnPropertyChanged(nameof(targetIcon));
@@ -387,7 +389,7 @@ namespace COTG.Views
 			var text = sender as FrameworkElement;
 			var supporter = text.DataContext as ResSource;
 			var flyout = new MenuFlyout();
-			flyout.CopyXamlRoomFrom(text);
+			flyout.CopyXamlRootFrom(text);
 			AApp.AddItem(flyout, "Zero", (_, _) =>
 			{
 				supporter.res.Clear();
@@ -475,7 +477,7 @@ namespace COTG.Views
 
 			s.res.Clear();
 			s.OnPropertyChanged();
-			App.DispatchOnUIThreadIdle(() =>
+			AppS.DispatchOnUIThreadIdle(() =>
 			{
 				s.NotifyChange();
 				DoRefresh();

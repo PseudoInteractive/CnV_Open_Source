@@ -1,4 +1,4 @@
-﻿using COTG.Helpers;
+﻿using CnV.Helpers;
 
 using System;
 using System.Collections.Generic;
@@ -7,12 +7,16 @@ using System.ComponentModel;
 using System.Text;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
-using COTG.Views;
-using static COTG.Game.Troops;
-using static COTG.AUtil;
+using CnV.Views;
+using static CnV.Game.Troops;
+using static CnV.AUtil;
+using System.Numerics;
 
-namespace COTG.Game
+namespace CnV.Game
 {
+	using Helpers;
+	using Views;
+
 	public enum AttackType : byte
 	{
 		none,
@@ -413,6 +417,32 @@ namespace COTG.Game
 
 		public static bool Contains(this AttackPlanCity[] l, int cid) => l.Any(a => a.cid==cid);
 		public static bool Contains(this AttackPlanCity[] l, City city) => Contains(l, city.cid);
+		public static Span2 SpanFromCities(this IEnumerable<AttackPlanCity> spots)
+		{
+			Span2 rv;
+			rv.c0 = new Vector2(float.MaxValue);
+			rv.c1 = new Vector2(-float.MaxValue);
+			foreach(var spot in spots)
+			{
+				rv.Union(spot.cid.ToWorldC());
+			}
+
+			return rv;
+		}
+
+		public static Span2 UnionWithout(IEnumerable<AttackPlanCity>  spots, AttackPlanCity exclude )
+		{
+			Span2 rv;
+			rv.c0 = new Vector2(float.MaxValue);
+			rv.c1 = new Vector2(-float.MaxValue);
+			foreach (var s in spots)
+			{
+			
+				if(s != exclude)
+					rv.Union(s.cid.ToWorldC());
+			}
+			return rv;
+		}
 
 	};
 }

@@ -4,7 +4,7 @@ using System;
 
 using Windows.UI.Notifications;
 
-namespace COTG.Services
+namespace CnV.Services
 {
     internal partial class ToastNotificationsService
     {

@@ -1,6 +1,6 @@
-﻿using COTG.Game;
-using COTG.JSON;
-using COTG.Services;
+﻿using CnV.Game;
+
+using CnV.Services;
 
 using System;
 using System.Collections.Generic;
@@ -11,20 +11,22 @@ using System.Threading.Tasks;
 
 //using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls;
-using COTG.Views;
+using CnV.Views;
 //using Microsoft.UI.Xaml.Media;
 
-using static COTG.Debug;
-using static COTG.Game.City;
-using static COTG.Views.CityBuild;
-using static COTG.Views.ShellPage;
-using static COTG.Views.QueueTab;
+using static CnV.Debug;
+using static CnV.Game.City;
+using static CnV.Views.CityBuild;
+using static CnV.Views.ShellPage;
+using static CnV.Views.QueueTab;
 using EnumsNET;
 using Microsoft.UI.Xaml;
+using CnV;
 
-namespace COTG.Views
+namespace CnV.Views
 {
 	using System.Collections;
+	using Game;
 
 
 	public sealed partial class QueueTab : UserTab
@@ -74,7 +76,7 @@ namespace COTG.Views
 	//			return;
 	//		}
 
-	////		await App.DispatchOnUIThreadTask(() =>
+	////		await AppS.DispatchOnUIThreadTask(() =>
 	//		{
 	//			BuildItemView view = null;
 	//			foreach (var c in instance.cities)
@@ -96,7 +98,7 @@ namespace COTG.Views
 		
 		public static void RebuildAll()
 		{
-			App.DispatchOnUIThread(() =>
+			AppS.DispatchOnUIThread(() =>
 		   {
 			   var build = City.GetBuild();
 				//build.UpdateBuildStage();
@@ -580,8 +582,9 @@ namespace COTG.Views
 	}
 
 }
-namespace COTG.Game
+namespace CnV.Game
 {
+	using Views;
 
 	public partial class City
 	{
@@ -635,7 +638,7 @@ namespace COTG.Game
 			var initialMoveSlots = Player.moveSlots;
 			var nextMoveConfirm = initialMoveSlots - movesPerConfirm;
 
-			var result = await App.DoYesNoBox("Move Stuff", "Whould you like to demo resources where buildings should go?", cancel: "Don't Move", no: "Move Stuff", yes: "Move+Demo");
+			var result = await AppS.DoYesNoBox("Move Stuff", "Whould you like to demo resources where buildings should go?", cancel: "Don't Move", no: "Move Stuff", yes: "Move+Demo");
 			if (result == -1)
 				return;
 			var allowDemo = result == 1;
@@ -686,7 +689,7 @@ namespace COTG.Game
 												if (Player.moveSlots < nextMoveConfirm)
 												{
 													nextMoveConfirm = (Player.moveSlots - movesPerConfirm).Max(3);
-													if (await App.DoYesNoBox("Move Stuff", $"{initialMoveSlots - Player.moveSlots} moves so far, {Player.moveSlots} moves left, continue?") != 1)
+													if (await AppS.DoYesNoBox("Move Stuff", $"{initialMoveSlots - Player.moveSlots} moves so far, {Player.moveSlots} moves left, continue?") != 1)
 														goto done;
 												}
 											}
@@ -724,7 +727,7 @@ namespace COTG.Game
 			Note.Show($"Final Move slots: {Player.moveSlots}");
 			return;
 		error:
-			await App.DoYesNoBox("Move Stuff", "Something did not move right.  Maybe a race condition?  Maybe try again to continue", "Okay", null);
+			await AppS.DoYesNoBox("Move Stuff", "Something did not move right.  Maybe a race condition?  Maybe try again to continue", "Okay", null);
 
 		}
 		public  string bStage
@@ -956,7 +959,7 @@ namespace COTG.Game
 									if(asked==false)
 									{
 										asked = true;
-										if(await App.DoYesNoBox("Clear Res?","Would you like to clear out the resources?") != 1)
+										if(await AppS.DoYesNoBox("Clear Res?","Would you like to clear out the resources?") != 1)
 										{
 											return;
 										}

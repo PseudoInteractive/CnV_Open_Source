@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-using COTG.Game;
+using CnV.Game;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
 using Windows.ApplicationModel.DataTransfer;
@@ -12,12 +12,12 @@ using Windows.Foundation.Metadata;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Navigation;
-using static COTG.Debug;
+using static CnV.Debug;
 using SymbolIconSource = Microsoft.UI.Xaml.Controls.SymbolIconSource;
 using System.Linq;
 //using Microsoft.UI.Windowing;
 
-namespace COTG.Views
+namespace CnV.Views
 {
 	public sealed partial class TabPage:Page
 	{
@@ -245,7 +245,7 @@ namespace COTG.Views
 
 		public static void ShowTabs()
 		{
-			App.DispatchOnUIThreadIdle(()=>
+			AppS.DispatchOnUIThreadIdle(()=>
 			{
 				MainPage.instance.ShowOrAdd(true);
 				SpotTab.instance.ShowOrAdd(true);
@@ -498,7 +498,7 @@ namespace COTG.Views
 			}
 			if(menu.Items.Count == 0)
 				menu.Items.Add(new MenuFlyoutItem() { Text = "All the Tabs are open" });
-			menu.CopyXamlRoomFrom(sender);
+			menu.CopyXamlRootFrom(sender);
 
 			menu.ShowAt(_sender);
 

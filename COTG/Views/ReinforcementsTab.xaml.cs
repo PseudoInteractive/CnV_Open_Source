@@ -8,12 +8,13 @@ using Windows.Foundation;
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
 
-namespace COTG.Views
+namespace CnV.Views
 {
 	using System.Collections;
 	using System.IO;
 	using System.Text;
 	using System.Threading.Tasks;
+	using Game;
 	using Syncfusion.UI.Xaml.DataGrid;
 
 

@@ -1,6 +1,6 @@
-﻿using COTG.Draw;
-using COTG.Game;
-using COTG.JSON;
+﻿using CnV.Draw;
+using CnV.Game;
+
 
 using System;
 using System.Linq;
@@ -8,15 +8,17 @@ using System.Threading.Tasks;
 
 using Microsoft.UI.Xaml;
 
-using static COTG.Debug;
-using static COTG.Game.City;
-using static COTG.Game.Troops;
-using static COTG.BuildingDef;
+using static CnV.Debug;
+using static CnV.Game.City;
+using static CnV.Game.Troops;
+using static CnV.BuildingDef;
 using System.Buffers;
 //using static System.Buffers.ArrayPool<COTG.Building>;
 
-namespace COTG.Views
+namespace CnV.Views
 {
+	using Game;
+
 	public sealed partial class PlannerTab : UserTab
 	{
 		public static PlannerTab instance;

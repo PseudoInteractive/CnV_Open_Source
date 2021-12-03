@@ -1,5 +1,5 @@
-﻿using COTG.Services;
-using COTG.Views;
+﻿using CnV.Services;
+using CnV.Views;
 
 using System;
 using System.Collections.Generic;
@@ -10,20 +10,22 @@ using System.Threading.Tasks;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 
-using TroopTypeCounts = COTG.Game.TroopTypeCounts;
-using TroopTypeCountsRef = COTG.Game.TroopTypeCounts;
-using static COTG.Game.TroopTypeCountHelper;
-using COTG.Helpers;
+using TroopTypeCounts = CnV.Game.TroopTypeCounts;
+using TroopTypeCountsRef = CnV.Game.TroopTypeCounts;
+using static CnV.Game.TroopTypeCountHelper;
+using CnV.Helpers;
 //COTG.DArrayRef<COTG.Game.TroopTypeCount>;
 
-namespace COTG.Game;
+namespace CnV.Game;
 
 using System.Net.Http;
+using Services;
+using Views;
 
 //"trintr"
 [Serializable]
 [System.Diagnostics.DebuggerDisplay($"{{{nameof(GetDebuggerDisplay)}(),nq}}")]
-public class Reinforcement : IEquatable<Reinforcement>
+public class Reinforcement : IEquatable<Reinforcement>, IComparable<Reinforcement>
 {
 	public long order;
 
@@ -55,7 +57,7 @@ public class Reinforcement : IEquatable<Reinforcement>
 		$"reinRet?order={order.ToString()}&pid={sourceCity.pid.ToString() }");
 	public string  retS => "Return";
 	
-	public TroopTypeCountsRef troops = new();
+	public TroopTypeCounts troops = new();
 	public City[] cities => new []{sourceCity, targetCity};
 	public string _Troops { get => troops.Format(":",' ',','); }
 
@@ -136,6 +138,10 @@ public class Reinforcement : IEquatable<Reinforcement>
 	{
 		return $"{{{nameof(time)}={time.ToString()},  {nameof(sourceCity)}={sourceCity}, {nameof(targetCity)}={targetCity}, {nameof(troops)}={troops.ToString()}}}";
 	}
+
+	public int CompareTo(Reinforcement other) => order.CompareTo(other.order);
+
+
 }
 	
     public static class ReinforcementHelper

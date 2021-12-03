@@ -1,5 +1,7 @@
-﻿using COTG.Game;
-using COTG.Views;
+﻿using CnV;
+
+using CnV.Game;
+using CnV.Views;
 
 using System;
 using System.Collections.Generic;
@@ -11,9 +13,12 @@ using System.Threading.Tasks;
 
 using Windows.Storage;
 
-namespace COTG.Services
+namespace CnV.Services
 {
-    public static class ChatStorage
+	using Game;
+	using Views;
+
+	public static class ChatStorage
     {
         static string fileName => $"whisper{JSClient.world}{Player.myId}.zip";
         static string ArchiveName(int playerId) => playerId.ToString();
@@ -53,7 +58,7 @@ namespace COTG.Services
                         }
 
                         var temp = System.Text.Json.JsonSerializer.Deserialize<List<WhisperMessage>>(byteBuffer);
-                        App.DispatchOnUIThreadLow(() =>
+                        AppS.DispatchOnUIThreadLow(() =>
                         {
 
                             // add in new messages

@@ -1,6 +1,6 @@
-﻿using COTG.Helpers;
-using COTG.Services;
-using COTG.Views;
+﻿using CnV.Helpers;
+using CnV.Services;
+using CnV.Views;
 using System.Text.RegularExpressions;
 
 using Cysharp.Text;
@@ -18,15 +18,22 @@ using System.Runtime.InteropServices.WindowsRuntime;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
-
+using CnV.GameData;
 using Windows.Storage;
 using Microsoft.UI.Xaml.Media.Imaging;
 
-using static COTG.Debug;
-using static COTG.Game.WorldViewSettings;
+using static CnV.Debug;
+using static CnV.Game.WorldViewSettings;
 using Vector2 = System.Numerics.Vector2;
-namespace COTG.Game
+using CnV;
+using static CnV.AMath;
+
+namespace CnV.Game
 {
+	using Helpers;
+	using Services;
+	using Views;
+
 	static class WorldHelper
 	{
 
@@ -100,7 +107,37 @@ namespace COTG.Game
 			return RGB16((type & 1) != 0 ? 0xFFu : 0x3Fu, (type & 2) != 0 ? 0xFFu : 0x3Fu, (type & 4) != 0 ? 0xFFu : 0x3Fu);
 		}
 
-		
+		public static float DistanceToCid(this int a, int cid) => AMath.Distance(a.CidToWorld(), cid.CidToWorld());
+		public static double DistanceToCidD(this int a, int cid) => AMath.DistanceD(a.CidToWorld(), cid.CidToWorld());
+
+		public static float DistanceToCid(this (int x, int y) a, int cid) => AMath.Distance(a, cid.CidToWorld());
+		public static double DistanceToCidD(this (int x, int y) a, int cid) => AMath.DistanceD(a, cid.CidToWorld());
+
+		public static uint ToCompactCid(this int c)
+		{
+			var x = c % 65536;
+			var y = c >> 16;
+			return ToCompactCid((x, y));
+
+		}
+
+		public static uint ToCompactCid(this (int x,int y) c)
+		{
+			return (uint)c.x | (uint)c.y * World.span;
+		}
+
+		public static (int x,int y) FromCompactCid(this uint c)
+		{
+			var y = c / World.span;
+
+			return ( (int)(c -y* World.span),(int) y );
+		}
+
+		public static uint ZCurveEncodeCid(this int cid)
+		{
+			var c = World.WorldToContinentAndOffset(cid.CidToWorld());
+			return (uint)((Morton.ZCurveEncode( (c.x,c.y))&0xffffff) + (c.continent << 24));
+		}
 	}
 
 
@@ -1236,7 +1273,7 @@ namespace COTG.Game
 				//	shot.continents[contId].settled = Continent.all[contId].settled;
 			//		shot.continents[contId].castles = Continent.all[contId].castles;
 				}
-			//	shot.time = JSClient.ServerTime().UtcDateTime;
+			//	shot.time = CnVServer.ServerTime().UtcDateTime;
 				//if (ContinentsSnapshot.all.Length > 0 && shot.time - ContinentsSnapshot.all.Last().time < TimeSpan.FromHours(1.5f))
 				//{
 				//	// don't update, max one snapshot per 1.5 hours
@@ -1430,7 +1467,7 @@ namespace COTG.Game
 				var data1 = await HeatMap.GetSnapshot(World.heatMapT1);
 				//Log("Change string");
 				
-				var task = App.DispatchOnUIThreadTask(() =>
+				var task = AppS.DispatchOnUIThreadTask(() =>
 			   {
 				   if (HeatTab.instance.isFocused)
 				   {
@@ -1579,7 +1616,7 @@ namespace COTG.Game
 		public static int nextUpdateTick;
 		public static void UpdateRegionInfo(int cid)
 		{
-			if (JSON.TileData.state != JSON.TileData.State.ready)
+			if (CnV.GameData.TileData.state != TileData.State.ready)
 				return;
 
 			var tick = Environment.TickCount;
@@ -1623,7 +1660,7 @@ namespace COTG.Game
 
 					foreach (var st in o.Value.EnumerateArray())
 					{
-						JSON.TileData.UpdateTile(st.GetAsString());
+						TileData.UpdateTile(st.GetAsString());
 					}
 				}
 			}

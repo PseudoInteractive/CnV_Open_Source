@@ -1,5 +1,5 @@
-﻿using COTG.Game;
-using COTG.Models;
+﻿using CnV.Game;
+using CnV.Models;
 using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -9,7 +9,7 @@ using Microsoft.UI.Xaml.Controls;
 using System.Diagnostics.Contracts;
 using System.Collections.Generic;
 using Telerik.UI.Xaml.Controls.Grid;
-using static COTG.Debug;
+using static CnV.Debug;
 using Windows.ApplicationModel.Core;
 //using Windows.UI.Core;
 using Microsoft.UI.Xaml;
@@ -20,19 +20,21 @@ using System.Collections.Specialized;
 using Windows.Foundation;
 using CommunityToolkit.WinUI;
 using Microsoft.UI.Xaml.Input;
-using COTG.Services;
+using CnV.Services;
 using System.Collections;
-using COTG.JSON;
+
 //using Windows.UI.Input;
 using Telerik.UI.Xaml.Controls.Input;
-using COTG.Helpers;
+using CnV.Helpers;
 using Microsoft.UI.Xaml.Navigation;
 using Windows.System;
 using System.Linq;
 
-namespace COTG.Views
+namespace CnV.Views
 {
-    public sealed partial class SpotTab : UserTab
+	using Game;
+
+	public sealed partial class SpotTab : UserTab
     {
 		public override TabPage defaultPage => TabPage.secondaryTabs;
 
@@ -102,7 +104,7 @@ namespace COTG.Views
         //public static void SelectedToGrid()
         //{
         //    ++silenceChanges;
-        //    App.DispatchOnUIThreadLow(() =>
+        //    AppS.DispatchOnUIThreadLow(() =>
         //    {
         //        try
         //        {
@@ -153,7 +155,7 @@ namespace COTG.Views
         //}
         //public static void SelectOne(Spot spot)
         //{
-        //    App.DispatchOnUIThreadLow(() =>
+        //    AppS.DispatchOnUIThreadLow(() =>
         //    {
         //        try
         //        {
@@ -183,7 +185,7 @@ namespace COTG.Views
             if (disableSelection == 0)
             {
 
-                App.DispatchOnUIThreadLow(() =>
+                AppS.DispatchOnUIThreadLow(() =>
            {
                var id = SpotMRU.c.IndexOf(spot);
                if (id != 0)

@@ -9,7 +9,7 @@ using Windows.ApplicationModel.Core;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 
-namespace COTG.Services
+namespace CnV.Services
 {
 //    public delegate void ViewClosedHandler(ViewLifetimeControl viewControl, EventArgs e);
 

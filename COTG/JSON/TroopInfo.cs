@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 using J = System.Text.Json.Serialization.JsonPropertyNameAttribute;
 
-namespace COTG.JSON
+namespace CnV.GameData
 {
 	public partial class TroopInfo
 	{
@@ -15,7 +15,7 @@ namespace COTG.JSON
 		public static TroopInfo[] all;
 		public static async Task Init()
 		{
-			all = await Json.FromContent<TroopInfo[]>("Troops");
+			all = await JSON.FromContent<TroopInfo[]>("Troops");
 		}
 		public int i { get; set; }  // index
 			public string tn { get; set; } // name

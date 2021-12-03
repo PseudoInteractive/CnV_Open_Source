@@ -1,9 +1,8 @@
 ﻿
-using COTG.Draw;
-using COTG.Game;
-using COTG.Helpers;
-using COTG.JSON;
-using COTG.Views;
+using CnV.Draw;
+using CnV.Game;
+using CnV.Helpers;
+using CnV.Views;
 
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -18,9 +17,9 @@ using System.Numerics;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 
-using static COTG.Debug;
-using static COTG.Game.Troops;
-using static COTG.CanvasHelpers;
+using static CnV.Debug;
+using static CnV.Game.Troops;
+using static CnV.CanvasHelpers;
 
 
 using UWindows = Windows;
@@ -32,14 +31,14 @@ using XVector3 = Microsoft.Xna.Framework.Vector3;
 using XVector4 = Microsoft.Xna.Framework.Vector4;
 
 using Microsoft.Xna.Framework.Input;
-using Layer = COTG.Draw.Layer;
+using Layer = CnV.Draw.Layer;
 using BitmapFont;
 using System.Threading.Tasks;
-using static COTG.Views.AttackTab;
-using static COTG.JSON.GetIO;
+using static CnV.Views.AttackTab;
 using Microsoft.Xna.Framework.Media;
+using CnV;
 
-namespace COTG
+namespace CnV
 {
 	using KeyF = KeyFrame<float>;
 	using Vector4 = System.Numerics.Vector4;
@@ -111,7 +110,7 @@ namespace COTG
 
 		static Vector2 shadowOffset = new Vector2(4,4);
 		public const float cameraZ = 1.0f;
-		public static SwapChainPanel canvas;
+		public static SwapChainPanel canvas => ShellPage.canvas;
 		public static AGame instance;
 		public static GraphicsDevice device => instance.GraphicsDevice;
 		public static GraphicsDeviceManager _graphics;
@@ -240,7 +239,6 @@ namespace COTG
 		public static Material[] troopImages = new Material[Game.Troops.ttCount];
 		static Vector2 troopImageOriginOffset;
 		const int maxTextLayouts = 1024;
-		public static bool initialized => canvas != null;
 
 
 
@@ -263,11 +261,12 @@ namespace COTG
 		{
 			_graphics = new GraphicsDeviceManager(this)
 			{
+				//PreferredBackBufferFormat = SurfaceFormat.Bgra32,
 				PreferredBackBufferFormat = SurfaceFormat.Bgra32,
-				//			PreferredBackBufferFormat = SurfaceFormat.Color,
 				PreferMultiSampling = false,
 				PreferredDepthStencilFormat = DepthFormat.None,
-
+				
+				GraphicsProfile =  GraphicsProfile.HiDef
 			};
 			IsFixedTimeStep = false;
 			_graphics.PreparingDeviceSettings += _graphics_PreparingDeviceSettings;
@@ -281,7 +280,9 @@ namespace COTG
 			inf.GraphicsProfile = GraphicsProfile.HiDef;
 			inf.PresentationParameters.PresentationInterval= PresentInterval.One;
 			//	inf.PresentationParameters.IsFullScreen= true;
+		//	inf.PresentationParameters.BackBufferFormat = SurfaceFormat.Bgra32;
 			inf.PresentationParameters.SwapChainPanel = canvas;
+			
 			inf.PresentationParameters.RenderTargetUsage = RenderTargetUsage.DiscardContents;
 			if(clientSpan.X > 0 && clientSpan.Y > 0)
 			{
@@ -292,6 +293,10 @@ namespace COTG
 
 		static public void Create(SwapChainPanel swapChainPanel)
 		{
+			//var sz = swapChainPanel.ActualSize;
+			//Assert(sz.X > 0);
+			//Assert(sz.Y > 0);
+			//AGame.SetClientSpan(sz.X,sz.Y);
 			//var display = Windows.Graphics.Display.DisplayInformation.GetForCurrentView();
 			//var colorInfo = display.GetAdvancedColorInfo();
 			//AGame.colorKind = colorInfo.CurrentAdvancedColorKind;
@@ -299,7 +304,6 @@ namespace COTG
 			//{
 			//	AGame.colorKind = a.GetAdvancedColorInfo().CurrentAdvancedColorKind;
 			//};
-			canvas = swapChainPanel;
 			//			canvas.CompositeMode = (Microsoft.UI.Xaml.Media.ElementCompositeMode.SourceOver);
 			//canvas.CompositeMode = (Microsoft.UI.Xaml.Media.ElementCompositeMode.MinBlend);
 			instance = MonoGame.Framework.XamlGame<AGame>.Create(() => new AGame() { },"",App.window,swapChainPanel);
@@ -508,7 +512,7 @@ namespace COTG
 					}
 				}
 				//if(JSClient.webViewBrush!=null)
-				//	App.DispatchOnUIThread(
+				//	AppS.DispatchOnUIThread(
 				//		() =>
 				//		{
 				//			JSClient.webViewBrush.SourceName = "cotgView";
@@ -524,8 +528,8 @@ namespace COTG
 					faulted = true;
 					try
 					{
-						COTG.Debug.LogEx(sex,report: false);
-						COTG.Debug.Log($"{sex.ResultCode} {sex.Descriptor.ApiCode} {sex.Descriptor.Description} {sex.Descriptor.ToString()} ");
+						CnV.Debug.LogEx(sex,report: false);
+						CnV.Debug.Log($"{sex.ResultCode} {sex.Descriptor.ApiCode} {sex.Descriptor.Description} {sex.Descriptor.ToString()} ");
 						Faulted();
 
 					}
@@ -538,7 +542,7 @@ namespace COTG
 			}
 			catch(Exception _exception)
 			{
-				COTG.Debug.LogEx(_exception);
+				CnV.Debug.LogEx(_exception);
 			}
 
 
@@ -547,9 +551,9 @@ namespace COTG
 
 		private static async Task Faulted()
 		{
-			var a = await App.DispatchOnUIThreadTask(async () =>
+			var a = await AppS.DispatchOnUIThreadTask(async () =>
 			{
-				return await App.DoYesNoBoxUI("Video Driver broke","Please restart, it should recover fine");
+				return await AppS.Failed("Video Driver broke","Please restart, it should recover fine");
 
 			});
 			if(a == 1)
@@ -602,10 +606,19 @@ namespace COTG
 
 		public static void SetClientSpan(double dx,double dy)
 		{
-			dipToNative = instance.GraphicsDevice.PresentationParameters.SwapChainPanel.XamlRoot.RasterizationScale;
-			nativeToDip = 1.0 / dipToNative;
+			if (instance is not null)
+            {
+
+	            dipToNative = instance.GraphicsDevice.PresentationParameters.SwapChainPanel.XamlRoot.RasterizationScale;
+	            nativeToDip = 1.0 / dipToNative;
+	    
+	            resolutionDirtyCounter = wantFastRefresh ? 2 : 30;
+	            wantFastRefresh = false;
+            }
 			//clientSpan.X = MathF.Round( (float)((dx* dipToNative+3) / 4))*4.0f;
 			//clientSpan.Y = MathF.Round((float)((dy* dipToNative+3) /4))*4.0f;
+			
+			// bug:  Not using Dip
 			clientSpan.X = (float)(dx * dipToNative);
 			clientSpan.Y = (float)(dy * dipToNative);
 			virtualSpan.X = clientSpan.X + ShellPage.popupLeftMargin;
@@ -615,9 +628,7 @@ namespace COTG
             
             clip.c0 = -projectionC;
             clip.c1 = clientSpan-projectionC;
-	
-           resolutionDirtyCounter = wantFastRefresh ? 2 : 30;
-           wantFastRefresh = false;
+            
 		}
 
 		public static void PopupsChanged()
@@ -641,13 +652,9 @@ namespace COTG
 		//	//		.TransformPoint(new UWindows.Foundation.Point(0, 0)).ToVector2();
 		//	resolutionDirtyCounter = 10;
 		//}
-		public static void Canvas_SizeChanged(object sender,SizeChangedEventArgs e)
+		static void Canvas_SizeChanged(object sender,SizeChangedEventArgs e)
 		{
 
-			if(!initialized)
-			{
-				return;
-			}
 
 			SetClientSpan(e.NewSize.Width,e.NewSize.Height);
 			//clientCScreen = canvas.TransformToVisual(Helper.CoreContent)
@@ -851,7 +858,7 @@ namespace COTG
 				SpriteAnim.flagPinned.Load();
 				SpriteAnim.flagGrey.Load();
 
-				draw = new COTG.Draw.SpriteBatch(GraphicsDevice);
+				draw = new CnV.Draw.SpriteBatch(GraphicsDevice);
 				// worldBackgroundDark = new TintEffect() { BufferPrecision = CanvasBufferPrecision.Precision8UIntNormalizedSrgb, Source = worldBackground, Color = new Color() { A = 255, R = 128, G = 128, B = 128 } };
 
 
@@ -864,7 +871,7 @@ namespace COTG
 				//				quadTexture = new Material(Content.Load<Texture2D>("Art/quad"), sdfEffect);
 				quadTexture = new Material(null,sdfEffect);
 				whiteMaterial = new Material(null,noTextureEffect);
-				for(int i = 0;i < COTG.Game.Troops.ttCount;++i)
+				for(int i = 0;i < CnV.Game.Troops.ttCount;++i)
 				{
 
 					troopImages[i] = LoadMaterial($"Art/icons/troops{i}");
@@ -1117,7 +1124,7 @@ namespace COTG
 
 			try
 			{
-				//		var _serverNow = JSClient.ServerTime();
+				//		var _serverNow = CnVServer.ServerTime();
 				var dt = (float)gameTime.ElapsedGameTime.TotalSeconds; // max delta is 1s
 																	   //	lastDrawTime = _serverNow;
 
@@ -1128,7 +1135,7 @@ namespace COTG
 				//                cameraZoomLag += (cameraZoom
 				// smooth ease towards target
 				eventTimeOffsetLag += (ShellPage.instance.eventTimeOffset - eventTimeOffsetLag) * gain;
-				var serverNow = JSClient.ServerTime() + TimeSpan.FromMinutes(eventTimeOffsetLag);
+				var serverNow = CnVServer.ServerTime() + TimeSpan.FromMinutes(eventTimeOffsetLag);
 
 				// not too high or we lose float precision
 				// not too low or people will see when when wraps
@@ -1348,12 +1355,12 @@ namespace COTG
 							const byte oBrightness = 255;
 							const byte alpha = 255;
 							const float texelGain = 1.0f / srcImageSpan;
-							draw.AddQuad(COTG.Draw.Layer.background,worldBackground,
+							draw.AddQuad(CnV.Draw.Layer.background,worldBackground,
 								destP0,destP1,srcP0 * texelGain,srcP1 * texelGain,
 								 new Color(brightness,brightness,brightness,alpha),ConstantDepth,0); ;
 
 							if(worldObjects != null)
-								draw.AddQuad(COTG.Draw.Layer.background + 1,worldObjects,
+								draw.AddQuad(CnV.Draw.Layer.background + 1,worldObjects,
 									destP0,destP1,srcP0 * texelGain,srcP1 * texelGain,new Color(oBrightness,oBrightness,oBrightness,alpha),ConstantDepth,zCities);
 						}
 					}
@@ -1414,7 +1421,7 @@ namespace COTG
 						// 2 == features
 						foreach(var layer in td.layers)
 						{
-							var isBonus = Object.ReferenceEquals(layer,JSON.Layer.bonus);
+							var isBonus = Object.ReferenceEquals(layer,JsonLayer.bonus);
 							if(!wantDetails && !isBonus)
 								continue;
 

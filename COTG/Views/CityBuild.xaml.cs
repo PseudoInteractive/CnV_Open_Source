@@ -1,8 +1,8 @@
-﻿using COTG.Draw;
-using COTG.Game;
-using COTG.Helpers;
-using COTG.JSON;
-using COTG.Services;
+﻿using CnV.Draw;
+using CnV.Game;
+using CnV.Helpers;
+
+using CnV.Services;
 
 using Microsoft.Toolkit.HighPerformance;
 
@@ -22,17 +22,22 @@ using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Imaging;
 
-using static COTG.Debug;
-using static COTG.Draw.CityView;
-using static COTG.Game.City;
-using static COTG.Views.CityBuild;
-using static COTG.BuildingDef;
-using Action = COTG.Views.CityBuild.Action;
+using static CnV.Debug;
+using static CnV.Draw.CityView;
+using static CnV.Game.City;
+using static CnV.Views.CityBuild;
+using static CnV.BuildingDef;
+using Action = CnV.Views.CityBuild.Action;
 using ContentDialog = Microsoft.UI.Xaml.Controls.ContentDialog;
 using ContentDialogResult = Microsoft.UI.Xaml.Controls.ContentDialogResult;
+using CnV;
 
-namespace COTG.Views
+namespace CnV.Views
 {
+	using Draw;
+	using Game;
+	using Helpers;
+
 	public sealed partial class CityBuild : Microsoft.UI.Xaml.Controls.UserControl
 	{
 		public static bool testFlag;
@@ -162,7 +167,7 @@ namespace COTG.Views
 					  break;
 			  }
 		  
-			//	App.DispatchOnUIThreadLow( ()=> instance.quickBuild.SelectedIndex = (int)_action ); /// the first 3 are mapped. this triggers a selected changed event
+			//	AppS.DispatchOnUIThreadLow( ()=> instance.quickBuild.SelectedIndex = (int)_action ); /// the first 3 are mapped. this triggers a selected changed event
 		}
 		public static void SetQuickBuild(int quickBuildItemBid)
 		{
@@ -172,7 +177,7 @@ namespace COTG.Views
 			lastBuildToolTipSpot=-1;
 			lastQuickBuildActionBSpot = -1;
 			quickBuildId = quickBuildItemBid;
-			//	App.DispatchOnUIThreadLow( ()=> instance.quickBuild.SelectedIndex = (int)_action ); /// the first 3 are mapped. this triggers a selected changed event
+			//	AppS.DispatchOnUIThreadLow( ()=> instance.quickBuild.SelectedIndex = (int)_action ); /// the first 3 are mapped. this triggers a selected changed event
 		}
 
 		//static List<QuickBuildItem> items;
@@ -494,7 +499,7 @@ namespace COTG.Views
 			//		if (!open)
 			//		{
 			//			await Task.Delay(450);
-			//			App.DispatchOnUIThreadLow( ()=>buildMenuCanvas.Visibility = Visibility.Collapsed );
+			//			AppS.DispatchOnUIThreadLow( ()=>buildMenuCanvas.Visibility = Visibility.Collapsed );
 
 			//			menuOpen = false;
 			//		}
@@ -590,7 +595,7 @@ namespace COTG.Views
 				City.GetBuild().BuildingsOrQueueChanged();
 
 				if (syncPlannerTab && !PlannerTab.IsVisible())
-					await App.DispatchOnUIThreadTask(() => PlannerTab.instance.Show());
+					await AppS.DispatchOnUIThreadTask(() => PlannerTab.instance.Show());
 			}
 			else
 			{
@@ -603,7 +608,7 @@ namespace COTG.Views
 
 				if (syncPlannerTab && PlannerTab.IsVisible())
 				{
-					await App.DispatchOnUIThreadTask(() =>
+					await AppS.DispatchOnUIThreadTask(() =>
 				   {
 					   if (PlannerTab.instance.isFocused)
 					   {
@@ -1078,7 +1083,7 @@ namespace COTG.Views
 				//		if (!dryRun)
 				//		{
 
-				//			App.DispatchOnUIThreadLow(()=>TogglePlanner() );
+				//			AppS.DispatchOnUIThreadLow(()=>TogglePlanner() );
 				//		}
 
 				//		break;
@@ -1533,7 +1538,7 @@ namespace COTG.Views
 
 		private static async Task<bool> ShowShareStringMaybe()
 		{
-			var a = await App.DoYesNoBox("No Layout","Would you like to set a layout?");
+			var a = await AppS.DoYesNoBox("No Layout","Would you like to set a layout?");
 			if(a== 1)
 			{
 				await ShareString.Show(City.build,SetupFlags.layout);

@@ -10,9 +10,9 @@ using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 
-using static COTG.Debug;
+using static CnV.Debug;
 
-namespace COTG.Game
+namespace CnV.Game
 {
 	using Microsoft.UI.Xaml.Media.Imaging;
 

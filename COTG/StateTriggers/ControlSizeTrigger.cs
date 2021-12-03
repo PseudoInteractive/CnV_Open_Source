@@ -1,6 +1,6 @@
 ﻿using Microsoft.UI.Xaml;
 
-namespace COTG.StateTriggers
+namespace CnV.StateTriggers
 {
     public class ControlSizeTrigger : StateTriggerBase
     {

@@ -1,4 +1,4 @@
-﻿namespace COTG.Models
+﻿namespace CnV.Models
 {
     public class TabViewItemData
     {

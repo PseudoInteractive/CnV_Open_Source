@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Threading.Tasks;
 
-using COTG.Helpers;
+using CnV.Helpers;
 
 using Windows.ApplicationModel.Core;
 using Windows.Storage;
 //using Windows.UI.Core;
 using Microsoft.UI.Xaml;
 
-namespace COTG.Services
+namespace CnV.Services
 {
     public static class ThemeSelectorService
     {
@@ -31,7 +31,7 @@ namespace COTG.Services
 
         public static async Task SetRequestedThemeAsync()
         {
-            App.QueueOnUIThread( ()=>
+            AppS.QueueOnUIThread( ()=>
 				{    if (App.window.Content is FrameworkElement frameworkElement)
                     {
                         frameworkElement.RequestedTheme = Theme;
@@ -44,7 +44,7 @@ namespace COTG.Services
 		//{
 		//	var theme = Theme;
 		//	var tempTheme = theme == ElementTheme.Light ? ElementTheme.Dark : ElementTheme.Light;
-		//	await App.DispatchOnUIThreadTask(()=>
+		//	await AppS.DispatchOnUIThreadTask(()=>
 		//	{
 		//		foreach (var view in CoreApplication.Views)
 		//		{
@@ -56,7 +56,7 @@ namespace COTG.Services
 		//		return Task.CompletedTask;
 		//	}	);
 		//	await Task.Delay(200);
-		//	await App.DispatchOnUIThreadTask(() =>
+		//	await AppS.DispatchOnUIThreadTask(() =>
 		//	{
 		//		foreach (var view in CoreApplication.Views)
 		//		{

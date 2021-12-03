@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace COTG.Converters
+namespace CnV.Converters
 {
 	using Microsoft.UI.Xaml.Data;
 

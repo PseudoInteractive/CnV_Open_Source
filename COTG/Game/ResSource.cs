@@ -1,14 +1,17 @@
-﻿using COTG.Helpers;
-using COTG.Views;
+﻿using CnV.Helpers;
+using CnV.Views;
 
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Threading.Tasks;
 using System.Text.Json.Serialization;
+using CnV;
 
-namespace COTG.Game
+namespace CnV.Game
 {
+	using Views;
+
 	public struct Resources
 	{
 		public static string[] names =
@@ -233,7 +236,7 @@ namespace COTG.Game
 			return (city.res[type]- SettingsPage.nearResReserve[type]).Min(NearRes.instance.GetTransport(city)); // TODO
 		}
 
-		public DateTimeOffset eta { get => JSClient.ServerTime() + travel; set => _ = value; }
+		public DateTimeOffset eta { get => CnVServer.ServerTime() + travel; set => _ = value; }
 
 		
 

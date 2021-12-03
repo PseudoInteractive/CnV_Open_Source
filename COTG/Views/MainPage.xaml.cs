@@ -1,5 +1,5 @@
-﻿using COTG.Game;
-using COTG.Models;
+﻿using CnV.Game;
+using CnV.Models;
 using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -9,7 +9,7 @@ using Microsoft.UI.Xaml.Controls;
 using System.Diagnostics.Contracts;
 using System.Collections.Generic;
 using Telerik.UI.Xaml.Controls.Grid;
-using static COTG.Debug;
+using static CnV.Debug;
 using Windows.ApplicationModel.Core;
 //using Windows.UI.Core;
 using Microsoft.UI.Xaml;
@@ -20,26 +20,28 @@ using System.Collections.Specialized;
 using Windows.Foundation;
 using CommunityToolkit.WinUI;
 using Microsoft.UI.Xaml.Input;
-using COTG.Services;
+using CnV.Services;
 using System.Collections;
 //using Windows.UI.Input;
-using COTG.Helpers;
+using CnV.Helpers;
 using Microsoft.UI.Xaml.Navigation;
 using System.Linq;
 using System.Threading.Tasks;
-using static COTG.Game.Troops;
+using static CnV.Game.Troops;
 using Microsoft.UI.Xaml.Controls;
 using Telerik.UI.Xaml.Controls.Grid.Commands;
 using System.Threading;
 using Telerik.UI.Xaml.Controls.Grid.Primitives;
-using COTG.JSON;
 
-namespace COTG.Views
+using CnV;
+
+namespace CnV.Views
 {
+	using Game;
+	using Services;
 
 
-
-    public sealed partial class MainPage : UserTab
+	public sealed partial class MainPage : UserTab
     {
         public static MainPage instance;
      
@@ -349,23 +351,23 @@ namespace COTG.Views
 
 		private void ResetBadRaidsFast(object sender, RoutedEventArgs e)
 		{
-			App.HideFlyout(sender);
+			AppS.HideFlyout(sender);
 			ReturnRaids(true, true);
 		}
 		private void ResetBadRaidsSlow(object sender, RoutedEventArgs e)
 		{
-			App.HideFlyout(sender);
+			AppS.HideFlyout(sender);
 			ReturnRaids(false, true);
 		}
 		private void ResetRaidsFast(object sender, RoutedEventArgs e)
 		{
-			App.HideFlyout(sender);
+			AppS.HideFlyout(sender);
 			ReturnRaids(true, false);
 		}
 
 		private void ResetRaidsSlow(object sender, RoutedEventArgs e)
 		{
-			App.HideFlyout(sender);
+			AppS.HideFlyout(sender);
 			ReturnRaids(false, false);
 		}
 		private async void ReturnRaids(bool fast, bool onlyNeeded)
@@ -376,7 +378,7 @@ namespace COTG.Views
 
 			if (cityGrid.SelectedItems.Count <= 1)
 			{
-				if (await App.DoYesNoBoxUI("Select All", "Non selected, select all?") != 1)
+				if (await AppS.DoYesNoBoxUI("Select All", "Non selected, select all?") != 1)
 					return;
 				cityGrid.SelectAll();
 			}
@@ -392,7 +394,7 @@ namespace COTG.Views
                 }
 
             }
-			if (await App.DoYesNoBox("Reset Raids?", $"Will return {ret.Count}, best to only reset if you will be around to send returners out again", "Do it", "Maybe Not") == 1)
+			if (await AppS.DoYesNoBox("Reset Raids?", $"Will return {ret.Count}, best to only reset if you will be around to send returners out again", "Do it", "Maybe Not") == 1)
 			{
 				if(fast)
 					Raiding.ReturnFastBatch(ret);
@@ -408,7 +410,7 @@ namespace COTG.Views
 			var sel = Spot.GetSelectedForContextMenu(0, false, onlyMine: true);
 			if(sel.Count <= 1)
 			{
-				if(await App.DoYesNoBox($"{sel.Count} selected","Select all?",cancel:null) == 1)
+				if(await AppS.DoYesNoBox($"{sel.Count} selected","Select all?",cancel:null) == 1)
 				{
 					cityGrid.SelectAll();
 					await Task.Delay(200);
@@ -552,7 +554,7 @@ namespace COTG.Views
 		}
 		public override void Execute(object parameter)
         {
-		//	App.DispatchOnUIThreadLow(() =>
+		//	AppS.DispatchOnUIThreadLow(() =>
 		   {
 			   var context = parameter as DataBindingCompleteEventArgs;
 				// put your custom logic here

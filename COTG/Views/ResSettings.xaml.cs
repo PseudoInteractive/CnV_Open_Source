@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
-using COTG.Game;
-using COTG.Converters;
+using CnV.Game;
+using CnV.Converters;
 using Windows.Foundation;
-using COTG.Helpers;
-using COTG.JSON;
+using CnV.Helpers;
+
 using Windows.Foundation.Collections;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -21,8 +21,11 @@ using System.ComponentModel;
 
 // The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234236
 
-namespace COTG.Views
+namespace CnV.Views
 {
+	using CnV.GameData;
+	using Game;
+
 	public sealed partial class ResSettings : UserControl, IANotifyPropertyChanged
 	{
 

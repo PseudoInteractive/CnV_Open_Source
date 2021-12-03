@@ -1,6 +1,6 @@
-﻿using COTG.Game;
-using COTG.Services;
-using COTG.Views;
+﻿using CnV.Game;
+using CnV.Services;
+using CnV.Views;
 //using ZLogger;
 
 //using Cysharp.Text;
@@ -22,12 +22,17 @@ using CommunityToolkit.WinUI;
 using CommunityToolkit.WinUI.Notifications;
 using CommunityToolkit.WinUI.UI.Controls;
 
-using static COTG.Debug;
+using static CnV.Debug;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml;
+using CnV;
 
-namespace COTG
+namespace CnV
 {
+	using Game;
+	using Services;
+	using Views;
+
 	public static class Note
 	{
 	
@@ -37,7 +42,7 @@ namespace COTG
 			//markDownText.TableCellPadding = new Thickness(0,0,0,0); // hack!
 			//markDownText.ListMargin = new Thickness(0,0,0,0); // hack!
 			//markDownText.Background = null;
-
+			Debug.OnNote = Show;
 		}
 
 		//private static void InAppNote_Closed(object sender, InAppNotificationClosedEventArgs e)
@@ -56,14 +61,8 @@ namespace COTG
 		{
 			ChatTab.L(s);
 		}
-		public enum Priority
-		{
-			none,
-			low, // if one is active, drop this
-			medium, // if one is active wait
-			high // if one is active cancel it
-		}
-		public static Task ShowQuiet(string s,Priority priority = Priority.medium,bool useInfoBar = false,int timeout = 5000)
+		
+		public static Task ShowQuiet(string s,Debug.Priority priority = Debug.Priority.medium,bool useInfoBar = false,int timeout = 5000)
 		{
 			return Show(s,priority,useInfoBar,timeout,false);
 		}
@@ -71,13 +70,13 @@ namespace COTG
 	//	static DateTime nextInAppNote = new DateTime(0);
 	//static MarkdownTextBlock markDownText;
 	//	static CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
-		public static async Task Show(string s, Priority priority=Priority.medium, bool useInfoBar = false, int timeout = 5000, bool showDebugOutput=true, bool showNote=true)
+		public static async Task Show(string s, Debug.Priority priority=Debug.Priority.medium, bool useInfoBar = false, int timeout = 5000, bool showDebugOutput=true, bool showNote=true)
 		{
 			try
 			{
 				if(showDebugOutput)
 				{
-					App.DispatchOnUIThreadLow(() =>
+					AppS.DispatchOnUIThreadLow(() =>
 					{
 						ChatTab.L(s);
 					});
@@ -91,7 +90,7 @@ namespace COTG
 					//if (!initialized)
 					//{
 					//	initialized = true;
-					//	App.DispatchOnUIThread(() =>
+					//	AppS.DispatchOnUIThread(() =>
 					//	{
 					//		ShellPage.inAppNote.Closed += InAppNote_Closed;
 					//		//		ShellPage.instance.infoBar.CloseButtonClick += InfoBar_CloseButtonClick;
@@ -129,7 +128,7 @@ namespace COTG
 
 					//}
 
-					//	App.DispatchOnUIThreadLow(() =>
+					//	AppS.DispatchOnUIThreadLow(() =>
 					{
 						//ChatTab.L(s);
 
@@ -158,7 +157,7 @@ namespace COTG
 								Debounce.Q(runOnUIThread: true,action: async () => 
 								ShellPage.instance.InAppNote.Text = ShellPage.instance.noteText,debounceT: 100);
 
-								Debounce.Q(debounceT: ((priority >= Priority.high) ? noteDelayHigh : noteDelay)*1000,
+								Debounce.Q(debounceT: ((priority >= Debug.Priority.high) ? noteDelayHigh : noteDelay)*1000,
 									runOnUIThread: true,
 									action: () =>
 								{
@@ -291,7 +290,7 @@ namespace COTG
 		//	{
 		//	//	ShellPage.instance.commandBar.Focus(FocusState.Programmatic);
 
-		//		App.DispatchOnUIThreadLow(() => ob.Focus(FocusState.Programmatic));
+		//		AppS.DispatchOnUIThreadLow(() => ob.Focus(FocusState.Programmatic));
 		//	}
 		//}
 		//public static void Focus(this Microsoft.UI.Xaml.Controls.Control ob)
@@ -300,7 +299,7 @@ namespace COTG
 		//	{
 		//	//	ShellPage.keyboardProxy.Focus(FocusState.Programmatic);
 
-		//		App.DispatchOnUIThreadIdle(() => ob.Focus(FocusState.Programmatic));
+		//		AppS.DispatchOnUIThreadIdle(() => ob.Focus(FocusState.Programmatic));
 		//	}
 		//}
 
@@ -330,7 +329,7 @@ namespace COTG
 			if (str != lastTip && TabPage.mainTabs?.tip is not null )
 			{
 				lastTip = str;
-				App.DispatchOnUIThreadLow(() =>
+				AppS.DispatchOnUIThreadLow(() =>
 			   TabPage.mainTabs.tip.Text = str); // Todo:  use the correct tabPage
 			}
 		}

@@ -1,7 +1,7 @@
 ﻿using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Media;
 
-namespace COTG.Services.DragAndDrop
+namespace CnV.Services.DragAndDrop
 {
     public class VisualDropConfiguration : DependencyObject
     {

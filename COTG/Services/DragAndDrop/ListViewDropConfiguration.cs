@@ -1,12 +1,14 @@
 ﻿using System;
 
-using COTG.Models;
+using CnV.Models;
 
 using Microsoft.UI.Xaml;
 
-namespace COTG.Services.DragAndDrop
+namespace CnV.Services.DragAndDrop
 {
-    public class ListViewDropConfiguration : DropConfiguration
+	using Models;
+
+	public class ListViewDropConfiguration : DropConfiguration
     {
         public static readonly DependencyProperty DragItemsStartingActionProperty =
             DependencyProperty.Register("DragItemsStartingAction", typeof(Action<DragDropStartingData>), typeof(DropConfiguration), new PropertyMetadata(null));

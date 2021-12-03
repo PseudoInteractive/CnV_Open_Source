@@ -1,5 +1,5 @@
-﻿using COTG.Game;
-using COTG.Models;
+﻿using CnV.Game;
+using CnV.Models;
 using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -9,7 +9,7 @@ using Microsoft.UI.Xaml.Controls;
 using System.Diagnostics.Contracts;
 using System.Collections.Generic;
 using Telerik.UI.Xaml.Controls.Grid;
-using static COTG.Debug;
+using static CnV.Debug;
 using Windows.ApplicationModel.Core;
 //using Windows.UI.Core;
 using Microsoft.UI.Xaml;
@@ -20,21 +20,22 @@ using System.Collections.Specialized;
 using Windows.Foundation;
 using CommunityToolkit.WinUI;
 using Microsoft.UI.Xaml.Input;
-using COTG.Services;
+using CnV.Services;
 using System.Collections;
-using COTG.JSON;
+
 //using Windows.UI.Input;
 using Telerik.UI.Xaml.Controls.Input;
-using COTG.Helpers;
+using CnV.Helpers;
 using Microsoft.UI.Xaml.Navigation;
 using Telerik.UI.Xaml.Controls.Grid.Commands;
 using System.Threading.Tasks;
 using System.Linq;
 
-namespace COTG.Views
+namespace CnV.Views
 {
+	using Game;
 
-    public sealed partial class OutgoingTab : UserTab
+	public sealed partial class OutgoingTab : UserTab
     {
 		public static Spot lastSelected;
 		bool includeInternal;
@@ -123,7 +124,7 @@ namespace COTG.Views
         public override Task VisibilityChanged(bool visible, bool longTerm)
 		{
 			/// TODO:  Why clear?
-            //App.DispatchOnUIThreadLow(() =>
+            //AppS.DispatchOnUIThreadLow(() =>
             //{
             //    attackerGrid.ItemsSource = null;
             //    armyGrid.ItemsSource = Army.empty;

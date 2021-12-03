@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 
-namespace COTG.Activation
+namespace CnV.Activation
 {
     // For more information on understanding and extending activation flow see
     // https://github.com/Microsoft/WindowsTemplateStudio/blob/master/docs/UWP/activation.md

@@ -14,14 +14,16 @@ using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
 using System.Collections.Concurrent;
-using COTG.Helpers;
+using CnV.Helpers;
 using Microsoft.Toolkit;
 using CommunityToolkit.WinUI;
-using COTG.Game;
+using CnV.Game;
 using CommunityToolkit.WinUI.UI.Controls;
 
-namespace COTG.Views
+namespace CnV.Views
 {
+	using Game;
+
 	public class PlayerChanges
 	{
 		public int pid;

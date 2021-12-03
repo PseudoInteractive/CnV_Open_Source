@@ -1,4 +1,4 @@
-﻿using COTG.Game;
+﻿using CnV.Game;
 
 using System;
 using System.Collections.Generic;
@@ -18,12 +18,14 @@ using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
 
-using static COTG.Game.Spot;
+using static CnV.Game.Spot;
 
 // The Content Dialog item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
 
-namespace COTG.Views
+namespace CnV.Views
 {
+	using Game;
+
 	public sealed partial class ExportCastles : ContentDialog
 	{
 
@@ -154,7 +156,7 @@ namespace COTG.Views
 							  ++counter;
 							  if ((counter % 10) == 0)
 							  {
-								  App.DispatchOnUIThreadLow(() => ShellPage.WorkUpdate($"Exporting .. {Alliance.all[alliance].name}, {p.name}, {counter}"));
+								  AppS.DispatchOnUIThreadLow(() => ShellPage.WorkUpdate($"Exporting .. {Alliance.all[alliance].name}, {p.name}, {counter}"));
 								  if (App.IsEscDown())
 								  {
 									  Note.Show("Aborted");
@@ -164,42 +166,42 @@ namespace COTG.Views
 							  sb.Append($"{Alliance.all[alliance].name}\t{ p.name}\t{cid.CidToContinent()}\t{s.xy}\t{s.isCastle.As01()}\t{((s.isMine||Player.isSpecial)?(s.hasAcademy.GetValueOrDefault()?"Academy":"none") : "dunno") }\t{s.isTemple.As01()}\t{s.isOnWater.As01()}\t{(isO?1:isD?-1:0)}\t");
 							   switch (c)
 							   {
-								   case Classification.sorcs:
+								   case Spot.Classification.sorcs:
 									   sb.Append("Sorc\t");
 									   break;
-								   case Classification.druids:
+								   case Spot.Classification.druids:
 									   sb.Append("Druid\t");
 									   break;
-								   case Classification.praetor:
+								   case Spot.Classification.praetor:
 									   sb.Append("Prae\t");
 									   break;
-								   case Classification.priestess:
+								   case Spot.Classification.priestess:
 									   sb.Append("Priest\t");
 									   break;
 								   // TODO
-								   case Classification.arbs:
+								   case Spot.Classification.arbs:
 									  sb.Append("Arbs\t");
 									  break;
-								  case Classification.horses:
+								  case Spot.Classification.horses:
 									   sb.Append("Horses\t");
 									   break;
 
-								   case Classification.se:
+								   case Spot.Classification.se:
 									   sb.Append("Scorp\t");
 									   break;
-								   case Classification.navy:
+								   case Spot.Classification.navy:
 									   sb.Append("Warship?\t");
 									   break;
-								  case Classification.stingers:
+								  case Spot.Classification.stingers:
 									  sb.Append("Stinger?\t");
 									  break;
-								  case Classification.rt:
+								  case Spot.Classification.rt:
 									  sb.Append("RT\t");
 									  break;
-								  case Classification.vanqs:
+								  case Spot.Classification.vanqs:
 									  sb.Append("Vanq\t");
 									  break;
-								  case Classification.hub:
+								  case Spot.Classification.hub:
 									  sb.Append("Hub\t");
 									  break;
 								  default:

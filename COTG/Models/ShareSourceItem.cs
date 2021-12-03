@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 using Windows.Storage;
 
-namespace COTG.Models
+namespace CnV.Models
 {
     internal enum ShareSourceItemType
     {

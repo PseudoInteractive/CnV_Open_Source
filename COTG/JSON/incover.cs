@@ -1,7 +1,7 @@
-﻿using COTG.Game;
-using COTG.Helpers;
-using COTG.Services;
-using COTG.Views;
+﻿using CnV.Game;
+using CnV.Helpers;
+using CnV.Services;
+using CnV.Views;
 
 using System;
 using System.Collections.Concurrent;
@@ -9,21 +9,25 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
-using static COTG.Game.Troops;
-using static COTG.Debug;
+using static CnV.Game.Troops;
+using static CnV.Debug;
 //using Windows.UI.ViewManagement;
 using System.Net.Http;
 using System.Text.Json;
-using TroopTypeCountsRef = COTG.Game.TroopTypeCounts;
-using static COTG.Game.TroopTypeCountHelper;
+using TroopTypeCountsRef = CnV.Game.TroopTypeCounts;
+using static CnV.Game.TroopTypeCountHelper;
 //COTG.DArrayRef<COTG.Game.TroopTypeCount>;
-using TroopTypeCounts = COTG.Game.TroopTypeCounts;
+using TroopTypeCounts = CnV.Game.TroopTypeCounts;
 using DiscordCnV;
 using System.Text;
+using CnV;
 //COTG.DArray<COTG.Game.TroopTypeCount>;
 
-namespace COTG.Game
+namespace CnV.Game
 {
+	using Services;
+	using Views;
+
 	public static class IncomingOverview
 	{
 		public static bool updateInProgress;
@@ -261,7 +265,7 @@ namespace COTG.Game
 												  {
 													  LogEx(e);
 												  }
-												  TroopTypeCountsRef sumDef = new();
+												  TroopTypeCounts sumDef = new();
 												  var processedTroopsHome = false; // for some reason, these repeat
 												  foreach (var armyV in val.GetProperty("9").EnumerateArray())
 												  {
@@ -363,7 +367,7 @@ namespace COTG.Game
 													  }
 													  var source = Spot.GetOrAdd(army.sourceCid);
 													  army.sourcePid = source.pid;  // todo!
-													  TroopTypeCountsRef ttl = new();
+													  TroopTypeCounts ttl = new();
 													  if (!reused || army.isDefense)
 													  {
 														  if (armyV.TryGetProperty("3", out var ttp))
@@ -421,7 +425,7 @@ namespace COTG.Game
 
 																  source.QueueClassify(true);
 
-																  COTG.Game.IncomingEstimate.Get(army);
+																  IncomingEstimate.Get(army);
 																  // if (source.classification == Spot.Classification.pending)
 																  // {
 																  //	  army.miscInfo = "pending " + army.miscInfo;
@@ -479,73 +483,73 @@ namespace COTG.Game
 
 
 
-																  if (DGame.isValidForIncomingNotes)
-																  {
+																  //if (DGame.isValidForIncomingNotes)
+																  //{
 
 
-																	  if (++reportCount < 64)
-																	  {
-																		  var _army = army;
-																		  if (await Tables.TryAddOrder(_army.time, _army.order))
-																		  {
-																			  //Log($"Enqueue {order}");
-																			  App.EnqeueTask(async () =>
-																			  {
-																				  try
-																				  {
-																				  //Log($"Enqueue2 {order}");
-																				  var name = _army.tPlayer;
+																	 // if (++reportCount < 64)
+																	 // {
+																		//  var _army = army;
+																		//  if (await Tables.TryAddOrder(_army.time, _army.order))
+																		//  {
+																		//	  //Log($"Enqueue {order}");
+																		//	  App.EnqeueTask(async () =>
+																		//	  {
+																		//		  try
+																		//		  {
+																		//		  //Log($"Enqueue2 {order}");
+																		//		  var name = _army.tPlayer;
 
-																					  var target = Spot.GetOrAdd(_army.targetCid);
-																					  var _source = Spot.GetOrAdd(_army.sourceCid);
-																					  while (!_source.isClassified)
-																					  {
-																						  await Task.Delay(400);
-																					  }
-																					  if (!DGame.members.TryGetValue(name.ToLower(), out var id))
-																						  id = name;
+																		//			  var target = Spot.GetOrAdd(_army.targetCid);
+																		//			  var _source = Spot.GetOrAdd(_army.sourceCid);
+																		//			  while (!_source.isClassified)
+																		//			  {
+																		//				  await Task.Delay(400);
+																		//			  }
+																		//			  if (!DGame.members.TryGetValue(name.ToLower(), out var id))
+																		//				  id = name;
 
-																					  var content = $"<@{id}> {_army.time.Format()}: {army.miscInfo}, {ttNameWithCaps[army.troops.GetPrimaryTroopType()]} to {target.cityName} ({target.xy}) from  {_source.player.name} {_source.cityName} ({_source.xy}";
-																					  if (army.claim > 0)
-																					  {
-																						  content += $" claim {army.claim}%";
-																					  }
+																		//			  var content = $"<@{id}> {_army.time.Format()}: {army.miscInfo}, {ttNameWithCaps[army.troops.GetPrimaryTroopType()]} to {target.cityName} ({target.xy}) from  {_source.player.name} {_source.cityName} ({_source.xy}";
+																		//			  if (army.claim > 0)
+																		//			  {
+																		//				  content += $" claim {army.claim}%";
+																		//			  }
 
-																				  //      Note.Show(content);
+																		//		  //      Note.Show(content);
 
-																				  var client = JSClient.genericClient;
-
-
-																					  var message = new DGame.Message() { username = "INCOMING", content = content, avatar_url = "" };
-																					  for (int i = 0; i < 4; ++i) // retry up to 4 times;
-																				  {
-
-																						  var post = new StringContent(
-																										JsonSerializer.Serialize(message), Encoding.UTF8,
-																										 "application/json");
-
-																						  var result = await client.PostAsync(DGame.discordIncomingHook, post);
-																						  if (result.StatusCode == System.Net.HttpStatusCode.TooManyRequests)
-																						  {
-																							  await Task.Delay(2000); // wait 2 seconds
-																					  }
-																						  else
-																						  {
-																						  //  result.EnsureSuccessStatusCode();
-																						  break;
-																						  }
-																					  }
-																				  }
-																				  catch (Exception ex)
-																				  {
-																					  Log(ex);
-																				  }
-																			  });
-																		  }
-																	  }
+																		//		  var client = JSClient.genericClient;
 
 
-																  }
+																		//			  var message = new DGame.Message() { username = "INCOMING", content = content, avatar_url = "" };
+																		//			  for (int i = 0; i < 4; ++i) // retry up to 4 times;
+																		//		  {
+
+																		//				  var post = new StringContent(
+																		//								JsonSerializer.Serialize(message), Encoding.UTF8,
+																		//								 "application/json");
+
+																		//				  var result = await client.PostAsync(DGame.discordIncomingHook, post);
+																		//				  if (result.StatusCode == System.Net.HttpStatusCode.TooManyRequests)
+																		//				  {
+																		//					  await Task.Delay(2000); // wait 2 seconds
+																		//			  }
+																		//				  else
+																		//				  {
+																		//				  //  result.EnsureSuccessStatusCode();
+																		//				  break;
+																		//				  }
+																		//			  }
+																		//		  }
+																		//		  catch (Exception ex)
+																		//		  {
+																		//			  Log(ex);
+																		//		  }
+																		//	  });
+																		//  }
+																	 // }
+
+
+																  //}
 
 															  }
 															  if (watch.Contains(army.tPlayer))
@@ -605,7 +609,7 @@ namespace COTG.Game
 								  var defenderPage = IncomingTab.instance;
 								  if (defenderPage != null)
 								  {
-									 App.DispatchOnUIThreadLow( defenderPage.NotifyIncomingUpdated );
+									 AppS.DispatchOnUIThreadLow( defenderPage.NotifyIncomingUpdated );
 								  }
 							
 							  }
@@ -625,7 +629,7 @@ namespace COTG.Game
 									  {
 										  lastIncomingNotification = now;
 										  Note.Show(note);
-										  COTG.Services.ToastNotificationsService.instance.ShowNotification(note, "Incoming");
+										  ToastNotificationsService.instance.ShowNotification(note, "Incoming");
 
 									  }
 								  }
@@ -766,8 +770,8 @@ namespace COTG.Game
 																		supportReports.Add(Army.ReportHash(recId));
 																		continue;
 																	}
-																	TroopTypeCountsRef atkTroops = new();
-																	TroopTypeCountsRef defTroops = new();
+																	TroopTypeCounts atkTroops = new();
+																	TroopTypeCounts defTroops = new();
 																	var defTSLeft = 0;
 																	var atkCN = report.GetAsString("acn");
 																	source = AUtil.DecodeCid(atkCN.Length - 8, atkCN);
@@ -904,7 +908,7 @@ namespace COTG.Game
 
 					
 					//if(ShellPage.IsPageDefense())
-					await App.DispatchOnUIThreadTask(() =>
+					await AppS.DispatchOnUIThreadTask( () =>
 					{
 
 						try
@@ -940,7 +944,7 @@ namespace COTG.Game
 								}
 								killNote = $", {atkKilled:N0}({myAtkKilled:N0})TS atk ts killed, {defKilled:N0}({myDefKilled:N0})TS def Killed";
 								//	App.CopyTextToClipboard(killNote);
-								// App.DispatchOnUIThread(() =>
+								// AppS.DispatchOnUIThread(() =>
 								// We should do this on the Render Thread
 								defPage.SetHistory((reportsIncoming.OrderByDescending((atk) => atk.time.UtcTicks)).ToArray());
 							}
@@ -949,7 +953,7 @@ namespace COTG.Game
 						}
 						catch (Exception _exception)
 						{
-							COTG.Debug.LogEx(_exception);
+							Debug.LogEx(_exception);
 						}
 						return Task.CompletedTask;
 

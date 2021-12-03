@@ -5,12 +5,12 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.UI.Xaml.Media.Imaging;
 using Microsoft.UI.Xaml.Media;
-using static COTG.Views.CityBuild;
+using static CnV.Views.CityBuild;
 using Microsoft.UI.Xaml;
-using Action = COTG.Views.CityBuild.Action;
+using Action = CnV.Views.CityBuild.Action;
 using Microsoft.UI;
 
-namespace COTG.Views
+namespace CnV.Views
 {
 	public enum BuildPhase
 	{
@@ -28,27 +28,27 @@ namespace COTG.Views
 	public class BuildMenuItem
 	{
 		public int bid;
-		public bool isAction => action != Action.invalid;
+		public bool isAction => action != CityBuild.Action.invalid;
 		public bool isBuilding => bid != 0;
 		public ImageBrush brush;
 		public string toolTip;
 		public string header;
 		public Windows.UI.Color textColor;
-		public CityBuild.Action action = Action.invalid;
+		public CityBuild.Action action = CityBuild.Action.invalid;
 		public string accessKey { get; set; }
 		public const int width = 64;
 		public const int height = 64;
 
 		public BuildMenuItem()
 		{
-			action = Action.invalid;
+			action = CityBuild.Action.invalid;
 			bid = -1;
 			textColor = Colors.Black;
 
 		}
 		public BuildMenuItem(int _bid)
 		{
-			action = Action.invalid;
+			action = CityBuild.Action.invalid;
 			{
 				bid = _bid;
 				var def = BuildingDef.all[_bid];
@@ -63,7 +63,7 @@ namespace COTG.Views
 				}
 			}
 		}
-		public BuildMenuItem(string name, Action action, string icon, string toolTip)
+		public BuildMenuItem(string name, CityBuild.Action action, string icon, string toolTip)
 		{
 			header = name;
 			this.action = action;

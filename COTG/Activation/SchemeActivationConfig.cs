@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace COTG.Activation
+namespace CnV.Activation
 {
     public static class SchemeActivationConfig
     {

@@ -5,7 +5,7 @@
 //using System.Text;
 //using System.Threading.Tasks;
 
-//namespace COTG.JSON
+//namespace CnV.GameData
 //{
 //	public class Report : IEquatable<Report>
 //	{

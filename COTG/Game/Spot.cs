@@ -1,5 +1,5 @@
-﻿using COTG.Helpers;
-using COTG.Services;
+﻿using CnV.Helpers;
+using CnV.Services;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -13,25 +13,25 @@ using Windows.Foundation;
 //using Windows.UI.Input;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media.Imaging;
-using COTG.Views;
-using TroopTypeCounts = COTG.Game.TroopTypeCounts;
+using CnV.Views;
+using TroopTypeCounts = CnV.Game.TroopTypeCounts;
 //COTG.DArray<COTG.Game.TroopTypeCount>;
-using TroopTypeCountsRef = COTG.Game.TroopTypeCounts;
-using static COTG.Game.TroopTypeCountHelper;
+using TroopTypeCountsRef = CnV.Game.TroopTypeCounts;
+using static CnV.Game.TroopTypeCountHelper;
 //COTG.DArrayRef<COTG.Game.TroopTypeCount>;
 
-using static COTG.Debug;
+using static CnV.Debug;
 using System.ComponentModel;
 using System.Diagnostics;
 using Microsoft.UI.Xaml;
 using Windows.System;
 //using Microsoft.UI.Xaml.Controls;
-using COTG.JSON;
+
 using System.Text.Json;
 using System.Net.Http;
-using static COTG.Game.Troops;
+using static CnV.Game.Troops;
 using Windows.ApplicationModel.DataTransfer;
-using static COTG.Views.ShellPage;
+using static CnV.Views.ShellPage;
 using ContentDialog = Microsoft.UI.Xaml.Controls.ContentDialog;
 using ContentDialogResult = Microsoft.UI.Xaml.Controls.ContentDialogResult;
 using MenuFlyoutItem = Microsoft.UI.Xaml.Controls.MenuFlyoutItem;
@@ -47,10 +47,14 @@ using Microsoft.UI.Input;
 using Microsoft.UI.Xaml.Controls.Primitives;
 using System.Net.Http.Json;
 
-namespace COTG.Game
+namespace CnV.Game
 {
+	using CnV;
+	using Helpers;
+	using Services;
 	using Syncfusion.UI.Xaml.DataGrid;
 	using Syncfusion.UI.Xaml.Grids.ScrollAxis;
+	using Views;
 	using DateTimePicker = Views.DateTimePicker;
 
 	//public interface IKeyedItem
@@ -59,8 +63,40 @@ namespace COTG.Game
 	//  public  void Ctor(int id);
 	//}
 	[DebuggerDisplay("{" + nameof(GetDebuggerDisplay) + "(),nq}")]
-	public abstract class Spot : IEquatable<Spot>, IANotifyPropertyChanged
+	public abstract partial class Spot: SpotS, IEquatable<Spot>, IANotifyPropertyChanged
 	{
+		public override bool Equals(object obj)
+		{
+			return Equals(obj as Spot);
+		}
+		
+		public bool Equals(Spot other)
+		{
+			return other != null &&
+			       cid == other.cid;
+		}
+		public bool Equals(int _cid)
+		{
+			return   cid == _cid;
+		}
+		public override int GetHashCode()
+		{
+			return cid;
+		}
+		public static bool operator ==(Spot a, int cid) => a.cid == cid;
+		public static bool operator !=(Spot a, int cid) => a.cid != cid;
+
+		
+		public virtual event PropertyChangedEventHandler PropertyChanged;
+		public void CallPropertyChanged(string members = null)
+		{
+			PropertyChanged?.Invoke(this,new PropertyChangedEventArgs(members));
+		}
+
+		public void OnPropertyChanged(string members = null)
+		{
+			if(PropertyChanged is not null) ((IANotifyPropertyChanged)this).IOnPropertyChanged(members,(cid ==City.focus || cid ==City.build ));
+		}
 		public static ConcurrentDictionary<int, City> allSpots = new ConcurrentDictionary<int, City>(); // keyed by cid
 		public static HashSet<int> selected = new HashSet<int>();
 		public static City[] defendersI = Array.Empty<City>();
@@ -118,18 +154,7 @@ namespace COTG.Game
 			return false;
 		}
 		public static bool TryGet(int cid, out City spot) => allSpots.TryGetValue(cid, out spot);
-		public static int focus; // city that has focus (selected, but not necessarily building.  IF you click a city once, it goes to this state
-
-		public virtual event PropertyChangedEventHandler PropertyChanged;
-		public void CallPropertyChanged(string members = null)
-		{
-			PropertyChanged?.Invoke(this,new PropertyChangedEventArgs(members));
-		}
-
-		public void OnPropertyChanged(string members = null)
-		{
-			if(PropertyChanged is not null) ((IANotifyPropertyChanged)this).IOnPropertyChanged(members,(cid ==City.focus || cid ==City.build ));
-		}
+	
 		public bool isFriend => Player.IsFriend(pid); // this is set if it is one of our cities or our ally cities that we can visit
 		public bool? isAlly => Alliance.alliancesFetched ? cid.CidIsAlly() : null; // this is set if it is one of our cities or our ally cities that we can visit
 		public bool? isEnemy => Alliance.alliancesFetched ? cid.CidIsEnemy() : null; // this is set if it is one of our cities or our ally cities that we can visit
@@ -245,10 +270,7 @@ namespace COTG.Game
 		public string _cityName;
 		public string cityName => _cityName ?? xy;
 		public string cityNameOrNull => _cityName ?? string.Empty;
-		public int cid; // x,y combined into 1 number
-		public string xy => cid.CidToString();//$"({cid % 65536}:{cid / 65536})";
-		public int x => cid % 65536;
-		public int y => cid >> 16;
+		
 
 
 
@@ -310,7 +332,7 @@ namespace COTG.Game
 		public string defString => GetDefString(", ");
 		public string GetDefString(string separator)
 		{
-			TroopTypeCountsRef all = new();
+			TroopTypeCounts all = new();
 			if (incoming.Any())
 			{
 				foreach (var a in incoming)
@@ -839,7 +861,7 @@ namespace COTG.Game
 						}));
 					}
 				}
-				Note.Show($"{city.nameAndRemarks} set to {city.attackType}", Note.Priority.high);
+				Note.Show($"{city.nameAndRemarks} set to {city.attackType}", Debug.Priority.high);
 				AttackTab.WritebackAttacks();
 				AttackTab.WaitAndSaveAttacks();
 			}
@@ -881,7 +903,7 @@ namespace COTG.Game
 				var str = await Post.SendForText("includes/gLay.php", $"cid={cid}", World.CidToPlayerOrMe(cid));
 				Log(str);
 
-				App.DispatchOnUIThreadLow(() =>
+				AppS.DispatchOnUIThreadLow(() =>
 				{
 					// set is water var
 					str = $"{City.shareStringStart}{(World.GetInfoFromCid(cid).isWater ? ';' : ':')}{str.Substring(18)}";
@@ -1423,7 +1445,7 @@ namespace COTG.Game
 		{
 			++SpotTab.silenceSelectionChanges;
 
-			App.DispatchOnUIThreadLow(() =>
+			AppS.DispatchOnUIThreadLow(() =>
 			{
 				try
 				{
@@ -1615,26 +1637,7 @@ namespace COTG.Game
 			return pointSizeCount;
 		}
 
-		public override bool Equals(object obj)
-		{
-			return Equals(obj as Spot);
-		}
-
-		public bool Equals(Spot other)
-		{
-			return other != null &&
-				   cid == other.cid;
-		}
-		public bool Equals(int _cid)
-		{
-				return   cid == _cid;
-		}
-		public override int GetHashCode()
-		{
-			return cid;
-		}
-		public static bool operator ==(Spot a, int cid) => a.cid == cid;
-		public static bool operator !=(Spot a, int cid) => a.cid != cid;
+		
 		//public void ShowCity(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
 		//{
 		//	JSClient.CitySwitch(cid, false);
@@ -1671,18 +1674,12 @@ namespace COTG.Game
 			if (changed)
 			{
 				focus = cid;
-				App.QueueOnUIThread(UpdateFocusText);
+				AppS.QueueOnUIThread(UpdateFocusText);
 			}
 			if (bringIntoView)
 				cid.BringCidIntoWorldView(lazyMove);
 		}
-		public static int build; // city that has Build selection.  I.e. in city view, the city you are in
-		public static int lockedBuild; // 
-		public bool isBuild => cid == build;
-		public static bool IsBuild(int cid)
-		{
-			return build == cid;
-		}
+		
 
 		public static bool CanChangeCity(int cid)
 		{
@@ -1712,7 +1709,7 @@ namespace COTG.Game
 				if (lockedBuild != 0 && cid != lockedBuild)
 				{
 					Note.Show("Please wait for current operation to complete");
-					if (await App.DoYesNoBox("Busy", "Please wait for current operation to complete") != 1)
+					if (await AppS.DoYesNoBox("Busy", "Please wait for current operation to complete") != 1)
 					{
 						return false;
 					}
@@ -1761,7 +1758,7 @@ namespace COTG.Game
 								if (id == -1)
 									continue;
 								timing = timing.Substring(id + 9);
-								var t = JSClient.ServerTime();
+								var t = CnVServer.ServerTime();
 								;
 								var today = timing.StartsWith("Today");
 								var tomorrow = timing.StartsWith("Tomorrow");
@@ -1851,7 +1848,7 @@ namespace COTG.Game
 			Assert(cid == _cid);
 			if (type != 3 && type != -1) // 4 is empty, 3 is city or ruins, -1 means not open (for a continent)
 			{
-				App.DispatchOnUIThreadLow(() =>
+				AppS.DispatchOnUIThreadLow(() =>
 			   {
 				   var dialog = new ContentDialog()
 				   {
@@ -1861,7 +1858,7 @@ namespace COTG.Game
 				   };
 		   //SettingsPage.BoostVolume();
 		   ElementSoundPlayer.Play(ElementSoundKind.Invoke);
-				   COTG.Services.ToastNotificationsService.instance.SpotChanged($"{cid.CidToString()} has changed");
+				   ToastNotificationsService.instance.SpotChanged($"{cid.CidToString()} has changed");
 				   dialog.ShowAsync2();
 			   });
 				JSClient.ShowCity(cid, false);
@@ -2154,7 +2151,7 @@ namespace COTG.Game
 			var me = this as City;
 			var flyout = new MenuFlyout();
 			AddToFlyout(flyout,uie == MainPage.CityGrid || uie == BuildTab.CityGrid );
-			flyout.CopyXamlRoomFrom(uie);
+			flyout.CopyXamlRootFrom(uie);
 
 			//   flyout.XamlRoot = uie.XamlRoot;
 			flyout.ShowAt(uie, position);
@@ -2199,7 +2196,7 @@ namespace COTG.Game
 		{
 			await App.DispatchOnUIThreadExclusive(cid, async () =>
 			 {
-				 await COTG.DoTheStuff.Go(this as City, true, true);
+				 await CnV.DoTheStuff.Go(this as City, true, true);
 			 });
 		}
 		public static async void InfoClick(int _cid)
@@ -2252,14 +2249,14 @@ namespace COTG.Game
 			if (allianceId == Alliance.myId)
 			{
 				var tab = IncomingTab.instance;
-				App.DispatchOnUIThread(() => tab.Show());
+				AppS.DispatchOnUIThread(() => tab.Show());
 				for (; ; )
 				{
 					await Task.Delay(1000);
 					if (tab.defenderGrid.ItemsSource != null)
 						break;
 				}
-				App.DispatchOnUIThreadIdle(() =>
+				AppS.DispatchOnUIThreadIdle(() =>
 				{
 					tab.defenderGrid.SelectItem(this);
 					tab.defenderGrid.ScrollItemIntoView(this);
@@ -2269,14 +2266,14 @@ namespace COTG.Game
 			else
 			{
 				var tab = OutgoingTab.instance;
-				App.DispatchOnUIThread(() => tab.Show());
+				AppS.DispatchOnUIThread(() => tab.Show());
 				for (; ; )
 				{
 					await Task.Delay(1000);
 					if (tab.attackerGrid.ItemsSource != null)
 						break;
 				}
-				App.DispatchOnUIThreadIdle(() =>
+				AppS.DispatchOnUIThreadIdle(() =>
 				{
 					tab.attackerGrid.SelectItem(this);
 					tab.attackerGrid.ScrollItemIntoView(this);
@@ -2302,7 +2299,7 @@ namespace COTG.Game
 				var message = new DGame.Message() { username = "Cord Claim", content = $"{xy} claimed by {Player.myName}", avatar_url = "" };
 
 				//var content =  JsonContent.Create(message);
-				//, Json.jsonSerializerOptions), Encoding.UTF8,
+				//, JSON.jsonSerializerOptions), Encoding.UTF8,
 					//	   "application/json");
 
 				var result = await client.PostAsJsonAsync(DGame.discordHook, message);
@@ -2344,7 +2341,7 @@ namespace COTG.Game
 			//          instance.Dispatcher.RunAsync(DispatcherQueuePriority.Low, () =>
 			//           {
 			//   await Task.Delay(200);
-			App.QueueOnUIThread(() =>
+			AppS.QueueOnUIThread(() =>
 			{
 
 				{
@@ -2401,11 +2398,11 @@ namespace COTG.Game
 				{
 					var sc = new sndnc() { cid = _cid, rcid = rcid, type = 5, snd = bySea ? 2 : 1, tr = @"[{'tt':17,'tv':1}]" };
 					var magic = "Sx2xxresa" + _pid.ToString() + "sa2dT123ol";
-					var txt = await Post.SendEncryptedForText("includes/sndNC.php",JsonSerializer.Serialize(sc,Json.jsonSerializerOptions),magic,_pid,false);
+					var txt = await Post.SendEncryptedForText("includes/sndNC.php",JsonSerializer.Serialize(sc,JSON.jsonSerializerOptions),magic,_pid,false);
 					var tr = txt.Trim();
 					if (tr.Length > 0 && tr[0] == '{')
 					{
-						await App.DoYesNoBox("Something sent", "or someting");
+						await AppS.DoYesNoBox("Something sent", "or someting");
 						try
 						{
 							settles.Remove((_cid, rcid));
@@ -2464,7 +2461,7 @@ namespace COTG.Game
 		public static string CellText(this DataGridCellInfo cell) => (cell?.Column as DataGridTypedColumn)?.PropertyName ?? string.Empty;
 		public static Windows.Foundation.Point Show(this Microsoft.UI.Xaml.Controls.Flyout me,Windows.Foundation.Point sc,UIElement element)
 		{
-			me.CopyXamlRoomFrom(element);
+			me.CopyXamlRootFrom(element);
 			me.ShowAt(element,new FlyoutShowOptions() { Position = new Windows.Foundation.Point(sc.X,sc.Y),Placement = FlyoutPlacementMode.Auto,ShowMode=FlyoutShowMode.TransientWithDismissOnPointerMoveAway });
 			return sc;
 		}

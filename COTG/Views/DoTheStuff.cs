@@ -4,21 +4,26 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-using COTG.JSON;
-using COTG.Services;
-using COTG.Views;
+
+using CnV.Services;
+using CnV.Views;
 
 using EnumsNET;
 
-using static COTG.Game.City;
-using static COTG.Views.QueueTab;
-using static COTG.Views.ShellPage;
-using static COTG.Views.CityBuild;
+using static CnV.Game.City;
+using static CnV.Views.QueueTab;
+using static CnV.Views.ShellPage;
+using static CnV.Views.CityBuild;
 using Microsoft.UI.Xaml.Controls;
+using CnV;
 
-namespace COTG;
+namespace CnV;
 
-	public static class DoTheStuff
+using Game;
+using Services;
+using Views;
+
+public static class DoTheStuff
 	{
 	static readonly int[] cabinCounts = { 0,1,2,3,4,5,6,7,8 };
 
@@ -29,12 +34,12 @@ namespace COTG;
 
 			var cid = city.cid;
 			Assert(city.isBuild);
-			if(ShellPage.viewMode != ViewMode.city)
-				JSClient.ChangeView(ViewMode.city);
+			if(ShellPage.viewMode != ShellPage.ViewMode.city)
+				JSClient.ChangeView(ShellPage.ViewMode.city);
 			await CityBuild._IsPlanner(false,true);
 
 			Assert(App.uiSema.CurrentCount == 0);
-			Assert(App.IsOnUIThread());
+			Assert(AppS.IsOnUIThread());
 			await GetCity.Post(cid);
 			if(city.leaveMe)
 			{
@@ -43,7 +48,7 @@ namespace COTG;
 			}
 			var bc = city.UpdateBuildStage();
 
-			if(allowRename && (city.buildStage == BuildStage._new|| (city.autobuildCabinLevel==0&&(await App.DoYesNoBox("Autobuild Off?","Maybe you want Setup?")==1))))
+			if(allowRename && (city.buildStage == City.BuildStage._new|| (city.autobuildCabinLevel==0&&(await AppS.DoYesNoBox("Autobuild Off?","Maybe you want Setup?")==1))))
 			{
 				await ShareString.ShowNoLock(cid).ConfigureAwait(false);
 				return true;
@@ -51,14 +56,14 @@ namespace COTG;
 
 			Assert(city.isBuild);
 
-			if(city.buildStage == BuildStage.noLayout && allowSetLayout)
+			if(city.buildStage == City.BuildStage.noLayout && allowSetLayout)
 			{
 				//				if (!city.isBuild)
 				//				await JSClient.ChangeCity(city.cid, false);
 				await ShareString.ShowNoLock(cid,SetupFlags.all);
 				bc=city.UpdateBuildStage();
 
-				if(city.buildStage == BuildStage.noLayout)
+				if(city.buildStage == City.BuildStage.noLayout)
 					return false;
 			}
 
@@ -71,7 +76,7 @@ namespace COTG;
 			var bad = CountBadBuildings(city);
 			if(bad.isBad)
 			{
-				switch(await App.DoYesNoBox("Layout is not ideal",$"{bad.matches} matches, {bad.extraBuildings} extra or misplaced, {bad.missingOverlayBuildings} missing or out of place, Yes to Continue, No to cancel and change layout (or 'Use Buildings' in planner)","Continue","Layout..","Cancel"))
+				switch(await AppS.DoYesNoBox("Layout is not ideal",$"{bad.matches} matches, {bad.extraBuildings} extra or misplaced, {bad.missingOverlayBuildings} missing or out of place, Yes to Continue, No to cancel and change layout (or 'Use Buildings' in planner)","Continue","Layout..","Cancel"))
 				{
 					case -1: return false;
 					case 0:
@@ -92,7 +97,7 @@ namespace COTG;
 				}
 
 			}
-			if(city.buildStage == City.BuildStage.cabins || city.buildStage == BuildStage.townHall)
+			if(city.buildStage == City.BuildStage.cabins || city.buildStage == City.BuildStage.townHall)
 			{
 				if(bc.cabins >= SettingsPage.startCabinCount || bc.buildingCount >= bc.buildingLimit - 2)
 				{
@@ -190,7 +195,7 @@ namespace COTG;
 					{
 						if((bc.cabins < SettingsPage.startCabinCount || (bc.storeHouses == 0)) && !city.is7Point)
 						{
-							switch(await App.DoYesNoBox("Add Cabins",$"Would you like to add cabins to {city.nameAndRemarks}?"))
+							switch(await AppS.DoYesNoBox("Add Cabins",$"Would you like to add cabins to {city.nameAndRemarks}?"))
 							{
 								case -1: return false;
 								case 0: return true;
@@ -262,7 +267,7 @@ namespace COTG;
 						}
 					}
 					break;
-				case BuildStage.cabinsDone:
+				case City.BuildStage.cabinsDone:
 				case City.BuildStage.mainBuildings:
 					{
 						//var c = RandomCitySpot();
@@ -271,7 +276,7 @@ namespace COTG;
 
 						if(bc.buildingCount < buildingLimit)
 						{
-							switch(await App.DoYesNoBox("Building Placement",$"Would you like to place buildings for {city.nameAndRemarks}?"))
+							switch(await AppS.DoYesNoBox("Building Placement",$"Would you like to place buildings for {city.nameAndRemarks}?"))
 							{
 								case -1: return false;
 								case 0: return true;
@@ -428,7 +433,7 @@ namespace COTG;
 							Note.Show("Already doing teardown or finishing up buildings");
 							break;
 						}
-						var result = await App.DispatchOnUIThreadTask(async () =>
+						var result = await AppS.DispatchOnUIThreadTask(async () =>
 						{
 							var panel = new StackPanel() { };
 							panel.Children.Add(new TextBlock() { Text = "Swap cabins for buildings" });
@@ -552,7 +557,7 @@ namespace COTG;
 		if(Player.moveSlots > nextMoveConfirm)
 			return 1;
 		InitNextMoveConfirm();
-		return await App.DoYesNoBox("Move Slot Check",$"{Player.moveSlots} move slots left, continue?");
+		return await AppS.DoYesNoBox("Move Slot Check",$"{Player.moveSlots} move slots left, continue?");
 	}
 
 

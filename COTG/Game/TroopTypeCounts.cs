@@ -1,10 +1,12 @@
 ﻿using System.Collections.Generic;
-using static COTG.Game.Troops;
-using TroopTypeCountsRef = COTG.Game.TroopTypeCounts;
+using static CnV.Game.Troops;
+using TroopTypeCountsRef = CnV.Game.TroopTypeCounts;
 
 using System.Runtime.InteropServices;
-namespace COTG.Game
+namespace CnV.Game
 {
+	using System;
+
 	//public sealed class ArmySourceTargetComparer : IEqualityComparer<Army>
 	//{
 	//	public bool Equals(Army x, Army y)
@@ -527,7 +529,7 @@ namespace COTG.Game
 			}
 		}
 
-		public bool Equals(TroopTypeCountsRef other) => throw new NotImplementedException();
+		public bool Equals(TroopTypeCounts other) => throw new NotImplementedException();
 		public override int GetHashCode()
 		{
 				
@@ -546,11 +548,11 @@ namespace COTG.Game
 				return rv;
 			}
 		}
-		public int CompareTo(TroopTypeCountsRef other) => TS().CompareTo(other.TS());
+		public int CompareTo(TroopTypeCounts other) => TS().CompareTo(other.TS());
 
 		public override bool Equals(object obj)
 		{
-			if(!(obj is TroopTypeCountsRef other))
+			if(!(obj is TroopTypeCounts other))
 			{
 				return false;
 			}
@@ -558,8 +560,8 @@ namespace COTG.Game
 			throw new NotImplementedException();
 		}
 
-		public static bool operator ==(TroopTypeCountsRef left,TroopTypeCountsRef right) => left.Equals(right);
-		public static bool operator !=(TroopTypeCountsRef left,TroopTypeCountsRef right) => !(left==right);
+		public static bool operator ==(TroopTypeCounts left,TroopTypeCounts right) => left.Equals(right);
+		public static bool operator !=(TroopTypeCounts left,TroopTypeCounts right) => !(left==right);
 
 		public override string ToString()
 		{

@@ -6,15 +6,18 @@ using System.Text;
 using System.Threading.Tasks;
 using Windows.Storage;
 using System.IO.Compression;
-using static COTG.Debug;
-using COTG.Game;
-using COTG.Views;
+using static CnV.Debug;
+using CnV.Game;
+using CnV.Views;
 using Windows.Storage.Pickers;
 using Microsoft.Toolkit.HighPerformance.Buffers;
+using CnV;
 
-namespace COTG.Services
+namespace CnV.Services
 {
-    public static class WorldStorage
+	using Game;
+
+	public static class WorldStorage
     {
         static string fileName => $"gwrd{(JSClient.world==20?"":JSClient.world.ToString())}.zip";
         public static StorageFolder folder => ApplicationData.Current.LocalFolder;

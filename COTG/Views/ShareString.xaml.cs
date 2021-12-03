@@ -1,5 +1,5 @@
-﻿using COTG.Game;
-using COTG.Services;
+﻿using CnV.Game;
+using CnV.Services;
 
 using System;
 using System.Collections.Generic;
@@ -15,18 +15,21 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
-using static COTG.Game.City;
-using static COTG.Debug;
-using COTG.Helpers;
-using COTG.JSON;
+using static CnV.Game.City;
+using static CnV.Debug;
+using CnV.Helpers;
+
 using CommunityToolkit.WinUI;
 using System.Text.RegularExpressions;
 using System.ComponentModel;
-using static COTG.Game.City;
 using CommunityToolkit.WinUI.UI.Controls;
+using CnV;
 
-namespace COTG.Views
+namespace CnV.Views
 {
+	using Game;
+	using Helpers;
+	using Services;
 
 	//	record ab(string a=null, string b=null);
 	[Flags]
@@ -86,7 +89,7 @@ namespace COTG.Views
 				using var defer = new NotifyCollectionDeferral(ShareStringItem.all);
 				ShareStringItem.all.Clear();
 				var shares = await Tables.ReadShares(Player.myName).ConfigureAwait(false);
-				await App.DispatchOnUIThreadTask( () =>
+				await AppS.DispatchOnUIThreadTask( () =>
 				{
 					AddStaticLayouts();
 					foreach(var s in shares)
@@ -188,7 +191,7 @@ namespace COTG.Views
 				// could be on any thread
 				var city = City.GetOrAdd(cid);
 
-				return await App.DispatchOnUIThreadTask(async () =>
+				return await AppS.DispatchOnUIThreadTask(async () =>
 			   {
 
 				   try
@@ -296,7 +299,7 @@ namespace COTG.Views
 
 						   city.OnPropertyChanged();
 						   if(autobuild)
-							   await COTG.DoTheStuff.Go(city,false,false);
+							   await DoTheStuff.Go(city,false,false);
 							if(cid == City.build)
 							{
 							   JSClient.CityRefresh();
@@ -324,7 +327,7 @@ namespace COTG.Views
 
 		public async Task<ShareStringMeta> GetMeta()
 		{
-			return await App.DispatchOnUIThreadTask(async () =>
+			return await AppS.DispatchOnUIThreadTask(async () =>
 		   {
 			   var meta = new ShareStringMeta() { notes = TagHelper.ApplyTags(await TagsFromCheckboxes(),string.Empty),desc = description.Text,path = path.Text };
 			   if(SettingsPage.embedTradeInShareStrings)
@@ -345,7 +348,7 @@ namespace COTG.Views
 		{
 
 
-			return GetShareString() + JsonSerializer.Serialize(await GetMeta(),Json.jsonSerializerOptions);
+			return GetShareString() + JsonSerializer.Serialize(await GetMeta(),JSON.jsonSerializerOptions);
 
 		}
 
@@ -398,7 +401,7 @@ namespace COTG.Views
 
 			try
 			{
-				meta = JsonSerializer.Deserialize<ShareStringMeta>(s.json,Json.jsonSerializerOptions);
+				meta = JsonSerializer.Deserialize<ShareStringMeta>(s.json,JSON.jsonSerializerOptions);
 			}
 			catch(Exception ex)
 			{
@@ -484,8 +487,8 @@ namespace COTG.Views
 					if(i.shareStringWithJson != null)
 					{
 						TagsBlade.IsOpen=true;
-						var setTags = (await App.DoYesNoBox("Tags from ShareString","Set tags?") == 1);
-						var setRes = (await App.DoYesNoBox("Trade Settings from ShareString","Set Trade Settings?") == 1);
+						var setTags = (await AppS.DoYesNoBox("Tags from ShareString","Set tags?") == 1);
+						var setRes = (await AppS.DoYesNoBox("Trade Settings from ShareString","Set Trade Settings?") == 1);
 						if(setRes)
 						{
 							await SetupTradeDefaults();
@@ -556,7 +559,7 @@ namespace COTG.Views
 
 		public Task<Tags> TagsFromCheckboxes()
 		{
-			return App.DispatchOnUIThreadTask(() =>
+			return AppS.DispatchOnUIThreadTask(() =>
 		   {
 			   Tags tags = default;
 			   foreach(var tag in TagHelper.tagsWithoutAliases)
@@ -809,7 +812,7 @@ namespace COTG.Views
 		//	path = $"{Player.myName}~tba";
 		//	title = "tba";
 		//}
-		public override string ToString() => JsonSerializer.Serialize(this,Json.jsonSerializerOptions);
+		public override string ToString() => JsonSerializer.Serialize(this,JSON.jsonSerializerOptions);
 
 		//		public static Regex squiggleBracketMatcher = new(@"[^{}]*(?>(?>(?'open'\{)[^()]*)+(?>(?'-open'\})[^{}]*)+)+(?(open)(?!))", RegexOptions.CultureInvariant | RegexOptions.Compiled);
 
@@ -835,7 +838,7 @@ namespace COTG.Views
 				//{
 				//	int q = 0;
 				//}
-				var meta = JsonSerializer.Deserialize<ShareStringMeta>(json,Json.jsonSerializerOptions);
+				var meta = JsonSerializer.Deserialize<ShareStringMeta>(json,JSON.jsonSerializerOptions);
 				//	var path = ShareString.DecomposePath(meta.path);
 				Ctor(meta.path,meta.notes ?? string.Empty,meta.desc ?? string.Empty,s.ss ?? string.Empty,shareString);
 			}

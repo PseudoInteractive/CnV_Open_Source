@@ -7,11 +7,13 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 
-using COTG.Game;
+using CnV.Game;
 
 
-namespace COTG
+namespace CnV
 {
+	using Game;
+
 	[DebuggerDisplay($"{{{nameof(GetDebuggerDisplay)}(),nq}}")]
 	public readonly struct Building : IEquatable<Building>
 	{
@@ -29,7 +31,7 @@ namespace COTG
 		public readonly bool isCabin => id == BuildingDef.idCabin;
 		public readonly bool isTemple => id == BuildingDef.BidToId(City.bidTemple);
 
-		public readonly void AssertValid() => COTG.Debug.Assert(bid== City.bidWall || (id==0 ? bl==0 : (isRes||bl!=0)));
+		public readonly void AssertValid() => Debug.Assert(bid== City.bidWall || (id==0 ? bl==0 : (isRes||bl!=0)));
 		public readonly bool isMilitary => def.isMilitary;
 		public readonly bool isBarracks => def.isBarracks;
 

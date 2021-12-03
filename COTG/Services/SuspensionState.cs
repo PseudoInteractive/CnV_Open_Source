@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace COTG.Services
+namespace CnV.Services
 {
     public class SuspensionState
     {

@@ -7,12 +7,13 @@ using System.Threading.Tasks;
 namespace CnV
 {
 	using CnVChat;
-	using COTG;
+	using CnV;
 
 	// Assume that world is set at this point
 	internal static class PlayerTables
 	{
 		// We should ditch these after load
+		// There might be a lot of these, we might optimize this one day
 		internal static Dictionary<PlayerId, PlayerGameEntity> playersGame = new();
 
 		public static async Task LoadGamePlayers()
@@ -21,13 +22,15 @@ namespace CnV
 
 			await foreach (var a in PlayerGameEntity.QueryAsync( ))
 			{
-				playersGame.TryAdd(a.playerId, a);
+				var added = playersGame.TryAdd(a.playerId, a);
+				Assert(added);
 			}
 		}
+
 		public static async Task LoadWorldPlayers()
 		{
+#if CNV
 			// Fetch all game players
-
 			await foreach (var pw in PlayerWorldEntity.QueryAsync(World.world))
 			{
 				var playerId = pw.playerId;
@@ -35,11 +38,9 @@ namespace CnV
 				var player = new Player()
 				{
 					// Global info
-					discordId = pg.discordId.GetValueOrDefault(),
-					id=playerId,
+					id = playerId,
 					name = pg.playerName,
 					avatarUrl = pg.avatarURL,
-					playfabId = pg.playFabId.GetValueOrDefault(),
 					discordUserName = pg.discordUserName,
 					// Game info
 					alliance = pw.alliance.GetValueOrDefault().AsUShort(),
@@ -50,7 +51,24 @@ namespace CnV
 				Player.playerByDiscordId.TryAdd(player.discordId,player);
 				Player.nameToId.TryAdd(player.name, player.id);
 			}
+			
+			await foreach (var pw in PlayerGameEntity.QueryAsync())
+			{
+				var pid = pw.playerId;
+				if (Player.all.TryGetValue(pid, out var player))
+				{
+					player.discordId = pw.discordId.GetValueOrDefault();
+					player.playfabId = pw.playFabId.GetValueOrDefault();
+				}
+				else
+				{
+					Assert(false);
+				}
+			}
+
+			#endif
 		}
 		// Fetch all world Players
+
 	}
 }

@@ -1,7 +1,7 @@
-﻿using COTG.Game;
-using COTG.Helpers;
-using COTG.JSON;
-using COTG.Services;
+﻿using CnV.Game;
+using CnV.Helpers;
+
+using CnV.Services;
 
 using Cysharp.Text;
 
@@ -27,17 +27,21 @@ using Microsoft.UI.Xaml.Controls.Primitives;
 using Microsoft.UI.Xaml.Input;
 using System.Net.Http;
 using Microsoft.UI.Xaml.Media;
-using static COTG.Debug;
+using static CnV.Debug;
 
 using WinUI = Microsoft.UI.Xaml.Controls;
 using CommunityToolkit.WinUI.UI.Controls;
 using System.Reflection;
 using CommunityToolkit.WinUI.Helpers;
-using COTG.Helpers;
 using System.Collections.ObjectModel;
+using CnV;
 
-namespace COTG.Views
+namespace CnV.Views
 {
+	using Game;
+	using Helpers;
+	using Services;
+
 	//public class LogEntryStruct
 	//{
 	//    public string t { get; set; }
@@ -47,7 +51,7 @@ namespace COTG.Views
 	//    public LogEntryStruct(string _t) { t =_t; }
 	//}
 	// TODO WTS: Change the icons and titles for all NavigationViewItems in ShellPage.xaml.
-	public partial class ShellPage:Page, INotifyPropertyChanged
+	public sealed partial class ShellPage:Page, INotifyPropertyChanged
 	{
 		public const int canvasZDefault = 11;
 		public const int canvasZBack = 0;
@@ -85,7 +89,7 @@ namespace COTG.Views
 //		protected override void OnPreviewKeyDown(KeyRoutedEventArgs e) => Trace($"KeyP: {e.Key} {e.OriginalKey} {e.OriginalSource.ToString()}");
 		public static string WorkStart(string desc)
 		{
-			App.DispatchOnUIThreadLow(() =>
+			AppS.DispatchOnUIThreadLow(() =>
 		   {
 			   if(!workQueue.Any())
 			   {
@@ -104,7 +108,7 @@ namespace COTG.Views
 		public static void WorkUpdate(string desc)
 		{
 
-			App.DispatchOnUIThreadLow(() =>
+			AppS.DispatchOnUIThreadLow(() =>
 			{
 				instance.work.Text = desc;
 			});
@@ -112,7 +116,7 @@ namespace COTG.Views
 
 		public static void WorkEnd(string desc)
 		{
-			App.DispatchOnUIThreadLow(() =>
+			AppS.DispatchOnUIThreadLow(() =>
 			{
 				if(!workQueue.Any())
 				{
@@ -334,40 +338,20 @@ namespace COTG.Views
 			//	ShellPage.webclientSpan.x = (screenSize.Width * .715625f* SettingsPage.htmlZoom * 2).RoundToInt();
 			//	ShellPage.webclientSpan.y = (screenSize.Height * 0.89236111111111116f * SettingsPage.htmlZoom*2).RoundToInt();
 			//	await UpdateWebViewScale();
+			Log("Game Create!");
 			AGame.Create(canvas);
-
 			if(SystemInformation.Instance.IsAppUpdated && !JSClient.isSub)
 			{
-				App.DispatchOnUIThreadLow(SettingsPage.ShowWhatsNew);
+				AppS.DispatchOnUIThreadLow(SettingsPage.ShowWhatsNew);
 			}
 #if DEBUG
 			KeyboardFocus.Start(Focus,canvas.XamlRoot);
 			mouseOverCanvasBox.Visibility = Visibility.Visible;
 #endif
+			
 
 
-			Task.Delay(4500).ContinueWith((_) => App.DispatchOnUIThreadIdle(async  () =>
-			{
-				//		ShellPage.SetupCoreInput();
-				var sz = canvas.ActualSize;
-				AGame.SetClientSpan(sz.X,sz.Y);
-				//				SetupCoreInput();
-				//	TabPage.ShowTabs();
-				//	SetWebViewHasFocus(true);
-				//ShellPage.canvas.IsHitTestVisible = false;
-				//ShellPage.canvas.Visibility = Visibility.Collapsed;
-				//			var instances = Windows.ApplicationModel.AppInstance.GetInstances();
-				//Assert(instances.Count==1);
-				//if(instances.Count > 1)
-				//{
-				//	App.DoYesNoBox("More than one window is open", "If this is intentional, please ignore, if not, close some (they may already be closing) or restart your computer" );
-				//}
-				//	App.window.Content.XamlRoot.Content.GetVisualInternal
-
-				var signin = new Signin();
-				await signin.ShowAsync2();
-
-			}));
+			
 
 			//Task.Delay(5000).ContinueWith((_) =>
 			//{
@@ -820,7 +804,7 @@ namespace COTG.Views
 					bd.Add(new BuildingCount() { count = bCount,brush = CityBuild.BuildingBrush(City.bidTownHall,0.5f) });
 
 					// var button = sender as Button; button.Focus(FocusState.Programmatic);
-					App.DispatchOnUIThreadLow(() =>
+					AppS.DispatchOnUIThreadLow(() =>
 					{
 						buildingList.Width = double.NaN;
 						buildingList.Height = double.NaN;
@@ -1407,7 +1391,7 @@ namespace COTG.Views
 				//		return;
 				if(canvas != null && instance.grid != null)
 				{
-					//				return App.DispatchOnUIThreadTask( ()	=>
+					//				return AppS.DispatchOnUIThreadLow( ()	=>
 
 					try
 					{
@@ -1609,7 +1593,7 @@ namespace COTG.Views
 		//			//	SettingsPage.SaveAll();
 
 
-		//				await App.DoYesNoBox("Cookie set","Cookies", "Okay", null, "Okay");
+		//				await AppS.DoYesNoBox("Cookie set","Cookies", "Okay", null, "Okay");
 		//				if(!clear.IsChecked.GetValueOrDefault())
 		//					JSClient.view.Refresh();
 		//			}

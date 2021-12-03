@@ -7,12 +7,12 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
 using System.Net.Http;
 using WebView = Microsoft.UI.Xaml.Controls.WebView2;
-using static COTG.Debug;
+using static CnV.Debug;
 using Windows.System;
 using Microsoft.Web.WebView2.Core;
-using COTG.Services;
+using CnV.Services;
 
-namespace COTG.Views
+namespace CnV.Views
 {
     public sealed partial class WebViewPage : UserTab
     {

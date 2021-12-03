@@ -1,5 +1,8 @@
-﻿using COTG.Helpers;
-using COTG.Services;
+﻿using CnV;
+
+using CnV.Helpers;
+using CnV.Services;
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,10 +10,13 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Web;
 
-namespace COTG.Game
+namespace CnV.Game
 {
-    // these are transient, not cached, owned by their grid.
-    public class BlessedCity
+	using Services;
+	using Views;
+
+	// these are transient, not cached, owned by their grid.
+	public class BlessedCity
     {
         public static List<BlessedCity> all = new List<BlessedCity>();
         public static City senderCity;
@@ -33,7 +39,7 @@ namespace COTG.Game
 		public string travelTime => TimeSpan.FromMinutes(travelMinutes).Format();
 
 		public int priToScore => pri == 4 ? 0 : pri+1;
-		public float sortScore => (float)-(priToScore*1e20f - (JSClient.ServerTime() - blessedUntil).TotalHours - travelMinutes ); // todo: refine this, also take into acccount resources needed
+		public float sortScore => (float)-(priToScore*1e20f - (CnVServer.ServerTime() - blessedUntil).TotalHours - travelMinutes ); // todo: refine this, also take into acccount resources needed
         public static async void Refresh()
         {
             try
@@ -62,7 +68,7 @@ namespace COTG.Game
             }
             catch (Exception e)
             {
-                COTG.Debug.LogEx(e);
+                Debug.LogEx(e);
             }
 
         }

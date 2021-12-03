@@ -18,8 +18,10 @@ namespace CnVDiscord
 {
 	using System.Net.Http;
 	using System.Text.RegularExpressions;
+
+	using CnV;
+
 	using CnVChat;
-	using COTG;
 	using Microsoft.UI.Xaml.Media.Imaging;
 
 	class CnVChatClient:ICnVChatClient
@@ -78,7 +80,7 @@ namespace CnVDiscord
 				}
 				var channels = await connection.JoinAsync(new(){ playerName=Player.myName,world=JSClient.world,alliance=Alliance.my.name,allianceRole="Newbie"}); // Todo store role somewhere
 				Log("Got Channels " + channels.Length);
-				App.DispatchOnUIThread(async () =>
+				AppS.DispatchOnUIThread(async () =>
 				{
 					foreach (var channel in channels)
 					{
@@ -109,7 +111,7 @@ namespace CnVDiscord
 		public void OnReceiveMessages( ICnVChatClient.OnReceiveMessagesArgs messageArgs)
 		{
 			Log("Got Messages " + messageArgs.discordMessages.Length);
-			App.DispatchOnUIThread(async () =>
+			AppS.DispatchOnUIThread(async () =>
 			{
 				for(int i = 0;i<messageArgs.discordMessages.Length;++i)
 				{
@@ -148,7 +150,7 @@ namespace CnVDiscord
 
 					var _name = name; 
 					
-					await App.DispatchOnUIThreadTask( () =>
+					await AppS.DispatchOnUIThreadTask( () =>
 						{
 							p.avatarBrush= new BitmapImage(new Uri(url));
 							return Task.CompletedTask;
@@ -177,7 +179,7 @@ namespace CnVDiscord
 					content = content.Replace(mention, mentionGame);
 				}
 				var chat = new ChatEntry(name, content, message.Timestamp.ToServerTime(), ChatEntry.typeAlliance);
-				App.DispatchOnUIThreadLow(() => ChatTab.Post(message.ChannelId, chat, isNew,notify));
+				AppS.DispatchOnUIThreadLow(() => ChatTab.Post(message.ChannelId, chat, isNew,notify));
 			}
 			catch (Exception ex)
 			{

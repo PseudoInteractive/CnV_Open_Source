@@ -1,4 +1,4 @@
-﻿using COTG.Helpers;
+﻿using CnV.Helpers;
 using CommunityToolkit.WinUI;
 using System;
 using System.Collections.Concurrent;
@@ -20,12 +20,12 @@ using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
 using CnVDiscord;
-using static COTG.Debug;
+using static CnV.Debug;
 using Microsoft.UI.Xaml.Documents;
-using COTG.Game;
+using CnV.Game;
 using System.Text.Json;
 using Microsoft.UI;
-using COTG.Services;
+using CnV.Services;
 using System.Threading.Tasks;
 using System.Text;
 using Microsoft.UI.Xaml.Media.Imaging;
@@ -33,9 +33,14 @@ using System.Collections.ObjectModel;
 using CommunityToolkit.WinUI.UI.Controls;
 
 
-namespace COTG.Views
+namespace CnV.Views
 {
+	using System.Collections.Immutable;
+	using CnV;
+
 	using DSharpPlus.Entities;
+	using Game;
+	using Services;
 
 	public sealed class ChatEntry
 	{
@@ -134,7 +139,7 @@ namespace COTG.Views
 		{
 			if (items.Count > 0 && visible)
 			{
-				App.QueueOnUIThread(() =>
+				AppS.QueueOnUIThread(() =>
 				
 				{
 					items.ClearHash();
@@ -262,7 +267,7 @@ namespace COTG.Views
 			//              await _logSemaphore.WaitAsync();
 			// try
 			////  {
-			App.DispatchOnUIThreadIdle(() =>
+			AppS.DispatchOnUIThreadIdle(() =>
 			{
 
 				try
@@ -270,7 +275,7 @@ namespace COTG.Views
 					//  var str = $"{Tick.MSS()}:{s}";
 					//  instance.logEntries
 
-					debug.Post(new ChatEntry(null, s, JSClient.ServerTime()), true);
+					debug.Post(new ChatEntry(null, s, CnVServer.ServerTime()), true);
 				}
 				catch (Exception e)
 				{
@@ -493,7 +498,7 @@ namespace COTG.Views
 			}
 			else
 			{
-				ch.time = JSClient.ServerTime();
+				ch.time = CnVServer.ServerTime();
 			}
 
 			return ch;
@@ -542,7 +547,7 @@ namespace COTG.Views
 						}
 						int c = batch.Count-1;
 						var epsilon = TimeSpan.FromSeconds(10);
-						var lastTime = JSClient.ServerTime() + epsilon;
+						var lastTime = CnVServer.ServerTime() + epsilon;
 						for (; c >= 0;--c)
 						{
 							while( lastTime < batch[c].time )
@@ -657,7 +662,7 @@ namespace COTG.Views
 
 		//    var ll = await Avatarslate.TouchAsync();
 		//    var langs = await ll.GetLanguagesAsync();
-		//    App.DispatchOnUIThreadLow(() =>
+		//    AppS.DispatchOnUIThreadLow(() =>
 		//    {
 		//        var fly = new MenuFlyout();
 		//        var i = fly.Items;
@@ -689,7 +694,7 @@ namespace COTG.Views
 		//    var i = fly.Items;
 		//    var ll = await Avatarslate.TouchAsync();
 		//    var langs = await Avatarslate.GetLanguagesAsync();
-		//    App.DispatchOnUIThreadLow(() =>
+		//    AppS.DispatchOnUIThreadLow(() =>
 		//    {
 		//        foreach (var l in langs)
 		//        {
@@ -710,7 +715,7 @@ namespace COTG.Views
 		//    var i = fly.Items;
 		//    var ll = await Avatarslate.TouchAsync();
 		//    var langs = await Avatarslate.GetLanguagesAsync();
-		//    App.DispatchOnUIThreadLow(() =>
+		//    AppS.DispatchOnUIThreadLow(() =>
 		//    {
 		//        foreach (var l in langs)
 		//        {
@@ -727,7 +732,7 @@ namespace COTG.Views
 		//    var msg = sender as Button;
 		//    var ll = await Avatarslate.TouchAsync();
 		//    var langs = await Avatarslate.GetLanguagesAsync();
-		//    App.DispatchOnUIThreadLow(() =>
+		//    AppS.DispatchOnUIThreadLow(() =>
 		//    {
 		//        var fly = new MenuFlyout();
 		//        var i = fly.Items;
@@ -751,7 +756,7 @@ namespace COTG.Views
 
 		//    var ll = await Avatarslate.TouchAsync();
 		//    var langs = await ll.GetLanguagesAsync();
-		//    App.DispatchOnUIThreadLow(() =>
+		//    AppS.DispatchOnUIThreadLow(() =>
 		//    {
 		//        var fly = new MenuFlyout();
 		//        var i = fly.Items;
@@ -777,7 +782,7 @@ namespace COTG.Views
 			//           Log("Tapped");
 			//   listView.Focus(FocusState.Programmatic);
 		//	if(input.Focus(FocusState.)
-			App.QueueOnUIThread(() => input.Focus(FocusState.Programmatic));
+			AppS.QueueOnUIThread(() => input.Focus(FocusState.Programmatic));
 		}
 
 

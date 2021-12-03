@@ -2,7 +2,7 @@
 using System.Globalization;
 using Microsoft.UI.Xaml.Data;
 
-namespace COTG.Converters
+namespace CnV.Converters
 {
     public class DateTimeConverter : IValueConverter
     {

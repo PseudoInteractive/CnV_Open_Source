@@ -1,13 +1,12 @@
-﻿using COTG.Game;
-using COTG.JSON;
+﻿using CnV.Game;
 
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using static COTG.Game.City;
-using static COTG.AGame;
+using static CnV.Game.City;
+using static CnV.AGame;
 using UWindows = Windows;
 using Vector2 = System.Numerics.Vector2;
 using Vector3 = System.Numerics.Vector3;
@@ -15,16 +14,18 @@ using Vector3 = System.Numerics.Vector3;
 using XVector2 = Microsoft.Xna.Framework.Vector2;
 using XVector3 = Microsoft.Xna.Framework.Vector3;
 using XVector4 = Microsoft.Xna.Framework.Vector4;
-using static COTG.CanvasHelpers;
+using static CnV.CanvasHelpers;
 using Microsoft.Xna.Framework;
-using COTG.Views;
-using static COTG.Debug;
-using static COTG.Views.CityBuild;
+using CnV.Views;
+using static CnV.Debug;
+using static CnV.Views.CityBuild;
 
 
-namespace COTG.Draw
+namespace CnV.Draw
 {
-	
+	using Game;
+	using Views;
+
 	public class CityView
 	{
 		static CityView()

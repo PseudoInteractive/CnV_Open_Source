@@ -6,7 +6,7 @@
 //
 //    var poll2 = Poll2.FromJson(jsonString);
 
-namespace COTG
+namespace CnV
 {
 	using System;
 	using System.Collections.Generic;

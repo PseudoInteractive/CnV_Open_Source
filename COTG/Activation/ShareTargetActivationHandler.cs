@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 
-using COTG.Views;
+using CnV.Views;
 
 using Windows.ApplicationModel.Activation;
 using Microsoft.UI.Xaml;

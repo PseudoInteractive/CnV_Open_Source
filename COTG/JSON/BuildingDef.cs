@@ -1,4 +1,4 @@
-﻿using COTG.Game;
+﻿using CnV.Game;
 
 using System;
 using System.Collections.Generic;
@@ -7,10 +7,12 @@ using System.Text;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
-using static COTG.Debug;
-using static COTG.Game.City;
-namespace COTG
+using static CnV.Debug;
+using static CnV.Game.City;
+namespace CnV
 {
+	using Game;
+	using Helpers;
 	using J = System.Text.Json.Serialization.JsonPropertyNameAttribute;
 
 
@@ -67,7 +69,7 @@ namespace COTG
 		//}
 		public static async Task Init()
 		{
-			all = await Json.FromContent<Dictionary<int, BuildingDef>>("buildingDef");
+			all = await JSON.FromContent<Dictionary<int, BuildingDef>>("buildingDef");
 			byte counter = 0;
 			
 			idToBid = new BuildingDef[256];

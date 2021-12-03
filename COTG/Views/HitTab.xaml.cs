@@ -1,5 +1,5 @@
-﻿using COTG.Game;
-using COTG.JSON;
+﻿using CnV.Game;
+
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -22,9 +22,11 @@ using Microsoft.UI.Xaml.Navigation;
 
 // The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234236
 
-namespace COTG.Views
+namespace CnV.Views
 {
-    public sealed partial class HitTab : UserTab
+	using Game;
+
+	public sealed partial class HitTab : UserTab
     {
         public static HitTab instance;
 		public override TabPage defaultPage => TabPage.secondaryTabs;

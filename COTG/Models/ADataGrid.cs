@@ -1,13 +1,15 @@
 ﻿using Microsoft.UI.Xaml.Data;
 
 
-namespace COTG;
+namespace CnV;
 
 using Syncfusion.UI.Xaml.DataGrid;
 
 using Windows.Storage;
 using Converters;
+using Game;
 using Syncfusion.UI.Xaml.Grids;
+using Views;
 using DataGrid = Syncfusion.UI.Xaml.DataGrid.SfDataGrid;
 /// <summary>
 /// Tag is used to save/load the dataGrid

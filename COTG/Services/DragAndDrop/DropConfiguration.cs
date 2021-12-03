@@ -2,16 +2,18 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-using COTG.Models;
+using CnV.Models;
 
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Storage;
 using Windows.Storage.Streams;
 using Microsoft.UI.Xaml;
 
-namespace COTG.Services.DragAndDrop
+namespace CnV.Services.DragAndDrop
 {
-    public class DropConfiguration : DependencyObject
+	using Models;
+
+	public class DropConfiguration : DependencyObject
     {
         public static readonly DependencyProperty DropBitmapActionProperty =
             DependencyProperty.Register("DropBitmapAction", typeof(Action<RandomAccessStreamReference>), typeof(DropConfiguration), new PropertyMetadata(null));

@@ -1,4 +1,4 @@
-﻿using COTG.Game;
+﻿using CnV.Game;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -15,20 +15,23 @@ using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
-using static COTG.Game.Troops;
-using static COTG.Debug;
-using COTG.Helpers;
+using static CnV.Game.Troops;
+using static CnV.Debug;
+using CnV.Helpers;
 using System.ComponentModel;
-using COTG.Services;
+using CnV.Services;
 using CommunityToolkit.WinUI;
 using System.Threading.Tasks;
-using static COTG.Game.TroopTypeCountHelper;
+using static CnV.Game.TroopTypeCountHelper;
 using CommunityToolkit.WinUI.UI.Controls;
+using CnV;
 
-namespace COTG.Views
+namespace CnV.Views
 {
+	using Game;
+	using Services;
 
-    public sealed partial class NearDefenseTab : UserTab
+	public sealed partial class NearDefenseTab : UserTab
 	{
 
         public static NearDefenseTab instance;
@@ -197,7 +200,7 @@ namespace COTG.Views
             else
             {
 				supporters.Clear(true);
-				App.DispatchOnUIThreadLow( ()=>
+				AppS.DispatchOnUIThreadLow( ()=>
 				
                 troopTypeGrid.ItemsSource=supportByTroopTypeEmpty
            );     //              supportGrid.ItemsSource = null;
@@ -280,7 +283,7 @@ namespace COTG.Views
             var text = sender as FrameworkElement;
             var stt = text.DataContext as SupportByTroopType;
             var flyout = new MenuFlyout();
-            flyout.CopyXamlRoomFrom(text);
+            flyout.CopyXamlRootFrom(text);
             AApp.AddItem(flyout, "Troops Home", (_, _) =>
             {
                 var supporter = stt.supporter;
@@ -309,7 +312,7 @@ namespace COTG.Views
             var text = sender as FrameworkElement;
             var supporter = text.DataContext as Supporter;
             var flyout = new MenuFlyout();
-            flyout.CopyXamlRoomFrom(text);
+            flyout.CopyXamlRootFrom(text);
             AApp.AddItem(flyout, "Troops Home", (_, _) =>
             {
 				supporter.tSend = supporter.city.troopsHome;
@@ -353,9 +356,9 @@ namespace COTG.Views
 
                 departAt = city.GetRaidReturnTime() + TimeSpan.FromSeconds(15);
                 var canArriveAt = departAt+ TimeSpan.FromHours(supporter.travel );
-                if (_arriveAt > JSClient.ServerTime() && _arriveAt < canArriveAt)
+                if (_arriveAt > CnVServer.ServerTime() && _arriveAt < canArriveAt)
                 {
-					var result = await App.DispatchOnUIThreadTask(async () =>
+					var result = await AppS.DispatchOnUIThreadTask(async () =>
 					{
 						var msg = new ContentDialog()
 						{

@@ -8,31 +8,44 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
-using static COTG.Debug;
+using static CnV.Debug;
 using System.Web;
-using COTG.Game;
-using COTG.Helpers;
-using static COTG.Game.Troops;
-using COTG.Views;
+using CnV.Game;
+using CnV.Helpers;
+using static CnV.Game.Troops;
+using CnV.Views;
 using System.Globalization;
-using COTG.JSON;
+
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.IO;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml;
 using ContentDialog = Microsoft.UI.Xaml.Controls.ContentDialog;
 using ContentDialogResult = Microsoft.UI.Xaml.Controls.ContentDialogResult;
-using TroopTypeCounts = COTG.Game.TroopTypeCounts;
+using TroopTypeCounts = CnV.Game.TroopTypeCounts;
 //COTG.DArray<COTG.Game.TroopTypeCount>;
-using TroopTypeCountsRef = COTG.Game.TroopTypeCounts;
-using static COTG.Game.TroopTypeCountHelper;
+using TroopTypeCountsRef = CnV.Game.TroopTypeCounts;
+using static CnV.Game.TroopTypeCountHelper;
 using System.Net;
 using Nito.AsyncEx;
+using CnV;
 
 //COTG.DArrayRef<COTG.Game.TroopTypeCount>;
 
-namespace COTG.Services
+namespace CnV.Services
 {
+	using Game;
+	using Helpers;
+	using Views;
+	using City = Game.City;
+	using Dungeon = Game.Dungeon;
+	using Player = Game.Player;
+	using Raid = Game.Raid;
+	using Reinforcement = Game.Reinforcement;
+	using Spot = Game.Spot;
+	using TroopTypeCount = Game.TroopTypeCount;
+	using World = Game.World;
+
 	[Flags]
 	public enum RestFlags
 	{
@@ -154,7 +167,7 @@ namespace COTG.Services
 		{
 			try
 			{
-				return JsonSerializer.Deserialize<T>(await AsArray(resp).ConfigureAwait(false), Json.jsonSerializerOptions);
+				return JsonSerializer.Deserialize<T>(await AsArray(resp).ConfigureAwait(false), JSON.jsonSerializerOptions);
 
 			}
 			catch (Exception e)
@@ -333,7 +346,7 @@ namespace COTG.Services
 			// this	{"a":"worldButton","b":"block","c":true,"d":1591969039987,"e":"World"}
 			//      {"a":"worldButton","b":"block","c":true,"d":1591988862914,"e":"World"}
 			// this should be server time??
-			var json = $"{{\"a\":\"worldButton\",\"b\":\"block\",\"c\":true,\"d\":{JSClient.ServerTimeMs()},\"e\":\"World\"}}";
+			var json = $"{{\"a\":\"worldButton\",\"b\":\"block\",\"c\":true,\"d\":{CnVServer.ServerTimeMs()},\"e\":\"World\"}}";
 			var encoded = Aes.Encode(json, $"Addxddx5DdAxxer{Player.activeId}2wz");
 			var args = "a=" + HttpUtility.UrlEncode(encoded, Encoding.UTF8);
 			//"a=JwHt8WTz416hj%2FsCxccQzDNR47ebTllFGQq957Pigc%2BEb8EHJKNoVgVKQeNu2a4xi9Tx1vFxsUxw9WxRTuPLsey5mcvlVcftThXU4gA9";
@@ -509,10 +522,10 @@ namespace COTG.Services
 				for (int i = 0; ; ++i)
 				{
 
-					var t = JSClient.ServerTimeMs();
+					var t = CnVServer.ServerTimeMs();
 					var args = new Args() { tid = AMath.random.Next(), bt = 1, ds = t, de = t + 1, pa = 1, tc = count, tm = 0, ttype = tt, tbt = 4, tl = 1 };
 
-					var encoded = Aes.Encode(JsonSerializer.Serialize(args, Json.jsonSerializerOptions), magic);
+					var encoded = Aes.Encode(JsonSerializer.Serialize(args, JSON.jsonSerializerOptions), magic);
 					var urle = $"cid={cid}&a=" + HttpUtility.UrlEncode(encoded, Encoding.UTF8);
 					var str = (await Post.SendForText("includes/bTrp.php", urle)).Trim();
 					if (str == "0")
@@ -1031,7 +1044,7 @@ namespace COTG.Services
 
 				}
 			}
-			App.QueueOnUIThread(()
+			AppS.QueueOnUIThread(()
 				=>
 			{
 				MainPage.instance.rWood.Text = $"Wood: {(rWood * 0.001).RoundToInt():N0} k/h";
@@ -1166,20 +1179,20 @@ namespace COTG.Services
 			{
 				cid = cid,
 				rcid = rcid,
-				tr = JsonSerializer.Serialize(tttv, Json.jsonSerializerOptions),
+				tr = JsonSerializer.Serialize(tttv, JSON.jsonSerializerOptions),
 				snd = 1, // 1 means send immediately
 			};
-			if (arrival > JSClient.ServerTime())
+			if (arrival > CnVServer.ServerTime())
 			{
 				sr.snd = 3;
 				sr.ts = arrival.ToString("MM/dd/yyyy HH':'mm':'ss");
 			}
-			else if (departAt > JSClient.ServerTime())
+			else if (departAt > CnVServer.ServerTime())
 			{
 				sr.snd = 2;
 				sr.ts = departAt.ToString("MM/dd/yyyy HH':'mm':'ss");
 			}
-			var post = JsonSerializer.Serialize(sr, Json.jsonSerializerOptions);
+			var post = JsonSerializer.Serialize(sr, JSON.jsonSerializerOptions);
 			var secret = $"XTR977sW{pid}sss2x2";
 			var city = City.GetOrAddCity(cid);
 			for (var i = 0; ;)
@@ -1207,7 +1220,7 @@ namespace COTG.Services
 							{
 								if (!arrival.IsZero())
 								{
-									var result = await App.DispatchOnUIThreadTask(async () =>
+									var result = await AppS.DispatchOnUIThreadTask(async () =>
 									{
 										var content = new ContentDialog()
 										{

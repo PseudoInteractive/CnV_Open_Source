@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using System.Text.Json;
 using J = System.Text.Json.Serialization.JsonPropertyNameAttribute;
 
-namespace COTG.JSON
+namespace CnV.GameData
 {
 	public class TradeSettings
 	{

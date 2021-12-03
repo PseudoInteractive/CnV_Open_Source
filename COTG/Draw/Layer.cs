@@ -7,7 +7,7 @@ using System;
 using System.Collections.Generic;
 
 
-namespace COTG.Draw
+namespace CnV.Draw
 {
 	// SortKey = (layer << 20) + (Effect._sortingKey << 16) + Texture.SortingKey;
 	public static class Layer

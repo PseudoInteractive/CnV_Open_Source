@@ -2,8 +2,8 @@
 
 using Azure.Storage.Blobs.Models;
 
-using COTG.BinaryMemory;
-using COTG.Services;
+using CnV.BinaryMemory;
+using CnV.Services;
 
 using System;
 using System.Buffers;
@@ -14,19 +14,23 @@ using System.Text;
 using System.Threading.Tasks;
 //using ImpromptuNinjas.ZStd;
 
-using static COTG.Debug;
-using COTG.Helpers;
+using static CnV.Debug;
+using CnV.Helpers;
 using System.IO.Compression;
 using Microsoft.Toolkit.HighPerformance.Buffers;
 using Nito.AsyncEx;
-using COTG.Views;
+using CnV.Views;
 using System.ComponentModel;
-using static COTG.Game.World;
+using static CnV.Game.World;
 using Cysharp.Text;
 using EnumsNET;
 
-namespace COTG.Game
+namespace CnV.Game
 {
+	using BinaryMemory;
+	using Services;
+	using Views;
+
 	public enum AzureLoadState : byte
 	{
 		none,
@@ -35,7 +39,7 @@ namespace COTG.Game
 		doesNotExist,
 		failed,
 	}
-	public class HeatMapItem : IANotifyPropertyChanged
+	public class HeatMapItem : IANotifyPropertyChanged, IEquatable<HeatMapItem>, IComparable<HeatMapItem>
 	{
 		public uint[] a;
 	
@@ -64,6 +68,10 @@ namespace COTG.Game
 
 		}
 
+		public bool Equals(HeatMapItem? other) => other is not null && t==other.t;
+
+		public int CompareTo(HeatMapItem other) => t.CompareTo(other.t);
+
 		public override bool Equals(object obj)
 		{
 			return obj is HeatMapItem item &&
@@ -86,7 +94,7 @@ namespace COTG.Game
 		}
 	}
 
-	public class HeatMapDay : HeatMapItem
+	public class HeatMapDay : HeatMapItem,IComparable<HeatMapDay>
 	{
 		// key is lastUpdated.Date
 		public static NotifyCollection<HeatMapDay> days = new() ;
@@ -105,6 +113,8 @@ namespace COTG.Game
 		public bool isLoadedOrDoesNotExist => loadState switch { AzureLoadState.loaded or AzureLoadState.doesNotExist=>true,_ => false }; 
 		public bool loadHasBeenCalled => loadState >= AzureLoadState.loading;
 		public AzureLoadState loadState;
+		public int CompareTo(HeatMapDay other) => t.CompareTo(other.t);
+
 		public override string ToString() => desc;
 
 		public Azure.ETag eTag; // server version, if our version is not equal to the version on azure we discard current work and fetch the latest
@@ -449,7 +459,7 @@ namespace COTG.Game
 
 	}
 
-	public class HeatMapDelta : HeatMapItem
+	public class HeatMapDelta : HeatMapItem,IComparable<HeatMapDelta>
 	{
 		internal static HeatMapDelta pending = new(0, Array.Empty<uint>());
 
@@ -474,6 +484,8 @@ namespace COTG.Game
 		{
 			return $"{t.ToString("s")}: {changes.Length / 2} changes";
 		}
+
+		public int CompareTo(HeatMapDelta other) => t.CompareTo(other.t);
 	}
 
 	public static class HeatMap

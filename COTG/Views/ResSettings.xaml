@@ -1,29 +1,29 @@
 ﻿<UserControl
-    x:Class="COTG.Views.ResSettings"
+    x:Class="CnV.Views.ResSettings"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:COTG.Views"
+    xmlns:local="using:CnV.Views"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
      xmlns:tk="using:CommunityToolkit.WinUI.UI.Controls"
 	xmlns:winui="using:Microsoft.UI.Xaml.Controls"
     mc:Ignorable="d"
-	 xmlns:cotg="using:COTG"
-	 xmlns:game="using:COTG.Game"
-	 xmlns:views="using:COTG.Views"
-	xmlns:converter="using:COTG.Converters"
+	 xmlns:cotg="using:CnV"
+	 xmlns:game="using:CnV.Game"
+	 xmlns:views="using:CnV.Views"
+	xmlns:converter="using:CnV.Convertersters"
     d:DesignHeight="300"
     d:DesignWidth="400">
 
 	<StackPanel>
-			<StackPanel Style="{StaticResource StackPanelReveal}">
+			<StackPanel >
 				<views:CityControl x:Name="reqHub" Label="Request" x:FieldModifier="public"
 						   ToolTipService.ToolTip="If req boxes below are checked, this hub will be set as the source hub" />
 				<views:CityControl x:Name="sendHub" Label="Send To" x:FieldModifier="public"
 						   ToolTipService.ToolTip="If export boxes below are checked, this hub will be set as the target hub" />
 				
 			</StackPanel>
-			<StackPanel Style="{StaticResource StackPanelReveal}">
+			<StackPanel >
 				<!--<ToggleSwitch Header="Request Resources" OnContent="Set" OffContent="Ignore" IsOn="{x:Bind applyRequested}" />-->
 				<tk:WrapPanel Orientation="Horizontal" Margin="4" >
 
@@ -52,7 +52,7 @@
 										 />
 				</tk:WrapPanel>
 			</StackPanel>
-			<StackPanel Style="{StaticResource StackPanelReveal}" Margin="2,8,2,2">
+			<StackPanel Margin="2,8,2,2">
 				<!--<ToggleSwitch Header="Send Resources" OnContent="Set" OffContent="Ignore" IsOn="{x:Bind applySend}" />-->
 				<tk:WrapPanel  Orientation="Horizontal" >
 					<winui:NumberBox Header="Wood Limit"
@@ -81,7 +81,7 @@
 										 />
 				</tk:WrapPanel>
 			</StackPanel>
-		<StackPanel Style="{StaticResource StackPanelReveal}" >
+		<StackPanel >
 			<Border Style="{StaticResource BorderReveal}">
 				<tk:WrapPanel  Orientation="Horizontal">
 					<CheckBox  Content="Request Wood" IsThreeState="True" IsChecked="{x:Bind reqFilter.wood, Mode=TwoWay}" ToolTipService.ToolTip="Checked:  Wood is requested from the source hub Off: City does not request wood [Box]: Leave wood source hub as is" />

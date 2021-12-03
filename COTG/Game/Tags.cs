@@ -6,12 +6,14 @@ using System.Threading.Tasks;
 using Cysharp.Text;
 using EnumsNET;
 
-using static COTG.StringList;
-using static COTG.Game.Troops;
-using COTG.Services;
+using static CnV.StringList;
+using static CnV.Game.Troops;
+using CnV.Services;
 
-namespace COTG.Game
+namespace CnV.Game
 {
+	using Services;
+
 	public class IsAliasAttribute : Attribute
 	{
 

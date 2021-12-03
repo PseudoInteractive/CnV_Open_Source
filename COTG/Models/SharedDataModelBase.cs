@@ -1,4 +1,4 @@
-﻿namespace COTG.Models
+﻿namespace CnV.Models
 {
     public abstract class SharedDataModelBase
     {

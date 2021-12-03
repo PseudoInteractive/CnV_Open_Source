@@ -1,5 +1,7 @@
-﻿using COTG.Draw;
-using COTG.Services;
+﻿using CnV;
+
+using CnV.Draw;
+using CnV.Services;
 
 using Cysharp.Text;
 
@@ -14,13 +16,20 @@ using System.Web;
 
 using Windows.Storage;
 
-using static COTG.BuildQueue;
-using static COTG.Game.City;
+using static CnV.BuildQueue;
+using static CnV.Game.City;
 
 using ContentDialog = Microsoft.UI.Xaml.Controls.ContentDialog;
 using ContentDialogResult = Microsoft.UI.Xaml.Controls.ContentDialogResult;
 
-namespace COTG;
+namespace CnV;
+
+using System;
+using System.Linq;
+using Draw;
+using Game;
+using Nito.AsyncEx;
+using Services;
 
 //	public struct BuildQueueItem
 //	{
@@ -692,7 +701,7 @@ public class ExtendedQueue:IDisposable
 								{
 
 									// casle failed.
-									var a = await Post.SendForText("/includes/nCb.php",$"type={bidCastle}&spot={i.bspot}&cid={cid}&bt={JSClient.ServerTimeMs()}").ConfigureAwait(false);
+									var a = await Post.SendForText("/includes/nCb.php",$"type={bidCastle}&spot={i.bspot}&cid={cid}&bt={CnVServer.ServerTimeMs()}").ConfigureAwait(false);
 									// failed to build castle, keep it in the queue
 
 									if(a==null || a.Length <= 4)
@@ -705,7 +714,7 @@ public class ExtendedQueue:IDisposable
 								}
 								else
 								{
-									var de = (JSClient.ServerTimeSeconds()+1 + cotgQ.Sum(q => q.buildTime));
+									var de = (CnVServer.ServerTimeSeconds()+1 + cotgQ.Sum(q => q.buildTime));
 
 									var ok = await IssueCommand(i,cid,de*1000).ConfigureAwait(false);
 									if(!ok)
@@ -784,7 +793,7 @@ public class ExtendedQueue:IDisposable
 			}
 			catch(Exception _exception)
 			{
-				COTG.Debug.LogEx(_exception);
+				Debug.LogEx(_exception);
 			}
 			finally
 			{
@@ -861,7 +870,7 @@ public class ExtendedQueue:IDisposable
 						city.BuildingsOrQueueChanged();
 						//		if(delay > 2000)
 						//			delay = 2000;
-						//App.DispatchOnUIThreadIdle(() => JSClient.coreWebView.PostWebMessageAsString("{\"poll\":200}"));
+						//AppS.DispatchOnUIThreadIdle(() => JSClient.coreWebView.PostWebMessageAsString("{\"poll\":200}"));
 						pollDebounce.Go();
 					}
 					else
@@ -907,7 +916,7 @@ public class ExtendedQueue:IDisposable
 	//	var lg = city.buildQueue.Length;
 	//	if (lg > 0)
 	//	{
-	//		delay = delay.Max(JSClient.ServerTimeOffsetMs(city.buildQueue[ (lg-2).Max(0) ].de ).Min(15*60*1000) ); 
+	//		delay = delay.Max(CnVServer.ServerTimeOffsetMs(city.buildQueue[ (lg-2).Max(0) ].de ).Min(15*60*1000) ); 
 	//	}
 	//	try
 	//	{
@@ -922,8 +931,8 @@ public class ExtendedQueue:IDisposable
 	//				//	var put = 0;
 	//				//	foreach (var cmd in bq.EnumerateArray())
 	//				//	{
-	//				//		delays[put++] = JSClient.ServerTimeOffset(cmd.GetAsInt64("ds"));
-	//				//		delays[put++] = JSClient.ServerTimeOffset(cmd.GetAsInt64("de"));
+	//				//		delays[put++] = CnVServer.ServerTimeOffset(cmd.GetAsInt64("ds"));
+	//				//		delays[put++] = CnVServer.ServerTimeOffset(cmd.GetAsInt64("de"));
 	//				//	}
 	//				//	ShellPage.debugTip = delays.ToArrayString();
 	//				//	Log(delays.ToArrayString());
@@ -1134,7 +1143,7 @@ public static class BuildQueue
 			if(a.bid == City.bidCastle && a.isBuild)
 			{
 				Assert(cid == City.build);
-				var result = await App.DispatchOnUIThreadTask(async () =>
+				var result = await AppS.DispatchOnUIThreadTask(async () =>
 			   {
 
 				   var dialog = new ContentDialog()

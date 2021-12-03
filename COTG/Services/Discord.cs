@@ -1,5 +1,6 @@
-﻿using COTG;
-using COTG.Game;
+﻿using CnV;
+
+using CnV.Game;
 
 using System;
 using System.Collections.Generic;

@@ -1,9 +1,9 @@
 ﻿<local:UserTab
-    x:Class="COTG.Views.ChatTab"
+    x:Class="CnV.Views.ChatTab"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:COTG.Views"
-    xmlns:cotg="using:COTG"
+    xmlns:local="using:CnV.Views"
+    xmlns:cotg="using:CnV"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:wuxdata="using:Microsoft.UI.Xaml.Data"
@@ -11,7 +11,7 @@
     xmlns:winui="using:Microsoft.UI.Xaml.Controls"
     mc:Ignorable="d"
  >
-	<winui:Grid x:Name="chatGrid"  TabFocusNavigation="Once"  >
+	<winui:Grid x:Name="chatGrid"    >
 		<Grid.RowDefinitions>
 			<RowDefinition Height="*"/>
 			<RowDefinition Height="Auto"/>
@@ -37,7 +37,11 @@ sent or received, and those values are bound in the DataTemplate.-->
 						<RowDefinition Height="Auto"/>
 					</Grid.RowDefinitions>
 					<TextBlock Text="{x:Bind arrivedString,Mode=OneTime}" VerticalAlignment="Center" Foreground="Gray" FontSize="{StaticResource ChatFontSize}" Margin="0,0,2,0" Padding="0,0,2,0" Tag="{Binding ElementName=message}" x:Phase="0"  />
-					<winui:HyperlinkButton x:Name="sender" Grid.Column="2" Foreground="{Binding Converter={StaticResource hyperlinkColorConverter}, Mode=OneTime}" VerticalAlignment="Center" HorizontalAlignment="Center" Content="{x:Bind player, Mode=OneTime}" x:Phase="0"  Tapped ="HyperlinkButton_Tapped" RightTapped="HyperlinkButton_RightTapped" FontSize="{ThemeResource ChatFontSize}"  Margin="2,0,4,0" Padding="2,0,4,0"  />
+					<winui:HyperlinkButton x:Name="sender" Grid.Column="2" 
+					                       Foreground="{Binding Converter={StaticResource hyperlinkColorConverter}, Mode=OneTime}" 
+					                       VerticalAlignment="Center" HorizontalAlignment="Center" Content="{x:Bind player, Mode=OneTime}" 
+					                       x:Phase="0"  Tapped ="HyperlinkButton_Tapped" 
+					                       RightTapped="HyperlinkButton_RightTapped" FontSize="{ThemeResource ChatFontSize}"  Margin="2,0,4,0" Padding="2,0,4,0"  />
 					<winui:Image Grid.Column="1" Stretch="Fill" x:Phase="1" MaxHeight="{StaticResource ChatImageHeight}"  Source="{x:Bind avatar}" Margin="2,0,2,0" VerticalAlignment="Center"/>
 					<tk:MarkdownTextBlock Grid.Column="3" x:Name="message" Text="{x:Bind text,Mode=OneTime}"  FontSize="{StaticResource ChatFontSize}" Margin="0,0,0,0"  Padding="0,0,0,0"    
                                              InlineCodeBackground="Black" x:Phase="2" VerticalAlignment="Center" TableCellPadding="0,0,0,0" IsTextSelectionEnabled="True"
@@ -46,7 +50,7 @@ sent or received, and those values are bound in the DataTemplate.-->
 
 			</DataTemplate>
 		</Grid.Resources>
-		<Grid Grid.Row="1" Width="Auto" TabFocusNavigation="Once"   >
+		<Grid Grid.Row="1" Width="Auto"    >
 			<Grid.ColumnDefinitions>
 				<ColumnDefinition Width="Auto"/>
 				<ColumnDefinition Width="Auto"/>
@@ -55,7 +59,8 @@ sent or received, and those values are bound in the DataTemplate.-->
 			<Button Grid.Column="1" Click="Copy_Click" Style="{ThemeResource ButtonRevealStyle}" ToolTipService.ToolTip="This will copy selected messages to the clipboard, tip - select a message above and press control-A to select all" >
 				<SymbolIcon Symbol="Copy"/>
 			</Button>
-			<TextBox x:Name="input" x:FieldModifier="public" Grid.Column="2" HorizontalAlignment="Stretch"  Canvas.ZIndex="99" VerticalAlignment="Center" KeyDown="input_KeyDown" PlaceholderText="Please enter message" IsTabStop="True" TabFocusNavigation="Once" Margin="4"  GotFocus="input_GotFocus" PointerEntered="inputPointerOver"  IsSpellCheckEnabled="True" IsTextPredictionEnabled="True" PreventKeyboardDisplayOnProgrammaticFocus="True" TextWrapping="Wrap" FontSize="{ThemeResource ChatFontSize}"  />
+			<TextBox x:Name="input" x:FieldModifier="public" Grid.Column="2" HorizontalAlignment="Stretch"  
+			         Canvas.ZIndex="99" VerticalAlignment="Center" KeyDown="input_KeyDown" PlaceholderText="Please enter message" IsTabStop="True"  Margin="4"  GotFocus="input_GotFocus" PointerEntered="inputPointerOver"  IsSpellCheckEnabled="True" IsTextPredictionEnabled="True" PreventKeyboardDisplayOnProgrammaticFocus="True" TextWrapping="Wrap" FontSize="{ThemeResource ChatFontSize}"  />
 		</Grid>
 		<winui:ListView x:Name="listView" x:FieldModifier="public" Margin="0" Padding="0" ItemTemplate="{StaticResource MessageViewTemplate}" SelectionMode="Extended"
                    ItemsSource="{x:Bind items,Mode=OneWay}"   >

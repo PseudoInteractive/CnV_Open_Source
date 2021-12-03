@@ -1,4 +1,4 @@
-﻿using COTG.Game;
+﻿using CnV.Game;
 
 using System;
 using System.Collections.Generic;
@@ -16,15 +16,17 @@ using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
-using COTG.Services;
-using static COTG.Debug;
-using static COTG.Game.Troops;
-using static COTG.Views.SettingsPage;
-using COTG.Helpers;
+using CnV.Services;
+using static CnV.Debug;
+using static CnV.Game.Troops;
+using static CnV.Views.SettingsPage;
+using CnV.Helpers;
 // The Content Dialog item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
 
-namespace COTG.Views
+namespace CnV.Views
 {
+	using Game;
+
 	public sealed partial class DungeonView : ContentDialog
 	{
 
@@ -70,14 +72,14 @@ namespace COTG.Views
 				}
 				return;
 			}
-			if( App.isPopupOpen )
+			if( AppS.isPopupOpen )
 			{
 				Assert(false);
 				return;
 			}
 			try
 			{
-				await App.DispatchOnUIThreadTask(async () =>
+				await AppS.DispatchOnUIThreadTask(async () =>
 			   {
 				   if (city != null)
 				   {
@@ -95,7 +97,7 @@ namespace COTG.Views
 				   if (!hasRunOnce && city != null)
 				   {
 					   hasRunOnce = true;
-					   Task.Delay(1000).ContinueWith( (_)=> App.DispatchOnUIThreadLow(()=>instance.items.NotifyReset(true)));
+					   Task.Delay(1000).ContinueWith( (_)=> AppS.DispatchOnUIThreadLow(()=>instance.items.NotifyReset(true)));
 				   }
 				   await instance.ShowAsync2();
 			   });
@@ -265,7 +267,7 @@ namespace COTG.Views
 				}
 			}
 
-			flyout.CopyXamlRoomFrom(button);
+			flyout.CopyXamlRootFrom(button);
 			flyout.Closing += Flyout_Closing;
 			flyout.ShowAt(button);
 		}

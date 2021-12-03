@@ -3,7 +3,7 @@
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 
-namespace COTG.Views
+namespace CnV.Views
 {
     public sealed partial class WhatsNewDialog : ContentDialog
     {

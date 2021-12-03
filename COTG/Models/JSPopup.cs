@@ -5,17 +5,19 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using COTG.Views;
+using CnV.Views;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml;
 using System.Text.RegularExpressions;
 using Microsoft.UI.Xaml.Media.Imaging;
 using Microsoft.UI.Xaml.Media;
-using static COTG.Debug;
-using COTG.Helpers;
+using static CnV.Debug;
+using CnV.Helpers;
 
-namespace COTG.Models
+namespace CnV.Models
 {
+	using Views;
+
 	public class JSPopupNode
 	{
 		//	public string className { get; set; }

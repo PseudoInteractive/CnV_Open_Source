@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-using COTG.Activation;
-using COTG.Services;
-using COTG.Views;
+using CnV.Activation;
+using CnV.Services;
+using CnV.Views;
 
 using Microsoft.AppCenter;
 using Microsoft.AppCenter.Analytics;
@@ -19,14 +19,19 @@ using Windows.Storage.Streams;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls;
-using COTG.JSON;
+
 using Windows.System;
 using Microsoft.Web.WebView2.Core;
 using Microsoft.UI.Xaml.Media;
 
-namespace COTG.Services
+namespace CnV.Services
 {
-    // For more information on understanding and extending activation flow see
+	using System.Runtime.CompilerServices;
+	using Activation;
+	using PInvoke;
+	using Views;
+
+	// For more information on understanding and extending activation flow see
     // https://github.com/Microsoft/WindowsTemplateStudio/blob/master/docs/UWP/activation.md
     internal class ActivationService
     {
@@ -50,7 +55,7 @@ namespace COTG.Services
 
         public async Task ActivateAsync(IActivatedEventArgs activationArgs, bool wasRunning)
         {
-			//App.globalQueue = DispatcherQueue.GetForCurrentThread();
+			//AppS.globalQueue = DispatcherQueue.GetForCurrentThread();
 			Debug.Assert(IsInteractive(activationArgs));
 			if(!wasRunning)
 				await InitializeAsync();
@@ -100,9 +105,22 @@ namespace COTG.Services
 				}
 				// Ensure the current window is active
 				await Task.Delay(500);
+				Log("Activate!");
 				App.window.Activate();
+				Log("Activate!Done");
 				await Task.Delay(500);
+				Log("Max");
 				App.window.Maximize();
+		//		_ = PInvoke.User32.ShowWindow(WinRT.Interop.WindowNative.GetWindowHandle(App.window), PInvoke.User32.WindowShowStyle.SW_MAXIMIZE);
+				//User32.WINDOWPLACEMENT placement = new()
+				//{
+				//	length = Unsafe.SizeOf<User32.WINDOWPLACEMENT>(),
+				//	flags = User32.WindowPlacementFlags.WPF_RESTORETOMAXIMIZED
+				//	        | User32.WindowPlacementFlags.WPF_ASYNCWINDOWPLACEMENT,
+				//	showCmd = User32.WindowShowStyle.SW_SHOWMAXIMIZED
+				//};
+			//	_ = PInvoke.User32.SetWindowPlacement(WinRT.Interop.WindowNative.GetWindowHandle(App.window), placement);
+				;
 
 			}
 		}
@@ -144,7 +162,7 @@ namespace COTG.Services
 			//		if(!SettingsPage.askedToHdr)
 			//		{
 			//			SettingsPage.askedToHdr=true;
-			//			App.DoYesNoBox("HDR Available", "Tip: You can enable HDR for your monitor in Settings", "Thank you", null,null );
+			//			AppS.DoYesNoBox("HDR Available", "Tip: You can enable HDR for your monitor in Settings", "Thank you", null,null );
 			//		}
 
 			//	}	

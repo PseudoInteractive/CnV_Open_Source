@@ -1,22 +1,26 @@
-﻿using COTG.Helpers;
+﻿using CnV.Helpers;
 using System;
-using COTG;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 using System.Web;
-using static COTG.Debug;
-using static COTG.Game.Troops;
-using COTG.Services;
-using COTG.Views;
+using static CnV.Debug;
+using static CnV.Game.Troops;
+using CnV.Services;
+using CnV.Views;
 using System.Text.Encodings.Web;
+using CnV;
 
-namespace COTG.Game
+namespace CnV.Game
 {
-    // This is used for drawing only, we don't keep track of repeats, troops etc.
-    public struct Raid : IEquatable<Raid>
+	using Helpers;
+	using Services;
+	using Views;
+
+	// This is used for drawing only, we don't keep track of repeats, troops etc.
+	public struct Raid : IEquatable<Raid>
     {
         public int target;// cid
         public bool isReturning;
@@ -199,9 +203,9 @@ namespace COTG.Game
 						city.troopsHome[ttype] -= r.reps * count;
 
 				}
-				var trs = JsonSerializer.Serialize(tr, Json.jsonSerializerOptions);
+				var trs = JsonSerializer.Serialize(tr, JSON.jsonSerializerOptions);
 				var args = new sndRaidArgs() { rcid = d.cid, type = SettingsPage.wantRaidRepeat ? 1 : 2, co = wantDelays ? 1 : r.reps, rt = 1, snd = 1, rut = 0, tr = trs, iv = SettingsPage.raidIntervals + 1 };
-				var snd = new COTG.Services.sndRaid(JsonSerializer.Serialize(args, Json.jsonSerializerOptions), city.cid);
+				var snd = new sndRaid(JsonSerializer.Serialize(args, JSON.jsonSerializerOptions), city.cid);
 				var res = await RestAPI.AcceptText(await snd.Send().ConfigureAwait(false) ).ConfigureAwait(false);
 				if(res != "\n0\n")
 				{

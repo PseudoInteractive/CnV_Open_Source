@@ -1,15 +1,17 @@
 ﻿using System;
 using System.Threading.Tasks;
 
-using COTG.Activation;
+using CnV.Activation;
 
 using Windows.ApplicationModel.Activation;
 //using Microsoft.UI.Notifications;
 using Windows.UI.Notifications;
 
-namespace COTG.Services
+namespace CnV.Services
 {
-    internal partial class ToastNotificationsService : ActivationHandler<ToastNotificationActivatedEventArgs>
+	using Activation;
+
+	internal partial class ToastNotificationsService : ActivationHandler<ToastNotificationActivatedEventArgs>
     {
         public static ToastNotificationsService instance = new ToastNotificationsService();
         public void ShowToastNotification(ToastNotification toastNotification)

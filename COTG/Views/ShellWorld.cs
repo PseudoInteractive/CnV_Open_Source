@@ -1,6 +1,6 @@
-﻿using COTG.Game;
-using COTG.Helpers;
-using COTG.Services;
+﻿using CnV.Game;
+using CnV.Helpers;
+using CnV.Services;
 
 using System;
 using System.Collections.Generic;
@@ -13,13 +13,13 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
 using Microsoft.UI.Xaml.Input;
-using static COTG.Debug;
-using static COTG.AGame;
+using static CnV.Debug;
+using static CnV.AGame;
 using Microsoft.Xna.Framework.Input;
 using System.Collections.Concurrent;
 using Windows.System.Threading;
-using COTG.Draw;
-using static COTG.Helpers.AString;
+using CnV.Draw;
+using static CnV.Helpers.AString;
 using Cysharp.Text;
 using EnumsNET;
 using Microsoft.UI.Input;
@@ -29,9 +29,13 @@ using PointerPoint = Microsoft.UI.Input.Experimental.ExpPointerPoint;
 using PointerUpdateKind = Windows.UI.Input.PointerUpdateKind;
 //using Windows.UI.Core;
 using Microsoft.UI.Input.Experimental;
+using CnV;
 //using InputPointerSource = ;//Microsoft.UI.Input.Experimental.expin;
-namespace COTG.Views
+namespace CnV.Views
 {
+	using Draw;
+	using Game;
+	using Helpers;
 
 	public partial class ShellPage
 	{
@@ -327,7 +331,7 @@ namespace COTG.Views
 			//			(var worldC, var cc) = ScreenToWorldAndCityC(mousePositionW);
 			//			Reset();
 			//			var cid = worldC.WorldToCid();
-			//			App.DispatchOnUIThreadLow(RightClick(cc, cid));
+			//			AppS.DispatchOnUIThreadLow(RightClick(cc, cid));
 
 			//		}
 			//	}
@@ -609,7 +613,7 @@ namespace COTG.Views
 		private void EventTimeTravelSliderChanged(object sender, RangeBaseValueChangedEventArgs e)
 		{
 			var dt = TimeSpan.FromMinutes(e.NewValue);
-			var serverTime = JSClient.ServerTime() + TimeSpan.FromMinutes(e.NewValue);
+			var serverTime = CnVServer.ServerTime() + TimeSpan.FromMinutes(e.NewValue);
 			eventTimeTravelText.Text = $"Attack Time Travel:\t\t{dt.Hours}:{dt.Minutes},\t\tT:{serverTime.Format()}";
 		}
 
@@ -688,7 +692,7 @@ namespace COTG.Views
 							//if (AttackTab.instance.isVisible && e.KeyModifiers.IsShiftAndControl() && City.Get(cid).isCityOrCastle)
 							//{
 							//	var _cid = cid;
-							//	App.DispatchOnUIThreadLow(() =>
+							//	AppS.DispatchOnUIThreadLow(() =>
 							//	{
 							//		var city = City.Get(_cid);
 							//		if (city.IsAllyOrNap())
@@ -708,7 +712,7 @@ namespace COTG.Views
 							{
 								if (IsCityView() && (cid == City.build) )
 								{
-									App.DispatchOnUIThreadLow(() =>
+									AppS.DispatchOnUIThreadLow(() =>
 									{
 										CityBuild.Click(cc, false);
 
@@ -726,12 +730,12 @@ namespace COTG.Views
 
 					case GestureAction.rightClick:
 						{
-							App.DispatchOnUIThreadLow(RightClick( cc, cid));
+							AppS.DispatchOnUIThreadLow(RightClick( cc, cid));
 							break;
 						}
 					//case GestureAction.rightClick:
 					//	{
-					//		App.DispatchOnUIThreadLow(() =>
+					//		AppS.DispatchOnUIThreadLow(() =>
 					//		{
 
 					//			var spot = Spot.GetOrAdd(cid);
@@ -827,7 +831,7 @@ namespace COTG.Views
 												//  e.Handled = false;
 												//if (CityBuild.menuOpen)
 												//{
-												//	App.DispatchOnUIThreadLow(() => ShellPage.instance.buildMenu.IsOpen = false); // light dismiss
+												//	AppS.DispatchOnUIThreadLow(() => ShellPage.instance.buildMenu.IsOpen = false); // light dismiss
 												//	return;
 												//}
 

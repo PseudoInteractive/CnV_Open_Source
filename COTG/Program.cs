@@ -15,7 +15,7 @@
 //using Windows.UI.Input;
 //using Windows.UI.Core;
 
-namespace COTG
+namespace CnV
 {
 	using System.Diagnostics;
 	using System.Threading;
@@ -26,8 +26,8 @@ namespace COTG
 	public static class Program
 	{
 		[global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.UI.Xaml.Markup.Compiler"," 0.0.0.0")]
-		[global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-		[global::System.STAThreadAttribute]
+		[DebuggerNonUserCode()]
+		[STAThread]
 		static void Main(string[] args)
 		{
 			global::WinRT.ComWrappersSupport.InitializeComWrappers();

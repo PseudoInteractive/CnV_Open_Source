@@ -4,13 +4,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-using COTG.Helpers;
-using COTG.Services;
+using CnV.Helpers;
+using CnV.Services;
 
-using static COTG.Debug;
+using static CnV.Debug;
 
-namespace COTG.Game
+namespace CnV.Game
 {
+	using Services;
+
 	class PlayerStats
 	{
 		public int pid;

@@ -8,7 +8,7 @@ using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
 
-namespace COTG.Draw
+namespace CnV.Draw
 {
 	/// <summary>
 	/// This class handles the queueing of batch items into the GPU by creating the triangle tesselations

@@ -3,24 +3,23 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using static COTG.Views.CityBuild;
-using COTG.Views;
-using static COTG.BuildingDef;
-using COTG;
-using COTG.JSON;
+using static CnV.Views.CityBuild;
+using CnV.Views;
+using static CnV.BuildingDef;
+
 using Microsoft.Toolkit.HighPerformance;
 using Microsoft.UI.Xaml.Controls;
-using static COTG.Debug;
-using static COTG.Draw.CityView;
-using static COTG.Game.City;
-using static COTG.Views.CityBuild;
-using static COTG.BuildingDef;
-using COTG.Views;
-using COTG.Services;
+using static CnV.Debug;
+using static CnV.Draw.CityView;
+using static CnV.Game.City;
+using CnV.Services;
 
-namespace COTG.Game
+namespace CnV.Game
 {
+	using CnV;
+	using Services;
 	using Syncfusion.UI.Xaml.DataGrid;
+	using Views;
 
 
 	public partial class City
@@ -115,16 +114,16 @@ namespace COTG.Game
 		}
 
 		public HashSet<ushort> buildingSpots => isOnWater ? buildingSpotsExcludingWater : buildingSpotsLandLocked;
-		public HashSet<ushort> GetSpots(SpotType type)
+		public HashSet<ushort> GetSpots(CityBuild.SpotType type)
 		{
 			switch (type)
 			{
-				case SpotType.innerTower:
+				case CityBuild.SpotType.innerTower:
 					return towerSpots;
-				case SpotType.outerTower:
+				case CityBuild.SpotType.outerTower:
 					return outerTowerSpots;
-				case SpotType.shore: return shoreSpots;
-				case SpotType.building: return buildingSpots;
+				case CityBuild.SpotType.shore: return shoreSpots;
+				case CityBuild.SpotType.building: return buildingSpots;
 				default:
 					return testFlag ? buildingSpotsLandLocked : emptySpotList; // how should this be properly handled?
 			}
@@ -152,7 +151,7 @@ namespace COTG.Game
 
 		public async Task<bool> BuildWallDialogue()
 		{
-			var result = await App.DispatchOnUIThreadTask(async () =>
+			var result = await AppS.DispatchOnUIThreadTask(async () =>
 			{
 
 				var dialog = new ContentDialog()
@@ -182,7 +181,7 @@ namespace COTG.Game
 			var currentLevel = postQueueBuildings[bspotTownHall].bl;
 			if (currentLevel >= toLevel)
 				return true;
-			var a = await App.DispatchOnUIThreadTask(async () =>
+			var a = await AppS.DispatchOnUIThreadTask(async () =>
 			{
 				var dialog = new ContentDialog()
 				{
@@ -628,7 +627,7 @@ namespace COTG.Game
 						Status($"Maybe destory {postQueueBuildings[bd].name} to make room...",dryRun);
 						if(showUI && !dryRun )
 						{
-							var xy = await App.DoYesNoBoxSticky($"Demo {postQueueBuildings[bd].name} to make room?");
+							var xy = await AppS.DoYesNoBoxSticky($"Demo {postQueueBuildings[bd].name} to make room?");
 							SettingsPage.demoBuildingOnBuildIfFull = xy.sticky;
 							if(!xy.rv)
 								bd = -1;
@@ -656,7 +655,7 @@ namespace COTG.Game
 							Status($"Maybe destory {postQueueBuildings[bd].name} to make room...",dryRun);
 							if(showUI && !dryRun)
 							{
-								var xy = await App.DoYesNoBoxSticky($"Demo cabin to make room?");
+								var xy = await AppS.DoYesNoBoxSticky($"Demo cabin to make room?");
 								SettingsPage.demoCottageOnBuildIfFull = xy.sticky;
 								if(!xy.rv)
 									bd = -1;
@@ -971,7 +970,7 @@ namespace COTG.Game
 							{
 								if(!dryRun)
 								{
-									var move = isPlanner ? 1 : await App.DoYesNoBox($"{b.name} in the way :(",$"What do you want to do with {b.name}?","Move it" ," Demo", "Forget it");
+									var move = isPlanner ? 1 : await AppS.DoYesNoBox($"{b.name} in the way :(",$"What do you want to do with {b.name}?","Move it" ," Demo", "Forget it");
 									if(move == -1)
 										return -1; 
 									else if(move == 1)
@@ -1024,35 +1023,35 @@ namespace COTG.Game
 
 			return bestSpot;
 		}
-		public SpotType GetSpotType(int a)
+		public CityBuild.SpotType GetSpotType(int a)
 		{
 			return a switch
 			{
-				_ when IsInnerTowerSpot(a) => SpotType.innerTower,
-				_ when IsOuterTowerSpot(a) => SpotType.outerTower,
-				_ when IsShoreSpot(a) => SpotType.shore,
-				_ when IsWaterSpot(a) => SpotType.water,
-				_ when IsBuildingSpot(a) => SpotType.building,
-				_ when (a == bspotTownHall) => SpotType.townHall,
-				_ when IsWallSpot(a) => SpotType.wall,
+				_ when IsInnerTowerSpot(a) => CityBuild.SpotType.innerTower,
+				_ when IsOuterTowerSpot(a) => CityBuild.SpotType.outerTower,
+				_ when IsShoreSpot(a) => CityBuild.SpotType.shore,
+				_ when IsWaterSpot(a) => CityBuild.SpotType.water,
+				_ when IsBuildingSpot(a) => CityBuild.SpotType.building,
+				_ when (a == bspotTownHall) => CityBuild.SpotType.townHall,
+				_ when IsWallSpot(a) => CityBuild.SpotType.wall,
 
-				_ => SpotType.invalid
+				_ => CityBuild.SpotType.invalid
 			};
 		}
-		public SpotType GetSpotTypeFromBid(int bid)
+		public CityBuild.SpotType GetSpotTypeFromBid(int bid)
 		{
 			var def = BuildingDef.FromBid(bid);
 			if (def.isTownHall)
-				return SpotType.townHall;
+				return CityBuild.SpotType.townHall;
 			if (def.isWall)
-				return SpotType.wall;
+				return CityBuild.SpotType.wall;
 			if (def.isShoreBuilding)
-				return SpotType.shore;
+				return CityBuild.SpotType.shore;
 			if (def.isBarricade)
-				return SpotType.outerTower;
+				return CityBuild.SpotType.outerTower;
 			if (def.isPost)
-				return SpotType.innerTower;
-			return SpotType.building;
+				return CityBuild.SpotType.innerTower;
+			return CityBuild.SpotType.building;
 
 		}
 		public int FindAnyFreeSpotForMove(int bSpot, bool verbose = true)
@@ -1073,7 +1072,7 @@ namespace COTG.Game
 			return true;
 		}
 
-		public int FindFreeSpot(SpotType type = SpotType.building, bool verbose = true)
+		public int FindFreeSpot(CityBuild.SpotType type = CityBuild.SpotType.building, bool verbose = true)
 		{
 			var build = this;
 			var spots = GetSpots(type);

@@ -12,9 +12,11 @@ using Windows.Foundation;
 
 //using Microsoft.UI.Windowing;
 
-namespace COTG.Views
+namespace CnV.Views
 {
+	using System;
 	using System.Collections;
+	using Game;
 
 	public class UserTab:UserControl, IANotifyPropertyChanged
 	{
@@ -199,7 +201,7 @@ namespace COTG.Views
 
 		public void SetPlus(bool set)
 		{
-			App.QueueOnUIThread(() =>
+			AppS.QueueOnUIThread(() =>
 			{
 				(var tp, var tvi) = GetViewItem();
 				if(tvi!=null)
@@ -338,24 +340,30 @@ namespace COTG.Views
 
 		protected void CelNavigate(object sender,Syncfusion.UI.Xaml.Grids.CurrentCellRequestNavigateEventArgs e)
 		{
-			var uri = new Uri(e.NavigateText);
-
-
-			if(uri.Scheme == ProtocolActivation.scheme && uri.LocalPath.StartsWith(ProtocolActivation.command))
+			try
 			{
-				var subStr = uri.LocalPath.AsSpan().Slice(ProtocolActivation.command.Length);
-				if(subStr.StartsWith(returnReinforcement.AsSpan(),StringComparison.Ordinal))
-				{
-					e.Handled=true;
-					var args = new WwwFormUrlDecoder(subStr.Slice(returnReinforcement.Length).ToString());
+				e.Handled = true;
+				var uri = new Uri(e.NavigateText);
 
-					Note.Show("ProtoClick");
-					//			var args = Uri.Par
-					//	Reinforcement.ReturnAsync(args.GetFirstValueByName("order").ParseLong().GetValueOrDefault(),args.GetFirstValueByName("pid").ParseInt().GetValueOrDefault());
+				if (uri.Scheme == ProtocolActivation.scheme && uri.LocalPath.StartsWith(ProtocolActivation.command))
+				{
+					var subStr = uri.LocalPath.AsSpan().Slice(ProtocolActivation.command.Length);
+					if (subStr.StartsWith(returnReinforcement.AsSpan(), StringComparison.Ordinal))
+					{
+						var args = new WwwFormUrlDecoder(subStr.Slice(returnReinforcement.Length).ToString());
+
+						Note.Show("ProtoClick");
+						//			var args = Uri.Par
+						//	Reinforcement.ReturnAsync(args.GetFirstValueByName("order").ParseLong().GetValueOrDefault(),args.GetFirstValueByName("pid").ParseInt().GetValueOrDefault());
+
+					}
+
 
 				}
-
-
+			}
+			catch (Exception ex)
+			{
+				// invalid link, not a problem - we are just using it as a button
 			}
 		}
 

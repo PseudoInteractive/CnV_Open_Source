@@ -45,15 +45,13 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Azure.Core" Version="1.21.0" />
     <PackageReference Include="Azure.Data.Tables" Version="12.3.0" />
-    <PackageReference Include="Azure.Storage.Blobs" Version="12.11.0-beta.1" />
+    <PackageReference Include="Azure.Storage.Blobs" Version="12.11.0-beta.2" />
     <PackageReference Include="CommunityToolkit.WinUI.Notifications" Version="7.1.2" />
     <PackageReference Include="CommunityToolkit.WinUI.UI.Controls" Version="7.0.3" />
     <PackageReference Include="DSharpPlus" Version="4.1.0" />
     <PackageReference Include="DSharpPlus.CommandsNext" Version="4.1.0" />
     <PackageReference Include="Enums.NET" Version="4.0.0" />
-    <PackageReference Include="GoogleSheetsWrapper" Version="1.0.27" />
     <PackageReference Include="Grpc.Net.Client" Version="2.41.0-pre1" />
     <PackageReference Include="Humanizer.Core" Version="2.13.14" />
     <PackageReference Include="MagicOnion.Client" Version="4.3.1" />
@@ -93,10 +91,10 @@
     <PackageReference Include="SharpDX.DXGI" Version="4.2.0" />
     <PackageReference Include="SharpDX.MediaFoundation" Version="4.2.0" />
     <PackageReference Include="SharpGen.Runtime.COM" Version="2.0.0-beta.10" />
-    <PackageReference Include="Syncfusion.Chart.WinUI" Version="19.3.0.55" />
-    <PackageReference Include="Syncfusion.Grid.WinUI" Version="19.3.0.55" />
-    <PackageReference Include="Syncfusion.Licensing" Version="19.3.0.55" />
-    <PackageReference Include="Syncfusion.Scheduler.WinUI" Version="19.3.0.55" />
+    <PackageReference Include="Syncfusion.Chart.WinUI" Version="19.3.0.56" />
+    <PackageReference Include="Syncfusion.Grid.WinUI" Version="19.3.0.56" />
+    <PackageReference Include="Syncfusion.Licensing" Version="19.3.0.56" />
+    <PackageReference Include="Syncfusion.Scheduler.WinUI" Version="19.3.0.56" />
     <PackageReference Include="System.Collections.Immutable" Version="6.0.0" />
     <PackageReference Include="System.Diagnostics.PerformanceCounter" Version="6.0.0" />
     <PackageReference Include="System.Drawing.Common" Version="6.0.0" />
@@ -212,6 +210,11 @@
     <Compile Include="Activation\ShareTargetActivationHandler.cs" />
     <Compile Include="Activation\WebToAppLinkActivationHandler.cs" />
     <Compile Include="Bookmarks.cs" />
+    <Compile Include="ClientUIHelpers\ImageHelper.cs" />
+    <Compile Include="ClientUIHelpers\KeyboardFocus.cs" />
+    <Compile Include="ClientUIHelpers\NavStack.cs" />
+    <Compile Include="ClientOS\SettingsStorageExtensions.cs" />
+    <Compile Include="ClientOS\WindowHelper.cs" />
     <Compile Include="CnVChatClient\CnVChatClient.cs" />
     <Compile Include="Converters\CityConverters.cs" />
     <Compile Include="Converters\DateTimeFormatConverter.cs" />
@@ -251,7 +254,9 @@
     <Compile Include="Game\TroopTypeCounts.cs" />
     <Compile Include="Game\World.cs" />
     <Compile Include="Game\WorldViewSettings.cs" />
+    <Compile Include="Game\XNAUtil.cs" />
     <Compile Include="GlobalSuppressions2.cs" />
+    <Compile Include="GlobalUsing.cs" />
     <Compile Include="JSON\Building.cs" />
     <Compile Include="JSON\BuildingDef.cs" />
     <Compile Include="JSON\CitySettings.cs" />
@@ -289,8 +294,6 @@
     <Compile Include="Models\SharedDataModelBase.cs" />
     <Compile Include="Models\SharedDataStorageItemsModel.cs" />
     <Compile Include="Models\SharedDataWebLinkModel.cs" />
-    <Compile Include="Models\ShareSourceData.cs" />
-    <Compile Include="Models\ShareSourceItem.cs" />
     <Compile Include="Models\TabViewItemData.cs" />
     <Compile Include="Models\UserData.cs" />
     <Compile Include="Services\ActivationService.cs" />
@@ -805,13 +808,13 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <Optimize>False</Optimize>
     <WarningLevel>4</WarningLevel>
-    <DefineConstants>DISABLE_XAML_GENERATED_BREAK_ON_UNHANDLED_EXCEPTION;DISABLE_XAML_GENERATED_MAIN;CRASHES;CNV</DefineConstants>
+    <DefineConstants>DISABLE_XAML_GENERATED_BREAK_ON_UNHANDLED_EXCEPTION;DISABLE_XAML_GENERATED_MAIN;CRASHES;COTG</DefineConstants>
     <Deterministic>True</Deterministic>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <Optimize>True</Optimize>
     <WarningLevel>4</WarningLevel>
-    <DefineConstants>DISABLE_XAML_GENERATED_BREAK_ON_UNHANDLED_EXCEPTION;DISABLE_XAML_GENERATED_MAIN;CRASHES;CNV</DefineConstants>
+    <DefineConstants>DISABLE_XAML_GENERATED_BREAK_ON_UNHANDLED_EXCEPTION;DISABLE_XAML_GENERATED_MAIN;CRASHES;COTG</DefineConstants>
     <Deterministic>True</Deterministic>
   </PropertyGroup>
   <ProjectExtensions />
@@ -831,14 +834,18 @@
     <EmbeddedResource Include="Wiki\fixes.md" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\CnVShared\CnVShared.csproj" />
+  </ItemGroup>
+  <ItemGroup>
     <None Update="cnvCover2.png">
       <Pack>True</Pack>
       <PackagePath>\</PackagePath>
     </None>
-    <None Update="Themes\Generic.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Base\" />
+    <Folder Include="ClientHelpers\" />
+    <Folder Include="Themes\" />
   </ItemGroup>
 
-  <Import Project="..\..\CnVShared\CnVShared.projitems" Label="Shared" />
-</Project>
+ </Project>

@@ -9,13 +9,14 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 
-using static COTG.Debug;
+using static CnV.Debug;
 // The Content Dialog item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
 using ContentDialog = Microsoft.UI.Xaml.Controls.ContentDialog;
 using ContentDialogResult = Microsoft.UI.Xaml.Controls.ContentDialogResult;
 using System.Collections.ObjectModel;
+using CnV;
 
-namespace COTG.Views
+namespace CnV.Views
 {
 	public sealed partial class DateTimePicker : ContentDialog, INotifyPropertyChanged
 	{
@@ -92,13 +93,13 @@ namespace COTG.Views
 
 		public static async Task<(DateTimeOffset t, bool yes)> ShowAsync(string title, DateTimeOffset? _time=null)
 		{
-			var result = await App.DispatchOnUIThreadTask(async () =>
+			var result = await AppS.DispatchOnUIThreadTask(async () =>
 			{
 
 				if (title != null)
 					instance.Title = title;
 				if (recentTimes.Count == 0)
-					AddRecentTime(JSClient.ServerTime());
+					AddRecentTime(CnVServer.ServerTime());
 				if (_time != null)
 				{
 					dateTime = _time.Value;
@@ -151,7 +152,7 @@ namespace COTG.Views
 
 		private void NowClick(object sender, RoutedEventArgs e)
 		{
-			dateTime = JSClient.ServerTime();
+			dateTime = CnVServer.ServerTime();
 			TimeToUI();
 //			Log(dateTime);
 		}

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Web;
 
-namespace COTG.Activation
+namespace CnV.Activation
 {
     public class SchemeActivationData
     {

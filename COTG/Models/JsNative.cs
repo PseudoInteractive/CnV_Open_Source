@@ -1,4 +1,4 @@
-﻿namespace COTG
+﻿namespace CnV
 {
    // [AllowForWeb]
     class COTGNative

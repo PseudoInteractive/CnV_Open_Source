@@ -4,11 +4,77 @@ using System.Collections.Immutable;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+
 using MessagePack;
-namespace COTG
+namespace CnV
 {
+	using CnV;
+
 	using System.IO;
+
 	using Windows.Storage;
+	using Game;
+	using Views;
+
+	public static class SettingsFile<TData,TSerialize> where TSerialize: new() where TData: new()
+	{
+		public static byte[] lastLoaded;
+		public static TData V;
+		public static string fileName => $"{ApplicationData.Current.LocalFolder.Path}/Settings{nameof(TData)}.mpk";
+		public static async Task<bool> Load( Func<TSerialize,TData> transform, Action<TData,bool> onComplete=null, Func<TData> _default =null )
+		{
+			if (lastLoaded is not null)
+				return false;
+			try
+			{
+				byte[] buffer = null;
+				using (FileStream fs = new FileStream(fileName, new FileStreamOptions()
+				       {
+					       Mode = FileMode.OpenOrCreate,
+					       Access = FileAccess.ReadWrite,
+					       Share = FileShare.ReadWrite,
+					       Options = FileOptions.Asynchronous | FileOptions.SequentialScan
+				       }))
+				{
+					var lg = fs.Length.AsInt();
+					buffer = new byte[lg];
+					var readSoFar = 0;
+					for (;;)
+					{
+						if (readSoFar >= lg)
+							break;
+						var count = await fs.ReadAsync( new Memory<byte>(buffer, readSoFar, lg - readSoFar) );
+						readSoFar += count;
+						if (count == 0 )
+							break;
+					}
+				}
+
+				var loaded = AMessagePack.TryDeserialize<TSerialize>(buffer, out var serialized );
+				
+				
+					V = loaded ? transform(serialized) :
+						_default is not null ? _default() :
+						default;
+				
+				onComplete?.Invoke(V, loaded);
+				lastLoaded = buffer;
+
+				return true;
+				
+
+			}
+			catch (Exception ex)
+			{
+				LogEx(ex);
+				return false;
+			}
+
+		}
+
+
+
+	}
 
 	[MessagePackObject]
 	public struct CityCustom:IEquatable<CityCustom>
@@ -51,7 +117,7 @@ namespace COTG
 			}
 
 		}
-		public async static Task Load()
+		public static void Load()
 		{
 			if(!CityCustom.loaded)
 			{

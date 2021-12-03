@@ -5,18 +5,23 @@ using System.Text;
 using System.Threading.Tasks;
 using Telerik.UI.Xaml.Controls.Grid;
 using Telerik.UI.Xaml.Controls.Grid.Commands;
-using COTG.Helpers;
-using static COTG.Debug;
-using COTG.Game;
+using CnV.Helpers;
+using static CnV.Debug;
+using CnV.Game;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Input;
-using COTG.Services;
-using COTG.Views;
-using COTG.JSON;
-using Telerik.Data.Core;
+using CnV.Services;
+using CnV.Views;
 
-namespace COTG.Models
+using Telerik.Data.Core;
+using CnV;
+
+namespace CnV.Models
 {
+	using Game;
+	using Services;
+	using Views;
+
 	public class CityTextFiler : IFilter
 	{
 		private string matchString;
@@ -428,7 +433,7 @@ namespace COTG.Models
         {
             var context = parameter as DataGridCellInfo;
             // put your custom logic here
-            var i = context.Item as COTG.Game.Dungeon;
+            var i = context.Item as Dungeon;
             var cid = i.cid;
             if (context.Column.Header != null)
             {

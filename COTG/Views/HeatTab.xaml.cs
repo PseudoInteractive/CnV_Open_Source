@@ -1,5 +1,5 @@
-﻿using COTG.Game;
-using COTG.Helpers;
+﻿using CnV.Game;
+using CnV.Helpers;
 
 using System;
 using System.Collections.Generic;
@@ -18,13 +18,15 @@ using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
 using CommunityToolkit.WinUI;
-using static COTG.Debug;
+using static CnV.Debug;
 using System.Threading.Tasks;
-using static COTG.AUtil;
+using static CnV.AUtil;
 // The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234236
 
-namespace COTG.Views
+namespace CnV.Views
 {
+	using Game;
+
 	class HeatmapTemplateSelector : Microsoft.UI.Xaml.Controls.DataTemplateSelector
 	{
 		public DataTemplate dayTemplate { get; set; }
@@ -71,7 +73,7 @@ namespace COTG.Views
 				day.UpdateDesc(false, true);
 			}
 
-			await App.DispatchOnUIThreadTask(() =>
+			await AppS.DispatchOnUIThreadTask(() =>
 		   {
 			   foreach (var day in HeatMapDay.days)
 			   {
@@ -136,7 +138,7 @@ namespace COTG.Views
 			{
 				for (; ; )
 				{
-					await App.DispatchOnUIThreadTask(() =>
+					await AppS.DispatchOnUIThreadTask(() =>
 				   {
 					   if (zoom.SelectedNodes != null)
 					   {
@@ -166,7 +168,7 @@ namespace COTG.Views
 
 			var t1 = SmallTime.zero;
 			var t0 = SmallTime.serverNow;
-			await App.DispatchOnUIThreadTask(() => {
+			await AppS.DispatchOnUIThreadTask(() => {
 				var sel = zoom.SelectedNodes;
 				if (sel != null && sel.Count > 0)
 				{
@@ -197,7 +199,7 @@ namespace COTG.Views
 
 
 			World.ClearHeatmap();
-			App.DispatchOnUIThreadLow(() =>
+			AppS.DispatchOnUIThreadLow(() =>
 		   {
 			   if (HeatTab.instance.isFocused)
 			   {
@@ -324,7 +326,7 @@ namespace COTG.Views
 					}
 				}
 			}
-			//			App.DispatchOnUIThreadLow(() =>
+			//			AppS.DispatchOnUIThreadLow(() =>
 			//		   {
 			////			   instance.zoom.SelectionMode = TreeViewSelectionMode.None;
 			////			   instance.zoom.SelectionMode = TreeViewSelectionMode.Multiple;

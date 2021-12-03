@@ -3,7 +3,7 @@
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
 
-namespace COTG.Views
+namespace CnV.Views
 {
     // TODO WTS: Remove this sample page when/if it's not needed.
     // This page is an sample of how to launch a specific page in response to launching from the command line and passing arguments.

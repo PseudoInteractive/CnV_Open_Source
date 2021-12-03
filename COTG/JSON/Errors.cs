@@ -1,4 +1,4 @@
-﻿namespace COTG.JSON
+﻿namespace CnV.GameData
 {
 	public class Errors
 	{

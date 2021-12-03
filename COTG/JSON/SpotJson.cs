@@ -5,13 +5,13 @@ using System.Linq;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Text;
-using TroopTypeCounts = COTG.Game.TroopTypeCounts;
+using TroopTypeCounts = CnV.Game.TroopTypeCounts;
 //COTG.DArray<COTG.Game.TroopTypeCount>;
-using TroopTypeCountsRef = COTG.Game.TroopTypeCounts;
-using static COTG.Game.TroopTypeCountHelper;
+using TroopTypeCountsRef = CnV.Game.TroopTypeCounts;
+using static CnV.Game.TroopTypeCountHelper;
 //COTG.DArrayRef<COTG.Game.TroopTypeCount>;
 
-namespace COTG.DB
+namespace CnV.DB
 {
 
 	// JSON version
@@ -139,7 +139,7 @@ namespace COTG.DB
 //        }
 //        public override string ToString()
 //        {
-//            return JsonSerializer.Serialize(this, Json.jsonSerializerOptions);
+//            return JsonSerializer.Serialize(this, JSON.jsonSerializerOptions);
 //        }
 //    }
 

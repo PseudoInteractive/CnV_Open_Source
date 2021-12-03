@@ -8,14 +8,18 @@ using Azure;
 using Azure.Data.Tables;
 using Azure.Data.Tables.Models;
 using System.Globalization;
-using static COTG.Debug;
-using COTG.Game;
+using static CnV.Debug;
+using CnV.Game;
 using System.Runtime.InteropServices;
 using System.Web;
 
-namespace COTG.Services
+namespace CnV.Services
 {
+	using CnV;
+
 	using CnVChat;
+	using Game;
+
 	public class PlayerGlobal : ITableEntity
 	{
 		public PlayerGlobal()

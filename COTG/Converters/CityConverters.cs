@@ -4,8 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace COTG;
+namespace CnV;
 
+using Game;
 using Microsoft.UI.Xaml.Data;
 
 	public class CityIconConverter : IValueConverter	

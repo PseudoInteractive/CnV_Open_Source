@@ -1,4 +1,4 @@
-﻿using COTG.Game;
+﻿using CnV.Game;
 
 using System;
 using System.Collections.Generic;
@@ -10,10 +10,12 @@ using Telerik.UI.Xaml.Controls.Grid;
 
 using Microsoft.UI.Xaml;
 
-using static COTG.Game.Troops;
-namespace COTG.Styles
+using static CnV.Game.Troops;
+namespace CnV.Styles
 {
-		public class ReportKillStyleSelector : Microsoft.UI.Xaml.Controls.StyleSelector
+	using Game;
+
+	public class ReportKillStyleSelector : Microsoft.UI.Xaml.Controls.StyleSelector
 		{
 			public Style attackerWinStyle { get; set; }
 

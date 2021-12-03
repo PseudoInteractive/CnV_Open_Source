@@ -3,15 +3,17 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using COTG.Helpers;
-using static COTG.Debug;
-using static COTG.Game.Troops;
+using CnV.Helpers;
+using static CnV.Debug;
+using static CnV.Game.Troops;
 using System.Text.Json;
-using COTG.Views;
+using CnV.Views;
 
-namespace COTG.Game
+namespace CnV.Game
 {
-    public class Dungeon 
+	using Views;
+
+	public class Dungeon 
     {
 
 		public static void Initialize()
@@ -31,7 +33,7 @@ namespace COTG.Game
             _ => "water"
         };
 
-        public bool isWater => type == (int)DungeonType.water;
+        public bool isWater => type == (int)Troops.DungeonType.water;
         
 
         //        [JsonProperty("l")]
@@ -52,7 +54,7 @@ namespace COTG.Game
 
 		public float carry;
 		public byte reps;
-        public float loot => (type == (int)DungeonType.mountain ? mountainLoot[level - 1] : otherLoot[level - 1]) * (2 - completion * 0.01f);
+        public float loot => (type == (int)Troops.DungeonType.mountain ? mountainLoot[level - 1] : otherLoot[level - 1]) * (2 - completion * 0.01f);
         public string plan { get
             {
             //    var r = Raiding.ComputeIdealReps(this,city);
@@ -81,7 +83,7 @@ namespace COTG.Game
 			foreach (var dung in jse.EnumerateArray())
 			{
 				var type = dung.GetAsByte("t");
-				if (Views.SettingsPage.raidOffDungeons || (type == idealType) || type == (byte)DungeonType.water )
+				if (Views.SettingsPage.raidOffDungeons || (type == idealType) || type == (byte)Troops.DungeonType.water )
 				{
 					var d = new Dungeon()
 					{

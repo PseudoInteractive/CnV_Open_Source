@@ -2,7 +2,7 @@
 
 using Microsoft.UI.Xaml.Media;
 
-namespace COTG.Models
+namespace CnV.Models
 {
     public class SharedDataStorageItemsModel : SharedDataModelBase
     {

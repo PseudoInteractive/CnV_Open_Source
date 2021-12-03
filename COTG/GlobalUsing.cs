@@ -1,0 +1,12 @@
+﻿global using CnV;
+global using System.Linq;
+global using System;
+global using CnV.Game;
+global using CnV.Views;
+global using CnV.Helpers;
+global using MessagePack;
+global using static CnV.Debug;
+global using System.Collections.Immutable;
+global using ByteOwner = Microsoft.Toolkit.HighPerformance.Buffers.MemoryOwner<byte>;
+global using CnV.GameData;
+global using Nito.AsyncEx;

@@ -5,17 +5,22 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using COTG.Game;
-using COTG.Helpers;
+using CnV.Game;
+using CnV.Helpers;
 using System.IO;
 using System.IO.Compression;
-using COTG.Views;
+using CnV.Views;
 using Azure.Storage.Blobs.Models;
 using System.Buffers;
-using COTG.BinaryMemory;
-using static COTG.Debug;
-namespace COTG.Services
+using CnV.BinaryMemory;
+using static CnV.Debug;
+using CnV;
+
+namespace CnV.Services
 {
+	using BinaryMemory;
+	using Game;
+
 	class Blobs
 	{
 		const string connectionString = "DefaultEndpointsProtocol=https;AccountName=avata;AccountKey=IWRPGlttorpK5DcHWin/GdA2VEcZKnHkr30lE0ZDvKLG0q1CjZONcAQYI2D26DENd7TIAxF8tPsE0mIk98BafA==;EndpointSuffix=core.windows.net";
@@ -339,7 +344,7 @@ namespace COTG.Services
 			}
 
 			App.CopyTextToClipboard(sb.ToString());
-			Note.Show("Copied stats to clipboard (tsv) for sheets",priority: Note.Priority.high,timeout: 8*10000);
+			Note.Show("Copied stats to clipboard (tsv) for sheets",priority: Priority.high,timeout: 8*10000);
 		}
 
 		public static async Task PlayerStats(DateTimeOffset t0, DateTimeOffset t1, int continent, int minTS, bool score, bool cities,bool allianceStats, int maxPlayers, bool tsTotal, bool tsOff, bool tsDef)

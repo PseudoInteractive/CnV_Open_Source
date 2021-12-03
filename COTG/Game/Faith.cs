@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using EnumsNET;
 
-namespace COTG.Game
+namespace CnV.Game
 {
 	// for COTG numbers, add 1
 	public enum Faith : byte

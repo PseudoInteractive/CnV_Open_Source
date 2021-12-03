@@ -8,12 +8,12 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using System.Web;
 
-using COTG.Game;
-using COTG.Helpers;
-using COTG.JSON;
-using COTG.Models;
-using COTG.Services;
-using static COTG.Debug;
+using CnV.Game;
+using CnV.Helpers;
+
+using CnV.Models;
+using CnV.Services;
+using static CnV.Debug;
 using CommunityToolkit.WinUI;
 using Windows.ApplicationModel;
 using Windows.Globalization.NumberFormatting;
@@ -26,9 +26,14 @@ using System.IO;
 using MessagePack;
 using Windows.Storage;
 using System.Collections.Immutable;
+using CnV;
 
-namespace COTG.Views
+namespace CnV.Views
 {
+	using Game;
+	using Helpers;
+	using Services;
+
 	public enum Theme
 	{
 		cotg,
@@ -407,7 +412,7 @@ namespace COTG.Views
 				// incomingWatch = st.Read(nameof(incomingWatch), Array.Empty<string>() );
 				//    autoBuildOn = st.Read(nameof(autoBuildOn)+'2', -1) switch {  0 => false, 1 => true, _ => null };
 				// AttackTab.time = st.Read("attacktime", DateTime.UtcNow.Date);
-				App.DispatchOnUIThread( ()=>
+				AppS.DispatchOnUIThread( ()=>
 				{
 					SetSoundOn(soundOn);
 					ElementSoundPlayer.Volume = volume;
@@ -419,7 +424,7 @@ namespace COTG.Views
 					raidCarryMax = 1.75f; // error!
 				if (raidCarryMax <= raidCarryMin)
 					raidCarryMax = raidCarryMin*1.75f; // error!
-				App.DispatchOnUIThread(()=>	UpdateZoom() );
+				AppS.DispatchOnUIThread(()=>	UpdateZoom() );
 				//	DungeonView.Initialize();
 			
 			}
@@ -703,7 +708,7 @@ namespace COTG.Views
 
 		private void UpdateCityLists(object sender, RoutedEventArgs e)
 		{
-			App.DispatchOnUIThreadLow( async () =>
+			AppS.DispatchOnUIThreadLow( async () =>
 			   {
 				   var pid = Player.activeId;
 				   using var work = new WorkScope("update citylists");
@@ -746,7 +751,7 @@ namespace COTG.Views
 				   foreach (var city in City.myCities)
 				   {
 					   var cid = city.cid;
-					   COTG.Debug.Assert(city is City);
+					   Debug.Assert(city is City);
 					   List<CityList> prior = new();
 					   foreach (var l in CityList.all)
 					   {
@@ -803,7 +808,7 @@ namespace COTG.Views
 							   continue;
 						   cityList.Add(l.id.ToString() + l.name);
 					   }
-					   sli = ("a=" + HttpUtility.UrlEncode(JsonSerializer.Serialize(cityList, Json.jsonSerializerOptions)));
+					   sli = ("a=" + HttpUtility.UrlEncode(JsonSerializer.Serialize(cityList, JSON.jsonSerializerOptions)));
 					   //                await Post.Send("includes/sLi.php",);
 				   }
 				   {
@@ -830,7 +835,7 @@ namespace COTG.Views
 							   continue;
 
 						   var strs = temp.Select(a => a.id.ToString()).ToArray();
-						   cgs.Add($"a={HttpUtility.UrlEncode(JsonSerializer.Serialize(strs, Json.jsonSerializerOptions))}&cid={cid}");
+						   cgs.Add($"a={HttpUtility.UrlEncode(JsonSerializer.Serialize(strs, JSON.jsonSerializerOptions))}&cid={cid}");
 					   }
 				   }
 				   if (sli != null)
@@ -847,7 +852,7 @@ namespace COTG.Views
 
 		private void TipsRestore(object sender, RoutedEventArgs e)
 		{
-			Tips.seen = new HashSet<string>();
+		//	Tips.seen = new HashSet<string>();
 			Note.Show("Keener :)");
 			HideMe();
 		}
@@ -887,7 +892,7 @@ namespace COTG.Views
 						if (TileData.instance.GetSpotType(x, y).type == TileData.SpotType.plain)
 						{
 							var cityId = (x, y).WorldToCid();
-							await App.DispatchOnUIThreadTask( async () =>
+							await AppS.DispatchOnUIThreadTask( async () =>
 							  await JSClient.ExecuteScriptAsync("gStQuery", (cityId) )
 							  );
 							await Task.Delay(100);
@@ -934,7 +939,7 @@ namespace COTG.Views
 			catch (Exception ex)
 			{
 				Note.Show("Copy strings and coords to clipboard please");
-				COTG.Debug.LogEx(ex);
+				Debug.LogEx(ex);
 
 			}
 
@@ -954,7 +959,7 @@ namespace COTG.Views
 		
 		public static void Show()
 		{
-			App.DispatchOnUIThreadLow(async () =>
+			AppS.DispatchOnUIThreadLow(async () =>
 			{
 				ElementSoundPlayer.Play(ElementSoundKind.Hide);
 				if (instance == null)
@@ -1003,21 +1008,21 @@ namespace COTG.Views
 
 		private void ExportRanks(object sender, RoutedEventArgs e)
 		{
-			App.HideFlyout(sender);
+			AppS.HideFlyout(sender);
 			HideMe();
 			var cont = exportRanksCont.Value.RoundToInt().ContinentToXY().XYToPackedContinent();
-			var t1 = JSClient.ServerTime();
+			var t1 = CnVServer.ServerTime();
 			Blobs.AllianceStats(t1 - TimeSpan.FromDays(exportRanksDays.Value), t1, cont, exportRanksCities.Value.RoundToInt() );
 		}
 
 
 		private void ExportTS(object sender, RoutedEventArgs e)
 		{
-			App.HideFlyout(sender);
+			AppS.HideFlyout(sender);
 			HideMe();
 			var cont = SettingsPage.exportContinent.ContinentToXY().XYToPackedContinent();
 			var tsMin = exportTSMinTS.Value.RoundToInt();
-			var t1 = JSClient.ServerTime();
+			var t1 = CnVServer.ServerTime();
 			Blobs.PlayerStats(t1-TimeSpan.FromDays(exportTSDays.Value), t1,cont,tsMin,
 				this.exportTSScore.IsChecked.GetValueOrDefault(),
 				this.exportTSCities.IsChecked.GetValueOrDefault(),

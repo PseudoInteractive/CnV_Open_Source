@@ -1,15 +1,19 @@
-﻿using COTG.Helpers;
-using COTG.Services;
+﻿using CnV;
+
+using CnV.Helpers;
+using CnV.Services;
 
 using System;
 using System.Collections.Generic;
 using System.Text.Json;
 using System.Threading.Tasks;
 
-using static COTG.Debug;
+using static CnV.Debug;
 
-namespace COTG.Game
+namespace CnV.Game
 {
+	using Services;
+
 	public enum Diplomacy : byte
 	{
 		none = 0,

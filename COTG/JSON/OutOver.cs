@@ -1,7 +1,7 @@
-﻿using COTG.Game;
-using COTG.Helpers;
-using COTG.Services;
-using COTG.Views;
+﻿using CnV.Game;
+using CnV.Helpers;
+using CnV.Services;
+using CnV.Views;
 
 using System;
 using System.Collections.Concurrent;
@@ -9,17 +9,21 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
-using static COTG.Game.Troops;
-using static COTG.Debug;
-using TroopTypeCounts = COTG.Game.TroopTypeCounts;
+using static CnV.Game.Troops;
+using static CnV.Debug;
+using TroopTypeCounts = CnV.Game.TroopTypeCounts;
 //COTG.DArray<COTG.Game.TroopTypeCount>;
-using TroopTypeCountsRef = COTG.Game.TroopTypeCounts;
-using static COTG.Game.TroopTypeCountHelper;
+using TroopTypeCountsRef = CnV.Game.TroopTypeCounts;
+using static CnV.Game.TroopTypeCountHelper;
+using CnV;
 //COTG.DArrayRef<COTG.Game.TroopTypeCount>;
 
-namespace COTG.Game
+namespace CnV.Game
 {
-    public static class OutgoingOverview
+	using Services;
+	using Views;
+
+	public static class OutgoingOverview
     {
         public static bool updateInProgress;
 		public static int outgoingCounter;
@@ -152,7 +156,7 @@ namespace COTG.Game
 											}
 											var time = b[6].GetAsString().ParseDateTime();// b.GetString("arrival").ParseDateTime();
 
-											var serverTime = JSClient.ServerTime();
+											var serverTime = CnVServer.ServerTime();
 											var spotted = time - TimeSpan.FromSeconds(atkCid.DistanceToCidD(defCid) * TTTravel(type!=ttPending ? type : ttSenator ));
 										//	if (spotted > serverTime)
 										//		spotted = serverTime;
@@ -204,7 +208,7 @@ namespace COTG.Game
 									Spot.attackersO = attackers.ToArray();
 							
 							}
-							App.DispatchOnUIThreadLow(OutgoingTab.NotifyOutgoingUpdated);
+							AppS.DispatchOnUIThreadLow(OutgoingTab.NotifyOutgoingUpdated);
 
 
 						}
@@ -444,7 +448,7 @@ namespace COTG.Game
                     }
 
                     await task0;
-                    App.DispatchOnUIThreadLow(() =>
+                    AppS.DispatchOnUIThreadLow(() =>
                     {
                         updateInProgress = false;
                         if (fetchReports)
@@ -455,7 +459,7 @@ namespace COTG.Game
                             var page = HitTab.instance;
                             for (int i = 0; i < reportParts.Length; ++i)
                                 reportsOutgoing.AddRange(reportParts[i]);
-                        // App.DispatchOnUIThread(() =>
+                        // AppS.DispatchOnUIThread(() =>
                         // We should do this on the Render Thread
                         page.SetHistory((reportsOutgoing.OrderByDescending((atk) => atk.time.UtcTicks)).ToArray());
                             defKilled = 0;
@@ -494,7 +498,7 @@ namespace COTG.Game
 			}
             catch (Exception _exception)
             {
-                COTG.Debug.LogEx(_exception);
+                Debug.LogEx(_exception);
                 updateInProgress = false;
 				++outgoingCounter;
 

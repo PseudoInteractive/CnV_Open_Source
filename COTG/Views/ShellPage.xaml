@@ -1,16 +1,14 @@
-﻿<winui:Page x:Class="COTG.Views.ShellPage"
+﻿<winui:Page x:Class="CnV.Views.ShellPage"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-	  xmlns:cotg="using:COTG"
-      xmlns:game="using:COTG.Game"
-      xmlns:helpers="using:COTG.Helpers"
+	  xmlns:cotg="using:CnV"
+      xmlns:game="using:CnV.Game"
+      xmlns:helpers="using:CnV.Helpers"
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       xmlns:tk="using:CommunityToolkit.WinUI.UI.Controls"
-      xmlns:views="using:COTG.Views"
-      xmlns:models="using:COTG.Models"
+      xmlns:views="using:CnV.Views"
       xmlns:winui="using:Microsoft.UI.Xaml.Controls"
-		xmlns:developerTools="using:CommunityToolkit.WinUI.DeveloperTools"
       x:Name="shellPage"
 		RequestedTheme="Dark"   
 	  Loaded="OnLoaded"
@@ -44,7 +42,7 @@
 	
 	<Grid Margin="0" 
 		  x:Name="layoutGrid" 
-		  TabFocusNavigation="Once"
+		  
 		  Grid.RowSpan="6" Grid.ColumnSpan="3"  >
 		
 
@@ -200,7 +198,7 @@ Grid.Column="0"
 
 
 
-			<winui:CommandBar Grid.ColumnSpan="2" TabFocusNavigation="Once" UseSystemFocusVisuals="True" x:Name="commandBar" x:FieldModifier="public"  >
+			<winui:CommandBar Grid.ColumnSpan="2"  UseSystemFocusVisuals="True" x:Name="commandBar" x:FieldModifier="public"  >
 				<winui:CommandBar.Content   >
 					<StackPanel Orientation="Horizontal" VerticalAlignment="Center">
 						<winui:ComboBox x:Name="windowLayout" SelectedIndex="2" SelectionChanged="windowLayout_SelectionChanged"  VerticalAlignment="Center" Margin="4"
@@ -392,7 +390,7 @@ TextSubmitted="CitySubmitted"
 						BorderThickness="0"
 						ScrollViewer.ZoomMode="Disabled"
 								  IsTabStop="True"
-							TabFocusNavigation="Once"
+							
 					
 						Margin="0,95,0,0"
 						IsHitTestVisible="False"
@@ -406,8 +404,8 @@ TextSubmitted="CitySubmitted"
 				<RowDefinition Height="3*"/>
 				<RowDefinition Height="*"/>
 			</Grid.RowDefinitions>
-				<winui:Frame x:Name="shellTabs"  TabFocusNavigation="Once" IsNavigationStackEnabled="False" x:FieldModifier="public" />
-				<winui:Frame x:Name="spotTabs" TabFocusNavigation="Once" Grid.Row="1" IsNavigationStackEnabled="False" x:FieldModifier="public" />
+				<winui:Frame x:Name="shellTabs"   IsNavigationStackEnabled="False" x:FieldModifier="public" />
+				<winui:Frame x:Name="spotTabs"  Grid.Row="1" IsNavigationStackEnabled="False" x:FieldModifier="public" />
 			<tk:GridSplitter
 				IsTabStop="True"
 				CursorBehavior="ChangeOnSplitterHover"
@@ -433,7 +431,7 @@ TextSubmitted="CitySubmitted"
 				<ColumnDefinition Width="3*"/>
 				<ColumnDefinition Width="3*"/>
 			</Grid.ColumnDefinitions>
-			<Frame x:Name="chatTabs" x:FieldModifier="public" Grid.Column ="1" Grid.Row="1"  Margin="12,12,16,0" IsNavigationStackEnabled="False" TabFocusNavigation="Once" />
+			<Frame x:Name="chatTabs" x:FieldModifier="public" Grid.Column ="1" Grid.Row="1"  Margin="12,12,16,0" IsNavigationStackEnabled="False"  />
 			<!--Chat Width resizer-->
 			<tk:GridSplitter
                         Background="{x:Null}"

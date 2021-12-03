@@ -27,8 +27,10 @@ using PlayFab.ClientModels;
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
 
-namespace COTG.Views
+namespace CnV.Views
 {
+	using Game;
+
 	public sealed partial class Signin: ContentDialog
 	{
 		public Signin()

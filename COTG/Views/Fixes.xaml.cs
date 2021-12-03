@@ -16,7 +16,7 @@ using Microsoft.UI.Xaml.Navigation;
 
 // The Content Dialog item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
 
-namespace COTG.Views
+namespace CnV.Views
 {
 	public sealed partial class Fixes : ContentDialog
 	{

@@ -1,4 +1,4 @@
-﻿using COTG.Services;
+﻿using CnV.Services;
 //using Windows.UI.Core;
 using Microsoft.UI.Xaml;
 
@@ -9,10 +9,13 @@ using System.Threading.Tasks;
 
 using Telerik.UI.Xaml.Controls.Grid;
 
-using static COTG.Game.City;
+using static CnV.Game.City;
 
-namespace COTG.Views
+namespace CnV.Views
 {
+	using CnV;
+	using Game;
+	using Services;
 	using Syncfusion.UI.Xaml.DataGrid;
 
 
@@ -183,9 +186,9 @@ namespace COTG.Views
 					city.UpdateBuildStage();
 
 					city.points = (ushort)ci[2].GetAsInt();
-					var isBuilding = (ci[4].GetAsFloat() != 0) || (city.buildStage == BuildStage.complete)||
-					(city.buildStage == BuildStage.completeX)
-								|| (city.buildStage == BuildStage.leave);
+					var isBuilding = (ci[4].GetAsFloat() != 0) || (city.buildStage == City.BuildStage.complete)||
+					(city.buildStage == City.BuildStage.completeX)
+								|| (city.buildStage == City.BuildStage.leave);
 					//if (ci[3].GetAsFloat() != 0)
 					//{
 					//	//	Log($"3!: {city.nameAndRemarks}");
@@ -294,7 +297,7 @@ namespace COTG.Views
 			await base.VisibilityChanged(visible,longTerm: longTerm);
 			//	if(visible)
 			//	{
-			//		App.DispatchOnUIThreadLow(() => Spot.SyncUISelection(true, City.GetBuild() ));
+			//		AppS.DispatchOnUIThreadLow(() => Spot.SyncUISelection(true, City.GetBuild() ));
 			//	}
 		}
 		//private void BuildCityContextFlyout(TabPage newPage)

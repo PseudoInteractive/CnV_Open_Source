@@ -5,32 +5,38 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Collections.Concurrent;
-using static COTG.Debug;
+using static CnV.Debug;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media.Imaging;
-using COTG.Helpers;
+using CnV.Helpers;
 using System.Text.Json;
-using static COTG.Game.Troops;
+using static CnV.Game.Troops;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using COTG.Services;
-using COTG.Views;
-using COTG.JSON;
-using static COTG.Game.City;
+using CnV.Services;
+using CnV.Views;
+
+using static CnV.Game.City;
 using Microsoft.Toolkit.HighPerformance;
 using Microsoft.Toolkit.HighPerformance.Enumerables;
-using COTG.Draw;
+using CnV.Draw;
 using System.Threading;
 using EnumsNET;
-using static COTG.Game.TroopTypeCountHelper;
+using static CnV.Game.TroopTypeCountHelper;
 using static Cysharp.Text.ZString;
 using Nito.AsyncEx;
-using static COTG.BuildingDef;
+using static CnV.BuildingDef;
 using System.Buffers;
 using System.Diagnostics;
+using CnV;
 
-namespace COTG.Game
+namespace CnV.Game
 {
+	using Draw;
+	using Helpers;
+	using Services;
+	using Views;
+
 	//struct Building
 	//{
 	//	public byte type;
@@ -40,7 +46,7 @@ namespace COTG.Game
 	//}
 	///
 	[DebuggerDisplay($"{{{nameof(GetDebuggerDisplay)}(),nq}}")]
-	public sealed partial class City : Spot, IANotifyPropertyChanged
+	public sealed partial class City :Spot
 	{
 
 		public const short bidTownHall = 455;
@@ -370,7 +376,7 @@ namespace COTG.Game
 
 		public DateTimeOffset GetRaidReturnTime()
 		{
-			return raids.Any() ? raids.Max(a => a.GetReturnTime(this)) : JSClient.ServerTime();
+			return raids.Any() ? raids.Max(a => a.GetReturnTime(this)) : CnVServer.ServerTime();
 		}
 
 		public static bool CanVisit(int cid)
@@ -738,7 +744,7 @@ namespace COTG.Game
 						tradeInfo.inc[3] = ir[3].GetAsInt();
 						//if (NearRes.IsVisible())
 						//{
-						//	App.DispatchOnUIThreadLow( ()=> NearRes.instance.Refresh() );
+						//	AppS.DispatchOnUIThreadLow( ()=> NearRes.instance.Refresh() );
 						//}
 					}
 				}
@@ -1499,7 +1505,7 @@ namespace COTG.Game
 			foreach (var ttc in troopsHome.Enumerate())
 			{
 				var type = ttBestDungeonType[ttc.type];
-				if (type >= (byte)DungeonType.water)
+				if (type >= (byte)Troops.DungeonType.water)
 					continue;// todo: handle water
 				var ts = ttc.ts;
 				if (ts > bestTS)
@@ -1915,7 +1921,7 @@ namespace COTG.Game
 		//}
 		public static void SyncCityBox()
 		{
-			App.QueueOnUIThread(() =>
+			AppS.QueueOnUIThread(() =>
 			{
 				var _build = City.GetBuild();
 				if (_build != ShellPage.instance.cityBox.SelectedItem)
@@ -2311,6 +2317,18 @@ namespace COTG.Game
 	public static class CityHelpers
 	{
 		
+		public static (bool reachable, bool viaWater) CanReachByTrade(this int hub, int cid1)
+		{
+			if (hub.CidToContinent() == cid1.CidToContinent())
+			{
+				return ((City.Get(hub).carts > 0),false);
+			}
+			if (!City.Get(cid1).isOnWater || !City.Get(hub).isOnWater )
+				return (false,true);
+
+			return ((City.Get(hub).ships > 0),true);
+		}
+
 
 		public static int CidOr0(this City c) => c != null ? c.cid : 0;
 		public static City AsCity(this int cid) => City.Get(cid);
@@ -2487,7 +2505,7 @@ namespace COTG.Game
 		public static void NotifyChange(bool itemsChanged)
 		{
 
-			App.QueueOnUIThread(async () =>
+			AppS.QueueOnUIThread(async () =>
 			{
 				//               Log("CityListChange");
 
