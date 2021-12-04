@@ -4,7 +4,7 @@
 	<OutputType>WinExe</OutputType>
     <TargetFramework>net6.0-windows10.0.22000.0</TargetFramework>
     <TargetPlatformMinVersion>10.0.18362.0</TargetPlatformMinVersion>
-    <RootNamespace>COTG</RootNamespace>
+    <RootNamespace>CnV</RootNamespace>
     <Platforms>x64</Platforms>
     <MonoGamePlatform>WindowsStoreApp</MonoGamePlatform>
     <RuntimeIdentifier>win10-x64</RuntimeIdentifier>
@@ -802,7 +802,7 @@
     <ProduceReferenceAssembly>True</ProduceReferenceAssembly>
     <EnforceCodeStyleInBuild>False</EnforceCodeStyleInBuild>
     <ImplicitUsings>disable</ImplicitUsings>
-    <Nullable>warnings</Nullable>
+    <Nullable>annotations</Nullable>
     <PackageIcon>cnvCover2.png</PackageIcon>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">

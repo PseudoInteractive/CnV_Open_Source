@@ -41,7 +41,7 @@ namespace CnV.Views
 		private async void LoginRequest(ContentDialog sender, ContentDialogButtonClickEventArgs args)
 		{
 			SettingsPage.SaveAll();
-			var rv = await APlayfab.Login(SettingsPage.playerEmail,SettingsPage.playerPassword);
+			var rv = await APlayFab.Signin(SettingsPage.playerEmail,SettingsPage.playerPassword);
 			if (rv == false)
 			{
 				args.Cancel = true;
@@ -54,7 +54,7 @@ namespace CnV.Views
 		{
 			SettingsPage.SaveAll();
 
-			var rv = await APlayfab.Register(SettingsPage.playerName,SettingsPage.playerEmail,SettingsPage.playerPassword);
+			var rv = await APlayFab.Register(SettingsPage.playerName,SettingsPage.playerEmail,SettingsPage.playerPassword);
 			if (rv == false)
 			{
 				args.Cancel = true;

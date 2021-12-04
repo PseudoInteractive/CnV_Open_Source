@@ -10,6 +10,8 @@ using System.Threading.Tasks;
 
 namespace DiscordCnV
 {
+	
+
 	public static partial class DGame
 	{
 		public struct Message

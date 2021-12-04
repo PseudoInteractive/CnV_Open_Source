@@ -3,143 +3,61 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
-
 using MessagePack;
 namespace CnV
 {
-	using CnV;
-
 	using System.IO;
 
 	using Windows.Storage;
 	using Game;
 	using Views;
-
-	public static class SettingsFile<TData,TSerialize> where TSerialize: new() where TData: new()
-	{
-		public static byte[] lastLoaded;
-		public static TData V;
-		public static string fileName => $"{ApplicationData.Current.LocalFolder.Path}/Settings{nameof(TData)}.mpk";
-		public static async Task<bool> Load( Func<TSerialize,TData> transform, Action<TData,bool> onComplete=null, Func<TData> _default =null )
-		{
-			if (lastLoaded is not null)
-				return false;
-			try
-			{
-				byte[] buffer = null;
-				using (FileStream fs = new FileStream(fileName, new FileStreamOptions()
-				       {
-					       Mode = FileMode.OpenOrCreate,
-					       Access = FileAccess.ReadWrite,
-					       Share = FileShare.ReadWrite,
-					       Options = FileOptions.Asynchronous | FileOptions.SequentialScan
-				       }))
-				{
-					var lg = fs.Length.AsInt();
-					buffer = new byte[lg];
-					var readSoFar = 0;
-					for (;;)
-					{
-						if (readSoFar >= lg)
-							break;
-						var count = await fs.ReadAsync( new Memory<byte>(buffer, readSoFar, lg - readSoFar) );
-						readSoFar += count;
-						if (count == 0 )
-							break;
-					}
-				}
-
-				var loaded = AMessagePack.TryDeserialize<TSerialize>(buffer, out var serialized );
-				
-				
-					V = loaded ? transform(serialized) :
-						_default is not null ? _default() :
-						default;
-				
-				onComplete?.Invoke(V, loaded);
-				lastLoaded = buffer;
-
-				return true;
-				
-
-			}
-			catch (Exception ex)
-			{
-				LogEx(ex);
-				return false;
-			}
-
-		}
-
-
-
-	}
+	using CityCustoms = System.Collections.Concurrent.ConcurrentDictionary<int, CityCustom>;
 
 	[MessagePackObject]
-	public struct CityCustom:IEquatable<CityCustom>
+	public struct CityCustom
 	{
 		[Key(0)]
 		public int cid; // this is redundant
 		[Key(1)]
 		public bool pinned;
 
-		public static ImmutableHashSet<CityCustom> all = ImmutableHashSet<CityCustom>.Empty;
-		public static bool loaded;
-
-		public bool Equals(CityCustom other)
-		{
-			return cid == other.cid;
-		}
-
+		public static SettingsFile<CityCustoms, CityCustom[]> all = new();
+		
 		public override int GetHashCode() => cid;
 		public override string ToString() => $"{City.Get(cid)}: pinned={pinned}";
-		public static string pinsFileName => $"{folder.Path}/CityCustom{JSClient.world}.mpk";
-		static StorageFolder folder => ApplicationData.Current.LocalFolder;
+		
 		public static void Save()
 		{
-			if (CityCustom.loaded)
+			if (all.isLoaded)
 			{
-				try
+				// Clear pinned values
+				foreach (var i in all.V)
 				{
-					Assert(JSClient.world != 0);
-					all = SettingsPage.pinned.Select( a => new CityCustom() { cid = a, pinned = true} )
-						.ToImmutableHashSet();
-					using (FileStream fs = new FileStream(pinsFileName, FileMode.Truncate,FileAccess.Write,FileShare.ReadWrite, 64*1024,false))
-					{
-						AMessagePack.Serialize(fs,all);
-					}
+					var prior = i.Value;
+					prior.pinned = (false);
+					all.V[i.Key] = prior; // not atomic
 				}
-				catch (Exception e)
+				// Set new ones
+				foreach (var i in SettingsPage.pinned)
 				{
-					Debug.LogEx(e);
+					all.V.AddOrUpdate(i,
+						(i)=>new CityCustom() {cid=i,pinned=true},
+						(i,prior)=>
+						{
+							prior.pinned = true;
+							return prior;
+						} );
 				}
+				all.Save( (data) => data.Values.ToArray() );
 			}
-
 		}
+
 		public static void Load()
 		{
-			if(!CityCustom.loaded)
-			{
-				Assert(JSClient.world != 0);
-				try
-				{
-					using (FileStream fs = new FileStream(pinsFileName, FileMode.OpenOrCreate, FileAccess.ReadWrite,FileShare.ReadWrite,64*1024,false))
-					{
-						CityCustom.all = (AMessagePack.Deserialize(fs,() => Array.Empty<CityCustom>() )).ToImmutableHashSet();
-						SettingsPage.pinned = CityCustom.all.Where(a=>a.pinned).Select(a=>a.cid).ToArray();
-						CityCustom.loaded = true;
-					}
-				}
-				catch (Exception ex)
-				{
-					LogEx(ex);
-				}
-
-
-				
-				
-			}
+			all.Load( (tArray) => new CityCustoms(tArray.ToDictionary( a=>a.cid) ),
+				(v, loaded) => SettingsPage.pinned = v.Where(a=>a.Value.pinned).Select(a=>a.Value.cid).ToArray(), // this might wind up on a different thread
+				()=>new(), // empty dictionary
+				true);  // Async please
 		}
 	}
 	

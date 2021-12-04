@@ -1068,7 +1068,7 @@ namespace CnV.Views
 			{
 				var dialog = new WhatsNewDialog();
 				dialog.DefaultButton = Microsoft.UI.Xaml.Controls.ContentDialogButton.Primary;
-				dialog.fixesText.Text = new StreamReader((typeof(Fixes).Assembly).GetManifestResourceStream($"COTG.Wiki.fixes.md")).ReadToEnd();
+				dialog.fixesText.Text = new StreamReader((typeof(Fixes).Assembly).GetManifestResourceStream($"CnV.Wiki.fixes.md")).ReadToEnd();
 
 				var result = await dialog.ShowAsync2();
 

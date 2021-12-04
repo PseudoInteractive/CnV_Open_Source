@@ -51,7 +51,7 @@ namespace CnV.Game
         public static int viewHover; // in the view menu
 		public static int moveSlots=100;
 		public HashSet<int> cities = new();
-		public static bool isSpecial => myId == 2375;
+		public static bool isSpecial => myId == 2375 ;
 
 
 		public string allianceName => Alliance.IdToName(alliance);

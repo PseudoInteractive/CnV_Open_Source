@@ -2242,7 +2242,7 @@ namespace CnV.Game
 		}
 		public void BuildStageDirty()
 		{
-			OnPropertyChanged(nameof(City.buildStage));
+			OnPropertyChanged(nameof(City.bStage));
 		}
 		public async void ShowIncoming()
 		{

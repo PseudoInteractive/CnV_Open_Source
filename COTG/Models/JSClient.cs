@@ -1150,15 +1150,22 @@ namespace CnV
 						city.SetFocus(scrollIntoUI, select);
 						SyncCityBox();
 
-						if(changed)
-							if(isLocked || waitOnChange)
-								if(await ChangeCityJSWait(cid) == false)
+						if (changed)
+						{
+							if (isLocked || waitOnChange)
+							{
+								if (await ChangeCityJSWait(cid) == false)
 								{
 									Note.Show("Somethings wrong, please try again");
 									return false;
 								}
+							}
 							else
+							{
 								ChangeCityJS(cid);
+							}
+						}
+						
 					}
 					if(!lazyMove)
 						cid.BringCidIntoWorldView(lazyMove);

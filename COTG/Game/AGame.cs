@@ -802,7 +802,7 @@ namespace CnV
 
 				bfont = new BitmapFont.BitmapFont();
 
-				var a = new System.IO.StreamReader((typeof(AGame).Assembly).GetManifestResourceStream("COTG.Content.Fonts.tra.fnt")).ReadToEnd();
+				var a = new System.IO.StreamReader((typeof(AGame).Assembly).GetManifestResourceStream("CnV.Content.Fonts.tra.fnt")).ReadToEnd();
 				//	using (System.IO.TextReader stream = new System.IO.StreamReader(a))
 				{
 

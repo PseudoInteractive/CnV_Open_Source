@@ -19,7 +19,7 @@ namespace CnV
 	using PlayFab.Json;
 	using EntityKey = PlayFab.DataModels.EntityKey;
 
-	public class APlayfab
+	public class APlayFab
 	{
 		private const int W0Id = 0xBE97E;
 		private const string W0IdString = "BE97E";
@@ -61,7 +61,9 @@ namespace CnV
 		
 		static async Task SaveLocalPlayerDataToPlayfab(int playerId)
 		{
+			#if CNV
 			Player.myId = playerId;
+#endif
 			var data = new Dictionary<string, object>()
 			{
 				{"playerId", playerId },
@@ -133,7 +135,7 @@ namespace CnV
 
 
 		// Sets Authentication Context and myPlayfabId
-		public static async Task<bool> Login(string email, string password)
+		public static async Task<bool> Signin(string email, string password)
 		{
 			try
 			{
@@ -170,7 +172,7 @@ namespace CnV
 				}
 
 				var login = loginResult.Result;
-				return await FinishLogin(login.AuthenticationContext,false,null);
+				return await FinishSignin(login.AuthenticationContext,false,null);
 			}
 			catch (Exception e)
 			{
@@ -220,7 +222,7 @@ namespace CnV
 				}
 
 				var login = loginResult.Result;
-				return await FinishLogin(login.AuthenticationContext, true, playerName);
+				return await FinishSignin(login.AuthenticationContext, true, playerName);
 			}
 			catch (Exception _exception)
 			{
@@ -235,7 +237,7 @@ namespace CnV
 		public string SessionTicket;
 	//	public UserSettings SettingsForUser;
 	//	public string Username;
-		static async Task<bool> FinishLogin(PlayFabAuthenticationContext _authenticationContext,bool isNewUser, string playerName)
+		static async Task<bool> FinishSignin(PlayFabAuthenticationContext _authenticationContext,bool isNewUser, string playerName)
 		{
 			var PlayFabId = _authenticationContext.PlayFabId;
 			authenticationContext = _authenticationContext;
@@ -392,7 +394,7 @@ namespace CnV
 			return true;
 		}
 		
-		public static async Task<bool> LoginLegacy(string playerName)
+		public static async Task<bool> SigninLegacy(string playerName)
 		{
 			try
 			{
@@ -462,7 +464,7 @@ namespace CnV
 						//return;
 					}
 				}
-				return await FinishLogin(authenticationContext, true, playerName);
+				return await FinishSignin(authenticationContext, true, playerName);
 			}
 			catch (Exception _exception)
 			{

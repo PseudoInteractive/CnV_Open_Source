@@ -35,7 +35,7 @@ namespace CnV
 			var signin = new Signin();
 			await signin.ShowAsync2();
 			#else
-			await APlayFab.SigninLegacy();
+			await APlayFab.SigninLegacy(Player.myName);
 			#endif
 			Assert( JSClient.world != 0);
 			ShellPage.SetViewModeCity();
