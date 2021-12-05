@@ -200,7 +200,7 @@ namespace CnV.Views
 		{
 			var point = e.GetCurrentPoint(canvas);
 			e.KeyModifiers.UpdateKeyModifiers();
-
+			App.InputRecieved();
 			Canvas_PointerPressed((point.Position, point.PointerId, point.IsInContact, point.Timestamp, point.Properties.PointerUpdateKind));
 		}
 
@@ -1130,7 +1130,7 @@ namespace CnV.Views
 		if(!mouseOverCanvas)
 			Log("Mouse Moved Canvas");
 		//	App.cursorDefault.Set();
-			App.InputRecieved(); // prevent idle timer;
+			 // prevent idle timer;
 			mouseOverCanvas = true;		
 			instance.mouseOverCanvasBox.IsChecked = mouseOverCanvas;
 

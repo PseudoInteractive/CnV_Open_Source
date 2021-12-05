@@ -14,8 +14,10 @@ New World:
 namespace CnV
 {
 	using System.Globalization;
-
+	using System.Text.Json;
 	using CnVChat;
+	using Microsoft.UI.Xaml.Controls;
+	using PlayFab.GroupsModels;
 	using PlayFab.Json;
 	using EntityKey = PlayFab.DataModels.EntityKey;
 
@@ -39,7 +41,6 @@ namespace CnV
 
 		static PlayFabAuthenticationContext authenticationContext;
 		
-		public static int[] seenNews;
 
 
 		public static string GetCustomId(string playerName)
@@ -231,44 +232,48 @@ namespace CnV
 			}
 		}
 
+		public static SettingsFile<string[],string[]> seenNews = new( );
 
-//		public EntityTokenResponse EntityToken;
-	//	public string PlayFabId;
+		//		public EntityTokenResponse EntityToken;
+		//	public string PlayFabId;
 		public string SessionTicket;
 	//	public UserSettings SettingsForUser;
 	//	public string Username;
 		static async Task<bool> FinishSignin(PlayFabAuthenticationContext _authenticationContext,bool isNewUser, string playerName)
 		{
-			var PlayFabId = _authenticationContext.PlayFabId;
-			authenticationContext = _authenticationContext;
-			Assert( isNewUser == playerName is not null);
-			var newsAsync = PlayFabClientAPI.GetTitleNewsAsync(new() { AuthenticationContext = authenticationContext});
-
-			titlePlayerEntityKey = new () { Id = _authenticationContext.EntityId, Type =  _authenticationContext.EntityType };
-			globalPlayerEntityKey = new() {Id = PlayFabId, Type = "master_player_account" };
+			try
+			{
+				var PlayFabId = _authenticationContext.PlayFabId;
+				authenticationContext = _authenticationContext;
+				Assert( isNewUser == playerName is not null);
+				var newsAsync = PlayFabClientAPI.GetTitleNewsAsync(new() { AuthenticationContext = authenticationContext});
+				var seenAsync  = seenNews.Load(a=>a,asAsync: true, _default:()=>Array.Empty<string>());
+				var dataAsync = PlayFabClientAPI.GetTitleDataAsync(new() { AuthenticationContext = authenticationContext });
+				titlePlayerEntityKey = new () { Id = _authenticationContext.EntityId, Type =  _authenticationContext.EntityType };
+				globalPlayerEntityKey = new() {Id = PlayFabId, Type = "master_player_account" };
 			
-			Player.myPlayfabId = ulong.Parse(PlayFabId, NumberStyles.AllowHexSpecifier);
-			var playfabId = Player.myPlayfabId.ToString("X");
-			Assert( playfabId == PlayFabId);
+				Player.myPlayfabId = ulong.Parse(PlayFabId, NumberStyles.AllowHexSpecifier);
+				var playfabId = Player.myPlayfabId.ToString("X");
+				Assert( playfabId == PlayFabId);
 			
 
-			/// Use auth here
-			await PlayerTables.LoadGamePlayers();
+				/// Use auth here
+				await PlayerTables.LoadGamePlayers();
 			
-			if (isNewUser )
-			{   // Set user Title Data
-				var hr = await PlayFabClientAPI.UpdateUserTitleDisplayNameAsync(new UpdateUserTitleDisplayNameRequest()
-				{
-					AuthenticationContext = authenticationContext,
-					DisplayName = playerName // Same as Title name
-				});
-				if (hr.Error != null)
-				{
-					await AppS.Failed(hr.Error.GenerateErrorReport());
-					// return;
-				}
+				if (isNewUser )
+				{   // Set user Title Data
+					var hr = await PlayFabClientAPI.UpdateUserTitleDisplayNameAsync(new UpdateUserTitleDisplayNameRequest()
+					{
+						AuthenticationContext = authenticationContext,
+						DisplayName = playerName // Same as Title name
+					});
+					if (hr.Error != null)
+					{
+						await AppS.Failed(hr.Error.GenerateErrorReport());
+						// return;
+					}
 
-				// new user
+					// new user
 
 				
 					int playerId =
@@ -292,106 +297,164 @@ namespace CnV
 					}
 					// no need to await? Maybe?
 					SaveLocalPlayerDataToPlayfab(playerId);
-			}
-			else
-			{
-				await LoadLocalPlayerDataFromPlayfab();
-			}
-
-			await PlayerTables.LoadWorldPlayers();
-			var news = await newsAsync;
-			if (news.Error != null)
-			{
-				foreach (var n in news.Result.News)
-				{
-
 				}
+				else
+				{
+					await LoadLocalPlayerDataFromPlayfab();
+				}
+
+				await PlayerTables.LoadWorldPlayers();
+				var news = await newsAsync;
+
+				if (news.Error == null)
+				{
+					await seenAsync;
+					foreach (var n in news.Result.News)
+					{
+						if (seenNews.V.Contains(n.NewsId) )
+						{
+							continue;
+						}
+
+						try
+						{
+						
+							var text = n.Body;
+							if (text != null)
+							{
+								await AppS.DispatchOnUIThreadTask(async () =>
+								{
+									var dialog = new WhatsNewDialog();
+									dialog.DefaultButton = ContentDialogButton.Primary;
+									dialog.fixesText.Text = text;
+									await dialog.ShowAsync2();
+								});
+							}
+
+							if (n.Timestamp <= DateTime.UtcNow)
+							{
+								seenNews.V.ArrayAppend(n.NewsId);
+								seenNews.Save(a => a);
+							}
+
+						}
+						catch (Exception e)
+						{
+							LogEx(e);
+						}
+
+
+					}
+				}
+
+				var data = await dataAsync;
+				if (data.Error == null)
+				{
+					if (data.Result.Data.TryGetValue("closed", out var closed ))
+					{
+						await AppS.DispatchOnUIThreadTask( () =>
+						{
+							App.window.Close();
+							return Task.CompletedTask;
+						});
+						return false;
+					}
+				}
+
+				//// wait until our alliance is fetched
+				while(!Alliance.diplomacyFetched)
+				{
+					await Task.Delay(2500);
+				}
+				//if(Alliance.hasAlliance)
+				//{
+				//	var groups = $"{World.world}_{Alliance.my.name}";
+				//	var group = await PlayFabGroupsAPI.GetGroupAsync(new GetGroupRequest() { AuthenticationContext = authenticationContext, GroupName = Alliance.my.name });
+				//	if(group.Error != null)
+				//	{
+				//		Log($"!!! Failed to GetGroup PlayFab: {group.Error.ErrorMessage}");
+				//		// group does not exist?
+				//		var hr = await PlayFabGroupsAPI.CreateGroupAsync(new CreateGroupRequest() { AuthenticationContext = authenticationContext, GroupName = Alliance.my.name });
+				//		if(hr.Error != null)
+				//		{
+				//			Log($"!!! Failed to CreateGroupAsync PlayFab: {hr.Error.ErrorMessage}");
+
+				//		}
+				//		else
+				//		{
+				//			//	PlayFabGroupsAPI.ApplyToGroupAsync(new PlayFab.GroupsModels.ApplyToGroupRequest() {AuthenticationContext=authenticationContext,AutoAcceptOutstandingInvite=true,Group= } );
+				//			//   hr.Result.
+				//		}
+
+
+				//	}
+				//	else
+				//	{
+				//		var hr = await PlayFabGroupsAPI.ListMembershipAsync(new ListMembershipRequest() { AuthenticationContext = authenticationContext, Entity = group.Result.Group });
+
+				//	}
+				//	// create a character for this world
+				//	//foreach(var ch in login.InfoResultPayload.CharacterList)
+				//	//{
+				//	//	ch.
+				//	//}
+
+				//}
+				//{
+				//	var group = await PlayFabGroupsAPI.GetGroupAsync(new GetGroupRequest()
+				//	{
+				//		AuthenticationContext = authenticationContext,
+				//		GroupName = $"W{JSClient.world}"
+				//	});
+				//	if(group.Error != null)
+				//	{
+				//		Log($"!!! Failed to GetGroup PlayFab: {group.Error.ErrorMessage}");
+				//		// group does not exist?
+				//		var hr = await PlayFabGroupsAPI.CreateGroupAsync(new CreateGroupRequest() { AuthenticationContext = authenticationContext, GroupName = Alliance.my.name });
+				//		if(hr.Error != null)
+				//		{
+				//			Log($"!!! Failed to CreateGroupAsync PlayFab: {hr.Error.ErrorMessage}");
+
+				//		}
+				//		else
+				//		{
+				//			//	PlayFabGroupsAPI.ApplyToGroupAsync(new PlayFab.GroupsModels.ApplyToGroupRequest() {AuthenticationContext=authenticationContext,AutoAcceptOutstandingInvite=true,Group= } );
+				//			//   hr.Result.
+				//		}
+
+
+				//	}
+				//	else
+				//	{
+				//		//var hr = await PlayFabGroupsAPI.ListGroupMembersAsync(new PlayFab.GroupsModels.ListGroupMembersRequest() { AuthenticationContext = authenticationContext, Entity = group.Result.Group });
+				//		//if(hr.Error!=null)
+				//		//{
+				//		//	Log(hr.Error);
+				//		//}
+				//		//else
+				//		//{
+				//		//	foreach(var r in hr.Result.Members)
+				//		//	{
+
+				//		//	}
+				//		//}
+
+				//	}
+				//	// create a character for this world
+				//	//foreach(var ch in login.InfoResultPayload.CharacterList)
+				//	//{
+				//	//	ch.
+				//	//}
+
+				//}
+
+				return true;
 			}
-
-			//// wait until our alliance is fetched
-			//while(!Alliance.diplomacyFetched)
-			//{
-			//	await Task.Delay(2500);
-			//}
-
-			//{ 
-			//	var group = await PlayFabGroupsAPI.GetGroupAsync(new PlayFab.GroupsModels.GetGroupRequest() { AuthenticationContext = authenticationContext, GroupName = Alliance.my.name });
-			//	if (group.Error != null)
-			//	{
-			//		Log($"!!! Failed to GetGroup PlayFab: {group.Error.ErrorMessage}");
-			//		// group does not exist?
-			//		var hr = await PlayFabGroupsAPI.CreateGroupAsync(new PlayFab.GroupsModels.CreateGroupRequest() { AuthenticationContext = authenticationContext, GroupName = Alliance.my.name });
-			//		if (hr.Error != null)
-			//		{
-			//			Log($"!!! Failed to CreateGroupAsync PlayFab: {hr.Error.ErrorMessage}");
-
-			//		}
-			//		else
-			//		{
-			//			//	PlayFabGroupsAPI.ApplyToGroupAsync(new PlayFab.GroupsModels.ApplyToGroupRequest() {AuthenticationContext=authenticationContext,AutoAcceptOutstandingInvite=true,Group= } );
-			//			//   hr.Result.
-			//		}
-
-
-			//	}
-			//	else
-			//	{
-			//		var hr = await PlayFabGroupsAPI.ListMembershipAsync(new PlayFab.GroupsModels.ListMembershipRequest() { AuthenticationContext = authenticationContext, Entity = group.Result.Group });
-
-			//	}
-			//	// create a character for this world
-			//	//foreach(var ch in login.InfoResultPayload.CharacterList)
-			//	//{
-			//	//	ch.
-			//	//}
-
-			//}
-			//{
-			//	var group = await PlayFabGroupsAPI.GetGroupAsync(new PlayFab.GroupsModels.GetGroupRequest() { AuthenticationContext = authenticationContext, 
-			//		GroupName = $"W{JSClient.world}" });
-			//	if (group.Error != null)
-			//	{
-			//		Log($"!!! Failed to GetGroup PlayFab: {group.Error.ErrorMessage}");
-			//		// group does not exist?
-			//		var hr = await PlayFabGroupsAPI.CreateGroupAsync(new PlayFab.GroupsModels.CreateGroupRequest() { AuthenticationContext = authenticationContext, GroupName = Alliance.my.name });
-			//		if (hr.Error != null)
-			//		{
-			//			Log($"!!! Failed to CreateGroupAsync PlayFab: {hr.Error.ErrorMessage}");
-
-			//		}
-			//		else
-			//		{
-			//			//	PlayFabGroupsAPI.ApplyToGroupAsync(new PlayFab.GroupsModels.ApplyToGroupRequest() {AuthenticationContext=authenticationContext,AutoAcceptOutstandingInvite=true,Group= } );
-			//			//   hr.Result.
-			//		}
-
-
-			//	}
-			//	else
-			//	{
-			//		//var hr = await PlayFabGroupsAPI.ListGroupMembersAsync(new PlayFab.GroupsModels.ListGroupMembersRequest() { AuthenticationContext = authenticationContext, Entity = group.Result.Group });
-			//		//if(hr.Error!=null)
-			//		//{
-			//		//	Log(hr.Error);
-			//		//}
-			//		//else
-			//		//{
-			//		//	foreach(var r in hr.Result.Members)
-			//		//	{
-
-			//		//	}
-			//		//}
-
-			//	}
-			//	// create a character for this world
-			//	//foreach(var ch in login.InfoResultPayload.CharacterList)
-			//	//{
-			//	//	ch.
-			//	//}
-
-			//}
-
-			return true;
+			catch (Exception e)
+			{
+				LogEx(e);
+				return false;
+			}
 		}
 		
 		public static async Task<bool> SigninLegacy(string playerName)

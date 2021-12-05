@@ -25,6 +25,7 @@ using ContentDialogResult = Microsoft.UI.Xaml.Controls.ContentDialogResult;
 namespace CnV;
 
 using System;
+using System.IO;
 using System.Linq;
 using Draw;
 using Game;
@@ -1102,7 +1103,7 @@ public static class BuildQueue
 	//		public static Utf8ValueStringBuilder commandBuilder = ZString.CreateUtf8StringBuilder();
 
 	public static StorageFolder folder => ApplicationData.Current.LocalFolder;
-	static string fileName => $"buildQueue{JSClient.world}_{Player.myName}.json";
+	//static string fileName => $"buildQueue{JSClient.world}_{Player.myName}.json";
 
 	public static bool initialized => saveTimer != null;
 	public static async Task Enqueue(this int cid,BuildQueueItem b)
@@ -1231,6 +1232,8 @@ public static class BuildQueue
 		SaveAll().Wait();
 
 	}
+
+	private static string fileName => $"buildQueue{JSClient.world}_{Player.myName}.json";
 	static internal async Task SaveAll()
 	{
 
@@ -1265,12 +1268,7 @@ public static class BuildQueue
 
 					try
 					{
-						var file = await folder.CreateFileAsync(fileName,CreationCollisionOption.ReplaceExisting);
-						if(file != null)
-						{
-							await FileIO.WriteTextAsync(file,str);
-						}
-
+						LocalFiles.Write(fileName,str);
 					}
 					catch(Exception ex)
 					{
@@ -1305,6 +1303,8 @@ public static class BuildQueue
 			Debug.LogEx(__ex);
 		}
 	}
+
+	
 
 	static internal void SaveTimer_Tick(object sender,System.Timers.ElapsedEventArgs e)
 	{

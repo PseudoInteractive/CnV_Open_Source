@@ -24,7 +24,10 @@ namespace CnV
 
 	public partial class AGame
 	{
-	public static async void InitializeForWorld()
+		private static BackgroundTask reinforcementsTask;
+		private static BackgroundTask senInfoTask;
+
+		public static async void InitializeForWorld()
 	{
 
 		//					   CnVChatClient.instance = new();
@@ -47,7 +50,6 @@ namespace CnV
 			ShellPage.canvasVisible = true;
 			//   ShellPage.isHitTestVisible = true;
 			///                   await GetCitylistOverview();
-			Task.Delay(3000).ContinueWith((_) => City.UpdateSenatorInfo());  // no async
 			TileData.Ctor(false);
 			//if (TipsSeen.instance.refresh == false
 			//||TipsSeen.instance.chat0==false
@@ -90,10 +92,14 @@ namespace CnV
 			TabPage.ShowTabs();
 			CityCustom.Load();
 
-			await Task.Delay(1000);
+			
+				//	await Task.Delay(1000);
 
-		//	System.GC.Collect(2,GCCollectionMode.Default,true,true);
-		//	GCSettings.LatencyMode = GCLatencyMode.SustainedLowLatency;
+				//	System.GC.Collect(2,GCCollectionMode.Default,true,true);
+
+				//	GCSettings.LatencyMode = GCLatencyMode.SustainedLowLatency;
+				reinforcementsTask = new(interval:64.0f,()=> ReinforcementsOverview.instance.Post(),initialDelay:4.0f );
+				senInfoTask = new( interval: 68f, City.UpdateSenatorInfo, 3.0f);
 		}
 		catch(Exception ex)
 		{

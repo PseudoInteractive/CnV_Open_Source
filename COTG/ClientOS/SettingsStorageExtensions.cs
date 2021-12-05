@@ -96,7 +96,7 @@ namespace CnV.Helpers
 				return Array.Empty<byte>();
 			}
 		}
-
+		
 		public static async Task<T> ReadMessagePack< T>(this StorageFolder folder,string name,  Func<T> _default =null)
 		{
 			return AMessagePack.Deserialize<T>(await ReadAsync(folder,name), _default );
@@ -119,11 +119,12 @@ namespace CnV.Helpers
 			
 
 			// don't block on this save
-			if(!prior.IsNullOrEmpty() )
-				await FileIO.WriteTextAsync(await folder.CreateFileAsync(GetFileName($"{name}___{CnVServer.ServerTime().FormatFileTimeToMinute()}___"), CreationCollisionOption.ReplaceExisting), prior);
-	
-			var file = await folder.CreateFileAsync(GetFileName(name), CreationCollisionOption.ReplaceExisting);
-			await FileIO.WriteTextAsync(file, fileContent);
+			if (!prior.IsNullOrEmpty() )
+			{
+				LocalFiles.Write($"{name}___{CnVServer.ServerTime().FormatFileTimeToMinute()}___",prior);
+			}
+
+			LocalFiles.Write(GetFileName(name),fileContent);
 		}
 		public static async Task<(T d,string prior)> ReadAsyncForBackup<T>(this StorageFolder folder, string name, T _default)
 		{

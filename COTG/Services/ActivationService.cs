@@ -110,8 +110,8 @@ namespace CnV.Services
 				Log("Activate!Done");
 				await Task.Delay(500);
 				Log("Max");
-				App.window.Maximize();
-		//		_ = PInvoke.User32.ShowWindow(WinRT.Interop.WindowNative.GetWindowHandle(App.window), PInvoke.User32.WindowShowStyle.SW_MAXIMIZE);
+//				App.window.Maximize();
+				_ = PInvoke.User32.ShowWindow(WinRT.Interop.WindowNative.GetWindowHandle(App.window), PInvoke.User32.WindowShowStyle.SW_MAXIMIZE);
 				//User32.WINDOWPLACEMENT placement = new()
 				//{
 				//	length = Unsafe.SizeOf<User32.WINDOWPLACEMENT>(),

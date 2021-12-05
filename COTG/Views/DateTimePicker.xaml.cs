@@ -191,12 +191,11 @@ namespace CnV.Views
 					try
 					{
 						++disableFocusNotification;
-						for (int i = 0; i < 3; ++i)
-						{// Go to the "Done" button
-							var temp = FocusManager.TryMoveFocus(FocusNavigationDirection.Next);
-							Assert(temp);
-			
-						}
+						//for (int i = 0; i < 3; ++i)
+						//{// Go to the "Done" button
+						//	var temp = FocusManager.TryMoveFocus(FocusNavigationDirection.Next);
+						//	Assert(temp);
+						//}
 					}
 					finally 
 					{ 

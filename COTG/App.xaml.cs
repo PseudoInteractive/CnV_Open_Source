@@ -421,12 +421,11 @@ namespace CnV
 			}
 		}
 
-		public static int lastInputTick;
-		public static void InputRecieved() => App.lastInputTick = Environment.TickCount;
+		
 
 		private static ConcurrentQueue<Action> idleTasks = new ConcurrentQueue<Action>();
 		private static ConcurrentQueue<Func<Task>> throttledTasks = new ConcurrentQueue<Func<Task>>();
-		public static DesktopWindow window;
+		public static Window window;
 		static DateTimeOffset activeStart = DateTimeOffset.UtcNow;
 		//private static Microsoft.Extensions.Configuration.IConfigurationRoot BuildConfig()
 		//{
@@ -556,8 +555,10 @@ namespace CnV
 
 		private void Window_Closed(object sender,WindowEventArgs args)
 		{
+			BackgroundTask.dispatcherQueueController.ShutdownQueueAsync();
+
 			Log("Closed!");
-			Assert(state == State.closed);
+		//	Assert(state == State.closed);
 			SwitchToBackground();
 		}
 
@@ -601,7 +602,7 @@ namespace CnV
 			//	var window = Window.Current;
 				window.VisibilityChanged += Window_VisibilityChanged;
 				window.Closed+=Window_Closed;
-				window.WantClose+=Window_Closing;
+		//		window.WantClose+=Window_Closing;
 			//	window.Activated+=Window_Activated;
 			}
 			await ActivationService.ActivateAsync(args,wasRunning);
@@ -886,6 +887,7 @@ namespace CnV
 			return rv;
 		}
 
+		public static void InputRecieved() => AppS.InputRecieved();
 
 		//private static void OnPointerMoved(CoreWindow sender, PointerEventArgs args)
 		//{
@@ -897,7 +899,6 @@ namespace CnV
 		//	ShellPage.UpdateMousePosition(args,ShellPage.instance);
 		//	ShellPage.UpdateFocus();
 		//}
-
 		private static async void ProcessIdleTasks()
 		{
 	//		await TaskScheduler.Default;
@@ -905,7 +906,7 @@ namespace CnV
 			{
 				var tick = Environment.TickCount;
 				// must be idle for at least 4 s
-				if ((tick - lastInputTick).Abs() < 4 * 1000)
+				if (!CnV.AppS.isPlayerIdle )
 				{
 					// not idle
 					await Task.Delay(4 * 1000).ConfigureAwait(false);

@@ -823,7 +823,7 @@ namespace CnV.Services
 			{
 				LogEx(e);
 			}
-			Note.Show($"Reinforcements updated {cityCount} cities reinforced with {reinCount} orders and {ts} TS");
+			//Note.Show($"Reinforcements updated {cityCount} cities reinforced with {reinCount} orders and {ts} TS");
 		}
 
 		private static bool IsDigitOrComma(string str, int tcEnd)

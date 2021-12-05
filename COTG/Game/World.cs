@@ -1450,7 +1450,7 @@ namespace CnV.Game
 		const int continentCityThreshHold2 = 550;
 		const int continentCityThreshHold1 = 500;
 		const int continentCityThreshHold0 = 450;
-		public const int world = 0;
+		public static int world => CnVServer.world;
 
 		public static async void UpdateChangeMap()
 		{

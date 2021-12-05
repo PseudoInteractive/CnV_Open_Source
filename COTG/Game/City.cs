@@ -840,7 +840,7 @@ namespace CnV.Game
 				{
 					if(trintr.ValueKind == JsonValueKind.Array && trintr.GetArrayLength() > 0)
 					{
-						var l = new List<Reinforcement>(reinforcementsIn.WhereNotMine());
+						var l = new List<Reinforcement>();//reinforcementsIn.WhereNotMine());
 
 						foreach(var rein in trintr.EnumerateArray())
 						{
@@ -860,6 +860,10 @@ namespace CnV.Game
 						}
 
 						SetReinforcementsIn(l);
+					}
+					else
+					{
+					//	Assert(false);
 					}
 
 				}
@@ -1429,7 +1433,7 @@ namespace CnV.Game
 						}
 					}
 
-					changed.NotifyChange(nameof(City.senny));
+					changed.NotifyChange();
 				}
 			}
 			catch (Exception ex)

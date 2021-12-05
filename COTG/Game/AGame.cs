@@ -1560,7 +1560,7 @@ namespace CnV
 
 					if(!focusOnCity)
 					{
-						var defenderVisible = IncomingTab.IsVisible() || NearDefenseTab.IsVisible() || SettingsPage.incomingAlwaysVisible;
+						var defenderVisible = IncomingTab.IsVisible() || ReinforcementsTab.instance.isFocused || NearDefenseTab.IsVisible() || SettingsPage.incomingAlwaysVisible;
 						var outgoingVisible = OutgoingTab.IsVisible() || SettingsPage.attacksAlwaysVisible;
 						{
 							//if (DefenseHistoryTab.IsVisible() || HitTab.IsVisible())
@@ -1996,7 +1996,7 @@ namespace CnV
 
 								}
 							}
-							if(!defenderVisible && !attacksVisible)
+							//if(!defenderVisible && !attacksVisible)
 							{
 								if(Spot.settles.Any())
 								{

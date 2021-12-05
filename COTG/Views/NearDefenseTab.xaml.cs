@@ -85,7 +85,7 @@ namespace CnV.Views
 						defendants.Add(City.GetBuild(),true);
 				}
 
-				var viaWater = sendViaWater && defendants.Any(d => d.isOnWater);
+				var viaWater = sendViaWater;// && defendants.Any(d => d.isOnWater);
 
 //				if (defendants != null && defendant.isCityOrCastle)
 				{

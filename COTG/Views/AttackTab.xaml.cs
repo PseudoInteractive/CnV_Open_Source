@@ -469,7 +469,8 @@ namespace CnV.Views
                     var spot = City.GetOrAdd(att.cid);
 					att.CopyTo(spot);
 					attacks.Add(spot);
-                }
+
+			    }
                 var targets = new List<City>();
                 if (plan.targets != null)
                 {
@@ -478,6 +479,7 @@ namespace CnV.Views
                         var t = City.GetOrAdd(target.cid);
 						target.CopyTo(t);
                         targets.Add(t);
+						
 
                     }
                 }
@@ -516,6 +518,7 @@ namespace CnV.Views
 				using var _ = await TouchLists();
 				WritebackAttacks();
 				DoRefresh();
+				City.UpdateSenatorInfo();
 
 			}
 			else
@@ -2108,7 +2111,7 @@ namespace CnV.Views
 			foreach(var cid in sel)
 			{
 				var city = new AttackPlanCity(cid);
-				if(Alliance.IsAllyOrNap(cid))
+				if(City.Get(cid).IsAllyOrNap() )
 				{
 					if(friend==AttackType.invalid)
 					{

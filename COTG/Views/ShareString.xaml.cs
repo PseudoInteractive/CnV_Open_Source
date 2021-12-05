@@ -494,10 +494,10 @@ namespace CnV.Views
 							await SetupTradeDefaults();
 							TradeBlade.IsOpen=true;
 						}
+						SetFromSS(i.shareStringWithJson,setTags: setTags,setRes: setRes);
+
 						NameBlade.IsOpen=true;
 						AutobuildBlade.IsOpen=true;
-
-						SetFromSS(i.shareStringWithJson,setTags: setTags,setRes: setRes);
 					}
 					else
 					{

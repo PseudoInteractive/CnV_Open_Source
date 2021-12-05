@@ -29,20 +29,20 @@ namespace CnV
         }
     }
 
-    public class WindowClosingEventArgs : EventArgs
-    {
-        public DesktopWindow Window { get; private set; }
-        public WindowClosingEventArgs(DesktopWindow window)
-        {
-            Window = window;
-        }
+    //public class WindowClosingEventArgs : EventArgs
+    //{
+    //    public DesktopWindow Window { get; private set; }
+    //    public WindowClosingEventArgs(DesktopWindow window)
+    //    {
+    //        Window = window;
+    //    }
 
-        public void TryCancel()
-        {
-            Window.IsClosing = true;
-            Window.Close();
-        }
-    }
+    //    public void TryCancel()
+    //    {
+    //        Window.IsClosing = true;
+    //        Window.Close();
+    //    }
+    //}
 
     public class WindowDpiChangedEventArgs : EventArgs
     {
