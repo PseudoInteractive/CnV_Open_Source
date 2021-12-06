@@ -168,7 +168,6 @@
 				<tg:DataGridTimeColumn
                                                    PropertyName="time"
                                                    CellContentFormat="{}{0:dd',' HH':'mm':'ss}"
-Width=""
                                                    CellContentStyle="{StaticResource CenterAlign}" />
 				<tg:DataGridTextColumn PropertyName="sXY"
 

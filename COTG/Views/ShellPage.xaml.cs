@@ -1430,16 +1430,16 @@ namespace CnV.Views
 							instance.webView.Margin= new(htmlShift,0,0,0);
 							//							var delta = -htmlShift + (canvasBaseX - initialWidth0);
 							var gridWidth = instance.grid.ActualWidth;
-							instance.grid.ColumnDefinitions[0].Width = new GridLength(canvasBaseX,GridUnitType.Pixel);
+							instance.grid.ColumnDefinitions[0].Width = new GridLength(canvasBaseX.Max(0),GridUnitType.Pixel);
 							if(updateLayout)
 							{
 								var newWidth1 = ((gridWidth-canvasScaledX)*szC -(_canvasBaseX-canvasScaledX)).RoundToInt().Max0();
-								instance.grid.ColumnDefinitions[1].Width = new(newWidth1);//	instance.grid.RowDefinitions[0].Height = new(canvasYOffset);
+								instance.grid.ColumnDefinitions[1].Width = new(newWidth1.Max(0));//	instance.grid.RowDefinitions[0].Height = new(canvasYOffset);
 								instance.grid.ColumnDefinitions[2].Width = new GridLength(1,GridUnitType.Star);//	instance.grid.RowDefinitions[0].Height = new(canvasYOffset);
 							}
 							else
 							{
-								instance.grid.ColumnDefinitions[2].Width = new(initialWidth2);// leave 2 as is	instance.grid.ColumnDefinitions[1].Width = GridLength.Auto;
+								instance.grid.ColumnDefinitions[2].Width = new(initialWidth2.Max(0));// leave 2 as is	instance.grid.ColumnDefinitions[1].Width = GridLength.Auto;
 								instance.grid.ColumnDefinitions[1].Width = new GridLength(1,GridUnitType.Star);//	GridLength.Auto;//	instance.grid.RowDefinitions[0].Height = new(canvasYOffset);
 							}
 

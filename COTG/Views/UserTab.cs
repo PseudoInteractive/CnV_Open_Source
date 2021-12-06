@@ -278,7 +278,7 @@ namespace CnV.Views
 				return;
 			TabPage.Close(this);
 		}
-		public void ShowOrAdd(bool selectMe = true,bool onlyIfClosed = false)
+		public void ShowOrAdd(bool selectMe = true,bool onlyIfClosed = false,TabPage page=null)
 
 		{
 			if(onlyIfClosed && isOpen)
@@ -293,7 +293,7 @@ namespace CnV.Views
 				return;
 			}
 
-			defaultPage.Add(this,selectMe);
+			(page??defaultPage).Add(this,selectMe);
 		}
 
 		protected void SfCellTapped(object sender,Syncfusion.UI.Xaml.DataGrid.GridCellTappedEventArgs e)

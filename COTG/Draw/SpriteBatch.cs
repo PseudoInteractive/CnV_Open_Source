@@ -558,7 +558,8 @@ namespace CnV.Draw
 		}
 		public void AddQuadWithShadow(int layer,int shadowLayer, Material texture, Vector2 c0, Vector2 c1, Color color,Color shadowColor, (float depth00, float depth10, float depth01, float depth11) depth, (float depth00, float depth10, float depth01, float depth11) depthShadow, Vector2 shadowOffset)
 		{
-			AddQuad(shadowLayer, texture, c0+shadowOffset, c1 + shadowOffset, shadowColor, depthShadow);
+			if(AGame.wantShadow)
+				AddQuad(shadowLayer, texture, c0+shadowOffset, c1 + shadowOffset, shadowColor, depthShadow);
 			AddQuad(layer, texture, c0, c1, color, depth);
 
 		}

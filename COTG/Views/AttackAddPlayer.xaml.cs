@@ -99,7 +99,7 @@ namespace CnV.Views
 						if (AttackTab.attacks.Any(a => a.cid==cid))
 							continue;
 						city.classification = baseClassification;
-						toAdd.Add(new AttackPlanCity(city, baseClassification == Spot.Classification.se ? AttackType.se
+						toAdd.Add(new AttackPlanCity(city,true, baseClassification == Spot.Classification.se ? AttackType.se
 							: ((wantAcademy.HasValue ? wantAcademy.Value : city.hasAcademy.GetValueOrDefault()) ? AttackType.senator : AttackType.assault)));
 
 					}

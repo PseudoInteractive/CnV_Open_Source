@@ -454,10 +454,6 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-	<Page Include="Styles\SharedResources.xaml">
-	  <Generator>MSBuild:Compile</Generator>
-	  <SubType>Designer</SubType>
-    </Page>
     <Page Include="Styles\_Colors.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -728,6 +724,7 @@
     <None Remove="Strings\en-us\Resources.resw" />
     <None Remove="Package.appxmanifest" />
     <None Remove="Styles\CommandBar.xaml" />
+    <None Remove="Styles\SharedResources.xaml" />
     <None Remove="Views\CityBox.xaml" />
     <None Remove="Views\CityRename.xaml" />
     <None Remove="Views\DefenderPage.xaml" />

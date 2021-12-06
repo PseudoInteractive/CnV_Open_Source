@@ -133,7 +133,8 @@ namespace CnV.Game
 			return  (float)tt.TravelTimeMinutes(cid, otherCid);
 		}
 
-		public bool isAttack => city.IsAllyOrNap(); // true for attack, false for target, must be set on initialization
+		[JsonInclude]
+		public bool isAttack;// => city.IsAllyOrNap(); // true for attack, false for target, must be set on initialization
 		public bool isTarget => !isAttack; // true for attack, false for target
 										   //public DateTimeOffset lastAccessed { get; set; } // lass user access
 
@@ -155,8 +156,9 @@ namespace CnV.Game
 		public uint spatialIndex => cid.ZCurveEncodeCid();
 
 
-		public void Set(City city, AttackType _attackType =AttackType.invalid, byte troopType = ttPending)
+		public void Set(City city,bool isAttack, AttackType _attackType =AttackType.invalid, byte troopType = ttPending)
 		{
+			this.isAttack = isAttack;
 			cid = city.cid;
 			if (troopType == ttPending)
 			{
@@ -178,8 +180,8 @@ namespace CnV.Game
 					attackType = AttackType.invalid; //??
 			}
 		}
-		public AttackPlanCity(City city, AttackType _attackType = AttackType.invalid, byte troopType = ttPending) => Set(city, _attackType, troopType);
-		public AttackPlanCity(int cid, AttackType _attackType = AttackType.invalid, byte troopType = ttPending) => Set(City.Get(cid), _attackType, troopType);
+		public AttackPlanCity(City city,bool isAttack, AttackType _attackType = AttackType.invalid, byte troopType = ttPending) => Set(city,isAttack, _attackType, troopType);
+		public AttackPlanCity(int cid,bool isAttack, AttackType _attackType = AttackType.invalid, byte troopType = ttPending) => Set(City.Get(cid), isAttack, _attackType, troopType);
 		public AttackPlanCity() { }
 		public async Task GuessTroopType()
 		{
@@ -324,15 +326,17 @@ namespace CnV.Game
 		public static AttackPlanCity Get(City city) => Get(city.cid);
 		public static void Remove(int cid)
 		{
-			AddOrUpdate(new AttackPlanCity(cid,AttackType.none));
+			AddOrUpdate(new AttackPlanCity(cid,true,AttackType.none));
+			AddOrUpdate(new AttackPlanCity(cid,false, AttackType.none));
 		}
 		public static void Remove(City city) => Remove(city.cid);
 		public static bool AddOrUpdate(AttackPlanCity c)
 		{
 			var city = c.city;
 			ref var l = ref plan.attacks;
-			if(!city.IsAllyOrNap() )
-				l = ref plan.targets;
+			if(c.isTarget )
+				l= ref plan.targets ;
+
 			if (c.attackType == AttackType.none)
 			{
 				l = l.Where( a => a.cid != c.cid).ToArray();

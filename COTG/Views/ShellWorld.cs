@@ -51,8 +51,8 @@ namespace CnV.Views
 
 
 		public float eventTimeOffset;
-		public static string toolTip;
-		public static string contToolTip;
+		public static string? toolTip;
+		public static string? contToolTip;
 		public static string debugTip;
 		public static int lastCont;
 		public static DispatcherQueueController _queuecontroller;

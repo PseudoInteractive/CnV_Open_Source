@@ -29,7 +29,7 @@
 		<Grid x:Name="HeroGrid" 
 	 >
 			<Grid.ColumnDefinitions>
-				<ColumnDefinition Width="auto" />
+				<ColumnDefinition Width="Auto" />
 				<ColumnDefinition Width="*" />
 			</Grid.ColumnDefinitions>
 			<StackPanel Margin="8" >

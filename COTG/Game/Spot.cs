@@ -843,15 +843,16 @@ namespace CnV.Game
 				var city = City.Get(cid);
 				{
 					using var __lock = await AttackTab.instance.TouchLists();
-
-					if (city.IsAllyOrNap())
+					var prior = AttackPlan.Get(cid);
+					var isAttack = prior != null ? prior.isAttack : city.IsAllyOrNap();
+					if (isAttack)
 					{
-						AttackPlan.AddOrUpdate( new(city,city.attackType switch
+						AttackPlan.AddOrUpdate( new(city, isAttack,city.attackType switch
 						{ AttackType.assault => AttackType.senator, AttackType.senator => AttackType.se, AttackType.se => AttackType.none, _ => AttackType.assault }));
 					}
 					else
 					{
-						AttackPlan.AddOrUpdate( new(city, city.attackType switch
+						AttackPlan.AddOrUpdate( new(city, isAttack, city.attackType switch
 						{
 							AttackType.seFake => AttackType.se,
 							AttackType.se => AttackType.senatorFake,
@@ -2056,11 +2057,9 @@ namespace CnV.Game
 						var afly = aWar.AddSubMenu("Attack Planner");
 						if(!Alliance.IsAllyOrNap(this.allianceId))
 						{
-							afly.AddItem("Add as Target" + multiString,(_,_) => AttackTab.AddTarget(sel));
 							afly.AddItem("Ignore Player" + multiString,(_,_) => AttackTab.IgnorePlayer(cid.CidToPid()));
 						}
-						if(!Alliance.IsEnemy(this.allianceId))
-						{
+						afly.AddItem("Add as Target" + multiString, (_, _) => AttackTab.AddTarget(sel));
 							afly.AddItem("Add as Attacker" + multiString,(_,_) =>
 							{
 								using var work = new WorkScope("Add as attackers..");
@@ -2074,7 +2073,7 @@ namespace CnV.Game
 								Note.Show($"Added attacker {s}");
 
 							});
-						};
+						
 					}
 					//else
 					if(!Alliance.IsAllyOrNap(this.allianceId))

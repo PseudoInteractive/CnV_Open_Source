@@ -154,6 +154,8 @@ namespace CnV
 		public static IndexBuffer tesselatedWorldIB;
 		public static Mesh tesselatedWorld;
 		public static EffectPass GetTileEffect() => (SettingsPage.lighting != Lighting.none) ? litEffect : unlitEffect;
+		public static bool wantLighting => (SettingsPage.lighting != Lighting.none);
+		public static bool wantShadow => (SettingsPage.lighting != Lighting.none);
 
 		public static Color CColor(byte r = 0,byte g = 0,byte b = 0,byte a = 255)
 		{
@@ -213,7 +215,7 @@ namespace CnV
 		public static float bmFontScale = 0.125f;
 		public static Texture2D fontTexture;
 		static readonly Color attackColor = Color.White;
-		static Color ShadowColor(float alpha,bool highlight = false) => new Color(highlight ? 32 : 0,highlight ? 0 : 0,highlight ? 0 : 32,(int)(220 * alpha));
+		static Color ShadowColor(float alpha,bool highlight = false) => new Color(highlight ? 16 : 0,highlight ? 0 : 0,highlight ? 0 : 8,(int)(220 * alpha));
 		static readonly Color defenseColor = new Color(255,20,160,160);
 		static readonly Color defenseArrivedColor = new Color(255,20,255,160);
 		static readonly Color artColor = Color.DarkBlue;
@@ -1450,7 +1452,7 @@ namespace CnV
 										if(tile.material == null)
 											continue;
 
-										for(int isShadow = layer.wantShadow ? 2 : 1;--isShadow >= 0;)
+										for(int isShadow = layer.wantShadow&&wantShadow ? 2 : 1;--isShadow >= 0;)
 										{
 											if(isShadow == 1 && !tile.wantShadow)
 											{
@@ -2486,7 +2488,7 @@ namespace CnV
 
 		const float actionStopDistance = 48.0f;
 		private void DrawAction(float timeToArrival,float journeyTime,float rectSpan,Vector2 c0,Vector2 c1,Color color,
-		Material bitmap,bool applyStopDistance,Army army,float alpha = 1,float lineThickness = lineThickness,bool highlight = false)
+		Material bitmap,bool applyStopDistance,Army? army,float alpha = 1,float lineThickness = lineThickness,bool highlight = false)
 		{
 			if(IsSegmentCulled(c0,c1))
 				return;
@@ -2530,9 +2532,10 @@ namespace CnV
 			}
 			if(highlight)
 				lineThickness *= 2;
-			var shadowColor = ShadowColor(alpha,highlight);
-			DrawLine(Layer.effectShadow,c0,c1,GetLineUs(c0,c1),shadowColor,zEffectShadow,thickness: lineThickness);
-			if(applyStopDistance)
+			var shadowColor = ShadowColor(1.0f,highlight);
+		//	if(wantShadow)
+				DrawLine(Layer.effectShadow,c0,c1,GetLineUs(c0,c1),shadowColor,zEffectShadow,thickness: lineThickness);
+			if(applyStopDistance && wantShadow)
 				DrawSquare(Layer.effectShadow,c0,shadowColor,zEffectShadow);
 			DrawLine(Layer.action + 2,c0,mid,GetLineUs(c0,mid),color,zLabels,thickness: lineThickness);
 			if(applyStopDistance)
@@ -2597,7 +2600,7 @@ namespace CnV
 		private static void DrawRectOutlineShadow(int layer,Vector2 c0,Vector2 c1,Color color,float thickness = 3,float expand = 0)
 		{
 			DrawRectOutline(layer,c0,c1,color,zCities,thickness,expand);
-			if(AGame.parallaxGain > 0)
+			if(AGame.parallaxGain > 0 && wantShadow)
 				DrawRectOutline(Layer.tileShadow,c0 +shadowOffset*0,c1+shadowOffset*0,color.GetShadowColorDark(),0.0f,thickness,expand);
 		}
 		private static void DrawRectOutlineShadow(int layer,int cid,Color col,string label = null,float thickness = 3,float expand = 0)
@@ -2633,7 +2636,7 @@ namespace CnV
 		private static void DrawDiamondShadow(int layer,Vector2 c0,Vector2 c1,Color color,float thickness,float expand)
 		{
 			DrawDiamond(layer,c0,c1,color,zCities,thickness,expand);
-			if(AGame.parallaxGain > 0)
+			if(AGame.parallaxGain > 0 && wantShadow)
 				DrawDiamond(Layer.tileShadow,c0 + shadowOffset*0,c1 + shadowOffset*0,color.GetShadowColorDark(),0f,thickness,expand);
 		}
 		private static void DrawDiamondShadow(int layer,int cid,Color col,string label = null,float thickness = 3,float expand = 0)
@@ -2686,7 +2689,8 @@ namespace CnV
 		public static void DrawAccent(Vector2 c,float radius,float angularSpeed,Color brush)
 		{
 			var angle = angularSpeed * AGame.animationT;
-			DrawAccentBase(c.X,c.Y,radius,angle,brush.GetShadowColorDark(),Layer.effectShadow,zEffectShadow);
+			if(wantShadow)
+				DrawAccentBase(c.X,c.Y,radius,angle,brush.GetShadowColorDark(),Layer.effectShadow,zEffectShadow);
 			DrawAccentBase(c.X,c.Y,radius,angle,brush,Layer.overlay,zLabels);
 		}
 		public static void DrawAccent(int cid,float angularSpeedBase,Color brush,float radiusScale = 1.0f)

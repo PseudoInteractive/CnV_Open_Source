@@ -38,8 +38,7 @@ namespace CnV.Views
         public static float woodStoneRatio = -1;
         public static int reserveWood = 0;
         public static int reserveStone = 0;
-		public static bool proportionateToWhatsNeeded = true;
-
+        public static bool viaWater;
 		public string[] priorityNames = { "NA","Low","Medium","High","Do Not Send" };
 		NotifyCollection<City> donationGridSource = new();
 
@@ -176,7 +175,8 @@ public class BlessedTapCommand : DataGridCommand
                                     return;
 
                                 }
-                                var useShips = sender.cid.CidToContinent() != i.cid.CidToContinent();
+
+                                var useShips = DonationTab.viaWater;//;sender.cid.CidToContinent() != i.cid.CidToContinent();
                                 if (useShips)
                                 {
 
@@ -218,7 +218,7 @@ public class BlessedTapCommand : DataGridCommand
                                         wood = (int)(wood * ratio);
                                         stone = (int)(stone * ratio);
                                         float denom = (wood + stone);
-                                        var desRatio = DonationTab.proportionateToWhatsNeeded && (i.wood > 0 || i.stone > 0) ?
+                                        var desRatio = SettingsPage.donationsProportionateToWhatsNeeded && (i.wood > 0 || i.stone > 0) ?
 												   (float)i.wood / (i.wood + i.stone).Max(1) :
 												   DonationTab.woodStoneRatio;
                                         if (desRatio >= 0)

@@ -469,9 +469,9 @@ namespace CnV.Views
 
 
 			var rv = new MenuFlyoutItem() { DataContext=tab,Text = title,Icon= GetOldIconForTab(tab) };
-			static void Rv_Click(object sender,RoutedEventArgs e)
+			void Rv_Click(object sender,RoutedEventArgs e)
 			{
-				((sender as MenuFlyoutItem).DataContext as UserTab).ShowOrAdd(true);
+				((sender as MenuFlyoutItem).DataContext as UserTab).ShowOrAdd(true,page:this);
 			}
 			rv.Click += Rv_Click;
 			return rv;

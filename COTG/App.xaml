@@ -31,7 +31,7 @@
 					<Color x:Key="SystemAccentColorLight2">#FF21145B</Color>
 					<Color x:Key="SystemAccentColorLight3">#FF160F51</Color>
 					<Color x:Key="RegionColor">#FF153A35</Color>
-					<SolidColorBrush x:Key="RegionBrush" Color="{StaticResource RegionColor}" />
+					<SolidColorBrush x:Key="RegionBrush" Color="#FF153A35" />
 				</ResourceDictionary>
 
 				<ResourceDictionary Source="/Styles/_Colors.xaml" />
@@ -40,7 +40,7 @@
 				<ResourceDictionary Source="/Styles/TextBlock.xaml" />
 				<ResourceDictionary Source="/Styles/Page.xaml" />
 				<ResourceDictionary Source="/Styles/BattleReport.xaml" />
-				<ResourceDictionary Source="/Styles/SharedResources.xaml" />
+				<!--<ResourceDictionary Source="/Styles/SharedResources.xaml" />-->
 
 
 			</ResourceDictionary.MergedDictionaries>

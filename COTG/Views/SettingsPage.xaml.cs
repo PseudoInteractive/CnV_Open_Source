@@ -94,6 +94,8 @@ namespace CnV.Views
 		}
 		public static Lighting lighting = Lighting.day;
 
+		public static bool donationsProportionateToWhatsNeeded = true;
+
 		public static string playerName = string.Empty;
 		public static string playerEmail = string.Empty;
 		public static string playerPassword = string.Empty;
@@ -380,6 +382,8 @@ namespace CnV.Views
 			}
 			try
 			{
+				// try loading as dictionary
+
 			//	LoadPinned();
 				//reqWood = st.Read(nameof(reqWood), 160000);
 				//reqStone = st.Read(nameof(reqWood), 205000);

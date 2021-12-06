@@ -326,6 +326,7 @@ namespace CnV
 								{
 									var dialog = new WhatsNewDialog();
 									dialog.DefaultButton = ContentDialogButton.Primary;
+									dialog.Title = n.Title;
 									dialog.fixesText.Text = text;
 									await dialog.ShowAsync2();
 								});

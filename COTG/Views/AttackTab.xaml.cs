@@ -661,8 +661,9 @@ namespace CnV.Views
 
 					if (!atk.isAttack)
 					{
-						Note.Show("Warning - bad person almost added as attacker");
-						continue;
+						Note.Show("Warning - bad person added as attacker");
+						
+						//	continue;
 					}
 					if(!city.isCastle)
 					{
@@ -724,8 +725,10 @@ namespace CnV.Views
 					
 					if (!atk.IsAllyOrNap() )
 					{
-						Note.Show("Warning - enemy almost added as attacker");
-						continue;
+						if (await AppS.DoYesNoBox("Add non ally as attacker?", $"{atk.playerName} {atk}" ) != 1 )
+							continue;
+					//	Note.Show("Warning - enemy added as attacker");
+					//	continue;
 					}
 
 					if ( !atk.isCastle)
@@ -753,7 +756,7 @@ namespace CnV.Views
 					if (isNew || ((troopType.HasValue || atk.attackType == AttackType.none) && updateExisting))
 					{
 						// academy may be overriden for the purpose of attack type
-						AttackPlan.AddOrUpdate(new(atk, atk.classification == City.Classification.se ? AttackType.se : (hasAcademy ? AttackType.senator : AttackType.assault),atk.TroopType ));
+						AttackPlan.AddOrUpdate(new(atk,true, atk.classification == City.Classification.se ? AttackType.se : (hasAcademy ? AttackType.senator : AttackType.assault),atk.TroopType ));
 					}
 				}
 				Note.Show($"Added {attacks.Length - prior}, updated {duplicates}");
@@ -885,7 +888,7 @@ namespace CnV.Views
 					if (!present || attackType.update)
 					{
 						await spot.Classify();
-						AttackPlan.AddOrUpdate(new(spot, attackType.atk,spot.TroopType));
+						AttackPlan.AddOrUpdate(new(spot,false, attackType.atk,spot.TroopType));
 					}
 						if (present)
 						{
@@ -1090,8 +1093,12 @@ namespace CnV.Views
 				var spot = City.GetOrAdd(cid);
 				if(Alliance.IsAllyOrNap(spot.allianceId) )
 				{
-					++wrongAlliance;
-					continue;
+					if (await AppS.DoYesNoBox("Add friend as target?", $"{spot.playerName} {spot}") != 1)
+					{
+
+						++wrongAlliance;
+						continue;
+					}
 				}
 				if (!spot.isCastle)
 				{
@@ -1102,7 +1109,7 @@ namespace CnV.Views
 				{
 					if (attackType.update)
 					{
-						AttackPlan.AddOrUpdate(new(spot,attackType.atk));
+						AttackPlan.AddOrUpdate(new(spot,false,attackType.atk));
 
 					}
 					++updated;
@@ -1111,7 +1118,7 @@ namespace CnV.Views
 				{
 					await spot.Classify();
 
-					AttackPlan.AddOrUpdate(new(spot, attackType.atk));
+					AttackPlan.AddOrUpdate(new(spot,false, attackType.atk));
 					++added;
 				}
 			}
@@ -2102,34 +2109,33 @@ namespace CnV.Views
 				Log(ex);
 			}
 		}
-
-		private async void AddSelected(object sender, RoutedEventArgs e)
+		private async void AddSelectedAs(bool isAttack)
 		{
 			var sel = Spot.GetSelectedForContextMenu(0, false);
 			AttackType enemy = AttackType.invalid;
 			AttackType friend = AttackType.invalid;
 			foreach(var cid in sel)
 			{
-				var city = new AttackPlanCity(cid);
-				if(City.Get(cid).IsAllyOrNap() )
+				var city = new AttackPlanCity(cid,isAttack);
+				if(isAttack)
 				{
 					if(friend==AttackType.invalid)
 					{
 						friend = await ChooseAttackerType();
 					}
-					if (friend == AttackType.none)
+					if(friend == AttackType.none)
 						break;
 					city.attackType = friend;
 
 				}
 				else
 				{
-					if (enemy == AttackType.invalid)
+					if(enemy == AttackType.invalid)
 					{
-						(enemy,_) = await ChooseTargetType(false);
+						(enemy, _) = await ChooseTargetType(false);
 					}
 					city.attackType =enemy;
-					if (enemy == AttackType.none)
+					if(enemy == AttackType.none)
 						break;
 
 				}
@@ -2139,6 +2145,17 @@ namespace CnV.Views
 
 			SyncUIGrids();
 			WritebackAttacks();
+		}
+
+		private async void AddSelectedAsAttacks(object sender, RoutedEventArgs e)
+		{
+			AddSelectedAs(true);
+
+		}
+		private async void AddSelectedAsTargets(object sender, RoutedEventArgs e)
+		{
+			AddSelectedAs(false);
+
 		}
 
 		static string[] planSynonyms = { "scheme", "plan", "proposal", "proposition", "ploy", "project", "procedure", "strategy", "stratagem", "formula", "recipe", "scenario", "agenda", "way", "maneuver", "ruse" };

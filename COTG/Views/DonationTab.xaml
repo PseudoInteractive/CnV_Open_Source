@@ -24,11 +24,13 @@
         </Grid.RowDefinitions>
         <tk:WrapPanel Orientation="Horizontal" Grid.Row="0" >
 
-			<ToggleSwitch Header="Wood vs Stone" IsOn="{x:Bind local:DonationTab.proportionateToWhatsNeeded, Mode=TwoWay}" OnContent="Needed" OffContent="Have"
+			<ToggleSwitch Header="Wood vs Stone" IsOn="{x:Bind local:SettingsPage.donationsProportionateToWhatsNeeded, Mode=TwoWay}" OnContent="Needed" OffContent="Have"
 						  ToolTipService.ToolTip="Ratio of wood vs stone to send.  On: Whats needed, Off: What's in storage" />
+			<ToggleSwitch Header="Land or Water" IsOn="{x:Bind local:DonationTab.sendViaWater, Mode=TwoWay}" OnContent="Water" OffContent="Land"
+			               />
 			<my:NumberBox Header="Fixed Wood vs Stone?" Value="{x:Bind local:DonationTab.woodStoneRatio,Mode=TwoWay}"
-                  Style="{StaticResource NumberBoxSmall}" ToolTipService.ToolTip="If this is not -1, resources will be sent in a fixed ratio of wood vs stone, i.e. 0.5 means half of each, 0 means all stone, 1 means all wood" 
-						  NumberFormatter="{x:Bind cotg:App.formatter2Digit}" />
+			              Style="{StaticResource NumberBoxSmall}" ToolTipService.ToolTip="If this is not -1, resources will be sent in a fixed ratio of wood vs stone, i.e. 0.5 means half of each, 0 means all stone, 1 means all wood" 
+			              NumberFormatter="{x:Bind cotg:App.formatter2Digit}" />
 			<my:NumberBox Header="Reserve Carts" Value="{x:Bind local:DonationTab.reserveCarts,Mode=TwoWay}"
 						  Style="{StaticResource NumberBoxCarts}" Width="100"
 						  

@@ -173,10 +173,10 @@
                     ToolTipService.ToolTip="Sets selected attacker types"
                     Style="{StaticResource ButtonSmall}"
                     Click="SetAttackerType" />
-				<Button Content="Add Selected"
-                    ToolTipService.ToolTip="Adds selected castles as attackers or targets"
+				<Button Content="Add Selected As Attackers"
+                    ToolTipService.ToolTip="Adds selected castles as attackers"
                     Style="{StaticResource ButtonSmall}"
-                    Click="AddSelected" />
+                    Click="AddSelectedAsAttacks" />
 
 				<Button Content="Add Attacks from Clipboard"
                     ToolTipService.ToolTip="Extracts coordinates from the clipboard and adds attacks"
@@ -477,6 +477,11 @@
                     HorizontalAlignment="Center"
                     Style="{StaticResource ButtonSmall}"
                     Click="AttackSender_Tapped" />
+				<Button Content="Add Selected As Targets"
+				        ToolTipService.ToolTip="Adds selected castles as targets"
+				        Style="{StaticResource ButtonSmall}"
+				        Click="AddSelectedAsTargets" />
+
 				<Button Content="Select Targets"
                     VerticalAlignment="Center"
                     Margin="2"

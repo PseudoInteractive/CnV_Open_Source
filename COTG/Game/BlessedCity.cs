@@ -73,7 +73,7 @@ namespace CnV.Game
 
         }
 
-        public static List<BlessedCity> GetForCity(City city)
+        public static List<BlessedCity> GetForCity(City? city)
         {
             senderCity = city;
             if(city==null)
@@ -87,8 +87,17 @@ namespace CnV.Game
             foreach (var blc in all)
             {
                 // only on same continent or if both are on water and we have ships
-                if (blc.cont != cont && (!blc.spot.isOnWater || city.shipsHome == 0))
-                    continue;
+                if (DonationTab.viaWater)
+				{
+					if( (!blc.spot.isOnWater || city.shipsHome == 0))
+						continue;
+				}
+                else
+                {
+	                if (blc.cont != cont )
+		                continue;
+                }
+
                 blc.travelMinutes = (float)( worldC.DistanceToCidD(blc.spot.cid)*Troops.cartTravel);
                 rv.Add(blc);
             }
