@@ -353,6 +353,32 @@ namespace CnV.Views
 		}
 		static bool loadedOnce;
 
+		public static async Task LoadFromPlayFab()
+		{
+			var settings = await APlayFab.LoadSettings();
+			var props = typeof(SettingsPage).GetFields(BindingFlags.Static  | BindingFlags.Public | BindingFlags.DeclaredOnly);
+			var st = App.Settings();
+			foreach(var p in props)
+			{
+				if(!p.IsNotSerialized)
+				{
+					try
+					{
+						if (settings.TryGetValue(p.Name, out var v))
+						{
+							p.SetValue(null, v);
+							st.Values[p.Name] = v;
+						}
+					}
+					catch(Exception e)
+					{
+						LogEx(e);
+					}
+				}
+			}
+		}
+
+
 		public static void LoadAll()
 		{
 			///  fetchFullHistory = st.Read(nameof(fetchFullHistory),true ); // default is true
@@ -497,14 +523,19 @@ namespace CnV.Views
 				//    }
 				//    pinned = mru.ToArray();
 				//}
+				var settings = new Dictionary<string, object>();
 				foreach (var p in props)
 				{
 					if (!p.IsNotSerialized)
 					{
-						st.SaveT(p.Name, p.FieldType, p.GetValue(null));
+						var o = p.GetValue(null);
+						st.SaveT(p.Name, p.FieldType,o );
+						settings[p.Name] = o;
 					}
 
 				}
+
+				APlayFab.SaveSettings(settings);
 				//6st.Save(nameof(raidCarry), Raiding.desiredCarry);
 
 				//  st.Save(nameof(fetchFullHistory), fetchFullHistory);

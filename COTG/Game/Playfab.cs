@@ -89,6 +89,29 @@ namespace CnV
 			});
 			Trace(results.Result.ProfileVersion);
 		}
+		public static async Task SaveSettings(Dictionary<string, object> settings )
+		{
+			
+			var dataList = new List<SetObject>()
+			{
+				new SetObject()
+				{
+					ObjectName = "Settings",
+					DataObject = settings
+
+				},
+				// A free-tier customer may store up to 3 objects on each entity
+			};
+
+
+			//var results = await PlayFabDataAPI.SetObjectsAsync(new SetObjectsRequest()
+			//{
+			//	Entity =
+			//		globalPlayerEntityKey, // Saved from GetEntityToken, or a specified key created from a titlePlayerId, CharacterId, etc
+			//	Objects = dataList,
+			//});
+			//Trace(results.Result.ProfileVersion);
+		}
 
 		static async Task LoadLocalPlayerDataFromPlayfab()
 		{
@@ -127,7 +150,35 @@ namespace CnV
 				LogEx(e);
 			}
 		}
+		public static async Task<IDictionary<string,object>> LoadSettings()
+		{
+			try
+			{
 
+				var getRequest = new GetObjectsRequest { Entity = globalPlayerEntityKey };
+				var result = await PlayFabDataAPI.GetObjectsAsync(getRequest);
+				if(result.Error is not null)
+				{
+					await AppS.Failed(result.Error.GenerateErrorReport());
+				}
+				else
+				{
+					var obs = result.Result.Objects;
+					if(obs.TryGetValue("Settings", out var s))
+					{
+						var d = s.DataObject as JsonObject;
+						return d;
+					}
+
+				}
+			}
+			catch(Exception e)
+			{
+				LogEx(e);
+			}
+
+			return new Dictionary<string, object>();
+		}
 		public static void Init()
 		{
 			PlayFabSettings.staticSettings.TitleId = titleId;
