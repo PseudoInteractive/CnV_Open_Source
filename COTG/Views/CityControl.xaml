@@ -17,7 +17,7 @@
 			<ColumnDefinition Width="Auto" />
 		</Grid.ColumnDefinitions>
 
-		<TextBlock Text="{x:Bind Label}" Style="{StaticResource TextBlockMedium}" />
+		<TextBlock Text="{x:Bind Label, Mode=OneWay}" Style="{StaticResource TextBlockMedium}" />
 
 		<Image Source= "{x:Bind icon, Mode=OneWay}" Grid.Column="1" Tapped="Image_Tapped" RightTapped="Image_RightTapped" HorizontalAlignment="Center"
                      Stretch="Uniform" VerticalAlignment="Center"  />

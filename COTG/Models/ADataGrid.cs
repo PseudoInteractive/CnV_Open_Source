@@ -18,7 +18,9 @@ public static partial class ADataGrid
 {
 	public static DataGrid Create<T>() where T : class
 	{
+
 		var rv = new DataGrid();
+		
 		rv.View.BeginInit();
 		rv.SourceType = typeof(T);
 		return rv;

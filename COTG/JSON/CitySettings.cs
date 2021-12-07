@@ -109,8 +109,8 @@ namespace CnV.GameData
 
 
 				var settings = new ResSettings();
-				settings.InitTradeSettings(city,_sourceHub,_targetHub,reqFilter,targetFilter);
-				
+				await settings.InitTradeSettings(city,_sourceHub,_targetHub,reqFilter,targetFilter);
+				await AUtil.AwaitChangesComplete();
 
 				var dialog = new ContentDialog()
 				{
@@ -119,7 +119,7 @@ namespace CnV.GameData
 					SecondaryButtonText = "Skip",
 					CloseButtonText = "Cancel"
 				};
-
+				
 				dialog.Title = $"Set Trade settings for {city.nameAndRemarks}";
 			//	await settings.InitTradeSettings(city,, (city.isHubOrStorage&&!targetExplicit) ? 0 : targetHub.GetValueOrDefault() );
 				var rv = await dialog.ShowAsync2();

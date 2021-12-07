@@ -142,10 +142,9 @@ namespace CnV.Views
 				AppS.QueueOnUIThread(() =>
 				
 				{
-					items.ClearHash();
-					items.NotifyReset();
+					items.NotifyReset(true,true);
 					listView.ScrollIntoView(items.Last());
-					input.Focus(FocusState.Programmatic);
+		//			input.Focus(FocusState.Programmatic);
 				});
 			}
 
@@ -163,7 +162,7 @@ namespace CnV.Views
 
 		public override TabPage defaultPage => ChatTab.tabPage;
 		//public ChatEntry lastChat = new ChatEntry(null, string.Empty, DateTimeOffset.MinValue, 0);
-		public void Post(ChatEntry entry, bool isNew, bool notify=true) // if is new, this message is fresh.  Otherwise loaded from archives
+		public void Post(ChatEntry entry, bool isNew) // if is new, this message is fresh.  Otherwise loaded from archives
 		{
 		// this runs on the UI thread?
 			// duplicate?
@@ -214,7 +213,7 @@ namespace CnV.Views
 							return;
 					}
 				}
-				items.Insert(insert, entry,notify);
+				items.Insert(insert, entry);
 				var text = entry.text;
 				if (isNew)
 				{
@@ -239,10 +238,10 @@ namespace CnV.Views
 		}
 		public void Post(IEnumerable<ChatEntry> entries)
 		{
+			using var aaa = items.DeferChanges();
 			// Todo: batch these
 			foreach (var entry in entries)
-				Post(entry,false,false);
-			items.NotifyReset();
+				Post(entry,false);
 		}
 
 
@@ -460,7 +459,7 @@ namespace CnV.Views
 			}
 			if(t ==null)
 				t = alliance;
-			t.Post(chat, isNew, notify);
+			t.Post(chat, isNew);
 
 		}
 
@@ -770,11 +769,11 @@ namespace CnV.Views
 		//        fly.ShowAt(date, e.GetPosition(date));
 		//    });
 		//}
-		static ChatTab hasFocus;
+		//static ChatTab hasFocus;
 		private void input_GotFocus(object sender, RoutedEventArgs e)
 		{
 			SetPlus(false);
-			hasFocus = this;
+		//	hasFocus = this;
 		}
 
 		private void inputPointerOver(object sender, PointerRoutedEventArgs e)

@@ -825,7 +825,7 @@ namespace CnV.Views
 		public static void Canvas_PointerPressed((Windows.Foundation.Point Position, uint PointerId,
 																			bool IsInContact, ulong Timestamp, PointerUpdateKind PointerUpdateKind) point)
 		{
-
+			AppS.InputRecieved();
 			UpdateMousePosition(point.Position);
 			ShellPage.UpdateFocus();            //	ClearHover();
 												//  e.Handled = false;

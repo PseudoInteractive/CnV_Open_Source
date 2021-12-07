@@ -38,7 +38,7 @@ namespace CnV.Views
 		{
 			if(PropertyChanged is not null) ((IANotifyPropertyChanged)this).IOnPropertyChanged();
 		}
-		public event PropertyChangedEventHandler PropertyChanged;
+		public event PropertyChangedEventHandler? PropertyChanged;
 		#endregion
 
 		public ResourcesNullable req;
