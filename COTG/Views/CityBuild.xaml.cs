@@ -979,7 +979,7 @@ namespace CnV.Views
 						else
 						{
 
-							await City.GetBuild().SmartBuild(cc, build.GetLayoutBid(bspot), dryRun: dryRun,searchForSpare:true, wantDemoUI: true);
+							await City.GetBuild().SmartBuild(cc, build.GetLayoutBid(bspot), dryRun: dryRun,searchForSpare:true, wantDemoUI: null);
 
 						}
 						break;
@@ -1012,7 +1012,7 @@ namespace CnV.Views
 
 							if (sel != 0)
 							{
-									await City.GetBuild().SmartBuild(cc, sel,searchForSpare: false,dryRun: dryRun, wantDemoUI: true);
+									await City.GetBuild().SmartBuild(cc, sel,searchForSpare: false,dryRun: dryRun, wantDemoUI: null);
 
 								break;
 							}
@@ -1475,7 +1475,7 @@ namespace CnV.Views
 				case Windows.System.VirtualKey.X: CityBuild.ShortBuild(City.bidCastle); return; //  467;
 				case Windows.System.VirtualKey.O: CityBuild.ShortBuild(City.bidPort); return; //  488;
 				case Windows.System.VirtualKey.P: CityBuild.ShortBuild(City.bidShipyard); return; //  491;
-				case Windows.System.VirtualKey.Q: if (!isPlanner) City.GetBuild().SmartBuild(hovered, City.GetBuild().GetLayoutBid(hovered),searchForSpare:false,dryRun:true, wantDemoUI: true); return;
+				case Windows.System.VirtualKey.Q: if (!isPlanner) City.GetBuild().SmartBuild(hovered, City.GetBuild().GetLayoutBid(hovered),searchForSpare:false,dryRun:true, wantDemoUI: false); return;
 
 				default:
 					break;

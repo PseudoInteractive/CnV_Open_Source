@@ -54,6 +54,8 @@ using CnV;
 
 namespace CnV
 {
+	using Microsoft.AppCenter.Crashes;
+
 	/// <summary>
 	/// The j s client.
 	/// </summary>
@@ -640,16 +642,35 @@ namespace CnV
 
 
 
-		private static void CoreWebView2_ProcessFailed(CoreWebView sender, CoreWebView2ProcessFailedEventArgs args)
+		private static async void CoreWebView2_ProcessFailed(CoreWebView sender,
+			CoreWebView2ProcessFailedEventArgs args)
 		{
-			AAnalytics.Track("WebViewFail", new Dictionary<string, string> {
-				{"Kind:",args.ProcessFailedKind.ToString() },
-			//	{"Reason:",args.Reason.ToString() },
-			//	{"Desc:",args.ProcessDescription },
+			
+			AAnalytics.Track("WebViewFail", new Dictionary<string, string>
+			{
+				{"Kind:", args.ProcessFailedKind.ToString() },
+				//	{"Reason:",args.Reason.ToString() },
+				//	{"Desc:",args.ProcessDescription },
 			});
-			AppS.DoYesNoBox("The internet is broken", "Please restart");
+		#if CRASHES
+			Crashes.TrackError(new Exception(args.ProcessFailedKind.ToString()));
+							//	{"Desc:",args.ProcessDescription },
+		#endif
 
+			if(await AppS.DoYesNoBox("The internet is broken",
+				    $"{args.ProcessFailedKind.ToString()}?\nIt might be memory (in which case please restart computer) or something might be missing, do you want to try downloading something?")
+			    == 1)
+			{
+				await Windows.System.Launcher.LaunchUriAsync(
+					new Uri("https://go.microsoft.com/fwlink/p/?LinkId=2124703", UriKind.Absolute));
+			}
+			else
+			{
+				AppS.DoYesNoBox("broken", "Please restart computer and/or report it and/or curse politely");
+			}
 		}
+
+	
 
 		private async static void CoreWebView_NewWindowRequested(CoreWebView sender, CoreWebView2NewWindowRequestedEventArgs args)
 		{
@@ -672,8 +693,8 @@ namespace CnV
 				//	await Task.Delay(1000);
 				//}
 				//	var view = webView.webView;
-				view.DispatcherQueue.TryEnqueue(DispatcherQueuePriority.Normal, async () =>
-			  {
+			//	view.DispatcherQueue.TryEnqueue(DispatcherQueuePriority.Normal, async () =>
+			//  {
 				  await view.EnsureCoreWebView2Async();
 
 				  args.NewWindow = view.CoreWebView2;
@@ -681,7 +702,7 @@ namespace CnV
 				  view.Source = new Uri(args.Uri);
 				  args.Handled = true;
 				  defer.Complete();
-			  });
+			 // });
 
 				//	Log(args.Uri.ToString());
 				//	Launcher.LaunchUriAsync(new Uri(args.Uri));
@@ -2345,8 +2366,17 @@ namespace CnV
 
 
 								   UpdatePPDT(ppdt, Player.myId, pruneCities: true);
-								   if(Player.isSpecial)
-									   Raid.test = true;
+								   Alliance.alliancesFetchedTask.ContinueWith( (_) =>
+								   {
+									   if (Player.isSpecial)
+										   Raid.test = true;
+
+								   });
+
+							   
+
+
+
 								   World.RunWhenLoaded(() => AppS.DispatchOnUIThreadIdle(Spot.UpdateFocusText));
 
 

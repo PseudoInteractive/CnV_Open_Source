@@ -19,6 +19,7 @@
 	<winui:TabView x:Name="Tabs" x:FieldModifier="public"
                       TabWidthMode="SizeToContent"
                              VerticalAlignment="Stretch"
+                      IsTabStop="True"
                              HorizontalAlignment="Stretch"
                              AddTabButtonClick="Tabs_AddTabButtonClick"
                              TabCloseRequested="Tabs_TabCloseRequested"

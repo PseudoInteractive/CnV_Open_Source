@@ -614,10 +614,10 @@ namespace CnV.Game
 
 		}
 
-		public async Task<int> FindBuildingToRemoveUI(bool showUI, bool dryRun)
+		public async Task<int> FindBuildingToRemoveUI(bool? showUI, bool dryRun)
 		{
 			var toRemove = -1;
-			if (SettingsPage.demoBuildingOnBuildIfFull != false)
+			if (SettingsPage.demoBuildingOnBuildIfFull != false || showUI==true)
 			{
 				var bd = FindExtraBuilding();
 				if (bd != -1)
@@ -625,7 +625,7 @@ namespace CnV.Game
 					if (SettingsPage.demoBuildingOnBuildIfFull == null)
 					{
 						Status($"Maybe destory {postQueueBuildings[bd].name} to make room...",dryRun);
-						if(showUI && !dryRun )
+						if(showUI!=false && !dryRun )
 						{
 							var xy = await AppS.DoYesNoBoxSticky($"Demo {postQueueBuildings[bd].name} to make room?");
 							SettingsPage.demoBuildingOnBuildIfFull = xy.sticky;
@@ -645,7 +645,7 @@ namespace CnV.Game
 			}
 			if (toRemove == -1)
 			{
-				if (SettingsPage.demoCottageOnBuildIfFull != false)
+				if (SettingsPage.demoCottageOnBuildIfFull != false|| showUI==true)
 				{
 					var bd = FindCabinToDemo();
 					if (bd != -1)
@@ -653,7 +653,7 @@ namespace CnV.Game
 						if (SettingsPage.demoCottageOnBuildIfFull == null)
 						{
 							Status($"Maybe destory {postQueueBuildings[bd].name} to make room...",dryRun);
-							if(showUI && !dryRun)
+							if(showUI!=false && !dryRun)
 							{
 								var xy = await AppS.DoYesNoBoxSticky($"Demo cabin to make room?");
 								SettingsPage.demoCottageOnBuildIfFull = xy.sticky;
@@ -678,7 +678,7 @@ namespace CnV.Game
 
 		public async Task<int> SmartBuild((int x, int y) cc, int desBid, bool searchForSpare, bool dryRun = false, 
 					
-						bool wantDemoUI = false )
+						bool? wantDemoUI = null )
 		{
 			int rv = 0;
 			var bspot = XYToId(cc);
@@ -924,7 +924,7 @@ namespace CnV.Game
 									if (counts.buildingCount >= 100)
 									{
 
-										if (wantDemoUI)
+										if (wantDemoUI != null)
 										{
 											int bestSpot =
 												await FindBuildingToRemoveUI(showUI: wantDemoUI, dryRun: dryRun);

@@ -95,11 +95,40 @@ namespace CnV.Views
             webView.Reload();
         }
 
-       
 
-      
+		public bool IsBackEnabled
+		{
+			get { return webView.CanGoBack; }
+		}
 
-        public WebViewPage()
+		public bool IsForwardEnabled
+		{
+			get { return webView.CanGoForward; }
+		}
+
+		private void OnGoBack(object sender, RoutedEventArgs e)
+		{
+			webView.GoBack();
+		}
+
+		private void OnGoForward(object sender, RoutedEventArgs e)
+		{
+			webView.GoForward();
+		}
+
+		private void OnRefresh(object sender, RoutedEventArgs e)
+		{
+			webView.Reload();
+		}
+
+		private async void OnOpenInBrowser(object sender, RoutedEventArgs e)
+		{
+			await Windows.System.Launcher.LaunchUriAsync(webView.Source);
+		}
+
+
+
+		public WebViewPage()
         {
             InitializeComponent();
             IsLoading = true;
@@ -165,7 +194,6 @@ namespace CnV.Views
   //          }
   //      }
 
-        public event PropertyChangedEventHandler PropertyChanged;
 
         private void Set<T>(ref T storage, T value, [CallerMemberName]string propertyName = null)
         {

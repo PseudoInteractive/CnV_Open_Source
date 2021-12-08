@@ -68,7 +68,7 @@ public static class DoTheStuff
 			}
 
 			Assert(city.isBuild);
-			if((city.buildStage == City.BuildStage.complete)||(city.buildStage == City.BuildStage.completeX))
+			if((city.buildStage == City.BuildStage.complete)||(false))
 			{
 				Note.Show($"Complete: {city}");
 				return true;
@@ -263,16 +263,15 @@ public static class DoTheStuff
 						}
 						else
 						{
-							Note.Show("Cabins are building, please come back later");
+							Note.Show("Cabins or townhall are building, please come back later");
 						}
 					}
 					break;
 				case City.BuildStage.cabinsDone:
-				case City.BuildStage.mainBuildings:
 					{
 						//var c = RandomCitySpot();
 						var message = string.Empty;
-					var buildingLimit = city.GetBuildingLimit(bc);// !city.hasCastleInLayout ? 100 : bc.hasCastle ? 100 : 99;
+						var buildingLimit = city.GetBuildingLimit(bc);// !city.hasCastleInLayout ? 100 : bc.hasCastle ? 100 : 99;
 
 						if(bc.buildingCount < buildingLimit)
 						{
@@ -322,8 +321,11 @@ public static class DoTheStuff
 									{
 
 										var xx = await CheckMoveSlots();
-										if(xx == -1)
+										if (xx == -1)
+										{
 											return false;
+										}
+
 										if(xx == 0)
 											break;
 
@@ -343,7 +345,7 @@ public static class DoTheStuff
 										{
 											continue;
 										}
-										if(await city.SmartBuild(i,bid,searchForSpare: true,wantDemoUI: true) == -1)
+										if(await city.SmartBuild(i,bid,searchForSpare: true,wantDemoUI: null) == -1)
 										{
 											Note.Show("Something unusual happened");
 											break;
@@ -366,12 +368,16 @@ public static class DoTheStuff
 										if(bc.buildingCount >= buildingLimit)
 											break;
 										var xx = await CheckMoveSlots();
-										if(xx == -1)
+										if (xx == -1)
+										{
+											
 											return false;
+										}
+
 										if(xx == 0)
 											break;
 
-										if(await city.SmartBuild(i,bid,searchForSpare: true,wantDemoUI: true) == -1)
+										if(await city.SmartBuild(i,bid,searchForSpare: true,wantDemoUI: null) == -1)
 										{
 											Note.Show("Something unusual happened");
 											break;
@@ -383,7 +389,7 @@ public static class DoTheStuff
 
 								}
 							}
-							if(bc.buildingCount < buildingLimit)
+						//	if(bc.buildingCount < buildingLimit)
 							{
 								// do the rest
 								var todo = FindPendingOverlayBuildings(city);
@@ -392,13 +398,16 @@ public static class DoTheStuff
 									if(bc.buildingCount >= buildingLimit)
 										break;
 									var xx = await CheckMoveSlots();
-									if(xx == -1)
+									if (xx == -1)
+									{
 										return false;
+									}
+
 									if(xx == 0)
 										break;
 
 									var bid = city.GetLayoutBid(c);
-									if(await city.SmartBuild(IdToXY(c),bid,searchForSpare: true,wantDemoUI: true) == -1)
+									if(await city.SmartBuild(IdToXY(c),bid,searchForSpare: true,wantDemoUI: null) == -1)
 									{
 										Note.Show("Something unusual happened");
 										break;
@@ -418,21 +427,26 @@ public static class DoTheStuff
 
 						break;
 					}
-				case City.BuildStage.preTeardown:
+			case City.BuildStage.mainBuildings:
+				case BuildStage.kindOfDone:
+			case City.BuildStage.preTeardown:
 				case City.BuildStage.teardown:
 					{
-						//if( WantMoveStuff() )
-						//{
-						//	await MoveStuffLocked();
-						//}
+						if(city.buildStage == BuildStage.kindOfDone)
+						{
+							await city.MoveStuffLocked();
+						}
 
 						const int maxCommands = 15;
-						int count = (maxCommands - city.GetBuildQueueLength()).Min(bc.cabins * 2);
-						if(count < 2 || bc.unfinishedBuildings > 4)
+						if ( bc.unfinishedBuildings > 4)
 						{
-							Note.Show("Already doing teardown or finishing up buildings");
-							break;
+							if (await AppS.DoYesNoBox($"{bc.unfinishedBuildings} unfinished buildings",
+								    "continue with teardown anyway in {city.nameAndRemarks}?") != 1)
+							{
+								return true;
+							}
 						}
+
 						var result = await AppS.DispatchOnUIThreadTask(async () =>
 						{
 							var panel = new StackPanel() { };
@@ -484,11 +498,16 @@ public static class DoTheStuff
 							int milBid = bc.GetMainMilitaryBid();
 							var barracks = FindPendingOverlayBuildingsOfType(city,100,bidBarracks).OrderByDescending(a => GetBarrackScore(city,a,milBid)).ToList();
 							var commandLimit = SettingsPage.cabinsToRemovePerSwap * 2;
+							if(!todo.Any())
+							{
+							// 
+								Note.Show("No pending buildings?  That doesn't seem right..");
+							}
 							var todoGet = 0;
 							for(;;)
 							{
-								count = (commandLimit - city.GetBuildQueueLength());
-								if(count < 2 || todoGet >= todo.Length  || bc.cabins == 0)
+								var count = (commandLimit - city.GetBuildQueueLength());
+								if(count < 2 || todoGet >= todo.Length )
 									break;
 								var xx = await CheckMoveSlots();
 								if(xx == -1)
@@ -504,7 +523,7 @@ public static class DoTheStuff
 									c = barracks[0];
 									barracks.RemoveAt(0);
 								}
-								var delta = await city.SmartBuild(c,bid,searchForSpare: true,wantDemoUI: true);
+								var delta = await city.SmartBuild(c,bid,searchForSpare: true,wantDemoUI: city.buildStage == BuildStage.kindOfDone ? true : null);
 								if(delta == -1)
 								{
 									Note.Show("Something unusual happened");
@@ -519,9 +538,6 @@ public static class DoTheStuff
 					break;
 				case City.BuildStage.complete:
 					Note.Show("Complete :)");
-					break;
-			case City.BuildStage.completeX:
-					Note.Show("Complete (with some different buildings between layout and city)");
 					break;
 			default:
 					Assert(false);

@@ -71,7 +71,7 @@ namespace CnV.Game
 			return false;
 		}
 
-		public static bool wantsIntel => ((myId == 42)) && JSClient.world == 23;
+		public static bool wantsIntel => ((Raid.test)) ;
 
 		public static string IdToName(int id)
 		{
@@ -107,6 +107,7 @@ namespace CnV.Game
 		}
 
 		public static bool alliancesFetched;
+		public static Task alliancesFetchedTask = new(() => { });
 		public static SortedList<byte, byte> diplomacy = new SortedList<byte, byte>(); // small Dictionary
 		public static Alliance none = new Alliance() { id = 0, name = "No Alliance" };
 		enum AllianceInitializationStage
@@ -290,6 +291,7 @@ namespace CnV.Game
 			Task.Run(Blobs.ProcessStats);
 			if (Alliance.hasAlliance)
 				Task.Run(Blobs.ProcessTSStats);
+			alliancesFetchedTask.RunSynchronously();
 		}
 
 

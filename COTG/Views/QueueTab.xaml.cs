@@ -36,7 +36,7 @@ namespace CnV.Views
 
 		
 		public static QueueTab instance;
-		private const int badBuildingThreshold = 10;
+		private const int badBuildingThreshold = 20;
 
 
 		public static bool IsVisible() => instance.isFocused;
@@ -274,10 +274,41 @@ namespace CnV.Views
 				return 0;
 
 		}
+
+		class BuildingStretchData
+		{
+			Dictionary<int, ALinq.BuildingStretchData<int>> data = new();
+
+			public void AddBuildingType(int bid, City city, int buildSpot)
+			{
+				if(!data.TryGetValue(bid, out var d))
+				{
+					d = new(-32768f / MathF.Sqrt(BuildingDef.FromBid(bid).GetBuildTimeMeasure()));
+					data.Add(bid, d);
+				}
+				d.totalCount++;
+				var currentBid = city.postQueueBuildings[buildSpot].bid;
+				if(currentBid == bid)
+				{
+					d.currentCount++;
+				}
+				else
+				{
+					d.pending.Add(buildSpot);
+				}
+
+			}
+
+			public int[] result =>
+			
+				data.StretchAndInterleave();
+			
+		}
 		internal static int[] FindPendingOverlayBuildings(City city)
 		{
-			Dictionary<int,ALinq.BuildingStretchData<int> > data = new();
-			
+			var data = new BuildingStretchData();
+
+
 			for (int r = 1; r <= City.citySpan; ++r)
 			{
 				for (var y = -r; y <= r; ++y)
@@ -298,27 +329,14 @@ namespace CnV.Views
 								continue;
 							}
 
-							if (!data.TryGetValue(bid, out var d))
-							{
-								d = new( -32768f / MathF.Sqrt(BuildingDef.FromBid(bid).GetBuildTimeMeasure()));
-								data.Add(bid, d);
-							}
-						    d.totalCount++;
-							var currentBid = city.postQueueBuildings[id].bid;
-							if (currentBid == bid)
-							{
-								d.currentCount++; 
-							}
-							else
-							{
-								d.pending.Add(id);
-							}
+							data.AddBuildingType(bid,city,id);
 						}
 					}
 				}
 			}
 
-			return data.StretchAndInterleave();
+			return data.result;
+
 		}
 		internal static (int matches,int missingOverlayBuildings,int extraBuildings, bool isBad) CountBadBuildings(City city)
 		{
@@ -630,6 +648,7 @@ namespace CnV.Game
 		{
 			return ((!bc.hasCastle) && tsTotal > SettingsPage.tsForCastle && HasOverlayBuildingOfType(bidCastle));
 		}
+
 		public async Task MoveStuffLocked()
 		{
 			Note.Show($"Move slots: {Player.moveSlots}");

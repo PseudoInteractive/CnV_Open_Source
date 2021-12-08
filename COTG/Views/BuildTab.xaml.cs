@@ -178,7 +178,7 @@ namespace CnV.Views
 
 					city.points = (ushort)ci[2].GetAsInt();
 					var isBuilding = (ci[4].GetAsFloat() != 0) || (city.buildStage == City.BuildStage.complete)||
-					(city.buildStage == City.BuildStage.completeX)
+					(false)
 								|| (city.buildStage == City.BuildStage.leave);
 					//if (ci[3].GetAsFloat() != 0)
 					//{

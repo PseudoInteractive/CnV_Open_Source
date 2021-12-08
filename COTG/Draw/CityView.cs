@@ -582,10 +582,13 @@ namespace CnV.Draw
 		}
 		public static void UpdateLighting(Lighting value)
 		{
+			if(buildingAtlas.effect is not null)
 			// reset effects to lit or unlit
-			buildingAtlas.effect = AGame.GetTileEffect();
-			cityWallsLand.effect = AGame.GetTileEffect();
-			cityWallsWater.effect = AGame.GetTileEffect();
+				buildingAtlas.effect = AGame.GetTileEffect();
+			if(cityWallsLand.effect is not null)
+				cityWallsLand.effect = AGame.GetTileEffect();
+			if(cityWallsWater.effect is not null)
+				cityWallsWater.effect = AGame.GetTileEffect();
 		}
 
 		public static void ClearSelectedBuilding()

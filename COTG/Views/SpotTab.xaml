@@ -28,11 +28,12 @@
 						  Grid.Row="0"
 						  VerticalAlignment="Center"
 						  >
-			<Button Content="Toggle Selected" Style="{StaticResource ButtonSmall}" ToolTipService.ToolTip="Toggles on/off pinned status for selected items" Click="Button_Click"/>
+			<Button Content="Toggle Selected ⛄" Style="{StaticResource ButtonSmall}" ToolTipService.ToolTip="Toggles on/off pinned status for selected items" Click="Button_Click"/>
 </tk:WrapPanel>	
         <tg:RadDataGrid x:Name="selectedGrid"
 						x:FieldModifier="public"
                         Grid.Row="1"
+						TabFocusNavigation="Once"
 						AutoGenerateColumns="False"
                         CanUserChooseColumns="True"
 								
@@ -41,7 +42,7 @@
                        ColumnResizeHandleDisplayMode="Always"
                         PointerPressed="gridPointerPress"
 				        ItemsSource="{x:Bind spotMRU, Mode=OneWay}"
-										
+						IsTabStop="True"
                         RowHeight="{StaticResource MediumGridRowHeight}"
                         AlternationStep="2"
                         SelectionMode="Extended"
@@ -52,6 +53,7 @@
             <tg:RadDataGrid.Columns>
                 <tg:DataGridImageColumn PropertyName="icon"
                                         Header="I"
+
                                         SizeMode="Fixed"
                                         Width="32" />
                 <tg:DataGridTextColumn PropertyName="nameAndRemarks"

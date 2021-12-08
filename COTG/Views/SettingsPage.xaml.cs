@@ -242,7 +242,7 @@ namespace CnV.Views
 		public static bool raidSendExact;
 		public static int resetRaidsCarry = 90;
 		public static int resetRaidsIdle = 10;
-		public static int raidSendMinIdle = 10; //
+		public static int raidSendMinIdle = 5; //
 
 
 		public static int raidsVisible = -1;

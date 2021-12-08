@@ -22,9 +22,9 @@ namespace CnV.Draw
 		public readonly int _sortingKey = System.Threading.Interlocked.Increment(ref _lastSortingKey);
 		private static int _lastSortingKey;
 
-		public Texture texture;
-		public Texture texture1 = null;
-		public EffectPass effect;
+		public Texture? texture;
+		public Texture? texture1 = null;
+		public EffectPass? effect;
 		public Material(Texture _texture)
 		{
 			texture = _texture;

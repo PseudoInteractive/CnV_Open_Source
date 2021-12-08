@@ -163,10 +163,14 @@ namespace CnV
 		}
 		internal static void SetLighting(Lighting value)
 		{
-			foreach(var tile in TileData.instance.tilesets)
+			if (TileData.instance is not null && TileData.instance.tilesets is not null)
 			{
-				tile.material.effect = GetTileEffect();
+				foreach (var tile in TileData.instance.tilesets)
+				{
+					tile.material.effect = GetTileEffect();
+				}
 			}
+
 			CityView.UpdateLighting(value);
 		}
 
@@ -1095,6 +1099,8 @@ namespace CnV
 			if(!App.isForeground)
 				return false;
 			if(!ShellPage.canvasVisible)
+				return false;
+			if (faulted)
 				return false;
 			return base.BeginDraw();
 		}

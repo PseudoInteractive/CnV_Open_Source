@@ -33,6 +33,7 @@ namespace CnVDiscord
 		public ICnVChatClientConnection connection;
 		public static async Task Setup()
 		{
+			#if CNV
 			if(instance!=null)
 				return;
 		
@@ -41,11 +42,12 @@ namespace CnVDiscord
 			// Any Magic Onion?
 			if(!await  instance.Initialize() ) 
 				return; 
-			
+			#endif
 		}
 
 		public async Task<bool> Initialize()
 		{
+#if CNV
 			try
 			{
 				Assert(channel == null);
@@ -99,6 +101,7 @@ namespace CnVDiscord
 				Log(e.ToString());
 				return false;
 			}
+#endif
 			return true;
 		}
 

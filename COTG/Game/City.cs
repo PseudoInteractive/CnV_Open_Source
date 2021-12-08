@@ -1948,7 +1948,7 @@ namespace CnV.Game
 			preTeardown,
 			teardown,
 			complete,
-			completeX,
+			kindOfDone,
 			pending,
 			count,
 		}
@@ -2220,7 +2220,7 @@ namespace CnV.Game
 			if (bc.cabins > 0 || bc.buildingCount < 100  )
 				return new BuildInfo(BuildStage.teardown,buildingLimit);
 			if( !IsLayoutComplete(this))
-				return new BuildInfo(BuildStage.completeX,buildingLimit);
+				return new BuildInfo(BuildStage.kindOfDone,buildingLimit);
 
 			return new BuildInfo(BuildStage.complete,buildingLimit);
 		}
