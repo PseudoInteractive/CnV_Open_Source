@@ -660,7 +660,7 @@ namespace CnV
 		//}
 		static void Canvas_SizeChanged(object sender,SizeChangedEventArgs e)
 		{
-
+			ShellPage.updateHtmlOffsets.Go(true);
 
 			SetClientSpan(e.NewSize.Width,e.NewSize.Height);
 			//clientCScreen = canvas.TransformToVisual(Helper.CoreContent)

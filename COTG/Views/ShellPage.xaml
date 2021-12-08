@@ -33,28 +33,28 @@
 				<Setter Property="VerticalAlignment" Value="Stretch"/>
 				<Setter Property="HorizontalAlignment" Value="Stretch"/>
 			</Style>
-			
-		
+
+
 		</ResourceDictionary>
-		
-		
+
+
 	</Page.Resources>
-	
+
 	<Grid Margin="0" 
 		  x:Name="layoutGrid" 
 		  
 		  Grid.RowSpan="6" Grid.ColumnSpan="3"  >
-		
+
 
 		<Grid.ColumnDefinitions>
 			<ColumnDefinition Width="8" />
 			<ColumnDefinition Width="*" />
 			<ColumnDefinition Width="8" />
 		</Grid.ColumnDefinitions>
-	
-		
+
+
 		<Grid x:Name="leftLayoutGrid" Margin="0"  Grid.Column="0" Canvas.ZIndex="33"  Style="{StaticResource GridNoScroll}" >
-			
+
 			<Grid.RowDefinitions>
 				<RowDefinition Height="2*" />
 				<RowDefinition Height="1*" />
@@ -190,34 +190,52 @@ Grid.Column="0"
 				<RowDefinition Height="40"/>
 			</Grid.RowDefinitions>
 			<Grid.ColumnDefinitions>
-				<ColumnDefinition Width="420" />
-				<ColumnDefinition Width="2*" />
-				<ColumnDefinition Width="1*" />
+				<!-- 0 HTML column -->
+				<ColumnDefinition Width="365" x:Name="columnHtml" />
+				<!-- 1 black space for popups -->
+				<ColumnDefinition Width="0"  x:Name="columnPopup" />
+				<!-- 2 Render View -->
+				<ColumnDefinition Width="2*"  x:Name="columnRender" />
+				<!-- 3 Tab View -->
+				<ColumnDefinition Width="1*" x:Name="columnTabs" />
 			</Grid.ColumnDefinitions>
 			<!-- Overlay grid for sizing -->
 
 
-
-			<winui:CommandBar Grid.ColumnSpan="2"  UseSystemFocusVisuals="True" x:Name="commandBar" x:FieldModifier="public"  >
-				<winui:CommandBar.Content   >
-					<StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-						<winui:ComboBox x:Name="windowLayout" SelectedIndex="2" SelectionChanged="windowLayout_SelectionChanged"  VerticalAlignment="Center" Margin="4"
-                           ToolTipService.ToolTip="Select a view layout"  >
+			<winui:CommandBar Grid.ColumnSpan="3" IsSticky="True" IsTabStop="True"  UseSystemFocusVisuals="True" x:Name="commandBar" x:FieldModifier="public"  >
+			<winui:CommandBar.Content>
+				<Grid>
+					<Grid.ColumnDefinitions>
+						<ColumnDefinition Width ="Auto"/>
+						<ColumnDefinition Width ="Auto"/>
+						<ColumnDefinition  Width ="Auto"/>
+					</Grid.ColumnDefinitions>
+				<ProgressRing x:Name="progress" IsActive="False" />
+				<TextBlock Grid.Column="1" x:Name="work" x:FieldModifier="public" Margin="6" VerticalAlignment="Center" Width="255" />
+				<TextBox Grid.Column="2" x:Name="coords" Margin="4" Width="100" TextAlignment="Center"  Text="000:000" VerticalAlignment="Center" x:FieldModifier="public" KeyDown="coords_KeyDown"/>
+				</Grid>
+				</winui:CommandBar.Content>
+			<winui:CommandBar.PrimaryCommands  >
+				<AppBarElementContainer>
+					<ComboBox x:Name="windowLayout" SelectedIndex="2" SelectionChanged="windowLayout_SelectionChanged"  VerticalAlignment="Center" Margin="4"
+					                       ToolTipService.ToolTip="Select a view layout"  >
 							<ComboBoxItem Content="Legacy"/>
 							<ComboBoxItem Content="Max View"/>
 							<ComboBoxItem Content="Busy"/>
 							<ComboBoxItem Content="Task"/>
 							<ComboBoxItem Content="Sheets"/>
 							<ComboBoxItem Content="Chat"/>
-						</winui:ComboBox>
-						<winui:ComboBox x:Name="cityBox" x:FieldModifier="public" 
-                 Width="200"
-		  IsEditable="True"
-TextSubmitted="CitySubmitted"
+					</ComboBox>
+					</AppBarElementContainer>
+					<AppBarElementContainer>	
+					<winui:ComboBox x:Name="cityBox" x:FieldModifier="public" 
+					                Width="200"
+					                IsEditable="True"
+					                TextSubmitted="CitySubmitted"
             
                  
-                 VerticalAlignment="Center" ToolTipService.ToolTip="'Build City'- the city that you would build if you were building a city"
-                 Margin="4" >
+					                VerticalAlignment="Center" ToolTipService.ToolTip="'Build City'- the city that you would build if you were building a city"
+					                Margin="4" >
 							<winui:ComboBox.ItemTemplate>
 								<DataTemplate x:Name="SingleLineDataTemplate" x:DataType="game:City">
 									<StackPanel Orientation="Horizontal" Height="32" >
@@ -227,22 +245,24 @@ TextSubmitted="CitySubmitted"
 								</DataTemplate>
 							</winui:ComboBox.ItemTemplate>
 						</winui:ComboBox>
-						<TextBox x:Name="coords" Margin="4" Width="100" TextAlignment="Center"  Text="000:000" VerticalAlignment="Center" x:FieldModifier="public" KeyDown="coords_KeyDown"/>
-						<Button x:Name="ContinentFilter"  x:FieldModifier="public"
-									  Content="Cont/Tags"
-									  Margin="2"
-									  FontSize="{StaticResource MediumFontSize}"
-										FontFamily="Bahnschrift"
-									  IsTextScaleFactorEnabled="False"
-										 RightTapped="FilterRightTapped"
-									  Click="{x:Bind views:ShellPage.ContinentFilterClick}"
-									AccessKey="F"
-									 ToolTipService.ToolTip="Yet another Continent filter.  Uncheck all to show everything"  />
+					</AppBarElementContainer>
 
-						<Button x:Name="HomeButton" Click="BuildHomeClick" RightTapped="BuildHomeRightTapped" Margin="4" Style="{ThemeResource ButtonRevealStyle}"
-                            ToolTipService.ToolTip="&#x0a;Click to switch between region view and city view&#x0a;Right clck for menu"
-							AccessKey="H" 
-							>
+					
+					<AppBarButton x:Name="ContinentFilter"  x:FieldModifier="public"
+					              Content="Cont/Tags"
+					              Margin="2"
+					              FontSize="{StaticResource MediumFontSize}"
+					              FontFamily="Bahnschrift"
+					              IsTextScaleFactorEnabled="False"
+					              RightTapped="FilterRightTapped"
+					              Click="{x:Bind views:ShellPage.ContinentFilterClick}"
+					              AccessKey="F"
+					              ToolTipService.ToolTip="Yet another Continent filter.  Uncheck all to show everything"  />
+
+					<AppBarButton x:Name="HomeButton" Click="BuildHomeClick" RightTapped="BuildHomeRightTapped" Margin="4" Style="{ThemeResource ButtonRevealStyle}"
+					              ToolTipService.ToolTip="&#x0a;Click to switch between region view and city view&#x0a;Right clck for menu"
+					              AccessKey="H" 
+					>
 							<!--<Button.Resources>
 							<winui:TeachingTip x:Key="HomeButtonTip" Title="Home Button" x:FieldModifier="public"
                                    IsLightDismissEnabled="True" PreferredPlacement="Right" 
@@ -250,28 +270,23 @@ TextSubmitted="CitySubmitted"
 						</Button.Resources>-->
 							<SymbolIcon Symbol="Home"/>
 
-						</Button>
-						<Button Click="PriorCityClick" Margin="4" Style="{ThemeResource ButtonRevealStyle}"
-                            ToolTipService.ToolTip="Switch to prior city in the current city list"
-							AccessKey="Left"
-							>
+						</AppBarButton>
+					<AppBarButton Click="PriorCityClick" Margin="4" Style="{ThemeResource ButtonRevealStyle}"
+					              ToolTipService.ToolTip="Switch to prior city in the current city list"
+					              AccessKey="Left"
+					>
 							<SymbolIcon Symbol="Previous"/>
-						</Button>
-						<Button Click="NextCityClick" Margin="4" Style="{ThemeResource ButtonRevealStyle}"
-                            ToolTipService.ToolTip="Switch to next city in the current city list" 
-							AccessKey="Right" >
+						</AppBarButton>
+					<AppBarButton Click="NextCityClick" Margin="4" Style="{ThemeResource ButtonRevealStyle}"
+					              ToolTipService.ToolTip="Switch to next city in the current city list" 
+					              AccessKey="Right" >
 							<SymbolIcon Symbol="Next"/>
-						</Button>
-						<Button x:Name="focus" Margin="4" Width="140"  VerticalAlignment="Center" x:FieldModifier="public"
+						</AppBarButton>
+						<AppBarButton x:Name="focus" Margin="4" Width="140"  VerticalAlignment="Center" x:FieldModifier="public"
                             Style="{ThemeResource ButtonRevealStyle}" Click="HomeClick" RightTapped="HomeRightTapped" FontFamily="Bahnschrift"
                             ToolTipService.ToolTip="Spot with Focus.&#x0a;Click to re-center or swith to this city&#x0a;Right clck for menu" Visibility="Collapsed"/>
-						<winui:ProgressRing x:Name="progress" IsActive="False" />
-						<TextBlock x:Name="work" x:FieldModifier="public" Margin="6" VerticalAlignment="Center"  />
-						<TextBlock x:Name="Focus" Visibility="Collapsed" MaxWidth="200" />
-						<CheckBox x:Name="mouseOverCanvasBox" Visibility="Collapsed"  x:FieldModifier="public" />
-					</StackPanel>
-				</winui:CommandBar.Content>
-				<winui:CommandBar.SecondaryCommands>
+						
+					
 					<winui:AppBarElementContainer>
 						<ComboBox x:Name="cityListBox" x:FieldModifier="public"
                      IsEditable="True"
@@ -284,36 +299,7 @@ TextSubmitted="CitySubmitted"
 							  
                       Margin="4" />
 					</winui:AppBarElementContainer>
-					<winui:AppBarButton Label="Time"
-                              Icon="Shuffle"
-                          Style="{StaticResource AppBarButtonRevealStyle}"
-                               ToolTipService.ToolTip="No longer does much">
-						<Button.Flyout>
-							<Flyout FlyoutPresenterStyle="{StaticResource TimeFlyoutStyle}">
-								<Grid>
-									<Grid.RowDefinitions>
-										<RowDefinition/>
-										<RowDefinition/>
-									</Grid.RowDefinitions>
-									<TextBlock Grid.Row="1" x:Name="eventTimeTravelText">Preview Time</TextBlock>
-									<Slider x:Name="eventTimeTravelSlider"
-                                        ValueChanged="EventTimeTravelSliderChanged"
-                                        TickFrequency="10"
-                                
-                                        StepFrequency="10"
-                                    SmallChange="10" LargeChange="60"
-                                        HorizontalAlignment="Stretch"
-                                TickPlacement="Outside"
-                                    Maximum="1430.0"
-                                        Minimum="-1430.0"
-                                        Value="{x:Bind eventTimeOffset,Mode=TwoWay}" />
-								</Grid>
-							</Flyout>
-						</Button.Flyout>
-					</winui:AppBarButton>
 
-				</winui:CommandBar.SecondaryCommands>
-				<winui:CommandBar.PrimaryCommands>
 
 					<winui:AppBarButton Click="{x:Bind helpers:NavStack.BackClick}"  Icon="Back" Label="Back" RightTapped="BackRightTapped" Style="{StaticResource AppBarButtonRevealStyle}"
                           ToolTipService.ToolTip="Switch to most recently visited city&#x0a;Right click to view history"  AccessKey=","/>
@@ -331,7 +317,7 @@ TextSubmitted="CitySubmitted"
                                ToolTipService.ToolTip="When in doubt, refresh - Right click to refresh world data"
 								  AccessKey="F5"
                               Icon="RepeatAll">
-						
+
 						<!--<AppBarButton.Resources>
 						<winui:TeachingTip x:Key="RefreshTip"
                                 IsLightDismissEnabled="True" 
@@ -382,31 +368,52 @@ TextSubmitted="CitySubmitted"
 						</Button.Flyout>
 					</winui:AppBarButton>
 					<AppBarSeparator/>
-					<AppBarSeparator/>
 					<AppBarButton Label="Settings" Icon="Setting" Click="ShowSettings" Style="{StaticResource AppBarButtonRevealStyle}"/>
 				</winui:CommandBar.PrimaryCommands>
 			</winui:CommandBar>
-			<winui:SwapChainPanel x:Name="_canvas" Grid.Column="1" Grid.Row="1" Grid.RowSpan="4"
-						BorderThickness="0"
-						ScrollViewer.ZoomMode="Disabled"
-								  IsTabStop="True"
+
+			<tk:GridSplitter
+				IsTabStop="True"
+				PointerMoved="GridSpliterOnPointerReleased"
+				CursorBehavior="ChangeOnSplitterHover"
+				GripperCursor="SizeNorthSouth"
+				VerticalAlignment="Stretch"
+				HorizontalAlignment="Right"
+				Height="11"
+				Grid.Column="{x:Bind grid.ColumnDefinitions.IndexOf(columnHtml) }"
+				Grid.Row="0"
+				Grid.RowSpan="6"
+				Background="Transparent"
+				Canvas.ZIndex="22">
+				<tk:GridSplitter.Element>
+					<FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE784;"
+					/>
+				</tk:GridSplitter.Element>
+			</tk:GridSplitter>
+
+			<winui:SwapChainPanel x:Name="_canvas" 
+			                      Grid.Column="{x:Bind grid.ColumnDefinitions.IndexOf(columnRender)}" 
+			                      Grid.Row="1" Grid.RowSpan="4"
+			                      BorderThickness="0"
+			                      IsTabStop="True"
 							
 					
-						Margin="0,95,0,0"
-						IsHitTestVisible="False"
-						Canvas.ZIndex="12" />
+			                      Margin="0,95,0,0"
+			                      IsHitTestVisible="False"
+			                      Canvas.ZIndex="12" />
 
 
 
-		
-		<Grid Grid.Column="2" Grid.RowSpan="6" Margin="0,0,0,0">
-			<Grid.RowDefinitions>
-				<RowDefinition Height="3*"/>
-				<RowDefinition Height="*"/>
-			</Grid.RowDefinitions>
+
+			<Grid Grid.Column="{x:Bind grid.ColumnDefinitions.IndexOf(columnTabs)}" 
+			      Grid.RowSpan="6" Margin="0,0,0,0">
+				<Grid.RowDefinitions>
+					<RowDefinition Height="3*"/>
+					<RowDefinition Height="*"/>
+				</Grid.RowDefinitions>
 				<winui:Frame x:Name="shellTabs"   IsNavigationStackEnabled="False" x:FieldModifier="public" />
 				<winui:Frame x:Name="spotTabs"  Grid.Row="1" IsNavigationStackEnabled="False" x:FieldModifier="public" />
-			<tk:GridSplitter
+				<tk:GridSplitter
 				IsTabStop="True"
 				CursorBehavior="ChangeOnSplitterHover"
 				GripperCursor="SizeWestEast"
@@ -416,24 +423,25 @@ TextSubmitted="CitySubmitted"
                         Grid.Row="1"
 				Background="#80808080"
                         Canvas.ZIndex="22">
-				<tk:GridSplitter.Element>
-					<FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE76F;"
+					<tk:GridSplitter.Element>
+						<FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE76F;"
                        />
-				</tk:GridSplitter.Element>
-			</tk:GridSplitter>
-		</Grid>
-		<Grid x:Name="chatGrid" Grid.Column="1" Grid.Row="2" Grid.RowSpan="3" Canvas.ZIndex="20" Background="{x:Null}" >
-			<Grid.RowDefinitions>
-				<RowDefinition Height="4*"/>
-				<RowDefinition Height="2*"/>
-			</Grid.RowDefinitions>
-			<Grid.ColumnDefinitions>
-				<ColumnDefinition Width="3*"/>
-				<ColumnDefinition Width="3*"/>
-			</Grid.ColumnDefinitions>
-			<Frame x:Name="chatTabs" x:FieldModifier="public" Grid.Column ="1" Grid.Row="1"  Margin="12,12,16,0" IsNavigationStackEnabled="False"  />
-			<!--Chat Width resizer-->
-			<tk:GridSplitter
+					</tk:GridSplitter.Element>
+				</tk:GridSplitter>
+			</Grid>
+			<Grid x:Name="chatGrid" Grid.Column="{x:Bind grid.ColumnDefinitions.IndexOf(columnRender)}"
+			      Grid.Row="2" Grid.RowSpan="3" Canvas.ZIndex="20" Background="{x:Null}" >
+				<Grid.RowDefinitions>
+					<RowDefinition Height="4*"/>
+					<RowDefinition Height="2*"/>
+				</Grid.RowDefinitions>
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="3*"/>
+					<ColumnDefinition Width="3*"/>
+				</Grid.ColumnDefinitions>
+				<Frame x:Name="chatTabs" x:FieldModifier="public" Grid.Column ="1" Grid.Row="1"  Margin="12,12,16,0" IsNavigationStackEnabled="False"  />
+				<!--Chat Width resizer-->
+				<tk:GridSplitter
                         Background="{x:Null}"
                     Grid.Row="1"
 											IsTabStop="True"
@@ -445,13 +453,13 @@ TextSubmitted="CitySubmitted"
                         VerticalAlignment="Stretch"
                         Width="11"
                         Canvas.ZIndex="22">
-				<tk:GridSplitter.Element>
-					<FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE784;"
+					<tk:GridSplitter.Element>
+						<FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE784;"
                />
-				</tk:GridSplitter.Element>
-			</tk:GridSplitter>
-			<!--Chat Height resizer-->
-			<tk:GridSplitter
+					</tk:GridSplitter.Element>
+				</tk:GridSplitter>
+				<!--Chat Height resizer-->
+				<tk:GridSplitter
                     Grid.Row="1"
                      Tapped="chatResizeTapped"
 												IsTabStop="True"
@@ -464,14 +472,14 @@ TextSubmitted="CitySubmitted"
                         Height="11"
                         HorizontalAlignment="Stretch"
                     >
-				<tk:GridSplitter.Element>
-					<FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE76F;"
+					<tk:GridSplitter.Element>
+						<FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE76F;"
                         />
-				</tk:GridSplitter.Element>
-			</tk:GridSplitter>
-		</Grid>
-		
-		<tk:MarkdownTextBlock x:Name="InAppNote"
+					</tk:GridSplitter.Element>
+				</tk:GridSplitter>
+			</Grid>
+
+			<tk:MarkdownTextBlock x:Name="InAppNote"
                                   Grid.Row="1"
 							  HorizontalAlignment="Left"
                               VerticalAlignment="Top"
@@ -479,7 +487,8 @@ TextSubmitted="CitySubmitted"
 								Margin="20,80,0,0"
 								Background="#48004000"
 								
-							  Grid.Column="1"
+							  Grid.Column="{x:Bind grid.ColumnDefinitions.IndexOf(columnPopup)}"
+							  Grid.ColumnSpan="2"
                               IsTabStop="False"
                              MaxHeight="200"
 							  IsHitTestVisible="False"
@@ -487,7 +496,7 @@ TextSubmitted="CitySubmitted"
                               
                                   Canvas.ZIndex="55" />
 
-		<!--<winui:InfoBar x:Name="infoBar"
+			<!--<winui:InfoBar x:Name="infoBar"
                                   Grid.Row="1"
                                   Grid.Column="1"
 					   x:FieldModifier="public"
@@ -495,36 +504,36 @@ TextSubmitted="CitySubmitted"
                                >
 			<Button></Button>
 			-->
-		<!--<tk:MarkdownTextBlock x:Name="infoMD" x:FieldModifier="public" Text="TBA" Background="{x:Null}"/>-->
-		<!--
+			<!--<tk:MarkdownTextBlock x:Name="infoMD" x:FieldModifier="public" Text="TBA" Background="{x:Null}"/>-->
+			<!--
 		</winui:InfoBar>-->
-		<winui:WebView2 x:Name="webView" x:FieldModifier="public"
+			<winui:WebView2 x:Name="webView" x:FieldModifier="public"
 						Grid.RowSpan="5"
-						Grid.ColumnSpan="2"
+						Grid.ColumnSpan="3"
 						Canvas.ZIndex="10"
 						AllowFocusOnInteraction="False"
 						AllowDrop="False"
 						AllowFocusWhenDisabled="False"					
 						Grid.Row="1" />
 
-		<tk:GridSplitter
+			<tk:GridSplitter
                         Background="{x:Null}"
                     Grid.RowSpan="5"
 										IsTabStop="True"
 			 				
 			CursorBehavior="ChangeOnSplitterHover"
 				GripperCursor="SizeWestEast"
-                        Grid.Column="1"
+                        Grid.Column="{x:Bind grid.ColumnDefinitions.IndexOf(columnRender)}"
                         HorizontalAlignment="Right"
                         VerticalAlignment="Stretch"
                         Width="11"
                         Canvas.ZIndex="22">
-			<tk:GridSplitter.Element>
-				<FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE784;"
+				<tk:GridSplitter.Element>
+					<FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE784;"
                  
 						  />
-			</tk:GridSplitter.Element>
-		</tk:GridSplitter>
-	</Grid>
+				</tk:GridSplitter.Element>
+			</tk:GridSplitter>
+		</Grid>
 	</Grid>
 </winui:Page>

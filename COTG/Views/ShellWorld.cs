@@ -174,7 +174,7 @@ namespace CnV.Views
 
 		//	Assert(mouseOverCanvas== true);
 			mouseOverCanvas = false;
-			instance.mouseOverCanvasBox.IsChecked = mouseOverCanvas;
+		//	instance.mouseOverCanvasBox.IsChecked = mouseOverCanvas;
 			
 			var point = e.GetCurrentPoint(canvas);
 			Canvas_PointerExited(point.Position, point.PointerId);
@@ -482,7 +482,7 @@ namespace CnV.Views
 			if(!mouseOverCanvas)
 			{
 				mouseOverCanvas = true;
-				instance.mouseOverCanvasBox.IsChecked = mouseOverCanvas;
+			//	instance.mouseOverCanvasBox.IsChecked = mouseOverCanvas;
 
 //				Trace("MouseEnterred");
 			}
@@ -610,12 +610,12 @@ namespace CnV.Views
 		//}
 
 		static public int lastCanvasC;
-		private void EventTimeTravelSliderChanged(object sender, RangeBaseValueChangedEventArgs e)
-		{
-			var dt = TimeSpan.FromMinutes(e.NewValue);
-			var serverTime = CnVServer.ServerTime() + TimeSpan.FromMinutes(e.NewValue);
-			eventTimeTravelText.Text = $"Attack Time Travel:\t\t{dt.Hours}:{dt.Minutes},\t\tT:{serverTime.Format()}";
-		}
+		//private void EventTimeTravelSliderChanged(object sender, RangeBaseValueChangedEventArgs e)
+		//{
+		//	var dt = TimeSpan.FromMinutes(e.NewValue);
+		//	var serverTime = CnVServer.ServerTime() + TimeSpan.FromMinutes(e.NewValue);
+		//	eventTimeTravelText.Text = $"Attack Time Travel:\t\t{dt.Hours}:{dt.Minutes},\t\tT:{serverTime.Format()}";
+		//}
 
 		/// <summary>
 		/// <inheritdoc 
@@ -1132,7 +1132,7 @@ namespace CnV.Views
 		//	App.cursorDefault.Set();
 			 // prevent idle timer;
 			mouseOverCanvas = true;		
-			instance.mouseOverCanvasBox.IsChecked = mouseOverCanvas;
+		//	instance.mouseOverCanvasBox.IsChecked = mouseOverCanvas;
 
 			
 			//	PointerInfo(e);
@@ -1463,6 +1463,7 @@ namespace CnV.Views
 			}
 		}
 
+		
 	}
 	public static class ShellHelper
 	{

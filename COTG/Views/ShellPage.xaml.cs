@@ -344,10 +344,7 @@ namespace CnV.Views
 			{
 				AppS.DispatchOnUIThreadLow(SettingsPage.ShowWhatsNew);
 			}
-#if DEBUG
-			KeyboardFocus.Start(Focus,canvas.XamlRoot);
-			mouseOverCanvasBox.Visibility = Visibility.Visible;
-#endif
+
 			
 
 
@@ -1320,7 +1317,8 @@ namespace CnV.Views
 			{
 				runOnUiThread= true;
 				debounceDelay=100;
-				throttleDelay=300;
+				throttleDelay=200;
+				throttled = true;
 				base.func=F;
 			}
 			public void Go(bool updateLayout)
@@ -1372,11 +1370,16 @@ namespace CnV.Views
 
 				}
 
-				float zoom = htmlVisible || SettingsPage.webZoomSmall <= 0 ? SettingsPage.webZoom : SettingsPage.webZoomSmall;
-				var canvasScaledX = (zoom * canvasBaseXUnscaled).RoundToInt();
+				var webWidth = instance.columnHtml.ActualWidth;
+				var zoom = (float)( webWidth/ 420.0);
+				var htmlVisible = zoom > 0.25f;
+				SettingsPage.HtmlZoom = zoom;
+				
+//				float zoom = htmlVisible || SettingsPage.webZoomSmall <= 0 ? SettingsPage.webZoom : SettingsPage.webZoomSmall;
+				var canvasScaledX = (webWidth).RoundToInt();
 				var canvasScaledY = (zoom * canvasBaseYUnscaled).RoundToInt();
 
-				var htmlShift = htmlVisible||SettingsPage.webZoomSmall>0 ? 0 : -canvasScaledX;
+				var htmlShift = 0;//htmlVisible ? 0 : -canvasScaledX;
 
 				popupLeftMargin = ((popupLeftOffset*zoom).RoundToInt()-canvasScaledX).Max0();
 				popupTopMargin = ((popupTopOffset*zoom).RoundToInt()-canvasScaledY).Max0();
@@ -1399,7 +1402,7 @@ namespace CnV.Views
 						if(JSClient.view != null && zoom != webZoomCurrent)
 						{
 							webZoomCurrent= zoom;
-							JSClient.view.ExecuteScriptAsync($"document.body.style.zoom={zoom};");
+							JSClient.view.ExecuteScriptAsync($"document.body.style.zoom={(htmlVisible ? zoom : 1.0f)};");
 						}
 						if(updateLayout)
 						{
@@ -1422,26 +1425,25 @@ namespace CnV.Views
 
 							canvasBaseX = _canvasBaseX;
 							canvasBaseY = _canvasBaseY;
-							var initialWidth0 = instance.grid.ColumnDefinitions[0].ActualWidth;
-							var initialWidth1 = instance.grid.ColumnDefinitions[1].ActualWidth;
-							var initialMargin = instance.webView.Margin.Left;
-							var initialWidth2 = instance.grid.ColumnDefinitions[2].ActualWidth;
-
-							instance.webView.Margin= new(htmlShift,0,0,0);
-							//							var delta = -htmlShift + (canvasBaseX - initialWidth0);
+				//			var initialWidth0 = webWidth;
+				//			var initialWidth1 = instance.columnRender.ActualWidth;
+				//			var initialMargin = instance.webView.Margin.Left;
+							var initialWidth2 = instance.columnTabs.ActualWidth;
+							instance.columnPopup.Width = new(popupLeftMargin);
+							//instance.webView.Margin= new(htmlShift,0,0,0);
+							////							var delta = -htmlShift + (canvasBaseX - initialWidth0);
 							var gridWidth = instance.grid.ActualWidth;
-							instance.grid.ColumnDefinitions[0].Width = new GridLength(canvasBaseX.Max(0),GridUnitType.Pixel);
+			//				instance.grid.ColumnDefinitions[0].Width = new GridLength(canvasBaseX.Max(0),GridUnitType.Pixel);
 							if(updateLayout)
 							{
-								var newWidth1 = ((gridWidth-canvasScaledX)*szC -(_canvasBaseX-canvasScaledX)).RoundToInt().Max0();
-								instance.grid.ColumnDefinitions[1].Width = new(newWidth1.Max(0));//	instance.grid.RowDefinitions[0].Height = new(canvasYOffset);
-								instance.grid.ColumnDefinitions[2].Width = new GridLength(1,GridUnitType.Star);//	instance.grid.RowDefinitions[0].Height = new(canvasYOffset);
+								var newWidth1 = (gridWidth*(1-szC));
+								instance.columnTabs.Width = new(newWidth1);// leave 2 as is	instance.grid.ColumnDefinitions[1].Width = GridLength.Auto;
 							}
 							else
 							{
-								instance.grid.ColumnDefinitions[2].Width = new(initialWidth2.Max(0));// leave 2 as is	instance.grid.ColumnDefinitions[1].Width = GridLength.Auto;
-								instance.grid.ColumnDefinitions[1].Width = new GridLength(1,GridUnitType.Star);//	GridLength.Auto;//	instance.grid.RowDefinitions[0].Height = new(canvasYOffset);
+								instance.columnTabs.Width = new(initialWidth2.Max(0));// leave 2 as is	instance.grid.ColumnDefinitions[1].Width = GridLength.Auto;
 							}
+							instance.columnRender.Width = new GridLength(1, GridUnitType.Star);//	GridLength.Auto;//	instance.grid.RowDefinitions[0].Height = new(canvasYOffset);
 
 							instance.grid.RowDefinitions[5].Height = new(40*zoom);//new GridLength(newWidth1,GridUnitType.Pixel);//	instance.grid.RowDefinitions[0].Height = 
 
@@ -1604,11 +1606,16 @@ namespace CnV.Views
 			ContinentTagFilter.Show(true);
 		}
 
-//	protected override void OnKeyboardAcceleratorInvoked(KeyboardAcceleratorInvokedEventArgs args) => base.OnKeyboardAcceleratorInvoked(args);
-//		protected override void OnProcessKeyboardAccelerators(ProcessKeyboardAcceleratorEventArgs args) => base.OnProcessKeyboardAccelerators(args);
-	//	protected override void OnPointerEntered(PointerRoutedEventArgs e) => base.OnPointerEntered(e);
-	//	protected override void OnPointerPressed(PointerRoutedEventArgs e) => base.OnPointerPressed(e);
-	//	protected override void OnPointerMoved(PointerRoutedEventArgs e) => base.OnPointerMoved(e);
+		private void GridSpliterOnPointerReleased(object sender, PointerRoutedEventArgs e)
+		{
+		//	updateHtmlOffsets.Go(true);
+		}
+
+		//	protected override void OnKeyboardAcceleratorInvoked(KeyboardAcceleratorInvokedEventArgs args) => base.OnKeyboardAcceleratorInvoked(args);
+		//		protected override void OnProcessKeyboardAccelerators(ProcessKeyboardAcceleratorEventArgs args) => base.OnProcessKeyboardAccelerators(args);
+		//	protected override void OnPointerEntered(PointerRoutedEventArgs e) => base.OnPointerEntered(e);
+		//	protected override void OnPointerPressed(PointerRoutedEventArgs e) => base.OnPointerPressed(e);
+		//	protected override void OnPointerMoved(PointerRoutedEventArgs e) => base.OnPointerMoved(e);
 
 		//private void shellPage_ProcessKeyboardAccelerators(UIElement sender,ProcessKeyboardAcceleratorEventArgs args)
 		//{
