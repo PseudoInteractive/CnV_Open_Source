@@ -580,7 +580,7 @@ namespace CnV.Draw
 			cityWallsLand = Helper.LoadLitMaterial(cityBase + "baseland");
 			cityWallsWater = Helper.LoadLitMaterial(cityBase + "basewater");
 		}
-		public static void UpdateLighting(Lighting value)
+		public static void UpdateLighting()
 		{
 			if(buildingAtlas.effect is not null)
 			// reset effects to lit or unlit

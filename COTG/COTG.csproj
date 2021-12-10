@@ -231,6 +231,7 @@
     <Compile Include="Game\Army.cs" />
     <Compile Include="Game\Attack.cs" />
     <Compile Include="Game\BlessedCity.cs" />
+    <Compile Include="Game\CanvasHelpers.cs" />
     <Compile Include="Game\City.cs" />
     <Compile Include="Game\City2.cs" />
     <Compile Include="Game\CityCustom.cs" />
@@ -437,6 +438,7 @@
     <Compile Include="Views\TroopBox.xaml.cs">
       <DependentUpon>TroopBox.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\UpdateHtmlOffsets.cs" />
     <Compile Include="Views\UserTab.cs" />
     <Compile Include="Views\WebViewPage.xaml.cs">
       <DependentUpon>WebViewPage.xaml</DependentUpon>

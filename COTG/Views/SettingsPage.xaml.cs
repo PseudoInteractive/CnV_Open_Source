@@ -64,34 +64,33 @@ namespace CnV.Views
 		public static string attackPlanName = "PlanB";
 		//private static bool _isLoggedIn;
 		//private static bool _isBusy;
-		public static float renderScale=1.0f;
+		public static float renderQuality=0.75f;
+
+		public float RenderQuality
+		{
+			get => renderQuality;
+			set
+			{
+				if ( !renderQuality.AlmostEquals(value,1.0f/8.0f)  )
+				{
+					AGame.UpdateRenderQuality(renderQuality);
+				}
+			}
+		}
+		public static int layout;
+		public static LayoutOffsets[] layoutOffsets = new LayoutOffsets[]
+		{
+			new(0.875f, 0.333f, 0.75f, 0.42f, 0.375f),
+			new(1.0f, 0.0f, 0.75f, 0.42f, 0.375f),
+			
+			new(0.5f, 0.25f, 0.75f, 0.42f, 0.25f),
 		
-		public static float webZoom = 0.875f;
-		public static float webZoomSmall = 0.5f;
+			new(0.5f, 0.5f, 0.75f, 0.42f, 0.375f),
+			new(0f, 0.5f, 0.375f, 0.42f, 0.25f),
 
+			new(0.875f, 0.333f, 0.75f, 0.625f, 0.625f),
+		};
 
-		public static float HtmlZoom
-		{
-			get => webZoom;
-			set {
-				if(webZoom != value)
-				{
-					webZoom = value;
-					ShellPage.updateHtmlOffsets.Go(false);
-				}
-			}
-		}
-		public static float HtmlZoomSmall
-		{
-			get => webZoomSmall;
-			set {
-				if(webZoomSmall != value)
-				{
-					webZoomSmall = value;
-					ShellPage.updateHtmlOffsets.Go(false);
-				}
-			}
-		}
 		public static Lighting lighting = Lighting.day;
 
 		public static bool donationsProportionateToWhatsNeeded = true;
@@ -259,7 +258,7 @@ namespace CnV.Views
 			set
 			{
 				lighting = (Lighting)value;
-				AGame.SetLighting(lighting);
+				AGame.UpdateLighting();
 			}
 		}
 		bool uiStayAlive
@@ -456,8 +455,19 @@ namespace CnV.Views
 					raidCarryMax = raidCarryMin*1.75f; // error!
 				AppS.DispatchOnUIThread(()=>	UpdateZoom() );
 				//	DungeonView.Initialize();
-			
-			}
+		layoutOffsets = new LayoutOffsets[]
+		{
+			new(0.875f, 0.333f, 0.75f, 0.42f, 0.375f),
+			new(1.0f, 0.0f, 0.75f, 0.42f, 0.375f),
+
+			new(0.5f, 0.25f, 0.75f, 0.42f, 0.25f),
+
+			new(0.5f, 0.5f, 0.75f, 0.42f, 0.375f),
+			new(0f, 0.5f, 0.375f, 0.42f, 0.25f),
+
+			new(0.875f, 0.333f, 0.75f, 0.625f, 0.625f),
+		};
+	}
 			catch (Exception e)
 			{
 				LogEx(e);

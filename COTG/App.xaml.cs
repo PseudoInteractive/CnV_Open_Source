@@ -243,7 +243,7 @@ namespace CnV
 
 		private static Task SaveState()
 		{
-			var t0 = BuildQueue.SaveAll();
+			var t0 = BuildQueue.SaveAll(true,false);
 			var t1 = AttackTab.SaveAttacksBlock();
 			SettingsPage.SaveAll();
 			return Task.WhenAll(t0,t1);

@@ -415,7 +415,7 @@ namespace CnV.Views
 			var info = supporter.info;
 			var city = supporter.city;
 			var res = supporter.city.res.Sub(reserve).Max(0);
-			var viaWater = NearRes.instance.viaWater;
+		//	var viaWater = NearRes.instance.viaWater;
 			var shipping = GetTransport(city);//viaWater ? (city.shipsHome - SettingsPage.nearResShipReserve).Max0() * 10000 : (city.cartsHome - SettingsPage.nearResCartReserve).Max0() * 1000;
 			if (shipping > res.sum)
 			{
@@ -563,7 +563,7 @@ namespace CnV.Views
 		private void MaxResClick(int id)
 		{
 			selected.res[id] = selected.ResMax(id);
-			var viaWater = NearRes.instance.viaWater;
+			//var viaWater = NearRes.instance.viaWater;
 			var info = selected.info;
 			var transport = GetTransport(selected.city);
 			if (viaWater)

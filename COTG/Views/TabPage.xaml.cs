@@ -22,16 +22,15 @@ namespace CnV.Views
 	public sealed partial class TabPage:Page
 	{
 		public static List<Window> tabWindows = new();
-		public static TabPage mainTabs;
-		public static TabPage secondaryTabs;
-		const Window RootAppWindow = null;
-		static public TabPage[] tabPages;
-		static public UserTab[][] hiddenTabs;
+		public static TabPage? mainTabs;
+		public static TabPage? secondaryTabs;
+		public static TabPage[]? tabPages;
+		public static UserTab[][]? hiddenTabs;
 
 		static TabPage CreateTabView(Frame frame)
 		{
 			frame.Navigate(typeof(TabPage));
-			return frame.Content as TabPage;
+			return (TabPage)frame.Content;
 
 		}
 		public static void Initialize()
@@ -42,7 +41,7 @@ namespace CnV.Views
 			{
 				ChatTab.Ctor();
 
-				mainTabs = CreateTabView(ShellPage.instance.shellTabs);
+				mainTabs = CreateTabView(ShellPage.instance.topTabs);
 				secondaryTabs = CreateTabView(ShellPage.instance.spotTabs);
 				ChatTab.tabPage = CreateTabView(ShellPage.instance.chatTabs);
 				tabPages = new[] { mainTabs,secondaryTabs,ChatTab.tabPage };

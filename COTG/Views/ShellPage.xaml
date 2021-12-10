@@ -191,11 +191,11 @@ Grid.Column="0"
 			</Grid.RowDefinitions>
 			<Grid.ColumnDefinitions>
 				<!-- 0 HTML column -->
-				<ColumnDefinition Width="365" x:Name="columnHtml" />
+				<ColumnDefinition Width="420" x:Name="columnHtml" />
 				<!-- 1 black space for popups -->
 				<ColumnDefinition Width="0"  x:Name="columnPopup" />
 				<!-- 2 Render View -->
-				<ColumnDefinition Width="2*"  x:Name="columnRender" />
+				<ColumnDefinition Width="*"  x:Name="columnRender" />
 				<!-- 3 Tab View -->
 				<ColumnDefinition Width="1*" x:Name="columnTabs" />
 			</Grid.ColumnDefinitions>
@@ -209,26 +209,15 @@ Grid.Column="0"
 						<ColumnDefinition Width ="Auto"/>
 						<ColumnDefinition Width ="Auto"/>
 						<ColumnDefinition  Width ="Auto"/>
+						<ColumnDefinition  Width ="Auto"/>
+						<ColumnDefinition  Width ="Auto"/>
 					</Grid.ColumnDefinitions>
 				<ProgressRing x:Name="progress" IsActive="False" />
 				<TextBlock Grid.Column="1" x:Name="work" x:FieldModifier="public" Margin="6" VerticalAlignment="Center" Width="255" />
 				<TextBox Grid.Column="2" x:Name="coords" Margin="4" Width="100" TextAlignment="Center"  Text="000:000" VerticalAlignment="Center" x:FieldModifier="public" KeyDown="coords_KeyDown"/>
-				</Grid>
-				</winui:CommandBar.Content>
-			<winui:CommandBar.PrimaryCommands  >
-				<AppBarElementContainer>
-					<ComboBox x:Name="windowLayout" SelectedIndex="2" SelectionChanged="windowLayout_SelectionChanged"  VerticalAlignment="Center" Margin="4"
-					                       ToolTipService.ToolTip="Select a view layout"  >
-							<ComboBoxItem Content="Legacy"/>
-							<ComboBoxItem Content="Max View"/>
-							<ComboBoxItem Content="Busy"/>
-							<ComboBoxItem Content="Task"/>
-							<ComboBoxItem Content="Sheets"/>
-							<ComboBoxItem Content="Chat"/>
-					</ComboBox>
-					</AppBarElementContainer>
-					<AppBarElementContainer>	
-					<winui:ComboBox x:Name="cityBox" x:FieldModifier="public" 
+						<ComboBox Grid.Column="3" x:Name="windowLayout" SelectedIndex="2" SelectionChanged="windowLayout_SelectionChanged"  VerticalAlignment="Center" Margin="4"
+						          ToolTipService.ToolTip="Select a view layout"  ItemsSource="{x:Bind layoutOptions}"  />
+						<winui:ComboBox Grid.Column="4" x:Name="cityBox" x:FieldModifier="public" 
 					                Width="200"
 					                IsEditable="True"
 					                TextSubmitted="CitySubmitted"
@@ -236,17 +225,19 @@ Grid.Column="0"
                  
 					                VerticalAlignment="Center" ToolTipService.ToolTip="'Build City'- the city that you would build if you were building a city"
 					                Margin="4" >
-							<winui:ComboBox.ItemTemplate>
-								<DataTemplate x:Name="SingleLineDataTemplate" x:DataType="game:City">
-									<StackPanel Orientation="Horizontal" Height="32" >
-										<Image Source="{x:Bind icon}" Height="32" Width="32" Stretch="Fill" VerticalAlignment="Center"/>
-										<TextBlock Text="{x:Bind nameAndRemarks}" VerticalAlignment="Center" />
-									</StackPanel>
-								</DataTemplate>
-							</winui:ComboBox.ItemTemplate>
-						</winui:ComboBox>
-					</AppBarElementContainer>
-
+						<winui:ComboBox.ItemTemplate>
+							<DataTemplate x:Name="SingleLineDataTemplate" x:DataType="game:City">
+								<StackPanel Orientation="Horizontal" Height="32" >
+									<Image Source="{x:Bind icon}" Height="32" Width="32" Stretch="Fill" VerticalAlignment="Center"/>
+									<TextBlock Text="{x:Bind nameAndRemarks}" VerticalAlignment="Center" />
+								</StackPanel>
+							</DataTemplate>
+						</winui:ComboBox.ItemTemplate>
+					</winui:ComboBox>
+					</Grid>
+				</winui:CommandBar.Content>
+			<winui:CommandBar.PrimaryCommands  >
+				
 					
 					<AppBarButton x:Name="ContinentFilter"  x:FieldModifier="public"
 					              Content="Cont/Tags"
@@ -408,10 +399,10 @@ Grid.Column="0"
 			<Grid Grid.Column="{x:Bind grid.ColumnDefinitions.IndexOf(columnTabs)}" 
 			      Grid.RowSpan="6" Margin="0,0,0,0">
 				<Grid.RowDefinitions>
-					<RowDefinition Height="3*"/>
+					<RowDefinition Height="3*"  x:Name="rowTabTop"  />
 					<RowDefinition Height="*"/>
 				</Grid.RowDefinitions>
-				<winui:Frame x:Name="shellTabs"   IsNavigationStackEnabled="False" x:FieldModifier="public" />
+				<winui:Frame x:Name="topTabs"   IsNavigationStackEnabled="False" x:FieldModifier="public" />
 				<winui:Frame x:Name="spotTabs"  Grid.Row="1" IsNavigationStackEnabled="False" x:FieldModifier="public" />
 				<tk:GridSplitter
 				IsTabStop="True"
@@ -432,12 +423,12 @@ Grid.Column="0"
 			<Grid x:Name="chatGrid" Grid.Column="{x:Bind grid.ColumnDefinitions.IndexOf(columnRender)}"
 			      Grid.Row="2" Grid.RowSpan="3" Canvas.ZIndex="20" Background="{x:Null}" >
 				<Grid.RowDefinitions>
-					<RowDefinition Height="4*"/>
-					<RowDefinition Height="2*"/>
+					<RowDefinition Height="*"/>
+					<RowDefinition Height="100"  x:Name="rowChat"  />
 				</Grid.RowDefinitions>
 				<Grid.ColumnDefinitions>
-					<ColumnDefinition Width="3*"/>
-					<ColumnDefinition Width="3*"/>
+					<ColumnDefinition Width="*"/>
+					<ColumnDefinition Width="100"  x:Name="columnChat"  />
 				</Grid.ColumnDefinitions>
 				<Frame x:Name="chatTabs" x:FieldModifier="public" Grid.Column ="1" Grid.Row="1"  Margin="12,12,16,0" IsNavigationStackEnabled="False"  />
 				<!--Chat Width resizer-->

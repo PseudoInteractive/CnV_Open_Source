@@ -108,24 +108,24 @@ namespace CnV
 		//public static string userAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.114 Safari/537.36";
 		//public static string userAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.114 Safari/537.36 Edg/91.0.864.54";
 		//		public static string userAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/93.0.4577.82 Safari/537.36 Edg/93.0.961.52";
-		public static string userAgent;// = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.61 Safari/537.36 Edg/94.0.992.31";
+		public static string? userAgent;// = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.61 Safari/537.36 Edg/94.0.992.31";
 									   //        public static JsonDocument ppdt;
 		public static JSClient instance = new JSClient();
-		public static WebView2 view;
-		public static CoreWebView coreWebView;
+		public static WebView2? view;
+		public static CoreWebView? coreWebView;
 		//public static WebViewBrush webViewBrush; 
-		public static HttpClientHandler httpFilter;
+		public static HttpClientHandler? httpFilter;
 
 		//	public static HttpCookieManager cookieManager;
 		//		const int clientCount = 6;
 		//	public static ConcurrentBag<HttpClient> clientPool;
 		//	public static SemaphoreSlim clientPoolSema = new SemaphoreSlim(clientCount);
-		static HttpClient _downloadImageClient;
+		static HttpClient? _downloadImageClient;
 		static bool councillorsChecked;
 		public static int spanX;
 		public static int spanY;
-		public static string cotgS;
-		public static string cookies;
+		public static string? cotgS;
+		public static string? cookies;
 		// hack:  resources for web load
 		//		static string jsFunkyEtc;
 

@@ -331,12 +331,11 @@ namespace CnV
 						PlayerTables.playersGame.Count + 1; // Hack!  If two people do this at once it will be bad
 					// Add ourselves to the list of World players for W0
 					
-
 					// Add ourselves to the Global list of players
 					// We could reload but we are just adding it to the end of the list
 					{
 						var gp = new PlayerGameEntity(playerId);
-						gp.playFabId = Player.myPlayfabId;
+						gp.SetPlayFabId(Player.myPlayfabId);
 						gp.playerName = playerName;
 						var t0 = PlayerGameEntity.table.UpsertAsync(gp);
 						PlayerTables.playersGame[playerId] = gp;
@@ -344,6 +343,7 @@ namespace CnV
 						// Do we need to delay before refetching?
 						var pw = new PlayerWorldEntity(World.world, playerId);
 						var t1 = PlayerWorldEntity.table.UpsertAsync(pw);
+						
 						await Task.WhenAll(t0, t1);
 					}
 					// no need to await? Maybe?

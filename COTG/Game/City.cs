@@ -1583,7 +1583,7 @@ namespace CnV.Game
 			t = TimeSpan.Zero;
 
 			var targetC = Spot.GetOrAdd(target);
-			if (!targetC.isOnWater || !isOnWater)
+			if (!canSendViaWater)
 				return false;
 
 
@@ -1593,6 +1593,9 @@ namespace CnV.Game
 			return true;
 
 		}
+
+		private bool canSendViaWater => (isOnWater && ships>0);
+
 		public bool ComputeTravelTime(int target, bool onlyHome,bool includeOffense,bool incudeSenators,bool includeSE, bool viaWater,float maxHours, ref float hours)
 		{
 			var onDifferentContinent = cont != target.CidToContinent();

@@ -622,7 +622,7 @@ namespace CnV.Game
 				var bd = FindExtraBuilding();
 				if (bd != -1)
 				{
-					if (SettingsPage.demoBuildingOnBuildIfFull == null)
+					if (SettingsPage.demoBuildingOnBuildIfFull == null|| showUI==true)
 					{
 						Status($"Maybe destory {postQueueBuildings[bd].name} to make room...",dryRun);
 						if(showUI!=false && !dryRun )

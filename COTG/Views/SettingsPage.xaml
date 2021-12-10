@@ -38,7 +38,7 @@
 			<wct:WrapPanel Orientation="Horizontal"
 						   Margin="4">
 
-
+				<Slider Height="128" Header="Quality" Value="{x:Bind RenderQuality, Mode=TwoWay}" Maximum="1.0" TickFrequency="0.25"  StepFrequency="0.25" SmallChange="0.25" Margin="8" TickPlacement="Outside" Orientation="Vertical" ToolTipService.ToolTip="Render Quality vs Performance, lower is faster (if your video card is weak)" />
 
 				<controls:RadioButtons Header="Lighting"
                    SelectedIndex="{x:Bind uiLighting, Mode=TwoWay}">
@@ -66,8 +66,6 @@
 						   Margin="4">
 				<Slider Height="128" Header="Font Size" Value="{x:Bind views:SettingsPage.tabZoom, Mode=TwoWay}" Maximum="1.0" TickFrequency="0.125"  StepFrequency="0.0625" SmallChange="0.0625" Margin="8" TickPlacement="Outside" Orientation="Vertical" ToolTipService.ToolTip="Must restart to see changes" ValueChanged="{x:Bind views:SettingsPage.UpdateZoom}" />
 				<Slider Height="128" Header="Chat Font Size" Value="{x:Bind views:SettingsPage.chatZoom, Mode=TwoWay}" Maximum="1.0" TickFrequency="0.125"  StepFrequency="0.0625" SmallChange="0.0625" Margin="8" TickPlacement="Outside" Orientation="Vertical" ToolTipService.ToolTip="Must restart to see changes" ValueChanged="{x:Bind views:SettingsPage.UpdateZoom}" />
-				<Slider Height="128" Header="HTML Zoom" Value="{x:Bind views:SettingsPage.HtmlZoom, Mode=TwoWay}" Maximum="1.25" TickFrequency="0.125"  StepFrequency="0.0625" SmallChange="0.0625" Margin="8" TickPlacement="Outside" Orientation="Vertical" ToolTipService.ToolTip="Scales COTG HTML"  />
-				<Slider Height="128" Header="HTML Zoom Small" Value="{x:Bind views:SettingsPage.HtmlZoomSmall, Mode=TwoWay}" Maximum="1.25" TickFrequency="0.125"  StepFrequency="0.0625" SmallChange="0.0625" Margin="8" TickPlacement="Outside" Orientation="Vertical" ToolTipService.ToolTip="Scales COTG HTML in compact HTML layout modes (i.e. full screen region and others) set to 0 to completetly hide the left bar but keep the top bar normal"  />
 			</wct:WrapPanel>
 
 			<wct:WrapPanel Orientation="Horizontal">

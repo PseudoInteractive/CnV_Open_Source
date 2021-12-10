@@ -1098,9 +1098,13 @@ public static class BuildQueue
 	static System.Timers.Timer saveTimer;
 	public static byte buildActionCounter; // needs to be saved to disc
 
+	public static bool needSave;
 	//	public AsyncLock queueLock = new(1,1);
-	public static void SaveNeeded() => buildActionCounter = 3;
-	//		public static Utf8ValueStringBuilder commandBuilder = ZString.CreateUtf8StringBuilder();
+	public static void SaveNeeded()
+	{
+		needSave = true;
+		buildActionCounter = 3;
+	} //		public static Utf8ValueStringBuilder commandBuilder = ZString.CreateUtf8StringBuilder();
 
 	public static StorageFolder folder => ApplicationData.Current.LocalFolder;
 	//static string fileName => $"buildQueue{JSClient.world}_{Player.myName}.json";
@@ -1229,15 +1233,17 @@ public static class BuildQueue
 		saveTimer = null;
 		_saveTimer.Stop();
 
-		SaveAll().Wait();
+		SaveAll(true,false).Wait();
 
 	}
 
 	private static string fileName => $"buildQueue{JSClient.world}_{Player.myName}.json";
-	static internal async Task SaveAll()
+	static internal async Task SaveAll(bool force, bool async)
 	{
 
 		if(!initialized)
+			return;
+		if (!force && !BuildQueue.needSave)
 			return;
 		try
 		{
@@ -1246,51 +1252,63 @@ public static class BuildQueue
 			if(ExtendedQueue.all.Any())
 			{
 				IDisposable[] locks = null;
-				await ExtendedQueue.processLock.LockAsync();
-
 				try
 				{
-					var all = ExtendedQueue.all.ToArray(); ;
-					locks = new IDisposable[all.Length];
+				if (async)
+				{
+					await ExtendedQueue.processLock.LockAsync();
 
-					for(int i = 0;i<all.Length;++i)
-					{
-
-						Log($"SaveQWait {i}");
-						locks[i] = await all[i].Value.queueLock.LockAsync();
-
-					}
+						var all = ExtendedQueue.all.ToArray();
+						;
 
 
-					Log("SaveQWait1");
+						locks = new IDisposable[all.Length];
+
+
+						for (int i = 0; i < all.Length; ++i)
+						{
+
+							Log($"SaveQWait {i}");
+							locks[i] = await all[i].Value.queueLock.LockAsync();
+
+						}
+					
+					
+				}
+
+
+				Log("SaveQWait1");
 
 					var str = Serialize();
 
-					try
-					{
 						LocalFiles.Write(fileName,str);
-					}
-					catch(Exception ex)
-					{
-						LogEx(ex);
-						SaveNeeded();
-					}
+						BuildQueue.needSave = false;
+				}
+				catch(Exception ex)
+				{
+					LogEx(ex);
+					SaveNeeded();
 				}
 				finally
 				{
 					Log("SaveQDoneA");
-					ExtendedQueue.processLock.Release(); ;
-
-					Log("SaveQDone0");
-					if(locks!=null)
+					if (async)
 					{
-						foreach(var i in locks)
+						ExtendedQueue.processLock.Release();
+						;
+
+						Log("SaveQDone0");
+						if (locks != null)
 						{
-							if(i!= null)
-								i.Dispose();
+							foreach (var i in locks)
+							{
+								if (i != null)
+									i.Dispose();
+							}
 						}
+
+						Log("SaveQDone1");
 					}
-					Log("SaveQDone1");
 				}
 				//Log($"SaveQueue: {str}");
 
@@ -1327,7 +1345,7 @@ public static class BuildQueue
 			//{
 			//	return;
 			//}
-			await SaveAll();
+			await SaveAll(false,true);
 		}
 		catch(Exception ex)
 		{

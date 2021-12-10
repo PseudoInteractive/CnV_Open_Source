@@ -35,11 +35,12 @@ using System.Reflection;
 using CommunityToolkit.WinUI.Helpers;
 using System.Collections.ObjectModel;
 using CnV;
-
 namespace CnV.Views
 {
 	using Game;
+	
 	using Helpers;
+
 	using Services;
 
 	//public class LogEntryStruct
@@ -55,6 +56,11 @@ namespace CnV.Views
 	{
 		public const int canvasZDefault = 11;
 		public const int canvasZBack = 0;
+		public int  layout
+		{
+			get=> CnV.Views.SettingsPage.layout;
+			set => CnV.Views.SettingsPage.layout = value;
+		}
 
 		class LayoutItem
 		{
@@ -63,11 +69,13 @@ namespace CnV.Views
 
 		}
 
-		LayoutItem[] layoutOptions =  Enum.GetValues<Layout>().Select(a=>new LayoutItem(){name=a.ToString(),id=(int)a}).ToArray();
+		string[] layoutOptions =  System.Linq.Enumerable.Range(0,SettingsPage.layoutOffsets.Length).Select(a=> $"Layout {a}").ToArray();
 		//private readonly KeyboardAccelerator _altLeftKeyboardAccelerator = BuildKeyboardAccelerator(VirtualKey.Left, VirtualKeyModifiers.Menu);
 		//private readonly KeyboardAccelerator _backKeyboardAccelerator = BuildKeyboardAccelerator(VirtualKey.GoBack);
 		//private readonly KeyboardAccelerator _forwardKeyboardAccelerator = BuildKeyboardAccelerator(VirtualKey.GoForward);
-		static public ShellPage instance;
+		static public ShellPage? instance;
+
+		internal void AddHandler(object pointerMovedEvent, PointerEventHandler pointerEventHandler, bool v) => throw new NotImplementedException();
 
 		private bool _isBackEnabled;
 		private WinUI.NavigationViewItem _selected;
@@ -75,8 +83,9 @@ namespace CnV.Views
 		private bool _isLoggedIn;
 		private bool _isAuthorized;
 
-		public static float webZoomCurrent = 1;
+		public static float webZoomLast; // for lazy setting of HTML zoom
 		public static TextBlock gridTip;
+		
 
 
 
@@ -195,20 +204,8 @@ namespace CnV.Views
 			RequestedTheme = ElementTheme.Dark; // default theme
 
 		}
-		public enum Layout
-		{
-			l2,
-			l1,
-			c,
-			r1,
-			r2,
-			chat,
-			count,
-			first = l2,
-		}
-		public static Layout layout = Layout.c;
-		public static bool rightTabsVisible => layout>=Layout.c;
-		public static bool htmlVisible => layout is not (Layout.l1 or  Layout.r2 or Layout.r1);
+//		public static bool rightTabsVisible => SettingsPage.layout>=Layout.c;
+//		public static bool htmlVisible => SettingsPage.layout is not (Layout.l1 or  Layout.r2 or Layout.r1);
 
 		//public static void SetHeaderText(string text)
 		//{
@@ -300,7 +297,7 @@ namespace CnV.Views
 			KeyboardAccelerators.Add(BuildKeyboardAccelerator(VirtualKey.Right,NavStack.ForwardInvoked,VirtualKeyModifiers.Menu));
 			// KeyboardAccelerators.Add(BuildKeyboardAccelerator(VirtualKey.GoForward, NavStack.ForwardInvoked));
 
-			for(var i = Layout.first;i< Layout.count;++i)
+			for(var i = 0;i< SettingsPage.layoutOffsets.Length;++i)
 			{
 				KeyboardAccelerators.Add(BuildKeyboardAccelerator( VirtualKey.Number0+(int)i,LayoutAccelerator_Invoked,VirtualKeyModifiers.Control));
 			}
@@ -345,10 +342,10 @@ namespace CnV.Views
 				AppS.DispatchOnUIThreadLow(SettingsPage.ShowWhatsNew);
 			}
 
-			
+		//	updateHtmlOffsets.Go(true);
 
+			TabPage.mainTabs.SizeChanged += (( o,  args) => ShellPage.updateHtmlOffsets.SizeChanged() );
 
-			
 
 			//Task.Delay(5000).ContinueWith((_) =>
 			//{
@@ -358,11 +355,11 @@ namespace CnV.Views
 
 		public static void AdjustLayout(int delta)
 		{
-			layout+=delta;
-			if(layout >= Layout.count)
-				layout = 0;
-			if(layout < 0)
-				layout = (Layout)(Layout.count-1);
+			SettingsPage.layout+=delta;
+			if(SettingsPage.layout >= SettingsPage.layoutOffsets.Length)
+				SettingsPage.layout = 0;
+			if(SettingsPage.layout < 0)
+				SettingsPage.layout = SettingsPage.layoutOffsets.Length-1;
 			updateHtmlOffsets.Go(true);
 		}
 		//private void ShellPage_PointerPressed(object sender,PointerRoutedEventArgs e)
@@ -1270,15 +1267,15 @@ namespace CnV.Views
 			if(MainPage.instance != null)
 			{
 				var viewToggle = windowLayout.SelectedIndex;
-				SetLayout((Layout)viewToggle);
+				SetLayout(viewToggle);
 			}
 		}
 
 		//		public static Vector2 webViewScale = new(1,1);
 		//		internal static bool webviewHasFocus2=true;
-		private async void SetLayout(Layout viewToggle)
+		private async void SetLayout(int viewToggle)
 		{
-			if(viewToggle == layout)
+			if(viewToggle == SettingsPage.layout)
 				return;
 			layout = viewToggle;
 
@@ -1307,162 +1304,10 @@ namespace CnV.Views
 			{
 				popupLeftOffset =   leftOffset;
 				popupTopOffset  = topOffset;
-				updateHtmlOffsets.Go(false);
+				updateHtmlOffsets.PopupsChanged();
 			}
 
 		}
-		internal class UpdateHtmlOffsets:Debounce
-		{
-			public UpdateHtmlOffsets() : base(null)
-			{
-				runOnUiThread= true;
-				debounceDelay=100;
-				throttleDelay=200;
-				throttled = true;
-				base.func=F;
-			}
-			public void Go(bool updateLayout)
-			{
-				this.updateLayout=updateLayout;
-				base.Go();
-			}
-
-			bool updateLayout;
-			Task F()
-			{
-				float szC;
-				var chatX = 3;
-				var chatY = 4;
-
-				switch(layout)
-				{
-					case Layout.l2:
-						szC = 1;
-						// default chat
-						break;
-					case Layout.l1:
-						szC =  1;
-						// small chat
-						chatY =5;
-						break;
-
-					case Layout.c:
-						szC  = 0.667f;
-						break;
-					case Layout.chat:
-						szC  = 0.667f;
-						chatX = 1;
-						chatY = 1;
-						break;
-					case Layout.r1:
-						szC  = 0.56f;
-						break;
-					case Layout.r2:
-						szC  = 0.333f;
-						// small chat
-						chatY =5;
-						break;
-					default:
-						// not used
-						Assert(false);
-						szC = 0.5f;
-						break;
-
-				}
-
-				var webWidth = instance.columnHtml.ActualWidth;
-				var zoom = (float)( webWidth/ 420.0);
-				var htmlVisible = zoom > 0.25f;
-				SettingsPage.HtmlZoom = zoom;
-				
-//				float zoom = htmlVisible || SettingsPage.webZoomSmall <= 0 ? SettingsPage.webZoom : SettingsPage.webZoomSmall;
-				var canvasScaledX = (webWidth).RoundToInt();
-				var canvasScaledY = (zoom * canvasBaseYUnscaled).RoundToInt();
-
-				var htmlShift = 0;//htmlVisible ? 0 : -canvasScaledX;
-
-				popupLeftMargin = ((popupLeftOffset*zoom).RoundToInt()-canvasScaledX).Max0();
-				popupTopMargin = ((popupTopOffset*zoom).RoundToInt()-canvasScaledY).Max0();
-
-				// only need 1 to avoid collisions
-				if(popupLeftMargin > popupTopMargin)
-					popupLeftMargin =0;
-				else
-					popupTopMargin=0;
-				instance.AddHandler(PointerMovedEvent,new PointerEventHandler(ProcessPointerMoved),true);
-				//	if (!Alliance.alliancesFetched)
-				//		return;
-				if(canvas != null && instance.grid != null)
-				{
-					//				return AppS.DispatchOnUIThreadLow( ()	=>
-
-					try
-					{
-
-						if(JSClient.view != null && zoom != webZoomCurrent)
-						{
-							webZoomCurrent= zoom;
-							JSClient.view.ExecuteScriptAsync($"document.body.style.zoom={(htmlVisible ? zoom : 1.0f)};");
-						}
-						if(updateLayout)
-						{
-							// has it not been modified
-							if((instance.chatGrid.ColumnDefinitions[0].Width is { GridUnitType: GridUnitType.Star, Value: 3 or 1 } &&
-								instance.chatGrid.RowDefinitions[0].Height is { GridUnitType: GridUnitType.Star, Value: 5 or 3 or 4 or 2 or 1 })||(layout==Layout.chat))
-							{
-								instance.chatGrid.ColumnDefinitions[0].Width = new(chatX,GridUnitType.Star);
-								instance.chatGrid.ColumnDefinitions[1].Width = new(6-chatX,GridUnitType.Star);
-								instance.chatGrid.RowDefinitions[0].Height = new(chatY,GridUnitType.Star);
-								instance.chatGrid.RowDefinitions[1].Height = new(6-chatY,GridUnitType.Star);
-
-							}
-						}
-
-						var _canvasBaseX = (popupLeftMargin + canvasScaledX + htmlShift).Max0();
-						var _canvasBaseY = (popupTopMargin + canvasScaledY).Max0();
-						//	if(canvasBaseX != _canvasBaseX || canvasBaseY != _canvasBaseY)
-						{
-
-							canvasBaseX = _canvasBaseX;
-							canvasBaseY = _canvasBaseY;
-				//			var initialWidth0 = webWidth;
-				//			var initialWidth1 = instance.columnRender.ActualWidth;
-				//			var initialMargin = instance.webView.Margin.Left;
-							var initialWidth2 = instance.columnTabs.ActualWidth;
-							instance.columnPopup.Width = new(popupLeftMargin);
-							//instance.webView.Margin= new(htmlShift,0,0,0);
-							////							var delta = -htmlShift + (canvasBaseX - initialWidth0);
-							var gridWidth = instance.grid.ActualWidth;
-			//				instance.grid.ColumnDefinitions[0].Width = new GridLength(canvasBaseX.Max(0),GridUnitType.Pixel);
-							if(updateLayout)
-							{
-								var newWidth1 = (gridWidth*(1-szC));
-								instance.columnTabs.Width = new(newWidth1);// leave 2 as is	instance.grid.ColumnDefinitions[1].Width = GridLength.Auto;
-							}
-							else
-							{
-								instance.columnTabs.Width = new(initialWidth2.Max(0));// leave 2 as is	instance.grid.ColumnDefinitions[1].Width = GridLength.Auto;
-							}
-							instance.columnRender.Width = new GridLength(1, GridUnitType.Star);//	GridLength.Auto;//	instance.grid.RowDefinitions[0].Height = new(canvasYOffset);
-
-							instance.grid.RowDefinitions[5].Height = new(40*zoom);//new GridLength(newWidth1,GridUnitType.Pixel);//	instance.grid.RowDefinitions[0].Height = 
-
-							canvas.Margin = new Thickness(0,canvasBaseY,0,0);
-						}
-
-						TabPage.LayoutChanged();
-						AGame.wantFastRefresh = true;
-					}
-					catch(Exception ex)
-					{
-						LogEx(ex);
-					}
-				}
-				return Task.CompletedTask;
-
-			}
-		}
-		internal static UpdateHtmlOffsets updateHtmlOffsets = new();
 
 
 
@@ -1543,11 +1388,9 @@ namespace CnV.Views
 					if(id< rightLayoutGrid.Children.Count)
 						(rightLayoutGrid.Children[id] as Button).IsEnabled=false;
 				}
-				SetLayout((Layout)offset);
+				SetLayout((int)offset);
 			}
-
 			return fn;
-
 		}
 
 
@@ -1622,11 +1465,11 @@ namespace CnV.Views
 		//	Trace($"Accel2 {args.Key} {sender.ToString()}");
 		//}
 
-		static void ProcessPointerMoved(object sender,PointerRoutedEventArgs e)
-		{
-			var c = e.GetCurrentPoint(canvas);
-			UpdateMousePosition( c.Position );
-		}
+		//static void ProcessPointerMoved(object sender,PointerRoutedEventArgs e)
+		//{
+		//	var c = e.GetCurrentPoint(canvas);
+		//	UpdateMousePosition( c.Position );
+		//}
 	}
 	public struct WorkScope : IDisposable
 	{

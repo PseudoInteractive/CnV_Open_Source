@@ -39,26 +39,26 @@ namespace CnV.Views
 	{
 		// public static Rectangle canvasHitTest;
 
-		public const int canvasBaseXUnscaled = 420;
+		public const int htmlBaseWidth = 420;
 		public const int canvasTitleYOffset = 40;
 		public const int canvasHtmlYOffset = 55;
-		public const int canvasBaseYUnscaled = 95;
+		public const int canvasBaseYUnscaled = canvasTitleYOffset+canvasHtmlYOffset;
 
 //		public static int canvasScaledX = 420;
 //		public static int canvasScaledY = 95;
 
-		public static int canvasBaseX = 420;
-		public static int canvasBaseY = 95;
+//		public static int canvasBaseX = htmlBaseWidth;
+//		public static int canvasBaseY = canvasBaseYUnscaled;
 	//	public static int htmlShift = 0;
 		//public static int cachedTopOffset = 0;
 		//public static int cachedXOffset = 0;
-		static public SwapChainPanel canvas;
+		static public SwapChainPanel? canvas;
 		public static bool hasKeyboardFocus;
 	//	public static KeyboardProxy keyboardProxy;
 		public static ViewMode viewMode;
 //		public static bool webviewHasFocus=>webviewHasFocus2;
 		private const int bottomMargin = 0;
-		private const int cotgPopupLeft = 438;
+		private const int cotgPopupLeft = htmlBaseWidth+18;
 		private const int cotgPopupRight = cotgPopupLeft + cotgPopupWidth;
 		private const int cotgPopupWidth = 550;
 		public enum ViewMode
