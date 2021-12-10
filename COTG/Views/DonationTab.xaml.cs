@@ -27,6 +27,7 @@ namespace CnV.Views
 {
 	using Game;
 	using Services;
+	using Syncfusion.UI.Xaml.Grids;
 
 	public sealed partial class DonationTab : UserTab
 	{
@@ -47,7 +48,8 @@ namespace CnV.Views
             Assert(instance == null);
             instance = this;
             this.InitializeComponent();
-			SetupDataGrid(donationGrid);
+			SetupDataGrid((RadDataGrid) donationGrid);
+
 			//	spotGrids.Add(donationGrid);
 			City.cityListChanged += CityListChanged;
 		}
@@ -120,18 +122,15 @@ namespace CnV.Views
    
 
      
-
-        private void donationGrid_SelectionChanged(object sender, DataGridSelectionChangedEventArgs e)
+        private void donationGrid_SelectionChanged(object? sender, GridSelectionChangedEventArgs e)
         {
-			if (!isOpen)
-				return;
+	        if(!isOpen)
+		        return;
 
-			var it = e.AddedItems.FirstOrDefault();
-            var newSel = it as City;
-            blessedGrid.ItemsSource = BlessedCity.GetForCity(newSel);
-        }
-
-		
+	        var it = e.AddedItems.FirstOrDefault();
+	        var newSel = it as City;
+	        blessedGrid.ItemsSource = BlessedCity.GetForCity(newSel);
+		}
 	}
 
 public class BlessedTapCommand : DataGridCommand

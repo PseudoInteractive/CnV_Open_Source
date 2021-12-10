@@ -327,38 +327,7 @@ namespace CnV.Views
 
 		public static bool IsVisible() => instance.isFocused;
 
-		private void SelectionChanged(object sender,DataGridSelectionChangedEventArgs e)
-		{
-			if(!isOpen)
-				return;
-
-			if(SpotTab.silenceSelectionChanges == 0)
-			{
-				try
-				{
-
-					var sel = cityGrid.SelectedItems;
-					var newSel = new HashSet<int>();
-					foreach(Spot s in sel)
-					{
-						newSel.Add(s.cid);
-
-					}
-
-					//          Spot.selected.EnterWriteLock();
-
-					Spot.selected = newSel;
-				}
-				catch(Exception ex)
-				{
-					LogEx(ex);
-				}
-				finally
-				{
-					//          Spot.selected.ExitWriteLock();
-				}
-			}
-		}
+	
 
 		private void SelectAll(object sender,RoutedEventArgs e)
 		{

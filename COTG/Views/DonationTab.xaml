@@ -7,9 +7,8 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       xmlns:cotg="using:CnV"
       xmlns:my="using:Microsoft.UI.Xaml.Controls"
-      xmlns:tg="using:Telerik.UI.Xaml.Controls.Grid"
+	  xmlns:sf="using:Syncfusion.UI.Xaml.DataGrid"
       xmlns:tk="using:CommunityToolkit.WinUI.UI.Controls"
-      xmlns:telerikGrid="using:Telerik.UI.Xaml.Controls.Grid"
       xmlns:local="using:CnV.Views"
         Tag="Donation"
 
@@ -54,161 +53,146 @@
                       />
 
         </tk:WrapPanel>
-        <telerikGrid:RadDataGrid x:Name="donationGrid"
-                                 x:FieldModifier="public"
-                        Grid.Row="2"
+		<sf:SfDataGrid x:Name="donationGrid"
+		                x:FieldModifier="public"
+		                Grid.Row="2"
 								 							
-                        AllowFocusOnInteraction="True"
-                        AutoGenerateColumns="False"
-                        CanUserChooseColumns="True"
-						IsTabStop="True"
-                        ColumnResizeHandleDisplayMode="Always"
-                        UserGroupMode="Enabled"
-                        PointerPressed="{x:Bind game:Spot.GridPressed}"
-						PointerExited="{x:Bind game:Spot.GridExited}"
-                        FontSize="{StaticResource MediumFontSize}"
-                        ItemsSource="{x:Bind donationGridSource}"
-                        RowHeight="{StaticResource MediumGridRowHeight}"
-                        AlternationStep="2"
-                        SelectionMode="Single"
-                        SelectionUnit="Row"
-                        GroupPanelPosition="Bottom"
-                        SelectionChanged="donationGrid_SelectionChanged"
-                        >
-                <telerikGrid:RadDataGrid.Columns>
-                <telerikGrid:DataGridImageColumn PropertyName="icon"
-                                        Header="I"
-												 SizeMode="Fixed"
+		                AllowFocusOnInteraction="True"
+		                AutoGenerateColumns="False"
+		                IsTabStop="True"
+		                PointerPressed="{x:Bind game:Spot.GridPressed}"
+		                PointerExited="{x:Bind game:Spot.GridExited}"
+		                FontSize="{StaticResource MediumFontSize}"
+		                ItemsSource="{x:Bind donationGridSource}"
+		                RowHeight="{StaticResource MediumGridRowHeight}"
+		                AlternationCount="2"
+						AllowTriStateSorting="True"
+		                SelectionMode="Single"
+		                SelectionUnit="Row"
+		                SelectionChanged="donationGrid_SelectionChanged"
+		>
+			<sf:SfDataGrid.Columns>
+				<sf:GridImageColumn MappingName="icon"
+                                        HeaderText="I"
+										ColumnWidthMode="None"
                                         Width="32"
                                          />
-                    <telerikGrid:DataGridTextColumn PropertyName="nameAndRemarks"
+				<sf:GridTextColumn MappingName="nameAndRemarks"
                                        
-                                                CellContentStyle="{StaticResource LeftAlign}"
-													SizeMode="Auto"
                                         />
-                    <telerikGrid:DataGridTextColumn PropertyName="xy"
-                                                CellContentStyle="{StaticResource CenterAlignLink}"
-                                       SizeMode="Auto"
+				<sf:GridHyperlinkColumn MappingName="xy"
                                         />
-                    <telerikGrid:DataGridNumericalColumn  PropertyName="cont"
-                                                      SizeMode="Auto"
-                                                      CellContentStyle="{StaticResource CenterAlign}"
+				<sf:GridNumericColumn  MappingName="cont"
+                                       TextAlignment="Center"
                                              />
-				<telerikGrid:DataGridNumericalColumn  PropertyName="CartsHome"
-                                            CellContentFormat="{}{0,5:N0}"
-                                            CellContentStyle="{StaticResource RightAlign}"
-                                            SizeMode="Auto"
+				<sf:GridNumericColumn  MappingName="CartsHome"
+                                       TextAlignment="Right"
+                                       DisplayNumberFormat="{}{0,5:N0}"
                                              />
-				<telerikGrid:DataGridNumericalColumn PropertyName="Wood"
-                                            CellContentFormat="{}{0,7:N0}"
-                                                     CellContentStyle="{StaticResource RightAlign}"
+				<sf:GridNumericColumn MappingName="Wood"
+				                            DisplayNumberFormat="{}{0,7:N0}"
+                                                     TextAlignment="Right"
                                             
                                               />
-                    <telerikGrid:DataGridNumericalColumn PropertyName="woodStorage"
-                                            CellContentFormat="{}{0,7:N0}"
-                                                     CellContentStyle="{StaticResource RightAlign}"
+				<sf:GridNumericColumn MappingName="woodStorage"
+				                      TextAlignment="Right"
+                                            DisplayNumberFormat="{}{0,7:N0}"
                                             
-                                             IsVisible="False" />
-				<telerikGrid:DataGridNumericalColumn  PropertyName="Stone"
-                                            CellContentFormat="{}{0,7:N0}"
+                                            IsHidden="True" />
+				<sf:GridNumericColumn  MappingName="Stone"
+                                            DisplayNumberFormat="{}{0,7:N0}"
                                            
-                                            CellContentStyle="{StaticResource RightAlign}"
+                                            TextAlignment="Right"
                                              />
-				<telerikGrid:DataGridNumericalColumn  PropertyName="Carts"
+				<sf:GridNumericColumn  MappingName="Carts"
                                             
-                                           CellContentFormat="{}{0,5:N0}"
-                                                      IsVisible="False"
+                                           DisplayNumberFormat="{}{0,5:N0}"
+                                                      IsHidden="True"
                                              />
-                    <telerikGrid:DataGridNumericalColumn  PropertyName="ShipsHome"
-                                            CellContentFormat="{}{0,5:N0}"
-                                            CellContentStyle="{StaticResource RightAlign}"          
+				<sf:GridNumericColumn  MappingName="ShipsHome"
+                                            DisplayNumberFormat="{}{0,5:N0}"
+                                            TextAlignment="Right"          
                                              />
-                    <telerikGrid:DataGridNumericalColumn  PropertyName="Ships"
-                                            CellContentFormat="{}{0,5:N0}"
-                                                      IsVisible="False"
+				<sf:GridNumericColumn  MappingName="Ships"
+                                            DisplayNumberFormat="{}{0,5:N0}"
+                                                      IsHidden="True"
                                              />
-                    <telerikGrid:DataGridNumericalColumn PropertyName="points"
-                                                     IsVisible="False"
+				<sf:GridNumericColumn MappingName="points"
+                                                     IsHidden="True"
                                              />
-                </telerikGrid:RadDataGrid.Columns>
-            </telerikGrid:RadDataGrid>
-        <telerikGrid:RadDataGrid x:Name="blessedGrid" x:FieldModifier="public"
+			</sf:SfDataGrid.Columns>
+		</sf:SfDataGrid>
+		<sf:SfDataGrid x:Name="blessedGrid" x:FieldModifier="public"
                         Grid.Row="3"
 								 
                         AllowFocusOnInteraction="True"
                         AutoGenerateColumns="False"
-                        CanUserChooseColumns="True"
-								 IsTabStop="True"
-                        ColumnResizeHandleDisplayMode="Always"
-                        UserGroupMode="Disabled"
+						 IsTabStop="True"
                         FontSize="{StaticResource MediumFontSize}"
-                        
                         RowHeight="{StaticResource MediumGridRowHeight}"
-                        AlternationStep="2"
                         SelectionMode="Single"
                         SelectionUnit="Row"
-                        GroupPanelPosition="Left"
                         >
-            <tg:RadDataGrid.Commands>
+            <sf:SfDataGrid.Commands>
                 <local:BlessedTapCommand />
-            </tg:RadDataGrid.Commands>
-            <telerikGrid:RadDataGrid.Columns>
+            </sf:SfDataGrid.Commands>
+            <sf:SfDataGrid.Columns>
 
-                <telerikGrid:DataGridTextColumn PropertyName="virtue"
-                                                CellContentStyle="{StaticResource CenterAlignLink}"
+                <sf:GridHyperlinkColumn MappingName="virtue"
                                                 
                                         />
-				<telerikGrid:DataGridTextColumn  PropertyName="Pri"
-                                                      CellContentStyle="{StaticResource CenterAlign}"
+				<sf:GridTextColumn  MappingName="Pri"
+                                                      TextAlignment="Center"
                                              />
-				<telerikGrid:DataGridDateColumn PropertyName="blessedUntil"
+				<sf:GridDateColumn MappingName="blessedUntil"
                                                     
-                                                CellContentFormat="{}{0:MM/dd',' HH':'mm}"
-
-                                                CellContentStyle="{StaticResource CenterAlign}"
+                                        
+                                                TextAlignment="Center"
                                         />
-				<telerikGrid:DataGridTextColumn PropertyName="notes" CellContentStyle="{StaticResource LeftAlign}"
-                         />
+				<sf:GridTextColumn MappingName="notes" />
 			
 				
-				<telerikGrid:DataGridNumericalColumn  PropertyName="cont"
+				<sf:GridNumericColumn  MappingName="cont"
                                                       
-                                                      CellContentStyle="{StaticResource CenterAlign}"
+                                                      TextAlignment="Center"
                                              />
-				<telerikGrid:DataGridNumericalColumn  PropertyName="wood"
-                                                      CellContentStyle="{StaticResource RightAlign}"
-                                            CellContentFormat="{}{0,9:N0}"
-                                                      
-                                             />
-				<telerikGrid:DataGridNumericalColumn  PropertyName="stone"
-                                                      CellContentStyle="{StaticResource RightAlign}"
-                                            CellContentFormat="{}{0,9:N0}"
+				<sf:GridNumericColumn  MappingName="wood"
+                                                      TextAlignment="Right"
+                                            DisplayNumberFormat="{}{0,9:N0}"
                                                       
                                              />
-				<telerikGrid:DataGridTextColumn  PropertyName="travelTime"
-                                                      Header="Travel"
-                                                      CellContentStyle="{StaticResource RightAlign}"
-                                             />
-				<telerikGrid:DataGridNumericalColumn  PropertyName="level"
+				<sf:GridNumericColumn  MappingName="stone"
+                                                      TextAlignment="Right"
+                                            DisplayNumberFormat="{}{0,9:N0}"
                                                       
-                                                      CellContentStyle="{StaticResource CenterAlign}"
-                                            CellContentFormat="{}{0,2:N0}"
                                              />
-				<telerikGrid:DataGridTextColumn PropertyName="xy"
-                                                
-                                                CellContentStyle="{StaticResource CenterAlignLink}"
+				<sf:GridTimeColumn  MappingName="travelTime"
+                                                      HeaderText="Travel"
+                                             />
+				<sf:GridNumericColumn  MappingName="level"
+                                                      
+                                                      TextAlignment="Center"
+                                            DisplayNumberFormat="{}{0,2:N0}"
+                                             />
+				<sf:GridHyperlinkColumn MappingName="xy"
                                         />
-				<telerikGrid:DataGridTextColumn PropertyName="playerName" Header="Player"
+                <sf:GridImageColumn MappingName="icon"
+                                    HeaderText="I"
+                                    ColumnWidthMode="None"
+                                    Width="32"
+                />
+
+				<sf:GridTextColumn MappingName="playerName" HeaderText="Player"
                                                 
-                                                CellContentStyle="{StaticResource CenterAlign}"
+                                                TextAlignment="Center"
                                                 
                                         />
-				<telerikGrid:DataGridTextColumn PropertyName="city"
+				<sf:GridTextColumn MappingName="city"
                                        
-                                                CellContentStyle="{StaticResource CenterAlign}"
+                                                TextAlignment="Center"
                                         />
-			</telerikGrid:RadDataGrid.Columns>
-        </telerikGrid:RadDataGrid>
+			</sf:SfDataGrid.Columns>
+        </sf:SfDataGrid>
         <tk:GridSplitter Grid.Row="3"
                          ResizeDirection="Rows"
                                    						 				IsTabStop="True"

@@ -1380,7 +1380,7 @@ namespace CnV.Game
 
 			if (!onlyIfShiftPressed || App.IsKeyPressedShift() || App.IsKeyPressedControl())
 			{
-				foreach (var sel in Spot.selected.ToArray())
+				foreach (var sel in Spot.selected)
 				{
 					if (sel != cid && sel != ignoreCid && (!onlyCities || City.Get(sel).isCityOrCastle))
 						cids.Add(sel);
@@ -1506,7 +1506,7 @@ namespace CnV.Game
 				}
 				//                   SpotTab.SelectOne(this);
 			}
-					SyncUISelection(scrollIntoView, this);
+					SyncSelectionToUI(scrollIntoView, this);
 				}
 				catch (Exception e)
 				{
@@ -1522,16 +1522,20 @@ namespace CnV.Game
 
 
 
-		public static void SyncUISelection(bool scrollIntoView, Spot spot = null)
+		public static void SyncSelectionToUI(bool scrollIntoView, Spot focusSpot = null)
 		{
 			++SpotTab.silenceSelectionChanges;
 			try
 			{
 
-				foreach (var grid in UserTab.spotGrids)
+				foreach (var grid in UserTab.dataGrids)
 				{
+					if (!grid.tab.isFocused)
+						continue;
+
 					var uiInSync = false;
-					var sel1 = grid.sf?.SelectedItems ?? grid.rad.SelectedItems;
+					
+					var sel1 = grid.SelectedItems();
 					if (selected.Count == sel1.Count)
 					{
 						uiInSync = true;
@@ -1550,9 +1554,9 @@ namespace CnV.Game
 						
 						
 					}
-					if ((scrollIntoView || !uiInSync) && (sel1.Any() || spot != null))
+					if ((scrollIntoView || !uiInSync) && (sel1.Any() || focusSpot != null))
 					{
-						var current = spot ?? (City.GetBuild().isSelected ? City.GetBuild() : null);
+						var current = focusSpot ?? (City.GetBuild().isSelected ? City.GetBuild() : null);
 						if (current != null && grid.sf is not null)
 						{
 							grid.sf.CurrentItem = current;
@@ -1571,19 +1575,19 @@ namespace CnV.Game
 						}
 					}
 				}
-				if (AttackTab.IsVisible() && spot != null )
+				if (AttackTab.IsVisible() && focusSpot != null )
 				{
 					try
 					{
-						if( AttackTab.attacks.Contains(spot.cid)&& !AttackTab.instance.attackGrid.SelectedItems.Contains(spot) )
+						if( AttackTab.attacks.Contains(focusSpot.cid)&& !AttackTab.instance.attackGrid.SelectedItems.Contains(focusSpot) )
 						{
-							AttackTab.instance.attackGrid.SelectedItem = spot as City;
-							AttackTab.instance.attackGrid.ScrollIntoView(spot, null);
+							AttackTab.instance.attackGrid.SelectedItem = focusSpot as City;
+							AttackTab.instance.attackGrid.ScrollIntoView(focusSpot, null);
 						}
-						if (AttackTab.targets.Contains(spot.cid)&& !AttackTab.instance.targetGrid.SelectedItems.Contains(spot))
+						if (AttackTab.targets.Contains(focusSpot.cid)&& !AttackTab.instance.targetGrid.SelectedItems.Contains(focusSpot))
 						{
-							AttackTab.instance.targetGrid.SelectedItem = spot as City;
-							AttackTab.instance.targetGrid.ScrollIntoView(spot, null);
+							AttackTab.instance.targetGrid.SelectedItem = focusSpot as City;
+							AttackTab.instance.targetGrid.ScrollIntoView(focusSpot, null);
 						}
 					}
 					catch
@@ -1597,6 +1601,7 @@ namespace CnV.Game
 			}
 
 		}
+
 
 		public static bool AreAnySelected()
 		{
@@ -1827,7 +1832,7 @@ namespace CnV.Game
 				return; // aborted
 			using var work = new WorkScope("Return At..");
 
-			var cids = MainPage.GetContextCids(cid);
+			var cids = Spot.GetSelectedForContextMenu(cid);
 			foreach (var _cid in cids)
 			{
 				var __cid = _cid;

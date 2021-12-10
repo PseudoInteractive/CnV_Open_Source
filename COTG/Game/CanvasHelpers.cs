@@ -224,24 +224,50 @@ public static class CanvasHelpers
 		return (c.c0.CToDepth(dz), new Vector2(c.c1.X,c.c0.Y).CToDepth(dz),
 			new Vector2(c.c0.X,c.c1.Y).CToDepth(dz), c.c1.CToDepth(dz));
 	}
-	public static bool BringCidIntoWorldView(this int cid,bool lazy)
-	{
-		var worldC = cid.ToWorldC();
-		var cc = WorldToCamera(worldC);
-		//	if (ShellPage.IsCityView())
-		//		lazy = false;
-		// only move if needed, heuristic is if any part is off screen
-		if(!lazy ||
-		   !AGame.clip.ContainsSquare( cc,AGame.pixelScale*1.5f))
-		{
-			var thresh = 32;//lazy ? 0.5f : 0.5f;
-			// only move if moving more than about 64 pixels (should be fraction of screen?)
-			if(cc.LengthSquared() >= thresh.Squared() )
-			{
-				// try region view
+	//public static bool BringCidIntoWorldView(this int cid,bool lazy)
+	//{
+	//	var worldC = cid.ToWorldC();
+	//	var cc = WorldToCamera(worldC);
+	//	//	if (ShellPage.IsCityView())
+	//	//		lazy = false;
+	//	// only move if needed, heuristic is if any part is off screen
+	//	if(!lazy ||
+	//	   !AGame.clip.ContainsSquare( cc,AGame.pixelScale*1.5f))
+	//	{
+	//		var thresh = 32;//lazy ? 0.5f : 0.5f;
+	//		// only move if moving more than about 64 pixels (should be fraction of screen?)
+	//		if(cc.LengthSquared() >= thresh.Squared() )
+	//		{
+	//			// try region view
 					
 				
-				AGame.CameraC = worldC;
+	//			AGame.CameraC = worldC;
+	//			ShellPage.SetJSCamera();
+	//			if(cid != City.build && (!City.CanVisit(cid) || !Spot.CanChangeCity(cid)))
+	//				ShellPage.EnsureNotCityView();
+
+	//			return true;
+	//		}
+
+	//	}
+	//	return false;
+	//}
+
+	public static bool BringCidIntoWorldView(this int cid, bool lazy)
+	{
+		var newC = cid.CidToWorldV();
+		var dc = newC - AGame.cameraC;
+		if(!lazy ||
+		   !AGame.clip.ContainsSquare(dc,0.5f*AGame.pixelScale))
+	//		c0.X < CnV.AGame.c(dc.X.Abs() + 0.5f) * AGame.pixelScale >= AGame.halfSpan.X ||
+	//	   (dc.Y.Abs() + 0.5f) * AGame.pixelScale >= AGame.halfSpan.Y)
+		{
+			var thresh = lazy ? 0.75f : 0.25f;
+			// only move if moving more than about 1 city span
+			if(Vector2.Distance(AGame.cameraC, newC) >= thresh)
+			{
+				
+				AGame.CameraC = newC;
 				ShellPage.SetJSCamera();
 				if(cid != City.build && (!City.CanVisit(cid) || !Spot.CanChangeCity(cid)))
 					ShellPage.EnsureNotCityView();
@@ -252,6 +278,7 @@ public static class CanvasHelpers
 		}
 		return false;
 	}
+
 	public static Color GetShadowColor(this Color c)
 	{
 		return new Color((byte)(c.R * 0 / 4),(byte)(c.G * 0 / 4),(byte)(c.B * 0 / 4),(byte)192);

@@ -342,7 +342,7 @@ namespace CnV.Views
 				AppS.DispatchOnUIThreadLow(SettingsPage.ShowWhatsNew);
 			}
 
-		//	updateHtmlOffsets.Go(true);
+			updateHtmlOffsets.Go(true);
 
 			TabPage.mainTabs.SizeChanged += (( o,  args) => ShellPage.updateHtmlOffsets.SizeChanged() );
 

@@ -57,7 +57,7 @@ namespace CnV.Views
             instance = this;
             this.InitializeComponent();
 
-			AUtil.AddIfAbsent(ref spotGrids,new(rad: cityGrid));
+			AUtil.AddIfAbsent(ref dataGrids,new(this,rad: cityGrid));
 
 		}
 
@@ -75,7 +75,7 @@ namespace CnV.Views
         }
         private void CityGrid_SelectionChanged(object sender, DataGridSelectionChangedEventArgs e)
         {
-			if (!isOpen)
+			if (!isFocused)
 				return;
 
             var it = e.AddedItems.FirstOrDefault();

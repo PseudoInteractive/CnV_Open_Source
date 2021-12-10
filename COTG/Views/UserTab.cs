@@ -16,32 +16,40 @@ namespace CnV.Views
 {
 	using System;
 	using System.Collections;
+	using System.Collections.ObjectModel;
+
 	using Game;
+	using Syncfusion.UI.Xaml.Grids;
 
 	public class UserTab:UserControl, IANotifyPropertyChanged
 	{
 
 		private const string returnReinforcement = nameof(returnReinforcement);
-		public virtual TabPage defaultPage => TabPage.mainTabs;
+		public virtual TabPage? defaultPage => TabPage.mainTabs;
 
-		public record struct DataGridProxy(RadDataGrid rad=null,SfDataGrid sf=null)
+		public readonly record struct DataGridProxy(UserTab tab, RadDataGrid? rad=null,SfDataGrid? sf=null)
 		{
-		}
-		public static ImmutableArray<DataGridProxy> spotGrids = ImmutableArray<DataGridProxy>.Empty;
-		public static ImmutableArray<RadDataGrid> dataGrids = ImmutableArray<RadDataGrid>.Empty;
-		public static ImmutableArray<SfDataGrid> sfGrids = ImmutableArray<SfDataGrid>.Empty;
+			public Control  control => rad is not null ? (Control)rad : (Control)sf!;
+			public bool isRad => rad is not null;
+			public bool isSf => sf is not null;
 
+			public  ObservableCollection<object> SelectedItems() => isSf ? sf!.SelectedItems : rad!.SelectedItems;
+
+		}
+
+		public static ImmutableArray<DataGridProxy> dataGrids = ImmutableArray<DataGridProxy>.Empty;
+		
 		public event PropertyChangedEventHandler PropertyChanged;
-		public void CallPropertyChanged(string members = null)
+		public void CallPropertyChanged(string? members = null)
 		{
 			PropertyChanged?.Invoke(this,new PropertyChangedEventArgs(members));
 		}
-		public void OnPropertyChanged(string member = null)
+		public void OnPropertyChanged(string? member = null)
 		{
 			if(PropertyChanged is not null) ((IANotifyPropertyChanged)this).IOnPropertyChanged();
 		}
 
-		public static UserTab[] userTabs;
+		public static UserTab[]? userTabs;
 
 
 		public static void InitUserTabs()
@@ -73,7 +81,7 @@ namespace CnV.Views
 		{
 			var grid = sender as RadDataGrid;
 			Assert(grid != null);
-			if(!isOpen)
+			if(!isFocused)
 				return;
 
 			if(SpotTab.silenceSelectionChanges == 0)
@@ -150,9 +158,9 @@ namespace CnV.Views
 				await VisibilityChanged(true,longTerm: false);  // close enough default behaviour
 			}
 		}
-		public static  void SetupDataGrid(RadDataGrid grid)
+		public void SetupDataGrid(RadDataGrid grid)
 		{
-			if(!AUtil.AddIfAbsent(ref dataGrids,grid))
+			if(!dataGrids.AddIfAbsent(new(this,rad:grid) ))
 				return;
 			grid.Padding = new (0,0,32,32);
 			grid.FontStretch = Windows.UI.Text.FontStretch.Condensed;
@@ -164,34 +172,53 @@ namespace CnV.Views
 			grid.FontSize = SettingsPage.smallFontSize;
 			grid.RowHeight = SettingsPage.mediumGridRowHeight;
 			grid.ProcessTooltips();
+			if (object.ReferenceEquals(grid.ItemsSource, City.gridCitySource) )
+			{
+				grid.SelectionChanged += (a, b) => SpotSelectionChanged(((RadDataGrid)a).SelectedItems);
+			}
 
 		}
 
-		public void SetupCityDataGrid(RadDataGrid grid)
-		{
-			// damn, there should be a better way to check for this
-			if(!AUtil.AddIfAbsent(ref spotGrids,new(rad:grid)) )
-				return;
-			grid.SelectionChanged += SpotSelectionChanged;
-			
-			SetupDataGrid(grid);
-		}
 		public ADataGrid.ChangeContextDisposable SetupCityDataGrid(SfDataGrid grid)
 		{
 			// damn, there should be a better way to check for this
-			var rv = SetupGrid(grid);
-			spotGrids.AddIfAbsent( new(sf:grid));
+			var rv = SetupDataGrid(grid);
+			dataGrids.AddIfAbsent( new(this,sf:grid));
 
+			grid.SelectionChanged += (a, b) => SpotSelectionChanged( ((SfDataGrid)a).SelectedItems);
 			return rv;
 			
-//			grid.SelectionChanged += SpotSelectionChanged;
 
 //			SetupDataGrid(grid);
 		}
+
+		private void SpotSelectionChanged(IEnumerable<object> sel)
+		{
+				if(!isFocused)
+					return;
+
+				if(SpotTab.silenceSelectionChanges == 0)
+				{
+					try
+					{
+
+						Spot.selected = new HashSet<int>( sel.Select(a=> (a as Spot).cid ) );
+					}
+					catch(Exception ex)
+					{
+						LogEx(ex);
+					}
+					finally
+					{
+						//          Spot.selected.ExitWriteLock();
+					}
+				}
+		}
+
 		protected void DataGridLoaded(object sender,RoutedEventArgs e)
 		{
 			if(sender is RadDataGrid rad)
-				SetupCityDataGrid(rad);
+				SetupDataGrid(rad);
 			else if (sender is SfDataGrid sf)
 			{
 				using var x = SetupCityDataGrid(sf);
@@ -398,13 +425,15 @@ namespace CnV.Views
 			return typeof(object);
 		}
 
-		public ADataGrid.ChangeContextDisposable SetupGrid(SfDataGrid grid, Type sourceType=null)
+		public ADataGrid.ChangeContextDisposable SetupDataGrid(SfDataGrid grid, Type sourceType=null)
 		{
 			var _lock0 = grid.ChangeContext();
 			if (sfGrids.AddIfAbsent( grid))
 			{
 				grid.Margin = new (0,0,32,32);
-				
+
+				grid.AlternationCount = 2;
+				grid.AllowTriStateSorting = true;
 				grid.FontStretch = Windows.UI.Text.FontStretch.Condensed;
 				grid.ExpanderColumnWidth = 32;
 				grid.FontSize = SettingsPage.smallFontSize;

@@ -4,7 +4,6 @@
 			  xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 			  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 			  xmlns:sf="using:Syncfusion.UI.Xaml.DataGrid"
-			  xmlns:tk="using:CommunityToolkit.WinUI.UI.Controls"
 			  xmlns:winui="using:Microsoft.UI.Xaml.Controls"
 			  xmlns:model="using:CnV.Modelsdels"
 			  xmlns:game="using:CnV.Game"

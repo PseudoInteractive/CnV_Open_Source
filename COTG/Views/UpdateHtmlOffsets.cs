@@ -130,16 +130,18 @@ namespace CnV.Views
 				popupLeftMargin = ((popupLeftOffset * zoom).RoundToInt() - (canvasScaledX-htmlShift) ).Max0();
 
 				popupTopMargin = ((popupTopOffset * zoom).RoundToInt() - canvasScaledY).Max0();
-				var canvasBaseY = (popupTopMargin + canvasScaledY).Max0();
+				if(popupLeftMargin > popupTopMargin)
+					popupLeftMargin = 0;
+				else
+					popupTopMargin = 0;
+
+
+					var canvasBaseY = (popupTopMargin + canvasScaledY).Max0();
 
 				canvas.Margin = new Thickness(0, canvasBaseY, 0, 0);
 
 
 					// only need 1 to avoid collisions
-					if(popupLeftMargin > popupTopMargin)
-						popupLeftMargin = 0;
-					else
-						popupTopMargin = 0;
 				//	if (!Alliance.alliancesFetched)
 				//		return;
 					//				return AppS.DispatchOnUIThreadLow( ()	=>

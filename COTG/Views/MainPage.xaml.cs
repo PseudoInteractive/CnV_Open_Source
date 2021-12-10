@@ -104,34 +104,14 @@ namespace CnV.Views
         {
             
             var cid = (int)((sender as MenuFlyoutItem).DataContext);
-            return GetContextCids(cid);
+            return Spot.GetSelectedForContextMenu(cid);
         }
-        public static List<int> GetContextCids(int cid)
-        {
-            var cids = new List<int>();
-
-            if(cid != 0)
-             cids.Add(cid);
-
-            if (Spot.TryGetSelected(out var selected))
-            {
-                foreach (var sel in selected)
-                {
-                    if (sel is City city)
-                    {
-                        if(city.cid != cid)
-                            cids.Add(city.cid);
-                    }
-                }
-            }
-            NearDefenseTab.GetSelected(cids);
-            return cids;
-        }
+      
         
 
         public static int GetContextCidCount(int focusCid)
         {
-            return GetContextCids(focusCid).Count;
+            return Spot.GetSelectedForContextMenu(focusCid).Count;
       
         }
         public static void ReturnSlowClick(object sender, RoutedEventArgs e)
