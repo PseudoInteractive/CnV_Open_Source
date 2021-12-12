@@ -1,27 +1,11 @@
-﻿using CnV.Game;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using Telerik.UI.Xaml.Controls.Grid;
-using Telerik.UI.Xaml.Controls.Grid.Commands;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
-using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Controls.Primitives;
-using Microsoft.UI.Xaml.Data;
+﻿using System.Collections.Generic;
 using Microsoft.UI.Xaml.Input;
-using Microsoft.UI.Xaml.Media;
-using Microsoft.UI.Xaml.Navigation;
-using static CnV.Game.Troops;
-using static CnV.Debug;
 using System.Threading.Tasks;
 
 namespace CnV.Views
 {
 	using Game;
+	using Syncfusion.UI.Xaml.Grids;
 
 	public sealed partial class BossTab : UserTab
     {
@@ -55,25 +39,19 @@ namespace CnV.Views
         {
             Assert(instance == null);
             instance = this;
-            this.InitializeComponent();
-
-			AUtil.AddIfAbsent(ref dataGrids,new(this,rad: cityGrid));
-
+         
 		}
 
-		private void gridPointerPress(object sender, PointerRoutedEventArgs e)
-        {
+		//private void gridPointerPress(object sender, PointerRoutedEventArgs e)
+  //      {
 			
-			Spot.GridPressed(sender, e);
+		//	Spot.GridPressed(sender, e);
 
-        }
+  //      }
 
-        private void gridPointerExited(object sender, PointerRoutedEventArgs e)
-        {
-            Spot.ProcessPointerExited();
-
-        }
-        private void CityGrid_SelectionChanged(object sender, DataGridSelectionChangedEventArgs e)
+      
+        private void CityGrid_SelectionChanged(object sender, 
+	        GridSelectionChangedEventArgs e)
         {
 			if (!isFocused)
 				return;
@@ -117,37 +95,6 @@ namespace CnV.Views
 
 		}
     }
-        public class BossTapCommand : DataGridCommand
-        {
-            public BossTapCommand()
-            {
-                this.Id = CommandId.CellTap;
-            }
-
-            public override bool CanExecute(object parameter)
-            {
-                var context = parameter as DataGridCellInfo;
-                return true;
-            }
-
-            public override void Execute(object parameter)
-            {
-                var context = parameter as DataGridCellInfo;
-                var i = context.Item as Boss;
-                Debug.Assert(i != null);
-                var c = context.Column.Header?.ToString() ?? string.Empty;
-                if (i != null)
-                {
-                    switch (c)
-                    {
-
-                        case nameof(i.xy):
-                            Spot.ProcessCoordClick(i.cid, false, App.keyModifiers);
-                            break;
-                    }
-                }
-            Owner.CommandService.ExecuteDefaultCommand(Id, parameter);
-        }
-        }
+   
     
 }

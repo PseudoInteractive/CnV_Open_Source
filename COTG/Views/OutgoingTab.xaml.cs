@@ -1,39 +1,14 @@
-﻿using CnV.Game;
-using CnV.Models;
-using System;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
-
-using Microsoft.UI.Xaml.Controls;
-using System.Diagnostics.Contracts;
-using System.Collections.Generic;
-using Telerik.UI.Xaml.Controls.Grid;
-using static CnV.Debug;
-using Windows.ApplicationModel.Core;
-//using Windows.UI.Core;
+﻿//using Windows.UI.Core;
 using Microsoft.UI.Xaml;
-using Telerik.Core.Data;
-using Telerik.Data.Core;
-using Telerik.Data;
-using System.Collections.Specialized;
-using Windows.Foundation;
-using CommunityToolkit.WinUI;
 using Microsoft.UI.Xaml.Input;
-using CnV.Services;
-using System.Collections;
 
 //using Windows.UI.Input;
-using Telerik.UI.Xaml.Controls.Input;
-using CnV.Helpers;
-using Microsoft.UI.Xaml.Navigation;
-using Telerik.UI.Xaml.Controls.Grid.Commands;
 using System.Threading.Tasks;
-using System.Linq;
 
 namespace CnV.Views
 {
 	using Game;
+	using Syncfusion.UI.Xaml.Grids;
 
 	public sealed partial class OutgoingTab : UserTab
     {
@@ -69,23 +44,19 @@ namespace CnV.Views
 
 
 		public static Spot selected => instance.attackerGrid.SelectedItem as Spot;
-		private void gridPointerPress(object sender, PointerRoutedEventArgs e)
-        {
-       //     (var hit, var column, var pointerPoint,_) = Spot.HitTest(sender, e);
-            //if (hit != null)
-            //    defenderGrid.ShowRowDetailsForItem(hit);
+		//private void gridPointerPress(object sender, PointerRoutedEventArgs e)
+  //      {
+  //     //     (var hit, var column, var pointerPoint,_) = Spot.HitTest(sender, e);
+  //          //if (hit != null)
+  //          //    defenderGrid.ShowRowDetailsForItem(hit);
 
-            Spot.GridPressed(sender, e);
-        }
+  //          Spot.GridPressed(sender, e);
+  //      }
         //private void gridPointerMoved(object sender, PointerRoutedEventArgs e)
         //{
         //    Spot.ProcessPointerMoved(sender, e);
         //}
-        private void gridPointerExited(object sender, PointerRoutedEventArgs e)
-        {
-            Spot.ProcessPointerExited();
-        }
-
+ 
 
 
 		NotifyCollection<City> attackerSource = new();
@@ -110,16 +81,7 @@ namespace CnV.Views
             }
         }
 
-
-
-        private void ArmyTapped(object sender, TappedRoutedEventArgs e)
-        {
-            (var hit, var column, var pointerPoint) = Army.HitTest(sender, e);
-            if (hit != null)
-                hit.ProcessTap(column);
-
-
-        }
+		
 
         public override Task VisibilityChanged(bool visible, bool longTerm)
 		{
@@ -165,7 +127,7 @@ namespace CnV.Views
 		}
 		
 
-        private void defenderGrid_SelectionChanged(object sender, DataGridSelectionChangedEventArgs e)
+        private void defenderGrid_SelectionChanged(object sender, GridSelectionChangedEventArgs e)
 		{
 			if (!isOpen)
 				return;

@@ -7,9 +7,8 @@
       xmlns:game="using:CnV.Game"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       xmlns:cotg="using:CnV"
-	  xmlns:tg="using:Telerik.UI.Xaml.Controls.Grid"
-      xmlns:tgCore="using:Telerik.Data.Core"
-      xmlns:my="using:Microsoft.UI.Xaml.Controls"
+    xmlns:sf="using:Syncfusion.UI.Xaml.DataGrid"
+    xmlns:my="using:Microsoft.UI.Xaml.Controls"
       xmlns:tk="using:CommunityToolkit.WinUI.UI.Controls"
       xmlns:views="using:CnV.Views"
     mc:Ignorable="d">
@@ -20,56 +19,54 @@
             <RowDefinition Height="3*" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-		<tg:RadDataGrid x:Name="defendantGrid" x:FieldModifier="public"
+		<sf:SfDataGrid x:Name="defendantGrid" x:FieldModifier="public"
                         Grid.Row="1"
 						AutoGenerateColumns="False"
-                        CanUserChooseColumns="True"
+                        
 								 IsTabStop="True"
 								 
-								 
-                       ColumnResizeHandleDisplayMode="Always"
-                        PointerPressed="gridPointerPress"
+                        Loaded="DataGridLoaded"
+                       
 						AllowFocusOnInteraction="True"
                         ItemsSource="{x:Bind views:NearDefenseTab.defendants, Mode=OneWay}"
 													
-                        UserGroupMode="Disabled"
+                        
                         RowHeight="{StaticResource MediumGridRowHeight}"
-                        AlternationStep="2"
+                        
                         SelectionMode="Extended"
                         SelectionUnit="Row"
-                        GroupPanelPosition="Bottom"
+                        
 						
 						>
 
-			<tg:RadDataGrid.Columns>
-				<tg:DataGridImageColumn PropertyName="icon"
-                                        Header="I"
-                                        SizeMode="Fixed"
+			<sf:SfDataGrid.Columns>
+				<sf:GridImageColumn MappingName="icon"
+                                        HeaderText="I"
+                                        ColumnWidthMode="None" 
                                         Width="32" />
-				<tg:DataGridTextColumn PropertyName="nameAndRemarks"
+				<sf:GridTextColumn MappingName="nameAndRemarks"
                                      
                                        />
-				<tg:DataGridTextColumn PropertyName="xy"
-                                                CellContentStyle="{StaticResource CenterAlignLink}"
-                                       />
+				<sf:GridHyperlinkColumn MappingName="xy"
+				/>
 
-				<tg:DataGridNumericalColumn PropertyName="cont"
-                                       SizeMode="Fixed"
-                                       CellContentStyle="{StaticResource CenterAlign}"
+				<sf:GridNumericColumn MappingName="cont"
+                                       ColumnWidthMode="None" 
+                                       TextAlignment="Center"
                                        Width="34" />
-				<tg:DataGridTextColumn PropertyName="playerName" Header="Player"
+				<sf:GridTextColumn MappingName="playerName" HeaderText="Player"
                                      />
-				<tg:DataGridTextColumn PropertyName="defString"
-                                       CellContentStyle="{StaticResource LeftAlign}"
+				<sf:GridTextColumn MappingName="defString"
+                                       TextAlignment="Left"
                                        />
-				<tg:DataGridBooleanColumn PropertyName="isCastle"
-                                          IsVisible="True"
+				<sf:GridCheckBoxColumn  MappingName="isCastle"
+                                          IsHidden="False"
                                            />
-				<tg:DataGridBooleanColumn PropertyName="isOnWater"
-                                          IsVisible="True"
+				<sf:GridCheckBoxColumn  MappingName="isOnWater"
+                                          IsHidden="False"
                                           />
-			</tg:RadDataGrid.Columns>
-		</tg:RadDataGrid>
+			</sf:SfDataGrid.Columns>
+		</sf:SfDataGrid>
 		<tk:WrapPanel Orientation="Horizontal" HorizontalAlignment="Stretch" >
             <Border  Margin="12" VerticalAlignment="Center">
                 <TextBlock x:Name="sendAtUI"  VerticalAlignment="Center" Text="{x:Bind arriveAt,Mode=OneWay,Converter={StaticResource DateTimeConverter}}"

@@ -6,7 +6,6 @@
     xmlns:tk="using:CommunityToolkit.WinUI.UI.Controls"
 	xmlns:COTG="using:CnV"
     xmlns:winui="using:Microsoft.UI.Xaml.Controls"
-    xmlns:telerikGrid="using:Telerik.UI.Xaml.Controls.Grid"
     xmlns:sf="using:Syncfusion.UI.Xaml.DataGrid"
  >
 	
@@ -19,12 +18,6 @@
 	<x:Double x:Key="TeachingTipMaxWidth">1680</x:Double>
 	<SolidColorBrush x:Key="HyperLinkBrush" Color="#FFA060FF" />
 
-	<Style TargetType="ScrollViewer" x:Key="ScrollViewerNoKeyboardFocus"  >
-		<Setter Property="ManipulationMode" Value="None" />
-		<Setter Property="IsTabStop" Value="False" />
-		<Setter Property="AllowFocusOnInteraction" Value="False" />
-		<Setter Property="AllowFocusWhenDisabled" Value="False" />
-	</Style>
 	
 	<Style TargetType="FontIcon" x:Key="GridSplitterGlyph" >
 		<Setter Property="FontFamily" Value="{StaticResource SymbolThemeFontFamily}"/>
@@ -106,30 +99,6 @@
 		<Setter Property="Padding" Value="4"/>
         <Setter Property="BorderBrush" Value="{ThemeResource SystemControlBackgroundAccentRevealBorderBrush}"/>
     </Style>
-	<Style TargetType="telerikGrid:RadDataGrid" >
-		<Setter Property="BorderThickness" Value="1" />
-		<Setter Property="BorderBrush" Value="{ThemeResource SystemControlBackgroundAccentRevealBorderBrush}"/>
-		<Setter Property="ColumnDataOperationsMode" Value="Inline" />
-		<Setter Property="UserGroupMode" Value ="Auto" />
-		<Setter Property="AlternationStep" Value="2" />
-		<Setter Property="CanUserChooseColumns" Value ="True" />
-		<Setter Property="FontSize" Value="{StaticResource SmallFontSize}" />
-		<Setter Property="FontWeight" Value="Light" />
-		<Setter Property="FontStretch" Value="ExtraCondensed" />
-		<Setter Property="UserFilterMode" Value="Auto" />
-		<Setter Property="SelectionUnit" Value="Row" />
-		<Setter Property="ColumnResizeHandleDisplayMode" Value="Always" />
-	</Style>
-	
-	<Style TargetType="telerikGrid:DataGridColumn"  x:Key="DataGridColumnDefault" >
-		<Setter Property="SizeMode" Value="Auto" />
-		<Setter Property="SortDirection" Value="Descending" />
-	</Style>
-	<Style TargetType="telerikGrid:DataGridTextColumn" BasedOn="{StaticResource DataGridColumnDefault}" >
-	</Style>
-	<Style TargetType="telerikGrid:DataGridNumericalColumn" BasedOn="{StaticResource DataGridColumnDefault}" >
-	</Style>
-	<Style TargetType="telerikGrid:DataGridComboBoxColumn" BasedOn="{StaticResource DataGridColumnDefault}" />
 
 
 	<Style TargetType="tk:Expander">

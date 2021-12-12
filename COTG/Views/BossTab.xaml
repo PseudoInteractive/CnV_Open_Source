@@ -7,12 +7,12 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       xmlns:cotg="using:CnV"
       xmlns:my="using:Microsoft.UI.Xaml.Controls"
-    	xmlns:tgCore="using:Telerik.Data.Core"
-      xmlns:tg="using:Telerik.UI.Xaml.Controls.Grid"
+    xmlns:sf="using:Syncfusion.UI.Xaml.DataGrid"
       xmlns:tk="using:CommunityToolkit.WinUI.UI.Controls"
-      xmlns:telerikGrid="using:Telerik.UI.Xaml.Controls.Grid"
       xmlns:local="using:CnV.Views"
-        Tag="Boss"
+      xmlns:sfdata="using:Syncfusion.UI.Xaml.Data"
+      xmlns:grids="using:Syncfusion.UI.Xaml.Grids"
+      Tag="Boss"
 			  IsTabStop="True"
     mc:Ignorable="d">
     <Grid>
@@ -20,105 +20,86 @@
             <RowDefinition/>
             <RowDefinition/>
         </Grid.RowDefinitions>
-        <telerikGrid:RadDataGrid x:Name="cityGrid"
+        <sf:SfDataGrid x:Name="cityGrid"
                                  x:FieldModifier="public"
-								 							
+                                 Loaded="DataGridLoaded"	
                         Grid.Row="0"
                         AutoGenerateColumns="False"
-                        CanUserChooseColumns="True"
-                        ColumnResizeHandleDisplayMode="Always"
-                        UserGroupMode="Enabled"
-                        PointerPressed="{x:Bind game:Spot.GridPressed}"
-							PointerExited="{x:Bind game:Spot.GridExited}"
                         FontSize="{StaticResource MediumFontSize}"
                         ItemsSource="{x:Bind local:BossTab.cities, Mode=OneTime}"
                         RowHeight="{StaticResource MediumGridRowHeight}"
-                        AlternationStep="2"
                         SelectionMode="Single"
                         SelectionUnit="Row"
 								 IsTabStop="True"
-
-                        GroupPanelPosition="Bottom"
                         SelectionChanged="CityGrid_SelectionChanged"
                         >
-			<telerikGrid:RadDataGrid.SortDescriptors>
-				<tgCore:PropertySortDescriptor PropertyName="homeTroopsAttack" SortOrder="Descending" />
-			</telerikGrid:RadDataGrid.SortDescriptors>
-            <telerikGrid:RadDataGrid.Columns>
-                <telerikGrid:DataGridImageColumn PropertyName="icon" Header="I"
-                                        SizeMode="Fixed"
-												 Width="32"
+			<sf:SfDataGrid.SortColumnDescriptions>
+				<grids:SortColumnDescription ColumnName="HomeTroopsAttack"  SortDirection="Descending" />
+			</sf:SfDataGrid.SortColumnDescriptions>
+            <sf:SfDataGrid.Columns>
+                <sf:GridImageColumn MappingName="icon" HeaderText="I"
+                                       		 Width="32"
                                          />
-                <telerikGrid:DataGridTextColumn PropertyName="nameAndRemarks"
-                                                CellContentStyle="{StaticResource LeftAlign}"
+                <sf:GridTextColumn MappingName="nameAndRemarks"
+                                                TextAlignment="Left"
                                         />
-                <telerikGrid:DataGridTextColumn PropertyName="xy"
-                                                CellContentStyle="{StaticResource CenterAlignLink}"
+                <sf:GridHyperlinkColumn MappingName="xy"
                                         />
-				<telerikGrid:DataGridNumericalColumn PropertyName="homeTroopsAttack"
-												Header="Attack"
-												 CellContentFormat="{}{0,7:N0}"
-												SortDirection="Descending"
-                                                CellContentStyle="{StaticResource RightAlign}"
+				<sf:GridNumericColumn MappingName="homeTroopsAttack"
+												HeaderText="Attack"
+												 DisplayNumberFormat="0,7:N0"
+												
+                                                TextAlignment="Right"
                                         />
-				<telerikGrid:DataGridNumericalColumn  PropertyName="cont"
+				<sf:GridNumericColumn  MappingName="cont"
                                           
-                                                      CellContentStyle="{StaticResource CenterAlign}"
+                                                      TextAlignment="Center"
                                              />
-                <telerikGrid:DataGridTextColumn PropertyName="troopsString"
-                                                     Header="troops"
+                <sf:GridTextColumn MappingName="troopsString"
+                                                     
+                                   HeaderText="troops"
                                              />
-                <telerikGrid:DataGridNumericalColumn PropertyName="points"
-                                                     IsVisible="False"
-                                             />
-            </telerikGrid:RadDataGrid.Columns>
-        </telerikGrid:RadDataGrid>
-        <telerikGrid:RadDataGrid x:Name="bossGrid" x:FieldModifier="public"
+                <sf:GridNumericColumn MappingName="points"
+                                                     IsHidden="True"
+                                            
+                                                     />
+            </sf:SfDataGrid.Columns>
+        </sf:SfDataGrid>
+        <sf:SfDataGrid x:Name="bossGrid" x:FieldModifier="public"
                         Grid.Row="1"
-
+                        Loaded="DataGridLoaded"	
                         AutoGenerateColumns="False"
 
                     
-                        UserGroupMode="Disabled"
                         FontSize="{StaticResource MediumFontSize}"
 								 
                         ItemsSource="{x:Bind game:Boss.all, Mode=OneTime}"
 
 						RowHeight="{StaticResource MediumGridRowHeight}"
-                        AlternationStep="2"
                         SelectionMode="Single"
                                IsTabStop="True"
                         SelectionUnit="Row"
-                        GroupPanelPosition="Left"
                         >
-            <tg:RadDataGrid.Commands>
-                <local:BossTapCommand />
-            </tg:RadDataGrid.Commands>
-            <telerikGrid:RadDataGrid.Columns>
-                <telerikGrid:DataGridNumericalColumn  PropertyName="type"
-                                                      SizeMode="Fixed"
-                                                      CellContentStyle="{StaticResource CenterAlign}"
+            <sf:SfDataGrid.Columns>
+                <sf:GridNumericColumn  MappingName="type"
+                                                      TextAlignment="Center"
                                              />
-                <telerikGrid:DataGridNumericalColumn  PropertyName="level"
-                                                      SizeMode="Fixed"
-                                                      CellContentStyle="{StaticResource CenterAlign}"
+                <sf:GridNumericColumn  MappingName="level"
+                                                      TextAlignment="Center"
                                              />
-                <telerikGrid:DataGridNumericalColumn  PropertyName="dist"
-                                                      Header="Hours"
-                                                      SizeMode="Fixed"
-                                                      CellContentStyle="{StaticResource CenterAlign}"
-                                            CellContentFormat="{}{0,4:N2}"
+                <sf:GridNumericColumn  MappingName="dist"
+                                                      HeaderText="Hours"
+                                                      TextAlignment="Center"
+                                            DisplayNumberFormat="0,4:N2"
                                              />
-                <telerikGrid:DataGridNumericalColumn  PropertyName="cont"
-                                                      SizeMode="Fixed"
-                                                      CellContentStyle="{StaticResource CenterAlign}"
+                <sf:GridNumericColumn  MappingName="cont"
+                                                      TextAlignment="Center"
                                              />
-                <telerikGrid:DataGridTextColumn PropertyName="xy"
-                                                SizeMode="Fixed"
-                                                CellContentStyle="{StaticResource CenterAlignLink}"
-                                        />
-            </telerikGrid:RadDataGrid.Columns>
-        </telerikGrid:RadDataGrid>
+				<sf:GridHyperlinkColumn MappingName="xy"
+				                  
+				/>
+            </sf:SfDataGrid.Columns>
+        </sf:SfDataGrid>
         <tk:GridSplitter Grid.Row="1"
                          ResizeDirection="Rows"
                                      						 				IsTabStop="True"

@@ -6,159 +6,145 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       xmlns:model="using:CnV.Models"
       xmlns:cotg="using:CnV"
-      xmlns:telerikGrid="using:Telerik.UI.Xaml.Controls.Grid"
+      xmlns:sf="using:Syncfusion.UI.Xaml.DataGrid"
       xmlns:local="using:CnV.Views"
       Background="{x:Null}"
       Tag="DefenseHistory"
 			 
-			  IsTabStop="True"
       mc:Ignorable="d">
 
     <Grid>
         
-        <telerikGrid:RadDataGrid x:Name="historyGrid"
+        <sf:SfDataGrid x:Name="historyGrid"
 AllowFocusOnInteraction="True"
-								 							
+Loaded="DataGridLoaded"				
 
-								 IsTabStop="True"
                         AutoGenerateColumns="False"
-                        CanUserChooseColumns="True"
-                        ColumnResizeHandleDisplayMode="Always"
+                        
+                        
 					    FontSize="{StaticResource MediumFontSize}"
-                         GroupPanelPosition="Bottom"
+                         
                         ItemsSource="{x:Bind history, Mode=OneWay}"
                         RowHeight="{StaticResource ShortGridRowHeight}"
-                        AlternationStep="2"
+                        
                         SelectionMode="Single"
                         SelectionUnit="Row"
-
-                        UserSortMode="Auto">
-            
-            <telerikGrid:RadDataGrid.Commands  >
-                <model:DefenseTapCommand   />
-            </telerikGrid:RadDataGrid.Commands>
-            <telerikGrid:RadDataGrid.Columns>
-                <telerikGrid:DataGridDateColumn 
-                                       PropertyName="time"
-                                       Header="Time"
-                                       CellContentFormat="{}{0:dd',' HH':'mm':'ss}"
+>
+            <sf:SfDataGrid.Columns>
+                <sf:GridTimeColumn 
+                                       MappingName="time"
+                                       HeaderText="Time"
+                                       DisplayTimeFormat="0:dd',' HH':'mm':'ss"
                                        
-                                       CellContentStyleSelector="{StaticResource ReportTypeStyleSelector}" />
-                <telerikGrid:DataGridTextColumn 
-                                       PropertyName ="Type"
-                                       SizeMode="Auto"
-                                       CellContentStyleSelector="{StaticResource ReportTypeStyleSelector}" />
-                <telerikGrid:DataGridTextColumn 
-                                       CellContentStyle="{StaticResource LeftAlign}"
-                                       Header="dPlyr"
-                                        PropertyName="tPlayer"        />
-                <telerikGrid:DataGridTextColumn 
-                                       CellContentStyle="{StaticResource LeftAlign}"
-                                       Header="aPlyr"
-                                       PropertyName="sPlayer"         />
-                <telerikGrid:DataGridTextColumn 
-                                       Header="dXY"
-                                                PropertyName="tXY"
-                                       CellContentStyle="{StaticResource CenterAlignLink}"
+                                       
+                                       />
+                <sf:GridTextColumn 
+                                       MappingName="Type"
                                         />
-                <telerikGrid:DataGridTextColumn 
-                                       Header="aXY"
-                                                PropertyName="sXY"
-                                       CellContentStyle="{StaticResource CenterAlignLink}"
+                <sf:GridTextColumn 
+                                       TextAlignment="Left"
+                                       HeaderText="dPlyr"
+                                        MappingName="tPlayer"        />
+                <sf:GridTextColumn 
+                                       TextAlignment="Left"
+                                       HeaderText="aPlyr"
+                                       MappingName="sPlayer"         />
+				<sf:GridHyperlinkColumn 
+                                       HeaderText="dXY"
+                                                MappingName="tXY"
+                             
                                         />
-                <telerikGrid:DataGridNumericalColumn 
-                                            PropertyName="dTS"
-                                            CellContentStyleSelector="{StaticResource ReportKillStyleSelector}"
-                                            CellContentFormat="{}{0,7:N0}"
+				<sf:GridHyperlinkColumn 
+                                       HeaderText="aXY"
+                                                MappingName="sXY"
+                                    
+                                        />
+                <sf:GridNumericColumn 
+                                            MappingName="dTS"
+                                            DisplayNumberFormat="0,7:N0"
                                              />
-                <telerikGrid:DataGridNumericalColumn 
-                                            PropertyName="aTS"
-                                            CellContentStyleSelector="{StaticResource ReportKillStyleSelector}"
-                                            CellContentFormat="{}{0,7:N0}"
+                <sf:GridNumericColumn 
+                                            MappingName="aTS"
+                                            DisplayNumberFormat="0,7:N0"
                                              />
-                <telerikGrid:DataGridNumericalColumn 
-                                            PropertyName="dTsKill"
-                                            CellContentStyleSelector="{StaticResource ReportKillStyleSelector}"
-                                            CellContentFormat="{}{0,7:N0}"
+                <sf:GridNumericColumn 
+                                            MappingName="dTsKill"
+                                            DisplayNumberFormat="0,7:N0"
                                              />
-                <telerikGrid:DataGridNumericalColumn 
-                                            PropertyName="aTsKill"
-                                            CellContentStyleSelector="{StaticResource ReportKillStyleSelector}"
-                                            CellContentFormat="{}{0,7:N0}"
+                <sf:GridNumericColumn 
+                                            MappingName="aTsKill"
+                                            DisplayNumberFormat="0,7:N0"
                                              />
-				<telerikGrid:DataGridNumericalColumn 
-                                            PropertyName="approxKill"
-					                        Header="aprxKill"
-                                            CellContentStyleSelector="{StaticResource ReportKillStyleSelector}"
-                                            CellContentFormat="{}{0,7:N0}"
+				<sf:GridNumericColumn 
+                                            MappingName="approxKill"
+					                        HeaderText="aprxKill"
+                                            DisplayNumberFormat="0,7:N0"
                                              />
-				<telerikGrid:DataGridTextColumn 
-                                       CellContentStyle="{StaticResource LeftAlign}"
-                                       Header="defCN"
-                                       PropertyName="targetCN"         />
-                <telerikGrid:DataGridTextColumn 
-                                       CellContentStyle="{StaticResource LeftAlign}"
-                                       Header="atkCN"
-                                       PropertyName="sourceCN"         />
-                <telerikGrid:DataGridNumericalColumn 
-                                            PropertyName="claim"
-                                            CellContentFormat="{}{0,3:N0}"
-                                            CellContentStyle="{StaticResource RightAlign}"
+				<sf:GridTextColumn 
+                                       TextAlignment="Left"
+                                       HeaderText="defCN"
+                                       MappingName="targetCN"         />
+                <sf:GridTextColumn 
+                                       TextAlignment="Left"
+                                       HeaderText="atkCN"
+                                       MappingName="sourceCN"         />
+                <sf:GridNumericColumn 
+                                            MappingName="claim"
+                                            DisplayNumberFormat="0,3:N0"
+                                            TextAlignment="Right"
                                              />
-                <telerikGrid:DataGridNumericalColumn 
-                                            PropertyName="Cont"
-                                            CellContentStyle="{StaticResource CenterAlign}"
+                <sf:GridNumericColumn 
+                                            MappingName="Cont"
+                                            TextAlignment="Center"
                                              />
-                <telerikGrid:DataGridBooleanColumn 
-                                          CellContentStyle="{StaticResource CenterAlign}"
-                                          Header="Sen"
-                                          PropertyName="hasSenator"
+                <sf:GridCheckBoxColumn  
+                                          TextAlignment="Center"
+                                          HeaderText="Sen"
+                                          MappingName="hasSenator"
                                            />
-                <telerikGrid:DataGridBooleanColumn 
-                                          CellContentStyle="{StaticResource CenterAlign}"
-                                          Header="Nav"
-                                                   PropertyName="hasNaval"
+                <sf:GridCheckBoxColumn 
+                                          TextAlignment="Center"
+                                          HeaderText="Nav"
+                                                   MappingName="hasNaval"
                                            />
-                <telerikGrid:DataGridBooleanColumn 
-                                          Header="SE"
-                                           PropertyName="hasArt"
-                                          CellContentStyle="{StaticResource CenterAlign}"
+                <sf:GridCheckBoxColumn  
+                                          HeaderText="SE"
+                                           MappingName="hasArt"
+                                          TextAlignment="Center"
                                            />
-                <telerikGrid:DataGridNumericalColumn 
-                                            PropertyName="dTsLeft"
-                                            CellContentStyleSelector="{StaticResource ReportKillStyleSelector}"
-                                            CellContentFormat="{}{0,7:N0}"
+                <sf:GridNumericColumn 
+                                            MappingName="dTsLeft"
+                                            DisplayNumberFormat="0,7:N0"
                                              />
-                <telerikGrid:DataGridNumericalColumn 
-                                            PropertyName="aTsLeft"
-                                            CellContentStyleSelector="{StaticResource ReportKillStyleSelector}"
-                                            CellContentFormat="{}{0,7:N0}"
+                <sf:GridNumericColumn 
+                                            MappingName="aTsLeft"
+                                            DisplayNumberFormat="0,7:N0"
                                              />
-                <telerikGrid:DataGridTextColumn 
-                                       CellContentStyle="{StaticResource LeftAlign}"
-                                       Header="atkAli"
-                                                PropertyName="sourceAllianceName" />
-                <telerikGrid:DataGridTextColumn 
-                                       CellContentStyle="{StaticResource LeftAlign}"
-                                       Header="defAli"
-                                                PropertyName="targetAllianceName"
-                                       IsVisible="False" />
-            </telerikGrid:RadDataGrid.Columns>
-            <!--<telerikGrid:RadDataGrid.AggregateDescriptors>
-                <telerikCore:PropertyAggregateDescriptor PropertyName="SE"
+                <sf:GridTextColumn 
+                                       TextAlignment="Left"
+                                       HeaderText="atkAli"
+                                                MappingName="sourceAllianceName" />
+                <sf:GridTextColumn 
+                                       TextAlignment="Left"
+                                       HeaderText="defAli"
+                                                MappingName="targetAllianceName"
+                                       IsHidden="True" />
+            </sf:SfDataGrid.Columns>
+            <!--<sf:SfDataGrid.AggregateDescriptors>
+                <telerikCore:PropertyAggregateDescriptor MappingName="SE"
                                                          Function="Count" />
-                <telerikCore:PropertyAggregateDescriptor PropertyName="Sen"
+                <telerikCore:PropertyAggregateDescriptor MappingName="Sen"
                                                          Function="Count" />
-                <telerikCore:PropertyAggregateDescriptor PropertyName="atsKill"
+                <telerikCore:PropertyAggregateDescriptor MappingName="atsKill"
                                                          Function="Sum" />
-                <telerikCore:PropertyAggregateDescriptor PropertyName="dtsKill"
+                <telerikCore:PropertyAggregateDescriptor MappingName="dtsKill"
                                                          Function="Sum" />
-                <telerikCore:PropertyAggregateDescriptor PropertyName="aTS"
+                <telerikCore:PropertyAggregateDescriptor MappingName="aTS"
                                                          Function="Sum" />
-                <telerikCore:PropertyAggregateDescriptor PropertyName="dTS"
+                <telerikCore:PropertyAggregateDescriptor MappingName="dTS"
                                                          Function="Sum" />
-            </telerikGrid:RadDataGrid.AggregateDescriptors>-->
-        </telerikGrid:RadDataGrid>
+            </sf:SfDataGrid.AggregateDescriptors>-->
+        </sf:SfDataGrid>
       
     </Grid>
 </local:UserTab>

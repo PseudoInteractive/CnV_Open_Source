@@ -49,6 +49,11 @@ namespace CnV.Views
 		private const double mediumFontSizeBase = 14.0;
 		private const double smallFontSizeBase = 12.0;
 		private const double chatFontSizeBase = 14.0;
+		private const double largeGridRowHeightBase = largeFontSizeBase*2.0;
+		private const double mediumGridRowHeightBase = 32;//mediumFontSizeBase*(2.25);
+		private const double smallGridRowHeightBase = 28;//smallFontSizeBase*2.25;
+		private const double chatRowHeightBase = (14.0/30.0);
+
 		internal static SettingsPage instance;
 		//      private static UserDataService UserDataService => Singleton<UserDataService>.Instance;
 
@@ -474,40 +479,40 @@ namespace CnV.Views
 			}
 		}
 
-		
 
 		[NonSerialized]
-		public static float mediumFontSize = 14;
+		public static double mediumFontSize = mediumFontSizeBase;
 		[NonSerialized]
-		public static float largeFontSize = 20;
+		public static double largeFontSize = largeFontSizeBase;
 		[NonSerialized]
-		public static float smallFontSize = 12;
+		public static double smallFontSize = smallFontSizeBase;
 		[NonSerialized] 
-		public static float largeGridRowHeight = 34;
+		public static double largeGridRowHeight = largeGridRowHeightBase;
 		[NonSerialized]
-		public static GridLength largeGridRowHeighL = new(largeGridRowHeight);
+		public static GridLength largeGridRowHeighL = new(largeGridRowHeightBase);
 		[NonSerialized]
-		public static float mediumGridRowHeight = 30;
+		public static double mediumGridRowHeight = mediumGridRowHeightBase;
 		[NonSerialized] 
-		public static float shortGridRowHeight = 28;
+		public static double shortGridRowHeight = smallGridRowHeightBase;
 
 		public static void UpdateZoom(object sender = null, Microsoft.UI.Xaml.Controls.Primitives.RangeBaseValueChangedEventArgs e = null)
 		{
 			var chatZoom = SettingsPage.chatZoom.Squared()  + 0.75f;
 			var tabZoom = SettingsPage.tabZoom.Squared()  + 0.75f;
-			float AsFloat(object d) => (float)(double)d;
-			smallFontSize = AsFloat(App.instance.Resources["SmallFontSize"] = tabZoom * smallFontSizeBase);
-			largeFontSize = AsFloat(App.instance.Resources["LargeFontSize"] = tabZoom * 20.0);
-			mediumFontSize = AsFloat(App.instance.Resources["MediumFontSize"] = tabZoom * mediumFontSizeBase);
-			App.instance.Resources["ChatFontSize"] = chatZoom * 12.0;
+			double AsDouble(object d) => (double)d;
+			double RoundDouble(double d) => Math.Round(d);
+			smallFontSize = AsDouble(App.instance.Resources["SmallFontSize"] = RoundDouble(tabZoom * smallFontSizeBase));
+			largeFontSize = AsDouble(App.instance.Resources["LargeFontSize"] = RoundDouble(tabZoom * largeFontSizeBase));
+			mediumFontSize = AsDouble(App.instance.Resources["MediumFontSize"] = RoundDouble(tabZoom * mediumFontSizeBase));
+//			App.instance.Resources["ChatFontSize"] = RoundDouble(chatZoom *cha;
 
-			largeGridRowHeight = AsFloat(App.instance.Resources["LargeGridRowHeight"] = tabZoom * (largeFontSizeBase*2.25));
-		
-			mediumGridRowHeight = AsFloat(App.instance.Resources["MediumGridRowHeight"] = tabZoom * (mediumFontSizeBase*2.25));
-			shortGridRowHeight = AsFloat(App.instance.Resources["ShortGridRowHeight"] = tabZoom * (smallFontSizeBase*2.25) );
+			largeGridRowHeight = AsDouble(App.instance.Resources["LargeGridRowHeight"] = RoundDouble(tabZoom * largeGridRowHeightBase));
+			largeGridRowHeighL = new(largeGridRowHeight);
+			mediumGridRowHeight = AsDouble(App.instance.Resources["MediumGridRowHeight"] = RoundDouble(tabZoom * mediumGridRowHeightBase));
+			shortGridRowHeight = AsDouble(App.instance.Resources["ShortGridRowHeight"] = RoundDouble(tabZoom * smallGridRowHeightBase));
 
-			App.instance.Resources["ChatFontSize"] = chatZoom * chatFontSizeBase;
-			App.instance.Resources["ChatFontImageHeight"] = chatZoom * 32.0;
+			App.instance.Resources["ChatFontSize"] = RoundDouble(chatZoom * chatFontSizeBase);
+			App.instance.Resources["ChatFontImageHeight"] = RoundDouble(chatZoom * chatRowHeightBase);
 			
 
 		}

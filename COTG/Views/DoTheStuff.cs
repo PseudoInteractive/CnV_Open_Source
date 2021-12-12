@@ -441,7 +441,7 @@ public static class DoTheStuff
 						if ( bc.unfinishedBuildings > 4)
 						{
 							if (await AppS.DoYesNoBox($"{bc.unfinishedBuildings} unfinished buildings",
-								    "continue with teardown anyway in {city.nameAndRemarks}?") != 1)
+								    $"continue with teardown anyway in {city.nameAndRemarks}?") != 1)
 							{
 								return true;
 							}

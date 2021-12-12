@@ -52,7 +52,7 @@
     <PackageReference Include="DSharpPlus" Version="4.1.0" />
     <PackageReference Include="DSharpPlus.CommandsNext" Version="4.1.0" />
     <PackageReference Include="Enums.NET" Version="4.0.0" />
-    <PackageReference Include="Grpc.Net.Client" Version="2.41.0-pre1" />
+    <PackageReference Include="Grpc.Net.Client" Version="2.41.0" />
     <PackageReference Include="Humanizer.Core" Version="2.13.14" />
     <PackageReference Include="MagicOnion.Client" Version="4.3.1" />
     <PackageReference Include="MessagePackAnalyzer" Version="2.3.85" />
@@ -84,28 +84,27 @@
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     <PackageReference Include="Nito.AsyncEx.Coordination" Version="5.1.2" />
     <PackageReference Include="Nito.AsyncEx.Tasks" Version="5.1.2" />
-    <PackageReference Include="PlayFabAllSDK" Version="1.105.211108" />
+    <PackageReference Include="PlayFabAllSDK" Version="1.107.211209" />
     <PackageReference Include="SharpDX" Version="4.2.0" />
     <PackageReference Include="SharpDX.D3DCompiler" Version="4.2.0" />
     <PackageReference Include="SharpDX.Direct3D11" Version="4.2.0" />
     <PackageReference Include="SharpDX.DXGI" Version="4.2.0" />
     <PackageReference Include="SharpDX.MediaFoundation" Version="4.2.0" />
     <PackageReference Include="SharpGen.Runtime.COM" Version="2.0.0-beta.10" />
-    <PackageReference Include="Syncfusion.Chart.WinUI" Version="19.3.0.56" />
-    <PackageReference Include="Syncfusion.Grid.WinUI" Version="19.3.0.56" />
-    <PackageReference Include="Syncfusion.Licensing" Version="19.3.0.56" />
-    <PackageReference Include="Syncfusion.Scheduler.WinUI" Version="19.3.0.56" />
+    <PackageReference Include="Syncfusion.Chart.WinUI" Version="19.3.0.57" />
+    <PackageReference Include="Syncfusion.Grid.WinUI" Version="19.3.0.57" />
+    <PackageReference Include="Syncfusion.Licensing" Version="19.3.0.57" />
+    <PackageReference Include="Syncfusion.Scheduler.WinUI" Version="19.3.0.57" />
     <PackageReference Include="System.Collections.Immutable" Version="6.0.0" />
     <PackageReference Include="System.Diagnostics.PerformanceCounter" Version="6.0.0" />
     <PackageReference Include="System.Drawing.Common" Version="6.0.0" />
-    <PackageReference Include="System.Linq.Async" Version="5.0.0" />
+    <PackageReference Include="System.Linq.Async" Version="5.1.0" />
     <PackageReference Include="System.Management" Version="6.0.0" />
     <PackageReference Include="System.Memory.Data" Version="6.0.0" />
     <PackageReference Include="System.Runtime.Caching" Version="6.0.0" />
     <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="6.0.0" />
     <PackageReference Include="System.Text.Json" Version="6.0.0" />
     <PackageReference Include="System.Threading.Tasks.Dataflow" Version="6.0.0" />
-    <PackageReference Include="Telerik.WinUI.Controls.Trial" Version="0.5.0" />
     <PackageReference Include="ZString" Version="2.4.3" />
     <PackageReference Include="PInvoke.User32" Version="0.7.104" />
   </ItemGroup>
@@ -277,7 +276,7 @@
     <Compile Include="JSON\TradeSettings.cs" />
     <Compile Include="JSON\TroopInfo.cs" />
     <Compile Include="Models\ADataGrid.cs" />
-    <Compile Include="Models\CityTapCommand.cs" />
+    <Compile Include="Models\DataGridTap.cs" />
     <Compile Include="Models\GoogleSheets.cs" />
     <Compile Include="Models\JsNative.cs" />
     <Compile Include="Models\JSPopup.cs" />
@@ -292,11 +291,6 @@
     <Compile Include="Models\DragDropData.cs" />
     <Compile Include="Models\DragDropStartingData.cs" />
     <Compile Include="Models\JSClient.cs" />
-    <Compile Include="Models\SharedDataModelBase.cs" />
-    <Compile Include="Models\SharedDataStorageItemsModel.cs" />
-    <Compile Include="Models\SharedDataWebLinkModel.cs" />
-    <Compile Include="Models\TabViewItemData.cs" />
-    <Compile Include="Models\UserData.cs" />
     <Compile Include="Services\ActivationService.cs" />
     <Compile Include="Activation\DefaultActivationHandler.cs" />
     <Compile Include="Services\Discord.cs" />
@@ -455,6 +449,9 @@
     <Page Include="Styles\Page.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Styles\ScrollBarHack.xaml">
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Styles\_Colors.xaml">
       <SubType>Designer</SubType>
@@ -726,6 +723,7 @@
     <None Remove="Strings\en-us\Resources.resw" />
     <None Remove="Package.appxmanifest" />
     <None Remove="Styles\CommandBar.xaml" />
+    <None Remove="Styles\ScrollBarHack.xaml" />
     <None Remove="Styles\SharedResources.xaml" />
     <None Remove="Views\CityBox.xaml" />
     <None Remove="Views\CityRename.xaml" />

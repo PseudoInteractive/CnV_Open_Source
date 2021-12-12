@@ -9,17 +9,16 @@ using Windows.Storage;
 using Converters;
 using Game;
 using Syncfusion.UI.Xaml.Grids;
+using Syncfusion.UI.Xaml.Grids.ScrollAxis;
 using Views;
-using DataGrid = Syncfusion.UI.Xaml.DataGrid.SfDataGrid;
 /// <summary>
 /// Tag is used to save/load the dataGrid
 /// </summary>
 public static partial class ADataGrid
 {
-	public static DataGrid Create<T>() where T : class
+	public static xDataGrid Create<T>() where T : class
 	{
-
-		var rv = new DataGrid();
+		var rv = new xDataGrid();
 		
 		rv.View.BeginInit();
 		rv.SourceType = typeof(T);
@@ -28,30 +27,51 @@ public static partial class ADataGrid
 
 	public ref struct ChangeContextDisposable
 	{
-		DataGrid grid;
+		xDataGrid? grid;
 
-		public ChangeContextDisposable(DataGrid dataGrid)
+		public ChangeContextDisposable(xDataGrid? dataGrid)
 		{
 			grid = dataGrid;
-			Assert(!dataGrid.IsListenerSuspended);
-			grid.SuspendNotifyListener();
-			grid.Columns.Suspend();
-			if(grid.View !=null)
-				grid.View.BeginInit();
+			if (dataGrid is not null)
+			{
+				
+				Assert(!dataGrid.IsListenerSuspended);
+				grid.SuspendNotifyListener();
+				grid.Columns.Suspend();
+				if (grid.View != null)
+					grid.View.BeginInit();
+			}
+			else
+			{
+				
+			}
 		}
 		public void Dispose()
 		{
-			grid.Columns.Resume();
-			grid.ResumeNotifyListener();
-			if(grid.View !=null)
-				grid.View.EndInit();
+			if (grid is not null)
+			{
+				grid.Columns.Resume();
+				grid.ResumeNotifyListener();
+				if (grid.View != null)
+					grid.View.EndInit();
+			}
 		}
 	}
 
-	public static ChangeContextDisposable ChangeContext(this DataGrid grid) => new ChangeContextDisposable(grid);
+	public static ChangeContextDisposable ChangeContext(this xDataGrid grid) => new ChangeContextDisposable(grid);
 
+	public static void ScrollItemIntoView(this xDataGrid grid, object? o)
+	{
+		if (o is not null)
+		{
+			var rowIndex = grid.ResolveToRowIndex(o);
+			var columnIndex = grid.ResolveToStartColumnIndex();
+			if (rowIndex >= 0)
+				grid.ScrollInView(new RowColumnIndex(rowIndex, columnIndex));
+		}
+	}
 
-	public static void AddCity(this DataGrid grid,string headerText = null,bool wantImage = true,bool wantRemarks = true,bool wantStatus = true, bool wantDefense=false,bool wantTroops=false)
+	public static void AddCity(this xDataGrid grid,string headerText = null,bool wantImage = true,bool wantRemarks = true,bool wantStatus = true, bool wantDefense=false,bool wantTroops=false)
 	{
 		Assert(grid.IsListenerSuspended);
 		try
@@ -125,7 +145,7 @@ public static partial class ADataGrid
 		
 		}
 	}
-	public static bool AddTime(this DataGrid grid,string mapping,string headerText = null,bool readOnly=true,string nullText=null)
+	public static bool AddTime(this xDataGrid grid,string mapping,string headerText = null,bool readOnly=true,string nullText=null)
 	{
 
 		Assert(grid.IsListenerSuspended);
@@ -154,7 +174,7 @@ public static partial class ADataGrid
 
 		}
 	}
-	public static bool AddText(this DataGrid grid,string mapping,string headerText = null,ColumnWidthMode widthMode= ColumnWidthMode.Auto,double width = double.NaN, bool readOnly = true)
+	public static bool AddText(this xDataGrid grid,string mapping,string headerText = null,ColumnWidthMode widthMode= ColumnWidthMode.Auto,double width = double.NaN, bool readOnly = true)
 	{
 
 		Assert(grid.IsListenerSuspended);
@@ -181,7 +201,7 @@ public static partial class ADataGrid
 		}
 		
 	}
-	public static void AddHyperLink(this DataGrid grid,string mapping, string headerText = null,string displayMapping=null,string buttonStr=null)
+	public static void AddHyperLink(this xDataGrid grid,string mapping, string headerText = null,string displayMapping=null,string buttonStr=null)
 	{
 
 		Assert(grid.IsListenerSuspended);
@@ -210,7 +230,51 @@ public static partial class ADataGrid
 
 		}
 	}
+	public static bool Register(this UserTab tab,xDataGrid grid)
+	{
+		var a = UserTab.dataGrids.TryAdd(grid, tab);
+		return a;
+	}
+	public static bool Deregister(this UserTab tab,xDataGrid grid)
+	{
+		var a = UserTab.dataGrids.Remove(grid);
+		return a;
+	}
+	public static ADataGrid.ChangeContextDisposable SetupDataGrid(this UserTab tab,xDataGrid grid, bool wantChangeContext = false, Type? sourceType = null)
+	{
 
+		if(Register(tab,grid))
+		{
+			var _lock0 = new ADataGrid.ChangeContextDisposable(wantChangeContext ? grid : null);
+			grid.Margin = new(0, 0, 32, 32);
+
+			grid.AlternationCount = 2;
+			grid.AllowTriStateSorting = true;
+			grid.FontStretch = Windows.UI.Text.FontStretch.Condensed;
+			grid.ExpanderColumnWidth = 32;
+			grid.FontSize = SettingsPage.smallFontSize;
+			grid.GridContextFlyoutOpening += UserTab.ContextFlyoutOpening;
+			grid.RecordContextFlyout = new();
+			grid.CurrentCellRequestNavigate += UserTab.CelNavigate;
+			grid.CellTapped += ADataGrid.SfCellTapped;
+			//				grid.AllowFrozenGroupHeaders = false;
+			grid.ColumnWidthMode = Syncfusion.UI.Xaml.Grids.ColumnWidthMode.AutoLastColumnFill;
+			grid.CellToolTipOpening += UserTab.CellToolTipOpening;
+			if(sourceType is not null || grid.ItemsSource is not null)
+				grid.SourceType = sourceType ?? UserTab.GetContainerType(grid.ItemsSource);
+			grid.UseSystemFocusVisuals=true;
+			grid.ShowSortNumbers = true;
+			return _lock0;
+
+		}
+		else
+		{
+			return new ADataGrid.ChangeContextDisposable(null);
+		}
+
+		//			grid.LiveDataUpdateMode = Syncfusion.UI.Xaml.Data.LiveDataUpdateMode.AllowChildViewUpdate;
+
+	}
 
 
 	public static class Statics

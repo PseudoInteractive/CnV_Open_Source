@@ -284,7 +284,7 @@ namespace CnV
 			await ShareString.Show(cid);
 		}
 
-		//public static void Focus(this Telerik.UI.Xaml.Controls.Grid.RadDataGrid ob)
+		//public static void Focus(this Telerik.UI.Xaml.Controls.Grid.SfDataGrid ob)
 		//{
 		//	if (ob != null)
 		//	{
@@ -304,40 +304,40 @@ namespace CnV
 		//}
 
 		static string lastTip;
-		public static void ProcessTooltipsOnPointerMoved(object sender, PointerRoutedEventArgs e)
-		{
-			try
-			{
-				var info = Spot.HitTest(sender,e);
-				var ctrl = info.column?.Column;
-				var str = string.Empty;
-				if(ctrl != null)
-				{
-					var _str = ToolTipService.GetToolTip(ctrl) as string;
-					if(_str != null)
-						str = _str;
-				}
-				ShowTip(str);
-			}
-			catch(Exception ex)
-			{
-				Log(ex);
-			}
-		}
+		//public static void ProcessTooltipsOnPointerMoved(object sender, PointerRoutedEventArgs e)
+		//{
+		//	try
+		//	{
+		//		var info = Spot.HitTest(sender,e);
+		//		var ctrl = info.column?.Column;
+		//		var str = string.Empty;
+		//		if(ctrl != null)
+		//		{
+		//			var _str = ToolTipService.GetToolTip(ctrl) as string;
+		//			if(_str != null)
+		//				str = _str;
+		//		}
+		//		ShowTip(str);
+		//	}
+		//	catch(Exception ex)
+		//	{
+		//		Log(ex);
+		//	}
+		//}
 		public static void ShowTip(string str)
 		{
-			if (str != lastTip && TabPage.mainTabs?.tip is not null )
+			if(str != lastTip && TabPage.mainTabs?.tip is not null)
 			{
 				lastTip = str;
 				AppS.DispatchOnUIThreadLow(() =>
 			   TabPage.mainTabs.tip.Text = str); // Todo:  use the correct tabPage
 			}
 		}
-		public static void ProcessTooltips(this Telerik.UI.Xaml.Controls.Grid.RadDataGrid grid)
-		{
-			grid.PointerMoved -= ProcessTooltipsOnPointerMoved;
-			grid.PointerMoved += ProcessTooltipsOnPointerMoved;
-		}
-		
+		//public static void ProcessTooltips(this xDataGrid grid)
+		//{
+		//	grid.PointerMoved -= ProcessTooltipsOnPointerMoved;
+		//	grid.PointerMoved += ProcessTooltipsOnPointerMoved;
+		//}
+
 	}
 }

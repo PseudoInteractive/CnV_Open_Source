@@ -1,10 +1,5 @@
-﻿using CnV.Game;
-using CnV.Services;
-using CnV.Views;
-
-using System;
+﻿using CnV.Services;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web;
@@ -13,10 +8,7 @@ using System.Web;
 using Microsoft.UI.Xaml.Controls;
 using ContentDialog = Microsoft.UI.Xaml.Controls.ContentDialog;
 using ContentDialogResult = Microsoft.UI.Xaml.Controls.ContentDialogResult;
-using static CnV.Debug;
 using static CnV.Views.SettingsPage;
-using Microsoft.UI.Xaml.Controls;
-using CnV.Helpers;
 
 namespace CnV.GameData
 {

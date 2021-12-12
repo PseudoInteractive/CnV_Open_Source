@@ -3,13 +3,10 @@
 			  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 			  xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 			  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-			  xmlns:tg="using:Telerik.UI.Xaml.Controls.Grid"
-			  xmlns:tgCore="using:Telerik.Data.Core"
+			  xmlns:sf="using:Syncfusion.UI.Xaml.DataGrid"
 			  xmlns:tk="using:CommunityToolkit.WinUI.UI.Controls"
 			  xmlns:winui="using:Microsoft.UI.Xaml.Controls"
-			  xmlns:model="using:CnV.Models"
 			  xmlns:game="using:CnV.Game"
-			  xmlns:cotg="using:CnV"
 			  xmlns:views="using:CnV.Views"
 			  mc:Ignorable="d"
 			  Tag="Raid"
@@ -25,208 +22,117 @@
 				<RowDefinition Height="*" />
 			</Grid.RowDefinitions>
 	
-		<tg:RadDataGrid x:Name="cityGrid"
-					
-							x:FieldModifier="public"
-							ColumnDataOperationsMode="Inline"
+		<sf:SfDataGrid x:Name="cityGrid"
+		              	x:FieldModifier="public"
 							Grid.Row="3"
 							Loaded="DataGridLoaded"
-							 GroupPanelPosition="Bottom"
+							 
 						FrozenColumnCount="3"
-							UserGroupMode="Auto"
-							AlternationStep="2"
+							
 							ItemsSource="{x:Bind game:City.gridCitySource, Mode=OneWay}"
 							AutoGenerateColumns="False"
 							SelectionMode="Extended"
-							CanUserChooseColumns="True"
-							UserFilterMode="Auto"
-							PointerPressed="{x:Bind game:Spot.GridPressed}"
-							PointerExited="{x:Bind game:Spot.GridExited}"
+							
 							FontSize="{StaticResource SmallFontSize}"
 							IsTextScaleFactorEnabled="False"
 							SelectionUnit="Row"
-							ColumnResizeHandleDisplayMode ="None"
 							Tag="Raid"
 							
 					
 							>
 
 
-				<tg:RadDataGrid.Commands>
-					<views:CustomDataBindingCompleteCommand />
-					<model:CityGridToggleColumnVisibilityCommand />
-				</tg:RadDataGrid.Commands>
-				<tg:RadDataGrid.AggregateDescriptors>
-					<tgCore:PropertyAggregateDescriptor PropertyName="cont"	Function="Count" />
-					<tgCore:PropertyAggregateDescriptor PropertyName="tsTotal"	Function="Sum" />
-					<tgCore:PropertyAggregateDescriptor PropertyName="tsRaid"	Function="Sum" />
-					<tgCore:PropertyAggregateDescriptor PropertyName="isCastle"		Function="Sum" />
-					<tgCore:PropertyAggregateDescriptor PropertyName="isOnWater"	Function="Sum" />
-					<tgCore:PropertyAggregateDescriptor PropertyName="points"	Function="Sum" />
-				</tg:RadDataGrid.AggregateDescriptors>
+				<sf:SfDataGrid.Columns>
 
-				<tg:RadDataGrid.Columns>
-
-					<tg:DataGridTextColumn Header= "+" 
-										   PropertyName="dungeonsToggle"
-										   CellContentStyle="{StaticResource CenterAlignLink}"
-										   SizeMode="Fixed"
-											Width="20"
-										   CanUserFilter="False"
-										CanUserResize="False"
-										   winui:ToolTipService.ToolTip="Tap to expend or collapse dungeons" />
-					<tg:DataGridImageColumn PropertyName="icon"
-											Header="I"
-											SizeMode="Fixed"
-										   CanUserFilter="False"
+				<sf:GridHyperlinkColumn HeaderText= "+" 
+				                        MappingName="dungeonsToggle"
+				                        Width="20"
+				                        winui:ToolTipService.ToolTip="Tap to expend or collapse dungeons" />
+					<sf:GridImageColumn MappingName="icon"
+											HeaderText="I"
 											Width="32"
-										CanUserResize="False"
 											winui:ToolTipService.ToolTip="Click to switch to this city"
 											 />
-					<tg:DataGridTextColumn PropertyName="nameAndRemarks"
+					<sf:GridTextColumn MappingName="nameAndRemarks"
 										   winui:ToolTipService.ToolTip="Click to raid from this city without switching cities (fast)"
-										   Header="Name"
-										   CellContentStyle="{StaticResource LeftAlign}"
-										   SizeMode="Auto"
+										   HeaderText="Name"
+										   TextAlignment="Left"
 										    />
-					<tg:DataGridTextColumn PropertyName="xy"
+					<sf:GridHyperlinkColumn MappingName="xy"
 										   winui:ToolTipService.ToolTip="Click to view this city"
-										   CellContentStyle="{StaticResource CenterAlignLink}"
-										   CanUserFilter="False"
-											SizeMode="Fixed"
-											Width="48"
-										CanUserResize="False"
+										  Width="48"
 										    />
-				<tg:DataGridNumericalColumn PropertyName="cont"
-												
-												CellContentStyle="{StaticResource CenterAlign}"
-												SizeMode="Fixed"
+					<sf:GridNumericColumn MappingName="cont"
+												TextAlignment="Center"
 											Width="48"
-										CanUserResize="False"
-									>
-							<tg:DataGridNumericalColumn.AggregatesTemplate>
-								<DataTemplate>
-										<TextBlock Text="{Binding [0].Value}" TextAlignment="Center" />
-								</DataTemplate>
-							</tg:DataGridNumericalColumn.AggregatesTemplate>
-						</tg:DataGridNumericalColumn>
-				<tg:DataGridNumericalColumn PropertyName="tsTotal"
-												Header="TS"
-												CellContentStyle="{StaticResource RightAlign}"
+									/>
+				<sf:GridNumericColumn MappingName="tsTotal"
+												HeaderText="TS"
+												TextAlignment="Right"
 												winui:ToolTipService.ToolTip="TS enlisted in city"
-												CellContentFormat="{}{0,7:N0}"
-												SortDirection="Descending"
-												SizeMode="Auto"
-												 >
-					<tg:DataGridNumericalColumn.AggregatesTemplate>
-						<DataTemplate>
-							<TextBlock Text="{Binding [1].Value, Converter={StaticResource IntConverter} }" TextAlignment="Right" />
-						</DataTemplate>
-					</tg:DataGridNumericalColumn.AggregatesTemplate>
-				</tg:DataGridNumericalColumn>
-				<tg:DataGridNumericalColumn PropertyName="tsRaid"
-												Header="Raid"
-												CellContentStyle="{StaticResource RightAlign}"
-												CellContentFormat="{}{0,7:N0}"
-												SortDirection="Descending"
-												SizeMode="Auto"
-												winui:ToolTipService.ToolTip="TS of Troops at home that can raid">
-					<tg:DataGridNumericalColumn.AggregatesTemplate>
-						<DataTemplate>
-							<TextBlock Text="{Binding [2].Value, Converter={StaticResource IntConverter} }" TextAlignment="Right" />
-						</DataTemplate>
-					</tg:DataGridNumericalColumn.AggregatesTemplate>
-				
-				</tg:DataGridNumericalColumn>
-				<tg:DataGridNumericalColumn PropertyName="raidIdle"
-												Header="%Idle"
-												CellContentStyle="{StaticResource RightAlign}"
-												CellContentFormat="{}{0,3:P1}"
-												SortDirection="Descending"
-												SizeMode="Auto"
+												DisplayNumberFormat="0,7:N0"
+												 />
+				<sf:GridNumericColumn MappingName="tsRaid"
+												HeaderText="Raid"
+												TextAlignment="Right"
+												DisplayNumberFormat="0,7:N0"
+												winui:ToolTipService.ToolTip="TS of Troops at home that can raid"/>
+				<sf:GridNumericColumn MappingName="raidIdle"
+												HeaderText="%Idle"
+												TextAlignment="Right"
+												DisplayNumberFormat="0,3:P1"
 												winui:ToolTipService.ToolTip="% raiding troops idle" />
-				<tg:DataGridNumericalColumn PropertyName="tsHome"
-												CellContentStyle="{StaticResource RightAlign}"
-												SortDirection="Descending"
+				<sf:GridNumericColumn MappingName="tsHome"
+												TextAlignment="Right"
 												winui:ToolTipService.ToolTip="TS of Troops at home (including non raiding troops)"
-												CellContentFormat="{}{0,7:N0}"
-												SizeMode="Auto"
-												IsVisible="False"/>
-				<tg:DataGridTextColumn PropertyName="raidReturn"
-												winui:ToolTipService.ToolTip="Click here to bring troops home asap"
-												CellContentStyle="{StaticResource RightAlignLink}"
-										   CanUserFilter="False"
-												CellContentFormat="{}{0,6:N0}"
-												SizeMode="Auto"/>
-				<tg:DataGridNumericalColumn PropertyName="raidCarry"
+												DisplayNumberFormat="0,7:N0"
+												IsHidden="True"/>
+				<sf:GridHyperlinkColumn MappingName="raidReturn"
+				                        winui:ToolTipService.ToolTip="Click here to bring troops home asap"
+				                        />
+				<sf:GridNumericColumn MappingName="raidCarry"
 												winui:ToolTipService.ToolTip="% of loot carried per raid&#x0a;Click here to bring troops home after the next raid"
-												CellContentStyle="{StaticResource RightAlignLink}"
-												CellContentFormat="{}{0,5:N1}"
-												SizeMode="Auto"
+												DisplayNumberFormat="0,5:N1"
 												 />
-				<tg:DataGridNumericalColumn PropertyName="points"
+				<sf:GridNumericColumn MappingName="points"
 												winui:ToolTipService.ToolTip="City score"
-												SizeMode="Auto"
-												CellContentStyle="{StaticResource RightAlign}"
-												CellContentFormat="{}{0,6:N0}"
-												 >
-					<tg:DataGridNumericalColumn.AggregatesTemplate>
-						<DataTemplate>
-							<TextBlock Text="{Binding [5].Value, Converter={StaticResource IntConverter} }" TextAlignment="Right" />
-						</DataTemplate>
-					</tg:DataGridNumericalColumn.AggregatesTemplate>
-				</tg:DataGridNumericalColumn>
-				<tg:DataGridTextColumn PropertyName="remarks"
-										   CellContentStyle="{StaticResource LeftAlign}"
-										   SizeMode="Auto"
-										   IsVisible="False" />
-					<tg:DataGridTextColumn PropertyName="senny"
-										   CellContentStyle="{StaticResource LeftAlign}"
-										   SizeMode="Auto"
-										   IsVisible="False" />
-				<tg:DataGridBooleanColumn PropertyName="isCastle"
-											  IsVisible="False"
-											  SizeMode="Auto"
-											   >
-					<tg:DataGridBooleanColumn.AggregatesTemplate>
-						<DataTemplate>
-							<TextBlock Text="{Binding [3].Value, Converter={StaticResource IntConverter} }" TextAlignment="Right" />
-						</DataTemplate>
-					</tg:DataGridBooleanColumn.AggregatesTemplate>
-				</tg:DataGridBooleanColumn>
-				<tg:DataGridBooleanColumn PropertyName="isOnWater"
-											  IsVisible="False"
-											  SizeMode="Auto"
-											   >
-					<tg:DataGridBooleanColumn.AggregatesTemplate>
-						<DataTemplate>
-							<TextBlock Text="{Binding [4].Value, Converter={StaticResource IntConverter} }" TextAlignment="Right" />
-						</DataTemplate>
-					</tg:DataGridBooleanColumn.AggregatesTemplate>
-					</tg:DataGridBooleanColumn>
-					<tg:DataGridNumericalColumn PropertyName="carryCapacity"
-												CellContentStyle="{StaticResource RightAlign}"
-												CellContentFormat="{}{0,8:N0}"
-												IsVisible="False"
+												TextAlignment="Right"
+												DisplayNumberFormat="0,6:N0"
 												 />
-					<tg:DataGridNumericalColumn PropertyName="activeCommands"
-												CellContentStyle="{StaticResource RightAlign}"
-												CellContentFormat="{}{0,2:N0}"
-												IsVisible="False"
+				<sf:GridTextColumn MappingName="remarks"
+										   TextAlignment="Left"
+										   IsHidden="True" />
+					<sf:GridTextColumn MappingName="senny"
+										   TextAlignment="Left"
+										   IsHidden="True" />
+				<sf:GridCheckBoxColumn  MappingName="isCastle"
+											  IsHidden="True"
+											   />
+				<sf:GridCheckBoxColumn  MappingName="isOnWater"
+											  IsHidden="True"
+											   />
+					<sf:GridNumericColumn MappingName="carryCapacity"
+												TextAlignment="Right"
+												DisplayNumberFormat="0,8:N0"
+												IsHidden="True"
 												 />
-					<tg:DataGridNumericalColumn PropertyName="commandSlots"
-												CellContentStyle="{StaticResource RightAlign}"
-												CellContentFormat="{}{0,2:N0}"
-												IsVisible="False"
+					<sf:GridNumericColumn MappingName="activeCommands"
+												TextAlignment="Right"
+												DisplayNumberFormat="0,2:N0"
+												IsHidden="True"
 												 />
-					<tg:DataGridTextColumn PropertyName="troopsString"
-												CellContentStyle="{StaticResource LeftAlign}"
-											   IsCellFlyoutEnabled="True"
-										  
+					<sf:GridNumericColumn MappingName="commandSlots"
+												TextAlignment="Right"
+												DisplayNumberFormat="0,2:N0"
+												IsHidden="True"
+												 />
+					<sf:GridTextColumn MappingName="troopsString"
+												TextAlignment="Left"
+											
                                              />
-				</tg:RadDataGrid.Columns>
+				</sf:SfDataGrid.Columns>
 
-			</tg:RadDataGrid>
+			</sf:SfDataGrid>
 		<StackPanel Grid.Row="0">
 			<tk:WrapPanel Orientation="Horizontal"
 						  Margin="2"

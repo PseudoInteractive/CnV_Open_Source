@@ -292,5 +292,9 @@ namespace CnV.Views
 		{
 			UpdateRaidPlans();
 		}
+
+		private void DataGridLoaded(object sender, RoutedEventArgs e)
+		{
+		}
 	}
 }

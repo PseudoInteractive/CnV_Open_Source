@@ -23,7 +23,6 @@
 		<ResourceDictionary>
 			<ResourceDictionary.MergedDictionaries>
 				<ResourceDictionary Source="ms-appx:///Microsoft.UI.Xaml/DensityStyles/Compact.xaml" />
-				<ResourceDictionary Source="ms-appx:///Telerik.WinUI.Controls/DensityStyles/Compact.xaml" />
 			</ResourceDictionary.MergedDictionaries>
 			<Style TargetType="Button" BasedOn="{StaticResource ButtonRevealStyle}" x:Key="layoutButton" >
 				<Setter Property="Margin" Value="0,2,0,2" />
@@ -502,7 +501,6 @@ Grid.Column="0"
 						Grid.RowSpan="5"
 						Grid.ColumnSpan="3"
 						Canvas.ZIndex="10"
-						AllowFocusOnInteraction="False"
 						AllowDrop="False"
 						AllowFocusWhenDisabled="False"					
 						Grid.Row="1" />

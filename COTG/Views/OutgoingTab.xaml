@@ -3,15 +3,9 @@
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:game="using:CnV.Game"
-      xmlns:gridCommands="using:Telerik.UI.Xaml.Controls.Grid.Commands"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-      xmlns:model="using:CnV.Modelsdels"
-      xmlns:cotg="using:CnV"
-      xmlns:my="using:Microsoft.UI.Xaml.Controls"
-      xmlns:tdd="using:Telerik.Data.Core"
-      xmlns:tg="using:Telerik.UI.Xaml.Controls.Grid"
+      xmlns:sf="using:Syncfusion.UI.Xaml.DataGrid"
       xmlns:tk="using:CommunityToolkit.WinUI.UI.Controls"
-      xmlns:tl="using:Telerik.UI.Xaml.Controls"
       xmlns:local="using:CnV.Views"
       Background="{x:Null}"
       Tag="Outgoing"
@@ -26,158 +20,136 @@
 			<ToggleSwitch Header="Internal" OnContent="Include" OffContent="Excluse" IsOn="{x:Bind includeInternal,Mode=TwoWay}" Toggled="ToggleSwitch_Toggled"/>
 			<ToggleSwitch Header="From" OnContent="Me" OffContent="Anyone" IsOn="{x:Bind onlyMine,Mode=TwoWay}" Toggled="ToggleSwitch_Toggled"/>
 		</tk:WrapPanel>
-        <tg:RadDataGrid Grid.Row="1" x:Name="attackerGrid"
+        <sf:SfDataGrid Grid.Row="1" x:Name="attackerGrid"
 						x:FieldModifier="public"
-                        GridLinesThickness="1"
                         AutoGenerateColumns="False"
-                        CanUserChooseColumns="True"
 						IsTabStop="True"
-						
-						ColumnResizeHandleDisplayMode="Always"
+						Loaded="DataGridLoaded"
                         FontSize="{StaticResource MediumFontSize}"
                         RowHeight="{StaticResource MediumGridRowHeight}"
-                        PointerPressed="gridPointerPress"
-                        GroupPanelPosition="Bottom"
-                        AlternationStep="2"
                         SelectionMode="Single"
 ItemsSource="{x:Bind attackerSource,Mode=OneWay}"
                         AllowFocusOnInteraction="True"
                         SelectionChanged="defenderGrid_SelectionChanged"
-                        UserGroupMode="Enabled"
                         SelectionUnit="Row"
-                        UserSortMode="Auto">
-            <tg:RadDataGrid.Columns>
-                <tg:DataGridImageColumn PropertyName="icon"
-                                        Header="I"
-                                        SizeMode="Fixed"
+       >
+            <sf:SfDataGrid.Columns>
+                <sf:GridImageColumn MappingName="icon"
+                                        HeaderText="I"
                                         Width="32"
                                          />
-                <tg:DataGridTextColumn PropertyName="Claim"
+                <sf:GridTextColumn MappingName="Claim"
                                             
                                        
-                                       CellContentStyle="{StaticResource CenterAlign}"
+                                       TextAlignment="Center"
                                              />
-                <tg:DataGridTextColumn PropertyName="xy"
-                                       
-                                       
-                                       CellContentStyle="{StaticResource CenterAlignLink}"
+				<sf:GridHyperlinkColumn MappingName="xy"
+                               />
+				<sf:GridTextColumn MappingName="firstIncomingString"
+									   HeaderText="First"
+                                       TextAlignment="Left"
                                         />
-				<tg:DataGridTextColumn PropertyName="firstIncomingString"
-									   Header="First"
-                                       CellContentStyle="{StaticResource LeftAlign}"
-                                        />
-				<tg:DataGridNumericalColumn PropertyName="incomingAttacks"
-                                            Header="inA"
+				<sf:GridNumericColumn MappingName="incomingAttacks"
+                                            HeaderText="inA"
                                             
-                                            CellContentStyle="{StaticResource CenterAlign}"
-                                            CellContentFormat="{}{0,1:N0}"
+                                            TextAlignment="Center"
+                                            DisplayNumberFormat="0,1:N0"
                                              />
-                <tg:DataGridNumericalColumn PropertyName="incTotal"
-                                            Header="incTS"
+                <sf:GridNumericColumn MappingName="incTotal"
+                                            HeaderText="incTS"
                                             
-                                            CellContentStyle="{StaticResource RightAlign}"
-                                            CellContentFormat="{}{0,7:N0}"
+                                            TextAlignment="Right"
+                                            DisplayNumberFormat="0,7:N0"
                                              />
                 
-                <tg:DataGridNumericalColumn PropertyName="tsHome"
-                                            Header="Def"
+                <sf:GridNumericColumn MappingName="tsHome"
+                                            HeaderText="Def"
                                             
-                                            CellContentStyle="{StaticResource RightAlign}"
-                                            CellContentFormat="{}{0,7:N0}"
+                                            TextAlignment="Right"
+                                            DisplayNumberFormat="0,7:N0"
                                              />
-                <tg:DataGridTextColumn PropertyName="playerName" Header="Player"
-                                       CellContentStyle="{StaticResource LeftAlign}"
+                <sf:GridTextColumn MappingName="playerName" HeaderText="Player"
+                                       TextAlignment="Left"
                                        
                                         />
                 
-                <tg:DataGridTextColumn PropertyName="cityName"
+                <sf:GridTextColumn MappingName="cityName"
                                        
-                                       CellContentStyle="{StaticResource LeftAlign}"
-                                        IsVisible="False" />
-                <tg:DataGridTextColumn Header="Alliance"
-                                       PropertyName="alliance"
-                                       CellContentStyle="{StaticResource LeftAlign}"
+                                       TextAlignment="Left"
+                                        IsHidden="True" />
+                <sf:GridTextColumn HeaderText="Alliance"
+                                       MappingName="alliance"
+                                       TextAlignment="Left"
                                        
-                                        IsVisible="False" />
-                <tg:DataGridTextColumn PropertyName="attackers"
-                                       CellContentStyle="{StaticResource LeftAlign}"
+                                        IsHidden="True" />
+                <sf:GridTextColumn MappingName="attackers"
+                                       TextAlignment="Left"
                                        
                                         />
-                <tg:DataGridNumericalColumn PropertyName="cont"
-                                            CellContentStyle="{StaticResource CenterAlign}"
+                <sf:GridNumericColumn MappingName="cont"
+                                            TextAlignment="Center"
                                             
                                              />
-                <tg:DataGridTextColumn PropertyName="classificationString"
-                                       Header="intel"
-                                       CellContentStyle="{StaticResource LeftAlign}"
+                <sf:GridTextColumn MappingName="classificationString"
+                                       HeaderText="intel"
+                                       TextAlignment="Left"
                                        
                                         />
-            </tg:RadDataGrid.Columns>
-        </tg:RadDataGrid>
-        <tg:RadDataGrid x:Name="armyGrid"
+            </sf:SfDataGrid.Columns>
+        </sf:SfDataGrid>
+        <sf:SfDataGrid x:Name="armyGrid"
                                     ItemsSource="{x:Bind game:Army.empty, Mode=OneTime}"
-                                    CanUserChooseColumns="True"
-                                    GridLinesThickness="1"
 IsTabStop="True"
-						
-											
-
                                     Grid.Row="2"
                                     FontSize="{StaticResource MediumFontSize}"
                                     HorizontalAlignment="Stretch"
                                     RowHeight="{StaticResource MediumGridRowHeight}"
-                                    ColumnResizeHandleDisplayMode="Always"
-                                    Tapped="ArmyTapped"
+                                    
                         AllowFocusOnInteraction="True"
-                                    UserGroupMode="Disabled"
-                                    AlternationStep="2"
+                                    
+                                    
                                     AutoGenerateColumns="False">
-            <tg:RadDataGrid.Columns>
-                <tg:DataGridTimeColumn 
-                                                   PropertyName="time"
-                                                   CellContentFormat="{}{0:dd',' HH':'mm':'ss}"
-                                                   
-                                                   CellContentStyle="{StaticResource CenterAlign}" />
-                <tg:DataGridTextColumn PropertyName="sXY"
-                                                   
-                                                   
-                                                   CellContentStyle="{StaticResource CenterAlignLink}" />
-                <tg:DataGridTextColumn PropertyName="Type"
+            <sf:SfDataGrid.Columns>
+                <sf:GridTimeColumn MappingName="time"
+                                   DisplayTimeFormat="0:dd',' HH':'mm':'ss"
+                                   TextAlignment="Center" />
+				<sf:GridHyperlinkColumn MappingName="sXY" />
+                <sf:GridTextColumn MappingName="Type"
                                                    
                                                    
-                                                   CellContentStyle="{StaticResource CenterAlign}" />
+                                                   TextAlignment="Center" />
 
-                <tg:DataGridNumericalColumn PropertyName="ts"
+                <sf:GridNumericColumn MappingName="ts"
                                             
-                                       CellContentStyle="{StaticResource RightAlign}"
-                                            CellContentFormat="{}{0,7:N0}"
+                                       TextAlignment="Right"
+                                            DisplayNumberFormat="0,7:N0"
                                              />
-                <tg:DataGridTextColumn PropertyName="sPlayer"
-                                                   Header="Player"
+                <sf:GridTextColumn MappingName="sPlayer"
+                                                   HeaderText="Player"
                                                    
                                                    
-                                                   CellContentStyle="{StaticResource LeftAlign}" />
-                <tg:DataGridNumericalColumn PropertyName="dist"
+                                                   TextAlignment="Left" />
+                <sf:GridNumericColumn MappingName="dist"
                                             
-                                       CellContentStyle="{StaticResource RightAlign}"
-                                            CellContentFormat="{}{0,3:N0}"
+                                       TextAlignment="Right"
+                                            DisplayNumberFormat="0,3:N0"
                                              />
-                <tg:DataGridTextColumn PropertyName="sourceCN"
-                                                   Header="City"
+                <sf:GridTextColumn MappingName="sourceCN"
+                                                   HeaderText="City"
                                                    
                                                    
-                                                   CellContentStyle="{StaticResource LeftAlign}" />
-                <tg:DataGridNumericalColumn PropertyName="dTS"
+                                                   TextAlignment="Left" />
+                <sf:GridNumericColumn MappingName="dTS"
                                             
-                                       CellContentStyle="{StaticResource RightAlign}"
-                                            CellContentFormat="{}{0,7:N0}"
+                                       TextAlignment="Right"
+                                            DisplayNumberFormat="0,7:N0"
                                              />
-                <tg:DataGridTextColumn PropertyName="troopInfo"
-                                                   IsCellFlyoutEnabled="True"
+                <sf:GridTextColumn MappingName="troopInfo"
                                                    
-                                                   CellContentStyle="{StaticResource LeftAlign}" />
-            </tg:RadDataGrid.Columns>
-        </tg:RadDataGrid>
+                                                   
+                                                   TextAlignment="Left" />
+            </sf:SfDataGrid.Columns>
+        </sf:SfDataGrid>
         <tk:GridSplitter
                     Grid.Row="2"
                     Background="transparent"

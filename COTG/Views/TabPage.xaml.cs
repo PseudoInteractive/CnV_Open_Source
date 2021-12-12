@@ -564,6 +564,8 @@ namespace CnV.Views
 					}
 				}
 			}
+
+			Spot.SyncSelectionToUI(true);
 		}
 
 

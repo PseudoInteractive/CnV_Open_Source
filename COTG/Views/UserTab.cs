@@ -1,19 +1,21 @@
-﻿using System.Collections.Generic;
+﻿global using xDataGrid = Syncfusion.UI.Xaml.DataGrid.SfDataGrid;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.UI.Xaml.Controls;
 
-using Telerik.UI.Xaml.Controls.Grid;
 //using Windows.UI.ViewManagement;
 //using Windows.UI.WindowManagement;
 using Microsoft.UI.Xaml;
 using System.ComponentModel;
 using Syncfusion.UI.Xaml.DataGrid;
 using Windows.Foundation;
+using static CnV.Views.UserTab;
+
 
 //using Microsoft.UI.Windowing;
 
-namespace CnV.Views
-{
+namespace CnV.Views;
+
 	using System;
 	using System.Collections;
 	using System.Collections.ObjectModel;
@@ -21,25 +23,28 @@ namespace CnV.Views
 	using Game;
 	using Syncfusion.UI.Xaml.Grids;
 
-	public class UserTab:UserControl, IANotifyPropertyChanged
+	public partial class UserTab:UserControl, IANotifyPropertyChanged
 	{
 
 		private const string returnReinforcement = nameof(returnReinforcement);
 		public virtual TabPage? defaultPage => TabPage.mainTabs;
 
-		public readonly record struct DataGridProxy(UserTab tab, RadDataGrid? rad=null,SfDataGrid? sf=null)
+		public readonly record struct DataGridProxy(UserTab tab, xDataGrid sf)
 		{
-			public Control  control => rad is not null ? (Control)rad : (Control)sf!;
-			public bool isRad => rad is not null;
-			public bool isSf => sf is not null;
+			public  ObservableCollection<object> SelectedItems() => sf.SelectedItems;
+		}
+		public ImmutableArray<xDataGrid> myDataGrids = ImmutableArray<xDataGrid>.Empty;
 
-			public  ObservableCollection<object> SelectedItems() => isSf ? sf!.SelectedItems : rad!.SelectedItems;
+		public static Dictionary<xDataGrid,UserTab> dataGrids = new();
+		
+		
 
+		public virtual IEnumerable<xDataGrid> GetDataGrids()
+		{
+			yield break;
 		}
 
-		public static ImmutableArray<DataGridProxy> dataGrids = ImmutableArray<DataGridProxy>.Empty;
-		
-		public event PropertyChangedEventHandler PropertyChanged;
+	public event PropertyChangedEventHandler? PropertyChanged;
 		public void CallPropertyChanged(string? members = null)
 		{
 			PropertyChanged?.Invoke(this,new PropertyChangedEventArgs(members));
@@ -77,21 +82,18 @@ namespace CnV.Views
 
 		}
 
-		protected void SpotSelectionChanged(object sender,DataGridSelectionChangedEventArgs e)
+		protected void SpotSelectionChanged(object sender,GridSelectionChangedEventArgs e)
 		{
-			var grid = sender as RadDataGrid;
-			Assert(grid != null);
 			if(!isFocused)
 				return;
-
+			var grid = (xDataGrid)sender;
+			Assert(grid.IsCityGrid());
 			if(SpotTab.silenceSelectionChanges == 0)
 			{
 				try
 				{
-
 					var sel = grid.SelectedItems;
 					Spot.selected =new HashSet<int>( sel.Select(a=> ((Spot)a).cid ));
-
 				}
 				catch(Exception ex)
 				{
@@ -102,8 +104,8 @@ namespace CnV.Views
 					//          Spot.selected.ExitWriteLock();
 				}
 			}
-
 		}
+
 		public virtual Task VisibilityChanged(bool visible,bool longTerm)
 		{
 			if(visible)
@@ -141,8 +143,28 @@ namespace CnV.Views
 //			this.Height = 500;
 			//	ScrollViewer.SetVerticalScrollMode(this, ScrollMode.Auto); //DependencyObjectExtensions.FindDescendant<ScrollViewer>(this).AllowFocusOnInteraction= false;
 			Margin= new(8);
+			Loaded+=OnLoaded;
+
 		}
-		public Task VisibilityMaybeChanged()
+		protected void DataGridLoaded(object sender, RoutedEventArgs e)
+		{
+			var dataGrid = (xDataGrid) sender;
+			using var __ = ADataGrid.SetupDataGrid(this,dataGrid,false);
+		}
+	protected virtual void OnLoaded(object sender, RoutedEventArgs e)
+		{
+			// not generally required
+			foreach (var grid in GetDataGrids())
+			{
+				using var __ = ADataGrid.SetupDataGrid(this,  grid,false);
+			}
+		}
+	protected  ADataGrid.ChangeContextDisposable SetupDataGrid( xDataGrid grid, bool wantChangeContext = false, Type? sourceType = null)
+	{
+		return ADataGrid.SetupDataGrid(this, grid, wantChangeContext, sourceType);
+
+	}
+	public Task VisibilityMaybeChanged()
 		{
 			return VisibilityChanged(isFocused,longTerm: false);
 
@@ -158,74 +180,29 @@ namespace CnV.Views
 				await VisibilityChanged(true,longTerm: false);  // close enough default behaviour
 			}
 		}
-		public void SetupDataGrid(RadDataGrid grid)
-		{
-			if(!dataGrids.AddIfAbsent(new(this,rad:grid) ))
-				return;
-			grid.Padding = new (0,0,32,32);
-			grid.FontStretch = Windows.UI.Text.FontStretch.Condensed;
-			grid.FontWeight = Microsoft.UI.Text.FontWeights.Light;
-			grid.UseSystemFocusVisuals=true;
-			grid.GridLinesVisibility= Telerik.UI.Xaml.Controls.Primitives.GridLinesVisibility.Both;
+
+		//public void SetupDataGrid(SfDataGrid grid)
+		//{
+		//	if(!allDataGrids.AddIfAbsent(new(this,rad:grid) ))
+		//		return;
+		//	grid.Padding = new (0,0,32,32);
+		//	grid.FontStretch = Windows.UI.Text.FontStretch.Condensed;
+		//	grid.FontWeight = Microsoft.UI.Text.FontWeights.Light;
+		//	grid.UseSystemFocusVisuals=true;
+		//	grid.GridLinesVisibility= Telerik.UI.Xaml.Controls.Primitives.GridLinesVisibility.Both;
+		////	grid.ProcessTooltips();
+		////	grid.ListenForNestedPropertyChange=false;
+		//	grid.FontSize = SettingsPage.smallFontSize;
+		//	grid.RowHeight = SettingsPage.mediumGridRowHeight;
 		//	grid.ProcessTooltips();
-		//	grid.ListenForNestedPropertyChange=false;
-			grid.FontSize = SettingsPage.smallFontSize;
-			grid.RowHeight = SettingsPage.mediumGridRowHeight;
-			grid.ProcessTooltips();
-			if (object.ReferenceEquals(grid.ItemsSource, City.gridCitySource) )
-			{
-				grid.SelectionChanged += (a, b) => SpotSelectionChanged(((RadDataGrid)a).SelectedItems);
-			}
+		//	if (object.ReferenceEquals(grid.ItemsSource, City.gridCitySource) )
+		//	{
+		//		grid.SelectionChanged += (a, b) => SpotSelectionChanged(((SfDataGrid)a).SelectedItems);
+		//	}
 
-		}
+		//}
 
-		public ADataGrid.ChangeContextDisposable SetupCityDataGrid(SfDataGrid grid)
-		{
-			// damn, there should be a better way to check for this
-			var rv = SetupDataGrid(grid);
-			dataGrids.AddIfAbsent( new(this,sf:grid));
-
-			grid.SelectionChanged += (a, b) => SpotSelectionChanged( ((SfDataGrid)a).SelectedItems);
-			return rv;
-			
-
-//			SetupDataGrid(grid);
-		}
-
-		private void SpotSelectionChanged(IEnumerable<object> sel)
-		{
-				if(!isFocused)
-					return;
-
-				if(SpotTab.silenceSelectionChanges == 0)
-				{
-					try
-					{
-
-						Spot.selected = new HashSet<int>( sel.Select(a=> (a as Spot).cid ) );
-					}
-					catch(Exception ex)
-					{
-						LogEx(ex);
-					}
-					finally
-					{
-						//          Spot.selected.ExitWriteLock();
-					}
-				}
-		}
-
-		protected void DataGridLoaded(object sender,RoutedEventArgs e)
-		{
-			if(sender is RadDataGrid rad)
-				SetupDataGrid(rad);
-			else if (sender is SfDataGrid sf)
-			{
-				using var x = SetupCityDataGrid(sf);
-			}
-
-		}
-
+		
 		public void SetPlus(bool set)
 		{
 			AppS.QueueOnUIThread(() =>
@@ -323,49 +300,9 @@ namespace CnV.Views
 			(page??defaultPage).Add(this,selectMe);
 		}
 
-		protected void SfCellTapped(object sender,Syncfusion.UI.Xaml.DataGrid.GridCellTappedEventArgs e)
-		{
-
-			try
-			{
-			//	Note.Show($"Cell Tap {e.Column.HeaderText??"NA"}  {e.RowColumnIndex} {e.RowColumnIndex} {e.Record.ToString} ");
-			if (e.Record is City city)
-			{
-				city.CityRowClick(e);
-				
-
-				return;
-			}
-				switch(e.Column.MappingName)
-				{
-					case nameof(Reinforcement.retUri):
-						{
-							var r = e.Record as Reinforcement;
-							Note.Show($"Returning {r.troopsString} from {r.targetCity} back to {r.sourceCity} ");
-							r.ReturnAsync();
-							if(r.targetCity.reinforcementsIn is not null)
-								r.targetCity.reinforcementsIn.Remove(r,true);
-							if(r.sourceCity.reinforcementsOut is not null)
-								r.sourceCity.reinforcementsOut.Remove(r,true);
-							// Todo: refresh lists
-							break;
-
-						}
-					
-				}
-			}
-			catch(Exception exception)
-			{
-				Log(exception);
-				throw;
-			}
 
 
-
-		}
-
-
-		protected void CelNavigate(object sender,Syncfusion.UI.Xaml.Grids.CurrentCellRequestNavigateEventArgs e)
+		public static void CelNavigate(object sender,Syncfusion.UI.Xaml.Grids.CurrentCellRequestNavigateEventArgs e)
 		{
 			try
 			{
@@ -394,7 +331,7 @@ namespace CnV.Views
 			}
 		}
 
-		protected void CellToolTipOpening(object sender,Syncfusion.UI.Xaml.DataGrid.GridCellToolTipOpeningEventArgs e)
+		public static void CellToolTipOpening(object sender,Syncfusion.UI.Xaml.DataGrid.GridCellToolTipOpeningEventArgs e)
 		{
 ///			var tt = e.ToolTip;
 //			var rec = e.Record;
@@ -404,7 +341,7 @@ namespace CnV.Views
 				e.ToolTip.Content = tt;
 		}
 
-		static Type GetContainerType(object container)
+		public static Type GetContainerType(object container)
 		{
 			if (container is NotifyCollection<City> )
 			{
@@ -425,38 +362,11 @@ namespace CnV.Views
 			return typeof(object);
 		}
 
-		public ADataGrid.ChangeContextDisposable SetupDataGrid(SfDataGrid grid, Type sourceType=null)
-		{
-			var _lock0 = grid.ChangeContext();
-			if (sfGrids.AddIfAbsent( grid))
-			{
-				grid.Margin = new (0,0,32,32);
-
-				grid.AlternationCount = 2;
-				grid.AllowTriStateSorting = true;
-				grid.FontStretch = Windows.UI.Text.FontStretch.Condensed;
-				grid.ExpanderColumnWidth = 32;
-				grid.FontSize = SettingsPage.smallFontSize;
-				grid.GridContextFlyoutOpening += ContextFlyoutOpening;
-				grid.RecordContextFlyout = new();
-				grid.CurrentCellRequestNavigate += CelNavigate;
-				grid.CellTapped += SfCellTapped;
-//				grid.AllowFrozenGroupHeaders = false;
-				grid.ColumnWidthMode = Syncfusion.UI.Xaml.Grids.ColumnWidthMode.AutoLastColumnFill;
-				grid.CellToolTipOpening += CellToolTipOpening;
-				if(sourceType is not null || grid.ItemsSource is not null)
-					grid.SourceType = sourceType ?? GetContainerType(grid.ItemsSource);
-				grid.UseSystemFocusVisuals=true;
-
-			}
-
-//			grid.LiveDataUpdateMode = Syncfusion.UI.Xaml.Data.LiveDataUpdateMode.AllowChildViewUpdate;
-			return _lock0;
-		}
+		
 
 
 
-		protected void ContextFlyoutOpening(object sender,GridContextFlyoutEventArgs e)
+		public static void ContextFlyoutOpening(object sender,GridContextFlyoutEventArgs e)
 		{
 			var flyout = e.ContextFlyout;
 			flyout.Items.Clear();
@@ -484,14 +394,18 @@ namespace CnV.Views
 			}
 		}
 
-		
-
-		public virtual IEnumerable<SfDataGrid> GetGrids()
-		{
-			yield break;
-		}
-
 
 
 	}
-}
+	
+	
+	public static class UserTabHelpers
+	{
+		internal static UserTab GetTab(this xDataGrid grid)
+		{
+			return UserTab.dataGrids[grid];
+		}
+
+		internal static bool IsCityGrid(this xDataGrid grid) => object.ReferenceEquals(grid.ItemsSource, City.gridCitySource);
+	}
+

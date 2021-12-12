@@ -1,15 +1,7 @@
-﻿using CnV.Services;
-//using Windows.UI.Core;
+﻿//using Windows.UI.Core;
 using Microsoft.UI.Xaml;
-
-using System.Collections.Generic;
-using System.Runtime.CompilerServices;
 //using Windows.UI.Input;
 using System.Threading.Tasks;
-
-using Telerik.UI.Xaml.Controls.Grid;
-
-using static CnV.Game.City;
 
 namespace CnV.Views
 {
@@ -338,10 +330,10 @@ namespace CnV.Views
 		//      static Dungeon lastTooltip;
 		//private void DungeonPointerMoved(object sender, Microsoft.UI.Xaml.Input.PointerRoutedEventArgs e)
 		//{
-		//          var physicalPoint = e.GetCurrentPoint(sender as RadDataGrid);
+		//          var physicalPoint = e.GetCurrentPoint(sender as SfDataGrid);
 		//          var point = new Point { X = physicalPoint.Position.X, Y = physicalPoint.Position.Y };
-		//          var row = (sender as RadDataGrid).HitTestService.RowItemFromPoint(point);
-		//          var cell = (sender as RadDataGrid).HitTestService.CellInfoFromPoint(point);
+		//          var row = (sender as SfDataGrid).HitTestService.RowItemFromPoint(point);
+		//          var cell = (sender as SfDataGrid).HitTestService.CellInfoFromPoint(point);
 		//          var hit = cell?.Item as Dungeon;
 		//          if(hit!=lastTooltip)
 		//	{

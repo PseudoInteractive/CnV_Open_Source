@@ -11,9 +11,8 @@
 	xmlns:tk="using:CommunityToolkit.WinUI.UI.Controls"
 			  xmlns:winui="using:Microsoft.UI.Xaml.Controls"
 	 xmlns:game="using:CnV.Game"
-	xmlns:tg="using:Telerik.UI.Xaml.Controls.Grid"
+    xmlns:sf="using:Syncfusion.UI.Xaml.DataGrid"
 	DefaultButton="Close"
-	   xmlns:tgCore="using:Telerik.Data.Core"
     CloseButtonText="Close"
 	IsPrimaryButtonEnabled="False"
 	IsSecondaryButtonEnabled="False"
@@ -22,56 +21,45 @@
 
 	<StackPanel  >
 
-		<tg:RadDataGrid x:Name="dungeonGrid" 
-						      UserGroupMode="Disabled"
+		<sf:SfDataGrid x:Name="dungeonGrid" 
+		               Loaded="DataGridLoaded"
+						      
 							ItemsSource="{x:Bind items}"
-							ColumnResizeHandleDisplayMode="Always"
-							ColumnDataOperationsMode="Inline"
+							
+							
 							IsTabStop="True"
 						MaxHeight="300"
-							CanUserChooseColumns="False"
-							UserFilterMode="Disabled"
+							
+							
 							
 							IsTextScaleFactorEnabled="False"
 							SelectionUnit="Row"
-							AlternationStep="2"
+							
 							FontSize="{StaticResource MediumFontSize}"
 							RowHeight="{StaticResource MediumGridRowHeight}"
 							Tag="Dungeons"
                               AutoGenerateColumns="False">
-			<tg:RadDataGrid.Commands>
-				<model:DungeonTapCommand />
-			</tg:RadDataGrid.Commands>
-			<tg:RadDataGrid.Columns>
-				<tg:DataGridTextColumn PropertyName="dispatch"
-										   CellContentStyle="{StaticResource CenterAlignLink}"
-											   SizeMode="Auto"
-										   winui:ToolTipService.ToolTip="Click here to send raids" />
+			<sf:SfDataGrid.Columns>
+				<sf:GridHyperlinkColumn MappingName="dispatch"
+				                        winui:ToolTipService.ToolTip="Click here to send raids" />
 
-				<tg:DataGridTextColumn PropertyName="plan"
-										   CellContentStyle="{StaticResource LeftAlignLink}"
-											   SizeMode="Auto"
+				<sf:GridHyperlinkColumn MappingName="plan"
 										   winui:ToolTipService.ToolTip="Click here to send raids" />
-				<tg:DataGridNumericalColumn PropertyName="distance"
-												CellContentStyle="{StaticResource RightAlign}"
-												  SizeMode="Auto"
+				<sf:GridNumericColumn MappingName="distance"
+												TextAlignment="Right"
 												winui:ToolTipService.ToolTip="Distance to dungeon" />
-				<tg:DataGridNumericalColumn PropertyName="level"
-												  SizeMode="Auto"
-												CellContentStyle="{StaticResource RightAlign}" />
-				<tg:DataGridNumericalColumn PropertyName="completion"
+				<sf:GridNumericColumn MappingName="level"
+												TextAlignment="Right" />
+				<sf:GridNumericColumn MappingName="completion"
 												winui:ToolTipService.ToolTip="How worn out the dungeon is&#x0a;When this reaches 0 the dungeon disappears and troops stop raiding&#x0a;Prefering dungeons with lower completion is a way to prevent raid carry from falling too far, a form of auto reseting raids"
-												CellContentFormat="{}{0,7:N3}"
-												  SizeMode="Auto"
-												CellContentStyle="{StaticResource RightAlign}" />
-				<tg:DataGridTextColumn PropertyName="kind"
-										     SizeMode="Auto"
-										   CellContentStyle="{StaticResource RightAlign}" />
-				<tg:DataGridTextColumn PropertyName="xy"
-										     SizeMode="Auto"
-										   CellContentStyle="{StaticResource CenterAlignLink}" />
-			</tg:RadDataGrid.Columns>
-		</tg:RadDataGrid>
+												DisplayNumberFormat="0,7:N3"
+												TextAlignment="Right" />
+				<sf:GridTextColumn MappingName="kind"
+										   TextAlignment="Right" />
+				<sf:GridHyperlinkColumn MappingName="xy"
+				                      />
+			</sf:SfDataGrid.Columns>
+		</sf:SfDataGrid>
 		
 		<tk:WrapPanel  
 			             x:Name="raidOptionBox"

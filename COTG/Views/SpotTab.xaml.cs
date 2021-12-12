@@ -1,34 +1,9 @@
-﻿using CnV.Game;
-using CnV.Models;
-using System;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
-
-using Microsoft.UI.Xaml.Controls;
-using System.Diagnostics.Contracts;
-using System.Collections.Generic;
-using Telerik.UI.Xaml.Controls.Grid;
-using static CnV.Debug;
-using Windows.ApplicationModel.Core;
-//using Windows.UI.Core;
+﻿//using Windows.UI.Core;
 using Microsoft.UI.Xaml;
-using Telerik.Core.Data;
-using Telerik.Data.Core;
-using Telerik.Data;
-using System.Collections.Specialized;
-using Windows.Foundation;
-using CommunityToolkit.WinUI;
 using Microsoft.UI.Xaml.Input;
-using CnV.Services;
-using System.Collections;
 
 //using Windows.UI.Input;
-using Telerik.UI.Xaml.Controls.Input;
-using CnV.Helpers;
-using Microsoft.UI.Xaml.Navigation;
 using Windows.System;
-using System.Linq;
 
 namespace CnV.Views
 {
@@ -61,32 +36,29 @@ namespace CnV.Views
 
 
 
-		private void gridPointerPress(object sender, PointerRoutedEventArgs e)
-        {
-            try
-            {
-                ++disableSelection;
-                ++silenceSelectionChanges;
-                Spot.GridPressed(sender, e);
-            }
-            catch (Exception ex)
-            {
-                LogEx(ex);
-            }
-            finally
-            {
-                --disableSelection;
-                --silenceSelectionChanges;
-            }
-        }
+		//private void gridPointerPress(object sender, PointerRoutedEventArgs e)
+  //      {
+  //          try
+  //          {
+  //              ++disableSelection;
+  //              ++silenceSelectionChanges;
+  //              Spot.GridPressed(sender, e);
+  //          }
+  //          catch (Exception ex)
+  //          {
+  //              LogEx(ex);
+  //          }
+  //          finally
+  //          {
+  //              --disableSelection;
+  //              --silenceSelectionChanges;
+  //          }
+  //      }
         //private void gridPointerMoved(object sender, PointerRoutedEventArgs e)
         //{
         //    Spot.ProcessPointerMoved(sender, e);
         //}
-        private void gridPointerExited(object sender, PointerRoutedEventArgs e)
-        {
-            Spot.ProcessPointerExited();
-        }
+ 
 
 
         public static Spot TouchSpot(int cid, VirtualKeyModifiers mod,bool updateSelected=false,bool pin=false)

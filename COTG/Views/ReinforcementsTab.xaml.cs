@@ -37,11 +37,11 @@ namespace CnV.Views
 		
 		}
 
-		public override IEnumerable<SfDataGrid> GetGrids()
-		{
-			yield return reinIn;
-			yield return reinOut;
-		}
+		//public override IEnumerable<SfDataGrid> GetDataGrids()
+		//{
+		//	yield return reinIn;
+		//	yield return reinOut;
+		//}
 
 
 		public override async Task VisibilityChanged(bool visible, bool longTerm)
@@ -63,7 +63,7 @@ namespace CnV.Views
 		}
 		void SetupReinforcementGrid(SfDataGrid grid, bool isOutgoing)
 		{
-			using var _lock = SetupDataGrid(grid);
+			using var _lock = SetupDataGrid(grid,true);
 			grid.SourceType = typeof(City);
 			
 			grid.AddCity(isOutgoing ? "Defender" : "Target", wantTroops:isOutgoing,wantDefense:!isOutgoing);
@@ -72,7 +72,7 @@ namespace CnV.Views
 			
 			{
 				SfDataGrid child0 = new() { AutoGenerateRelations = false, AutoGenerateColumns = false};
-				using var _lock1 = SetupDataGrid(child0);
+				using var _lock1 = SetupDataGrid(child0,true);
 				child0.SourceType = typeof(Reinforcement);
 				child0.AddHyperLink(nameof(Reinforcement.retUri), "Return");
 				child0.AddTime(nameof(Reinforcement.dateTime), "Arrival", nullText: "Arrived");
@@ -84,7 +84,7 @@ namespace CnV.Views
 				}
 				{
 					SfDataGrid child1 = new() { AutoGenerateRelations = false, AutoGenerateColumns = false};
-					using var _lock2 = SetupDataGrid(child1);
+					using var _lock2 = SetupDataGrid(child1,true);
 					child1.SourceType = typeof(City);
 					child1.AddCity(!isOutgoing ? "Defender" : "Target",wantTroops:!isOutgoing,wantDefense:isOutgoing);
 					var details1 = new GridViewDefinition()

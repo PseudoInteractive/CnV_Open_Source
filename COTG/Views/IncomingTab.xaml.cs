@@ -1,118 +1,93 @@
-﻿using CnV.Game;
-using CnV.Models;
-using System;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
+﻿using System.Runtime.CompilerServices;
 
 using Microsoft.UI.Xaml.Controls;
-using System.Diagnostics.Contracts;
 using System.Collections.Generic;
-using Telerik.UI.Xaml.Controls.Grid;
-using static CnV.Debug;
-using Windows.ApplicationModel.Core;
 //using Windows.UI.Core;
 using Microsoft.UI.Xaml;
-using Telerik.Core.Data;
-using Telerik.Data.Core;
-using Telerik.Data;
-using System.Collections.Specialized;
-using Windows.Foundation;
-using CommunityToolkit.WinUI;
 using Microsoft.UI.Xaml.Input;
-using CnV.Services;
-using System.Collections;
-
-using Windows.UI.Input;
-using Telerik.UI.Xaml.Controls.Input;
-using CnV.Helpers;
-using Microsoft.UI.Xaml.Navigation;
-using Telerik.UI.Xaml.Controls.Grid.Commands;
 using static CnV.Game.Troops;
 using System.Threading.Tasks;
-using System.Linq;
 
 namespace CnV.Views
 {
 	using Game;
+	using Syncfusion.UI.Xaml.DataGrid;
+	using Syncfusion.UI.Xaml.Grids;
 
-	public sealed partial class IncomingTab : UserTab
-    {
+	public sealed partial class IncomingTab:UserTab
+	{
 		public int typeFilter { get; set; }
 		public static Spot lastSelected;
-        public static IncomingTab instance;
+		public static IncomingTab instance;
 		public bool includeInternal { get; set; }
-        //        public static Report showingRowDetails;
+		//        public static Report showingRowDetails;
 
-        //public DataTemplate GetTsInfoDataTemplate()
-        //{
-        //    var rv = cityGrid.Resources["tsInfoDT"] as DataTemplate;
-        //    Assert(rv != null);
-        //    return rv;
-        //}
-        public IncomingTab()
-        {
-            Assert(instance == null);
-            instance = this;
+		//public DataTemplate GetTsInfoDataTemplate()
+		//{
+		//    var rv = cityGrid.Resources["tsInfoDT"] as DataTemplate;
+		//    Assert(rv != null);
+		//    return rv;
+		//}
+		public IncomingTab()
+		{
+			Assert(instance == null);
+			instance = this;
 
-            InitializeComponent();
+			InitializeComponent();
 			SetupDataGrid(defenderGrid);
-//			spotGrids.Add(defenderGrid);
+			//			spotGrids.Add(defenderGrid);
 
 			//defenderGrid.OnKey = Spot.OnKeyDown;
-            //            historyGrid.ContextFlyout = cityMenuFlyout;
+			//            historyGrid.ContextFlyout = cityMenuFlyout;
 
-      //      var data = defenderGrid.GetDataView();
-        }
+			//      var data = defenderGrid.GetDataView();
+		}
 
-        public class ArmyTypeStyleSelector : StyleSelector
-        {
-            public Style pendingStyle { get; set; }
+		public class ArmyTypeStyleSelector:StyleSelector
+		{
+			public Style? pendingStyle { get; set; }
 
-            public Style siegingStyle { get; set; }
-            public Style siegeStyle { get; set; }
+			public Style? siegingStyle { get; set; }
+			public Style? siegeStyle { get; set; }
 
-            public Style scoutStyle { get; set; }
-            public Style assaultStyle { get; set; }
-            public Style plunderStyle { get; set; }
-
-
-            protected override Style SelectStyleCore(object item, DependencyObject container)
-            {
-                var cell = (item as DataGridCellInfo);
-                var report = cell.Item as Army;
-                switch (report.type)
-                {
-                    case reportAssault: return assaultStyle;
-                    case reportSiege: return siegeStyle;
-                    case reportSieging: return siegingStyle;
-                    case reportPlunder: return plunderStyle;
-                    default: return scoutStyle;
-                }
-
-            }
-        }
-
-        
-        private void gridPointerPress(object sender, PointerRoutedEventArgs e)
-        {
-          //  (var hit,var column,var pointerPoint,_) = Spot.HitTest(sender, e);
-            //if (hit != null)
-            //    defenderGrid.ShowRowDetailsForItem(hit);
-
-            Spot.GridPressed(sender, e);
-        }
-        //private void gridPointerMoved(object sender, PointerRoutedEventArgs e)
-        //{
-        //    Spot.ProcessPointerMoved(sender, e);
-        //}
-        private void gridPointerExited(object sender, PointerRoutedEventArgs e)
-        {
-            Spot.ProcessPointerExited();
-        }
+			public Style? scoutStyle { get; set; }
+			public Style? assaultStyle { get; set; }
+			public Style? plunderStyle { get; set; }
 
 
-       
+			protected override Style? SelectStyleCore(object item, DependencyObject container)
+			{
+				var report = (item as Army);
+				if (report is null)
+					return null;
+				return report.type switch
+				{
+					reportAssault => assaultStyle,
+					reportSiege => siegeStyle,
+					reportSieging => siegingStyle,
+					reportPlunder => plunderStyle,
+					_ => scoutStyle
+				};
+			}
+		}
+
+
+		//private void gridPointerPress(object sender, PointerRoutedEventArgs e)
+		//{
+		//	//  (var hit,var column,var pointerPoint,_) = Spot.HitTest(sender, e);
+		//	//if (hit != null)
+		//	//    defenderGrid.ShowRowDetailsForItem(hit);
+
+		//	Spot.GridPressed(sender, e);
+		//}
+		////private void gridPointerMoved(object sender, PointerRoutedEventArgs e)
+		////{
+		////    Spot.ProcessPointerMoved(sender, e);
+		////}
+		//private void gridPointerExited(object sender, PointerRoutedEventArgs e)
+		//{
+		//	Spot.ProcessPointerExited();
+		//}
 
 
 
@@ -121,86 +96,84 @@ namespace CnV.Views
 
 
 
- 
-        private void Set<T>(ref T storage, T value, [CallerMemberName] string propertyName = null)
-        {
-            if (Equals(storage, value))
-            {
-                return;
-            }
-            storage = value;
-            OnPropertyChanged(propertyName);
-        }
 
-        
+
+
+
+		private void Set<T>(ref T storage, T value, [CallerMemberName] string propertyName = null)
+		{
+			if(Equals(storage, value))
+			{
+				return;
+			}
+			storage = value;
+			OnPropertyChanged(propertyName);
+		}
+
+
 		public static Spot selected
 		{
-			get
-			{
-				if (!instance.isFocused)
+			get {
+				if(!instance.isFocused)
 					return null;
-				var items =  instance.defenderGrid.SelectedItems;
-				if (items.Count == 1)
+				var items = instance.defenderGrid.SelectedItems;
+				if(items.Count == 1)
 					return items[0] as Spot;
 				return null;
 			}
 		}
-        public void NotifyIncomingUpdated()
-        {
-            if (IncomingTab.IsVisible())
-            {
-                try
-                {
+		public void NotifyIncomingUpdated()
+		{
+			if(IncomingTab.IsVisible())
+			{
+				try
+				{
 					//					lastSelected = sel;
 
-					defenderGrid.ItemsSource = Spot.defendersI.Where(w => w.testContinentFilter 
+					defenderGrid.ItemsSource = Spot.defendersI.Where(w => w.testContinentFilter
 													&& (includeInternal||w.hasEnemyIncoming)
-													&&(typeFilter == 2 ? w.pid == Player.activeId 
-													: typeFilter == 1 ? SettingsPage.incomingWatch.Contains(w.playerName)|| w.pid == Player.activeId 
-													: true)).OrderBy(w=>w.firstIncoming).ToArray();
+													&&(typeFilter == 2 ? w.pid == Player.activeId
+													: typeFilter == 1 ? SettingsPage.incomingWatch.Contains(w.playerName)|| w.pid == Player.activeId
+													: true)).OrderBy(w => w.firstIncoming).ToArray();
 					var sel = defenderGrid.SelectedItems.ToArray();
-					if (sel.Length > 0)
-                    {
-                        AppS.DispatchOnUIThreadLow(() =>
-                        {
+					if(sel.Length > 0)
+					{
+						AppS.DispatchOnUIThreadLow(() =>
+						{
 							++SpotTab.silenceSelectionChanges;
 							try
 							{
-								defenderGrid.DeselectAll();
+								defenderGrid.ClearSelections(false);
 								foreach(var i in sel)
-									defenderGrid.SelectItem(i);
-									if (sel.Length == 1)
-									{
-										defenderGrid.ScrollItemIntoView(sel[0]);
-									}
+								{
+									defenderGrid.SelectedItems.Add(i);
+								}
+
+								if(sel.Length >= 1)
+								{
+									defenderGrid.ScrollItemIntoView(sel[0]);
+								}
 							}
 							finally
 							{
 								--SpotTab.silenceSelectionChanges;
 							}
-                        });
+						});
 
-                    }
-                }
-                catch( Exception e)
-                {
-                    LogEx(e);
-                }
-            }
-        }
+					}
+				}
+				catch(Exception e)
+				{
+					LogEx(e);
+				}
+			}
+		}
 
-        
 
-        private void ArmyTapped(object sender, TappedRoutedEventArgs e)
-        {
-                (var hit, var column, var pointerPoint) = Army.HitTest(sender, e);
-                if (hit != null)
-                    hit.ProcessTap(column);
 
-          
-        }
 
-        public override Task VisibilityChanged(bool visible, bool longTerm)
+
+		public override Task VisibilityChanged(bool visible, bool longTerm)
 		{
 			//  Log("Vis change" + visible);
 			//AppS.DispatchOnUIThreadLow(() =>
@@ -209,39 +182,39 @@ namespace CnV.Views
 			//    armyGrid.ItemsSource = Army.empty;
 			//});
 
-			if (visible)
+			if(visible)
 			{
 				lastSelected = null;
 				IncomingOverview.Process(false);
 			}
 			return base.VisibilityChanged(visible, longTerm: longTerm);
 
-        }
-        public static bool IsVisible() => instance.isFocused;
+		}
+		public static bool IsVisible() => instance.isFocused;
 
 
 
-		private void defenderGrid_SelectionChanged(object sender, DataGridSelectionChangedEventArgs e)
-        {
-			if (!isOpen)
+		private void defenderGrid_SelectionChanged(object sender, GridSelectionChangedEventArgs e)
+		{
+			if(!isOpen)
 				return;
-			if (SpotTab.silenceSelectionChanges == 0)
+			if(SpotTab.silenceSelectionChanges == 0)
 			{
 				var sel = selected;
 				var changed = sel != null && sel != lastSelected;
-				if (changed)
+				if(changed)
 				{
 					lastSelected = sel;
-					if (sel != null)
+					if(sel != null)
 					{
 						armyGrid.ItemsSource = sel.incoming;
 
-						if (SettingsPage.fetchFullHistory)
+						if(SettingsPage.fetchFullHistory)
 						{
 							var tab = DefenseHistoryTab.instance;
-							if (!tab.isFocused)
+							if(!tab.isFocused)
 							{
-								tab.ShowOrAdd(true, onlyIfClosed:true);
+								tab.ShowOrAdd(true, onlyIfClosed: true);
 
 							}
 							else
@@ -271,8 +244,10 @@ namespace CnV.Views
 			}
 			Spot.ExportToDefenseSheet(cids);
 		}
+
+
 	}
 
-   
+
 
 }

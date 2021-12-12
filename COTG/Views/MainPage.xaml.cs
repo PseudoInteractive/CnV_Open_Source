@@ -1,44 +1,17 @@
-﻿using CnV.Game;
-using CnV.Models;
-using System;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
+﻿using System.Runtime.CompilerServices;
 
 using Microsoft.UI.Xaml.Controls;
-using System.Diagnostics.Contracts;
 using System.Collections.Generic;
-using Telerik.UI.Xaml.Controls.Grid;
-using static CnV.Debug;
-using Windows.ApplicationModel.Core;
 //using Windows.UI.Core;
 using Microsoft.UI.Xaml;
-using Telerik.Core.Data;
-using Telerik.Data.Core;
-using Telerik.Data;
-using System.Collections.Specialized;
-using Windows.Foundation;
-using CommunityToolkit.WinUI;
-using Microsoft.UI.Xaml.Input;
-using CnV.Services;
-using System.Collections;
 //using Windows.UI.Input;
-using CnV.Helpers;
-using Microsoft.UI.Xaml.Navigation;
-using System.Linq;
 using System.Threading.Tasks;
-using static CnV.Game.Troops;
-using Microsoft.UI.Xaml.Controls;
-using Telerik.UI.Xaml.Controls.Grid.Commands;
-using System.Threading;
-using Telerik.UI.Xaml.Controls.Grid.Primitives;
-
-using CnV;
 
 namespace CnV.Views
 {
 	using Game;
 	using Services;
+	using Syncfusion.UI.Xaml.DataGrid;
 
 
 	public sealed partial class MainPage : UserTab
@@ -54,7 +27,7 @@ namespace CnV.Views
 		//    Assert(rv != null);
 		//    return rv;
 		//}
-		public static RadDataGrid CityGrid => instance.cityGrid;
+		public static SfDataGrid CityGrid => instance.cityGrid;
     
       //  static MenuFlyout cityMenuFlyout;
         public MainPage()
@@ -85,7 +58,7 @@ namespace CnV.Views
         }
 
 		
-		//static RadDataGrid GetGrid(PointerRoutedEventArgs e)
+		//static SfDataGrid GetGrid(PointerRoutedEventArgs e)
 		//{
 		//	var a = e.OriginalSource as FrameworkElement;
 		//	while(a != null)
@@ -496,10 +469,10 @@ namespace CnV.Views
 		//      static Dungeon lastTooltip;
 		//private void DungeonPointerMoved(object sender, Microsoft.UI.Xaml.Input.PointerRoutedEventArgs e)
 		//{
-		//          var physicalPoint = e.GetCurrentPoint(sender as RadDataGrid);
+		//          var physicalPoint = e.GetCurrentPoint(sender as SfDataGrid);
 		//          var point = new Point { X = physicalPoint.Position.X, Y = physicalPoint.Position.Y };
-		//          var row = (sender as RadDataGrid).HitTestService.RowItemFromPoint(point);
-		//          var cell = (sender as RadDataGrid).HitTestService.CellInfoFromPoint(point);
+		//          var row = (sender as SfDataGrid).HitTestService.RowItemFromPoint(point);
+		//          var cell = (sender as SfDataGrid).HitTestService.CellInfoFromPoint(point);
 		//          var hit = cell?.Item as Dungeon;
 		//          if(hit!=lastTooltip)
 		//	{
@@ -512,42 +485,42 @@ namespace CnV.Views
 		//      }
 	}
 
-	public class CustomDataBindingCompleteCommand : DataGridCommand
-    {
-        public CustomDataBindingCompleteCommand()
-        {
-            this.Id = CommandId.DataBindingComplete;
-        }
+	//public class CustomDataBindingCompleteCommand : DataGridCommand
+ //   {
+ //       public CustomDataBindingCompleteCommand()
+ //       {
+ //           this.Id = CommandId.DataBindingComplete;
+ //       }
 
-		static T GetValue<T>(IDataView view, int id)
-		{
-			var rv = view.GetAggregateValue(id, null);
-			if (rv is null)
-				return default;
-			return (T)rv;
-		}
-		public override bool CanExecute(object parameter)
-		{
-			var context = parameter as DataBindingCompleteEventArgs;
-			// put your custom logic here
-			return true;
-		}
-		public override void Execute(object parameter)
-        {
-		//	AppS.DispatchOnUIThreadLow(() =>
-		   {
-			   var context = parameter as DataBindingCompleteEventArgs;
-				// put your custom logic here
-				var view = context.DataView;
+	//	static T GetValue<T>(IDataView view, int id)
+	//	{
+	//		var rv = view.GetAggregateValue(id, null);
+	//		if (rv is null)
+	//			return default;
+	//		return (T)rv;
+	//	}
+	//	public override bool CanExecute(object parameter)
+	//	{
+	//		var context = parameter as DataBindingCompleteEventArgs;
+	//		// put your custom logic here
+	//		return true;
+	//	}
+	//	public override void Execute(object parameter)
+ //       {
+	//	//	AppS.DispatchOnUIThreadLow(() =>
+	//	   {
+	//		   var context = parameter as DataBindingCompleteEventArgs;
+	//			// put your custom logic here
+	//			var view = context.DataView;
 
-			   MainPage.instance.count.Text = $"Cities: {GetValue<ulong>(view,0)}";
-			   MainPage.instance.tsTotal.Text = $"TS Total:  {GetValue<double>(view,1):N0}";
-			   MainPage.instance.tsRaid.Text = $"TS Home: {GetValue<double>(view,2):N0}";
-			   MainPage.instance.castles.Text = $"Castles: {GetValue<double>(view,3)}";
-			   MainPage.instance.water.Text = $"On Water: {GetValue<double>(view,4)}";
-		   }//);
-        }
+	//		   MainPage.instance.count.Text = $"Cities: {GetValue<ulong>(view,0)}";
+	//		   MainPage.instance.tsTotal.Text = $"TS Total:  {GetValue<double>(view,1):N0}";
+	//		   MainPage.instance.tsRaid.Text = $"TS Home: {GetValue<double>(view,2):N0}";
+	//		   MainPage.instance.castles.Text = $"Castles: {GetValue<double>(view,3)}";
+	//		   MainPage.instance.water.Text = $"On Water: {GetValue<double>(view,4)}";
+	//	   }//);
+ //       }
 		
 
-	}
+	//}
 }

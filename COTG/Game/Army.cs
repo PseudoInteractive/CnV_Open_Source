@@ -1,31 +1,20 @@
-﻿using CnV.Helpers;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.Numerics;
-using System.Text;
-using System.Threading.Tasks;
-using Telerik.UI.Xaml.Controls.Grid;
 using Windows.Foundation;
 using Microsoft.UI.Xaml.Input;
 using static CnV.Game.Troops;
 using Microsoft.UI.Xaml.Media.Imaging;
-using Windows.System;
 using System.Text.Json.Serialization;
 using System.Text.Json;
-using CnV.Views;
-using TroopTypeCounts = CnV.Game.TroopTypeCounts;//COTG.DArray<COTG.Game.TroopTypeCount>;
+//COTG.DArray<COTG.Game.TroopTypeCount>;
 using TroopTypeCountsRef = CnV.Game.TroopTypeCounts;
-using static CnV.Game.TroopTypeCountHelper;
-
 using System.Runtime.InteropServices;
-using System.Collections;
 using Cysharp.Text;
-using CnV;
 
 namespace CnV.Game
 {
 	using Helpers;
+	using Syncfusion.UI.Xaml.DataGrid;
 
 	public sealed class Army:IEquatable<Army>
 	{
@@ -107,35 +96,40 @@ namespace CnV.Game
 
         //    public bool isSiege => isAttack && !troops.IsNullOrEmpty();// this unforunately includes internal attack regardess of type
 
-        public static (Army spot, string column, Vector2 point) HitTest(object sender, TappedRoutedEventArgs e)
-        {
-            var grid = sender as RadDataGrid;
-            var physicalPoint = e.GetPosition(grid);
-            var point = new Point { X = physicalPoint.X, Y = physicalPoint.Y };
-            var cell = grid.HitTestService.CellInfoFromPoint(point);
-            var army = (cell?.Item as Army);
+        //public static (Army spot, string column, Vector2 point) HitTest(object sender, TappedRoutedEventArgs e)
+        //{
+        //    var grid = sender as SfDataGrid;
+        //    var physicalPoint = e.GetPosition(grid);
+        //    var point = new Point { X = physicalPoint.X, Y = physicalPoint.Y };
+        //    var cell = grid.HitTestService.CellInfoFromPoint(point);
+        //    var army = (cell?.Item as Army);
 
 
-            return (army, cell?.Column.Header?.ToString() ?? string.Empty, physicalPoint.ToVector2());
-        }
-        public void ProcessTap(string column)
+        //    return (army, cell?.Column.Header?.ToString() ?? string.Empty, physicalPoint.ToVector2());
+        //}
+        public bool ProcessTap(string column)
         {
             switch (column)
             {
                 case "city":
-                case nameof(sXY): Spot.ProcessCoordClick(sourceCid,false, App.keyModifiers,false); break;
-                case nameof(sPlayer):JSClient.ShowPlayer(sPlayer); break;
-                case nameof(tPlayer): JSClient.ShowPlayer(tPlayer); break;
-                case "Troops":
+                case nameof(sXY): Spot.ProcessCoordClick(sourceCid,false, App.keyModifiers,false); return true;
+
+				case nameof(sPlayer):JSClient.ShowPlayer(sPlayer); return true;
+
+				case nameof(tPlayer): JSClient.ShowPlayer(tPlayer); return true;
+
+				case "Troops":
                 case "Total Def":
                     {
                         var s = $"{targetCid.CidToCoords()}\t{sourceCid.CidToCoords()}{ (column=="Troops"?troops:sumDef).Format("", '\t',',')}";
                         Note.Show(s);
                         App.CopyTextToClipboard(s);
                     }
-                    break;
+	                return true;
                 
             }
+
+            return false;
         }
 	
 		public static string cN(in TroopTypeCounts troops,int n) => troops.Count > n ? $" {troops.GetIndexCount(n):N0} " : null;

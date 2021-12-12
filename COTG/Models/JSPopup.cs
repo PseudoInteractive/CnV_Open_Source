@@ -1,18 +1,4 @@
-﻿using Microsoft.UI.Xaml.Controls;
-
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using CnV.Views;
-using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml;
-using System.Text.RegularExpressions;
-using Microsoft.UI.Xaml.Media.Imaging;
-using Microsoft.UI.Xaml.Media;
-using static CnV.Debug;
-using CnV.Helpers;
+﻿using System.Text.RegularExpressions;
 
 namespace CnV.Models
 {

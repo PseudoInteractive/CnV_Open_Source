@@ -55,13 +55,10 @@
         </tk:WrapPanel>
 		<sf:SfDataGrid x:Name="donationGrid"
 		                x:FieldModifier="public"
-		                Grid.Row="2"
+		                Grid.Row="2" Loaded="DataGridLoaded"
 								 							
 		                AllowFocusOnInteraction="True"
 		                AutoGenerateColumns="False"
-		                IsTabStop="True"
-		                PointerPressed="{x:Bind game:Spot.GridPressed}"
-		                PointerExited="{x:Bind game:Spot.GridExited}"
 		                FontSize="{StaticResource MediumFontSize}"
 		                ItemsSource="{x:Bind donationGridSource}"
 		                RowHeight="{StaticResource MediumGridRowHeight}"
@@ -124,7 +121,7 @@
 		</sf:SfDataGrid>
 		<sf:SfDataGrid x:Name="blessedGrid" x:FieldModifier="public"
                         Grid.Row="3"
-								 
+                        Loaded="DataGridLoaded"
                         AllowFocusOnInteraction="True"
                         AutoGenerateColumns="False"
 						 IsTabStop="True"
@@ -133,9 +130,7 @@
                         SelectionMode="Single"
                         SelectionUnit="Row"
                         >
-            <sf:SfDataGrid.Commands>
-                <local:BlessedTapCommand />
-            </sf:SfDataGrid.Commands>
+
             <sf:SfDataGrid.Columns>
 
                 <sf:GridHyperlinkColumn MappingName="virtue"

@@ -11,12 +11,9 @@
 			  xmlns:view="using:CnV.Views"
 			  mc:Ignorable="d"
 			  Tag="Build"
-			  IsTabStop="True"
 			  FontStretch="Condensed"		             
 			  FontFamily="Bahnschrift">
-
 	<Grid x:Name="cityBaseGrid">
-
 		<Grid.RowDefinitions>
 			<RowDefinition Height="Auto" />
 			<RowDefinition Height="Auto" />
@@ -28,9 +25,7 @@
 							x:FieldModifier="public"
 							AllowFiltering="True"
 							Grid.Row="3"
-							IsTabStop="True"
-							
-					FrozenColumnCount="2"
+							FrozenColumnCount="2"
 							ItemsSource="{x:Bind game:City.gridCitySource, Mode=OneWay}"
 							AutoGenerateColumns="False"
 							SelectionMode="Extended"
@@ -44,10 +39,10 @@
 							
 							>
 	
-			<!--<sf:RadDataGrid.Commands>
+			<!--<sf:SfDataGrid.Commands>
 				<view:BuildCustomDataBindingCompleteCommand />
 				<model:CityGridToggleColumnVisibilityCommand />
-			</sf:RadDataGrid.Commands>-->
+			</sf:SfDataGrid.Commands>-->
 			<sf:SfDataGrid.TableSummaryRows>
 				<sf:GridTableSummaryRow ShowSummaryInRow="False" TitleColumnCount="2" Position="Bottom"
 				                              Title=" {Building} cities of {Cities} are building">

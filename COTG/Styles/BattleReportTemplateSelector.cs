@@ -1,14 +1,4 @@
-﻿using CnV.Game;
-
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-using Telerik.UI.Xaml.Controls.Grid;
-
-using Microsoft.UI.Xaml;
+﻿using Microsoft.UI.Xaml;
 
 using static CnV.Game.Troops;
 namespace CnV.Styles
@@ -26,8 +16,8 @@ namespace CnV.Styles
 
 			protected override Style SelectStyleCore(object item, DependencyObject container)
 			{
-				var cell = (item as DataGridCellInfo);
-				var report = cell.Item as Army;
+		//		var cell = (item as DataGridCellInfo);
+				var report = item as Army;
 				if (report.type == reportPending)
 					return noKillsStyle;
 				if (report.type == reportSieging)
@@ -64,8 +54,8 @@ namespace CnV.Styles
 
 			protected override Style SelectStyleCore(object item, DependencyObject container)
 			{
-				var cell = (item as DataGridCellInfo);
-				var report = cell.Item as Army;
+//				var cell = (item as DataGridCellInfo);
+				var report = item as Army;
 				if( report.claim >= 100)
 					return capturedStyle;
 				if (report.claim > 0)

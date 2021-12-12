@@ -7,8 +7,6 @@ using System.Linq;
 using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
-using Telerik.UI.Xaml.Controls.Grid;
-using Telerik.UI.Xaml.Controls.Input;
 using Windows.Foundation;
 //using Windows.UI.Input;
 using Microsoft.UI.Xaml.Input;
@@ -608,54 +606,54 @@ namespace CnV.Game
 			Note.Show($"Exported {cids.Count} to clipboard for sheets");
 		}
 
-		// The UIElement returned will be the RadDataGrid
-		public static (Spot spot, DataGridCellInfo column, PointerPoint pt, UIElement uie) HitTest(object sender, PointerRoutedEventArgs e)
-		{
-			e.KeyModifiers.UpdateKeyModifiers();
-			var grid = sender as RadDataGrid;
-			Assert(grid is not null);
-			var physicalPoint = e.GetCurrentPoint(grid);
-			var point = new Point { X = physicalPoint.Position.X, Y = physicalPoint.Position.Y };
-			var cell = grid.HitTestService.CellInfoFromPoint(point);
-			//var row = grid.HitTestService.RowItemFromPoint(point);
-			//if(cell?.Item != row )
-			//{
-			//    Note.Show($"{cell} {row} {cell?.Column}");
+		// The UIElement returned will be the SfDataGrid
+		//public static (Spot spot, DataGridCellInfo column, PointerPoint pt, UIElement uie) HitTest(object sender, PointerRoutedEventArgs e)
+		//{
+		//	e.KeyModifiers.UpdateKeyModifiers();
+		//	var grid = sender as SfDataGrid;
+		//	Assert(grid is not null);
+		//	var physicalPoint = e.GetCurrentPoint(grid);
+		//	var point = new Point { X = physicalPoint.Position.X, Y = physicalPoint.Position.Y };
+		//	var cell = grid.HitTestService.CellInfoFromPoint(point);
+		//	//var row = grid.HitTestService.RowItemFromPoint(point);
+		//	//if(cell?.Item != row )
+		//	//{
+		//	//    Note.Show($"{cell} {row} {cell?.Column}");
 
-			//}
+		//	//}
 
-			var spot = point.Y > 34 ? (cell?.Item as Spot) : null; // workaround for clicking on the header
-			ClearHover();
-			viewHover = spot != null ? spot.cid : 0;
-			Player.viewHover = spot != null ? spot.pid : 0;
-
-
-			return (spot, cell, physicalPoint, grid);
-		}
+		//	var spot = point.Y > 34 ? (cell?.Item as Spot) : null; // workaround for clicking on the header
+		//	ClearHover();
+		//	viewHover = spot != null ? spot.cid : 0;
+		//	Player.viewHover = spot != null ? spot.pid : 0;
 
 
+		//	return (spot, cell, physicalPoint, grid);
+		//}
 
 
-		public static void GridPressed(object sender, PointerRoutedEventArgs e)
-		{
-			//(sender as RadDataGrid).Focus();
-			try
-			{
-				e.KeyModifiers.UpdateKeyModifiers();
 
-				var hit = Spot.HitTest(sender,e);
-				var spot = hit.spot;
-				//	uiPress = spot != null ? spot.cid : 0;
-				uiPressColumn = hit.column.CellText();
-				// The UIElement returned will be the RadDataGrid
-				if(spot != null)
-					spot.ProcessClick(uiPressColumn,hit.pt,hit.uie,e.KeyModifiers);
-			}
-			catch(Exception ex)
-			{
-				Log(ex);
-			}
-		}
+
+		//public static void GridPressed(object sender, PointerRoutedEventArgs e)
+		//{
+		//	//(sender as SfDataGrid).Focus();
+		//	try
+		//	{
+		//		e.KeyModifiers.UpdateKeyModifiers();
+
+		//		var hit = Spot.HitTest(sender,e);
+		//		var spot = hit.spot;
+		//		//	uiPress = spot != null ? spot.cid : 0;
+		//		uiPressColumn = hit.column.CellText();
+		//		// The UIElement returned will be the SfDataGrid
+		//		if(spot != null)
+		//			spot.ProcessClick(uiPressColumn,hit.pt,hit.uie,e.KeyModifiers);
+		//	}
+		//	catch(Exception ex)
+		//	{
+		//		Log(ex);
+		//	}
+		//}
 
 		
 
@@ -664,10 +662,7 @@ namespace CnV.Game
 			ClearHover();
 		}
 
-		public static void GridExited(object sender, PointerRoutedEventArgs e)
-		{
-			ClearHover();
-		}
+	
 
 		public static void ClearHover()
 		{
@@ -1527,73 +1522,82 @@ namespace CnV.Game
 			++SpotTab.silenceSelectionChanges;
 			try
 			{
-
-				foreach (var grid in UserTab.dataGrids)
+				foreach (var gridX in UserTab.dataGrids)
 				{
-					if (!grid.tab.isFocused)
+
+					var grid = gridX.Key;
+
+					if (!gridX.Value.isFocused)
 						continue;
 
-					var uiInSync = false;
-					
-					var sel1 = grid.SelectedItems();
-					if (selected.Count == sel1.Count)
+					if (grid.IsCityGrid())
 					{
-						uiInSync = true;
-						foreach (var i in sel1)
+						var uiInSync = false;
+						var sel1 = grid.SelectedItems;
+						if (selected.Count == sel1.Count)
 						{
-							if (!selected.Contains((i as City).cid))
+							uiInSync = true;
+							foreach (var i in sel1)
 							{
-								uiInSync = false;
-								break;
+								if (!selected.Contains((i as City).cid))
+								{
+									uiInSync = false;
+									break;
+								}
+							}
+						}
+
+						if (!uiInSync)
+						{
+							selected.SyncList(sel1, (cid, spot) => cid == ((Spot) spot).cid,
+								(cid) => City.Get(cid) );
+						}
+
+						if ((scrollIntoView) && (sel1.Any() || focusSpot != null))
+						{
+							var current = focusSpot ?? (City.GetBuild().isSelected ? City.GetBuild() : null);
+							if (current != null )
+							{
+								grid.CurrentItem = current;
+							}
+
+							var any = current ?? sel1.First();
+							{
+								var rowIndex = grid.ResolveToRowIndex(any);
+								var columnIndex = grid.ResolveToStartColumnIndex();
+								if (rowIndex >= 0)
+									grid.ScrollInView(new RowColumnIndex(rowIndex, columnIndex));
+							}
+						}
+
+						if (AttackTab.IsVisible() && focusSpot != null )
+						{
+							try
+							{
+								if ( AttackTab.attacks.Contains(focusSpot.cid)
+								     && !AttackTab.instance.attackGrid.SelectedItems.Contains(focusSpot) )
+								{
+									AttackTab.instance.attackGrid.SelectedItem = focusSpot as City;
+									AttackTab.instance.attackGrid.ScrollIntoView(focusSpot, null);
+								}
+
+								if (AttackTab.targets.Contains(focusSpot.cid)
+								    && !AttackTab.instance.targetGrid.SelectedItems.Contains(focusSpot))
+								{
+									AttackTab.instance.targetGrid.SelectedItem = focusSpot as City;
+									AttackTab.instance.targetGrid.ScrollIntoView(focusSpot, null);
+								}
+							}
+							catch
+							{
 							}
 						}
 					}
-					if (!uiInSync)
-					{
-						selected.SyncList<int,object>(sel1, (cid,spot)=> cid== ((Spot)spot).cid,(cid)=>City.Get(cid) );
-						
-						
-					}
-					if ((scrollIntoView || !uiInSync) && (sel1.Any() || focusSpot != null))
-					{
-						var current = focusSpot ?? (City.GetBuild().isSelected ? City.GetBuild() : null);
-						if (current != null && grid.sf is not null)
-						{
-							grid.sf.CurrentItem = current;
-
-						}
-
-						var any = current ?? sel1.First();
-						if (grid.rad is not null)
-							grid.rad.ScrollItemIntoView(any);
-						if (grid.sf is not null)
-						{
-							var rowIndex = grid.sf.ResolveToRowIndex(any);
-							var columnIndex = grid.sf.ResolveToStartColumnIndex();
-							if(rowIndex >= 0)
-								grid.sf.ScrollInView(new RowColumnIndex(rowIndex, columnIndex));
-						}
-					}
 				}
-				if (AttackTab.IsVisible() && focusSpot != null )
-				{
-					try
-					{
-						if( AttackTab.attacks.Contains(focusSpot.cid)&& !AttackTab.instance.attackGrid.SelectedItems.Contains(focusSpot) )
-						{
-							AttackTab.instance.attackGrid.SelectedItem = focusSpot as City;
-							AttackTab.instance.attackGrid.ScrollIntoView(focusSpot, null);
-						}
-						if (AttackTab.targets.Contains(focusSpot.cid)&& !AttackTab.instance.targetGrid.SelectedItems.Contains(focusSpot))
-						{
-							AttackTab.instance.targetGrid.SelectedItem = focusSpot as City;
-							AttackTab.instance.targetGrid.ScrollIntoView(focusSpot, null);
-						}
-					}
-					catch
-					{
-					}
-				}
+			}
+			catch (Exception ex)
+			{
+				LogEx(ex);
 			}
 			finally
 			{
@@ -2262,7 +2266,7 @@ namespace CnV.Game
 				}
 				AppS.DispatchOnUIThreadIdle(() =>
 				{
-					tab.defenderGrid.SelectItem(this);
+					tab.defenderGrid.SelectedItem=(this);
 					tab.defenderGrid.ScrollItemIntoView(this);
 				});
 
@@ -2279,7 +2283,7 @@ namespace CnV.Game
 				}
 				AppS.DispatchOnUIThreadIdle(() =>
 				{
-					tab.attackerGrid.SelectItem(this);
+					tab.attackerGrid.SelectedItem=(this);
 					tab.attackerGrid.ScrollItemIntoView(this);
 				});
 			}
@@ -2462,7 +2466,7 @@ namespace CnV.Game
 				_ => false
 			};
 		}
-		public static string CellText(this DataGridCellInfo cell) => (cell?.Column as DataGridTypedColumn)?.PropertyName ?? string.Empty;
+	//	public static string CellText(this DataGridCellInfo cell) => (cell?.Column as DataGridTypedColumn)?.PropertyName ?? string.Empty;
 		public static Windows.Foundation.Point Show(this Microsoft.UI.Xaml.Controls.Flyout me,Windows.Foundation.Point sc,UIElement element)
 		{
 			me.CopyXamlRootFrom(element);

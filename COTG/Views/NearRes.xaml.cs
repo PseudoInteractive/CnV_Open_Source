@@ -1,33 +1,12 @@
-﻿using CnV.Game;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using Telerik.UI.Xaml.Controls.Grid;
-using Telerik.UI.Xaml.Controls.Grid.Commands;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
+﻿using System.Collections.Generic;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Controls.Primitives;
-using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Input;
-using Microsoft.UI.Xaml.Media;
-using Microsoft.UI.Xaml.Navigation;
-using static CnV.Game.Troops;
-using static CnV.Debug;
-using CnV.Helpers;
-using CnV.Services;
-using CommunityToolkit.WinUI;
 using System.Threading.Tasks;
 using System.Web;
 using System.Text;
 using Microsoft.UI.Xaml.Media.Imaging;
-using Microsoft.AppCenter.Analytics;
-using System.ComponentModel;
 using CommunityToolkit.WinUI.UI.Controls;
-using static CnV.Debounce;
 
 namespace CnV.Views
 {

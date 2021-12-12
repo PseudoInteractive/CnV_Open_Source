@@ -93,7 +93,17 @@ namespace CnV.Game
 			});
 		}
 
-	}
+		public void ProcessedTapped(string columnHeaderText)
+		{
+			switch(columnHeaderText)
+			{
+
+				case nameof(xy):
+					Spot.ProcessCoordClick(cid, false, App.keyModifiers);
+					break;
+			}
+		}
+    }
     // Proxy for a datagrid that displays 1 row per troop type
     public class SupportByTroopType
 	{
