@@ -78,7 +78,7 @@ namespace CnV.Services
 			try
 			{
 					var a = await AsArray(resp).ConfigureAwait(false);
-					var json = JsonDocument.Parse(a, jsonParseOptions);
+					using var json = JsonDocument.Parse(a, jsonParseOptions);
 					ProcessJson(json);
 					return true;
 				
@@ -180,7 +180,7 @@ namespace CnV.Services
 
 		public virtual void ProcessJson(JsonDocument json)
 		{
-
+			
 			//if (json.RootElement.TryGetProperty("a", out var a))
 			//{
 			//    var s = a.GetString();
@@ -356,6 +356,7 @@ namespace CnV.Services
 		public override void ProcessJson(JsonDocument json)
 		{
 			World.UpdateCurrent(json);
+			json.Dispose();
 		}
 		public static Task<bool> Send()
 		{
@@ -635,7 +636,7 @@ namespace CnV.Services
 				if (!dec2.IsNullOrEmpty())
 				{
 					var temps = Aes.Decode(dec2, secret);
-					var json = JsonDocument.Parse(temps);
+					using var json = JsonDocument.Parse(temps);
 
 
 					var jse = json.RootElement;
@@ -1198,7 +1199,7 @@ namespace CnV.Services
 			for (var i = 0; ;)
 			{
 				Note.Show("Sending Reinforcements " + (i + 1));
-				var jsd = await SendEncryptedForJson("includes/sndRein.php", post, secret, pid);
+				using var jsd = await SendEncryptedForJson("includes/sndRein.php", post, secret, pid);
 				if (jsd == null)
 				{
 					Note.Show("Something went wrong");

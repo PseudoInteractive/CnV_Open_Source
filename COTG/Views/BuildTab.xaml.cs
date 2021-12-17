@@ -148,7 +148,7 @@ namespace CnV.Views
 			for(;;)
 			{
 				getBuildState = 1;
-				var js = await Post.SendForJson("overview/bcounc.php").ConfigureAwait(false);
+				using var js = await Post.SendForJson("overview/bcounc.php").ConfigureAwait(false);
 				//var changes = new List<int>();
 				//var getCities = new List<Task>();
 				foreach(var ci in js.RootElement.EnumerateArray())
@@ -323,7 +323,7 @@ namespace CnV.Views
 
 		private void SelectAll(object sender,RoutedEventArgs e)
 		{
-			cityGrid.SelectAll();
+			SelectAllWorkAround(cityGrid);
 
 		}
 

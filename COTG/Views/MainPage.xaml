@@ -70,34 +70,34 @@
 												HeaderText="TS"
 												TextAlignment="Right"
 												winui:ToolTipService.ToolTip="TS enlisted in city"
-												DisplayNumberFormat="0,7:N0"
+												DisplayNumberFormat="N0"
 												 />
 				<sf:GridNumericColumn MappingName="tsRaid"
 												HeaderText="Raid"
 												TextAlignment="Right"
-												DisplayNumberFormat="0,7:N0"
+												DisplayNumberFormat="N0"
 												winui:ToolTipService.ToolTip="TS of Troops at home that can raid"/>
 				<sf:GridNumericColumn MappingName="raidIdle"
 												HeaderText="%Idle"
 												TextAlignment="Right"
-												DisplayNumberFormat="0,3:P1"
+												DisplayNumberFormat="P1"
 												winui:ToolTipService.ToolTip="% raiding troops idle" />
 				<sf:GridNumericColumn MappingName="tsHome"
 												TextAlignment="Right"
 												winui:ToolTipService.ToolTip="TS of Troops at home (including non raiding troops)"
-												DisplayNumberFormat="0,7:N0"
+												DisplayNumberFormat="N0"
 												IsHidden="True"/>
 				<sf:GridHyperlinkColumn MappingName="raidReturn"
 				                        winui:ToolTipService.ToolTip="Click here to bring troops home asap"
 				                        />
 				<sf:GridNumericColumn MappingName="raidCarry"
 												winui:ToolTipService.ToolTip="% of loot carried per raid&#x0a;Click here to bring troops home after the next raid"
-												DisplayNumberFormat="0,5:N1"
+												DisplayNumberFormat="N1"
 												 />
 				<sf:GridNumericColumn MappingName="points"
 												winui:ToolTipService.ToolTip="City score"
 												TextAlignment="Right"
-												DisplayNumberFormat="0,6:N0"
+												DisplayNumberFormat="N0"
 												 />
 				<sf:GridTextColumn MappingName="remarks"
 										   TextAlignment="Left"
@@ -113,17 +113,17 @@
 											   />
 					<sf:GridNumericColumn MappingName="carryCapacity"
 												TextAlignment="Right"
-												DisplayNumberFormat="0,8:N0"
+												DisplayNumberFormat="N0"
 												IsHidden="True"
 												 />
 					<sf:GridNumericColumn MappingName="activeCommands"
 												TextAlignment="Right"
-												DisplayNumberFormat="0,2:N0"
+												DisplayNumberFormat="N0"
 												IsHidden="True"
 												 />
 					<sf:GridNumericColumn MappingName="commandSlots"
 												TextAlignment="Right"
-												DisplayNumberFormat="0,2:N0"
+												DisplayNumberFormat="N0"
 												IsHidden="True"
 												 />
 					<sf:GridTextColumn MappingName="troopsString"

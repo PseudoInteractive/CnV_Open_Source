@@ -75,7 +75,7 @@ namespace CnV.Views
 		//private readonly KeyboardAccelerator _forwardKeyboardAccelerator = BuildKeyboardAccelerator(VirtualKey.GoForward);
 		static public ShellPage? instance;
 
-		internal void AddHandler(object pointerMovedEvent, PointerEventHandler pointerEventHandler, bool v) => throw new NotImplementedException();
+	//	internal void AddHandler(object pointerMovedEvent, PointerEventHandler pointerEventHandler, bool v) => throw new NotImplementedException();
 
 		private bool _isBackEnabled;
 		private WinUI.NavigationViewItem _selected;
@@ -342,7 +342,7 @@ namespace CnV.Views
 				AppS.DispatchOnUIThreadLow(SettingsPage.ShowWhatsNew);
 			}
 
-			updateHtmlOffsets.Go(true);
+			
 
 			TabPage.mainTabs.SizeChanged += (( o,  args) => ShellPage.updateHtmlOffsets.SizeChanged() );
 

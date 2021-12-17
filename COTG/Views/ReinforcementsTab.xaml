@@ -8,7 +8,7 @@
     xmlns:dataGrid="using:Syncfusion.UI.Xaml.DataGrid"
 	xmlns:view="using:CnV.Views"
 	xmlns:game="using:CnV.Game"
-	Loaded="OnLoaded"
+	Loaded="ReinLoaded"
     Tag="Reinforcements"
     >
 
@@ -37,7 +37,6 @@
 					   AllowDraggingColumns="True"
 					   ColumnWidthMode="SizeToHeader"
 		              
-		               Loaded="DataGridLoaded"
 
 
 					>
@@ -71,7 +70,6 @@
 						ColumnWidthMode="SizeToHeader"
 						AllowTriStateSorting="True"
 					
-							Loaded="DataGridLoaded"
 					  >
 			<sf:SfDataGrid.TableSummaryRows>
 				<sf:GridTableSummaryRow ShowSummaryInRow="False" TitleColumnCount="1" Position="Bottom"

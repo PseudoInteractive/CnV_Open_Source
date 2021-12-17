@@ -23,11 +23,7 @@
 		<Setter Property="FontFamily" Value="{StaticResource SymbolThemeFontFamily}"/>
         <Setter Property="Glyph" Value="&#xE76F;" />
 	</Style>
-	<Style TargetType="tk:GridSplitter"  >
-		<Setter Property="Background" Value="{x:Null}"/>
-		<Setter Property="IsTabStop" Value="True"/>
-		<Setter Property="CursorBehavior" Value="ChangeOnSplitterHover" />
-	</Style>
+
 	
 	<Style TargetType="winui:TreeView" >
 		
@@ -137,6 +133,10 @@
 		<Setter Property="ShowHeaderToolTip" Value="True"/>
 	</Style>
 	<Style  TargetType="sf:GridImageColumn" BasedOn="{StaticResource SfGridColumnBase}">
+		<Setter Property="AllowSorting" Value="False"/>
+		<Setter Property="AllowFiltering" Value="False"/>
+	</Style>
+	<Style  TargetType="sf:GridTemplateColumn" BasedOn="{StaticResource SfGridColumnBase}">
 		<Setter Property="AllowSorting" Value="False"/>
 		<Setter Property="AllowFiltering" Value="False"/>
 	</Style>

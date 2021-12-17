@@ -196,7 +196,7 @@ namespace CnV.Views
 
 		private void defenderGrid_SelectionChanged(object sender, GridSelectionChangedEventArgs e)
 		{
-			if(!isOpen)
+			if(!isFocused)
 				return;
 			if(SpotTab.silenceSelectionChanges == 0)
 			{
@@ -224,7 +224,7 @@ namespace CnV.Views
 						}
 					}
 				}
-				SpotSelectionChanged(sender, e);
+			//	SpotSelectionChanged(sender, e);
 			}
 		}
 

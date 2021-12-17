@@ -31,7 +31,6 @@
 		</tk:WrapPanel>
 		<sf:SfDataGrid x:Name="defenderGrid"
 						Grid.Row="1"
-													Margin="4,4,8,16"
 
                         x:FieldModifier="public"
 						IsTabStop="True"
@@ -68,23 +67,23 @@
 									   
 
                                        TextAlignment="Right"
-                                            DisplayNumberFormat="0,7:N0" />
+                                            DisplayNumberFormat="N0" />
 				<sf:GridNumericColumn MappingName="tsHome"
                                             HeaderText="tsNow"
 									   
 
                                             TextAlignment="Right"
-                                            DisplayNumberFormat="0,7:N0" />
+                                            DisplayNumberFormat="N0" />
 				<sf:GridNumericColumn MappingName="incMax"
 									   
 
                                             TextAlignment="Right"
-                                            DisplayNumberFormat="0,7:N0" />
+                                            DisplayNumberFormat="N0" />
 				<sf:GridNumericColumn MappingName="incTotal"
 									   
 
                                             TextAlignment="Right"
-                                            DisplayNumberFormat="0,7:N0"
+                                            DisplayNumberFormat="N0"
                                             IsHidden="True" />
 				<sf:GridTextColumn MappingName="playerName" HeaderText="Player"
                                        TextAlignment="Left"
@@ -98,13 +97,13 @@
 									   
 
                                             TextAlignment="Center"
-                                            DisplayNumberFormat="0,1:N0" />
+                                            DisplayNumberFormat="N0" />
 				<sf:GridNumericColumn MappingName="incomingDefenders"
                                             HeaderText="inD"
 									   
 
                                             TextAlignment="Center"
-                                            DisplayNumberFormat="0,1:N0" />
+                                            DisplayNumberFormat="N0" />
 				<sf:GridTextColumn MappingName="firstIncomingString"
 									   HeaderText="First"
                                       
@@ -128,7 +127,7 @@
 									   
 
                                        TextAlignment="Right"
-                                            DisplayNumberFormat="0,7:N0"
+                                            DisplayNumberFormat="N0"
                                               />
 				<sf:GridCheckBoxColumn  MappingName="isOnWater"
 
@@ -151,7 +150,6 @@
 						
                                     ItemsSource="{x:Bind game:Army.empty}"
                                     
-							Margin="4,4,8,16"
 
 						
                                     FontSize="{StaticResource MediumFontSize}"
@@ -184,7 +182,7 @@
 				<sf:GridNumericColumn MappingName="dist"
 
                                        TextAlignment="Right"
-                                            DisplayNumberFormat="0,3:N0" />
+                                            DisplayNumberFormat="N0" />
 
 				<sf:GridTextColumn MappingName="sourceCN"
                                                    HeaderText="City"
@@ -196,12 +194,7 @@
                                                    DisplayTimeFormat="0:dd',' HH':'mm':'ss"
                                                    TextAlignment="Center" />
 
-				<sf:GridTemplateColumn HeaderText="Troops">
-					<sf:GridTemplateColumn.CellStyle>
-						<Style TargetType="Rectangle">
-							<Setter Property="Fill" Value="Gray" />
-						</Style>
-					</sf:GridTemplateColumn.CellStyle>
+				<sf:GridTemplateColumn MappingName="Troops">
 					<sf:GridTemplateColumn.CellTemplate>
 						<DataTemplate x:DataType="game:Army">
 							<StackPanel Orientation="Vertical"
@@ -257,12 +250,8 @@
 						</DataTemplate>
 					</sf:GridTemplateColumn.CellTemplate>
 				</sf:GridTemplateColumn>
-				<sf:GridTemplateColumn HeaderText="Total Def">
-					<sf:GridTemplateColumn.CellStyle>
-						<Style TargetType="Rectangle">
-							<Setter Property="Fill" Value="Gray" />
-						</Style>
-					</sf:GridTemplateColumn.CellStyle>
+				<sf:GridTemplateColumn MappingName="Total Def">
+				
 					<sf:GridTemplateColumn.CellTemplate>
 						<DataTemplate>
 							<StackPanel Orientation="Vertical"

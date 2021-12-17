@@ -92,7 +92,8 @@ namespace CnV
 			TabPage.ShowTabs();
 			CityCustom.Load();
 
-			
+			ShellPage.updateHtmlOffsets.Go(true);
+
 				//	await Task.Delay(1000);
 
 				//	System.GC.Collect(2,GCCollectionMode.Default,true,true);

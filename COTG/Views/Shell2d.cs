@@ -189,61 +189,61 @@ namespace CnV.Views
 			debounceDelay=100,
 			throttleDelay=100 };
 
-		static bool forceFocus;
-		static void TakeFocusIfAppropriate()
-		{
-			takeFocusIfAppropriate.Go();
-		}
-		static void TakeFocus()
-		{
-			forceFocus=true;;
-			takeFocusIfAppropriate.Go();
-		}
-		static  Debounce takeFocusIfAppropriate = new( () =>
-		{
-			var isOverCanvas = mouseOverCanvas && isHitTestVisible;
-			var note = 0;
-			if(isOverCanvas)
-			{
-				if((canvas.FocusState is FocusState.Unfocused) || forceFocus)
-				{
-					forceFocus=false;
-					//if(JSClient.view is not null && App.IsKeyPressedShift())
-					{
-						//		var f = JSClient.view.Focus(FocusState.Programmatic);
-						//		Assert(f);
-					}
-					//else if( App.IsKeyPressedControl())
-					//{
-					//	var f = ChatTab.tabPage.Focus(FocusState.Programmatic);
-					//	Assert(f);
-					//}
-					//AppS.QueueOnUIThread( ()=>
-					{
-						var f = canvas.Focus(FocusState.Programmatic);
-						if(!forceFocus)
-						{
-							if(!f)
-							{
-								Assert(false);
-							}
-						}
-					} //);
-					note|=2;
-				}
-			}
-#if DEBUG
-		//	if(note!=0)
-		//		Note.Show($"!Focu{note}: f{canvas.IsHitTestVisible} o{isOverCanvas}");
-#endif
-			return Task.CompletedTask;
+//		static bool forceFocus;
+//		static void TakeFocusIfAppropriate()
+//		{
+//			takeFocusIfAppropriate.Go();
+//		}
+//		static void TakeFocus()
+//		{
+//			forceFocus=true;;
+//			takeFocusIfAppropriate.Go();
+//		}
+//		static  Debounce takeFocusIfAppropriate = new( () =>
+//		{
+//			var isOverCanvas = mouseOverCanvas && isHitTestVisible;
+//			var note = 0;
+//			if(isOverCanvas)
+//			{
+//				if((canvas.FocusState is FocusState.Unfocused) || forceFocus)
+//				{
+//					forceFocus=false;
+//					//if(JSClient.view is not null && App.IsKeyPressedShift())
+//					{
+//						//		var f = JSClient.view.Focus(FocusState.Programmatic);
+//						//		Assert(f);
+//					}
+//					//else if( App.IsKeyPressedControl())
+//					//{
+//					//	var f = ChatTab.tabPage.Focus(FocusState.Programmatic);
+//					//	Assert(f);
+//					//}
+//					//AppS.QueueOnUIThread( ()=>
+//					{
+//						var f = canvas.Focus(FocusState.Programmatic);
+//						if(!forceFocus)
+//						{
+//							if(!f)
+//							{
+//								Assert(false);
+//							}
+//						}
+//					} //);
+//					note|=2;
+//				}
+//			}
+//#if DEBUG
+//		//	if(note!=0)
+//		//		Note.Show($"!Focu{note}: f{canvas.IsHitTestVisible} o{isOverCanvas}");
+//#endif
+//			return Task.CompletedTask;
 
-		})
-		{
-			runOnUiThread=true,
-			debounceDelay=50,
-			throttleDelay=100
-		};
+//		})
+//		{
+//			runOnUiThread=true,
+//			debounceDelay=50,
+//			throttleDelay=100
+//		};
 
 		
 		
@@ -350,9 +350,9 @@ namespace CnV.Views
 
 			//canvas.Children.Add(keyboardProxy);
 			//			canvas.PreviewKeyDown+=KeyboardProxy_KeyDown;
-		//	canvas.KeyDown += KeyboardProxy_KeyDown;
-			App.window.Content.PreviewKeyDown+=ShellPage.KeyboardProxy_KeyDown; ;
-			canvas.PreviewKeyDown+=ShellPage.KeyboardProxy_KeyDown2; ;
+			canvas.KeyDown += KeyboardProxy_KeyDown;
+		//	App.window.Content.PreviewKeyDown+=ShellPage.KeyboardProxy_KeyDown; ;
+		//	canvas.PreviewKeyDown+=ShellPage.KeyboardProxy_KeyDown2; ;
 			//			App.window.Content.PreviewKeyUp+=ShellPage.KeyboardProxy_KeyUp;
 			App.window.Content.AddHandler(PointerWheelChangedEvent,new PointerEventHandler( KeyboardProxy_PointerWheelChanged),true);
 			//			canvas.AddHandler(KeyDownEvent,new KeyEventHandler(KeyboardProxy_KeyDown2),true);
@@ -419,14 +419,14 @@ namespace CnV.Views
 		}
 
 
-		public static void KeyboardProxy_KeyDown2(object sender,Microsoft.UI.Xaml.Input.KeyRoutedEventArgs e)
-		{
-//			Log($"KeyDown2 {e.Key} handled:{e.Handled} mouse:{mouseOverCanvas}");
-			if(!e.Handled)
-			{
-				e.Handled=	DoKeyDown(e.Key);
-			}
-		}
+//		public static void KeyboardProxy_KeyDown2(object sender,Microsoft.UI.Xaml.Input.KeyRoutedEventArgs e)
+//		{
+////			Log($"KeyDown2 {e.Key} handled:{e.Handled} mouse:{mouseOverCanvas}");
+//			if(!e.Handled)
+//			{
+//				e.Handled=	DoKeyDown(e.Key);
+//			}
+//		}
 
 		public static void KeyboardAccelerator(KeyboardAccelerator acc,KeyboardAcceleratorInvokedEventArgs args)
 		{

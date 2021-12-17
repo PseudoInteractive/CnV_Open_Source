@@ -28,6 +28,13 @@ namespace CnV;
 
 			try
 			{
+				Assert(e.Column is not null);
+				Assert(e.Column?.HeaderText is not null);
+				if(e.Record is null)
+				{
+					Assert(false);
+					return;
+				}
 				//	Note.Show($"Cell Tap {e.Column.HeaderText??"NA"}  {e.RowColumnIndex} {e.RowColumnIndex} {e.Record.ToString} ");
 				switch (e.Record)
 				{
@@ -109,7 +116,7 @@ namespace CnV;
 					{
 						var cid = d.cid;
 						//    Log(context.Column.Header);
-						switch (e.Column.HeaderText)
+						switch (e.Column.MappingName)
 						{
 							case nameof(Dungeon.xy):
 								Spot.ProcessCoordClick(cid, false, App.keyModifiers, false);
@@ -153,8 +160,7 @@ namespace CnV;
 			}
 			catch (Exception exception)
 			{
-				Log(exception);
-				throw;
+				LogEx(exception);
 			}
 
 

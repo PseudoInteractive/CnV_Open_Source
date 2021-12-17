@@ -1411,7 +1411,7 @@ public static class BuildQueue
 		var encoded = Aes.Encode(json,$"X2U11s33S{World.CidToPlayerOrMe(cid)}ccJx1e2");
 		//var encoded = Aes.Encode(json, $"XTR977sW{World.CidToPlayer(cid)}sss2x2");
 		var args = $"cid={cid}&a=" + HttpUtility.UrlEncode(encoded,Encoding.UTF8);
-		var response = await Post.SendForJson("includes/nBuu.php",args);
+		using var response = await Post.SendForJson("includes/nBuu.php",args);
 		if (response == null)
 		{
 			Assert(false);
@@ -1499,7 +1499,7 @@ public static class BuildQueue
 				try
 				{
 
-					var js = JsonDocument.Parse(data);
+					using var js = JsonDocument.Parse(data);
 					foreach(var jsCity in js.RootElement.EnumerateObject())
 					{
 						var cid = int.Parse(jsCity.Name);

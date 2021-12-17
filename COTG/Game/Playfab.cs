@@ -414,10 +414,7 @@ namespace CnV
 				}
 
 				//// wait until our alliance is fetched
-				while(!Alliance.diplomacyFetched)
-				{
-					await Task.Delay(2500);
-				}
+			//	await Alliance.diplomacyFetchedTask;
 				//if(Alliance.hasAlliance)
 				//{
 				//	var groups = $"{World.world}_{Alliance.my.name}";

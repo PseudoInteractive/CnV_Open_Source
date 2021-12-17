@@ -19,13 +19,13 @@ namespace CnV.Game
 	public class BlessedCity
 	{
 		public static List<BlessedCity> all = new List<BlessedCity>();
-		public static City senderCity;
-		public Spot spot;
-		public int cid => spot.cid;
-		public int cont => spot.cont;
-		public string city => spot.cityName;
-		public string xy => spot.xy;
-		public string player => spot.playerName;
+		public static City? senderCity;
+		public Spot? spot;
+		public int cid => spot is not null ? spot.cid : 0;
+		public int cont => spot is not null ? spot.cont : 0;
+		public string city => spot?.cityName;
+		public string xy => spot?.xy;
+		public string player => spot?.playerName;
 		public string virtue { get; set; }
 		public DateTimeOffset blessedUntil { get; set; }
 		public int wood { get; set; }
@@ -49,7 +49,7 @@ namespace CnV.Game
 			try
 			{
 				var cities = new List<BlessedCity>();
-				var data = await Post.SendForJson("overview/bleover.php");
+				using var data = await Post.SendForJson("overview/bleover.php");
 				foreach (var city in data.RootElement.GetProperty("a").EnumerateArray())
 				{
 					var bc = new BlessedCity();
@@ -118,6 +118,8 @@ namespace CnV.Game
 			// Sender City might be null here
 			try
 			{
+				var city = senderCid.AsCity();
+				var target = targetCid.AsCity();
 				var sendType = useShips ? 2 : 1;
 				App.UpdateKeyStates();
 				var pid = World.CidToPlayerOrMe(senderCid);
@@ -135,6 +137,8 @@ namespace CnV.Game
 						$"cid={_sender}&f=" + HttpUtility.UrlEncode(Aes.Encode(reqF, secret), Encoding.UTF8), pid);
 					await Task.Delay(450);
 				}
+				city.OnPropertyChanged();
+				target.OnPropertyChanged();
 			}
 			catch (Exception e)
 			{
@@ -262,10 +266,10 @@ namespace CnV.Game
 						sender.wood -= wood;
 						sender.stone -= stone;
 						BlessedCity.SendDonation(sender.cid, i.cid, wood, stone, useShips);
-						DonationTab.instance.blessedGrid.ItemsSource = null;
 						i.wood -= wood;
 						i.stone -= stone;
-						BlessedCity.senderCity = null;
+						DonationTab.ClearBlessedCity();
+						//	BlessedCity.senderCity = null;
 						//      var tempSource = DonationTab.instance.donationGrid.ItemsSource;
 						//   DonationTab.instance.donationGrid.ItemsSource = tempSource;
 						//     DonationTab.instance.donationGrid.ItemsSource = null;
@@ -273,7 +277,7 @@ namespace CnV.Game
 
 
 					}
-				}
+					}
 					break;
 				case nameof(i.xy):
 					Spot.ProcessCoordClick(i.cid, false, App.keyModifiers);

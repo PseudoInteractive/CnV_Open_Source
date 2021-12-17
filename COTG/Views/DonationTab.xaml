@@ -84,34 +84,34 @@
                                              />
 				<sf:GridNumericColumn  MappingName="CartsHome"
                                        TextAlignment="Right"
-                                       DisplayNumberFormat="{}{0,5:N0}"
+                                       DisplayNumberFormat="N0"
                                              />
 				<sf:GridNumericColumn MappingName="Wood"
-				                            DisplayNumberFormat="{}{0,7:N0}"
+				                            DisplayNumberFormat="N0"
                                                      TextAlignment="Right"
                                             
                                               />
 				<sf:GridNumericColumn MappingName="woodStorage"
 				                      TextAlignment="Right"
-                                            DisplayNumberFormat="{}{0,7:N0}"
+                                            DisplayNumberFormat="N0"
                                             
                                             IsHidden="True" />
 				<sf:GridNumericColumn  MappingName="Stone"
-                                            DisplayNumberFormat="{}{0,7:N0}"
+                                            DisplayNumberFormat="N0"
                                            
                                             TextAlignment="Right"
                                              />
 				<sf:GridNumericColumn  MappingName="Carts"
                                             
-                                           DisplayNumberFormat="{}{0,5:N0}"
+                                           DisplayNumberFormat="N0"
                                                       IsHidden="True"
                                              />
 				<sf:GridNumericColumn  MappingName="ShipsHome"
-                                            DisplayNumberFormat="{}{0,5:N0}"
+                                            DisplayNumberFormat="N0"
                                             TextAlignment="Right"          
                                              />
 				<sf:GridNumericColumn  MappingName="Ships"
-                                            DisplayNumberFormat="{}{0,5:N0}"
+                                            DisplayNumberFormat="N0"
                                                       IsHidden="True"
                                              />
 				<sf:GridNumericColumn MappingName="points"
@@ -153,21 +153,21 @@
                                              />
 				<sf:GridNumericColumn  MappingName="wood"
                                                       TextAlignment="Right"
-                                            DisplayNumberFormat="{}{0,9:N0}"
+                                                      DisplayNumberFormat="N0"
                                                       
                                              />
 				<sf:GridNumericColumn  MappingName="stone"
                                                       TextAlignment="Right"
-                                            DisplayNumberFormat="{}{0,9:N0}"
+                                                      DisplayNumberFormat= "N0"
                                                       
                                              />
-				<sf:GridTimeColumn  MappingName="travelTime"
+				<sf:GridTextColumn  MappingName="travelTime"
                                                       HeaderText="Travel"
                                              />
 				<sf:GridNumericColumn  MappingName="level"
                                                       
                                                       TextAlignment="Center"
-                                            DisplayNumberFormat="{}{0,2:N0}"
+                                                      DisplayNumberFormat="N0"
                                              />
 				<sf:GridHyperlinkColumn MappingName="xy"
                                         />
@@ -195,7 +195,7 @@
 				GripperCursor="SizeNorthSouth"              Height="11"
                          HorizontalAlignment="Stretch"
                          VerticalAlignment="Top"
-                         Background="transparent" 
+                         Background="Transparent"
                     >
             <tk:GridSplitter.Element>
                 <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE76F;"

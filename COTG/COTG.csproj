@@ -13,7 +13,7 @@
     <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
     <EnableDefaultPageItems>false</EnableDefaultPageItems>
     <LangVersion>preview</LangVersion>
-    <StartupObject>COTG.Program</StartupObject>
+	      <StartupObject></StartupObject>
     <PackageCertificateThumbprint>5DC3522778776B8DC772B28B915990F3B4487888</PackageCertificateThumbprint>
     <AppxPackageSigningEnabled>True</AppxPackageSigningEnabled>
     <GenerateAppInstallerFile>False</GenerateAppInstallerFile>
@@ -107,12 +107,6 @@
     <PackageReference Include="System.Threading.Tasks.Dataflow" Version="6.0.0" />
     <PackageReference Include="ZString" Version="2.4.3" />
     <PackageReference Include="PInvoke.User32" Version="0.7.104" />
-  </ItemGroup>
-	<ItemGroup>
-		<PackageReference Include="Microsoft.ProjectReunion" Version="0.8.5" />
-		<Manifest Include="$(ApplicationManifest)" />
-	</ItemGroup>
-  <ItemGroup>
     <Content Include="Assets\BadgeLogo.scale-100.png" />
     <Content Include="Assets\BadgeLogo.scale-200.png" />
     <Content Include="Assets\BadgeLogo.scale-400.png" />
@@ -346,8 +340,6 @@
     <Compile Include="Views\ContinentTagFilter.xaml.cs">
       <DependentUpon>ContinentTagFilter.xaml</DependentUpon>
     </Compile>
-	<Compile Include="Views\DesktopWindow.cs" />
-	<Compile Include="Views\DisplayInformation.cs" />
 	<Compile Include="Views\DoTheStuff.cs" />
     <Compile Include="Views\DungeonView.xaml.cs">
       <DependentUpon>DungeonView.xaml</DependentUpon>
@@ -758,8 +750,7 @@
 	  <MonoGameContentReference Include="Content\cotg.mgcb" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="COTG_TemporaryKey.pfx" />
-    <None Include="JS\pack.js" />
+     <None Include="JS\pack.js" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="JSON\ofdf.cs" />
@@ -781,14 +772,12 @@
     <SignAssembly>true</SignAssembly>
   </PropertyGroup>
   <PropertyGroup>
-    <AssemblyOriginatorKeyFile>SignatureKey.snk</AssemblyOriginatorKeyFile>
+ <AssemblyOriginatorKeyFile>SignatureKey.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <PropertyGroup>
     <PreBuildEvent />
   </PropertyGroup>
   <PropertyGroup>
-    <PostBuildEvent />
-    <StartupObject></StartupObject>
     <DebugType>portable</DebugType>
     <GenerateDocumentationFile>True</GenerateDocumentationFile>
     <RunAnalyzersDuringLiveAnalysis>False</RunAnalyzersDuringLiveAnalysis>
@@ -800,7 +789,6 @@
     <EnforceCodeStyleInBuild>False</EnforceCodeStyleInBuild>
     <ImplicitUsings>disable</ImplicitUsings>
     <Nullable>annotations</Nullable>
-    <PackageIcon>cnvCover2.png</PackageIcon>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <Optimize>False</Optimize>
@@ -816,33 +804,16 @@
   </PropertyGroup>
   <ProjectExtensions />
   <ItemGroup>
-	  <Content Remove="cnvCover.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AppxManifest Include="Package.appxmanifest">
-      <SubType>Designer</SubType>
-    </AppxManifest>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Content\Art\City\Winter\building_set5.png" />
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="Content\Fonts\tra.fnt" />
     <EmbeddedResource Include="Wiki\fixes.md" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\CnVShared\CnVShared.csproj" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Update="cnvCover2.png">
-      <Pack>True</Pack>
-      <PackagePath>\</PackagePath>
-    </None>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Base\" />
     <Folder Include="ClientHelpers\" />
     <Folder Include="Themes\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\CnVShared\CnVShared.csproj" />
   </ItemGroup>
 
  </Project>

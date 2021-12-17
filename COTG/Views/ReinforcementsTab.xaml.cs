@@ -103,7 +103,7 @@ namespace CnV.Views
 
 		private bool hasLoaded;
 
-		private void OnLoaded(object sender,Microsoft.UI.Xaml.RoutedEventArgs e)
+		private  void ReinLoaded(object sender,Microsoft.UI.Xaml.RoutedEventArgs e)
 		{
 			if(!hasLoaded)
 			{

@@ -401,7 +401,7 @@ Grid.Column="0"
 					<RowDefinition Height="3*"  x:Name="rowTabTop"  />
 					<RowDefinition Height="*"/>
 				</Grid.RowDefinitions>
-				<winui:Frame x:Name="topTabs"   IsNavigationStackEnabled="False" x:FieldModifier="public" />
+				<winui:Frame x:Name="rightTabs"   IsNavigationStackEnabled="False" x:FieldModifier="public" />
 				<winui:Frame x:Name="spotTabs"  Grid.Row="1" IsNavigationStackEnabled="False" x:FieldModifier="public" />
 				<tk:GridSplitter
 				IsTabStop="True"

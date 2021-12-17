@@ -71,24 +71,24 @@
                                         />
                 <sf:GridNumericColumn 
                                             MappingName="dTS"
-                                            DisplayNumberFormat="0,7:N0"
+                                            DisplayNumberFormat="N0"
                                              />
                 <sf:GridNumericColumn 
                                             MappingName="aTS"
-                                            DisplayNumberFormat="0,7:N0"
+                                            DisplayNumberFormat="N0"
                                              />
                 <sf:GridNumericColumn 
                                             MappingName="dTsKill"
-                                            DisplayNumberFormat="0,7:N0"
+                                            DisplayNumberFormat="N0"
                                              />
                 <sf:GridNumericColumn 
                                             MappingName="aTsKill"
-                                            DisplayNumberFormat="0,7:N0"
+                                            DisplayNumberFormat="N0"
                                              />
 				<sf:GridNumericColumn 
                                             MappingName="approxKill"
 					                        HeaderText="aprxKill"
-                                            DisplayNumberFormat="0,7:N0"
+                                            DisplayNumberFormat="N0"
                                              />
 				<sf:GridTextColumn 
                                        TextAlignment="Left"
@@ -100,7 +100,7 @@
                                        MappingName="sourceCN"         />
                 <sf:GridNumericColumn 
                                             MappingName="claim"
-                                            DisplayNumberFormat="0,3:N0"
+                                            DisplayNumberFormat="N0"
                                             TextAlignment="Right"
                                              />
                 <sf:GridNumericColumn 
@@ -124,11 +124,11 @@
                                            />
                 <sf:GridNumericColumn 
                                             MappingName="dTsLeft"
-                                            DisplayNumberFormat="0,7:N0"
+                                            DisplayNumberFormat="N0"
                                              />
                 <sf:GridNumericColumn 
                                             MappingName="aTsLeft"
-                                            DisplayNumberFormat="0,7:N0"
+                                            DisplayNumberFormat="N0"
                                              />
                 <sf:GridTextColumn 
                                        TextAlignment="Left"

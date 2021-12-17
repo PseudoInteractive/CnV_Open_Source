@@ -1257,7 +1257,8 @@ namespace CnV.Game
 			(((long) incomingFlags) << 56) + ((long) pid << 32) + cid.ZCurveEncodeCid();
 		public async Task<bool> DoPoll()
 		{
-			var pollResult = (await Post.SendForJson("/includes/poll2.php",$"cid={cid}&ai=0&ss={JSClient.cotgS}").ConfigureAwait(false) ).RootElement;
+			using var task = (await Post.SendForJson("/includes/poll2.php",$"cid={cid}&ai=0&ss={JSClient.cotgS}").ConfigureAwait(false) );
+			var pollResult = task.RootElement;
 			if(pollResult.TryGetProperty("city",out var cjs))
 			{
 				LoadCityData(cjs);
@@ -1271,22 +1272,20 @@ namespace CnV.Game
 		}
 		public void CityRowClick(GridCellTappedEventArgs e)
 		{
+			var modifiers = App.keyModifiers;
+			var wantSelect = true;
 			switch (e.Column.MappingName)
 			{
-				case nameof(icon):
-				case nameof(nameAndRemarks):
+				
 				case nameof(cityName):
 				case nameof(iconUri):
 				case nameof(remarks):
+					wantSelect = false;
 					DoClick();
 					break;
 				case nameof(bStage):
 					DoTheStuff();
 					break;
-				case nameof(xy):
-					ProcessCoordClick(cid, false, App.keyModifiers, false);
-					break;
-				case nameof(City.tsTotal):
 				case nameof(tsHome):
 				case nameof(tsRaid):
 					if (City.CanVisit(cid) && MainPage.IsVisible())
@@ -1294,23 +1293,14 @@ namespace CnV.Game
 						Raiding.UpdateTS(true, true);
 					}
 					break;
-				case nameof(City.raidReturn):
-					if (City.CanVisit(cid) && MainPage.IsVisible())
-					{
-						Raiding.ReturnFast(cid, true);
-					}
-					break;
-				case nameof(pinned):
-					var newSetting = !pinned;
-
-					SetPinned(newSetting);
-
-					return;
 				case nameof(City.AutoWalls):
 					AutoWalls = !autoWalls;
+					wantSelect = false;
+
 					return;
 				case nameof(City.AutoTowers):
 					AutoTowers = !autoTowers;
+					wantSelect = false;
 					return;
 				case nameof(City.raidCarry):
 					if (City.CanVisit(cid) && MainPage.IsVisible())
@@ -1318,7 +1308,58 @@ namespace CnV.Game
 						Raiding.ReturnSlow(cid, true);
 					}
 					break;
+						case nameof(nameAndRemarks):
+							// first click selects
+							// second acts as coord click
+							if(IsSelected(cid))
+							{
+								ProcessCoordClick(cid, false, modifiers, false);
+								wantSelect = false;
+					}
+						
+
+					break;
+						case nameof(xy):
+							ProcessCoordClick(cid, false, modifiers, false);
+							wantSelect = false;
+						break;
+						case nameof(icon):
+							DoClick();
+							wantSelect = false;
+							break;
+						case nameof(City.dungeonsToggle):
+						{
+							ShowDungeons();
+							wantSelect = false;
+							break;
+						}
+						case nameof(City.tsTotal):
+							if(City.CanVisit(cid) && MainPage.IsVisible())
+							{
+								Raiding.UpdateTS(true, true);
+							}
+
+							break;
+						case nameof(City.raidReturn):
+							if(City.CanVisit(cid) && MainPage.IsVisible())
+							{
+								Raiding.ReturnFast(cid, true);
+							}
+							break;
+						case nameof(pinned):
+						{
+							var newSetting = !pinned;
+
+							SetPinned(newSetting);
+							wantSelect = false;
+						}
+							return;
+					
 			}
+			if(wantSelect)
+				SetFocus(false, true, true, false);
+			NavStack.Push(cid);
+
 		}
 
 	}

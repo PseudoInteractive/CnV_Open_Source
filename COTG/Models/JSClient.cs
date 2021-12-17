@@ -438,7 +438,7 @@ namespace CnV
 				//	view.PreviewKeyDown+=View_PreviewKeyDown;
 				view.NavigationStarting+=View_NavigationStarting;
 				view.NavigationCompleted+=View_NavigationCompleted; ;
-				view.PointerMoved +=View_PointerMoved;
+			//	view.PointerMoved +=View_PointerMoved;
 				//	view.NavigationCompleted+=View_NavigationCompleted;
 				coreWebView.PermissionRequested+=View_PermissionRequested; ;
 				coreWebView.NewWindowRequested+=CoreWebView_NewWindowRequested; ;
@@ -505,10 +505,10 @@ namespace CnV
 			}
 		}
 
-		private static void View_PointerMoved(object sender, PointerRoutedEventArgs e)
-		{
-			throw new NotImplementedException();
-		}
+		//private static void View_PointerMoved(object sender, PointerRoutedEventArgs e)
+		//{
+		//	throw new NotImplementedException();
+		//}
 
 		internal static void Initialize(Grid panel, WebView2 _view)
 		{
@@ -1524,7 +1524,7 @@ namespace CnV
 			ttCombatBonus[16] = 1 + faith.cyndros * 0.5f / 100 + researchRamp[research[45]] / 100;
 			ttCombatBonus[17] = 1; // no combat research for senator
 		}
-		public static JsonDocument extCityHack;
+	//	public static JsonDocument extCityHack;
 		public static bool ppdtInitialized;
 		static private int[] lastCln = null;
 		public static async void UpdatePPDT(JsonElement jse, int thisPid, bool pruneCities = false, bool updateBuildCity = false)
@@ -1765,8 +1765,23 @@ namespace CnV
 			// extract cities
 			if(jse.TryGetProperty("c", out var cProp))
 			{
-				while(!World.initialized)
-					await Task.Delay(1000);
+				int citySwitch = 0;
+				if(updateBuildCity)
+				{
+					if(jse.TryGetProperty("lcit", out var lcit))
+					{
+						citySwitch= lcit.GetAsInt();
+					
+					}
+
+				}
+
+				if (!World.initialized)
+				{
+					cProp = cProp.Clone();
+					while (!World.initialized)
+						await Task.Delay(1000);
+				}
 
 				var now = DateTimeOffset.UtcNow;
 				foreach(var jsCity in cProp.EnumerateArray())
@@ -1777,6 +1792,7 @@ namespace CnV
 					if(pruneCities)
 						if(World.GetInfoFromCid(cid).player != thisPid)
 						{
+
 							Note.Show($"Invalid City, was it lost? {cid.CidToString()}");
 							ChangeCityJS(cid);
 
@@ -1819,12 +1835,8 @@ namespace CnV
 
 
 				}
-				if(updateBuildCity)
-					if(jse.TryGetProperty("lcit", out var lcit))
-					{
-						var cid = lcit.GetAsInt();
-						CitySwitch(cid, true);
-					}
+	if(citySwitch != 0)
+		CitySwitch(citySwitch, true);
 				CityList.NotifyChange(true);
 
 				if(!ppdtInitialized)
@@ -2262,7 +2274,7 @@ namespace CnV
 			   {
 				   var gotCreds = false;
 				   Log($"Notify: {eValue.Length},{sender}:{eValue.Truncate(128) }");
-				   var jsDoc = JsonDocument.Parse(eValue);
+				   using var jsDoc = JsonDocument.Parse(eValue);
 				   var jsd = jsDoc.RootElement;
 				   foreach(var jsp in jsd.EnumerateObject())
 					   switch(jsp.Name)
@@ -2680,8 +2692,8 @@ namespace CnV
 
 
 						   case "ext":
-							   {
-								   extCityHack = jsDoc;
+						   {
+							   Assert(false);
 								   break;
 							   }
 
@@ -2773,22 +2785,23 @@ namespace CnV
 						   case "gPlA":
 							   {
 								   Player.Ctor(jsp.Value);
-								   while(!ppdtInitialized || !Alliance.diplomacyFetched)
-									   await Task.Delay(500).ConfigureAwait(false);
-								   //if (Player.isAvatarOrTest)
-								   //{
-								   // AppS.DispatchOnUIThreadLow(() =>
-								   // {
-								   // // create a timer for precense updates
-								   // presenceTimer = new DispatcherTimer();
-								   //  presenceTimer.Interval = TimeSpan.FromSeconds(16);
-								   //  presenceTimer.Tick += PresenceTimer_Tick; ;
-								   //  presenceTimer.Start();
-								   // // Seed it off
+								   //await 
+								   //while(!ppdtInitialized || !Alliance.diplomacyFetched)
+									  // await Task.Delay(500).ConfigureAwait(false);
+								   ////if (Player.isAvatarOrTest)
+								   ////{
+								   //// AppS.DispatchOnUIThreadLow(() =>
+								   //// {
+								   //// // create a timer for precense updates
+								   //// presenceTimer = new DispatcherTimer();
+								   ////  presenceTimer.Interval = TimeSpan.FromSeconds(16);
+								   ////  presenceTimer.Tick += PresenceTimer_Tick; ;
+								   ////  presenceTimer.Start();
+								   //// // Seed it off
 
-								   //});
-								   // PresenceTimer_Tick(null, null); // seed it off, but only after our token has time to have been set
-								   //}
+								   ////});
+								   //// PresenceTimer_Tick(null, null); // seed it off, but only after our token has time to have been set
+								   ////}
 								   break;
 							   }
 						   // city lists
@@ -2799,13 +2812,15 @@ namespace CnV
 								   break;
 							   }
 						   case "chat":
-							   {
-								   AppS.DispatchOnUIThreadLow(() => ChatTab.ProcessIncomingChat(jsp));
+						   {
+							   var jsv = jsp.Value.Clone();
+								   AppS.DispatchOnUIThreadLow(() => ChatTab.ProcessIncomingChat(jsv));
 
 								   break;
 							   }
 						   case "chatin":
-							   AppS.DispatchOnUIThreadLow(() => ChatTab.PasteToChatInput(jsp.Value.GetString()));
+							   var s = jsp.Value.GetString();
+							   AppS.DispatchOnUIThreadLow(() => ChatTab.PasteToChatInput(s));
 							   break;
 						   case "copyclip":
 							   {

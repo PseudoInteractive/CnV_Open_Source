@@ -710,7 +710,7 @@ namespace CnV.Game
 						wantSelect = false;
 						wantRaidScan = false;
 						break;
-					case nameof(City.dungeonsToggle):
+					case "+":
 						{
 							ShowDungeons();
 							wantRaidScan = false;
@@ -1526,8 +1526,8 @@ namespace CnV.Game
 				{
 
 					var grid = gridX.Key;
-
-					if (!gridX.Value.isFocused)
+					
+					if (!gridX.Value?.isFocused == true)
 						continue;
 
 					if (grid.IsCityGrid())
@@ -1754,7 +1754,7 @@ namespace CnV.Game
 					{
 						DateTimeOffset? time = null;
 						var ogaStr = await JSClient.view.ExecuteScriptAsync("getOGA()");
-						var jsDoc = JsonDocument.Parse(ogaStr.Replace("\\\"","\"").Trim('"'));
+						using var jsDoc = JsonDocument.Parse(ogaStr.Replace("\\\"","\"").Trim('"'));
 						foreach (var i in jsDoc.RootElement.EnumerateArray())
 						{
 							try
@@ -2168,7 +2168,7 @@ namespace CnV.Game
 		private async void CancelAttacks(object sender, RoutedEventArgs e)
 		{
 			var ogaStr = await JSClient.view.ExecuteScriptAsync("getOGA()");
-			var js = JsonDocument.Parse(ogaStr.Replace("\\\"","\"").Trim('"'));
+			using var js = JsonDocument.Parse(ogaStr.Replace("\\\"","\"").Trim('"'));
 			
 	
 			foreach(var (i,o) in new JsonArrayEnumerator(js.RootElement) )

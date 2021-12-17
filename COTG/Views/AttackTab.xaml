@@ -397,6 +397,7 @@
 		<tk:GridSplitter Grid.Row="2"
                          ResizeDirection="Rows"
                          Height="11"
+                         Background="Transparent"
 						 			
 				GripperCursor="SizeNorthSouth"
                          HorizontalAlignment="Stretch"

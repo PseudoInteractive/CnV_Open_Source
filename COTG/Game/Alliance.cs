@@ -108,6 +108,7 @@ namespace CnV.Game
 
 		public static bool alliancesFetched;
 		public static Task alliancesFetchedTask = new(() => { });
+		public static Task diplomacyFetchedTask = new(() => { });
 		public static SortedList<byte, byte> diplomacy = new SortedList<byte, byte>(); // small Dictionary
 		public static Alliance none = new Alliance() { id = 0, name = "No Alliance" };
 		enum AllianceInitializationStage
@@ -199,7 +200,7 @@ namespace CnV.Game
 			nameToId = new Dictionary<string, int>(_nameToId);
 			all = new Dictionary<int, Alliance>(_all);
 			diplomacyFetched = true;
-
+			diplomacyFetchedTask.RunSynchronously();
 			 // wait for player info to be fetched
 			for (; ; )
 			{
@@ -228,55 +229,65 @@ namespace CnV.Game
 					}
 				}
 
-				foreach (var _al in alliances)
+				int count = alliances.Count;
+				var tasks = new Task<JsonDocument>[count];
+				for(int alId =0;alId < count;++alId)
 				{
-					var alName = _al;
+					var alName = alliances[alId];
 					// var al = _al;
 					// does this not get a complete list of allianceas?
-					using (var jsa = await Post.SendForJson("includes/gAd.php", "a=" + System.Web.HttpUtility.UrlEncode(alName)))
-					{
-						if (jsa != null)
-						{
-							var id = jsa.RootElement.GetAsInt("id");
-							if (all.TryGetValue(id, out var al) == false)
-							{
-								al = new Alliance() { id = id, name = alName };
-								_all.TryAdd(id, al);
-								_nameToId.TryAdd(alName, id);
-							}
+					tasks[alId]=( Post.SendForJson("includes/gAd.php", "a=" + System.Web.HttpUtility.UrlEncode(alName)));
+				}
+				await Task.WhenAll(tasks);
+				for(int alId = 0; alId < count; ++alId)
+				{
+					var alName = alliances[alId];
+					var t = tasks[alId];
 
-							// _all.Add(id, al); _nameToId.Add(alName, id);
-							int counter = 0;
-							if (jsa.RootElement.TryGetProperty("me", out var meList))
+						using var jsa = t.Result;
+						{
+							if (jsa != null)
 							{
-								foreach (var me in meList.EnumerateArray())
+								var id = jsa.RootElement.GetAsInt("id");
+								if (all.TryGetValue(id, out var al) == false)
 								{
-									var meName = me.GetString("n");
-									if (meName == null)
+									al = new Alliance() { id = id, name = alName };
+									_all.TryAdd(id, al);
+									_nameToId.TryAdd(alName, id);
+								}
+
+								// _all.Add(id, al); _nameToId.Add(alName, id);
+								int counter = 0;
+								if (jsa.RootElement.TryGetProperty("me", out var meList))
+								{
+									foreach (var me in meList.EnumerateArray())
 									{
-										//Log("Missing name? " + counter);
-										//foreach (var member in me.EnumerateObject())
-										//{
-										//    Log($"{member.Name}:{member.Value.ToString()}");
-										//}
-									}
-									else if (Player.nameToId.TryGetValue(meName, out var pId))
-									{
-										++counter;
-										var p = Player.all[pId];
-										p.alliance = (ushort)id;
-										// p.cities = (byte)me.GetInt("c");
-										p.points = (me.GetInt("s"));
-									}
-									else
-									{
-										Log("Error: " + meName);
+										var meName = me.GetString("n");
+										if (meName == null)
+										{
+											//Log("Missing name? " + counter);
+											//foreach (var member in me.EnumerateObject())
+											//{
+											//    Log($"{member.Name}:{member.Value.ToString()}");
+											//}
+										}
+										else if (Player.nameToId.TryGetValue(meName, out var pId))
+										{
+											++counter;
+											var p = Player.all[pId];
+											p.alliance = (ushort) id;
+											// p.cities = (byte)me.GetInt("c");
+											p.points = (me.GetInt("s"));
+										}
+										else
+										{
+											Log("Error: " + meName);
+										}
 									}
 								}
 							}
 						}
 					}
-				}
 			}
 			catch (Exception e)
 			{

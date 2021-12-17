@@ -82,7 +82,7 @@ namespace CnV.Views;
 
 		}
 
-		protected void SpotSelectionChanged(object sender,GridSelectionChangedEventArgs e)
+		internal void SpotSelectionChanged(object sender,GridSelectionChangedEventArgs? e)
 		{
 			if(!isFocused)
 				return;
@@ -105,8 +105,13 @@ namespace CnV.Views;
 				}
 			}
 		}
+		public void SelectAllWorkAround(xDataGrid grid)
+		{
+			grid.SelectAll();
+			SpotSelectionChanged(grid, null);
+		}
 
-		public virtual Task VisibilityChanged(bool visible,bool longTerm)
+	public virtual Task VisibilityChanged(bool visible,bool longTerm)
 		{
 			if(visible)
 			{
@@ -307,22 +312,25 @@ namespace CnV.Views;
 			try
 			{
 				e.Handled = true;
-				var uri = new Uri(e.NavigateText);
-
-				if (uri.Scheme == ProtocolActivation.scheme && uri.LocalPath.StartsWith(ProtocolActivation.command))
+				if (e.NavigateText.Contains("://"))
 				{
-					var subStr = uri.LocalPath.AsSpan().Slice(ProtocolActivation.command.Length);
-					if (subStr.StartsWith(returnReinforcement.AsSpan(), StringComparison.Ordinal))
-					{
-						var args = new WwwFormUrlDecoder(subStr.Slice(returnReinforcement.Length).ToString());
+					var uri = new Uri(e.NavigateText);
 
-						Note.Show("ProtoClick");
-						//			var args = Uri.Par
-						//	Reinforcement.ReturnAsync(args.GetFirstValueByName("order").ParseLong().GetValueOrDefault(),args.GetFirstValueByName("pid").ParseInt().GetValueOrDefault());
+					if (uri.Scheme == ProtocolActivation.scheme && uri.LocalPath.StartsWith(ProtocolActivation.command))
+					{
+						var subStr = uri.LocalPath.AsSpan().Slice(ProtocolActivation.command.Length);
+						if (subStr.StartsWith(returnReinforcement.AsSpan(), StringComparison.Ordinal))
+						{
+							var args = new WwwFormUrlDecoder(subStr.Slice(returnReinforcement.Length).ToString());
+
+							Note.Show("ProtoClick");
+							//			var args = Uri.Par
+							//	Reinforcement.ReturnAsync(args.GetFirstValueByName("order").ParseLong().GetValueOrDefault(),args.GetFirstValueByName("pid").ParseInt().GetValueOrDefault());
+
+						}
+
 
 					}
-
-
 				}
 			}
 			catch (Exception ex)

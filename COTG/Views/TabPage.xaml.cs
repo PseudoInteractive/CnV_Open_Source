@@ -41,7 +41,7 @@ namespace CnV.Views
 			{
 				ChatTab.Ctor();
 
-				mainTabs = CreateTabView(ShellPage.instance.topTabs);
+				mainTabs = CreateTabView(ShellPage.instance.rightTabs);
 				secondaryTabs = CreateTabView(ShellPage.instance.spotTabs);
 				ChatTab.tabPage = CreateTabView(ShellPage.instance.chatTabs);
 				tabPages = new[] { mainTabs,secondaryTabs,ChatTab.tabPage };
@@ -282,6 +282,8 @@ namespace CnV.Views
 
 		public static Microsoft.UI.Xaml.Controls.IconSource GetIconForTab(UserTab tab)
 		{
+			if(tab.Tag is null)
+				return new SymbolIconSource() { Symbol = Symbol.Emoji2 };
 			if(tabSymbolIcons.TryGetValue(tab.Tag as string,out var symbol))
 				return new SymbolIconSource() { Symbol = symbol };
 			if(tabFontIcons.TryGetValue(tab.Tag as string,out var glyph))
@@ -290,6 +292,8 @@ namespace CnV.Views
 		}
 		private static IconElement GetOldIconForTab(UserTab tab)
 		{
+			if (tab.Tag is null)
+				return new SymbolIcon() { Symbol = Symbol.Emoji2 };
 			if(tabSymbolIcons.TryGetValue(tab.Tag as string,out var symbol))
 				return new SymbolIcon() { Symbol = symbol };
 			if(tabFontIcons.TryGetValue(tab.Tag as string,out var glyph))
@@ -464,10 +468,11 @@ namespace CnV.Views
 		public MenuFlyoutItem AddTabMenuItem(UserTab tab)
 		{
 			var title = tab.Tag as string;
-
+			Assert(title is not null);
 
 
 			var rv = new MenuFlyoutItem() { DataContext=tab,Text = title,Icon= GetOldIconForTab(tab) };
+
 			void Rv_Click(object sender,RoutedEventArgs e)
 			{
 				((sender as MenuFlyoutItem).DataContext as UserTab).ShowOrAdd(true,page:this);

@@ -1300,10 +1300,16 @@ namespace CnV.Game
 			// reset players	
 
 
-			while (!Alliance.alliancesFetched && counter++ < 64)
+			try
 			{
-				await Task.Delay(1000);
+				await Alliance.alliancesFetchedTask.WaitAsync(TimeSpan.FromSeconds(32)).ConfigureAwait(false);
+
 			}
+			catch (Exception e)
+			{
+				LogEx(e);
+			}
+			
 			if (!isDrawingHeatMap)
 				Task.Run( () => DrawPixels(raw) );
 
@@ -1652,7 +1658,7 @@ namespace CnV.Game
 			}
 			str += "]";
 			const string magic = "X22ssa41aA1522";
-			var jsp = await Post.SendEncryptedForJson("includes/rMp.php", str, magic, Player.activeId);
+			using var jsp = await Post.SendEncryptedForJson("includes/rMp.php", str, magic, Player.activeId);
 			if (jsp != null)
 			{
 				foreach (var o in jsp.RootElement.EnumerateObject())

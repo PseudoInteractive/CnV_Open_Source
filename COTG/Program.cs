@@ -26,7 +26,6 @@ namespace CnV
 	public static class Program
 	{
 		[global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.UI.Xaml.Markup.Compiler"," 0.0.0.0")]
-		[DebuggerNonUserCode()]
 		[STAThread]
 		static void Main(string[] args)
 		{
@@ -43,17 +42,14 @@ namespace CnV
 					}
 					catch (Exception e)
 					{
-						Log(e);
+						System.Diagnostics.Debug.WriteLine(e.ToString()); 
 					}
 				});
 			}
 			catch (Exception e2)
 			{
-				Console.WriteLine(e2.Message);
-				if (Debugger.IsAttached)
-				{
-					Debugger.Break();
-				}
+				System.Diagnostics.Debug.WriteLine(e2.ToString());
+				
 			}
 		}
 

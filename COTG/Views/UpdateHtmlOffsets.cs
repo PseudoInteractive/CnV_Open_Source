@@ -64,7 +64,7 @@ namespace CnV.Views
 				{
 					return;
 				}
-				this.updateLayout = _updateLayout;
+				this.updateLayout |= _updateLayout;
 				base.Go();
 			}
 			public void SizeChanged()
@@ -87,6 +87,8 @@ namespace CnV.Views
 			{
 				if (canvas is null || instance?.grid is null)
 					return Task.CompletedTask;
+				var _updateLayout = this.updateLayout;
+				this.updateLayout = false;
 
 				try
 				{
@@ -98,21 +100,21 @@ namespace CnV.Views
 				gridSize.Y = (gridSize.Y).Max(1.0f);
 
 				float tabWidth = (float)instance.columnTabs.ActualWidth;
-				float topTabHeight = (float) instance.topTabs.ActualHeight;
+				float topTabHeight = (float) instance.rightTabs.ActualHeight;
 				int webWidth;
-				if (!updateLayout )
+				if (!_updateLayout )
 				{
 					webWidth =instance.columnHtml.ActualWidth.RoundToInt();
 					c.htmlScale = ( (float)webWidth / htmlBaseWidth);
 				}
 				else
 				{
-					webWidth = (c.htmlScale*htmlBaseWidth).RoundToInt();
+					webWidth = (c.htmlScale*htmlBaseWidth).RoundToInt().Max(4);
 					instance.columnHtml.Width = new(webWidth);
 				}
 
 				var zoom = c.htmlScale;
-				var htmlVisible = zoom > 0.125f;
+				var htmlVisible = webWidth > 4;
 				int htmlShift = 0;
 				var canvasScaledX = (webWidth);
 				Assert( (webWidth-htmlBaseWidth*zoom).Abs() < 0.75f );
@@ -146,12 +148,12 @@ namespace CnV.Views
 				//		return;
 					//				return AppS.DispatchOnUIThreadLow( ()	=>
 
-						if(updateLayout)
+						if(_updateLayout)
 						{
 							// has it not been modified
 
-							instance.columnChat.Width = new(c.chatWidth*gridSize.X);
-							instance.rowChat.Height = new(c.chatHeight*gridSize.Y);
+							instance.columnChat.Width = new(c.chatWidth.Clamp(0.125f,0.875f)*gridSize.X);
+							instance.rowChat.Height = new(c.chatHeight.Clamp(0.125f, 0.875f)*gridSize.Y);
 						}
 						else
 						{
@@ -162,17 +164,18 @@ namespace CnV.Views
 						if(JSClient.view != null && zoom != webZoomLast)
 						{
 							webZoomLast = zoom;
-							JSClient.view.ExecuteScriptAsync($"document.body.style.zoom={(htmlVisible ? zoom : 1.0f)};");
+							var _zoom = (htmlVisible ? zoom : 1.0f);
+							AppS.DispatchOnUIThreadLow(() => JSClient.view.ExecuteScriptAsync($"document.body.style.zoom={_zoom};") );
 						}
 
 						{
 
 							instance.columnPopup.Width = new(popupLeftMargin);
 							
-								if (updateLayout)
+								if (_updateLayout)
 								{
-									tabWidth = (gridSize.X * c.tabWidth.Max(1.0f/512f));
-									topTabHeight = gridSize.Y * c.tabTopHeight;
+									tabWidth = (gridSize.X * c.tabWidth);
+									topTabHeight = gridSize.Y * c.tabTopHeight.Clamp(1.0f/8.0f,7.0f/8.0f);
 									instance.rowTabTop.Height = new (topTabHeight);
 								}
 								else
@@ -181,7 +184,7 @@ namespace CnV.Views
 									c.tabTopHeight = (float)(topTabHeight/gridSize.Y);
 								}
 
-								tabWidth = tabWidth.Min(gridSize.X - canvasScaledX + popupLeftMargin - 8).Max(0);
+								tabWidth = tabWidth.Min(gridSize.X - canvasScaledX + popupLeftMargin - 8).Max(8);
 								instance.columnTabs.Width = new(tabWidth);
 								rightTabsVisible = tabWidth > 0;
 								//	instance.columnRender.Width = new GridLength(1, GridUnitType.Star); //	GridLength.Auto;//	instance.grid.RowDefinitions[0].Height = new(canvasYOffset);
@@ -190,7 +193,7 @@ namespace CnV.Views
 						instance.webView.Margin= new(htmlShift, 0, 0, 0);
 					TabPage.LayoutChanged();
 						AGame.wantFastRefresh = true;
-					}
+				}
 					catch (Exception ex)
 					{
 						LogEx(ex);

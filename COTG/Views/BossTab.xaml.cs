@@ -39,7 +39,7 @@ namespace CnV.Views
         {
             Assert(instance == null);
             instance = this;
-         
+	         InitializeComponent();
 		}
 
 		//private void gridPointerPress(object sender, PointerRoutedEventArgs e)
@@ -53,10 +53,10 @@ namespace CnV.Views
         private void CityGrid_SelectionChanged(object sender, 
 	        GridSelectionChangedEventArgs e)
         {
-			if (!isFocused)
+			if (!isFocused || !bossGrid.SelectedItems.Any())
 				return;
 
-            var it = e.AddedItems.FirstOrDefault();
+            var it = bossGrid.SelectedItems.First();
             var newSel = it as City;
             Boss.distanceReference = newSel;
             var bosses = new List<Boss>();

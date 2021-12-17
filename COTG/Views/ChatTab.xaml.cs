@@ -527,16 +527,16 @@ namespace CnV.Views
 			}
 		}
 
-		public static void ProcessIncomingChat(JsonProperty jsp)
+		public static void ProcessIncomingChat(JsonElement jsp)
 		{
-			var a = jsp.Value.GetAsInt("a");
+			var a = jsp.GetAsInt("a");
 			switch (a)
 			{
 				case 444:
 				case 555:
 				case 333:
 					{
-						if (!jsp.Value.TryGetProperty("b", out var messages))
+						if (!jsp.TryGetProperty("b", out var messages))
 							break;
 
 						var batch = new List<ChatEntry>();
@@ -578,7 +578,7 @@ namespace CnV.Views
 				case 5:
 				case 3:
 					{
-						var ch = GetChatMessage(jsp.Value);
+						var ch = GetChatMessage(jsp);
 						if (ch.type == ChatEntry.typeWhisperFrom || ch.type == ChatEntry.typeWhisperTo) // whisper
 						{
 							//if (ch.player == "Avatar" && ch.type == ChatEntry.typeWhisperFrom)

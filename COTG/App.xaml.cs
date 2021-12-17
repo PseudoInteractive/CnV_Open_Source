@@ -135,7 +135,18 @@ namespace CnV
 #endif
 								Analytics.SetEnabledAsync(true));
 
-
+			try
+			{
+				var str = CoreWebView2Environment.GetAvailableBrowserVersionString();
+				Log(str);
+				//			createWebEnvironmentTask =  CoreWebView2Environment.CreateAsync();
+				AAnalytics.Track("WebView", new Dictionary<string, string>(new [] { new KeyValuePair<string, string>("Version",str) } ));
+			}
+			catch(Exception ex)
+			{
+				await Windows.System.Launcher.LaunchUriAsync(new("https://go.microsoft.com/fwlink/p/?LinkId=2124703", UriKind.Absolute));
+				LogEx(ex);
+			}
 			//#if CRASHES
 			//			bool didAppCrash = await Crashes.HasCrashedInLastSessionAsync();
 			//			if (didAppCrash)
@@ -149,12 +160,13 @@ namespace CnV
 		
 		public App()
 		{
-			Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense("NTI5MjE3QDMxMzkyZTMzMmUzMFZNeEhhNVA0S1B4blBBVjJvWCtRS1NDanJJVnJpSEljWndpbXduU3Z2dVk9");
 			//			services = ConfigureServices();
+			RequestedTheme = ApplicationTheme.Dark;
+			InitializeComponent(); 
 			UnhandledException+=App_UnhandledException;
 
-		InitializeComponent();
-		RequestedTheme = ApplicationTheme.Dark;
+	
+		
 			//try
 			//{
 			//    {
@@ -171,12 +183,12 @@ namespace CnV
 			//	InitializeComponent();
 			instance = this;
 
-			UnhandledException += OnAppUnhandledException;
+//			UnhandledException += OnAppUnhandledException;
 			//Microsoft.Extensions.Hosting.Host.Cre
 			TaskScheduler.UnobservedTaskException+=TaskScheduler_UnobservedTaskException;
-			FocusVisualKind = FocusVisualKind.Reveal;
-			
+
 			// TODO WTS: Add your app in the app center and set your secret here. More at https://docs.microsoft.com/appcenter/sdk/getting-started/uwp
+			Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense("NTI5MjE3QDMxMzkyZTMzMmUzMFZNeEhhNVA0S1B4blBBVjJvWCtRS1NDanJJVnJpSEljWndpbXduU3Z2dVk9");
 
 			// Deferred execution until used. Check https://msdn.microsoft.com/library/dd642331(v=vs.110).aspx for further info on Lazy<T> class.
 			_activationService = new Lazy<ActivationService>(CreateActivationService);
@@ -366,7 +378,7 @@ namespace CnV
 			}
 			InputRecieved();
 
-			return ShellPage.DoKeyDown(key);
+			return false;//ShellPage.DoKeyDown(key);
 
 		}
 
@@ -452,17 +464,19 @@ namespace CnV
 		{
 			try
 			{
-				
+
 
 
 				//	Windows.UI.ViewManagement.ApplicationView.PreferredLaunchWindowingMode =Windows.UI.ViewManagement.ApplicationViewWindowingMode.Maximized;// new Size(bounds.Width, bounds.Height);
 				//				Windows.UI.ViewManagement.ApplicationView.GetForCurrentView().TryEnterViewModeAsync(Windows.UI.ViewManagement.ApplicationViewMode.CompactOverlay);
 
+				
 				window= new();
 				AppS.window = window;
 				//	window.
-				
-				
+				FocusVisualKind = FocusVisualKind.Reveal;
+
+
 				//var view = DisplayInformation.GetForCurrentView();
 				var uwpArgs = AppInstance.GetActivatedEventArgs();//args.UWPLaunchActivatedEventArgs;
 				if(uwpArgs.Kind == Windows.ApplicationModel.Activation.ActivationKind.Protocol) 
@@ -512,18 +526,7 @@ namespace CnV
 				Services.StoreHelper.instance.DownloadAndInstallAllUpdatesAsync();
 			}
 
-			try
-			{
-				var str = CoreWebView2Environment.GetAvailableBrowserVersionString();
-				Log(str);
-	//			createWebEnvironmentTask =  CoreWebView2Environment.CreateAsync();
-
-			}
-			catch(Exception ex)
-			{
-				Windows.System.Launcher.LaunchUriAsync(new ("https://go.microsoft.com/fwlink/p/?LinkId=2124703",UriKind.Absolute));
-				LogEx(ex);
-			}
+			
 
 			// if (!args.PrelaunchActivated)
 
@@ -586,6 +589,7 @@ namespace CnV
 				
 
 				this.DebugSettings.FailFastOnErrors = false;
+
 #if  DEBUG
 //			this.DebugSettings.FailFastOnErrors = true;
 #endif

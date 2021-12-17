@@ -84,9 +84,10 @@
     <Content Include="Package.StoreAssociation.xml" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\COTG\COTG.csproj" Exclude="..\COTG\Content\**;COTG\Content\**;COTG\COTG\Content\**" >
+    <ProjectReference Include="..\COTG\COTG.csproj" Exclude="..\COTG\Content\**;COTG\Content\**;COTG\COTG\Content\**">
       <SkipGetTargetFrameworkProperties>True</SkipGetTargetFrameworkProperties>
-      <ExcludeAssets>Content\;COTG\Content\</ExcludeAssets>
+      <ExcludeAssets>
+      </ExcludeAssets>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

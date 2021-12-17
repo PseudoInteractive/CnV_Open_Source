@@ -240,29 +240,34 @@ public static partial class ADataGrid
 		var a = UserTab.dataGrids.Remove(grid);
 		return a;
 	}
-	public static ADataGrid.ChangeContextDisposable SetupDataGrid(this UserTab tab,xDataGrid grid, bool wantChangeContext = false, Type? sourceType = null)
+
+	public static ADataGrid.ChangeContextDisposable SetupDataGrid(this UserTab? tab, xDataGrid grid,
+		bool wantChangeContext = false, Type? sourceType = null)
 	{
 
-		if(Register(tab,grid))
+		if (Register(tab, grid))
 		{
 			var _lock0 = new ADataGrid.ChangeContextDisposable(wantChangeContext ? grid : null);
-			grid.Margin = new(0, 0, 32, 32);
-
+		
 			grid.AlternationCount = 2;
 			grid.AllowTriStateSorting = true;
 			grid.FontStretch = Windows.UI.Text.FontStretch.Condensed;
 			grid.ExpanderColumnWidth = 32;
+			if (tab is not null && grid.IsCityGrid())
+				grid.SelectionChanged += tab.SpotSelectionChanged;
 			grid.FontSize = SettingsPage.smallFontSize;
 			grid.GridContextFlyoutOpening += UserTab.ContextFlyoutOpening;
 			grid.RecordContextFlyout = new();
 			grid.CurrentCellRequestNavigate += UserTab.CelNavigate;
 			grid.CellTapped += ADataGrid.SfCellTapped;
+			grid.AllowGrouping = true;
+			grid.AllowFiltering = true;
 			//				grid.AllowFrozenGroupHeaders = false;
 			grid.ColumnWidthMode = Syncfusion.UI.Xaml.Grids.ColumnWidthMode.AutoLastColumnFill;
 			grid.CellToolTipOpening += UserTab.CellToolTipOpening;
-			if(sourceType is not null || grid.ItemsSource is not null)
+			if (sourceType is not null || grid.ItemsSource is not null)
 				grid.SourceType = sourceType ?? UserTab.GetContainerType(grid.ItemsSource);
-			grid.UseSystemFocusVisuals=true;
+			grid.UseSystemFocusVisuals = true;
 			grid.ShowSortNumbers = true;
 			return _lock0;
 
@@ -271,10 +276,10 @@ public static partial class ADataGrid
 		{
 			return new ADataGrid.ChangeContextDisposable(null);
 		}
-
-		//			grid.LiveDataUpdateMode = Syncfusion.UI.Xaml.Data.LiveDataUpdateMode.AllowChildViewUpdate;
-
 	}
+
+	//			grid.LiveDataUpdateMode = Syncfusion.UI.Xaml.Data.LiveDataUpdateMode.AllowChildViewUpdate;
+	
 
 
 	public static class Statics

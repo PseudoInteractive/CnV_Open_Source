@@ -333,7 +333,7 @@ namespace CnV.Views
 			{
 				if (await AppS.DoYesNoBoxUI("Select All", "Non selected, select all?") != 1)
 					return;
-				cityGrid.SelectAll();
+				SelectAll();
 			}
 			var ret = new List<int>();
 
@@ -365,7 +365,7 @@ namespace CnV.Views
 			{
 				if(await AppS.DoYesNoBox($"{sel.Count} selected","Select all?",cancel:null) == 1)
 				{
-					cityGrid.SelectAll();
+					SelectAll();
 					await Task.Delay(200);
 					sel = Spot.GetSelectedForContextMenu(0,false,onlyMine: true);
 				}
@@ -426,9 +426,9 @@ namespace CnV.Views
 
 		}
 
-		private void SelectAll(object sender, RoutedEventArgs e)
+		private void SelectAll(object? sender=null, RoutedEventArgs? e=null)
 		{
-			cityGrid.SelectAll();
+			SelectAllWorkAround(cityGrid);
 		}
 
 		public void RaidSettings(object sender, RoutedEventArgs e)

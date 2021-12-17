@@ -557,7 +557,8 @@ namespace CnV.Game
 				return false;
 			}
 
-			throw new NotImplementedException();
+			return false;
+			//	throw new NotImplementedException();
 		}
 
 		public static bool operator ==(TroopTypeCounts left,TroopTypeCounts right) => left.Equals(right);

@@ -90,7 +90,7 @@ namespace CnV.Views
 			try
 			{
 				Trace("Trade Stuff update start");
-				var data = await Post.SendForJson("overview/tcounc.php").ConfigureAwait(false);
+				using var data = await Post.SendForJson("overview/tcounc.php").ConfigureAwait(false);
 				//	Trace(data.RootElement.ToString());
 				foreach (var js in data.RootElement[0].EnumerateArray())
 				{

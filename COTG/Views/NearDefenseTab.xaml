@@ -226,7 +226,6 @@
                     RowStyle="{StaticResource DataGridRowStyle}"
 					 IsRightTapEnabled="True"
 					 RightTapped="troopTypeGrid_RightTapped"
-                     Margin="0,14,0,0"
                      CanUserReorderColumns="False"
                      CanUserSortColumns="False"
                      GridLinesVisibility="All"

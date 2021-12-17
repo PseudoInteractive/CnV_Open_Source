@@ -62,16 +62,16 @@ namespace CnV.Services
 		public string s { get; set; }
 	}
 	
-	public class DiscordAllianceDB : ITableEntity
-	{
-		public string PartitionKey { get; set; }
-		public string RowKey { get; set; }
-		public DateTimeOffset? Timestamp { get; set; }
-		public ETag ETag { get; set; }
-		public Int64 ChatID { get; set; }
+	//public class DiscordAllianceDB : ITableEntity
+	//{
+	//	public string PartitionKey { get; set; }
+	//	public string RowKey { get; set; }
+	//	public DateTimeOffset? Timestamp { get; set; }
+	//	public ETag ETag { get; set; }
+	//	public Int64 ChatID { get; set; }
 
 
-	}
+	//}
 
 
 	public class IncomingDB : ITableEntity
@@ -94,12 +94,12 @@ namespace CnV.Services
 
 	static class Tables
 	{
-		const string accountNameCnV = "cnv";
-		const string storageAccountKeyCnV = "EWd320nJYCPBsIJIb53HTQvdauQLpX0zyzXhkmhzNaZLSkXJhhfzeQa6bliSfUWAWyRjlTsvPVtGxSzsfq+Rqw==";
-		static string tableNameDiscord => $"Discord{JSClient.world}";
-		const string storageUriCnV = "https://" + accountNameCnV + ".table.core.windows.net/";
-		static bool tableClientCnVInitialized;
-		static ATable<DiscordAllianceDB> tableDiscord;
+	//	const string accountNameCnV = "cnv";
+	//	const string storageAccountKeyCnV = "EWd320nJYCPBsIJIb53HTQvdauQLpX0zyzXhkmhzNaZLSkXJhhfzeQa6bliSfUWAWyRjlTsvPVtGxSzsfq+Rqw==";
+	//	static string tableNameDiscord => $"Discord{JSClient.world}";
+	//	const string storageUriCnV = "https://" + accountNameCnV + ".table.core.windows.net/";
+	//	static bool tableClientCnVInitialized;
+	//	static ATable<DiscordAllianceDB> tableDiscord;
 
 		const string accountName = "avata";
 		const string storageUri = "https://" + accountName + ".table.core.windows.net/";
@@ -139,26 +139,26 @@ namespace CnV.Services
 			return incTableClient = GetServiceClient().Table<IncomingDB>(incTableName);
 		}
 
-		static public async Task<ATable<DiscordAllianceDB> > TouchCnV()
-		{
-			if (!tableClientCnVInitialized)
-			{
-				tableClientCnVInitialized=true;
-				for (int counter = 0; counter < 32; ++counter)
-				{
-					if (Alliance.alliancesFetched)
-					{
-						tableDiscord = new ATableService(
-							new Uri(storageUriCnV),
-							new TableSharedKeyCredential(accountNameCnV, storageAccountKeyCnV)).Table<DiscordAllianceDB>(tableNameDiscord);
-						break;
-					}
+		//static public async Task<ATable<DiscordAllianceDB> > TouchCnV()
+		//{
+		//	if (!tableClientCnVInitialized)
+		//	{
+		//		tableClientCnVInitialized=true;
+		//		for (int counter = 0; counter < 32; ++counter)
+		//		{
+		//			if (Alliance.alliancesFetched)
+		//			{
+		//				tableDiscord = new ATableService(
+		//					new Uri(storageUriCnV),
+		//					new TableSharedKeyCredential(accountNameCnV, storageAccountKeyCnV)).Table<DiscordAllianceDB>(tableNameDiscord);
+		//				break;
+		//			}
 
-					await Task.Delay(1000).ConfigureAwait(false);
-				}
-			}
-			return tableDiscord;
-		}
+		//			await Task.Delay(1000).ConfigureAwait(false);
+		//		}
+		//	}
+		//	return tableDiscord;
+		//}
 
 		//static public async Task<ulong> GetDiscordChatId()
 		//{

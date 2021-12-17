@@ -487,7 +487,7 @@ namespace CnV.Views
 //				Trace("MouseEnterred");
 			}
 			UpdateMousePosition(args);
-			TakeFocus();
+		//	TakeFocus();
 
 			//			Log($"!Focus11: {hasKeyboardFocus} w{webviewHasFocus} w2{webviewHasFocus2}");
 			hasKeyboardFocus=false;
@@ -1137,7 +1137,7 @@ namespace CnV.Views
 			
 			//	PointerInfo(e);
 			UpdateMousePosition(point.Position);
-			TakeFocusIfAppropriate();
+		//	TakeFocusIfAppropriate();
 			UpdateFocus();
 			if (!isFocused)
 				return;

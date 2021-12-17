@@ -72,7 +72,7 @@ namespace CnV.Game
 			var snap = new Snapshot();
 			snap.time = SmallTime.serverNow;
 			{
-				var js = await Post.SendForJson("includes/gR.php", "a=0&b=56");
+				using var js = await Post.SendForJson("includes/gR.php", "a=0&b=56");
 				// score, cities, alliance
 				foreach (var i in js.RootElement[0].EnumerateArray())
 				{
@@ -414,7 +414,7 @@ namespace CnV.Game
 						}
 						{
 							// offense ts
-							var js = await Post.SendForJson("includes/gR.php", $"a=17&b={contId.y}{contId.x}");
+							using var js = await Post.SendForJson("includes/gR.php", $"a=17&b={contId.y}{contId.x}");
 							// score, cities, alliance
 							foreach (var i in js.RootElement.GetProperty("17").EnumerateArray())
 							{
@@ -441,7 +441,7 @@ namespace CnV.Game
 						}
 						{
 							// defense ts
-							var js = await Post.SendForJson("includes/gR.php", $"a=18&b={contId.y}{contId.x}");
+							using var js = await Post.SendForJson("includes/gR.php", $"a=18&b={contId.y}{contId.x}");
 							// score, cities, alliance
 							foreach (var i in js.RootElement.GetProperty("18").EnumerateArray())
 							{

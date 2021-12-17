@@ -53,20 +53,20 @@ ItemsSource="{x:Bind attackerSource,Mode=OneWay}"
                                             HeaderText="inA"
                                             
                                             TextAlignment="Center"
-                                            DisplayNumberFormat="0,1:N0"
+                                            DisplayNumberFormat="N0"
                                              />
                 <sf:GridNumericColumn MappingName="incTotal"
                                             HeaderText="incTS"
                                             
                                             TextAlignment="Right"
-                                            DisplayNumberFormat="0,7:N0"
+                                            DisplayNumberFormat="N0"
                                              />
                 
                 <sf:GridNumericColumn MappingName="tsHome"
                                             HeaderText="Def"
                                             
                                             TextAlignment="Right"
-                                            DisplayNumberFormat="0,7:N0"
+                                            DisplayNumberFormat="N0"
                                              />
                 <sf:GridTextColumn MappingName="playerName" HeaderText="Player"
                                        TextAlignment="Left"
@@ -122,7 +122,7 @@ IsTabStop="True"
                 <sf:GridNumericColumn MappingName="ts"
                                             
                                        TextAlignment="Right"
-                                            DisplayNumberFormat="0,7:N0"
+                                            DisplayNumberFormat="N0"
                                              />
                 <sf:GridTextColumn MappingName="sPlayer"
                                                    HeaderText="Player"
@@ -132,7 +132,7 @@ IsTabStop="True"
                 <sf:GridNumericColumn MappingName="dist"
                                             
                                        TextAlignment="Right"
-                                            DisplayNumberFormat="0,3:N0"
+                                            DisplayNumberFormat="N0"
                                              />
                 <sf:GridTextColumn MappingName="sourceCN"
                                                    HeaderText="City"
@@ -142,7 +142,7 @@ IsTabStop="True"
                 <sf:GridNumericColumn MappingName="dTS"
                                             
                                        TextAlignment="Right"
-                                            DisplayNumberFormat="0,7:N0"
+                                            DisplayNumberFormat="N0"
                                              />
                 <sf:GridTextColumn MappingName="troopInfo"
                                                    

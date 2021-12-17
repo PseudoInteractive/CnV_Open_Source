@@ -1365,7 +1365,7 @@ namespace CnV.Game
 		
 			try
 			{
-				var a = await Post.SendForJson("overview/senfind.php", "a=0");
+				using var a = await Post.SendForJson("overview/senfind.php", "a=0");
 				var empty = Array.Empty<SenatorInfo>();
 				var changed = new HashSet<City>();
 				foreach (var city in City.myCities)

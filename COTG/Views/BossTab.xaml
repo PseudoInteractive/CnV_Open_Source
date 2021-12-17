@@ -10,10 +10,9 @@
     xmlns:sf="using:Syncfusion.UI.Xaml.DataGrid"
       xmlns:tk="using:CommunityToolkit.WinUI.UI.Controls"
       xmlns:local="using:CnV.Views"
-      xmlns:sfdata="using:Syncfusion.UI.Xaml.Data"
+    Tag="Boss"
       xmlns:grids="using:Syncfusion.UI.Xaml.Grids"
-      Tag="Boss"
-			  IsTabStop="True"
+ 			  IsTabStop="True"
     mc:Ignorable="d">
     <Grid>
         <Grid.RowDefinitions>
@@ -47,7 +46,7 @@
                                         />
 				<sf:GridNumericColumn MappingName="homeTroopsAttack"
 												HeaderText="Attack"
-												 DisplayNumberFormat="0,7:N0"
+												 DisplayNumberFormat="N0"
 												
                                                 TextAlignment="Right"
                                         />
@@ -90,7 +89,7 @@
                 <sf:GridNumericColumn  MappingName="dist"
                                                       HeaderText="Hours"
                                                       TextAlignment="Center"
-                                            DisplayNumberFormat="0,4:N2"
+                                            DisplayNumberFormat="N2"
                                              />
                 <sf:GridNumericColumn  MappingName="cont"
                                                       TextAlignment="Center"
@@ -102,6 +101,7 @@
         </sf:SfDataGrid>
         <tk:GridSplitter Grid.Row="1"
                          ResizeDirection="Rows"
+                         Background="Transparent"
                                      						 				IsTabStop="True"
 								CursorBehavior="ChangeOnSplitterHover"
 				

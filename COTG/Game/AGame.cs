@@ -772,7 +772,7 @@ namespace CnV
 
 		public static void LoadWorldBackground()
 		{
-			worldBackground = LoadMaterial($"Art/world{((JSClient.world&1) switch { 1 => "23", _ => "22" })}");
+			worldBackground = LoadMaterial($"Art/world{(JSClient.world>=26? 26 :((JSClient.world&1) switch { 1 => "23", _ => "22" }))}");
 
 		}
 		protected override async void LoadContent()
@@ -2551,10 +2551,10 @@ namespace CnV
 				lineThickness *= 2;
 			var shadowColor = ShadowColor(1.0f,highlight);
 		//	if(wantShadow)
-				DrawLine(Layer.effectShadow,c0,c1,GetLineUs(c0,c1),shadowColor,zEffectShadow,thickness: lineThickness);
+			//	DrawLine(Layer.effectShadow,c0,c1,GetLineUs(c0,c1),shadowColor,zEffectShadow,thickness: lineThickness);
 			if(applyStopDistance && wantShadow)
 				DrawSquare(Layer.effectShadow,c0,shadowColor,zEffectShadow);
-			DrawLine(Layer.action + 2,c0,mid,GetLineUs(c0,mid),color,zLabels,thickness: lineThickness);
+			DrawLine(Layer.action + 2,c0, c1, GetLineUs(c0, c1),color,zLabels,thickness: lineThickness);
 			if(applyStopDistance)
 				DrawSquare(Layer.action + 3,new Vector2(c0.X,c0.Y),color,zLabels);
 			//var dc = new Vector2(spriteSize, spriteSize);

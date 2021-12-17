@@ -87,30 +87,36 @@ namespace CnV.Views
 			else
 			{
 				// Not listening
-				AppS.DispatchOnUIThreadLow(() =>
-				{
-					blessedGrid.ItemsSource = null;
-					//    donationGrid.ItemsSource = null;
-				});
-				BlessedCity.senderCity = null;
+				ClearBlessedCity();
+				
 			}
 
 			await base.VisibilityChanged(visible, longTerm: longTerm);
 
 		}
 
-
-
+		public static void ClearBlessedCity()
+		{
+			AppS.QueueOnUIThread(() =>
+			{
+				instance.blessedGrid.ItemsSource = Array.Empty<BlessedCity>();
+				//    donationGrid.ItemsSource = null;
+		//		BlessedCity.senderCity = null;
+			});
+		}
 
 
 		private void donationGrid_SelectionChanged(object? sender, GridSelectionChangedEventArgs e)
 		{
-			if (!isOpen)
+			if (!isFocused)
 				return;
-
-			var it = e.AddedItems.FirstOrDefault();
-			var newSel = it as City;
-			blessedGrid.ItemsSource = BlessedCity.GetForCity(newSel);
+			if(donationGrid.SelectedItems.Any())
+			{
+				var newSel = donationGrid.SelectedItems.First() as City;
+				blessedGrid.ItemsSource = BlessedCity.GetForCity(newSel);
+			
+			
+			}
 		}
 
 
