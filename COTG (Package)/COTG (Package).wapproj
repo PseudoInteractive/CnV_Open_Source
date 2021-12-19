@@ -24,16 +24,16 @@
     <SelfContained>true</SelfContained>
     <DefaultLanguage>en-US</DefaultLanguage>
     <EntryPointProjectUniqueName>..\COTG\COTG.csproj</EntryPointProjectUniqueName>
-    <PackageCertificateThumbprint>5DC3522778776B8DC772B28B915990F3B4487888</PackageCertificateThumbprint>
     <AppxPackageSigningEnabled>True</AppxPackageSigningEnabled>
     <GenerateAppInstallerFile>False</GenerateAppInstallerFile>
     <AppxPackageSigningTimestampDigestAlgorithm>SHA256</AppxPackageSigningTimestampDigestAlgorithm>
-    <AppxAutoIncrementPackageRevision>True</AppxAutoIncrementPackageRevision>
+    <AppxAutoIncrementPackageRevision>False</AppxAutoIncrementPackageRevision>
     <GenerateTestArtifacts>True</GenerateTestArtifacts>
     <AppxBundle>Always</AppxBundle>
     <AppxBundlePlatforms>x64</AppxBundlePlatforms>
     <HoursBetweenUpdateChecks>0</HoursBetweenUpdateChecks>
-    <AppxSymbolPackageEnabled>True</AppxSymbolPackageEnabled>
+    <AppxSymbolPackageEnabled>False</AppxSymbolPackageEnabled>
+    <PackageCertificateKeyFile>COTG %28Package%29_TemporaryKey.pfx</PackageCertificateKeyFile>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <AppxBundle>Always</AppxBundle>
@@ -81,6 +81,7 @@
     <Content Include="Assets\Wide310x150Logo.scale-100.png" />
     <Content Include="Assets\Wide310x150Logo.scale-200.png" />
     <Content Include="Assets\Wide310x150Logo.scale-400.png" />
+    <None Include="COTG %28Package%29_TemporaryKey.pfx" />
     <Content Include="Package.StoreAssociation.xml" />
   </ItemGroup>
   <ItemGroup>
@@ -91,14 +92,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.ProjectReunion" Version="0.8.5">
-      <IncludeAssets>build</IncludeAssets>
-      <ExcludeAssets>Microsoft.ProjectReunion.InteractiveExperiences</ExcludeAssets>
-    </PackageReference>
-    <PackageReference Include="Microsoft.ProjectReunion.WinUI" Version="0.8.5">
-      <IncludeAssets>build</IncludeAssets>
-      <ExcludeAssets>Microsoft.ProjectReunion.InteractiveExperiences</ExcludeAssets>
-    </PackageReference>
+    <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.0.0" />
   </ItemGroup>
   <Import Project="$(WapProjPath)\Microsoft.DesktopBridge.targets" />
 </Project>

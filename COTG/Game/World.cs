@@ -426,7 +426,7 @@ namespace CnV.Game
 		}
 		public static Microsoft.Xna.Framework.Color GetTint(int packedId)
 		{
-			if (!SettingsPage.tintCities || !Alliance.diplomacyFetched)
+			if (!SettingsPage.tintCities || !Alliance.diplomacyFetchedTask)
 				return new Color(255, 255, 255, 255);
 			//	var packedId = GetPackedId(xy);
 			uint rv = raw[packedId];
@@ -1302,7 +1302,7 @@ namespace CnV.Game
 
 			try
 			{
-				await Alliance.alliancesFetchedTask.WaitAsync(TimeSpan.FromSeconds(32)).ConfigureAwait(false);
+				await Alliance.alliancesFetchedTask.t.WaitAsync(TimeSpan.FromSeconds(132)).ConfigureAwait(false);
 
 			}
 			catch (Exception e)

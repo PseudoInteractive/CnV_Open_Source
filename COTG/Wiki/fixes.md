@@ -382,12 +382,12 @@
    - If you have a good graphics card it won't make a difference
      - If so you are probably limited by RAM and RAM speed, or CPU
      - An exception is 4k+ screens which can be taxing on all but _very_ good graphics cards
+	 - Previously the default was 1 (full quality)
    - Lower settings should help most laptops
  - **Screen Layouts** allow you to change between different layouts of the various screen elements depending on what you are doing
   - The App remembers 6 (saved in settings)
   - You can select a layout using:
     - The top left (last I checked) Layout Button to choose
-    - control+1 to choose
-    - control+2..control..8 to switch immediately
+    - control+1..control..7 to switch between them
   - When you are using a setting (say setting 0) any adjustments to element sizes will be saved to setting 0 and if you switch to another setting and back it will remember.
   - Added a gripper to adjust the Left HTML panel scale (replaces HTML Zoom), drag all the way to the left to (almost) hide it.  This is also saved in layouts

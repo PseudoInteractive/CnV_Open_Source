@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using System.Web;
 
 using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
 using static CnV.Game.City;
 using System.Text.RegularExpressions;
@@ -17,6 +16,11 @@ namespace CnV.Views
 	using Game;
 	using Helpers;
 	using Services;
+	using ContentDialog = Microsoft.UI.Xaml.Controls.ContentDialog;
+	using ContentDialogButtonClickEventArgs = Microsoft.UI.Xaml.Controls.ContentDialogButtonClickEventArgs;
+	using SelectionChangedEventArgs = Microsoft.UI.Xaml.Controls.SelectionChangedEventArgs;
+	using TeachingTip = Microsoft.UI.Xaml.Controls.TeachingTip;
+	using TextChangedEventArgs = Microsoft.UI.Xaml.Controls.TextChangedEventArgs;
 
 	//	record ab(string a=null, string b=null);
 	[Flags]

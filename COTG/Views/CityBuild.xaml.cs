@@ -37,6 +37,7 @@ namespace CnV.Views
 	using Draw;
 	using Game;
 	using Helpers;
+	//// using PInvoke
 
 	public sealed partial class CityBuild : Microsoft.UI.Xaml.Controls.UserControl
 	{
@@ -145,27 +146,27 @@ namespace CnV.Views
 
 			
 
-				switch(action)
-			  {
-				  case Action.moveStart:
-					  App.cursorMoveStart.Set();
-					  break;
-				  case Action.moveEnd:
-					  App.cursorMoveEnd.Set();
-					  break;
-				  case Action.destroy:
-					  App.cursorDestroy.Set();
-					  break;
-				  case Action.build:
-					  App.cursorQuickBuild.Set();
-					  break;
-				  case Action.layout:
-					  App.cursorLayout.Set();
-					  break;
-				  default:
-					  App.cursorDefault.Set();
-					  break;
-			  }
+				//switch(action)
+			 // {
+				//  case Action.moveStart:
+				//	  App.cursorMoveStart.Set();
+				//	  break;
+				//  case Action.moveEnd:
+				//	  App.cursorMoveEnd.Set();
+				//	  break;
+				//  case Action.destroy:
+				//	  App.cursorDestroy.Set();
+				//	  break;
+				//  case Action.build:
+				//	  App.cursorQuickBuild.Set();
+				//	  break;
+				//  case Action.layout:
+				//	  App.cursorLayout.Set();
+				//	  break;
+				//  default:
+				//	  App.cursorDefault.Set();
+				//	  break;
+			 // }
 		  
 			//	AppS.DispatchOnUIThreadLow( ()=> instance.quickBuild.SelectedIndex = (int)_action ); /// the first 3 are mapped. this triggers a selected changed event
 		}

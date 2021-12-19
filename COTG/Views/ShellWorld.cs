@@ -24,11 +24,11 @@ using Cysharp.Text;
 using EnumsNET;
 using Microsoft.UI.Input;
 using Microsoft.UI.Dispatching;
-using PointerEventArgs = Microsoft.UI.Input.Experimental.ExpPointerEventArgs;
-using PointerPoint = Microsoft.UI.Input.Experimental.ExpPointerPoint;
-using PointerUpdateKind = Windows.UI.Input.PointerUpdateKind;
+//using PointerEventArgs = Microsoft.UI.Input.Experimental.ExpPointerEventArgs;
+//using PointerPoint = Microsoft.UI.Input.Experimental.ExpPointerPoint;
+//using PointerUpdateKind = Windows.UI.Input.PointerUpdateKind;
 //using Windows.UI.Core;
-using Microsoft.UI.Input.Experimental;
+//using Microsoft.UI.Input.Experimental;
 using CnV;
 //using InputPointerSource = ;//Microsoft.UI.Input.Experimental.expin;
 namespace CnV.Views
@@ -39,7 +39,7 @@ namespace CnV.Views
 
 	public partial class ShellPage
 	{
-		public static Microsoft.UI.Input.Experimental.ExpIndependentPointerInputObserver coreInputSource;
+		public static InputPointerSource coreInputSource;
 
 		public static Vector2 mousePosition;
 		public static Vector2 mousePositionC; // in camera space
@@ -63,79 +63,74 @@ namespace CnV.Views
 
 			//	var workItemHandler = new WorkItemHandler((action) =>
 			//{
-			
-				try
-				{
-				
-		
-			_queuecontroller = DispatcherQueueController.CreateOnDedicatedThread();
-				_queuecontroller.DispatcherQueue.TryEnqueue(DispatcherQueuePriority.High,
-					() =>
-					{
-						try
-						{
+
+			try
+			{
+
+
+				canvas.DispatcherQueue.TryEnqueue( () =>
+				   {
+					   try
+					   {
 							// Set up the pointer input source to receive pen input for the swap chain panel.
-							coreInputSource = canvas.CreateCoreIndependentInputSource(Windows.UI.Core.CoreInputDeviceTypes.Mouse);
+							coreInputSource = canvas.CreateCoreIndependentInputSource(InputPointerSourceDeviceKinds.Mouse | InputPointerSourceDeviceKinds.Pen|InputPointerSourceDeviceKinds.Touch);
 
 
 							//	Log(canvas.ManipulationMode);
 							//	canvas.ManipulationMode = ManipulationModes.All;
 							coreInputSource.PointerMoved+=CoreInputSource_PointerMoved;
-							coreInputSource.PointerPressed+=CoreInputSource_PointerPressed; ;
-							coreInputSource.PointerReleased+=CoreInputSource_PointerReleased; ;
-							coreInputSource.PointerEntered+=CoreInputSource_PointerEntered; ;
-							coreInputSource.PointerExited+=CoreInputSource_PointerExited; ;
-							coreInputSource.PointerCaptureLost += CoreInputSource_PointerCaptureLost;
+						   coreInputSource.PointerPressed+=CoreInputSource_PointerPressed; ;
+						   coreInputSource.PointerReleased+=CoreInputSource_PointerReleased; ;
+						   coreInputSource.PointerEntered+=CoreInputSource_PointerEntered; ;
+						   coreInputSource.PointerExited+=CoreInputSource_PointerExited; ;
+						   coreInputSource.PointerCaptureLost += CoreInputSource_PointerCaptureLost;
 
-							coreInputSource.PointerWheelChanged += Canvas_PointerWheelChanged;
+						   coreInputSource.PointerWheelChanged += Canvas_PointerWheelChanged;
 
 
-						}
-						catch(Exception __ex)
-						{
-							Debug.LogEx(__ex);
-						}
+					   }
+					   catch(Exception __ex)
+					   {
+						   Debug.LogEx(__ex);
+					   }
 
-					//coreInputSource.PointerCursor = 
-					//			coreInputSource.Dispatcher.ProcessEvents(CoreProcessEventsOption.ProcessUntilQuit);
-					//				coreInputSource.IsInputEnabled = true;
-					//		App.cursorDefault.Set();
 
-				});
-				//	catch(Exception __ex)
-				//	{
-				//		Debug.LogEx(__ex);
-				//	}
+				   });
+			}
+					catch(Exception __ex)
+			{
+				Debug.LogEx(__ex);
+			}
 				
-			//	);
+				
 		}
-				catch(Exception ex)
-				{
-					Log(ex);
-				} ;
+		//		catch(Exception ex)
+		//		{
+		//			Log(ex);
+		//		} ;
 
 		//	});
 
-			//}//);
-//		
-	//	var inputWorker = ThreadPool.RunAsync(workItemHandler,WorkItemPriority.High,WorkItemOptions.TimeSliced);
+		//}//);
+		//		
+		//	var inputWorker = ThreadPool.RunAsync(workItemHandler,WorkItemPriority.High,WorkItemOptions.TimeSliced);
 
-	}
+	
 
-		private static void CoreInputSource_PointerExited(ExpPointerInputObserver sender,PointerEventArgs args)
+		private static void CoreInputSource_PointerExited(InputPointerSource sender,PointerEventArgs args)
 		{
 			args.KeyModifiers.UpdateKeyModifiers();
 			Canvas_PointerExited(args.CurrentPoint.Position, args.CurrentPoint.PointerId);
 		}
 
-		private static void CoreInputSource_PointerEntered(ExpPointerInputObserver sender,PointerEventArgs args)
+		private static void CoreInputSource_PointerEntered(InputPointerSource sender,PointerEventArgs args)
 		{
 			args.KeyModifiers.UpdateKeyModifiers();
 
 			Canvas_PointerEntered(args.CurrentPoint.Position);
 		}
 
-		private static void CoreInputSource_PointerReleased(ExpPointerInputObserver sender,PointerEventArgs args)
+		private static void CoreInputSource_PointerReleased(InputPointerSource sender,PointerEventArgs args)
 		{
 			args.KeyModifiers.UpdateKeyModifiers();
 
@@ -144,7 +139,7 @@ namespace CnV.Views
 
 		}
 //		public static PointerUpdateKind GetPointerUpdateKind()
-		private static void CoreInputSource_PointerPressed(ExpPointerInputObserver sender,PointerEventArgs args)
+		private static void CoreInputSource_PointerPressed(InputPointerSource sender,PointerEventArgs args)
 		{
 			var point = args.CurrentPoint;
 			args.KeyModifiers.UpdateKeyModifiers();
@@ -152,7 +147,7 @@ namespace CnV.Views
 
 		}
 
-		public static void CoreInputSource_PointerMoved(ExpPointerInputObserver sender,Microsoft.UI.Input.Experimental.ExpPointerEventArgs e)
+		public static void CoreInputSource_PointerMoved(InputPointerSource sender, PointerEventArgs e)
 		{
 			var point = e.CurrentPoint;
 			e.KeyModifiers.UpdateKeyModifiers();
@@ -161,11 +156,13 @@ namespace CnV.Views
 
 		public static void SetupNonCoreInput()
 		{
-			canvas.PointerMoved+=KeyboardProxy_PointerMoved;
-			canvas.PointerPressed+=KeyboardProxy_PointerPressed;
-			canvas.PointerReleased+=KeyboardProxy_PointerReleased;
-			canvas.PointerEntered+=KeyboardProxy_PointerEntered;
-			canvas.PointerExited +=KeyboardProxy_PointerExited;
+			//Canvas_PointerWheelChanged(mouseState, priorMouseState);
+
+			//canvas.PointerMoved+=KeyboardProxy_PointerMoved;
+			//canvas.PointerPressed+=KeyboardProxy_PointerPressed;
+			//canvas.PointerReleased+=KeyboardProxy_PointerReleased;
+			//canvas.PointerEntered+=KeyboardProxy_PointerEntered;
+			//canvas.PointerExited +=KeyboardProxy_PointerExited;
 		}
 
 		private static void KeyboardProxy_PointerExited(object sender,PointerRoutedEventArgs e)
@@ -470,7 +467,7 @@ namespace CnV.Views
 
 
 
-		private static void CoreInputSource_PointerCaptureLost(Microsoft.UI.Input.Experimental.ExpPointerInputObserver sender, PointerEventArgs args)
+		private static void CoreInputSource_PointerCaptureLost(InputPointerSource sender, PointerEventArgs args)
 		{
 			Log("pointer lost");
 		
@@ -648,8 +645,8 @@ namespace CnV.Views
 			// why do this trigger gestures?
 			switch (point.PointerUpdateKind)
 			{
-				case Windows.UI.Input.PointerUpdateKind.XButton1Released:
-				case Windows.UI.Input.PointerUpdateKind.XButton2Released:
+				case PointerUpdateKind.XButton1Released:
+				case PointerUpdateKind.XButton2Released:
 					return;
 			}
 			mousePosition = gestureResult.c;
@@ -1010,7 +1007,7 @@ namespace CnV.Views
 		}
 
 
-		private static void Canvas_PointerWheelChanged(Microsoft.UI.Input.Experimental.ExpPointerInputObserver sender, PointerEventArgs e)
+		private static void Canvas_PointerWheelChanged(InputPointerSource sender, PointerEventArgs e)
 		{
 			var point = e.CurrentPoint.Position;
 			var scroll = e.CurrentPoint.Properties.MouseWheelDelta;

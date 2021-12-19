@@ -10,7 +10,8 @@ using Microsoft.UI.Xaml.Media.Imaging;
 
 namespace CnV.Helpers
 {
-    public static class ImageHelper
+
+	public static class ImageHelper
     {
         //public static async Task<BitmapImage> ImageFromStringAsync(string data)
         //{

@@ -54,7 +54,6 @@ namespace CnV.Game
 			return nameToId.GetValueOrDefault(s);
 		}
 
-		public static bool diplomacyFetched;
 
 		public static bool PartNameToId(string name, out int id)
 		{
@@ -83,10 +82,10 @@ namespace CnV.Game
 
 			return string.Empty;
 		}
-
+		public static DummyTask diplomacyFetchedTask;
 		public static Diplomacy GetDiplomacy(int allianceId)
 		{
-			Assert(diplomacyFetched);
+			Assert(diplomacyFetchedTask);
 			if (myId == allianceId)
 			{
 				return Diplomacy.allied;
@@ -107,8 +106,7 @@ namespace CnV.Game
 		}
 
 		public static bool alliancesFetched;
-		public static Task alliancesFetchedTask = new(() => { });
-		public static Task diplomacyFetchedTask = new(() => { });
+		public static DummyTask alliancesFetchedTask ;
 		public static SortedList<byte, byte> diplomacy = new SortedList<byte, byte>(); // small Dictionary
 		public static Alliance none = new Alliance() { id = 0, name = "No Alliance" };
 		enum AllianceInitializationStage
@@ -121,7 +119,7 @@ namespace CnV.Game
 		public static async void Ctor(JsonDocument _aldt)
 		{
 			Log("Fetch Aldt");
-			if (diplomacyFetched)
+			if (diplomacyFetchedTask)
 			{
 				Log("Already got aldt"); // should not happen
 				return;
@@ -199,8 +197,7 @@ namespace CnV.Game
 			diplomacy = _diplomacy;
 			nameToId = new Dictionary<string, int>(_nameToId);
 			all = new Dictionary<int, Alliance>(_all);
-			diplomacyFetched = true;
-			diplomacyFetchedTask.RunSynchronously();
+			diplomacyFetchedTask.Complete();
 			 // wait for player info to be fetched
 			for (; ; )
 			{
@@ -302,7 +299,7 @@ namespace CnV.Game
 			Task.Run(Blobs.ProcessStats);
 			if (Alliance.hasAlliance)
 				Task.Run(Blobs.ProcessTSStats);
-			alliancesFetchedTask.RunSynchronously();
+			alliancesFetchedTask.Complete();
 		}
 
 

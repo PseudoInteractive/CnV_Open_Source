@@ -37,14 +37,45 @@ using System.Threading.Tasks;
 using static CnV.Views.AttackTab;
 using Microsoft.Xna.Framework.Media;
 using CnV;
+using System.Runtime.CompilerServices;
 
 namespace CnV
 {
 	using KeyF = KeyFrame<float>;
 	using Vector4 = System.Numerics.Vector4;
 
+	public struct DummyTask
+	{
+		public Task _t;
+		public Task t { 
+			get 
+				{
+				if(_t == null)
+					_t = new Task(() => { });
+				return _t;
+			}
+			}
+		public  Task ContinueWith(Action<Task, object?> continuationAction, object? state) => t.ContinueWith(continuationAction,state);
+		public  Task ContinueWith(Action<Task> continuationAction) => t.ContinueWith(continuationAction);
+		public void Complete(){
+			if(_t == null)
+			{
+				_t = Task.CompletedTask;
+			}
+			else
+			{ 
+				_t.RunSynchronously(); 
+				
+			}
+			}
+		public static implicit operator Task(DummyTask t) => t.t;
+		public static implicit operator bool(DummyTask t) => t.t.IsCompleted;
+		public ConfiguredTaskAwaitable WaitAsync(bool continueOnCapturedContext=true) => t.ConfigureAwait(continueOnCapturedContext);
+
+	}
 	public static partial class Helper
 	{
+		
 		//	public static bool IsKeyPressed(this Keys key) => AGame.keyboardState.IsKeyDown(key);
 
 		//	public static bool WasKeyPressed(this Keys key) => AGame.keyboardState.IsKeyDown(key) && !AGame.priorKeyboardState.IsKeyDown(key);
@@ -458,14 +489,13 @@ namespace CnV
 
 				//mouseState = Mouse.GetState();
 				//ShellPage.Canvas_PointerMoved(mouseState, priorMouseState);
-				//ShellPage.Canvas_PointerWheelChanged(mouseState, priorMouseState);
 				//ShellPage.Canvas_PointerPressed(mouseState, priorMouseState);
 
 				if(App.isForeground)
 				{
 					if(renderFrame >= 5 && ShellPage._queuecontroller==null)
 					{
-		//				ShellPage.SetupCoreInput();
+						ShellPage.SetupCoreInput();
 
 					}
 					//else
@@ -714,7 +744,8 @@ namespace CnV
 		//	renderTarget = new CanvasRenderTarget(canvas, (float)(clientSpan.X), (float)(clientSpan.Y), canvas.Dpi, Windows.Graphics.DirectX.DirectXPixelFormat.B8G8R8A8UIntNormalized, CanvasAlphaMode.Premultiplied);
 
 		//}
-		public static bool contentLoadingStarted;
+
+		public static DummyTask contentLoadingStarted ;
 		public static Microsoft.Xna.Framework.Media.Song[] music;
 		//	bool inputInitialized;
 
@@ -779,7 +810,7 @@ namespace CnV
 		{
 			try
 			{
-				contentLoadingStarted = true;
+				contentLoadingStarted.Complete();
 
 				avaEffect = Content.Load<Effect>("Effects/Ava");
 				defaultEffect = EffectPass("AlphaBlend");

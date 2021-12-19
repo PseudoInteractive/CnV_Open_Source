@@ -14,13 +14,13 @@
 
   <Identity
     Name="33626dsw.15864FAB9E7D2"
-    Publisher="CN=BE72B2C5-14F0-4AD5-84D4-EAA91D8D0812"
-    Version="1.0.387.0" />
+    Publisher="CN=FBC"
+    Version="1.0.388.0" />
 
 
   <Properties>
-    <DisplayName>Conquest and Virtue</DisplayName>
-    <PublisherDisplayName>Alliances</PublisherDisplayName>
+    <DisplayName>COTGA</DisplayName>
+    <PublisherDisplayName>FBC</PublisherDisplayName>
     <Logo>Assets\StoreLogo.png</Logo>
   </Properties>
 
@@ -41,7 +41,7 @@
         DisplayName="COTGA"
         Square150x150Logo="Assets\Square150x150Logo.png"
         Square44x44Logo="Assets\Square44x44Logo.png"
-        Description="Crown of the Gods Client (CnV Edition)"
+        Description="Crown of the Gods Client"
         BackgroundColor="black">
         <uap:DefaultTile Wide310x150Logo="Assets\Wide310x150Logo.png" Square71x71Logo="Assets\SmallTile.png" Square310x310Logo="Assets\LargeTile.png" ShortName="COTGA">
           <uap:ShowNameOnTiles>

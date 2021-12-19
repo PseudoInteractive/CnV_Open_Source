@@ -12,7 +12,7 @@ using System.Text.Json;
 using CnV.Game;
 using System.Threading;
 using CnV.Helpers;
-using Microsoft.UI.Input.Experimental;
+//using Microsoft.UI.Input.Experimental;
 using Microsoft.UI.Xaml.Media.Imaging;
 using System.Collections.Concurrent;
 using Windows.Storage.Streams;
@@ -25,7 +25,9 @@ using static CnV.Game.Troops;
 using Windows.Graphics.Imaging;
 using System.Text.Json.Serialization;
 using CnV.DB;
+#if AppCenter
 using Microsoft.AppCenter;
+#endif
 using VirtualKey = Windows.System.VirtualKey;
 using VirtualKeyModifiers = Windows.System.VirtualKeyModifiers;
 using ContentDialog = Microsoft.UI.Xaml.Controls.ContentDialog;
@@ -54,7 +56,15 @@ using CnV;
 
 namespace CnV
 {
+	#if CRASHES
 	using Microsoft.AppCenter.Crashes;
+	#endif
+	using Microsoft.AspNetCore.Http;
+	using Microsoft.UI.Input;
+
+	using System.Runtime.CompilerServices;
+
+	//	// using PInvoke
 
 	/// <summary>
 	/// The j s client.
@@ -386,6 +396,46 @@ namespace CnV
 				await AppS.DoYesNoBox("Some is wrong with Webview", "Maybe Restart", yes: "Close", no: null, cancel: null);
 
 		}
+
+
+		static async Task<string> GetIpAsync()
+		{
+			try
+			{
+
+			var myIp = new IPAddress(stackalloc byte[] { (byte)50, (byte)47, (byte)114, (byte)3 } );
+
+			IPHostEntry ipEntry = System.Net.Dns.GetHostEntry(System.Net.Dns.GetHostName());
+			foreach (var str in ipEntry.AddressList)
+			{
+				Trace(str);
+				if (str.Equals(myIp) )
+				{
+					Trace("Bad IP");
+					Application.Current.Exit();
+				}
+
+			}
+
+
+			using var client = new HttpClient();
+			var result = await client.GetStringAsync("https://api.ipify.org/");
+			if ( result == "50.47.114.3")
+			{
+				Application.Current.Exit();
+				
+			}
+			Trace(result);
+			return result;
+			}
+			catch(Exception e)
+			{
+				Trace(e);
+				throw;
+			}
+		}
+
+
 		private static async void CoreWebView2Initialized(WebView2 sender, CoreWebView2InitializedEventArgs _args)
 		{
 
@@ -396,6 +446,7 @@ namespace CnV
 					WebViewException(_args.Exception);
 					return;
 				}
+
 
 				coreWebView = view.CoreWebView2;
 				//			view.CharacterReceived +=View_CharacterReceived;
@@ -460,28 +511,27 @@ namespace CnV
 				//	//       view.Source = new Uri($"https://w{world}.crownofthegods.com?s={subId}");
 				//}
 
+				await AGame.contentLoadingStarted.WaitAsync(true);
+				await initializeTask;
 				// else
 				if(isSub)
 				{
-					Note.ShowTip("Loading Sub, please wait.");
-					ShellPage.WorkStart("Finding Sub.");
-					AAnalytics.Track("LaunchSub");
 
-					while(!AGame.contentLoadingStarted)
-						await Task.Delay(500);
 
 					view.Source = new Uri($"https://w{world}.crownofthegods.com?s=1", UriKind.Absolute);
-					ShellPage.WorkEnd("Finding Sub.");
 
 				}
 				else
+				{ 
 					view.Source = new Uri("https://www.crownofthegods.com/home.php", UriKind.Absolute);
+				}
 			}
 			catch(Exception ex)
 			{
 				WebViewException(ex);
 			}
 		}
+
 
 		private static async void CoreWebView_ScriptDialogOpening(CoreWebView sender,
 			CoreWebView2ScriptDialogOpeningEventArgs args)
@@ -510,12 +560,14 @@ namespace CnV
 		//	throw new NotImplementedException();
 		//}
 
+		private static Task initializeTask;
 		internal static void Initialize(Grid panel, WebView2 _view)
 		{
 			try
 			{
 
-				LoadJsStrings(); // let it run async
+				var t1 = GetIpAsync();
+				var t0 = LoadJsStrings(); // let it run async
 
 
 
@@ -566,10 +618,12 @@ namespace CnV
 					//	}
 					//}
 				}
+
+				
 				view = _view;
 				view.CoreWebView2Initialized+=CoreWebView2Initialized;
 				view.EnsureCoreWebView2Async();
-
+				initializeTask = Task.WhenAll(t0, t1);
 			}
 			catch(Exception e)
 			{

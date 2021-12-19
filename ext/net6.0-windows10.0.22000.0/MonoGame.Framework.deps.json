@@ -8,7 +8,7 @@
     ".NETCoreApp,Version=v6.0": {
       "MonoGame.Framework/1.0.0": {
         "dependencies": {
-          "Microsoft.ProjectReunion": "0.8.5",
+          "Microsoft.WindowsAppSDK": "1.0.0",
           "SharpDX": "4.2.0",
           "SharpDX.DXGI": "4.2.0",
           "SharpDX.Direct3D11": "4.2.0",
@@ -36,37 +36,68 @@
       },
       "Microsoft.NETCore.Platforms/1.1.0": {},
       "Microsoft.NETCore.Targets/1.1.0": {},
-      "Microsoft.ProjectReunion/0.8.5": {
-        "dependencies": {
-          "Microsoft.ProjectReunion.DWrite": "0.8.5",
-          "Microsoft.ProjectReunion.Foundation": "0.8.5",
-          "Microsoft.ProjectReunion.InteractiveExperiences": "0.8.5",
-          "Microsoft.ProjectReunion.WinUI": "0.8.5"
-        }
-      },
-      "Microsoft.ProjectReunion.DWrite/0.8.5": {},
-      "Microsoft.ProjectReunion.Foundation/0.8.5": {
-        "runtime": {
-          "lib/net5.0-windows/Microsoft.ApplicationModel.Resources.Projection.dll": {
-            "assemblyVersion": "0.8.0.0",
-            "fileVersion": "0.8.0.0"
-          }
-        }
-      },
-      "Microsoft.ProjectReunion.InteractiveExperiences/0.8.5": {},
-      "Microsoft.ProjectReunion.WinUI/0.8.5": {
-        "runtime": {
-          "lib/net5.0-windows10.0.18362.0/Microsoft.WinUI.dll": {
-            "assemblyVersion": "3.0.0.0",
-            "fileVersion": "3.0.0.2110"
-          }
-        }
-      },
       "Microsoft.Win32.Primitives/4.3.0": {
         "dependencies": {
           "Microsoft.NETCore.Platforms": "1.1.0",
           "Microsoft.NETCore.Targets": "1.1.0",
           "System.Runtime": "4.3.0"
+        }
+      },
+      "Microsoft.Windows.SDK.BuildTools/10.0.22000.194": {},
+      "Microsoft.WindowsAppSDK/1.0.0": {
+        "dependencies": {
+          "Microsoft.Windows.SDK.BuildTools": "10.0.22000.194"
+        },
+        "runtime": {
+          "lib/net5.0-windows10.0.18362.0/Microsoft.InteractiveExperiences.Projection.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.22467.1012"
+          },
+          "lib/net5.0-windows10.0.18362.0/Microsoft.WinUI.dll": {
+            "assemblyVersion": "3.0.0.0",
+            "fileVersion": "3.0.0.2111"
+          },
+          "lib/net5.0-windows10.0.18362.0/Microsoft.Windows.AppLifecycle.Projection.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.0.0"
+          },
+          "lib/net5.0-windows10.0.18362.0/Microsoft.Windows.ApplicationModel.DynamicDependency.Projection.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.0.0"
+          },
+          "lib/net5.0-windows10.0.18362.0/Microsoft.Windows.ApplicationModel.Resources.Projection.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.0.0"
+          },
+          "lib/net5.0-windows10.0.18362.0/Microsoft.Windows.ApplicationModel.WindowsAppRuntime.Projection.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.0.0"
+          },
+          "lib/net5.0-windows10.0.18362.0/Microsoft.Windows.System.Power.Projection.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.0.0"
+          },
+          "lib/net5.0-windows10.0.18362.0/Microsoft.WindowsAppRuntime.Bootstrap.Net.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.0.0"
+          }
+        },
+        "runtimeTargets": {
+          "runtimes/win10-arm64/native/Microsoft.WindowsAppRuntime.Bootstrap.dll": {
+            "rid": "win10-arm64",
+            "assetType": "native",
+            "fileVersion": "0.0.0.0"
+          },
+          "runtimes/win10-x64/native/Microsoft.WindowsAppRuntime.Bootstrap.dll": {
+            "rid": "win10-x64",
+            "assetType": "native",
+            "fileVersion": "0.0.0.0"
+          },
+          "runtimes/win10-x86/native/Microsoft.WindowsAppRuntime.Bootstrap.dll": {
+            "rid": "win10-x86",
+            "assetType": "native",
+            "fileVersion": "0.0.0.0"
+          }
         }
       },
       "NETStandard.Library/1.6.1": {
@@ -845,47 +876,26 @@
       "path": "microsoft.netcore.targets/1.1.0",
       "hashPath": "microsoft.netcore.targets.1.1.0.nupkg.sha512"
     },
-    "Microsoft.ProjectReunion/0.8.5": {
-      "type": "package",
-      "serviceable": true,
-      "sha512": "sha512-ULnfd2gjbFG51btQCGTsx8/HCVvWUc09XJmwz3U5eLmVSLCOSdI6hqyJSzux7rXlXD5kJPqoR7i+aiO1QeuaZg==",
-      "path": "microsoft.projectreunion/0.8.5",
-      "hashPath": "microsoft.projectreunion.0.8.5.nupkg.sha512"
-    },
-    "Microsoft.ProjectReunion.DWrite/0.8.5": {
-      "type": "package",
-      "serviceable": true,
-      "sha512": "sha512-35JLFDuThe8yhrTW537EurydrlkwslSbwZWcqGSPgfDtAdpCU+XGF2beGZH+VO04a5voDdx1Ocy8ao0H1SsqAQ==",
-      "path": "microsoft.projectreunion.dwrite/0.8.5",
-      "hashPath": "microsoft.projectreunion.dwrite.0.8.5.nupkg.sha512"
-    },
-    "Microsoft.ProjectReunion.Foundation/0.8.5": {
-      "type": "package",
-      "serviceable": true,
-      "sha512": "sha512-xS6bTOK86G5T53eGszWv5A2BQLo56JlFvxHxKnJCkTDs9kjUxYYoa4X5TL21BDWT4ik4NLW6ggHW7/O9jCLXwA==",
-      "path": "microsoft.projectreunion.foundation/0.8.5",
-      "hashPath": "microsoft.projectreunion.foundation.0.8.5.nupkg.sha512"
-    },
-    "Microsoft.ProjectReunion.InteractiveExperiences/0.8.5": {
-      "type": "package",
-      "serviceable": true,
-      "sha512": "sha512-qni6T6RlajHrN4JeW/WK5hyjA6KrsF75dG66E8+FCxAaaQUqWZ+GAr51ySjqjLKcTfqCorYtrKNzbv5B7ZT+6g==",
-      "path": "microsoft.projectreunion.interactiveexperiences/0.8.5",
-      "hashPath": "microsoft.projectreunion.interactiveexperiences.0.8.5.nupkg.sha512"
-    },
-    "Microsoft.ProjectReunion.WinUI/0.8.5": {
-      "type": "package",
-      "serviceable": true,
-      "sha512": "sha512-TQa3xXYVNXI7KU6ItMKCywDZs27t2ptvVrL9ztTnkMVl5xC92rvePQzzgz53O6T1BDoggef3oKDTnEKBpwvNig==",
-      "path": "microsoft.projectreunion.winui/0.8.5",
-      "hashPath": "microsoft.projectreunion.winui.0.8.5.nupkg.sha512"
-    },
     "Microsoft.Win32.Primitives/4.3.0": {
       "type": "package",
       "serviceable": true,
       "sha512": "sha512-9ZQKCWxH7Ijp9BfahvL2Zyf1cJIk8XYLF6Yjzr2yi0b2cOut/HQ31qf1ThHAgCc3WiZMdnWcfJCgN82/0UunxA==",
       "path": "microsoft.win32.primitives/4.3.0",
       "hashPath": "microsoft.win32.primitives.4.3.0.nupkg.sha512"
+    },
+    "Microsoft.Windows.SDK.BuildTools/10.0.22000.194": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-4L0P3zqut466SIqT3VBeLTNUQTxCBDOrTRymRuROCRJKazcK7ibLz9yAO1nKWRt50ttCj39oAa2Iuz9ZTDmLlg==",
+      "path": "microsoft.windows.sdk.buildtools/10.0.22000.194",
+      "hashPath": "microsoft.windows.sdk.buildtools.10.0.22000.194.nupkg.sha512"
+    },
+    "Microsoft.WindowsAppSDK/1.0.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-nQRK4KuaRDWk9YX78k4Vn1D9w2Z07ki1mTmuT+4oCIEJNM01c40A7DUC6GiBdTjmHJbBq4hm7EyFQUb+kBSW8A==",
+      "path": "microsoft.windowsappsdk/1.0.0",
+      "hashPath": "microsoft.windowsappsdk.1.0.0.nupkg.sha512"
     },
     "NETStandard.Library/1.6.1": {
       "type": "package",

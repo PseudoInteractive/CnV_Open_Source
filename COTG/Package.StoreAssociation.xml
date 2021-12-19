@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <StoreAssociation xmlns="http://schemas.microsoft.com/appx/2010/storeassociation">
   <Publisher>CN=BE72B2C5-14F0-4AD5-84D4-EAA91D8D0812</Publisher>
-  <PublisherDisplayName>Alliances</PublisherDisplayName>
+  <PublisherDisplayName>FBC</PublisherDisplayName>
   <DeveloperAccountType>MSA</DeveloperAccountType>
   <GeneratePackageHash>http://www.w3.org/2001/04/xmlenc#sha256</GeneratePackageHash>
   <SupportedLocales>
@@ -363,7 +363,7 @@
   <ProductReservedInfo>
     <MainPackageIdentityName>33626dsw.15864FAB9E7D2</MainPackageIdentityName>
     <ReservedNames>
-      <ReservedName>Conquest and Virtue</ReservedName>
+      <ReservedName>COTGA</ReservedName>
     </ReservedNames>
   </ProductReservedInfo>
   <AccountPackageIdentityNames>

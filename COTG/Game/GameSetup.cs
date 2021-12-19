@@ -7,8 +7,11 @@ using CnV.Game;
 using CnV.Services;
 using CnV.Views;
 using System.Numerics;
+#if AppCenter
 using Microsoft.AppCenter;
+#endif
 using CommunityToolkit.WinUI.Helpers;
+
 using System.Runtime;
 
 namespace CnV
@@ -34,12 +37,12 @@ namespace CnV
 		//					   CnVChatClient.instance.Initialize();
 		try
 		{
-			#if CNV
+#if CNV
 			var signin = new Signin();
 			await signin.ShowAsync2();
-			#else
+#else
 			await APlayFab.SigninLegacy(Player.myName);
-			#endif
+#endif
 			Assert( JSClient.world != 0);
 			ShellPage.SetViewModeCity();
 			
@@ -70,6 +73,8 @@ namespace CnV
 			//    //var now = DateTime.UtcNow;
 			//    //if (now.Day <= 28 && now.Month==11)
 			//    {
+#if AppCenter
+
 			{
 				AppCenter.SetUserId(Player.myName);
 				//AppCenter.Analytics.Properties.put("UserId", "your user Id");
@@ -79,7 +84,7 @@ namespace CnV
 				AAnalytics.Track("GotCreds",new Dictionary<string,string>() { { "World",JSClient.world.ToString() },{ "sub",JSClient.isSub.ToString() },{ "UserId",Player.myName } });
 				ShellPage.UpdateFocus();
 			}
-
+#endif
 			// 
 			// Friend.LoadAll();
 

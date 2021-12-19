@@ -39,136 +39,9 @@
 
 	</Page.Resources>
 
-	<Grid Margin="0" 
-		  x:Name="layoutGrid" 
-		  
-		  Grid.RowSpan="6" Grid.ColumnSpan="3"  >
 
-
-		<Grid.ColumnDefinitions>
-			<ColumnDefinition Width="8" />
-			<ColumnDefinition Width="*" />
-			<ColumnDefinition Width="8" />
-		</Grid.ColumnDefinitions>
-
-
-		<Grid x:Name="leftLayoutGrid" Margin="0"  Grid.Column="0" Canvas.ZIndex="33"  Style="{StaticResource GridNoScroll}" >
-
-			<Grid.RowDefinitions>
-				<RowDefinition Height="2*" />
-				<RowDefinition Height="1*" />
-				<RowDefinition Height="1*" />
-				<RowDefinition Height="1*" />
-				<RowDefinition Height="1*" />
-				<RowDefinition Height="1*" />
-				<RowDefinition Height="1*"/>
-				<RowDefinition Height="1*"/>
-			</Grid.RowDefinitions>
-			<Button 
-				Style="{StaticResource layoutButton}"
-					Click="LayoutEnterX(0)"
-					BorderBrush="#C0700040"
-					ToolTipService.ToolTip="Legacy Layout"
-					Grid.Row="1" 
-					/>
-
-			<Button 
-					Click="LayoutEnterX(1)" 
-				Style="{StaticResource layoutButton}"
-					ToolTipService.ToolTip="Max View Layout"
-					Grid.Row="2" 
-					BorderBrush="#C0602050"	  
-					/>
-
-			<Button 
-					Click="LayoutEnterX(2)" 
-								Style="{StaticResource layoutButton}"
-
-					ToolTipService.ToolTip="Busy Layout"				 
-					BorderBrush="#C0400060" 
-					Grid.Row="3"
-					/>
-
-			<Button 
-					Click="LayoutEnterX(3)" 
-				Style="{StaticResource layoutButton}"
-   					ToolTipService.ToolTip="Task Layout"
-					BorderBrush="#C0202070"	 
-					Grid.Row="4"
-					/>
-
-			<Button
-					Click="LayoutEnterX(4)" 
-				Style="{StaticResource layoutButton}"
-   					ToolTipService.ToolTip="Geek Sheet Layout"
-					IsHitTestVisible="True"
-					BorderBrush="#C0000080"
-					Grid.Row="5"
-					/>
-		</Grid>
-		<Grid Grid.Column="2" x:Name="rightLayoutGrid" Margin="0" Canvas.ZIndex="33" >
-			<Grid.RowDefinitions>
-				<RowDefinition Height="2*" />
-				<RowDefinition Height="1*" />
-				<RowDefinition Height="1*" />
-				<RowDefinition Height="1*" />
-				<RowDefinition Height="1*" />
-				<RowDefinition Height="1*" />
-				<RowDefinition Height="1*"/>
-				<RowDefinition Height="1*"/>
-			</Grid.RowDefinitions>
-			<Button Name="layout0"
-				Style="{StaticResource layoutButton}"
-					Click="LayoutEnterX(0)"
-					BorderBrush="#C0700040"
-					ToolTipService.ToolTip="Legacy Layout"
-					Grid.Row="1" 
-					/>
-
-			<Button Name="layout1"
-					Click="LayoutEnterX(1)" 
-				Style="{StaticResource layoutButton}"
-					ToolTipService.ToolTip="Max View Layout"
-					Grid.Row="2" 
-					BorderBrush="#C0602050"	  
-					/>
-
-			<Button Name="layout2"
-					Click="LayoutEnterX(2)" 
-								Style="{StaticResource layoutButton}"
-
-					ToolTipService.ToolTip="Busy Layout"				 
-					BorderBrush="#C0400060" 
-					Grid.Row="3"
-					/>
-
-			<Button Name="layout3"
-					Click="LayoutEnterX(3)" 
-				Style="{StaticResource layoutButton}"
-   					ToolTipService.ToolTip="Task Layout"
-					BorderBrush="#C0202070"	 
-					Grid.Row="4"
-					/>
-
-			<Button Name="layout4"
-					Click="LayoutEnterX(4)" 
-				Style="{StaticResource layoutButton}"
-   					ToolTipService.ToolTip="Geek Sheet Layout"
-					IsHitTestVisible="True"
-					BorderBrush="#C0000080"
-					Grid.Row="5"
-					/>
-			<Button Click="LayoutEnterX(5)" 
-				Style="{StaticResource layoutButton}"
-
-		ToolTipService.ToolTip="Chat"
-
-BorderBrush="#C0404000"
-Grid.Row="6"
-Grid.Column="0"
-			/>
-		</Grid>
-		<views:ShareString  x:Name="citySetup" HeroContentPlacement="Top"  x:FieldModifier="public" Grid.Column="1" 
+	<Grid>
+	<views:ShareString  x:Name="citySetup" HeroContentPlacement="Top"  x:FieldModifier="public" Grid.Column="1" 
 							ShouldConstrainToRootBounds="False" PreferredPlacement="Center"  />
 		<Grid  Margin="0" x:Name="grid"  x:FieldModifier="public" Grid.Column="1" >
 			<Grid.Resources>
@@ -213,8 +86,8 @@ Grid.Column="0"
 					</Grid.ColumnDefinitions>
 				<ProgressRing x:Name="progress" IsActive="False" />
 				<TextBlock Grid.Column="1" x:Name="work" x:FieldModifier="public" Margin="6" VerticalAlignment="Center" Width="255" />
-				<TextBox Grid.Column="2" x:Name="coords" Margin="4" Width="100" TextAlignment="Center"  Text="000:000" VerticalAlignment="Center" x:FieldModifier="public" KeyDown="coords_KeyDown"/>
-						<ComboBox Grid.Column="3" x:Name="windowLayout" SelectedIndex="2" SelectionChanged="windowLayout_SelectionChanged"  VerticalAlignment="Center" Margin="4"
+				<TextBox Grid.Column="2" x:Name="coords" Margin="4" Width="100" TextAlignment="Center"  Text="000:000" HorizontalAlignment="Center" x:FieldModifier="public" KeyDown="coords_KeyDown"/>
+						<ComboBox Grid.Column="3" x:Name="windowLayout" SelectedIndex="{x:Bind layout}"  VerticalAlignment="Center" Margin="4"
 						          ToolTipService.ToolTip="Select a view layout"  ItemsSource="{x:Bind layoutOptions}"  />
 						<winui:ComboBox Grid.Column="4" x:Name="cityBox" x:FieldModifier="public" 
 					                Width="200"
@@ -524,5 +397,5 @@ Grid.Column="0"
 				</tk:GridSplitter.Element>
 			</tk:GridSplitter>
 		</Grid>
-	</Grid>
+	</Grid>	
 </winui:Page>

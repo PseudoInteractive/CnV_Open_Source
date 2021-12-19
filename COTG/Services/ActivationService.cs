@@ -7,8 +7,11 @@ using CnV.Activation;
 using CnV.Services;
 using CnV.Views;
 
+#if AppCenter
+
 using Microsoft.AppCenter;
 using Microsoft.AppCenter.Analytics;
+#endif
 //using Microsoft.AppCenter.Crashes;
 
 using Windows.ApplicationModel.Activation;
@@ -28,7 +31,7 @@ namespace CnV.Services
 {
 	using System.Runtime.CompilerServices;
 	using Activation;
-	using PInvoke;
+	// using PInvoke
 	using Views;
 
 	// For more information on understanding and extending activation flow see
@@ -94,8 +97,8 @@ namespace CnV.Services
             // Depending on activationArgs one of ActivationHandlers or DefaultActivationHandler
             // will navigate to the first page
             await HandleActivationAsync(activationArgs);
-          //  _lastActivationArgs = activationArgs;
-
+			//  _lastActivationArgs = activationArgs;
+			Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense("NTUwMDAxQDMxMzkyZTM0MmUzMFJnano4Uk4veXEvQmczQ2M5eWZQQ1JUT0UyVVJwamhxcEZjRWEvL3V4ZkE9;NTUwMDAyQDMxMzkyZTM0MmUzMENITkt6cXZtZ2oxZkFTa09HMmkxRXlFaVRhQjRUN1dUQzc2VHNDeXU4TWc9");
 			if (IsInteractive(activationArgs))
 			{
 				var activation = activationArgs as IActivatedEventArgs;
@@ -111,7 +114,7 @@ namespace CnV.Services
 				await Task.Delay(500);
 				Log("Max");
 //				App.window.Maximize();
-				_ = PInvoke.User32.ShowWindow(WinRT.Interop.WindowNative.GetWindowHandle(App.window), PInvoke.User32.WindowShowStyle.SW_MAXIMIZE);
+//				_ = PInvoke.User32.ShowWindow(WinRT.Interop.WindowNative.GetWindowHandle(App.window), PInvoke.User32.WindowShowStyle.SW_MAXIMIZE);
 				//User32.WINDOWPLACEMENT placement = new()
 				//{
 				//	length = Unsafe.SizeOf<User32.WINDOWPLACEMENT>(),
@@ -133,7 +136,7 @@ namespace CnV.Services
 			{
 				var t2 = BuildingDef.Init();
 				var t3 = TroopInfo.Init();
-				var t4 = App.StartAnalyticsAsync();
+				var t4 = App.EnsureBrowserInstalledAsync();
 				SettingsPage.Initialize();
 
 

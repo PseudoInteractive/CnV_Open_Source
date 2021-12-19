@@ -48,7 +48,7 @@
     <PackageReference Include="Azure.Data.Tables" Version="12.3.0" />
     <PackageReference Include="Azure.Storage.Blobs" Version="12.11.0-beta.2" />
     <PackageReference Include="CommunityToolkit.WinUI.Notifications" Version="7.1.2" />
-    <PackageReference Include="CommunityToolkit.WinUI.UI.Controls" Version="7.0.3" />
+    <PackageReference Include="CommunityToolkit.WinUI.UI.Controls" Version="7.1.2" />
     <PackageReference Include="DSharpPlus" Version="4.1.0" />
     <PackageReference Include="DSharpPlus.CommandsNext" Version="4.1.0" />
     <PackageReference Include="Enums.NET" Version="4.0.0" />
@@ -56,32 +56,13 @@
     <PackageReference Include="Humanizer.Core" Version="2.13.14" />
     <PackageReference Include="MagicOnion.Client" Version="4.3.1" />
     <PackageReference Include="MessagePackAnalyzer" Version="2.3.85" />
-    <PackageReference Include="Microsoft.AppCenter" Version="4.4.0" />
-    <PackageReference Include="Microsoft.AppCenter.Analytics" Version="4.4.0" />
-    <PackageReference Include="Microsoft.AppCenter.Crashes" Version="4.4.0" />
-    <PackageReference Include="Microsoft.DependencyValidation.Analyzers" Version="0.11.0" />
-    <PackageReference Include="Microsoft.Extensions.Configuration" Version="6.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="6.0.0" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="6.0.0" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="6.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Diagnostics.HealthChecks" Version="6.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Hosting" Version="6.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="6.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Logging" Version="6.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="6.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Configuration" Version="6.0.0" />
-    <PackageReference Include="Microsoft.Extensions.ObjectPool" Version="6.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Options" Version="6.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Primitives" Version="6.0.0" />
-    <PackageReference Include="Microsoft.Graphics.Win2D" Version="1.0.0.30" />
-    <PackageReference Include="Microsoft.NETCore.Platforms" Version="6.0.0" />
     <PackageReference Include="Microsoft.Toolkit" Version="7.1.2" />
     <PackageReference Include="Microsoft.Toolkit.Diagnostics" Version="7.1.2" />
     <PackageReference Include="Microsoft.Toolkit.HighPerformance" Version="7.1.2" />
     <PackageReference Include="Microsoft.Toolkit.Mvvm" Version="7.1.2" />
     <PackageReference Include="Microsoft.Windows.CsWinRT" Version="1.4.1" />
+    <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.0.0" />
     <PackageReference Include="MonoGame.Content.Builder.Task" Version="3.8.1.1941-develop" />
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     <PackageReference Include="Nito.AsyncEx.Coordination" Version="5.1.2" />
     <PackageReference Include="Nito.AsyncEx.Tasks" Version="5.1.2" />
     <PackageReference Include="PlayFabAllSDK" Version="1.107.211209" />
@@ -91,22 +72,15 @@
     <PackageReference Include="SharpDX.DXGI" Version="4.2.0" />
     <PackageReference Include="SharpDX.MediaFoundation" Version="4.2.0" />
     <PackageReference Include="SharpGen.Runtime.COM" Version="2.0.0-beta.10" />
-    <PackageReference Include="Syncfusion.Chart.WinUI" Version="19.3.0.57" />
-    <PackageReference Include="Syncfusion.Grid.WinUI" Version="19.3.0.57" />
-    <PackageReference Include="Syncfusion.Licensing" Version="19.3.0.57" />
-    <PackageReference Include="Syncfusion.Scheduler.WinUI" Version="19.3.0.57" />
-    <PackageReference Include="System.Collections.Immutable" Version="6.0.0" />
-    <PackageReference Include="System.Diagnostics.PerformanceCounter" Version="6.0.0" />
-    <PackageReference Include="System.Drawing.Common" Version="6.0.0" />
+    <PackageReference Include="Syncfusion.Chart.WinUI" Version="19.4.0.38" />
+    <PackageReference Include="Syncfusion.Grid.WinUI" Version="19.4.0.38" />
+    <PackageReference Include="Syncfusion.Licensing" Version="19.4.0.38" />
+    <PackageReference Include="Syncfusion.Scheduler.WinUI" Version="19.4.0.38" />
     <PackageReference Include="System.Linq.Async" Version="5.1.0" />
     <PackageReference Include="System.Management" Version="6.0.0" />
-    <PackageReference Include="System.Memory.Data" Version="6.0.0" />
-    <PackageReference Include="System.Runtime.Caching" Version="6.0.0" />
     <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="6.0.0" />
-    <PackageReference Include="System.Text.Json" Version="6.0.0" />
-    <PackageReference Include="System.Threading.Tasks.Dataflow" Version="6.0.0" />
+    <PackageReference Include="System.Text.Json" Version="6.0.1" />
     <PackageReference Include="ZString" Version="2.4.3" />
-    <PackageReference Include="PInvoke.User32" Version="0.7.104" />
     <Content Include="Assets\BadgeLogo.scale-100.png" />
     <Content Include="Assets\BadgeLogo.scale-200.png" />
     <Content Include="Assets\BadgeLogo.scale-400.png" />
@@ -792,14 +766,14 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <Optimize>False</Optimize>
-    <WarningLevel>4</WarningLevel>
-    <DefineConstants>DISABLE_XAML_GENERATED_BREAK_ON_UNHANDLED_EXCEPTION;DISABLE_XAML_GENERATED_MAIN;CRASHES;COTG</DefineConstants>
+    <WarningLevel>3</WarningLevel>
+    <DefineConstants>DISABLE_XAML_GENERATED_BREAK_ON_UNHANDLED_EXCEPTION;DISABLE_XAML_GENERATED_MAIN;COTG</DefineConstants>
     <Deterministic>True</Deterministic>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <Optimize>True</Optimize>
-    <WarningLevel>4</WarningLevel>
-    <DefineConstants>DISABLE_XAML_GENERATED_BREAK_ON_UNHANDLED_EXCEPTION;DISABLE_XAML_GENERATED_MAIN;CRASHES;COTG</DefineConstants>
+    <WarningLevel>3</WarningLevel>
+    <DefineConstants>DISABLE_XAML_GENERATED_BREAK_ON_UNHANDLED_EXCEPTION;DISABLE_XAML_GENERATED_MAIN;COTG</DefineConstants>
     <Deterministic>True</Deterministic>
   </PropertyGroup>
   <ProjectExtensions />

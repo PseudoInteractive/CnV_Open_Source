@@ -6,8 +6,12 @@ using CnV.Helpers;
 using CnV.Services;
 
 using WinRT;
+#if AppCenter
+
 using Microsoft.AppCenter;
 using Microsoft.AppCenter.Analytics;
+
+#endif
 #if CRASHES
 using Microsoft.AppCenter.Crashes;
 #endif
@@ -21,7 +25,6 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
 using Microsoft.Web.WebView2.Core;
 //using ZLogger;
-using CoreCursor = Windows.UI.Core.CoreCursor;
 //using Cysharp.Text;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -32,7 +35,6 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using PointerUpdateKind = Windows.UI.Input.PointerUpdateKind;
 //using Microsoft.AppCenter;
 //using Microsoft.AppCenter.Analytics;
 //using Microsoft.AppCenter.Crashes;
@@ -40,7 +42,7 @@ using Microsoft.Extensions.Configuration;
 //using Microsoft.Extensions.DependencyInjection;
 //using Microsoft.Extensions.Logging;
 //using Microsoft.Extensions.Options;
-using Microsoft.UI.Input.Experimental;
+//using Microsoft.UI.Input.Experimental;
 using DispatcherQueue = Microsoft.UI.Dispatching.DispatcherQueue;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
@@ -79,6 +81,8 @@ namespace CnV
 	using Game;
 	using Helpers;
 	using Microsoft.Extensions.Hosting;
+	using Microsoft.Xna.Framework.Input;
+	//// using PInvoke
 	using Services;
 	using Views;
 
@@ -109,8 +113,10 @@ namespace CnV
 		public static App instance;
 		public static string appLink = "cotg";
 
-		public static async Task StartAnalyticsAsync()
+		public static async Task EnsureBrowserInstalledAsync()
 		{
+#if AppCenter
+
 			if(AppCenter.Configured)
 			{
 				return;
@@ -134,6 +140,9 @@ namespace CnV
 					Crashes.SetEnabledAsync(true),
 #endif
 								Analytics.SetEnabledAsync(true));
+
+#endif
+
 
 			try
 			{
@@ -188,7 +197,7 @@ namespace CnV
 			TaskScheduler.UnobservedTaskException+=TaskScheduler_UnobservedTaskException;
 
 			// TODO WTS: Add your app in the app center and set your secret here. More at https://docs.microsoft.com/appcenter/sdk/getting-started/uwp
-			Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense("NTI5MjE3QDMxMzkyZTMzMmUzMFZNeEhhNVA0S1B4blBBVjJvWCtRS1NDanJJVnJpSEljWndpbXduU3Z2dVk9");
+			
 
 			// Deferred execution until used. Check https://msdn.microsoft.com/library/dd642331(v=vs.110).aspx for further info on Lazy<T> class.
 			_activationService = new Lazy<ActivationService>(CreateActivationService);
@@ -294,8 +303,9 @@ namespace CnV
 		}
 		public static void UpdateKeyStates()
 		{
-			shiftPressed = KeyboardInput.GetKeyStateForCurrentThread(VirtualKey.Shift).HasFlag(Windows.UI.Core.CoreVirtualKeyStates.Down);
-			controlPressed = KeyboardInput.GetKeyStateForCurrentThread(VirtualKey.Control).HasFlag(Windows.UI.Core.CoreVirtualKeyStates.Down);
+			
+			shiftPressed = InputKeyboardSource.GetKeyStateForCurrentThread(VirtualKey.Shift).HasFlag(Windows.UI.Core.CoreVirtualKeyStates.Down);
+			controlPressed = InputKeyboardSource.GetKeyStateForCurrentThread(VirtualKey.Control).HasFlag(Windows.UI.Core.CoreVirtualKeyStates.Down);
 		}
 		public static bool IsKeyPressedShift()
 		{
@@ -538,27 +548,27 @@ namespace CnV
 			}
 		}
 
-		private bool Window_Closing() //object sender,WindowClosingEventArgs e)
-		{
-			Log("Closing!");
-			if(state == State.closed)
-				return true;
-			if( state == State.closing)
-				return false;
-			state = State.closing;
+		//private bool Window_Closing() //object sender,WindowClosingEventArgs e)
+		//{
+		//	Log("Closing!");
+		//	if(state == State.closed)
+		//		return true;
+		//	if( state == State.closing)
+		//		return false;
+		//	state = State.closing;
 			
-			SwitchToBackground().ContinueWith( (_)=> 
-				{
-				state = State.closed;
-				AppS.DispatchOnUIThread(window.Close);
-			});
-			return false;
+		//	SwitchToBackground().ContinueWith( (_)=> 
+		//		{
+		//		state = State.closed;
+		//		AppS.DispatchOnUIThread(window.Close);
+		//	});
+		//	return false;
 
-		}
+		//}
 
 		private void Window_Closed(object sender,WindowEventArgs args)
 		{
-			BackgroundTask.dispatcherQueueController.ShutdownQueueAsync();
+//			BackgroundTask.dispatcherQueueController.ShutdownQueueAsync();
 
 			Log("Closed!");
 		//	Assert(state == State.closed);
@@ -579,27 +589,27 @@ namespace CnV
 				e.Handled =OnKeyDown(e.Key);
 		}
 
-		
+		private static void DebugSettings_BindingFailed(object sender, BindingFailedEventArgs e)
+		{
+			Log(e.Message);
+		}
+
 
 		private async Task OnLaunchedOrActivated(Windows.ApplicationModel.Activation.IActivatedEventArgs args)
 		{
 
 			try
 			{
-				
 
-				this.DebugSettings.FailFastOnErrors = false;
 
-#if  DEBUG
-//			this.DebugSettings.FailFastOnErrors = true;
-#endif
+
+#if DEBUG
+//				this.DebugSettings.FailFastOnErrors = false;
+			this.DebugSettings.FailFastOnErrors = true;
 			this.DebugSettings.EnableFrameRateCounter = false;
 			this.DebugSettings.IsTextPerformanceVisualizationEnabled = false;
-#if DEBUG
-			//this.DebugSettings.FailFastOnErrors = false;
-			this.DebugSettings.IsBindingTracingEnabled = true;
-#else
-            this.DebugSettings.IsBindingTracingEnabled = false;
+				//this.DebugSettings.FailFastOnErrors = false;
+				this.DebugSettings.IsBindingTracingEnabled = true;
 #endif
 			var wasRunning = args.PreviousExecutionState == ApplicationExecutionState.Running || args.PreviousExecutionState == ApplicationExecutionState.Suspended;
 				if(!wasRunning)
@@ -1144,12 +1154,12 @@ namespace CnV
 		//	}
 		//}
 
-		public static CoreCursor cursorDefault;// = CoreCursor.Create(CoreCursorShape.Arrow);
-		public static CoreCursor cursorQuickBuild;// = CoreCursor.Create(CoreCursorShape.Cross);
-		public static CoreCursor cursorMoveStart;// = CoreCursor.Create(CoreCursorShape.SizeNortheastSouthwest);
-		public static CoreCursor cursorMoveEnd;// = CoreCursor.Create(CoreCursorShape.SizeNorthSouth);
-		public static CoreCursor cursorLayout;// = CoreCursor.Create(CoreCursorShape.Pin);
-		public static CoreCursor cursorDestroy;// = CoreCursor.Create(CoreCursorShape.UniversalNo);
+		//public static CoreCursor cursorDefault;// = CoreCursor.Create(CoreCursorShape.Arrow);
+		//public static CoreCursor cursorQuickBuild;// = CoreCursor.Create(CoreCursorShape.Cross);
+		//public static CoreCursor cursorMoveStart;// = CoreCursor.Create(CoreCursorShape.SizeNortheastSouthwest);
+		//public static CoreCursor cursorMoveEnd;// = CoreCursor.Create(CoreCursorShape.SizeNorthSouth);
+		//public static CoreCursor cursorLayout;// = CoreCursor.Create(CoreCursorShape.Pin);
+		//public static CoreCursor cursorDestroy;// = CoreCursor.Create(CoreCursorShape.UniversalNo);
 		internal static VirtualKeyModifiers keyModifiers
 		{
 			get
@@ -1431,18 +1441,18 @@ namespace CnV
 		}
 
 		// must be on the right thread for this
-		public static void Set(this CoreCursor c) 
-		{
-			// is this thread safe?
-			//if(ShellPage.coreInputSource != null)
-			//{				
-			//	ShellPage.coreInputSource.DispatcherQueue.EnqueueAsync(() =>
+		//public static void Set(this CoreCursor c) 
+		//{
+		//	// is this thread safe?
+		//	//if(ShellPage.coreInputSource != null)
+		//	//{				
+		//	//	ShellPage.coreInputSource.DispatcherQueue.EnqueueAsync(() =>
 				
-			//		ShellPage.coreInputSource.PointerCursor = type,DispatcherQueuePriority.Low);
+		//	//		ShellPage.coreInputSource.PointerCursor = type,DispatcherQueuePriority.Low);
 
-			//}
-		//	AppS.QueueOnUIThread( () =>	CoreWindow.GetForCurrentThread().PointerCursor = type);
-		}
+		//	//}
+		////	AppS.QueueOnUIThread( () =>	CoreWindow.GetForCurrentThread().PointerCursor = type);
+		//}
 
 		public static bool IsLocalPointOver(this FrameworkElement e,int x,int y)
 		{

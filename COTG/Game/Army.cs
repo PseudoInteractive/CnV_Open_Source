@@ -249,6 +249,15 @@ namespace CnV.Game
 
 		public static bool operator ==(Army left,Army right) => EqualityComparer<Army>.Default.Equals(left,right);
 		public static bool operator !=(Army left,Army right) => !(left==right);
+
+		public override bool Equals(object obj)
+		{
+			if(ReferenceEquals(this, obj))
+				return true;
+			if(ReferenceEquals(obj, null))
+				return false;
+			throw new NotImplementedException();
+		}
 	}
 
 	[StructLayout(LayoutKind.Sequential, Pack=8,Size =8)]

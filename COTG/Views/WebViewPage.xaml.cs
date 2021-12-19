@@ -141,6 +141,7 @@ namespace CnV.Views
 		}
 		private void OnLoaded(object sender,RoutedEventArgs e)
 		{
+			base.OnLoaded(sender,e);
 			webView.CoreWebView2Initialized+=WebView_CoreWebView2Initialized;
 
 		}
@@ -170,9 +171,9 @@ namespace CnV.Views
 	
 
 	private void WebView_CoreWebView2Initialized(WebView sender,CoreWebView2InitializedEventArgs args)
-		{
+	{
 		webView.CoreWebView2.PermissionRequested+=CoreWebView2_PermissionRequested;
-		}
+	}
 
 		private void CoreWebView2_PermissionRequested(Microsoft.Web.WebView2.Core.CoreWebView2 sender,Microsoft.Web.WebView2.Core.CoreWebView2PermissionRequestedEventArgs args)
 		{

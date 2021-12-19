@@ -21,6 +21,7 @@ using CnV;
 namespace CnV.Views
 {
 	using Game;
+	// using PInvoke
 
 	//public class KeyboardProxy : Control
 	//{
@@ -354,7 +355,7 @@ namespace CnV.Views
 		//	App.window.Content.PreviewKeyDown+=ShellPage.KeyboardProxy_KeyDown; ;
 		//	canvas.PreviewKeyDown+=ShellPage.KeyboardProxy_KeyDown2; ;
 			//			App.window.Content.PreviewKeyUp+=ShellPage.KeyboardProxy_KeyUp;
-			App.window.Content.AddHandler(PointerWheelChangedEvent,new PointerEventHandler( KeyboardProxy_PointerWheelChanged),true);
+		//	App.window.Content.AddHandler(PointerWheelChangedEvent,new PointerEventHandler( KeyboardProxy_PointerWheelChanged),true);
 			//			canvas.AddHandler(KeyDownEvent,new KeyEventHandler(KeyboardProxy_KeyDown2),true);
 			//keyboardProxy.LostFocus += KeyboardProxy_LostFocus;
 			//keyboardProxy.GotFocus += KeyboardProxy_GotFocus;
@@ -400,12 +401,12 @@ namespace CnV.Views
 		//	Log($"Key!!Canvas {args.Key} {args}");
 		//}
 
-		private void KeyboardProxy_PointerWheelChanged(object sender,PointerRoutedEventArgs e)
+		private void KeyboardProxy_PointerWheelChanged(object sender, PointerRoutedEventArgs e)
 		{
 			if(mouseOverCanvas)
 			{
 				var pt = e.GetCurrentPoint(canvas);
-				HandleWheel(pt.Position,pt.Properties.MouseWheelDelta);
+				HandleWheel(pt.Position, pt.Properties.MouseWheelDelta);
 			}
 			else
 			{

@@ -40,7 +40,7 @@ namespace CnV.Views
 	using Game;
 	
 	using Helpers;
-
+	// using PInvoke
 	using Services;
 
 	//public class LogEntryStruct
@@ -59,8 +59,13 @@ namespace CnV.Views
 		public int  layout
 		{
 			get=> CnV.Views.SettingsPage.layout;
-			set => CnV.Views.SettingsPage.layout = value;
-		}
+			set {
+				if(CnV.Views.SettingsPage.layout != value)
+				{
+					CnV.Views.SettingsPage.layout = value;
+					updateHtmlOffsets.Go(true);
+				}
+			} }
 
 		class LayoutItem
 		{
@@ -337,12 +342,21 @@ namespace CnV.Views
 			//	await UpdateWebViewScale();
 			Log("Game Create!");
 			AGame.Create(canvas);
-			if(SystemInformation.Instance.IsAppUpdated && !JSClient.isSub)
+			try
 			{
-				AppS.DispatchOnUIThreadLow(SettingsPage.ShowWhatsNew);
+				if(SystemInformation.Instance.IsAppUpdated && !JSClient.isSub)
+				{
+					AppS.DispatchOnUIThreadLow(SettingsPage.ShowWhatsNew);
+				}
+
+			}
+			catch(Exception __ex)
+			{
+				Debug.Log(__ex.ToString());
 			}
 
-			
+
+
 
 			TabPage.mainTabs.SizeChanged += (( o,  args) => ShellPage.updateHtmlOffsets.SizeChanged() );
 
@@ -353,15 +367,15 @@ namespace CnV.Views
 			//});
 		}
 
-		public static void AdjustLayout(int delta)
-		{
-			SettingsPage.layout+=delta;
-			if(SettingsPage.layout >= SettingsPage.layoutOffsets.Length)
-				SettingsPage.layout = 0;
-			if(SettingsPage.layout < 0)
-				SettingsPage.layout = SettingsPage.layoutOffsets.Length-1;
-			updateHtmlOffsets.Go(true);
-		}
+		//public static void AdjustLayout(int delta)
+		//{
+		//	SettingsPage.layout+=delta;
+		//	if(SettingsPage.layout >= SettingsPage.layoutOffsets.Length)
+		//		SettingsPage.layout = 0;
+		//	if(SettingsPage.layout < 0)
+		//		SettingsPage.layout = SettingsPage.layoutOffsets.Length-1;
+		//	updateHtmlOffsets.Go(true);
+		//}
 		//private void ShellPage_PointerPressed(object sender,PointerRoutedEventArgs e)
 		//{
 		//	if(e.GetCurrentPoint(this).Properties.IsMiddleButtonPressed)
@@ -1262,36 +1276,36 @@ namespace CnV.Views
 			// todo!
 		}
 
-		private void windowLayout_SelectionChanged(object sender,SelectionChangedEventArgs e)
-		{
-			if(MainPage.instance != null)
-			{
-				var viewToggle = windowLayout.SelectedIndex;
-				SetLayout(viewToggle);
-			}
-		}
+		//private void windowLayout_SelectionChanged(object sender,SelectionChangedEventArgs e)
+		//{
+		//	if(MainPage.instance != null)
+		//	{
+		//		var viewToggle = windowLayout.SelectedIndex;
+		//		SetLayout(viewToggle);
+		//	}
+		//}
 
 		//		public static Vector2 webViewScale = new(1,1);
 		//		internal static bool webviewHasFocus2=true;
-		private async void SetLayout(int viewToggle)
-		{
-			if(viewToggle == SettingsPage.layout)
-				return;
-			layout = viewToggle;
+		//private async void SetLayout(int viewToggle)
+		//{
+		//	if(viewToggle == SettingsPage.layout)
+		//		return;
+		//	layout = viewToggle;
 
 
 
-			//			   UpdateCanvasMarginForWebview(webViewScale);
-			//scroll.ChangeView(null, null, 0.5f);
-			//var raidInfoVisible = true;
+		//	//			   UpdateCanvasMarginForWebview(webViewScale);
+		//	//scroll.ChangeView(null, null, 0.5f);
+		//	//var raidInfoVisible = true;
 
-			updateHtmlOffsets.Go(true);
+		//	updateHtmlOffsets.Go(true);
 
-			//MainPage.ToggleInfoBoxes(raidInfoVisible);
-			//   Task.Delay(200).ContinueWith((_) => City.gridCitySource.NotifyReset());
-			//UpdateWebViewScale();
+		//	//MainPage.ToggleInfoBoxes(raidInfoVisible);
+		//	//   Task.Delay(200).ContinueWith((_) => City.gridCitySource.NotifyReset());
+		//	//UpdateWebViewScale();
 
-		}
+		//}
 		//		static Debounce layoutChanged = new(TabPage.LayoutChanged){ runOnUiThead = true};
 
 		static int popupLeftOffset, popupTopOffset;
@@ -1356,42 +1370,7 @@ namespace CnV.Views
 
 
 
-		private RoutedEventHandler LayoutEnterX(object offset)
-		{
-
-			void fn(object sender,RoutedEventArgs e)
-			{
-				var s = sender as Button;
-				int id = -1;
-				for(int i = 0;i<2;++i)
-				{
-					int counter = 0;
-					foreach(Button b in (i==0 ? leftLayoutGrid : rightLayoutGrid).Children)
-					{
-						{
-							if(s!= b)
-							{
-								b.IsEnabled=true;
-							}
-							else
-							{
-								id = counter;
-							}
-							++counter;
-						}
-					}
-				}
-				if(id != -1)
-				{
-					if(id< leftLayoutGrid.Children.Count)
-						(leftLayoutGrid.Children[id] as Button).IsEnabled=false;
-					if(id< rightLayoutGrid.Children.Count)
-						(rightLayoutGrid.Children[id] as Button).IsEnabled=false;
-				}
-				SetLayout((int)offset);
-			}
-			return fn;
-		}
+		
 
 
 
