@@ -142,9 +142,39 @@ namespace CnV.Views
 		private void OnLoaded(object sender,RoutedEventArgs e)
 		{
 			base.OnLoaded(sender,e);
+			webView.CoreProcessFailed+=WebView_CoreProcessFailed;
 			webView.CoreWebView2Initialized+=WebView_CoreWebView2Initialized;
 
 		}
+
+		private async void WebView_CoreProcessFailed(WebView sender, CoreWebView2ProcessFailedEventArgs args)
+		{
+				Log( $"Kind:{args.ProcessFailedKind.ToString()}\nReason:{args.Reason.ToString()}\nDesc:{args.ProcessDescription}\nExit:{ args.ExitCode}\nString:{args}" );
+			
+			AAnalytics.Track("WebViewFail", new Dictionary<string, string>
+			{
+				{"Kind:", args.ProcessFailedKind.ToString() },
+				 {"Reason:",args.Reason.ToString() },
+					{"Desc:",args.ProcessDescription } });
+		
+#if CRASHES
+			Crashes.TrackError(new Exception(args.ProcessFailedKind.ToString()));
+							//	{"Desc:",args.ProcessDescription },
+#endif
+
+				if(await AppS.DoYesNoBox("The internet is broken",
+						$"{args.ProcessFailedKind.ToString()}?\nIt might be memory (in which case please restart computer) or something might be missing, do you want to try downloading something?")
+					== 1)
+				{
+					await Windows.System.Launcher.LaunchUriAsync(
+						new Uri("https://go.microsoft.com/fwlink/p/?LinkId=2124703", UriKind.Absolute));
+				}
+				else
+				{
+					AppS.DoYesNoBox("broken", "Please restart computer and/or report it and/or curse politely");
+				}
+			}
+		
 
 		//		webView.UnsafeContentWarningDisplaying += WebView_UnsafeContentWarningDisplaying;
 		//	webView.UnsupportedUriSchemeIdentified += WebView_UnsupportedUriSchemeIdentified;
@@ -168,12 +198,17 @@ namespace CnV.Views
 		//	Source = (DefaultUrl);
 		//	DefaultUrl = null;
 		//}
-	
 
-	private void WebView_CoreWebView2Initialized(WebView sender,CoreWebView2InitializedEventArgs args)
+
+		private void WebView_CoreWebView2Initialized(WebView sender,CoreWebView2InitializedEventArgs args)
 	{
-		webView.CoreWebView2.PermissionRequested+=CoreWebView2_PermissionRequested;
+		var coreWebView  = sender.CoreWebView2;
+		coreWebView.PermissionRequested+= JSClient.View_PermissionRequested;
+			coreWebView.ProcessFailed += (a,b)=>JSClient.CoreWebView2_ProcessFailed(a,b,false);
+
+
 	}
+
 
 		private void CoreWebView2_PermissionRequested(Microsoft.Web.WebView2.Core.CoreWebView2 sender,Microsoft.Web.WebView2.Core.CoreWebView2PermissionRequestedEventArgs args)
 		{

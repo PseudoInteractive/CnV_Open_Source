@@ -78,10 +78,17 @@ namespace CnV.Services
 			try
 			{
 					var a = await AsArray(resp).ConfigureAwait(false);
+				if(!a.IsNullOrEmpty())
+				{ 
 					using var json = JsonDocument.Parse(a, jsonParseOptions);
 					ProcessJson(json);
 					return true;
-				
+				}
+				else
+				{
+					Log("HTTP:  no result");
+					return false;
+				}
 			}
 			catch (Exception e)
 			{
@@ -126,9 +133,16 @@ namespace CnV.Services
 		//}
 		private static async Task<byte[]> AsArray(HttpResponseMessage resp)
 		{
+			if(resp != null)
+			{ 
 			var rv = await resp.Content.ReadAsByteArrayAsync().ConfigureAwait(false);
 			resp.Dispose();
 			return rv;
+			}
+			else
+			{
+				return Array.Empty<byte>();
+			}
 		}
 
 		public static async Task<string> AcceptText(HttpResponseMessage resp, bool except=false)
@@ -152,6 +166,8 @@ namespace CnV.Services
 
 			try
 			{
+				if(resp is null)
+					return null;
 	
 				return JsonDocument.Parse(await AsArray(resp).ConfigureAwait(false));
 
@@ -163,11 +179,19 @@ namespace CnV.Services
 			}
 		}
 
-		public static async Task<T> AcceptJsonT<T>(HttpResponseMessage resp, bool except=false)
+		public static async Task<T> AcceptJsonT<T>(HttpResponseMessage resp, bool except=false) 
 		{
 			try
 			{
-				return JsonSerializer.Deserialize<T>(await AsArray(resp).ConfigureAwait(false), JSON.jsonSerializerOptions);
+				var data = await AsArray(resp).ConfigureAwait(false);
+				if(!data.IsNullOrEmpty())
+				{ 
+				return JsonSerializer.Deserialize<T>(data, JSON.jsonSerializerOptions);
+				}
+				else
+				{
+					return default;
+				}
 
 			}
 			catch (Exception e)
@@ -1081,7 +1105,7 @@ namespace CnV.Services
 		//	var p = new Post(url, _pid);
 		//	return await p.Send(postContent, except);
 		//}
-		async public static Task<bool> SendForOkay(string url, string postContent = nullPost, int _pid = -1, bool except = false)
+		 public static async Task<bool> SendForOkay(string url, string postContent = nullPost, int _pid = -1, bool except = false)
 		{
 			var p = new Post(url, _pid);
 			
@@ -1094,7 +1118,7 @@ namespace CnV.Services
 			return false;
 		}
 
-		async public static Task<JsonDocument> SendForJson(string url, string postContent = nullPost, int _pid = -1, bool except = false)
+		 public  static async Task<JsonDocument> SendForJson(string url, string postContent = nullPost, int _pid = -1, bool except = false)
 		{
 
 			try
@@ -1104,17 +1128,20 @@ namespace CnV.Services
 			}
 			catch(Exception ex)
 			{
+				if(except)
+				{ 
 				LogEx(ex);
+			}
 				return null;
 			}
 		}
-		async public static Task<string> SendForText(string url, string postContent = nullPost, int _pid = -1, bool except=false)
+			public   static async Task<string> SendForText(string url, string postContent = nullPost, int _pid = -1, bool except=false)
 		{
 			var p = new Post(url, _pid);
-			return await AcceptText(await p.Send(postContent, except), except);
+			return await AcceptText(await p.Send(postContent, except));
 		}
 
-		async public static Task<T> SendForJsonT<T>(string url, string postContent = nullPost, int _pid = -1, bool except=false)
+		 public static async Task<T> SendForJsonT<T>(string url, string postContent = nullPost, int _pid = -1, bool except=false)
 		{
 			var p = new Post(url, _pid);
 			return await AcceptJsonT<T>(await p.Send(postContent, except));

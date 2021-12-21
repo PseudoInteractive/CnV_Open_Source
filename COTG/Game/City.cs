@@ -30,8 +30,8 @@ using System.Buffers;
 using System.Diagnostics;
 using CnV;
 
-namespace CnV.Game
-{
+namespace CnV.Game;
+
 	using Draw;
 	using Helpers;
 	using Services;
@@ -1366,6 +1366,8 @@ namespace CnV.Game
 			try
 			{
 				using var a = await Post.SendForJson("overview/senfind.php", "a=0");
+				if(a is not null)
+				{ 
 				var empty = Array.Empty<SenatorInfo>();
 				var changed = new HashSet<City>();
 				foreach (var city in City.myCities)
@@ -1436,14 +1438,17 @@ namespace CnV.Game
 					changed.NotifyChange();
 				}
 			}
+			}
 			catch (Exception ex)
 			{
 				LogEx(ex);
 			}
 
 
+		
 
 		}
+	
 
 	
 		
@@ -2558,4 +2563,5 @@ namespace CnV.Game
 		
 	}
 
-}
+
+

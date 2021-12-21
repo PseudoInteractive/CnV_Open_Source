@@ -55,7 +55,7 @@ namespace CnV.Views
 		public static string? contToolTip;
 		public static string debugTip;
 		public static int lastCont;
-		public static DispatcherQueueController _queuecontroller;
+	//	public static DispatcherQueueController _queuecontroller;
 ///ivate static InputPointerSource _inputPointerSource;
 
 		public static void SetupCoreInput()
@@ -68,7 +68,7 @@ namespace CnV.Views
 			{
 
 
-				canvas.DispatcherQueue.TryEnqueue( () =>
+	//			AppS.DispatchOnUIThread(  () =>
 				   {
 					   try
 					   {
@@ -95,7 +95,8 @@ namespace CnV.Views
 					   }
 
 
-				   });
+				   }
+			//	);
 			}
 					catch(Exception __ex)
 			{
@@ -158,11 +159,11 @@ namespace CnV.Views
 		{
 			//Canvas_PointerWheelChanged(mouseState, priorMouseState);
 
-			//canvas.PointerMoved+=KeyboardProxy_PointerMoved;
-			//canvas.PointerPressed+=KeyboardProxy_PointerPressed;
-			//canvas.PointerReleased+=KeyboardProxy_PointerReleased;
-			//canvas.PointerEntered+=KeyboardProxy_PointerEntered;
-			//canvas.PointerExited +=KeyboardProxy_PointerExited;
+			canvas.PointerMoved+=KeyboardProxy_PointerMoved;
+			canvas.PointerPressed+=KeyboardProxy_PointerPressed;
+			canvas.PointerReleased+=KeyboardProxy_PointerReleased;
+			canvas.PointerEntered+=KeyboardProxy_PointerEntered;
+			canvas.PointerExited +=KeyboardProxy_PointerExited;
 		}
 
 		private static void KeyboardProxy_PointerExited(object sender,PointerRoutedEventArgs e)

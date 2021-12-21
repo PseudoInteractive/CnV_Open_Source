@@ -1302,7 +1302,7 @@ namespace CnV.Game
 
 			try
 			{
-				await Alliance.alliancesFetchedTask.t.WaitAsync(TimeSpan.FromSeconds(132)).ConfigureAwait(false);
+				await Alliance.alliancesFetchedTask.t.WaitAsync(TimeSpan.FromSeconds(632)).ConfigureAwait(false);
 
 			}
 			catch (Exception e)

@@ -434,9 +434,12 @@ namespace CnV
 				throw;
 			}
 		}
+		internal static async void GeneralWebViewIniitalized(WebView2 sender, CoreWebView2InitializedEventArgs _args, bool isInGameWebView)
+		{
 
+		}
 
-		private static async void CoreWebView2Initialized(WebView2 sender, CoreWebView2InitializedEventArgs _args)
+			private static async void CoreWebView2Initialized(WebView2 sender, CoreWebView2InitializedEventArgs _args)
 		{
 
 			try
@@ -451,17 +454,19 @@ namespace CnV
 				coreWebView = view.CoreWebView2;
 				//			view.CharacterReceived +=View_CharacterReceived;
 				coreWebView.Settings.AreDevToolsEnabled=System.Diagnostics.Debugger.IsAttached;
-				//	coreWebView.Settings.UserAgent = userAgent;
+				coreWebView.Settings.UserAgent = userAgent;
 
 				coreWebView.Settings.IsWebMessageEnabled=true;
-				//	coreWebView.Settings.IsPasswordAutosaveEnabled=true;
-				coreWebView.Settings.IsScriptEnabled=true;
+//				coreWebView.Settings.IsPasswordAutosaveEnabled=true;
+				coreWebView.Settings.IsGeneralAutofillEnabled=true;
+				//coreWebView.Settings.userAgent.Value 
+				coreWebView.SourceChanged+=CoreWebView_SourceChanged;
 				//			coreWebView.Settings.IsPinchZoomEnabled =false;
 				coreWebView.Settings.IsZoomControlEnabled=false;
 				coreWebView.Settings.AreDefaultScriptDialogsEnabled=false;
-				coreWebView.Settings.IsStatusBarEnabled=false;
+				coreWebView.Settings.IsStatusBarEnabled=true;
 				coreWebView.Settings.IsBuiltInErrorPageEnabled=true;
-				coreWebView.Settings.AreHostObjectsAllowed=false;
+				coreWebView.Settings.AreHostObjectsAllowed=true;
 				//	coreWebView.Settings.AreBrowserAcceleratorKeysEnabled=false;
 				coreWebView.Settings.AreDefaultContextMenusEnabled=true;
 				coreWebView.Environment.NewBrowserVersionAvailable+=Environment_NewBrowserVersionAvailable;
@@ -471,7 +476,7 @@ namespace CnV
 				coreWebView.WebResourceRequested += View_WebResourceRequested;
 				coreWebView.WebMessageReceived +=CoreWebView_WebMessageReceived;
 				//	view.EffectiveViewportChanged += View_EffectiveViewportChanged;
-				view.AddHandler(UIElement.KeyDownEvent, new KeyEventHandler(webViewKeyDownHandler), true);
+			
 				//view.AddHandler(WebView2.PointerPressedEvent, new PointerEventHandler(pointerEventHandler), true);
 				//	view.UnsafeContentWarningDisplaying += View_UnsafeContentWarningDisplaying;
 				//	view.UnsupportedUriSchemeIdentified += View_UnsupportedUriSchemeIdentified;
@@ -487,8 +492,13 @@ namespace CnV
 				//	view.KeyDown+=View_KeyDown;
 				coreWebView.ScriptDialogOpening+=CoreWebView_ScriptDialogOpening;
 				//	view.PreviewKeyDown+=View_PreviewKeyDown;
+				view.AddHandler(UIElement.KeyDownEvent, new KeyEventHandler(webViewKeyDownHandler), true);
+
 				view.NavigationStarting+=View_NavigationStarting;
 				view.NavigationCompleted+=View_NavigationCompleted; ;
+				coreWebView.FrameNavigationStarting+=CoreWebView_FrameNavigationStarting;
+				coreWebView.FrameCreated+=CoreWebView_FrameCreated;
+				coreWebView.FrameNavigationCompleted+=CoreWebView_FrameNavigationCompleted;
 			//	view.PointerMoved +=View_PointerMoved;
 				//	view.NavigationCompleted+=View_NavigationCompleted;
 				coreWebView.PermissionRequested+=View_PermissionRequested; ;
@@ -497,7 +507,7 @@ namespace CnV
 				view.GotFocus += View_GotFocus;
 				view.LostFocus += View_LostFocus; ;
 
-				view.CoreWebView2.ProcessFailed+=CoreWebView2_ProcessFailed;
+				view.CoreWebView2.ProcessFailed+=(a,b) => CoreWebView2_ProcessFailed(a,b,true);
 
 				//   view.CacheMode = CacheMode.
 				//Grid.Se SetAlignLeftWithPanel(view, true);
@@ -532,6 +542,29 @@ namespace CnV
 			}
 		}
 
+		private static void CoreWebView_FrameNavigationCompleted(CoreWebView sender, CoreWebView2NavigationCompletedEventArgs args)
+		{
+			Log(args.ToString());
+//			throw new NotImplementedException();
+		}
+
+		private static void CoreWebView_FrameCreated(CoreWebView sender, CoreWebView2FrameCreatedEventArgs args)
+		{
+			Log(args);
+//			throw new NotImplementedException();
+		}
+
+		private static void CoreWebView_FrameNavigationStarting(CoreWebView sender, CoreWebView2NavigationStartingEventArgs args)
+		{
+			Log(args.Uri.ToString());
+			Log(args.ToString());
+		}
+
+		private static void CoreWebView_SourceChanged(CoreWebView sender, CoreWebView2SourceChangedEventArgs args)
+		{
+			Log(args.IsNewDocument);
+			Log(args.ToString());
+		}
 
 		private static async void CoreWebView_ScriptDialogOpening(CoreWebView sender,
 			CoreWebView2ScriptDialogOpeningEventArgs args)
@@ -688,7 +721,7 @@ namespace CnV
 		//	Log("Character recieved");
 		//}
 
-		private static void Environment_NewBrowserVersionAvailable(CoreWebView2Environment sender, object args)
+		internal static void Environment_NewBrowserVersionAvailable(CoreWebView2Environment sender, object args)
 		{
 			AAnalytics.Track("NewBrowser");
 			Log(args.ToString());
@@ -696,8 +729,8 @@ namespace CnV
 
 
 
-		private static async void CoreWebView2_ProcessFailed(CoreWebView sender,
-			CoreWebView2ProcessFailedEventArgs args)
+		internal static async void CoreWebView2_ProcessFailed(CoreWebView sender,
+			CoreWebView2ProcessFailedEventArgs args,bool isGameAppWebView)
 		{
 			
 			AAnalytics.Track("WebViewFail", new Dictionary<string, string>
@@ -710,17 +743,31 @@ namespace CnV
 			Crashes.TrackError(new Exception(args.ProcessFailedKind.ToString()));
 							//	{"Desc:",args.ProcessDescription },
 		#endif
-
+			if(isGameAppWebView)
+			{ 
 			if(await AppS.DoYesNoBox("The internet is broken",
-				    $"{args.ProcessFailedKind.ToString()}?\nIt might be memory (in which case please restart computer) or something might be missing, do you want to try downloading something?")
-			    == 1)
+				    $"{args.ProcessFailedKind.ToString()}?\nIt might be memory (in which case please Restart App, Restart computer)", "Close App", "Continue") == 1)
 			{
-				await Windows.System.Launcher.LaunchUriAsync(
-					new Uri("https://go.microsoft.com/fwlink/p/?LinkId=2124703", UriKind.Absolute));
+				Application.Current.Exit();
 			}
 			else
 			{
-				AppS.DoYesNoBox("broken", "Please restart computer and/or report it and/or curse politely");
+			}
+			}
+			else
+			{
+				if(await AppS.DoYesNoBox("The internet is broken",
+					$"{args.ProcessFailedKind.ToString()}?\nIt might be memory (in which case please restart computer) or something might be missing, do you want to try downloading something?")
+				== 1)
+					{
+						await Windows.System.Launcher.LaunchUriAsync(
+							new Uri("https://go.microsoft.com/fwlink/p/?LinkId=2124703", UriKind.Absolute));
+					}
+					else
+					{
+						AppS.DoYesNoBox("broken", "Please restart computer and/or report it and/or curse politely");
+					}
+
 			}
 		}
 
@@ -732,9 +779,8 @@ namespace CnV
 			try
 			{
 
-				var webView = new WebViewPage();
 				var view = new WebView2();
-				webView.ShowOrAdd(true);
+				//webView.ShowOrAdd(true);
 				//			f.Content = webView;
 
 				//w.
@@ -776,7 +822,7 @@ namespace CnV
 
 		private static void View_NavigationCompleted(WebView2 sender, CoreWebView2NavigationCompletedEventArgs args)
 		{
-			Log("Nav complete: " + args);
+			Log("Nav complete: "+args.IsSuccess.ToString());
 			if(hasMainPageLoaded)
 			{
 				coreWebView.WebResourceRequested-=View_WebResourceRequested; //-= View_WebResourceRequested1;
@@ -786,7 +832,7 @@ namespace CnV
 		}
 
 
-		private static void View_PermissionRequested(CoreWebView sender, CoreWebView2PermissionRequestedEventArgs args)
+		internal static void View_PermissionRequested(CoreWebView sender, CoreWebView2PermissionRequestedEventArgs args)
 		{
 			args.State = CoreWebView2PermissionState.Allow;
 			switch(args.PermissionKind)

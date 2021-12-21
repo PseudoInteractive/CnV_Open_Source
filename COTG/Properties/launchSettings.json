@@ -20,11 +20,6 @@
       "authenticationMode": "Windows",
       "doNotLaunchApp": false,
       "nativeDebugging": true
-    },
-    "DebugAll": {
-      "commandName": "Project",
-      "jsWebView2Debugging": false,
-      "nativeDebugging": true
     }
   }
 }

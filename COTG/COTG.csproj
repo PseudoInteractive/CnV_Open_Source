@@ -249,7 +249,11 @@
     <Compile Include="Models\JsNative.cs" />
     <Compile Include="Models\JSPopup.cs" />
     <Compile Include="Note.cs" />
-    <Compile Include="Program.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
     <Compile Include="Services\Avatarslate.cs" />
     <Compile Include="Services\Blobs.cs" />
     <Compile Include="Services\ChatStorage.cs" />
@@ -759,22 +763,25 @@
     <AnalysisLevel>preview</AnalysisLevel>
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
     <IsPublishable>True</IsPublishable>
-    <ProduceReferenceAssembly>True</ProduceReferenceAssembly>
+    <ProduceReferenceAssembly>False</ProduceReferenceAssembly>
     <EnforceCodeStyleInBuild>False</EnforceCodeStyleInBuild>
-    <ImplicitUsings>disable</ImplicitUsings>
+    <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>annotations</Nullable>
+    <DocumentationFile></DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <Optimize>False</Optimize>
-    <WarningLevel>3</WarningLevel>
-    <DefineConstants>DISABLE_XAML_GENERATED_BREAK_ON_UNHANDLED_EXCEPTION;DISABLE_XAML_GENERATED_MAIN;COTG</DefineConstants>
+    <WarningLevel>4</WarningLevel>
+    <DefineConstants>COTG</DefineConstants>
     <Deterministic>True</Deterministic>
+    <FileAlignment>4096</FileAlignment>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <Optimize>True</Optimize>
-    <WarningLevel>3</WarningLevel>
-    <DefineConstants>DISABLE_XAML_GENERATED_BREAK_ON_UNHANDLED_EXCEPTION;DISABLE_XAML_GENERATED_MAIN;COTG</DefineConstants>
+    <WarningLevel>4</WarningLevel>
+    <DefineConstants>COTG</DefineConstants>
     <Deterministic>True</Deterministic>
+    <FileAlignment>4096</FileAlignment>
   </PropertyGroup>
   <ProjectExtensions />
   <ItemGroup>
@@ -788,6 +795,12 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\CnVShared\CnVShared.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Update="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
   </ItemGroup>
 
  </Project>

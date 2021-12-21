@@ -1655,7 +1655,7 @@ namespace CnV.Game
 
 		//}
 
-		private string GetDebuggerDisplay()
+		public string GetDebuggerDisplay()
 		{
 			return ToString();
 		}

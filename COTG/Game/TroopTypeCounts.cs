@@ -29,7 +29,7 @@ namespace CnV.Game
 	//	int targetCid;
 	//}
 	[StructLayout(LayoutKind.Sequential)]
-	public struct TroopTypeCounts : IComparable<TroopTypeCounts>, IEquatable<TroopTypeCounts>
+	public struct TroopTypeCounts : IComparable<TroopTypeCounts>
 	{
 		public unsafe fixed int counts[(ttCount)];
 
@@ -529,7 +529,7 @@ namespace CnV.Game
 			}
 		}
 
-		public bool Equals(TroopTypeCounts other) => throw new NotImplementedException();
+	//	public bool Equals(TroopTypeCounts other) => throw new NotImplementedException();
 		public override int GetHashCode()
 		{
 				

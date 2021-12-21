@@ -493,9 +493,9 @@ namespace CnV
 
 				if(App.isForeground)
 				{
-					if(renderFrame >= 5 && ShellPage._queuecontroller==null)
+					if(renderFrame >= 5 && ShellPage.coreInputSource==null)
 					{
-						ShellPage.SetupCoreInput();
+	//					ShellPage.SetupCoreInput();
 
 					}
 					//else
@@ -591,7 +591,7 @@ namespace CnV
 		{
 			var a = await AppS.DispatchOnUIThreadTask(async () =>
 			{
-				return await AppS.Failed("Video Driver broke","Please restart, it should recover fine");
+				return await AppS.Failed("Video Driver broke","Please restart, it should recover");
 
 			});
 			if(a == 1)
