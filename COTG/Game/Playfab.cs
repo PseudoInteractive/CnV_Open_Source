@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿global using PlayFabId = System.Int64;
+
+using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using PlayFab.ClientModels;
@@ -185,7 +187,6 @@ namespace CnV
 			PlayFabSettings.GlobalErrorHandler = OnError;
 		}
 
-
 		// Sets Authentication Context and myPlayfabId
 		public static async Task<bool> Signin(string email, string password)
 		{
@@ -341,8 +342,8 @@ namespace CnV
 						PlayerTables.playersGame[playerId] = gp;
 
 						// Do we need to delay before refetching?
-						var pw = new PlayerWorldEntity(World.world, playerId);
-						var t1 = PlayerWorldEntity.table.UpsertAsync(pw);
+						var pw = new PlayerEntity(World.world, playerId);
+						var t1 = PlayerEntity.table.UpsertAsync(pw);
 						
 						await Task.WhenAll(t0, t1);
 					}

@@ -207,9 +207,7 @@
     <Compile Include="Game\GameSetup.cs" />
     <Compile Include="Game\HeatMap.cs" />
     <Compile Include="Game\Overview.cs" />
-    <Compile Include="Game\Player.cs" />
     <Compile Include="Game\PlayerPresence.cs" />
-    <Compile Include="Game\PlayerTables.cs" />
     <Compile Include="Game\Stats.cs" />
     <Compile Include="Game\Playfab.cs" />
     <Compile Include="Game\Raiding.cs" />
@@ -771,14 +769,14 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <Optimize>False</Optimize>
     <WarningLevel>4</WarningLevel>
-    <DefineConstants>COTG</DefineConstants>
+    <DefineConstants>CNV</DefineConstants>
     <Deterministic>True</Deterministic>
     <FileAlignment>4096</FileAlignment>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <Optimize>True</Optimize>
     <WarningLevel>4</WarningLevel>
-    <DefineConstants>COTG</DefineConstants>
+    <DefineConstants>CNV</DefineConstants>
     <Deterministic>True</Deterministic>
     <FileAlignment>4096</FileAlignment>
   </PropertyGroup>
