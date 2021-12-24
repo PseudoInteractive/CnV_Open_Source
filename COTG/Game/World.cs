@@ -28,7 +28,7 @@ using Vector2 = System.Numerics.Vector2;
 using CnV;
 using static CnV.AMath;
 
-namespace CnV.Game
+namespace CnV
 {
 	using Helpers;
 	using Services;
@@ -222,7 +222,7 @@ namespace CnV.Game
 		public static City distanceReference; // Set temporarily for boss hunting.  Null usually
 	}
 
-	public static class World
+	public static partial class World
 	{
 		//	public static World current;
 		public const int continentSpan = 100;
