@@ -187,7 +187,6 @@ namespace CnV
 			PlayFabSettings.GlobalErrorHandler = OnError;
 		}
 
-
 		// Sets Authentication Context and myPlayfabId
 		public static async Task<bool> Signin(string email, string password)
 		{
