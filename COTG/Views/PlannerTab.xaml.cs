@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 using Microsoft.UI.Xaml;
 
 using static CnV.Debug;
-using static CnV.Game.City;
+using static Cnv.City;
 using static CnV.Game.Troops;
 using static CnV.BuildingDef;
 using System.Buffers;

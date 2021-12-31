@@ -40,7 +40,7 @@ using System.Net.Http.Headers;
 using DiscordCnV;
 using Microsoft.UI.Xaml.Controls;
 using CommunityToolkit.WinUI.Notifications;
-using static CnV.Game.City;
+using static Cnv.City;
 using Microsoft.Web.WebView2.Core;
 using Microsoft.Web;
 using CoreWebView = Microsoft.Web.WebView2.Core.CoreWebView2;

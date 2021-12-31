@@ -12,7 +12,7 @@ using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Shapes;
 
 using static CnV.Debug;
-using static CnV.Game.City;
+using static Cnv.City;
 using static CnV.Views.CityBuildUI;
 using System.Collections.Generic;
 using CommunityToolkit.WinUI.UI;

@@ -688,19 +688,4 @@ namespace CnV.Views
 
 		}
 	}
-
-	public class CityTradeInfo
-	{
-		public static CityTradeInfo invalid = new CityTradeInfo();
-		public int[] resSource = Array.Empty<int>();
-		public int[] resDest = Array.Empty<int>();
-
-		
-		//public Resources res;
-		public Resources inc;
-		//public int resTotal => res.sum;
-
-	}
-
-
 }

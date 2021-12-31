@@ -30,6 +30,7 @@
     <HoursBetweenUpdateChecks>0</HoursBetweenUpdateChecks>
     <AppxSymbolPackageEnabled>True</AppxSymbolPackageEnabled>
     <TieredCompilation>true</TieredCompilation>
+    <Configurations>Debug;Release</Configurations>
   </PropertyGroup>
   <ItemGroup>
     <EmbeddedResource Remove="AppPackages\**" />
@@ -288,6 +289,7 @@
     <Compile Include="Views\ChatTab.xaml.cs">
       <DependentUpon>ChatTab.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\CityLayout.cs" />
     <Compile Include="Views\CityBox.xaml.cs" />
     <Compile Include="Views\CityBuildUI.xaml.cs">
       <DependentUpon>CityBuildUI.xaml</DependentUpon>

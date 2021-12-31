@@ -10,7 +10,7 @@ using CnV.Views;
 
 using EnumsNET;
 
-using static CnV.Game.City;
+using static Cnv.City;
 using static CnV.Views.QueueTab;
 using static CnV.Views.ShellPage;
 using static CnV.Views.CityBuildUI;
