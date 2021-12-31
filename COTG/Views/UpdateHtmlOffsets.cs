@@ -6,43 +6,6 @@ using Microsoft.UI.Xaml.Input;
 
 namespace CnV.Views
 {
-	using System.Text.Json.Serialization;
-
-	[MessagePackObject]
-	public class LayoutOffsets
-	{
-		[JsonInclude]
-		[Key(0)]
-		public float htmlScale;
-		[JsonInclude]
-		[Key(1)]
-		public float tabWidth;
-		[JsonInclude]
-		[Key(2)]
-		public float tabTopHeight;
-		[JsonInclude]
-		[Key(3)]
-		public float chatHeight;
-		[JsonInclude]
-		[Key(4)]
-		public float chatWidth;
-
-		public LayoutOffsets()
-		{
-		}
-
-		public LayoutOffsets(float htmlScale, float tabWidth, float tabTopHeight, float chatHeight, float chatWidth)
-		{
-			this.htmlScale=htmlScale;
-			this.tabWidth=tabWidth;
-			this.tabTopHeight=tabTopHeight;
-			this.chatHeight=chatHeight;
-			this.chatWidth=chatWidth;
-		}
-
-
-	}
-
 	public partial class ShellPage
 	{
 		

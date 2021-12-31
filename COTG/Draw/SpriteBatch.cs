@@ -14,52 +14,6 @@ using BitmapFont;
 
 namespace CnV.Draw
 {
-    /// <summary>
-    /// Helper class for drawing text strings and sprites in one or more optimized batches.
-    /// </summary>
-	public class Material : IEquatable<Material>
-	{
-		public readonly int _sortingKey = System.Threading.Interlocked.Increment(ref _lastSortingKey);
-		private static int _lastSortingKey;
-
-		public Texture? texture;
-		public Texture? texture1 = null;
-		public EffectPass? effect;
-		public Material(Texture _texture)
-		{
-			texture = _texture;
-			Assert(AGame.defaultEffect != null);
-			effect = AGame.defaultEffect;
-		}
-		public Material(Texture _texture, EffectPass _effect)
-		{
-			texture = _texture;
-			effect = _effect;
-			Assert(effect != null);
-
-		}
-		public Material(Texture _texture, Texture _texture1, EffectPass _effect)
-		{
-			texture = _texture;
-			texture1 = _texture1;
-			effect = _effect;
-			Assert(effect != null);
-
-		}
-		public Texture2D texture2d => texture as Texture2D;
-
-		public int Width => texture switch { Texture2D t => t.Width, Texture3D t => t.Width, _ => 1 };
-		public int Height => texture switch { Texture2D t => t.Height, Texture3D t => t.Height, _ => 1 };
-
-	
-
-		public override	int GetHashCode()
-		{
-			return _sortingKey;
-		}
-
-		public bool Equals(Material b) =>   _sortingKey == b._sortingKey;
-	}
 	public class SpriteBatch : GraphicsResource
 	{
         #region Private Fields

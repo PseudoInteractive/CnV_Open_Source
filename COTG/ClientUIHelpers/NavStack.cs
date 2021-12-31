@@ -173,6 +173,18 @@ namespace CnV.Helpers
 
 		public static NavStack instance = new NavStack();
 
+		// override global no op
+		public NavStack()
+		{
+			CnV.NavStack.Push = Push;
+		}
+
+
+		// triggers global constructor
+		public static NavStack Init()
+		{
+			return instance;
+		}
 		public bool CanExecute(object parameter)
 		{
 			return true;

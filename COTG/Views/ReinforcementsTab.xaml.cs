@@ -15,19 +15,22 @@ namespace CnV.Views
 	using System.Text;
 	using System.Threading.Tasks;
 	using Game;
+	using Microsoft.UI.Xaml;
+	using Services;
 	using Syncfusion.UI.Xaml.DataGrid;
+	using Syncfusion.UI.Xaml.Grids;
 
 
 	public sealed partial class ReinforcementsTab : UserTab
 	{
 		
-		public override TabPage defaultPage => TabPage.secondaryTabs;
-		public string reinInTitle;
-		public string reinOutTitle;
-		public NotifyCollection<City> reinforcementsOut = new();
-		public NotifyCollection<City> reinforcementsIn = new();
-		public static ReinforcementsTab instance;
-		public int targetCid;
+		public override TabPage                defaultPage => TabPage.secondaryTabs;
+		public          string                 reinInTitle;
+		public          string                 reinOutTitle;
+		public          NotifyCollection<City> reinforcementsOut = new();
+		public          NotifyCollection<City> reinforcementsIn  = new();
+		public static   ReinforcementsTab      instance;
+		public          int                    targetCid;
 
 		public ReinforcementsTab()
 		{
@@ -77,7 +80,7 @@ namespace CnV.Views
 				child0.AddHyperLink(nameof(Reinforcement.retUri), "Return");
 				child0.AddTime(nameof(Reinforcement.dateTime), "Arrival", nullText: "Arrived");
 				child0.AddText(nameof(Reinforcement._Troops), "Troops",
-					widthMode: Syncfusion.UI.Xaml.Grids.ColumnWidthMode.Star );
+					widthMode: ColumnWidthMode.Star );
 				{
 					var details = new GridViewDefinition() { RelationalColumn=isOutgoing?nameof(City.reinforcementsOutProp) : nameof(City.reinforcementsInProp) , DataGrid=child0 } ;
 					grid.DetailsViewDefinition.Add(details);
@@ -103,7 +106,7 @@ namespace CnV.Views
 
 		private bool hasLoaded;
 
-		private  void ReinLoaded(object sender,Microsoft.UI.Xaml.RoutedEventArgs e)
+		private  void ReinLoaded(object sender,RoutedEventArgs e)
 		{
 			if(!hasLoaded)
 			{
@@ -123,7 +126,7 @@ namespace CnV.Views
 			var _cid = targetCid;
 			var showAll = _cid == 0;
 			using var work = new WorkScope("Checking reinforcements..");
-			await Services.ReinforcementsOverview.instance.Post();
+			await ReinforcementsOverview.instance.Post();
 			await refreshTask;
 			
 			var _spot = _cid == 0 ? null : Spot.GetOrAdd(_cid);
@@ -174,6 +177,52 @@ namespace CnV.Views
 			//var file = await ADataGrid.Statics.folder.CreateFileAsync( (Tag as string) + ".xml", Windows.Storage.CreationCollisionOption.ReplaceExisting  );
 
 			//reinIn.Serialize(file);
+
+		}
+
+		public static async void ShowReinforcements(int _cid, UIElement uie)
+		{
+			try
+			{
+				var tab = ReinforcementsTab.instance;
+				tab.targetCid = _cid;
+				await tab.Update();
+
+				//}
+				//	var result = await msg.ShowAsync2(uie);
+				//	if(result == ContentDialogResult.Primary)
+				//	{
+				//		ShellPage.WorkStart("Return..");
+				//		int counter = 0;
+				//		foreach(var check in panel.Children)
+				//		{
+				//			if(!(check is CheckBox c))
+				//				continue;
+				//			if(c.IsChecked.GetValueOrDefault())
+				//			{
+				//				await Return(orders[counter]);
+				//			}
+
+				//			++counter;
+				//			ShellPage.WorkUpdate($"Return.. {counter}");
+				//		}
+				//		if(counter > 0)
+				//		{
+				//			await Task.Delay(400);
+				//			await Services.ReinforcementsOverview.instance.Post();
+				//		}
+
+
+				//	}
+
+				tab.ShowOrAdd(true, false);
+
+			}
+			catch(Exception __ex)
+			{
+				Debug.LogEx(__ex);
+			}
+
 
 		}
 	}

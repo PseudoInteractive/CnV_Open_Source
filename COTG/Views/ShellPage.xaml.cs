@@ -38,7 +38,7 @@ using CnV;
 namespace CnV.Views
 {
 	using Game;
-	
+
 	using Helpers;
 	// using PInvoke
 	using Services;
@@ -101,7 +101,7 @@ namespace CnV.Views
 
 	//	protected override void OnKeyDown(KeyRoutedEventArgs e) => Trace($"Key: {e.Key} {e.OriginalKey} {e.OriginalSource.ToString()}");
 //		protected override void OnPreviewKeyDown(KeyRoutedEventArgs e) => Trace($"KeyP: {e.Key} {e.OriginalKey} {e.OriginalSource.ToString()}");
-		public static string WorkStart(string desc)
+		public static void WorkStart(string desc)
 		{
 			AppS.DispatchOnUIThreadLow(() =>
 		   {
@@ -115,7 +115,6 @@ namespace CnV.Views
 			   }
 			   workQueue.Add(desc);
 		   });
-			return desc;
 		}
 
 		// Todo:  Queue updates with tasks
@@ -225,7 +224,12 @@ namespace CnV.Views
 		public static bool isFocused => isHitTestVisible && App.isForeground;
 		private void OnLoaded(object sender,RoutedEventArgs e)
 		{
-
+			NoteClient.Init();
+			CnV.Helpers.NavStack.Init();
+			// hook up delegates
+			WorkScope.Start  = WorkStart;
+			WorkScope.End    = WorkEnd;
+			WorkScope.Update = WorkUpdate;
 			//		SystemNavigationManagerPreview.GetForCurrentView().CloseRequested += App.App_CloseRequested; ;
 			//typeof(Telerik.UI.Xaml.Controls.RadDataForm).Assembly.GetType("Telerik.UI.Xaml.Controls.TelerikLicense").GetField("messageDisplayed",BindingFlags.NonPublic|BindingFlags.Static).SetValue(null,true,BindingFlags.Static|BindingFlags.NonPublic,null,null);
 
@@ -1449,31 +1453,5 @@ namespace CnV.Views
 		//	var c = e.GetCurrentPoint(canvas);
 		//	UpdateMousePosition( c.Position );
 		//}
-	}
-	public struct WorkScope : IDisposable
-	{
-		private readonly string desc;
-
-		// passing null results in a Scope with no effect
-		public WorkScope(string _desc)
-		{
-			if(_desc != null)
-			{
-				this.desc = ShellPage.WorkStart(_desc);
-			}
-			else
-			{
-				this.desc = null;
-			}
-		}
-
-		public void Dispose()
-		{
-			if(desc != null)
-			{
-				ShellPage.WorkEnd(desc);
-				Note.Show(desc + " complete");
-			}
-		}
 	}
 }

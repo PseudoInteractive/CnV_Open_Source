@@ -33,16 +33,18 @@ namespace CnV
 	using Services;
 	using Views;
 
-	public static class Note
+	public static class NoteClient
 	{
 	
-		static Note()
+		public static void Init()
 		{
 			//markDownText = new();
 			//markDownText.TableCellPadding = new Thickness(0,0,0,0); // hack!
 			//markDownText.ListMargin = new Thickness(0,0,0,0); // hack!
 			//markDownText.Background = null;
 			Debug.OnNote = Show;
+			Note.Show    = Show;
+			
 		}
 
 		//private static void InAppNote_Closed(object sender, InAppNotificationClosedEventArgs e)

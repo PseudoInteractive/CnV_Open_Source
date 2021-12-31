@@ -53,9 +53,8 @@
     <PackageReference Include="DSharpPlus" Version="4.1.0" />
     <PackageReference Include="DSharpPlus.CommandsNext" Version="4.1.0" />
     <PackageReference Include="Enums.NET" Version="4.0.0" />
-    <PackageReference Include="Grpc.Net.Client" Version="2.41.0" />
+    <PackageReference Include="Grpc.Net.Client" Version="2.42.0-pre1" />
     <PackageReference Include="Humanizer.Core" Version="2.13.14" />
-    <PackageReference Include="MagicOnion.Client" Version="4.3.1" />
     <PackageReference Include="MessagePackAnalyzer" Version="2.3.85" />
     <PackageReference Include="Microsoft.Toolkit" Version="7.1.2" />
     <PackageReference Include="Microsoft.Toolkit.Diagnostics" Version="7.1.2" />
@@ -72,10 +71,6 @@
     <PackageReference Include="SharpDX.DXGI" Version="4.2.0" />
     <PackageReference Include="SharpDX.MediaFoundation" Version="4.2.0" />
     <PackageReference Include="SharpGen.Runtime.COM" Version="2.0.0-beta.10" />
-    <PackageReference Include="Syncfusion.Chart.WinUI" Version="19.4.0.38" />
-    <PackageReference Include="Syncfusion.Grid.WinUI" Version="19.4.0.38" />
-    <PackageReference Include="Syncfusion.Licensing" Version="19.4.0.38" />
-    <PackageReference Include="Syncfusion.Scheduler.WinUI" Version="19.4.0.38" />
     <PackageReference Include="System.Linq.Async" Version="5.1.0" />
     <PackageReference Include="System.Management" Version="6.0.0" />
     <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="6.0.0" />
@@ -203,8 +198,6 @@
     <Compile Include="Game\Overview.cs" />
     <Compile Include="Game\PlayerPresence.cs" />
     <Compile Include="Game\Stats.cs" />
-    <Compile Include="Game\Playfab.cs" />
-    <Compile Include="Game\ResSource.cs" />
     <Compile Include="Game\World.cs" />
     <Compile Include="Game\WorldViewSettings.cs" />
     <Compile Include="Game\XNAUtil.cs" />
@@ -222,14 +215,12 @@
     <Compile Include="JSON\ppdt.cs" />
     <Compile Include="JSON\Report.cs" />
     <Compile Include="JSON\SpotJson.cs" />
-    <Compile Include="JSON\TileSet.cs" />
-    <Compile Include="JSON\TradeSettings.cs" />
     <Compile Include="Models\ADataGrid.cs" />
     <Compile Include="Models\DataGridTap.cs" />
     <Compile Include="Models\GoogleSheets.cs" />
     <Compile Include="Models\JsNative.cs" />
     <Compile Include="Models\JSPopup.cs" />
-    <Compile Include="Note.cs" />
+    <Compile Include="NoteClient.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
@@ -239,7 +230,6 @@
     <Compile Include="Services\Blobs.cs" />
     <Compile Include="Services\ChatStorage.cs" />
     <Compile Include="Services\Cosmos.cs" />
-    <Compile Include="Services\CotGRest.cs" />
     <Compile Include="Models\DragDropCompletedData.cs" />
     <Compile Include="Models\DragDropData.cs" />
     <Compile Include="Models\DragDropStartingData.cs" />
@@ -289,7 +279,6 @@
     <Compile Include="Views\ChatTab.xaml.cs">
       <DependentUpon>ChatTab.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\CityLayout.cs" />
     <Compile Include="Views\CityBox.xaml.cs" />
     <Compile Include="Views\CityBuildUI.xaml.cs">
       <DependentUpon>CityBuildUI.xaml</DependentUpon>
@@ -297,6 +286,7 @@
     <Compile Include="Views\CityControl.xaml.cs">
       <DependentUpon>CityControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\CityUI.cs" />
     <Compile Include="Views\ContinentTagFilter.xaml.cs">
       <DependentUpon>ContinentTagFilter.xaml</DependentUpon>
     </Compile>
@@ -581,8 +571,6 @@
   </ItemGroup>
   <ItemGroup>
 	<None Remove="cnvCover.png" />
-    <None Remove="Content\Art\bgr_all_cities_destroyed.png" />
-    <None Remove="Content\Art\bgr_tablet_scr_closed.png" />
     <None Remove="Content\Art\circlegradient.png" />
     <None Remove="Content\Art\circlegradient.xcf" />
     <None Remove="Content\Art\City\baseland.png" />

@@ -122,7 +122,7 @@ namespace CnV
 		public static Effect avaEffect;
 		public static Span2i[] popups = Array.Empty<Span2i>();
 
-		public static EffectPass defaultEffect;
+		public static EffectPass defaultEffect => Material.defaultEffect;
 		public static EffectPass alphaAddEffect;
 		public static EffectPass fontEffect;
 		public static EffectPass darkFontEffect;

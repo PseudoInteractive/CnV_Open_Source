@@ -6,7 +6,7 @@ using System.Web;
 
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls.Primitives;
-using static Cnv.City;
+using static CnV.City;
 using System.Text.RegularExpressions;
 using System.ComponentModel;
 using CommunityToolkit.WinUI.UI.Controls;
