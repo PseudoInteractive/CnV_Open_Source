@@ -5,9 +5,9 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.UI.Xaml.Media.Imaging;
 using Microsoft.UI.Xaml.Media;
-using static CnV.Views.CityBuild;
+using static CnV.Views.CityBuildUI;
 using Microsoft.UI.Xaml;
-using Action = CnV.Views.CityBuild.Action;
+using Action = CnV.Views.CityBuildUI.Action;
 using Microsoft.UI;
 
 namespace CnV.Views
@@ -28,27 +28,27 @@ namespace CnV.Views
 	public class BuildMenuItem
 	{
 		public int bid;
-		public bool isAction => action != CityBuild.Action.invalid;
+		public bool isAction => action != CityBuildUI.Action.invalid;
 		public bool isBuilding => bid != 0;
 		public ImageBrush brush;
 		public string toolTip;
 		public string header;
 		public Windows.UI.Color textColor;
-		public CityBuild.Action action = CityBuild.Action.invalid;
+		public CityBuildUI.Action action = CityBuildUI.Action.invalid;
 		public string accessKey { get; set; }
 		public const int width = 64;
 		public const int height = 64;
 
 		public BuildMenuItem()
 		{
-			action = CityBuild.Action.invalid;
+			action = CityBuildUI.Action.invalid;
 			bid = -1;
 			textColor = Colors.Black;
 
 		}
 		public BuildMenuItem(int _bid)
 		{
-			action = CityBuild.Action.invalid;
+			action = CityBuildUI.Action.invalid;
 			{
 				bid = _bid;
 				var def = BuildingDef.all[_bid];
@@ -63,11 +63,11 @@ namespace CnV.Views
 				}
 			}
 		}
-		public BuildMenuItem(string name, CityBuild.Action action, string icon, string toolTip)
+		public BuildMenuItem(string name, CityBuildUI.Action action, string icon, string toolTip)
 		{
 			header = name;
 			this.action = action;
-			brush = CityBuild.BrushFromImage(icon);
+			brush = CityBuildUI.BrushFromImage(icon);
 			this.toolTip = toolTip;
 		}
 	}

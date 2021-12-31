@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using static CnV.Game.City;
+using static CnV.City;
 using static CnV.AGame;
 using UWindows = Windows;
 using Vector2 = System.Numerics.Vector2;
@@ -18,7 +18,7 @@ using static CnV.CanvasHelpers;
 using Microsoft.Xna.Framework;
 using CnV.Views;
 using static CnV.Debug;
-using static CnV.Views.CityBuild;
+using static CnV.Views.CityBuildUI;
 
 
 namespace CnV.Draw
@@ -37,6 +37,16 @@ namespace CnV.Draw
 
 				}
 			AUtil.UnsafeCopy(CityView.baseAnimationOffsets, CityView.animationOffsets);
+
+			City.buildCityChanged += ()
+											=>
+									{
+										AUtil.UnsafeCopy(CityView.baseAnimationOffsets, CityView.animationOffsets);
+										//buildQueue.ClearKeepBuffer();
+										//buildQInSync = false;
+										ClearSelectedBuilding();
+
+									}
 		}
 
 		const int atlasTileSize = 128;
@@ -165,7 +175,7 @@ namespace CnV.Draw
 						var bspot = XYToId((cx, cy));
 
 						Building cur, next;//,overlay;
-						if(!CityBuild.isPlanner)
+						if(!CityBuildUI.isPlanner)
 						{
 							cur = buildings[bspot];
 							next = postBuildings[bspot];
@@ -290,7 +300,7 @@ namespace CnV.Draw
 							int bid, currentBid;
 							//	BuildingDef bd;
 							//Building current;
-							if(CityBuild.isPlanner)
+							if(CityBuildUI.isPlanner)
 							{
 								var bs = postBuildings[bspot];
 								if(bs.isEmpty)
@@ -600,27 +610,27 @@ namespace CnV.Draw
 		{
 			if (xy.IsValid())
 			{
-				if (action == CityBuild.Action.moveEnd)
+				if (action == CityBuildUI.Action.moveEnd)
 				{ 
 					// stay here
 				}
-				else if (action == CityBuild.Action.moveStart)
+				else if (action == CityBuildUI.Action.moveStart)
 				{
 					if (_isSingleClickAction)
 					{
 
-						CityBuild.PushSingleAction(CityBuild.Action.moveEnd);
+						CityBuildUI.PushSingleAction(CityBuildUI.Action.moveEnd);
 
 					}
 					else
 					{
-						SetAction(CityBuild.Action.moveEnd);
+						SetAction(CityBuildUI.Action.moveEnd);
 					}
 				}
 			}
 			else
 			{
-				if (action == CityBuild.Action.moveEnd)
+				if (action == CityBuildUI.Action.moveEnd)
 				{
 					if (_isSingleClickAction)
 					{
@@ -628,7 +638,7 @@ namespace CnV.Draw
 					}
 					else
 					{
-						SetAction(CityBuild.Action.moveStart);
+						SetAction(CityBuildUI.Action.moveStart);
 					}
 				}
 			}

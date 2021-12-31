@@ -193,16 +193,9 @@
     <Compile Include="Draw\SpriteBatcher.cs" />
     <Compile Include="Draw\SpriteBatchItem.cs" />
     <Compile Include="Game\AGame.cs" />
-    <Compile Include="Game\Alliance.cs" />
-    <Compile Include="Game\Army.cs" />
-    <Compile Include="Game\Attack.cs" />
     <Compile Include="Game\BlessedCity.cs" />
     <Compile Include="Game\CanvasHelpers.cs" />
-    <Compile Include="Game\City.cs" />
-    <Compile Include="Game\City2.cs" />
     <Compile Include="Game\CityCustom.cs" />
-    <Compile Include="Game\Dungeon.cs" />
-    <Compile Include="Game\Enums.cs" />
     <Compile Include="Game\Faith.cs" />
     <Compile Include="Game\GameSetup.cs" />
     <Compile Include="Game\HeatMap.cs" />
@@ -210,23 +203,14 @@
     <Compile Include="Game\PlayerPresence.cs" />
     <Compile Include="Game\Stats.cs" />
     <Compile Include="Game\Playfab.cs" />
-    <Compile Include="Game\Raiding.cs" />
-    <Compile Include="Game\Reinforcement.cs" />
     <Compile Include="Game\ResSource.cs" />
-    <Compile Include="Game\Spot.cs" />
-    <Compile Include="Game\Supporter.cs" />
-    <Compile Include="Game\Tags.cs" />
-    <Compile Include="Game\TroopTypeCounts.cs" />
     <Compile Include="Game\World.cs" />
     <Compile Include="Game\WorldViewSettings.cs" />
     <Compile Include="Game\XNAUtil.cs" />
     <Compile Include="GlobalSuppressions2.cs" />
     <Compile Include="GlobalUsing.cs" />
-    <Compile Include="JSON\Building.cs" />
-    <Compile Include="JSON\BuildingDef.cs" />
     <Compile Include="JSON\CitySettings.cs" />
     <Compile Include="JSON\Errors.cs" />
-    <Compile Include="JSON\ExtendedQueue.cs" />
     <Compile Include="JSON\GetIO.cs" />
     <Compile Include="JSON\gFRep2.cs" />
     <Compile Include="JSON\IncomingEstimate.cs" />
@@ -239,7 +223,6 @@
     <Compile Include="JSON\SpotJson.cs" />
     <Compile Include="JSON\TileSet.cs" />
     <Compile Include="JSON\TradeSettings.cs" />
-    <Compile Include="JSON\TroopInfo.cs" />
     <Compile Include="Models\ADataGrid.cs" />
     <Compile Include="Models\DataGridTap.cs" />
     <Compile Include="Models\GoogleSheets.cs" />
@@ -306,8 +289,8 @@
       <DependentUpon>ChatTab.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\CityBox.xaml.cs" />
-    <Compile Include="Views\CityBuild.xaml.cs">
-      <DependentUpon>CityBuild.xaml</DependentUpon>
+    <Compile Include="Views\CityBuildUI.xaml.cs">
+      <DependentUpon>CityBuildUI.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\CityControl.xaml.cs">
       <DependentUpon>CityControl.xaml</DependentUpon>
@@ -459,7 +442,7 @@
     <Page Include="Views\CityBox.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\CityBuild.xaml">
+    <Page Include="Views\CityBuildUI.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -16,7 +16,7 @@ using CnV.Views;
 
 using static CnV.Debug;
 using static CnV.Game.City;
-using static CnV.Views.CityBuild;
+using static CnV.Views.CityBuildUI;
 using static CnV.Views.ShellPage;
 using static CnV.Views.QueueTab;
 using EnumsNET;
@@ -132,7 +132,7 @@ namespace CnV.Views
 
 		private void ClearQueue(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
 		{
-			CityBuild.ClearQueue();
+			CityBuildUI.ClearQueue();
 			RebuildAll();
 		}
 
@@ -568,7 +568,7 @@ namespace CnV.Views
 		{
 			var city = City.GetOrAdd(_cid);
 			cid = _cid;
-			brush = CityBuild.BrushFromImage(city.icon);
+			brush = CityBuildUI.BrushFromImage(city.icon);
 			text = City.GetOrAdd(_cid).nameAndRemarks;
 		}
 	}
@@ -583,7 +583,7 @@ namespace CnV.Views
 		{
 			cid = _cid;
 			op = item;
-			brush = CityBuild.BuildingBrush(item.bid,size / 128.0f);
+			brush = CityBuildUI.BuildingBrush(item.bid,size / 128.0f);
 			var desc = item.elvl == 0 ? "Destroy" : item.slvl == 0 ? "Build" : item.slvl > item.elvl ? "Downgrade" : "Upgrade";
 			text = desc + BuildingDef.all[item.bid].Bn;
 		}

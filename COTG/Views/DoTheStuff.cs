@@ -13,7 +13,7 @@ using EnumsNET;
 using static CnV.Game.City;
 using static CnV.Views.QueueTab;
 using static CnV.Views.ShellPage;
-using static CnV.Views.CityBuild;
+using static CnV.Views.CityBuildUI;
 using Microsoft.UI.Xaml.Controls;
 using CnV;
 
@@ -36,7 +36,7 @@ public static class DoTheStuff
 			Assert(city.isBuild);
 			if(ShellPage.viewMode != ShellPage.ViewMode.city)
 				JSClient.ChangeView(ShellPage.ViewMode.city);
-			await CityBuild._IsPlanner(false,true);
+			await CityBuildUI._IsPlanner(false,true);
 
 			Assert(App.uiSema.CurrentCount == 0);
 			Assert(AppS.IsOnUIThread());

@@ -229,12 +229,12 @@ namespace CnV.Views
 			//		SystemNavigationManagerPreview.GetForCurrentView().CloseRequested += App.App_CloseRequested; ;
 			//typeof(Telerik.UI.Xaml.Controls.RadDataForm).Assembly.GetType("Telerik.UI.Xaml.Controls.TelerikLicense").GetField("messageDisplayed",BindingFlags.NonPublic|BindingFlags.Static).SetValue(null,true,BindingFlags.Static|BindingFlags.NonPublic,null,null);
 
-			CityBuild.Initialize();
+			CityBuildUI.Initialize();
 			// Grid.SetColumn(webView, 0);
-			Grid.SetRow(CityBuild.instance,1);
-			Grid.SetRowSpan(CityBuild.instance,5);
-			Grid.SetColumnSpan(CityBuild.instance,1);
-			Canvas.SetZIndex(CityBuild.instance,13);
+			Grid.SetRow(CityBuildUI.instance,1);
+			Grid.SetRowSpan(CityBuildUI.instance,5);
+			Grid.SetColumnSpan(CityBuildUI.instance,1);
+			Canvas.SetZIndex(CityBuildUI.instance,13);
 			var c = CreateCanvasControl();
 
 			
@@ -787,7 +787,7 @@ namespace CnV.Views
 					}
 				}
 
-				foreach(var bdi in CityBuild.isPlanner ? build.GetLayoutBuildings() : build.postQueueBuildings)
+				foreach(var bdi in CityBuildUI.isPlanner ? build.GetLayoutBuildings() : build.postQueueBuildings)
 				{
 					var id = bdi.id;
 					if(id == 0 || !bdi.isBuilding)
@@ -806,10 +806,10 @@ namespace CnV.Views
 						if(i.Value > 0)
 						{
 							var bdf = BuildingDef.all[i.Key];
-							bd.Add(new BuildingCount() { count = i.Value,brush = CityBuild.BuildingBrush(bdf.bid,0.5f) });
+							bd.Add(new BuildingCount() { count = i.Value,brush = CityBuildUI.BuildingBrush(bdf.bid,0.5f) });
 						}
 					}
-					bd.Add(new BuildingCount() { count = bCount,brush = CityBuild.BuildingBrush(City.bidTownHall,0.5f) });
+					bd.Add(new BuildingCount() { count = bCount,brush = CityBuildUI.BuildingBrush(City.bidTownHall,0.5f) });
 
 					// var button = sender as Button; button.Focus(FocusState.Programmatic);
 					AppS.DispatchOnUIThreadLow(() =>

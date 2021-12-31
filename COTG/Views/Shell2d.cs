@@ -13,7 +13,7 @@ using Microsoft.UI.Xaml.Shapes;
 
 using static CnV.Debug;
 using static CnV.Game.City;
-using static CnV.Views.CityBuild;
+using static CnV.Views.CityBuildUI;
 using System.Collections.Generic;
 using CommunityToolkit.WinUI.UI;
 using CnV;
@@ -572,7 +572,7 @@ namespace CnV.Views
 				case Windows.System.VirtualKey.F10:
 					if (Player.isSpecial  || (App.IsKeyPressedShift() && App.IsKeyPressedControl()))
 					{
-						CityBuild.testFlag ^= true;
+						CityBuildUI.testFlag ^= true;
 						Note.Show("Test: " + testFlag);
 						JSClient.view.ExecuteScriptAsync($"setTestFlag({(testFlag ? "1" : "0")})");
 					}

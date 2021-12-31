@@ -216,7 +216,7 @@ namespace CnV.Views
 			{
 				if (IsCityView() && (cid == City.build))
 				{
-					CityBuild.Click(cc, true);
+					CityBuildUI.Click(cc, true);
 				}
 				else
 				{
@@ -712,7 +712,7 @@ namespace CnV.Views
 								{
 									AppS.DispatchOnUIThreadLow(() =>
 									{
-										CityBuild.Click(cc, false);
+										CityBuildUI.Click(cc, false);
 
 									});
 								}
@@ -894,7 +894,7 @@ namespace CnV.Views
 				// only needs for pen and touch
 				if (IsCityView())
 				{
-					CityBuild.PointerDown(cc);
+					CityBuildUI.PointerDown(cc);
 				
 				}
 

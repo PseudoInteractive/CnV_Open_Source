@@ -37,42 +37,12 @@ using System.Threading.Tasks;
 using static CnV.Views.AttackTab;
 using Microsoft.Xna.Framework.Media;
 using CnV;
-using System.Runtime.CompilerServices;
 
 namespace CnV
 {
 	using KeyF = KeyFrame<float>;
 	using Vector4 = System.Numerics.Vector4;
 
-	public struct DummyTask
-	{
-		public Task _t;
-		public Task t { 
-			get 
-				{
-				if(_t == null)
-					_t = new Task(() => { });
-				return _t;
-			}
-			}
-		public  Task ContinueWith(Action<Task, object?> continuationAction, object? state) => t.ContinueWith(continuationAction,state);
-		public  Task ContinueWith(Action<Task> continuationAction) => t.ContinueWith(continuationAction);
-		public void Complete(){
-			if(_t == null)
-			{
-				_t = Task.CompletedTask;
-			}
-			else
-			{ 
-				_t.RunSynchronously(); 
-				
-			}
-			}
-		public static implicit operator Task(DummyTask t) => t.t;
-		public static implicit operator bool(DummyTask t) => t.t.IsCompleted;
-		public ConfiguredTaskAwaitable WaitAsync(bool continueOnCapturedContext=true) => t.ConfigureAwait(continueOnCapturedContext);
-
-	}
 	public static partial class Helper
 	{
 		

@@ -378,7 +378,7 @@ namespace CnV.Views
 
 			//Assert(CityBuild.isPlanner);
 
-			if( CityBuild.isPlanner)
+			if( CityBuildUI.isPlanner)
 			{
 				city.BuildingsOrQueueChanged();
 				PleaseRefresh.Go();
@@ -402,7 +402,7 @@ namespace CnV.Views
 			city.TouchLayoutForWrite();
 			var bc = city.layout.ToArray();
 			
-			Assert(CityBuild.isPlanner);
+			Assert(CityBuildUI.isPlanner);
 			for (int y = span0; y <= span1; ++y)
 			{
 				for (int x = span0; x <= span1; ++x)
@@ -423,7 +423,7 @@ namespace CnV.Views
 		private async void FlipHClick(object sender, RoutedEventArgs e)
 		{
 			App.UpdateKeyStates();
-			Assert(CityBuild.isPlanner);
+			Assert(CityBuildUI.isPlanner);
 			//await CityBuild._IsPlanner(true);
 			var city = GetBuild();
 			city.FlipLayoutH(true,App.IsKeyPressedControl());
@@ -433,7 +433,7 @@ namespace CnV.Views
 		{
 			App.UpdateKeyStates();
 
-			Assert(CityBuild.isPlanner);
+			Assert(CityBuildUI.isPlanner);
 			//await CityBuild._IsPlanner(true);
 			var city = GetBuild();
 			city.FlipLayoutV(true,App.IsKeyPressedControl());
@@ -526,7 +526,7 @@ namespace CnV.Views
 						var bid = city.GetLayoutBid(id);
 						if (bid != 0 && bid != bidShipyard && bid != bidPort)
 						{
-							if (CityBuild.IsWaterSpot(id))
+							if (CityBuildUI.IsWaterSpot(id))
 								hasInvalid = true;
 							if (IsResHelper(bid))
 								++resHelpers;
@@ -669,7 +669,7 @@ namespace CnV.Views
 		public override void Close()
 		{ 
 			base.Close();
-			CityBuild._IsPlanner(false);
+			CityBuildUI._IsPlanner(false);
 
 		}
 
