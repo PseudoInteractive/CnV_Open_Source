@@ -303,7 +303,7 @@ namespace CnV.Services
 				Log("No snapshots");
 				return;
 			}
-			snaps.SortSmall((a, b) => a.time.secondsI.CompareTo(b.time.secondsI));
+			snaps.SortSmall((a, b) => a.time.seconds.CompareTo(b.time.seconds));
 			var sb = new StringBuilder();
 			var aids = new List<int>();
 			foreach(var alli in snaps.Last().allianceStats )
@@ -366,7 +366,7 @@ namespace CnV.Services
 				Note.Show("No snapshots");
 				return;
 			}
-			snaps.SortSmall((a, b) => a.time.secondsI.CompareTo(b.time.secondsI));
+			snaps.SortSmall((a, b) => a.time.seconds.CompareTo(b.time.seconds));
 			var sb = new StringBuilder();
 			var pids = new List<int>();
 

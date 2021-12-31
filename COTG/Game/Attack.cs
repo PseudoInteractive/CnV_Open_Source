@@ -258,9 +258,9 @@ namespace CnV.Game
 		public float attackMaxTravelHoursSen = 40;
 
 		[JsonInclude]
-		public int senTime;
+		public uint senTime;
 		[JsonInclude]
-		public int seTime;
+		public uint seTime;
 
 		[JsonIgnore]
 		public SmallTime attackTime => new SmallTime( senTime != 0 ? seTime != 0 ? senTime.Min(seTime) : senTime : seTime); 

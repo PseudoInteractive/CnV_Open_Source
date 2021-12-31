@@ -1420,8 +1420,8 @@ namespace CnV
 
 		public static void SetHeatmapDates(SmallTime t0, SmallTime t1)
 		{
-			Assert(t0.secondsI != 0);
-			Assert(t1.secondsI != 0);
+			Assert(t0.seconds != 0);
+			Assert(t1.seconds != 0);
 			SmallTime _t0 = t0;
 			SmallTime  _t1 = t1 + 1;
 
@@ -1519,7 +1519,7 @@ namespace CnV
 										   {
 											   var delta = target - cityCount1;
 											   var sec = ((float)dt * (float)(delta) / dc);
-											   sb.AppendFormat("{0} cities at {1}", target, new SmallTime(heatMapT1 + sec.RoundToInt()).ToString());
+											   sb.AppendFormat("{0} cities at {1}", target, new SmallTime((heatMapT1 + sec.RoundToInt()).AsUInt()).ToString());
 											   sb.AppendFormat(" ({0})\n", TimeSpan.FromSeconds(sec).Format());
 										   }
 									   }

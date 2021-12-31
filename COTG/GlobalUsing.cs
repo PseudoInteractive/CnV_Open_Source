@@ -1,4 +1,5 @@
-﻿global using CnV;
+﻿global using MessagePack;
+global using CnV;
 global using System.Linq;
 global using System;
 global using CnV.Game;

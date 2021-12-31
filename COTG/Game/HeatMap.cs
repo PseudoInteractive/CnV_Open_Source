@@ -80,7 +80,7 @@ namespace CnV.Game
 
 		public override int GetHashCode()
 		{
-			return t.secondsI;
+			return t.GetHashCode();
 		}
 
 		public static bool operator ==(HeatMapItem left, HeatMapItem right)

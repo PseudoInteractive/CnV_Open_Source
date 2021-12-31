@@ -189,7 +189,7 @@ namespace CnV.Helpers
                     string a => a,
                     bool a => a,
                     DateTimeOffset a => a.UtcTicks,
-					SmallTime a => a.secondsI,
+					SmallTime a => a.seconds,
                     TimeSpan a => a,
                     Guid a => a,
                     Point a => a,
@@ -224,7 +224,7 @@ namespace CnV.Helpers
 					}
 					else if (t == typeof(SmallTime))
 					{
-						return new SmallTime((int)o);
+						return new SmallTime((uint)o);
 					}
 					else if (t == typeof(Nullable<bool>) )
                     {
