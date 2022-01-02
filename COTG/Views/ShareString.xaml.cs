@@ -164,7 +164,7 @@ namespace CnV.Views
 		public static Task<bool> ShowNoLock(int cid,SetupFlags flags = SetupFlags.all)
 		{
 			Log("enter2");
-			Assert(App.uiSema.CurrentCount == 0);
+			Assert(AppS.uiSema.CurrentCount == 0);
 			Assert(cid == City.build);
 
 			//	var sel = Spot.GetSelectedForContextMenu(cid,false, onlyMine: true);

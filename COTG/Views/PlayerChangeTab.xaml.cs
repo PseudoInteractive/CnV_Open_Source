@@ -52,7 +52,7 @@ namespace CnV.Views
 		public int templesMade { get; set; }
 		public int templesLost { get; set; }
 
-		public ushort allianceId => Player.Get(pid).alliance;
+		public ushort allianceId => Player.Get(pid).allianceId;
 
 	}
 
@@ -83,7 +83,7 @@ namespace CnV.Views
 				Comparison<PlayerChanges> comparer = null;
 				switch (tag)
 				{
-					case nameof(PlayerChanges.alliance): comparer = (a, b) => a.alliance.CompareTo(b.alliance); break;
+					case nameof(PlayerChanges.allianceId): comparer = (a, b) => a.allianceId.CompareTo(b.allianceId); break;
 					case nameof(PlayerChanges.activity): comparer = (a, b) => a.activity.CompareTo(b.activity); break;
 					case nameof(PlayerChanges.name): comparer = (a, b) => a.name.CompareTo(b.name); break;
 					case nameof(PlayerChanges.cities): comparer = (a, b) => a.cities.CompareTo(b.cities); break;

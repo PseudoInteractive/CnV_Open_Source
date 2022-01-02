@@ -164,9 +164,9 @@
 					</winui:AppBarElementContainer>
 
 
-					<winui:AppBarButton Click="{x:Bind helpers:NavStack.BackClick}"  Icon="Back" Label="Back" RightTapped="BackRightTapped" Style="{StaticResource AppBarButtonRevealStyle}"
+					<winui:AppBarButton Click="{x:Bind cotg:NavStack.BackClick}"  Icon="Back" Label="Back" RightTapped="BackRightTapped" Style="{StaticResource AppBarButtonRevealStyle}"
                           ToolTipService.ToolTip="Switch to most recently visited city&#x0a;Right click to view history"  AccessKey=","/>
-					<winui:AppBarButton Click="{x:Bind helpers:NavStack.ForwardClick}" Icon="Forward" Label="Forward"  RightTapped="ForwardRightTapped" Style="{StaticResource AppBarButtonRevealStyle}"
+					<winui:AppBarButton Click="{x:Bind cotg:NavStack.ForwardClick}" Icon="Forward" Label="Forward"  RightTapped="ForwardRightTapped" Style="{StaticResource AppBarButtonRevealStyle}"
                            ToolTipService.ToolTip="Move forward in city history&#x0a;This is only useful after you have pressed 'Back'&#x0a;Right click to view forward history" AccessKey="." />
 
 					<winui:AppBarToggleButton x:Name="webFocus" Click="webFocus_Click" Icon="Caption" Label="HTML"  

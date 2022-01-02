@@ -56,6 +56,7 @@
     <PackageReference Include="Grpc.Net.Client" Version="2.42.0-pre1" />
     <PackageReference Include="Humanizer.Core" Version="2.13.14" />
     <PackageReference Include="MessagePackAnalyzer" Version="2.3.85" />
+    <PackageReference Include="Microsoft.DependencyValidation.Analyzers" Version="0.11.0" />
     <PackageReference Include="Microsoft.Toolkit" Version="7.1.2" />
     <PackageReference Include="Microsoft.Toolkit.Diagnostics" Version="7.1.2" />
     <PackageReference Include="Microsoft.Toolkit.HighPerformance" Version="7.1.2" />
@@ -172,11 +173,12 @@
     <Compile Include="Activation\ShareTargetActivationHandler.cs" />
     <Compile Include="Activation\WebToAppLinkActivationHandler.cs" />
     <Compile Include="Bookmarks.cs" />
-    <Compile Include="ClientUIHelpers\ImageHelper.cs" />
     <Compile Include="ClientUIHelpers\KeyboardFocus.cs" />
     <Compile Include="ClientUIHelpers\NavStack.cs" />
     <Compile Include="ClientOS\SettingsStorageExtensions.cs" />
     <Compile Include="ClientOS\WindowHelper.cs" />
+    <Compile Include="ClientUI\CitySettingsUI.cs" />
+    <Compile Include="ClientUI\OnTap.cs" />
     <Compile Include="CnVChatClient\CnVChatClient.cs" />
     <Compile Include="Converters\CityConverters.cs" />
     <Compile Include="Converters\DateTimeFormatConverter.cs" />
@@ -192,12 +194,13 @@
     <Compile Include="Game\BlessedCity.cs" />
     <Compile Include="Game\CanvasHelpers.cs" />
     <Compile Include="Game\CityCustom.cs" />
+    <Compile Include="Game\CnVClient.cs" />
     <Compile Include="Game\Faith.cs" />
     <Compile Include="Game\GameSetup.cs" />
     <Compile Include="Game\HeatMap.cs" />
     <Compile Include="Game\Overview.cs" />
     <Compile Include="Game\PlayerPresence.cs" />
-    <Compile Include="Game\Stats.cs" />
+    <Compile Include="Game\Supporter.cs" />
     <Compile Include="Game\World.cs" />
     <Compile Include="Game\WorldViewSettings.cs" />
     <Compile Include="Game\XNAUtil.cs" />
@@ -226,7 +229,6 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="Services\Avatarslate.cs" />
-    <Compile Include="Services\Blobs.cs" />
     <Compile Include="Services\ChatStorage.cs" />
     <Compile Include="Services\Cosmos.cs" />
     <Compile Include="Models\DragDropCompletedData.cs" />
@@ -674,6 +676,9 @@
     <None Remove="Win32Native.txt" />
   </ItemGroup>
   <ItemGroup>
+    <AdditionalFiles Include="..\..\CnVDepends\CnVDepends\DependencyValidation1.layerdiagram" Link="DependencyValidation1.layerdiagram">
+      <Visible>False</Visible>
+    </AdditionalFiles>
     <None Include="JS\alasstylesheet.css" />
     <None Include="JS\jquery1_12_4" />
     <None Include="JS\jquery-migrate1_4_1" />
@@ -759,7 +764,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Base\" />
-    <Folder Include="ClientHelpers\" />
     <Folder Include="Themes\" />
   </ItemGroup>
   <ItemGroup>
@@ -771,5 +775,6 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
+  <Import Project="..\..\CnVSharedSource\CnVSharedSource.projitems" Label="Shared" />
 
  </Project>

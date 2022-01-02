@@ -520,7 +520,7 @@ namespace CnV.Views
 
 		//private async void SplatAll(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
 		//{
-		//	if (App.uiSema.CurrentCount == 0)
+		//	if (AppS.uiSema.CurrentCount == 0)
 		//	{
 		//		Log("Already running");
 		//		return;

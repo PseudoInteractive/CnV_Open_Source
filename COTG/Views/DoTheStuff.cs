@@ -37,7 +37,7 @@ public static class DoTheStuff
 				JSClient.ChangeView(ViewMode.city);
 			await CityBuildUI._IsPlanner(false,true);
 
-			Assert(App.uiSema.CurrentCount == 0);
+			Assert(AppS.uiSema.CurrentCount == 0);
 			Assert(AppS.IsOnUIThread());
 			await GetCity.Post(cid);
 			if(city.leaveMe)

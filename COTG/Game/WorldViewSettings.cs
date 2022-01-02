@@ -10,7 +10,7 @@ namespace CnV.Game
 {
 	using static World;
 
-	class WorldViewSettings
+	public class WorldViewSettings
 	{
 
 		public struct Setting
@@ -79,7 +79,7 @@ namespace CnV.Game
 
 		//				var pid = World.GetPlayer(d0);
 		//				var hasPlayer = Player.all.TryGetValue((int)pid, out var p);
-		//				var alliance = hasPlayer ? p.alliance : 0;
+		//				var alliance = hasPlayer ? p.allianceId : 0;
 
 		//				if (pid == 0)
 		//				{

@@ -51,8 +51,8 @@ namespace CnV.Views
 
 
 		public float eventTimeOffset;
-		public static string? toolTip;
-		public static string? contToolTip;
+		public static string? toolTip => ToolTips.toolTip;
+		public static string? contToolTip=>ToolTips.contToolTip;
 		public static string debugTip;
 		public static int lastCont;
 	//	public static DispatcherQueueController _queuecontroller;
@@ -1229,8 +1229,8 @@ namespace CnV.Views
 														sb.AppendLine(player.name);
 														sb.AppendLine(city.cityName);
 														sb.AppendFormat("pts:{0:N0}\n", city.points);
-														if(player.alliance!= 0)
-															sb.AppendLine(Alliance.IdToName(player.alliance));
+														if(player.allianceId!= 0)
+															sb.AppendLine(Alliance.IdToName(player.allianceId));
 														if (Player.IsFriend(data.player)) 
 															sb.AppendLine(city.GetTroopsString("\n"));
 
@@ -1321,7 +1321,7 @@ namespace CnV.Views
 												//	var info = spot != null ?
 												//		$"{spot.cityName}\n{spot.points}\n"
 												//	 : "";
-												//	toolTip = $"{player.name}\n{Alliance.IdToName(player.alliance)}\n{info}{c.y / 100}{c.x / 100} ({c.x}:{c.y})\ncities:{player.cities.Count}\npts:{player.pointsH * 100}";
+												//	toolTip = $"{player.name}\n{Alliance.IdToName(player.allianceId)}\n{info}{c.y / 100}{c.x / 100} ({c.x}:{c.y})\ncities:{player.cities.Count}\npts:{player.pointsH * 100}";
 												//}
 											}
 										}

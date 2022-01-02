@@ -65618,7 +65618,7 @@ function outer() {
             else
                 return !"";
         }
-        cotg.alliance = {
+        cotg.allianceId = {
             name: function () { E6k.y6(); return aldt["n"]; },
             faith: function () {
                 E6k.R6();
@@ -68664,7 +68664,7 @@ function decwdata(data) {
 }
 function UpdateResearchAndFaith() {
     try {
-        let faith = cotg.alliance.faith();
+        let faith = cotg.allianceId.faith();
         let research = cotg.player.research();
         ttSpeedBonus[0] = 1;
         ttSpeedBonus[1] = 1 + AsNumber(faith.domdis) * 0.5 / 100 + AsNumber(Res_[research[12]]) / 100;

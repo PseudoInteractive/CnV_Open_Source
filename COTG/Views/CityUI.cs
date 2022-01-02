@@ -1,4 +1,6 @@
-﻿using System;
+﻿global using SpotId = System.Int32;
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,11 +8,29 @@ using System.Threading.Tasks;
 
 namespace CnV;
 
+using System.Text.Json;
+using static CnV.Game.Troops;
+using DiscordCnV;
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Services;
 
 public static partial class CityUI
 {
+	public static Action<City[]> cityListChanged;
+
+	public static void SyncCityBox()
+	{
+		AppS.QueueOnUIThread(() =>
+							{
+								var _build = City.GetBuild();
+								if(_build != ShellPage.instance.cityBox.SelectedItem)
+								{
+									ShellPage.instance.cityBox.SelectedItem = _build;
+								}
+							});
+	}
+
 	public static  void AddToFlyout(this City me, MenuFlyout flyout, bool useSelected = false)
 	{
 		var cid     = me.cid;
@@ -21,7 +41,7 @@ public static partial class CityUI
 		if (me.isCityOrCastle)
 		{
 			// Look - its my city!
-			if (me.isFriend)
+			if (me.CanVisit)
 			{
 
 				//{
@@ -149,50 +169,84 @@ public static partial class CityUI
 
 			//	if (Raid.test)
 			aWar.AddItem("Recruit Sen",             (_, _) => Recruit.Send(cid, ttSenator, 1, true));
-			aWar.AddItem("Send Defence",            (_, _) => JSDefend(cid));
+			aWar.AddItem("Send Defence",            (_, _) => Spot.JSDefend(cid));
 			aWar.AddItem("Show Reinforcements",     (_, _) => ReinforcementsTab.ShowReinforcements(cid, null));
 			aWar.AddItem("Show All Reinforcements", (_, _) => ReinforcementsTab.ShowReinforcements(0,   null));
-			aExport.AddItem("Defense Sheet", ExportToDefenseSheet);
+			aExport.AddItem("Defense Sheet", me.ExportToDefenseSheet);
 			AApp.AddItem(flyout, "Send Res", (_, _) => Spot.JSSendRes(cid));
-			AApp.AddItem(flyout, "Near Res", ShowNearRes);
-			if (isFriend)
+			AApp.AddItem(flyout, "Near Res", me.ShowNearRes);
+			if (me.CanVisit)
 			{
-				AApp.AddItem(flyout, "Do the stuff",  (_, _) => DoTheStuff());
+				AApp.AddItem(flyout, "Do the stuff",  (_, _) => me.DoTheStuff());
 				AApp.AddItem(flyout, "Food Warnings", (_, _) => CitySettings.SetFoodWarnings(cid));
 				flyout.AddItem("Ministers", me.ministersOn.IsTrueOrNull, (me as City).SetMinistersOn);
 			}
 		}
-		else if (this.isDungeon || this.isBoss)
+		else if (me.isDungeon || me.isBoss)
 		{
 			AApp.AddItem(flyout, "Raid", (_, _) => Spot.JSRaid(cid));
 
 		}
-		else if (this.isEmpty && DGame.isValidForIncomingNotes)
+		else if (me.isEmpty && DGame.isValidForIncomingNotes)
 		{
-			AApp.AddItem(flyout, "Claim", this.DiscordClaim);
+			AApp.AddItem(flyout, "Claim", me.DiscordClaim);
 
 		}
 
-		aMisc.AddItem("Notify on Decay", DecayQuery);
+		aMisc.AddItem("Notify on Decay", ()=>DecayQuery(cid);
 		if (Raid.test)
 		{
-			aMisc.AddItem("Settle whenever water", (_, _) => TrySettle(City.build, cid, true));
-			aMisc.AddItem("Settle whenever land",  (_, _) => TrySettle(City.build, cid, false));
+			aMisc.AddItem("Settle whenever water", (_, _) => Spot.TrySettle(City.build, cid, true));
+			aMisc.AddItem("Settle whenever land",  (_, _) => Spot.TrySettle(City.build, cid, false));
 		}
 
-		aMisc.AddItem("Distance",       (_, _) => ShowDistanceTo());
-		aMisc.AddItem("Select",         (_, _) => SelectMe(true, App.keyModifiers));
-		aMisc.AddItem("Coords to Chat", () => CoordsToChat(cid));
+		aMisc.AddItem("Distance",       (_, _) => me.ShowDistanceTo());
+		aMisc.AddItem("Select",         (_, _) => me.SelectMe(true, App.keyModifiers));
+		aMisc.AddItem("Coords to Chat", () => Spot.CoordsToChat(cid));
 		flyout.RemoveEmpy();
+	}
+	public static void DecayQuery(SpotId cid)
+	{
+		JSClient.gStCB(cid, DecayQueryCB, AMath.random.Next());
+	}
+
+	async static void DecayQueryCB(JsonElement jso)
+	{
+		var type = jso.GetAsInt("type");
+		var _cid = jso.GetAsInt("cid");
+		Assert(cid == _cid);
+		if(type != 3 && type != -1) // 4 is empty, 3 is city or ruins, -1 means not open (for a continent)
+		{
+			AppS.DispatchOnUIThreadLow(() =>
+										{
+											var dialog = new ContentDialog()
+											{
+													Title             = "Spot has Changed",
+													Content           = cid.CidToString(),
+													PrimaryButtonText = "Okay"
+											};
+											//SettingsPage.BoostVolume();
+											ElementSoundPlayer.Play(ElementSoundKind.Invoke);
+											ToastNotificationsService.instance.SpotChanged($"{cid.CidToString()} has changed");
+											dialog.ShowAsync2();
+										});
+			JSClient.ShowCity(cid, false);
+		}
+		else
+		{
+			//	Note.Show($"Query {cid.CidToStringMD()},type:{type}");
+			await Task.Delay(60 * 1000);
+			DecayQuery();
+		}
 	}
 
 	public static void ShowContextMenu(this City me,UIElement uie, Windows.Foundation.Point position)
 	{
 
 		//   SelectMe(false) ;
-		var me     = this as City;
+	
 		var flyout = new MenuFlyout();
-		AddToFlyout(flyout, uie == MainPage.CityGrid || uie == BuildTab.CityGrid);
+		AddToFlyout(me,flyout, uie == MainPage.CityGrid || uie == BuildTab.CityGrid);
 		flyout.CopyXamlRootFrom(uie);
 
 		//   flyout.XamlRoot = uie.XamlRoot;

@@ -328,8 +328,6 @@ namespace CnV
 		//	OnKeyUp(key);
 		//}
 
-		public static bool shiftPressed;
-		public static bool controlPressed;
 
 		public static void OnKeyUp(VirtualKey key)
 		{
@@ -1101,26 +1099,6 @@ namespace CnV
 		public static DecimalFormatter formatterSeconds = new DecimalFormatter() { FractionDigits=0,IsGrouped = false, IntegerDigits = 2, IsDecimalPointAlwaysDisplayed = false };
 
 
-		public static void CopyTextToClipboard(string s)
-		{
-			AppS.DispatchOnUIThread(() =>
-		 {
-			 try
-			 {
-				 DataPackage dataPackage = new DataPackage();
-				 // copy
-				 dataPackage.RequestedOperation = DataPackageOperation.Copy;
-				 dataPackage.SetText(s);
-				 // if(appLink!=null)
-				 //     dataPackage.SetApplicationLink(new Uri() )
-				 Clipboard.SetContent(dataPackage);
-			 }
-			 catch (Exception ex)
-			 {
-				 LogEx(ex);
-			 }
-		 });
-		}
 
 		public static async Task<string> GetClipboardText()
 		{
@@ -1160,16 +1138,6 @@ namespace CnV
 		//public static CoreCursor cursorMoveEnd;// = CoreCursor.Create(CoreCursorShape.SizeNorthSouth);
 		//public static CoreCursor cursorLayout;// = CoreCursor.Create(CoreCursorShape.Pin);
 		//public static CoreCursor cursorDestroy;// = CoreCursor.Create(CoreCursorShape.UniversalNo);
-		internal static VirtualKeyModifiers keyModifiers
-		{
-			get
-			{
-				var rv = shiftPressed ? VirtualKeyModifiers.Shift : default;
-				if( controlPressed)
-					rv |= VirtualKeyModifiers.Control;
-				return rv;
-			}
-		}
 
 		public static ApplicationDataContainer ClientSettings()
 		{
@@ -1190,80 +1158,7 @@ namespace CnV
 			return buffer.ToArray();
 		}
 		
-		public static SemaphoreSlim uiSema = new SemaphoreSlim(1);
-
-		public static bool isUISemaLocked => uiSema.IsLocked();
-		public static async Task<T>
-			DispatchOnUIThreadExclusive<T>(int cid,Func<Task<T>> func, DispatcherQueuePriority priority = DispatcherQueuePriority.Low)
-		{
-			if (!await LockUiSema(cid))
-				return default;
-			try
-			{
-				return await AppS.DispatchOnUIThreadTask(func, priority);
-			}
-			finally
-			{
-				ReleaseUISema(cid);
-
-			}
-
-		}
-		
-		public static async Task
-			DispatchOnUIThreadExclusive(int cid, Func<Task> func, DispatcherQueuePriority priority = DispatcherQueuePriority.Low)
-		{
-			if (!await LockUiSema(cid).ConfigureAwait(false))
-				return ;
-
-			try
-			{
-				await AppS.DispatchOnUIThreadTask(func, priority);
-			}
-			finally
-			{
-				ReleaseUISema(cid);
-			}
-
-		}
-
-		public static void ReleaseUISema(int cid)
-		{
-			Log($"unlock sema: {uiSema.CurrentCount}");
-			Assert(SpotS.lockedBuild == cid);
-			SpotS.lockedBuild = 0;
-			uiSema.Release();
-		}
-
-		public delegate Task ChangeCity(int cid, bool isLocked);
-
-		public static async Task<bool> LockUiSema(int cid)
-		{
-			Log($"Lock sema: {uiSema.CurrentCount}");
-			if(isUISemaLocked)
-			{
-				var i = await AppS.DoYesNoBox("Busy","Wait for process to finish?");
-				if(i != 1)
-					return false;
-			}
-			await uiSema.WaitAsync();
-			try
-			{
-				if (!await JSClient.CitySwitch(cid, isLocked:true))
-					throw new UIException("Sema");
-				SpotS.lockedBuild = cid;
-			}
-			catch(Exception ex)
-			{
-				LogEx(ex);
-				uiSema.Release();
-				return false;
-			}
-			return true;
-		}
-
-	}
-
+	
 
 
 	public static class UserAgent

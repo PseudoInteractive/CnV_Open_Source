@@ -262,7 +262,7 @@ namespace CnV.Views
 				case nameof(City.xy): cmpL = (a) => (long)a.cid.ZCurveEncodeCid(); break;
 				case "Water": cmpL = (a) => a.isOnWater ? 1l : 0l ; break;
 				case "Player": cmpS = (a) => a.playerName; break;
-				case "Alliance": cmpS = (a) => a.alliance; break;
+				case "Alliance": cmpS = (a) => a.allianceId; break;
 			}
 
 			if (cmpL != null || cmpS != null)

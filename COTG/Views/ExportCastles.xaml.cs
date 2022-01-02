@@ -73,7 +73,7 @@ namespace CnV.Views
 				  }
 				  else if (exportPlayer != null)
 				  {
-					  alliances.Add(exportPlayer.alliance);
+					  alliances.Add(exportPlayer.allianceId);
 					  who = 6;
 				  }
 				  else
@@ -117,7 +117,7 @@ namespace CnV.Views
 					   sb.AppendLine(allianceName);
 					   foreach (var p in Player.all.Values)
 					   {
-						   if (p.alliance != alliance)
+						   if (p.allianceId != alliance)
 							   continue;
 						   if (onlyMe && !p.isMe)
 							   continue;

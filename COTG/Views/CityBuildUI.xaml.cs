@@ -44,7 +44,7 @@ namespace CnV.Views
 		public static int lastQuickBuildActionBSpot = -1;
 		public static int lastBuildToolTipSpot = -1;
 		public static CityBuildUI instance;
-		public static bool isPlanner;
+		public static bool isPlanner => CityBuild.isPlanner;
 
 		static readonly Dictionary<int, ImageBrush> brushFromAtlasCache = new();
 		static readonly Dictionary<string, ImageBrush> brushFromImageCache = new();

@@ -52,117 +52,121 @@ namespace CnV.Views
 	//    public LogEntryStruct(string _t) { t =_t; }
 	//}
 	// TODO WTS: Change the icons and titles for all NavigationViewItems in ShellPage.xaml.
-	public sealed partial class ShellPage:Page, INotifyPropertyChanged
+	public sealed partial class ShellPage : Page, INotifyPropertyChanged
 	{
 		public const int canvasZDefault = 11;
-		public const int canvasZBack = 0;
-		public int  layout
+		public const int canvasZBack    = 0;
+
+		public int layout
 		{
-			get=> CnV.Views.SettingsPage.layout;
-			set {
-				if(CnV.Views.SettingsPage.layout != value)
+			get => Settings.layout;
+			set
+			{
+				if (Settings.layout != value)
 				{
-					CnV.Views.SettingsPage.layout = value;
+					Settings.layout = value;
 					updateHtmlOffsets.Go(true);
 				}
-			} }
+			}
+		}
 
 		class LayoutItem
 		{
 			public string name { get; set; }
-			public int id { get; set; }
+			public int    id   { get; set; }
 
 		}
 
-		string[] layoutOptions =  System.Linq.Enumerable.Range(0,SettingsPage.layoutOffsets.Length).Select(a=> $"Layout {a}").ToArray();
+		string[] layoutOptions =  System.Linq.Enumerable.Range(0, Settings.layoutOffsets.Length)
+			.Select(a => $"Layout {a}").ToArray();
+
 		//private readonly KeyboardAccelerator _altLeftKeyboardAccelerator = BuildKeyboardAccelerator(VirtualKey.Left, VirtualKeyModifiers.Menu);
 		//private readonly KeyboardAccelerator _backKeyboardAccelerator = BuildKeyboardAccelerator(VirtualKey.GoBack);
 		//private readonly KeyboardAccelerator _forwardKeyboardAccelerator = BuildKeyboardAccelerator(VirtualKey.GoForward);
 		static public ShellPage? instance;
 
-	//	internal void AddHandler(object pointerMovedEvent, PointerEventHandler pointerEventHandler, bool v) => throw new NotImplementedException();
+		//	internal void AddHandler(object pointerMovedEvent, PointerEventHandler pointerEventHandler, bool v) => throw new NotImplementedException();
 
-		private bool _isBackEnabled;
+		private bool                     _isBackEnabled;
 		private WinUI.NavigationViewItem _selected;
-		private bool _isBusy;
-		private bool _isLoggedIn;
-		private bool _isAuthorized;
+		private bool                     _isBusy;
+		private bool                     _isLoggedIn;
+		private bool                     _isAuthorized;
 
-		public static float webZoomLast; // for lazy setting of HTML zoom
+		public static float     webZoomLast; // for lazy setting of HTML zoom
 		public static TextBlock gridTip;
-		
+
 
 
 
 		//		public static ScrollViewer webView;
 
-		private static DateTime workStarted;
+		private static          DateTime     workStarted;
 		private static readonly List<string> workQueue = new List<string>();
 
-	//	protected override void OnKeyDown(KeyRoutedEventArgs e) => Trace($"Key: {e.Key} {e.OriginalKey} {e.OriginalSource.ToString()}");
+		//	protected override void OnKeyDown(KeyRoutedEventArgs e) => Trace($"Key: {e.Key} {e.OriginalKey} {e.OriginalSource.ToString()}");
 //		protected override void OnPreviewKeyDown(KeyRoutedEventArgs e) => Trace($"KeyP: {e.Key} {e.OriginalKey} {e.OriginalSource.ToString()}");
 		public static void WorkStart(string desc)
 		{
 			AppS.DispatchOnUIThreadLow(() =>
-		   {
-			   if(!workQueue.Any())
-			   {
-				   instance.progress.IsActive = true;
-				   // FIX
-				   workStarted = DateTime.UtcNow;
-				   instance.work.Text = desc;
-				   instance.work.Visibility = Visibility.Visible;
-			   }
-			   workQueue.Add(desc);
-		   });
+										{
+											if (!workQueue.Any())
+											{
+												instance.progress.IsActive = true;
+												// FIX
+												workStarted              = DateTime.UtcNow;
+												instance.work.Text       = desc;
+												instance.work.Visibility = Visibility.Visible;
+											}
+
+											workQueue.Add(desc);
+										});
 		}
 
 		// Todo:  Queue updates with tasks
 		public static void WorkUpdate(string desc)
 		{
 
-			AppS.DispatchOnUIThreadLow(() =>
-			{
-				instance.work.Text = desc;
-			});
+			AppS.DispatchOnUIThreadLow(() => { instance.work.Text = desc; });
 		}
 
 		public static void WorkEnd(string desc)
 		{
 			AppS.DispatchOnUIThreadLow(() =>
-			{
-				if(!workQueue.Any())
-				{
-					Log("End end called too often");
-				}
-				else
-				{
-					if(DateTime.UtcNow - workStarted > TimeSpan.FromMinutes(5))
-					{
-						Log("rogue work item");
-						workQueue.Clear();
-					}
-					else
-					{
-						workQueue.Remove(desc);
-					}
-				}
-				if(!workQueue.Any())
-				{
-					instance.progress.IsActive=false;
+										{
+											if (!workQueue.Any())
+											{
+												Log("End end called too often");
+											}
+											else
+											{
+												if (DateTime.UtcNow - workStarted > TimeSpan.FromMinutes(5))
+												{
+													Log("rogue work item");
+													workQueue.Clear();
+												}
+												else
+												{
+													workQueue.Remove(desc);
+												}
+											}
 
-					// FIX
-					instance.work.Visibility = Visibility.Collapsed;
-				}
-				else
-				{
-					workStarted = DateTime.UtcNow;
-					instance.work.Text = workQueue.First();
-				}
-			});
+											if (!workQueue.Any())
+											{
+												instance.progress.IsActive = false;
+
+												// FIX
+												instance.work.Visibility = Visibility.Collapsed;
+											}
+											else
+											{
+												workStarted        = DateTime.UtcNow;
+												instance.work.Text = workQueue.First();
+											}
+										});
 		}
 
-		
+
 
 		// private IdentityService IdentityService => Singleton<IdentityService>.Instance;
 
@@ -174,31 +178,31 @@ namespace CnV.Views
 		public bool IsBackEnabled
 		{
 			get { return _isBackEnabled; }
-			set { Set(ref _isBackEnabled,value); }
+			set { Set(ref _isBackEnabled, value); }
 		}
 
 		public WinUI.NavigationViewItem Selected
 		{
 			get { return _selected; }
-			set { Set(ref _selected,value); }
+			set { Set(ref _selected, value); }
 		}
 
 		public bool IsBusy
 		{
 			get { return _isBusy; }
-			set { Set(ref _isBusy,value); }
+			set { Set(ref _isBusy, value); }
 		}
 
 		public bool IsLoggedIn
 		{
 			get { return _isLoggedIn; }
-			set { Set(ref _isLoggedIn,value); }
+			set { Set(ref _isLoggedIn, value); }
 		}
 
 		public bool IsAuthorized
 		{
 			get { return _isAuthorized; }
-			set { Set(ref _isAuthorized,value); }
+			set { Set(ref _isAuthorized, value); }
 		}
 
 		public ShellPage()
@@ -218,14 +222,17 @@ namespace CnV.Views
 		//	// instance.status.Label=text );
 		//}
 
-		public static bool isHitTestVisible => !ShellPage.isOverPopup && !forceAllowWebFocus&& canvasVisible;
+		public static bool isHitTestVisible => !ShellPage.isOverPopup && !forceAllowWebFocus && canvasVisible;
+
 		//public static bool _isHitTestVisible;
 		public static bool canvasVisible;
 		public static bool isFocused => isHitTestVisible && App.isForeground;
-		private void OnLoaded(object sender,RoutedEventArgs e)
+
+		private void OnLoaded(object sender, RoutedEventArgs e)
 		{
+			CnVServer.CitySwitch = CnVClient.CitySwitch;
 			NoteClient.Init();
-			CnV.Helpers.NavStack.Init();
+			NavStack.Init();
 			// hook up delegates
 			WorkScope.Start  = WorkStart;
 			WorkScope.End    = WorkEnd;
@@ -235,13 +242,13 @@ namespace CnV.Views
 
 			CityBuildUI.Initialize();
 			// Grid.SetColumn(webView, 0);
-			Grid.SetRow(CityBuildUI.instance,1);
-			Grid.SetRowSpan(CityBuildUI.instance,5);
-			Grid.SetColumnSpan(CityBuildUI.instance,1);
-			Canvas.SetZIndex(CityBuildUI.instance,13);
+			Grid.SetRow(CityBuildUI.instance, 1);
+			Grid.SetRowSpan(CityBuildUI.instance, 5);
+			Grid.SetColumnSpan(CityBuildUI.instance, 1);
+			Canvas.SetZIndex(CityBuildUI.instance, 13);
 			var c = CreateCanvasControl();
 
-			
+
 			// canvas.ContextFlyout = CityFlyout;
 			//	grid.Children.Add(c.canvas);
 			// grid.Children.Add(c.hitTest);
@@ -253,7 +260,7 @@ namespace CnV.Views
 			// Placement.LayoutUpdated += Placement_LayoutUpdated; grid.Children.Add(img);
 
 			// Grid.SetRowSpan(img, 4); Grid.SetColumnSpan(img, 4); Canvas.SetZIndex(img, 12);
-			JSClient.Initialize(grid,webView);
+			JSClient.Initialize(grid, webView);
 			// foreach (var i in webView.KeyboardAccelerators) i.IsEnabled = false;
 			// webView.AllowFocusOnInteraction = false; c.hitTest.Margin= webView.Margin = new
 			// Thickness(0, 0, 11, 0);
@@ -300,28 +307,34 @@ namespace CnV.Views
 			// Keyboard accelerators are added here to avoid showing 'Alt + left' tooltip on the
 			// page. More info on tracking issue https://github.com/Microsoft/microsoft-ui-xaml/issues/8
 
-			KeyboardAccelerators.Add(BuildKeyboardAccelerator(VirtualKey.Left,NavStack.BackInvoked,VirtualKeyModifiers.Menu));
+			KeyboardAccelerators.Add(BuildKeyboardAccelerator(VirtualKey.Left, NavStack.BackInvoked,
+															VirtualKeyModifiers.Menu));
 			// KeyboardAccelerators.Add(BuildKeyboardAccelerator(VirtualKey.GoBack,NavStack.BackInvoked));
 
-			KeyboardAccelerators.Add(BuildKeyboardAccelerator(VirtualKey.Right,NavStack.ForwardInvoked,VirtualKeyModifiers.Menu));
+			KeyboardAccelerators.Add(BuildKeyboardAccelerator(VirtualKey.Right, NavStack.ForwardInvoked,
+															VirtualKeyModifiers.Menu));
 			// KeyboardAccelerators.Add(BuildKeyboardAccelerator(VirtualKey.GoForward, NavStack.ForwardInvoked));
 
-			for(var i = 0;i< SettingsPage.layoutOffsets.Length;++i)
+			for (var i = 0; i < Settings.layoutOffsets.Length; ++i)
 			{
-				KeyboardAccelerators.Add(BuildKeyboardAccelerator( VirtualKey.Number0+(int)i,LayoutAccelerator_Invoked,VirtualKeyModifiers.Control));
+				KeyboardAccelerators.Add(BuildKeyboardAccelerator( VirtualKey.Number0 + (int) i,
+																	LayoutAccelerator_Invoked,
+																	VirtualKeyModifiers.Control));
 			}
-			
+
 
 			//			KeyboardAccelerators.Add(BuildKeyboardAccelerator(VirtualKey.F5, Refresh_Invoked,VirtualKeyModifiers.Control));
-			KeyboardAccelerators.Add(BuildKeyboardAccelerator(VirtualKey.R,instance.Refresh_Invoked,VirtualKeyModifiers.Control));
-			foreach(var k in buildKeys)
+			KeyboardAccelerators.Add(BuildKeyboardAccelerator(VirtualKey.R, instance.Refresh_Invoked,
+															VirtualKeyModifiers.Control));
+			foreach (var k in buildKeys)
 			{
-				KeyboardAccelerators.Add(BuildKeyboardAccelerator(k,KeyboardAccelerator));
+				KeyboardAccelerators.Add(BuildKeyboardAccelerator(k, KeyboardAccelerator));
 			}
+
 			//				KeyboardAccelerators.Add(BuildKeyboardAccelerator(VirtualKey.F4, LayoutAccelerator_Invoked));
-			IsLoggedIn = true;// IdentityService.IsLoggedIn();
-			IsAuthorized = true;// IsLoggedIn && IdentityService.IsAuthorized();
-								// grid.hor
+			IsLoggedIn   = true; // IdentityService.IsLoggedIn();
+			IsAuthorized = true; // IsLoggedIn && IdentityService.IsAuthorized();
+			// grid.hor
 			/// we pass this as an argument to let the page know that it is a programmatic navigation
 			// Services.NavigationService.Navigate<Views.DefenseHistoryTab>(this); ChatTab.Ctor();
 			TabPage.Initialize();
@@ -329,9 +342,9 @@ namespace CnV.Views
 			// testMenu.Items.Add(MenuAction(MainPage.ShowTipRaiding1,"TipRaiding1"));
 			// testMenu.Items.Add(MenuAction(MainPage.ShowTipRaiding2, "TipRaiding2"));
 			// testMenu.Items.Add(MenuAction(MainPage.ShowTipRaiding3, "TipRaiding3"));
-			cityListBox.SelectedIndex = 0; // reset
+			cityListBox.SelectedIndex    =  0; // reset
 			cityListBox.SelectionChanged += CityListBox_SelectionChanged;
-			cityBox.SelectionChanged += CityBox_SelectionChanged;
+			cityBox.SelectionChanged     += CityBox_SelectionChanged;
 
 			//SystemNavigationManager.GetForCurrentView().BackRequested += ShellPage_BackRequested;
 			// PointerPressed+= PointerPressedCB; HomeButtonTip.IsOpen = true;
@@ -348,13 +361,13 @@ namespace CnV.Views
 			AGame.Create(canvas);
 			try
 			{
-				if(SystemInformation.Instance.IsAppUpdated && !JSClient.isSub)
+				if (SystemInformation.Instance.IsAppUpdated && !JSClient.isSub)
 				{
 					AppS.DispatchOnUIThreadLow(SettingsPage.ShowWhatsNew);
 				}
 
 			}
-			catch(Exception __ex)
+			catch (Exception __ex)
 			{
 				Debug.Log(__ex.ToString());
 			}
@@ -362,7 +375,7 @@ namespace CnV.Views
 
 
 
-			TabPage.mainTabs.SizeChanged += (( o,  args) => ShellPage.updateHtmlOffsets.SizeChanged() );
+			TabPage.mainTabs.SizeChanged += (( o, args) => ShellPage.updateHtmlOffsets.SizeChanged() );
 
 
 			//Task.Delay(5000).ContinueWith((_) =>
@@ -492,7 +505,7 @@ namespace CnV.Views
 		//	//e.Handled = true;
 		//}
 
-		private void Refresh_Invoked(KeyboardAccelerator sender,KeyboardAcceleratorInvokedEventArgs args)
+		private void Refresh_Invoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
 		{
 			WorkStart("Refresh");
 			sender.Modifiers.UpdateKeyModifiers();
@@ -503,13 +516,13 @@ namespace CnV.Views
 			// args.Handled = true;
 		}
 
-		private void LayoutAccelerator_Invoked(KeyboardAccelerator sender,KeyboardAcceleratorInvokedEventArgs args)
+		private void LayoutAccelerator_Invoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
 		{
 			sender.Modifiers.UpdateKeyModifiers();
 			Log($"Accel: {sender.Key} {sender.ScopeOwner}");
 			var layout = args.KeyboardAccelerator.Key - VirtualKey.Number0;
-			this.windowLayout.SelectedIndex= layout;
-			
+			this.windowLayout.SelectedIndex = layout;
+
 		}
 
 		//public static MenuFlyoutItem MenuAction( Action a, string text)
@@ -607,11 +620,16 @@ namespace CnV.Views
 		//    NavigationService.GoBack();
 		//}
 
-		private static KeyboardAccelerator BuildKeyboardAccelerator(VirtualKey key,TypedEventHandler<KeyboardAccelerator,KeyboardAcceleratorInvokedEventArgs> OnKeyboardAcceleratorInvoked,VirtualKeyModifiers modifiers = VirtualKeyModifiers.None)
+		private static KeyboardAccelerator BuildKeyboardAccelerator(VirtualKey key,
+																	TypedEventHandler<KeyboardAccelerator,
+																					KeyboardAcceleratorInvokedEventArgs>
+																			OnKeyboardAcceleratorInvoked,
+																	VirtualKeyModifiers modifiers =
+																			VirtualKeyModifiers.None)
 		{
 			var keyboardAccelerator = new KeyboardAccelerator() { Key = key };
-			keyboardAccelerator.Modifiers = modifiers;
-			keyboardAccelerator.Invoked +=OnKeyboardAcceleratorInvoked;
+			keyboardAccelerator.Modifiers =  modifiers;
+			keyboardAccelerator.Invoked   += OnKeyboardAcceleratorInvoked;
 			return keyboardAccelerator;
 		}
 
@@ -627,7 +645,7 @@ namespace CnV.Views
 
 		//}
 
-		public void Refresh(object o,RoutedEventArgs e)
+		public void Refresh(object o, RoutedEventArgs e)
 		{
 			Refresh();
 		}
@@ -635,12 +653,13 @@ namespace CnV.Views
 		private async static Task RefreshWorldData()
 		{
 			World.lastUpdatedContinent = -1;
-			using var work = new WorkScope("Refresh..");
-			var task0 = TileData.Ctor(false);
-			if(World.completed)
+			using var work  = new WorkScope("Refresh..");
+			var       task0 = TileData.Ctor(false);
+			if (World.completed)
 			{
 				await GetWorldInfo.Send();
 			}
+
 			await task0;
 		}
 
@@ -648,7 +667,7 @@ namespace CnV.Views
 		{
 			using var work = new WorkScope("Refresh..");
 			World.lastUpdatedContinent = -1;
-			if(World.completed)
+			if (World.completed)
 			{
 				GetWorldInfo.Send();
 			}
@@ -659,9 +678,9 @@ namespace CnV.Views
 		public static async Task RefreshX()
 		{
 			using var work = new WorkScope("Refresh All");
-			var t = RefreshWorldData();
+			var       t    = RefreshWorldData();
 
-			foreach(var city in City.allSpots)
+			foreach (var city in City.allSpots)
 				city.Value.OnPropertyChanged();
 			NotifyCollectionBase.ResetAll(true);
 
@@ -670,21 +689,23 @@ namespace CnV.Views
 
 		}
 
-		public void RefreshX(object sender,RightTappedRoutedEventArgs e)
+		public void RefreshX(object sender, RightTappedRoutedEventArgs e)
 		{
 			RefreshX();
 		}
 
 		public static Debounce RefreshTabs = new(_RefreshTabs) { };
+
 		public static Task _RefreshTabs()
 		{
 			// fall through from shift-refresh. Shift refresh does both
 			//	City.UpdateSenatorInfo();
-			foreach(var tab in UserTab.userTabs)
+			foreach (var tab in UserTab.userTabs)
 			{
-				if(tab.isFocused)
+				if (tab.isFocused)
 					tab.refresh.Go();
 			}
+
 			City.gridCitySource.ClearHash();
 
 			JSClient.CityRefresh();
@@ -694,14 +715,14 @@ namespace CnV.Views
 
 		public static void OnRefresh()
 		{
-			if(JSClient.world == 0)
+			if (JSClient.world == 0)
 			{
 				JSClient.view.Source = new Uri("https://www.crownofthegods.com/home/");
 				return;
 			}
 
 
-			if(App.IsKeyPressedShift())
+			if (App.IsKeyPressedShift())
 			{
 				RefreshX();
 			}
@@ -714,7 +735,7 @@ namespace CnV.Views
 		private static void Refresh()
 		{
 			using var s = new WorkScope("Refresh...");
-			foreach(var city in City.myCities)
+			foreach (var city in City.myCities)
 				city.OnPropertyChanged();
 			NotifyCollectionBase.ResetAll(false);
 			RefreshTabs.Go();
@@ -722,11 +743,12 @@ namespace CnV.Views
 
 		public event PropertyChangedEventHandler PropertyChanged;
 
-		private void OnPropertyChanged(string propertyName) => PropertyChanged?.Invoke(this,new PropertyChangedEventArgs(propertyName));
+		private void OnPropertyChanged(string propertyName) =>
+				PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 
-		private void Set<T>(ref T storage,T value,[CallerMemberName] string propertyName = null)
+		private void Set<T>(ref T storage, T value, [CallerMemberName] string propertyName = null)
 		{
-			if(Equals(storage,value))
+			if (Equals(storage, value))
 			{
 				return;
 			}
@@ -757,31 +779,33 @@ namespace CnV.Views
 			public int                                count { get; set; }
 
 		}
-		private async void ShowBuildings(object sender,object e)
+
+		private async void ShowBuildings(object sender, object e)
 		{
 			try
 			{
-				var build = City.GetBuild();
+				var build  = City.GetBuild();
 				int bCount = 0;
-				var bdd = new Dictionary<int,int>();
+				var bdd    = new Dictionary<int, int>();
 
-				void ProcessBuilding(BuildingDef bd,bool add = true)
+				void ProcessBuilding(BuildingDef bd, bool add = true)
 				{
-					if(bd.bid == City.bidTownHall || bd.bid == City.bidWall)
+					if (bd.bid == City.bidTownHall || bd.bid == City.bidWall)
 					{
 						return;
 					}
 
 					var id = bd.refId;
-					if(!bdd.TryGetValue(id,out var counter))
+					if (!bdd.TryGetValue(id, out var counter))
 					{
-						bdd.Add(id,0);
+						bdd.Add(id, 0);
 						counter = 0;
 					}
-					if(add)
+
+					if (add)
 					{
 						bdd[id] = counter + 1;
-						if(!bd.isTower)
+						if (!bd.isTower)
 						{
 							++bCount;
 						}
@@ -789,17 +813,17 @@ namespace CnV.Views
 					else
 					{
 						bdd[id] = counter - 1;
-						if(!bd.isTower)
+						if (!bd.isTower)
 						{
 							--bCount;
 						}
 					}
 				}
 
-				foreach(var bdi in CityBuildUI.isPlanner ? build.GetLayoutBuildings() : build.postQueueBuildings)
+				foreach (var bdi in CityBuildUI.isPlanner ? build.GetLayoutBuildings() : build.postQueueBuildings)
 				{
 					var id = bdi.id;
-					if(id == 0 || !bdi.isBuilding)
+					if (id == 0 || !bdi.isBuilding)
 					{
 						continue;
 					}
@@ -810,24 +834,27 @@ namespace CnV.Views
 
 				{
 					var bd = new List<BuildingCount>();
-					foreach(var i in bdd)
+					foreach (var i in bdd)
 					{
-						if(i.Value > 0)
+						if (i.Value > 0)
 						{
 							var bdf = BuildingDef.all[i.Key];
-							bd.Add(new BuildingCount() { count = i.Value,brush = CityBuildUI.BuildingBrush(bdf.bid,0.5f) });
+							bd.Add(new BuildingCount()
+											{ count = i.Value, brush = CityBuildUI.BuildingBrush(bdf.bid, 0.5f) });
 						}
 					}
-					bd.Add(new BuildingCount() { count = bCount,brush = CityBuildUI.BuildingBrush(City.bidTownHall,0.5f) });
+
+					bd.Add(new BuildingCount()
+									{ count = bCount, brush = CityBuildUI.BuildingBrush(City.bidTownHall, 0.5f) });
 
 					// var button = sender as Button; button.Focus(FocusState.Programmatic);
 					AppS.DispatchOnUIThreadLow(() =>
-					{
-						buildingList.Width = double.NaN;
-						buildingList.Height = double.NaN;
-						buildingList.ItemsSource = bd;
-						buildingList.UpdateLayout();
-					});
+												{
+													buildingList.Width       = double.NaN;
+													buildingList.Height      = double.NaN;
+													buildingList.ItemsSource = bd;
+													buildingList.UpdateLayout();
+												});
 				}
 			}
 			// var flyout = FlyoutBase.GetAttachedFlyout(button);
@@ -858,7 +885,7 @@ namespace CnV.Views
 			// spawn); button.Flyout.ShowAt(button, new FlyoutShowOptions() {
 			// Placement=FlyoutPlacementMode.Full, ShowMode=FlyoutShowMode.Transient }); //
 			// ,ExclusionRect=avoid });
-			catch(Exception ex)
+			catch (Exception ex)
 			{
 				LogEx(ex);
 			}
@@ -895,7 +922,7 @@ namespace CnV.Views
 		//{
 		//}
 
-		private void FlyoutClosing(FlyoutBase sender,FlyoutBaseClosingEventArgs args)
+		private void FlyoutClosing(FlyoutBase sender, FlyoutBaseClosingEventArgs args)
 		{
 			// Log("Why is this closing?");
 		}
@@ -955,12 +982,12 @@ namespace CnV.Views
 		//    }
 		//}
 
-		private void TipTest(object sender,RoutedEventArgs e)
+		private void TipTest(object sender, RoutedEventArgs e)
 		{
 			ShowTipRefresh();
 		}
 
-		private void ShowSettings(object sender,RoutedEventArgs e)
+		private void ShowSettings(object sender, RoutedEventArgs e)
 		{
 			SettingsPage.Show();
 		}
@@ -968,38 +995,38 @@ namespace CnV.Views
 		public static ComboBox CityListBox => instance.cityListBox;
 
 		// private DumbCollection<CityList> cityListSelections => CityList.selections;
-		private void CityListBox_SelectionChanged(object sender,SelectionChangedEventArgs e)
+		private void CityListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
 		{
-			if(e.AddedItems.Any())
+			if (e.AddedItems.Any())
 			{
-				var newSel = e.AddedItems?.FirstOrDefault();
+				var newSel   = e.AddedItems?.FirstOrDefault();
 				var priorSel = e.RemovedItems?.FirstOrDefault();
-				if(newSel != priorSel && priorSel != null)
+				if (newSel != priorSel && priorSel != null)
 				{
 					// Log("City Sel changed");
-					CityList.NotifyChange(false);
+					CityListNotifyChange(false);
 				}
 			}
 		}
 
 
-		private void CityBox_SelectionChanged(object sender,SelectionChangedEventArgs e)
+		private void CityBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
 		{
 			var sel = cityBox.SelectedItem as City;
-			if(sel != null && sel.cid != City.build)
+			if (sel != null && sel.cid != City.build)
 			{
-				JSClient.CitySwitch(sel.cid,false);
+				JSClient.CitySwitch(sel.cid, false);
 				NavStack.Push(sel.cid);
 			}
 		}
 
 		public void ChangeCityClick(int delta)
 		{
-			var items = ShellPage.instance.cityBox.ItemsSource as City[];
+			var  items = ShellPage.instance.cityBox.ItemsSource as City[];
 			City newSel;
-			if(items.Length <= 1)
+			if (items.Length <= 1)
 			{
-				if(items.Length == 0)
+				if (items.Length == 0)
 				{
 					return;
 				}
@@ -1008,101 +1035,104 @@ namespace CnV.Views
 			}
 			else
 			{
-				int id = Array.IndexOf(items,City.GetBuild()) + delta;
-				if(id < 0)
+				int id = Array.IndexOf(items, City.GetBuild()) + delta;
+				if (id < 0)
 				{
 					id += items.Length;
 				}
 
-				if(id >= items.Length)
+				if (id >= items.Length)
 				{
 					id -= items.Length;
 				}
 
 				newSel = items[id];
 			}
+
 			//newSel.SetBuild(true);
-			JSClient.CitySwitch(newSel.cid,false);
+			JSClient.CitySwitch(newSel.cid, false);
 			// ElementSoundPlayer.Play(delta > 0 ? ElementSoundKind.MoveNext : ElementSoundKind.MovePrevious);
 			NavStack.Push(newSel.cid);
 		}
 
-		private void PriorCityClick(object sender,RoutedEventArgs e)
+		private void PriorCityClick(object sender, RoutedEventArgs e)
 		{
 			ChangeCityClick(-1);
 		}
 
-		private void NextCityClick(object sender,RoutedEventArgs e)
+		private void NextCityClick(object sender, RoutedEventArgs e)
 		{
 			ChangeCityClick(+1);
 		}
 
-		private void BackRightTapped(object sender,RightTappedRoutedEventArgs e)
+		private void BackRightTapped(object sender, RightTappedRoutedEventArgs e)
 		{
-			var menu = new MenuFlyout();
-			bool any = false;
-			for(int i = 1;i < 25;++i)
+			var  menu = new MenuFlyout();
+			bool any  = false;
+			for (int i = 1; i < 25; ++i)
 			{
 				var str = NavStack.GetSpotName(-i);
-				if(str == null)
+				if (str == null)
 				{
 					break;
 				}
 
 				any = true;
-				menu.Items.Add(AApp.CreateMenuItem(str,NavStack.instance,-i));
+				menu.Items.Add(AApp.CreateMenuItem(str, NavStack.instance, -i));
 			}
-			if(!any)
+
+			if (!any)
 			{
-				menu.Items.Add(AApp.CreateMenuItem("no more :(",() => { }));
+				menu.Items.Add(AApp.CreateMenuItem("no more :(", () => { }));
 			}
 
 			menu.ShowAt(sender as FrameworkElement);
 		}
 
-		private void ForwardRightTapped(object sender,RightTappedRoutedEventArgs e)
+		private void ForwardRightTapped(object sender, RightTappedRoutedEventArgs e)
 		{
-			var menu = new MenuFlyout();
-			bool any = false;
-			for(int i = 1;i < 25;++i)
+			var  menu = new MenuFlyout();
+			bool any  = false;
+			for (int i = 1; i < 25; ++i)
 			{
 				var str = NavStack.GetSpotName(i);
-				if(str == null)
+				if (str == null)
 				{
 					break;
 				}
 
 				any = true;
-				menu.Items.Add(AApp.CreateMenuItem(str,NavStack.instance,i));
+				menu.Items.Add(AApp.CreateMenuItem(str, NavStack.instance, i));
 			}
-			if(!any)
+
+			if (!any)
 			{
-				menu.Items.Add(AApp.CreateMenuItem("this is the most recent :(",() => { }));
+				menu.Items.Add(AApp.CreateMenuItem("this is the most recent :(", () => { }));
 			}
 
 			menu.ShowAt(sender as FrameworkElement);
 		}
 
-		private void coords_KeyDown(object sender,KeyRoutedEventArgs e)
+		private void coords_KeyDown(object sender, KeyRoutedEventArgs e)
 		{
 			var str = sender as TextBox;
 			Assert(str != null);
-			if(str != null)
+			if (str != null)
 			{
-				if(e.Key == Windows.System.VirtualKey.Enter)
+				if (e.Key == Windows.System.VirtualKey.Enter)
 				{
 					var cid = str.Text.FromCoordinate();
-					if(cid > 0)
+					if (cid > 0)
 					{
 						NavStack.Push(cid);
-						SpotTab.TouchSpot(cid,App.keyModifiers);
-						JSClient.CitySwitch(cid,false);
+						SpotTab.TouchSpot(cid, App.keyModifiers);
+						JSClient.CitySwitch(cid, false);
 					}
 				}
 			}
 		}
 
-		public static void ContinentFilterClick(object sender,RoutedEventArgs e)
+		public static void ContinentFilterClick(object sender, RoutedEventArgs e)
 		{
 			ContinentTagFilter.Show();
 			/*
@@ -1178,54 +1208,56 @@ namespace CnV.Views
 		//	}
 		//}
 
-		private void HomeClick(object sender,RoutedEventArgs e)
+		private void HomeClick(object sender, RoutedEventArgs e)
 		{
-			if(Spot.focus == 0)
+			if (Spot.focus == 0)
 			{
 				return;
 			}
 
-			if(Spot.focus.BringCidIntoWorldView(false) && City.IsBuild(Spot.focus)) // first just focus
+			if (Spot.focus.BringCidIntoWorldView(false) && City.IsBuild(Spot.focus)) // first just focus
 			{
 				return;
 			}
-			Spot.ProcessCoordClick(Spot.focus,false,App.keyModifiers,true); // then normal click
+
+			Spot.ProcessCoordClick(Spot.focus, false, App.keyModifiers, true); // then normal click
 		}
 
-		private void HomeRightTapped(object sender,RightTappedRoutedEventArgs e)
+		private void HomeRightTapped(object sender, RightTappedRoutedEventArgs e)
 		{
 			var ui = sender as UIElement;
-			Spot.GetFocus()?.ShowContextMenu(ui,e.GetPosition(ui));
+			Spot.GetFocus()?.ShowContextMenu(ui, e.GetPosition(ui));
 		}
 
-		private void BuildHomeClick(object sender,RoutedEventArgs e)
+		private void BuildHomeClick(object sender, RoutedEventArgs e)
 		{
-			if(City.build == 0)
+			if (City.build == 0)
 			{
 				return;
 			}
 
-			Spot.ProcessCoordClick(City.build,false,App.keyModifiers,true); // then normal click
+			Spot.ProcessCoordClick(City.build, false, App.keyModifiers, true); // then normal click
 		}
 
-		private void BuildHomeRightTapped(object sender,RightTappedRoutedEventArgs e)
+		private void BuildHomeRightTapped(object sender, RightTappedRoutedEventArgs e)
 		{
 			var ui = sender as UIElement;
-			City.GetBuild()?.ShowContextMenu(ui,e.GetPosition(ui));
+			City.GetBuild()?.ShowContextMenu(ui, e.GetPosition(ui));
 		}
 
-		private void CityListSubmitted(ComboBox sender,ComboBoxTextSubmittedEventArgs args)
+		private void CityListSubmitted(ComboBox sender, ComboBoxTextSubmittedEventArgs args)
 		{
-			var text = args.Text.ToLower();
+			var text  = args.Text.ToLower();
 			var items = CityList.selections;
-			foreach(var it in items)
+			foreach (var it in items)
 			{
 				// its good
-				if(it.name == text)
+				if (it.name == text)
 				{
 					return;
 				}
 			}
+
 			args.Handled = true;
 			//foreach (var it in items)
 			//{
@@ -1237,11 +1269,11 @@ namespace CnV.Views
 			//	}
 			//}
 			// try contains
-			foreach(var it in items)
+			foreach (var it in items)
 			{
-				if(it.name.ToLower().Contains(text))
+				if (it.name.ToLower().Contains(text))
 				{
-					sender.Text = it.name;
+					sender.Text         = it.name;
 					sender.SelectedItem = it;
 					return;
 				}
@@ -1249,19 +1281,20 @@ namespace CnV.Views
 			// todo!
 		}
 
-		private void CitySubmitted(ComboBox sender,ComboBoxTextSubmittedEventArgs args)
+		private void CitySubmitted(ComboBox sender, ComboBoxTextSubmittedEventArgs args)
 		{
 			var text = args.Text.ToLower();
 
 			var items = City.gridCitySource;
-			foreach(var it in items)
+			foreach (var it in items)
 			{
 				// its good
-				if(it.nameAndRemarks == text)
+				if (it.nameAndRemarks == text)
 				{
 					return;
 				}
 			}
+
 			args.Handled = true;
 			//foreach (var it in items)
 			//{
@@ -1273,11 +1306,11 @@ namespace CnV.Views
 			//	}
 			//}
 			// try contains
-			foreach(var it in items)
+			foreach (var it in items)
 			{
-				if(it.nameAndRemarks.ToLower().Contains(text))
+				if (it.nameAndRemarks.ToLower().Contains(text))
 				{
-					sender.Text = it.nameAndRemarks;
+					sender.Text         = it.nameAndRemarks;
 					sender.SelectedItem = it;
 					return;
 				}
@@ -1317,15 +1350,16 @@ namespace CnV.Views
 		//}
 		//		static Debounce layoutChanged = new(TabPage.LayoutChanged){ runOnUiThead = true};
 
-		static int popupLeftOffset, popupTopOffset;
+		static        int popupLeftOffset, popupTopOffset;
 		public static int popupLeftMargin;
 		public static int popupTopMargin;
-		public static void UpdateWebViewOffsets(int leftOffset,int topOffset)
+
+		public static void UpdateWebViewOffsets(int leftOffset, int topOffset)
 		{
-			if(popupLeftOffset  != leftOffset ||
-				popupTopOffset != topOffset)
+			if (popupLeftOffset != leftOffset ||
+				popupTopOffset  != topOffset)
 			{
-				popupLeftOffset =   leftOffset;
+				popupLeftOffset = leftOffset;
 				popupTopOffset  = topOffset;
 				updateHtmlOffsets.PopupsChanged();
 			}
@@ -1335,7 +1369,7 @@ namespace CnV.Views
 
 
 
-		private void webFocus_Click(object sender,RoutedEventArgs e)
+		private void webFocus_Click(object sender, RoutedEventArgs e)
 		{
 			forceAllowWebFocus = !forceAllowWebFocus;
 			//var hasFocus = !webviewHasFocus;
@@ -1345,7 +1379,7 @@ namespace CnV.Views
 			//isHitTestVisible = !hasFocus;
 			//SetWebViewHasFocus(hasFocus);
 			ShellPage.canvas.Visibility = ShellPage.forceAllowWebFocus ? Visibility.Collapsed : Visibility.Visible;
-			ShellPage.hasKeyboardFocus=false;
+			ShellPage.hasKeyboardFocus  = false;
 			ShellPage.UpdateFocus();
 
 		}
@@ -1364,22 +1398,31 @@ namespace CnV.Views
 		//	}
 		//}
 
-		private void chatResizeTapped(object sender,TappedRoutedEventArgs e)
+		private void chatResizeTapped(object sender, TappedRoutedEventArgs e)
 		{
 			//			var height = new( chatGrid.RowDefinitions[0].Height.Value switch { 1=>2,2=>3,3=>4,4=>5,_=>1});
 			var flyout = new MenuFlyout();
-			flyout.AddItem("Tall",() => { chatGrid.RowDefinitions[0].Height = new GridLength(1,GridUnitType.Star);
-				chatGrid.RowDefinitions[1].Height = new GridLength(5,GridUnitType.Star); });
-			flyout.AddItem("Medium",() => { chatGrid.RowDefinitions[0].Height = new GridLength(4,GridUnitType.Star);
-				chatGrid.RowDefinitions[1].Height = new GridLength(2,GridUnitType.Star); });
-			flyout.AddItem("Small",() => { chatGrid.RowDefinitions[0].Height = new GridLength(5,GridUnitType.Star);
-				chatGrid.RowDefinitions[1].Height = new GridLength(1,GridUnitType.Star); });
-			flyout.ShowAt(chatGrid,e.GetPosition(chatGrid));
+			flyout.AddItem("Tall", () =>
+									{
+										chatGrid.RowDefinitions[0].Height = new GridLength(1, GridUnitType.Star);
+										chatGrid.RowDefinitions[1].Height = new GridLength(5, GridUnitType.Star);
+									});
+			flyout.AddItem("Medium", () =>
+									{
+										chatGrid.RowDefinitions[0].Height = new GridLength(4, GridUnitType.Star);
+										chatGrid.RowDefinitions[1].Height = new GridLength(2, GridUnitType.Star);
+									});
+			flyout.AddItem("Small", () =>
+									{
+										chatGrid.RowDefinitions[0].Height = new GridLength(5, GridUnitType.Star);
+										chatGrid.RowDefinitions[1].Height = new GridLength(1, GridUnitType.Star);
+									});
+			flyout.ShowAt(chatGrid, e.GetPosition(chatGrid));
 		}
 
 
 
-		
+
 
 
 
@@ -1432,14 +1475,14 @@ namespace CnV.Views
 		//			}
 		//		}
 
-		private void FilterRightTapped(object sender,RightTappedRoutedEventArgs e)
+		private void FilterRightTapped(object sender, RightTappedRoutedEventArgs e)
 		{
 			ContinentTagFilter.Show(true);
 		}
 
 		private void GridSpliterOnPointerReleased(object sender, PointerRoutedEventArgs e)
 		{
-		//	updateHtmlOffsets.Go(true);
+			//	updateHtmlOffsets.Go(true);
 		}
 
 		//	protected override void OnKeyboardAcceleratorInvoked(KeyboardAcceleratorInvokedEventArgs args) => base.OnKeyboardAcceleratorInvoked(args);
@@ -1458,5 +1501,56 @@ namespace CnV.Views
 		//	var c = e.GetCurrentPoint(canvas);
 		//	UpdateMousePosition( c.Position );
 		//}
+
+		public static void CityListNotifyChange(bool itemsChanged)
+		{
+
+			AppS.QueueOnUIThread(async () =>
+								{
+									//               Log("CityListChange");
+
+									var    selectedCityList = ShellPage.instance.cityListBox.SelectedItem as CityList;
+									City[] l;
+									if (selectedCityList == null || selectedCityList.id == -1) // "all"
+									{
+										l = City.myCities;
+									}
+									else
+									{
+										var cityList = selectedCityList; // CityList.Find(selectedCityList);
+										var filtered = new List<City>();
+										foreach (var cid in cityList.cities)
+										{
+											if (City.TryGet(cid, out var c))
+											{
+												filtered.Add(c);
+											}
+										}
+
+										l = cityList.cities.Select(cid => cid.AsCity()).ToArray();
+									}
+
+									l = l.Where(a => a.testContinentAndTagFilter)
+										.OrderBy((a) => a, new CityList.CityComparer()).ToArray();
+									ShellPage.instance.cityBox.ItemsSource = l;
+									City.gridCitySource.Set(l, true, itemsChanged);
+									// todo change this
+									Spot.selected = Spot.selected.Where(cid => City.TestContinentAndFlagFilter(cid))
+										.ToHashSet(); // filter selected
+									CityUI.SyncCityBox();
+									CityUI.cityListChanged?.Invoke(l);
+									//   if (MainPage.IsVisible())
+
+
+
+
+									//if (IncomingTab.instance.isVisible)
+									//   IncomingTab.instance.refresh.Go();
+
+
+
+								});
+		}
 	}
+
 }

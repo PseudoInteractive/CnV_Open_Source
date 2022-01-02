@@ -2196,7 +2196,7 @@ namespace CnV
 										}
 										if(spot != null && !focusOnCity && !(Settings.troopsVisible.HasValue && Settings.troopsVisible.Value == false))
 										{
-											if(!spot.troopsTotal.Any() && spot.isNotClassified && spot.isFriend && Settings.troopsVisible.GetValueOrDefault())
+											if(!spot.troopsTotal.Any() && spot.isNotClassified && spot.CanVisit && Settings.troopsVisible.GetValueOrDefault())
 												spot.TouchClassification();
 											if(spot.troopsTotal.Any() || spot.isClassified)
 											{

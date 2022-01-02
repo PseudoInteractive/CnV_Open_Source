@@ -107,38 +107,6 @@ namespace CnV.Draw
 		private static TextFormat textformatBuilding = new TextFormat(TextFormat.HorizontalAlignment.center, TextFormat.VerticalAlignment.center);
 		public static int cityDrawAlpha;
 
-		public static void Status(string s, bool dryRun)
-		{
-			if (dryRun)
-			{
-				Status(s);
-			}
-			else
-			{
-				Note.Show(s);
-			}
-		}
-		public static void StatusIf(string s,bool dryRun,bool condition)
-		{
-			if(!condition)
-				return;
-			if(dryRun)
-			{
-				Status(s);
-			}
-			else
-			{
-				Note.Show(s);
-			}
-		}
-		// Dry Run can be accessed on conditional and directly
-		public static void Status(string s)
-		{
-				if (ShellPage.contToolTip != null)
-					ShellPage.contToolTip = $"{ShellPage.contToolTip}\n{s}";
-				else
-					ShellPage.contToolTip = s;
-		}
 
 
 		public static void Draw(float alpha)
