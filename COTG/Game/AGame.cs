@@ -7,6 +7,7 @@ using CnV.Views;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
+using static CnV.AGameS;
 
 using System;
 using System.Collections.Generic;
@@ -37,6 +38,7 @@ using System.Threading.Tasks;
 using static CnV.Views.AttackTab;
 using Microsoft.Xna.Framework.Media;
 using CnV;
+using static CnV.AGameS;
 
 namespace CnV
 {
@@ -81,33 +83,13 @@ namespace CnV
 			return new Draw.Material(texture,normalMap,AGame.GetTileEffect());
 		}
 	}
-	public enum Lighting
-	{
-		day,
-		night,
-		none,
-	}
+	
 	public partial class AGame:Microsoft.Xna.Framework.Game
 	{
 		static public Windows.Graphics.Display.AdvancedColorKind colorKind;
 
 
-		const float parallaxBaseGain = 2.0f / 1024.0f;
-		public const float zBase = 0;
-		public const float zLand = 0;
-		public const float zEffectShadowBase = 10 * parallaxBaseGain;
-		public const float zWaterBase = 10 * parallaxBaseGain;
-		public const float zTerrainBase = 18 * parallaxBaseGain;
-		public const float zTopLevelBase = 24 * parallaxBaseGain;
-		public const float zCitiesBase = 28 * parallaxBaseGain;
-		public const float zLabelsBase = 28 * parallaxBaseGain;
-		public static float zWater => zWaterBase * AGame.parallaxGain;
-		public static float zTerrain => zTerrainBase * AGame.parallaxGain;
-		public static float zTopLevel => zTopLevelBase * AGame.parallaxGain;
-		public static float zCities => zCitiesBase * AGame.parallaxGain;
-		public static float zLabels => zLabelsBase * AGame.parallaxGain;
-		const byte textBackgroundOpacity = 192;
-		public static float zEffectShadow => zEffectShadowBase * 0.0f;
+		
 
 		static Vector2 shadowOffset = new Vector2(4,4);
 		public const float cameraZ = 1.0f;
@@ -127,7 +109,7 @@ namespace CnV
 		public static EffectPass fontEffect;
 		public static EffectPass darkFontEffect;
 		public static EffectPass litEffect;
-		public static EffectPass unlitEffect;
+		public static EffectPass unlitEffect=>Material.unlitEffect;
 		public static EffectPass animatedSpriteEffect;
 		private static EffectPass sdfEffect;
 		private static EffectPass noTextureEffect;
@@ -324,6 +306,7 @@ namespace CnV
 		{
 			instance = this;
 			base.Initialize();
+			AGameS.LoadLitMaterial= Helper.LoadLitMaterial;
 
 		}
 
@@ -612,12 +595,12 @@ namespace CnV
 		public static double nativeToDip = 1;
 		public static bool wantFastRefresh;
 
-		private static float resolutionScale => SettingsPage.renderQuality switch
+		private static float resolutionScale => Settings.renderQuality switch
 		{
 			>= 0.625f => 1.0f, >= 0.375f => 0.875f, >= 0.1875f => 0.75f, _ => 0.625f
 		};
 
-		private static bool wantLighting => SettingsPage.renderQuality > 0.875f && (SettingsPage.lighting != Lighting.none);
+		private static bool wantLighting => Settings.renderQuality > 0.875f && (Settings.lighting != Lighting.none);
 
 		public static void UpdateResolution()
 		{
@@ -715,7 +698,6 @@ namespace CnV
 
 		//}
 
-		public static DummyTask contentLoadingStarted ;
 		public static Microsoft.Xna.Framework.Media.Song[] music;
 		//	bool inputInitialized;
 
@@ -723,7 +705,7 @@ namespace CnV
 		static int lastSongPlayed;
 		public static void UpdateMusic()
 		{
-			if(SettingsPage.musicVolume > 0 && !JSClient.isSub)
+			if(Settings.musicVolume > 0 && !JSClient.isSub)
 			{
 				if(music == null)
 				{
@@ -734,7 +716,7 @@ namespace CnV
 						music[i] = instance.Content.Load<Song>($"Audio/music{i}");
 				}
 
-				MediaPlayer.Volume = SettingsPage.musicVolume;
+				MediaPlayer.Volume = Settings.musicVolume;
 				if(MediaPlayer.State == MediaState.Stopped)
 				{
 					MediaPlayer.Play(music[AMath.random.Next(musicCount)]);
@@ -782,17 +764,17 @@ namespace CnV
 			{
 				contentLoadingStarted.Complete();
 
-				avaEffect = Content.Load<Effect>("Effects/Ava");
-				defaultEffect = EffectPass("AlphaBlend");
-				alphaAddEffect = EffectPass("AlphaAdd");
-				fontEffect = EffectPass("FontLight");
-				darkFontEffect = EffectPass("FontDark");
-				litEffect = EffectPass("Lit");
-				unlitEffect = EffectPass("Unlit");
-				animatedSpriteEffect = EffectPass("SpriteAnim");
-				sdfEffect = EffectPass("SDF");
-				noTextureEffect = EffectPass("NoTexture");
-				worldSpaceEffect = EffectPass("WorldSpace");
+				avaEffect              = Content.Load<Effect>("Effects/Ava");
+				Material.defaultEffect = EffectPass("AlphaBlend");
+				alphaAddEffect         = EffectPass("AlphaAdd");
+				fontEffect             = EffectPass("FontLight");
+				darkFontEffect         = EffectPass("FontDark");
+				litEffect              = EffectPass("Lit");
+				Material.unlitEffect   = EffectPass("Unlit");
+				animatedSpriteEffect   = EffectPass("SpriteAnim");
+				sdfEffect              = EffectPass("SDF");
+				noTextureEffect        = EffectPass("NoTexture");
+				worldSpaceEffect       = EffectPass("WorldSpace");
 
 				
 
@@ -1099,7 +1081,6 @@ namespace CnV
 		internal static Material fontMaterial;
 		internal static Material darkFontMaterial;
 		public static BitmapFont.BitmapFont bfont;
-		public static float parallaxGain;
 		const float lineTileGain = 1.5f / 64.0f;
 
 		const float actionAnimationGain = 64.0f;
@@ -1194,9 +1175,9 @@ namespace CnV
 				// var scale = ShellPage.canvas.ConvertPixelsToDips(1);
 				pixelScale = (cameraZoomLag);
 				halfSquareOffset = new Vector2(pixelScale * 0.5f,pixelScale * .5f);
-				var bonusLayerScale = pixelScale.Max(64 * SettingsPage.iconScale);
+				var bonusLayerScale = pixelScale.Max(64 * Settings.iconScale);
 
-				bmFontScale = (MathF.Sqrt(pixelScale / 64.0f) * 0.5f * SettingsPage.fontScale);//.Min(0.5f);
+				bmFontScale = (MathF.Sqrt(pixelScale / 64.0f) * 0.5f * Settings.fontScale);//.Min(0.5f);
 				pixelScaleInverse = 1.0f / cameraZoomLag;
 				clampedScaleInverse = (64 * pixelScaleInverse).Min(4.0f);
 				shapeSizeGain = MathF.Sqrt(pixelScale * (1.50f / 64.0f));
@@ -1218,7 +1199,7 @@ namespace CnV
 				bulgeGain = bulgeGain.Min(0.4f);// Eval(bulgeGain);
 
 
-				bulgeGain *= SettingsPage.planet * (1.0f - cityAlpha);
+				bulgeGain *= Settings.planet * (1.0f - cityAlpha);
 				bulgeInputGain = 4*(0.75f.Squared()) / (virtualSpan.X.Squared() + virtualSpan.Y.Squared());
 				// world space coords
 				var srcP0 = new Vector2((cameraCLag.X + 0.5f) * bSizeGain2 - projectionC.X * bSizeGain2 * pixelScaleInverse,
@@ -1250,12 +1231,12 @@ namespace CnV
 					srcP1.Y = srcImageSpan;
 
 				}
-				var isWinter = SettingsPage.IsThemeWinter();
+				var isWinter = Settings.IsThemeWinter();
 				//				var attacksVisible = DefenseHistoryTab.IsVisible() | OutgoingTab.IsVisible() | IncomingTab.IsVisible() | HitTab.IsVisible() | AttackTab.IsVisible();
 				var attacksVisible = OutgoingTab.IsVisible() | IncomingTab.IsVisible() | AttackTab.IsVisible();
 
 
-				var wantParallax = SettingsPage.parallax > 0.1f;
+				var wantParallax = Settings.parallax > 0.1f;
 
 				//var gr = spriteBatch;// spriteBatch;// wantLight ? renderTarget.CreateDrawingSession() : args.DrawingSession;
 
@@ -1315,7 +1296,7 @@ namespace CnV
 					//					var proj = Matrix.CreateOrthographicOffCenter(480, 1680, 1680, 480, 0, -1);
 					worldMatrixParameter.SetValue(proj);
 
-					if(SettingsPage.lighting == Lighting.night)
+					if(Settings.lighting == Lighting.night)
 					{
 						var l = ShellPage.mousePosition;//.InverseProject();
 						lightPositionParameter.SetValue(new Microsoft.Xna.Framework.Vector3(l.X,l.Y,lightZ0));
@@ -1349,9 +1330,9 @@ namespace CnV
 
 				}
 
-				var focusOnCity = (ShellPage.viewMode == ShellPage.ViewMode.city);
+				var focusOnCity = (View.viewMode == ShellPage.ViewMode.city);
 
-				parallaxGain = SettingsPage.parallax * MathF.Sqrt(Math.Min(11.0f,cameraZoomLag / 64.0f)) * regionAlpha * (1 - cityAlpha);
+				parallaxGain = Settings.parallax * MathF.Sqrt(Math.Min(11.0f,cameraZoomLag / 64.0f)) * regionAlpha * (1 - cityAlpha);
 
 				{
 					var wToCGain = (1.0f / cameraZoomLag);
@@ -1580,8 +1561,8 @@ namespace CnV
 
 					if(!focusOnCity)
 					{
-						var defenderVisible = IncomingTab.IsVisible() || ReinforcementsTab.instance.isFocused || NearDefenseTab.IsVisible() || SettingsPage.incomingAlwaysVisible;
-						var outgoingVisible = OutgoingTab.IsVisible() || SettingsPage.attacksAlwaysVisible;
+						var defenderVisible = IncomingTab.IsVisible() || ReinforcementsTab.instance.isFocused || NearDefenseTab.IsVisible() || Settings.incomingAlwaysVisible;
+						var outgoingVisible = OutgoingTab.IsVisible() || Settings.attacksAlwaysVisible;
 						{
 							//if (DefenseHistoryTab.IsVisible() || HitTab.IsVisible())
 							//{
@@ -1602,7 +1583,7 @@ namespace CnV
 
 							//		if (reports.Length > 0)
 							//		{
-							//			var autoShow = reports.Length <= SettingsPage.showAttacksLimit;
+							//			var autoShow = reports.Length <= Settings.showAttacksLimit;
 
 							//			var counts = new Dictionary<int, IncomingCounts>();
 
@@ -1711,7 +1692,7 @@ namespace CnV
 
 								if(!AttackTab.attackClusters.IsNullOrEmpty())
 								{
-									var showAll = (AttackTab.attackClusters.Length < SettingsPage.showAttacksLimit) &&(!hovered.Any());
+									var showAll = (AttackTab.attackClusters.Length < Settings.showAttacksLimit) &&(!hovered.Any());
 									foreach(var cluster in AttackTab.attackClusters)
 									{
 										var isHover = hovered.Contains(cluster);
@@ -1814,8 +1795,8 @@ namespace CnV
 											continue;
 									}
 									var list = defenders ? Spot.defendersI : Spot.defendersO;
-									bool noneIsAll = list.Length <= SettingsPage.showAttacksLimit;
-									bool showAll = list.Length <= SettingsPage.showAttacksLimit0 ||(defenders ? SettingsPage.incomingAlwaysVisible : SettingsPage.attacksAlwaysVisible);
+									bool noneIsAll = list.Length <= Settings.showAttacksLimit;
+									bool showAll = list.Length <= Settings.showAttacksLimit0 ||(defenders ? Settings.incomingAlwaysVisible : Settings.attacksAlwaysVisible);
 									foreach(var city in list)
 									{
 										if(!city.testContinentFilter)
@@ -2092,7 +2073,7 @@ namespace CnV
 										if(!city.isSelected || city.cid == City.build)
 											DrawFlag(city.cid,city.cid == City.build ? SpriteAnim.flagHome : SpriteAnim.flagRed,new Vector2(4,4));
 									}
-									if((MainPage.IsVisible() && SettingsPage.raidsVisible != 0) || SettingsPage.raidsVisible == 1)
+									if((MainPage.IsVisible() && Settings.raidsVisible != 0) || Settings.raidsVisible == 1)
 									{
 										if(IsSquareCulledWC(wc,raidCullSlopSpace))
 											continue;
@@ -2119,7 +2100,7 @@ namespace CnV
 							DrawRectOutlineShadow(Layer.effects - 1,cid,selectColor,null,3.0f,4.0f);
 							//DrawFlag(cid, SpriteAnim.flagSelected, Vector2.Zero);
 						}
-						foreach(var cid in SettingsPage.pinned)
+						foreach(var cid in Settings.pinned)
 						{
 							DrawFlag(cid,SpriteAnim.flagPinned,new Vector2(4,-4));
 						}
@@ -2213,9 +2194,9 @@ namespace CnV
 											//									, Layer.tileText, z,PlanetDepth);
 
 										}
-										if(spot != null && !focusOnCity && !(SettingsPage.troopsVisible.HasValue && SettingsPage.troopsVisible.Value == false))
+										if(spot != null && !focusOnCity && !(Settings.troopsVisible.HasValue && Settings.troopsVisible.Value == false))
 										{
-											if(!spot.troopsTotal.Any() && spot.isNotClassified && spot.isFriend && SettingsPage.troopsVisible.GetValueOrDefault())
+											if(!spot.troopsTotal.Any() && spot.isNotClassified && spot.isFriend && Settings.troopsVisible.GetValueOrDefault())
 												spot.TouchClassification();
 											if(spot.troopsTotal.Any() || spot.isClassified)
 											{
@@ -2249,7 +2230,7 @@ namespace CnV
 
 												}
 												var r = t.Ramp();
-												var spriteSize = new Vector2(32 * SettingsPage.iconScale);
+												var spriteSize = new Vector2(32 * Settings.iconScale);
 												var _c0 = c1 - spriteSize;
 												var _c1 = c1 + spriteSize;
 
@@ -2276,7 +2257,7 @@ namespace CnV
 					//		var wc = cid.CidToWorld();
 					//		if (!IsCulledWC(wc))
 					//		{
-					//			DrawTextBox($"~{Player.IdToName(pid)}~", wc.WToCamera(), tipTextFormatCentered, Color.Red, 255, Layer.tileText, 3, 3, null, -1, 0.75f * SettingsPage.fontScale);
+					//			DrawTextBox($"~{Player.IdToName(pid)}~", wc.WToCamera(), tipTextFormatCentered, Color.Red, 255, Layer.tileText, 3, 3, null, -1, 0.75f * Settings.fontScale);
 					//		}
 					//	}
 					//}
@@ -2377,7 +2358,7 @@ namespace CnV
 				return;
 
 			var c = wc.WorldToCamera() + offset;
-			var dv = AGame.shapeSizeGain * 48 * 4 * SettingsPage.flagScale;
+			var dv = AGame.shapeSizeGain * 48 * 4 * Settings.flagScale;
 			float z = zLabels;
 
 			// hover flags
@@ -2535,7 +2516,7 @@ namespace CnV
 				gain = 1.0f + (1.0f - timeToArrival / postAttackDisplayTime) * 0.25f;
 			var mid = progress.Lerp(c0,c1);
 
-			float spriteSize = 32 * SettingsPage.iconScale;
+			float spriteSize = 32 * Settings.iconScale;
 
 			if(army is not null && ShellPage.toolTip is null)
 			{

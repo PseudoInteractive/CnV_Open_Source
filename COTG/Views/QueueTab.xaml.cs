@@ -29,12 +29,11 @@ namespace CnV.Views
 
 	public sealed partial class QueueTab : UserTab
 	{
-		public const int movesPerConfirm = 8;
 
 
 		
 		public static QueueTab instance;
-		private const int badBuildingThreshold = 20;
+		private const int      badBuildingThreshold = 20;
 
 
 		public static bool IsVisible() => instance.isFocused;

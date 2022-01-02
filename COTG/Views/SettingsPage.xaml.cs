@@ -27,6 +27,7 @@ using MessagePack;
 using Windows.Storage;
 using System.Collections.Immutable;
 using CnV;
+using static CnV.Settings;
 
 namespace CnV.Views
 {
@@ -34,12 +35,7 @@ namespace CnV.Views
 	using Helpers;
 	using Services;
 
-	public enum Theme
-	{
-		cotg,
-		louWinter,
-		louDefault,
-	}
+	
 
 	// TODO WTS: Add other settings as necessary. For help see https://github.com/Microsoft/WindowsTemplateStudio/blob/master/docs/UWP/pages/settings-codebehind.md
 	// TODO WTS: Change the URL for your privacy policy in the Resource File, currently set to https://YourPrivacyUrlGoesHere
@@ -60,16 +56,7 @@ namespace CnV.Views
 		//       private static IdentityService IdentityService => Singleton<IdentityService>.Instance;
 
 
-		public static bool nearResAsRatio=true;
-
-		public static bool? syncIncoming = null;
-		public static bool? syncOutgoing = null;
-		public static float tabZoom = 0.5f;
-		public static float chatZoom = 0.5f;
-		public static string attackPlanName = "PlanB";
-		//private static bool _isLoggedIn;
-		//private static bool _isBusy;
-		public static float renderQuality=0.75f;
+		
 
 		public float RenderQuality
 		{
@@ -82,117 +69,7 @@ namespace CnV.Views
 				}
 			}
 		}
-		public static int layout;
-		public static LayoutOffsets[] layoutOffsets = new LayoutOffsets[]
-		{
-			new(0.875f, 0.333f, 0.75f, 0.42f, 0.375f),
-			new(1.0f, 0.0f, 0.75f, 0.42f, 0.375f),
-			
-			new(0.5f, 0.25f, 0.75f, 0.42f, 0.25f),
-		
-			new(0.5f, 0.5f, 0.75f, 0.42f, 0.375f),
-			new(0f, 0.5f, 0.375f, 0.42f, 0.25f),
-
-			new(0.875f, 0.333f, 0.75f, 0.625f, 0.625f),
-		};
-
-		public static Lighting lighting = Lighting.day;
-
-		public static bool donationsProportionateToWhatsNeeded = true;
-
-		public static string playerName = string.Empty;
-		public static string playerEmail = string.Empty;
-		public static string playerPassword = string.Empty;
-		//        private static UserData _user;
-		public static bool fetchFullHistory = false;
-		public static bool? autoBuildOn = true;
-		public static bool setRecruit = true;
-		public static bool extendedBuild=true;
-		public static float planet = 0.5f;
-		public static float parallax = 0.5f;
-		public static string hubCitylistName = "Hubs";
-		public static string exportPlayer = string.Empty;
-		public static string exportAlliance = string.Empty;
-		public static bool drawBuildingOverlays=true;
-		public static float raidTroopFraction = 1;
-		public static float returnRaidsBias = 1.0f;
-		public static bool autoBuildCabins = true;
-		public static bool autoRearrangeShareStrings= true;
-		public static ResourcesNullable defaultReq = new (200000,220000,200000,250000);
-		public static ResourcesNullable defaultSend = new(250000,250000,300000,350000);
-		public static int cabinsToRemovePerSwap= 6;
-		public static int cottageLevel = 7;
-		public static bool? troopsVisible;
-//		public static bool sendWood = true;
-//		public static bool sendStone = true;
-		public static int exportContinent = 22;
-//		public static bool sendIron = true;
-//		public static bool sendFood = true;
-		public static int tsForCastle = 22000;
-		public static int tsForSorcTower = 32000;
-		public static int defaultFoodWarning = 12;
-		public static bool showDungeonsInRegionView = false;
-		public static bool applyTags=true;
-		public static bool setHub = true;
-		
-
-		public static bool wantRaidRepeat=true;
-		public static bool clearOnlyCenterRes;
-		public static bool clearRes=true;
-		public static bool embedTradeInShareStrings = true;
-		public static bool? demoCottageOnBuildIfFull;
-		public static bool? demoBuildingOnBuildIfFull;
-		public static int startCabinCount = 39;
-		public static float fontScale = 0.5f;
-		public static float musicVolume = 0.5f;
-		public static bool? autoBuildWalls=true;
-		public static float minDungeonCompletion = 15;
-		public static int autoWallLevel = 1;
-		public static int autoTowerLevel = 1;
-		public static int scoutpostCount=2;
-		public static bool returnRaidsBeforeSend;
-		public static float flagScale=0.25f;
-		public static float iconScale = 0.5f;
-
-		public static bool[] includeRaiders = new[] {
-				false, false,true,true,
-				true,true,true,false,
-				true,true,true,true,
-				false,false,true,true,
-				true,false
-		};
-
-		public static string VRTRatio = "1:1:1";
-
-		public static (float v, float r,float t) vrtRatio {
-			get
-			{
-				try
-				{
-					var str = VRTRatio.Split(':');
-					return (float.Parse(str[0], NumberStyles.Any), float.Parse(str[1], NumberStyles.Any), float.Parse(str[2], NumberStyles.Any));
-				}
-				catch(Exception ex)
-				{
-					Note.Show($"Invalid VRT ratio {VRTRatio}, should be like '1:1:1'");
-					return (1, 1, 1);
-				}
-
-			}
-		}
-
-		// rooms for 16 for now
-		public static bool[] includeBuildStages = new[] {true,true,true,true,
-			true,true,true,true,
-			true,true,true,true,
-			true,true,true,true };
-
-		public static int raidIntervals;
-		public static int nearResCartReserve = 100;
-		public static int nearResShipReserve = 0;
-		public static Resources nearResReserve = new Resources(100000, 100000, 100000, 100000);
-		public static Resources nearResSend = new Resources(100000,100000,100000,100000);
-
+	
 		public float uiMusic
 		{
 			get => musicVolume;
@@ -202,7 +79,6 @@ namespace CnV.Views
 				AGame.UpdateMusic();
 			}
 		}
-		public static Theme theme = Theme.louWinter;
 		public int uiTheme
 		{
 			get => (int)theme;
@@ -214,49 +90,7 @@ namespace CnV.Views
 				Note.Show("City theme will not completly update until you restart the app");
 			}
 		}
-
-		public static string[] incomingWatch = Array.Empty<string>();
-		public static byte exportOffence;
-		public static byte exportWater;
-		public static byte exportCastles;
-		public static bool onlyTemples;
-		public static bool? exportHeaders = true;
-		public static bool? exportScore;
-		public static byte exportWho;
-
-		public static int chooseAttackTypeIndex;
-		public static bool chooseAttackTypeUpdate;
-
-		//public static string secSessionId;
-		public static int mruSize = 32;
-		[NonSerialized]
-		public static int[] pinned = Array.Empty<int>();
-
-	//	public static bool isPinnedLoaded => pinned != null; 
-		public static int showAttacksLimit = 100;
-		public static int showAttacksLimit0 = 30;
-		[NonSerialized]
-		public static HashSet<int> tipSeen;
-		public static bool soundOn = true;
-		public static float volume = 0.5f;
-		public static bool spatialOn = false;
-		public static bool stayAlive;
-		public static bool raidOffDungeons = false;
-		public static bool tintCities= true;
-		public static bool raidSendExact;
-		public static int resetRaidsCarry = 90;
-		public static int resetRaidsIdle = 10;
-		public static int raidSendMinIdle = 5; //
-
-
-		public static int raidsVisible = -1;
-		public static bool cityListWarship=true;
-		public static bool cityListShippers = true;
-		public static bool cityListDefense = true;
-		public static bool cityListOffense = true;
-		public static bool cityListGalleys = true;
-		public static bool cityListStingers = true;
-		public static bool shareStringApplyTags = true;
+		
 		int uiLighting
 		{
 			get => (int)lighting;
@@ -325,15 +159,7 @@ namespace CnV.Views
 			}
 
 		}
-		public static int raidReserveCommandSlots = 0;
-		public static float raidMaxTriariRatio = 2;
-		public static float raidCarryVsDistance = 0.5f;
-
-		public static float raidCarryMin = 0.9f;
-		public static float raidCarryTarget = 1.15f;
-		public static float raidCarryMax = 2.00f;
-		public static int intialStorehouses=1;
-		public static int intialMarkets = 1;
+		
 		public static int raidCarryMinPercent
 		{
 			get => (raidCarryMin*100.0).RoundToInt();
@@ -360,8 +186,8 @@ namespace CnV.Views
 		public static async Task LoadFromPlayFab()
 		{
 			var settings = await APlayFab.LoadSettings();
-			var props = typeof(SettingsPage).GetFields(BindingFlags.Static  | BindingFlags.Public | BindingFlags.DeclaredOnly);
-			var st = App.Settings();
+			var props = typeof(Settings).GetFields(BindingFlags.Static  | BindingFlags.Public | BindingFlags.DeclaredOnly);
+			var st = App.ClientSettings();
 			foreach(var p in props)
 			{
 				if(!p.IsNotSerialized)
@@ -389,8 +215,8 @@ namespace CnV.Views
 
 			//     TipsSeen.instance = st.Read(nameof(TipsSeen), new TipsSeen());
 			//  hubCitylistName = st.Read(nameof(hubCitylistName), "Hubs");
-			var props = typeof(SettingsPage).GetFields(BindingFlags.Static  | BindingFlags.Public | BindingFlags.DeclaredOnly  );
-			var st = App.Settings();
+			var props = typeof(Settings).GetFields(BindingFlags.Static  | BindingFlags.Public | BindingFlags.DeclaredOnly  );
+			var st = App.ClientSettings();
 			if (!st.Values.ContainsKey("currentVersion") )
 			{
 				st.SaveString("currentVersion", "0");
@@ -497,8 +323,8 @@ namespace CnV.Views
 
 		public static void UpdateZoom(object sender = null, Microsoft.UI.Xaml.Controls.Primitives.RangeBaseValueChangedEventArgs e = null)
 		{
-			var chatZoom = SettingsPage.chatZoom.Squared()  + 0.75f;
-			var tabZoom = SettingsPage.tabZoom.Squared()  + 0.75f;
+			var chatZoom = chatZoom.Squared()  + 0.75f;
+			var tabZoom = tabZoom.Squared()  + 0.75f;
 			double AsDouble(object d) => (double)d;
 			double RoundDouble(double d) => Math.Round(d);
 			smallFontSize = AsDouble(App.instance.Resources["SmallFontSize"] = RoundDouble(tabZoom * smallFontSizeBase));
@@ -526,7 +352,7 @@ namespace CnV.Views
 			{
 				CityCustom.Save(); // synchronous
 				var props = typeof(SettingsPage).GetFields(System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.DeclaredOnly);
-				var st = App.Settings();
+				var st = App.ClientSettings();
 				//if (SpotTab.instance.spotMRU.Count>0)
 				//{
 				//    List<int> mru = new List<int>();
@@ -760,7 +586,7 @@ namespace CnV.Views
 		{
 			AppS.DispatchOnUIThreadLow( async () =>
 			   {
-				   var pid = Player.activeId;
+				   var pid = Player.myId;
 				   using var work = new WorkScope("update citylists");
 				   var cityListCount = CityList.all.Length;
 				   string sli = null;
@@ -779,17 +605,17 @@ namespace CnV.Views
 				   var global = new List<CityList.GroupDef>();
 				   var perContinent = new List<CityList.GroupDef>();
 				   
-				   if(SettingsPage.cityListGalleys)
+				   if(Settings.cityListGalleys)
 					   global.Add(CityList.gdGalley);
-				   if (SettingsPage.cityListStingers)
+				   if (Settings.cityListStingers)
 					   global.Add(CityList.gdStinger);
-				   if (SettingsPage.cityListOffense)
+				   if (Settings.cityListOffense)
 					   perContinent.Add(CityList.gdOffense);
-				   if (SettingsPage.cityListDefense)
+				   if (Settings.cityListDefense)
 					   perContinent.Add(CityList.gdDefense);
-				   if (SettingsPage.cityListShippers)
+				   if (Settings.cityListShippers)
 					   global.Add(CityList.gdShipper);
-				   if (SettingsPage.cityListWarship)
+				   if (Settings.cityListWarship)
 					   global.Add(CityList.gdWarship);
 				   global.Add(CityList.gdHubs);
 				   global.Add(CityList.gdLeaveMe);

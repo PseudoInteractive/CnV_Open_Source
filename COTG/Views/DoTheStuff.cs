@@ -10,7 +10,6 @@ using CnV.Views;
 
 using EnumsNET;
 
-using static Cnv.City;
 using static CnV.Views.QueueTab;
 using static CnV.Views.ShellPage;
 using static CnV.Views.CityBuildUI;
@@ -34,8 +33,8 @@ public static class DoTheStuff
 
 			var cid = city.cid;
 			Assert(city.isBuild);
-			if(ShellPage.viewMode != ShellPage.ViewMode.city)
-				JSClient.ChangeView(ShellPage.ViewMode.city);
+			if(View.viewMode != ViewMode.city)
+				JSClient.ChangeView(ViewMode.city);
 			await CityBuildUI._IsPlanner(false,true);
 
 			Assert(App.uiSema.CurrentCount == 0);
@@ -566,7 +565,7 @@ public static class DoTheStuff
 		}
 
 	static int nextMoveConfirm;
-	static void InitNextMoveConfirm() => nextMoveConfirm = Player.moveSlots - movesPerConfirm;
+	static void InitNextMoveConfirm() => nextMoveConfirm = Player.moveSlots - CityBuild.movesPerConfirm;
 
 	static async Task<int> CheckMoveSlots()
 	{

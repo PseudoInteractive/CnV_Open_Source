@@ -203,7 +203,6 @@
     <Compile Include="Game\XNAUtil.cs" />
     <Compile Include="GlobalSuppressions2.cs" />
     <Compile Include="GlobalUsing.cs" />
-    <Compile Include="JSON\CitySettings.cs" />
     <Compile Include="JSON\Errors.cs" />
     <Compile Include="JSON\GetIO.cs" />
     <Compile Include="JSON\gFRep2.cs" />

@@ -1086,7 +1086,7 @@ namespace CnV.Views
 		public static void AutoSwitchViewMode()
 		{
 			var _viewMode = cameraZoom >= cityZoomThreshold ? ViewMode.city : cameraZoom > cityZoomWorldThreshold ? ViewMode.region : ViewMode.world;
-			if (_viewMode != viewMode)
+			if (_viewMode != View.viewMode)
 			{
 				ShellPage.SetViewMode(_viewMode);
 			}

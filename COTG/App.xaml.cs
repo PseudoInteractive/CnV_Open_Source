@@ -1171,7 +1171,7 @@ namespace CnV
 			}
 		}
 
-		public static ApplicationDataContainer Settings()
+		public static ApplicationDataContainer ClientSettings()
 		{
 			var appData = ApplicationData.Current;
 			if (appData.RoamingStorageQuota > 4)

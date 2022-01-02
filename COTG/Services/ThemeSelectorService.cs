@@ -24,7 +24,7 @@ namespace CnV.Services
         public static async Task SetThemeAsync(ElementTheme theme)
         {
             Theme = theme;
-            App.Settings().Save(SettingsKey, theme);
+            App.ClientSettings().Save(SettingsKey, theme);
 
             await SetRequestedThemeAsync();
         }
@@ -73,7 +73,7 @@ namespace CnV.Services
 		private static async Task<ElementTheme> LoadThemeFromSettingsAsync()
         {
             ElementTheme cacheTheme = ElementTheme.Dark;
-            string themeName = App.Settings().Read<string>(SettingsKey);
+            string themeName = App.ClientSettings().Read<string>(SettingsKey);
             if (!string.IsNullOrEmpty(themeName))
             {
                 Enum.TryParse(themeName, out cacheTheme);

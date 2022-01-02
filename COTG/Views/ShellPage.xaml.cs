@@ -751,7 +751,12 @@ namespace CnV.Views
 		//static short[] bidMap = new short[] { 448, 446, 464, 461, 479, 447, 504, 445, 465, 483, 449, 481, 460, 466, 462, 500, 463, 482, 477, 502, 467, 488, 489, 490, 491, 496, 498, bidTownHall, 467 };
 
 		//		public static (int x, int y) webclientSpan;
+		public class BuildingCount
+		{
+			public Microsoft.UI.Xaml.Media.ImageBrush brush { get; set; }
+			public int                                count { get; set; }
 
+		}
 		private async void ShowBuildings(object sender,object e)
 		{
 			try

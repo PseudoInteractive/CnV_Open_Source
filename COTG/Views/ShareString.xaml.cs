@@ -600,7 +600,7 @@ namespace CnV.Views
 			{
 				tradeStale=false;
 				var city = City.Get(cid);
-				await NearRes.UpdateTradeStuffIfNeeded().ConfigureAwait(false);
+				await TradeOverview.UpdateTradeStuffIfNeeded().ConfigureAwait(false);
 				var tags = await TagsFromCheckboxes();
 				var isHubOrStorage = tags.HasFlag(Tags.Hub) | tags.HasFlag(Tags.Storage);
 

@@ -12,7 +12,6 @@ using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Shapes;
 
 using static CnV.Debug;
-using static Cnv.City;
 using static CnV.Views.CityBuildUI;
 using System.Collections.Generic;
 using CommunityToolkit.WinUI.UI;
@@ -56,23 +55,17 @@ namespace CnV.Views
 		static public SwapChainPanel? canvas;
 		public static bool hasKeyboardFocus;
 	//	public static KeyboardProxy keyboardProxy;
-		public static ViewMode viewMode;
+
 //		public static bool webviewHasFocus=>webviewHasFocus2;
 		private const int bottomMargin = 0;
 		private const int cotgPopupLeft = htmlBaseWidth+18;
 		private const int cotgPopupRight = cotgPopupLeft + cotgPopupWidth;
 		private const int cotgPopupWidth = 550;
-		public enum ViewMode
-		{
-			city = 0,
-			region = 1,
-			world = 2,
-			invalid = 3
-		};
 
-		public static bool IsCityView() => viewMode == ViewMode.city;
 
-		public static bool IsWorldView() => viewMode == ViewMode.world;
+		public static bool IsCityView() => View.viewMode == ViewMode.city;
+
+		public static bool IsWorldView() => View.viewMode == ViewMode.world;
 
 		//public static void NotifyCotgPopup(int cotgPopupOpen)
 		//{
@@ -110,23 +103,23 @@ namespace CnV.Views
 		public static void SetViewMode(ViewMode _viewMode,  bool leaveZoom = false)
 		{
 		//	var _webviewHasFocus = pwebviewHasFocus.HasValue ? pwebviewHasFocus.Value : webviewHasFocus;
-			var priorView = viewMode;
+			var priorView = View.viewMode;
 		//	var priorWebviewHasFocus = webviewHasFocus;
-			viewMode = _viewMode;
+		View.viewMode = _viewMode;
 		//	webviewHasFocus = _webviewHasFocus;
 
-			if (priorView != viewMode )
+			if (priorView != View.viewMode )
 			{
 				//Log($"!Focus5: {hasKeyboardFocus}");
 				//hasKeyboardFocus = 0;
-				if (!leaveZoom && priorView != viewMode)
+				if (!leaveZoom && priorView != View.viewMode)
 				{
-					if (viewMode == ViewMode.world)
+					if (View.viewMode == ViewMode.world)
 					{
 						if (AGame.cameraZoom > AGame.cityZoomWorldThreshold)
 							AGame.cameraZoom = AGame.cameraZoomWorldDefault;
 					}
-					else if (viewMode == ViewMode.region)
+					else if (View.viewMode == ViewMode.region)
 					{
 						if (AGame.cameraZoom > AGame.cityZoomThreshold || AGame.cameraZoom < AGame.cityZoomWorldThreshold)
 							AGame.cameraZoom = AGame.cameraZoomRegionDefault;
@@ -459,7 +452,8 @@ namespace CnV.Views
 		}
 		public static HashSet<VirtualKey> buildKeys = GetBuildKeys();
 
-		public static Debounce1<VirtualKey> hotKeyDown = new(_KeyDown) { debounceDelay=0,throttleDelay=50, runOnUiThread=true,throttled=true };
+		public static Debounce1<VirtualKey> hotKeyDown = new(_KeyDown) { debounceDelay =0,throttleDelay =50, runOnUiThread =true,throttled =true };
+
 		public static bool DoKeyDown(VirtualKey key)
 		{
 		//	Log($"DoKeyDown {key}");
