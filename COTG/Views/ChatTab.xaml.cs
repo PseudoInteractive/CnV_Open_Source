@@ -509,7 +509,7 @@ namespace CnV.Views
 			{
 				var parseEnd = coords.IndexOf(' ', 3);
 				var player = coords.Substring(3, parseEnd - 3);
-				App.CopyTextToClipboard(player);
+				AppS.CopyTextToClipboard(player);
 				var tab = ChatTab.GetWhisperTab(player, true);
 				tab.Paste(coords, false);
 				return;
@@ -522,7 +522,7 @@ namespace CnV.Views
 			if (lg == 24)
 			{
 				var c = coords.Substring(8, 7);
-				App.CopyTextToClipboard(c);
+				AppS.CopyTextToClipboard(c);
 				//               Note.Show($"[{c}](/c/{c}) posted to chat");
 			}
 		}
@@ -807,7 +807,7 @@ namespace CnV.Views
 				}
 
 			}
-			App.CopyTextToClipboard(sb.ToString());
+			AppS.CopyTextToClipboard(sb.ToString());
 			Note.Show("Copied to clipboard");
 		}
 	}

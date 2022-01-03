@@ -163,7 +163,7 @@ namespace CnV.Views
 									  break;
 								  }
 							  }
-							  sb.Append($"{Alliance.all[alliance].name}\t{ p.name}\t{cid.CidToContinent()}\t{s.xy}\t{s.isCastle.As01()}\t{((s.isMine||Player.isSpecial)?(s.hasAcademy.GetValueOrDefault()?"Academy":"none") : "dunno") }\t{s.isTemple.As01()}\t{s.isOnWater.As01()}\t{(isO?1:isD?-1:0)}\t");
+							  sb.Append($"{Alliance.all[alliance].name}\t{ p.name}\t{cid.CidToContinent()}\t{s.xy}\t{s.isCastle.As01()}\t{((s.isMine)?(s.hasAcademy.GetValueOrDefault()?"Academy":"none") : "dunno") }\t{s.isTemple.As01()}\t{s.isOnWater.As01()}\t{(isO?1:isD?-1:0)}\t");
 							   switch (c)
 							   {
 								   case Spot.Classification.sorcs:
@@ -214,7 +214,7 @@ namespace CnV.Views
 						   }
 					   }
 				   }
-				   App.CopyTextToClipboard(sb.ToString());
+				   AppS.CopyTextToClipboard(sb.ToString());
 				   ShellPage.WorkEnd("Exporting");
 
 				   Note.Show($"Copied {counter} castles to clipboard for sheets");

@@ -71,7 +71,7 @@ namespace CnV.Views
 			var image = sender as FrameworkElement;
 			var cc = image.FindParent<CityControl>();
 			if (cc?.city != null)
-				JSClient.ShowCity(cc.city.cid, false, false, false);
+				City.ShowCity(cc.city.cid, false, false, false);
 
 		}
 

@@ -18,7 +18,7 @@ using Microsoft.AppCenter.Crashes;
 
 using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.Storage;
-
+using static CnV.AppS;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 //using Microsoft.UI.Xaml.Controls;
@@ -98,19 +98,20 @@ namespace CnV
 			closing,
 			closed,
 		}
+
 		static IConfigurationRoot configuration;
 
-		public static State state;
-		private Lazy<ActivationService> _activationService;
-		public static bool isForeground;
-		public static bool processingTasksStarted;
+		public static State                   state;
+		private       Lazy<ActivationService> _activationService;
+		public static bool                    processingTasksStarted;
+
 		private ActivationService ActivationService
 		{
 			get { return _activationService.Value; }
 		}
 
 
-		public static App instance;
+		public static App    instance;
 		public static string appLink = "cotg";
 
 		public static async Task EnsureBrowserInstalledAsync()
@@ -134,7 +135,7 @@ namespace CnV
 #endif
 			   );
 
-			AAnalytics.initialized=true;
+			AAnalytics.initialized = true;
 			await Task.WhenAll(
 #if CRASHES
 					Crashes.SetEnabledAsync(true),
@@ -149,11 +150,16 @@ namespace CnV
 				var str = CoreWebView2Environment.GetAvailableBrowserVersionString();
 				Log(str);
 				//			createWebEnvironmentTask =  CoreWebView2Environment.CreateAsync();
-				AAnalytics.Track("WebView", new Dictionary<string, string>(new [] { new KeyValuePair<string, string>("Version",str) } ));
+				AAnalytics.Track("WebView",
+								new Dictionary<string, string>(new []
+								{
+										new KeyValuePair<string, string>("Version", str)
+								} ));
 			}
-			catch(Exception ex)
+			catch (Exception ex)
 			{
-				await Windows.System.Launcher.LaunchUriAsync(new("https://go.microsoft.com/fwlink/p/?LinkId=2124703", UriKind.Absolute));
+				await Windows.System.Launcher.LaunchUriAsync(new("https://go.microsoft.com/fwlink/p/?LinkId=2124703",
+																UriKind.Absolute));
 				LogEx(ex);
 			}
 			//#if CRASHES
@@ -166,16 +172,16 @@ namespace CnV
 			//#endif
 		}
 
-		
+
 		public App()
 		{
 			//			services = ConfigureServices();
 			RequestedTheme = ApplicationTheme.Dark;
-			InitializeComponent(); 
-			UnhandledException+=App_UnhandledException;
+			InitializeComponent();
+			UnhandledException += App_UnhandledException;
 
-	
-		
+
+
 			//try
 			//{
 			//    {
@@ -194,41 +200,41 @@ namespace CnV
 
 //			UnhandledException += OnAppUnhandledException;
 			//Microsoft.Extensions.Hosting.Host.Cre
-			TaskScheduler.UnobservedTaskException+=TaskScheduler_UnobservedTaskException;
+			TaskScheduler.UnobservedTaskException += TaskScheduler_UnobservedTaskException;
 
 			// TODO WTS: Add your app in the app center and set your secret here. More at https://docs.microsoft.com/appcenter/sdk/getting-started/uwp
-			
+
 
 			// Deferred execution until used. Check https://msdn.microsoft.com/library/dd642331(v=vs.110).aspx for further info on Lazy<T> class.
 			_activationService = new Lazy<ActivationService>(CreateActivationService);
 			//	UserAgent.SetUserAgent(JSClient.userAgent);  // set webview useragent
-		//	Ioc.Default.ConfigureServices(ConfigureServices());
+			//	Ioc.Default.ConfigureServices(ConfigureServices());
 
-			
+
 		}
-		 //private System.IServiceProvider ConfigureServices()
-		 //{
-			// Host.CreateDefaultBuilder().Build();
-   //         // TODO WTS: Register your services, viewmodels and pages here
-   //         var services = new ServiceCollection();
-			//services.AddLogging();
+		//private System.IServiceProvider ConfigureServices()
+		//{
+		// Host.CreateDefaultBuilder().Build();
+		//         // TODO WTS: Register your services, viewmodels and pages here
+		//         var services = new ServiceCollection();
+		//services.AddLogging();
 
-   //         return services.BuildServiceProvider();
-   //     }
+		//         return services.BuildServiceProvider();
+		//     }
 
-		private void App_UnhandledException(object sender,Microsoft.UI.Xaml.UnhandledExceptionEventArgs e)
+		private void App_UnhandledException(object sender, Microsoft.UI.Xaml.UnhandledExceptionEventArgs e)
 		{
-			e.Handled=true;
+			e.Handled = true;
 			System.Diagnostics.Debug.WriteLine($"Unhandled Exception: " + e.Message);
 			System.Diagnostics.Debug.WriteLine(e.Exception.StackTrace);
 
 		}
 
-		private void TaskScheduler_UnobservedTaskException(object sender,UnobservedTaskExceptionEventArgs e)
+		private void TaskScheduler_UnobservedTaskException(object sender, UnobservedTaskExceptionEventArgs e)
 		{
 			e.SetObserved();
 			LogEx(e.Exception);
-			
+
 		}
 
 		//		public static Windows.Foundation.IAsyncOperation<CoreWebView2Environment> createWebEnvironmentTask;
@@ -236,7 +242,7 @@ namespace CnV
 		private static async Task SwitchToBackground()
 		{
 			Log("Background");
-			if(isForeground == true)
+			if (isForeground == true)
 			{
 				isForeground = false;
 
@@ -246,17 +252,19 @@ namespace CnV
 
 					var t0 = SaveState();
 
-					var t = DateTimeOffset.UtcNow;
+					var t  = DateTimeOffset.UtcNow;
 					var dt = t - activeStart;
 					activeStart = t;
-				//	Trace("Finished!1");
+					//	Trace("Finished!1");
 
-					AAnalytics.Track("Background",new Dictionary<string,string> { { "time",dt.TotalSeconds.RoundToInt().ToString() } });
+					AAnalytics.Track("Background",
+									new Dictionary<string, string>
+											{ { "time", dt.TotalSeconds.RoundToInt().ToString() } });
 					SystemInformation.Instance.AddToAppUptime(dt);
 					await t0;
-				   Log("Finished!");
+					Log("Finished!");
 				}
-				catch(Exception ex)
+				catch (Exception ex)
 				{
 				}
 			}
@@ -264,10 +272,10 @@ namespace CnV
 
 		private static Task SaveState()
 		{
-			var t0 = BuildQueue.SaveAll(true,false);
+			var t0 = BuildQueue.SaveAll(true, false);
 			var t1 = AttackTab.SaveAttacksBlock();
 			SettingsPage.SaveAll();
-			return Task.WhenAll(t0,t1);
+			return Task.WhenAll(t0, t1);
 		}
 
 
@@ -289,35 +297,8 @@ namespace CnV
 		//	return (state & CoreVirtualKeyStates.Down) == CoreVirtualKeyStates.Down;
 		//}
 
-		// can be called from any thread
-		public static bool IsKeyPressedControl()
-		{
-			return controlPressed;
-		//	return IsKeyDown(VirtualKey.Control)| IsKeyDown(VirtualKey.LeftControl)| IsKeyDown(VirtualKey.RightControl);
-			//Microsoft.Xna.Framework.Input.Keys.LeftControl.IsKeyPressed() |
-				//   Microsoft.Xna.Framework.Input.Keys.RightControl.IsKeyPressed();// shiftPressed;
-		}
-		public static bool IsEscDown()
-		{
-			return false;//Microsoft.Xna.Framework.Input.Keys.Escape.IsKeyPressed();
-		}
-		public static void UpdateKeyStates()
-		{
-			
-			shiftPressed = InputKeyboardSource.GetKeyStateForCurrentThread(VirtualKey.Shift).HasFlag(Windows.UI.Core.CoreVirtualKeyStates.Down);
-			controlPressed = InputKeyboardSource.GetKeyStateForCurrentThread(VirtualKey.Control).HasFlag(Windows.UI.Core.CoreVirtualKeyStates.Down);
-		}
-		public static bool IsKeyPressedShift()
-		{
-			return shiftPressed;
-//			IsKeyDown(VirtualKey.Shift) | IsKeyDown(VirtualKey.LeftShift) | IsKeyDown(VirtualKey.RightShift);
-//			return Microsoft.Xna.Framework.Input.Keys.LeftShift.IsKeyPressed() |
-//				   Microsoft.Xna.Framework.Input.Keys.RightShift.IsKeyPressed();// shiftPressed;
-		}
-		public static bool IsKeyPressedShiftOrControl()
-		{
-			return IsKeyPressedShift() | IsKeyPressedControl();
-		}
+	
+
 		public static bool IsKeyPressedShiftAndControl()
 		{
 			return IsKeyPressedShift() && IsKeyPressedControl();
@@ -338,7 +319,7 @@ namespace CnV
 				case VirtualKey.Shift:
 				case VirtualKey.LeftShift:
 				case VirtualKey.RightShift:
-			//		Trace("Shift Up");
+					//		Trace("Shift Up");
 					shiftPressed = false;
 					break;
 				case VirtualKey.Control:
@@ -347,8 +328,9 @@ namespace CnV
 
 					controlPressed = false;
 					break;
-				
+
 			}
+
 			InputRecieved();
 		}
 
@@ -358,16 +340,16 @@ namespace CnV
 		//{
 		//	Note.Show("Key!");
 		//	var key = args.VirtualKey;
-	
+
 		//	OnKeyDown(key);
 
 		//}
 		public static bool OnKeyDown(VirtualKey key)
 		{
 			//Log($"KeyDown {key} mouse:{ShellPage.mouseOverCanvas}");
-		
+
 			App.UpdateKeyStates();
-			switch(key)
+			switch (key)
 			{
 				case VirtualKey.Shift:
 				case VirtualKey.LeftShift:
@@ -384,23 +366,25 @@ namespace CnV
 					break;
 
 			}
+
 			InputRecieved();
 
-			return false;//ShellPage.DoKeyDown(key);
+			return false; //ShellPage.DoKeyDown(key);
 
 		}
 
 		private void SwitchToForeground()
 		{
 			Log("Foreground");
-			if(!isForeground)
+			if (!isForeground)
 			{
 				isForeground = true;
-				var t = DateTimeOffset.UtcNow;
+				var t  = DateTimeOffset.UtcNow;
 				var dt = t - activeStart;
 				activeStart = t;
-				AAnalytics.Track("Foreground", new Dictionary<string, string> { { "time", dt.TotalSeconds.RoundToInt().ToString() } });
-			//	JSClient.ResumeWebView();
+				AAnalytics.Track("Foreground",
+								new Dictionary<string, string> { { "time", dt.TotalSeconds.RoundToInt().ToString() } });
+				//	JSClient.ResumeWebView();
 
 			}
 			//if (ShellPage.canvas != null)
@@ -409,7 +393,7 @@ namespace CnV
 
 		static public int storageFull = 0;
 
-		private void OnAppUnhandledException(object sender,Microsoft.UI.Xaml.UnhandledExceptionEventArgs e)
+		private void OnAppUnhandledException(object sender, Microsoft.UI.Xaml.UnhandledExceptionEventArgs e)
 		{
 			e.Handled = true;
 			try
@@ -421,17 +405,18 @@ namespace CnV
 
 
 
-				if(AppS.RegisterException(e.Message))
+				if (AppS.RegisterException(e.Message))
 				{
 #if CRASHES
 
 					Crashes.TrackError(e.Exception);
 #endif
-					AAnalytics.Track("UnhandledException",new Dictionary<string,string> { { "message",e.Message.Truncate(64) } });
+					AAnalytics.Track("UnhandledException",
+									new Dictionary<string, string> { { "message", e.Message.Truncate(64) } });
 				}
-			
+
 			}
-			catch(Exception ex2)
+			catch (Exception ex2)
 			{
 
 				//LogEx(ex2);
@@ -441,11 +426,12 @@ namespace CnV
 			}
 		}
 
-		
 
-		private static ConcurrentQueue<Action> idleTasks = new ConcurrentQueue<Action>();
+
+		private static ConcurrentQueue<Action>     idleTasks      = new ConcurrentQueue<Action>();
 		private static ConcurrentQueue<Func<Task>> throttledTasks = new ConcurrentQueue<Func<Task>>();
-		public static Window window;
+		public static  Window                      window;
+
 		static DateTimeOffset activeStart = DateTimeOffset.UtcNow;
 		//private static Microsoft.Extensions.Configuration.IConfigurationRoot BuildConfig()
 		//{
@@ -478,19 +464,19 @@ namespace CnV
 				//	Windows.UI.ViewManagement.ApplicationView.PreferredLaunchWindowingMode =Windows.UI.ViewManagement.ApplicationViewWindowingMode.Maximized;// new Size(bounds.Width, bounds.Height);
 				//				Windows.UI.ViewManagement.ApplicationView.GetForCurrentView().TryEnterViewModeAsync(Windows.UI.ViewManagement.ApplicationViewMode.CompactOverlay);
 
-				
-				window= new();
+
+				window      = new();
 				AppS.window = window;
 				//	window.
 				FocusVisualKind = FocusVisualKind.Reveal;
 
 
 				//var view = DisplayInformation.GetForCurrentView();
-				var uwpArgs = AppInstance.GetActivatedEventArgs();//args.UWPLaunchActivatedEventArgs;
-				if(uwpArgs.Kind == Windows.ApplicationModel.Activation.ActivationKind.Protocol) 
+				var uwpArgs = AppInstance.GetActivatedEventArgs(); //args.UWPLaunchActivatedEventArgs;
+				if (uwpArgs.Kind == Windows.ApplicationModel.Activation.ActivationKind.Protocol)
 				{
 					var eventArgs = uwpArgs as ProtocolActivatedEventArgs;
-					Log("Args!! "+eventArgs.Uri);
+					Log("Args!! " + eventArgs.Uri);
 					var s = System.Web.HttpUtility.ParseQueryString(eventArgs.Uri.Query);
 
 					Debug.Log(s);
@@ -498,14 +484,14 @@ namespace CnV
 					// are / chars inserted?
 					//  if (s.Length >= 3)
 					{
-						if(AMath.TryParseInt(s["s"],out int _s))
+						if (AMath.TryParseInt(s["s"], out int _s))
 							JSClient.subId = _s;
-						
+
 						var n = s["p"];
-						if(n!=null)
+						if (n != null)
 							Player.subOwner = n;
-						
-						if(AMath.TryParseInt(s["w"],out int _w))
+
+						if (AMath.TryParseInt(s["w"], out int _w))
 							JSClient.world = _w;
 
 //						if(AMath.TryParseInt(s["n"],out int _n)) // new instance
@@ -513,6 +499,7 @@ namespace CnV
 
 					}
 				}
+
 				//// Get the screen resolution (APIs available from 14393 onward).
 				//var resolution = new Size(view.ScreenWidthInRawPixels, view.ScreenHeightInRawPixels);
 				//// Calculate the screen size in effective pixels. 
@@ -521,26 +508,26 @@ namespace CnV
 				//var bounds = new Size(resolution.Width / scale, resolution.Height / scale);
 				window.Title = "Crown of the Gods (sort of)";
 //				window.SetTitleBar
-			//ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.PreferredLaunchViewSize;
-	//		window.ExtendsContentIntoTitleBar = true;
-			//	window.ExtendsContentIntoTitleBar = true;
-	//App.globalDispatcher = CoreWindow.GetForCurrentThread().Dispatcher;
-			AppS.globalQueue =  window.DispatcherQueue;
-		//	keyQueue = globalQueue.CreateTimer();
-			//CoreApplication.EnablePrelaunch(false);
+				//ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.PreferredLaunchViewSize;
+				//		window.ExtendsContentIntoTitleBar = true;
+				//	window.ExtendsContentIntoTitleBar = true;
+				//App.globalDispatcher = CoreWindow.GetForCurrentThread().Dispatcher;
+				AppS.globalQueue = window.DispatcherQueue;
+				//	keyQueue = globalQueue.CreateTimer();
+				//CoreApplication.EnablePrelaunch(false);
 				if (uwpArgs.Kind == Windows.ApplicationModel.Activation.ActivationKind.Launch)
-			{
-				// do this asynchronously
-				Services.StoreHelper.instance.DownloadAndInstallAllUpdatesAsync();
+				{
+					// do this asynchronously
+					Services.StoreHelper.instance.DownloadAndInstallAllUpdatesAsync();
+				}
+
+
+
+				// if (!args.PrelaunchActivated)
+
+				await OnLaunchedOrActivated(args.UWPLaunchActivatedEventArgs);
 			}
-
-			
-
-			// if (!args.PrelaunchActivated)
-
-			await OnLaunchedOrActivated(args.UWPLaunchActivatedEventArgs);
-			}
-			catch(Exception e)
+			catch (Exception e)
 			{
 				Log(e);
 			}
@@ -554,7 +541,7 @@ namespace CnV
 		//	if( state == State.closing)
 		//		return false;
 		//	state = State.closing;
-			
+
 		//	SwitchToBackground().ContinueWith( (_)=> 
 		//		{
 		//		state = State.closed;
@@ -564,27 +551,27 @@ namespace CnV
 
 		//}
 
-		private void Window_Closed(object sender,WindowEventArgs args)
+		private void Window_Closed(object sender, WindowEventArgs args)
 		{
 //			BackgroundTask.dispatcherQueueController.ShutdownQueueAsync();
 
 			Log("Closed!");
-		//	Assert(state == State.closed);
+			//	Assert(state == State.closed);
 			SwitchToBackground();
 		}
 
-		private void Content_PreviewKeyUp(object sender,Microsoft.UI.Xaml.Input.KeyRoutedEventArgs e)
+		private void Content_PreviewKeyUp(object sender, Microsoft.UI.Xaml.Input.KeyRoutedEventArgs e)
 		{
 			OnKeyUp(e.Key);
-			
+
 		}
 
-		private void Content_PreviewKeyDown(object sender,Microsoft.UI.Xaml.Input.KeyRoutedEventArgs e)
+		private void Content_PreviewKeyDown(object sender, Microsoft.UI.Xaml.Input.KeyRoutedEventArgs e)
 		{
 			InputRecieved();
-		//	Log($"PreviewKeyDown {e.Key} {e.Handled}");
-			if(!e.Handled)
-				e.Handled =OnKeyDown(e.Key);
+			//	Log($"PreviewKeyDown {e.Key} {e.Handled}");
+			if (!e.Handled)
+				e.Handled = OnKeyDown(e.Key);
 		}
 
 		private static void DebugSettings_BindingFailed(object sender, BindingFailedEventArgs e)
@@ -603,54 +590,57 @@ namespace CnV
 
 #if DEBUG
 //				this.DebugSettings.FailFastOnErrors = false;
-			this.DebugSettings.FailFastOnErrors = true;
-			this.DebugSettings.EnableFrameRateCounter = false;
-			this.DebugSettings.IsTextPerformanceVisualizationEnabled = false;
+				this.DebugSettings.FailFastOnErrors                      = true;
+				this.DebugSettings.EnableFrameRateCounter                = false;
+				this.DebugSettings.IsTextPerformanceVisualizationEnabled = false;
 				//this.DebugSettings.FailFastOnErrors = false;
 				this.DebugSettings.IsBindingTracingEnabled = true;
 #endif
-			var wasRunning = args.PreviousExecutionState == ApplicationExecutionState.Running || args.PreviousExecutionState == ApplicationExecutionState.Suspended;
-				if(!wasRunning)
-			{
-			//	var window = Window.Current;
-				window.VisibilityChanged += Window_VisibilityChanged;
-				window.Closed+=Window_Closed;
-		//		window.WantClose+=Window_Closing;
-			//	window.Activated+=Window_Activated;
-			}
-			await ActivationService.ActivateAsync(args,wasRunning);
-			
-			if(wasRunning)
-				return;
-			window.Content.PreviewKeyUp+=Content_PreviewKeyUp;
-			window.Content.PreviewKeyDown+=Content_PreviewKeyDown; ;
+				var wasRunning = args.PreviousExecutionState   == ApplicationExecutionState.Running
+								|| args.PreviousExecutionState == ApplicationExecutionState.Suspended;
+				if (!wasRunning)
+				{
+					//	var window = Window.Current;
+					window.VisibilityChanged += Window_VisibilityChanged;
+					window.Closed            += Window_Closed;
+					//		window.WantClose+=Window_Closing;
+					//	window.Activated+=Window_Activated;
+				}
+
+				await ActivationService.ActivateAsync(args, wasRunning);
+
+				if (wasRunning)
+					return;
+				window.Content.PreviewKeyUp   += Content_PreviewKeyUp;
+				window.Content.PreviewKeyDown += Content_PreviewKeyDown;
+				;
 //			window.KeyDown+=Window_KeyDown;
-			
+
 				//			CoreApplication.MainView.HostedViewClosing+=MainView_HostedViewClosing; ;
 				//	CoreApplication.MainView.CoreWindow.Closed+=CoreWindow_Closed;
 				//if(args!=null)
 				//	SystemInformation.TrackAppUse(args);
-				if(processingTasksStarted == false)
+				if (processingTasksStarted == false)
 				{
 					processingTasksStarted = true;
 
 					Task.Run(ProcessThrottledTasks);
 					Task.Run(ProcessIdleTasks);
 				}
-			
-			
-			SystemInformation.Instance.TrackAppUse(args);
+
+
+				SystemInformation.Instance.TrackAppUse(args);
 #if DEBUG
 //			var coreTitleBar = CoreApplication.GetCurrentView().TitleBar;
 //			coreTitleBar.ExtendViewIntoTitleBar = false;
 //			var titleBar = Windows.UI.ViewManagement.ApplicationView.GetForCurrentView().TitleBar;
 
 
-	//		var color = Windows.UI.Color.FromArgb(0xFF, 0x20, 0x0, 0x35);
-	//		var colorInactive = Windows.UI.Color.FromArgb(0xFF, 0x00, 0x0, 0x35);
-	//		titleBar.BackgroundColor = color;
-			//titleBar.ForegroundColor = color;
-			//titleBar.ButtonForegroundColor = color;
+				//		var color = Windows.UI.Color.FromArgb(0xFF, 0x20, 0x0, 0x35);
+				//		var colorInactive = Windows.UI.Color.FromArgb(0xFF, 0x00, 0x0, 0x35);
+				//		titleBar.BackgroundColor = color;
+				//titleBar.ForegroundColor = color;
+				//titleBar.ButtonForegroundColor = color;
 //			titleBar.ButtonBackgroundColor = color;
 //			titleBar.InactiveBackgroundColor = titleBar.ButtonInactiveBackgroundColor = colorInactive;
 				//				titleBar.InactiveForegroundColor =  titleBar.ButtonInactiveForegroundColor = colorInactive;
@@ -662,13 +652,13 @@ namespace CnV
 				// Set XAML element as a draggable region.
 				//          Window.Current.SetTitleBar(ShellPage.instance.AppTitleBar);
 			}
-			catch(Exception e)
+			catch (Exception e)
 			{
 				Log(e);
 			}
 		}
 
-	
+
 
 		//private void Window_Activated(object sender,WindowActivatedEventArgs args)
 		//{
@@ -676,18 +666,18 @@ namespace CnV
 		////	SwitchToForeground();
 		//}
 
-		private async void Window_VisibilityChanged(object sender,WindowVisibilityChangedEventArgs args)
+		private async void Window_VisibilityChanged(object sender, WindowVisibilityChangedEventArgs args)
 		{
-				Log($"Visibility!!: {args.Visible}");
-				if(!args.Visible)
-				{
-					await SwitchToBackground();
-				}
-				else
-				{
-					SwitchToForeground();
-				}
-			
+			Log($"Visibility!!: {args.Visible}");
+			if (!args.Visible)
+			{
+				await SwitchToBackground();
+			}
+			else
+			{
+				SwitchToForeground();
+			}
+
 
 			//			throw new NotImplementedException();
 		}
@@ -746,7 +736,7 @@ namespace CnV
 
 		//		return;
 		//	}
-			
+
 		//	await OnLaunchedOrActivated(args);
 
 
@@ -802,7 +792,7 @@ namespace CnV
 		//	var window = CoreApplication.MainView.CoreWindow;
 		//	{
 		//		//Log($"{view.TitleBar.ToString()} {view.IsMain} ");
-			
+
 		//	//	window.PointerMoved += OnPointerMoved;
 		//		window.PointerPressed += OnPointerPressed; ;
 		//	//	window.PointerExited+=Window_PointerExited; ;
@@ -875,10 +865,12 @@ namespace CnV
 				await Task.Delay(500).ConfigureAwait(false);
 			}
 		}
+
 		public static void EnqeueTask(Func<Task> a)
 		{
 			throttledTasks.Enqueue(a);
 		}
+
 		public static bool OnPointerPressed(PointerUpdateKind prop)
 		{
 			var rv = false;
@@ -896,6 +888,7 @@ namespace CnV
 					rv = true;
 					break;
 			}
+
 			InputRecieved();
 			return rv;
 		}
@@ -914,7 +907,7 @@ namespace CnV
 		//}
 		private static async void ProcessIdleTasks()
 		{
-	//		await TaskScheduler.Default;
+			//		await TaskScheduler.Default;
 			for (; ; )
 			{
 				var tick = Environment.TickCount;
@@ -925,6 +918,7 @@ namespace CnV
 					await Task.Delay(4 * 1000).ConfigureAwait(false);
 					continue;
 				}
+
 				if (isForeground)
 				{
 					while (idleTasks.TryDequeue(out Action a))
@@ -937,9 +931,11 @@ namespace CnV
 						{
 							Debug.LogEx(_exception);
 						}
+
 						await Task.Delay(1000).ConfigureAwait(false); // wait one second if idle
 					}
 				}
+
 				// not idle but no tasks
 				await Task.Delay(4 * 1000).ConfigureAwait(false);
 			}
@@ -950,7 +946,7 @@ namespace CnV
 		{
 			foreach (var i in idleTasks)
 			{
-				if (i==a )
+				if (i == a )
 					return;
 			}
 
@@ -972,7 +968,7 @@ namespace CnV
 
 		private ActivationService CreateActivationService()
 		{
-			return new ActivationService();//this, null, new Lazy<UIElement>(()=> new Views.ShellPage()));
+			return new ActivationService(); //this, null, new Lazy<UIElement>(()=> new Views.ShellPage()));
 		}
 
 		//public static Task EnqueueAsync(DispatcherQueue dispatcher,Func<Task> function,DispatcherQueuePriority priority = 0)
@@ -1016,7 +1012,7 @@ namespace CnV
 		//		return taskCompletionSource.Task;
 		//	}
 		//}
-		
+
 		//public static async Task WaitWhileUiSemaBusy()
 		//{
 		//	Log($"Lock sema: {uiSema.CurrentCount}");
@@ -1031,43 +1027,43 @@ namespace CnV
 		//	}
 
 		//}
-		
-	
-
-	//public static int pendingDispatch;
-	//public static int pendingDispatchMax=10;
-	//public static void DispatchStart()
-	//{
-	//	++pendingDispatch;
-	//	if(pendingDispatch > pendingDispatchMax)
-	//	{
-	//		pendingDispatchMax = pendingDispatch + 5;
-	//		Trace("PendingDispatch: " + pendingDispatch);
-	//	}
-	//}
-	//public static void DispatchEnd() => --pendingDispatch;
-
-	//public static void DispatchOnUIThreadSneakyLow(DispatcherQueueHandler action)
-	//{
-	//	var d = GlobalDispatcher();
-	//	// run it immediately if we can
-	//	if (d.HasThreadAccess && d.CurrentPriority <= DispatcherQueuePriority.Low)
-	//		action();
-	//	else
-	//		d.RunAsync(DispatcherQueuePriority.Low, action);
-	//}
-	//public static async Task DispatchOnUIThreadSneakyLowAwait(DispatcherQueueHandler action)
-	//{
-	//	var d = GlobalDispatcher();
-	//	// run it immediately if we can
-	//	if (d.HasThreadAccess && d.CurrentPriority <= DispatcherQueuePriority.Low)
-	//		action();
-	//	else
-	//		await d.RunAsync(DispatcherQueuePriority.Low, action);
-	//}
 
 
-	// We only have 1 UI thread here
+
+		//public static int pendingDispatch;
+		//public static int pendingDispatchMax=10;
+		//public static void DispatchStart()
+		//{
+		//	++pendingDispatch;
+		//	if(pendingDispatch > pendingDispatchMax)
+		//	{
+		//		pendingDispatchMax = pendingDispatch + 5;
+		//		Trace("PendingDispatch: " + pendingDispatch);
+		//	}
+		//}
+		//public static void DispatchEnd() => --pendingDispatch;
+
+		//public static void DispatchOnUIThreadSneakyLow(DispatcherQueueHandler action)
+		//{
+		//	var d = GlobalDispatcher();
+		//	// run it immediately if we can
+		//	if (d.HasThreadAccess && d.CurrentPriority <= DispatcherQueuePriority.Low)
+		//		action();
+		//	else
+		//		d.RunAsync(DispatcherQueuePriority.Low, action);
+		//}
+		//public static async Task DispatchOnUIThreadSneakyLowAwait(DispatcherQueueHandler action)
+		//{
+		//	var d = GlobalDispatcher();
+		//	// run it immediately if we can
+		//	if (d.HasThreadAccess && d.CurrentPriority <= DispatcherQueuePriority.Low)
+		//		action();
+		//	else
+		//		await d.RunAsync(DispatcherQueuePriority.Low, action);
+		//}
+
+
+		// We only have 1 UI thread here
 		//public static bool IsKeyPressedControl()
 		//{
 		//    var window = CoreWindow.GetForCurrentThread();
@@ -1093,10 +1089,23 @@ namespace CnV
 
 
 		///        public static DumbCollection<City> emptyCityList = new DumbCollection<City>();
-		public static PercentFormatter percentFormatter = new PercentFormatter() { FractionDigits=1,IsGrouped = false, NumberRounder = new SignificantDigitsNumberRounder() { SignificantDigits = 1 } };
-		public static DecimalFormatter formatter2Digit = new DecimalFormatter() { FractionDigits = 2, IsGrouped = true, NumberRounder = new SignificantDigitsNumberRounder() { SignificantDigits = 2 } };
-		public static DecimalFormatter formatterInt = new DecimalFormatter() { FractionDigits=0,IsGrouped = true, IsDecimalPointAlwaysDisplayed=false };
-		public static DecimalFormatter formatterSeconds = new DecimalFormatter() { FractionDigits=0,IsGrouped = false, IntegerDigits = 2, IsDecimalPointAlwaysDisplayed = false };
+		public static PercentFormatter percentFormatter = new PercentFormatter()
+		{
+				FractionDigits = 1, IsGrouped = false,
+				NumberRounder  = new SignificantDigitsNumberRounder() { SignificantDigits = 1 }
+		};
+
+		public static DecimalFormatter formatter2Digit = new DecimalFormatter()
+		{
+				FractionDigits = 2, IsGrouped = true,
+				NumberRounder  = new SignificantDigitsNumberRounder() { SignificantDigits = 2 }
+		};
+
+		public static DecimalFormatter formatterInt = new DecimalFormatter()
+				{ FractionDigits = 0, IsGrouped = true, IsDecimalPointAlwaysDisplayed = false };
+
+		public static DecimalFormatter formatterSeconds = new DecimalFormatter()
+				{ FractionDigits = 0, IsGrouped = false, IntegerDigits = 2, IsDecimalPointAlwaysDisplayed = false };
 
 
 
@@ -1150,90 +1159,61 @@ namespace CnV
 
 		public static async Task<byte[]> GetContent(string filename)
 		{
-			var uri = new Uri("ms-appx:///" + filename);
+			var uri  = new Uri("ms-appx:///" + filename);
 			var file = await StorageFile.GetFileFromApplicationUriAsync(uri);
-	
+
 			var buffer = await FileIO.ReadBufferAsync(file);
 
 			return buffer.ToArray();
 		}
-		
-	
 
 
-	public static class UserAgent
-	{
-		const int URLMON_OPTION_USERAGENT = 0x10000001;
 
-		[DllImport("urlmon.dll", CharSet = CharSet.Ansi)]
-		private static extern int UrlMkSetSessionOption(int dwOption, string pBuffer, int dwBufferLength, int dwReserved);
 
-		[DllImport("urlmon.dll", CharSet = CharSet.Ansi)]
-		private static extern int UrlMkGetSessionOption(int dwOption, StringBuilder pBuffer, int dwBufferLength, ref int pdwBufferLength, int dwReserved);
-
-		public static string GetUserAgent()
+		public static class UserAgent
 		{
-			int capacity = 255;
-			var buf = new StringBuilder(capacity);
-			int length = 0;
+			const int URLMON_OPTION_USERAGENT = 0x10000001;
 
-			UrlMkGetSessionOption(URLMON_OPTION_USERAGENT, buf, capacity, ref length, 0);
+			[DllImport("urlmon.dll", CharSet = CharSet.Ansi)]
+			private static extern int UrlMkSetSessionOption(int dwOption, string pBuffer, int dwBufferLength,
+															int dwReserved);
 
-			return buf.ToString();
-		}
+			[DllImport("urlmon.dll", CharSet = CharSet.Ansi)]
+			private static extern int UrlMkGetSessionOption(int     dwOption, StringBuilder pBuffer, int dwBufferLength,
+															ref int pdwBufferLength, int dwReserved);
 
-		public static void SetUserAgent(string agent)
-		{
-			var hr = UrlMkSetSessionOption(URLMON_OPTION_USERAGENT, agent, agent.Length, 0);
-			var ex = Marshal.GetExceptionForHR(hr);
-			if (null != ex)
+			public static string GetUserAgent()
 			{
-				throw ex;
-			}
-		}
+				int capacity = 255;
+				var buf      = new StringBuilder(capacity);
+				int length   = 0;
 
-		public static void AppendUserAgent(string suffix)
-		{
-			SetUserAgent(GetUserAgent() + suffix);
+				UrlMkGetSessionOption(URLMON_OPTION_USERAGENT, buf, capacity, ref length, 0);
+
+				return buf.ToString();
+			}
+
+			public static void SetUserAgent(string agent)
+			{
+				var hr = UrlMkSetSessionOption(URLMON_OPTION_USERAGENT, agent, agent.Length, 0);
+				var ex = Marshal.GetExceptionForHR(hr);
+				if (null != ex)
+				{
+					throw ex;
+				}
+			}
+
+			public static void AppendUserAgent(string suffix)
+			{
+				SetUserAgent(GetUserAgent() + suffix);
+			}
+
 		}
 
 	}
 
 	public static class AApp
 	{
-
-
-
-
-
-
-		//[Conditional("DEBUG")]
-		public static void UpdateKeyModifiers(this VirtualKeyModifiers mod)
-		{
-			if(App.shiftPressed!= mod.IsShift())
-			{
-				App.shiftPressed = mod.IsShift();
-		//		Trace($"Shift: {App.shiftPressed}");
-			}
-			App.controlPressed = mod.IsControl();
-		}
-		
-		public static bool IsShift(this VirtualKeyModifiers mod)
-		{
-			return mod.HasFlag(VirtualKeyModifiers.Shift);
-		}
-		public static bool IsControl(this VirtualKeyModifiers mod)
-		{
-			return mod.HasFlag(VirtualKeyModifiers.Control);
-		}
-		public static bool IsShiftOrControl(this VirtualKeyModifiers mod)
-		{
-			return mod.HasFlag(VirtualKeyModifiers.Control) | mod.HasFlag(VirtualKeyModifiers.Shift);
-		}
-		public static bool IsShiftAndControl(this VirtualKeyModifiers mod)
-		{
-			return mod.HasFlag(VirtualKeyModifiers.Control) & mod.HasFlag(VirtualKeyModifiers.Shift);
-		}
 		
 
 		public static MenuFlyoutItem CreateMenuItem(string text, Action command, object context = null)

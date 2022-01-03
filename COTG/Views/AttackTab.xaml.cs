@@ -34,7 +34,6 @@ namespace CnV.Views
 	using Game;
 	using Helpers;
 	using AttackPlanCity = Game.AttackPlanCity;
-	using City = Game.City;
 
 	public sealed partial class AttackTab : UserTab
     {
@@ -172,7 +171,7 @@ namespace CnV.Views
 					allCommands += command;
 					sb.Clear();
 				}
-				App.CopyTextToClipboard(allCommands);
+				AppS.CopyTextToClipboard(allCommands);
 				Note.Show("Copied Attack sender scripts to clipboard");
 				SaveAttacks();
 			}
@@ -704,14 +703,14 @@ namespace CnV.Views
 
 			try
 			{
-				var strs = text.Split(App.IsKeyPressedControl()? new char[] { '\n', ',', ';',' ','\t' } : new char[] { '\n', ',', ';','\t' }, StringSplitOptions.RemoveEmptyEntries);
+				var strs = text.Split(AppS.IsKeyPressedControl()? new char[] { '\n', ',', ';',' ','\t' } : new char[] { '\n', ',', ';','\t' }, StringSplitOptions.RemoveEmptyEntries);
 				int prior = attacks.Length;
 				var duplicates = 0;
 				//int count = strs.Length;
 				foreach (var str in strs)
 				{
 
-					var match = App.IsKeyPressedShift() ? AUtil.coordsRegex.Matches(str) : AUtil.coordsRegexAny.Matches(str);
+					var match = AppS.IsKeyPressedShift() ? AUtil.coordsRegex.Matches(str) : AUtil.coordsRegexAny.Matches(str);
 					if (match.Count == 0)
 						continue;
 					if (match.Count > 1)
@@ -1905,7 +1904,7 @@ namespace CnV.Views
 					//        sb.Append($"{a.player} <coords>{a.target.CidToString()}</coords> {AttackType.types[a.type].name} {(a.fake ? "Fake" : "Real")} at {time.FormatDefault()}\n");
 					//    }
 					//}
-					//App.CopyTextToClipboard(sb.ToString());
+					//AppS.CopyTextToClipboard(sb.ToString());
 
 					AttackSender_Tapped();
 

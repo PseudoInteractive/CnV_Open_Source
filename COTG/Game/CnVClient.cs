@@ -15,7 +15,7 @@ namespace CnV
 	using Services;
 	using Microsoft.UI.Input;
 
-	internal static class CnVClient
+	internal  static partial class CnVClient
 	{
 		static readonly float[] researchRamp = { 0, 1, 3, 6, 10, 15, 20, 25, 30, 35, 40, 45, 50 };
 		private static void BonusesUpdated()
@@ -368,7 +368,7 @@ namespace CnV
 
 					city.isOnWater |= jsCity.GetAsInt("16") > 0;  // Use Or in case the data is imcomplete or missing, in which case we get it from world data, if that is not incomplete or missing ;)
 					city.isTemple = jsCity.GetAsInt("15") > 0;
-					//	city.pid = Player.activeId;
+					//	city.pid = Player.myId;
 					//  Log($"Temple:{jsCity.GetAsInt("15")}:{jsCity.ToString()}");
 
 
@@ -478,7 +478,7 @@ namespace CnV
 					}
 					var city = GetOrAddCity(cid);
 
-					//if(city.pid != Player.activeId)
+					//if(city.pid != Player.myId)
 						// no longer happens
 					//	Assert(false);
 					//else
@@ -510,7 +510,7 @@ namespace CnV
 								//	await CityBuild._IsPlanner(false, true);
 								//}
 
-								//	Assert(pid == Player.activeId);
+								//	Assert(pid == Player.myId);
 								//Cosmos.PublishPlayerInfo(JSClient.jsBase.pid, City.build, JSClient.jsBase.token, JSClient.jsBase.cookies); // broadcast change
 
 								//foreach (var p in PlayerPresence.all)
@@ -571,127 +571,6 @@ namespace CnV
 
 		}
 
-		public static async Task AddToAttackSender(int cityId)
-		{
-			try
-			{
-				await AppS.DispatchOnUIThreadTask(async () =>
-				{
-
-
-					await ExecuteScriptAsync("addtoattacksender", cityId);
-				});
-
-			}
-			catch(Exception e)
-			{
-				LogEx(e);
-			}
-
-		}
-
-		public static async Task OpenAttackSender(string cmd)
-		{
-			try
-			{
-				var p = JsonSerializer.Deserialize<AttackSenderScript>(cmd, JSON.jsonSerializerOptions);
-				await CitySwitch(p.cid, false);
-				await Task.Delay(1000);
-				var test = HttpUtility.UrlEncode(cmd);
-				var str = "{\"openAttackSender\":" + JSON.JavaScriptStringEncode(cmd, true) + "}";
-
-				await AppS.DispatchOnUIThreadTask(async () =>
-				{
-					PostWebMessageAsString(str);
-				});
-			}
-			catch(Exception e)
-			{
-				LogEx(e);
-			}
-
-		}
-		
-		
-		public static void ChangeView(ViewMode viewMode)
-		{
-			try
-			{
-				ShellPage.SetViewMode(viewMode);
-				//	AppS.DispatchOnUIThreadLow(() => ExecuteScriptAsync("setviewmode", ( viewMode == ShellPage.ViewMode.city ? "c" : "r" )));
-
-			}
-			catch (Exception e)
-			{
-				LogEx(e);
-			}
-		}
-		public static void ShowPlayer(string playerName)
-		{
-			try
-			{
-				App.CopyTextToClipboard(playerName);
-				//     ExecuteScriptAsync("eval", new string[] { $"gspotfunct.infoPlay('{playerName}')" });
-				ExecuteScriptAsync("infoPlay", playerName);
-			}
-			catch(Exception e)
-			{
-				LogEx(e);
-			}
-		}
-		public static void ShowAlliance(string allianceName)
-		{
-			try
-			{
-				ExecuteScriptAsync("alliancelink", allianceName);
-				//     ExecuteScriptAsync("eval", new string[] { $"gspotfunct.alliancelink('{allianceName}')" });
-			}
-			catch(Exception e)
-			{
-				LogEx(e);
-			}
-		}
-		public static void ShowReport(string report)
-		{
-			if(report.IsNullOrEmpty())
-				return;
-			try
-			{
-				ExecuteScriptAsync($"__c.showreport('{report}')");
-			}
-			catch(Exception e)
-			{
-				LogEx(e);
-			}
-		}
-		public static async void ShowCity(int cityId, bool lazyMove, bool select = true, bool scrollToInUI = true)
-		{
-			try
-			{
-				//				ShellPage.SetViewModeWorld();
-
-				// if (City.IsMine(cityId))
-				{
-					Spot.SetFocus(cityId, scrollToInUI, select, true, lazyMove);
-				}
-
-				// if (JSClient.IsWorldView())
-				//	cityId.BringCidIntoWorldView(lazyMove, false);
-
-				FetchCity(cityId);
-				//             if( City.IsMine(cityId)  )
-				//                 Raiding.UpdateTSHome();
-
-
-
-			}
-			catch(Exception e)
-			{
-				LogEx(e);
-			}
-
-
-		}
 
 		private static void CoreWebView_WebMessageReceived(string eValue)
 		{
@@ -776,7 +655,7 @@ namespace CnV
 								//	Player.myName = jso.GetString("player");
 								//	if(Player.subOwner == null)
 								//		Player.subOwner = Player.myName;
-								//	Player.activeId = Player.myId = jso.GetAsInt("pid"); ;
+								//	Player.myId = Player.myId = jso.GetAsInt("pid"); ;
 									Player.myIds.Add(Player.myId);
 									var cid = jso.GetAsInt("cid");
 									Spot.build = Spot.focus = cid;
@@ -831,7 +710,7 @@ namespace CnV
 								{
 									var msg = jsp.Value.ToString();
 									Note.Show($"Exported Order to clipboard: {msg}");
-									App.CopyTextToClipboard(msg);
+									AppS.CopyTextToClipboard(msg);
 									break;
 
 									;
@@ -1021,7 +900,7 @@ namespace CnV
 							case "rmp":
 								{
 									var str = jsp.ToString();
-									App.CopyTextToClipboard(str);
+									AppS.CopyTextToClipboard(str);
 									Note.Show(str);
 									foreach(var o in jsp.Value.EnumerateObject())
 										foreach(var st in o.Value.EnumerateArray())
@@ -1051,7 +930,7 @@ namespace CnV
 							//		TileData.instance.ResourceGain(x - 1, y + 1, true, ref woodCount, ref stoneCount, ref ironCount, ref plainsCount);
 							//		TileData.instance.ResourceGain(x - 1, y - 1, true, ref woodCount, ref stoneCount, ref ironCount, ref plainsCount);
 							//		TileData.instance.ResourceGain(x + 1, y - 1, true, ref woodCount, ref stoneCount, ref ironCount, ref plainsCount);
-							//		//if (!App.IsKeyPressedShift())
+							//		//if (!AppS.IsKeyPressedShift())
 							//		//{
 							//		//    woodCount = woodCount.Min(30);
 							//		//    stoneCount = stoneCount.Min(30);
@@ -1248,7 +1127,7 @@ namespace CnV
 								break;
 							case "copyclip":
 								{
-									App.CopyTextToClipboard(jsp.Value.GetAsString());
+									AppS.CopyTextToClipboard(jsp.Value.GetAsString());
 									break;
 								}
 							case "cmd":
@@ -1462,7 +1341,7 @@ namespace CnV
 		//			foreach (var p in PlayerPresence.all)
 		//			{
 		//				ShellPage.instance.friendListBox.Items.Add(p.name);
-		//				if (p.pid == Player.activeId)
+		//				if (p.pid == Player.myId)
 		//					sel = counter;
 		//				++counter;
 		//				// reset menu, TOTO:  Keep track of active selection

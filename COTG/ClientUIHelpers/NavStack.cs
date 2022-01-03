@@ -126,12 +126,12 @@ namespace CnV
 					}
 					//if (cityView != COTG.Views.ShellPage.IsCityView())
 					//{
-					//	JSClient.ChangeView(Views.ShellPage.ViewMode.city);
+					//	View.SetViewMode(Views.ShellPage.ViewMode.city);
 					//}
 				}
 				else
 				{
-					JSClient.ShowCity(cid, false);
+					City.ShowCity(cid, false);
 				}
 			}
 		}
@@ -170,7 +170,8 @@ namespace CnV
 
 
 		// triggers global constructor
-		public static NavStack Init()
+		public static NavStack 
+				Init()
 		{
 			return instance;
 		}

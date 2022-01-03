@@ -226,7 +226,7 @@ namespace CnV.Views
 
 		//public static bool _isHitTestVisible;
 		public static bool canvasVisible;
-		public static bool isFocused => isHitTestVisible && App.isForeground;
+		public static bool isFocused => isHitTestVisible && AppS.isForeground;
 
 		private void OnLoaded(object sender, RoutedEventArgs e)
 		{
@@ -722,7 +722,7 @@ namespace CnV.Views
 			}
 
 
-			if (App.IsKeyPressedShift())
+			if (AppS.IsKeyPressedShift())
 			{
 				RefreshX();
 			}
@@ -1350,9 +1350,9 @@ namespace CnV.Views
 		//}
 		//		static Debounce layoutChanged = new(TabPage.LayoutChanged){ runOnUiThead = true};
 
-		static        int popupLeftOffset, popupTopOffset;
-		public static int popupLeftMargin;
-		public static int popupTopMargin;
+		static            int popupLeftOffset, popupTopOffset;
+		public static ref int popupLeftMargin => ref View.popupLeftMargin;
+		public static ref int popupTopMargin  => ref View.popupTopMargin;
 
 		public static void UpdateWebViewOffsets(int leftOffset, int topOffset)
 		{

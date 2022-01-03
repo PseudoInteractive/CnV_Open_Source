@@ -41,7 +41,7 @@ public static partial class CityUI
 		if (me.isCityOrCastle)
 		{
 			// Look - its my city!
-			if (me.CanVisit)
+			if (me.canVisit )
 			{
 
 				//{
@@ -210,6 +210,43 @@ public static partial class CityUI
 		JSClient.gStCB(cid, DecayQueryCB, AMath.random.Next());
 	}
 
+	public static void ScrollMeIntoView(this City city) => ScrollIntoView(city.cid);
+
+	public static void ScrollIntoView(int cid)
+	{
+		//         await Task.Delay(2000);
+		//          instance.Dispatcher.RunAsync(DispatcherQueuePriority.Low, () =>
+		//           {
+		//   await Task.Delay(200);
+		AppS.QueueOnUIThread(() =>
+							{
+
+								{
+									/// MainPage.CityGrid.SelectedItem = this;
+									//                      MainPage.CityGrid.SetCurrentItem(this);
+
+									//     MainPage.CityGrid.SetCurrentItem(this,false);
+									if(MainPage.IsVisible())
+										MainPage.CityGrid.ScrollItemIntoView(City.GetOrAdd(cid));
+									if(BuildTab.IsVisible())
+										BuildTab.CityGrid.CurrentItem = (City.GetOrAdd(cid));
+									// await Task.Delay(200);
+									//MainPage.CityGrid.SelectItem(this);
+									//var id = gridCitySource.IndexOf(this);
+									//if (id != -1)
+									//{
+									//    MainPage.CityGrid.ScrollIndexIntoView(id);
+
+									//}
+								}
+								// todo: donations page and boss hunting
+
+
+								// ShellPage.instance.coords.Text = cid.CidToString();
+								//            });
+							});
+
+	}
 	async static void DecayQueryCB(JsonElement jso)
 	{
 		var type = jso.GetAsInt("type");
@@ -230,7 +267,7 @@ public static partial class CityUI
 											ToastNotificationsService.instance.SpotChanged($"{cid.CidToString()} has changed");
 											dialog.ShowAsync2();
 										});
-			JSClient.ShowCity(cid, false);
+			City.ShowCity(cid, false);
 		}
 		else
 		{
@@ -251,5 +288,70 @@ public static partial class CityUI
 
 		//   flyout.XamlRoot = uie.XamlRoot;
 		flyout.ShowAt(uie, position);
+	}
+	public static async void ProcessCoordClick(int cid, bool lazyMove, VirtualKeyModifiers mod, bool scrollIntoUI = false)
+	{
+		mod.UpdateKeyModifiers();
+
+		//if(mod.IsShiftAndControl() && AttackTab.IsVisible() && City.Get(cid).isCastle)
+		//{
+		//	var city = City.Get(cid);
+		//	{
+		//		using var __lock = await AttackTab.instance.TouchLists();
+		//		var prior = AttackPlan.Get(cid);
+		//		var isAttack = prior != null ? prior.isAttack : city.IsAllyOrNap();
+		//		if (isAttack)
+		//		{
+		//			AttackPlan.AddOrUpdate( new(city, isAttack,city.attackType switch
+		//			{ AttackType.assault => AttackType.senator, AttackType.senator => AttackType.se, AttackType.se => AttackType.none, _ => AttackType.assault }));
+		//		}
+		//		else
+		//		{
+		//			AttackPlan.AddOrUpdate( new(city, isAttack, city.attackType switch
+		//			{
+		//				AttackType.seFake => AttackType.se,
+		//				AttackType.se => AttackType.senatorFake,
+		//				AttackType.senatorFake => AttackType.senator,
+		//				AttackType.senator => AttackType.none,
+		//				_ => AttackType.seFake
+		//			}));
+		//		}
+		//	}
+		//	Note.Show($"{city.nameAndRemarks} set to {city.attackType}", Debug.Priority.high);
+		//	AttackTab.WritebackAttacks();
+		//	AttackTab.WaitAndSaveAttacks();
+		//}
+		//else
+		if(City.CanVisit(cid) && !mod.IsShiftOrControl())
+		{
+			if(City.IsBuild(cid))
+			{
+				View.SetViewMode(View.viewMode.GetNext());// toggle between city/region view
+				if(scrollIntoUI)
+				{
+					Spot.SetFocus(cid, scrollIntoUI, true, true, lazyMove);
+				}
+				else
+				{
+					cid.BringCidIntoWorldView(lazyMove);
+				}
+			}
+			else
+			{
+				await JSClient.CitySwitch(cid, lazyMove, false, scrollIntoUI); // keep current view, switch to city
+																			   //	View.SetViewMode(ShellPage.viewMode.GetNextUnowned());// toggle between city/region view
+			}
+			NavStack.Push(cid);
+
+		}
+		else
+		{
+			City.ShowCity(cid, lazyMove, false, scrollIntoUI);
+			NavStack.Push(cid);
+		}
+		//Spot.GetOrAdd(cid).SelectMe(false,mod);
+		SpotTab.TouchSpot(cid, mod, true);
+
+
 	}
 }

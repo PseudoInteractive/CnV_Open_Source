@@ -129,7 +129,7 @@ namespace CnV.Game
 					$"{{\"a\":{woodToSend},\"b\":{stoneToSend},\"c\":0,\"d\":0,\"cid\":{senderCid},\"rcid\":{targetCid},\"t\":\"{sendType}\"}}"; // t==1 is land, t==2 is water
 				Note.Show(
 					$"Sent {woodToSend:N0} wood and {stoneToSend:N0} stone in {((woodToSend + stoneToSend + 999) / (sendType == 1 ? 1000 : 10000)):N0} {(sendType == 1 ? "carts" : "ships")} from {City.Get(senderCid).nameMarkdown}");
-				int count = App.IsKeyPressedShiftAndControl() ? 4 : 1;
+				int count = AppS.IsKeyPressedShiftAndControl() ? 4 : 1;
 				var _sender = senderCid;
 				for (int i = 0; i < count; ++i)
 				{

@@ -51,10 +51,8 @@ namespace CnV.Views
 
 
 		public float eventTimeOffset;
-		public static string? toolTip => ToolTips.toolTip;
-		public static string? contToolTip=>ToolTips.contToolTip;
-		public static string debugTip;
-		public static int lastCont;
+		public static ref string? toolTip => ref ToolTips.toolTip;
+		public static ref string? contToolTip=> ref ToolTips.contToolTip;
 	//	public static DispatcherQueueController _queuecontroller;
 ///ivate static InputPointerSource _inputPointerSource;
 
@@ -222,7 +220,7 @@ namespace CnV.Views
 				{
 
 					var spot = Spot.GetOrAdd(cid);
-					if (!App.IsKeyPressedShiftOrControl())
+					if (!AppS.IsKeyPressedShiftOrControl())
 						spot.SetFocus(true, true, false);
 					spot.ShowContextMenu(canvas, CanvasToDIP(mousePosition));
 					// }
@@ -537,14 +535,6 @@ namespace CnV.Views
 			return new Windows.Foundation.Point((point.X * nativeToDip), (point.Y * nativeToDip));
 		}
 
-		public static void SetJSCamera()
-		{
-			//var cBase = halfSpan + clientC+halfSpan;
-			//var c0 = cBase / cameraZoom;
-			//var c1 = cBase / 64.0f;
-			//var regionC = (cameraC + c0 - c1) * 64.0f;
-			//    ShellPage.SetJSCamera(regionC);
-		}
 		//public static (int x, int y) JSPointToScreen((int x, int y) c) => JSPointToScreen(c.x, c.y);
 		//public static (int x, int y) JSPointToScreen(int x, int y)
 		//{
@@ -553,18 +543,7 @@ namespace CnV.Views
 		//			(dipToNative * (y * ShellPage.webViewScale.Y - ShellPage.canvasBaseY)).RoundToInt());
 
 		//}
-		public static void ClearHover()
-		{
-			if(!IsCityView())
-				contToolTip = null;
-			lastCanvasC = 0;
-			lastCont = -1;
-			toolTip = null;
-			CityView.hovered = CanvasHelpers.invalidXY;
-			Spot.viewHover = 0;
-			Player.viewHover = 0;
-		}
-
+		
 		static void PointerInfo(PointerEventArgs args, [System.Runtime.CompilerServices.CallerMemberName] string memberName = "")
 		{
 			Log($"{memberName} : f:{args.CurrentPoint.FrameId} id:{args.CurrentPoint.PointerId} C:{args.CurrentPoint.IsInContact} l{args.CurrentPoint.Position.X},{args.CurrentPoint.Position.Y}> ");
@@ -607,7 +586,7 @@ namespace CnV.Views
 		//	return new Vector2( (c1.X-halfSpan.X)/cameraZoomLag + cameraC.X, (c1.Y - halfSpan.Y) / cameraZoomLag + cameraC.Y) ;
 		//}
 
-		static public int lastCanvasC;
+		static public ref int lastCanvasC => ref View.lastCanvasC;
 		//private void EventTimeTravelSliderChanged(object sender, RangeBaseValueChangedEventArgs e)
 		//{
 		//	var dt = TimeSpan.FromMinutes(e.NewValue);
@@ -740,7 +719,7 @@ namespace CnV.Views
 
 					//			var text = spot.ToTsv();
 					//			Note.Show($"Copied to clipboard: {text}");
-					//			App.CopyTextToClipboard(text);
+					//			AppS.CopyTextToClipboard(text);
 					//			spot.SelectMe(true,App.keyModifiers);
 
 					//		});
@@ -780,7 +759,7 @@ namespace CnV.Views
 		//		{
 
 		//			var spot = Spot.GetOrAdd(cid);
-		//			if (!App.IsKeyPressedShiftOrControl())
+		//			if (!AppS.IsKeyPressedShiftOrControl())
 		//				spot.SetFocus(true, true, false);
 		//			spot.ShowContextMenu(canvas, CanvasToDIP(mousePosition));
 		//			// }
@@ -947,65 +926,7 @@ namespace CnV.Views
 		//    Spot.viewHover = 0;
 		//}
 		
-		private static async Task<bool> AutoSwitchCityView()
-		{
-			if (cameraZoom <= cityZoomThreshold)
-				return false;
-
-				
-			var wc = cameraC.RoundToInt();
-			var target = wc;
-			float bestScore = float.MaxValue;
-			// Try a different city
-			
-				for (int x = 0; x <= 0; ++x)
-					for (int y = 0; y <= 0; ++y)
-					{
-						var dxy = (x, y);
-						float lg = dxy.Length();
-						if (lg > bestScore )
-							continue;
-
-						var probe = wc.Sum(dxy);
-
-						if (City.CanVisit(probe.WorldToCid()))
-						{
-							target = probe;
-							bestScore = dxy.Length();
-							
-						}
-					}
-				if (bestScore < float.MaxValue)
-				{
-					var cid = target.WorldToCid();
-					if (cid != City.build)
-					{
-						try
-						{
-							if(!await JSClient.CitySwitch(target.WorldToCid(), true) )
-							{
-								EnsureNotCityView();
-							}
-						}
-						catch(UIException ex)
-						{
-							LogEx(ex);
-							EnsureNotCityView();
 		
-						}
-					}
-					return true;
-				}
-				return false;
-		}
-		public static void EnsureNotCityView()
-		{
-			if (cameraZoom > cameraZoomRegionDefault)
-			{
-				cameraZoom = cameraZoomRegionDefault;
-				AutoSwitchViewMode();
-			}
-		}
 
 
 		private static void Canvas_PointerWheelChanged(InputPointerSource sender, PointerEventArgs e)
@@ -1039,57 +960,6 @@ namespace CnV.Views
 			//}
 			DoZoom(scroll,false);
 			return false;
-		}
-
-		static async void DoZoom(float delta,bool skipPan)
-		{
-
-
-			var dZoom = delta.SignOr0() * 0.0f + delta * (1.0f / 256);
-			var newZoom = (cameraZoom * MathF.Exp(dZoom)).Clamp(1, maxZoom);
-			var cBase = new Vector2(); ////GetCanvasPosition(pt.Position) - halfSpan;
-
-			var skipMove = skipPan;
-
-			if (IsCityView())
-			{
-				if (await AutoSwitchCityView())
-				{
-					if (!skipPan)
-					{
-						cBase = (City.build.CidToWorldV() - cameraC) * cameraZoom;
-						CameraC += 0.25f * (City.build.CidToWorldV() - cameraC); // nudge towards center
-					}
-				}
-			}
-			else
-			{
-				skipMove = true;
-			}
-
-
-			if (!skipMove)
-			{
-				// when zooming in in city mode, constrain to city
-				var c0 = cBase / cameraZoom;
-				var c1 = cBase / newZoom;
-				CameraC += c0 - c1;
-			}
-
-
-			cameraZoom = newZoom;
-			AutoSwitchViewMode();
-			ClearHover();
-			//    ChatTab.L("CWheel " + wheel);
-		}
-
-		public static void AutoSwitchViewMode()
-		{
-			var _viewMode = cameraZoom >= cityZoomThreshold ? ViewMode.city : cameraZoom > cityZoomWorldThreshold ? ViewMode.region : ViewMode.world;
-			if (_viewMode != View.viewMode)
-			{
-				ShellPage.SetViewMode(_viewMode);
-			}
 		}
 		public static void UpdateMousePosition(PointerEventArgs e)
 		{

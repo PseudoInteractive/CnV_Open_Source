@@ -52,7 +52,7 @@ namespace CnV.Views
 	//	public static int htmlShift = 0;
 		//public static int cachedTopOffset = 0;
 		//public static int cachedXOffset = 0;
-		static public SwapChainPanel? canvas;
+		static public SwapChainPanel? canvas=>AGame.canvas;
 		public static bool hasKeyboardFocus;
 	//	public static KeyboardProxy keyboardProxy;
 
@@ -63,9 +63,6 @@ namespace CnV.Views
 		private const int cotgPopupWidth = 550;
 
 
-		public static bool IsCityView() => View.viewMode == ViewMode.city;
-
-		public static bool IsWorldView() => View.viewMode == ViewMode.world;
 
 		//public static void NotifyCotgPopup(int cotgPopupOpen)
 		//{
@@ -100,57 +97,7 @@ namespace CnV.Views
 		// _grid.ColumnDefinitions[1].Width = new GridLength(_grid.ColumnDefinitions[1].Width.Value-delta))));
 		//}
 
-		public static void SetViewMode(ViewMode _viewMode,  bool leaveZoom = false)
-		{
-		//	var _webviewHasFocus = pwebviewHasFocus.HasValue ? pwebviewHasFocus.Value : webviewHasFocus;
-			var priorView = View.viewMode;
-		//	var priorWebviewHasFocus = webviewHasFocus;
-		View.viewMode = _viewMode;
-		//	webviewHasFocus = _webviewHasFocus;
-
-			if (priorView != View.viewMode )
-			{
-				//Log($"!Focus5: {hasKeyboardFocus}");
-				//hasKeyboardFocus = 0;
-				if (!leaveZoom && priorView != View.viewMode)
-				{
-					if (View.viewMode == ViewMode.world)
-					{
-						if (AGame.cameraZoom > AGame.cityZoomWorldThreshold)
-							AGame.cameraZoom = AGame.cameraZoomWorldDefault;
-					}
-					else if (View.viewMode == ViewMode.region)
-					{
-						if (AGame.cameraZoom > AGame.cityZoomThreshold || AGame.cameraZoom < AGame.cityZoomWorldThreshold)
-							AGame.cameraZoom = AGame.cameraZoomRegionDefault;
-					}
-					else
-					{
-						if (AGame.cameraZoom < AGame.cityZoomThreshold)
-							AGame.cameraZoom = AGame.cityZoomDefault;
-					}
-				}
-
-				//	ShellPage.isOverPopup = false;// reset
-				//var isWorld = IsWorldView();
-				//				ShellPage.isHitTestVisible = !webviewHasFocus;
-			//	UpdateFocus();
-				//AppS.DispatchOnUIThreadLow(() =>
-				//{
-				//	//	instance.webFocus.IsChecked = webviewHasFocus;
-				//	//	Log($"!FocusWeb: {hasKeyboardFocus} w{webviewHasFocus} w2{webviewHasFocus2}");
-				//	//		ShellPage.isOverPopup = false;// reset again in case it changed
-				//	ShellPage.canvas.IsHitTestVisible = ShellPage.isOverPopup
-				//	ShellPage.canvas.Visibility = !ShellPage.canvasVisible ? Visibility.Collapsed : Visibility.Visible;
-				//	AGame.UpdateMusic();
-					
-				//	if (!webviewHasFocus && priorWebviewHasFocus)
-				//	{
-				//		TakeKeyboardFocus();
-				//	}
-				//});
-			}
-		}
+		
 		public static void UpdateFocus()
 		{
 			
@@ -202,12 +149,12 @@ namespace CnV.Views
 //				if((canvas.FocusState is FocusState.Unfocused) || forceFocus)
 //				{
 //					forceFocus=false;
-//					//if(JSClient.view is not null && App.IsKeyPressedShift())
+//					//if(JSClient.view is not null && AppS.IsKeyPressedShift())
 //					{
 //						//		var f = JSClient.view.Focus(FocusState.Programmatic);
 //						//		Assert(f);
 //					}
-//					//else if( App.IsKeyPressedControl())
+//					//else if( AppS.IsKeyPressedControl())
 //					//{
 //					//	var f = ChatTab.tabPage.Focus(FocusState.Programmatic);
 //					//	Assert(f);
@@ -458,7 +405,7 @@ namespace CnV.Views
 		{
 		//	Log($"DoKeyDown {key}");
 			App.UpdateKeyStates();
-			if(App.IsKeyPressedShiftOrControl())
+			if(AppS.IsKeyPressedShiftOrControl())
 				return false;
 			if(!buildKeys.Contains(key))
 			{
@@ -553,25 +500,7 @@ namespace CnV.Views
 				ProcessKey(key);
 				
 			}
-			switch (key)
-			{
-				case Windows.System.VirtualKey.F11:
-					if (Player.isSpecial)
-					{
-						Raid.test ^= true;
-						Note.Show("Test: " + Raid.test);
-					}
-					break;
-
-				case Windows.System.VirtualKey.F10:
-					if (Player.isSpecial  || (App.IsKeyPressedShift() && App.IsKeyPressedControl()))
-					{
-						CityBuildUI.testFlag ^= true;
-						Note.Show("Test: " + testFlag);
-						JSClient.view.ExecuteScriptAsync($"setTestFlag({(testFlag ? "1" : "0")})");
-					}
-					break;
-			}
+			
 			return Task.CompletedTask;
 			// });
 		}

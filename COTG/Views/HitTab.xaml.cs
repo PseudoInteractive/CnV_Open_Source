@@ -26,7 +26,7 @@ namespace CnV.Views
 			//		sb.AppendLine($"{c.cid.CidToCoords()}\t{cl}");
 
 			//	}
-			//	App.CopyTextToClipboard(sb.ToString());
+			//	AppS.CopyTextToClipboard(sb.ToString());
 	
 			//}
 			history = _history;

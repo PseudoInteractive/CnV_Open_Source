@@ -1,7 +1,7 @@
 ﻿//using System.Threading.Tasks;
-
+//
 //using Windows.ApplicationModel.Activation;
-
+//
 //namespace COTG.Activation
 //{
 //    internal class WebToAppLinkActivationHandler : ActivationHandler<ProtocolActivatedEventArgs>
@@ -14,7 +14,6 @@
 //        private const string Host = "myapp.website.com";
 //        private const string Section1 = "/MySection1";
 //        private const string Section2 = "/MySection2";
-
 //        protected override async Task HandleInternalAsync(ProtocolActivatedEventArgs args)
 //        {
 //            // TODO WTS: Handle navigation based on the original URI

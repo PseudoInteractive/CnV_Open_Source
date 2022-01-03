@@ -427,25 +427,7 @@ namespace CnV.Views
 
 			}
 		}
-		public static (string ss, string json) SplitShareString(string shareString)
-		{
-			if(shareString == null)
-				return (string.Empty, AUtil.emptyJson);
-			string json;
-			string ss;
-
-			var i = shareString.IndexOf('{');
-			if(i == -1)
-				json=   AUtil.emptyJson;
-			else
-				json = shareString.Substring(i);
-			if(shareString.Length >= shareStringStartOffset + citySpotCount)
-				ss = shareString.Substring(0,shareStringStartOffset+  citySpotCount);
-			else
-				ss = string.Empty;
-			return (ss, json);
-		}
-
+		
 
 		private async void FromClipboardClick(object sender,RoutedEventArgs e)
 		{
@@ -464,7 +446,7 @@ namespace CnV.Views
 
 		private void ToClipboardClick(object sender,RoutedEventArgs e)
 		{
-			App.CopyTextToClipboard(GetShareString());
+			AppS.CopyTextToClipboard(GetShareString());
 		}
 
 		private async void ShareItemInvoked(Microsoft.UI.Xaml.Controls.TreeView sender,Microsoft.UI.Xaml.Controls.TreeViewItemInvokedEventArgs args)

@@ -24,38 +24,6 @@ namespace CnV.Views
 {
 	using Game;
 
-	public class PlayerChanges
-	{
-		public int pid;
-		public string name => Player.IdToName(pid);
-
-		public int activity => settled*2 + castled*4 + abandonedCities + upgraded*1 - flattened*0 + castlesCappedEnemy*16 + castlesCappedAlly*4 + castlesCappedLawless * 4 - 
-			castlesLostEnemy* 2 - castlesLostAlly*2 - castlesAbandoned*2 + templesMade*32 -templesLost*32; // approximate measure of overall non sub activity
-																										//	public int nonSubActivity; // approximate measure of overall non sub activity
-		public int progress => settled*4 + castled * 4 - abandonedCities*3 + upgraded * 1 - flattened * 1 + castlesCappedEnemy * 16 + castlesCappedAlly * 2 -
-			castlesLostEnemy * 4 + castlesCappedLawless * 2 - castlesLostAlly * 2 - castlesAbandoned * 4 + templesMade * 32 - templesLost*32; // approximate measure of overall non sub activity
-																												   //	public int nonSubActivity; // approximate measure of overall non sub 	public string alliance => Player.Get(pid).allianceName;
-
-		public string alliance => Player.Get(pid).allianceName; 
-		public int cities => Player.Get(pid).cities.Count();
-		public int settled { get; set; }
-		public int castled { get; set; }
-		public int abandonedCities { get; set; }
-		public int upgraded { get; set; }
-		public int flattened { get; set; }
-		public int castlesCappedEnemy { get; set; }
-		public int castlesCappedAlly { get; set; }
-		public int castlesCappedLawless { get; set; }
-		public int castlesLostEnemy { get; set; }
-		public int castlesLostAlly { get; set; }
-		public int castlesAbandoned { get; set; }
-		public int templesMade { get; set; }
-		public int templesLost { get; set; }
-
-		public ushort allianceId => Player.Get(pid).allianceId;
-
-	}
-
 	public sealed partial class PlayerChangeTab : UserTab
 	{
 		public static PlayerChangeTab instance;

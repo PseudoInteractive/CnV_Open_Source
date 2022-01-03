@@ -25,7 +25,7 @@ namespace CnV
 	using Services;
 	using Views;
 
-	public partial class AGame
+	internal static partial class CnVClient
 	{
 		private static BackgroundTask reinforcementsTask;
 		private static BackgroundTask senInfoTask;
@@ -68,7 +68,7 @@ namespace CnV
 				await CnVChatClient.Setup();
 			});
 
-			JSClient.SetStayAlive(SettingsPage.stayAlive);
+			JSClient.SetStayAlive(Settings.stayAlive);
 			//{
 			//    //var now = DateTime.UtcNow;
 			//    //if (now.Day <= 28 && now.Month==11)
@@ -105,7 +105,11 @@ namespace CnV
 
 				//	GCSettings.LatencyMode = GCLatencyMode.SustainedLowLatency;
 				reinforcementsTask = new(interval:64.0f,()=> ReinforcementsOverview.instance.Post(),initialDelay:4.0f );
-				senInfoTask = new( interval: 68f, City.UpdateSenatorInfo, 3.0f);
+				senInfoTask        = new( interval: 68f, City.UpdateSenatorInfo, 3.0f);
+				CnVServer.isInitialized      = true;
+
+				AGame.ClientDraw = ClientDraw.Draw;
+	
 		}
 		catch(Exception ex)
 		{

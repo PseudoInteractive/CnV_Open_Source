@@ -218,7 +218,7 @@ namespace CnV;
 	//    //            Log(context.Column.Header);
 	//    //            switch (context.Column.Header.ToString())
 	//    //            {
-	//    //                case "xy": JSClient.ShowCity(cid); break;
+	//    //                case "xy": City.ShowCity(cid); break;
 	//    //                case "icon": JSClient.ChangeCity(cid); break;
 	//    //                case "tsHome":
 	//    //                    {

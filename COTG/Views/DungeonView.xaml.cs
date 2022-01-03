@@ -27,6 +27,8 @@ namespace CnV.Views
 {
 	using Game;
 
+	using System.Text.Json;
+
 	public sealed partial class DungeonView : ContentDialog
 	{
 
@@ -297,6 +299,75 @@ namespace CnV.Views
 		{
 			var dataGrid = (xDataGrid)sender;
 			using var __ = ADataGrid.SetupDataGrid(null, dataGrid, false,typeof(Dungeon));
+		}
+		public static async Task<bool> ShowDungeonList(City city, JsonElement jse, bool autoRaid)
+		{
+			var rv = new List<Dungeon>();
+			//	rv.Clear();
+			var idealType = city.GetIdealDungeonType();
+			foreach(var dung in jse.EnumerateArray())
+			{
+				var type = dung.GetAsByte("t");
+				if(Settings.raidOffDungeons || (type == idealType) || type == (byte)Troops.DungeonType.water)
+				{
+					var d = new Dungeon()
+					{
+							city       = city,
+							cid        = dung.GetAsInt("c"),
+							type       = type,
+							level      = dung.GetAsByte("l"),
+							completion = dung.GetAsFloat("p"),
+							distance   = dung.GetAsFloat("d")
+
+					};
+					var r = Raiding.ComputeIdealReps(d, city);
+					d.isValid = r.isValid;
+					d.carry   = r.averageCarry;
+					d.reps    = (byte)r.reps;
+					if(d.isValid || !autoRaid)
+						rv.Add(d);
+
+
+				}
+			}
+
+			rv.Sort((a, b) => a.GetScore(idealType).CompareTo(b.GetScore(idealType)));
+
+			if(autoRaid)
+			{
+				var sent = false;
+				if(rv.Count >0)
+				{
+					foreach(var _i in rv)
+					{
+						if(!_i.isValid)
+							continue;
+						var i       = _i;
+						int counter = 0;
+
+						var good = await Raiding.SendRaids(i);
+						if(!good)
+						{
+							Note.Show($"Raid send failed for {city.nameMarkdown}, will try again");
+						}
+						sent = true;
+						break;
+					}
+				}
+				if(!sent)
+				{
+					Note.Show($"No appropriate dungeons for {city.nameMarkdown}");
+				}
+				return sent;
+			}
+			else
+			{
+
+				// dont wait on this 
+				//COTG.Views.MainPage.UpdateDungeonList(rv);
+				await DungeonView.Show(city, rv);
+				return true;
+			}
 		}
 	}
 }

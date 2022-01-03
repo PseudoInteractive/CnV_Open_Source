@@ -24,7 +24,7 @@ namespace CnV
 				{
 					var s = $"{me.targetCid.CidToCoords()}\t{me.sourceCid.CidToCoords()}{ (column=="Troops" ? me.troops : me.sumDef).Format("", '\t', ',')}";
 					Note.Show(s);
-					App.CopyTextToClipboard(s);
+					AppS.CopyTextToClipboard(s);
 				}
 					return true;
 

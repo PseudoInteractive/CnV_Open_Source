@@ -943,7 +943,7 @@ namespace CnV.Game
 									}
 								}
 								killNote = $", {atkKilled:N0}({myAtkKilled:N0})TS atk ts killed, {defKilled:N0}({myDefKilled:N0})TS def Killed";
-								//	App.CopyTextToClipboard(killNote);
+								//	AppS.CopyTextToClipboard(killNote);
 								// AppS.DispatchOnUIThread(() =>
 								// We should do this on the Render Thread
 								defPage.SetHistory((reportsIncoming.OrderByDescending((atk) => atk.time.UtcTicks)).ToArray());

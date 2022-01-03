@@ -71,7 +71,7 @@ namespace CnV.Views
                 {
 					instance.attackerSource.Set( Spot.defendersO.Where( w => w.testContinentFilter 
 																					&& (instance.includeInternal || !w.IsAllyOrNap() ) 
-																					&& (!instance.onlyMine ||w.HasIncomingFrom(Player.activeId))).OrderBy(w=>w.firstIncoming) );
+																					&& (!instance.onlyMine ||w.HasIncomingFrom(Player.myId))).OrderBy(w=>w.firstIncoming) );
 					instance.attackerSource.ItemContentChanged();
 				}
                 catch (Exception e)

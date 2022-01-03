@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 using Microsoft.UI.Xaml;
 
 using static CnV.Debug;
-using static Cnv.City;
+using static CnV.City;
 using static CnV.Game.Troops;
 using static CnV.BuildingDef;
 using System.Buffers;
@@ -372,7 +372,7 @@ namespace CnV.Views
 		}
 		public static Debounce PleaseRefresh = new (PlannerTab.UpdateStats) { runOnUiThread = true };
 
-		internal static async Task<bool> BuildingsChanged(City city, bool wasWritten=true)
+		internal static async Task BuildingsChanged(City city, bool wasWritten=true)
 		{
 			Assert(City.emptyLayout.GetHashCode() == City.emptyLayoutHashCode);
 
@@ -385,9 +385,8 @@ namespace CnV.Views
 			}
 			if(wasWritten)
 			{
-				return await city.SaveShareStringFromLayout();
+				await city.SaveShareStringFromLayout();
 			}
-			return true;
 		}
 
 		private void ShareStringClick(object sender, RoutedEventArgs e)
@@ -426,7 +425,7 @@ namespace CnV.Views
 			Assert(CityBuildUI.isPlanner);
 			//await CityBuild._IsPlanner(true);
 			var city = GetBuild();
-			city.FlipLayoutH(true,App.IsKeyPressedControl());
+			city.FlipLayoutH(true,AppS.IsKeyPressedControl());
 		//	PlannerTab.BuildingsChanged(city,true);
 		}
 		private async void FlipVClick(object sender, RoutedEventArgs e)
@@ -436,7 +435,7 @@ namespace CnV.Views
 			Assert(CityBuildUI.isPlanner);
 			//await CityBuild._IsPlanner(true);
 			var city = GetBuild();
-			city.FlipLayoutV(true,App.IsKeyPressedControl());
+			city.FlipLayoutV(true,AppS.IsKeyPressedControl());
 			//PlannerTab.BuildingsChanged(city,true);
 		}
 
@@ -526,7 +525,7 @@ namespace CnV.Views
 						var bid = city.GetLayoutBid(id);
 						if (bid != 0 && bid != bidShipyard && bid != bidPort)
 						{
-							if (CityBuildUI.IsWaterSpot(id))
+							if (CityBuild.IsWaterSpot(id))
 								hasInvalid = true;
 							if (IsResHelper(bid))
 								++resHelpers;
