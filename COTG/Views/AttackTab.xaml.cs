@@ -216,7 +216,7 @@ namespace CnV.Views
 			//        id =0;
 			//    var cid = atk.targets[id];
 			//    var spot = City.GetOrAdd(cid);
-			//    City.ProcessCoordClick(cid, false,  App.keyModifiers);
+			//    City.ProcessCoordClick(cid, false,  AppS.keyModifiers);
 			//    foreach (var t in targets)
 			//    {
 			//        if (t.cid == cid)
@@ -308,7 +308,7 @@ namespace CnV.Views
             if (spot.cid != 0)
             {
 
-                City.ProcessCoordClick(spot.cid, false, App.keyModifiers,false);
+                City.ProcessCoordClick(spot.cid, false, AppS.keyModifiers,false);
             }
         }
         static bool loaded = false;
@@ -531,7 +531,7 @@ namespace CnV.Views
             var i = sender as FrameworkElement;
 
             var spot = i.DataContext as City;
-            City.ProcessCoordClick(spot.cid, false, App.keyModifiers,false);
+            City.ProcessCoordClick(spot.cid, false, AppS.keyModifiers,false);
             //foreach (var t in attacks)
             //{
             //    // take any one
@@ -2096,7 +2096,7 @@ namespace CnV.Views
 				var commands = playerCommands[city.pid];
 			//	JSClient.view.InvokeScriptAsync("sendmail",new string[] { city.playerName,SettingsPage.attackPlanName + " " + plan.attackTime.FormatDateForFileName(),playerCommands[city.pid].Replace("<","&lt;").Replace(">","&gt;").Replace("\n","&#10;&#13;") });
 
-				JSClient.ExecuteScriptAsync("sendmail",city.playerName,SettingsPage.attackPlanName + " " + plan.attackTime.FormatDateForFileName(),
+				JSClient.ExecuteScriptAsync("sendmail",city.playerName,Settings.attackPlanName + " " + plan.attackTime.FormatDateForFileName(),
 	playerCommands[city.pid].Replace("<","&lt;").Replace(">","&gt;").Replace("\n","<br />"));//.Replace("\n", "&#10;&#10;") });
 
 
@@ -2177,7 +2177,7 @@ namespace CnV.Views
 
 			HideMe0.Hide();
 			using var _ = await TouchLists();
-			SettingsPage.attackPlanName = newPlanName.Text;
+			Settings.attackPlanName = newPlanName.Text;
 			plan.attacks = Array.Empty<AttackPlanCity>();
 			plan.targets = Array.Empty<AttackPlanCity>();
 
@@ -2207,7 +2207,7 @@ namespace CnV.Views
 			Log(sel);
 			if(sel is StorageFile file)
 			{
-				SettingsPage.attackPlanName = file.DisplayName;
+				Settings.attackPlanName = file.DisplayName;
 				Log(file.DisplayName);
 
 				// reload

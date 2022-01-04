@@ -131,7 +131,7 @@ namespace CnV
 				}
 				else
 				{
-					City.ShowCity(cid, false);
+					CityUI.ShowCity(cid, false);
 				}
 			}
 		}
@@ -165,7 +165,6 @@ namespace CnV
 		// override global no op
 		public NavStack()
 		{
-			CnV.NavStack.Push = Push;
 		}
 
 

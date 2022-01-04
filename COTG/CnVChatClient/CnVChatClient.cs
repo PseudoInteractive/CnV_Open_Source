@@ -76,8 +76,8 @@ namespace CnVDiscord
 				connection = await StreamingHubClient.ConnectAsync<ICnVChatClientConnection,ICnVChatClient>(channel,this, cancellationToken: shutdownCancellation.Token);
 				if(connection == null)
 					return false;
-				await Alliance.alliancesFetchedTask();
-				var channels = await connection.JoinAsync(new(){ playerName=Player.myName,world=JSClient.world,alliance=Alliance.my.name,allianceRole="Newbie"}); // Todo store role somewhere
+				await Alliance.alliancesFetchedTask.WaitAsync(false);
+				var channels = await connection.JoinAsync(new(){ playerId=Player.myId,world=JSClient.world,alliance=Alliance.myId,allianceTitle=AllianceTitle.newbie}); // Todo store role somewhere
 				Log("Got Channels " + channels.Length);
 				AppS.DispatchOnUIThread(async () =>
 				{

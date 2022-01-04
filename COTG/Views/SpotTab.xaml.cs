@@ -17,8 +17,7 @@ namespace CnV.Views
 
         public static NotifyCollection<Spot> SpotMRU => instance.spotMRU;
         public static int disableSelection;
-		static bool loaded;
-        public static SpotTab instance;
+	    public static SpotTab instance;
         public SpotTab()
         {
             Assert(instance == null);
@@ -166,7 +165,7 @@ namespace CnV.Views
                    {
                        SpotMRU.RemoveAt(id,true);
                    }
-                   else if (SpotMRU.Count >= SettingsPage.mruSize)
+                   else if (SpotMRU.Count >= Settings.mruSize)
                    {
                        // not in list
                        var counter = SpotMRU.Count;
@@ -191,20 +190,7 @@ namespace CnV.Views
             }
 
         }
-        public static void LoadFromPriorSession( )
-        {
-			if(!loaded)
-			{
-				
-				loaded = true;
-				SettingsPage.pinned = SettingsPage.pinned.ArrayRemoveDuplicates();
-
-				foreach (var m in SettingsPage.pinned)
-				{
-				  var spot=  TouchSpot(m, VirtualKeyModifiers.None, false,true);
-				}
-			}
-		}
+        
 
 		private void Button_Click(object sender, RoutedEventArgs e)
 		{

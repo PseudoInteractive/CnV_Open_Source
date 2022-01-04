@@ -21,7 +21,7 @@ using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Imaging;
 
 using static CnV.Debug;
-using static CnV.Draw.CityView;
+using static CnV.CityView;
 using static CnV.City;
 using static CnV.Views.CityBuildUI;
 using static CnV.BuildingDef;
@@ -29,7 +29,6 @@ using ContentDialog = Microsoft.UI.Xaml.Controls.ContentDialog;
 using ContentDialogResult = Microsoft.UI.Xaml.Controls.ContentDialogResult;
 using CnV;
 using static CnV.CityBuild;
-using Action = CnV.CityBuild.Action;
 
 namespace CnV.Views
 {
@@ -41,7 +40,7 @@ namespace CnV.Views
 	public sealed partial class CityBuildUI : Microsoft.UI.Xaml.Controls.UserControl
 	{
 		public static CityBuildUI instance;
-		public static bool isPlanner => CityBuild.isPlanner;
+		public static ref bool isPlanner => ref CityBuild.isPlanner;
 
 		static readonly Dictionary<int, ImageBrush> brushFromAtlasCache = new();
 		static readonly Dictionary<string, ImageBrush> brushFromImageCache = new();
@@ -957,7 +956,7 @@ namespace CnV.Views
 				case VirtualKey.Space: CityBuildUI.Click(CityView.hovered, true); return;
 				case VirtualKey.Enter: CityBuildUI.Click(CityView.hovered, false); return;
 				case Windows.System.VirtualKey.Left:
-					if (CityView.hovered.IsValid())
+					if (CityView.hovered.IsNotNan())
 						CityView.hovered.x = (CityView.hovered.x - 1).Max(City.span0);
 					else
 						CityView.hovered = (0, 0);
@@ -965,14 +964,14 @@ namespace CnV.Views
 					break;
 
 				case Windows.System.VirtualKey.Up:
-					if (CityView.hovered.IsValid())
+					if (CityView.hovered.IsNotNan())
 						CityView.hovered.y = (CityView.hovered.y - 1).Max(City.span0);
 					else
 						CityView.hovered = (0, 0);
 					break;
 
 				case Windows.System.VirtualKey.Right:
-					if (CityView.hovered.IsValid())
+					if (CityView.hovered.IsNotNan())
 						CityView.hovered.x = (CityView.hovered.x + 1).Min(City.span1);
 					else
 						CityView.hovered = (0, 0);
@@ -980,7 +979,7 @@ namespace CnV.Views
 					break;
 
 				case Windows.System.VirtualKey.Down:
-					if (CityView.hovered.IsValid())
+					if (CityView.hovered.IsNotNan())
 						CityView.hovered.y = (CityView.hovered.y + 1).Min(City.span1);
 					else
 						CityView.hovered = (0, 0);

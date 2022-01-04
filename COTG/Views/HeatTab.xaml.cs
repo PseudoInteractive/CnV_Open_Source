@@ -304,7 +304,7 @@ namespace CnV.Views
 							continue;
 						Note.Show(change);
 						var c = World.PackedIdToCid(id);
-						Spot.ProcessCoordClick(c.WorldToCid(), false, App.keyModifiers);
+						Spot.ProcessCoordClick(c.WorldToCid(), false, AppS.keyModifiers);
 						break;
 					}
 				}

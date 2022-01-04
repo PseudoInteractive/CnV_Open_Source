@@ -4,7 +4,7 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using static CnV.Game.Troops;
 using System.Threading.Tasks;
-using static CnV.Game.TroopTypeCountHelper;
+using static CnV.TroopTypeCountHelper;
 using CommunityToolkit.WinUI.UI.Controls;
 
 namespace CnV.Views
@@ -224,7 +224,7 @@ namespace CnV.Views
             var image = sender as FrameworkElement;
             
             var supporter = image.DataContext as Supporter;
-            Spot.ProcessCoordClick(supporter.city.cid, false, App.keyModifiers,false);
+            Spot.ProcessCoordClick(supporter.city.cid, false, AppS.keyModifiers,false);
 
         }
 

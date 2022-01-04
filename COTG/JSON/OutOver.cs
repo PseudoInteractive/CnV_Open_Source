@@ -14,7 +14,7 @@ using static CnV.Debug;
 using TroopTypeCounts = CnV.Game.TroopTypeCounts;
 //COTG.DArray<COTG.Game.TroopTypeCount>;
 using TroopTypeCountsRef = CnV.Game.TroopTypeCounts;
-using static CnV.Game.TroopTypeCountHelper;
+using static CnV.TroopTypeCountHelper;
 using CnV;
 //COTG.DArrayRef<COTG.Game.TroopTypeCount>;
 

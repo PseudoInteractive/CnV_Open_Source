@@ -15,7 +15,7 @@ using static CnV.Debug;
 using System.Net.Http;
 using System.Text.Json;
 using TroopTypeCountsRef = CnV.Game.TroopTypeCounts;
-using static CnV.Game.TroopTypeCountHelper;
+using static CnV.TroopTypeCountHelper;
 //COTG.DArrayRef<COTG.Game.TroopTypeCount>;
 using TroopTypeCounts = CnV.Game.TroopTypeCounts;
 using DiscordCnV;

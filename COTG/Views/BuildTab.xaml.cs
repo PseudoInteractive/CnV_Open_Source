@@ -245,10 +245,10 @@ namespace CnV.Views
 		override public async Task VisibilityChanged(bool visible,bool longTerm)
 		{
 			//   Log("Vis change" + visible);
+			CityBuild.buildTabVisible = visible;
 
 			if(visible)
 			{
-
 				if(JSClient.ppdtInitialized)
 				{
 					//	await Raiding.UpdateTS(true, false);

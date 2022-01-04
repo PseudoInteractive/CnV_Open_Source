@@ -35,7 +35,7 @@ namespace CnV.Views
 
 		public BitmapImage targetIcon => target.icon;
 		public string targetName => target.nameAndRemarks;
-		public static bool useRatio => SettingsPage.nearResAsRatio;
+		public static bool useRatio => Settings.nearResAsRatio;
 
 		public Resources des = new Resources() { wood = 100000, stone = 100000, food = 100000, iron = 100000 };
 		public Resources willHave => target.res.Add(target.tradeInfo.inc);
@@ -44,13 +44,13 @@ namespace CnV.Views
 		public ResSource selected = ResSource.dummy;
 
 //		public Resources send;
-		public Resources reserve => SettingsPage.nearResReserve;
+		public Resources reserve => Settings.nearResReserve;
 
 		//	public Resources reserve = new Resources(100000,100000,100000,100000);
-		public static int reserveCarts =>SettingsPage.nearResCartReserve;
-		public static int reserveShips => SettingsPage.nearResShipReserve;
+		public static int reserveCarts =>Settings.nearResCartReserve;
+		public static int reserveShips => Settings.nearResShipReserve;
 
-		public int GetTransport(City city) => viaWater ? (city.shipsHome-SettingsPage.nearResShipReserve).Max0() * 10000 : (city.cartsHome-SettingsPage.nearResCartReserve).Max0() * 1000;
+		public int GetTransport(City city) => viaWater ? (city.shipsHome-Settings.nearResShipReserve).Max0() * 10000 : (city.cartsHome-Settings.nearResCartReserve).Max0() * 1000;
 
 
 		public void RefreshSupportByRes()
@@ -93,10 +93,10 @@ namespace CnV.Views
 			{
 				Trace($"Update {DateTime.Now}");
 
-				await UpdateTradeStuffDebounce.Go();
+				await TradeOverview.UpdateTradeStuffIfNeeded();
 
-				int shipReserve = SettingsPage.nearResShipReserve;
-				int cartReserve = SettingsPage.nearResCartReserve;
+				int shipReserve = Settings.nearResShipReserve;
+				int cartReserve = Settings.nearResCartReserve;
 
 				if(resetValuesPending)
 				{
@@ -109,11 +109,11 @@ namespace CnV.Views
 				{
 				
 
-					var r = SettingsPage.nearResSend;// des.Sub(target.res.Add(target.tradeInfo.inc));
+					var r = Settings.nearResSend;// des.Sub(target.res.Add(target.tradeInfo.inc));
 					
-					var reserve = SettingsPage.nearResReserve;
+					var reserve = Settings.nearResReserve;
 					r.ClampToPositive();
-					//views: SettingsPage.nearResSend = r;
+					//views: Settings.nearResSend = r;
 					if(useRatio)
 						r = r*((1<<30)/r.sum.Max(1));
 
@@ -167,7 +167,7 @@ namespace CnV.Views
 							{
 								send *= (shipping / (double)r.sum.Max(1));
 							}
-							send = send.Min(sup.city.res.SubSat(SettingsPage.nearResReserve));
+							send = send.Min(sup.city.res.SubSat(Settings.nearResReserve));
 							Assert( send.sum <= shipping);
 	
 
@@ -242,7 +242,7 @@ namespace CnV.Views
 			var image = sender as FrameworkElement;
 
 			var supporter = image.DataContext as ResSource;
-			Spot.ProcessCoordClick(supporter.city.cid, false, App.keyModifiers, false);
+			Spot.ProcessCoordClick(supporter.city.cid, false, AppS.keyModifiers, false);
 
 		}
 
@@ -294,7 +294,7 @@ namespace CnV.Views
 			var city = supporter.city;
 			var res = supporter.city.res.Sub(reserve).Max(0);
 		//	var viaWater = NearRes.instance.viaWater;
-			var shipping = GetTransport(city);//viaWater ? (city.shipsHome - SettingsPage.nearResShipReserve).Max0() * 10000 : (city.cartsHome - SettingsPage.nearResCartReserve).Max0() * 1000;
+			var shipping = GetTransport(city);//viaWater ? (city.shipsHome - Settings.nearResShipReserve).Max0() * 10000 : (city.cartsHome - Settings.nearResCartReserve).Max0() * 1000;
 			if (shipping > res.sum)
 			{
 				supporter.res = res;  // we can send all of it
@@ -553,7 +553,7 @@ namespace CnV.Views
 
 		private void TargetTapped(object sender, TappedRoutedEventArgs e)
 		{
-			Spot.ProcessCoordClick(target.cid, false, App.keyModifiers, false);
+			Spot.ProcessCoordClick(target.cid, false, AppS.keyModifiers, false);
 
 		}
 

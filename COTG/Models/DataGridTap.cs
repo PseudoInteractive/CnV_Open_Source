@@ -80,10 +80,10 @@ namespace CnV;
 										Note.Show("This attack is in the future, there is no report yet");
 									break;
 								case "dXY":
-									Spot.ProcessCoordClick(i.targetCid, false, App.keyModifiers, false);
+									Spot.ProcessCoordClick(i.targetCid, false, AppS.keyModifiers, false);
 									break;
 								case "aXY":
-									Spot.ProcessCoordClick(i.sourceCid, false, App.keyModifiers, false);
+									Spot.ProcessCoordClick(i.sourceCid, false, AppS.keyModifiers, false);
 									break;
 								case "aPlyr":
 									JSClient.ShowPlayer(i.sPlayer);
@@ -119,7 +119,7 @@ namespace CnV;
 						switch (e.Column.MappingName)
 						{
 							case nameof(Dungeon.xy):
-								Spot.ProcessCoordClick(cid, false, App.keyModifiers, false);
+								Spot.ProcessCoordClick(cid, false, AppS.keyModifiers, false);
 								break;
 							case nameof(Dungeon.dispatch):
 							case nameof(Dungeon.plan):
@@ -149,7 +149,7 @@ namespace CnV;
 						{
 
 							case nameof(boss.xy):
-								Spot.ProcessCoordClick(boss.cid, false, App.keyModifiers);
+								Spot.ProcessCoordClick(boss.cid, false, AppS.keyModifiers);
 								break;
 						}
 
@@ -218,7 +218,7 @@ namespace CnV;
 	//    //            Log(context.Column.Header);
 	//    //            switch (context.Column.Header.ToString())
 	//    //            {
-	//    //                case "xy": City.ShowCity(cid); break;
+	//    //                case "xy": CityUI.ShowCity(cid); break;
 	//    //                case "icon": JSClient.ChangeCity(cid); break;
 	//    //                case "tsHome":
 	//    //                    {

@@ -53,34 +53,34 @@ namespace CnV.Views
 		public int? ReqHub => reqHub.city?.cid;
 		public int? SendHub => sendHub.city?.cid;
 
-		public TradeSettings _TradeSettingsSel;
-		public static TradeSettings[] tradeSettingsItemsSource;
-		public TradeSettings tradeSettingsSel
-		{
-			get => _TradeSettingsSel;
-			set
-			{
-				if (_TradeSettingsSel != value)
-				{
-					_TradeSettingsSel = value;
-					req.wood = value.requestWood;
-					req.stone = value.requestStone;
-					req.iron = value.requestIron;
-					req.food = value.requestFood; ;
-					//	SettingsPage.sendWood = value.destWood != 0;
-					//	SettingsPage.sendStone = value.destStone != 0;
-					//		SettingsPage.sendIron = value.destIron != 0;
-					//		SettingsPage.sendFood = value.destFood != 0;
-					max.wood = value.sendWood;
-					max.stone = value.sendStone;
-					max.iron = value.sendIron;
-					max.food = value.sendFood;
-					// TODO:  fix this
-					//Bindings.Update();
-					OnPropertyChanged();
-				}
-			}
-		}
+		//public TradeSettings _TradeSettingsSel;
+		//public static TradeSettings[] tradeSettingsItemsSource;
+		//public TradeSettings tradeSettingsSel
+		//{
+		//	get => _TradeSettingsSel;
+		//	set
+		//	{
+		//		if (_TradeSettingsSel != value)
+		//		{
+		//			_TradeSettingsSel = value;
+		//			req.wood = value.requestWood;
+		//			req.stone = value.requestStone;
+		//			req.iron = value.requestIron;
+		//			req.food = value.requestFood; ;
+		//			//	SettingsPage.sendWood = value.destWood != 0;
+		//			//	SettingsPage.sendStone = value.destStone != 0;
+		//			//		SettingsPage.sendIron = value.destIron != 0;
+		//			//		SettingsPage.sendFood = value.destFood != 0;
+		//			max.wood = value.sendWood;
+		//			max.stone = value.sendStone;
+		//			max.iron = value.sendIron;
+		//			max.food = value.sendFood;
+		//			// TODO:  fix this
+		//			//Bindings.Update();
+		//			OnPropertyChanged();
+		//		}
+		//	}
+		//}
 
 		public async Task InitTradeSettings(City city, int _sourceHub, int _targetHub,ResourceFilter reqFilter,ResourceFilter targetFilter) 
 		{

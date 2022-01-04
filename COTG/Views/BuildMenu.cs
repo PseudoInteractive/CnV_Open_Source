@@ -7,7 +7,6 @@ using Microsoft.UI.Xaml.Media.Imaging;
 using Microsoft.UI.Xaml.Media;
 using static CnV.Views.CityBuildUI;
 using Microsoft.UI.Xaml;
-using Action = CnV.Views.CityBuildUI.Action;
 using Microsoft.UI;
 
 namespace CnV.Views

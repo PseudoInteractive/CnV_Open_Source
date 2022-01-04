@@ -75,7 +75,6 @@ namespace CnV.Views
 
         public static List<int> GetContextCids(object sender)
         {
-            
             var cid = (int)((sender as MenuFlyoutItem).DataContext);
             return Spot.GetSelectedForContextMenu(cid);
         }

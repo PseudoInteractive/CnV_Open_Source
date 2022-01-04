@@ -88,7 +88,7 @@ namespace CnV.Game
 			{
 
 				case nameof(xy):
-					Spot.ProcessCoordClick(cid, false, App.keyModifiers);
+					Spot.ProcessCoordClick(cid, false, AppS.keyModifiers);
 					break;
 			}
 		}

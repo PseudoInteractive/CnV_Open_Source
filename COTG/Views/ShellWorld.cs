@@ -576,7 +576,7 @@ namespace CnV.Views
 			(int x, int y) wi = (w.X.RoundToInt(), w.Y.RoundToInt());
 			(int x, int y) bi = wi.WorldToCid() == City.build ?  
 				(((w.X - wi.x)*City.citySpan).RoundToInt().Clamp(City.span0,City.span1), ((w.Y - wi.y) * City.citySpan/CityView.yScale).RoundToInt().Clamp(City.span0, City.span1)):
-				CanvasHelpers.invalidXY;
+				AUtil.NanXY;
 
 			return (wi, bi);
 		}
@@ -720,7 +720,7 @@ namespace CnV.Views
 					//			var text = spot.ToTsv();
 					//			Note.Show($"Copied to clipboard: {text}");
 					//			AppS.CopyTextToClipboard(text);
-					//			spot.SelectMe(true,App.keyModifiers);
+					//			spot.SelectMe(true,AppS.keyModifiers);
 
 					//		});
 					//		break;

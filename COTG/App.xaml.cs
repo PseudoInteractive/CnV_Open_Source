@@ -348,7 +348,7 @@ namespace CnV
 		{
 			//Log($"KeyDown {key} mouse:{ShellPage.mouseOverCanvas}");
 
-			App.UpdateKeyStates();
+			AppS.UpdateKeyStates();
 			switch (key)
 			{
 				case VirtualKey.Shift:
@@ -428,9 +428,6 @@ namespace CnV
 
 
 
-		private static ConcurrentQueue<Action>     idleTasks      = new ConcurrentQueue<Action>();
-		private static ConcurrentQueue<Func<Task>> throttledTasks = new ConcurrentQueue<Func<Task>>();
-		public static  Window                      window;
 
 		static DateTimeOffset activeStart = DateTimeOffset.UtcNow;
 		//private static Microsoft.Extensions.Configuration.IConfigurationRoot BuildConfig()
@@ -905,66 +902,7 @@ namespace CnV
 		//	ShellPage.UpdateMousePosition(args,ShellPage.instance);
 		//	ShellPage.UpdateFocus();
 		//}
-		private static async void ProcessIdleTasks()
-		{
-			//		await TaskScheduler.Default;
-			for (; ; )
-			{
-				var tick = Environment.TickCount;
-				// must be idle for at least 4 s
-				if (!CnV.AppS.isPlayerIdle )
-				{
-					// not idle
-					await Task.Delay(4 * 1000).ConfigureAwait(false);
-					continue;
-				}
-
-				if (isForeground)
-				{
-					while (idleTasks.TryDequeue(out Action a))
-					{
-						try
-						{
-							a();
-						}
-						catch (Exception _exception)
-						{
-							Debug.LogEx(_exception);
-						}
-
-						await Task.Delay(1000).ConfigureAwait(false); // wait one second if idle
-					}
-				}
-
-				// not idle but no tasks
-				await Task.Delay(4 * 1000).ConfigureAwait(false);
-			}
-		}
-
-		// with a delay
-		public static void QueueIdleTask(Action a, int intialDelayInmilisecons)
-		{
-			foreach (var i in idleTasks)
-			{
-				if (i == a )
-					return;
-			}
-
-			Task.Delay(intialDelayInmilisecons).ContinueWith((_) => QueueIdleTask(a));
-		}
-
-		public static void QueueIdleTask(Action a)
-		{
-			foreach (var i in idleTasks)
-			{
-				if (i == a )
-					return;
-			}
-
-			idleTasks.Enqueue(a);
-
-
-		}
+	
 
 		private ActivationService CreateActivationService()
 		{

@@ -80,7 +80,7 @@ namespace CnV.Views
 			var image = sender as FrameworkElement;
 			var cc = image.FindParent<CityControl>();
 			if(cc?.city != null)
-				City.ShowCity(cc.city.cid,false,false,false);
+				CityUI.ShowCity(cc.city.cid,false,false,false);
 
 		}
 
@@ -89,7 +89,7 @@ namespace CnV.Views
 			var image = sender as FrameworkElement;
 			var cc = image.FindParent<CityControl>();
 			if(cc?.city!=null)
-				Spot.ProcessCoordClick(cc.city.cid,false,App.keyModifiers,false);
+				Spot.ProcessCoordClick(cc.city.cid,false,AppS.keyModifiers,false);
 
 		}
 

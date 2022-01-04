@@ -57,6 +57,7 @@ namespace CnV.Views
 		private int cid;
 		public ShareString() : base()
 		{
+			res.data = new();
 			InitializeComponent();
 		}
 		internal static ShareString Touch()
@@ -612,16 +613,7 @@ namespace CnV.Views
 			}
 		}
 		static Regex regexCityName = new Regex(@"([^\d]*)(\d+)([^\d]+)([1-9]?)(0*)(\d+)(.*)",RegexOptions.CultureInvariant | RegexOptions.Compiled);
-		public static bool IsNew(City city) => IsNew(city._cityName);
-		public static bool IsNew(string _cityName)
-		{
-			return _cityName == "*New City";
-		}
-		public static bool IsNewOrCaptured(City city)
-		{
-			return IsNew(city._cityName) || city._cityName == "lawless city" || city._cityName == "*Lawless City";
-		}
-
+		
 		void ChooseName(object sender,SelectionChangedEventArgs e)
 		{
 			var city = City.Get(cid);

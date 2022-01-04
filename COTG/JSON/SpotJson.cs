@@ -8,7 +8,7 @@ using System.Text;
 using TroopTypeCounts = CnV.Game.TroopTypeCounts;
 //COTG.DArray<COTG.Game.TroopTypeCount>;
 using TroopTypeCountsRef = CnV.Game.TroopTypeCounts;
-using static CnV.Game.TroopTypeCountHelper;
+using static CnV.TroopTypeCountHelper;
 //COTG.DArrayRef<COTG.Game.TroopTypeCount>;
 
 namespace CnV.DB

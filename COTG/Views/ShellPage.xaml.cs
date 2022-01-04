@@ -232,6 +232,7 @@ namespace CnV.Views
 		{
 			CnVServer.CitySwitch = CnVClient.CitySwitch;
 			NoteClient.Init();
+			CityUI.Init();
 			NavStack.Init();
 			// hook up delegates
 			WorkScope.Start  = WorkStart;
@@ -1125,7 +1126,7 @@ namespace CnV.Views
 					if (cid > 0)
 					{
 						NavStack.Push(cid);
-						SpotTab.TouchSpot(cid, App.keyModifiers);
+						SpotTab.TouchSpot(cid, AppS.keyModifiers);
 						JSClient.CitySwitch(cid, false);
 					}
 				}
@@ -1220,7 +1221,7 @@ namespace CnV.Views
 				return;
 			}
 
-			Spot.ProcessCoordClick(Spot.focus, false, App.keyModifiers, true); // then normal click
+			Spot.ProcessCoordClick(Spot.focus, false, AppS.keyModifiers, true); // then normal click
 		}
 
 		private void HomeRightTapped(object sender, RightTappedRoutedEventArgs e)
@@ -1236,7 +1237,7 @@ namespace CnV.Views
 				return;
 			}
 
-			Spot.ProcessCoordClick(City.build, false, App.keyModifiers, true); // then normal click
+			Spot.ProcessCoordClick(City.build, false, AppS.keyModifiers, true); // then normal click
 		}
 
 		private void BuildHomeRightTapped(object sender, RightTappedRoutedEventArgs e)

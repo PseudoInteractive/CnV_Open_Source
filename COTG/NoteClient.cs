@@ -242,7 +242,7 @@ namespace CnV
 							}
 							break;
 						case "c":
-							Spot.ProcessCoordClick(paths[2].FromCoordinate(), false, App.keyModifiers, false);
+							Spot.ProcessCoordClick(paths[2].FromCoordinate(), false, AppS.keyModifiers, false);
 							break;
 						case "p": // player
 							JSClient.ShowPlayer(paths[2]);

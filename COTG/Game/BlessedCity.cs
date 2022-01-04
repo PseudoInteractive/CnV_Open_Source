@@ -280,7 +280,7 @@ namespace CnV.Game
 					}
 					break;
 				case nameof(i.xy):
-					Spot.ProcessCoordClick(i.cid, false, App.keyModifiers);
+					Spot.ProcessCoordClick(i.cid, false, AppS.keyModifiers);
 					break;
 				//            case nameof(Dungeon.plan):
 				//                Raiding.SendRaids(i);

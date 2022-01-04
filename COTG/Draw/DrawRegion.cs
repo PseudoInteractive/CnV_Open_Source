@@ -5,7 +5,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Media;
 using Vector2 = System.Numerics.Vector2;
 using Vector4 = System.Numerics.Vector4;
-
+using static CnV.View;
 using CnV.Draw;
 
 //using Windows.UI.Core;
@@ -25,16 +25,51 @@ namespace CnV;
 /// TODO: Migrate from AGame and CityView
 /// </summary>
 
-public static partial class ClientDraw
+internal partial class GameClient
+{
+	public static TextFormat textformatLabel = new TextFormat(TextFormat.HorizontalAlignment.center, TextFormat.VerticalAlignment.center);
+	private TextFormat tipTextFormatCentered = new TextFormat(TextFormat.HorizontalAlignment.center);
+	private TextFormat tipTextFormat = new TextFormat(TextFormat.HorizontalAlignment.left);
+	private TextFormat tipTextFormatRight = new TextFormat(TextFormat.HorizontalAlignment.right);
+	private TextFormat nameTextFormat = new TextFormat(TextFormat.HorizontalAlignment.center, TextFormat.VerticalAlignment.center);
+
+	class IncomingCounts
 	{
-		static Army  underMouse;
-		static float bestUnderMouseScore;
+		public int prior;
+		public int incoming;
+	};
+
+	const float postAttackDisplayTime = 15 * 60; // 11 min
+
+	const float lineThickness = 3.0f;
+	const float circleRadMin  = 3.0f;
+	const float circleRadMax  = 5.5f;
+	//	static float LineThickness(bool hovered) => hovered ? lineThickness * 2 : lineThickness;
+	const         float   rectSpanMin  = 4.0f;
+	const         float   rectSpanMax  = 8.0f;
+	const         float   bSizeGain    = 4.0f;
+	const         float   bSizeGain2   = 4; //4.22166666666667f;
+	const         float   srcImageSpan = 2400;
+	const         float   bSizeGain3   = bSizeGain * bSizeGain / bSizeGain2;
+	public static float   pixelScale   = 1;
+	public static Vector2 halfSquareOffset;
+	public static float   circleRadiusBase = 1.0f;
+	public static float   shapeSizeGain    = 1.0f;
+	public static float   bulgeSpan => 1.0f + bulgeNegativeRange;
+	public static float   bulgeGain           = 0;
+	public static float   pixelScaleInverse   = 1;
+	public static float   clampedScaleInverse = 1;
+	//	const float dashLength = (dashD0 + dashD1) * lineThickness;
+	public static Draw.SpriteBatch draw;
+
+	static        Army             underMouse;
+		static    float            bestUnderMouseScore;
 		//   public static Vector2 cameraMid;
 		public static float eventTimeOffsetLag; // smoothed version of event time offset
 		public static float eventTimeEnd;
 		static public Color nameColor, nameColorHover, myNameColor, nameColorOutgoing, nameColorIncoming, nameColorSieged, nameColorIncomingHover, nameColorSiegedHover, myNameColorIncoming, myNameColorSieged;
 
-		public static void Draw(GameTime gameTime)
+		protected override void Draw(GameTime gameTime)
 		{
 			if(faulted)
 				return;
@@ -55,7 +90,7 @@ public static partial class ClientDraw
 																	   //	lastDrawTime = _serverNow;
 
 				var gain = 1.0f - MathF.Exp(-4.0f * dt);
-				cameraCLag += (cameraC - cameraCLag) * gain;
+				cameraCLag += (AGame.cameraC - cameraCLag) * gain;
 				cameraZoomLag += (cameraZoom - cameraZoomLag) * gain;
 				//cameraLightC = (ShellPage.mousePositionC);
 				//                cameraZoomLag += (cameraZoom
@@ -1274,16 +1309,92 @@ public static partial class ClientDraw
 			}
 		}
 
-		//	static Vector2 _uv0;
-		//	static Vector2 _uv1;
-		private static void DrawFlag(int cid, SpriteAnim sprite, Vector2 offset)
+
+	static Dictionary<int, TextLayout> nameLayoutCache = new Dictionary<int, TextLayout>();
+	static public TextLayout GetTextLayout(string name, TextFormat format)
+	{
+		var hash = name.GetHashCode(StringComparison.Ordinal);
+		if(nameLayoutCache.TryGetValue(name.GetHashCode(StringComparison.Ordinal), out var rv))
+			return rv;
+		rv = new TextLayout(name, format);
+
+		if(nameLayoutCache.Count >= maxTextLayouts)
+			nameLayoutCache.Remove(nameLayoutCache.First().Key);
+		nameLayoutCache.Add(hash, rv);
+
+		return rv;
+
+	}
+
+
+
+
+
+
+
+	public static void DrawTextBox(string text, Vector2 at, TextFormat format, Color color, byte backgroundAlpha, int layer = Layer.tileText, float _expandX = 2.0f, float _expandY = 0, DepthFunction depth = null, float zBias = -1, float scale = 0)
+	{
+		DrawTextBox(text, at, format, color, backgroundAlpha == 0 ? new Color() : color.IsDark() ? new Color((byte)255, (byte)255, (byte)255, backgroundAlpha) : new Color((byte)(byte)0, (byte)0, (byte)0, backgroundAlpha), layer, _expandX, _expandY, depth, zBias, scale);
+	}
+	private static void DrawTextBox(string text, Vector2 at, TextFormat format, Color color, Color backgroundColor, int layer = Layer.tileText, float _expandX = 0.0f, float _expandY = 0, DepthFunction depth = null, float zBias = -1, float scale = 0)
+	{
+		if(IsSquareCulled(at, textBoxCullSlop))
+		{
+			return;
+		}
+		if(scale == 0)
+			scale = bmFontScale;
+		if(scale == 0)
+			return;
+
+		TextLayout textLayout = GetTextLayout(text, format);
+		if(zBias == -1)
+			zBias = zLabels;
+
+		var constantDepth = depth == null;
+
+		// shift everything, then ignore Z
+		if(constantDepth)
+		{
+			depth = ConstantDepth;
+			var atScale = at.Project(zBias);
+			at = atScale.c;
+			scale *= atScale.scale;
+			zBias = 0;
+		}
+		var span = textLayout.ScaledSpan(scale);
+		var expand = new Vector2(_expandX, _expandY);
+		if(backgroundColor.A > 0)
+		{
+			var c0 = at;
+			if(format.horizontalAlignment == TextFormat.HorizontalAlignment.center)
+				c0.X -= span.X * 0.5f;
+			if(format.horizontalAlignment == TextFormat.HorizontalAlignment.right)
+				c0.X -= span.X;
+			if(format.verticalAlignment == TextFormat.VerticalAlignment.center)
+				c0.Y -= span.Y * 0.5f;
+			if(format.verticalAlignment == TextFormat.VerticalAlignment.bottom)
+				c0.Y -= span.Y;
+			backgroundColor.A = (byte)(((int)backgroundColor.A * color.A) / 255);
+			FillRoundedRectangle(Layer.textBackground, c0 - expand, c0 + expand + span, backgroundColor, depth, zBias);
+		}
+		textLayout.Draw(at, scale, color, layer, zBias, depth);
+	}
+
+	private static void FillRoundedRectangle(int layer, Vector2 c0, Vector2 c1, Color background, DepthFunction depth, float z)
+	{
+		draw.AddQuad(layer, quadTexture, c0, c1, background, depth, z);/// c0.CToDepth(),(c1.X,c0.Y).CToDepth(), (c0.X,c1.Y).CToDepth(), c1.CToDepth() );
+	}
+	//	static Vector2 _uv0;
+	//	static Vector2 _uv1;
+	private static void DrawFlag(int cid, SpriteAnim sprite, Vector2 offset)
 		{
 			var wc = cid.CidToWorld();
 			if(IsCulledWC(wc))
 				return;
 
 			var c = wc.WorldToCamera() + offset;
-			var dv = AGame.shapeSizeGain * 48 * 4 * Settings.flagScale;
+			var dv = shapeSizeGain * 48 * 4 * Settings.flagScale;
 			float z = zLabels;
 
 			// hover flags
@@ -1359,8 +1470,8 @@ public static partial class ClientDraw
 		//      }
 
 		const float actionStopDistance = 48.0f;
-		private void DrawAction(float timeToArrival, float journeyTime, float rectSpan, Vector2 c0, Vector2 c1, Color color,
-		Material bitmap, bool applyStopDistance, Army? army, float alpha = 1, float lineThickness = lineThickness, bool highlight = false)
+		private static void DrawAction(float timeToArrival, float journeyTime, float rectSpan, Vector2 c0, Vector2 c1, Color color,
+		Material bitmap, bool applyStopDistance, Army? army, float alpha = 1, float lineThickness = GameClient.lineThickness, bool highlight = false)
 		{
 			if(IsSegmentCulled(c0, c1))
 				return;
@@ -1592,9 +1703,9 @@ public static partial class ClientDraw
 	const float viewHoverZGain = 1.0f / 64.0f;
 	const float viewHoverElevationKt = 24.0f;
 	public static List<(int cid, float z, float vz)> viewHovers = new List<(int cid, float z, float vz)>();
-	
 
-	protected override void Update(GameTime gameTime)
+
+	public static void Update(GameTime gameTime)
 	{
 
 		try
@@ -1810,7 +1921,7 @@ public static partial class ClientDraw
 		}
 	}
 
-	
+
 
 	//public static void SetCanvasVisibility(bool visible)
 	//{
@@ -1844,7 +1955,7 @@ public static partial class ClientDraw
 	//	//		.TransformPoint(new UWindows.Foundation.Point(0, 0)).ToVector2();
 	//	resolutionDirtyCounter = 10;
 	//}
-	
+
 
 	//class Disposer
 	//{
@@ -1876,8 +1987,17 @@ public static partial class ClientDraw
 	//	renderTarget = new CanvasRenderTarget(canvas, (float)(clientSpan.X), (float)(clientSpan.Y), canvas.Dpi, Windows.Graphics.DirectX.DirectXPixelFormat.B8G8R8A8UIntNormalized, CanvasAlphaMode.Premultiplied);
 
 	//}
+	protected override bool BeginDraw()
+	{
+		if(!AppS.isForeground)
+			return false;
+		if(!CnVServer.isInitialized)
+			return false;
+		if(faulted)
+			return false;
+		return base.BeginDraw();
+	}
 
-	
 }
 
 

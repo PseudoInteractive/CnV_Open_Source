@@ -9,11 +9,15 @@ using System.Threading.Tasks;
 namespace CnV;
 
 using System.Text.Json;
+using Windows.System;
 using static CnV.Game.Troops;
 using DiscordCnV;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Services;
+using Syncfusion.UI.Xaml.DataGrid;
+using Syncfusion.UI.Xaml.Grids.ScrollAxis;
+using static CnV.Spot;
 
 public static partial class CityUI
 {
@@ -29,6 +33,11 @@ public static partial class CityUI
 									ShellPage.instance.cityBox.SelectedItem = _build;
 								}
 							});
+	}
+
+	public static void Init()
+	{
+		World.worldFirstLoadedActions += CityUI.LoadFromPriorSession;
 	}
 
 	public static  void AddToFlyout(this City me, MenuFlyout flyout, bool useSelected = false)
@@ -193,7 +202,7 @@ public static partial class CityUI
 
 		}
 
-		aMisc.AddItem("Notify on Decay", ()=>DecayQuery(cid);
+//		aMisc.AddItem("Notify on Decay", ()=>DecayQuery(cid));
 		if (Raid.test)
 		{
 			aMisc.AddItem("Settle whenever water", (_, _) => Spot.TrySettle(City.build, cid, true));
@@ -201,11 +210,30 @@ public static partial class CityUI
 		}
 
 		aMisc.AddItem("Distance",       (_, _) => me.ShowDistanceTo());
-		aMisc.AddItem("Select",         (_, _) => me.SelectMe(true, App.keyModifiers));
+		aMisc.AddItem("Select",         (_, _) => me.SelectMe(true, AppS.keyModifiers));
 		aMisc.AddItem("Coords to Chat", () => Spot.CoordsToChat(cid));
 		flyout.RemoveEmpy();
 	}
-	public static void DecayQuery(SpotId cid)
+
+	public static async void CoordsToChat(int _cid)
+	{
+		var           targets = Spot.GetSelectedForContextMenu(_cid, false, onlyMine: false, onlyCities: false);
+		StringBuilder sb      = new();
+		var           first   = true;
+		foreach(var cid in targets)
+		{
+			if(first)
+				first = false;
+			else
+				sb.Append('\t');
+			sb.Append(cid.CidToCoords());
+		}
+		var str = sb.ToString();
+		AppS.CopyTextToClipboard(str);
+		ChatTab.PasteToChatInput(str);
+	}
+
+		public static void DecayQuery(SpotId cid)
 	{
 		JSClient.gStCB(cid, DecayQueryCB, AMath.random.Next());
 	}
@@ -249,34 +277,50 @@ public static partial class CityUI
 	}
 	async static void DecayQueryCB(JsonElement jso)
 	{
-		var type = jso.GetAsInt("type");
-		var _cid = jso.GetAsInt("cid");
-		Assert(cid == _cid);
-		if(type != 3 && type != -1) // 4 is empty, 3 is city or ruins, -1 means not open (for a continent)
-		{
-			AppS.DispatchOnUIThreadLow(() =>
-										{
-											var dialog = new ContentDialog()
-											{
-													Title             = "Spot has Changed",
-													Content           = cid.CidToString(),
-													PrimaryButtonText = "Okay"
-											};
-											//SettingsPage.BoostVolume();
-											ElementSoundPlayer.Play(ElementSoundKind.Invoke);
-											ToastNotificationsService.instance.SpotChanged($"{cid.CidToString()} has changed");
-											dialog.ShowAsync2();
-										});
-			City.ShowCity(cid, false);
-		}
-		else
-		{
-			//	Note.Show($"Query {cid.CidToStringMD()},type:{type}");
-			await Task.Delay(60 * 1000);
-			DecayQuery();
-		}
+		//var type = jso.GetAsInt("type");
+		//var _cid = jso.GetAsInt("cid");
+		//Assert(cid == _cid);
+		//if(type != 3 && type != -1) // 4 is empty, 3 is city or ruins, -1 means not open (for a continent)
+		//{
+		//	AppS.DispatchOnUIThreadLow(() =>
+		//								{
+		//									var dialog = new ContentDialog()
+		//									{
+		//											Title             = "Spot has Changed",
+		//											Content           = cid.CidToString(),
+		//											PrimaryButtonText = "Okay"
+		//									};
+		//									//SettingsPage.BoostVolume();
+		//									ElementSoundPlayer.Play(ElementSoundKind.Invoke);
+		//									ToastNotificationsService.instance.SpotChanged($"{cid.CidToString()} has changed");
+		//									dialog.ShowAsync2();
+		//								});
+		//	CityUI.ShowCity(cid, false);
+		//}
+		//else
+		//{
+		//	//	Note.Show($"Query {cid.CidToStringMD()},type:{type}");
+		//	await Task.Delay(60 * 1000);
+		//	DecayQuery();
+		//}
 	}
 
+	static bool loaded;
+
+	public static void LoadFromPriorSession()
+	{
+		if(!loaded)
+		{
+
+			loaded              = true;
+			Settings.pinned = Settings.pinned.ArrayRemoveDuplicates();
+
+			foreach(var m in Settings.pinned)
+			{
+				var spot = SpotTab.TouchSpot(m, VirtualKeyModifiers.None, false, true);
+			}
+		}
+	}
 	public static void ShowContextMenu(this City me,UIElement uie, Windows.Foundation.Point position)
 	{
 
@@ -346,7 +390,7 @@ public static partial class CityUI
 		}
 		else
 		{
-			City.ShowCity(cid, lazyMove, false, scrollIntoUI);
+			CityUI.ShowCity(cid, lazyMove, false, scrollIntoUI);
 			NavStack.Push(cid);
 		}
 		//Spot.GetOrAdd(cid).SelectMe(false,mod);
@@ -354,4 +398,338 @@ public static partial class CityUI
 
 
 	}
+
+	public static void SelectMe(this City me, bool showClick = false, VirtualKeyModifiers mod = VirtualKeyModifiers.Shift, bool scrollIntoView = true)
+	{
+		var cid = me.cid;
+		if(showClick || scrollIntoView)
+			NavStack.Push(cid);
+		SpotTab.AddToGrid(me, mod, true, scrollIntoView);
+		if(showClick)
+		{
+			CityUI.ShowCity(cid, true);
+		}
+	}
+	public static void SyncSelectionToUI(bool scrollIntoView, Spot focusSpot = null)
+	{
+		++SpotTab.silenceSelectionChanges;
+		try
+		{
+			foreach(var gridX in UserTab.dataGrids)
+			{
+
+				var grid = gridX.Key;
+
+				if(!gridX.Value?.isFocused == true)
+					continue;
+
+				if(grid.IsCityGrid())
+				{
+					var uiInSync = false;
+					var sel1 = grid.SelectedItems;
+					if(selected.Count == sel1.Count)
+					{
+						uiInSync = true;
+						foreach(var i in sel1)
+						{
+							if(!selected.Contains((i as City).cid))
+							{
+								uiInSync = false;
+								break;
+							}
+						}
+					}
+
+					if(!uiInSync)
+					{
+						selected.SyncList(sel1, (cid, spot) => cid == ((Spot)spot).cid,
+							(cid) => City.Get(cid));
+					}
+
+					if((scrollIntoView) && (sel1.Any() || focusSpot != null))
+					{
+						var current = focusSpot ?? (City.GetBuild().isSelected ? City.GetBuild() : null);
+						if(current != null)
+						{
+							grid.CurrentItem = current;
+						}
+
+						var any = current ?? sel1.First();
+						{
+							var rowIndex = grid.ResolveToRowIndex(any);
+							var columnIndex = grid.ResolveToStartColumnIndex();
+							if(rowIndex >= 0)
+								grid.ScrollInView(new RowColumnIndex(rowIndex, columnIndex));
+						}
+					}
+
+					if(AttackTab.IsVisible() && focusSpot != null)
+					{
+						try
+						{
+							if(AttackTab.attacks.Contains(focusSpot.cid)
+								 && !AttackTab.instance.attackGrid.SelectedItems.Contains(focusSpot))
+							{
+								AttackTab.instance.attackGrid.SelectedItem = focusSpot as City;
+								AttackTab.instance.attackGrid.ScrollIntoView(focusSpot, null);
+							}
+
+							if(AttackTab.targets.Contains(focusSpot.cid)
+								&& !AttackTab.instance.targetGrid.SelectedItems.Contains(focusSpot))
+							{
+								AttackTab.instance.targetGrid.SelectedItem = focusSpot as City;
+								AttackTab.instance.targetGrid.ScrollIntoView(focusSpot, null);
+							}
+						}
+						catch
+						{
+						}
+					}
+				}
+			}
+		}
+		catch(Exception ex)
+		{
+			LogEx(ex);
+		}
+		finally
+		{
+			--SpotTab.silenceSelectionChanges;
+		}
+
+	}
+	public static void CityRowClick(this City me,GridCellTappedEventArgs e)
+	{
+		var modifiers = AppS.keyModifiers;
+		var wantSelect = true;
+		switch(e.Column.MappingName)
+		{
+
+			case nameof(cityName):
+			case nameof(iconUri):
+			case nameof(remarks):
+				wantSelect = false;
+				DoClick();
+				break;
+			case nameof(bStage):
+				DoTheStuff();
+				break;
+			case nameof(tsHome):
+			case nameof(tsRaid):
+				if(City.CanVisit(cid))
+				{
+					Raiding.UpdateTS(true, true);
+				}
+				break;
+			case nameof(City.AutoWalls):
+				AutoWalls = !autoWalls;
+				wantSelect = false;
+
+				return;
+			case nameof(City.AutoTowers):
+				AutoTowers = !autoTowers;
+				wantSelect = false;
+				return;
+			case nameof(City.raidCarry):
+				if(City.CanVisit(cid))
+				{
+					Raiding.ReturnSlow(cid, true);
+				}
+				break;
+			case nameof(nameAndRemarks):
+				// first click selects
+				// second acts as coord click
+				if(IsSelected(cid))
+				{
+					ProcessCoordClick(cid, false, modifiers, false);
+					wantSelect = false;
+				}
+
+
+				break;
+			case nameof(xy):
+				ProcessCoordClick(cid, false, modifiers, false);
+				wantSelect = false;
+				break;
+			case nameof(icon):
+				DoClick();
+				wantSelect = false;
+				break;
+			case nameof(City.dungeonsToggle):
+				{
+					ShowDungeons();
+					wantSelect = false;
+					break;
+				}
+			case nameof(City.tsTotal):
+				if(City.CanVisit(cid))
+				{
+					Raiding.UpdateTS(true, true);
+				}
+
+				break;
+			case nameof(City.raidReturn):
+				if(City.CanVisit(cid))
+				{
+					Raiding.ReturnFast(cid, true);
+				}
+				break;
+			case nameof(pinned):
+				{
+					var newSetting = !pinned;
+
+					SetPinned(newSetting);
+					wantSelect = false;
+				}
+				return;
+
+		}
+		if(wantSelect)
+			SetFocus(false, true, true, false);
+		NavStack.Push(cid);
+
+	}
+	public static bool OnKeyDown(object _spot, VirtualKey key)
+	{
+		var spot = _spot as Spot;
+		switch(key)
+		{
+			case VirtualKey.Enter:
+				spot.SetFocus(false);
+				return true;
+				break;
+			case VirtualKey.Space:
+			{
+				if(spot.canVisit)
+					spot.ShowDungeons();
+				else
+					spot.SetFocus(false);
+				return true;
+			}
+
+			default:
+				break;
+		}
+		return false;
+	}
+
+	public static Task DoTheStuff(this City me)
+	{
+
+		return AppS.DispatchOnUIThreadExclusive(me.cid, async () =>
+													{
+														await CnV.DoTheStuff.Go(me, true, true);
+													});
+
+	}
+	public static async void InfoClick(int _intialCid)
+	{
+		var cids = MainPage.GetContextCids(_intialCid);
+		foreach(var cid in cids)
+		{
+			var _cid = cid;
+			await ShareString.Show(_cid);
+			{
+				break;
+			}
+		}
+	}
+	public static void DefendMe(this Spot me)
+	{
+		var cids = GetSelectedForContextMenu(me.cid, false);
+
+		NearDefenseTab.defendants.Set(cids.Select(a => City.Get(a)), true);
+
+		var tab = NearDefenseTab.instance;
+		tab.ShowOrAdd(true);
+		tab.refresh.Go();
+	}
+
+
+	public static void ShowNearRes(this City me)
+	{
+		var tab = NearRes.instance;
+		tab.target = me;
+		if(!tab.isOpen)
+		{
+			tab.ShowOrAdd(true);
+		}
+		else
+		{
+			if(!tab.isFocused)
+				TabPage.Show(tab);
+			else
+				tab.refresh.Go();
+		}
+	}
+	public static async void ShowIncoming(this City me)
+	{
+		// Todo:  use IsAlly?
+		if(Alliance.IsAlly(me.allianceId) )
+		{
+			var tab = IncomingTab.instance;
+			AppS.DispatchOnUIThread(() => tab.Show());
+			for(; ; )
+			{
+				await Task.Delay(1000);
+				if(tab.defenderGrid.ItemsSource != null)
+					break;
+			}
+			AppS.DispatchOnUIThreadIdle(() =>
+										{
+											tab.defenderGrid.SelectedItem = (this);
+											tab.defenderGrid.ScrollItemIntoView(this);
+										});
+
+		}
+		else
+		{
+			var tab = OutgoingTab.instance;
+			AppS.DispatchOnUIThread(() => tab.Show());
+			for(; ; )
+			{
+				await Task.Delay(1000);
+				if(tab.attackerGrid.ItemsSource != null)
+					break;
+			}
+			AppS.DispatchOnUIThreadIdle(() =>
+										{
+											tab.attackerGrid.SelectedItem = (this);
+											tab.attackerGrid.ScrollItemIntoView(this);
+										});
+		}
+	}
+
+
+
+	public static async void DiscordClaim()
+	{
+		if(!DGame.isValidForIncomingNotes)
+		{
+			Log("Invalid");
+			return;
+		}
+		try
+		{
+			Note.Show($"Registering claim on {xy}");
+			var client = JSClient.genericClient;
+
+
+			var message = new DGame.Message() { username = "Cord Claim", content = $"{xy} claimed by {Player.myName}", avatar_url = "" };
+
+			//var content =  JsonContent.Create(message);
+			//, JSON.jsonSerializerOptions), Encoding.UTF8,
+			//	   "application/json");
+
+			var result = await client.PostAsJsonAsync(DGame.discordHook, message);
+			result.EnsureSuccessStatusCode();
+		}
+		catch(Exception ex)
+		{
+			LogEx(ex);
+		}
+
+
+	}
+
 }

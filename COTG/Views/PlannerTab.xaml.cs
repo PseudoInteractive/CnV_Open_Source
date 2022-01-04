@@ -414,7 +414,7 @@ namespace CnV.Views
 
 				}
 			}
-			PlannerTab.BuildingsChanged(city,true);
+			CityBuild.BuildingsChanged(city,true);
 			// SaveLayout();
 		}
 
@@ -426,7 +426,7 @@ namespace CnV.Views
 			//await CityBuild._IsPlanner(true);
 			var city = GetBuild();
 			city.FlipLayoutH(true,AppS.IsKeyPressedControl());
-		//	PlannerTab.BuildingsChanged(city,true);
+		//	CityBuild.BuildingsChanged(city,true);
 		}
 		private async void FlipVClick(object sender, RoutedEventArgs e)
 		{
@@ -436,7 +436,7 @@ namespace CnV.Views
 			//await CityBuild._IsPlanner(true);
 			var city = GetBuild();
 			city.FlipLayoutV(true,AppS.IsKeyPressedControl());
-			//PlannerTab.BuildingsChanged(city,true);
+			//CityBuild.BuildingsChanged(city,true);
 		}
 
 		struct AllowedToMove

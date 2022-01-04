@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using static CnV.CnVServer;
 using static CnV.Game.Troops;
 using static CnV.City;
+using static CnV.ClientView;
 
 namespace CnV
 {
@@ -103,15 +104,15 @@ namespace CnV
 					bonusesUpdated = true;
 
 				}
-				if(jse.TryGetProperty("tcps", out var tcps))
-				{
-					TradeSettings.all = JsonSerializer.Deserialize<TradeSettings[]>(tcps.ToString(), JSON.jsonSerializerOptions);
+				//if(jse.TryGetProperty("tcps", out var tcps))
+				//{
+				//	TradeSettings.all = JsonSerializer.Deserialize<TradeSettings[]>(tcps.ToString(), JSON.jsonSerializerOptions);
 
-					AppS.DispatchOnUIThreadIdle(() =>
-					{
-						ResSettings.tradeSettingsItemsSource = TradeSettings.all;
-					});
-				}
+				//	AppS.DispatchOnUIThreadIdle(() =>
+				//	{
+				//		ResSettings.tradeSettingsItemsSource = TradeSettings.all;
+				//	});
+				//}
 
 				if(jse.TryGetProperty("wmo", out var wo))
 				{
@@ -472,7 +473,7 @@ namespace CnV
 					// Is it locked?
 					if(!Spot.CanChangeCity(cid))
 					{
-						ShellPage.EnsureNotCityView();
+						ClientView.EnsureNotCityView();
 						Note.Show("Please wait for current operation to complete");
 						return false;
 					}
@@ -564,7 +565,7 @@ namespace CnV
 						cid.BringCidIntoWorldView(lazyMove);
 				}
 				else
-					ShowCity(cid, lazyMove, scrollIntoUI);
+					CityUI.ShowCity(cid, lazyMove, scrollIntoUI);
 
 			}
 			return true;
@@ -595,7 +596,7 @@ namespace CnV
 									var token = jso.GetString("token");
 									var raidSecret = jso.GetString("raid");
 									var agent = jso.GetString("agent");
-									cotgS = jso.GetString("s");
+									//cotgS = jso.GetString("s");
 									//  var cookie = jso.GetString("cookie");
 									//   Log(jsVars.cookie);
 									Log(token);
@@ -694,7 +695,7 @@ namespace CnV
 
 
 
-									World.RunWhenLoaded(() => AppS.DispatchOnUIThreadIdle(Spot.UpdateFocusText));
+									World.RunWhenLoaded(() => AppS.DispatchOnUIThreadIdle(CityUI.UpdateFocusText));
 
 
 									BuildQueue.Initialize();
@@ -741,7 +742,7 @@ namespace CnV
 								{
 									var jso = jsp.Value;
 									var cid = jso.GetAsInt();
-									Spot.ProcessCoordClick(cid, false, App.keyModifiers, true); // then normal click
+									Spot.ProcessCoordClick(cid, false, AppS.keyModifiers, true); // then normal click
 																								//AppS.DispatchOnUIThreadLow(async () =>
 																								//{
 																								// try
@@ -1187,18 +1188,18 @@ namespace CnV
 										switch(vm)
 										{
 											case ViewMode.city:
-												AGame.cameraZoom = AGame.cityZoomDefault;
+												View.cameraZoom = View.cityZoomDefault;
 												break;
 											case ViewMode.region:
-												AGame.cameraZoom = AGame.cameraZoomRegionDefault;
+												View.cameraZoom = View.cameraZoomRegionDefault;
 												break;
 											case ViewMode.world:
-												AGame.cameraZoom = AGame.cameraZoomWorldDefault;
+												View.cameraZoom = View.cameraZoomWorldDefault;
 
 												break;
 										}
 										Spot.build.BringCidIntoWorldView(false);
-										ShellPage.AutoSwitchViewMode();
+										ClientView.AutoSwitchViewMode();
 									}
 
 									//   ShellPage.SetViewMode((ShellPage.ViewMode)jso.GetInt("v"));

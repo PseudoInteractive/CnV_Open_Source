@@ -86,7 +86,7 @@ namespace CnV.Views
 			{
 				theme = (Theme)value;
 				ShellPage.RefreshAndReloadWorldData();
-				Draw.CityView.LoadTheme();
+				CityView.LoadTheme();
 				Note.Show("City theme will not completly update until you restart the app");
 			}
 		}

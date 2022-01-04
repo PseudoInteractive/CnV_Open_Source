@@ -172,28 +172,45 @@
     <Compile Include="Activation\SchemeActivationHandler.cs" />
     <Compile Include="Activation\ShareTargetActivationHandler.cs" />
     <Compile Include="Activation\WebToAppLinkActivationHandler.cs" />
+    <Compile Include="Audio\Audio.cs" />
     <Compile Include="Bookmarks.cs" />
+    <Compile Include="City\CityBuildClient.cs" />
+    <Compile Include="City\CityCommands.cs" />
+    <Compile Include="City\CityFocus.cs" />
+    <Compile Include="City\CitySelection.cs" />
+    <Compile Include="City\ResourceSource.cs" />
     <Compile Include="ClientUIHelpers\KeyboardFocus.cs" />
     <Compile Include="ClientUIHelpers\NavStack.cs" />
     <Compile Include="ClientOS\SettingsStorageExtensions.cs" />
     <Compile Include="ClientOS\WindowHelper.cs" />
     <Compile Include="ClientUI\CitySettingsUI.cs" />
     <Compile Include="ClientUI\OnTap.cs" />
+    <Compile Include="ClientUI\TradeSettingsUI.cs" />
     <Compile Include="CnVChatClient\CnVChatClient.cs" />
     <Compile Include="Converters\CityConverters.cs" />
     <Compile Include="Converters\DateTimeFormatConverter.cs" />
     <Compile Include="Converters\IntConverter.cs" />
     <Compile Include="Converters\StringConverter.cs" />
+    <Compile Include="Draw\CanvasHelpers.cs" />
+    <Compile Include="Draw\CityView.cs" />
+    <Compile Include="Draw\ClientView.cs" />
     <Compile Include="Draw\DrawRegion.cs" />
+    <Compile Include="Draw\SpriteAnim.cs" />
+    <Compile Include="Draw\SpriteBatch.cs" />
+    <Compile Include="Draw\SpriteBatcher.cs" />
+    <Compile Include="Draw\SpriteBatchItem.cs" />
+    <Compile Include="Draw\TextFormat.cs" />
+    <Compile Include="Draw\TextLayout.cs" />
     <Compile Include="Game\BlessedCity.cs" />
     <Compile Include="Game\CityClient.cs" />
     <Compile Include="Game\CityCustom.cs" />
     <Compile Include="Game\CnVClient.cs" />
+    <Compile Include="Game\GameClient.cs" />
     <Compile Include="Game\GameSetup.cs" />
     <Compile Include="Game\Overview.cs" />
     <Compile Include="Game\PlayerPresence.cs" />
     <Compile Include="Game\Supporter.cs" />
-    <Compile Include="Game\World.cs" />
+    <Compile Include="Game\WorldUI.cs" />
     <Compile Include="GlobalSuppressions2.cs" />
     <Compile Include="GlobalUsing.cs" />
     <Compile Include="JSON\Errors.cs" />
@@ -276,7 +293,7 @@
     <Compile Include="Views\CityControl.xaml.cs">
       <DependentUpon>CityControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\CityUI.cs" />
+    <Compile Include="City\CityUI.cs" />
     <Compile Include="Views\ContinentTagFilter.xaml.cs">
       <DependentUpon>ContinentTagFilter.xaml</DependentUpon>
     </Compile>
@@ -727,14 +744,14 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <Optimize>False</Optimize>
     <WarningLevel>4</WarningLevel>
-    <DefineConstants>CNV</DefineConstants>
+    <DefineConstants>CNV;CNVCLIENT</DefineConstants>
     <Deterministic>True</Deterministic>
     <FileAlignment>4096</FileAlignment>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <Optimize>True</Optimize>
     <WarningLevel>4</WarningLevel>
-    <DefineConstants>CNV</DefineConstants>
+    <DefineConstants>CNV;CNVCLIENT</DefineConstants>
     <Deterministic>True</Deterministic>
     <FileAlignment>4096</FileAlignment>
   </PropertyGroup>

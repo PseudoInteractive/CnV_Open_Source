@@ -473,7 +473,7 @@ namespace CnV.Views
 					// todo: handle differently for city view
 
 					case Windows.System.VirtualKey.Space:
-						Spot.ProcessCoordClick(Spot.focus, false, App.keyModifiers, true);
+						Spot.ProcessCoordClick(Spot.focus, false, AppS.keyModifiers, true);
 						break;
 
 					case Windows.System.VirtualKey.Left:
