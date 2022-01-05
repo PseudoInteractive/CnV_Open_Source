@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace CnV;
 using static CnV.CitySettings;
-public class TradeSettingsUI
+public partial class CityUI
 {
 	public static async Task SetTradeSettings(int _cid, int? sourceHub = null, ResourceFilter reqFilter = default, int? targetHub = null, ResourceFilter targetFilter = default, bool autoFind = false)
 	{

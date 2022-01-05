@@ -886,7 +886,7 @@ namespace CnV.Views
 
 		public static void Canvas_PointerPressedJS(int x, int y, Windows.UI.Input.PointerUpdateKind kind)
 		{
-			App.UpdateKeyStates();
+			AppS.UpdateKeyStates();
 			//e.KeyModifiers.UpdateKeyModifiers();
 
 		//	Assert(isOverPopup == false);

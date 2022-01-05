@@ -314,7 +314,7 @@ namespace CnV.Views
 
 		private async void SendClick(object sender, RoutedEventArgs e)
 		{
-			App.UpdateKeyStates();
+			AppS.UpdateKeyStates();
 
 			var text = sender as FrameworkElement;
 			var s = text.DataContext as ResSource;

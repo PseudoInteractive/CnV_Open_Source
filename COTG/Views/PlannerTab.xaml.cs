@@ -421,7 +421,7 @@ namespace CnV.Views
 
 		private async void FlipHClick(object sender, RoutedEventArgs e)
 		{
-			App.UpdateKeyStates();
+			AppS.UpdateKeyStates();
 			Assert(CityBuildUI.isPlanner);
 			//await CityBuild._IsPlanner(true);
 			var city = GetBuild();
@@ -430,7 +430,7 @@ namespace CnV.Views
 		}
 		private async void FlipVClick(object sender, RoutedEventArgs e)
 		{
-			App.UpdateKeyStates();
+			AppS.UpdateKeyStates();
 
 			Assert(CityBuildUI.isPlanner);
 			//await CityBuild._IsPlanner(true);

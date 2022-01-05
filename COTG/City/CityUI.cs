@@ -1,4 +1,5 @@
 ﻿global using SpotId = System.Int32;
+global using CityId = System.Int32; // same
 
 using System;
 using System.Collections.Generic;
@@ -8,6 +9,7 @@ using System.Threading.Tasks;
 
 namespace CnV;
 
+using System.Net.Http.Json;
 using System.Text.Json;
 using Windows.System;
 using static CnV.Game.Troops;
@@ -78,19 +80,19 @@ public static partial class CityUI
 				if (count > 1)
 				{
 					aRaid.AddItem($"End Raids x{count} selected", MainPage.ReturnSlowClick, cid);
-					aRaid.AddItem($"Return At...x{count}",        me.ReturnAtBatch);
+					aRaid.AddItem($"Return At...x{count}",        ()=> ReturnAtBatch(cid) );
 
 				}
 				else
 				{
 
 					aRaid.AddItem("End Raids",    me.ReturnSlowClick);
-					aRaid.AddItem("Return At...", me.ReturnAt);
+					aRaid.AddItem("Return At...", ReturnAt);
 				}
 
 
-				aSetup.AddItem("Setup...",    (_, _) => Spot.InfoClick(cid));
-				aSetup.AddItem("Find Hub",    (_, _) => CitySettings.SetClosestHub(cid));
+				aSetup.AddItem("Setup...",    (_, _) => CityUI.InfoClick(cid));
+				aSetup.AddItem("Find Hub",    (_, _) => CityUI.SetClosestHub(cid));
 				aSetup.AddItem("Set Recruit", (_, _) => CitySettings.SetRecruitFromTag(cid));
 				aSetup.AddItem("Change...",   (_, _) => ShareString.Show(cid, default));
 				aSetup.AddItem("Move Stuff",  (_, _) => me.MoveStuffLocked());
@@ -164,8 +166,8 @@ public static partial class CityUI
 			}
 			//if (cid != City.build)
 			{
-				aSetup.AddItem("Set target hub", (_, _) => CitySettings.SetTargetHub(City.build, cid));
-				aSetup.AddItem("Set source hub", (_, _) => CitySettings.SetSourceHub(City.build, cid));
+				aSetup.AddItem("Set target hub", (_, _) => CityUI.SetTargetHub(City.build, cid));
+				aSetup.AddItem("Set source hub", (_, _) => CityUI.SetSourceHub(City.build, cid));
 				//if(Player.myName == "Avatar")
 				//    AApp.AddItem(flyout, "Set target hub I", (_, _) => CitySettings.SetOtherHubSettings(City.build, cid));
 			}
@@ -198,7 +200,7 @@ public static partial class CityUI
 		}
 		else if (me.isEmpty && DGame.isValidForIncomingNotes)
 		{
-			AApp.AddItem(flyout, "Claim", me.DiscordClaim);
+			AApp.AddItem(flyout, "Claim", (_,_)=> CityUI.DiscordClaim(cid) );
 
 		}
 
@@ -702,7 +704,7 @@ public static partial class CityUI
 
 
 
-	public static async void DiscordClaim()
+	public static async void DiscordClaim(SpotId cid)
 	{
 		if(!DGame.isValidForIncomingNotes)
 		{
@@ -711,11 +713,11 @@ public static partial class CityUI
 		}
 		try
 		{
-			Note.Show($"Registering claim on {xy}");
+			Note.Show($"Registering claim on {cid.CidToCoords()}");
 			var client = JSClient.genericClient;
 
 
-			var message = new DGame.Message() { username = "Cord Claim", content = $"{xy} claimed by {Player.myName}", avatar_url = "" };
+			var message = new DGame.Message() { username = "Cord Claim", content = $"{cid.CidToCoords()} claimed by {Player.myName}", avatar_url = "" };
 
 			//var content =  JsonContent.Create(message);
 			//, JSON.jsonSerializerOptions), Encoding.UTF8,

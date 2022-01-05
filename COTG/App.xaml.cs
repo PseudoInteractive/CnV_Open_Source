@@ -312,7 +312,7 @@ namespace CnV
 
 		public static void OnKeyUp(VirtualKey key)
 		{
-			App.UpdateKeyStates();
+			AppS.UpdateKeyStates();
 			//Trace("KeyUp" + key);
 			switch (key)
 			{

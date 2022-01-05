@@ -404,7 +404,7 @@ namespace CnV.Views
 		public static bool DoKeyDown(VirtualKey key)
 		{
 		//	Log($"DoKeyDown {key}");
-			App.UpdateKeyStates();
+			AppS.UpdateKeyStates();
 			if(AppS.IsKeyPressedShiftOrControl())
 				return false;
 			if(!buildKeys.Contains(key))
@@ -418,7 +418,7 @@ namespace CnV.Views
 				return false;
 			}
 			// don't process if chat has focus
-			App.UpdateKeyStates();
+			AppS.UpdateKeyStates();
 
 			hotKeyDown.Go(key);
 			return true;
@@ -442,7 +442,7 @@ namespace CnV.Views
 		{
 //			Log("SomeKeyDown " + key);
 
-			App.UpdateKeyStates();
+			AppS.UpdateKeyStates();
 
 
 

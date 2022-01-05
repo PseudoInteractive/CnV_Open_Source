@@ -699,7 +699,7 @@ namespace CnV.Views
 		public static async Task AddAttacksFromString(string text,bool updateExisting)
 		{
 			using var __lock = await instance.TouchLists();
-			App.UpdateKeyStates();
+			AppS.UpdateKeyStates();
 
 			try
 			{

@@ -22,6 +22,7 @@ public static partial class CityUI
 
 		//if (!IsBuild(cid))
 		{
+			var cid = me.cid;
 			await AppS.DispatchOnUIThreadExclusive(cid, async () =>
 			{
 
@@ -98,7 +99,7 @@ public static partial class CityUI
 
 		}
 	}
-	public static async void ReturnAtBatch(object sender, RoutedEventArgs e)
+	public static async void ReturnAtBatch(SpotId cid)
 	{
 		(var at, var okay) = await Views.DateTimePicker.ShowAsync("Return By:");
 		if(!okay)

@@ -13,11 +13,11 @@ namespace CnV
 			switch(column)
 			{
 				case "city":
-				case nameof(Army.sXY): Spot.ProcessCoordClick(me.sourceCid, false, AppS.keyModifiers, false); return true;
+				case nameof(Army.sXY): CityUI.ProcessCoordClick(me.sourceCid, false, AppS.keyModifiers, false); return true;
 
-				case nameof(Army.sPlayer): CnVClient.ShowPlayer(me.sPlayer); return true;
+				case nameof(Army.sPlayer): CnVServer.ShowPlayer(me.sPlayer); return true;
 
-				case nameof(Army.tPlayer): CnVClient.ShowPlayer(me.tPlayer); return true;
+				case nameof(Army.tPlayer): CnVServer.ShowPlayer(me.tPlayer); return true;
 
 				case "Troops":
 				case "Total Def":

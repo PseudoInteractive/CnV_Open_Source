@@ -121,7 +121,7 @@ namespace CnV.Game
 				var city = senderCid.AsCity();
 				var target = targetCid.AsCity();
 				var sendType = useShips ? 2 : 1;
-				App.UpdateKeyStates();
+				AppS.UpdateKeyStates();
 				var pid = World.CidToPlayerOrMe(senderCid);
 
 				var secret = $"JJx452Tdd{pid}sRAssa";

@@ -383,9 +383,6 @@
     </Compile>
     <Compile Include="Views\UpdateHtmlOffsets.cs" />
     <Compile Include="Views\UserTab.cs" />
-    <Compile Include="Views\WebViewPage.xaml.cs">
-      <DependentUpon>WebViewPage.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Views\WhatsNewDialog.xaml.cs">
       <DependentUpon>WhatsNewDialog.xaml</DependentUpon>
     </Compile>
@@ -567,10 +564,6 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\WebViewPage.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
     <Page Include="Views\WhatsNewDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -678,6 +671,7 @@
     <None Remove="Views\DefendTab.xaml" />
     <None Remove="Views\ReinforcementsTab.xaml" />
     <None Remove="Views\Signin.xaml" />
+    <None Remove="Views\WebViewPage.xaml" />
     <None Remove="Wiki\fixes.md" />
     <None Remove="Win32Native.txt" />
   </ItemGroup>
@@ -763,6 +757,9 @@
   <ItemGroup>
     <Folder Include="Base\" />
     <Folder Include="Themes\" />
+  </ItemGroup>
+  <ItemGroup Label="shared">
+    <Compile Include="..\..\CnVShared\**\*.cs"></Compile>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\CnVShared\CnVShared.csproj" />
