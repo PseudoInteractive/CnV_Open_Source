@@ -36,7 +36,7 @@ namespace CnV.Views
 		}
 		public static async void Go()
 		{
-			SettingsPage.HideMe();
+			Settings.HideMe();
 			{
 				if (!await ContinentTagFilter.Show())
 					return;
@@ -54,15 +54,15 @@ namespace CnV.Views
 			   var rv = await instance.ShowAsync2();
 			   if (rv != ContentDialogResult.Primary)
 				   return;
-			   var offence = SettingsPage.exportOffence;
-			   var water = SettingsPage.exportWater;
-			   var castles = SettingsPage.exportCastles;
-			   var onlyTemples = SettingsPage.onlyTemples;
-			   var headers = SettingsPage.exportHeaders;
-				var exportPlayer = Player.FromNameOrNull(SettingsPage.exportPlayer);
-				var exportAlliance = Alliance.NameToId(SettingsPage.exportAlliance);
-			   var who = SettingsPage.exportWho;
-			   var score = SettingsPage.exportScore;
+			   var offence = Settings.exportOffence;
+			   var water = Settings.exportWater;
+			   var castles = Settings.exportCastles;
+			   var onlyTemples = Settings.onlyTemples;
+			   var headers = Settings.exportHeaders;
+				var exportPlayer = Player.FromNameOrNull(Settings.exportPlayer);
+				var exportAlliance = Alliance.NameToId(Settings.exportAlliance);
+			   var who = Settings.exportWho;
+			   var score = Settings.exportScore;
 			   ShellPage.WorkStart("Exporting");
 			  await Task.Run(async () => {
 				   List<int> alliances = new();
@@ -157,7 +157,7 @@ namespace CnV.Views
 							  if ((counter % 10) == 0)
 							  {
 								  AppS.DispatchOnUIThreadLow(() => ShellPage.WorkUpdate($"Exporting .. {Alliance.all[alliance].name}, {p.name}, {counter}"));
-								  if (App.IsEscDown())
+								  if (AppS.IsEscDown())
 								  {
 									  Note.Show("Aborted");
 									  break;

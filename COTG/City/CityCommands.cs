@@ -10,11 +10,71 @@ using System.Text.Json;
 using Microsoft.UI.Xaml;
 
 namespace CnV;
+using static CnV.View;
 
 
 public static partial class CityUI
 {
-	public static async Task ShowReturnAt(this City me,bool wantDialog)
+	
+	public static async void ReturnAtBatch(SpotId cid)
+	{
+		(var at, var okay) = await Views.DateTimePicker.ShowAsync("Return By:");
+		if(!okay)
+			return; // aborted
+		using var work = new WorkScope("Return At..");
+
+		var cids = Spot.GetSelectedForContextMenu(cid);
+		foreach(var _cid in cids)
+		{
+			var __cid = _cid;
+			await Raiding.ReturnAt(__cid, at);
+		}
+		Note.Show($"End {cids.Count} raids at {at.Format()} ");
+
+	}
+	
+	public static async void ShowCity(int cityId, bool lazyMove, bool select = true, bool scrollToInUI = true)
+	{
+		try
+		{
+			//				ShellPage.SetViewModeWorld();
+
+			// if (City.IsMine(cityId))
+			{
+				CityUI.SetFocus(cityId, scrollToInUI, select, true, lazyMove);
+			}
+
+			// if (JSClient.IsWorldView())
+			//	cityId.BringCidIntoWorldView(lazyMove, false);
+
+			CnVServer.FetchCity(cityId);
+			//             if( City.IsMine(cityId)  )
+			//                 Raiding.UpdateTSHome();
+
+
+
+		}
+		catch(Exception e)
+		{
+			LogEx(e);
+		}
+
+
+	}
+
+}
+/// <summary>
+/// These operations use the City class the Client project, which works with shared source projects.
+/// As opposed to class libraries, as City is a shared Type.
+/// </summary>
+
+public partial class City
+{
+	public void ReturnAt(object sender, RoutedEventArgs e)
+	{
+		ShowReturnAt(true);
+	}
+	public async Task ShowReturnAt( bool wantDialog)
 	{
 
 
@@ -22,7 +82,7 @@ public static partial class CityUI
 
 		//if (!IsBuild(cid))
 		{
-			var cid = me.cid;
+			var cid = this.cid;
 			await AppS.DispatchOnUIThreadExclusive(cid, async () =>
 			{
 
@@ -99,53 +159,4 @@ public static partial class CityUI
 
 		}
 	}
-	public static async void ReturnAtBatch(SpotId cid)
-	{
-		(var at, var okay) = await Views.DateTimePicker.ShowAsync("Return By:");
-		if(!okay)
-			return; // aborted
-		using var work = new WorkScope("Return At..");
-
-		var cids = Spot.GetSelectedForContextMenu(cid);
-		foreach(var _cid in cids)
-		{
-			var __cid = _cid;
-			await Raiding.ReturnAt(__cid, at);
-		}
-		Note.Show($"End {cids.Count} raids at {at.Format()} ");
-
-	}
-	public static void ReturnAt(object sender, RoutedEventArgs e)
-	{
-		ShowReturnAt(true);
-	}
-	public static async void ShowCity(int cityId, bool lazyMove, bool select = true, bool scrollToInUI = true)
-	{
-		try
-		{
-			//				ShellPage.SetViewModeWorld();
-
-			// if (City.IsMine(cityId))
-			{
-				Spot.SetFocus(cityId, scrollToInUI, select, true, lazyMove);
-			}
-
-			// if (JSClient.IsWorldView())
-			//	cityId.BringCidIntoWorldView(lazyMove, false);
-
-			CnVServer.FetchCity(cityId);
-			//             if( City.IsMine(cityId)  )
-			//                 Raiding.UpdateTSHome();
-
-
-
-		}
-		catch(Exception e)
-		{
-			LogEx(e);
-		}
-
-
-	}
-
 }

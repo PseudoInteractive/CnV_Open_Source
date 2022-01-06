@@ -6,7 +6,7 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:game="using:CnV.Game"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-      xmlns:cotg="using:CnV"
+      xmlns:cnv="using:CnV"
 	xmlns:winui="using:Microsoft.UI.Xaml.Controls"
       xmlns:tk="using:CommunityToolkit.WinUI.UI.Controls"
 	xmlns:views="using:CnV.Views"
@@ -31,24 +31,24 @@
 
 			<Border Style="{StaticResource BorderReveal}">
 				<StackPanel Orientation="Vertical">
-						<ToggleSwitch Margin="4,4,4,4" Header="Resources to Send" OnContent="Ratio" OffContent="Absolute" IsOn="{x:Bind views:SettingsPage.nearResAsRatio}"
+						<ToggleSwitch Margin="4,4,4,4" Header="Resources to Send" OnContent="Ratio" OffContent="Absolute" IsOn="{x:Bind cnv:Settings.nearResAsRatio}"
 									  FontSize="{StaticResource LargeFontSize}" ToolTipService.ToolTip="Ratio means send as much res as possible in given ratio of wood, stone, iron and food, absolute means limit the total sent to a fixed amount" />
 
 					<tk:WrapPanel Orientation="Horizontal" HorizontalAlignment="Stretch" >
 
-						<winui:NumberBox Value="{x:Bind views:SettingsPage.nearResSend.wood,Mode=TwoWay}" Style="{StaticResource RightAlignNumberBox}"
+						<winui:NumberBox Value="{x:Bind cnv:Settings.nearResSend.wood,Mode=TwoWay}" Style="{StaticResource RightAlignNumberBox}"
 							ValidationMode="InvalidInputOverwritten"
                           ValueChanged="NumberBox_ValueChanged" AcceptsExpression="True"
                           Header="Wood"  Margin="6,0,6,0" LargeChange="1000000" SmallChange="100000"  />
-						<winui:NumberBox Value="{x:Bind views:SettingsPage.nearResSend.stone,Mode=TwoWay}" Style="{StaticResource RightAlignNumberBox}"
+						<winui:NumberBox Value="{x:Bind cnv:Settings.nearResSend.stone,Mode=TwoWay}" Style="{StaticResource RightAlignNumberBox}"
                           ValidationMode="InvalidInputOverwritten"
 						  ValueChanged="NumberBox_ValueChanged"
                           Header="Stone"  Margin="6,0,6,0" LargeChange="1000000" AcceptsExpression="True" SmallChange="100000"  />
-						<winui:NumberBox Value="{x:Bind views:SettingsPage.nearResSend.iron,Mode=TwoWay}" Style="{StaticResource RightAlignNumberBox}"
+						<winui:NumberBox Value="{x:Bind cnv:Settings.nearResSend.iron,Mode=TwoWay}" Style="{StaticResource RightAlignNumberBox}"
 							ValidationMode="InvalidInputOverwritten"
 									  ValueChanged="NumberBox_ValueChanged"
                           Header="Iron"  Margin="6,0,6,0"  LargeChange="1000000" AcceptsExpression="True" SmallChange="100000" />
-						<winui:NumberBox Value="{x:Bind views:SettingsPage.nearResSend.food,Mode=TwoWay}" Style="{StaticResource RightAlignNumberBox}"
+						<winui:NumberBox Value="{x:Bind cnv:Settings.nearResSend.food,Mode=TwoWay}" Style="{StaticResource RightAlignNumberBox}"
                           ValidationMode="InvalidInputOverwritten"
 							  ValueChanged="NumberBox_ValueChanged"
                           Header="Food"  Margin="6,0,6,0"  LargeChange="1000000" AcceptsExpression="True" SmallChange="100000"  />
@@ -60,32 +60,32 @@
 				<TextBlock Text="Reserve" />
 				<tk:WrapPanel Orientation="Horizontal" HorizontalAlignment="Stretch" >
 
-						<winui:NumberBox Value="{x:Bind views:SettingsPage.nearResReserve.wood,Mode=TwoWay}" Style="{StaticResource RightAlignNumberBox}"
+						<winui:NumberBox Value="{x:Bind cnv:Settings.nearResReserve.wood,Mode=TwoWay}" Style="{StaticResource RightAlignNumberBox}"
 							ValidationMode="InvalidInputOverwritten"
                           ValueChanged="NumberBox_ValueChanged" AcceptsExpression="True"
 									 ToolTipService.ToolTip="Cities will leave at least this wood much at home"
                           Header="Wood"  Margin="6,0,6,0" LargeChange="2000000" SmallChange="500000" />
-						<winui:NumberBox Value="{x:Bind views:SettingsPage.nearResReserve.stone,Mode=TwoWay}" Style="{StaticResource RightAlignNumberBox}"
+						<winui:NumberBox Value="{x:Bind cnv:Settings.nearResReserve.stone,Mode=TwoWay}" Style="{StaticResource RightAlignNumberBox}"
                           ValidationMode="InvalidInputOverwritten"
 						  ValueChanged="NumberBox_ValueChanged"
 									 ToolTipService.ToolTip="Cities will leave at least this much stone at home"
                           Header="Stone"  Margin="6,0,6,0" LargeChange="2000000" AcceptsExpression="True" SmallChange="500000"  />
-						<winui:NumberBox Value="{x:Bind views:SettingsPage.nearResReserve.iron,Mode=TwoWay}" Style="{StaticResource RightAlignNumberBox}"
+						<winui:NumberBox Value="{x:Bind cnv:Settings.nearResReserve.iron,Mode=TwoWay}" Style="{StaticResource RightAlignNumberBox}"
 							ValidationMode="InvalidInputOverwritten"
 									 ToolTipService.ToolTip="Cities will leave at least this much iron at home"
 									  ValueChanged="NumberBox_ValueChanged"
                           Header="Iron"  Margin="6,0,6,0"  LargeChange="2000000" AcceptsExpression="True" SmallChange="500000"  />
-						<winui:NumberBox Value="{x:Bind views:SettingsPage.nearResReserve.food,Mode=TwoWay}" Style="{StaticResource RightAlignNumberBox}"
+						<winui:NumberBox Value="{x:Bind cnv:Settings.nearResReserve.food,Mode=TwoWay}" Style="{StaticResource RightAlignNumberBox}"
                           ValidationMode="InvalidInputOverwritten"
 							  ValueChanged="NumberBox_ValueChanged"
 									 ToolTipService.ToolTip="Cities will leave at least this food at home"
                           Header="Food"  Margin="6,0,6,0"  LargeChange="2000000" AcceptsExpression="True" SmallChange="500000"  />
-						<winui:NumberBox Value="{x:Bind views:SettingsPage.nearResCartReserve,Mode=TwoWay}" Style="{StaticResource RightAlignNumberBox}"
+						<winui:NumberBox Value="{x:Bind cnv:Settings.nearResCartReserve,Mode=TwoWay}" Style="{StaticResource RightAlignNumberBox}"
                           ValidationMode="InvalidInputOverwritten"
 							  ValueChanged="NumberBox_ValueChanged"
 										 ToolTipService.ToolTip="Cities will keep at least this many carts at home"
                           Header="Carts"  Margin="6,0,6,0"  LargeChange="5000" AcceptsExpression="True" SmallChange="500"  />
-						<winui:NumberBox Value="{x:Bind views:SettingsPage.nearResShipReserve,Mode=TwoWay}" Style="{StaticResource RightAlignNumberBox}"
+						<winui:NumberBox Value="{x:Bind cnv:Settings.nearResShipReserve,Mode=TwoWay}" Style="{StaticResource RightAlignNumberBox}"
                           ValidationMode="InvalidInputOverwritten"
 										 ToolTipService.ToolTip="Cities will keep at least this many ships at home"
 							  ValueChanged="NumberBox_ValueChanged"

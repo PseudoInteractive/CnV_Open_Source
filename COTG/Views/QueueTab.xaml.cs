@@ -15,11 +15,12 @@ using CnV.Views;
 //using Microsoft.UI.Xaml.Media;
 
 using static CnV.Debug;
-using static CnV.Views.CityBuildUI;
+using static CnV.CityBuild;
 using static CnV.Views.ShellPage;
 using EnumsNET;
 using Microsoft.UI.Xaml;
 using CnV;
+using static CnV.City;
 
 namespace CnV.Views
 {
@@ -129,7 +130,7 @@ namespace CnV.Views
 
 		private void ClearQueue(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
 		{
-			CityBuildUI.ClearQueue();
+			CityBuild.ClearQueue();
 			RebuildAll();
 		}
 
@@ -371,7 +372,7 @@ namespace CnV.Views
 		internal async void MoveStuff(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
 		{
 			var cid = City.build;
-			if (!await App.LockUiSema(cid))
+			if (!await AppS.LockUiSema(cid))
 				return;
 			try
 			{
@@ -380,7 +381,7 @@ namespace CnV.Views
 			}
 			finally
 			{
-				App.ReleaseUISema(cid);
+				AppS.ReleaseUISema(cid);
 
 			}
 		}
@@ -489,7 +490,7 @@ namespace CnV.Views
 				{
 					var c = (cx, cy);// (int x, int y) c = RandCitySpot();
 					var b = city.postQueueBuildings[City.XYToId(c)];
-					if (b.isTower && b.bl < SettingsPage.autoTowerLevel)
+					if (b.isTower && b.bl < Settings.autoTowerLevel)
 					{
 						rv.Add(c);
 					}
@@ -565,7 +566,7 @@ namespace CnV.Views
 		{
 			var city = City.GetOrAdd(_cid);
 			cid = _cid;
-			brush = CityBuildUI.BrushFromImage(city.icon);
+			brush = CityBuild.BrushFromImage(city.icon);
 			text = City.GetOrAdd(_cid).nameAndRemarks;
 		}
 	}
@@ -580,7 +581,7 @@ namespace CnV.Views
 		{
 			cid = _cid;
 			op = item;
-			brush = CityBuildUI.BuildingBrush(item.bid,size / 128.0f);
+			brush = CityBuild.BuildingBrush(item.bid,size / 128.0f);
 			var desc = item.elvl == 0 ? "Destroy" : item.slvl == 0 ? "Build" : item.slvl > item.elvl ? "Downgrade" : "Upgrade";
 			text = desc + BuildingDef.all[item.bid].Bn;
 		}

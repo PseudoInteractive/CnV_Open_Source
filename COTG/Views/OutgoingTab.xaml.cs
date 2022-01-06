@@ -109,7 +109,7 @@ namespace CnV.Views
 			if (sel != null)
 			{
 				instance.armyGrid.ItemsSource = sel.incoming;
-				if (SettingsPage.fetchFullHistory)
+				if (Settings.fetchFullHistory)
 				{
 					var tab = HitTab.instance;
 					if (!instance.isFocused)

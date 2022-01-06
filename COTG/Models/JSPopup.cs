@@ -56,7 +56,7 @@ namespace CnV.Models
 				maxY = maxY.Max(y0.Max(y1));
 
 
-				var scale =  AGame.dipToNative; // ShellPage.webViewScale *
+				var scale = GameClient.dipToNative; // ShellPage.webViewScale *
 				//AGame.popups[put] = new Span2i(
 				//	ShellPage.JSPointToScreen(x0, y0),
 				//	ShellPage.JSPointToScreen(x1, y1));
@@ -88,7 +88,7 @@ namespace CnV.Models
 				++put;
 			}
 			ShellPage.UpdateWebViewOffsets(maxX,maxY);
-			if (AGame.popups.Length == 0)
+			if (GameClient.popups.Length == 0)
 			{
 				// ensure that the webview does not have focus
 	//			ShellPage.SetWebViewHasFocus(false);

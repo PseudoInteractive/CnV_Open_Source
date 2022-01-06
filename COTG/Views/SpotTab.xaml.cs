@@ -185,7 +185,7 @@ namespace CnV.Views
                }
 
                if (updateSelection)
-                   spot.ProcessSelection(mod,false,scrollIntoView);
+                   CityUI.ProcessSelection(spot as City,mod,false,scrollIntoView);
            });
             }
 

@@ -18,6 +18,7 @@ using System.Buffers;
 namespace CnV.Views
 {
 	using Game;
+	using GameData;
 
 	public sealed partial class PlannerTab : UserTab
 	{
@@ -378,7 +379,7 @@ namespace CnV.Views
 
 			//Assert(CityBuild.isPlanner);
 
-			if( CityBuildUI.isPlanner)
+			if( CityBuild.isPlanner)
 			{
 				city.BuildingsOrQueueChanged();
 				PleaseRefresh.Go();
@@ -401,7 +402,7 @@ namespace CnV.Views
 			city.TouchLayoutForWrite();
 			var bc = city.layout.ToArray();
 			
-			Assert(CityBuildUI.isPlanner);
+			Assert(CityBuild.isPlanner);
 			for (int y = span0; y <= span1; ++y)
 			{
 				for (int x = span0; x <= span1; ++x)
@@ -422,7 +423,7 @@ namespace CnV.Views
 		private async void FlipHClick(object sender, RoutedEventArgs e)
 		{
 			AppS.UpdateKeyStates();
-			Assert(CityBuildUI.isPlanner);
+			Assert(CityBuild.isPlanner);
 			//await CityBuild._IsPlanner(true);
 			var city = GetBuild();
 			city.FlipLayoutH(true,AppS.IsKeyPressedControl());
@@ -432,7 +433,7 @@ namespace CnV.Views
 		{
 			AppS.UpdateKeyStates();
 
-			Assert(CityBuildUI.isPlanner);
+			Assert(CityBuild.isPlanner);
 			//await CityBuild._IsPlanner(true);
 			var city = GetBuild();
 			city.FlipLayoutV(true,AppS.IsKeyPressedControl());
@@ -668,7 +669,7 @@ namespace CnV.Views
 		public override void Close()
 		{ 
 			base.Close();
-			CityBuildUI._IsPlanner(false);
+			CityBuild._IsPlanner(false);
 
 		}
 

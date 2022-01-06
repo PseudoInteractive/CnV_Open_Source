@@ -17,10 +17,7 @@ public static partial class CityUI
 		ShellPage.instance.coords.Text   = focus.CidToString();
 	}
 
-	public static void SetFocus(this Spot me,bool scrollIntoView, bool select = true, bool bringIntoWorldView = true, bool lazyMove = true)
-	{
-		SetFocus(me.cid, scrollIntoView, select, bringIntoWorldView, lazyMove);
-	}
+	
 
 
 
@@ -38,28 +35,8 @@ public static partial class CityUI
 		if(bringIntoView)
 			cid.BringCidIntoWorldView(lazyMove);
 	}
-	public static async Task<bool> DoClick(this Spot me)
-	{
-		var cid = me.cid;
-		if(City.CanVisit(cid))
-		{
-			var wasBuild = City.IsBuild(cid);
 
-			if(!await JSClient.CitySwitch(cid, false, true, false))
-				return false;
-
-			if(wasBuild)
-			{
-				View.SetViewMode(View.viewMode.GetNext());
-			}
-		}
-		else
-		{
-			CityUI.ShowCity(cid, false, true, false);
-		}
-
-		return true;
-	}
+	
 	public static  async void SelectInWorldView(this City me, bool lazyMove)
 	{
 		var cid = me.cid;

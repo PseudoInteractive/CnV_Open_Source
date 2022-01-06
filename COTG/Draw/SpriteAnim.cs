@@ -21,7 +21,7 @@ namespace CnV
 		public string asset;
 		public Material material;
 		public string assetPath => $"Art/Anim/{asset}";
-		public void Load() { material =new Material( AGame.instance.Content.Load<Texture2D>(assetPath),AGame.animatedSpriteEffect); }
+		public void Load() { material =new Material( AGame.instance.Content.Load<Texture2D>(assetPath),GameClient.animatedSpriteEffect); }
 		
 		public SpriteAnim(string _asset, int _frameCount)
 		{

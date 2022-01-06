@@ -12,9 +12,15 @@ using EnumsNET;
 
 using static CnV.Views.QueueTab;
 using static CnV.Views.ShellPage;
-using static CnV.Views.CityBuildUI;
+using static CnV.CityBuild;
 using Microsoft.UI.Xaml.Controls;
 using CnV;
+using static CnV.Debug;
+using static CnV.City;
+using static CnV.Spot;
+
+using static CnV.CityBuild;
+
 
 namespace CnV;
 
@@ -35,7 +41,7 @@ public static class DoTheStuff
 			Assert(city.isBuild);
 			if(View.viewMode != ViewMode.city)
 				View.SetViewMode(ViewMode.city);
-			await CityBuildUI._IsPlanner(false,true);
+			await CityBuild._IsPlanner(false,true);
 
 			Assert(AppS.uiSema.CurrentCount == 0);
 			Assert(AppS.IsOnUIThread());
@@ -98,7 +104,7 @@ public static class DoTheStuff
 			}
 			if(city.buildStage == City.BuildStage.cabins || city.buildStage == City.BuildStage.townHall)
 			{
-				if(bc.cabins >= SettingsPage.startCabinCount || bc.buildingCount >= bc.buildingLimit - 2)
+				if(bc.cabins >= Settings.startCabinCount || bc.buildingCount >= bc.buildingLimit - 2)
 				{
 					Note.Show($"Building {city.buildStage.AsString()} - {city}");
 					return true;
@@ -106,7 +112,7 @@ public static class DoTheStuff
 			}
 
 			Assert(city.isBuild);
-			if(!bc.hasCastle  && ((city.tsTotal > SettingsPage.tsForCastle)||(city.is7Point&&bc.townHallLevel>=8)) && city.hasCastleInLayout)
+			if(!bc.hasCastle  && ((city.tsTotal > Settings.tsForCastle)||(city.is7Point&&bc.townHallLevel>=8)) && city.hasCastleInLayout)
 			{
 				//			if (!city.isBuild)
 				//				await JSClient.ChangeCity(city.cid, false); ;
@@ -123,7 +129,7 @@ public static class DoTheStuff
 					await city.DowngradeTo((0, 0),1); // downgrade town hall
 				}
 			}
-		if((bc.sorcTowers == 0 || bc.sorcTowerLevel != 10) && (city.tsTotal > SettingsPage.tsForSorcTower || (!city.isMilitary && city.points> SettingsPage.scoreForSorcTower)) && city.FindOverlayBuildingsOfType(bidSorcTower).Count == 1)
+		if((bc.sorcTowers == 0 || bc.sorcTowerLevel != 10) && (city.tsTotal > Settings.tsForSorcTower || (!city.isMilitary && city.points> Settings.scoreForSorcTower)) && city.FindOverlayBuildingsOfType(bidSorcTower).Count == 1)
 		{
 			var c = FindValidBuildingOfType(city,bidSorcTower);
 
@@ -146,9 +152,9 @@ public static class DoTheStuff
 				bc.wallLevel = 1;
 			}
 			Assert(city.isBuild);
-			if(bc.hasWall && bc.scoutpostCount < SettingsPage.scoutpostCount && !city.is7Point)
+			if(bc.hasWall && bc.scoutpostCount < Settings.scoutpostCount && !city.is7Point)
 			{
-				while(bc.scoutpostCount < SettingsPage.scoutpostCount)
+				while(bc.scoutpostCount < Settings.scoutpostCount)
 				{
 					var spot = 0;
 					foreach(var _spot in innerTowerSpots)
@@ -192,7 +198,7 @@ public static class DoTheStuff
 				case City.BuildStage.townHall:
 				case City.BuildStage.cabins:
 					{
-						if((bc.cabins < SettingsPage.startCabinCount || (bc.storeHouses == 0)) && !city.is7Point)
+						if((bc.cabins < Settings.startCabinCount || (bc.storeHouses == 0)) && !city.is7Point)
 						{
 							switch(await AppS.DoYesNoBox("Add Cabins",$"Would you like to add cabins to {city.nameAndRemarks}?"))
 							{
@@ -206,7 +212,7 @@ public static class DoTheStuff
 							{
 								await city.EnqueueUpgrade(4,bspotTownHall);
 							}
-							var storeHouses = FindPendingOverlayBuildingsOfType(city,SettingsPage.intialStorehouses - bc.storeHouses,bidStorehouse,true);
+							var storeHouses = FindPendingOverlayBuildingsOfType(city,Settings.intialStorehouses - bc.storeHouses,bidStorehouse,true);
 							foreach(var storage in storeHouses)
 							{
 
@@ -216,9 +222,9 @@ public static class DoTheStuff
 
 
 							}
-							if(bc.cabins < SettingsPage.startCabinCount)
+							if(bc.cabins < Settings.startCabinCount)
 							{
-								message = $"Adding {SettingsPage.startCabinCount - bc.cabins}";
+								message = $"Adding {Settings.startCabinCount - bc.cabins}";
 								var cabinsInLayout = FindPendingOverlayBuildingsOfType(city,100,bidCottage).ToList();
 
 								// find a good spot for a cabin
@@ -247,7 +253,7 @@ public static class DoTheStuff
 											await city.Build(XYToId(c),bidCottage,false,false);
 											++bc.cabins;
 										}
-										if(bc.cabins >= SettingsPage.startCabinCount)
+										if(bc.cabins >= Settings.startCabinCount)
 										{
 											goto done;
 										}
@@ -280,9 +286,9 @@ public static class DoTheStuff
 								case 0: return true;
 							}
 
-							if(bc.storeHouses < SettingsPage.intialStorehouses)
+							if(bc.storeHouses < Settings.intialStorehouses)
 							{
-								var storage = FindPendingOverlayBuildingsOfType(city,SettingsPage.intialStorehouses  - bc.storeHouses,bidStorehouse,true);
+								var storage = FindPendingOverlayBuildingsOfType(city,Settings.intialStorehouses  - bc.storeHouses,bidStorehouse,true);
 								foreach(var s in storage)
 								{
 									message += $"Adding Storehouse";
@@ -293,11 +299,11 @@ public static class DoTheStuff
 							if(bc.forums == 0 && bc.ports==0 && bc.buildingCount < buildingLimit)
 							{
 								var bid = bidMarketplace;
-								var bd = FindPendingOverlayBuildingsOfType(city,SettingsPage.intialMarkets,bid);
+								var bd = FindPendingOverlayBuildingsOfType(city,Settings.intialMarkets,bid);
 								if(!bd.Any())
 								{
 									bid = bidPort;
-									bd = FindPendingOverlayBuildingsOfType(city,SettingsPage.intialMarkets,bid);
+									bd = FindPendingOverlayBuildingsOfType(city,Settings.intialMarkets,bid);
 								}
 								foreach(var b in bd)
 								{
@@ -452,9 +458,9 @@ public static class DoTheStuff
 							panel.Children.Add(new TextBlock() { Text = "Swap cabins for buildings" });
 
 							var combo = new ComboBox() { Header="Cabins to remove:",ItemsSource= cabinCounts };
-							combo.SelectedIndex = SettingsPage.cabinsToRemovePerSwap;
+							combo.SelectedIndex = Settings.cabinsToRemovePerSwap;
 							//  var hasExtra = city.hasExtraBuildings;
-							//   var removeOthers = hasExtra ? new CheckBox() { Header = "Extra buildings", OnContent = "Remove", OffContent = "Leave",Bind.IsChecked = SettingsPage.demoUnwantedBuildingsWithCabins } : null; 
+							//   var removeOthers = hasExtra ? new CheckBox() { Header = "Extra buildings", OnContent = "Remove", OffContent = "Leave",Bind.IsChecked = Settings.demoUnwantedBuildingsWithCabins } : null; 
 
 							panel.Children.Add(combo);
 							//  if(hasExtra)
@@ -474,11 +480,11 @@ public static class DoTheStuff
 							if(res == ContentDialogResult.Primary)
 							{
 								//if(removeOthers!=null)
-								// SettingsPage.demoUnwantedBuildingsWithCabins = removeOthers.IsOn;
+								// Settings.demoUnwantedBuildingsWithCabins = removeOthers.IsOn;
 								var sel = combo.SelectedIndex;
 								if(sel >= 0)
-									SettingsPage.cabinsToRemovePerSwap = cabinCounts[sel];
-							//	SettingsPage.SaveAll();
+									Settings.cabinsToRemovePerSwap = cabinCounts[sel];
+							//	Settings.SaveAll();
 								return 1;
 							}
 							if(res == ContentDialogResult.Secondary)
@@ -496,7 +502,7 @@ public static class DoTheStuff
 							var todo = FindPendingOverlayBuildings(city);
 							int milBid = bc.GetMainMilitaryBid();
 							var barracks = FindPendingOverlayBuildingsOfType(city,100,bidBarracks).OrderByDescending(a => GetBarrackScore(city,a,milBid)).ToList();
-							var commandLimit = SettingsPage.cabinsToRemovePerSwap * 2;
+							var commandLimit = Settings.cabinsToRemovePerSwap * 2;
 							if(!todo.Any())
 							{
 							// 
@@ -546,17 +552,17 @@ public static class DoTheStuff
 			{
 				foreach(var t in FindAllUnfinishedTowers(city))
 				{
-					await city.UpgradeToLevel(SettingsPage.autoTowerLevel,t,false);
+					await city.UpgradeToLevel(Settings.autoTowerLevel,t,false);
 				}
 			}
-			if(bc.hasWall && bc.wallLevel < SettingsPage.autoWallLevel && SettingsPage.autoWallLevel != 10)
+			if(bc.hasWall && bc.wallLevel < Settings.autoWallLevel && Settings.autoWallLevel != 10)
 			{
-				await city.UpgradeToLevel(SettingsPage.autoWallLevel,IdToXY(bspotWall),false);
+				await city.UpgradeToLevel(Settings.autoWallLevel,IdToXY(bspotWall),false);
 
 			}
 			city.NotifyChange();
 			BuildTab.GetBuildInfo();
-			if(SettingsPage.clearRes && !city.leaveMe)
+			if(Settings.clearRes && !city.leaveMe)
 			{
 				await city.ClearResUI();
 			}

@@ -31,6 +31,7 @@ namespace CnV.Services
 {
 	using System.Runtime.CompilerServices;
 	using Activation;
+	using GameData;
 	// using PInvoke
 	using Views;
 
@@ -137,7 +138,7 @@ namespace CnV.Services
 				var t2 = BuildingDef.Init();
 				var t3 = TroopInfo.Init();
 				var t4 = App.EnsureBrowserInstalledAsync();
-				SettingsPage.Initialize();
+				Settings.Initialize();
 
 
 				await Task.WhenAll(t2,t3,t4);
@@ -162,9 +163,9 @@ namespace CnV.Services
 			//{
 			//	if(colorInfo.IsAdvancedColorKindAvailable(Windows.Graphics.Display.AdvancedColorKind.HighDynamicRange))
 			//	{
-			//		if(!SettingsPage.askedToHdr)
+			//		if(!Settings.askedToHdr)
 			//		{
-			//			SettingsPage.askedToHdr=true;
+			//			Settings.askedToHdr=true;
 			//			AppS.DoYesNoBox("HDR Available", "Tip: You can enable HDR for your monitor in Settings", "Thank you", null,null );
 			//		}
 

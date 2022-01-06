@@ -197,8 +197,8 @@ namespace CnV.Views;
 		//	grid.GridLinesVisibility= Telerik.UI.Xaml.Controls.Primitives.GridLinesVisibility.Both;
 		////	grid.ProcessTooltips();
 		////	grid.ListenForNestedPropertyChange=false;
-		//	grid.FontSize = SettingsPage.smallFontSize;
-		//	grid.RowHeight = SettingsPage.mediumGridRowHeight;
+		//	grid.FontSize = Settings.smallFontSize;
+		//	grid.RowHeight = Settings.mediumGridRowHeight;
 		//	grid.ProcessTooltips();
 		//	if (object.ReferenceEquals(grid.ItemsSource, City.gridCitySource) )
 		//	{

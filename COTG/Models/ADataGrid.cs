@@ -78,7 +78,7 @@ public static partial class ADataGrid
 		{
 			if (wantImage)
 			{
-				var dim = SettingsPage.mediumGridRowHeight;
+				var dim = Settings.mediumGridRowHeight;
 				var imageDim = dim * 0.875f;
 				grid.Columns.Add(new GridImageColumn()
 				{
@@ -255,7 +255,7 @@ public static partial class ADataGrid
 			grid.ExpanderColumnWidth = 32;
 			if (tab is not null && grid.IsCityGrid())
 				grid.SelectionChanged += tab.SpotSelectionChanged;
-			grid.FontSize = SettingsPage.smallFontSize;
+			grid.FontSize = Settings.smallFontSize;
 			grid.GridContextFlyoutOpening += UserTab.ContextFlyoutOpening;
 			grid.RecordContextFlyout = new();
 			grid.CurrentCellRequestNavigate += UserTab.CelNavigate;

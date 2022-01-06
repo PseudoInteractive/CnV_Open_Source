@@ -126,7 +126,7 @@ namespace CnV
 					}
 					//if (cityView != COTG.Views.ShellPage.IsCityView())
 					//{
-					//	View.SetViewMode(Views.ShellPage.ViewMode.city);
+					//	View.SetViewMode(Views.ViewMode.city);
 					//}
 				}
 				else

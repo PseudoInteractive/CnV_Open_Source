@@ -33,7 +33,7 @@ namespace CnV
 	using Services;
 	using Views;
 
-	public static class NoteClient
+	public static partial class Note
 	{
 	
 		public static void Init()
@@ -42,8 +42,6 @@ namespace CnV
 			//markDownText.TableCellPadding = new Thickness(0,0,0,0); // hack!
 			//markDownText.ListMargin = new Thickness(0,0,0,0); // hack!
 			//markDownText.Background = null;
-			Debug.OnNote = Show;
-			Note.Show    = Show;
 			
 		}
 
@@ -64,15 +62,15 @@ namespace CnV
 			ChatTab.L(s);
 		}
 		
-		public static Task ShowQuiet(string s,Debug.Priority priority = Debug.Priority.medium,bool useInfoBar = false,int timeout = 5000)
+		public static void ShowQuiet(string s,Debug.Priority priority = Debug.Priority.medium,bool useInfoBar = false,int timeout = 5000)
 		{
-			return Show(s,priority,useInfoBar,timeout,false);
+			Show(s,priority,useInfoBar,timeout,false);
 		}
 	//	static Priority currentPriority;
 	//	static DateTime nextInAppNote = new DateTime(0);
 	//static MarkdownTextBlock markDownText;
 	//	static CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
-		public static async Task Show(string s, Debug.Priority priority=Debug.Priority.medium, bool useInfoBar = false, int timeout = 5000, bool showDebugOutput=true, bool showNote=true)
+		public static partial void Show(string s, Debug.Priority priority=Debug.Priority.medium, bool useInfoBar = false, int timeout = 5000, bool showDebugOutput=true, bool showNote=true)
 		{
 			try
 			{
@@ -86,7 +84,7 @@ namespace CnV
 
 				if(showNote && ShellPage.instance != null)
 				{
-					int noteDelay = SettingsPage.notificationDuration;
+					int noteDelay = Settings.notificationDuration;
 					int noteDelayHigh = noteDelay+3;
 
 					//if (!initialized)

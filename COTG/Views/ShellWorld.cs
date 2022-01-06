@@ -22,8 +22,11 @@ using CnV.Draw;
 using static CnV.Helpers.AString;
 using Cysharp.Text;
 using EnumsNET;
+using static CnV.GameClient;
 using Microsoft.UI.Input;
 using Microsoft.UI.Dispatching;
+using static CnV.View;
+using static CnV.ClientView;
 //using PointerEventArgs = Microsoft.UI.Input.Experimental.ExpPointerEventArgs;
 //using PointerPoint = Microsoft.UI.Input.Experimental.ExpPointerPoint;
 //using PointerUpdateKind = Windows.UI.Input.PointerUpdateKind;
@@ -214,7 +217,7 @@ namespace CnV.Views
 			{
 				if (IsCityView() && (cid == City.build))
 				{
-					CityBuildUI.Click(cc, true);
+					CityBuild.Click(cc, true);
 				}
 				else
 				{
@@ -691,7 +694,7 @@ namespace CnV.Views
 								{
 									AppS.DispatchOnUIThreadLow(() =>
 									{
-										CityBuildUI.Click(cc, false);
+										CityBuild.Click(cc, false);
 
 									});
 								}
@@ -771,7 +774,7 @@ namespace CnV.Views
 		public static  bool isOverPopup{
 			get{
 		
-			foreach(var popup in AGame.popups)
+			foreach(var popup in GameClient.popups)
 			{
 				// should this be in DIPS or pixels?
 				if(popup.Contains(mousePosition))
@@ -873,7 +876,7 @@ namespace CnV.Views
 				// only needs for pen and touch
 				if (IsCityView())
 				{
-					CityBuildUI.PointerDown(cc);
+					CityBuild.PointerDown(cc);
 				
 				}
 
@@ -1101,7 +1104,7 @@ namespace CnV.Views
 														sb.AppendFormat("pts:{0:N0}\n", city.points);
 														if(player.allianceId!= 0)
 															sb.AppendLine(Alliance.IdToName(player.allianceId));
-														if (Player.IsFriend(data.player)) 
+														if (Player.IsSubOrMe(data.player)) 
 															sb.AppendLine(city.GetTroopsString("\n"));
 
 														if (city.senatorInfo.Length != 0)

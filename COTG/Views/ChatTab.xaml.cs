@@ -568,7 +568,7 @@ namespace CnV.Views
 							}
 							else
 							{
-								ChatTab.allianceId.Post(batch);
+								ChatTab.alliance.Post(batch);
 							}
 						}
 
@@ -591,7 +591,7 @@ namespace CnV.Views
 
 							ChatTab.GetWhisperTab(ch.player, false).Post(ch, true);
 							// ChatTab.whisper.Post(ch);
-							ChatTab.allianceId.Post(ch,true);
+							ChatTab.alliance.Post(ch,true);
 							//       ChatTab.officer.Post(ch);
 							//       ChatTab.world.Post(ch);
 						}
@@ -606,7 +606,7 @@ namespace CnV.Views
 
 								//if (ch.type == 4)
 								//	PlayerHooks.PlayerChat?.Invoke(new PlayerHooks.PlayerChatEventArgs() { player = Player.FromName(ch.player), text = ch.text });
-								ChatTab.allianceId.Post(ch, true);
+								ChatTab.alliance.Post(ch, true);
 							}
 							else
 								ChatTab.world.Post(ch, true);

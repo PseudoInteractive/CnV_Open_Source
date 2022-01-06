@@ -133,7 +133,7 @@ namespace CnV.Views
 					defenderGrid.ItemsSource = Spot.defendersI.Where(w => w.testContinentFilter
 													&& (includeInternal||w.hasEnemyIncoming)
 													&&(typeFilter == 2 ? w.pid == Player.myId
-													: typeFilter == 1 ? SettingsPage.incomingWatch.Contains(w.playerName)|| w.pid == Player.myId
+													: typeFilter == 1 ? Settings.incomingWatch.Contains(w.playerName)|| w.pid == Player.myId
 													: true)).OrderBy(w => w.firstIncoming).ToArray();
 					var sel = defenderGrid.SelectedItems.ToArray();
 					if(sel.Length > 0)
@@ -209,7 +209,7 @@ namespace CnV.Views
 					{
 						armyGrid.ItemsSource = sel.incoming;
 
-						if(SettingsPage.fetchFullHistory)
+						if(Settings.fetchFullHistory)
 						{
 							var tab = DefenseHistoryTab.instance;
 							if(!tab.isFocused)

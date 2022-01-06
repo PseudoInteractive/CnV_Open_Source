@@ -7,10 +7,12 @@ using static CnV.City;
 using static CnV.CityBuild;
 using static CnV.CityView;
 using static CnV.ToolTips;
+using static CnV.CityViewS;
+//using static CnV.CityBuild;
 
-namespace CnV.Views
+namespace CnV
 {
-	public sealed partial class CityBuildUI:Microsoft.UI.Xaml.Controls.UserControl
+	public sealed partial class CityBuild :Microsoft.UI.Xaml.Controls.UserControl
 	{
 		public static void PreviewBuildAction()
 		{
@@ -25,7 +27,7 @@ namespace CnV.Views
 		public static void RevertToLastAction()
 		{
 			SetAction(priorQuickAction);
-			priorQuickAction    = Action.none;
+			priorQuickAction    = CityBuildAction.none;
 			isSingleClickAction = false;
 			ClearSelectedBuilding();
 
@@ -33,12 +35,12 @@ namespace CnV.Views
 
 		public static void ClearAction()
 		{
-			SetAction(Action.none);
+			SetAction(CityBuildAction.none);
 			isSingleClickAction = false;
-			priorQuickAction    = Action.none;
+			priorQuickAction    = CityBuildAction.none;
 			ClearSelectedBuilding();
 		}
-		public static void SetAction(Action _action)
+		public static void SetAction(CityBuildAction _action)
 		{
 			Log($"{action}=>{_action}");
 			action = _action;
@@ -72,14 +74,14 @@ namespace CnV.Views
 		public static void SetQuickBuild(int quickBuildItemBid)
 		{
 
-			SetAction(Action.build);
+			SetAction(CityBuildAction.build);
 
 			lastBuildToolTipSpot      = -1;
 			lastQuickBuildActionBSpot = -1;
 			quickBuildId              = quickBuildItemBid;
 			//	AppS.DispatchOnUIThreadLow( ()=> instance.quickBuild.SelectedIndex = (int)_action ); /// the first 3 are mapped. this triggers a selected changed event
 		}
-		public static async Task PerformAction(Action action, (int x, int y) cc, int _quickBuildId, bool dryRun)
+		public static async Task PerformAction(CityBuildAction action, (int x, int y) cc, int _quickBuildId, bool dryRun)
 		{
 
 
@@ -87,7 +89,7 @@ namespace CnV.Views
 			var build = GetBuild();
 			var b = City.GetBuild().GetBuildingOrLayout(bspot);
 
-			if(action == Action.moveEnd)
+			if(action == CityBuildAction.moveEnd)
 			{
 				// We lost our move source
 				if(selected.IsNan())
@@ -98,14 +100,14 @@ namespace CnV.Views
 					}
 					else
 					{
-						SetAction(Action.moveStart);
+						SetAction(CityBuildAction.moveStart);
 					}
 				}
 			}
 
 			switch(action)
 			{
-				case Action.layout:
+				case CityBuildAction.layout:
 					{
 
 						if(CityBuild.isPlanner)
@@ -125,7 +127,7 @@ namespace CnV.Views
 						}
 						break;
 					}
-				case Action.build:
+				case CityBuildAction.build:
 					{
 						if(!b.isEmpty && !isPlanner)
 						{
@@ -161,7 +163,7 @@ namespace CnV.Views
 						}
 						break;
 					}
-				case Action.destroy:
+				case CityBuildAction.destroy:
 					{
 						//if (buildQueueFull)
 						//{
@@ -173,23 +175,23 @@ namespace CnV.Views
 
 						break;
 					}
-				case Action.moveStart:
-				case Action.moveEnd:
+				case CityBuildAction.moveStart:
+				case CityBuildAction.moveEnd:
 					{
-						MoveHovered(isSingleClickAction, (action == Action.moveStart), dryRun);
+						MoveHovered(isSingleClickAction, (action == CityBuildAction.moveStart), dryRun);
 						break;
 					}
-				case Action.downgrade:
+				case CityBuildAction.downgrade:
 					{
 						await City.GetBuild().Downgrade(cc, dryRun);
 						break;
 					}
-				case Action.upgrade:
+				case CityBuildAction.upgrade:
 					{
 						City.GetBuild().UpgradeToLevel(1, cc, dryRun);
 						break;
 					}
-				case Action.flipLayoutH:
+				case CityBuildAction.flipLayoutH:
 					{
 						if(!dryRun)
 						{
@@ -229,13 +231,13 @@ namespace CnV.Views
 
 				//		break;
 				//	}
-				case Action.flipLayoutV:
+				case CityBuildAction.flipLayoutV:
 					{
 						if(!dryRun)
 							GetBuild().FlipLayoutV(true);
 						break;
 					}
-				case Action.none:
+				case CityBuildAction.none:
 					{
 						if(b.isEmpty)
 						{
@@ -270,7 +272,7 @@ namespace CnV.Views
 		public static int quickBuildId;
 		public static int lastQuickBuildActionBSpot = -1;
 		public static int lastBuildToolTipSpot = -1;
-		public enum Action
+		public enum CityBuildAction
 		{
 			none,
 			moveStart,
@@ -287,8 +289,8 @@ namespace CnV.Views
 			count = invalid,
 
 		};
-		public static Action action;
-		public static Action priorQuickAction;    // set when you temporarily switch from quickbuild to select/move
+		public static CityBuildAction action;
+		public static CityBuildAction priorQuickAction;    // set when you temporarily switch from quickbuild to select/move
 		public static bool isSingleClickAction; // set on left click tool select
 		
 
@@ -316,11 +318,11 @@ namespace CnV.Views
 						CityView.SetSelectedBuilding(hovered, _isSingleAction);
 						if(_isSingleAction)
 						{
-							PushSingleAction(Action.moveEnd);
+							CityBuild.PushSingleAction(CityBuildAction.moveEnd);
 						}
 						else
 						{
-							SetAction(Action.moveEnd);
+							SetAction(CityBuildAction.moveEnd);
 						}
 
 					}
@@ -383,7 +385,7 @@ namespace CnV.Views
 							}
 							else
 							{
-								SetAction(Action.moveStart);
+								SetAction(CityBuildAction.moveStart);
 							}
 						}
 					}
@@ -391,7 +393,7 @@ namespace CnV.Views
 			}
 		}
 
-		public static void PushSingleAction(Action _action)
+		public static void PushSingleAction(CityBuildAction _action)
 		{
 			priorQuickAction = action;
 			SetAction(_action);

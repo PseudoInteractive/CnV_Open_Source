@@ -7,7 +7,7 @@
 			  xmlns:winui="using:Microsoft.UI.Xaml.Controls"
 			  xmlns:model="using:CnV.Modelsdels"
 			  xmlns:game="using:CnV.Game"
-			  xmlns:cotg="using:CnV"
+			  xmlns:cnv="using:CnV"
 			  xmlns:view="using:CnV.Views"
 			  mc:Ignorable="d"
 			  Tag="Build"

@@ -57,7 +57,7 @@ namespace CnV.Views
 				{
 					lastUpdateTick = Environment.TickCount64;
 
-				var c = SettingsPage.layoutOffsets[SettingsPage.layout];
+				var c = Settings.layoutOffsets[Settings.layout];
 				var gridSize = instance.grid.ActualSize;
 				gridSize.X = gridSize.X.Max(1.0f);
 				gridSize.Y = (gridSize.Y).Max(1.0f);
@@ -89,7 +89,7 @@ namespace CnV.Views
 					canvasScaledX = 0;
 				}
 
-					//				float zoom = htmlVisible || SettingsPage.webZoomSmall <= 0 ? SettingsPage.webZoom : SettingsPage.webZoomSmall;
+					//				float zoom = htmlVisible || Settings.webZoomSmall <= 0 ? Settings.webZoom : Settings.webZoomSmall;
 				
 				var canvasScaledY = (zoom * canvasBaseYUnscaled).RoundToInt();
 				popupLeftMargin = ((popupLeftOffset * zoom).RoundToInt() - (canvasScaledX-htmlShift) ).Max0();
@@ -124,12 +124,12 @@ namespace CnV.Views
 							c.chatHeight = (float)(instance.rowChat.ActualHeight/gridSize.Y);
 						}
 
-						if(JSClient.view != null && zoom != webZoomLast)
-						{
-							webZoomLast = zoom;
-							var _zoom = (htmlVisible ? zoom : 1.0f);
-							AppS.DispatchOnUIThreadLow(() => JSClient.view.ExecuteScriptAsync($"document.body.style.zoom={_zoom};") );
-						}
+						//if(JSClient.view != null && zoom != webZoomLast)
+						//{
+						//	webZoomLast = zoom;
+						//	var _zoom = (htmlVisible ? zoom : 1.0f);
+						//	AppS.DispatchOnUIThreadLow(() => JSClient.ExecuteScriptAsync($"document.body.style.zoom={_zoom};") );
+						//}
 
 						{
 
@@ -155,7 +155,7 @@ namespace CnV.Views
 						}
 						instance.webView.Margin= new(htmlShift, 0, 0, 0);
 					TabPage.LayoutChanged();
-						AGame.wantFastRefresh = true;
+						GameClient.wantFastRefresh = true;
 				}
 					catch (Exception ex)
 					{

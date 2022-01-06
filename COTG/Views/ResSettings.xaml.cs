@@ -67,10 +67,10 @@ namespace CnV.Views
 		//			req.stone = value.requestStone;
 		//			req.iron = value.requestIron;
 		//			req.food = value.requestFood; ;
-		//			//	SettingsPage.sendWood = value.destWood != 0;
-		//			//	SettingsPage.sendStone = value.destStone != 0;
-		//			//		SettingsPage.sendIron = value.destIron != 0;
-		//			//		SettingsPage.sendFood = value.destFood != 0;
+		//			//	Settings.sendWood = value.destWood != 0;
+		//			//	Settings.sendStone = value.destStone != 0;
+		//			//		Settings.sendIron = value.destIron != 0;
+		//			//		Settings.sendFood = value.destFood != 0;
 		//			max.wood = value.sendWood;
 		//			max.stone = value.sendStone;
 		//			max.iron = value.sendIron;

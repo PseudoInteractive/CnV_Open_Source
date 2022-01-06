@@ -38,7 +38,7 @@ namespace CnV
 					all.V[i.Key] = prior; // not atomic
 				}
 				// Set new ones
-				foreach (var i in SettingsPage.pinned)
+				foreach (var i in Settings.pinned)
 				{
 					all.V.AddOrUpdate(i,
 						(i)=>new CityCustom() {cid=i,pinned=true},
@@ -55,7 +55,7 @@ namespace CnV
 		public static void Load()
 		{
 			all.Load( (tArray) => new CityCustoms(tArray.ToDictionary( a=>a.cid) ),
-				(v, loaded) => SettingsPage.pinned = v.Where(a=>a.Value.pinned).Select(a=>a.Value.cid).ToArray(), // this might wind up on a different thread
+				(v, loaded) => Settings.pinned = v.Where(a=>a.Value.pinned).Select(a=>a.Value.cid).ToArray(), // this might wind up on a different thread
 				()=>new(), // empty dictionary
 				true);  // Async please
 		}

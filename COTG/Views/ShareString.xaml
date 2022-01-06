@@ -8,7 +8,7 @@
     xmlns:tk="using:CommunityToolkit.WinUI.UI.Controls"
 	xmlns:winui="using:Microsoft.UI.Xaml.Controls"
     mc:Ignorable="d"
-	 xmlns:cotg="using:CnV"
+	 xmlns:cnv="using:CnV"
 	  xmlns:game="using:CnV.Game"
 	 xmlns:views="using:CnV.Views"
 	HeroContentPlacement ="Top"
@@ -89,7 +89,7 @@
 							<winui:Border Grid.Row="1" Style="{StaticResource BorderReveal}">
 							<tk:WrapPanel>
 							<winui:NumberBox Header="Cottage Level"
-										Value="{x:Bind views:SettingsPage.cottageLevel, Mode=TwoWay}"
+										Value="{x:Bind cnv:Settings.cottageLevel, Mode=TwoWay}"
 										Width="100"
 										Style="{StaticResource NumberBoxSmall}"
 										SmallChange="1" />
@@ -97,17 +97,17 @@
 							  Margin="4"
 							  IsThreeState="True"
 					  ToolTipService.ToolTip="Checked: Turn on autobuild, Unchecked; Turn off autobuild, Kind of checked: Leave it"
-							  IsChecked="{x:Bind views:SettingsPage.autoBuildOn, Mode=TwoWay}" />
-							<ToggleSwitch Header="Clear Res" IsOn="{x:Bind local:SettingsPage.clearRes, Mode=TwoWay}" OnContent="Clear" OffContent="Leave" />
-							<ToggleSwitch Header="Place Cabins" IsOn="{x:Bind local:SettingsPage.autoBuildCabins, Mode=TwoWay}" OnContent="Build" OffContent="Skip" ToolTipService.ToolTip="If set, cabins will be places when setup is complete" />
-							<winui:NumberBox Header="Cabins" Value="{x:Bind views:SettingsPage.startCabinCount,Mode=TwoWay}" Style="{StaticResource NumberBoxSmall}" ToolTipService.ToolTip="The number of cabins to place if PlaceCabins is set" />
-							<winui:NumberBox Header="TS Castle" Value="{x:Bind views:SettingsPage.tsForCastle, Mode=TwoWay}" Style="{StaticResource NumberBoxSmall}" ToolTipService.ToolTip="When a city has this many TS or more, it will start its castle" />
-							<winui:NumberBox Header="TS Sorc Tower" Value="{x:Bind views:SettingsPage.tsForSorcTower, Mode=TwoWay}" Style="{StaticResource NumberBoxSmall}" ToolTipService.ToolTip="When a city has this many TS or more, the sorc tower will be raised to level 10" />
-							<winui:NumberBox Header="WallLevel" Value="{x:Bind views:SettingsPage.autoWallLevel, Mode=TwoWay}" Style="{StaticResource NumberBoxSmall}" ToolTipService.ToolTip="How high to automatically build the wall during 'do the stuff'. The wall is built right before the clastle.  If set to 10, autobuild is turned on.  Values other than 1 or 10 are not guaranteed"/>
-							<winui:NumberBox Header="TowerLevel" Value="{x:Bind views:SettingsPage.autoTowerLevel,Mode=TwoWay}" Style="{StaticResource NumberBoxSmall}" ToolTipService.ToolTip="How high to automatically build towers during 'do the stuff'.  Towers are placed right before the clastle.  If set to 10, autobuild is turned on. Values other than 1 or 10 are not guaranteed" />
-							<winui:NumberBox Header="Scout Towers" Value="{x:Bind views:SettingsPage.scoutpostCount,Mode=TwoWay}" Style="{StaticResource NumberBoxSmall}" ToolTipService.ToolTip="The number of scout towers to place.  They are placed with the castle  during 'do the stuff'" />
-							<winui:NumberBox Header="Storehouses" Value="{x:Bind views:SettingsPage.intialStorehouses,Mode=TwoWay}" Style="{StaticResource NumberBoxSmall}" ToolTipService.ToolTip="The number of storehouses to start a city with" />
-							<winui:NumberBox Header="Markets" Value="{x:Bind views:SettingsPage.intialMarkets,Mode=TwoWay}" Style="{StaticResource NumberBoxSmall}" ToolTipService.ToolTip="The number of markets to start a city with" />
+							  IsChecked="{x:Bind cnv:Settings.autoBuildOn, Mode=TwoWay}" />
+							<ToggleSwitch Header="Clear Res" IsOn="{x:Bind local:Settings.clearRes, Mode=TwoWay}" OnContent="Clear" OffContent="Leave" />
+							<ToggleSwitch Header="Place Cabins" IsOn="{x:Bind local:Settings.autoBuildCabins, Mode=TwoWay}" OnContent="Build" OffContent="Skip" ToolTipService.ToolTip="If set, cabins will be places when setup is complete" />
+							<winui:NumberBox Header="Cabins" Value="{x:Bind cnv:Settings.startCabinCount,Mode=TwoWay}" Style="{StaticResource NumberBoxSmall}" ToolTipService.ToolTip="The number of cabins to place if PlaceCabins is set" />
+							<winui:NumberBox Header="TS Castle" Value="{x:Bind cnv:Settings.tsForCastle, Mode=TwoWay}" Style="{StaticResource NumberBoxSmall}" ToolTipService.ToolTip="When a city has this many TS or more, it will start its castle" />
+							<winui:NumberBox Header="TS Sorc Tower" Value="{x:Bind cnv:Settings.tsForSorcTower, Mode=TwoWay}" Style="{StaticResource NumberBoxSmall}" ToolTipService.ToolTip="When a city has this many TS or more, the sorc tower will be raised to level 10" />
+							<winui:NumberBox Header="WallLevel" Value="{x:Bind cnv:Settings.autoWallLevel, Mode=TwoWay}" Style="{StaticResource NumberBoxSmall}" ToolTipService.ToolTip="How high to automatically build the wall during 'do the stuff'. The wall is built right before the clastle.  If set to 10, autobuild is turned on.  Values other than 1 or 10 are not guaranteed"/>
+							<winui:NumberBox Header="TowerLevel" Value="{x:Bind cnv:Settings.autoTowerLevel,Mode=TwoWay}" Style="{StaticResource NumberBoxSmall}" ToolTipService.ToolTip="How high to automatically build towers during 'do the stuff'.  Towers are placed right before the clastle.  If set to 10, autobuild is turned on. Values other than 1 or 10 are not guaranteed" />
+							<winui:NumberBox Header="Scout Towers" Value="{x:Bind cnv:Settings.scoutpostCount,Mode=TwoWay}" Style="{StaticResource NumberBoxSmall}" ToolTipService.ToolTip="The number of scout towers to place.  They are placed with the castle  during 'do the stuff'" />
+							<winui:NumberBox Header="Storehouses" Value="{x:Bind cnv:Settings.intialStorehouses,Mode=TwoWay}" Style="{StaticResource NumberBoxSmall}" ToolTipService.ToolTip="The number of storehouses to start a city with" />
+							<winui:NumberBox Header="Markets" Value="{x:Bind cnv:Settings.intialMarkets,Mode=TwoWay}" Style="{StaticResource NumberBoxSmall}" ToolTipService.ToolTip="The number of markets to start a city with" />
 						</tk:WrapPanel>
 						</winui:Border>
 					
@@ -130,7 +130,7 @@
 								<Button Content="From Clipboard" Click="FromClipboardClick" Style="{StaticResource ButtonMedium}" />
 								<Button Content="To Clipboard" Click="ToClipboardClick" Style="{StaticResource ButtonMedium}" />
 								<Button Content="Clear" Click="ClearClick" Style="{StaticResource ButtonMedium}" />
-								<ToggleSwitch Header="Rearrange" OffContent="Skip" OnContent="Smart" IsOn="{x:Bind views:SettingsPage.autoRearrangeShareStrings, Mode=TwoWay}" ToolTipService.ToolTip="Moves buildings whose positions don't matter to where existing corresponding buildings are located or to locations without res nodes"  />
+								<ToggleSwitch Header="Rearrange" OffContent="Skip" OnContent="Smart" IsOn="{x:Bind cnv:Settings.autoRearrangeShareStrings, Mode=TwoWay}" ToolTipService.ToolTip="Moves buildings whose positions don't matter to where existing corresponding buildings are located or to locations without res nodes"  />
 							</tk:WrapPanel>
 						</Border>
 						<Border  Style="{StaticResource BorderReveal}">
@@ -149,9 +149,9 @@
 				<tk:BladeItem x:Name="TagsBlade" Header="Tags" IsOpen="False">
 					<StackPanel>
 						<StackPanel Orientation="Horizontal">
-							<ToggleSwitch x:Name="setRecruit" Header="Set Recruit" OffContent="Leave" OnContent="From Tags" ToolTipService.ToolTip="If set, the city will be set to recruit troops based on the tags" IsOn="{x:Bind views:SettingsPage.setRecruit}"  />
+							<ToggleSwitch x:Name="setRecruit" Header="Set Recruit" OffContent="Leave" OnContent="From Tags" ToolTipService.ToolTip="If set, the city will be set to recruit troops based on the tags" IsOn="{x:Bind cnv:Settings.setRecruit}"  />
 							<TextBox 
-						 Text="{x:Bind views:SettingsPage.VRTRatio, Mode=TwoWay}"
+						 Text="{x:Bind cnv:Settings.VRTRatio, Mode=TwoWay}"
 						 Header="V/R/T Ratio (if applicable)" />
 						</StackPanel>
 						<tk:WrapPanel x:Name="tagsPanel" x:FieldModifier="public"></tk:WrapPanel>

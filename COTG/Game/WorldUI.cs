@@ -1,6 +1,8 @@
 ﻿namespace CnV;
 
-public static class WorldUI
+using Cysharp.Text;
+
+public static partial class World
 {
 	public static void SetHeatmapDates(SmallTime t0, SmallTime t1)
 	{

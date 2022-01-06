@@ -6,7 +6,7 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:game="using:CnV.Game"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-      xmlns:cotg="using:CnV"
+      xmlns:cnv="using:CnV"
     xmlns:sf="using:Syncfusion.UI.Xaml.DataGrid"
     xmlns:my="using:Microsoft.UI.Xaml.Controls"
       xmlns:tk="using:CommunityToolkit.WinUI.UI.Controls"

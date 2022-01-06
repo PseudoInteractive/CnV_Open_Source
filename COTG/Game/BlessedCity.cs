@@ -239,7 +239,7 @@ namespace CnV.Game
 								stone = (int) (stone * ratio);
 								float denom = (wood + stone);
 								var desRatio =
-									SettingsPage.donationsProportionateToWhatsNeeded && (i.wood > 0 || i.stone > 0)
+									Settings.donationsProportionateToWhatsNeeded && (i.wood > 0 || i.stone > 0)
 										? (float) i.wood / (i.wood + i.stone).Max(1)
 										: DonationTab.woodStoneRatio;
 								if (desRatio >= 0)

@@ -98,7 +98,7 @@ namespace CnV.Views
 				//                atk.x.Add(xy.x);
 				//                atk.y.Add(xy.y);
 				//            }
-				//var time = SettingsPage.attackPlannerTime;
+				//var time = Settings.attackPlannerTime;
 
 				//atk.time = new string[] { time.Hour.ToString("00"), time.Minute.ToString("00"), time.Second.ToString("00"), time.ToString("MM/dd/yyyy") };
 				//            scripts[cluster.id]= System.Text.Json.JsonSerializer.Serialize(atk, JSON.jsonSerializerOptions);
@@ -261,7 +261,7 @@ namespace CnV.Views
 				case nameof(City.xy): cmpL = (a) => (long)a.cid.ZCurveEncodeCid(); break;
 				case "Water": cmpL = (a) => a.isOnWater ? 1l : 0l ; break;
 				case "Player": cmpS = (a) => a.playerName; break;
-				case "Alliance": cmpS = (a) => a.allianceId; break;
+				case "Alliance": cmpS = (a) => a.alliance; break;
 			}
 
 			if (cmpL != null || cmpS != null)
@@ -392,7 +392,7 @@ namespace CnV.Views
         {
             AppS.DispatchOnUIThreadIdle(() =>
             {
-				planName.Text = SettingsPage.attackPlanName;
+				planName.Text = Settings.attackPlanName;
 
 				var attacks = plan.attacks.Where(a => a.attackType != AttackType.none).ToArray();
 				var targets =plan.targets.Where(a => a.attackType != AttackType.none).ToArray();
@@ -424,7 +424,7 @@ namespace CnV.Views
 		{
 			if (loaded)
 			{
-				return folder.SaveAsyncBackup(SettingsPage.attackPlanName, plan,lastSave);
+				return folder.SaveAsyncBackup(Settings.attackPlanName, plan,lastSave);
 			}
 			return Task.CompletedTask;
 		}
@@ -456,9 +456,9 @@ namespace CnV.Views
 				folder = await ApplicationData.Current.LocalFolder.CreateFolderAsync("attacks", CreationCollisionOption.OpenIfExists);
 
 				using var work = new WorkScope("load attacks");
-				(plan,lastSave) = await folder.ReadAsyncForBackup<AttackPlan>(SettingsPage.attackPlanName, plan);
+				(plan,lastSave) = await folder.ReadAsyncForBackup<AttackPlan>(Settings.attackPlanName, plan);
 				// if we just loaded a backup, strip the backup info from the name
-				SettingsPage.attackPlanName = SettingsStorageExtensions.regexBackupDatePostFix.Replace(SettingsPage.attackPlanName,"");
+				Settings.attackPlanName = SettingsStorageExtensions.regexBackupDatePostFix.Replace(Settings.attackPlanName,"");
 
 				// AppS.DispatchOnUIThreadLow(() =>
 				//  {
@@ -800,7 +800,7 @@ namespace CnV.Views
 				combo.Items.Add("Real Demo");
 				combo.Items.Add("Fake Demo");
 				combo.Items.Add("None (Disable)");
-			//	combo.SelectedIndex. = SettingsPage.chooseAttackTypeUpdate;
+			//	combo.SelectedIndex. = Settings.chooseAttackTypeUpdate;
 
 			var check = new CheckBox() { Content = "Update Existing", IsChecked = true };
 				//	var removeTargets = new CheckBox() { Content = $"{targetGrid.SelectedItems.Count} targets", IsChecked = true };
@@ -833,7 +833,7 @@ namespace CnV.Views
 			combo.Items.Add("Fake Senator");
 			combo.Items.Add("Fake Assault");
 			combo.Items.Add("None");
-			//	combo.SelectedIndex. = SettingsPage.chooseAttackTypeUpdate;
+			//	combo.SelectedIndex. = Settings.chooseAttackTypeUpdate;
 
 
 			var msg = new ContentDialog()
@@ -2094,13 +2094,13 @@ namespace CnV.Views
 				var city = i.DataContext as City;
 				var time = plan.attackTime;
 				var commands = playerCommands[city.pid];
-			//	JSClient.view.InvokeScriptAsync("sendmail",new string[] { city.playerName,SettingsPage.attackPlanName + " " + plan.attackTime.FormatDateForFileName(),playerCommands[city.pid].Replace("<","&lt;").Replace(">","&gt;").Replace("\n","&#10;&#13;") });
+			//	JSClient.view.InvokeScriptAsync("sendmail",new string[] { city.playerName,Settings.attackPlanName + " " + plan.attackTime.FormatDateForFileName(),playerCommands[city.pid].Replace("<","&lt;").Replace(">","&gt;").Replace("\n","&#10;&#13;") });
 
 				JSClient.ExecuteScriptAsync("sendmail",city.playerName,Settings.attackPlanName + " " + plan.attackTime.FormatDateForFileName(),
 	playerCommands[city.pid].Replace("<","&lt;").Replace(">","&gt;").Replace("\n","<br />"));//.Replace("\n", "&#10;&#10;") });
 
 
-	//			JSClient.coreWebView.PostWebMessageAsString($"{{\"sendmail\":{{\"to\":\"{city.playerName}\",\"subject\":\"{SettingsPage.attackPlanName+ " " + plan.attackTime.FormatDateForFileName()}\",\"body\"//{COTG.Helpers.JSON.JavaScriptStringEncode(commands.Replace("<", "&lt;").Replace(">", "&gt;").Replace("\n","<br />"),false)}}}");//.Replace("\n", "&#10;&#10;") });
+	//			JSClient.coreWebView.PostWebMessageAsString($"{{\"sendmail\":{{\"to\":\"{city.playerName}\",\"subject\":\"{Settings.attackPlanName+ " " + plan.attackTime.FormatDateForFileName()}\",\"body\"//{COTG.Helpers.JSON.JavaScriptStringEncode(commands.Replace("<", "&lt;").Replace(">", "&gt;").Replace("\n","<br />"),false)}}}");//.Replace("\n", "&#10;&#10;") });
 			}
 			catch(Exception ex)
 			{
@@ -2213,7 +2213,7 @@ namespace CnV.Views
 				// reload
 				loaded = false;
 				await TouchLists();
-				SettingsPage.SaveAll();
+				Settings.SaveAll();
 
 			}
 			else

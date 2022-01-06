@@ -5,7 +5,7 @@ using CnV.Draw;
 
 //using Windows.UI.Core;
 namespace CnV;
-
+using static CnV.GameClient;
 public class TextLayout
 	{
 		public   TextFormat format;
@@ -17,7 +17,7 @@ public class TextLayout
 		{
 			this.text   = text;
 			this.format = format;
-			var size = AGame.bfont.MeasureFont(text);
+			var size = bfont.MeasureFont(text);
 
 			normalizedSpan.X = size.Width;  // *0.5f;
 			normalizedSpan.Y = size.Height; // *0.5f;
@@ -36,7 +36,7 @@ public class TextLayout
 				c.Y -= span.Y;
 
 
-			AGame.draw.DrawString(AGame.bfont, text, c, scale, color, layer, z,
+			draw.DrawString(bfont, text, c, scale, color, layer, z,
 								depthFunction); // (c+span*0.5f).CToDepth() );
 		}
 

@@ -5,7 +5,7 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:game="using:CnV.Game"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-      xmlns:cotg="using:CnV"
+      xmlns:cnv="using:CnV"
       xmlns:my="using:Microsoft.UI.Xaml.Controls"
 	  xmlns:sf="using:Syncfusion.UI.Xaml.DataGrid"
       xmlns:tk="using:CommunityToolkit.WinUI.UI.Controls"
@@ -23,7 +23,7 @@
         </Grid.RowDefinitions>
         <tk:WrapPanel Orientation="Horizontal" Grid.Row="0" >
 
-			<ToggleSwitch Header="Wood vs Stone" IsOn="{x:Bind local:SettingsPage.donationsProportionateToWhatsNeeded, Mode=TwoWay}" OnContent="Needed" OffContent="Have"
+			<ToggleSwitch Header="Wood vs Stone" IsOn="{x:Bind local:Settings.donationsProportionateToWhatsNeeded, Mode=TwoWay}" OnContent="Needed" OffContent="Have"
 						  ToolTipService.ToolTip="Ratio of wood vs stone to send.  On: Whats needed, Off: What's in storage" />
 			<ToggleSwitch Header="Land or Water" IsOn="{x:Bind local:DonationTab.viaWater, Mode=TwoWay}" OnContent="Water" OffContent="Land"
 			               />

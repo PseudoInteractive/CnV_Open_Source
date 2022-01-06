@@ -225,6 +225,10 @@ namespace CnV
 
 			return new Material(rv, effect);
 		}
+		public static EffectPass EffectPass(string name)
+		{
+			return avaEffect.Techniques[name].Passes[0];
+		}
 
 		public static Texture2D LoadTexture(string filename)
 		{

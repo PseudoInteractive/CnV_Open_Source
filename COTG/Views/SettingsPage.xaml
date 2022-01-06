@@ -1,17 +1,16 @@
-﻿<ContentDialog x:Class="CnV.Views.SettingsPage"
+﻿<ContentDialog x:Class="CnV.Settings"
 			   xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 			   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 			   xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 			   xmlns:helper="using:CnV.Helperspers"
 			   xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-			   xmlns:cotg="using:CnV"
+			   xmlns:cnv="using:CnV"
 			   xmlns:views="using:CnV.Views"
 			   xmlns:game="using:CnV.Game"
 			   xmlns:xaml="using:Microsoft.UI.Xaml"
 			   xmlns:wct="using:CommunityToolkit.WinUI.UI.Controls"
 			   xmlns:controls="using:Microsoft.UI.Xaml.Controls"
 			   mc:Ignorable="d"
-			   
 			   PrimaryButtonText="Done"
 			   Title="Settings"
 			   FullSizeDesired="True"
@@ -22,7 +21,7 @@
 	<ScrollViewer ZoomMode="Enabled">
 		<StackPanel Orientation="Vertical" ScrollViewer.VerticalScrollMode="Enabled">
 			<StackPanel Orientation="Horizontal">
-			<HyperlinkButton  Content="{x:Bind views:SettingsPage.versionDescription}"
+			<HyperlinkButton  Content="{x:Bind views:Settings.versionDescription}"
 					   FontSize="12" Click="VersionTapped" />
 				<Button    Content="Launch+"
 						   Style="{ThemeResource ButtonRevealStyle}"
@@ -53,19 +52,19 @@
 					<x:String>Winter</x:String>
 				</controls:RadioButtons>
 
-				<Slider Height="128" Header="Parallax" Value="{x:Bind views:SettingsPage.parallax, Mode=TwoWay}" Maximum="1.0" TickFrequency="0.125"  StepFrequency="0.025" SmallChange="0.025" Margin="8" TickPlacement="Outside" Orientation="Vertical" />
-				<Slider Height="128" Margin="8" Header="Planet" Value="{x:Bind views:SettingsPage.planet, Mode=TwoWay}" Maximum="1.0"  TickFrequency="0.125" StepFrequency="0.0625" SmallChange="0.0625" TickPlacement="Outside" Orientation="Vertical" ToolTipService.ToolTip="Use 0 to disable parallax and shadows" />
-				<Slider Height="128" Margin="8" Header="Font" Value="{x:Bind views:SettingsPage.fontScale, Mode=TwoWay}" Maximum="1.0"  TickFrequency="0.125" StepFrequency="0.0625" SmallChange="0.0625" TickPlacement="Outside" Orientation="Vertical" ToolTipService.ToolTip="Use 0 if the believe that the world is flat" />
-				<!--<Slider Height="128" Header="Detail" Value="{x:Bind views:SettingsPage.renderScale, Mode=TwoWay}" Maximum="1.0" TickFrequency="0.125"  StepFrequency="0.125" SmallChange="0.125" Margin="8" TickPlacement="Outside" Orientation="Vertical" ToolTipService.ToolTip="Controls the resolution at which the view is renderered.  Lower settings may be faster but might also be more blurry.  Lower settings are only needed if you display has a high resolution and your GPU is weak." />-->
-				<Slider Height="128" Header="Flag" Value="{x:Bind views:SettingsPage.flagScale, Mode=TwoWay}" Maximum="1.0" TickFrequency="0.125"  StepFrequency="0.0625" SmallChange="0.0625" Margin="8" TickPlacement="Outside" Orientation="Vertical" ToolTipService.ToolTip="Controls the size of flags above cities and spots." />
-				<Slider Height="128" Header="Icons" Value="{x:Bind views:SettingsPage.iconScale, Mode=TwoWay}" Maximum="1.0" TickFrequency="0.125"  StepFrequency="0.0625" SmallChange="0.0625" Margin="8" TickPlacement="Outside" Orientation="Vertical" ToolTipService.ToolTip="Controls the size of troop icons in world view." />
+				<Slider Height="128" Header="Parallax" Value="{x:Bind cnv:Settings.parallax, Mode=TwoWay}" Maximum="1.0" TickFrequency="0.125"  StepFrequency="0.025" SmallChange="0.025" Margin="8" TickPlacement="Outside" Orientation="Vertical" />
+				<Slider Height="128" Margin="8" Header="Planet" Value="{x:Bind cnv:Settings.planet, Mode=TwoWay}" Maximum="1.0"  TickFrequency="0.125" StepFrequency="0.0625" SmallChange="0.0625" TickPlacement="Outside" Orientation="Vertical" ToolTipService.ToolTip="Use 0 to disable parallax and shadows" />
+				<Slider Height="128" Margin="8" Header="Font" Value="{x:Bind cnv:Settings.fontScale, Mode=TwoWay}" Maximum="1.0"  TickFrequency="0.125" StepFrequency="0.0625" SmallChange="0.0625" TickPlacement="Outside" Orientation="Vertical" ToolTipService.ToolTip="Use 0 if the believe that the world is flat" />
+				<!--<Slider Height="128" Header="Detail" Value="{x:Bind cnv:Settings.renderScale, Mode=TwoWay}" Maximum="1.0" TickFrequency="0.125"  StepFrequency="0.125" SmallChange="0.125" Margin="8" TickPlacement="Outside" Orientation="Vertical" ToolTipService.ToolTip="Controls the resolution at which the view is renderered.  Lower settings may be faster but might also be more blurry.  Lower settings are only needed if you display has a high resolution and your GPU is weak." />-->
+				<Slider Height="128" Header="Flag" Value="{x:Bind cnv:Settings.flagScale, Mode=TwoWay}" Maximum="1.0" TickFrequency="0.125"  StepFrequency="0.0625" SmallChange="0.0625" Margin="8" TickPlacement="Outside" Orientation="Vertical" ToolTipService.ToolTip="Controls the size of flags above cities and spots." />
+				<Slider Height="128" Header="Icons" Value="{x:Bind cnv:Settings.iconScale, Mode=TwoWay}" Maximum="1.0" TickFrequency="0.125"  StepFrequency="0.0625" SmallChange="0.0625" Margin="8" TickPlacement="Outside" Orientation="Vertical" ToolTipService.ToolTip="Controls the size of troop icons in world view." />
 
 			</wct:WrapPanel>
 
 			<wct:WrapPanel Orientation="Horizontal"
 						   Margin="4">
-				<Slider Height="128" Header="Font Size" Value="{x:Bind views:SettingsPage.tabZoom, Mode=TwoWay}" Maximum="1.0" TickFrequency="0.125"  StepFrequency="0.0625" SmallChange="0.0625" Margin="8" TickPlacement="Outside" Orientation="Vertical" ToolTipService.ToolTip="Must restart to see changes" ValueChanged="{x:Bind views:SettingsPage.UpdateZoom}" />
-				<Slider Height="128" Header="Chat Font Size" Value="{x:Bind views:SettingsPage.chatZoom, Mode=TwoWay}" Maximum="1.0" TickFrequency="0.125"  StepFrequency="0.0625" SmallChange="0.0625" Margin="8" TickPlacement="Outside" Orientation="Vertical" ToolTipService.ToolTip="Must restart to see changes" ValueChanged="{x:Bind views:SettingsPage.UpdateZoom}" />
+				<Slider Height="128" Header="Font Size" Value="{x:Bind cnv:Settings.tabZoom, Mode=TwoWay}" Maximum="1.0" TickFrequency="0.125"  StepFrequency="0.0625" SmallChange="0.0625" Margin="8" TickPlacement="Outside" Orientation="Vertical" ToolTipService.ToolTip="Must restart to see changes" ValueChanged="{x:Bind cnv:Settings.UpdateZoom}" />
+				<Slider Height="128" Header="Chat Font Size" Value="{x:Bind cnv:Settings.chatZoom, Mode=TwoWay}" Maximum="1.0" TickFrequency="0.125"  StepFrequency="0.0625" SmallChange="0.0625" Margin="8" TickPlacement="Outside" Orientation="Vertical" ToolTipService.ToolTip="Must restart to see changes" ValueChanged="{x:Bind cnv:Settings.UpdateZoom}" />
 			</wct:WrapPanel>
 
 			<wct:WrapPanel Orientation="Horizontal">
@@ -74,19 +73,19 @@
 						  ToolTipService.ToolTip="If disabled, the Hits tab and Defense History tab will not work, but incoming and outgoing tabs will be faster"
 						  Margin="4" />
 				<controls:NumberBox  Header="Show Attacks Limit"
-									 Value="{x:Bind views:SettingsPage.showAttacksLimit,Mode=TwoWay}"
+									 Value="{x:Bind cnv:Settings.showAttacksLimit,Mode=TwoWay}"
 									 SmallChange="1"
 									 ToolTipService.ToolTip="If there are more incoming attacks than this, only attacks for selected cities will be shown, can be combined with Outgoing Visible or Incoming Visble to see everything (tip: use a continent filter to help performance)"
 									 LargeChange="10"
 									 Style="{StaticResource NumberBoxSmall}" />
 				<controls:NumberBox  Header="Spot MRU count"
-									 Value="{x:Bind views:SettingsPage.mruSize,Mode=TwoWay}"
+									 Value="{x:Bind cnv:Settings.mruSize,Mode=TwoWay}"
 									 SmallChange="1"
 									 LargeChange="10"
 									 Style="{StaticResource NumberBoxSmall}" />
 
 				<ToggleSwitch  Header="City Tint"
-							   IsOn="{x:Bind views:SettingsPage.tintCities, Mode=TwoWay}"
+							   IsOn="{x:Bind cnv:Settings.tintCities, Mode=TwoWay}"
 							   Margin="4"
 							   OnContent="Custom"
 							   OffContent="None"
@@ -94,14 +93,14 @@
 							   />
 				
 				<ToggleSwitch  Header="Incoming visible"
-							   IsOn="{x:Bind views:SettingsPage.incomingAlwaysVisible, Mode=TwoWay}"
+							   IsOn="{x:Bind cnv:Settings.incomingAlwaysVisible, Mode=TwoWay}"
 							   Margin="4"
 							   OnContent="Always"
 							   OffContent="If Tab Open"
 							   ToolTipService.ToolTip="Allows you to always show incoming overlays (potentialy slower and more confusing) or to only show the overlays if an incoming tab is selected"
 							   />
 				<ToggleSwitch  Header="Outgoing visible"
-							   IsOn="{x:Bind views:SettingsPage.attacksAlwaysVisible, Mode=TwoWay}"
+							   IsOn="{x:Bind cnv:Settings.attacksAlwaysVisible, Mode=TwoWay}"
 							   Margin="4"
 							   OnContent="Always"
 							   OffContent="If Tab Open"
@@ -114,7 +113,7 @@
 						   Indeterminate="raidsVisibleMaybe"
 							   ToolTipService.ToolTip="If checked, raids are always visible, if off, raids are never visible, if indeterminate raids are visible when the tab is open"
 							   />
-				<CheckBox  Content="Troops Visible" IsThreeState="True" IsChecked="{x:Bind views:SettingsPage.troopsVisible, Mode=TwoWay}" 
+				<CheckBox  Content="Troops Visible" IsThreeState="True" IsChecked="{x:Bind cnv:Settings.troopsVisible, Mode=TwoWay}" 
 							   Margin="4"
 						  
 							   ToolTipService.ToolTip="If checked, each city with trrops will draw a troop overlay in region view"
@@ -125,30 +124,30 @@
 							   OnContent="Keep COTG Alive"
 							   OffContent="Drop connection on Idle" />
 				<controls:NumberBox Header="Reset Raids Carry %"
-									 Value="{x:Bind views:SettingsPage.resetRaidsCarry,Mode=TwoWay}"
+									 Value="{x:Bind cnv:Settings.resetRaidsCarry,Mode=TwoWay}"
 									 SmallChange="1" ToolTipService.ToolTip="When resetting raids, if [Min(carry%)] &lt;= [Reset Raids Carry %] raids are reset"
 									 LargeChange="5"
 									 Style="{StaticResource NumberBoxSmall}" />
 				<controls:NumberBox Header="Reset Raids Idle %"
-									 Value="{x:Bind views:SettingsPage.resetRaidsIdle,Mode=TwoWay}"
+									 Value="{x:Bind cnv:Settings.resetRaidsIdle,Mode=TwoWay}"
 									 SmallChange="1" ToolTipService.ToolTip="When resetting raids, if [idle troops]/[total troops] > [Reset Raids Idle %] raids are reset"
 									 LargeChange="5"
 									 Style="{StaticResource NumberBoxSmall}" />
 				<controls:NumberBox Header="Return Raids Offset"
-									 Value="{x:Bind views:SettingsPage.returnRaidsBias,Mode=TwoWay}"
+									 Value="{x:Bind cnv:Settings.returnRaidsBias,Mode=TwoWay}"
 									 SmallChange="0.125"
 									ToolTipService.ToolTip="When attacks are scheduled and raids are asked to return before departure, they will come home this many hours before departure"
 									 LargeChange="1"
 									 Style="{StaticResource NumberBoxSmall}" />
 				<controls:NumberBox Header="NotificationDuration"
-									Value="{x:Bind views:SettingsPage.notificationDuration, Mode=TwoWay }"
+									Value="{x:Bind cnv:Settings.notificationDuration, Mode=TwoWay }"
 									SmallChange="1"
 									ToolTipService.ToolTip="Specifies how long notications delays last on screen, regardless of durations you can click on the notifications to dismiss them"
 									/>
-				<CheckBox IsThreeState="True"  Content="Demo cabins if full" IsChecked="{x:Bind views:SettingsPage.demoCottageOnBuildIfFull,Mode=TwoWay}"  ToolTipService.ToolTip="If On, cabins will be automatically destroyed when you place a building into a city with 100 buildings"  />
+				<CheckBox IsThreeState="True"  Content="Demo cabins if full" IsChecked="{x:Bind cnv:Settings.demoCottageOnBuildIfFull,Mode=TwoWay}"  ToolTipService.ToolTip="If On, cabins will be automatically destroyed when you place a building into a city with 100 buildings"  />
 
-				<CheckBox IsThreeState="True"  Content="Demo extra buildings if full" IsChecked="{x:Bind views:SettingsPage.demoBuildingOnBuildIfFull,Mode=TwoWay}" ToolTipService.ToolTip="If On, extra buildings will be automatically destroyed when you place a building into a city with 100 buildings"  />
-				<CheckBox Content="Clear only center res" IsChecked="{x:Bind views:SettingsPage.clearOnlyCenterRes,Mode=TwoWay}" ToolTipService.ToolTip="If clear res is used, this will determine if all nodes are cleared vs only nodes in the center part"  />
+				<CheckBox IsThreeState="True"  Content="Demo extra buildings if full" IsChecked="{x:Bind cnv:Settings.demoBuildingOnBuildIfFull,Mode=TwoWay}" ToolTipService.ToolTip="If On, extra buildings will be automatically destroyed when you place a building into a city with 100 buildings"  />
+				<CheckBox Content="Clear only center res" IsChecked="{x:Bind cnv:Settings.clearOnlyCenterRes,Mode=TwoWay}" ToolTipService.ToolTip="If clear res is used, this will determine if all nodes are cleared vs only nodes in the center part"  />
 			</wct:WrapPanel>
 		
 			<wct:WrapPanel Orientation="Horizontal"
@@ -218,7 +217,7 @@
 							<StackPanel Orientation="Vertical" Width="300" >
 								<wct:WrapPanel Orientation="Horizontal" Margin="4">
 									<controls:NumberBox 
-									Value="{x:Bind views:SettingsPage.exportContinent, Mode=TwoWay}"
+									Value="{x:Bind cnv:Settings.exportContinent, Mode=TwoWay}"
 									NumberFormatter="{x:Bind cotg:App.formatterInt,Mode=OneTime}"
 									Style="{StaticResource NumberBoxSmall}"
 									Header="Continent"
@@ -296,30 +295,30 @@
 						   Margin="4">
 
 					<ToggleSwitch Header="Offense"
-						IsOn="{x:Bind views:SettingsPage.cityListOffense, Mode=TwoWay}"
+						IsOn="{x:Bind cnv:Settings.cityListOffense, Mode=TwoWay}"
 						
 						Margin="4"
 						MinWidth="60" />
 
 					<ToggleSwitch Header="Defense"
-						IsOn="{x:Bind views:SettingsPage.cityListDefense, Mode=TwoWay}"
+						IsOn="{x:Bind cnv:Settings.cityListDefense, Mode=TwoWay}"
 						Margin="4"
 							MinWidth="60" />
 					<ToggleSwitch Header="Shippers"
-						IsOn="{x:Bind views:SettingsPage.cityListShippers, Mode=TwoWay}"
+						IsOn="{x:Bind cnv:Settings.cityListShippers, Mode=TwoWay}"
 						Margin="4"
 						MinWidth="60" />
 					<ToggleSwitch Header="Galleys"
-						IsOn="{x:Bind views:SettingsPage.cityListGalleys, Mode=TwoWay}"
+						IsOn="{x:Bind cnv:Settings.cityListGalleys, Mode=TwoWay}"
 						
 						Margin="4"
 						MinWidth="60" />
 					<ToggleSwitch Header="Warships"
-						IsOn="{x:Bind views:SettingsPage.cityListWarship, Mode=TwoWay}"
+						IsOn="{x:Bind cnv:Settings.cityListWarship, Mode=TwoWay}"
 						Margin="4"
 						MinWidth="60" />
 					<ToggleSwitch Header="Stingers"
-						IsOn="{x:Bind views:SettingsPage.cityListStingers, Mode=TwoWay}"
+						IsOn="{x:Bind cnv:Settings.cityListStingers, Mode=TwoWay}"
 						
 						Margin="4"
 						MinWidth="60" />
@@ -352,26 +351,26 @@
 							  x:FieldModifier="public"
 							  Header="Hub City List"
 							  Width="120"
-							  SelectedItem="{x:Bind views:SettingsPage.hubCitylistUI, Mode=TwoWay}"
+							  SelectedItem="{x:Bind cnv:Settings.hubCitylistUI, Mode=TwoWay}"
 							  DisplayMemberPath="name"
 							  ItemsSource="{x:Bind game:CityList.all, Mode=OneTime}"
 							  ToolTipService.ToolTip="City List used for hubs"
 							  Margin="4" />
 					<controls:NumberBox Header="Cottage Level"
-										Value="{x:Bind views:SettingsPage.cottageLevel, Mode=TwoWay}"
+										Value="{x:Bind cnv:Settings.cottageLevel, Mode=TwoWay}"
 										Width="120"
 										Style="{StaticResource NumberBoxSmall}"
 										SmallChange="1" />
 					<CheckBox Content="Autobuild"
 							  Margin="4"
 							  IsThreeState="True"
-							  IsChecked="{x:Bind views:SettingsPage.autoBuildOn, Mode=TwoWay}" />
+							  IsChecked="{x:Bind cnv:Settings.autoBuildOn, Mode=TwoWay}" />
 			
 					<CheckBox Content="Building Overlays"
 							  Margin="4"
 							  IsThreeState="false"
 							  ToolTipService.ToolTip="Draw or don't draw the share string building overlays"
-							  IsChecked="{x:Bind views:SettingsPage.drawBuildingOverlays, Mode=TwoWay}" />
+							  IsChecked="{x:Bind cnv:Settings.drawBuildingOverlays, Mode=TwoWay}" />
 
 
 			</StackPanel>

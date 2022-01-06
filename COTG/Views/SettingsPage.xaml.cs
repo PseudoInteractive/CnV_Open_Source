@@ -29,7 +29,7 @@ using System.Collections.Immutable;
 using CnV;
 using static CnV.Settings;
 
-namespace CnV.Views
+namespace CnV
 {
 	using Game;
 	using Helpers;
@@ -39,7 +39,7 @@ namespace CnV.Views
 
 	// TODO WTS: Add other settings as necessary. For help see https://github.com/Microsoft/WindowsTemplateStudio/blob/master/docs/UWP/pages/settings-codebehind.md
 	// TODO WTS: Change the URL for your privacy policy in the Resource File, currently set to https://YourPrivacyUrlGoesHere
-	public sealed partial class SettingsPage : ContentDialog, INotifyPropertyChanged
+	public sealed partial class Settings : ContentDialog, INotifyPropertyChanged
 	{
 		private const double largeFontSizeBase = 20.0;
 		private const double mediumFontSizeBase = 14.0;
@@ -50,7 +50,7 @@ namespace CnV.Views
 		private const double smallGridRowHeightBase = 28;//smallFontSizeBase*2.25;
 		private const double chatRowHeightBase = (14.0/30.0);
 
-		internal static SettingsPage instance;
+		internal static Settings instance;
 		//      private static UserDataService UserDataService => Singleton<UserDataService>.Instance;
 
 		//       private static IdentityService IdentityService => Singleton<IdentityService>.Instance;
@@ -65,7 +65,7 @@ namespace CnV.Views
 			{
 				if ( !renderQuality.AlmostEquals(value,1.0f/8.0f)  )
 				{
-					AGame.UpdateRenderQuality(renderQuality);
+					GameClient.UpdateRenderQuality(renderQuality);
 				}
 			}
 		}
@@ -76,7 +76,7 @@ namespace CnV.Views
 			set
 			{
 				musicVolume = value;
-				AGame.UpdateMusic();
+				Audio.UpdateMusic();
 			}
 		}
 		public int uiTheme
@@ -97,7 +97,7 @@ namespace CnV.Views
 			set
 			{
 				lighting = (Lighting)value;
-				AGame.UpdateLighting();
+				GameClient.UpdateLighting();
 			}
 		}
 		bool uiStayAlive
@@ -121,6 +121,7 @@ namespace CnV.Views
 			get => CityList.Find(hubCitylistName);
 			set => hubCitylistName = value switch { null => hubCitylistName, _ => value.name };
 		}
+
 
 		public string visitToken;
 		public string visitCookie;
@@ -160,28 +161,24 @@ namespace CnV.Views
 
 		}
 		
-		public static int raidCarryMinPercent
-		{
-			get => (raidCarryMin*100.0).RoundToInt();
-			set => raidCarryMin = value*(0.01f);
-		}
-		public static int raidCarryTargetPercent
-		{
-			get => (raidCarryTarget*100.0).RoundToInt();
-			set => raidCarryTarget = value*(0.01f);
-		}
-		public static int raidCarryMaxPercent
-		{
-			get => (raidCarryMax*100.0).RoundToInt();
-			set => raidCarryMax = value*(0.01f);
-		}
+		//public static int raidCarryMinPercent
+		//{
+		//	get => (raidCarryMin*100.0).RoundToInt();
+		//	set => raidCarryMin = value*(0.01f);
+		//}
+		//public static int raidCarryTargetPercent
+		//{
+		//	get => (raidCarryTarget*100.0).RoundToInt();
+		//	set => raidCarryTarget = value*(0.01f);
+		//}
+		//public static int raidCarryMaxPercent
+		//{
+		//	get => (raidCarryMax*100.0).RoundToInt();
+		//	set => raidCarryMax = value*(0.01f);
+		//}
 
 
-		public static bool IsThemeWinter()
-		{
-			return theme == Theme.louWinter;
-		}
-		static bool loadedOnce;
+		
 
 		public static async Task LoadFromPlayFab()
 		{
@@ -323,101 +320,28 @@ namespace CnV.Views
 
 		public static void UpdateZoom(object sender = null, Microsoft.UI.Xaml.Controls.Primitives.RangeBaseValueChangedEventArgs e = null)
 		{
-			var chatZoom = chatZoom.Squared()  + 0.75f;
-			var tabZoom = tabZoom.Squared()  + 0.75f;
+			var _chatZoom = chatZoom.Squared() + 0.75f;
+			var _tabZoom  = tabZoom.Squared()  + 0.75f;
 			double AsDouble(object d) => (double)d;
 			double RoundDouble(double d) => Math.Round(d);
-			smallFontSize = AsDouble(App.instance.Resources["SmallFontSize"] = RoundDouble(tabZoom * smallFontSizeBase));
-			largeFontSize = AsDouble(App.instance.Resources["LargeFontSize"] = RoundDouble(tabZoom * largeFontSizeBase));
-			mediumFontSize = AsDouble(App.instance.Resources["MediumFontSize"] = RoundDouble(tabZoom * mediumFontSizeBase));
-//			App.instance.Resources["ChatFontSize"] = RoundDouble(chatZoom *cha;
+			smallFontSize = AsDouble(App.instance.Resources["SmallFontSize"] = RoundDouble(_tabZoom * smallFontSizeBase));
+			largeFontSize = AsDouble(App.instance.Resources["LargeFontSize"] = RoundDouble(_tabZoom * largeFontSizeBase));
+			mediumFontSize = AsDouble(App.instance.Resources["MediumFontSize"] = RoundDouble(_tabZoom * mediumFontSizeBase));
+			//			App.instance.Resources["ChatFontSize"] = RoundDouble(_chatZoom *cha;
 
-			largeGridRowHeight = AsDouble(App.instance.Resources["LargeGridRowHeight"] = RoundDouble(tabZoom * largeGridRowHeightBase));
+			largeGridRowHeight = AsDouble(App.instance.Resources["LargeGridRowHeight"] = RoundDouble(_tabZoom * largeGridRowHeightBase));
 			largeGridRowHeighL = new(largeGridRowHeight);
-			mediumGridRowHeight = AsDouble(App.instance.Resources["MediumGridRowHeight"] = RoundDouble(tabZoom * mediumGridRowHeightBase));
-			shortGridRowHeight = AsDouble(App.instance.Resources["ShortGridRowHeight"] = RoundDouble(tabZoom * smallGridRowHeightBase));
+			mediumGridRowHeight = AsDouble(App.instance.Resources["MediumGridRowHeight"] = RoundDouble(_tabZoom * mediumGridRowHeightBase));
+			shortGridRowHeight = AsDouble(App.instance.Resources["ShortGridRowHeight"] = RoundDouble(_tabZoom * smallGridRowHeightBase));
 
-			App.instance.Resources["ChatFontSize"] = RoundDouble(chatZoom * chatFontSizeBase);
-			App.instance.Resources["ChatFontImageHeight"] = RoundDouble(chatZoom * chatRowHeightBase);
+			App.instance.Resources["ChatFontSize"]        = RoundDouble(_chatZoom * chatFontSizeBase);
+			App.instance.Resources["ChatFontImageHeight"] = RoundDouble(_chatZoom * chatRowHeightBase);
 			
 
 		}
 
 
-		public static void SaveAll(object __ = null, Windows.ApplicationModel.SuspendingEventArgs _=null)
-		{
-			if (!loadedOnce)
-				return;
-			try
-			{
-				CityCustom.Save(); // synchronous
-				var props = typeof(SettingsPage).GetFields(System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.DeclaredOnly);
-				var st = App.ClientSettings();
-				//if (SpotTab.instance.spotMRU.Count>0)
-				//{
-				//    List<int> mru = new List<int>();
-				//    foreach (var sp in SpotTab.instance.spotMRU)
-				//    {
-				//        if (sp.pinned)
-				//            mru.Add(sp.cid);
-
-				//    }
-				//    pinned = mru.ToArray();
-				//}
-				var settings = new Dictionary<string, object>();
-				foreach (var p in props)
-				{
-					if (!p.IsNotSerialized)
-					{
-						var o = p.GetValue(null);
-						st.SaveT(p.Name, p.FieldType,o );
-						settings[p.Name] = o;
-					}
-
-				}
-
-				APlayFab.SaveSettings(settings);
-				//6st.Save(nameof(raidCarry), Raiding.desiredCarry);
-
-				//  st.Save(nameof(fetchFullHistory), fetchFullHistory);
-				////  st.Save(nameof(TipsSeen), TipsSeen.instance);
-				//  st.Save(nameof(hubCitylistName), hubCitylistName);
-
-				//  st.Save(nameof(reqWood), reqWood);
-				//  st.Save(nameof(reqStone), reqStone);
-				//  st.Save(nameof(reqFood), reqFood);
-				//  st.Save(nameof(reqIron), reqIron);
-				//  st.Save(nameof(maxWood), maxWood);
-				//  st.Save(nameof(maxStone), maxStone);
-				//  st.Save(nameof(maxFood), maxFood);
-				//  st.Save(nameof(maxIron), maxIron);
-				//  st.Save(nameof(autoBuildOn) + '2', autoBuildOn==null ? -1 : autoBuildOn==true ? 1 : 0 );
-
-				//  st.Save(nameof(sendWood), sendWood);
-				//  st.Save(nameof(sendStone), sendStone);
-				//  st.Save(nameof(sendFood), sendFood);
-				//  st.Save(nameof(sendIron), sendIron);
-				//  st.Save(nameof(reserveCarts), reserveCarts);
-				//  st.Save(nameof(incomingWatch), incomingWatch);
-
-				st.Save(nameof(DonationTab.reserveCarts), DonationTab.reserveCarts);
-				st.Save(nameof(DonationTab.reserveCartsPCT), DonationTab.reserveCartsPCT);
-				st.Save(nameof(DonationTab.reserveShips), DonationTab.reserveShips);
-				st.Save(nameof(DonationTab.reserveShipsPCT), DonationTab.reserveShipsPCT);
-				st.Save(nameof(DonationTab.woodStoneRatio), DonationTab.woodStoneRatio);
-				st.Save(nameof(DonationTab.reserveWood), DonationTab.reserveWood);
-				st.Save(nameof(DonationTab.reserveStone), DonationTab.reserveStone);
-				//Tips.SaveSeen();
-				//  st.Save("attacktime", AttackTab.time.DateTime);
-
-//				AttackTab.SaveAttacksBlock();
-			}
-			catch (Exception e)
-			{
-				LogEx(e);
-			}
-
-		}
+		
 
 		public bool isLightTheme
 		{
@@ -430,12 +354,12 @@ namespace CnV.Views
 			set { if (value) ThemeSelectorService.SetThemeAsync(ElementTheme.Dark); }
 		}
 
-		public static string versionDescription = string.Empty;
-		public static bool incomingAlwaysVisible;
-		public static bool attacksAlwaysVisible;
-		public static float penaltyForWrongDungeonType = 6;
-		public static ushort scoreForSorcTower = 2000;
-		public static int notificationDuration = 3;
+		////public static string versionDescription = string.Empty;
+		////public static bool incomingAlwaysVisible;
+		////public static bool attacksAlwaysVisible;
+		////public static float penaltyForWrongDungeonType = 6;
+		////public static ushort scoreForSorcTower = 2000;
+		////public static int notificationDuration = 3;
 		//public string VersionDescription
 		//{
 		//	get { return _versionDescription; }
@@ -462,7 +386,7 @@ namespace CnV.Views
 		//}
 
 
-		public SettingsPage()
+		public Settings()
 		{
 			InitializeComponent();
 
@@ -839,7 +763,7 @@ namespace CnV.Views
 			{
 				ElementSoundPlayer.Play(ElementSoundKind.Hide);
 				if (instance == null)
-					instance = new SettingsPage();
+					instance = new Settings();
 				//shown = true;
 				switch (raidsVisible)
 				{
@@ -855,7 +779,7 @@ namespace CnV.Views
 					//Cosmos.PublishPlayerInfo(56996, 220 + 226*65536, instance.visitToken, instance.visitCookie);
 				}
 
-				SettingsPage.SaveAll();
+				Settings.SaveAll();
 				//   dialog.auto
 			},true);
 		}
@@ -896,7 +820,7 @@ namespace CnV.Views
 		{
 			AppS.HideFlyout(sender);
 			HideMe();
-			var cont = SettingsPage.exportContinent.ContinentToXY().XYToPackedContinent();
+			var cont = Settings.exportContinent.ContinentToXY().XYToPackedContinent();
 			var tsMin = exportTSMinTS.Value.RoundToInt();
 			var t1 = CnVServer.ServerTime();
 			Blobs.PlayerStats(t1-TimeSpan.FromDays(exportTSDays.Value), t1,cont,tsMin,
@@ -955,4 +879,5 @@ namespace CnV.Views
 			}
 		}
 	}
+
 }

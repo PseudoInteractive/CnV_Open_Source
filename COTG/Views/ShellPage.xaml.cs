@@ -54,9 +54,9 @@ namespace CnV.Views
 	// TODO WTS: Change the icons and titles for all NavigationViewItems in ShellPage.xaml.
 	public sealed partial class ShellPage : Page, INotifyPropertyChanged
 	{
-		public const int canvasZDefault = 11;
-		public const int canvasZBack    = 0;
-
+		public const  int            canvasZDefault = 11;
+		public const  int            canvasZBack    = 0;
+		public static SwapChainPanel canvas => GameClient.canvas;
 		public int layout
 		{
 			get => Settings.layout;
@@ -76,7 +76,6 @@ namespace CnV.Views
 			public int    id   { get; set; }
 
 		}
-
 		string[] layoutOptions =  System.Linq.Enumerable.Range(0, Settings.layoutOffsets.Length)
 			.Select(a => $"Layout {a}").ToArray();
 
@@ -212,8 +211,8 @@ namespace CnV.Views
 			RequestedTheme = ElementTheme.Dark; // default theme
 
 		}
-//		public static bool rightTabsVisible => SettingsPage.layout>=Layout.c;
-//		public static bool htmlVisible => SettingsPage.layout is not (Layout.l1 or  Layout.r2 or Layout.r1);
+//		public static bool rightTabsVisible => Settings.layout>=Layout.c;
+//		public static bool htmlVisible => Settings.layout is not (Layout.l1 or  Layout.r2 or Layout.r1);
 
 		//public static void SetHeaderText(string text)
 		//{
@@ -231,7 +230,9 @@ namespace CnV.Views
 		private void OnLoaded(object sender, RoutedEventArgs e)
 		{
 			CnVServer.CitySwitch = CnVClient.CitySwitch;
-			NoteClient.Init();
+			GameClient.canvas    = _canvas;
+
+			Note.Init();
 			CityUI.Init();
 			NavStack.Init();
 			// hook up delegates
@@ -241,12 +242,12 @@ namespace CnV.Views
 			//		SystemNavigationManagerPreview.GetForCurrentView().CloseRequested += App.App_CloseRequested; ;
 			//typeof(Telerik.UI.Xaml.Controls.RadDataForm).Assembly.GetType("Telerik.UI.Xaml.Controls.TelerikLicense").GetField("messageDisplayed",BindingFlags.NonPublic|BindingFlags.Static).SetValue(null,true,BindingFlags.Static|BindingFlags.NonPublic,null,null);
 
-			CityBuildUI.Initialize();
+			CityBuild.Initialize();
 			// Grid.SetColumn(webView, 0);
-			Grid.SetRow(CityBuildUI.instance, 1);
-			Grid.SetRowSpan(CityBuildUI.instance, 5);
-			Grid.SetColumnSpan(CityBuildUI.instance, 1);
-			Canvas.SetZIndex(CityBuildUI.instance, 13);
+			Grid.SetRow(CityBuild.instance, 1);
+			Grid.SetRowSpan(CityBuild.instance, 5);
+			Grid.SetColumnSpan(CityBuild.instance, 1);
+			Canvas.SetZIndex(CityBuild.instance, 13);
 			var c = CreateCanvasControl();
 
 
@@ -287,7 +288,7 @@ namespace CnV.Views
 			//		Grid.SetColumnSpan(webView, 2);
 			//		Canvas.SetZIndex(webView, 10);
 
-			//		webView.Scale = new Vector3(SettingsPage.htmlZoom.Squared() * 2.0f + 0.5f);
+			//		webView.Scale = new Vector3(Settings.htmlZoom.Squared() * 2.0f + 0.5f);
 
 
 			//var splitter = new GridSplitter();
@@ -355,16 +356,16 @@ namespace CnV.Views
 			//var displayInformation = DisplayInformation.GetForCurrentView();
 			//var screenSize = new Size(displayInformation.ScreenWidthInRawPixels,
 			//						  displayInformation.ScreenHeightInRawPixels);
-			//	ShellPage.webclientSpan.x = (screenSize.Width * .715625f* SettingsPage.htmlZoom * 2).RoundToInt();
-			//	ShellPage.webclientSpan.y = (screenSize.Height * 0.89236111111111116f * SettingsPage.htmlZoom*2).RoundToInt();
+			//	ShellPage.webclientSpan.x = (screenSize.Width * .715625f* Settings.htmlZoom * 2).RoundToInt();
+			//	ShellPage.webclientSpan.y = (screenSize.Height * 0.89236111111111116f * Settings.htmlZoom*2).RoundToInt();
 			//	await UpdateWebViewScale();
 			Log("Game Create!");
-			AGame.Create(canvas);
+			GameClient.Create(_canvas);
 			try
 			{
 				if (SystemInformation.Instance.IsAppUpdated && !JSClient.isSub)
 				{
-					AppS.DispatchOnUIThreadLow(SettingsPage.ShowWhatsNew);
+					AppS.DispatchOnUIThreadLow(Settings.ShowWhatsNew);
 				}
 
 			}
@@ -387,11 +388,11 @@ namespace CnV.Views
 
 		//public static void AdjustLayout(int delta)
 		//{
-		//	SettingsPage.layout+=delta;
-		//	if(SettingsPage.layout >= SettingsPage.layoutOffsets.Length)
-		//		SettingsPage.layout = 0;
-		//	if(SettingsPage.layout < 0)
-		//		SettingsPage.layout = SettingsPage.layoutOffsets.Length-1;
+		//	Settings.layout+=delta;
+		//	if(Settings.layout >= Settings.layoutOffsets.Length)
+		//		Settings.layout = 0;
+		//	if(Settings.layout < 0)
+		//		Settings.layout = Settings.layoutOffsets.Length-1;
 		//	updateHtmlOffsets.Go(true);
 		//}
 		//private void ShellPage_PointerPressed(object sender,PointerRoutedEventArgs e)
@@ -556,7 +557,7 @@ namespace CnV.Views
 		// (isCurrentPageRestricted) { NavigationService.GoBack(); } }
 
 		// private void OnUserProfile(object sender, RoutedEventArgs e) { if (IsLoggedIn) { OpenSettingsPage(sender,e);
-		////                NavigationService.Navigate<SettingsPage>();
+		////                NavigationService.Navigate<Settings>();
 		// } //else //{ // IsBusy = true; // var loginResult = await IdentityService.LoginAsync();
 		// // if (loginResult != LoginResultType.Success) // { // await
 		// AuthenticationHelper.ShowLoginErrorAsync(loginResult); // IsBusy = false; // } //} }
@@ -572,7 +573,7 @@ namespace CnV.Views
 		//private void Frame_Navigated(object sender, NavigationEventArgs e)
 		//{
 		//    IsBackEnabled = NavigationService.CanGoBack;
-		//    if (e.SourcePageType == typeof(SettingsPage))
+		//    if (e.SourcePageType == typeof(Settings))
 		//    {
 		//        Selected = navigationView.SettingsItem as WinUI.NavigationViewItem;
 		//        return;
@@ -609,7 +610,7 @@ namespace CnV.Views
 		// private void OnItemInvoked(WinUI.NavigationView sender,
 		// WinUI.NavigationViewItemInvokedEventArgs args) { if (args.IsSettingsInvoked) {
 		// OpenSettingsPage(sender, args);
-		////                NavigationService.Navigate<SettingsPage>(null, args.RecommendedNavigationTransitionInfo);
+		////                NavigationService.Navigate<Settings>(null, args.RecommendedNavigationTransitionInfo);
 		// return; }
 
 		// //if (args.InvokedItemContainer is WinUI.NavigationViewItem selectedItem) //{ // var
@@ -714,24 +715,24 @@ namespace CnV.Views
 			return Task.CompletedTask;
 		}
 
-		public static void OnRefresh()
-		{
-			if (JSClient.world == 0)
-			{
-				JSClient.view.Source = new Uri("https://www.crownofthegods.com/home/");
-				return;
-			}
+		//public static void OnRefresh()
+		//{
+		//	if (JSClient.world == 0)
+		//	{
+		//		JSClient.view.Source = new Uri("https://www.crownofthegods.com/home/");
+		//		return;
+		//	}
 
 
-			if (AppS.IsKeyPressedShift())
-			{
-				RefreshX();
-			}
-			else
-			{
-				Refresh();
-			}
-		}
+		//	if (AppS.IsKeyPressedShift())
+		//	{
+		//		RefreshX();
+		//	}
+		//	else
+		//	{
+		//		Refresh();
+		//	}
+		//}
 
 		private static void Refresh()
 		{
@@ -821,7 +822,7 @@ namespace CnV.Views
 					}
 				}
 
-				foreach (var bdi in CityBuildUI.isPlanner ? build.GetLayoutBuildings() : build.postQueueBuildings)
+				foreach (var bdi in CityBuild.isPlanner ? build.GetLayoutBuildings() : build.postQueueBuildings)
 				{
 					var id = bdi.id;
 					if (id == 0 || !bdi.isBuilding)
@@ -841,12 +842,12 @@ namespace CnV.Views
 						{
 							var bdf = BuildingDef.all[i.Key];
 							bd.Add(new BuildingCount()
-											{ count = i.Value, brush = CityBuildUI.BuildingBrush(bdf.bid, 0.5f) });
+											{ count = i.Value, brush = CityBuild.BuildingBrush(bdf.bid, 0.5f) });
 						}
 					}
 
 					bd.Add(new BuildingCount()
-									{ count = bCount, brush = CityBuildUI.BuildingBrush(City.bidTownHall, 0.5f) });
+									{ count = bCount, brush = CityBuild.BuildingBrush(City.bidTownHall, 0.5f) });
 
 					// var button = sender as Button; button.Focus(FocusState.Programmatic);
 					AppS.DispatchOnUIThreadLow(() =>
@@ -990,7 +991,7 @@ namespace CnV.Views
 
 		private void ShowSettings(object sender, RoutedEventArgs e)
 		{
-			SettingsPage.Show();
+			Settings.Show();
 		}
 
 		public static ComboBox CityListBox => instance.cityListBox;
@@ -1332,7 +1333,7 @@ namespace CnV.Views
 		//		internal static bool webviewHasFocus2=true;
 		//private async void SetLayout(int viewToggle)
 		//{
-		//	if(viewToggle == SettingsPage.layout)
+		//	if(viewToggle == Settings.layout)
 		//		return;
 		//	layout = viewToggle;
 
@@ -1466,8 +1467,8 @@ namespace CnV.Views
 		//					//				WebView.ClearTemporaryWebDataAsync();
 		//		//			JSClient.SetCookie("sec_session_id", text2.Text);
 		//				}
-		//			//	SettingsPage.secSessionId = text2.Text;
-		//			//	SettingsPage.SaveAll();
+		//			//	Settings.secSessionId = text2.Text;
+		//			//	Settings.SaveAll();
 
 
 		//				await AppS.DoYesNoBox("Cookie set","Cookies", "Okay", null, "Okay");

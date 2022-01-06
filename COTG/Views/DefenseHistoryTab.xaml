@@ -5,7 +5,7 @@
       xmlns:game="using:CnV.Game"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       xmlns:model="using:CnV.Models"
-      xmlns:cotg="using:CnV"
+      xmlns:cnv="using:CnV"
       xmlns:sf="using:Syncfusion.UI.Xaml.DataGrid"
       xmlns:local="using:CnV.Views"
       Background="{x:Null}"

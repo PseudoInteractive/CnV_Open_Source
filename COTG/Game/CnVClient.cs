@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using static CnV.CnVServer;
 using static CnV.Game.Troops;
 using static CnV.City;
+using static CnV.Spot;
 using static CnV.ClientView;
 
 namespace CnV
@@ -283,10 +284,10 @@ namespace CnV
 						for(var i = 0; i < lists.Count; ++i)
 							CityList.selections[i + 1] = lists[i];
 						CityList.all = lists.ToArray();
-						if(SettingsPage.instance!=null)
+						if(Settings.instance!=null)
 						{
-							SettingsPage.instance.hubCityListBox.ItemsSource = null;
-							SettingsPage.instance.hubCityListBox.ItemsSource = CityList.all;
+							Settings.instance.hubCityListBox.ItemsSource = null;
+							Settings.instance.hubCityListBox.ItemsSource = CityList.all;
 						}
 						ShellPage.CityListBox.ItemsSource          = CityList.selections;
 						ShellPage.CityListBox.SelectedIndex = priorIndex; // Hopefully this is close enough
@@ -742,7 +743,7 @@ namespace CnV
 								{
 									var jso = jsp.Value;
 									var cid = jso.GetAsInt();
-									Spot.ProcessCoordClick(cid, false, AppS.keyModifiers, true); // then normal click
+									ProcessCoordClick(cid, false, AppS.keyModifiers, true); // then normal click
 																								//AppS.DispatchOnUIThreadLow(async () =>
 																								//{
 																								// try
@@ -862,7 +863,7 @@ namespace CnV
 												var msg = new ChatEntry(friend, online ? " has come online" : " has gone offline", ServerTime(), ChatEntry.typeAnnounce);
 												AppS.DispatchOnUIThreadLow(() =>
 												{
-													ChatTab.allianceId.Post(msg, true);
+													ChatTab.alliance.Post(msg, true);
 													ChatTab.world.Post(msg, true);
 												}); // post on both
 											}
@@ -880,12 +881,12 @@ namespace CnV
 								}
 							case "incoming":
 								{
-									App.QueueIdleTask(IncomingOverview.ProcessTask, 1000);
+									AppS.QueueIdleTask(IncomingOverview.ProcessTask, 1000);
 									break;
 								}
 							case "outgoing":
 								{
-									App.QueueIdleTask(OutgoingOverview.ProcessTask, 1000);
+									AppS.QueueIdleTask(OutgoingOverview.ProcessTask, 1000);
 									break;
 								}
 							//case "gstcb":
@@ -1202,7 +1203,7 @@ namespace CnV
 										ClientView.AutoSwitchViewMode();
 									}
 
-									//   ShellPage.SetViewMode((ShellPage.ViewMode)jso.GetInt("v"));
+									//   ShellPage.SetViewMode((ViewMode)jso.GetInt("v"));
 									if(jso.TryGetProperty("pop", out var pop))
 									{
 										var str = pop.ToString();
@@ -1248,7 +1249,7 @@ namespace CnV
 						}
 
 					if(gotCreds)
-						AGame.InitializeForWorld();
+						CnVClient.InitializeForWorld();
 				}
 				//}
 

@@ -20,9 +20,9 @@ using CnV.Views;
 using static CnV.Debug;
 using static CnV.CityBuild;
 using static CnV.GameClient;
-using static CnV.Views.CityBuildUI;
 using static CnV.CityViewS;
 
+//using CityBuildAction = CnV.CityBuild.Action;
 namespace CnV
 {
 	using Draw;
@@ -40,12 +40,12 @@ namespace CnV
 					baseAnimationOffsets[City.XYToId((x,y))] =MathF.Atan2(y, x) / MathF.PI + (((float)y/span0).Squared() + ((float)x / span0).Squared()).Sqrt();
 
 				}
-			AUtil.UnsafeCopy(CityView.baseAnimationOffsets, CityView.animationOffsets);
+			AUtil.UnsafeCopy(CityView.baseAnimationOffsets, CityViewS.animationOffsets);
 
 			City.buildCityChanged += ()
 											=>
 									{
-										AUtil.UnsafeCopy(CityView.baseAnimationOffsets, CityView.animationOffsets);
+										AUtil.UnsafeCopy(CityView.baseAnimationOffsets, CityViewS.animationOffsets);
 										//buildQueue.ClearKeepBuffer();
 										//buildQInSync = false;
 										ClearSelectedBuilding();
@@ -586,27 +586,27 @@ namespace CnV
 		{
 			if (xy.IsNotNan())
 			{
-				if (action == Action.moveEnd)
+				if (action == CityBuildAction.moveEnd)
 				{ 
 					// stay here
 				}
-				else if (action == Action.moveStart)
+				else if (action == CityBuildAction.moveStart)
 				{
 					if (_isSingleClickAction)
 					{
 
-						CityBuild.PushSingleAction(Action.moveEnd);
+						CityBuild.PushSingleAction(CityBuildAction.moveEnd);
 
 					}
 					else
 					{
-						SetAction(Action.moveEnd);
+						SetAction(CityBuildAction.moveEnd);
 					}
 				}
 			}
 			else
 			{
-				if (action == Action.moveEnd)
+				if (action == CityBuildAction.moveEnd)
 				{
 					if (_isSingleClickAction)
 					{
@@ -614,7 +614,7 @@ namespace CnV
 					}
 					else
 					{
-						SetAction(Action.moveStart);
+						SetAction(CityBuildAction.moveStart);
 					}
 				}
 			}

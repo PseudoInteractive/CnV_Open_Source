@@ -60,8 +60,8 @@ namespace CnV
 			//|| TipsSeen.instance.chat2 == false)
 			//    App.QueueIdleTask(ShellPage.ShowTipRefresh);
 			// await RaidOverview.Send();
-			App.QueueIdleTask(IncomingOverview.ProcessTask,1000);
-			App.QueueIdleTask(OutgoingOverview.ProcessTask,1000);
+			AppS.QueueIdleTask(IncomingOverview.ProcessTask,1000);
+			AppS.QueueIdleTask(OutgoingOverview.ProcessTask,1000);
 
 			Task.Run(async () =>
 			{
@@ -108,7 +108,7 @@ namespace CnV
 				senInfoTask        = new( interval: 68f, City.UpdateSenatorInfo, 3.0f);
 				CnVServer.isInitialized      = true;
 
-				AGame.ClientDraw = ClientDraw.Draw;
+			
 	
 		}
 		catch(Exception ex)

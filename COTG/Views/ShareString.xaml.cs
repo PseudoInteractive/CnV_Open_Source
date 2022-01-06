@@ -57,7 +57,6 @@ namespace CnV.Views
 		private int cid;
 		public ShareString() : base()
 		{
-			res.data = new();
 			InitializeComponent();
 		}
 		internal static ShareString Touch()
@@ -154,7 +153,7 @@ namespace CnV.Views
 
 		static public Task Show(int cid,SetupFlags flags = SetupFlags.all)
 		{
-			return App.DispatchOnUIThreadExclusive(cid,async () =>
+			return AppS.DispatchOnUIThreadExclusive(cid,async () =>
 			{
 				Log("enter");
 				await ShowNoLock(cid,flags);
@@ -252,25 +251,25 @@ namespace CnV.Views
 
 						   //var req = new Resources((int)reqWood.Value, (int)reqStone.Value, (int)reqIron.Value, (int)reqFood.Value);
 						   //var max = new Resources((int)maxWood.Value, (int)maxStone.Value, (int)maxIron.Value, (int)maxFood.Value);
-						   //SettingsPage.reqWood = req.wood;
-						   //SettingsPage.reqStone = req.stone;
-						   //SettingsPage.reqIron = req.iron;
-						   //SettingsPage.reqFood = req.food;
+						   //Settings.reqWood = req.wood;
+						   //Settings.reqStone = req.stone;
+						   //Settings.reqIron = req.iron;
+						   //Settings.reqFood = req.food;
 
-						   //SettingsPage.maxWood = max.wood;
-						   //SettingsPage.maxStone = max.stone;
-						   //SettingsPage.maxIron = max.iron;
-						   //SettingsPage.maxFood = max.food;
+						   //Settings.maxWood = max.wood;
+						   //Settings.maxStone = max.stone;
+						   //Settings.maxIron = max.iron;
+						   //Settings.maxFood = max.food;
 						   var reqFilter = res.reqFilter;
 						   var sendFilter = (!city.isHubOrStorage) ? res.sendFilter : ResourceFilter._null;
 						   //			await CitySettings.SetTradeResourcesSettings(city.cid,req,max);
 						   await CitySettings.SetCitySettings(cid,
-							   autoBuildOn: autobuild&&SettingsPage.autoBuildOn.GetValueOrDefault() ? true : null,
-								autoWalls: autobuild&&(SettingsPage.autoWallLevel == 10) ? true : null,
-								autoTowers: autobuild&&(SettingsPage.autoTowerLevel == 10) ? true : null,
+							   autoBuildOn: autobuild&&Settings.autoBuildOn.GetValueOrDefault() ? true : null,
+								autoWalls: autobuild&&(Settings.autoWallLevel == 10) ? true : null,
+								autoTowers: autobuild&&(Settings.autoTowerLevel == 10) ? true : null,
 								  reqHub: (setTrade ? res.reqHub.city switch { City a => a.cid, _ => 0 } : null),
 								  targetHub: (setTrade ? res.sendHub.city switch { null => 0, var a => a.cid } : null),
-								   setRecruit: setTags && SettingsPage.setRecruit,
+								   setRecruit: setTags && Settings.setRecruit,
 								   cartReserve: setTrade ? res.cartReserve : null,
 								  shipReserve: setTrade ? res.shipReserve : null,
 								   req: (setTrade ? res.req : ResourcesNullable._null),
@@ -282,7 +281,7 @@ namespace CnV.Views
 						   {
 							   await city.SetShareString(await GetShareStringWithJson(),true);
 
-							   if(SettingsPage.autoRearrangeShareStrings && city.isLayoutCustom)
+							   if(Settings.autoRearrangeShareStrings && city.isLayoutCustom)
 							   {
 								   await PlannerTab.SmartRearrange(city,true);
 							   }
@@ -322,7 +321,7 @@ namespace CnV.Views
 			return await AppS.DispatchOnUIThreadTask(async () =>
 		   {
 			   var meta = new ShareStringMeta() { notes = TagHelper.ApplyTags(await TagsFromCheckboxes(),string.Empty),desc = description.Text,path = path.Text };
-			   if(SettingsPage.embedTradeInShareStrings)
+			   if(Settings.embedTradeInShareStrings)
 			   {
 				   meta.reqWood = res.req.wood;
 				   meta.reqStone = res.req.stone;
@@ -592,7 +591,7 @@ namespace CnV.Views
 				var hasAnyHubs = (bestReqHub!=0)||(bestSendHub!=0);
 				if(!hasAnyHubs)
 				{
-					bestReqHub =   await CitySettings.FindBestHubWithChoice(cid,"Find Request Hub",null,isHubOrStorage).ConfigureAwait(false);
+					bestReqHub =   await CityUI.FindBestHubWithChoice(cid,"Find Request Hub",null,isHubOrStorage).ConfigureAwait(false);
 					if( !isHubOrStorage)
 						bestSendHub =   await CitySettings.FindBestHub(cid,false).ConfigureAwait(false);
 				}
@@ -701,7 +700,7 @@ namespace CnV.Views
 					cityType.SelectedIndex = 2;
 				else
 					cityType.SelectedIndex =0;
-				bool isNew = IsNewOrCaptured(city)||city._cityName.IsNullOrEmpty();
+				bool isNew = TagHelper.IsNewOrCaptured(city)||city._cityName.IsNullOrEmpty();
 				useSuggested.IsOn = isNew;
 				current.Text = city._cityName;
 				// is this needed?
@@ -785,7 +784,7 @@ namespace CnV.Views
 		{
 			try
 			{
-				var s = ShareString.SplitShareString(shareString);
+				var s = SplitShareString(shareString);
 				//if(s.json.Contains("}{"))
 				//{
 				//	int q = 0;

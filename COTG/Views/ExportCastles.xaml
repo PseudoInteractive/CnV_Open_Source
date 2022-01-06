@@ -7,7 +7,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 	xmlns:wct="using:CommunityToolkit.WinUI.UI.Controls"
 	xmlns:winui="using:Microsoft.UI.Xaml.Controls"
-	xmlns:cotg="using:CnV"
+	xmlns:cnv="using:CnV"
 	xmlns:views="using:CnV.Views"
 	  xmlns:game="using:CnV.Game"
 
@@ -26,7 +26,7 @@
 
 
 
-			<ComboBox Header="Which"  SelectedIndex="{x:Bind views:SettingsPage.exportWho, Mode=TwoWay}"  >
+			<ComboBox Header="Which"  SelectedIndex="{x:Bind cnv:Settings.exportWho, Mode=TwoWay}"  >
 				<x:String>Mine</x:String>
 				<x:String>Alliance</x:String>
 				<x:String>Enemies</x:String>
@@ -38,7 +38,7 @@
 			<AutoSuggestBox Header="Player" x:Name="filterPlayer" PlaceholderText="All Players" TextChanged="{x:Bind views:PlayerGroup.PlayerNameSuggest_TextChanged}"
                 QueryIcon="OtherUser"
 							ToolTipService.ToolTip="Leave Blank to use the 'Which' filter"
-							Text="{x:Bind views:SettingsPage.exportPlayer, Mode=TwoWay}"
+							Text="{x:Bind cnv:Settings.exportPlayer, Mode=TwoWay}"
                 Width="300"  />
 
 			<AutoSuggestBox Header="Alliance" x:Name="filterAlliance" PlaceholderText="All Alliances" 
@@ -51,19 +51,19 @@
 
 		<wct:WrapPanel Orientation="Horizontal"
 						   Margin="4" >
-			<ComboBox Header="Off or Def" SelectedIndex="{x:Bind views:SettingsPage.exportOffence, Mode=TwoWay}"  >
+			<ComboBox Header="Off or Def" SelectedIndex="{x:Bind cnv:Settings.exportOffence, Mode=TwoWay}"  >
 				<x:String>Any</x:String>
 				<x:String>Offense</x:String>
 				<x:String>Defense</x:String>
 			</ComboBox>
 
-			<ComboBox Header="Castles" SelectedIndex="{x:Bind views:SettingsPage.exportCastles, Mode=TwoWay}"  >
+			<ComboBox Header="Castles" SelectedIndex="{x:Bind cnv:Settings.exportCastles, Mode=TwoWay}"  >
 				<x:String>Any</x:String>
 				<x:String>Castles</x:String>
 				<x:String>Cities</x:String>
 			</ComboBox>
 
-			<ComboBox Header="Water" SelectedIndex="{x:Bind views:SettingsPage.exportWater, Mode=TwoWay}"  >
+			<ComboBox Header="Water" SelectedIndex="{x:Bind cnv:Settings.exportWater, Mode=TwoWay}"  >
 				<x:String>Any</x:String>
 				<x:String>Water</x:String>
 				<x:String>Land Locked</x:String>
@@ -78,17 +78,17 @@
 			  ToolTipService.ToolTip="Checked: only temples, Unchecked: temples and non temples"
 									Content="Only Temples"
 			
-									IsChecked="{x:Bind views:SettingsPage.onlyTemples, Mode=TwoWay}" />
+									IsChecked="{x:Bind cnv:Settings.onlyTemples, Mode=TwoWay}" />
 
 			<CheckBox x:Name="score"
 			  ToolTipService.ToolTip="If checked, score is output for each castle (only works for your cities or your alliance cities otherwise it would be slow)"
 								Content="Score"
-			  					IsChecked="{x:Bind views:SettingsPage.exportScore, Mode=TwoWay}"  />
+			  					IsChecked="{x:Bind cnv:Settings.exportScore, Mode=TwoWay}"  />
 			<CheckBox x:Name="headers"
 			  ToolTipService.ToolTip="Checked: a header row is output, Checked or Slightly Checked: group rows are output"
 								Content="Headers"
 								IsThreeState="True"
-								IsChecked="{x:Bind views:SettingsPage.exportHeaders, Mode=TwoWay}"  />
+								IsChecked="{x:Bind cnv:Settings.exportHeaders, Mode=TwoWay}"  />
 	
 
 		</wct:WrapPanel>

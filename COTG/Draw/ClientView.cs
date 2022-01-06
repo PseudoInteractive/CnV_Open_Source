@@ -13,7 +13,7 @@ namespace CnV;
 
 	internal static partial class ClientView
 	{
-		static async void DoZoom(float delta, bool skipPan)
+		internal static async void DoZoom(float delta, bool skipPan)
 		{
 
 
@@ -55,7 +55,7 @@ namespace CnV;
 			//    ChatTab.L("CWheel " + wheel);
 		}
 
-		private static async Task<bool> AutoSwitchCityView()
+		internal static async Task<bool> AutoSwitchCityView()
 		{
 			if(cameraZoom <= cityZoomThreshold)
 				return false;
@@ -139,7 +139,7 @@ namespace CnV;
 		public static bool BringCidIntoWorldView(this int cid, bool lazy)
 		{
 			var newC = cid.CidToWorldV();
-			var dc   = newC - AGame.cameraC;
+			var dc   = newC - View.cameraC;
 			if(!lazy ||
 				!AGame.clip.ContainsSquare(dc, 0.5f *GameClient.pixelScale))
 					//		c0.X < CnV.AGame.c(dc.X.Abs() + 0.5f) * AGame.pixelScale >= AGame.halfSpan.X ||
@@ -147,7 +147,7 @@ namespace CnV;
 			{
 				var thresh = lazy ? 0.75f : 0.25f;
 				// only move if moving more than about 1 city span
-				if(Vector2.Distance(AGame.cameraC, newC) >= thresh)
+				if(Vector2.Distance(View.cameraC, newC) >= thresh)
 				{
 
 					AGame.CameraC = newC;
@@ -160,58 +160,6 @@ namespace CnV;
 			}
 			return false;
 		}
-		public static void SetViewMode(ViewMode _viewMode, bool leaveZoom = false)
-		{
-			//	var _webviewHasFocus = pwebviewHasFocus.HasValue ? pwebviewHasFocus.Value : webviewHasFocus;
-			var priorView = View.viewMode;
-			//	var priorWebviewHasFocus = webviewHasFocus;
-			View.viewMode = _viewMode;
-			//	webviewHasFocus = _webviewHasFocus;
-
-			if(priorView == View.viewMode)
-				return;
-
-			//Log($"!Focus5: {hasKeyboardFocus}");
-			//hasKeyboardFocus = 0;
-			if(!leaveZoom && priorView != View.viewMode)
-			{
-				if(View.viewMode == ViewMode.world)
-				{
-					if(View.cameraZoom > View.cityZoomWorldThreshold)
-						View.cameraZoom = View.cameraZoomWorldDefault;
-				}
-				else if(View.viewMode == ViewMode.region)
-				{
-					if(View.cameraZoom  > View.cityZoomThreshold ||
-						View.cameraZoom < View.cityZoomWorldThreshold)
-						View.cameraZoom = View.cameraZoomRegionDefault;
-				}
-				else
-				{
-					if(View.cameraZoom < View.cityZoomThreshold)
-						View.cameraZoom = View.cityZoomDefault;
-				}
-			}
-
-			//	ShellPage.isOverPopup = false;// reset
-			//var isWorld = IsWorldView();
-			//				ShellPage.isHitTestVisible = !webviewHasFocus;
-			//	UpdateFocus();
-			//AppS.DispatchOnUIThreadLow(() =>
-			//{
-			//	//	instance.webFocus.IsChecked = webviewHasFocus;
-			//	//	Log($"!FocusWeb: {hasKeyboardFocus} w{webviewHasFocus} w2{webviewHasFocus2}");
-			//	//		ShellPage.isOverPopup = false;// reset again in case it changed
-			//	ShellPage.canvas.IsHitTestVisible = ShellPage.isOverPopup
-			//	ShellPage.canvas.Visibility = !ShellPage.canvasVisible ? Visibility.Collapsed : Visibility.Visible;
-			//	AGame.UpdateMusic();
-
-			//	if (!webviewHasFocus && priorWebviewHasFocus)
-			//	{
-			//		TakeKeyboardFocus();
-			//	}
-			//});
-			Audio.UpdateMusic();
-		}
+		
 }
 

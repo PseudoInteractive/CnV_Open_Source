@@ -12,10 +12,11 @@ using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Shapes;
 
 using static CnV.Debug;
-using static CnV.Views.CityBuildUI;
+using static CnV.CityBuild;
 using System.Collections.Generic;
 using CommunityToolkit.WinUI.UI;
 using CnV;
+using static CnV.View;
 
 namespace CnV.Views
 {
@@ -52,7 +53,7 @@ namespace CnV.Views
 	//	public static int htmlShift = 0;
 		//public static int cachedTopOffset = 0;
 		//public static int cachedXOffset = 0;
-		static public SwapChainPanel? canvas=>AGame.canvas;
+//		static public SwapChainPanel? canvas=>GameClient.canvas;
 		public static bool hasKeyboardFocus;
 	//	public static KeyboardProxy keyboardProxy;
 
@@ -265,10 +266,10 @@ namespace CnV.Views
 			//Assert((-0.5f).FloorToInt() == -1);
 			const float dpiLimit = 96.0f;
 
-			canvas = _canvas;
+			var canvas = _canvas;
 			
 			//{
-			//	// DpiScale = SettingsPage.dpiScale != 0 ? SettingsPage.dpiScale : (dpiLimit / DisplayInformation.GetForCurrentView().LogicalDpi).Min(1.0f),
+			//	// DpiScale = Settings.dpiScale != 0 ? Settings.dpiScale : (dpiLimit / DisplayInformation.GetForCurrentView().LogicalDpi).Min(1.0f),
 			//	Name = "DX",
 			//	IsHitTestVisible = false,
 			//	Visibility = Visibility.Visible,
@@ -466,7 +467,7 @@ namespace CnV.Views
 			//	return;
 
 			//}
-			if (!IsCityView())
+			if (!View.IsCityView())
 			{
 				switch (key)
 				{

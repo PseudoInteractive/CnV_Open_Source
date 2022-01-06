@@ -38,7 +38,6 @@ using System.Windows.Input;
 //using Microsoft.AppCenter;
 //using Microsoft.AppCenter.Analytics;
 //using Microsoft.AppCenter.Crashes;
-using Microsoft.Extensions.Configuration;
 //using Microsoft.Extensions.DependencyInjection;
 //using Microsoft.Extensions.Logging;
 //using Microsoft.Extensions.Options;
@@ -80,7 +79,6 @@ namespace CnV
 	using CnV;
 	using Game;
 	using Helpers;
-	using Microsoft.Extensions.Hosting;
 	using Microsoft.Xna.Framework.Input;
 	//// using PInvoke
 	using Services;
@@ -99,8 +97,8 @@ namespace CnV
 			closed,
 		}
 
-		static IConfigurationRoot configuration;
-
+//		static IConfigurationRoot configuration;
+		public  static      Window?           window => AppS.window;
 		public static State                   state;
 		private       Lazy<ActivationService> _activationService;
 		public static bool                    processingTasksStarted;
@@ -274,7 +272,7 @@ namespace CnV
 		{
 			var t0 = BuildQueue.SaveAll(true, false);
 			var t1 = AttackTab.SaveAttacksBlock();
-			SettingsPage.SaveAll();
+			Settings.SaveAll();
 			return Task.WhenAll(t0, t1);
 		}
 
@@ -299,10 +297,6 @@ namespace CnV
 
 	
 
-		public static bool IsKeyPressedShiftAndControl()
-		{
-			return IsKeyPressedShift() && IsKeyPressedControl();
-		}
 		//static void OnKeyUp(CoreWindow sender, KeyEventArgs args)
 		//{
 		//	var key = args.VirtualKey;
@@ -462,8 +456,7 @@ namespace CnV
 				//				Windows.UI.ViewManagement.ApplicationView.GetForCurrentView().TryEnterViewModeAsync(Windows.UI.ViewManagement.ApplicationViewMode.CompactOverlay);
 
 
-				window      = new();
-				AppS.window = window;
+				AppS.window = new();
 				//	window.
 				FocusVisualKind = FocusVisualKind.Reveal;
 
@@ -484,9 +477,9 @@ namespace CnV
 						if (AMath.TryParseInt(s["s"], out int _s))
 							JSClient.subId = _s;
 
-						var n = s["p"];
-						if (n != null)
-							Player.subOwner = n;
+						//var n = s["p"];
+						//if (n != null)
+						//	Player.subOwner = n;
 
 						if (AMath.TryParseInt(s["w"], out int _w))
 							JSClient.world = _w;
@@ -622,7 +615,7 @@ namespace CnV
 					processingTasksStarted = true;
 
 					Task.Run(ProcessThrottledTasks);
-					Task.Run(ProcessIdleTasks);
+					Task.Run(AppS.ProcessIdleTasks);
 				}
 
 

@@ -19,8 +19,8 @@ using Microsoft.UI.Xaml.Navigation;
 using CnV.Services;
 using static CnV.Debug;
 using static CnV.Game.Troops;
-using static CnV.Views.SettingsPage;
 using CnV.Helpers;
+using static CnV.Settings;
 // The Content Dialog item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
 
 namespace CnV.Views
@@ -58,7 +58,7 @@ namespace CnV.Views
 		public static void Close()
 		{
 			instance.Hide();
-			SettingsPage.SaveAll();
+			Settings.SaveAll();
 		}
 		static bool hasRunOnce;
 		public static async Task Show(City city, List<Dungeon> dungeons)
@@ -111,7 +111,7 @@ namespace CnV.Views
 			finally
 			{
 				openCity=0;
-				SettingsPage.SaveAll();
+				Settings.SaveAll();
 			}
 		}
 
@@ -164,13 +164,13 @@ namespace CnV.Views
 		//		switch (sender.Name)
 		//		{
 		//			case nameof(raidCarryMaxBox):
-		//				SetCarry(ref SettingsPage.raidCarryMax, _raidCarry, 2, true);
+		//				SetCarry(ref Settings.raidCarryMax, _raidCarry, 2, true);
 		//				break;
 		//			case nameof(raidCarryMinBox):
-		//				SetCarry(ref SettingsPage.raidCarryMin, _raidCarry, 0, true);
+		//				SetCarry(ref Settings.raidCarryMin, _raidCarry, 0, true);
 		//				break;
 		//			default:
-		//				SetCarry(ref SettingsPage.raidCarryTarget, _raidCarry, 1, true);
+		//				SetCarry(ref Settings.raidCarryTarget, _raidCarry, 1, true);
 		//				break;
 		//		}
 
@@ -238,13 +238,13 @@ namespace CnV.Views
 		//		switch( box.Name )
 		//		{
 		//			case nameof(raidCarryMaxBox):
-		//				SetCarry(ref SettingsPage.raidCarryMax, raidCarrySteps[sel], 2,false);
+		//				SetCarry(ref Settings.raidCarryMax, raidCarrySteps[sel], 2,false);
 		//				break;
 		//			case nameof(raidCarryMinBox):
-		//				SetCarry(ref SettingsPage.raidCarryMin, raidCarrySteps[sel], 0, false) ;
+		//				SetCarry(ref Settings.raidCarryMin, raidCarrySteps[sel], 0, false) ;
 		//				break;
 		//			default:
-		//				SetCarry(ref SettingsPage.raidCarryTarget, raidCarrySteps[sel], 1, false);
+		//				SetCarry(ref Settings.raidCarryTarget, raidCarrySteps[sel], 1, false);
 		//				break;
 		//		}
 						
@@ -264,7 +264,7 @@ namespace CnV.Views
 			{
 				if (IsRaider(i))
 				{
-					var but = new ToggleMenuFlyoutItem() { IsChecked = SettingsPage.includeRaiders[i], DataContext = (object)i, Text = ttNameWithCaps[i] };
+					var but = new ToggleMenuFlyoutItem() { IsChecked = Settings.includeRaiders[i], DataContext = (object)i, Text = ttNameWithCaps[i] };
 					flyout.Items.Add(but);
 				}
 			}
@@ -283,7 +283,7 @@ namespace CnV.Views
 				if (IsRaider(i))
 				{
 					var but = menu.Items[counter] as ToggleMenuFlyoutItem;
-					SettingsPage.includeRaiders[i] = but.IsChecked;
+					Settings.includeRaiders[i] = but.IsChecked;
 					++counter;
 				}
 			}

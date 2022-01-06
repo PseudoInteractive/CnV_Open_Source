@@ -570,7 +570,7 @@ namespace CnV.Views
 				}
 			}
 
-			Spot.SyncSelectionToUI(true);
+			CityUI.SyncSelectionToUI(true);
 		}
 
 

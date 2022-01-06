@@ -117,7 +117,7 @@ namespace CnVDiscord
 				{
 					var message = CnVJsonMessagePackDiscordMessage.Get(messageArgs.discordMessages[i]);
 					var senderOverrides = messageArgs.senderOverrides;
-					if(!Player.playerByDiscordUserName.TryGetValue(message.Author.Username,out var player))
+					if(!Player.fromDiscordUserName.TryGetValue(message.Author.Username,out var player))
 					{
 						player = null;
 					}
@@ -140,7 +140,7 @@ namespace CnVDiscord
 		{
 			try
 			{
-				if(!Player.playerByDiscordId.TryGetValue(senderOverride,out var p))
+				if(!Player.fromDiscordId.TryGetValue(senderOverride,out var p))
 					p = Player.me;
 				var name = p.name; // todo: use clients
 				if (p.avatarBrush is null && p.avatarUrl is not null )

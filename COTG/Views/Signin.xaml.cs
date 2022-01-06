@@ -40,8 +40,8 @@ namespace CnV.Views
 
 		private async void LoginRequest(ContentDialog sender, ContentDialogButtonClickEventArgs args)
 		{
-			SettingsPage.SaveAll();
-			var rv = await APlayFab.Signin(SettingsPage.playerEmail,SettingsPage.playerPassword);
+			Settings.SaveAll();
+			var rv = await APlayFab.Signin(Settings.playerEmail,Settings.playerPassword);
 			if (rv == false)
 			{
 				args.Cancel = true;
@@ -52,9 +52,9 @@ namespace CnV.Views
 
 		private async void RegisterRequest(ContentDialog sender, ContentDialogButtonClickEventArgs args)
 		{
-			SettingsPage.SaveAll();
+			Settings.SaveAll();
 
-			var rv = await APlayFab.Register(SettingsPage.playerName,SettingsPage.playerEmail,SettingsPage.playerPassword);
+			var rv = await APlayFab.Register(Settings.playerName,Settings.playerEmail,Settings.playerPassword);
 			if (rv == false)
 			{
 				args.Cancel = true;
@@ -69,7 +69,7 @@ namespace CnV.Views
 		}
 
 
-		//public string Username => SettingsPage.playerName;
+		//public string Username => Settings.playerName;
 		// /// <summary>
 		//      /// This method is invoked when you select the Register button
 		//      /// This method illustrates the flow for Registration process.

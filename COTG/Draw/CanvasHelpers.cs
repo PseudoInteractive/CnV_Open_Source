@@ -95,7 +95,7 @@ public static class CanvasHelpers
 	//          DrawRoundedSquare(ds, c - ShellPage.shadowOffset, circleRadius, brush, thickness);
 	//      }
 	//	public static float parallaxZ0 = 1024;
-	//public static float ParallaxScale(float dz) => SettingsPage.wantParallax? parallaxZ0 / (parallaxZ0 - dz) : 1.0f;
+	//public static float ParallaxScale(float dz) => Settings.wantParallax? parallaxZ0 / (parallaxZ0 - dz) : 1.0f;
 	// for now we just the same bias for shadows as for light, assuming that the camera is as far from the world as the light
 	//	public static float ParallaxScaleShadow(float dz) => 1;// parralaxZ0 / (parralaxZ0 - dz);
 	public static float bulgeInputGain = 0;
@@ -203,7 +203,7 @@ public static class CanvasHelpers
 
 	public static Vector2 WorldToCamera(this Vector2 c)
 	{
-		return (c - AGame.cameraCLag) * pixelScale;
+		return (c - View.cameraCLag) * pixelScale;
 	}
 	public static Vector2 WorldToCamera(this (int x, int y) c)
 	{

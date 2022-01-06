@@ -1,5 +1,4 @@
-﻿using Microsoft.UI.Xaml;
-using static CnV.AGame;
+﻿using static CnV.AGame;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Media;
@@ -19,11 +18,10 @@ using XVector3 = Microsoft.Xna.Framework.Vector3;
 using XVector4 = Microsoft.Xna.Framework.Vector4;
 using Layer = CnV.Draw.Layer;
 using static CnV.View;
-namespace CnV;
+using static CnV.AGame;
+using KeyF = CnV.KeyFrame<float>;
 
-/// <summary>
-/// TODO: Migrate from AGame and CityView
-/// </summary>
+namespace CnV;
 
 internal partial class GameClient
 {
@@ -32,6 +30,53 @@ internal partial class GameClient
 	private TextFormat tipTextFormat = new TextFormat(TextFormat.HorizontalAlignment.left);
 	private TextFormat tipTextFormatRight = new TextFormat(TextFormat.HorizontalAlignment.right);
 	private TextFormat nameTextFormat = new TextFormat(TextFormat.HorizontalAlignment.center, TextFormat.VerticalAlignment.center);
+	const byte textBackgroundOpacity = 192;
+
+	public static Material worldBackground;
+	//public static Effect imageEffect;
+	public static Effect   avaEffect;
+	public static Span2i[] popups = Array.Empty<Span2i>();
+
+	//    public static TintEffect worldBackgroundDark;
+	public static Material worldObjects;
+	public static Material worldOwners;
+
+	public static VertexBuffer tesselatedWorldVB;
+	public static IndexBuffer tesselatedWorldIB;
+	static KeyF[] bulgeKeys = new[] { new KeyF(0.0f, 0.0f), new KeyF(0.44f, 0.44f), new KeyF(1.5f, 0.44f), new KeyF(2.5f, 0.0f) };
+
+	private static bool TilesReady()
+	{
+		return (TileData.state >= TileData.State.ready);
+	}
+
+	private const int   textBoxCullSlop = 80;
+	static        byte  clearCounter    = 10;
+
+	public static bool  tileSetsPending;
+	private const float smallRectSpan = 4;
+	public const  float lightZ0       = 460f;
+	public const  float lightZDay     = 550;
+	//public static Vector2 cameraLightC;
+	static SamplerState fontFilter = new SamplerState()
+	{
+			Filter                  = TextureFilter.Linear,
+			MipMapLevelOfDetailBias = -1.5f,
+			BorderColor             = new Color(0, 0, 0, 0),
+			MaxAnisotropy           = 2,
+			AddressW                = TextureAddressMode.Border,
+			AddressU                = TextureAddressMode.Border,
+			AddressV                = TextureAddressMode.Border,
+	};
+	static        int                   filterCounter;
+	public static Material              fontMaterial;
+	public static Material              darkFontMaterial;
+	public static BitmapFont.BitmapFont bfont;
+	const         float                 lineTileGain = 1.5f / 64.0f;
+
+	const float actionAnimationGain = 64.0f;
+	const float drawActionLength    = 32;
+	const float lineAnimationGain   = 2.0f;
 
 	class IncomingCounts
 	{
@@ -41,11 +86,15 @@ internal partial class GameClient
 
 	const float postAttackDisplayTime = 15 * 60; // 11 min
 
-	const float lineThickness = 3.0f;
-	const float circleRadMin  = 3.0f;
-	const float circleRadMax  = 5.5f;
+	const  float   lineThickness        = 3.0f;
+	const  float   circleRadMin         = 3.0f;
+	const  float   circleRadMax         = 5.5f;
+	static Vector2 shadowOffset         = new Vector2(4, 4);
+	const  float   detailsZoomThreshold = 28;
+	const  float   detailsZoomFade      = 4;
+
 	//	static float LineThickness(bool hovered) => hovered ? lineThickness * 2 : lineThickness;
-	const         float   rectSpanMin  = 4.0f;
+	const float   rectSpanMin  = 4.0f;
 	const         float   rectSpanMax  = 8.0f;
 	const         float   bSizeGain    = 4.0f;
 	const         float   bSizeGain2   = 4; //4.22166666666667f;
@@ -90,7 +139,7 @@ internal partial class GameClient
 																	   //	lastDrawTime = _serverNow;
 
 				var gain = 1.0f - MathF.Exp(-4.0f * dt);
-				cameraCLag += (AGame.cameraC - cameraCLag) * gain;
+				cameraCLag += (View.cameraC - cameraCLag) * gain;
 				cameraZoomLag += (cameraZoom - cameraZoomLag) * gain;
 				//cameraLightC = (ShellPage.mousePositionC);
 				//                cameraZoomLag += (cameraZoom
@@ -290,7 +339,7 @@ internal partial class GameClient
 
 				}
 
-				var focusOnCity = (View.viewMode == ShellPage.ViewMode.city);
+				var focusOnCity = (View.viewMode == ViewMode.city);
 
 				parallaxGain = Settings.parallax * MathF.Sqrt(Math.Min(11.0f, cameraZoomLag / 64.0f)) * regionAlpha * (1 - cityAlpha);
 
@@ -637,7 +686,7 @@ internal partial class GameClient
 
 							if(AttackTab.IsVisible())
 							{
-								List<AttackCluster> hovered = new();
+								List<AttackTab.AttackCluster> hovered = new();
 								if(!AttackTab.attackClusters.IsNullOrEmpty())
 								{
 									foreach(var cluster in AttackTab.attackClusters)
@@ -1156,7 +1205,7 @@ internal partial class GameClient
 										}
 										if(spot != null && !focusOnCity && !(Settings.troopsVisible.HasValue && Settings.troopsVisible.Value == false))
 										{
-											if(!spot.troopsTotal.Any() && spot.isNotClassified && spot.CanVisit && Settings.troopsVisible.GetValueOrDefault())
+											if(!spot.troopsTotal.Any() && spot.isNotClassified && spot.canVisit && Settings.troopsVisible.GetValueOrDefault())
 												spot.TouchClassification();
 											if(spot.troopsTotal.Any() || spot.isClassified)
 											{
@@ -1243,7 +1292,7 @@ internal partial class GameClient
 						System.Numerics.Vector2 c = new System.Numerics.Vector2(20, 16).ScreenToCamera();
 						DrawTextBox(_contTip, c, tipTextFormat, Color.White.Scale(alpha), (byte)(alpha * 192.0f).RoundToInt(), Layer.overlay, 11, 11, ConstantDepth, 0, 0.5f);
 					}
-					if(ShellPage.IsCityView())
+					if(View.IsCityView())
 					{
 						var                     alpha = 255;
 						System.Numerics.Vector2 c     = new System.Numerics.Vector2(clientSpan.X - 32, 16).ScreenToCamera();
@@ -1255,7 +1304,7 @@ internal partial class GameClient
 							DrawTextBox($"{counts.buildingCount}/{counts.townHallLevel * 10}", c, tipTextFormatRight, Color.White.Scale(alpha), (byte)(alpha * 192.0f).RoundToInt(), Layer.overlay, 11, 11, ConstantDepth, 0, 0.5f);
 						}
 					}
-					var _debugTip = ShellPage.debugTip;
+					var _debugTip = ToolTips.debugTip;
 					if(_debugTip != null)
 					{
 						var                     alpha = 255;
@@ -1583,7 +1632,7 @@ internal partial class GameClient
 		private static void DrawRectOutlineShadow(int layer, Vector2 c0, Vector2 c1, Color color, float thickness = 3, float expand = 0)
 		{
 			DrawRectOutline(layer, c0, c1, color, zCities, thickness, expand);
-			if(AGame.parallaxGain > 0 && wantShadow)
+			if(parallaxGain > 0 && wantShadow)
 				DrawRectOutline(Layer.tileShadow, c0 +shadowOffset*0, c1+shadowOffset*0, color.GetShadowColorDark(), 0.0f, thickness, expand);
 		}
 		private static void DrawRectOutlineShadow(int layer, int cid, Color col, string label = null, float thickness = 3, float expand = 0)
@@ -1619,7 +1668,7 @@ internal partial class GameClient
 		private static void DrawDiamondShadow(int layer, Vector2 c0, Vector2 c1, Color color, float thickness, float expand)
 		{
 			DrawDiamond(layer, c0, c1, color, zCities, thickness, expand);
-			if(AGame.parallaxGain > 0 && wantShadow)
+			if(parallaxGain > 0 && wantShadow)
 				DrawDiamond(Layer.tileShadow, c0 + shadowOffset*0, c1 + shadowOffset*0, color.GetShadowColorDark(), 0f, thickness, expand);
 		}
 		private static void DrawDiamondShadow(int layer, int cid, Color col, string label = null, float thickness = 3, float expand = 0)
@@ -1637,7 +1686,7 @@ internal partial class GameClient
 			}
 		}
 
-		(float u, float v) GetLineUs(Vector2 c0, Vector2 c1)
+		static  (float u, float v) GetLineUs(Vector2 c0, Vector2 c1)
 		{
 			float offset = (lineAnimationGain * (animationTWrap)) % 1;
 			return (offset, offset-(c0 - c1).Length()* clampedScaleInverse * lineTileGain);
@@ -1689,7 +1738,7 @@ internal partial class GameClient
 
 			var angularSpeed = angularSpeedBase + rnd * 0.5f;
 			var t = (AGame.animationT * rnd.Lerp(1.25f / 256.0f, 1.75f / 256f));
-			var r = t.Wave().Lerp(AGame.circleRadiusBase, AGame.circleRadiusBase * 1.375f)* radiusScale;
+			var r = t.Wave().Lerp(GameClient.circleRadiusBase, GameClient.circleRadiusBase * 1.375f)* radiusScale;
 			DrawAccent(c, r, angularSpeed, brush);
 		}
 		
@@ -1768,7 +1817,7 @@ internal partial class GameClient
 							BackBufferWidth = (int)(clientSpan.X*resolutionScale),// - ShellPage.cachedXOffset,
 							BackBufferHeight = (int)(clientSpan.Y*resolutionScale), // - ShellPage.cachedTopOffset,
 						};
-						GraphicsDevice.Reset(pre);
+						GameClient.instance.GraphicsDevice.Reset(pre);
 					}
 				}
 			}

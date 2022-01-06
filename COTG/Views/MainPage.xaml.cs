@@ -340,7 +340,7 @@ namespace CnV.Views
             {
 				if (!c.testContinentAndTagFilter )
 					continue;
-                if( !onlyNeeded || (c.raidCarry != 0 && (c.raidCarry <= SettingsPage.resetRaidsCarry || c.tsRaid*100 >= (c.tsRaidTotal * SettingsPage.resetRaidsIdle) )) )
+                if( !onlyNeeded || (c.raidCarry != 0 && (c.raidCarry <= Settings.resetRaidsCarry || c.tsRaid*100 >= (c.tsRaidTotal * Settings.resetRaidsIdle) )) )
                 {
                     ret.Add(c.cid);
                 }
@@ -374,7 +374,7 @@ namespace CnV.Views
 			{
 				ShellPage.WorkUpdate($"Update Raids {iter0}...");
 				int totalSent = 0;
-				float minRaidIdle = SettingsPage.raidSendMinIdle*0.01f;
+				float minRaidIdle = Settings.raidSendMinIdle*0.01f;
 				for (int pass=0;pass<8;++pass)
 				{
 
@@ -407,7 +407,7 @@ namespace CnV.Views
 
 					// On second and further passes only send if a good number are home
 					// not ideal but it helps
-					if (SettingsPage.raidIntervals != 0)
+					if (Settings.raidIntervals != 0)
 						minRaidIdle = minRaidIdle.Max(4.0f / 16.0f);
 				}
 				Note.ShowTip($"Auto Raid Pass {iter0} {sel.Count}/{sel.Count}");

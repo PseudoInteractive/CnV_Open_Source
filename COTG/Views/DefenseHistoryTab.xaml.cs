@@ -53,7 +53,7 @@ namespace CnV.Views
 				if (!IncomingOverview.updateInProgress)
 				{
 
-					IncomingOverview.Process(SettingsPage.fetchFullHistory); // Todo: throttle
+					IncomingOverview.Process(Settings.fetchFullHistory); // Todo: throttle
 				}
 			}
 			return base.VisibilityChanged(visible, longTerm: longTerm);

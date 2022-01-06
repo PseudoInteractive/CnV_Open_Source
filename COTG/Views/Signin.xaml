@@ -14,9 +14,9 @@
 
     <Grid>
 	    <StackPanel >
-		    <TextBox Header="Name" Text="{x:Bind views:SettingsPage.playerName, Mode=TwoWay }" PlaceholderText="Please don't use 'Avatar'"  />
-		    <TextBox Header="Email" Text="{x:Bind views:SettingsPage.playerEmail, Mode=TwoWay }" PlaceholderText="Email..."  />
-		    <TextBox Header="Password" Text="{x:Bind views:SettingsPage.playerPassword, Mode=TwoWay }"  PlaceholderText="Password... (not secure)"  />
+		    <TextBox Header="Name" Text="{x:Bind cnv:Settings.playerName, Mode=TwoWay }" PlaceholderText="Please don't use 'Avatar'"  />
+		    <TextBox Header="Email" Text="{x:Bind cnv:Settings.playerEmail, Mode=TwoWay }" PlaceholderText="Email..."  />
+		    <TextBox Header="Password" Text="{x:Bind cnv:Settings.playerPassword, Mode=TwoWay }"  PlaceholderText="Password... (not secure)"  />
 	    </StackPanel>
     </Grid>
 </ContentDialog>

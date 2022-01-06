@@ -123,7 +123,7 @@ namespace CnV.Game
 							break;
 						await Task.Delay(1000);
 					}
-					var watch = SettingsPage.incomingWatch;
+					var watch = Settings.incomingWatch;
 					IncomingInfo personalIncoming = new IncomingInfo() { count = 0, first = new DateTimeOffset(2050, 1, 1, 1, 1, 1, TimeSpan.Zero) };
 					IncomingInfo watchIncoming = new IncomingInfo() { count = 0, first = new DateTimeOffset(2050, 1, 1, 1, 1, 1, TimeSpan.Zero) };
 

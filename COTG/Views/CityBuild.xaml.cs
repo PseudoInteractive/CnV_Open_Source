@@ -23,24 +23,23 @@ using Microsoft.UI.Xaml.Media.Imaging;
 using static CnV.Debug;
 using static CnV.CityView;
 using static CnV.City;
-using static CnV.Views.CityBuildUI;
+
 using static CnV.BuildingDef;
 using ContentDialog = Microsoft.UI.Xaml.Controls.ContentDialog;
 using ContentDialogResult = Microsoft.UI.Xaml.Controls.ContentDialogResult;
 using CnV;
 using static CnV.CityBuild;
 
-namespace CnV.Views
+namespace CnV
 {
 	using Draw;
 	using Game;
 	using Helpers;
 	//// using PInvoke
 
-	public sealed partial class CityBuildUI : Microsoft.UI.Xaml.Controls.UserControl
+	public sealed partial class CityBuild : Microsoft.UI.Xaml.Controls.UserControl
 	{
-		public static CityBuildUI instance;
-		public static ref bool isPlanner => ref CityBuild.isPlanner;
+		public static CityBuild instance;
 
 		static readonly Dictionary<int, ImageBrush> brushFromAtlasCache = new();
 		static readonly Dictionary<string, ImageBrush> brushFromImageCache = new();
@@ -90,11 +89,11 @@ namespace CnV.Views
 		public readonly struct ActionInfo
 		{
 			public readonly string name;
-			public readonly Action action;
+			public readonly CityBuildAction action;
 			public readonly string icon;
 			public readonly string toolTip;
 
-			public ActionInfo(string name, Action action, string icon, string toolTip)
+			public ActionInfo(string name, CityBuildAction action, string icon, string toolTip)
 			{
 				this.name = name;
 				this.action = action;
@@ -104,16 +103,16 @@ namespace CnV.Views
 		}
 		public static BuildingMRU[] buildingMru = new BuildingMRU[maxMRUSize];
 
-		static readonly BuildMenuItem amSelect = new BuildMenuItem("Modify", Action.none, "City/decal_select_building.png", "Left click opens a menu");
-		static readonly BuildMenuItem amMove = new BuildMenuItem("Move", Action.moveStart, "City/decal_move_building.png", "In this mode you first click a building, then click empty space, then click the next buildin to move, etc.");
-		static readonly BuildMenuItem amDemo = new BuildMenuItem("Demo", Action.destroy, "City/decal_building_invalid.png", "Destroy anything you click");
-		static readonly BuildMenuItem amLayout = new BuildMenuItem("Smart", Action.layout, "City/decal_building_valid_multi.png", "Smart build based on city layouts");
+		static readonly BuildMenuItem amSelect = new BuildMenuItem("Modify", CityBuildAction.none, "City/decal_select_building.png", "Left click opens a menu");
+		static readonly BuildMenuItem amMove = new BuildMenuItem("Move", CityBuildAction.moveStart, "City/decal_move_building.png", "In this mode you first click a building, then click empty space, then click the next buildin to move, etc.");
+		static readonly BuildMenuItem amDemo = new BuildMenuItem("Demo", CityBuildAction.destroy, "City/decal_building_invalid.png", "Destroy anything you click");
+		static readonly BuildMenuItem amLayout = new BuildMenuItem("Smart", CityBuildAction.layout, "City/decal_building_valid_multi.png", "Smart build based on city layouts");
 		static readonly BuildMenuItem amNone = new BuildMenuItem();
-		static readonly BuildMenuItem amUpgrade = new BuildMenuItem("Upgrade", Action.upgrade, "City/decal_building_valid.png", "Upgrade buildings");
-		static readonly BuildMenuItem amBuild = new BuildMenuItem("Build", Action.upgrade, "City/decal_building_valid.png", "Buidl this");
-		static readonly BuildMenuItem amDowngrade = new BuildMenuItem("Downgrade", Action.downgrade, "City/decal_building_invalid.png", "Downgrade buildings");
-		static readonly BuildMenuItem amFlipLayoutH = new BuildMenuItem("Flip H", Action.flipLayoutH, "City/build_details_gloss_overlay.png", "Flip Layout Horizontally");
-		static readonly BuildMenuItem amFlipLayoutV = new BuildMenuItem("Flip V", Action.flipLayoutV, "City/build_details_gloss_overlay.png", "Flip Layout Vertically");
+		static readonly BuildMenuItem amUpgrade = new BuildMenuItem("Upgrade", CityBuildAction.upgrade, "City/decal_building_valid.png", "Upgrade buildings");
+		static readonly BuildMenuItem amBuild = new BuildMenuItem("Build", CityBuildAction.upgrade, "City/decal_building_valid.png", "Buidl this");
+		static readonly BuildMenuItem amDowngrade = new BuildMenuItem("Downgrade", CityBuildAction.downgrade, "City/decal_building_invalid.png", "Downgrade buildings");
+		static readonly BuildMenuItem amFlipLayoutH = new BuildMenuItem("Flip H", CityBuildAction.flipLayoutH, "City/build_details_gloss_overlay.png", "Flip Layout Horizontally");
+		static readonly BuildMenuItem amFlipLayoutV = new BuildMenuItem("Flip V", CityBuildAction.flipLayoutV, "City/build_details_gloss_overlay.png", "Flip Layout Vertically");
 
 
 
@@ -324,9 +323,9 @@ namespace CnV.Views
 
 		public static Microsoft.UI.Xaml.Controls.Flyout buildMenu;
 
-		public static CityBuildUI Initialize()
+		public static CityBuild Initialize()
 		{
-			instance = new CityBuildUI();
+			instance = new CityBuild();
 			buildMenu = new Microsoft.UI.Xaml.Controls.Flyout()
 			{
 				LightDismissOverlayMode = Microsoft.UI.Xaml.Controls.LightDismissOverlayMode.On,
@@ -398,7 +397,7 @@ namespace CnV.Views
 			menuOpen = false;
 		}
 
-		public CityBuildUI()
+		public CityBuild()
 		{
 			instance = this;
 			this.InitializeComponent();
@@ -496,7 +495,7 @@ namespace CnV.Views
 		{
 			Note.Show("Cleared Queue");
 			BuildQueue.ClearQueue();
-			JSClient.view.ExecuteScriptAsync("cancelbuilds()");
+			JSClient.ExecuteScriptAsync("cancelbuilds()");
 		}
 
 
@@ -668,7 +667,7 @@ namespace CnV.Views
 			const int dvDt = 128;
 			var u0 = (iconId % atlasColumns) * duDt;
 			var v0 = (iconId / atlasColumns % 33) * dvDt;
-			var uri = SettingsPage.IsThemeWinter() ? "City/Winter/building_set5.png" :
+			var uri = Settings.IsThemeWinter() ? "City/Winter/building_set5.png" :
 			"City/building_set5.png";
 			return BrushFromAtlas(uri, u0, v0, scale);
 		}
@@ -712,7 +711,7 @@ namespace CnV.Views
 
 		private static async Task RemoveCastleFromLayout(City city)
 		{
-			if (CityBuildUI.isPlanner)
+			if (CityBuild.isPlanner)
 				Note.Show("Might not work properly in planner mode, good luck!");
 
 			var id = city.FindOverlayBuildingOfType(bidCastle);
@@ -725,7 +724,7 @@ namespace CnV.Views
 
 		internal static void ShortBuild(short bid)
 		{
-			PerformAction(CityBuildUI.Action.build, hovered, bid, false);
+			PerformAction(CityBuild.CityBuildAction.build, hovered, bid, false);
 			lastQuickBuildActionBSpot = XYToId(hovered);
 
 		}
@@ -741,9 +740,9 @@ namespace CnV.Views
 
 		public static async void Click((int x, int y) cc, bool isRight)
 		{
-			if(CityBuildUI.menuOpen)
+			if(CityBuild.menuOpen)
 			{
-				CityBuildUI.menuOpen = false;
+				CityBuild.menuOpen = false;
 				if(buildMenu.IsOpen)
 				{
 					buildMenu.Hide();
@@ -761,17 +760,17 @@ namespace CnV.Views
 			int bspot = XYToId(cc);
 
 			// tempoararily switch to Select from quickbuild
-			if (!isRight && action == Action.build && !City.GetBuild().postQueueBuildings[bspot].isEmpty && !isPlanner)
+			if (!isRight && action == CityBuildAction.build && !City.GetBuild().postQueueBuildings[bspot].isEmpty && !isPlanner)
 			{
 				priorQuickAction = action;
-				action = Action.none;
+				action = CityBuildAction.none;
 			}
 
-			if (!isRight && (action != Action.none))
+			if (!isRight && (action != CityBuildAction.none))
 			{
 			//	ElementSoundPlayer.Play(action == Action.destroy ? ElementSoundKind.GoBack : ElementSoundKind.Focus);
 				await PerformAction(action, cc, quickBuildId, false);
-				if (action != Action.moveStart && action != Action.moveEnd)
+				if (action != CityBuildAction.moveStart && action != CityBuildAction.moveEnd)
 					lastQuickBuildActionBSpot = bspot;
 
 				//	Assert(!isSingleClickAction);
@@ -830,7 +829,7 @@ namespace CnV.Views
 				//	return;
 				//}
 				isSingleClickAction = true;
-				if(CityBuildUI.IsWallSpot(bspot))
+				if(CityBuild.IsWallSpot(bspot))
 				{
 					bspot = 0;
 					cc = (span0, span0);
@@ -848,7 +847,7 @@ namespace CnV.Views
 
 
 				bspot == 0 ? MenuType.buliding :
-				b.id == 0 ? (CityBuildUI.IsTowerSpot(bspot) ? MenuType.tower : CityBuildUI.IsShoreSpot(bspot) ? MenuType.shore : MenuType.empty) :
+				b.id == 0 ? (CityBuild.IsTowerSpot(bspot) ? MenuType.tower : CityBuild.IsShoreSpot(bspot) ? MenuType.shore : MenuType.empty) :
 				b.bl == 0 ? MenuType.res :
 				d.bid == bidTownHall ? isPlanner ? MenuType.townhallPlanner : MenuType.townhall :
 				MenuType.buliding;
@@ -884,7 +883,7 @@ namespace CnV.Views
 					if (isSingleClickAction)
 					{
 
-						await PerformAction(CityBuildUI.Action.build, selected, bi.bid, false);
+						await PerformAction(CityBuild.CityBuildAction.build, selected, bi.bid, false);
 						RevertToLastAction();
 
 					}
@@ -901,7 +900,7 @@ namespace CnV.Views
 				else if (bi.isAction)
 				{
 					//			var items = ShellPage.instance.buildMenu.Items;
-					if (bi.action == Action.layout && !City.GetBuild().isLayoutCustom)
+					if (bi.action == CityBuildAction.layout && !City.GetBuild().isLayoutCustom)
 					{
 						//		JSClient.JSInvoke("showLayout", null);
 						// Dont await on this, just close the menu, we'll activate nex time
@@ -912,10 +911,10 @@ namespace CnV.Views
 					{
 						if (isSingleClickAction)
 						{
-							if (bi.action == CityBuildUI.Action.moveStart)
+							if (bi.action == CityBuild.CityBuildAction.moveStart)
 							{
 
-								SetAction(CityBuildUI.Action.moveEnd);
+								SetAction(CityBuild.CityBuildAction.moveEnd);
 								// leave action pending
 							}
 							else
@@ -953,8 +952,8 @@ namespace CnV.Views
 		{
 			switch (key)
 			{
-				case VirtualKey.Space: CityBuildUI.Click(CityView.hovered, true); return;
-				case VirtualKey.Enter: CityBuildUI.Click(CityView.hovered, false); return;
+				case VirtualKey.Space: CityBuild.Click(CityView.hovered, true); return;
+				case VirtualKey.Enter: CityBuild.Click(CityView.hovered, false); return;
 				case Windows.System.VirtualKey.Left:
 					if (CityView.hovered.IsNotNan())
 						CityView.hovered.x = (CityView.hovered.x - 1).Max(City.span0);
@@ -998,23 +997,23 @@ namespace CnV.Views
 				case Windows.System.VirtualKey.U: City.GetBuild().UpgradeToLevel(1, CityView.hovered, false); break;
 				// case Windows.System.VirtualKey.Q: CityBuild.ClearQueue(); break;
 				case Windows.System.VirtualKey.D: City.GetBuild().Demolish(CityView.hovered, false); break;
-				case Windows.System.VirtualKey.Escape: CityBuildUI.ClearAction(); break;
+				case Windows.System.VirtualKey.Escape: CityBuild.ClearAction(); break;
 				case (VirtualKey)192:
 					{
-						if (action == CityBuildUI.Action.moveEnd)
-							CityBuildUI.MoveHovered(true, false, false);
+						if (action == CityBuild.CityBuildAction.moveEnd)
+							CityBuild.MoveHovered(true, false, false);
 						else
 						{
 							CityView.ClearSelectedBuilding();
-							CityBuildUI.MoveHovered(true, true, false);
+							CityBuild.MoveHovered(true, true, false);
 						}
 						break; //  (City.XYToId(CityView.selected), City.XYToId(CityView.hovered)); break;
 					}
 				// short keys
-				case Windows.System.VirtualKey.F: CityBuildUI.ShortBuild(City.bidForester); return; //  448;
-				case Windows.System.VirtualKey.C: CityBuildUI.ShortBuild(City.bidCottage); return; //  446;
-				case Windows.System.VirtualKey.R: CityBuildUI.ShortBuild(City.bidStorehouse); return; //  464;
-				case Windows.System.VirtualKey.S: CityBuildUI.ShortBuild(City.bidQuarry); return; //  461;
+				case Windows.System.VirtualKey.F: CityBuild.ShortBuild(City.bidForester); return; //  448;
+				case Windows.System.VirtualKey.C: CityBuild.ShortBuild(City.bidCottage); return; //  446;
+				case Windows.System.VirtualKey.R: CityBuild.ShortBuild(City.bidStorehouse); return; //  464;
+				case Windows.System.VirtualKey.S: CityBuild.ShortBuild(City.bidQuarry); return; //  461;
 																								// case
 																								// Windows.System.VirtualKey.Q
 																								// :
@@ -1022,7 +1021,7 @@ namespace CnV.Views
 																								// );
 																								// return;
 																								// // 479;
-				case Windows.System.VirtualKey.A: CityBuildUI.ShortBuild(City.bidFarmhouse); return; //  447;
+				case Windows.System.VirtualKey.A: CityBuild.ShortBuild(City.bidFarmhouse); return; //  447;
 																								   // case
 																								   // Windows.System.VirtualKey.U
 																								   // :
@@ -1030,22 +1029,22 @@ namespace CnV.Views
 																								   // );
 																								   // return;
 																								   // // 504;
-				case Windows.System.VirtualKey.B: CityBuildUI.ShortBuild(City.bidBarracks); return; //  445;
-				case Windows.System.VirtualKey.I: CityBuildUI.ShortBuild(City.bidMine); return; //  465;
-				case Windows.System.VirtualKey.T: CityBuildUI.ShortBuild(City.bidTrainingGround); return; //  483;
-				case Windows.System.VirtualKey.M: CityBuildUI.ShortBuild(City.bidMarketplace); return; //  449;
-				case Windows.System.VirtualKey.V: CityBuildUI.ShortBuild(City.bidTownhouse); return; //  481;
-				case Windows.System.VirtualKey.L: CityBuildUI.ShortBuild(City.bidSawmill); return; //  460;
-				case Windows.System.VirtualKey.E: CityBuildUI.ShortBuild(City.bidStable); return; //  466;
-				case Windows.System.VirtualKey.H: CityBuildUI.ShortBuild(City.bidStonemason); return; //  462;
-				case Windows.System.VirtualKey.W: CityBuildUI.ShortBuild(City.bidSorcTower); return; //  500;
-				case Windows.System.VirtualKey.G: CityBuildUI.ShortBuild(City.bidWindmill); return; //  463;
-				case Windows.System.VirtualKey.Y: CityBuildUI.ShortBuild(City.bidAcademy); return; //  482;
-				case Windows.System.VirtualKey.Z: CityBuildUI.ShortBuild(City.bidSmelter); return; //  477;
-				case Windows.System.VirtualKey.K: CityBuildUI.ShortBuild(City.bidBlacksmith); return; //  502;
-				case Windows.System.VirtualKey.X: CityBuildUI.ShortBuild(City.bidCastle); return; //  467;
-				case Windows.System.VirtualKey.O: CityBuildUI.ShortBuild(City.bidPort); return; //  488;
-				case Windows.System.VirtualKey.P: CityBuildUI.ShortBuild(City.bidShipyard); return; //  491;
+				case Windows.System.VirtualKey.B: CityBuild.ShortBuild(City.bidBarracks); return; //  445;
+				case Windows.System.VirtualKey.I: CityBuild.ShortBuild(City.bidMine); return; //  465;
+				case Windows.System.VirtualKey.T: CityBuild.ShortBuild(City.bidTrainingGround); return; //  483;
+				case Windows.System.VirtualKey.M: CityBuild.ShortBuild(City.bidMarketplace); return; //  449;
+				case Windows.System.VirtualKey.V: CityBuild.ShortBuild(City.bidTownhouse); return; //  481;
+				case Windows.System.VirtualKey.L: CityBuild.ShortBuild(City.bidSawmill); return; //  460;
+				case Windows.System.VirtualKey.E: CityBuild.ShortBuild(City.bidStable); return; //  466;
+				case Windows.System.VirtualKey.H: CityBuild.ShortBuild(City.bidStonemason); return; //  462;
+				case Windows.System.VirtualKey.W: CityBuild.ShortBuild(City.bidSorcTower); return; //  500;
+				case Windows.System.VirtualKey.G: CityBuild.ShortBuild(City.bidWindmill); return; //  463;
+				case Windows.System.VirtualKey.Y: CityBuild.ShortBuild(City.bidAcademy); return; //  482;
+				case Windows.System.VirtualKey.Z: CityBuild.ShortBuild(City.bidSmelter); return; //  477;
+				case Windows.System.VirtualKey.K: CityBuild.ShortBuild(City.bidBlacksmith); return; //  502;
+				case Windows.System.VirtualKey.X: CityBuild.ShortBuild(City.bidCastle); return; //  467;
+				case Windows.System.VirtualKey.O: CityBuild.ShortBuild(City.bidPort); return; //  488;
+				case Windows.System.VirtualKey.P: CityBuild.ShortBuild(City.bidShipyard); return; //  491;
 				case Windows.System.VirtualKey.Q: if (!isPlanner) City.GetBuild().SmartBuild(hovered, City.GetBuild().GetLayoutBid(hovered),searchForSpare:false,dryRun:true, wantDemoUI: false); return;
 
 				default:
@@ -1057,7 +1056,7 @@ namespace CnV.Views
 		{
 			var xy = CityView.hovered;
 			var spot = City.XYToId(xy);
-			if (CityBuildUI.IsTowerSpot(spot) && City.GetBuild().postQueueBuildings[spot].bl == 0)
+			if (CityBuild.IsTowerSpot(spot) && City.GetBuild().postQueueBuildings[spot].bl == 0)
 			{
 				var bid = number switch
 				{
@@ -1090,9 +1089,9 @@ namespace CnV.Views
 		{
 			buildMenu.Hide();
 
-			if (CityBuildUI.isPlanner)
+			if (CityBuild.isPlanner)
 			{
-				await CityBuildUI._IsPlanner(false, true);
+				await CityBuild._IsPlanner(false, true);
 			}
 			else
 			{
@@ -1102,7 +1101,7 @@ namespace CnV.Views
 						return;
 				}
 
-				await CityBuildUI._IsPlanner(true, true);
+				await CityBuild._IsPlanner(true, true);
 
 			}
 		}
@@ -1132,7 +1131,7 @@ namespace CnV.Views
 		{
 			buildMenu.Hide();
 			var cid = City.build;
-			await App.DispatchOnUIThreadExclusive(cid, async () =>
+			await AppS.DispatchOnUIThreadExclusive(cid, async () =>
 			{
 				var dialog = new ContentDialog()
 				{
