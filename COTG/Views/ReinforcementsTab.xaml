@@ -7,7 +7,7 @@
 	xmlns:sf="using:Syncfusion.UI.Xaml.DataGrid"
     xmlns:dataGrid="using:Syncfusion.UI.Xaml.DataGrid"
 	xmlns:view="using:CnV.Views"
-	xmlns:game="using:CnV.Game"
+	xmlns:game="using:CnV"
 	Loaded="ReinLoaded"
     Tag="Reinforcements"
     >

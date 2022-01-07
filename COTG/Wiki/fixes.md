@@ -163,7 +163,8 @@
    - **Fix**
     - World map not displaying properly on W24
    - **Tip**
-    - To run a second instance of the app (for another world for instance) press [Windows Key]+R, then type: cotg:launch?n=1
+    - To run a second instance of the app (for another world for instance) press [Windows Key]+R, then type: 
+	launch?n=1
 	- Not thoroughly tested but it seems to work...
 	- https://i.imgur.com/OrxwWHv.png
 ### 2021/6/21

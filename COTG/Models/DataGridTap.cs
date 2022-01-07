@@ -75,7 +75,7 @@ namespace CnV;
 							{
 								case nameof(i.Type):
 									if (i.reportId != null)
-										JSClient.ShowReport(i.reportId);
+										CnVServer.ShowReport(i.reportId);
 									else
 										Note.Show("This attack is in the future, there is no report yet");
 									break;
@@ -86,22 +86,22 @@ namespace CnV;
 									Spot.ProcessCoordClick(i.sourceCid, false, AppS.keyModifiers, false);
 									break;
 								case "aPlyr":
-									JSClient.ShowPlayer(i.sPlayer);
+									CnVServer.ShowPlayer(i.sPlayer);
 									break;
 								case "dPlyr":
-									JSClient.ShowPlayer(i.tPlayer);
+									CnVServer.ShowPlayer(i.tPlayer);
 									break;
 								//case nameof(i.atkCN): Spot.ProcessCoordClick(i.atkCid, false); break;
 								//case nameof(i.defC):
 								//case nameof(i.defCN): Spot.ProcessCoordClick(i.defCid,false); break;
 								case "atkAli":
-									JSClient.ShowAlliance(i.sourceAllianceName);
+									CnVServer.ShowAlliance(i.sourceAllianceName);
 									break;
 								case "defAli":
-									JSClient.ShowAlliance(i.targetAllianceName);
+									CnVServer.ShowAlliance(i.targetAllianceName);
 									break;
-									//case nameof(i.aPlyr): JSClient.ShowPlayer(i.aPlyr);break;
-									//case nameof(i.dPlyr): JSClient.ShowPlayer(i.dPlyr); break;
+									//case nameof(i.aPlyr): CnVServer.ShowPlayer(i.aPlyr);break;
+									//case nameof(i.dPlyr): CnVServer.ShowPlayer(i.dPlyr); break;
 
 									break;
 
@@ -219,7 +219,7 @@ namespace CnV;
 	//    //            switch (context.Column.Header.ToString())
 	//    //            {
 	//    //                case "xy": CityUI.ShowCity(cid); break;
-	//    //                case "icon": JSClient.ChangeCity(cid); break;
+	//    //                case "icon": CnVServer.ChangeCity(cid); break;
 	//    //                case "tsHome":
 	//    //                    {
 	//    //                        ScanDungeons.Post(cid); break;

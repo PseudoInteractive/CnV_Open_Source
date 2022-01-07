@@ -6,7 +6,8 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 	 xmlns:wuxdata="using:Microsoft.UI.Xaml.Data"
-	xmlns:game="using:CnV.Game"
+	xmlns:game="using:CnV"
+	xmlns:cnv="using:CnV"
 	xmlns:win="using:Microsoft.UI.Xaml.Controls"
 	 xmlns:tk="using:CommunityToolkit.WinUI.UI.Controls"
     mc:Ignorable="d"
@@ -18,7 +19,7 @@
 			
 
 
-			<DataTemplate x:Key="deltaTemplate"   x:DataType="game:HeatMapDelta">
+			<DataTemplate x:Key="deltaTemplate"   x:DataType="cnv:HeatMapDelta">
 				<win:TreeViewItem  
 						ToolTipService.ToolTip="First click will load history for this day.  Then you can select a the start and end of a time period to see corresponding changes.  When in doubt, refresh."
 									    >
@@ -28,7 +29,7 @@
 			</DataTemplate>
 
 
-			<DataTemplate x:Key="dayTemplate"   x:DataType="game:HeatMapDay">
+			<DataTemplate x:Key="dayTemplate"   x:DataType="cnv:HeatMapDay">
 				<win:TreeViewItem ItemsSource="{x:Bind deltas, Mode=OneWay}"
 						ToolTipService.ToolTip="First click will load history for this day.  Then you can select a the start and end of a time period to see corresponding changes.  When in doubt, refresh." 
 								  >

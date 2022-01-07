@@ -45,7 +45,7 @@ sent or received, and those values are bound in the DataTemplate.-->
 					<winui:Image Grid.Column="1" Stretch="Fill" x:Phase="1" MaxHeight="{StaticResource ChatImageHeight}"  Source="{x:Bind avatar}" Margin="2,0,2,0" VerticalAlignment="Center"/>
 					<tk:MarkdownTextBlock Grid.Column="3" x:Name="message" Text="{x:Bind text,Mode=OneTime}"  FontSize="{StaticResource ChatFontSize}" Margin="0,0,0,0"  Padding="0,0,0,0"    
                                              InlineCodeBackground="Black" x:Phase="2" VerticalAlignment="Center" TableCellPadding="0,0,0,0" IsTextSelectionEnabled="True"
-                                              TextWrapping="Wrap" LinkClicked="{x:Bind cotg:Note.MarkDownLinkClicked}"  />
+                                              TextWrapping="Wrap" LinkClicked="{x:Bind cnv:Note.MarkDownLinkClicked}"  />
 				</Grid>
 
 			</DataTemplate>

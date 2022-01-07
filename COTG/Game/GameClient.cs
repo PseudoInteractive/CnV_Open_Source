@@ -53,7 +53,7 @@ namespace CnV
 		static readonly Color      focusColor  = Color.Maroon;
 		static readonly Color      pinnedColor = Color.Teal;
 		static readonly Color      black0Alpha = new Color() { A = 0, R = 0, G = 0, B = 0 };
-		public static   Material[] troopImages = new Material[Game.Troops.ttCount];
+		public static   Material[] troopImages = new Material[Troops.ttCount];
 		static          Vector2    troopImageOriginOffset;
 		const           int        maxTextLayouts = 1024;
 
@@ -255,7 +255,7 @@ namespace CnV
 
 		public static void LoadWorldBackground()
 		{
-			worldBackground = LoadMaterial($"Art/world{(JSClient.world>=26 ? 26 : ((JSClient.world&1) switch { 1 => "23", _ => "22" }))}");
+			worldBackground = LoadMaterial($"Art/world{(CnVServer.world>=26 ? 26 : ((CnVServer.world&1) switch { 1 => "23", _ => "22" }))}");
 
 		}
 
@@ -373,7 +373,7 @@ namespace CnV
 				//				quadTexture = new Material(Content.Load<Texture2D>("Art/quad"), sdfEffect);
 				quadTexture = new Material(null, sdfEffect);
 				whiteMaterial = new Material(null, noTextureEffect);
-				for(int i = 0; i < CnV.Game.Troops.ttCount; ++i)
+				for(int i = 0; i < CnV.Troops.ttCount; ++i)
 				{
 
 					troopImages[i] = LoadMaterial($"Art/icons/troops{i}");

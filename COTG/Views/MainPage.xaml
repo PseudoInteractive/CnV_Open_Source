@@ -6,7 +6,7 @@
 			  xmlns:sf="using:Syncfusion.UI.Xaml.DataGrid"
 			  xmlns:tk="using:CommunityToolkit.WinUI.UI.Controls"
 			  xmlns:winui="using:Microsoft.UI.Xaml.Controls"
-			  xmlns:game="using:CnV.Game"
+			  xmlns:game="using:CnV"
 			  xmlns:views="using:CnV.Views"
 			  mc:Ignorable="d"
 			  Tag="Raid"

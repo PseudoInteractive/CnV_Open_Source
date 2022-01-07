@@ -3,7 +3,7 @@
      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-      xmlns:game="using:CnV.Game"
+      xmlns:game="using:CnV"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       xmlns:cnv="using:CnV"
       xmlns:my="using:Microsoft.UI.Xaml.Controls"
@@ -23,26 +23,26 @@
         </Grid.RowDefinitions>
         <tk:WrapPanel Orientation="Horizontal" Grid.Row="0" >
 
-			<ToggleSwitch Header="Wood vs Stone" IsOn="{x:Bind local:Settings.donationsProportionateToWhatsNeeded, Mode=TwoWay}" OnContent="Needed" OffContent="Have"
+			<ToggleSwitch Header="Wood vs Stone" IsOn="{x:Bind cnv:Settings.donationsProportionateToWhatsNeeded, Mode=TwoWay}" OnContent="Needed" OffContent="Have"
 						  ToolTipService.ToolTip="Ratio of wood vs stone to send.  On: Whats needed, Off: What's in storage" />
 			<ToggleSwitch Header="Land or Water" IsOn="{x:Bind local:DonationTab.viaWater, Mode=TwoWay}" OnContent="Water" OffContent="Land"
 			               />
 			<my:NumberBox Header="Fixed Wood vs Stone?" Value="{x:Bind local:DonationTab.woodStoneRatio,Mode=TwoWay}"
 			              Style="{StaticResource NumberBoxSmall}" ToolTipService.ToolTip="If this is not -1, resources will be sent in a fixed ratio of wood vs stone, i.e. 0.5 means half of each, 0 means all stone, 1 means all wood" 
-			              NumberFormatter="{x:Bind cotg:App.formatter2Digit}" />
+			              NumberFormatter="{x:Bind cnv:App.formatter2Digit}" />
 			<my:NumberBox Header="Reserve Carts" Value="{x:Bind local:DonationTab.reserveCarts,Mode=TwoWay}"
 						  Style="{StaticResource NumberBoxCarts}" Width="100"
 						  
 						  />
             <my:NumberBox Header="Reserve Carts %" Value="{x:Bind local:DonationTab.reserveCartsPCT,Mode=TwoWay}" 
-					NumberFormatter="{x:Bind cotg:App.percentFormatter}" Width="120"
+					NumberFormatter="{x:Bind cnv:App.percentFormatter}" Width="120"
 				Style="{StaticResource NumberBoxPercent}" />
             <my:NumberBox Header="Reserve Ships" Value="{x:Bind local:DonationTab.reserveShips,Mode=TwoWay}"
 						  Style="{StaticResource NumberBoxShips}" Width="100"
 						          />
 			<my:NumberBox Header="Reserve Ships %" Value="{x:Bind local:DonationTab.reserveShipsPCT,Mode=TwoWay}" 
 						   Style="{StaticResource NumberBoxPercent}" Width="120"
-						  NumberFormatter="{x:Bind cotg:App.percentFormatter}"
+						  NumberFormatter="{x:Bind cnv:App.percentFormatter}"
 						  />
 			
             <my:NumberBox  Header="Reserve Wood" Value="{x:Bind local:DonationTab.reserveWood,Mode=TwoWay}"

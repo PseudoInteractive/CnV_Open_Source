@@ -64,7 +64,7 @@ public static class DoTheStuff
 			if(city.buildStage == City.BuildStage.noLayout && allowSetLayout)
 			{
 				//				if (!city.isBuild)
-				//				await JSClient.ChangeCity(city.cid, false);
+				//				await CnVServer.ChangeCity(city.cid, false);
 				await ShareString.ShowNoLock(cid,SetupFlags.all);
 				bc=city.UpdateBuildStage();
 
@@ -115,7 +115,7 @@ public static class DoTheStuff
 			if(!bc.hasCastle  && ((city.tsTotal > Settings.tsForCastle)||(city.is7Point&&bc.townHallLevel>=8)) && city.hasCastleInLayout)
 			{
 				//			if (!city.isBuild)
-				//				await JSClient.ChangeCity(city.cid, false); ;
+				//				await CnVServer.ChangeCity(city.cid, false); ;
 				//				if(!bc.hasWall)
 				//					await city.Enqueue(0, 1, bidWall, bspotWall);
 				await city.SmartBuild(city.FindOverlayBuildingOfType(bidCastle),bidCastle,searchForSpare: true,wantDemoUI: true);
@@ -186,7 +186,7 @@ public static class DoTheStuff
 			}
 
 			// todo: teardown
-			//	await JSClient.ChangeCity(city.cid,false);
+			//	await CnVServer.ChangeCity(city.cid,false);
 			bc=city.UpdateBuildStage();
 
 

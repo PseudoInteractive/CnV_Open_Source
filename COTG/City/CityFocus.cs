@@ -42,7 +42,7 @@ public static partial class CityUI
 		var cid = me.cid;
 		if(!me.isBuild)
 		{
-			if(!await JSClient.CitySwitch(cid, lazyMove)) // keep current view, switch to city 
+			if(!await CnVServer.CitySwitch(cid, lazyMove)) // keep current view, switch to city 
 				return;
 		}
 		if(!View.IsWorldView())

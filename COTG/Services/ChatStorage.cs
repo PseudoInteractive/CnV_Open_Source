@@ -20,7 +20,7 @@ namespace CnV.Services
 
 	public static class ChatStorage
     {
-        static string fileName => $"whisper{JSClient.world}{Player.myId}.zip";
+        static string fileName => $"whisper{CnVServer.world}{Player.myId}.zip";
         static string ArchiveName(int playerId) => playerId.ToString();
         public static bool whisperInitialized;
         public struct WhisperMessage

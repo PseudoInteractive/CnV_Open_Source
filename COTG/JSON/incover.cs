@@ -9,21 +9,21 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
-using static CnV.Game.Troops;
+using static CnV.Troops;
 using static CnV.Debug;
 //using Windows.UI.ViewManagement;
 using System.Net.Http;
 using System.Text.Json;
-using TroopTypeCountsRef = CnV.Game.TroopTypeCounts;
+using TroopTypeCountsRef = CnV.TroopTypeCounts;
 using static CnV.TroopTypeCountHelper;
-//COTG.DArrayRef<COTG.Game.TroopTypeCount>;
-using TroopTypeCounts = CnV.Game.TroopTypeCounts;
+//COTG.DArrayRef<COTG.TroopTypeCount>;
+using TroopTypeCounts = CnV.TroopTypeCounts;
 using DiscordCnV;
 using System.Text;
 using CnV;
-//COTG.DArray<COTG.Game.TroopTypeCount>;
+//COTG.DArray<COTG.TroopTypeCount>;
 
-namespace CnV.Game
+namespace CnV
 {
 	using Services;
 	using Views;
@@ -378,7 +378,7 @@ namespace CnV.Game
 																  var str = tt.GetAsString();
 																  int firstSpace = str.IndexOf(' ');
 
-																  var ttype = Game.Troops.ttNameWithCapsAndBatteringRam.IndexOf(str.Substring(firstSpace + 1));
+																  var ttype = Troops.ttNameWithCapsAndBatteringRam.IndexOf(str.Substring(firstSpace + 1));
 																  if (ttype != -1)
 																  {
 																	  Add(ref ttl, new TroopTypeCount()
@@ -517,7 +517,7 @@ namespace CnV.Game
 
 																		//		  //      Note.Show(content);
 
-																		//		  var client = JSClient.genericClient;
+																		//		  var client = CnVServer.genericClient;
 
 
 																		//			  var message = new DGame.Message() { username = "INCOMING", content = content, avatar_url = "" };

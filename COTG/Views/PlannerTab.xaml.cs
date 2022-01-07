@@ -10,7 +10,7 @@ using Microsoft.UI.Xaml;
 
 using static CnV.Debug;
 using static CnV.City;
-using static CnV.Game.Troops;
+using static CnV.Troops;
 using static CnV.BuildingDef;
 using System.Buffers;
 //using static System.Buffers.ArrayPool<COTG.Building>;

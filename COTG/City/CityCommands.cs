@@ -44,7 +44,7 @@ public static partial class CityUI
 				CityUI.SetFocus(cityId, scrollToInUI, select, true, lazyMove);
 			}
 
-			// if (JSClient.IsWorldView())
+			// if (CnVServer.IsWorldView())
 			//	cityId.BringCidIntoWorldView(lazyMove, false);
 
 			CnVServer.FetchCity(cityId);
@@ -89,7 +89,7 @@ public partial class City
 				try
 				{
 					DateTimeOffset? time = null;
-					var ogaStr = await JSClient.ExecuteScriptAsync("getOGA()");
+					var ogaStr = await CnVServer.ExecuteScriptAsync("getOGA()");
 					using var jsDoc = JsonDocument.Parse(ogaStr.Replace("\\\"", "\"").Trim('"'));
 					foreach(var i in jsDoc.RootElement.EnumerateArray())
 					{

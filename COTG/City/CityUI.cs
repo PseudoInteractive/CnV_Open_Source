@@ -1,6 +1,4 @@
-﻿global using SpotId = System.Int32;
-global using CityId = System.Int32; // same
-
+﻿
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,7 +10,7 @@ namespace CnV;
 using System.Net.Http.Json;
 using System.Text.Json;
 using Windows.System;
-using static CnV.Game.Troops;
+using static CnV.Troops;
 using DiscordCnV;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -102,7 +100,7 @@ public static partial class CityUI
 				//	CityBuild.
 
 				//}
-				//   AApp.AddItem(flyout, "Clear Res", (_, _) => JSClient.ClearCenterRes(cid) );
+				//   AApp.AddItem(flyout, "Clear Res", (_, _) => CnVServer.ClearCenterRes(cid) );
 				aSetup.AddItem("Clear Res", me.ClearRes);
 
 
@@ -112,7 +110,7 @@ public static partial class CityUI
 			{
 				if ( me.cityName == null)
 				{
-					JSClient.FetchCity(cid);
+					CnVServer.FetchCity(cid);
 				}
 
 			}
@@ -156,7 +154,7 @@ public static partial class CityUI
 
 																foreach (var id in sel)
 																{
-																	await JSClient.AddToAttackSender(id);
+																	await CnVServer.AddToAttackSender(id);
 																}
 															}
 								);
@@ -238,7 +236,7 @@ public static partial class CityUI
 
 		public static void DecayQuery(SpotId cid)
 	{
-		JSClient.gStCB(cid, DecayQueryCB, AMath.random.Next());
+		CnVServer.gStCB(cid, DecayQueryCB, AMath.random.Next());
 	}
 
 	public static void ScrollMeIntoView(this City city) => ScrollIntoView(city.cid);
@@ -553,7 +551,7 @@ public static partial class CityUI
 		try
 		{
 			Note.Show($"Registering claim on {cid.CidToCoords()}");
-			var client = JSClient.genericClient;
+			var client = CnVServer.genericClient;
 
 
 			var message = new DGame.Message() { username = "Cord Claim", content = $"{cid.CidToCoords()} claimed by {Player.myName}", avatar_url = "" };
@@ -631,7 +629,7 @@ public partial class Spot
 			}
 			else
 			{
-				await JSClient.CitySwitch(cid, lazyMove, false, scrollIntoUI); // keep current view, switch to city
+				await CnVServer.CitySwitch(cid, lazyMove, false, scrollIntoUI); // keep current view, switch to city
 																			   //	View.SetViewMode(ShellPage.viewMode.GetNextUnowned());// toggle between city/region view
 			}
 			NavStack.Push(cid);
@@ -658,7 +656,7 @@ public partial class City
 		{
 			var wasBuild = City.IsBuild(cid);
 
-			if(!await JSClient.CitySwitch(cid, false, true, false))
+			if(!await CnVServer.CitySwitch(cid, false, true, false))
 				return false;
 
 			if(wasBuild)

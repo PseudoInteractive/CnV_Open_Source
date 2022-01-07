@@ -2,7 +2,7 @@
 	x:Class="CnV.Views.PlannerTab"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:game="using:CnV.Game"
+    xmlns:game="using:CnV"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:cnv="using:CnV"
                xmlns:tk="using:CommunityToolkit.WinUI.UI.Controls"

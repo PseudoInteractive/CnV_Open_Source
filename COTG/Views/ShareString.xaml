@@ -9,7 +9,7 @@
 	xmlns:winui="using:Microsoft.UI.Xaml.Controls"
     mc:Ignorable="d"
 	 xmlns:cnv="using:CnV"
-	  xmlns:game="using:CnV.Game"
+	  xmlns:game="using:CnV"
 	 xmlns:views="using:CnV.Views"
 	HeroContentPlacement ="Top"
 	
@@ -98,8 +98,8 @@
 							  IsThreeState="True"
 					  ToolTipService.ToolTip="Checked: Turn on autobuild, Unchecked; Turn off autobuild, Kind of checked: Leave it"
 							  IsChecked="{x:Bind cnv:Settings.autoBuildOn, Mode=TwoWay}" />
-							<ToggleSwitch Header="Clear Res" IsOn="{x:Bind local:Settings.clearRes, Mode=TwoWay}" OnContent="Clear" OffContent="Leave" />
-							<ToggleSwitch Header="Place Cabins" IsOn="{x:Bind local:Settings.autoBuildCabins, Mode=TwoWay}" OnContent="Build" OffContent="Skip" ToolTipService.ToolTip="If set, cabins will be places when setup is complete" />
+							<ToggleSwitch Header="Clear Res" IsOn="{x:Bind cnv:Settings.clearRes, Mode=TwoWay}" OnContent="Clear" OffContent="Leave" />
+							<ToggleSwitch Header="Place Cabins" IsOn="{x:Bind cnv:Settings.autoBuildCabins, Mode=TwoWay}" OnContent="Build" OffContent="Skip" ToolTipService.ToolTip="If set, cabins will be places when setup is complete" />
 							<winui:NumberBox Header="Cabins" Value="{x:Bind cnv:Settings.startCabinCount,Mode=TwoWay}" Style="{StaticResource NumberBoxSmall}" ToolTipService.ToolTip="The number of cabins to place if PlaceCabins is set" />
 							<winui:NumberBox Header="TS Castle" Value="{x:Bind cnv:Settings.tsForCastle, Mode=TwoWay}" Style="{StaticResource NumberBoxSmall}" ToolTipService.ToolTip="When a city has this many TS or more, it will start its castle" />
 							<winui:NumberBox Header="TS Sorc Tower" Value="{x:Bind cnv:Settings.tsForSorcTower, Mode=TwoWay}" Style="{StaticResource NumberBoxSmall}" ToolTipService.ToolTip="When a city has this many TS or more, the sorc tower will be raised to level 10" />

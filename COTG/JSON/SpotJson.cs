@@ -5,11 +5,11 @@ using System.Linq;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Text;
-using TroopTypeCounts = CnV.Game.TroopTypeCounts;
-//COTG.DArray<COTG.Game.TroopTypeCount>;
-using TroopTypeCountsRef = CnV.Game.TroopTypeCounts;
+using TroopTypeCounts = CnV.TroopTypeCounts;
+//COTG.DArray<COTG.TroopTypeCount>;
+using TroopTypeCountsRef = CnV.TroopTypeCounts;
 using static CnV.TroopTypeCountHelper;
-//COTG.DArrayRef<COTG.Game.TroopTypeCount>;
+//COTG.DArrayRef<COTG.TroopTypeCount>;
 
 namespace CnV.DB
 {
@@ -39,7 +39,7 @@ namespace CnV.DB
 	//		var cookies = _cookies.Split(';');
 	//		string rv = string.Empty;
 	//		//{
-	//		//	JSClient.SetCookie("_gat", string.Empty, false, false, true); // bonus cookie
+	//		//	CnVServer.SetCookie("_gat", string.Empty, false, false, true); // bonus cookie
 	//		//}
 	//		foreach (var c in cookies)
 	//		{
@@ -60,7 +60,7 @@ namespace CnV.DB
 	//			if (isSession)
 	//				rv = value;
 
-	////			JSClient.SetCookieCollab(name, value, isSession, isHttpOnly);
+	////			CnVServer.SetCookieCollab(name, value, isSession, isHttpOnly);
 
 	//		}
 	//		return rv;

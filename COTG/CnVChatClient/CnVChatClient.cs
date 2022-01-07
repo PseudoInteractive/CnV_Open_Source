@@ -77,7 +77,7 @@ namespace CnVDiscord
 				if(connection == null)
 					return false;
 				await Alliance.alliancesFetchedTask.WaitAsync(false);
-				var channels = await connection.JoinAsync(new(){ playerId=Player.myId,world=JSClient.world,alliance=Alliance.myId,allianceTitle=AllianceTitle.newbie}); // Todo store role somewhere
+				var channels = await connection.JoinAsync(new(){ playerId=Player.myId,world=CnVServer.world,alliance=Alliance.myId,allianceTitle=AllianceTitle.newbie}); // Todo store role somewhere
 				Log("Got Channels " + channels.Length);
 				AppS.DispatchOnUIThread(async () =>
 				{

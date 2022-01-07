@@ -103,7 +103,7 @@ namespace CnV
 		bool uiStayAlive
 		{
 			get => stayAlive;
-			set { stayAlive = value; JSClient.SetStayAlive(value); }
+			set { stayAlive = value; CnVServer.SetStayAlive(value); }
 		}
 		bool uiSoundOn
 		{
@@ -208,6 +208,8 @@ namespace CnV
 
 		public static void LoadAll()
 		{
+			Assert(!Settings.loadedOnce);
+			
 			///  fetchFullHistory = st.Read(nameof(fetchFullHistory),true ); // default is true
 
 			//     TipsSeen.instance = st.Read(nameof(TipsSeen), new TipsSeen());
@@ -260,9 +262,9 @@ namespace CnV
 				DonationTab.reserveStone = st.Read(nameof(DonationTab.reserveStone), 0);
 			//	Tips.ReadSeen();
 			//	World.LoadContinentHistory();
-				if(!loadedOnce)
+				if(!Settings.loadedOnce)
 				{
-					loadedOnce = true;
+					Settings.loadedOnce = true;
 					
 
 				}
@@ -644,7 +646,7 @@ namespace CnV
 				   foreach (var it in cgs)
 					   await Post.Get("includes/cgS.php", it, pid);
 				   Note.Show($"Added {addedCityLists} citylists, updated {cgs.Count} cities");
-				   //   JSClient.GetCitylistOverview();
+				   //   CnVServer.GetCitylistOverview();
 				   //			   Note.Show($"Successfully added continent citylists :)");
 			   });
 			HideMe();
@@ -693,7 +695,7 @@ namespace CnV
 						{
 							var cityId = (x, y).WorldToCid();
 							await AppS.DispatchOnUIThreadTask( async () =>
-							  await JSClient.ExecuteScriptAsync("gStQuery", (cityId) )
+							  await CnVServer.ExecuteScriptAsync("gStQuery", (cityId) )
 							  );
 							await Task.Delay(100);
 						}

@@ -5,7 +5,7 @@ using System.Collections.Generic;
 //using Windows.UI.Core;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Input;
-using static CnV.Game.Troops;
+using static CnV.Troops;
 using System.Threading.Tasks;
 
 namespace CnV.Views

@@ -85,7 +85,7 @@ namespace CnV.Services
 //		//		private static Container sessionContainer;
 //	//	static CosmosClientOptions clientOptions = new() { ConnectionMode = ConnectionMode.Direct ,LimitToEndpoint=true,EnableContentResponseOnWrite=false };
 
-//		static string worldPostfix => JSClient.world == 21 ? "": ('_' + JSClient.world.ToString());
+//		static string worldPostfix => CnVServer.world == 21 ? "": ('_' + CnVServer.world.ToString());
 
 //		// The name of the database and container we will create
 //		// We are currently putting them all into w21 to save on databases
@@ -94,7 +94,7 @@ namespace CnV.Services
 //		private static string presenceContainerId => $"p282{worldPostfix}";
 //	//	private static string sessionContainerId => $"s{151 + (Alliance.myId == 131 || Alliance.myId == 132 ? 131 : Alliance.myId) }";
 //		private static string ordersContainerId => $"seenOrders{worldPostfix}";
-////        private static string blobContainerId => $"c{JSClient.world}";
+////        private static string blobContainerId => $"c{CnVServer.world}";
 // //       private static string blobName => $"b{311 + Alliance.myId}22";
 //     	const int concurrentRequestCount = 1;
 //        private static SemaphoreSlim throttle = new SemaphoreSlim(concurrentRequestCount);
@@ -165,7 +165,7 @@ namespace CnV.Services
 //		#region BuildQ
 
 //		//static bool buildQueueExists;
-//		//static string buildQueuePartition => $"{JSClient.world}_{Player.myName}";
+//		//static string buildQueuePartition => $"{CnVServer.world}_{Player.myName}";
 //		//const string buildQueueKey = "buildq";
 //		//public static async Task<string> LoadBuildQueue()
 //		//{
@@ -265,7 +265,7 @@ namespace CnV.Services
 
 //	//	static async ValueTask<bool> Touch()
 //	//	{
-//	//		Assert(JSClient.world != 0);
+//	//		Assert(CnVServer.world != 0);
 //	//		if (cosmosClient != null)
 //	//			return database != null;
 		
@@ -318,7 +318,7 @@ namespace CnV.Services
 //		{
 //			return Task.CompletedTask;
 //			//// don't send for subs
-//			//if (JSClient.ppss != 0)
+//			//if (CnVServer.ppss != 0)
 //			//	return;
 //			//if (!await Touch())
 //			//	return;

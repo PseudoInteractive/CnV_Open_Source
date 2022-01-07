@@ -96,7 +96,7 @@ namespace CnV.Services
 	{
 	//	const string accountNameCnV = "cnv";
 	//	const string storageAccountKeyCnV = "EWd320nJYCPBsIJIb53HTQvdauQLpX0zyzXhkmhzNaZLSkXJhhfzeQa6bliSfUWAWyRjlTsvPVtGxSzsfq+Rqw==";
-	//	static string tableNameDiscord => $"Discord{JSClient.world}";
+	//	static string tableNameDiscord => $"Discord{CnVServer.world}";
 	//	const string storageUriCnV = "https://" + accountNameCnV + ".table.core.windows.net/";
 	//	static bool tableClientCnVInitialized;
 	//	static ATable<DiscordAllianceDB> tableDiscord;
@@ -107,7 +107,7 @@ namespace CnV.Services
 		
 		const string tableName = "sharestring";
 
-		static string incTableName => $"inc{JSClient.world}";
+		static string incTableName => $"inc{CnVServer.world}";
 		// DefaultEndpointsProtocol=https;AccountName=avata;AccountKey=IWRPGlttorpK5DcHWin/GdA2VEcZKnHkr30lE0ZDvKLG0q1CjZONcAQYI2D26DENd7TIAxF8tPsE0mIk98BafA==;EndpointSuffix=core.windows.net
 		static ATableService serviceClient;
 		static ATable<ShareStringDB> TableShareStrings;

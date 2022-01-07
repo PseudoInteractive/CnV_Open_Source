@@ -308,7 +308,7 @@ namespace CnV.Views
 		{
 			var chatEntry = sender as HyperlinkButton;
 			if (chatEntry != null)
-				JSClient.ShowPlayer(chatEntry.Content.ToString());
+				CnVServer.ShowPlayer(chatEntry.Content.ToString());
 		}
 		private void HyperlinkButton_Tapped(object sender, TappedRoutedEventArgs e)
 		{
@@ -427,7 +427,7 @@ namespace CnV.Views
 								int cotgId = isWhisperChannel ? 1 : chatToId.IndexOf(s);
 								if ( cotgId >= 0)
 								{
-									JSClient.SendChat(cotgId + 1, str);
+									CnVServer.SendChat(cotgId + 1, str);
 								}
 
 							}
@@ -641,7 +641,7 @@ namespace CnV.Views
 		//    if (pt.PointerUpdateKind == Windows.UI.Input.PointerUpdateKind.RightButtonPressed)
 		//    {
 		//        if (chatEntry != null)
-		//            JSClient.ShowPlayer(chatEntry.Content.ToString());
+		//            CnVServer.ShowPlayer(chatEntry.Content.ToString());
 		//    }
 		//    else if (pt.PointerUpdateKind == Windows.UI.Input.PointerUpdateKind.LeftButtonPressed)
 		//    {

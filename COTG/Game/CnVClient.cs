@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using static CnV.CnVServer;
-using static CnV.Game.Troops;
+using static CnV.Troops;
 using static CnV.City;
 using static CnV.Spot;
 using static CnV.ClientView;
@@ -513,7 +513,7 @@ namespace CnV
 								//}
 
 								//	Assert(pid == Player.myId);
-								//Cosmos.PublishPlayerInfo(JSClient.jsBase.pid, City.build, JSClient.jsBase.token, JSClient.jsBase.cookies); // broadcast change
+								//Cosmos.PublishPlayerInfo(CnVServer.jsBase.pid, City.build, CnVServer.jsBase.token, CnVServer.jsBase.cookies); // broadcast change
 
 								//foreach (var p in PlayerPresence.all)
 								//{

@@ -23,8 +23,8 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 
 using static CnV.Debug;
-using static CnV.Game.AttackPlan;
-using static CnV.Game.Troops;
+using static CnV.AttackPlan;
+using static CnV.Troops;
 using System.Linq;
 using CommunityToolkit.WinUI.UI.Controls;
 using CnV;
@@ -33,7 +33,7 @@ namespace CnV.Views
 {
 	using Game;
 	using Helpers;
-	using AttackPlanCity = Game.AttackPlanCity;
+	using AttackPlanCity = AttackPlanCity;
 
 	public sealed partial class AttackTab : UserTab
     {
@@ -190,7 +190,7 @@ namespace CnV.Views
 				{
 					if (attackStrings.TryGetValue(atk.cid, out var script))
 					{
-						await JSClient.OpenAttackSender(script);
+						await CnVServer.OpenAttackSender(script);
 
 					}
 					else
@@ -419,7 +419,7 @@ namespace CnV.Views
 
 			});
         }
-//		static string attacksFile => $"attackPlans{JSClient.world.ToString()}\\attacks";
+//		static string attacksFile => $"attackPlans{CnVServer.world.ToString()}\\attacks";
 		internal static Task SaveAttacks()
 		{
 			if (loaded)
@@ -488,7 +488,7 @@ namespace CnV.Views
                 //});
                 UpdateStats();
                 BuildAttackClusters();
-				Bindings.Update(); 
+				//Bindings.Update(); 
 				loaded = true;
 			}
 			return rv;
@@ -2094,13 +2094,13 @@ namespace CnV.Views
 				var city = i.DataContext as City;
 				var time = plan.attackTime;
 				var commands = playerCommands[city.pid];
-			//	JSClient.view.InvokeScriptAsync("sendmail",new string[] { city.playerName,Settings.attackPlanName + " " + plan.attackTime.FormatDateForFileName(),playerCommands[city.pid].Replace("<","&lt;").Replace(">","&gt;").Replace("\n","&#10;&#13;") });
+			//	CnVServer.view.InvokeScriptAsync("sendmail",new string[] { city.playerName,Settings.attackPlanName + " " + plan.attackTime.FormatDateForFileName(),playerCommands[city.pid].Replace("<","&lt;").Replace(">","&gt;").Replace("\n","&#10;&#13;") });
 
-				JSClient.ExecuteScriptAsync("sendmail",city.playerName,Settings.attackPlanName + " " + plan.attackTime.FormatDateForFileName(),
+				CnVServer.ExecuteScriptAsync("sendmail",city.playerName,Settings.attackPlanName + " " + plan.attackTime.FormatDateForFileName(),
 	playerCommands[city.pid].Replace("<","&lt;").Replace(">","&gt;").Replace("\n","<br />"));//.Replace("\n", "&#10;&#10;") });
 
 
-	//			JSClient.coreWebView.PostWebMessageAsString($"{{\"sendmail\":{{\"to\":\"{city.playerName}\",\"subject\":\"{Settings.attackPlanName+ " " + plan.attackTime.FormatDateForFileName()}\",\"body\"//{COTG.Helpers.JSON.JavaScriptStringEncode(commands.Replace("<", "&lt;").Replace(">", "&gt;").Replace("\n","<br />"),false)}}}");//.Replace("\n", "&#10;&#10;") });
+	//			CnVServer.coreWebView.PostWebMessageAsString($"{{\"sendmail\":{{\"to\":\"{city.playerName}\",\"subject\":\"{Settings.attackPlanName+ " " + plan.attackTime.FormatDateForFileName()}\",\"body\"//{COTG.Helpers.JSON.JavaScriptStringEncode(commands.Replace("<", "&lt;").Replace(">", "&gt;").Replace("\n","<br />"),false)}}}");//.Replace("\n", "&#10;&#10;") });
 			}
 			catch(Exception ex)
 			{
@@ -2231,7 +2231,7 @@ namespace CnV.Views
 
 		public override string ToString() => name;
 
-		public static TroopTypeItemSource[] all = Game.Troops.ttNameWithCaps.Select( (a,i) => new TroopTypeItemSource() { name = a, TroopType = (byte)i} ).ToArray();
+		public static TroopTypeItemSource[] all = Troops.ttNameWithCaps.Select( (a,i) => new TroopTypeItemSource() { name = a, TroopType = (byte)i} ).ToArray();
 	}
 
 }

@@ -1,1 +1,1 @@
-﻿global using JSClient = CnV.CnVServer;
+﻿global using CnVServer = CnV.CnVServer;

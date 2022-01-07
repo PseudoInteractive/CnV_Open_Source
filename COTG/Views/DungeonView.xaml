@@ -10,7 +10,7 @@
 	  xmlns:model="using:CnV.Models"
 	xmlns:tk="using:CommunityToolkit.WinUI.UI.Controls"
 			  xmlns:winui="using:Microsoft.UI.Xaml.Controls"
-	 xmlns:game="using:CnV.Game"
+	 xmlns:game="using:CnV"
     xmlns:sf="using:Syncfusion.UI.Xaml.DataGrid"
 	DefaultButton="Close"
     CloseButtonText="Close"

@@ -18,7 +18,7 @@
 		<ScrollViewer x:Name="scrollView" x:FieldModifier="public" >
 		        <controls:MarkdownTextBlock x:Name="fixesText" x:FieldModifier="public" WrapCodeBlock="True"
                                   Margin="6" Background="{x:Null}" TextWrapping="WrapWholeWords"
-											LinkClicked="{x:Bind cotg:Note.MarkDownLinkClicked}"
+											LinkClicked="{x:Bind cnv:Note.MarkDownLinkClicked}"
                                    />
 		
 	</ScrollViewer>

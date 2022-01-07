@@ -43,7 +43,7 @@ namespace CnV
 #else
 			await APlayFab.SigninLegacy(Player.myName);
 #endif
-			Assert( JSClient.world != 0);
+			Assert( CnVServer.world != 0);
 			ShellPage.SetViewModeCity();
 			
 
@@ -68,7 +68,7 @@ namespace CnV
 				await CnVChatClient.Setup();
 			});
 
-			JSClient.SetStayAlive(Settings.stayAlive);
+			CnVServer.SetStayAlive(Settings.stayAlive);
 			//{
 			//    //var now = DateTime.UtcNow;
 			//    //if (now.Day <= 28 && now.Month==11)
@@ -79,9 +79,9 @@ namespace CnV
 				AppCenter.SetUserId(Player.myName);
 				//AppCenter.Analytics.Properties.put("UserId", "your user Id");
 				CustomProperties properties = new CustomProperties();
-				properties.Set("alliance",Alliance.myId).Set("allianceName",Alliance.my.name).Set("world",JSClient.world).Set("sub",JSClient.isSub).Set("playerId",Player.myId).Set("UserId",Player.myName);
+				properties.Set("alliance",Alliance.myId).Set("allianceName",Alliance.my.name).Set("world",CnVServer.world).Set("sub",CnVServer.isSub).Set("playerId",Player.myId).Set("UserId",Player.myName);
 				AppCenter.SetCustomProperties(properties);
-				AAnalytics.Track("GotCreds",new Dictionary<string,string>() { { "World",JSClient.world.ToString() },{ "sub",JSClient.isSub.ToString() },{ "UserId",Player.myName } });
+				AAnalytics.Track("GotCreds",new Dictionary<string,string>() { { "World",CnVServer.world.ToString() },{ "sub",CnVServer.isSub.ToString() },{ "UserId",Player.myName } });
 				ShellPage.UpdateFocus();
 			}
 #endif

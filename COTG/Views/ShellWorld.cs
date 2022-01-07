@@ -615,7 +615,7 @@ namespace CnV.Views
 			if(!isFocused)
 				return;
 			
-			//if (JSClient.IsCityView())
+			//if (CnVServer.IsCityView())
 			//{
 			//	e.Handled = false;
 			//	return;
@@ -792,7 +792,7 @@ namespace CnV.Views
 		//private static bool TryPostJSMouseEvent(string eventName, int button)
 		//{
 		//	if(isOverPopup)
-		//	{		JSClient.PostMouseEventToJS( (int)(AGame.nativeToDip/ShellPage.webViewScale.X * mousePosition.X) + canvasBaseX, (int)(AGame.nativeToDip/ShellPage.webViewScale.Y * mousePosition.Y) + canvasBaseY, eventName, button );
+		//	{		CnVServer.PostMouseEventToJS( (int)(AGame.nativeToDip/ShellPage.webViewScale.X * mousePosition.X) + canvasBaseX, (int)(AGame.nativeToDip/ShellPage.webViewScale.Y * mousePosition.Y) + canvasBaseY, eventName, button );
 		//			Log("JsMouse");
 		//		return true;
 		//	}
@@ -837,7 +837,7 @@ namespace CnV.Views
 			mousePositionW = mousePositionC.InverseProject();
 			(var c, var cc) = ScreenToWorldAndCityC(mousePositionW);
 
-			//  if (JSClient.IsCityView())
+			//  if (CnVServer.IsCityView())
 			// The app pas priority over back and forward events
 			{
 				switch (point.PointerUpdateKind)

@@ -293,7 +293,7 @@ namespace CnV.Views
 							   await DoTheStuff.Go(city,false,false);
 							if(cid == City.build)
 							{
-							   JSClient.CityRefresh();
+							   CnVServer.CityRefresh();
 
 							}
 					   }

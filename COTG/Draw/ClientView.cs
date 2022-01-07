@@ -90,7 +90,7 @@ namespace CnV;
 				{
 					try
 					{
-						if(!await JSClient.CitySwitch(target.WorldToCid(), true))
+						if(!await CnVServer.CitySwitch(target.WorldToCid(), true))
 						{
 							EnsureNotCityView();
 						}

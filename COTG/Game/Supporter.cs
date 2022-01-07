@@ -1,13 +1,13 @@
 ﻿using System.ComponentModel;
 using Microsoft.UI.Xaml.Media.Imaging;
 
-//COTG.DArray<COTG.Game.TroopTypeCount>;
-using TroopTypeCountsRef = CnV.Game.TroopTypeCounts;
+//COTG.DArray<COTG.TroopTypeCount>;
+using TroopTypeCountsRef = CnV.TroopTypeCounts;
 using static CnV.TroopTypeCountHelper;
 
-//COTG.DArrayRef<COTG.Game.TroopTypeCount>;
+//COTG.DArrayRef<COTG.TroopTypeCount>;
 
-namespace CnV.Game
+namespace CnV
 {
 	public class Supporter : IANotifyPropertyChanged
     {

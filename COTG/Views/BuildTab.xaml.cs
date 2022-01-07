@@ -249,7 +249,7 @@ namespace CnV.Views
 
 			if(visible)
 			{
-				if(JSClient.ppdtInitialized)
+				if(CnVServer.ppdtInitialized)
 				{
 					//	await Raiding.UpdateTS(true, false);
 					//	await RaidOverview.Send();

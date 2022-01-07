@@ -56,7 +56,7 @@ namespace CnV
 			return (city.res[type]- Settings.nearResReserve[type]).Min(NearRes.instance.GetTransport(city)); // TODO
 		}
 
-		public DateTimeOffset eta { get => JSClient.ServerTime() + travel; set => _ = value; }
+		public DateTimeOffset eta { get => CnVServer.ServerTime() + travel; set => _ = value; }
 
 
 

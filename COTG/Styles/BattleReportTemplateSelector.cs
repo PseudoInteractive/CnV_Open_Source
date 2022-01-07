@@ -1,6 +1,6 @@
 ﻿using Microsoft.UI.Xaml;
 
-using static CnV.Game.Troops;
+using static CnV.Troops;
 namespace CnV.Styles
 {
 	using Game;

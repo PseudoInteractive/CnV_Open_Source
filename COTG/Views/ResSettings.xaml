@@ -9,7 +9,7 @@
 	xmlns:winui="using:Microsoft.UI.Xaml.Controls"
     mc:Ignorable="d"
 	 xmlns:cnv="using:CnV"
-	 xmlns:game="using:CnV.Game"
+	 xmlns:game="using:CnV"
 	 xmlns:views="using:CnV.Views"
 	xmlns:converter="using:CnV.Convertersters"
     d:DesignHeight="300"
@@ -112,13 +112,7 @@
 							Style="{StaticResource RightAlignNumberBox}"
 							ToolTipService.ToolTip="% ships reserved for trades that are not the result of sending overflow"
 							 />
-			<ComboBox   Header="COTG Preset"
-						      SelectedItem="{x:Bind tradeSettingsSel, Mode=TwoWay}"	
-							  ItemsSource="{x:Bind views:ResSettings.tradeSettingsItemsSource}"
-							  DisplayMemberPath="N"
-							  ToolTipService.ToolTip="Select a COTG Trade setting to override settings"
-							  Margin="4" />
-
+			
 		</tk:WrapPanel  >
 
 	</StackPanel>

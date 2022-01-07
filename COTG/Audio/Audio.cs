@@ -18,7 +18,7 @@ namespace CnV
 		static int lastSongPlayed;
 		public static void UpdateMusic()
 		{
-			if (Settings.musicVolume > 0 && !JSClient.isSub)
+			if (Settings.musicVolume > 0 && !CnVServer.isSub)
 			{
 				if (music == null)
 				{

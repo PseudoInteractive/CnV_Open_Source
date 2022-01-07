@@ -2,12 +2,9 @@
 			   xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 			   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 			   xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-			   xmlns:helper="using:CnV.Helperspers"
 			   xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 			   xmlns:cnv="using:CnV"
 			   xmlns:views="using:CnV.Views"
-			   xmlns:game="using:CnV.Game"
-			   xmlns:xaml="using:Microsoft.UI.Xaml"
 			   xmlns:wct="using:CommunityToolkit.WinUI.UI.Controls"
 			   xmlns:controls="using:Microsoft.UI.Xaml.Controls"
 			   mc:Ignorable="d"
@@ -21,7 +18,7 @@
 	<ScrollViewer ZoomMode="Enabled">
 		<StackPanel Orientation="Vertical" ScrollViewer.VerticalScrollMode="Enabled">
 			<StackPanel Orientation="Horizontal">
-			<HyperlinkButton  Content="{x:Bind views:Settings.versionDescription}"
+			<HyperlinkButton  Content="{x:Bind cnv:Settings.versionDescription}"
 					   FontSize="12" Click="VersionTapped" />
 				<Button    Content="Launch+"
 						   Style="{ThemeResource ButtonRevealStyle}"
@@ -39,18 +36,22 @@
 
 				<Slider Height="128" Header="Quality" Value="{x:Bind RenderQuality, Mode=TwoWay}" Maximum="1.0" TickFrequency="0.25"  StepFrequency="0.25" SmallChange="0.25" Margin="8" TickPlacement="Outside" Orientation="Vertical" ToolTipService.ToolTip="Render Quality vs Performance, lower is faster (if your video card is weak)" />
 
-				<controls:RadioButtons Header="Lighting"
+				<RadioButtons Header="Lighting"
                    SelectedIndex="{x:Bind uiLighting, Mode=TwoWay}">
-					<x:String>Day</x:String>
+					<RadioButtons.Items>
+<x:String>Day</x:String>
 					<x:String>Night</x:String>
 					<x:String>None</x:String>
-				</controls:RadioButtons>
+						</RadioButtons.Items>
+</RadioButtons>
 
-				<controls:RadioButtons Header="Theme"
+				<RadioButtons Header="Theme"
                    SelectedIndex="{x:Bind uiTheme, Mode=TwoWay}">
-					<x:String>COTG</x:String>
-					<x:String>Winter</x:String>
-				</controls:RadioButtons>
+					<RadioButtons.Items>
+						<x:String>COTG</x:String>
+						<x:String>Winter</x:String>
+					</RadioButtons.Items>
+				</RadioButtons>
 
 				<Slider Height="128" Header="Parallax" Value="{x:Bind cnv:Settings.parallax, Mode=TwoWay}" Maximum="1.0" TickFrequency="0.125"  StepFrequency="0.025" SmallChange="0.025" Margin="8" TickPlacement="Outside" Orientation="Vertical" />
 				<Slider Height="128" Margin="8" Header="Planet" Value="{x:Bind cnv:Settings.planet, Mode=TwoWay}" Maximum="1.0"  TickFrequency="0.125" StepFrequency="0.0625" SmallChange="0.0625" TickPlacement="Outside" Orientation="Vertical" ToolTipService.ToolTip="Use 0 to disable parallax and shadows" />
@@ -160,7 +161,7 @@
 						<Flyout ShowMode="TransientWithDismissOnPointerMoveAway" >
 							<StackPanel Orientation="Vertical">
 								<controls:NumberBox x:Name="CastlesCont"
-									NumberFormatter="{x:Bind cotg:App.formatterInt,Mode=OneTime}"
+									NumberFormatter="{x:Bind cnv:App.formatterInt,Mode=OneTime}"
 									Style="{StaticResource NumberBoxSmall}"
 									Header="Continent"
 									PlaceholderText="i.e. 22 34"
@@ -183,19 +184,19 @@
 							<StackPanel Orientation="Vertical" Width="300" >
 								<wct:WrapPanel Orientation="Horizontal" Margin="4">
 									<controls:NumberBox x:Name="exportRanksCont"
-										NumberFormatter="{x:Bind cotg:App.formatterInt,Mode=OneTime}"
+										NumberFormatter="{x:Bind cnv:App.formatterInt,Mode=OneTime}"
 										Style="{StaticResource NumberBoxSmall}"
 										Header="Continent"
 										ToolTipService.ToolTip="56 means world"
 										Value="3" />
 									<controls:NumberBox x:Name="exportRanksCities"
-										NumberFormatter="{x:Bind cotg:App.formatterInt,Mode=OneTime}"
+										NumberFormatter="{x:Bind cnv:App.formatterInt,Mode=OneTime}"
 										Style="{StaticResource NumberBoxSmall}"
 										Header="Min Cities"
 										ToolTipService.ToolTip="Alliances with fewer than this many cities are skipped"
 										Value="300" />
 									<controls:NumberBox x:Name="exportRanksDays"
-										NumberFormatter="{x:Bind cotg:App.formatter2Digit,Mode=OneTime}"
+										NumberFormatter="{x:Bind cnv:App.formatter2Digit,Mode=OneTime}"
 										Style="{StaticResource NumberBoxSmall}"
 										Header="Days"
 										ToolTipService.ToolTip="Max number of days to export"
@@ -218,25 +219,25 @@
 								<wct:WrapPanel Orientation="Horizontal" Margin="4">
 									<controls:NumberBox 
 									Value="{x:Bind cnv:Settings.exportContinent, Mode=TwoWay}"
-									NumberFormatter="{x:Bind cotg:App.formatterInt,Mode=OneTime}"
+									NumberFormatter="{x:Bind cnv:App.formatterInt,Mode=OneTime}"
 									Style="{StaticResource NumberBoxSmall}"
 									Header="Continent"
 									ToolTipService.ToolTip="56 means world"
 									 />
 									<controls:NumberBox x:Name="exportTSPlayers"
-									NumberFormatter="{x:Bind cotg:App.formatterInt,Mode=OneTime}"
+									NumberFormatter="{x:Bind cnv:App.formatterInt,Mode=OneTime}"
 									Style="{StaticResource NumberBoxSmall}"
 									Header="Players"
 									ToolTipService.ToolTip="Max # of players to export"
 									Value="10" />
 									<controls:NumberBox x:Name="exportTSMinTS"
-									NumberFormatter="{x:Bind cotg:App.formatterInt,Mode=OneTime}"
+									NumberFormatter="{x:Bind cnv:App.formatterInt,Mode=OneTime}"
 									Style="{StaticResource NumberBoxSmall}"
 									Header="MinTS"
 									ToolTipService.ToolTip="Cities with fewer TS will not be exported"
 									Value="300" />
 									<controls:NumberBox x:Name="exportTSDays"
-									NumberFormatter="{x:Bind cotg:App.formatter2Digit,Mode=OneTime}"
+									NumberFormatter="{x:Bind cnv:App.formatter2Digit,Mode=OneTime}"
 									Style="{StaticResource NumberBoxSmall}"
 									Header="Days"
 									ToolTipService.ToolTip="Max number of days to export"
@@ -353,7 +354,7 @@
 							  Width="120"
 							  SelectedItem="{x:Bind cnv:Settings.hubCitylistUI, Mode=TwoWay}"
 							  DisplayMemberPath="name"
-							  ItemsSource="{x:Bind game:CityList.all, Mode=OneTime}"
+							  ItemsSource="{x:Bind cnv:CityList.all, Mode=OneTime}"
 							  ToolTipService.ToolTip="City List used for hubs"
 							  Margin="4" />
 					<controls:NumberBox Header="Cottage Level"

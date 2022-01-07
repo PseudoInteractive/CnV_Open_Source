@@ -4,7 +4,7 @@
      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-      xmlns:game="using:CnV.Game"
+      xmlns:game="using:CnV"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       xmlns:cnv="using:CnV"
 	xmlns:winui="using:Microsoft.UI.Xaml.Controls"
@@ -173,7 +173,7 @@
 			<tk:DataGrid.Columns>
 				<tk:DataGridTemplateColumn Header="I" CanUserSort="False">
 					<tk:DataGridTemplateColumn.CellTemplate>
-						<DataTemplate x:DataType="game:ResSource">
+						<DataTemplate x:DataType="cnv:ResSource">
 							<Image Source= "{x:Bind icon}" Tapped="Coord_Tapped" RightTapped="Image_RightTapped" HorizontalAlignment="Center"
                                                        
                                    VerticalAlignment="Center" MaxWidth="32" />
@@ -182,7 +182,7 @@
 				</tk:DataGridTemplateColumn>
 				<tk:DataGridTemplateColumn Header="Send" CanUserSort="False" >
 					<tk:DataGridTemplateColumn.CellTemplate>
-						<DataTemplate x:DataType="game:ResSource">
+						<DataTemplate x:DataType="cnv:ResSource">
 							<HyperlinkButton Content="{x:Bind Send}" Click= "SendClick" HorizontalAlignment="Center" FontSize="14" HorizontalContentAlignment="Center"
                                              RightTapped="TsSendRightTapped"
                                              />
@@ -191,7 +191,7 @@
 				</tk:DataGridTemplateColumn>
 				<tk:DataGridTemplateColumn Header="xy" CanUserSort="False">
 					<tk:DataGridTemplateColumn.CellTemplate>
-						<DataTemplate x:DataType="game:ResSource">
+						<DataTemplate x:DataType="cnv:ResSource">
 							<HyperlinkButton Content="{x:Bind xy, Mode=OneWay}" Tapped="Coord_Tapped" RightTapped="Image_RightTapped" HorizontalAlignment="Center" FontSize="14" HorizontalContentAlignment="Center"
                                                            ToolTipService.ToolTip="Selects support city, right click to bring troops home from raids"
                                              
@@ -239,7 +239,7 @@
 
 				<tk:DataGridTemplateColumn Header="Wood" CanUserSort="False" IsReadOnly="True"> 
 					<tk:DataGridTemplateColumn.CellTemplate>
-						<DataTemplate x:DataType="game:ResSource">
+						<DataTemplate x:DataType="cnv:ResSource">
 							<TextBlock Text="{x:Bind ResString(0), Mode=OneWay}" Tapped="ResSetMax" RightTapped="ResSetZero" 
                                              Style="{StaticResource TextBlockSmall}" VerticalAlignment="Center"
                                              />
@@ -250,7 +250,7 @@
 
 				<tk:DataGridTemplateColumn Header="Stone" CanUserSort="False" IsReadOnly="True">
 					<tk:DataGridTemplateColumn.CellTemplate>
-						<DataTemplate x:DataType="game:ResSource">
+						<DataTemplate x:DataType="cnv:ResSource">
 							<TextBlock Text="{x:Bind ResString(1), Mode=OneWay}" Tapped="ResSetMax" RightTapped="ResSetZero" 
                                              Style="{StaticResource TextBlockSmall}" VerticalAlignment="Center"
                                              />
@@ -259,7 +259,7 @@
 				</tk:DataGridTemplateColumn>
 				<tk:DataGridTemplateColumn Header="Iron" CanUserSort="False" IsReadOnly="True">
 					<tk:DataGridTemplateColumn.CellTemplate>
-						<DataTemplate x:DataType="game:ResSource">
+						<DataTemplate x:DataType="cnv:ResSource">
 							<TextBlock Text="{x:Bind ResString(2), Mode=OneWay}" Tapped="ResSetMax" RightTapped="ResSetZero" 
                                              Style="{StaticResource TextBlockSmall}" VerticalAlignment="Center"
                                              />
@@ -268,7 +268,7 @@
 				</tk:DataGridTemplateColumn>
 				<tk:DataGridTemplateColumn Header="Food" CanUserSort="False" IsReadOnly="True">
 					<tk:DataGridTemplateColumn.CellTemplate>
-						<DataTemplate x:DataType="game:ResSource">
+						<DataTemplate x:DataType="cnv:ResSource">
 							<TextBlock Text="{x:Bind ResString(3), Mode=OneWay}" Tapped="ResSetMax" RightTapped="ResSetZero" 
                                              Style="{StaticResource TextBlockSmall}" VerticalAlignment="Center"
                                              />

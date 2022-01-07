@@ -142,13 +142,13 @@ namespace CnV.Views
 		//	var item = e.DestinationItem.Item as BuildItemView;
 		//	if(item!=null)
 		//	{
-		//		JSClient.ChangeCity(item.cid, false);
+		//		CnVServer.ChangeCity(item.cid, false);
 		//		return;
 		//	}
 		//	var op = e.DestinationItem.Item as BuildItemView;
 		//	if(op!=null)
 		//	{
-		//		JSClient.ChangeCity(op.cid, false);
+		//		CnVServer.ChangeCity(op.cid, false);
 		//		return;
 
 		//	}
@@ -156,13 +156,13 @@ namespace CnV.Views
 		//	item = e.SourceItem.Item as BuildItemView;
 		//	if (item != null)
 		//	{
-		//		JSClient.ChangeCity(item.cid, false);
+		//		CnVServer.ChangeCity(item.cid, false);
 		//		return;
 		//	}
 		//	op = e.SourceItem.Item as BuildItemView;
 		//	if (op != null)
 		//	{
-		//		JSClient.ChangeCity(op.cid, false);
+		//		CnVServer.ChangeCity(op.cid, false);
 		//		return;
 
 		//	}
@@ -227,7 +227,7 @@ namespace CnV.Views
 			if (ob is BuildItemView q)
 			{
 				if(q.cid != City.build)
-					JSClient.CitySwitch(q.cid, false, scrollIntoUI:false); // this is always true now
+					CnVServer.CitySwitch(q.cid, false, scrollIntoUI:false); // this is always true now
 			}
 		
 		}

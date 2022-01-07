@@ -9,16 +9,16 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
-using static CnV.Game.Troops;
+using static CnV.Troops;
 using static CnV.Debug;
-using TroopTypeCounts = CnV.Game.TroopTypeCounts;
-//COTG.DArray<COTG.Game.TroopTypeCount>;
-using TroopTypeCountsRef = CnV.Game.TroopTypeCounts;
+using TroopTypeCounts = CnV.TroopTypeCounts;
+//COTG.DArray<COTG.TroopTypeCount>;
+using TroopTypeCountsRef = CnV.TroopTypeCounts;
 using static CnV.TroopTypeCountHelper;
 using CnV;
-//COTG.DArrayRef<COTG.Game.TroopTypeCount>;
+//COTG.DArrayRef<COTG.TroopTypeCount>;
 
-namespace CnV.Game
+namespace CnV
 {
 	using Services;
 	using Views;
@@ -146,7 +146,7 @@ namespace CnV.Game
 											}
 											if (defTS > 0)
 											{
-												Set(ref army.sumDef, new TroopTypeCount(Game.Troops.ttGuard, defTS));
+												Set(ref army.sumDef, new TroopTypeCount(Troops.ttGuard, defTS));
 												target._tsHome = defTS;
 												//	spot._tsHome = val.GetAsInt("8");
 
@@ -360,7 +360,7 @@ namespace CnV.Game
                                                                     int counter = 0;
                                                                     foreach (var t in ttle.EnumerateArray())
                                                                     {
-                                                                        defTSLeft += t.GetInt32() * Game.Troops.ttTs[counter];
+                                                                        defTSLeft += t.GetInt32() * Troops.ttTs[counter];
                                                                         ++counter;
                                                                     }
                                                                 //  Assert(defTS > 0);

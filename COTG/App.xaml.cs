@@ -205,7 +205,7 @@ namespace CnV
 
 			// Deferred execution until used. Check https://msdn.microsoft.com/library/dd642331(v=vs.110).aspx for further info on Lazy<T> class.
 			_activationService = new Lazy<ActivationService>(CreateActivationService);
-			//	UserAgent.SetUserAgent(JSClient.userAgent);  // set webview useragent
+			//	UserAgent.SetUserAgent(CnVServer.userAgent);  // set webview useragent
 			//	Ioc.Default.ConfigureServices(ConfigureServices());
 
 
@@ -378,7 +378,7 @@ namespace CnV
 				activeStart = t;
 				AAnalytics.Track("Foreground",
 								new Dictionary<string, string> { { "time", dt.TotalSeconds.RoundToInt().ToString() } });
-				//	JSClient.ResumeWebView();
+				//	CnVServer.ResumeWebView();
 
 			}
 			//if (ShellPage.canvas != null)
@@ -470,19 +470,19 @@ namespace CnV
 					var s = System.Web.HttpUtility.ParseQueryString(eventArgs.Uri.Query);
 
 					Debug.Log(s);
-					// format $"cotg:launch?w={world}&s=1&n=1"
+					// format $"cnv:launch?w={world}&s=1&n=1"
 					// are / chars inserted?
 					//  if (s.Length >= 3)
 					{
 						if (AMath.TryParseInt(s["s"], out int _s))
-							JSClient.subId = _s;
+							CnVServer.subId = _s;
 
 						//var n = s["p"];
 						//if (n != null)
 						//	Player.subOwner = n;
 
 						if (AMath.TryParseInt(s["w"], out int _w))
-							JSClient.world = _w;
+							CnVServer.world = _w;
 
 //						if(AMath.TryParseInt(s["n"],out int _n)) // new instance
 //							key = "cotgaMulti" + DateTimeOffset.UtcNow.UtcTicks;
@@ -676,7 +676,7 @@ namespace CnV
 		//{
 		//	Log("Close");
 		//	state = State.closing;
-		//	JSClient.CloseWebView();
+		//	CnVServer.CloseWebView();
 		//	TabPage.CloseAllTabWindows();
 		//}
 
@@ -685,7 +685,7 @@ namespace CnV
 		//	var defer = args.GetDeferral();
 		//	Log("Close");
 		//	state = State.closing;
-		//	JSClient.CloseWebView();
+		//	CnVServer.CloseWebView();
 		//	await TabPage.CloseAllTabWindows();
 		//}
 

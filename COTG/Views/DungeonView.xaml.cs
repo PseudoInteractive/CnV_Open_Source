@@ -18,7 +18,7 @@ using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
 using CnV.Services;
 using static CnV.Debug;
-using static CnV.Game.Troops;
+using static CnV.Troops;
 using CnV.Helpers;
 using static CnV.Settings;
 // The Content Dialog item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238

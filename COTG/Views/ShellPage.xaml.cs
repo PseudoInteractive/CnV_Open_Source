@@ -262,7 +262,7 @@ namespace CnV.Views
 			// Placement.LayoutUpdated += Placement_LayoutUpdated; grid.Children.Add(img);
 
 			// Grid.SetRowSpan(img, 4); Grid.SetColumnSpan(img, 4); Canvas.SetZIndex(img, 12);
-			JSClient.Initialize(grid, webView);
+			CnVServer.Initialize(grid, webView);
 			// foreach (var i in webView.KeyboardAccelerators) i.IsEnabled = false;
 			// webView.AllowFocusOnInteraction = false; c.hitTest.Margin= webView.Margin = new
 			// Thickness(0, 0, 11, 0);
@@ -270,7 +270,7 @@ namespace CnV.Views
 
 			//	FocusManager.GotFocus+=FocusManager_GotFocus;
 
-			//c.hitTest.Fill = JSClient.webViewBrush;
+			//c.hitTest.Fill = CnVServer.webViewBrush;
 			//				var visual = ElementCompositionPreview.GetElementVisual(c.canvas);
 			//			var webVisual = ElementCompositionPreview.GetElementVisual(view);
 			//	var sprite = visual.Compositor.CreateSpriteVisual();//	var sprite = visual.Compositor.CreateSpriteVisual();
@@ -363,7 +363,7 @@ namespace CnV.Views
 			GameClient.Create(_canvas);
 			try
 			{
-				if (SystemInformation.Instance.IsAppUpdated && !JSClient.isSub)
+				if (SystemInformation.Instance.IsAppUpdated && !CnVServer.isSub)
 				{
 					AppS.DispatchOnUIThreadLow(Settings.ShowWhatsNew);
 				}
@@ -710,16 +710,16 @@ namespace CnV.Views
 
 			City.gridCitySource.ClearHash();
 
-			JSClient.CityRefresh();
+			CnVServer.CityRefresh();
 			//	instance.UpdateWebViewScale();
 			return Task.CompletedTask;
 		}
 
 		//public static void OnRefresh()
 		//{
-		//	if (JSClient.world == 0)
+		//	if (CnVServer.world == 0)
 		//	{
-		//		JSClient.view.Source = new Uri("https://www.crownofthegods.com/home/");
+		//		CnVServer.view.Source = new Uri("https://www.crownofthegods.com/home/");
 		//		return;
 		//	}
 
@@ -767,7 +767,7 @@ namespace CnV.Views
 		//}
 		//private async void GetPPDT(object sender, RoutedEventArgs e)
 		//{
-		//    await JSClient.GetCitylistOverview();
+		//    await CnVServer.GetCitylistOverview();
 		//}
 
 		//static string[] buildings = { "forester", "cottage", "storehouse", "quarry", "hideaway", "farmhouse", "cityguardhouse", "barracks", "mine", "trainingground", "marketplace", "townhouse", "sawmill", "stable", "stonemason", "mage_tower", "windmill", "temple", "smelter", "blacksmith", "castle", "port", "port", "port", "shipyard", "shipyard", "shipyard", "townhall", "castle" };
@@ -775,13 +775,7 @@ namespace CnV.Views
 		//static short[] bidMap = new short[] { 448, 446, 464, 461, 479, 447, 504, 445, 465, 483, 449, 481, 460, 466, 462, 500, 463, 482, 477, 502, 467, 488, 489, 490, 491, 496, 498, bidTownHall, 467 };
 
 		//		public static (int x, int y) webclientSpan;
-		public class BuildingCount
-		{
-			public Microsoft.UI.Xaml.Media.ImageBrush brush { get; set; }
-			public int                                count { get; set; }
-
-		}
-
+		
 		private async void ShowBuildings(object sender, object e)
 		{
 			try
@@ -835,18 +829,18 @@ namespace CnV.Views
 				}
 
 				{
-					var bd = new List<BuildingCount>();
+					var bd = new List<BuildingCountAndBrush>();
 					foreach (var i in bdd)
 					{
 						if (i.Value > 0)
 						{
 							var bdf = BuildingDef.all[i.Key];
-							bd.Add(new BuildingCount()
+							bd.Add(new BuildingCountAndBrush()
 											{ count = i.Value, brush = CityBuild.BuildingBrush(bdf.bid, 0.5f) });
 						}
 					}
 
-					bd.Add(new BuildingCount()
+					bd.Add(new BuildingCountAndBrush()
 									{ count = bCount, brush = CityBuild.BuildingBrush(City.bidTownHall, 0.5f) });
 
 					// var button = sender as Button; button.Focus(FocusState.Programmatic);
@@ -1017,7 +1011,7 @@ namespace CnV.Views
 			var sel = cityBox.SelectedItem as City;
 			if (sel != null && sel.cid != City.build)
 			{
-				JSClient.CitySwitch(sel.cid, false);
+				CnVServer.CitySwitch(sel.cid, false);
 				NavStack.Push(sel.cid);
 			}
 		}
@@ -1052,7 +1046,7 @@ namespace CnV.Views
 			}
 
 			//newSel.SetBuild(true);
-			JSClient.CitySwitch(newSel.cid, false);
+			CnVServer.CitySwitch(newSel.cid, false);
 			// ElementSoundPlayer.Play(delta > 0 ? ElementSoundKind.MoveNext : ElementSoundKind.MovePrevious);
 			NavStack.Push(newSel.cid);
 		}
@@ -1128,7 +1122,7 @@ namespace CnV.Views
 					{
 						NavStack.Push(cid);
 						SpotTab.TouchSpot(cid, AppS.keyModifiers);
-						JSClient.CitySwitch(cid, false);
+						CnVServer.CitySwitch(cid, false);
 					}
 				}
 			}
@@ -1396,7 +1390,7 @@ namespace CnV.Views
 		//	{
 		//		var s = e.AddedItems[0] as string;
 		//		var friend = Array.Find(PlayerPresence.all, f => f.name == s);
-		//		JSClient.SetPlayer(friend.pid, friend.token, friend.cookies, friend.cid, friend.name);
+		//		CnVServer.SetPlayer(friend.pid, friend.token, friend.cookies, friend.cid, friend.name);
 		//	}
 		//}
 
@@ -1453,19 +1447,19 @@ namespace CnV.Views
 		//			{
 		//				if( clear.IsChecked.GetValueOrDefault())
 		//				{
-		//					JSClient.httpFilter.ClearAuthenticationCache();
+		//					CnVServer.httpFilter.ClearAuthenticationCache();
 		//					Microsft.UI.Xaml.WebView2.ClearTemporaryWebDataAsync();
-		//					JSClient.ClearAllCookies();
+		//					CnVServer.ClearAllCookies();
 		//				}
 		//				else if(!text.Text.IsNullOrEmpty()) 
 		//				{
-		//					JSClient.SetCookie("remember_me", text.Text);
-		//					//	JSClient.SetCookie("_ttw", "2ebd127595739638f691d800afb6d9a2cb44f03b");
-		//					//	JSClient.SetCookie("CotG", "a%3A4%3A%7Bi%3A0%3Bs%3A5%3A%2239311%22%3Bi%3A1%3Bs%3A40%3A%220578a77365184184d96859fd54cb78925d962139%22%3Bi%3A2%3Bi%3A1626898500%3Bi%3A3%3Bi%3A0%3B%7D");
+		//					CnVServer.SetCookie("remember_me", text.Text);
+		//					//	CnVServer.SetCookie("_ttw", "2ebd127595739638f691d800afb6d9a2cb44f03b");
+		//					//	CnVServer.SetCookie("CotG", "a%3A4%3A%7Bi%3A0%3Bs%3A5%3A%2239311%22%3Bi%3A1%3Bs%3A40%3A%220578a77365184184d96859fd54cb78925d962139%22%3Bi%3A2%3Bi%3A1626898500%3Bi%3A3%3Bi%3A0%3B%7D");
 		//					//	_ttw = 062667a5a7767056ae099f43a2f6d4e24fd015fb; expires = Mon, 20 - Sep - 2021 19:44:58 GMT; Max - Age = 7776000; path =/; domain =.crownofthegods.com; secure; httponly
 
 		//					//				WebView.ClearTemporaryWebDataAsync();
-		//		//			JSClient.SetCookie("sec_session_id", text2.Text);
+		//		//			CnVServer.SetCookie("sec_session_id", text2.Text);
 		//				}
 		//			//	Settings.secSessionId = text2.Text;
 		//			//	Settings.SaveAll();
@@ -1473,7 +1467,7 @@ namespace CnV.Views
 
 		//				await AppS.DoYesNoBox("Cookie set","Cookies", "Okay", null, "Okay");
 		//				if(!clear.IsChecked.GetValueOrDefault())
-		//					JSClient.view.Refresh();
+		//					CnVServer.view.Refresh();
 		//			}
 		//		}
 
@@ -1554,5 +1548,12 @@ namespace CnV.Views
 								});
 		}
 	}
+	public class BuildingCountAndBrush
+	{
+		public Microsoft.UI.Xaml.Media.ImageBrush brush { get; set; }
+		public int                                count { get; set; }
+
+	}
+
 
 }

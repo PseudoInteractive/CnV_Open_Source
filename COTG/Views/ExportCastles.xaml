@@ -9,7 +9,7 @@
 	xmlns:winui="using:Microsoft.UI.Xaml.Controls"
 	xmlns:cnv="using:CnV"
 	xmlns:views="using:CnV.Views"
-	  xmlns:game="using:CnV.Game"
+	  xmlns:game="using:CnV"
 
 	mc:Ignorable="d"
     Title="Castles to Clipboard"

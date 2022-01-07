@@ -70,7 +70,7 @@ namespace CnV
 	//	static DateTime nextInAppNote = new DateTime(0);
 	//static MarkdownTextBlock markDownText;
 	//	static CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
-		public static partial void Show(string s, Debug.Priority priority=Debug.Priority.medium, bool useInfoBar = false, int timeout = 5000, bool showDebugOutput=true, bool showNote=true)
+		internal static partial void Show(string s, Debug.Priority priority=Debug.Priority.medium, bool useInfoBar = false, int timeout = 5000, bool showDebugOutput=true, bool showNote=true)
 		{
 			try
 			{
@@ -243,13 +243,13 @@ namespace CnV
 							Spot.ProcessCoordClick(paths[2].FromCoordinate(), false, AppS.keyModifiers, false);
 							break;
 						case "p": // player
-							JSClient.ShowPlayer(paths[2]);
+							CnVServer.ShowPlayer(paths[2]);
 							break;
 						case "a": // Alliance
-							JSClient.ShowAlliance(paths[2]);
+							CnVServer.ShowAlliance(paths[2]);
 							break;
 						case "r": // Report
-							JSClient.ShowReport(paths[2]);
+							CnVServer.ShowReport(paths[2]);
 							break;
 					}
 				}

@@ -6,9 +6,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-using static CnV.Game.Troops;
+using static CnV.Troops;
 
-namespace CnV.Game
+namespace CnV
 {
 	public enum TravelType
 	{

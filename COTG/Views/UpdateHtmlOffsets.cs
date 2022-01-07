@@ -124,11 +124,11 @@ namespace CnV.Views
 							c.chatHeight = (float)(instance.rowChat.ActualHeight/gridSize.Y);
 						}
 
-						//if(JSClient.view != null && zoom != webZoomLast)
+						//if(CnVServer.view != null && zoom != webZoomLast)
 						//{
 						//	webZoomLast = zoom;
 						//	var _zoom = (htmlVisible ? zoom : 1.0f);
-						//	AppS.DispatchOnUIThreadLow(() => JSClient.ExecuteScriptAsync($"document.body.style.zoom={_zoom};") );
+						//	AppS.DispatchOnUIThreadLow(() => CnVServer.ExecuteScriptAsync($"document.body.style.zoom={_zoom};") );
 						//}
 
 						{

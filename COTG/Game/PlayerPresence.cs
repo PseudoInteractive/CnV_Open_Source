@@ -29,8 +29,8 @@ namespace CnV.Game
 	//		if (pid == Player.myId)
 	//		{
 	//			name = Player.myName;
-	//			token = JSClient.jsBase.token;
-	//			cookies = JSClient.jsBase.cookies;
+	//			token = CnVServer.jsBase.token;
+	//			cookies = CnVServer.jsBase.cookies;
 	//		}
 	//		else
 	//		{

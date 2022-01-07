@@ -17,7 +17,7 @@ using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
-using static CnV.Game.Troops;
+using static CnV.Troops;
 using static CnV.Spot;
 
 namespace CnV.Views

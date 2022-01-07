@@ -495,7 +495,7 @@ namespace CnV
 		{
 			Note.Show("Cleared Queue");
 			BuildQueue.ClearQueue();
-			JSClient.ExecuteScriptAsync("cancelbuilds()");
+			CnVServer.ExecuteScriptAsync("cancelbuilds()");
 		}
 
 
@@ -839,7 +839,7 @@ namespace CnV
 			}
 			var d = b.def;
 			if(d.bid != 0)
-				JSClient.ExecuteScriptAsync("exBuildingInfo",d.bid,b.bl,bspot);
+				CnVServer.ExecuteScriptAsync("exBuildingInfo",d.bid,b.bl,bspot);
 
 			CityView.SetSelectedBuilding(cc,isSingleClickAction);
 
@@ -902,7 +902,7 @@ namespace CnV
 					//			var items = ShellPage.instance.buildMenu.Items;
 					if (bi.action == CityBuildAction.layout && !City.GetBuild().isLayoutCustom)
 					{
-						//		JSClient.JSInvoke("showLayout", null);
+						//		CnVServer.JSInvoke("showLayout", null);
 						// Dont await on this, just close the menu, we'll activate nex time
 						var _ = ShowShareStringMaybe();
 
@@ -1144,12 +1144,12 @@ namespace CnV
 				if (rv == ContentDialogResult.Primary)
 				{
 					var city = City.Get(cid);
-					await JSClient.ExecuteScriptAsync("misccommand",  "abandoncity", cid );
+					await CnVServer.ExecuteScriptAsync("misccommand",  "abandoncity", cid );
 					city.pid = 0; //
 						if (myCities.Length > 1)
 					{
 						var closest = myCities.Min<City, (float d, City c)>(a => (a == city ? float.MaxValue : cid.DistanceToCid(a.cid), a));
-						await JSClient.CitySwitch(closest.c.cid, false);
+						await CnVServer.CitySwitch(closest.c.cid, false);
 					}
 					await Task.Delay(500);
 					CitiesChanged();

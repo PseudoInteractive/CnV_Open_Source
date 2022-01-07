@@ -67,7 +67,7 @@ namespace CnV.Views
 
 		//public static void NotifyCotgPopup(int cotgPopupOpen)
 		//{
-		//	//JSClient.CaptureWebPage(canvas);
+		//	//CnVServer.CaptureWebPage(canvas);
 		//	//	cotgPopupOpen = 0;
 		//	var hasPopup = (cotgPopupOpen & 127) != 0;
 		//	var hasLongWindow = cotgPopupOpen >= 128;
@@ -115,7 +115,7 @@ namespace CnV.Views
 			//	_isHitTestVisible=wantVisible;
 				ShellPage.canvas.IsHitTestVisible = wantVisible;
 				//if(!wantVisible)
-				//	JSClient.view.Focus(FocusState.Programmatic);
+				//	CnVServer.view.Focus(FocusState.Programmatic);
 			//	TakeFocus();
 			//	note|=1;
 			}
@@ -150,9 +150,9 @@ namespace CnV.Views
 //				if((canvas.FocusState is FocusState.Unfocused) || forceFocus)
 //				{
 //					forceFocus=false;
-//					//if(JSClient.view is not null && AppS.IsKeyPressedShift())
+//					//if(CnVServer.view is not null && AppS.IsKeyPressedShift())
 //					{
-//						//		var f = JSClient.view.Focus(FocusState.Programmatic);
+//						//		var f = CnVServer.view.Focus(FocusState.Programmatic);
 //						//		Assert(f);
 //					}
 //					//else if( AppS.IsKeyPressedControl())

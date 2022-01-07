@@ -8,7 +8,7 @@ using static CnV.View;
 using CnV.Draw;
 
 //using Windows.UI.Core;
-using static CnV.Game.Troops;
+using static CnV.Troops;
 using static CnV.CanvasHelpers;
 
 
@@ -564,7 +564,7 @@ internal partial class GameClient
 					var circleRadius = animTLoop.Lerp(circleRadMin, circleRadMax) * shapeSizeGain * 6.5f;
 					//    var highlightRectSpan = new Vector2(circleRadius * 2.0f, circleRadius * 2);
 
-					//	ds.FillRectangle(new Rect(0, 0, clientSpan.X, clientSpan.Y), JSClient.webViewBrush);
+					//	ds.FillRectangle(new Rect(0, 0, clientSpan.X, clientSpan.Y), CnVServer.webViewBrush);
 
 
 
@@ -1754,7 +1754,7 @@ internal partial class GameClient
 	public static List<(int cid, float z, float vz)> viewHovers = new List<(int cid, float z, float vz)>();
 
 
-	public static void Update(GameTime gameTime)
+	protected override void Update(GameTime gameTime)
 	{
 
 		try
@@ -1913,14 +1913,14 @@ internal partial class GameClient
 
 				}
 			}
-			//if(JSClient.webViewBrush!=null)
+			//if(CnVServer.webViewBrush!=null)
 			//	AppS.DispatchOnUIThread(
 			//		() =>
 			//		{
-			//			JSClient.webViewBrush.SourceName = "cotgView";
-			//			JSClient.webViewBrush.SetSource(JSClient.view);
-			//			JSClient.webViewBrush.Redraw();
-			//			ShellPage.canvasHitTest.Fill = JSClient.webViewBrush;
+			//			CnVServer.webViewBrush.SourceName = "cotgView";
+			//			CnVServer.webViewBrush.SetSource(CnVServer.view);
+			//			CnVServer.webViewBrush.Redraw();
+			//			ShellPage.canvasHitTest.Fill = CnVServer.webViewBrush;
 			//		});
 		}
 		catch(SharpDX.SharpDXException sex)

@@ -25,7 +25,7 @@ namespace CnV
 
 		public static void Push(int cid)
 		{
-			var cityView = false;// JSClient.IsCityView();
+			var cityView = false;// CnVServer.IsCityView();
 								 // end current stack naviation session?
 			if (position != -1)
 			{
@@ -122,7 +122,7 @@ namespace CnV
 					Note.Show($"Navigate to {City.GetOrAddCity(cid).nameMarkdown} {position} {NavStack.backStack.Count}");
 					if (!City.IsBuild(cid) || !City.IsFocus(cid))
 					{
-						JSClient.CitySwitch(cid, false);
+						CnVServer.CitySwitch(cid, false);
 					}
 					//if (cityView != COTG.Views.ShellPage.IsCityView())
 					//{
