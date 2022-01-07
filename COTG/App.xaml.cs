@@ -474,15 +474,15 @@ namespace CnV
 					// are / chars inserted?
 					//  if (s.Length >= 3)
 					{
-						if (AMath.TryParseInt(s["s"], out int _s))
-							CnVServer.subId = _s;
+						//if (AMath.TryParseInt(s["s"], out int _s))
+						//	CnVServer.subId = _s;
 
-						//var n = s["p"];
-						//if (n != null)
-						//	Player.subOwner = n;
+						////var n = s["p"];
+						////if (n != null)
+						////	Player.subOwner = n;
 
-						if (AMath.TryParseInt(s["w"], out int _w))
-							CnVServer.world = _w;
+						//if (AMath.TryParseInt(s["w"], out int _w))
+						//	CnVServer.world = _w;
 
 //						if(AMath.TryParseInt(s["n"],out int _n)) // new instance
 //							key = "cotgaMulti" + DateTimeOffset.UtcNow.UtcTicks;

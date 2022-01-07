@@ -43,7 +43,7 @@ namespace CnV
 #else
 			await APlayFab.SigninLegacy(Player.myName);
 #endif
-			Assert( CnVServer.world != 0);
+			Assert( CnVServer.worldId != 0);
 			ShellPage.SetViewModeCity();
 			
 

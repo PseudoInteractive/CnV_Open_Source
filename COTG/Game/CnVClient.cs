@@ -736,7 +736,7 @@ namespace CnV
 							case "sub":
 								{
 									var i = jsp.Value.GetAsInt();
-									AppS.DispatchOnUIThread(() => Windows.System.Launcher.LaunchUriAsync(new Uri($"{App.appLink}:launch?w={world}&s={i}&n=1&p={HttpUtility.UrlEncode(Player.myName, Encoding.UTF8)}", UriKind.Absolute)));
+									AppS.DispatchOnUIThread(() => Windows.System.Launcher.LaunchUriAsync(new Uri($"{App.appLink}:launch?w={worldId}&s={i}&n=1&p={HttpUtility.UrlEncode(Player.myName, Encoding.UTF8)}", UriKind.Absolute)));
 									break;
 								}
 							case "shcit":

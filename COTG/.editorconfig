@@ -154,6 +154,9 @@ dotnet_diagnostic.CA1845.severity=warning
 # CS1591: Missing XML comment for publicly visible type or member
 dotnet_diagnostic.CS1591.severity = none
 
+# CS1587: XML comment is not placed on a valid language element
+dotnet_diagnostic.CS1587.severity = silent
+
 [*.{cs,vb}]
 dotnet_diagnostic.CA2215.severity=suggestion
 dotnet_diagnostic.CA2251.severity=suggestion

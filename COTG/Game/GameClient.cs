@@ -255,7 +255,7 @@ namespace CnV
 
 		public static void LoadWorldBackground()
 		{
-			worldBackground = LoadMaterial($"Art/world{(CnVServer.world>=26 ? 26 : ((CnVServer.world&1) switch { 1 => "23", _ => "22" }))}");
+			worldBackground = LoadMaterial($"Art/world{(CnVServer.worldId>=26 ? 26 : ((CnVServer.worldId&1) switch { 1 => "23", _ => "22" }))}");
 
 		}
 

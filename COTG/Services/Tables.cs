@@ -107,7 +107,7 @@ namespace CnV.Services
 		
 		const string tableName = "sharestring";
 
-		static string incTableName => $"inc{CnVServer.world}";
+		static string incTableName => $"inc{CnVServer.worldId}";
 		// DefaultEndpointsProtocol=https;AccountName=avata;AccountKey=IWRPGlttorpK5DcHWin/GdA2VEcZKnHkr30lE0ZDvKLG0q1CjZONcAQYI2D26DENd7TIAxF8tPsE0mIk98BafA==;EndpointSuffix=core.windows.net
 		static ATableService serviceClient;
 		static ATable<ShareStringDB> TableShareStrings;
