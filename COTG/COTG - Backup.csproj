@@ -7,7 +7,7 @@
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <Platforms>x64</Platforms>
     <MonoGamePlatform>WindowsStoreApp</MonoGamePlatform>
-    <RuntimeIdentifiers>win10-x64</RuntimeIdentifiers>
+    <RuntimeIdentifier>win10-x64</RuntimeIdentifier>
     <UseWinUI>true</UseWinUI>
     <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
     <EnableDefaultPageItems>false</EnableDefaultPageItems>
@@ -15,17 +15,19 @@
     <PackageCertificateThumbprint>5DC3522778776B8DC772B28B915990F3B4487888</PackageCertificateThumbprint>
     <AppxPackageSigningEnabled>True</AppxPackageSigningEnabled>
     <GenerateAppInstallerFile>False</GenerateAppInstallerFile>
-	<TieredCompilation>true</TieredCompilation>
-	<AppxPackageSigningTimestampDigestAlgorithm>SHA256</AppxPackageSigningTimestampDigestAlgorithm>
+    <TieredCompilation>true</TieredCompilation>
+    <AppxPackageSigningTimestampDigestAlgorithm>SHA256</AppxPackageSigningTimestampDigestAlgorithm>
     <AppxAutoIncrementPackageRevision>True</AppxAutoIncrementPackageRevision>
+    <GenerateTestArtifacts>True</GenerateTestArtifacts>
 	<PublishProfile>Properties\PublishProfiles\win10-$(Platform).pubxml</PublishProfile>	  
-	<AppxBundle>Always</AppxBundle>
+	      <AppxBundle>Always</AppxBundle>
 	<SelfContained>true</SelfContained>
 	<PublishSingleFile>False</PublishSingleFile>
     <PublishReadyToRun>False</PublishReadyToRun>
     <AppxBundlePlatforms>x64</AppxBundlePlatforms>
     <HoursBetweenUpdateChecks>0</HoursBetweenUpdateChecks>
     <AppxSymbolPackageEnabled>True</AppxSymbolPackageEnabled>
+    <TieredCompilation>true</TieredCompilation>
     <Configurations>Debug;Release</Configurations>
   </PropertyGroup>
   <ItemGroup>
@@ -42,70 +44,41 @@
   </ItemGroup>
 
   <ItemGroup>
-	<PackageReference Include="Azure.Data.Tables" Version="12.3.0" />
+    <PackageReference Include="Azure.Data.Tables" Version="12.3.0" />
     <PackageReference Include="Azure.Storage.Blobs" Version="12.11.0-beta.2" />
     <PackageReference Include="CommunityToolkit.WinUI.Notifications" Version="7.1.2" />
     <PackageReference Include="CommunityToolkit.WinUI.UI.Controls" Version="7.1.2" />
     <PackageReference Include="DSharpPlus" Version="4.2.0-nightly-01056" />
     <PackageReference Include="DSharpPlus.CommandsNext" Version="4.2.0-nightly-01056" />
     <PackageReference Include="DSharpPlus.Interactivity" Version="4.2.0-nightly-01056" />
-    <PackageReference Include="DSharpPlus.SlashCommands" Version="4.2.0-nightly-01056" />
     <PackageReference Include="Enums.NET" Version="4.0.0" />
-    <PackageReference Include="Grpc.Net.Client" Version="2.41.0-pre1" />
-    <PackageReference Include="Grpc.Net.Client" Version="2.42.0-pre1" />
     <PackageReference Include="Humanizer.Core" Version="2.13.14" />
     <PackageReference Include="MessagePack" Version="2.3.85" />
     <PackageReference Include="MessagePack.Experimental" Version="2.3.85" />
     <PackageReference Include="MessagePackAnalyzer" Version="2.3.85" />
     <PackageReference Include="MagicOnion.Client" Version="4.3.1" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="6.0.0" />
     <PackageReference Include="Microsoft.Extensions.ObjectPool" Version="6.0.1" />
-    <PackageReference Include="Microsoft.Toolkit" Version="7.1.2" />
-    <PackageReference Include="Microsoft.Toolkit.Diagnostics" Version="7.1.2" />
-    <PackageReference Include="Microsoft.Toolkit.HighPerformance" Version="7.1.2" />
-    <PackageReference Include="Microsoft.Toolkit.Mvvm" Version="7.1.2" />
-    <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.1054.31" />
-    <PackageReference Include="Microsoft.Windows.CsWinRT" Version="1.4.1" />
-	<PackageReference Include="Azure.Data.Tables" Version="12.3.0" />
-    <PackageReference Include="Azure.Storage.Blobs" Version="12.11.0-beta.2" />
-    <PackageReference Include="CommunityToolkit.WinUI.Notifications" Version="7.1.2" />
-    <PackageReference Include="CommunityToolkit.WinUI.UI.Controls" Version="7.1.2" />
-    <PackageReference Include="DSharpPlus" Version="4.2.0-nightly-01056" />
-    <PackageReference Include="DSharpPlus.CommandsNext" Version="4.2.0-nightly-01056" />
-    <PackageReference Include="DSharpPlus.Interactivity" Version="4.2.0-nightly-01056" />
-    <PackageReference Include="DSharpPlus.SlashCommands" Version="4.2.0-nightly-01056" />
-    <PackageReference Include="Enums.NET" Version="4.0.0" />
-    <PackageReference Include="Grpc.Net.Client" Version="2.41.0-pre1" />
-    <PackageReference Include="Grpc.Net.Client" Version="2.42.0-pre1" />
-    <PackageReference Include="Humanizer.Core" Version="2.13.14" />
-    <PackageReference Include="MessagePack" Version="2.3.85" />
-    <PackageReference Include="MessagePack.Experimental" Version="2.3.85" />
-    <PackageReference Include="MessagePackAnalyzer" Version="2.3.85" />
-    <PackageReference Include="MagicOnion.Client" Version="4.3.1" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="6.0.0" />
-    <PackageReference Include="Microsoft.Extensions.ObjectPool" Version="6.0.1" />
+    <PackageReference Include="Microsoft.Identity.Client" Version="4.40.0" />
     <PackageReference Include="Microsoft.Toolkit" Version="7.1.2" />
     <PackageReference Include="Microsoft.Toolkit.Diagnostics" Version="7.1.2" />
     <PackageReference Include="Microsoft.Toolkit.HighPerformance" Version="7.1.2" />
     <PackageReference Include="Microsoft.Toolkit.Mvvm" Version="7.1.2" />
     <PackageReference Include="Microsoft.Windows.CsWinRT" Version="1.4.1" />
-    <PackageReference Include="Microsoft.Identity.Client" Version="4.40.0" />	  
     <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.0.0" />
-	<PackageReference Include="Nito.AsyncEx.Coordination" Version="5.1.2" />
+    <PackageReference Include="Nito.AsyncEx.Coordination" Version="5.1.2" />
     <PackageReference Include="PlayFabAllSDK" Version="1.107.211209" />
     <PackageReference Include="Syncfusion.Grid.WinUI" Version="19.4.0.41" />
     <PackageReference Include="Syncfusion.Licensing" Version="19.4.0.41" />
-	<PackageReference Include="SharpDX" Version="4.2.0" />
+  <PackageReference Include="SharpDX" Version="4.2.0" />
     <PackageReference Include="SharpDX.D3DCompiler" Version="4.2.0" />
     <PackageReference Include="SharpDX.Direct3D11" Version="4.2.0" />
     <PackageReference Include="SharpDX.DXGI" Version="4.2.0" />
     <PackageReference Include="SharpDX.MediaFoundation" Version="4.2.0" />
     <PackageReference Include="SharpGen.Runtime.COM" Version="2.0.0-beta.10" />
-    <PackageReference Include="System.Linq.Async" Version="5.1.0" />
     <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="6.0.0" />
     <PackageReference Include="System.Text.Json" Version="6.0.1" />
-	<PackageReference Include="ZString" Version="2.4.4" />
-    	<Content Include="Assets\BadgeLogo.scale-100.png" />
+    <PackageReference Include="ZString" Version="2.4.4" />
+    <Content Include="Assets\BadgeLogo.scale-100.png" />
     <Content Include="Assets\BadgeLogo.scale-200.png" />
     <Content Include="Assets\BadgeLogo.scale-400.png" />
     <Content Include="Assets\LargeTile.scale-100.png" />
@@ -194,7 +167,6 @@
   <ItemGroup>
     <Compile Include="Activation\ProtocolActivation.cs" />
     <Compile Include="Activation\ActivationHandler.cs" />
-    <Compile Include="Services\TokenCacheHelper.cs" />
     <Manifest Include="$(ApplicationManifest)" />
     <Compile Include="Activation\CommandLineActivationHandler.cs" />
     <Compile Include="Activation\SchemeActivationConfig.cs" />
@@ -790,7 +762,7 @@
     <Folder Include="Themes\" />
   </ItemGroup>
   <ItemGroup>
-	 <Reference Include="Cyotek.Drawing.BitmapFont">
+    <Reference Include="Cyotek.Drawing.BitmapFont">
       <HintPath>..\ext\Cyotek.Drawing.BitmapFont.dll</HintPath>
     </Reference>
     <Reference Include="MonoGame.Framework">

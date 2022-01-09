@@ -38,8 +38,6 @@ namespace CnV
 		try
 		{
 #if CNV
-			var signin = new Signin();
-			await signin.ShowAsync2();
 #else
 			await APlayFab.SigninLegacy(Player.myName);
 #endif

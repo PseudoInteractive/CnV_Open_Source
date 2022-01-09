@@ -379,7 +379,10 @@ namespace CnV.Views
 
 			TabPage.mainTabs.SizeChanged += (( o, args) => ShellPage.updateHtmlOffsets.SizeChanged() );
 
-
+			var rv = await APlayFab.Signin(Settings.playerEmail, Settings.playerPassword);
+			if(rv == false)
+			{
+			}
 			//Task.Delay(5000).ContinueWith((_) =>
 			//{
 			//	DGame.Startup();

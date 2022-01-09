@@ -12,11 +12,9 @@
   </ItemGroup>
   <PropertyGroup>
     <WapProjPath Condition="'$(WapProjPath)'==''">$(MSBuildExtensionsPath)\Microsoft\DesktopBridge\</WapProjPath>
-    <PathToXAMLWinRTImplementations>COTG\</PathToXAMLWinRTImplementations>
   </PropertyGroup>
   <Import Project="$(WapProjPath)\Microsoft.DesktopBridge.props" />
   <PropertyGroup>
-    <DotNetVersion>net6.0</DotNetVersion>
     <ProjectGuid>e468cd1e-2b87-4604-9d22-291015b36c9f</ProjectGuid>
     <TargetPlatformVersion>10.0.22000.0</TargetPlatformVersion>
     <MonoGamePlatform>WindowsStoreApp</MonoGamePlatform>
@@ -85,15 +83,15 @@
     <Content Include="Package.StoreAssociation.xml" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\COTG\COTG.csproj" Exclude="..\COTG\Content\**;COTG\Content\**;COTG\COTG\Content\**">
+    <ProjectReference Include="..\COTG\COTG.csproj" >
       <SkipGetTargetFrameworkProperties>True</SkipGetTargetFrameworkProperties>
-      <ExcludeAssets>
-      </ExcludeAssets>
+      <PublishProfile>Properties\PublishProfiles\win10-$(Platform).pubxml</PublishProfile>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="6.0.0" />
-    <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.0.0" />
+    <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.0.0" >
+ 	<IncludeAssets>build</IncludeAssets>
+    </PackageReference>
   </ItemGroup>
   <Import Project="$(WapProjPath)\Microsoft.DesktopBridge.targets" />
 </Project>

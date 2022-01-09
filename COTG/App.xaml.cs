@@ -143,23 +143,23 @@ namespace CnV
 #endif
 
 
-			try
-			{
-				var str = CoreWebView2Environment.GetAvailableBrowserVersionString();
-				Log(str);
-				//			createWebEnvironmentTask =  CoreWebView2Environment.CreateAsync();
-				AAnalytics.Track("WebView",
-								new Dictionary<string, string>(new []
-								{
-										new KeyValuePair<string, string>("Version", str)
-								} ));
-			}
-			catch (Exception ex)
-			{
-				await Windows.System.Launcher.LaunchUriAsync(new("https://go.microsoft.com/fwlink/p/?LinkId=2124703",
-																UriKind.Absolute));
-				LogEx(ex);
-			}
+			//try
+			//{
+			//	var str = CoreWebView2Environment.GetAvailableBrowserVersionString();
+			//	Log(str);
+			//	//			createWebEnvironmentTask =  CoreWebView2Environment.CreateAsync();
+			//	AAnalytics.Track("WebView",
+			//					new Dictionary<string, string>(new []
+			//					{
+			//							new KeyValuePair<string, string>("Version", str)
+			//					} ));
+			//}
+			//catch (Exception ex)
+			//{
+			//	await Windows.System.Launcher.LaunchUriAsync(new("https://go.microsoft.com/fwlink/p/?LinkId=2124703",
+			//													UriKind.Absolute));
+			//	LogEx(ex);
+			//}
 			//#if CRASHES
 			//			bool didAppCrash = await Crashes.HasCrashedInLastSessionAsync();
 			//			if (didAppCrash)
