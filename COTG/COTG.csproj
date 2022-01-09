@@ -64,7 +64,6 @@
     <PackageReference Include="Microsoft.Toolkit.Diagnostics" Version="7.1.2" />
     <PackageReference Include="Microsoft.Toolkit.HighPerformance" Version="7.1.2" />
     <PackageReference Include="Microsoft.Toolkit.Mvvm" Version="7.1.2" />
-    <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.1054.31" />
     <PackageReference Include="Microsoft.Windows.CsWinRT" Version="1.4.1" />
 	<PackageReference Include="Azure.Data.Tables" Version="12.3.0" />
     <PackageReference Include="Azure.Storage.Blobs" Version="12.11.0-beta.2" />
@@ -194,6 +193,7 @@
   <ItemGroup>
     <Compile Include="Activation\ProtocolActivation.cs" />
     <Compile Include="Activation\ActivationHandler.cs" />
+    <Compile Include="Services\Signin.cs" />
     <Compile Include="Services\TokenCacheHelper.cs" />
     <Manifest Include="$(ApplicationManifest)" />
     <Compile Include="Activation\CommandLineActivationHandler.cs" />
@@ -399,9 +399,6 @@
       <DependentUpon>ShellPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\ShellWorld.cs" />
-    <Compile Include="Views\SigninPage.xaml.cs">
-	 <DependentUpon>SigninPage.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Views\SpotTab.xaml.cs">
       <DependentUpon>SpotTab.xaml</DependentUpon>
     </Compile>
@@ -579,10 +576,6 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Views\SigninPage.xaml">
-      <Generator>MSBuild:Compile</Generator>
-	   <SubType>Designer</SubType>
-    </Page>
     <Page Include="Views\SpotTab.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -702,6 +695,7 @@
     <None Remove="Views\DefendTab.xaml" />
     <None Remove="Views\ReinforcementsTab.xaml" />
     <None Remove="Views\Signin.xaml" />
+    <None Remove="Views\SigninPage.xaml" />
     <None Remove="Views\WebViewPage.xaml" />
     <None Remove="Wiki\fixes.md" />
     <None Remove="Win32Native.txt" />

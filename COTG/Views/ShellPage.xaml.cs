@@ -227,10 +227,12 @@ namespace CnV.Views
 		public static bool canvasVisible;
 		public static bool isFocused => isHitTestVisible && AppS.isForeground;
 
-		private void OnLoaded(object sender, RoutedEventArgs e)
+		private async void OnLoaded(object sender, RoutedEventArgs e)
 		{
 			CnVServer.CitySwitch = CnVClient.CitySwitch;
 			GameClient.canvas    = _canvas;
+
+			var signinTask = Task.Run(Signin.Go);
 
 			Note.Init();
 			CityUI.Init();
@@ -248,7 +250,7 @@ namespace CnV.Views
 			Grid.SetRowSpan(CityBuild.instance, 5);
 			Grid.SetColumnSpan(CityBuild.instance, 1);
 			Canvas.SetZIndex(CityBuild.instance, 13);
-			var c = CreateCanvasControl();
+			var c          = CreateCanvasControl();
 
 
 			// canvas.ContextFlyout = CityFlyout;
@@ -378,11 +380,16 @@ namespace CnV.Views
 
 
 			TabPage.mainTabs.SizeChanged += (( o, args) => ShellPage.updateHtmlOffsets.SizeChanged() );
-
-			var rv = await APlayFab.Signin(Settings.playerEmail, Settings.playerPassword);
-			if(rv == false)
+			
+			await signinTask;
+			
+			var okay = await PlayerTables.InitializePlayers();
+			if (!okay)
 			{
+				AppS.Failed("Player name is already used.  :( ");
+				await Signin.SignOut();
 			}
+
 			//Task.Delay(5000).ContinueWith((_) =>
 			//{
 			//	DGame.Startup();

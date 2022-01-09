@@ -13,33 +13,33 @@ using CnV.Game;
 using System.Runtime.InteropServices;
 using System.Web;
 
-namespace CnV.Services
+namespace CnV
 {
-	using CnV;
 
 	using CnVChat;
 	using Game;
 
-	public class PlayerGlobal : ITableEntity
-	{
-		public PlayerGlobal()
-		{
-		}
+	
+	//public class PlayerGlobal : ITableEntity
+	//{
+	//	public PlayerGlobal()
+	//	{
+	//	}
 
-		public PlayerGlobal(string partitionKey, string rowKey, string s)
-		{
-			this.PartitionKey = partitionKey;
-			this.RowKey = rowKey;
-			this.s = s;
+	//	public PlayerGlobal(string partitionKey, string rowKey, string s)
+	//	{
+	//		this.PartitionKey = partitionKey;
+	//		this.RowKey = rowKey;
+	//		this.s = s;
 
-		}
+	//	}
 
-		public string PartitionKey { get; set; }
-		public string RowKey { get; set; }
-		public DateTimeOffset? Timestamp { get; set; }
-		public ETag ETag { get; set; }
-		public string s { get; set; }
-	}
+	//	public string PartitionKey { get; set; }
+	//	public string RowKey { get; set; }
+	//	public DateTimeOffset? Timestamp { get; set; }
+	//	public ETag ETag { get; set; }
+	//	public string s { get; set; }
+	//}
 
 	public class ShareStringDB : ITableEntity
 	{
@@ -74,23 +74,23 @@ namespace CnV.Services
 	//}
 
 
-	public class IncomingDB : ITableEntity
-	{
-		public IncomingDB() 
-		{ 
-		}
+	//public class IncomingDB : ITableEntity
+	//{
+	//	public IncomingDB() 
+	//	{ 
+	//	}
 
-		public IncomingDB(DateTimeOffset date,long orderId)
-		{
-			this.PartitionKey = date.ToString("yyyy_MM_dd", CultureInfo.InvariantCulture );
-			this.RowKey = orderId.ToString();
-		}
+	//	public IncomingDB(DateTimeOffset date,long orderId)
+	//	{
+	//		this.PartitionKey = date.ToString("yyyy_MM_dd", CultureInfo.InvariantCulture );
+	//		this.RowKey = orderId.ToString();
+	//	}
 
-		public string PartitionKey { get; set; }
-		public string RowKey { get; set; }
-		public DateTimeOffset? Timestamp { get; set; }
-		public ETag ETag { get; set; }
-	}
+	//	public string PartitionKey { get; set; }
+	//	public string RowKey { get; set; }
+	//	public DateTimeOffset? Timestamp { get; set; }
+	//	public ETag ETag { get; set; }
+	//}
 
 	static class Tables
 	{
@@ -99,7 +99,7 @@ namespace CnV.Services
 	//	static string tableNameDiscord => $"Discord{CnVServer.world}";
 	//	const string storageUriCnV = "https://" + accountNameCnV + ".table.core.windows.net/";
 	//	static bool tableClientCnVInitialized;
-	//	static ATable<DiscordAllianceDB> tableDiscord;
+	//	static TypedTable<DiscordAllianceDB> tableDiscord;
 
 		const string accountName = "avata";
 		const string storageUri = "https://" + accountName + ".table.core.windows.net/";
@@ -107,39 +107,29 @@ namespace CnV.Services
 		
 		const string tableName = "sharestring";
 
-		static string incTableName => $"inc{CnVServer.worldId}";
+//		static string incTableName => $"inc{CnVServer.worldId}";
 		// DefaultEndpointsProtocol=https;AccountName=avata;AccountKey=IWRPGlttorpK5DcHWin/GdA2VEcZKnHkr30lE0ZDvKLG0q1CjZONcAQYI2D26DENd7TIAxF8tPsE0mIk98BafA==;EndpointSuffix=core.windows.net
-		static ATableService serviceClient;
-		static ATable<ShareStringDB> TableShareStrings;
-		static ATable<IncomingDB> incTableClient;
+		static ATableService          serviceClient = new(
+														new Uri(storageUri),
+														new TableSharedKeyCredential(accountName, storageAccountKey));
+		static TypedTable<ShareStringDB>? TableShareStrings;
 
 
-		static ATableService GetServiceClient()
-		{
-			if(serviceClient == null)
-			{
-				serviceClient = new ATableService(
-					new Uri(storageUri),
-					new TableSharedKeyCredential(accountName, storageAccountKey));
-			}
-			return serviceClient;
-		}
 
 		static bool TouchT()
 		{
 			if (TableShareStrings != null)
 				return true;
 
-			var serviceClient = GetServiceClient();
 			TableShareStrings = serviceClient.Table<ShareStringDB>(tableName);
 			return true;
 		}
-		static ATable<IncomingDB> TouchIncT()
-		{
-			return incTableClient = GetServiceClient().Table<IncomingDB>(incTableName);
-		}
+		//static TypedTable<IncomingDB> TouchIncT()
+		//{
+		//	return incTableClient = GetServiceClient().Table<IncomingDB>(incTableName);
+		//}
 
-		//static public async Task<ATable<DiscordAllianceDB> > TouchCnV()
+		//static public async Task<TypedTable<DiscordAllianceDB> > TouchCnV()
 		//{
 		//	if (!tableClientCnVInitialized)
 		//	{
@@ -247,69 +237,69 @@ namespace CnV.Services
 			return null;
 		}
 
-		static ConcurrentHashSet<long> ordersSeen = new ConcurrentHashSet<long>();
+		//static ConcurrentHashSet<long> ordersSeen = new ConcurrentHashSet<long>();
 		//		/// returns true of the order was inserted, false if it already existed
 		//		static ItemRequestOptions itemRequesDefault = new ItemRequestOptions() { EnableContentResponseOnWrite = false };
 
 		//		/// 
-		public static async Task<bool> TryAddOrder(DateTimeOffset date, long orderId)
-		{
-			//Log($"Order {date} {orderId}");
-			if (!ordersSeen.Add(orderId))
-				return false;
+		//public static async Task<bool> TryAddOrder(DateTimeOffset date, long orderId)
+		//{
+		//	//Log($"Order {date} {orderId}");
+		//	if (!ordersSeen.Add(orderId))
+		//		return false;
 
-			try
-			{
+		//	try
+		//	{
 
-				var tab = TouchIncT();
-				if (tab == null)
-					return false;
+		//		var tab = TouchIncT();
+		//		if (tab == null)
+		//			return false;
 
-				var ent = new IncomingDB(date, orderId);
-				var i = await tab.AddAsync(ent).ConfigureAwait(false);
-				//	Log($"Created entry {orderId}");
+		//		var ent = new IncomingDB(date, orderId);
+		//		var i = await tab.AddAsync(ent).ConfigureAwait(false);
+		//		//	Log($"Created entry {orderId}");
 
-				return i;
+		//		return i;
 				
-				//return false;
-			}
-			catch(Exception ex)
-			{
-				//LogEx(ex);
+		//		//return false;
+		//	}
+		//	catch(Exception ex)
+		//	{
+		//		//LogEx(ex);
 
-				return false;
-			}
-			//	////		Assert(used.Add(orderId) == true);
-			// //           if (!await Touch() )
-			// //               return false;
-			// //           var order = new Order() { id = orderId.ToString() };
-			//	//		await throttle.WaitAsync();
-			//	//		try
-			//	//		{
-			//	//			//var result = await ordersContainer.CreateItemAsync(order, new PartitionKey(order.id));
-			//	//			var result = await ordersContainer.CreateItemAsync(order, new PartitionKey(order.id), itemRequesDefault);
+		//		return false;
+		//	}
+		//	//	////		Assert(used.Add(orderId) == true);
+		//	// //           if (!await Touch() )
+		//	// //               return false;
+		//	// //           var order = new Order() { id = orderId.ToString() };
+		//	//	//		await throttle.WaitAsync();
+		//	//	//		try
+		//	//	//		{
+		//	//	//			//var result = await ordersContainer.CreateItemAsync(order, new PartitionKey(order.id));
+		//	//	//			var result = await ordersContainer.CreateItemAsync(order, new PartitionKey(order.id), itemRequesDefault);
 
-			// //           }
-			//	//		catch (CosmosException ex)
-			//	//		{
-			//	//			if (ex.StatusCode == HttpStatusCode.Conflict)
-			//	//				return false;
-			//	//			Log(ex);
+		//	// //           }
+		//	//	//		catch (CosmosException ex)
+		//	//	//		{
+		//	//	//			if (ex.StatusCode == HttpStatusCode.Conflict)
+		//	//	//				return false;
+		//	//	//			Log(ex);
 
-			//	//		}
-			//	//		catch (Exception ex)
-			// //           {
+		//	//	//		}
+		//	//	//		catch (Exception ex)
+		//	// //           {
 
-			//	//			Log(ex);
-			//	//			return false;
-			// //           }
+		//	//	//			Log(ex);
+		//	//	//			return false;
+		//	// //           }
 
-			//	//		finally
-			//	//		{
-			//	//			throttle.Release();
-			//	//		}
-			// //           return true;
-		}
+		//	//	//		finally
+		//	//	//		{
+		//	//	//			throttle.Release();
+		//	//	//		}
+		//	// //           return true;
+		//}
 	}
 }
 
