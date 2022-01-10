@@ -880,6 +880,13 @@ namespace CnV
 				Debug.LogEx(__ex);
 			}
 		}
+
+		private async void SignoutTapped(object sender, RoutedEventArgs e)
+		{
+			Hide();
+			await Signin.SignOut();
+			AppS.window.Close();
+		}
 	}
 
 }

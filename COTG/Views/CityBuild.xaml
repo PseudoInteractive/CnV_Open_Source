@@ -121,7 +121,7 @@
 				<AppBarButton Command="{StaticResource TogglePlanner}" />
 				<AppBarButton Command="{StaticResource CancelQueue}" />
 				<AppBarButton Command="{StaticResource Abandon}" />
-				<AppBarButton Command="{StaticResource Settings}" />
+				<AppBarButton Command="{StaticResource SettingsCommand}" />
 			</CommandBar.PrimaryCommands>
 	</CommandBar>
 	</Grid>

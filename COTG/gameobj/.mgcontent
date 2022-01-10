@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="utf-8"?>
+<SourceFileCollection xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Profile>HiDef</Profile>
+  <Platform>Windows</Platform>
+  <Config />
+  <SourceFiles>
+    <File>C:/Source/CnV/COTG/Content/Art/Anim/flagAnim0.png</File>
+    <File>C:/Source/CnV/COTG/Content/Art/Anim/flagAnim1.png</File>
+    <File>C:/Source/CnV/COTG/Content/Art/Anim/flagAnim3.png</File>
+    <File>C:/Source/CnV/COTG/Content/Art/Anim/flagAnim4.png</File>
+    <File>C:/Source/CnV/COTG/Content/Art/Anim/flagAnimGrey.png</File>
+    <File>C:/Source/CnV/COTG/Content/Art/circlegradient.png</File>
+    <File>C:/Source/CnV/COTG/Content/Art/City/baseland.png</File>
+    <File>C:/Source/CnV/COTG/Content/Art/City/baseland_n.dds</File>
+    <File>C:/Source/CnV/COTG/Content/Art/City/baseWater.png</File>
+    <File>C:/Source/CnV/COTG/Content/Art/City/basewater_n.dds</File>
+    <File>C:/Source/CnV/COTG/Content/Art/City/build_details_gloss_overlay.png</File>
+    <File>C:/Source/CnV/COTG/Content/Art/City/building_set5.png</File>
+    <File>C:/Source/CnV/COTG/Content/Art/City/building_set5_n.dds</File>
+    <File>C:/Source/CnV/COTG/Content/Art/City/decal_building_invalid.png</File>
+    <File>C:/Source/CnV/COTG/Content/Art/City/decal_building_valid.png</File>
+    <File>C:/Source/CnV/COTG/Content/Art/City/decal_building_valid_multi.png</File>
+    <File>C:/Source/CnV/COTG/Content/Art/City/decal_move_building.png</File>
+    <File>C:/Source/CnV/COTG/Content/Art/City/decal_select_building.png</File>
+    <File>C:/Source/CnV/COTG/Content/Art/City/Winter/baseland.png</File>
+    <File>C:/Source/CnV/COTG/Content/Art/City/Winter/baseland_n.dds</File>
+    <File>C:/Source/CnV/COTG/Content/Art/City/Winter/basewater.png</File>
+    <File>C:/Source/CnV/COTG/Content/Art/City/Winter/basewater_n.dds</File>
+    <File>C:/Source/CnV/COTG/Content/Art/City/Winter/building_set5.png</File>
+    <File>C:/Source/CnV/COTG/Content/Art/City/Winter/building_set5_n.dds</File>
+    <File>C:/Source/CnV/COTG/Content/Art/Icons/troops0.png</File>
+    <File>C:/Source/CnV/COTG/Content/Art/Icons/troops1.png</File>
+    <File>C:/Source/CnV/COTG/Content/Art/Icons/troops10.png</File>
+    <File>C:/Source/CnV/COTG/Content/Art/Icons/troops11.png</File>
+    <File>C:/Source/CnV/COTG/Content/Art/Icons/troops12.png</File>
+    <File>C:/Source/CnV/COTG/Content/Art/Icons/troops13.png</File>
+    <File>C:/Source/CnV/COTG/Content/Art/Icons/troops14.png</File>
+    <File>C:/Source/CnV/COTG/Content/Art/Icons/troops15.png</File>
+    <File>C:/Source/CnV/COTG/Content/Art/Icons/troops16.png</File>
+    <File>C:/Source/CnV/COTG/Content/Art/Icons/troops17.png</File>
+    <File>C:/Source/CnV/COTG/Content/Art/Icons/troops2.png</File>
+    <File>C:/Source/CnV/COTG/Content/Art/Icons/troops3.png</File>
+    <File>C:/Source/CnV/COTG/Content/Art/Icons/troops4.png</File>
+    <File>C:/Source/CnV/COTG/Content/Art/Icons/troops5.png</File>
+    <File>C:/Source/CnV/COTG/Content/Art/Icons/troops6.png</File>
+    <File>C:/Source/CnV/COTG/Content/Art/Icons/troops7.png</File>
+    <File>C:/Source/CnV/COTG/Content/Art/Icons/troops8.png</File>
+    <File>C:/Source/CnV/COTG/Content/Art/Icons/troops9.png</File>
+    <File>C:/Source/CnV/COTG/Content/Art/lineDraw.dds</File>
+    <File>C:/Source/CnV/COTG/Content/Art/lineDraw2.dds</File>
+    <File>C:/Source/CnV/COTG/Content/Art/quad.dds</File>
+    <File>C:/Source/CnV/COTG/Content/Art/quad2.dds</File>
+    <File>C:/Source/CnV/COTG/Content/Art/sky.dds</File>
+    <File>C:/Source/CnV/COTG/Content/Art/Tiles/cotg/cities-only.png</File>
+    <File>C:/Source/CnV/COTG/Content/Art/Tiles/cotg/cities-only_n.dds</File>
+    <File>C:/Source/CnV/COTG/Content/Art/Tiles/cotg/land.jpg</File>
+    <File>C:/Source/CnV/COTG/Content/Art/Tiles/cotg/land_n.png</File>
+    <File>C:/Source/CnV/COTG/Content/Art/Tiles/cotg/numberedthings.png</File>
+    <File>C:/Source/CnV/COTG/Content/Art/Tiles/cotg/numberedthings_n.png</File>
+    <File>C:/Source/CnV/COTG/Content/Art/Tiles/cotg/terrainfeatures.png</File>
+    <File>C:/Source/CnV/COTG/Content/Art/Tiles/cotg/terrainfeatures_n.png</File>
+    <File>C:/Source/CnV/COTG/Content/Art/Tiles/cotg/watertiles.png</File>
+    <File>C:/Source/CnV/COTG/Content/Art/Tiles/cotg/watertiles_n.png</File>
+    <File>C:/Source/CnV/COTG/Content/Art/Tiles/winter/cities-only.png</File>
+    <File>C:/Source/CnV/COTG/Content/Art/Tiles/winter/cities-only_n.png</File>
+    <File>C:/Source/CnV/COTG/Content/Art/Tiles/winter/land.png</File>
+    <File>C:/Source/CnV/COTG/Content/Art/Tiles/winter/land_n.png</File>
+    <File>C:/Source/CnV/COTG/Content/Art/Tiles/winter/numberedthings.png</File>
+    <File>C:/Source/CnV/COTG/Content/Art/Tiles/winter/numberedthings_n.png</File>
+    <File>C:/Source/CnV/COTG/Content/Art/Tiles/winter/terrainfeatures.png</File>
+    <File>C:/Source/CnV/COTG/Content/Art/Tiles/winter/terrainfeatures_n.png</File>
+    <File>C:/Source/CnV/COTG/Content/Art/Tiles/winter/watertiles.png</File>
+    <File>C:/Source/CnV/COTG/Content/Art/Tiles/winter/watertiles_n.png</File>
+    <File>C:/Source/CnV/COTG/Content/Art/world22.png</File>
+    <File>C:/Source/CnV/COTG/Content/Art/world26.png</File>
+    <File>C:/Source/CnV/COTG/Content/Art/world23.png</File>
+    <File>C:/Source/CnV/COTG/Content/Audio/music0.ogg</File>
+    <File>C:/Source/CnV/COTG/Content/Audio/music1.ogg</File>
+    <File>C:/Source/CnV/COTG/Content/Audio/music2.ogg</File>
+    <File>C:/Source/CnV/COTG/Content/Audio/music3.ogg</File>
+    <File>C:/Source/CnV/COTG/Content/Audio/music4.ogg</File>
+    <File>C:/Source/CnV/COTG/Content/Audio/music5.ogg</File>
+    <File>C:/Source/CnV/COTG/Content/Audio/music6.ogg</File>
+    <File>C:/Source/CnV/COTG/Content/Effects/Ava.fx</File>
+    <File>C:/Source/CnV/COTG/Content/Fonts/tra_0.png</File>
+  </SourceFiles>
+  <DestFiles>
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+  </DestFiles>
+</SourceFileCollection>

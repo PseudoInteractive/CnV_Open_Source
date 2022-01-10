@@ -123,8 +123,7 @@ namespace CnVDiscord
 					}
 					else
 					{
-						Console.WriteLine(
-							$"Missing discordName: {message.Author.Username} {message.Author.Id} HasOverride:{senderOverrides != null} ");
+						Log($"Missing discordName: {message.Author.Username} {message.Author.Id} HasOverride:{senderOverrides != null} ");
 					}
 					await AddMessage( (senderOverrides!=null? senderOverrides[i] : (player is not null ? player.discordId : message.Author.Id)),message, false, true);
 				}

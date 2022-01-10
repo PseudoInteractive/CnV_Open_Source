@@ -18,6 +18,9 @@ namespace CnV
 		static int lastSongPlayed;
 		public static void UpdateMusic()
 		{
+			try
+			{
+
 			if (Settings.musicVolume > 0 && !CnVServer.isSub)
 			{
 				if (music == null)
@@ -26,7 +29,7 @@ namespace CnV
 						return;
 					music = new Song[musicCount];
 					for (int i = 0; i < musicCount; ++i)
-						music[i] = AGame.instance.Content.Load<Song>($"Audio/music{i}");
+						music[i] = GameClient.instance.Content.Load<Song>($"Audio/music{i}");
 				}
 
 				MediaPlayer.Volume = Settings.musicVolume;
@@ -39,6 +42,12 @@ namespace CnV
 			{
 				if (MediaPlayer.State != MediaState.Stopped)
 					MediaPlayer.Stop();
+			}
+			}
+			catch(Exception e)
+			{
+				Console.WriteLine(e);
+				throw;
 			}
 		}
 	}

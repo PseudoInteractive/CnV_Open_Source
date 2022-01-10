@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PipelineBuildEvent xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <SourceFile>C:/Source/CnV/COTG/Content/Effects/Ava.fx</SourceFile>
+  <SourceTime>2022-01-10T03:26:36.6542774-08:00</SourceTime>
+  <DestFile>C:/Source/CnV/COTG/gamebin/Effects/Ava.xnb</DestFile>
+  <DestTime>2022-01-10T03:28:51.6985404-08:00</DestTime>
+  <Importer>EffectImporter</Importer>
+  <ImporterTime>2020-08-10T09:17:54-07:00</ImporterTime>
+  <Processor>EffectProcessor</Processor>
+  <ProcessorTime>2020-08-10T09:17:54-07:00</ProcessorTime>
+  <Parameters>
+    <Key>DebugMode</Key>
+    <Value>Optimize</Value>
+  </Parameters>
+  <Dependencies>
+    <string>C:\Source\CnV\COTG\Content\Effects\Constants.fxh</string>
+    <string>C:\Source\CnV\COTG\Content\Effects\Macros.fxh</string>
+    <string>C:\Source\CnV\COTG\Content\Effects\Structures.fxh</string>
+    <string>C:\Source\CnV\COTG\Content\Effects\defaultEffect.fxh</string>
+    <string>C:\Source\CnV\COTG\Content\Effects\AlphaAdd.fxh</string>
+    <string>C:\Source\CnV\COTG\Content\Effects\lit.fxh</string>
+    <string>C:\Source\CnV\COTG\Content\Effects\unlit.fxh</string>
+    <string>C:\Source\CnV\COTG\Content\Effects\font.fxh</string>
+    <string>C:\Source\CnV\COTG\Content\Effects\darkFont.fxh</string>
+    <string>C:\Source\CnV\COTG\Content\Effects\sdf.fxh</string>
+    <string>C:\Source\CnV\COTG\Content\Effects\NoTexture.fxh</string>
+    <string>C:\Source\CnV\COTG\Content\Effects\WorldSpace.fxh</string>
+    <string>C:\Source\CnV\COTG\Content\Effects\AnimatedSprite.fxh</string>
+  </Dependencies>
+  <BuildAsset />
+  <BuildOutput />
+</PipelineBuildEvent>

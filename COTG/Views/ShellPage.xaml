@@ -371,13 +371,6 @@
 			<!--<tk:MarkdownTextBlock x:Name="infoMD" x:FieldModifier="public" Text="TBA" Background="{x:Null}"/>-->
 			<!--
 		</winui:InfoBar>-->
-			<winui:WebView2 x:Name="webView" x:FieldModifier="public"
-						Grid.RowSpan="5"
-						Grid.ColumnSpan="3"
-						Canvas.ZIndex="10"
-						AllowDrop="False"
-						AllowFocusWhenDisabled="False"					
-						Grid.Row="1" />
 
 			<tk:GridSplitter
                         Background="{x:Null}"

@@ -56,8 +56,8 @@ namespace CnV
 		/// From Azure AD B2C / UserFlows blade
 		/// </summary>
 		const string PolicySignUpSignIn = "b2c_1_signupstuff";
-		const string PolicyEditProfile   = "b2c_1_edit_profile";
-		const string PolicyResetPassword = "b2c_1_reset";
+		const string PolicyEditProfile   = "b2c_1_editDisplayName";
+		const string PolicyResetPassword = "b2c_1_reset_password";
 
 
 		/// <summary>
@@ -92,7 +92,7 @@ namespace CnV
 		}
 
 
-		public static async Task Go()
+		public static async Task<bool> Go()
 		{
 			try
 			{
@@ -126,7 +126,7 @@ namespace CnV
 
 						ProcessUserInfo(authResult);
 
-						return;
+						return true;
 					}
 				}
 			}
@@ -137,7 +137,7 @@ namespace CnV
 
 			
 
-			for(int i=0;i<8;++i)
+			for(int i=0;i<5;++i)
 			{
 				try
 				{
@@ -146,7 +146,7 @@ namespace CnV
 										.WithPrompt(Prompt.SelectAccount)
 										.ExecuteAsync();
 					ProcessUserInfo(authResult);
-					return;
+					return true;
 				}
 				catch (Exception ex)
 				{
@@ -157,8 +157,10 @@ namespace CnV
 		catch(Exception e)
 		{
 			LogEx(e);
-			throw;
+			return false;
 		}
+
+			return false;
 
 		}
 		private static IAccount? GetAccountByPolicy(IEnumerable<IAccount> accounts, string policy)
@@ -271,6 +273,7 @@ namespace CnV
 
         internal static async Task SignOut()
         {
+			
 			var PublicClientApp = BuildPublicClientApp();
 
 			// SingOut will remove tokens from the token cache from ALL accounts, irrespective of user flow
@@ -284,7 +287,7 @@ namespace CnV
                 }
 
 	//			playerName         = null;
-				await AppS.Failed("Please restart");
+				await AppS.Failed("Signed out, please restart to sign in");
             }
             catch (Exception ex)
             {
@@ -292,7 +295,25 @@ namespace CnV
             }
         }
 
+		//internal void EditProfile()
+		//{
+		//		try
+		//		{
+		//			IEnumerable<IAccount> accounts = await App.PublicClientApp.GetAccountsAsync();
+		//			ResultText.Text = $"Calling API:{App.AuthorityEditProfile}";
+		//			AuthenticationResult authResult = await App.PublicClientApp.AcquireTokenInteractive(ApiScopes)
+		//												.WithAccount(GetAccountByPolicy(accounts, App.PolicyEditProfile))
+		//												.WithPrompt(Prompt.NoPrompt)
+		//												.WithB2CAuthority(App.AuthorityEditProfile)
+		//												.ExecuteAsync();
+		//			DisplayBasicTokenInfo(authResult);
+		//		}
+		//		catch(Exception ex)
+		//		{
+		//			LogEx(ex);
+		//		}
 
+		//}
         private static void ProcessUserInfo(AuthenticationResult authResult)
         {
             if (authResult != null)

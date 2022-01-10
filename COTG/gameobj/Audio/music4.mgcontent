@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PipelineBuildEvent xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <SourceFile>C:/Source/CnV/COTG/Content/Audio/music4.ogg</SourceFile>
+  <SourceTime>2021-10-28T08:04:34.9985531-07:00</SourceTime>
+  <DestFile>C:/Source/CnV/COTG/gamebin/Audio/music4.xnb</DestFile>
+  <DestTime>2022-01-10T03:28:47.5885222-08:00</DestTime>
+  <Importer>OggImporter</Importer>
+  <ImporterTime>2020-08-10T09:17:54-07:00</ImporterTime>
+  <Processor>SongProcessor</Processor>
+  <ProcessorTime>2020-08-10T09:17:54-07:00</ProcessorTime>
+  <Parameters>
+    <Key>Quality</Key>
+    <Value>Medium</Value>
+  </Parameters>
+  <Dependencies />
+  <BuildAsset />
+  <BuildOutput>
+    <string>C:/Source/CnV/COTG/gamebin/Audio/music4.wma</string>
+  </BuildOutput>
+</PipelineBuildEvent>

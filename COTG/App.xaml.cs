@@ -23,7 +23,7 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 //using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
-using Microsoft.Web.WebView2.Core;
+//using Microsoft.Web.WebView2.Core;
 //using ZLogger;
 //using Cysharp.Text;
 using System.Collections.Concurrent;
@@ -239,7 +239,7 @@ namespace CnV
 
 		private static async Task SwitchToBackground()
 		{
-			Log("Background");
+			Log($"Background {isForeground}");
 			if (isForeground == true)
 			{
 				isForeground = false;
@@ -545,7 +545,7 @@ namespace CnV
 		{
 //			BackgroundTask.dispatcherQueueController.ShutdownQueueAsync();
 
-			Log("Closed!");
+			Log($"Closed!  {isForeground}");
 			//	Assert(state == State.closed);
 			SwitchToBackground();
 		}
@@ -658,7 +658,7 @@ namespace CnV
 
 		private async void Window_VisibilityChanged(object sender, WindowVisibilityChangedEventArgs args)
 		{
-			Log($"Visibility!!: {args.Visible}");
+			Log($"Visibility!!: {args.Visible}  {isForeground}");
 			if (!args.Visible)
 			{
 				await SwitchToBackground();

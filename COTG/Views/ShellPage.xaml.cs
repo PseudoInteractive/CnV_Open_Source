@@ -264,7 +264,7 @@ namespace CnV.Views
 			// Placement.LayoutUpdated += Placement_LayoutUpdated; grid.Children.Add(img);
 
 			// Grid.SetRowSpan(img, 4); Grid.SetColumnSpan(img, 4); Canvas.SetZIndex(img, 12);
-			CnVServer.Initialize(grid, webView);
+			CnVServer.Initialize(grid);
 			// foreach (var i in webView.KeyboardAccelerators) i.IsEnabled = false;
 			// webView.AllowFocusOnInteraction = false; c.hitTest.Margin= webView.Margin = new
 			// Thickness(0, 0, 11, 0);
@@ -380,14 +380,28 @@ namespace CnV.Views
 
 
 			TabPage.mainTabs.SizeChanged += (( o, args) => ShellPage.updateHtmlOffsets.SizeChanged() );
+
 			
-			await signinTask;
-			
-			var okay = await PlayerTables.InitializePlayers();
-			if (!okay)
+			var okay = await signinTask;
+			if(okay)
 			{
-				AppS.Failed("Player name is already used.  :( ");
+				var okay2 = await PlayerTables.InitializePlayers();
+				if (okay2)
+				{
+					var okay3 = await APlayFab.Init();
+					Assert(okay3);
+				}
+				else
+				{
+					AppS.Failed("Player name is already used.  :( ");
+					await Signin.SignOut();
+				}
+			}
+			else
+			{
+				AppS.Failed("Signin didn't happen.  :( ");
 				await Signin.SignOut();
+
 			}
 
 			//Task.Delay(5000).ContinueWith((_) =>

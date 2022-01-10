@@ -104,11 +104,11 @@ namespace CnV
 			Texture normalMap;
 			using (var scope = new SRGBLoadScope())
 			{
-				texture = AGame.instance.Content.Load<Texture2D>($"{name}");
+				texture = GameClient.instance.Content.Load<Texture2D>($"{name}");
 			}
 			using (var scope = new LinearRGBLoadScope())
 			{
-				normalMap = AGame.instance.Content.Load<Texture2D>($"{ name}_n");
+				normalMap = GameClient.instance.Content.Load<Texture2D>($"{ name}_n");
 			}
 			return new Material(texture, normalMap, AGame.GetTileEffect());
 		}
@@ -264,7 +264,9 @@ namespace CnV
 		{
 			try
 			{
-				contentLoadingStarted.Complete();
+				contentLoadingStarted = true;
+				
+				Audio.UpdateMusic();
 
 				avaEffect              = Content.Load<Effect>("Effects/Ava");
 				defaultEffect = EffectPass("AlphaBlend");
@@ -423,7 +425,8 @@ namespace CnV
 				//};
 
 				CityView.LoadContent();
-				Audio.UpdateMusic();
+			//	contentLoadingCompleted.Complete();
+
 			}
 			catch(Exception ex)
 			{

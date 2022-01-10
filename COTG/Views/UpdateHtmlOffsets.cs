@@ -153,7 +153,7 @@ namespace CnV.Views
 								//	instance.columnRender.Width = new GridLength(1, GridUnitType.Star); //	GridLength.Auto;//	instance.grid.RowDefinitions[0].Height = new(canvasYOffset);
 								instance.grid.RowDefinitions[5].Height = new(40 * zoom); //new GridLength(newWidth1,GridUnitType.Pixel);//	instance.grid.RowDefinitions[0].Height = 
 						}
-						instance.webView.Margin= new(htmlShift, 0, 0, 0);
+					//	instance.webView.Margin= new(htmlShift, 0, 0, 0);
 					TabPage.LayoutChanged();
 						GameClient.wantFastRefresh = true;
 				}
