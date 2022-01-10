@@ -13,8 +13,10 @@ using System.Text;
 using static CnV.Debug;
 namespace CnV
 {
+	using System.Globalization;
 	using System.IO;
 	using System.Text.Json;
+	using Microsoft.Identity.Client.Extensions.Msal;
 	using Microsoft.UI;
 	using Microsoft.UI.Xaml;
 	using Microsoft.UI.Xaml.Controls;
@@ -23,9 +25,10 @@ namespace CnV
 
 	internal sealed partial class Signin
 	{
-		public static string? name;
-		public static string? azureId;
-		public static string? email;
+		public static string?    name;
+		public static string?    azureId;
+		public static string?    email;
+		public static DiscordId discordId;
 
 
 		/// <summary>
@@ -75,33 +78,43 @@ namespace CnV
 		const string ApiEndpoint = ""; //"https://jwt.ms/";
 
 		// Shouldn't need to change these:
-		const         string AuthorityBase          = $"https://{AzureAdB2CHostname}/tfp/{Tenant}/";
-		const         string AuthoritySignUpSignIn  = $"{AuthorityBase}{PolicySignUpSignIn}";
-		const         string AuthorityEditProfile   = $"{AuthorityBase}{PolicyEditProfile}";
-		const  string AuthorityResetPassword = $"{AuthorityBase}{PolicyResetPassword}";
-
-		static IPublicClientApplication BuildPublicClientApp()
+		const                  string AuthorityBase          = $"https://{AzureAdB2CHostname}/tfp/{Tenant}/";
+		const                  string AuthoritySignUpSignIn  = $"{AuthorityBase}{PolicySignUpSignIn}";
+		const                  string AuthorityEditProfile   = $"{AuthorityBase}{PolicyEditProfile}";
+		const                  string AuthorityResetPassword = $"{AuthorityBase}{PolicyResetPassword}";
+		const                  string CacheFileName          = "cnv_msal_cache.txt";
+		public readonly static string CacheDir               = MsalCacheHelper.UserRootDirectory;
+		static async Task  BuildPublicClientApp()
 		{
-			var PublicClientApp = PublicClientApplicationBuilder.Create(ClientId)
+			// TODO:  Mac and linux!
+			var storageProperties =
+					new StorageCreationPropertiesBuilder(CacheFileName,CacheDir,ClientId)
+						.Build();
+
+			PublicClientApp = PublicClientApplicationBuilder.Create(ClientId)
 				.WithB2CAuthority(AuthoritySignUpSignIn)
 				.WithRedirectUri(RedirectUri)
 				.WithLogging(_Log, LogLevel.Verbose, true, true) // don't log P(ersonally) I(dentifiable) I(nformation) details on a regular basis
 				.Build();
-			TokenCacheHelper.Bind(PublicClientApp.UserTokenCache);
-			return PublicClientApp;
+
+			var cacheHelper = await MsalCacheHelper.CreateAsync(storageProperties);
+			cacheHelper.RegisterCache(PublicClientApp.UserTokenCache);
+
+		//	TokenCacheHelper.Bind(PublicClientApp.UserTokenCache);
 		}
 
+		private static IPublicClientApplication PublicClientApp;
 
 		public static async Task<bool> Go()
 		{
 			try
 			{
 
-			var                   PublicClientApp = BuildPublicClientApp();
+			await BuildPublicClientApp();
 			IEnumerable<IAccount> accounts        = null;
 			try
 			{
-				accounts = await PublicClientApp.GetAccountsAsync();
+				accounts = await PublicClientApp.GetAccountsAsync(PolicySignUpSignIn);
 				foreach(var a in accounts)
 				{
 					Debug.Log(a.Username + " " + a.Environment + " " + a.HomeAccountId);
@@ -112,13 +125,13 @@ namespace CnV
 			{
 				LogEx(ex);
 			}
+			IAccount? currentUserAccount = accounts?.FirstOrDefault();
 			try
-			{
+				{
 				if (accounts != null)
 				{
 
 
-					IAccount? currentUserAccount = GetAccountByPolicy(accounts, PolicySignUpSignIn);
 					if (currentUserAccount is not null)
 					{
 						var authResult = await PublicClientApp.AcquireTokenSilent(ApiScopes, currentUserAccount)
@@ -137,12 +150,12 @@ namespace CnV
 
 			
 
-			for(int i=0;i<5;++i)
+			for(int i=0;i<3;++i)
 			{
 				try
 				{
 					var authResult = await PublicClientApp.AcquireTokenInteractive(ApiScopes)
-										.WithAccount(GetAccountByPolicy(accounts, PolicySignUpSignIn))
+										.WithAccount(currentUserAccount)
 										.WithPrompt(Prompt.SelectAccount)
 										.ExecuteAsync();
 					ProcessUserInfo(authResult);
@@ -163,16 +176,16 @@ namespace CnV
 			return false;
 
 		}
-		private static IAccount? GetAccountByPolicy(IEnumerable<IAccount> accounts, string policy)
-		{
-			foreach (var account in accounts)
-			{
-				string userIdentifier = account.HomeAccountId.ObjectId.Split('.')[0];
-				if (userIdentifier.EndsWith(policy.ToLower())) return account;
-			}
+		//private static IAccount? GetAccountByPolicy(IEnumerable<IAccount> accounts, string policy)
+		//{
+		//	foreach (var account in accounts)
+		//	{
+		//		string userIdentifier = account.HomeAccountId.ObjectId.Split('.')[0];
+		//		if (userIdentifier.EndsWith(policy.ToLower())) return account;
+		//	}
 
-			return null;
-		}
+		//	return null;
+		//}
 		
 		//private IntPtr GetHWND()
 		//{
@@ -274,12 +287,15 @@ namespace CnV
         internal static async Task SignOut()
         {
 			
-			var PublicClientApp = BuildPublicClientApp();
 
 			// SingOut will remove tokens from the token cache from ALL accounts, irrespective of user flow
 			IEnumerable<IAccount> accounts = await PublicClientApp.GetAccountsAsync();
             try
-            {
+			{
+				name      = null;
+				discordId = 0;
+				azureId   = null;
+				email     = null;
                 while (accounts.Any())
                 {
                     await PublicClientApp.RemoveAsync(accounts.FirstOrDefault());
@@ -295,55 +311,101 @@ namespace CnV
             }
         }
 
-		//internal void EditProfile()
-		//{
-		//		try
-		//		{
-		//			IEnumerable<IAccount> accounts = await App.PublicClientApp.GetAccountsAsync();
-		//			ResultText.Text = $"Calling API:{App.AuthorityEditProfile}";
-		//			AuthenticationResult authResult = await App.PublicClientApp.AcquireTokenInteractive(ApiScopes)
-		//												.WithAccount(GetAccountByPolicy(accounts, App.PolicyEditProfile))
-		//												.WithPrompt(Prompt.NoPrompt)
-		//												.WithB2CAuthority(App.AuthorityEditProfile)
-		//												.ExecuteAsync();
-		//			DisplayBasicTokenInfo(authResult);
-		//		}
-		//		catch(Exception ex)
-		//		{
-		//			LogEx(ex);
-		//		}
+		internal static async Task EditProfile()
+		{
+			try
+			{
+			//	IEnumerable<IAccount> accounts = await PublicClientApp.GetAccountsAsync(PolicySignUpSignIn);
+				AuthenticationResult authResult = await PublicClientApp.AcquireTokenInteractive(ApiScopes)
+												//	.WithAccount(accounts.FirstOrDefault() )
+													.WithPrompt(Prompt.NoPrompt)
+											//.WithLoginHint()
+													.WithB2CAuthority(AuthorityEditProfile)
+													.ExecuteAsync();
+				var changes = ProcessUserInfo(authResult);
+				
+				//	"extension_DiscordId"
+			}
+			catch(Exception ex)
+			{
+				LogEx(ex);
+			}
+		}
 
-		//}
-        private static void ProcessUserInfo(AuthenticationResult authResult)
-        {
-            if (authResult != null)
+		record struct PropertyChanges
+		{
+			public bool azureId=false;
+			public bool name=false;
+			public bool email     = false;
+			public bool discordId = false;
+		}
+		private static PropertyChanges ProcessUserInfo(AuthenticationResult authResult)
+		{
+			PropertyChanges result = new();
+			
+			if(authResult != null)
             {
 				try
 				{
 
 		               using var user = ParseIdToken(authResult.IdToken);
 						var      js   = user.RootElement;
-						name         =  js.GetAsString("name");
-						azureId         =  js.GetAsString("oid");
-					
-		                Log( $"Name: {name}"    );
-		              //  TokenInfoText.Text += $"User Identifier: {playerAzId}"                       + Environment.NewLine;
 
-						if ( js.TryGetProperty("emails", out var emails) )
+					if(js.TryGetProperty("oid", out var oid))
+					{
+						if(azureId != oid.GetString())
 						{
-
-							foreach (var v in emails.EnumerateArray())
+							if (azureId is not null)
 							{
-								if (email == null)
-									email = v.GetString();
+								Note.Show("Error:  Player changed identity");
+								return result;
+							}
+							azureId        = oid.GetString();
+							result.azureId = true;
+						}
+					}
+
+					if(js.TryGetProperty("extension_DiscordId", out var _discordId))
+						{
+							var       d = _discordId.GetString();
+							DiscordId v;
+							if (DiscordId.TryParse(d, NumberStyles.HexNumber, NumberFormatInfo.InvariantInfo, out v) || DiscordId.TryParse(d, NumberStyles.Integer, NumberFormatInfo.InvariantInfo, out v) )
+							{
+								if (discordId != v)
+								{
+									discordId        = v;
+									result.discordId = true;
+								}
+							}
+							else
+							{
+								Note.Show("Invalid DiscordID, should be number");
 							}
 						}
-						else
+						if(js.TryGetProperty("name", out var _name))
 						{
-							Note.Show("No email :(");
+							var newName = _name.GetString();
+							if (newName != name)
+							{
+								name        = newName;
+								result.name = true;
+							}
+						}
+						
+
+					//  TokenInfoText.Text += $"User Identifier: {playerAzId}"                       + Environment.NewLine;
+					if(TryGetEmail(js,out var _email))
+					{
+						if (_email is not null && _email != email)
+						{
+							email        = _email;
+							result.email = true;
 						}
 
-						//Debug.Log(TokenInfoText.Text);
+					}
+
+					//Debug.Log(TokenInfoText.Text);
+					Log($"Name: {name}");
 						Debug.Log(user.ToString());
 
 				}
@@ -352,6 +414,32 @@ namespace CnV
 					LogEx(e);
 				}
 			}
+
+			return result;
+		}
+
+		private static bool TryGetEmail(JsonElement js,out string? email)
+		{
+			if ( js.TryGetProperty("emails", out var emails) )
+			{
+				if (emails.ValueKind == JsonValueKind.Array && emails.GetArrayLength() > 0 )
+				{
+					email = emails[0].GetString();
+					return true;
+				}
+				else
+				{
+					Note.Show("Empty Email group");
+				}
+
+			}
+			else
+			{
+				Note.Show("No email :(");
+			}
+
+			email = null;
+			return false;
 		}
 
 		static JsonDocument ParseIdToken(string idToken)

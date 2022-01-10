@@ -104,32 +104,32 @@ namespace CnV.Views
 			
 	//		Log($"!Focu92: {ShellPage.isHitTestVisible} o{ShellPage.isMouseOver}");
 
-			updateCanvasVisibility.Go();
+			//updateCanvasVisibility.Go();
 		}
 
-		static Debounce updateCanvasVisibility = new(()=>
-		{
-			var wantVisible = ShellPage.isHitTestVisible;
-			if(ShellPage.canvas.IsHitTestVisible!= wantVisible)
-			{
-			//	_isHitTestVisible=wantVisible;
-				ShellPage.canvas.IsHitTestVisible = wantVisible;
-				//if(!wantVisible)
-				//	CnVServer.view.Focus(FocusState.Programmatic);
-			//	TakeFocus();
-			//	note|=1;
-			}
+		//static Debounce updateCanvasVisibility = new(()=>
+		//{
+		//	var wantVisible = ShellPage.isHitTestVisible;
+		//	if(ShellPage.canvas.IsHitTestVisible!= wantVisible)
+		//	{
+		//	//	_isHitTestVisible=wantVisible;
+		//		ShellPage.canvas.IsHitTestVisible = wantVisible;
+		//		//if(!wantVisible)
+		//		//	CnVServer.view.Focus(FocusState.Programmatic);
+		//	//	TakeFocus();
+		//	//	note|=1;
+		//	}
 
 			
-			//if(note!=0)
-			//	Note.Show($"!Focu{note}: {wantVisible} f{canvas.IsHitTestVisible} o{isOverCanvas}");
+		//	//if(note!=0)
+		//	//	Note.Show($"!Focu{note}: {wantVisible} f{canvas.IsHitTestVisible} o{isOverCanvas}");
 
 
-			return Task.CompletedTask;
-		}) {
-			runOnUiThread=true,
-			debounceDelay=100,
-			throttleDelay=100 };
+		//	return Task.CompletedTask;
+		//}) {
+		//	runOnUiThread=true,
+		//	debounceDelay=100,
+		//	throttleDelay=100 };
 
 //		static bool forceFocus;
 //		static void TakeFocusIfAppropriate()

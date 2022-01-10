@@ -887,6 +887,12 @@ namespace CnV
 			await Signin.SignOut();
 			AppS.window.Close();
 		}
+		private async void ChangeNameTapped(object sender, RoutedEventArgs e)
+		{
+			Hide();
+			await Signin.EditProfile();
+			
+		}
 	}
 
 }

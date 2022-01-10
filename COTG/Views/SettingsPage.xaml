@@ -22,8 +22,12 @@
 					   FontSize="12" Click="VersionTapped" />
 				<Button    Content="Sign Out"
 						   Style="{ThemeResource ButtonRevealStyle}"
-						   ToolTipService.ToolTip="Launches a second instance of the app. It is best not to run two instances with the same player and world"
+						   ToolTipService.ToolTip="Sign out of account"
 					   FontSize="12" Click="SignoutTapped"  Margin="4" />
+				<Button    Content="Change Name"
+			           Style="{ThemeResource ButtonRevealStyle}"
+			           ToolTipService.ToolTip="Change Player Name (warning, may not work)"
+			           FontSize="12" Click="ChangeNameTapped"  Margin="4" />
 				<Button    Content="Monitor Scale"
 						   Style="{ThemeResource ButtonRevealStyle}"
 						   ToolTipService.ToolTip="Launches display settings page to set display scale (if things don't look right, set this to 100%)"

@@ -31,8 +31,8 @@
 
 			// Then use FocusManager event from 1809 to listen to updates
 
-			FocusManager.GotFocus -= instance.FocusManager_GotFocus;
-			FocusManager.GotFocus += instance.FocusManager_GotFocus;
+		//	FocusManager.GotFocus -= instance.FocusManager_GotFocus;
+		//	FocusManager.GotFocus += instance.FocusManager_GotFocus;
 
 			return instance;
 
@@ -40,30 +40,30 @@
 		
 		private void Stop()
 		{
-			FocusManager.GotFocus -= FocusManager_GotFocus;
+		//	FocusManager.GotFocus -= FocusManager_GotFocus;
 		}
 
-		private void FocusManager_GotFocus(object sender,FocusManagerGotFocusEventArgs e)
-		{
-			FocusOnControl(e.NewFocusedElement as FrameworkElement);
-		}
+	//	private void FocusManager_GotFocus(object sender,FocusManagerGotFocusEventArgs e)
+	//	{
+	//		FocusOnControl(e.NewFocusedElement as FrameworkElement);
+	//	}
 
 		
 
-		private void FocusOnControl(FrameworkElement focusedControl)
-		{
-			if(focusedControl == this.focusedControl)
-				return;
-			this.focusedControl=focusedControl;
-	//		Trace($"Focus on {focusedControl?.Name}");
-			if(focusedControl == null)
-			{
-				display.Text = "[None]";;
-				return;
-			}
+	//	private void FocusOnControl(FrameworkElement focusedControl)
+	//	{
+	//		if(focusedControl == this.focusedControl)
+	//			return;
+	//		this.focusedControl=focusedControl;
+	////		Trace($"Focus on {focusedControl?.Name}");
+	//		if(focusedControl == null)
+	//		{
+	//			display.Text = "[None]";;
+	//			return;
+	//		}
 
-			display.Text = GetFocusDescription();
-		}
+	//		display.Text = GetFocusDescription();
+	//	}
 
 		public string GetParentsString()
 		{
