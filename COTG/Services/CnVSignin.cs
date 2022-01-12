@@ -23,13 +23,22 @@ namespace CnV
 
 
 
-	internal sealed partial class Signin
+	internal sealed class CnVSignin
 	{
-		public static string?    name;
+		public static string?    shortName;
 		public static string?    azureId;
 		public static string?    email;
 		public static DiscordId discordId;
 
+		//
+		// is this a security risk?
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="id"></param>
+		/// <returns></returns>
+		
+		
 
 		/// <summary>
 		/// B2C tenant name
@@ -70,7 +79,7 @@ namespace CnV
 		/// 2nd: Azure AD B2C / App registrations / [This App] / API Permissions / Add a permission / My APIs / [API App] / Select & Add Permissions
 		/// 3rd: Azure AD B2C / App registrations / [This App] / API Permissions / ... (next to add a permission) / Grant Admin Consent for [tenant]
 		/// </summary>
-		public static string[] ApiScopes = { "openid", "offline_access" };//$"https://{Tenant}/CnV/demo.read" };
+		public static string[] ApiScopes = { "openid", "offline_access", "email", "profile" };//$"https://{Tenant}/CnV/demo.read" };
 
 		/// <summary>
 		/// URL for API which will receive the bearer token corresponding to this authentication
@@ -81,7 +90,7 @@ namespace CnV
 		const                  string AuthorityBase          = $"https://{AzureAdB2CHostname}/tfp/{Tenant}/";
 		const                  string AuthoritySignUpSignIn  = $"{AuthorityBase}{PolicySignUpSignIn}";
 		const                  string AuthorityEditProfile   = $"{AuthorityBase}{PolicyEditProfile}";
-		const                  string AuthorityResetPassword = $"{AuthorityBase}{PolicyResetPassword}";
+//		const                  string AuthorityResetPassword = $"{AuthorityBase}{PolicyResetPassword}";
 		const                  string CacheFileName          = "cnv_msal_cache.txt";
 		public readonly static string CacheDir               = MsalCacheHelper.UserRootDirectory;
 		static async Task  BuildPublicClientApp()
@@ -283,53 +292,80 @@ namespace CnV
                 return ex.ToString();
             }
         }
+		internal static async Task ClearTokenCache()
+		{
 
-        internal static async Task SignOut()
-        {
-			
 
 			// SingOut will remove tokens from the token cache from ALL accounts, irrespective of user flow
 			IEnumerable<IAccount> accounts = await PublicClientApp.GetAccountsAsync();
-            try
+			try
 			{
-				name      = null;
-				discordId = 0;
-				azureId   = null;
-				email     = null;
-                while (accounts.Any())
-                {
-                    await PublicClientApp.RemoveAsync(accounts.FirstOrDefault());
-                    accounts = await PublicClientApp.GetAccountsAsync();
-                }
+				while(accounts.Any())
+				{
+					await PublicClientApp.RemoveAsync(accounts.FirstOrDefault());
+					accounts = await PublicClientApp.GetAccountsAsync();
+				}
 
-	//			playerName         = null;
-				await AppS.Failed("Signed out, please restart to sign in");
-            }
-            catch (Exception ex)
-            {
-                Log( $"Error signing-out user: {ex.Message}");
-            }
-        }
+				//			playerName         = null;
+			}
+			catch(Exception ex)
+			{
+				Log($"Error signing-out user: {ex.Message}");
+			}
+		}
+
+		internal static async Task SignOut()
+		{
+			await ClearTokenCache();
+
+			shortName      = null;
+			discordId = 0;
+			azureId   = null;
+			email     = null;
+			await AppS.Failed("Signed out, please restart to sign in");
+		}
+
 
 		internal static async Task EditProfile()
 		{
 			try
 			{
-			//	IEnumerable<IAccount> accounts = await PublicClientApp.GetAccountsAsync(PolicySignUpSignIn);
+				//	IEnumerable<IAccount> accounts = await PublicClientApp.GetAccountsAsync(PolicySignUpSignIn);
 				AuthenticationResult authResult = await PublicClientApp.AcquireTokenInteractive(ApiScopes)
-												//	.WithAccount(accounts.FirstOrDefault() )
+													//	.WithLoginHint(accounts.FirstOrDefault() )
 													.WithPrompt(Prompt.NoPrompt)
-											//.WithLoginHint()
+														//.WithLoginHint()
 													.WithB2CAuthority(AuthorityEditProfile)
 													.ExecuteAsync();
-				var changes = ProcessUserInfo(authResult);
-				
-				//	"extension_DiscordId"
+				var changes  = ProcessUserInfo(authResult);
+				var gp       = await PlayerGameEntity.GetAsync(Player.myId);
+				if (changes.name && CnVSignin.shortName is not null)
+				{
+					var longName =  await PlayerTables.GetLongNameAsync(CnVSignin.shortName);
+					gp.name = longName;
+					Player.me.SetName(longName);
+				}
+
+				if (changes.discordId)
+				{
+					gp.discordId        = (long) (CnVSignin.discordId);
+					Player.me.discordId = CnVSignin.discordId;
+				}
+
+				await gp.UpsertAsync();
+				await APlayFab.UpdateProfileData();
+
+				//
+				//	Now update Playfab
+				//
+				AppS.MessageBox("Success",$"{Player.me.name}"); 
+			
 			}
 			catch(Exception ex)
 			{
 				LogEx(ex);
 			}
+
 		}
 
 		record struct PropertyChanges
@@ -369,7 +405,8 @@ namespace CnV
 						{
 							var       d = _discordId.GetString();
 							DiscordId v;
-							if (DiscordId.TryParse(d, NumberStyles.HexNumber, NumberFormatInfo.InvariantInfo, out v) || DiscordId.TryParse(d, NumberStyles.Integer, NumberFormatInfo.InvariantInfo, out v) )
+							//if (DiscordId.TryParse(d, NumberStyles.HexNumber, NumberFormatInfo.InvariantInfo, out v) || DiscordId.TryParse(d, NumberStyles.Integer, NumberFormatInfo.InvariantInfo, out v) )
+							if(DiscordId.TryParse(d,NumberStyles.Integer, NumberFormatInfo.InvariantInfo, out v))
 							{
 								if (discordId != v)
 								{
@@ -385,9 +422,9 @@ namespace CnV
 						if(js.TryGetProperty("name", out var _name))
 						{
 							var newName = _name.GetString();
-							if (newName != name)
+							if (newName != shortName)
 							{
-								name        = newName;
+								shortName   = newName;
 								result.name = true;
 							}
 						}
@@ -405,7 +442,7 @@ namespace CnV
 					}
 
 					//Debug.Log(TokenInfoText.Text);
-					Log($"Name: {name}");
+					Log($"Name: {shortName}");
 						Debug.Log(user.ToString());
 
 				}

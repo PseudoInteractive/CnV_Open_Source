@@ -884,13 +884,13 @@ namespace CnV
 		private async void SignoutTapped(object sender, RoutedEventArgs e)
 		{
 			Hide();
-			await Signin.SignOut();
+			await CnVSignin.SignOut();
 			AppS.window.Close();
 		}
 		private async void ChangeNameTapped(object sender, RoutedEventArgs e)
 		{
 			Hide();
-			await Signin.EditProfile();
+			await CnVSignin.EditProfile();
 			
 		}
 	}

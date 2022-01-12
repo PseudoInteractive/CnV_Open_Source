@@ -232,7 +232,7 @@ namespace CnV.Views
 			CnVServer.CitySwitch = CnVClient.CitySwitch;
 			GameClient.canvas    = _canvas;
 
-			var signinTask = Task.Run(Signin.Go);
+			var signinTask = Task.Run(CnVSignin.Go);
 
 			Note.Init();
 			CityUI.Init();
@@ -385,22 +385,28 @@ namespace CnV.Views
 			var okay = await signinTask;
 			if(okay)
 			{
+				// don't await
+				var message = AppS.MessageBox($"Welcome {CnVSignin.shortName}");
+
 				var okay2 = await PlayerTables.InitializePlayers();
 				if (okay2)
 				{
+
 					var okay3 = await APlayFab.Init();
+					await APlayFab.UpdateProfileData();
+
 					Assert(okay3);
 				}
 				else
 				{
 					AppS.Failed("Player name is already used.  :( ");
-					await Signin.SignOut();
+					await CnVSignin.SignOut();
 				}
 			}
 			else
 			{
 				AppS.Failed("Signin didn't happen.  :( ");
-				await Signin.SignOut();
+				await CnVSignin.SignOut();
 
 			}
 
