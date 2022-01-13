@@ -1,5 +1,0 @@
-{
-	"powershell.codeFormatting.addWhitespaceAroundPipe": true,
-	"debug.javascript.autoAttachFilter": "smart",
-	"debug.javascript.automaticallyTunnelRemoteServer": false
-}
