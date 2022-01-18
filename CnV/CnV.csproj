@@ -62,20 +62,20 @@
     <PackageReference Include="Microsoft.Extensions.ObjectPool" Version="6.0.1" />
     <PackageReference Include="Microsoft.Identity.Client" Version="4.40.0" />
     <PackageReference Include="Microsoft.Identity.Client.Extensions.Msal" Version="2.19.3" />
+    <PackageReference Include="Microsoft.Identity.Web.TokenCache" Version="1.22.1" />
     <PackageReference Include="Microsoft.Toolkit" Version="7.1.2" />
     <PackageReference Include="Microsoft.Toolkit.Diagnostics" Version="7.1.2" />
     <PackageReference Include="Microsoft.Toolkit.HighPerformance" Version="7.1.2" />
     <PackageReference Include="Microsoft.Toolkit.Mvvm" Version="7.1.2" />
-    <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.1054.31" />
     <PackageReference Include="Microsoft.Windows.CsWinRT" Version="1.4.1" />
-	<PackageReference Include="Azure.Data.Tables" Version="12.3.0" />
+	<PackageReference Include="Azure.Data.Tables" Version="12.4.0" />
     <PackageReference Include="Azure.Storage.Blobs" Version="12.11.0-beta.2" />
     <PackageReference Include="CommunityToolkit.WinUI.Notifications" Version="7.1.2" />
     <PackageReference Include="CommunityToolkit.WinUI.UI.Controls" Version="7.1.2" />
-    <PackageReference Include="DSharpPlus" Version="4.2.0-nightly-01057" />
-    <PackageReference Include="DSharpPlus.CommandsNext" Version="4.2.0-nightly-01057" />
-    <PackageReference Include="DSharpPlus.Interactivity" Version="4.2.0-nightly-01057" />
-    <PackageReference Include="DSharpPlus.SlashCommands" Version="4.2.0-nightly-01057" />
+    <PackageReference Include="DSharpPlus" Version="4.2.0-nightly-01060" />
+    <PackageReference Include="DSharpPlus.CommandsNext" Version="4.2.0-nightly-01060" />
+    <PackageReference Include="DSharpPlus.Interactivity" Version="4.2.0-nightly-01060" />
+    <PackageReference Include="DSharpPlus.SlashCommands" Version="4.2.0-nightly-01060" />
     <PackageReference Include="Enums.NET" Version="4.0.0" />
     <PackageReference Include="Grpc.Net.Client" Version="2.41.0-pre1" />
     <PackageReference Include="Grpc.Net.Client" Version="2.42.0-pre1" />

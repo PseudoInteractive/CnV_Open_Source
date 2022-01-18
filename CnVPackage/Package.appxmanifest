@@ -14,13 +14,13 @@
 
   <Identity
     Name="33626dsw.15864FAB9E7D2"
-    Publisher="CN=FBC"
+    Publisher="CN=Pseudo Interactive"
     Version="1.0.388.0" />
 
 
   <Properties>
-    <DisplayName>COTGA</DisplayName>
-    <PublisherDisplayName>FBC</PublisherDisplayName>
+    <DisplayName>Conquest and Virtue</DisplayName>
+    <PublisherDisplayName>Alliances</PublisherDisplayName>
     <Logo>Assets\StoreLogo.png</Logo>
   </Properties>
 
@@ -38,12 +38,12 @@
       Executable="$targetnametoken$.exe"
       EntryPoint="$targetentrypoint$">
       <uap:VisualElements
-        DisplayName="COTGA"
+        DisplayName="Conquest and Virtue"
         Square150x150Logo="Assets\Square150x150Logo.png"
         Square44x44Logo="Assets\Square44x44Logo.png"
-        Description="Crown of the Gods Client"
+        Description="Conquest and Virtue Alpha"
         BackgroundColor="black">
-        <uap:DefaultTile Wide310x150Logo="Assets\Wide310x150Logo.png" Square71x71Logo="Assets\SmallTile.png" Square310x310Logo="Assets\LargeTile.png" ShortName="COTGA">
+        <uap:DefaultTile Wide310x150Logo="Assets\Wide310x150Logo.png" Square71x71Logo="Assets\SmallTile.png" Square310x310Logo="Assets\LargeTile.png" ShortName="CnV">
           <uap:ShowNameOnTiles>
             <uap:ShowOn Tile="square150x150Logo"/>
             <uap:ShowOn Tile="wide310x150Logo"/>
@@ -58,21 +58,18 @@
 
       <Extensions>
         <uap:Extension Category="windows.protocol">
-          <uap:Protocol Name="cotg" DesiredView="useMore">
+          <uap:Protocol Name="cnv" DesiredView="useMore">
             <uap:Logo>cnvCover2.png</uap:Logo>
-            <uap:DisplayName>Crown of the Gods A</uap:DisplayName>
+            <uap:DisplayName>Conquest and Virtue</uap:DisplayName>
           </uap:Protocol>
         </uap:Extension>
       </Extensions>
-      <uap:ApplicationContentUriRules>
-        <uap:Rule Type="include" Match="https://*.crownofthegods.com" WindowsRuntimeAccess="all"/>
-      </uap:ApplicationContentUriRules>
     </Application>
   </Applications>
 
   <Capabilities>
-    <Capability Name="internetClient" />
     <rescap:Capability Name="runFullTrust" />
+    <Capability Name="internetClientServer"/>
   </Capabilities>
 
  

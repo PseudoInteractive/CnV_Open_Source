@@ -25,9 +25,19 @@ namespace CnV
 
 	internal sealed class CnVSignin
 	{
-		public static string?    shortName;
+		const string discordIdB2C = "streetAddress";
+		const string avatarUrlHashB2C = "JobTitle";
+		const string discordDiscriminatorB2C = "givenName";
+		const string localeB2C = "surName";
+
+
+		public static string?    name;
 		public static string?    azureId;
 		public static string?    email;
+		public static string? avatarUrlHash;
+		public static string? discordDiscriminator;
+		public static string? locale;
+	
 		public static DiscordId discordId;
 
 		//
@@ -50,28 +60,41 @@ namespace CnV
 		/// <summary>
 		/// ClientId for the application which initiates the login functionality (this app)  
 		/// </summary>
-		const string ClientId = "ede9a681-b61d-4881-b264-c8dd65d5153f";
+		const string ClientId ="ede9a681-b61d-4881-b264-c8dd65d5153f";// "b39598a1-4beb-4a7a-8ca5-3e06068c086b";
 
 		/// <summary>
 		/// Should be one of the choices on the Azure AD B2c / [This App] / Authentication blade
 		/// </summary>
-		const string RedirectUri = $"https://{TenantName}.b2clogin.com/oauth2/nativeclient";
+		//const string RedirectUri = $"https://{TenantName}.b2clogin.com/oauth2/nativeclient";
 
+		//		const string RedirectUri = $"http://localhost";
 
 
 
 
 		//	private static readonly string RedirectUri = "msalede9a681-b61d-4881-b264-c8dd65d5153f://auth";
-		//private static readonly string RedirectUri = $"https://login.microsoftonline.com/common/oauth2/nativeclient";
-
+		private static readonly string RedirectUri = "https://pseudoplayers.b2clogin.com/oauth2/nativeclient";
+		//private static readonly string RedirectUri ="https://pseudoplayers.b2clogin.com/pseudoplayers.onmicrosoft.com/oauth2/authresp";
+		//private static readonly string RedirectUri ="http://localhost";
+	//			"pseudoplayers.b2clogin.com/pseudoplayers.onmicrosoft.com/oauth2/authresp";
 		/// <summary>
 		/// From Azure AD B2C / UserFlows blade
 		/// </summary>
-		const string PolicySignUpSignIn = "b2c_1_signupstuff";
+		const string PolicySignUpSignIn = "B2C_1A_SIGNUP_SIGNIN";//"b2c_1_signupstuff";
 		const string PolicyEditProfile   = "b2c_1_editDisplayName";
-		const string PolicyResetPassword = "b2c_1_reset_password";
+		const string PolicyResetPassword = "b2c_1_passwordreset";
+		/*
+				https://PseudoPlayers.b2clogin.com/PseudoPlayers.onmicrosoft.com/oauth2/v2.0/authorize?p=B2C_1A_SIGNUP_SIGNIN&client_id=b39598a1-4beb-4a7a-8ca5-3e06068c086b&nonce=defaultNonce&redirect_uri=https%3A%2F%2FPseudoPlayers.b2clogin.com%2Foauth2%2Fnativeclient&scope=openid&response_type=id_token&prompt=login
 
+				https://pseudoplayers.b2clogin.com/tfp/pseudoplayers.onmicrosoft.com/b2c_1a_signup_signin/oauth2/v2.0/authorize?scope=openid+offline_access+profile&response_type=code&client_id=b39598a1-4beb-4a7a-8ca5-3e06068c086b&redirect_uri=https%3A%2F%2Fpseudoplayers.b2clogin.com%2Fypseudoplayers.onmicrosoft.com%2Foauth2%2Fauthresp&client-request-id=fa0fc1f6-a1f0-4481-8cb1-e5abf37d0234&x-client-SKU=MSAL.NetCore&x-client-Ver=4.40.0.0&x-client-CPU=x64&x-client-OS=Microsoft+Windows+10.0.22000&prompt=select_account&code_challenge=DOPFe5YZmVqW-d1ntCNS65ypmOJtXkYqyKZkqx-eQvA&code_challenge_method=S256&state=1000c8fe-ba17-4e62-a9e1-8769d95894e100038956-4599-44f7-9fe5-18879b312ff4&client_info=1
 
+				https://pseudoplayers.b2clogin.com/oauth2/nativeclient?error=redirect_uri_mismatch&error_description=AADB2C90006%3a+The+redirect+URI+%27https%3a%2f%2fpseudoplayers.b2clogin.com%2fypseudoplayers.onmicrosoft.com%2foauth2%2fauthresp%27+provided+in+the+request+is+not+registered+for+the+client+id+%27b39598a1-4beb-4a7a-8ca5-3e06068c086b%27.%0d%0aCorrelation+ID%3a+48c290f8-e2d6-46c4-8bd2-371db901d80d%0d%0aTimestamp%3a+2022-01-14+11%3a57%3a30Z%0d%0a&state=1000c8fe-ba17-4e62-a9e1-8769d95894e100038956-4599-44f7-9fe5-18879b312ff4
+		
+		https://PseudoPlayers.b2clogin.com/PseudoPlayers.onmicrosoft.com/oauth2/v2.0/authorize?p=B2C_1A_SIGNUP_SIGNIN&client_id=b39598a1-4beb-4a7a-8ca5-3e06068c086b&nonce=defaultNonce&redirect_uri=https%3A%2F%2FPseudoPlayers.b2clogin.com%2Foauth2%2Fnativeclient&scope=openid&response_type=id_token&prompt=login
+
+		https://pseudoplayers.b2clogin.com/tfp/pseudoplayers.onmicrosoft.com/b2c_1a_signup_signin/oauth2/v2.0/authorize?scope=openid+offline_access+profile&response_type=code&client_id=b39598a1-4beb-4a7a-8ca5-3e06068c086b&redirect_uri=https%3A%2F%2Fpseudoplayers.b2clogin.com%2Fpseudoplayers.onmicrosoft.com%2Foauth2%2Fauthresp&client-request-id=24a95ec8-e26b-41ab-a8e7-6635e860fa20&x-client-SKU=MSAL.NetCore&x-client-Ver=4.40.0.0&x-client-CPU=x64&x-client-OS=Microsoft+Windows+10.0.22000&prompt=select_account&code_challenge=1X2Wle2SL0PPUABQLtQKlLu40X7WN821A_zrAofcKGQ&code_challenge_method=S256&state=698a6eb9-10de-4028-8dd4-ede1216ab3152653be4a-dcf6-47eb-be33-cb2ab569a6d3&client_info=1
+
+		 */
 		/// <summary>
 		/// Note: AcquireTokenInteractive will fail to get the AccessToken if "Admin Consent" has not been granted to this scope.  To achieve this:
 		/// 
@@ -79,7 +102,7 @@ namespace CnV
 		/// 2nd: Azure AD B2C / App registrations / [This App] / API Permissions / Add a permission / My APIs / [API App] / Select & Add Permissions
 		/// 3rd: Azure AD B2C / App registrations / [This App] / API Permissions / ... (next to add a permission) / Grant Admin Consent for [tenant]
 		/// </summary>
-		public static string[] ApiScopes = { "openid", "offline_access", "email", "profile" };//$"https://{Tenant}/CnV/demo.read" };
+		public static string[] ApiScopes = { "https://PseudoPlayers.onmicrosoft.com/signin/tasks.read" };// "https://pseudoplayers.onmicrosoft.com/cnvlogin/tasks.read" };// "openid" };//$"https://{Tenant}/CnV/demo.read" };
 
 		/// <summary>
 		/// URL for API which will receive the bearer token corresponding to this authentication
@@ -88,8 +111,8 @@ namespace CnV
 
 		// Shouldn't need to change these:
 		const                  string AuthorityBase          = $"https://{AzureAdB2CHostname}/tfp/{Tenant}/";
-		const                  string AuthoritySignUpSignIn  = $"{AuthorityBase}{PolicySignUpSignIn}";
-		const                  string AuthorityEditProfile   = $"{AuthorityBase}{PolicyEditProfile}";
+		const                  string AuthoritySignUpSignIn  = $"{AuthorityBase}{PolicySignUpSignIn}/";
+		const                  string AuthorityEditProfile   = $"{AuthorityBase}{PolicyEditProfile}/";
 //		const                  string AuthorityResetPassword = $"{AuthorityBase}{PolicyResetPassword}";
 		const                  string CacheFileName          = "cnv_msal_cache.txt";
 		public readonly static string CacheDir               = MsalCacheHelper.UserRootDirectory;
@@ -102,20 +125,27 @@ namespace CnV
 
 			PublicClientApp = PublicClientApplicationBuilder.Create(ClientId)
 				.WithB2CAuthority(AuthoritySignUpSignIn)
-				.WithRedirectUri(RedirectUri)
+									.WithRedirectUri(RedirectUri)
+					//	.WithExperimentalFeatures(true)
+			//	.WithDefaultRedirectUri()
+
+
 				.WithLogging(_Log, LogLevel.Verbose, true, true) // don't log P(ersonally) I(dentifiable) I(nformation) details on a regular basis
 				.Build();
 
 			var cacheHelper = await MsalCacheHelper.CreateAsync(storageProperties);
 			cacheHelper.RegisterCache(PublicClientApp.UserTokenCache);
 
-		//	TokenCacheHelper.Bind(PublicClientApp.UserTokenCache);
+			//CacheHelper.Bind(PublicClientApp.UserTokenCache);
 		}
 
 		private static IPublicClientApplication PublicClientApp;
 
 		public static async Task<bool> Go()
-		{
+		{ 
+		//	await Task.Delay(500).ConfigureAwait(false);
+//			await Task.Yield();
+//AppS.DispatchOnUIThread( async () => {  
 			try
 			{
 
@@ -159,20 +189,21 @@ namespace CnV
 
 			
 
-			for(int i=0;i<3;++i)
+			for(int i=0;i<5;++i)
 			{
 				try
 				{
-					var authResult = await PublicClientApp.AcquireTokenInteractive(ApiScopes)
+				var authResult = await PublicClientApp.AcquireTokenInteractive(ApiScopes)
 										.WithAccount(currentUserAccount)
-										.WithPrompt(Prompt.SelectAccount)
+									//	.WithUseEmbeddedWebView(false)
+									//	.WithPrompt(Prompt.SelectAccount)
 										.ExecuteAsync();
 					ProcessUserInfo(authResult);
 					return true;
 				}
 				catch (Exception ex)
 				{
-					LogEx(ex);
+					Log(ex.Message);
 				}
 			}
 		}
@@ -184,6 +215,7 @@ namespace CnV
 
 			return false;
 
+	//	});
 		}
 		//private static IAccount? GetAccountByPolicy(IEnumerable<IAccount> accounts, string policy)
 		//{
@@ -318,62 +350,67 @@ namespace CnV
 		{
 			await ClearTokenCache();
 
-			shortName      = null;
+			name      = null;
 			discordId = 0;
+			avatarUrlHash = null;
 			azureId   = null;
 			email     = null;
 			await AppS.Failed("Signed out, please restart to sign in");
 		}
 
 
-		internal static async Task EditProfile()
-		{
-			try
-			{
-				//	IEnumerable<IAccount> accounts = await PublicClientApp.GetAccountsAsync(PolicySignUpSignIn);
-				AuthenticationResult authResult = await PublicClientApp.AcquireTokenInteractive(ApiScopes)
-													//	.WithLoginHint(accounts.FirstOrDefault() )
-													.WithPrompt(Prompt.NoPrompt)
-														//.WithLoginHint()
-													.WithB2CAuthority(AuthorityEditProfile)
-													.ExecuteAsync();
-				var changes  = ProcessUserInfo(authResult);
-				var gp       = await PlayerGameEntity.GetAsync(Player.myId);
-				if (changes.name && CnVSignin.shortName is not null)
-				{
-					var longName =  await PlayerTables.GetLongNameAsync(CnVSignin.shortName);
-					gp.name = longName;
-					Player.me.SetName(longName);
-				}
+		//internal static async Task EditProfile()
+		//{
+		//	try
+		//	{
+		//		//	IEnumerable<IAccount> accounts = await PublicClientApp.GetAccountsAsync(PolicySignUpSignIn);
+		//		AuthenticationResult authResult = await PublicClientApp.AcquireTokenInteractive(ApiScopes)
+		//											//	.WithLoginHint(accounts.FirstOrDefault() )
+		//											.WithPrompt(Prompt.NoPrompt)
+		//												//.WithLoginHint()
+		//											.WithB2CAuthority(AuthorityEditProfile)
+		//											.ExecuteAsync();
+		//		var changes  = ProcessUserInfo(authResult);
+		//		var gp       = await PlayerGameEntity.GetAsync(Player.myId);
+		//		if (changes.name && CnVSignin.name is not null)
+		//		{
+		//			var longName =  await PlayerTables.GetLongNameAsync(CnVSignin.name);
+		//			gp.name = longName;
+		//			Player.me.SetName(longName);
+		//		}
 
-				if (changes.discordId)
-				{
-					gp.discordId        = (long) (CnVSignin.discordId);
-					Player.me.discordId = CnVSignin.discordId;
-				}
+		//		if (changes.discordId)
+		//		{
+		//			gp.discordId        = (long) (CnVSignin.discordId);
+		//			Player.me.discordId = CnVSignin.discordId;
+		//		}
 
-				await gp.UpsertAsync();
-				await APlayFab.UpdateProfileData(CnVSignin.email);
+		//		await gp.UpsertAsync();
+		//		await APlayFab.UpdateProfileData(CnVSignin.email);
 
-				//
-				//	Now update Playfab
-				//
-				AppS.MessageBox("Success",$"{Player.me.name}"); 
+		//		//
+		//		//	Now update Playfab
+		//		//
+		//		AppS.MessageBox("Success",$"{Player.me.name}"); 
 			
-			}
-			catch(Exception ex)
-			{
-				LogEx(ex);
-			}
+		//	}
+		//	catch(Exception ex)
+		//	{
+		//		LogEx(ex);
+		//	}
 
-		}
+		//}
 
 		record struct PropertyChanges
 		{
 			public bool azureId=false;
+
 			public bool name=false;
 			public bool email     = false;
 			public bool discordId = false;
+			internal bool locale=false;
+			internal bool avatarUrlHash=false;
+			internal bool discordDiscriminator=false;
 		}
 		private static PropertyChanges ProcessUserInfo(AuthenticationResult authResult)
 		{
@@ -383,25 +420,11 @@ namespace CnV
             {
 				try
 				{
+					azureId = authResult.UniqueId;
+					using var user = ParseIdToken(authResult.IdToken);
+					var js = user.RootElement;
 
-		               using var user = ParseIdToken(authResult.IdToken);
-						var      js   = user.RootElement;
-
-					if(js.TryGetProperty("oid", out var oid))
-					{
-						if(azureId != oid.GetString())
-						{
-							if (azureId is not null)
-							{
-								Note.Show("Error:  Player changed identity");
-								return result;
-							}
-							azureId        = oid.GetString();
-							result.azureId = true;
-						}
-					}
-
-					if(js.TryGetProperty("extension_DiscordId", out var _discordId))
+					if(js.TryGetProperty(discordIdB2C, out var _discordId))
 						{
 							var       d = _discordId.GetString();
 							DiscordId v;
@@ -419,12 +442,27 @@ namespace CnV
 								Note.Show("Invalid DiscordID, should be number");
 							}
 						}
-						if(js.TryGetProperty("name", out var _name))
+					if(js.TryGetProperty(avatarUrlHashB2C, out var _avatarHash))
+					{
+						avatarUrlHash = _avatarHash.GetString();
+						result.avatarUrlHash = true;
+					}
+					if(js.TryGetProperty(discordDiscriminatorB2C, out var _desc))
+					{
+						discordDiscriminator = _desc.GetString();
+						result.discordDiscriminator = true;
+					}
+					if(js.TryGetProperty(localeB2C, out var _locale))
+					{
+						locale = _locale.GetString();
+						result.locale = true;
+					}
+					if(js.TryGetProperty("name", out var _name))
 						{
 							var newName = _name.GetString();
-							if (newName != shortName)
+							if (newName != name)
 							{
-								shortName   = newName;
+								name   = newName;
 								result.name = true;
 							}
 						}
@@ -442,7 +480,7 @@ namespace CnV
 					}
 
 					//Debug.Log(TokenInfoText.Text);
-					Log($"Name: {shortName}");
+					Log($"Name: {name}");
 						Debug.Log(user.ToString());
 
 				}
@@ -457,7 +495,12 @@ namespace CnV
 
 		private static bool TryGetEmail(JsonElement js,out string? email)
 		{
-			if ( js.TryGetProperty("emails", out var emails) )
+			if(js.TryGetProperty("email", out var _email))
+			{
+				email = _email.GetString();
+				return true;
+			}
+				if ( js.TryGetProperty("emails", out var emails) )
 			{
 				if (emails.ValueKind == JsonValueKind.Array && emails.GetArrayLength() > 0 )
 				{

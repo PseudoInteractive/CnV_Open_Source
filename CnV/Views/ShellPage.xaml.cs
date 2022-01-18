@@ -232,7 +232,7 @@ namespace CnV.Views
 			CnVServer.CitySwitch = CnVClient.CitySwitch;
 			GameClient.canvas    = _canvas;
 
-			var signinTask = Task.Run(CnVSignin.Go);
+		//	var signinTask = await CnVSignin.Go();// Task.Run(CnVSignin.Go);
 
 			Note.Init();
 			CityUI.Init();
@@ -243,7 +243,7 @@ namespace CnV.Views
 			WorkScope.Update = WorkUpdate;
 			//		SystemNavigationManagerPreview.GetForCurrentView().CloseRequested += App.App_CloseRequested; ;
 			//typeof(Telerik.UI.Xaml.Controls.RadDataForm).Assembly.GetType("Telerik.UI.Xaml.Controls.TelerikLicense").GetField("messageDisplayed",BindingFlags.NonPublic|BindingFlags.Static).SetValue(null,true,BindingFlags.Static|BindingFlags.NonPublic,null,null);
-
+			var signinTask = await CnVSignin.Go();// Task.Run(CnVSignin.Go);
 			CityBuild.Initialize();
 			// Grid.SetColumn(webView, 0);
 			Grid.SetRow(CityBuild.instance, 1);
@@ -328,12 +328,12 @@ namespace CnV.Views
 
 
 			//			KeyboardAccelerators.Add(BuildKeyboardAccelerator(VirtualKey.F5, Refresh_Invoked,VirtualKeyModifiers.Control));
-			KeyboardAccelerators.Add(BuildKeyboardAccelerator(VirtualKey.R, instance.Refresh_Invoked,
-															VirtualKeyModifiers.Control));
-			foreach (var k in buildKeys)
-			{
-				KeyboardAccelerators.Add(BuildKeyboardAccelerator(k, KeyboardAccelerator));
-			}
+			//KeyboardAccelerators.Add(BuildKeyboardAccelerator(VirtualKey.R, instance.Refresh_Invoked,
+			//												VirtualKeyModifiers.Control));
+			//foreach (var k in buildKeys)
+			//{
+			//	KeyboardAccelerators.Add(BuildKeyboardAccelerator(k, KeyboardAccelerator));
+			//}
 
 			//				KeyboardAccelerators.Add(BuildKeyboardAccelerator(VirtualKey.F4, LayoutAccelerator_Invoked));
 			IsLoggedIn   = true; // IdentityService.IsLoggedIn();
@@ -363,6 +363,10 @@ namespace CnV.Views
 			//	await UpdateWebViewScale();
 			Log("Game Create!");
 			GameClient.Create(_canvas);
+
+			
+
+
 			try
 			{
 				if (SystemInformation.Instance.IsAppUpdated && !CnVServer.isSub)
@@ -382,18 +386,26 @@ namespace CnV.Views
 			TabPage.mainTabs.SizeChanged += (( o, args) => ShellPage.updateHtmlOffsets.SizeChanged() );
 
 			
-			var okay = await signinTask;
+			var okay = signinTask;
 			if(okay)
 			{
 				// don't await
-				var message = AppS.MessageBox($"Welcome {CnVSignin.shortName}");
+				
 
-				var changed = await PlayerTables.InitializeAndUpdateCurrentPlayer(azureId:CnVSignin.azureId,shortName:CnVSignin.shortName, discordId:CnVSignin.discordId);
+				var changed = await PlayerTables.InitializeAndUpdateCurrentPlayer(azureId:CnVSignin.azureId, discordId:CnVSignin.discordId,discordUserName:CnVSignin.name,avatarUrlHash:CnVSignin.avatarUrlHash);
 				//if (okay2)
+				try
 				{
-
 					var okay3 = await APlayFab.Init();
 					Assert(okay3);
+
+				}
+				catch (Exception exception)
+				{
+					LogEx(exception);
+					throw;
+				}{
+
 				}
 				//else
 				//{
