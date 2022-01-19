@@ -26,9 +26,9 @@ namespace CnV
 	internal sealed class CnVSignin
 	{
 		const string discordIdB2C = "streetAddress";
-		const string avatarUrlHashB2C = "JobTitle";
+		const string avatarUrlHashB2C = "jobTitle";
 		const string discordDiscriminatorB2C = "givenName";
-		const string localeB2C = "surName";
+		const string localeB2C = "surname";
 
 
 		public static string?    name;
@@ -125,16 +125,16 @@ namespace CnV
 
 			PublicClientApp = PublicClientApplicationBuilder.Create(ClientId)
 				.WithB2CAuthority(AuthoritySignUpSignIn)
-									.WithRedirectUri(RedirectUri)
-					//	.WithExperimentalFeatures(true)
+				.WithRedirectUri(RedirectUri)
+				.WithExperimentalFeatures(true)
 			//	.WithDefaultRedirectUri()
 
 
 				.WithLogging(_Log, LogLevel.Verbose, true, true) // don't log P(ersonally) I(dentifiable) I(nformation) details on a regular basis
 				.Build();
 
-			var cacheHelper = await MsalCacheHelper.CreateAsync(storageProperties);
-			cacheHelper.RegisterCache(PublicClientApp.UserTokenCache);
+		//	var cacheHelper = await MsalCacheHelper.CreateAsync(storageProperties);
+		//	cacheHelper.RegisterCache(PublicClientApp.UserTokenCache);
 
 			//CacheHelper.Bind(PublicClientApp.UserTokenCache);
 		}
@@ -424,7 +424,7 @@ namespace CnV
 					using var user = ParseIdToken(authResult.IdToken);
 					var js = user.RootElement;
 
-					if(js.TryGetProperty(discordIdB2C, out var _discordId))
+						if(js.TryGetProperty(discordIdB2C, out var _discordId))
 						{
 							var       d = _discordId.GetString();
 							DiscordId v;
