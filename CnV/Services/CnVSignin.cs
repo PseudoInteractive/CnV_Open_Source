@@ -102,7 +102,7 @@ namespace CnV
 		/// 2nd: Azure AD B2C / App registrations / [This App] / API Permissions / Add a permission / My APIs / [API App] / Select & Add Permissions
 		/// 3rd: Azure AD B2C / App registrations / [This App] / API Permissions / ... (next to add a permission) / Grant Admin Consent for [tenant]
 		/// </summary>
-		public static string[] ApiScopes = { "https://PseudoPlayers.onmicrosoft.com/signin/tasks.read" };// "https://pseudoplayers.onmicrosoft.com/cnvlogin/tasks.read" };// "openid" };//$"https://{Tenant}/CnV/demo.read" };
+		public static string[] ApiScopes = { "openid", "profile", "email", "offline_access" };// "https://PseudoPlayers.onmicrosoft.com/signin/tasks.read" };// "https://pseudoplayers.onmicrosoft.com/cnvlogin/tasks.read" };// "openid" };//$"https://{Tenant}/CnV/demo.read" };
 
 		/// <summary>
 		/// URL for API which will receive the bearer token corresponding to this authentication
@@ -133,8 +133,14 @@ namespace CnV
 				.WithLogging(_Log, LogLevel.Verbose, true, true) // don't log P(ersonally) I(dentifiable) I(nformation) details on a regular basis
 				.Build();
 
-		//	var cacheHelper = await MsalCacheHelper.CreateAsync(storageProperties);
-		//	cacheHelper.RegisterCache(PublicClientApp.UserTokenCache);
+			var cacheHelper = await MsalCacheHelper.CreateAsync(storageProperties,
+#if DEBUG
+				new("MSALCache", SourceLevels.All)
+#else
+				null
+#endif
+				);
+			cacheHelper.RegisterCache(PublicClientApp.UserTokenCache);
 
 			//CacheHelper.Bind(PublicClientApp.UserTokenCache);
 		}
@@ -423,7 +429,7 @@ namespace CnV
 					azureId = authResult.UniqueId;
 					using var user = ParseIdToken(authResult.IdToken);
 					var js = user.RootElement;
-
+					Log(js.ToString());
 						if(js.TryGetProperty(discordIdB2C, out var _discordId))
 						{
 							var       d = _discordId.GetString();
