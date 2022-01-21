@@ -193,9 +193,9 @@ namespace CnV
 				Note.Show("Account not working");
 			}
 
-			
 
-			for(int i=0;i<5;++i)
+			await	AppS.DispatchOnUIThreadTask(async () => { 
+			for(;;)
 			{
 				try
 				{
@@ -205,13 +205,16 @@ namespace CnV
 									//	.WithPrompt(Prompt.SelectAccount)
 										.ExecuteAsync();
 					ProcessUserInfo(authResult);
-					return true;
+					break;
 				}
 				catch (Exception ex)
 				{
 					Log(ex.Message);
 				}
+				await Task.Delay(200);
+
 			}
+				});
 		}
 		catch(Exception e)
 		{

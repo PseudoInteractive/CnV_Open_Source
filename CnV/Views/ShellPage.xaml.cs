@@ -232,7 +232,7 @@ namespace CnV.Views
 			CnVServer.CitySwitch = CnVClient.CitySwitch;
 			GameClient.canvas    = _canvas;
 
-		//	var signinTask = await CnVSignin.Go();// Task.Run(CnVSignin.Go);
+			var signinTask =  Task.Run(CnVSignin.Go);
 
 			Note.Init();
 			CityUI.Init();
@@ -386,7 +386,7 @@ namespace CnV.Views
 			TabPage.mainTabs.SizeChanged += (( o, args) => ShellPage.updateHtmlOffsets.SizeChanged() );
 
 			
-			var okay = signinTask;
+			var okay = await signinTask;
 			if(okay)
 			{
 				// don't await

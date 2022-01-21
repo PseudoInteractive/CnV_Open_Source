@@ -37,17 +37,56 @@ namespace CnV
 		//					   CnVChatClient.instance.Initialize();
 		try
 		{
-#if CNV
-#else
-			await APlayFab.SigninLegacy(Player.myName);
-#endif
-			Assert( CnVServer.worldId != 0);
-			ShellPage.SetViewModeCity();
+
+				var timeOffset = jso.GetAsInt64("timeoffset");
+				var timeOffsetSecondsRounded = Math.Round(timeOffset / (1000.0 * 60*30)) * 60 * 30.0f; // round to nearest half hour
+				CnVServer.gameTOffset = TimeSpan.FromHours(world.timeZoneOffsetHours);
+				CnVServer.gameTOffsetSeconds = CnVServer.gameTOffset.totalSeconds;
+				BuildQueue.Initialize();
+
+				//	var str = timeOffsetSecondsRounded >= 0 ? " +" : " ";
+				//	str += $"{gameTOffset.Hours:D2}:{gameTOffset.Minutes:D2}";
+				//	Helpers.JSON.timeZoneString = str;
+				//   Log(JSONHelper.timeZoneString);
+
+
+				//	ppss = jso.GetAsInt("ppss");
+				//	Player.myName = jso.GetString("player");
+				//	if(Player.subOwner == null)
+				//		Player.subOwner = Player.myName;
+				//	Player.myId = Player.myId = jso.GetAsInt("pid"); ;
+				Player.myIds.Add(Player.myId);
+				//Note.L("cid=" + cid.CidToString());
+				//gameMSAtStart = jso.GetAsInt64("time");
+				//launchTime = DateTimeOffset.UtcNow;
+				//    Log(jsVars.ToString());
+				//  Settings.secSessionId = jso.GetAsString("s");
+				//		AGame.clientTL.X = jso.GetAsFloat("left");
+				//  AGame.clientTL.Y = jso.GetAsFloat("top");
+				//   Log($"WebClient:{AGame.clientTL} {ShellPage.webclientSpan.y}");
+				//     Note.Show($" {clientSpanX}:{clientSpanY} {ShellPage.clientTL} ");
+				//			   spanX = jso.GetAsInt("spanX");
+				//			   spanY = jso.GetAsInt("spanY");
+				//			   Note.Show($"ClientSpan: {spanX}x{spanY}");
+				//    Log($"Built heades {httpClient.DefaultRequestHeaders.ToString() }");
+
+				//   UpdatePPDT(jso.GetProperty("ppdt"));
 			
+				// todo: utf
+				//		AddPlayer(true, true, Player.myId, Player.myName, token, raidSecret, cookies);//, s, ppdt.ToString());
 
-			//CnVChatClient.CnVChatClient.Setup();
 
-			GetWorldInfo.Send();
+				UpdatePPDT(ppdt, Player.myId, pruneCities: true);
+				Assert( CnVServer.worldId != 0);
+				ShellPage.SetViewModeCity();
+				Spot.build = Spot.focus = cid;
+				NavStack.Push(cid);
+				AGame.CameraC = cid.CidToWorldV();
+
+
+				//CnVChatClient.CnVChatClient.Setup();
+
+				GetWorldInfo.Send();
 			ShellPage.canvasVisible = true;
 			//   ShellPage.isHitTestVisible = true;
 			///                   await GetCitylistOverview();

@@ -62,6 +62,7 @@
     <PackageReference Include="Microsoft.Extensions.ObjectPool" Version="6.0.1" />
     <PackageReference Include="Microsoft.Identity.Client" Version="4.40.0" />
     <PackageReference Include="Microsoft.Identity.Client.Extensions.Msal" Version="2.19.3" />
+    <PackageReference Include="Microsoft.NET.StringTools" Version="1.0.0" />
     <PackageReference Include="Microsoft.Toolkit" Version="7.1.2" />
     <PackageReference Include="Microsoft.Toolkit.Diagnostics" Version="7.1.2" />
     <PackageReference Include="Microsoft.Toolkit.HighPerformance" Version="7.1.2" />
@@ -241,7 +242,6 @@
     <Compile Include="Game\Supporter.cs" />
     <Compile Include="Game\WorldUI.cs" />
     <Compile Include="GlobalSuppressions2.cs" />
-    <Compile Include="GlobalUsing.cs" />
     <Compile Include="JSON\Errors.cs" />
     <Compile Include="JSON\GetIO.cs" />
     <Compile Include="JSON\gFRep2.cs" />
@@ -799,5 +799,6 @@
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="..\..\CnVShared\CnVShared.projitems" Label="Shared" />
+  <Import Project="..\..\CnVServer\CnVServer\CnVServer.projitems" Label="Shared" />
 
  </Project>

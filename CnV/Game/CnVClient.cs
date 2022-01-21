@@ -311,9 +311,7 @@ namespace CnV
 					if(jse.TryGetProperty("lcit", out var lcit))
 					{
 						citySwitch= lcit.GetAsInt();
-
 					}
-
 				}
 
 				if(!World.initialized)
@@ -641,50 +639,50 @@ namespace CnV
 
 									//   clientPoolSema.Release(clientCount);
 
-									var timeOffset = jso.GetAsInt64("timeoffset");
-									var timeOffsetSecondsRounded = Math.Round(timeOffset / (1000.0 * 60*30)) * 60 * 30.0f; // round to nearest half hour
-									gameTOffset = TimeSpan.FromSeconds(timeOffsetSecondsRounded);
-									gameTOffsetSeconds = (int)timeOffsetSecondsRounded;
-									//   gameTOffsetMs = (long)timeOffsetSecondsRounded*1000;
-									var str = timeOffsetSecondsRounded >= 0 ? " +" : " ";
-									str += $"{gameTOffset.Hours:D2}:{gameTOffset.Minutes:D2}";
-									Helpers.JSON.timeZoneString = str;
-									//   Log(JSONHelper.timeZoneString);
+							//		var timeOffset = jso.GetAsInt64("timeoffset");
+							//		var timeOffsetSecondsRounded = Math.Round(timeOffset / (1000.0 * 60*30)) * 60 * 30.0f; // round to nearest half hour
+							//		gameTOffset = TimeSpan.FromSeconds(timeOffsetSecondsRounded);
+							//		gameTOffsetSeconds = (int)timeOffsetSecondsRounded;
+							//		//   gameTOffsetMs = (long)timeOffsetSecondsRounded*1000;
+							//		var str = timeOffsetSecondsRounded >= 0 ? " +" : " ";
+							//		str += $"{gameTOffset.Hours:D2}:{gameTOffset.Minutes:D2}";
+							//		Helpers.JSON.timeZoneString = str;
+							//		//   Log(JSONHelper.timeZoneString);
 
-									Log($"TOffset {gameTOffset}");
-									Log(ServerTime().ToString("u"));
-								//	ppss = jso.GetAsInt("ppss");
-								//	Player.myName = jso.GetString("player");
-								//	if(Player.subOwner == null)
-								//		Player.subOwner = Player.myName;
-								//	Player.myId = Player.myId = jso.GetAsInt("pid"); ;
-									Player.myIds.Add(Player.myId);
-									var cid = jso.GetAsInt("cid");
-									Spot.build = Spot.focus = cid;
-									NavStack.Push(cid);
-									AGame.CameraC = cid.CidToWorldV();
-									//Note.L("cid=" + cid.CidToString());
-									//gameMSAtStart = jso.GetAsInt64("time");
-									//launchTime = DateTimeOffset.UtcNow;
-									//    Log(jsVars.ToString());
-									//  Settings.secSessionId = jso.GetAsString("s");
-									//		AGame.clientTL.X = jso.GetAsFloat("left");
-									//  AGame.clientTL.Y = jso.GetAsFloat("top");
-									//   Log($"WebClient:{AGame.clientTL} {ShellPage.webclientSpan.y}");
-									//     Note.Show($" {clientSpanX}:{clientSpanY} {ShellPage.clientTL} ");
-									gotCreds = true;
-									//			   spanX = jso.GetAsInt("spanX");
-									//			   spanY = jso.GetAsInt("spanY");
-									//			   Note.Show($"ClientSpan: {spanX}x{spanY}");
-									//    Log($"Built heades {httpClient.DefaultRequestHeaders.ToString() }");
+							//		Log($"TOffset {gameTOffset}");
+							//		Log(ServerTime().ToString("u"));
+							//	//	ppss = jso.GetAsInt("ppss");
+							//	//	Player.myName = jso.GetString("player");
+							//	//	if(Player.subOwner == null)
+							//	//		Player.subOwner = Player.myName;
+							//	//	Player.myId = Player.myId = jso.GetAsInt("pid"); ;
+							//		Player.myIds.Add(Player.myId);
+							//		var cid = jso.GetAsInt("cid");
+							//		Spot.build = Spot.focus = cid;
+							//		NavStack.Push(cid);
+							//		AGame.CameraC = cid.CidToWorldV();
+							//		//Note.L("cid=" + cid.CidToString());
+							//		//gameMSAtStart = jso.GetAsInt64("time");
+							//		//launchTime = DateTimeOffset.UtcNow;
+							//		//    Log(jsVars.ToString());
+							//		//  Settings.secSessionId = jso.GetAsString("s");
+							//		//		AGame.clientTL.X = jso.GetAsFloat("left");
+							//		//  AGame.clientTL.Y = jso.GetAsFloat("top");
+							//		//   Log($"WebClient:{AGame.clientTL} {ShellPage.webclientSpan.y}");
+							//		//     Note.Show($" {clientSpanX}:{clientSpanY} {ShellPage.clientTL} ");
+							//		gotCreds = true;
+							//		//			   spanX = jso.GetAsInt("spanX");
+							//		//			   spanY = jso.GetAsInt("spanY");
+							//		//			   Note.Show($"ClientSpan: {spanX}x{spanY}");
+							//		//    Log($"Built heades {httpClient.DefaultRequestHeaders.ToString() }");
 
-									//   UpdatePPDT(jso.GetProperty("ppdt"));
-									var ppdt = jso.GetProperty("ppdt");
-									// todo: utf
-							//		AddPlayer(true, true, Player.myId, Player.myName, token, raidSecret, cookies);//, s, ppdt.ToString());
+							//		//   UpdatePPDT(jso.GetProperty("ppdt"));
+							//		var ppdt = jso.GetProperty("ppdt");
+							//		// todo: utf
+							////		AddPlayer(true, true, Player.myId, Player.myName, token, raidSecret, cookies);//, s, ppdt.ToString());
 
 
-									UpdatePPDT(ppdt, Player.myId, pruneCities: true);
+							//		UpdatePPDT(ppdt, Player.myId, pruneCities: true);
 									//Alliance.alliancesFetchedTask.ContinueWith((_) =>
 									//{
 									//	if(Player.isSpecial)

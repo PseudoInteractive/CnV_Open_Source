@@ -3,23 +3,28 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31717.71
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "COTG", "COTG\COTG.csproj", "{D3C61EE9-9FAD-45BD-ACCE-F4E95AE32807}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CnV", "CnV\CnV.csproj", "{D3C61EE9-9FAD-45BD-ACCE-F4E95AE32807}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{A932D01D-2F2F-4C1F-8CF9-BD778D7D42D3}"
 	ProjectSection(SolutionItems) = preProject
+		.gitattributes = .gitattributes
 		ext\CotgKey.pfx = ext\CotgKey.pfx
 	EndProjectSection
 EndProject
-Project("{C7167F0D-BC9F-4E6E-AFE1-012C56B48DB5}") = "COTG (Package)", "COTG (Package)\COTG (Package).wapproj", "{E468CD1E-2B87-4604-9D22-291015B36C9F}"
+Project("{C7167F0D-BC9F-4E6E-AFE1-012C56B48DB5}") = "CnVPackage", "CnVPackage\CnVPackage.wapproj", "{E468CD1E-2B87-4604-9D22-291015B36C9F}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CnvChatServer", "..\CnvChatServer\CnvChatServer\CnvChatServer.csproj", "{64A79352-0193-4A6C-92ED-4FF8D1C156AA}"
 EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "CnVShared", "..\CnVShared\CnVShared.shproj", "{06711006-5A6C-41FF-AA66-A08C8624F98B}"
 EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "CnVServer", "..\CnVServer\CnVServer\CnVServer.shproj", "{7043C492-A062-4748-9603-A6E5DA4E4E11}"
+EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		..\CnVShared\CnVShared.projitems*{06711006-5a6c-41ff-aa66-a08c8624f98b}*SharedItemsImports = 13
 		..\CnVShared\CnVShared.projitems*{64a79352-0193-4a6c-92ed-4ff8d1c156aa}*SharedItemsImports = 5
+		..\CnVServer\CnVServer\CnVServer.projitems*{7043c492-a062-4748-9603-a6e5da4e4e11}*SharedItemsImports = 13
+		..\CnVServer\CnVServer\CnVServer.projitems*{d3c61ee9-9fad-45bd-acce-f4e95ae32807}*SharedItemsImports = 5
 		..\CnVShared\CnVShared.projitems*{d3c61ee9-9fad-45bd-acce-f4e95ae32807}*SharedItemsImports = 5
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
