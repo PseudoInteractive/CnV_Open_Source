@@ -17,7 +17,7 @@ using Microsoft.UI.Xaml.Controls;
 using Services;
 using Syncfusion.UI.Xaml.DataGrid;
 using Syncfusion.UI.Xaml.Grids.ScrollAxis;
-using static CnV.Spot;
+using static CnV.City;
 using static CnV.CityUI;
 
 public static partial class CityUI
@@ -550,11 +550,11 @@ public static partial class CityUI
 		}
 		try
 		{
-			Note.Show($"Registering claim on {cid.CidToCoords()}");
+			Note.Show($"Registering claim on {cid.ToStringCoords()}");
 			var client = CnVServer.genericClient;
 
 
-			var message = new DGame.Message() { username = "Cord Claim", content = $"{cid.CidToCoords()} claimed by {Player.myName}", avatar_url = "" };
+			var message = new DGame.Message() { username = "Cord Claim", content = $"{cid.ToStringCoords()} claimed by {Player.myName}", avatar_url = "" };
 
 			//var content =  JsonContent.Create(message);
 			//, JSON.jsonSerializerOptions), Encoding.UTF8,
@@ -573,7 +573,7 @@ public static partial class CityUI
 
 }
 
-public partial class Spot
+public partial class City
 {
 	public void SetFocus(bool scrollIntoView, bool select = true, bool bringIntoWorldView = true, bool lazyMove = true)
 	{

@@ -9,7 +9,6 @@ using static CnV.CityView;
 using static CnV.ToolTips;
 using static CnV.CityViewS;
 //using static CnV.CityBuild;
-
 namespace CnV
 {
 	public sealed partial class CityBuild :Microsoft.UI.Xaml.Controls.UserControl
@@ -69,7 +68,7 @@ namespace CnV
 			//	  break;
 			// }
 
-			//	AppS.DispatchOnUIThreadLow( ()=> instance.quickBuild.SelectedIndex = (int)_action ); /// the first 3 are mapped. this triggers a selected changed event
+			//	AppS.DispatchOnUIThreadLow( ()=> instance.quickBuild.SelectedIndex = (int)_action ); /// the first 3 are mapped. this triggers a selectedPoint changed event
 		}
 		public static void SetQuickBuild(int quickBuildItemBid)
 		{
@@ -79,7 +78,7 @@ namespace CnV
 			lastBuildToolTipSpot      = -1;
 			lastQuickBuildActionBSpot = -1;
 			quickBuildId              = quickBuildItemBid;
-			//	AppS.DispatchOnUIThreadLow( ()=> instance.quickBuild.SelectedIndex = (int)_action ); /// the first 3 are mapped. this triggers a selected changed event
+			//	AppS.DispatchOnUIThreadLow( ()=> instance.quickBuild.SelectedIndex = (int)_action ); /// the first 3 are mapped. this triggers a selectedPoint changed event
 		}
 		public static async Task PerformAction(CityBuildAction action, (int x, int y) cc, int _quickBuildId, bool dryRun)
 		{
@@ -92,7 +91,7 @@ namespace CnV
 			if(action == CityBuildAction.moveEnd)
 			{
 				// We lost our move source
-				if(selected.IsNan())
+				if(CityView.selectedPoint.IsNan())
 				{
 					if(isSingleClickAction)
 					{
@@ -335,7 +334,7 @@ namespace CnV
 			}
 			else
 			{
-				Assert(selected.IsNotNan());
+				Assert(selectedPoint.IsNotNan());
 
 				if(targetB.isRes)
 				{
@@ -343,7 +342,7 @@ namespace CnV
 				}
 				else
 				{
-					var source = XYToId(selected);
+					var source = XYToId(selectedPoint);
 					var sourceBid = build.postQueueBuildings[source].bid;
 					// Is this a valid transition
 					//var bs1 = GetSpotType(targetSpot);
@@ -360,14 +359,14 @@ namespace CnV
 					if(dryRun)
 					{
 						DrawSprite(hovered, decalMoveBuilding, 0.343f);
-						DrawSprite(selected, decalMoveBuilding, 0.323f);
+						DrawSprite(selectedPoint, decalMoveBuilding, 0.323f);
 					}
 
 					{
 
 						if(!targetB.isEmpty)
 						{
-							if(IsTowerSpot(selected))
+							if(IsTowerSpot(selectedPoint))
 								Status("Cannot swap towers, please move them one at a time", dryRun);
 							else
 								await City.GetBuild().SwapBuilding(source, targetSpot, dryRun);

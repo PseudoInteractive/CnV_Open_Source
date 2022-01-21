@@ -29,16 +29,28 @@
     <Configurations>Debug;Release</Configurations>
   </PropertyGroup>
   <ItemGroup>
+    <Content Remove="Content\**" />
+    <Content Remove="gamebin\**" />
+    <Content Remove="gameobj\**" />
+    <Content Remove="JS\**" />
     <EmbeddedResource Remove="AppPackages\**" />
     <EmbeddedResource Remove="BundleArtifacts\**" />
     <EmbeddedResource Remove="CnVDiscord\**" />
-    <EmbeddedResource Remove="Content\bin\**" />
-    <EmbeddedResource Remove="Content\obj\**" />
+    <EmbeddedResource Remove="Content\**" />
+    <EmbeddedResource Remove="gamebin\**" />
+    <EmbeddedResource Remove="gameobj\**" />
+    <EmbeddedResource Remove="JS\**" />
     <None Remove="AppPackages\**" />
     <None Remove="BundleArtifacts\**" />
     <None Remove="CnVDiscord\**" />
-    <None Remove="Content\bin\**" />
-    <None Remove="Content\obj\**" />
+    <None Remove="Content\**" />
+    <None Remove="gamebin\**" />
+    <None Remove="gameobj\**" />
+    <None Remove="JS\**" />
+    <PRIResource Remove="Content\**" />
+    <PRIResource Remove="gamebin\**" />
+    <PRIResource Remove="gameobj\**" />
+    <PRIResource Remove="JS\**" />
   </ItemGroup>
 
   <ItemGroup>
@@ -58,7 +70,6 @@
     <PackageReference Include="MessagePack.Experimental" Version="2.3.85" />
     <PackageReference Include="MessagePackAnalyzer" Version="2.3.85" />
     <PackageReference Include="MagicOnion.Client" Version="4.3.1" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="6.0.0" />
     <PackageReference Include="Microsoft.Extensions.ObjectPool" Version="6.0.1" />
     <PackageReference Include="Microsoft.Identity.Client" Version="4.40.0" />
     <PackageReference Include="Microsoft.Identity.Client.Extensions.Msal" Version="2.19.3" />
@@ -84,15 +95,13 @@
     <PackageReference Include="MessagePack.Experimental" Version="2.3.85" />
     <PackageReference Include="MessagePackAnalyzer" Version="2.3.85" />
     <PackageReference Include="MagicOnion.Client" Version="4.3.1" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="6.0.2-mauipre.1.22054.8" />
     <PackageReference Include="Microsoft.Extensions.ObjectPool" Version="6.0.1" />
     <PackageReference Include="Microsoft.Toolkit" Version="7.1.2" />
     <PackageReference Include="Microsoft.Toolkit.Diagnostics" Version="7.1.2" />
     <PackageReference Include="Microsoft.Toolkit.HighPerformance" Version="7.1.2" />
     <PackageReference Include="Microsoft.Toolkit.Mvvm" Version="7.1.2" />
     <PackageReference Include="Microsoft.Windows.CsWinRT" Version="1.4.1" />	  
-    <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.0.0" />	  
-    <PackageReference Include="MonoGame.Content.Builder.Task" Version="3.8.1.1941-develop" />
+    <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.0.0" />
 	<PackageReference Include="Nito.AsyncEx.Coordination" Version="5.1.2" />
     <PackageReference Include="PlayFabAllSDK" Version="1.108.220118" />
     <PackageReference Include="Syncfusion.Grid.WinUI" Version="19.4.0.43" />
@@ -141,57 +150,6 @@
     <Content Include="Assets\Wide310x150Logo.scale-100.png" />
     <Content Include="Assets\Wide310x150Logo.scale-200.png" />
     <Content Include="Assets\Wide310x150Logo.scale-400.png" />
-    <Content Include="Content\Art\City\bgr_build_item_gloss.png" />
-    <Content Include="Content\Art\City\building_set5.png" />
-    <Content Include="Content\Art\City\build_details_gloss_overlay.png" />
-    <Content Include="Content\Art\City\decal_building_invalid.png" />
-    <Content Include="Content\Art\City\decal_building_valid.png" />
-    <Content Include="Content\Art\City\decal_building_valid_multi.png" />
-    <Content Include="Content\Art\City\decal_move_building.png" />
-    <Content Include="Content\Art\City\decal_select_building.png" />
-    <Content Include="Content\Art\Icons\blessed.png" />
-    <Content Include="Content\Art\Icons\castle0.png" />
-    <Content Include="Content\Art\Icons\castle0w.png" />
-    <Content Include="Content\Art\Icons\castle1.png" />
-    <Content Include="Content\Art\Icons\castle1w.png" />
-    <Content Include="Content\Art\Icons\castle2.png" />
-    <Content Include="Content\Art\Icons\castle2w.png" />
-    <Content Include="Content\Art\Icons\city0.png" />
-    <Content Include="Content\Art\Icons\city0w.png" />
-    <Content Include="Content\Art\Icons\city1.png" />
-    <Content Include="Content\Art\Icons\city1w.png" />
-    <Content Include="Content\Art\Icons\city2.png" />
-    <Content Include="Content\Art\Icons\city2w.png" />
-    <Content Include="Content\Art\Icons\cityll0.png" />
-    <Content Include="Content\Art\Icons\cityll1.png" />
-    <Content Include="Content\Art\Icons\cityll2.png" />
-    <Content Include="Content\Art\Icons\roundRect.png" />
-    <Content Include="Content\Art\Icons\temple0.png" />
-    <Content Include="Content\Art\Icons\temple0w.png" />
-    <Content Include="Content\Art\Icons\temple1.png" />
-    <Content Include="Content\Art\Icons\temple1w.png" />
-    <Content Include="Content\Art\Icons\temple2.png" />
-    <Content Include="Content\Art\Icons\temple2w.png" />
-    <Content Include="Content\Art\Icons\troops0.png" />
-    <Content Include="Content\Art\Icons\troops1.png" />
-    <Content Include="Content\Art\Icons\troops10.png" />
-    <Content Include="Content\Art\Icons\troops11.png" />
-    <Content Include="Content\Art\Icons\troops12.png" />
-    <Content Include="Content\Art\Icons\troops13.png" />
-    <Content Include="Content\Art\Icons\troops14.png" />
-    <Content Include="Content\Art\Icons\troops15.png" />
-    <Content Include="Content\Art\Icons\troops16.png" />
-    <Content Include="Content\Art\Icons\troops17.png" />
-    <Content Include="Content\Art\Icons\troops2.png" />
-    <Content Include="Content\Art\Icons\troops3.png" />
-    <Content Include="Content\Art\Icons\troops4.png" />
-    <Content Include="Content\Art\Icons\troops5.png" />
-    <Content Include="Content\Art\Icons\troops6.png" />
-    <Content Include="Content\Art\Icons\troops7.png" />
-    <Content Include="Content\Art\Icons\troops8.png" />
-    <Content Include="Content\Art\Icons\troops9.png" />
-    <Content Include="JS\funky" />
-    <Content Include="JS\J0EE" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Activation\ProtocolActivation.cs" />
@@ -596,93 +554,6 @@
   </ItemGroup>
   <ItemGroup>
 	<None Remove="cnvCover.png" />
-    <None Remove="Content\Art\circlegradient.png" />
-    <None Remove="Content\Art\circlegradient.xcf" />
-    <None Remove="Content\Art\City\baseland.png" />
-    <None Remove="Content\Art\City\baseland_n.dds" />
-    <None Remove="Content\Art\City\baseWater.png" />
-    <None Remove="Content\Art\City\basewater_n.dds" />
-    <None Remove="Content\Art\City\bgr_build_item_gloss.png" />
-    <None Remove="Content\Art\City\building_set5.png" />
-    <None Remove="Content\Art\City\building_set5_n.dds" />
-    <None Remove="Content\Art\City\build_details_gloss_overlay.png" />
-    <None Remove="Content\Art\City\city_walls.png" />
-    <None Remove="Content\Art\City\decal_building_invalid.png" />
-    <None Remove="Content\Art\City\decal_building_valid.png" />
-    <None Remove="Content\Art\City\decal_building_valid_multi.png" />
-    <None Remove="Content\Art\City\decal_move_building.png" />
-    <None Remove="Content\Art\City\decal_select_building.png" />
-    <None Remove="Content\Art\City\land.dds" />
-    <None Remove="Content\Art\City\land.jpg" />
-    <None Remove="Content\Art\City\land.psd" />
-    <None Remove="Content\Art\City\texture_bg_tile_big_city.jpg" />
-    <None Remove="Content\Art\City\walls_water2.png" />
-    <None Remove="Content\Art\City\water_water.png" />
-    <None Remove="Content\Art\City\Winter\baseland.png" />
-    <None Remove="Content\Art\City\Winter\baseland_n.dds" />
-    <None Remove="Content\Art\City\Winter\basewater.png" />
-    <None Remove="Content\Art\City\Winter\basewater_n.dds" />
-    <None Remove="Content\Art\City\Winter\building_set5.png" />
-    <None Remove="Content\Art\City\Winter\building_set5_n.dds" />
-    <None Remove="Content\Art\Icons\blessed.png" />
-    <None Remove="Content\Art\Icons\castle0.png" />
-    <None Remove="Content\Art\Icons\castle0w.png" />
-    <None Remove="Content\Art\Icons\castle1.png" />
-    <None Remove="Content\Art\Icons\castle1w.png" />
-    <None Remove="Content\Art\Icons\castle2.png" />
-    <None Remove="Content\Art\Icons\castle2w.png" />
-    <None Remove="Content\Art\Icons\city0.png" />
-    <None Remove="Content\Art\Icons\city0w.png" />
-    <None Remove="Content\Art\Icons\city1.png" />
-    <None Remove="Content\Art\Icons\city1w.png" />
-    <None Remove="Content\Art\Icons\city2.png" />
-    <None Remove="Content\Art\Icons\city2w.png" />
-    <None Remove="Content\Art\Icons\cityll0.png" />
-    <None Remove="Content\Art\Icons\cityll1.png" />
-    <None Remove="Content\Art\Icons\cityll2.png" />
-    <None Remove="Content\Art\Icons\roundRect.png" />
-    <None Remove="Content\Art\Icons\temple0.png" />
-    <None Remove="Content\Art\Icons\temple0w.png" />
-    <None Remove="Content\Art\Icons\temple1.png" />
-    <None Remove="Content\Art\Icons\temple1w.png" />
-    <None Remove="Content\Art\Icons\temple2.png" />
-    <None Remove="Content\Art\Icons\temple2w.png" />
-    <None Remove="Content\Art\Icons\troops0.png" />
-    <None Remove="Content\Art\Icons\troops1.png" />
-    <None Remove="Content\Art\Icons\troops10.png" />
-    <None Remove="Content\Art\Icons\troops11.png" />
-    <None Remove="Content\Art\Icons\troops12.png" />
-    <None Remove="Content\Art\Icons\troops13.png" />
-    <None Remove="Content\Art\Icons\troops14.png" />
-    <None Remove="Content\Art\Icons\troops15.png" />
-    <None Remove="Content\Art\Icons\troops16.png" />
-    <None Remove="Content\Art\Icons\troops17.png" />
-    <None Remove="Content\Art\Icons\troops2.png" />
-    <None Remove="Content\Art\Icons\troops3.png" />
-    <None Remove="Content\Art\Icons\troops4.png" />
-    <None Remove="Content\Art\Icons\troops5.png" />
-    <None Remove="Content\Art\Icons\troops6.png" />
-    <None Remove="Content\Art\Icons\troops7.png" />
-    <None Remove="Content\Art\Icons\troops8.png" />
-    <None Remove="Content\Art\Icons\troops9.png" />
-    <None Remove="Content\Art\lineDraw.dds" />
-    <None Remove="Content\Art\lineDraw2 - Copy.dds" />
-    <None Remove="Content\Art\lineDraw2.dds" />
-    <None Remove="Content\Art\quad.dds" />
-    <None Remove="Content\Art\quad2.dds" />
-    <None Remove="Content\Art\quadGradient.png" />
-    <None Remove="Content\Art\sky.dds" />
-    <None Remove="Content\Art\Sphere64.png" />
-    <None Remove="Content\Art\world22.dds" />
-    <None Remove="Content\Art\world22.png" />
-    <None Remove="Content\Art\world23.png" />
-    <None Remove="Content\Fonts\File.spritefont" />
-    <None Remove="Content\Fonts\perpb.fnt" />
-    <None Remove="Content\Fonts\perpb_0.png" />
-    <None Remove="Content\Fonts\perpetua.fnt" />
-    <None Remove="Content\Fonts\perpetua_0.png" />
-    <None Remove="Content\Fonts\tra.fnt" />
-    <None Remove="Content\PERTILI.TTF" />
     <None Remove="Properties\PublishProfiles\win10-x64.pubxml" />
     <None Remove="Resources\Icon1.ico" />
     <None Remove="Strings\en-us\Resources.resw" />
@@ -705,30 +576,13 @@
     <AdditionalFiles Include="..\..\CnVDepends\CnVDepends\DependencyValidation1.layerdiagram" Link="DependencyValidation1.layerdiagram">
       <Visible>False</Visible>
     </AdditionalFiles>
-    <None Include="JS\alasstylesheet.css" />
-    <None Include="JS\jquery1_12_4" />
-    <None Include="JS\jquery-migrate1_4_1" />
-    <None Include="JS\jquery3_5_1" />
-    <None Include="JS\jquerymigrate" />
-    <None Include="JS\index.htm" />
-    <Content Include="JS\DHRUVCC.js" />
-    <Content Include="JSON\buildingDef.json" />
     <None Include="CotgKey.pfx" />
     <None Include="JSON\poll2.json" />
-    <Content Include="JSON\Troops.json" />
-    <None Include="JS\jquerymigrate3_3_2" />
     <None Include="Package.StoreAssociation.xml" />
-    <None Include="JS\jquery" />
     <Content Include="Properties\Default.rd.xml" />
     <None Include="SignatureKey.snk" />
     <None Include="SignaturePubKey.snk" />
     <Resource Include="Wiki\wiki.md" />
-  </ItemGroup>
-  <ItemGroup>
-	  <MonoGameContentReference Include="Content\cotg.mgcb" />
-  </ItemGroup>
-  <ItemGroup>
-     <None Include="JS\pack.js" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="JSON\ofdf.cs" />
@@ -777,7 +631,6 @@
   </PropertyGroup>
   <ProjectExtensions />
   <ItemGroup>
-    <EmbeddedResource Include="Content\Fonts\tra.fnt" />
     <EmbeddedResource Include="Wiki\fixes.md" />
   </ItemGroup>
   <ItemGroup>

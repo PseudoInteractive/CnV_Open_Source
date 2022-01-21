@@ -100,11 +100,11 @@ namespace CnV
 				GameClient.UpdateLighting();
 			}
 		}
-		bool uiStayAlive
-		{
-			get => stayAlive;
-			set { stayAlive = value; CnVServer.SetStayAlive(value); }
-		}
+		//bool uiStayAlive
+		//{
+		//	get => stayAlive;
+		//	set { stayAlive = value; CnVServer.SetStayAlive(value); }
+		//}
 		bool uiSoundOn
 		{
 			get => soundOn;

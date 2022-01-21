@@ -883,7 +883,7 @@ namespace CnV
 					if (isSingleClickAction)
 					{
 
-						await PerformAction(CityBuild.CityBuildAction.build, selected, bi.bid, false);
+						await PerformAction(CityBuild.CityBuildAction.build, selectedPoint, bi.bid, false);
 						RevertToLastAction();
 
 					}
@@ -919,8 +919,8 @@ namespace CnV
 							}
 							else
 							{
-								await PerformAction(bi.action, selected, 0, false);
-								lastQuickBuildActionBSpot = XYToId(selected);
+								await PerformAction(bi.action, selectedPoint, 0, false);
+								lastQuickBuildActionBSpot = XYToId(selectedPoint);
 
 								RevertToLastAction();
 

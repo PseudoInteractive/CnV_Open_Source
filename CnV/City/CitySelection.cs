@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-using static CnV.Spot;
 using static CnV.City;
 namespace CnV;
 

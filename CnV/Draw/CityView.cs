@@ -80,7 +80,7 @@ namespace CnV
 
 		public static float zHover => 4.0f / 64.0f * Settings.parallax;
 
-		public static (int x, int y) selected = AUtil.NanXY;
+		public static (int x, int y) selectedPoint = AUtil.NanXY;
 		public static (int x, int y) hovered = AUtil.NanXY;
 	//	static Color textColor = new Color(0xf1, 0xd1, 0x1b, 0xff);
 		public static Vector2 CityPointToCC( float x, float y)
@@ -618,7 +618,7 @@ namespace CnV
 					}
 				}
 			}
-			selected = xy;
+			selectedPoint = xy;
 		}
 
 	}

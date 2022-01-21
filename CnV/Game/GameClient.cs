@@ -92,7 +92,7 @@ namespace CnV
 			};
 			IsFixedTimeStep                   =  false;
 			_graphics.PreparingDeviceSettings += _graphics_PreparingDeviceSettings;
-			Content.RootDirectory             =  "Content";
+			Content.RootDirectory             =  "gameBin";
 			Material.LoadLitMaterial          =  LoadLitMaterial;
 		}
 
@@ -423,7 +423,7 @@ namespace CnV
 				//	//    Source2 = await CanvasBitmap.LoadAsync(sender, "Shaders/SketchTexture.jpg"),
 				//	//   Source2Mapping = SamplerCoordinateMapping.Unknown
 				//};
-
+				LoadWorldBackground();
 				CityView.LoadContent();
 			//	contentLoadingCompleted.Complete();
 

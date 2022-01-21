@@ -30,7 +30,7 @@ namespace CnV
 		private static BackgroundTask reinforcementsTask;
 		private static BackgroundTask senInfoTask;
 
-		public static async void InitializeForWorld()
+		public static async void InitializeGame()
 	{
 
 		//					   CnVChatClient.instance = new();
@@ -38,11 +38,19 @@ namespace CnV
 		try
 		{
 
-				var timeOffset = jso.GetAsInt64("timeoffset");
-				var timeOffsetSecondsRounded = Math.Round(timeOffset / (1000.0 * 60*30)) * 60 * 30.0f; // round to nearest half hour
-				CnVServer.gameTOffset = TimeSpan.FromHours(world.timeZoneOffsetHours);
-				CnVServer.gameTOffsetSeconds = CnVServer.gameTOffset.totalSeconds;
+				//var timeOffset = jso.GetAsInt64("timeoffset");
+				//var timeOffsetSecondsRounded = Math.Round(timeOffset / (1000.0 * 60*30)) * 60 * 30.0f; // round to nearest half hour
+				CnVServer.gameTOffset = TimeSpan.FromHours(World.timeZoneOffsetHours);
+				CnVServer.gameTOffsetSeconds = CnVServer.gameTOffset.TotalSeconds.RoundToInt();
+				Player.myIds.Add(Player.myId);
+
+				var t0 = Task.Run(World.LoadWorldData);
+				var t1 = Task.Run(() => TileData.Ctor(false));
+				CityCustom.Load();
 				BuildQueue.Initialize();
+
+				await Task.WhenAll(t0,t1).ConfigureAwait(false);
+
 
 				//	var str = timeOffsetSecondsRounded >= 0 ? " +" : " ";
 				//	str += $"{gameTOffset.Hours:D2}:{gameTOffset.Minutes:D2}";
@@ -55,7 +63,7 @@ namespace CnV
 				//	if(Player.subOwner == null)
 				//		Player.subOwner = Player.myName;
 				//	Player.myId = Player.myId = jso.GetAsInt("pid"); ;
-				Player.myIds.Add(Player.myId);
+
 				//Note.L("cid=" + cid.CidToString());
 				//gameMSAtStart = jso.GetAsInt64("time");
 				//launchTime = DateTimeOffset.UtcNow;
@@ -71,26 +79,30 @@ namespace CnV
 				//    Log($"Built heades {httpClient.DefaultRequestHeaders.ToString() }");
 
 				//   UpdatePPDT(jso.GetProperty("ppdt"));
-			
+
 				// todo: utf
 				//		AddPlayer(true, true, Player.myId, Player.myName, token, raidSecret, cookies);//, s, ppdt.ToString());
 
+				Startup.NewPlayerStartup(Player.me);
+				//UpdatePPDT();
+				var cid = City.myCities.First().cid;
 
-				UpdatePPDT(ppdt, Player.myId, pruneCities: true);
-				Assert( CnVServer.worldId != 0);
+		//		Assert( CnVServer.worldId != 0);
+				
+				await CitySwitch(cid);
 				ShellPage.SetViewModeCity();
-				Spot.build = Spot.focus = cid;
-				NavStack.Push(cid);
+				Assert(Spot.build ==cid && Spot.focus == cid);
+			//	Spot.build = Spot.focus = cid;
+				//NavStack.Push(cid);
 				AGame.CameraC = cid.CidToWorldV();
 
 
 				//CnVChatClient.CnVChatClient.Setup();
 
-				GetWorldInfo.Send();
-			ShellPage.canvasVisible = true;
+				ShellPage.canvasVisible = true;
 			//   ShellPage.isHitTestVisible = true;
 			///                   await GetCitylistOverview();
-			TileData.Ctor(false);
+			
 			//if (TipsSeen.instance.refresh == false
 			//||TipsSeen.instance.chat0==false
 			//|| TipsSeen.instance.chat1 == false
@@ -105,7 +117,7 @@ namespace CnV
 				await CnVChatClient.Setup();
 			});
 
-			CnVServer.SetStayAlive(Settings.stayAlive);
+			//CnVServer.SetStayAlive(Settings.stayAlive);
 			//{
 			//    //var now = DateTime.UtcNow;
 			//    //if (now.Day <= 28 && now.Month==11)
@@ -132,9 +144,10 @@ namespace CnV
 
 			// give some time for initial pressure to come down
 			TabPage.ShowTabs();
-			CityCustom.Load();
+			
+				
 
-			ShellPage.updateHtmlOffsets.Go(true);
+				ShellPage.updateHtmlOffsets.Go(true);
 
 				//	await Task.Delay(1000);
 

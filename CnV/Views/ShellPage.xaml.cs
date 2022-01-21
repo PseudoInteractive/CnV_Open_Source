@@ -243,7 +243,7 @@ namespace CnV.Views
 			WorkScope.Update = WorkUpdate;
 			//		SystemNavigationManagerPreview.GetForCurrentView().CloseRequested += App.App_CloseRequested; ;
 			//typeof(Telerik.UI.Xaml.Controls.RadDataForm).Assembly.GetType("Telerik.UI.Xaml.Controls.TelerikLicense").GetField("messageDisplayed",BindingFlags.NonPublic|BindingFlags.Static).SetValue(null,true,BindingFlags.Static|BindingFlags.NonPublic,null,null);
-			var signinTask = await CnVSignin.Go();// Task.Run(CnVSignin.Go);
+			//var signinTask = await CnVSignin.Go();// Task.Run(CnVSignin.Go);
 			CityBuild.Initialize();
 			// Grid.SetColumn(webView, 0);
 			Grid.SetRow(CityBuild.instance, 1);
@@ -420,6 +420,7 @@ namespace CnV.Views
 
 			}
 
+			CnVClient.InitializeGame();
 			//Task.Delay(5000).ContinueWith((_) =>
 			//{
 			//	DGame.Startup();
@@ -694,27 +695,27 @@ namespace CnV.Views
 
 		private async static Task RefreshWorldData()
 		{
-			World.lastUpdatedContinent = -1;
-			using var work  = new WorkScope("Refresh..");
-			var       task0 = TileData.Ctor(false);
-			if (World.completed)
-			{
-				await GetWorldInfo.Send();
-			}
+			//World.lastUpdatedContinent = -1;
+			//using var work  = new WorkScope("Refresh..");
+			//var       task0 = TileData.Ctor(false);
+			//if (World.completed)
+			//{
+			//	await GetWorldInfo.Send();
+			//}
 
-			await task0;
+			//await task0;
 		}
 
 		public static void RefreshAndReloadWorldData()
 		{
-			using var work = new WorkScope("Refresh..");
-			World.lastUpdatedContinent = -1;
-			if (World.completed)
-			{
-				GetWorldInfo.Send();
-			}
+			//using var work = new WorkScope("Refresh..");
+			//World.lastUpdatedContinent = -1;
+			//if (World.completed)
+			//{
+			//	GetWorldInfo.Send();
+			//}
 
-			TileData.Ctor(true);
+			//TileData.Ctor(true);
 		}
 
 		public static async Task RefreshX()

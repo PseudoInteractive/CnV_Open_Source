@@ -412,15 +412,16 @@ namespace CnV
 
 		record struct PropertyChanges
 		{
-			public bool azureId=false;
+			public bool azureId;
 
-			public bool name=false;
-			public bool email     = false;
-			public bool discordId = false;
-			internal bool locale=false;
-			internal bool avatarUrlHash=false;
-			internal bool discordDiscriminator=false;
+			public bool name;
+			public bool email ;
+			public bool discordId;
+			internal bool locale;
+			internal bool avatarUrlHash;
+			internal bool discordDiscriminator;
 		}
+
 		private static PropertyChanges ProcessUserInfo(AuthenticationResult authResult)
 		{
 			PropertyChanges result = new();

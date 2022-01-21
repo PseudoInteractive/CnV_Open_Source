@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using static CnV.CnVServer;
 using static CnV.Troops;
 using static CnV.City;
-using static CnV.Spot;
+
 using static CnV.ClientView;
 
 namespace CnV
@@ -86,7 +86,7 @@ namespace CnV
 			// City lists
 			try
 			{
-				
+		
 
 				var bonusesUpdated = false;
 				// research?
@@ -103,7 +103,6 @@ namespace CnV
 						}
 					}
 					bonusesUpdated = true;
-
 				}
 				//if(jse.TryGetProperty("tcps", out var tcps))
 				//{
@@ -316,7 +315,9 @@ namespace CnV
 
 				if(!World.initialized)
 				{
+					// using would lose this otherwise maybe?
 					cProp = cProp.Clone();
+					
 					while(!World.initialized)
 						await Task.Delay(1000);
 				}
@@ -380,7 +381,7 @@ namespace CnV
 				if(!ppdtInitialized)
 				{
 
-					ppdtInitialized = true;
+				// todo:	ppdtInitialized = true;
 
 					//Task.Delay(500).ContinueWith( _ => App.DispatchOnUIThreadSneakyLow( MainPage.instance.Refresh));
 					ShellPage.RefreshTabs.Go();
@@ -585,127 +586,127 @@ namespace CnV
 					foreach(var jsp in jsd.EnumerateObject())
 						switch(jsp.Name)
 						{
-							case "jsvars":
-								{
-									//	   AppS.DispatchOnUIThreadLow(() => ShellPage.instance.cookie.Visibility = Visibility.Collapsed);
+							//case "jsvars":
+							//	{
+							//		//	   AppS.DispatchOnUIThreadLow(() => ShellPage.instance.cookie.Visibility = Visibility.Collapsed);
 
-									var jso = jsp.Value;
+							//		var jso = jsp.Value;
 
-									//   var s = CookieDB.Serialize(cookieManager);// GetSecSessionId();
-									var token = jso.GetString("token");
-									var raidSecret = jso.GetString("raid");
-									var agent = jso.GetString("agent");
-									//cotgS = jso.GetString("s");
-									//  var cookie = jso.GetString("cookie");
-									//   Log(jsVars.cookie);
-									Log(token);
-									// Log(s);
-									//  for (int i = 0; i < clientCount; ++i)
-									//  {
-									//   await clientPoolSema.WaitAsync();//.ConfigureAwait(false);
-									////   httpFilter.CookieManager.SetCookie(new HttpCookie)
+							//		//   var s = CookieDB.Serialize(cookieManager);// GetSecSessionId();
+							//		var token = jso.GetString("token");
+							//		var raidSecret = jso.GetString("raid");
+							//		var agent = jso.GetString("agent");
+							//		//cotgS = jso.GetString("s");
+							//		//  var cookie = jso.GetString("cookie");
+							//		//   Log(jsVars.cookie);
+							//		Log(token);
+							//		// Log(s);
+							//		//  for (int i = 0; i < clientCount; ++i)
+							//		//  {
+							//		//   await clientPoolSema.WaitAsync();//.ConfigureAwait(false);
+							//		////   httpFilter.CookieManager.SetCookie(new HttpCookie)
 
-									//  }
-									//HTTPCook
-									// {
+							//		//  }
+							//		//HTTPCook
+							//		// {
 
-									//  var cooki
-									// }
+							//		//  var cooki
+							//		// }
 
-									for(; ; )
-									{
-										try
-										{
-											{
-												//    var clients = clientPool.ToArray();
-												//										   foreach (var httpClient in clientPool)
-												//										   {
-												//												  // httpClient.DefaultRequestHeaders.Cookie = "sec_session_id="+s;
+							//		for(; ; )
+							//		{
+							//			try
+							//			{
+							//				{
+							//					//    var clients = clientPool.ToArray();
+							//					//										   foreach (var httpClient in clientPool)
+							//					//										   {
+							//					//												  // httpClient.DefaultRequestHeaders.Cookie = "sec_session_id="+s;
 
-												////											   		if (subId == 0)
-												//											   		//  httpClient.DefaultRequestHeaders.TryAppendWithoutValidation("Cookie",cookies);//"sec_session_id=" + s);
-												//										   }
-											}
-										}
-										catch(Exception _ex)
-										{
-											LogEx(_ex);
-											await Task.Delay(1000);//.ConfigureAwait(false);
-											continue;
+							//					////											   		if (subId == 0)
+							//					//											   		//  httpClient.DefaultRequestHeaders.TryAppendWithoutValidation("Cookie",cookies);//"sec_session_id=" + s);
+							//					//										   }
+							//				}
+							//			}
+							//			catch(Exception _ex)
+							//			{
+							//				LogEx(_ex);
+							//				await Task.Delay(1000);//.ConfigureAwait(false);
+							//				continue;
 
-										}
-										break;
-									}
+							//			}
+							//			break;
+							//		}
 
-									//   clientPoolSema.Release(clientCount);
+							//		//   clientPoolSema.Release(clientCount);
 
-							//		var timeOffset = jso.GetAsInt64("timeoffset");
-							//		var timeOffsetSecondsRounded = Math.Round(timeOffset / (1000.0 * 60*30)) * 60 * 30.0f; // round to nearest half hour
-							//		gameTOffset = TimeSpan.FromSeconds(timeOffsetSecondsRounded);
-							//		gameTOffsetSeconds = (int)timeOffsetSecondsRounded;
-							//		//   gameTOffsetMs = (long)timeOffsetSecondsRounded*1000;
-							//		var str = timeOffsetSecondsRounded >= 0 ? " +" : " ";
-							//		str += $"{gameTOffset.Hours:D2}:{gameTOffset.Minutes:D2}";
-							//		Helpers.JSON.timeZoneString = str;
-							//		//   Log(JSONHelper.timeZoneString);
+							////		var timeOffset = jso.GetAsInt64("timeoffset");
+							////		var timeOffsetSecondsRounded = Math.Round(timeOffset / (1000.0 * 60*30)) * 60 * 30.0f; // round to nearest half hour
+							////		gameTOffset = TimeSpan.FromSeconds(timeOffsetSecondsRounded);
+							////		gameTOffsetSeconds = (int)timeOffsetSecondsRounded;
+							////		//   gameTOffsetMs = (long)timeOffsetSecondsRounded*1000;
+							////		var str = timeOffsetSecondsRounded >= 0 ? " +" : " ";
+							////		str += $"{gameTOffset.Hours:D2}:{gameTOffset.Minutes:D2}";
+							////		Helpers.JSON.timeZoneString = str;
+							////		//   Log(JSONHelper.timeZoneString);
 
-							//		Log($"TOffset {gameTOffset}");
-							//		Log(ServerTime().ToString("u"));
-							//	//	ppss = jso.GetAsInt("ppss");
-							//	//	Player.myName = jso.GetString("player");
-							//	//	if(Player.subOwner == null)
-							//	//		Player.subOwner = Player.myName;
-							//	//	Player.myId = Player.myId = jso.GetAsInt("pid"); ;
-							//		Player.myIds.Add(Player.myId);
-							//		var cid = jso.GetAsInt("cid");
-							//		Spot.build = Spot.focus = cid;
-							//		NavStack.Push(cid);
-							//		AGame.CameraC = cid.CidToWorldV();
-							//		//Note.L("cid=" + cid.CidToString());
-							//		//gameMSAtStart = jso.GetAsInt64("time");
-							//		//launchTime = DateTimeOffset.UtcNow;
-							//		//    Log(jsVars.ToString());
-							//		//  Settings.secSessionId = jso.GetAsString("s");
-							//		//		AGame.clientTL.X = jso.GetAsFloat("left");
-							//		//  AGame.clientTL.Y = jso.GetAsFloat("top");
-							//		//   Log($"WebClient:{AGame.clientTL} {ShellPage.webclientSpan.y}");
-							//		//     Note.Show($" {clientSpanX}:{clientSpanY} {ShellPage.clientTL} ");
-							//		gotCreds = true;
-							//		//			   spanX = jso.GetAsInt("spanX");
-							//		//			   spanY = jso.GetAsInt("spanY");
-							//		//			   Note.Show($"ClientSpan: {spanX}x{spanY}");
-							//		//    Log($"Built heades {httpClient.DefaultRequestHeaders.ToString() }");
+							////		Log($"TOffset {gameTOffset}");
+							////		Log(ServerTime().ToString("u"));
+							////	//	ppss = jso.GetAsInt("ppss");
+							////	//	Player.myName = jso.GetString("player");
+							////	//	if(Player.subOwner == null)
+							////	//		Player.subOwner = Player.myName;
+							////	//	Player.myId = Player.myId = jso.GetAsInt("pid"); ;
+							////		Player.myIds.Add(Player.myId);
+							////		var cid = jso.GetAsInt("cid");
+							////		Spot.build = Spot.focus = cid;
+							////		NavStack.Push(cid);
+							////		AGame.CameraC = cid.CidToWorldV();
+							////		//Note.L("cid=" + cid.CidToString());
+							////		//gameMSAtStart = jso.GetAsInt64("time");
+							////		//launchTime = DateTimeOffset.UtcNow;
+							////		//    Log(jsVars.ToString());
+							////		//  Settings.secSessionId = jso.GetAsString("s");
+							////		//		AGame.clientTL.X = jso.GetAsFloat("left");
+							////		//  AGame.clientTL.Y = jso.GetAsFloat("top");
+							////		//   Log($"WebClient:{AGame.clientTL} {ShellPage.webclientSpan.y}");
+							////		//     Note.Show($" {clientSpanX}:{clientSpanY} {ShellPage.clientTL} ");
+							////		gotCreds = true;
+							////		//			   spanX = jso.GetAsInt("spanX");
+							////		//			   spanY = jso.GetAsInt("spanY");
+							////		//			   Note.Show($"ClientSpan: {spanX}x{spanY}");
+							////		//    Log($"Built heades {httpClient.DefaultRequestHeaders.ToString() }");
 
-							//		//   UpdatePPDT(jso.GetProperty("ppdt"));
-							//		var ppdt = jso.GetProperty("ppdt");
-							//		// todo: utf
-							////		AddPlayer(true, true, Player.myId, Player.myName, token, raidSecret, cookies);//, s, ppdt.ToString());
-
-
-							//		UpdatePPDT(ppdt, Player.myId, pruneCities: true);
-									//Alliance.alliancesFetchedTask.ContinueWith((_) =>
-									//{
-									//	if(Player.isSpecial)
-									//		Raid.test = true;
-
-									//});
+							////		//   UpdatePPDT(jso.GetProperty("ppdt"));
+							////		var ppdt = jso.GetProperty("ppdt");
+							////		// todo: utf
+							//////		AddPlayer(true, true, Player.myId, Player.myName, token, raidSecret, cookies);//, s, ppdt.ToString());
 
 
+							////		UpdatePPDT(ppdt, Player.myId, pruneCities: true);
+							//		//Alliance.alliancesFetchedTask.ContinueWith((_) =>
+							//		//{
+							//		//	if(Player.isSpecial)
+							//		//		Raid.test = true;
+
+							//		//});
 
 
 
-									World.RunWhenLoaded(() => AppS.DispatchOnUIThreadIdle(CityUI.UpdateFocusText));
 
 
-									BuildQueue.Initialize();
-									AppS.DispatchOnUIThreadLow(() =>
-									{
-										ShellPage.instance.coords.Text = cid.CidToString();
-										//		   ShellPage.instance.cookie.Visibility = Visibility.Collapsed;
-									});
+							//		//World.RunWhenLoaded(() => AppS.DispatchOnUIThreadIdle(CityUI.UpdateFocusText));
 
-									break;
-								}
+
+							//		//BuildQueue.Initialize();
+							//		//AppS.DispatchOnUIThreadLow(() =>
+							//		//{
+							//		//	ShellPage.instance.coords.Text = cid.CidToString();
+							//		//	//		   ShellPage.instance.cookie.Visibility = Visibility.Collapsed;
+							//		//});
+
+							//		//break;
+							//	}
 							case "aexp":
 								{
 									var msg = jsp.Value.ToString();
@@ -1246,8 +1247,8 @@ namespace CnV
 								//    break;
 						}
 
-					if(gotCreds)
-						CnVClient.InitializeForWorld();
+					//if(gotCreds)
+					//	CnVClient.InitializeGame();
 				}
 				//}
 

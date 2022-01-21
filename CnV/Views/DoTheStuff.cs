@@ -17,7 +17,7 @@ using Microsoft.UI.Xaml.Controls;
 using CnV;
 using static CnV.Debug;
 using static CnV.City;
-using static CnV.Spot;
+
 
 using static CnV.CityBuild;
 

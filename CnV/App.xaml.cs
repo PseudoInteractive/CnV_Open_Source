@@ -196,7 +196,7 @@ namespace CnV
 			//	InitializeComponent();
 			instance = this;
 
-//			UnhandledException += OnAppUnhandledException;
+			UnhandledException += OnAppUnhandledException;
 			//Microsoft.Extensions.Hosting.Host.Cre
 			TaskScheduler.UnobservedTaskException += TaskScheduler_UnobservedTaskException;
 
