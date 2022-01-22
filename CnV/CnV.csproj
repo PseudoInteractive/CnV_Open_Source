@@ -653,5 +653,6 @@
   </ItemGroup>
   <Import Project="..\..\CnVShared\CnVShared.projitems" Label="Shared" />
   <Import Project="..\..\CnVServer\CnVServer\CnVServer.projitems" Label="Shared" />
+  <Import Project="..\..\cnvResource\CnVResource.projitems" Label="Shared" />
 
  </Project>

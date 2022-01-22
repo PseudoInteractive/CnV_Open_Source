@@ -1075,17 +1075,7 @@ namespace CnV
 									// Log(e.Value);
 									break;
 								}
-							case "aldt":
-								{
-									Log("Aldt");
-									Alliance.Ctor(jsDoc);
-
-									// now we can update player info
-									//Cosmos.PublishPlayerInfo(jsBase.pid, City.build, jsBase.token, jsBase.cookies);
-
-
-									break;
-								}
+							
 							//case "gPlA":
 							//	{
 							//		Player.Ctor(jsp.Value);

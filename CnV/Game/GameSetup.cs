@@ -46,10 +46,11 @@ namespace CnV
 
 				var t0 = Task.Run(World.LoadWorldData);
 				var t1 = Task.Run(() => TileData.Ctor(false));
+				Alliance.Ctor();
 				CityCustom.Load();
 				BuildQueue.Initialize();
-
-				await Task.WhenAll(t0,t1).ConfigureAwait(false);
+				await t0.ConfigureAwait(false);
+				await t1.ConfigureAwait(false);
 
 
 				//	var str = timeOffsetSecondsRounded >= 0 ? " +" : " ";

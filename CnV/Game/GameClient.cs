@@ -266,9 +266,10 @@ namespace CnV
 			{
 				contentLoadingStarted = true;
 				
-				Audio.UpdateMusic();
+			
 
 				avaEffect              = Content.Load<Effect>("Effects/Ava");
+				Audio.UpdateMusic();
 				defaultEffect = EffectPass("AlphaBlend");
 				alphaAddEffect         = EffectPass("AlphaAdd");
 				fontEffect             = EffectPass("FontLight");
@@ -280,7 +281,7 @@ namespace CnV
 				noTextureEffect        = EffectPass("NoTexture");
 				worldSpaceEffect       = EffectPass("WorldSpace");
 
-
+				
 
 				using var srgb = new SRGBLoadScope();
 

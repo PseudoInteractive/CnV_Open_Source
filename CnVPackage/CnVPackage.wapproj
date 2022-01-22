@@ -32,7 +32,9 @@
     <HoursBetweenUpdateChecks>0</HoursBetweenUpdateChecks>
     <AppxSymbolPackageEnabled>False</AppxSymbolPackageEnabled>
     <PackageCertificateKeyFile>CnVPackage_TemporaryKey.pfx</PackageCertificateKeyFile>
-    <EntryPointProjectUniqueName>..\CnV\CnV.csproj</EntryPointProjectUniqueName>
+      <AssetTargetFallback>net6.0-windows$(TargetPlatformVersion);$(AssetTargetFallback)</AssetTargetFallback>
+
+	  <EntryPointProjectUniqueName>..\CnV\CnV.csproj</EntryPointProjectUniqueName>
     <PackageCertificateThumbprint>92945405680979BF599EF0E34C0565F1CD911791</PackageCertificateThumbprint>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">

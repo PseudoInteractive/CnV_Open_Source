@@ -19,15 +19,17 @@ Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "CnVShared", "..\CnVShared\C
 EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "CnVServer", "..\CnVServer\CnVServer\CnVServer.shproj", "{7043C492-A062-4748-9603-A6E5DA4E4E11}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "cnvResource", "..\cnvResource\cnvResource.csproj", "{5B075B5C-14C2-4B80-BE6E-522E499159C3}"
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "CnVResource", "..\cnvResource\CnVResource.shproj", "{DFB81CA7-2237-4E6E-8E73-742A39A18451}"
 EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		..\CnVShared\CnVShared.projitems*{06711006-5a6c-41ff-aa66-a08c8624f98b}*SharedItemsImports = 13
 		..\CnVShared\CnVShared.projitems*{64a79352-0193-4a6c-92ed-4ff8d1c156aa}*SharedItemsImports = 5
 		..\CnVServer\CnVServer\CnVServer.projitems*{7043c492-a062-4748-9603-a6e5da4e4e11}*SharedItemsImports = 13
+		..\cnvResource\CnVResource.projitems*{d3c61ee9-9fad-45bd-acce-f4e95ae32807}*SharedItemsImports = 5
 		..\CnVServer\CnVServer\CnVServer.projitems*{d3c61ee9-9fad-45bd-acce-f4e95ae32807}*SharedItemsImports = 5
 		..\CnVShared\CnVShared.projitems*{d3c61ee9-9fad-45bd-acce-f4e95ae32807}*SharedItemsImports = 5
+		..\cnvResource\CnVResource.projitems*{dfb81ca7-2237-4e6e-8e73-742a39a18451}*SharedItemsImports = 13
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -64,14 +66,6 @@ Global
 		{64A79352-0193-4A6C-92ED-4FF8D1C156AA}.Release|Any CPU.Build.0 = Release|x64
 		{64A79352-0193-4A6C-92ED-4FF8D1C156AA}.Release|x64.ActiveCfg = Release|x64
 		{64A79352-0193-4A6C-92ED-4FF8D1C156AA}.Release|x64.Build.0 = Release|x64
-		{5B075B5C-14C2-4B80-BE6E-522E499159C3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{5B075B5C-14C2-4B80-BE6E-522E499159C3}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{5B075B5C-14C2-4B80-BE6E-522E499159C3}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{5B075B5C-14C2-4B80-BE6E-522E499159C3}.Debug|x64.Build.0 = Debug|Any CPU
-		{5B075B5C-14C2-4B80-BE6E-522E499159C3}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{5B075B5C-14C2-4B80-BE6E-522E499159C3}.Release|Any CPU.Build.0 = Release|Any CPU
-		{5B075B5C-14C2-4B80-BE6E-522E499159C3}.Release|x64.ActiveCfg = Release|Any CPU
-		{5B075B5C-14C2-4B80-BE6E-522E499159C3}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
