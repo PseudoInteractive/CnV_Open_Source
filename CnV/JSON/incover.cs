@@ -68,7 +68,7 @@ namespace CnV
 			internal int sourceCid => firstArmy.sourceCid;
 
 			public string intel => $"{firstArmy.miscInfo}, {ttNameWithCaps[firstArmy.troops.GetPrimaryTroopType()]}";
-			public string note => $"{Player.IdToName(targetCid.CidToPid())} attacker: {Player.IdToName(sourceCid.CidToPid())} to {targetCid.CidToContinent()} {first.Format()} first: {intel}) to {City.Get(targetCid).nameAndRemarks} at {first.Format()}{( count>1?$" and {count-1} others":"")}";
+			public string note => $"{Player.IdToName(targetCid.CidToPid())} attacker: {Player.IdToName(sourceCid.CidToPid())} to {targetCid.CidToContinentDigits()} {first.Format()} first: {intel}) to {City.Get(targetCid).nameAndRemarks} at {first.Format()}{( count>1?$" and {count-1} others":"")}";
 		}
 
 		public static Debounce IncomingUpdateDebounce = new(DoProcess) {  debounceDelay = 1000, throttleDelay = 2000 };
@@ -86,6 +86,7 @@ namespace CnV
 
 		public async static Task DoProcess()
 		{
+			return;  // Todo
 			if (updateInProgress)
 			{
 				Assert(false);

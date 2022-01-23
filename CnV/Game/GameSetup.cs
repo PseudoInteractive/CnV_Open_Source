@@ -91,7 +91,7 @@ namespace CnV
 		//		Assert( CnVServer.worldId != 0);
 				
 				await CitySwitch(cid);
-				ShellPage.SetViewModeCity();
+				ShellPage.SetViewModeRegion();
 				Assert(Spot.build ==cid && Spot.focus == cid);
 			//	Spot.build = Spot.focus = cid;
 				//NavStack.Push(cid);
@@ -99,7 +99,8 @@ namespace CnV
 
 
 				//CnVChatClient.CnVChatClient.Setup();
-
+				ShellPage.CityListNotifyChange(true);
+				ShellPage.RefreshTabs.Go();
 				ShellPage.canvasVisible = true;
 			//   ShellPage.isHitTestVisible = true;
 			///                   await GetCitylistOverview();
@@ -155,8 +156,8 @@ namespace CnV
 				//	System.GC.Collect(2,GCCollectionMode.Default,true,true);
 
 				//	GCSettings.LatencyMode = GCLatencyMode.SustainedLowLatency;
-				reinforcementsTask = new(interval:64.0f,()=> ReinforcementsOverview.instance.Post(),initialDelay:4.0f );
-				senInfoTask        = new( interval: 68f, City.UpdateSenatorInfo, 3.0f);
+			//	reinforcementsTask = new(interval:64.0f,()=> ReinforcementsOverview.instance.Post(),initialDelay:4.0f );
+			//	senInfoTask        = new( interval: 68f, City.UpdateSenatorInfo, 3.0f);
 				CnVServer.isInitialized      = true;
 
 			
@@ -164,7 +165,7 @@ namespace CnV
 		}
 		catch(Exception ex)
 		{
-			Log(ex);
+			LogEx(ex);
 		}
 		}
 	

@@ -234,7 +234,7 @@ public static partial class CityUI
 		ChatTab.PasteToChatInput(str);
 	}
 
-		public static void DecayQuery(SpotId cid)
+		public static void DecayQuery(WorldC cid)
 	{
 		CnVServer.gStCB(cid, DecayQueryCB, AMath.random.Next());
 	}
@@ -541,7 +541,7 @@ public static partial class CityUI
 
 
 
-	public static async void DiscordClaim(SpotId cid)
+	public static async void DiscordClaim(WorldC cid)
 	{
 		if(!DGame.isValidForIncomingNotes)
 		{

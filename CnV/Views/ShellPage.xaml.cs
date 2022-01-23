@@ -398,6 +398,11 @@ namespace CnV.Views
 				{
 					var okay3 = await APlayFab.Init();
 					Assert(okay3);
+					AppS.QueueOnUIThread(() => { 
+						AppS.MessageBox($"Welcome {Player.me.shortName}.");
+						AppS.window.Title = $"Conquest and Virtue Alpha, World {World.id} - {Player.me.shortName}";
+				});
+				
 
 				}
 				catch (Exception exception)

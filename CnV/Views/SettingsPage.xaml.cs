@@ -63,6 +63,7 @@ namespace CnV
 			get => renderQuality;
 			set
 			{
+				renderQuality = value;
 				if ( !renderQuality.AlmostEquals(value,1.0f/8.0f)  )
 				{
 					GameClient.UpdateRenderQuality(renderQuality);
@@ -812,7 +813,7 @@ namespace CnV
 		{
 			AppS.HideFlyout(sender);
 			HideMe();
-			var cont = exportRanksCont.Value.RoundToInt().ContinentToXY().XYToPackedContinent();
+			var cont = exportRanksCont.Value.RoundToInt().ContinentToXY().ContinentXYToContinentId();
 			var t1 = CnVServer.ServerTime();
 			Blobs.AllianceStats(t1 - TimeSpan.FromDays(exportRanksDays.Value), t1, cont, exportRanksCities.Value.RoundToInt() );
 		}
@@ -822,7 +823,7 @@ namespace CnV
 		{
 			AppS.HideFlyout(sender);
 			HideMe();
-			var cont = Settings.exportContinent.ContinentToXY().XYToPackedContinent();
+			var cont = Settings.exportContinent.ContinentToXY().ContinentXYToContinentId();
 			var tsMin = exportTSMinTS.Value.RoundToInt();
 			var t1 = CnVServer.ServerTime();
 			Blobs.PlayerStats(t1-TimeSpan.FromDays(exportTSDays.Value), t1,cont,tsMin,

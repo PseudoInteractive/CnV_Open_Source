@@ -1060,7 +1060,7 @@ namespace CnV.Views
 							if (!IsCityView())
 							{
 								ref var cn = ref Continent.all[cont];
-								contToolTip = $"{World.UnpackedContinent(cont)}\nSettled {cn.settled}\nFree {cn.unsettled}\nCities {cn.cities}\nCastles {cn.castles}\nTemples {cn.temples}\nDungeons {cn.dungeons}";
+								contToolTip = $"{World.UnpackContinent(cont)}\nSettled {cn.settled}\nFree {cn.unsettled}\nCities {cn.cities}\nCastles {cn.castles}\nTemples {cn.temples}\nDungeons {cn.dungeons}";
 
 							}
 						}
@@ -1074,8 +1074,8 @@ namespace CnV.Views
 							toolTip = null;
 
 							lastCanvasC = cid;
-							var packedId = World.GetPackedId(c);
-							var data = World.GetInfoFromPackedId(World.rawPrior1!=null? World.rawPrior1 : World.raw, packedId);
+							var packedId = World.GetWorldId(c);
+							var data = World.GetInfoFromWorldId(World.rawPrior1!=null? World.rawPrior1 : World.raw, packedId);
 							switch (data.type)
 							{
 								case World.typeCity:
@@ -1219,7 +1219,7 @@ namespace CnV.Views
 
 							if (World.rawPrior0 != null)
 							{
-								var pData = World.GetInfoFromPackedId(World.rawPrior0 , packedId);
+								var pData = World.GetInfoFromWorldId(World.rawPrior0 , packedId);
 								if (pData.all == data.all )
 								{
 									// no change

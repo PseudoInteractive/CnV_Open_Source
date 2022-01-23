@@ -84,8 +84,8 @@ namespace CnV
 			{
 				var rv = string.Empty;
 
-				var targetContinent = army.targetCid.CidToContinent();
-				var sourceContinent = army.sourceCid.CidToContinent();
+				var targetContinent = army.targetCid.CidToContinentDigits();
+				var sourceContinent = army.sourceCid.CidToContinentDigits();
 				//$("#iaBody tr").each(function() {
 				//              const tid_2 = GetIntData($(":nth-child(5)", this).children().children());
 				//              const sid_ = GetIntData($(":nth-child(10)", this).children());

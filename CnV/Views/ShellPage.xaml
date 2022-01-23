@@ -75,7 +75,7 @@
 			<!-- Overlay grid for sizing -->
 
 
-			<winui:CommandBar Grid.ColumnSpan="3" IsSticky="True" IsTabStop="True"  UseSystemFocusVisuals="True" x:Name="commandBar" x:FieldModifier="public"  >
+			<winui:CommandBar Grid.ColumnSpan="3" IsSticky="True" IsTabStop="True"   x:Name="commandBar" x:FieldModifier="public"  >
 			<winui:CommandBar.Content>
 				<Grid>
 					<Grid.ColumnDefinitions>
@@ -263,7 +263,6 @@
 							
 					
 			                      Margin="0,95,0,0"
-			                      IsHitTestVisible="False"
 			                      Canvas.ZIndex="12" />
 
 

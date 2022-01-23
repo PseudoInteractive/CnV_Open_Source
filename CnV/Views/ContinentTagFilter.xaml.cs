@@ -53,7 +53,7 @@ namespace CnV.Views
 				var isAll = Spot.isContinentFilterAll|actuallyClearPlease;
 				for (int id = 0; id < World.continentCount; ++id)
 				{
-					var xy = World.PackedContinentToXY(id);
+					var xy = World.ContinentIdToXY(id);
 					var text = ZString.Format("{0}{1}", xy.y, xy.x);
 					var check = instance.continentsPanel.Children.FirstOrDefault((a) => a is ToggleButton b && b.Content as string == text) as ToggleButton;
 					if (check == null)
@@ -123,7 +123,7 @@ namespace CnV.Views
 						else
 						{
 							// is just one set?
-							var xy = World.PackedContinentToXY(first);
+							var xy = World.ContinentIdToXY(first);
 							var contLabel = ZString.Format("{0}{1}", xy.y, xy.x);
 							if (contCount > 1)
 							{

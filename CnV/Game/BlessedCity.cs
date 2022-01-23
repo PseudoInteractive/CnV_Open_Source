@@ -89,7 +89,7 @@ namespace CnV
 			var rv = new List<BlessedCity>();
 			var cid = city.cid;
 			var worldC = cid.CidToWorld();
-			var cont = cid.CidToContinent();
+			var cont = cid.CidToContinentDigits();
 			foreach (var blc in all)
 			{
 				// only on same continent or if both are on water and we have ships

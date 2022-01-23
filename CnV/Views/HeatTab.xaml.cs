@@ -296,14 +296,14 @@ namespace CnV.Views
 						if (delta.changes.Length == 0)
 							break;
 						var id = delta.changes[deltaOffset * 2 % delta.changes.Length];
-						if (!Spot.TestContinentFilterPacked(World.PackedIdToPackedContinent(id)))
+						if (!Spot.TestContinentFilterPacked(World.WorldIdToContinentId(id)))
 							continue;
 
 						var change = ChangeInfo.GetChangeDesc(World.rawPrior0[(int)id], World.rawPrior1[(int)id]);
 						if (change == null)
 							continue;
 						Note.Show(change);
-						var c = World.PackedIdToCid(id);
+						var c = World.WorldIdToWorldC(id);
 						Spot.ProcessCoordClick(c.WorldToCid(), false, AppS.keyModifiers);
 						break;
 					}

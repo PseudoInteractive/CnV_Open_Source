@@ -376,7 +376,7 @@ namespace CnV
 				}
 				if(citySwitch != 0)
 					CitySwitch(citySwitch, true);
-				ShellPage.CityListNotifyChange(true);
+				
 
 				if(!ppdtInitialized)
 				{
@@ -384,7 +384,7 @@ namespace CnV
 				// todo:	ppdtInitialized = true;
 
 					//Task.Delay(500).ContinueWith( _ => App.DispatchOnUIThreadSneakyLow( MainPage.instance.Refresh));
-					ShellPage.RefreshTabs.Go();
+					
 				}
 
 				//    Log(City.all.ToString());

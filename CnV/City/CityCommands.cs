@@ -15,7 +15,7 @@ using static CnV.View;
 public static partial class CityUI
 {
 	
-	public static async void ReturnAtBatch(spotId cid)
+	public static async void ReturnAtBatch(SpotId cid)
 	{
 		(var at, var okay) = await Views.DateTimePicker.ShowAsync("Return By:");
 		if(!okay)

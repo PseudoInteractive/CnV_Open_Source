@@ -183,10 +183,10 @@ namespace CnV.Views
             {
 				if (CnVServer.ppdtInitialized)
 				{
-					await Raiding.UpdateTS(true, false);
-					await RaidOverview.Send();
-					if (City.build != 0)
-						await GetCity.Post(City.build);
+					//await Raiding.UpdateTS(true, false);
+					//await RaidOverview.Send();
+				//	if (City.build != 0)
+				//		await GetCity.Post(City.build);
 					foreach(var c in City.myCities)
 					{
 						if(c.testContinentAndTagFilter)

@@ -46,7 +46,7 @@ namespace CnV
 			}
 			catch(Exception e)
 			{
-				LogEx(e);
+				Log(e);
 			
 			}
 		}

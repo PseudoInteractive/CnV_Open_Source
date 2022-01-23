@@ -88,7 +88,7 @@ namespace CnV.Views
 						var wi = World.GetInfoFromCid(cid);
 						if (!wi.isCastle)
 							continue;
-						if (cid.CidToContinent() != wantContinent)
+						if (cid.CidToContinentDigits() != wantContinent)
 							continue;
 						var city = City.GetOrAdd(cid);
 						var cls = await city.ClassifyEx(false);

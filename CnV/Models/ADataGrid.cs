@@ -267,7 +267,7 @@ public static partial class ADataGrid
 			grid.CellToolTipOpening += UserTab.CellToolTipOpening;
 			if (sourceType is not null || grid.ItemsSource is not null)
 				grid.SourceType = sourceType ?? UserTab.GetContainerType(grid.ItemsSource);
-			grid.UseSystemFocusVisuals = true;
+		//	grid.UseSystemFocusVisuals = true;
 			grid.ShowSortNumbers = true;
 			return _lock0;
 

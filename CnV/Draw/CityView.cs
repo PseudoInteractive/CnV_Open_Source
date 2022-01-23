@@ -111,7 +111,8 @@ namespace CnV
 
 		public static void Draw(float alpha)
 		{
-			Assert(isDrawing == true);
+			Assert(isDrawing == false);
+			isDrawing = true;
 			ToolTips.contToolTip = null;
 
 			var build = City.GetBuild();
