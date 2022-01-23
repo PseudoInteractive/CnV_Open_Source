@@ -32,7 +32,7 @@ namespace CnV.Views
 		public ImageBrush brush;
 		public string toolTip;
 		public string header;
-		public Windows.UI.Color textColor;
+		//public Color textColor;
 		public CityBuild.CityBuildAction action = CityBuild.CityBuildAction.invalid;
 		public string accessKey { get; set; }
 		public const int width = 64;
@@ -42,7 +42,7 @@ namespace CnV.Views
 		{
 			action = CityBuild.CityBuildAction.invalid;
 			bid = -1;
-			textColor = Colors.Black;
+		//	textColor = Colors.Black;
 
 		}
 		public BuildMenuItem(int _bid)

@@ -269,7 +269,7 @@ namespace CnV.Views
 				}
 			}
 
-			flyout.CopyXamlRootFrom(button);
+			flyout.SetXamlRoot(button);
 			flyout.Closing += Flyout_Closing;
 			flyout.ShowAt(button);
 		}

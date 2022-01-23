@@ -887,7 +887,7 @@ namespace CnV.Views
 
 	
 
-		public static void Canvas_PointerPressedJS(int x, int y, Windows.UI.Input.PointerUpdateKind kind)
+		public static void Canvas_PointerPressedJS(int x, int y, PointerUpdateKind kind)
 		{
 			AppS.UpdateKeyStates();
 			//e.KeyModifiers.UpdateKeyModifiers();
@@ -898,9 +898,9 @@ namespace CnV.Views
 			{
 				switch (kind)
 				{
-					case Windows.UI.Input.PointerUpdateKind.XButton1Pressed:
+					case PointerUpdateKind.XButton1Pressed:
 						return;
-					case Windows.UI.Input.PointerUpdateKind.XButton2Pressed:
+					case PointerUpdateKind.XButton2Pressed:
 						return;
 
 

@@ -502,7 +502,7 @@ namespace CnV.Views
 			}
 			if(menu.Items.Count == 0)
 				menu.Items.Add(new MenuFlyoutItem() { Text = "All the Tabs are open" });
-			menu.CopyXamlRootFrom(sender);
+			menu.SetXamlRoot(sender);
 
 			menu.ShowAt(_sender);
 

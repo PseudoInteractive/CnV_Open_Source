@@ -170,7 +170,7 @@ namespace CnV.Views
 		// private IdentityService IdentityService => Singleton<IdentityService>.Instance;
 
 		// private UserDataService UserDataService => Singleton<UserDataService>.Instance;
-
+		public ObservableCollection<string> inAppNotes= new();
 		//		public static InAppNotification inAppNote => instance.InAppNote;
 		public string noteText = string.Empty;
 
@@ -229,203 +229,213 @@ namespace CnV.Views
 
 		private async void OnLoaded(object sender, RoutedEventArgs e)
 		{
-			CnVServer.CitySwitch = CnVClient.CitySwitch;
-			GameClient.canvas    = _canvas;
-
-			var signinTask =  Task.Run(CnVSignin.Go);
-
-			Note.Init();
-			CityUI.Init();
-			NavStack.Init();
-			// hook up delegates
-			WorkScope.Start  = WorkStart;
-			WorkScope.End    = WorkEnd;
-			WorkScope.Update = WorkUpdate;
-			//		SystemNavigationManagerPreview.GetForCurrentView().CloseRequested += App.App_CloseRequested; ;
-			//typeof(Telerik.UI.Xaml.Controls.RadDataForm).Assembly.GetType("Telerik.UI.Xaml.Controls.TelerikLicense").GetField("messageDisplayed",BindingFlags.NonPublic|BindingFlags.Static).SetValue(null,true,BindingFlags.Static|BindingFlags.NonPublic,null,null);
-			//var signinTask = await CnVSignin.Go();// Task.Run(CnVSignin.Go);
-			CityBuild.Initialize();
-			// Grid.SetColumn(webView, 0);
-			Grid.SetRow(CityBuild.instance, 1);
-			Grid.SetRowSpan(CityBuild.instance, 5);
-			Grid.SetColumnSpan(CityBuild.instance, 1);
-			Canvas.SetZIndex(CityBuild.instance, 13);
-			var c          = CreateCanvasControl();
-
-
-			// canvas.ContextFlyout = CityFlyout;
-			//	grid.Children.Add(c.canvas);
-			// grid.Children.Add(c.hitTest);
-
-			// Canvas.SetZIndex(c.hitTest, 13); Task.Run(SetupCanvasInput);//
-			// Task.Run(SetupCanvasInput); Placement.SizeChanged += Placement_SizeChanged; var img =
-			// new Image() { Opacity=0.5f, Source = new SvgImageSource(new
-			// Uri($"ms-appx:///Assets/world20.svg")),IsHitTestVisible=false };
-			// Placement.LayoutUpdated += Placement_LayoutUpdated; grid.Children.Add(img);
-
-			// Grid.SetRowSpan(img, 4); Grid.SetColumnSpan(img, 4); Canvas.SetZIndex(img, 12);
-			CnVServer.Initialize(grid);
-			// foreach (var i in webView.KeyboardAccelerators) i.IsEnabled = false;
-			// webView.AllowFocusOnInteraction = false; c.hitTest.Margin= webView.Margin = new
-			// Thickness(0, 0, 11, 0);
-			//		grid.Children.Add(webView);
-
-			//	FocusManager.GotFocus+=FocusManager_GotFocus;
-
-			//c.hitTest.Fill = CnVServer.webViewBrush;
-			//				var visual = ElementCompositionPreview.GetElementVisual(c.canvas);
-			//			var webVisual = ElementCompositionPreview.GetElementVisual(view);
-			//	var sprite = visual.Compositor.CreateSpriteVisual();//	var sprite = visual.Compositor.CreateSpriteVisual();
-
-			// sprite.Brush = ElementCompositionPreview.SetElementChildVisual(visual,sprite);
-			// grid.Background = null;
-
-			// grid.Children.Add(shellFrame); Grid.SetColumn(shellFrame, 2); Grid.SetRow(shellFrame,
-			// 0); Grid.SetRowSpan(shellFrame, 6); shellFrame.Margin = new Thickness(13, 0, 0, 0);
-			// Canvas.SetZIndex(shellFrame, 3);
-
-			//		Grid.SetColumn(webView, 0);
-			//		Grid.SetRow(webView, 1);
-			//		Grid.SetRowSpan(webView, 5);
-			//		Grid.SetColumnSpan(webView, 2);
-			//		Canvas.SetZIndex(webView, 10);
-
-			//		webView.Scale = new Vector3(Settings.htmlZoom.Squared() * 2.0f + 0.5f);
-
-
-			//var splitter = new GridSplitter();
-			//grid.Children.Add(splitter);
-			//Grid.SetColumn(splitter, 2);
-			//// Grid.SetRowSpan(splitter, 4);
-			////  splitter.Height = 200;
-			//splitter.Width = 8;
-			//splitter.Height = 200;
-			//Grid.SetRowSpan(splitter, 5);
-			//splitter.HorizontalAlignment = HorizontalAlignment.Left;
-			//splitter.VerticalAlignment = VerticalAlignment.Stretch;
-			//splitter.ResizeDirection = GridSplitter.GridResizeDirection.Columns;
-			//Canvas.SetZIndex(splitter, 5);
-
-			// NavigationService.Frame = shellFrame;
-
-			// Keyboard accelerators are added here to avoid showing 'Alt + left' tooltip on the
-			// page. More info on tracking issue https://github.com/Microsoft/microsoft-ui-xaml/issues/8
-
-			KeyboardAccelerators.Add(BuildKeyboardAccelerator(VirtualKey.Left, NavStack.BackInvoked,
-															VirtualKeyModifiers.Menu));
-			// KeyboardAccelerators.Add(BuildKeyboardAccelerator(VirtualKey.GoBack,NavStack.BackInvoked));
-
-			KeyboardAccelerators.Add(BuildKeyboardAccelerator(VirtualKey.Right, NavStack.ForwardInvoked,
-															VirtualKeyModifiers.Menu));
-			// KeyboardAccelerators.Add(BuildKeyboardAccelerator(VirtualKey.GoForward, NavStack.ForwardInvoked));
-
-			for (var i = 0; i < Settings.layoutOffsets.Length; ++i)
-			{
-				KeyboardAccelerators.Add(BuildKeyboardAccelerator( VirtualKey.Number0 + (int) i,
-																	LayoutAccelerator_Invoked,
-																	VirtualKeyModifiers.Control));
-			}
-
-
-			//			KeyboardAccelerators.Add(BuildKeyboardAccelerator(VirtualKey.F5, Refresh_Invoked,VirtualKeyModifiers.Control));
-			//KeyboardAccelerators.Add(BuildKeyboardAccelerator(VirtualKey.R, instance.Refresh_Invoked,
-			//												VirtualKeyModifiers.Control));
-			//foreach (var k in buildKeys)
-			//{
-			//	KeyboardAccelerators.Add(BuildKeyboardAccelerator(k, KeyboardAccelerator));
-			//}
-
-			//				KeyboardAccelerators.Add(BuildKeyboardAccelerator(VirtualKey.F4, LayoutAccelerator_Invoked));
-			IsLoggedIn   = true; // IdentityService.IsLoggedIn();
-			IsAuthorized = true; // IsLoggedIn && IdentityService.IsAuthorized();
-			// grid.hor
-			/// we pass this as an argument to let the page know that it is a programmatic navigation
-			// Services.NavigationService.Navigate<Views.DefenseHistoryTab>(this); ChatTab.Ctor();
-			TabPage.Initialize();
-			// refreshAccelerator.Invoked += (_, __) => view?.Refresh();
-			// testMenu.Items.Add(MenuAction(MainPage.ShowTipRaiding1,"TipRaiding1"));
-			// testMenu.Items.Add(MenuAction(MainPage.ShowTipRaiding2, "TipRaiding2"));
-			// testMenu.Items.Add(MenuAction(MainPage.ShowTipRaiding3, "TipRaiding3"));
-			cityListBox.SelectedIndex    =  0; // reset
-			cityListBox.SelectionChanged += CityListBox_SelectionChanged;
-			cityBox.SelectionChanged     += CityBox_SelectionChanged;
-
-			//SystemNavigationManager.GetForCurrentView().BackRequested += ShellPage_BackRequested;
-			// PointerPressed+= PointerPressedCB; HomeButtonTip.IsOpen = true;
-			//	this.ProcessKeyboardAccelerators+=ShellPage_ProcessKeyboardAccelerators;
-			//this.PointerPressed+=ShellPage_PointerPressed;
-			//App.SetupCoreWindowInputHooks();
-			//var displayInformation = DisplayInformation.GetForCurrentView();
-			//var screenSize = new Size(displayInformation.ScreenWidthInRawPixels,
-			//						  displayInformation.ScreenHeightInRawPixels);
-			//	ShellPage.webclientSpan.x = (screenSize.Width * .715625f* Settings.htmlZoom * 2).RoundToInt();
-			//	ShellPage.webclientSpan.y = (screenSize.Height * 0.89236111111111116f * Settings.htmlZoom*2).RoundToInt();
-			//	await UpdateWebViewScale();
-			Log("Game Create!");
-			GameClient.Create(_canvas);
-
-			
-
-
 			try
 			{
-				if (SystemInformation.Instance.IsAppUpdated && !CnVServer.isSub)
+				CnVServer.CitySwitch = CnVClient.CitySwitch;
+				GameClient.canvas    = _canvas;
+
+				var signinTask = Task.Run(CnVSignin.Go);
+
+				Note.Init();
+				CityUI.Init();
+				NavStack.Init();
+				// hook up delegates
+				WorkScope.Start  = WorkStart;
+				WorkScope.End    = WorkEnd;
+				WorkScope.Update = WorkUpdate;
+				//		SystemNavigationManagerPreview.GetForCurrentView().CloseRequested += App.App_CloseRequested; ;
+				//typeof(Telerik.UI.Xaml.Controls.RadDataForm).Assembly.GetType("Telerik.UI.Xaml.Controls.TelerikLicense").GetField("messageDisplayed",BindingFlags.NonPublic|BindingFlags.Static).SetValue(null,true,BindingFlags.Static|BindingFlags.NonPublic,null,null);
+				//var signinTask = await CnVSignin.Go();// Task.Run(CnVSignin.Go);
+				CityBuild.Initialize();
+				// Grid.SetColumn(webView, 0);
+				Grid.SetRow(CityBuild.instance, 1);
+				Grid.SetRowSpan(CityBuild.instance, 5);
+				Grid.SetColumnSpan(CityBuild.instance, 1);
+				Canvas.SetZIndex(CityBuild.instance, 13);
+				var c = CreateCanvasControl();
+
+
+				// canvas.ContextFlyout = CityFlyout;
+				//	grid.Children.Add(c.canvas);
+				// grid.Children.Add(c.hitTest);
+
+				// Canvas.SetZIndex(c.hitTest, 13); Task.Run(SetupCanvasInput);//
+				// Task.Run(SetupCanvasInput); Placement.SizeChanged += Placement_SizeChanged; var img =
+				// new Image() { Opacity=0.5f, Source = new SvgImageSource(new
+				// Uri($"ms-appx:///Assets/world20.svg")),IsHitTestVisible=false };
+				// Placement.LayoutUpdated += Placement_LayoutUpdated; grid.Children.Add(img);
+
+				// Grid.SetRowSpan(img, 4); Grid.SetColumnSpan(img, 4); Canvas.SetZIndex(img, 12);
+				CnVServer.Initialize(grid);
+				// foreach (var i in webView.KeyboardAccelerators) i.IsEnabled = false;
+				// webView.AllowFocusOnInteraction = false; c.hitTest.Margin= webView.Margin = new
+				// Thickness(0, 0, 11, 0);
+				//		grid.Children.Add(webView);
+
+				//	FocusManager.GotFocus+=FocusManager_GotFocus;
+
+				//c.hitTest.Fill = CnVServer.webViewBrush;
+				//				var visual = ElementCompositionPreview.GetElementVisual(c.canvas);
+				//			var webVisual = ElementCompositionPreview.GetElementVisual(view);
+				//	var sprite = visual.Compositor.CreateSpriteVisual();//	var sprite = visual.Compositor.CreateSpriteVisual();
+
+				// sprite.Brush = ElementCompositionPreview.SetElementChildVisual(visual,sprite);
+				// grid.Background = null;
+
+				// grid.Children.Add(shellFrame); Grid.SetColumn(shellFrame, 2); Grid.SetRow(shellFrame,
+				// 0); Grid.SetRowSpan(shellFrame, 6); shellFrame.Margin = new Thickness(13, 0, 0, 0);
+				// Canvas.SetZIndex(shellFrame, 3);
+
+				//		Grid.SetColumn(webView, 0);
+				//		Grid.SetRow(webView, 1);
+				//		Grid.SetRowSpan(webView, 5);
+				//		Grid.SetColumnSpan(webView, 2);
+				//		Canvas.SetZIndex(webView, 10);
+
+				//		webView.Scale = new Vector3(Settings.htmlZoom.Squared() * 2.0f + 0.5f);
+
+
+				//var splitter = new GridSplitter();
+				//grid.Children.Add(splitter);
+				//Grid.SetColumn(splitter, 2);
+				//// Grid.SetRowSpan(splitter, 4);
+				////  splitter.Height = 200;
+				//splitter.Width = 8;
+				//splitter.Height = 200;
+				//Grid.SetRowSpan(splitter, 5);
+				//splitter.HorizontalAlignment = HorizontalAlignment.Left;
+				//splitter.VerticalAlignment = VerticalAlignment.Stretch;
+				//splitter.ResizeDirection = GridSplitter.GridResizeDirection.Columns;
+				//Canvas.SetZIndex(splitter, 5);
+
+				// NavigationService.Frame = shellFrame;
+
+				// Keyboard accelerators are added here to avoid showing 'Alt + left' tooltip on the
+				// page. More info on tracking issue https://github.com/Microsoft/microsoft-ui-xaml/issues/8
+
+				KeyboardAccelerators.Add(BuildKeyboardAccelerator(VirtualKey.Left, NavStack.BackInvoked,
+																VirtualKeyModifiers.Menu));
+				// KeyboardAccelerators.Add(BuildKeyboardAccelerator(VirtualKey.GoBack,NavStack.BackInvoked));
+
+				KeyboardAccelerators.Add(BuildKeyboardAccelerator(VirtualKey.Right, NavStack.ForwardInvoked,
+																VirtualKeyModifiers.Menu));
+				// KeyboardAccelerators.Add(BuildKeyboardAccelerator(VirtualKey.GoForward, NavStack.ForwardInvoked));
+
+				for(var i = 0; i < Settings.layoutOffsets.Length; ++i)
 				{
-					AppS.DispatchOnUIThreadLow(Settings.ShowWhatsNew);
+					KeyboardAccelerators.Add(BuildKeyboardAccelerator(VirtualKey.Number0 + (int)i,
+																		LayoutAccelerator_Invoked,
+																		VirtualKeyModifiers.Control));
 				}
 
-			}
-			catch (Exception __ex)
-			{
-				Debug.Log(__ex.ToString());
-			}
+
+				//			KeyboardAccelerators.Add(BuildKeyboardAccelerator(VirtualKey.F5, Refresh_Invoked,VirtualKeyModifiers.Control));
+				//KeyboardAccelerators.Add(BuildKeyboardAccelerator(VirtualKey.R, instance.Refresh_Invoked,
+				//												VirtualKeyModifiers.Control));
+				//foreach (var k in buildKeys)
+				//{
+				//	KeyboardAccelerators.Add(BuildKeyboardAccelerator(k, KeyboardAccelerator));
+				//}
+
+				//				KeyboardAccelerators.Add(BuildKeyboardAccelerator(VirtualKey.F4, LayoutAccelerator_Invoked));
+				IsLoggedIn   = true; // IdentityService.IsLoggedIn();
+				IsAuthorized = true; // IsLoggedIn && IdentityService.IsAuthorized();
+									 // grid.hor
+				/// we pass this as an argument to let the page know that it is a programmatic navigation
+				// Services.NavigationService.Navigate<Views.DefenseHistoryTab>(this); ChatTab.Ctor();
+				TabPage.Initialize();
+				// refreshAccelerator.Invoked += (_, __) => view?.Refresh();
+				// testMenu.Items.Add(MenuAction(MainPage.ShowTipRaiding1,"TipRaiding1"));
+				// testMenu.Items.Add(MenuAction(MainPage.ShowTipRaiding2, "TipRaiding2"));
+				// testMenu.Items.Add(MenuAction(MainPage.ShowTipRaiding3, "TipRaiding3"));
+				cityListBox.SelectedIndex    =  0; // reset
+				cityListBox.SelectionChanged += CityListBox_SelectionChanged;
+				cityBox.SelectionChanged     += CityBox_SelectionChanged;
+
+				//SystemNavigationManager.GetForCurrentView().BackRequested += ShellPage_BackRequested;
+				// PointerPressed+= PointerPressedCB; HomeButtonTip.IsOpen = true;
+				//	this.ProcessKeyboardAccelerators+=ShellPage_ProcessKeyboardAccelerators;
+				//this.PointerPressed+=ShellPage_PointerPressed;
+				//App.SetupCoreWindowInputHooks();
+				//var displayInformation = DisplayInformation.GetForCurrentView();
+				//var screenSize = new Size(displayInformation.ScreenWidthInRawPixels,
+				//						  displayInformation.ScreenHeightInRawPixels);
+				//	ShellPage.webclientSpan.x = (screenSize.Width * .715625f* Settings.htmlZoom * 2).RoundToInt();
+				//	ShellPage.webclientSpan.y = (screenSize.Height * 0.89236111111111116f * Settings.htmlZoom*2).RoundToInt();
+				//	await UpdateWebViewScale();
+				Log("Game Create!");
+				GameClient.Create(_canvas);
 
 
 
 
-			TabPage.mainTabs.SizeChanged += (( o, args) => ShellPage.updateHtmlOffsets.SizeChanged() );
-
-			
-			var okay = await signinTask;
-			if(okay)
-			{
-				// don't await
-				
-
-				var changed = await PlayerTables.InitializeAndUpdateCurrentPlayer(azureId:CnVSignin.azureId, discordId:CnVSignin.discordId,discordUserName:CnVSignin.name,avatarUrlHash:CnVSignin.avatarUrlHash);
-				//if (okay2)
 				try
 				{
-					var okay3 = await APlayFab.Init();
-					Assert(okay3);
-					AppS.QueueOnUIThread(() => { 
-						AppS.MessageBox($"Welcome {Player.me.shortName}.");
-						AppS.window.Title = $"Conquest and Virtue Alpha, World {World.id} - {Player.me.shortName}";
-				});
-				
+					if(SystemInformation.Instance.IsAppUpdated && !CnVServer.isSub)
+					{
+						AppS.DispatchOnUIThreadLow(Settings.ShowWhatsNew);
+					}
 
 				}
-				catch (Exception exception)
+				catch(Exception __ex)
 				{
-					LogEx(exception);
-					throw;
-				}{
+					Debug.Log(__ex.ToString());
+				}
+
+
+
+
+				TabPage.mainTabs.SizeChanged += ((o, args) => ShellPage.updateHtmlOffsets.SizeChanged());
+
+
+				var okay = await signinTask;
+				if(okay)
+				{
+					// don't await
+
+
+					var changed = await PlayerTables.InitializeAndUpdateCurrentPlayer(azureId: CnVSignin.azureId, discordId: CnVSignin.discordId, discordUserName: CnVSignin.name, avatarUrlHash: CnVSignin.avatarUrlHash);
+					//if (okay2)
+					try
+					{
+						var okay3 = await APlayFab.Init();
+						Assert(okay3);
+						AppS.QueueOnUIThread(() =>
+						{
+							AppS.MessageBox($"Welcome {Player.me.shortName}.");
+							AppS.appWindow.Title = $"Conquest and Virtue Alpha, World {World.id} - {Player.me.shortName}";
+						});
+
+
+					}
+					catch(Exception exception)
+					{
+						LogEx(exception);
+						throw;
+					}
+					{
+
+					}
+					//else
+					//{
+					//	AppS.Failed("Player name is already used.  :( ");
+					//	await CnVSignin.SignOut();
+					//}
+				}
+				else
+				{
+					AppS.Failed("Signin didn't happen.  :( ");
+					await CnVSignin.SignOut();
 
 				}
-				//else
-				//{
-				//	AppS.Failed("Player name is already used.  :( ");
-				//	await CnVSignin.SignOut();
-				//}
+
+				CnVClient.InitializeGame();
 			}
-			else
+			catch(Exception ex)
 			{
-				AppS.Failed("Signin didn't happen.  :( ");
-				await CnVSignin.SignOut();
-
+				LogEx(ex);
+				await AppS.Fatal(ex.Message);
 			}
-
-			CnVClient.InitializeGame();
 			//Task.Delay(5000).ContinueWith((_) =>
 			//{
 			//	DGame.Startup();

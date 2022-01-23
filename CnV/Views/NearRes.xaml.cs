@@ -267,7 +267,7 @@ namespace CnV.Views
 			var text = sender as FrameworkElement;
 			var supporter = text.DataContext as ResSource;
 			var flyout = new MenuFlyout();
-			flyout.CopyXamlRootFrom(text);
+			flyout.SetXamlRoot(text);
 			AApp.AddItem(flyout, "Zero", (_, _) =>
 			{
 				supporter.res.Clear();

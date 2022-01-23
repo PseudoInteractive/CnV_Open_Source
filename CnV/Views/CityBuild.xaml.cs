@@ -333,7 +333,8 @@ namespace CnV
 			
 				Content = instance
 			};
-			
+			buildMenu.SetXamlRoot();
+
 
 			buildMenu.Closed += BuildMenu_Closed;
 			Style s = new Microsoft.UI.Xaml.Style { TargetType = typeof(Microsoft.UI.Xaml.Controls.FlyoutPresenter) };

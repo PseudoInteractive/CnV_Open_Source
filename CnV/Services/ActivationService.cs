@@ -32,6 +32,8 @@ namespace CnV.Services
 	using System.Runtime.CompilerServices;
 	using Activation;
 	using GameData;
+
+	using Microsoft.UI.Windowing;
 	// using PInvoke
 	using Views;
 
@@ -108,11 +110,11 @@ namespace CnV.Services
 					//        await Singleton<SuspendAndResumeService>.Instance.RestoreSuspendAndResumeData();
 				}
 				// Ensure the current window is active
-				await Task.Delay(500);
+				//await Task.Delay(500);
 				Log("Activate!");
-				App.window.Activate();
-				Log("Activate!Done");
-				await Task.Delay(500);
+				AppS.appWindow.Show(true);
+				AppS.presenter.Maximize();
+				//await Task.Delay(500);
 				Log("Max");
 //				App.window.Maximize();
 //				_ = PInvoke.User32.ShowWindow(WinRT.Interop.WindowNative.GetWindowHandle(App.window), PInvoke.User32.WindowShowStyle.SW_MAXIMIZE);

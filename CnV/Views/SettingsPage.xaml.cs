@@ -886,7 +886,7 @@ namespace CnV
 		{
 			Hide();
 			await CnVSignin.SignOut();
-			AppS.window.Close();
+			AppS.Exit();
 		}
 		//private async void ChangeNameTapped(object sender, RoutedEventArgs e)
 		//{

@@ -2,7 +2,7 @@
 
 using System;
 
-using Windows.UI.Notifications;
+using Microsoft.UI.Notifications;
 
 namespace CnV.Services
 {

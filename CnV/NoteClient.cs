@@ -70,7 +70,7 @@ namespace CnV
 	//	static DateTime nextInAppNote = new DateTime(0);
 	//static MarkdownTextBlock markDownText;
 	//	static CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
-		internal static partial void Show(string s, Debug.Priority priority=Debug.Priority.medium, bool useInfoBar = false, int timeout = 5000, bool showDebugOutput=true, bool showNote=true)
+		internal static async partial void Show(string s, Debug.Priority priority=Debug.Priority.medium, bool useInfoBar = false, int timeout = 5000, bool showDebugOutput=true, bool showNote=true)
 		{
 			try
 			{
@@ -143,27 +143,28 @@ namespace CnV
 							try
 							{
 								//	var textBlock = markDownText;
-								if(ShellPage.instance.noteText.StartsWith(s))
+								if(ShellPage.instance.inAppNotes.Contains(s))
 								{
 									return;
 								}
-								else
-								{
-									ShellPage.instance.noteText =  s + "\n\n" + ShellPage.instance.noteText;
-
-								}
 								//var textNull = ShellPage.instance.noteText.Length == 0;
 								// update on screen
-								Debounce.Q(runOnUIThread: true,action: async () => 
-								ShellPage.instance.InAppNote.Text = ShellPage.instance.noteText,debounceT: 100);
-
-								Debounce.Q(debounceT: ((priority >= Debug.Priority.high) ? noteDelayHigh : noteDelay)*1000,
-									runOnUIThread: true,
-									action: () =>
+								AppS.DispatchOnUIThread( () =>
 								{
-									ShellPage.instance.noteText = string.Empty;
-									ShellPage.instance.InAppNote.Text = ShellPage.instance.noteText;
-									return Task.CompletedTask;
+									ShellPage.instance.inAppNotes.Add( s );
+								});
+								
+								await Task.Delay( noteDelay ).ConfigureAwait(false);
+								AppS.DispatchOnUIThread(() =>
+								{
+									try 
+									{ 
+										ShellPage.instance.inAppNotes.RemoveAt(0);
+									}
+									catch (Exception e)
+									{
+										LogEx(e);
+									}
 								});
 
 							}

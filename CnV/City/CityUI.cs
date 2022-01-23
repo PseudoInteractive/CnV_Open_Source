@@ -329,7 +329,7 @@ public static partial class CityUI
 	
 		var flyout = new MenuFlyout();
 		AddToFlyout(me,flyout, uie == MainPage.CityGrid || uie == BuildTab.CityGrid);
-		flyout.CopyXamlRootFrom(uie);
+		flyout.SetXamlRoot(uie);
 
 		//   flyout.XamlRoot = uie.XamlRoot;
 		flyout.ShowAt(uie, position);

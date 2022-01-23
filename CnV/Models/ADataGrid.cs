@@ -251,7 +251,7 @@ public static partial class ADataGrid
 		
 			grid.AlternationCount = 2;
 			grid.AllowTriStateSorting = true;
-			grid.FontStretch = Windows.UI.Text.FontStretch.Condensed;
+			grid.FontStretch = Microsoft.UI.Text.FontStretch.Condensed;
 			grid.ExpanderColumnWidth = 32;
 			if (tab is not null && grid.IsCityGrid())
 				grid.SelectionChanged += tab.SpotSelectionChanged;
@@ -265,9 +265,9 @@ public static partial class ADataGrid
 			//				grid.AllowFrozenGroupHeaders = false;
 			grid.ColumnWidthMode = Syncfusion.UI.Xaml.Grids.ColumnWidthMode.AutoLastColumnFill;
 			grid.CellToolTipOpening += UserTab.CellToolTipOpening;
-			if (sourceType is not null || grid.ItemsSource is not null)
-				grid.SourceType = sourceType ?? UserTab.GetContainerType(grid.ItemsSource);
-		//	grid.UseSystemFocusVisuals = true;
+			//if (sourceType is not null || grid.ItemsSource is not null)
+			//	grid.SourceType = sourceType ?? UserTab.GetContainerType(grid.ItemsSource);
+			grid.UseSystemFocusVisuals = true;
 			grid.ShowSortNumbers = true;
 			return _lock0;
 

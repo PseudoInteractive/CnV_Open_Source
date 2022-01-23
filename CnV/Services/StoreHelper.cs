@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 using Windows.Foundation;
 using Windows.Services.Store;
-using Windows.UI.Popups;
+//using Windows.UI.Popups;
 
 namespace CnV.Services
 {

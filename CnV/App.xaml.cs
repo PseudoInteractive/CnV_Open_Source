@@ -79,6 +79,8 @@ namespace CnV
 	using CnV;
 	using Game;
 	using Helpers;
+
+	using Microsoft.UI.Windowing;
 	using Microsoft.Xna.Framework.Input;
 	//// using PInvoke
 	using Services;
@@ -455,10 +457,11 @@ namespace CnV
 				//	Windows.UI.ViewManagement.ApplicationView.PreferredLaunchWindowingMode =Windows.UI.ViewManagement.ApplicationViewWindowingMode.Maximized;// new Size(bounds.Width, bounds.Height);
 				//				Windows.UI.ViewManagement.ApplicationView.GetForCurrentView().TryEnterViewModeAsync(Windows.UI.ViewManagement.ApplicationViewMode.CompactOverlay);
 
+				FocusVisualKind = FocusVisualKind.Reveal;
 
 				AppS.window = new();
 				//	window.
-				FocusVisualKind = FocusVisualKind.Reveal;
+
 
 
 				//var view = DisplayInformation.GetForCurrentView();
@@ -496,8 +499,16 @@ namespace CnV
 				//// Note the height of the Windows Taskbar is ignored here since the app will only be given the maxium available size.
 				//var scale = view.ResolutionScale == ResolutionScale.Invalid ? 1 : view.RawPixelsPerViewPixel;
 				//var bounds = new Size(resolution.Width / scale, resolution.Height / scale);
-				window.Title = "Conquest and Virtue Alpha";
-//				window.SetTitleBar
+
+				{
+					IntPtr hWnd = WinRT.Interop.WindowNative.GetWindowHandle(window);
+					WindowId myWndId = Microsoft.UI.Win32Interop.GetWindowIdFromWindow(hWnd);
+					AppS.appWindow= AppWindow.GetFromWindowId(myWndId);
+				}
+				AppS.appWindow.Title = "Conquest and Virtue Alpha";
+
+				//				
+				//				window.SetTitleBar
 				//ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.PreferredLaunchViewSize;
 				//		window.ExtendsContentIntoTitleBar = true;
 				//	window.ExtendsContentIntoTitleBar = true;

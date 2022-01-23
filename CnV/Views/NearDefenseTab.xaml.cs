@@ -265,7 +265,7 @@ namespace CnV.Views
             var text = sender as FrameworkElement;
             var stt = text.DataContext as SupportByTroopType;
             var flyout = new MenuFlyout();
-            flyout.CopyXamlRootFrom(text);
+            flyout.SetXamlRoot(text);
             AApp.AddItem(flyout, "Troops Home", (_, _) =>
             {
                 var supporter = stt.supporter;
@@ -294,7 +294,7 @@ namespace CnV.Views
             var text = sender as FrameworkElement;
             var supporter = text.DataContext as Supporter;
             var flyout = new MenuFlyout();
-            flyout.CopyXamlRootFrom(text);
+            flyout.SetXamlRoot(text);
             AApp.AddItem(flyout, "Troops Home", (_, _) =>
             {
 				supporter.tSend = supporter.city.troopsHome;
