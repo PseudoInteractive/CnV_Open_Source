@@ -4,7 +4,7 @@
 	      RequestedTheme="Dark"   
 	xmlns:Custom="using:CnV.Views"
 	xmlns:winui="using:Microsoft.UI.Xaml.Controls"
-
+	>
 	<Application.Resources>
 		<ResourceDictionary>
 			<ResourceDictionary.MergedDictionaries>

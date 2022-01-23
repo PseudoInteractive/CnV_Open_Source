@@ -251,7 +251,7 @@ public static partial class ADataGrid
 		
 			grid.AlternationCount = 2;
 			grid.AllowTriStateSorting = true;
-			grid.FontStretch = Microsoft.UI.Text.FontStretch.Condensed;
+			grid.FontStretch = Windows.UI.Text.FontStretch.Condensed;
 			grid.ExpanderColumnWidth = 32;
 			if (tab is not null && grid.IsCityGrid())
 				grid.SelectionChanged += tab.SpotSelectionChanged;

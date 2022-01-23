@@ -95,7 +95,10 @@ namespace CnV.Views
 		public static float     webZoomLast; // for lazy setting of HTML zoom
 		public static TextBlock gridTip;
 
-
+		int GridRowIndex( RowDefinition row, int offset  )
+		{
+			return grid.RowDefinitions.IndexOf(row)+offset;
+		}
 
 
 		//		public static ScrollViewer webView;
@@ -225,7 +228,7 @@ namespace CnV.Views
 
 		//public static bool _isHitTestVisible;
 		public static bool canvasVisible;
-		public static bool isFocused => isHitTestVisible && AppS.isForeground;
+		//public static bool isFocused => isHitTestVisible && AppS.isForeground;
 
 		private async void OnLoaded(object sender, RoutedEventArgs e)
 		{

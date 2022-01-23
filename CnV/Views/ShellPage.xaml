@@ -55,12 +55,12 @@
 				</Style>
 			</Grid.Resources>
 			<Grid.RowDefinitions>
-				<RowDefinition Height="40" />
+				<RowDefinition Height="40" x:Name="rowHeader" />
 				<RowDefinition />
 				<RowDefinition />
 				<RowDefinition />
 				<RowDefinition />
-				<RowDefinition Height="40"/>
+				<RowDefinition Height="40"  x:Name="rowFooter" />
 			</Grid.RowDefinitions>
 			<Grid.ColumnDefinitions>
 				<!-- 0 HTML column -->
@@ -260,7 +260,7 @@
 			                      Grid.Row="1" Grid.RowSpan="4"
 			                      BorderThickness="0"
 			                      IsTabStop="True"
-							
+									IsHitTestVisible="False"
 					
 			                      Margin="0,95,0,0"
 			                      Canvas.ZIndex="12" />
@@ -341,13 +341,22 @@
 					</tk:GridSplitter.Element>
 				</tk:GridSplitter>
 			</Grid>
-
-			<ListView x:Name="InAppNote" x:FieldModifier="public" Margin="2" Padding="2"  Canvas.ZIndex="35"
-                   ItemsSource="{x:Bind inAppNotes,Mode=OneWay}" Grid.Column="1" Grid.Row="1" Background="Transparent"  >
+			<Expander IsExpanded="True" Header="Info"  Grid.Column="2" 
+					  VerticalAlignment="Bottom"
+					  FontSize="{StaticResource MediumFontSize}"
+		              FontFamily="Bahnschrift"
+					  Grid.Row="{x:Bind GridRowIndex(rowFooter,-2)}"
+					  Grid.RowSpan="2" 
+					  ExpandDirection="Up"
+					  Canvas.ZIndex="35"   >
+			<ListView x:Name="InAppNote" x:FieldModifier="public"  
+                   ItemsSource="{x:Bind inAppNotes,Mode=OneWay}" MaxWidth="400" MaxHeight="300"  >
 				<ListView.ItemTemplate>
 					<DataTemplate  x:DataType="x:String"  >
-						<tk:MarkdownTextBlock Grid.Column="3" x:Name="message" Text="{x:Bind (x:String) , Mode=OneTime}"  FontSize="{StaticResource ChatFontSize}" Margin="0,0,0,0"  Padding="0,0,0,0"    
-                                              x:Phase="1" VerticalAlignment="Center" TableCellPadding="0,0,0,0" IsTextSelectionEnabled="True"
+						<tk:MarkdownTextBlock  x:Name="message" Text="{x:Bind (x:String), Mode=OneTime}"  Margin="0,0,0,0"  Padding="0,0,0,0"    
+                                              VerticalAlignment="Center"  IsTextSelectionEnabled="True"
+											  FontSize="{StaticResource MediumFontSize}"
+											 FontFamily="Bahnschrift"
                                               TextWrapping="Wrap" LinkClicked="{x:Bind cnv:Note.MarkDownLinkClicked}"  Background="Transparent"  />
 
 				</DataTemplate>
@@ -365,14 +374,15 @@
 				<ListView.ItemContainerStyle>
 					<Style TargetType="ListViewItem">
 						<Setter Property="HorizontalContentAlignment" Value="Stretch"/>
-						<Setter Property="Padding" Value="4,1,1,2" />
+						<Setter Property="Margin" Value="1" />
+						<Setter Property="Padding" Value="0" />
 						<Setter Property="VerticalAlignment" Value="Center"/>
 						<Setter Property="VerticalContentAlignment" Value="Center"/>
 						<Setter Property="Background" Value="#48004000"/>
 					</Style>
 				</ListView.ItemContainerStyle>
 			</ListView>
-						
+			</Expander>
 
 			<!--<winui:InfoBar x:Name="infoBar"
                                   Grid.Row="1"

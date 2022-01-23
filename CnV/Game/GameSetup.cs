@@ -101,8 +101,8 @@ namespace CnV
 				//CnVChatClient.CnVChatClient.Setup();
 				ShellPage.CityListNotifyChange(true);
 				ShellPage.RefreshTabs.Go();
-				ShellPage.canvasVisible = true;
-			//   ShellPage.isHitTestVisible = true;
+			//	ShellPage.canvasVisible = true;
+			   
 			///                   await GetCitylistOverview();
 			
 			//if (TipsSeen.instance.refresh == false
@@ -160,9 +160,9 @@ namespace CnV
 			//	senInfoTask        = new( interval: 68f, City.UpdateSenatorInfo, 3.0f);
 				CnVServer.isInitialized      = true;
 
-			
-	
-		}
+				AppS.DispatchOnUIThread( ShellPage.SetupNonCoreInput );
+
+			}
 		catch(Exception ex)
 		{
 			LogEx(ex);

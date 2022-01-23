@@ -59,53 +59,53 @@ namespace CnV.Views
 	//	public static DispatcherQueueController _queuecontroller;
 ///ivate static InputPointerSource _inputPointerSource;
 
-		public static void SetupCoreInput()
-		{
+	//	public static void SetupCoreInput()
+	//	{
 
-			//	var workItemHandler = new WorkItemHandler((action) =>
-			//{
+	//		//	var workItemHandler = new WorkItemHandler((action) =>
+	//		//{
 
-			try
-			{
-
-
-	//			AppS.DispatchOnUIThread(  () =>
-				   {
-					   try
-					   {
-							// Set up the pointer input source to receive pen input for the swap chain panel.
-							coreInputSource = canvas.CreateCoreIndependentInputSource(InputPointerSourceDeviceKinds.Mouse | InputPointerSourceDeviceKinds.Pen|InputPointerSourceDeviceKinds.Touch);
+	//		try
+	//		{
 
 
-							//	Log(canvas.ManipulationMode);
-							//	canvas.ManipulationMode = ManipulationModes.All;
-							coreInputSource.PointerMoved+=CoreInputSource_PointerMoved;
-						   coreInputSource.PointerPressed+=CoreInputSource_PointerPressed; ;
-						   coreInputSource.PointerReleased+=CoreInputSource_PointerReleased; ;
-						   coreInputSource.PointerEntered+=CoreInputSource_PointerEntered; ;
-						   coreInputSource.PointerExited+=CoreInputSource_PointerExited; ;
-						   coreInputSource.PointerCaptureLost += CoreInputSource_PointerCaptureLost;
-
-						   coreInputSource.PointerWheelChanged += Canvas_PointerWheelChanged;
+	////			AppS.DispatchOnUIThread(  () =>
+	//			   {
+	//				   try
+	//				   {
+	//						// Set up the pointer input source to receive pen input for the swap chain panel.
+	//						coreInputSource = canvas.CreateCoreIndependentInputSource(InputPointerSourceDeviceKinds.Mouse | InputPointerSourceDeviceKinds.Pen|InputPointerSourceDeviceKinds.Touch);
 
 
-					   }
-					   catch(Exception __ex)
-					   {
-						   Debug.LogEx(__ex);
-					   }
+	//						//	Log(canvas.ManipulationMode);
+	//						//	canvas.ManipulationMode = ManipulationModes.All;
+	//						coreInputSource.PointerMoved+=CoreInputSource_PointerMoved;
+	//					   coreInputSource.PointerPressed+=CoreInputSource_PointerPressed; ;
+	//					   coreInputSource.PointerReleased+=CoreInputSource_PointerReleased; ;
+	//					   coreInputSource.PointerEntered+=CoreInputSource_PointerEntered; ;
+	//					   coreInputSource.PointerExited+=CoreInputSource_PointerExited; ;
+	//					   coreInputSource.PointerCaptureLost += CoreInputSource_PointerCaptureLost;
+
+	//					   coreInputSource.PointerWheelChanged += Canvas_PointerWheelChanged;
 
 
-				   }
-			//	);
-			}
-					catch(Exception __ex)
-			{
-				Debug.LogEx(__ex);
-			}
+	//				   }
+	//				   catch(Exception __ex)
+	//				   {
+	//					   Debug.LogEx(__ex);
+	//				   }
+
+
+	//			   }
+	//		//	);
+	//		}
+	//				catch(Exception __ex)
+	//		{
+	//			Debug.LogEx(__ex);
+	//		}
 				
 				
-		}
+	//	}
 		//		catch(Exception ex)
 		//		{
 		//			Log(ex);
@@ -132,29 +132,29 @@ namespace CnV.Views
 			Canvas_PointerEntered(args.CurrentPoint.Position);
 		}
 
-		private static void CoreInputSource_PointerReleased(InputPointerSource sender,PointerEventArgs args)
-		{
-			args.KeyModifiers.UpdateKeyModifiers();
+		//private static void CoreInputSource_PointerReleased(InputPointerSource sender,PointerEventArgs args)
+		//{
+		//	args.KeyModifiers.UpdateKeyModifiers();
 
-			var point = args.CurrentPoint;
-			Canvas_PointerReleased((point.Position, point.PointerId, point.IsInContact, point.Timestamp, point.Properties.PointerUpdateKind), args.KeyModifiers);
+		//	var point = args.CurrentPoint;
+		//	Canvas_PointerReleased((point.Position, point.PointerId, point.IsInContact, point.Timestamp, point.Properties.PointerUpdateKind), args.KeyModifiers);
 
-		}
+		//}
 //		public static PointerUpdateKind GetPointerUpdateKind()
-		private static void CoreInputSource_PointerPressed(InputPointerSource sender,PointerEventArgs args)
-		{
-			var point = args.CurrentPoint;
-			args.KeyModifiers.UpdateKeyModifiers();
-			Canvas_PointerPressed((point.Position, point.PointerId, point.IsInContact, point.Timestamp, point.Properties.PointerUpdateKind));
+		//private static void CoreInputSource_PointerPressed(InputPointerSource sender,PointerEventArgs args)
+		//{
+		//	var point = args.CurrentPoint;
+		//	args.KeyModifiers.UpdateKeyModifiers();
+		//	Canvas_PointerPressed((point.Position, point.PointerId, point.IsInContact, point.Timestamp, point.Properties.PointerUpdateKind));
 
-		}
+		//}
 
-		public static void CoreInputSource_PointerMoved(InputPointerSource sender, PointerEventArgs e)
-		{
-			var point = e.CurrentPoint;
-			e.KeyModifiers.UpdateKeyModifiers();
-			Canvas_PointerMoved((point.Position,point.PointerId,point.IsInContact,point.Timestamp,point.Properties.PointerUpdateKind));
-		}
+		//public static void CoreInputSource_PointerMoved(InputPointerSource sender, PointerEventArgs e)
+		//{
+		//	var point = e.CurrentPoint;
+		//	e.KeyModifiers.UpdateKeyModifiers();
+		//	Canvas_PointerMoved((point.Position,point.PointerId,point.IsInContact,point.Timestamp,point.Properties.PointerUpdateKind));
+		//}
 
 		public static void SetupNonCoreInput()
 		{
@@ -165,6 +165,7 @@ namespace CnV.Views
 			canvas.PointerReleased+=KeyboardProxy_PointerReleased;
 			canvas.PointerEntered+=KeyboardProxy_PointerEntered;
 			canvas.PointerExited +=KeyboardProxy_PointerExited;
+			canvas.IsHitTestVisible = true;
 		}
 
 		private static void KeyboardProxy_PointerExited(object sender,PointerRoutedEventArgs e)
@@ -612,8 +613,8 @@ namespace CnV.Views
 			
 			keyModifiers.UpdateKeyModifiers(); 
 			UpdateMousePosition(point.Position);
-			if(!isFocused)
-				return;
+		//	if(!isFocused)
+		//		return;
 			
 			//if (CnVServer.IsCityView())
 			//{
@@ -815,8 +816,8 @@ namespace CnV.Views
 												//	return;
 												//}
 
-			if(!isFocused)
-				return;
+		//	if(!isFocused)
+		//		return;
 		
 			Assert(isOverPopup == false);
 			//            canvas.CapturePointer(e.Pointer);
@@ -998,8 +999,8 @@ namespace CnV.Views
 																			bool IsInContact, ulong Timestamp, PointerUpdateKind PointerUpdateKind) point)
 		{
 			
-		if(!mouseOverCanvas)
-			Log("Mouse Moved Canvas");
+			if(!mouseOverCanvas)
+				Log("Mouse Moved Canvas");
 		//	App.cursorDefault.Set();
 			 // prevent idle timer;
 			mouseOverCanvas = true;		
@@ -1010,8 +1011,8 @@ namespace CnV.Views
 			UpdateMousePosition(point.Position);
 		//	TakeFocusIfAppropriate();
 			UpdateFocus();
-			if (!isFocused)
-				return;
+		//	if (!isFocused)
+		//		return;
 		//	var priorMouseC = mousePosition;
 			var gestureResult = Gesture.ProcessMoved(point);
 			if (gestureResult.action == GestureAction.none)

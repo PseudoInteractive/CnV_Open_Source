@@ -325,7 +325,7 @@ namespace CnV.Views
 			//canvasHitTest.Stretch = Stretch.Fill;
 			//  SetupCoreInput();
 			canvas.CompositionScaleChanged += Canvas_CompositionScaleChanged;
-			SetupNonCoreInput();
+			
 			
 		///	SetupCoreInput();
 			return (canvas, null);

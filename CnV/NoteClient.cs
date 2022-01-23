@@ -143,10 +143,10 @@ namespace CnV
 							try
 							{
 								//	var textBlock = markDownText;
-								if(ShellPage.instance.inAppNotes.Contains(s))
-								{
-									return;
-								}
+								//if(ShellPage.instance.inAppNotes.Contains(s))
+								//{
+								//	return;
+								//}
 								//var textNull = ShellPage.instance.noteText.Length == 0;
 								// update on screen
 								AppS.DispatchOnUIThread( () =>
@@ -154,18 +154,18 @@ namespace CnV
 									ShellPage.instance.inAppNotes.Add( s );
 								});
 								
-								await Task.Delay( noteDelay ).ConfigureAwait(false);
-								AppS.DispatchOnUIThread(() =>
-								{
-									try 
-									{ 
-										ShellPage.instance.inAppNotes.RemoveAt(0);
-									}
-									catch (Exception e)
-									{
-										LogEx(e);
-									}
-								});
+								//await Task.Delay( noteDelay ).ConfigureAwait(false);
+								//AppS.DispatchOnUIThread(() =>
+								//{
+								//	try 
+								//	{ 
+								//		ShellPage.instance.inAppNotes.RemoveAt(0);
+								//	}
+								//	catch (Exception e)
+								//	{
+								//		LogEx(e);
+								//	}
+								//});
 
 							}
 							catch(Exception __ex)
