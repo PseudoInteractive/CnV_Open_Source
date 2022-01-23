@@ -431,7 +431,7 @@ internal partial class GameClient
 						// 2 == features
 						foreach(var layer in td.layers)
 						{
-							var isBonus = Object.ReferenceEquals(layer, JsonLayer.bonus);
+							var isBonus = Object.ReferenceEquals(layer, TileLayer.bonus);
 							if(!wantDetails && !isBonus)
 								continue;
 
@@ -453,8 +453,8 @@ internal partial class GameClient
 									{
 										//    var imageId = ((uint)layerData & 0xffffu);
 										//     layerData >>= 16;
-										var tileId = imageId >> 13;
-										var off = imageId & ((1 << 13) - 1);
+										var tileId = TileLayer.TilesetId(imageId);
+										var off = TileLayer.ImageId(imageId);
 										var tile = td.tilesets[tileId];
 
 										if(tile.material == null)
@@ -469,7 +469,7 @@ internal partial class GameClient
 											var _tint = (isShadow == 1 && wantParallax) ? tintShadow : !tile.isBase ? World.GetTint(ccid) : tint;
 											if(!isBonus && isShadow == 0 && !tile.isBase)
 												_tint.A = intAlpha; ;
-											if(wantCity && cid == City.build && layer.id > 1)
+											if(wantCity && cid == City.build && layer.id > TileLayer.Id.land)
 											{
 												if(cityAlphaI >= 255)
 													continue;
@@ -504,7 +504,7 @@ internal partial class GameClient
 											var uv0 = new System.Numerics.Vector2((sx) * tile.scaleXToU + tile.halfTexelU, (sy) * tile.scaleYToV + tile.halfTexelV);
 											var uv1 = new System.Numerics.Vector2((sx + 1) * tile.scaleXToU + tile.halfTexelU, (sy + 1) * tile.scaleYToV - tile.halfTexelV);
 
-											draw.AddQuad((isShadow == 1) ? Layer.tileShadow : tile.isBase ? Layer.tileBase + layer.id : Layer.tiles + layer.id,
+											draw.AddQuad((isShadow == 1) ? Layer.tileShadow : (tile.isBase ? Layer.tileBase: Layer.tiles) + ((int)layer.id+1),
 												(isShadow == 1 ? tile.shadowMaterial : tile.material), cc0, cc1,
 												uv0,
 												uv1, _tint,
@@ -1933,8 +1933,7 @@ internal partial class GameClient
 					try
 					{
 						CnV.Debug.LogEx(sex, report: false);
-						CnV.Debug
-							.Log($"{sex.ResultCode} {sex.Descriptor.ApiCode} {sex.Descriptor.Description} {sex.Descriptor.ToString()} ");
+						CnV.Debug.Log($"{sex.ResultCode} {sex.Descriptor.ApiCode} {sex.Descriptor.Description} {sex.Descriptor.ToString()} ");
 						Faulted();
 
 					}

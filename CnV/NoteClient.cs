@@ -74,13 +74,13 @@ namespace CnV
 		{
 			try
 			{
-				if(showDebugOutput)
-				{
-					AppS.DispatchOnUIThreadLow(() =>
-					{
-						ChatTab.L(s);
-					});
-				}
+				//if(showDebugOutput)
+				//{
+				//	AppS.DispatchOnUIThreadLow(() =>
+				//	{
+				//		ChatTab.L(s);
+				//	});
+				//}
 
 				if(showNote && ShellPage.instance != null)
 				{
@@ -151,21 +151,24 @@ namespace CnV
 								// update on screen
 								AppS.DispatchOnUIThread( () =>
 								{
-									ShellPage.instance.inAppNotes.Add( s );
+									ShellPage.instance.inAppNotes.Add( CnVServer.ServerTime().ToString("HH':'mm':'ss") + "\t" + s );
 								});
-								
-								//await Task.Delay( noteDelay ).ConfigureAwait(false);
-								//AppS.DispatchOnUIThread(() =>
+								//if(noteDelay < 30 )
 								//{
-								//	try 
-								//	{ 
-								//		ShellPage.instance.inAppNotes.RemoveAt(0);
-								//	}
-								//	catch (Exception e)
+								//	await Task.Delay(noteDelay*1000).ConfigureAwait(false);
+								//	AppS.DispatchOnUIThread(() =>
 								//	{
-								//		LogEx(e);
-								//	}
-								//});
+								//		try
+								//		{
+								//			ShellPage.instance.inAppNotes.RemoveAt(0);
+								//		}
+								//		catch(Exception e)
+								//		{
+								//			LogEx(e);
+								//		}
+								//	});
+
+								//}
 
 							}
 							catch(Exception __ex)

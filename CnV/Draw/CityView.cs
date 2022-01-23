@@ -171,7 +171,7 @@ namespace CnV
 
 						var dt = (animationT - animationOffsets[bspot]);
 						float blendT = ((dt)*0.333f).Frac();
-						var bonus = (dt).Abs().Saturate().Bezier(0,1,0,0);
+						var bonus = (dt*0.5f).Abs().Saturate().Bezier(1,0,0);
 
 						if(cur.id==next.id || ((next.bl==cur.bl)&&(!cur.isRes)))
 						{

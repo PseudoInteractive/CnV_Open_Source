@@ -341,23 +341,31 @@
 					</tk:GridSplitter.Element>
 				</tk:GridSplitter>
 			</Grid>
-			<Expander IsExpanded="True" Header="Info"  Grid.Column="2" 
+			<Expander IsExpanded="True"   Grid.Column="2" 
 					  VerticalAlignment="Bottom"
 					  FontSize="{StaticResource MediumFontSize}"
 		              FontFamily="Bahnschrift"
 					  Grid.Row="{x:Bind GridRowIndex(rowFooter,-2)}"
 					  Grid.RowSpan="2" 
+					  
 					  ExpandDirection="Up"
 					  Canvas.ZIndex="35"   >
-			<ListView x:Name="InAppNote" x:FieldModifier="public"  
-                   ItemsSource="{x:Bind inAppNotes,Mode=OneWay}" MaxWidth="400" MaxHeight="300"  >
+				<Expander.Header>
+					<Grid Background="#58300000">
+					<TextBlock Text="Info" FontSize="{StaticResource MediumFontSize}"
+		              FontFamily="Bahnschrift" VerticalAlignment="Center" HorizontalAlignment="Center" />
+					</Grid>
+				</Expander.Header>
+				<ListView x:Name="InAppNote" x:FieldModifier="public"  
+                   ItemsSource="{x:Bind inAppNotes,Mode=OneWay}" MaxWidth="300" MaxHeight="200"  >
 				<ListView.ItemTemplate>
 					<DataTemplate  x:DataType="x:String"  >
-						<tk:MarkdownTextBlock  x:Name="message" Text="{x:Bind (x:String), Mode=OneTime}"  Margin="0,0,0,0"  Padding="0,0,0,0"    
-                                              VerticalAlignment="Center"  IsTextSelectionEnabled="True"
+						<tk:MarkdownTextBlock  x:Name="message" Text="{x:Bind (x:String), Mode=OneTime}"  Margin="8,0"  Padding="0,0,0,0"    
+                                               IsTextSelectionEnabled="True"
 											  FontSize="{StaticResource MediumFontSize}"
 											 FontFamily="Bahnschrift"
-                                              TextWrapping="Wrap" LinkClicked="{x:Bind cnv:Note.MarkDownLinkClicked}"  Background="Transparent"  />
+                                              TextWrapping="Wrap" 
+											   LinkClicked="{x:Bind cnv:Note.MarkDownLinkClicked}"  Background="Transparent"  />
 
 				</DataTemplate>
 				</ListView.ItemTemplate>
@@ -373,12 +381,11 @@
 				<!-- This setter property is created so ListViewItems correctly align to the left or right. -->
 				<ListView.ItemContainerStyle>
 					<Style TargetType="ListViewItem">
-						<Setter Property="HorizontalContentAlignment" Value="Stretch"/>
 						<Setter Property="Margin" Value="1" />
 						<Setter Property="Padding" Value="0" />
 						<Setter Property="VerticalAlignment" Value="Center"/>
 						<Setter Property="VerticalContentAlignment" Value="Center"/>
-						<Setter Property="Background" Value="#48004000"/>
+						<Setter Property="Background" Value="#58003000"/>
 					</Style>
 				</ListView.ItemContainerStyle>
 			</ListView>
