@@ -678,31 +678,31 @@ namespace CnV
 		//	}
 		//	this.Hide();
 		//}
-		private async void ShrineFinder(object sender, RoutedEventArgs e)
-		{
-			var cont = (int)CastlesCont.Value;
-			this.Hide();
+		//private async void ShrineFinder(object sender, RoutedEventArgs e)
+		//{
+		//	var cont = (int)CastlesCont.Value;
+		//	this.Hide();
 
-			var cy = cont / 10;
-			var cx = cont - cy * 10;
-			int x0 = cx * 100, y0 = cy * 100, x1 = (cx + 1) * 100, y1 = (cy + 1) * 100;
-			using (new WorkScope("Shrine Finder"))
-				for (int x = x0; x < x1; ++x)
-				{
-					ShellPage.WorkUpdate($"Shrine Finder {cont}:  {x - x0}%");
-					for (int y = y0; y < y1; ++y)
-					{
-						if (TileData.instance.GetSpotType(x, y).type == TileData.SpotType.plain)
-						{
-							var cityId = (x, y).WorldToCid();
-							await AppS.DispatchOnUIThreadTask( async () =>
-							  await CnVServer.ExecuteScriptAsync("gStQuery", (cityId) )
-							  );
-							await Task.Delay(100);
-						}
-					}
-				}
-		}
+		//	var cy = cont / 10;
+		//	var cx = cont - cy * 10;
+		//	int x0 = cx * 100, y0 = cy * 100, x1 = (cx + 1) * 100, y1 = (cy + 1) * 100;
+		//	using (new WorkScope("Shrine Finder"))
+		//		for (int x = x0; x < x1; ++x)
+		//		{
+		//			ShellPage.WorkUpdate($"Shrine Finder {cont}:  {x - x0}%");
+		//			for (int y = y0; y < y1; ++y)
+		//			{
+		//				if (TileData.instance.GetSpotType(x, y).type == TileData.TileType.plain)
+		//				{
+		//					var cityId = (x, y).WorldToCid();
+		//					await AppS.DispatchOnUIThreadTask( async () =>
+		//					  await CnVServer.ExecuteScriptAsync("gStQuery", (cityId) )
+		//					  );
+		//					await Task.Delay(100);
+		//				}
+		//			}
+		//		}
+		//}
 
 		private async void WatchIncomingForPlayers(object sender, RoutedEventArgs e)
 		{

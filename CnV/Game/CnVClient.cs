@@ -183,7 +183,7 @@ namespace CnV
 						foreach(var pset in a.EnumerateObject())
 						{
 							var ps = new WorldViewSettings.AllianceSetting();
-							ps.pid = pset.Value.GetAsInt("a");
+							ps.pid = pset.Value.GetAsUShort("a");
 							ps.color = pset.Value.GetColor("c");
 							ps.isOn = pset.Value.GetAsInt("d") == 1;
 

@@ -44,13 +44,12 @@ namespace CnV
 				CnVServer.gameTOffsetSeconds = CnVServer.gameTOffset.TotalSeconds.RoundToInt();
 				Player.myIds.Add(Player.myId);
 
-				var t0 = Task.Run(World.LoadWorldData);
 				var t1 = Task.Run(() => TileData.Ctor(false));
 				Alliance.Ctor();
 				CityCustom.Load();
 				BuildQueue.Initialize();
-				await t0.ConfigureAwait(false);
 				await t1.ConfigureAwait(false);
+				await World.LoadWorldData().ConfigureAwait(false);
 
 
 				//	var str = timeOffsetSecondsRounded >= 0 ? " +" : " ";

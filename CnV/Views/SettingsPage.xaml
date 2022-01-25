@@ -150,23 +150,7 @@
 			<wct:WrapPanel Orientation="Horizontal"
 						   Margin="4">
 
-				<Button Content="Shrine Finder"
-						Style="{ThemeResource ButtonRevealStyle}"
-						Margin="4">
-					<Button.Flyout>
-						<Flyout ShowMode="TransientWithDismissOnPointerMoveAway" >
-							<StackPanel Orientation="Vertical">
-								<controls:NumberBox x:Name="CastlesCont"
-									NumberFormatter="{x:Bind cnv:App.formatterInt,Mode=OneTime}"
-									Style="{StaticResource NumberBoxSmall}"
-									Header="Continent"
-									PlaceholderText="i.e. 22 34"
-									Value="22" />
-								<Button Content="Go" Click="{x:Bind ShrineFinder}" />
-							</StackPanel>
-						</Flyout>
-					</Button.Flyout>
-				</Button>
+				
 				<Button Content="Export for War"
 						Click="{x:Bind views:ExportCastles.Go}"
 						ToolTipService.ToolTip="Exports cities/castles to the clipboard in a spreadsheet format based on filters"

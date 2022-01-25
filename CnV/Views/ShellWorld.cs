@@ -1073,10 +1073,12 @@ namespace CnV.Views
 							Spot.viewHover = 0;
 							Player.viewHover = 0;
 							toolTip = null;
+							
+
 
 							lastCanvasC = cid;
 							var packedId = World.GetWorldId(c);
-							var data = World.GetInfoFromWorldId(World.rawPrior1!=null? World.rawPrior1 : World.raw, packedId);
+							var data = World.GetInfoFromWorldId(World.rawPrior1!=null? World.rawPrior1 : World.tileData, packedId);
 							switch (data.type)
 							{
 								case World.typeCity:
@@ -1297,8 +1299,15 @@ namespace CnV.Views
 									}
 								}
 							}
-							var info = TileData.instance.GetSpotType(c.x, c.y);
-							toolTip += $"({info.type} Water{info.touchesWater}";
+							{ 
+							 StringBuilder sb = new(toolTip);
+							var info = TileData.instance.GetSpotinfo(c.x, c.y, sb);
+							Assert( data.type == (int)info.type );
+							if(data.isWater)
+								Assert(info.touchesWater);
+
+								toolTip = sb.ToString();
+							}
 						}
 					}
 				}
