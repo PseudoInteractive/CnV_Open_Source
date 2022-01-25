@@ -455,7 +455,7 @@ internal partial class GameClient
 										//     layerData >>= 16;
 										var tileId = TileLayer.TilesetId(imageId);
 										var off = TileLayer.ImageId(imageId);
-										var tile = td.tilesets[tileId];
+										var tile = td.tilesets[(int)tileId];
 
 										if(tile.material == null)
 											continue;

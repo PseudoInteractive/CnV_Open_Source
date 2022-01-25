@@ -1297,6 +1297,8 @@ namespace CnV.Views
 									}
 								}
 							}
+							var info = TileData.instance.GetSpotType(c.x, c.y);
+							toolTip += $"({info.type} Water{info.touchesWater}";
 						}
 					}
 				}
