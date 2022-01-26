@@ -19,13 +19,17 @@ namespace CnV
 {
 	using System.Diagnostics;
 	using System.Threading;
-	using Microsoft.Extensions.Hosting;
 	using Microsoft.UI.Dispatching;
 	using Microsoft.UI.Xaml;
 
 	public static class Program
 	{
-		[global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.UI.Xaml.Markup.Compiler"," 0.0.0.0")]
+#if DISABLE_XAML_GENERATED_MAIN
+
+		[global::System.Runtime.InteropServices.DllImport("Microsoft.ui.xaml.dll")]
+		private static extern void XamlCheckProcessRequirements();
+
+		[global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.UI.Xaml.Markup.Compiler"," 1.0.0.0")]
 		[STAThread]
 		static void Main(string[] args)
 		{
@@ -53,7 +57,8 @@ namespace CnV
 			}
 		}
 
-	
+#endif
+
 		//public static IHostBuilder CreateHostBuilder(string[] args) =>
 		//	Host.CreateDefaultBuilder(args)
 		//		.ConfigureServices((hostContext,services) =>

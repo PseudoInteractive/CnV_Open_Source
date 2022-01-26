@@ -34,7 +34,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Windows.Input;
+//using System.Windows.Input;
 //using Microsoft.AppCenter;
 //using Microsoft.AppCenter.Analytics;
 //using Microsoft.AppCenter.Crashes;
@@ -457,7 +457,7 @@ namespace CnV
 				//	Windows.UI.ViewManagement.ApplicationView.PreferredLaunchWindowingMode =Windows.UI.ViewManagement.ApplicationViewWindowingMode.Maximized;// new Size(bounds.Width, bounds.Height);
 				//				Windows.UI.ViewManagement.ApplicationView.GetForCurrentView().TryEnterViewModeAsync(Windows.UI.ViewManagement.ApplicationViewMode.CompactOverlay);
 
-				FocusVisualKind = FocusVisualKind.Reveal;
+				//FocusVisualKind = FocusVisualKind.Reveal;
 
 				AppS.window = new();
 				//	window.
@@ -1166,7 +1166,7 @@ namespace CnV
 				rv.Click += (_, _) => command();
 			return rv;
 		}
-		public static MenuFlyoutItem CreateMenuItem(string text, ICommand command, object parameter, object context = null)
+		public static MenuFlyoutItem CreateMenuItem(string text, System.Windows.Input.ICommand command, object parameter, object context = null)
 		{
 			return new MenuFlyoutItem() { Text = text, Command = command, CommandParameter = parameter, DataContext = context };
 		}

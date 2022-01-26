@@ -1147,6 +1147,7 @@ namespace CnV.Views
 		private void ForwardRightTapped(object sender, RightTappedRoutedEventArgs e)
 		{
 			var  menu = new MenuFlyout();
+			menu.SetXamlRoot();
 			bool any  = false;
 			for (int i = 1; i < 25; ++i)
 			{
@@ -1457,6 +1458,7 @@ namespace CnV.Views
 		{
 			//			var height = new( chatGrid.RowDefinitions[0].Height.Value switch { 1=>2,2=>3,3=>4,4=>5,_=>1});
 			var flyout = new MenuFlyout();
+			flyout.SetXamlRoot();
 			flyout.AddItem("Tall", () =>
 									{
 										chatGrid.RowDefinitions[0].Height = new GridLength(1, GridUnitType.Star);

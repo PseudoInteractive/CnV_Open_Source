@@ -199,7 +199,7 @@ public static partial class CityUI
 		}
 		else if (me.isEmpty && DGame.isValidForIncomingNotes)
 		{
-			AApp.AddItem(flyout, "Claim", (_,_)=> CityUI.DiscordClaim(cid) );
+			AApp.AddItem(flyout, "Claim", (_,_)=> CityUI.DiscordClaim(WorldC.FromCid(cid) ) );
 
 		}
 
@@ -236,7 +236,7 @@ public static partial class CityUI
 
 		public static void DecayQuery(WorldC cid)
 	{
-		CnVServer.gStCB(cid, DecayQueryCB, AMath.random.Next());
+		CnVServer.gStCB(cid.cid, DecayQueryCB, AMath.random.Next());
 	}
 
 	public static void ScrollMeIntoView(this City city) => ScrollIntoView(city.cid);

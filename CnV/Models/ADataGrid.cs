@@ -258,6 +258,7 @@ public static partial class ADataGrid
 			grid.FontSize = Settings.smallFontSize;
 			grid.GridContextFlyoutOpening += UserTab.ContextFlyoutOpening;
 			grid.RecordContextFlyout = new();
+			grid.RecordContextFlyout.SetXamlRoot(grid);
 			grid.CurrentCellRequestNavigate += UserTab.CelNavigate;
 			grid.CellTapped += ADataGrid.SfCellTapped;
 			grid.AllowGrouping = true;
@@ -267,7 +268,7 @@ public static partial class ADataGrid
 			grid.CellToolTipOpening += UserTab.CellToolTipOpening;
 			//if (sourceType is not null || grid.ItemsSource is not null)
 			//	grid.SourceType = sourceType ?? UserTab.GetContainerType(grid.ItemsSource);
-			grid.UseSystemFocusVisuals = true;
+			//grid.UseSystemFocusVisuals = true;
 			grid.ShowSortNumbers = true;
 			return _lock0;
 
