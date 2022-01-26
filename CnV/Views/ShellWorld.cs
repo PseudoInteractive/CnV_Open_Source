@@ -1302,10 +1302,9 @@ namespace CnV.Views
 							{ 
 							 StringBuilder sb = new(toolTip);
 							var info = TileData.instance.GetSpotinfo(c.x, c.y, sb);
+							sb.Append($"\nOnWater:{data.isOnWater}");
 							Assert( data.type == (int)info.type );
-							if(data.isWater)
-								Assert(info.touchesWater);
-
+	
 								toolTip = sb.ToString();
 							}
 						}

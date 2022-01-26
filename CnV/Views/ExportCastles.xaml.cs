@@ -137,7 +137,7 @@ namespace CnV.Views
 								   continue;
 							  if (onlyTemples && !wi.isTemple)
 								  continue;
-							  if ( water !=0 && water != (wi.isWater? 1: 2) )
+							  if ( water !=0 && water != (wi.isOnWater? 1: 2) )
 								  continue;
 
 							   var s = Spot.GetOrAdd(cid);
