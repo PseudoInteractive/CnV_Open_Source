@@ -12,6 +12,7 @@
   </ItemGroup>
   <PropertyGroup>
     <WapProjPath Condition="'$(WapProjPath)'==''">$(MSBuildExtensionsPath)\Microsoft\DesktopBridge\</WapProjPath>
+    <PathToXAMLWinRTImplementations>CnV\</PathToXAMLWinRTImplementations>
   </PropertyGroup>
   <Import Project="$(WapProjPath)\Microsoft.DesktopBridge.props" />
   <PropertyGroup>
@@ -32,9 +33,8 @@
     <HoursBetweenUpdateChecks>0</HoursBetweenUpdateChecks>
     <AppxSymbolPackageEnabled>False</AppxSymbolPackageEnabled>
     <PackageCertificateKeyFile>CnVPackage_TemporaryKey.pfx</PackageCertificateKeyFile>
-      <AssetTargetFallback>net6.0-windows$(TargetPlatformVersion);$(AssetTargetFallback)</AssetTargetFallback>
-
-	  <EntryPointProjectUniqueName>..\CnV\CnV.csproj</EntryPointProjectUniqueName>
+    <AssetTargetFallback>net6.0-windows$(TargetPlatformVersion);$(AssetTargetFallback)</AssetTargetFallback>
+    <EntryPointProjectUniqueName>..\CnV\CnV.csproj</EntryPointProjectUniqueName>
     <PackageCertificateThumbprint>92945405680979BF599EF0E34C0565F1CD911791</PackageCertificateThumbprint>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -87,12 +87,18 @@
     <Content Include="Package.StoreAssociation.xml" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.0.0">
-      <IncludeAssets>build</IncludeAssets>
-    </PackageReference>
+    <ProjectReference Include="..\CnV\CnV.csproj">
+      <SkipGetTargetFrameworkProperties>True</SkipGetTargetFrameworkProperties>
+      <PublishProfile>Properties\PublishProfiles\win10-$(Platform).pubxml</PublishProfile>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\CnV\CnV.csproj" />
+    <PackageReference Include="Microsoft.WindowsAppSDK" Version="[1.0.0]">
+      <IncludeAssets>build</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.22538-preview">
+      <IncludeAssets>build</IncludeAssets>
+    </PackageReference>
   </ItemGroup>
   <Import Project="$(WapProjPath)\Microsoft.DesktopBridge.targets" />
 </Project>

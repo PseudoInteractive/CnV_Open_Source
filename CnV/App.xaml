@@ -6,7 +6,7 @@
 	<Application.Resources>
 		<ResourceDictionary>
 			<ResourceDictionary.MergedDictionaries>
-				<XamlControlsResources  />
+				<XamlControlsResources xmlns="using:Microsoft.UI.Xaml.Controls" />
 				<ResourceDictionary Source="ms-appx:///Microsoft.UI.Xaml/DensityStyles/Compact.xaml" />
 				<ColorPaletteResources Accent="#FF361F70" 
 									   BaseHigh="#FFFFFFFF" BaseLow="#FF380E0E" BaseMedium="#FFA68484" BaseMediumHigh="#FFC1A2A2" BaseMediumLow="#FF6F4949" ChromeAltLow="#FFC1A2A2" ChromeBlackHigh="#FF505050" ChromeBlackLow="#FFC1A2A2" ChromeBlackMedium="#FF303030" ChromeBlackMediumLow="#FF202020" ChromeDisabledHigh="#FF380E0E" ChromeDisabledLow="#FFA68484" ChromeGray="#FF8A6767" ChromeHigh="#FF8A6767" ChromeLow="#FF2A0303" ChromeMedium="#FF2D0606" ChromeMediumLow="#FF340B0B" ChromeWhite="#FFFFFFFF" ListLow="#FF2D0606" ListMedium="#FF380E0E" 					
