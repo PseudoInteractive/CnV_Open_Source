@@ -66,7 +66,7 @@ namespace CnV.Views
 
 		public static void PlayerNameSuggest_TextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)
         {
-			Suggest_TextChanged(sender, args, Player.all.Select(p => p.Value.name));
+			Suggest_TextChanged(sender, args, Player.all.Select(p => p.name));
         }
 		public static void CityNameSuggest_TextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)
 		{

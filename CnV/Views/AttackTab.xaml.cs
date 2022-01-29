@@ -106,7 +106,7 @@ namespace CnV.Views
 				attackStrings.Clear();
 				playerCommands.Clear();
 				StringBuilder sb = new StringBuilder();
-				var players = new List<int>();
+				var players = new List<PlayerId>();
 				var assaultOffsets = new int[attackClusters.Length];
 				string allCommands = "";
 				foreach (var a in attacks)
@@ -1126,7 +1126,7 @@ namespace CnV.Views
 			await SaveAttacks();
         }
 
-		internal static async void IgnorePlayer(int pid)
+		internal static async void IgnorePlayer(PlayerId pid)
 		{
 			using var _ = await instance.TouchLists();
 

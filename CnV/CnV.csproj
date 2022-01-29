@@ -225,7 +225,6 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="Services\Avatarslate.cs" />
-    <Compile Include="Services\ChatStorage.cs" />
     <Compile Include="Services\Cosmos.cs" />
     <Compile Include="Models\DragDropCompletedData.cs" />
     <Compile Include="Models\DragDropData.cs" />

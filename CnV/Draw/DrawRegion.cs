@@ -1126,7 +1126,7 @@ internal partial class GameClient
 
 						if(Player.viewHover != 0)
 						{
-							if(Player.all.TryGetValue(Player.viewHover, out var p))
+							if(Player.TryGetValue(Player.viewHover, out var p))
 							{
 								try
 								{

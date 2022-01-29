@@ -78,7 +78,7 @@ namespace CnV
 			return rv;
 		}
 
-		public static async void UpdatePPDT(JsonElement jse, int thisPid, bool pruneCities = false, bool updateBuildCity = false)
+		public static async void UpdatePPDT(JsonElement jse, PlayerId thisPid, bool pruneCities = false, bool updateBuildCity = false)
 		{
 			// Todo:  should we update our local PPDT to the server?
 
@@ -171,11 +171,11 @@ namespace CnV
 						foreach(var pset in p.EnumerateObject())
 						{
 							var ps = new WorldViewSettings.PlayerSetting();
-							ps.pid = pset.Value.GetAsInt("a");
+							ps.id = pset.Value.GetAsUShort("a");
 							ps.color = pset.Value.GetColor("c");
-							ps.isOn = pset.Value.GetAsInt("d") == 1;
+							ps.isOn = pset.Value.GetAsByte("d") == 1;
 
-							WorldViewSettings.playerSettings.Add(ps.pid, ps);
+							WorldViewSettings.playerSettings.Add(ps.id, ps);
 						}
 					WorldViewSettings.allianceSettings.Clear();
 					if(wo.TryGetProperty("a", out var a))
@@ -183,11 +183,11 @@ namespace CnV
 						foreach(var pset in a.EnumerateObject())
 						{
 							var ps = new WorldViewSettings.AllianceSetting();
-							ps.pid = pset.Value.GetAsUShort("a");
+							ps.id = pset.Value.GetAsByte("a");
 							ps.color = pset.Value.GetColor("c");
 							ps.isOn = pset.Value.GetAsInt("d") == 1;
 
-							WorldViewSettings.allianceSettings.Add(ps.pid, ps);
+							WorldViewSettings.allianceSettings.Add(ps.id, ps);
 						}
 
 					//	if (World.completed)
@@ -1099,12 +1099,12 @@ namespace CnV
 							//		break;
 							//	}
 							// city lists
-							case "ppdt":
-								{
-									var jse = jsp.Value;
-									UpdatePPDT(jse, jse.TryGetProperty("pid", out var _pid) ? _pid.GetAsInt() : Player.myId);
-									break;
-								}
+							//case "ppdt":
+							//	{
+							//		var jse = jsp.Value;
+							//		UpdatePPDT(jse, jse.TryGetProperty("pid", out var _pid) ? _pid.GetAsInt() : Player.myId);
+							//		break;
+							//	}
 							case "chat":
 								{
 									var jsv = jsp.Value.Clone();

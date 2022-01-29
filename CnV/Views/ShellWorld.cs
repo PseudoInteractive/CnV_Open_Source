@@ -1095,7 +1095,7 @@ namespace CnV.Views
 											{
 												Player.viewHover = data.player;
 
-												var player = Player.all.GetValueOrDefault(data.player, Player._default);
+												var player = Player.GetValueOrDefault(data.player, Player._default);
 												//	if (Player.IsFriend(data.player))
 												{
 													//if (spot is City city)
@@ -1243,12 +1243,12 @@ namespace CnV.Views
 													}
 													else if (data.player == 0)
 													{
-														var player = Player.all.GetValueOrDefault(pData.player, Player._default);
+														var player = Player.GetValueOrDefault(pData.player, Player._default);
 														toolTip += $"\nWas abandoned by:\n{player.name}\n{player.allianceName}";
 													}
 													else
 													{
-														var player = Player.all.GetValueOrDefault(pData.player, Player._default);
+														var player = Player.GetValueOrDefault(pData.player, Player._default);
 														toolTip += $"\nWas captured from:\n{player.name}\n{player.allianceName}";
 													}
 												}

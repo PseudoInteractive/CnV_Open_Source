@@ -257,7 +257,7 @@ namespace CnV.Views
 				Canvas.SetZIndex(CityBuild.instance, 13);
 				var c = CreateCanvasControl();
 
-
+				var cachePlayerTask = Task.Run(PlayerGameEntity.UpdateCache);
 				// canvas.ContextFlyout = CityFlyout;
 				//	grid.Children.Add(c.canvas);
 				// grid.Children.Add(c.hitTest);
@@ -397,7 +397,7 @@ namespace CnV.Views
 					// don't await
 
 
-					var changed = await PlayerTables.InitializeAndUpdateCurrentPlayer(azureId: CnVSignin.azureId, discordId: CnVSignin.discordId, discordUserName: CnVSignin.name, avatarUrlHash: CnVSignin.avatarUrlHash);
+					await PlayerTables.InitializeAndUpdateCurrentPlayer(cachePlayerTask,azureId: CnVSignin.azureId, discordId: CnVSignin.discordId, discordUserName: CnVSignin.name, avatarUrlHash: CnVSignin.avatarUrlHash);
 					//if (okay2)
 					try
 					{

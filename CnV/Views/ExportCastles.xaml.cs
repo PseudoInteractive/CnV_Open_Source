@@ -65,7 +65,7 @@ namespace CnV.Views
 			   var score = Settings.exportScore;
 			   ShellPage.WorkStart("Exporting");
 			  await Task.Run(async () => {
-				   List<int> alliances = new();
+				   List<AllianceId> alliances = new();
 				  if (exportAlliance != 0)
 				  {
 					  alliances.Add(exportAlliance);
@@ -115,7 +115,7 @@ namespace CnV.Views
 					  var allianceName = Alliance.all[alliance].name;
 					
 					   sb.AppendLine(allianceName);
-					   foreach (var p in Player.all.Values)
+					   foreach (var p in Player.all)
 					   {
 						   if (p.allianceId != alliance)
 							   continue;
