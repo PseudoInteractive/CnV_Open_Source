@@ -16,21 +16,23 @@
           "SharpDX.XAudio2": "4.2.0",
           "SharpDX.XInput": "4.2.0",
           "SharpGen.Runtime.COM": "2.0.0-beta.10",
-          "runtimepack.Microsoft.Windows.SDK.NET.Ref": "10.0.22000.21"
+          "StbImageSharp": "2.27.8",
+          "StbImageWriteSharp": "1.13.5",
+          "runtimepack.Microsoft.Windows.SDK.NET.Ref": "10.0.22000.22"
         },
         "runtime": {
           "MonoGame.Framework.dll": {}
         }
       },
-      "runtimepack.Microsoft.Windows.SDK.NET.Ref/10.0.22000.21": {
+      "runtimepack.Microsoft.Windows.SDK.NET.Ref/10.0.22000.22": {
         "runtime": {
           "Microsoft.Windows.SDK.NET.dll": {
-            "assemblyVersion": "10.0.22000.21",
-            "fileVersion": "10.0.22000.21"
+            "assemblyVersion": "10.0.22000.22",
+            "fileVersion": "10.0.22000.22"
           },
           "WinRT.Runtime.dll": {
-            "assemblyVersion": "1.3.0.0",
-            "fileVersion": "1.3.5.36601"
+            "assemblyVersion": "1.4.0.0",
+            "fileVersion": "1.4.0.37231"
           }
         }
       },
@@ -285,6 +287,22 @@
           "lib/net5.0/SharpGen.Runtime.COM.dll": {
             "assemblyVersion": "2.0.0.0",
             "fileVersion": "2.0.0.0"
+          }
+        }
+      },
+      "StbImageSharp/2.27.8": {
+        "runtime": {
+          "lib/netstandard2.0/StbImageSharp.dll": {
+            "assemblyVersion": "2.27.8.0",
+            "fileVersion": "2.27.8.0"
+          }
+        }
+      },
+      "StbImageWriteSharp/1.13.5": {
+        "runtime": {
+          "lib/netstandard2.0/StbImageWriteSharp.dll": {
+            "assemblyVersion": "1.13.5.0",
+            "fileVersion": "1.13.5.0"
           }
         }
       },
@@ -857,7 +875,7 @@
       "serviceable": false,
       "sha512": ""
     },
-    "runtimepack.Microsoft.Windows.SDK.NET.Ref/10.0.22000.21": {
+    "runtimepack.Microsoft.Windows.SDK.NET.Ref/10.0.22000.22": {
       "type": "runtimepack",
       "serviceable": false,
       "sha512": ""
@@ -1071,6 +1089,20 @@
       "sha512": "sha512-T7F3HAcSOj6RHup+90GXRNcolilAOAF5fL3XFWjeSw5/bUbG1tcV2nArR7K5BLvZduyalGX7vh43VcCAUsDYaw==",
       "path": "sharpgen.runtime.com/2.0.0-beta.10",
       "hashPath": "sharpgen.runtime.com.2.0.0-beta.10.nupkg.sha512"
+    },
+    "StbImageSharp/2.27.8": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-/LM7rEtSf7SWEJOPJfKVh3L0q/a+uYHOgaZg0bfz7QTqTzGUBRUcDWdxcjcANyj7RCSLH+40bmOflKziLTnrfw==",
+      "path": "stbimagesharp/2.27.8",
+      "hashPath": "stbimagesharp.2.27.8.nupkg.sha512"
+    },
+    "StbImageWriteSharp/1.13.5": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-AxnCp3V1OwpVhLYeftM+pBF2Ob8iqqMeppZmOb7H5rE6H0xdBU/F2BXWgty5OpjXbFaIuybFEieEmbxLdH+CJg==",
+      "path": "stbimagewritesharp/1.13.5",
+      "hashPath": "stbimagewritesharp.1.13.5.nupkg.sha512"
     },
     "System.AppContext/4.3.0": {
       "type": "package",
