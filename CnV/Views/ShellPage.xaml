@@ -347,17 +347,16 @@
 		              FontFamily="Bahnschrift"
 					  Grid.Row="{x:Bind GridRowIndex(rowFooter,-2)}"
 					  Grid.RowSpan="2" 
-					  
+					  Width="300"
+
 					  ExpandDirection="Up"
 					  Canvas.ZIndex="35"   >
 				<Expander.Header>
-					<Grid Background="#58300000">
 					<TextBlock Text="Info" FontSize="{StaticResource MediumFontSize}"
 		              FontFamily="Bahnschrift" VerticalAlignment="Center" HorizontalAlignment="Center" />
-					</Grid>
 				</Expander.Header>
 				<ListView x:Name="InAppNote" x:FieldModifier="public"  
-                   ItemsSource="{x:Bind inAppNotes,Mode=OneWay}" MaxWidth="300" MaxHeight="200"  >
+                   ItemsSource="{x:Bind inAppNotes,Mode=OneWay}" Width="300" MaxHeight="200"  >
 				<ListView.ItemTemplate>
 					<DataTemplate  x:DataType="x:String"  >
 						<tk:MarkdownTextBlock  x:Name="message" Text="{x:Bind (x:String), Mode=OneTime}"  Margin="8,0"  Padding="0,0,0,0"    

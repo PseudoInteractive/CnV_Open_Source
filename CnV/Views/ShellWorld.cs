@@ -574,13 +574,13 @@ namespace CnV.Views
 		{
 			return (((c1.X) / cameraZoomLag + cameraC.X).RoundToInt(), ((c1.Y) / cameraZoomLag + cameraC.Y).RoundToInt());
 		}
-		static public ((int x, int y) wc, (int x, int y) cc) ScreenToWorldAndCityC(Vector2 c1)
+		static public ((int x, int y) wc, BuildC cc) ScreenToWorldAndCityC(Vector2 c1)
 		{
 			var w = new Vector2(((c1.X) / cameraZoomLag + cameraC.X), ((c1.Y) / cameraZoomLag + cameraC.Y));
 			(int x, int y) wi = (w.X.RoundToInt(), w.Y.RoundToInt());
 			(int x, int y) bi = wi.WorldToCid() == City.build ?  
 				(((w.X - wi.x)*City.citySpan).RoundToInt().Clamp(City.span0,City.span1), ((w.Y - wi.y) * City.citySpan/CityView.yScale).RoundToInt().Clamp(City.span0, City.span1)):
-				AUtil.NanXY;
+				BuildC.Nan;
 
 			return (wi, bi);
 		}

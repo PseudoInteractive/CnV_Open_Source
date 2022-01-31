@@ -31,6 +31,7 @@ namespace CnV
 
 	public class CityView
 	{
+		internal const float buildingPlacementZ = (1.0f/64.0f);
 		public static bool isDrawing;
 		static CityView()
 		{
@@ -173,7 +174,7 @@ namespace CnV
 
 						var dt = (animationT - animationOffsets[bspot]);
 						float blendT = ((dt)*0.333f).Frac();
-						var bonus = (dt*0.25f).Abs().Saturate().Bezier(1,0.5f,0,0);
+						var bonus = (dt*0.5f).Abs().Saturate().BSpline(1,0,0);
 
 						if(cur.id==next.id || ((next.bl==cur.bl)&&(!cur.isRes)))
 						{
@@ -186,7 +187,7 @@ namespace CnV
 								{
 									var t = (blendT) * 4.0f;
 									bl = next.bl; // fade next number
-									fontA = t.Bezier(0,1,1);
+									fontA = t.BSpline(0,1,1);
 									blendOp = t.SCurve();
 								}
 								else if(blendT < 0.5f)
@@ -195,7 +196,7 @@ namespace CnV
 									blendOp = 1;
 									// fade out number
 									bl = next.bl; // fade next number
-									fontA = t.Bezier(1,1,0);
+									fontA = t.BSpline(1,1,0);
 
 								}
 								else if(blendT < 0.75f) // fade out hammer
@@ -204,7 +205,7 @@ namespace CnV
 									blendOp = t.SCurve(1,0);
 									// fade in last number
 									bl = cur.bl;
-									fontA = t.Bezier(0,1,1);
+									fontA = t.BSpline(0,1,1);
 								}
 								else
 								{
@@ -212,9 +213,9 @@ namespace CnV
 									var t = (blendT - 0.75f) * 4.0f; // fade in new number
 																	 // fade out number
 									bl = cur.bl;
-									fontA = t.Bezier(1,1,0);// prior number out	
+									fontA = t.BSpline(1,1,0);// prior number out	
 								}
-								var z = bonus*(0.5f/64.0f);
+								var z = bonus*buildingPlacementZ;
 								DrawBuilding(iAlpha,z*0.5f,fontScale,cs,next,Layer.tileCity,(int)(alpha*fontA*255f),bl,bidOverride);
 								if(blendOp > 0)
 								{
@@ -249,12 +250,12 @@ namespace CnV
 							if(blendT < 0.25f)
 							{
 								var t = blendT * 4.0f; // demo fades in, half second
-								blendOp = t.Bezier(0,1,1);
+								blendOp = t.BSpline(0,1,1);
 							}
 							else
 							{
 								var t = (blendT - 0.25f) *(1.0f/0.75f); // building fades in, hammer fades out 1 seconds
-								blendOp = t.Bezier(1,1,0);
+								blendOp = t.BSpline(1,1,0);
 							}
 							var z = bonus*(0.5f/64.0f);
 
@@ -534,7 +535,7 @@ namespace CnV
 			draw.AddQuad(Layer.tileCity + 2, mat, cs.c0, cs.c1, new Color( cityDrawAlpha, cityDrawAlpha, cityDrawAlpha, cityDrawAlpha / 2).Scale(cScale),zZero);
 		}
 
-		public static void DrawBuilding((int x, int y) cc,int iAlpha, BuildingId bid, float randomValue, Material overlay=null)
+		public static void DrawBuilding((int x, int y) cc,int iAlpha, BuildingId bid, float randomValue, float zBias=0)
 		{
 			const float zBase = 0.0f;
 			var iconId = BidToAtlas(bid);
@@ -544,9 +545,9 @@ namespace CnV
 
 			var off = randomValue;
 			var cScale = new Vector2(off.Wave().Lerp(0.8f, 1.0f), off.WaveC().Lerp(0.8f, 1.0f));
-			draw.AddQuad(Layer.tileCity, buildingAtlas, cs.c0, cs.c1, new Vector2(u0, v0), new Vector2(u0 + duDt, v0 + dvDt), iAlpha.AlphaToAll().Scale(cScale),zZero); // shader does the z transform
-			if(overlay!=null)
-				draw.AddQuad(Layer.tileCity + 2, overlay, cs.c0, cs.c1, new Color(iAlpha, iAlpha, iAlpha, iAlpha / 2).Scale(cScale), PlanetDepth, zHover);
+			draw.AddQuad(Layer.tileCity, buildingAtlas, cs.c0, cs.c1, new Vector2(u0, v0), new Vector2(u0 + duDt, v0 + dvDt), iAlpha.AlphaToAll().Scale(cScale),(zBias, zBias, zBias, zBias) ); // shader does the z transform
+			//if(overlay!=null)
+			//	draw.AddQuad(Layer.tileCity + 2, overlay, cs.c0, cs.c1, new Color(iAlpha, iAlpha, iAlpha, iAlpha / 2).Scale(cScale), (zHover+zBias, zHover+zBias, zHover+zBias, zHover+zBias) );
 		}
 
 		public static void LoadContent()
