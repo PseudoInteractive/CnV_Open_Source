@@ -23,6 +23,7 @@ using Microsoft.UI.Xaml.Media.Imaging;
 using static CnV.Debug;
 using static CnV.CityView;
 using static CnV.City;
+using static CnV.Building;
 
 using static CnV.BuildingDef;
 using ContentDialog = Microsoft.UI.Xaml.Controls.ContentDialog;
@@ -116,7 +117,7 @@ namespace CnV
 
 
 
-		static BuildMenuItem CreateBuildMenuItem(int bid)
+		static BuildMenuItem CreateBuildMenuItem(BuildingId bid)
 		{
 			var rv = new BuildMenuItem(bid); //  = 454;
 			allBuildings.Add(rv);
@@ -125,17 +126,17 @@ namespace CnV
 		public static List<BuildMenuItem> allBuildings = new();
 
 		static readonly BuildMenuItem bmForester = CreateBuildMenuItem(bidForester); //  = 448;
-		static readonly BuildMenuItem bmQuarry = CreateBuildMenuItem(bidQuarry); //  = 461;
-		static readonly BuildMenuItem bmMine = CreateBuildMenuItem(bidMine); //  = 465;
-		static readonly BuildMenuItem bmFarmhouse = CreateBuildMenuItem(bidFarmhouse); //  = 447;
+		static readonly BuildMenuItem bmQuarry = CreateBuildMenuItem(bidStoneMine); //  = 461;
+		static readonly BuildMenuItem bmMine = CreateBuildMenuItem(bidIronMine); //  = 465;
+		static readonly BuildMenuItem bmFarmhouse = CreateBuildMenuItem(bidFarmEstate); //  = 447;
 
 		static readonly BuildMenuItem bmSawmill = CreateBuildMenuItem(bidSawmill); //  = 460;
 		static readonly BuildMenuItem bmStonemason = CreateBuildMenuItem(bidStonemason); //  = 462;
 		static readonly BuildMenuItem bmSmelter = CreateBuildMenuItem(bidSmelter); //  = 477;
-		static readonly BuildMenuItem bmWindmill = CreateBuildMenuItem(bidWindmill); //  = 463;
+		static readonly BuildMenuItem bmWindmill = CreateBuildMenuItem(bidGrainMill); //  = 463;
 
 		static readonly BuildMenuItem bmBarracks = CreateBuildMenuItem(bidBarracks); //  = 445;
-		static readonly BuildMenuItem bmTrainingground = CreateBuildMenuItem(bidTrainingGround); //  = 483;
+		static readonly BuildMenuItem bmTrainingground = CreateBuildMenuItem(bidTrainingArena); //  = 483;
 		static readonly BuildMenuItem bmMage_tower = CreateBuildMenuItem(bidSorcTower); //  = 500;
 		static readonly BuildMenuItem bmStable = CreateBuildMenuItem(bidStable); //  = 466;
 
@@ -148,11 +149,11 @@ namespace CnV
 		static readonly BuildMenuItem bmCottage = CreateBuildMenuItem(bidCottage); //  = 446;
 		static readonly BuildMenuItem bmStorehouse = CreateBuildMenuItem(bidStorehouse); //  = 464;
 		static readonly BuildMenuItem bmHideaway = CreateBuildMenuItem(bidHideaway); //  = 479;
-		static readonly BuildMenuItem bmCityguardhouse = CreateBuildMenuItem(bidCityguardhouse); //  = 504;
-		static readonly BuildMenuItem bmTownhouse = CreateBuildMenuItem(bidTownhouse); //  = 481;
+		static readonly BuildMenuItem bmCityguardhouse = CreateBuildMenuItem(bidGuardHouse); //  = 504;
+		static readonly BuildMenuItem bmTownhouse = CreateBuildMenuItem(bidVilla); //  = 481;
 		static readonly BuildMenuItem bmTemple = CreateBuildMenuItem(bidTemple); //  = 890;
 		static readonly BuildMenuItem bmPort = CreateBuildMenuItem(bidPort); //  = 488;
-		static readonly BuildMenuItem bmMarketplace = CreateBuildMenuItem(bidMarketplace); //  = 449;
+		static readonly BuildMenuItem bmMarketplace = CreateBuildMenuItem(bidMarket); //  = 449;
 
 
 
@@ -172,7 +173,7 @@ namespace CnV
 		static readonly BuildMenuItem bmWall = CreateBuildMenuItem(bidWall); //  = 809;
 
 
-		public static void UpdateBuildMenuType(MenuType _menuType, int bspot)
+		public static void UpdateBuildMenuType(MenuType _menuType, BuildC bspot)
 		{
 			if (menuType == _menuType)
 				return;
@@ -195,7 +196,7 @@ namespace CnV
 			//}
 			menuType = _menuType;
 			var city = City.GetBuild();
-			//var townHallLevel = city.postQueueBuildings[City.bspotTownHall].bl;
+			//var townHallLevel = city.postQueueBuildings[bspotTownHall].bl;
 
 			instance.TogglePlanner.Label = isPlanner ? "Build" : "Planner";
 
@@ -253,7 +254,7 @@ namespace CnV
 					// restrict by level?
 					foreach (var i in allBuildings)
 					{
-						var def = BuildingDef.all[i.bid];
+						var def = BuildingDef.FromId(i.bid);
 						if (def.isTower || i.bid == bidPort || i.bid == bidShipyard)
 						{
 							continue;
@@ -302,7 +303,7 @@ namespace CnV
 			//{
 			//	if( bi.isBuilding)
 			//	{
-			//		var def = BuildingDef.all[bi.bid];
+			//		var def = BuildingDef.FromId(bi.bid);
 			//		var enabled = true;
 			//		if(def.Thl > townHallLevel)
 			//		{
@@ -660,14 +661,16 @@ namespace CnV
 			return brush;
 		}
 
-		public static ImageBrush BuildingBrush(int id, float scale)
+		public static ImageBrush BuildingBrush(BuildingId id, float scale)
 		{
+			var atlasC = CityView.BidToAtlas(id);
 			var iconId = id - 443;
 			const int atlasColumns = 4;
 			const int duDt = 128;
 			const int dvDt = 128;
-			var u0 = (iconId % atlasColumns) * duDt;
-			var v0 = (iconId / atlasColumns % 33) * dvDt;
+
+			var u0 = atlasC.x * duDt;
+			var v0 = atlasC.y * dvDt;
 			var uri = Settings.IsThemeWinter() ? "City/Winter/building_set5.png" :
 			"City/building_set5.png";
 			return BrushFromAtlas(uri, u0, v0, scale);
@@ -723,7 +726,7 @@ namespace CnV
 			}
 		}
 
-		internal static void ShortBuild(short bid)
+		internal static void ShortBuild(BuildingId bid)
 		{
 			PerformAction(CityBuild.CityBuildAction.build, hovered, bid, false);
 			lastQuickBuildActionBSpot = XYToId(hovered);
@@ -739,7 +742,7 @@ namespace CnV
 
 		
 
-		public static async void Click((int x, int y) cc, bool isRight)
+		public static async void Click(BuildC cc, bool isRight)
 		{
 			if(CityBuild.menuOpen)
 			{
@@ -758,10 +761,10 @@ namespace CnV
 			//	await Task.Delay(200).ConfigureAwait(true);
 			//}
 
-			int bspot = XYToId(cc);
+			//int bspot = XYToId(cc);
 
 			// tempoararily switch to Select from quickbuild
-			if (!isRight && action == CityBuildAction.build && !City.GetBuild().postQueueBuildings[bspot].isEmpty && !isPlanner)
+			if (!isRight && action == CityBuildAction.build && !City.GetBuild().postQueueBuildings[cc].isEmpty && !isPlanner)
 			{
 				priorQuickAction = action;
 				action = CityBuildAction.none;
@@ -772,7 +775,7 @@ namespace CnV
 			//	ElementSoundPlayer.Play(action == Action.destroy ? ElementSoundKind.GoBack : ElementSoundKind.Focus);
 				await PerformAction(action, cc, quickBuildId, false);
 				if (action != CityBuildAction.moveStart && action != CityBuildAction.moveEnd)
-					lastQuickBuildActionBSpot = bspot;
+					lastQuickBuildActionBSpot = cc;
 
 				//	Assert(!isSingleClickAction);
 				//				{
@@ -813,14 +816,14 @@ namespace CnV
 
 
 		static bool contextMenuResultSelected = false;
-		public static void ShowContextMenu(City city, (int x, int y) cc, bool isRight)
+		public static void ShowContextMenu(City city, BuildC cc, bool isRight)
 		{
 			isSingleClickAction = false; // default
 										 // toggle visibility
 
 			contextMenuResultSelected = false;
-			int bspot = XYToId(cc);
-			var b = city.postQueueBuildings[bspot];
+			//int bspot = XYToId(cc);
+			var b = city.postQueueBuildings[cc];
 
 			if(!isRight)
 			{
@@ -830,29 +833,29 @@ namespace CnV
 				//	return;
 				//}
 				isSingleClickAction = true;
-				if(CityBuild.IsWallSpot(bspot))
+				if(CityBuild.IsWallSpot(cc))
 				{
-					bspot = 0;
-					cc = (span0, span0);
-					b = city.postQueueBuildings[bspot];
+					//..var bspot = bspotWall;
+					cc = bspotWall;
+					b = city.postQueueBuildings[cc];
 
 				}
 			}
-			var d = b.def;
-			if(d.bid != 0)
-				CnVServer.ExecuteScriptAsync("exBuildingInfo",d.bid,b.bl,bspot);
+		//	var d = b.def;
+			if(b.id != 0)
+				CnVServer.ExecuteScriptAsync("exBuildingInfo",b.id,b.bl, cc);
 
 			CityView.SetSelectedBuilding(cc,isSingleClickAction);
 
 			var type = isRight ? MenuType.quickBuild :
 
 
-				bspot == 0 ? MenuType.buliding :
-				b.id == 0 ? (CityBuild.IsTowerSpot(bspot) ? MenuType.tower : CityBuild.IsShoreSpot(bspot) ? MenuType.shore : MenuType.empty) :
+				cc == bspotWall ? MenuType.buliding :
+				b.id == 0 ? (CityBuild.IsTowerSpot(cc) ? MenuType.tower : CityBuild.IsShoreSpot(cc) ? MenuType.shore : MenuType.empty) :
 				b.bl == 0 ? MenuType.res :
-				d.bid == bidTownHall ? isPlanner ? MenuType.townhallPlanner : MenuType.townhall :
+				b.id == bidTownHall ? isPlanner ? MenuType.townhallPlanner : MenuType.townhall :
 				MenuType.buliding;
-			UpdateBuildMenuType(type,bspot);
+			UpdateBuildMenuType(type,cc);
 
 			//				ShellPage.instance.buildMenu.IsOpen = true;
 
@@ -874,8 +877,8 @@ namespace CnV
 		{
 			contextMenuResultSelected = true;
 			var bi = e.ClickedItem as BuildMenuItem;
-			lastQuickBuildActionBSpot = -1; // reset
-			lastBuildToolTipSpot=-1;
+			lastQuickBuildActionBSpot = BuildC.Nan; // reset
+			lastBuildToolTipSpot=BuildC.Nan; 
 
 			if (bi != null)
 			{
@@ -956,31 +959,31 @@ namespace CnV
 				case VirtualKey.Space: CityBuild.Click(CityView.hovered, true); return;
 				case VirtualKey.Enter: CityBuild.Click(CityView.hovered, false); return;
 				case Windows.System.VirtualKey.Left:
-					if (CityView.hovered.IsNotNan())
-						CityView.hovered.x = (CityView.hovered.x - 1).Max(City.span0);
+					if (CityView.hovered.isNotNan)
+						CityView.hovered = (CityView.hovered+(-1,0)).Clamped(); // CityView.hovered with {  x = (CityView.hovered.x - 1).Max(City.span0) };
 					else
 						CityView.hovered = (0, 0);
 
 					break;
 
 				case Windows.System.VirtualKey.Up:
-					if (CityView.hovered.IsNotNan())
-						CityView.hovered.y = (CityView.hovered.y - 1).Max(City.span0);
+					if (CityView.hovered.isNotNan)
+						CityView.hovered =(CityView.hovered+(0, -1)).Clamped(); 
 					else
 						CityView.hovered = (0, 0);
 					break;
 
 				case Windows.System.VirtualKey.Right:
-					if (CityView.hovered.IsNotNan())
-						CityView.hovered.x = (CityView.hovered.x + 1).Min(City.span1);
+					if (CityView.hovered.isNotNan)
+						CityView.hovered = (CityView.hovered+(1, 0)).Clamped();
 					else
 						CityView.hovered = (0, 0);
 
 					break;
 
 				case Windows.System.VirtualKey.Down:
-					if (CityView.hovered.IsNotNan())
-						CityView.hovered.y = (CityView.hovered.y + 1).Min(City.span1);
+					if (CityView.hovered.isNotNan)
+						CityView.hovered = (CityView.hovered+(0, 1)).Clamped(); //(CityView.hovered.y + 1).Min(City.span1);
 					else
 						CityView.hovered = (0, 0);
 					break;
@@ -1011,41 +1014,41 @@ namespace CnV
 						break; //  (City.XYToId(CityView.selected), City.XYToId(CityView.hovered)); break;
 					}
 				// short keys
-				case Windows.System.VirtualKey.F: CityBuild.ShortBuild(City.bidForester); return; //  448;
-				case Windows.System.VirtualKey.C: CityBuild.ShortBuild(City.bidCottage); return; //  446;
-				case Windows.System.VirtualKey.R: CityBuild.ShortBuild(City.bidStorehouse); return; //  464;
-				case Windows.System.VirtualKey.S: CityBuild.ShortBuild(City.bidQuarry); return; //  461;
+				case Windows.System.VirtualKey.F: CityBuild.ShortBuild(Building.bidForester); return; //  448;
+				case Windows.System.VirtualKey.C: CityBuild.ShortBuild(Building.bidCottage); return; //  446;
+				case Windows.System.VirtualKey.R: CityBuild.ShortBuild(Building.bidStorehouse); return; //  464;
+				case Windows.System.VirtualKey.S: CityBuild.ShortBuild(Building.bidQuarry); return; //  461;
 																								// case
 																								// Windows.System.VirtualKey.Q
 																								// :
-																								// CityBuild.ShortBuild(City.bidHideaway
+																								// CityBuild.ShortBuild(Building.bidHideaway
 																								// );
 																								// return;
 																								// // 479;
-				case Windows.System.VirtualKey.A: CityBuild.ShortBuild(City.bidFarmhouse); return; //  447;
+				case Windows.System.VirtualKey.A: CityBuild.ShortBuild(Building.bidFarm); return; //  447;
 																								   // case
 																								   // Windows.System.VirtualKey.U
 																								   // :
-																								   // CityBuild.ShortBuild(City.bidCityguardhouse
+																								   // CityBuild.ShortBuild(Building.bidCityguardhouse
 																								   // );
 																								   // return;
 																								   // // 504;
-				case Windows.System.VirtualKey.B: CityBuild.ShortBuild(City.bidBarracks); return; //  445;
-				case Windows.System.VirtualKey.I: CityBuild.ShortBuild(City.bidMine); return; //  465;
-				case Windows.System.VirtualKey.T: CityBuild.ShortBuild(City.bidTrainingGround); return; //  483;
-				case Windows.System.VirtualKey.M: CityBuild.ShortBuild(City.bidMarketplace); return; //  449;
-				case Windows.System.VirtualKey.V: CityBuild.ShortBuild(City.bidTownhouse); return; //  481;
-				case Windows.System.VirtualKey.L: CityBuild.ShortBuild(City.bidSawmill); return; //  460;
-				case Windows.System.VirtualKey.E: CityBuild.ShortBuild(City.bidStable); return; //  466;
-				case Windows.System.VirtualKey.H: CityBuild.ShortBuild(City.bidStonemason); return; //  462;
-				case Windows.System.VirtualKey.W: CityBuild.ShortBuild(City.bidSorcTower); return; //  500;
-				case Windows.System.VirtualKey.G: CityBuild.ShortBuild(City.bidWindmill); return; //  463;
-				case Windows.System.VirtualKey.Y: CityBuild.ShortBuild(City.bidAcademy); return; //  482;
-				case Windows.System.VirtualKey.Z: CityBuild.ShortBuild(City.bidSmelter); return; //  477;
-				case Windows.System.VirtualKey.K: CityBuild.ShortBuild(City.bidBlacksmith); return; //  502;
-				case Windows.System.VirtualKey.X: CityBuild.ShortBuild(City.bidCastle); return; //  467;
-				case Windows.System.VirtualKey.O: CityBuild.ShortBuild(City.bidPort); return; //  488;
-				case Windows.System.VirtualKey.P: CityBuild.ShortBuild(City.bidShipyard); return; //  491;
+				case Windows.System.VirtualKey.B: CityBuild.ShortBuild(Building.bidBarracks); return; //  445;
+				case Windows.System.VirtualKey.I: CityBuild.ShortBuild(Building.bidIronMine); return; //  465;
+				case Windows.System.VirtualKey.T: CityBuild.ShortBuild(Building.bidTrainingGround); return; //  483;
+				case Windows.System.VirtualKey.M: CityBuild.ShortBuild(Building.bidMarket); return; //  449;
+				case Windows.System.VirtualKey.V: CityBuild.ShortBuild(Building.bidVilla); return; //  481;
+				case Windows.System.VirtualKey.L: CityBuild.ShortBuild(Building.bidSawmill); return; //  460;
+				case Windows.System.VirtualKey.E: CityBuild.ShortBuild(Building.bidStable); return; //  466;
+				case Windows.System.VirtualKey.H: CityBuild.ShortBuild(Building.bidStonemason); return; //  462;
+				case Windows.System.VirtualKey.W: CityBuild.ShortBuild(Building.bidSorcTower); return; //  500;
+				case Windows.System.VirtualKey.G: CityBuild.ShortBuild(Building.bidGrainMill); return; //  463;
+				case Windows.System.VirtualKey.Y: CityBuild.ShortBuild(Building.bidAcademy); return; //  482;
+				case Windows.System.VirtualKey.Z: CityBuild.ShortBuild(Building.bidSmelter); return; //  477;
+				case Windows.System.VirtualKey.K: CityBuild.ShortBuild(Building.bidBlacksmith); return; //  502;
+				case Windows.System.VirtualKey.X: CityBuild.ShortBuild(Building.bidCastle); return; //  467;
+				case Windows.System.VirtualKey.O: CityBuild.ShortBuild(Building.bidPort); return; //  488;
+				case Windows.System.VirtualKey.P: CityBuild.ShortBuild(Building.bidShipyard); return; //  491;
 				case Windows.System.VirtualKey.Q: if (!isPlanner) City.GetBuild().SmartBuild(hovered, City.GetBuild().GetLayoutBid(hovered),searchForSpare:false,dryRun:true, wantDemoUI: false); return;
 
 				default:
@@ -1056,12 +1059,12 @@ namespace CnV
 		private static void UpgradeOrTower(int number)
 		{
 			var xy = CityView.hovered;
-			var spot = City.XYToId(xy);
-			if (CityBuild.IsTowerSpot(spot) && City.GetBuild().postQueueBuildings[spot].bl == 0)
+		//	var spot = City.XYToId(xy);
+			if (CityBuild.IsTowerSpot(xy) && City.GetBuild().postQueueBuildings[xy].bl == 0)
 			{
 				var bid = number switch
 				{
-					1 => City.bidSentinelPost,
+					1 => Building.bidSentinelPost,
 					2 => bidRangerPost,
 					3 => bidTriariPost,
 					4 => bidPriestessPost,

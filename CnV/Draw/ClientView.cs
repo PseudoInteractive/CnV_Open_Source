@@ -114,7 +114,7 @@ namespace CnV;
 			lastCanvasC      = 0;
 			lastCont         = -1;
 			ToolTips.toolTip = null;
-			CityView.hovered = AUtil.NanXY;
+			CityView.hovered = BuildC.Nan;
 			Spot.viewHover   = 0;
 			Player.viewHover = 0;
 		}

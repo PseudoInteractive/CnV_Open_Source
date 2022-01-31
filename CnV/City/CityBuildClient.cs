@@ -15,7 +15,7 @@ namespace CnV
 	{
 		public static void PreviewBuildAction()
 		{
-			if(hovered.IsNotNan())
+			if(hovered.isNotNan)
 			{
 				if(XYToId(hovered) == lastQuickBuildActionBSpot)
 					return;
@@ -70,28 +70,28 @@ namespace CnV
 
 			//	AppS.DispatchOnUIThreadLow( ()=> instance.quickBuild.SelectedIndex = (int)_action ); /// the first 3 are mapped. this triggers a selectedPoint changed event
 		}
-		public static void SetQuickBuild(int quickBuildItemBid)
+		public static void SetQuickBuild(BuildingId quickBuildItemBid)
 		{
 
 			SetAction(CityBuildAction.build);
 
-			lastBuildToolTipSpot      = -1;
-			lastQuickBuildActionBSpot = -1;
+			lastBuildToolTipSpot      = BuildC.Nan;;
+			lastQuickBuildActionBSpot = BuildC.Nan; ;
 			quickBuildId              = quickBuildItemBid;
 			//	AppS.DispatchOnUIThreadLow( ()=> instance.quickBuild.SelectedIndex = (int)_action ); /// the first 3 are mapped. this triggers a selectedPoint changed event
 		}
-		public static async Task PerformAction(CityBuildAction action, (int x, int y) cc, int _quickBuildId, bool dryRun)
+		public static async Task PerformAction(CityBuildAction action, BuildC cc, BuildingId _quickBuildId, bool dryRun)
 		{
 
 
-			int bspot = XYToId(cc);
+			//int bspot = XYToId(cc);
 			var build = GetBuild();
-			var b = City.GetBuild().GetBuildingOrLayout(bspot);
+			var b = City.GetBuild().GetBuildingOrLayout(cc);
 
 			if(action == CityBuildAction.moveEnd)
 			{
 				// We lost our move source
-				if(CityView.selectedPoint.IsNan())
+				if(CityView.selectedPoint.isNan)
 				{
 					if(isSingleClickAction)
 					{
@@ -121,7 +121,7 @@ namespace CnV
 						else
 						{
 
-							await City.GetBuild().SmartBuild(cc, build.GetLayoutBid(bspot), dryRun: dryRun, searchForSpare: true, wantDemoUI: null);
+							await City.GetBuild().SmartBuild(cc, build.GetLayoutBid(cc), dryRun: dryRun, searchForSpare: true, wantDemoUI: null);
 
 						}
 						break;
@@ -268,9 +268,9 @@ namespace CnV
 					}
 			}
 		}
-		public static int quickBuildId;
-		public static int lastQuickBuildActionBSpot = -1;
-		public static int lastBuildToolTipSpot = -1;
+		public static BuildingId quickBuildId;
+		public static BuildC lastQuickBuildActionBSpot = BuildC.Nan;
+		public static BuildC lastBuildToolTipSpot = BuildC.Nan;
 		public enum CityBuildAction
 		{
 			none,
@@ -298,20 +298,20 @@ namespace CnV
 			var build = GetBuild();
 
 			Status($"Move slots left: {Player.moveSlots}", dryRun);
-			if(hovered.IsNan())
+			if(hovered.isNan)
 			{
 				Status("Please select something in the city", dryRun);
 				return;
 			}
-			int targetSpot = XYToId(hovered);
-			var targetB = isPlanner ? build.GetLayoutBuilding(targetSpot) : build.buildings[targetSpot];
+			var targetSpot =hovered;
+			var targetB = isPlanner ? build.GetLayoutBuilding(hovered) : build.buildings[targetSpot];
 
 			if(isStart)
 			{
 				if(targetB.isBuilding)
 				{
 
-					Status($"Move {targetB.def.Bn} at {hovered.bspotToString()} to ... ", dryRun);
+					Status($"Move {targetB.def.Bn} at {hovered.ToString()} to ... ", dryRun);
 					if(!dryRun)
 					{
 						CityView.SetSelectedBuilding(hovered, _isSingleAction);
@@ -334,7 +334,7 @@ namespace CnV
 			}
 			else
 			{
-				Assert(selectedPoint.IsNotNan());
+				Assert(selectedPoint.isNotNan);
 
 				if(targetB.isRes)
 				{

@@ -841,16 +841,16 @@ namespace CnV.Views
 			{
 				var build  = City.GetBuild();
 				int bCount = 0;
-				var bdd    = new Dictionary<int, int>();
+				var bdd    = new Dictionary<BuildingId, int>();
 
 				void ProcessBuilding(BuildingDef bd, bool add = true)
 				{
-					if (bd.bid == City.bidTownHall || bd.bid == City.bidWall)
+					if (bd.id == Building.bidTownHall || bd.id == Building.bidWall)
 					{
 						return;
 					}
 
-					var id = bd.refId;
+					var id = bd.id;
 					if (!bdd.TryGetValue(id, out var counter))
 					{
 						bdd.Add(id, 0);
@@ -893,14 +893,14 @@ namespace CnV.Views
 					{
 						if (i.Value > 0)
 						{
-							var bdf = BuildingDef.all[i.Key];
+							var bdf = BuildingDef.FromId(i.Key);
 							bd.Add(new BuildingCountAndBrush()
-											{ count = i.Value, brush = CityBuild.BuildingBrush(bdf.bid, 0.5f) });
+											{ count = i.Value, brush = CityBuild.BuildingBrush(bdf.id, 0.5f) });
 						}
 					}
 
 					bd.Add(new BuildingCountAndBrush()
-									{ count = bCount, brush = CityBuild.BuildingBrush(City.bidTownHall, 0.5f) });
+									{ count = bCount, brush = CityBuild.BuildingBrush(Building.bidTownHall, 0.5f) });
 
 					// var button = sender as Button; button.Focus(FocusState.Programmatic);
 					AppS.DispatchOnUIThreadLow(() =>

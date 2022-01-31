@@ -26,7 +26,7 @@ namespace CnV.Views
 
 	public class BuildMenuItem
 	{
-		public int bid;
+		public BuildingId bid;
 		public bool isAction => action != CityBuild.CityBuildAction.invalid;
 		public bool isBuilding => bid != 0;
 		public ImageBrush brush;
@@ -41,16 +41,16 @@ namespace CnV.Views
 		public BuildMenuItem()
 		{
 			action = CityBuild.CityBuildAction.invalid;
-			bid = -1;
+			bid = 0;
 		//	textColor = Colors.Black;
 
 		}
-		public BuildMenuItem(int _bid)
+		public BuildMenuItem(BuildingId _bid)
 		{
 			action = CityBuild.CityBuildAction.invalid;
 			{
 				bid = _bid;
-				var def = BuildingDef.all[_bid];
+				var def = BuildingDef.FromId(_bid);
 				header = def.Bn;
 				toolTip = def.Ds;
 				brush = BuildingBrush(bid, width / 128.0f);
@@ -80,7 +80,7 @@ namespace CnV.Views
 	//	public QuickBuildItem(int _id)
 	//	{
 	//		bid = _id;
-	//		name = BuildingDef.all[_id].Bn;
+	//		name = BuildingDef.FromId(_id).Bn;
 	//		brush = CityBuild.BuildingBrush(_id, 0.5f);
 	//	}
 	//	public QuickBuildItem(CityBuild.Action _id, string _name, string image)
@@ -99,16 +99,16 @@ namespace CnV.Views
 		public static readonly DependencyProperty bidProperty =
 			DependencyProperty.Register("bid", typeof(int), typeof(BuildingButton), new PropertyMetadata(null));
 
-		public int bid
+		public BuildingId bid
 		{
 			get
 			{
-				return (int)this.GetValue(bidProperty);
+				return (BuildingId)this.GetValue(bidProperty);
 			}
 			set
 			{
 				this.SetValue(bidProperty, value);
-				Background = BuildingBrush(bid, (float)Width / 128.0f);
+				Background = BuildingBrush(value, (float)Width / 128.0f);
 			}
 		}
 
@@ -126,16 +126,16 @@ namespace CnV.Views
 		public static readonly DependencyProperty bidProperty =
 			DependencyProperty.Register("bid", typeof(int), typeof(BuildingButton), new PropertyMetadata(null));
 
-		public int bid
+		public BuildingId bid
 		{
 			get
 			{
-				return (int)this.GetValue(bidProperty);
+				return (BuildingId)this.GetValue(bidProperty);
 			}
 			set
 			{
 				this.SetValue(bidProperty, value);
-				Background = BuildingBrush(bid, (float)Width / 128.0f);
+				Background = BuildingBrush(value, (float)Width / 128.0f);
 			}
 		}
 		public string image

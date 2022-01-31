@@ -17,7 +17,7 @@ using Microsoft.UI.Xaml.Controls;
 using CnV;
 using static CnV.Debug;
 using static CnV.City;
-
+using static CnV.Building;
 
 using static CnV.CityBuild;
 
@@ -156,7 +156,7 @@ public static class DoTheStuff
 			{
 				while(bc.scoutpostCount < Settings.scoutpostCount)
 				{
-					var spot = 0;
+					var spot = BuildC.Nan;
 					foreach(var _spot in innerTowerSpots)
 					{
 						if(city.postQueueBuildings[_spot].isEmpty)
@@ -175,10 +175,9 @@ public static class DoTheStuff
 						}
 
 					}
-
+					break; // non left;
 				added:
-					if(spot == 0)
-						break;
+					Assert(spot.isNotNan);
 					await city.Enqueue(0,1,bidSentinelPost,spot);
 
 					++bc.scoutpostCount;

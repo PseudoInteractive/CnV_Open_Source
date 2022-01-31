@@ -1,7 +1,7 @@
 ﻿using CnV.Game;
 
 using CnV.Services;
-
+using static CnV.Building;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -275,13 +275,13 @@ namespace CnV.Views
 
 		class BuildingStretchData
 		{
-			Dictionary<int, ALinq.BuildingStretchData<int>> data = new();
+			Dictionary<BuildingId, ALinq.BuildingStretchData<BuildC>> data = new();
 
-			public void AddBuildingType(int bid, City city, int buildSpot)
+			public void AddBuildingType(BuildingId bid, City city, BuildC buildSpot)
 			{
 				if(!data.TryGetValue(bid, out var d))
 				{
-					d = new(-32768f / MathF.Sqrt(BuildingDef.FromBid(bid).GetBuildTimeMeasure()));
+					d = new(-32768f / MathF.Sqrt(BuildingDef.FromId(bid).GetBuildTimeMeasure()));
 					data.Add(bid, d);
 				}
 				d.totalCount++;
@@ -297,17 +297,17 @@ namespace CnV.Views
 
 			}
 
-			public int[] result =>
+			public BuildC[] result =>
 			
 				data.StretchAndInterleave();
 			
 		}
-		internal static int[] FindPendingOverlayBuildings(City city)
+		internal static BuildC[] FindPendingOverlayBuildings(City city)
 		{
 			var data = new BuildingStretchData();
 
 
-			for (int r = 1; r <= City.citySpan; ++r)
+			for (var  r = 1; r <= City.citySpan; ++r)
 			{
 				for (var y = -r; y <= r; ++y)
 				{
@@ -315,19 +315,19 @@ namespace CnV.Views
 					{
 						if ((x == -r || x == r) || (y == -r || y == r))
 						{
-							var c = (x, y);
-							var id = XYToId(c);
-							if (!city.IsBuildingSpot(id))
+							var c = new BuildC(x, y);
+							//var id = XYToId(c);
+							if (!city.IsBuildingSpot(c))
 								continue;
 
-							var bid = city.GetLayoutBid(id);
+							var bid = city.GetLayoutBid(c);
 							// filter out.  Note that most of these are filtered by IsBuildingSpot
-							if (bid switch { 0 or bidCottage or bidWall or bidTownHall or (>= bidResStart and <= bidResEnd) => true, _ => false })
+							if (bid switch { bidNone or bidCottage or bidWall or bidTownHall or (>= bidResStart and <= bidResEnd) => true, _ => false })
 							{
 								continue;
 							}
 
-							data.AddBuildingType(bid,city,id);
+							data.AddBuildingType(bid,city, c);
 						}
 					}
 				}
@@ -583,7 +583,7 @@ namespace CnV.Views
 			op = item;
 			brush = CityBuild.BuildingBrush(item.bid,size / 128.0f);
 			var desc = item.elvl == 0 ? "Destroy" : item.slvl == 0 ? "Build" : item.slvl > item.elvl ? "Downgrade" : "Upgrade";
-			text = desc + BuildingDef.all[item.bid].Bn;
+			text = desc + BuildingDef.FromId(item.bid).Bn;
 		}
 	}
 	class BuildItemTemplateSelector:Microsoft.UI.Xaml.Controls.DataTemplateSelector

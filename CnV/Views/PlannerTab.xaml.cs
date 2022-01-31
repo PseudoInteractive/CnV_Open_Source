@@ -12,6 +12,7 @@ using static CnV.Debug;
 using static CnV.City;
 using static CnV.Troops;
 using static CnV.BuildingDef;
+using static CnV.Building;
 using System.Buffers;
 //using static System.Buffers.ArrayPool<COTG.Building>;
 
@@ -188,7 +189,7 @@ namespace CnV.Views
 			
 			var bds = city.GetLayoutBuildings();
 			var tsMultipler = 1;
-			var stTownHall = BuildingDef.all[bidTownHall].St[10];
+			var stTownHall = BuildingDef.FromId(bidTownHall).St[10];
 			int carts = 0,ships=0,ts=0, cs=100,rsInf = 0, rsBlessed=0,rsMagic=0,rsArt=0,rsNavy=0,rsCav=0, stWood = stTownHall, stIron = stTownHall, stStone = stTownHall, stFood= stTownHall;
 			for (int x = span0; x <= span1; ++x)
 			{
@@ -198,7 +199,7 @@ namespace CnV.Views
 					var spot = XYToId(cc);
 					var bd = bds[spot];
 					var bid = bd.bid;
-					var bdef = BuildingDef.all[bid];
+					var bdef = BuildingDef.FromId(bid);
 					switch (bid)
 					{
 						case bidCastle:
@@ -260,7 +261,7 @@ namespace CnV.Views
 											case bidStonemason:
 												stStone += bd1.def.St[bd1.bl] * str / 100;
 												break;
-											case bidWindmill:
+											case bidGrainMill:
 												stFood += bd1.def.St[bd1.bl] * str / 100;
 												break;
 										}
@@ -454,7 +455,7 @@ namespace CnV.Views
 			int rv = 0;
 			//var bdc = city.layout;
 		//	var bds = city.postQueueBuildings;
-			for(int i=0;i<citySpotCount;++i)
+			for(BuildingSpot i=0;i<citySpotCount;++i)
 			{
 				var des = city.GetLayoutBuilding(i);
 				var bdBid = des.bid;
@@ -521,7 +522,7 @@ namespace CnV.Views
 				}
 				else
 				{
-					for (int id = 0; id < City.citySpotCount; ++id)
+					for (BuildingSpot id = 0; id < City.citySpotCount; ++id)
 					{
 						var bid = city.GetLayoutBid(id);
 						if (bid != 0 && bid != bidShipyard && bid != bidPort)
@@ -658,7 +659,7 @@ namespace CnV.Views
 
 		private static bool IsResHelper(int bid)
 		{
-			return bid == bidSawmill || bid == bidWindmill || bid == bidStonemason || bid == bidSmelter;
+			return bid == bidSawmill || bid == bidGrainMill || bid == bidStonemason || bid == bidSmelter;
 		}
 
 		private void Done(object sender, RoutedEventArgs e)

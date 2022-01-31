@@ -21,7 +21,7 @@ using static CnV.Debug;
 using static CnV.CityBuild;
 using static CnV.GameClient;
 using static CnV.CityViewS;
-
+using static CnV.Building;
 //using CityBuildAction = CnV.CityBuild.Action;
 namespace CnV
 {
@@ -54,14 +54,16 @@ namespace CnV
 		}
 
 		const int atlasTileSize = 128;
+		const int atlasRows = 33;
 		const int atlasColumns = 4;
-		static public (int x, int y) BidToAtlas(int bid)
+		internal const int atlasIconCount = atlasRows*atlasColumns;
+		static public (int x, int y) BidToAtlas(BuildingId bid)
 		{
-			var iconId = bid - 443;
+			var iconId = BuildingDef.idToAtlasOffset[bid];
 			var y = iconId / atlasColumns;
 			return (iconId - y*atlasColumns,y );
 		}
-		const int atlasRows = 33;
+		
 		const float duDt = (1.0f / atlasColumns);
 		const float dvDt = (1.0f / atlasRows);
 		static Vector2 buildCityOrigin;
@@ -80,8 +82,8 @@ namespace CnV
 
 		public static float zHover => 4.0f / 64.0f * Settings.parallax;
 
-		public static (int x, int y) selectedPoint = AUtil.NanXY;
-		public static (int x, int y) hovered = AUtil.NanXY;
+		public static BuildC selectedPoint = BuildC.Nan;
+		public static BuildC hovered = BuildC.Nan;
 	//	static Color textColor = new Color(0xf1, 0xd1, 0x1b, 0xff);
 		public static Vector2 CityPointToCC( float x, float y)
 		{
@@ -142,7 +144,7 @@ namespace CnV
 				{
 					for(var cx = span0;cx <= span1;++cx)
 					{
-						var bspot = XYToId((cx, cy));
+						var bspot = new BuildC(cx, cy);
 
 						Building cur, next;//,overlay;
 						if(!CityBuild.isPlanner)
@@ -159,12 +161,12 @@ namespace CnV
 						}
 
 						// this is to show the demo symbol?
-						var bidOverride = -1;
-						if(bspot == 0)
+						var bidOverride = bidNone;
+						if(bspot == bspotWall)
 						{
 							if(cur.bl == 0)
 								continue;
-							bidOverride = 799;
+							bidOverride = bidWall;
 						}
 
 						var cs = CityPointToQuad(cx,cy);
@@ -267,7 +269,7 @@ namespace CnV
 						// draw overlays
 						if(build.isLayoutCustom && Settings.drawBuildingOverlays && build.IsBuildingSpotOrWater(bspot) )
 						{
-							int bid, currentBid;
+							BuildingId bid, currentBid;
 							//	BuildingDef bd;
 							//Building current;
 							if(CityBuild.isPlanner)
@@ -299,8 +301,7 @@ namespace CnV
 
 							if(bid==0)
 							{
-								bid = 443 + 8 * 4; // X mark
-								if(currentBid == bidCottage)
+								if(currentBid == Building.bidCabin)
 									continue; // leave it, it is fine
 							}
 
@@ -393,7 +394,7 @@ namespace CnV
 					//		//	if (sel != 0)
 					//		//	{
 					//		//		DrawBuilding(hovered, iAlpha, sel, animationT * 0.3247f);
-					//		//		ShellPage.contToolTip = $"Click to place { BuildingDef.all[sel].Bn }";
+					//		//		ShellPage.contToolTip = $"Click to place { BuildingDef.FromId(sel).Bn }";
 					//		//	}
 					//		//}
 					//		//else
@@ -497,14 +498,14 @@ namespace CnV
 
 		}
 
-		private static void DrawBuilding(int iAlpha, float zBase, float fontScale, (Vector2 c0,Vector2 c1) cs,in Building bid,int layer,int fontAlpha=-1, int blOverride=-1, int bidOverride = -1)
+		private static void DrawBuilding(int iAlpha, float zBase, float fontScale, (Vector2 c0,Vector2 c1) cs,in Building bid,int layer,int fontAlpha=-1, int blOverride=-1, BuildingId bidOverride = 0)
 		{
 			Assert(isDrawing);
 			if (bid.id != 0)
 			{
 				var bd = BuildingDef.FromId(bid.id);
 
-				var iconId = BidToAtlas(bidOverride==-1? BuildingDef.FromId(bid.id).bid : bidOverride);
+				var iconId = BidToAtlas(bidOverride==bidNone? bid.id : bidOverride);
 
 				var u0 = iconId.x * duDt;
 				var v0 = iconId.y * dvDt;
@@ -533,7 +534,7 @@ namespace CnV
 			draw.AddQuad(Layer.tileCity + 2, mat, cs.c0, cs.c1, new Color( cityDrawAlpha, cityDrawAlpha, cityDrawAlpha, cityDrawAlpha / 2).Scale(cScale),zZero);
 		}
 
-		public static void DrawBuilding((int x, int y) cc,int iAlpha, int bid, float randomValue, Material overlay=null)
+		public static void DrawBuilding((int x, int y) cc,int iAlpha, BuildingId bid, float randomValue, Material overlay=null)
 		{
 			const float zBase = 0.0f;
 			var iconId = BidToAtlas(bid);
@@ -580,12 +581,12 @@ namespace CnV
 
 		public static void ClearSelectedBuilding()
 		{
-			SetSelectedBuilding(AUtil.NanXY, isSingleClickAction);
+			SetSelectedBuilding(BuildC.Nan, isSingleClickAction);
 		}
 
-		public static void SetSelectedBuilding( (int x, int y) xy, bool _isSingleClickAction)
+		public static void SetSelectedBuilding( BuildC xy, bool _isSingleClickAction)
 		{
-			if (xy.IsNotNan())
+			if (xy.isNotNan)
 			{
 				if (action == CityBuildAction.moveEnd)
 				{ 
