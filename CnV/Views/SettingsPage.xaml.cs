@@ -288,13 +288,13 @@ namespace CnV
 				//	DungeonView.Initialize();
 		layoutOffsets = new LayoutOffsets[]
 		{
-			new(0.875f, 0.333f, 0.75f, 0.42f, 0.375f),
-			new(1.0f, 0.0f, 0.75f, 0.42f, 0.375f),
+			new(0.875f, 0.333f, 0.75f, 0.22f, 0.375f),
+			new(1.0f, 0.0f, 0.75f, 0.22f, 0.375f),
 
-			new(0.5f, 0.25f, 0.75f, 0.42f, 0.25f),
+			new(0.5f, 0.25f, 0.75f, 0.22f, 0.25f),
 
-			new(0.5f, 0.5f, 0.75f, 0.42f, 0.375f),
-			new(0f, 0.5f, 0.375f, 0.42f, 0.25f),
+			new(0.5f, 0.5f, 0.75f, 0.22f, 0.375f),
+			new(0f, 0.5f, 0.375f, 0.22f, 0.25f),
 
 			new(0.875f, 0.333f, 0.75f, 0.625f, 0.625f),
 		};

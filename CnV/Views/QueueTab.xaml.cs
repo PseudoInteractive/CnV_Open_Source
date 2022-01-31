@@ -414,9 +414,9 @@ namespace CnV.Views
 			return rv;
 		}
 
-		internal static List<(int x, int y)> FindPendingOverlayBuildingsOfType(City city, int count, int bid, bool addDummyIfNoLayout=false)
+		internal static List<BuildC> FindPendingOverlayBuildingsOfType(City city, int count, BuildingId bid, bool addDummyIfNoLayout=false)
 		{
-			List<(int x, int y)> rv = new();
+			List<BuildC> rv = new();
 			if (count <= 0)
 				goto done;
 			if(!city.isLayoutCustom && addDummyIfNoLayout)

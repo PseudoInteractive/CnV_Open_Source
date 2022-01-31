@@ -138,12 +138,14 @@ namespace CnV.Services
 			try
 			{
 				var t2 = BuildingDef.Init();
-				var t3 = TroopInfo.Init();
+				var t3 = CnV.Data.TroopInfo.Init();
+			
 				var t4 = App.EnsureBrowserInstalledAsync();
+				var t5 = CnV.Data.Boss.Init();
 				Settings.Initialize();
 
 
-				await Task.WhenAll(t2,t3,t4);
+				await Task.WhenAll(t2,t3,t4,t5);
 			}
 			catch(Exception ex)
 			{

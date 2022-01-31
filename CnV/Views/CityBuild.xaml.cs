@@ -726,13 +726,17 @@ namespace CnV
 			}
 		}
 
-		internal static void ShortBuild(BuildingId bid)
+		internal static async void ShortBuild(BuildingId bid)
 		{
-			PerformAction(CityBuild.CityBuildAction.build, hovered, bid, false);
-			lastQuickBuildActionBSpot = XYToId(hovered);
+			await PerformAction(CityBuild.CityBuildAction.build, hovered, bid, false);
+			SetLastQuickBuildActionSpot(hovered);
 
 		}
-
+		public static void SetLastQuickBuildActionSpot( BuildC c)
+		{
+			lastQuickBuildActionSpotValidUntil = CnVServer.ServerTimeSeconds()+3;
+			lastQuickBuildActionBSpot = c;
+		}
 		public static void PointerDown((int x, int y) cc)
 		{
 			//  called before pointer release, pointer release is a click or drag/swaipe
@@ -775,7 +779,7 @@ namespace CnV
 			//	ElementSoundPlayer.Play(action == Action.destroy ? ElementSoundKind.GoBack : ElementSoundKind.Focus);
 				await PerformAction(action, cc, quickBuildId, false);
 				if (action != CityBuildAction.moveStart && action != CityBuildAction.moveEnd)
-					lastQuickBuildActionBSpot = cc;
+					SetLastQuickBuildActionSpot(cc);
 
 				//	Assert(!isSingleClickAction);
 				//				{
@@ -924,7 +928,7 @@ namespace CnV
 							else
 							{
 								await PerformAction(bi.action, selectedPoint, 0, false);
-								lastQuickBuildActionBSpot = XYToId(selectedPoint);
+								SetLastQuickBuildActionSpot(selectedPoint);
 
 								RevertToLastAction();
 

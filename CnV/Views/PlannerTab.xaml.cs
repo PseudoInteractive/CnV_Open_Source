@@ -19,7 +19,7 @@ using System.Buffers;
 namespace CnV.Views
 {
 	using Game;
-	using GameData;
+	using Data;
 
 	public sealed partial class PlannerTab : UserTab
 	{
@@ -408,10 +408,10 @@ namespace CnV.Views
 			{
 				for (int x = span0; x <= span1; ++x)
 				{
-					var c = (x, y);
-					if (c.IsXYInCenter() ? center : outer)
+					var c = new BuildC(x, y);
+					if (c.isInCenter ? center : outer)
 					{
-						city.layout[XYToId((x, y))] = bc[XYToId((y, -x))];
+						city.layout[c] = bc[XYToId((y, -x))];
 					}
 
 				}

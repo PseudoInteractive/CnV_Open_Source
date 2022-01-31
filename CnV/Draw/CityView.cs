@@ -174,7 +174,7 @@ namespace CnV
 
 						var dt = (animationT - animationOffsets[bspot]);
 						float blendT = ((dt)*0.333f).Frac();
-						var bonus = (dt*0.5f).Abs().Saturate().BSpline(1,0,0);
+						var bonus = (dt*0.5f).Abs().Saturate().SCurve(1,0);
 
 						if(cur.id==next.id || ((next.bl==cur.bl)&&(!cur.isRes)))
 						{
@@ -187,7 +187,7 @@ namespace CnV
 								{
 									var t = (blendT) * 4.0f;
 									bl = next.bl; // fade next number
-									fontA = t.BSpline(0,1,1);
+									fontA = t.SCurve(0,1);
 									blendOp = t.SCurve();
 								}
 								else if(blendT < 0.5f)
@@ -196,7 +196,7 @@ namespace CnV
 									blendOp = 1;
 									// fade out number
 									bl = next.bl; // fade next number
-									fontA = t.BSpline(1,1,0);
+									fontA = t.SCurve(1,0);
 
 								}
 								else if(blendT < 0.75f) // fade out hammer
@@ -205,7 +205,7 @@ namespace CnV
 									blendOp = t.SCurve(1,0);
 									// fade in last number
 									bl = cur.bl;
-									fontA = t.BSpline(0,1,1);
+									fontA = t.SCurve(0,1);
 								}
 								else
 								{
@@ -213,7 +213,7 @@ namespace CnV
 									var t = (blendT - 0.75f) * 4.0f; // fade in new number
 																	 // fade out number
 									bl = cur.bl;
-									fontA = t.BSpline(1,1,0);// prior number out	
+									fontA = t.SCurve(1,0);// prior number out	
 								}
 								var z = bonus*buildingPlacementZ;
 								DrawBuilding(iAlpha,z*0.5f,fontScale,cs,next,Layer.tileCity,(int)(alpha*fontA*255f),bl,bidOverride);
@@ -250,12 +250,12 @@ namespace CnV
 							if(blendT < 0.25f)
 							{
 								var t = blendT * 4.0f; // demo fades in, half second
-								blendOp = t.BSpline(0,1,1);
+								blendOp = t.SCurve(0,1);
 							}
 							else
 							{
 								var t = (blendT - 0.25f) *(1.0f/0.75f); // building fades in, hammer fades out 1 seconds
-								blendOp = t.BSpline(1,1,0);
+								blendOp = t.SCurve(1,0);
 							}
 							var z = bonus*(0.5f/64.0f);
 

@@ -17,8 +17,11 @@ namespace CnV
 		{
 			if(hovered.isNotNan)
 			{
-				if(XYToId(hovered) == lastQuickBuildActionBSpot)
+				if( hovered == lastQuickBuildActionBSpot && (CnVServer.ServerTimeSeconds() < lastQuickBuildActionSpotValidUntil))
 					return;
+				else
+					lastQuickBuildActionBSpot = BuildC.Nan;
+
 				PerformAction(action, hovered, quickBuildId, true);
 			}
 		}
@@ -82,194 +85,203 @@ namespace CnV
 		}
 		public static async Task PerformAction(CityBuildAction action, BuildC cc, BuildingId _quickBuildId, bool dryRun)
 		{
-
-
-			//int bspot = XYToId(cc);
-			var build = GetBuild();
-			var b = City.GetBuild().GetBuildingOrLayout(cc);
-
-			if(action == CityBuildAction.moveEnd)
+			try
 			{
-				// We lost our move source
-				if(CityView.selectedPoint.isNan)
+
+
+				//int bspot = XYToId(cc);
+				var build = GetBuild();
+				var b = City.GetBuild().GetBuildingOrLayout(cc);
+
+				if(action == CityBuildAction.moveEnd)
 				{
-					if(isSingleClickAction)
+					// We lost our move source
+					if(CityView.selectedPoint.isNan)
 					{
-						RevertToLastAction();
-					}
-					else
-					{
-						SetAction(CityBuildAction.moveStart);
+						if(isSingleClickAction)
+						{
+							RevertToLastAction();
+						}
+						else
+						{
+							SetAction(CityBuildAction.moveStart);
+						}
 					}
 				}
-			}
 
-			switch(action)
-			{
-				case CityBuildAction.layout:
-					{
-
-						if(CityBuild.isPlanner)
-						{
-							Status("You are in layout mode, exit to use the layout tool", dryRun);
-						}
-						else if(!build.isLayoutCustom)
+				switch(action)
+				{
+					case CityBuildAction.layout:
 						{
 
-							Status("Please assign a layout", dryRun);
-						}
-						else
-						{
+							if(CityBuild.isPlanner)
+							{
+								Status("You are in layout mode, exit to use the layout tool", dryRun);
+							}
+							else if(!build.isLayoutCustom)
+							{
 
-							await City.GetBuild().SmartBuild(cc, build.GetLayoutBid(cc), dryRun: dryRun, searchForSpare: true, wantDemoUI: null);
+								Status("Please assign a layout", dryRun);
+							}
+							else
+							{
 
-						}
-						break;
-					}
-				case CityBuildAction.build:
-					{
-						if(!b.isEmpty && !isPlanner)
-						{
-							//	if(dryRun)
-							//	{
-							Status($"Select {b.name}", dryRun);
-							//	}
-							//	else
-							//	{
-							// redirect to normal click
-							//		ShowContectMenu(cc, false);
-							//	}
-							//	result = false;
+								await City.GetBuild().SmartBuild(cc, build.GetLayoutBid(cc), dryRun: dryRun, searchForSpare: true, wantDemoUI: null);
+
+							}
 							break;
 						}
-						else
+					case CityBuildAction.build:
+						{
+							if(!b.isEmpty && !isPlanner)
+							{
+								//	if(dryRun)
+								//	{
+								Status($"Select {b.name}", dryRun);
+								//	}
+								//	else
+								//	{
+								// redirect to normal click
+								//		ShowContectMenu(cc, false);
+								//	}
+								//	result = false;
+								break;
+							}
+							else
+							{
+								//if (buildQueueFull)
+								//{
+								//	Status("Build Queue full", dryRun);
+								//	break;
+								//}
+
+								var sel = _quickBuildId;
+
+								if(sel != 0)
+								{
+									await City.GetBuild().SmartBuild(cc, sel, searchForSpare: false, dryRun: dryRun, wantDemoUI: null);
+
+									break;
+								}
+								Status("Please select a valid building", dryRun);
+							}
+							break;
+						}
+					case CityBuildAction.destroy:
 						{
 							//if (buildQueueFull)
 							//{
 							//	Status("Build Queue full", dryRun);
 							//	break;
 							//}
+							await City.GetBuild().Demolish(cc, dryRun);
 
-							var sel = _quickBuildId;
 
-							if(sel != 0)
-							{
-								await City.GetBuild().SmartBuild(cc, sel, searchForSpare: false, dryRun: dryRun, wantDemoUI: null);
-
-								break;
-							}
-							Status("Please select a valid building", dryRun);
+							break;
 						}
-						break;
-					}
-				case CityBuildAction.destroy:
-					{
-						//if (buildQueueFull)
-						//{
-						//	Status("Build Queue full", dryRun);
-						//	break;
-						//}
-						await City.GetBuild().Demolish(cc, dryRun);
-
-
-						break;
-					}
-				case CityBuildAction.moveStart:
-				case CityBuildAction.moveEnd:
-					{
-						MoveHovered(isSingleClickAction, (action == CityBuildAction.moveStart), dryRun);
-						break;
-					}
-				case CityBuildAction.downgrade:
-					{
-						await City.GetBuild().Downgrade(cc, dryRun);
-						break;
-					}
-				case CityBuildAction.upgrade:
-					{
-						City.GetBuild().UpgradeToLevel(1, cc, dryRun);
-						break;
-					}
-				case CityBuildAction.flipLayoutH:
-					{
-						if(!dryRun)
+					case CityBuildAction.moveStart:
+					case CityBuildAction.moveEnd:
 						{
-							var city = GetBuild();
-							city.FlipLayoutH(true);
-
-
+							MoveHovered(isSingleClickAction, (action == CityBuildAction.moveStart), dryRun);
+							break;
 						}
-
-						break;
-					}
-				//case Action.showShareString:
-				//	{
-				//		if (!dryRun)
-				//		{
-				//			if (isSingleClickAction)
-				//			await ShareString.Show(City.build);
-				//		}
-				//		break;
-				//	}
-				//case Action.doTheStuff:
-				//	{
-				//		if (!dryRun)
-				//		{
-				//			if (isSingleClickAction)
-				//			await City.GetBuild().DoTheStuff();
-				//		}
-				//		break;
-				//	}
-				//case Action.togglePlanner:
-				//	{
-				//		if (!dryRun)
-				//		{
-
-				//			AppS.DispatchOnUIThreadLow(()=>TogglePlanner() );
-				//		}
-
-				//		break;
-				//	}
-				case CityBuildAction.flipLayoutV:
-					{
-						if(!dryRun)
-							GetBuild().FlipLayoutV(true);
-						break;
-					}
-				case CityBuildAction.none:
-					{
-						if(b.isEmpty)
+					case CityBuildAction.downgrade:
 						{
-							if(IsBuildingSpotOrTownHall(XYToId(hovered)))
+							await City.GetBuild().Downgrade(cc, dryRun);
+							break;
+						}
+					case CityBuildAction.upgrade:
+						{
+							await City.GetBuild().UpgradeToLevel(1, cc, dryRun);
+							break;
+						}
+					case CityBuildAction.flipLayoutH:
+						{
+							if(!dryRun)
 							{
-								Status($"Left click to build something\nRight click to select a quick build tool", dryRun);
+								var city = GetBuild();
+								city.FlipLayoutH(true);
+
 
 							}
-							else if(IsTowerSpot(hovered))
-							{
-								Status($"Left click to build tower\nRight click to select a quick build tool", dryRun);
 
-							}
-							else if(IsWallSpot(hovered))
+							break;
+						}
+					//case Action.showShareString:
+					//	{
+					//		if (!dryRun)
+					//		{
+					//			if (isSingleClickAction)
+					//			await ShareString.Show(City.build);
+					//		}
+					//		break;
+					//	}
+					//case Action.doTheStuff:
+					//	{
+					//		if (!dryRun)
+					//		{
+					//			if (isSingleClickAction)
+					//			await City.GetBuild().DoTheStuff();
+					//		}
+					//		break;
+					//	}
+					//case Action.togglePlanner:
+					//	{
+					//		if (!dryRun)
+					//		{
+
+					//			AppS.DispatchOnUIThreadLow(()=>TogglePlanner() );
+					//		}
+
+					//		break;
+					//	}
+					case CityBuildAction.flipLayoutV:
+						{
+							if(!dryRun)
+								GetBuild().FlipLayoutV(true);
+							break;
+						}
+					case CityBuildAction.none:
+						{
+							if(b.isEmpty)
 							{
-								Status($"Left click to build wall\nRight click to select a quick build tool", dryRun);
+								if(IsBuildingSpotOrTownHall(XYToId(hovered)))
+								{
+									Status($"Left click to build something\nRight click to select a quick build tool", dryRun);
+
+								}
+								else if(IsTowerSpot(hovered))
+								{
+									Status($"Left click to build tower\nRight click to select a quick build tool", dryRun);
+
+								}
+								else if(IsWallSpot(hovered))
+								{
+									Status($"Left click to build wall\nRight click to select a quick build tool", dryRun);
+								}
+								else
+								{
+									Status($"Please don't left click here\nRight click to select a quick build tool", dryRun);
+								}
 							}
 							else
 							{
-								Status($"Please don't left click here\nRight click to select a quick build tool", dryRun);
+								Status($"Left click modify {b.def.Bn}, Right click to select a quick build tool", dryRun);
 							}
-						}
-						else
-						{
-							Status($"Left click modify {b.def.Bn}, Right click to select a quick build tool", dryRun);
-						}
 
-						break;
-					}
+							break;
+						}
+				}
+			}
+			catch(Exception ex)
+			{
+
+				LogEx(ex);
 			}
 		}
 		public static BuildingId quickBuildId;
 		public static BuildC lastQuickBuildActionBSpot = BuildC.Nan;
+		public static uint lastQuickBuildActionSpotValidUntil;
 		public static BuildC lastBuildToolTipSpot = BuildC.Nan;
 		public enum CityBuildAction
 		{

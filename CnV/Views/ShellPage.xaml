@@ -88,7 +88,7 @@
 				<ProgressRing x:Name="progress" IsActive="False" />
 				<TextBlock Grid.Column="1" x:Name="work" x:FieldModifier="public" Margin="6" VerticalAlignment="Center" Width="255" />
 				<TextBox Grid.Column="2" x:Name="coords" Margin="4" Width="100" TextAlignment="Center"  Text="000:000" HorizontalAlignment="Center" x:FieldModifier="public" KeyDown="coords_KeyDown"/>
-						<ComboBox Grid.Column="3" x:Name="windowLayout" SelectedIndex="{x:Bind layout}"  VerticalAlignment="Center" Margin="4"
+						<ComboBox Grid.Column="3" x:Name="windowLayout" SelectedIndex="{x:Bind layout, Mode=TwoWay}"  VerticalAlignment="Center" Margin="4"
 						          ToolTipService.ToolTip="Select a view layout"  ItemsSource="{x:Bind layoutOptions}"  />
 						<winui:ComboBox Grid.Column="4" x:Name="cityBox" x:FieldModifier="public" 
 					                Width="200"

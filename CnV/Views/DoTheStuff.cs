@@ -143,7 +143,7 @@ public static class DoTheStuff
 			}
 			// raise to level 10
 			if(c.bl != 0) // did it work?
-				await city.EnqueueUpgrade(10,XYToId((c.x, c.y)));
+				await city.EnqueueUpgrade(10,(c.x, c.y));
 		}
 		Assert(city.isBuild);
 			if(!bc.hasWall && bc.hasCastle && !city.is7Point)
@@ -233,7 +233,7 @@ public static class DoTheStuff
 									{
 										bool hasCabinsInLayout = cabinsInLayout.Any();
 
-										var c = hasCabinsInLayout ? cabinsInLayout.First() : (x, y);// (int x, int y) c = RandCitySpot();
+										var c = hasCabinsInLayout ? cabinsInLayout.First() : new BuildC(x, y);// (int x, int y) c = RandCitySpot();
 										if(hasCabinsInLayout)
 										{
 											cabinsInLayout.RemoveAt(0);
@@ -247,9 +247,9 @@ public static class DoTheStuff
 
 										if(bc.buildingCount >= city.GetBuildingLimit(bc))
 											goto done;
-										if(city.postQueueBuildings[City.XYToId(c)].isEmpty && (city.GetLayoutBid(c) == 0))
+										if(city.postQueueBuildings[c].isEmpty && (city.GetLayoutBid(c) == 0))
 										{
-											await city.Build(XYToId(c),bidCottage,false,false);
+											await city.Build(c,bidCottage,false,false);
 											++bc.cabins;
 										}
 										if(bc.cabins >= Settings.startCabinCount)
