@@ -78,7 +78,6 @@
     <PackageReference Include="Microsoft.Toolkit.Diagnostics" Version="7.1.2" />
     <PackageReference Include="Microsoft.Toolkit.HighPerformance" Version="7.1.2" />
     <PackageReference Include="Microsoft.Toolkit.Mvvm" Version="7.1.2" />
-    <PackageReference Include="Microsoft.Windows.CsWinRT" Version="1.4.1" />
 	<PackageReference Include="Azure.Data.Tables" Version="12.4.0" />
     <PackageReference Include="Azure.Storage.Blobs" Version="12.11.0-beta.2" />
     <PackageReference Include="CommunityToolkit.WinUI.Notifications" Version="7.1.2" />
@@ -89,8 +88,8 @@
     <PackageReference Include="DSharpPlus.SlashCommands" Version="4.2.0-nightly-01063" />
     <PackageReference Include="Enums.NET" Version="4.0.0" />
     <PackageReference Include="Grpc.Net.Client" Version="2.41.0-pre1" />
-    <PackageReference Include="Grpc.Net.Client" Version="2.42.0" />
-    <PackageReference Include="Humanizer.Core" Version="2.13.14" />
+    <PackageReference Include="Grpc.Net.Client" Version="2.43.0-pre1" />
+    <PackageReference Include="Humanizer.Core" Version="2.14.1" />
     <PackageReference Include="MessagePack" Version="2.3.85" />
     <PackageReference Include="MessagePack.Experimental" Version="2.3.85" />
     <PackageReference Include="MessagePackAnalyzer" Version="2.3.85" />
@@ -99,14 +98,13 @@
     <PackageReference Include="Microsoft.Toolkit" Version="7.1.2" />
     <PackageReference Include="Microsoft.Toolkit.Diagnostics" Version="7.1.2" />
     <PackageReference Include="Microsoft.Toolkit.HighPerformance" Version="7.1.2" />
-    <PackageReference Include="Microsoft.Toolkit.Mvvm" Version="7.1.2" />
-    <PackageReference Include="Microsoft.Windows.CsWinRT" Version="1.4.1" />	  
+    <PackageReference Include="Microsoft.Toolkit.Mvvm" Version="7.1.2" />	  
     <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.0.0" />
-    <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.22538-preview" />
+    <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.22543-preview" />
 	<PackageReference Include="Nito.AsyncEx.Coordination" Version="5.1.2" />
     <PackageReference Include="PlayFabAllSDK" Version="1.108.220118" />
-    <PackageReference Include="Syncfusion.Grid.WinUI" Version="19.4.0.47" />
-    <PackageReference Include="Syncfusion.Licensing" Version="19.4.0.47" />
+    <PackageReference Include="Syncfusion.Grid.WinUI" Version="19.4.0.48" />
+    <PackageReference Include="Syncfusion.Licensing" Version="19.4.0.48" />
 	<PackageReference Include="SharpDX" Version="4.2.0" />
     <PackageReference Include="SharpDX.D3DCompiler" Version="4.2.0" />
     <PackageReference Include="SharpDX.Direct3D11" Version="4.2.0" />

@@ -80,7 +80,7 @@ namespace CnV.Views
 				var htmlVisible = webWidth > 4;
 				int htmlShift = 0;
 				var canvasScaledX = (webWidth);
-				Assert( (webWidth-htmlBaseWidth*zoom).Abs() < 0.75f );
+				Assert( (webWidth-htmlBaseWidth*zoom).Abs() < 4.75f );
 
 				if(!htmlVisible)
 				{

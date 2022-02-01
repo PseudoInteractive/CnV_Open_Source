@@ -28,9 +28,10 @@ namespace CnV
 	using Draw;
 	using Game;
 	using Views;
-
+	
 	public class CityView
 	{
+	///	public Event a;
 		internal const float buildingPlacementZ = (1.0f/64.0f);
 		public static bool isDrawing;
 		static CityView()
@@ -131,7 +132,7 @@ namespace CnV
 				// draw each building tile
 				var city = City.GetBuild();
 				cityDrawAlpha = iAlpha;
-				var zBase = 0f;
+				//const float zBase = 0f;
 				// selected
 
 				// Timeline:
@@ -160,22 +161,47 @@ namespace CnV
 							next = cur;
 							//				overlay = city.postQueueBuildings[id];
 						}
-
+						if(cur.id==0 && next.id==0)
+							continue;
 						// this is to show the demo symbol?
-						var bidOverride = bidNone;
 						if(bspot == bspotWall)
 						{
 							if(cur.bl == 0)
 								continue;
-							bidOverride = bidWall;
 						}
 
 						var cs = CityPointToQuad(cx,cy);
 
 						var dt = (animationT - animationOffsets[bspot]);
-						float blendT = ((dt)*0.333f).Frac();
-						var bonus = (dt*0.5f).Abs().Saturate().SCurve(1,0);
-
+						float dtF = dt*0.3333f;
+						float blendT = (dtF).Frac();
+						// ZBase is on initial action placement
+						var zBase =0f;
+						if(dtF < 1 )
+						{
+							var prior = priorBuildings[bspot];
+							if(prior == bidNone )
+							{
+								// drop in
+								zBase = dtF.SCurve(1f,0f)*buildingPlacementZ;
+							}
+							else
+							{
+								if(next.id == bidNone)
+								{
+									// fire out
+									zBase = dtF.Bezier(0f,0.0f,1.0f)*buildingPlacementZ;
+								}
+								else
+								{
+									
+									// bump
+									zBase = dtF.CatmullRom(-1f, 0f,1,0.0f,0f)*buildingPlacementZ;
+									//Log($"{dtF}:  {dtF.CatmullRom(-1f, 0f, 1, 0f,0f)}");
+								}
+							}
+						}
+					
 						if(cur.id==next.id || ((next.bl==cur.bl)&&(!cur.isRes)))
 						{
 							if(next.bl != cur.bl)
@@ -215,19 +241,18 @@ namespace CnV
 									bl = cur.bl;
 									fontA = t.SCurve(1,0);// prior number out	
 								}
-								var z = bonus*buildingPlacementZ;
-								DrawBuilding(iAlpha,z*0.5f,fontScale,cs,next,Layer.tileCity,(int)(alpha*fontA*255f),bl,bidOverride);
+								DrawBuilding(next.id, iAlpha, zBase, Layer.tileCity, cs, fontScale, (int)(alpha*fontA*255f), bl);
 								if(blendOp > 0)
 								{
-									// upgrade
-									
-									draw.AddQuad(Layer.tileCity + 2,(next.bl > cur.bl) ? decalBuildingValid : decalSelectEmpty,cs.c0,cs.c1,new Color(iAlpha,iAlpha,iAlpha,iAlpha / 2).Scale(blendOp),(z,z,z,z) );
+									// cross fade in new level that this is going to
+									float z1 = zBase*1.5f;
+									draw.AddQuad(Layer.tileCity + 2,(next.bl > cur.bl) ? decalBuildingValid : decalSelectEmpty,cs.c0,cs.c1,new Color(iAlpha,iAlpha,iAlpha,iAlpha / 2).Scale(blendOp),(z1,z1,z1,z1) );
 								}
 							}
 							else
 							{
 								// not changing
-								DrawBuilding(iAlpha,zBase,fontScale,cs,cur,Layer.tileCity,-1,-1,bidOverride);
+								DrawBuilding(cur.id, iAlpha, zBase, layer: Layer.tileCity, cs: cs, fontScale: fontScale, fontAlpha: -1, buildingLevel: cur.bl);
 
 							}
 
@@ -257,14 +282,15 @@ namespace CnV
 								var t = (blendT - 0.25f) *(1.0f/0.75f); // building fades in, hammer fades out 1 seconds
 								blendOp = t.SCurve(1,0);
 							}
-							var z = bonus*(0.5f/64.0f);
-
+						
+							// either buildings from new or demoing
 							if(blendOp > 0)
 							{
-								draw.AddQuad(Layer.tileCity + 2,blendMat,cs.c0,cs.c1,(new Color(iAlpha,iAlpha,iAlpha,iAlpha)).Scale(blendOp),(z,z,z,z) );
+								float z1 = zBase*1.5f;
+								draw.AddQuad(Layer.tileCity + 2,blendMat,cs.c0,cs.c1,(new Color(iAlpha,iAlpha,iAlpha,iAlpha)).Scale(blendOp),(z1,z1,z1,z1) );
 							}
 
-							DrawBuilding(iAlpha,z*0.5f,fontScale,cs,bd,Layer.tileCity,-1,-1,bidOverride);
+							DrawBuilding(bd.id, iAlpha, zBase: zBase, layer: Layer.tileCity, cs: cs, fontScale: fontScale, fontAlpha: -1, buildingLevel: bd.bl);
 						}
 
 						// draw overlays
@@ -499,30 +525,74 @@ namespace CnV
 
 		}
 
-		private static void DrawBuilding(int iAlpha, float zBase, float fontScale, (Vector2 c0,Vector2 c1) cs,in Building bid,int layer,int fontAlpha=-1, int blOverride=-1, BuildingId bidOverride = 0)
+		private static void DrawBuilding(BuildingId bid, int iAlpha, float zBase, int layer, (Vector2 c0, Vector2 c1) cs, float fontScale=0, int fontAlpha = -1, int buildingLevel = -1)
 		{
 			Assert(isDrawing);
-			if (bid.id != 0)
-			{
-				var bd = BuildingDef.FromId(bid.id);
+			if( bid == 0)
+				return;
 
-				var iconId = BidToAtlas(bidOverride==bidNone? bid.id : bidOverride);
+				var iconId = BidToAtlas(bid);
 
 				var u0 = iconId.x * duDt;
 				var v0 = iconId.y * dvDt;
+
+			// building
+			draw.AddQuad(layer, buildingAtlas, cs.c0, cs.c1, new Vector2(u0, v0), new Vector2(u0 + duDt, v0 + dvDt), iAlpha.AlphaToAll(), (zBase, zBase, zBase, zBase)); // shader does the z transform
+			
+			// building level
+			if(buildingLevel > 0) 
+			{
+					if(fontAlpha == -1)
+						fontAlpha = iAlpha;
+				
+					DrawTextBox(buildingLevel.ToString(), 0.825f.Lerp(cs.c0, cs.c1), textformatBuilding,
+						color:new Color(0xf1* fontAlpha/256, 0xd1* fontAlpha/256, 0x1b* fontAlpha/256, fontAlpha),
+						backgroundAlpha: (byte)iAlpha, layer:((int)layer+16), scale: fontScale, zBias: zBase*0.5f );
+			}
+			
+		}
+
+		//private static void DrawBuilding(int iAlpha, float zBase, float fontScale, (Vector2 c0,Vector2 c1) cs,in Building bid,int layer,int fontAlpha=-1, int blOverride=-1, BuildingId bidOverride = 0)
+		//{
+		//	Assert(isDrawing);
+		//	if (bid.id != 0)
+		//	{
+		//		var bd = BuildingDef.FromId(bid.id);
+
+		//		var iconId = BidToAtlas(bidOverride==bidNone? bid.id : bidOverride);
+
+		//		var u0 = iconId.x * duDt;
+		//		var v0 = iconId.y * dvDt;
 			
 
-				draw.AddQuad(layer, buildingAtlas, cs.c0, cs.c1, new Vector2(u0, v0), new Vector2(u0 + duDt, v0 + dvDt), iAlpha.AlphaToAll(), (zBase, zBase, zBase, zBase)); // shader does the z transform
-				if (fontAlpha == -1)
-					fontAlpha = iAlpha;
-				if (blOverride == -1)
-					blOverride = bid.bl;
-				if (blOverride != 0)
-					DrawTextBox(blOverride.ToString(), 0.825f.Lerp(cs.c0, cs.c1), textformatBuilding, 
-						new Color(0xf1* fontAlpha/256, 0xd1* fontAlpha/256, 0x1b* fontAlpha/256, fontAlpha),
-						(byte)iAlpha, ((int)layer+16), scale: fontScale, zBias: 0);
+		//		draw.AddQuad(layer, buildingAtlas, cs.c0, cs.c1, new Vector2(u0, v0), new Vector2(u0 + duDt, v0 + dvDt), iAlpha.AlphaToAll(), (zBase, zBase, zBase, zBase)); // shader does the z transform
+		//		if (fontAlpha == -1)
+		//			fontAlpha = iAlpha;
+		//		if (blOverride == -1)
+		//			blOverride = bid.bl;
+		//		if (blOverride != 0)
+		//			DrawTextBox(blOverride.ToString(), 0.825f.Lerp(cs.c0, cs.c1), textformatBuilding, 
+		//				new Color(0xf1* fontAlpha/256, 0xd1* fontAlpha/256, 0x1b* fontAlpha/256, fontAlpha),
+		//				(byte)iAlpha, ((int)layer+16), scale: fontScale, zBias: 0);
 				
-			}
+		//	}
+		//}
+		public static void DrawBuilding((int x, int y) cc, int iAlpha, BuildingId bid,  float zBase)
+		{
+			var cs = CityPointToQuad(cc.x, cc.y);
+			var off = AGame.animationT * 0.333f;
+			var cScale = off.Wave().Lerp(0.8f, 1.0f);//, off.WaveC().Lerp(0.8f, 1.0f));
+
+			DrawBuilding(bid: bid, iAlpha: iAlpha.ScaleAndRound(cScale), zBase: zBase, layer: Layer.tileCity-1, cs: cs);
+
+
+			//var iconId = BidToAtlas(bid);
+			//var u0 = iconId.x * duDt;
+			//var v0 = iconId.y * dvDt;
+
+			//draw.AddQuad(Layer.tileCity, buildingAtlas, cs.c0, cs.c1, new Vector2(u0, v0), new Vector2(u0 + duDt, v0 + dvDt), iAlpha.AlphaToAll().Scale(cScale), (zBase, zBase, zBase, zBase)); // shader does the z transform
+			//																																													//if(overlay!=null)
+			//																																													//	draw.AddQuad(Layer.tileCity + 2, overlay, cs.c0, cs.c1, new Color(iAlpha, iAlpha, iAlpha, iAlpha / 2).Scale(cScale), (zHover+zBias, zHover+zBias, zHover+zBias, zHover+zBias) );
 		}
 		static (float,float,float,float) zZero = (0,0,0,0);
 		public static void DrawSprite( (int x, int y) cc, Material mat, float animFreq)
@@ -535,20 +605,7 @@ namespace CnV
 			draw.AddQuad(Layer.tileCity + 2, mat, cs.c0, cs.c1, new Color( cityDrawAlpha, cityDrawAlpha, cityDrawAlpha, cityDrawAlpha / 2).Scale(cScale),zZero);
 		}
 
-		public static void DrawBuilding((int x, int y) cc,int iAlpha, BuildingId bid, float randomValue, float zBias=0)
-		{
-			const float zBase = 0.0f;
-			var iconId = BidToAtlas(bid);
-			var u0 = iconId.x * duDt;
-			var v0 = iconId.y * dvDt;
-			var cs = CityPointToQuad(cc.x, cc.y);
-
-			var off = randomValue;
-			var cScale = new Vector2(off.Wave().Lerp(0.8f, 1.0f), off.WaveC().Lerp(0.8f, 1.0f));
-			draw.AddQuad(Layer.tileCity, buildingAtlas, cs.c0, cs.c1, new Vector2(u0, v0), new Vector2(u0 + duDt, v0 + dvDt), iAlpha.AlphaToAll().Scale(cScale),(zBias, zBias, zBias, zBias) ); // shader does the z transform
-			//if(overlay!=null)
-			//	draw.AddQuad(Layer.tileCity + 2, overlay, cs.c0, cs.c1, new Color(iAlpha, iAlpha, iAlpha, iAlpha / 2).Scale(cScale), (zHover+zBias, zHover+zBias, zHover+zBias, zHover+zBias) );
-		}
+		
 
 		public static void LoadContent()
 		{
