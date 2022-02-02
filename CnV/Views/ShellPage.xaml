@@ -37,12 +37,12 @@
 
 		</ResourceDictionary>
 
-		
+
 	</Page.Resources>
 
 
 	<Grid>
-	<views:ShareString  x:Name="citySetup" HeroContentPlacement="Top"  x:FieldModifier="public" Grid.Column="1" 
+		<views:ShareString  x:Name="citySetup" HeroContentPlacement="Top"  x:FieldModifier="public" Grid.Column="1" 
 							ShouldConstrainToRootBounds="False" PreferredPlacement="Center"  />
 		<Grid  Margin="0" x:Name="grid"  x:FieldModifier="public" Grid.Column="1" >
 			<Grid.Resources>
@@ -56,6 +56,7 @@
 			</Grid.Resources>
 			<Grid.RowDefinitions>
 				<RowDefinition Height="40" x:Name="rowHeader" />
+				<RowDefinition Height="95" x:Name="stats" />
 				<RowDefinition />
 				<RowDefinition />
 				<RowDefinition />
@@ -76,18 +77,18 @@
 
 
 			<winui:CommandBar Grid.ColumnSpan="3" IsSticky="True" IsTabStop="True"   x:Name="commandBar" x:FieldModifier="public"  >
-			<winui:CommandBar.Content>
-				<Grid>
-					<Grid.ColumnDefinitions>
-						<ColumnDefinition Width ="Auto"/>
-						<ColumnDefinition Width ="Auto"/>
-						<ColumnDefinition  Width ="Auto"/>
-						<ColumnDefinition  Width ="Auto"/>
-						<ColumnDefinition  Width ="Auto"/>
-					</Grid.ColumnDefinitions>
-				<ProgressRing x:Name="progress" IsActive="False" />
-				<TextBlock Grid.Column="1" x:Name="work" x:FieldModifier="public" Margin="6" VerticalAlignment="Center" Width="255" />
-				<TextBox Grid.Column="2" x:Name="coords" Margin="4" Width="100" TextAlignment="Center"  Text="000:000" HorizontalAlignment="Center" x:FieldModifier="public" KeyDown="coords_KeyDown"/>
+				<winui:CommandBar.Content>
+					<Grid>
+						<Grid.ColumnDefinitions>
+							<ColumnDefinition Width ="Auto"/>
+							<ColumnDefinition Width ="Auto"/>
+							<ColumnDefinition  Width ="Auto"/>
+							<ColumnDefinition  Width ="Auto"/>
+							<ColumnDefinition  Width ="Auto"/>
+						</Grid.ColumnDefinitions>
+						<ProgressRing x:Name="progress" IsActive="False" />
+						<TextBlock Grid.Column="1" x:Name="work" x:FieldModifier="public" Margin="6" VerticalAlignment="Center" Width="255" />
+						<TextBox Grid.Column="2" x:Name="coords" Margin="4" Width="100" TextAlignment="Center"  Text="000:000" HorizontalAlignment="Center" x:FieldModifier="public" KeyDown="coords_KeyDown"/>
 						<ComboBox Grid.Column="3" x:Name="windowLayout" SelectedIndex="{x:Bind layout, Mode=TwoWay}"  VerticalAlignment="Center" Margin="4"
 						          ToolTipService.ToolTip="Select a view layout"  ItemsSource="{x:Bind layoutOptions}"  />
 						<winui:ComboBox Grid.Column="4" x:Name="cityBox" x:FieldModifier="public" 
@@ -98,20 +99,20 @@
                  
 					                VerticalAlignment="Center" ToolTipService.ToolTip="'Build City'- the city that you would build if you were building a city"
 					                Margin="4" >
-						<winui:ComboBox.ItemTemplate>
-							<DataTemplate x:Name="SingleLineDataTemplate" x:DataType="cnv:City">
-								<StackPanel Orientation="Horizontal" Height="32" >
-									<Image Source="{x:Bind icon}" Height="32" Width="32" Stretch="Fill" VerticalAlignment="Center"/>
-									<TextBlock Text="{x:Bind nameAndRemarks}" VerticalAlignment="Center" />
-								</StackPanel>
-							</DataTemplate>
-						</winui:ComboBox.ItemTemplate>
-					</winui:ComboBox>
+							<winui:ComboBox.ItemTemplate>
+								<DataTemplate x:Name="SingleLineDataTemplate" x:DataType="cnv:City">
+									<StackPanel Orientation="Horizontal" Height="32" >
+										<Image Source="{x:Bind icon}" Height="32" Width="32" Stretch="Fill" VerticalAlignment="Center"/>
+										<TextBlock Text="{x:Bind nameAndRemarks}" VerticalAlignment="Center" />
+									</StackPanel>
+								</DataTemplate>
+							</winui:ComboBox.ItemTemplate>
+						</winui:ComboBox>
 					</Grid>
 				</winui:CommandBar.Content>
-			<winui:CommandBar.PrimaryCommands  >
-				
-					
+				<winui:CommandBar.PrimaryCommands  >
+
+
 					<AppBarButton x:Name="ContinentFilter"  x:FieldModifier="public"
 					              Content="Cont/Tags"
 					              Margin="2"
@@ -127,30 +128,30 @@
 					              ToolTipService.ToolTip="&#x0a;Click to switch between region view and city view&#x0a;Right clck for menu"
 					              AccessKey="H" 
 					>
-							<!--<Button.Resources>
+						<!--<Button.Resources>
 							<winui:TeachingTip x:Key="HomeButtonTip" Title="Home Button" x:FieldModifier="public"
                                    IsLightDismissEnabled="True" PreferredPlacement="Right" 
                                     Subtitle="Click to toggle between city and world view, and to focus on the current city" />
 						</Button.Resources>-->
-							<SymbolIcon Symbol="Home"/>
+						<SymbolIcon Symbol="Home"/>
 
-						</AppBarButton>
+					</AppBarButton>
 					<AppBarButton Click="PriorCityClick" Margin="4" Style="{ThemeResource ButtonRevealStyle}"
 					              ToolTipService.ToolTip="Switch to prior city in the current city list"
 					              AccessKey="Left"
 					>
-							<SymbolIcon Symbol="Previous"/>
-						</AppBarButton>
+						<SymbolIcon Symbol="Previous"/>
+					</AppBarButton>
 					<AppBarButton Click="NextCityClick" Margin="4" Style="{ThemeResource ButtonRevealStyle}"
 					              ToolTipService.ToolTip="Switch to next city in the current city list" 
 					              AccessKey="Right" >
-							<SymbolIcon Symbol="Next"/>
-						</AppBarButton>
-						<AppBarButton x:Name="focus" Margin="4" Width="140"  VerticalAlignment="Center" x:FieldModifier="public"
+						<SymbolIcon Symbol="Next"/>
+					</AppBarButton>
+					<AppBarButton x:Name="focus" Margin="4" Width="140"  VerticalAlignment="Center" x:FieldModifier="public"
                             Style="{ThemeResource ButtonRevealStyle}" Click="HomeClick" RightTapped="HomeRightTapped" FontFamily="Bahnschrift"
                             ToolTipService.ToolTip="Spot with Focus.&#x0a;Click to re-center or swith to this city&#x0a;Right clck for menu" Visibility="Collapsed"/>
-						
-					
+
+
 					<winui:AppBarElementContainer>
 						<ComboBox x:Name="cityListBox" x:FieldModifier="public"
                      IsEditable="True"
@@ -236,6 +237,12 @@
 				</winui:CommandBar.PrimaryCommands>
 			</winui:CommandBar>
 
+			<cnv:CityStats 
+				x:Name="cityStats"
+				Grid.Row="1" 
+				Grid.ColumnSpan="3"
+				/>
+
 			<tk:GridSplitter
 				IsTabStop="True"
 				PointerMoved="GridSpliterOnPointerReleased"
@@ -246,7 +253,7 @@
 				Height="11"
 				Grid.Column="{x:Bind grid.ColumnDefinitions.IndexOf(columnHtml) }"
 				Grid.Row="0"
-				Grid.RowSpan="6"
+				Grid.RowSpan="7"
 				Background="Transparent"
 				Canvas.ZIndex="22">
 				<tk:GridSplitter.Element>
@@ -257,7 +264,7 @@
 
 			<winui:SwapChainPanel x:Name="_canvas" 
 			                      Grid.Column="{x:Bind grid.ColumnDefinitions.IndexOf(columnRender)}" 
-			                      Grid.Row="1" Grid.RowSpan="4"
+			                      Grid.Row="2" Grid.RowSpan="4"
 			                      BorderThickness="0"
 			                      IsTabStop="True"
 									IsHitTestVisible="False"
@@ -269,7 +276,7 @@
 
 
 			<Grid Grid.Column="{x:Bind grid.ColumnDefinitions.IndexOf(columnTabs)}" 
-			      Grid.RowSpan="6" Margin="0,0,0,0">
+			      Grid.RowSpan="7" Margin="0,0,0,0">
 				<Grid.RowDefinitions>
 					<RowDefinition Height="3*"  x:Name="rowTabTop"  />
 					<RowDefinition Height="*"/>
@@ -293,7 +300,7 @@
 				</tk:GridSplitter>
 			</Grid>
 			<Grid x:Name="chatGrid" Grid.Column="{x:Bind grid.ColumnDefinitions.IndexOf(columnRender)}"
-			      Grid.Row="2" Grid.RowSpan="3" Canvas.ZIndex="20" Background="{x:Null}" >
+			      Grid.Row="3" Grid.RowSpan="3" Canvas.ZIndex="20" Background="{x:Null}" >
 				<Grid.RowDefinitions>
 					<RowDefinition Height="*"/>
 					<RowDefinition Height="100"  x:Name="rowChat"  />
@@ -357,37 +364,37 @@
 				</Expander.Header>
 				<ListView x:Name="InAppNote" x:FieldModifier="public"  
                    ItemsSource="{x:Bind inAppNotes,Mode=OneWay}" Width="300" MaxHeight="200"  >
-				<ListView.ItemTemplate>
-					<DataTemplate  x:DataType="x:String"  >
-						<tk:MarkdownTextBlock  x:Name="message" Text="{x:Bind (x:String), Mode=OneTime}"  Margin="8,0"  Padding="0,0,0,0"    
+					<ListView.ItemTemplate>
+						<DataTemplate  x:DataType="x:String"  >
+							<tk:MarkdownTextBlock  x:Name="message" Text="{x:Bind (x:String), Mode=OneTime}"  Margin="8,0"  Padding="0,0,0,0"    
                                                IsTextSelectionEnabled="True"
 											  FontSize="{StaticResource MediumFontSize}"
 											 FontFamily="Bahnschrift"
                                               TextWrapping="Wrap" 
 											   LinkClicked="{x:Bind cnv:Note.MarkDownLinkClicked}"  Background="Transparent"  />
 
-				</DataTemplate>
-				</ListView.ItemTemplate>
-				<!-- The ItemsStackPanel must be edited to update the following two properties -->
-				<!-- These properties allow the list to grow from the bottom -->
-				<ListView.ItemsPanel>
-					<winui:ItemsPanelTemplate>
-						<ItemsStackPanel ItemsUpdatingScrollMode="KeepLastItemInView" 
+						</DataTemplate>
+					</ListView.ItemTemplate>
+					<!-- The ItemsStackPanel must be edited to update the following two properties -->
+					<!-- These properties allow the list to grow from the bottom -->
+					<ListView.ItemsPanel>
+						<winui:ItemsPanelTemplate>
+							<ItemsStackPanel ItemsUpdatingScrollMode="KeepLastItemInView" 
 									
                             VerticalAlignment="Center"/>
-					</winui:ItemsPanelTemplate>
-				</ListView.ItemsPanel>
-				<!-- This setter property is created so ListViewItems correctly align to the left or right. -->
-				<ListView.ItemContainerStyle>
-					<Style TargetType="ListViewItem">
-						<Setter Property="Margin" Value="1" />
-						<Setter Property="Padding" Value="0" />
-						<Setter Property="VerticalAlignment" Value="Center"/>
-						<Setter Property="VerticalContentAlignment" Value="Center"/>
-						<Setter Property="Background" Value="#58003000"/>
-					</Style>
-				</ListView.ItemContainerStyle>
-			</ListView>
+						</winui:ItemsPanelTemplate>
+					</ListView.ItemsPanel>
+					<!-- This setter property is created so ListViewItems correctly align to the left or right. -->
+					<ListView.ItemContainerStyle>
+						<Style TargetType="ListViewItem">
+							<Setter Property="Margin" Value="1" />
+							<Setter Property="Padding" Value="0" />
+							<Setter Property="VerticalAlignment" Value="Center"/>
+							<Setter Property="VerticalContentAlignment" Value="Center"/>
+							<Setter Property="Background" Value="#58003000"/>
+						</Style>
+					</ListView.ItemContainerStyle>
+				</ListView>
 			</Expander>
 
 			<!--<winui:InfoBar x:Name="infoBar"
@@ -421,5 +428,5 @@
 				</tk:GridSplitter.Element>
 			</tk:GridSplitter>
 		</Grid>
-	</Grid>	
+	</Grid>
 </winui:Page>

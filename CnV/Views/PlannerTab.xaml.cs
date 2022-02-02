@@ -195,9 +195,8 @@ namespace CnV.Views
 			{
 				for (int y = span0; y <= span1; ++y)
 				{
-					var cc = (x, y);
-					var spot = XYToId(cc);
-					var bd = bds[spot];
+					var cc = new BuildC(x, y);
+					var bd = bds[cc];
 					var bid = bd.bid;
 					var bdef = BuildingDef.FromId(bid);
 					switch (bid)

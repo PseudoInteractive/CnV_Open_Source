@@ -91,7 +91,7 @@ namespace CnV.Views
 
 					//				float zoom = htmlVisible || Settings.webZoomSmall <= 0 ? Settings.webZoom : Settings.webZoomSmall;
 				
-				var canvasScaledY = (zoom * canvasBaseYUnscaled).RoundToInt();
+				var canvasScaledY = ( canvasBaseYUnscaled);//.RoundToInt();
 				popupLeftMargin = ((popupLeftOffset * zoom).RoundToInt() - (canvasScaledX-htmlShift) ).Max0();
 
 				popupTopMargin = ((popupTopOffset * zoom).RoundToInt() - canvasScaledY).Max0();
@@ -151,7 +151,7 @@ namespace CnV.Views
 								instance.columnTabs.Width = new(tabWidth);
 								rightTabsVisible = tabWidth > 0;
 								//	instance.columnRender.Width = new GridLength(1, GridUnitType.Star); //	GridLength.Auto;//	instance.grid.RowDefinitions[0].Height = new(canvasYOffset);
-								instance.grid.RowDefinitions[5].Height = new(40 * zoom); //new GridLength(newWidth1,GridUnitType.Pixel);//	instance.grid.RowDefinitions[0].Height = 
+							//	instance.grid.RowDefinitions[5].Height = new(40 * zoom); //new GridLength(newWidth1,GridUnitType.Pixel);//	instance.grid.RowDefinitions[0].Height = 
 						}
 					//	instance.webView.Margin= new(htmlShift, 0, 0, 0);
 					TabPage.LayoutChanged();

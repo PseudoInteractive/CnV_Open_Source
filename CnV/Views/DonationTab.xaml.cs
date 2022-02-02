@@ -54,22 +54,22 @@ namespace CnV.Views
 				var details = await  CityOverview.Send().ConfigureAwait(false);
 				foreach (var detail in details)
 				{
-					var city = City.GetOrAddCity(detail.id);
-					city.points = (ushort) detail.score;
-					city.cartsHome = detail.carts_home;
-					city.carts = detail.carts_total;
-					city.shipsHome = detail.ships_home;
-					city.ships = detail.ships_total;
-					city.wood = detail.wood;
-					city.woodStorage = detail.wood_storage;
-					city.stone = detail.stone;
-					city.stoneStorage = detail.stone;
-					city.iron = detail.iron;
-					city.ironStorage = detail.iron_storage;
-					city.food = detail.food;
-					city.foodStorage = detail.food_storage;
-					city.hasAcademy = detail.Academy == "Y";
-					city.sorcTower = detail.Sorc_tower == "Y";
+				//	var city = City.GetOrAddCity(detail.id);
+				//	city.points = (ushort) detail.score;
+				//	city.cartsHome = detail.carts_home;
+				//	city.carts = detail.carts_total;
+				//	city.shipsHome = detail.ships_home;
+				//	city.ships = detail.ships_total;
+				//	city.wood = detail.wood;
+				////	city.woodStorage = detail.wood_storage;
+				//	city.stone = detail.stone;
+				////	city.stoneStorage = detail.stone;
+				//	city.iron = detail.iron;
+				////	city.ironStorage = detail.iron_storage;
+				//	city.food = detail.food;
+				//	//city.foodStorage = detail.food_storage;
+				//	city.hasAcademy = detail.Academy == "Y";
+				////	city.sorcTower = detail.Sorc_tower == "Y";
 				}
 
 				CityListChanged(City.gridCitySource);

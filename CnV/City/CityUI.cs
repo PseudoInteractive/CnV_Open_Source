@@ -189,7 +189,7 @@ public static partial class CityUI
 			{
 				AApp.AddItem(flyout, "Do the stuff",  (_, _) => me.DoTheStuff());
 				AApp.AddItem(flyout, "Food Warnings", (_, _) => CitySettings.SetFoodWarnings(cid));
-				flyout.AddItem("Ministers", me.ministersOn.IsTrueOrNull, (me as City).SetMinistersOn);
+				flyout.AddItem("Ministers", me.ministersOn, (me as City).SetMinistersOn);
 			}
 		}
 		else if (me.isDungeon || me.isBoss)

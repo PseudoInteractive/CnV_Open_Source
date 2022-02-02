@@ -153,8 +153,10 @@
   <ItemGroup>
     <Compile Include="Activation\ProtocolActivation.cs" />
     <Compile Include="Activation\ActivationHandler.cs" />
+    <Compile Include="City\CityBuildingStats.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Services\CnVSignin.cs" />
+    <Compile Include="Views\CityStats.xaml.cs" />
     <Manifest Include="$(ApplicationManifest)" />
     <Compile Include="Activation\CommandLineActivationHandler.cs" />
     <Compile Include="Activation\SchemeActivationConfig.cs" />
@@ -431,6 +433,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="Views\CityStats.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\ContinentTagFilter.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -562,6 +567,7 @@
     <None Remove="Styles\SharedResources.xaml" />
     <None Remove="Views\CityBox.xaml" />
     <None Remove="Views\CityRename.xaml" />
+    <None Remove="Views\CityStats.xaml" />
     <None Remove="Views\DefenderPage.xaml" />
     <None Remove="Views\DefendTab.xaml" />
     <None Remove="Views\ReinforcementsTab.xaml" />

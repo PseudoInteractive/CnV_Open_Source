@@ -944,7 +944,7 @@ internal partial class GameClient
 												var xT0 = (r + 0.5f) / 4.0f;
 												var xT1 = (r + 1.375f) / 4.0f;
 												var yt0 = 0.0f;
-												var yt1 = (city.res[r] * (1.0f / (512 * 128))).Min(1.0f);
+												var yt1 = (city.resources[r] * (1.0f / (512 * 128))).Min(1.0f);
 												var color = r switch
 												{
 													0 => new Color(150, 75, 0, 255),

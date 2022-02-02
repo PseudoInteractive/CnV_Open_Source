@@ -38,7 +38,7 @@ namespace CnV.Views
 		public static bool useRatio => Settings.nearResAsRatio;
 
 		public Resources des = new Resources() { wood = 100000, stone = 100000, food = 100000, iron = 100000 };
-		public Resources willHave => target.res.Add(target.tradeInfo.inc);
+		public Resources willHave => target.resources.Add(target.tradeInfo.inc);
 		
 
 		public ResSource selected = ResSource.dummy;
@@ -107,12 +107,11 @@ namespace CnV.Views
 				//supportGrid.ItemsSource = null;
 				if (target != null && target.isCityOrCastle)
 				{
-				
 
-					var r = Settings.nearResSend;// des.Sub(target.res.Add(target.tradeInfo.inc));
+
+					var r  = Settings.nearResSend= Settings.nearResSend.ClampToPositive();// des.Sub(target.res.Add(target.tradeInfo.inc));
 					
 					var reserve = Settings.nearResReserve;
-					r.ClampToPositive();
 					//views: Settings.nearResSend = r;
 					if(useRatio)
 						r = r*((1<<30)/r.sum.Max(1));
@@ -129,12 +128,12 @@ namespace CnV.Views
 							var ti = city.tradeInfo;
 							if (viaWater)
 							{
-								if (!city.ComputeShipTravelTime(target.cid, out dt) || dt.TotalHours > filterTime || city.shipsHome < filterShipsHome + shipReserve|| city.res.Sub(reserve).sum < filterResHome)
+								if (!city.ComputeShipTravelTime(target.cid, out dt) || dt.TotalHours > filterTime || city.shipsHome < filterShipsHome + shipReserve|| city.resources.Sub(reserve).sum < filterResHome)
 									continue;
 							}
 							else
 							{
-								if (!city.ComputeCartTravelTime(target.cid, out dt) || dt.TotalHours > filterTime || city.cartsHome < filterCartsHome + cartReserve  || city.res.Sub(reserve).sum < filterResHome)
+								if (!city.ComputeCartTravelTime(target.cid, out dt) || dt.TotalHours > filterTime || city.cartsHome < filterCartsHome + cartReserve  || city.resources.Sub(reserve).sum < filterResHome)
 									continue;
 
 							}
@@ -167,7 +166,7 @@ namespace CnV.Views
 							{
 								send *= (shipping / (double)r.sum.Max(1));
 							}
-							send = send.Min(sup.city.res.SubSat(Settings.nearResReserve));
+							send = send.Min(sup.city.resources.SubSat(Settings.nearResReserve));
 							Assert( send.sum <= shipping);
 	
 
@@ -270,7 +269,7 @@ namespace CnV.Views
 			flyout.SetXamlRoot(text);
 			AApp.AddItem(flyout, "Zero", (_, _) =>
 			{
-				supporter.res.Clear();
+				supporter.res = default;
 				DoRefresh();
 				supporter.NotifyChange();
 			});
@@ -292,7 +291,7 @@ namespace CnV.Views
 		{
 			var info = supporter.info;
 			var city = supporter.city;
-			var res = supporter.city.res.Sub(reserve).Max(0);
+			var res = supporter.city.resources.Sub(reserve).Max(0);
 		//	var viaWater = NearRes.instance.viaWater;
 			var shipping = GetTransport(city);//viaWater ? (city.shipsHome - Settings.nearResShipReserve).Max0() * 10000 : (city.cartsHome - Settings.nearResCartReserve).Max0() * 1000;
 			if (shipping > res.sum)
@@ -353,7 +352,7 @@ namespace CnV.Views
 				}
 			}
 
-			s.res.Clear();
+			s.res = default;
 			s.OnPropertyChanged();
 			AppS.DispatchOnUIThreadIdle(() =>
 			{

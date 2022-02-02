@@ -40,6 +40,7 @@ namespace CnV.Views
 	{
 		// public static Rectangle canvasHitTest;
 
+		public City city => City.GetBuild();
 		public const int htmlBaseWidth = 420;
 		public const int canvasTitleYOffset = 40;
 		public const int canvasHtmlYOffset = 55;

@@ -42,7 +42,7 @@ namespace CnV
 		public TimeSpan travel { get; set; }
 
 		public Resources res;
-		public string ResString(int index) => $"{res[index]:N0} ({city.res[index]:N0})";
+		public string ResString(int index) => $"{res[index]:N0} ({city.resources[index]:N0})";
 		public void ResSetMax(int index) => res[index] = ResMax(index);
 		public void ResSetZero(int index) => res[index] = 0;
 
@@ -53,7 +53,7 @@ namespace CnV
 		}
 		public int ResMax(int type)
 		{
-			return (city.res[type]- Settings.nearResReserve[type]).Min(NearRes.instance.GetTransport(city)); // TODO
+			return (city.resources[type]- Settings.nearResReserve[type]).Min(NearRes.instance.GetTransport(city)); // TODO
 		}
 
 		public DateTimeOffset eta { get => CnVServer.ServerTime() + travel; set => _ = value; }

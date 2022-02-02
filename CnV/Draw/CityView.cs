@@ -31,7 +31,7 @@ namespace CnV
 	
 	public class CityView
 	{
-	///	public Event a;
+
 		internal const float buildingPlacementZ = (1.0f/64.0f);
 		public static bool isDrawing;
 		static CityView()
@@ -173,7 +173,7 @@ namespace CnV
 						var cs = CityPointToQuad(cx,cy);
 
 						var dt = (animationT - animationOffsets[bspot]);
-						float dtF = dt*0.3333f;
+						float dtF = dt*3f;
 						float blendT = (dtF).Frac();
 						// ZBase is on initial action placement
 						var zBase =0f;
