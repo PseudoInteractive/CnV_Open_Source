@@ -150,7 +150,7 @@ namespace CnV.Views
 		{
 
 			var t1 = SmallTime.zero;
-			var t0 = SmallTime.serverNow;
+			var t0 = SmallTime.UtcNow;
 			await AppS.DispatchOnUIThreadTask(() => {
 				var sel = zoom.SelectedNodes;
 				if (sel != null && sel.Count > 0)
@@ -171,7 +171,7 @@ namespace CnV.Views
 			});
 			if( t0 == t1)
 			{
-				t0 = SmallTime.serverNow;
+				t0 = SmallTime.UtcNow;
 			}
 
 			if (t1.seconds != 0)

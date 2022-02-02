@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Windows.UI;
+using Microsoft.UI;
 namespace CnV
 {
 	using static Building;
@@ -37,7 +39,7 @@ namespace CnV
 			var tsPercentMultipler = 100;
 			var townHallLevel = bds[bspotTownHall].bl;
 			var stTownHall = BuildingDef.FromId(bidTownHall).St[townHallLevel];
-			CityBuildingStats stats = new() {  cs=100, storage = new( stTownHall*100) };
+			CityBuildingStats stats = new() {  cs=100, storage = new( stTownHall*100),production =new(wood:300) };
 
 			for(int x = span0; x <= span1; ++x)
 			{
@@ -225,8 +227,26 @@ namespace CnV
 				return rv;
 			}
 			this.stats = stats;
-			AppS.DispatchOnUIThread( CityStats.instance.OnPropertyChanged );
-
+			if(isBuild)
+			{ 
+				AppS.DispatchOnUIThreadIdle( ()=>
+				{
+					var i = CityStats.instance;
+					for(var r=0;r<Resources.idCount;r++)
+					{ 
+						var txt = r switch { 0 => i.res0, 1 => i.res1, 2 => i.res2, 3 => i.res3 };
+						var prod = r switch { 0 => i.prod0, 1 => i.prod1, 2 => i.prod2, 3 => i.prod3 };
+						var res = resources[r];
+						var storage = stats.storage[r];
+						txt.Text =  $"{res:N0}";
+						txt.Foreground = AppS.Brush( res >= storage ? Colors.Red : res >= storage*3/4 ? Colors.Orange : res == 0 ? Colors.Gray : Colors.Green);
+						
+						var p= stats.production[r];
+						prod.Text = $"{p:N0}";
+						prod.Foreground = AppS.Brush( p switch { > 0 => Colors.Green, < 0 => Colors.Yellow, _ => Colors.Gray } );
+					}
+				});
+			}
 		}
 	}
 }

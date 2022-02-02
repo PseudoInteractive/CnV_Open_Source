@@ -158,7 +158,7 @@ namespace CnV
 											}
 											var time = b[6].GetAsString().ParseDateTime();// b.GetString("arrival").ParseDateTime();
 
-											var serverTime = CnVServer.ServerTime();
+											var serverTime = CnVServer.simTime;
 											var spotted = time - TimeSpan.FromSeconds(atkCid.DistanceToCidD(defCid) * TTTravel(type!=ttPending ? type : ttSenator ));
 										//	if (spotted > serverTime)
 										//		spotted = serverTime;

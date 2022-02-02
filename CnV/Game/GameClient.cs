@@ -18,7 +18,7 @@ namespace CnV
 		public static GameClient            instance;
 		public static GraphicsDevice        device => instance.GraphicsDevice;
 		public static GraphicsDeviceManager _graphics;
-		public static SwapChainPanel        canvas;
+		public static CnVSwapChainPanel        canvas;
 
 		public static Mesh tesselatedWorld;
 
@@ -129,7 +129,7 @@ namespace CnV
 
 		public static int resolutionDirtyCounter;
 
-		static public void Create(SwapChainPanel swapChainPanel)
+		static public void Create(CnVSwapChainPanel swapChainPanel)
 		{
 			//var sz = swapChainPanel.ActualSize;
 			//Assert(sz.X > 0);

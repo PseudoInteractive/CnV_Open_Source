@@ -262,14 +262,13 @@
 				</tk:GridSplitter.Element>
 			</tk:GridSplitter>
 
-			<winui:SwapChainPanel x:Name="_canvas" 
+			<cnv:CnVSwapChainPanel x:Name="_canvas" 
 			                      Grid.Column="{x:Bind grid.ColumnDefinitions.IndexOf(columnRender)}" 
 			                      Grid.Row="2" Grid.RowSpan="4"
-			                      BorderThickness="0"
 			                      IsTabStop="True"
 									IsHitTestVisible="False"
-					
-			                      Margin="0,95,0,0"
+								  Margin="0"
+								   Padding="0"
 			                      Canvas.ZIndex="12" />
 
 

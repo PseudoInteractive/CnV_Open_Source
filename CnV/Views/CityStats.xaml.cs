@@ -31,6 +31,10 @@ namespace CnV
 		}
 		public City city => City.GetBuild();
 
+
+		public SolidColorBrush ResourceForeground(int resId) => new SolidColorBrush(Windows.UI.Color.FromArgb(255,(byte)(31+64*resId),128,128) );
+		public string ResourceStr(int resId) => $"{city?.resources[resId]:N0}";
+		
 		public event PropertyChangedEventHandler PropertyChanged;
 
 		public void OnPropertyChanged() =>

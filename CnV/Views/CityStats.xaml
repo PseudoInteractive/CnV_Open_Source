@@ -10,10 +10,23 @@
 
     <Grid>
 		<tk:WrapPanel Orientation="Horizontal">
-			<TextBlock Text="Hello There!" />
-			<TextBlock Text="{x:Bind city.stats.storage.wood, Mode=OneWay}" />
-			<NumberBox Value="{x:Bind city.stats.storage.stone, Mode=OneWay}" Header="Stone Storage" />
-			<NumberBox Value="{x:Bind city.woodStorage, Mode=OneWay}" Header="Wood Storage" />
+			<TextBlock Text="Resources" />
+			<StackPanel Orientation="Vertical">
+				<TextBlock x:Name="res0" x:FieldModifier="public"  />
+				<TextBlock x:Name="prod0" x:FieldModifier="public" />
+			</StackPanel>
+			<StackPanel Orientation="Vertical">
+				<TextBlock x:Name="res1" x:FieldModifier="public"  />
+				<TextBlock x:Name="prod1" x:FieldModifier="public" />
+			</StackPanel>
+			<StackPanel Orientation="Vertical">
+				<TextBlock x:Name="res2" x:FieldModifier="public"  />
+				<TextBlock x:Name="prod2" x:FieldModifier="public" />
+			</StackPanel>
+			<StackPanel Orientation="Vertical">
+				<TextBlock x:Name="res3" x:FieldModifier="public"  />
+				<TextBlock x:Name="prod3" x:FieldModifier="public" />
+			</StackPanel>
 
 		</tk:WrapPanel>
 	</Grid>

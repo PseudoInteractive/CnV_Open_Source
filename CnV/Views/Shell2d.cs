@@ -255,7 +255,7 @@ namespace CnV.Views
 		//	StartCap = CanvasCapStyle.Flat,
 		//	//           TransformBehavior=CanvasStrokeTransformBehavior.Hairline
 		//};
-		public (SwapChainPanel canvas, Rectangle hitTest) CreateCanvasControl()
+		public (CnVSwapChainPanel canvas, Rectangle hitTest) CreateCanvasControl()
 		{
 			//Assert((0.5f).CeilToInt() == 1);
 			//Assert((-1.0f).CeilToInt() == -1);

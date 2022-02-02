@@ -26,6 +26,7 @@ using Microsoft.UI.Xaml.Controls.Primitives;
 //using Microsoft.Web.WebView2.Core;
 //using ZLogger;
 //using Cysharp.Text;
+using Microsoft.UI.Input;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -1083,12 +1084,14 @@ namespace CnV
 		//	}
 		//}
 
-		//public static CoreCursor cursorDefault;// = CoreCursor.Create(CoreCursorShape.Arrow);
-		//public static CoreCursor cursorQuickBuild;// = CoreCursor.Create(CoreCursorShape.Cross);
-		//public static CoreCursor cursorMoveStart;// = CoreCursor.Create(CoreCursorShape.SizeNortheastSouthwest);
-		//public static CoreCursor cursorMoveEnd;// = CoreCursor.Create(CoreCursorShape.SizeNorthSouth);
-		//public static CoreCursor cursorLayout;// = CoreCursor.Create(CoreCursorShape.Pin);
-		//public static CoreCursor cursorDestroy;// = CoreCursor.Create(CoreCursorShape.UniversalNo);
+		public static InputCursor cursorDefault = InputSystemCursor.Create(InputSystemCursorShape.Arrow);
+		public static InputCursor cursorQuickBuild = InputSystemCursor.Create(InputSystemCursorShape.Person);
+		public static InputCursor cursorMoveStart = InputSystemCursor.Create(InputSystemCursorShape.SizeNortheastSouthwest);
+		public static InputCursor cursorMoveEnd = InputSystemCursor.Create(InputSystemCursorShape.SizeNorthwestSoutheast);
+		public static InputCursor cursorLayout = InputSystemCursor.Create(InputSystemCursorShape.Pin);
+		 public static InputCursor cursorDestroy = InputSystemCursor.Create(InputSystemCursorShape.UniversalNo);
+		public static InputCursor cursorUpgrade =  InputSystemCursor.Create(InputSystemCursorShape.UpArrow);
+		public static InputCursor cursorDowngrade = InputSystemCursor.Create(InputSystemCursorShape.SizeNorthSouth);
 
 		public static ApplicationDataContainer ClientSettings()
 		{
@@ -1258,7 +1261,7 @@ namespace CnV
 		}
 
 		// must be on the right thread for this
-		//public static void Set(this CoreCursor c) 
+		//public static void Set(this InputCursor c) 
 		//{
 		//	// is this thread safe?
 		//	//if(ShellPage.coreInputSource != null)

@@ -27,7 +27,6 @@ using Microsoft.UI.Xaml.Controls.Primitives;
 using Microsoft.UI.Xaml.Input;
 using System.Net.Http;
 using Microsoft.UI.Xaml.Media;
-using static CnV.Debug;
 
 using WinUI = Microsoft.UI.Xaml.Controls;
 using CommunityToolkit.WinUI.UI.Controls;
@@ -43,6 +42,9 @@ namespace CnV.Views
 	// using PInvoke
 	using Services;
 
+	//	using System.Diagnostics;
+	using static CnV.Debug;
+
 	//public class LogEntryStruct
 	//{
 	//    public string t { get; set; }
@@ -56,7 +58,7 @@ namespace CnV.Views
 	{
 		public const  int            canvasZDefault = 11;
 		public const  int            canvasZBack    = 0;
-		public static SwapChainPanel canvas => GameClient.canvas;
+		public static CnVSwapChainPanel canvas => GameClient.canvas;
 		public int layout
 		{
 			get => Settings.layout;
@@ -234,6 +236,40 @@ namespace CnV.Views
 		{
 			try
 			{
+				//{
+				//	var sw = new Stopwatch();
+				//	sw.Start();
+				//	HashSet<int> ms0 = new();
+				//	HashSet<int> ms1 = new();
+				//	var t0 = DateTimeOffset.UtcNow;
+				//	var end = t0 + TimeSpan.FromSeconds(1.0f);
+				//	var ta0 = sw.ElapsedMilliseconds;
+				//	for(;;)
+				//	{
+				//		var t = DateTimeOffset.UtcNow;
+				//		if( t >= end )
+				//			break;
+				//		ms0.Add( (t-t0).TotalMilliseconds.RoundToInt() );
+				//		ms1.Add( (int)(sw.ElapsedMilliseconds - ta0) );
+				//	}
+				//	Log(ms0);
+				//	HashSet<int> ms0a = new();
+				//	HashSet<int> ms1a = new();
+				//	 t0 = DateTimeOffset.UtcNow;
+				//	 end = t0 + TimeSpan.FromSeconds(1.0f);
+				//	ta0 = Environment.TickCount64;
+				//	for(; ; )
+				//	{
+				//		var t = DateTimeOffset.UtcNow;
+				//		if(t >= end)
+				//			break;
+				//		ms0a.Add((t-t0).TotalMilliseconds.RoundToInt());
+				//		ms1a.Add((int)(sw.ElapsedMilliseconds - ta0));
+				//		Thread.Sleep(0);
+				//	}
+				//	Log(ms0);
+
+				//}
 				CnVServer.CitySwitch = CnVClient.CitySwitch;
 				GameClient.canvas    = _canvas;
 

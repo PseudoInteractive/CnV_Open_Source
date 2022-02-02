@@ -41,7 +41,7 @@ namespace CnV
 		public int priToScore => pri == 4 ? 0 : pri + 1;
 
 		public float sortScore =>
-			(float) -(priToScore * 1e20f - (CnVServer.ServerTime() - blessedUntil).TotalHours
+			(float) -(priToScore * 1e20f - (CnVServer.simTime - blessedUntil).TotalHours
 			                             - travelMinutes ); // todo: refine this, also take into acccount resources needed
 
 		public static async void Refresh()

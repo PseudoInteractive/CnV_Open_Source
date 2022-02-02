@@ -330,7 +330,7 @@ namespace CnV
 			buildMenu = new Microsoft.UI.Xaml.Controls.Flyout()
 			{
 				LightDismissOverlayMode = Microsoft.UI.Xaml.Controls.LightDismissOverlayMode.On,
-			//	ShowMode = FlyoutShowMode.Standard,
+				ShowMode = FlyoutShowMode.Standard,
 			
 				Content = instance
 			};
@@ -734,7 +734,7 @@ namespace CnV
 		}
 		public static void SetLastQuickBuildActionSpot( BuildC c)
 		{
-			lastQuickBuildActionSpotValidUntil = CnVServer.ServerTimeSeconds()+3;
+			lastQuickBuildActionSpotValidUntil = SmallTime.UtcNow+3;
 			lastQuickBuildActionBSpot = c;
 		}
 		public static void PointerDown((int x, int y) cc)
@@ -760,6 +760,11 @@ namespace CnV
 				}
 				return;
 			}
+			if(action == CityBuildAction.build && isRight)
+			{
+				SetAction(CityBuildAction.none);
+				return;
+			}
 			//while( CityBuild.menuOpen )
 			//{
 			//	await Task.Delay(200).ConfigureAwait(true);
@@ -768,11 +773,11 @@ namespace CnV
 			//int bspot = XYToId(cc);
 
 			// tempoararily switch to Select from quickbuild
-			if (!isRight && action == CityBuildAction.build && !City.GetBuild().postQueueBuildings[cc].isEmpty && !isPlanner)
-			{
-				priorQuickAction = action;
-				action = CityBuildAction.none;
-			}
+			//if (!isRight && action == CityBuildAction.build && !City.GetBuild().postQueueBuildings[cc].isEmpty && !isPlanner)
+			//{
+			//	priorQuickAction = action;
+			//	action = CityBuildAction.none;
+			//}
 
 			if (!isRight && (action != CityBuildAction.none))
 			{

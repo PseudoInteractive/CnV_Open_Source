@@ -57,7 +57,7 @@ namespace CnV.Converters
 				
 				else
 				{
-					return src.Format();
+					return src.FormatServer();
 				}
 			}
 			return value;
@@ -98,7 +98,7 @@ namespace CnV.Converters
 			    }
 			    else if(value is SmallTime st)
 			    {
-				    return st.dateTime;
+				    return st.dateTimeUtc;
 			    }
 			    else if(value is null)
 			    {
