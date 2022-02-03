@@ -148,6 +148,7 @@ namespace CnV
 				Assert( isCastle == false);
 				var c = city.worldC;
 				World.SetTile(c,World.GetTile(c).withCastle);
+				TileData.Update(city);
 				Note.Show($"{city} became a castle");
 			}
 			if(stats.rsInf != 0)
