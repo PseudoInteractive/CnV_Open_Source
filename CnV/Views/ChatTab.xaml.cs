@@ -780,8 +780,8 @@ namespace CnV.Views
 		{
 			//           Log("Tapped");
 			//   listView.Focus(FocusState.Programmatic);
-		//	if(input.Focus(FocusState.)
-			AppS.QueueOnUIThread(() => input.Focus(FocusState.Programmatic));
+	//		if(input.Focus(FocusState) == focus )
+	//			input.Focus(FocusState.Keyboard);
 		}
 
 

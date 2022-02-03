@@ -14,6 +14,7 @@ using System.Threading.Tasks;
 using static CnV.CityBuild;
 using Windows.System;
 //using Windows.UI.Core;
+using Microsoft.UI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls.Primitives;
 using Microsoft.UI.Xaml.Input;
@@ -36,6 +37,9 @@ namespace CnV
 	using Draw;
 	using Game;
 	using Helpers;
+
+	using Windows.UI;
+
 	//// using PInvoke
 
 	public sealed partial class CityBuild : Microsoft.UI.Xaml.Controls.UserControl
@@ -329,12 +333,9 @@ namespace CnV
 			instance = new CityBuild();
 			buildMenu = new Microsoft.UI.Xaml.Controls.Flyout()
 			{
-				LightDismissOverlayMode = Microsoft.UI.Xaml.Controls.LightDismissOverlayMode.On,
-				ShowMode = FlyoutShowMode.Standard,
-			
 				Content = instance
 			};
-			buildMenu.SetXamlRoot();
+			buildMenu.SetXamlRoot(ShellPage.instance.grid);
 
 
 			buildMenu.Closed += BuildMenu_Closed;
@@ -397,6 +398,9 @@ namespace CnV
 		{
 			await Task.Delay(50).ConfigureAwait(false);
 			menuOpen = false;
+			Note.Show($"Build menu closed");
+
+			ShellPage.TakeFocus();
 		}
 
 		public CityBuild()
@@ -875,9 +879,12 @@ namespace CnV
 			//Canvas.SetTop(bm, sc.Y - buildToolSpan / 2 + 41);
 			//		ShellPage.instance.buildMenuCanvas.Visibility = Visibility.Visible;
 			//bm.ContentMenuBackgroundStyle = new Style( typeof(Rectangle) ) {  (Style)Application.Current.Resources[isRight? "ContentMenuStyle" : "ContentMenu2Style"];
-			menuOpen=true;
-			sc =buildMenu.Show(sc, ShellPage.instance.grid);
+			instance.gridView.Background =  AppS.Brush(isRight ? Color.FromArgb(0xFF, 0x20, 0x05, 0x30) : Color.FromArgb(0xFF, 0x30, 0x05, 0x05));
+			menuOpen =true;
+			buildMenu.ShowAt(ShellPage.instance.grid, new FlyoutShowOptions() { Position = new Windows.Foundation.Point(sc.X, sc.Y), Placement = FlyoutPlacementMode.Auto, ShowMode=FlyoutShowMode.Standard });
 
+			sc =buildMenu.Show(sc, ShellPage.instance.grid);
+			
 		}
 
 		

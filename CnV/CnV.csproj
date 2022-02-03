@@ -111,7 +111,7 @@
     <PackageReference Include="SharpDX.DXGI" Version="4.2.0" />
     <PackageReference Include="SharpDX.MediaFoundation" Version="4.2.0" />
     <PackageReference Include="SharpGen.Runtime.COM" Version="2.0.0-beta.10" />
-    <PackageReference Include="System.Linq.Async" Version="5.1.0" />
+    <PackageReference Include="System.Linq.Async" Version="6.0.1" />
     <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="6.0.2-mauipre.1.22054.8" />
     <PackageReference Include="System.Text.Json" Version="6.0.2-mauipre.1.22054.8" />
 	<PackageReference Include="ZString" Version="2.4.4" />

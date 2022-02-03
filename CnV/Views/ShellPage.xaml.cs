@@ -229,7 +229,7 @@ namespace CnV.Views
 		public static bool isHitTestVisible => !ShellPage.isOverPopup && !forceAllowWebFocus && canvasVisible;
 
 		//public static bool _isHitTestVisible;
-		public static bool canvasVisible;
+		public static bool canvasVisible=true;
 		//public static bool isFocused => isHitTestVisible && AppS.isForeground;
 
 		private async void OnLoaded(object sender, RoutedEventArgs e)
@@ -1471,8 +1471,7 @@ namespace CnV.Views
 			//isHitTestVisible = !hasFocus;
 			//SetWebViewHasFocus(hasFocus);
 			ShellPage.canvas.Visibility = ShellPage.forceAllowWebFocus ? Visibility.Collapsed : Visibility.Visible;
-			ShellPage.hasKeyboardFocus  = false;
-			ShellPage.UpdateFocus();
+//			ShellPage.UpdateFocus();
 
 		}
 

@@ -33,12 +33,14 @@ namespace CnV
 		{
 			if(!this.stats.dirty)
 				return;
+			
 			var city = this;
 			// current not future or whatever
 			var bds = city.buildings;
 			var tsPercentMultipler = 100;
 			var townHallLevel = bds[bspotTownHall].bl;
 			var stTownHall = BuildingDef.FromId(bidTownHall).St[townHallLevel];
+			var hasCastle=false;
 			CityBuildingStats stats = new() {  cs=100, storage = new( stTownHall*100),production =new(wood:300) };
 
 			for(int x = span0; x <= span1; ++x)
@@ -57,6 +59,7 @@ namespace CnV
 					switch(bid)
 					{
 						case bidCastle:
+							hasCastle = true;
 							tsPercentMultipler = (100+bdef.sc[bd.bl]);
 							break;
 						case bidTrainingGround:
@@ -89,6 +92,17 @@ namespace CnV
 						case bidBarracks:
 							stats.maxTs += bdef.Tc[bd.bl];
 							break;
+						case bidForester:
+						case bidStoneMine:
+						case bidIronMine:
+						case bidFarm:
+							{
+								var r = ResProducerIdFromBid(bid);
+								int cabinGain = 100, resGain = 100, processingGain = 100;
+								AddResBuildings(cc, bds, r, ref cabinGain, ref resGain, ref processingGain);
+								stats.production[r] += (int)((long)bd.def.r[bd.bl]*((long)cabinGain)*(resGain)*(processingGain)/(100L*100L*100L));
+								break;
+							}
 						case bidStorehouse:
 							{
 								var str = bdef.St[bd.bl];
@@ -128,6 +142,13 @@ namespace CnV
 					stats.points += (ushort)bdef.sc[bd.bl];
 
 				}
+			}
+			if(hasCastle != isCastle)
+			{
+				Assert( isCastle == false);
+				var c = city.worldC;
+				World.SetTile(c,World.GetTile(c).withCastle);
+				Note.Show($"{city} became a castle");
 			}
 			if(stats.rsInf != 0)
 				stats.rsInf += 100;
@@ -226,6 +247,34 @@ namespace CnV
 
 				return rv;
 			}
+			static void AddResBuildings(BuildC cc,Building[] bds,int res, ref int cabinGain, ref int resGain, ref int processingain )
+			{
+				foreach(var delta in Octant.deltas)
+				{
+					var cc1 = cc + delta;
+					if(!cc1.isInCity)
+						continue;
+					var bd1 = bds[cc1];
+					var rp = City.ResProcessingIdFromBid(bd1.id);
+					if(rp!=-1)
+					{
+						processingain += bd1.def.eff[bd1.bl];
+						continue;
+					}
+					var rs = ResIdFromBid(bd1.id);
+					if(rs!=-1)
+					{
+						resGain += bd1.def.eff[0];
+						continue;
+					}
+					if(bd1.id == bidCabin)
+					{
+						cabinGain += bd1.def.eff[bd1.bl];
+					}
+
+
+				}
+			}
 			this.stats = stats;
 			if(isBuild)
 			{ 
@@ -248,5 +297,10 @@ namespace CnV
 				});
 			}
 		}
+
+		internal static int ResProducerIdFromBid(byte bid) => bid switch { bidForester => 0, bidStoneMine => 1, bidIronMine => 2, bidFarm => 3, _=>-1};
+		internal static int ResProcessingIdFromBid(byte bid) => bid switch { bidSawmill => 0, bidStonemason => 1, bidSmelter=> 2, bidGrainMill => 3, _=>-1 };
+		internal static int ResIdFromBid(byte bid) => bid switch { bidForest => 0, bidStone => 1, bidIron => 2, bidLake => 3, _ => -1 };
+		private void AddResBuildings(BuildC cc, ref float cabinGain, ref float resGain, ref float processingGain) => throw new NotImplementedException();
 	}
 }

@@ -53,13 +53,13 @@
 		<CollectionViewSource x:Name="cvsGroups" IsSourceGrouped="True" 
                               ItemsPath="items"/>
 	</UserControl.Resources>
-		<Grid>
+		<Grid Background="{x:Null}">
 		<Grid.RowDefinitions>
 			<RowDefinition Height="*"/>
 			<RowDefinition Height="Auto"/>
 		</Grid.RowDefinitions>
 		<GridView x:Name="gridView" SelectionMode="None" IsItemClickEnabled="True" ItemClick="ItemClick" Height="Auto" 
-			  ItemsSource="{x:Bind cvsGroups.View, Mode=OneWay}" >
+			  ItemsSource="{x:Bind cvsGroups.View, Mode=OneWay}" Background= "{x:Null}" >
 
 
 				<GridView.ItemTemplate>
@@ -115,7 +115,7 @@
                                 Title="City Planer"
                                 Subtitle="To Edit your layout select 'planner', this will put you in a mode that is similar to LOUTOPT/COTGOPT but different">
 			</winui:TeachingTip>-->
-	<CommandBar x:Name="commands"  Grid.Row="1" >
+		<CommandBar x:Name="commands"  Grid.Row="1" Background="{x:Null}">
 			<CommandBar.PrimaryCommands>
 				<AppBarButton Command="{StaticResource DoTheStuff}" />
 				<AppBarButton Command="{StaticResource TogglePlanner}" />

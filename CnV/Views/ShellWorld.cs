@@ -165,13 +165,27 @@ namespace CnV.Views
 			canvas.PointerReleased+=KeyboardProxy_PointerReleased;
 			canvas.PointerEntered+=KeyboardProxy_PointerEntered;
 			canvas.PointerExited +=KeyboardProxy_PointerExited;
+			canvas.PointerWheelChanged += KeyboardProxy_PointerWheelChanged;
+			canvas.KeyDown += KeyboardProxy_KeyDown;
+			FocusManager.GotFocus +=FocusManager_GotFocus;
+			FocusManager.LostFocus +=FocusManager_LostFocus;
 			canvas.IsHitTestVisible = true;
+		}
+
+		private static void FocusManager_LostFocus(object? sender, FocusManagerLostFocusEventArgs e)
+		{
+			Note.Show($"Lost focus: {e.OldFocusedElement} { (e.OldFocusedElement as FrameworkElement)?.Name}");
+		}
+
+		private static void FocusManager_GotFocus(object? sender, FocusManagerGotFocusEventArgs e)
+		{
+			Note.Show($"New focus: {e.NewFocusedElement} { (e.NewFocusedElement as FrameworkElement)?.Name}");
 		}
 
 		private static void KeyboardProxy_PointerExited(object sender,PointerRoutedEventArgs e)
 		{
 			e.KeyModifiers.UpdateKeyModifiers();
-
+			Note.Show($"Pointer exit {mouseOverCanvas}");
 		//	Assert(mouseOverCanvas== true);
 			mouseOverCanvas = false;
 		//	instance.mouseOverCanvasBox.IsChecked = mouseOverCanvas;
@@ -193,6 +207,7 @@ namespace CnV.Views
 
 			var point = e.GetCurrentPoint(canvas);
 			Canvas_PointerReleased((point.Position, point.PointerId, point.IsInContact, point.Timestamp, point.Properties.PointerUpdateKind),e.KeyModifiers);
+			e.Handled=true;
 
 		}
 
@@ -202,6 +217,7 @@ namespace CnV.Views
 			e.KeyModifiers.UpdateKeyModifiers();
 			App.InputRecieved();
 			Canvas_PointerPressed((point.Position, point.PointerId, point.IsInContact, point.Timestamp, point.Properties.PointerUpdateKind));
+			e.Handled=true;
 		}
 
 		private static void KeyboardProxy_PointerMoved(object sender,PointerRoutedEventArgs e)
@@ -479,6 +495,7 @@ namespace CnV.Views
 		private static void Canvas_PointerEntered(Windows.Foundation.Point args)
 		{
 			//	Assert(mouseOverCanvas== false);
+			Note.Show($"Pointer entered {mouseOverCanvas}");
 			if(!mouseOverCanvas)
 			{
 				mouseOverCanvas = true;
@@ -487,12 +504,11 @@ namespace CnV.Views
 //				Trace("MouseEnterred");
 			}
 			UpdateMousePosition(args);
-		//	TakeFocus();
+			TakeFocus();
 
 			//			Log($"!Focus11: {hasKeyboardFocus} w{webviewHasFocus} w2{webviewHasFocus2}");
-			hasKeyboardFocus=false;
 //			args.KeyModifiers.UpdateKeyModifiers();
-			ShellPage.UpdateFocus(); 
+			//ShellPage.UpdateFocus(); 
 		}
 
 		
@@ -566,7 +582,7 @@ namespace CnV.Views
 			//}
 			//	Log($"!FocusExit: {hasKeyboardFocus} w{webviewHasFocus} w2{webviewHasFocus2}");
 			//	hasKeyboardFocus=0;
-			UpdateFocus();
+			//UpdateFocus();
 
 			ClearHover();
 		}
@@ -613,17 +629,18 @@ namespace CnV.Views
 			
 			keyModifiers.UpdateKeyModifiers(); 
 			UpdateMousePosition(point.Position);
-		//	if(!isFocused)
-		//		return;
 			
-			//if (CnVServer.IsCityView())
-			//{
-			//	e.Handled = false;
-			//	return;
-			//}
+				//	if(!isFocused)
+				//		return;
 
-	//		var pointerPoint = e.CurrentPoint;
-			var gestureResult = Gesture.ProcessRelased(point);
+				//if (CnVServer.IsCityView())
+				//{
+				//	e.Handled = false;
+				//	return;
+				//}
+
+				//		var pointerPoint = e.CurrentPoint;
+				var gestureResult = Gesture.ProcessRelased(point);
 			if (gestureResult.action == GestureAction.none)
 				return;
 			// why do this trigger gestures?
@@ -747,6 +764,7 @@ namespace CnV.Views
 			}
 			else
 			{
+			//	TakeFocus();
 				// middle click des nothing
 			}
 		}
@@ -808,7 +826,7 @@ namespace CnV.Views
 		{
 			AppS.InputRecieved();
 			UpdateMousePosition(point.Position);
-			ShellPage.UpdateFocus();            //	ClearHover();
+		//	ShellPage.TakeFocus();            //	ClearHover();
 												//  e.Handled = false;
 												//if (CityBuild.menuOpen)
 												//{
@@ -920,7 +938,7 @@ namespace CnV.Views
 
 			//  if (ShellPage.IsCityView())
 			// The app pas priority over back and forward events
-			ShellPage.UpdateFocus();
+			//S hellPage.UpdateFocus();
 			//  e.Handled = false;
 			Gesture.Reset();
 		}
@@ -943,8 +961,9 @@ namespace CnV.Views
 		public  static bool HandleWheel(Windows.Foundation.Point point,int scroll)
 		{
 			UpdateMousePosition(point);
+			Note.Show($"Wheel");
 
-			ShellPage.UpdateFocus();
+			ShellPage.TakeFocus();
 			//PointerInfo(e);
 			//if (ShellPage.IsCityView())
 			//{
@@ -1010,7 +1029,7 @@ namespace CnV.Views
 			//	PointerInfo(e);
 			UpdateMousePosition(point.Position);
 		//	TakeFocusIfAppropriate();
-			UpdateFocus();
+			//UpdateFocus();
 		//	if (!isFocused)
 		//		return;
 		//	var priorMouseC = mousePosition;
@@ -1321,9 +1340,12 @@ namespace CnV.Views
 				{
 					DoZoom(gestureResult.delta.Z * 0.75f, gestureResult.action.HasFlag(GestureAction.pan));
 					cameraZoomLag = cameraZoom;
+					//TakeFocus();
+
 				}
 				if (gestureResult.action.HasFlag(GestureAction.pan))
 				{
+				//	TakeFocus();
 					var dr = gestureResult.delta;
 					{
 						dr *= 1.0f / cameraZoomLag;

@@ -174,7 +174,7 @@ namespace CnV
 
 						var dt = (animationT - animationOffsets[bspot]);
 						float dtF = dt*3f;
-						float blendT = (dtF).Frac();
+						float blendT = (dt*0.5f).PingPong();
 						// ZBase is on initial action placement
 						var zBase =0f;
 						if(dtF < 1 )
@@ -212,25 +212,25 @@ namespace CnV
 								if(blendT < 0.25f)
 								{
 									var t = (blendT) * 4.0f;
-									bl = next.bl; // fade next number
-									fontA = t.SCurve(0,1);
-									blendOp = t.SCurve();
+									bl = cur.bl; // fade next number
+									fontA = 1.0f;//t.SCurve(0,1);
+									blendOp = t.SCurve(0,1);
 								}
 								else if(blendT < 0.5f)
 								{
 									var t = (blendT - 0.25f) * 4.0f;
 									blendOp = 1;
 									// fade out number
-									bl = next.bl; // fade next number
+									bl = cur.bl; // fade next number
 									fontA = t.SCurve(1,0);
 
 								}
 								else if(blendT < 0.75f) // fade out hammer
 								{
 									var t = (blendT - 0.5f) * 4.0f; // fade in new number
-									blendOp = t.SCurve(1,0);
+									blendOp = 1;// t.SCurve(1,0);
 									// fade in last number
-									bl = cur.bl;
+									bl = next.bl;
 									fontA = t.SCurve(0,1);
 								}
 								else
@@ -238,8 +238,9 @@ namespace CnV
 									// fade in number
 									var t = (blendT - 0.75f) * 4.0f; // fade in new number
 																	 // fade out number
-									bl = cur.bl;
-									fontA = t.SCurve(1,0);// prior number out	
+									blendOp =t.SCurve(1, 0);
+									bl = next.bl;
+									fontA = 1.0f;//t.SCurve(1,0);// prior number out	
 								}
 								DrawBuilding(next.id, iAlpha, zBase, Layer.tileCity, cs, fontScale, (int)(alpha*fontA*255f), bl);
 								if(blendOp > 0)
@@ -272,14 +273,14 @@ namespace CnV
 								blendMat = decalBuildingValid;
 								bd = next;
 							}
-							if(blendT < 0.25f)
+							if(blendT < 0.5f)
 							{
-								var t = blendT * 4.0f; // demo fades in, half second
+								var t = blendT * 2.0f; // demo fades in, half second
 								blendOp = t.SCurve(0,1);
 							}
 							else
 							{
-								var t = (blendT - 0.25f) *(1.0f/0.75f); // building fades in, hammer fades out 1 seconds
+								var t = (blendT - 0.5f) *(2.0f); // building fades in, hammer fades out 1 seconds
 								blendOp = t.SCurve(1,0);
 							}
 						

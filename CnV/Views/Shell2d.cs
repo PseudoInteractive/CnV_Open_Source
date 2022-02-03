@@ -55,7 +55,6 @@ namespace CnV.Views
 		//public static int cachedTopOffset = 0;
 		//public static int cachedXOffset = 0;
 //		static public SwapChainPanel? canvas=>GameClient.canvas;
-		public static bool hasKeyboardFocus;
 	//	public static KeyboardProxy keyboardProxy;
 
 //		public static bool webviewHasFocus=>webviewHasFocus2;
@@ -100,13 +99,13 @@ namespace CnV.Views
 		//}
 
 		
-		public static void UpdateFocus()
-		{
+	//	public static void UpdateFocus()
+	//	{
 			
-	//		Log($"!Focu92: {ShellPage.isHitTestVisible} o{ShellPage.isMouseOver}");
+	////		Log($"!Focu92: {ShellPage.isHitTestVisible} o{ShellPage.isMouseOver}");
 
-			//updateCanvasVisibility.Go();
-		}
+	//		//updateCanvasVisibility.Go();
+	//	}
 
 		//static Debounce updateCanvasVisibility = new(()=>
 		//{
@@ -137,59 +136,74 @@ namespace CnV.Views
 //		{
 //			takeFocusIfAppropriate.Go();
 //		}
-//		static void TakeFocus()
-//		{
-//			forceFocus=true;;
-//			takeFocusIfAppropriate.Go();
-//		}
-//		static  Debounce takeFocusIfAppropriate = new( () =>
-//		{
-//			var isOverCanvas = mouseOverCanvas && isHitTestVisible;
-//			var note = 0;
-//			if(isOverCanvas)
-//			{
-//				if((canvas.FocusState is FocusState.Unfocused) || forceFocus)
-//				{
-//					forceFocus=false;
-//					//if(CnVServer.view is not null && AppS.IsKeyPressedShift())
-//					{
-//						//		var f = CnVServer.view.Focus(FocusState.Programmatic);
-//						//		Assert(f);
-//					}
-//					//else if( AppS.IsKeyPressedControl())
-//					//{
-//					//	var f = ChatTab.tabPage.Focus(FocusState.Programmatic);
-//					//	Assert(f);
-//					//}
-//					//AppS.QueueOnUIThread( ()=>
-//					{
-//						var f = canvas.Focus(FocusState.Programmatic);
-//						if(!forceFocus)
-//						{
-//							if(!f)
-//							{
-//								Assert(false);
-//							}
-//						}
-//					} //);
-//					note|=2;
-//				}
-//			}
-//#if DEBUG
-//		//	if(note!=0)
-//		//		Note.Show($"!Focu{note}: f{canvas.IsHitTestVisible} o{isOverCanvas}");
-//#endif
-//			return Task.CompletedTask;
+		public static void TakeFocus()
+		{
+			if(!mouseOverCanvas)
+				Note.Show($"Pointer focus not over canvas!");
+			if(CityBuild.menuOpen)
+				return;
+			takeFocusIfAppropriate.Go();
+		}
+		static Debounce takeFocusIfAppropriate = new(() =>
+	  {
+		  //  var isOverCanvas = mouseOverCanvas && isHitTestVisible;
+		  // var note = 0;
+		  // if(isOverCanvas)
+		    try
+			  {
+			  if(!ChatTabHasFocus())
+			  {
+				  Note.Show("Focus");
+				  canvas.Focus(FocusState.Programmatic);
+			  }
+		  }
+		  catch( Exception ex)
+		  {
+			  LogEx(ex);
+		  }
+			  //if((canvas.FocusState is FocusState.Unfocused) || forceFocus)
+			  //{
+			  // forceFocus=false;
+			  // //if(CnVServer.view is not null && AppS.IsKeyPressedShift())
+			  // {
+			  //  //		var f = CnVServer.view.Focus(FocusState.Programmatic);
+			  //  //		Assert(f);
+			  // }
+			  // //else if( AppS.IsKeyPressedControl())
+			  // //{
+			  // //	var f = ChatTab.tabPage.Focus(FocusState.Programmatic);
+			  // //	Assert(f);
+			  // //}
+			  // //AppS.QueueOnUIThread( ()=>
+			  // {
+			  //  var f = canvas.Focus(FocusState.Programmatic);
+			  //  if(!forceFocus)
+			  //  {
+			  //	  if(!f)
+			  //	  {
+			  //		  Assert(false);
+			  //	  }
+			  //  }
+			  // } //);
+			  // note|=2;
+			  //}
+		  
+#if DEBUG
+		  //	if(note!=0)
+		  //		Note.Show($"!Focu{note}: f{canvas.IsHitTestVisible} o{isOverCanvas}");
+#endif
+		  return Task.CompletedTask;
 
-//		})
-//		{
-//			runOnUiThread=true,
-//			debounceDelay=50,
-//			throttleDelay=100
-//		};
+	  })
+		{
+			runOnUiThread=true,
+			debounceDelay=100,
+			throttleDelay=500,
+			throttled=true
+		};
 
-		
-		
+
+
 		//private static bool IsMouseOverChat()
 		//{
 		//	var xf = canvas.TransformToVisual(ChatTab.tabPage );
@@ -293,7 +307,7 @@ namespace CnV.Views
 
 			//canvas.Children.Add(keyboardProxy);
 			//			canvas.PreviewKeyDown+=KeyboardProxy_KeyDown;
-			canvas.KeyDown += KeyboardProxy_KeyDown;
+			
 		//	App.window.Content.PreviewKeyDown+=ShellPage.KeyboardProxy_KeyDown; ;
 		//	canvas.PreviewKeyDown+=ShellPage.KeyboardProxy_KeyDown2; ;
 			//			App.window.Content.PreviewKeyUp+=ShellPage.KeyboardProxy_KeyUp;
@@ -302,13 +316,12 @@ namespace CnV.Views
 			//keyboardProxy.LostFocus += KeyboardProxy_LostFocus;
 			//keyboardProxy.GotFocus += KeyboardProxy_GotFocus;
 			//	keyboardProxy.PointerWheelChanged+=KeyboardProxy_PointerWheelChanged;
-			canvas.PointerWheelChanged += KeyboardProxy_PointerWheelChanged;
 
 			//canvas.AddHandler(canvas.Children.Add(keyboardProxy);)
 			//			GettingFocusEvent
 			//		keyboardProxy.AddHandler(GettingFocusEvent, KeyboardProxy_GettingFocus, true);
 			//		keyboardProxy.AddHandler(LostFocusEvent, KeyboardProxy_LostFocus, true);
-		//	canvas.ProcessKeyboardAccelerators+=Canvas_ProcessKeyboardAccelerators;
+			//	canvas.ProcessKeyboardAccelerators+=Canvas_ProcessKeyboardAccelerators;
 			//canvasHitTest = new Rectangle()
 			//{
 			//	Name="webDrawer",
@@ -343,7 +356,7 @@ namespace CnV.Views
 		//	Log($"Key!!Canvas {args.Key} {args}");
 		//}
 
-		private void KeyboardProxy_PointerWheelChanged(object sender, PointerRoutedEventArgs e)
+		private static void KeyboardProxy_PointerWheelChanged(object sender, PointerRoutedEventArgs e)
 		{
 			if(true||mouseOverCanvas)
 			{
@@ -416,12 +429,13 @@ namespace CnV.Views
 			}
 			if(!mouseOverCanvas)
 			{
-		//		Log("Not over canvas");
+				Note.Show("Not over canvas");
 				return false;
 			}
 			// don't process if chat has focus
-			AppS.UpdateKeyStates();
-
+			//AppS.UpdateKeyStates();
+			//if(ChatTabHasFocus)
+			//	return false;
 			hotKeyDown.Go(key);
 			return true;
 		}
@@ -432,12 +446,12 @@ namespace CnV.Views
 			{
 				if (tab.input.FocusState != FocusState.Unfocused)
 				{
-	//				Log($"{tab.Name} {tab.input.FocusState}");
-					return false;
+					Note.Show($"{tab.Name} {tab.input.FocusState}");
+					return true;
 				}
 			}
 
-			return true;
+			return false;
 		}
 
 		public static Task _KeyDown(VirtualKey key)
@@ -450,6 +464,7 @@ namespace CnV.Views
 
 			if(!mouseOverCanvas)
 			{
+				Note.Show("Mouse not over canvas");
 				return Task.CompletedTask;
 		//		Log("Mouse not over");
 			}
