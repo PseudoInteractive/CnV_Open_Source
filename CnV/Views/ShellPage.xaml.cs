@@ -179,35 +179,7 @@ namespace CnV.Views
 		//		public static InAppNotification inAppNote => instance.InAppNote;
 		public string noteText = string.Empty;
 
-		public bool IsBackEnabled
-		{
-			get { return _isBackEnabled; }
-			set { Set(ref _isBackEnabled, value); }
-		}
-
-		public WinUI.NavigationViewItem Selected
-		{
-			get { return _selected; }
-			set { Set(ref _selected, value); }
-		}
-
-		public bool IsBusy
-		{
-			get { return _isBusy; }
-			set { Set(ref _isBusy, value); }
-		}
-
-		public bool IsLoggedIn
-		{
-			get { return _isLoggedIn; }
-			set { Set(ref _isLoggedIn, value); }
-		}
-
-		public bool IsAuthorized
-		{
-			get { return _isAuthorized; }
-			set { Set(ref _isAuthorized, value); }
-		}
+	
 
 		public ShellPage()
 		{
@@ -376,10 +348,7 @@ namespace CnV.Views
 				//	KeyboardAccelerators.Add(BuildKeyboardAccelerator(k, KeyboardAccelerator));
 				//}
 
-				//				KeyboardAccelerators.Add(BuildKeyboardAccelerator(VirtualKey.F4, LayoutAccelerator_Invoked));
-				IsLoggedIn   = true; // IdentityService.IsLoggedIn();
-				IsAuthorized = true; // IsLoggedIn && IdentityService.IsAuthorized();
-									 // grid.hor
+			
 				/// we pass this as an argument to let the page know that it is a programmatic navigation
 				// Services.NavigationService.Navigate<Views.DefenseHistoryTab>(this); ChatTab.Ctor();
 				TabPage.Initialize();
@@ -402,12 +371,15 @@ namespace CnV.Views
 				//	ShellPage.webclientSpan.x = (screenSize.Width * .715625f* Settings.htmlZoom * 2).RoundToInt();
 				//	ShellPage.webclientSpan.y = (screenSize.Height * 0.89236111111111116f * Settings.htmlZoom*2).RoundToInt();
 				//	await UpdateWebViewScale();
+
+				AppS.state = AppS.State.setup;
+
 				Log("Game Create!");
 				GameClient.Create(_canvas);
 
 
 
-
+				// Links will not work until after the game is set up
 				try
 				{
 					if(SystemInformation.Instance.IsAppUpdated && !CnVServer.isSub)
@@ -468,7 +440,8 @@ namespace CnV.Views
 
 				}
 
-				CnVClient.InitializeGame();
+				await CnVClient.InitializeGame();
+				AppS.state = AppS.State.active;
 			}
 			catch(Exception ex)
 			{

@@ -2,6 +2,7 @@
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
     <TargetFramework>net6.0-windows10.0.22000.0</TargetFramework>
+    <EnablePreviewFeatures>true</EnablePreviewFeatures>
     <TargetPlatformMinVersion>10.0.18362.0</TargetPlatformMinVersion>
     <RootNamespace>CnV</RootNamespace>
     <ApplicationManifest>app.manifest</ApplicationManifest>

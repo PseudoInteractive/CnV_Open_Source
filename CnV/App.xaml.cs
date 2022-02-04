@@ -99,10 +99,10 @@ namespace CnV
 			closing,
 			closed,
 		}
-
-//		static IConfigurationRoot configuration;
+		public static ref State => ref AppS.state;
+		//		static IConfigurationRoot configuration;
 		public  static      Window?           window => AppS.window;
-		public static State                   state;
+		
 		private       Lazy<ActivationService> _activationService;
 		public static bool                    processingTasksStarted;
 
@@ -242,13 +242,20 @@ namespace CnV
 
 		private static async Task SwitchToBackground()
 		{
+			try
+			{ 
 			Log($"Background {isForeground}");
-			if (isForeground == true)
+			while(AppS.windowState == AppS.WindowState.switching)
 			{
-				isForeground = false;
+				await Task.Delay(100);
+			}
+
+			if(AppS.windowState == AppS.WindowState.foreground)
+			{
+				AppS.windowState = AppS.WindowState.switching;
 
 				//TODO: Save application state and stop any background activity
-				try
+					try
 				{
 
 					var t0 = SaveState();
@@ -263,11 +270,16 @@ namespace CnV
 											{ { "time", dt.TotalSeconds.RoundToInt().ToString() } });
 					SystemInformation.Instance.AddToAppUptime(dt);
 					await t0;
+					AppS.windowState = AppS.WindowState.background;
 					Log("Finished!");
 				}
 				catch (Exception ex)
 				{
 				}
+			}
+			}catch(Exception ex)
+			{
+				LogEx(ex);
 			}
 		}
 
@@ -370,12 +382,16 @@ namespace CnV
 
 		}
 
-		private void SwitchToForeground()
+		private async void SwitchToForeground()
 		{
 			Log("Foreground");
-			if (!isForeground)
+			while(AppS.windowState == AppS.WindowState.switching)
 			{
-				isForeground = true;
+				await Task.Delay(100);
+			}
+			if(AppS.windowState == AppS.WindowState.background)
+			{
+				AppS.windowState = AppS.WindowState.foreground;
 				var t  = DateTimeOffset.UtcNow;
 				var dt = t - activeStart;
 				activeStart = t;
@@ -517,11 +533,11 @@ namespace CnV
 				AppS.globalQueue = window.DispatcherQueue;
 				//	keyQueue = globalQueue.CreateTimer();
 				//CoreApplication.EnablePrelaunch(false);
-				if (uwpArgs.Kind == Windows.ApplicationModel.Activation.ActivationKind.Launch)
-				{
-					// do this asynchronously
-					Services.StoreHelper.instance.DownloadAndInstallAllUpdatesAsync();
-				}
+				//if (uwpArgs.Kind == Windows.ApplicationModel.Activation.ActivationKind.Launch)
+				//{
+				//	// do this asynchronously
+				//	Services.StoreHelper.instance.DownloadAndInstallAllUpdatesAsync();
+				//}
 
 
 
@@ -553,14 +569,14 @@ namespace CnV
 
 		//}
 
-		private void Window_Closed(object sender, WindowEventArgs args)
-		{
-//			BackgroundTask.dispatcherQueueController.ShutdownQueueAsync();
+//		private void Window_Closed(object sender, WindowEventArgs args)
+//		{
+////			BackgroundTask.dispatcherQueueController.ShutdownQueueAsync();
 
-			Log($"Closed!  {isForeground}");
-			//	Assert(state == State.closed);
-			SwitchToBackground();
-		}
+//			Log($"Closed!  {isForeground}");
+//			//	Assert(state == State.closed);
+//			SwitchToBackground();
+//		}
 
 		private void Content_PreviewKeyUp(object sender, Microsoft.UI.Xaml.Input.KeyRoutedEventArgs e)
 		{
@@ -604,7 +620,8 @@ namespace CnV
 				{
 					//	var window = Window.Current;
 					window.VisibilityChanged += Window_VisibilityChanged;
-					window.Closed            += Window_Closed;
+				//	window.Closed            += Window_Closed;
+					AppS.appWindow.Closing+=AppWindow_Closing;
 					//		window.WantClose+=Window_Closing;
 					//	window.Activated+=Window_Activated;
 				}
@@ -660,6 +677,31 @@ namespace CnV
 			}
 		}
 
+		private async void AppWindow_Closing(AppWindow sender, AppWindowClosingEventArgs args)
+		{
+			try
+			{
+				Log($"Closing!!: {AppS.state}  {AppS.windowState}");
+
+				AppS.state = AppS.State.closing;
+				if(AppS.state !=  AppS.State.closed)
+				{
+					args.Cancel = true;
+					await SwitchToBackground();
+					AppS.state = AppS.State.closed;
+					appWindow.Destroy();
+				}
+			}
+			catch(Exception ex)
+			{
+				// Todo
+				LogEx(ex);
+			}
+			finally
+			{
+			}
+		}
+
 
 
 		//private void Window_Activated(object sender,WindowActivatedEventArgs args)
@@ -670,7 +712,7 @@ namespace CnV
 
 		private async void Window_VisibilityChanged(object sender, WindowVisibilityChangedEventArgs args)
 		{
-			Log($"Visibility!!: {args.Visible}  {isForeground}");
+			Log($"Visibility!!: {args.Visible}  {AppS.windowState}");
 			if (!args.Visible)
 			{
 				await SwitchToBackground();
@@ -1070,7 +1112,7 @@ namespace CnV
 		// HTML control messs wit this
 //		public static VirtualKeyModifiers keyModifiers => canvasKeyModifiers;
 
-		public static bool isShuttingDown => state == State.closing;
+	
 
 		//{
 		//	get

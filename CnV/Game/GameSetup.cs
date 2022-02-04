@@ -30,14 +30,14 @@ namespace CnV
 		private static BackgroundTask reinforcementsTask;
 		private static BackgroundTask senInfoTask;
 
-		public static async void InitializeGame()
+		public static async Task InitializeGame()
 	{
 
 		//					   CnVChatClient.instance = new();
 		//					   CnVChatClient.instance.Initialize();
 		try
 		{
-
+				ISmallTimeServer.SetEpoch( DateTimeOffset.UtcNow);
 				//var timeOffset = jso.GetAsInt64("timeoffset");
 				//var timeOffsetSecondsRounded = Math.Round(timeOffset / (1000.0 * 60*30)) * 60 * 30.0f; // round to nearest half hour
 				CnVServer.gameTOffset = TimeSpan.FromHours(World.timeZoneOffsetHours);
@@ -138,7 +138,7 @@ namespace CnV
 			// 
 			// Friend.LoadAll();
 
-			App.state = App.State.active;
+			AppS.state = AppS.State.active;
 		//	CnVDiscord.Discord.Initialize();
 
 			//  System.GC.Collect(2,GCCollectionMode.Default,true);

@@ -883,7 +883,7 @@ namespace CnV
 			menuOpen =true;
 			buildMenu.ShowAt(ShellPage.instance.grid, new FlyoutShowOptions() { Position = new Windows.Foundation.Point(sc.X, sc.Y), Placement = FlyoutPlacementMode.Auto, ShowMode=FlyoutShowMode.Standard });
 
-			sc =buildMenu.Show(sc, ShellPage.instance.grid);
+			//sc =buildMenu.Show(sc, ShellPage.instance.grid);
 			
 		}
 
