@@ -283,12 +283,13 @@ namespace CnV
 		}
 		public static void UpdateBuildCityStatsView()
 		{
-			static void UpdateIfNeeded(Microsoft.UI.Xaml.Controls.TextBlock txt,string _txt, Microsoft.UI.Xaml.Media.SolidColorBrush brush )
+			static void UpdateIfNeeded(Microsoft.UI.Xaml.Controls.TextBlock txt,string _txt, Color color )
 			{
 				if( _txt != txt.Text)
 				{
 					txt.Text = _txt;
 				}
+				var brush = AppS.Brush(color);
 				if( !object.ReferenceEquals(txt.Foreground,brush) )
 				{ 
 					txt.Foreground = brush;
@@ -299,16 +300,21 @@ namespace CnV
 			{
 				var  city= City.GetBuild();
 				var  i = CityStats.instance;
+				var resources = city.SampleResources();
 				for(var r = 0; r<Resources.idCount; r++)
 				{
 					var txt = r switch { 0 => i.res0, 1 => i.res1, 2 => i.res2, 3 => i.res3 };
 					var prod = r switch { 0 => i.prod0, 1 => i.prod1, 2 => i.prod2, 3 => i.prod3 };
-					var res = city.resources[r];
+					var res = resources[r];
 					var storage = city.stats.storage[r];
-					UpdateIfNeeded(txt, $"{res:N0}", AppS.Brush(res >= storage ? Colors.Red : res >= storage*3/4 ? Colors.Orange : res == 0 ? Colors.Gray : Colors.Green) );
+					UpdateIfNeeded(txt, $"{res:N0}", (res >= storage ? Colors.Red : res >= storage*3/4 ? Colors.Orange : res == 0 ? Colors.Gray : Colors.Green) );
 					var p = city.stats.production[r];
-					UpdateIfNeeded(prod, $"{p:N0}",AppS.Brush(p switch { > 0 => Colors.Green, < 0 => Colors.Yellow, _ => Colors.Gray }));
+					UpdateIfNeeded(prod, $"{p:N0}", (p switch { > 0 => Colors.Green, < 0 => Colors.Yellow, _ => Colors.Gray }) );
 				}
+				var t = ServerTime.now;
+
+				UpdateIfNeeded(ShellPage.instance.timeDisplay, $"Time: {t}",Colors.White);
+
 			});
 		}
 

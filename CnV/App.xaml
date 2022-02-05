@@ -30,9 +30,7 @@
 					<SolidColorBrush x:Key="RegionBrush" Color="#FF153A35" />
 				</ResourceDictionary>
 
-				<ResourceDictionary Source="/Styles/_Colors.xaml" />
-				<ResourceDictionary Source="/Styles/_FontSizes.xaml" />
-				<ResourceDictionary Source="/Styles/_Thickness.xaml" />
+				<ResourceDictionary Source="/Styles/FontSizes.xaml" />
 				<ResourceDictionary Source="/Styles/TextBlock.xaml" />
 				<ResourceDictionary Source="/Styles/Page.xaml" />
 				<ResourceDictionary Source="/Styles/BattleReport.xaml" />
@@ -42,7 +40,11 @@
 
 			</ResourceDictionary.MergedDictionaries>
 
-
+			<ResourceDictionary.ThemeDictionaries>
+				<ResourceDictionary x:Key="Default">
+					<FontFamily x:Key="MyCustomFont">Bahnschrift</FontFamily>
+				</ResourceDictionary>
+			</ResourceDictionary.ThemeDictionaries>
 
 		</ResourceDictionary>
 	</Application.Resources>

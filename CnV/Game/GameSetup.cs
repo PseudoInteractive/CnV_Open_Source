@@ -37,6 +37,7 @@ namespace CnV
 		//					   CnVChatClient.instance.Initialize();
 		try
 		{
+				
 				// Todo:  Persist this
 				CnVServer.serverStartTime =( DateTimeOffset.UtcNow);
 				//var timeOffset = jso.GetAsInt64("timeoffset");
@@ -47,10 +48,13 @@ namespace CnV
 
 				var t1 = Task.Run(() => TileData.Ctor(false));
 				Alliance.Ctor();
-				CityCustom.Load();
+				var t2 = CityCustom.Load();
 				BuildQueue.Initialize();
 				await t1.ConfigureAwait(false);
+
+				// World cannot load until tiles are loaded
 				await World.LoadWorldData().ConfigureAwait(false);
+				await t2.ConfigureAwait(false); ; // city custom can end here
 
 				AppS.state = AppS.State.active;
 

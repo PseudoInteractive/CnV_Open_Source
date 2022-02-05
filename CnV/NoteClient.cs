@@ -74,6 +74,10 @@ namespace CnV
 		{
 			try
 			{
+				if(AppS.state >= AppS.State.closing)
+					return;
+				if(AppS.state < AppS.State.setup)
+					return;
 				//if(showDebugOutput)
 				//{
 				//	AppS.DispatchOnUIThreadLow(() =>

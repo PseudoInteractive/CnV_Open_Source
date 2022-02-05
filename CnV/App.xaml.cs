@@ -171,6 +171,14 @@ namespace CnV
 
 		public App()
 		{
+			{
+				var a = new IServerTime();
+				var b = new ServerTime();
+				var c = new ISmallTimeUtc();
+				var d = new SmallTime();
+				Log($"{IServerTime.Now()} {b} {a} {d} {ISmallTimeUtc.Now()} {c} {ServerTime.now} {SmallTime.now}");
+			}
+
 			//			services = ConfigureServices();
 			RequestedTheme = ApplicationTheme.Dark;
 			InitializeComponent();
@@ -206,7 +214,7 @@ namespace CnV
 			//	UserAgent.SetUserAgent(CnVServer.userAgent);  // set webview useragent
 			//	Ioc.Default.ConfigureServices(ConfigureServices());
 
-
+			
 		}
 		//private System.IServiceProvider ConfigureServices()
 		//{
@@ -239,7 +247,7 @@ namespace CnV
 		{
 			try
 			{ 
-			Log($"Background {isForeground}");
+			Log($"Switch to Background (was foreground: {isForeground})");
 			while(AppS.windowState == AppS.WindowState.switching)
 			{
 				await Task.Delay(100);
@@ -463,6 +471,9 @@ namespace CnV
 		{
 			try
 			{
+				Assert(AppS.state == AppS.State.loading);
+				AppS.state = AppS.State.init;
+
 
 
 
@@ -564,14 +575,13 @@ namespace CnV
 
 		//}
 
-//		private void Window_Closed(object sender, WindowEventArgs args)
-//		{
-////			BackgroundTask.dispatcherQueueController.ShutdownQueueAsync();
+		private void Window_Closed(object sender, WindowEventArgs args)
+		{
 
-//			Log($"Closed!  {isForeground}");
+			Log($"WindowClosed!  {isForeground} {args.Handled}");
 //			//	Assert(state == State.closed);
 //			SwitchToBackground();
-//		}
+		}
 
 		private void Content_PreviewKeyUp(object sender, Microsoft.UI.Xaml.Input.KeyRoutedEventArgs e)
 		{
@@ -615,7 +625,7 @@ namespace CnV
 				{
 					//	var window = Window.Current;
 					window.VisibilityChanged += Window_VisibilityChanged;
-				//	window.Closed            += Window_Closed;
+					window.Closed            += Window_Closed;
 					AppS.appWindow.Closing+=AppWindow_Closing;
 					//		window.WantClose+=Window_Closing;
 					//	window.Activated+=Window_Activated;
@@ -678,13 +688,18 @@ namespace CnV
 			{
 				Log($"Closing!!: {AppS.state}  {AppS.windowState}");
 
-				AppS.state = AppS.State.closing;
-				if(AppS.state !=  AppS.State.closed)
+				if(AppS.state <  AppS.State.closing)
 				{
+					AppS.state = AppS.State.closing;
 					args.Cancel = true;
+					BackgroundTask.dispatcherQueueController.ShutdownQueueAsync();
+
 					await SwitchToBackground();
+					Assert( AppS.state == AppS.State.closing);
 					AppS.state = AppS.State.closed;
-					appWindow.Destroy();
+					Log($"Destroyed");
+					Exit();
+					//appWindow.Destroy();
 				}
 			}
 			catch(Exception ex)

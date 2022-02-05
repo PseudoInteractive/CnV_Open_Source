@@ -183,9 +183,9 @@ namespace CnV.Views
 
 		public ShellPage()
 		{
-			instance = this;
+//			instance = this;
 			InitializeComponent();
-			RequestedTheme = ElementTheme.Dark; // default theme
+	//		RequestedTheme = ElementTheme.Dark; // default theme
 
 		}
 //		public static bool rightTabsVisible => Settings.layout>=Layout.c;
@@ -208,6 +208,7 @@ namespace CnV.Views
 		{
 			try
 			{
+				instance = this;
 				//{
 				//	var sw = new Stopwatch();
 				//	sw.Start();
@@ -371,7 +372,7 @@ namespace CnV.Views
 				//	ShellPage.webclientSpan.x = (screenSize.Width * .715625f* Settings.htmlZoom * 2).RoundToInt();
 				//	ShellPage.webclientSpan.y = (screenSize.Height * 0.89236111111111116f * Settings.htmlZoom*2).RoundToInt();
 				//	await UpdateWebViewScale();
-
+				Assert( AppS.state == AppS.State.init);
 				AppS.state = AppS.State.setup;
 
 				Log("Game Create!");

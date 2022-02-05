@@ -396,7 +396,9 @@
 					</ListView.ItemContainerStyle>
 				</ListView>
 			</Expander>
-
+			<TextBlock x:Name="timeDisplay" x:FieldModifier="public" Grid.Column="{x:Bind grid.rowDefinitions.IndexOf(rowFooter)}"
+					   />
+		
 			<!--<winui:InfoBar x:Name="infoBar"
                                   Grid.Row="1"
                                   Grid.Column="1"

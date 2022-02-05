@@ -3,20 +3,21 @@
     <OutputType>WinExe</OutputType>
     <TargetFramework>net6.0-windows10.0.22000.0</TargetFramework>
     <EnablePreviewFeatures>true</EnablePreviewFeatures>
-    <TargetPlatformMinVersion>10.0.18362.0</TargetPlatformMinVersion>
+    <TargetPlatformVersion>10.0.22000.0</TargetPlatformVersion>
+	<TargetPlatformMinVersion>10.0.18362.0</TargetPlatformMinVersion>
     <RootNamespace>CnV</RootNamespace>
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <Platforms>x64</Platforms>
     <MonoGamePlatform>WindowsStoreApp</MonoGamePlatform>
     <RuntimeIdentifiers>win10-x64</RuntimeIdentifiers>
-    <UseWinUI>true</UseWinUI>
+    <UseWinUI>True</UseWinUI>
     <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
     <EnableDefaultPageItems>false</EnableDefaultPageItems>
     <LangVersion>preview</LangVersion>
     <PackageCertificateThumbprint>5DC3522778776B8DC772B28B915990F3B4487888</PackageCertificateThumbprint>
     <AppxPackageSigningEnabled>True</AppxPackageSigningEnabled>
     <GenerateAppInstallerFile>False</GenerateAppInstallerFile>
-	<TieredCompilation>true</TieredCompilation>
+	<TieredCompilation>True</TieredCompilation>
 	<AppxPackageSigningTimestampDigestAlgorithm>SHA256</AppxPackageSigningTimestampDigestAlgorithm>
     <AppxAutoIncrementPackageRevision>True</AppxAutoIncrementPackageRevision>
 	<PublishProfile>Properties\PublishProfiles\win10-$(Platform).pubxml</PublishProfile>	  
@@ -114,7 +115,7 @@
     <PackageReference Include="SharpGen.Runtime.COM" Version="2.0.0-beta.10" />
     <PackageReference Include="System.Linq.Async" Version="6.0.1" />
     <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="6.0.2-mauipre.1.22054.8" />
-    <PackageReference Include="System.Runtime.Experimental" Version="6.0.0" />
+    <PackageReference Include="System.Runtime.Experimental" Version="6.0.2-mauipre.1.22054.8" />
     <PackageReference Include="System.Text.Json" Version="6.0.2-mauipre.1.22054.8" />
 	<PackageReference Include="ZString" Version="2.4.4" />
     	<Content Include="Assets\BadgeLogo.scale-100.png" />
@@ -389,15 +390,7 @@
     <Page Include="Styles\ScrollBarHack.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Styles\_Colors.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Styles\_FontSizes.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Styles\_Thickness.xaml">
+    <Page Include="Styles\FontSizes.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -568,6 +561,9 @@
     <None Remove="Styles\CommandBar.xaml" />
     <None Remove="Styles\ScrollBarHack.xaml" />
     <None Remove="Styles\SharedResources.xaml" />
+    <None Remove="Styles\_Colors.xaml" />
+    <None Remove="Styles\_Thickness.xaml" />
+    <None Remove="Themes\Generic.xaml" />
     <None Remove="Views\CityBox.xaml" />
     <None Remove="Views\CityRename.xaml" />
     <None Remove="Views\CityStats.xaml" />
@@ -643,6 +639,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Base\" />
+    <Folder Include="Themes\" />
   </ItemGroup>
   <ItemGroup>
 	 <Reference Include="Cyotek.Drawing.BitmapFont">
@@ -657,11 +654,6 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
-    <None Update="Themes\Generic.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </None>
   </ItemGroup>
   <Import Project="..\..\CnVShared\CnVShared.projitems" Label="Shared" />
   <Import Project="..\..\CnVServer\CnVServer\CnVServer.projitems" Label="Shared" />
