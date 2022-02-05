@@ -18,7 +18,7 @@ namespace CnV.Game
 	//	public readonly string cookies;// { get; set; } // cookie
 	//	public readonly string name;// => Game.Player.IdToName(pid);
 
-	//	public DateTimeOffset lastSeen => SmallTime.ToDateTime(lastSeenSec);
+	//	public DateTimeOffset lastSeen => ServerTime.ToDateTime(lastSeenSec);
 
 	
 

@@ -99,7 +99,7 @@ namespace CnV.Views
 				if (title != null)
 					instance.Title = title;
 				if (recentTimes.Count == 0)
-					AddRecentTime(CnVServer.simTime);
+					AddRecentTime(CnVServer.simDateTime);
 				if (_time != null)
 				{
 					dateTime = _time.Value;

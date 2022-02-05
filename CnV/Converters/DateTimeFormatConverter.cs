@@ -48,7 +48,7 @@ namespace CnV.Converters
 				}
 			}
 
-			if (value is SmallTime src)
+			if (value is ServerTime src)
 			{
 				if (targetType == typeof(DateTimeOffset))
 				{
@@ -57,7 +57,7 @@ namespace CnV.Converters
 				
 				else
 				{
-					return src.FormatServer();
+					return src.Format();
 				}
 			}
 			return value;
@@ -66,26 +66,26 @@ namespace CnV.Converters
 
 	    public object ConvertBack(object value,Type targetType,object parameter,string language)
 	    {
-		    if (typeof(SmallTime) == targetType)
+		    if (typeof(ServerTime) == targetType)
 		    {
-			    if(value is SmallTime st)
+			    if(value is ServerTime st)
 			    {
 				    return st;
 			    }
 				else if ( value is DateTimeOffset dn)
 			    {
-				    return new SmallTime(dn);
+				    return new ServerTime(dn);
 			    }
 			    else if (value is null)
 			    {
-				    return SmallTime.zero;
+				    return ServerTime.zero;
 			    }
 			    else
 			    {
 				    if (AUtil.TryParseTime(value.ToString(), out var rv))
-					    return new SmallTime(rv);
+					    return new ServerTime(rv);
 				    else
-					    return SmallTime.zero;
+					    return ServerTime.zero;
 
 			    }
 		    }
@@ -96,9 +96,9 @@ namespace CnV.Converters
 			    {
 				    return dn;
 			    }
-			    else if(value is SmallTime st)
+			    else if(value is ServerTime st)
 			    {
-				    return st.dateTimeUtc;
+				    return st.dateTime;
 			    }
 			    else if(value is null)
 			    {

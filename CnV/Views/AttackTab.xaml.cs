@@ -315,8 +315,8 @@ namespace CnV.Views
 
 		// read only cache to enable threads to read the attacks white another thread is writing
 		
-		public static DateTimeOffset senTime { get => new SmallTime(plan.senTime).dateTimeUtc; set => plan.senTime = new SmallTime(value); }
-		public static DateTimeOffset seTime { get => new SmallTime(plan.seTime).dateTimeUtc; set => plan.seTime = new SmallTime(value); }
+		public static DateTimeOffset senTime { get => new ServerTime(plan.senTime).dateTime; set => plan.senTime = new ServerTime(value); }
+		public static DateTimeOffset seTime { get => new ServerTime(plan.seTime).dateTime; set => plan.seTime = new ServerTime(value); }
 
 
 

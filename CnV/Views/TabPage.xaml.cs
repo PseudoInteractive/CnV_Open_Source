@@ -162,7 +162,7 @@ namespace CnV.Views
 		public static bool Close(UserTab tab)
 		{
 			bool rv = false;
-			if(App.isShuttingDown)
+			if(AppS.isShuttingDown)
 				return false;
 			foreach(var tabPage in tabPages)
 			{
@@ -216,7 +216,7 @@ namespace CnV.Views
 	
 		void RemoveAllTabs()
 		{
-			if(App.isShuttingDown)
+			if(AppS.isShuttingDown)
 				return;
 
 			var _tab = Tabs;
@@ -514,7 +514,7 @@ namespace CnV.Views
 
 		static void RemoveTab(TabView view,TabViewItem tab)
 		{
-			if(App.isShuttingDown)
+			if(AppS.isShuttingDown)
 				return;
 			var itab = tab.Content as UserTab;
 			tab.Content = null; // remove it

@@ -738,7 +738,7 @@ namespace CnV
 		}
 		public static void SetLastQuickBuildActionSpot( BuildC c)
 		{
-			lastQuickBuildActionSpotValidUntil = SmallTime.UtcNow+3;
+			lastQuickBuildActionSpotValidUntil = SmallTime.now+3;
 			lastQuickBuildActionBSpot = c;
 		}
 		public static void PointerDown((int x, int y) cc)

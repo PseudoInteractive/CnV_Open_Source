@@ -149,8 +149,8 @@ namespace CnV.Views
 		public async Task _SelectionChanged()
 		{
 
-			var t1 = SmallTime.zero;
-			var t0 = SmallTime.UtcNow;
+			var t1 = ServerTime.zero;
+			var t0 = ServerTime.now;
 			await AppS.DispatchOnUIThreadTask(() => {
 				var sel = zoom.SelectedNodes;
 				if (sel != null && sel.Count > 0)
@@ -171,7 +171,7 @@ namespace CnV.Views
 			});
 			if( t0 == t1)
 			{
-				t0 = SmallTime.UtcNow;
+				t0 = ServerTime.now;
 			}
 
 			if (t1.seconds != 0)
@@ -381,7 +381,7 @@ namespace CnV.Views
 	}
 	//public class DayChanges
 	//{
-	//	public SmallTime t; // server time, only the date format is non zero
+	//	public ServerTime t; // server time, only the date format is non zero
 	//	public string dateStr => t.ToString("yyyy-MM-dd");
 	//	public Azure.ETag eTag;
 
@@ -403,7 +403,7 @@ namespace CnV.Views
 
 	//public class SnapshotChanges
 	//{
-	//	public SmallTime t; // server time
+	//	public ServerTime t; // server time
 	//	public string timeStr => t.ToString("HH':'mm':'ss");
 
 	//	public uint[] deltas;  // pairs of uints, first is offset, second is changed xor value

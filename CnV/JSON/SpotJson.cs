@@ -147,9 +147,9 @@ namespace CnV.DB
 //    public class Record
 //    {
 //        public int t { get; set; } // smalltime seconds
-//        public void  SetTime(DateTimeOffset _t) { t = SmallTime.ToSeconds(_t); }
+//        public void  SetTime(DateTimeOffset _t) { t = ServerTime.ToSeconds(_t); }
 //        [JsonIgnore]
-//        public DateTimeOffset dateTime => SmallTime.ToDateTime(t);
+//        public DateTimeOffset dateTime => ServerTime.ToDateTime(t);
 
 //    }
 

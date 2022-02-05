@@ -4,12 +4,12 @@ using Cysharp.Text;
 
 public static partial class World
 {
-	public static void SetHeatmapDates(SmallTime t0, SmallTime t1)
+	public static void SetHeatmapDates(ServerTime t0, ServerTime t1)
 	{
 		Assert(t0.seconds != 0);
 		Assert(t1.seconds != 0);
-		SmallTime _t0 = t0;
-		SmallTime _t1 = t1 + 1;
+		ServerTime _t0 = t0;
+		ServerTime _t1 = t1 + 1;
 
 		//if ( _t0.Date() != t0.Date())
 		//{
@@ -101,8 +101,8 @@ public static partial class World
 										{
 											var delta = target - cityCount1;
 											var sec = ((float)dt * (float)(delta) / dc);
-											sb.AppendFormat("{0} cities at {1}", target, new SmallTime((heatMapT1 + sec.RoundToInt()).AsUInt()).ToString());
-											sb.AppendFormat(" ({0})\n", TimeSpan.FromSeconds(sec).Format());
+											sb.AppendFormat("{0} cities at {1}", target, heatMapT1 + sec.RoundToInt() );
+											sb.AppendFormat(" ({0})\n", sec );
 										}
 									}
 								}

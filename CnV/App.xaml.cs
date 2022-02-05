@@ -74,6 +74,7 @@ using System.Runtime.InteropServices;
 using Microsoft.UI;
 using WinRT;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
+using DecimalFormatter = Windows.Globalization.NumberFormatting.DecimalFormatter;
 
 namespace CnV
 {
@@ -92,14 +93,8 @@ namespace CnV
 	/// </summary>
 	public sealed partial class App : Application
 	{
-		public enum State
-		{
-			init,
-			active,
-			closing,
-			closed,
-		}
-		public static ref State => ref AppS.state;
+		
+		//public static ref State => ref AppS.state;
 		//		static IConfigurationRoot configuration;
 		public  static      Window?           window => AppS.window;
 		

@@ -300,9 +300,9 @@ namespace CnV.Views
 			}
 			else
 			{
-				var ratio = shipping / (float)res.sum.Max(1);
+				var ratio = shipping / (double)res.sum.Max(1);
 
-				supporter.res = res.Scale(ratio);
+				supporter.res = res.ScaleAndTruncate(ratio);
 
 			}
 

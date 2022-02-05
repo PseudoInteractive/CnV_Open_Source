@@ -33,7 +33,7 @@ namespace CnV
 		{
 			if(!this.stats.dirty)
 				return;
-			
+			ApplyResProductionToPresent();
 			var city = this;
 			// current not future or whatever
 			var bds = city.buildings;
@@ -63,22 +63,22 @@ namespace CnV
 							tsPercentMultipler = (100+bdef.sc[bd.bl]);
 							break;
 						case bidTrainingGround:
-							stats.rsInf += AddMilBuilding(bdef, bd, bds, cc);
+							stats.rsInf += ApplyMilBuilding(bdef, bd, bds, cc);
 							break;
 						case bidAcademy:
-							stats.rsBlessed += AddMilBuilding(bdef, bd, bds, cc);
+							stats.rsBlessed += ApplyMilBuilding(bdef, bd, bds, cc);
 							break;
 						case bidStable:
-							stats.rsCav += AddMilBuilding(bdef, bd, bds, cc);
+							stats.rsCav += ApplyMilBuilding(bdef, bd, bds, cc);
 							break;
 						case bidSorcTower:
-							stats.rsMagic += AddMilBuilding(bdef, bd, bds, cc);
+							stats.rsMagic += ApplyMilBuilding(bdef, bd, bds, cc);
 							break;
 						case bidShipyard:
-							stats.rsNavy += AddMilBuilding(bdef, bd, bds, cc);
+							stats.rsNavy += ApplyMilBuilding(bdef, bd, bds, cc);
 							break;
 						case bidBlacksmith:
-							stats.rsArt += AddMilBuilding(bdef, bd, bds, cc);
+							stats.rsArt += ApplyMilBuilding(bdef, bd, bds, cc);
 							break;
 						case bidMarketplace:
 							stats.carts += (ushort)bdef.Trn[bd.bl];
@@ -228,7 +228,7 @@ namespace CnV
 			//	instance.rtPrae.Text = AUtil.FormatDurationFromSeconds(TroopInfo.all[ttPraetor].ps * gain);
 			//	instance.rtSen.Text = AUtil.FormatDurationFromSeconds(TroopInfo.all[ttSenator].ps * gain);
 			//}
-			static int AddMilBuilding(in BuildingDef bdef, in Building bd, Building[] bds, BuildC cc)
+			static int ApplyMilBuilding(in BuildingDef bdef, in Building bd, Building[] bds, BuildC cc)
 			{
 				var rv = bdef.Ts[bd.bl];
 				foreach(var delta in Octant.deltas)
@@ -279,24 +279,37 @@ namespace CnV
 			this.stats = stats;
 			if(isBuild)
 			{ 
-				AppS.DispatchOnUIThreadIdle( ()=>
-				{
-					var i = CityStats.instance;
-					for(var r=0;r<Resources.idCount;r++)
-					{ 
-						var txt = r switch { 0 => i.res0, 1 => i.res1, 2 => i.res2, 3 => i.res3 };
-						var prod = r switch { 0 => i.prod0, 1 => i.prod1, 2 => i.prod2, 3 => i.prod3 };
-						var res = resources[r];
-						var storage = stats.storage[r];
-						txt.Text =  $"{res:N0}";
-						txt.Foreground = AppS.Brush( res >= storage ? Colors.Red : res >= storage*3/4 ? Colors.Orange : res == 0 ? Colors.Gray : Colors.Green);
-						
-						var p= stats.production[r];
-						prod.Text = $"{p:N0}";
-						prod.Foreground = AppS.Brush( p switch { > 0 => Colors.Green, < 0 => Colors.Yellow, _ => Colors.Gray } );
-					}
-				});
 			}
+		}
+		public static void UpdateBuildCityStatsView()
+		{
+			static void UpdateIfNeeded(Microsoft.UI.Xaml.Controls.TextBlock txt,string _txt, Microsoft.UI.Xaml.Media.SolidColorBrush brush )
+			{
+				if( _txt != txt.Text)
+				{
+					txt.Text = _txt;
+				}
+				if( !object.ReferenceEquals(txt.Foreground,brush) )
+				{ 
+					txt.Foreground = brush;
+				}
+			}
+
+			AppS.DispatchOnUIThreadIdle(() =>
+			{
+				var  city= City.GetBuild();
+				var  i = CityStats.instance;
+				for(var r = 0; r<Resources.idCount; r++)
+				{
+					var txt = r switch { 0 => i.res0, 1 => i.res1, 2 => i.res2, 3 => i.res3 };
+					var prod = r switch { 0 => i.prod0, 1 => i.prod1, 2 => i.prod2, 3 => i.prod3 };
+					var res = city.resources[r];
+					var storage = city.stats.storage[r];
+					UpdateIfNeeded(txt, $"{res:N0}", AppS.Brush(res >= storage ? Colors.Red : res >= storage*3/4 ? Colors.Orange : res == 0 ? Colors.Gray : Colors.Green) );
+					var p = city.stats.production[r];
+					UpdateIfNeeded(prod, $"{p:N0}",AppS.Brush(p switch { > 0 => Colors.Green, < 0 => Colors.Yellow, _ => Colors.Gray }));
+				}
+			});
 		}
 
 		internal static int ResProducerIdFromBid(byte bid) => bid switch { bidForester => 0, bidStoneMine => 1, bidIronMine => 2, bidFarm => 3, _=>-1};

@@ -37,11 +37,12 @@ namespace CnV
 		//					   CnVChatClient.instance.Initialize();
 		try
 		{
-				ISmallTimeServer.SetEpoch( DateTimeOffset.UtcNow);
+				// Todo:  Persist this
+				CnVServer.serverStartTime =( DateTimeOffset.UtcNow);
 				//var timeOffset = jso.GetAsInt64("timeoffset");
 				//var timeOffsetSecondsRounded = Math.Round(timeOffset / (1000.0 * 60*30)) * 60 * 30.0f; // round to nearest half hour
-				CnVServer.gameTOffset = TimeSpan.FromHours(World.timeZoneOffsetHours);
-				CnVServer.gameTOffsetSeconds = CnVServer.gameTOffset.TotalSeconds.RoundToInt();
+			//	CnVServer.gameTOffset = TimeSpan.FromHours(World.timeZoneOffsetHours);
+			//	CnVServer.gameTOffsetSeconds = CnVServer.gameTOffset.TotalSeconds.RoundToInt();
 				Player.myIds.Add(Player.myId);
 
 				var t1 = Task.Run(() => TileData.Ctor(false));
@@ -51,6 +52,9 @@ namespace CnV
 				await t1.ConfigureAwait(false);
 				await World.LoadWorldData().ConfigureAwait(false);
 
+				AppS.state = AppS.State.active;
+
+				CnVServer.StartSim();
 
 				//	var str = timeOffsetSecondsRounded >= 0 ? " +" : " ";
 				//	str += $"{gameTOffset.Hours:D2}:{gameTOffset.Minutes:D2}";
@@ -138,7 +142,6 @@ namespace CnV
 			// 
 			// Friend.LoadAll();
 
-			AppS.state = AppS.State.active;
 		//	CnVDiscord.Discord.Initialize();
 
 			//  System.GC.Collect(2,GCCollectionMode.Default,true);

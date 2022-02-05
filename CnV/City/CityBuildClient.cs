@@ -18,7 +18,7 @@ namespace CnV
 		{
 			if(hovered.isNotNan)
 			{
-				if( hovered == lastQuickBuildActionBSpot && (SmallTime.UtcNow < lastQuickBuildActionSpotValidUntil))
+				if( hovered == lastQuickBuildActionBSpot && (SmallTime.now < lastQuickBuildActionSpotValidUntil))
 					return;
 				else
 					lastQuickBuildActionBSpot = BuildC.Nan;
