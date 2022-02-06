@@ -174,18 +174,18 @@ namespace CnV.Views
 
 		private static void FocusManager_LostFocus(object? sender, FocusManagerLostFocusEventArgs e)
 		{
-			Note.Show($"Lost focus: {e.OldFocusedElement} { (e.OldFocusedElement as FrameworkElement)?.Name}");
+		//	Note.Show($"Lost focus: {e.OldFocusedElement} { (e.OldFocusedElement as FrameworkElement)?.Name}");
 		}
 
 		private static void FocusManager_GotFocus(object? sender, FocusManagerGotFocusEventArgs e)
 		{
-			Note.Show($"New focus: {e.NewFocusedElement} { (e.NewFocusedElement as FrameworkElement)?.Name}");
+		//	Note.Show($"New focus: {e.NewFocusedElement} { (e.NewFocusedElement as FrameworkElement)?.Name}");
 		}
 
 		private static void KeyboardProxy_PointerExited(object sender,PointerRoutedEventArgs e)
 		{
 			e.KeyModifiers.UpdateKeyModifiers();
-			Note.Show($"Pointer exit {mouseOverCanvas}");
+		//	Note.Show($"Pointer exit {mouseOverCanvas}");
 		//	Assert(mouseOverCanvas== true);
 			mouseOverCanvas = false;
 		//	instance.mouseOverCanvasBox.IsChecked = mouseOverCanvas;
@@ -495,7 +495,7 @@ namespace CnV.Views
 		private static void Canvas_PointerEntered(Windows.Foundation.Point args)
 		{
 			//	Assert(mouseOverCanvas== false);
-			Note.Show($"Pointer entered {mouseOverCanvas}");
+		//	Note.Show($"Pointer entered {mouseOverCanvas}");
 			if(!mouseOverCanvas)
 			{
 				mouseOverCanvas = true;
@@ -610,7 +610,7 @@ namespace CnV.Views
 		//private void EventTimeTravelSliderChanged(object sender, RangeBaseValueChangedEventArgs e)
 		//{
 		//	var dt = TimeSpan.FromMinutes(e.NewValue);
-		//	var serverTime = CnVServer.ServerTime() + TimeSpan.FromMinutes(e.NewValue);
+		//	var serverTime = CnVServer.serverTime + TimeSpan.FromMinutes(e.NewValue);
 		//	eventTimeTravelText.Text = $"Attack Time Travel:\t\t{dt.Hours}:{dt.Minutes},\t\tT:{serverTime.Format()}";
 		//}
 
@@ -961,7 +961,7 @@ namespace CnV.Views
 		public  static bool HandleWheel(Windows.Foundation.Point point,int scroll)
 		{
 			UpdateMousePosition(point);
-			Note.Show($"Wheel");
+			///Note.Show($"Wheel");
 
 			ShellPage.TakeFocus();
 			//PointerInfo(e);

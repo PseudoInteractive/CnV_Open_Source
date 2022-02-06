@@ -33,7 +33,7 @@ namespace CnV.Views
 		public float _filterTime { get => filterTime; set { filterTime = value; refresh.Go(); } }  // defenders outside of this window are not included
         public int _filterTSTotal { get => filterTSTotal; set { filterTSTotal = value; refresh.Go(); } }
         public int _filterTSHome { get => filterTSHome; set { filterTSHome = value; refresh.Go(); } } // need at this this many ts at home to be considered for def
-        public DateTimeOffset arriveAt { get; set; } = AUtil.dateTimeZero;
+        public ServerTime arriveAt { get; set; } = default;
         public static SupportByTroopType [] supportByTroopTypeEmpty = Array.Empty<SupportByTroopType>();
         public static int[] splitArray = { 1, 2, 3, 4, 5 };
         public static bool Include(TroopTypeCount tt) => includeOffense || tt.isDef;
@@ -161,7 +161,7 @@ namespace CnV.Views
 						{
 							Add(ref supporter.tSend,  troops, tt => (includeOffense || tt.isDef) && (canTravelViaWater||!tt.isNaval) ); // clone array
 						}
-						supporter.travel = hours + (defendants.Count - validCount);  // penality for targtes that we cannot make it to
+						supporter.travel = TimeSpanS.FromHours(hours);  // penality for targtes that we cannot make it to
 					}
 				}
                     if (portal)
@@ -172,7 +172,7 @@ namespace CnV.Views
                             supporters.Set(s.OrderByDescending(a => a.tsTotal),true);
                     }
                     else
-                        supporters.Set(s.OrderBy(a => a.travel - a.validTargets ),true);
+                        supporters.Set(s.OrderBy(a => a.travel.TotalHours - a.validTargets ),true);
 					
 					defendants.NotifyReset();
                 }
@@ -337,8 +337,8 @@ namespace CnV.Views
                 }
 
                 departAt = city.GetRaidReturnTime() + TimeSpan.FromSeconds(15);
-                var canArriveAt = departAt+ TimeSpan.FromHours(supporter.travel );
-                if (_arriveAt > CnVServer.ServerTime() && _arriveAt < canArriveAt)
+                var canArriveAt = departAt+ (TimeSpan)(supporter.travel );
+                if (_arriveAt > CnVServer.serverTime && _arriveAt < canArriveAt)
                 {
 					var result = await AppS.DispatchOnUIThreadTask(async () =>
 					{
@@ -355,7 +355,7 @@ namespace CnV.Views
 						{
 							return false;
 						}
-						_arriveAt = AUtil.dateTimeZero;
+						_arriveAt = ServerTime.zero;
 						return true;
 					});
 					if (result == false)
@@ -442,7 +442,7 @@ namespace CnV.Views
             (var dateTime, var okay) = await DateTimePicker.ShowAsync("Send At");
             if (okay)
             {
-                arriveAt = dateTime;
+                arriveAt = (ServerTime)(dateTime);
                 OnPropertyChanged(nameof(arriveAt));
             }
 

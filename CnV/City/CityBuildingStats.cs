@@ -12,6 +12,7 @@ namespace CnV
 	public struct CityBuildingStats
 	{
 		public bool dirty;
+		public bool isCastle;
 		public ushort points; // score
 		public ushort carts;
 		public ushort ships;
@@ -40,7 +41,7 @@ namespace CnV
 			var tsPercentMultipler = 100;
 			var townHallLevel = bds[bspotTownHall].bl;
 			var stTownHall = BuildingDef.FromId(bidTownHall).St[townHallLevel];
-			var hasCastle=false;
+			var wasCastle = isCastle;
 			CityBuildingStats stats = new() {  cs=100, storage = new( stTownHall*100),production =new(wood:300) };
 
 			for(int x = span0; x <= span1; ++x)
@@ -59,7 +60,7 @@ namespace CnV
 					switch(bid)
 					{
 						case bidCastle:
-							hasCastle = true;
+							stats.isCastle = true;
 							tsPercentMultipler = (100+bdef.sc[bd.bl]);
 							break;
 						case bidTrainingGround:
@@ -143,14 +144,8 @@ namespace CnV
 
 				}
 			}
-			if(hasCastle != isCastle)
-			{
-				Assert( isCastle == false);
-				var c = city.worldC;
-				World.SetTile(c,World.GetTile(c).withCastle);
-				TileData.Update(city);
-				Note.Show($"{city} became a castle");
-			}
+			
+
 			if(stats.rsInf != 0)
 				stats.rsInf += 100;
 			if(stats.rsCav != 0)
@@ -163,7 +158,19 @@ namespace CnV
 				stats.rsNavy += 100;
 			stats.storage /= 100;
 			stats.maxTs = (stats.maxTs * tsPercentMultipler)/100;
-		
+			this.stats = stats;
+			if(isBuild)
+			{
+			}
+			if(stats.isCastle != wasCastle)
+			{
+				Assert(wasCastle == false);
+				//		isCastle = statst,ihasCastle;
+
+				Note.Show($"{city} became a castle");
+			}
+			World.SetTile(worldC, World.GetTile(worldC).withCastle);// Todo: Set IsBig
+			TileData.Update(this);
 			//instance.ships.Text = $"{ships:N0}";
 			//instance.carts.Text = $"{carts:N0}";
 
@@ -276,10 +283,6 @@ namespace CnV
 
 				}
 			}
-			this.stats = stats;
-			if(isBuild)
-			{ 
-			}
 		}
 		public static void UpdateBuildCityStatsView()
 		{
@@ -303,8 +306,8 @@ namespace CnV
 				var resources = city.SampleResources();
 				for(var r = 0; r<Resources.idCount; r++)
 				{
-					var txt = r switch { 0 => i.res0, 1 => i.res1, 2 => i.res2, 3 => i.res3 };
-					var prod = r switch { 0 => i.prod0, 1 => i.prod1, 2 => i.prod2, 3 => i.prod3 };
+					var txt = r switch { 0 => i.res0, 1 => i.res1, 2 => i.res2, _ => i.res3 };
+					var prod = r switch { 0 => i.prod0, 1 => i.prod1, 2 => i.prod2, _ => i.prod3 };
 					var res = resources[r];
 					var storage = city.stats.storage[r];
 					UpdateIfNeeded(txt, $"{res:N0}", (res >= storage ? Colors.Red : res >= storage*3/4 ? Colors.Orange : res == 0 ? Colors.Gray : Colors.Green) );

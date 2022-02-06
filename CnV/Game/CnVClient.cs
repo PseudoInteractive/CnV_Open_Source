@@ -859,7 +859,7 @@ namespace CnV
 												// online notify
 												var friend = ss[1];
 												var online = ss[2] == "1";
-												var msg = new ChatEntry(friend, online ? " has come online" : " has gone offline", ServerTime(), ChatEntry.typeAnnounce);
+												var msg = new ChatEntry(friend, online ? " has come online" : " has gone offline", serverTime, ChatEntry.typeAnnounce);
 												AppS.DispatchOnUIThreadLow(() =>
 												{
 													ChatTab.alliance.Post(msg, true);
@@ -964,7 +964,7 @@ namespace CnV
 										city.type = jso.GetAsByte("type");
 										city.remarks = jso.GetAsString("notes");                //Assert(city.pid > 0);
 										city.UpdateTags();
-										city.points = (ushort)jso.GetAsInt("score");
+										city.stats.points = (ushort)jso.GetAsInt("score");
 										//   city.allianceId = jso.GetString("alliance"); // todo:  this should be an into alliance id
 										//       city.lastAccessed = DateTimeOffset.UtcNow;
 										// city.isCastle = jso.GetAsInt("castle") == 1;

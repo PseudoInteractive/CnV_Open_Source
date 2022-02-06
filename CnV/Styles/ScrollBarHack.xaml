@@ -32,7 +32,7 @@
 							</Grid.RowDefinitions>
 							<ScrollContentPresenter x:Name="ScrollContentPresenter" 
                               ContentTemplate="{TemplateBinding ContentTemplate}" 
-                              Margin="{TemplateBinding Padding}" />
+                             />
 							<ScrollBar x:Name="VerticalScrollBar" 
                  Grid.Column="1" 
                  IsTabStop="False" 

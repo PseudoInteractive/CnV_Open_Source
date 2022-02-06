@@ -274,7 +274,7 @@ namespace CnV.Views
 					//  var str = $"{Tick.MSS()}:{s}";
 					//  instance.logEntries
 
-					debug.Post(new ChatEntry(null, s, CnVServer.ServerTime()), true);
+					debug.Post(new ChatEntry(null, s, CnVServer.serverTime), true);
 				}
 				catch (Exception e)
 				{
@@ -497,7 +497,7 @@ namespace CnV.Views
 			}
 			else
 			{
-				ch.time = CnVServer.ServerTime();
+				ch.time = CnVServer.serverTime;
 			}
 
 			return ch;
@@ -546,7 +546,7 @@ namespace CnV.Views
 						}
 						int c = batch.Count-1;
 						var epsilon = TimeSpan.FromSeconds(10);
-						var lastTime = CnVServer.ServerTime() + epsilon;
+						var lastTime = CnVServer.serverTime + epsilon;
 						for (; c >= 0;--c)
 						{
 							while( lastTime < batch[c].time )

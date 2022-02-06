@@ -42,7 +42,7 @@
 //        public string TT => time.ToString(AUtil.defaultDateFormat);
 //        public DateTimeOffset spotted { get; set; }
 //        public byte type;
-//        public float journeyTime => spotted == AUtil.dateTimeZero ? 2 * 60 * 60.0f : (float)(time - spotted).TotalSeconds;
+//        public float journeyTime => spotted.iszero ? 2 * 60 * 60.0f : (float)(time - spotted).TotalSeconds;
 
 //        public float TimeToArrival(DateTimeOffset serverTime) => (float)(time - serverTime).TotalSeconds;
 //        public string Type => type == typePending ? troopEstimate : reportStrings[type];

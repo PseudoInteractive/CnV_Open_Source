@@ -348,11 +348,12 @@
 					</tk:GridSplitter.Element>
 				</tk:GridSplitter>
 			</Grid>
-			<Expander IsExpanded="True"   Grid.Column="2" 
+			<Expander IsExpanded="True"  
+					  Grid.Column="2" 
 					  VerticalAlignment="Bottom"
 					  FontSize="{StaticResource MediumFontSize}"
 		              FontFamily="Bahnschrift"
-					  Grid.Row="{x:Bind GridRowIndex(rowFooter,-2)}"
+					  Grid.Row="{x:Bind GridRowIndex(rowFooter,-1)}"
 					  Grid.RowSpan="2" 
 					  Width="300"
 
@@ -363,7 +364,7 @@
 		              FontFamily="Bahnschrift" VerticalAlignment="Center" HorizontalAlignment="Center" />
 				</Expander.Header>
 				<ListView x:Name="InAppNote" x:FieldModifier="public"  
-                   ItemsSource="{x:Bind inAppNotes,Mode=OneWay}" Width="300" MaxHeight="200"  >
+                   ItemsSource="{x:Bind inAppNotes,Mode=OneWay}"  MaxHeight="200"  >
 					<ListView.ItemTemplate>
 						<DataTemplate  x:DataType="x:String"  >
 							<tk:MarkdownTextBlock  x:Name="message" Text="{x:Bind (x:String), Mode=OneTime}"  Margin="8,0"  Padding="0,0,0,0"    
@@ -396,7 +397,7 @@
 					</ListView.ItemContainerStyle>
 				</ListView>
 			</Expander>
-			<TextBlock x:Name="timeDisplay" x:FieldModifier="public" Grid.Column="{x:Bind grid.rowDefinitions.IndexOf(rowFooter)}"
+			<TextBlock x:Name="timeDisplay" x:FieldModifier="public" Grid.Row="{x:Bind grid.RowDefinitions.IndexOf(rowFooter)}"
 					   />
 		
 			<!--<winui:InfoBar x:Name="infoBar"

@@ -31,8 +31,9 @@ namespace CnV.Helpers
             var fileContent = JsonSerializer.Serialize(content, JSON.jsonSerializerOptions);
 
 			// don't block on this save
+			// local time
 			if (backup)
-				await SaveAsync<T>(folder, $"{name}___{CnVServer.ServerTime().FormatFileTimeToMinute()}___", content, false);
+				await SaveAsync<T>(folder, $"{name}___{DateTimeOffset.Now.FormatFileTimeToMinute()}___", content, false);
 			await FileIO.WriteTextAsync(file, fileContent);
 		}
 		public static async Task SaveAsync(this StorageFolder folder,string name,byte[] fileContent)
@@ -121,7 +122,7 @@ namespace CnV.Helpers
 			// don't block on this save
 			if (!prior.IsNullOrEmpty() )
 			{
-				LocalFiles.Write($"{name}___{CnVServer.ServerTime().FormatFileTimeToMinute()}___",prior);
+				LocalFiles.Write($"{name}___{DateTimeOffset.Now.FormatFileTimeToMinute()}___",prior);
 			}
 
 			LocalFiles.Write(GetFileName(name),fileContent);

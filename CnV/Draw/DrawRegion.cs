@@ -134,7 +134,7 @@ internal partial class GameClient
 
 			try
 			{
-				//		var _serverNow = CnVServer.ServerTime();
+				//		var _serverNow = CnVServer.serverTime;
 				var dt = (float)gameTime.ElapsedGameTime.TotalSeconds; // max delta is 1s
 																	   //	lastDrawTime = _serverNow;
 
@@ -145,7 +145,7 @@ internal partial class GameClient
 				//                cameraZoomLag += (cameraZoom
 				// smooth ease towards target
 				eventTimeOffsetLag += (ShellPage.instance.eventTimeOffset - eventTimeOffsetLag) * gain;
-				var serverNow = CnVServer.ServerTime() + TimeSpan.FromMinutes(eventTimeOffsetLag);
+				var serverNow = CnVServer.simTime + ISmallTime.FromMinutes(eventTimeOffsetLag);
 
 				// not too high or we lose float precision
 				// not too low or people will see when when wraps
@@ -1275,7 +1275,7 @@ internal partial class GameClient
 					if(underMouse != null)
 					{
 						//         Spot.viewHover = 0; // clear
-						_toolTip = underMouse.GetToopTip(serverNow);
+						_toolTip = underMouse.GetToopTip();
 					}
 					if(_toolTip != null)
 					{

@@ -302,7 +302,7 @@ namespace CnV
 														  bool onSupport = home || (arrival == "on support");
 														  if (onSupport)
 														  {
-															  army.time = AUtil.dateTimeZero;
+															  army.time = ServerTime.zero;
 														  }
 														  else
 														  {
@@ -363,7 +363,7 @@ namespace CnV
 														  }
 														  else
 														  {
-															  army.spotted = army.time - TimeSpan.FromSeconds(targetCid.DistanceToCidD(army.sourceCid) * TTTravel(ttScout));
+															  army.spotted = army.time - TimeSpanS.FromSeconds(targetCid.DistanceToCidD(army.sourceCid) * TTTravel(ttScout));
 														  }
 													  }
 													  var source = Spot.GetOrAdd(army.sourceCid);
@@ -723,7 +723,7 @@ namespace CnV
 												targetCid = target,
 												time = time,
 												reportId = recId,
-												spotted = time - TimeSpan.FromSeconds(target.CidToWorld().DistanceD(source.CidToWorld()) * TTTravel(ttScout)),
+												spotted = time - TimeSpanS.FromSeconds(target.CidToWorld().DistanceD(source.CidToWorld()) * TTTravel(ttScout)),
 												type = reportScout,
 												targetPid= defP,
 												sourcePid =  atkP,
@@ -863,7 +863,7 @@ namespace CnV
 																			targetCid = target,
 																			claim = (byte)(hasSen && root.GetAsString("senatorapn") == atkPN ? IncomingOverview.ClaimToByte(root.GetAsFloat("senator")) : (byte)0),
 																			time = time,
-																			spotted = time - TimeSpan.FromSeconds(target.CidToWorld().DistanceD(source.CidToWorld()) * TTTravel(ttVanquisher)),
+																			spotted = time - TimeSpanS.FromSeconds(target.CidToWorld().DistanceD(source.CidToWorld()) * TTTravel(ttVanquisher)),
 																			type = (byte)reportType
 																			// todo TS info
 
@@ -947,7 +947,7 @@ namespace CnV
 								//	AppS.CopyTextToClipboard(killNote);
 								// AppS.DispatchOnUIThread(() =>
 								// We should do this on the Render Thread
-								defPage.SetHistory((reportsIncoming.OrderByDescending((atk) => atk.time.UtcTicks)).ToArray());
+								defPage.SetHistory((reportsIncoming.OrderByDescending((atk) => atk.time.ticks)).ToArray());
 							}
 							if (fetchReports)
 								Note.Show($"Complete: {reportsIncoming.Count + incCount} attacks, {fetched} fetched {killNote}");

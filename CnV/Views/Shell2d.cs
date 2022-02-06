@@ -139,7 +139,10 @@ namespace CnV.Views
 		public static void TakeFocus()
 		{
 			if(!mouseOverCanvas)
+			{
 				Note.Show($"Pointer focus not over canvas!");
+				return;
+			}
 			if(CityBuild.menuOpen)
 				return;
 			takeFocusIfAppropriate.Go();
@@ -153,7 +156,7 @@ namespace CnV.Views
 			  {
 			  if(!ChatTabHasFocus())
 			  {
-				  Note.Show("Focus");
+				//  Note.Show("Focus");
 				  canvas.Focus(FocusState.Programmatic);
 			  }
 		  }
@@ -446,7 +449,7 @@ namespace CnV.Views
 			{
 				if (tab.input.FocusState != FocusState.Unfocused)
 				{
-					Note.Show($"{tab.Name} {tab.input.FocusState}");
+					Note.Show($"Chat Focus {tab.Name} {tab.input.FocusState}");
 					return true;
 				}
 			}

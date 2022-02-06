@@ -171,13 +171,7 @@ namespace CnV
 
 		public App()
 		{
-			{
-				var a = new IServerTime();
-				var b = new ServerTime();
-				var c = new ISmallTimeUtc();
-				var d = new SmallTime();
-				Log($"{IServerTime.Now()} {b} {a} {d} {ISmallTimeUtc.Now()} {c} {ServerTime.now} {SmallTime.now}");
-			}
+			
 
 			//			services = ConfigureServices();
 			RequestedTheme = ApplicationTheme.Dark;

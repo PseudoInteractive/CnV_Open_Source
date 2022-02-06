@@ -168,7 +168,7 @@ namespace CnV.Views
 					}
 					city.UpdateBuildStage();
 
-					city.points = (ushort)ci[2].GetAsInt();
+					city.stats.points = (ushort)ci[2].GetAsInt();
 					var isBuilding = (ci[4].GetAsFloat() != 0) || (city.buildStage == City.BuildStage.complete)||
 					(false)
 								|| (city.buildStage == City.BuildStage.leave);

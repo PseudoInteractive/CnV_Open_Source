@@ -292,7 +292,7 @@ namespace CnV
 
 													time = time,
                                                     reportId = recId,
-                                                    spotted = time - TimeSpan.FromSeconds(target.CidToWorld().DistanceD(source.CidToWorld()) * TTTravel(ttScout)),// TODO!
+                                                    spotted = time - TimeSpanS.FromSeconds(target.CidToWorld().DistanceD(source.CidToWorld()) * TTTravel(ttScout)),// TODO!
                                                 type = reportScout,
                                                 // todo TS info
 
@@ -399,7 +399,7 @@ namespace CnV
 																		claim = IncomingOverview.ClaimToByte( report.GetAsFloat("senator") ),
 
                                                                         time = time,
-                                                                        spotted = time - TimeSpan.FromSeconds(target.CidToWorld().DistanceD(source.CidToWorld()) * TTTravel(ttVanquisher)),
+                                                                        spotted = time - TimeSpanS.FromSeconds(target.CidToWorld().DistanceD(source.CidToWorld()) * TTTravel(ttVanquisher)),
                                                                         type = (byte)reportType
                                                                     // todo TS info
 
@@ -463,7 +463,7 @@ namespace CnV
                                 reportsOutgoing.AddRange(reportParts[i]);
                         // AppS.DispatchOnUIThread(() =>
                         // We should do this on the Render Thread
-                        page.SetHistory((reportsOutgoing.OrderByDescending((atk) => atk.time.UtcTicks)).ToArray());
+                        page.SetHistory((reportsOutgoing.OrderByDescending((atk) => atk.time.ticks)).ToArray());
                             defKilled = 0;
                             atkKilled = 0;
                             myDefKilled = 0;

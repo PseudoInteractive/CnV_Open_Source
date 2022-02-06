@@ -152,7 +152,7 @@ namespace CnV.Views
 
 		private void NowClick(object sender, RoutedEventArgs e)
 		{
-			dateTime = CnVServer.ServerTime();
+			dateTime = CnVServer.serverTime;
 			TimeToUI();
 //			Log(dateTime);
 		}

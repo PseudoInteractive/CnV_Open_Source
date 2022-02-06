@@ -23,9 +23,9 @@ namespace CnV
         public int tsHome => NearDefenseTab.includeOffense ? city.tsHome : city.tsDefCityHome;
         public int tsTotal => NearDefenseTab.includeOffense ? city.tsTotal : city.tsDefCityTotal;
         public int split { get; set; } = 1; // splits def and sends in batches for wings
-		public float travel;
+		public TimeSpanS travel;
 		public int validTargets { get; set; }
-		public string travelTime => TimeSpan.FromHours(travel).Format();
+		public string travelTime => travel.Format();
 		public TroopTypeCounts tSend = new();
 		public int tsSend
         {
@@ -34,16 +34,16 @@ namespace CnV
         
 
        
-        public DateTimeOffset eta { get => CnVServer.ServerTime() + TimeSpan.FromHours(travel);
+        public DateTimeOffset eta { get => CnVServer.serverTime + (TimeSpan)(travel);
 			set {
-				NearDefenseTab.instance.arriveAt = value;
+				NearDefenseTab.instance.arriveAt = new ServerTime(value);
 				NearDefenseTab.instance.OnPropertyChanged(string.Empty);
 			}
 		}
-        public DateTimeOffset etaWings { get => CnVServer.ServerTime() + 0.5f * TimeSpan.FromHours(travel); 
+        public DateTimeOffset etaWings { get => CnVServer.serverTime + 0.5f * (TimeSpan)(travel); 
 			set
 			{
-					NearDefenseTab.instance.arriveAt = value;
+					NearDefenseTab.instance.arriveAt = new ServerTime(value);
 					NearDefenseTab.instance.OnPropertyChanged(string.Empty);
 			}
 		}

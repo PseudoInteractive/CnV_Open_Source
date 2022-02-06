@@ -155,7 +155,7 @@ namespace CnV
 								// update on screen
 								AppS.DispatchOnUIThread( () =>
 								{
-									ShellPage.instance.inAppNotes.Add( CnVServer.ServerTime().ToString("HH':'mm':'ss") + "\t" + s );
+									ShellPage.instance.inAppNotes.Add( CnVServer.serverTime.ToString("HH':'mm':'ss") + "\t" + s );
 								});
 								//if(noteDelay < 30 )
 								//{

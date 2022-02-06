@@ -103,7 +103,7 @@ public partial class City
 							if(id == -1)
 								continue;
 							timing = timing.Substring(id + 9);
-							var t = CnVServer.ServerTime();
+							var t = CnVServer.serverTime;
 							;
 							var today = timing.StartsWith("Today");
 							var tomorrow = timing.StartsWith("Tomorrow");

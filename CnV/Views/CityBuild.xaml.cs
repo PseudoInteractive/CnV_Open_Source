@@ -398,7 +398,7 @@ namespace CnV
 		{
 			await Task.Delay(50).ConfigureAwait(false);
 			menuOpen = false;
-			Note.Show($"Build menu closed");
+//			Note.Show($"Build menu closed");
 
 			ShellPage.TakeFocus();
 		}
