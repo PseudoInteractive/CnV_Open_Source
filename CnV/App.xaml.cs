@@ -83,6 +83,7 @@ namespace CnV
 	using Helpers;
 
 	using Microsoft.UI.Windowing;
+	using Microsoft.UI.Xaml.Media;
 	using Microsoft.Xna.Framework.Input;
 	//// using PInvoke
 	using Services;
@@ -460,7 +461,7 @@ namespace CnV
 
 		//	return builder.Build();
 		//}
-
+		public static FontFamily CnVFont;
 		protected override async void OnLaunched(Microsoft.UI.Xaml.LaunchActivatedEventArgs args)
 		{
 			try
@@ -468,16 +469,17 @@ namespace CnV
 				Assert(AppS.state == AppS.State.loading);
 				AppS.state = AppS.State.init;
 
-
-
+				CnVFont = new FontFamily("Bahnschrift,Segoe Fluent Icons");
 
 				//	Windows.UI.ViewManagement.ApplicationView.PreferredLaunchWindowingMode =Windows.UI.ViewManagement.ApplicationViewWindowingMode.Maximized;// new Size(bounds.Width, bounds.Height);
 				//				Windows.UI.ViewManagement.ApplicationView.GetForCurrentView().TryEnterViewModeAsync(Windows.UI.ViewManagement.ApplicationViewMode.CompactOverlay);
 
-				//FocusVisualKind = FocusVisualKind.Reveal;
+				FocusVisualKind = FocusVisualKind.Reveal;
 
 				AppS.window = new();
+				
 				//	window.
+				
 
 
 

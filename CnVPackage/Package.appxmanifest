@@ -59,7 +59,7 @@
       <Extensions>
         <uap:Extension Category="windows.protocol">
           <uap:Protocol Name="cnv" DesiredView="useMore">
-            <uap:Logo>cnvCover2.png</uap:Logo>
+            <uap:Logo>cnvCoverSquare.png</uap:Logo>
             <uap:DisplayName>Conquest and Virtue</uap:DisplayName>
           </uap:Protocol>
         </uap:Extension>

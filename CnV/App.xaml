@@ -6,8 +6,11 @@
 	<Application.Resources>
 		<ResourceDictionary>
 			<ResourceDictionary.MergedDictionaries>
-				<XamlControlsResources xmlns="using:Microsoft.UI.Xaml.Controls" />
+				<XamlControlsResources xmlns="using:Microsoft.UI.Xaml.Controls"  />
 				<ResourceDictionary Source="ms-appx:///Microsoft.UI.Xaml/DensityStyles/Compact.xaml" />
+				<!--<ResourceDictionary >
+					<FontFamily x:Key="CnVFont">ms-appx:///Assets/CnVFont-VF.ttf#CnVFont,Segoe Fluent Icons"</FontFamily>
+				</ResourceDictionary>-->
 				<ColorPaletteResources Accent="#FF361F70" 
 									   BaseHigh="#FFFFFFFF" BaseLow="#FF380E0E" BaseMedium="#FFA68484" BaseMediumHigh="#FFC1A2A2" BaseMediumLow="#FF6F4949" ChromeAltLow="#FFC1A2A2" ChromeBlackHigh="#FF505050" ChromeBlackLow="#FFC1A2A2" ChromeBlackMedium="#FF303030" ChromeBlackMediumLow="#FF202020" ChromeDisabledHigh="#FF380E0E" ChromeDisabledLow="#FFA68484" ChromeGray="#FF8A6767" ChromeHigh="#FF8A6767" ChromeLow="#FF2A0303" ChromeMedium="#FF2D0606" ChromeMediumLow="#FF340B0B" ChromeWhite="#FFFFFFFF" ListLow="#FF2D0606" ListMedium="#FF380E0E" 					
 					AltHigh="#80200040" AltLow="#80003000" AltMedium="#80110030" AltMediumHigh="#80102010" AltMediumLow="#80051505"		 />
@@ -30,9 +33,9 @@
 					<SolidColorBrush x:Key="RegionBrush" Color="#FF153A35" />
 				</ResourceDictionary>
 
+				<ResourceDictionary Source="/Styles/Page.xaml" />
 				<ResourceDictionary Source="/Styles/FontSizes.xaml" />
 				<ResourceDictionary Source="/Styles/TextBlock.xaml" />
-				<ResourceDictionary Source="/Styles/Page.xaml" />
 				<ResourceDictionary Source="/Styles/BattleReport.xaml" />
 				<ResourceDictionary Source="/Styles/ScrollBarHack.xaml" />
 				<!--<ResourceDictionary Source="/Styles/SharedResources.xaml" />-->
@@ -41,9 +44,7 @@
 			</ResourceDictionary.MergedDictionaries>
 
 			<ResourceDictionary.ThemeDictionaries>
-				<ResourceDictionary x:Key="Default">
-					<FontFamily x:Key="MyCustomFont">Bahnschrift</FontFamily>
-				</ResourceDictionary>
+				
 			</ResourceDictionary.ThemeDictionaries>
 
 		</ResourceDictionary>

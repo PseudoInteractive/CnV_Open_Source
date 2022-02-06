@@ -10,23 +10,40 @@
 
     <Grid>
 		<tk:WrapPanel Orientation="Horizontal">
-			<TextBlock Text="Resources" />
-			<StackPanel Orientation="Vertical">
-				<TextBlock x:Name="res0" x:FieldModifier="public"  />
-				<TextBlock x:Name="prod0" x:FieldModifier="public" />
-			</StackPanel>
-			<StackPanel Orientation="Vertical">
-				<TextBlock x:Name="res1" x:FieldModifier="public"  />
-				<TextBlock x:Name="prod1" x:FieldModifier="public" />
-			</StackPanel>
-			<StackPanel Orientation="Vertical">
-				<TextBlock x:Name="res2" x:FieldModifier="public"  />
-				<TextBlock x:Name="prod2" x:FieldModifier="public" />
-			</StackPanel>
-			<StackPanel Orientation="Vertical">
-				<TextBlock x:Name="res3" x:FieldModifier="public"  />
-				<TextBlock x:Name="prod3" x:FieldModifier="public" />
-			</StackPanel>
+			<Grid BorderThickness="1" Margin="4" Padding="4" BorderBrush="{StaticResource SystemControlBackgroundAccentRevealBorderBrush}" Width="80" >
+				<Grid.RowDefinitions>
+					<RowDefinition/>
+					<RowDefinition/>
+				</Grid.RowDefinitions>				
+				<TextBlock  x:Name="res0" x:FieldModifier="public" HorizontalTextAlignment="Right"  />
+				<TextBlock  Grid.Row="1" x:Name="prod0" x:FieldModifier="public"  HorizontalTextAlignment="Right" />
+			</Grid>
+			<Grid BorderThickness="1" Margin="4" Padding="4" BorderBrush="{StaticResource SystemControlBackgroundAccentRevealBorderBrush}" Width="80" >
+				<Grid.RowDefinitions>
+					<RowDefinition/>
+					<RowDefinition/>
+				</Grid.RowDefinitions>
+				<TextBlock  x:Name="res1" x:FieldModifier="public" HorizontalTextAlignment="Right"  />
+				<TextBlock  Grid.Row="1" x:Name="prod1" x:FieldModifier="public"  HorizontalTextAlignment="Right" />
+			</Grid>
+			<Grid BorderThickness="1" Margin="4" Padding="4" BorderBrush="{StaticResource SystemControlBackgroundAccentRevealBorderBrush}" Width="80" >
+				<Grid.RowDefinitions>
+					<RowDefinition/>
+					<RowDefinition/>
+				</Grid.RowDefinitions>
+				<TextBlock  x:Name="res2" x:FieldModifier="public" HorizontalTextAlignment="Right"  />
+				<TextBlock  Grid.Row="1" x:Name="prod2" x:FieldModifier="public"  HorizontalTextAlignment="Right" />
+			</Grid>
+			<Grid BorderThickness="1" Margin="4" Padding="4" BorderBrush="{StaticResource SystemControlBackgroundAccentRevealBorderBrush}" Width="80" >
+				<Grid.RowDefinitions>
+					<RowDefinition/>
+					<RowDefinition/>
+				</Grid.RowDefinitions>
+				<TextBlock  x:Name="res3" x:FieldModifier="public" HorizontalTextAlignment="Right"  />
+				<TextBlock  Grid.Row="1" x:Name="prod3" x:FieldModifier="public"  HorizontalTextAlignment="Right" />
+			</Grid>
+			<TextBlock x:Name="text" x:FieldModifier="public" Text="&#xEDC6;" />
+
 
 		</tk:WrapPanel>
 	</Grid>

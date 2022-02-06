@@ -13,6 +13,7 @@
       x:Name="shellPage"
 		RequestedTheme="Dark"   
 	  Loaded="OnLoaded"
+  	FontFamily="Bahnschrift,Segoe Fluent Icons"
 	  Background="{x:Null}"
 	  Margin="0"
       mc:Ignorable="d"	
@@ -22,9 +23,6 @@
 >
 	<Page.Resources>
 		<ResourceDictionary>
-			<ResourceDictionary.MergedDictionaries>
-				<ResourceDictionary Source="ms-appx:///Microsoft.UI.Xaml/DensityStyles/Compact.xaml" />
-			</ResourceDictionary.MergedDictionaries>
 			<Style TargetType="Button" BasedOn="{StaticResource ButtonRevealStyle}" x:Key="layoutButton" >
 				<Setter Property="Margin" Value="0,2,0,2" />
 				<Setter Property="Padding" Value="1"/>
@@ -57,10 +55,10 @@
 			<Grid.RowDefinitions>
 				<RowDefinition Height="40" x:Name="rowHeader" />
 				<RowDefinition Height="95" x:Name="stats" />
-				<RowDefinition />
-				<RowDefinition />
-				<RowDefinition />
-				<RowDefinition />
+				<RowDefinition x:Name="CanvasStart" />
+				<RowDefinition x:Name="rowChat" />
+				<RowDefinition x:Name="rowChat2" />
+				<RowDefinition x:Name="rowBottom" />
 				<RowDefinition Height="40"  x:Name="rowFooter" />
 			</Grid.RowDefinitions>
 			<Grid.ColumnDefinitions>
@@ -117,7 +115,7 @@
 					              Content="Cont/Tags"
 					              Margin="2"
 					              FontSize="{StaticResource MediumFontSize}"
-					              FontFamily="Bahnschrift"
+					              FontFamily="Bahnschrift,Segoe Fluent Icons"
 					              IsTextScaleFactorEnabled="False"
 					              RightTapped="FilterRightTapped"
 					              Click="{x:Bind views:ShellPage.ContinentFilterClick}"
@@ -148,7 +146,7 @@
 						<SymbolIcon Symbol="Next"/>
 					</AppBarButton>
 					<AppBarButton x:Name="focus" Margin="4" Width="140"  VerticalAlignment="Center" x:FieldModifier="public"
-                            Style="{ThemeResource ButtonRevealStyle}" Click="HomeClick" RightTapped="HomeRightTapped" FontFamily="Bahnschrift"
+                            Style="{ThemeResource ButtonRevealStyle}" Click="HomeClick" RightTapped="HomeRightTapped" FontFamily="Bahnschrift,Segoe Fluent Icons"
                             ToolTipService.ToolTip="Spot with Focus.&#x0a;Click to re-center or swith to this city&#x0a;Right clck for menu" Visibility="Collapsed"/>
 
 
@@ -240,7 +238,8 @@
 			<cnv:CityStats 
 				x:Name="cityStats"
 				Grid.Row="1" 
-				Grid.ColumnSpan="3"
+				Grid.ColumnSpan="1"
+				Grid.RowSpan="1" 
 				/>
 
 			<tk:GridSplitter
@@ -352,7 +351,7 @@
 					  Grid.Column="2" 
 					  VerticalAlignment="Bottom"
 					  FontSize="{StaticResource MediumFontSize}"
-		              FontFamily="Bahnschrift"
+		              FontFamily="Bahnschrift,Segoe Fluent Icons"
 					  Grid.Row="{x:Bind GridRowIndex(rowFooter,-1)}"
 					  Grid.RowSpan="2" 
 					  Width="300"
@@ -361,16 +360,16 @@
 					  Canvas.ZIndex="35"   >
 				<Expander.Header>
 					<TextBlock Text="Info" FontSize="{StaticResource MediumFontSize}"
-		              FontFamily="Bahnschrift" VerticalAlignment="Center" HorizontalAlignment="Center" />
+		              FontFamily="Bahnschrift,Segoe Fluent Icons" VerticalAlignment="Center" HorizontalAlignment="Center" />
 				</Expander.Header>
 				<ListView x:Name="InAppNote" x:FieldModifier="public"  
                    ItemsSource="{x:Bind inAppNotes,Mode=OneWay}"  MaxHeight="200"  >
 					<ListView.ItemTemplate>
 						<DataTemplate  x:DataType="x:String"  >
-							<tk:MarkdownTextBlock  x:Name="message" Text="{x:Bind (x:String), Mode=OneTime}"  Margin="8,0"  Padding="0,0,0,0"    
+							<tk:MarkdownTextBlock  x:Name="message" Text="{x:Bind ToString(), Mode=OneTime}"  Margin="8,0"  Padding="0,0,0,0"    
                                                IsTextSelectionEnabled="True"
 											  FontSize="{StaticResource MediumFontSize}"
-											 FontFamily="Bahnschrift"
+											 FontFamily="Bahnschrift,Segoe Fluent Icons"
                                               TextWrapping="Wrap" 
 											   LinkClicked="{x:Bind cnv:Note.MarkDownLinkClicked}"  Background="Transparent"  />
 

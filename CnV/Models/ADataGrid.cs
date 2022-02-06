@@ -248,9 +248,24 @@ public static partial class ADataGrid
 		if (Register(tab, grid))
 		{
 			var _lock0 = new ADataGrid.ChangeContextDisposable(wantChangeContext ? grid : null);
-		
+			grid.FontFamily = App.CnVFont;
 			grid.AlternationCount = 2;
-			grid.AllowTriStateSorting = true;
+
+			grid.RowHeight = Settings.mediumGridRowHeight;
+			grid.FontSize = Settings.mediumFontSize;
+			grid.FontStretch = Windows.UI.Text.FontStretch.Condensed;
+			grid.SelectionMode = GridSelectionMode.Extended;
+			grid.GridLinesVisibility = GridLinesVisibility.Both;
+			grid.AutoGenerateColumns = false;
+			grid.ShowGroupDropArea=true;
+			grid.AllowResizingHiddenColumns = true;
+			grid.AllowResizingColumns = true;
+			grid.CanMaintainScrollPosition=true;
+			grid.ShowToolTip=true;
+			grid.AllowEditing=false;
+			grid.AllowDraggingColumns=true;
+			grid.AllowSorting=true;
+			grid.AllowTriStateSorting=true;
 			grid.FontStretch = Windows.UI.Text.FontStretch.Condensed;
 			grid.ExpanderColumnWidth = 32;
 			if (tab is not null && grid.IsCityGrid())
@@ -270,6 +285,7 @@ public static partial class ADataGrid
 			//	grid.SourceType = sourceType ?? UserTab.GetContainerType(grid.ItemsSource);
 			//grid.UseSystemFocusVisuals = true;
 			grid.ShowSortNumbers = true;
+			
 			return _lock0;
 
 		}

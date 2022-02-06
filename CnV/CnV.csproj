@@ -31,11 +31,13 @@
     <Configurations>Debug;Release</Configurations>
   </PropertyGroup>
   <ItemGroup>
+    <Content Remove="Assets\**" />
     <Content Remove="Content\**" />
     <Content Remove="gamebin\**" />
     <Content Remove="gameobj\**" />
     <Content Remove="JS\**" />
     <EmbeddedResource Remove="AppPackages\**" />
+    <EmbeddedResource Remove="Assets\**" />
     <EmbeddedResource Remove="BundleArtifacts\**" />
     <EmbeddedResource Remove="CnVDiscord\**" />
     <EmbeddedResource Remove="Content\**" />
@@ -43,12 +45,14 @@
     <EmbeddedResource Remove="gameobj\**" />
     <EmbeddedResource Remove="JS\**" />
     <None Remove="AppPackages\**" />
+    <None Remove="Assets\**" />
     <None Remove="BundleArtifacts\**" />
     <None Remove="CnVDiscord\**" />
     <None Remove="Content\**" />
     <None Remove="gamebin\**" />
     <None Remove="gameobj\**" />
     <None Remove="JS\**" />
+    <PRIResource Remove="Assets\**" />
     <PRIResource Remove="Content\**" />
     <PRIResource Remove="gamebin\**" />
     <PRIResource Remove="gameobj\**" />
@@ -118,45 +122,12 @@
     <PackageReference Include="System.Runtime.Experimental" Version="6.0.2-mauipre.1.22054.8" />
     <PackageReference Include="System.Text.Json" Version="6.0.2-mauipre.1.22054.8" />
 	<PackageReference Include="ZString" Version="2.4.4" />
-    	<Content Include="Assets\BadgeLogo.scale-100.png" />
-    <Content Include="Assets\BadgeLogo.scale-200.png" />
-    <Content Include="Assets\BadgeLogo.scale-400.png" />
-    <Content Include="Assets\LargeTile.scale-100.png" />
-    <Content Include="Assets\LargeTile.scale-200.png" />
-    <Content Include="Assets\LargeTile.scale-400.png" />
-    <Content Include="Assets\protocolImage.png" />
-    <Content Include="Assets\SmallTile.scale-100.png" />
-    <Content Include="Assets\SmallTile.scale-200.png" />
-    <Content Include="Assets\SmallTile.scale-400.png" />
-    <Content Include="Assets\SplashScreen.scale-100.png" />
-    <Content Include="Assets\SplashScreen.scale-200.png" />
-    <Content Include="Assets\SplashScreen.scale-400.png" />
-    <Content Include="Assets\Square150x150Logo.scale-100.png" />
-    <Content Include="Assets\Square150x150Logo.scale-200.png" />
-    <Content Include="Assets\Square150x150Logo.scale-400.png" />
-    <Content Include="Assets\Square44x44Logo.altform-lightunplated_targetsize-16.png" />
-    <Content Include="Assets\Square44x44Logo.altform-lightunplated_targetsize-256.png" />
-    <Content Include="Assets\Square44x44Logo.altform-lightunplated_targetsize-48.png" />
-    <Content Include="Assets\Square44x44Logo.altform-unplated_targetsize-16.png" />
-    <Content Include="Assets\Square44x44Logo.altform-unplated_targetsize-256.png" />
-    <Content Include="Assets\Square44x44Logo.altform-unplated_targetsize-48.png" />
-    <Content Include="Assets\Square44x44Logo.scale-100.png" />
-    <Content Include="Assets\Square44x44Logo.scale-200.png" />
-    <Content Include="Assets\Square44x44Logo.scale-400.png" />
-    <Content Include="Assets\Square44x44Logo.targetsize-16.png" />
-    <Content Include="Assets\Square44x44Logo.targetsize-256.png" />
-    <Content Include="Assets\Square44x44Logo.targetsize-48.png" />
-    <Content Include="Assets\StoreLogo.scale-100.png" />
-    <Content Include="Assets\StoreLogo.scale-200.png" />
-    <Content Include="Assets\StoreLogo.scale-400.png" />
-    <Content Include="Assets\Wide310x150Logo.scale-100.png" />
-    <Content Include="Assets\Wide310x150Logo.scale-200.png" />
-    <Content Include="Assets\Wide310x150Logo.scale-400.png" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Activation\ProtocolActivation.cs" />
     <Compile Include="Activation\ActivationHandler.cs" />
     <Compile Include="City\CityBuildingStats.cs" />
+    <Compile Include="Draw\StatsView.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Services\CnVSignin.cs" />
     <Compile Include="Views\CityStats.xaml.cs" />
@@ -555,6 +526,7 @@
   <ItemGroup>
 	<None Remove="cnvCover.png" />
     <None Remove="Properties\PublishProfiles\win10-x64.pubxml" />
+    <None Remove="Resources\CnVFont-VF.ttf" />
     <None Remove="Resources\Icon1.ico" />
     <None Remove="Strings\en-us\Resources.resw" />
     <None Remove="Package.appxmanifest" />
@@ -586,6 +558,7 @@
     <Content Include="Properties\Default.rd.xml" />
     <None Include="SignatureKey.snk" />
     <None Include="SignaturePubKey.snk" />
+    <Resource Include="Resources\CnVFont-VF.ttf" />
     <Resource Include="Wiki\wiki.md" />
   </ItemGroup>
   <ItemGroup>
@@ -651,7 +624,7 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Update="Properties\Resources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
+      <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>

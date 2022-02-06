@@ -4,11 +4,19 @@
     xmlns:converter="using:CnV.Converters"
     xmlns:converterTK="using:CommunityToolkit.WinUI.UI.Converters"
     xmlns:tk="using:CommunityToolkit.WinUI.UI.Controls"
-	xmlns:COTG="using:CnV"
     xmlns:winui="using:Microsoft.UI.Xaml.Controls"
     xmlns:sf="using:Syncfusion.UI.Xaml.DataGrid"
  >
-	
+	<Style x:Key="BaseTextBlockStyle" TargetType="TextBlock">
+		<Setter Property="FontFamily" Value="Bahnschrift,Segoe Fluent Icons" />
+		<Setter Property="FontWeight" Value="Light" />
+		<Setter Property="FontStretch" Value="Condensed" />
+		<Setter Property="FontSize" Value="14" />
+		<Setter Property="TextTrimming" Value="None" />
+		<Setter Property="TextWrapping" Value="Wrap" />
+		<Setter Property="LineStackingStrategy" Value="MaxHeight" />
+		<Setter Property="TextLineBounds" Value="Full" />
+	</Style>
     <x:Double x:Key="ContentDialogMaxWidth">1024</x:Double>
 	<x:Double x:Key="FlyoutMaxWidth">1920</x:Double>
 	<x:Double x:Key="GridViewMaxWidth">1440</x:Double>
@@ -19,49 +27,37 @@
 	<SolidColorBrush x:Key="HyperLinkBrush" Color="#FFA060FF" />
 
 	
-	<Style TargetType="FontIcon" x:Key="GridSplitterGlyph" >
-		<Setter Property="FontFamily" Value="{StaticResource SymbolThemeFontFamily}"/>
-        <Setter Property="Glyph" Value="&#xE76F;" />
-	</Style>
 
 	
-	<Style TargetType="winui:TreeView" >
-		
-		<Setter Property="AllowDrop" Value="False"/>
-		<Setter Property="CanDragItems" Value="False"/>
-				<Setter Property="CanReorderItems" Value="False"/>
-	</Style>
 	<Style TargetType="HyperlinkButton" >
 		<Setter Property="Foreground" Value="{StaticResource HyperLinkBrush}" />
-		<Setter Property="FontFamily" Value="Bahnschrift"/>
+		<Setter Property="FontFamily" Value="Bahnschrift,Segoe Fluent Icons"/>
 		<Setter Property="FontSize" Value="{StaticResource MediumFontSize}" />
 	</Style>
 	<Style TargetType="tk:MarkdownTextBlock">
 		<Setter Property="LinkForeground" Value="{StaticResource HyperLinkBrush}" />
 	</Style>
-	<Style TargetType="Page">
-		<Setter Property="FontFamily" Value="Bahnschrift"/>
-	</Style>
+
 	<Style TargetType="Button" BasedOn="{StaticResource ButtonRevealStyle}">
 		<Setter Property="VerticalAlignment" Value="Stretch"/>
 		<Setter Property="HorizontalAlignment" Value="Stretch"/>
-		<Setter Property="FontFamily" Value="Bahnschrift"/>
+		<Setter Property="FontFamily" Value="Bahnschrift,Segoe Fluent Icons"/>
 		<Setter Property="FontStretch" Value="Condensed" />
-		<Setter Property="FontWeight" Value="Light" />
+		
 		<Setter Property="FontSize" Value="{StaticResource MediumFontSize}" />
-		<Setter Property="Margin" Value="2"/>
 	</Style>
 
 	<Style x:Key="ButtonSmall" TargetType="Button" BasedOn="{StaticResource DefaultButtonStyle}">
 		<Setter Property="VerticalAlignment" Value="Center"/>
 		<Setter Property="HorizontalAlignment" Value="Center"/>
-		<Setter Property="FontFamily" Value="Bahnschrift"/>
+		<Setter Property="FontFamily" Value="Bahnschrift,Segoe Fluent Icons"/>
 		<Setter Property="FontStretch" Value="Condensed" />
-		<Setter Property="FontWeight" Value="Light" />
+		
 		<Setter Property="FontSize" Value="{StaticResource MediumFontSize}" />
-		<Setter Property="Margin" Value="2"/>
 		<Setter Property="IsTextScaleFactorEnabled" Value="False"/>
 	</Style>
+	
+	
 	
 	<Style x:Key="ButtonMedium" TargetType="Button" BasedOn="{StaticResource ButtonSmall}">
 		<Setter Property="Margin" Value="4"/>
@@ -71,61 +67,50 @@
 		<Setter Property="FontSize" Value="{StaticResource LargeFontSize}" />
 		<Setter Property="Margin" Value="4"/>
 	</Style>
-	<Style TargetType="TextBlock"  >
-        <Setter Property="FontFamily" Value="Bahnschrift"/>
-		<Setter Property="FontSize" Value="{StaticResource MediumFontSize}" />
+	<Style TargetType="TextBlock" BasedOn="{StaticResource BaseTextBlockStyle}"  >
+		<Setter Property="FontFamily" Value="Bahnschrift,Segoe Fluent Icons"/>
+		<Setter Property="FontStretch" Value="Condensed"/>
 	</Style>
 	<Style TargetType="CheckBox" BasedOn="{StaticResource DefaultCheckBoxStyle}">
-		<Setter Property="FontFamily" Value="Bahnschrift"/>
+		<Setter Property="FontFamily" Value="Bahnschrift,Segoe Fluent Icons"/>
 		<Setter Property="FontSize" Value="{StaticResource MediumFontSize}" />
-		<Setter Property="IsTextScaleFactorEnabled" Value="False"/>
 	</Style>
 	<Style TargetType="RadioButtons" >
-		<Setter Property="FontFamily" Value="Bahnschrift"/>
+		<Setter Property="FontFamily" Value="Bahnschrift,Segoe Fluent Icons"/>
 		<Setter Property="FontSize" Value="{StaticResource MediumFontSize}" />
-	</Style>
-	<Style TargetType="tk:WrapPanel">
-		<Setter Property="Margin" Value="4"/>
-		<Setter Property="HorizontalSpacing" Value="4"/>
-		<Setter Property="VerticalSpacing" Value="4"/>
 	</Style>
 	<Style TargetType="Border" x:Key="BorderReveal"  >
-        <Setter Property="BorderThickness" Value="1" />
+		<Setter Property="BorderThickness" Value="1" />
 		<Setter Property="Margin" Value="2"/>
 		<Setter Property="Padding" Value="4"/>
-        <Setter Property="BorderBrush" Value="{ThemeResource SystemControlBackgroundAccentRevealBorderBrush}"/>
-    </Style>
-
-
-	<Style TargetType="tk:Expander">
-		<Setter Property="BorderThickness" Value="1" />
-		<Setter Property="Margin" Value="4" />
 		<Setter Property="BorderBrush" Value="{ThemeResource SystemControlBackgroundAccentRevealBorderBrush}"/>
 	</Style>
+
+
+
 	<Style TargetType="TextBox" BasedOn="{StaticResource DefaultTextBoxStyle}">
-		<Setter Property="FontFamily" Value="Bahnschrift"/>
+		<Setter Property="FontFamily" Value="Bahnschrift,Segoe Fluent Icons"/>
 		<Setter Property="FontStretch" Value="Condensed" />
 		<Setter Property="FontWeight" Value="Light" />
 		<Setter Property="FontSize" Value="{StaticResource MediumFontSize}" />
 	</Style>
-	<Style TargetType="TextBox" x:Key="TextBoxReveal" >
-		<Setter Property="FontFamily" Value="Bahnschrift"/>
+	<Style TargetType="TextBox" x:Key="TextBoxReveal" BasedOn="{StaticResource DefaultTextBoxStyle}" >
+		<Setter Property="FontFamily" Value="Bahnschrift,Segoe Fluent Icons"/>
 		<Setter Property="FontStretch" Value="Condensed" />
-		<Setter Property="FontWeight" Value="Light" />
+		
 		<Setter Property="FontSize" Value="{StaticResource MediumFontSize}" />
 		<Setter Property="BorderBrush" Value="{ThemeResource SystemControlBackgroundAccentRevealBorderBrush}"/>
     </Style>
-    <Style x:Key="TextBlockSmall" TargetType="TextBlock">
-        <Setter Property="FontFamily" Value="Bahnschrift"/>
+	<Style x:Key="TextBlockSmall" TargetType="TextBlock" BasedOn="{StaticResource BodyTextBlockStyle}" >
+        <Setter Property="FontFamily" Value="Bahnschrift,Segoe Fluent Icons"/>
         <Setter Property="FontSize" Value="{StaticResource SmallFontSize}" />
 		<Setter Property="FontStretch" Value="Condensed" />
-		<Setter Property="FontWeight" Value="Light" />
+		
 	</Style>
 	<Style x:Key="SfTextCell" TargetType="sf:GridCell">
-		<Setter Property="FontFamily" Value="Bahnschrift"/>
+		<Setter Property="FontFamily" Value="Bahnschrift,Segoe Fluent Icons"/>
 		<Setter Property="FontSize" Value="{StaticResource SmallFontSize}" />
 		<Setter Property="FontStretch" Value="Condensed" />
-		<Setter Property="FontWeight" Value="Light" />
 	</Style>
 	<Style  TargetType="sf:GridCell" BasedOn="{StaticResource SfTextCell}">
 	</Style>
@@ -152,18 +137,18 @@
 		<Setter Property="FontSize" Value="{StaticResource MediumFontSize}" />
 	</Style>
 	<Style x:Key="TextBoxSmall" BasedOn="{StaticResource TextBoxReveal}" TargetType="TextBox">
-        <Setter Property="FontFamily" Value="Bahnschrift"/>
+        <Setter Property="FontFamily" Value="Bahnschrift,Segoe Fluent Icons"/>
 		
 		<Setter Property="FontSize" Value="{StaticResource MediumFontSize}" />
 		<Setter Property="FontStretch" Value="Condensed" />
-		<Setter Property="FontWeight" Value="Light" />
+		
 		<Setter Property="BorderThickness" Value="1" />
         <Setter Property="BorderBrush" Value="{ThemeResource SystemControlBackgroundAccentRevealBorderBrush}"/>       
     </Style>
-    <Style x:Key="NumberBoxSmall" TargetType="winui:NumberBox">
+	<Style x:Key="NumberBoxSmall" TargetType="winui:NumberBox"  >
 		<Setter Property="FontSize" Value="{StaticResource MediumFontSize}" />
-		<Setter Property="FontFamily" Value="Bahnschrift"/>
-		<Setter Property="IsTextScaleFactorEnabled" Value="False"/>
+		<Setter Property="FontFamily" Value="Bahnschrift,Segoe Fluent Icons"/>
+	
         <Setter Property="SpinButtonPlacementMode" Value="Compact"/>
 		<Setter Property="SmallChange" Value="1"/>
 		<Setter Property="LargeChange" Value="10"/>
@@ -210,12 +195,9 @@
 		<Setter Property="LargeChange" Value="0.1"/>
 		<Setter Property="Width" Value="120"/>
 	</Style>
-	<Style x:Key="GridNoScroll" TargetType="Grid">
-
-	</Style>
 
 	<Style BasedOn="{StaticResource ToggleButtonRevealStyle}" TargetType="ToggleButton">
-		<Setter Property="FontFamily" Value="Bahnschrift"/>
+		<Setter Property="FontFamily" Value="Bahnschrift,Segoe Fluent Icons"/>
 		<Setter Property="FontSize" Value="{StaticResource MediumFontSize}" />
         <Setter Property="IsTextScaleFactorEnabled" Value="False"/>
         <Setter Property="Margin" Value="4"/>
@@ -312,48 +294,9 @@
         <Setter Property="HorizontalAlignment"
                         Value="Left" />
     </Style>
-	<Style TargetType="tk:DataGrid">
-		<Setter Property="RowHeight" Value="{StaticResource ShortGridRowHeight}" />
-		<Setter Property="FontFamily" Value="Bahnschrift" />
-		<Setter Property="FontSize" Value="{StaticResource SmallFontSize}" />
-		<Setter Property="RowStyle" Value="{StaticResource DataGridRowStyle}" />
-		<Setter Property="RowHeaderStyle" Value="{StaticResource DataGridColumnHeaderStyle}"/>
-		<Setter Property="FontStretch" Value="Condensed" />
-		<Setter Property="FontWeight" Value="Light" />
-		<Setter Property="CanUserSortColumns" Value="True" />
-		<Setter Property="ClipboardCopyMode" Value="IncludeHeader" />
-		<Setter Property="SelectionMode" Value="Extended" />
-		<Setter Property="CanUserReorderColumns" Value="True" />
-		<Setter Property="CanUserResizeColumns" Value="True" />
-		<Setter Property="GridLinesVisibility" Value="All" />
-		<Setter Property="ClipboardCopyMode" Value="IncludeHeader"/>
-		<Setter Property="AlternatingRowBackground" Value="#FF200020" />
-	</Style>
-	<Style TargetType="sf:SfDataGrid" x:Key="sfDataGridDefaults" >
-		<Setter Property="RowHeight" Value="{StaticResource MediumGridRowHeight}" />
-		<Setter Property="FontFamily" Value="Bahnschrift" />
-		<Setter Property="FontSize" Value="{StaticResource SmallFontSize}" />
-		<Setter Property="FontStretch" Value="Condensed" />
-		<Setter Property="FontWeight" Value="Light" />
-		<Setter Property="SelectionMode" Value="Extended" />
-		<Setter Property="GridLinesVisibility" Value="Both" />
-		<Setter Property="AutoGenerateColumns" Value="False"/>
-		<Setter Property="ExpanderColumnWidth" Value= "40" />
-		<Setter Property="ShowGroupDropArea" Value="True" />
-		<Setter Property="AllowSorting" Value="True" />
-		<Setter Property="AllowDraggingColumns" Value="True" />
-		<Setter Property="AllowResizingHiddenColumns" Value="True" />
-		<Setter Property="AllowResizingColumns" Value="True" />
-		<Setter Property="CanMaintainScrollPosition" Value="True" />
-		<Setter Property="AllowEditing" Value="false"/>
-		<Setter Property="ShowToolTip" Value="True" />
-
-		<Setter Property="AllowDraggingColumns" Value="True"/>
-		<Setter Property="ColumnWidthMode" Value="SizeToHeader"/>
-	</Style>
-	<Style TargetType="sf:SfDataGrid" BasedOn="{StaticResource sfDataGridDefaults}" />
-	<Style TargetType="sf:DetailsViewDataGrid" BasedOn="{StaticResource sfDataGridDefaults}" />
-
+	
+	
+	
 	<converter:DateTimeConverter x:Key="DateTimeConverter" />
     <converter:IntConverter x:Key="IntConverter" />
 	<converter:TimeConverter x:Key="TimeConverter" />

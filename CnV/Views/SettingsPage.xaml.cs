@@ -43,7 +43,7 @@ namespace CnV
 	{
 		private const double largeFontSizeBase = 20.0;
 		private const double mediumFontSizeBase = 14.0;
-		private const double smallFontSizeBase = 12.0;
+		private const double smallFontSizeBase = 14.0;
 		private const double chatFontSizeBase = 14.0;
 		private const double largeGridRowHeightBase = largeFontSizeBase*2.0;
 		private const double mediumGridRowHeightBase = 32;//mediumFontSizeBase*(2.25);
