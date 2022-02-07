@@ -103,7 +103,7 @@ namespace CnV.Views
 
 					var canvasBaseY = (popupTopMargin + canvasScaledY).Max0();
 
-				canvas.Margin = new Thickness(0, canvasBaseY, 0, 0);
+				//canvas.Margin = new Thickness(0, canvasBaseY, 0, 0);
 
 
 					// only need 1 to avoid collisions

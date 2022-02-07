@@ -9,7 +9,7 @@
  >
 	<Style x:Key="BaseTextBlockStyle" TargetType="TextBlock">
 		<Setter Property="FontFamily" Value="Bahnschrift,Segoe Fluent Icons" />
-		<Setter Property="FontWeight" Value="Light" />
+		<Setter Property="FontWeight" Value="Normal" />
 		<Setter Property="FontStretch" Value="Condensed" />
 		<Setter Property="FontSize" Value="14" />
 		<Setter Property="TextTrimming" Value="None" />
@@ -91,7 +91,7 @@
 	<Style TargetType="TextBox" BasedOn="{StaticResource DefaultTextBoxStyle}">
 		<Setter Property="FontFamily" Value="Bahnschrift,Segoe Fluent Icons"/>
 		<Setter Property="FontStretch" Value="Condensed" />
-		<Setter Property="FontWeight" Value="Light" />
+		<Setter Property="FontWeight" Value="Normal" />
 		<Setter Property="FontSize" Value="{StaticResource MediumFontSize}" />
 	</Style>
 	<Style TargetType="TextBox" x:Key="TextBoxReveal" BasedOn="{StaticResource DefaultTextBoxStyle}" >
@@ -106,6 +106,12 @@
         <Setter Property="FontSize" Value="{StaticResource SmallFontSize}" />
 		<Setter Property="FontStretch" Value="Condensed" />
 		
+	</Style>
+	<Style x:Key="ToggleButton" TargetType="ToggleButton" BasedOn="{StaticResource ToggleButtonRevealStyle}" >
+		<Setter Property="FontFamily" Value="Bahnschrift,Segoe Fluent Icons"/>
+		<Setter Property="FontSize" Value="{StaticResource MediumFontSize}" />
+		<Setter Property="FontStretch" Value="Condensed" />
+
 	</Style>
 	<Style x:Key="SfTextCell" TargetType="sf:GridCell">
 		<Setter Property="FontFamily" Value="Bahnschrift,Segoe Fluent Icons"/>
@@ -136,20 +142,20 @@
 	<Style x:Key="TextBlockMedium" TargetType="TextBlock" BasedOn="{StaticResource TextBlockSmall}" >
 		<Setter Property="FontSize" Value="{StaticResource MediumFontSize}" />
 	</Style>
-	<Style x:Key="TextBoxSmall" BasedOn="{StaticResource TextBoxReveal}" TargetType="TextBox">
+	<Style x:Key="TextBox" BasedOn="{StaticResource TextBoxReveal}" TargetType="TextBox">
         <Setter Property="FontFamily" Value="Bahnschrift,Segoe Fluent Icons"/>
 		
 		<Setter Property="FontSize" Value="{StaticResource MediumFontSize}" />
-		<Setter Property="FontStretch" Value="Condensed" />
+		<Setter Property="FontStretch" Value="Normal" />
 		
 		<Setter Property="BorderThickness" Value="1" />
         <Setter Property="BorderBrush" Value="{ThemeResource SystemControlBackgroundAccentRevealBorderBrush}"/>       
     </Style>
-	<Style x:Key="NumberBoxSmall" TargetType="winui:NumberBox"  >
+	<Style x:Key="NumberBox" TargetType="NumberBox"  >
 		<Setter Property="FontSize" Value="{StaticResource MediumFontSize}" />
 		<Setter Property="FontFamily" Value="Bahnschrift,Segoe Fluent Icons"/>
-	
-        <Setter Property="SpinButtonPlacementMode" Value="Compact"/>
+		<Setter Property="FontStretch" Value="Normal" />
+		<Setter Property="SpinButtonPlacementMode" Value="Compact"/>
 		<Setter Property="SmallChange" Value="1"/>
 		<Setter Property="LargeChange" Value="10"/>
 		<Setter Property="BorderThickness" Value="1" />
@@ -159,20 +165,22 @@
 		<Setter Property="Margin" Value="2" />
 		<Setter Property="Width" Value="110" />
 	</Style>
-	<!--Todo merge this two-->
-	<Style TargetType="winui:NumberBox" BasedOn="{StaticResource NumberBoxSmall}" />
 
-	<Style  x:Key="NumberBoxWide" BasedOn="{StaticResource NumberBoxSmall}" TargetType="winui:NumberBox">
+	<Style  x:Key="NumberBoxSmall" BasedOn="{StaticResource NumberBox}" TargetType="NumberBox">
+		<Setter Property="Width" Value="110" />
+	</Style>
+	
+	<Style  x:Key="NumberBoxWide" BasedOn="{StaticResource NumberBox}" TargetType="NumberBox">
 		<Setter Property="Width" Value="130" />
 	</Style>
 
-	<Style  x:Key="RightAlignBox" BasedOn="{StaticResource TextBoxSmall}" TargetType="TextBox">
+	<Style  x:Key="RightAlignBox" BasedOn="{StaticResource TextBox}" TargetType="TextBox">
         <Setter Property="VerticalAlignment"
                         Value="Center" />
     	<Setter Property="TextAlignment" Value="Right" />
        
     </Style>
-    <Style  x:Key="RightAlignNumberBox" BasedOn="{StaticResource NumberBoxSmall}" TargetType="winui:NumberBox">
+    <Style  x:Key="RightAlignNumberBox" BasedOn="{StaticResource NumberBox}" TargetType="winui:NumberBox">
 		<Setter Property="HorizontalContentAlignment" Value="Right" />
     </Style>
 	<Style x:Key="NumberBoxRes" BasedOn="{StaticResource RightAlignNumberBox}" TargetType="winui:NumberBox">

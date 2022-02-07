@@ -6,45 +6,115 @@
     xmlns:tk="using:CommunityToolkit.WinUI.UI.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	Margin="0"
+	HorizontalAlignment="Stretch"
+	VerticalAlignment="Stretch"
+	Background="{x:Null}"
     mc:Ignorable="d">
-
-    <Grid>
-		<tk:WrapPanel Orientation="Horizontal">
-			<Grid BorderThickness="1" Margin="4" Padding="4" BorderBrush="{StaticResource SystemControlBackgroundAccentRevealBorderBrush}" Width="80" >
-				<Grid.RowDefinitions>
-					<RowDefinition/>
-					<RowDefinition/>
-				</Grid.RowDefinitions>				
-				<TextBlock  x:Name="res0" x:FieldModifier="public" HorizontalTextAlignment="Right"  />
-				<TextBlock  Grid.Row="1" x:Name="prod0" x:FieldModifier="public"  HorizontalTextAlignment="Right" />
-			</Grid>
-			<Grid BorderThickness="1" Margin="4" Padding="4" BorderBrush="{StaticResource SystemControlBackgroundAccentRevealBorderBrush}" Width="80" >
-				<Grid.RowDefinitions>
-					<RowDefinition/>
-					<RowDefinition/>
-				</Grid.RowDefinitions>
-				<TextBlock  x:Name="res1" x:FieldModifier="public" HorizontalTextAlignment="Right"  />
-				<TextBlock  Grid.Row="1" x:Name="prod1" x:FieldModifier="public"  HorizontalTextAlignment="Right" />
-			</Grid>
-			<Grid BorderThickness="1" Margin="4" Padding="4" BorderBrush="{StaticResource SystemControlBackgroundAccentRevealBorderBrush}" Width="80" >
-				<Grid.RowDefinitions>
-					<RowDefinition/>
-					<RowDefinition/>
-				</Grid.RowDefinitions>
-				<TextBlock  x:Name="res2" x:FieldModifier="public" HorizontalTextAlignment="Right"  />
-				<TextBlock  Grid.Row="1" x:Name="prod2" x:FieldModifier="public"  HorizontalTextAlignment="Right" />
-			</Grid>
-			<Grid BorderThickness="1" Margin="4" Padding="4" BorderBrush="{StaticResource SystemControlBackgroundAccentRevealBorderBrush}" Width="80" >
+	
+	<ScrollViewer  x:Name="scroll"
+					Background="{x:Null}"   HorizontalScrollMode="Disabled" VerticalScrollMode="Auto" 
+				  MinZoomFactor="0.5" MaxZoomFactor="2" ZoomMode="Enabled" IsVerticalRailEnabled="True"
+				  HorizontalAlignment="Stretch"
+				  HorizontalContentAlignment="Stretch"
+				   SizeChanged="scroll_SizeChanged"
+				  VerticalAlignment="Stretch">
+		<StackPanel x:Name="stackPanel"  Margin="2" Padding="2" Background="{x:Null}"  >
+		<Expander Header="Incoming" Expanding="Expander_Expanding" Padding="0" Visibility="Collapsed"  Margin="0.0"  Background="{x:Null}" x:Name="expIncoming"  >
+		</Expander>
+		<Expander  Expanding="Expander_Expanding"  Padding="0" Margin="0"  Background="{x:Null}" HorizontalContentAlignment="Left" HorizontalAlignment="Stretch" x:Name="expResource" VerticalAlignment="Center" VerticalContentAlignment="Top"> 
+			<Expander.Header   >
+					<ToggleButton  Content ="Resources" Margin="0" Padding="0"  Style="{StaticResource ToggleButton}" HorizontalAlignment="Right" VerticalAlignment="Top"  />
+			</Expander.Header>
+			<tk:WrapPanel Orientation="Horizontal" Background="{x:Null}" HorizontalSpacing="4" VerticalSpacing="4" >
+			<Grid BorderThickness="1" Padding="4"  BorderBrush="{StaticResource SystemControlBackgroundAccentRevealBorderBrush}" Width="90" Background="#B0200000" >
 				<Grid.RowDefinitions>
 					<RowDefinition/>
 					<RowDefinition/>
 				</Grid.RowDefinitions>
-				<TextBlock  x:Name="res3" x:FieldModifier="public" HorizontalTextAlignment="Right"  />
-				<TextBlock  Grid.Row="1" x:Name="prod3" x:FieldModifier="public"  HorizontalTextAlignment="Right" />
+					<TextBlock  x:Name="res0" x:FieldModifier="public" HorizontalTextAlignment="Right" Style="{StaticResource TextBlockMedium}" />
+				<TextBlock  x:Name="prod0" x:FieldModifier="public"  HorizontalTextAlignment="Right" Style="{StaticResource TextBlockSmall}" />
 			</Grid>
-			<TextBlock x:Name="text" x:FieldModifier="public" Text="&#xEDC6;" />
+				<Grid BorderThickness="1" Margin="0" Padding="4" BorderBrush="{StaticResource SystemControlBackgroundAccentRevealBorderBrush}" Width="90" Background="#B0200000" >
+				<Grid.RowDefinitions>
+					<RowDefinition/>
+					<RowDefinition/>
+				</Grid.RowDefinitions>
+					<TextBlock  x:Name="res1" x:FieldModifier="public" HorizontalTextAlignment="Right"  Style="{StaticResource TextBlockMedium}"  />
+					<TextBlock  x:Name="prod1" x:FieldModifier="public"  HorizontalTextAlignment="Right" Style="{StaticResource TextBlockSmall}" />
+			</Grid>
+				<Grid BorderThickness="1" Margin="0" Padding="4" BorderBrush="{StaticResource SystemControlBackgroundAccentRevealBorderBrush}" Width="90" Background="#B0200000"  >
+				<Grid.RowDefinitions>
+					<RowDefinition/>
+					<RowDefinition/>
+				</Grid.RowDefinitions>
+					<TextBlock  x:Name="res2" x:FieldModifier="public" HorizontalTextAlignment="Right" Style="{StaticResource TextBlockMedium}" />
+					<TextBlock  x:Name="prod2" x:FieldModifier="public"  HorizontalTextAlignment="Right" Style="{StaticResource TextBlockSmall}"/>
+			</Grid>
+				<Grid BorderThickness="1" Margin="0" Padding="4" BorderBrush="{StaticResource SystemControlBackgroundAccentRevealBorderBrush}" Width="90" Background="#B0200000"  >
+				<Grid.RowDefinitions>
+					<RowDefinition/>
+					<RowDefinition/>
+				</Grid.RowDefinitions>
+					<TextBlock  x:Name="res3" x:FieldModifier="public" HorizontalTextAlignment="Right" Style="{StaticResource TextBlockMedium}" />
+					<TextBlock  x:Name="prod3" x:FieldModifier="public"  HorizontalTextAlignment="Right" Style="{StaticResource TextBlockSmall}" />
+			</Grid>
+			</tk:WrapPanel>
+		</Expander>
+		<Expander Header="Build Queue" Expanding="Expander_Expanding" x:Name="expBuildQueue"  Margin="0.0" Background="{x:Null}"  >
+				<ListView x:Name="InAppNote" x:FieldModifier="public"  Margin="0" Padding="0"
+                   
+						  MaxHeight="200"  >
+					<ListView.ItemTemplate>
+						<DataTemplate  x:DataType="x:String"  >
+							<tk:MarkdownTextBlock  x:Name="message" Text="{x:Bind ToString(), Mode=OneTime}"  Margin="1"  Padding="0,0,0,0"    
+                                               IsTextSelectionEnabled="True"
+											  FontSize="{StaticResource SmallFontSize}"
+											 FontFamily="Bahnschrift,Segoe Fluent Icons"
+                                              TextWrapping="Wrap" 
+											   LinkClicked="{x:Bind cnv:Note.MarkDownLinkClicked}"  Background="Transparent"  />
 
+						</DataTemplate>
+					</ListView.ItemTemplate>
+					<!-- The ItemsStackPanel must be edited to update the following two properties -->
+					<!-- These properties allow the list to grow from the bottom -->
+					<ListView.ItemsPanel>
+						<ItemsPanelTemplate>
+							<ItemsStackPanel ItemsUpdatingScrollMode="KeepLastItemInView" 
+									
+                            VerticalAlignment="Center"/>
+						</ItemsPanelTemplate>
+					</ListView.ItemsPanel>
+					<!-- This setter property is created so ListViewItems correctly align to the left or right. -->
+					<ListView.ItemContainerStyle>
+						<Style TargetType="ListViewItem">
+							<Setter Property="Margin" Value="1" />
+							<Setter Property="Padding" Value="0" />
+							<Setter Property="VerticalAlignment" Value="Center"/>
+							<Setter Property="VerticalContentAlignment" Value="Center"/>
+							<Setter Property="Background" Value="#58003000"/>
+						</Style>
+					</ListView.ItemContainerStyle>
+					<x:String>"hello"</x:String>
+					<x:String>"There"</x:String>
+				</ListView>
+			</Expander>
+		<Expander Header="Buildings" Expanding="Expander_Expanding" x:Name="expBuildings" Background="{x:Null}"  >
+			
+		</Expander>
+		<Expander Header="Enlistment" Expanding="Expander_Expanding" x:Name="expEnlistment" Background="{x:Null}"  >
 
-		</tk:WrapPanel>
-	</Grid>
+		</Expander>
+		<Expander Header="Commands" Expanding="Expander_Expanding" x:Name="expCommands" Background="{x:Null}"  >
+
+		</Expander>
+		<Expander Header="Reinforcements" Expanding="Expander_Expanding" x:Name="expReinforcements" Background="{x:Null}"  >
+
+		</Expander>
+		<Expander Header="Trades" Expanding="Expander_Expanding" x:Name="expTrades" Background="{x:Null}"  >
+
+		</Expander>
+
+	</StackPanel>
+	</ScrollViewer>
 </UserControl>

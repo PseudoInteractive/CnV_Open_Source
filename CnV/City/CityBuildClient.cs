@@ -100,7 +100,7 @@ namespace CnV
 				var build = GetBuild();
 				var b = City.GetBuild().GetBuildingOrLayout(cc);
 
-				if(action == CityBuildAction.moveEnd)
+				if(action == CityBuildAction.moveEnd && !dryRun)
 				{
 					// We lost our move source
 					if(CityView.selectedPoint.isNan)
@@ -377,7 +377,7 @@ namespace CnV
 
 					if(dryRun)
 					{
-						DrawSprite(hovered, decalMoveBuilding, 0.343f);
+						DrawSprite(targetSpot, decalMoveBuilding, 0.343f);
 						DrawSprite(selectedPoint, decalMoveBuilding, 0.323f);
 					}
 

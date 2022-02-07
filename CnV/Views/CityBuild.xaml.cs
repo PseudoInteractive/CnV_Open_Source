@@ -968,12 +968,14 @@ namespace CnV
 		}
 	
 
-		public static void ProcessKey(VirtualKey key)
+		public static bool ProcessKey(VirtualKey key)
 		{
+			if(!hovered.isInCity)
+				return false;
 			switch (key)
 			{
-				case VirtualKey.Space: CityBuild.Click(CityView.hovered, true); return;
-				case VirtualKey.Enter: CityBuild.Click(CityView.hovered, false); return;
+				case VirtualKey.Space: CityBuild.Click(CityView.hovered, true); break;
+				case VirtualKey.Enter: CityBuild.Click(CityView.hovered, false); break;
 				case Windows.System.VirtualKey.Left:
 					if (CityView.hovered.isNotNan)
 						CityView.hovered = (CityView.hovered+(-1,0)).Clamped(); // CityView.hovered with {  x = (CityView.hovered.x - 1).Max(City.span0) };
@@ -1014,10 +1016,12 @@ namespace CnV
 				case Windows.System.VirtualKey.Number8: UpgradeOrTower(8); break;
 				case Windows.System.VirtualKey.Number9: UpgradeOrTower(9); break;
 				case Windows.System.VirtualKey.Number0: City.GetBuild().UpgradeToLevel(10, CityView.hovered); break;
+				case Windows.System.VirtualKey.Subtract: City.GetBuild().Downgrade(CityView.hovered, false); break;
+				case Windows.System.VirtualKey.Add:
 				case Windows.System.VirtualKey.U: City.GetBuild().UpgradeToLevel(1, CityView.hovered, false); break;
 				// case Windows.System.VirtualKey.Q: CityBuild.ClearQueue(); break;
 				case Windows.System.VirtualKey.D: City.GetBuild().Demolish(CityView.hovered, false); break;
-				case Windows.System.VirtualKey.Escape: CityBuild.ClearAction(); break;
+				case Windows.System.VirtualKey.Escape: CityBuild.ClearAction(); return false;
 				case (VirtualKey)192:
 					{
 						if (action == CityBuild.CityBuildAction.moveEnd)
@@ -1030,46 +1034,47 @@ namespace CnV
 						break; //  (City.XYToId(CityView.selected), City.XYToId(CityView.hovered)); break;
 					}
 				// short keys
-				case Windows.System.VirtualKey.F: CityBuild.ShortBuild(Building.bidForester); return; //  448;
-				case Windows.System.VirtualKey.C: CityBuild.ShortBuild(Building.bidCottage); return; //  446;
-				case Windows.System.VirtualKey.R: CityBuild.ShortBuild(Building.bidStorehouse); return; //  464;
-				case Windows.System.VirtualKey.S: CityBuild.ShortBuild(Building.bidQuarry); return; //  461;
+				case Windows.System.VirtualKey.F: CityBuild.ShortBuild(Building.bidForester); break; //  448;
+				case Windows.System.VirtualKey.C: CityBuild.ShortBuild(Building.bidCottage); break; //  446;
+				case Windows.System.VirtualKey.R: CityBuild.ShortBuild(Building.bidStorehouse); break; //  464;
+				case Windows.System.VirtualKey.S: CityBuild.ShortBuild(Building.bidQuarry); break; //  461;
 																								// case
 																								// Windows.System.VirtualKey.Q
 																								// :
 																								// CityBuild.ShortBuild(Building.bidHideaway
 																								// );
-																								// return;
+																								// break;
 																								// // 479;
-				case Windows.System.VirtualKey.A: CityBuild.ShortBuild(Building.bidFarm); return; //  447;
+				case Windows.System.VirtualKey.A: CityBuild.ShortBuild(Building.bidFarm); break; //  447;
 																								   // case
 																								   // Windows.System.VirtualKey.U
 																								   // :
 																								   // CityBuild.ShortBuild(Building.bidCityguardhouse
 																								   // );
-																								   // return;
+																								   // break;
 																								   // // 504;
-				case Windows.System.VirtualKey.B: CityBuild.ShortBuild(Building.bidBarracks); return; //  445;
-				case Windows.System.VirtualKey.I: CityBuild.ShortBuild(Building.bidIronMine); return; //  465;
-				case Windows.System.VirtualKey.T: CityBuild.ShortBuild(Building.bidTrainingGround); return; //  483;
-				case Windows.System.VirtualKey.M: CityBuild.ShortBuild(Building.bidMarket); return; //  449;
-				case Windows.System.VirtualKey.V: CityBuild.ShortBuild(Building.bidVilla); return; //  481;
-				case Windows.System.VirtualKey.L: CityBuild.ShortBuild(Building.bidSawmill); return; //  460;
-				case Windows.System.VirtualKey.E: CityBuild.ShortBuild(Building.bidStable); return; //  466;
-				case Windows.System.VirtualKey.H: CityBuild.ShortBuild(Building.bidStonemason); return; //  462;
-				case Windows.System.VirtualKey.W: CityBuild.ShortBuild(Building.bidSorcTower); return; //  500;
-				case Windows.System.VirtualKey.G: CityBuild.ShortBuild(Building.bidGrainMill); return; //  463;
-				case Windows.System.VirtualKey.Y: CityBuild.ShortBuild(Building.bidAcademy); return; //  482;
-				case Windows.System.VirtualKey.Z: CityBuild.ShortBuild(Building.bidSmelter); return; //  477;
-				case Windows.System.VirtualKey.K: CityBuild.ShortBuild(Building.bidBlacksmith); return; //  502;
-				case Windows.System.VirtualKey.X: CityBuild.ShortBuild(Building.bidCastle); return; //  467;
-				case Windows.System.VirtualKey.O: CityBuild.ShortBuild(Building.bidPort); return; //  488;
-				case Windows.System.VirtualKey.P: CityBuild.ShortBuild(Building.bidShipyard); return; //  491;
-				case Windows.System.VirtualKey.Q: if (!isPlanner) City.GetBuild().SmartBuild(hovered, City.GetBuild().GetLayoutBid(hovered),searchForSpare:false,dryRun:true, wantDemoUI: false); return;
+				case Windows.System.VirtualKey.B: CityBuild.ShortBuild(Building.bidBarracks); break; //  445;
+				case Windows.System.VirtualKey.I: CityBuild.ShortBuild(Building.bidIronMine); break; //  465;
+				case Windows.System.VirtualKey.T: CityBuild.ShortBuild(Building.bidTrainingGround); break; //  483;
+				case Windows.System.VirtualKey.M: CityBuild.ShortBuild(Building.bidMarket); break; //  449;
+				case Windows.System.VirtualKey.V: CityBuild.ShortBuild(Building.bidVilla); break; //  481;
+				case Windows.System.VirtualKey.L: CityBuild.ShortBuild(Building.bidSawmill); break; //  460;
+				case Windows.System.VirtualKey.E: CityBuild.ShortBuild(Building.bidStable); break; //  466;
+				case Windows.System.VirtualKey.H: CityBuild.ShortBuild(Building.bidStonemason); break; //  462;
+				case Windows.System.VirtualKey.W: CityBuild.ShortBuild(Building.bidSorcTower); break; //  500;
+				case Windows.System.VirtualKey.G: CityBuild.ShortBuild(Building.bidGrainMill); break; //  463;
+				case Windows.System.VirtualKey.Y: CityBuild.ShortBuild(Building.bidAcademy); break; //  482;
+				case Windows.System.VirtualKey.Z: CityBuild.ShortBuild(Building.bidSmelter); break; //  477;
+				case Windows.System.VirtualKey.K: CityBuild.ShortBuild(Building.bidBlacksmith); break; //  502;
+				case Windows.System.VirtualKey.X: CityBuild.ShortBuild(Building.bidCastle); break; //  467;
+				case Windows.System.VirtualKey.O: CityBuild.ShortBuild(Building.bidPort); break; //  488;
+				case Windows.System.VirtualKey.P: CityBuild.ShortBuild(Building.bidShipyard); break; //  491;
+				case Windows.System.VirtualKey.Q: if (!isPlanner) City.GetBuild().SmartBuild(hovered, City.GetBuild().GetLayoutBid(hovered),searchForSpare:false,dryRun:true, wantDemoUI: false); break;
 
 				default:
-					break;
+					return false;
 			}
+			return true;
 		}
 
 		private static void UpgradeOrTower(int number)

@@ -42,26 +42,44 @@ namespace CnV
 		//		PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(null));
 		public void UpdateUI()
 		{
-			var i = CityStats.instance;
+		//	var i = CityStats.instance;
 			var city = this.city;
+			if(city.IsInvalid())
+				return;
+
 			var resources = city.SampleResources();
 			for(var r = 0; r< CnV.Resources.idCount; r++)
 			{
-				var txt = r switch { 0 => i.res0, 1 => i.res1, 2 => i.res2, _ => i.res3 };
-				var prod = r switch { 0 => i.prod0, 1 => i.prod1, 2 => i.prod2, _ => i.prod3 };
+				var txt = r switch { 0 => res0, 1 => res1, 2 => res2, _ => res3 };
+				var prod = r switch { 0 => prod0, 1 => prod1, 2 => prod2, _ => prod3 };
+				
 				var res = resources[r];
 				var storage = city.stats.storage[r];
 				txt.UpdateLazy($"{res:N0}", (res >= storage ? Colors.Red : res >= storage*3/4 ? Colors.Orange : res == 0 ? Colors.Gray : Colors.Green));
 				var p = city.stats.production[r];
-				prod.UpdateLazy($"{p:+#,#;-#,#;'--'}", (p switch
+				prod.UpdateLazy($"{CnV.Resources.names[r]}/h:{p:+#,#;-#,#;' --'}", (p switch
 				{
 					> 0 => Colors.Gray,
 					< 0 => Colors.Yellow,
 					_ => Colors.DarkGray
 
 				}));
+				{ 
+				var bCounts = city.GetTownHallAndBuildingCount(true);
+				expBuildings.Header = $"Buildings\t[{bCounts.count}/{bCounts.max}]";
+
+				}
 			}
 		}
 
+		private void Expander_Expanding(Expander sender, ExpanderExpandingEventArgs args)
+		{
+			UpdateUI();
+		}
+
+		private void scroll_SizeChanged(object sender, SizeChangedEventArgs e)
+		{
+			stackPanel.Width = e.NewSize.Width;
+		}
 	}
 }

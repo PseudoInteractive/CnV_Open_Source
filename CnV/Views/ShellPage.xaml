@@ -23,6 +23,9 @@
 >
 	<Page.Resources>
 		<ResourceDictionary>
+			<ResourceDictionary.MergedDictionaries>
+				<ResourceDictionary Source="ms-appx:///Microsoft.UI.Xaml/DensityStyles/Compact.xaml" />
+			</ResourceDictionary.MergedDictionaries>
 			<Style TargetType="Button" BasedOn="{StaticResource ButtonRevealStyle}" x:Key="layoutButton" >
 				<Setter Property="Margin" Value="0,2,0,2" />
 				<Setter Property="Padding" Value="1"/>
@@ -54,11 +57,9 @@
 			</Grid.Resources>
 			<Grid.RowDefinitions>
 				<RowDefinition Height="40" x:Name="rowHeader" />
-				<RowDefinition Height="95" x:Name="stats" />
+				<RowDefinition Height="60" x:Name="stats" />
 				<RowDefinition x:Name="CanvasStart" />
-				<RowDefinition x:Name="rowChat" />
-				<RowDefinition x:Name="rowChat2" />
-				<RowDefinition x:Name="rowBottom" />
+				<RowDefinition x:Name="rowChatBase" />
 				<RowDefinition Height="40"  x:Name="rowFooter" />
 			</Grid.RowDefinitions>
 			<Grid.ColumnDefinitions>
@@ -237,9 +238,11 @@
 
 			<cnv:CityStats 
 				x:Name="cityStats"
-				Grid.Row="1" 
+				Grid.Row="2" 
 				Grid.ColumnSpan="1"
-				Grid.RowSpan="1" 
+				Grid.RowSpan="3" 
+				Canvas.ZIndex="14" 
+				
 				/>
 
 			<tk:GridSplitter
@@ -252,7 +255,7 @@
 				Height="11"
 				Grid.Column="{x:Bind grid.ColumnDefinitions.IndexOf(columnHtml) }"
 				Grid.Row="0"
-				Grid.RowSpan="7"
+				Grid.RowSpan="3"
 				Background="Transparent"
 				Canvas.ZIndex="22">
 				<tk:GridSplitter.Element>
@@ -262,8 +265,9 @@
 			</tk:GridSplitter>
 
 			<cnv:CnVSwapChainPanel x:Name="_canvas" 
-			                      Grid.Column="{x:Bind grid.ColumnDefinitions.IndexOf(columnRender)}" 
-			                      Grid.Row="2" Grid.RowSpan="4"
+			                      Grid.Column="0"
+								   Grid.ColumnSpan="3"
+			                      Grid.Row="2" Grid.RowSpan="2"
 			                      IsTabStop="True"
 									IsHitTestVisible="False"
 								  Margin="0"
@@ -275,7 +279,7 @@
 
 
 			<Grid Grid.Column="{x:Bind grid.ColumnDefinitions.IndexOf(columnTabs)}" 
-			      Grid.RowSpan="7" Margin="0,0,0,0">
+			      Grid.RowSpan="5" Margin="0,0,0,0">
 				<Grid.RowDefinitions>
 					<RowDefinition Height="3*"  x:Name="rowTabTop"  />
 					<RowDefinition Height="*"/>
@@ -299,7 +303,7 @@
 				</tk:GridSplitter>
 			</Grid>
 			<Grid x:Name="chatGrid" Grid.Column="{x:Bind grid.ColumnDefinitions.IndexOf(columnRender)}"
-			      Grid.Row="3" Grid.RowSpan="3" Canvas.ZIndex="20" Background="{x:Null}" >
+			      Grid.Row="3" Grid.RowSpan="1" Canvas.ZIndex="20" Background="{x:Null}" >
 				<Grid.RowDefinitions>
 					<RowDefinition Height="*"/>
 					<RowDefinition Height="100"  x:Name="rowChat"  />
@@ -348,27 +352,30 @@
 				</tk:GridSplitter>
 			</Grid>
 			<Expander IsExpanded="True"  
+					  
 					  Grid.Column="2" 
 					  VerticalAlignment="Bottom"
 					  FontSize="{StaticResource MediumFontSize}"
 		              FontFamily="Bahnschrift,Segoe Fluent Icons"
 					  Grid.Row="{x:Bind GridRowIndex(rowFooter,-1)}"
 					  Grid.RowSpan="2" 
+					  Margin="0"
+					  Padding="0"
 					  Width="300"
-
+						
 					  ExpandDirection="Up"
 					  Canvas.ZIndex="35"   >
-				<Expander.Header>
-					<TextBlock Text="Info" FontSize="{StaticResource MediumFontSize}"
-		              FontFamily="Bahnschrift,Segoe Fluent Icons" VerticalAlignment="Center" HorizontalAlignment="Center" />
+				<Expander.Header   >
+					<TextBlock Text="Info" FontSize="{StaticResource MediumFontSize}" Height="24" Margin="0" Padding="0"
+		              FontFamily="Bahnschrift,Segoe Fluent Icons"  HorizontalAlignment="Right" />
 				</Expander.Header>
-				<ListView x:Name="InAppNote" x:FieldModifier="public"  
+				<ListView x:Name="InAppNote" x:FieldModifier="public"  Margin="0" Padding="0"
                    ItemsSource="{x:Bind inAppNotes,Mode=OneWay}"  MaxHeight="200"  >
 					<ListView.ItemTemplate>
 						<DataTemplate  x:DataType="x:String"  >
-							<tk:MarkdownTextBlock  x:Name="message" Text="{x:Bind ToString(), Mode=OneTime}"  Margin="8,0"  Padding="0,0,0,0"    
+							<tk:MarkdownTextBlock  x:Name="message" Text="{x:Bind }"  Margin="1"  Padding="0,0,0,0"    
                                                IsTextSelectionEnabled="True"
-											  FontSize="{StaticResource MediumFontSize}"
+											  FontSize="{StaticResource SmallFontSize}"
 											 FontFamily="Bahnschrift,Segoe Fluent Icons"
                                               TextWrapping="Wrap" 
 											   LinkClicked="{x:Bind cnv:Note.MarkDownLinkClicked}"  Background="Transparent"  />
@@ -413,7 +420,7 @@
 
 			<tk:GridSplitter
                         Background="{x:Null}"
-                    Grid.RowSpan="5"
+                    Grid.RowSpan="3"
 										IsTabStop="True"
 			 				
 			CursorBehavior="ChangeOnSplitterHover"

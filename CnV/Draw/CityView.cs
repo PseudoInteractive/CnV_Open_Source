@@ -79,7 +79,6 @@ namespace CnV
 		public static Material cityWater;
 		// See CityViewS for more
 		
-		public static Material decalSelectEmpty;
 		public static Vector2 half2 = new Vector2(0.5f, 0.5f);
 
 		public static float zHover => 4.0f / 64.0f * Settings.parallax;
@@ -247,7 +246,7 @@ namespace CnV
 								{
 									// cross fade in new level that this is going to
 									float z1 = zBase*1.5f;
-									draw.AddQuad(Layer.tileCity + 2,(next.bl > cur.bl) ? decalBuildingValid : decalSelectEmpty,cs.c0,cs.c1,new Color(iAlpha,iAlpha,iAlpha,iAlpha / 2).Scale(blendOp),(z1,z1,z1,z1) );
+									draw.AddQuad(Layer.tileCity + 2, decalSelectGloss,cs.c0,cs.c1,new Color(iAlpha,iAlpha,iAlpha,iAlpha / 2).Scale(blendOp),(z1,z1,z1,z1) );
 								}
 							}
 							else
@@ -270,7 +269,7 @@ namespace CnV
 							}
 							else
 							{
-								blendMat = decalBuildingValid;
+								blendMat = decalBuildBuilding;
 								bd = next;
 							}
 							if(blendT < 0.5f)
@@ -478,7 +477,10 @@ namespace CnV
 
 					//}
 				}
-					PreviewBuildAction();
+				if(hovered.isInCity)
+					CityViewS.ClientDrawSprite(hovered, CityViewS.decalSelectBuilding, 0.312f);
+
+				PreviewBuildAction();
 					//var processed = new HashSet<int>();
 					//foreach (var r in IterateQueue() )
 					//{
@@ -612,11 +614,11 @@ namespace CnV
 		{
 			LoadTheme();
 			decalBuildingInvalid       = LoadMaterialAdditive("Art/City/decal_building_invalid");
-			decalBuildingValid         = LoadMaterialAdditive("Art/City/decal_building_valid");
-			decalBuildingValidMulti    = LoadMaterialAdditive("Art/City/decal_building_valid_multi");
+			decalBuildBuilding         = LoadMaterialAdditive("Art/City/decal_building_valid");
+			decalBuildBuildingMulti    = LoadMaterialAdditive("Art/City/decal_building_valid_multi");
 			decalMoveBuilding          = LoadMaterialAdditive("Art/City/decal_move_building");
 			decalSelectBuilding        = LoadMaterialAdditive("Art/City/decal_select_building");
-			decalSelectEmpty           = LoadMaterialAdditive("Art/City/build_details_gloss_overlay");
+			decalSelectGloss           = LoadMaterialAdditive("Art/City/build_details_gloss_overlay");
 			CityViewS.ClientDrawSprite = DrawSprite;
 		}
 		public static void LoadTheme()

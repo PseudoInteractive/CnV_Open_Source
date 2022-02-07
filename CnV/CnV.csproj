@@ -88,10 +88,10 @@
     <PackageReference Include="Azure.Storage.Blobs" Version="12.11.0-beta.2" />
     <PackageReference Include="CommunityToolkit.WinUI.Notifications" Version="7.1.2" />
     <PackageReference Include="CommunityToolkit.WinUI.UI.Controls" Version="7.1.2" />
-    <PackageReference Include="DSharpPlus" Version="4.2.0-nightly-01063" />
-    <PackageReference Include="DSharpPlus.CommandsNext" Version="4.2.0-nightly-01063" />
-    <PackageReference Include="DSharpPlus.Interactivity" Version="4.2.0-nightly-01063" />
-    <PackageReference Include="DSharpPlus.SlashCommands" Version="4.2.0-nightly-01063" />
+    <PackageReference Include="DSharpPlus" Version="4.2.0-nightly-01065" />
+    <PackageReference Include="DSharpPlus.CommandsNext" Version="4.2.0-nightly-01065" />
+    <PackageReference Include="DSharpPlus.Interactivity" Version="4.2.0-nightly-01065" />
+    <PackageReference Include="DSharpPlus.SlashCommands" Version="4.2.0-nightly-01065" />
     <PackageReference Include="Enums.NET" Version="4.0.0" />
     <PackageReference Include="Grpc.Net.Client" Version="2.41.0-pre1" />
     <PackageReference Include="Grpc.Net.Client" Version="2.43.0-pre1" />
@@ -104,9 +104,9 @@
     <PackageReference Include="Microsoft.Toolkit" Version="7.1.2" />
     <PackageReference Include="Microsoft.Toolkit.Diagnostics" Version="7.1.2" />
     <PackageReference Include="Microsoft.Toolkit.HighPerformance" Version="7.1.2" />
-    <PackageReference Include="Microsoft.Toolkit.Mvvm" Version="7.1.2" />	  
+    <PackageReference Include="Microsoft.Toolkit.Mvvm" Version="7.1.2" />
+    <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.22543-preview" />	  
     <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.0.0" />
-    <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.22543-preview" />
 	<PackageReference Include="Nito.AsyncEx.Coordination" Version="5.1.2" />
     <PackageReference Include="PlayFabAllSDK" Version="1.108.220118" />
     <PackageReference Include="Syncfusion.Grid.WinUI" Version="19.4.0.48" />
@@ -525,6 +525,7 @@
   </ItemGroup>
   <ItemGroup>
 	<None Remove="cnvCover.png" />
+	<None Remove="Package.StoreAssociation.xml" />
     <None Remove="Properties\PublishProfiles\win10-x64.pubxml" />
     <None Remove="Resources\CnVFont-VF.ttf" />
     <None Remove="Resources\Icon1.ico" />
@@ -554,7 +555,6 @@
     </AdditionalFiles>
     <None Include="CotgKey.pfx" />
     <None Include="JSON\poll2.json" />
-    <None Include="Package.StoreAssociation.xml" />
     <Content Include="Properties\Default.rd.xml" />
     <None Include="SignatureKey.snk" />
     <None Include="SignaturePubKey.snk" />

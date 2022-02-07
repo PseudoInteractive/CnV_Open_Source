@@ -164,3 +164,12 @@ dotnet_diagnostic.CA3009.severity=silent
 dotnet_diagnostic.CA2351.severity=silent
 dotnet_diagnostic.CA2350.severity=silent
 dotnet_diagnostic.CA2361.severity=silent
+
+# MsgPack001: Avoid mutable default options
+dotnet_diagnostic.MsgPack001.severity = error
+
+# MsgPack002: Avoid mutable static options
+dotnet_diagnostic.MsgPack002.severity = error
+
+# WFAC010: Unsupported high DPI configuration
+dotnet_diagnostic.WFAC010.severity = error

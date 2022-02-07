@@ -387,16 +387,16 @@ namespace CnV.Views
 //			}
 //		}
 
-		public static void KeyboardAccelerator(KeyboardAccelerator acc,KeyboardAcceleratorInvokedEventArgs args)
-		{
-	///		Log($"Accelerator {acc.Key} handled:{args.Handled} mouse:{mouseOverCanvas}");
-			if(args.Handled)
-			{
+	//	public static void KeyboardAccelerator(KeyboardAccelerator acc,KeyboardAcceleratorInvokedEventArgs args)
+	//	{
+	/////		Log($"Accelerator {acc.Key} handled:{args.Handled} mouse:{mouseOverCanvas}");
+	//		if(args.Handled)
+	//		{
 
-				return;
-			}
-			args.Handled=DoKeyDown(acc.Key);
-		}
+	//			return;
+	//		}
+	//		args.Handled=DoKeyDown(acc.Key);
+	//	}
 		public static void KeyboardProxy_KeyDown(object sender,Microsoft.UI.Xaml.Input.KeyRoutedEventArgs e)
 		{
 		//	Log($"KeyDown {e.Key} handled:{e.Handled} mouse:{mouseOverCanvas}"); 
@@ -417,7 +417,7 @@ namespace CnV.Views
 		}
 		public static HashSet<VirtualKey> buildKeys = GetBuildKeys();
 
-		public static Debounce1<VirtualKey> hotKeyDown = new(_KeyDown) { debounceDelay =0,throttleDelay =50, runOnUiThread =true,throttled =true };
+	//	public static Debounce1<VirtualKey> hotKeyDown = new(_KeyDown) { debounceDelay =0,throttleDelay =50, runOnUiThread =true,throttled =true };
 
 		public static bool DoKeyDown(VirtualKey key)
 		{
@@ -439,8 +439,7 @@ namespace CnV.Views
 			//AppS.UpdateKeyStates();
 			//if(ChatTabHasFocus)
 			//	return false;
-			hotKeyDown.Go(key);
-			return true;
+			return _KeyDown(key);
 		}
 
 		internal static bool ChatTabHasFocus()
@@ -457,7 +456,7 @@ namespace CnV.Views
 			return false;
 		}
 
-		public static Task _KeyDown(VirtualKey key)
+		public static bool _KeyDown(VirtualKey key)
 		{
 //			Log("SomeKeyDown " + key);
 
@@ -468,13 +467,13 @@ namespace CnV.Views
 			if(!mouseOverCanvas)
 			{
 				Note.Show("Mouse not over canvas");
-				return Task.CompletedTask;
+				return false;
 		//		Log("Mouse not over");
 			}
 			App.InputRecieved();
 
 			if(!isHitTestVisible)
-				return Task.CompletedTask;
+				return false;
 
 			//if (CityBuild.menuOpen)
 			//{
@@ -512,16 +511,16 @@ namespace CnV.Views
 						Spot.SetFocus(Spot.focus.Translate((0, 1)), true, true, true);
 						break;
 				}
+				return false;
 			}
 			else
 			{
 				// AppS.DispatchOnUIThreadLow(() =>
 				
-				ProcessKey(key);
+				return ProcessKey(key);
 				
 			}
 			
-			return Task.CompletedTask;
 			// });
 		}
 
