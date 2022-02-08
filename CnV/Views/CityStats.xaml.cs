@@ -16,7 +16,9 @@ using static CnV.View;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Microsoft.UI;
-
+using CommunityToolkit.WinUI.UI;
+using CommunityToolkit.WinUI.UI.Controls;
+using Expander = CommunityToolkit.WinUI.UI.Controls.Expander;
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
 
@@ -50,8 +52,14 @@ namespace CnV
 			var resources = city.SampleResources();
 			for(var r = 0; r< CnV.Resources.idCount; r++)
 			{
-				var txt = r switch { 0 => res0, 1 => res1, 2 => res2, _ => res3 };
-				var prod = r switch { 0 => prod0, 1 => prod1, 2 => prod2, _ => prod3 };
+				var panel = expResource.FindChild<WrapPanel>();
+				var ch = panel.FindChildren().ElementAt(r).FindChildren();
+				
+				var txt = ch.ElementAt(0) as TextBlock;
+				var prod = ch.ElementAt(1) as TextBlock;
+
+//				var txt = r switch { 0 => res0, 1 => res1, 2 => res2, _ => res3 };
+//				var prod = r switch { 0 => prod0, 1 => prod1, 2 => prod2, _ => prod3 };
 				
 				var res = resources[r];
 				var storage = city.stats.storage[r];
