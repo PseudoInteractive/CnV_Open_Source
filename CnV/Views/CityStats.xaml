@@ -21,48 +21,39 @@
 				   SizeChanged="scroll_SizeChanged"
 				>
 		<StackPanel x:Name="stackPanel"  Margin="2" Padding="2" Background="{x:Null}"  >
-			<tk:Expander Header="Incoming" Expanding="Expander_Expanding" Padding="0" Visibility="Collapsed"  Margin="0.0"  Background="{x:Null}" x:Name="expIncoming"  >
-			</tk:Expander>
-			<tk:Expander  Expanding="Expander_Expanding"  Padding="0" Margin="0"  Background="{x:Null}" HorizontalContentAlignment="Left" HorizontalAlignment="Stretch" x:Name="expResource" VerticalAlignment="Center" VerticalContentAlignment="Top">
-				<tk:Expander.Header   >
-					<ToggleButton  Content ="Resources" Margin="0" Padding="4"  Style="{StaticResource ToggleButton}" FontWeight="Light" HorizontalAlignment="Right" VerticalAlignment="Top"  />
-				</tk:Expander.Header>
+			<Expander Header="Incoming" Expanding="Expander_Expanding"  Padding="0" Visibility="Collapsed"  Margin="0.0"  Background="{x:Null}" x:Name="expIncoming"  >
+			</Expander>
+			<Expander  Expanding="Expander_Expanding"  Padding="0" Margin="0"  Background="{x:Null}"  x:Name="expResource"  >
+				<Expander.Header   >
+					<Border Background="#B0200000" BorderThickness="0" Padding="4" CornerRadius="4" >
+						<TextBlock Text ="Resources" Margin="0"   Style="{StaticResource TextBlockMedium}" HorizontalAlignment="Right"   />
+					</Border>
+				</Expander.Header>
 				<tk:WrapPanel Orientation="Horizontal" Background="{x:Null}" HorizontalSpacing="4" VerticalSpacing="4" >
-					<Grid BorderThickness="1" Padding="4"  BorderBrush="{StaticResource SystemControlBackgroundAccentRevealBorderBrush}" Width="90" Background="#B0200000" >
-						<Grid.RowDefinitions>
-							<RowDefinition/>
-							<RowDefinition/>
-						</Grid.RowDefinitions>
+					<StackPanel CornerRadius="4" Orientation="Vertical"  Padding="4"   Width="90" Background="#B0200000"   >
 						<TextBlock  x:Name="res0" x:FieldModifier="public" HorizontalTextAlignment="Right" Style="{StaticResource TextBlockMedium}" />
 						<TextBlock Grid.Row="1" x:Name="prod0" x:FieldModifier="public"  HorizontalTextAlignment="Right" Style="{StaticResource TextBlockSmall}" />
-					</Grid>
-					<Grid BorderThickness="1" Margin="0" Padding="4" BorderBrush="{StaticResource SystemControlBackgroundAccentRevealBorderBrush}" Width="90" Background="#B0200000" >
-						<Grid.RowDefinitions>
-							<RowDefinition/>
-							<RowDefinition/>
-						</Grid.RowDefinitions>
+					</StackPanel>
+					<StackPanel CornerRadius="4"  Margin="0" Padding="4" Width="90" Background="#B0200000" >
 						<TextBlock  x:Name="res1" x:FieldModifier="public" HorizontalTextAlignment="Right"  Style="{StaticResource TextBlockMedium}"  />
 						<TextBlock Grid.Row="1" x:Name="prod1" x:FieldModifier="public"  HorizontalTextAlignment="Right" Style="{StaticResource TextBlockSmall}" />
-					</Grid>
-					<Grid BorderThickness="1" Margin="0" Padding="4" BorderBrush="{StaticResource SystemControlBackgroundAccentRevealBorderBrush}" Width="90" Background="#B0200000"  >
-						<Grid.RowDefinitions>
-							<RowDefinition/>
-							<RowDefinition/>
-						</Grid.RowDefinitions>
+					</StackPanel>
+					<StackPanel CornerRadius="4"  Margin="0" Padding="4" Width="90" Background="#B0200000"  >
 						<TextBlock  x:Name="res2" x:FieldModifier="public" HorizontalTextAlignment="Right" Style="{StaticResource TextBlockMedium}" />
 						<TextBlock  x:Name="prod2" x:FieldModifier="public" Grid.Row="1" HorizontalTextAlignment="Right" Style="{StaticResource TextBlockSmall}"/>
-					</Grid>
-					<Grid BorderThickness="1" Margin="0" Padding="4" BorderBrush="{StaticResource SystemControlBackgroundAccentRevealBorderBrush}" Width="90" Background="#B0200000"  >
-						<Grid.RowDefinitions>
-							<RowDefinition/>
-							<RowDefinition/>
-						</Grid.RowDefinitions>
+					</StackPanel>
+					<StackPanel CornerRadius="4"   Margin="0" Padding="4" Width="90" Background="#B0200000"  >
 						<TextBlock  x:Name="res3" x:FieldModifier="public" HorizontalTextAlignment="Right" Style="{StaticResource TextBlockMedium}" />
 						<TextBlock  x:Name="prod3" x:FieldModifier="public" Grid.Row="1" HorizontalTextAlignment="Right" Style="{StaticResource TextBlockSmall}" />
-					</Grid>
+					</StackPanel>
 				</tk:WrapPanel>
-			</tk:Expander>
-			<Expander Header="Build Queue" Expanding="Expander_Expanding" x:Name="expBuildQueue"  Margin="0.0" Background="{x:Null}"  >
+			</Expander>
+			<Expander Header="Build Queue" BorderThickness="1" BorderBrush="White" Expanding="Expander_Expanding" x:Name="expBuildQueue"  Margin="0.0" Background="{x:Null}"  >
+				<Expander.Header   >
+					<Border Background="#B0200000" BorderThickness="0" Padding="4" CornerRadius="4" >
+						<TextBlock Text ="Build Queue" Margin="0"  Style="{StaticResource TextBlockMedium}" HorizontalAlignment="Right"   />
+					</Border>
+				</Expander.Header>
 				<ListView x:Name="InAppNote" x:FieldModifier="public"  Margin="0" Padding="0"
                    
 						  MaxHeight="200"  >
