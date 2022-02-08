@@ -315,8 +315,6 @@ namespace CnV
 		[NonSerialized] 
 		public static double largeGridRowHeight = largeGridRowHeightBase;
 		[NonSerialized]
-		public static GridLength largeGridRowHeighL = new(largeGridRowHeightBase);
-		[NonSerialized]
 		public static double mediumGridRowHeight = mediumGridRowHeightBase;
 		[NonSerialized] 
 		public static double shortGridRowHeight = smallGridRowHeightBase;
@@ -325,15 +323,14 @@ namespace CnV
 		{
 			var _chatZoom = chatZoom.Squared() + 0.75f;
 			var _tabZoom  = tabZoom.Squared()  + 0.75f;
+			Log($"FontZoom {_tabZoom} Chat: {_chatZoom} Med:{mediumFontSize}");
 			double AsDouble(object d) => (double)d;
 			double RoundDouble(double d) => Math.Round(d);
 			smallFontSize = AsDouble(App.instance.Resources["SmallFontSize"] = RoundDouble(_tabZoom * smallFontSizeBase));
 			largeFontSize = AsDouble(App.instance.Resources["LargeFontSize"] = RoundDouble(_tabZoom * largeFontSizeBase));
 			mediumFontSize = AsDouble(App.instance.Resources["MediumFontSize"] = RoundDouble(_tabZoom * mediumFontSizeBase));
-			//			App.instance.Resources["ChatFontSize"] = RoundDouble(_chatZoom *cha;
-
+			
 			largeGridRowHeight = AsDouble(App.instance.Resources["LargeGridRowHeight"] = RoundDouble(_tabZoom * largeGridRowHeightBase));
-			largeGridRowHeighL = new(largeGridRowHeight);
 			mediumGridRowHeight = AsDouble(App.instance.Resources["MediumGridRowHeight"] = RoundDouble(_tabZoom * mediumGridRowHeightBase));
 			shortGridRowHeight = AsDouble(App.instance.Resources["ShortGridRowHeight"] = RoundDouble(_tabZoom * smallGridRowHeightBase));
 

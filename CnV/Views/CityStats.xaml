@@ -21,40 +21,40 @@
 				   SizeChanged="scroll_SizeChanged"
 				>
 		<StackPanel x:Name="stackPanel"  Margin="2" Padding="2" Background="{x:Null}"  >
-			<Expander Header="Incoming" Expanding="Expander_Expanding"  Padding="0" Visibility="Collapsed"  Margin="0.0"  Background="{x:Null}" x:Name="expIncoming"  >
+			<Expander Header="Incoming" Expanding="Expander_Expanding" MinHeight="24" Padding="0" Visibility="Collapsed"  Margin="0.0" BorderThickness="0" Background="{x:Null}" x:Name="expIncoming"  >
 			</Expander>
-			<Expander  Expanding="Expander_Expanding"  Padding="0" Margin="0"  Background="{x:Null}"  x:Name="expResource"  >
+			<Expander  Expanding="Expander_Expanding" MinHeight="22"  Padding="0" Margin="0"  Background="{x:Null}"  x:Name="expResource"  >
 				<Expander.Header   >
-					<Border Background="#B0200000" BorderThickness="0" Padding="4" CornerRadius="4" >
-						<TextBlock Text ="Resources" Margin="0"   Style="{StaticResource TextBlockMedium}" HorizontalAlignment="Right"   />
+					<Border Background="#40100000" BorderThickness="0" Padding="4" CornerRadius="4" >
+						<TextBlock Text ="Resources" Margin="0"   Style="{StaticResource TextBlockMedium}"    />
 					</Border>
 				</Expander.Header>
 				<tk:WrapPanel Orientation="Horizontal" Background="{x:Null}" HorizontalSpacing="4" VerticalSpacing="4" >
-					<StackPanel CornerRadius="4" Orientation="Vertical"  Padding="4"   Width="90" Background="#B0200000"   >
+					<StackPanel CornerRadius="4" Orientation="Vertical"  Padding="4"   Width="90" Background="#B4020000"   >
 						<TextBlock  x:Name="res0" x:FieldModifier="public" HorizontalTextAlignment="Right" Style="{StaticResource TextBlockMedium}" />
 						<TextBlock Grid.Row="1" x:Name="prod0" x:FieldModifier="public"  HorizontalTextAlignment="Right" Style="{StaticResource TextBlockSmall}" />
 					</StackPanel>
 					<StackPanel CornerRadius="4"  Margin="0" Padding="4" Width="90" Background="#B0200000" >
-						<TextBlock  x:Name="res1" x:FieldModifier="public" HorizontalTextAlignment="Right"  Style="{StaticResource TextBlockMedium}"  />
-						<TextBlock Grid.Row="1" x:Name="prod1" x:FieldModifier="public"  HorizontalTextAlignment="Right" Style="{StaticResource TextBlockSmall}" />
+						<TextBlock  HorizontalTextAlignment="Right"  Style="{StaticResource TextBlockMedium}"  />
+						<TextBlock Grid.Row="1"   HorizontalTextAlignment="Right" Style="{StaticResource TextBlockSmall}" />
 					</StackPanel>
 					<StackPanel CornerRadius="4"  Margin="0" Padding="4" Width="90" Background="#B0200000"  >
-						<TextBlock  x:Name="res2" x:FieldModifier="public" HorizontalTextAlignment="Right" Style="{StaticResource TextBlockMedium}" />
-						<TextBlock  x:Name="prod2" x:FieldModifier="public" Grid.Row="1" HorizontalTextAlignment="Right" Style="{StaticResource TextBlockSmall}"/>
+						<TextBlock  HorizontalTextAlignment="Right" Style="{StaticResource TextBlockMedium}" />
+						<TextBlock   Grid.Row="1" HorizontalTextAlignment="Right" Style="{StaticResource TextBlockSmall}"/>
 					</StackPanel>
 					<StackPanel CornerRadius="4"   Margin="0" Padding="4" Width="90" Background="#B0200000"  >
-						<TextBlock  x:Name="res3" x:FieldModifier="public" HorizontalTextAlignment="Right" Style="{StaticResource TextBlockMedium}" />
-						<TextBlock  x:Name="prod3" x:FieldModifier="public" Grid.Row="1" HorizontalTextAlignment="Right" Style="{StaticResource TextBlockSmall}" />
+						<TextBlock   HorizontalTextAlignment="Right" Style="{StaticResource TextBlockMedium}" />
+						<TextBlock   Grid.Row="1" HorizontalTextAlignment="Right" Style="{StaticResource TextBlockSmall}" />
 					</StackPanel>
 				</tk:WrapPanel>
 			</Expander>
-			<Expander Header="Build Queue" BorderThickness="1" BorderBrush="White" Expanding="Expander_Expanding" x:Name="expBuildQueue"  Margin="0.0" Background="{x:Null}"  >
+			<Expander  MinHeight="24" FontSize="12" BorderThickness="0" Expanding="Expander_Expanding" x:Name="expBuildQueue" Padding="0"  Margin="0.0" Background="{x:Null}"  >
 				<Expander.Header   >
 					<Border Background="#B0200000" BorderThickness="0" Padding="4" CornerRadius="4" >
 						<TextBlock Text ="Build Queue" Margin="0"  Style="{StaticResource TextBlockMedium}" HorizontalAlignment="Right"   />
 					</Border>
 				</Expander.Header>
-				<ListView x:Name="InAppNote" x:FieldModifier="public"  Margin="0" Padding="0"
+				<ListView x:Name="InAppNote" x:FieldModifier="public"  Margin="0" Padding="0" Background="#40100000"
                    
 						  MaxHeight="200"  >
 					<ListView.ItemTemplate>
@@ -91,8 +91,37 @@
 					<x:String>"There"</x:String>
 				</ListView>
 			</Expander>
-			<Expander Header="Buildings" Expanding="Expander_Expanding" x:Name="expBuildings" Background="{x:Null}"  >
-
+			
+				<Expander  MinHeight="24" FontSize="12" BorderThickness="0" Expanding="Expander_Expanding" x:Name="expBuildings" Padding="0" Margin="0.0" Background="{x:Null}"  >
+				<Expander.Header   >
+					<Border Background="#B0200000" BorderThickness="0" Padding="4" CornerRadius="4" >
+						<TextBlock Text ="Buildings" Margin="0"  Style="{StaticResource TextBlockMedium}"   />
+					</Border>
+				</Expander.Header>
+				<GridView x:Name="buildingCountGrid" Background="{x:Null}" HorizontalAlignment="Stretch" SelectionMode="Multiple" IsMultiSelectCheckBoxEnabled="False" >
+					<GridView.ItemTemplate>
+						<DataTemplate x:DataType="cnv:BuildingCountAndBrush">
+							<Grid >
+								<Grid.RowDefinitions>
+									<RowDefinition Height="auto" />
+									<RowDefinition  />
+								</Grid.RowDefinitions>
+								<Rectangle Fill="{x:Bind brush, Mode=OneTime}"
+                                                   Width="64" Height="64" />
+								<TextBlock Grid.Row="1"
+                                                       HorizontalAlignment="Center"
+                                                       VerticalAlignment="Center"
+                                                       Text="{x:Bind count, Mode=OneTime}" />
+							</Grid>
+						</DataTemplate>
+					</GridView.ItemTemplate>
+					<GridView.ItemsPanel>
+						<ItemsPanelTemplate>
+							<ItemsWrapGrid 
+                                                       Orientation="Horizontal" />
+						</ItemsPanelTemplate>
+					</GridView.ItemsPanel>
+				</GridView>
 			</Expander>
 			<Expander Header="Enlistment" Expanding="Expander_Expanding" x:Name="expEnlistment" Background="{x:Null}"  >
 

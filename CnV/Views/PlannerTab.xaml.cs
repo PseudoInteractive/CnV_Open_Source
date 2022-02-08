@@ -373,22 +373,7 @@ namespace CnV.Views
 		}
 		public static Debounce PleaseRefresh = new (PlannerTab.UpdateStats) { runOnUiThread = true };
 
-		internal static async Task BuildingsChanged(City city, bool wasWritten=true)
-		{
-			Assert(City.emptyLayout.GetHashCode() == City.emptyLayoutHashCode);
-
-			//Assert(CityBuild.isPlanner);
-
-			if( CityBuild.isPlanner)
-			{
-				city.BuildingsOrQueueChanged();
-				PleaseRefresh.Go();
-			}
-			if(wasWritten)
-			{
-				await city.SaveShareStringFromLayout();
-			}
-		}
+		
 
 		private void ShareStringClick(object sender, RoutedEventArgs e)
 		{
@@ -415,7 +400,7 @@ namespace CnV.Views
 
 				}
 			}
-			CityBuild.BuildingsChanged(city,true);
+			city.BuildingsChanged();
 			// SaveLayout();
 		}
 
@@ -651,7 +636,7 @@ namespace CnV.Views
 			Note.Show($"Moved buildings to reduce overlaps, final layout match score: {CountResOverlaps(city, bds, ref allowed) }");
 			//city.TouchLayoutForWrite();
 			//City.buildingCache.Return(layoutB);
-			BuildingsChanged(city);
+			city.BuildingsChanged();
 		//	if(wasPlanner == false && revertIsPlanner)
 		//		await CityBuild._IsPlanner(false);
 		}

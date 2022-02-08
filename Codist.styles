@@ -1,0 +1,143 @@
+{
+  "Version": "6.1.0",
+  "Styles": [
+    {
+      "Key": "Keyword",
+      "Bold": false,
+      "Italic": false,
+      "Strikethrough": false,
+      "Underline": false,
+      "Stretch": 3
+    },
+    {
+      "Key": "struct name",
+      "Bold": false,
+      "Italic": false,
+      "Strikethrough": false,
+      "Underline": false,
+      "Stretch": 3
+    },
+    {
+      "Key": "enum name",
+      "Bold": false,
+      "Italic": false,
+      "Strikethrough": false,
+      "Underline": false,
+      "Stretch": 3
+    },
+    {
+      "Key": "method name",
+      "Bold": false,
+      "Italic": false,
+      "Strikethrough": false,
+      "Underline": false
+    },
+    {
+      "Key": "Identifier",
+      "Bold": false,
+      "Italic": false,
+      "Strikethrough": false,
+      "Underline": false,
+      "Stretch": 3
+    },
+    {
+      "Key": "Comment",
+      "ForegroundColor": "#86DDA0"
+    },
+    {
+      "Key": "C#: Abstraction keyword",
+      "ForegroundColor": "#00FFFF"
+    },
+    {
+      "Key": "C#: Branching keyword",
+      "Bold": false,
+      "Italic": false,
+      "Strikethrough": false,
+      "Underline": false
+    },
+    {
+      "Key": "C#: Loop keyword",
+      "Bold": false,
+      "Italic": false,
+      "Strikethrough": false,
+      "Underline": false,
+      "ForegroundColor": "#D854CB"
+    },
+    {
+      "Key": "C#: Type cast keyword",
+      "ForegroundColor": "#5750DC"
+    },
+    {
+      "Key": "C#: Declaration",
+      "Bold": false,
+      "Italic": false,
+      "Strikethrough": false,
+      "Underline": false
+    },
+    {
+      "Key": "C#: Member declaration",
+      "Bold": false,
+      "Italic": false,
+      "Strikethrough": false,
+      "Underline": false
+    },
+    {
+      "Key": "C#: Local declaration",
+      "ForegroundColor": "#9DB0FD"
+    },
+    {
+      "Key": "C#: Label",
+      "ForegroundColor": "#FF0080"
+    },
+    {
+      "Key": "C#: Field",
+      "ForegroundColor": "#B9AEC8"
+    },
+    {
+      "Key": "C#: Const field",
+      "ForegroundColor": "#CBB4C7"
+    },
+    {
+      "Key": "C#: Read-only field",
+      "ForegroundColor": "#CDA9BA"
+    },
+    {
+      "Key": "C#: Enum field",
+      "ForegroundColor": "#DBA4A5"
+    },
+    {
+      "Key": "C#: Property",
+      "ForegroundColor": "#F4EAC4"
+    },
+    {
+      "Key": "C#: Method",
+      "Bold": false,
+      "Italic": false,
+      "Strikethrough": false,
+      "Underline": false,
+      "Stretch": 3
+    },
+    {
+      "Key": "C#: Extension method",
+      "ForegroundColor": "#D6DF9F"
+    },
+    {
+      "Key": "C#: Parameter",
+      "ForegroundColor": "#B6E4E0"
+    },
+    {
+      "Key": "formal language",
+      "Bold": false,
+      "Italic": false,
+      "Strikethrough": false,
+      "Underline": false,
+      "Stretch": 3
+    },
+    {
+      "Key": "keyword - control",
+      "Italic": false,
+      "Strikethrough": false,
+      "Underline": false
+    }
+  ]
+}

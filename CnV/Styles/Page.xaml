@@ -9,7 +9,7 @@
  >
 	<Style x:Key="BaseTextBlockStyle" TargetType="TextBlock">
 		<Setter Property="FontFamily" Value="Bahnschrift,Segoe Fluent Icons" />
-		<Setter Property="FontWeight" Value="Normal" />
+		<Setter Property="FontWeight" Value="SemiLight" />
 		<Setter Property="FontSize" Value="{StaticResource MediumFontSize}" />
 		<Setter Property="TextTrimming" Value="None" />
 		<Setter Property="TextWrapping" Value="Wrap" />
@@ -42,6 +42,7 @@
 		<Setter Property="HorizontalAlignment" Value="Stretch"/>
 		<Setter Property="FontFamily" Value="Bahnschrift,Segoe Fluent Icons"/>
 		<Setter Property="FontStretch" Value="Condensed" />
+		<Setter Property="FontWeight" Value="SemiLight" />
 		
 		<Setter Property="FontSize" Value="{StaticResource MediumFontSize}" />
 	</Style>
@@ -51,7 +52,8 @@
 		<Setter Property="HorizontalAlignment" Value="Center"/>
 		<Setter Property="FontFamily" Value="Bahnschrift,Segoe Fluent Icons"/>
 		<Setter Property="FontStretch" Value="Condensed" />
-		
+		<Setter Property="FontWeight" Value="SemiLight" />
+
 		<Setter Property="FontSize" Value="{StaticResource MediumFontSize}" />
 		<Setter Property="IsTextScaleFactorEnabled" Value="False"/>
 	</Style>
@@ -71,12 +73,13 @@
 	
 	<Style TargetType="TextBlock" x:Key="TextBlock" BasedOn="{StaticResource BaseTextBlockStyle}"  />
 
-	 <!--default text block-->
-	<Style TargetType="TextBlock" BasedOn="{StaticResource TextBlock}" />
 
 	<Style TargetType="TextBlock" x:Key="TextBlockCondensed" BasedOn="{StaticResource TextBlock}" >
 		<Setter Property="FontStretch" Value="Condensed"/>
+		<Setter Property="FontWeight" Value="SemiLight" />
+
 	</Style>
+
 
 	<Style x:Key="TextBlockSmall" TargetType="TextBlock" BasedOn="{StaticResource TextBlockCondensed}" >
 		<Setter Property="FontSize" Value="{StaticResource SmallFontSize}" />
@@ -88,21 +91,28 @@
 	</Style>
 	<Style x:Key="TextBlockMedium" TargetType="TextBlock" BasedOn="{StaticResource TextBlock}" >
 		<Setter Property="FontSize" Value="{StaticResource MediumFontSize}" />
-	</Style>
-	<Style x:Key="LeftAlign" BasedOn="{StaticResource TextBlockSmall}" TargetType="TextBlock">
 
-		<Setter Property="HorizontalAlignment"
-                        Value="Left" />
 	</Style>
-	<Style x:Key="CenterAlign" BasedOn="{StaticResource TextBlockSmall}" TargetType="TextBlock">
-		<Setter Property="HorizontalAlignment" Value="Center" />
+	<Style x:Key="TextBoxCenter" BasedOn="{StaticResource TextBlock}" TargetType="TextBlock">
+		<Setter Property="HorizontalTextAlignment" Value="Center" />
 	</Style>
-	<Style  x:Key="RightAlign" BasedOn="{StaticResource TextBlockSmall}" TargetType="TextBlock">
+	<Style  x:Key="TextBlockRight" BasedOn="{StaticResource TextBlock}" TargetType="TextBlock">
+		<Setter Property="HorizontalTextAlignment"  Value="Right" />
+	</Style>
 
-		<Setter Property="TextAlignment"
-                        Value="Right" />
+	<Style x:Key="TextBlockSmallCenter" BasedOn="{StaticResource TextBlockSmall}" TargetType="TextBlock">
+		<Setter Property="HorizontalTextAlignment" Value="Center" />
 	</Style>
-	
+	<Style  x:Key="TextBlockSmallRight" BasedOn="{StaticResource TextBlockSmall}" TargetType="TextBlock">
+		<Setter Property="HorizontalTextAlignment"  Value="Right" />
+	</Style>
+
+	<!--default text block-->
+	<Style TargetType="TextBlock" BasedOn="{StaticResource TextBlock}" />
+
+	<!--Text Block-->
+
+
 	<!--links-->
 	
 	<Style  x:Key="RightAlignLink"
@@ -110,7 +120,7 @@
                     TargetType="TextBlock">
 		<Setter Property="VerticalAlignment"
                         Value="Center" />
-		<Setter Property="HorizontalAlignment"
+		<Setter Property="HorizontalTextAlignment"
                         Value="Right" />
 
 	</Style>
@@ -120,7 +130,7 @@
                     TargetType="TextBlock">
 		<Setter Property="VerticalAlignment"
                         Value="Center" />
-		<Setter Property="HorizontalAlignment"
+		<Setter Property="HorizontalTextAlignment"
                         Value="Left" />
 	</Style>
 	<Style  x:Key="CenterAlignLink"
@@ -129,7 +139,7 @@
 		<Setter Property="VerticalAlignment"
                         Value="Center" />
 		<Setter Property="Margin" Value="0,0,0,0" />
-		<Setter Property="HorizontalAlignment"
+		<Setter Property="HorizontalTextAlignment"
                         Value="Center" />
 	</Style>
 	<!--Text Block-->
@@ -190,10 +200,10 @@
 	</Style>
 
 	
-	<Style  x:Key="RightAlignNumberBox" BasedOn="{StaticResource NumberBox}" TargetType="winui:NumberBox">
+	<Style  x:Key="RightAlignNumberBox" BasedOn="{StaticResource NumberBox}" TargetType="NumberBox">
 		<Setter Property="HorizontalContentAlignment" Value="Right" />
 	</Style>
-	<Style x:Key="NumberBoxRes" BasedOn="{StaticResource RightAlignNumberBox}" TargetType="winui:NumberBox">
+	<Style x:Key="NumberBoxRes" BasedOn="{StaticResource RightAlignNumberBox}" TargetType="NumberBox">
 		<Setter Property="SmallChange" Value="25000"/>
 		<Setter Property="Width" Value="140"/>
 		<Setter Property="LargeChange" Value="100000"/>
@@ -228,6 +238,8 @@
 
 	<Style x:Key="ToggleButtonCondensed" TargetType="ToggleButton" BasedOn="{StaticResource ToggleButton}" >
 		<Setter Property="FontStretch" Value="Condensed" />
+		<Setter Property="FontWeight" Value="SemiLight" />
+
 	</Style>
 
 	<!--default-->
@@ -244,6 +256,8 @@
 		<Setter Property="FontFamily" Value="Bahnschrift,Segoe Fluent Icons"/>
 		<Setter Property="FontSize" Value="{StaticResource SmallFontSize}" />
 		<Setter Property="FontStretch" Value="Condensed" />
+		<Setter Property="FontWeight" Value="SemiLight" />
+
 	</Style>
 	<Style  TargetType="sf:GridCell" BasedOn="{StaticResource SfTextCell}"/>
 

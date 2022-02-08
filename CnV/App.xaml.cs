@@ -73,7 +73,6 @@ using Microsoft.Extensions.DependencyInjection;
 using System.Runtime.InteropServices;
 using Microsoft.UI;
 using WinRT;
-using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using DecimalFormatter = Windows.Globalization.NumberFormatting.DecimalFormatter;
 
 namespace CnV

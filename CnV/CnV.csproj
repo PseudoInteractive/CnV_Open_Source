@@ -62,6 +62,7 @@
   <ItemGroup>
 	<PackageReference Include="Azure.Data.Tables" Version="12.3.0" />
     <PackageReference Include="Azure.Storage.Blobs" Version="12.11.0-beta.2" />
+    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.0.0-preview1" />
     <PackageReference Include="CommunityToolkit.WinUI.Notifications" Version="7.1.2" />
     <PackageReference Include="CommunityToolkit.WinUI.UI.Controls" Version="7.1.2" />
     <PackageReference Include="DSharpPlus" Version="4.2.0-nightly-01056" />
@@ -77,21 +78,20 @@
     <PackageReference Include="MessagePackAnalyzer" Version="2.3.85" />
     <PackageReference Include="MagicOnion.Client" Version="4.3.1" />
     <PackageReference Include="Microsoft.Extensions.ObjectPool" Version="6.0.1" />
-    <PackageReference Include="Microsoft.Identity.Client" Version="4.40.0" />
+    <PackageReference Include="Microsoft.Identity.Client" Version="4.41.0" />
     <PackageReference Include="Microsoft.Identity.Client.Extensions.Msal" Version="2.19.3" />
     <PackageReference Include="Microsoft.NET.StringTools" Version="1.0.0" />
     <PackageReference Include="Microsoft.Toolkit" Version="7.1.2" />
     <PackageReference Include="Microsoft.Toolkit.Diagnostics" Version="7.1.2" />
     <PackageReference Include="Microsoft.Toolkit.HighPerformance" Version="7.1.2" />
-    <PackageReference Include="Microsoft.Toolkit.Mvvm" Version="7.1.2" />
 	<PackageReference Include="Azure.Data.Tables" Version="12.4.0" />
-    <PackageReference Include="Azure.Storage.Blobs" Version="12.11.0-beta.2" />
+    <PackageReference Include="Azure.Storage.Blobs" Version="12.11.0-beta.3" />
     <PackageReference Include="CommunityToolkit.WinUI.Notifications" Version="7.1.2" />
     <PackageReference Include="CommunityToolkit.WinUI.UI.Controls" Version="7.1.2" />
-    <PackageReference Include="DSharpPlus" Version="4.2.0-nightly-01065" />
-    <PackageReference Include="DSharpPlus.CommandsNext" Version="4.2.0-nightly-01065" />
-    <PackageReference Include="DSharpPlus.Interactivity" Version="4.2.0-nightly-01065" />
-    <PackageReference Include="DSharpPlus.SlashCommands" Version="4.2.0-nightly-01065" />
+    <PackageReference Include="DSharpPlus" Version="4.2.0-nightly-01067" />
+    <PackageReference Include="DSharpPlus.CommandsNext" Version="4.2.0-nightly-01067" />
+    <PackageReference Include="DSharpPlus.Interactivity" Version="4.2.0-nightly-01067" />
+    <PackageReference Include="DSharpPlus.SlashCommands" Version="4.2.0-nightly-01067" />
     <PackageReference Include="Enums.NET" Version="4.0.0" />
     <PackageReference Include="Grpc.Net.Client" Version="2.41.0-pre1" />
     <PackageReference Include="Grpc.Net.Client" Version="2.43.0-pre1" />
@@ -100,17 +100,16 @@
     <PackageReference Include="MessagePack.Experimental" Version="2.3.85" />
     <PackageReference Include="MessagePackAnalyzer" Version="2.3.85" />
     <PackageReference Include="MagicOnion.Client" Version="4.4.0" />
-    <PackageReference Include="Microsoft.Extensions.ObjectPool" Version="6.0.1" />
+    <PackageReference Include="Microsoft.Extensions.ObjectPool" Version="6.0.2" />
     <PackageReference Include="Microsoft.Toolkit" Version="7.1.2" />
     <PackageReference Include="Microsoft.Toolkit.Diagnostics" Version="7.1.2" />
     <PackageReference Include="Microsoft.Toolkit.HighPerformance" Version="7.1.2" />
-    <PackageReference Include="Microsoft.Toolkit.Mvvm" Version="7.1.2" />
     <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.22543-preview" />	  
     <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.0.0" />
 	<PackageReference Include="Nito.AsyncEx.Coordination" Version="5.1.2" />
     <PackageReference Include="PlayFabAllSDK" Version="1.108.220118" />
-    <PackageReference Include="Syncfusion.Grid.WinUI" Version="19.4.0.48" />
-    <PackageReference Include="Syncfusion.Licensing" Version="19.4.0.48" />
+    <PackageReference Include="Syncfusion.Grid.WinUI" Version="19.4.0.50" />
+    <PackageReference Include="Syncfusion.Licensing" Version="19.4.0.50" />
 	<PackageReference Include="SharpDX" Version="4.2.0" />
     <PackageReference Include="SharpDX.D3DCompiler" Version="4.2.0" />
     <PackageReference Include="SharpDX.Direct3D11" Version="4.2.0" />
@@ -120,7 +119,7 @@
     <PackageReference Include="System.Linq.Async" Version="6.0.1" />
     <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="6.0.2-mauipre.1.22054.8" />
     <PackageReference Include="System.Runtime.Experimental" Version="6.0.2-mauipre.1.22054.8" />
-    <PackageReference Include="System.Text.Json" Version="6.0.2-mauipre.1.22054.8" />
+    <PackageReference Include="System.Text.Json" Version="6.0.2" />
 	<PackageReference Include="ZString" Version="2.4.4" />
   </ItemGroup>
   <ItemGroup>

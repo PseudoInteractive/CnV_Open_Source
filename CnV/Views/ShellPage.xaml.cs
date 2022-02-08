@@ -845,116 +845,7 @@ namespace CnV.Views
 
 		//		public static (int x, int y) webclientSpan;
 		
-		private async void ShowBuildings(object sender, object e)
-		{
-			try
-			{
-				var build  = City.GetBuild();
-				int bCount = 0;
-				var bdd    = new Dictionary<BuildingId, int>();
-
-				void ProcessBuilding(BuildingDef bd, bool add = true)
-				{
-					if (bd.id == Building.bidTownHall || bd.id == Building.bidWall)
-					{
-						return;
-					}
-
-					var id = bd.id;
-					if (!bdd.TryGetValue(id, out var counter))
-					{
-						bdd.Add(id, 0);
-						counter = 0;
-					}
-
-					if (add)
-					{
-						bdd[id] = counter + 1;
-						if (!bd.isTower)
-						{
-							++bCount;
-						}
-					}
-					else
-					{
-						bdd[id] = counter - 1;
-						if (!bd.isTower)
-						{
-							--bCount;
-						}
-					}
-				}
-
-				foreach (var bdi in CityBuild.isPlanner ? build.GetLayoutBuildings() : build.postQueueBuildings)
-				{
-					var id = bdi.id;
-					if (id == 0 || !bdi.isBuilding)
-					{
-						continue;
-					}
-
-					var bd = bdi.def;
-					ProcessBuilding(bd);
-				}
-
-				{
-					var bd = new List<BuildingCountAndBrush>();
-					foreach (var i in bdd)
-					{
-						if (i.Value > 0)
-						{
-							var bdf = BuildingDef.FromId(i.Key);
-							bd.Add(new BuildingCountAndBrush()
-											{ count = i.Value, brush = CityBuild.BuildingBrush(bdf.id, 0.5f) });
-						}
-					}
-
-					bd.Add(new BuildingCountAndBrush()
-									{ count = bCount, brush = CityBuild.BuildingBrush(Building.bidTownHall, 0.5f) });
-
-					// var button = sender as Button; button.Focus(FocusState.Programmatic);
-					AppS.DispatchOnUIThreadLow(() =>
-												{
-													buildingList.Width       = double.NaN;
-													buildingList.Height      = double.NaN;
-													buildingList.ItemsSource = bd;
-													buildingList.UpdateLayout();
-												});
-				}
-			}
-			// var flyout = FlyoutBase.GetAttachedFlyout(button);
-			// flyout.OverlayInputPassThroughElement = shellPage; flyout.XamlRoot =
-			// shellFrame.XamlRoot; flyout.ShowMode =
-			// FlyoutShowMode.TransientWithDismissOnPointerMoveAway; Log($"{button.Tr.ToString()}");
-			// var c = button.CenterPoint; flyout.ShowAt(button, new FlyoutShowOptions() { Placement
-			// = FlyoutPlacementMode.Full, ShowMode =
-			// FlyoutShowMode.TransientWithDismissOnPointerMoveAway }); flyout.ShowAt(button, new
-			// FlyoutShowOptions() { Placement = FlyoutPlacementMode.Right, ShowMode =
-			// FlyoutShowMode.Auto });
-
-			// buildingList.Focus(FocusState.Programmatic); buildingList.CapturePointer(e.Pointer);
-			// buildingList.Focus(FocusState.Programmatic); buildingList.Height = ((bd.Count + 5) /
-			// 6) * 60+10; buildingList.DesiredSize
-			// FlyoutBase.ShowAttachedFlyout(button);//.OverlayInputPassThroughElement = button;
-
-			//           buildingList.UpdateLayout();
-			//     button.Flyout.with
-			//var mouseC = e.GetCurrentPoint(null).Position;
-			//const float spawn = 20.0f;
-			//      button.Focus(FocusState.Programmatic);
-
-			// var button.Flyout.Update = new Rect(mouseC.X - spawn, mouseC.Y - spawn, mouseC.X +
-			// spawn, mouseC.Y + spawn);
-
-			// var avoid = new Rect(mouseC.X - spawn, mouseC.Y - spawn, mouseC.X + spawn, mouseC.Y +
-			// spawn); button.Flyout.ShowAt(button, new FlyoutShowOptions() {
-			// Placement=FlyoutPlacementMode.Full, ShowMode=FlyoutShowMode.Transient }); //
-			// ,ExclusionRect=avoid });
-			catch (Exception ex)
-			{
-				LogEx(ex);
-			}
-		}
+		
 
 		public static void ShowTipRefresh()
 		{
@@ -1618,12 +1509,7 @@ namespace CnV.Views
 								});
 		}
 	}
-	public class BuildingCountAndBrush
-	{
-		public Microsoft.UI.Xaml.Media.ImageBrush brush { get; set; }
-		public int                                count { get; set; }
-
-	}
+	
 
 
 }

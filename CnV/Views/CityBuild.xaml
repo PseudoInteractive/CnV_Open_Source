@@ -66,7 +66,7 @@
 					<DataTemplate x:DataType="views:BuildMenuItem">
 						<StackPanel Orientation="Vertical" ToolTipService.ToolTip="{x:Bind toolTip}" AccessKey="{x:Bind accessKey}" >
 						<Canvas Width="64" Height="64" Background="{x:Bind brush}" />
-						<TextBlock Text="{x:Bind header}"  Style="{StaticResource CenterAlign}" FontSize="10" VerticalAlignment="Bottom" TextWrapping="WrapWholeWords" />
+						<TextBlock Text="{x:Bind header}"  Style="{StaticResource TextBlockSmallCenter}" VerticalAlignment="Bottom" TextWrapping="WrapWholeWords" />
 						</StackPanel>
 					</DataTemplate>
 				</GridView.ItemTemplate>

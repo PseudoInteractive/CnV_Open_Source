@@ -254,6 +254,7 @@ public static partial class ADataGrid
 			grid.RowHeight = Settings.mediumGridRowHeight;
 			grid.FontSize = Settings.mediumFontSize;
 			grid.FontStretch = Windows.UI.Text.FontStretch.Condensed;
+			grid.FontWeight=Microsoft.UI.Text.FontWeights.Normal;
 			grid.SelectionMode = GridSelectionMode.Extended;
 			grid.GridLinesVisibility = GridLinesVisibility.Both;
 			grid.AutoGenerateColumns = false;

@@ -27,22 +27,9 @@ namespace CnV;
 
 		public static void UpdateStatsUI()
 		{
-			
+			CityStats.instance.UpdateUI();
 
-			AppS.DispatchOnUIThreadIdle(() =>
-			{
-				var t = ServerTime.now;
-
-				// This could be moved to CityStats
-								
-				CityStats.instance.UpdateUI();
-
-				//
-				// Time
-				//
-				ShellPage.instance.timeDisplay.UpdateLazy( t.FormatWithDate(), Colors.White);
-
-			});
+		
 		}
 
 	}
