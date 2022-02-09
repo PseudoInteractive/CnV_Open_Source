@@ -106,8 +106,8 @@
 									<RowDefinition Height="auto" />
 									<RowDefinition  />
 								</Grid.RowDefinitions>
-								<Rectangle Fill="{x:Bind brush, Mode=OneTime}"
-                                                   Width="64" Height="64" />
+								<Image Stretch="Uniform" Source="{x:Bind image, Mode=OneTime}"
+                                                   Width="32" Height="32" />
 								<TextBlock Grid.Row="1"
                                                        HorizontalAlignment="Center"
                                                        VerticalAlignment="Center"

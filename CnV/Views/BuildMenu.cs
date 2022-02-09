@@ -29,7 +29,7 @@ namespace CnV.Views
 		public BuildingId bid;
 		public bool isAction => action != CityBuild.CityBuildAction.invalid;
 		public bool isBuilding => bid != 0;
-		public ImageBrush brush;
+		public BitmapImage image;
 		public string toolTip;
 		public string header;
 		//public Color textColor;
@@ -53,7 +53,7 @@ namespace CnV.Views
 				var def = BuildingDef.FromId(_bid);
 				header = def.Bn;
 				toolTip = def.Ds;
-				brush = BuildingBrush(bid, width / 128.0f);
+				image = GetBuildingImage( bid , width);
 				//	Command = BuildMenuItemCommand.instance;
 				var match = shortKeyRegEx.Match(toolTip);
 				if (match.Success && match.Groups.Count == 2)
@@ -66,7 +66,7 @@ namespace CnV.Views
 		{
 			header = name;
 			this.action = action;
-			brush = CityBuild.BrushFromImage(icon);
+			image = ImageHelper.FromImages(icon,width);
 			this.toolTip = toolTip;
 		}
 	}

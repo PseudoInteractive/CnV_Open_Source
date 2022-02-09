@@ -112,14 +112,13 @@ namespace CnV
 							{
 								if(i.Value > 0)
 								{
-									var bdf = BuildingDef.FromId(i.Key);
 									bd.Add(new BuildingCountAndBrush()
-									{ count = i.Value, brush = CityBuild.BuildingBrush(bdf.id, 0.5f) });
+									{ count = i.Value, image = CityBuild.GetBuildingImage(i.Key, BuildingCountAndBrush.width) });
 								}
 							}
 
 							bd.Add(new BuildingCountAndBrush()
-							{ count = bdd.buildingCount+bdd.towerCount, brush = CityBuild.BuildingBrush(Building.bidTownHall, 0.5f) });
+							{ count = bdd.buildingCount+bdd.towerCount, image = CityBuild.GetBuildingImage(Building.bidTownHall, BuildingCountAndBrush.width) });
 
 							// var button = sender as Button; button.Focus(FocusState.Programmatic);
 
@@ -201,7 +200,8 @@ namespace CnV
 	}
 	public class BuildingCountAndBrush
 	{
-		public Microsoft.UI.Xaml.Media.ImageBrush brush { get; set; }
+		public const int width = 32;
+		public Microsoft.UI.Xaml.Media.Imaging.BitmapImage image { get; set; }
 		public int count { get; set; }
 
 	}

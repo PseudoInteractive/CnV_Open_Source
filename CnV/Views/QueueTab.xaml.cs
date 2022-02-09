@@ -27,6 +27,7 @@ namespace CnV.Views
 	using System.Collections;
 	using Game;
 
+	using Microsoft.UI.Xaml.Media.Imaging;
 
 	public sealed partial class QueueTab : UserTab
 	{
@@ -555,7 +556,7 @@ namespace CnV.Views
 	}
 	public class BuildItemView
 	{
-		public Microsoft.UI.Xaml.Media.ImageBrush brush { get; set; }
+		public BitmapImage image { get; set; }
 		public int cid; // owner
 		public string text { get; set; }
 		public BuildItem[] queue => ExtendedQueue.TryGetBuildQueue(cid).Select( a => new BuildItem(a,cid) ).ToArray();
@@ -566,14 +567,14 @@ namespace CnV.Views
 		{
 			var city = City.GetOrAdd(_cid);
 			cid = _cid;
-			brush = CityBuild.BrushFromImage(city.icon);
+			image =city.icon;
 			text = City.GetOrAdd(_cid).nameAndRemarks;
 		}
 	}
 	public class BuildItem
 	{
 		public const int size = 32;
-		public Microsoft.UI.Xaml.Media.ImageBrush brush { get; set; }
+		public BitmapImage image { get; set; }
 		public string text { get; set; }
 		public BuildQueueItem op;
 		public int cid;
@@ -581,7 +582,7 @@ namespace CnV.Views
 		{
 			cid = _cid;
 			op = item;
-			brush = CityBuild.BuildingBrush(item.bid,size / 128.0f);
+			image = CityBuild.GetBuildingImage(item.bid,size);
 			var desc = item.elvl == 0 ? "Destroy" : item.slvl == 0 ? "Build" : item.slvl > item.elvl ? "Downgrade" : "Upgrade";
 			text = desc + BuildingDef.FromId(item.bid).Bn;
 		}

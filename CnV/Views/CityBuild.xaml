@@ -65,7 +65,7 @@
 				<GridView.ItemTemplate>
 					<DataTemplate x:DataType="views:BuildMenuItem">
 						<StackPanel Orientation="Vertical" ToolTipService.ToolTip="{x:Bind toolTip}" AccessKey="{x:Bind accessKey}" >
-						<Canvas Width="64" Height="64" Background="{x:Bind brush}" />
+						<Image  Width="64" Height="64" Source="{x:Bind image}" />
 						<TextBlock Text="{x:Bind header}"  Style="{StaticResource TextBlockSmallCenter}" VerticalAlignment="Bottom" TextWrapping="WrapWholeWords" />
 						</StackPanel>
 					</DataTemplate>

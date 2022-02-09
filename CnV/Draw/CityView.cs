@@ -623,7 +623,8 @@ namespace CnV
 		}
 		public static void LoadTheme()
 		{
-			var cityBase = Settings.IsThemeWinter() ? "Art/City/Winter/" : "Art/City/";
+			//var cityBase = Settings.IsThemeWinter() ? "Art/City/Winter/" : "Art/City/";
+			var cityBase =  "Art/City/";
 			buildingAtlas = Material.LoadLitMaterial(cityBase + "building_set5");
 			buildingShadows = new Material(buildingAtlas.texture, AGame.unlitEffect);
 			cityWallsLand = Material.LoadLitMaterial(cityBase + "baseland");
