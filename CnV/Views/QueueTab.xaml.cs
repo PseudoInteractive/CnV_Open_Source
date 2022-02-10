@@ -99,7 +99,7 @@ namespace CnV.Views
 		{
 			AppS.DispatchOnUIThread(() =>
 		   {
-			   var build = City.GetBuild();
+			  // var build = City.GetBuild();
 				//build.UpdateBuildStage();
 				//instance.stage.Text = $"Stage: {build.buildStage.AsString()}";
 				instance.zoom.ItemsSource = ExtendedQueue.all.ToArray().Select(a => new BuildItemView(a.Value.cid)).ToArray();

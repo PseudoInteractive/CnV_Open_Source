@@ -19,9 +19,7 @@
 					<Color x:Key="SystemChromeAltHighColor">#FF380E0E</Color>
 					<Color x:Key="SystemRevealListLowColor">#FF2D0606</Color>
 					<Color x:Key="SystemRevealListMediumColor">#FF380E0E</Color>
-					<!-- Override system shape defaults -->
-					<CornerRadius x:Key="ControlCornerRadius">2,2,2,2</CornerRadius>
-					<CornerRadius x:Key="OverlayCornerRadius">2,2,2,2</CornerRadius>
+					
 					<!-- Override system generated accent colors -->
 					<Color x:Key="SystemAccentColorDark1">#FF503B84</Color>
 					<Color x:Key="SystemAccentColorDark2">#FF695798</Color>
@@ -33,11 +31,11 @@
 					<SolidColorBrush x:Key="RegionBrush" Color="#FF153A35" />
 				</ResourceDictionary>
 
-				<ResourceDictionary Source="/Styles/Page.xaml" />
-				<ResourceDictionary Source="/Styles/FontSizes.xaml" />
-				<ResourceDictionary Source="/Styles/TextBlock.xaml" />
-				<ResourceDictionary Source="/Styles/BattleReport.xaml" />
-				<ResourceDictionary Source="/Styles/ScrollBarHack.xaml" />
+				<ResourceDictionary Source="Styles\\FontSizes.xaml"  />
+				<ResourceDictionary Source="Styles\\Page.xaml" />
+				<ResourceDictionary Source="Styles\\TextBlock.xaml" />
+				<ResourceDictionary Source="Styles\\BattleReport.xaml" />
+				<ResourceDictionary Source="Styles\\ScrollBarHack.xaml" />
 				<!--<ResourceDictionary Source="/Styles/SharedResources.xaml" />-->
 
 

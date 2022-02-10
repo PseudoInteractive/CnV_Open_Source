@@ -23,6 +23,7 @@ namespace CnV.Views
 		public string title { get; set; }
 		public List<BuildMenuItem> items { get; set; } = new();
 	}
+	
 
 	public class BuildMenuItem
 	{
@@ -30,6 +31,7 @@ namespace CnV.Views
 		public bool isAction => action != CityBuild.CityBuildAction.invalid;
 		public bool isBuilding => bid != 0;
 		public BitmapImage image;
+		public float opacity=1;
 		public string toolTip;
 		public string header;
 		//public Color textColor;
@@ -68,6 +70,17 @@ namespace CnV.Views
 			this.action = action;
 			image = ImageHelper.FromImages(icon,width);
 			this.toolTip = toolTip;
+		}
+
+		internal void UpdateValidity(bool seemsValid, int townHallLevel)
+		{
+			if(!seemsValid)
+				opacity = 0.25f;
+			else if( BuildingDef.FromId(bid).Thl > townHallLevel)
+				opacity = 0.5f;
+			else
+				opacity = 1.0f;
+
 		}
 	}
 

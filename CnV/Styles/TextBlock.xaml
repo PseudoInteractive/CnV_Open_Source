@@ -7,15 +7,15 @@
 	<!--  Common texts  -->
 	<Style x:Key="PageTitleStyle" TargetType="TextBlock">
 		<Setter Property="VerticalAlignment" Value="Center" />
-		<Setter Property="FontFamily" Value="Bahnschrift,Segoe Fluent Icons"/>
+		<Setter Property="FontFamily" Value="Bahnschrift,Segoe Fluent Icons,Segoe UI Emoji"/>
 		<Setter Property="FontSize" Value="{StaticResource  LargeFontSize}" />
 		<Setter Property="TextWrapping" Value="Wrap" />
 		<Setter Property="IsTextScaleFactorEnabled" Value="False"/>
         
     </Style>
 
-	<Style x:Key="BodyTextStyle" TargetType="TextBlock">
-		<Setter Property="FontFamily" Value="Bahnschrift,Segoe Fluent Icons"/>
+	<Style x:Key="BodyTextStyle" TargetType="TextBlock" BasedOn="{StaticResource BodyTextBlockStyle}">
+		<Setter Property="FontFamily" Value="Bahnschrift,Segoe Fluent Icons,Segoe UI Emoji"/>
 		<Setter Property="FontSize" Value="{StaticResource MediumFontSize}" />
 		<Setter Property="TextWrapping" Value="Wrap" />
         <Setter Property="IsTextScaleFactorEnabled" Value="False"/>
@@ -32,44 +32,19 @@
 
 	</Style>
 
-	<Style x:Key="ListSubTitleStyle" TargetType="TextBlock">
-		<Setter Property="FontSize" Value="{StaticResource MediumFontSize}" />
-		<Setter Property="FontFamily" Value="Bahnschrift,Segoe Fluent Icons"/>
-		<Setter Property="MaxLines" Value="1" />
-		<Setter Property="TextTrimming" Value="CharacterEllipsis" />
-        <Setter Property="IsTextScaleFactorEnabled" Value="False"/>
-        
-    </Style>
+	
 
-	<Style
-		x:Key="DetailSubTitleStyle"
-		BasedOn="{StaticResource BaseTextBlockStyle}"
-		TargetType="TextBlock">
-		<Setter Property="FontFamily" Value="Bahnschrift,Segoe Fluent Icons"/>
-		<Setter Property="FontSize" Value="{StaticResource MediumFontSize}" />
-        
-    </Style>
-
-	<Style
-		x:Key="DetailBodyBaseMediumStyle"
-		BasedOn="{StaticResource BaseTextBlockStyle}"
-		TargetType="TextBlock">
-		<Setter Property="FontFamily" Value="Bahnschrift,Segoe Fluent Icons"/>
-		<Setter Property="FontSize" Value="{StaticResource MediumFontSize}" />
-		<Setter Property="Foreground" Value="{ThemeResource SystemControlForegroundBaseMediumBrush}" />
-	</Style>
+	
 
     <Style
 		x:Key="ButtonTextStyle"
-		TargetType="TextBlock">
-        
-        <Setter Property="FontSize" Value="{StaticResource MediumFontSize}" />
-        <Setter Property="Foreground" Value="#FF8060FF" />
+		TargetType="TextBlock" BasedOn="{StaticResource TextBlockCondensed}">
+        <Setter Property="Foreground" Value="#FF8040FF" />
     </Style>
     <Style
 		x:Key="CellTextStyle"
 		TargetType="tk:DataGridCell">
-		<Setter Property="FontFamily" Value="Bahnschrift,Segoe Fluent Icons"/>
+		<Setter Property="FontFamily" Value="Bahnschrift,Segoe Fluent Icons,Segoe UI Emoji"/>
 		<Setter Property="FontSize" Value="{StaticResource SmallFontSize}" />
 		<Setter Property="Height" Value="{StaticResource ShortGridRowHeight}" />
 		<Setter Property="MinHeight" Value="{StaticResource ShortGridRowHeight}" />
@@ -81,7 +56,7 @@
 		x:Key="DataGridRowStyle"
 		TargetType="tk:DataGridRow">
 		<Setter Property="Padding" Value="0,0,0,0"/>
-		<Setter Property="FontFamily" Value="Bahnschrift,Segoe Fluent Icons"/>
+		<Setter Property="FontFamily" Value="Bahnschrift,Segoe Fluent Icons,Segoe UI Emoji"/>
 		<Setter Property="FontSize" Value="{StaticResource SmallFontSize}" />
 		<Setter Property="Height" Value="{StaticResource ShortGridRowHeight}" />
 		<Setter Property="MinHeight" Value="{StaticResource ShortGridRowHeight}" />
@@ -97,7 +72,7 @@
 	</Style>
 	<Style
 		TargetType="tk:DataGridCell">
-		<Setter Property="FontFamily" Value="Bahnschrift,Segoe Fluent Icons"/>
+		<Setter Property="FontFamily" Value="Bahnschrift,Segoe Fluent Icons,Segoe UI Emoji"/>
 		<Setter Property="FontSize" Value="{StaticResource SmallFontSize}" />
 		<Setter Property="FontStretch" Value="Condensed" />
 		
@@ -110,14 +85,8 @@
 		x:Key="CellButtonTextStyle"
         BasedOn="{StaticResource CellTextStyle}"
         TargetType="tk:DataGridCell">
-        <Setter Property="Foreground" Value="#FF8060FF" />
+        <Setter Property="Foreground" Value="#FF8040FF" />
     </Style>
-    <Style
-		x:Key="DetailBodyStyle"
-		BasedOn="{StaticResource BaseTextBlockStyle}"
-		TargetType="TextBlock">
-		<Setter Property="FontFamily" Value="Bahnschrift,Segoe Fluent Icons"/>
-		<Setter Property="FontSize" Value="{StaticResource MediumFontSize}" />
-	</Style>
+   
 
 </ResourceDictionary>

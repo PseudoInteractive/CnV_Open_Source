@@ -58,21 +58,21 @@
 			<RowDefinition Height="*"/>
 			<RowDefinition Height="Auto"/>
 		</Grid.RowDefinitions>
-		<GridView x:Name="gridView" SelectionMode="None" IsItemClickEnabled="True" ItemClick="ItemClick" Height="Auto" 
+		<GridView x:Name="gridView" SelectionMode="None" IsItemClickEnabled="True" ItemClick="ItemClick" Height="Auto"
 			  ItemsSource="{x:Bind cvsGroups.View, Mode=OneWay}" Background= "{x:Null}" >
 
 
 				<GridView.ItemTemplate>
 					<DataTemplate x:DataType="views:BuildMenuItem">
 						<StackPanel Orientation="Vertical" ToolTipService.ToolTip="{x:Bind toolTip}" AccessKey="{x:Bind accessKey}" >
-						<Image  Width="64" Height="64" Source="{x:Bind image}" />
+						<Image  Width="64" Height="64" Source="{x:Bind image}" Opacity="{x:Bind opacity, Mode=OneTime}" />
 						<TextBlock Text="{x:Bind header}"  Style="{StaticResource TextBlockSmallCenter}" VerticalAlignment="Bottom" TextWrapping="WrapWholeWords" />
 						</StackPanel>
 					</DataTemplate>
 				</GridView.ItemTemplate>
 				<GridView.ItemsPanel>
 					<ItemsPanelTemplate>
-						<ItemsWrapGrid MaximumRowsOrColumns="8"
+						<ItemsWrapGrid MaximumRowsOrColumns="6" 
                               Orientation="Horizontal" />
 					</ItemsPanelTemplate>
 				</GridView.ItemsPanel>
@@ -80,7 +80,7 @@
 					<GroupStyle HidesIfEmpty="True">
 						<GroupStyle.HeaderTemplate>
 							<DataTemplate x:DataType="views:BuildMenuItemGroup" >
-								<Grid BorderThickness="1" >
+								<Grid BorderThickness="0" >
 									<TextBlock Text="{x:Bind title}" />
 								</Grid>
 							</DataTemplate>

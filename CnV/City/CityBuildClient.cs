@@ -16,14 +16,16 @@ namespace CnV
 	{
 		public static void PreviewBuildAction()
 		{
-			if(hovered.isNotNan)
+			var city = City.GetBuild();
+			var cc= city.TranslateWaterOrWallSpot(hovered);
+			if(cc.isNotNan)
 			{
-				if( hovered == lastQuickBuildActionBSpot && (SmallTime.now < lastQuickBuildActionSpotValidUntil))
+				if( cc == lastQuickBuildActionBSpot && (SmallTime.now < lastQuickBuildActionSpotValidUntil))
 					return;
 				else
 					lastQuickBuildActionBSpot = BuildC.Nan;
 
-				PerformAction(action, hovered, quickBuildId, true);
+				PerformAction(city,action, cc, quickBuildId, true);
 			}
 		}
 
@@ -90,15 +92,14 @@ namespace CnV
 			quickBuildId              = quickBuildItemBid;
 			//	AppS.DispatchOnUIThreadLow( ()=> instance.quickBuild.SelectedIndex = (int)_action ); /// the first 3 are mapped. this triggers a selectedPoint changed event
 		}
-		public static async Task PerformAction(CityBuildAction action, BuildC cc, BuildingId _quickBuildId, bool dryRun)
+		public static async Task PerformAction(City build,CityBuildAction action, BuildC cc, BuildingId _quickBuildId, bool dryRun)
 		{
 			try
 			{
-
+				
 
 				//int bspot = XYToId(cc);
-				var build = GetBuild();
-				var b = City.GetBuild().GetBuildingOrLayout(cc);
+				var b = build.GetBuildingOrLayout(cc);
 
 				if(action == CityBuildAction.moveEnd && !dryRun)
 				{
@@ -133,7 +134,7 @@ namespace CnV
 							else
 							{
 
-								await City.GetBuild().SmartBuild(cc, build.GetLayoutBid(cc), dryRun: dryRun, searchForSpare: true, wantDemoUI: null);
+								await build.SmartBuild(cc, build.GetLayoutBid(cc), dryRun: dryRun, searchForSpare: true, wantDemoUI: null);
 
 							}
 							break;
@@ -166,7 +167,7 @@ namespace CnV
 
 								if(sel != 0)
 								{
-									await City.GetBuild().SmartBuild(cc, sel, searchForSpare: false, dryRun: dryRun, wantDemoUI: null);
+									await build.SmartBuild(cc, sel, searchForSpare: false, dryRun: dryRun, wantDemoUI: null);
 
 									break;
 								}
@@ -181,7 +182,7 @@ namespace CnV
 							//	Status("Build Queue full", dryRun);
 							//	break;
 							//}
-							await City.GetBuild().Demolish(cc, dryRun);
+							await build.Demolish(cc, dryRun);
 
 
 							break;
@@ -189,25 +190,24 @@ namespace CnV
 					case CityBuildAction.moveStart:
 					case CityBuildAction.moveEnd:
 						{
-							MoveHovered(isSingleClickAction, (action == CityBuildAction.moveStart), dryRun);
+							MoveBuilding(build,cc, isSingleClickAction, (action == CityBuildAction.moveStart), dryRun);
 							break;
 						}
 					case CityBuildAction.downgrade:
 						{
-							await City.GetBuild().Downgrade(cc, dryRun);
+							await build.Downgrade(cc, dryRun);
 							break;
 						}
 					case CityBuildAction.upgrade:
 						{
-							await City.GetBuild().UpgradeToLevel(1, cc, dryRun);
+							await build.UpgradeToLevel(1, cc, dryRun);
 							break;
 						}
 					case CityBuildAction.flipLayoutH:
 						{
 							if(!dryRun)
 							{
-								var city = GetBuild();
-								city.FlipLayoutH(true);
+								build.FlipLayoutH(true);
 
 
 							}
@@ -245,14 +245,14 @@ namespace CnV
 					case CityBuildAction.flipLayoutV:
 						{
 							if(!dryRun)
-								GetBuild().FlipLayoutV(true);
+								build.FlipLayoutV(true);
 							break;
 						}
 					case CityBuildAction.none:
 						{
 							if(b.isEmpty)
 							{
-								if(IsBuildingSpotOrTownHall(XYToId(hovered)))
+								if(IsBuildingSpotOrTownHall(XYToId(hovered), build))
 								{
 									Status($"Left click to build something\nRight click to select a quick build tool", dryRun);
 
@@ -312,28 +312,28 @@ namespace CnV
 		public static bool isSingleClickAction; // set on left click tool select
 		
 
-		public static async void MoveHovered(bool _isSingleAction, bool isStart, bool dryRun)
+		public static async void MoveBuilding(City build, BuildC cc, bool _isSingleAction, bool isStart, bool dryRun)
 		{
-			var build = GetBuild();
+			
 
 			Status($"Move slots left: {Player.moveSlots}", dryRun);
-			if(hovered.isNan)
+			if(cc.isNan)
 			{
 				Status("Please select something in the city", dryRun);
 				return;
 			}
-			var targetSpot =hovered;
-			var targetB = isPlanner ? build.GetLayoutBuilding(hovered) : build.buildings[targetSpot];
+			var targetSpot = cc;
+			var targetB = isPlanner ? build.GetLayoutBuilding(cc) : build.buildings[targetSpot];
 
 			if(isStart)
 			{
 				if(targetB.isBuilding)
 				{
 
-					Status($"Move {targetB.def.Bn} at {hovered.ToString()} to ... ", dryRun);
+					Status($"Move {targetB.def.Bn} at {cc.ToString()} to ... ", dryRun);
 					if(!dryRun)
 					{
-						CityView.SetSelectedBuilding(hovered, _isSingleAction);
+						CityView.SetSelectedBuilding(cc, _isSingleAction);
 						if(_isSingleAction)
 						{
 							CityBuild.PushSingleAction(CityBuildAction.moveEnd);
@@ -349,7 +349,6 @@ namespace CnV
 				{
 					Status("Please select a building to move", dryRun);
 				}
-
 			}
 			else
 			{
@@ -377,7 +376,6 @@ namespace CnV
 
 					if(dryRun)
 					{
-						DrawSprite(targetSpot, decalMoveBuilding, 0.343f);
 						DrawSprite(selectedPoint, decalMoveBuilding, 0.323f);
 					}
 
@@ -388,11 +386,11 @@ namespace CnV
 							if(IsTowerSpot(selectedPoint))
 								Status("Cannot swap towers, please move them one at a time", dryRun);
 							else
-								await City.GetBuild().SwapBuilding(source, targetSpot, dryRun);
+								await build.SwapBuilding(source, targetSpot, dryRun);
 						}
 						else
 						{
-							await City.GetBuild().MoveBuilding(source, targetSpot, dryRun);
+							await build.MoveBuilding(source, targetSpot, dryRun);
 						}
 						if(!dryRun)
 						{

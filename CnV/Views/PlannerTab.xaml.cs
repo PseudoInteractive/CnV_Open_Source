@@ -511,7 +511,7 @@ namespace CnV.Views
 						var bid = city.GetLayoutBid(id);
 						if (bid != 0 && bid != bidShipyard && bid != bidPort)
 						{
-							if (CityBuild.IsWaterSpot(id))
+							if (CityBuild.IsWaterSpot(id,city))
 								hasInvalid = true;
 							if (IsResHelper(bid))
 								++resHelpers;

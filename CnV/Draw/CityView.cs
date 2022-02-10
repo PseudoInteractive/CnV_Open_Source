@@ -129,7 +129,7 @@ namespace CnV
 				var buildings = build.buildings;
 				buildCityOrigin = build.cid.CidToWorldV();
 				// draw each building tile
-				var city = City.GetBuild();
+				var city =build;
 				cityDrawAlpha = iAlpha;
 				//const float zBase = 0f;
 				// selected
@@ -478,7 +478,7 @@ namespace CnV
 					//}
 				}
 				if(hovered.isInCity)
-					CityViewS.ClientDrawSprite(hovered, CityViewS.decalSelectBuilding, 0.312f);
+					CityViewS.ClientDrawSprite(hovered, CityBuild.action switch { CityBuild.CityBuildAction.moveStart or CityBuild.CityBuildAction.moveEnd => CityViewS.decalMoveBuilding, _=> CityViewS.decalSelectBuilding}, 0.312f);
 
 				PreviewBuildAction();
 					//var processed = new HashSet<int>();

@@ -468,7 +468,7 @@ namespace CnV
 				Assert(AppS.state == AppS.State.loading);
 				AppS.state = AppS.State.init;
 
-				CnVFont = new FontFamily("Bahnschrift,Segoe Fluent Icons");
+				CnVFont = new FontFamily("Bahnschrift,Segoe Fluent Icons,Segoe UI Emoji");
 
 				//	Windows.UI.ViewManagement.ApplicationView.PreferredLaunchWindowingMode =Windows.UI.ViewManagement.ApplicationViewWindowingMode.Maximized;// new Size(bounds.Width, bounds.Height);
 				//				Windows.UI.ViewManagement.ApplicationView.GetForCurrentView().TryEnterViewModeAsync(Windows.UI.ViewManagement.ApplicationViewMode.CompactOverlay);
@@ -613,6 +613,8 @@ namespace CnV
 				this.DebugSettings.IsTextPerformanceVisualizationEnabled = false;
 				//this.DebugSettings.FailFastOnErrors = false;
 				this.DebugSettings.IsBindingTracingEnabled = true;
+				this.DebugSettings.BindingFailed+=DebugSettings_BindingFailed1;
+
 #endif
 				var wasRunning = args.PreviousExecutionState   == ApplicationExecutionState.Running
 								|| args.PreviousExecutionState == ApplicationExecutionState.Suspended;
@@ -676,6 +678,22 @@ namespace CnV
 				Log(e);
 			}
 		}
+#if DEBUG
+		private void DebugSettings_BindingFailed1(object sender, BindingFailedEventArgs e)
+		{
+			try
+			{ 
+			var txt = $"BindingFailed: {e.Message}, from {sender.GetType()},{sender}";
+
+			Log(txt);
+			Note.Show(txt);
+			}
+			catch(Exception ex)
+			{
+				LogEx(ex);
+			}
+		}
+		#endif
 
 		private async void AppWindow_Closing(AppWindow sender, AppWindowClosingEventArgs args)
 		{

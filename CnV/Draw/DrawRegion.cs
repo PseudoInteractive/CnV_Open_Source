@@ -1281,35 +1281,36 @@ internal partial class GameClient
 					{
 						//	TextLayout textLayout = GetTextLayout( _toolTip, tipTextFormat);
 						//	var bounds = textLayout.span;
-						System.Numerics.Vector2 c = ShellPage.mousePositionC + new System.Numerics.Vector2(16, 16);
-						DrawTextBox(_toolTip, c, tipTextFormat, Color.White, 192, Layer.overlay, 11, 11, ConstantDepth, 0, 0.5f);
+						//System.Numerics.Vector2 c = ShellPage.mousePositionC + new System.Numerics.Vector2(16, 16);
+						System.Numerics.Vector2 c = new System.Numerics.Vector2(clientSpan.X-16, 16).ScreenToCamera();
+						DrawTextBox(_toolTip, c, tipTextFormatRight, Color.White, 192, Layer.overlay, 11, 11, ConstantDepth, 0, 0.5f);
 					}
 					var _contTip = ShellPage.contToolTip;
 					if(_contTip != null)
 					{
 						var alpha = pixelScale.SmoothStep(cityZoomThreshold - 128, cityZoomThreshold + 128).
 							Max(pixelScale.SmoothStep(cityZoomWorldThreshold + 16, cityZoomWorldThreshold - 16));
-						System.Numerics.Vector2 c = new System.Numerics.Vector2(20, 16).ScreenToCamera();
-						DrawTextBox(_contTip, c, tipTextFormat, Color.White.Scale(alpha), (byte)(alpha * 192.0f).RoundToInt(), Layer.overlay, 11, 11, ConstantDepth, 0, 0.5f);
+						System.Numerics.Vector2 c = new System.Numerics.Vector2(clientSpan.X-16, 16).ScreenToCamera();
+						DrawTextBox(_contTip, c, tipTextFormatRight, Color.White.Scale(alpha), (byte)(alpha * 192.0f).RoundToInt(), Layer.overlay, 11, 11, ConstantDepth, 0, 0.5f);
 					}
-					if(View.IsCityView())
-					{
-						var                     alpha = 255;
-						System.Numerics.Vector2 c     = new System.Numerics.Vector2(clientSpan.X - 32, 16).ScreenToCamera();
-						var                     city  = City.GetBuild();
-						if(city != null)
-						{
-							var counts = city.GetTownHallAndBuildingCount(false);
+					//if(View.IsCityView())
+					//{
+					//	var                     alpha = 255;
+					//	System.Numerics.Vector2 c     = new System.Numerics.Vector2(clientSpan.X - 32, 16).ScreenToCamera();
+					//	var                     city  =  City.GetBuild();
+					//	if(city != null)
+					//	{
+					//		var counts = city.GetTownHallAndBuildingCount(false);
 
-							DrawTextBox($"{counts.buildingCount}/{counts.townHallLevel * 10}", c, tipTextFormatRight, Color.White.Scale(alpha), (byte)(alpha * 192.0f).RoundToInt(), Layer.overlay, 11, 11, ConstantDepth, 0, 0.5f);
-						}
-					}
+					//		DrawTextBox($"{counts.buildingCount}/{counts.townHallLevel * 10}", c, tipTextFormatRight, Color.White.Scale(alpha), (byte)(alpha * 192.0f).RoundToInt(), Layer.overlay, 11, 11, ConstantDepth, 0, 0.5f);
+					//	}
+					//}
 					var _debugTip = ToolTips.debugTip;
 					if(_debugTip != null)
 					{
 						var                     alpha = 255;
-						System.Numerics.Vector2 c     = new Vector2(clientSpan.X - 16, 16).ScreenToCamera();
-						DrawTextBox(_debugTip, c, tipTextFormatRight, Color.White.Scale(alpha), (byte)(alpha * 192.0f).RoundToInt(), Layer.overlay, 11, 11, ConstantDepth, 0, 0.5f);
+						System.Numerics.Vector2 c     = new Vector2(16, 16).ScreenToCamera();
+						DrawTextBox(_debugTip, c, tipTextFormat, Color.White.Scale(alpha), (byte)(alpha * 192.0f).RoundToInt(), Layer.overlay, 11, 11, ConstantDepth, 0, 0.5f);
 					}
 
 
