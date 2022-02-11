@@ -16,8 +16,8 @@ using static CnV.View;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Microsoft.UI;
-using CommunityToolkit.WinUI.UI;
-using CommunityToolkit.WinUI.UI.Controls;
+//using CommunityToolkit.WinUI.UI;
+//using CommunityToolkit.WinUI.UI.Controls;
 using static CnV.City;
 //using Expander = CommunityToolkit.WinUI.UI.Controls.cer;
 // To learn more about WinUI, the WinUI project structure,
@@ -72,12 +72,12 @@ namespace CnV
 					try
 					{
 						var t = CnVServer.simTime;
-
+						ShellPage.instance.timeDisplay.Text = t.FormatWithYear();
 
 						if(expResource.IsExpanded)
 						{
 							var resources = city.SampleResources();
-							var panels = expResource.Child<WrapPanel>().Children<StackPanel>();
+							var panels = expResource.Child<CommunityToolkit.WinUI.UI.Controls.WrapPanel>().Children<StackPanel>();
 							for(var r = 0; r< CnV.Resources.idCount; r++)
 							{
 								var ch = panels.ElementAt(r).Children<TextBlock>();
@@ -142,11 +142,31 @@ namespace CnV
 			UpdateUI();
 		}
 
-		private void scroll_SizeChanged(object sender, SizeChangedEventArgs e)
+		private void scroll_SizeChanged(object sender, ScrollViewerViewChangedEventArgs e)
 		{
-			stackPanel.Width = (e.NewSize.Width).Max(0);
+			if(e.IsIntermediate)
+				return;
+			ScrollSizeChanged();
 		}
+		private void scroll_SizeChanged4(object sender, SizeChangedEventArgs e)
+		{
+			ScrollSizeChanged();
 
+		}
+		private void ScrollSizeChanged()
+		{
+			DebounceA.Q(runOnUIThread: true, debounceT: 50, action: () =>
+			{
+				var baseSize = ((scroll.ActualWidth)/scroll.ZoomFactor).Max(0);
+				stackPanel.Width = (baseSize -8).Max(0);
+				//var expanderWidth = (baseSize -14).Max(0);
+				//foreach(var ch in stackPanel.Children<Expander>())
+				//{
+				//	ch.Width = expanderWidth;
+				//}
+			});
+		}
+		
 
 		private void Expander_Expanded(object sender, EventArgs e)
 		{
@@ -197,6 +217,10 @@ namespace CnV
 			}
 			return (buildingCount, towerCount, -1, buildingCounts);
 		}
+
+		
+		
+		
 	}
 	public class BuildingCountAndBrush
 	{
@@ -205,4 +229,5 @@ namespace CnV
 		public int count { get; set; }
 
 	}
+
 }

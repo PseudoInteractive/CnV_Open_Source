@@ -39,6 +39,8 @@ namespace CnV.Views
 	using Game;
 
 	using Helpers;
+
+	using Microsoft.UI.Xaml.Data;
 	// using PInvoke
 	using Services;
 
@@ -78,6 +80,60 @@ namespace CnV.Views
 			public int    id   { get; set; }
 
 		}
+		
+		float timeScale
+		{
+			get => IServerTime.timeScale;
+			set {
+				IServerTime.SetTimeScale(value);
+				OnPropertyChanged("timeScaleSlider");
+			}
+
+		}
+		static float RoundNicely(float d)
+		{
+			var absD = d.Abs();
+
+			if(absD > 100)
+				return MathF.Round(d);
+			else if(absD > 10)
+				return MathF.Round(d/10)*10;
+			else if(absD> 1)
+				return MathF.Round(d/100)*100;
+			else
+				return MathF.Round(d/1000)*1000;
+
+
+
+		}
+		static float SliderToTimeScale(float v) =>  RoundNicely(MathF.Exp((v-0.25f)*8));
+		
+		
+		class TimeScaleToolTipConverter:IValueConverter
+		{
+			
+
+			public object Convert(object value, Type targetType, object parameter, string language) => SliderToTimeScale( (float)value).ToString();
+
+			public object ConvertBack(object value, Type targetType, object parameter, string language)
+			{
+				{ LogEx(new NotImplementedException("Convert")); return null; }
+			}
+		}
+		TimeScaleToolTipConverter timeScaleToolTipConverter = new TimeScaleToolTipConverter();
+
+		float timeScaleSlider
+		{
+			get => MathF.Log(IServerTime.timeScale)/8.0f + 0.25f;
+			set
+			{
+				var v = SliderToTimeScale(value);
+				Log(v);;
+				IServerTime.SetTimeScale(v);
+				OnPropertyChanged("timeScale");
+			}
+
+		}
 		string[] layoutOptions =  System.Linq.Enumerable.Range(0, Settings.layoutOffsets.Length)
 			.Select(a => $"Layout {a}").ToArray();
 
@@ -86,8 +142,7 @@ namespace CnV.Views
 		//private readonly KeyboardAccelerator _forwardKeyboardAccelerator = BuildKeyboardAccelerator(VirtualKey.GoForward);
 		static public ShellPage? instance;
 
-		//	internal void AddHandler(object pointerMovedEvent, PointerEventHandler pointerEventHandler, bool v) => throw new NotImplementedException();
-
+		
 		private bool                     _isBackEnabled;
 		private WinUI.NavigationViewItem _selected;
 		private bool                     _isBusy;
@@ -243,7 +298,7 @@ namespace CnV.Views
 				//	Log(ms0);
 
 				//}
-				CnVServer.CitySwitch = CnVClient.CitySwitch;
+				
 				GameClient.canvas    = _canvas;
 
 				var signinTask = Task.Run(CnVSignin.Go);
@@ -385,7 +440,7 @@ namespace CnV.Views
 				{
 					if(SystemInformation.Instance.IsAppUpdated && !CnVServer.isSub)
 					{
-						AppS.DispatchOnUIThreadLow(Settings.ShowWhatsNew);
+						AppS.DispatchOnUIThread(Settings.ShowWhatsNew);
 					}
 
 				}
@@ -971,7 +1026,7 @@ namespace CnV.Views
 			var sel = cityBox.SelectedItem as City;
 			if (sel != null && sel.cid != City.build)
 			{
-				CnVServer.CitySwitch(sel.cid, false);
+				CnVClient.CitySwitch(sel.cid, false);
 				NavStack.Push(sel.cid);
 			}
 		}
@@ -1006,7 +1061,7 @@ namespace CnV.Views
 			}
 
 			//newSel.SetBuild(true);
-			CnVServer.CitySwitch(newSel.cid, false);
+			CnVClient.CitySwitch(newSel.cid, false);
 			// ElementSoundPlayer.Play(delta > 0 ? ElementSoundKind.MoveNext : ElementSoundKind.MovePrevious);
 			NavStack.Push(newSel.cid);
 		}
@@ -1083,7 +1138,7 @@ namespace CnV.Views
 					{
 						NavStack.Push(cid);
 						SpotTab.TouchSpot(cid, AppS.keyModifiers);
-						CnVServer.CitySwitch(cid, false);
+						CnVClient.CitySwitch(cid, false);
 					}
 				}
 			}

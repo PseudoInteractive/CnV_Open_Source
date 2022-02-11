@@ -1228,7 +1228,7 @@ namespace CnV
 					if(myCities.Length > 1)
 					{
 						var closest = myCities.Min<City, (float d, City c)>(a => (a == city ? float.MaxValue : cid.DistanceToCid(a.cid), a));
-						await CnVServer.CitySwitch(closest.c.cid, false);
+						await CnVClient.CitySwitch(closest.c.cid, false);
 					}
 					await Task.Delay(500);
 					CitiesChanged();

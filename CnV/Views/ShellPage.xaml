@@ -34,7 +34,13 @@
 				<Setter Property="VerticalAlignment" Value="Stretch"/>
 				<Setter Property="HorizontalAlignment" Value="Stretch"/>
 			</Style>
-
+			<SolidColorBrush x:Key="brushExpanderContent">#80200000</SolidColorBrush>
+			<SolidColorBrush x:Key="brushExpanderHeader" >#B0200000</SolidColorBrush>
+			<Style TargetType="Expander" BasedOn="BaseExpanderStyle">
+				<Setter Property="MinHeight" Value="20" />
+				<Setter Property="ScrollViewer.Padding"
+			</Style>
+					<Expander  Expanding="Expander_Expanding" MinHeight="22"  Padding="0" Margin="0"  Background="{x:Null}"  x:Name="expResource" HorizontalAlignment="Stretch"  >
 
 		</ResourceDictionary>
 
@@ -60,7 +66,7 @@
 				<RowDefinition Height="60" x:Name="stats" />
 				<RowDefinition x:Name="CanvasStart" />
 				<RowDefinition x:Name="rowChatBase" />
-				<RowDefinition Height="40"  x:Name="rowFooter" />
+				<RowDefinition Height="auto"  x:Name="rowFooter" />
 			</Grid.RowDefinitions>
 			<Grid.ColumnDefinitions>
 				<!-- 0 HTML column -->
@@ -201,7 +207,7 @@
 				x:Name="cityStats"
 				Grid.Row="2" 
 				Grid.ColumnSpan="1"
-				Grid.RowSpan="3" 
+				Grid.RowSpan="2" 
 				Canvas.ZIndex="14" 
 				
 				/>
@@ -323,7 +329,7 @@
 					  Margin="0"
 					  Padding="0"
 					  Width="300"
-						
+						MinHeight="20"
 					  ExpandDirection="Up"
 					  Canvas.ZIndex="35"   >
 				<Expander.Header   >
@@ -336,6 +342,9 @@
 						<DataTemplate  x:DataType="x:String"  >
 							<tk:MarkdownTextBlock  x:Name="message" Text="{x:Bind }"  Margin="1"  Padding="0,0,0,0"    
                                                IsTextSelectionEnabled="True"
+												   MinHeight="22"
+												   ParagraphMargin="0"
+												   ParagraphLineHeight="18"
 											  FontSize="{StaticResource SmallFontSize}"
 											 FontFamily="Bahnschrift,Segoe Fluent Icons,Segoe UI Emoji"
                                               TextWrapping="Wrap" 
@@ -364,9 +373,24 @@
 					</ListView.ItemContainerStyle>
 				</ListView>
 			</Expander>
-			<TextBlock x:Name="timeDisplay" x:FieldModifier="public" Grid.Row="{x:Bind grid.RowDefinitions.IndexOf(rowFooter)}"
-					   />
-		
+			<Expander  Grid.Row="{x:Bind GridRowIndex(rowFooter,-1)}"
+					    Canvas.ZIndex="35"
+					   HorizontalAlignment="Stretch"
+					   ExpandDirection="Up"
+					   Background="#80808000" 
+					   VerticalAlignment="Bottom"
+					  MinHeight="22" Padding="0" Margin="0" Grid.RowSpan="2" >
+				<Expander.Header>
+					<TextBlock x:Name="timeDisplay" x:FieldModifier="public" Margin="2,0"  Text="Time" MinHeight="22" />
+				</Expander.Header>
+				<StackPanel Orientation="Vertical"  Padding="0" Margin="0">
+					<NumberBox   Header="TimeScale:"  Value="{x:Bind timeScale, Mode=TwoWay}" Margin="2,4"  HorizontalContentAlignment="Right" VerticalContentAlignment="Center" VerticalAlignment="Center" HorizontalAlignment="Right" />
+					<Slider  ThumbToolTipValueConverter="{x:Bind timeScaleToolTipConverter}"  Value="{x:Bind timeScaleSlider, Mode=TwoWay}" VerticalAlignment="Bottom" Orientation="Horizontal" Minimum="0" Maximum="1" SmallChange="0.125" 
+							 StepFrequency="0.0625" TickFrequency="0.0625" Margin="2,4"  />
+					
+				</StackPanel>
+			</Expander>
+
 			<!--<winui:InfoBar x:Name="infoBar"
                                   Grid.Row="1"
                                   Grid.Column="1"

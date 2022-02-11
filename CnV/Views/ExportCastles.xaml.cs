@@ -156,7 +156,7 @@ namespace CnV.Views
 							  ++counter;
 							  if ((counter % 10) == 0)
 							  {
-								  AppS.DispatchOnUIThreadLow(() => ShellPage.WorkUpdate($"Exporting .. {Alliance.all[alliance].name}, {p.name}, {counter}"));
+								  AppS.QueueOnUIThreadIdle(() => ShellPage.WorkUpdate($"Exporting .. {Alliance.all[alliance].name}, {p.name}, {counter}"));
 								  if (AppS.IsEscDown())
 								  {
 									  Note.Show("Aborted");

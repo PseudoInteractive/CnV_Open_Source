@@ -98,33 +98,33 @@ namespace CnV.Draw
         {
 		}
 		
-        void CheckValid(Texture2D texture)
-        {
-            if (texture == null)
-                throw new ArgumentNullException("texture");
-            if (!_beginCalled)
-                throw new InvalidOperationException("Draw was called, but Begin has not yet been called. Begin must be called successfully before you can call Draw.");
-        }
+        //void CheckValid(Texture2D texture)
+        //{
+        //    if (texture == null)
+        //        throw new ArgumentNullException("texture");
+        //    if (!_beginCalled)
+        //        throw new InvalidOperationException("Draw was called, but Begin has not yet been called. Begin must be called successfully before you can call Draw.");
+        //}
 
-        void CheckValid(SpriteFont spriteFont, string text)
-        {
-            if (spriteFont == null)
-                throw new ArgumentNullException("spriteFont");
-            if (text == null)
-                throw new ArgumentNullException("text");
-            if (!_beginCalled)
-                throw new InvalidOperationException("DrawString was called, but Begin has not yet been called. Begin must be called successfully before you can call DrawString.");
-        }
+        //void CheckValid(SpriteFont spriteFont, string text)
+        //{
+        //    if (spriteFont == null)
+        //        throw new ArgumentNullException("spriteFont");
+        //    if (text == null)
+        //        throw new ArgumentNullException("text");
+        //    if (!_beginCalled)
+        //        throw new InvalidOperationException("DrawString was called, but Begin has not yet been called. Begin must be called successfully before you can call DrawString.");
+        //}
 
-        void CheckValid(SpriteFont spriteFont, StringBuilder text)
-        {
-            if (spriteFont == null)
-                throw new ArgumentNullException("spriteFont");
-            if (text == null)
-                throw new ArgumentNullException("text");
-            if (!_beginCalled)
-                throw new InvalidOperationException("DrawString was called, but Begin has not yet been called. Begin must be called successfully before you can call DrawString.");
-        }
+        //void CheckValid(SpriteFont spriteFont, StringBuilder text)
+        //{
+        //    if (spriteFont == null)
+        //        throw new ArgumentNullException("spriteFont");
+        //    if (text == null)
+        //        throw new ArgumentNullException("text");
+        //    if (!_beginCalled)
+        //        throw new InvalidOperationException("DrawString was called, but Begin has not yet been called. Begin must be called successfully before you can call DrawString.");
+        //}
 
 		//      /// <summary>
 		//      /// Submit a sprite for drawing in the current batch.

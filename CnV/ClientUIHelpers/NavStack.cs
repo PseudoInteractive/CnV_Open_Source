@@ -56,7 +56,7 @@ namespace CnV
 					Note.Show("Please navigate first");
 					if (cityBackOnEmpty)
 					{
-						AppS.DispatchOnUIThreadLow(() =>
+						AppS.DispatchOnUIThread(() =>
 					   Views.ShellPage.instance.ChangeCityClick(-1));
 					}
 
@@ -69,7 +69,7 @@ namespace CnV
 				Note.Show("This is the first city");
 				if (cityBackOnEmpty)
 				{
-					AppS.DispatchOnUIThreadLow(() =>
+					AppS.DispatchOnUIThread(() =>
 				   Views.ShellPage.instance.ChangeCityClick(-1));
 				}
 				return false;
@@ -98,7 +98,7 @@ namespace CnV
 
 				if (cityForwardOnEmpty)
 				{
-					AppS.DispatchOnUIThreadLow(() => Views.ShellPage.instance.ChangeCityClick(1));
+					AppS.DispatchOnUIThread(() => Views.ShellPage.instance.ChangeCityClick(1));
 				}
 				return false;
 			}
@@ -123,7 +123,7 @@ namespace CnV
 					Note.Show($"Navigate to {City.GetOrAddCity(cid).nameMarkdown} {position} {NavStack.backStack.Count}");
 					if (!City.IsBuild(cid) || !City.IsFocus(cid))
 					{
-						CnVServer.CitySwitch(cid, false);
+						CnVClient.CitySwitch(cid, false);
 					}
 					//if (cityView != COTG.Views.ShellPage.IsCityView())
 					//{

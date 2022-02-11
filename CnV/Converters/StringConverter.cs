@@ -14,7 +14,7 @@ namespace CnV.Converters
 
 		public object ConvertBack(object value,Type targetType,object parameter,string language)
 		{
-			throw new InvalidOperationException();
+			{ LogEx(new NotImplementedException("Convert")); return null; }
 		}
 	}
 }

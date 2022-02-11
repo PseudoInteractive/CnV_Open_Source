@@ -491,7 +491,7 @@ namespace CnV
 							{
 								Note.Show("Please wait for current operation to complete");
 								if(await AppS.DoYesNoBox("Busy", "Please wait for current operation to complete") != 1)
-									throw new Exception("SetBuildOverlap");
+									return false;
 							}
 							var wantUnblock = false;
 							// this blocks if we can't change the city

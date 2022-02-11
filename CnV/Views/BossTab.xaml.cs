@@ -16,7 +16,7 @@ namespace CnV.Views
 
         public override Task VisibilityChanged(bool visible, bool longTerm)
 		{
-			AppS.DispatchOnUIThreadLow(() =>
+			AppS.DispatchOnUIThread(() =>
 		   {
 			   if (visible)
 			   {

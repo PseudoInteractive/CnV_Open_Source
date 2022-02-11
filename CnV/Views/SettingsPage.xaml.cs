@@ -508,7 +508,7 @@ namespace CnV
 
 		private void UpdateCityLists(object sender, RoutedEventArgs e)
 		{
-			AppS.DispatchOnUIThreadLow( async () =>
+			AppS.QueueOnUIThreadIdle( async () =>
 			   {
 				   var pid = Player.myId;
 				   using var work = new WorkScope("update citylists");
@@ -759,7 +759,7 @@ namespace CnV
 		
 		public static void Show()
 		{
-			AppS.DispatchOnUIThreadLow(async () =>
+			AppS.DispatchOnUIThread(async () =>
 			{
 				ElementSoundPlayer.Play(ElementSoundKind.Hide);
 				if (instance == null)
@@ -781,7 +781,7 @@ namespace CnV
 
 				Settings.SaveAll();
 				//   dialog.auto
-			},true);
+			});
 		}
 
 		private void raidsVisibleTrue(object sender, RoutedEventArgs e)
@@ -884,6 +884,7 @@ namespace CnV
 			Hide();
 			await CnVSignin.SignOut();
 			AppS.Exit();
+			await Task.Delay(-1);
 		}
 		//private async void ChangeNameTapped(object sender, RoutedEventArgs e)
 		//{

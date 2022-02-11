@@ -374,7 +374,7 @@ namespace CnV.Views
 
 		private void Canvas_CompositionScaleChanged(SwapChainPanel sender, object args)
 		{
-			Log(canvas.CompositionScaleX);
+			Log($"CompositionScale: {sender.CompositionScaleX} {sender.CompositionScaleY}" );
 		}
 
 

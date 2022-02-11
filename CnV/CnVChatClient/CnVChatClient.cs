@@ -179,7 +179,7 @@ namespace CnVDiscord
 					content = content.Replace(mention, mentionGame);
 				}
 				var chat = new ChatEntry(name, content, message.Timestamp.ToServerTime(), ChatEntry.typeAlliance);
-				AppS.DispatchOnUIThreadLow(() => ChatTab.Post(message.ChannelId, chat, isNew,notify));
+				AppS.DispatchOnUIThread(() => ChatTab.Post(message.ChannelId, chat, isNew,notify));
 			}
 			catch (Exception ex)
 			{

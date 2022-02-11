@@ -210,7 +210,7 @@ namespace CnV
 									Spot.attackersO = attackers.ToArray();
 							
 							}
-							AppS.DispatchOnUIThreadLow(OutgoingTab.NotifyOutgoingUpdated);
+							AppS.QueueOnUIThreadIdle(OutgoingTab.NotifyOutgoingUpdated);
 
 
 						}
@@ -450,7 +450,7 @@ namespace CnV
                     }
 
                     await task0;
-                    AppS.DispatchOnUIThreadLow(() =>
+                    AppS.QueueOnUIThreadIdle(() =>
                     {
                         updateInProgress = false;
                         if (fetchReports)

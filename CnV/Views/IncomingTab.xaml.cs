@@ -138,7 +138,7 @@ namespace CnV.Views
 					var sel = defenderGrid.SelectedItems.ToArray();
 					if(sel.Length > 0)
 					{
-						AppS.DispatchOnUIThreadLow(() =>
+						AppS.DispatchOnUIThreadIdle(() =>
 						{
 							++SpotTab.silenceSelectionChanges;
 							try

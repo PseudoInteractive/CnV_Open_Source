@@ -91,7 +91,7 @@ namespace CnV;
 				{
 					try
 					{
-						if(!await CnVServer.CitySwitch(target.WorldToCid(), true))
+						if(!await CnVClient.CitySwitch(target.WorldToCid(), true))
 						{
 							EnsureNotCityView();
 						}

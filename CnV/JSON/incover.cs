@@ -610,7 +610,7 @@ namespace CnV
 								  var defenderPage = IncomingTab.instance;
 								  if (defenderPage != null)
 								  {
-									 AppS.DispatchOnUIThreadLow( defenderPage.NotifyIncomingUpdated );
+									 AppS.QueueOnUIThreadIdle( defenderPage.NotifyIncomingUpdated );
 								  }
 							
 							  }

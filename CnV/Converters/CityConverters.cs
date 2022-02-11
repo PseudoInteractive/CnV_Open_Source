@@ -13,7 +13,7 @@ using Microsoft.UI.Xaml.Data;
 	{
 		public object Convert(object value, Type targetType, object parameter, string language) => (value as Spot)?.iconUri;
 
-		public object ConvertBack(object value, Type targetType, object parameter, string language) => throw new InvalidOperationException(); 
+		public object ConvertBack(object value, Type targetType, object parameter, string language) { LogEx(new NotImplementedException("Convert")); return null; }
 	}
 public class CityNameConverter:IValueConverter
 {
@@ -30,7 +30,7 @@ public class CityStatusConverter:IValueConverter
 
 	public object ConvertBack(object value,Type targetType,object parameter,string language)
 	{
-		throw new InvalidOperationException();
+		{ LogEx(new NotImplementedException("Convert")); return null; }
 	}
 }
 public class CityRemarksConverter:IValueConverter

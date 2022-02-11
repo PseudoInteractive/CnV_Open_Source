@@ -31,11 +31,11 @@
 					<SolidColorBrush x:Key="RegionBrush" Color="#FF153A35" />
 				</ResourceDictionary>
 
-				<ResourceDictionary Source="Styles\\FontSizes.xaml"  />
-				<ResourceDictionary Source="Styles\\Page.xaml" />
-				<ResourceDictionary Source="Styles\\TextBlock.xaml" />
-				<ResourceDictionary Source="Styles\\BattleReport.xaml" />
-				<ResourceDictionary Source="Styles\\ScrollBarHack.xaml" />
+				<ResourceDictionary Source="Styles\FontSizes.xaml"  />
+				<ResourceDictionary Source="Styles\TextBlock.xaml" />
+				<ResourceDictionary Source="Styles\Page.xaml" />
+				<ResourceDictionary Source="Styles\BattleReport.xaml" />
+				<ResourceDictionary Source="Styles\ScrollBarHack.xaml" />
 				<!--<ResourceDictionary Source="/Styles/SharedResources.xaml" />-->
 
 

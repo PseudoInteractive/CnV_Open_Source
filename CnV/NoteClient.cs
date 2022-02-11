@@ -337,7 +337,7 @@ namespace CnV
 			if(str != lastTip && TabPage.mainTabs?.tip is not null)
 			{
 				lastTip = str;
-				AppS.DispatchOnUIThreadLow(() =>
+				AppS.DispatchOnUIThread(() =>
 			   TabPage.mainTabs.tip.Text = str); // Todo:  use the correct tabPage
 			}
 		}

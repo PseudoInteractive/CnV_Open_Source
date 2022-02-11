@@ -156,7 +156,7 @@ namespace CnV.Views
             if (disableSelection == 0)
             {
 
-                AppS.DispatchOnUIThreadLow(() =>
+                AppS.QueueOnUIThreadIdle(() =>
            {
                var id = SpotMRU.c.IndexOf(spot);
                if (id != 0)

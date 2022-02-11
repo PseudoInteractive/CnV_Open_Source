@@ -1890,7 +1890,7 @@ namespace CnV.Views
 								var d = clusters[a.attackCluster].GetTravelTimeHours(a);
 								if (d >= (j == 0 ? maxDistanceToSenator : maxDistanceToSE) - 3.0f)
 								{
-									Note.Show($"{a.nameMarkdown} leaves at around {((j == 0 ? senTime : seTime) - TimeSpan.FromHours(d)).Format()}");
+									Note.Show($"{a.nameMarkdown} leaves at around {((j == 0 ? senTime : seTime) - TimeSpan.FromHours(d)).FormatWithDate()}");
 								}
 							}
 						}

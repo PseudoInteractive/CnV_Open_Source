@@ -629,7 +629,7 @@ public partial class City
 			}
 			else
 			{
-				await CnVServer.CitySwitch(cid, lazyMove, false, scrollIntoUI); // keep current view, switch to city
+				await CnVClient.CitySwitch(cid, lazyMove, false, scrollIntoUI); // keep current view, switch to city
 																			   //	View.SetViewMode(ShellPage.viewMode.GetNextUnowned());// toggle between city/region view
 			}
 			NavStack.Push(cid);
@@ -656,7 +656,7 @@ public partial class City
 		{
 			var wasBuild = City.IsBuild(cid);
 
-			if(!await CnVServer.CitySwitch(cid, false, true, false))
+			if(!await CnVClient.CitySwitch(cid, false, true, false))
 				return false;
 
 			if(wasBuild)

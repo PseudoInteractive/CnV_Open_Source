@@ -228,7 +228,7 @@ namespace CnV.Views
 			if (ob is BuildItemView q)
 			{
 				if(q.cid != City.build)
-					CnVServer.CitySwitch(q.cid, false, scrollIntoUI:false); // this is always true now
+					CnVClient.CitySwitch(q.cid, false, scrollIntoUI:false); // this is always true now
 			}
 		
 		}
@@ -372,6 +372,8 @@ namespace CnV.Views
 
 		internal async void MoveStuff(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
 		{
+			try
+			{ 
 			var cid = City.build;
 			if (!await AppS.LockUiSema(cid))
 				return;
@@ -384,6 +386,10 @@ namespace CnV.Views
 			{
 				AppS.ReleaseUISema(cid);
 
+			}
+			}catch(Exception ex)
+			{
+				LogEx(ex);
 			}
 		}
 

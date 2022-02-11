@@ -289,6 +289,6 @@ namespace CnV
 		internal static int ResProducerIdFromBid(byte bid) => bid switch { bidForester => 0, bidStoneMine => 1, bidIronMine => 2, bidFarm => 3, _=>-1};
 		internal static int ResProcessingIdFromBid(byte bid) => bid switch { bidSawmill => 0, bidStonemason => 1, bidSmelter=> 2, bidGrainMill => 3, _=>-1 };
 		internal static int ResIdFromBid(byte bid) => bid switch { bidForest => 0, bidStone => 1, bidIron => 2, bidLake => 3, _ => -1 };
-		private void AddResBuildings(BuildC cc, ref float cabinGain, ref float resGain, ref float processingGain) => throw new NotImplementedException();
+		//private void AddResBuildings(BuildC cc, ref float cabinGain, ref float resGain, ref float processingGain) => throw new NotImplementedException();
 	}
 }
