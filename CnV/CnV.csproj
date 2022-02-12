@@ -133,6 +133,8 @@
     <Compile Include="Services\CnVSignin.cs" />
     <Compile Include="Views\CityStats.xaml.cs" />
     <Compile Include="Views\CnVSwapChainPanel.cs" />
+    <Compile Include="Xaml\CnVWindow.xaml.cs" />
+    <Compile Include="Xaml\Expander2.cs" />
     <Manifest Include="$(ApplicationManifest)" />
     <Compile Include="Activation\CommandLineActivationHandler.cs" />
     <Compile Include="Activation\SchemeActivationConfig.cs" />
@@ -523,6 +525,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="Xaml\CnVWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
 	<None Remove="cnvCover.png" />
@@ -537,7 +542,6 @@
     <None Remove="Styles\SharedResources.xaml" />
     <None Remove="Styles\_Colors.xaml" />
     <None Remove="Styles\_Thickness.xaml" />
-    <None Remove="Themes\Generic.xaml" />
     <None Remove="Views\CityBox.xaml" />
     <None Remove="Views\CityRename.xaml" />
     <None Remove="Views\CityStats.xaml" />
@@ -549,6 +553,7 @@
     <None Remove="Views\WebViewPage.xaml" />
     <None Remove="Wiki\fixes.md" />
     <None Remove="Win32Native.txt" />
+    <None Remove="Xaml\CnVWindow.xaml" />
   </ItemGroup>
   <ItemGroup>
     <AdditionalFiles Include="..\..\CnVDepends\CnVDepends\DependencyValidation1.layerdiagram" Link="DependencyValidation1.layerdiagram">
@@ -559,7 +564,6 @@
     <Content Include="Properties\Default.rd.xml" />
     <None Include="SignatureKey.snk" />
     <None Include="SignaturePubKey.snk" />
-    <Resource Include="Resources\CnVFont-VF.ttf" />
     <Resource Include="Wiki\wiki.md" />
   </ItemGroup>
   <ItemGroup>
@@ -613,7 +617,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Base\" />
-    <Folder Include="Themes\" />
+    <Folder Include="Resources\" />
   </ItemGroup>
   <ItemGroup>
 	 <Reference Include="Cyotek.Drawing.BitmapFont">
@@ -628,6 +632,11 @@
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Update="Themes\Generic.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </None>
   </ItemGroup>
   <Import Project="..\..\CnVShared\CnVShared.projitems" Label="Shared" />
   <Import Project="..\..\CnVServer\CnVServer\CnVServer.projitems" Label="Shared" />

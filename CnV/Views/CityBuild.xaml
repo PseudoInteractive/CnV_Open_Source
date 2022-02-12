@@ -12,7 +12,7 @@
 		<XamlUICommand x:Name="DoTheStuff" 
                        ExecuteRequested="DoTheStuff_ExecuteRequested"
                        Description="Do The Stuff please" 
-                       Label="DoTheStuff">
+					   Label="DoTheStuff">
 			<XamlUICommand.IconSource>
 				<SymbolIconSource Symbol="Bullets" />
 			</XamlUICommand.IconSource>
@@ -27,7 +27,7 @@
 		</XamlUICommand>
 		<XamlUICommand x:Name="SettingsCommand" 
                    ExecuteRequested="Settings_ExecuteRequested"
-                   Description="Share string, tags and stuff" 
+                   Description="City settings, tags, trade etc" 
                    Label="Setup..">
 			<XamlUICommand.IconSource >
 				<SymbolIconSource Symbol="Setting" />
@@ -59,6 +59,7 @@
 			<RowDefinition Height="Auto"/>
 		</Grid.RowDefinitions>
 		<GridView x:Name="gridView" SelectionMode="None" IsItemClickEnabled="True" ItemClick="ItemClick" Height="Auto"
+				  HorizontalContentAlignment="Left"
 			  ItemsSource="{x:Bind cvsGroups.View, Mode=OneWay}" Background= "{x:Null}" >
 
 
@@ -115,13 +116,13 @@
                                 Title="City Planer"
                                 Subtitle="To Edit your layout select 'planner', this will put you in a mode that is similar to LOUTOPT/COTGOPT but different">
 			</winui:TeachingTip>-->
-		<CommandBar x:Name="commands"  Grid.Row="1" Background="{x:Null}">
+		<CommandBar x:Name="commandBar"  Grid.Row="1" Background="{x:Null}">
 			<CommandBar.PrimaryCommands>
-				<AppBarButton Command="{StaticResource DoTheStuff}" />
-				<AppBarButton Command="{StaticResource TogglePlanner}" />
-				<AppBarButton Command="{StaticResource CancelQueue}" />
-				<AppBarButton Command="{StaticResource Abandon}" />
-				<AppBarButton Command="{StaticResource SettingsCommand}" />
+				<AppBarButton Command="{StaticResource DoTheStuff}" CommandParameter="{x:Bind buildCity}" />
+				<AppBarButton Command="{StaticResource TogglePlanner}" CommandParameter="{x:Bind buildCity}"/>
+				<AppBarButton Command="{StaticResource CancelQueue}" CommandParameter="{x:Bind buildCity}"/>
+				<AppBarButton Command="{StaticResource Abandon}" CommandParameter="{x:Bind buildCity}" />
+				<AppBarButton Command="{StaticResource SettingsCommand}" CommandParameter="{x:Bind buildCity}" />
 			</CommandBar.PrimaryCommands>
 	</CommandBar>
 	</Grid>

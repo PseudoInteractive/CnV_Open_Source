@@ -80,12 +80,13 @@ namespace CnV.Views
 			public int    id   { get; set; }
 
 		}
-		
+		const float minTimeScale= 0.125f;
+		const float maxTimeScale = 1024.0f;
 		float timeScale
 		{
 			get => IServerTime.timeScale;
 			set {
-				IServerTime.SetTimeScale(value);
+				IServerTime.SetTimeScale(value.Clamp(minTimeScale,maxTimeScale));
 				OnPropertyChanged("timeScaleSlider");
 			}
 
@@ -97,7 +98,7 @@ namespace CnV.Views
 			if(absD > 100)
 				return MathF.Round(d);
 			else if(absD > 10)
-				return MathF.Round(d/10)*10;
+				return MathF.Round(d*10)/10;
 			else if(absD> 1)
 				return MathF.Round(d/100)*100;
 			else
@@ -106,14 +107,16 @@ namespace CnV.Views
 
 
 		}
-		static float SliderToTimeScale(float v) =>  RoundNicely(MathF.Exp((v-0.25f)*8));
-		
-		
+		// slider ranges from or 0..10, 2^(x-2) 1/4 .. 256
+		static double SliderToTimeScale(double v) =>  Math.Pow(2,v-2).Clamp(minTimeScale, maxTimeScale);
+		static double TimeScaleToSlider(double v) => (Math.Log2(v) + 2).Clamp(0,10);  
+
+
 		class TimeScaleToolTipConverter:IValueConverter
 		{
 			
 
-			public object Convert(object value, Type targetType, object parameter, string language) => SliderToTimeScale( (float)value).ToString();
+			public object Convert(object value, Type targetType, object parameter, string language) => SliderToTimeScale( (double)value).ToString();
 
 			public object ConvertBack(object value, Type targetType, object parameter, string language)
 			{
@@ -121,19 +124,51 @@ namespace CnV.Views
 			}
 		}
 		TimeScaleToolTipConverter timeScaleToolTipConverter = new TimeScaleToolTipConverter();
-
-		float timeScaleSlider
+		private void TimeScalueSliderValueChanged(object sender, RangeBaseValueChangedEventArgs e)
 		{
-			get => MathF.Log(IServerTime.timeScale)/8.0f + 0.25f;
-			set
+			if(!e.OldValue.AlmostEquals(e.NewValue, 1.0f/2.0f))
 			{
-				var v = SliderToTimeScale(value);
-				Log(v);;
-				IServerTime.SetTimeScale(v);
-				OnPropertyChanged("timeScale");
+				var v = SliderToTimeScale(e.NewValue);
+				Log(v); ;
+				IServerTime.SetTimeScale((float)v);
+				
 			}
 
 		}
+		internal void TimeScaleChangeNotify(float v)
+		{
+			Debounce.Q(50,runOnUIThread:true,action:()=>
+			{ 
+			if( !timeScaleNumberBox.Value.IsEqualTo(v,1.0f/8.0f) )
+			{
+				timeScaleNumberBox.Value = v;
+			}
+			var sliderValue = TimeScaleToSlider(v);
+				if(!timeScaleSlider.Value.AlmostEquals(sliderValue, 0.25f))
+				{
+					timeScaleSlider.Value = sliderValue;
+				}
+			});
+		}
+		internal void TimeScaleValueChanged(NumberBox sender, NumberBoxValueChangedEventArgs e)
+		{
+			if(!e.OldValue.IsEqualTo(e.NewValue, 1.0f/4.0f))
+			{
+				IServerTime.SetTimeScale((float)e.NewValue);
+			}
+		}
+		//float timeScaleSlider
+		//{
+		//	get => MathF.Log2(IServerTime.timeScale) + 2.0f;
+		//	set
+		//	{
+		//		var v = SliderToTimeScale(value);
+		//		Log(v);;
+		//		IServerTime.SetTimeScale(v);
+		//		OnPropertyChanged("timeScale");
+		//	}
+
+		//}
 		string[] layoutOptions =  System.Linq.Enumerable.Range(0, Settings.layoutOffsets.Length)
 			.Select(a => $"Layout {a}").ToArray();
 
@@ -303,6 +338,7 @@ namespace CnV.Views
 
 				var signinTask = Task.Run(CnVSignin.Go);
 
+				App.window.titleImage.Source = new Microsoft.UI.Xaml.Media.Imaging.BitmapImage(new Uri($"ms-appx:///Assets/AppIcon24.png"));
 				Note.Init();
 				CityUI.Init();
 				NavStack.Init();
@@ -470,7 +506,7 @@ namespace CnV.Views
 						AppS.QueueOnUIThread(() =>
 						{
 							AppS.MessageBox($"Welcome {Player.me.shortName}.");
-							AppS.appWindow.Title = $"Conquest and Virtue Alpha, World {World.id} - {Player.me.shortName}";
+							App.window.titleText.Text = $"Conquest and Virtue Alpha, World {World.id} - {Player.me.shortName}";
 						});
 
 
@@ -1496,6 +1532,11 @@ namespace CnV.Views
 		{
 			//	updateHtmlOffsets.Go(true);
 		}
+
+		
+
+
+
 
 		//	protected override void OnKeyboardAcceleratorInvoked(KeyboardAcceleratorInvokedEventArgs args) => base.OnKeyboardAcceleratorInvoked(args);
 		//		protected override void OnProcessKeyboardAccelerators(ProcessKeyboardAcceleratorEventArgs args) => base.OnProcessKeyboardAccelerators(args);

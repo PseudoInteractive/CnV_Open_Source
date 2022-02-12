@@ -74,9 +74,16 @@ namespace CnV
 						var t = CnVServer.simTime;
 						ShellPage.instance.timeDisplay.Text = t.FormatWithYear();
 
+						var resources = city.SampleResources();
+						{ 
+						ResToolTip.Content=
+							$@"Resources: {resources}
+							Storage: {city.stats.storage}
+							Production: {city.stats.production}";
+						}
+
 						if(expResource.IsExpanded)
 						{
-							var resources = city.SampleResources();
 							var panels = expResource.Child<CommunityToolkit.WinUI.UI.Controls.WrapPanel>().Children<StackPanel>();
 							for(var r = 0; r< CnV.Resources.idCount; r++)
 							{
@@ -90,13 +97,17 @@ namespace CnV
 
 							var res = resources[r];
 								var storage = city.stats.storage[r];
-								txt.UpdateLazy($"{res:N0}", (res >= storage ? Colors.Red : res >= storage*3/4 ? Colors.Orange : res == 0 ? Colors.Gray : Colors.Green));
+								txt.UpdateLazy($"{res:N0}", (res >= storage ?
+									Colors.Red : res >= storage*3/4 ? 
+									Colors.Orange : res == 0 ? 
+									Colors.LightGray : Colors.LightGreen));
+
 								var p = city.stats.production[r];
 								prod.UpdateLazy($"{CnV.Resources.names[r]}/h:{p:+#,#;-#,#;' --'}", (p switch
 								{
-									> 0 => Colors.Gray,
+									> 0 => Colors.White,
 									< 0 => Colors.Yellow,
-									_ => Colors.DarkGray
+									_ => Colors.LightGray
 
 								}));
 							}
@@ -155,7 +166,7 @@ namespace CnV
 		}
 		private void ScrollSizeChanged()
 		{
-			DebounceA.Q(runOnUIThread: true, debounceT: 50, action: () =>
+			Debounce.Q(runOnUIThread: true, debounceT: 50, action: () =>
 			{
 				var baseSize = ((scroll.ActualWidth)/scroll.ZoomFactor).Max(0);
 				stackPanel.Width = (baseSize -8).Max(0);

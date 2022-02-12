@@ -59,15 +59,5 @@ namespace CnV.Properties {
                 resourceCulture = value;
             }
         }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Byte[].
-        /// </summary>
-        public static byte[] CnVFont {
-            get {
-                object obj = ResourceManager.GetObject("CnVFont", resourceCulture);
-                return ((byte[])(obj));
-            }
-        }
     }
 }

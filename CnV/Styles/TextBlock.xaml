@@ -3,74 +3,234 @@
                     xmlns:tk="using:CommunityToolkit.WinUI.UI.Controls"
 					xmlns:tkp="using:CommunityToolkit.WinUI.UI.Controls.Primitives"
                     x:Key="Default" >
+	<ResourceDictionary.ThemeDictionaries>
 
-	<!--  Common texts  -->
+		<ResourceDictionary x:Key="Default">
 
-	<!--  MasterDetail TextBlock Styles  -->
-	<Style
+			<!--  Common texts  -->
+			<!--Text Block-->
+
+
+			<Style TargetType="TextBlock" x:Key="TextBlockCondensed" BasedOn="{StaticResource BaseTextBlockStyle}" >
+				<Setter Property="FontStretch" Value="Condensed"/>
+				<Setter Property="FontWeight" Value="Light" />
+
+			</Style>
+
+
+			<Style x:Key="TextBlockSmall" TargetType="TextBlock" BasedOn="{StaticResource TextBlockCondensed}" >
+				<Setter Property="FontSize" Value="{StaticResource SmallFontSize}" />
+
+			</Style>
+
+			<Style x:Key="TextBlockLarge" TargetType="TextBlock" BasedOn="{StaticResource BaseTextBlockStyle}" >
+				<Setter Property="FontSize" Value="{StaticResource LargeFontSize}" />
+			</Style>
+			<Style x:Key="TextBlockMedium" TargetType="TextBlock" BasedOn="{StaticResource BaseTextBlockStyle}" >
+				<Setter Property="FontSize" Value="{StaticResource MediumFontSize}" />
+
+			</Style>
+			<Style x:Key="TextBoxCenter" BasedOn="{StaticResource BaseTextBlockStyle}" TargetType="TextBlock">
+				<Setter Property="HorizontalTextAlignment" Value="Center" />
+			</Style>
+			<Style  x:Key="TextBlockRight" BasedOn="{StaticResource BaseTextBlockStyle}" TargetType="TextBlock">
+				<Setter Property="HorizontalTextAlignment"  Value="Right" />
+			</Style>
+
+			<Style x:Key="TextBlockSmallCenter" BasedOn="{StaticResource TextBlockSmall}" TargetType="TextBlock">
+				<Setter Property="HorizontalTextAlignment" Value="Center" />
+			</Style>
+			<Style  x:Key="TextBlockSmallRight" BasedOn="{StaticResource TextBlockSmall}" TargetType="TextBlock">
+				<Setter Property="HorizontalTextAlignment"  Value="Right" />
+			</Style>
+
+			<!--default text block-->
+			<Style TargetType="TextBlock" BasedOn="{StaticResource BaseTextBlockStyle}" />
+
+			<!--Text Block-->
+
+
+			<!--links-->
+
+			<Style  x:Key="RightAlignLink"
+            BasedOn="{StaticResource ButtonTextStyle }"
+                    TargetType="TextBlock">
+				<Setter Property="VerticalAlignment"
+                        Value="Center" />
+				<Setter Property="HorizontalTextAlignment"
+                        Value="Right" />
+
+			</Style>
+
+			<Style  x:Key="LeftAlignLink"
+            BasedOn="{StaticResource ButtonTextStyle }"
+                    TargetType="TextBlock">
+				<Setter Property="VerticalAlignment"
+                        Value="Center" />
+				<Setter Property="HorizontalTextAlignment"
+                        Value="Left" />
+			</Style>
+			<Style  x:Key="CenterAlignLink"
+            BasedOn="{StaticResource ButtonTextStyle }"
+                    TargetType="TextBlock">
+				<Setter Property="VerticalAlignment"
+                        Value="Center" />
+				<Setter Property="Margin" Value="0,0,0,0" />
+				<Setter Property="HorizontalTextAlignment"
+                        Value="Center" />
+			</Style>
+			<!--Text Block-->
+
+
+
+			<!--Text Box-->
+
+			<Style TargetType="TextBox" x:Key="TextBox" BasedOn="{StaticResource DefaultTextBoxStyle}">
+				<Setter Property="FontFamily" Value="Bahnschrift,Segoe Fluent Icons,Segoe UI Emoji"/>
+				<Setter Property="FontWeight" Value="Normal" />
+				<Setter Property="FontSize" Value="{StaticResource MediumFontSize}" />
+			</Style>
+
+			<!--Default-->
+			<Style TargetType="TextBox"  BasedOn="{StaticResource TextBox}" />
+
+
+			<Style TargetType="TextBox" x:Key="TextBoxReveal" BasedOn="{StaticResource TextBox}" >
+				<Setter Property="BorderBrush" Value="{ThemeResource SystemControlBackgroundAccentRevealBorderBrush}"/>
+			</Style>
+
+			<Style  x:Key="RightAlignBox" BasedOn="{StaticResource TextBox}" TargetType="TextBox">
+				<Setter Property="TextAlignment" Value="Right" />
+
+			</Style>
+
+			<!--Text Box-->
+
+			<!--NumberBox-->
+
+			<Style x:Key="BaseNumberBox" TargetType="NumberBox" >
+				<Setter Property="FontSize" Value="{StaticResource MediumFontSize}" />
+				<Setter Property="FontFamily" Value="Bahnschrift,Segoe Fluent Icons,Segoe UI Emoji"/>
+				<Setter Property="FontWeight" Value="Light"/>
+				<Setter Property="FontStretch" Value="Normal" />
+				<Setter Property="SpinButtonPlacementMode" Value="Compact"/>
+				<Setter Property="SmallChange" Value="1"/>
+				<Setter Property="LargeChange" Value="10"/>
+				<Setter Property="BorderThickness" Value="1" />
+				<Setter Property="BorderBrush" Value="{ThemeResource SystemControlBackgroundAccentRevealBorderBrush}"/>
+				<Setter Property="AcceptsExpression" Value="True" />
+				<Setter Property="VerticalAlignment" Value="Stretch" />
+				<Setter Property="Margin" Value="2" />
+				<Setter Property="HorizontalAlignment" Value="Stretch" />
+				<Setter Property="HorizontalContentAlignment" Value="Right" />
+				<Setter Property="VerticalContentAlignment" Value="Center" />
+
+			</Style>
+
+			<!--default-->
+			<Style  TargetType="NumberBox"  BasedOn="{StaticResource BaseNumberBox}" />
+
+			<Style  x:Key="NumberBoxSmall" BasedOn="{StaticResource BaseNumberBox}" TargetType="NumberBox">
+				<Setter Property="Width" Value="110" />
+			</Style>
+			<Style  x:Key="NumberBoxMedium" BasedOn="{StaticResource BaseNumberBox}" TargetType="NumberBox">
+				<Setter Property="Width" Value="125" />
+			</Style>
+			<Style  x:Key="NumberBoxWide" BasedOn="{StaticResource BaseNumberBox}" TargetType="NumberBox">
+				<Setter Property="Width" Value="140" />
+			</Style>
+
+
+			<Style  x:Key="RightAlignNumberBox" BasedOn="{StaticResource BaseNumberBox}" TargetType="NumberBox">
+				<Setter Property="HorizontalContentAlignment" Value="Right" />
+			</Style>
+			<Style x:Key="NumberBoxRes" BasedOn="{StaticResource RightAlignNumberBox}" TargetType="NumberBox">
+				<Setter Property="SmallChange" Value="25000"/>
+				<Setter Property="Width" Value="140"/>
+				<Setter Property="LargeChange" Value="100000"/>
+			</Style>
+			<Style x:Key="NumberBoxCarts" BasedOn="{StaticResource RightAlignNumberBox}" TargetType="NumberBox">
+				<Setter Property="SmallChange" Value="100"/>
+				<Setter Property="Width" Value="120"/>
+				<Setter Property="LargeChange" Value="1000"/>
+			</Style>
+			<Style x:Key="NumberBoxShips" BasedOn="{StaticResource RightAlignNumberBox}" TargetType="NumberBox">
+				<Setter Property="SmallChange" Value="10"/>
+				<Setter Property="Width" Value="120"/>
+				<Setter Property="LargeChange" Value="100"/>
+			</Style>
+			<Style x:Key="NumberBoxPercent" BasedOn="{StaticResource RightAlignNumberBox}" TargetType="NumberBox">
+				<Setter Property="SmallChange" Value="0.01"/>
+				<Setter Property="LargeChange" Value="0.1"/>
+				<Setter Property="Width" Value="120"/>
+			</Style>
+
+			<!--NumberBox-->
+
+			<!--  MasterDetail TextBlock Styles  -->
+			<Style
 		x:Key="ListItemStyle"
-		BasedOn="{StaticResource BodyTextStyle}"
+		BasedOn="{StaticResource BodyTextBlockStyle}"
 		TargetType="TextBlock">
-		<Setter Property="MaxLines" Value="4" />
-		<Setter Property="LineStackingStrategy" Value="MaxHeight" />
+				<Setter Property="MaxLines" Value="4" />
+				<Setter Property="LineStackingStrategy" Value="MaxHeight" />
 
-	</Style>
+			</Style>
 
-	
 
-	
 
-    <Style
-		x:Key="ButtonTextStyle"
-		TargetType="TextBlock" BasedOn="{StaticResource TextBlockCondensed}">
-        <Setter Property="Foreground" Value="#FF8040FF" />
-    </Style>
-    <Style
+
+
+			<Style	x:Key="ButtonTextStyle"	TargetType="TextBlock" BasedOn="{StaticResource TextBlockCondensed}">
+				<Setter Property="Foreground" Value="#FF8040FF" />
+			</Style>
+			<Style
 		x:Key="CellTextStyle"
 		TargetType="tk:DataGridCell">
-		<Setter Property="FontFamily" Value="Bahnschrift,Segoe Fluent Icons,Segoe UI Emoji"/>
-		<Setter Property="FontSize" Value="{StaticResource SmallFontSize}" />
-		<Setter Property="Height" Value="{StaticResource ShortGridRowHeight}" />
-		<Setter Property="MinHeight" Value="{StaticResource ShortGridRowHeight}" />
-		<Setter Property="FontStretch" Value="Condensed" />
-		
-		<Setter Property="IsTextScaleFactorEnabled" Value="False"/>
-    </Style>
-	<Style
+				<Setter Property="FontFamily" Value="Bahnschrift,Segoe Fluent Icons,Segoe UI Emoji"/>
+				<Setter Property="FontSize" Value="{StaticResource SmallFontSize}" />
+				<Setter Property="Height" Value="{StaticResource ShortGridRowHeight}" />
+				<Setter Property="MinHeight" Value="{StaticResource ShortGridRowHeight}" />
+				<Setter Property="FontStretch" Value="Condensed" />
+
+				<Setter Property="IsTextScaleFactorEnabled" Value="False"/>
+			</Style>
+			<Style
 		x:Key="DataGridRowStyle"
 		TargetType="tk:DataGridRow">
-		<Setter Property="Padding" Value="0,0,0,0"/>
-		<Setter Property="FontFamily" Value="Bahnschrift,Segoe Fluent Icons,Segoe UI Emoji"/>
-		<Setter Property="FontSize" Value="{StaticResource SmallFontSize}" />
-		<Setter Property="Height" Value="{StaticResource ShortGridRowHeight}" />
-		<Setter Property="MinHeight" Value="{StaticResource ShortGridRowHeight}" />
-		<Setter Property="FontStretch" Value="Condensed" />
-		
-		<Setter Property="IsTextScaleFactorEnabled" Value="False"/>
-	</Style>
-	<Style
+				<Setter Property="Padding" Value="0,0,0,0"/>
+				<Setter Property="FontFamily" Value="Bahnschrift,Segoe Fluent Icons,Segoe UI Emoji"/>
+				<Setter Property="FontSize" Value="{StaticResource SmallFontSize}" />
+				<Setter Property="Height" Value="{StaticResource ShortGridRowHeight}" />
+				<Setter Property="MinHeight" Value="{StaticResource ShortGridRowHeight}" />
+				<Setter Property="FontStretch" Value="Condensed" />
+
+				<Setter Property="IsTextScaleFactorEnabled" Value="False"/>
+			</Style>
+			<Style
 		x:Key="DataGridColumnHeaderStyle"
 		TargetType="tkp:DataGridColumnHeader">
-		<Setter Property="Padding" Value="0,0,0,0"/>
-		<Setter Property="SeparatorVisibility" Value="Collapsed" />
-	</Style>
-	<Style
+				<Setter Property="Padding" Value="0,0,0,0"/>
+				<Setter Property="SeparatorVisibility" Value="Collapsed" />
+			</Style>
+			<Style
 		TargetType="tk:DataGridCell">
-		<Setter Property="FontFamily" Value="Bahnschrift,Segoe Fluent Icons,Segoe UI Emoji"/>
-		<Setter Property="FontSize" Value="{StaticResource SmallFontSize}" />
-		<Setter Property="FontStretch" Value="Condensed" />
-		
-		<Setter Property="IsTextScaleFactorEnabled" Value="False"/>
-	</Style>
-	
-	
+				<Setter Property="FontFamily" Value="Bahnschrift,Segoe Fluent Icons,Segoe UI Emoji"/>
+				<Setter Property="FontSize" Value="{StaticResource SmallFontSize}" />
+				<Setter Property="FontStretch" Value="Condensed" />
 
-	<Style
+				<Setter Property="IsTextScaleFactorEnabled" Value="False"/>
+			</Style>
+
+
+
+			<Style
 		x:Key="CellButtonTextStyle"
         BasedOn="{StaticResource CellTextStyle}"
         TargetType="tk:DataGridCell">
-        <Setter Property="Foreground" Value="#FF8040FF" />
-    </Style>
-   
+				<Setter Property="Foreground" Value="#FF8040FF" />
+			</Style>
+		</ResourceDictionary>
+	</ResourceDictionary.ThemeDictionaries>
 
 </ResourceDictionary>

@@ -71,7 +71,7 @@
 							<StackPanel  >
 								<TextBox  x:Name="suggested" Header="Suggested" x:FieldModifier="public" />
 								<TextBox  x:Name="current" Header="Prior" x:FieldModifier="public"   />
-								<TextBlock Style="{StaticResource BodyTextStyle}" MaxLines="8" MaxHeight="256"  TextWrapping="Wrap" >
+							<TextBlock Style="{StaticResource BodyTextBlockStyle}" MaxLines="8" MaxHeight="256"  TextWrapping="Wrap" >
 				Try to avoid '-'<LineBreak/>		
 				If you name hubs 22 001, 22 004... cites will wind up like 22 1003, 22 4005... where 1 and 4 are hub cluster #'s (the # of the closest hub)
 				cities will sort in order of continents, hubs, then clusters of cities for each hub.<LineBreak/>

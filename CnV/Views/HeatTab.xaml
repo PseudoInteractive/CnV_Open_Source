@@ -63,7 +63,7 @@
 
 
 
-		<TextBlock Grid.Row="0" x:Name="header" x:FieldModifier="public" Text="World Snapshots:" VerticalAlignment="Center" IsTextSelectionEnabled="True" Style="{StaticResource BodyTextStyle}" />
+		<TextBlock Grid.Row="0" x:Name="header" x:FieldModifier="public" Text="World Snapshots:" VerticalAlignment="Center" IsTextSelectionEnabled="True" Style="{StaticResource BodyTextBlockStyle}" />
 		<tk:WrapPanel Grid.Row="2" Orientation="Horizontal">
 			<Button Click="Now_Click"  Content="Clear"  />
 			<ToggleSwitch Header="Castles" IsOn="{x:Bind game:ChangeInfo.includeCastle, Mode=TwoWay}" />

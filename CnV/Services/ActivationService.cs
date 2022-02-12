@@ -83,18 +83,18 @@ namespace CnV.Services
               
                 // Do not repeat app initialization when the Window already has content,
                 // just ensure that the window is active
-                if (App.window.Content == null)
-                {
-					// Create a Shell or Frame to act as the navigation context
-				//	App.instance.Resources["TabViewBackground"] = new SolidColorBrush();
-				//	App.instance.Resources["TabViewButtonBackground"] = new SolidColorBrush();
-				//	App.instance.Resources["TabViewButtonForeground"] = new SolidColorBrush();
-				//	App.instance.Resources["OverlayCornerRadius"] = 1.0;
-				//	App.instance.Resources["TopCornerRadiusFilterConverter"] = new object();
+    //            if (App.window.frame == null)
+    //            {
+				//	// Create a Shell or Frame to act as the navigation context
+				////	App.instance.Resources["TabViewBackground"] = new SolidColorBrush();
+				////	App.instance.Resources["TabViewButtonBackground"] = new SolidColorBrush();
+				////	App.instance.Resources["TabViewButtonForeground"] = new SolidColorBrush();
+				////	App.instance.Resources["OverlayCornerRadius"] = 1.0;
+				////	App.instance.Resources["TopCornerRadiusFilterConverter"] = new object();
 					
-					App.window.Content = new ShellPage();
+				//	App.window.frame = new ShellPage();
 
-				}
+				//}
             }
 
             // Depending on activationArgs one of ActivationHandlers or DefaultActivationHandler

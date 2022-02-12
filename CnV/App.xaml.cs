@@ -96,7 +96,7 @@ namespace CnV
 		
 		//public static ref State => ref AppS.state;
 		//		static IConfigurationRoot configuration;
-		public  static      Window?           window => AppS.window;
+		public  static      CnVWindow?         window;
 		
 		private       Lazy<ActivationService> _activationService;
 		public static bool                    processingTasksStarted;
@@ -108,7 +108,7 @@ namespace CnV
 
 
 		public static App    instance;
-		public static string appLink = "cotg";
+		public static string appLink = "cnv";
 
 		public static async Task EnsureBrowserInstalledAsync()
 		{
@@ -475,7 +475,7 @@ namespace CnV
 
 				FocusVisualKind = FocusVisualKind.Reveal;
 
-				AppS.window = new();
+				window = new();
 				
 				//	window.
 				
@@ -523,7 +523,7 @@ namespace CnV
 					WindowId myWndId = Microsoft.UI.Win32Interop.GetWindowIdFromWindow(hWnd);
 					AppS.appWindow= AppWindow.GetFromWindowId(myWndId);
 				}
-				AppS.appWindow.Title = "Conquest and Virtue Alpha";
+			//	AppS.appWindow.Title = "Conquest and Virtue Alpha";
 
 				//				
 				//				window.SetTitleBar

@@ -23,9 +23,9 @@
 >
 	<Page.Resources>
 		<ResourceDictionary>
-			<ResourceDictionary.MergedDictionaries>
+			<!--<ResourceDictionary.MergedDictionaries>
 				<ResourceDictionary Source="ms-appx:///Microsoft.UI.Xaml/DensityStyles/Compact.xaml" />
-			</ResourceDictionary.MergedDictionaries>
+			</ResourceDictionary.MergedDictionaries>-->
 			<Style TargetType="Button" BasedOn="{StaticResource ButtonRevealStyle}" x:Key="layoutButton" >
 				<Setter Property="Margin" Value="0,2,0,2" />
 				<Setter Property="Padding" Value="1"/>
@@ -34,14 +34,7 @@
 				<Setter Property="VerticalAlignment" Value="Stretch"/>
 				<Setter Property="HorizontalAlignment" Value="Stretch"/>
 			</Style>
-			<SolidColorBrush x:Key="brushExpanderContent">#80200000</SolidColorBrush>
-			<SolidColorBrush x:Key="brushExpanderHeader" >#B0200000</SolidColorBrush>
-			<Style TargetType="Expander" BasedOn="BaseExpanderStyle">
-				<Setter Property="MinHeight" Value="20" />
-				<Setter Property="ScrollViewer.Padding"
-			</Style>
-					<Expander  Expanding="Expander_Expanding" MinHeight="22"  Padding="0" Margin="0"  Background="{x:Null}"  x:Name="expResource" HorizontalAlignment="Stretch"  >
-
+			
 		</ResourceDictionary>
 
 
@@ -377,16 +370,21 @@
 					    Canvas.ZIndex="35"
 					   HorizontalAlignment="Stretch"
 					   ExpandDirection="Up"
-					   Background="#80808000" 
 					   VerticalAlignment="Bottom"
 					  MinHeight="22" Padding="0" Margin="0" Grid.RowSpan="2" >
 				<Expander.Header>
-					<TextBlock x:Name="timeDisplay" x:FieldModifier="public" Margin="2,0"  Text="Time" MinHeight="22" />
+					<TextBlock x:Name="timeDisplay" x:FieldModifier="public" Margin="2,0" HorizontalAlignment="Stretch" />
 				</Expander.Header>
 				<StackPanel Orientation="Vertical"  Padding="0" Margin="0">
-					<NumberBox   Header="TimeScale:"  Value="{x:Bind timeScale, Mode=TwoWay}" Margin="2,4"  HorizontalContentAlignment="Right" VerticalContentAlignment="Center" VerticalAlignment="Center" HorizontalAlignment="Right" />
-					<Slider  ThumbToolTipValueConverter="{x:Bind timeScaleToolTipConverter}"  Value="{x:Bind timeScaleSlider, Mode=TwoWay}" VerticalAlignment="Bottom" Orientation="Horizontal" Minimum="0" Maximum="1" SmallChange="0.125" 
-							 StepFrequency="0.0625" TickFrequency="0.0625" Margin="2,4"  />
+					<NumberBox  x:Name="timeScaleNumberBox" Header="TimeScale:"  Value="1" ValueChanged="TimeScaleValueChanged" Margin="2,4"  HorizontalContentAlignment="Right" VerticalContentAlignment="Center" VerticalAlignment="Center" HorizontalAlignment="Right" 
+								
+								Minimum="0.25" 
+						Maximum="1024" />
+					<Slider x:Name="timeScaleSlider" ThumbToolTipValueConverter="{x:Bind timeScaleToolTipConverter}"  Value="2" 
+							ValueChanged="TimeScalueSliderValueChanged"
+							
+							VerticalAlignment="Bottom" Orientation="Horizontal" Minimum="0" Maximum="10" SmallChange="1" 
+							 StepFrequency="1"  Margin="2,4"  />
 					
 				</StackPanel>
 			</Expander>

@@ -11,6 +11,6 @@
         <TextBlock
             x:Name="PassedArguments"
             TextWrapping="Wrap"
-            Style="{StaticResource BodyTextStyle}" />
+            Style="{StaticResource BodyTextBlockStyle}" />
     </Grid>
 </Page>

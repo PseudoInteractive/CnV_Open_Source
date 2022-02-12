@@ -39,11 +39,14 @@ namespace CnV
 	using Helpers;
 
 	using Microsoft.UI.Xaml.Controls;
+
+	using System.ComponentModel;
+
 	using Windows.UI;
 
 	//// using PInvoke
 
-	public sealed partial class CityBuild:Microsoft.UI.Xaml.Controls.UserControl
+	public sealed partial class CityBuild:Microsoft.UI.Xaml.Controls.UserControl,INotifyPropertyChanged
 	{
 		public static CityBuild instance;
 
@@ -51,7 +54,8 @@ namespace CnV
 		static readonly Dictionary<string, ImageBrush> brushFromImageCache = new();
 		static readonly Dictionary<BitmapImage, ImageBrush> brushFromImageCache2 = new();
 
-
+		public City buildCity => City.GetBuild();
+		
 
 		public static Regex shortKeyRegEx = new Regex(@"Shortkey: (.)", RegexOptions.CultureInvariant | RegexOptions.Compiled);
 
@@ -366,6 +370,8 @@ namespace CnV
 			//	Content = instance,
 
 			};
+
+			City.buildCityChanged +=  instance.CityChanged;
 
 			Style s = new Microsoft.UI.Xaml.Style { TargetType = typeof(Microsoft.UI.Xaml.Controls.FlyoutPresenter) };
 			s.Setters.Add(new Setter(MinHeightProperty, "300"));
@@ -916,6 +922,8 @@ namespace CnV
 				b.bl == 0 ? MenuType.res :
 				b.id == bidTownHall ? isPlanner ? MenuType.townhallPlanner : MenuType.townhall :
 				MenuType.buliding;
+			// update city in command bar parameters
+			
 			UpdateBuildMenuType(type, cc);
 
 			//				ShellPage.instance.buildMenu.IsOpen = true;
@@ -1158,12 +1166,16 @@ namespace CnV
 
 		private async void DoTheStuff_ExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
 		{
+			Assert(object.ReferenceEquals(args.Parameter, City.GetBuild()));
+
 			buildFlyout.Hide();
 			await City.GetBuild().DoTheStuff().ConfigureAwait(false);
 		}
 
 		private async void TogglePlanner_ExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
 		{
+			Assert(object.ReferenceEquals(args.Parameter, City.GetBuild()));
+
 			buildFlyout.Hide();
 
 			if(CityBuild.isPlanner)
@@ -1199,6 +1211,8 @@ namespace CnV
 
 		private async void Settings_ExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
 		{
+			Assert(object.ReferenceEquals(args.Parameter, City.GetBuild()));
+
 			buildFlyout.Hide();
 			await ShareString.Show(City.build).ConfigureAwait(false);
 		}
@@ -1206,6 +1220,7 @@ namespace CnV
 
 		private async void Abandon_ExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
 		{
+			Assert(object.ReferenceEquals(args.Parameter, City.GetBuild()));
 
 
 			buildFlyout.Hide();
@@ -1241,8 +1256,18 @@ namespace CnV
 		private void CancelQueue_ExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
 		{
 			buildFlyout.Hide();
+			Assert(object.ReferenceEquals(args.Parameter,City.GetBuild()));
 			ClearQueue();
 		}
+		public void OnPropertyChanged(string member = null)
+		{
+			if(PropertyChanged is not null) PropertyChanged(this,new PropertyChangedEventArgs(member));
+		}
+		public void CityChanged()
+		{
+			AppS.DispatchOnUIThread( ()=> OnPropertyChanged( nameof(buildCity)) );
+		}
+		public event PropertyChangedEventHandler? PropertyChanged;
 		//public static BuildPhase GetBuildPhase()
 		//{
 		//	var buildings = postQueueBuildings;
