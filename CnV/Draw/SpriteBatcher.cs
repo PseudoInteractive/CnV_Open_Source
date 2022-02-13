@@ -168,7 +168,7 @@ namespace CnV.Draw
 			// Iterate through the batches, doing short.MaxValue sets of vertices only.
 			foreach (var layer in _batchItemList)
 			{
-				GameClient.instance.GraphicsDevice.BlendState = (layer.Key == Layer.webView) ?  BlendState.Opaque : BlendState.AlphaBlend;
+	//			GameClient.instance.GraphicsDevice.BlendState = (layer.Key == Layer.webView) ?  BlendState.Opaque : BlendState.AlphaBlend;
 				foreach (var _effect in layer.Value)
 				{
 					bool effectInitialized = false;

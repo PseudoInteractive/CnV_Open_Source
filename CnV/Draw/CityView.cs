@@ -656,7 +656,7 @@ namespace CnV
 				}
 				catch( Exception e )
 				{
-					Log($"Missing {build} {build.dimg}, {e.Message}");
+					Log($"InvalidTexture {build} {build.dimg}, {e.Message}");
 				}
 
 			}

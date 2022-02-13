@@ -422,7 +422,7 @@ internal partial class GameClient
 					//			shadowColor = new Color() { A = 128 };
 
 
-					if(TilesReady())
+					
 					{
 						var td = TileData.instance;
 
@@ -2043,6 +2043,8 @@ internal partial class GameClient
 		if(!CnVServer.isInitialized)
 			return false;
 		if(faulted)
+			return false;
+		if(!AGame.contentLoadingComplete)
 			return false;
 		return base.BeginDraw();
 	}

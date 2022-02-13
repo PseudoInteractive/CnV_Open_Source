@@ -269,14 +269,16 @@ namespace CnV
 				case DXGI_FORMAT.BC6H_SF16: return SurfaceFormat.BC6S;
 				case DXGI_FORMAT.BC6H_UF16: return SurfaceFormat.BC6U;
 
-				case DXGI_FORMAT.BC7_UNORM: return SurfaceFormat.BC7;
+				case DXGI_FORMAT.BC7_UNORM: return SurfaceFormat.BC7SRgb;
 				case DXGI_FORMAT.BC7_UNORM_SRGB: return SurfaceFormat.BC7SRgb;
 
 				default: throw new InvalidDataException($"Unsupported DDS format {format}");
 			}
 
 		}
-		private static int RoundUpTo4(int v) => v;//(v+3)&(~3);
+		private static int RoundUpTo4(int v) => (v+3)&(~3);
+		private static int RoundDownTo4(int v) => (v+3)&(~3);
+		private static bool IsMultipleOf4(int w,int h) => ((h&3)|(w&3)) ==0;//(v+3)&(~3);
 		public unsafe static Texture CreateFromDDS(string fileName)
 		{
 			using var scratch = DirectXTexNet.TexHelper.Instance.LoadFromDDSFile(fileName, DDS_FLAGS.NONE);
@@ -284,16 +286,22 @@ namespace CnV
 			Log($"{fileName} {meta.Dimension} {meta.Width}x{meta.Height}x{meta.Depth}[{meta.ArraySize}] Mips: {meta.MipLevels} Format: {meta.Format} {meta.GetAlphaMode()}");
 			SurfaceFormat format = GetFormat(meta.Format);
 			Assert( meta.Depth == 1);
-			var rv = new Texture2D(instance.GraphicsDevice, RoundUpTo4(meta.Width), RoundUpTo4(meta.Height), meta.MipLevels, format,meta.ArraySize);
+			int mips = IsMultipleOf4(meta.Width,meta.Height) ?  meta.MipLevels : 1;
+			if(mips==1)
+			{
+				Log("not multiple of 4");
+			}
+
+			var rv = new Texture2D(instance.GraphicsDevice, RoundUpTo4(meta.Width), RoundUpTo4(meta.Height), mips, format,meta.ArraySize);
 
 
 			for(int arraySlice =0;arraySlice<meta.ArraySize;++arraySlice)
 			{
-				for(int m=0;m<meta.MipLevels.Max(1);++m)
+				for(int m=0;m<mips;++m)
 				{
 					const int item = 0;
 					var image = scratch.GetImage(m,item,arraySlice);
-					rv.SetDataRaw(image.Pixels,m,image.RowPitch, image.Width, image.Height,arraySlice);
+					rv.SetDataRaw(image.Pixels,m,image.RowPitch, (image.Width),(image.Height),arraySlice);
 
 				}
 			}
@@ -343,7 +351,7 @@ namespace CnV
 		{
 			try
 			{
-				contentLoadingStarted = true;
+				contentStage = ContentStage.loading;
 				
 			
 
@@ -505,7 +513,11 @@ namespace CnV
 				//};
 				LoadWorldBackground();
 				CityView.LoadContent();
-			//	contentLoadingCompleted.Complete();
+
+				await TileData.LoadImages();
+
+				contentStage = ContentStage.loaded;
+
 
 			}
 			catch(Exception ex)
