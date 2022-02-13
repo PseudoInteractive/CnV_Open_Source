@@ -27,6 +27,9 @@ namespace CnV
 {
 	using Draw;
 	using Game;
+
+	using Microsoft.Xna.Framework.Graphics;
+
 	using Views;
 	
 	public class CityView
@@ -534,14 +537,15 @@ namespace CnV
 			if( bid == 0)
 				return;
 
-				var iconId = BidToAtlas(bid);
-
-				var u0 = iconId.x * duDt;
-				var v0 = iconId.y * dvDt;
+			if( BuildingMaterials.all.TryGetValue(bid,out var materials) )
+			{ 
+				
 
 			// building
-			draw.AddQuad(layer, buildingAtlas, cs.c0, cs.c1, new Vector2(u0, v0), new Vector2(u0 + duDt, v0 + dvDt), iAlpha.AlphaToAll(), (zBase, zBase, zBase, zBase)); // shader does the z transform
-			
+
+				draw.AddQuad(layer, materials.main, cs.c0, cs.c1, new Vector2(0, 0), new Vector2(1,1), iAlpha.AlphaToAll(), (zBase, zBase, zBase, zBase)); // shader does the z transform
+
+			}
 			// building level
 			if(buildingLevel > 0) 
 			{
@@ -621,6 +625,13 @@ namespace CnV
 			decalSelectGloss           = LoadMaterialAdditive("Art/City/build_details_gloss_overlay");
 			CityViewS.ClientDrawSprite = DrawSprite;
 		}
+		internal class BuildingMaterials
+		{
+			internal Material main;
+			internal Material shadow;
+			internal  static Dictionary<BuildingId, BuildingMaterials> all = new();
+		}
+
 		public static void LoadTheme()
 		{
 			//var cityBase = Settings.IsThemeWinter() ? "Art/City/Winter/" : "Art/City/";
@@ -629,6 +640,26 @@ namespace CnV
 			buildingShadows = new Material(buildingAtlas.texture, AGame.unlitEffect);
 			cityWallsLand = Material.LoadLitMaterial(cityBase + "baseland");
 			cityWallsWater = Material.LoadLitMaterial(cityBase + "basewater");
+			foreach(var build in BuildingDef.all)
+			{
+				if(build==null  || build.dimg == null || build.dimg.Length ==0 )
+					continue;
+				try
+				{ 
+					var path = AppS.AppFileName($"runtime\\city\\{build.dimg}.dds");
+					var pathN = AppS.AppFileName($"runtime\\city\\{build.dimg}_n.dds");
+					Microsoft.Xna.Framework.Graphics.Texture texture = CreateFromDDS(path);
+					Microsoft.Xna.Framework.Graphics.Texture normalMap = CreateFromDDS(pathN);
+					var main = new Material(texture, normalMap, AGame.GetTileEffect());
+					var shadow = new Material(texture,AGame.unlitEffect);
+					BuildingMaterials.all[build.id] = new BuildingMaterials() { main = main, shadow =shadow};
+				}
+				catch( Exception e )
+				{
+					Log($"Missing {build} {build.dimg}, {e.Message}");
+				}
+
+			}
 		}
 		public static void UpdateLighting()
 		{

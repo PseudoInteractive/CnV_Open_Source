@@ -56,7 +56,7 @@ namespace CnV
 				await World.LoadWorldData().ConfigureAwait(false);
 				await t2.ConfigureAwait(false); ; // city custom can end here
 
-				AppS.state = AppS.State.active;
+				AppS.SetState( AppS.State.active );
 
 				CnVServer.StartSim();
 

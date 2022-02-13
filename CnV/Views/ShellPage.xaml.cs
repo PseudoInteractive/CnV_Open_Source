@@ -464,7 +464,7 @@ namespace CnV.Views
 				//	ShellPage.webclientSpan.y = (screenSize.Height * 0.89236111111111116f * Settings.htmlZoom*2).RoundToInt();
 				//	await UpdateWebViewScale();
 				Assert( AppS.state == AppS.State.init);
-				AppS.state = AppS.State.setup;
+				AppS.SetState(AppS.State.setup);
 
 				Log("Game Create!");
 				GameClient.Create(_canvas);
@@ -533,7 +533,7 @@ namespace CnV.Views
 				}
 
 				await CnVClient.InitializeGame();
-				AppS.state = AppS.State.active;
+				AppS.SetState( AppS.State.active );
 			}
 			catch(Exception ex)
 			{

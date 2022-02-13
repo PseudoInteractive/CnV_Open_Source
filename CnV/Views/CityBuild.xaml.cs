@@ -706,19 +706,8 @@ namespace CnV
 		{
 			var bdef = BuildingDef.FromId(id);
 			var str = bdef.dimg;
-			var lastDot = str.LastIndexOf('.');
-			const int maxExtennsionLength = 6;
-			// could add a slash heuristic in here
-			if(lastDot == -1 ||  (str.Length-lastDot > maxExtennsionLength))
-			{
-				if(bdef.animationFrames > 0)
-					str = str + ".gif";
-				else
-					str = str + ".png";
 
-			}
-
-			return ImageHelper.FromImages($"townlayer/{str}", width);
+			return ImageHelper.FromImages($"townlayer/{str}.{((bdef.animationFrames > 0)?"gif":"png")}", width);
 		}
 		public static ImageBrush BuildingBrush(BuildingId id, float scale)
 		{

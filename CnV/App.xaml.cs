@@ -466,7 +466,7 @@ namespace CnV
 			try
 			{
 				Assert(AppS.state == AppS.State.loading);
-				AppS.state = AppS.State.init;
+				AppS.SetState( AppS.State.init );
 
 				CnVFont = new FontFamily("Bahnschrift,Segoe Fluent Icons,Segoe UI Emoji");
 
@@ -703,13 +703,13 @@ namespace CnV
 
 				if(AppS.state <  AppS.State.closing)
 				{
-					AppS.state = AppS.State.closing;
+					AppS.SetState(  AppS.State.closing );
 					args.Cancel = true;
 					BackgroundTask.dispatcherQueueController.ShutdownQueueAsync();
 
 					await SwitchToBackground();
 					Assert( AppS.state == AppS.State.closing);
-					AppS.state = AppS.State.closed;
+					AppS.SetState( AppS.State.closed );
 					Log($"Destroyed");
 					Exit();
 					//appWindow.Destroy();

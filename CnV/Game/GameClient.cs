@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using DirectXTexNet;
 using static CnV.AGame;
 using static CnV.View;
 namespace CnV
@@ -146,8 +147,32 @@ namespace CnV
 			//canvas.CompositeMode = (Microsoft.UI.Xaml.Media.ElementCompositeMode.MinBlend);
 			var _instance = MonoGame.Framework.XamlGame<GameClient>.Create(() => new GameClient() { }, "", App.window, swapChainPanel);
 			Assert(instance == _instance);
+			instance.Deactivated+=Instance_Deactivated;
+			instance.GraphicsDevice.DeviceLost+=GraphicsDevice_DeviceLost;
+			instance.GraphicsDevice.DeviceReset+=GraphicsDevice_DeviceReset; ;
+			instance.GraphicsDevice.DeviceResetting+=GraphicsDevice_DeviceResetting; ;
 			canvas.SizeChanged += Canvas_SizeChanged;
 
+		}
+
+		private static void GraphicsDevice_DeviceResetting(object? sender, EventArgs e)
+		{
+			Log("GraphicsDevice_DeviceResetting");
+		}
+
+		private static void GraphicsDevice_DeviceReset(object? sender, EventArgs e)
+		{
+			Log("GraphicsDevice_DeviceReset");
+		}
+
+		private static void GraphicsDevice_DeviceLost(object? sender, EventArgs e)
+		{
+			LogEx(new InvalidProgramException("GraphicsDevice_DeviceLost"));
+		}
+
+		private static void Instance_Deactivated(object? sender, EventArgs e)
+		{
+			Log("Deactivated");
 		}
 
 		protected override void Initialize()
@@ -225,6 +250,60 @@ namespace CnV
 
 			return new Material(rv, effect);
 		}
+
+		static SurfaceFormat GetFormat(DXGI_FORMAT format)
+		{
+			switch(format) {
+				case DXGI_FORMAT.BC1_UNORM: return SurfaceFormat.Dxt1;
+				case DXGI_FORMAT.BC1_UNORM_SRGB: return SurfaceFormat.Dxt1SRgb;
+
+				case DXGI_FORMAT.BC3_UNORM: return SurfaceFormat.Dxt5;
+				case DXGI_FORMAT.BC3_UNORM_SRGB: return SurfaceFormat.Dxt5SRgb;
+
+				case DXGI_FORMAT.BC4_UNORM: return SurfaceFormat.BC4U;
+				case DXGI_FORMAT.BC4_SNORM: return SurfaceFormat.BC4S;
+
+				case DXGI_FORMAT.BC5_UNORM: return SurfaceFormat.BC5U;
+				case DXGI_FORMAT.BC5_SNORM: return SurfaceFormat.BC5S;
+
+				case DXGI_FORMAT.BC6H_SF16: return SurfaceFormat.BC6S;
+				case DXGI_FORMAT.BC6H_UF16: return SurfaceFormat.BC6U;
+
+				case DXGI_FORMAT.BC7_UNORM: return SurfaceFormat.BC7;
+				case DXGI_FORMAT.BC7_UNORM_SRGB: return SurfaceFormat.BC7SRgb;
+
+				default: throw new InvalidDataException($"Unsupported DDS format {format}");
+			}
+
+		}
+		private static int RoundUpTo4(int v) => v;//(v+3)&(~3);
+		public unsafe static Texture CreateFromDDS(string fileName)
+		{
+			using var scratch = DirectXTexNet.TexHelper.Instance.LoadFromDDSFile(fileName, DDS_FLAGS.NONE);
+			var meta = scratch.GetMetadata();
+			Log($"{fileName} {meta.Dimension} {meta.Width}x{meta.Height}x{meta.Depth}[{meta.ArraySize}] Mips: {meta.MipLevels} Format: {meta.Format} {meta.GetAlphaMode()}");
+			SurfaceFormat format = GetFormat(meta.Format);
+			Assert( meta.Depth == 1);
+			var rv = new Texture2D(instance.GraphicsDevice, RoundUpTo4(meta.Width), RoundUpTo4(meta.Height), meta.MipLevels, format,meta.ArraySize);
+
+
+			for(int arraySlice =0;arraySlice<meta.ArraySize;++arraySlice)
+			{
+				for(int m=0;m<meta.MipLevels.Max(1);++m)
+				{
+					const int item = 0;
+					var image = scratch.GetImage(m,item,arraySlice);
+					rv.SetDataRaw(image.Pixels,m,image.RowPitch, image.Width, image.Height,arraySlice);
+
+				}
+			}
+
+			
+
+
+			return rv;
+		}
+
 		public static EffectPass EffectPass(string name)
 		{
 			return avaEffect.Techniques[name].Passes[0];
