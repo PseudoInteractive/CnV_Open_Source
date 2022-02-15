@@ -646,13 +646,11 @@ namespace CnV
 					continue;
 				try
 				{ 
-					var path = AppS.AppFileName($"runtime\\city\\{build.dimg}.dds");
-					var pathN = AppS.AppFileName($"runtime\\city\\{build.dimg}_n.dds");
-					Microsoft.Xna.Framework.Graphics.Texture texture = CreateFromDDS(path);
-					Microsoft.Xna.Framework.Graphics.Texture normalMap = CreateFromDDS(pathN);
-					var main = new Material(texture, normalMap, AGame.GetTileEffect());
-					var shadow = new Material(texture,AGame.unlitEffect);
-					BuildingMaterials.all[build.id] = new BuildingMaterials() { main = main, shadow =shadow};
+					if(GameClient.TryLoadLitMaterialFromDDS($"runtime\\city\\{build.dimg}", out var main, out var shadow))
+					{ 
+						BuildingMaterials.all[build.id] = new BuildingMaterials() { main = main, shadow =shadow};
+
+					}
 				}
 				catch( Exception e )
 				{

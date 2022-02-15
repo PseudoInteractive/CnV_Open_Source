@@ -73,7 +73,7 @@
 							<tk:MarkdownTextBlock  x:Name="message" Text="{x:Bind ToString(), Mode=OneTime}"  Margin="1"  Padding="0,0,0,0"    
                                                IsTextSelectionEnabled="True"
 											  FontSize="{StaticResource SmallFontSize}"
-											 FontFamily="Bahnschrift,Segoe Fluent Icons,Segoe UI Emoji"
+											 FontFamily="XamlAutoFontFamily"
                                               TextWrapping="Wrap" 
 											   LinkClicked="{x:Bind cnv:Note.MarkDownLinkClicked}"  Background="Transparent"  />
 

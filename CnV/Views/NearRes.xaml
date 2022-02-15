@@ -165,7 +165,7 @@
 			<tk:DataGrid.CellStyle >
 				<Style TargetType="tk:DataGridCell">
 					<Setter Property="Margin" Value="0" />
-					<Setter Property="FontFamily" Value="Bahnschrift,Segoe Fluent Icons,Segoe UI Emoji"/>
+					<Setter Property="FontFamily" Value="XamlAutoFontFamily"/>
 					<Setter Property="FontSize" Value="{StaticResource SmallFontSize}" />
 					<Setter Property="IsTextScaleFactorEnabled" Value="False"/>
 				</Style>
@@ -203,7 +203,7 @@
                                         Binding="{Binding travel, Converter={StaticResource TimeConverter},Mode=OneWay}"
                                         IsReadOnly="True" Tag="travel"
 										FontSize="{StaticResource SmallFontSize}"
-										FontFamily="Bahnschrift,Segoe Fluent Icons,Segoe UI Emoji"
+										FontFamily="XamlAutoFontFamily"
 										
 
                                              />
@@ -212,13 +212,13 @@
                                         IsReadOnly="True" Tag="carts"
                                             CellStyle="{StaticResource CellCenter}"
 										FontSize="{StaticResource SmallFontSize}"
-		   							   FontFamily="Bahnschrift,Segoe Fluent Icons,Segoe UI Emoji"
+		   							   FontFamily="XamlAutoFontFamily"
 
                                              />
 				<tk:DataGridTextColumn  Header="Ships" 
                                         Binding="{Binding shipsHome, Converter={StaticResource IntConverter},Mode=OneWay}"
                                         FontSize="{StaticResource SmallFontSize}"
-										FontFamily="Bahnschrift,Segoe Fluent Icons,Segoe UI Emoji"
+										FontFamily="XamlAutoFontFamily"
 										IsReadOnly="True" Tag="ships"
                                             CellStyle="{StaticResource CellCenter}"
                                              />
@@ -227,12 +227,12 @@
                                         Binding="{Binding name, Mode=OneWay }"
                                         IsReadOnly="True"
 										FontSize="{StaticResource SmallFontSize}"
-		   							   FontFamily="Bahnschrift,Segoe Fluent Icons,Segoe UI Emoji"
+		   							   FontFamily="XamlAutoFontFamily"
                                             CellStyle="{StaticResource CellLeft}" />
 
 				<tk:DataGridTextColumn Header="Send Res" Binding="{Binding totalRes,Converter={StaticResource IntConverter}, Mode=OneTime}"
                                        FontSize="{StaticResource SmallFontSize}"
-		   							   FontFamily="Bahnschrift,Segoe Fluent Icons,Segoe UI Emoji"
+		   							   FontFamily="XamlAutoFontFamily"
 
 									   CellStyle="{StaticResource CellRight}" IsReadOnly="True"  Tag="resSend"
                                         />
@@ -279,7 +279,7 @@
 				<tk:DataGridTextColumn Header="ETA"
                                        CellStyle="{StaticResource CellCenter}"
 										FontSize="{StaticResource SmallFontSize}"
-		   							   FontFamily="Bahnschrift,Segoe Fluent Icons,Segoe UI Emoji"
+		   							   FontFamily="XamlAutoFontFamily"
                                        IsReadOnly="False"
                                        ToolTipService.ToolTip="Time at which res will arrive"
                                        Binding="{Binding eta,Converter={StaticResource DateTimeConverter},Mode=OneWay}"

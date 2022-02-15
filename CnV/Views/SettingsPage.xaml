@@ -48,7 +48,7 @@
 				<RadioButtons Header="Theme"
                    SelectedIndex="{x:Bind uiTheme, Mode=TwoWay}">
 					<RadioButtons.Items>
-						<x:String>COTG</x:String>
+						<x:String>Summer</x:String>
 						<x:String>Winter</x:String>
 					</RadioButtons.Items>
 				</RadioButtons>
@@ -73,6 +73,11 @@
 						  IsChecked="{x:Bind FetchFullHistory,Mode=TwoWay}"
 						  ToolTipService.ToolTip="If disabled, the Hits tab and Defense History tab will not work, but incoming and outgoing tabs will be faster"
 						  Margin="4" />
+				<controls:NumberBox  Header="Debug LAyer"
+									 Value="{x:Bind cnv:GameClient.debugLayer,Mode=TwoWay}"
+									 SmallChange="1"
+									 LargeChange="10"
+									 Style="{StaticResource NumberBoxSmall}" />
 				<controls:NumberBox  Header="Show Attacks Limit"
 									 Value="{x:Bind cnv:Settings.showAttacksLimit,Mode=TwoWay}"
 									 SmallChange="1"

@@ -10,7 +10,7 @@
 			  xmlns:views="using:CnV.Views"
 			  mc:Ignorable="d"
 			  Tag="Raid"
-			  FontFamily="Bahnschrift,Segoe Fluent Icons,Segoe UI Emoji">
+			  FontFamily="XamlAutoFontFamily">
 
 	<Grid x:Name="cityBaseGrid"  >
 		

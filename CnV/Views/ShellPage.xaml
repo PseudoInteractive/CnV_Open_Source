@@ -3,17 +3,16 @@
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"	
       xmlns:game="using:CnV"
       xmlns:cnv="using:CnV"
-
-      xmlns:helpers="using:CnV.Helpers"
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       xmlns:tk="using:CommunityToolkit.WinUI.UI.Controls"
+      xmlns:tkui="using:CommunityToolkit.WinUI.UI"
       xmlns:views="using:CnV.Views"
       xmlns:winui="using:Microsoft.UI.Xaml.Controls"
       x:Name="shellPage"
 		RequestedTheme="Dark"   
 	  Loaded="OnLoaded"
-  	FontFamily="Bahnschrift,Segoe Fluent Icons,Segoe UI Emoji"
+  	FontFamily="XamlAutoFontFamily"
 	  Background="{x:Null}"
 	  Margin="0"
       mc:Ignorable="d"	
@@ -115,7 +114,7 @@
 					              Content="Cont/Tags"
 					              Margin="2"
 					              FontSize="{StaticResource MediumFontSize}"
-					              FontFamily="Bahnschrift,Segoe Fluent Icons,Segoe UI Emoji"
+					              FontFamily="XamlAutoFontFamily"
 					              RightTapped="FilterRightTapped"
 					              Click="{x:Bind views:ShellPage.ContinentFilterClick}"
 					              AccessKey="F"
@@ -145,7 +144,7 @@
 						<SymbolIcon Symbol="Next"/>
 					</AppBarButton>
 					<AppBarButton x:Name="focus" Margin="4" Width="140"  VerticalAlignment="Center" x:FieldModifier="public"
-                            Style="{ThemeResource ButtonRevealStyle}" Click="HomeClick" RightTapped="HomeRightTapped" FontFamily="Bahnschrift,Segoe Fluent Icons,Segoe UI Emoji"
+                            Style="{ThemeResource ButtonRevealStyle}" Click="HomeClick" RightTapped="HomeRightTapped" FontFamily="XamlAutoFontFamily"
                             ToolTipService.ToolTip="Spot with Focus.&#x0a;Click to re-center or swith to this city&#x0a;Right clck for menu" Visibility="Collapsed"/>
 
 
@@ -316,7 +315,7 @@
 					  Grid.Column="2" 
 					  VerticalAlignment="Bottom"
 					  FontSize="{StaticResource MediumFontSize}"
-		              FontFamily="Bahnschrift,Segoe Fluent Icons,Segoe UI Emoji"
+		              FontFamily="XamlAutoFontFamily"
 					  Grid.Row="{x:Bind GridRowIndex(rowFooter,-1)}"
 					  Grid.RowSpan="2" 
 					  Margin="0"
@@ -327,7 +326,7 @@
 					  Canvas.ZIndex="35"   >
 				<Expander.Header   >
 					<TextBlock Text="Info" FontSize="{StaticResource MediumFontSize}" Height="24" Margin="0" Padding="0"
-		              FontFamily="Bahnschrift,Segoe Fluent Icons,Segoe UI Emoji"  HorizontalAlignment="Right" />
+		              FontFamily="XamlAutoFontFamily"  HorizontalAlignment="Right" />
 				</Expander.Header>
 				<ListView x:Name="InAppNote" x:FieldModifier="public"  Margin="0" Padding="0"
                    ItemsSource="{x:Bind inAppNotes,Mode=OneWay}"  MaxHeight="200"  >
@@ -339,7 +338,7 @@
 												   ParagraphMargin="0"
 												   ParagraphLineHeight="18"
 											  FontSize="{StaticResource SmallFontSize}"
-											 FontFamily="Bahnschrift,Segoe Fluent Icons,Segoe UI Emoji"
+											 FontFamily="XamlAutoFontFamily"
                                               TextWrapping="Wrap" 
 											   LinkClicked="{x:Bind cnv:Note.MarkDownLinkClicked}"  Background="Transparent"  />
 
@@ -375,16 +374,30 @@
 				<Expander.Header>
 					<TextBlock x:Name="timeDisplay" x:FieldModifier="public" Margin="2,0" HorizontalAlignment="Stretch" />
 				</Expander.Header>
-				<StackPanel Orientation="Vertical"  Padding="0" Margin="0">
-					<NumberBox  x:Name="timeScaleNumberBox" Header="TimeScale:"  Value="1" ValueChanged="TimeScaleValueChanged" Margin="2,4"  HorizontalContentAlignment="Right" VerticalContentAlignment="Center" VerticalAlignment="Center" HorizontalAlignment="Right" 
+				<StackPanel Orientation="Vertical"  Padding="0" Margin="0" Background="{StaticResource ExpanderBrushContent}" HorizontalAlignment="Stretch" >
+					<NumberBox  x:Name="timeScaleNumberBox" Header="TimeScale:"  Value="1" ValueChanged="TimeScaleValueChanged" Margin="2,4"  HorizontalContentAlignment="Right" VerticalContentAlignment="Center" VerticalAlignment="Center" HorizontalAlignment="Center"  Description="Desc" 
 								
-								Minimum="0.25" 
-						Maximum="1024" />
+								Minimum="0.0" 
+								
+						Maximum="256" >
+						
+						</NumberBox>
 					<Slider x:Name="timeScaleSlider" ThumbToolTipValueConverter="{x:Bind timeScaleToolTipConverter}"  Value="2" 
 							ValueChanged="TimeScalueSliderValueChanged"
-							
+							HorizontalAlignment="Stretch"
 							VerticalAlignment="Bottom" Orientation="Horizontal" Minimum="0" Maximum="10" SmallChange="1" 
 							 StepFrequency="1"  Margin="2,4"  />
+					<StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch" >
+						<Button Content="{tkui:SymbolIcon Symbol=Previous}" Click="TimeBackClick"/>
+						<Button Click="TimeTogglePlay" >
+							<Button.Content>
+								<SymbolIcon x:Name ="timeTogglePlayIcon" Symbol="Pause" />
+							</Button.Content>
+						</Button>
+						<Button Content="{tkui:SymbolIcon Symbol=Next}" Click="TimeForwardClick" />
+
+
+					</StackPanel>
 					
 				</StackPanel>
 			</Expander>

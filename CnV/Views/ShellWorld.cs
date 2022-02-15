@@ -1325,7 +1325,7 @@ namespace CnV.Views
 							{
 								StringBuilder sb = new(toolTip);
 								var info = TileData.instance.GetSpotinfo(c.x, c.y, sb);
-								sb.Append($"\nOnWater:{data.isOnWater}");
+								sb.Append($"\nOnWater:{data.isOnWater}\nShoreline:{info.shoreline}\nOcean:{info.isOcean}");
 								Assert(data.type == (int)info.type);
 
 								toolTip = sb.ToString();

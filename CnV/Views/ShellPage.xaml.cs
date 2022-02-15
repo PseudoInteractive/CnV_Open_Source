@@ -56,17 +56,16 @@ namespace CnV.Views
 	//    public LogEntryStruct(string _t) { t =_t; }
 	//}
 	// TODO WTS: Change the icons and titles for all NavigationViewItems in ShellPage.xaml.
-	public sealed partial class ShellPage : Page, INotifyPropertyChanged
+	public sealed partial class ShellPage:Page, INotifyPropertyChanged
 	{
-		public const  int            canvasZDefault = 11;
-		public const  int            canvasZBack    = 0;
+		public const int canvasZDefault = 11;
+		public const int canvasZBack = 0;
 		public static CnVSwapChainPanel canvas => GameClient.canvas;
 		public int layout
 		{
 			get => Settings.layout;
-			set
-			{
-				if (Settings.layout != value)
+			set {
+				if(Settings.layout != value)
 				{
 					Settings.layout = value;
 					updateHtmlOffsets.Go(true);
@@ -77,16 +76,16 @@ namespace CnV.Views
 		class LayoutItem
 		{
 			public string name { get; set; }
-			public int    id   { get; set; }
+			public int id { get; set; }
 
 		}
-		const float minTimeScale= 0.125f;
+		const float minTimeScale = 0.125f;
 		const float maxTimeScale = 1024.0f;
 		float timeScale
 		{
 			get => IServerTime.timeScale;
 			set {
-				IServerTime.SetTimeScale(value.Clamp(minTimeScale,maxTimeScale));
+				IServerTime.SetTimeScale(value.Clamp(minTimeScale, maxTimeScale));
 				OnPropertyChanged("timeScaleSlider");
 			}
 
@@ -108,15 +107,15 @@ namespace CnV.Views
 
 		}
 		// slider ranges from or 0..10, 2^(x-2) 1/4 .. 256
-		static double SliderToTimeScale(double v) =>  Math.Pow(2,v-2).Clamp(minTimeScale, maxTimeScale);
-		static double TimeScaleToSlider(double v) => (Math.Log2(v) + 2).Clamp(0,10);  
+		static double SliderToTimeScale(double v) => v<= 0 ? 0 : Math.Pow(2, v-2);
+		static double TimeScaleToSlider(double v) => v <= 0 ? 0 : (Math.Log2(v) + 2).Clamp(0, 10);
 
 
 		class TimeScaleToolTipConverter:IValueConverter
 		{
-			
 
-			public object Convert(object value, Type targetType, object parameter, string language) => SliderToTimeScale( (double)value).ToString();
+
+			public object Convert(object value, Type targetType, object parameter, string language) => SliderToTimeScale((double)value).ToString();
 
 			public object ConvertBack(object value, Type targetType, object parameter, string language)
 			{
@@ -129,26 +128,30 @@ namespace CnV.Views
 			if(!e.OldValue.AlmostEquals(e.NewValue, 1.0f/2.0f))
 			{
 				var v = SliderToTimeScale(e.NewValue);
-				Log(v); ;
 				IServerTime.SetTimeScale((float)v);
-				
+
 			}
 
 		}
-		internal void TimeScaleChangeNotify(float v)
+		internal void TimeScaleChangeNotify()
 		{
-			Debounce.Q(50,runOnUIThread:true,action:()=>
-			{ 
-			if( !timeScaleNumberBox.Value.IsEqualTo(v,1.0f/8.0f) )
-			{
-				timeScaleNumberBox.Value = v;
-			}
-			var sliderValue = TimeScaleToSlider(v);
-				if(!timeScaleSlider.Value.AlmostEquals(sliderValue, 0.25f))
+			Debounce.Q(50, runOnUIThread: true, action: () =>
 				{
-					timeScaleSlider.Value = sliderValue;
-				}
-			});
+					var v = IServerTime.timeScale;
+					if(!timeScaleNumberBox.Value.IsEqualTo(v, 1.0f/8.0f))
+					{
+						timeScaleNumberBox.Value = v;
+					}
+					var sliderValue = TimeScaleToSlider(v);
+					if(!timeScaleSlider.Value.AlmostEquals(sliderValue, 0.25f))
+					{
+						timeScaleSlider.Value = sliderValue;
+					}
+					var symbol = v == 0 ? Symbol.Play : Symbol.Stop;
+					var icon = timeTogglePlayIcon;
+					if(icon.Symbol != symbol )
+						icon.Symbol = symbol;  
+				});
 		}
 		internal void TimeScaleValueChanged(NumberBox sender, NumberBoxValueChangedEventArgs e)
 		{
@@ -169,7 +172,7 @@ namespace CnV.Views
 		//	}
 
 		//}
-		string[] layoutOptions =  System.Linq.Enumerable.Range(0, Settings.layoutOffsets.Length)
+		string[] layoutOptions = System.Linq.Enumerable.Range(0, Settings.layoutOffsets.Length)
 			.Select(a => $"Layout {a}").ToArray();
 
 		//private readonly KeyboardAccelerator _altLeftKeyboardAccelerator = BuildKeyboardAccelerator(VirtualKey.Left, VirtualKeyModifiers.Menu);
@@ -177,17 +180,17 @@ namespace CnV.Views
 		//private readonly KeyboardAccelerator _forwardKeyboardAccelerator = BuildKeyboardAccelerator(VirtualKey.GoForward);
 		static public ShellPage? instance;
 
-		
-		private bool                     _isBackEnabled;
-		private WinUI.NavigationViewItem _selected;
-		private bool                     _isBusy;
-		private bool                     _isLoggedIn;
-		private bool                     _isAuthorized;
 
-		public static float     webZoomLast; // for lazy setting of HTML zoom
+		private bool _isBackEnabled;
+		private WinUI.NavigationViewItem _selected;
+		private bool _isBusy;
+		private bool _isLoggedIn;
+		private bool _isAuthorized;
+
+		public static float webZoomLast; // for lazy setting of HTML zoom
 		public static TextBlock gridTip;
 
-		int GridRowIndex( RowDefinition row, int offset  )
+		int GridRowIndex(RowDefinition row, int offset)
 		{
 			return grid.RowDefinitions.IndexOf(row)+offset;
 		}
@@ -195,16 +198,16 @@ namespace CnV.Views
 
 		//		public static ScrollViewer webView;
 
-		private static          DateTime     workStarted;
+		private static DateTime workStarted;
 		private static readonly List<string> workQueue = new List<string>();
 
 		//	protected override void OnKeyDown(KeyRoutedEventArgs e) => Trace($"Key: {e.Key} {e.OriginalKey} {e.OriginalSource.ToString()}");
-//		protected override void OnPreviewKeyDown(KeyRoutedEventArgs e) => Trace($"KeyP: {e.Key} {e.OriginalKey} {e.OriginalSource.ToString()}");
+		//		protected override void OnPreviewKeyDown(KeyRoutedEventArgs e) => Trace($"KeyP: {e.Key} {e.OriginalKey} {e.OriginalSource.ToString()}");
 		public static void WorkStart(string desc)
 		{
 			AppS.DispatchOnUIThreadLow(() =>
 										{
-											if (!workQueue.Any())
+											if(!workQueue.Any())
 											{
 												instance.progress.IsActive = true;
 												// FIX
@@ -228,13 +231,13 @@ namespace CnV.Views
 		{
 			AppS.DispatchOnUIThreadLow(() =>
 										{
-											if (!workQueue.Any())
+											if(!workQueue.Any())
 											{
 												Log("End end called too often");
 											}
 											else
 											{
-												if (DateTime.UtcNow - workStarted > TimeSpan.FromMinutes(5))
+												if(DateTime.UtcNow - workStarted > TimeSpan.FromMinutes(5))
 												{
 													Log("rogue work item");
 													workQueue.Clear();
@@ -245,7 +248,7 @@ namespace CnV.Views
 												}
 											}
 
-											if (!workQueue.Any())
+											if(!workQueue.Any())
 											{
 												instance.progress.IsActive = false;
 
@@ -265,21 +268,21 @@ namespace CnV.Views
 		// private IdentityService IdentityService => Singleton<IdentityService>.Instance;
 
 		// private UserDataService UserDataService => Singleton<UserDataService>.Instance;
-		public ObservableCollection<string> inAppNotes= new();
+		public ObservableCollection<string> inAppNotes = new();
 		//		public static InAppNotification inAppNote => instance.InAppNote;
 		public string noteText = string.Empty;
 
-	
+
 
 		public ShellPage()
 		{
-//			instance = this;
+			//			instance = this;
 			InitializeComponent();
-	//		RequestedTheme = ElementTheme.Dark; // default theme
+			//		RequestedTheme = ElementTheme.Dark; // default theme
 
 		}
-//		public static bool rightTabsVisible => Settings.layout>=Layout.c;
-//		public static bool htmlVisible => Settings.layout is not (Layout.l1 or  Layout.r2 or Layout.r1);
+		//		public static bool rightTabsVisible => Settings.layout>=Layout.c;
+		//		public static bool htmlVisible => Settings.layout is not (Layout.l1 or  Layout.r2 or Layout.r1);
 
 		//public static void SetHeaderText(string text)
 		//{
@@ -291,7 +294,7 @@ namespace CnV.Views
 		public static bool isHitTestVisible => !ShellPage.isOverPopup && !forceAllowWebFocus && canvasVisible;
 
 		//public static bool _isHitTestVisible;
-		public static bool canvasVisible=true;
+		public static bool canvasVisible = true;
 		//public static bool isFocused => isHitTestVisible && AppS.isForeground;
 
 		private async void OnLoaded(object sender, RoutedEventArgs e)
@@ -333,7 +336,7 @@ namespace CnV.Views
 				//	Log(ms0);
 
 				//}
-				
+
 				GameClient.canvas    = _canvas;
 
 				var signinTask = Task.Run(CnVSignin.Go);
@@ -440,7 +443,7 @@ namespace CnV.Views
 				//	KeyboardAccelerators.Add(BuildKeyboardAccelerator(k, KeyboardAccelerator));
 				//}
 
-			
+
 				/// we pass this as an argument to let the page know that it is a programmatic navigation
 				// Services.NavigationService.Navigate<Views.DefenseHistoryTab>(this); ChatTab.Ctor();
 				TabPage.Initialize();
@@ -463,7 +466,7 @@ namespace CnV.Views
 				//	ShellPage.webclientSpan.x = (screenSize.Width * .715625f* Settings.htmlZoom * 2).RoundToInt();
 				//	ShellPage.webclientSpan.y = (screenSize.Height * 0.89236111111111116f * Settings.htmlZoom*2).RoundToInt();
 				//	await UpdateWebViewScale();
-				Assert( AppS.state == AppS.State.init);
+				Assert(AppS.state == AppS.State.init);
 				AppS.SetState(AppS.State.setup);
 
 				Log("Game Create!");
@@ -497,7 +500,7 @@ namespace CnV.Views
 					// don't await
 
 
-					await PlayerTables.InitializeAndUpdateCurrentPlayer(cachePlayerTask,azureId: CnVSignin.azureId, discordId: CnVSignin.discordId, discordUserName: CnVSignin.name, avatarUrlHash: CnVSignin.avatarUrlHash);
+					await PlayerTables.InitializeAndUpdateCurrentPlayer(cachePlayerTask, azureId: CnVSignin.azureId, discordId: CnVSignin.discordId, discordUserName: CnVSignin.name, avatarUrlHash: CnVSignin.avatarUrlHash);
 					//if (okay2)
 					try
 					{
@@ -533,7 +536,7 @@ namespace CnV.Views
 				}
 
 				await CnVClient.InitializeGame();
-				AppS.SetState( AppS.State.active );
+				AppS.SetState(AppS.State.active);
 			}
 			catch(Exception ex)
 			{
@@ -840,9 +843,9 @@ namespace CnV.Views
 		public static async Task RefreshX()
 		{
 			using var work = new WorkScope("Refresh All");
-			var       t    = RefreshWorldData();
+			var t = RefreshWorldData();
 
-			foreach (var city in City.allSpots)
+			foreach(var city in City.allSpots)
 				city.Value.OnPropertyChanged();
 			NotifyCollectionBase.ResetAll(true);
 
@@ -862,9 +865,9 @@ namespace CnV.Views
 		{
 			// fall through from shift-refresh. Shift refresh does both
 			//	City.UpdateSenatorInfo();
-			foreach (var tab in UserTab.userTabs)
+			foreach(var tab in UserTab.userTabs)
 			{
-				if (tab.isFocused)
+				if(tab.isFocused)
 					tab.refresh.Go();
 			}
 
@@ -897,7 +900,7 @@ namespace CnV.Views
 		private static void Refresh()
 		{
 			using var s = new WorkScope("Refresh...");
-			foreach (var city in City.myCities)
+			foreach(var city in City.myCities)
 				city.OnPropertyChanged();
 			NotifyCollectionBase.ResetAll(false);
 			RefreshTabs.Go();
@@ -910,7 +913,7 @@ namespace CnV.Views
 
 		private void Set<T>(ref T storage, T value, [CallerMemberName] string propertyName = null)
 		{
-			if (Equals(storage, value))
+			if(Equals(storage, value))
 			{
 				return;
 			}
@@ -935,8 +938,8 @@ namespace CnV.Views
 		//static short[] bidMap = new short[] { 448, 446, 464, 461, 479, 447, 504, 445, 465, 483, 449, 481, 460, 466, 462, 500, 463, 482, 477, 502, 467, 488, 489, 490, 491, 496, 498, bidTownHall, 467 };
 
 		//		public static (int x, int y) webclientSpan;
-		
-		
+
+
 
 		public static void ShowTipRefresh()
 		{
@@ -1044,11 +1047,11 @@ namespace CnV.Views
 		// private DumbCollection<CityList> cityListSelections => CityList.selections;
 		private void CityListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
 		{
-			if (e.AddedItems.Any())
+			if(e.AddedItems.Any())
 			{
-				var newSel   = e.AddedItems?.FirstOrDefault();
+				var newSel = e.AddedItems?.FirstOrDefault();
 				var priorSel = e.RemovedItems?.FirstOrDefault();
-				if (newSel != priorSel && priorSel != null)
+				if(newSel != priorSel && priorSel != null)
 				{
 					// Log("City Sel changed");
 					CityListNotifyChange(false);
@@ -1060,7 +1063,7 @@ namespace CnV.Views
 		private void CityBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
 		{
 			var sel = cityBox.SelectedItem as City;
-			if (sel != null && sel.cid != City.build)
+			if(sel != null && sel.cid != City.build)
 			{
 				CnVClient.CitySwitch(sel.cid, false);
 				NavStack.Push(sel.cid);
@@ -1069,11 +1072,11 @@ namespace CnV.Views
 
 		public void ChangeCityClick(int delta)
 		{
-			var  items = ShellPage.instance.cityBox.ItemsSource as City[];
+			var items = ShellPage.instance.cityBox.ItemsSource as City[];
 			City newSel;
-			if (items.Length <= 1)
+			if(items.Length <= 1)
 			{
-				if (items.Length == 0)
+				if(items.Length == 0)
 				{
 					return;
 				}
@@ -1083,12 +1086,12 @@ namespace CnV.Views
 			else
 			{
 				int id = Array.IndexOf(items, City.GetBuild()) + delta;
-				if (id < 0)
+				if(id < 0)
 				{
 					id += items.Length;
 				}
 
-				if (id >= items.Length)
+				if(id >= items.Length)
 				{
 					id -= items.Length;
 				}
@@ -1114,12 +1117,12 @@ namespace CnV.Views
 
 		private void BackRightTapped(object sender, RightTappedRoutedEventArgs e)
 		{
-			var  menu = new MenuFlyout();
-			bool any  = false;
-			for (int i = 1; i < 25; ++i)
+			var menu = new MenuFlyout();
+			bool any = false;
+			for(int i = 1; i < 25; ++i)
 			{
 				var str = NavStack.GetSpotName(-i);
-				if (str == null)
+				if(str == null)
 				{
 					break;
 				}
@@ -1128,7 +1131,7 @@ namespace CnV.Views
 				menu.Items.Add(AApp.CreateMenuItem(str, NavStack.instance, -i));
 			}
 
-			if (!any)
+			if(!any)
 			{
 				menu.Items.Add(AApp.CreateMenuItem("no more :(", () => { }));
 			}
@@ -1138,13 +1141,13 @@ namespace CnV.Views
 
 		private void ForwardRightTapped(object sender, RightTappedRoutedEventArgs e)
 		{
-			var  menu = new MenuFlyout();
+			var menu = new MenuFlyout();
 			menu.SetXamlRoot();
-			bool any  = false;
-			for (int i = 1; i < 25; ++i)
+			bool any = false;
+			for(int i = 1; i < 25; ++i)
 			{
 				var str = NavStack.GetSpotName(i);
-				if (str == null)
+				if(str == null)
 				{
 					break;
 				}
@@ -1153,7 +1156,7 @@ namespace CnV.Views
 				menu.Items.Add(AApp.CreateMenuItem(str, NavStack.instance, i));
 			}
 
-			if (!any)
+			if(!any)
 			{
 				menu.Items.Add(AApp.CreateMenuItem("this is the most recent :(", () => { }));
 			}
@@ -1165,12 +1168,12 @@ namespace CnV.Views
 		{
 			var str = sender as TextBox;
 			Assert(str != null);
-			if (str != null)
+			if(str != null)
 			{
-				if (e.Key == Windows.System.VirtualKey.Enter)
+				if(e.Key == Windows.System.VirtualKey.Enter)
 				{
 					var cid = str.Text.FromCoordinate();
-					if (cid > 0)
+					if(cid > 0)
 					{
 						NavStack.Push(cid);
 						SpotTab.TouchSpot(cid, AppS.keyModifiers);
@@ -1258,12 +1261,12 @@ namespace CnV.Views
 
 		private void HomeClick(object sender, RoutedEventArgs e)
 		{
-			if (Spot.focus == 0)
+			if(Spot.focus == 0)
 			{
 				return;
 			}
 
-			if (Spot.focus.BringCidIntoWorldView(false) && City.IsBuild(Spot.focus)) // first just focus
+			if(Spot.focus.BringCidIntoWorldView(false) && City.IsBuild(Spot.focus)) // first just focus
 			{
 				return;
 			}
@@ -1279,7 +1282,7 @@ namespace CnV.Views
 
 		private void BuildHomeClick(object sender, RoutedEventArgs e)
 		{
-			if (City.build == 0)
+			if(City.build == 0)
 			{
 				return;
 			}
@@ -1295,12 +1298,12 @@ namespace CnV.Views
 
 		private void CityListSubmitted(ComboBox sender, ComboBoxTextSubmittedEventArgs args)
 		{
-			var text  = args.Text.ToLower();
+			var text = args.Text.ToLower();
 			var items = CityList.selections;
-			foreach (var it in items)
+			foreach(var it in items)
 			{
 				// its good
-				if (it.name == text)
+				if(it.name == text)
 				{
 					return;
 				}
@@ -1317,9 +1320,9 @@ namespace CnV.Views
 			//	}
 			//}
 			// try contains
-			foreach (var it in items)
+			foreach(var it in items)
 			{
-				if (it.name.ToLower().Contains(text))
+				if(it.name.ToLower().Contains(text))
 				{
 					sender.Text         = it.name;
 					sender.SelectedItem = it;
@@ -1334,10 +1337,10 @@ namespace CnV.Views
 			var text = args.Text.ToLower();
 
 			var items = City.gridCitySource;
-			foreach (var it in items)
+			foreach(var it in items)
 			{
 				// its good
-				if (it.nameAndRemarks == text)
+				if(it.nameAndRemarks == text)
 				{
 					return;
 				}
@@ -1354,9 +1357,9 @@ namespace CnV.Views
 			//	}
 			//}
 			// try contains
-			foreach (var it in items)
+			foreach(var it in items)
 			{
-				if (it.nameAndRemarks.ToLower().Contains(text))
+				if(it.nameAndRemarks.ToLower().Contains(text))
 				{
 					sender.Text         = it.nameAndRemarks;
 					sender.SelectedItem = it;
@@ -1398,13 +1401,13 @@ namespace CnV.Views
 		//}
 		//		static Debounce layoutChanged = new(TabPage.LayoutChanged){ runOnUiThead = true};
 
-		static            int popupLeftOffset, popupTopOffset;
-		public static ref int popupLeftMargin => ref View.popupLeftMargin;
-		public static ref int popupTopMargin  => ref View.popupTopMargin;
+		static int popupLeftOffset, popupTopOffset;
+		//public static ref int popupLeftMargin => ref View.popupLeftMargin;
+		//public static ref int popupTopMargin => ref View.popupTopMargin;
 
 		public static void UpdateWebViewOffsets(int leftOffset, int topOffset)
 		{
-			if (popupLeftOffset != leftOffset ||
+			if(popupLeftOffset != leftOffset ||
 				popupTopOffset  != topOffset)
 			{
 				popupLeftOffset = leftOffset;
@@ -1427,7 +1430,7 @@ namespace CnV.Views
 			//isHitTestVisible = !hasFocus;
 			//SetWebViewHasFocus(hasFocus);
 			ShellPage.canvas.Visibility = ShellPage.forceAllowWebFocus ? Visibility.Collapsed : Visibility.Visible;
-//			ShellPage.UpdateFocus();
+			//			ShellPage.UpdateFocus();
 
 		}
 
@@ -1533,7 +1536,28 @@ namespace CnV.Views
 			//	updateHtmlOffsets.Go(true);
 		}
 
-		
+		private void TimeBackClick(object sender, RoutedEventArgs e)
+		{
+			CnVServer.GoToTime(CnVServer.simTime + TimeSpanS.FromHours(1));
+		}
+
+		private void TimeForwardClick(object sender, RoutedEventArgs e)
+		{
+			CnVServer.GoToTime(CnVServer.simTime - TimeSpanS.FromHours(1));
+		}
+
+		private void TimeTogglePlay(object sender, RoutedEventArgs e)
+		{
+			if(IServerTime.timeScale == 0)
+			{
+				IServerTime.SetTimeScale(1.0f);
+			}
+			else
+			{
+				IServerTime.SetTimeScale(0.0f);
+			}
+		}
+
 
 
 
@@ -1562,9 +1586,9 @@ namespace CnV.Views
 								{
 									//               Log("CityListChange");
 
-									var    selectedCityList = ShellPage.instance.cityListBox.SelectedItem as CityList;
+									var selectedCityList = ShellPage.instance.cityListBox.SelectedItem as CityList;
 									City[] l;
-									if (selectedCityList == null || selectedCityList.id == -1) // "all"
+									if(selectedCityList == null || selectedCityList.id == -1) // "all"
 									{
 										l = City.myCities;
 									}
@@ -1572,9 +1596,9 @@ namespace CnV.Views
 									{
 										var cityList = selectedCityList; // CityList.Find(selectedCityList);
 										var filtered = new List<City>();
-										foreach (var cid in cityList.cities)
+										foreach(var cid in cityList.cities)
 										{
-											if (City.TryGet(cid, out var c))
+											if(City.TryGet(cid, out var c))
 											{
 												filtered.Add(c);
 											}
@@ -1605,7 +1629,7 @@ namespace CnV.Views
 								});
 		}
 	}
-	
+
 
 
 }

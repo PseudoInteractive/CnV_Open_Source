@@ -279,8 +279,10 @@ namespace CnV
 		private static int RoundUpTo4(int v) => (v+3)&(~3);
 		private static int RoundDownTo4(int v) => (v+3)&(~3);
 		private static bool IsMultipleOf4(int w,int h) => ((h&3)|(w&3)) ==0;//(v+3)&(~3);
-		public unsafe static Texture CreateFromDDS(string fileName)
+		public static Texture CreateFromDDS(string fileName)
 		{
+			try
+			{ 
 			using var scratch = DirectXTexNet.TexHelper.Instance.LoadFromDDSFile(fileName, DDS_FLAGS.NONE);
 			var meta = scratch.GetMetadata();
 			Log($"{fileName} {meta.Dimension} {meta.Width}x{meta.Height}x{meta.Depth}[{meta.ArraySize}] Mips: {meta.MipLevels} Format: {meta.Format} {meta.GetAlphaMode()}");
@@ -310,6 +312,36 @@ namespace CnV
 
 
 			return rv;
+			}
+			catch(Exception ex)
+			{
+				Log($"Invalid Texture {fileName} {ex}" );
+				return null;
+			}
+		}
+
+		public static bool TryLoadLitMaterialFromDDS(string nameAndPath, out Material main, out Material shadow, int volumeSlices = 0)
+		{
+			try
+			{ 
+				var path = AppS.AppFileName($"{nameAndPath}.dds");
+				var pathN = AppS.AppFileName($"{nameAndPath}_n.dds");
+				Texture texture = CreateFromDDS(path);
+				Texture normalMap = CreateFromDDS(pathN);
+				if(texture is not null && normalMap is not null)
+				{ 
+					main = new Material(texture, normalMap, AGame.GetTileEffect());
+					shadow = new Material(texture, AGame.unlitEffect);
+					return true;
+				}
+			}
+			catch (Exception ex)
+			{
+				Log($"Missing material: {ex}");
+			}
+			main = null;
+			shadow =null;
+			return false;
 		}
 
 		public static EffectPass EffectPass(string name)

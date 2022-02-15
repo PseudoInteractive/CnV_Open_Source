@@ -4,6 +4,8 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:views="using:CnV.Views"
 	xmlns:winui="using:Microsoft.UI.Xaml.Controls"
+	xmlns:tk="using:CommunityToolkit.WinUI.UI"
+
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 	mc:Ignorable="d">
@@ -11,27 +13,33 @@
 		
 		<XamlUICommand x:Name="DoTheStuff" 
                        ExecuteRequested="DoTheStuff_ExecuteRequested"
-                       Description="Do The Stuff please" 
-					   Label="DoTheStuff">
-			<XamlUICommand.IconSource>
-				<SymbolIconSource Symbol="Bullets" />
-			</XamlUICommand.IconSource>
+                       Description="Does the next things to do for your city based on the layout" 
+					   Label="DoTheStuff"
+						IconSource ="{tk:FontIconSource Glyph=&#xE822;}"  >
+			<XamlUICommand.KeyboardAccelerators>
+				<KeyboardAccelerator Key="D" Modifiers="Control"/>
+			</XamlUICommand.KeyboardAccelerators>
+
 		</XamlUICommand>
 		<XamlUICommand x:Name="TogglePlanner" 
                      ExecuteRequested="TogglePlanner_ExecuteRequested"
                      Description="Toggle between planner and build" 
-                     Label="Toggle Planner">
-			<XamlUICommand.IconSource >
-				<SymbolIconSource Symbol="Map" />
-			</XamlUICommand.IconSource>
+                     Label="Toggle Planner"
+				IconSource ="{tk:SymbolIconSource Symbol=Map}"  >
+			<XamlUICommand.KeyboardAccelerators>
+				<KeyboardAccelerator Key="P" Modifiers="Control"/>
+			</XamlUICommand.KeyboardAccelerators>
 		</XamlUICommand>
 		<XamlUICommand x:Name="SettingsCommand" 
                    ExecuteRequested="Settings_ExecuteRequested"
                    Description="City settings, tags, trade etc" 
-                   Label="Setup..">
-			<XamlUICommand.IconSource >
-				<SymbolIconSource Symbol="Setting" />
-			</XamlUICommand.IconSource>
+                   Label="Setup.."
+	   				IconSource ="{tk:SymbolIconSource Symbol=Repair}"  >
+
+			
+			<XamlUICommand.KeyboardAccelerators>
+				<KeyboardAccelerator Key="I" Modifiers="Control"/>
+			</XamlUICommand.KeyboardAccelerators>
 		</XamlUICommand>
 		<XamlUICommand x:Name="CancelQueue" 
                  ExecuteRequested="CancelQueue_ExecuteRequested"
@@ -44,10 +52,9 @@
 		<XamlUICommand x:Name="Abandon" 
                  ExecuteRequested="Abandon_ExecuteRequested"
                  Description="Abandon city" 
-                 Label="Abandon..">
-			<XamlUICommand.IconSource >
-				<FontIconSource Glyph="&#x1F47B;" />
-			</XamlUICommand.IconSource>
+                 Label="Abandon.." 
+					   IconSource ="{tk:SymbolIconSource Symbol=Repair}" >
+			
 		</XamlUICommand>
 
 		<CollectionViewSource x:Name="cvsGroups" IsSourceGrouped="True" 

@@ -20,7 +20,7 @@
 		<Setter Property="HorizontalAlignment" Value="Stretch" />
 		<Setter Property="HorizontalContentAlignment" Value="Left" />
 		<Setter Property="Background" Value="{x:Null}" />
-		<Setter Property="FontFamily" Value="Bahnschrift,Segoe Fluent Icons,Segoe UI Emoji" />
+		<Setter Property="FontFamily" Value="XamlAutoFontFamily" />
 		<Setter Property="FontWeight" Value="Light" />
 		<Setter Property="FontSize" Value="{StaticResource MediumFontSize}" />
 	</Style>
@@ -41,7 +41,7 @@
 
 			<Style TargetType="HyperlinkButton" >
 				<Setter Property="Foreground" Value="{StaticResource HyperLinkBrush}" />
-				<Setter Property="FontFamily" Value="Bahnschrift,Segoe Fluent Icons,Segoe UI Emoji"/>
+				<Setter Property="FontFamily" Value="XamlAutoFontFamily"/>
 				<Setter Property="FontSize" Value="{StaticResource MediumFontSize}" />
 			</Style>
 			<Style TargetType="tk:MarkdownTextBlock">
@@ -51,7 +51,7 @@
 			<Style TargetType="Button" BasedOn="{StaticResource ButtonRevealStyle}">
 				<Setter Property="VerticalAlignment" Value="Stretch"/>
 				<Setter Property="HorizontalAlignment" Value="Stretch"/>
-				<Setter Property="FontFamily" Value="Bahnschrift,Segoe Fluent Icons,Segoe UI Emoji"/>
+				<Setter Property="FontFamily" Value="XamlAutoFontFamily"/>
 				<Setter Property="FontStretch" Value="Condensed" />
 				<Setter Property="FontWeight" Value="Light" />
 
@@ -61,7 +61,7 @@
 			<Style x:Key="ButtonSmall" TargetType="Button" BasedOn="{StaticResource DefaultButtonStyle}">
 				<Setter Property="VerticalAlignment" Value="Center"/>
 				<Setter Property="HorizontalAlignment" Value="Center"/>
-				<Setter Property="FontFamily" Value="Bahnschrift,Segoe Fluent Icons,Segoe UI Emoji"/>
+				<Setter Property="FontFamily" Value="XamlAutoFontFamily"/>
 				<Setter Property="FontStretch" Value="Condensed" />
 				<Setter Property="FontWeight" Value="Light" />
 				<Setter Property="FontSize" Value="{StaticResource MediumFontSize}" />
@@ -83,7 +83,7 @@
 
 			<!--Toggle Button-->
 			<Style x:Key="ToggleButton" TargetType="ToggleButton" BasedOn="{StaticResource ToggleButtonRevealStyle}" >
-				<Setter Property="FontFamily" Value="Bahnschrift,Segoe Fluent Icons,Segoe UI Emoji"/>
+				<Setter Property="FontFamily" Value="XamlAutoFontFamily"/>
 				<Setter Property="FontSize" Value="{StaticResource MediumFontSize}" />
 				<Setter Property="FontWeight" Value="Normal" />
 				<Setter Property="Margin" Value="2" />
@@ -107,7 +107,7 @@
 			<!--Syncfusion text-->
 
 			<Style x:Key="SfTextCell" TargetType="sf:GridCell">
-				<Setter Property="FontFamily" Value="Bahnschrift,Segoe Fluent Icons,Segoe UI Emoji"/>
+				<Setter Property="FontFamily" Value="XamlAutoFontFamily"/>
 				<Setter Property="FontSize" Value="{StaticResource SmallFontSize}" />
 				<Setter Property="FontStretch" Value="Condensed" />
 				<Setter Property="FontWeight" Value="Light" />
@@ -187,12 +187,12 @@
 
 
 			<Style TargetType="CheckBox" BasedOn="{StaticResource DefaultCheckBoxStyle}">
-				<Setter Property="FontFamily" Value="Bahnschrift,Segoe Fluent Icons,Segoe UI Emoji"/>
+				<Setter Property="FontFamily" Value="XamlAutoFontFamily"/>
 				<Setter Property="FontSize" Value="{StaticResource MediumFontSize}" />
 			</Style>
 
 			<Style TargetType="RadioButtons" >
-				<Setter Property="FontFamily" Value="Bahnschrift,Segoe Fluent Icons,Segoe UI Emoji"/>
+				<Setter Property="FontFamily" Value="XamlAutoFontFamily"/>
 				<Setter Property="FontSize" Value="{StaticResource MediumFontSize}" />
 			</Style>
 

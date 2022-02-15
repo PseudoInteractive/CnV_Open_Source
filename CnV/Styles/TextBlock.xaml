@@ -86,7 +86,7 @@
 			<!--Text Box-->
 
 			<Style TargetType="TextBox" x:Key="TextBox" BasedOn="{StaticResource DefaultTextBoxStyle}">
-				<Setter Property="FontFamily" Value="Bahnschrift,Segoe Fluent Icons,Segoe UI Emoji"/>
+				<Setter Property="FontFamily" Value="XamlAutoFontFamily"/>
 				<Setter Property="FontWeight" Value="Normal" />
 				<Setter Property="FontSize" Value="{StaticResource MediumFontSize}" />
 			</Style>
@@ -110,7 +110,7 @@
 
 			<Style x:Key="BaseNumberBox" TargetType="NumberBox" >
 				<Setter Property="FontSize" Value="{StaticResource MediumFontSize}" />
-				<Setter Property="FontFamily" Value="Bahnschrift,Segoe Fluent Icons,Segoe UI Emoji"/>
+				<Setter Property="FontFamily" Value="XamlAutoFontFamily"/>
 				<Setter Property="FontWeight" Value="Light"/>
 				<Setter Property="FontStretch" Value="Normal" />
 				<Setter Property="SpinButtonPlacementMode" Value="Compact"/>
@@ -119,7 +119,7 @@
 				<Setter Property="BorderThickness" Value="1" />
 				<Setter Property="BorderBrush" Value="{ThemeResource SystemControlBackgroundAccentRevealBorderBrush}"/>
 				<Setter Property="AcceptsExpression" Value="True" />
-				<Setter Property="VerticalAlignment" Value="Stretch" />
+				<Setter Property="VerticalAlignment" Value="Center" />
 				<Setter Property="Margin" Value="2" />
 				<Setter Property="HorizontalAlignment" Value="Stretch" />
 				<Setter Property="HorizontalContentAlignment" Value="Right" />
@@ -187,7 +187,7 @@
 			<Style
 		x:Key="CellTextStyle"
 		TargetType="tk:DataGridCell">
-				<Setter Property="FontFamily" Value="Bahnschrift,Segoe Fluent Icons,Segoe UI Emoji"/>
+				<Setter Property="FontFamily" Value="XamlAutoFontFamily"/>
 				<Setter Property="FontSize" Value="{StaticResource SmallFontSize}" />
 				<Setter Property="Height" Value="{StaticResource ShortGridRowHeight}" />
 				<Setter Property="MinHeight" Value="{StaticResource ShortGridRowHeight}" />
@@ -199,7 +199,7 @@
 		x:Key="DataGridRowStyle"
 		TargetType="tk:DataGridRow">
 				<Setter Property="Padding" Value="0,0,0,0"/>
-				<Setter Property="FontFamily" Value="Bahnschrift,Segoe Fluent Icons,Segoe UI Emoji"/>
+				<Setter Property="FontFamily" Value="XamlAutoFontFamily"/>
 				<Setter Property="FontSize" Value="{StaticResource SmallFontSize}" />
 				<Setter Property="Height" Value="{StaticResource ShortGridRowHeight}" />
 				<Setter Property="MinHeight" Value="{StaticResource ShortGridRowHeight}" />
@@ -215,7 +215,7 @@
 			</Style>
 			<Style
 		TargetType="tk:DataGridCell">
-				<Setter Property="FontFamily" Value="Bahnschrift,Segoe Fluent Icons,Segoe UI Emoji"/>
+				<Setter Property="FontFamily" Value="XamlAutoFontFamily"/>
 				<Setter Property="FontSize" Value="{StaticResource SmallFontSize}" />
 				<Setter Property="FontStretch" Value="Condensed" />
 

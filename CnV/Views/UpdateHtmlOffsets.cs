@@ -76,32 +76,32 @@ namespace CnV.Views
 					instance.columnHtml.Width = new(webWidth);
 				}
 
-				var zoom = c.htmlScale;
-				var htmlVisible = webWidth > 4;
-				int htmlShift = 0;
-				var canvasScaledX = (webWidth);
-				Assert( (webWidth-htmlBaseWidth*zoom).Abs() < 4.75f );
+			//	var zoom = c.htmlScale;
+			///	var htmlVisible = webWidth > 4;
+				//int htmlShift = 0;
+			///	var canvasScaledX = (webWidth);
+				//Assert( (webWidth-htmlBaseWidth*zoom).Abs() < 4.75f );
 
-				if(!htmlVisible)
-				{
-					zoom = 0.875f;
-					htmlShift = (-htmlBaseWidth*zoom).RoundToInt();
-					canvasScaledX = 0;
-				}
+				//if(!htmlVisible)
+				//{
+				//	zoom = 0.875f;
+				////	htmlShift = (-htmlBaseWidth*zoom).RoundToInt();
+				////	canvasScaledX = 0;
+				//}
 
 					//				float zoom = htmlVisible || Settings.webZoomSmall <= 0 ? Settings.webZoom : Settings.webZoomSmall;
 				
-				var canvasScaledY = ( canvasBaseYUnscaled);//.RoundToInt();
-				popupLeftMargin = ((popupLeftOffset * zoom).RoundToInt() - (canvasScaledX-htmlShift) ).Max0();
+		//		var canvasScaledY = ( canvasBaseYUnscaled);//.RoundToInt();
+			//	popupLeftMargin = 0;//((popupLeftOffset * zoom).RoundToInt() - (canvasScaledX-htmlShift) ).Max0();
 
-				popupTopMargin = ((popupTopOffset * zoom).RoundToInt() - canvasScaledY).Max0();
-				if(popupLeftMargin > popupTopMargin)
-					popupLeftMargin = 0;
-				else
-					popupTopMargin = 0;
+			//	popupTopMargin = 0;//((popupTopOffset * zoom).RoundToInt() - canvasScaledY).Max0();
+			//	if(popupLeftMargin > popupTopMargin)
+			//		popupLeftMargin = 0;
+			//	else
+			//		popupTopMargin = 0;
 
 
-					var canvasBaseY = (popupTopMargin + canvasScaledY).Max0();
+//					var canvasBaseY = ( canvasScaledY).Max0();
 
 				//canvas.Margin = new Thickness(0, canvasBaseY, 0, 0);
 
@@ -133,7 +133,7 @@ namespace CnV.Views
 
 						{
 
-							instance.columnPopup.Width = new(popupLeftMargin);
+							//instance.columnPopup.Width = new(popupLeftMargin);
 							
 								if (_updateLayout)
 								{
@@ -147,7 +147,7 @@ namespace CnV.Views
 									c.tabTopHeight = (float)(topTabHeight/gridSize.Y);
 								}
 
-								tabWidth = tabWidth.Min(gridSize.X - canvasScaledX + popupLeftMargin - 8).Max(8);
+								tabWidth = tabWidth.Min(gridSize.X - 8).Max(8);
 								instance.columnTabs.Width = new(tabWidth);
 								rightTabsVisible = tabWidth > 0;
 								//	instance.columnRender.Width = new GridLength(1, GridUnitType.Star); //	GridLength.Auto;//	instance.grid.RowDefinitions[0].Height = new(canvasYOffset);
