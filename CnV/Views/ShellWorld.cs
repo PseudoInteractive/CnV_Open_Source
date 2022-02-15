@@ -1202,9 +1202,9 @@ namespace CnV.Views
 															sb.AppendLine("Has Academy");
 														if(NearRes.instance.isFocused)
 														{
-															sb.AppendLine($"Carts:{AUtil.Format((city.cartsHome, city.carts))}");
+															sb.AppendLine($"Carts:{AUtil.FormaRatio((city.cartsHome, city.carts))}");
 															if(city.ships > 0)
-																sb.AppendLine($"Ships:{AUtil.Format(city.shipsHome, city.ships)}");
+																sb.AppendLine($"Ships:{AUtil.FormatRatio(city.shipsHome, city.ships)}");
 															sb.AppendLine($"Wood:{city.resources[0].Format()}, Stone:{ city.resources[1].DivideRound(1000):4,N0}k");
 															sb.AppendLine($"Iron:{city.resources[2].Format()}, Food:{ city.resources[3].FormatWithSign()}k");
 														}

@@ -58,7 +58,7 @@ internal partial class GameClient
 	private const float smallRectSpan = 4;
 	public const float lightZNight = 200;
 	public const float lightZDay = 300f;
-	public const float cameraZForLighting = 300f;
+	public const float cameraZForLighting = 500f;
 	//public static Vector2 cameraLightC;
 	static SamplerState fontSampler = new SamplerState()
 	{
@@ -338,6 +338,7 @@ internal partial class GameClient
 					ToolTips.debugTip = $"{ShellPage.mousePosition} {lightZNight*pixelScale}";
 					var l = ShellPage.mousePosition;//C.CameraToScreen();//.InverseProject();
 					lightPositionParameter.SetValue(new Microsoft.Xna.Framework.Vector3(l.X, l.Y, lightZNight));
+					lightPositionCameraParameter.SetValue(new Microsoft.Xna.Framework.Vector3(l.X, l.Y, lightZNight));
 					lightGainsParameter.SetValue(new Microsoft.Xna.Framework.Vector4(0.25f, 1.25f, 0.375f, 1.0625f));
 					lightAmbientParameter.SetValue(new Microsoft.Xna.Framework.Vector4(.493f, .576f, .639f, 1f) * 0.25f);
 					lightColorParameter.SetValue(new Microsoft.Xna.Framework.Vector4(1.0f, 1.0f, 1.0f, 1.0f) * 1.25f);
@@ -348,31 +349,39 @@ internal partial class GameClient
 					///				var xc = lightWC.WorldToCamera().CameraToScreen();
 					var t = (float)CnVServer.simDateTime.TimeOfDay.TotalDays;
 
+					const float shrink = 0.125f;
 					t = t*64;
 					t -= MathF.Floor(t);
-
+					t = t.Bezier(0f,0.5f,0.5f,0.5f,1.0f);
 					var isDay = (t >= 0.25f) & (t <= 0.75f);
 					var t1 = (t-0.25f); // 0..1 is Morning to evening, -1..1 is evening until morning 
 					t1 -= t1.Floor();
 					//Assert( t1 >= -1.0f);
 					//Assert(t1 <= 1.0f);
+					const float worldSpan0 = World.span * -0.25f;
+					const float worldSpan1 = World.span *  1.25f;
 					var csTau = MathF.Cos(t*MathF.Tau);
-					Vector2 wc = new Vector2(MathF.Sin(t*MathF.Tau).SNormLerp(0, World.span),
-						(csTau * (isDay ? 1.0f : 1.0f)).SNormLerp(0.0f, World.span));
+					Vector2 wc = new Vector2(MathF.Sin(t*MathF.Tau).SNormLerp(worldSpan0, worldSpan1),
+						(csTau * (isDay ? 1.0f : 1.0f)).SNormLerp(worldSpan0,worldSpan1));
 					var Z = csTau * (isDay ? -1.0f : 0.5f) + 1.0f;
-					var sc = wc.WorldToCamera().CameraToScreen();
+					var cc = (wc.WorldToCamera()*shrink);
+					var sc = cc.CameraToScreen();
 					Assert(Z> 0);
-					var lightC = new XVector3(sc.X, sc.Y, Z*lightZDay*pixelScale);
-					ToolTips.debugTip = $"{lightC/lightC.Length()} {lightC}";
-					var d3 = t.CatmullRomLoop(new Vector3(0.5f,0.25f,0.5f),
-												new Vector3(0.25f,0.25f,1.0f),
+					var lightZ = Z*(lightZDay*shrink*pixelScale);
+					var lightC = new XVector3(sc.X, sc.Y, lightZ);
+					var lightCC = new XVector3(cc.X, cc.Y, lightZ );
+					
+					
+					ToolTips.debugTip = $"{XVector3.Normalize(lightCC).ToNumerics().Format()} {AUtil.Format(lightCC.ToNumerics())}";
+					var d3 = t.CatmullRomLoop(new Vector3(0.75f,0.25f,0.25f),
+												new Vector3(0.5f,0.5f,1.0f),
 												new Vector3(1.0f,1.0f,1.0f),
-												new Vector3(0.75f,0.75f,0.25f)
+												new Vector3(0.75f,0.5f,0.0f)
 																		);
-					var a3 = t.CatmullRomLoop(new Vector3(0.5f,0.25f,0.5f),
-												new Vector3(0.25f,0.25f,1.0f),
+					var a3 = t.CatmullRomLoop(new Vector3(0.25f,0.25f,0.5f),
+												new Vector3(0.5f,0.5f,1.0f),
 												new Vector3(1.0f,1.0f,1.0f),
-												new Vector3(0.75f,0.75f,0.25f)
+												new Vector3(0.75f,0.5f,0.25f)
 																		)*0.5f;
 					
 					//var hue = 0.6667f - t1;
@@ -383,6 +392,7 @@ internal partial class GameClient
 					//var diffuse = HSLToRGB.ToRGBAV(hue,saturation,lumd,alpha:1.25f);
 					//var ambient = HSLToRGB.ToRGBAV(hue,saturation,luma,alpha:0.75f);
 					lightPositionParameter.SetValue(lightC);
+					lightPositionCameraParameter.SetValue(lightCC);
 					//lightGainsParameter.SetValue(new XVector4(0.25f, 1.25f, 0.375f, 1.0625f));
 					//lightAmbientParameter.SetValue(new XVector4(.483f, .476f, .549f, 1f) * 0.75f);
 					//lightColorParameter.SetValue(new XVector4(1.1f, 1.1f, 0.9f, 1f) * 1.25f);
@@ -390,7 +400,7 @@ internal partial class GameClient
 						lightGainsParameter.SetValue(new XVector4(0.25f, 1.25f, 0.375f, 1.0625f));
 					lightAmbientParameter.SetValue(new XVector4(a3.X,a3.Y,a3.Z,0.75f));
 					lightColorParameter.SetValue(new XVector4(d3.X,d3.Y,d3.Z,1.25f));
-					lightSpecularParameter.SetValue(new XVector4(1.0f, 1.0f, 1.0f, 1.0f) * 1.25f);
+					lightSpecularParameter.SetValue(new XVector4(1.0f, 1.0f, 1.0f, 1.0f) * 0.75f);
 				}
 			
 				cameraReferencePositionParameter.SetValue(new Microsoft.Xna.Framework.Vector3(projectionC.X, projectionC.Y, cameraZForLighting));

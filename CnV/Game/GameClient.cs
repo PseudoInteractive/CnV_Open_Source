@@ -68,6 +68,7 @@ namespace CnV
 		public static      EffectParameter planetGainsParamater;
 		public static      EffectParameter worldMatrixParameter;
 		public static      EffectParameter lightPositionParameter;
+		public static      EffectParameter lightPositionCameraParameter;
 		public static      EffectParameter lightGainsParameter;
 		public static      EffectParameter lightAmbientParameter;
 		public static      EffectParameter lightColorParameter;
@@ -408,8 +409,9 @@ namespace CnV
 
 
 				lightPositionParameter = avaEffect.Parameters["lightPosition"];
+				lightPositionCameraParameter = avaEffect.Parameters["lightPositionCamera"];
 				planetGainsParamater = avaEffect.Parameters["planetGains"];
-				lightGainsParameter = avaEffect.Parameters["lightGains"];
+				//lightGainsParameter = avaEffect.Parameters["lightGains"];
 				lightColorParameter = avaEffect.Parameters["lightColor"];
 				lightSpecularParameter = avaEffect.Parameters["lightSpecular"];
 				lightAmbientParameter = avaEffect.Parameters["lightAmbient"];
