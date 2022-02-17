@@ -106,7 +106,7 @@
     <PackageReference Include="Microsoft.Toolkit" Version="7.1.2" />
     <PackageReference Include="Microsoft.Toolkit.Diagnostics" Version="7.1.2" />
     <PackageReference Include="Microsoft.Toolkit.HighPerformance" Version="7.1.2" />
-    <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.22543-preview" />	  
+    <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.22557-preview" />	  
     <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.0.0" />
 	<PackageReference Include="Nito.AsyncEx.Coordination" Version="5.1.2" />
     <PackageReference Include="PlayFabAllSDK" Version="1.108.220118" />
