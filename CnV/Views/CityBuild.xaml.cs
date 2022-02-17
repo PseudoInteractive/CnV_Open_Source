@@ -810,7 +810,7 @@ namespace CnV
 				return;
 			}
 			var city = GetBuild();
-			cc = city.TranslateWaterOrWallSpot(cc);
+			cc = city.TranslateWallSpot(cc);
 
 			//while( CityBuild.menuOpen )
 			//{

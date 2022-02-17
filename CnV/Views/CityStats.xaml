@@ -32,11 +32,12 @@
 			<Expander Header="Incoming" Expanding="Expander_Expanding"  Visibility="Collapsed" x:Name="expIncoming" HorizontalAlignment="Stretch" >
 			</Expander>
 			<Expander  Expanding="Expander_Expanding" IsExpanded="True"  Background="{x:Null}"  x:Name="expResource" HorizontalAlignment="Stretch"  >
+				<ToolTipService.ToolTip >
+					<ToolTip x:Name="ResToolTip" Content="Resources" />
+				</ToolTipService.ToolTip>
 				<Expander.Header   >
 					<Border Background="{StaticResource ExpanderBrushHeader}" BorderThickness="0" Padding="4" CornerRadius="4" >
-						<ToolTipService.ToolTip >
-							<ToolTip x:Name="ResToolTip" Content="Resources" />
-						</ToolTipService.ToolTip>
+						
 						<TextBlock Text ="Resources" Margin="0"   Style="{StaticResource TextBlockMedium}"    />
 					</Border>
 				</Expander.Header>

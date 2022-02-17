@@ -15,7 +15,8 @@
                        ExecuteRequested="DoTheStuff_ExecuteRequested"
                        Description="Does the next things to do for your city based on the layout" 
 					   Label="DoTheStuff"
-						IconSource ="{tk:FontIconSource Glyph=&#xE822;}"  >
+						IconSource ="{tk:FontIconSource FontFamily='Segoe Fluent Icons',Glyph=&#xE822;}"  >
+			
 			<XamlUICommand.KeyboardAccelerators>
 				<KeyboardAccelerator Key="D" Modifiers="Control"/>
 			</XamlUICommand.KeyboardAccelerators>
@@ -25,7 +26,10 @@
                      ExecuteRequested="TogglePlanner_ExecuteRequested"
                      Description="Toggle between planner and build" 
                      Label="Toggle Planner"
-				IconSource ="{tk:SymbolIconSource Symbol=Map}"  >
+			 >
+			<XamlUICommand.IconSource >
+				<SymbolIconSource Symbol="Map" />
+			</XamlUICommand.IconSource>
 			<XamlUICommand.KeyboardAccelerators>
 				<KeyboardAccelerator Key="P" Modifiers="Control"/>
 			</XamlUICommand.KeyboardAccelerators>
@@ -34,9 +38,11 @@
                    ExecuteRequested="Settings_ExecuteRequested"
                    Description="City settings, tags, trade etc" 
                    Label="Setup.."
-	   				IconSource ="{tk:SymbolIconSource Symbol=Repair}"  >
+	   				  >
+			<XamlUICommand.IconSource >
+				<SymbolIconSource Symbol="Repair" />
+			</XamlUICommand.IconSource>
 
-			
 			<XamlUICommand.KeyboardAccelerators>
 				<KeyboardAccelerator Key="I" Modifiers="Control"/>
 			</XamlUICommand.KeyboardAccelerators>
@@ -44,16 +50,19 @@
 		<XamlUICommand x:Name="CancelQueue" 
                  ExecuteRequested="CancelQueue_ExecuteRequested"
                  Description="Cancel all commands in queue" 
-                 Label="Cancel Queue">
+                 Label="Cancel Queue"  >
 			<XamlUICommand.IconSource >
-				<SymbolIconSource Symbol="ClearSelection" />
+				<SymbolIconSource Symbol="Cancel" />
 			</XamlUICommand.IconSource>
 		</XamlUICommand>
 		<XamlUICommand x:Name="Abandon" 
                  ExecuteRequested="Abandon_ExecuteRequested"
                  Description="Abandon city" 
-                 Label="Abandon.." 
-					   IconSource ="{tk:SymbolIconSource Symbol=Repair}" >
+                 Label="Abandon.." >
+			<XamlUICommand.IconSource >
+			<SymbolIconSource Symbol="ClearSelection" />
+			</XamlUICommand.IconSource>
+			
 			
 		</XamlUICommand>
 

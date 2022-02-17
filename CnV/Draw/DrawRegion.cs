@@ -18,8 +18,6 @@ using XVector2 = Microsoft.Xna.Framework.Vector2;
 using XVector3 = Microsoft.Xna.Framework.Vector3;
 using XVector4 = Microsoft.Xna.Framework.Vector4;
 using Layer = CnV.Draw.Layer;
-using static CnV.View;
-using static CnV.AGame;
 using KeyF = CnV.KeyFrame<float>;
 
 namespace CnV;
@@ -174,6 +172,7 @@ internal partial class GameClient
 			// not too high or we lose float precision
 			// not too low or people will see when when wraps
 			animationT = gameTime.TotalGameTime.TotalSeconds;// ((uint)Environment.TickCount % 0xffffff) * (1.0f / 1000.0f);
+			wantParallax = Settings.parallax > 0.1f;
 
 			//{
 			//	var i = (int)(animationT / 4.0f);
@@ -270,7 +269,6 @@ internal partial class GameClient
 			var attacksVisible = OutgoingTab.IsVisible() | IncomingTab.IsVisible() | AttackTab.IsVisible();
 
 
-			var wantParallax = Settings.parallax > 0.1f;
 
 			//var gr = spriteBatch;// spriteBatch;// wantLight ? renderTarget.CreateDrawingSession() : args.DrawingSession;
 
@@ -354,7 +352,7 @@ internal partial class GameClient
 					const float shrink = 0.25f;
 					t = t*64;
 					t -= MathF.Floor(t);
-					t = t.Bezier(0f,0.375f,0.5f,0.5f,0.625f,1.0f);
+					t = t.Bezier(0f,0.25f,0.375f,0.625f,0.75f,1.0f);
 					var isDay = (t >= 0.25f) & (t <= 0.75f);
 					var t1 = (t-0.25f); // 0..1 is Morning to evening, -1..1 is evening until morning 
 					t1 -= t1.Floor();
@@ -422,7 +420,7 @@ internal partial class GameClient
 
 			var focusOnCity = (View.viewMode == ViewMode.city);
 
-			parallaxGain = Settings.parallax * MathF.Sqrt(Math.Min(11.0f, cameraZoomLag / 64.0f)) * regionAlpha * (1 - cityAlpha);
+			parallaxGain = Settings.parallax * (Math.Min(1,cameraZoomLag / 128.0f));// * regionAlpha * (1 - cityAlpha);
 
 			{
 				var wToCGain = (1.0f / cameraZoomLag);
@@ -572,7 +570,7 @@ internal partial class GameClient
 										var _tint = (isShadow == 1) ? tintShadow : !tile.isBase ? World.GetTint(ccid) : tint;
 										if(!isBonus && isShadow == 0 && !tile.isBase)
 											_tint.A = intAlpha; ;
-										if(wantCity && layer.id > TileLayer.Id.land && (cx, cy).WorldToCid() == City.build )
+										if(wantCity && (cx, cy).WorldToCid() == City.build )
 										{
 											if(cityAlphaI >= 255)
 												continue;
@@ -583,7 +581,7 @@ internal partial class GameClient
 
 
 
-										if(tile.canHover && !tile.isBase )
+										if(tile.canHover  )
 										{
 											if(TryGetViewHover( (cx, cy).WorldToCid(), out var hz ))
 											{ 
@@ -592,14 +590,14 @@ internal partial class GameClient
 										}
 
 
-										if(isShadow == 1)
-										{
+										//if(isShadow == 1)
+										//{
 
-											// shift shadow
-											//	cc = (cc - cameraLightC) * (1 + dz*2) + cameraLightC;
-											//		cc = (cc - cameraLightC)*
-										//	dz = 0;
-										}
+										//	// shift shadow
+										//	//	cc = (cc - cameraLightC) * (1 + dz*2) + cameraLightC;
+										//	//		cc = (cc - cameraLightC)*
+										////	dz = 0;
+										//}
 
 
 										draw.AddQuad((isShadow == 1) ? Layer.tileShadow : (tile.isBase ? Layer.tileBase : Layer.tiles) + ((int)layer.id+1),
@@ -1272,7 +1270,7 @@ internal partial class GameClient
 										var cid = (cx, cy).WorldToCid();
 
 										var drawC = (new System.Numerics.Vector2(cx, cy).WorldToCamera());
-										drawC.Y += span *  8.675f / 16.0f;
+										drawC.Y += span *  7.625f / 16.0f;
 										var z = zCities;
 										var scale = bmFontScale;
 
@@ -1718,8 +1716,8 @@ internal partial class GameClient
 	{
 
 		float t = thickness * 0.5f;
-		const float waveGain = 0.25f;
-		z = z * (1.0f + animationTWrap.Wave() * waveGain);
+		const float waveGain = 0.75f;
+		z = z * (0.25f+ animationTWrap.Wave() * waveGain);
 		c0 = new(c0.X - expand, c0.Y - expand);
 		c1 = new(c1.X + expand, c1.Y + expand);
 
@@ -1733,13 +1731,13 @@ internal partial class GameClient
 	}
 
 
-	private static void DrawRectOutlineShadow(int layer, Vector2 c0, Vector2 c1, Color color, float thickness = 3, float expand = 0)
+	internal static void DrawRectOutlineShadow(int layer, Vector2 c0, Vector2 c1, Color color, float thickness = 2, float expand = 0)
 	{
 		DrawRectOutline(layer, c0, c1, color, zCities, thickness, expand);
-		if(parallaxGain > 0 && wantShadow)
+		if(wantParallax )
 			DrawRectOutline(Layer.tileShadow, c0 +shadowOffset*0, c1+shadowOffset*0, color.GetShadowColorDark(), 0.0f, thickness, expand);
 	}
-	private static void DrawRectOutlineShadow(int layer, int cid, Color col, string label = null, float thickness = 3, float expand = 0)
+	private static void DrawRectOutlineShadow(int layer, int cid, Color col, string label = null, float thickness = 2, float expand = 0)
 	{
 		var wc = cid.CidToWorld();
 		if(IsCulledWC(wc))
@@ -1772,7 +1770,7 @@ internal partial class GameClient
 	private static void DrawDiamondShadow(int layer, Vector2 c0, Vector2 c1, Color color, float thickness, float expand)
 	{
 		DrawDiamond(layer, c0, c1, color, zCities, thickness, expand);
-		if(parallaxGain > 0 && wantShadow)
+		if(wantParallax)
 			DrawDiamond(Layer.tileShadow, c0 + shadowOffset*0, c1 + shadowOffset*0, color.GetShadowColorDark(), 0f, thickness, expand);
 	}
 	private static void DrawDiamondShadow(int layer, int cid, Color col, string label = null, float thickness = 3, float expand = 0)
@@ -1853,7 +1851,7 @@ internal partial class GameClient
 		UpdateResolution();
 	}
 
-	const float viewHoverZGain = 1.0f / 64.0f;
+	const float viewHoverZGain = 0.5f / 64.0f;
 	const float viewHoverElevationKt = 24.0f;
 	public static List<(int cid, float z, float vz)> viewHovers = new List<(int cid, float z, float vz)>();
 	static bool TryGetViewHover( int cid, out float z)

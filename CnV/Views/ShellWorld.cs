@@ -598,7 +598,7 @@ namespace CnV.Views
 			var w = new Vector2(((c1.X) / cameraZoomLag + cameraC.X), ((c1.Y) / cameraZoomLag + cameraC.Y));
 			(int x, int y) wi = (w.X.RoundToInt(), w.Y.RoundToInt());
 			(int x, int y) bi = wi.WorldToCid() == City.build ?
-				(((w.X - wi.x)*City.citySpan).RoundToInt().Clamp(City.span0, City.span1), ((w.Y - wi.y) * City.citySpan/CityView.yScale).RoundToInt().Clamp(City.span0, City.span1)) :
+				(((w.X - wi.x)*City.citySpan).RoundToInt().Clamp(City.span0, City.span1), ((w.Y - wi.y) * City.citySpan/CityView.cityYScale).RoundToInt().Clamp(City.span0, City.span1)) :
 				BuildC.Nan;
 
 			return (wi, bi);
@@ -1104,7 +1104,7 @@ namespace CnV.Views
 							var data = World.GetInfoFromWorldId(World.rawPrior1!=null ? World.rawPrior1 : World.tileData, packedId);
 							switch(data.type)
 							{
-								case World.typeCity:
+								case World.TileType.city:
 									{
 										Spot.viewHover = cid;
 										var city = City.GetOrAddCity(cid);
@@ -1226,19 +1226,19 @@ namespace CnV.Views
 										}
 										break;
 									}
-								case World.typeShrine:
+								case World.TileType.shrine:
 									if(WorldViewSettings.shrines.isOn)
 										toolTip = $"Shrine\n{(data.data == 255 ? "Unlit" : ((Faith)data.data-1).AsString())}";
 									break;
-								case World.typeBoss:
+								case World.TileType.boss:
 									if(WorldViewSettings.bosses.isOn)
 										toolTip = $"Boss\nLevel:{data.data}"; // \ntype:{data >> 4}";
 									break;
-								case World.typeDungeon:
+								case World.TileType.dungeon:
 									if(WorldViewSettings.caverns.isOn)
 										toolTip = $"Dungeon\nLevel:{data.data}"; // \ntype:{data >> 4}";
 									break;
-								case World.typePortal:
+								case World.TileType.portal:
 									toolTip = $"Portal\n{(data.data == 0 ? "Inactive" : "Active")}";
 									break;
 							}
@@ -1255,8 +1255,8 @@ namespace CnV.Views
 								{
 									switch(data.type)
 									{
-										case World.typeCity:
-											if(pData.type == World.typeCity)
+										case World.TileType.city:
+											if(pData.type == World.TileType.city)
 											{
 												if(pData.player != data.player)
 												{
@@ -1303,10 +1303,10 @@ namespace CnV.Views
 												toolTip += "\nWas founded";
 											}
 											break;
-										case World.typeShrine:
+										case World.TileType.shrine:
 											toolTip += "\nWas unlit";
 											break;
-										case World.typePortal:
+										case World.TileType.portal:
 											if(data.player == 0)
 												toolTip += "\nWas active";
 											else
@@ -1326,7 +1326,7 @@ namespace CnV.Views
 								StringBuilder sb = new(toolTip);
 								var info = TileData.instance.GetSpotinfo(c.x, c.y, sb);
 								sb.Append($"\nOnWater:{data.isOnWater}\nShoreline:{info.shoreline}\nOcean:{info.isOcean}");
-								Assert(data.type == (int)info.type);
+								Assert(data.type == info.type);
 
 								toolTip = sb.ToString();
 							}

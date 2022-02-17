@@ -72,11 +72,11 @@ namespace CnV
 		const float duDt = (1.0f / atlasColumns);
 		const float dvDt = (1.0f / atlasRows);
 		static Vector2 buildCityOrigin;
+		public const float cityYScale = 96.0f / 128.0f; // aspect ratio
 		const float cityTileGainX = 1.0f / citySpan;
-		const float cityTileGainY= yScale * cityTileGainX;
-		public const float yScale = 96.0f / 128.0f; // aspect ratio
-		public static Material buildingAtlas;
-		public static Material buildingShadows;
+		const float cityTileGainY= cityYScale * cityTileGainX;
+	//	public static Material buildingAtlas;
+	//	public static Material buildingShadows;
 		public static Material cityWallsLand;
 		public static Material cityWallsWater;
 		public static Material cityWater;
@@ -107,7 +107,7 @@ namespace CnV
 			// There is no aspect ratio scaling for Y
 			var baseScale = (0.5f * cityTileGainX );
 			var xScale = bt.xScale;
-			var YScale = bt.yScale;
+			var yScale = bt.yScale;
 			var dc = new Vector2(baseScale* xScale, baseScale* yScale);
 			var c0 = c-dc;
 			var c1 = c+dc;
@@ -366,10 +366,11 @@ namespace CnV
 
 						}
 					}
-					var citySpan = new Vector2(0.5f,0.5f * yScale);
+					// Walls and background
+					var citySpan = new Vector2(0.5f,0.5f * cityYScale);
 					var city0 = buildCityOrigin - citySpan;
 					var city1 = buildCityOrigin + citySpan;
-					draw.AddQuad(Layer.tileCity - 2,city.isOnWater ? cityWallsWater : cityWallsLand,city0,city1,iAlpha.AlphaToAll(),(0f, 0f, 0f, 0f));
+					draw.AddQuad(Layer.tileCityBase,city.isOnWater ? cityWallsWater : cityWallsLand,city0,city1,iAlpha.AlphaToAll(),(0f, 0f, 0f, 0f));
 
 					// draw overlays
 
@@ -494,7 +495,20 @@ namespace CnV
 					//}
 				}
 				if(hovered.isInCity)
-					CityView.DrawSprite(hovered, CityBuild.action switch { CityBuild.CityBuildAction.moveStart or CityBuild.CityBuildAction.moveEnd => CityViewS.decalMoveBuilding, _=> CityViewS.decalSelectBuilding}, 0.312f);
+				{
+					switch (CityBuild.action)
+					{
+						case CityBuild.CityBuildAction.moveStart:
+							case CityBuild.CityBuildAction.moveEnd: 
+					{
+							CityView.DrawSprite(hovered,CityViewS.decalMoveBuilding ,0.312f);
+								break;
+					}
+						default:
+							CityView.DrawHoverMarker(hovered);
+							break;
+					}
+				}
 
 				PreviewBuildAction();
 					//var processed = new HashSet<int>();
@@ -553,6 +567,12 @@ namespace CnV
 			if( BuildingMaterials.all.TryGetValue(bid,out var materials) )
 			{
 				// building
+				int iconId = 0;
+				var altCount = materials.altCount;
+				if(altCount > 0)
+				{
+					iconId = buildC.ToRandom(altCount+1);
+				}
 				var _cs = CityPointToQuad(buildC,materials,lerpC0,lerpC1);
 				var bdi = BuildingDef.FromId(bid);
 				if(materials.frameCount > 1)
@@ -567,7 +587,7 @@ namespace CnV
 					int blend = frame8 - (frame<<8);
 				
 					
-					draw.AddQuad(layer,materials.main.m,_cs.c0,_cs.c1,
+					draw.AddQuad(layer,materials.M(iconId).m,_cs.c0,_cs.c1,
 						new Vector2( (float)(du*frame),0),
 						new Vector2( (float)(du*(frame+1)),1),
 						new(blend.AsByte(),materials.frameDeltaG,materials.frameDeltaB, iAlpha.AsByte() ),(zBase, zBase, zBase, zBase)); 
@@ -575,7 +595,7 @@ namespace CnV
 				else
 				{
 
-					draw.AddQuad(layer,materials.main.m,_cs.c0,_cs.c1,new Vector2(0,0),new Vector2(1,1),new((byte)255,(byte)255,(byte)255,iAlpha.AsByte()),(zBase, zBase, zBase, zBase)); // shader does the z transform
+					draw.AddQuad(layer,materials.M(iconId).m,_cs.c0,_cs.c1,new Vector2(0,0),new Vector2(1,1),new((byte)255,(byte)255,(byte)255,iAlpha.AsByte()),(zBase, zBase, zBase, zBase)); // shader does the z transform
 				}
 			}
 			// building level
@@ -613,12 +633,17 @@ namespace CnV
 		{
 			Assert(isDrawing);
 
-			var off = (animationT * animFreq);
+			var off = (animationT-animationOffsets[cc]) * animFreq;
 			var cScale = new Vector2(off.Wave().Lerp(0.8f, 1.0f), off.WaveC().Lerp(0.8f, 1.0f));
 			var cs = CityPointToQuad(cc, 1.2f);
-			draw.AddQuad(Layer.tileCity + 2, mat, cs.c0, cs.c1, new Color( cityDrawAlpha, cityDrawAlpha, cityDrawAlpha, cityDrawAlpha / 2).Scale(cScale),zZero);
+			draw.AddQuad(Layer.tileCity + 2, mat, cs.c0.WorldToCamera(), cs.c1.WorldToCamera(), new Color( cityDrawAlpha, cityDrawAlpha, cityDrawAlpha, cityDrawAlpha / 2).Scale(cScale),zZero);
 		}
-
+		public static void DrawHoverMarker(BuildC cc)
+		{
+			Assert(isDrawing);
+			var cs = CityPointToQuad(cc);
+			DrawRectOutlineShadow(Layer.effects,cs.c0.WorldToCamera(),cs.c1.WorldToCamera(),new Color(32, 0, 96, 220), 3.0f);
+		}
 		
 
 		public static void LoadContent()
@@ -652,7 +677,7 @@ namespace CnV
 			internal byte frameDeltaB;
 			internal byte frameCount=1;
 
-			internal int altCont => alt1.m is null ? 0 :
+			internal int altCount => alt1.m is null ? 0 :
 									alt2.m is null ? 1 :
 									alt3.m is null ? 2 :
 				alt4.m is null ? 3 :
@@ -679,8 +704,8 @@ namespace CnV
 		{
 			//var cityBase = Settings.IsThemeWinter() ? "Art/City/Winter/" : "Art/City/";
 			var cityBase =  "Art/City/";
-			buildingAtlas = Material.LoadLitMaterial(cityBase + "building_set5");
-			buildingShadows = new Material(buildingAtlas.texture, AGame.unlitEffect);
+			//buildingAtlas = Material.LoadLitMaterial(cityBase + "building_set5");
+			//buildingShadows = new Material(buildingAtlas.texture, AGame.unlitEffect);
 			cityWallsLand = Material.LoadLitMaterial(cityBase + "baseland");
 			cityWallsWater = Material.LoadLitMaterial(cityBase + "basewater");
 			foreach(var build in BuildingDef.all)
@@ -730,9 +755,9 @@ namespace CnV
 		}
 		public static void UpdateLighting()
 		{
-			if(buildingAtlas.effect is not null)
+		//	if(buildingAtlas.effect is not null)
 			// reset effects to lit or unlit
-				buildingAtlas.effect = AGame.GetTileEffect();
+		//		buildingAtlas.effect = AGame.GetTileEffect();
 			if(cityWallsLand.effect is not null)
 				cityWallsLand.effect = AGame.GetTileEffect();
 			if(cityWallsWater.effect is not null)

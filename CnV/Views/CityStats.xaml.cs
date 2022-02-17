@@ -77,9 +77,7 @@ namespace CnV
 						var resources = city.SampleResources();
 						{ 
 						ResToolTip.Content=
-							$@"Resources: {resources}
-							Storage: {city.stats.storage}
-							Production: {city.stats.production}";
+							$"Storage:\n{city.stats.storage.Format("\n")}";
 						}
 
 						if(expResource.IsExpanded)
