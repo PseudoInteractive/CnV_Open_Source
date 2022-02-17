@@ -149,18 +149,61 @@ internal partial class GameClient
 		++renderFrame;
 		underMouse = null;
 		bestUnderMouseScore = 8;
+		if(gameTime.IsRunningSlowly)
+		{
+			if(ToolTips.debugTip is null)
+				ToolTips.debugTip = "Slow";
+			else
+				ToolTips.debugTip += "\nSlow";
 
+		}
 
 		//parallaxZ0 = 1024 * 64.0f / cameraZoomLag;
 		var isFocused = CnVServer.isInitialized&&AppS.isForeground;
 
 		try
 		{
+			var timerT = timer.Elapsed.TotalSeconds;
 			//		var _serverNow = CnVServer.serverTime;
-			var dt = (float)gameTime.ElapsedGameTime.TotalSeconds; // max delta is 1s
-																   //	lastDrawTime = _serverNow;
+			var dt = ((float)(timerT - animationT)).Min(1.0f);// (float)gameTime.ElapsedGameTime.TotalSeconds; // max delta is 1s
+			{                                                      //	lastDrawTime = _serverNow;
+				var hover = lastCanvasC;
+				if(hover != 0 && World.GetInfoFromCid(hover).type != 0)
+				{
+					if(!viewHovers.Exists(a => a.cid == lastCanvasC))
+					{
+						viewHovers.Add((lastCanvasC, 1.0f / 32.0f, 0.0f));
+					}
+				}
+				{
+					var removeMe = -1;
+					int count = viewHovers.Count;
+					for(int i = 0;i < count;++i)
+					{
+						var cid = viewHovers[i].cid;
 
-			var gain = 1.0f - MathF.Exp(-4.0f * dt);
+						float z = viewHovers[i].z;
+						float vz = viewHovers[i].vz;
+						var kd = (viewHoverElevationKt);
+						var ks = AMath.CritDampingKs(kd);
+
+						vz += (((cid == hover ? 1.0f : 0.0f) - z) * ks - vz * kd) * dt;
+						z += vz * (float)dt;
+						viewHovers[i] = (cid, z, vz);
+
+
+						if(z <= 1.0f / 32.0f)
+						{
+							removeMe = i;
+						}
+					}
+					// Hack:  Just remove one per frame, we'll get the rest next time,
+					if(removeMe != -1)
+						viewHovers.RemoveAt(removeMe);
+
+				}
+			}
+			var gain = 1.0f - MathF.Exp(-4.0f * (float)dt);
 			cameraCLag += (View.cameraC - cameraCLag) * gain;
 			cameraZoomLag += (cameraZoom - cameraZoomLag) * gain;
 			//cameraLightC = (ShellPage.mousePositionC);
@@ -171,7 +214,7 @@ internal partial class GameClient
 
 			// not too high or we lose float precision
 			// not too low or people will see when when wraps
-			animationT = gameTime.TotalGameTime.TotalSeconds;// ((uint)Environment.TickCount % 0xffffff) * (1.0f / 1000.0f);
+			animationT = timerT;// ((uint)Environment.TickCount % 0xffffff) * (1.0f / 1000.0f);
 			wantParallax = Settings.parallax > 0.1f;
 
 			//{
@@ -352,7 +395,7 @@ internal partial class GameClient
 					const float shrink = 0.25f;
 					t = t*64;
 					t -= MathF.Floor(t);
-					t = t.Bezier(0f,0.25f,0.375f,0.625f,0.75f,1.0f);
+					t = t.Bezier(0f,0.3f,0.43f,0.57f,0.70f,1.0f);
 					var isDay = (t >= 0.25f) & (t <= 0.75f);
 					var t1 = (t-0.25f); // 0..1 is Morning to evening, -1..1 is evening until morning 
 					t1 -= t1.Floor();
@@ -373,16 +416,17 @@ internal partial class GameClient
 					
 					
 					ToolTips.debugTip = $"{XVector3.Normalize(lightCC).ToNumerics().Format()} {AUtil.Format(lightCC.ToNumerics())}";
-					var d3 = t.CatmullRomLoop(new Vector3(0.75f,0.25f,0.25f),
-												new Vector3(0.5f,0.5f,1.0f),
+					var d3 = t.CatmullRomLoop(new Vector3(1.0f,0.5f,1.5f),
+												new Vector3(0.5f,0.5f,1.5f),
 												new Vector3(1.0f,1.0f,1.0f),
-												new Vector3(0.875f,0.625f,0.125f)
+												new Vector3(1.0f,0.5f,0.125f)
 																		)*0.75f;
-					var a3 = t.CatmullRomLoop(new Vector3(0.25f,0.25f,0.5f),
+					var a3 = t.CatmullRomLoop(new Vector3(0.750f,0.5f,1.0f),
 												new Vector3(0.5f,0.5f,1.0f),
 												new Vector3(1.0f,1.0f,1.0f),
-												new Vector3(0.75f,0.5f,0.25f)
+												new Vector3(1.0f,0.5f,0.25f)
 																		)*0.375f;
+					var s3 = 0.5f.Lerp(d3.Normalized(),new Vector3(0.75f,0.75f,0.75f) );
 					
 					//var hue = 0.6667f - t1;
 					//hue -= hue.Floor();
@@ -400,16 +444,16 @@ internal partial class GameClient
 					//	lightGainsParameter.SetValue(new XVector4(0.25f, 1.25f, 0.375f, 1.0625f));
 					lightAmbientParameter.SetValue(a3);
 					lightColorParameter.SetValue(d3);
-					lightSpecularParameter.SetValue(new XVector3(1.0f, 1.0f, 1.0f) * 0.75f);
+					lightSpecularParameter.SetValue(s3);
 				}
 			
-				cameraReferencePositionParameter.SetValue(new Microsoft.Xna.Framework.Vector3(projectionC.X, projectionC.Y, cameraZForLighting));
+				cameraReferencePositionParameter.SetValue(new XVector3(projectionC.X, projectionC.Y, cameraZForLighting));
 				//					defaultEffect.Parameters["DiffuseColor"].SetValue(new Microsoft.Xna.Framework.Vector4(1, 1, 1, 1));
 				var gain1 = bulgeInputGain * bulgeGain * bulgeSpan;
 				var planetGains = new XVector3(bulgeGain, -gain1, !AppS.IsKeyPressedShift() ? 0.0f: gain1*bulgeInputSpan2.Sqrt() );
 				planetGainsParamater.SetValue(planetGains);
 
-				cameraCParameter.SetValue(new System.Numerics.Vector3(cameraCLag.X, cameraCLag.Y, 0.0f)); // Z of camera is always 0
+				cameraCParameter.SetValue(new XVector2(cameraCLag.X, cameraCLag.Y)); // Z of camera is always 1
 				pixelScaleParameter.SetValue(pixelScale);
 
 
@@ -1873,43 +1917,9 @@ internal partial class GameClient
 
 		try
 		{
-			float dt = ((float)gameTime.ElapsedGameTime.TotalSeconds).Min(1.0f / 16.0f);
+			
 
-			var hover = lastCanvasC;
-			if(hover != 0 && World.GetInfoFromCid(hover).type != 0)
-			{
-				if(!viewHovers.Exists(a => a.cid == lastCanvasC))
-				{
-					viewHovers.Add((lastCanvasC, 1.0f / 32.0f, 0.0f));
-				}
-			}
-			{
-				var removeMe = -1;
-				int count = viewHovers.Count;
-				for(int i = 0; i < count; ++i)
-				{
-					var cid = viewHovers[i].cid;
-
-					float z = viewHovers[i].z;
-					float vz = viewHovers[i].vz;
-					var kd = (viewHoverElevationKt);
-					var ks = AMath.CritDampingKs(kd);
-
-					vz += (((cid == hover ? 1.0f : 0.0f) - z) * ks - vz * kd) * dt;
-					z += vz * (float)dt;
-					viewHovers[i] = (cid, z, vz);
-
-
-					if(z <= 1.0f / 32.0f)
-					{
-						removeMe = i;
-					}
-				}
-				// Hack:  Just remove one per frame, we'll get the rest next time,
-				if(removeMe != -1)
-					viewHovers.RemoveAt(removeMe);
-
-			}
+			
 
 
 			if(clientSpan.X > 0 && clientSpan.Y > 0 && AppS.isForeground)

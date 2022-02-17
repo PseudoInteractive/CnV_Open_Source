@@ -92,7 +92,8 @@ namespace CnV
 
 					GraphicsProfile =  GraphicsProfile.HiDef
 			};
-			IsFixedTimeStep                   =  false;
+			
+			
 			_graphics.PreparingDeviceSettings += _graphics_PreparingDeviceSettings;
 			Content.RootDirectory             =  "gameBin";
 			Material.LoadLitMaterial          =  LoadLitMaterial;
@@ -153,6 +154,7 @@ namespace CnV
 			instance.GraphicsDevice.DeviceReset+=GraphicsDevice_DeviceReset; ;
 			instance.GraphicsDevice.DeviceResetting+=GraphicsDevice_DeviceResetting; ;
 			canvas.SizeChanged += Canvas_SizeChanged;
+			//instance.IsFixedTimeStep                   =  true;
 
 		}
 
@@ -180,6 +182,7 @@ namespace CnV
 		{
 			Assert( instance == this);
 			base.Initialize();
+			timer.Start();
 
 		}
 
@@ -362,7 +365,7 @@ namespace CnV
 				if(texture is not null && normalMap is not null)
 				{ 
 					main = new Material(texture, normalMap, AGame.GetTileEffect(animationFrames > 1));
-					shadow =wantShadow ?  new Material(texture, Material.shadowEffect) : null;
+					shadow =wantShadow ?  new Material(texture, GetShadowEffect(animationFrames > 1)) : null;
 					return true;
 				}
 			}
@@ -426,6 +429,8 @@ namespace CnV
 				darkFontEffect         = EffectPass("FontDark");
 				litEffect              = EffectPass("Lit");
 				Material.litAnimatedEffect              = EffectPass("LitAnimated");
+				Material.unlitAnimatedEffect              = EffectPass("UnlitAnimated");
+				Material.shadowAnimatedEffect              = EffectPass("ShadowAnimated");
 				unlitEffect   = EffectPass("Unlit");
 				Material.shadowEffect   = EffectPass("Shadow");
 				animatedSpriteEffect   = EffectPass("SpriteAnim");

@@ -212,7 +212,7 @@ namespace CnV
 			//}
 			menuType = _menuType;
 			var city = City.GetBuild();
-			var townHallLevel = city.townHallLevel;
+			var townHallLevel = isPlanner ? 10 : city.townHallLevel;
 
 			instance.TogglePlanner.Label = isPlanner ? "Build" : "Planner";
 
@@ -432,13 +432,20 @@ namespace CnV
 
 		}
 
-		private static void BuildMenu_Closed(object sender, object e)
+		private static async void BuildMenu_Closed(object sender, object e)
 		{
-			menuOpen = false;
-			buildFlyout.Content=null;
+			try
+			{
+				menuOpen = false;
+				buildFlyout.Content=null;
 
-
-			ShellPage.TakeFocus();
+				await Task.Delay(50);
+				ShellPage.TakeFocus();
+			}
+			catch(Exception ex)
+			{
+				LogEx(ex);
+			}
 		}
 
 		public CityBuild()
@@ -1119,7 +1126,7 @@ namespace CnV
 				case Windows.System.VirtualKey.X: CityBuild.ShortBuild(Building.bidCastle, city, cc); break; //  467;
 				case Windows.System.VirtualKey.O: CityBuild.ShortBuild(Building.bidPort, city, cc); break; //  488;
 				case Windows.System.VirtualKey.P: CityBuild.ShortBuild(Building.bidShipyard, city, cc); break; //  491;
-				case Windows.System.VirtualKey.Q: if(!isPlanner) city.SmartBuild(cc, city.GetLayoutBid(cc), searchForSpare: false, dryRun: true, wantDemoUI: false); break;
+				case Windows.System.VirtualKey.Q: if(!isPlanner && city.isLayoutCustom) city.SmartBuild(cc, city.GetLayoutBid(cc), searchForSpare: false, dryRun: false, wantDemoUI: false); break;
 
 				default:
 					return false;

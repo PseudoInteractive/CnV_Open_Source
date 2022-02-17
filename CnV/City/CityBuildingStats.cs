@@ -275,9 +275,13 @@ namespace CnV
 						resGain += bd1.def.eff[0];
 						continue;
 					}
-					if(bd1.id == bidCabin)
+					else if(bd1.id == bidCabin)
 					{
 						cabinGain += bd1.def.eff[bd1.bl];
+					}
+					else if( res == Resources.idFood && bd1.id == bidNone)
+					{
+						processingain += 40; // what is the proper number here?
 					}
 
 

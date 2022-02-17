@@ -324,7 +324,11 @@ namespace CnV
 			}
 			var targetSpot = cc;
 			var targetB = isPlanner ? build.GetLayoutBuilding(cc) : build.buildings[targetSpot];
-
+			if(!targetB.canMove)
+			{
+				Status("Cannot move that", dryRun);
+				return;
+			}
 			if(isStart)
 			{
 				if(targetB.isBuilding)
