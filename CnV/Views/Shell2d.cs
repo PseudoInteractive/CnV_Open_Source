@@ -492,23 +492,24 @@ namespace CnV.Views
 					// todo: handle differently for city view
 
 					case Windows.System.VirtualKey.Space:
+					case Windows.System.VirtualKey.Enter:
 						Spot.ProcessCoordClick(Spot.focus, false, AppS.keyModifiers, true);
 						break;
 
 					case Windows.System.VirtualKey.Left:
-						Spot.SetFocus(Spot.focus.Translate((-1, 0)), true, true, true);
+						Spot.SetFocus(Spot.focus.Translate((-1, 0)), true, true, true,lazyMove:false);
 						break;
 
 					case Windows.System.VirtualKey.Up:
-						Spot.SetFocus(Spot.focus.Translate((0, -1)), true, true, true);
+						Spot.SetFocus(Spot.focus.Translate((0, -1)), true, true, true,lazyMove:false);
 						break;
 
 					case Windows.System.VirtualKey.Right:
-						Spot.SetFocus(Spot.focus.Translate((1, 0)), true, true, true);
+						Spot.SetFocus(Spot.focus.Translate((1, 0)), true, true, true,lazyMove:false);
 						break;
 
 					case Windows.System.VirtualKey.Down:
-						Spot.SetFocus(Spot.focus.Translate((0, 1)), true, true, true);
+						Spot.SetFocus(Spot.focus.Translate((0, 1)), true, true, true,lazyMove:false);
 						break;
 				}
 				return false;

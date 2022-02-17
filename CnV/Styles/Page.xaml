@@ -9,8 +9,8 @@
  >
 	
 	<!--"Expander"-->
-	<SolidColorBrush x:Key="ExpanderBrushContent">#80200030</SolidColorBrush>
-	<SolidColorBrush x:Key="ExpanderBrushHeader" >#80200030</SolidColorBrush>
+	<SolidColorBrush x:Key="ExpanderBrushContent">#80150030</SolidColorBrush>
+	<SolidColorBrush x:Key="ExpanderBrushHeader" >#80150030</SolidColorBrush>
 	<Style TargetType="Expander" >
 		<Setter Property="MinHeight" Value="20" />
 		<Setter Property="BorderThickness" Value="0"/>

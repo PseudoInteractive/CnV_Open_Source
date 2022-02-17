@@ -23,23 +23,25 @@ namespace CnV
 		public string assetPath => $"Art/Anim/{asset}";
 		public void Load() { material =new Material( GameClient.instance.Content.Load<Texture2D>(assetPath),GameClient.animatedSpriteEffect); }
 		
-		public SpriteAnim(string _asset, int _frameCount)
+		public static (byte frameDeltaG, byte frameDeltaB) ComputeFrameDeltaAsColours(int frameCount)
 		{
-			asset = _asset;
-			frameCount = (byte)_frameCount;
-			double dFrameCount = _frameCount;
+			double dFrameCount = frameCount;
 			double frameDelta = 1.0 / dFrameCount;
 			var g = Math.Floor(frameDelta * 255.0);
 			var error = frameDelta - (g / 255.0);
 			Assert(error >= 0.0);
 			Assert(error <= 1.0/255.0);
-			var b = (int)(error * 256.0 * 255.0);
+			var b = (int)(error * 255.0 * 255.0);
 			Assert(b >= 0);
 			Assert(b <= 255);
-			frameDeltaB = (byte)b;
-			frameDeltaG = (byte)g;
-	//		var resultError = (frameDelta - g / 255.0 - b / 256.0 / 255.0);
-	//		COTG.Debug.Log($"{_asset} {resultError}");
+			return ( ((int)g).AsByte(),b.AsByte());
+		}
+
+		public SpriteAnim(string _asset, int _frameCount)
+		{
+			asset = _asset;
+			frameCount = (byte)_frameCount;
+			(frameDeltaG, frameDeltaB) = ComputeFrameDeltaAsColours(frameCount);
 		}
 		public static SpriteAnim flagHome = new SpriteAnim("flagAnim0",12);
 		public static SpriteAnim flagSelected = new SpriteAnim("flagAnim4",12);

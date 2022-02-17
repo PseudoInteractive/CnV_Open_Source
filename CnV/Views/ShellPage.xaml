@@ -367,15 +367,18 @@
 			</Expander>
 			<Expander  Grid.Row="{x:Bind GridRowIndex(rowFooter,-1)}"
 					    Canvas.ZIndex="35"
-					   HorizontalAlignment="Stretch"
+					   BorderThickness="0"
+					   HorizontalContentAlignment="Center"
 					   ExpandDirection="Up"
 					   VerticalAlignment="Bottom"
 					  MinHeight="22" Padding="0" Margin="0" Grid.RowSpan="2" >
 				<Expander.Header>
-					<TextBlock x:Name="timeDisplay" x:FieldModifier="public" Margin="2,0" HorizontalAlignment="Stretch" />
+					<Border BorderThickness="0" BorderBrush="{x:Null}" Background="{StaticResource ExpanderBrushContent}" Padding="4" CornerRadius="4" >
+					<TextBlock x:Name="timeDisplay" x:FieldModifier="public"  HorizontalAlignment="Stretch" />
+					</Border>
 				</Expander.Header>
-				<StackPanel Orientation="Vertical"  Padding="0" Margin="0" Background="{StaticResource ExpanderBrushContent}" HorizontalAlignment="Stretch" >
-					<NumberBox  x:Name="timeScaleNumberBox" Header="TimeScale:"  Value="1" ValueChanged="TimeScaleValueChanged" Margin="2,4"  HorizontalContentAlignment="Right" VerticalContentAlignment="Center" VerticalAlignment="Center" HorizontalAlignment="Center"  Description="Desc" 
+				<StackPanel Orientation="Vertical"  Padding="4" CornerRadius="4" Margin="0" Background="{StaticResource ExpanderBrushContent}" HorizontalAlignment="Center">
+					<NumberBox  x:Name="timeScaleNumberBox" Header="TimeScale:"  Value="1" ValueChanged="TimeScaleValueChanged" Margin="2,4"  HorizontalContentAlignment="Right" VerticalContentAlignment="Center" VerticalAlignment="Center" HorizontalAlignment="Center"  
 								
 								Minimum="0.0" 
 								
@@ -385,9 +388,9 @@
 					<Slider x:Name="timeScaleSlider" ThumbToolTipValueConverter="{x:Bind timeScaleToolTipConverter}"  Value="2" 
 							ValueChanged="TimeScalueSliderValueChanged"
 							HorizontalAlignment="Stretch"
-							VerticalAlignment="Bottom" Orientation="Horizontal" Minimum="0" Maximum="10" SmallChange="1" 
+							 Orientation="Horizontal" Minimum="0" Maximum="10" SmallChange="1" 
 							 StepFrequency="1"  Margin="2,4"  />
-					<StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch" >
+					<StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch" Spacing="8"  >
 						<Button Content="{tkui:SymbolIcon Symbol=Previous}" Click="TimeBackClick"/>
 						<Button Click="TimeTogglePlay" >
 							<Button.Content>

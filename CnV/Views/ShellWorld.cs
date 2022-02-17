@@ -910,42 +910,42 @@ namespace CnV.Views
 
 
 
-		public static void Canvas_PointerPressedJS(int x, int y, PointerUpdateKind kind)
-		{
-			AppS.UpdateKeyStates();
-			//e.KeyModifiers.UpdateKeyModifiers();
+		//public static void Canvas_PointerPressedJS(int x, int y, PointerUpdateKind kind)
+		//{
+		//	AppS.UpdateKeyStates();
+		//	//e.KeyModifiers.UpdateKeyModifiers();
 
-			//	Assert(isOverPopup == false);
-			//            canvas.CapturePointer(e.Pointer);
-			//	var point = e.CurrentPoint;
-			{
-				switch(kind)
-				{
-					case PointerUpdateKind.XButton1Pressed:
-						return;
-					case PointerUpdateKind.XButton2Pressed:
-						return;
+		//	//	Assert(isOverPopup == false);
+		//	//            canvas.CapturePointer(e.Pointer);
+		//	//	var point = e.CurrentPoint;
+		//	{
+		//		switch(kind)
+		//		{
+		//			case PointerUpdateKind.XButton1Pressed:
+		//				return;
+		//			case PointerUpdateKind.XButton2Pressed:
+		//				return;
 
 
-				}
-				//    e.Handled = false;
-				//    return;
-			}
-			//var properties = point.Properties;
-			mousePosition = new(x, y);
-			//	Log($"!Focus Canvas pressed? {x} {y} {kind}");
-			var prior = lastMousePressTime;
-			lastMousePressTime = DateTimeOffset.UtcNow;
-			lastMousePressPosition = mousePosition;
+		//		}
+		//		//    e.Handled = false;
+		//		//    return;
+		//	}
+		//	//var properties = point.Properties;
+		//	mousePosition = new(x, y);
+		//	//	Log($"!Focus Canvas pressed? {x} {y} {kind}");
+		//	var prior = lastMousePressTime;
+		//	lastMousePressTime = DateTimeOffset.UtcNow;
+		//	lastMousePressPosition = mousePosition;
 
-			ClearHover();
+		//	ClearHover();
 
-			//  if (ShellPage.IsCityView())
-			// The app pas priority over back and forward events
-			//S hellPage.UpdateFocus();
-			//  e.Handled = false;
-			Gesture.Reset();
-		}
+		//	//  if (ShellPage.IsCityView())
+		//	// The app pas priority over back and forward events
+		//	//S hellPage.UpdateFocus();
+		//	//  e.Handled = false;
+		//	Gesture.Reset();
+		//}
 		//private void Canvas_PointerCaptureLost(object sender, PointerRoutedEventArgs e)
 		//{
 		//    mouseButtons = 0;

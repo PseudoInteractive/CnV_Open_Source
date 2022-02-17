@@ -316,29 +316,7 @@ namespace CnV
 		//}
 
 
-		public static void OnKeyUp(VirtualKey key)
-		{
-			AppS.UpdateKeyStates();
-			//Trace("KeyUp" + key);
-			switch (key)
-			{
-				case VirtualKey.Shift:
-				case VirtualKey.LeftShift:
-				case VirtualKey.RightShift:
-					//		Trace("Shift Up");
-					shiftPressed = false;
-					break;
-				case VirtualKey.Control:
-				case VirtualKey.LeftControl:
-				case VirtualKey.RightControl:
-
-					controlPressed = false;
-					break;
-
-			}
-
-			InputRecieved();
-		}
+		
 
 		//static bool webViewInFront = false;
 
@@ -350,34 +328,7 @@ namespace CnV
 		//	OnKeyDown(key);
 
 		//}
-		public static bool OnKeyDown(VirtualKey key)
-		{
-			//Log($"KeyDown {key} mouse:{ShellPage.mouseOverCanvas}");
-
-			AppS.UpdateKeyStates();
-			switch (key)
-			{
-				case VirtualKey.Shift:
-				case VirtualKey.LeftShift:
-				case VirtualKey.RightShift:
-					//Trace("Shift Down");
-
-					shiftPressed = true;
-					break;
-				case VirtualKey.Control:
-				case VirtualKey.LeftControl:
-				case VirtualKey.RightControl:
-
-					controlPressed = true;
-					break;
-
-			}
-
-			InputRecieved();
-
-			return false; //ShellPage.DoKeyDown(key);
-
-		}
+	
 
 		private async void SwitchToForeground()
 		{
@@ -580,16 +531,53 @@ namespace CnV
 
 		private void Content_PreviewKeyUp(object sender, Microsoft.UI.Xaml.Input.KeyRoutedEventArgs e)
 		{
-			OnKeyUp(e.Key);
+			AppS.UpdateKeyStates();
+			var key = e.OriginalKey;
+			//Trace("KeyUp" + key);
+			switch (key)
+			{
+				case VirtualKey.Shift:
+				case VirtualKey.LeftShift:
+				case VirtualKey.RightShift:
+					//		Trace("Shift Up");
+					shiftPressed = false;
+					break;
+				case VirtualKey.Control:
+				case VirtualKey.LeftControl:
+				case VirtualKey.RightControl:
+
+					controlPressed = false;
+					break;
+
+			}
+
+			InputRecieved();
 
 		}
 
 		private void Content_PreviewKeyDown(object sender, Microsoft.UI.Xaml.Input.KeyRoutedEventArgs e)
 		{
+			AppS.UpdateKeyStates();
+			var key = e.OriginalKey;
+			switch (key)
+			{
+				case VirtualKey.Shift:
+				case VirtualKey.LeftShift:
+				case VirtualKey.RightShift:
+					//Trace("Shift Down");
+
+					shiftPressed = true;
+					break;
+				case VirtualKey.Control:
+				case VirtualKey.LeftControl:
+				case VirtualKey.RightControl:
+
+					controlPressed = true;
+					break;
+
+			}
+
 			InputRecieved();
-			//	Log($"PreviewKeyDown {e.Key} {e.Handled}");
-			if (!e.Handled)
-				e.Handled = OnKeyDown(e.Key);
 		}
 
 		private static void DebugSettings_BindingFailed(object sender, BindingFailedEventArgs e)

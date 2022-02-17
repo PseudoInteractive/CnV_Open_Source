@@ -762,37 +762,37 @@ namespace CnV
 									//});
 									break;
 								}
-							case "keyDown":
-								{
-									Log("Key");
-									//   Log($"Keydown: {jsp.Value.ToString()}");
-									VirtualKey key = default;
-									switch(jsp.Value.GetString("key"))
-									{
-										case "Control": key = VirtualKey.Control; break;
-										case "Shift": key = VirtualKey.Shift; break;
-										case "ScrollLock": key = VirtualKey.Scroll; break;
-									}
-									if(key != default)
+							//case "keyDown":
+							//	{
+							//		Log("Key");
+							//		//   Log($"Keydown: {jsp.Value.ToString()}");
+							//		VirtualKey key = default;
+							//		switch(jsp.Value.GetString("key"))
+							//		{
+							//			case "Control": key = VirtualKey.Control; break;
+							//			case "Shift": key = VirtualKey.Shift; break;
+							//			case "ScrollLock": key = VirtualKey.Scroll; break;
+							//		}
+							//		if(key != default)
 
-										App.OnKeyDown(key);
-									break;
-								}
-							case "keyUp":
-								{
-									Log("Key");
-									VirtualKey key = default;
-									switch(jsp.Value.GetString("key"))
-									{
-										case "Control": key = VirtualKey.Control; break;
-										case "Shift": key = VirtualKey.Shift; break;
-										case "ScrollLock": key = VirtualKey.Scroll; break;
-									}
-									if(key != default)
-										//   Note.Show($"{key} Up");
-										App.OnKeyUp(key);
-									break;
-								}
+							//			App.OnKeyDown(key);
+							//		break;
+							//	}
+							//case "keyUp":
+							//	{
+							//		Log("Key");
+							//		VirtualKey key = default;
+							//		switch(jsp.Value.GetString("key"))
+							//		{
+							//			case "Control": key = VirtualKey.Control; break;
+							//			case "Shift": key = VirtualKey.Shift; break;
+							//			case "ScrollLock": key = VirtualKey.Scroll; break;
+							//		}
+							//		if(key != default)
+							//			//   Note.Show($"{key} Up");
+							//			App.OnKeyUp(key);
+							//		break;
+							//	}
 							//case "mouseDown":
 							//	{
 							//		Log($"mouseDown: {jsp.Value.ToString()}");

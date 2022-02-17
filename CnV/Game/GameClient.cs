@@ -69,7 +69,7 @@ namespace CnV
 		public static      EffectParameter worldMatrixParameter;
 		public static      EffectParameter lightPositionParameter;
 		public static      EffectParameter lightPositionCameraParameter;
-		public static      EffectParameter lightGainsParameter;
+//		public static      EffectParameter lightGainsParameter;
 		public static      EffectParameter lightAmbientParameter;
 		public static      EffectParameter lightColorParameter;
 		public static      EffectParameter lightSpecularParameter;
@@ -280,39 +280,69 @@ namespace CnV
 		private static int RoundUpTo4(int v) => (v+3)&(~3);
 		private static int RoundDownTo4(int v) => (v+3)&(~3);
 		private static bool IsMultipleOf4(int w,int h) => ((h&3)|(w&3)) ==0;//(v+3)&(~3);
-		public static Texture CreateFromDDS(string fileName)
+		public static Texture CreateFromDDS(string fileName, int animatedFrameCount=0)
 		{
 			try
 			{ 
+			
 			using var scratch = DirectXTexNet.TexHelper.Instance.LoadFromDDSFile(fileName, DDS_FLAGS.NONE);
 			var meta = scratch.GetMetadata();
 			Log($"{fileName} {meta.Dimension} {meta.Width}x{meta.Height}x{meta.Depth}[{meta.ArraySize}] Mips: {meta.MipLevels} Format: {meta.Format} {meta.GetAlphaMode()}");
 			SurfaceFormat format = GetFormat(meta.Format);
 			Assert( meta.Depth == 1);
-			int mips = IsMultipleOf4(meta.Width,meta.Height) ?  meta.MipLevels : 1;
-			if(mips==1)
-			{
-				Log("not multiple of 4");
-			}
+				//if(animatedFrameCount > 1)
+				//{
+				//	Assert(false);
+				//	int width = meta.Width / animatedFrameCount;
+				//	Assert(width * animatedFrameCount == meta.Width); // must be even multiple
+				//	Assert( (width&3) == 0 );
+				//	int mips = 1;
+				//	var rv = new Texture3D(instance.GraphicsDevice,RoundUpTo4(meta.Width),RoundUpTo4(meta.Height),depth:animatedFrameCount,mipMap:false,format);
 
-			var rv = new Texture2D(instance.GraphicsDevice, RoundUpTo4(meta.Width), RoundUpTo4(meta.Height), mips, format,meta.ArraySize);
+					
+				//		for(int m = 0;m<mips;++m)
+				//		{
+				//			var image = scratch.GetImage(m,0,0);
+				//			for(int depth = 0;depth<animatedFrameCount;++depth)
+				//			{
+				//				var rowPitch = image.RowPitch/animatedFrameCount;
+				//				Assert(rowPitch*animatedFrameCount == image.RowPitch);
+				//				rv.SetDataRaw(image.Pixels,depth,m,image.RowPitch,image.RowPitch/animatedFrameCount,(width),(image.Height));
 
+				//			}
+				//		}
+						
+				//	return rv;
 
-			for(int arraySlice =0;arraySlice<meta.ArraySize;++arraySlice)
-			{
-				for(int m=0;m<mips;++m)
+				//}
+				//else
 				{
-					const int item = 0;
-					var image = scratch.GetImage(m,item,arraySlice);
-					rv.SetDataRaw(image.Pixels,m,image.RowPitch, (image.Width),(image.Height),arraySlice);
+					
+					//Not done
+					int mips = IsMultipleOf4(meta.Width,meta.Height) ?  meta.MipLevels : 1;
+					if(mips==1)
+					{
+						Log("not multiple of 4");
+					}
+					var rv = new Texture2D(instance.GraphicsDevice,RoundUpTo4(meta.Width),RoundUpTo4(meta.Height),mips,format,meta.ArraySize);
 
+
+					for(int arraySlice = 0;arraySlice<meta.ArraySize;++arraySlice)
+					{
+						for(int m = 0;m<mips;++m)
+						{
+							const int item = 0;
+							var image = scratch.GetImage(m,item,arraySlice);
+							rv.SetDataRaw(image.Pixels,m,image.RowPitch,(image.Width),(image.Height),arraySlice);
+
+						}
+					}
+
+
+
+
+					return rv;
 				}
-			}
-
-			
-
-
-			return rv;
 			}
 			catch(Exception ex)
 			{
@@ -321,18 +351,18 @@ namespace CnV
 			}
 		}
 
-		public static bool TryLoadLitMaterialFromDDS(string nameAndPath, out Material main, out Material shadow, int volumeSlices = 0)
+		public static bool TryLoadLitMaterialFromDDS(string nameAndPath, out Material main, out Material shadow,bool wantShadow, int animationFrames=0)
 		{
 			try
 			{ 
 				var path = AppS.AppFileName($"{nameAndPath}.dds");
 				var pathN = AppS.AppFileName($"{nameAndPath}_n.dds");
-				Texture texture = CreateFromDDS(path);
-				Texture normalMap = CreateFromDDS(pathN);
+				Texture texture = CreateFromDDS(path,animationFrames);
+				Texture normalMap = CreateFromDDS(pathN,animationFrames);
 				if(texture is not null && normalMap is not null)
 				{ 
-					main = new Material(texture, normalMap, AGame.GetTileEffect());
-					shadow = new Material(texture, AGame.unlitEffect);
+					main = new Material(texture, normalMap, AGame.GetTileEffect(animationFrames > 1));
+					shadow =wantShadow ?  new Material(texture, Material.shadowEffect) : null;
 					return true;
 				}
 			}
@@ -395,7 +425,9 @@ namespace CnV
 				fontEffect             = EffectPass("FontLight");
 				darkFontEffect         = EffectPass("FontDark");
 				litEffect              = EffectPass("Lit");
+				Material.litAnimatedEffect              = EffectPass("LitAnimated");
 				unlitEffect   = EffectPass("Unlit");
+				Material.shadowEffect   = EffectPass("Shadow");
 				animatedSpriteEffect   = EffectPass("SpriteAnim");
 				sdfEffect              = EffectPass("SDF");
 				noTextureEffect        = EffectPass("NoTexture");

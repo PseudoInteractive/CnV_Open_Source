@@ -173,7 +173,7 @@ internal partial class GameClient
 
 			// not too high or we lose float precision
 			// not too low or people will see when when wraps
-			animationT = (float)gameTime.TotalGameTime.TotalSeconds;// ((uint)Environment.TickCount % 0xffffff) * (1.0f / 1000.0f);
+			animationT = gameTime.TotalGameTime.TotalSeconds;// ((uint)Environment.TickCount % 0xffffff) * (1.0f / 1000.0f);
 
 			//{
 			//	var i = (int)(animationT / 4.0f);
@@ -182,7 +182,7 @@ internal partial class GameClient
 			//	tipTextFormat.FontStretch = fontStretch;
 			//	tipTextFormatCentered.FontStretch = fontStretch;
 			//}
-			animationTWrap = (animationT*0.333f).Frac(); // wraps every 3 seconds, 0..1
+			animationTWrap = (float)(animationT*(1.0/3.0)).Frac(); // wraps every 3 seconds, 0..1
 
 			device.Textures[7] = fontTexture;
 			//				float accentAngle = animT * MathF.PI * 2;
@@ -208,7 +208,7 @@ internal partial class GameClient
 			// var scale = ShellPage.canvas.ConvertPixelsToDips(1);
 			pixelScale       = (cameraZoomLag);
 			halfSquareOffset = new System.Numerics.Vector2(pixelScale * 0.5f, pixelScale * .5f);
-			var bonusLayerScale = pixelScale.Max(64 * Settings.iconScale);
+			var bonusLayerScale = 1f.Max(64 * pixelScaleInverse * Settings.iconScale);
 
 			bmFontScale = (MathF.Sqrt(pixelScale / 64.0f) * 0.5f * Settings.fontScale);//.Min(0.5f);
 			pixelScaleInverse = 1.0f / cameraZoomLag;
@@ -233,7 +233,8 @@ internal partial class GameClient
 
 
 			bulgeGain *= Settings.planet * (1.0f - cityAlpha);
-			bulgeInputGain = 4*(0.75f.Squared()) / (virtualSpan.X.Squared() + virtualSpan.Y.Squared());
+			float bulgeInputSpan2 = (virtualSpan.X.Squared() + virtualSpan.Y.Squared());
+			bulgeInputGain = 4*(0.75f.Squared()) / bulgeInputSpan2;
 			// world space coords
 			var srcP0 = new System.Numerics.Vector2((cameraCLag.X + 0.5f) * bSizeGain2 - projectionC.X * bSizeGain2 * pixelScaleInverse,
 													(cameraCLag.Y + 0.5f) * bSizeGain2 - projectionC.Y * bSizeGain2 * pixelScaleInverse);
@@ -337,22 +338,23 @@ internal partial class GameClient
 				{
 					ToolTips.debugTip = $"{ShellPage.mousePosition} {lightZNight*pixelScale}";
 					var l = ShellPage.mousePosition;//C.CameraToScreen();//.InverseProject();
+					var lc = ShellPage.mousePositionC;//C.CameraToScreen();//.InverseProject();
 					lightPositionParameter.SetValue(new Microsoft.Xna.Framework.Vector3(l.X, l.Y, lightZNight));
-					lightPositionCameraParameter.SetValue(new Microsoft.Xna.Framework.Vector3(l.X, l.Y, lightZNight));
-					lightGainsParameter.SetValue(new Microsoft.Xna.Framework.Vector4(0.25f, 1.25f, 0.375f, 1.0625f));
-					lightAmbientParameter.SetValue(new Microsoft.Xna.Framework.Vector4(.493f, .576f, .639f, 1f) * 0.25f);
-					lightColorParameter.SetValue(new Microsoft.Xna.Framework.Vector4(1.0f, 1.0f, 1.0f, 1.0f) * 1.25f);
-					lightSpecularParameter.SetValue(new Microsoft.Xna.Framework.Vector4(1.0f, 1.0f, 1.0f, 1.0f) * 1.25f);
+					lightPositionCameraParameter.SetValue(new Microsoft.Xna.Framework.Vector3(lc.X, lc.Y, lightZNight));
+					//lightGainsParameter.SetValue(new Microsoft.Xna.Framework.Vector4(0.25f, 1.25f, 0.375f, 1.0625f));
+					lightAmbientParameter.SetValue(new Microsoft.Xna.Framework.Vector3(.493f, .576f, .639f) * 0.25f);
+					lightColorParameter.SetValue(new Microsoft.Xna.Framework.Vector3(1.0f, 1.0f, 1.0f) * 1.25f);
+					lightSpecularParameter.SetValue(new Microsoft.Xna.Framework.Vector3(1.0f, 1.0f, 1.0f) * 1.25f);
 				}
 				else
 				{
 					///				var xc = lightWC.WorldToCamera().CameraToScreen();
 					var t = (float)CnVServer.simDateTime.TimeOfDay.TotalDays;
 
-					const float shrink = 0.125f;
+					const float shrink = 0.25f;
 					t = t*64;
 					t -= MathF.Floor(t);
-					t = t.Bezier(0f,0.5f,0.5f,0.5f,1.0f);
+					t = t.Bezier(0f,0.375f,0.5f,0.5f,0.625f,1.0f);
 					var isDay = (t >= 0.25f) & (t <= 0.75f);
 					var t1 = (t-0.25f); // 0..1 is Morning to evening, -1..1 is evening until morning 
 					t1 -= t1.Floor();
@@ -363,7 +365,7 @@ internal partial class GameClient
 					var csTau = MathF.Cos(t*MathF.Tau);
 					Vector2 wc = new Vector2(MathF.Sin(t*MathF.Tau).SNormLerp(worldSpan0, worldSpan1),
 						(csTau * (isDay ? 1.0f : 1.0f)).SNormLerp(worldSpan0,worldSpan1));
-					var Z = csTau * (isDay ? -1.0f : 0.5f) + 1.0f;
+					var Z = csTau * (isDay ? -1.0f : 0.0f) + 1.0f;
 					var cc = (wc.WorldToCamera()*shrink);
 					var sc = cc.CameraToScreen();
 					Assert(Z> 0);
@@ -376,13 +378,13 @@ internal partial class GameClient
 					var d3 = t.CatmullRomLoop(new Vector3(0.75f,0.25f,0.25f),
 												new Vector3(0.5f,0.5f,1.0f),
 												new Vector3(1.0f,1.0f,1.0f),
-												new Vector3(0.75f,0.5f,0.0f)
-																		);
+												new Vector3(0.875f,0.625f,0.125f)
+																		)*0.75f;
 					var a3 = t.CatmullRomLoop(new Vector3(0.25f,0.25f,0.5f),
 												new Vector3(0.5f,0.5f,1.0f),
 												new Vector3(1.0f,1.0f,1.0f),
 												new Vector3(0.75f,0.5f,0.25f)
-																		)*0.5f;
+																		)*0.375f;
 					
 					//var hue = 0.6667f - t1;
 					//hue -= hue.Floor();
@@ -397,20 +399,20 @@ internal partial class GameClient
 					//lightAmbientParameter.SetValue(new XVector4(.483f, .476f, .549f, 1f) * 0.75f);
 					//lightColorParameter.SetValue(new XVector4(1.1f, 1.1f, 0.9f, 1f) * 1.25f);
 					//lightSpecularParameter.SetValue(new XVector4(1.0f, 1.0f, 1.0f, 1.0f) * 1.25f);
-						lightGainsParameter.SetValue(new XVector4(0.25f, 1.25f, 0.375f, 1.0625f));
-					lightAmbientParameter.SetValue(new XVector4(a3.X,a3.Y,a3.Z,0.75f));
-					lightColorParameter.SetValue(new XVector4(d3.X,d3.Y,d3.Z,1.25f));
-					lightSpecularParameter.SetValue(new XVector4(1.0f, 1.0f, 1.0f, 1.0f) * 0.75f);
+					//	lightGainsParameter.SetValue(new XVector4(0.25f, 1.25f, 0.375f, 1.0625f));
+					lightAmbientParameter.SetValue(a3);
+					lightColorParameter.SetValue(d3);
+					lightSpecularParameter.SetValue(new XVector3(1.0f, 1.0f, 1.0f) * 0.75f);
 				}
 			
 				cameraReferencePositionParameter.SetValue(new Microsoft.Xna.Framework.Vector3(projectionC.X, projectionC.Y, cameraZForLighting));
 				//					defaultEffect.Parameters["DiffuseColor"].SetValue(new Microsoft.Xna.Framework.Vector4(1, 1, 1, 1));
 				var gain1 = bulgeInputGain * bulgeGain * bulgeSpan;
-				var planetGains = new Microsoft.Xna.Framework.Vector4(bulgeGain, -gain1, AppS.IsKeyPressedShift() ? 0.0f: MathF.Sqrt(gain1)*2.0f , 0);
+				var planetGains = new XVector3(bulgeGain, -gain1, !AppS.IsKeyPressedShift() ? 0.0f: gain1*bulgeInputSpan2.Sqrt() );
 				planetGainsParamater.SetValue(planetGains);
 
-				cameraCParameter.SetValue(new System.Numerics.Vector4(cameraCLag.X, cameraCLag.Y, 0.0f, 1.0f)); // Z of camera is always 0
-				pixelScaleParameter.SetValue(new Vector4(pixelScale, pixelScale, pixelScale, pixelScale));
+				cameraCParameter.SetValue(new System.Numerics.Vector3(cameraCLag.X, cameraCLag.Y, 0.0f)); // Z of camera is always 0
+				pixelScaleParameter.SetValue(pixelScale);
 
 
 
@@ -470,7 +472,7 @@ internal partial class GameClient
 
 				var rgb = attacksVisible ? 255 : 255;
 				var tint = new Color(rgb, rgb, rgb, intAlpha);
-				var tintShadow = new Color(0, 0, 32, isWinter ? intAlpha * 3 / 4 : intAlpha / 2);
+				var tintShadow = new Color(0, 0, 16, intAlpha * 3 / 4 );
 				//	var tintAlpha = (byte)(alpha * 255.0f).RoundToInt();
 
 				//if (isWinter)
@@ -548,17 +550,17 @@ internal partial class GameClient
 
 
 									var wc = new System.Numerics.Vector2(cx, cy);
-									var cc = wc.WorldToCamera();
-									var shift = new System.Numerics.Vector2((isBonus ? imageId== TileData.tilePortalOpen ? bonusLayerScale*2f : bonusLayerScale : pixelScale) * 0.5f);
-									var cc0 = cc - shift;
-									var cc1 = cc + shift;
+									//ar cc = wc.WorldToCamera();
+									var shift = new System.Numerics.Vector2((isBonus ? imageId== TileData.tilePortalOpen ? bonusLayerScale*2f : bonusLayerScale : 1f) * 0.5f);
+									var cc0 = wc - shift;
+									var cc1 = wc + shift;
 									var sy = off / tile.columns;
 									var sx = off - sy * tile.columns;
 									var uv0 = new System.Numerics.Vector2((sx) * tile.scaleXToU + tile.halfTexelU, (sy) * tile.scaleYToV + tile.halfTexelV);
 									var uv1 = new System.Numerics.Vector2((sx + 1) * tile.scaleXToU - tile.halfTexelU, (sy + 1) * tile.scaleYToV - tile.halfTexelV);
 									if(debugLayer != -1)
 									{
-										DrawTextBox($"{(sx, sy)}", cc0, nameTextFormat, Color.White, 255);
+										DrawTextBox($"{(sx, sy)}", cc0.WorldToCamera(), nameTextFormat, Color.White, 255);
 									}
 
 									for(int isShadow = layer.wantShadow&&wantShadow ? 2 : 1; --isShadow >= 0;)
@@ -567,7 +569,7 @@ internal partial class GameClient
 										{
 											continue;
 										}
-										var _tint = (isShadow == 1 && wantParallax) ? tintShadow : !tile.isBase ? World.GetTint(ccid) : tint;
+										var _tint = (isShadow == 1) ? tintShadow : !tile.isBase ? World.GetTint(ccid) : tint;
 										if(!isBonus && isShadow == 0 && !tile.isBase)
 											_tint.A = intAlpha; ;
 										if(wantCity && layer.id > TileLayer.Id.land && (cx, cy).WorldToCid() == City.build )
@@ -596,7 +598,7 @@ internal partial class GameClient
 											// shift shadow
 											//	cc = (cc - cameraLightC) * (1 + dz*2) + cameraLightC;
 											//		cc = (cc - cameraLightC)*
-											dz = 0;
+										//	dz = 0;
 										}
 
 
@@ -1270,7 +1272,7 @@ internal partial class GameClient
 										var cid = (cx, cy).WorldToCid();
 
 										var drawC = (new System.Numerics.Vector2(cx, cy).WorldToCamera());
-										drawC.Y += span * (isWinter ? 8.675f / 16.0f : 7.125f / 16.0f);
+										drawC.Y += span *  8.675f / 16.0f;
 										var z = zCities;
 										var scale = bmFontScale;
 
@@ -1298,7 +1300,7 @@ internal partial class GameClient
 
 										DrawTextBox(name, drawC, nameTextFormat, wantDarkText ? color.A.AlphaToBlack() : color,
 
-											!isWinter ? new Color() :
+											false ? new Color() :
 												wantDarkText ? new Color(color.R, color.G, color.B, (byte)128) : 128.AlphaToBlack(), Layer.tileText, 2, 0, PlanetDepth, z, scale);
 										//										layout.Draw(drawC,
 										//									, Layer.tileText, z,PlanetDepth);
@@ -1802,18 +1804,18 @@ internal partial class GameClient
 
 
 
-	public static void DrawAccentBaseI(float cX, float cY, float radius, float angle, Color color, int layer, float zBias)
+	public static void DrawAccentBaseI(float cX, float cY, float radius, double angle, Color color, int layer, float zBias)
 	{
-		var dx0 = radius * MathF.Cos(angle);
-		var dy0 = radius * MathF.Sin(angle);
+		var dx0 = radius * (float)Math.Cos(angle);
+		var dy0 = radius * (float)Math.Sin(angle);
 		var angle1 = angle + MathF.PI * 0.1875f;
-		var dx1 = radius * MathF.Cos(angle1);
-		var dy1 = radius * MathF.Sin(angle1);
+		var dx1 = radius * (float)Math.Cos(angle1);
+		var dy1 = radius * (float)Math.Sin(angle1);
 		DrawLine(layer, new Vector2(cX + dx0, cY + dy0), new Vector2(cX + dx1, cY + dy1), (angle.SignOr0(), 0), color, zBias);
 		// rotated by 180
 		DrawLine(layer, new Vector2(cX - dx0, cY - dy0), new Vector2(cX - dx1, cY - dy1), (angle.SignOr0(), 0), color, zBias);
 	}
-	public static void DrawAccentBase(float cX, float cY, float radius, float angle, Color color, int layer, float zBias)
+	public static void DrawAccentBase(float cX, float cY, float radius, double angle, Color color, int layer, float zBias)
 	{
 		DrawAccentBaseI(cX, cY, radius, angle, color, layer, zBias);
 		DrawAccentBaseI(cX, cY, radius * 0.875f, angle + angle.SignOr0() * 0.125f, color, layer, zBias);
@@ -1884,7 +1886,7 @@ internal partial class GameClient
 				}
 			}
 			{
-				var removeMe = 0;
+				var removeMe = -1;
 				int count = viewHovers.Count;
 				for(int i = 0; i < count; ++i)
 				{
@@ -1906,7 +1908,7 @@ internal partial class GameClient
 					}
 				}
 				// Hack:  Just remove one per frame, we'll get the rest next time,
-				if(removeMe != 0)
+				if(removeMe != -1)
 					viewHovers.RemoveAt(removeMe);
 
 			}

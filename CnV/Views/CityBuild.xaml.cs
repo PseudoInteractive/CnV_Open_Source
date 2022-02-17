@@ -1031,14 +1031,14 @@ namespace CnV
 					else
 						CityView.hovered = (0, 0);
 
-					break;
+					return false;
 
 				case Windows.System.VirtualKey.Up:
 					if(CityView.hovered.isNotNan)
 						CityView.hovered =(CityView.hovered+(0, -1)).Clamped();
 					else
 						CityView.hovered = (0, 0);
-					break;
+					return false;
 
 				case Windows.System.VirtualKey.Right:
 					if(CityView.hovered.isNotNan)
@@ -1046,14 +1046,14 @@ namespace CnV
 					else
 						CityView.hovered = (0, 0);
 
-					break;
+					return false;
 
 				case Windows.System.VirtualKey.Down:
 					if(CityView.hovered.isNotNan)
 						CityView.hovered = (CityView.hovered+(0, 1)).Clamped(); //(CityView.hovered.y + 1).Min(City.span1);
 					else
 						CityView.hovered = (0, 0);
-					break;
+					return false;
 
 				case Windows.System.VirtualKey.Number1: UpgradeOrTower(1,cc,city); break;
 				case Windows.System.VirtualKey.Number2: UpgradeOrTower(2, cc, city); break;
@@ -1065,12 +1065,13 @@ namespace CnV
 				case Windows.System.VirtualKey.Number8: UpgradeOrTower(8, cc, city); break;
 				case Windows.System.VirtualKey.Number9: UpgradeOrTower(9, cc, city); break;
 				case Windows.System.VirtualKey.Number0: city.UpgradeToLevel(10,  cc); break;
-				case Windows.System.VirtualKey.Subtract: city.Downgrade( cc,  false); break;
-				case Windows.System.VirtualKey.Add:
+			//	case Windows.System.VirtualKey.Subtract: city.Downgrade( cc,  false); break;
+			//	case Windows.System.VirtualKey.Add:
 				case Windows.System.VirtualKey.U: city.UpgradeToLevel(1, cc, false); break;
 				// case Windows.System.VirtualKey.Q: CityBuild.ClearQueue(); break;
 				case Windows.System.VirtualKey.D: city.Demolish(cc, false); break;
 				case Windows.System.VirtualKey.Escape: CityBuild.ClearAction(); return false;
+					// Tilda
 				case (VirtualKey)192:
 					{
 						if(action == CityBuild.CityBuildAction.moveEnd)
