@@ -187,7 +187,7 @@ namespace CnV
 
 							var dt = (float)(animationT - animationOffsets[bspot]);
 							float dtF = dt*3f;
-							float blendT = (dt*0.5f).PingPong();
+							float blendT = (dt*0.25f).PingPong();
 							// ZBase is on initial action placement
 							var zBase = 0f;
 							if(dtF < 1)

@@ -493,7 +493,6 @@ namespace CnV
 								if(await AppS.DoYesNoBox("Busy", "Please wait for current operation to complete") != 1)
 									return false;
 							}
-							var wantUnblock = false;
 							// this blocks if we can't change the city
 							if(!isLocked)
 								await AppS.uiSema.WaitAsync();
@@ -529,7 +528,6 @@ namespace CnV
 								//	await CityBuild._IsPlanner(true, false);
 								//}
 								// async
-								wantUnblock = true;
 							}
 							finally
 							{
@@ -537,9 +535,7 @@ namespace CnV
 									AppS.uiSema.Release();
 							}
 
-							if(wantUnblock)
-								ExtendedQueue.UnblockQueue(cid);
-
+				
 						}
 						city.SetFocus(scrollIntoUI, select);
 						CityUI.SyncCityBox();

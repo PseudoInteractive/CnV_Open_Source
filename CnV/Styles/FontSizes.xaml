@@ -21,9 +21,11 @@
 			<FontFamily x:Key="MTCMediaFontFamily">"XamlAutoFontFamily"</FontFamily>
 			<FontFamily x:Key="KeyTipFontFamily">"XamlAutoFontFamily"</FontFamily>
 
+
+			<CornerRadius x:Key="baseCR">2,2,2,2</CornerRadius>
 			<!-- Override system shape defaults -->
-			<CornerRadius x:Key="ControlCornerRadius">3,3,3,3</CornerRadius>
-			<CornerRadius x:Key="OverlayCornerRadius">3,3,3,3</CornerRadius>
+			<CornerRadius x:Key="ControlCornerRadius">2,2,2,2</CornerRadius>
+			<CornerRadius x:Key="OverlayCornerRadius">2,2,2,2</CornerRadius>
 
 			<Style x:Key="BaseControlStyle" TargetType="Control">
 				<Setter Property="FontFamily" Value="XamlAutoFontFamily" />

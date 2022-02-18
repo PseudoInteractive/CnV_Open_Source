@@ -11,12 +11,14 @@
 	<!--"Expander"-->
 	<SolidColorBrush x:Key="ExpanderBrushContent">#80150030</SolidColorBrush>
 	<SolidColorBrush x:Key="ExpanderBrushHeader" >#80150030</SolidColorBrush>
+	<SolidColorBrush x:Key="ExpanderBrushContentAlt">#4030</SolidColorBrush>
 	<Style TargetType="Expander" >
 		<Setter Property="MinHeight" Value="20" />
 		<Setter Property="BorderThickness" Value="0"/>
 		<Setter Property="BorderBrush" Value="{StaticResource ExpanderBrushHeader}"/>
 		<Setter Property="Padding" Value="0" />
 		<Setter Property="Margin" Value="0" />
+		<Setter Property="CornerRadius" Value="2"/>
 		<Setter Property="HorizontalAlignment" Value="Stretch" />
 		<Setter Property="HorizontalContentAlignment" Value="Left" />
 		<Setter Property="Background" Value="{x:Null}" />

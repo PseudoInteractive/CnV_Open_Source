@@ -373,11 +373,11 @@
 					   VerticalAlignment="Bottom"
 					  MinHeight="22" Padding="0" Margin="0" Grid.RowSpan="2" >
 				<Expander.Header>
-					<Border BorderThickness="0" BorderBrush="{x:Null}" Background="{StaticResource ExpanderBrushContent}" Padding="4" CornerRadius="4" >
+					<Border BorderThickness="0" BorderBrush="{x:Null}" Background="{StaticResource ExpanderBrushContent}" Padding="4" CornerRadius="{StaticResource baseCR}" >
 					<TextBlock x:Name="timeDisplay" x:FieldModifier="public"  HorizontalAlignment="Stretch" />
 					</Border>
 				</Expander.Header>
-				<StackPanel Orientation="Vertical"  Padding="4" CornerRadius="4" Margin="0" Background="{StaticResource ExpanderBrushContent}" HorizontalAlignment="Center">
+				<StackPanel Orientation="Vertical"  Padding="4" CornerRadius="{StaticResource baseCR}" Margin="0" Background="{StaticResource ExpanderBrushContent}" HorizontalAlignment="Center">
 					<NumberBox  x:Name="timeScaleNumberBox" Header="TimeScale:"  Value="1" ValueChanged="TimeScaleValueChanged" Margin="2,4"  HorizontalContentAlignment="Right" VerticalContentAlignment="Center" VerticalAlignment="Center" HorizontalAlignment="Center"  
 								
 								Minimum="0.0" 

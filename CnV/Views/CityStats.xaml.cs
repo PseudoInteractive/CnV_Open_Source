@@ -19,6 +19,7 @@ using Microsoft.UI;
 //using CommunityToolkit.WinUI.UI;
 //using CommunityToolkit.WinUI.UI.Controls;
 using static CnV.City;
+using System.Collections.ObjectModel;
 //using Expander = CommunityToolkit.WinUI.UI.Controls.cer;
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -32,9 +33,26 @@ namespace CnV
 		{
 			this.InitializeComponent();
 			instance = this;
+			City.buildCityChanged += NotifyBuildQueueChange;
 		}
 		public City city => City.GetBuild();
+		internal static void NotifyBuildQueueChange()
+		{
+			if(City.GetBuild().buildQueue != displayQueue)
+				cityQueueMightHaveChanged.Go();
+		} 
+		static ImmutableArray<BuildQueueItem> displayQueue=ImmutableArray<BuildQueueItem>.Empty;
 
+		internal static DebounceA cityQueueMightHaveChanged = new(() =>
+	  {
+		  displayQueue = City.GetBuild().buildQueue;
+		  instance.buildQueueListView.ItemsSource = displayQueue;
+
+	  })
+		{ runOnUiThread=true,debounceDelay=100 };
+		
+
+		
 
 		//public SolidColorBrush ResourceForeground(int resId) => new SolidColorBrush(Windows.UI.Color.FromArgb(255,(byte)(31+64*resId),128,128) );
 		//public string ResourceStr(int resId) => $"{city?.resources[resId]:N0}";
@@ -126,8 +144,8 @@ namespace CnV
 								}
 							}
 
-							bd.Add(new BuildingCountAndBrush()
-							{ count = bdd.buildingCount+bdd.towerCount, image = CityBuild.GetBuildingImage(Building.bidTownHall, BuildingCountAndBrush.width) });
+							//bd.Add(new BuildingCountAndBrush()
+							//{ count = bdd.buildingCount+bdd.towerCount, image = CityBuild.GetBuildingImage(Building.bidTownHall, BuildingCountAndBrush.width) });
 
 							// var button = sender as Button; button.Focus(FocusState.Programmatic);
 
@@ -227,16 +245,19 @@ namespace CnV
 			return (buildingCount, towerCount, -1, buildingCounts);
 		}
 
-		
+		ObservableCollection<BuildingCountAndBrush> buildingCounts = new();
 		
 		
 	}
-	public class BuildingCountAndBrush
+	public class BuildingCountAndBrush : IANotifyPropertyChanged
 	{
 		public const int width = 32;
 		public Microsoft.UI.Xaml.Media.Imaging.BitmapImage image { get; set; }
 		public int count { get; set; }
 
+		public void CallPropertyChanged(string members = null) => PropertyChanged?.Invoke(this,new (members) );
+
+		public event PropertyChangedEventHandler? PropertyChanged;
 	}
 
 }

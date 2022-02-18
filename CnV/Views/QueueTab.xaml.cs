@@ -97,26 +97,26 @@ namespace CnV.Views
 		
 		public static void RebuildAll()
 		{
-			AppS.DispatchOnUIThread(() =>
-		   {
-			  // var build = City.GetBuild();
-				//build.UpdateBuildStage();
-				//instance.stage.Text = $"Stage: {build.buildStage.AsString()}";
-				instance.zoom.ItemsSource = ExtendedQueue.all.ToArray().Select(a => new BuildItemView(a.Value.cid)).ToArray();
-		   });
+			//AppS.DispatchOnUIThread(() =>
+		 //  {
+			//  // var build = City.GetBuild();
+			//	//build.UpdateBuildStage();
+			//	//instance.stage.Text = $"Stage: {build.buildStage.AsString()}";
+			//	instance.zoom.ItemsSource = ExtendedQueue.all.ToArray().Select(a => new BuildItemView(a.Value.cid)).ToArray();
+		 //  });
 		}
 		override public Task VisibilityChanged(bool visible, bool longTerm)
 		{
 			//   Log("Vis change" + visible);
 
-			if (visible)
-			{
-				 RebuildAll ();
+			//if (visible)
+			//{
+			//	 RebuildAll ();
 				
-			}
-			else
-			{
-			}
+			//}
+			//else
+			//{
+			//}
 			return base.VisibilityChanged(visible, longTerm: longTerm);
 
 		}
@@ -170,74 +170,74 @@ namespace CnV.Views
 
 		//}
 
-		private async void ClearSelected(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
-		{
-			var sel = zoom.SelectedNodes;
-			var removedCitites = new List<BuildItemView>();
-			var removedOps = new List<BuildItem>();
+		//private async void ClearSelected(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
+		//{
+		//	var sel = zoom.SelectedNodes;
+		//	var removedCitites = new List<BuildItemView>();
+		//	var removedOps = new List<BuildItem>();
 
-			/// collect all cities
-			foreach (var i in sel)
-			{
-				if (i.Content is BuildItemView city )
-				{
-					removedCitites.Add(city);
-				}
-			}
+		//	/// collect all cities
+		//	foreach (var i in sel)
+		//	{
+		//		if (i.Content is BuildItemView city )
+		//		{
+		//			removedCitites.Add(city);
+		//		}
+		//	}
 
-			// collect op not part of removed cities
-			foreach (var i in sel)
-			{
-				if (i.Content is BuildItem op )
-				{
-					if (!removedCitites.Any(city => city.cid == op.cid))
-					{
-						removedOps.Add(op);
-					}
-				}
-			}
+		//	// collect op not part of removed cities
+		//	foreach (var i in sel)
+		//	{
+		//		if (i.Content is BuildItem op )
+		//		{
+		//			if (!removedCitites.Any(city => city.cid == op.cid))
+		//			{
+		//				removedOps.Add(op);
+		//			}
+		//		}
+		//	}
 
-			Note.Show($"Removed {removedOps.Count} build ops and {removedCitites.Count} city queues");
-			// now remove
-			foreach (var city in removedCitites)
-			{
-				var _city = city;
-				await BuildQueue.ClearQueue(_city.cid);
-			}
-			foreach (var _op in removedOps)
-			{
-				var op = _op;
-				var cid = op.cid;
-				if(ExtendedQueue.all.TryGetValue(cid,out var q))
-				{
+		//	Note.Show($"Removed {removedOps.Count} build ops and {removedCitites.Count} city queues");
+		//	// now remove
+		//	foreach (var city in removedCitites)
+		//	{
+		//		var _city = city;
+		//		await BuildQueue.ClearQueue(_city.cid);
+		//	}
+		//	foreach (var _op in removedOps)
+		//	{
+		//		var op = _op;
+		//		var cid = op.cid;
+		//		if(ExtendedQueue.all.TryGetValue(cid,out var q))
+		//		{
 
-					using(var _lock = await q.queueLock.LockAsync())
-					{
-						q.queue.Remove(op.op);
-					}
-					City.Get(cid).BuildingsOrQueueChanged();
-					BuildQueue.SaveNeeded();
-				}
+		//			using(var _lock = await q.queueLock.LockAsync())
+		//			{
+		//				q.queue.Remove(op.op);
+		//			}
+		//			City.Get(cid).BuildingsOrQueueChanged();
+		//			BuildQueue.SaveNeeded();
+		//		}
 
-			}
-			RebuildAll();
-		}
-		private void zoom_ItemInvoked(TreeView sender, TreeViewItemInvokedEventArgs args)
-		{
-			var ob = args.InvokedItem;
-			if (ob is BuildItemView q)
-			{
-				if(q.cid != City.build)
-					CnVClient.CitySwitch(q.cid, false, scrollIntoUI:false); // this is always true now
-			}
+		//	}
+		//	RebuildAll();
+		////}
+		//private void zoom_ItemInvoked(TreeView sender, TreeViewItemInvokedEventArgs args)
+		//{
+		//	var ob = args.InvokedItem;
+		//	if (ob is BuildItemView q)
+		//	{
+		//		if(q.cid != City.build)
+		//			CnVClient.CitySwitch(q.cid, false, scrollIntoUI:false); // this is always true now
+		//	}
 		
-		}
+		//}
 
-		private void DoTheStuff(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
-		{
-			City.GetBuild().DoTheStuff();
+		//private void DoTheStuff(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
+		//{
+		//	City.GetBuild().DoTheStuff();
 
-		}
+		//}
 
 
 		
@@ -560,49 +560,50 @@ namespace CnV.Views
 
 
 	}
-	public class BuildItemView
-	{
-		public BitmapImage image { get; set; }
-		public int cid; // owner
-		public string text { get; set; }
-		public BuildItem[] queue => ExtendedQueue.TryGetBuildQueue(cid).Select( a => new BuildItem(a,cid) ).ToArray();
-		public bool isCity => true;
-		public bool isOp => false;
 
-		public BuildItemView(int _cid)
-		{
-			var city = City.GetOrAdd(_cid);
-			cid = _cid;
-			image =city.icon;
-			text = City.GetOrAdd(_cid).nameAndRemarks;
-		}
-	}
-	public class BuildItem
-	{
-		public const int size = 32;
-		public BitmapImage image { get; set; }
-		public string text { get; set; }
-		public BuildQueueItem op;
-		public int cid;
-		public BuildItem(BuildQueueItem item, int _cid)
-		{
-			cid = _cid;
-			op = item;
-			image = CityBuild.GetBuildingImage(item.bid,size);
-			var desc = item.elvl == 0 ? "Destroy" : item.slvl == 0 ? "Build" : item.slvl > item.elvl ? "Downgrade" : "Upgrade";
-			text = desc + BuildingDef.FromId(item.bid).Bn;
-		}
-	}
-	class BuildItemTemplateSelector:Microsoft.UI.Xaml.Controls.DataTemplateSelector
-	{
-		public DataTemplate buildItemViewTemplate { get; set; }
-		public DataTemplate buildItemTemplate { get; set; }
+	//public class BuildItemView
+	//{
+	//	public BitmapImage image { get; set; }
+	//	public int cid; // owner
+	//	public string text { get; set; }
+	//	public BuildItem[] queue => ExtendedQueue.TryGetBuildQueue(cid).Select( a => new BuildItem(a,cid) ).ToArray();
+	//	public bool isCity => true;
+	//	public bool isOp => false;
 
-		protected override DataTemplate SelectTemplateCore(object item)
-		{
-			return item is BuildItem ? buildItemTemplate : buildItemViewTemplate;
-		}
-	}
+	//	public BuildItemView(int _cid)
+	//	{
+	//		var city = City.GetOrAdd(_cid);
+	//		cid = _cid;
+	//		image =city.icon;
+	//		text = City.GetOrAdd(_cid).nameAndRemarks;
+	//	}
+	//}
+	//public class BuildItem
+	//{
+	//	public const int size = 32;
+	//	public BitmapImage image { get; set; }
+	//	public string text { get; set; }
+	//	public BuildQueueItem op;
+	//	public int cid;
+	//	public BuildItem(BuildQueueItem item, int _cid)
+	//	{
+	//		cid = _cid;
+	//		op = item;
+	//		image = CityBuild.GetBuildingImage(item.bid,size);
+	//		var desc = item.elvl == 0 ? "Destroy" : item.slvl == 0 ? "Build" : item.slvl > item.elvl ? "Downgrade" : "Upgrade";
+	//		text = desc + BuildingDef.FromId(item.bid).Bn;
+	//	}
+	//}
+	//class BuildItemTemplateSelector:Microsoft.UI.Xaml.Controls.DataTemplateSelector
+	//{
+	//	public DataTemplate buildItemViewTemplate { get; set; }
+	//	public DataTemplate buildItemTemplate { get; set; }
+
+	//	protected override DataTemplate SelectTemplateCore(object item)
+	//	{
+	//		return item is BuildItem ? buildItemTemplate : buildItemViewTemplate;
+	//	}
+	//}
 
 }
 

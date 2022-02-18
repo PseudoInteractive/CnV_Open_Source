@@ -28,7 +28,7 @@
 				  HorizontalContentAlignment="Stretch"
 				   
 				>
-		<StackPanel x:Name="stackPanel"  Margin="2" Padding="2" Background="{x:Null}"  HorizontalAlignment="Stretch" >
+		<StackPanel x:Name="stackPanel"  Margin="2" Padding="2" Background="{x:Null}"  HorizontalAlignment="Stretch" CornerRadius="0" >
 			<Expander Header="Incoming" Expanding="Expander_Expanding"  Visibility="Collapsed" x:Name="expIncoming" HorizontalAlignment="Stretch" >
 			</Expander>
 			<Expander  Expanding="Expander_Expanding" IsExpanded="True"  Background="{x:Null}"  x:Name="expResource" HorizontalAlignment="Stretch"  >
@@ -36,25 +36,25 @@
 					<ToolTip x:Name="ResToolTip" Content="Resources" />
 				</ToolTipService.ToolTip>
 				<Expander.Header   >
-					<Border Background="{StaticResource ExpanderBrushHeader}" BorderThickness="0" Padding="4" CornerRadius="4" >
+					<Border Background="{StaticResource ExpanderBrushHeader}" BorderThickness="0" Padding="3" CornerRadius="{StaticResource baseCR}" >
 						
 						<TextBlock Text ="Resources" Margin="0"   Style="{StaticResource TextBlockMedium}"    />
 					</Border>
 				</Expander.Header>
 				<tk:WrapPanel Orientation="Horizontal" Background="{x:Null}" HorizontalSpacing="4" VerticalSpacing="4" >
-					<StackPanel CornerRadius="4" Orientation="Vertical"  Padding="4"   Width="90" Background="{StaticResource ExpanderBrushContent}"   >
+					<StackPanel CornerRadius="{StaticResource baseCR}" Orientation="Vertical"  Padding="2"   Width="90" Background="{StaticResource ExpanderBrushContent}"   >
 						<TextBlock  x:Name="res0" x:FieldModifier="public" HorizontalTextAlignment="Right" Style="{StaticResource TextBlockMedium}" />
 						<TextBlock Grid.Row="1" x:Name="prod0" x:FieldModifier="public"  HorizontalTextAlignment="Right" Style="{StaticResource TextBlockSmall}" />
 					</StackPanel>
-					<StackPanel CornerRadius="4"  Margin="0" Padding="4" Width="90" Background="{StaticResource ExpanderBrushContent}" >
+					<StackPanel CornerRadius="{StaticResource baseCR}"  Margin="0" Padding="2" Width="90" Background="{StaticResource ExpanderBrushContent}" >
 						<TextBlock  HorizontalTextAlignment="Right"  Style="{StaticResource TextBlockMedium}"  />
 						<TextBlock Grid.Row="1"   HorizontalTextAlignment="Right" Style="{StaticResource TextBlockSmall}" />
 					</StackPanel>
-					<StackPanel CornerRadius="4"  Margin="0" Padding="4" Width="90" Background="{StaticResource ExpanderBrushContent}"  >
+					<StackPanel CornerRadius="{StaticResource baseCR}"  Margin="0" Padding="2" Width="90" Background="{StaticResource ExpanderBrushContent}"  >
 						<TextBlock  HorizontalTextAlignment="Right" Style="{StaticResource TextBlockMedium}" />
 						<TextBlock   Grid.Row="1" HorizontalTextAlignment="Right" Style="{StaticResource TextBlockSmall}"/>
 					</StackPanel>
-					<StackPanel CornerRadius="4"   Margin="0" Padding="4" Width="90" Background="{StaticResource ExpanderBrushContent}"  >
+					<StackPanel CornerRadius="{StaticResource baseCR}"   Margin="0" Padding="2" Width="90" Background="{StaticResource ExpanderBrushContent}"  >
 						<TextBlock   HorizontalTextAlignment="Right" Style="{StaticResource TextBlockMedium}" />
 						<TextBlock   Grid.Row="1" HorizontalTextAlignment="Right" Style="{StaticResource TextBlockSmall}" />
 					</StackPanel>
@@ -62,17 +62,17 @@
 			</Expander>
 			<Expander  Expanding="Expander_Expanding" IsExpanded="True" x:Name="expBuildQueue" Background="{x:Null}" HorizontalAlignment="Stretch" >
 				<Expander.Header   >
-					<Border Background="{StaticResource ExpanderBrushHeader}" BorderThickness="0" Padding="4" CornerRadius="4" >
+					<Border Background="{StaticResource ExpanderBrushHeader}" BorderThickness="0" Padding="3" CornerRadius="{StaticResource baseCR}" >
 						<TextBlock Text ="Build Queue" Margin="0"  Style="{StaticResource TextBlockMedium}"   />
 					</Border>
 				</Expander.Header>
-				<ListView x:Name="InAppNote" x:FieldModifier="public"  Margin="0" Padding="0" Background="{x:Null}"
+				<ListView x:Name="buildQueueListView" x:FieldModifier="public"  Margin="0" Padding="0" Background="{x:Null}"
                    
 						  MaxHeight="200"  >
 					<ListView.ItemTemplate>
-						<DataTemplate  x:DataType="x:String"  >
-							<tk:MarkdownTextBlock  x:Name="message" Text="{x:Bind ToString(), Mode=OneTime}"  Margin="1"  Padding="0,0,0,0"    
-                                               IsTextSelectionEnabled="True"
+						<DataTemplate  x:DataType="cnv:BuildQueueItem"   >
+							<tk:MarkdownTextBlock  x:Name="message" Text="{x:Bind UIText, Mode=OneWay}"  Margin="1"  Padding="0,0,0,0"    
+                                              
 											  FontSize="{StaticResource SmallFontSize}"
 											 FontFamily="XamlAutoFontFamily"
                                               TextWrapping="Wrap" 
@@ -99,21 +99,20 @@
 							<Setter Property="Background" Value="#58003000"/>
 						</Style>
 					</ListView.ItemContainerStyle>
-					<x:String>"hello"</x:String>
-					<x:String>"There"</x:String>
+					
 				</ListView>
 			</Expander>
 
 			<Expander    Expanding="Expander_Expanding" x:Name="expBuildings" IsExpanded="True" >
 				<Expander.Header   >
-					<Border Background="{StaticResource ExpanderBrushHeader}" BorderThickness="0" Padding="4" CornerRadius="4" >
+					<Border Background="{StaticResource ExpanderBrushHeader}" BorderThickness="0" Padding="3" CornerRadius="{StaticResource baseCR}" >
 						<TextBlock Text ="Buildings" Margin="0"  Style="{StaticResource TextBlockMedium}"   />
 					</Border>
 				</Expander.Header>
 				<GridView x:Name="buildingCountGrid"  HorizontalAlignment="Stretch" SelectionMode="Multiple" IsMultiSelectCheckBoxEnabled="False" Background="{x:Null}">
 					<GridView.ItemTemplate>
 						<DataTemplate x:DataType="cnv:BuildingCountAndBrush">
-							<Grid >
+							<Grid Background="{StaticResource ExpanderBrushContentAlt}" Padding="4" CornerRadius="{StaticResource baseCR}" >
 								<Grid.RowDefinitions>
 									<RowDefinition Height="auto" />
 									<RowDefinition  />
