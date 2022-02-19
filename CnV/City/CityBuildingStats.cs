@@ -34,7 +34,7 @@ namespace CnV
 		{
 			if(!this.stats.dirty)
 				return;
-			ApplyResProductionToPresent();
+			SampleAndApplyResProductionToPresent();
 			var city = this;
 			// current not future or whatever
 			var bds = city.buildings;

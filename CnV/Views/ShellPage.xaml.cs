@@ -341,7 +341,7 @@ namespace CnV.Views
 
 				var signinTask = Task.Run(CnVSignin.Go);
 
-				App.window.titleImage.Source = new Microsoft.UI.Xaml.Media.Imaging.BitmapImage(new Uri($"ms-appx:///Assets/AppIcon24.png"));
+//				App.window.titleImage.Source = new Microsoft.UI.Xaml.Media.Imaging.BitmapImage(new Uri($"ms-appx:///Assets/AppIcon24.png"));
 				Note.Init();
 				CityUI.Init();
 				NavStack.Init();
@@ -508,8 +508,9 @@ namespace CnV.Views
 						Assert(okay3);
 						AppS.QueueOnUIThread(() =>
 						{
+							AppS.appWindow.Title = ( $"Conquest and Virtue Alpha, World {World.id} - {Player.me.shortName}" );
+							AppS.appWindow.SetIcon(AppS.AppFileName("assets/cnv.ico"));
 							AppS.MessageBox($"Welcome {Player.me.shortName}.");
-							App.window.titleText.Text = $"Conquest and Virtue Alpha, World {World.id} - {Player.me.shortName}";
 						});
 
 

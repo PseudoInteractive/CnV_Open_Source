@@ -1,12 +1,16 @@
 <ResourceDictionary
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:CnV">
+    xmlns:local="using:CnV"
+	xmlns:views="using:CnV.Views"
+	xmlns:cnvXaml="using:CnV.Xaml"
+	>
 
-    <Style TargetType="local2:CnVCanvas" xmlns:local2="using:CnV.Views">
+    
+    <Style TargetType="cnvXaml:Expander2" BasedOn="{StaticResource ExpanderDefault}"  >
         <Setter Property="Template">
             <Setter.Value>
-                <ControlTemplate TargetType="local2:CnVCanvas">
+                <ControlTemplate TargetType="cnvXaml:Expander2">
                     <Border
                         Background="{TemplateBinding Background}"
                         BorderBrush="{TemplateBinding BorderBrush}"
@@ -16,18 +20,5 @@
             </Setter.Value>
         </Setter>
     </Style>
-
-    <Style TargetType="local2:Expander2" xmlns:local2="using:CnV.Xaml">
-        <Setter Property="Template">
-            <Setter.Value>
-                <ControlTemplate TargetType="local2:Expander2">
-                    <Border
-                        Background="{TemplateBinding Background}"
-                        BorderBrush="{TemplateBinding BorderBrush}"
-                        BorderThickness="{TemplateBinding BorderThickness}">
-                    </Border>
-                </ControlTemplate>
-            </Setter.Value>
-        </Setter>
-    </Style>
+	
 </ResourceDictionary>

@@ -15,7 +15,7 @@
 	<Style TargetType="Expander" >
 		<Setter Property="MinHeight" Value="20" />
 		<Setter Property="BorderThickness" Value="0"/>
-		<Setter Property="BorderBrush" Value="{StaticResource ExpanderBrushHeader}"/>
+		<Setter Property="BorderBrush" Value="{x:Null}"/>
 		<Setter Property="Padding" Value="0" />
 		<Setter Property="Margin" Value="0" />
 		<Setter Property="CornerRadius" Value="2"/>

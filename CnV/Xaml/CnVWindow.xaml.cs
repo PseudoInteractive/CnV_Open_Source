@@ -26,8 +26,8 @@ namespace CnV
 		{
 			this.InitializeComponent();
 
-			ExtendsContentIntoTitleBar = true;
-			SetTitleBar(AppTitleBar);
+			//Title = null;
+		//	SetTitleBar(AppTitleBar);
 		
 		}
 	}

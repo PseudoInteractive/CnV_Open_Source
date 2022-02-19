@@ -148,7 +148,7 @@ public static class DoTheStuff
 		Assert(city.isBuild);
 			if(!bc.hasWall && bc.hasCastle && !city.is7Point)
 			{
-				await city.Enqueue(0,1,bidWall,bspotWall);
+				await city.Enqueue(0,1,bidWall,bspotWall,false);
 				bc.wallLevel = 1;
 			}
 			Assert(city.isBuild);
@@ -178,7 +178,7 @@ public static class DoTheStuff
 					break; // non left;
 				added:
 					Assert(spot.isNotNan);
-					await city.Enqueue(0,1,bidSentinelPost,spot);
+					await city.Enqueue(0,1,bidSentinelPost,spot,false);
 
 					++bc.scoutpostCount;
 				}

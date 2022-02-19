@@ -474,8 +474,8 @@ namespace CnV
 					WindowId myWndId = Microsoft.UI.Win32Interop.GetWindowIdFromWindow(hWnd);
 					AppS.appWindow= AppWindow.GetFromWindowId(myWndId);
 				}
-			//	AppS.appWindow.Title = "Conquest and Virtue Alpha";
-
+				AppS.appWindow.Title = "Conquest and Virtue Alpha";
+				AppS.appWindow.SetIcon("assets/cnv.ico");
 				//				
 				//				window.SetTitleBar
 				//ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.PreferredLaunchViewSize;

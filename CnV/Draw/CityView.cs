@@ -347,7 +347,7 @@ namespace CnV
 							{
 								currentBid = postBuildings[bspot].bid;
 								bid=build.GetLayoutBid(bspot);
-								if(BuildingDef.IsBidRes(currentBid) && bid == 0) // don't need to be removed
+								if(IsBidRes(currentBid) && bid == 0) // don't need to be removed
 								{
 									continue;
 								}
