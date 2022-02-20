@@ -323,7 +323,7 @@ namespace CnV
 				return;
 			}
 			var targetSpot = cc;
-			var targetB = isPlanner ? build.GetLayoutBuilding(cc) : build.buildings[targetSpot];
+			var targetB = isPlanner ? build.GetLayoutBuilding(cc) : build.postQueueBuildings[targetSpot];
 			if(!targetB.canMove)
 			{
 				Status("Cannot move that", dryRun);

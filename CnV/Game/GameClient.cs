@@ -96,7 +96,6 @@ namespace CnV
 			
 			_graphics.PreparingDeviceSettings += _graphics_PreparingDeviceSettings;
 			Content.RootDirectory             =  "gameBin";
-			Material.LoadLitMaterial          =  LoadLitMaterial;
 		}
 
 		public static double   dipToNative = 1;
@@ -255,13 +254,13 @@ namespace CnV
 			return new Material(rv, effect);
 		}
 
-		static SurfaceFormat GetFormat(DXGI_FORMAT format)
+		static SurfaceFormat GetFormat(DXGI_FORMAT format, bool wantSRGB)
 		{
 			switch(format) {
-				case DXGI_FORMAT.BC1_UNORM: return SurfaceFormat.Dxt1;
+				case DXGI_FORMAT.BC1_UNORM: return wantSRGB? SurfaceFormat.Dxt1SRgb : SurfaceFormat.Dxt1;
 				case DXGI_FORMAT.BC1_UNORM_SRGB: return SurfaceFormat.Dxt1SRgb;
 
-				case DXGI_FORMAT.BC3_UNORM: return SurfaceFormat.Dxt5;
+				case DXGI_FORMAT.BC3_UNORM:return wantSRGB?  SurfaceFormat.Dxt5SRgb :  SurfaceFormat.Dxt5;
 				case DXGI_FORMAT.BC3_UNORM_SRGB: return SurfaceFormat.Dxt5SRgb;
 
 				case DXGI_FORMAT.BC4_UNORM: return SurfaceFormat.BC4U;
@@ -273,7 +272,7 @@ namespace CnV
 				case DXGI_FORMAT.BC6H_SF16: return SurfaceFormat.BC6S;
 				case DXGI_FORMAT.BC6H_UF16: return SurfaceFormat.BC6U;
 
-				case DXGI_FORMAT.BC7_UNORM: return SurfaceFormat.BC7SRgb;
+				case DXGI_FORMAT.BC7_UNORM: return wantSRGB ?   SurfaceFormat.BC7SRgb  : SurfaceFormat.BC7;
 				case DXGI_FORMAT.BC7_UNORM_SRGB: return SurfaceFormat.BC7SRgb;
 
 				default: throw new InvalidDataException($"Unsupported DDS format {format}");
@@ -283,42 +282,56 @@ namespace CnV
 		private static int RoundUpTo4(int v) => (v+3)&(~3);
 		private static int RoundDownTo4(int v) => (v+3)&(~3);
 		private static bool IsMultipleOf4(int w,int h) => ((h&3)|(w&3)) ==0;//(v+3)&(~3);
-		public static Texture CreateFromDDS(string fileName, int animatedFrameCount=0)
+		public static Texture CreateFromDDS(string fileName, int animatedFrameCount, bool wantSRGB)
 		{
 			try
-			{ 
-			
-			using var scratch = DirectXTexNet.TexHelper.Instance.LoadFromDDSFile(fileName, DDS_FLAGS.NONE);
+			{
+
+				using var scratch = DirectXTexNet.TexHelper.Instance.LoadFromDDSFile(fileName,DDS_FLAGS.NONE);// DDS_FLAGS.BAD_DXTN_TAILS|DDS_FLAGS.FORCE_DX10_EXT_MISC2|DDS_FLAGS.FORCE_DX10_EXT);
 			var meta = scratch.GetMetadata();
-			Log($"{fileName} {meta.Dimension} {meta.Width}x{meta.Height}x{meta.Depth}[{meta.ArraySize}] Mips: {meta.MipLevels} Format: {meta.Format} {meta.GetAlphaMode()}");
-			SurfaceFormat format = GetFormat(meta.Format);
+			Log($"{fileName} {meta.Dimension} {meta.Width}x{meta.Height}x{meta.Depth}[{meta.ArraySize}] Mips: {meta.MipLevels} Images: {scratch.GetImageCount()}  Format: {meta.Format} {meta.GetAlphaMode()}");
+			SurfaceFormat format = GetFormat(meta.Format,wantSRGB);
 			Assert( meta.Depth == 1);
-				//if(animatedFrameCount > 1)
-				//{
-				//	Assert(false);
-				//	int width = meta.Width / animatedFrameCount;
-				//	Assert(width * animatedFrameCount == meta.Width); // must be even multiple
-				//	Assert( (width&3) == 0 );
-				//	int mips = 1;
-				//	var rv = new Texture3D(instance.GraphicsDevice,RoundUpTo4(meta.Width),RoundUpTo4(meta.Height),depth:animatedFrameCount,mipMap:false,format);
-
+				if(meta.ArraySize > 1 )
+				{
 					
-				//		for(int m = 0;m<mips;++m)
-				//		{
-				//			var image = scratch.GetImage(m,0,0);
-				//			for(int depth = 0;depth<animatedFrameCount;++depth)
-				//			{
-				//				var rowPitch = image.RowPitch/animatedFrameCount;
-				//				Assert(rowPitch*animatedFrameCount == image.RowPitch);
-				//				rv.SetDataRaw(image.Pixels,depth,m,image.RowPitch,image.RowPitch/animatedFrameCount,(width),(image.Height));
 
-				//			}
-				//		}
-						
-				//	return rv;
+				
+					var arraySize = meta.ArraySize ;
+					int width = meta.Width ;
+					Assert((width&3) == 0);
+					var mips = meta.MipLevels;
+					var rv = new Texture2D(instance.GraphicsDevice,RoundUpTo4(meta.Width),RoundUpTo4(meta.Height),mips,format,arraySize);
+					var bpp = TexHelper.Instance.BitsPerPixel(meta.Format);
 
-				//}
-				//else
+					for(int arraySlice = 0;arraySlice<arraySize;++arraySlice)
+					{
+						for(int mip	= 0;mip<mips;++mip)
+						{
+							try
+					{
+							const int item = 0;
+							var image = scratch.GetImage(mip,arraySlice,0);
+							
+							var iWidth = image.Width;
+							rv.SetDataRaw(image.Pixels,
+											mip,
+											image.RowPitch,iWidth,(image.Height),arraySlice,(int)0);
+
+					}
+					catch(Exception ex)
+					{
+						LogEx(ex);
+
+					}
+						}
+					}
+					return rv;
+					
+
+
+				}
+				else
 				{
 					
 					//Not done
@@ -336,7 +349,7 @@ namespace CnV
 						{
 							const int item = 0;
 							var image = scratch.GetImage(m,item,arraySlice);
-							rv.SetDataRaw(image.Pixels,m,image.RowPitch,(image.Width),(image.Height),arraySlice);
+							rv.SetDataRaw(image.Pixels,m,image.RowPitch,(image.Width),(image.Height),arraySlice,(int)image.SlicePitch);
 
 						}
 					}
@@ -350,22 +363,24 @@ namespace CnV
 			catch(Exception ex)
 			{
 				Log($"Invalid Texture {fileName} {ex}" );
-				return null;
 			}
+			return null;
 		}
 
-		public static bool TryLoadLitMaterialFromDDS(string nameAndPath, out Material main, out Material shadow,bool wantShadow, int animationFrames=0)
+		public static bool TryLoadLitMaterialFromDDS(string nameAndPath, out Material main, out Material shadow,bool wantShadow, int animationFrames=1,bool unlit=false)
 		{
 			try
 			{ 
 				var path = AppS.AppFileName($"{nameAndPath}.dds");
 				var pathN = AppS.AppFileName($"{nameAndPath}_n.dds");
-				Texture texture = CreateFromDDS(path,animationFrames);
-				Texture normalMap = CreateFromDDS(pathN,animationFrames);
-				if(texture is not null && normalMap is not null)
+				var animated = nameAndPath.Contains("animseq");
+				var frames = animated ? animationFrames : 1;
+				Texture texture = CreateFromDDS(path,frames,wantSRGB: true);
+				Texture normalMap = unlit ? null : CreateFromDDS(pathN,frames, wantSRGB:false);
+				if(texture is not null )
 				{ 
-					main = new Material(texture, normalMap, AGame.GetTileEffect(animationFrames > 1));
-					shadow =wantShadow ?  new Material(texture, GetShadowEffect(animationFrames > 1)) : null;
+					main = new Material(texture, normalMap, AGame.GetTileEffect(frames > 1,unlit));
+					shadow =wantShadow ?  new Material(texture, GetShadowEffect(frames > 1)) : null;
 					return true;
 				}
 			}

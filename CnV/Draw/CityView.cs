@@ -14,7 +14,6 @@ using Vector3 = System.Numerics.Vector3;
 using XVector2 = Microsoft.Xna.Framework.Vector2;
 using XVector3 = Microsoft.Xna.Framework.Vector3;
 using XVector4 = Microsoft.Xna.Framework.Vector4;
-using static CnV.CanvasHelpers;
 using Microsoft.Xna.Framework;
 using CnV.Views;
 using static CnV.Debug;
@@ -42,7 +41,7 @@ namespace CnV
 			for (int y = span0; y <= span1; ++y)
 				for (int x=span0;x<=span1;++x)
 				{
-					baseAnimationOffsets[City.XYToId((x,y))] =MathF.Atan2(y, x) / MathF.PI + (((float)y/span0).Squared() + ((float)x / span0).Squared()).Sqrt();
+					baseAnimationOffsets[City.XYToId((x,y))] =Math.Atan2(y, x)  +(((double)y/span0).Squared() + ((double)x / span0).Squared()).Sqrt()*MathF.PI;
 
 				}
 			AUtil.UnsafeCopy(CityView.baseAnimationOffsets, CityViewS.animationOffsets);
@@ -72,7 +71,7 @@ namespace CnV
 		const float duDt = (1.0f / atlasColumns);
 		const float dvDt = (1.0f / atlasRows);
 		static Vector2 buildCityOrigin;
-		public const float cityYScale = 96.0f / 128.0f; // aspect ratio
+		public const float cityYScale = 80.0f / 128.0f; // aspect ratio
 		const float cityTileGainX = 1.0f / citySpan;
 		const float cityTileGainY= cityYScale * cityTileGainX;
 	//	public static Material buildingAtlas;
@@ -106,14 +105,14 @@ namespace CnV
 			var c = CityPointToWC(bc);
 			// There is no aspect ratio scaling for Y
 			var baseScale = (0.5f * cityTileGainX );
-			var xScale = bt.xScale;
-			var yScale = bt.yScale;
+			var xScale = bt.main.xScale;
+			var yScale = bt.main.yScale;
 			var dc = new Vector2(baseScale* xScale, baseScale* yScale);
 			var c0 = c-dc;
 			var c1 = c+dc;
 			return (lerpC0.Lerp(c0,c1),lerpC1.Lerp(c0,c1) );
 		}
-		public static float[] baseAnimationOffsets = new float[citySpotCount];
+		public static double[] baseAnimationOffsets = new double[citySpotCount];
 		public static float animationRate = 0.25f;
 		
 	//	public Building GetBuilding( int id) => buildingsCache[id];
@@ -185,9 +184,9 @@ namespace CnV
 
 
 
-							var dt = (float)(animationT - animationOffsets[bspot]);
-							float dtF = dt*3f;
-							float blendT = (dt*0.25f).PingPong();
+							var dt = (animationT - animationOffsets[bspot]);
+							float dtF =(float) dt*3f;
+							float blendT = (dt*0.375f).Frac();
 							// ZBase is on initial action placement
 							var zBase = 0f;
 							if(dtF < 1)
@@ -226,7 +225,7 @@ namespace CnV
 									{
 										var t = (blendT) * 4.0f;
 										bl = cur.bl; // fade next number
-										fontA = 1.0f;//t.SCurve(0,1);
+										fontA = t.SCurve(0,1);
 										blendOp = t.SCurve(0,1);
 									}
 									else if(blendT < 0.5f)
@@ -253,21 +252,21 @@ namespace CnV
 																		 // fade out number
 										blendOp =t.SCurve(1,0);
 										bl = next.bl;
-										fontA = 1.0f;//t.SCurve(1,0);// prior number out	
+										fontA = t.SCurve(1,0);// prior number out	
 									}
-									DrawBuilding(next.id,iAlpha,zBase,Layer.tileCity,bspot,fontScale,(int)(alpha*fontA*255f),bl);
+									DrawBuilding(next.id,iAlpha,zBase,bspot.TileCity(),bspot,fontScale,(int)(alpha*fontA*255f),bl);
 									if(blendOp > 0)
 									{
-										var cs = CityPointToQuad(bspot);
+										var cs = CityPointToQuad(bspot, 1.2f);
 										// cross fade in new level that this is going to
 										float z1 = zBase*1.5f;
-										draw.AddQuad(Layer.tileCity + 2,decalSelectGloss,cs.c0.WorldToCamera(),cs.c1.WorldToCamera(),new Color(iAlpha,iAlpha,iAlpha,iAlpha / 2).Scale(blendOp),(z1, z1, z1, z1));
+										draw.AddQuad(Layer.tileCityOverlay,decalSelectGloss,cs.c0.WorldToCamera(),cs.c1.WorldToCamera(),new Color(iAlpha,iAlpha,iAlpha,iAlpha / 2).Scale(blendOp),depth:z1 );
 									}
 								}
 								else
 								{
 									// not changing
-									DrawBuilding(cur.id,iAlpha,zBase,layer: Layer.tileCity,buildC: bspot,fontScale: fontScale,fontAlpha: -1,buildingLevel: cur.bl);
+									DrawBuilding(cur.id,iAlpha,zBase,layer: bspot.TileCity(),buildC: bspot,fontScale: fontScale,fontAlpha: -1,buildingLevel: cur.bl);
 
 								}
 
@@ -284,7 +283,7 @@ namespace CnV
 								}
 								else
 								{
-									blendMat = decalBuildBuilding;
+									blendMat = decalSelectBuilding;
 									bd = next;
 								}
 								if(blendT < 0.5f)
@@ -301,12 +300,12 @@ namespace CnV
 								// either buildings from new or demoing
 								if(blendOp > 0)
 								{
-									var cs = CityPointToQuad(bspot);
+									var cs = CityPointToQuad(bspot, 1.2f);
 									float z1 = zBase*1.5f;
-									draw.AddQuad(Layer.tileCity + 2,blendMat,cs.c0.WorldToCamera(),cs.c1.WorldToCamera(),(new Color(iAlpha,iAlpha,iAlpha,iAlpha)).Scale(blendOp),(z1, z1, z1, z1));
+									draw.AddQuad(Layer.tileCityOverlay,blendMat,cs.c0.WorldToCamera(),cs.c1.WorldToCamera(),(new Color(iAlpha,iAlpha,iAlpha,iAlpha)).Scale(blendOp),depth:z1 );
 								}
 
-								DrawBuilding(bd.id,iAlpha,zBase: zBase,layer: Layer.tileCity,buildC: bspot,fontScale: fontScale,fontAlpha: -1,buildingLevel: bd.bl);
+								DrawBuilding(bd.id,iAlpha,zBase: zBase,layer: bspot.TileCity(),buildC: bspot,fontScale: fontScale,fontAlpha: -1,buildingLevel: bd.bl);
 							}
 							// farm fields
 							if(next.bid == bidFarm)
@@ -320,7 +319,7 @@ namespace CnV
 
 									if(!(isPlanner ? city.GetLayoutBid(c1) == bidNone : (city.postQueueBuildings[c1].bid == bidNone)))
 										continue; // spot is full
-									DrawBuilding(bidFarmField,255,zBase: zBase,layer: Layer.tileCity,buildC: c1);
+									DrawBuilding(bidFarmField,255,zBase: zBase,layer: bspot.TileCity(),buildC: c1);
 								}
 							}
 						}
@@ -374,7 +373,7 @@ namespace CnV
 							var shadowOffset = new Vector2(5.0f,5.0f);
 							var off = (animationT -animationOffsets[bspot]) * 0.3245f;
 							var cScale = off.Wave().Lerp(0.875f,1.0f);
-							DrawBuilding(bid,iAlpha,zBase: zCities*cScale,layer: Layer.tileCity+4,buildC:bspot,lerpC0:0.25f,lerpC1:0.75f,wantShadow:true);
+							DrawBuilding(bid,iAlpha,zBase: zCities*cScale,layer: Layer.tileCityLayout,buildC:bspot,lerpC0:0.25f,lerpC1:0.75f,wantShadow:true);
 							//draw.AddQuad(Layer.tileCity + 3,buildingShadows,_c0+shadowOffset,_c1+shadowOffset,new Vector2(u0,v0),new Vector2(u0 + duDt,v0 + dvDt),new Color(0,0,0,iAlpha*7/8).Scale(cScale),zZero); // shader does the z transform
 
 							//draw.AddQuad(Layer.tileCity+4,buildingAtlas,_c0,_c1,new Vector2(u0,v0),new Vector2(u0 + duDt,v0 + dvDt),iAlpha.AlphaToAll().Scale(cScale),zZero); // shader does the z transform
@@ -385,7 +384,7 @@ namespace CnV
 					var citySpan = new Vector2(0.5f,0.5f * cityYScale);
 					var city0 = buildCityOrigin - citySpan;
 					var city1 = buildCityOrigin + citySpan;
-					draw.AddQuad(Layer.tileCityBase,city.isOnWater ? cityWallsWater : cityWallsLand,city0,city1,iAlpha.AlphaToAll(),(0f, 0f, 0f, 0f));
+					draw.AddQuad(Layer.tileCityBase,city.isOnWater ? cityWallsWater : cityWallsLand,city0,city1,iAlpha.AlphaToAll(),depth:0f);
 
 					// draw overlays
 
@@ -589,39 +588,49 @@ namespace CnV
 					iconId = buildC.ToRandom(altCount+1);
 				}
 				var _cs = CityPointToQuad(buildC,materials,lerpC0,lerpC1);
-				var bdi = BuildingDef.FromId(bid);
-				if(materials.frameCount > 1)
+			//	var bdi = BuildingDef.FromId(bid);
+				var m = materials.main;
+				var frameCount = materials.frameCount;
+				if(frameCount > 1)
 				{
-					var frames = materials.frameCount;
+					var frames = frameCount;
 					var du = 1.0/frames;
-					
-					var dt = ((animationT-animationOffsets[buildC])/(bdi.animationDuration)).Frac()*(frames);
-	//				var duFX = (int)(255*255*du);
+
+					var dt = ((animationOffsets[buildC]-animationT)/(materials.animationDuration)).Frac()*(frames);
+					//				var duFX = (int)(255*255*du);
 					int frame8 = (int)(dt*256);
 					int frame = frame8 >> 8;
-					int blend = frame8 - (frame<<8);
-				
-					
+					var blend = (frame8 - (frame<<8)).AsByte();
+					var f0 = (frame*4).AsByte();
+					var f1 = (frame+1) >= frames ? (byte)0 : ((frame+1)*4).AsByte();
+					{
+						var alpha = iAlpha.AsByte();
 					draw.AddQuad(layer,materials.M(iconId).m,_cs.c0,_cs.c1,
-						new Vector2( (float)(du*frame),0),
-						new Vector2( (float)(du*(frame+1)),1),
-						new(blend.AsByte(),materials.frameDeltaG,materials.frameDeltaB, iAlpha.AsByte() ),(zBase, zBase, zBase, zBase)); 
+						new Vector2(0,0),
+						new Vector2(1,1),
+						new(blend,f1,f0,alpha),
+						
+
+						depth: zBase);
+				}
 					if(wantShadow)
 					{
+						var alpha = iAlpha.ScaleAndRound(0.75f).AsByte();
 					draw.AddQuad(layer-1,materials.M(iconId).shadow,_cs.c0,_cs.c1,
-						new Vector2( (float)(du*frame),0),
-						new Vector2( (float)(du*(frame+1)),1),
-						new(blend.AsByte(),materials.frameDeltaG,materials.frameDeltaB, iAlpha.ScaleAndRound(0.75f).AsByte() ),(0, 0, 0, 0)); 
+						new Vector2(0,0),
+						new Vector2(1,1),
+						new(blend,f1,f0,alpha),
+						depth:0f); 
 
 					}
 				}
 				else
 				{
 
-					draw.AddQuad(layer,materials.M(iconId).m,_cs.c0,_cs.c1,new Vector2(0,0),new Vector2(1,1),new((byte)255,(byte)255,(byte)255,iAlpha.AsByte()),(zBase, zBase, zBase, zBase)); // shader does the z transform
+					draw.AddQuad(layer,materials.M(iconId).m,_cs.c0,_cs.c1,new Vector2(0,0),new Vector2(1,1),new((byte)255,(byte)255,(byte)255,iAlpha.AsByte()),depth:zBase); // shader does the z transform
 					if(wantShadow)
 					{
-						draw.AddQuad(layer-1,materials.M(iconId).shadow,_cs.c0,_cs.c1,new Vector2(0,0),new Vector2(1,1),new((byte)0,(byte)0,(byte)0,iAlpha.ScaleAndRound(0.75f).AsByte()),(0, 0, 0, 0)); // shader does the z transform
+						draw.AddQuad(layer-1,materials.M(iconId).shadow,_cs.c0,_cs.c1,new Vector2(0,0),new Vector2(1,1),new((byte)0,(byte)0,(byte)0,iAlpha.ScaleAndRound(0.75f).AsByte()),depth:0f); // shader does the z transform
 
 					}
 				}
@@ -634,7 +643,7 @@ namespace CnV
 				var cs = CityPointToQuad(buildC);
 					DrawTextBox(buildingLevel.ToString(), 0.825f.Lerp(cs.c0, cs.c1).WorldToCamera(), textformatBuilding,
 						color:new Color(0xf1* fontAlpha/256, 0xd1* fontAlpha/256, 0x1b* fontAlpha/256, fontAlpha),
-						backgroundAlpha: (byte)iAlpha, layer:((int)layer+16), scale: fontScale, zBias: zBase*0.5f );
+						backgroundAlpha: (byte)iAlpha, layer:Layer.tileCityNumbers, scale: fontScale, zBias: zBase*0.5f );
 			}
 			
 		}
@@ -645,7 +654,7 @@ namespace CnV
 			var off = (AGame.animationT - animationOffsets[cc]) * 0.333f;
 			var cScale = off.Wave().Lerp(0.8f, 1.0f);//, off.WaveC().Lerp(0.8f, 1.0f));
 
-			DrawBuilding(bid: bid, iAlpha: iAlpha.ScaleAndRound(cScale), zBase: zBase, layer: Layer.tileCity-1,buildC: cc);
+			DrawBuilding(bid: bid, iAlpha: iAlpha.ScaleAndRound(cScale), zBase: zBase, layer: cc.TileCity(),buildC: cc);
 
 
 			//var iconId = BidToAtlas(bid);
@@ -656,7 +665,6 @@ namespace CnV
 			//																																													//if(overlay!=null)
 			//																																													//	draw.AddQuad(Layer.tileCity + 2, overlay, cs.c0, cs.c1, new Color(iAlpha, iAlpha, iAlpha, iAlpha / 2).Scale(cScale), (zHover+zBias, zHover+zBias, zHover+zBias, zHover+zBias) );
 		}
-		static (float,float,float,float) zZero = (0,0,0,0);
 		public static void DrawSprite(BuildC cc, Material mat, float animFreq)
 		{
 			Assert(isDrawing);
@@ -664,12 +672,12 @@ namespace CnV
 			var off = (animationT-animationOffsets[cc]) * animFreq;
 			var cScale = new Vector2(off.Wave().Lerp(0.8f, 1.0f), off.WaveC().Lerp(0.8f, 1.0f));
 			var cs = CityPointToQuad(cc, 1.2f);
-			draw.AddQuad(Layer.tileCity + 2, mat, cs.c0.WorldToCamera(), cs.c1.WorldToCamera(), new Color( cityDrawAlpha, cityDrawAlpha, cityDrawAlpha, cityDrawAlpha / 2).Scale(cScale),zZero);
+			draw.AddQuad(Layer.tileCityUI, mat, cs.c0.WorldToCamera(), cs.c1.WorldToCamera(), new Color( cityDrawAlpha, cityDrawAlpha, cityDrawAlpha, cityDrawAlpha / 2).Scale(cScale),depth:0);
 		}
 		public static void DrawHoverMarker(BuildC cc)
 		{
 			Assert(isDrawing);
-			var cs = CityPointToQuad(cc);
+			var cs = CityPointToQuad(cc, 1.2f);
 			DrawRectOutlineShadow(Layer.effects,cs.c0.WorldToCamera(),cs.c1.WorldToCamera(),new Color(32, 0, 96, 220), 3.0f);
 		}
 		
@@ -685,7 +693,22 @@ namespace CnV
 			decalSelectGloss           = LoadMaterialAdditive("Art/City/build_details_gloss_overlay");
 		}
 
-		internal readonly record  struct MaterialShadowPair(Material? m,Material? shadow);
+		internal  struct MaterialShadowPair
+		{
+			internal Material? m;
+		    internal Material? shadow;
+			internal float xScale;
+			internal float yScale ;
+
+			internal MaterialShadowPair(Material? m,Material? shadow, int frameCount)
+			{
+				this.m=m;
+				this.shadow=shadow;
+				this.xScale = m.texture2d.width/128.0f;
+				this.yScale = m.texture2d.height/128.0f;
+
+			}
+		}
 		internal class BuildingMaterials
 		{
 			internal const int maxAltCount = 4;
@@ -698,12 +721,13 @@ namespace CnV
 
 			internal MaterialShadowPair destroyed;
 
-			internal float xScale=1;
-			internal float yScale = 1;
+			internal MaterialShadowPair overlay;
+
 			internal float animationDuration;
-			internal byte frameDeltaG; // only if animatied
-			internal byte frameDeltaB;
-			internal byte frameCount=1;
+			internal byte frameCount;
+
+			internal const int MFirst = -2;
+			internal const int MLast = maxAltCount;
 
 			internal int altCount => alt1.m is null ? 0 :
 									alt2.m is null ? 1 :
@@ -722,6 +746,7 @@ namespace CnV
 					case 3: return ref alt3;
 					case 4: return ref alt4;
 					case -1: return ref destroyed;
+					case -2: return ref overlay;
 					default:
 						Assert(false);
 						return ref main;
@@ -734,41 +759,41 @@ namespace CnV
 			var cityBase =  "Art/City/";
 			//buildingAtlas = Material.LoadLitMaterial(cityBase + "building_set5");
 			//buildingShadows = new Material(buildingAtlas.texture, AGame.unlitEffect);
-			cityWallsLand = Material.LoadLitMaterial(cityBase + "baseland");
-			cityWallsWater = Material.LoadLitMaterial(cityBase + "basewater");
+			if(!GameClient.TryLoadLitMaterialFromDDS($"runtime\\city\\baseland",out cityWallsLand,out _,wantShadow: false,animationFrames: 1,unlit: false))
+			{
+				Assert(false);
+			}
+			///	cityWallsLand = LoadLitMaterial(cityBase + "baseland");
+			cityWallsWater =            cityWallsLand;
 			foreach(var build in BuildingDef.all)
 			{
 				if(build==null  || build.dimg == null || build.dimg.Length ==0 )
 					continue;
 				try
-				{ 
-					if(GameClient.TryLoadLitMaterialFromDDS($"runtime\\city\\{build.dimg}", out var main, out var shadow,wantShadow:true,animationFrames:build.animationFrames ))
+				{
+					var frames = build.animationFrames.Max(1);
+					if(GameClient.TryLoadLitMaterialFromDDS($"runtime\\city\\{build.dimg}", out var main, out var shadow,wantShadow:true,animationFrames:frames,unlit:build.isUnlit ))
 					{ 
-						var bm = new BuildingMaterials() { main = new( main,shadow), 
-							xScale = main.texture2d.width/128.0f/build.animationFrames.Max(1),
-							yScale = main.texture2d.height/128.0f};
-						if(build.animationFrames > 1 )
-						{
-							bm.frameCount = build.animationFrames;
-							bm.animationDuration = build.animationDuration;
-							(bm.frameDeltaG, bm.frameDeltaB) = SpriteAnim.ComputeFrameDeltaAsColours(build.animationFrames);
-						}
+						var bm = new BuildingMaterials() { main = new( main,shadow,frames) ,
+							animationDuration=build.animationDuration,
+							frameCount = frames
+							};
+						
 						BuildingMaterials.all[build.id] = bm;
-							for(int i = -1;i<=BuildingMaterials.maxAltCount;++i)
+							for(int i = BuildingMaterials.MFirst;i<=BuildingMaterials.maxAltCount;++i)
 							{
 								if(i==0)
 									continue;
-								var str = i switch { -1 => build.destroyImg, 
+								var str = i switch {
+									-2 => build.overlay,
+									-1 => build.destroyImg, 
 									1 => build.dimg1, 2 => build.dimg2, 
-									3 => build.dimg3, 4 => build.dimg4, _ => null };
+									3 => build.dimg3, 4 => build.dimg4 };
 								if(str ==null)
 									continue;
-								if(GameClient.TryLoadLitMaterialFromDDS($"runtime\\city\\{str}", out var main1, out var shadow1,wantShadow:true,animationFrames:build.animationFrames ))
+								if(GameClient.TryLoadLitMaterialFromDDS($"runtime\\city\\{str}", out var main1, out var shadow1,wantShadow:true,animationFrames:frames,unlit:build.isUnlit ))
 								{
-									if(i== -1)
-										bm.destroyed = new(main1,shadow1);
-									else
-										bm.M(i) = new(main1,shadow1);
+									bm.M(i) = new(main1,shadow1,frames);
 								}
 							}
 

@@ -40,7 +40,7 @@ namespace CnV
 			if(City.GetBuild().buildQueue != displayQueue)
 				instance.cityQueueChangeDebounce.Go();
 		}
-		static ImmutableArray<BuildQueueItem> displayQueue = ImmutableArray<BuildQueueItem>.Empty;
+		static BuildQueueType displayQueue = BuildQueueType.Empty;
 
 		static void UpdateBuildQueue()
 		{
@@ -171,7 +171,6 @@ namespace CnV
 							txt.UpdateLazy($"Buildings: [{bdd.buildingCount}/{bdd.townHallLevel*10}]");
 							queueText.UpdateLazy($"Queue cs:{city.stats.cs:N0}"); 
 						
-							buildingCountGrid.SelectedItems.Clear();
 							var bd = new List<BuildingCountAndBrush>();
 							foreach(var i in bdd.counts)
 							{
@@ -340,7 +339,7 @@ namespace CnV
 		{
 			op = item;
 			image = CityBuild.GetBuildingImage(item.isMove ? (byte)0 : item.bid,size);
-			var desc = item.isDemo ? "Destroy" : item.isBuild ? "Build" : item.isMove ? "Move" : item.isDowngrade ? $"DownTo {item.elvl}" : $"UpTo {item.elvl}" + (item.pa==false ? " P" : "");
+			var desc = item.isMove ? "Move" : item.isDemo ? "Destroy" : item.isBuild ? $"Build{(item.pa==false ? " p" : "") }" : item.isDowngrade ? $"Downgrade to {item.elvl}" : $"Upgrade to {item.elvl}" ;
 			text = desc;// + BuildingDef.FromId(item.bid).Bn;
 		}
 		public void OnPropertyChanged(string members = null) => PropertyChanged?.Invoke(this,new(members));

@@ -53,125 +53,156 @@ namespace CnV
 	public delegate float DepthFunction(float x, float y, float zBase);
 	public static class SpriteHelper
 	{
-		public static void Set(this SpriteVertices me, float x, float y, float dx, float dy, float w, float h, float sin, float cos, Color color, Vector2 texCoordTL, Vector2 texCoordBR, float depth)
+		//public static void Set(this SpriteVertices me, float x, float y, float dx, float dy, float w, float h, float sin, float cos, Color color, Vector2 texCoordTL, Vector2 texCoordBR, float depth)
+		//{
+		//	me.vertexTL.Position.X = x + dx * cos - dy * sin;
+		//	me.vertexTL.Position.Y = y + dx * sin + dy * cos;
+		//	me.vertexTL.Position.Z = depth;
+		//	me.vertexTL.Color = color;
+		//	me.vertexTL.TextureCoordinate.X = texCoordTL.X;
+		//	me.vertexTL.TextureCoordinate.Y = texCoordTL.Y;
+
+		//	me.vertexTR.Position.X = x + (dx + w) * cos - dy * sin;
+		//	me.vertexTR.Position.Y = y + (dx + w) * sin + dy * cos;
+		//	me.vertexTR.Position.Z = depth;
+		//	me.vertexTR.Color = color;
+		//	me.vertexTR.TextureCoordinate.X = texCoordBR.X;
+		//	me.vertexTR.TextureCoordinate.Y = texCoordTL.Y;
+
+		//	me.vertexBL.Position.X = x + dx * cos - (dy + h) * sin;
+		//	me.vertexBL.Position.Y = y + dx * sin + (dy + h) * cos;
+		//	me.vertexBL.Position.Z = depth;
+		//	me.vertexBL.Color = color;
+		//	me.vertexBL.TextureCoordinate.X = texCoordTL.X;
+		//	me.vertexBL.TextureCoordinate.Y = texCoordBR.Y;
+
+		//	me.vertexBR.Position.X = x + (dx + w) * cos - (dy + h) * sin;
+		//	me.vertexBR.Position.Y = y + (dx + w) * sin + (dy + h) * cos;
+		//	me.vertexBR.Position.Z = depth;
+		//	me.vertexBR.Color = color;
+		//	me.vertexBR.TextureCoordinate.X = texCoordBR.X;
+		//	me.vertexBR.TextureCoordinate.Y = texCoordBR.Y;
+		//}
+
+		
+		public static void Set(this SpriteVertices me, float x0, float y0, float x1, float y1, Color color, Vector2 texCoordTL, Vector2 texCoordBR, float depthBase, DepthFunction depth)
 		{
-			me.vertexTL.Position.X = x + dx * cos - dy * sin;
-			me.vertexTL.Position.Y = y + dx * sin + dy * cos;
-			me.vertexTL.Position.Z = depth;
+			me.vertexTL.Position.X = x0;
+			me.vertexTL.Position.Y = y0;
+			me.vertexTL.Position.Z = depth(x0, y0, depthBase);
 			me.vertexTL.Color = color;
 			me.vertexTL.TextureCoordinate.X = texCoordTL.X;
 			me.vertexTL.TextureCoordinate.Y = texCoordTL.Y;
 
-			me.vertexTR.Position.X = x + (dx + w) * cos - dy * sin;
-			me.vertexTR.Position.Y = y + (dx + w) * sin + dy * cos;
-			me.vertexTR.Position.Z = depth;
+			me.vertexTR.Position.X = x1;
+			me.vertexTR.Position.Y = y0;
+			me.vertexTR.Position.Z = depth(x1, y0, depthBase);
 			me.vertexTR.Color = color;
 			me.vertexTR.TextureCoordinate.X = texCoordBR.X;
 			me.vertexTR.TextureCoordinate.Y = texCoordTL.Y;
 
-			me.vertexBL.Position.X = x + dx * cos - (dy + h) * sin;
-			me.vertexBL.Position.Y = y + dx * sin + (dy + h) * cos;
-			me.vertexBL.Position.Z = depth;
+			me.vertexBL.Position.X = x0;
+			me.vertexBL.Position.Y = y1;
+			me.vertexBL.Position.Z = depth(x0, y1, depthBase);
 			me.vertexBL.Color = color;
 			me.vertexBL.TextureCoordinate.X = texCoordTL.X;
 			me.vertexBL.TextureCoordinate.Y = texCoordBR.Y;
 
-			me.vertexBR.Position.X = x + (dx + w) * cos - (dy + h) * sin;
-			me.vertexBR.Position.Y = y + (dx + w) * sin + (dy + h) * cos;
-			me.vertexBR.Position.Z = depth;
+			me.vertexBR.Position.X = x1;
+			me.vertexBR.Position.Y = y1;
+			me.vertexBR.Position.Z = depth(x1, y1, depthBase);
 			me.vertexBR.Color = color;
 			me.vertexBR.TextureCoordinate.X = texCoordBR.X;
 			me.vertexBR.TextureCoordinate.Y = texCoordBR.Y;
 		}
 
-		public static void Set(this Microsoft.Xna.SpriteVertices me, float x, float y, float w, float h, Color color, Vector2 texCoordTL, Vector2 texCoordBR, float depth)
+		public static void Set(this SpriteVertices me, float x0, float y0, float x1, float y1, Color color, Vector2 texCoordTL, Vector2 texCoordBR, float depthTL, float depthTR, float depthBL, float depthBR)
 		{
-			me.vertexTL.Position.X = x;
-			me.vertexTL.Position.Y = y;
-			me.vertexTL.Position.Z = depth;
-			me.vertexTL.Color = color;
-			me.vertexTL.TextureCoordinate.X = texCoordTL.X;
-			me.vertexTL.TextureCoordinate.Y = texCoordTL.Y;
-
-			me.vertexTR.Position.X = x + w;
-			me.vertexTR.Position.Y = y;
-			me.vertexTR.Position.Z = depth;
-			me.vertexTR.Color = color;
-			me.vertexTR.TextureCoordinate.X = texCoordBR.X;
-			me.vertexTR.TextureCoordinate.Y = texCoordTL.Y;
-
-			me.vertexBL.Position.X = x;
-			me.vertexBL.Position.Y = y + h;
-			me.vertexBL.Position.Z = depth;
-			me.vertexBL.Color = color;
-			me.vertexBL.TextureCoordinate.X = texCoordTL.X;
-			me.vertexBL.TextureCoordinate.Y = texCoordBR.Y;
-
-			me.vertexBR.Position.X = x + w;
-			me.vertexBR.Position.Y = y + h;
-			me.vertexBR.Position.Z = depth;
-			me.vertexBR.Color = color;
-			me.vertexBR.TextureCoordinate.X = texCoordBR.X;
-			me.vertexBR.TextureCoordinate.Y = texCoordBR.Y;
-		}
-		public static void Set(this SpriteVertices me, float x, float y, float w, float h, Color color, Vector2 texCoordTL, Vector2 texCoordBR, float depthBase, DepthFunction depth)
-		{
-			me.vertexTL.Position.X = x;
-			me.vertexTL.Position.Y = y;
-			me.vertexTL.Position.Z = depth(x, y, depthBase);
-			me.vertexTL.Color = color;
-			me.vertexTL.TextureCoordinate.X = texCoordTL.X;
-			me.vertexTL.TextureCoordinate.Y = texCoordTL.Y;
-
-			me.vertexTR.Position.X = x + w;
-			me.vertexTR.Position.Y = y;
-			me.vertexTR.Position.Z = depth(x + w, y, depthBase);
-			me.vertexTR.Color = color;
-			me.vertexTR.TextureCoordinate.X = texCoordBR.X;
-			me.vertexTR.TextureCoordinate.Y = texCoordTL.Y;
-
-			me.vertexBL.Position.X = x;
-			me.vertexBL.Position.Y = y + h;
-			me.vertexBL.Position.Z = depth(x, y + h, depthBase);
-			me.vertexBL.Color = color;
-			me.vertexBL.TextureCoordinate.X = texCoordTL.X;
-			me.vertexBL.TextureCoordinate.Y = texCoordBR.Y;
-
-			me.vertexBR.Position.X = x + w;
-			me.vertexBR.Position.Y = y + h;
-			me.vertexBR.Position.Z = depth(x + w, y + h, depthBase);
-			me.vertexBR.Color = color;
-			me.vertexBR.TextureCoordinate.X = texCoordBR.X;
-			me.vertexBR.TextureCoordinate.Y = texCoordBR.Y;
-		}
-
-		public static void Set(this SpriteVertices me, float x, float y, float w, float h, Color color, Vector2 texCoordTL, Vector2 texCoordBR, float depthTL, float depthTR, float depthBL, float depthBR)
-		{
-			me.vertexTL.Position.X = x;
-			me.vertexTL.Position.Y = y;
+			me.vertexTL.Position.X = x0;
+			me.vertexTL.Position.Y = y0;
 			me.vertexTL.Position.Z = depthTL;
 			me.vertexTL.Color = color;
 			me.vertexTL.TextureCoordinate.X = texCoordTL.X;
 			me.vertexTL.TextureCoordinate.Y = texCoordTL.Y;
 
-			me.vertexTR.Position.X = x + w;
-			me.vertexTR.Position.Y = y;
+			me.vertexTR.Position.X = x1;
+			me.vertexTR.Position.Y = y0;
 			me.vertexTR.Position.Z = depthTR;
 			me.vertexTR.Color = color;
 			me.vertexTR.TextureCoordinate.X = texCoordBR.X;
 			me.vertexTR.TextureCoordinate.Y = texCoordTL.Y;
 
-			me.vertexBL.Position.X = x;
-			me.vertexBL.Position.Y = y + h;
+			me.vertexBL.Position.X = x0;
+			me.vertexBL.Position.Y = y1;
 			me.vertexBL.Position.Z = depthBL;
 			me.vertexBL.Color = color;
 			me.vertexBL.TextureCoordinate.X = texCoordTL.X;
 			me.vertexBL.TextureCoordinate.Y = texCoordBR.Y;
 
-			me.vertexBR.Position.X = x + w;
-			me.vertexBR.Position.Y = y + h;
+			me.vertexBR.Position.X = x1;
+			me.vertexBR.Position.Y = y1;
 			me.vertexBR.Position.Z = depthBR;
 			me.vertexBR.Color = color;
+			me.vertexBR.TextureCoordinate.X = texCoordBR.X;
+			me.vertexBR.TextureCoordinate.Y = texCoordBR.Y;
+		}
+		public static void Set(this Microsoft.Xna.SpriteVertices me, float x0, float y0, float x1, float y1, Color color, Vector2 texCoordTL, Vector2 texCoordBR, float depth)
+		{
+			me.vertexTL.Position.X = x0;
+			me.vertexTL.Position.Y = y0;
+			me.vertexTL.Position.Z = depth;
+			me.vertexTL.Color = color;
+			me.vertexTL.TextureCoordinate.X = texCoordTL.X;
+			me.vertexTL.TextureCoordinate.Y = texCoordTL.Y;
+
+			me.vertexTR.Position.X = x1;
+			me.vertexTR.Position.Y = y0;
+			me.vertexTR.Position.Z = depth;
+			me.vertexTR.Color = color;
+			me.vertexTR.TextureCoordinate.X = texCoordBR.X;
+			me.vertexTR.TextureCoordinate.Y = texCoordTL.Y;
+
+			me.vertexBL.Position.X = x0;
+			me.vertexBL.Position.Y = y1;
+			me.vertexBL.Position.Z = depth;
+			me.vertexBL.Color = color;
+			me.vertexBL.TextureCoordinate.X = texCoordTL.X;
+			me.vertexBL.TextureCoordinate.Y = texCoordBR.Y;
+
+			me.vertexBR.Position.X = x1;
+			me.vertexBR.Position.Y = y1;
+			me.vertexBR.Position.Z = depth;
+			me.vertexBR.Color = color;
+			me.vertexBR.TextureCoordinate.X = texCoordBR.X;
+			me.vertexBR.TextureCoordinate.Y = texCoordBR.Y;
+		}
+		public static void Set(this Microsoft.Xna.SpriteVertices me, float x0, float y0, float x1, float y1, Color colorTL, Color colorTR,Color colorBL,Color colorBR, Vector2 texCoordTL, Vector2 texCoordBR, float depth)
+		{
+			me.vertexTL.Position.X = x0;
+			me.vertexTL.Position.Y = y0;
+			me.vertexTL.Position.Z = depth;
+			me.vertexTL.Color = colorTL;
+			me.vertexTL.TextureCoordinate.X = texCoordTL.X;
+			me.vertexTL.TextureCoordinate.Y = texCoordTL.Y;
+
+			me.vertexTR.Position.X = x1;
+			me.vertexTR.Position.Y = y0;
+			me.vertexTR.Position.Z = depth;
+			me.vertexTR.Color = colorTR;
+			me.vertexTR.TextureCoordinate.X = texCoordBR.X;
+			me.vertexTR.TextureCoordinate.Y = texCoordTL.Y;
+
+			me.vertexBL.Position.X = x0;
+			me.vertexBL.Position.Y = y1;
+			me.vertexBL.Position.Z = depth;
+			me.vertexBL.Color = colorBL;
+			me.vertexBL.TextureCoordinate.X = texCoordTL.X;
+			me.vertexBL.TextureCoordinate.Y = texCoordBR.Y;
+
+			me.vertexBR.Position.X = x1;
+			me.vertexBR.Position.Y = y1;
+			me.vertexBR.Position.Z = depth;
+			me.vertexBR.Color = colorBR;
 			me.vertexBR.TextureCoordinate.X = texCoordBR.X;
 			me.vertexBR.TextureCoordinate.Y = texCoordBR.Y;
 		}

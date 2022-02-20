@@ -70,7 +70,9 @@
 						<TextBlock x:Name="queueText"  Text ="Queue" Margin="0"  Style="{StaticResource TextBlockMedium}"   />
 					</Border>
 				</Expander.Header>
-				<ListView x:Name="buildQueueListView" x:FieldModifier="public"  Margin="0" Padding="0" Background="{x:Null}"
+				<ListView x:Name="buildQueueListView" x:FieldModifier="public"  
+						  SelectionMode="Extended"  Background="{StaticResource ExpanderBrushContentAlt}"
+						  Margin="0" Padding="0" 
 						ItemsSource="{x:Bind buildQueue}"
 						  MaxHeight="200"  >
 					<ListView.ItemTemplate>
@@ -92,15 +94,15 @@
 						</ItemsPanelTemplate>
 					</ListView.ItemsPanel>
 					<!-- This setter property is created so ListViewItems correctly align to the left or right. -->
-					<ListView.ItemContainerStyle>
+					<!--<ListView.ItemContainerStyle>
 						<Style TargetType="ListViewItem">
 							<Setter Property="Margin" Value="1" />
 							<Setter Property="Padding" Value="0" />
 							<Setter Property="VerticalAlignment" Value="Center"/>
 							<Setter Property="VerticalContentAlignment" Value="Center"/>
-							<Setter Property="Background" Value="#58003000"/>
+							<Setter Property="Background" Value="#8020"/>
 						</Style>
-					</ListView.ItemContainerStyle>
+					</ListView.ItemContainerStyle>-->
 					
 				</ListView>
 			</Expander>

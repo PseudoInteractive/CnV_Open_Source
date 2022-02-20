@@ -4,9 +4,9 @@ using Microsoft.Xna.Framework;
 using Vector2 = System.Numerics.Vector2;
 using Vector3 = System.Numerics.Vector3;
 using Vector4 = System.Numerics.Vector4;
-using static CnV.GameClient;
+using static GameClient;
 
-public static class CanvasHelpers
+ static partial class AGame
 {
 	
 		
@@ -204,6 +204,14 @@ public static class CanvasHelpers
 	public static Vector2 WorldToCamera(this Vector2 c)
 	{
 		return (c - View.cameraCLag) * pixelScale;
+	}
+	public static Vector2 CameraToWorldDelta(this Vector2 c)
+	{
+		return (c) *pixelScaleInverse;
+	}
+	public static Vector2 CameraToWorldPosition(this Vector2 c)
+	{
+		return (c) *pixelScaleInverse + View.cameraCLag;
 	}
 	public static Vector2 WorldToCamera(this (int x, int y) c)
 	{

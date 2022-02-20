@@ -10,9 +10,6 @@ using CnV.Draw;
 
 //using Windows.UI.Core;
 using static CnV.Troops;
-using static CnV.CanvasHelpers;
-
-
 using UWindows = Windows;
 using XVector2 = Microsoft.Xna.Framework.Vector2;
 using XVector3 = Microsoft.Xna.Framework.Vector3;
@@ -65,28 +62,44 @@ internal partial class GameClient
 		MipMapLevelOfDetailBias = -1.5f,
 		BorderColor             = new Color(0, 0, 0, 0),
 		MaxAnisotropy           = 2,
-		AddressW                = TextureAddressMode.Border,
+		AddressW                = TextureAddressMode.Wrap,
 		AddressU                = TextureAddressMode.Border,
 		AddressV                = TextureAddressMode.Border,
 	};
 	static SamplerState borderSampler = new SamplerState()
 	{
-		Name="SamplerState.BorderSampler",
 		Filter                  = TextureFilter.LinearMipPoint,
 		MipMapLevelOfDetailBias = 0,
 		MaxAnisotropy           = 0,
-		AddressW                = TextureAddressMode.Clamp,
+		AddressW                = TextureAddressMode.Wrap,
+		AddressU                = TextureAddressMode.Border,
+		AddressV                = TextureAddressMode.Border,
+	};
+	static SamplerState clampSampler = new SamplerState()
+	{
+		Filter                  = TextureFilter.LinearMipPoint,
+		MipMapLevelOfDetailBias = 0,
+		MaxAnisotropy           = 0,
+		AddressW                = TextureAddressMode.Wrap,
 		AddressU                = TextureAddressMode.Clamp,
 		AddressV                = TextureAddressMode.Clamp,
 	};
-	static SamplerState borderNormalSampler = new SamplerState()
+	static SamplerState wrapSampler = new SamplerState()
 	{
-		Name="SamplerState.BorderSampler",
 		Filter                  = TextureFilter.LinearMipPoint,
 		MipMapLevelOfDetailBias = 0,
 		MaxAnisotropy           = 0,
-		BorderColor             = new Color(128, 128, 128, 0),
-		AddressW                = TextureAddressMode.Border,
+		AddressW                = TextureAddressMode.Wrap,
+		AddressU                = TextureAddressMode.Wrap,
+		AddressV                = TextureAddressMode.Wrap,
+	};
+	static SamplerState normalSampler = new SamplerState()
+	{
+		Filter                  = TextureFilter.LinearMipPoint,
+		MipMapLevelOfDetailBias = 0,
+		MaxAnisotropy           = 0,
+		BorderColor             = new Color(128, 128, 255, 0),
+		AddressW                = TextureAddressMode.Wrap,
 		AddressU                = TextureAddressMode.Border,
 		AddressV                = TextureAddressMode.Border,
 	};
@@ -224,7 +237,7 @@ internal partial class GameClient
 			//	tipTextFormat.FontStretch = fontStretch;
 			//	tipTextFormatCentered.FontStretch = fontStretch;
 			//}
-			animationTWrap = (float)(animationT*(1.0/3.0)).Frac(); // wraps every 3 seconds, 0..1
+			animationTWrap = (float)((animationT*(1.0/3.0)).Frac()); // wraps every 3 seconds, 0..1
 
 			device.Textures[7] = fontTexture;
 			//				float accentAngle = animT * MathF.PI * 2;
@@ -331,12 +344,12 @@ internal partial class GameClient
 
 			//			GraphicsDevice.SamplerStates[0] = SamplerState.LinearWrap;
 			//			GraphicsDevice.SamplerStates[1] = SamplerState.LinearWrap;
-			if(fontSampler != null)
-				GraphicsDevice.SamplerStates[7] = fontSampler;
-			if(borderSampler!=null)
-				GraphicsDevice.SamplerStates[6] = borderSampler;
-			if(borderNormalSampler!=null)
-				GraphicsDevice.SamplerStates[5] = borderNormalSampler;
+			GraphicsDevice.SamplerStates[7] = fontSampler;
+			GraphicsDevice.SamplerStates[6] = borderSampler;
+			GraphicsDevice.SamplerStates[5] = normalSampler;
+			GraphicsDevice.SamplerStates[0] = wrapSampler;
+			GraphicsDevice.SamplerStates[1] = clampSampler;
+
 			GraphicsDevice.RasterizerState = RasterizerState.CullNone;
 			//if (WasKeyPressed(Keys.F))
 			//{
@@ -648,7 +661,7 @@ internal partial class GameClient
 											(isShadow == 1 ? tile.shadowMaterial : tile.material), cc0, cc1,
 											uv0,
 											uv1, _tint,
-											(dz, dz, dz, dz));
+											depth:dz);
 										//(cc0, cc1).RectDepth(dz));
 
 
@@ -1389,7 +1402,7 @@ internal partial class GameClient
 											var _c1 = c1 + spriteSize;
 
 											draw.AddQuadWithShadow(Layer.effects, Layer.effectShadow, troopImages[type], _c0, _c1, HSLToRGB.ToRGBA(rectSpan, 0.3f, 0.825f, alpha, alpha + 0.125f), ShadowColor(alpha),
-												(_c0, _c1).RectDepth(zCities), (_c0, _c1).RectDepth(zEffectShadow), shadowOffset);
+												zCities, zEffectShadow, shadowOffset);
 										}
 									dontDraw:;
 									}
@@ -1572,6 +1585,7 @@ internal partial class GameClient
 				c0.Y -= span.Y;
 			backgroundColor.A = (byte)(((int)backgroundColor.A * color.A) / 255);
 			FillRoundedRectangle(Layer.textBackground, c0 - expand, c0 + expand + span, backgroundColor, depth, zBias);
+			Assert(layer > Layer.textBackground);
 		}
 		textLayout.Draw(at, scale, color, layer, zBias, depth);
 	}
@@ -1610,14 +1624,26 @@ internal partial class GameClient
 		//	_blend = blend;
 		var c0 = new Vector2(c.X, c.Y - dv * 0.435f * 0.75f);
 		Vector2 c1 = new Vector2(c.X + dv * 0.5f * 0.75f, c.Y - dv * 0.035f * 0.75f);
+		var du = 1.0/frameCount;
+		
 		var uv0 = new Vector2((float)(frameI / frameCount), 0.0f);
 		var uv1 = new Vector2((float)((frameI + 1.0f) / frameCount), 1.0f);
 		//	_uv0 = uv0;
 		//	_uv1 = uv1;
-		draw.AddQuad(Layer.effects, sprite.material, c0, c1,
-			uv0,
-			uv1,
-			new Color(blend, sprite.frameDeltaG, sprite.frameDeltaB, 255), (c0, c1).RectDepth(z));
+		var material = sprite.material;
+		byte alpha = 255;
+		draw.AddQuad(Layer.effects, material, c0.CameraToWorldPosition(), c1.CameraToWorldPosition(),
+						new Vector2((float)(du*frameI),sprite.frameDeltaU),
+						new Vector2((float)(du*(frameI+1)),sprite.frameDeltaU),
+						new(blend,(byte)255,(byte)0,alpha),
+						new(blend,(byte)255,(byte)0,alpha),
+						new(blend,(byte)255,(byte)255,alpha),
+						new(blend,(byte)255,(byte)255,alpha),
+						depth:z); 
+		//draw.AddQuad(Layer.effects, sprite.material, c0.CameraToWorldPosition(), c1.CameraToWorldPosition(),
+		//	uv0,
+		//	uv1,
+		//	new Color(blend, sprite.frameDeltaG, sprite.frameDeltaB, 255), depth:z );
 	}
 
 
@@ -1723,7 +1749,7 @@ internal partial class GameClient
 		{
 			var _c0 = new Vector2(mid.X - spriteSize, mid.Y - spriteSize);
 			var _c1 = new Vector2(mid.X + spriteSize, mid.Y + spriteSize);
-			draw.AddQuadWithShadow(Layer.action + 4, Layer.effectShadow, bitmap, _c0, _c1, HSLToRGB.ToRGBA(rectSpan, 0.3f, 0.825f, alpha, gain * 1.1875f), shadowColor, (_c0, _c1).RectDepth(zLabels), (_c0, _c1).RectDepth(zEffectShadow), new());
+			draw.AddQuadWithShadow(Layer.action + 4, Layer.effectShadow, bitmap, _c0, _c1, HSLToRGB.ToRGBA(rectSpan, 0.3f, 0.825f, alpha, gain * 1.1875f), shadowColor,zLabels,zEffectShadow, new());
 		}
 		//            ds.DrawRoundedSquare(midS, rectSpan, color, 2.0f);
 

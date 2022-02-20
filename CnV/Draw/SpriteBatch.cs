@@ -450,8 +450,8 @@ namespace CnV.Draw
 	
 			item.Set(c0.X,
 					 c0.Y,
-					 c1.X-c0.X,
-					c1.Y-c0.Y,
+					 c1.X,
+					c1.Y,
 					 color,
 					 uv0,
 					 uv1,
@@ -468,8 +468,8 @@ namespace CnV.Draw
 
 			item.Set(c0.X,
 					 c0.Y,
-					 c1.X - c0.X,
-					c1.Y - c0.Y,
+					 c1.X,
+					c1.Y,
 					 color,
 					 new Vector2(),
 					 new Vector2(1,1),
@@ -484,57 +484,73 @@ namespace CnV.Draw
 
 			item.Set(c0.X,
 					 c0.Y,
-					 c1.X - c0.X,
-					c1.Y - c0.Y,
+					 c1.X,
+					c1.Y,
 					 color,
 					 uv0,
 					 uv1,
 					 depth.depth00, depth.depth10, depth.depth01, depth.depth11);
 
 		}
-		public void AddQuad(int layer, Material texture, Vector2 c0, Vector2 c1, Color color, (float depth00, float depth10, float depth01, float depth11) depth)
+		public void AddQuad(int layer, Material texture, Vector2 c0, Vector2 c1, Vector2 uv0, Vector2 uv1, Color color, float depth  )
 		{
 
 			var item = _batcher.CreateBatchItem(layer, texture);
 
 
-
-
 			item.Set(c0.X,
 					 c0.Y,
-					 c1.X - c0.X,
-					c1.Y - c0.Y,
+					 c1.X,
+					c1.Y,
 					 color,
-					 new Vector2(),
-					 new Vector2(1,1),
-					 depth.depth00, depth.depth10, depth.depth01, depth.depth11);
+					 uv0,
+					 uv1,
+					 depth);
 
 		}
-		public void AddQuadWithShadow(int layer,int shadowLayer, Material texture, Vector2 c0, Vector2 c1, Color color,Color shadowColor, (float depth00, float depth10, float depth01, float depth11) depth, (float depth00, float depth10, float depth01, float depth11) depthShadow, Vector2 shadowOffset)
-		{
-			if(AGame.wantShadow)
-				AddQuad(shadowLayer, texture, c0+shadowOffset, c1 + shadowOffset, shadowColor, depthShadow);
-			AddQuad(layer, texture, c0, c1, color, depth);
-
-		}
-		public void AddQuad(int layer, Material texture, Vector2 c0, Vector2 c1,  Color color, float depth=0)
+		public void AddQuad(int layer, Material texture, Vector2 c0, Vector2 c1, Vector2 uv0, Vector2 uv1, Color colorTL,Color colorTR, Color colorBL,Color colorBR, float depth  )
 		{
 
 			var item = _batcher.CreateBatchItem(layer, texture);
-			
+
+
+			item.Set(c0.X,
+					 c0.Y,
+					 c1.X,
+					c1.Y,
+					 colorTL,colorTR,colorBL,colorBR,
+					 uv0,
+					 uv1,
+					 depth);
+
+		}
+
+		public void AddQuad(int layer, Material texture, Vector2 c0, Vector2 c1, Color color, float depth=0)
+		{
+
+			var item = _batcher.CreateBatchItem(layer, texture);
+
 
 
 
 			item.Set(c0.X,
 					 c0.Y,
-					 c1.X - c0.X,
-					c1.Y - c0.Y,
+					 c1.X,
+					c1.Y,
 					 color,
 					 new Vector2(),
 					 new Vector2(1,1),
 					 depth);
 
 		}
+		public void AddQuadWithShadow(int layer,int shadowLayer, Material texture, Vector2 c0, Vector2 c1, Color color,Color shadowColor, float depth, float depthShadow, Vector2 shadowOffset)
+		{
+			if(AGame.wantShadow)
+				AddQuad(shadowLayer, texture, c0+shadowOffset, c1 + shadowOffset, shadowColor,depthFunction:AGame.PlanetDepth, depthShadow);
+			AddQuad(layer, texture, c0, c1, color,depthFunction:AGame.PlanetDepth,depth: depth);
+
+		}
+		
 		public unsafe void AddLine(int layer,Material texture, Vector2 c0, Vector2 c1, float thickness, float u0, float u1, Color color,(float v0,float v1) depth)
 		{
 
@@ -708,15 +724,15 @@ namespace CnV.Draw
 						_texCoordTL.Y = data.Y*texelHeight;
 						_texCoordBR.X = (data.X+data.Width) *texelWidth;
 						_texCoordBR.Y = (data.Y+data.Height)*texelHeight;
+						var x0 = p.X* scale + position.X;
+						var y0 = p.Y* scale + position.Y;
 
-						item.Set(p.X* scale + position.X,
-								 p.Y* scale + position.Y,
-								 data.Width* scale,
-								data.Height* scale,
+						item.Set(x0,y0,x0+data.Width*scale,y0+data.Height* scale,
+								
 								 color,
 								 _texCoordTL,
 								 _texCoordBR,
-								 z,depthFunction);
+								 depthBase:z,depth: depthFunction);
 
 						drawX += width;
 						previousCharacter = character;
