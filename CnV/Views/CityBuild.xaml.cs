@@ -650,65 +650,67 @@ namespace CnV
 		//	return City.GetBuild().Demolish(selected, false);
 		//}
 
-		static int GetHash(string name, int x, int y, float scale)
-		{
-			return HashCode.Combine(name, x, y, scale);
-		}
+		//static int GetHash(string name, int x, int y, float scale)
+		//{
+		//	return HashCode.Combine(name, x, y, scale);
+		//}
 
-		public static ImageBrush BrushFromAtlas(string name, int x, int y, float scale)
-		{
-			var hash = GetHash(name, x, y, scale);
-			if(brushFromAtlasCache.TryGetValue(hash, out var rv))
-				return rv;
+		//public static ImageBrush BrushFromAtlas(string name, int x, int y, float scale)
+		//{
+		//	var hash = GetHash(name, x, y, scale);
+		//	if(brushFromAtlasCache.TryGetValue(hash, out var rv))
+		//		return rv;
 
-			var bitmap = ImageHelper.FromImages(name);
-			var brush = new ImageBrush()
-			{
-				ImageSource = bitmap,
-				Stretch = Stretch.None,
-				AlignmentX = AlignmentX.Left,
-				AlignmentY = AlignmentY.Top,
-				Transform = new MatrixTransform() { Matrix = new Matrix(scale, 0f, 0.0f, scale, -x * scale, -y * scale) }
-			};
-			//	rect.Stretch = Stretch.None;
-			//			rect.Width = width;
-			//			rect.Height = height;
-			brushFromAtlasCache.Add(hash, brush);
-			return brush;
-		}
-		public static ImageBrush BrushFromImage(string name)
-		{
-			if(brushFromImageCache.TryGetValue(name, out var rv))
-				return rv;
+		//	var bitmap = ImageHelper.FromImages(name);
+		//	var brush = new ImageBrush()
+		//	{
+		//		ImageSource = bitmap,
+		//		Stretch = Stretch.None,
+		//		AlignmentX = AlignmentX.Left,
+		//		AlignmentY = AlignmentY.Top,
+		//		Transform = new MatrixTransform() { Matrix = new Matrix(scale, 0f, 0.0f, scale, -x * scale, -y * scale) }
+		//	};
+		//	//	rect.Stretch = Stretch.None;
+		//	//			rect.Width = width;
+		//	//			rect.Height = height;
+		//	brushFromAtlasCache.Add(hash, brush);
+		//	return brush;
+		//}
+		//public static ImageBrush BrushFromImage(string name, int width)
+		//{
+		//	var _hash = $"{name}X{width}";
+		//	if(brushFromImageCache.TryGetValue(_hash, out var rv))
+		//		return rv;
 
-			var bitmap = ImageHelper.FromImages(name);
-			var brush = new ImageBrush()
-			{
-				ImageSource = bitmap,
-				Stretch = Stretch.Fill,
-			};
-			//	rect.Stretch = Stretch.None;
-			//			rect.Width = width;
-			//			rect.Height = height;
-			brushFromImageCache.Add(name, brush);
-			return brush;
-		}
-		public static ImageBrush BrushFromImage(BitmapImage bitmap)
-		{
-			if(brushFromImageCache2.TryGetValue(bitmap, out var rv))
-				return rv;
+		//	var bitmap = ImageHelper.FromImages(name,width);
+		//	var brush = new ImageBrush()
+		//	{
+		//		ImageSource = bitmap,
+				
+		//		Stretch = Stretch.Uniform,
+		//	};
+		//	//	rect.Stretch = Stretch.None;
+		//	//			rect.Width = width;
+		//	//			rect.Height = height;
+		//	brushFromImageCache.Add(_hash, brush);
+		//	return brush;
+		//}
+		//public static ImageBrush BrushFromImage(BitmapImage bitmap)
+		//{
+		//	if(brushFromImageCache2.TryGetValue(bitmap, out var rv))
+		//		return rv;
 
-			var brush = new ImageBrush()
-			{
-				ImageSource = bitmap,
-				Stretch = Stretch.Fill,
-			};
-			//	rect.Stretch = Stretch.None;
-			//			rect.Width = width;
-			//			rect.Height = height;
-			brushFromImageCache2.Add(bitmap, brush);
-			return brush;
-		}
+		//	var brush = new ImageBrush()
+		//	{
+		//		ImageSource = bitmap,
+		//		Stretch = Stretch.Uniform,
+		//	};
+		//	//	rect.Stretch = Stretch.None;
+		//	//			rect.Width = width;
+		//	//			rect.Height = height;
+		//	brushFromImageCache2.Add(bitmap, brush);
+		//	return brush;
+		//}
 		public static BitmapImage GetBuildingImage(byte id, int width)
 		{
 			var bdef = BuildingDef.FromId(id);
@@ -716,19 +718,24 @@ namespace CnV
 			Assert(str is not null);
 			return ImageHelper.FromImages($"townlayer/{str}.{((bdef.animationFrames > 0)?"gif":"png")}", width);
 		}
-		public static ImageBrush BuildingBrush(BuildingId id, float scale)
+		public static ImageBrush BuildingBrush(BuildingId id, int width)
 		{
-			var atlasC = CityView.BidToAtlas(id);
-			var iconId = id - 443;
-			const int atlasColumns = 4;
-			const int duDt = 128;
-			const int dvDt = 128;
+			var _hash = $"{id}X{width}";
+			if(brushFromImageCache.TryGetValue(_hash,out var rv))
+				return rv;
 
-			var u0 = atlasC.x * duDt;
-			var v0 = atlasC.y * dvDt;
-			var uri = Settings.IsThemeWinter() ? "City/Winter/building_set5.png" :
-			"City/building_set5.png";
-			return BrushFromAtlas(uri, u0, v0, scale);
+			var bitmap = GetBuildingImage(id,width);
+			var brush = new ImageBrush()
+			{
+				ImageSource = bitmap,
+
+				Stretch = Stretch.Uniform,
+			};
+			//	rect.Stretch = Stretch.None;
+			//			rect.Width = width;
+			//			rect.Height = height;
+			brushFromImageCache.Add(_hash,brush);
+			return brush;
 		}
 
 

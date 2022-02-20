@@ -32,7 +32,7 @@ namespace CnV.Services
         public static async Task SetRequestedThemeAsync()
         {
             AppS.QueueOnUIThread( ()=>
-				{    if (App.window.Content is FrameworkElement frameworkElement)
+				{    if (AppS.window.Content is FrameworkElement frameworkElement)
                     {
                         frameworkElement.RequestedTheme = Theme;
                     }

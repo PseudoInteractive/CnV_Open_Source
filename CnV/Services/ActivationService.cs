@@ -74,28 +74,28 @@ namespace CnV.Services
 				{ ILaunchActivatedEventArgs a=>a.Arguments,
 					IProtocolActivatedEventArgs p=>p.Uri.ToString(),
 					_=>"{}"} } }  );
-			if(IsInteractive(activationArgs))
+			//if(IsInteractive(activationArgs))
             {
-                // Initialize services that you need before app activation
-                // take into account that the splash screen is shown while this code runs.
-            //    UserDataService.Initialize();
-  //              await IdentityService.InitializeWithAadAndPersonalMsAccounts();
-              
-                // Do not repeat app initialization when the Window already has content,
-                // just ensure that the window is active
-    //            if (App.window.frame == null)
-    //            {
-				//	// Create a Shell or Frame to act as the navigation context
-				////	App.instance.Resources["TabViewBackground"] = new SolidColorBrush();
-				////	App.instance.Resources["TabViewButtonBackground"] = new SolidColorBrush();
-				////	App.instance.Resources["TabViewButtonForeground"] = new SolidColorBrush();
-				////	App.instance.Resources["OverlayCornerRadius"] = 1.0;
-				////	App.instance.Resources["TopCornerRadiusFilterConverter"] = new object();
-					
-				//	App.window.frame = new ShellPage();
+				// Initialize services that you need before app activation
+				// take into account that the splash screen is shown while this code runs.
+				//    UserDataService.Initialize();
+				//              await IdentityService.InitializeWithAadAndPersonalMsAccounts();
 
-				//}
-            }
+				// Do not repeat app initialization when the Window already has content,
+				// just ensure that the window is active
+				if(AppS.window.Content is null)
+				{
+					// Create a Shell or Frame to act as the navigation context
+					//	App.instance.Resources["TabViewBackground"] = new SolidColorBrush();
+					//	App.instance.Resources["TabViewButtonBackground"] = new SolidColorBrush();
+					//	App.instance.Resources["TabViewButtonForeground"] = new SolidColorBrush();
+					//	App.instance.Resources["OverlayCornerRadius"] = 1.0;
+					//	App.instance.Resources["TopCornerRadiusFilterConverter"] = new object();
+
+					AppS.window.Content = new ShellPage();
+
+				}
+			}
 
             // Depending on activationArgs one of ActivationHandlers or DefaultActivationHandler
             // will navigate to the first page

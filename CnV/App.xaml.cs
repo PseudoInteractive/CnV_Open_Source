@@ -96,7 +96,7 @@ namespace CnV
 		
 		//public static ref State => ref AppS.state;
 		//		static IConfigurationRoot configuration;
-		public  static      CnVWindow?         window;
+		
 		
 		private       Lazy<ActivationService> _activationService;
 		public static bool                    processingTasksStarted;
@@ -474,7 +474,7 @@ namespace CnV
 					WindowId myWndId = Microsoft.UI.Win32Interop.GetWindowIdFromWindow(hWnd);
 					AppS.appWindow= AppWindow.GetFromWindowId(myWndId);
 				}
-				AppS.appWindow.Title = "Conquest and Virtue Alpha";
+				AppS.appWindow.Title = "Conquest and Virtue Alpha Signing in to Discord";
 				AppS.appWindow.SetIcon("assets/cnv.ico");
 				//				
 				//				window.SetTitleBar
@@ -615,6 +615,7 @@ namespace CnV
 					//		window.WantClose+=Window_Closing;
 					//	window.Activated+=Window_Activated;
 				}
+				SystemInformation.Instance.TrackAppUse(args);
 
 				await ActivationService.ActivateAsync(args, wasRunning);
 
@@ -638,7 +639,6 @@ namespace CnV
 				}
 
 
-				SystemInformation.Instance.TrackAppUse(args);
 #if DEBUG
 //			var coreTitleBar = CoreApplication.GetCurrentView().TitleBar;
 //			coreTitleBar.ExtendViewIntoTitleBar = false;
@@ -693,11 +693,13 @@ namespace CnV
 				{
 					AppS.SetState(  AppS.State.closing );
 					args.Cancel = true;
-					BackgroundTask.dispatcherQueueController.ShutdownQueueAsync();
+					var t0 = BackgroundTask.dispatcherQueueController.ShutdownQueueAsync();
 
 					await SwitchToBackground();
+					
 					Assert( AppS.state == AppS.State.closing);
 					AppS.SetState( AppS.State.closed );
+					await t0;
 					Log($"Destroyed");
 					Exit();
 					//appWindow.Destroy();

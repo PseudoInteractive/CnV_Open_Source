@@ -19,10 +19,8 @@
     <GenerateAppInstallerFile>False</GenerateAppInstallerFile>
 	<TieredCompilation>True</TieredCompilation>
 	<AppxPackageSigningTimestampDigestAlgorithm>SHA256</AppxPackageSigningTimestampDigestAlgorithm>
-    <AppxAutoIncrementPackageRevision>True</AppxAutoIncrementPackageRevision>
 	<PublishProfile>Properties\PublishProfiles\win10-$(Platform).pubxml</PublishProfile>	  
 	<AppxBundle>Always</AppxBundle>
-	<SelfContained>true</SelfContained>
 	<PublishSingleFile>False</PublishSingleFile>
     <PublishReadyToRun>False</PublishReadyToRun>
     <AppxBundlePlatforms>x64</AppxBundlePlatforms>
@@ -78,11 +76,9 @@
     <PackageReference Include="MessagePack.Experimental" Version="2.3.85" />
     <PackageReference Include="MessagePackAnalyzer" Version="2.3.85" />
     <PackageReference Include="MagicOnion.Client" Version="4.3.1" />
-    <PackageReference Include="Microsoft.DependencyValidation.Analyzers" Version="0.11.0" />
     <PackageReference Include="Microsoft.Extensions.ObjectPool" Version="6.0.1" />
     <PackageReference Include="Microsoft.Identity.Client" Version="4.41.0" />
     <PackageReference Include="Microsoft.Identity.Client.Extensions.Msal" Version="2.19.5" />
-    <PackageReference Include="Microsoft.NET.StringTools" Version="1.0.0" />
     <PackageReference Include="Microsoft.Toolkit" Version="7.1.2" />
     <PackageReference Include="Microsoft.Toolkit.Diagnostics" Version="7.1.2" />
     <PackageReference Include="Microsoft.Toolkit.HighPerformance" Version="7.1.2" />
@@ -90,10 +86,10 @@
     <PackageReference Include="Azure.Storage.Blobs" Version="12.11.0-beta.3" />
     <PackageReference Include="CommunityToolkit.WinUI.Notifications" Version="7.1.2" />
     <PackageReference Include="CommunityToolkit.WinUI.UI.Controls" Version="7.1.2" />
-    <PackageReference Include="DSharpPlus" Version="4.2.0-nightly-01072" />
-    <PackageReference Include="DSharpPlus.CommandsNext" Version="4.2.0-nightly-01072" />
-    <PackageReference Include="DSharpPlus.Interactivity" Version="4.2.0-nightly-01072" />
-    <PackageReference Include="DSharpPlus.SlashCommands" Version="4.2.0-nightly-01072" />
+    <PackageReference Include="DSharpPlus" Version="4.2.0-nightly-01079" />
+    <PackageReference Include="DSharpPlus.CommandsNext" Version="4.2.0-nightly-01079" />
+    <PackageReference Include="DSharpPlus.Interactivity" Version="4.2.0-nightly-01079" />
+    <PackageReference Include="DSharpPlus.SlashCommands" Version="4.2.0-nightly-01079" />
     <PackageReference Include="Enums.NET" Version="4.0.0" />
     <PackageReference Include="Grpc.Net.Client" Version="2.41.0-pre1" />
     <PackageReference Include="Grpc.Net.Client" Version="2.43.0-pre1" />
@@ -110,7 +106,6 @@
     <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.0.0" />
 	<PackageReference Include="Nito.AsyncEx.Coordination" Version="5.1.2" />
     <PackageReference Include="PlayFabAllSDK" Version="1.108.220118" />
-    <PackageReference Include="StbImageSharp" Version="2.27.8" />
     <PackageReference Include="Syncfusion.Grid.WinUI" Version="19.4.0.52" />
     <PackageReference Include="Syncfusion.Licensing" Version="19.4.0.52" />
 	<PackageReference Include="SharpDX" Version="4.2.0" />
@@ -120,7 +115,6 @@
     <PackageReference Include="SharpDX.MediaFoundation" Version="4.2.0" />
     <PackageReference Include="SharpGen.Runtime.COM" Version="2.0.0-beta.10" />
     <PackageReference Include="System.Collections.Immutable" Version="6.0.2-mauipre.1.22102.15" />
-    <PackageReference Include="System.Linq.Async" Version="6.0.1" />
     <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="6.0.2-mauipre.1.22102.15" />
     <PackageReference Include="System.Runtime.Experimental" Version="6.0.2-mauipre.1.22102.15" />
     <PackageReference Include="System.Text.Json" Version="6.0.2" />
@@ -129,10 +123,8 @@
   <ItemGroup>
     <Compile Include="Activation\ProtocolActivation.cs" />
     <Compile Include="Activation\ActivationHandler.cs" />
-    <Compile Include="City\CityBuildingStats.cs" />
     <Compile Include="Draw\StatsView.cs" />
     <Compile Include="FormatParameterObject.cs" />
-    <Compile Include="Helpers\UIDispatch.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Services\CnVSignin.cs" />
     <Compile Include="Views\CityStats.xaml.cs" />
@@ -560,11 +552,7 @@
     <None Remove="Xaml\CnVWindow.xaml" />
   </ItemGroup>
   <ItemGroup>
-    <AdditionalFiles Include="..\..\CnVDepends\CnVDepends\DependencyValidation1.layerdiagram" Link="DependencyValidation1.layerdiagram">
-      <Visible>False</Visible>
-    </AdditionalFiles>
-    <None Include="CotgKey.pfx" />
-    <None Include="JSON\poll2.json" />
+ 
     <Content Include="Properties\Default.rd.xml" />
     <None Include="SignatureKey.snk" />
     <None Include="SignaturePubKey.snk" />
@@ -579,7 +567,7 @@
 	</Compile>
   </ItemGroup>
   <PropertyGroup>
-    <SignAssembly>true</SignAssembly>
+    <SignAssembly>False</SignAssembly>
   </PropertyGroup>
   <PropertyGroup>
  <AssemblyOriginatorKeyFile>SignatureKey.snk</AssemblyOriginatorKeyFile>
@@ -589,17 +577,14 @@
   </PropertyGroup>
   <PropertyGroup>
     <DebugType>portable</DebugType>
-    <GenerateDocumentationFile>True</GenerateDocumentationFile>
+    <GenerateDocumentationFile>False</GenerateDocumentationFile>
     <RunAnalyzersDuringLiveAnalysis>False</RunAnalyzersDuringLiveAnalysis>
     <EnableNETAnalyzers>True</EnableNETAnalyzers>
     <AnalysisLevel>preview</AnalysisLevel>
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
-    <IsPublishable>True</IsPublishable>
-    <ProduceReferenceAssembly>False</ProduceReferenceAssembly>
-    <EnforceCodeStyleInBuild>False</EnforceCodeStyleInBuild>
-    <ImplicitUsings>enable</ImplicitUsings>
+    <ImplicitUsings>True</ImplicitUsings>
     <Nullable>annotations</Nullable>
-    <DocumentationFile></DocumentationFile>
+    <SupportedOSPlatformVersion>10.0.19041.0</SupportedOSPlatformVersion>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <Optimize>False</Optimize>
@@ -621,6 +606,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Base\" />
+    <Folder Include="Helpers\" />
     <Folder Include="Resources\" />
   </ItemGroup>
   <ItemGroup>

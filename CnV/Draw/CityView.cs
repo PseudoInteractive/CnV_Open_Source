@@ -57,19 +57,19 @@ namespace CnV
 									};
 		}
 
-		const int atlasTileSize = 128;
-		const int atlasRows = 33;
-		const int atlasColumns = 4;
-		internal const int atlasIconCount = atlasRows*atlasColumns;
-		static public (int x, int y) BidToAtlas(BuildingId bid)
-		{
-			var iconId = BuildingDef.idToAtlasOffset[bid];
-			var y = iconId / atlasColumns;
-			return (iconId - y*atlasColumns,y );
-		}
+		//const int atlasTileSize = 128;
+		//const int atlasRows = 33;
+		//const int atlasColumns = 4;
+		//internal const int atlasIconCount = atlasRows*atlasColumns;
+		//static public (int x, int y) BidToAtlas(BuildingId bid)
+		//{
+		//	var iconId = BuildingDef.idToAtlasOffset[bid];
+		//	var y = iconId / atlasColumns;
+		//	return (iconId - y*atlasColumns,y );
+		//}
 		
-		const float duDt = (1.0f / atlasColumns);
-		const float dvDt = (1.0f / atlasRows);
+		//const float duDt = (1.0f / atlasColumns);
+		//const float dvDt = (1.0f / atlasRows);
 		static Vector2 buildCityOrigin;
 		public const float cityYScale = 80.0f / 128.0f; // aspect ratio
 		const float cityTileGainX = 1.0f / citySpan;

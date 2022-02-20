@@ -102,12 +102,12 @@ namespace CnV
 		/// 2nd: Azure AD B2C / App registrations / [This App] / API Permissions / Add a permission / My APIs / [API App] / Select & Add Permissions
 		/// 3rd: Azure AD B2C / App registrations / [This App] / API Permissions / ... (next to add a permission) / Grant Admin Consent for [tenant]
 		/// </summary>
-		public static string[] ApiScopes = { "openid", "profile", "email", "offline_access" };// "https://PseudoPlayers.onmicrosoft.com/signin/tasks.read" };// "https://pseudoplayers.onmicrosoft.com/cnvlogin/tasks.read" };// "openid" };//$"https://{Tenant}/CnV/demo.read" };
+		public static string[] ApiScopes = { "openid", "offline_access" };// "https://PseudoPlayers.onmicrosoft.com/signin/tasks.read" };// "https://pseudoplayers.onmicrosoft.com/cnvlogin/tasks.read" };// "openid" };//$"https://{Tenant}/CnV/demo.read" };
 
 		/// <summary>
 		/// URL for API which will receive the bearer token corresponding to this authentication
 		/// </summary>
-		const string ApiEndpoint = ""; //"https://jwt.ms/";
+		//const string ApiEndpoint = ""; //"https://jwt.ms/";
 
 		// Shouldn't need to change these:
 		const                  string AuthorityBase          = $"https://{AzureAdB2CHostname}/tfp/{Tenant}/";
@@ -120,7 +120,7 @@ namespace CnV
 		{
 			// TODO:  Mac and linux!
 			var storageProperties =
-					new StorageCreationPropertiesBuilder(CacheFileName,CacheDir,ClientId)
+					new StorageCreationPropertiesBuilder(CacheFileName,CacheDir)
 						.Build();
 
 			PublicClientApp = PublicClientApplicationBuilder.Create(ClientId)
@@ -135,7 +135,7 @@ namespace CnV
 
 			var cacheHelper = await MsalCacheHelper.CreateAsync(storageProperties,
 #if DEBUG
-				new("MSALCache", SourceLevels.All)
+				new("MSALCache",SourceLevels.All)
 #else
 				null
 #endif
@@ -148,15 +148,22 @@ namespace CnV
 		private static IPublicClientApplication PublicClientApp;
 
 		public static async Task<bool> Go()
-		{ 
-		//	await Task.Delay(500).ConfigureAwait(false);
-//			await Task.Yield();
-//AppS.DispatchOnUIThread( async () => {  
+		{
+			//	await Task.Delay(500).ConfigureAwait(false);
+			//			await Task.Yield();
+			IEnumerable<IAccount> accounts = null;
+			IEnumerable<IAccount> accounts0 = null;
+			//AppS.DispatchOnUIThread( async () => {  
 			try
 			{
 
 			await BuildPublicClientApp();
-			IEnumerable<IAccount> accounts        = null;
+				accounts0 = (await PublicClientApp.GetAccountsAsync()).ToArray();
+				foreach(var a in accounts0)
+				{
+					Debug.Log(a.Username + " " + a.Environment + " " + a.HomeAccountId);
+				}
+				
 			try
 			{
 				accounts = await PublicClientApp.GetAccountsAsync(PolicySignUpSignIn);
@@ -170,7 +177,7 @@ namespace CnV
 			{
 				LogEx(ex);
 			}
-			IAccount? currentUserAccount = accounts?.FirstOrDefault();
+			IAccount? currentUserAccount = accounts?.FirstOrDefault() ?? accounts0?.FirstOrDefault();
 			try
 				{
 				if (accounts != null)
@@ -205,7 +212,7 @@ namespace CnV
 									//	.WithPrompt(Prompt.SelectAccount)
 										.ExecuteAsync();
 					ProcessUserInfo(authResult);
-					break;
+					return true;
 				}
 				catch (Exception ex)
 				{

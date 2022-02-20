@@ -146,7 +146,7 @@ namespace CnV
 			//};
 			//			canvas.CompositeMode = (Microsoft.UI.Xaml.Media.ElementCompositeMode.SourceOver);
 			//canvas.CompositeMode = (Microsoft.UI.Xaml.Media.ElementCompositeMode.MinBlend);
-			var _instance = MonoGame.Framework.XamlGame<GameClient>.Create(() => new GameClient() { }, "", App.window, swapChainPanel);
+			var _instance = MonoGame.Framework.XamlGame<GameClient>.Create(() => new GameClient() { }, "", AppS.window, swapChainPanel);
 			Assert(instance == _instance);
 			instance.Deactivated+=Instance_Deactivated;
 			instance.GraphicsDevice.DeviceLost+=GraphicsDevice_DeviceLost;

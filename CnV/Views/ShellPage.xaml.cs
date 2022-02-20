@@ -339,7 +339,7 @@ namespace CnV.Views
 
 				GameClient.canvas    = _canvas;
 
-				var signinTask = Task.Run(CnVSignin.Go);
+				var signinTask =CnVSignin.Go();
 
 //				App.window.titleImage.Source = new Microsoft.UI.Xaml.Media.Imaging.BitmapImage(new Uri($"ms-appx:///Assets/AppIcon24.png"));
 				Note.Init();

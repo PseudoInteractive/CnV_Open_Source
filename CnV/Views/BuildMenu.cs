@@ -121,7 +121,7 @@ namespace CnV.Views
 			set
 			{
 				this.SetValue(bidProperty, value);
-				Background = BuildingBrush(value, (float)Width / 128.0f);
+				Background = BuildingBrush(value, Width.RoundToInt() );
 			}
 		}
 
@@ -148,16 +148,16 @@ namespace CnV.Views
 			set
 			{
 				this.SetValue(bidProperty, value);
-				Background = BuildingBrush(value, (float)Width / 128.0f);
+				Background = BuildingBrush(value, Width.RoundToInt());
 			}
 		}
-		public string image
-		{
-			set
-			{
-				Background = BrushFromImage(value);
-			}
-		}
+		//public string image
+		//{
+		//	set
+		//	{
+		//		Background = BrushFromImage(value);
+		//	}
+//		}
 		public BuildingRect()
 		{
 			Width = 64;

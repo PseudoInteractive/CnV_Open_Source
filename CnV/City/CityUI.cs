@@ -773,5 +773,12 @@ public partial class City
 														});
 
 	}
+	public void ClearRes()
+	{
+		AppS.DispatchOnUIThreadExclusive(cid,async () =>
+		{
+			await ClearResUI();
+		});
+	}
 
 }

@@ -103,6 +103,10 @@ namespace CnV
 		{
 			if(_city == lastDisplayed)
 				lastDisplayed = null;
+			if(_city.isBuild)
+			{
+				CityStats.NotifyBuildQueueChange();
+			}
 		}
 		//public void OnPropertyChanged() =>
 		//		PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(null));
