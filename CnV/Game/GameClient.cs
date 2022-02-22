@@ -24,8 +24,6 @@ namespace CnV
 		public static Mesh tesselatedWorld;
 
 
-		public static Material material;
-		public static Material shadowMaterial;
 
 		public static float bmFontScale = 0.125f;
 		public static Texture2D fontTexture;
@@ -100,20 +98,20 @@ namespace CnV
 
 		public static double   dipToNative = 1;
 		public static double   nativeToDip = 1;
-		public static Material LoadLitMaterial(string name)
-		{
-			Texture texture;
-			Texture normalMap;
-			using (var scope = new SRGBLoadScope())
-			{
-				texture = GameClient.instance.Content.Load<Texture2D>($"{name}");
-			}
-			using (var scope = new LinearRGBLoadScope())
-			{
-				normalMap = GameClient.instance.Content.Load<Texture2D>($"{ name}_n");
-			}
-			return new Material(texture, normalMap, AGame.GetTileEffect());
-		}
+		//public static Material LoadLitMaterial(string name)
+		//{
+		//	Texture texture;
+		//	Texture normalMap;
+		//	using (var scope = new SRGBLoadScope())
+		//	{
+		//		texture = GameClient.instance.Content.Load<Texture2D>($"{name}");
+		//	}
+		//	using (var scope = new LinearRGBLoadScope())
+		//	{
+		//		normalMap = GameClient.instance.Content.Load<Texture2D>($"{ name}_n");
+		//	}
+		//	return new Material(texture, normalMap, AGame.GetTileEffect());
+		//}
 		static void Canvas_SizeChanged(object sender, SizeChangedEventArgs e)
 		{
 			//	ShellPage.updateHtmlOffsets.SizeChanged();
@@ -282,14 +280,14 @@ namespace CnV
 		private static int RoundUpTo4(int v) => (v+3)&(~3);
 		private static int RoundDownTo4(int v) => (v+3)&(~3);
 		private static bool IsMultipleOf4(int w,int h) => ((h&3)|(w&3)) ==0;//(v+3)&(~3);
-		public static Texture CreateFromDDS(string fileName, int animatedFrameCount, bool wantSRGB)
+		public static Texture CreateFromDDS(string fileName,  bool wantSRGB)
 		{
 			try
 			{
 
 				using var scratch = DirectXTexNet.TexHelper.Instance.LoadFromDDSFile(fileName,DDS_FLAGS.NONE);// DDS_FLAGS.BAD_DXTN_TAILS|DDS_FLAGS.FORCE_DX10_EXT_MISC2|DDS_FLAGS.FORCE_DX10_EXT);
 			var meta = scratch.GetMetadata();
-			Log($"{fileName} {meta.Dimension} {meta.Width}x{meta.Height}x{meta.Depth}[{meta.ArraySize}] Mips: {meta.MipLevels} Images: {scratch.GetImageCount()}  Format: {meta.Format} {meta.GetAlphaMode()}");
+//			Log($"{fileName} {meta.Dimension} {meta.Width}x{meta.Height}x{meta.Depth}[{meta.ArraySize}] Mips: {meta.MipLevels} Images: {scratch.GetImageCount()}  Format: {meta.Format} {meta.GetAlphaMode()}");
 			SurfaceFormat format = GetFormat(meta.Format,wantSRGB);
 			Assert( meta.Depth == 1);
 				if(meta.ArraySize > 1 )
@@ -367,20 +365,21 @@ namespace CnV
 			return null;
 		}
 
-		public static bool TryLoadLitMaterialFromDDS(string nameAndPath, out Material main, out Material shadow,bool wantShadow, int animationFrames=1,bool unlit=false)
+		public static bool TryLoadLitMaterialFromDDS(string nameAndPath, out Material main, out Material shadow,bool wantShadow,bool unlit, bool city )
 		{
 			try
 			{ 
 				var path = AppS.AppFileName($"{nameAndPath}.dds");
 				var pathN = AppS.AppFileName($"{nameAndPath}_n.dds");
-				var animated = nameAndPath.Contains("animseq");
-				var frames = animated ? animationFrames : 1;
-				Texture texture = CreateFromDDS(path,frames,wantSRGB: true);
-				Texture normalMap = unlit ? null : CreateFromDDS(pathN,frames, wantSRGB:false);
+			//	var animated = nameAndPath.Contains("animseq");
+			//var frames = animated ? animationFrames : 1;
+				Texture texture = CreateFromDDS(path,wantSRGB: true);
+				Texture normalMap = unlit ? null : CreateFromDDS(pathN,wantSRGB:false);
 				if(texture is not null )
-				{ 
-					main = new Material(texture, normalMap, AGame.GetTileEffect(frames > 1,unlit));
-					shadow =wantShadow ?  new Material(texture, GetShadowEffect(frames > 1)) : null;
+				{
+					var animated = texture.IsAnimated();
+					main = new Material(texture, normalMap, AGame.GetTileEffect(animated,unlit,city:city));
+					shadow =wantShadow ?  new Material(texture, GetShadowEffect(animated)) : null;
 					return true;
 				}
 			}
@@ -442,11 +441,13 @@ namespace CnV
 				alphaAddEffect         = EffectPass("AlphaAdd");
 				fontEffect             = EffectPass("FontLight");
 				darkFontEffect         = EffectPass("FontDark");
-				litEffect              = EffectPass("Lit");
+				Material.litCityEffect              = EffectPass("LitCity");
+				Material.litRegionEffect              = EffectPass("LitRegion");
 				Material.litAnimatedEffect              = EffectPass("LitAnimated");
 				Material.unlitAnimatedEffect              = EffectPass("UnlitAnimated");
 				Material.shadowAnimatedEffect              = EffectPass("ShadowAnimated");
-				unlitEffect   = EffectPass("Unlit");
+				Material.unlitCityEffect   = EffectPass("UnlitCity");
+				Material.unlitRegionEffect   = EffectPass("UnlitRegion");
 				Material.shadowEffect   = EffectPass("Shadow");
 				animatedSpriteEffect   = EffectPass("SpriteAnim");
 				sdfEffect              = EffectPass("SDF");
@@ -612,17 +613,17 @@ namespace CnV
 			}
 		}
 
-		public static void UpdateLighting()
-		{
-			if(TileData.instance is not null && TileData.instance.tilesets is not null)
-			{
-				foreach(var tile in TileData.instance.tilesets)
-				{
-					tile.material.effect = GetTileEffect();
-				}
-			}
+		//public static void UpdateLighting()
+		//{
+		//	if(TileData.instance is not null && TileData.instance.tilesets is not null)
+		//	{
+		//		foreach(var tile in TileData.instance.tilesets)
+		//		{
+		//			tile.material.effect = GetTileEffect();
+		//		}
+		//	}
 
-			CityView.UpdateLighting();
-		}
+		//	CityView.UpdateLighting();
+		//}
 	}
 }

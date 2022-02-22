@@ -598,7 +598,7 @@ namespace CnV.Views
 			var w = new Vector2(((c1.X) / cameraZoomLag + cameraC.X), ((c1.Y) / cameraZoomLag + cameraC.Y));
 			(int x, int y) wi = (w.X.RoundToInt(), w.Y.RoundToInt());
 			(int x, int y) bi = wi.WorldToCid() == City.build ?
-				(((w.X - wi.x)*City.citySpan).RoundToInt().Clamp(City.span0, City.span1), ((w.Y - wi.y) * City.citySpan/CityView.cityYScale).RoundToInt().Clamp(City.span0, City.span1)) :
+				(((w.X - wi.x)*City.citySpan).RoundToInt().Clamp(City.span0, City.span1), ((w.Y - wi.y) * City.citySpan/CityView.cityYAspectRatio).RoundToInt().Clamp(City.span0, City.span1)) :
 				BuildC.Nan;
 
 			return (wi, bi);

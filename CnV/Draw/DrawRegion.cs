@@ -62,7 +62,7 @@ internal partial class GameClient
 		MipMapLevelOfDetailBias = -1.5f,
 		BorderColor             = new Color(0, 0, 0, 0),
 		MaxAnisotropy           = 2,
-		AddressW                = TextureAddressMode.Wrap,
+		AddressW                = TextureAddressMode.Border,
 		AddressU                = TextureAddressMode.Border,
 		AddressV                = TextureAddressMode.Border,
 	};
@@ -162,6 +162,7 @@ internal partial class GameClient
 		++renderFrame;
 		underMouse = null;
 		bestUnderMouseScore = 8;
+#if DEBUG
 		if(gameTime.IsRunningSlowly)
 		{
 			if(ToolTips.debugTip is null)
@@ -170,6 +171,7 @@ internal partial class GameClient
 				ToolTips.debugTip += "\nSlow";
 
 		}
+#endif
 
 		//parallaxZ0 = 1024 * 64.0f / cameraZoomLag;
 		var isFocused = CnVServer.isInitialized&&AppS.isForeground;
@@ -390,7 +392,7 @@ internal partial class GameClient
 
 				if(Settings.lighting == Lighting.night)
 				{
-					ToolTips.debugTip = $"{ShellPage.mousePosition} {lightZNight*pixelScale}";
+	//				ToolTips.debugTip = $"{ShellPage.mousePosition} {lightZNight*pixelScale}";
 					var l = ShellPage.mousePosition;//C.CameraToScreen();//.InverseProject();
 					var lc = ShellPage.mousePositionC;//C.CameraToScreen();//.InverseProject();
 					lightPositionParameter.SetValue(new Microsoft.Xna.Framework.Vector3(l.X, l.Y, lightZNight));
@@ -428,7 +430,7 @@ internal partial class GameClient
 					var lightCC = new XVector3(cc.X, cc.Y, lightZ );
 					
 					
-					ToolTips.debugTip = $"{XVector3.Normalize(lightCC).ToNumerics().Format()} {AUtil.Format(lightCC.ToNumerics())}";
+				//	ToolTips.debugTip = $"{XVector3.Normalize(lightCC).ToNumerics().Format()} {AUtil.Format(lightCC.ToNumerics())}";
 					var d3 = t.CatmullRomLoop(new Vector3(1.0f,0.5f,1.5f),
 												new Vector3(0.5f,0.5f,1.5f),
 												new Vector3(1.0f,1.0f,1.0f),
@@ -868,7 +870,7 @@ internal partial class GameClient
 									{
 										var c0 = cluster.topLeft.WorldToCamera();
 										var c1 = cluster.bottomRight.WorldToCamera();
-										DrawRectOutlineShadow(Layer.effects+2, c0, c1, isHover ? new Color(128, 64, 64, 220) : new Color(64, 0, 0, 162), 5, 2);
+										DrawRectOutlineShadow(Layer.effects+2, c0, c1, isHover ? new Color(128, 64, 64, 220) : new Color(64, 0, 0, 162), 2, 2);
 									}
 
 									{
@@ -910,7 +912,7 @@ internal partial class GameClient
 										AttackType.seFake => CColor(98, 32, 168, 212),
 										_ => CColor(64, 64, 64, 64)
 									};
-									DrawRectOutlineShadow(Layer.effects, t.cid, col, (t.attackCluster >= 0) ? t.attackCluster.ToString() : null, 3, -2);
+									DrawRectOutlineShadow(Layer.effects, t.cid, col, (t.attackCluster >= 0) ? t.attackCluster.ToString() : null, 1, -2);
 								}
 								foreach(var t in AttackPlan.plan.attacks)
 								{
@@ -1040,15 +1042,15 @@ internal partial class GameClient
 											}
 										}
 										if(hasArt)
-											DrawRectOutlineShadow(Layer.effects - 1, targetCid, artColor, null, 4, -2f);
+											DrawRectOutlineShadow(Layer.effects - 1, targetCid, artColor, null, 1, -2f);
 										if(hasSen)
-											DrawRectOutlineShadow(Layer.effects - 1, targetCid, senatorColor, null, 4, -6f);
+											DrawRectOutlineShadow(Layer.effects - 1, targetCid, senatorColor, null, 1, -6f);
 										if(hasAssault)
-											DrawRectOutlineShadow(Layer.effects - 1, targetCid, assaultColor, null, 4, -10f);
+											DrawRectOutlineShadow(Layer.effects - 1, targetCid, assaultColor, null, 1, -10f);
 										if(sieged)
-											DrawRectOutlineShadow(Layer.effects-1, targetCid, siegeColor, null, 4, -12f);
+											DrawRectOutlineShadow(Layer.effects-1, targetCid, siegeColor, null, 1, -12f);
 										if(city.outGoing!=City.OutGoing.none)
-											DrawRectOutlineShadow(Layer.effects - 1, targetCid, attackColor, null, 4, -8f);
+											DrawRectOutlineShadow(Layer.effects - 1, targetCid, attackColor, null, 1, -8f);
 
 										if(!IsCulled(c1) && (wantDetails || showAll || Spot.IsSelectedOrHovered(targetCid, noneIsAll)))
 										{
@@ -1264,7 +1266,7 @@ internal partial class GameClient
 
 					foreach(var cid in Spot.selected)
 					{
-						DrawRectOutlineShadow(Layer.effects - 1, cid, selectColor, null, 3.0f, 4.0f);
+						DrawRectOutlineShadow(Layer.effects - 1, cid, selectColor, null, 1.0f, 1.0f);
 						//DrawFlag(cid, SpriteAnim.flagSelected, Vector2.Zero);
 					}
 					foreach(var cid in Settings.pinned)
@@ -1466,6 +1468,7 @@ internal partial class GameClient
 				var _debugTip = ToolTips.debugTip;
 				if(_debugTip != null)
 				{
+					ToolTips.debugTip=null;
 					var alpha = 255;
 					System.Numerics.Vector2 c = new Vector2(clientSpan.X/2, 16).ScreenToCamera();
 					DrawTextBox(_debugTip, c, tipTextFormat, Color.White.Scale(alpha), (byte)(alpha * 192.0f).RoundToInt(), Layer.overlay, 11, 11, ConstantDepth, 0, 0.5f);
@@ -1785,9 +1788,9 @@ internal partial class GameClient
 	private static void DrawRectOutline(int layer, Vector2 c0, Vector2 c1, Color color, float z, float thickness, float expand = 0f)
 	{
 
-		float t = thickness * 0.5f;
-		const float waveGain = 0.75f;
-		z = z * (0.25f+ animationTWrap.Wave() * waveGain);
+		float t = thickness;
+		const float waveGain = 0.375f;
+		z = z * (0.25f+ (animationT*(1.0/3)).Wave() * waveGain);
 		c0 = new(c0.X - expand, c0.Y - expand);
 		c1 = new(c1.X + expand, c1.Y + expand);
 
@@ -1801,13 +1804,13 @@ internal partial class GameClient
 	}
 
 
-	internal static void DrawRectOutlineShadow(int layer, Vector2 c0, Vector2 c1, Color color, float thickness = 2, float expand = 0)
+	internal static void DrawRectOutlineShadow(int layer, Vector2 c0, Vector2 c1, Color color, float thickness = 1, float expand = 0)
 	{
 		DrawRectOutline(layer, c0, c1, color, zCities, thickness, expand);
 		if(wantParallax )
 			DrawRectOutline(Layer.tileShadow, c0 +shadowOffset*0, c1+shadowOffset*0, color.GetShadowColorDark(), 0.0f, thickness, expand);
 	}
-	private static void DrawRectOutlineShadow(int layer, int cid, Color col, string label = null, float thickness = 2, float expand = 0)
+	private static void DrawRectOutlineShadow(int layer, int cid, Color col, string label = null, float thickness = 1, float expand = 0)
 	{
 		var wc = cid.CidToWorld();
 		if(IsCulledWC(wc))
@@ -1917,7 +1920,6 @@ internal partial class GameClient
 
 	public static void UpdateRenderQuality(float renderQuality)
 	{
-		UpdateLighting();
 		UpdateResolution();
 	}
 

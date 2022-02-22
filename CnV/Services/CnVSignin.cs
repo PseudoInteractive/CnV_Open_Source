@@ -127,14 +127,15 @@ namespace CnV
 				.WithB2CAuthority(AuthoritySignUpSignIn)
 				.WithRedirectUri(RedirectUri)
 				.WithExperimentalFeatures(true)
-			//	.WithDefaultRedirectUri()
+				//	.WithDefaultRedirectUri()
 
-
+#if SIGNINGLOG
 				.WithLogging(_Log, LogLevel.Verbose, true, true) // don't log P(ersonally) I(dentifiable) I(nformation) details on a regular basis
+#endif
 				.Build();
 
 			var cacheHelper = await MsalCacheHelper.CreateAsync(storageProperties,
-#if DEBUG
+#if SIGNINGLOG
 				new("MSALCache",SourceLevels.All)
 #else
 				null
@@ -430,7 +431,7 @@ namespace CnV
 		}
 
 		private static PropertyChanges ProcessUserInfo(AuthenticationResult authResult)
-		{
+		{  
 			PropertyChanges result = new();
 			
 			if(authResult != null)
@@ -495,10 +496,10 @@ namespace CnV
 						}
 
 					}
+					AppS.MessageBox($"Welcome {Player.ToShortName(name) }.");
 
 					//Debug.Log(TokenInfoText.Text);
-					Log($"Name: {name}");
-						Debug.Log(user.ToString());
+					Debug.Log(user.ToString());
 
 				}
 				catch(Exception e)
@@ -556,12 +557,15 @@ namespace CnV
             var decoded = Encoding.UTF8.GetString(byteArray, 0, byteArray.Count());
             return decoded;
         }
+		#if SIGNINGLOG
+
 		private static void _Log(LogLevel level, string message, bool containsPii)
 		{
 			Debug.Log(message);
 //			string logs = $"{level} {message}{Environment.NewLine}";
 //			File.AppendAllText(System.Reflection.Assembly.GetExecutingAssembly().Location + ".msalLogs.txt", logs);
 		}
+#endif
 
 	}
 }

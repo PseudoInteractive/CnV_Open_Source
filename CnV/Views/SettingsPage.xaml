@@ -73,7 +73,12 @@
 						  IsChecked="{x:Bind FetchFullHistory,Mode=TwoWay}"
 						  ToolTipService.ToolTip="If disabled, the Hits tab and Defense History tab will not work, but incoming and outgoing tabs will be faster"
 						  Margin="4" />
-				<controls:NumberBox  Header="Debug LAyer"
+				<controls:NumberBox  Header="UI Update Latency"
+									 Value="{x:Bind cnv:Settings.uiUpdateDelay,Mode=TwoWay}"
+									 SmallChange="1"
+									 LargeChange="10"
+									 Style="{StaticResource NumberBoxSmall}" />
+				<controls:NumberBox  Header="Debug Layer"
 									 Value="{x:Bind cnv:GameClient.debugLayer,Mode=TwoWay}"
 									 SmallChange="1"
 									 LargeChange="10"

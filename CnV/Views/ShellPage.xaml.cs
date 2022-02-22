@@ -56,7 +56,7 @@ namespace CnV.Views
 	//    public LogEntryStruct(string _t) { t =_t; }
 	//}
 	// TODO WTS: Change the icons and titles for all NavigationViewItems in ShellPage.xaml.
-	public sealed partial class ShellPage:Page, INotifyPropertyChanged
+	public sealed partial class ShellPage:UserControl, INotifyPropertyChanged
 	{
 		public const int canvasZDefault = 11;
 		public const int canvasZBack = 0;
@@ -340,8 +340,7 @@ namespace CnV.Views
 				GameClient.canvas    = _canvas;
 
 				var signinTask =CnVSignin.Go();
-
-//				App.window.titleImage.Source = new Microsoft.UI.Xaml.Media.Imaging.BitmapImage(new Uri($"ms-appx:///Assets/AppIcon24.png"));
+				//				App.window.titleImage.Source = new Microsoft.UI.Xaml.Media.Imaging.BitmapImage(new Uri($"ms-appx:///Assets/AppIcon24.png"));
 				Note.Init();
 				CityUI.Init();
 				NavStack.Init();
@@ -372,7 +371,7 @@ namespace CnV.Views
 				// Placement.LayoutUpdated += Placement_LayoutUpdated; grid.Children.Add(img);
 
 				// Grid.SetRowSpan(img, 4); Grid.SetColumnSpan(img, 4); Canvas.SetZIndex(img, 12);
-				CnVServer.Initialize(grid);
+				//nVServer.Initialize(grid);
 				// foreach (var i in webView.KeyboardAccelerators) i.IsEnabled = false;
 				// webView.AllowFocusOnInteraction = false; c.hitTest.Margin= webView.Margin = new
 				// Thickness(0, 0, 11, 0);
@@ -419,20 +418,7 @@ namespace CnV.Views
 				// Keyboard accelerators are added here to avoid showing 'Alt + left' tooltip on the
 				// page. More info on tracking issue https://github.com/Microsoft/microsoft-ui-xaml/issues/8
 
-				KeyboardAccelerators.Add(BuildKeyboardAccelerator(VirtualKey.Left, NavStack.BackInvoked,
-																VirtualKeyModifiers.Menu));
-				// KeyboardAccelerators.Add(BuildKeyboardAccelerator(VirtualKey.GoBack,NavStack.BackInvoked));
-
-				KeyboardAccelerators.Add(BuildKeyboardAccelerator(VirtualKey.Right, NavStack.ForwardInvoked,
-																VirtualKeyModifiers.Menu));
-				// KeyboardAccelerators.Add(BuildKeyboardAccelerator(VirtualKey.GoForward, NavStack.ForwardInvoked));
-
-				for(var i = 0; i < Settings.layoutOffsets.Length; ++i)
-				{
-					KeyboardAccelerators.Add(BuildKeyboardAccelerator(VirtualKey.Number0 + (int)i,
-																		LayoutAccelerator_Invoked,
-																		VirtualKeyModifiers.Control));
-				}
+				
 
 
 				//			KeyboardAccelerators.Add(BuildKeyboardAccelerator(VirtualKey.F5, Refresh_Invoked,VirtualKeyModifiers.Control));
@@ -492,7 +478,7 @@ namespace CnV.Views
 
 
 				TabPage.mainTabs.SizeChanged += ((o, args) => ShellPage.updateHtmlOffsets.SizeChanged());
-
+				chatTabs.SizeChanged+=((o,args) => ShellPage.updateHtmlOffsets.SizeChanged());
 
 				var okay = await signinTask;
 				if(okay)
@@ -510,7 +496,7 @@ namespace CnV.Views
 						{
 							AppS.appWindow.Title = ( $"Conquest and Virtue Alpha, World {World.id} - {Player.me.shortName}" );
 							AppS.appWindow.SetIcon(AppS.AppFileName("assets/cnv.ico"));
-							AppS.MessageBox($"Welcome {Player.me.shortName}.");
+						//	AppS.MessageBox($"Welcome {Player.me.shortName}.");
 						});
 
 
@@ -537,6 +523,22 @@ namespace CnV.Views
 				}
 
 				await CnVClient.InitializeGame();
+				
+				KeyboardAccelerators.Add(BuildKeyboardAccelerator(VirtualKey.Left,NavStack.BackInvoked,
+																VirtualKeyModifiers.Menu));
+				// KeyboardAccelerators.Add(BuildKeyboardAccelerator(VirtualKey.GoBack,NavStack.BackInvoked));
+
+				KeyboardAccelerators.Add(BuildKeyboardAccelerator(VirtualKey.Right,NavStack.ForwardInvoked,
+																VirtualKeyModifiers.Menu));
+				// KeyboardAccelerators.Add(BuildKeyboardAccelerator(VirtualKey.GoForward, NavStack.ForwardInvoked));
+
+				for(var i = 0;i < Settings.layoutOffsets.Length;++i)
+				{
+					KeyboardAccelerators.Add(BuildKeyboardAccelerator(VirtualKey.Number0 + (int)i,
+																		LayoutAccelerator_Invoked,
+																		VirtualKeyModifiers.Control));
+				}
+
 				AppS.SetState(AppS.State.active);
 			}
 			catch(Exception ex)

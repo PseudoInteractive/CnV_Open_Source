@@ -44,7 +44,8 @@ namespace CnV.Draw
 		///      then texture
 		///      then batch
 		/// </summary>
-		private SortedList<int, Dictionary<int, Dictionary<int, SpriteBatchItemList>>> _batchItemList;
+		public const int layerCount = 255;
+		private SortedList<int, SortedList<int, SpriteBatchItemList>>[] _batchItemList;
 
 
 		/// <summary>
@@ -68,8 +69,11 @@ namespace CnV.Draw
 
 
 
-			_batchItemList = new SortedList<int, Dictionary<int, Dictionary<int, SpriteBatchItemList>>>();
-
+			_batchItemList = new SortedList<int,SortedList<int,SpriteBatchItemList>>[layerCount];
+			for(int i=0;i<layerCount;++i)
+			{
+				_batchItemList[i] = new();
+			}
 			//			EnsureArrayCapacity();
 		}
 
@@ -88,16 +92,16 @@ namespace CnV.Draw
 		
 		public SpriteBatchItemList CreateBatchItemList(int layer, Material material)
 		{
-			if (!_batchItemList.TryGetValue(layer, out var batch))
-			{
-				batch = new Dictionary<int, Dictionary<int, SpriteBatchItemList>>();
-				_batchItemList.Add(layer, batch);
-			}
+			Assert(layer >= 0);
+			Assert(layer < layerCount);
+
+			var batch = _batchItemList[layer];
 			if (!batch.TryGetValue(material.effect._sortingKey, out var perEffect))
 			{
-				perEffect = new Dictionary<int, SpriteBatchItemList>();
+				perEffect = new();
 				batch.Add(material.effect._sortingKey, perEffect);
 			}
+
 			var textureKey = material.texture != null ? material.texture._sortingKey : 0;
 			if (!perEffect.TryGetValue(textureKey, out var list))
 			{
@@ -159,24 +163,23 @@ namespace CnV.Draw
 		/// <param name="effect">The custom effect to apply to the drawn geometry</param>
 		public unsafe void DrawBatch()
 		{
-			// nothing to do
-			if (_batchItemList.Count == 0)
-				return;
 
 
 			// Determine how many iterations through the drawing code we need to make
 			// Iterate through the batches, doing short.MaxValue sets of vertices only.
-			foreach (var layer in _batchItemList)
+			EffectPass lastEffectPass = null;
+			Texture lastTexture0 = null;
+			Texture lastTexture1 = null;
+			for(int i=0;i<layerCount;++i)
 			{
+				var layer = _batchItemList[i];
 	//			GameClient.instance.GraphicsDevice.BlendState = (layer.Key == Layer.webView) ?  BlendState.Opaque : BlendState.AlphaBlend;
-				foreach (var _effect in layer.Value)
+				foreach (var _effect in layer)
 				{
-					bool effectInitialized = false;
-					foreach (var _list in _effect.Value)
+					foreach(var _list in _effect.Value)
 					{
 						var list = _list.Value;
 						var material = list.material;
-						bool textureInitialized = false;
 						// setup the vertexArray array
 
 						int numBatchesToProcess = list.sprites.Count;
@@ -190,25 +193,20 @@ namespace CnV.Draw
 							//						var vertexArrayPtr = vertexArrayFixedPtr;
 
 							// Draw the batches
-							if (!effectInitialized)
+							var pass = material.effect;
+							if(lastEffectPass != pass)
 							{
-								effectInitialized = true;
-								var effect = material.effect;
-								if (effect != null)
-								{
-									
-									var pass = effect;
+								lastEffectPass =pass;
+								if (pass != null)
+								{									
 									pass._effect.CurrentTechnique = pass.technique;
 									pass.Apply();
 								}
 							}
-							if (!textureInitialized)
-							{
-								textureInitialized = true;
-								_device.Textures[0] = material.texture;
-								if (material.texture1 != null)
-									_device.Textures[1] = material.texture1;
-							}
+
+							_device.Textures[0] = material.texture;
+							_device.Textures[1] = material.texture1;
+
 							if (list.sprites.Count>0)
 							{
 								_device.DrawUserSprites(
@@ -219,7 +217,7 @@ namespace CnV.Draw
 							{
 								_device.SetIndexBuffer(mesh.ib);
 								_device.SetVertexBuffer(mesh.vb);
-								_device.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, mesh.vertexCount,0, mesh.triangleCount);
+								_device.DrawIndexedPrimitives(PrimitiveType.TriangleList, mesh.vertexCount,0, mesh.triangleCount);
 							}
 
 							list.Release();
@@ -229,10 +227,9 @@ namespace CnV.Draw
 					_effect.Value.Clear();
 				}
 
-				layer.Value.Clear();
+				layer.Clear();
 				// return items to the pool.  
 			}
-			_batchItemList.Clear();
 		}
 
 	}

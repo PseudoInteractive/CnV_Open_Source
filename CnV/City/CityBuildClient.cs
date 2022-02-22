@@ -380,7 +380,7 @@ namespace CnV
 
 					if(dryRun)
 					{
-						DrawSprite(selectedPoint, decalMoveBuilding, 0.323f);
+						DrawSprite(selectedPoint, decalMoveBuilding);
 					}
 
 					{

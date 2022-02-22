@@ -1,4 +1,4 @@
-﻿<winui:Page x:Class="CnV.Views.ShellPage"
+﻿<UserControl x:Class="CnV.Views.ShellPage"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"	
       xmlns:game="using:CnV"
@@ -12,7 +12,7 @@
       x:Name="shellPage"
 		RequestedTheme="Dark"   
 	  Loaded="OnLoaded"
-  	FontFamily="XamlAutoFontFamily"
+  
 	  Background="{x:Null}"
 	  Margin="0"
       mc:Ignorable="d"	
@@ -20,7 +20,7 @@
 		
 		
 >
-	<Page.Resources>
+	<UserControl.Resources>
 		<ResourceDictionary>
 			<!--<ResourceDictionary.MergedDictionaries>
 				<ResourceDictionary Source="ms-appx:///Microsoft.UI.Xaml/DensityStyles/Compact.xaml" />
@@ -37,7 +37,7 @@
 		</ResourceDictionary>
 
 
-	</Page.Resources>
+	</UserControl.Resources>
 
 
 	<Grid>
@@ -314,6 +314,7 @@
 					  
 					  Grid.Column="2" 
 					  VerticalAlignment="Bottom"
+					  HorizontalAlignment="Left"
 					  FontSize="{StaticResource MediumFontSize}"
 		              FontFamily="XamlAutoFontFamily"
 					  Grid.Row="{x:Bind GridRowIndex(rowFooter,-1)}"
@@ -437,4 +438,4 @@
 			</tk:GridSplitter>
 		</Grid>
 	</Grid>
-</winui:Page>
+</UserControl>

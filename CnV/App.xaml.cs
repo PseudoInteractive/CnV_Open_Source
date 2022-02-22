@@ -110,63 +110,63 @@ namespace CnV
 		public static App    instance;
 		public static string appLink = "cnv";
 
-		public static async Task EnsureBrowserInstalledAsync()
-		{
-#if AppCenter
+//		public static async Task EnsureBrowserInstalledAsync()
+//		{
+//#if AppCenter
 
-			if(AppCenter.Configured)
-			{
-				return;
-			}
-			//AppCenter.SetMaxStorageSizeAsync(16 * 1024 * 1024).ContinueWith((storageTask) => {
-			//	// The storageTask.Result is false when the size cannot be honored.
-			//});
+//			if(AppCenter.Configured)
+//			{
+//				return;
+//			}
+//			//AppCenter.SetMaxStorageSizeAsync(16 * 1024 * 1024).ContinueWith((storageTask) => {
+//			//	// The storageTask.Result is false when the size cannot be honored.
+//			//});
 
-			AppCenter.Configure("0b4c4039-3680-41bf-b7d7-685eb68e21d2");
-		//	AppCenter.LogLevel = System.Diagnostics.Debugger.IsAttached ? Microsoft.AppCenter.LogLevel.Warn : Microsoft.AppCenter.LogLevel.None;
-			AppCenter.Start(
-			   typeof(Analytics)
-#if CRASHES
-			   , typeof(Crashes)
-#endif
-			   );
+//			AppCenter.Configure("0b4c4039-3680-41bf-b7d7-685eb68e21d2");
+//		//	AppCenter.LogLevel = System.Diagnostics.Debugger.IsAttached ? Microsoft.AppCenter.LogLevel.Warn : Microsoft.AppCenter.LogLevel.None;
+//			AppCenter.Start(
+//			   typeof(Analytics)
+//#if CRASHES
+//			   , typeof(Crashes)
+//#endif
+//			   );
 
-			AAnalytics.initialized = true;
-			await Task.WhenAll(
-#if CRASHES
-					Crashes.SetEnabledAsync(true),
-#endif
-								Analytics.SetEnabledAsync(true));
+//			AAnalytics.initialized = true;
+//			await Task.WhenAll(
+//#if CRASHES
+//					Crashes.SetEnabledAsync(true),
+//#endif
+//								Analytics.SetEnabledAsync(true));
 
-#endif
+//#endif
 
 
-			//try
-			//{
-			//	var str = CoreWebView2Environment.GetAvailableBrowserVersionString();
-			//	Log(str);
-			//	//			createWebEnvironmentTask =  CoreWebView2Environment.CreateAsync();
-			//	AAnalytics.Track("WebView",
-			//					new Dictionary<string, string>(new []
-			//					{
-			//							new KeyValuePair<string, string>("Version", str)
-			//					} ));
-			//}
-			//catch (Exception ex)
-			//{
-			//	await Windows.System.Launcher.LaunchUriAsync(new("https://go.microsoft.com/fwlink/p/?LinkId=2124703",
-			//													UriKind.Absolute));
-			//	LogEx(ex);
-			//}
-			//#if CRASHES
-			//			bool didAppCrash = await Crashes.HasCrashedInLastSessionAsync();
-			//			if (didAppCrash)
-			//			{
-			//				ErrorReport crashReport = await Crashes.GetLastSessionCrashReportAsync();
-			//				Log(crashReport);
-			//			}
-			//#endif
-		}
+//			//try
+//			//{
+//			//	var str = CoreWebView2Environment.GetAvailableBrowserVersionString();
+//			//	Log(str);
+//			//	//			createWebEnvironmentTask =  CoreWebView2Environment.CreateAsync();
+//			//	AAnalytics.Track("WebView",
+//			//					new Dictionary<string, string>(new []
+//			//					{
+//			//							new KeyValuePair<string, string>("Version", str)
+//			//					} ));
+//			//}
+//			//catch (Exception ex)
+//			//{
+//			//	await Windows.System.Launcher.LaunchUriAsync(new("https://go.microsoft.com/fwlink/p/?LinkId=2124703",
+//			//													UriKind.Absolute));
+//			//	LogEx(ex);
+//			//}
+//			//#if CRASHES
+//			//			bool didAppCrash = await Crashes.HasCrashedInLastSessionAsync();
+//			//			if (didAppCrash)
+//			//			{
+//			//				ErrorReport crashReport = await Crashes.GetLastSessionCrashReportAsync();
+//			//				Log(crashReport);
+//			//			}
+//			//#endif
+//		}
 
 
 		public App()
@@ -411,7 +411,7 @@ namespace CnV
 
 		//	return builder.Build();
 		//}
-		public static FontFamily CnVFont;
+		//public static FontFamily CnVFont;
 		protected override async void OnLaunched(Microsoft.UI.Xaml.LaunchActivatedEventArgs args)
 		{
 			try
@@ -419,17 +419,17 @@ namespace CnV
 				Assert(AppS.state == AppS.State.loading);
 				AppS.SetState( AppS.State.init );
 
-				CnVFont = new FontFamily("XamlAutoFontFamily");
+			//	CnVFont = new FontFamily("XamlAutoFontFamily");
 
 				//	Windows.UI.ViewManagement.ApplicationView.PreferredLaunchWindowingMode =Windows.UI.ViewManagement.ApplicationViewWindowingMode.Maximized;// new Size(bounds.Width, bounds.Height);
 				//				Windows.UI.ViewManagement.ApplicationView.GetForCurrentView().TryEnterViewModeAsync(Windows.UI.ViewManagement.ApplicationViewMode.CompactOverlay);
 
 				FocusVisualKind = FocusVisualKind.Reveal;
 
-				window = new();
-				
+				window = new ();
+				AppS.globalQueue = window.DispatcherQueue;
 				//	window.
-				
+
 
 
 
@@ -482,7 +482,7 @@ namespace CnV
 				//		window.ExtendsContentIntoTitleBar = true;
 				//	window.ExtendsContentIntoTitleBar = true;
 				//App.globalDispatcher = CoreWindow.GetForCurrentThread().Dispatcher;
-				AppS.globalQueue = window.DispatcherQueue;
+				
 				//	keyQueue = globalQueue.CreateTimer();
 				//CoreApplication.EnablePrelaunch(false);
 				//if (uwpArgs.Kind == Windows.ApplicationModel.Activation.ActivationKind.Launch)
@@ -604,8 +604,9 @@ namespace CnV
 				this.DebugSettings.BindingFailed+=DebugSettings_BindingFailed1;
 
 #endif
-				var wasRunning = args.PreviousExecutionState   == ApplicationExecutionState.Running
+				var wasRunning =  args.PreviousExecutionState   == ApplicationExecutionState.Running
 								|| args.PreviousExecutionState == ApplicationExecutionState.Suspended;
+				Assert(!wasRunning);
 				if (!wasRunning)
 				{
 					//	var window = Window.Current;
@@ -613,12 +614,89 @@ namespace CnV
 					window.Closed            += Window_Closed;
 					AppS.appWindow.Closing+=AppWindow_Closing;
 					//		window.WantClose+=Window_Closing;
-					//	window.Activated+=Window_Activated;
+					//window.Activated+=Window_Activated;
 				}
 				SystemInformation.Instance.TrackAppUse(args);
+				// can this be async?
+				
 
-				await ActivationService.ActivateAsync(args, wasRunning);
+				if(!wasRunning)
+				{
+					var t2 = BuildingDef.Init();
+					var t3 = CnV.Data.TroopInfo.Init();
 
+					//var t4 = App.EnsureBrowserInstalledAsync();
+					var t5 = CnV.Data.Boss.Init();
+					Settings.Initialize(); // this is the long one
+
+
+					await Task.WhenAll(t2,t3,t5);
+				}
+				const bool isInteractive = true;
+
+				AAnalytics.Track("Activate",new Dictionary<string,string> { { "kind",args.Kind.ToString() },
+				{ "prior", args.Kind.ToString() },
+				{"args" , args switch
+				{ ILaunchActivatedEventArgs a=>a.Arguments,
+					IProtocolActivatedEventArgs p=>p.Uri.ToString(),
+					_=>"{}"} } });
+				//if(IsInteractive(activationArgs))
+				{
+					// Initialize services that you need before app activation
+					// take into account that the splash screen is shown while this code runs.
+					//    UserDataService.Initialize();
+					//              await IdentityService.InitializeWithAadAndPersonalMsAccounts();
+
+					// Do not repeat app initialization when the Window already has content,
+					// just ensure that the window is active
+					if(AppS.window.Content is null)
+					{
+						// Create a Shell or Frame to act as the navigation context
+						//	App.instance.Resources["TabViewBackground"] = new SolidColorBrush();
+						//	App.instance.Resources["TabViewButtonBackground"] = new SolidColorBrush();
+						//	App.instance.Resources["TabViewButtonForeground"] = new SolidColorBrush();
+						//	App.instance.Resources["OverlayCornerRadius"] = 1.0;
+						//	App.instance.Resources["TopCornerRadiusFilterConverter"] = new object();
+
+						AppS.window.Content = new ShellPage();
+
+					}
+				}
+
+				// Depending on activationArgs one of ActivationHandlers or DefaultActivationHandler
+				// will navigate to the first page
+			//	await HandleActivationAsync(activationArgs);
+				//  _lastActivationArgs = activationArgs;
+				Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense("NTUwMDAxQDMxMzkyZTM0MmUzMFJnano4Uk4veXEvQmczQ2M5eWZQQ1JUT0UyVVJwamhxcEZjRWEvL3V4ZkE9;NTUwMDAyQDMxMzkyZTM0MmUzMENITkt6cXZtZ2oxZkFTa09HMmkxRXlFaVRhQjRUN1dUQzc2VHNDeXU4TWc9");
+				if(isInteractive)
+				{
+					var activation = args;
+					if(activation.PreviousExecutionState == ApplicationExecutionState.Terminated)
+					{
+						//        await Singleton<SuspendAndResumeService>.Instance.RestoreSuspendAndResumeData();
+					}
+					// Ensure the current window is active
+					//await Task.Delay(500);
+					Log("Activate!");
+					AppS.appWindow.Show(true);
+					AppS.presenter.Maximize();
+					//await Task.Delay(500);
+					Log("Max");
+					//				App.window.Maximize();
+					//				_ = PInvoke.User32.ShowWindow(WinRT.Interop.WindowNative.GetWindowHandle(App.window), PInvoke.User32.WindowShowStyle.SW_MAXIMIZE);
+					//User32.WINDOWPLACEMENT placement = new()
+					//{
+					//	length = Unsafe.SizeOf<User32.WINDOWPLACEMENT>(),
+					//	flags = User32.WindowPlacementFlags.WPF_RESTORETOMAXIMIZED
+					//	        | User32.WindowPlacementFlags.WPF_ASYNCWINDOWPLACEMENT,
+					//	showCmd = User32.WindowShowStyle.SW_SHOWMAXIMIZED
+					//};
+					//	_ = PInvoke.User32.SetWindowPlacement(WinRT.Interop.WindowNative.GetWindowHandle(App.window), placement);
+					;
+
+				}
+
+				
 				if (wasRunning)
 					return;
 				window.Content.PreviewKeyUp   += Content_PreviewKeyUp;

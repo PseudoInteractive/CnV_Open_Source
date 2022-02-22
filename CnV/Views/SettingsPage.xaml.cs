@@ -67,6 +67,7 @@ namespace CnV
 				if ( !renderQuality.AlmostEquals(value,1.0f/8.0f)  )
 				{
 					GameClient.UpdateRenderQuality(renderQuality);
+
 				}
 			}
 		}
@@ -98,7 +99,7 @@ namespace CnV
 			set
 			{
 				lighting = (Lighting)value;
-				GameClient.UpdateLighting();
+				AppS.MessageBox("Please restart to see full changes");
 			}
 		}
 		//bool uiStayAlive
@@ -272,33 +273,29 @@ namespace CnV
 				// incomingWatch = st.Read(nameof(incomingWatch), Array.Empty<string>() );
 				//    autoBuildOn = st.Read(nameof(autoBuildOn)+'2', -1) switch {  0 => false, 1 => true, _ => null };
 				// AttackTab.time = st.Read("attacktime", DateTime.UtcNow.Date);
-				AppS.DispatchOnUIThread( ()=>
+				AppS.QueueOnUIThreadIdle( ()=>
 				{
 					SetSoundOn(soundOn);
 					ElementSoundPlayer.Volume = volume;
 					SetSpatialOn(spatialOn);
+					UpdateZoom();
 				});
-				if (raidCarryMin > 90)
-					raidCarryMin = 1.15f; // error!
-				if (raidCarryMax > 90)
-					raidCarryMax = 1.75f; // error!
-				if (raidCarryMax <= raidCarryMin)
-					raidCarryMax = raidCarryMin*1.75f; // error!
-				AppS.DispatchOnUIThread(()=>	UpdateZoom() );
+			
+				ShellPage.updateHtmlOffsets.Go(true);
 				//	DungeonView.Initialize();
-		layoutOffsets = new LayoutOffsets[]
-		{
-			new(0.875f, 0.333f, 0.75f, 0.22f, 0.375f),
-			new(1.0f, 0.0f, 0.75f, 0.22f, 0.375f),
+				//layoutOffsets = new LayoutOffsets[]
+				//{
+				//	new(0.5f, 0.12f, 0.75f, 0.17f, 0.2f),
+				//	new(0.75f, 0.0f, 0.75f, 0.17f, 0.2f),
 
-			new(0.5f, 0.25f, 0.75f, 0.22f, 0.25f),
+				//	new(0.5f, 0.12f, 0.75f, 0.17f, 0.2f),
 
-			new(0.5f, 0.5f, 0.75f, 0.22f, 0.375f),
-			new(0f, 0.5f, 0.375f, 0.22f, 0.25f),
+				//	new(0.5f, 0.5f, 0.75f, 0.17f, 0.2f),
+				//	new(0f, 0.5f, 0.375f, 0.17f, 0.2f),
 
-			new(0.875f, 0.333f, 0.75f, 0.625f, 0.625f),
-		};
-	}
+				//	new(0.875f, 0.12f, 0.75f, 0.625f, 0.5f),
+				//};
+			}
 			catch (Exception e)
 			{
 				LogEx(e);

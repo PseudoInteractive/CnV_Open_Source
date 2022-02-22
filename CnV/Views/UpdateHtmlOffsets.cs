@@ -155,7 +155,8 @@ namespace CnV.Views
 						}
 					//	instance.webView.Margin= new(htmlShift, 0, 0, 0);
 					TabPage.LayoutChanged();
-						GameClient.wantFastRefresh = true;
+					AppS.QueueOnUIThread( CityStats.instance.ProcessScrollSizeChanged );
+					GameClient.wantFastRefresh = true;
 				}
 					catch (Exception ex)
 					{

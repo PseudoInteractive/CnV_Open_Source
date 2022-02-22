@@ -584,7 +584,7 @@
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
     <ImplicitUsings>True</ImplicitUsings>
     <Nullable>annotations</Nullable>
-    <SupportedOSPlatformVersion>10.0.19041.0</SupportedOSPlatformVersion>
+    <SupportedOSPlatformVersion>10.0.18362.0</SupportedOSPlatformVersion>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <Optimize>False</Optimize>

@@ -248,7 +248,7 @@ public static partial class ADataGrid
 		if (Register(tab, grid))
 		{
 			var _lock0 = new ADataGrid.ChangeContextDisposable(wantChangeContext ? grid : null);
-			grid.FontFamily = App.CnVFont;
+		//	grid.FontFamily = App.CnVFont;
 			grid.AlternationCount = 2;
 
 			grid.RowHeight = Settings.mediumGridRowHeight;

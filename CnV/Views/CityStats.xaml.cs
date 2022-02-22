@@ -115,22 +115,23 @@ namespace CnV
 			try
 			{
 				//	var i = CityStats.instance;
-				var city = this.city;
+				
 				if(city.IsInvalid())
 					return;
 				// building counts
-				var hasBeenDisplayed = lastDisplayed == city;
-				if(!hasBeenDisplayed)
-					lastDisplayed = city;
-				var bdd = !hasBeenDisplayed ? GetBuildingCounts(city) : default;
+				
 
 
 				AppS.DispatchOnUIThreadIdle(() =>
 				{
-
+					var city = this.city;
+					var hasBeenDisplayed = lastDisplayed == city;
+					if(!hasBeenDisplayed)
+						lastDisplayed = city;
 
 					try
 					{
+						var bdd = !hasBeenDisplayed ? GetBuildingCounts(city) : default;
 						var t = CnVServer.simTime;
 						ShellPage.instance.timeDisplay.Text = t.FormatWithYear();
 
@@ -239,17 +240,15 @@ namespace CnV
 		{
 			if(e.IsIntermediate)
 				return;
-			ScrollSizeChanged();
+			ShellPage.updateHtmlOffsets.SizeChanged();
 		}
 		private void scroll_SizeChanged4(object sender,SizeChangedEventArgs e)
 		{
-			ScrollSizeChanged();
+			ShellPage.updateHtmlOffsets.SizeChanged();
 
 		}
-		private void ScrollSizeChanged()
+		internal void ProcessScrollSizeChanged()
 		{
-			Debounce.Q(runOnUIThread: true,debounceT: 50,action: () =>
-		  {
 			  var baseSize = ((scroll.ActualWidth)/scroll.ZoomFactor).Max(0);
 			  stackPanel.Width = (baseSize -8).Max(0);
 				//var expanderWidth = (baseSize -14).Max(0);
@@ -257,7 +256,6 @@ namespace CnV
 				//{
 				//	ch.Width = expanderWidth;
 				//}
-			});
 		}
 
 
