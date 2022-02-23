@@ -713,6 +713,7 @@ namespace CnV
 		//}
 		public static BitmapImage GetBuildingImage(byte id, int width)
 		{
+			Assert(id <= BuildingDef.all.Length);
 			var bdef = BuildingDef.FromId(id);
 			var str = bdef.dimg;
 			Assert(str is not null);

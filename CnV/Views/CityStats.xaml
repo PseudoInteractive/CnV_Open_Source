@@ -29,7 +29,7 @@
 				  HorizontalContentAlignment="Stretch"
 				   
 				>
-		<StackPanel x:Name="stackPanel"  Margin="2" Padding="2" Background="{x:Null}"  HorizontalAlignment="Stretch" CornerRadius="0" >
+		<StackPanel x:Name="stackPanel"  Margin="2" Padding="2" Background="{x:Null}"   CornerRadius="0" >
 			<Expander Header="Incoming" Expanding="Expander_Expanding"  Visibility="Collapsed" x:Name="expIncoming" HorizontalAlignment="Stretch" >
 			</Expander>
 			<Expander  Expanding="Expander_Expanding" IsExpanded="True"  Background="{x:Null}"  x:Name="expResource" HorizontalAlignment="Stretch"  >
@@ -62,26 +62,40 @@
 				</tk:WrapPanel>
 			</Expander>
 			
-			<!--Build Queue--> 
-			
-			<Expander  Expanding="Expander_Expanding" IsExpanded="True" x:Name="expBuildQueue" Background="{x:Null}" HorizontalAlignment="Stretch" >
+			<!--Build Queue-->
+
+			<Expander  Expanding="Expander_Expanding" IsExpanded="True" x:Name="expBuildQueue" Background="{x:Null}"   >
+				
 				<Expander.Header   >
+					
 					<Border Background="{StaticResource ExpanderBrushHeader}" BorderThickness="0" Padding="3" CornerRadius="{StaticResource baseCR}" >
 						<TextBlock x:Name="queueText"  Text ="Queue" Margin="0"  Style="{StaticResource TextBlockMedium}"   />
 					</Border>
 				</Expander.Header>
 				<ListView x:Name="buildQueueListView" x:FieldModifier="public"  
 						  SelectionMode="Extended"  Background="{StaticResource ExpanderBrushContentAlt}"
-						  Margin="0" Padding="0" 
+						  Margin="0" Padding="0" HorizontalAlignment="Stretch" 
+						  AllowDrop="True"
+						  CanDragItems="True"
+						  CanReorderItems="True"
+						  DropCompleted="buildQueueListView_DropCompleted"
+						  DragItemsStarting="buildQueueListView_DragItemsStarting"
+						  DragOver="buildQueueListView_DragOver"
+						  DragItemsCompleted="buildQueueListView_DragItemsCompleted"
+						  ContextRequested="buildQueueListView_ContextRequested"
+						
 						ItemsSource="{x:Bind buildQueue}"
 						  MaxHeight="200"  >
 					<ListView.ItemTemplate>
 						<DataTemplate x:DataType="cnv:BuildItem">
-								<StackPanel Orientation="Horizontal" Margin="4" MinWidth="200">
-									<Image Source="{x:Bind image}" Width="32" Height="32"  />
-									<TextBlock Text="{x:Bind text}"
-							   	/>
-								</StackPanel>
+								<Grid  Padding="2" ContextRequested="{x:Bind ContextRequested}" >
+								<Grid.ColumnDefinitions>
+									<ColumnDefinition Width="*"/>
+								</Grid.ColumnDefinitions>
+								<Image Source="{x:Bind image}" Width="32" Height="32" HorizontalAlignment="Left" />
+									<TextBlock Text="{x:Bind opText}" Margin="36,0,0,0"  	/>
+									<TextBlock Text="{x:Bind timeText,Mode=OneWay}" HorizontalAlignment="Right" Margin="0,0,4,0"	/>
+							</Grid>
 						</DataTemplate>
 					</ListView.ItemTemplate>
 					<!-- The ItemsStackPanel must be edited to update the following two properties -->
@@ -89,7 +103,7 @@
 					<ListView.ItemsPanel>
 						<ItemsPanelTemplate>
 							<ItemsStackPanel ItemsUpdatingScrollMode="KeepScrollOffset" 
-									
+								
                             VerticalAlignment="Center"/>
 						</ItemsPanelTemplate>
 					</ListView.ItemsPanel>

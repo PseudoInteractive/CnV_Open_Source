@@ -21,6 +21,8 @@ using Microsoft.UI;
 using static CnV.City;
 using System.Collections.ObjectModel;
 using Microsoft.UI.Xaml.Media.Imaging;
+using System.Collections.Specialized;
+using Windows.ApplicationModel.DataTransfer;
 //using Expander = CommunityToolkit.WinUI.UI.Controls.cer;
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -33,57 +35,138 @@ namespace CnV
 		public CityStats()
 		{
 			this.InitializeComponent();
+			buildQueue.CollectionChanged+=BuildQueue_CollectionChanged;
 		}
+
+		private static void BuildQueue_CollectionChanged(object? sender,NotifyCollectionChangedEventArgs e)
+		{
+			// invalidate
+		
+			NotifyBuildQueueChange();
+//			displayQueue = BuildQueueType.Empty;
+			//Log(e.Action);
+			//LogJson(e);
+			// This is coming from the UI to us
+			// Validate that the queue is still valid
+
+			//switch(e.Action)
+			//{
+			//	case NotifyCollectionChangedAction.Move:
+			//		{
+						
+			//			var city = instance.city;
+			//			if(city.AttempMove(e.OldStartingIndex,e.NewStartingIndex))
+			//			{
+			//			}
+			//			NotifyBuildQueueChange();
+			//			break;
+			//		}
+			//	case NotifyCollectionChangedAction.Remove:
+			//		{
+			//			return;
+			//			var city = instance.city;
+			//			if(city.AttempRemove(e.OldStartingIndex))
+			//			{
+			//			}
+			//			NotifyBuildQueueChange();
+			//			break;
+			//		}
+			//	case NotifyCollectionChangedAction.Add:
+			//		{
+
+			//			return;
+			//			var city = instance.city;
+			//			if(city.AttemptAdd(e.NewStartingIndex, e.NewItems.Cast<BuildItem>().Select( a => a.op ).ToArray() ))
+			//			{
+			//			}
+			//			NotifyBuildQueueChange();
+			//			break;
+			//		}
+			//	default:
+			//		Assert(false);
+			//		break;
+			//}
+		}
+
 		public City city => City.GetBuild();
 		internal static void NotifyBuildQueueChange()
 		{
-			if(City.GetBuild().buildQueue != displayQueue)
+//			if(City.GetBuild().buildQueue != displayQueue || force)
+			{
+//				Log("Debuounce");
 				instance.cityQueueChangeDebounce.Go();
+			}
 		}
-		static BuildQueueType displayQueue = BuildQueueType.Empty;
+		static BuildQueueType lastSynchronizedQueue = BuildQueueType.Empty;
 
 		static void UpdateBuildQueue()
 		{
-			displayQueue = City.GetBuild().buildQueue;
-			
-			var bq = instance.buildQueue;
-			for(int i = bq.Count;--i>= 0;)
+			// Don't notify whole we are doing stuff
+			try
 			{
-				var op = bq[i].op;
-				if(!displayQueue.Any(a => a == op))
+				instance.buildQueue.CollectionChanged -= BuildQueue_CollectionChanged;
+				
+				var city = City.GetBuild();
+				var displayQueue = city.buildQueue;
+				lastSynchronizedQueue = displayQueue;
+				int lg = displayQueue.Length;
+				var bq = instance.buildQueue;
+				//for(int i = bq.Count;--i>= 0;)
+				//{
+				//	var op = bq[i].op;
+				//	if(!displayQueue.Any(a => a == op))
+				//	{
+				//		bq.RemoveAt(i);
+				//	}
+				//}
+
+				// Add or update
+				for(int i = 0;i<lg;++i)
+				{
+					var op = displayQueue[i];
+					int cur = -1;
+					for(int j = i;j<bq.Count;++j)
+					{
+						if(bq[j].op == op)
+						{
+							cur = j;
+							break;
+						}
+					}
+					if(cur == -1)
+					{
+						var bi = new BuildItem(op);
+						bi.UpdateText(city);
+						bq.Insert(i,bi);
+					}
+					else
+					{
+						if(cur != i)
+						{
+							bq.Move(cur,i);
+
+						}
+
+					}
+				}
+				// sequence is done, remove extras if any
+				for(var i = bq.Count;--i>= lg;)
 				{
 					bq.RemoveAt(i);
 				}
-			}
 
-			// Add or update
-			for(int i = 0;i<displayQueue.Length;++i)
+				Assert(bq.Count == lg);
+				for(int i=0;i<lg;++i)
+				{
+					Assert(bq[i].op == displayQueue[i]);
+				}
+			}
+			catch ( Exception ex)
 			{
-				var op = displayQueue[i];
-				int cur = -1;
-				for(int j = i;j<bq.Count;++j)
-				{
-					if(bq[j].op == op)
-					{
-						cur = j;
-						break;
-					}
-				}
-				if(cur == -1)
-				{
-					bq.Insert(i,new(op));
-				}
-				else
-				{
-					if(cur != i)
-					{
-						bq.Move(cur,i);
-
-					}
-
-				}
+				LogEx(ex);
 			}
-
+			// restore callback
+			instance.buildQueue.CollectionChanged += BuildQueue_CollectionChanged;
 
 		}
 
@@ -170,6 +253,14 @@ namespace CnV
 								}));
 							}
 						}
+						if(expBuildQueue.IsExpanded)
+						{
+							foreach(var b in buildQueue)
+							{
+								b.UpdateText(city);
+							}
+						}
+
 						if(!hasBeenDisplayed)
 						{
 							var txt = (expBuildings.Header as DependencyObject).Child<TextBlock>(1);
@@ -320,6 +411,83 @@ namespace CnV
 			City.buildCityChanged += NotifyBuildQueueChange;
 
 		}
+
+		
+
+		
+
+		private async void buildQueueListView_DragItemsCompleted(ListViewBase sender,DragItemsCompletedEventArgs args)
+		{
+			try
+			{
+				Log(args.DropResult);
+				if(args.DropResult ==DataPackageOperation.Move)
+				{
+					var item = args.Items.FirstOrDefault() as BuildItem;
+					var index = buildQueue.IndexOf(item);
+					var bq = city.buildQueue;
+					Log($"Change: {dragStartingIndex}=>{index}, {buildQueue.Count} {bq == bqAtDragStart} ");
+					if(index != -1 || dragStartingIndex != -1 && (bq==bqAtDragStart))
+					{
+						if( (index == -1 || dragStartingIndex == -1)&&city.buildItemEndsAt.isNotZero )
+						{
+							Note.Show("Unable to order a build in progress");
+
+						}
+
+						city.AttempMove(dragStartingIndex,index);
+
+					}
+
+				}
+				else
+				{
+					Assert(false);
+				}
+			}
+			catch(Exception ex)
+			{
+				LogEx(ex);
+			}
+			NotifyBuildQueueChange();
+			//			Log(args.Items.Format());
+			//			LogJson(args);
+
+		}
+
+		BuildQueueType bqAtDragStart;
+		int dragStartingIndex;
+		private void buildQueueListView_DragItemsStarting(object sender,DragItemsStartingEventArgs e)
+		{
+			Log(e.Data?.RequestedOperation);
+			var i = e.Items?.FirstOrDefault() as BuildItem;
+			dragStartingIndex = buildQueue.IndexOf(i);
+			// Cannot move if it is currently building
+			var city = this.city;
+			bqAtDragStart= lastSynchronizedQueue; 
+
+	
+		}
+
+		private void buildQueueListView_ContextRequested(UIElement sender,ContextRequestedEventArgs args)
+		{
+			//VisualTreeHelper.GetParent(args.OriginalSource
+			LogJson(args);
+			Log(args.OriginalSource);
+			LogJson(sender);
+		}
+
+
+		private void buildQueueListView_DropCompleted(UIElement sender,DropCompletedEventArgs args)
+		{
+			Log(args.DropResult);
+			LogJson(args);
+		}
+		private void buildQueueListView_DragOver(object sender,DragEventArgs e)
+		{
+			LogJson(e);
+
+		}
 	}
 	public class BuildingCountAndBrush:INotifyPropertyChanged
 	{
@@ -335,14 +503,36 @@ namespace CnV
 	{
 		public const int size = 32;
 		public BitmapImage image { get; set; }
-		public string text { get; set; }
+		public string opText { get; set; }
+		public string timeText { get; set; }
 		public BuildQueueItem op;
 		public BuildItem(BuildQueueItem item)
 		{
 			op = item;
-			image = CityBuild.GetBuildingImage(item.isMove ? (byte)0 : item.bid,size);
-			var desc = item.isMove ? "Move" : item.isDemo ? "Destroy" : item.isBuild ? $"Build{(item.pa==false ? " p" : "") }" : item.isDowngrade ? $"Downgrade to {item.elvl}" : $"Upgrade to {item.elvl}" ;
-			text = desc;// + BuildingDef.FromId(item.bid).Bn;
+			image = CityBuild.GetBuildingImage(item.isMove ? Building.bidMove : item.bid,size);
+			opText = op.isMove ? "Move" : op.isDemo ? "Destroy" : op.isBuild ? $"Build{(op.pa==false ? " p" : "") }" : op.isDowngrade ? $"Down to {op.elvl}" : $"Up to {op.elvl}";
+		}
+		public void UpdateText(City city)
+		{
+			var q = city.buildQueue;
+			TimeSpanS dt;
+			if(q.Any() && q[0]== op && city.buildItemEndsAt.isZero )
+				dt = city.buildItemEndsAt - CnVServer.simTime;
+			else
+				dt = new(op.TimeRequired(city));
+			var text = dt.ToString();
+			if(text != timeText)
+			{
+				timeText = text;// + BuildingDef.FromId(item.bid).Bn;
+				OnPropertyChanged(nameof(this.timeText));
+			}
+
+		}
+		public void ContextRequested(UIElement sender,ContextRequestedEventArgs args)
+		{
+			LogJson(args);
+			LogJson(args.OriginalSource);
+			LogJson(sender);
 		}
 		public void OnPropertyChanged(string members = null) => PropertyChanged?.Invoke(this,new(members));
 

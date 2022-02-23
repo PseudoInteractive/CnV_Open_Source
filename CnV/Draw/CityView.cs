@@ -254,19 +254,19 @@ namespace CnV
 								if(next.bl != cur.bl)
 								{
 									float blendOp = 0;
-									var blendT = (dt*(1.0f/6.0f)).Frac();
+									var blendT = (dt*(1.0f/4.0f)).Frac();
 									var blendT4 = blendT*4;
 									if(blendT < 0.25f)
 									{
 										var t = (blendT4);
 										bl = cur.bl; // fade next number
 										fontAlpha *= t.SCurve(0,1);
-										blendOp = t.SCurve(0,1);
+										blendOp = 0;//.SCurve(0,1);
 									}
 									else if(blendT < 0.5f)
 									{
 										var t = (blendT4 - 1);
-										blendOp = 1;
+										blendOp = 0;
 										// fade out number
 										bl = cur.bl; // fade next number
 										fontAlpha*= t.SCurve(1,0);
@@ -275,7 +275,7 @@ namespace CnV
 									else if(blendT < 0.75f) // fade out hammer
 									{
 										var t = (blendT4 -2); // fade in new number
-										blendOp = 1;// t.SCurve(1,0);
+										blendOp = t.SCurve(0,1);
 													// fade in last number
 										bl = next.bl;
 										fontAlpha*= t.SCurve(0,1);

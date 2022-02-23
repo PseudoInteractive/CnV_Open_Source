@@ -20,13 +20,22 @@
 		<Setter Property="Margin" Value="0" />
 		<Setter Property="CornerRadius" Value="2"/>
 		<Setter Property="HorizontalAlignment" Value="Stretch" />
-		<Setter Property="HorizontalContentAlignment" Value="Left" />
+		<Setter Property="HorizontalContentAlignment" Value="Stretch" />
 		<Setter Property="Background" Value="{x:Null}" />
 		<Setter Property="FontFamily" Value="XamlAutoFontFamily" />
 		<Setter Property="FontWeight" Value="Light" />
 		<Setter Property="FontSize" Value="{StaticResource MediumFontSize}" />
 	</Style>
+
+	
+	<!--Overrides-->
+
 	<!--"Expander"-->
+	<x:Double x:Key="ExpanderMinHeight">24</x:Double>
+
+	<!-- Header -->
+	<Thickness x:Key="ExpanderHeaderPadding">2,0,0,0</Thickness>
+	<Thickness x:Key="ExpanderChevronMargin">2,0,8,0</Thickness>
 
 	
 	<x:Double x:Key="ContentDialogMaxWidth">1024</x:Double>

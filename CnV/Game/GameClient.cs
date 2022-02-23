@@ -197,8 +197,8 @@ namespace CnV
 			inf.PresentationParameters.RenderTargetUsage = RenderTargetUsage.DiscardContents;
 			if(clientSpan.X > 0 && clientSpan.Y > 0)
 			{
-				inf.PresentationParameters.BackBufferHeight = (int)clientSpan.Y;
-				inf.PresentationParameters.BackBufferWidth  = (int)clientSpan.X;
+				inf.PresentationParameters.BackBufferHeight = (int)(clientSpan.Y*resolutionScale);
+				inf.PresentationParameters.BackBufferWidth  = (int)(clientSpan.X*resolutionScale);
 			}
 		}
 		public static bool wantFastRefresh;
@@ -217,6 +217,9 @@ namespace CnV
 			resolutionDirtyCounter = wantFastRefresh ? 2 : 60;
 		}
 
+		// dx, dy are logical pixels
+		// dipToNative is 1 for 100% scaling 1.5 for 150% etc
+		// For hiDPI devices we should probably render at lower res
 		public static void SetClientSpan(double dx, double dy)
 		{
 			if(instance is not null)
