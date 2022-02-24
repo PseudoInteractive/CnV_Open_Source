@@ -16,6 +16,7 @@ using XVector3 = Microsoft.Xna.Framework.Vector3;
 using XVector4 = Microsoft.Xna.Framework.Vector4;
 using Layer = CnV.Draw.Layer;
 using KeyF = CnV.KeyFrame<float>;
+using Emzi0767;
 
 namespace CnV;
 
@@ -52,8 +53,8 @@ internal partial class GameClient
 	public static bool tileSetsPending;
 	private const float smallRectSpan = 4;
 	public const float lightZNight = 200;
-	public const float lightZDay = 300f;
-	public const float cameraZForLighting = 500f;
+	public const float lightZDay = 20f;
+	public const float cameraZForLighting = 2.0f;
 	//public static Vector2 cameraLightC;
 	static SamplerState fontSampler = new SamplerState()
 	{
@@ -99,10 +100,10 @@ internal partial class GameClient
 		MipMapLevelOfDetailBias = 0,
 		MaxAnisotropy           = 0,
 		BorderColor             = new Color(128, 128, 255, 0),
-		AddressW                = TextureAddressMode.Wrap,
 		AddressU                = TextureAddressMode.Border,
 		AddressV                = TextureAddressMode.Border,
 	};
+
 	public static Material fontMaterial;
 	public static Material darkFontMaterial;
 	public static BitmapFont.BitmapFont bfont;
@@ -152,6 +153,7 @@ internal partial class GameClient
 	public static float eventTimeOffsetLag; // smoothed version of event time offset
 	public static float eventTimeEnd;
 	static public Color nameColor, nameColorHover, myNameColor, nameColorOutgoing, nameColorIncoming, nameColorSieged, nameColorIncomingHover, nameColorSiegedHover, myNameColorIncoming, myNameColorSieged;
+	static float specularGain = 0.5f;
 
 	protected override void Draw(GameTime gameTime)
 	{
@@ -180,7 +182,7 @@ internal partial class GameClient
 		{
 			var timerT = timer.Elapsed.TotalSeconds;
 			//		var _serverNow = CnVServer.serverTime;
-			var dt = ((float)(timerT - animationT)).Min(1.0f);// (float)gameTime.ElapsedGameTime.TotalSeconds; // max delta is 1s
+			var dt = ((float)(timerT - animationT)).Min(0.25f);// (float)gameTime.ElapsedGameTime.TotalSeconds; // max delta is 1s
 			{                                                      //	lastDrawTime = _serverNow;
 				var hover = lastCanvasC;
 				if(hover != 0 && World.GetInfoFromCid(hover).type != 0)
@@ -345,12 +347,12 @@ internal partial class GameClient
 			//	GraphicsDevice.DepthStencilState = DepthStencilState.None;
 
 			//			GraphicsDevice.SamplerStates[0] = SamplerState.LinearWrap;
-			//			GraphicsDevice.SamplerStates[1] = SamplerState.LinearWrap;
-			GraphicsDevice.SamplerStates[7] = fontSampler;
-			GraphicsDevice.SamplerStates[6] = borderSampler;
-			GraphicsDevice.SamplerStates[5] = normalSampler;
 			GraphicsDevice.SamplerStates[0] = wrapSampler;
 			GraphicsDevice.SamplerStates[1] = clampSampler;
+			//			GraphicsDevice.SamplerStates[1] = SamplerState.LinearWrap;
+			GraphicsDevice.SamplerStates[6] = borderSampler;
+			GraphicsDevice.SamplerStates[5] = normalSampler;
+			GraphicsDevice.SamplerStates[7] = fontSampler;
 
 			GraphicsDevice.RasterizerState = RasterizerState.CullNone;
 			//if (WasKeyPressed(Keys.F))
@@ -389,6 +391,8 @@ internal partial class GameClient
 								  0.5f, 1.5f);
 				//					var proj = Matrix.CreateOrthographicOffCenter(480, 1680, 1680, 480, 0, -1);
 				worldMatrixParameter.SetValue(proj);
+				var lightCC = new XVector3(AGame.projectionC.X,AGame.projectionC.Y,virtualSpan.X*pixelScaleInverse*cameraZForLighting);
+				lightPositionCameraParameter.SetValue(lightCC);
 
 				if(Settings.lighting == Lighting.night)
 				{
@@ -396,18 +400,18 @@ internal partial class GameClient
 					var l = ShellPage.mousePosition;//C.CameraToScreen();//.InverseProject();
 					var lc = ShellPage.mousePositionC;//C.CameraToScreen();//.InverseProject();
 					lightPositionParameter.SetValue(new Microsoft.Xna.Framework.Vector3(l.X, l.Y, lightZNight));
-					lightPositionCameraParameter.SetValue(new Microsoft.Xna.Framework.Vector3(lc.X, lc.Y, lightZNight));
+				//	lightPositionCameraParameter.SetValue(new Microsoft.Xna.Framework.Vector3(lc.X, lc.Y, lightZNight));
 					//lightGainsParameter.SetValue(new Microsoft.Xna.Framework.Vector4(0.25f, 1.25f, 0.375f, 1.0625f));
-					lightAmbientParameter.SetValue(new Microsoft.Xna.Framework.Vector3(.493f, .576f, .639f) * 0.25f);
-					lightColorParameter.SetValue(new Microsoft.Xna.Framework.Vector3(1.0f, 1.0f, 1.0f) * 1.25f);
-					lightSpecularParameter.SetValue(new Microsoft.Xna.Framework.Vector3(1.0f, 1.0f, 1.0f) * 1.25f);
+					lightAmbientParameter.SetValue(new Vector4(new Vector3(.493f, .576f, .639f) * 0.25f*Settings.lightA,Settings.lightM));
+					lightColorParameter.SetValue(new Vector4( new Vector3(1.0f, 1.0f, 1.0f) * 1.25f*Settings.lightD,Settings.lightS));
+					//lightSpecularParameter.SetValue(new Microsoft.Xna.Framework.Vector3(1.0f, 1.0f, 1.0f) * 1.25f*specularGain);
 				}
 				else
 				{
 					///				var xc = lightWC.WorldToCamera().CameraToScreen();
 					var t = (float)CnVServer.simDateTime.TimeOfDay.TotalDays;
 
-					const float shrink = 0.25f;
+					const float shrink = 0.125f;
 					t = t*64;
 					t -= MathF.Floor(t);
 					t = t.Bezier(0f,0.3f,0.43f,0.57f,0.70f,1.0f);
@@ -421,13 +425,13 @@ internal partial class GameClient
 					var csTau = MathF.Cos(t*MathF.Tau);
 					Vector2 wc = new Vector2(MathF.Sin(t*MathF.Tau).SNormLerp(worldSpan0, worldSpan1),
 						(csTau * (isDay ? 1.0f : 1.0f)).SNormLerp(worldSpan0,worldSpan1));
-					var Z = csTau * (isDay ? -1.0f : 0.0f) + 1.0f;
+					
+					var Z = (csTau * (isDay ? -1.0f : 0.0f) + 1.0f)*World.span;
 					var cc = (wc.WorldToCamera()*shrink);
 					var sc = cc.CameraToScreen();
 					Assert(Z> 0);
-					var lightZ = Z*(lightZDay*shrink*pixelScale);
+					var lightZ = Z*shrink*pixelScale;
 					var lightC = new XVector3(sc.X, sc.Y, lightZ);
-					var lightCC = new XVector3(cc.X, cc.Y, lightZ );
 					
 					
 				//	ToolTips.debugTip = $"{XVector3.Normalize(lightCC).ToNumerics().Format()} {AUtil.Format(lightCC.ToNumerics())}";
@@ -435,13 +439,13 @@ internal partial class GameClient
 												new Vector3(0.5f,0.5f,1.5f),
 												new Vector3(1.0f,1.0f,1.0f),
 												new Vector3(1.0f,0.5f,0.125f)
-																		)*0.75f;
+																		)*0.75f*Settings.lightD;
 					var a3 = t.CatmullRomLoop(new Vector3(0.750f,0.5f,1.0f),
 												new Vector3(0.5f,0.5f,1.0f),
 												new Vector3(1.0f,1.0f,1.0f),
 												new Vector3(1.0f,0.5f,0.25f)
-																		)*0.375f;
-					var s3 = 0.5f.Lerp(d3.Normalized(),new Vector3(0.75f,0.75f,0.75f) );
+																		)*0.375f*Settings.lightA;
+				//	var s3 = new Vector4(Settings.lightSR,Settings.lightSG,Settings.lightSB,Settings.lightShader);//0.5f.Lerp(d3.Normalized(),new Vector3(0.75f,0.75f,0.75f) );
 					
 					//var hue = 0.6667f - t1;
 					//hue -= hue.Floor();
@@ -451,18 +455,20 @@ internal partial class GameClient
 					//var diffuse = HSLToRGB.ToRGBAV(hue,saturation,lumd,alpha:1.25f);
 					//var ambient = HSLToRGB.ToRGBAV(hue,saturation,luma,alpha:0.75f);
 					lightPositionParameter.SetValue(lightC);
-					lightPositionCameraParameter.SetValue(lightCC);
 					//lightGainsParameter.SetValue(new XVector4(0.25f, 1.25f, 0.375f, 1.0625f));
 					//lightAmbientParameter.SetValue(new XVector4(.483f, .476f, .549f, 1f) * 0.75f);
 					//lightColorParameter.SetValue(new XVector4(1.1f, 1.1f, 0.9f, 1f) * 1.25f);
 					//lightSpecularParameter.SetValue(new XVector4(1.0f, 1.0f, 1.0f, 1.0f) * 1.25f);
 					//	lightGainsParameter.SetValue(new XVector4(0.25f, 1.25f, 0.375f, 1.0625f));
-					lightAmbientParameter.SetValue(a3);
-					lightColorParameter.SetValue(d3);
-					lightSpecularParameter.SetValue(s3);
+					lightAmbientParameter.SetValue(new Vector4(a3,Settings.lightM) );
+					lightColorParameter.SetValue(new Vector4(d3,Settings.lightS));
+					
 				}
-			
-				cameraReferencePositionParameter.SetValue(new XVector3(projectionC.X, projectionC.Y, cameraZForLighting));
+				var s3 = new Vector4(Settings.lightSR,Settings.lightSG,Settings.lightSB,Settings.lightShader);//0.5f.Lerp(d3.Normalized(),new Vector3(0.75f,0.75f,0.75f) );
+				lightSpecularParameter.SetValue(s3);
+
+
+				//cameraReferencePositionParameter.SetValue(new XVector3(projectionC.X, projectionC.Y,1));
 				//					defaultEffect.Parameters["DiffuseColor"].SetValue(new Microsoft.Xna.Framework.Vector4(1, 1, 1, 1));
 				var gain1 = bulgeInputGain * bulgeGain * bulgeSpan;
 				var planetGains = new XVector3(bulgeGain, -gain1, !AppS.IsKeyPressedShift() ? 0.0f: gain1*bulgeInputSpan2.Sqrt() );
@@ -601,7 +607,7 @@ internal partial class GameClient
 									var tileId = TileLayer.TilesetId(imageId);
 									var off = TileLayer.ImageId(imageId);
 									var tile = td.tilesets[(int)tileId];
-
+									Assert(off < td.tilesets[(int)tileId].tilecount);
 									if(tile.material == null)
 										continue;
 
@@ -613,8 +619,12 @@ internal partial class GameClient
 									var cc1 = wc + shift;
 									var sy = off / tile.columns;
 									var sx = off - sy * tile.columns;
-									var uv0 = new System.Numerics.Vector2((sx) * tile.scaleXToU + tile.halfTexelU, (sy) * tile.scaleYToV + tile.halfTexelV);
-									var uv1 = new System.Numerics.Vector2((sx + 1) * tile.scaleXToU - tile.halfTexelU, (sy + 1) * tile.scaleYToV - tile.halfTexelV);
+									var uv0 = new System.Numerics.Vector2((float)(sx * tile.scaleXToU), (float)(sy * tile.scaleYToV ));
+									var uv1 = new System.Numerics.Vector2((float)((sx + 1) * tile.scaleXToU),(float)( (sy + 1) * tile.scaleYToV));
+									Assert(uv0.X.IsInRange(0,1));
+									Assert(uv0.Y.IsInRange(0,1));
+									Assert(uv1.X.IsInRange(0,1));
+									Assert(uv1.Y.IsInRange(0,1));
 									if(debugLayer != -1)
 									{
 										DrawTextBox($"{(sx, sy)}", cc0.WorldToCamera(), nameTextFormat, Color.White, 255);

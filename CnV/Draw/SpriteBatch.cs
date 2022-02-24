@@ -476,22 +476,22 @@ namespace CnV.Draw
 					depth, depthFunction);
 
 		}
-		public void AddQuad(int layer, Material texture, Vector2 c0, Vector2 c1, Vector2 uv0, Vector2 uv1, Color color, (float depth00, float depth10,float depth01, float depth11) depth  )
-		{
+		//public void AddQuad(int layer, Material texture, Vector2 c0, Vector2 c1, Vector2 uv0, Vector2 uv1, Color color, (float depth00, float depth10,float depth01, float depth11) depth  )
+		//{
 
-			var item = _batcher.CreateBatchItem(layer, texture);
+		//	var item = _batcher.CreateBatchItem(layer, texture);
 
 
-			item.Set(c0.X,
-					 c0.Y,
-					 c1.X,
-					c1.Y,
-					 color,
-					 uv0,
-					 uv1,
-					 depth.depth00, depth.depth10, depth.depth01, depth.depth11);
+		//	item.Set(c0.X,
+		//			 c0.Y,
+		//			 c1.X,
+		//			c1.Y,
+		//			 color,
+		//			 uv0,
+		//			 uv1,
+		//			 depth.depth00, depth.depth10, depth.depth01, depth.depth11);
 
-		}
+		//}
 		public void AddQuad(int layer, Material texture, Vector2 c0, Vector2 c1, Vector2 uv0, Vector2 uv1, Color color, float depth  )
 		{
 

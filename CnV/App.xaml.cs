@@ -86,6 +86,9 @@ namespace CnV
 	using Microsoft.Xna.Framework.Input;
 	//// using PInvoke
 	using Services;
+
+	using System.Windows.Input;
+
 	using Views;
 
 	/// <summary>
@@ -474,7 +477,7 @@ namespace CnV
 					WindowId myWndId = Microsoft.UI.Win32Interop.GetWindowIdFromWindow(hWnd);
 					AppS.appWindow= AppWindow.GetFromWindowId(myWndId);
 				}
-				AppS.appWindow.Title = "Conquest and Virtue Alpha Signing in to Discord";
+				AppS.appWindow.Title = "Conquest and Virtue Alpha sign in to Discord";
 				AppS.appWindow.SetIcon("assets/cnv.ico");
 				//				
 				//				window.SetTitleBar
@@ -1375,14 +1378,21 @@ namespace CnV
 			}
 		}
 
-		public static MenuFlyoutItem AddItem(this MenuFlyout menu, string text, Action command)
+		public static MenuFlyoutItem AddItem(this MenuFlyout menu,string text,IconElement icon,Action command)
 		{
-			var rv = new MenuFlyoutItem() { Text = text };
-			if (command != null)
-				rv.Click += (_, _) => command();
+			var rv = new MenuFlyoutItem() { Text = text,Icon= icon };
+			if(command != null)
+				rv.Click += (_,_) => command();
 			menu.Items.Add(rv);
 			return rv;
 		}
+
+
+
+		public static MenuFlyoutItem AddItem(this MenuFlyout menu,string text,Symbol symbol,Action command) => AddItem(menu,text,new SymbolIcon(symbol),command);
+		public static MenuFlyoutItem AddItem(this MenuFlyout menu,string text,Symbol symbol,UIColor iconColor,Action command) => AddItem(menu,text,new SymbolIcon(symbol) { Foreground=AppS.Brush(iconColor) },command);
+		public static MenuFlyoutItem AddItem(this MenuFlyout menu,string text,string glyph, Action command) => AddItem(menu,text,new FontIcon() { Glyph=glyph },command);
+		public static MenuFlyoutItem AddItem(this MenuFlyout menu,string text,Action command) => AddItem(menu,text,icon:null,command:command);
 
 		public static MenuFlyoutItem AddItem(this MenuFlyoutSubItem menu, string text, Action command)
 		{
@@ -1392,6 +1402,27 @@ namespace CnV
 			menu.Items.Add(rv);
 			return rv;
 		}
+		public static MenuFlyoutItem AddItem(this MenuFlyout menu,ICommand command,object parameter=null)
+		{
+			var rv = new MenuFlyoutItem() { Command = command,CommandParameter=parameter };
+			menu.Items.Add(rv);
+			return rv;
+		}
+
+		public static MenuFlyoutItem AddItem<T>(this MenuFlyout menu,StandardUICommandKind kind,T parameter, Action<T> action)
+		{
+			var rv = new MenuFlyoutItem() { Command = kind.Create(action),CommandParameter=parameter };
+			menu.Items.Add(rv);
+			return rv;
+		}
+		public static MenuFlyoutItem AddItem<T>(this MenuFlyout menu,StandardUICommandKind kind,Action action)
+		{
+			var rv = new MenuFlyoutItem() { Command = kind.Create(action) };
+			menu.Items.Add(rv);
+			return rv;
+		}
+
+		private static void C_ExecuteRequested(XamlUICommand sender,ExecuteRequestedEventArgs args) => throw new NotImplementedException();
 
 		// must be on the right thread for this
 		//public static void Set(this InputCursor c) 
@@ -1400,7 +1431,7 @@ namespace CnV
 		//	//if(ShellPage.coreInputSource != null)
 		//	//{				
 		//	//	ShellPage.coreInputSource.DispatcherQueue.EnqueueAsync(() =>
-				
+
 		//	//		ShellPage.coreInputSource.PointerCursor = type,DispatcherQueuePriority.Low);
 
 		//	//}

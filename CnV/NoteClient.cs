@@ -153,7 +153,7 @@ namespace CnV
 								//}
 								//var textNull = ShellPage.instance.noteText.Length == 0;
 								// update on screen
-								AppS.DispatchOnUIThread( () =>
+								AppS.QueueOnUIThread( () =>
 								{
 									ShellPage.instance.inAppNotes.Add( CnVServer.serverTime.ToString("HH':'mm':'ss") + "\t" + s );
 								});

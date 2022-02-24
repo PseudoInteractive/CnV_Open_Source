@@ -281,9 +281,9 @@ namespace CnV
 
 		}
 		private static int RoundUpTo4(int v) => (v+3)&(~3);
-		private static int RoundDownTo4(int v) => (v+3)&(~3);
+		private static int RoundDownTo4(int v) => (v)&(~3);
 		private static bool IsMultipleOf4(int w,int h) => ((h&3)|(w&3)) ==0;//(v+3)&(~3);
-		public static Texture CreateFromDDS(string fileName,  bool wantSRGB)
+		public static Texture2D CreateFromDDS(string fileName,  bool wantSRGB)
 		{
 			try
 			{
@@ -348,9 +348,8 @@ namespace CnV
 					{
 						for(int m = 0;m<mips;++m)
 						{
-							const int item = 0;
-							var image = scratch.GetImage(m,item,arraySlice);
-							rv.SetDataRaw(image.Pixels,m,image.RowPitch,(image.Width),(image.Height),arraySlice,(int)image.SlicePitch);
+							var image = scratch.GetImage(m,arraySlice,0);
+							rv.SetDataRaw(image.Pixels,m,image.RowPitch,(image.Width),(image.Height),arraySlice,0);
 
 						}
 					}
@@ -376,12 +375,13 @@ namespace CnV
 				var pathN = AppS.AppFileName($"{nameAndPath}_n.dds");
 			//	var animated = nameAndPath.Contains("animseq");
 			//var frames = animated ? animationFrames : 1;
-				Texture texture = CreateFromDDS(path,wantSRGB: true);
-				Texture normalMap = unlit ? null : CreateFromDDS(pathN,wantSRGB:false);
+				var texture = CreateFromDDS(path,wantSRGB: true);
+				var normalMap = unlit ? null : CreateFromDDS(pathN,wantSRGB:false);
 				if(texture is not null )
 				{
 					var animated = texture.IsAnimated();
 					main = new Material(texture, normalMap, AGame.GetTileEffect(animated,unlit,city:city));
+					
 					shadow =wantShadow ?  new Material(texture, GetShadowEffect(animated)) : null;
 					return true;
 				}

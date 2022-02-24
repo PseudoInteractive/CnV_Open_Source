@@ -450,7 +450,7 @@ namespace CnV
 
 					
 				}
-				if(hovered.isInCity)
+				if(hovered.isInCityAndNotNan)
 				{
 					switch (CityBuild.action)
 					{

@@ -116,7 +116,10 @@ namespace CnV
 //		const                  string AuthorityResetPassword = $"{AuthorityBase}{PolicyResetPassword}";
 		const                  string CacheFileName          = "cnv_msal_cache.txt";
 		public readonly static string CacheDir               = MsalCacheHelper.UserRootDirectory;
-		static async Task  BuildPublicClientApp()
+
+		public const string extraQueryParameters = "{domain_hint:'discord'}";
+
+	static async Task  BuildPublicClientApp()
 		{
 			// TODO:  Mac and linux!
 			var storageProperties =
@@ -124,7 +127,7 @@ namespace CnV
 						.Build();
 
 			PublicClientApp = PublicClientApplicationBuilder.Create(ClientId)
-				.WithB2CAuthority(AuthoritySignUpSignIn)
+				.WithB2CAuthority(AuthoritySignUpSignIn).WithExtraQueryParameters(extraQueryParameters)
 				.WithRedirectUri(RedirectUri)
 				.WithExperimentalFeatures(true)
 				//	.WithDefaultRedirectUri()
@@ -153,32 +156,32 @@ namespace CnV
 			//	await Task.Delay(500).ConfigureAwait(false);
 			//			await Task.Yield();
 			IEnumerable<IAccount> accounts = null;
-			IEnumerable<IAccount> accounts0 = null;
+//			IEnumerable<IAccount> accounts0 = null;
 			//AppS.DispatchOnUIThread( async () => {  
 			try
 			{
 
 			await BuildPublicClientApp();
-				accounts0 = (await PublicClientApp.GetAccountsAsync()).ToArray();
-				foreach(var a in accounts0)
-				{
-					Debug.Log(a.Username + " " + a.Environment + " " + a.HomeAccountId);
-				}
+				//accounts0 = (await PublicClientApp.GetAccountsAsync()).ToArray();
+				//foreach(var a in accounts0)
+				//{
+				//	Debug.Log(a.Username + " " + a.Environment + " " + a.HomeAccountId);
+				//}
 				
 			try
 			{
 				accounts = await PublicClientApp.GetAccountsAsync(PolicySignUpSignIn);
-				foreach(var a in accounts)
-				{
-					Debug.Log(a.Username + " " + a.Environment + " " + a.HomeAccountId);
-				}
+				//foreach(var a in accounts)
+				//{
+				//	Debug.Log(a.Username + " " + a.Environment + " " + a.HomeAccountId);
+				//}
 
 			}
 			catch(Exception ex)
 			{
 				LogEx(ex);
 			}
-			IAccount? currentUserAccount = accounts?.FirstOrDefault() ?? accounts0?.FirstOrDefault();
+			IAccount? currentUserAccount = accounts?.FirstOrDefault();
 			try
 				{
 				if (accounts != null)
@@ -187,7 +190,7 @@ namespace CnV
 
 					if (currentUserAccount is not null)
 					{
-						var authResult = await PublicClientApp.AcquireTokenSilent(ApiScopes, currentUserAccount)
+						var authResult = await PublicClientApp.AcquireTokenSilent(ApiScopes, currentUserAccount).WithExtraQueryParameters(extraQueryParameters)
 											.ExecuteAsync();
 
 						ProcessUserInfo(authResult);
@@ -208,9 +211,9 @@ namespace CnV
 				try
 				{
 				var authResult = await PublicClientApp.AcquireTokenInteractive(ApiScopes)
-										.WithAccount(currentUserAccount)
-									//	.WithUseEmbeddedWebView(false)
-									//	.WithPrompt(Prompt.SelectAccount)
+										.WithAccount(currentUserAccount).WithExtraQueryParameters(extraQueryParameters).WithPrompt(Prompt.NoPrompt)
+										//	.WithUseEmbeddedWebView(false)
+										//	.WithPrompt(Prompt.SelectAccount)
 										.ExecuteAsync();
 					ProcessUserInfo(authResult);
 					return true;

@@ -68,28 +68,77 @@
 				<Slider Height="128" Header="Chat Font Size" Value="{x:Bind cnv:Settings.chatZoom, Mode=TwoWay}" Maximum="1.0" TickFrequency="0.125"  StepFrequency="0.0625" SmallChange="0.0625" Margin="8" TickPlacement="Outside" Orientation="Vertical" ToolTipService.ToolTip="Must restart to see changes" ValueChanged="{x:Bind cnv:Settings.UpdateZoom}" />
 			</wct:WrapPanel>
 
-			<wct:WrapPanel Orientation="Horizontal">
+			<wct:WrapPanel Orientation="Horizontal" HorizontalAlignment="Stretch" >
 				<CheckBox Content="Fetch Attack Reports"
 						  IsChecked="{x:Bind FetchFullHistory,Mode=TwoWay}"
 						  ToolTipService.ToolTip="If disabled, the Hits tab and Defense History tab will not work, but incoming and outgoing tabs will be faster"
 						  Margin="4" />
-				<controls:NumberBox  Header="UI Update Latency"
+				<NumberBox  Header="lA"
+									 Value="{x:Bind cnv:Settings.lightA,Mode=TwoWay}"
+									 SmallChange="0.125"
+									 LargeChange="10"
+									 Style="{StaticResource NumberBoxSmall}" />
+									 
+					<NumberBox  Header="LD"
+									 Value="{x:Bind cnv:Settings.lightD,Mode=TwoWay}"
+									 SmallChange="0.125"
+									 LargeChange="10"
+									 Style="{StaticResource NumberBoxSmall}" />
+
+						<NumberBox  Header="SR"
+									 Value="{x:Bind cnv:Settings.lightSR,Mode=TwoWay}"
+									 SmallChange="0.125"
+									 LargeChange="10"
+									 Style="{StaticResource NumberBoxSmall}" />
+
+							<NumberBox  Header="SG"
+									 Value="{x:Bind cnv:Settings.lightSG,Mode=TwoWay}"
+									 SmallChange="0.125"
+									 LargeChange="10"
+									 Style="{StaticResource NumberBoxSmall}" />
+				<NumberBox  Header="SB"
+									 Value="{x:Bind cnv:Settings.lightSB,Mode=TwoWay}"
+									 SmallChange="0.125"
+									 LargeChange="10"
+									 Style="{StaticResource NumberBoxSmall}" />
+				<NumberBox  Header="R"
+									 Value="{x:Bind cnv:Settings.lightM,Mode=TwoWay}"
+									 SmallChange="0.125"
+									 LargeChange="10"
+									 Style="{StaticResource NumberBoxSmall}" />
+
+				<NumberBox  Header="S"
+									 Value="{x:Bind cnv:Settings.lightS,Mode=TwoWay}"
+									 SmallChange="0.125"
+									 LargeChange="10"
+									 Style="{StaticResource NumberBoxSmall}" />
+				<NumberBox  Header="Shader"
+									 Value="{x:Bind cnv:Settings.lightShader,Mode=TwoWay}"
+									 SmallChange="1"
+									 LargeChange="10"
+									 />
+
+
+
+		
+				
+				<NumberBox  Header="UI Update Latency"
 									 Value="{x:Bind cnv:Settings.uiUpdateDelay,Mode=TwoWay}"
 									 SmallChange="1"
 									 LargeChange="10"
 									 Style="{StaticResource NumberBoxSmall}" />
-				<controls:NumberBox  Header="Debug Layer"
+				<NumberBox  Header="Debug Layer"
 									 Value="{x:Bind cnv:GameClient.debugLayer,Mode=TwoWay}"
 									 SmallChange="1"
 									 LargeChange="10"
 									 Style="{StaticResource NumberBoxSmall}" />
-				<controls:NumberBox  Header="Show Attacks Limit"
+				<NumberBox  Header="Show Attacks Limit"
 									 Value="{x:Bind cnv:Settings.showAttacksLimit,Mode=TwoWay}"
 									 SmallChange="1"
 									 ToolTipService.ToolTip="If there are more incoming attacks than this, only attacks for selected cities will be shown, can be combined with Outgoing Visible or Incoming Visble to see everything (tip: use a continent filter to help performance)"
 									 LargeChange="10"
 									 Style="{StaticResource NumberBoxSmall}" />
-				<controls:NumberBox  Header="Spot MRU count"
+				<NumberBox  Header="Spot MRU count"
 									 Value="{x:Bind cnv:Settings.mruSize,Mode=TwoWay}"
 									 SmallChange="1"
 									 LargeChange="10"
@@ -130,23 +179,23 @@
 							   ToolTipService.ToolTip="If checked, each city with trrops will draw a troop overlay in region view"
 							   />
 
-				<controls:NumberBox Header="Reset Raids Carry %"
+				<NumberBox Header="Reset Raids Carry %"
 									 Value="{x:Bind cnv:Settings.resetRaidsCarry,Mode=TwoWay}"
 									 SmallChange="1" ToolTipService.ToolTip="When resetting raids, if [Min(carry%)] &lt;= [Reset Raids Carry %] raids are reset"
 									 LargeChange="5"
 									 Style="{StaticResource NumberBoxSmall}" />
-				<controls:NumberBox Header="Reset Raids Idle %"
+				<NumberBox Header="Reset Raids Idle %"
 									 Value="{x:Bind cnv:Settings.resetRaidsIdle,Mode=TwoWay}"
 									 SmallChange="1" ToolTipService.ToolTip="When resetting raids, if [idle troops]/[total troops] > [Reset Raids Idle %] raids are reset"
 									 LargeChange="5"
 									 Style="{StaticResource NumberBoxSmall}" />
-				<controls:NumberBox Header="Return Raids Offset"
+				<NumberBox Header="Return Raids Offset"
 									 Value="{x:Bind cnv:Settings.returnRaidsBias,Mode=TwoWay}"
 									 SmallChange="0.125"
 									ToolTipService.ToolTip="When attacks are scheduled and raids are asked to return before departure, they will come home this many hours before departure"
 									 LargeChange="1"
 									 Style="{StaticResource NumberBoxSmall}" />
-				<controls:NumberBox Header="NotificationDuration"
+				<NumberBox Header="NotificationDuration"
 									Value="{x:Bind cnv:Settings.notificationDuration, Mode=TwoWay }"
 									SmallChange="1"
 									ToolTipService.ToolTip="Specifies how long notications delays last on screen, regardless of durations you can click on the notifications to dismiss them"
@@ -173,19 +222,19 @@
 						<Flyout ShowMode="TransientWithDismissOnPointerMoveAway" >
 							<StackPanel Orientation="Vertical" Width="300" >
 								<wct:WrapPanel Orientation="Horizontal" Margin="4">
-									<controls:NumberBox x:Name="exportRanksCont"
+									<NumberBox x:Name="exportRanksCont"
 										NumberFormatter="{x:Bind cnv:App.formatterInt,Mode=OneTime}"
 										Style="{StaticResource NumberBoxSmall}"
 										Header="Continent"
 										ToolTipService.ToolTip="56 means world"
 										Value="3" />
-									<controls:NumberBox x:Name="exportRanksCities"
+									<NumberBox x:Name="exportRanksCities"
 										NumberFormatter="{x:Bind cnv:App.formatterInt,Mode=OneTime}"
 										Style="{StaticResource NumberBoxSmall}"
 										Header="Min Cities"
 										ToolTipService.ToolTip="Alliances with fewer than this many cities are skipped"
 										Value="300" />
-									<controls:NumberBox x:Name="exportRanksDays"
+									<NumberBox x:Name="exportRanksDays"
 										NumberFormatter="{x:Bind cnv:App.formatter2Digit,Mode=OneTime}"
 										Style="{StaticResource NumberBoxSmall}"
 										Header="Days"
@@ -207,26 +256,26 @@
 						<Flyout x:Name="exportTSFlyout" ShowMode="TransientWithDismissOnPointerMoveAway" >
 							<StackPanel Orientation="Vertical" Width="300" >
 								<wct:WrapPanel Orientation="Horizontal" Margin="4">
-									<controls:NumberBox 
+									<NumberBox 
 									Value="{x:Bind cnv:Settings.exportContinent, Mode=TwoWay}"
 									NumberFormatter="{x:Bind cnv:App.formatterInt,Mode=OneTime}"
 									Style="{StaticResource NumberBoxSmall}"
 									Header="Continent"
 									ToolTipService.ToolTip="56 means world"
 									 />
-									<controls:NumberBox x:Name="exportTSPlayers"
+									<NumberBox x:Name="exportTSPlayers"
 									NumberFormatter="{x:Bind cnv:App.formatterInt,Mode=OneTime}"
 									Style="{StaticResource NumberBoxSmall}"
 									Header="Players"
 									ToolTipService.ToolTip="Max # of players to export"
 									Value="10" />
-									<controls:NumberBox x:Name="exportTSMinTS"
+									<NumberBox x:Name="exportTSMinTS"
 									NumberFormatter="{x:Bind cnv:App.formatterInt,Mode=OneTime}"
 									Style="{StaticResource NumberBoxSmall}"
 									Header="MinTS"
 									ToolTipService.ToolTip="Cities with fewer TS will not be exported"
 									Value="300" />
-									<controls:NumberBox x:Name="exportTSDays"
+									<NumberBox x:Name="exportTSDays"
 									NumberFormatter="{x:Bind cnv:App.formatter2Digit,Mode=OneTime}"
 									Style="{StaticResource NumberBoxSmall}"
 									Header="Days"
@@ -347,7 +396,7 @@
 							  ItemsSource="{x:Bind cnv:CityList.all, Mode=OneTime}"
 							  ToolTipService.ToolTip="City List used for hubs"
 							  Margin="4" />
-					<controls:NumberBox Header="Cottage Level"
+					<NumberBox Header="Cottage Level"
 										Value="{x:Bind cnv:Settings.cottageLevel, Mode=TwoWay}"
 										Width="120"
 										Style="{StaticResource NumberBoxSmall}"

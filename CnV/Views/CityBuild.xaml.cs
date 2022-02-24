@@ -1034,7 +1034,7 @@ namespace CnV
 			var city = City.GetBuild();
 			var cc = city.TranslateWaterOrWallSpot(hovered);
 
-			if(!cc.isInCity)
+			if(!cc.isInCityAndNotNan)
 				return false;
 			switch(key)
 			{

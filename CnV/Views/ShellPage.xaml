@@ -6,7 +6,8 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       xmlns:tk="using:CommunityToolkit.WinUI.UI.Controls"
-      xmlns:tkui="using:CommunityToolkit.WinUI.UI"
+    xmlns:animatedvisuals="using:Microsoft.UI.Xaml.Controls.AnimatedVisuals"
+			 xmlns:tkui="using:CommunityToolkit.WinUI.UI"
       xmlns:views="using:CnV.Views"
       xmlns:winui="using:Microsoft.UI.Xaml.Controls"
       x:Name="shellPage"
@@ -191,7 +192,18 @@
 					</AppBarButton.Resources>-->
 					</winui:AppBarButton>
 					<AppBarSeparator/>
-					<AppBarButton Label="Settings" Icon="Setting" Click="ShowSettings" Style="{StaticResource AppBarButtonRevealStyle}"/>
+					<AppBarButton Label="Settings"  Click="ShowSettings" Style="{StaticResource AppBarButtonRevealStyle}">
+						<AppBarButton.Icon>
+							<AnimatedIcon x:Name='AnimatedIcon'>
+								<AnimatedIcon.Source>
+									<animatedvisuals:AnimatedSettingsVisualSource/>
+								</AnimatedIcon.Source>
+								<AnimatedIcon.FallbackIconSource>
+									<FontIconSource FontFamily="Segoe MDL2 Assets" Glyph="&#xE713;"/>
+								</AnimatedIcon.FallbackIconSource>
+							</AnimatedIcon>
+						</AppBarButton.Icon>
+					</AppBarButton>
 				</winui:CommandBar.PrimaryCommands>
 			</winui:CommandBar>
 

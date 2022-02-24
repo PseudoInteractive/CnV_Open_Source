@@ -168,8 +168,8 @@ namespace CnV.Draw
 			// Determine how many iterations through the drawing code we need to make
 			// Iterate through the batches, doing short.MaxValue sets of vertices only.
 			EffectPass lastEffectPass = null;
-			Texture lastTexture0 = null;
-			Texture lastTexture1 = null;
+			//Texture lastTexture0 = null;
+			//Texture lastTexture1 = null;
 			for(int i=0;i<layerCount;++i)
 			{
 				var layer = _batchItemList[i];
@@ -191,22 +191,41 @@ namespace CnV.Draw
 						//						fixed (VertexPositionColorTexture* vertexArrayFixedPtr = _vertexArray)
 						{
 							//						var vertexArrayPtr = vertexArrayFixedPtr;
-
+							
 							// Draw the batches
+							
+
+							
 							var pass = material.effect;
 							if(lastEffectPass != pass)
 							{
 								lastEffectPass =pass;
-								if (pass != null)
-								{									
+								if(pass != null)
+								{
 									pass._effect.CurrentTechnique = pass.technique;
 									pass.Apply();
 								}
+								//for(int i1 = 0;i1<4;++i1)
+								//	_device.Textures[i1] = null;
 							}
+							var t0 = material.texture;
+							var t1 = material.texture1;
+							//if(t0 is not null)
+							//{
+							//	if(t0.IsAnimated())
+							//	{
+							//		_device.Textures[2] = t0;
+							//		if(t1 is not null)
+							//			_device.Textures[3] = t1;
+							//	}
+							//	else
+								{
+									_device.Textures[0] = t0;
+									if(t1 is not null)
+									_device.Textures[1] = t1;
 
-							_device.Textures[0] = material.texture;
-							_device.Textures[1] = material.texture1;
-
+								}
+							//}
 							if (list.sprites.Count>0)
 							{
 								_device.DrawUserSprites(
@@ -217,7 +236,7 @@ namespace CnV.Draw
 							{
 								_device.SetIndexBuffer(mesh.ib);
 								_device.SetVertexBuffer(mesh.vb);
-								_device.DrawIndexedPrimitives(PrimitiveType.TriangleList, mesh.vertexCount,0, mesh.triangleCount);
+								_device.DrawIndexedPrimitives(PrimitiveType.TriangleList,0,0,mesh.vertexCount,0, mesh.triangleCount);
 							}
 
 							list.Release();

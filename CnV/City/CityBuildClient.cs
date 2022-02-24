@@ -252,17 +252,17 @@ namespace CnV
 						{
 							if(b.isEmpty)
 							{
-								if(IsBuildingSpotOrTownHall(XYToId(hovered), build))
+								if(IsBuildingSpotOrTownHall(XYToId(cc), build))
 								{
 									Status($"Left click to build something\nRight click to select a quick build tool", dryRun);
 
 								}
-								else if(IsTowerSpot(hovered))
+								else if(IsTowerSpot(cc))
 								{
 									Status($"Left click to build tower\nRight click to select a quick build tool", dryRun);
 
 								}
-								else if(IsWallSpot(hovered))
+								else if(IsWallSpot(cc))
 								{
 									Status($"Left click to build wall\nRight click to select a quick build tool", dryRun);
 								}

@@ -26,6 +26,7 @@ using Windows.ApplicationModel.DataTransfer;
 //using Expander = CommunityToolkit.WinUI.UI.Controls.cer;
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
+using static CnV.CityStats;
 
 namespace CnV
 {
@@ -97,7 +98,7 @@ namespace CnV
 				instance.cityQueueChangeDebounce.Go();
 			}
 		}
-		static BuildQueueType lastSynchronizedQueue = BuildQueueType.Empty;
+		internal static BuildQueueType lastSynchronizedQueue = BuildQueueType.Empty;
 
 		static void UpdateBuildQueue()
 		{
@@ -135,8 +136,7 @@ namespace CnV
 					}
 					if(cur == -1)
 					{
-						var bi = new BuildItem(op);
-						bi.UpdateText(city);
+						var bi = new BuildItem(op,city);
 						bq.Insert(i,bi);
 					}
 					else
@@ -170,7 +170,7 @@ namespace CnV
 
 		}
 
-		internal DebounceA cityQueueChangeDebounce = new(UpdateBuildQueue) { runOnUiThread=true,debounceDelay=50 };
+		internal DebounceA cityQueueChangeDebounce = new(UpdateBuildQueue) { runOnUiThread=true,debounceDelay=100 };
 
 
 
@@ -257,7 +257,7 @@ namespace CnV
 						{
 							foreach(var b in buildQueue)
 							{
-								b.UpdateText(city);
+								b.UpdateText();
 							}
 						}
 
@@ -402,7 +402,7 @@ namespace CnV
 
 		ObservableCollection<BuildingCountAndBrush> buildingCounts = new();
 
-		ObservableCollection<BuildItem> buildQueue = new();
+		internal ObservableCollection<BuildItem> buildQueue = new();
 
 		private void UserControl_Loaded(object sender,RoutedEventArgs e)
 		{
@@ -416,7 +416,7 @@ namespace CnV
 
 		
 
-		private async void buildQueueListView_DragItemsCompleted(ListViewBase sender,DragItemsCompletedEventArgs args)
+		private void buildQueueListView_DragItemsCompleted(ListViewBase sender,DragItemsCompletedEventArgs args)
 		{
 			try
 			{
@@ -426,36 +426,38 @@ namespace CnV
 					var item = args.Items.FirstOrDefault() as BuildItem;
 					var index = buildQueue.IndexOf(item);
 					var bq = city.buildQueue;
-					Log($"Change: {dragStartingIndex}=>{index}, {buildQueue.Count} {bq == bqAtDragStart} ");
-					if(index != -1 || dragStartingIndex != -1 && (bq==bqAtDragStart))
+					Note.Show($"Change: {dragStartingIndex}=>{index}, {buildQueue.Count} {bq == bqAtDragStart} ");
+					if((index != -1 && dragStartingIndex != -1) && (bq==bqAtDragStart))
 					{
-						if( (index == -1 || dragStartingIndex == -1)&&city.buildItemEndsAt.isNotZero )
-						{
-							Note.Show("Unable to order a build in progress");
+						
 
-						}
-
-						city.AttempMove(dragStartingIndex,index);
+						city.AttempMove(dragStartingIndex,index,bqAtDragStart);
 
 					}
 
 				}
 				else
 				{
-					Assert(false);
+					var items = args.Items.Select( (a) =>  buildQueue.IndexOf( a as BuildItem));
+					
+
+						city.RemoveWithDependencies(new(items),bqAtDragStart);
+
+					
 				}
 			}
 			catch(Exception ex)
 			{
 				LogEx(ex);
+				city.BuildingsOrQueueChanged();
 			}
-			NotifyBuildQueueChange();
+			
 			//			Log(args.Items.Format());
 			//			LogJson(args);
 
 		}
 
-		BuildQueueType bqAtDragStart;
+		BuildQueueType bqAtDragStart; // cache this, if it changes by drag end, everything is invalidated
 		int dragStartingIndex;
 		private void buildQueueListView_DragItemsStarting(object sender,DragItemsStartingEventArgs e)
 		{
@@ -465,16 +467,17 @@ namespace CnV
 			// Cannot move if it is currently building
 			var city = this.city;
 			bqAtDragStart= lastSynchronizedQueue; 
-
+			if(e.Items.Count > 1)
+			{
+				Note.Show("Multi item reorder not yet supported, moving first selement");
+			}
 	
 		}
 
 		private void buildQueueListView_ContextRequested(UIElement sender,ContextRequestedEventArgs args)
 		{
-			//VisualTreeHelper.GetParent(args.OriginalSource
-			LogJson(args);
-			Log(args.OriginalSource);
-			LogJson(sender);
+			
+			Log(args);
 		}
 
 
@@ -506,17 +509,21 @@ namespace CnV
 		public string opText { get; set; }
 		public string timeText { get; set; }
 		public BuildQueueItem op;
-		public BuildItem(BuildQueueItem item)
+
+		internal City city;
+		public BuildItem(BuildQueueItem item, City city)
 		{
+			this.city = city;
 			op = item;
 			image = CityBuild.GetBuildingImage(item.isMove ? Building.bidMove : item.bid,size);
 			opText = op.isMove ? "Move" : op.isDemo ? "Destroy" : op.isBuild ? $"Build{(op.pa==false ? " p" : "") }" : op.isDowngrade ? $"Down to {op.elvl}" : $"Up to {op.elvl}";
+			UpdateText();
 		}
-		public void UpdateText(City city)
+		public void UpdateText()
 		{
 			var q = city.buildQueue;
 			TimeSpanS dt;
-			if(q.Any() && q[0]== op && city.buildItemEndsAt.isZero )
+			if(q.Any() && q[0]== op && city.buildItemEndsAt.isNotZero )
 				dt = city.buildItemEndsAt - CnVServer.simTime;
 			else
 				dt = new(op.TimeRequired(city));
@@ -530,9 +537,55 @@ namespace CnV
 		}
 		public void ContextRequested(UIElement sender,ContextRequestedEventArgs args)
 		{
-			LogJson(args);
-			LogJson(args.OriginalSource);
-			LogJson(sender);
+			args.Handled    = true;
+			var flyout = new MenuFlyout();
+			flyout.SetXamlRoot();
+			
+
+			flyout.AddItem(StandardUICommandKind.Delete.Create( () =>
+			{
+				var index = instance.buildQueue.IndexOf(this);
+				if(index != -1)
+					city.RemoveWithDependencies(new(new[]{ index } ),lastSynchronizedQueue);
+				else
+					Note.Show("Something changed");
+			}));
+			flyout.AddItem("Cancel Selected",Symbol.Remove,() =>
+			{
+				var sel = instance.buildQueueListView.SelectedItems;
+
+				city.RemoveWithDependencies(sel.Any() ? new( sel.Select( x=> instance.buildQueue.IndexOf(x as BuildItem ))) :new(new[] { instance.buildQueue.IndexOf(this) }) ,lastSynchronizedQueue);
+			});
+			flyout.AddItem("Move To Front",Symbol.Up,() =>
+			{
+				var index = instance.buildQueue.IndexOf(this);
+				if(index != -1)
+					city.AttempMove(index,0,lastSynchronizedQueue);
+			}); 
+			flyout.AddItem("Move To End",Symbol.Back,() =>
+			{
+				var index = instance.buildQueue.IndexOf(this);
+				if(index != -1)
+					city.AttempMove(index,city.buildQueue.Length-1,lastSynchronizedQueue);
+			});
+
+			if(args.TryGetPosition(sender,out var c))
+			{
+				flyout.ShowAt(sender,c);
+			}
+			else if(args.TryGetPosition(CityStats.instance,out var c2))
+			{
+				flyout.ShowAt(CityStats.instance,c2);
+			}
+			else
+			{
+				flyout.ShowAt(CityStats.instance,new());
+				Assert(false); 
+			}
+			//VisualTreeHelper.GetParent(args.OriginalSource
+			//LogJson(args);
+			//Log(args.OriginalSource);
+			//LogJson(sender);
 		}
 		public void OnPropertyChanged(string members = null) => PropertyChanged?.Invoke(this,new(members));
 
