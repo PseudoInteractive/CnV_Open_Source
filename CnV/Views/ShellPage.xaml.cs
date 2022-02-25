@@ -361,8 +361,23 @@ namespace CnV.Views
 
 				var cachePlayerTask = Task.Run(PlayerGameEntity.UpdateCache);
 				// canvas.ContextFlyout = CityFlyout;
+
 				//	grid.Children.Add(c.canvas);
 				// grid.Children.Add(c.hitTest);
+				//AppS.DispatchOnUIThreadLow(() =>
+				//{
+				//	var display = Microsoft.Graphics.Canvas.CanvasDevice.GetSharedDevice();
+				//Log( display.IsPixelFormatSupported(Windows.Graphics.DirectX.DirectXPixelFormat.R10G10B10A2UIntNormalized) );
+				//Log(display.IsPixelFormatSupported(Windows.Graphics.DirectX.DirectXPixelFormat.R10G10B10XRBiasA2UIntNormalized));
+
+				//Log(display.IsPixelFormatSupported(Windows.Graphics.DirectX.DirectXPixelFormat.R11G11B10Float));
+				////	var colorInfo = display.GetAdvancedColorInfo();
+				////	AGame.colorKind = colorInfo.CurrentAdvancedColorKind;
+				////	display.AdvancedColorInfoChanged+= (a,__) =>
+				////	{
+				////		AGame.colorKind = a.GetAdvancedColorInfo().CurrentAdvancedColorKind;
+				////	};
+				//});
 
 				// Canvas.SetZIndex(c.hitTest, 13); Task.Run(SetupCanvasInput);//
 				// Task.Run(SetupCanvasInput); Placement.SizeChanged += Placement_SizeChanged; var img =
@@ -418,7 +433,7 @@ namespace CnV.Views
 				// Keyboard accelerators are added here to avoid showing 'Alt + left' tooltip on the
 				// page. More info on tracking issue https://github.com/Microsoft/microsoft-ui-xaml/issues/8
 
-				
+
 
 
 				//			KeyboardAccelerators.Add(BuildKeyboardAccelerator(VirtualKey.F5, Refresh_Invoked,VirtualKeyModifiers.Control));

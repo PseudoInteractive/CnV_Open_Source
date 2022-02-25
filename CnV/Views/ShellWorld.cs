@@ -1022,8 +1022,8 @@ namespace CnV.Views
 																			bool IsInContact, ulong Timestamp, PointerUpdateKind PointerUpdateKind) point)
 		{
 
-			if(!mouseOverCanvas)
-				Log("Mouse Moved Canvas");
+//			if(!mouseOverCanvas)
+//				Log("Mouse Moved Canvas");
 			//	App.cursorDefault.Set();
 			// prevent idle timer;
 			mouseOverCanvas = true;

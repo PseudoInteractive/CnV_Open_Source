@@ -391,28 +391,30 @@ internal partial class GameClient
 								  0.5f, 1.5f);
 				//					var proj = Matrix.CreateOrthographicOffCenter(480, 1680, 1680, 480, 0, -1);
 				worldMatrixParameter.SetValue(proj);
-				var lightCC = new XVector3(AGame.projectionC.X,AGame.projectionC.Y,virtualSpan.X*pixelScaleInverse*cameraZForLighting);
+				var lightCC = new XVector3(AGame.projectionC.X,AGame.projectionC.Y,virtualSpan.X*0.5f*cameraZForLighting);
 				lightPositionCameraParameter.SetValue(lightCC);
 
-				if(Settings.lighting == Lighting.night)
-				{
-	//				ToolTips.debugTip = $"{ShellPage.mousePosition} {lightZNight*pixelScale}";
-					var l = ShellPage.mousePosition;//C.CameraToScreen();//.InverseProject();
-					var lc = ShellPage.mousePositionC;//C.CameraToScreen();//.InverseProject();
-					lightPositionParameter.SetValue(new Microsoft.Xna.Framework.Vector3(l.X, l.Y, lightZNight));
-				//	lightPositionCameraParameter.SetValue(new Microsoft.Xna.Framework.Vector3(lc.X, lc.Y, lightZNight));
-					//lightGainsParameter.SetValue(new Microsoft.Xna.Framework.Vector4(0.25f, 1.25f, 0.375f, 1.0625f));
-					lightAmbientParameter.SetValue(new Vector4(new Vector3(.493f, .576f, .639f) * 0.25f*Settings.lightA,Settings.lightM));
-					lightColorParameter.SetValue(new Vector4( new Vector3(1.0f, 1.0f, 1.0f) * 1.25f*Settings.lightD,Settings.lightS));
-					//lightSpecularParameter.SetValue(new Microsoft.Xna.Framework.Vector3(1.0f, 1.0f, 1.0f) * 1.25f*specularGain);
-				}
-				else
+	//			if(Settings.lighting == Lighting.night)
+	//			{
+	////				ToolTips.debugTip = $"{ShellPage.mousePosition} {lightZNight*pixelScale}";
+	//				var l = ShellPage.mousePosition;//C.CameraToScreen();//.InverseProject();
+	//				var lc = ShellPage.mousePositionC;//C.CameraToScreen();//.InverseProject();
+	//				lightPositionParameter.SetValue(new Microsoft.Xna.Framework.Vector3(l.X, l.Y, lightZNight));
+	//			//	lightPositionCameraParameter.SetValue(new Microsoft.Xna.Framework.Vector3(lc.X, lc.Y, lightZNight));
+	//				//lightGainsParameter.SetValue(new Microsoft.Xna.Framework.Vector4(0.25f, 1.25f, 0.375f, 1.0625f));
+	//				lightAmbientParameter.SetValue(new Vector4(new Vector3(.493f, .576f, .639f) * 0.25f*Settings.lightA,Settings.lightM));
+	//				lightColorParameter.SetValue(new Vector4( new Vector3(1.0f, 1.0f, 1.0f) * 1.25f*Settings.lightD,Settings.lightS));
+	//				//lightSpecularParameter.SetValue(new Microsoft.Xna.Framework.Vector3(1.0f, 1.0f, 1.0f) * 1.25f*specularGain);
+	//			}
+	//			else
 				{
 					///				var xc = lightWC.WorldToCamera().CameraToScreen();
 					var t = (float)CnVServer.simDateTime.TimeOfDay.TotalDays;
 
 					const float shrink = 0.125f;
 					t = t*64;
+					if((Settings.lighting == Lighting.night))
+						t += 0.5f; // day t= night
 					t -= MathF.Floor(t);
 					t = t.Bezier(0f,0.3f,0.43f,0.57f,0.70f,1.0f);
 					var isDay = (t >= 0.25f) & (t <= 0.75f);
@@ -424,9 +426,9 @@ internal partial class GameClient
 					const float worldSpan1 = World.span *  1.25f;
 					var csTau = MathF.Cos(t*MathF.Tau);
 					Vector2 wc = new Vector2(MathF.Sin(t*MathF.Tau).SNormLerp(worldSpan0, worldSpan1),
-						(csTau * (isDay ? 1.0f : 1.0f)).SNormLerp(worldSpan0,worldSpan1));
+						(csTau ).SNormLerp(worldSpan0,worldSpan1));
 					
-					var Z = (csTau * (isDay ? -1.0f : 0.0f) + 1.0f)*World.span;
+					var Z = (csTau*t1.SCurve(-1.0f,-0.25f )+ 1.0f)*World.span;
 					var cc = (wc.WorldToCamera()*shrink);
 					var sc = cc.CameraToScreen();
 					Assert(Z> 0);
@@ -439,13 +441,14 @@ internal partial class GameClient
 												new Vector3(0.5f,0.5f,1.5f),
 												new Vector3(1.0f,1.0f,1.0f),
 												new Vector3(1.0f,0.5f,0.125f)
-																		)*0.75f*Settings.lightD;
+																		)*0.75f;
 					var a3 = t.CatmullRomLoop(new Vector3(0.750f,0.5f,1.0f),
 												new Vector3(0.5f,0.5f,1.0f),
 												new Vector3(1.0f,1.0f,1.0f),
 												new Vector3(1.0f,0.5f,0.25f)
-																		)*0.375f*Settings.lightA;
-				//	var s3 = new Vector4(Settings.lightSR,Settings.lightSG,Settings.lightSB,Settings.lightShader);//0.5f.Lerp(d3.Normalized(),new Vector3(0.75f,0.75f,0.75f) );
+																		)*0.375f;
+					// this will do for specular
+					var s3 =  0.5f.Lerp(d3.Normalized(),new Vector3(0.75f,0.75f,0.75f) );
 					
 					//var hue = 0.6667f - t1;
 					//hue -= hue.Floor();
@@ -460,12 +463,12 @@ internal partial class GameClient
 					//lightColorParameter.SetValue(new XVector4(1.1f, 1.1f, 0.9f, 1f) * 1.25f);
 					//lightSpecularParameter.SetValue(new XVector4(1.0f, 1.0f, 1.0f, 1.0f) * 1.25f);
 					//	lightGainsParameter.SetValue(new XVector4(0.25f, 1.25f, 0.375f, 1.0625f));
-					lightAmbientParameter.SetValue(new Vector4(a3,Settings.lightM) );
-					lightColorParameter.SetValue(new Vector4(d3,Settings.lightS));
-					
+					lightAmbientParameter.SetValue(a3);
+					lightColorParameter.SetValue(d3);
+					lightSpecularParameter.SetValue(s3);
 				}
-				var s3 = new Vector4(Settings.lightSR,Settings.lightSG,Settings.lightSB,Settings.lightShader);//0.5f.Lerp(d3.Normalized(),new Vector3(0.75f,0.75f,0.75f) );
-				lightSpecularParameter.SetValue(s3);
+//				var s3 = new Vector4(Settings.lightSR,Settings.lightSG,Settings.lightSB,Settings.lightShader);//0.5f.Lerp(d3.Normalized(),new Vector3(0.75f,0.75f,0.75f) );
+				
 
 
 				//cameraReferencePositionParameter.SetValue(new XVector3(projectionC.X, projectionC.Y,1));
@@ -1930,7 +1933,7 @@ internal partial class GameClient
 
 	public static void UpdateRenderQuality(float renderQuality)
 	{
-		UpdateResolution();
+		UpdateDevice();
 	}
 
 	const float viewHoverZGain = 0.5f / 64.0f;
@@ -1970,12 +1973,13 @@ internal partial class GameClient
 						//									_graphics.PreferredBackBufferHeight = (int)clientSpan.Y;
 						//								_graphics.PreferredBackBufferWidth = (int)clientSpan.X;
 						//					_graphics.ApplyChanges();
+						//_graphics.PreferredBackBufferFormat = GetBackBufferFormat();
 						var pre = new PresentationParameters()
 						{
-							BackBufferFormat = SurfaceFormat.Bgra32,//_graphics.PreferredBackBufferFormat,
+							BackBufferFormat =  GetBackBufferFormat(),
 							DepthStencilFormat = DepthFormat.None,
 							SwapChainPanel = canvas,
-							RenderTargetUsage = RenderTargetUsage.DiscardContents,
+							RenderTargetUsage = RenderTargetUsage.PlatformContents,
 							BackBufferWidth = (int)(clientSpan.X*resolutionScale),// - ShellPage.cachedXOffset,
 							BackBufferHeight = (int)(clientSpan.Y*resolutionScale), // - ShellPage.cachedTopOffset,
 						};
@@ -2116,6 +2120,8 @@ internal partial class GameClient
 
 
 	}
+
+	private static SurfaceFormat GetBackBufferFormat() => SurfaceFormat.Color; //  Settings.useHDR ? SurfaceFormat.Rgba1010102 : SurfaceFormat.Bgra32SRgb;
 
 	private static async Task Faulted()
 	{

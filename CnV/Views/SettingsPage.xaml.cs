@@ -280,7 +280,9 @@ namespace CnV
 					SetSpatialOn(spatialOn);
 					UpdateZoom();
 				});
-			
+
+				
+
 				ShellPage.updateHtmlOffsets.Go(true);
 				//	DungeonView.Initialize();
 				//layoutOffsets = new LayoutOffsets[]
@@ -301,8 +303,20 @@ namespace CnV
 				LogEx(e);
 			}
 		}
-
-
+		public bool UseHdr
+		{
+			get => Settings.useHDR;
+			set {
+				if(Settings.useHDR != value)
+				{
+					Settings.useHDR = value;
+					Microsoft.Xna.Framework.SharpDXHelper.SetWantHdr(Settings.useHDR);
+					
+					GameClient.UpdateDevice();
+				}
+			}
+		}
+		
 		[NonSerialized]
 		public static double mediumFontSize = mediumFontSizeBase;
 		[NonSerialized]

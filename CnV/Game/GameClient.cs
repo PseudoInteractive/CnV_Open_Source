@@ -71,7 +71,7 @@ namespace CnV
 		public static      EffectParameter lightAmbientParameter;
 		public static      EffectParameter lightColorParameter;
 		public static      EffectParameter lightSpecularParameter;
-		public static      EffectParameter cameraReferencePositionParameter;
+	//	public static      EffectParameter cameraReferencePositionParameter;
 		public static      EffectParameter cameraCParameter;
 		public static      EffectParameter pixelScaleParameter;
 		public static      Material        lineDraw;
@@ -80,11 +80,13 @@ namespace CnV
 		public static      Material        sky;
 		public GameClient()
 		{
+
+			Microsoft.Xna.Framework.SharpDXHelper.SetWantHdr(Settings.useHDR);
 			instance = this;
 			_graphics = new GraphicsDeviceManager(this)
 			{
-					//PreferredBackBufferFormat = SurfaceFormat.Bgra32,
-					PreferredBackBufferFormat   = SurfaceFormat.Bgra32,
+					PreferredBackBufferFormat = GetBackBufferFormat(),
+				//	PreferredBackBufferFormat   = SurfaceFormat.Rgba1010102,
 					PreferMultiSampling         = false,
 					PreferredDepthStencilFormat = DepthFormat.None,
 
@@ -144,6 +146,9 @@ namespace CnV
 			//};
 			//			canvas.CompositeMode = (Microsoft.UI.Xaml.Media.ElementCompositeMode.SourceOver);
 			//canvas.CompositeMode = (Microsoft.UI.Xaml.Media.ElementCompositeMode.MinBlend);
+			
+			
+			
 			var _instance = MonoGame.Framework.XamlGame<GameClient>.Create(() => new GameClient() { }, "", AppS.window, swapChainPanel);
 			Assert(instance == _instance);
 			instance.Deactivated+=Instance_Deactivated;
@@ -212,7 +217,7 @@ namespace CnV
 												};
 
 
-		public static void UpdateResolution()
+		public static void UpdateDevice()
 		{
 			resolutionDirtyCounter = wantFastRefresh ? 2 : 60;
 		}
@@ -227,7 +232,7 @@ namespace CnV
 
 				dipToNative = instance.GraphicsDevice.PresentationParameters.SwapChainPanel.XamlRoot.RasterizationScale;
 				nativeToDip = 1.0 / dipToNative;
-				UpdateResolution();
+				UpdateDevice();
 
 			}
 			//clientSpan.X = MathF.Round( (float)((dx* dipToNative+3) / 4))*4.0f;
@@ -465,13 +470,13 @@ namespace CnV
 
 
 				lightPositionParameter = avaEffect.Parameters["lightPosition"];
-				lightPositionCameraParameter = avaEffect.Parameters["lightPositionCamera"];
+				lightPositionCameraParameter = avaEffect.Parameters["viewPositionScreen"];
 				planetGainsParamater = avaEffect.Parameters["planetGains"];
 				//lightGainsParameter = avaEffect.Parameters["lightGains"];
 				lightColorParameter = avaEffect.Parameters["lightColor"];
 				lightSpecularParameter = avaEffect.Parameters["lightSpecular"];
 				lightAmbientParameter = avaEffect.Parameters["lightAmbient"];
-				cameraReferencePositionParameter = avaEffect.Parameters["cameraReferencePosition"];
+			//	cameraReferencePositionParameter = avaEffect.Parameters["cameraReferencePosition"];
 				cameraCParameter = avaEffect.Parameters["cameraC"];
 				pixelScaleParameter = avaEffect.Parameters["pixelScale"];
 

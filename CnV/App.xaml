@@ -20,7 +20,7 @@
 					<Color x:Key="SystemRevealListLowColor">#FF2D0606</Color>
 					<Color x:Key="SystemRevealListMediumColor">#FF380E0E</Color>
 					
-					<!-- Override system generated accent colors -->
+					 <!--Override system generated accent colors--> 
 					<Color x:Key="SystemAccentColorDark1">#FF503B84</Color>
 					<Color x:Key="SystemAccentColorDark2">#FF695798</Color>
 					<Color x:Key="SystemAccentColorDark3">#FF8372AC</Color>
@@ -31,6 +31,7 @@
 					<SolidColorBrush x:Key="RegionBrush" Color="#FF153A35" />
 				</ResourceDictionary>
 
+				<!--<ResourceDictionary Source="Styles/Theme.xaml"  />-->
 				<ResourceDictionary Source="Styles/FontSizes.xaml"  />
 				<ResourceDictionary Source="Styles/TextBlock.xaml" />
 				<ResourceDictionary Source="Styles/Page.xaml" />

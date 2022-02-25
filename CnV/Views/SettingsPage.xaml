@@ -10,10 +10,10 @@
 			   mc:Ignorable="d"
 			   PrimaryButtonText="Done"
 			   Title="Settings"
-			   FullSizeDesired="True"
 			   BorderBrush="{ThemeResource SystemControlBackgroundAccentRevealBorderBrush}"
 			   Background="Black"
 			   Margin="4">
+	
 	<ScrollViewer ZoomMode="Enabled">
 		<StackPanel Orientation="Vertical" ScrollViewer.VerticalScrollMode="Enabled">
 			<StackPanel Orientation="Horizontal">
@@ -35,7 +35,7 @@
 						   Margin="4">
 
 				<Slider Height="128" Header="Quality" Value="{x:Bind RenderQuality, Mode=TwoWay}" Maximum="1.0" TickFrequency="0.25"  StepFrequency="0.25" SmallChange="0.25" Margin="8" TickPlacement="Outside" Orientation="Vertical" ToolTipService.ToolTip="Render Quality vs Performance, lower is faster (if your video card is weak)" />
-
+				<CheckBox IsChecked="{x:Bind UseHdr, Mode=TwoWay}" ToolTipService.ToolTip="Use High Dynamic Range (requires nice monitor)"/>
 				<RadioButtons Header="Lighting"
                    SelectedIndex="{x:Bind uiLighting, Mode=TwoWay}">
 					<RadioButtons.Items>
