@@ -19,7 +19,7 @@ using System.Linq;
 
 namespace CnV.Views
 {
-	public sealed partial class TabPage:Page
+	public sealed partial class TabPage:Grid
 	{
 		public static List<Window> tabWindows = new();
 		public static TabPage? mainTabs;
@@ -29,8 +29,10 @@ namespace CnV.Views
 
 		static TabPage CreateTabView(Frame frame)
 		{
-			frame.Navigate(typeof(TabPage));
-			return (TabPage)frame.Content;
+			var rv = new TabPage();
+			frame.Content = rv;
+		//	frame.Navigate(typeof(TabPage));
+			return rv;
 
 		}
 		public static void Initialize()

@@ -40,6 +40,7 @@ namespace CnV.Views
 
 	using Helpers;
 
+	using Microsoft.UI;
 	using Microsoft.UI.Xaml.Data;
 	// using PInvoke
 	using Services;
@@ -510,7 +511,7 @@ namespace CnV.Views
 						AppS.QueueOnUIThread(() =>
 						{
 							AppS.appWindow.Title = ( $"Conquest and Virtue Alpha, World {World.id} - {Player.me.shortName}" );
-							AppS.appWindow.SetIcon(AppS.AppFileName("assets/cnv.ico"));
+//							AppS.appWindow.SetIcon(new IconId(0));
 						//	AppS.MessageBox($"Welcome {Player.me.shortName}.");
 						});
 

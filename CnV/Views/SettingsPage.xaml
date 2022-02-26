@@ -34,24 +34,37 @@
 			<wct:WrapPanel Orientation="Horizontal"
 						   Margin="4">
 
-				<Slider Height="128" Header="Quality" Value="{x:Bind RenderQuality, Mode=TwoWay}" Maximum="1.0" TickFrequency="0.25"  StepFrequency="0.25" SmallChange="0.25" Margin="8" TickPlacement="Outside" Orientation="Vertical" ToolTipService.ToolTip="Render Quality vs Performance, lower is faster (if your video card is weak)" />
-				<CheckBox IsChecked="{x:Bind UseHdr, Mode=TwoWay}" ToolTipService.ToolTip="Use High Dynamic Range (requires nice monitor)"/>
+				<Slider Height="128" Header="Quality" Value="{x:Bind RenderQuality, Mode=TwoWay}" Maximum="1.0" TickFrequency="0.125"  StepFrequency="0.0625" SmallChange="0.0625" Margin="8" TickPlacement="Outside" Orientation="Vertical" ToolTipService.ToolTip="Render Quality vs Performance, lower is faster (if your video card is weak), requires restart" />
+				<CheckBox IsThreeState="True"  IsChecked="{x:Bind UseHdr, Mode=TwoWay}" ToolTipService.ToolTip="Use High Dynamic Range (requires nice monitor), requires restart"/>
 				<RadioButtons Header="Lighting"
                    SelectedIndex="{x:Bind uiLighting, Mode=TwoWay}">
 					<RadioButtons.Items>
-<x:String>Day</x:String>
-					<x:String>Night</x:String>
+<x:String>Server</x:String>
+					<x:String>Local</x:String>
 					<x:String>None</x:String>
 						</RadioButtons.Items>
 </RadioButtons>
 
-				<RadioButtons Header="Theme"
-                   SelectedIndex="{x:Bind uiTheme, Mode=TwoWay}">
-					<RadioButtons.Items>
-						<x:String>Summer</x:String>
-						<x:String>Winter</x:String>
-					</RadioButtons.Items>
-				</RadioButtons>
+				<Slider Style="{StaticResource VerticalSlider}" 
+									Header="Diffuse" 
+									 Value="{x:Bind cnv:Settings.lightD,Mode=TwoWay}"
+									 Maximum="2"
+							/>
+
+				<Slider Style="{StaticResource VerticalSlider}" 
+									Header="Ambient" 
+									 Value="{x:Bind cnv:Settings.lightA,Mode=TwoWay}"
+									 Maximum="2"
+							/>
+				<Slider Style="{StaticResource VerticalSlider}" 
+									Header="Specular" 
+									 Value="{x:Bind cnv:Settings.lightS,Mode=TwoWay}"
+									 Maximum="2"
+							/>
+				<Slider Style="{StaticResource VerticalSlider}" 
+									Header="Smoothness" 
+									 Value="{x:Bind cnv:Settings.lightM,Mode=TwoWay}"
+							/>
 
 				<Slider Height="128" Header="Parallax" Value="{x:Bind cnv:Settings.parallax, Mode=TwoWay}" Maximum="1.0" TickFrequency="0.125"  StepFrequency="0.025" SmallChange="0.025" Margin="8" TickPlacement="Outside" Orientation="Vertical" />
 				<Slider Height="128" Margin="8" Header="Planet" Value="{x:Bind cnv:Settings.planet, Mode=TwoWay}" Maximum="1.0"  TickFrequency="0.125" StepFrequency="0.0625" SmallChange="0.0625" TickPlacement="Outside" Orientation="Vertical" ToolTipService.ToolTip="Use 0 to disable parallax and shadows" />
@@ -68,56 +81,12 @@
 				<Slider Height="128" Header="Chat Font Size" Value="{x:Bind cnv:Settings.chatZoom, Mode=TwoWay}" Maximum="1.0" TickFrequency="0.125"  StepFrequency="0.0625" SmallChange="0.0625" Margin="8" TickPlacement="Outside" Orientation="Vertical" ToolTipService.ToolTip="Must restart to see changes" ValueChanged="{x:Bind cnv:Settings.UpdateZoom}" />
 			</wct:WrapPanel>
 
-			<wct:WrapPanel Orientation="Horizontal" HorizontalAlignment="Stretch" >
+			<wct:WrapPanel Orientation="Horizontal" HorizontalSpacing="2" VerticalSpacing="2" >
 				<CheckBox Content="Fetch Attack Reports"
 						  IsChecked="{x:Bind FetchFullHistory,Mode=TwoWay}"
 						  ToolTipService.ToolTip="If disabled, the Hits tab and Defense History tab will not work, but incoming and outgoing tabs will be faster"
 						  Margin="4" />
-				<NumberBox  Header="lA"
-									 Value="{x:Bind cnv:Settings.lightA,Mode=TwoWay}"
-									 SmallChange="0.125"
-									 LargeChange="10"
-									 Style="{StaticResource NumberBoxSmall}" />
-									 
-					<NumberBox  Header="LD"
-									 Value="{x:Bind cnv:Settings.lightD,Mode=TwoWay}"
-									 SmallChange="0.125"
-									 LargeChange="10"
-									 Style="{StaticResource NumberBoxSmall}" />
-
-						<NumberBox  Header="SR"
-									 Value="{x:Bind cnv:Settings.lightSR,Mode=TwoWay}"
-									 SmallChange="0.125"
-									 LargeChange="10"
-									 Style="{StaticResource NumberBoxSmall}" />
-
-							<NumberBox  Header="SG"
-									 Value="{x:Bind cnv:Settings.lightSG,Mode=TwoWay}"
-									 SmallChange="0.125"
-									 LargeChange="10"
-									 Style="{StaticResource NumberBoxSmall}" />
-				<NumberBox  Header="SB"
-									 Value="{x:Bind cnv:Settings.lightSB,Mode=TwoWay}"
-									 SmallChange="0.125"
-									 LargeChange="10"
-									 Style="{StaticResource NumberBoxSmall}" />
-				<NumberBox  Header="R"
-									 Value="{x:Bind cnv:Settings.lightM,Mode=TwoWay}"
-									 SmallChange="0.125"
-									 LargeChange="10"
-									 Style="{StaticResource NumberBoxSmall}" />
-
-				<NumberBox  Header="S"
-									 Value="{x:Bind cnv:Settings.lightS,Mode=TwoWay}"
-									 SmallChange="0.125"
-									 LargeChange="10"
-									 Style="{StaticResource NumberBoxSmall}" />
-				<NumberBox  Header="Shader"
-									 Value="{x:Bind cnv:Settings.lightShader,Mode=TwoWay}"
-									 SmallChange="1"
-									 LargeChange="10"
-									 />
-
+			
 
 
 		

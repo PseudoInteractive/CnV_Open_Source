@@ -56,7 +56,7 @@ namespace CnV.Models
 				maxY = maxY.Max(y0.Max(y1));
 
 
-				var scale = GameClient.dipToNative; // ShellPage.webViewScale *
+			//	var scale = GameClient.dipToNative; // ShellPage.webViewScale *
 				//AGame.popups[put] = new Span2i(
 				//	ShellPage.JSPointToScreen(x0, y0),
 				//	ShellPage.JSPointToScreen(x1, y1));

@@ -4,6 +4,7 @@
     xmlns:local="using:CnV"
 	xmlns:views="using:CnV.Views"
 	xmlns:cnvXaml="using:CnV.Xaml"
+	x:Key="Default"
 	>
 
     

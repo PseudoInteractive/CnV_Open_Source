@@ -1,5 +1,4 @@
-﻿<winui:Page
-    x:Class="CnV.Views.TabPage"
+﻿<Grid x:Class="CnV.Views.TabPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -9,7 +8,7 @@
     
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 	
-	<winui:TabView x:Name="Tabs" x:FieldModifier="public"
+	<TabView x:Name="Tabs" x:FieldModifier="public"
                       TabWidthMode="SizeToContent"
                              VerticalAlignment="Stretch"
                       IsTabStop="True"
@@ -38,5 +37,5 @@
 				<TextBlock x:Name="tip" x:FieldModifier="public" VerticalAlignment="Center" HorizontalAlignment="Center"  />
 			</Grid>
 		</winui:TabView.TabStripFooter>
-	</winui:TabView>
-</winui:Page>
+	</TabView>
+</Grid>

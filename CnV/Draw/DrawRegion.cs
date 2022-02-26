@@ -54,7 +54,7 @@ internal partial class GameClient
 	private const float smallRectSpan = 4;
 	public const float lightZNight = 200;
 	public const float lightZDay = 20f;
-	public const float cameraZForLighting = 2.0f;
+	public const float cameraZForLighting = 0.5f;
 	//public static Vector2 cameraLightC;
 	static SamplerState fontSampler = new SamplerState()
 	{
@@ -136,7 +136,7 @@ internal partial class GameClient
 	const float srcImageSpan = 2400;
 	const float bSizeGain3 = bSizeGain * bSizeGain / bSizeGain2;
 	public static float pixelScale = 1;
-	public static Vector2 halfSquareOffset;
+	public static Vector2 v2Half = new(0.5f,0.5f);
 	public static float circleRadiusBase = 1.0f;
 	public static float shapeSizeGain = 1.0f;
 	public static float bulgeSpan => 1.0f + bulgeNegativeRange;
@@ -381,17 +381,23 @@ internal partial class GameClient
 			{
 				var viewport = GraphicsDevice.Viewport;
 
+				var cameraZ = cameraZLag;
+				cameraCParameter.SetValue(new XVector2(cameraCLag.X, cameraCLag.Y)); // Z of camera is always 1
+				pixelScaleParameter.SetValue(pixelScale);
+				float projectionOffsetGainX = 1.0f/canvasSizeDip.X;
+				float projectionOffsetGainY = 1.0f/canvasSizeDip.Y;
 				//var projCX = projectionC.X / clientSpan.X.Max(1);
 				//var projCY = projectionC.Y / clientSpan.Y.Max(1);
-				var proj = Matrix.CreateLookAt(new XVector3(0, 0, cameraZ),
-								XVector3.Zero, Microsoft.Xna.Framework.Vector3.Up) *
+				
+				var proj = Matrix.CreateWorld(new XVector3(cameraCLag.X,cameraCLag.Y, cameraZ),
+								new XVector3(0,0,-1), Microsoft.Xna.Framework.Vector3.Up) *
 						   Matrix.CreatePerspectiveOffCenter(
-							   -projectionC.X*0.5f, (viewport.Width-projectionC.X)*0.5f,
-							   (viewport.Height-projectionC.Y)*0.5f, -projectionC.Y*0.5f,
-								  0.5f, 1.5f);
+							  (-projectionC.X*0.5f)*projectionOffsetGainX, (canvasSizeDip.X-projectionC.X)*0.5f*projectionOffsetGainX,
+							   (canvasSizeDip.Y-projectionC.Y)*0.5f*projectionOffsetGainY, -projectionC.Y*0.5f*projectionOffsetGainY,
+								  0.5f*cameraZ, 1.5f*cameraZ);
 				//					var proj = Matrix.CreateOrthographicOffCenter(480, 1680, 1680, 480, 0, -1);
 				worldMatrixParameter.SetValue(proj);
-				var lightCC = new XVector3(AGame.projectionC.X,AGame.projectionC.Y,virtualSpan.X*0.5f*cameraZForLighting);
+				var lightCC = new XVector3(AGame.projectionC.X,AGame.projectionC.Y,virtualSpan.X*cameraZForLighting);
 				lightPositionCameraParameter.SetValue(lightCC);
 
 	//			if(Settings.lighting == Lighting.night)
@@ -411,7 +417,7 @@ internal partial class GameClient
 					///				var xc = lightWC.WorldToCamera().CameraToScreen();
 					var t = (float)CnVServer.simDateTime.TimeOfDay.TotalDays;
 
-					const float shrink = 0.125f;
+					const float shrink = 0.125f*0.5f;
 					t = t*64;
 					if((Settings.lighting == Lighting.night))
 						t += 0.5f; // day t= night
@@ -428,7 +434,7 @@ internal partial class GameClient
 					Vector2 wc = new Vector2(MathF.Sin(t*MathF.Tau).SNormLerp(worldSpan0, worldSpan1),
 						(csTau ).SNormLerp(worldSpan0,worldSpan1));
 					
-					var Z = (csTau*t1.SCurve(-1.0f,-0.25f )+ 1.0f)*World.span;
+					var Z =(csTau * (isDay ? -1.0f : 0.0f) + 1.0f)*World.span;
 					var cc = (wc.WorldToCamera()*shrink);
 					var sc = cc.CameraToScreen();
 					Assert(Z> 0);
@@ -441,14 +447,14 @@ internal partial class GameClient
 												new Vector3(0.5f,0.5f,1.5f),
 												new Vector3(1.0f,1.0f,1.0f),
 												new Vector3(1.0f,0.5f,0.125f)
-																		)*0.75f;
+																		)*0.75f * Settings.lightD;
 					var a3 = t.CatmullRomLoop(new Vector3(0.750f,0.5f,1.0f),
 												new Vector3(0.5f,0.5f,1.0f),
 												new Vector3(1.0f,1.0f,1.0f),
 												new Vector3(1.0f,0.5f,0.25f)
-																		)*0.375f;
+																		)*0.375f* Settings.lightA;
 					// this will do for specular
-					var s3 =  0.5f.Lerp(d3.Normalized(),new Vector3(0.75f,0.75f,0.75f) );
+					var s3 =  0.5f.Lerp(d3.Normalized(),new Vector3(0.5f,0.5f,0.5f) )* Settings.lightS;
 					
 					//var hue = 0.6667f - t1;
 					//hue -= hue.Floor();
@@ -465,7 +471,7 @@ internal partial class GameClient
 					//	lightGainsParameter.SetValue(new XVector4(0.25f, 1.25f, 0.375f, 1.0625f));
 					lightAmbientParameter.SetValue(a3);
 					lightColorParameter.SetValue(d3);
-					lightSpecularParameter.SetValue(s3);
+					lightSpecularParameter.SetValue(new Vector4(s3,Settings.lightM) );
 				}
 //				var s3 = new Vector4(Settings.lightSR,Settings.lightSG,Settings.lightSB,Settings.lightShader);//0.5f.Lerp(d3.Normalized(),new Vector3(0.75f,0.75f,0.75f) );
 				
@@ -477,8 +483,7 @@ internal partial class GameClient
 				var planetGains = new XVector3(bulgeGain, -gain1, !AppS.IsKeyPressedShift() ? 0.0f: gain1*bulgeInputSpan2.Sqrt() );
 				planetGainsParamater.SetValue(planetGains);
 
-				cameraCParameter.SetValue(new XVector2(cameraCLag.X, cameraCLag.Y)); // Z of camera is always 1
-				pixelScaleParameter.SetValue(pixelScale);
+				
 
 
 
@@ -881,8 +886,8 @@ internal partial class GameClient
 									if(!(showAll || isHover))
 										continue;
 									{
-										var c0 = cluster.topLeft.WorldToCamera();
-										var c1 = cluster.bottomRight.WorldToCamera();
+										var c0 = cluster.topLeft;
+										var c1 = cluster.bottomRight;
 										DrawRectOutlineShadow(Layer.effects+2, c0, c1, isHover ? new Color(128, 64, 64, 220) : new Color(64, 0, 0, 162), 2, 2);
 									}
 
@@ -1483,10 +1488,12 @@ internal partial class GameClient
 				{
 					ToolTips.debugTip=null;
 					var alpha = 255;
-					System.Numerics.Vector2 c = new Vector2(clientSpan.X/2, 16).ScreenToCamera();
+					System.Numerics.Vector2 c = new Vector2(clientSpan.X/2,clientSpan.X -16).ScreenToCamera();
 					DrawTextBox(_debugTip, c, tipTextFormat, Color.White.Scale(alpha), (byte)(alpha * 192.0f).RoundToInt(), Layer.overlay, 11, 11, ConstantDepth, 0, 0.5f);
 				}
-
+#if DEBUG
+				DrawRectOutlineShadow(Layer.effects,new Vector2(0,0).ScreenToWorld(),clientSpan.ScreenToWorld(),Color.Yellow,4,0);
+#endif
 
 			}
 			//if (popups.Length > 0)
@@ -1828,13 +1835,13 @@ internal partial class GameClient
 		var wc = cid.CidToWorld();
 		if(IsCulledWC(wc))
 			return;
-		var cc = wc.WorldToCamera();
-		var c0 = cc - halfSquareOffset;
-		var c1 = cc + halfSquareOffset;
+		var cc = wc.ToVector(); ;
+		var c0 = cc - v2Half;
+		var c1 = cc + v2Half;
 		DrawRectOutlineShadow(Layer.effects, c0, c1, col, thickness, expand);
 		if(label != null)
 		{
-			DrawTextBox(label, cc, textformatLabel, new Color(col, 255), textBackgroundOpacity, Layer.tileText, scale: (bmFontScale * 2.0f).Min(0.5f));
+			DrawTextBox(label, cc.WorldToCamera(), textformatLabel, new Color(col, 255), textBackgroundOpacity, Layer.tileText, scale: (bmFontScale * 2.0f).Min(0.5f));
 		}
 	}
 
@@ -1933,7 +1940,7 @@ internal partial class GameClient
 
 	public static void UpdateRenderQuality(float renderQuality)
 	{
-		UpdateDevice();
+		UpdateClientSpan();
 	}
 
 	const float viewHoverZGain = 0.5f / 64.0f;
@@ -1974,16 +1981,15 @@ internal partial class GameClient
 						//								_graphics.PreferredBackBufferWidth = (int)clientSpan.X;
 						//					_graphics.ApplyChanges();
 						//_graphics.PreferredBackBufferFormat = GetBackBufferFormat();
-						var pre = new PresentationParameters()
+						var pre = GameClient.instance.GraphicsDevice.PresentationParameters;
+
 						{
-							BackBufferFormat =  GetBackBufferFormat(),
-							DepthStencilFormat = DepthFormat.None,
-							SwapChainPanel = canvas,
-							RenderTargetUsage = RenderTargetUsage.PlatformContents,
-							BackBufferWidth = (int)(clientSpan.X*resolutionScale),// - ShellPage.cachedXOffset,
-							BackBufferHeight = (int)(clientSpan.Y*resolutionScale), // - ShellPage.cachedTopOffset,
+							pre.BackBufferFormat =  GetBackBufferFormat();
+							pre.DepthStencilFormat = DepthFormat.None;
+							pre.BackBufferWidth = (int)(clientSpan.X*dipToNative*resolutionScale);// - ShellPage.cachedXOffset,
+							pre.BackBufferHeight = (int)(clientSpan.Y*dipToNative*resolutionScale); // - ShellPage.cachedTopOffset,
 						};
-						GameClient.instance.GraphicsDevice.Reset(pre);
+						GameClient.instance.GraphicsDevice.OnPresentationChanged();
 					}
 				}
 			}

@@ -526,9 +526,9 @@ namespace CnV
 				if(frameCount > 1)
 				{
 					var frames = frameCount;
-					var du = 1.0/frames;
+				//	var du = 1.0/frames;
 
-					var dt = ((animationOffsets[buildC]-animationT)/(materials.animationDuration)).Frac()*(frames);
+					var dt = ((animationT-animationOffsets[buildC])/(materials.animationDuration)).Frac()*(frames);
 					//				var duFX = (int)(255*255*du);
 					int frame8 = (int)(dt*256);
 					int frame = frame8 >> 8;
@@ -540,7 +540,7 @@ namespace CnV
 					draw.AddQuad(layer,materials.M(iconId).m,_cs.c0,_cs.c1,
 						new Vector2(0,0),
 						new Vector2(1,1),
-						new(blend,f1,f0,alpha),
+						new(blend,f0,f1,alpha),
 						
 
 						depth: zBase);
@@ -551,7 +551,7 @@ namespace CnV
 					draw.AddQuad(layer-1,materials.M(iconId).shadow,_cs.c0,_cs.c1,
 						new Vector2(0,0),
 						new Vector2(1,1),
-						new(blend,f1,f0,alpha),
+						new(blend,f0,f1,alpha),
 						depth:0f); 
 
 					}
@@ -611,7 +611,7 @@ namespace CnV
 		{
 			Assert(isDrawing);
 			var cs = CityPointToQuad(cc, 1.0f,cityYAspectRatio);
-			DrawRectOutlineShadow(Layer.effects,cs.c0.WorldToCamera(),cs.c1.WorldToCamera(),new Color(48, 0, 128, 220));
+			DrawRectOutlineShadow(Layer.effects,cs.c0,cs.c1,new Color(48, 0, 128, 220));
 		}
 		
 

@@ -63,11 +63,12 @@ namespace CnV
 			get => renderQuality;
 			set
 			{
-				renderQuality = value;
-				if ( !renderQuality.AlmostEquals(value,1.0f/8.0f)  )
+				
+				if ( !renderQuality.AlmostEquals(value,1.0f/1024.0f)  )
 				{
+					renderQuality = value;
 					GameClient.UpdateRenderQuality(renderQuality);
-
+					Note.Show("Some changes require restart");
 				}
 			}
 		}
@@ -98,8 +99,11 @@ namespace CnV
 			get => (int)lighting;
 			set
 			{
-				lighting = (Lighting)value;
-				AppS.MessageBox("Please restart to see full changes");
+				if( value != (int)lighting)
+				{
+					lighting = (Lighting)value;
+					Note.Show("Please restart to see full changes");
+				}
 			}
 		}
 		//bool uiStayAlive
@@ -303,16 +307,16 @@ namespace CnV
 				LogEx(e);
 			}
 		}
-		public bool UseHdr
+		public bool? UseHdr
 		{
-			get => Settings.useHDR;
+			get => Settings.wantHdr;
 			set {
-				if(Settings.useHDR != value)
+				if(Settings.wantHdr != value)
 				{
-					Settings.useHDR = value;
-					Microsoft.Xna.Framework.SharpDXHelper.SetWantHdr(Settings.useHDR);
+					Settings.wantHdr = value;
+					Microsoft.Xna.Framework.SharpDXHelper.SetWantHdr(Settings.wantHdr);
 					
-					GameClient.UpdateDevice();
+					GameClient.UpdateClientSpan();
 				}
 			}
 		}
@@ -337,17 +341,20 @@ namespace CnV
 			Log($"FontZoom {_tabZoom} Chat: {_chatZoom} Med:{mediumFontSize}");
 			double AsDouble(object d) => (double)d;
 			double RoundDouble(double d) => Math.Round(d);
+			var mfont = RoundDouble(_tabZoom * mediumFontSizeBase);
 			smallFontSize = AsDouble(App.instance.Resources["SmallFontSize"] = RoundDouble(_tabZoom * smallFontSizeBase));
 			largeFontSize = AsDouble(App.instance.Resources["LargeFontSize"] = RoundDouble(_tabZoom * largeFontSizeBase));
-			mediumFontSize = AsDouble(App.instance.Resources["MediumFontSize"] = RoundDouble(_tabZoom * mediumFontSizeBase));
+			mediumFontSize = AsDouble(App.instance.Resources["MediumFontSize"] = mfont);
 			
 			largeGridRowHeight = AsDouble(App.instance.Resources["LargeGridRowHeight"] = RoundDouble(_tabZoom * largeGridRowHeightBase));
 			mediumGridRowHeight = AsDouble(App.instance.Resources["MediumGridRowHeight"] = RoundDouble(_tabZoom * mediumGridRowHeightBase));
 			shortGridRowHeight = AsDouble(App.instance.Resources["ShortGridRowHeight"] = RoundDouble(_tabZoom * smallGridRowHeightBase));
 
-			App.instance.Resources["ChatFontSize"]        = RoundDouble(_chatZoom * chatFontSizeBase);
-			App.instance.Resources["ChatFontImageHeight"] = RoundDouble(_chatZoom * chatRowHeightBase);
-			
+			App.instance.Resources["ControlContentThemeFontSize"] =mfont;
+			App.instance.Resources["ContentControlFontSize"] = mfont;
+		
+//			<x:Double x:Key="TextControlThemeMinHeight">24</x:Double>
+//		<x:Double x:Key="ListViewItemMinHeight">32</x:Double>
 
 		}
 

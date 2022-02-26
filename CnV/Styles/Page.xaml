@@ -6,26 +6,14 @@
     xmlns:tk="using:CommunityToolkit.WinUI.UI.Controls"
     xmlns:winui="using:Microsoft.UI.Xaml.Controls"
     xmlns:sf="using:Syncfusion.UI.Xaml.DataGrid"
+	
  >
 	
 	<!--"Expander"-->
 	<SolidColorBrush x:Key="ExpanderBrushContent">#80150030</SolidColorBrush>
 	<SolidColorBrush x:Key="ExpanderBrushHeader" >#80150030</SolidColorBrush>
 	<SolidColorBrush x:Key="ExpanderBrushContentAlt">#4030</SolidColorBrush>
-	<Style TargetType="Expander" >
-		<Setter Property="MinHeight" Value="20" />
-		<Setter Property="BorderThickness" Value="0"/>
-		<Setter Property="BorderBrush" Value="{x:Null}"/>
-		<Setter Property="Padding" Value="0" />
-		<Setter Property="Margin" Value="0" />
-		<Setter Property="CornerRadius" Value="2"/>
-		<Setter Property="HorizontalAlignment" Value="Stretch" />
-		<Setter Property="HorizontalContentAlignment" Value="Stretch" />
-		<Setter Property="Background" Value="{x:Null}" />
-		<Setter Property="FontFamily" Value="XamlAutoFontFamily" />
-		<Setter Property="FontWeight" Value="Light" />
-		<Setter Property="FontSize" Value="{StaticResource MediumFontSize}" />
-	</Style>
+	
 
 	
 	<!--Overrides-->
@@ -36,6 +24,27 @@
 	<!-- Header -->
 	<Thickness x:Key="ExpanderHeaderPadding">2,0,0,0</Thickness>
 	<Thickness x:Key="ExpanderChevronMargin">2,0,8,0</Thickness>
+	<Style TargetType="Expander" BasedOn="{StaticResource BaseControlStyle}" >
+		<Setter Property="MinHeight" Value="20" />
+		<Setter Property="BorderThickness" Value="0"/>
+		<Setter Property="BorderBrush" Value="{x:Null}"/>
+		<Setter Property="Padding" Value="0" />
+		<Setter Property="Margin" Value="0" />
+		<Setter Property="CornerRadius" Value="2"/>
+		<Setter Property="HorizontalAlignment" Value="Stretch" />
+		<Setter Property="HorizontalContentAlignment" Value="Stretch" />
+		<Setter Property="Background" Value="{StaticResource ExpanderBrushHeader}" />
+		<Setter Property="FontFamily" Value="XamlAutoFontFamily" />
+		<Setter Property="FontWeight" Value="Light" />
+		<Setter Property="FontSize" Value="{StaticResource MediumFontSize}" />
+	</Style>
+
+	<!-- Content -->
+	<Thickness x:Key="ExpanderContentPadding">4</Thickness>
+	<Thickness x:Key="ExpanderContentDownBorderThickness">1,1,1,1</Thickness>
+	<Thickness x:Key="ExpanderContentUpBorderThickness">1,1,1,1</Thickness>
+
+
 
 	
 	<x:Double x:Key="ContentDialogMaxWidth">1024</x:Double>
@@ -223,5 +232,26 @@
 			<converter:FloatConverter x:Key="FloatConverter" />
 			<converter:NullableIntToDoubleConverter x:Key="NullableIntConverter" />
 			<converterTK:FormatStringConverter x:Key="FormatString" />
+
+	<Style TargetType="Slider" x:Key="baseSlider"  >
+		<Setter Property="BorderThickness" Value="1" />
+		<Setter Property="Margin" Value="2"/>
+		<Setter Property="Padding" Value="4"/>
+		<Setter Property="Maximum" Value="1.0" />
+		<Setter Property="Minimum" Value="0.0" />
+		<Setter Property="SmallChange" Value="0.0625" />
+		<Setter Property="StepFrequency" Value="0.0625" />
+		<Setter Property="Orientation" Value="Vertical" />
+		<Setter Property="Margin" Value="4" />
+	</Style>
+
+	<Style TargetType="Slider" x:Key="VerticalSlider" BasedOn="{StaticResource baseSlider}">
+		<Setter Property="Height" Value="128"/>
+		<Setter Property="Orientation" Value="Vertical"/>
+	</Style>
+	<Style TargetType="Slider" x:Key="HorizontalSlider" BasedOn="{StaticResource baseSlider}">
+		<Setter Property="Width" Value="128"/>
+		<Setter Property="Orientation" Value="Horizontal"/>
+	</Style>
 
 </ResourceDictionary>

@@ -162,6 +162,10 @@ using static GameClient;
 	{
 		return s - AGame.projectionC;
 	}
+	public static Vector2 ScreenToWorld(this Vector2 s)
+	{
+		return CameraToWorldDelta( ScreenToCamera(s) );
+	}
 	public static Vector2 CameraToScreen(this Vector2 s)
 	{
 		return s + AGame.projectionC;

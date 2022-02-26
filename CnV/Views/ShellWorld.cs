@@ -542,7 +542,7 @@ namespace CnV.Views
 
 		public static Vector2 CanvasPointFromDip(Windows.Foundation.Point screenC)
 		{
-			return new Vector2((float)(screenC.X*dipToNative), (float)(screenC.Y*dipToNative));
+			return new Vector2((float)(screenC.X), (float)(screenC.Y));
 		}
 		//public static Vector2 GetCanvasPosition( int x , int y )
 		//{
@@ -555,7 +555,7 @@ namespace CnV.Views
 		// to device independant position
 		public static Windows.Foundation.Point CanvasToDIP(Vector2 point)
 		{
-			return new Windows.Foundation.Point((point.X * nativeToDip), (point.Y * nativeToDip));
+			return new Windows.Foundation.Point((point.X ), (point.Y ));
 		}
 
 		//public static (int x, int y) JSPointToScreen((int x, int y) c) => JSPointToScreen(c.x, c.y);

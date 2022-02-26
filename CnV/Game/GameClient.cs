@@ -81,7 +81,7 @@ namespace CnV
 		public GameClient()
 		{
 
-			Microsoft.Xna.Framework.SharpDXHelper.SetWantHdr(Settings.useHDR);
+			Microsoft.Xna.Framework.SharpDXHelper.SetWantHdr(Settings.wantHdr);
 			instance = this;
 			_graphics = new GraphicsDeviceManager(this)
 			{
@@ -89,12 +89,13 @@ namespace CnV
 				//	PreferredBackBufferFormat   = SurfaceFormat.Rgba1010102,
 					PreferMultiSampling         = false,
 					PreferredDepthStencilFormat = DepthFormat.None,
+				
 
 					GraphicsProfile =  GraphicsProfile.HiDef
 			};
 			
 			
-			_graphics.PreparingDeviceSettings += _graphics_PreparingDeviceSettings;
+			//_graphics.PreparingDeviceSettings += _graphics_PreparingDeviceSettings;
 			Content.RootDirectory             =  "gameBin";
 		}
 
@@ -114,11 +115,12 @@ namespace CnV
 		//	}
 		//	return new Material(texture, normalMap, AGame.GetTileEffect());
 		//}
+		public static Vector2 canvasSizeDip = new(1,1);
 		static void Canvas_SizeChanged(object sender, SizeChangedEventArgs e)
 		{
 			//	ShellPage.updateHtmlOffsets.SizeChanged();
-
-			SetClientSpan(e.NewSize.Width, e.NewSize.Height);
+			canvasSizeDip = new((float)e.NewSize.Width,(float)e.NewSize.Height);
+			UpdateClientSpan();
 			//clientCScreen = canvas.TransformToVisual(Helper.CoreContent)
 			//	.TransformPoint(new UWindows.Foundation.Point(0, 0)).ToVector2();
 			//	canvas.RunOnGameLoopThreadAsync(RemakeRenderTarget);
@@ -190,57 +192,58 @@ namespace CnV
 
 
 		public static int renderFrame;
-		private void _graphics_PreparingDeviceSettings(object sender, PreparingDeviceSettingsEventArgs e)
-		{
-			var inf = e.GraphicsDeviceInformation;
-			inf.GraphicsProfile                             = GraphicsProfile.HiDef;
-			inf.PresentationParameters.PresentationInterval = PresentInterval.One;
-			//	inf.PresentationParameters.IsFullScreen= true;
-			//	inf.PresentationParameters.BackBufferFormat = SurfaceFormat.Bgra32;
-			inf.PresentationParameters.SwapChainPanel = canvas;
+		//private void _graphics_PreparingDeviceSettings(object sender, PreparingDeviceSettingsEventArgs e)
+		//{
+		//	var inf = e.GraphicsDeviceInformation;
+		//	inf.GraphicsProfile                             = GraphicsProfile.HiDef;
+		//	inf.PresentationParameters.PresentationInterval = PresentInterval.One;
+		//	//	inf.PresentationParameters.IsFullScreen= true;
+		//	//	inf.PresentationParameters.BackBufferFormat = SurfaceFormat.Bgra32;
+		//	inf.PresentationParameters.SwapChainPanel = canvas;
 
-			inf.PresentationParameters.RenderTargetUsage = RenderTargetUsage.DiscardContents;
-			if(clientSpan.X > 0 && clientSpan.Y > 0)
-			{
-				inf.PresentationParameters.BackBufferHeight = (int)(clientSpan.Y*resolutionScale);
-				inf.PresentationParameters.BackBufferWidth  = (int)(clientSpan.X*resolutionScale);
-			}
-		}
+		//	inf.PresentationParameters.RenderTargetUsage = RenderTargetUsage.DiscardContents;
+		//	if(clientSpan.X > 0 && clientSpan.Y > 0)
+		//	{
+		//		inf.PresentationParameters.BackBufferHeight = (int)(clientSpan.Y*resolutionScale);
+		//		inf.PresentationParameters.BackBufferWidth  = (int)(clientSpan.X*resolutionScale);
+		//	}
+		//}
 		public static bool wantFastRefresh;
 
 		private static float resolutionScale => Settings.renderQuality switch
 												{
 														>= 0.625f  => 1.0f,
-														>= 0.375f  => 0.875f,
-														>= 0.1875f => 0.75f,
-														_          => 0.625f
+														>= 0.5f  => 0.875f,
+														>= 0.375f => 0.75f,
+														>= 0.25f => 0.625f,
+														>= 0.125f  => 0.5f,
+														_          => 0.25f
 												};
 
 
 		public static void UpdateDevice()
 		{
-			resolutionDirtyCounter = wantFastRefresh ? 2 : 60;
+			resolutionDirtyCounter = wantFastRefresh ? 2 : 10;
 		}
 
 		// dx, dy are logical pixels
 		// dipToNative is 1 for 100% scaling 1.5 for 150% etc
 		// For hiDPI devices we should probably render at lower res
-		public static void SetClientSpan(double dx, double dy)
+		public static void UpdateClientSpan()
 		{
 			if(instance is not null)
 			{
 
-				dipToNative = instance.GraphicsDevice.PresentationParameters.SwapChainPanel.XamlRoot.RasterizationScale;
-				nativeToDip = 1.0 / dipToNative;
 				UpdateDevice();
 
 			}
+			
 			//clientSpan.X = MathF.Round( (float)((dx* dipToNative+3) / 4))*4.0f;
 			//clientSpan.Y = MathF.Round((float)((dy* dipToNative+3) /4))*4.0f;
 
 			// bug:  Not using Dip
-			clientSpan.X  = (float)(dx * dipToNative);
-			clientSpan.Y  = (float)(dy * dipToNative);
+			clientSpan.X  = (float)(canvasSizeDip.X );
+			clientSpan.Y  = (float)(canvasSizeDip.Y );
 			virtualSpan.X = clientSpan.X        + View.popupLeftMargin;
 			virtualSpan.Y = clientSpan.Y        + View.popupTopMargin;
 			projectionC.X = clientSpan.X * 0.5f - View.popupLeftMargin * 0.5f;
