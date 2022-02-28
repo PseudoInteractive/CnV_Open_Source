@@ -591,13 +591,18 @@ namespace CnV.Views
 		}
 		static public (int x, int y) ScreenToWorldC(Vector3 c1)
 		{
-			return (((c1.X) / cameraZoomLag + cameraC.X).RoundToInt(), ((c1.Y) / cameraZoomLag + cameraC.Y).RoundToInt());
+			return (((c1.X) / viewZoomLag + viewTargetW.X).RoundToInt(), ((c1.Y) / viewZoomLag + viewTargetW.Y).RoundToInt());
 		}
-		static public ((int x, int y) wc, BuildC cc) ScreenToWorldAndCityC(Vector2 c1)
+		static public (WorldC wc, BuildC cc) ScreenToWorldAndCityC(Vector2 c1)
 		{
-			var w = new Vector2(((c1.X) / cameraZoomLag + cameraC.X), ((c1.Y) / cameraZoomLag + cameraC.Y));
-			(int x, int y) wi = (w.X.RoundToInt(), w.Y.RoundToInt());
-			(int x, int y) bi = wi.WorldToCid() == City.build ?
+			var w = new Vector2(((c1.X) / viewZoomLag + viewTargetW.X), ((c1.Y) / viewZoomLag + viewTargetW.Y));
+			if(!w.IsInWorld())
+				return (WorldC.Nan, BuildC.Nan);
+
+			var wi = new  WorldC(w);
+			
+
+			(int x, int y) bi = wi.cid == City.build ?
 				(((w.X - wi.x)*City.citySpan).RoundToInt().Clamp(City.span0, City.span1), ((w.Y - wi.y) * City.citySpan/CityView.cityYAspectRatio).RoundToInt().Clamp(City.span0, City.span1)) :
 				BuildC.Nan;
 
@@ -606,7 +611,7 @@ namespace CnV.Views
 
 		//static public Vector2 CameraToWorld(Vector2 c1)
 		//{
-		//	return new Vector2( (c1.X-halfSpan.X)/cameraZoomLag + cameraC.X, (c1.Y - halfSpan.Y) / cameraZoomLag + cameraC.Y) ;
+		//	return new Vector2( (c1.X-halfSpan.X)/cameraZoomLag + viewCW.X, (c1.Y - halfSpan.Y) / cameraZoomLag + viewCW.Y) ;
 		//}
 
 		static public ref int lastCanvasC => ref View.lastCanvasC;
@@ -683,7 +688,7 @@ namespace CnV.Views
 				//}
 
 				(var worldC, var cc) = ScreenToWorldAndCityC(mousePositionW);
-				var cid = worldC.WorldToCid();
+				var cid = worldC.cid;
 
 				switch(gestureResult.action)
 				{
@@ -1047,10 +1052,11 @@ namespace CnV.Views
 			//			mousePosition = GetCanvasPosition(windowsPosition);
 			mousePositionC = mousePosition.ScreenToCamera();
 			mousePositionW = mousePositionC.InverseProject();
+		
 			(var c, var cc) = ScreenToWorldAndCityC(mousePositionW);
 			//var point = e.CurrentPoint;
 			//var props = point.Properties;
-			if(gestureResult.action == GestureAction.hover)
+			if(gestureResult.action.HasFlag( GestureAction.hover)  && c.isInWorld)
 			{
 				//if (TryPostJSMouseEvent(null, 0))
 				//{
@@ -1060,7 +1066,7 @@ namespace CnV.Views
 				{
 
 					var cont = Continent.GetPackedIdFromC(c);
-					var cid = c.WorldToCid();
+					var cid = c.cid;
 					if(IsCityView())
 					{
 						var build = City.GetBuild();
@@ -1337,29 +1343,23 @@ namespace CnV.Views
 
 			}
 
-			else
+			//else
 			{
 				//			e.Handled = true;
 				if(gestureResult.action.HasFlag(GestureAction.zoom))
 				{
-					DoZoom(gestureResult.delta.Z * 0.75f, gestureResult.action.HasFlag(GestureAction.pan));
-					cameraZoomLag = cameraZoom;
+					DoZoom(gestureResult.delta.Z * 0.75f,true);
+					//cameraZoomLag = cameraZoom;
 					//TakeFocus();
 
 				}
 				if(gestureResult.action.HasFlag(GestureAction.pan))
 				{
 					//	TakeFocus();
-					var dr = gestureResult.delta;
+					var dr = gestureResult.delta.ToV2();
 					{
-						dr *= 1.0f / cameraZoomLag;
-						CameraC += dr.ToV2();
-						// instant
-						cameraCLag = CameraC;
-						if(IsCityView())
-						{
-							AutoSwitchCityView();
-						}
+						dr *= 1.0f / viewZoomLag;
+						View.SetViewTargetInstant(viewW2 + dr);
 					}
 					//else
 					{

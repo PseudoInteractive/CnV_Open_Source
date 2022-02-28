@@ -444,7 +444,6 @@ namespace CnV.Draw
 		{
 
 			var item = _batcher.CreateBatchItem(layer,texture);
-		
 
 
 	
@@ -496,6 +495,7 @@ namespace CnV.Draw
 		{
 
 			var item = _batcher.CreateBatchItem(layer, texture);
+			
 
 
 			item.Set(c0.X,

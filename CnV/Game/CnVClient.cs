@@ -465,7 +465,7 @@ namespace CnV
 		public static async Task<bool> CitySwitch(int cid, bool lazyMove = false, bool select = true, bool scrollIntoUI = true, bool isLocked = false, bool waitOnChange = false)
 		{
 			// Make sure we don't ignore the exception
-			{
+			
 				// is it my city?
 				if(CanVisit(cid))
 				{
@@ -473,14 +473,14 @@ namespace CnV
 					// Is it locked?
 					if(!Spot.CanChangeCity(cid))
 					{
-						ClientView.EnsureNotCityView();
+						View.EnsureNotCityView();
 						Note.Show("Please wait for current operation to complete");
 						return false;
 					}
 					var city = GetOrAddCity(cid);
 
 					//if(city.pid != Player.myId)
-						// no longer happens
+					// no longer happens
 					//	Assert(false);
 					//else
 					{
@@ -490,7 +490,7 @@ namespace CnV
 							if(Spot.lockedBuild != 0 && cid != Spot.lockedBuild)
 							{
 								Note.Show("Please wait for current operation to complete");
-								if(await AppS.DoYesNoBox("Busy", "Please wait for current operation to complete") != 1)
+								if(await AppS.DoYesNoBox("Busy","Please wait for current operation to complete") != 1)
 									return false;
 							}
 							// this blocks if we can't change the city
@@ -535,9 +535,9 @@ namespace CnV
 									AppS.uiSema.Release();
 							}
 
-				
+
 						}
-						city.SetFocus(scrollIntoUI, select);
+						city.SetFocus(scrollIntoUI,select);
 						CityUI.SyncCityBox();
 
 						if(changed)
@@ -559,12 +559,14 @@ namespace CnV
 					}
 					if(!lazyMove)
 						cid.BringCidIntoWorldView(lazyMove);
+					return true;
 				}
 				else
-					CityUI.ShowCity(cid, lazyMove, scrollIntoUI);
-
-			}
-			return true;
+				{
+					CityUI.ShowCity(cid,lazyMove,scrollIntoUI);
+					return false;
+				}
+			
 
 		}
 
@@ -1006,7 +1008,7 @@ namespace CnV
 										// var priorCid = cid;
 										var cid = jse.GetInt("cid");
 										//if (!ShellPage.IsWorldView())
-										// AGame.cameraC = cid.CidToWorldV();
+										// AGame.viewCW = cid.CidToWorldV();
 										var isFromTs = jse.TryGetProperty("ts", out _);
 										//Note.L("citydata=" + cid.CidToString());
 										var city = GetOrAddCity(cid);
@@ -1174,18 +1176,18 @@ namespace CnV
 										switch(vm)
 										{
 											case ViewMode.city:
-												View.cameraZoom = View.cityZoomDefault;
+												View.viewZoom = View.cityZoomDefault;
 												break;
 											case ViewMode.region:
-												View.cameraZoom = View.cameraZoomRegionDefault;
+												View.viewZoom = View.cameraZoomRegionDefault;
 												break;
 											case ViewMode.world:
-												View.cameraZoom = View.cameraZoomWorldDefault;
+												View.viewZoom = View.cameraZoomWorldDefault;
 
 												break;
 										}
 										Spot.build.BringCidIntoWorldView(false);
-										ClientView.AutoSwitchViewMode();
+										View.AutoSwitchViewMode();
 									}
 
 									//   ShellPage.SetViewMode((ViewMode)jso.GetInt("v"));

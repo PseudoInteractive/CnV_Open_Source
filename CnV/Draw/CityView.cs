@@ -26,10 +26,9 @@ namespace CnV
 {
 	using Draw;
 	using Game;
-
+	using static View;
 	using Microsoft.Xna.Framework.Graphics;
 
-	using Views;
 	
 	public class CityView
 	{

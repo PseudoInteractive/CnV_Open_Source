@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework;
 using Vector2 = System.Numerics.Vector2;
 using Vector3 = System.Numerics.Vector3;
 using Vector4 = System.Numerics.Vector4;
+using static View;
 using static GameClient;
 
  static partial class AGame
@@ -64,6 +65,9 @@ using static GameClient;
 	public static Vector2 ToV2(this Microsoft.Xna.Framework.Vector2 me) => new Vector2(me.X,me.Y);
 	public static Vector2 ToV2(this Vector3 me) => new Vector2(me.X,me.Y);
 
+	public static Vector3 WithZ(this Vector2 me, float z) => new Vector3(me.X,me.Y,z);
+
+
 	//public static Vector4 ToFVector4(this Color c) => new Vector4(c.R / 255, c.G / 255, c.B / 255, c.A / 255);
 	//public static void DrawLine(this CanvasSpriteBatch b, Vector2 c0, Vector2 c1, Vector4 c, float thickness, CanvasStrokeStyle style)
 	//{
@@ -102,52 +106,57 @@ using static GameClient;
 	public static float bulgeNegativeRange = 0.875f;
 	public static float CToDepth(this Vector2 c,float zBias)
 	{
-		float r2 = (c.LengthSquared() * bulgeInputGain).Min(1.0f);
-		//			return r.SLerp(AGame.bulgeGain, 0.0f);
-		//Assert(r2 <= 2.0f);
-		return (r2).Lerp(1,-bulgeNegativeRange) * bulgeGain + zBias;
+		return zBias;
+		//float r2 = (c.LengthSquared() * bulgeInputGain).Min(1.0f);
+		////			return r.SLerp(AGame.bulgeGain, 0.0f);
+		////Assert(r2 <= 2.0f);
+		//return (r2).Lerp(1,-bulgeNegativeRange) * bulgeGain + zBias;
 		//	return Math.Acos(r.SLerp(AGame.bulgeGain, 0.0f);
 
 	}
+	
 	public static float PlanetDepth(float x, float y, float zBase)
 	{
 		return new Vector2(x, y).CToDepth(zBase);
 	}
+	
 	public static float ConstantDepth(float x, float y, float zBase)
 	{
 		return zBase;
 
 	}
-	public static Vector2 Project(this Vector3 c)
-	{
-		float scale = 1.0f / (AGame.cameraZ - c.Z);
-		return new Vector2(c.X * scale,c.Y * scale);
 
-	}
-	public static (Vector2 c, float scale) Project(this Vector2 c,float zBias)
-	{
-		float scale = 1.0f / (AGame.cameraZ - (c.CToDepth(zBias)));
-		return (new Vector2(c.X * scale,c.Y * scale), scale);
+	//public static Vector2 Project(this Vector3 c)
+	//{
+	//	float scale = 1.0f / (AGame.cameraZ - c.Z);
+	//	return new Vector2(c.X * scale,c.Y * scale);
+	//}
 
-	}
+	//public static (Vector2 c, float scale) ViewToScreen(this Vector2 c,float zBias)
+	//{
+	//	float scale = 1.0f / (viewW.Z - zBias);
+	//	return (new Vector2(c.X * scale,c.Y * scale), scale);
 
-	public static Vector2 InverseProject(this Vector2 c,float z)
-	{
-		float scale = (AGame.cameraZ - z);
-		return new Vector2(c.X * scale,c.Y * scale);
-	}
+	//}
+
+	//public static Vector2 InverseProject(this Vector2 c,float z)
+	//{
+	//	float scale = (viewW.Z - z);
+	//	return new Vector2(c.X * scale,c.Y * scale);
+	//}
 
 	public static Vector2 InverseProject(this Vector2 c)
 	{
-		float zBias = AGame.zCities;
-		float z = CToDepth(c,zBias);
+		return c;
+		//float zBias = zCities;
+		//float z = CToDepth(c,zBias);
 
-		for(int i = 0;i < 8;++i)
-		{
-			var test = InverseProject(c,z);
-			z = new Vector2(test.X,test.Y).CToDepth(zBias);
-		}
-		return InverseProject(c,z);
+		////for(int i = 0;i < 8;++i)
+		////{
+		////	var test = InverseProject(c,z);
+		////	z = new Vector2(test.X,test.Y).CToDepth(zBias);
+		////}
+		//return InverseProject(c,z);
 	}
 
 	//		public static float CToDepth(this (float x, float y) c) => CToDepth(new Vector2(c.x, c.y));
@@ -160,15 +169,24 @@ using static GameClient;
 	//	public static Vector2 WToCp(this (float x, float y) c, float dz) => WToCp(new Vector2(c.x, c.y), dz);
 	public static Vector2 ScreenToCamera(this Vector2 s)
 	{
-		return s - AGame.projectionC;
+		return (s - AGame.projectionC)*pixelScaleInverse;
 	}
 	public static Vector2 ScreenToWorld(this Vector2 s)
 	{
-		return CameraToWorldDelta( ScreenToCamera(s) );
+		return CameraToWorld( ScreenToCamera(s) );
 	}
 	public static Vector2 CameraToScreen(this Vector2 s)
 	{
-		return s + AGame.projectionC;
+		return s* pixelScale + AGame.projectionC;
+	}
+
+	public static Vector2 WorldToScreen(this Vector2 s)
+	{
+		return CameraToScreen(WorldToCamera(s));
+	}
+	public static Vector3 WorldToCamera(this Vector3 s)
+	{
+		return s - viewW;
 	}
 	//	public static Vector2 WToCpSpan(this Vector2 c, float dz)
 	//{
@@ -207,16 +225,21 @@ using static GameClient;
 
 	public static Vector2 WorldToCamera(this Vector2 c)
 	{
-		return (c - View.cameraCLag) * pixelScale;
+		return (c - View.viewW2) ;
 	}
 	public static Vector2 CameraToWorldDelta(this Vector2 c)
 	{
-		return (c) *pixelScaleInverse;
+		return (c) ;
 	}
-	public static Vector2 CameraToWorldPosition(this Vector2 c)
+	public static Vector2 CameraToWorld(this Vector2 c)
 	{
-		return (c) *pixelScaleInverse + View.cameraCLag;
+		return c + View.viewW2;
 	}
+	public static Vector3 CameraToWorld(this Vector3 c)
+	{
+		return c + View.viewW;
+	}
+
 	public static Vector2 WorldToCamera(this (int x, int y) c)
 	{
 		return new Vector2(c.x,c.y).WorldToCamera();

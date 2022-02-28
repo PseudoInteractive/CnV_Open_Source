@@ -122,7 +122,9 @@
   <ItemGroup>
     <Compile Include="Activation\ProtocolActivation.cs" />
     <Compile Include="Activation\ActivationHandler.cs" />
+    <Compile Include="Draw\CameraView.cs" />
     <Compile Include="Draw\StatsView.cs" />
+    <Compile Include="Draw\ViewStep.cs" />
     <Compile Include="FormatParameterObject.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Services\CnVSignin.cs" />

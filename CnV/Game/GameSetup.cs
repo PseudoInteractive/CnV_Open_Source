@@ -102,7 +102,7 @@ namespace CnV
 				Assert(Spot.build ==cid && Spot.focus == cid);
 			//	Spot.build = Spot.focus = cid;
 				//NavStack.Push(cid);
-				AGame.CameraC = cid.CidToWorldV();
+				//AGame.CameraC = cid.CidToWorldV();
 
 
 				//CnVChatClient.CnVChatClient.Setup();

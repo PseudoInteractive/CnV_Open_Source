@@ -62,21 +62,25 @@ namespace CnV
 		public static      EffectPass      animatedSpriteEffect;
 		private static     EffectPass      sdfEffect;
 		private static     EffectPass      noTextureEffect;
+		private static     EffectPass      noTextureShadowEffect;
 		private static     EffectPass      worldSpaceEffect;
 		public static      EffectParameter planetGainsParamater;
 		public static      EffectParameter worldMatrixParameter;
-		public static      EffectParameter lightPositionParameter;
-		public static      EffectParameter lightPositionCameraParameter;
+		public static EffectParameter viewCWParam;
+//		public static      EffectParameter lightPositionParameter;
+		public static      EffectParameter lightCCParam;
+		public static      EffectParameter lightCWParam;
 //		public static      EffectParameter lightGainsParameter;
 		public static      EffectParameter lightAmbientParameter;
 		public static      EffectParameter lightColorParameter;
 		public static      EffectParameter lightSpecularParameter;
 	//	public static      EffectParameter cameraReferencePositionParameter;
-		public static      EffectParameter cameraCParameter;
+	//	public static      EffectParameter cameraCParameter;
 		public static      EffectParameter pixelScaleParameter;
 		public static      Material        lineDraw;
 		public static      Material        quadTexture;
 		public static      Material        whiteMaterial;
+		public static      Material        shadowMaterial; // no texture
 		public static      Material        sky;
 		public GameClient()
 		{
@@ -464,23 +468,25 @@ namespace CnV
 				sdfEffect              = EffectPass("SDF");
 				noTextureEffect        = EffectPass("NoTexture");
 				worldSpaceEffect       = EffectPass("WorldSpace");
-
+				noTextureShadowEffect = EffectPass("NoTextureShadow");
 				
 
 				using var srgb = new SRGBLoadScope();
 
 				worldMatrixParameter = avaEffect.Parameters["WorldViewProjection"];
+				worldMatrixParameter = avaEffect.Parameters["WorldViewProjection"];
 
 
-				lightPositionParameter = avaEffect.Parameters["lightPosition"];
-				lightPositionCameraParameter = avaEffect.Parameters["viewPositionScreen"];
+			//	lightPositionParameter = avaEffect.Parameters["lightPosition"];
+				lightCCParam = avaEffect.Parameters["lightCC"];
+				lightCWParam = avaEffect.Parameters["lightCW"];
 				planetGainsParamater = avaEffect.Parameters["planetGains"];
 				//lightGainsParameter = avaEffect.Parameters["lightGains"];
 				lightColorParameter = avaEffect.Parameters["lightColor"];
 				lightSpecularParameter = avaEffect.Parameters["lightSpecular"];
 				lightAmbientParameter = avaEffect.Parameters["lightAmbient"];
 			//	cameraReferencePositionParameter = avaEffect.Parameters["cameraReferencePosition"];
-				cameraCParameter = avaEffect.Parameters["cameraC"];
+				viewCWParam = avaEffect.Parameters["viewCW"];
 				pixelScaleParameter = avaEffect.Parameters["pixelScale"];
 
 				fontMaterial = new Material(null, fontEffect);
