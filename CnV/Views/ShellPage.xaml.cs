@@ -40,6 +40,7 @@ namespace CnV.Views
 
 	using Helpers;
 
+	using Microsoft.Graphics.DirectX;
 	using Microsoft.UI;
 	using Microsoft.UI.Xaml.Data;
 	// using PInvoke
@@ -554,6 +555,15 @@ namespace CnV.Views
 																		LayoutAccelerator_Invoked,
 																		VirtualKeyModifiers.Control));
 				}
+
+				KeyboardAccelerators.Add(BuildKeyboardAccelerator(key:VirtualKey.Enter,modifiers:
+																VirtualKeyModifiers.Menu,OnKeyboardAcceleratorInvoked: (_,a) =>
+																{
+																	a.Handled=true;
+																Settings.fullScreen = !Settings.fullScreen.GetValueOrDefault();
+																AppS.appWindow.SetPresenter(Settings.fullScreen.GetValueOrDefault() ? Microsoft.UI.Windowing.AppWindowPresenterKind.FullScreen : Microsoft.UI.Windowing.AppWindowPresenterKind.Overlapped);
+																} ));
+
 
 				AppS.SetState(AppS.State.active);
 			}

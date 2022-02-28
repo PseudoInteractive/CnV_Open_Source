@@ -49,13 +49,19 @@ namespace CnV.Views
 		public static InputPointerSource coreInputSource;
 
 		public static Vector2 mousePosition;
-		public static Vector2 mousePositionC; // in camera space
-		public static Vector2 mousePositionW; // in warped space
+		//public static Vector2 mousePositionC; // in camera space
+		public static Vector2 mousePositionW; // in world space
+
+		internal static void SetMousePosition(Vector2 c)
+		{
+			mousePosition = c;
+			mousePositionW = c.ScreenToWorld();
+		}
 		public static Vector2 lastMousePressPosition;
 		public static DateTimeOffset lastMousePressTime;
 
 		public static bool mouseOverCanvas;
-		static IAsyncAction inputWorker;
+		static Thread inputWorker;
 
 		public float eventTimeOffset;
 		public static ref string? toolTip => ref ToolTips.toolTip;
@@ -63,129 +69,70 @@ namespace CnV.Views
 		//	public static DispatcherQueueController _queuecontroller;
 		///ivate static InputPointerSource _inputPointerSource;
 
-		//public static void SetupCoreInput()
-		//{
-
-		//	try
-		//	{
-		//		var workItemHandler = new WorkItemHandler(async (action) =>
-		//	{
+		
+		
 
 
 
-		//	//	canvas.DispatchOnUIThread(  () =>
-		//		{
-		//			try
-		//			{
-		//				// Set up the pointer input source to receive pen input for the swap chain panel.
-		//				coreInputSource = canvas.CreateCoreIndependentInputSource(InputPointerSourceDeviceKinds.Mouse | InputPointerSourceDeviceKinds.Pen|InputPointerSourceDeviceKinds.Touch);
 
-
-		//				//	Log(canvas.ManipulationMode);
-		//				//	canvas.ManipulationMode = ManipulationModes.All;
-		//				coreInputSource.PointerMoved+=CoreInputSource_PointerMoved;
-		//				coreInputSource.PointerPressed+=CoreInputSource_PointerPressed; ;
-		//				coreInputSource.PointerReleased+=CoreInputSource_PointerReleased; ;
-		//				coreInputSource.PointerEntered+=CoreInputSource_PointerEntered; ;
-		//				coreInputSource.PointerExited+=CoreInputSource_PointerExited; ;
-		//				coreInputSource.PointerCaptureLost += CoreInputSource_PointerCaptureLost;
-
-		//				coreInputSource.PointerWheelChanged += Canvas_PointerWheelChanged;
-
-		//				await Task.Delay(-1);
-		//			}
-		//			catch(Exception __ex)
-		//			{
-		//				Debug.LogEx(__ex);
-		//			}
-
-
-		//			}
-		//		//	);
-		//	});
-		//		inputWorker = Windows.System.Threading.ThreadPool.RunAsync(workItemHandler, WorkItemPriority.High, WorkItemOptions.TimeSliced);
-
-		//	}
-		//	catch(Exception __ex)
-		//	{
-		//		Debug.LogEx(__ex);
-		//	}
-
-		//}
-
-
-
-		//);
 		//		
 		//	
 
 
 
-		private static void CoreInputSource_PointerExited(InputPointerSource sender, PointerEventArgs args)
+		private static void CoreInputSource_PointerExited(InputPointerSource sender,PointerEventArgs args)
 		{
 			args.KeyModifiers.UpdateKeyModifiers();
-			Canvas_PointerExited(args.CurrentPoint.Position, args.CurrentPoint.PointerId);
+			Canvas_PointerExited(args.CurrentPoint.Position,args.CurrentPoint.PointerId);
 		}
 
-		private static void CoreInputSource_PointerEntered(InputPointerSource sender, PointerEventArgs args)
+		private static void CoreInputSource_PointerEntered(InputPointerSource sender,PointerEventArgs args)
 		{
 			args.KeyModifiers.UpdateKeyModifiers();
 
 			Canvas_PointerEntered(args.CurrentPoint.Position);
 		}
 
-		private static void CoreInputSource_PointerReleased(InputPointerSource sender, PointerEventArgs args)
+		private static void CoreInputSource_PointerReleased(InputPointerSource sender,PointerEventArgs args)
 		{
 			args.KeyModifiers.UpdateKeyModifiers();
 
 			var point = args.CurrentPoint;
-			Canvas_PointerReleased((point.Position, point.PointerId, point.IsInContact, point.Timestamp, point.Properties.PointerUpdateKind), args.KeyModifiers);
-
+			Canvas_PointerReleased((point.Position, point.PointerId, point.IsInContact, point.Timestamp, point.Properties.PointerUpdateKind),args.KeyModifiers);
+			args.Handled=true;
 		}
-//		public static PointerUpdateKind GetPointerUpdateKind()
-		private static void CoreInputSource_PointerPressed(InputPointerSource sender, PointerEventArgs args)
+		//		public static PointerUpdateKind GetPointerUpdateKind()
+		private static void CoreInputSource_PointerPressed(InputPointerSource sender,PointerEventArgs args)
 		{
 			var point = args.CurrentPoint;
 			args.KeyModifiers.UpdateKeyModifiers();
 			Canvas_PointerPressed((point.Position, point.PointerId, point.IsInContact, point.Timestamp, point.Properties.PointerUpdateKind));
 
+			args.Handled=true;
+
 		}
 
-		public static void CoreInputSource_PointerMoved(InputPointerSource sender, PointerEventArgs e)
+		public static void CoreInputSource_PointerMoved(InputPointerSource sender,PointerEventArgs e)
 		{
 			var point = e.CurrentPoint;
 			e.KeyModifiers.UpdateKeyModifiers();
 			Canvas_PointerMoved((point.Position, point.PointerId, point.IsInContact, point.Timestamp, point.Properties.PointerUpdateKind));
+			e.Handled=true;
 		}
 
-		public static void SetupNonCoreInput()
-		{
-			//Canvas_PointerWheelChanged(mouseState, priorMouseState);
-			//SetupCoreInput();
 
-			canvas.PointerMoved+=KeyboardProxy_PointerMoved;
-			canvas.PointerPressed+=KeyboardProxy_PointerPressed;
-			canvas.PointerReleased+=KeyboardProxy_PointerReleased;
-			canvas.PointerEntered+=KeyboardProxy_PointerEntered;
-			canvas.PointerExited +=KeyboardProxy_PointerExited;
-		   canvas.PointerWheelChanged += KeyboardProxy_PointerWheelChanged;
-			canvas.KeyDown += KeyboardProxy_KeyDown;
-			FocusManager.GotFocus +=FocusManager_GotFocus;
-			FocusManager.LostFocus +=FocusManager_LostFocus;
-			canvas.IsHitTestVisible = true;
-		}
 
-		private static void FocusManager_LostFocus(object? sender, FocusManagerLostFocusEventArgs e)
+		private static void FocusManager_LostFocus(object? sender,FocusManagerLostFocusEventArgs e)
 		{
 			//	Note.Show($"Lost focus: {e.OldFocusedElement} { (e.OldFocusedElement as FrameworkElement)?.Name}");
 		}
 
-		private static void FocusManager_GotFocus(object? sender, FocusManagerGotFocusEventArgs e)
+		private static void FocusManager_GotFocus(object? sender,FocusManagerGotFocusEventArgs e)
 		{
 			//	Note.Show($"New focus: {e.NewFocusedElement} { (e.NewFocusedElement as FrameworkElement)?.Name}");
 		}
 
-		private static void KeyboardProxy_PointerExited(object sender, PointerRoutedEventArgs e)
+		private static void KeyboardProxy_PointerExited(object sender,PointerRoutedEventArgs e)
 		{
 			e.KeyModifiers.UpdateKeyModifiers();
 			//	Note.Show($"Pointer exit {mouseOverCanvas}");
@@ -194,27 +141,27 @@ namespace CnV.Views
 			//	instance.mouseOverCanvasBox.IsChecked = mouseOverCanvas;
 
 			var point = e.GetCurrentPoint(canvas);
-			Canvas_PointerExited(point.Position, point.PointerId);
+			Canvas_PointerExited(point.Position,point.PointerId);
 		}
 
-		private static void KeyboardProxy_PointerEntered(object sender, PointerRoutedEventArgs e)
+		private static void KeyboardProxy_PointerEntered(object sender,PointerRoutedEventArgs e)
 		{
 			e.KeyModifiers.UpdateKeyModifiers();
 
 			Canvas_PointerEntered(e.GetCurrentPoint(canvas).Position);
 		}
 
-		private static void KeyboardProxy_PointerReleased(object sender, PointerRoutedEventArgs e)
+		private static void KeyboardProxy_PointerReleased(object sender,PointerRoutedEventArgs e)
 		{
 			e.KeyModifiers.UpdateKeyModifiers();
 
 			var point = e.GetCurrentPoint(canvas);
-			Canvas_PointerReleased((point.Position, point.PointerId, point.IsInContact, point.Timestamp, point.Properties.PointerUpdateKind), e.KeyModifiers);
+			Canvas_PointerReleased((point.Position, point.PointerId, point.IsInContact, point.Timestamp, point.Properties.PointerUpdateKind),e.KeyModifiers);
 			e.Handled=true;
 
 		}
 
-		private static void KeyboardProxy_PointerPressed(object sender, PointerRoutedEventArgs e)
+		private static void KeyboardProxy_PointerPressed(object sender,PointerRoutedEventArgs e)
 		{
 			var point = e.GetCurrentPoint(canvas);
 			e.KeyModifiers.UpdateKeyModifiers();
@@ -223,7 +170,7 @@ namespace CnV.Views
 			e.Handled=true;
 		}
 
-		private static void KeyboardProxy_PointerMoved(object sender, PointerRoutedEventArgs e)
+		private static void KeyboardProxy_PointerMoved(object sender,PointerRoutedEventArgs e)
 		{
 			e.KeyModifiers.UpdateKeyModifiers();
 
@@ -231,21 +178,21 @@ namespace CnV.Views
 			Canvas_PointerMoved((point.Position, point.PointerId, point.IsInContact, point.Timestamp, point.Properties.PointerUpdateKind));
 		}
 
-		public static DispatcherQueueHandler RightClick((int x, int y) cc, int cid)
+		public static DispatcherQueueHandler RightClick((int x, int y) cc,int cid)
 		{
 			return () =>
 			{
 				if(IsCityView() && (cid == City.build))
 				{
-					CityBuild.Click(cc, true);
+					CityBuild.Click(cc,true);
 				}
 				else
 				{
 
 					var spot = Spot.GetOrAdd(cid);
 					if(!AppS.IsKeyPressedShiftOrControl())
-						spot.SetFocus(true, true, false);
-					spot.ShowContextMenu(canvas, CanvasToDIP(mousePosition));
+						spot.SetFocus(true,true,false);
+					spot.ShowContextMenu(canvas,CanvasToDIP(mousePosition));
 					// }
 				}
 			};
@@ -320,7 +267,7 @@ namespace CnV.Views
 							return (c, false);
 						}
 					}
-					pointer = new Point() { id = id, startTimestamp = point.Timestamp, startC = c, c = c };
+					pointer = new Point() { id = id,startTimestamp = point.Timestamp,startC = c,c = c };
 					points.Add(pointer);
 					maxPoints = points.Count.Max(maxPoints);
 					//  reset
@@ -489,7 +436,7 @@ namespace CnV.Views
 
 
 
-		private static void CoreInputSource_PointerCaptureLost(InputPointerSource sender, PointerEventArgs args)
+		private static void CoreInputSource_PointerCaptureLost(InputPointerSource sender,PointerEventArgs args)
 		{
 			Log("pointer lost");
 
@@ -542,7 +489,7 @@ namespace CnV.Views
 
 		public static Vector2 CanvasPointFromDip(Windows.Foundation.Point screenC)
 		{
-			return new Vector2((float)(screenC.X), (float)(screenC.Y));
+			return new Vector2((float)(screenC.X),(float)(screenC.Y));
 		}
 		//public static Vector2 GetCanvasPosition( int x , int y )
 		//{
@@ -555,7 +502,7 @@ namespace CnV.Views
 		// to device independant position
 		public static Windows.Foundation.Point CanvasToDIP(Vector2 point)
 		{
-			return new Windows.Foundation.Point((point.X ), (point.Y ));
+			return new Windows.Foundation.Point((point.X),(point.Y));
 		}
 
 		//public static (int x, int y) JSPointToScreen((int x, int y) c) => JSPointToScreen(c.x, c.y);
@@ -567,11 +514,11 @@ namespace CnV.Views
 
 		//}
 
-		static void PointerInfo(PointerEventArgs args, [System.Runtime.CompilerServices.CallerMemberName] string memberName = "")
+		static void PointerInfo(PointerEventArgs args,[System.Runtime.CompilerServices.CallerMemberName] string memberName = "")
 		{
 			Log($"{memberName} : f:{args.CurrentPoint.FrameId} id:{args.CurrentPoint.PointerId} C:{args.CurrentPoint.IsInContact} l{args.CurrentPoint.Position.X},{args.CurrentPoint.Position.Y}> ");
 		}
-		private static void Canvas_PointerExited(Windows.Foundation.Point Point, uint PointerId)
+		private static void Canvas_PointerExited(Windows.Foundation.Point Point,uint PointerId)
 		{
 			UpdateMousePosition(Point);
 			//			e.KeyModifiers.UpdateKeyModifiers();
@@ -589,21 +536,21 @@ namespace CnV.Views
 
 			ClearHover();
 		}
-		static public (int x, int y) ScreenToWorldC(Vector3 c1)
+		//static public (int x, int y) ScreenToWorldC(Vector3 c1)
+		//{
+		//	return (((c1.X) / viewZoomLag + viewTargetW.X).RoundToInt(), ((c1.Y) / viewZoomLag + viewTargetW.Y).RoundToInt());
+		//}
+		static public (WorldC wc, BuildC cc) ToWorldAndCityC(Vector2 w)
 		{
-			return (((c1.X) / viewZoomLag + viewTargetW.X).RoundToInt(), ((c1.Y) / viewZoomLag + viewTargetW.Y).RoundToInt());
-		}
-		static public (WorldC wc, BuildC cc) ScreenToWorldAndCityC(Vector2 c1)
-		{
-			var w = new Vector2(((c1.X) / viewZoomLag + viewTargetW.X), ((c1.Y) / viewZoomLag + viewTargetW.Y));
+			//var w = new Vector2(((sc.X)  + viewTargetW.X),((sc.Y) + viewTargetW.Y));
 			if(!w.IsInWorld())
 				return (WorldC.Nan, BuildC.Nan);
 
-			var wi = new  WorldC(w);
-			
+			var wi = new WorldC(w);
+
 
 			(int x, int y) bi = wi.cid == City.build ?
-				(((w.X - wi.x)*City.citySpan).RoundToInt().Clamp(City.span0, City.span1), ((w.Y - wi.y) * City.citySpan/CityView.cityYAspectRatio).RoundToInt().Clamp(City.span0, City.span1)) :
+				(((w.X - wi.x)*City.citySpan).RoundToInt().Clamp(City.span0,City.span1), ((w.Y - wi.y) * City.citySpan/CityView.cityYAspectRatio).RoundToInt().Clamp(City.span0,City.span1)) :
 				BuildC.Nan;
 
 			return (wi, bi);
@@ -658,9 +605,8 @@ namespace CnV.Views
 				case PointerUpdateKind.XButton2Released:
 					return;
 			}
-			mousePosition = gestureResult.c;
-			mousePositionC = mousePosition.ScreenToCamera();
-			mousePositionW = mousePositionC.InverseProject();
+			SetMousePosition( gestureResult.c);
+
 
 			//	var wasOverPopup = isOverPopup;
 			int jsButton = 0;
@@ -687,7 +633,7 @@ namespace CnV.Views
 				//	return;
 				//}
 
-				(var worldC, var cc) = ScreenToWorldAndCityC(mousePositionW);
+				(var worldC, var cc) = ToWorldAndCityC(mousePositionW);
 				var cid = worldC.cid;
 
 				switch(gestureResult.action)
@@ -695,39 +641,20 @@ namespace CnV.Views
 					case GestureAction.leftClick:
 						{
 
-							//if (AttackTab.instance.isVisible && e.KeyModifiers.IsShiftAndControl() && City.Get(cid).isCityOrCastle)
-							//{
-							//	var _cid = cid;
-							//	AppS.DispatchOnUIThreadLow(() =>
-							//	{
-							//		var city = City.Get(_cid);
-							//		if (city.IsAllyOrNap())
-							//		{
-							//			AttackTab.AddAttacks(new () { _cid }  );
-
-							//		}
-							//		else
-							//		{
-							//			AttackTab.AddTarget(new[] { _cid });
-
-							//		}
-
-							//	});
-							//}
-							//else
+						
 							{
 								if(IsCityView() && (cid == City.build))
 								{
-									AppS.DispatchOnUIThread(priority:DispatcherQueuePriority.High,action:() =>
-									{
-										CityBuild.Click(cc, false);
+									AppS.DispatchOnUIThread(priority: DispatcherQueuePriority.High,action: () =>
+									  {
+										  CityBuild.Click(cc,false);
 
-									});
+									  });
 								}
 								else
 								{
 									// check to see if it needs to go to the webview
-									Spot.ProcessCoordClick(cid, cid != City.build, keyModifiers, true); ;
+									Spot.ProcessCoordClick(cid,cid != City.build,keyModifiers,true); ;
 									//e.Handled = true;
 								}
 							}
@@ -736,7 +663,7 @@ namespace CnV.Views
 
 					case GestureAction.rightClick:
 						{
-							AppS.DispatchOnUIThread(RightClick(cc, cid),priority:DispatcherQueuePriority.High);
+							AppS.DispatchOnUIThread(RightClick(cc,cid),priority: DispatcherQueuePriority.High);
 							break;
 						}
 					//case GestureAction.rightClick:
@@ -854,16 +781,16 @@ namespace CnV.Views
 			var gestureResponse = Gesture.ProcessPressed(point);
 			if(!gestureResponse.process)
 				return;
-			mousePosition = gestureResponse.c;
-			mousePositionC = mousePosition.ScreenToCamera();
-			mousePositionW = mousePositionC.InverseProject();
+			SetMousePosition( gestureResponse.c);
+		//	mousePositionW = mousePosition.ScreenToWorld();
+
 
 			var prior = lastMousePressTime;
 			lastMousePressTime = DateTimeOffset.UtcNow;
 			lastMousePressPosition = mousePosition;
 
-			mousePositionW = mousePositionC.InverseProject();
-			(var c, var cc) = ScreenToWorldAndCityC(mousePositionW);
+			
+			(var c, var cc) = ToWorldAndCityC(mousePositionW);
 
 			//  if (CnVServer.IsCityView())
 			// The app pas priority over back and forward events
@@ -901,10 +828,10 @@ namespace CnV.Views
 			//			}
 			//			else
 			{
-				// only needs for pen and touch
+				// Update focus
 				if(IsCityView())
 				{
-					CityBuild.PointerDown(cc);
+					CityBuild.UpdateHovered(cc);
 
 				}
 
@@ -915,59 +842,17 @@ namespace CnV.Views
 
 
 
-		//public static void Canvas_PointerPressedJS(int x, int y, PointerUpdateKind kind)
-		//{
-		//	AppS.UpdateKeyStates();
-		//	//e.KeyModifiers.UpdateKeyModifiers();
 
-		//	//	Assert(isOverPopup == false);
-		//	//            canvas.CapturePointer(e.Pointer);
-		//	//	var point = e.CurrentPoint;
-		//	{
-		//		switch(kind)
-		//		{
-		//			case PointerUpdateKind.XButton1Pressed:
-		//				return;
-		//			case PointerUpdateKind.XButton2Pressed:
-		//				return;
-
-
-		//		}
-		//		//    e.Handled = false;
-		//		//    return;
-		//	}
-		//	//var properties = point.Properties;
-		//	mousePosition = new(x, y);
-		//	//	Log($"!Focus Canvas pressed? {x} {y} {kind}");
-		//	var prior = lastMousePressTime;
-		//	lastMousePressTime = DateTimeOffset.UtcNow;
-		//	lastMousePressPosition = mousePosition;
-
-		//	ClearHover();
-
-		//	//  if (ShellPage.IsCityView())
-		//	// The app pas priority over back and forward events
-		//	//S hellPage.UpdateFocus();
-		//	//  e.Handled = false;
-		//	Gesture.Reset();
-		//}
-		//private void Canvas_PointerCaptureLost(object sender, PointerRoutedEventArgs e)
-		//{
-		//    mouseButtons = 0;
-		//    Spot.viewHover = 0;
-		//}
-
-
-
-
-		private static void Canvas_PointerWheelChanged(InputPointerSource sender, PointerEventArgs e)
+		private static void Canvas_PointerWheelChanged(InputPointerSource sender,PointerEventArgs e)
 		{
 			var point = e.CurrentPoint.Position;
 			var scroll = e.CurrentPoint.Properties.MouseWheelDelta;
-			HandleWheel(point, scroll);
+			e.Handled=true;
+			HandleWheel(point,scroll);
+
 		}
 
-		public static bool HandleWheel(Windows.Foundation.Point point, int scroll)
+		public static bool HandleWheel(Windows.Foundation.Point point,int scroll)
 		{
 			UpdateMousePosition(point);
 			///Note.Show($"Wheel");
@@ -990,17 +875,17 @@ namespace CnV.Views
 			//	//				ShellPage.SetWebViewHasFocus(true);
 			//	return true;
 			//}
-			DoZoom(scroll, false);
+			DoZoom(scroll);
 			return false;
 		}
 		public static void UpdateMousePosition(PointerEventArgs e)
 		{
 			UpdateMousePosition(e.CurrentPoint.Position);
 		}
-		public static void UpdateMousePosition(PointerEventArgs e, UIElement source)
+		public static void UpdateMousePosition(PointerEventArgs e,UIElement source)
 		{
 			var pt0 = e.CurrentPoint.Position;
-			var pt = pt0.TransformPoint(source, canvas);
+			var pt = pt0.TransformPoint(source,canvas);
 
 			UpdateMousePosition(pt);
 		}
@@ -1013,369 +898,21 @@ namespace CnV.Views
 		}
 		public static void UpdateMousePosition(Windows.Foundation.Point point)
 		{
-			mousePosition = point.ToVector2();
+			SetMousePosition( point.ToVector2() );
 
 			//Note.Show($"{pointC.X} {pointC.Y}");
 
 			//			var windowsPosition = e.CurrentPoint.Position;
 			//			mousePosition = GetCanvasPosition(windowsPosition);
-			mousePositionC = mousePosition.ScreenToCamera();
-			mousePositionW = mousePositionC.InverseProject();
+
 
 		}
-		private static void Canvas_PointerMoved((Windows.Foundation.Point Position, uint PointerId,
-																			bool IsInContact, ulong Timestamp, PointerUpdateKind PointerUpdateKind) point)
-		{
-
-//			if(!mouseOverCanvas)
-//				Log("Mouse Moved Canvas");
-			//	App.cursorDefault.Set();
-			// prevent idle timer;
-			mouseOverCanvas = true;
-			//	instance.mouseOverCanvasBox.IsChecked = mouseOverCanvas;
-
-
-			//	PointerInfo(e);
-			UpdateMousePosition(point.Position);
-			//	TakeFocusIfAppropriate();
-			//UpdateFocus();
-			//	if (!isFocused)
-			//		return;
-			//	var priorMouseC = mousePosition;
-			var gestureResult = Gesture.ProcessMoved(point);
-			if(gestureResult.action == GestureAction.none)
-				return;
-
-			mousePosition = gestureResult.c;
-
-			//			var windowsPosition = e.CurrentPoint.Position;
-			//			mousePosition = GetCanvasPosition(windowsPosition);
-			mousePositionC = mousePosition.ScreenToCamera();
-			mousePositionW = mousePositionC.InverseProject();
-		
-			(var c, var cc) = ScreenToWorldAndCityC(mousePositionW);
-			//var point = e.CurrentPoint;
-			//var props = point.Properties;
-			if(gestureResult.action.HasFlag( GestureAction.hover)  && c.isInWorld)
-			{
-				//if (TryPostJSMouseEvent(null, 0))
-				//{
-				//	// mouse over popup
-				//}
-				//else
-				{
-
-					var cont = Continent.GetPackedIdFromC(c);
-					var cid = c.cid;
-					if(IsCityView())
-					{
-						var build = City.GetBuild();
-						if(build != null)
-						{
-							//	var b = build.GetBuiding(cc);
-							//var d = b.def;
-							//	contToolTip = $"({cc.x},{cc.y})\n{d.Bn} {b.bl}";
-							Spot.viewHover = 0;
-							Player.viewHover = 0;
-							toolTip = null;
-							CityView.hovered = cc;
-						}
-					}
-					else
-					{
-
-						if(cont != lastCont)
-						{
-							lastCont = cont;
-							if(!IsCityView())
-							{
-								ref var cn = ref Continent.all[cont];
-								contToolTip = $"{World.UnpackContinent(cont)}\nSettled {cn.settled}\nFree {cn.unsettled}\nCities {cn.cities}\nCastles {cn.castles}\nTemples {cn.temples}\nDungeons {cn.dungeons}";
-
-							}
-						}
-
-
-						if(lastCanvasC != cid)
-						{
-
-							Spot.viewHover = 0;
-							Player.viewHover = 0;
-							toolTip = null;
-
-
-
-							lastCanvasC = cid;
-							var packedId = World.GetWorldId(c);
-							var data = World.GetInfoFromWorldId(World.rawPrior1!=null ? World.rawPrior1 : World.tileData, packedId);
-							switch(data.type)
-							{
-								case World.TileType.city:
-									{
-										Spot.viewHover = cid;
-										var city = City.GetOrAddCity(cid);
-										if(city != null)
-										{
-											if(data.player == 0)
-											{
-												toolTip = $"Lawless\n{c.y / 100}{c.x / 100} ({c.x}:{c.y})\nPoints {city.points}";
-											}
-											else
-											{
-												Player.viewHover = data.player;
-
-												var player = Player.GetValueOrDefault(data.player, Player._default);
-												//	if (Player.IsFriend(data.player))
-												{
-													//if (spot is City city)
-													{
-														using var sb = ZString.CreateUtf8StringBuilder();
-														//	var notes = city.remarks.IsNullOrEmpty() ? "" : city.remarks.Substring(0, city.remarks.Length.Min(40)) + "\n";
-														sb.AppendLine(player.name);
-														sb.AppendLine(city.cityName);
-														sb.AppendFormat("pts:{0:N0}\n", city.points);
-														if(player.allianceId!= 0)
-															sb.AppendLine(Alliance.IdToName(player.allianceId));
-														if(Player.IsSubOrMe(data.player))
-															sb.AppendLine(city.GetTroopsString("\n"));
-
-														if(city.senatorInfo.Length != 0)
-														{
-															sb.AppendLine(city.GetSenatorInfo());
-														}
-														if(city.incoming.Any())
-														{
-
-															var incAttacks = 0;
-															var incTs = 0;
-															foreach(var i in city.incoming)
-															{
-																if(i.isAttack)
-																{
-																	++incAttacks;
-																	incTs += i.ts;
-																	if(incAttacks<=3)
-																	{
-																		sb.AppendLine(i.troopInfo); // only show first two
-																	}
-																	else if(incAttacks ==4)
-																	{
-																		sb.AppendLine("..");
-																	}
-																}
-															}
-															sb.AppendFormat("{0} incoming attacks", incAttacks);
-															if(incTs > 0)
-																sb.AppendFormat(" ({0} total TS)\n", incTs);
-															else
-																sb.Append('\n');
-
-															if(city.claim != 0)
-																sb.AppendFormat("{0}% Claim\n", city.claim);
-
-															sb.AppendFormat("{0} total def\n", city.tsDefMax);
-
-															sb.AppendLine(city.GetDefString("\n"));
-
-														}
-														if(city.outGoing!=0)
-														{
-															if(city.outGoing.HasFlag(City.OutGoing.sieging))
-																sb.Append("Sieging\n");
-															else if(city.outGoing.HasFlag(City.OutGoing.scheduled))
-																sb.Append("Attack Scheduled\n");
-															else
-																sb.Append("Attack Sent\n");
-														}
-														else if(city.reinforcementsIn.AnyNullable())
-														{
-															sb.AppendFormat("{0} def\n", city.tsDefMax);
-															int counter = 0;
-															foreach(var i in city.reinforcementsIn)
-															{
-																sb.AppendLine(i.troops.Format($"From {City.GetOrAddCity(i.sourceCid).nameAndRemarks}:", '\n', '\n'));
-																if(++counter >= 4)
-																{
-																	sb.AppendLine("...");
-																	break;
-																}
-															}
-
-														}
-														if(!city.remarks.IsNullOrEmpty())
-															sb.AppendLine(city.remarks.AsSpan().Wrap(20));
-														if(city.hasAcademy.GetValueOrDefault())
-															sb.AppendLine("Has Academy");
-														if(NearRes.instance.isFocused)
-														{
-															sb.AppendLine($"Carts:{AUtil.FormaRatio((city.cartsHome, city.carts))}");
-															if(city.ships > 0)
-																sb.AppendLine($"Ships:{AUtil.FormatRatio(city.shipsHome, city.ships)}");
-															sb.AppendLine($"Wood:{city.resources[0].Format()}, Stone:{ city.resources[1].DivideRound(1000):4,N0}k");
-															sb.AppendLine($"Iron:{city.resources[2].Format()}, Food:{ city.resources[3].FormatWithSign()}k");
-														}
-														sb.Append($"{c.y / 100}{c.x / 100} ({c.x}:{c.y})");
-
-														toolTip = sb.ToString();
-
-													}
-
-												}
-												//else
-												//{
-												//	var info = spot != null ?
-												//		$"{spot.cityName}\n{spot.points}\n"
-												//	 : "";
-												//	toolTip = $"{player.name}\n{Alliance.IdToName(player.allianceId)}\n{info}{c.y / 100}{c.x / 100} ({c.x}:{c.y})\ncities:{player.cities.Count}\npts:{player.pointsH * 100}";
-												//}
-											}
-										}
-										break;
-									}
-								case World.TileType.shrine:
-									if(WorldViewSettings.shrines.isOn)
-										toolTip = $"Shrine\n{(data.data == 255 ? "Unlit" : ((Faith)data.data-1).AsString())}";
-									break;
-								case World.TileType.boss:
-									if(WorldViewSettings.bosses.isOn)
-										toolTip = $"Boss\nLevel:{data.data}"; // \ntype:{data >> 4}";
-									break;
-								case World.TileType.dungeon:
-									if(WorldViewSettings.caverns.isOn)
-										toolTip = $"Dungeon\nLevel:{data.data}"; // \ntype:{data >> 4}";
-									break;
-								case World.TileType.portal:
-									toolTip = $"Portal\n{(data.data == 0 ? "Inactive" : "Active")}";
-									break;
-							}
-
-							if(World.rawPrior0 != null)
-							{
-								var pData = World.GetInfoFromWorldId(World.rawPrior0, packedId);
-								if(pData.all == data.all)
-								{
-									// no change
-
-								}
-								else
-								{
-									switch(data.type)
-									{
-										case World.TileType.city:
-											if(pData.type == World.TileType.city)
-											{
-												if(pData.player != data.player)
-												{
-													if(pData.player == 0)
-													{
-														toolTip += "\nLawless was settled";
-													}
-													else if(data.player == 0)
-													{
-														var player = Player.GetValueOrDefault(pData.player, Player._default);
-														toolTip += $"\nWas abandoned by:\n{player.name}\n{player.allianceName}";
-													}
-													else
-													{
-														var player = Player.GetValueOrDefault(pData.player, Player._default);
-														toolTip += $"\nWas captured from:\n{player.name}\n{player.allianceName}";
-													}
-												}
-												else
-												{
-													if(pData.isTemple != data.isTemple)
-													{
-														if(data.isTemple)
-															toolTip += "\nBecame a Temple";
-														else
-															toolTip += "\nBecame not a temple";
-													}
-													else if(pData.isCastle != data.isCastle)
-													{
-														toolTip += "\nWas castled";
-													}
-													else if(data.isBig)
-													{
-														toolTip += "\nWas rennovated";
-													}
-													else
-													{
-														toolTip += "\nWas flattened";
-													}
-												}
-											}
-											else
-											{
-												toolTip += "\nWas founded";
-											}
-											break;
-										case World.TileType.shrine:
-											toolTip += "\nWas unlit";
-											break;
-										case World.TileType.portal:
-											if(data.player == 0)
-												toolTip += "\nWas active";
-											else
-												toolTip += "\nWas inactive";
-											break;
-										default:
-											if(pData.player != 0)
-												toolTip += $"\nDecayed (was {Player.IdToName(pData.player)})";
-											else
-												toolTip += "\nLawless Decayed";
-											break;
-
-									}
-								}
-							}
-							{
-								StringBuilder sb = new(toolTip);
-								var info = TileData.instance.GetSpotinfo(c.x, c.y, sb);
-								sb.Append($"\nOnWater:{data.isOnWater}\nShoreline:{info.shoreline}\nOcean:{info.isOcean}");
-								Assert(data.type == info.type);
-
-								toolTip = sb.ToString();
-							}
-						}
-					}
-				}
-				//				e.Handled = false;
-
-			}
-
-			//else
-			{
-				//			e.Handled = true;
-				if(gestureResult.action.HasFlag(GestureAction.zoom))
-				{
-					DoZoom(gestureResult.delta.Z * 0.75f,true);
-					//cameraZoomLag = cameraZoom;
-					//TakeFocus();
-
-				}
-				if(gestureResult.action.HasFlag(GestureAction.pan))
-				{
-					//	TakeFocus();
-					var dr = gestureResult.delta.ToV2();
-					{
-						dr *= 1.0f / viewZoomLag;
-						View.SetViewTargetInstant(viewW2 + dr);
-					}
-					//else
-					{
-
-						//		PostJSMouseEvent("mousemove",0, (int)dr.X,(int)dr.Y);
-					}
-				}
-
-			}
-		}
-
+	
 
 	}
 	public static class ShellHelper
 	{
-		public static Windows.Foundation.Point TransformPoint(this Windows.Foundation.Point pt0, UIElement source, UIElement target)
+		public static Windows.Foundation.Point TransformPoint(this Windows.Foundation.Point pt0,UIElement source,UIElement target)
 		{
 			var gt = source.TransformToVisual(target);
 			return gt.TransformPoint(pt0);

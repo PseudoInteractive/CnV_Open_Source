@@ -25,7 +25,8 @@ namespace CnV
 
 
 
-		public static float bmFontScale = 0.125f;
+		public static float baseFontScale = 0.125f;
+		public static float regionFontScale = 0.125f;
 		public static Texture2D fontTexture;
 
 		static readonly Color attackColor = Color.White;
@@ -64,7 +65,7 @@ namespace CnV
 		private static     EffectPass      noTextureEffect;
 		private static     EffectPass      noTextureShadowEffect;
 		private static     EffectPass      worldSpaceEffect;
-		public static      EffectParameter planetGainsParamater;
+//		public static      EffectParameter planetGainsParamater;
 		public static      EffectParameter worldMatrixParameter;
 		public static EffectParameter viewCWParam;
 //		public static      EffectParameter lightPositionParameter;
@@ -76,7 +77,7 @@ namespace CnV
 		public static      EffectParameter lightSpecularParameter;
 	//	public static      EffectParameter cameraReferencePositionParameter;
 	//	public static      EffectParameter cameraCParameter;
-		public static      EffectParameter pixelScaleParameter;
+//		public static      EffectParameter pixelScaleParameter;
 		public static      Material        lineDraw;
 		public static      Material        quadTexture;
 		public static      Material        whiteMaterial;
@@ -103,8 +104,7 @@ namespace CnV
 			Content.RootDirectory             =  "gameBin";
 		}
 
-		public static double   dipToNative = 1;
-		public static double   nativeToDip = 1;
+		
 		//public static Material LoadLitMaterial(string name)
 		//{
 		//	Texture texture;
@@ -213,6 +213,7 @@ namespace CnV
 		//	}
 		//}
 		public static bool wantFastRefresh;
+		public static bool wantDeviceReset;
 
 		private static float resolutionScale => Settings.renderQuality switch
 												{
@@ -253,8 +254,8 @@ namespace CnV
 			projectionC.X = clientSpan.X * 0.5f - View.popupLeftMargin * 0.5f;
 			projectionC.Y = clientSpan.Y * 0.5f - View.popupTopMargin  * 0.5f;
 
-			clip.c0 = -projectionC;
-			clip.c1 = clientSpan -projectionC;
+			clip.c0 = default;
+			clip.c1 = clientSpan;
 
 		}
 		public static Material CreateFromBytes(byte[] pixels, int x, int y, SurfaceFormat format, EffectPass effect = null)
@@ -474,20 +475,20 @@ namespace CnV
 				using var srgb = new SRGBLoadScope();
 
 				worldMatrixParameter = avaEffect.Parameters["WorldViewProjection"];
-				worldMatrixParameter = avaEffect.Parameters["WorldViewProjection"];
+				//worldMatrixParameter = avaEffect.Parameters["WorldViewProjection"];
 
 
 			//	lightPositionParameter = avaEffect.Parameters["lightPosition"];
 				lightCCParam = avaEffect.Parameters["lightCC"];
 				lightCWParam = avaEffect.Parameters["lightCW"];
-				planetGainsParamater = avaEffect.Parameters["planetGains"];
+				//planetGainsParamater = avaEffect.Parameters["planetGains"];
 				//lightGainsParameter = avaEffect.Parameters["lightGains"];
 				lightColorParameter = avaEffect.Parameters["lightColor"];
 				lightSpecularParameter = avaEffect.Parameters["lightSpecular"];
 				lightAmbientParameter = avaEffect.Parameters["lightAmbient"];
 			//	cameraReferencePositionParameter = avaEffect.Parameters["cameraReferencePosition"];
 				viewCWParam = avaEffect.Parameters["viewCW"];
-				pixelScaleParameter = avaEffect.Parameters["pixelScale"];
+				//pixelScaleParameter = avaEffect.Parameters["pixelScale"];
 
 				fontMaterial = new Material(null, fontEffect);
 				fontTexture = Content.Load<Texture2D>("Fonts/tra_0"); // font is always set to register 7

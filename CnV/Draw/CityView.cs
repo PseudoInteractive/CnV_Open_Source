@@ -174,7 +174,7 @@ namespace CnV
 				draw.AddQuad(Layer.tileCityBase,city.isOnWater ? cityWallsWater : cityWallsLand,city0,city1,iAlpha.AlphaToAll(),depth: 0f);
 
 
-				var fontScale = (pixelScale / 64.0f) * (2.5f/64.0f) * Settings.fontScale; // perspective attenuation with distance
+				var fontScale = regionFontScale*0.325f; // perspective attenuation with distance
 				for(var cy = span0;cy <= span1;++cy)
 				{
 					for(var cx = span0;cx <= span1;++cx)
@@ -573,7 +573,7 @@ namespace CnV
 					if(fontAlpha == -1)
 						fontAlpha = iAlpha;
 				var cs = CityPointToQuad(buildC);
-					DrawTextBox(buildingLevel.ToString(), 0.825f.Lerp(cs.c0, cs.c1).WorldToCamera(), textformatBuilding,
+					DrawTextBox(buildingLevel.ToString(), 0.825f.Lerp(cs.c0, cs.c1), textformatBuilding,
 						color:new Color(0xf1* fontAlpha/256, 0xd1* fontAlpha/256, 0x1b* fontAlpha/256, fontAlpha),
 						backgroundAlpha: (byte)iAlpha, layer:Layer.tileCityNumbers, scale: fontScale, zBias: zBase*0.5f );
 			}

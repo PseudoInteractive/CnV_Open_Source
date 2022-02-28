@@ -25,6 +25,9 @@ public class TextLayout
 
 		internal void Draw(Vector2 c, float scale, Color color, int layer, float z, DepthFunction depthFunction)
 		{
+		// convert screen from pixels to world units
+			
+
 			var span = ScaledSpan(scale);
 			if (format.horizontalAlignment == TextFormat.HorizontalAlignment.center)
 				c.X -= span.X * 0.5f;

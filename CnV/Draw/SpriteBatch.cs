@@ -543,14 +543,15 @@ namespace CnV.Draw
 					 depth);
 
 		}
-		public void AddQuadWithShadow(int layer,int shadowLayer, Material texture, Vector2 c0, Vector2 c1, Color color,Color shadowColor, float depth, float depthShadow, Vector2 shadowOffset)
+		public void AddQuadWithShadow(int layer,int shadowLayer, Material texture, Vector2 c0, Vector2 c1, Color color,Color shadowColor, float depth)
 		{
 			if(AGame.wantShadow)
-				AddQuad(shadowLayer, texture, c0+shadowOffset, c1 + shadowOffset, shadowColor,depthFunction:AGame.PlanetDepth, depthShadow);
+				AddQuad(shadowLayer, texture, c0, c1, shadowColor,depthFunction:AGame.PlanetDepth, View.zShadow);
 			AddQuad(layer, texture, c0, c1, color,depthFunction:AGame.PlanetDepth,depth: depth);
 
 		}
 		
+		// Thickness is in screen space
 		public unsafe void AddLine(int layer,Material texture, Vector2 c0, Vector2 c1, float thickness, float u0, float u1, Color color,(float v0,float v1) depth)
 		{
 
@@ -558,7 +559,7 @@ namespace CnV.Draw
 
 			var dc0 = c1 - c0;
 			var dc1 = new Vector2(dc0.Y, -dc0.X);
-			dc1 *= thickness * 0.5f / dc1.Length();
+			dc1 *= (thickness * 0.5f / dc1.Length()).ScreenToWorld();
 
 
 			

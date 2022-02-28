@@ -374,10 +374,10 @@ namespace CnV.Views
 
 		private void Canvas_CompositionScaleChanged(SwapChainPanel sender, object args)
 		{
-			GameClient.dipToNative = sender.XamlRoot.RasterizationScale;
-			GameClient.nativeToDip = 1.0 / GameClient.dipToNative;
+			dipToNative = sender.XamlRoot.RasterizationScale;
+			nativeToDip = 1.0 / dipToNative;
 			Assert(sender.CompositionScaleY.AlmostEquals(sender.CompositionScaleX));
-			Assert(GameClient.dipToNative.AlmostEquals(sender.CompositionScaleX));
+			Assert(dipToNative.AlmostEquals(sender.CompositionScaleX));
 			Log($"CompositionScale: {sender.CompositionScaleX} {sender.CompositionScaleY}" );
 		}
 

@@ -800,7 +800,7 @@ namespace CnV
 			lastQuickBuildActionSpotValidUntil = SmallTime.now+3;
 			lastQuickBuildActionBSpot = c;
 		}
-		public static void PointerDown((int x, int y) cc)
+		public static void UpdateHovered((int x, int y) cc)
 		{
 			//  called before pointer release, pointer release is a click or drag/swaipe
 			hovered = cc;

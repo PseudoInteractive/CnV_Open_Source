@@ -315,7 +315,7 @@ namespace CnV
 				{
 					Settings.wantHdr = value;
 					Microsoft.Xna.Framework.SharpDXHelper.SetWantHdr(Settings.wantHdr);
-					
+					GameClient.wantDeviceReset =true;
 					GameClient.UpdateClientSpan();
 				}
 			}

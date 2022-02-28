@@ -145,19 +145,19 @@ using static GameClient;
 	//	return new Vector2(c.X * scale,c.Y * scale);
 	//}
 
-	public static Vector2 InverseProject(this Vector2 c)
-	{
-		return c;
-		//float zBias = zCities;
-		//float z = CToDepth(c,zBias);
+	//public static Vector2 InverseProject(this Vector2 c)
+	//{
+	//	return c;
+	//	//float zBias = zCities;
+	//	//float z = CToDepth(c,zBias);
 
-		////for(int i = 0;i < 8;++i)
-		////{
-		////	var test = InverseProject(c,z);
-		////	z = new Vector2(test.X,test.Y).CToDepth(zBias);
-		////}
-		//return InverseProject(c,z);
-	}
+	//	////for(int i = 0;i < 8;++i)
+	//	////{
+	//	////	var test = InverseProject(c,z);
+	//	////	z = new Vector2(test.X,test.Y).CToDepth(zBias);
+	//	////}
+	//	//return InverseProject(c,z);
+	//}
 
 	//		public static float CToDepth(this (float x, float y) c) => CToDepth(new Vector2(c.x, c.y));
 	//	public static Vector2 WToCp(this Vector2 c, float dz)
@@ -167,27 +167,45 @@ using static GameClient;
 	//	return (c- AGame.cameraCLag)* paralaxGain*AGame.pixelScale;
 	//}
 	//	public static Vector2 WToCp(this (float x, float y) c, float dz) => WToCp(new Vector2(c.x, c.y), dz);
-	public static Vector2 ScreenToCamera(this Vector2 s)
+	
+	public static float ScreenToWorld(this float s)
 	{
-		return (s - AGame.projectionC)*pixelScaleInverse;
+		return s*pixelScaleInverse;
 	}
 	public static Vector2 ScreenToWorld(this Vector2 s)
 	{
-		return CameraToWorld( ScreenToCamera(s) );
-	}
-	public static Vector2 CameraToScreen(this Vector2 s)
-	{
-		return s* pixelScale + AGame.projectionC;
+		return (s - AGame.projectionC)*pixelScaleInverse + View.viewW2;
 	}
 
-	public static Vector2 WorldToScreen(this Vector2 s)
+	public static Vector2 ScreenToWorldOffset(this Vector2 s)
 	{
-		return CameraToScreen(WorldToCamera(s));
+		return (s )*pixelScaleInverse ;
 	}
-	public static Vector3 WorldToCamera(this Vector3 s)
+	public static Vector2 DipToWorldOffset(this Vector2 s)
 	{
-		return s - viewW;
+		return (s )*dipScaleInverse ;
 	}
+	public static float ScreenToWorldOffset(this float s)
+	{
+		return (s )*pixelScaleInverse ;
+	}
+	public static float DipToWorld(this float s)
+	{
+		return (s )*dipScaleInverse ;
+	}
+	//public static Vector2 CameraToScreen(this Vector2 s)
+	//{
+	//	return s* pixelScale + AGame.projectionC;
+	//}
+
+	//public static Vector2 WorldToScreen(this Vector2 s)
+	//{
+	//	return CameraToScreen(WorldToCamera(s));
+	//}
+	//public static Vector3 WorldToCamera(this Vector3 s)
+	//{
+	//	return s - viewW;
+	//}
 	//	public static Vector2 WToCpSpan(this Vector2 c, float dz)
 	//{
 	//	var paralaxGain = ParallaxScale(dz);
@@ -227,14 +245,14 @@ using static GameClient;
 	{
 		return (c - View.viewW2) ;
 	}
-	public static Vector2 CameraToWorldDelta(this Vector2 c)
-	{
-		return (c) ;
-	}
-	public static Vector2 CameraToWorld(this Vector2 c)
-	{
-		return c + View.viewW2;
-	}
+	//public static Vector2 CameraToWorldDelta(this Vector2 c)
+	//{
+	//	return (c) ;
+	//}
+	//public static Vector2 CameraToWorld(this Vector2 c)
+	//{
+	//	return c + View.viewW2;
+	//}
 	public static Vector3 CameraToWorld(this Vector3 c)
 	{
 		return c + View.viewW;
@@ -244,10 +262,10 @@ using static GameClient;
 	{
 		return new Vector2(c.x,c.y).WorldToCamera();
 	}
-	public static Vector2 WorldToCamera(this (float x, float y) c)
-	{
-		return new Vector2(c.x,c.y).WorldToCamera();
-	}
+	//public static Vector2 WorldToCamera(this (float x, float y) c)
+	//{
+	//	return new Vector2(c.x,c.y).WorldToCamera();
+	//}
 	//	public static Vector2 WToCp(this (int x, int y) c, float z)
 	//{
 	//	return new Vector2(c.x, c.y).WToCp(z);
