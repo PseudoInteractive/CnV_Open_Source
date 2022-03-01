@@ -46,11 +46,11 @@ using Game;
 			//	if (!isFocused)
 			//		return;
 			//	var priorMouseC = mousePosition;
-			var gestureResult = Gesture.ProcessMoved(point);
-			if(gestureResult.action == GestureAction.none)
-				return;
+			//var gestureResult = Gesture.ProcessMoved(point);
+			//if(gestureResult.action == GestureAction.none)
+		//		return;
 
-			SetMousePosition( gestureResult.c);
+			//SetMousePosition( gestureResult.c);
 
 			//			var windowsPosition = e.CurrentPoint.Position;
 			//			mousePosition = GetCanvasPosition(windowsPosition);
@@ -60,7 +60,7 @@ using Game;
 			(var c, var cc) = ToWorldAndCityC(mousePositionW);
 			//var point = e.CurrentPoint;
 			//var props = point.Properties;
-			if(gestureResult.action.HasFlag(GestureAction.hover)  && c.isInWorld)
+			if(!recognizer.IsActive  && c.isInWorld)
 			{
 				//if (TryPostJSMouseEvent(null, 0))
 				//{
@@ -349,29 +349,29 @@ using Game;
 
 			//else
 			{
-				//			e.Handled = true;
-				if(gestureResult.action.HasFlag(GestureAction.zoom))
-				{
-					DoZoom(gestureResult.delta.Z * 0.75f);
-					//	//cameraZoomLag = cameraZoom;
-					//	//TakeFocus();
+				////			e.Handled = true;
+				//if(gestureResult.action.HasFlag(GestureAction.zoom))
+				//{
+				//	DoZoom(gestureResult.delta.Z * 0.75f);
+				//	//	//cameraZoomLag = cameraZoom;
+				//	//	//TakeFocus();
 
-				}
-				if(gestureResult.action.HasFlag(GestureAction.pan))
-				{
-					//	TakeFocus();
-					var dr = gestureResult.delta.ToV2();
-					{
+				//}
+				//if(gestureResult.action.HasFlag(GestureAction.pan))
+				//{
+				//	//	TakeFocus();
+				//	var dr = gestureResult.delta.ToV2();
+				//	{
 						
-						dr *= 1.0f.ScreenToWorld();
-						View.SetViewTargetInstant(View.viewW2 + dr);
-					}
-					//else
-					{
+				//		dr *= 1.0f.ScreenToWorld();
+				//		View.SetViewTargetInstant(View.viewW2 + dr);
+				//	}
+				//	//else
+				//	{
 
-						//		PostJSMouseEvent("mousemove",0, (int)dr.X,(int)dr.Y);
-					}
-				}
+				//		//		PostJSMouseEvent("mousemove",0, (int)dr.X,(int)dr.Y);
+				//	}
+				//}
 
 			}
 		}

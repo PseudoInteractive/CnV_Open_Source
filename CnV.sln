@@ -17,9 +17,12 @@ Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "CnVShared", "..\CnVShared\C
 EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "CnVResource", "..\cnvResource\CnVResource.shproj", "{DFB81CA7-2237-4E6E-8E73-742A39A18451}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CnvChatServer", "..\CnvChatServer\CnvChatServer\CnvChatServer.csproj", "{CD03B28F-EEEE-4760-AEF0-6A5CE0F4CACD}"
+EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		..\CnVShared\CnVShared.projitems*{06711006-5a6c-41ff-aa66-a08c8624f98b}*SharedItemsImports = 13
+		..\CnVShared\CnVShared.projitems*{cd03b28f-eeee-4760-aef0-6a5ce0f4cacd}*SharedItemsImports = 5
 		..\cnvResource\CnVResource.projitems*{d3c61ee9-9fad-45bd-acce-f4e95ae32807}*SharedItemsImports = 5
 		..\CnVShared\CnVShared.projitems*{d3c61ee9-9fad-45bd-acce-f4e95ae32807}*SharedItemsImports = 5
 		..\cnvResource\CnVResource.projitems*{dfb81ca7-2237-4e6e-8e73-742a39a18451}*SharedItemsImports = 13
@@ -52,6 +55,14 @@ Global
 		{E468CD1E-2B87-4604-9D22-291015B36C9F}.Release|x64.ActiveCfg = Release|x64
 		{E468CD1E-2B87-4604-9D22-291015B36C9F}.Release|x64.Build.0 = Release|x64
 		{E468CD1E-2B87-4604-9D22-291015B36C9F}.Release|x64.Deploy.0 = Release|x64
+		{CD03B28F-EEEE-4760-AEF0-6A5CE0F4CACD}.Debug|Any CPU.ActiveCfg = Debug|x64
+		{CD03B28F-EEEE-4760-AEF0-6A5CE0F4CACD}.Debug|Any CPU.Build.0 = Debug|x64
+		{CD03B28F-EEEE-4760-AEF0-6A5CE0F4CACD}.Debug|x64.ActiveCfg = Debug|x64
+		{CD03B28F-EEEE-4760-AEF0-6A5CE0F4CACD}.Debug|x64.Build.0 = Debug|x64
+		{CD03B28F-EEEE-4760-AEF0-6A5CE0F4CACD}.Release|Any CPU.ActiveCfg = Release|x64
+		{CD03B28F-EEEE-4760-AEF0-6A5CE0F4CACD}.Release|Any CPU.Build.0 = Release|x64
+		{CD03B28F-EEEE-4760-AEF0-6A5CE0F4CACD}.Release|x64.ActiveCfg = Release|x64
+		{CD03B28F-EEEE-4760-AEF0-6A5CE0F4CACD}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

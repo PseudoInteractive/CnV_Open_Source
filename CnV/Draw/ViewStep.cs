@@ -12,9 +12,9 @@ using static GameClient;
 	internal const float viewHoverElevationFreq = 12.0f;
 
 	internal const float cameraControlFrequencyTight = 30.0f;
-	internal const float cameraControlFrequencyNormal = 20.0f;
-	internal const float cameraControlDampingTight = 1.0f;
-	internal const float cameraControlDampingNormal = 1.0f;
+	internal const float cameraControlFrequencyNormal = 12.0f;
+	internal const float cameraControlDampingTight = 1.125f;
+	internal const float cameraControlDampingNormal = 1.125f;
 
 		internal static float viewControlTightness;
 	const float viewControlTightnessDecay = 4;
@@ -22,8 +22,6 @@ using static GameClient;
 	// public static Vector3 viewVW = default;
 
 
-	public const float viewMinZ = 0.25f;
-	public const float viewMaxZ = 512;
 	internal static void StepViewToPresent()
 	{
 		{

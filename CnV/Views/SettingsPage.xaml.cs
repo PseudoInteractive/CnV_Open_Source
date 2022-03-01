@@ -307,20 +307,32 @@ namespace CnV
 				LogEx(e);
 			}
 		}
-		public bool? UseHdr
+		public int DynamicRange
 		{
-			get => Settings.wantHdr;
+			get => Settings.hdrMode;
 			set {
-				if(Settings.wantHdr != value)
+				if(Settings.hdrMode != value)
 				{
-					Settings.wantHdr = value;
-					Microsoft.Xna.Framework.SharpDXHelper.SetWantHdr(Settings.wantHdr);
+					Settings.hdrMode = value;
+					Microsoft.Xna.Framework.SharpDXHelper.SetHDR(Settings.hdrMode,Settings.gammaProfile);
 					GameClient.wantDeviceReset =true;
 					GameClient.UpdateClientSpan();
 				}
 			}
 		}
-		
+		public int GammaProfile
+		{
+			get => Settings.gammaProfile;
+			set {
+				if(Settings.gammaProfile != value)
+				{
+					Settings.gammaProfile = value;
+					Microsoft.Xna.Framework.SharpDXHelper.SetHDR(Settings.hdrMode,Settings.gammaProfile);
+					GameClient.wantDeviceReset =true;
+					GameClient.UpdateClientSpan();
+				}
+			}
+		}
 		[NonSerialized]
 		public static double mediumFontSize = mediumFontSizeBase;
 		[NonSerialized]

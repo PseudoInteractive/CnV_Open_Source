@@ -174,7 +174,7 @@ namespace CnV
 				draw.AddQuad(Layer.tileCityBase,city.isOnWater ? cityWallsWater : cityWallsLand,city0,city1,iAlpha.AlphaToAll(),depth: 0f);
 
 
-				var fontScale = regionFontScale*0.325f; // perspective attenuation with distance
+				var fontScale = regionFontScale*0.1875f; // perspective attenuation with distance
 				for(var cy = span0;cy <= span1;++cy)
 				{
 					for(var cx = span0;cx <= span1;++cx)

@@ -383,10 +383,15 @@ internal partial class GameClient
 					///				var xc = lightWC.WorldToCamera().CameraToScreen();
 					var t = (float)CnVServer.simDateTime.TimeOfDay.TotalDays;
 
-					const float shrink = 0.125f*0.5f;
-					t = t*64;
+					const float shrink = 0.125f*0.125f;
+					
 					if((Settings.lighting == Lighting.local))
 						t = (float)DateTimeOffset.Now.TimeOfDay.TotalDays; // day t= night
+					else if((Settings.lighting == Lighting.strobe))
+						t = t*1024;
+					else
+						t = t*64;
+
 					t -= MathF.Floor(t);
 					t = t.Bezier(0f,0.3f,0.43f,0.57f,0.70f,1.0f);
 					var isDay = (t >= 0.25f) & (t <= 0.75f);
@@ -497,7 +502,7 @@ internal partial class GameClient
 
 			var focusOnCity = (View.viewMode == ViewMode.city);
 
-			parallaxGain = Settings.parallax * (Math.Min(1,viewZoomLag / 128.0f));// * regionAlpha * (1 - cityAlpha);
+			parallaxGain = Settings.parallax * (viewW.Z*0.125f).Min(1);// (Math.Min(1,viewZoomLag / 128.0f));// * regionAlpha * (1 - cityAlpha);
 
 			{
 				//var wToCGain = pixelScaleInverse;// (1.0f / viewZoomLag);
@@ -1463,7 +1468,7 @@ internal partial class GameClient
 					//	TextLayout textLayout = GetTextLayout( _toolTip, tipTextFormat);
 					//	var bounds = textLayout.span;
 					//System.Numerics.Vector2 c = ShellPage.mousePositionC + new System.Numerics.Vector2(16, 16);
-					System.Numerics.Vector2 c = new System.Numerics.Vector2(clientSpan.X-16,16).ScreenToWorld();
+					System.Numerics.Vector2 c = new System.Numerics.Vector2(clientSpan.X-4,4).ScreenToWorld();
 					DrawTextBox(_toolTip,c,tipTextFormatRight,Color.White,192,Layer.overlay,11,11,ConstantDepth,0,scale:baseFontScale);
 				}
 				var _contTip = ShellPage.contToolTip;
@@ -1471,7 +1476,7 @@ internal partial class GameClient
 				{
 					var alpha = pixelScale.SmoothStep(cityZoomThreshold - 128,cityZoomThreshold + 128).
 						Max(pixelScale.SmoothStep(cityZoomWorldThreshold + 16,cityZoomWorldThreshold - 16));
-					System.Numerics.Vector2 c = new System.Numerics.Vector2(clientSpan.X-16,16).ScreenToWorld();
+					System.Numerics.Vector2 c = new System.Numerics.Vector2(clientSpan.X/2,4).ScreenToWorld();
 					DrawTextBox(_contTip,c,tipTextFormatRight,Color.White.Scale(alpha),(byte)(alpha * 192.0f).RoundToInt(),Layer.overlay,11,11,ConstantDepth,0,scale:baseFontScale);
 				}
 				//if(View.IsCityView())
@@ -1491,11 +1496,11 @@ internal partial class GameClient
 				{
 					ToolTips.debugTip=null;
 					var alpha = 255;
-					System.Numerics.Vector2 c = new Vector2(clientSpan.X/2,clientSpan.X -16).ScreenToWorld();
+					System.Numerics.Vector2 c = new Vector2(clientSpan.X/2,clientSpan.X -4).ScreenToWorld();
 					DrawTextBox(_debugTip,c,tipTextFormat,Color.White.Scale(alpha),(byte)(alpha * 192.0f).RoundToInt(),Layer.overlay,11,11,ConstantDepth,0,scale:baseFontScale);
 				}
 #if DEBUG
-				DrawRectOutlineShadow(Layer.effects,new Vector2(16,16).ScreenToWorld(),clientSpan.ScreenToWorld() - new Vector2(16f.ScreenToWorld()),Color.Yellow,4,0);
+			//	DrawRectOutlineShadow(Layer.effects,new Vector2(16,16).ScreenToWorld(),clientSpan.ScreenToWorld() - new Vector2(16f.ScreenToWorld()),Color.Yellow,4,0);
 #endif
 
 			}

@@ -61,11 +61,6 @@ using static GameClient;
 	public static Color AlphaToBlack(this byte alpha) { return new Color((byte)0,(byte)0,(byte)0,alpha); }
 
 	//public static Point2 ToPoint(this Vector2 me) => new Point2(me.X,me.Y);
-	public static Vector2 ToV2(this Point me) => new Vector2(me.X,me.Y);
-	public static Vector2 ToV2(this Microsoft.Xna.Framework.Vector2 me) => new Vector2(me.X,me.Y);
-	public static Vector2 ToV2(this Vector3 me) => new Vector2(me.X,me.Y);
-
-	public static Vector3 WithZ(this Vector2 me, float z) => new Vector3(me.X,me.Y,z);
 
 
 	//public static Vector4 ToFVector4(this Color c) => new Vector4(c.R / 255, c.G / 255, c.B / 255, c.A / 255);

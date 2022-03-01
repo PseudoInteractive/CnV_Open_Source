@@ -814,7 +814,7 @@ namespace CnV
 			// clicked on region view with flyout was open
 			if(CityBuild.menuOpen)
 			{
-				CloseFlyout();
+				AppS.DispatchOnUIThreadHigh( CloseFlyout );
 				return;
 			}
 
@@ -876,11 +876,10 @@ namespace CnV
 				//i.upgrade.IsEnabled = d.Bc.Count() > b.bl && b.isBuilding;
 				//i.downgrade.IsEnabled = b.bl > 1;
 				//i.rect.Fill = BuildingBrush(d.bid, 1.0f);
-				{
-					ElementSoundPlayer.Play(ElementSoundKind.Show);
-					ShowContextMenu(city, cc, isRight);
+				
+				AppS.DispatchOnUIThreadHigh( ()=> ShowContextMenu(city, cc, isRight) );
 
-				}
+				
 			}
 		}
 		public const int buildToolSpan = 448;
@@ -932,7 +931,7 @@ namespace CnV
 
 			//				ShellPage.instance.buildMenu.IsOpen = true;
 
-			var sc = ShellPage.CanvasToDIP(ShellPage.mousePosition).TransformPoint(ShellPage.canvas, ShellPage.instance.grid);
+			var sc = (new Windows.Foundation.Point(ShellPage.mousePosition.X,ShellPage.mousePosition.Y)).TransformPoint(ShellPage.canvas, ShellPage.instance.grid);
 
 			//var bm = ShellPage.instance.buildMenu;
 			//Canvas.SetLeft(bm, sc.X - buildToolSpan / 2 - 1);

@@ -359,18 +359,18 @@ namespace CnV.Views
 		//	Log($"Key!!Canvas {args.Key} {args}");
 		//}
 
-		private static void KeyboardProxy_PointerWheelChanged(object sender, PointerRoutedEventArgs e)
-		{
-			if(true||mouseOverCanvas)
-			{
-				var pt = e.GetCurrentPoint(canvas);
-				HandleWheel(pt.Position, pt.Properties.MouseWheelDelta);
-			}
-			else
-			{
-				Log("Mouse not over");
-			}
-		}
+		//private static void KeyboardProxy_PointerWheelChanged(object sender, PointerRoutedEventArgs e)
+		//{
+		//	if(true||mouseOverCanvas)
+		//	{
+		//		var pt = e.GetCurrentPoint(canvas);
+		//		HandleWheel(pt.Position, pt.Properties.MouseWheelDelta);
+		//	}
+		//	else
+		//	{
+		//		Log("Mouse not over");
+		//	}
+		//}
 
 		private void Canvas_CompositionScaleChanged(SwapChainPanel sender, object args)
 		{

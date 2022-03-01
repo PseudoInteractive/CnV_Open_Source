@@ -86,10 +86,11 @@ namespace CnV
 		public GameClient()
 		{
 
-			Microsoft.Xna.Framework.SharpDXHelper.SetWantHdr(Settings.wantHdr);
+			Microsoft.Xna.Framework.SharpDXHelper.SetHDR(Settings.hdrMode,Settings.gammaProfile);
 			instance = this;
 			_graphics = new GraphicsDeviceManager(this)
 			{
+				
 					PreferredBackBufferFormat = GetBackBufferFormat(),
 				//	PreferredBackBufferFormat   = SurfaceFormat.Rgba1010102,
 					PreferMultiSampling         = false,

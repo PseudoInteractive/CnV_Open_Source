@@ -51,36 +51,42 @@ namespace CnV
 			action = _action;
 
 
-
-			switch(action)
+			InputCursor cursor = App.cursorDefault;
+			if(action==CityBuildAction.moveStart)
 			{
-				case CityBuildAction.moveStart:
-					ShellPage.canvas.SetCursor(App.cursorMoveStart);
-					break;
-				case CityBuildAction.moveEnd:
-					ShellPage.canvas.SetCursor(App.cursorMoveEnd);
-					break;
-				case CityBuildAction.destroy:
-					ShellPage.canvas.SetCursor(App.cursorDestroy);
-					break;
-				case CityBuildAction.build:
-					ShellPage.canvas.SetCursor(App.cursorQuickBuild);
-					break;
-				case CityBuildAction.layout:
-					ShellPage.canvas.SetCursor(App.cursorLayout);
-					break;
-				case CityBuildAction.upgrade:
-					ShellPage.canvas.SetCursor(App.cursorUpgrade);
-					break;
-				case CityBuildAction.downgrade:
-					ShellPage.canvas.SetCursor(App.cursorDowngrade);
-					break;
-				default:
-					ShellPage.canvas.SetCursor(App.cursorDefault);
-					break;
+				cursor=(App.cursorMoveStart);
 			}
+			else if(action==CityBuildAction.moveEnd)
+			{
+				cursor=(App.cursorMoveEnd);
+			}
+			else if(action==CityBuildAction.destroy)
+			{
+				cursor=(App.cursorDestroy);
+			}
+			else if(action==CityBuildAction.build)
+			{
+				cursor=(App.cursorQuickBuild);
+			}
+			else if(action==CityBuildAction.layout)
+			{
+				cursor=(App.cursorLayout);
+			}
+			else if(action==CityBuildAction.upgrade)
+			{
+				cursor=(App.cursorUpgrade);
+			}
+			else if(action==CityBuildAction.downgrade)
+			{
+				cursor=(App.cursorDowngrade);
+			}
+			else
+			{
+				cursor=(App.cursorDefault);
+			}
+			ShellPage.coreInputSource.DispatcherQueue.TryEnqueue(() => ShellPage.coreInputSource.Cursor = cursor);
 
-//			AppS.DispatchOnUIThreadLow( ()=> instance.quickBuild.SelectedIndex = (int)_action ); /// the first 3 are mapped. this triggers a selectedPoint changed event
+			//			AppS.DispatchOnUIThreadLow( ()=> instance.quickBuild.SelectedIndex = (int)_action ); /// the first 3 are mapped. this triggers a selectedPoint changed event
 		}
 		public static void SetQuickBuild(BuildingId quickBuildItemBid)
 		{
