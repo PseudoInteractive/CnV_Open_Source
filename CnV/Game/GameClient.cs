@@ -27,6 +27,7 @@ namespace CnV
 
 		public static float baseFontScale = 0.125f;
 		public static float regionFontScale = 0.125f;
+		public static float fontCullScaleW = 0.125f;
 		public static Texture2D fontTexture;
 
 		static readonly Color attackColor = Color.White;
@@ -259,16 +260,21 @@ namespace CnV
 			clip.c1 = clientSpan;
 
 		}
-		public static Material CreateFromBytes(byte[] pixels, int x, int y, SurfaceFormat format, EffectPass effect = null)
+		public static Material CreateFromBytes<T>(T[] pixels, int x, int y, SurfaceFormat format, EffectPass effect ) where T: struct
 		{
+			
+			var rv = CreateFromBytes(pixels,x,y,format);
 			if(effect == null)
 				effect = AGame.defaultEffect;
-			var rv = new Texture2D(instance.GraphicsDevice, x, y, false, format);
-			rv.SetData(pixels);
-
 			return new Material(rv, effect);
 		}
-
+		public static Texture2D CreateFromBytes<T>(T[] pixels, int x, int y, SurfaceFormat format) where T: struct
+		{
+			
+			var rv = new Texture2D(instance.GraphicsDevice, x, y, false, format);
+			rv.SetData(pixels);
+			return rv;
+		}
 		static SurfaceFormat GetFormat(DXGI_FORMAT format, bool wantSRGB)
 		{
 			switch(format) {
@@ -439,7 +445,7 @@ namespace CnV
 
 		public static void LoadWorldBackground()
 		{
-			worldBackground = LoadMaterial($"Art/world{(CnVServer.worldId>=26 ? 26 : ((CnVServer.worldId&1) switch { 1 => "23", _ => "22" }))}");
+			//worldBackground = LoadMaterial($"Art/world{(CnVServer.worldId>=26 ? 26 : ((CnVServer.worldId&1) switch { 1 => "23", _ => "22" }))}");
 
 		}
 
@@ -466,6 +472,8 @@ namespace CnV
 				Material.unlitCityEffect   = EffectPass("UnlitCity");
 				Material.unlitRegionEffect   = EffectPass("UnlitRegion");
 				Material.shadowEffect   = EffectPass("Shadow");
+				World.tileEffect =EffectPass("LitTile");
+				World.unlitTileEffect =EffectPass("UnLitTile");
 				animatedSpriteEffect   = EffectPass("SpriteAnim");
 				sdfEffect              = EffectPass("SDF");
 				noTextureEffect        = EffectPass("NoTexture");
@@ -545,7 +553,7 @@ namespace CnV
 				tesselatedWorld = new Mesh();
 				tesselatedWorld.vb = tesselatedWorldVB;
 				tesselatedWorld.ib = tesselatedWorldIB;
-				tesselatedWorld.vertexCount = (World.span + 1) * (World.span + 1);
+			//	tesselatedWorld.vertexCount = (World.span + 1) * (World.span + 1);
 				tesselatedWorld.triangleCount = (World.span) * (World.span) * 2;
 
 
@@ -564,7 +572,7 @@ namespace CnV
 				lineDraw = LoadMaterial("Art/linedraw2");
 				lineDraw.effect = alphaAddEffect;
 				//lineDraw2 = new PixelShaderEffect(
-				sky = LoadMaterial("Art/sky");
+				//sky = LoadMaterial("Art/sky");
 				//				roundedRect = new Material(Content.Load<Texture2D>("Art/Icons/roundRect"),alphaAddEffect);
 				//				quadTexture = new Material(Content.Load<Texture2D>("Art/quad"), sdfEffect);
 				quadTexture = new Material(null, sdfEffect);
@@ -619,8 +627,9 @@ namespace CnV
 				//};
 				LoadWorldBackground();
 				CityView.LoadContent();
-
+				
 				await TileData.LoadImages();
+				World.BuldRenderTileMesh();
 
 				contentStage = ContentStage.loaded;
 

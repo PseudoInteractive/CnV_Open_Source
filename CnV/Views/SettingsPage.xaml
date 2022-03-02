@@ -12,9 +12,9 @@
 			   Title="Settings"
 			   BorderBrush="{ThemeResource SystemControlBackgroundAccentRevealBorderBrush}"
 			   Background="Black"
+			   Width="1280"
 			   Margin="4">
-	
-	<ScrollViewer ZoomMode="Enabled">
+	<ScrollViewer Width ="1280">
 		<StackPanel Orientation="Vertical" ScrollViewer.VerticalScrollMode="Enabled">
 			<StackPanel Orientation="Horizontal">
 			<HyperlinkButton  Content="{x:Bind cnv:Settings.versionDescription}"
@@ -83,10 +83,14 @@
 				<Slider Style="{StaticResource VerticalSlider}" 
 									Header="Smoothness" 
 									 Value="{x:Bind cnv:Settings.lightM,Mode=TwoWay}"
+						SmallChange="0.015625"
+						StepFrequency="0.015625"
 							/>
 
 				<Slider Height="128" Margin="8" Header="Region Text" Value="{x:Bind cnv:Settings.fontScale, Mode=TwoWay}" Maximum="1.0"  TickFrequency="0.125" StepFrequency="0.0625" SmallChange="0.0625" TickPlacement="Outside" Orientation="Vertical" 
-						ToolTipService.ToolTip="Controls the size of labels in region and city view" />
+						ToolTipService.ToolTip="The size of labels in region and city view" />
+				<Slider Height="128" Margin="8" Header="Cull Text" Value="{x:Bind cnv:Settings.fontCullScale, Mode=TwoWay}" Maximum="1.0"  TickFrequency="0.125" StepFrequency="0.0625" SmallChange="0.0625" TickPlacement="Outside" Orientation="Vertical" 
+						ToolTipService.ToolTip="Text smaller than this will not be drawn" />
 				<!--<Slider Height="128" Header="Detail" Value="{x:Bind cnv:Settings.renderScale, Mode=TwoWay}" Maximum="1.0" TickFrequency="0.125"  StepFrequency="0.125" SmallChange="0.125" Margin="8" TickPlacement="Outside" Orientation="Vertical" ToolTipService.ToolTip="Controls the resolution at which the view is renderered.  Lower settings may be faster but might also be more blurry.  Lower settings are only needed if you display has a high resolution and your GPU is weak." />-->
 				<Slider Height="128" Header="Flag" Value="{x:Bind cnv:Settings.flagScale, Mode=TwoWay}" Maximum="1.0" TickFrequency="0.125"  StepFrequency="0.0625" SmallChange="0.0625" Margin="8" TickPlacement="Outside" Orientation="Vertical" ToolTipService.ToolTip="Controls the size of flags above cities and spots." />
 				<Slider Height="128" Header="Icons" Value="{x:Bind cnv:Settings.iconScale, Mode=TwoWay}" Maximum="1.0" TickFrequency="0.125"  StepFrequency="0.0625" SmallChange="0.0625" Margin="8" TickPlacement="Outside" Orientation="Vertical" ToolTipService.ToolTip="Controls the size of troop icons in world view." />

@@ -17,7 +17,6 @@
   <Import Project="$(WapProjPath)\Microsoft.DesktopBridge.props" />
   <PropertyGroup>
     <LangVersion>Preview</LangVersion>
-    <DotNetVersion>net6.0</DotNetVersion>
     <EnablePreviewFeatures>True</EnablePreviewFeatures>
     <ProjectGuid>e468cd1e-2b87-4604-9d22-291015b36c9f</ProjectGuid>
     <TargetPlatformVersion>10.0.22000.0</TargetPlatformVersion>

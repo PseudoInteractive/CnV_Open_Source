@@ -78,6 +78,8 @@ namespace CnV
 	//	public static Material buildingShadows;
 		public static Material cityWallsLand;
 		public static Material cityWallsWater;
+		public static Material cityNoWallsLand;
+		public static Material cityNoWallsWater;
 		public static Material cityWater;
 		// See CityViewS for more
 		
@@ -156,25 +158,30 @@ namespace CnV
 
 			try
 			{
-				int iAlpha = (int)(cityAlpha * 255f);
+				int iAlpha = (cityAlpha * 255f).RoundToInt();
 				var postBuildings = build.postQueueBuildingsForRender;
 				var buildings = build.buildings;
 				buildCityOrigin = build.cid.CidToWorldV();
 				// draw each building tile
 				var city =build;
-				cityDrawAlpha =  (int)(cityAlpha * 255f);
+				cityDrawAlpha =  iAlpha;
 				//const float zBase = 0f;
 				// selected
-				
-
+					
 				// Walls and background
-				var citySpan = new Vector2(0.5f,0.5f * cityYAspectRatio);
+				var citySpan = new Vector2(0.5f*(23.0f/21.0f),0.5f*(23.0f/21.0f) * cityYAspectRatio);
 				var city0 = buildCityOrigin - citySpan;
 				var city1 = buildCityOrigin + citySpan;
-				draw.AddQuad(Layer.tileCityBase,city.isOnWater ? cityWallsWater : cityWallsLand,city0,city1,iAlpha.AlphaToAll(),depth: 0f);
+				{
+				
+					
+					{
+						var hasWall = buildings[bspotWall].bl > 0;
+						draw.AddQuad(Layer.tileCityBase,city.isOnWater ? !hasWall ? cityNoWallsWater: cityWallsWater :!hasWall ? cityNoWallsLand: cityWallsLand,city0,city1,iAlpha.AlphaToAll(),depth: 0f);
+					}
+				}
 
-
-				var fontScale = regionFontScale*0.1875f; // perspective attenuation with distance
+				var fontScale = (regionFontScale*0.25f).Min(baseFontScale*1.5f); // perspective attenuation with distance
 				for(var cy = span0;cy <= span1;++cy)
 				{
 					for(var cx = span0;cx <= span1;++cx)
@@ -198,11 +205,11 @@ namespace CnV
 						if(cur.id!=0 || next.id!=0)
 						{
 							// this is to show the demo symbol?
-							if(bspot == bspotWall)
-							{
-								if(cur.bl == 0)
-									continue;
-							}
+							//if(bspot == bspotWall)
+							//{
+							//	if(cur.bl == 0)
+							//		continue;
+							//}
 
 
 							BuildingId bid;
@@ -353,7 +360,8 @@ namespace CnV
 										var buildEnd = city.buildItemEndsAt.EarliestSeconds;
 										var required = currentBuildOp.TimeRequired(city);
 										var gain = ((buildEnd - simTApprox)/required).SaturateToFloat();
-										if(currentBuildOp.isBuild)
+										var isBuild = currentBuildOp.isBuild;
+										if(isBuild)
 										{
 											alpha = gain.Lerp(1,alpha);
 										}
@@ -362,6 +370,14 @@ namespace CnV
 											alpha = gain.Lerp(0,alpha);
 
 										}
+										if(bspot == bspotWall)
+										{
+											var fade = 1-gain;
+
+											draw.AddQuad(Layer.tileCityBase+1,city.isOnWater ?isBuild? cityWallsWater : cityNoWallsWater : isBuild ? cityWallsLand : cityNoWallsLand,city0,city1,new Color((byte)255,(byte)255,(byte)255,fade.UNormToByte()),depth: 0f);
+				
+										}
+
 									//	alpha *= (gain);
 									}
 								}
@@ -527,11 +543,11 @@ namespace CnV
 					var frames = frameCount;
 				//	var du = 1.0/frames;
 
-					var dt = ((animationT-animationOffsets[buildC])/(materials.animationDuration)).Frac()*(frames);
+					var dt = ((animationOffsets[buildC]-animationT)/(materials.animationDuration)).Frac()*(frames);
 					//				var duFX = (int)(255*255*du);
 					int frame8 = (int)(dt*256);
 					int frame = frame8 >> 8;
-					var blend = (frame8 - (frame<<8)).AsByte();
+					var blend =  (frame8 - (frame<<8)).AsByte();
 					var f0 = (frame*4).AsByte();
 					var f1 = (frame+1) >= frames ? (byte)0 : ((frame+1)*4).AsByte();
 					{
@@ -700,12 +716,24 @@ namespace CnV
 			//var cityBase =  "Art/City/";
 			//buildingAtlas = Material.LoadLitMaterial(cityBase + "building_set5");
 			//buildingShadows = new Material(buildingAtlas.texture, AGame.unlitEffect);
-			if(!GameClient.TryLoadLitMaterialFromDDS($"runtime\\city\\baseland",out cityWallsLand,out _,wantShadow: false,unlit: false,city:false))
+			if(!GameClient.TryLoadLitMaterialFromDDS($"runtime\\city\\CityWallsLL",out cityWallsLand,out _,wantShadow: false,unlit: false,city:false))
 			{
 				Assert(false);
 			}
 			///	cityWallsLand = LoadLitMaterial(cityBase + "baseland");
-			cityWallsWater =            cityWallsLand;
+			if(!GameClient.TryLoadLitMaterialFromDDS($"runtime\\city\\CityWallsWater",out cityWallsWater,out _,wantShadow: false,unlit: false,city:false))
+			{
+				Assert(false);
+			}
+			if(!GameClient.TryLoadLitMaterialFromDDS($"runtime\\city\\CityNoWallsLL",out cityNoWallsLand,out _,wantShadow: false,unlit: false,city:false))
+			{
+				Assert(false);
+			}
+			///	cityWallsLand = LoadLitMaterial(cityBase + "baseland");
+			if(!GameClient.TryLoadLitMaterialFromDDS($"runtime\\city\\CityNoWallsWater",out cityNoWallsWater,out _,wantShadow: false,unlit: false,city:false))
+			{
+				Assert(false);
+			}
 			foreach(var build in BuildingDef.all)
 			{
 				if(build==null  || build.dimg == null || build.dimg.Length ==0 )

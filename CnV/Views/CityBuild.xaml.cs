@@ -126,10 +126,11 @@ namespace CnV
 
 
 
-		static BuildMenuItem CreateBuildMenuItem(BuildingId bid)
+		static BuildMenuItem CreateBuildMenuItem(BuildingId bid, bool wantAdd = true)
 		{
 			var rv = new BuildMenuItem(bid); //  = 454;
-			allBuildings.Add(rv);
+			if(wantAdd)
+				allBuildings.Add(rv);
 			return rv;
 		}
 		public static List<BuildMenuItem> allBuildings = new();
@@ -186,7 +187,7 @@ namespace CnV
 
 
 		//static readonly BuildMenuItem bmTownHall = CreateBuildMenuItem(bidTownHall); //  = 455;
-		//static readonly BuildMenuItem bmWall = CreateBuildMenuItem(bidWall); //  = 809;
+		static readonly BuildMenuItem bmWall = CreateBuildMenuItem(bidWall,false); //  = 809;
 
 
 		public static void UpdateBuildMenuType(MenuType _menuType, BuildC bspot)
@@ -247,10 +248,21 @@ namespace CnV
 
 					break;
 				case MenuType.townhall:
-					commands.items.Add(amMove);
 					commands.items.Add(amUpgrade);
 					commands.items.Add(amDowngrade);
 
+					break;
+				case MenuType.wall:
+					if(city.postQueueBuildings[bspotWall].bl == 0)
+					{
+						items.items.Add(bmWall);
+					}
+					else
+					{
+						commands.items.Add(amUpgrade);
+						commands.items.Add(amDemo);
+						commands.items.Add(amDowngrade);
+					}
 					break;
 				case MenuType.townhallPlanner:
 					commands.items.Add(amUpgrade);
@@ -907,7 +919,7 @@ namespace CnV
 				{
 					//..var bspot = bspotWall;
 					cc = bspotWall;
-					b = city.postQueueBuildings[cc];
+					b =city.postQueueBuildings[bspotWall];
 
 				}
 			}
@@ -920,7 +932,7 @@ namespace CnV
 			var type = isRight ? MenuType.quickBuild :
 
 
-				cc == bspotWall ? MenuType.buliding :
+				cc == bspotWall ? MenuType.wall :
 				b.id == 0 ? (CityBuild.IsTowerSpot(cc) ? MenuType.tower : CityBuild.IsShoreSpot(cc,city) ? MenuType.shore : MenuType.empty) :
 				b.bl == 0 ? MenuType.res :
 				b.id == bidTownHall ? isPlanner ? MenuType.townhallPlanner : MenuType.townhall :

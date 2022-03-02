@@ -11,8 +11,8 @@ namespace CnV
 {
 	public class Mesh
 	{
-		public int vertexCount;
 		public int triangleCount;
+		public int baseVertex;
 		public VertexBuffer vb;
 		public IndexBuffer ib;
 	};

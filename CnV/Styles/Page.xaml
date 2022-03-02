@@ -253,5 +253,9 @@
 		<Setter Property="Width" Value="128"/>
 		<Setter Property="Orientation" Value="Horizontal"/>
 	</Style>
-
+	<!-- Default-->
+	<Style TargetType="Slider"  BasedOn="{StaticResource HorizontalSlider}">
+		<Setter Property="Width" Value="128"/>
+		<Setter Property="Orientation" Value="Horizontal"/>
+	</Style>
 </ResourceDictionary>

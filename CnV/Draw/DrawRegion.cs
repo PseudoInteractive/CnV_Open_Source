@@ -29,7 +29,7 @@ internal partial class GameClient
 	private TextFormat nameTextFormat = new TextFormat(TextFormat.HorizontalAlignment.center, TextFormat.VerticalAlignment.center);
 	const byte textBackgroundOpacity = 192;
 
-	public static Material worldBackground;
+//	public static Material worldBackground;
 	//public static Effect imageEffect;
 	public static Effect avaEffect;
 	public static Span2i[] popups = Array.Empty<Span2i>();
@@ -125,7 +125,7 @@ internal partial class GameClient
 	const float circleRadMin = 3.0f;
 	const float circleRadMax = 5.5f;
 	static Vector2 shadowOffset = new Vector2(4, 4);
-	const float detailsZoomThreshold = 28;
+	const float detailsZoomThreshold = 16;
 	const float detailsZoomFade = 4;
 
 	//	static float LineThickness(bool hovered) => hovered ? lineThickness * 2 : lineThickness;
@@ -157,6 +157,7 @@ internal partial class GameClient
 	static long ticksAtDraw;
 	public static Matrix projection;
 	internal static double timeSinceLastFrame;
+	static float pitch;
 	internal const float targetStepsPerSecond = 256;
 	protected override void Draw(GameTime gameTime)
 	{
@@ -219,6 +220,21 @@ internal partial class GameClient
 			animationTWrap = (float)((animationT*(1.0/3.0)).Frac()); // wraps every 3 seconds, 0..1
 
 			device.Textures[7] = fontTexture;
+
+			device.Textures[8] = TileData.landTileset.material.texture;
+			device.Textures[9] = TileData.landTileset.material.texture1;
+
+			device.Textures[10] = TileData.waterTileset.material.texture;
+			device.Textures[11] = TileData.waterTileset.material.texture1;
+
+			device.Textures[12] = TileData.terrainTileset.material.texture;
+			device.Textures[13] = TileData.terrainTileset.material.texture1;
+
+			device.Textures[2] = TileData.cityTileset.material.texture;
+			device.Textures[3] = TileData.cityTileset.material.texture1;
+
+			device.Textures[4] = TileData.topLevelTileset.material.texture;
+			device.Textures[5] = TileData.topLevelTileset.material.texture1;
 			//				float accentAngle = animT * MathF.PI * 2;
 			int tick = (Environment.TickCount >> 3) & 0xfffff;
 			var animTLoop = animationTWrap.Wave();
@@ -255,12 +271,13 @@ internal partial class GameClient
 
 			baseFontScale = ( Settings.fontScale*0.75f).DipToWorld();//.Min(0.5f);
 			regionFontScale =  MathF.Sqrt(pixelScale / 64.0f) * 0.75f* baseFontScale;//.Min(0.5f);
+			fontCullScaleW = Settings.fontCullScale.DipToWorld();
 			
 			clampedScaleInverse = (64 * pixelScaleInverse).Min(4.0f);
 			shapeSizeGain = MathF.Sqrt(pixelScale * (1.50f / 64.0f)).DipToWorld();
 			spriteSizeGain = 32 * Settings.iconScale*shapeSizeGain;
 			var deltaZoom = viewZoomLag - detailsZoomThreshold;
-			var wantDetails = deltaZoom > 0;
+			var wantDetails = deltaZoom > 0 && regionFontScale > fontCullScaleW;
 			var wantImage = deltaZoom < detailsZoomFade;
 			var deltaZoomCity = viewZoomLag - cityZoomThreshold;
 			var wantCity = deltaZoomCity >= 0;
@@ -268,8 +285,8 @@ internal partial class GameClient
 																		// in rangeshould we taket the sqrt()?
 			var cityAlphaI = (int)(cityAlpha * 255.0f);
 
-			var wantFade = wantImage; // world to region fade
-			var regionAlpha = wantFade ? (deltaZoom / detailsZoomFade).Saturate().Sqrt() : 1.0f;
+			//var wantFade = wantImage; // world to region fade
+			var regionAlpha = 1;// wantFade ? (deltaZoom / detailsZoomFade).Saturate().Sqrt() : 1.0f;
 			var intAlpha = (byte)(regionAlpha * 255.0f).RoundToInt();
 
 			var zoomT = viewZoomLag / detailsZoomThreshold;
@@ -329,6 +346,8 @@ internal partial class GameClient
 			//		fontEffect._pixelShader.Samplers[i].state = fontFilter;
 			//	}
 			//}
+			//if(AppS.IsKeyPressedShift())
+			//	pitch += (float)timeSinceLastFrame * (AppS.IsKeyPressedControl()  ? 0.25f : -0.25f);
 
 			{
 				var viewport = GraphicsDevice.Viewport;
@@ -348,7 +367,7 @@ internal partial class GameClient
 								new XVector3(viewW.X,viewW.Y,viewW.Z),
 								new XVector3(viewW.X,viewW.Y,0),
 								Microsoft.Xna.Framework.Vector3.Up);
-
+				var mR = Matrix.CreateRotationX(pitch);
 				float nearZ = 0.125f;
 				var nearGain = nearZ*projectionOffsetGainX;
 
@@ -361,7 +380,7 @@ internal partial class GameClient
 
 							   nearZ,viewMaxZ + nearZ);
 
-				projection = m0*m1;
+				projection = m0*mR*m1;
 				worldMatrixParameter.SetValue(projection);
 				//var lightCC = new XVector3(AGame.projectionC.X,AGame.projectionC.Y,virtualSpan.X*cameraZForLighting);
 				//lightCCParam.SetValue(lightCC);
@@ -509,16 +528,16 @@ internal partial class GameClient
 				//				var halfTiles = (clientSpan * (0.5f / cameraZoomLag));
 				var _c0 = clip.c0.ScreenToWorld();
 				var _c1 = clip.c1.ScreenToWorld();
-				cx0 = _c0.X.FloorToInt().Max(0);
-				cy0 = (_c0.Y.FloorToInt()).Max(0);
-				cx1 = (_c1.X.CeilToInt() + 1).Min(World.span);
-				cy1 = (_c1.Y.CeilToInt() + 1).Min(World.span);
+				cx0 = _c0.X.FloorToInt().Clamp (0,World.span);
+				cy0 = (_c0.Y.FloorToInt()).Clamp(0,World.span);
+				cx1 = (_c1.X.CeilToInt() + 1).Clamp(0,World.span);
+				cy1 = (_c1.Y.CeilToInt() + 1).Clamp(0,World.span);
 			}
 			cullWC = new Span2i(cx0,cy0,cx1,cy1);
 			cullWCF = cullWC.span2;
 			{
 				//	ds.Antialiasing = CanvasAntialiasing.Aliased;
-				if(worldBackground != null && wantImage)
+				if( wantImage)
 				{
 					if(wantImage)
 					{
@@ -526,13 +545,13 @@ internal partial class GameClient
 						const byte oBrightness = 255;
 						const byte alpha = 255;
 						const float texelGain = 1.0f / srcImageSpan;
-						draw.AddQuad(CnV.Draw.Layer.background,worldBackground,
-							new(0,0),new(World.span,World.span),
-							 new Color(brightness,brightness,brightness,alpha),ConstantDepth,0); ;
+						//draw.AddQuad(CnV.Draw.Layer.background,worldBackground,
+						//	new(0,0),new(World.span,World.span),
+						//	 new Color(brightness,brightness,brightness,alpha),ConstantDepth,0); ;
 
-						if(worldObjects != null)
-							draw.AddQuad(CnV.Draw.Layer.background + 1,worldObjects,
-								new(0,0),new(World.span,World.span),new Color(oBrightness,oBrightness,oBrightness,alpha),ConstantDepth,zCities);
+						//if(worldObjects != null)
+						//	draw.AddQuad(CnV.Draw.Layer.background + 1,worldObjects,
+						//		new(0,0),new(World.span,World.span),new Color(oBrightness,oBrightness,oBrightness,alpha),ConstantDepth,zCities);
 					}
 				}
 
@@ -674,7 +693,8 @@ internal partial class GameClient
 												dz += hz * viewHoverZGain;
 											}
 										}
-
+										if(!AppS.IsKeyPressedShift())
+											continue;
 
 										//if(isShadow == 1)
 										//{
@@ -743,7 +763,19 @@ internal partial class GameClient
 				}
 				else
 				{
-					Assert(cityAlpha <= 0);
+					if(!AppS.IsKeyPressedShift())
+					{
+						Assert(cityAlpha <= 0);
+						var cc0x = (cx0/100).Clamp(0,World.continentCountX-1);
+						var cc0y = (cy0/100).Clamp(0,World.continentCountY-1);
+						var cc1x = (cx1.DivideRoundUp(100)).Clamp(0,World.continentCountX-1);
+						var cc1y = (cy1.DivideRoundUp(100)).Clamp(0,World.continentCountY-1);
+
+					//	var c = WorldC.FromCid(viewW).continentClamped;
+						for(int i = cc0x;i<=cc1x;++i)
+							for(int j=cc0y;j<cc1y;++j)
+								draw.AddMesh(World.renderTileMeshes[i,j],Layer.tiles,World.renderTileMaterial);
+					}
 				}
 
 				circleRadiusBase = circleRadMin * shapeSizeGain * 7.9f;
@@ -1583,7 +1615,7 @@ internal partial class GameClient
 		}
 		if(scale == 0)
 			scale = regionFontScale;
-		if(scale == 0)
+		if(scale <= fontCullScaleW)
 			return;
 
 		TextLayout textLayout = GetTextLayout(text, format);
@@ -2077,8 +2109,19 @@ internal partial class GameClient
 						worldObjects = null;
 						w.texture.Dispose();
 					}
-					worldObjects = CreateFromBytes(pixels, World.outSize, World.outSize, SurfaceFormat.Dxt1SRgb);
+					worldObjects = CreateFromBytes(pixels, World.outSize, World.outSize, SurfaceFormat.Dxt1SRgb, defaultEffect);
 				}
+				//if(World.renderTileStaging != null)
+				//{
+				//	var pixels = World.renderTileStaging;
+				//	World.renderTileStaging= null;
+				//	var prior = World.renderTilesTexture;
+				//	World.renderTilesTexture = null;
+				//	if(prior is not null)
+				//		prior.Dispose();
+				//	World.renderTilesTexture = CreateFromBytes(World.renderTileStaging,World.span,World.span,SurfaceFormat.R32G32B32A32_SInt);
+					
+				//}
 				if(World.worldOwnerPixels != null)
 				{
 					var ownerPixels = World.worldOwnerPixels;
@@ -2089,7 +2132,7 @@ internal partial class GameClient
 						worldOwners = null;
 						w.texture.Dispose();
 					}
-					worldOwners = CreateFromBytes(ownerPixels, World.outSize, World.outSize, SurfaceFormat.Dxt1SRgb);
+					worldOwners = CreateFromBytes(ownerPixels, World.outSize, World.outSize, SurfaceFormat.Dxt1SRgb, defaultEffect);
 					//canvas.Paused = falwirse;
 					//if (worldObjectsDark != null)
 					//    worldObjectsDark.Dispose();

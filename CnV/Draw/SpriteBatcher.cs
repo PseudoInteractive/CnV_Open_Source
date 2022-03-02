@@ -236,7 +236,7 @@ namespace CnV.Draw
 							{
 								_device.SetIndexBuffer(mesh.ib);
 								_device.SetVertexBuffer(mesh.vb);
-								_device.DrawIndexedPrimitives(PrimitiveType.TriangleList,0,0,mesh.vertexCount,0, mesh.triangleCount);
+								_device.DrawIndexedPrimitives(PrimitiveType.TriangleList,mesh.baseVertex,0, mesh.triangleCount);
 							}
 
 							list.Release();

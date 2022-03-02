@@ -794,6 +794,7 @@ namespace CnV
 				ElementSoundPlayer.Play(ElementSoundKind.Hide);
 				if (instance == null)
 					instance = new Settings();
+				
 				//shown = true;
 				switch (raidsVisible)
 				{
