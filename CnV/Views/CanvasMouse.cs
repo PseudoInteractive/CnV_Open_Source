@@ -27,10 +27,11 @@ using System.Numerics;
 partial class ShellPage
 {
 	static GestureRecognizer gestureRecognizer;
-
+	
 	public static void SetupNonCoreInput()
 	{
 		//Canvas_PointerWheelChanged(mouseState, priorMouseState);
+		canvas.ManipulationMode= ManipulationModes.None;
 		SetupCoreInput();
 
 //		canvas.PointerMoved+=KeyboardProxy_PointerMoved;
@@ -154,7 +155,10 @@ partial class ShellPage
 		if(scale != 1.0f)
 			Note.Show($"Scale: {scale}");
 		var exp = args.Delta.Expansion;
-		if(exp != 0.0f && args.PointerDeviceType != PointerDeviceType.Mouse)
+		if(exp != 0.0f
+			//&&
+			//args.PointerDeviceType != PointerDeviceType.Mouse
+			)
 		{
 			HandleWheel(args.Position,exp); 
 		}
@@ -223,7 +227,7 @@ partial class ShellPage
 
 		}
 		//	Canvas_PointerPressed((point.Position, point.PointerId, point.IsInContact, point.Timestamp, point.Properties.PointerUpdateKind));
-
+		args.Handled=true;
 
 	}
 
@@ -231,15 +235,18 @@ partial class ShellPage
 	{
 		recognizer.ProcessMoveEvents(e.GetIntermediatePoints());
 		var point = e.CurrentPoint;
+		if(point.Properties.ContactRect._width> 1)
+			Note.Show(point.Properties.ContactRect.ToString());
 		e.KeyModifiers.UpdateKeyModifiers();
 		Canvas_PointerMoved((point.Position, point.PointerId, point.IsInContact, point.Timestamp, point.Properties.PointerUpdateKind));
-		e.Handled=true;
+		//e.Handled=true;
 	}
 	private static void CoreInputSource_PointerWheelChanged(InputPointerSource sender,PointerEventArgs e)
 	{
 		var pt = e.CurrentPoint;
 		var point = pt.Position;
-		if(pt.PointerDeviceType == PointerDeviceType.Mouse )
+		
+		if(false && pt.PointerDeviceType == PointerDeviceType.Mouse )
 		{
 			var scroll = pt.Properties.MouseWheelDelta;
 			HandleWheel(point,scroll);
