@@ -126,6 +126,7 @@
     <Compile Include="Activation\ProtocolActivation.cs" />
     <Compile Include="Activation\ActivationHandler.cs" />
     <Compile Include="Draw\CameraView.cs" />
+    <Compile Include="Draw\DrawX.cs" />
     <Compile Include="Draw\StatsView.cs" />
     <Compile Include="Draw\ViewStep.cs" />
     <Compile Include="FormatParameterObject.cs" />

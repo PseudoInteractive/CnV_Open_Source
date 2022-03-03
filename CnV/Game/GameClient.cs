@@ -21,7 +21,7 @@ namespace CnV
 		public static GraphicsDeviceManager _graphics;
 		public static CnVSwapChainPanel        canvas;
 
-		public static Mesh tesselatedWorld;
+	//	public static Mesh tesselatedWorld;
 
 
 
@@ -53,19 +53,19 @@ namespace CnV
 		static readonly Color      hoverColor  = Color.Purple;
 		static readonly Color      focusColor  = Color.Maroon;
 		static readonly Color      pinnedColor = Color.Teal;
-		static readonly Color      black0Alpha = new Color() { A = 0, R = 0, G = 0, B = 0 };
+		internal static readonly Color      black0Alpha = new Color() { A = 0, R = 0, G = 0, B = 0 };
 		public static   Material[] troopImages = new Material[Troops.ttCount];
-		static          Vector2    troopImageOriginOffset;
-		const           int        maxTextLayouts = 1024;
+		internal static          Vector2    troopImageOriginOffset;
+		internal const           int        maxTextLayouts = 1024;
 
 		public static      EffectPass      alphaAddEffect;
 		public static      EffectPass      fontEffect;
 		public static      EffectPass      darkFontEffect;
 		public static      EffectPass      animatedSpriteEffect;
-		private static     EffectPass      sdfEffect;
-		private static     EffectPass      noTextureEffect;
-		private static     EffectPass      noTextureShadowEffect;
-		private static     EffectPass      worldSpaceEffect;
+		internal static     EffectPass      sdfEffect;
+		internal static     EffectPass      noTextureEffect;
+		internal static     EffectPass      noTextureShadowEffect;
+		internal static     EffectPass      worldSpaceEffect;
 //		public static      EffectParameter planetGainsParamater;
 		public static      EffectParameter worldMatrixParameter;
 		public static EffectParameter viewCWParam;
@@ -91,8 +91,9 @@ namespace CnV
 			instance = this;
 			_graphics = new GraphicsDeviceManager(this)
 			{
-				
-					PreferredBackBufferFormat = GetBackBufferFormat(),
+
+				PreferredBackBufferFormat = GetBackBufferFormat(),
+			//	PreferHalfPixelOffset=false,
 				//	PreferredBackBufferFormat   = SurfaceFormat.Rgba1010102,
 					PreferMultiSampling         = false,
 					PreferredDepthStencilFormat = DepthFormat.None,
@@ -215,7 +216,7 @@ namespace CnV
 		//	}
 		//}
 		public static bool wantFastRefresh;
-		public static bool wantDeviceReset;
+		public static bool wantDeviceReset = false;
 
 		private static float resolutionScale => Settings.renderQuality switch
 												{
@@ -415,11 +416,7 @@ namespace CnV
 			return false;
 		}
 
-		public static EffectPass EffectPass(string name)
-		{
-			return avaEffect.Techniques[name].Passes[0];
-		}
-
+		
 		public static Texture2D LoadTexture(string filename)
 		{
 			return instance.Content.Load<Texture2D>(filename);
@@ -450,195 +447,9 @@ namespace CnV
 		}
 
 
-		protected override async void LoadContent()
+		protected override void LoadContent()
 		{
-			try
-			{
-				contentStage = ContentStage.loading;
-				
-			
-
-				avaEffect              = Content.Load<Effect>("Effects/Ava");
-				Audio.UpdateMusic();
-				defaultEffect = EffectPass("AlphaBlend");
-				alphaAddEffect         = EffectPass("AlphaAdd");
-				fontEffect             = EffectPass("FontLight");
-				darkFontEffect         = EffectPass("FontDark");
-				Material.litCityEffect              = EffectPass("LitCity");
-				Material.litRegionEffect              = EffectPass("LitRegion");
-				Material.litAnimatedEffect              = EffectPass("LitAnimated");
-				Material.unlitAnimatedEffect              = EffectPass("UnlitAnimated");
-				Material.shadowAnimatedEffect              = EffectPass("ShadowAnimated");
-				Material.unlitCityEffect   = EffectPass("UnlitCity");
-				Material.unlitRegionEffect   = EffectPass("UnlitRegion");
-				Material.shadowEffect   = EffectPass("Shadow");
-				World.tileEffect =EffectPass("LitTile");
-				World.unlitTileEffect =EffectPass("UnLitTile");
-				animatedSpriteEffect   = EffectPass("SpriteAnim");
-				sdfEffect              = EffectPass("SDF");
-				noTextureEffect        = EffectPass("NoTexture");
-				worldSpaceEffect       = EffectPass("WorldSpace");
-				noTextureShadowEffect = EffectPass("NoTextureShadow");
-				
-
-				using var srgb = new SRGBLoadScope();
-
-				worldMatrixParameter = avaEffect.Parameters["WorldViewProjection"];
-				//worldMatrixParameter = avaEffect.Parameters["WorldViewProjection"];
-
-
-			//	lightPositionParameter = avaEffect.Parameters["lightPosition"];
-				lightCCParam = avaEffect.Parameters["lightCC"];
-				lightCWParam = avaEffect.Parameters["lightCW"];
-				//planetGainsParamater = avaEffect.Parameters["planetGains"];
-				//lightGainsParameter = avaEffect.Parameters["lightGains"];
-				lightColorParameter = avaEffect.Parameters["lightColor"];
-				lightSpecularParameter = avaEffect.Parameters["lightSpecular"];
-				lightAmbientParameter = avaEffect.Parameters["lightAmbient"];
-			//	cameraReferencePositionParameter = avaEffect.Parameters["cameraReferencePosition"];
-				viewCWParam = avaEffect.Parameters["viewCW"];
-				//pixelScaleParameter = avaEffect.Parameters["pixelScale"];
-
-				fontMaterial = new Material(null, fontEffect);
-				fontTexture = Content.Load<Texture2D>("Fonts/tra_0"); // font is always set to register 7
-				darkFontMaterial = new Material(fontMaterial.texture, darkFontEffect);
-
-
-				fontMaterial.effect = fontEffect;
-
-				bfont = new BitmapFont.BitmapFont();
-
-				var a = new System.IO.StreamReader((typeof(AGame).Assembly).GetManifestResourceStream("CnV.Content.Fonts.tra.fnt")).ReadToEnd();
-				//	using (System.IO.TextReader stream = new System.IO.StreamReader(a))
-				{
-
-					bfont.LoadXml(a);
-				}
-
-				tesselatedWorldVB = new VertexBuffer(device, VertexPositionTexture.VertexDeclaration, ((World.span + 1) * (World.span + 1)), BufferUsage.None);
-				{
-					var input = new VertexPositionTexture[(World.span + 1) * (World.span + 1)];
-					for(int x = 0; x < World.span + 1; ++x)
-					{
-						for(int y = 0; y < World.span + 1; ++y)
-						{
-							var i = new VertexPositionTexture();
-							i.Position = new Vector3(x, y, 0.0f);
-							i.TextureCoordinate.X = (float)(x+0.5f) / (World.span);
-							i.TextureCoordinate.Y = (float)(y + 0.5f) / (World.span);
-							input[(World.span + 1) * y + x] = i;
-						}
-					}
-					tesselatedWorldVB.SetData(input);
-				}
-				tesselatedWorldIB = new IndexBuffer(device, IndexElementSize.ThirtyTwoBits,
-					(World.span) * (World.span) * 6, BufferUsage.None);
-				{
-					var input = new int[(World.span) * (World.span) * 6];
-					for(int x = 0; x < World.span; ++x)
-					{
-						for(int y = 0; y < World.span; ++y)
-						{
-							input[(x + y * (World.span)) * 6 + 0] = (int)(x + y * (World.span + 1));
-							input[(x + y * (World.span)) * 6 + 1] = (int)(x + 1 + y * (World.span + 1));
-							input[(x + y * (World.span)) * 6 + 2] = (int)(x + 1 + (y + 1) * (World.span + 1));
-
-							input[(x + y * (World.span)) * 6 + 3] = (int)(x + y * (World.span + 1));
-							input[(x + y * (World.span)) * 6 + 4] = (int)(x + 1 + (y + 1) * (World.span + 1));
-							input[(x + y * (World.span)) * 6 + 5] = (int)(x + (y + 1) * (World.span + 1));
-						}
-					}
-					tesselatedWorldIB.SetData(input);
-				}
-				tesselatedWorld = new Mesh();
-				tesselatedWorld.vb = tesselatedWorldVB;
-				tesselatedWorld.ib = tesselatedWorldIB;
-			//	tesselatedWorld.vertexCount = (World.span + 1) * (World.span + 1);
-				tesselatedWorld.triangleCount = (World.span) * (World.span) * 2;
-
-
-
-				SpriteAnim.flagHome.Load();
-				SpriteAnim.flagSelected.Load();
-				SpriteAnim.flagRed.Load();
-				SpriteAnim.flagPinned.Load();
-				SpriteAnim.flagGrey.Load();
-
-				draw = new CnV.Draw.SpriteBatch(GraphicsDevice);
-				// worldBackgroundDark = new TintEffect() { BufferPrecision = CanvasBufferPrecision.Precision8UIntNormalizedSrgb, Source = worldBackground, Color = new Color() { A = 255, R = 128, G = 128, B = 128 } };
-
-
-
-				lineDraw = LoadMaterial("Art/linedraw2");
-				lineDraw.effect = alphaAddEffect;
-				//lineDraw2 = new PixelShaderEffect(
-				//sky = LoadMaterial("Art/sky");
-				//				roundedRect = new Material(Content.Load<Texture2D>("Art/Icons/roundRect"),alphaAddEffect);
-				//				quadTexture = new Material(Content.Load<Texture2D>("Art/quad"), sdfEffect);
-				quadTexture = new Material(null, sdfEffect);
-				whiteMaterial = new Material(null, noTextureEffect);
-				for(int i = 0; i < CnV.Troops.ttCount; ++i)
-				{
-
-					troopImages[i] = LoadMaterial($"Art/icons/troops{i}");
-					if(i == 0)
-					{
-						troopImageOriginOffset.X = (float)troopImages[i].Width * 0.5f;
-						troopImageOriginOffset.Y = (float)troopImages[i].Height * 0.625f;
-					}
-				}
-				//// create a full screen rendertarget
-				//RemakeRenderTarget();
-
-				//tipBackgroundBrush = new CanvasLinearGradientBrush(canvas, new CanvasGradientStop[]
-				//	   {
-				//				new CanvasGradientStop() { Position = 0.0f, Color = new Color(){A=255,R=128,G=64,B=64 } },
-				//				new CanvasGradientStop() { Position = 1.0f, Color = Color.Black } }, CanvasEdgeBehavior.Clamp, CanvasAlphaMode.Premultiplied)
-				//{ Opacity = 0.675f };
-				//tipTextBrush = new CanvasLinearGradientBrush(canvas, new CanvasGradientStop[]
-				//{
-				//				new CanvasGradientStop() { Position = 0.0f, Color = Color.White },
-				//				new CanvasGradientStop() { Position = 1.0f, Color = Color.Blue }
-				//}, CanvasEdgeBehavior.Clamp, CanvasAlphaMode.Premultiplied);
-				//;
-
-				//if (args.Reason != Microsoft.Graphics.Canvas.UI.CanvasCreateResourcesReason.FirstTime)
-				{
-					//	TileData.Ctor(true);
-				}
-
-
-				//var lightEffectBytes = await App.GetContent("shader/light.bin");
-				//	var lightEffect = new Effect(instance.GraphicsDevice, lightEffectBytes)
-				//{
-
-				//	//Source2 = sky,
-				//	//Source2Mapping = SamplerCoordinateMapping.Unknown,
-				//	//Source2Interpolation = CanvasImageInterpolation.Linear,
-				//	//Source2BorderMode = EffectBorderMode.Soft,
-				//	//CacheOutput = false,
-				//	//Source1BorderMode = EffectBorderMode.Soft,
-				//	//Source1Mapping = SamplerCoordinateMapping.Offset,
-				//	//MaxSamplerOffset = 4,
-				//	Name = "SSLighting"
-
-				//	//    Source2 = await CanvasBitmap.LoadAsync(sender, "Shaders/SketchTexture.jpg"),
-				//	//   Source2Mapping = SamplerCoordinateMapping.Unknown
-				//};
-				LoadWorldBackground();
-				CityView.LoadContent();
-				
-				await TileData.LoadImages();
-				World.BuldRenderTileMesh();
-
-				contentStage = ContentStage.loaded;
-
-
-			}
-			catch(Exception ex)
-			{
-				LogEx(ex);
-			}
+			View.LoadContent();
 		}
 
 		//public static void UpdateLighting()

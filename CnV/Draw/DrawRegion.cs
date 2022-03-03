@@ -305,7 +305,7 @@ internal partial class GameClient
 
 			// funky logic
 			//if (wantLight)
-			if(--clearCounter > 0)
+		//	if(--clearCounter > 0)
 			{
 				GraphicsDevice.Clear(new Color(0,0,0,0)); // black transparent
 			}
@@ -323,7 +323,8 @@ internal partial class GameClient
 			GraphicsDevice.SamplerStates[5] = normalSampler;
 			GraphicsDevice.SamplerStates[7] = fontSampler;
 
-			GraphicsDevice.RasterizerState = RasterizerState.CullNone;
+			GraphicsDevice.RasterizerState = rasterizationState;
+		//	GraphicsDevice.DepthStencilState = depthWrite;
 			//if (WasKeyPressed(Keys.F))
 			//{
 			//	++filterCounter;
@@ -367,8 +368,9 @@ internal partial class GameClient
 								new XVector3(viewW.X,viewW.Y,viewW.Z),
 								new XVector3(viewW.X,viewW.Y,0),
 								Microsoft.Xna.Framework.Vector3.Up);
-				var mR = Matrix.CreateRotationX(pitch);
-				float nearZ = 0.125f;
+				//var mR = Matrix.CreateRotationX(pitch);
+				const float nearZ = 0.125f;
+				const float farZ = nearZ +viewMaxZ;
 				var nearGain = nearZ*projectionOffsetGainX;
 
 				var m1 = Matrix.CreatePerspectiveOffCenter(
@@ -378,9 +380,9 @@ internal partial class GameClient
 							  (canvasSizeDip.Y-projectionC.Y)*nearGain,
 							   -projectionC.Y*nearGain,
 
-							   nearZ,viewMaxZ + nearZ);
+							   nearZ,farZ);
 
-				projection = m0*mR*m1;
+				projection = m0*m1;
 				worldMatrixParameter.SetValue(projection);
 				//var lightCC = new XVector3(AGame.projectionC.X,AGame.projectionC.Y,virtualSpan.X*cameraZForLighting);
 				//lightCCParam.SetValue(lightCC);
@@ -745,7 +747,8 @@ internal partial class GameClient
 					//var tOffset = new Vector2(0.0f, 0.0f);
 					//var t2d = worldChanges.texture2d;
 					//var scale = new Vector2(t2d.TexelWidth, t2d.TexelHeight);
-					draw.AddMesh(tesselatedWorld,Layer.tileShadow - 1,worldChanges);
+					Assert(false);
+					//draw.AddMesh(tesselatedWorld,Layer.tileShadow - 1,worldChanges);
 				}
 				if(worldOwners != null && !focusOnCity)
 				{
@@ -2030,6 +2033,7 @@ internal partial class GameClient
 
 							{
 								pre.BackBufferFormat =  GetBackBufferFormat();
+								pre.MultiSampleCount = 0;
 								pre.DepthStencilFormat = DepthFormat.None;
 								pre.BackBufferWidth = (int)(clientSpan.X*dipToNative*resolutionScale);// - ShellPage.cachedXOffset,
 								pre.BackBufferHeight = (int)(clientSpan.Y*dipToNative*resolutionScale); // - ShellPage.cachedTopOffset,
@@ -2191,7 +2195,7 @@ internal partial class GameClient
 
 	}
 
-	private static SurfaceFormat GetBackBufferFormat() => SurfaceFormat.Color; //  Settings.useHDR ? SurfaceFormat.Rgba1010102 : SurfaceFormat.Bgra32SRgb;
+	private static SurfaceFormat GetBackBufferFormat() => Settings.hdrMode switch { 0 => SurfaceFormat.Bgra32SRgb, 1 => SurfaceFormat.Rgba1010102, _ => SurfaceFormat.HalfVector4 };
 
 	private static async Task Faulted()
 	{

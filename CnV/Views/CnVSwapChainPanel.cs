@@ -21,9 +21,6 @@ namespace CnV
 		public CnVSwapChainPanel()
 		{
 		}
-		public void SetCursor( InputCursor inputCursor)
-		{
-			ProtectedCursor = inputCursor;
-		}
+		
 	}
 }
