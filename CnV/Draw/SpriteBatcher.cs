@@ -220,9 +220,10 @@ namespace CnV.Draw
 							//	}
 							//	else
 								{
-									_device.Textures[0] = t0;
+									if(t0 is not null)
+										_device.Textures[0] = t0;
 									if(t1 is not null)
-									_device.Textures[1] = t1;
+										_device.Textures[1] = t1;
 
 								}
 							//}

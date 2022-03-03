@@ -2283,6 +2283,7 @@ internal partial class GameClient
 			return false;
 		if(!AGame.contentLoadingComplete)
 			return false;
+		World.UpdateTileDatas();
 		return base.BeginDraw();
 	}
 
