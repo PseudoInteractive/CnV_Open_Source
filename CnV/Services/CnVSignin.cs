@@ -205,7 +205,7 @@ namespace CnV
 			}
 
 
-			await	AppS.DispatchOnUIThreadTask(async () => { 
+			return await	AppS.DispatchOnUIThreadTask(async () => { 
 			for(;;)
 			{
 				try

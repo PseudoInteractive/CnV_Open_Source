@@ -58,7 +58,14 @@ partial class ShellPage
 				{
 					// Set up the pointer input source to receive pen input for the swap chain panel.
 					coreInputSource = canvas.CreateCoreIndependentInputSource(InputPointerSourceDeviceKinds.Mouse | InputPointerSourceDeviceKinds.Pen|InputPointerSourceDeviceKinds.Touch);
-					recognizer = new() { GestureSettings= GestureSettings.Tap|GestureSettings.RightTap|GestureSettings.ManipulationTranslateX|GestureSettings.ManipulationTranslateY|GestureSettings.ManipulationScale };
+					recognizer = new()
+					{
+						GestureSettings= GestureSettings.Tap|GestureSettings.RightTap|
+					GestureSettings.ManipulationTranslateX|GestureSettings.ManipulationTranslateY|GestureSettings.ManipulationScale
+					|GestureSettings.ManipulationTranslateInertia
+//					|GestureSettings.ManipulationMultipleFingerPanning
+					};
+
 					recognizer.AutoProcessInertia = true;
 					recognizer.ManipulationCompleted+=Recognizer_ManipulationCompleted;
 					recognizer.ManipulationInertiaStarting+=Recognizer_ManipulationInertiaStarting;

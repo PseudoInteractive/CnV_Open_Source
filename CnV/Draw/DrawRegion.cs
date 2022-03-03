@@ -153,7 +153,7 @@ internal partial class GameClient
 	public static float eventTimeOffsetLag; // smoothed version of event time offset
 	public static float eventTimeEnd;
 	static public Color nameColor, nameColorHover, myNameColor, nameColorOutgoing, nameColorIncoming, nameColorSieged, nameColorIncomingHover, nameColorSiegedHover, myNameColorIncoming, myNameColorSieged;
-	static float specularGain = 0.5f;
+	//static float specularGain = 0.5f;
 	static long ticksAtDraw;
 	public static Matrix projection;
 	internal static double timeSinceLastFrame;
