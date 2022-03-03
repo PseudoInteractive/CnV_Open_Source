@@ -761,11 +761,11 @@ internal partial class GameClient
 					// this could use refactoring
 					CityView.Draw(cityAlpha);
 				}
-				else
+				//else
 				{
 					if(!AppS.IsKeyPressedShift())
 					{
-						Assert(cityAlpha <= 0);
+					//	Assert(cityAlpha <= 0);
 						var cc0x = (cx0/100).Clamp(0,World.continentCountX-1);
 						var cc0y = (cy0/100).Clamp(0,World.continentCountY-1);
 						var cc1x = (cx1.DivideRoundUp(100)).Clamp(0,World.continentCountX-1);
@@ -774,7 +774,7 @@ internal partial class GameClient
 					//	var c = WorldC.FromCid(viewW).continentClamped;
 						for(int i = cc0x;i<=cc1x;++i)
 							for(int j=cc0y;j<cc1y;++j)
-								draw.AddMesh(World.renderTileMeshes[i,j],Layer.tiles,World.renderTileMaterial);
+								draw.AddMesh(World.renderTileMeshes[i,j],Layer.tileBase,World.renderTileMaterial);
 					}
 				}
 
