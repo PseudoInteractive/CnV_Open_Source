@@ -267,7 +267,7 @@ internal partial class GameClient
 			dipScale       = 1.0f/dipScaleInverse;
 
 			//halfSquareOffset = new System.Numerics.Vector2(pixelScale * 0.5f, pixelScale * .5f);
-			var bonusLayerScale = 1f.Max(64 * Settings.iconScale).DipToWorld();
+			var bonusLayerScale = (2 * Settings.iconScale)*MathF.Sqrt(pixelScale / 64.0f).DipToWorld();
 
 			baseFontScale = ( Settings.fontScale*0.75f).DipToWorld();//.Min(0.5f);
 			regionFontScale =  MathF.Sqrt(pixelScale / 64.0f) * 0.75f* baseFontScale;//.Min(0.5f);
@@ -611,17 +611,18 @@ internal partial class GameClient
 					// 0 == land
 					// 1 == shadows
 					// 2 == features
-					foreach(var layer in td.layers)
+					//foreach(var layer in td.layers)
+					var layer = TileLayer.bonus;
 					{
 						var isBonus = Object.ReferenceEquals(layer,TileLayer.bonus);
-						if(!wantDetails && !isBonus)
-							continue;
-						if(debugLayer != -1)
-						{
-							if((int)layer.id!= debugLayer)
-								continue;
+						//if(!wantDetails && !isBonus)
+						//	continue;
+						//if(debugLayer != -1)
+						//{
+						//	if((int)layer.id!= debugLayer)
+						//		continue;
 
-						}
+						//}
 
 						var layerDat = layer.data;
 
@@ -695,8 +696,8 @@ internal partial class GameClient
 												dz += hz * viewHoverZGain;
 											}
 										}
-										if(!AppS.IsKeyPressedShift())
-											continue;
+										//if(!AppS.IsKeyPressedShift())
+										//	continue;
 
 										//if(isShadow == 1)
 										//{
@@ -1503,16 +1504,16 @@ internal partial class GameClient
 					//	TextLayout textLayout = GetTextLayout( _toolTip, tipTextFormat);
 					//	var bounds = textLayout.span;
 					//System.Numerics.Vector2 c = ShellPage.mousePositionC + new System.Numerics.Vector2(16, 16);
-					System.Numerics.Vector2 c = new System.Numerics.Vector2(clientSpan.X-4,4).ScreenToWorld();
-					DrawTextBox(_toolTip,c,tipTextFormatRight,Color.White,192,Layer.overlay,11,11,ConstantDepth,0,scale:baseFontScale);
+					System.Numerics.Vector2 c = new System.Numerics.Vector2(clientSpan.X-2,2).ScreenToWorld();
+					DrawTextBox(_toolTip,c,tipTextFormatRight,Color.White,192,Layer.overlay,4,4,ConstantDepth,0,scale:baseFontScale);
 				}
 				var _contTip = ShellPage.contToolTip;
 				if(_contTip != null)
 				{
 					var alpha = pixelScale.SmoothStep(cityZoomThreshold - 128,cityZoomThreshold + 128).
 						Max(pixelScale.SmoothStep(cityZoomWorldThreshold + 16,cityZoomWorldThreshold - 16));
-					System.Numerics.Vector2 c = new System.Numerics.Vector2(clientSpan.X/2,4).ScreenToWorld();
-					DrawTextBox(_contTip,c,tipTextFormatRight,Color.White.Scale(alpha),(byte)(alpha * 192.0f).RoundToInt(),Layer.overlay,11,11,ConstantDepth,0,scale:baseFontScale);
+					System.Numerics.Vector2 c = new System.Numerics.Vector2(clientSpan.X/2,2).ScreenToWorld();
+					DrawTextBox(_contTip,c,tipTextFormatCentered,Color.White.Scale(alpha),(byte)(alpha * 192.0f).RoundToInt(),Layer.overlay,4,4,ConstantDepth,0,scale:baseFontScale);
 				}
 				//if(View.IsCityView())
 				//{
@@ -1531,8 +1532,8 @@ internal partial class GameClient
 				{
 					ToolTips.debugTip=null;
 					var alpha = 255;
-					System.Numerics.Vector2 c = new Vector2(clientSpan.X/2,clientSpan.X -4).ScreenToWorld();
-					DrawTextBox(_debugTip,c,tipTextFormat,Color.White.Scale(alpha),(byte)(alpha * 192.0f).RoundToInt(),Layer.overlay,11,11,ConstantDepth,0,scale:baseFontScale);
+					System.Numerics.Vector2 c = new Vector2(clientSpan.X/2,clientSpan.Y -2).ScreenToWorld();
+					DrawTextBox(_debugTip,c,tipTextFormatCentered,Color.White.Scale(alpha),(byte)(alpha * 192.0f).RoundToInt(),Layer.overlay,4,4,ConstantDepth,0,scale:baseFontScale);
 				}
 #if DEBUG
 			//	DrawRectOutlineShadow(Layer.effects,new Vector2(16,16).ScreenToWorld(),clientSpan.ScreenToWorld() - new Vector2(16f.ScreenToWorld()),Color.Yellow,4,0);
@@ -1607,7 +1608,7 @@ internal partial class GameClient
 
 	public static void DrawTextBox(string text, Vector2 at, TextFormat format, Color color, byte backgroundAlpha, int layer = Layer.tileText, float _expandX = 2.0f, float _expandY = 0, DepthFunction depth = null, float zBias = -1, float scale = 0)
 	{
-		DrawTextBox(text, at, format, color, backgroundAlpha == 0 ? new Color() : color.IsDark() ? new Color((byte)255, (byte)255, (byte)255, backgroundAlpha) : new Color((byte)(byte)0, (byte)0, (byte)0, backgroundAlpha), layer, _expandX, _expandY, depth, zBias, scale);
+		DrawTextBox(text, at, format, color, backgroundAlpha == 0 ? new Color() : color.IsDark() ? new Color(byte.MaxValue, byte.MaxValue, byte.MaxValue, backgroundAlpha) : new Color((byte)(byte)0, (byte)0, (byte)0, backgroundAlpha), layer, _expandX, _expandY, depth, zBias, scale);
 	}
 
 	private static void DrawTextBox(string text, Vector2 at, TextFormat format, Color color, Color backgroundColor, int layer = Layer.tileText, float _expandX = 0.0f, float _expandY = 0, DepthFunction depth = null, float zBias = -1, float scale = 0)
@@ -1701,10 +1702,10 @@ internal partial class GameClient
 		draw.AddQuad(Layer.effects, material, c0, c1,
 						new Vector2((float)(du*frameI),sprite.frameDeltaU),
 						new Vector2((float)(du*(frameI+1)),sprite.frameDeltaU),
-						new(blend,(byte)255,(byte)0,alpha),
-						new(blend,(byte)255,(byte)0,alpha),
-						new(blend,(byte)255,(byte)255,alpha),
-						new(blend,(byte)255,(byte)255,alpha),
+						new(blend,byte.MaxValue,(byte)0,alpha),
+						new(blend,byte.MaxValue,(byte)0,alpha),
+						new(blend,byte.MaxValue,byte.MaxValue,alpha),
+						new(blend,byte.MaxValue,byte.MaxValue,alpha),
 						depth:z); 
 		//draw.AddQuad(Layer.effects, sprite.material, c0.CameraToWorldPosition(), c1.CameraToWorldPosition(),
 		//	uv0,

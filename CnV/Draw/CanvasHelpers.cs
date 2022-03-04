@@ -39,6 +39,7 @@ using static GameClient;
 
 	public static Color AlphaToWhite(this int alpha) { return new Color(255,255,255,alpha); }
 	public static Color AlphaToAll(this int alpha) { return new Color(alpha,alpha,alpha,alpha); }
+	public static Color AlphaToAll(this byte alpha) { return new Color(alpha,alpha,alpha,alpha); }
 	public static Color AlphaToBlack(this int alpha) { return new Color(0,0,0,alpha); }
 
 	public static Color Scale(this Color value,Vector4 scale)
@@ -57,7 +58,7 @@ using static GameClient;
 
 	}
 
-	public static Color AlphaToWhite(this byte alpha) { return new Color((byte)255,(byte)255,(byte)255,alpha); }
+	public static Color AlphaToWhite(this byte alpha) { return new Color(byte.MaxValue,byte.MaxValue,byte.MaxValue,alpha); }
 	public static Color AlphaToBlack(this byte alpha) { return new Color((byte)0,(byte)0,(byte)0,alpha); }
 
 	//public static Point2 ToPoint(this Vector2 me) => new Point2(me.X,me.Y);
@@ -253,10 +254,10 @@ using static GameClient;
 		return c + View.viewW;
 	}
 
-	public static Vector2 WorldToCamera(this (int x, int y) c)
-	{
-		return new Vector2(c.x,c.y).WorldToCamera();
-	}
+	//public static Vector2 WorldToCamera(this (int x, int y) c)
+	//{
+	//	return new Vector2(c.x,c.y).WorldToCamera();
+	//}
 	//public static Vector2 WorldToCamera(this (float x, float y) c)
 	//{
 	//	return new Vector2(c.x,c.y).WorldToCamera();
@@ -265,10 +266,10 @@ using static GameClient;
 	//{
 	//	return new Vector2(c.x, c.y).WToCp(z);
 	//}
-	public static Vector2 CidToCamera(this int c)
-	{
-		return c.ToWorldC().WorldToCamera();
-	}
+	//public static Vector2 CidToCamera(this int c)
+	//{
+	//	return c.ToWorldC().WorldToCamera();
+	//}
 	//public static Vector2 CidToCp(this int c, float z)
 	//{
 	//	return c.ToWorldC().WToCp(z);

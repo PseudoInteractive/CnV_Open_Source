@@ -41,17 +41,17 @@ static partial class View
 				Material.litCityEffect              = EffectPass("LitCity");
 				Material.unlitCityEffect   = EffectPass("UnlitCity");
 
-				Material.litCityOpaqueEffect = EffectPassOpaque(Material.litCityEffect);
-				Material.unlitCityOpaqueEffect = EffectPassOpaque(Material.unlitCityEffect);
+				Material.litCityOpaqueEffect = EffectPassOpaque(Material.litCityEffect, blendAlphaAdd);
+				Material.unlitCityOpaqueEffect = EffectPassOpaque(Material.unlitCityEffect, blendAlphaAdd);
 		
-				Material.litRegionEffect              = EffectPassOpaque("LitRegion");
+				Material.litRegionEffect              = EffectPassOpaque("LitRegion", blendAlphaAdd);
 				Material.litAnimatedEffect              = EffectPass("LitAnimated");
 				Material.unlitAnimatedEffect              = EffectPass("UnlitAnimated");
 				Material.shadowAnimatedEffect              = EffectPass("ShadowAnimated");
-				Material.unlitRegionEffect   = EffectPassOpaque("UnlitRegion");
+				Material.unlitRegionEffect   = EffectPassOpaque("UnlitRegion", blendAlphaAdd);
 				Material.shadowEffect   = EffectPass("Shadow");
-				World.tileEffect =EffectPassOpaque("LitTile");
-				World.unlitTileEffect =EffectPassOpaque("UnLitTile");
+				World.tileEffect =EffectPassOpaque("LitTile", blendReplace);
+				World.unlitTileEffect =EffectPassOpaque("UnLitTile",blendReplace);
 				animatedSpriteEffect   = EffectPass("SpriteAnim");
 				sdfEffect              = EffectPass("SDF");
 				noTextureEffect        = EffectPass("NoTexture");
@@ -243,8 +243,8 @@ static partial class View
 		{
 			return  new EffectPass(basedOn._effect,basedOn,blend,depth);
 		}
-		public static EffectPass EffectPassOpaque(string name) => EffectPass(name,blendReplace,depthOpaque);
-		public static EffectPass EffectPassOpaque(EffectPass basedOn) => EffectPass(basedOn,blendReplace,depthOpaque);
+		public static EffectPass EffectPassOpaque(string name,BlendState blendState) => EffectPass(name,blendState,depthOpaque);
+		public static EffectPass EffectPassOpaque(EffectPass basedOn, BlendState blendState) => EffectPass(basedOn,blendState,depthOpaque);
 		public static EffectPass EffectPassAlpha(string name) => EffectPass(name,blendAlphaAdd,depthRead);
 		public static EffectPass EffectPass(string name) =>EffectPassAlpha(name);
 	
