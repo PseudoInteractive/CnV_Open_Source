@@ -324,7 +324,7 @@ internal partial class GameClient
 			GraphicsDevice.SamplerStates[7] = fontSampler;
 
 			GraphicsDevice.RasterizerState = rasterizationState;
-		//	GraphicsDevice.DepthStencilState = depthWrite;
+			GraphicsDevice.DepthStencilState = depthWrite;
 			//if (WasKeyPressed(Keys.F))
 			//{
 			//	++filterCounter;
@@ -2034,7 +2034,7 @@ internal partial class GameClient
 							{
 								pre.BackBufferFormat =  GetBackBufferFormat();
 								pre.MultiSampleCount = 0;
-								pre.DepthStencilFormat = DepthFormat.None;
+								pre.DepthStencilFormat = DepthFormat.Depth24Stencil8;
 								pre.BackBufferWidth = (int)(clientSpan.X*dipToNative*resolutionScale);// - ShellPage.cachedXOffset,
 								pre.BackBufferHeight = (int)(clientSpan.Y*dipToNative*resolutionScale); // - ShellPage.cachedTopOffset,
 							};

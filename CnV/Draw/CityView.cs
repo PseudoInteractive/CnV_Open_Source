@@ -177,7 +177,7 @@ namespace CnV
 					
 					{
 						var hasWall = buildings[bspotWall].bl > 0;
-						draw.AddQuad(Layer.tileCityBase,city.isOnWater ? !hasWall ? cityNoWallsWater: cityWallsWater :!hasWall ? cityNoWallsLand: cityWallsLand,city0,city1,iAlpha.AlphaToAll(),depth: 0f);
+						draw.AddQuad(Layer.tileCityBaseOpaque,city.isOnWater ? !hasWall ? cityNoWallsWater: cityWallsWater :!hasWall ? cityNoWallsLand: cityWallsLand,city0,city1,iAlpha.AlphaToAll(),depth: 0f);
 					}
 				}
 
@@ -374,7 +374,7 @@ namespace CnV
 										{
 											var fade = 1-gain;
 
-											draw.AddQuad(Layer.tileCityBase+1,city.isOnWater ?isBuild? cityWallsWater : cityNoWallsWater : isBuild ? cityWallsLand : cityNoWallsLand,city0,city1,new Color((byte)255,(byte)255,(byte)255,fade.UNormToByte()),depth: 0f);
+											draw.AddQuad(Layer.tileCityBaseFade,city.isOnWater ?isBuild? cityWallsWater : cityNoWallsWater : isBuild ? cityWallsLand : cityNoWallsLand,city0,city1,new Color((byte)255,(byte)255,(byte)255,fade.UNormToByte()),depth: 0f);
 				
 										}
 
@@ -716,21 +716,21 @@ namespace CnV
 			//var cityBase =  "Art/City/";
 			//buildingAtlas = Material.LoadLitMaterial(cityBase + "building_set5");
 			//buildingShadows = new Material(buildingAtlas.texture, AGame.unlitEffect);
-			if(!GameClient.TryLoadLitMaterialFromDDS($"runtime\\city\\CityWallsLL",out cityWallsLand,out _,wantShadow: false,unlit: false,city:false))
+			if(!GameClient.TryLoadLitMaterialFromDDS($"runtime\\city\\CityWallsLL",out cityWallsLand,out _,wantShadow: false,unlit: false,city:false,opaque:true))
 			{
 				Assert(false);
 			}
 			///	cityWallsLand = LoadLitMaterial(cityBase + "baseland");
-			if(!GameClient.TryLoadLitMaterialFromDDS($"runtime\\city\\CityWallsWater",out cityWallsWater,out _,wantShadow: false,unlit: false,city:false))
+			if(!GameClient.TryLoadLitMaterialFromDDS($"runtime\\city\\CityWallsWater",out cityWallsWater,out _,wantShadow: false,unlit: false,city:false,opaque:true))
 			{
 				Assert(false);
 			}
-			if(!GameClient.TryLoadLitMaterialFromDDS($"runtime\\city\\CityNoWallsLL",out cityNoWallsLand,out _,wantShadow: false,unlit: false,city:false))
+			if(!GameClient.TryLoadLitMaterialFromDDS($"runtime\\city\\CityNoWallsLL",out cityNoWallsLand,out _,wantShadow: false,unlit: false,city:false,opaque:true))
 			{
 				Assert(false);
 			}
 			///	cityWallsLand = LoadLitMaterial(cityBase + "baseland");
-			if(!GameClient.TryLoadLitMaterialFromDDS($"runtime\\city\\CityNoWallsWater",out cityNoWallsWater,out _,wantShadow: false,unlit: false,city:false))
+			if(!GameClient.TryLoadLitMaterialFromDDS($"runtime\\city\\CityNoWallsWater",out cityNoWallsWater,out _,wantShadow: false,unlit: false,city:false,opaque:true))
 			{
 				Assert(false);
 			}

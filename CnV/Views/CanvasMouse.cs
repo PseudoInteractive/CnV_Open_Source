@@ -30,6 +30,7 @@ partial class ShellPage
 
 	public static void SetupNonCoreInput()
 	{
+		canvas.ManipulationMode = ManipulationModes.None;
 		//Canvas_PointerWheelChanged(mouseState, priorMouseState);
 		SetupCoreInput();
 
@@ -147,7 +148,7 @@ partial class ShellPage
 		if(scale != 1.0f)
 			Note.Show($"Scale: {scale}");
 		var exp = args.Delta.Expansion;
-		if(exp != 0.0f && args.PointerDeviceType != PointerDeviceType.Mouse)
+		if(exp != 0.0f ) // && args.PointerDeviceType != PointerDeviceType.Mouse)
 		{
 			HandleWheel(args.Position,exp); 
 		}
@@ -232,7 +233,7 @@ partial class ShellPage
 	{
 		var pt = e.CurrentPoint;
 		var point = pt.Position;
-		if(pt.PointerDeviceType == PointerDeviceType.Mouse )
+		if( pt.PointerDeviceType == PointerDeviceType.Mouse )
 		{
 			var scroll = pt.Properties.MouseWheelDelta;
 			HandleWheel(point,scroll);

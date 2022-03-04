@@ -39,12 +39,16 @@ static partial class View
 				fontEffect             = EffectPass("FontLight");
 				darkFontEffect         = EffectPass("FontDark");
 				Material.litCityEffect              = EffectPass("LitCity");
-				Material.litRegionEffect              = EffectPass("LitRegion");
+				Material.unlitCityEffect   = EffectPass("UnlitCity");
+
+				Material.litCityOpaqueEffect = EffectPassOpaque(Material.litCityEffect);
+				Material.unlitCityOpaqueEffect = EffectPassOpaque(Material.unlitCityEffect);
+		
+				Material.litRegionEffect              = EffectPassOpaque("LitRegion");
 				Material.litAnimatedEffect              = EffectPass("LitAnimated");
 				Material.unlitAnimatedEffect              = EffectPass("UnlitAnimated");
 				Material.shadowAnimatedEffect              = EffectPass("ShadowAnimated");
-				Material.unlitCityEffect   = EffectPass("UnlitCity");
-				Material.unlitRegionEffect   = EffectPass("UnlitRegion");
+				Material.unlitRegionEffect   = EffectPassOpaque("UnlitRegion");
 				Material.shadowEffect   = EffectPass("Shadow");
 				World.tileEffect =EffectPassOpaque("LitTile");
 				World.unlitTileEffect =EffectPassOpaque("UnLitTile");
@@ -218,23 +222,29 @@ static partial class View
 			}
 }
 
-	internal static DepthStencilState depthWrite = new() { DepthBufferEnable=true, DepthBufferFunction=CompareFunction.Always };
-	internal static DepthStencilState depthRead = new() { DepthBufferEnable=true,DepthBufferFunction=CompareFunction.Always  };
-	internal static DepthStencilState depthOpaque = new() { DepthBufferEnable=true, DepthBufferFunction=CompareFunction.Always };
+	internal static DepthStencilState depthWrite = new() { DepthBufferEnable=false, DepthBufferFunction=CompareFunction.Always };
+	internal static DepthStencilState depthRead = new() { DepthBufferEnable=true,DepthBufferFunction=CompareFunction.LessEqual,DepthBufferWriteEnable=false  };
+	internal static DepthStencilState depthOpaque = new() { DepthBufferEnable=true,DepthBufferWriteEnable=true, DepthBufferFunction=CompareFunction.LessEqual };
 
 	internal static RasterizerState rasterizationState = new() { CullMode = CullMode.None,DepthClipEnable=false,MultiSampleAntiAlias=false };
 
 	internal static BlendState blendReplace = BlendState.Opaque;
 	internal static BlendState blendAlphaAdd = BlendState.AlphaBlend;
+	// If we want to different z modes for an effect we have to clone it
 	public static EffectPass EffectPass(string name, BlendState blend,DepthStencilState depth)
 		{
 			var rv = avaEffect.Techniques[name].Passes[0];
-			//rv._blendState=blend;
-			//rv._depthStencilState = depth;
-			
+			rv._blendState=blend;
+			rv._depthStencilState = depth;
 			return rv;
 		}
+
+	public static EffectPass EffectPass(EffectPass basedOn, BlendState blend,DepthStencilState depth)
+		{
+			return  new EffectPass(basedOn._effect,basedOn,blend,depth);
+		}
 		public static EffectPass EffectPassOpaque(string name) => EffectPass(name,blendReplace,depthOpaque);
+		public static EffectPass EffectPassOpaque(EffectPass basedOn) => EffectPass(basedOn,blendReplace,depthOpaque);
 		public static EffectPass EffectPassAlpha(string name) => EffectPass(name,blendAlphaAdd,depthRead);
 		public static EffectPass EffectPass(string name) =>EffectPassAlpha(name);
 	

@@ -96,7 +96,7 @@ namespace CnV
 			//	PreferHalfPixelOffset=false,
 				//	PreferredBackBufferFormat   = SurfaceFormat.Rgba1010102,
 					PreferMultiSampling         = false,
-					PreferredDepthStencilFormat = DepthFormat.None,
+					PreferredDepthStencilFormat = DepthFormat.Depth24Stencil8,
 				
 
 					GraphicsProfile =  GraphicsProfile.HiDef
@@ -388,7 +388,7 @@ namespace CnV
 			return null;
 		}
 
-		public static bool TryLoadLitMaterialFromDDS(string nameAndPath, out Material main, out Material shadow,bool wantShadow,bool unlit, bool city )
+		public static bool TryLoadLitMaterialFromDDS(string nameAndPath, out Material main, out Material shadow,bool wantShadow,bool unlit, bool city, bool opaque=false )
 		{
 			try
 			{ 
@@ -401,7 +401,7 @@ namespace CnV
 				if(texture is not null )
 				{
 					var animated = texture.IsAnimated();
-					main = new Material(texture, normalMap, AGame.GetTileEffect(animated,unlit,city:city));
+					main = new Material(texture, normalMap, AGame.GetTileEffect(animated,unlit,city:city,opaque:opaque));
 					
 					shadow =wantShadow ?  new Material(texture, GetShadowEffect(animated)) : null;
 					return true;
