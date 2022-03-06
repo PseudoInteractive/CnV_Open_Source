@@ -83,7 +83,9 @@
 						  DragOver="buildQueueListView_DragOver"
 						  DragItemsCompleted="buildQueueListView_DragItemsCompleted"
 						  ContextRequested="buildQueueListView_ContextRequested"
-						
+						ItemClick="buildQueueListView_ItemClick"
+						  IsItemClickEnabled="True"
+						  SelectionChanged="buildQueueListView_SelectionChanged"
 						ItemsSource="{x:Bind buildQueue}"
 						  MaxHeight="200"  >
 					<ListView.ItemTemplate>
@@ -138,7 +140,9 @@
 						<TextBlock Text ="Buildings" Margin="0"  Style="{StaticResource TextBlockMedium}"   />
 					</Border>
 				</Expander.Header>
-				<GridView x:Name="buildingCountGrid"  HorizontalAlignment="Stretch" SelectionMode="Multiple" IsMultiSelectCheckBoxEnabled="False" 
+				<GridView x:Name="buildingCountGrid"  HorizontalAlignment="Stretch" SelectionMode="Multiple" 
+						  IsMultiSelectCheckBoxEnabled="False" 
+						  SelectionChanged="buildingCountGrid_SelectionChanged"
 						  Background="{x:Null}" ItemsSource="{x:Bind buildingCounts}" >
 					<GridView.ItemTemplate>
 						<DataTemplate x:DataType="cnv:BuildingCountAndBrush">

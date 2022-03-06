@@ -127,7 +127,7 @@ namespace CnV.Views
 		// public static ChatTab whisper = new ChatTab() { Tag = nameof(whisper) };
 			debug = new ChatTab() { Tag = nameof(debug) };
 
-			all = (new ChatTab[] { alliance, world, officer, debug }).ToImmutableArray();
+			all = (new ChatTab[] { alliance, world, officer }).ToImmutableArray();
 		}
 		public string whisperTarget; // null if no target
 		public DateTimeOffset lastRead;

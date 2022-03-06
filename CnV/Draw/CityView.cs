@@ -33,6 +33,11 @@ namespace CnV
 	public class CityView
 	{
 
+		internal static BuildC[] selectedBuildCs = Array.Empty<BuildC>();
+		internal static double selectedBuildCsChangeTime;
+		internal static BuildingId[] selectedBuildingIds = Array.Empty<BuildingId>();
+		internal static double selectedBuildingIdsChangeTime;
+
 		const float zBuildings = 0;
 		const float zCityOverlay = 1.0f/128;
 		internal const float buildingPlacementZ = 0;// (1.0f/64.0f);
@@ -427,7 +432,11 @@ namespace CnV
 								}
 
 							DrawBuilding(bid,iAlpha: alpha.UNormToByte(),zBase: 0,layer: bspot.LayerBuilding(),buildC: bspot,fontScale: fontScale,fontAlpha: fontAlpha.UNormToByte(),buildingLevel: bl);
-
+							if(selectedBuildingIds.Contains(bid))
+							{
+								//var t = ((animationT - selectedBuildingIdsChangeTime)*2).Saturate().Wave()*2.0f;
+								CityView.DrawHoverMarker(bspot,new Color(255, 64, 0, 255));
+							}
 							// farm fields
 							if(next.bid == bidFarm)
 							{
@@ -518,7 +527,7 @@ namespace CnV
 								break;
 					}
 						default:
-							CityView.DrawHoverMarker(hovered);
+							CityView.DrawHoverMarker(hovered,new Color(48, 0, 128, 255));
 							break;
 					}
 				}
@@ -546,7 +555,13 @@ namespace CnV
 						}
 					}
 				}
+				
+				foreach(var selBc in selectedBuildCs)
+				{
+			//		var t = ((animationT - selectedBuildCsChangeTime)*2).Saturate().Wave()*2.0f;
 
+					CityView.DrawHoverMarker(selBc,new Color(255,64,0,255));
+				}
 				PreviewBuildAction();
 				
 			}
@@ -642,7 +657,7 @@ namespace CnV
 		public static void DrawBuildingOverlay(BuildC cc, int iAlpha, BuildingId bid)
 		{
 			var off = (AGame.animationT - animationOffsets[cc]) * 0.333f;
-			var cScale = off.Wave().Lerp(0.0f, 1.0f);//, off.WaveC().Lerp(0.8f, 1.0f));
+			var cScale = off.Wave().Lerp(0.75f, 0.875f);//, off.WaveC().Lerp(0.8f, 1.0f));
 
 			DrawBuilding(bid: bid, iAlpha: iAlpha.ScaleAndRound(cScale), zBase: zBuildings, layer: cc.LayerBuilding(),buildC: cc);
 
@@ -664,11 +679,11 @@ namespace CnV
 			var cs = CityPointToQuad(cc, 1.2f);
 			draw.AddQuad(Layer.cityActionIndicator, mat, cs.c0, cs.c1, new Color( cityDrawAlpha, cityDrawAlpha, cityDrawAlpha, cityDrawAlpha / 2).Scale(cScale),depth:zCityOverlay);
 		}
-		public static void DrawHoverMarker(BuildC cc)
+		public static void DrawHoverMarker(BuildC cc,Color color)
 		{
 			Assert(isDrawing);
-			var cs = CityPointToQuad(cc, 1.0f,cityYAspectRatio);
-			DrawRectOutlineShadow(Layer.effects,cs.c0,cs.c1,new Color(48, 0, 128, 255));
+			var cs = CityPointToQuad(cc,yScale:0.875f);
+			DrawRectOutlineShadow(Layer.effects,cs.c0,cs.c1,color,animationOffset:animationOffsets[cc]);
 		}
 		
 

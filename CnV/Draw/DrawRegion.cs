@@ -1669,6 +1669,7 @@ internal partial class GameClient
 	//	static Vector2 _uv1;
 	private static void DrawFlag(int cid, SpriteAnim sprite, Vector2 offset)
 	{
+		return;
 		var wc = cid.CidToWorld();
 		if(IsCulledWC(wc))
 			return;
@@ -1857,13 +1858,13 @@ internal partial class GameClient
 	{
 		draw.AddQuad(layer, quadTexture, c0, c1, new Vector2(), new Vector2(1, 1), color, PlanetDepth, zLabels);
 	}
-	private static void DrawRectOutline(int layer, Vector2 c0, Vector2 c1, Color color, float z, float thickness, float _expand = 0f)
+	private static void DrawRectOutline(int layer, Vector2 c0, Vector2 c1, Color color, float z, float thickness, float _expand = 0f, double animationOffset=0)
 	{
 
 		float t = thickness.ScreenToWorld();
 		var expand = _expand.ScreenToWorld();
 		const float waveGain = 0.375f;
-		z = z * (0.25f+ (animationT*(1.0/3)).Wave() * waveGain);
+		z = z * (0.25f+ ((animationT-animationOffset)*(1.0/3)).Wave() * waveGain);
 		c0 = new(c0.X - expand, c0.Y - expand);
 		c1 = new(c1.X + expand, c1.Y + expand);
 
@@ -1877,12 +1878,12 @@ internal partial class GameClient
 	}
 
 
-	internal static void DrawRectOutlineShadow(int layer, Vector2 c0, Vector2 c1, Color color, float thickness = 1, float expand = 0)
+	internal static void DrawRectOutlineShadow(int layer, Vector2 c0, Vector2 c1, Color color, float thickness = 1, float expand = 0, double animationOffset=0)
 	{
-		DrawRectOutline(layer, c0, c1, color, zUI, thickness, expand);
-		DrawRectOutline(Layer.tileShadow, c0, c1, color.GetShadowColorDark(), zShadow, thickness, expand);
+		DrawRectOutline(layer, c0, c1, color, zUI, thickness, expand,animationOffset);
+		DrawRectOutline(Layer.tileShadow, c0, c1, color.GetShadowColorDark(), zShadow, thickness, expand,animationOffset);
 	}
-	private static void DrawRectOutlineShadow(int layer, int cid, Color col, string label = null, float thickness = 1, float expand = 0)
+	private static void DrawRectOutlineShadow(int layer, int cid, Color col, string label = null, float thickness = 1, float expand = 0, double animationOffset=0)
 	{
 		var wc = cid.CidToWorld();
 		if(IsCulledWC(wc))
@@ -1890,7 +1891,7 @@ internal partial class GameClient
 		var cc = wc.ToVector(); ;
 		var c0 = cc - v2Half;
 		var c1 = cc + v2Half;
-		DrawRectOutlineShadow(Layer.effects, c0, c1, col, thickness, expand);
+		DrawRectOutlineShadow(Layer.effects, c0, c1, col, thickness, expand,animationOffset);
 		if(label != null)
 		{
 			DrawTextBox(label, cc, textformatLabel, new Color(col, 255), textBackgroundOpacity, Layer.tileText, scale: (regionFontScale * 2.0f));

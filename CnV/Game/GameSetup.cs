@@ -175,6 +175,8 @@ namespace CnV
 
 				AppS.DispatchOnUIThread( ShellPage.SetupNonCoreInput );
 
+				--View.hideSceneCounter;
+
 			}
 		catch(Exception ex)
 		{

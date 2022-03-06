@@ -280,7 +280,9 @@ namespace CnV
 								if(i.Value > 0)
 								{
 									bd.Add(new BuildingCountAndBrush()
-									{ count = i.Value,image = CityBuild.GetBuildingImage(i.Key,BuildingCountAndBrush.width) });
+									{ count = i.Value,
+										image = CityBuild.GetBuildingImage(i.Key,BuildingCountAndBrush.width),
+										bid = i.Key });
 								}
 							}
 							for(int i = buildingCounts.Count;--i>= 0;)
@@ -497,9 +499,27 @@ namespace CnV
 			LogJson(e);
 
 		}
+
+		private void buildQueueListView_ItemClick(object sender,ItemClickEventArgs e)
+		{
+
+		}
+
+		private void buildQueueListView_SelectionChanged(object sender,SelectionChangedEventArgs e)
+		{
+			CityView.selectedBuildCs = buildQueueListView.SelectedItems.Select(a => ((BuildItem)a).op.bspot).ToArray();
+			CityView.selectedBuildCsChangeTime = AGame.animationT;
+		}
+
+		private void buildingCountGrid_SelectionChanged(object sender,SelectionChangedEventArgs e)
+		{
+			CityView.selectedBuildingIds = buildingCountGrid.SelectedItems.Select(a => ((BuildingCountAndBrush)a).bid).ToArray();
+			CityView.selectedBuildingIdsChangeTime = AGame.animationT;
+		}
 	}
 	public class BuildingCountAndBrush:INotifyPropertyChanged
 	{
+		public BuildingId bid;
 		public const int width = 32;
 		public Microsoft.UI.Xaml.Media.Imaging.BitmapImage image { get; set; }
 		public int count { get; set; }

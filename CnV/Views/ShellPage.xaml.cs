@@ -565,7 +565,7 @@ namespace CnV.Views
 																} ));
 
 
-				AppS.SetState(AppS.State.active);
+				//AppS.SetState(AppS.State.active);
 			}
 			catch(Exception ex)
 			{

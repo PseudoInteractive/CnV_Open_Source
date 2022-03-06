@@ -786,12 +786,15 @@ namespace CnV
 					AppS.SetState( AppS.State.closed );
 					await t0;
 					// Wait for sim thread to save
-					if(CnVServer.simThreadAction is not null)
-						await CnVServer.simThreadAction;
-
+					Log($"Await Sim");
+					while(Sim.isSimRunning)
+					{
+						await Task.Delay(500);
+					}
 					Log($"Destroyed");
-					Exit();
-					//appWindow.Destroy();
+					window.Close();
+					// Exit?
+
 				}
 			}
 			catch(Exception ex)
