@@ -59,13 +59,14 @@ partial class ShellPage
 				try
 				{
 					// Set up the pointer input source to receive pen input for the swap chain panel.
-					coreInputSource = canvas.CreateCoreIndependentInputSource(InputPointerSourceDeviceKinds.Mouse | InputPointerSourceDeviceKinds.Pen|InputPointerSourceDeviceKinds.Touch);
+					coreInputSource = canvas.CreateCoreIndependentInputSource(InputPointerSourceDeviceKinds.Mouse | InputPointerSourceDeviceKinds.Pen|InputPointerSourceDeviceKinds.Touch  
+						);
 					recognizer = new()
 					{
 						GestureSettings= GestureSettings.Tap|GestureSettings.RightTap|
 					GestureSettings.ManipulationTranslateX|GestureSettings.ManipulationTranslateY|GestureSettings.ManipulationScale
 					|GestureSettings.ManipulationTranslateInertia
-//					|GestureSettings.ManipulationMultipleFingerPanning
+					|GestureSettings.ManipulationMultipleFingerPanning
 					};
 
 					recognizer.AutoProcessInertia = true;
@@ -234,8 +235,12 @@ partial class ShellPage
 
 	public static void CoreInputSource_PointerMoved(InputPointerSource sender,PointerEventArgs e)
 	{
+		
 		recognizer.ProcessMoveEvents(e.GetIntermediatePoints());
 		var point = e.CurrentPoint;
+		if(point.PointerDeviceType == PointerDeviceType.Touchpad)
+			Note.Show("Touchpad");
+
 		if(point.Properties.ContactRect._width> 1)
 			Note.Show(point.Properties.ContactRect.ToString());
 		e.KeyModifiers.UpdateKeyModifiers();
@@ -249,7 +254,7 @@ partial class ShellPage
 		if( pt.PointerDeviceType == PointerDeviceType.Mouse )
 		{
 			var scroll = pt.Properties.MouseWheelDelta;
-			HandleWheel(point,scroll);
+			HandleWheel(point,scroll*0.5f);
 		}
 		else
 		{
