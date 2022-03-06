@@ -223,8 +223,11 @@ namespace CnV
 					{
 						var bdd = !hasBeenDisplayed ? GetBuildingCounts(city) : default;
 						var t = CnVServer.simTime;
+#if DEBUG
+						ShellPage.instance.timeDisplay.Text = $"{t.FormatWithYear()} Frame {GameClient.renderFrame/60}";
+#else
 						ShellPage.instance.timeDisplay.Text = t.FormatWithYear();
-
+#endif
 						{
 							ResToolTip.Content=
 								$"Storage:\n{city.stats.storage.Format("\n")}";

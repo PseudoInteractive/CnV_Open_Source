@@ -2,7 +2,7 @@
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
     <TargetFramework>net6.0-windows10.0.22000.0</TargetFramework>
-    <EnablePreviewFeatures>true</EnablePreviewFeatures>
+    <EnablePreviewFeatures>True</EnablePreviewFeatures>
     <TargetPlatformVersion>10.0.22000.0</TargetPlatformVersion>
 	<TargetPlatformMinVersion>10.0.18362.0</TargetPlatformMinVersion>
     <RootNamespace>CnV</RootNamespace>
@@ -13,7 +13,6 @@
     <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
     <EnableDefaultPageItems>false</EnableDefaultPageItems>
     <LangVersion>preview</LangVersion>
-    <PackageCertificateThumbprint>5DC3522778776B8DC772B28B915990F3B4487888</PackageCertificateThumbprint>
     <AppxPackageSigningEnabled>True</AppxPackageSigningEnabled>
     <GenerateAppInstallerFile>False</GenerateAppInstallerFile>
 	<TieredCompilation>True</TieredCompilation>
@@ -70,10 +69,8 @@
     <PackageReference Include="Grpc.Net.Client" Version="2.42.0-pre1" />
     <PackageReference Include="Humanizer.Core" Version="2.13.14" />
     <PackageReference Include="MessagePack" Version="2.3.85" />
-    <PackageReference Include="MessagePack.Annotations" Version="2.4.14-alpha" />
     <PackageReference Include="MessagePack.Experimental" Version="2.3.85" />
     <PackageReference Include="MessagePack.ImmutableCollection" Version="2.4.14-alpha" />
-    <PackageReference Include="MessagePackAnalyzer" Version="2.3.85" />
     <PackageReference Include="MagicOnion.Client" Version="4.3.1" />
     <PackageReference Include="Microsoft.Extensions.ObjectPool" Version="6.0.1" />
     <PackageReference Include="Microsoft.Identity.Client" Version="4.42.0" />
@@ -95,16 +92,12 @@
     <PackageReference Include="Humanizer.Core" Version="2.14.1" />
     <PackageReference Include="MessagePack" Version="2.4.14-alpha" />
     <PackageReference Include="MessagePack.Experimental" Version="2.4.14-alpha" />
-    <PackageReference Include="MessagePackAnalyzer" Version="2.4.14-alpha">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
     <PackageReference Include="MagicOnion.Client" Version="4.4.0" />
     <PackageReference Include="Microsoft.Extensions.ObjectPool" Version="7.0.0-preview.1.22109.13" />
     <PackageReference Include="Microsoft.Toolkit" Version="7.1.2" />
     <PackageReference Include="Microsoft.Toolkit.Diagnostics" Version="7.1.2" />
     <PackageReference Include="Microsoft.Toolkit.HighPerformance" Version="7.1.2" />
-    <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.22563-preview" />	  
+    <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.22567-preview" />	  
     <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.0.0" />
 	<PackageReference Include="Nito.AsyncEx.Coordination" Version="5.1.2" />
     <PackageReference Include="PlayFabAllSDK" Version="1.108.220118" />
@@ -537,8 +530,6 @@
   </ItemGroup>
   <ItemGroup>
 	<None Remove="cnvCover.png" />
-	<None Remove="Package.StoreAssociation.xml" />
-    <None Remove="Properties\PublishProfiles\win10-x64.pubxml" />
     <None Remove="Resources\CnVFont-VF.ttf" />
     <None Remove="Resources\Icon1.ico" />
     <None Remove="Strings\en-us\Resources.resw" />
@@ -611,6 +602,9 @@
     <ApplicationIcon>cnv.ico</ApplicationIcon>
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <PackageIcon>Square44x44Logo.targetsize-256.png</PackageIcon>
+    <PackageCertificateKeyFile>CnV_TemporaryKey.pfx</PackageCertificateKeyFile>
+    <AppxAutoIncrementPackageRevision>True</AppxAutoIncrementPackageRevision>
+    <GenerateTestArtifacts>True</GenerateTestArtifacts>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <Optimize>False</Optimize>

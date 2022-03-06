@@ -34,10 +34,10 @@ partial class ShellPage
 		//Canvas_PointerWheelChanged(mouseState, priorMouseState);
 		SetupCoreInput();
 
-//		canvas.PointerMoved+=KeyboardProxy_PointerMoved;
-//		canvas.PointerPressed+=KeyboardProxy_PointerPressed;
-//		canvas.PointerReleased+=KeyboardProxy_PointerReleased;
-//		canvas.PointerWheelChanged += KeyboardProxy_PointerWheelChanged;
+		//		canvas.PointerMoved+=KeyboardProxy_PointerMoved;
+		//		canvas.PointerPressed+=KeyboardProxy_PointerPressed;
+		//		canvas.PointerReleased+=KeyboardProxy_PointerReleased;
+		//		canvas.PointerWheelChanged += KeyboardProxy_PointerWheelChanged;
 
 		canvas.PointerEntered+=KeyboardProxy_PointerEntered;
 		canvas.PointerExited +=KeyboardProxy_PointerExited;
@@ -148,15 +148,15 @@ partial class ShellPage
 		if(scale != 1.0f)
 			Note.Show($"Scale: {scale}");
 		var exp = args.Delta.Expansion;
-		if(exp != 0.0f ) // && args.PointerDeviceType != PointerDeviceType.Mouse)
+		if(exp != 0.0f) // && args.PointerDeviceType != PointerDeviceType.Mouse)
 		{
-			HandleWheel(args.Position,exp); 
+			HandleWheel(args.Position,exp);
 		}
 	}
 
-	private static void Recognizer_ManipulationStarted(GestureRecognizer sender,ManipulationStartedEventArgs args) => Note.Show("Manipulation Started");
-	private static void Recognizer_ManipulationInertiaStarting(GestureRecognizer sender,ManipulationInertiaStartingEventArgs args) => Note.Show("Inertia");
-	private static void Recognizer_ManipulationCompleted(GestureRecognizer sender,ManipulationCompletedEventArgs args) => Note.Show("Manipulation Complete");
+	private static void Recognizer_ManipulationStarted(GestureRecognizer sender,ManipulationStartedEventArgs args)  {}// Note.Show("Manipulation Started");
+	private static void Recognizer_ManipulationInertiaStarting(GestureRecognizer sender,ManipulationInertiaStartingEventArgs args)  {}// Note.Show("Inertia");
+	private static void Recognizer_ManipulationCompleted(GestureRecognizer sender,ManipulationCompletedEventArgs args) { }// => Note.Show("Manipulation Complete");
 
 	private static void CoreInputSource_PointerExited(InputPointerSource sender,PointerEventArgs args)
 	{

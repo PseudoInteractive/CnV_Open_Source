@@ -14,13 +14,13 @@
 
   <Identity
     Name="33626dsw.15864FAB9E7D2"
-    Publisher="CN=Pseudo Interactive"
-    Version="1.0.388.0" />
+    Publisher="CN=BE72B2C5-14F0-4AD5-84D4-EAA91D8D0812"
+    Version="1.1.6.0" />
 
 
   <Properties>
     <DisplayName>Conquest and Virtue</DisplayName>
-    <PublisherDisplayName>Alliances</PublisherDisplayName>
+    <PublisherDisplayName>Pseudo Interactive</PublisherDisplayName>
     <Logo>Assets\StoreLogo.png</Logo>
   </Properties>
 

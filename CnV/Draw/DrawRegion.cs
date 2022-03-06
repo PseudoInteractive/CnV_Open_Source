@@ -22,14 +22,15 @@ namespace CnV;
 
 internal partial class GameClient
 {
-	public static TextFormat textformatLabel = new TextFormat(TextFormat.HorizontalAlignment.center, TextFormat.VerticalAlignment.center);
+	public static TextFormat textformatLabel = new TextFormat(TextFormat.HorizontalAlignment.center,TextFormat.VerticalAlignment.center);
 	private TextFormat tipTextFormatCentered = new TextFormat(TextFormat.HorizontalAlignment.center);
+	private TextFormat tipTextFormatCenteredBottom = new TextFormat(TextFormat.HorizontalAlignment.center,TextFormat.VerticalAlignment.bottom);
 	private TextFormat tipTextFormat = new TextFormat(TextFormat.HorizontalAlignment.left);
 	private TextFormat tipTextFormatRight = new TextFormat(TextFormat.HorizontalAlignment.right);
-	private TextFormat nameTextFormat = new TextFormat(TextFormat.HorizontalAlignment.center, TextFormat.VerticalAlignment.center);
+	private TextFormat nameTextFormat = new TextFormat(TextFormat.HorizontalAlignment.center,TextFormat.VerticalAlignment.center);
 	const byte textBackgroundOpacity = 192;
 
-//	public static Material worldBackground;
+	//	public static Material worldBackground;
 	//public static Effect imageEffect;
 	public static Effect avaEffect;
 	public static Span2i[] popups = Array.Empty<Span2i>();
@@ -40,7 +41,7 @@ internal partial class GameClient
 
 	public static VertexBuffer tesselatedWorldVB;
 	public static IndexBuffer tesselatedWorldIB;
-	static KeyF[] bulgeKeys = new[] { new KeyF(0.0f, 0.0f), new KeyF(0.44f, 0.44f), new KeyF(1.5f, 0.44f), new KeyF(2.5f, 0.0f) };
+	static KeyF[] bulgeKeys = new[] { new KeyF(0.0f,0.0f),new KeyF(0.44f,0.44f),new KeyF(1.5f,0.44f),new KeyF(2.5f,0.0f) };
 
 	private static bool TilesReady()
 	{
@@ -61,7 +62,7 @@ internal partial class GameClient
 		Name="SamplerState.FontSampler",
 		Filter                  = TextureFilter.Linear,
 		MipMapLevelOfDetailBias = -1.5f,
-		BorderColor             = new Color(0, 0, 0, 0),
+		BorderColor             = new Color(0,0,0,0),
 		MaxAnisotropy           = 2,
 		AddressW                = TextureAddressMode.Border,
 		AddressU                = TextureAddressMode.Border,
@@ -99,7 +100,7 @@ internal partial class GameClient
 		Filter                  = TextureFilter.LinearMipPoint,
 		MipMapLevelOfDetailBias = 0,
 		MaxAnisotropy           = 0,
-		BorderColor             = new Color(128, 128, 255, 0),
+		BorderColor             = new Color(128,128,255,0),
 		AddressU                = TextureAddressMode.Border,
 		AddressV                = TextureAddressMode.Border,
 	};
@@ -124,7 +125,7 @@ internal partial class GameClient
 	const float lineThickness = 3.0f;
 	const float circleRadMin = 3.0f;
 	const float circleRadMax = 5.5f;
-	static Vector2 shadowOffset = new Vector2(4, 4);
+	static Vector2 shadowOffset = new Vector2(4,4);
 	const float detailsZoomThreshold = 16;
 	const float detailsZoomFade = 4;
 
@@ -135,7 +136,7 @@ internal partial class GameClient
 	const float bSizeGain2 = 1; //4.22166666666667f;
 	const float srcImageSpan = 2400;
 	const float bSizeGain3 = bSizeGain * bSizeGain / bSizeGain2;
-	
+
 
 	public static float circleRadiusBase = 1.0f;
 	public static float shapeSizeGain = 1.0f;
@@ -151,7 +152,7 @@ internal partial class GameClient
 	static float bestUnderMouseScore;
 	//   public static Vector2 cameraMid;
 	public static float eventTimeOffsetLag; // smoothed version of event time offset
-	//public static float eventTimeEnd;
+											//public static float eventTimeEnd;
 	static public Color nameColor, nameColorHover, myNameColor, nameColorOutgoing, nameColorIncoming, nameColorSieged, nameColorIncomingHover, nameColorSiegedHover, myNameColorIncoming, myNameColorSieged;
 	//static float specularGain = 0.5f;
 	static long ticksAtDraw;
@@ -159,6 +160,7 @@ internal partial class GameClient
 	internal static double timeSinceLastFrame;
 	static float pitch;
 	internal const float targetStepsPerSecond = 256;
+	public static int drawCounter;
 	protected override void Draw(GameTime gameTime)
 	{
 		if(faulted)
@@ -168,6 +170,7 @@ internal partial class GameClient
 		++renderFrame;
 		underMouse = null;
 		bestUnderMouseScore = 8;
+		++drawCounter;
 #if DEBUG
 		if(gameTime.IsRunningSlowly)
 		{
@@ -175,8 +178,10 @@ internal partial class GameClient
 				ToolTips.debugTip = "Slow";
 			else
 				ToolTips.debugTip += "\nSlow";
-
+			
 		}
+		if(ToolTips.debugTip == null)
+			ToolTips.debugTip = $"{(timeSinceLastFrame*1000).RoundToInt()}ms"; 
 #endif
 
 		//parallaxZ0 = 1024 * 64.0f / cameraZoomLag;
@@ -521,44 +526,43 @@ internal partial class GameClient
 
 			// sprite draw
 			draw.Begin();
-			if(hideSceneCounter == 0)
-			{ 
+		
 
-			var focusOnCity = (View.viewMode == ViewMode.city);
+				var focusOnCity = (View.viewMode == ViewMode.city);
 
-			parallaxGain = Settings.parallax * (viewW.Z*0.125f).Min(1);// (Math.Min(1,viewZoomLag / 128.0f));// * regionAlpha * (1 - cityAlpha);
+				parallaxGain = Settings.parallax * (viewW.Z*0.125f).Min(1);// (Math.Min(1,viewZoomLag / 128.0f));// * regionAlpha * (1 - cityAlpha);
 
-			{
-				//var wToCGain = pixelScaleInverse;// (1.0f / viewZoomLag);
-				//				var halfTiles = (clientSpan * (0.5f / cameraZoomLag));
-				var _c0 = clip.c0.ScreenToWorld();
-				var _c1 = clip.c1.ScreenToWorld();
-				cx0 = _c0.X.FloorToInt().Clamp (0,World.span);
-				cy0 = (_c0.Y.FloorToInt()).Clamp(0,World.span);
-				cx1 = (_c1.X.CeilToInt() + 1).Clamp(0,World.span);
-				cy1 = (_c1.Y.CeilToInt() + 1).Clamp(0,World.span);
-			}
-			cullWC = new Span2i(cx0,cy0,cx1,cy1);
-			cullWCF = cullWC.span2;
 				{
+					//var wToCGain = pixelScaleInverse;// (1.0f / viewZoomLag);
+					//				var halfTiles = (clientSpan * (0.5f / cameraZoomLag));
+					var _c0 = clip.c0.ScreenToWorld();
+					var _c1 = clip.c1.ScreenToWorld();
+					cx0 = _c0.X.FloorToInt().Clamp(0,World.span);
+					cy0 = (_c0.Y.FloorToInt()).Clamp(0,World.span);
+					cx1 = (_c1.X.CeilToInt() + 1).Clamp(0,World.span);
+					cy1 = (_c1.Y.CeilToInt() + 1).Clamp(0,World.span);
+				}
+				cullWC = new Span2i(cx0,cy0,cx1,cy1);
+				cullWCF = cullWC.span2;
+				
 					//	ds.Antialiasing = CanvasAntialiasing.Aliased;
-					if(wantImage)
-					{
-						if(wantImage)
-						{
-							const byte brightness = 128;
-							const byte oBrightness = 255;
-							const byte alpha = 255;
-							const float texelGain = 1.0f / srcImageSpan;
-							//draw.AddQuad(CnV.Draw.Layer.background,worldBackground,
-							//	new(0,0),new(World.span,World.span),
-							//	 new Color(brightness,brightness,brightness,alpha),ConstantDepth,0); ;
+					//if(wantImage)
+					//{
+					//	if(wantImage)
+					//	{
+					//		const byte brightness = 128;
+					//		const byte oBrightness = 255;
+					//		const byte alpha = 255;
+					//		const float texelGain = 1.0f / srcImageSpan;
+					//		//draw.AddQuad(CnV.Draw.Layer.background,worldBackground,
+					//		//	new(0,0),new(World.span,World.span),
+					//		//	 new Color(brightness,brightness,brightness,alpha),ConstantDepth,0); ;
 
-							//if(worldObjects != null)
-							//	draw.AddQuad(CnV.Draw.Layer.background + 1,worldObjects,
-							//		new(0,0),new(World.span,World.span),new Color(oBrightness,oBrightness,oBrightness,alpha),ConstantDepth,zCities);
-						}
-					}
+					//		//if(worldObjects != null)
+					//		//	draw.AddQuad(CnV.Draw.Layer.background + 1,worldObjects,
+					//		//		new(0,0),new(World.span,World.span),new Color(oBrightness,oBrightness,oBrightness,alpha),ConstantDepth,zCities);
+					//	}
+					//}
 
 					//   ds.Antialiasing = CanvasAntialiasing.Antialiased;
 					// ds.Transform = new Matrix3x2( _gain, 0, 0, _gain, -_gain * ShellPage.viewCW.X, -_gain * ShellPage.viewCW.Y );
@@ -607,7 +611,8 @@ internal partial class GameClient
 					//			shadowColor = new Color() { A = 128 };
 
 
-
+			if(hideSceneCounter == 0)
+			{
 					{
 						var td = TileData.instance;
 
@@ -1496,6 +1501,7 @@ internal partial class GameClient
 				//		}
 				//	}
 				//}
+			
 				// show selected
 				var _toolTip = ShellPage.toolTip;
 				if(underMouse != null)
@@ -1509,7 +1515,7 @@ internal partial class GameClient
 					//	var bounds = textLayout.span;
 					//System.Numerics.Vector2 c = ShellPage.mousePositionC + new System.Numerics.Vector2(16, 16);
 					System.Numerics.Vector2 c = new System.Numerics.Vector2(clientSpan.X-2,2).ScreenToWorld();
-					DrawTextBox(_toolTip,c,tipTextFormatRight,Color.White,192,Layer.overlay,4,4,ConstantDepth,0,scale:baseFontScale);
+					DrawTextBox(_toolTip,c,tipTextFormatRight,Color.White,192,Layer.overlay,4,4,ConstantDepth,0,scale: baseFontScale);
 				}
 				var _contTip = ShellPage.contToolTip;
 				if(_contTip != null)
@@ -1517,7 +1523,7 @@ internal partial class GameClient
 					var alpha = pixelScale.SmoothStep(cityZoomThreshold - 128,cityZoomThreshold + 128).
 						Max(pixelScale.SmoothStep(cityZoomWorldThreshold + 16,cityZoomWorldThreshold - 16));
 					System.Numerics.Vector2 c = new System.Numerics.Vector2(clientSpan.X/2,2).ScreenToWorld();
-					DrawTextBox(_contTip,c,tipTextFormatCentered,Color.White.Scale(alpha),(byte)(alpha * 192.0f).RoundToInt(),Layer.overlay,4,4,ConstantDepth,0,scale:baseFontScale);
+					DrawTextBox(_contTip,c,tipTextFormatCentered,Color.White.Scale(alpha),(byte)(alpha * 192.0f).RoundToInt(),Layer.overlay,4,4,ConstantDepth,0,scale: baseFontScale);
 				}
 				//if(View.IsCityView())
 				//{
@@ -1536,14 +1542,14 @@ internal partial class GameClient
 				{
 					ToolTips.debugTip=null;
 					var alpha = 255;
-					System.Numerics.Vector2 c = new Vector2(clientSpan.X/2,clientSpan.Y -2).ScreenToWorld();
-					DrawTextBox(_debugTip,c,tipTextFormatCentered,Color.White.Scale(alpha),(byte)(alpha * 192.0f).RoundToInt(),Layer.overlay,4,4,ConstantDepth,0,scale:baseFontScale);
+					System.Numerics.Vector2 c = new Vector2(clientSpan.X/2,clientSpan.Y -16).ScreenToWorld();
+					DrawTextBox(_debugTip,c,tipTextFormatCenteredBottom,Color.White.Scale(alpha),(byte)(alpha * 192.0f).RoundToInt(),Layer.overlay,4,4,ConstantDepth,0,scale: baseFontScale);
 				}
 #if DEBUG
-			//	DrawRectOutlineShadow(Layer.effects,new Vector2(16,16).ScreenToWorld(),clientSpan.ScreenToWorld() - new Vector2(16f.ScreenToWorld()),Color.Yellow,4,0);
+				//	DrawRectOutlineShadow(Layer.effects,new Vector2(16,16).ScreenToWorld(),clientSpan.ScreenToWorld() - new Vector2(16f.ScreenToWorld()),Color.Yellow,4,0);
 #endif
 
-			}
+		
 			//if (popups.Length > 0)
 			//{
 			//	var color = isFocused ? new Color(135, 235, 255, 255) : new Color(255, 255, 255, 255);
@@ -1565,7 +1571,7 @@ internal partial class GameClient
 			draw._beginCalled = false;
 		}
 
-		static (int iType, float alpha) GetTroopBlend(float t, int nSprite)
+		static (int iType, float alpha) GetTroopBlend(float t,int nSprite)
 		{
 			int iType = 0;
 			float alpha = 1;
@@ -1588,17 +1594,17 @@ internal partial class GameClient
 		}
 	}
 
-	static Dictionary<int, TextLayout> nameLayoutCache = new Dictionary<int, TextLayout>();
-	static public TextLayout GetTextLayout(string name, TextFormat format)
+	static Dictionary<int,TextLayout> nameLayoutCache = new Dictionary<int,TextLayout>();
+	static public TextLayout GetTextLayout(string name,TextFormat format)
 	{
 		var hash = name.GetHashCode(StringComparison.Ordinal);
-		if(nameLayoutCache.TryGetValue(name.GetHashCode(StringComparison.Ordinal), out var rv))
+		if(nameLayoutCache.TryGetValue(name.GetHashCode(StringComparison.Ordinal),out var rv))
 			return rv;
-		rv = new TextLayout(name, format);
+		rv = new TextLayout(name,format);
 
 		if(nameLayoutCache.Count >= maxTextLayouts)
 			nameLayoutCache.Remove(nameLayoutCache.First().Key);
-		nameLayoutCache.Add(hash, rv);
+		nameLayoutCache.Add(hash,rv);
 
 		return rv;
 
@@ -1610,14 +1616,14 @@ internal partial class GameClient
 
 
 
-	public static void DrawTextBox(string text, Vector2 at, TextFormat format, Color color, byte backgroundAlpha, int layer = Layer.tileText, float _expandX = 2.0f, float _expandY = 0, DepthFunction depth = null, float zBias = -1, float scale = 0)
+	public static void DrawTextBox(string text,Vector2 at,TextFormat format,Color color,byte backgroundAlpha,int layer = Layer.tileText,float _expandX = 2.0f,float _expandY = 0,DepthFunction depth = null,float zBias = -1,float scale = 0)
 	{
-		DrawTextBox(text, at, format, color, backgroundAlpha == 0 ? new Color() : color.IsDark() ? new Color(byte.MaxValue, byte.MaxValue, byte.MaxValue, backgroundAlpha) : new Color((byte)(byte)0, (byte)0, (byte)0, backgroundAlpha), layer, _expandX, _expandY, depth, zBias, scale);
+		DrawTextBox(text,at,format,color,backgroundAlpha == 0 ? new Color() : color.IsDark() ? new Color(byte.MaxValue,byte.MaxValue,byte.MaxValue,backgroundAlpha) : new Color((byte)(byte)0,(byte)0,(byte)0,backgroundAlpha),layer,_expandX,_expandY,depth,zBias,scale);
 	}
 
-	private static void DrawTextBox(string text, Vector2 at, TextFormat format, Color color, Color backgroundColor, int layer = Layer.tileText, float _expandX = 0.0f, float _expandY = 0, DepthFunction depth = null, float zBias = -1, float scale = 0)
+	private static void DrawTextBox(string text,Vector2 at,TextFormat format,Color color,Color backgroundColor,int layer = Layer.tileText,float _expandX = 0.0f,float _expandY = 0,DepthFunction depth = null,float zBias = -1,float scale = 0)
 	{
-		if(IsSquareCulledWC(at, textBoxCullSlop))
+		if(IsSquareCulledWC(at,textBoxCullSlop))
 		{
 			return;
 		}
@@ -1626,7 +1632,7 @@ internal partial class GameClient
 		if(scale <= fontCullScaleW)
 			return;
 
-		TextLayout textLayout = GetTextLayout(text, format);
+		TextLayout textLayout = GetTextLayout(text,format);
 		if(zBias == -1)
 			zBias = zLabels;
 
@@ -1636,13 +1642,13 @@ internal partial class GameClient
 		if(constantDepth)
 		{
 			depth = ConstantDepth;
-		//	var atScale = at.ViewToScreen(zBias);
-		//	at = atScale.c;
-		//	scale *= atScale.scale;
-		//	zBias = 0;
+			//	var atScale = at.ViewToScreen(zBias);
+			//	at = atScale.c;
+			//	scale *= atScale.scale;
+			//	zBias = 0;
 		}
 		var span = textLayout.ScaledSpan(scale);
-		var expand = new Vector2(_expandX.DipToWorld(), _expandY.DipToWorld());
+		var expand = new Vector2(_expandX.DipToWorld(),_expandY.DipToWorld());
 		if(backgroundColor.A > 0)
 		{
 			var c0 = at;
@@ -1655,19 +1661,19 @@ internal partial class GameClient
 			if(format.verticalAlignment == TextFormat.VerticalAlignment.bottom)
 				c0.Y -= span.Y;
 			backgroundColor.A = (byte)(((int)backgroundColor.A * color.A) / 255);
-			FillRoundedRectangle(Layer.textBackground, c0 - expand, c0 + expand + span, backgroundColor, depth, zBias);
+			FillRoundedRectangle(Layer.textBackground,c0 - expand,c0 + expand + span,backgroundColor,depth,zBias);
 			Assert(layer > Layer.textBackground);
 		}
-		textLayout.Draw(at, scale, color, layer, zBias, depth);
+		textLayout.Draw(at,scale,color,layer,zBias,depth);
 	}
 
-	private static void FillRoundedRectangle(int layer, Vector2 c0, Vector2 c1, Color background, DepthFunction depth, float z)
+	private static void FillRoundedRectangle(int layer,Vector2 c0,Vector2 c1,Color background,DepthFunction depth,float z)
 	{
-		draw.AddQuad(layer, quadTexture, c0, c1, background, depth, z);/// c0.CToDepth(),(c1.X,c0.Y).CToDepth(), (c0.X,c1.Y).CToDepth(), c1.CToDepth() );
+		draw.AddQuad(layer,quadTexture,c0,c1,background,depth,z);/// c0.CToDepth(),(c1.X,c0.Y).CToDepth(), (c0.X,c1.Y).CToDepth(), c1.CToDepth() );
 	}
 	//	static Vector2 _uv0;
 	//	static Vector2 _uv1;
-	private static void DrawFlag(int cid, SpriteAnim sprite, Vector2 offset)
+	private static void DrawFlag(int cid,SpriteAnim sprite,Vector2 offset)
 	{
 		return;
 		var wc = cid.CidToWorld();
@@ -1679,7 +1685,7 @@ internal partial class GameClient
 		float z = zLabels;
 
 		// hover flags
-		if(TryGetViewHover(cid, out var dz))
+		if(TryGetViewHover(cid,out var dz))
 		{
 			c.Y -= dz * (5.0f * shapeSizeGain); // 8 pixels up regardless of scale
 			z += dz * viewHoverZGain;
@@ -1694,24 +1700,24 @@ internal partial class GameClient
 		Assert(frameMod < 256.0f);
 		var blend = (int)(frameMod);
 		//	_blend = blend;
-		var c0 = new Vector2(c.X, c.Y - dv * 0.435f * 0.75f);
-		Vector2 c1 = new Vector2(c.X + dv * 0.5f * 0.75f, c.Y - dv * 0.035f * 0.75f);
+		var c0 = new Vector2(c.X,c.Y - dv * 0.435f * 0.75f);
+		Vector2 c1 = new Vector2(c.X + dv * 0.5f * 0.75f,c.Y - dv * 0.035f * 0.75f);
 		var du = 1.0/frameCount;
-		
-		var uv0 = new Vector2((float)(frameI / frameCount), 0.0f);
-		var uv1 = new Vector2((float)((frameI + 1.0f) / frameCount), 1.0f);
+
+		var uv0 = new Vector2((float)(frameI / frameCount),0.0f);
+		var uv1 = new Vector2((float)((frameI + 1.0f) / frameCount),1.0f);
 		//	_uv0 = uv0;
 		//	_uv1 = uv1;
 		var material = sprite.material;
 		byte alpha = 255;
-		draw.AddQuad(Layer.effects, material, c0, c1,
+		draw.AddQuad(Layer.effects,material,c0,c1,
 						new Vector2((float)(du*frameI),sprite.frameDeltaU),
 						new Vector2((float)(du*(frameI+1)),sprite.frameDeltaU),
 						new(blend,byte.MaxValue,(byte)0,alpha),
 						new(blend,byte.MaxValue,(byte)0,alpha),
 						new(blend,byte.MaxValue,byte.MaxValue,alpha),
 						new(blend,byte.MaxValue,byte.MaxValue,alpha),
-						depth:z); 
+						depth: z);
 		//draw.AddQuad(Layer.effects, sprite.material, c0.CameraToWorldPosition(), c1.CameraToWorldPosition(),
 		//	uv0,
 		//	uv1,
@@ -1763,10 +1769,10 @@ internal partial class GameClient
 	//      }
 
 	const float actionStopDistance = 48.0f;
-	private static void DrawAction(float timeToArrival, float journeyTime, float rectSpan, Vector2 c0, Vector2 c1, Color color,
-	Material bitmap, bool applyStopDistance, Army? army, float alpha = 1, float lineThickness = GameClient.lineThickness, bool highlight = false)
+	private static void DrawAction(float timeToArrival,float journeyTime,float rectSpan,Vector2 c0,Vector2 c1,Color color,
+	Material bitmap,bool applyStopDistance,Army? army,float alpha = 1,float lineThickness = GameClient.lineThickness,bool highlight = false)
 	{
-		if(IsSegmentCulledWC(c0, c1))
+		if(IsSegmentCulledWC(c0,c1))
 			return;
 		float progress;
 		if(timeToArrival <= 0.0f)
@@ -1783,7 +1789,7 @@ internal partial class GameClient
 		}
 		if(applyStopDistance)
 		{
-			progress = progress.Min(1.0f -  actionStopDistance / Vector2.Distance(c0, c1));
+			progress = progress.Min(1.0f -  actionStopDistance / Vector2.Distance(c0,c1));
 			//      var dc01 = c0 - c1;
 			//       c1 += dc01 *( actionStopDistance / dc01.Length());
 		}
@@ -1791,14 +1797,14 @@ internal partial class GameClient
 		var gain = 1.0f;
 		if(timeToArrival < postAttackDisplayTime)
 			gain = 1.0f + (1.0f - timeToArrival / postAttackDisplayTime) * 0.25f;
-		var mid = progress.Lerp(c0, c1);
+		var mid = progress.Lerp(c0,c1);
 
-		
+
 		float spriteSize = spriteSizeGain;
 
 		if(army is not null && ShellPage.toolTip is null)
 		{
-			(var distance, _) = ShellPage.mousePositionW.DistanceToSegment(c0, c1);
+			(var distance, _) = ShellPage.mousePositionW.DistanceToSegment(c0,c1);
 			if(distance < bestUnderMouseScore)
 			{
 				bestUnderMouseScore = distance;
@@ -1809,20 +1815,20 @@ internal partial class GameClient
 		}
 		if(highlight)
 			lineThickness *= 2;
-		var shadowColor = ShadowColor(1.0f, highlight);
+		var shadowColor = ShadowColor(1.0f,highlight);
 		//	if(wantShadow)
 		//	DrawLine(Layer.effectShadow,c0,c1,GetLineUs(c0,c1),shadowColor,zEffectShadow,thickness: lineThickness);
 		if(applyStopDistance && wantShadow)
-			DrawSquare(Layer.effectShadow, c0, shadowColor, zEffectShadow);
-		DrawLine(Layer.action + 2, c0, c1, GetLineUs(c0, c1), color, zLabels, thickness: lineThickness);
+			DrawSquare(Layer.effectShadow,c0,shadowColor,zEffectShadow);
+		DrawLine(Layer.action + 2,c0,c1,GetLineUs(c0,c1),color,zLabels,thickness: lineThickness);
 		if(applyStopDistance)
-			DrawSquare(Layer.action + 3, new Vector2(c0.X, c0.Y), color, zLabels);
+			DrawSquare(Layer.action + 3,new Vector2(c0.X,c0.Y),color,zLabels);
 		//var dc = new Vector2(spriteSize, spriteSize);
 		if(bitmap != null)
 		{
-			var _c0 = new Vector2(mid.X - spriteSize, mid.Y - spriteSize);
-			var _c1 = new Vector2(mid.X + spriteSize, mid.Y + spriteSize);
-			draw.AddQuadWithShadow(Layer.action + 4, Layer.effectShadow, bitmap, _c0, _c1, HSLToRGB.ToRGBA(rectSpan, 0.3f, 0.825f, alpha, gain * 1.1875f), shadowColor,zLabels);
+			var _c0 = new Vector2(mid.X - spriteSize,mid.Y - spriteSize);
+			var _c1 = new Vector2(mid.X + spriteSize,mid.Y + spriteSize);
+			draw.AddQuadWithShadow(Layer.action + 4,Layer.effectShadow,bitmap,_c0,_c1,HSLToRGB.ToRGBA(rectSpan,0.3f,0.825f,alpha,gain * 1.1875f),shadowColor,zLabels);
 		}
 		//            ds.DrawRoundedSquare(midS, rectSpan, color, 2.0f);
 
@@ -1830,11 +1836,11 @@ internal partial class GameClient
 	}
 
 
-	
 
-	private void DrawAction(Vector2 c0, Vector2 c1, Color color, float thickness, bool highlight)
+
+	private void DrawAction(Vector2 c0,Vector2 c1,Color color,float thickness,bool highlight)
 	{
-		DrawAction(0, 1.0f, 1, c0, c1, color, null, false, null, alpha: 1, lineThickness: thickness, highlight: highlight);
+		DrawAction(0,1.0f,1,c0,c1,color,null,false,null,alpha: 1,lineThickness: thickness,highlight: highlight);
 
 
 		/*			if (IsCulled(c0, c1))
@@ -1850,40 +1856,40 @@ internal partial class GameClient
 					DrawLine(Layer.effectShadow, cm, cm + dl*inverseL*drawActionLength, (0.0f,1.0f), color, zEffectShadow);
 		*/
 	}
-	private static void DrawSquare(int layer, Vector2 c0, Color color, float zBias)
+	private static void DrawSquare(int layer,Vector2 c0,Color color,float zBias)
 	{
-		draw.AddQuad(layer, quadTexture, new Vector2(c0.X - smallRectSpan, c0.Y - smallRectSpan), new Vector2(c0.X + smallRectSpan, c0.Y + smallRectSpan), new Vector2(0, 0), new Vector2(1, 1), color, PlanetDepth, zBias);
+		draw.AddQuad(layer,quadTexture,new Vector2(c0.X - smallRectSpan,c0.Y - smallRectSpan),new Vector2(c0.X + smallRectSpan,c0.Y + smallRectSpan),new Vector2(0,0),new Vector2(1,1),color,PlanetDepth,zBias);
 	}
-	private static void DrawRect(int layer, Vector2 c0, Vector2 c1, Color color, float Z)
+	private static void DrawRect(int layer,Vector2 c0,Vector2 c1,Color color,float Z)
 	{
-		draw.AddQuad(layer, quadTexture, c0, c1, new Vector2(), new Vector2(1, 1), color, PlanetDepth, zLabels);
+		draw.AddQuad(layer,quadTexture,c0,c1,new Vector2(),new Vector2(1,1),color,PlanetDepth,zLabels);
 	}
-	private static void DrawRectOutline(int layer, Vector2 c0, Vector2 c1, Color color, float z, float thickness, float _expand = 0f, double animationOffset=0)
+	private static void DrawRectOutline(int layer,Vector2 c0,Vector2 c1,Color color,float z,float thickness,float _expand = 0f,double animationOffset = 0)
 	{
 
 		float t = thickness.ScreenToWorld();
 		var expand = _expand.ScreenToWorld();
 		const float waveGain = 0.375f;
 		z = z * (0.25f+ ((animationT-animationOffset)*(1.0/3)).Wave() * waveGain);
-		c0 = new(c0.X - expand, c0.Y - expand);
-		c1 = new(c1.X + expand, c1.Y + expand);
+		c0 = new(c0.X - expand,c0.Y - expand);
+		c1 = new(c1.X + expand,c1.Y + expand);
 
-		draw.AddQuad(layer, quadTexture, new(c0.X, c0.Y-t), new(c1.X, c0.Y+t), new Vector2(), new Vector2(1, 1), color, PlanetDepth, z);
+		draw.AddQuad(layer,quadTexture,new(c0.X,c0.Y-t),new(c1.X,c0.Y+t),new Vector2(),new Vector2(1,1),color,PlanetDepth,z);
 
-		draw.AddQuad(layer, quadTexture, new(c0.X, c1.Y -t), new(c1.X, c1.Y +t), new Vector2(), new Vector2(1, 1), color, PlanetDepth, z);
+		draw.AddQuad(layer,quadTexture,new(c0.X,c1.Y -t),new(c1.X,c1.Y +t),new Vector2(),new Vector2(1,1),color,PlanetDepth,z);
 
-		draw.AddQuad(layer, quadTexture, new(c0.X- t, c0.Y), new(c0.X +t, c1.Y), new Vector2(), new Vector2(1, 1), color, PlanetDepth, z);
+		draw.AddQuad(layer,quadTexture,new(c0.X- t,c0.Y),new(c0.X +t,c1.Y),new Vector2(),new Vector2(1,1),color,PlanetDepth,z);
 
-		draw.AddQuad(layer, quadTexture, new(c1.X-t, c0.Y), new(c1.X+t, c1.Y), new Vector2(), new Vector2(1, 1), color, PlanetDepth, z);
+		draw.AddQuad(layer,quadTexture,new(c1.X-t,c0.Y),new(c1.X+t,c1.Y),new Vector2(),new Vector2(1,1),color,PlanetDepth,z);
 	}
 
 
-	internal static void DrawRectOutlineShadow(int layer, Vector2 c0, Vector2 c1, Color color, float thickness = 1, float expand = 0, double animationOffset=0)
+	internal static void DrawRectOutlineShadow(int layer,Vector2 c0,Vector2 c1,Color color,float thickness = 1,float expand = 0,double animationOffset = 0)
 	{
-		DrawRectOutline(layer, c0, c1, color, zUI, thickness, expand,animationOffset);
-		DrawRectOutline(Layer.tileShadow, c0, c1, color.GetShadowColorDark(), zShadow, thickness, expand,animationOffset);
+		DrawRectOutline(layer,c0,c1,color,zUI,thickness,expand,animationOffset);
+		DrawRectOutline(Layer.tileShadow,c0,c1,color.GetShadowColorDark(),zShadow,thickness,expand,animationOffset);
 	}
-	private static void DrawRectOutlineShadow(int layer, int cid, Color col, string label = null, float thickness = 1, float expand = 0, double animationOffset=0)
+	private static void DrawRectOutlineShadow(int layer,int cid,Color col,string label = null,float thickness = 1,float expand = 0,double animationOffset = 0)
 	{
 		var wc = cid.CidToWorld();
 		if(IsCulledWC(wc))
@@ -1891,35 +1897,35 @@ internal partial class GameClient
 		var cc = wc.ToVector(); ;
 		var c0 = cc - v2Half;
 		var c1 = cc + v2Half;
-		DrawRectOutlineShadow(Layer.effects, c0, c1, col, thickness, expand,animationOffset);
+		DrawRectOutlineShadow(Layer.effects,c0,c1,col,thickness,expand,animationOffset);
 		if(label != null)
 		{
-			DrawTextBox(label, cc, textformatLabel, new Color(col, 255), textBackgroundOpacity, Layer.tileText, scale: (regionFontScale * 2.0f));
+			DrawTextBox(label,cc,textformatLabel,new Color(col,255),textBackgroundOpacity,Layer.tileText,scale: (regionFontScale * 2.0f));
 		}
 	}
 
-	private static void DrawDiamond(Material lineMaterial, int layer, Vector2 c0, Vector2 c1, Color color, float z, float thickness, float expand)
+	private static void DrawDiamond(Material lineMaterial,int layer,Vector2 c0,Vector2 c1,Color color,float z,float thickness,float expand)
 	{
 		float d = thickness.ScreenToWorld();
 		var cm = (c0 + c1) * 0.5f;
 		float ext = 0.41f + expand.ScreenToWorld();
 		float ext1 = 1.0f + ext;
-		var ct = new Vector2(cm.X, c0.Y * ext1 - cm.Y * ext);
-		var cb = new Vector2(cm.X, c1.Y * ext1 - cm.Y * ext);
-		var cl = new Vector2(c0.X * ext1 - cm.X * ext, cm.Y);
-		var cr = new Vector2(c1.X * ext1 - cm.X * ext, cm.Y);
-		draw.AddLine(layer, lineMaterial, cl, ct, d, 0.0f, 1.0f, color, (cl.CToDepth(z), ct.CToDepth(z)));
-		draw.AddLine(layer, lineMaterial, ct, cr, d, 0.0f, 1.0f, color, (ct.CToDepth(z), cr.CToDepth(z)));
-		draw.AddLine(layer, lineMaterial, cr, cb, d, 0.0f, 1.0f, color, (cr.CToDepth(z), cb.CToDepth(z)));
-		draw.AddLine(layer, lineMaterial, cb, cl, d, 0.0f, 1.0f, color, (cb.CToDepth(z), cl.CToDepth(z))); ;
+		var ct = new Vector2(cm.X,c0.Y * ext1 - cm.Y * ext);
+		var cb = new Vector2(cm.X,c1.Y * ext1 - cm.Y * ext);
+		var cl = new Vector2(c0.X * ext1 - cm.X * ext,cm.Y);
+		var cr = new Vector2(c1.X * ext1 - cm.X * ext,cm.Y);
+		draw.AddLine(layer,lineMaterial,cl,ct,d,0.0f,1.0f,color,(cl.CToDepth(z), ct.CToDepth(z)));
+		draw.AddLine(layer,lineMaterial,ct,cr,d,0.0f,1.0f,color,(ct.CToDepth(z), cr.CToDepth(z)));
+		draw.AddLine(layer,lineMaterial,cr,cb,d,0.0f,1.0f,color,(cr.CToDepth(z), cb.CToDepth(z)));
+		draw.AddLine(layer,lineMaterial,cb,cl,d,0.0f,1.0f,color,(cb.CToDepth(z), cl.CToDepth(z))); ;
 	}
-	private static void DrawDiamondShadow(int layer, Vector2 c0, Vector2 c1, Color color, float thickness, float expand)
+	private static void DrawDiamondShadow(int layer,Vector2 c0,Vector2 c1,Color color,float thickness,float expand)
 	{
-		DrawDiamond(whiteMaterial, layer, c0, c1, color, zCities, thickness, expand);
+		DrawDiamond(whiteMaterial,layer,c0,c1,color,zCities,thickness,expand);
 		if(wantParallax)
-			DrawDiamond(shadowMaterial,Layer.tileShadow, c0, c1, color.GetShadowColorDark(), zCities, thickness, expand);
+			DrawDiamond(shadowMaterial,Layer.tileShadow,c0,c1,color.GetShadowColorDark(),zCities,thickness,expand);
 	}
-	private static void DrawDiamondShadow(int layer, int cid, Color col, string label = null, float thickness = 3, float expand = 0)
+	private static void DrawDiamondShadow(int layer,int cid,Color col,string label = null,float thickness = 3,float expand = 0)
 	{
 		var wc = cid.CidToWorld();
 		if(IsCulledWC(wc))
@@ -1927,67 +1933,67 @@ internal partial class GameClient
 		var ww = wc.ToVector();
 		var c0 = ww - v2Half;
 		var c1 = ww + v2Half;
-		DrawDiamondShadow(Layer.effects, c0, c1, col, thickness, expand);
+		DrawDiamondShadow(Layer.effects,c0,c1,col,thickness,expand);
 		if(label != null)
 		{
-			DrawTextBox(label, ww, textformatLabel, new Color(col, 255), textBackgroundOpacity, Layer.tileText, scale: (regionFontScale * 2.0f));
+			DrawTextBox(label,ww,textformatLabel,new Color(col,255),textBackgroundOpacity,Layer.tileText,scale: (regionFontScale * 2.0f));
 		}
 	}
 
-	static (float u, float v) GetLineUs(Vector2 c0, Vector2 c1)
+	static (float u, float v) GetLineUs(Vector2 c0,Vector2 c1)
 	{
 		float offset = (lineAnimationGain * (animationTWrap)) % 1;
 		return (offset, offset-(c0 - c1).Length()* clampedScaleInverse * lineTileGain);
 
 	}
-	private static void DrawLine(int layer, Vector2 c0, Vector2 c1, (float u, float v) uv, Color color, float zBias, float thickness = lineThickness)
+	private static void DrawLine(int layer,Vector2 c0,Vector2 c1,(float u, float v) uv,Color color,float zBias,float thickness = lineThickness)
 	{
 		//	draw.AddLine(layer,lineDraw, c0, c1, lineThickness, , color,(c0.CToDepth()+ zBias, c1.CToDepth()+ zBias) );
-		draw.AddLine(layer, lineDraw, c0, c1, thickness, uv.u, uv.v, color, (c0.CToDepth(zBias), c1.CToDepth(zBias)));
+		draw.AddLine(layer,lineDraw,c0,c1,thickness,uv.u,uv.v,color,(c0.CToDepth(zBias), c1.CToDepth(zBias)));
 	}
 
 
 
-	public static void DrawAccentBaseI(float cX, float cY, float radius, double angle, Color color, int layer, float zBias)
+	public static void DrawAccentBaseI(float cX,float cY,float radius,double angle,Color color,int layer,float zBias)
 	{
 		var dx0 = radius * (float)Math.Cos(angle);
 		var dy0 = radius * (float)Math.Sin(angle);
 		var angle1 = angle + MathF.PI * 0.1875f;
 		var dx1 = radius * (float)Math.Cos(angle1);
 		var dy1 = radius * (float)Math.Sin(angle1);
-		DrawLine(layer, new Vector2(cX + dx0, cY + dy0), new Vector2(cX + dx1, cY + dy1), (angle.SignOr0(), 0), color, zBias);
+		DrawLine(layer,new Vector2(cX + dx0,cY + dy0),new Vector2(cX + dx1,cY + dy1),(angle.SignOr0(), 0),color,zBias);
 		// rotated by 180
-		DrawLine(layer, new Vector2(cX - dx0, cY - dy0), new Vector2(cX - dx1, cY - dy1), (angle.SignOr0(), 0), color, zBias);
+		DrawLine(layer,new Vector2(cX - dx0,cY - dy0),new Vector2(cX - dx1,cY - dy1),(angle.SignOr0(), 0),color,zBias);
 	}
-	public static void DrawAccentBase(float cX, float cY, float radius, double angle, Color color, int layer, float zBias)
+	public static void DrawAccentBase(float cX,float cY,float radius,double angle,Color color,int layer,float zBias)
 	{
-		DrawAccentBaseI(cX, cY, radius, angle, color, layer, zBias);
-		DrawAccentBaseI(cX, cY, radius * 0.875f, angle + angle.SignOr0() * 0.125f, color, layer, zBias);
+		DrawAccentBaseI(cX,cY,radius,angle,color,layer,zBias);
+		DrawAccentBaseI(cX,cY,radius * 0.875f,angle + angle.SignOr0() * 0.125f,color,layer,zBias);
 		//DrawAccentBaseI(ds, cX, cY, radius*0.655f, angle+angle.SignOr0()*0.25f, color);
 	}
 
-	public static void DrawAccent(Vector2 c, float radius, float angularSpeed, Color brush)
+	public static void DrawAccent(Vector2 c,float radius,float angularSpeed,Color brush)
 	{
 		var angle = angularSpeed * AGame.animationT;
 		if(wantShadow)
-			DrawAccentBase(c.X, c.Y, radius, angle, brush.GetShadowColorDark(), Layer.effectShadow, zEffectShadow);
-		DrawAccentBase(c.X, c.Y, radius, angle, brush, Layer.overlay, zLabels);
+			DrawAccentBase(c.X,c.Y,radius,angle,brush.GetShadowColorDark(),Layer.effectShadow,zEffectShadow);
+		DrawAccentBase(c.X,c.Y,radius,angle,brush,Layer.overlay,zLabels);
 	}
-	public static void DrawAccent(int cid, float angularSpeedBase, Color brush, float radiusScale = 1.0f)
+	public static void DrawAccent(int cid,float angularSpeedBase,Color brush,float radiusScale = 1.0f)
 	{
 
 		var wc = cid.CidToWorld();
 		if(IsCulledWC(wc))
 			return;
 
-	//	var c = wc.WorldToCamera();
+		//	var c = wc.WorldToCamera();
 
 		var rnd = cid.CidToRandom();
 
 		var angularSpeed = angularSpeedBase + rnd * 0.5f;
-		var t = (AGame.animationT * rnd.Lerp(1.25f / 256.0f, 1.75f / 256f));
-		var r = t.Wave().Lerp(GameClient.circleRadiusBase, GameClient.circleRadiusBase * 1.375f)* radiusScale;
-		DrawAccent(wc.ToVector(), r, angularSpeed, brush);
+		var t = (AGame.animationT * rnd.Lerp(1.25f / 256.0f,1.75f / 256f));
+		var r = t.Wave().Lerp(GameClient.circleRadiusBase,GameClient.circleRadiusBase * 1.375f)* radiusScale;
+		DrawAccent(wc.ToVector(),r,angularSpeed,brush);
 	}
 
 
@@ -1996,9 +2002,9 @@ internal partial class GameClient
 		UpdateClientSpan();
 	}
 
-	
+
 	public static List<(int cid, float z, float vz)> viewHovers = new List<(int cid, float z, float vz)>();
-	static bool TryGetViewHover( int cid, out float z)
+	static bool TryGetViewHover(int cid,out float z)
 	{
 		foreach(var hover in viewHovers)
 		{
@@ -2017,9 +2023,9 @@ internal partial class GameClient
 
 		try
 		{
-			
 
-			
+
+
 
 
 			if(clientSpan.X > 0 && clientSpan.Y > 0 && AppS.isForeground)
@@ -2029,7 +2035,7 @@ internal partial class GameClient
 					if(--resolutionDirtyCounter == 0)
 					{
 						wantFastRefresh = false;
-					//	AppS.DispatchOnUIThread(() =>
+						//	AppS.DispatchOnUIThread(() =>
 						{
 							//									_graphics.PreferredBackBufferHeight = (int)clientSpan.Y;
 							//								_graphics.PreferredBackBufferWidth = (int)clientSpan.X;
@@ -2119,7 +2125,7 @@ internal partial class GameClient
 						worldObjects = null;
 						w.texture.Dispose();
 					}
-					worldObjects = CreateFromBytes(pixels, World.outSize, World.outSize, SurfaceFormat.Dxt1SRgb, defaultEffect);
+					worldObjects = CreateFromBytes(pixels,World.outSize,World.outSize,SurfaceFormat.Dxt1SRgb,defaultEffect);
 				}
 				//if(World.renderTileStaging != null)
 				//{
@@ -2130,7 +2136,7 @@ internal partial class GameClient
 				//	if(prior is not null)
 				//		prior.Dispose();
 				//	World.renderTilesTexture = CreateFromBytes(World.renderTileStaging,World.span,World.span,SurfaceFormat.R32G32B32A32_SInt);
-					
+
 				//}
 				if(World.worldOwnerPixels != null)
 				{
@@ -2142,7 +2148,7 @@ internal partial class GameClient
 						worldOwners = null;
 						w.texture.Dispose();
 					}
-					worldOwners = CreateFromBytes(ownerPixels, World.outSize, World.outSize, SurfaceFormat.Dxt1SRgb, defaultEffect);
+					worldOwners = CreateFromBytes(ownerPixels,World.outSize,World.outSize,SurfaceFormat.Dxt1SRgb,defaultEffect);
 					//canvas.Paused = falwirse;
 					//if (worldObjectsDark != null)
 					//    worldObjectsDark.Dispose();
@@ -2154,7 +2160,7 @@ internal partial class GameClient
 					var pixels = World.changePixels;
 
 					ClearHeatmapImage();
-					worldChanges = CreateFromBytes(pixels, World.outSize, World.outSize, SurfaceFormat.Dxt1, worldSpaceEffect);
+					worldChanges = CreateFromBytes(pixels,World.outSize,World.outSize,SurfaceFormat.Dxt1,worldSpaceEffect);
 
 
 				}
@@ -2178,7 +2184,7 @@ internal partial class GameClient
 				{
 					try
 					{
-						CnV.Debug.LogEx(sex, report: false);
+						CnV.Debug.LogEx(sex,report: false);
 						CnV.Debug.Log($"{sex.ResultCode} {sex.Descriptor.ApiCode} {sex.Descriptor.Description} {sex.Descriptor.ToString()} ");
 						Faulted();
 
@@ -2207,7 +2213,7 @@ internal partial class GameClient
 	{
 		var a = await AppS.DispatchOnUIThreadTask(async () =>
 		{
-			return await AppS.Failed("Video Driver broke", "Please restart, it should recover");
+			return await AppS.Failed("Video Driver broke","Please restart, it should recover");
 
 		});
 		if(a == 1)

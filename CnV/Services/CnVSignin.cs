@@ -201,17 +201,17 @@ namespace CnV
 			}
 			catch(Exception ex)
 			{
-				Note.Show("Account not working");
+				Note.Show("Silent didn't work, trying interactive");
 			}
 
 
-			await	AppS.DispatchOnUIThreadTask(async () => { 
+			return await	AppS.DispatchOnUIThreadTask(async () => { 
 			for(;;)
 			{
 				try
 				{
 				var authResult = await PublicClientApp.AcquireTokenInteractive(ApiScopes)
-										.WithAccount(currentUserAccount).WithExtraQueryParameters(extraQueryParameters).WithPrompt(Prompt.NoPrompt)
+										.WithAccount(currentUserAccount)
 										//	.WithUseEmbeddedWebView(false)
 										//	.WithPrompt(Prompt.SelectAccount)
 										.ExecuteAsync();
@@ -233,7 +233,6 @@ namespace CnV
 			return false;
 		}
 
-			return false;
 
 	//	});
 		}
