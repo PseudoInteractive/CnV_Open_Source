@@ -186,7 +186,7 @@ namespace CnV
 
 		private static void Instance_Deactivated(object? sender, EventArgs e)
 		{
-			Log("Deactivated");
+		//	Log("Deactivated");
 		}
 
 		protected override void Initialize()

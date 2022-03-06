@@ -106,7 +106,8 @@ namespace CnV
 			try
 			{
 				instance.buildQueue.CollectionChanged -= BuildQueue_CollectionChanged;
-				
+				//var firstVisible = instance.buildQueueListView.vis
+				var anyRemoved = false;
 				var city = City.GetBuild();
 				var displayQueue = city.buildQueue;
 				lastSynchronizedQueue = displayQueue;
@@ -152,6 +153,7 @@ namespace CnV
 				// sequence is done, remove extras if any
 				for(var i = bq.Count;--i>= lg;)
 				{
+					anyRemoved=true;
 					bq.RemoveAt(i);
 				}
 
@@ -159,6 +161,11 @@ namespace CnV
 				for(int i=0;i<lg;++i)
 				{
 					Assert(bq[i].op == displayQueue[i]);
+				}
+				// keep first in view
+				if(anyRemoved && bq.Any() )
+				{
+					instance.buildQueueListView.ScrollIntoView(bq.First());
 				}
 			}
 			catch ( Exception ex)
@@ -416,7 +423,7 @@ namespace CnV
 
 		
 
-		private void buildQueueListView_DragItemsCompleted(ListViewBase sender,DragItemsCompletedEventArgs args)
+		private async void buildQueueListView_DragItemsCompleted(ListViewBase sender,DragItemsCompletedEventArgs args)
 		{
 			try
 			{
@@ -430,8 +437,8 @@ namespace CnV
 					if((index != -1 && dragStartingIndex != -1) && (bq==bqAtDragStart))
 					{
 						
-
-						city.AttempMove(dragStartingIndex,index,bqAtDragStart);
+						// async action
+						await city.AttemptMove(dragStartingIndex,index,bqAtDragStart);
 
 					}
 
@@ -440,8 +447,7 @@ namespace CnV
 				{
 					var items = args.Items.Select( (a) =>  buildQueue.IndexOf( a as BuildItem));
 					
-
-						city.RemoveWithDependencies(new(items),bqAtDragStart);
+					city.RemoveWithDependencies(new(items),bqAtDragStart);
 
 					
 				}
@@ -516,22 +522,30 @@ namespace CnV
 			this.city = city;
 			op = item;
 			image = CityBuild.GetBuildingImage(item.isMove ? Building.bidMove : item.bid,size);
-			opText = op.isMove ? "Move" : op.isDemo ? "Destroy" : op.isBuild ? $"Build{(op.pa==false ? " p" : "") }" : op.isDowngrade ? $"Down to {op.elvl}" : $"Up to {op.elvl}";
+			var u = op.unpack;
+			opText = u.isMove ? "Move" : u.isDemo ? "Destroy" : u.isBuild ? $"Build{(u.pa==false ? " p" : "") }" : u.isDowngrade ? $"Down to {u.elvl}" : $"Up to {u.elvl}";
 			UpdateText();
 		}
 		public void UpdateText()
 		{
-			var q = city.buildQueue;
-			TimeSpanS dt;
-			if(q.Any() && q[0]== op && city.buildItemEndsAt.isNotZero )
-				dt = city.buildItemEndsAt - CnVServer.simTime;
-			else
-				dt = new(op.TimeRequired(city));
-			var text = dt.ToString();
-			if(text != timeText)
+			try
 			{
-				timeText = text;// + BuildingDef.FromId(item.bid).Bn;
-				OnPropertyChanged(nameof(this.timeText));
+				var q = city.buildQueue;
+				TimeSpanS dt;
+				if(q.Any() && q[0]== op && city.buildItemEndsAt.isNotZero)
+					dt = city.buildItemEndsAt - CnVServer.simTime;
+				else
+					dt = new(op.TimeRequired(city));
+				var text = dt.ToString();
+				if(text != timeText)
+				{
+					timeText = text;// + BuildingDef.FromId(item.bid).Bn;
+					OnPropertyChanged(nameof(this.timeText));
+				}
+			}
+			catch(Exception ex)
+			{
+				LogEx(ex);
 			}
 
 		}
@@ -560,14 +574,15 @@ namespace CnV
 			{
 				var index = instance.buildQueue.IndexOf(this);
 				if(index != -1)
-					city.AttempMove(index,0,lastSynchronizedQueue);
+					city.AttemptMove(index,0,lastSynchronizedQueue);
 			}); 
 			flyout.AddItem("Move To End",Symbol.Back,() =>
 			{
 				var index = instance.buildQueue.IndexOf(this);
 				if(index != -1)
-					city.AttempMove(index,city.buildQueue.Length-1,lastSynchronizedQueue);
+					city.AttemptMove(index,city.buildQueue.Length-1,lastSynchronizedQueue);
 			});
+			// Todo: Sort
 
 			if(args.TryGetPosition(sender,out var c))
 			{

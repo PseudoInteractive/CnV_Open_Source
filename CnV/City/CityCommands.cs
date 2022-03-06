@@ -69,6 +69,8 @@ public static partial class CityUI
 
 public partial class City
 {
+	
+
 	public void ReturnAt(object sender, RoutedEventArgs e)
 	{
 		ShowReturnAt(true);

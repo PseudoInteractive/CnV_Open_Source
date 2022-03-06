@@ -147,7 +147,8 @@ namespace CnV
 			if(build == null)
 				return;
 
-			var constructionSpot = currentBuildOp.isNop ? BuildC.Nan : currentBuildOp.bspot;
+			var buildOp = currentBuildOp.unpack;
+			
 			//if(build.buildQueue.Any())
 			//{
 			//	var op = build.buildQueue.FirstOrDefault(); 
@@ -335,7 +336,7 @@ namespace CnV
 									
 									var cs = CityPointToQuad(bspot,1.2f);
 									float z1 = zCityOverlay*bumpOffset;
-									if(bspot != constructionSpot)
+									if(bspot != buildOp.c)
 									{
 										bl = cur.bl;
 										var blendMat = decalBuildingInvalid;
@@ -371,17 +372,16 @@ namespace CnV
 								
 
 							}
-							if(bspot == constructionSpot)
+							if(bspot == buildOp.c)
 								{
 									var simTApprox = IServerTime.NowToServerSeconds();
 									var buildEnd = city.buildItemEndsAt.EarliestSeconds;
 									var required = currentBuildOp.TimeRequired(city);
 									var gain = ((buildEnd - simTApprox)/required).SaturateToFloat();
-									
-									if(currentBuildOp.isBuild|currentBuildOp.isDemo)
+
+									if(buildOp.isBuild|buildOp.isDemo)
 									{
-										var isBuild = currentBuildOp.isBuild;
-										if(isBuild)
+										if(buildOp.isBuild)
 										{
 											alpha = gain.Lerp(1,alpha);
 										}
@@ -394,18 +394,22 @@ namespace CnV
 										{
 											var fade = 1-gain;
 
-											draw.AddQuad(Layer.tileCityBaseFade,city.isOnWater ?isBuild? cityWallsWater : cityNoWallsWater : isBuild ? cityWallsLand : cityNoWallsLand,cityWall0,cityWall1,new Color(byte.MaxValue,byte.MaxValue,byte.MaxValue,fade.UNormToByte()),depth: 0.0f/1024f);
+											draw.AddQuad(Layer.tileCityBaseFade,
+												city.isOnWater ?buildOp.isBuild? cityWallsWater : cityNoWallsWater 
+												: buildOp.isBuild ? cityWallsLand : cityNoWallsLand,
+												cityWall0,cityWall1,new Color(byte.MaxValue,byte.MaxValue,byte.MaxValue,fade.UNormToByte()),depth: 0.0f/1024f);
 				
 										}
 
 									//	alpha *= (gain);
 									}
+									if(!buildOp.isMove)
 									{
 										var dT = ((animationT -currentBuildStartTime)).SaturateToFloat();
 										var fade = (dT).UNormToByte();
 
 										float v0, v1;
-										if(currentBuildOp.isDemo || currentBuildOp.isDowngrade)
+										if(buildOp.isDemo || buildOp.isDowngrade)
 										{
 											v0 = (1-gain); v1 = 1;
 										}
@@ -518,9 +522,9 @@ namespace CnV
 							break;
 					}
 				}
-				if(currentBuildOp.isNotNop)
+				if(buildOp.isNotNop)
 				{
-					var spot = currentBuildOp.bspot;
+					var spot = buildOp.c;
 					var dT = (animationT -currentBuildStartTime).SaturateToFloat();
 					var fade = ((dT*255).RoundToInt());
 
@@ -664,7 +668,7 @@ namespace CnV
 		{
 			Assert(isDrawing);
 			var cs = CityPointToQuad(cc, 1.0f,cityYAspectRatio);
-			DrawRectOutlineShadow(Layer.effects,cs.c0,cs.c1,new Color(48, 0, 128, 220));
+			DrawRectOutlineShadow(Layer.effects,cs.c0,cs.c1,new Color(48, 0, 128, 255));
 		}
 		
 

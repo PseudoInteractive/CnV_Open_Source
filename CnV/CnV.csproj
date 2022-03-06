@@ -18,23 +18,23 @@
     <GenerateAppInstallerFile>False</GenerateAppInstallerFile>
 	<TieredCompilation>True</TieredCompilation>
 	<AppxPackageSigningTimestampDigestAlgorithm>SHA256</AppxPackageSigningTimestampDigestAlgorithm>
-	<PublishProfile>Properties\PublishProfiles\win10-$(Platform).pubxml</PublishProfile>	  
+	<EnablePreviewMsixTooling>true</EnablePreviewMsixTooling>
+	<PublishProfile>Properties\PublishProfiles\win10-$(Platform).pubxml</PublishProfile>
 	<AppxBundle>Always</AppxBundle>
 	<PublishSingleFile>False</PublishSingleFile>
     <PublishReadyToRun>False</PublishReadyToRun>
     <AppxBundlePlatforms>x64</AppxBundlePlatforms>
     <HoursBetweenUpdateChecks>0</HoursBetweenUpdateChecks>
     <AppxSymbolPackageEnabled>True</AppxSymbolPackageEnabled>
+	  
     <Configurations>Debug;Release</Configurations>
   </PropertyGroup>
   <ItemGroup>
-    <Content Remove="Assets\**" />
     <Content Remove="Content\**" />
     <Content Remove="gamebin\**" />
     <Content Remove="gameobj\**" />
     <Content Remove="JS\**" />
     <EmbeddedResource Remove="AppPackages\**" />
-    <EmbeddedResource Remove="Assets\**" />
     <EmbeddedResource Remove="BundleArtifacts\**" />
     <EmbeddedResource Remove="CnVDiscord\**" />
     <EmbeddedResource Remove="Content\**" />
@@ -42,14 +42,12 @@
     <EmbeddedResource Remove="gameobj\**" />
     <EmbeddedResource Remove="JS\**" />
     <None Remove="AppPackages\**" />
-    <None Remove="Assets\**" />
     <None Remove="BundleArtifacts\**" />
     <None Remove="CnVDiscord\**" />
     <None Remove="Content\**" />
     <None Remove="gamebin\**" />
     <None Remove="gameobj\**" />
     <None Remove="JS\**" />
-    <PRIResource Remove="Assets\**" />
     <PRIResource Remove="Content\**" />
     <PRIResource Remove="gamebin\**" />
     <PRIResource Remove="gameobj\**" />
@@ -72,7 +70,9 @@
     <PackageReference Include="Grpc.Net.Client" Version="2.42.0-pre1" />
     <PackageReference Include="Humanizer.Core" Version="2.13.14" />
     <PackageReference Include="MessagePack" Version="2.3.85" />
+    <PackageReference Include="MessagePack.Annotations" Version="2.4.14-alpha" />
     <PackageReference Include="MessagePack.Experimental" Version="2.3.85" />
+    <PackageReference Include="MessagePack.ImmutableCollection" Version="2.4.14-alpha" />
     <PackageReference Include="MessagePackAnalyzer" Version="2.3.85" />
     <PackageReference Include="MagicOnion.Client" Version="4.3.1" />
     <PackageReference Include="Microsoft.Extensions.ObjectPool" Version="6.0.1" />
@@ -561,6 +561,11 @@
     <None Remove="Wiki\fixes.md" />
     <None Remove="Win32Native.txt" />
     <None Remove="Xaml\CnVWindow.xaml" />
+  </ItemGroup>
+  <ItemGroup>
+    <AppxManifest Include="Package.appxmanifest">
+      <SubType>Designer</SubType>
+    </AppxManifest>
   </ItemGroup>
   <ItemGroup>
  

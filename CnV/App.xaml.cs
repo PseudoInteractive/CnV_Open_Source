@@ -773,7 +773,11 @@ namespace CnV
 				if(AppS.state <  AppS.State.closing)
 				{
 					AppS.SetState(  AppS.State.closing );
+
 					args.Cancel = true;
+					// Cancel sim thread
+					CnVServer.simCancelTokenSource.Cancel();
+					
 					var t0 = BackgroundTask.dispatcherQueueController.ShutdownQueueAsync();
 
 					await SwitchToBackground();
@@ -781,6 +785,10 @@ namespace CnV
 					Assert( AppS.state == AppS.State.closing);
 					AppS.SetState( AppS.State.closed );
 					await t0;
+					// Wait for sim thread to save
+					if(CnVServer.simThreadAction is not null)
+						await CnVServer.simThreadAction;
+
 					Log($"Destroyed");
 					Exit();
 					//appWindow.Destroy();

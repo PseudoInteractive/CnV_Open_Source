@@ -14,10 +14,9 @@
 
   <Identity
     Name="33626dsw.15864FAB9E7D2"
-    Publisher="CN=BE72B2C5-14F0-4AD5-84D4-EAA91D8D0812"
-    Version="1.0.381.0" />
+    Publisher="CN=Pseudo Interactive"
+    Version="1.0.388.0" />
 
-  <mp:PhoneIdentity PhoneProductId="a38820ed-0899-4fce-a2fb-0cd2af3bc26c" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 
   <Properties>
     <DisplayName>Conquest and Virtue</DisplayName>
@@ -39,12 +38,11 @@
       Executable="$targetnametoken$.exe"
       EntryPoint="$targetentrypoint$">
       <uap:VisualElements
-        DisplayName="COTGA"
+        DisplayName="Conquest and Virtue"
         Square150x150Logo="Assets\Square150x150Logo.png"
         Square44x44Logo="Assets\Square44x44Logo.png"
-        Description="Crown of the Gods Client (CnV Edition)"
-        BackgroundColor="black">
-        <uap:DefaultTile Wide310x150Logo="Assets\Wide310x150Logo.png" Square71x71Logo="Assets\SmallTile.png" Square310x310Logo="Assets\LargeTile.png" ShortName="COTGA">
+        Description="Conquest and Virtue Alpha" BackgroundColor="black">
+        <uap:DefaultTile Wide310x150Logo="Assets\Wide310x150Logo.png" Square71x71Logo="Assets\SmallTile.png" Square310x310Logo="Assets\LargeTile.png" ShortName="CnV">
           <uap:ShowNameOnTiles>
             <uap:ShowOn Tile="square150x150Logo"/>
             <uap:ShowOn Tile="wide310x150Logo"/>
@@ -59,20 +57,18 @@
 
       <Extensions>
         <uap:Extension Category="windows.protocol">
-          <uap:Protocol Name="cotg" DesiredView="useMore">
-            <uap:Logo>cnvCover2.png</uap:Logo>
-            <uap:DisplayName>Crown of the Gods A</uap:DisplayName>
+          <uap:Protocol Name="cnv" DesiredView="useMore">
+            <uap:Logo>cnvCoverSquare.png</uap:Logo>
+            <uap:DisplayName>Conquest and Virtue</uap:DisplayName>
           </uap:Protocol>
         </uap:Extension>
       </Extensions>
-      <uap:ApplicationContentUriRules>
-        <uap:Rule Type="include" Match="https://*.crownofthegods.com" WindowsRuntimeAccess="all"/>
-      </uap:ApplicationContentUriRules>
     </Application>
   </Applications>
 
   <Capabilities>
-    <Capability Name="internetClient" />
+    <rescap:Capability Name="runFullTrust" />
+    <Capability Name="internetClientServer"/>
   </Capabilities>
 
  

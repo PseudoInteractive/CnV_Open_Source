@@ -97,12 +97,21 @@
 									<TextBlock Text="{x:Bind timeText,Mode=OneWay}" HorizontalAlignment="Right" Margin="0,0,4,0"	/>
 							</Grid>
 						</DataTemplate>
+						
+						
 					</ListView.ItemTemplate>
+					<ListView.ItemContainerTransitions>
+						<TransitionCollection>
+					 <!--  Remove all -->
+						</TransitionCollection>
+					</ListView.ItemContainerTransitions>
+
 					<!-- The ItemsStackPanel must be edited to update the following two properties -->
 					<!-- These properties allow the list to grow from the bottom -->
 					<ListView.ItemsPanel>
 						<ItemsPanelTemplate>
-							<ItemsStackPanel ItemsUpdatingScrollMode="KeepScrollOffset" 
+							<ItemsStackPanel 
+								ItemsUpdatingScrollMode="KeepItemsInView" 
 								
                             VerticalAlignment="Center"/>
 						</ItemsPanelTemplate>

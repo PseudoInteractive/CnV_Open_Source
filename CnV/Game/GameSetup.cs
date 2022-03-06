@@ -39,7 +39,7 @@ namespace CnV
 		{
 				
 				// Todo:  Persist this
-				CnVServer.serverStartTime =( DateTimeOffset.UtcNow);
+			
 				//var timeOffset = jso.GetAsInt64("timeoffset");
 				//var timeOffsetSecondsRounded = Math.Round(timeOffset / (1000.0 * 60*30)) * 60 * 30.0f; // round to nearest half hour
 			//	CnVServer.gameTOffset = TimeSpan.FromHours(World.timeZoneOffsetHours);
@@ -58,7 +58,9 @@ namespace CnV
 
 				AppS.SetState( AppS.State.active );
 
-				CnVServer.StartSim();
+				
+
+				await CnVServer.StartSim();
 
 				//	var str = timeOffsetSecondsRounded >= 0 ? " +" : " ";
 				//	str += $"{gameTOffset.Hours:D2}:{gameTOffset.Minutes:D2}";
@@ -91,13 +93,18 @@ namespace CnV
 				// todo: utf
 				//		AddPlayer(true, true, Player.myId, Player.myName, token, raidSecret, cookies);//, s, ppdt.ToString());
 
-				Startup.NewPlayerStartup(Player.me);
+
+				while(!City.myCities.Any())
+				{
+					await Task.Delay(500);
+				}
 				//UpdatePPDT();
 				var cid = City.myCities.First().cid;
 
 		//		Assert( CnVServer.worldId != 0);
 				
 				await CitySwitch(cid);
+				View.SetViewTargetInstant(cid.CidToWorldV());
 				ShellPage.SetViewModeRegion();
 				Assert(Spot.build ==cid && Spot.focus == cid);
 			//	Spot.build = Spot.focus = cid;
