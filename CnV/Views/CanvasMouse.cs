@@ -27,11 +27,12 @@ using System.Numerics;
 partial class ShellPage
 {
 	static GestureRecognizer gestureRecognizer;
-
+	
 	public static void SetupNonCoreInput()
 	{
 		canvas.ManipulationMode = ManipulationModes.None;
 		//Canvas_PointerWheelChanged(mouseState, priorMouseState);
+		canvas.ManipulationMode= ManipulationModes.None;
 		SetupCoreInput();
 
 		//		canvas.PointerMoved+=KeyboardProxy_PointerMoved;
@@ -59,7 +60,14 @@ partial class ShellPage
 				{
 					// Set up the pointer input source to receive pen input for the swap chain panel.
 					coreInputSource = canvas.CreateCoreIndependentInputSource(InputPointerSourceDeviceKinds.Mouse | InputPointerSourceDeviceKinds.Pen|InputPointerSourceDeviceKinds.Touch);
-					recognizer = new() { GestureSettings= GestureSettings.Tap|GestureSettings.RightTap|GestureSettings.ManipulationTranslateX|GestureSettings.ManipulationTranslateY|GestureSettings.ManipulationScale };
+					recognizer = new()
+					{
+						GestureSettings= GestureSettings.Tap|GestureSettings.RightTap|
+					GestureSettings.ManipulationTranslateX|GestureSettings.ManipulationTranslateY|GestureSettings.ManipulationScale
+					|GestureSettings.ManipulationTranslateInertia
+//					|GestureSettings.ManipulationMultipleFingerPanning
+					};
+
 					recognizer.AutoProcessInertia = true;
 					recognizer.ManipulationCompleted+=Recognizer_ManipulationCompleted;
 					recognizer.ManipulationInertiaStarting+=Recognizer_ManipulationInertiaStarting;
@@ -148,7 +156,10 @@ partial class ShellPage
 		if(scale != 1.0f)
 			Note.Show($"Scale: {scale}");
 		var exp = args.Delta.Expansion;
-		if(exp != 0.0f) // && args.PointerDeviceType != PointerDeviceType.Mouse)
+		if(exp != 0.0f
+			//&&
+			//args.PointerDeviceType != PointerDeviceType.Mouse
+			)
 		{
 			HandleWheel(args.Position,exp);
 		}
@@ -217,7 +228,7 @@ partial class ShellPage
 
 		}
 		//	Canvas_PointerPressed((point.Position, point.PointerId, point.IsInContact, point.Timestamp, point.Properties.PointerUpdateKind));
-
+		args.Handled=true;
 
 	}
 
@@ -225,9 +236,11 @@ partial class ShellPage
 	{
 		recognizer.ProcessMoveEvents(e.GetIntermediatePoints());
 		var point = e.CurrentPoint;
+		if(point.Properties.ContactRect._width> 1)
+			Note.Show(point.Properties.ContactRect.ToString());
 		e.KeyModifiers.UpdateKeyModifiers();
 		Canvas_PointerMoved((point.Position, point.PointerId, point.IsInContact, point.Timestamp, point.Properties.PointerUpdateKind));
-		e.Handled=true;
+		//e.Handled=true;
 	}
 	private static void CoreInputSource_PointerWheelChanged(InputPointerSource sender,PointerEventArgs e)
 	{
