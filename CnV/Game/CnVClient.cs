@@ -254,8 +254,8 @@ namespace CnV
 
 				}
 
-				if(jse.TryGetProperty("r", out var r))
-					Player.me.title = r.GetAsByte();
+				//if(jse.TryGetProperty("r", out var r))
+				//	Player.me.title = r.GetAsByte();
 
 				if(jse.TryGetProperty("clc", out var cityListCities))
 				{

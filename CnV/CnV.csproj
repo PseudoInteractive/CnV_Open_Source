@@ -71,6 +71,7 @@
     <PackageReference Include="MessagePack.ImmutableCollection" Version="2.4.14-alpha" />
     <PackageReference Include="MagicOnion.Client" Version="4.3.1" />
     <PackageReference Include="Microsoft.Extensions.ObjectPool" Version="6.0.1" />
+    <PackageReference Include="Microsoft.Extensions.Primitives" Version="7.0.0-preview.1.22076.8" />
     <PackageReference Include="Microsoft.Identity.Client" Version="4.42.0" />
     <PackageReference Include="Microsoft.Identity.Client.Extensions.Msal" Version="2.19.6" />
     <PackageReference Include="Microsoft.Toolkit" Version="7.1.2" />
@@ -80,10 +81,10 @@
     <PackageReference Include="Azure.Storage.Blobs" Version="12.11.0-beta.3" />
     <PackageReference Include="CommunityToolkit.WinUI.Notifications" Version="7.1.2" />
     <PackageReference Include="CommunityToolkit.WinUI.UI.Controls" Version="7.1.2" />
-    <PackageReference Include="DSharpPlus" Version="4.2.0-nightly-01083" />
-    <PackageReference Include="DSharpPlus.CommandsNext" Version="4.2.0-nightly-01083" />
-    <PackageReference Include="DSharpPlus.Interactivity" Version="4.2.0-nightly-01083" />
-    <PackageReference Include="DSharpPlus.SlashCommands" Version="4.2.0-nightly-01083" />
+    <PackageReference Include="DSharpPlus" Version="4.2.0-nightly-01084" />
+    <PackageReference Include="DSharpPlus.CommandsNext" Version="4.2.0-nightly-01084" />
+    <PackageReference Include="DSharpPlus.Interactivity" Version="4.2.0-nightly-01084" />
+    <PackageReference Include="DSharpPlus.SlashCommands" Version="4.2.0-nightly-01084" />
     <PackageReference Include="Enums.NET" Version="4.0.0" />
     <PackageReference Include="Grpc.Net.Client" Version="2.41.0-pre1" />
     <PackageReference Include="Grpc.Net.Client" Version="2.43.0" />

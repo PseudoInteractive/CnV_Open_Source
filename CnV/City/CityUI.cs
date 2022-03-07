@@ -649,28 +649,7 @@ public partial class City
 
 public partial class City
 {
-	public async Task<bool> DoClick()
-	{
-		var cid = this.cid;
-		if(City.CanVisit(cid))
-		{
-			var wasBuild = City.IsBuild(cid);
-
-			if(!await CnVClient.CitySwitch(cid, false, true, false))
-				return false;
-
-			if(wasBuild)
-			{
-				View.SetViewMode(View.viewMode.GetNext());
-			}
-		}
-		else
-		{
-			CityUI.ShowCity(cid, false, true, false);
-		}
-
-		return true;
-	}
+	
 
 	public void CityRowClick(GridCellTappedEventArgs e)
 	{
