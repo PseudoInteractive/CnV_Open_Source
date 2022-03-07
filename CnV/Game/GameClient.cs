@@ -296,6 +296,9 @@ namespace CnV
 
 				case DXGI_FORMAT.BC7_UNORM: return wantSRGB ?   SurfaceFormat.BC7SRgb  : SurfaceFormat.BC7;
 				case DXGI_FORMAT.BC7_UNORM_SRGB: return SurfaceFormat.BC7SRgb;
+				case DXGI_FORMAT.A8_UNORM: return SurfaceFormat.Alpha8;
+				case DXGI_FORMAT.B8G8R8A8_UNORM: return SurfaceFormat.Bgra32;
+				case DXGI_FORMAT.R8G8B8A8_UNORM: return SurfaceFormat.Color;
 
 				default: throw new InvalidDataException($"Unsupported DDS format {format}");
 			}

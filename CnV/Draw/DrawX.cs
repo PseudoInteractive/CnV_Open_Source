@@ -77,11 +77,12 @@ static partial class View
 				lightAmbientParameter = avaEffect.Parameters["lightAmbient"];
 			//	cameraReferencePositionParameter = avaEffect.Parameters["cameraReferencePosition"];
 				viewCWParam = avaEffect.Parameters["viewCW"];
-				//pixelScaleParameter = avaEffect.Parameters["pixelScale"];
+			//pixelScaleParameter = avaEffect.Parameters["pixelScale"];
 
-				fontMaterial = new Material(null, fontEffect);
-				fontTexture = Content.Load<Texture2D>("Fonts/tra_0"); // font is always set to register 7
-				darkFontMaterial = new Material(fontMaterial.texture, darkFontEffect);
+				fontTexture = CreateFromDDS(AppS.AppFileName("runtime\\font.dds"),false);
+
+				fontMaterial = new Material(fontTexture,fontEffect);
+				darkFontMaterial = new Material(fontTexture, darkFontEffect);
 
 
 				fontMaterial.effect = fontEffect;

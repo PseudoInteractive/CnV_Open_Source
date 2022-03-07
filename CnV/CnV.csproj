@@ -18,10 +18,8 @@
 	<TieredCompilation>True</TieredCompilation>
 	<AppxPackageSigningTimestampDigestAlgorithm>SHA256</AppxPackageSigningTimestampDigestAlgorithm>
 	<EnablePreviewMsixTooling>true</EnablePreviewMsixTooling>
-	<PublishProfile>Properties\PublishProfiles\win10-$(Platform).pubxml</PublishProfile>
 	<AppxBundle>Always</AppxBundle>
-	<PublishSingleFile>False</PublishSingleFile>
-    <PublishReadyToRun>False</PublishReadyToRun>
+	<TieredCompilation>True</TieredCompilation>
     <AppxBundlePlatforms>x64</AppxBundlePlatforms>
     <HoursBetweenUpdateChecks>0</HoursBetweenUpdateChecks>
     <AppxSymbolPackageEnabled>True</AppxSymbolPackageEnabled>
@@ -620,6 +618,7 @@
     <DefineConstants>$(DefineConstants);CNV;CNVCLIENT;DISABLE_XAML_GENERATED_MAIN</DefineConstants>
     <Deterministic>True</Deterministic>
     <FileAlignment>4096</FileAlignment>
+    <LayoutDir />
   </PropertyGroup>
   <ProjectExtensions />
   <ItemGroup>

@@ -670,7 +670,7 @@ namespace CnV.Draw
 		public unsafe void DrawString(BitmapFont.BitmapFont me, string text, Vector2 position, float scale, Color color, int layer, float z, DepthFunction depthFunction, float maxWidth = -1f)
 		{
 			var   isDark      = color.IsDark();
-			var   material    = isDark ? GameClient.darkFontMaterial: GameClient.fontMaterial;
+			var   material    =  GameClient.fontMaterial;
 			var   texture     = GameClient.fontTexture;
 			float texelWidth  = texture.TexelWidth;
 			float texelHeight = texture.TexelHeight;

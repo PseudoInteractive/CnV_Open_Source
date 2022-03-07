@@ -511,7 +511,7 @@ namespace CnV.Views
 						Assert(okay3);
 						AppS.QueueOnUIThread(() =>
 						{
-							AppS.appWindow.Title = ( $"Conquest and Virtue Alpha, World {World.id} - {Player.me.shortName}" );
+							AppS.appWindow.Title = ( $"Conquest and Virtue Alpha, World {World.id} - {Player.me.title.n} {Player.me.shortName}" );
 //							AppS.appWindow.SetIcon(new IconId(0));
 						//	AppS.MessageBox($"Welcome {Player.me.shortName}.");
 						});

@@ -88,8 +88,10 @@
 						StepFrequency="0.015625"
 							/>
 
-				<Slider Style="{StaticResource VerticalSlider}"  Header="Region Text" Value="{x:Bind cnv:Settings.fontScale, Mode=TwoWay}" 	ToolTipService.ToolTip="The size of labels in region and city view" />
-				<Slider Style="{StaticResource VerticalSlider}"  Header="Cull Text" Value="{x:Bind cnv:Settings.fontCullScale, Mode=TwoWay}" ToolTipService.ToolTip="Text smaller than this will not be drawn" />
+				<Slider Style="{StaticResource VerticalSlider}"  Header="Game Text" Value="{x:Bind cnv:Settings.fontScale, Mode=TwoWay}" 	ToolTipService.ToolTip="The size of all text in region and city view" />
+				<Slider Style="{StaticResource VerticalSlider}"  Header="Label Text" Value="{x:Bind cnv:Settings.regionLabelScale, Mode=TwoWay}" 	ToolTipService.ToolTip="The size of labels in region view" />
+				<Slider Style="{StaticResource VerticalSlider}"  Header="Building Text" Value="{x:Bind cnv:Settings.buildingLabelScale, Mode=TwoWay}" 	ToolTipService.ToolTip="The size of labels in City view" />
+				<Slider Style="{StaticResource VerticalSlider}"  Header="Cull Min" Value="{x:Bind cnv:Settings.fontCullScale, Mode=TwoWay}" ToolTipService.ToolTip="Text smaller than this will not be drawn" />
 				<!--<Slider Height="128" Header="Detail" Value="{x:Bind cnv:Settings.renderScale, Mode=TwoWay}" Maximum="1.0" TickFrequency="0.125"  StepFrequency="0.125" SmallChange="0.125" Margin="8" TickPlacement="Outside" Orientation="Vertical" ToolTipService.ToolTip="Controls the resolution at which the view is renderered.  Lower settings may be faster but might also be more blurry.  Lower settings are only needed if you display has a high resolution and your GPU is weak." />-->
 				<Slider Style="{StaticResource VerticalSlider}"  Header="Flag" Value="{x:Bind cnv:Settings.flagScale, Mode=TwoWay}" ToolTipService.ToolTip="Controls the size of flags above cities and spots." />
 				<Slider Style="{StaticResource VerticalSlider}"  Header="Icons" Value="{x:Bind cnv:Settings.iconScale, Mode=TwoWay}" ToolTipService.ToolTip="Controls the size of troop icons in world view." />
