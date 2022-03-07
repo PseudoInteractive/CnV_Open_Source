@@ -346,6 +346,12 @@ namespace CnV
 		[NonSerialized] 
 		public static double shortGridRowHeight = smallGridRowHeightBase;
 
+		public int PointerGestureMode
+		{
+			get => (int)Settings.pointerGestureMode;
+			set => Settings.pointerGestureMode = (PointerGestureMode)value;
+		}
+
 		public static void UpdateZoom(object sender = null, Microsoft.UI.Xaml.Controls.Primitives.RangeBaseValueChangedEventArgs e = null)
 		{
 			var _chatZoom = chatZoom.Squared() + 0.75f;

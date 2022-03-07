@@ -99,6 +99,15 @@
 
 			<wct:WrapPanel Orientation="Horizontal"
 						   Margin="4">
+				<RadioButtons Header="Wheel/Trackpad"
+                   SelectedIndex="{x:Bind PointerGestureMode, Mode=TwoWay}"
+							 ToolTipService.ToolTip="If set to Pan mouse wheel and 2 finger swipe will pan, otherwise they will zoom.  Pan works best for trackpads and 4 direction mice, zoom works best for normal mice" 
+							  >
+					<RadioButtons.Items>
+						<x:String>Pan</x:String>
+						<x:String>Zoom</x:String>
+					</RadioButtons.Items>
+				</RadioButtons>
 				<Slider Height="128" Header="Font Size" Value="{x:Bind cnv:Settings.tabZoom, Mode=TwoWay}" Maximum="1.0" TickFrequency="0.125"  StepFrequency="0.0625" SmallChange="0.0625" Margin="8" TickPlacement="Outside" Orientation="Vertical" ToolTipService.ToolTip="Must restart to see changes" ValueChanged="{x:Bind cnv:Settings.UpdateZoom}" />
 				<Slider Height="128" Header="Chat Font Size" Value="{x:Bind cnv:Settings.chatZoom, Mode=TwoWay}" Maximum="1.0" TickFrequency="0.125"  StepFrequency="0.0625" SmallChange="0.0625" Margin="8" TickPlacement="Outside" Orientation="Vertical" ToolTipService.ToolTip="Must restart to see changes" ValueChanged="{x:Bind cnv:Settings.UpdateZoom}" />
 			</wct:WrapPanel>

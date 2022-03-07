@@ -26,7 +26,7 @@ using System.Numerics;
 
 partial class ShellPage
 {
-	static GestureRecognizer gestureRecognizer;
+//	static GestureRecognizer gestureRecognizer;
 	
 	public static void SetupNonCoreInput()
 	{
@@ -53,6 +53,8 @@ partial class ShellPage
 	static GestureRecognizer recognizer;
 	public static void SetupCoreInput()
 	{
+	//	MouseWheelParameters
+//		recognizer.MouseWheelParameters
 		inputQueueController = DispatcherQueueController.CreateOnDedicatedThread();
 		inputQueueController.DispatcherQueue.TryEnqueue(DispatcherQueuePriority.High,
 			() =>
@@ -66,7 +68,8 @@ partial class ShellPage
 					{
 						GestureSettings= GestureSettings.Tap|GestureSettings.RightTap|
 					GestureSettings.ManipulationTranslateX|GestureSettings.ManipulationTranslateY|GestureSettings.ManipulationScale
-					|GestureSettings.ManipulationMultipleFingerPanning
+				//	|GestureSettings.ManipulationMultipleFingerPanning
+				|GestureSettings.Hold
 					};
 
 					recognizer.AutoProcessInertia = false;
@@ -76,6 +79,7 @@ partial class ShellPage
 					recognizer.ManipulationUpdated+=Recognizer_ManipulationUpdated;
 					recognizer.Tapped+=Recognizer_Tapped;
 					recognizer.RightTapped+=Recognizer_RightTapped;
+					recognizer.Holding+=Recognizer_Holding;
 					//	Log(canvas.ManipulationMode);
 					//	canvas.ManipulationMode = ManipulationModes.All;
 					coreInputSource.PointerMoved+=CoreInputSource_PointerMoved;
@@ -97,6 +101,10 @@ partial class ShellPage
 			});
 	}
 
+	private static void Recognizer_Holding(GestureRecognizer sender,HoldingEventArgs args) {
+	
+	}
+	
 	private static void Recognizer_RightTapped(GestureRecognizer sender,RightTappedEventArgs args)
 	{
 		//args.KeyModifiers.UpdateKeyModifiers();
@@ -258,14 +266,17 @@ partial class ShellPage
 			Note.Show(point.Properties.ContactRect.ToString());
 		e.KeyModifiers.UpdateKeyModifiers();
 		Canvas_PointerMoved((point.Position, point.PointerId, point.IsInContact, point.Timestamp, point.Properties.PointerUpdateKind));
-		//e.Handled=true;
+		e.Handled=true;
 	}
 	private static void CoreInputSource_PointerWheelChanged(InputPointerSource sender,PointerEventArgs e)
 	{
 		View.EndCoasting();
 		var pt = e.CurrentPoint;
 		var point = pt.Position;
-		if( pt.PointerDeviceType == PointerDeviceType.Mouse )
+		if(pt.PointerDeviceType == PointerDeviceType.Touchpad)
+			Note.Show("Touchpad");
+
+		if(  pt.PointerDeviceType == PointerDeviceType.Mouse && (Settings.pointerGestureMode == PointerGestureMode.wheelIsZoom) )
 		{
 			var scroll = pt.Properties.MouseWheelDelta;
 			HandleWheel(point,scroll*0.5f);

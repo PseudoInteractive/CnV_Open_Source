@@ -200,8 +200,8 @@ namespace CnV.Views
 	  })
 		{
 			runOnUiThread=true,
-			debounceDelay=100,
-			throttleDelay=500,
+			debounceDelay=50,
+			throttleDelay=200,
 			throttled=true
 		};
 
