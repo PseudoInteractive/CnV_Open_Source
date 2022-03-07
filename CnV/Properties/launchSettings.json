@@ -1,29 +1,8 @@
 {
   "profiles": {
-    "MyApp": {
+    "Profile 2": {
       "commandName": "MsixPackage",
-      "jsWebView2Debugging": true,
-      "alwaysReinstallApp": false,
-      "remoteDebugEnabled": false,
-      "allowLocalNetworkLoopbackProperty": true,
-      "authenticationMode": "Windows",
-      "doNotLaunchApp": false,
-      "remoteDebugMachine": "",
-      "nativeDebugging": true
-    },
-    "NativeTest": {
-      "commandName": "MsixPackage",
-      "jsWebView2Debugging": true,
-      "alwaysReinstallApp": false,
-      "remoteDebugEnabled": false,
-      "allowLocalNetworkLoopbackProperty": true,
-      "authenticationMode": "Windows",
-      "doNotLaunchApp": false,
-      "nativeDebugging": true
-    },
-    "Profile 1": {
-      "commandName": "Project",
-      "hotReloadEnabled": false,
+      "hotReloadEnabled": true,
       "nativeDebugging": true
     }
   }

@@ -175,12 +175,15 @@ namespace CnV
 
 				AppS.DispatchOnUIThread( ShellPage.SetupNonCoreInput );
 
-				--View.hideSceneCounter;
-
+				
 			}
 		catch(Exception ex)
 		{
 			LogEx(ex);
+		}
+		finally
+		{
+			Interlocked.Decrement(ref View.hideSceneCounter);
 		}
 		}
 	

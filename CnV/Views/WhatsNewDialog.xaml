@@ -10,9 +10,7 @@
 	Opened="ContentDialog_Opened"
     PrimaryButtonText="Done"
 	
-	Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
-   BorderBrush="{ThemeResource SystemControlBackgroundAccentRevealBorderBrush}"
-    mc:Ignorable="d">
+	 mc:Ignorable="d">
 
 	<Border Style="{StaticResource BorderReveal}" Margin="16" Padding="8" >
 		<ScrollViewer x:Name="scrollView" x:FieldModifier="public" >

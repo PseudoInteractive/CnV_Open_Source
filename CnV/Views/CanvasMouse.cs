@@ -31,8 +31,9 @@ partial class ShellPage
 	public static void SetupNonCoreInput()
 	{
 		canvas.ManipulationMode = ManipulationModes.None;
+		
 		//Canvas_PointerWheelChanged(mouseState, priorMouseState);
-		canvas.ManipulationMode= ManipulationModes.None;
+	//	canvas.ManipulationMode= ManipulationModes.None;
 		SetupCoreInput();
 
 		//		canvas.PointerMoved+=KeyboardProxy_PointerMoved;
@@ -40,8 +41,8 @@ partial class ShellPage
 		//		canvas.PointerReleased+=KeyboardProxy_PointerReleased;
 		//		canvas.PointerWheelChanged += KeyboardProxy_PointerWheelChanged;
 
-		canvas.PointerEntered+=KeyboardProxy_PointerEntered;
-		canvas.PointerExited +=KeyboardProxy_PointerExited;
+	//	canvas.PointerEntered+=KeyboardProxy_PointerEntered;
+	//	canvas.PointerExited +=KeyboardProxy_PointerExited;
 		canvas.KeyDown += KeyboardProxy_KeyDown;
 		//FocusManager.GotFocus +=FocusManager_GotFocus;
 		//FocusManager.LostFocus +=FocusManager_LostFocus;
@@ -65,11 +66,10 @@ partial class ShellPage
 					{
 						GestureSettings= GestureSettings.Tap|GestureSettings.RightTap|
 					GestureSettings.ManipulationTranslateX|GestureSettings.ManipulationTranslateY|GestureSettings.ManipulationScale
-					|GestureSettings.ManipulationTranslateInertia
 					|GestureSettings.ManipulationMultipleFingerPanning
 					};
 
-					recognizer.AutoProcessInertia = true;
+					recognizer.AutoProcessInertia = false;
 					recognizer.ManipulationCompleted+=Recognizer_ManipulationCompleted;
 					recognizer.ManipulationInertiaStarting+=Recognizer_ManipulationInertiaStarting;
 					recognizer.ManipulationStarted+=Recognizer_ManipulationStarted;
@@ -81,8 +81,8 @@ partial class ShellPage
 					coreInputSource.PointerMoved+=CoreInputSource_PointerMoved;
 					coreInputSource.PointerPressed+=CoreInputSource_PointerPressed; ;
 					coreInputSource.PointerReleased+=CoreInputSource_PointerReleased; ;
-					//					coreInputSource.PointerEntered+=CoreInputSource_PointerEntered; ;
-					//					coreInputSource.PointerExited+=CoreInputSource_PointerExited; ;
+					coreInputSource.PointerEntered+=CoreInputSource_PointerEntered; ;
+					coreInputSource.PointerExited+=CoreInputSource_PointerExited; ;
 					//coreInputSource.PointerCaptureLost += CoreInputSource_PointerCaptureLost;
 
 					coreInputSource.PointerWheelChanged+=CoreInputSource_PointerWheelChanged;
@@ -168,7 +168,19 @@ partial class ShellPage
 
 	private static void Recognizer_ManipulationStarted(GestureRecognizer sender,ManipulationStartedEventArgs args)  {}// Note.Show("Manipulation Started");
 	private static void Recognizer_ManipulationInertiaStarting(GestureRecognizer sender,ManipulationInertiaStartingEventArgs args)  {}// Note.Show("Inertia");
-	private static void Recognizer_ManipulationCompleted(GestureRecognizer sender,ManipulationCompletedEventArgs args) { }// => Note.Show("Manipulation Complete");
+	private static void Recognizer_ManipulationCompleted(GestureRecognizer sender,ManipulationCompletedEventArgs args) 
+	{
+		var dv = args.Velocities.Linear;
+		var dr = new Vector2(dv._x,dv._y);
+		var speed = dr.Length();
+		//Note.Show($"Speed: {speed}");
+		if(speed  >  0.5f  )
+		{
+			View.isCoasting =true;
+		//	var gain = -View.panV1*View.viewW.Z / speed;
+			View.viewVW= new(-1000*dr.ScreenToWorldOffset(),0.0f);
+		}
+	}
 
 	private static void CoreInputSource_PointerExited(InputPointerSource sender,PointerEventArgs args)
 	{
@@ -196,7 +208,8 @@ partial class ShellPage
 	//		public static PointerUpdateKind GetPointerUpdateKind()
 	private static void CoreInputSource_PointerPressed(InputPointerSource sender,PointerEventArgs args)
 	{
-
+		View.EndCoasting();
+		//View.isCoasting = false;
 		AppS.InputRecieved();
 		recognizer.ProcessDownEvent(args.CurrentPoint);
 
@@ -249,6 +262,7 @@ partial class ShellPage
 	}
 	private static void CoreInputSource_PointerWheelChanged(InputPointerSource sender,PointerEventArgs e)
 	{
+		View.EndCoasting();
 		var pt = e.CurrentPoint;
 		var point = pt.Position;
 		if( pt.PointerDeviceType == PointerDeviceType.Mouse )

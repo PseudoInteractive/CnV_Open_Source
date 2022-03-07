@@ -1567,12 +1567,14 @@ namespace CnV.Views
 
 		private void TimeBackClick(object sender, RoutedEventArgs e)
 		{
-			CnVServer.GoToTime(CnVServer.simTime + TimeSpanS.FromHours(1));
+			Sim.ResetSim();
 		}
+
+		
 
 		private void TimeForwardClick(object sender, RoutedEventArgs e)
 		{
-			CnVServer.GoToTime(CnVServer.simTime - TimeSpanS.FromHours(1));
+			CnVServer.GoToTime(CnVServer.simTime + TimeSpanS.FromMinutes( (IServerTime.timeScale*5.0f).Min(24.0f*60) ));
 		}
 
 		private void TimeTogglePlay(object sender, RoutedEventArgs e)

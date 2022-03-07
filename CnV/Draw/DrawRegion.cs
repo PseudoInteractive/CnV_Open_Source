@@ -410,7 +410,7 @@ internal partial class GameClient
 					///				var xc = lightWC.WorldToCamera().CameraToScreen();
 					var t = (float)CnVServer.simDateTime.TimeOfDay.TotalDays;
 
-					const float shrink = 0.125f*0.125f;
+					float shrink = 1.0f/(64*4)*viewW.Z;
 
 					if((Settings.lighting == Lighting.local))
 						t = (float)DateTimeOffset.Now.TimeOfDay.TotalDays; // day t= night
@@ -420,7 +420,7 @@ internal partial class GameClient
 						t = t*64;
 
 					t -= MathF.Floor(t);
-					t = t.Bezier(0f,0.3f,0.43f,0.57f,0.70f,1.0f);
+				//	t = t.Bezier(0f,0.3f,0.43f,0.57f,0.70f,1.0f);
 					var isDay = (t >= 0.25f) & (t <= 0.75f);
 					var t1 = (t-0.25f); // 0..1 is Morning to evening, -1..1 is evening until morning 
 					t1 -= t1.Floor();
@@ -438,22 +438,24 @@ internal partial class GameClient
 					Assert(Z> 0);
 					var lightZ = Z*shrink;
 					var lightC = new Vector3(cc.X,cc.Y,lightZ);
-					lightCCParam.SetValue(lightC);
+					lightCCParam.SetValue(lightC  );
 					lightCWParam.SetValue(lightC.CameraToWorld());
 					viewCWParam.SetValue(viewW);
 					//	ToolTips.debugTip = $"{XVector3.Normalize(lightCC).ToNumerics().Format()} {AUtil.Format(lightCC.ToNumerics())}";
-					var d3 = t.CatmullRomLoop(new Vector3(1.0f,0.5f,1.5f),
+					var d3 = t.CatmullRomLoop(new Vector3(0.875f,0.25f,1.25f),
 												new Vector3(0.5f,0.5f,1.5f),
 												new Vector3(1.0f,1.0f,1.0f),
-												new Vector3(1.0f,0.5f,0.125f)
+												new Vector3(1.25f,0.5f,0.125f)
 																		)*0.75f * Settings.lightD;
-					var a3 = t.CatmullRomLoop(new Vector3(0.750f,0.5f,1.0f),
-												new Vector3(0.5f,0.5f,1.0f),
+					var a3 = t.CatmullRomLoop(new Vector3(0.50f,0.0f,0.5f),
+												new Vector3(0.5f,0.5f,1.25f),
 												new Vector3(1.0f,1.0f,1.0f),
-												new Vector3(1.0f,0.5f,0.25f)
+												new Vector3(1.25f,0.5f,0.25f)
 																		)*0.375f* Settings.lightA;
 					// this will do for specular
-					var s3 = 0.5f.Lerp(d3.Normalized(),new Vector3(0.5f,0.5f,0.5f))* Settings.lightS;
+					
+					
+					var s3 = 0.375f.Lerp(d3.Normalized(),new Vector3(0.5f,0.5f,0.5f))*(t.CatmullRomLoop(1.125f,1.0f,0.875f,1.0f)* Settings.lightS);
 
 					//var hue = 0.6667f - t1;
 					//hue -= hue.Floor();
@@ -597,10 +599,10 @@ internal partial class GameClient
 					//}
 					//else
 					{
-						nameColor = new Color() { A = intAlpha,G = 120,B = 255,R = 200 };
+						nameColor = new Color() { A = intAlpha,G = 220,B = 220,R = 220 };
 						nameColorOutgoing = new Color() { A = intAlpha,G = 80,B = 142,R = 222 };
 						nameColorHover = new Color() { A = intAlpha,G = 255,B = 255,R = 255 };
-						myNameColor = new Color() { A = intAlpha,G = 120,B = 255,R = 255 };
+						myNameColor = new Color() { A = intAlpha,G = 120,B = 255,R = 20 };
 						nameColorIncoming = new Color() { A = intAlpha,G = 100,B = 190,R = 255 };
 						nameColorSieged = new Color() { A = intAlpha,G = 100,B = 160,R = 255 };
 						nameColorIncomingHover = new Color() { A = intAlpha,G = 100,B = 170,R = 255 };
@@ -611,8 +613,10 @@ internal partial class GameClient
 					//			shadowColor = new Color() { A = 128 };
 
 
-			if(hideSceneCounter == 0)
+			if(hideSceneCounter <= 0)
 			{
+				//Assert(City.build != 0);
+					if(false)
 					{
 						var td = TileData.instance;
 
@@ -759,7 +763,7 @@ internal partial class GameClient
 						Assert(false);
 						//draw.AddMesh(tesselatedWorld,Layer.tileShadow - 1,worldChanges);
 					}
-					if(worldOwners != null && !focusOnCity)
+					if(false && (worldOwners != null && !focusOnCity) )
 					{
 						var tOffset = new System.Numerics.Vector2(0.0f,0.0f);
 						var t2d = worldOwners.texture2d;
@@ -767,7 +771,7 @@ internal partial class GameClient
 						draw.AddQuad(Layer.tiles - 1,worldOwners,
 							new(0,0),new(World.span,World.span),new Color(128,128,128,128),ConstantDepth,zTerrain);
 					}
-					if(wantCity)
+					if(wantCity && City.build != 0)
 					{
 						Assert(cityAlpha > 0.0f);
 						// this could use refactoring
@@ -775,17 +779,17 @@ internal partial class GameClient
 					}
 					//else
 					{
-						if(!AppS.IsKeyPressedShift())
+						if(TilesReady() )
 						{
 							//	Assert(cityAlpha <= 0);
 							var cc0x = (cx0/100).Clamp(0,World.continentCountX-1);
 							var cc0y = (cy0/100).Clamp(0,World.continentCountY-1);
-							var cc1x = (cx1.DivideRoundUp(100)).Clamp(0,World.continentCountX-1);
-							var cc1y = (cy1.DivideRoundUp(100)).Clamp(0,World.continentCountY-1);
+							var cc1x = (cx1/100).Clamp(0,World.continentCountX-1);
+							var cc1y = (cy1/100).Clamp(0,World.continentCountY-1);
 
 							//	var c = WorldC.FromCid(viewW).continentClamped;
 							for(int i = cc0x;i<=cc1x;++i)
-								for(int j = cc0y;j<cc1y;++j)
+								for(int j = cc0y;j<=cc1y;++j)
 									draw.AddMesh(World.renderTileMeshes[i,j],Layer.tileBase,World.renderTileMaterial);
 						}
 					}
@@ -1426,13 +1430,13 @@ internal partial class GameClient
 												   : nameColor);
 
 											DrawTextBox(name,drawC,nameTextFormat,wantDarkText ? color.A.AlphaToBlack() : color,
-
-												false ? new Color() :
-													wantDarkText ? new Color(color.R,color.G,color.B,(byte)128) : 128.AlphaToBlack(),Layer.tileText,2,0,PlanetDepth,z,scale);
+														wantDarkText ? new Color(color.R,color.G,color.B,(byte)128) : 128.AlphaToBlack(),Layer.tileText,2,0,PlanetDepth,z,scale);
 											//										layout.Draw(drawC,
 											//									, Layer.tileText, z,PlanetDepth);
 
 										}
+									if(false)
+									{
 										if(spot != null && !focusOnCity && !(Settings.troopsVisible.HasValue && Settings.troopsVisible.Value == false))
 										{
 											if(!spot.troopsTotal.Any() && spot.isNotClassified && spot.canVisit && Settings.troopsVisible.GetValueOrDefault())
@@ -1478,6 +1482,7 @@ internal partial class GameClient
 											}
 											dontDraw:;
 										}
+									}
 									}
 								}
 							}

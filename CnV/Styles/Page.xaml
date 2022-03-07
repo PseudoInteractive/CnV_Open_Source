@@ -241,13 +241,13 @@
 		<Setter Property="Minimum" Value="0.0" />
 		<Setter Property="SmallChange" Value="0.0625" />
 		<Setter Property="StepFrequency" Value="0.0625" />
-		<Setter Property="Orientation" Value="Vertical" />
 		<Setter Property="Margin" Value="4" />
 	</Style>
 
 	<Style TargetType="Slider" x:Key="VerticalSlider" BasedOn="{StaticResource baseSlider}">
 		<Setter Property="Height" Value="128"/>
 		<Setter Property="Orientation" Value="Vertical"/>
+		<Setter Property="HorizontalAlignment" Value="Center" />
 	</Style>
 	<Style TargetType="Slider" x:Key="HorizontalSlider" BasedOn="{StaticResource baseSlider}">
 		<Setter Property="Width" Value="128"/>
@@ -255,7 +255,5 @@
 	</Style>
 	<!-- Default-->
 	<Style TargetType="Slider"  BasedOn="{StaticResource HorizontalSlider}">
-		<Setter Property="Width" Value="128"/>
-		<Setter Property="Orientation" Value="Horizontal"/>
 	</Style>
 </ResourceDictionary>

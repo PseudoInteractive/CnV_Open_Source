@@ -392,7 +392,7 @@
 				</Expander.Header>
 				<StackPanel Orientation="Vertical"  Padding="4" CornerRadius="{StaticResource baseCR}" Margin="0" Background="{StaticResource ExpanderBrushContent}" HorizontalAlignment="Center">
 					<NumberBox  x:Name="timeScaleNumberBox" Header="TimeScale:"  Value="1" ValueChanged="TimeScaleValueChanged" Margin="2,4"  HorizontalContentAlignment="Right" VerticalContentAlignment="Center" VerticalAlignment="Center" HorizontalAlignment="Center"  
-								
+								ToolTipService.ToolTip="Speeds up or slows down the server clock rate [for test]"
 								Minimum="0.0" 
 								
 						Maximum="256" >
@@ -404,13 +404,13 @@
 							 Orientation="Horizontal" Minimum="0" Maximum="10" SmallChange="1" 
 							 StepFrequency="1"  Margin="2,4"  />
 					<StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch" Spacing="8"  >
-						<Button Content="{tkui:SymbolIcon Symbol=Previous}" Click="TimeBackClick"/>
-						<Button Click="TimeTogglePlay" >
+						<Button Content="{tkui:SymbolIcon Symbol=Previous}" Click="TimeBackClick" ToolTipService.ToolTip="Rewind to start of server to replay [for test], not that building while building is playing back can cause your queue to get stuck.  If stuck, remove queued items"/>
+						<Button Click="TimeTogglePlay" ToolTipService.ToolTip="Pause/Resume server" >
 							<Button.Content>
 								<SymbolIcon x:Name ="timeTogglePlayIcon" Symbol="Pause" />
 							</Button.Content>
 						</Button>
-						<Button Content="{tkui:SymbolIcon Symbol=Next}" Click="TimeForwardClick" />
+						<Button Content="{tkui:SymbolIcon Symbol=Next}" Click="TimeForwardClick" ToolTipService.ToolTip="Move forward in time by 5 minutes * (multiplied by timescale)" />
 
 
 					</StackPanel>

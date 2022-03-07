@@ -15,8 +15,9 @@ using static GameClient;
 	internal const float cameraControlFrequencyNormal = 12.0f;
 	internal const float cameraControlDampingTight = 1.125f;
 	internal const float cameraControlDampingNormal = 1.125f;
-
-		internal static float viewControlTightness;
+	internal static float panV1 = 0.125f;
+	internal static float panV0 = panV1*0.75f;
+	static float panSlowdown = 0.25f;
 	const float viewControlTightnessDecay = 4;
 	// Velocity
 	// public static Vector3 viewVW = default;
@@ -29,19 +30,37 @@ using static GameClient;
 			var dt = (float)(timeSinceLastFrame / splits);
 			for(int step = 0;step<splits;++step)
 			{
-
+				var viewVW0 = viewVW;
 				//
 				// Camera (ViewW, ViewWV, ViewWTarget, VW
 				//
-				var damping = viewControlTightness.Lerp(cameraControlDampingNormal,cameraControlDampingTight);
-				var viewKs = viewControlTightness.Lerp(cameraControlFrequencyNormal,cameraControlFrequencyTight).FreqencyToKsAndKd(damping);
+				var damping = cameraControlDampingNormal;//,cameraControlDampingTight);
+				var viewKs = cameraControlFrequencyNormal.FreqencyToKsAndKd(damping);//,cameraControlFrequencyTight).FreqencyToKsAndKd(damping);
 
-				var viewVW0 = viewVW;
-				viewVW += ((viewTargetW - viewW) * viewKs.ks - viewVW*viewKs.kd)*dt;
-				viewW += (viewVW0+viewVW)*(0.5f * dt);
+				if( View.isCoasting)
+				{
+					float lg = viewVW.ToV2().Length();
+					if(lg <= panV0 * viewW.Z )
+					{
+						viewVW -= viewVW*viewKs.kd*dt;
+					}
+					else
+					{
+						viewVW -= viewVW*panSlowdown*dt; // inertia
+					}
+				}
+				else
+				{
 
-
-				viewControlTightness -= viewControlTightness*viewControlTightnessDecay*dt;
+						viewVW += ((viewTargetW - viewW) * viewKs.ks - viewVW*viewKs.kd)*dt;
+				
+				}
+					viewW += (viewVW0+viewVW)*(0.5f * dt);
+				if(View.isCoasting)
+				{
+					viewTargetW = viewW;
+				}
+			//	viewControlTightness -= viewControlTightness*viewControlTightnessDecay*dt;
 
 				eventTimeOffsetLag += (ShellPage.instance.eventTimeOffset - eventTimeOffsetLag) * dt*8.0f;
 

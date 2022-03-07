@@ -557,8 +557,7 @@ namespace CnV
 		internal static void ClearQueue()
 		{
 			Note.Show("Cleared Queue");
-			BuildQueue.ClearQueue(City.GetBuild());
-			CnVServer.ExecuteScriptAsync("cancelbuilds()");
+			City.GetBuild().ClearQueue();
 		}
 
 

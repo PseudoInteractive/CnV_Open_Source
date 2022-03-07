@@ -803,7 +803,8 @@ namespace CnV
 					case -1: instance.raidsVisibleCheckbox.IsChecked = null; break;
 
 				}
-
+			///	instance.stackRoot.MaxWidth = instance.ActualWidth;
+			//	instance.UpdateLayout();
 				var result = await instance.ShowAsync2();
 				if (!instance.visitToken.IsNullOrEmpty())
 				{

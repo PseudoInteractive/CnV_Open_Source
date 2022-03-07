@@ -392,3 +392,7 @@
     - control+1..control..7 to switch between them
   - When you are using a setting (say setting 0) any adjustments to element sizes will be saved to setting 0 and if you switch to another setting and back it will remember.
   - Added a gripper to adjust the Left HTML panel scale (replaces HTML Zoom), drag all the way to the left to (almost) hide it.  This is also saved in layouts
+## 1.1.0 [3/6/2021]
+#### New:
+  - Please log in with Discord.
+   - Ignore the option to Sign up or to sign in with a local account.

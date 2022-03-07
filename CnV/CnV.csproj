@@ -113,6 +113,7 @@
     <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="7.0.0-preview.1.22076.8" />
     <PackageReference Include="System.Runtime.Experimental" Version="6.0.2-mauipre.1.22102.15" />
     <PackageReference Include="System.Text.Json" Version="7.0.0-preview.1.22076.8" />
+    <PackageReference Include="WinPixEventRuntime" Version="1.0.220124001" />
 	<PackageReference Include="ZString" Version="2.4.4" />
   </ItemGroup>
   <ItemGroup>

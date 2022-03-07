@@ -593,6 +593,16 @@ namespace CnV
 
 				city.RemoveWithDependencies(sel.Any() ? new( sel.Select( x=> instance.buildQueue.IndexOf(x as BuildItem ))) :new(new[] { instance.buildQueue.IndexOf(this) }) ,lastSynchronizedQueue);
 			});
+			flyout.AddItem("Cancel all",Symbol.Cut,() =>
+			{
+				var sel = instance.buildQueueListView.SelectedItems;
+				new CnVEventCancelBuildQueue(city.worldC).Execute();
+			});
+			flyout.AddItem("Sort",Symbol.Sort,() =>
+			{
+				var sel = instance.buildQueueListView.SelectedItems;
+				new CnVEventSortBuildQueue(city.worldC).Execute();
+			});
 			flyout.AddItem("Move To Front",Symbol.Up,() =>
 			{
 				var index = instance.buildQueue.IndexOf(this);

@@ -165,7 +165,7 @@ namespace CnV
 			instance.GraphicsDevice.DeviceReset+=GraphicsDevice_DeviceReset; ;
 			instance.GraphicsDevice.DeviceResetting+=GraphicsDevice_DeviceResetting; ;
 			canvas.SizeChanged += Canvas_SizeChanged;
-			//instance.IsFixedTimeStep                   =  true;
+			instance.IsFixedTimeStep                   =  false;
 
 		}
 
