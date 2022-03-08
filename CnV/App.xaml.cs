@@ -628,12 +628,12 @@ namespace CnV
 					var t2 = BuildingDef.Init();
 					var t3 = CnV.Data.TroopInfo.Init();
 					var t4 = Title.Init();
-					//var t4 = App.EnsureBrowserInstalledAsync();
-					var t5 = CnV.Data.Boss.Init();
+					var t5 = Artifact.Init();
+					var t6 = CnV.Data.Boss.Init();
 					Settings.Initialize(); // this is the long one
 
 
-					await Task.WhenAll(t2,t3,t4,t5);
+					await Task.WhenAll(t2,t3,t4,t5,t6);
 				}
 				const bool isInteractive = true;
 

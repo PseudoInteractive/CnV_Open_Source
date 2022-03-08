@@ -57,50 +57,67 @@ internal partial class GameClient
 	public const float lightZDay = 20f;
 	public const float cameraZForLighting = 0.5f;
 	//public static Vector2 cameraLightC;
-	static SamplerState fontSampler = new SamplerState()
-	{
-		Name="SamplerState.FontSampler",
-		Filter                  = TextureFilter.Linear,
-		MipMapLevelOfDetailBias = -1.5f,
-		BorderColor             = new Color(0,0,0,0),
-		MaxAnisotropy           = 2,
-		AddressW                = TextureAddressMode.Border,
-		AddressU                = TextureAddressMode.Border,
-		AddressV                = TextureAddressMode.Border,
-	};
-	static SamplerState borderSampler = new SamplerState()
-	{
-		Filter                  = TextureFilter.LinearMipPoint,
-		MipMapLevelOfDetailBias = 0,
-		MaxAnisotropy           = 0,
-		AddressW                = TextureAddressMode.Wrap,
-		AddressU                = TextureAddressMode.Border,
-		AddressV                = TextureAddressMode.Border,
-	};
-	static SamplerState clampSampler = new SamplerState()
-	{
-		Filter                  = TextureFilter.LinearMipPoint,
-		MipMapLevelOfDetailBias = 0,
-		MaxAnisotropy           = 0,
-		AddressW                = TextureAddressMode.Wrap,
-		AddressU                = TextureAddressMode.Clamp,
-		AddressV                = TextureAddressMode.Clamp,
-	};
-	static SamplerState wrapSampler = new SamplerState()
-	{
-		Filter                  = TextureFilter.LinearMipPoint,
-		MipMapLevelOfDetailBias = 0,
-		MaxAnisotropy           = 0,
-		AddressW                = TextureAddressMode.Wrap,
-		AddressU                = TextureAddressMode.Wrap,
-		AddressV                = TextureAddressMode.Wrap,
-	};
+	static SamplerState fontSampler = SamplerState.LinearBorder; 
+	//{
+	//	Name = "Font",
+	//	Filter                  = TextureFilter.LinearMipPoint,
+	//	MipMapLevelOfDetailBias = 0,
+	//	BorderColor             = new Color(0,0,0,0),
+	//	AddressW                = TextureAddressMode.Border,
+	//	AddressU                = TextureAddressMode.Border,
+	//	AddressV                = TextureAddressMode.Border,
+
+	//};
+	//static SamplerState borderSampler = new SamplerState()
+	//{
+	//	Name = "border",
+
+	//	Filter                  = TextureFilter.LinearMipPoint,
+	//	MipMapLevelOfDetailBias = 0,
+	//	MaxAnisotropy           = 0,
+	//	AddressW                = TextureAddressMode.Wrap,
+	//	AddressU                = TextureAddressMode.Border,
+	//	AddressV                = TextureAddressMode.Border,
+	//};
+	//static SamplerState clampSampler = new SamplerState()
+	//{
+	//	Filter                  = TextureFilter.LinearMipPoint,
+	//	MipMapLevelOfDetailBias = 0,
+	//	MaxAnisotropy           = 0,
+	//	AddressW                = TextureAddressMode.Wrap,
+	//	AddressU                = TextureAddressMode.Clamp,
+	//	AddressV                = TextureAddressMode.Clamp,
+	//};
+	//static SamplerState wrapSampler = new SamplerState()
+	//{
+	//	Filter                  = TextureFilter.LinearMipPoint,
+	//	MipMapLevelOfDetailBias = 0,
+	//	MaxAnisotropy           = 0,
+	//	AddressW                = TextureAddressMode.Wrap,
+	//	AddressU                = TextureAddressMode.Wrap,
+	//	AddressV                = TextureAddressMode.Wrap,
+	//};
+	//static SamplerState fontSampler = new SamplerState()
+	//{
+	//	Name = "Font",
+	//	Filter                  = TextureFilter.LinearMipPoint,
+	//	MipMapLevelOfDetailBias = 0,
+	//	BorderColor             = new Color(0,0,0,0),
+	//	AddressW                = TextureAddressMode.Border,
+	//	AddressU                = TextureAddressMode.Border,
+	//	AddressV                = TextureAddressMode.Border,
+
+	//};
+	static SamplerState borderSampler = SamplerState.LinearBorder;
+	static SamplerState clampSampler = SamplerState.LinearClamp;
+	static SamplerState wrapSampler = SamplerState.LinearWrap;
+
 	static SamplerState normalSampler = new SamplerState()
 	{
 		Filter                  = TextureFilter.LinearMipPoint,
 		MipMapLevelOfDetailBias = 0,
 		MaxAnisotropy           = 0,
-		BorderColor             = new Color(128,128,255,0),
+		BorderColor             = new Color(128,128,128,0),
 		AddressU                = TextureAddressMode.Border,
 		AddressV                = TextureAddressMode.Border,
 	};

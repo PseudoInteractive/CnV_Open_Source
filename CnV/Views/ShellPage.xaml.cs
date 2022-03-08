@@ -112,7 +112,7 @@ namespace CnV.Views
 		static double SliderToTimeScale(double v) => v<= 0 ? 0 : Math.Pow(2, v-2);
 		static double TimeScaleToSlider(double v) => v <= 0 ? 0 : (Math.Log2(v) + 2).Clamp(0, 10);
 
-
+		static internal Grid rootGrid;
 		class TimeScaleToolTipConverter:IValueConverter
 		{
 
@@ -303,6 +303,7 @@ namespace CnV.Views
 		{
 			try
 			{
+				rootGrid = _rootGrid;
 				instance = this;
 				//{
 				//	var sw = new Stopwatch();

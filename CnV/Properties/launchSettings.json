@@ -1,6 +1,7 @@
 {
     "profiles": {
         "MyApp": {
+
             "commandName": "MsixPackage",
             "commandLineArgs": "", /* Command line arguments to pass to the app. */
             "alwaysReinstallApp": false, /* Uninstall and then reinstall the app. All information about the app state is deleted. */
@@ -10,6 +11,7 @@
             "doNotLaunchApp": false, /* Do not launch the app, but debug my code when it starts. */
             "remoteDebugMachine": "", /* The name of the remote machine. */
             "nativeDebugging": false /* Enable debugging for managed and native code together, also known as mixed-mode debugging. */
+
         }
     }
 }

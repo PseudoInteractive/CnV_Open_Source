@@ -498,7 +498,9 @@ namespace CnV
 						}
 
 					}
-					AppS.MessageBox($"Welcome {Player.ToShortName(name) }.");
+					AppS.MessageBox(title:"Signed in",text:$"Welcome {Player.ToShortName(name) }.", 
+						//hero: "UI/menues/fortune_teller/background.jpeg",
+						placement:TeachingTipPlacementMode.Left,lightDismiss:false);
 
 					//Debug.Log(TokenInfoText.Text);
 					Debug.Log(user.ToString());

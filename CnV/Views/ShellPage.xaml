@@ -41,10 +41,10 @@
 	</UserControl.Resources>
 
 
-	<Grid>
-		<views:ShareString  x:Name="citySetup" HeroContentPlacement="Top"  x:FieldModifier="public" Grid.Column="1" 
+	<Grid x:Name="_rootGrid" Canvas.ZIndex="33">
+		<views:ShareString  x:Name="citySetup" HeroContentPlacement="Top"  x:FieldModifier="public" 
 							ShouldConstrainToRootBounds="False" PreferredPlacement="Center"  />
-		<Grid  Margin="0" x:Name="grid"  x:FieldModifier="public" Grid.Column="1" >
+		<Grid  Margin="0" x:Name="grid"  x:FieldModifier="public"  >
 			<Grid.Resources>
 				<Style x:Key="TimeFlyoutStyle"
                TargetType="FlyoutPresenter">
