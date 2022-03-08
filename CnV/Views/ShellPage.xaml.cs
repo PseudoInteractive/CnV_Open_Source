@@ -294,7 +294,7 @@ namespace CnV.Views
 		//}
 
 		public static bool isHitTestVisible => !ShellPage.isOverPopup && !forceAllowWebFocus && canvasVisible;
-
+		internal static Frame gameUIFrame;
 		//public static bool _isHitTestVisible;
 		public static bool canvasVisible = true;
 		//public static bool isFocused => isHitTestVisible && AppS.isForeground;
@@ -303,6 +303,7 @@ namespace CnV.Views
 		{
 			try
 			{
+				gameUIFrame = _gameUIFrame;
 				rootGrid = _rootGrid;
 				instance = this;
 				//{
@@ -1450,17 +1451,15 @@ namespace CnV.Views
 
 
 
-		private void webFocus_Click(object sender, RoutedEventArgs e)
+		private void ArtifactsClicked(object sender,RoutedEventArgs e)
 		{
-			forceAllowWebFocus = !forceAllowWebFocus;
+
 			//var hasFocus = !webviewHasFocus;
-			webFocus.IsChecked = forceAllowWebFocus;
-			//CityBuild.instance.Visibility = hasFocus ? Visibility.Collapsed : Visibility.Visible;
-			//canvasVisible = !hasFocus;
-			//isHitTestVisible = !hasFocus;
-			//SetWebViewHasFocus(hasFocus);
-			ShellPage.canvas.Visibility = ShellPage.forceAllowWebFocus ? Visibility.Collapsed : Visibility.Visible;
-			//			ShellPage.UpdateFocus();
+		//	artifactsButton.IsChecked = !artifactsButton.IsChecked;
+			if(artifactsButton.IsChecked.GetValueOrDefault())
+				gameUIFrame.Navigate(typeof(Artifacts));
+			else
+				gameUIFrame.Navigate( typeof(Page)  );
 
 		}
 
@@ -1589,6 +1588,8 @@ namespace CnV.Views
 				IServerTime.SetTimeScale(0.0f);
 			}
 		}
+
+		
 
 
 

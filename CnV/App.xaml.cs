@@ -478,7 +478,7 @@ namespace CnV
 					AppS.appWindow= AppWindow.GetFromWindowId(myWndId);
 				}
 				AppS.appWindow.Title = "Conquest and Virtue Alpha sign in to Discord";
-				//AppS.appWindow.SetIcon("assets/cnv.ico");
+				AppS.appWindow.SetIcon("assets\\cnvIcon.ico");
 				//				
 				//				window.SetTitleBar
 				//ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.PreferredLaunchViewSize;

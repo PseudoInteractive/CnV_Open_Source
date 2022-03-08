@@ -117,9 +117,10 @@ internal partial class GameClient
 		Filter                  = TextureFilter.LinearMipPoint,
 		MipMapLevelOfDetailBias = 0,
 		MaxAnisotropy           = 0,
-		BorderColor             = new Color(128,128,128,0),
+		BorderColor             = new Color(128,128,148,0),
 		AddressU                = TextureAddressMode.Border,
 		AddressV                = TextureAddressMode.Border,
+		AddressW                = TextureAddressMode.Border,
 	};
 
 	public static Material fontMaterial;
@@ -460,14 +461,14 @@ internal partial class GameClient
 					viewCWParam.SetValue(viewW);
 					//	ToolTips.debugTip = $"{XVector3.Normalize(lightCC).ToNumerics().Format()} {AUtil.Format(lightCC.ToNumerics())}";
 					var d3 = t.CatmullRomLoop(new Vector3(0.875f,0.25f,1.25f),
-												new Vector3(0.5f,0.5f,1.5f),
+												new Vector3(0.5f,0.75f,1.5f),
 												new Vector3(1.0f,1.0f,1.0f),
-												new Vector3(1.25f,0.5f,0.125f)
+												new Vector3(1.25f,0.65f,0.35f)
 																		)*0.75f * Settings.lightD;
-					var a3 = t.CatmullRomLoop(new Vector3(0.50f,0.0f,0.5f),
-												new Vector3(0.5f,0.5f,1.25f),
+					var a3 = t.CatmullRomLoop(new Vector3(0.50f,0.25f,0.5f),
+												new Vector3(0.5f,0.75f,1.25f),
 												new Vector3(1.0f,1.0f,1.0f),
-												new Vector3(1.25f,0.5f,0.25f)
+												new Vector3(1.25f,0.625f,0.3725f)
 																		)*0.375f* Settings.lightA;
 					// this will do for specular
 					

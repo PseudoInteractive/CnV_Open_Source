@@ -21,12 +21,12 @@
 					<Color x:Key="SystemRevealListMediumColor">#FF380E0E</Color>
 					
 					 <!--Override system generated accent colors--> 
-					<Color x:Key="SystemAccentColorDark1">#FF503B84</Color>
-					<Color x:Key="SystemAccentColorDark2">#FF695798</Color>
-					<Color x:Key="SystemAccentColorDark3">#FF8372AC</Color>
-					<Color x:Key="SystemAccentColorLight1">#FF2B1A66</Color>
-					<Color x:Key="SystemAccentColorLight2">#FF21145B</Color>
-					<Color x:Key="SystemAccentColorLight3">#FF160F51</Color>
+					<Color x:Key="SystemAccentColorLight1">#FF503B84</Color>
+					<Color x:Key="SystemAccentColorLight2">#FF695798</Color>
+					<Color x:Key="SystemAccentColorLight3">#FF8372AC</Color>
+					<Color x:Key="SystemAccentColorDark1">#FF2B1A66</Color>
+					<Color x:Key="SystemAccentColorDark2">#FF21145B</Color>
+					<Color x:Key="SystemAccentColorDark3">#FF160F51</Color>
 					<Color x:Key="RegionColor">#FF153A35</Color>
 					<SolidColorBrush x:Key="RegionBrush" Color="#FF153A35" />
 				</ResourceDictionary>

@@ -1,0 +1,70 @@
+﻿<Page
+    x:Class="CnV.Artifacts"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:cnv="using:CnV"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+	MaxWidth="600"
+	HorizontalAlignment="Left"
+	HorizontalContentAlignment="Left"
+	NavigationCacheMode="Required"
+	Background="{StaticResource ApplicationPageBackgroundThemeBrush}"
+	>
+	<Page.Resources>
+		<DataTemplate x:Key="ArtifactItem" x:DataType="cnv:Artifact"  >
+			<Grid  Background="{x:Null}" Height="Auto" Margin="4,1"  >
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width ="Auto"  />
+					<ColumnDefinition Width ="Auto" />
+					<ColumnDefinition Width ="*" />
+				</Grid.ColumnDefinitions>
+				<Grid.RowDefinitions>
+					<RowDefinition Height="Auto"/>
+					<RowDefinition Height="Auto"/>
+				</Grid.RowDefinitions>
+				<Image Grid.Column="0" Source="{x:Bind image}" />
+				<TextBlock Grid.Column="1" Text="{x:Bind description}" MaxLines="3" />
+				<RelativePanel Grid.Row="1" >
+					<BitmapIcon Grid.Column="0" UriSource="ms-appx://Content/Art/diamonds.png" />
+				</RelativePanel>
+				
+			</Grid>
+
+		</DataTemplate>
+	</Page.Resources>
+    <Grid  >
+		<Grid.RowDefinitions>
+			<RowDefinition Height="auto"/>
+			<RowDefinition Height="auto"/>
+		</Grid.RowDefinitions>
+		
+		<StackPanel Orientation="Horizontal">
+			<ComboBox x:Name="titleComboBox" SelectedIndex="0" ItemsSource="{x:Bind cnv:Title.names}"  SelectionChanged="titleComboBox_SelectionChanged" />
+			<Button Content="Get Zirconia" />
+		</StackPanel>
+		<TabView x:Name="tabView" Grid.Row="1"  >
+			<TabView.TabItems>
+				<TabViewItem Header="Relics">
+					<ListView x:Name="relicsList" Header="Relics" ItemTemplate="{StaticResource ArtifactItem}">
+					</ListView>
+				
+				</TabViewItem>
+				<TabViewItem Header="Enhancements">
+					<TextBlock>Test1</TextBlock>
+				</TabViewItem>
+				<TabViewItem Header="Special">
+					<TextBlock>Test1</TextBlock>
+				</TabViewItem>
+
+				<TabViewItem Header="Overview">
+					<TextBlock>Test1</TextBlock>
+				</TabViewItem>
+				<TabViewItem Header="History">
+					<TextBlock>Test1</TextBlock>
+				</TabViewItem>
+			</TabView.TabItems>
+		</TabView>
+	</Grid>
+</Page>
