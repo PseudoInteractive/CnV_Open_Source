@@ -380,10 +380,11 @@ namespace CnV
 							if(bspot == buildOp.c)
 								{
 									var simTApprox = IServerTime.NowToServerSeconds();
-									var buildEnd = city.buildItemEndsAt.EarliestSeconds;
+									var buildEnd = city.buildItemEndsAt.seconds - 0.25f; // should this be earliest?
 									var required = currentBuildOp.TimeRequired(city);
-									var gain = ((buildEnd - simTApprox)/required).SaturateToFloat();
-
+										var gain = ((buildEnd - simTApprox)/required).SaturateToFloat();
+									Assert(buildEnd >= simTApprox - 1.0f);
+									Assert(buildEnd - simTApprox <= required + 1.0f);
 									if(buildOp.isBuild|buildOp.isDemo)
 									{
 										if(buildOp.isBuild)
@@ -410,7 +411,7 @@ namespace CnV
 									}
 									if(!buildOp.isMove)
 									{
-										var dT = ((animationT -currentBuildStartTime)).SaturateToFloat();
+										var dT = ((animationT -currentBuildStartTime)*2.0f).SaturateToFloat();
 										var fade = (dT).UNormToByte();
 
 										float v0, v1;

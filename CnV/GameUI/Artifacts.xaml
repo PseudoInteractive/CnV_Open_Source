@@ -6,7 +6,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
-	MaxWidth="620"
+	MaxWidth="600"
 	HorizontalAlignment="Left"
 	HorizontalContentAlignment="Left"
 	NavigationCacheMode="Required"
@@ -36,12 +36,12 @@
 					<TextBlock Text="{x:Bind mana}" Style="{StaticResource TextBlockMedium}"  Margin="2" TextAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Bottom" />
 				</Grid>
 				<StackPanel Grid.Row="1" Grid.Column="2" Orientation="Horizontal"  >
-					<TextBlock Text="{x:Bind ownedStr}" Style="{StaticResource TextBlockMedium}"  Margin="2" VerticalAlignment="Center" />
-					<NumberBox  Style="{StaticResource NumberBoxSmall}" Value="{x:Bind nbEnterUse,Mode=TwoWay}"  Margin="2" Width="90" />
+					<TextBlock Text="{x:Bind ownedStr,Mode=OneWay}" Style="{StaticResource TextBlockMedium}"  Margin="2" VerticalAlignment="Center" />
+					<NumberBox  Style="{StaticResource NumberBoxSmall}" Value="{x:Bind nbEnterUse,Mode=TwoWay}"  Margin="8,2" Width="70" />
 					<Button Content ="Use"  Margin="2,1,6,1" Click="{x:Bind UseClick}" />
-					<TextBlock Text="{x:Bind priceStr}" Style="{StaticResource TextBlockMedium}"  Margin="2" VerticalAlignment="Center" />
-					<NumberBox Style="{StaticResource NumberBoxSmall}" Value="{x:Bind nbEnterBuy,Mode=TwoWay}"  Margin="2" Width="90" />
-					<Button Content ="Buy"  Margin="2,4,1,1" Click="{x:Bind BuyClick}" />
+					<TextBlock Text="{x:Bind priceStr,Mode=OneWay}" Style="{StaticResource TextBlockMedium}"  Margin="2" VerticalAlignment="Center" />
+					<NumberBox Style="{StaticResource NumberBoxSmall}" Value="{x:Bind nbEnterBuy,Mode=TwoWay}"  Margin="8,2" Width="70" />
+					<Button Content ="Buy"  Margin="2,1,6,1" Click="{x:Bind BuyClick}" />
 				</StackPanel>
 
 			</Grid>
@@ -74,7 +74,8 @@
 				</TabViewItem>
 
 				<TabViewItem Header="Overview">
-					<TextBlock>Test1</TextBlock>
+					<ListView x:Name="overviewList" ItemTemplate="{StaticResource ArtifactItem}">
+					</ListView>
 				</TabViewItem>
 				<TabViewItem Header="History">
 					<TextBlock>Test1</TextBlock>

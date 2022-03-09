@@ -200,6 +200,7 @@ namespace CnV
 		}
 		//public void OnPropertyChanged() =>
 		//		PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(null));
+		static bool updateInProgress;
 		public void UpdateUI()
 		{
 			try
@@ -209,18 +210,21 @@ namespace CnV
 				if(city.IsInvalid())
 					return;
 				// building counts
-				
 
+				if(updateInProgress)
+					return;
+				updateInProgress = true;
 
 				AppS.DispatchOnUIThreadIdle(() =>
 				{
-					var city = this.city;
-					var hasBeenDisplayed = lastDisplayed == city;
-					if(!hasBeenDisplayed)
-						lastDisplayed = city;
+					
 
 					try
 					{
+						var city = this.city;
+						var hasBeenDisplayed = lastDisplayed == city;
+						if(!hasBeenDisplayed)
+							lastDisplayed = city;
 						var bdd = !hasBeenDisplayed ? GetBuildingCounts(city) : default;
 						var t = CnVServer.simTime;
 #if DEBUG
@@ -325,6 +329,11 @@ namespace CnV
 					catch(Exception e)
 					{
 						LogEx(e,report: false);
+					}
+					finally
+					{
+						updateInProgress = false;
+
 					}
 				});
 

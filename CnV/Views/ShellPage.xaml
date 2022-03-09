@@ -109,7 +109,9 @@
 					</Grid>
 				</winui:CommandBar.Content>
 				<winui:CommandBar.PrimaryCommands  >
-
+					
+					<winui:AppBarToggleButton x:Name="artifactsButton" Click="ArtifactsClicked" Icon="AddFriend" Label="Artifact"  IsChecked="False" 
+                           ToolTipService.ToolTip="This will hid or show the artifacts window" />
 
 					<AppBarButton x:Name="ContinentFilter"  x:FieldModifier="public"
 					              Content="Cont/Tags"
@@ -168,8 +170,7 @@
 					<winui:AppBarButton Click="{x:Bind cnv:NavStack.ForwardClick}" Icon="Forward" Label="Forward"  RightTapped="ForwardRightTapped" 
                            ToolTipService.ToolTip="Move forward in city history&#x0a;This is only useful after you have pressed 'Back'&#x0a;Right click to view forward history" AccessKey="." />
 
-					<winui:AppBarToggleButton x:Name="artifactsButton" Click="ArtifactsClicked" Icon="AddFriend" Label="Artifact"  IsChecked="False" 
-                           ToolTipService.ToolTip="This will hid or show the artifacts window" />
+					
 
 					<winui:AppBarButton x:Name="Fresh"
                               Label="Fresh"
@@ -192,19 +193,13 @@
 					</AppBarButton.Resources>-->
 					</winui:AppBarButton>
 					<AppBarSeparator/>
-					<AppBarButton Label="Settings"  Click="ShowSettings" Style="{StaticResource AppBarButtonRevealStyle}">
-						<AppBarButton.Icon>
-							<AnimatedIcon x:Name='AnimatedIcon'>
-								<AnimatedIcon.Source>
-									<animatedvisuals:AnimatedSettingsVisualSource/>
-								</AnimatedIcon.Source>
-								<AnimatedIcon.FallbackIconSource>
-									<FontIconSource FontFamily="Segoe MDL2 Assets" Glyph="&#xE713;"/>
-								</AnimatedIcon.FallbackIconSource>
-							</AnimatedIcon>
-						</AppBarButton.Icon>
-					</AppBarButton>
-				</winui:CommandBar.PrimaryCommands>
+						
+					</winui:CommandBar.PrimaryCommands>
+				
+				<CommandBar.SecondaryCommands >
+					<AppBarButton Label="Settings" Icon="Setting"  Click="ShowSettings" />
+
+				</CommandBar.SecondaryCommands>
 			</winui:CommandBar>
 
 			<cnv:CityStats 
@@ -215,7 +210,12 @@
 				Canvas.ZIndex="14" 
 				
 				/>
-
+			<cnv:PlayerStats 
+				x:Name="playerStats"
+				Grid.Row="1" 
+				Grid.ColumnSpan="2"
+				
+				/>
 			<tk:GridSplitter
 				IsTabStop="True"
 				PointerMoved="GridSpliterOnPointerReleased"

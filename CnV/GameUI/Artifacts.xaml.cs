@@ -42,7 +42,7 @@ namespace CnV
 			// Do we need to call property changes on each artifact?
 			relicsList.ItemsSource = Artifact.all.Where(a => a.level == sel && a.column == 1).ToList();
 			enhancementsList.ItemsSource = Artifact.all.Where(a => a.level == sel && a.column == 2).ToList();
-			specialList.ItemsSource = Artifact.all.Where(a => a.level == sel && a.column == 3).ToList();
+			specialList.ItemsSource = Artifact.all.Where( a => a.level == 0 && a.column == 3).ToList();
 		}
 
 		

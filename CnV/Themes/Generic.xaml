@@ -3,23 +3,58 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:CnV"
 	xmlns:views="using:CnV.Views"
-	xmlns:cnvXaml="using:CnV.Xaml"
+	xmlns:cnv="using:CnV"
 	x:Key="Default"
 	>
 
-    
-    <Style TargetType="cnvXaml:Expander2" BasedOn="{StaticResource ExpanderDefault}"  >
+
+	
+
+    <Style TargetType="cnv:IconText" >
         <Setter Property="Template">
             <Setter.Value>
-                <ControlTemplate TargetType="cnvXaml:Expander2">
-                    <Border
-                        Background="{TemplateBinding Background}"
-                        BorderBrush="{TemplateBinding BorderBrush}"
-                        BorderThickness="{TemplateBinding BorderThickness}">
-                    </Border>
-                </ControlTemplate>
+                <ControlTemplate TargetType="cnv:IconText">
+					<Grid>
+						<Grid.RowDefinitions>
+							<RowDefinition Height="Auto"/>
+							<RowDefinition/>
+						</Grid.RowDefinitions>
+						<Grid.ColumnDefinitions>
+							<ColumnDefinition Width="Auto"/>
+							<ColumnDefinition Width="*"/>
+						</Grid.ColumnDefinitions>
+						<Image x:Name="image"
+							   
+                              Source="{TemplateBinding Image}"
+							   VerticalAlignment="Center"
+							   HorizontalAlignment="Center"
+                                         />
+						<TextBlock x:Name="textBlock"
+                                          Text="{TemplateBinding Text}"
+											Style="{StaticResource TextBlockMedium}" 
+											MaxLines="3"
+                                       
+                                          Grid.Column="1"
+                                          HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                         TextAlignment="DetectFromContent"
+											VerticalAlignment="Center"
+								   />
+						<VisualStateManager.VisualStateGroups>
+							<VisualStateGroup x:Name="OrientationStates">
+								<VisualState x:Name="Horizontal" />
+								<VisualState x:Name="Vertical">
+									<VisualState.Setters>
+										<Setter Target="image.(Grid.ColumnSpan)" Value="2" />
+										<Setter Target="textBlock.(Grid.ColumnSpan)" Value="2" />
+										<Setter Target="textBlock.(Grid.Row)" Value="1" />
+									
+									</VisualState.Setters>
+								</VisualState>
+							</VisualStateGroup>
+						</VisualStateManager.VisualStateGroups>
+					</Grid>
+				</ControlTemplate>
             </Setter.Value>
         </Setter>
     </Style>
-	
 </ResourceDictionary>
