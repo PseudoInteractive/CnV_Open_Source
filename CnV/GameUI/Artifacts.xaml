@@ -6,7 +6,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
-	MaxWidth="600"
+	MaxWidth="620"
 	HorizontalAlignment="Left"
 	HorizontalContentAlignment="Left"
 	NavigationCacheMode="Required"
@@ -16,20 +16,34 @@
 		<DataTemplate x:Key="ArtifactItem" x:DataType="cnv:Artifact"  >
 			<Grid  Background="{x:Null}" Height="Auto" Margin="4,1"  >
 				<Grid.ColumnDefinitions>
-					<ColumnDefinition Width ="Auto"  />
-					<ColumnDefinition Width ="Auto" />
+					<ColumnDefinition Width ="80"  />
+					<ColumnDefinition Width ="110" />
 					<ColumnDefinition Width ="*" />
 				</Grid.ColumnDefinitions>
 				<Grid.RowDefinitions>
-					<RowDefinition Height="Auto"/>
-					<RowDefinition Height="Auto"/>
+					<RowDefinition Height="64"/>
+					<RowDefinition Height="48"/>
 				</Grid.RowDefinitions>
-				<Image Grid.Column="0" Source="{x:Bind image}" />
-				<TextBlock Grid.Column="1" Text="{x:Bind description}" MaxLines="3" />
-				<RelativePanel Grid.Row="1" >
-					<BitmapIcon Grid.Column="0" UriSource="ms-appx://Content/Art/diamonds.png" />
-				</RelativePanel>
-				
+				<Image Grid.Column="0" Source="{x:Bind image}" Margin="3"  />
+				<TextBlock Grid.Column="1" Text="{x:Bind name}" Margin="3" Style="{StaticResource TextBlockMedium}" TextWrapping="WrapWholeWords" TextAlignment="Center" MaxLines="3" />
+				<TextBlock Grid.Column="2" Text="{x:Bind description}"  Margin="3" Style="{StaticResource TextBlockSmall}" TextWrapping="WrapWholeWords"  MaxLines="4" TextAlignment="Center" />
+				<Grid Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" >
+					<Image Source="{x:Bind cnv:Artifact.imageDiamondsSmall}"  Margin="2"  HorizontalAlignment="Center" VerticalAlignment="Top" Stretch="None" />
+					<TextBlock Text="{x:Bind zirconia}" Style="{StaticResource TextBlockMedium}"  Margin="2" TextAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Bottom" />
+				</Grid>
+				<Grid Grid.Row="1" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" >
+					<Image Source="{x:Bind cnv:Artifact.imageManaSmall}"   Margin="2" HorizontalAlignment="Center" Stretch="None" VerticalAlignment="Top" />
+					<TextBlock Text="{x:Bind mana}" Style="{StaticResource TextBlockMedium}"  Margin="2" TextAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Bottom" />
+				</Grid>
+				<StackPanel Grid.Row="1" Grid.Column="2" Orientation="Horizontal"  >
+					<TextBlock Text="{x:Bind ownedStr}" Style="{StaticResource TextBlockMedium}"  Margin="2" VerticalAlignment="Center" />
+					<NumberBox  Style="{StaticResource NumberBoxSmall}" Value="{x:Bind nbEnterUse,Mode=TwoWay}"  Margin="2" Width="90" />
+					<Button Content ="Use"  Margin="2,1,6,1" Click="{x:Bind UseClick}" />
+					<TextBlock Text="{x:Bind priceStr}" Style="{StaticResource TextBlockMedium}"  Margin="2" VerticalAlignment="Center" />
+					<NumberBox Style="{StaticResource NumberBoxSmall}" Value="{x:Bind nbEnterBuy,Mode=TwoWay}"  Margin="2" Width="90" />
+					<Button Content ="Buy"  Margin="2,4,1,1" Click="{x:Bind BuyClick}" />
+				</StackPanel>
+
 			</Grid>
 
 		</DataTemplate>
@@ -47,15 +61,16 @@
 		<TabView x:Name="tabView" Grid.Row="1"  >
 			<TabView.TabItems>
 				<TabViewItem Header="Relics">
-					<ListView x:Name="relicsList" Header="Relics" ItemTemplate="{StaticResource ArtifactItem}">
+					<ListView x:Name="relicsList" ItemTemplate="{StaticResource ArtifactItem}">
 					</ListView>
-				
 				</TabViewItem>
 				<TabViewItem Header="Enhancements">
-					<TextBlock>Test1</TextBlock>
+					<ListView x:Name="enhancementsList" ItemTemplate="{StaticResource ArtifactItem}">
+					</ListView>
 				</TabViewItem>
 				<TabViewItem Header="Special">
-					<TextBlock>Test1</TextBlock>
+					<ListView x:Name="specialList" ItemTemplate="{StaticResource ArtifactItem}">
+					</ListView>
 				</TabViewItem>
 
 				<TabViewItem Header="Overview">

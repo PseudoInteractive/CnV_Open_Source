@@ -25,18 +25,26 @@ namespace CnV
 	/// </summary>
 	public sealed partial class Artifacts:Page
 	{
+		public static Artifacts? instance;
 		public Artifacts()
 		{
 			this.InitializeComponent();
-			
-		}
+			Assert(instance == null);
+			instance =this;
 
+		}
+		
 		private void titleComboBox_SelectionChanged(object sender,SelectionChangedEventArgs e)
 		{
-			var sel = titleComboBox.SelectedIndex;
-			//if(sel >= 1)
-			//	--sel;
-			relicsList.ItemsSource = Artifact.all.Where(a => a.level == sel).ToList();
+			var sel = titleComboBox.SelectedIndex ;
+			if(sel >= 1)
+				++sel;
+			// Do we need to call property changes on each artifact?
+			relicsList.ItemsSource = Artifact.all.Where(a => a.level == sel && a.column == 1).ToList();
+			enhancementsList.ItemsSource = Artifact.all.Where(a => a.level == sel && a.column == 2).ToList();
+			specialList.ItemsSource = Artifact.all.Where(a => a.level == sel && a.column == 3).ToList();
 		}
+
+		
 	}
 }

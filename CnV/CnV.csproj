@@ -70,6 +70,10 @@
     <PackageReference Include="MessagePack.Experimental" Version="2.3.85" />
     <PackageReference Include="MessagePack.ImmutableCollection" Version="2.4.14-alpha" />
     <PackageReference Include="MagicOnion.Client" Version="4.3.1" />
+    <PackageReference Include="MessagePackAnalyzer" Version="2.4.14-alpha">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
     <PackageReference Include="Microsoft.Extensions.ObjectPool" Version="6.0.1" />
     <PackageReference Include="Microsoft.Extensions.Primitives" Version="7.0.0-preview.1.22076.8" />
     <PackageReference Include="Microsoft.Identity.Client" Version="4.42.0" />

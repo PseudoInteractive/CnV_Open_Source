@@ -181,10 +181,7 @@ using static GameClient;
 	{
 		return (s )*dipScaleInverse ;
 	}
-	public static float ScreenToWorldOffset(this float s)
-	{
-		return (s )*pixelScaleInverse ;
-	}
+
 	public static float DipToWorld(this float s)
 	{
 		return (s )*dipScaleInverse ;

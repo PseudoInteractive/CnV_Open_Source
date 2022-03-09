@@ -286,7 +286,7 @@ internal partial class GameClient
 			pixelScaleInverse = 1.0f*projectionOffsetGainX*viewW.Z;
 			pixelScale       = 1.0f/pixelScaleInverse;
 
-			dipScaleInverse = (float)(pixelScaleInverse*dipToNative);
+			dipScaleInverse = (float)(pixelScaleInverse*dipToNative*Settings.dpiScale);
 			dipScale       = 1.0f/dipScaleInverse;
 
 			//halfSquareOffset = new System.Numerics.Vector2(pixelScale * 0.5f, pixelScale * .5f);
