@@ -68,7 +68,7 @@ partial class ShellPage
 					{
 						GestureSettings= GestureSettings.Tap|GestureSettings.RightTap|
 					GestureSettings.ManipulationTranslateX|GestureSettings.ManipulationTranslateY|GestureSettings.ManipulationScale
-				//	|GestureSettings.ManipulationMultipleFingerPanning
+					|GestureSettings.ManipulationMultipleFingerPanning
 				|GestureSettings.Hold
 					};
 
