@@ -56,7 +56,7 @@
 			</Grid.Resources>
 			<Grid.RowDefinitions>
 				<RowDefinition Height="40" x:Name="rowHeader" />
-				<RowDefinition Height="60" x:Name="stats" />
+				<RowDefinition Height="auto" x:Name="stats" />
 				<RowDefinition x:Name="CanvasStart" />
 				<RowDefinition x:Name="rowChatBase" />
 				<RowDefinition Height="auto"  x:Name="rowFooter" />
@@ -206,14 +206,18 @@
 				x:Name="cityStats"
 				Grid.Row="2" 
 				Grid.ColumnSpan="1"
-				Grid.RowSpan="2" 
+				Grid.RowSpan="2" 				
+				
 				Canvas.ZIndex="14" 
 				
 				/>
 			<cnv:PlayerStats 
 				x:Name="playerStats"
 				Grid.Row="1" 
-				Grid.ColumnSpan="2"
+				x:Load="False"
+				Grid.Column="0"
+				Grid.ColumnSpan="3"
+				Canvas.ZIndex="46" 
 				
 				/>
 			<tk:GridSplitter

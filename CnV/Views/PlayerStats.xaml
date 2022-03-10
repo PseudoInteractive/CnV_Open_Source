@@ -5,12 +5,32 @@
     xmlns:cnv="using:CnV"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	xmlns:tk="using:CommunityToolkit.WinUI.UI.Controls"
     mc:Ignorable="d">
 
-    <StackPanel Orientation="Horizontal">
-		<cnv:IconText Image="{x:Bind cnv:Artifact.imageDiamonds}" Text="Test" >
-			
-		</cnv:IconText>
+    <tk:WrapPanel Orientation="Horizontal" HorizontalSpacing="4" VerticalSpacing="4" >
+		<cnv:IconText x:Name="zirc" 
+					  Image="{x:Bind cnv:ImageHelper.GetPhysical('zirconia.png',28) }"
+					  Text="{x:Bind zirconiaS, Mode=OneWay}" 
+					 />
+		<cnv:IconText Image="{x:Bind cnv:ImageHelper.GetPhysical('UI/icons/Icon_mana.png',24) }"
+					  Text="{x:Bind manaS, Mode=OneWay}" 
+					 />
+		<cnv:IconText Image="{x:Bind cnv:ImageHelper.GetPhysical('UI/icons_ressource_gold.png',28) }"
+					  Text="{x:Bind goldS, Mode=OneWay}" 
+					 />
+		<cnv:IconText Image="{x:Bind cnv:ImageHelper.GetPhysical('UI/icons_ressource_wood.png',28) }"
+					  Text="{x:Bind RefineS(0), Mode=OneWay}" 
+					 />
+		<cnv:IconText Image="{x:Bind cnv:ImageHelper.GetPhysical('UI/icons_ressource_stone.png',28) }"
+					  Text="{x:Bind RefineS(1), Mode=OneWay}" 
+					 />
+		<cnv:IconText Image="{x:Bind cnv:ImageHelper.GetPhysical('UI/icons_ressource_iron.png',28) }"
+					  Text="{x:Bind RefineS(2), Mode=OneWay}" 
+					 />
+		<cnv:IconText Image="{x:Bind cnv:ImageHelper.GetPhysical('UI/icons_ressource_grain.png',28) }"
+					  Text="{x:Bind RefineS(3), Mode=OneWay}" 
+					 />
 
-    </StackPanel>
+	</tk:WrapPanel>
 </UserControl>

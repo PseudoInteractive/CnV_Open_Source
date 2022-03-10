@@ -36,15 +36,28 @@ namespace CnV
 		
 		private void titleComboBox_SelectionChanged(object sender,SelectionChangedEventArgs e)
 		{
-			var sel = titleComboBox.SelectedIndex ;
-			if(sel >= 1)
-				++sel;
+			var sel = titleComboBox.SelectedIndex+2 ;
+//			if(sel >= 1)
+//				++sel;
 			// Do we need to call property changes on each artifact?
 			relicsList.ItemsSource = Artifact.all.Where(a => a.level == sel && a.column == 1).ToList();
-			enhancementsList.ItemsSource = Artifact.all.Where(a => a.level == sel && a.column == 2).ToList();
-			specialList.ItemsSource = Artifact.all.Where( a => a.level == 0 && a.column == 3).ToList();
+			enhancementsList.ItemsSource = Artifact.all.Where(a => a.level == sel && (a.column == 2) ).ToList();
+			specialList.ItemsSource = Artifact.all.Where( a => a.level == sel && a.column == 3).ToList();
+			overviewList.ItemsSource = Artifact.all.Where(a => a.owned > 0).ToList();
+		}
+
+		private void Page_Loading(FrameworkElement sender,object args)
+		{
+			Assert(Player.me is not null);
+			Log(Player.me.title);
+			titleComboBox.SelectedIndex = ( Player.me.title.rank-1).Max(0);
 		}
 
 		
+
+		private void GetZirconiaClick(object sender,RoutedEventArgs e)
+		{
+			(new CnVEventPurchaseArtifacts() {  artifact = (ushort)Artifact.ArtifactType.denari, count = 1}).Execute();
+		}
 	}
 }

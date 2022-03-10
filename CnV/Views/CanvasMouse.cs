@@ -47,6 +47,8 @@ partial class ShellPage
 		//FocusManager.GotFocus +=FocusManager_GotFocus;
 		//FocusManager.LostFocus +=FocusManager_LostFocus;
 		canvas.IsHitTestVisible = true;
+		
+		
 	}
 
 	internal static DispatcherQueueController inputQueueController;

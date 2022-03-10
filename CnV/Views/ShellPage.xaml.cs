@@ -514,6 +514,7 @@ namespace CnV.Views
 						AppS.QueueOnUIThread(() =>
 						{
 							AppS.appWindow.Title = ( $"Conquest and Virtue Alpha, World {World.id} - {Player.me.title.n} {Player.me.shortName}" );
+							FindName(nameof(playerStats));
 //							AppS.appWindow.SetIcon(new IconId(0));
 						//	AppS.MessageBox($"Welcome {Player.me.shortName}.");
 						});
@@ -1455,11 +1456,14 @@ namespace CnV.Views
 		{
 
 			//var hasFocus = !webviewHasFocus;
-		//	artifactsButton.IsChecked = !artifactsButton.IsChecked;
+			//	artifactsButton.IsChecked = !artifactsButton.IsChecked;
 			if(artifactsButton.IsChecked.GetValueOrDefault())
+			{
+			
 				gameUIFrame.Navigate(typeof(Artifacts));
+			}
 			else
-				gameUIFrame.Navigate( typeof(Page)  );
+				gameUIFrame.Navigate(typeof(Page));
 
 		}
 

@@ -68,7 +68,7 @@ namespace CnV.Views
 		{
 			header = name;
 			this.action = action;
-			image = ImageHelper.FromImages(icon,width);
+			image = ImageHelper.Get(icon,width);
 			this.toolTip = toolTip;
 		}
 

@@ -9,6 +9,7 @@
 	MaxWidth="600"
 	HorizontalAlignment="Left"
 	HorizontalContentAlignment="Left"
+	Loading="Page_Loading"
 	NavigationCacheMode="Required"
 	Background="{StaticResource ApplicationPageBackgroundThemeBrush}"
 	>
@@ -55,8 +56,8 @@
 		</Grid.RowDefinitions>
 		
 		<StackPanel Orientation="Horizontal">
-			<ComboBox x:Name="titleComboBox" SelectedIndex="0" ItemsSource="{x:Bind cnv:Title.names}"  SelectionChanged="titleComboBox_SelectionChanged" />
-			<Button Content="Get Zirconia" />
+			<ComboBox x:Name="titleComboBox" SelectedIndex="0" ItemsSource="{x:Bind cnv:Title.artifactTitleNames}"  SelectionChanged="titleComboBox_SelectionChanged" />
+			<Button Content="Get Zirconia" Click="GetZirconiaClick" />
 		</StackPanel>
 		<TabView x:Name="tabView" Grid.Row="1"  >
 			<TabView.TabItems>

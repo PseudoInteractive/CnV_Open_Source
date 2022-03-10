@@ -728,7 +728,7 @@ namespace CnV
 			var bdef = BuildingDef.FromId(id);
 			var str = bdef.dimg;
 			Assert(str is not null);
-			return ImageHelper.FromImages($"townlayer/{str}.{((bdef.animationFrames > 0)?"gif":"png")}", width);
+			return ImageHelper.Get($"townlayer/{str}.{((bdef.animationFrames > 0)?"gif":"png")}", width);
 		}
 		public static ImageBrush BuildingBrush(BuildingId id, int width)
 		{

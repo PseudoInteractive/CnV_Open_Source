@@ -378,6 +378,9 @@
     <Page Include="Styles\Theme.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Themes\Generic.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\AttackAddPlayer.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -549,6 +552,7 @@
     <None Remove="Styles\Theme.xaml" />
     <None Remove="Styles\_Colors.xaml" />
     <None Remove="Styles\_Thickness.xaml" />
+    <None Remove="Themes\Generic.xaml" />
     <None Remove="Views\CityBox.xaml" />
     <None Remove="Views\CityRename.xaml" />
     <None Remove="Views\CityStats.xaml" />
@@ -653,11 +657,6 @@
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
-    <None Update="Themes\Generic.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </None>
   </ItemGroup>
   <Import Project="..\..\CnVShared\CnVShared.projitems" Label="Shared" />
   <Import Project="..\..\cnvResource\CnVResource.projitems" Label="Shared" />

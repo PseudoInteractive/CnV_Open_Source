@@ -67,7 +67,7 @@ public sealed class IconText:Control
 		nameof(Orientation),
 		typeof(Orientation),
 		typeof(IconText),
-		new PropertyMetadata(Orientation.Vertical,OnOrientationChanged));
+		new PropertyMetadata(Orientation.Horizontal,OnOrientationChanged));
 
 	/// <summary>
 	/// Gets or sets the <see cref="Orientation"/> used for the header.

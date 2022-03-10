@@ -764,7 +764,7 @@ namespace CnV
 		}
 		#endif
 
-		private async void AppWindow_Closing(AppWindow sender, AppWindowClosingEventArgs args)
+		private async static void AppWindow_Closing(AppWindow sender, AppWindowClosingEventArgs args)
 		{
 			try
 			{
@@ -792,8 +792,9 @@ namespace CnV
 						await Task.Delay(500);
 					}
 					Log($"Destroyed");
-					window.Close();
-					// Exit?
+			//		args.Cancel=false;
+	//				window.Close();
+					App.instance.Exit();
 
 				}
 			}

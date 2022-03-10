@@ -174,7 +174,7 @@ namespace CnV
 				cityDrawAlpha =  iAlpha;
 				//const float zBase = 0f;
 				// selected
-					
+				double simTime = IServerTime.NowToServerSeconds(); // includes fractional
 				// Walls and background
 				var cityWallSpan = new Vector2(0.5f*(23.0f/21.0f),0.5f*(23.0f/21.0f) * cityYAspectRatio);
 				var cityWallOrigin = new Vector2(buildCityOrigin.X+(2.0f/64f)*cityTileGainX,buildCityOrigin.Y+0.375f*cityTileGainY );
@@ -379,12 +379,13 @@ namespace CnV
 							}
 							if(bspot == buildOp.c)
 								{
-									var simTApprox = IServerTime.NowToServerSeconds();
-									var buildEnd = city.buildItemEndsAt.seconds - 0.25f; // should this be earliest?
-									var required = currentBuildOp.TimeRequired(city);
-										var gain = ((buildEnd - simTApprox)/required).SaturateToFloat();
-									Assert(buildEnd >= simTApprox - 1.0f);
-									Assert(buildEnd - simTApprox <= required + 1.0f);
+									
+									var buildEnd = city.buildItemEndsAt.EarliestSeconds; // should this be earliest?
+									var startT = currentBuildStartTime;
+									var required = buildEnd-startT;
+										var gain = ((buildEnd - simTime)/required).SaturateToFloat();
+									Assert(buildEnd >= simTime - 1.0f);
+									Assert(buildEnd - simTime <= required + 1.0f);
 									if(buildOp.isBuild|buildOp.isDemo)
 									{
 										if(buildOp.isBuild)
@@ -411,7 +412,7 @@ namespace CnV
 									}
 									if(!buildOp.isMove)
 									{
-										var dT = ((animationT -currentBuildStartTime)*2.0f).SaturateToFloat();
+										var dT = ((simTime -currentBuildStartTime)*2.0f).SaturateToFloat();
 										var fade = (dT).UNormToByte();
 
 										float v0, v1;
@@ -535,7 +536,7 @@ namespace CnV
 				if(buildOp.isNotNop)
 				{
 					var spot = buildOp.c;
-					var dT = (animationT -currentBuildStartTime).SaturateToFloat();
+					var dT = ((simTime -currentBuildStartTime)*1.5f).SaturateToFloat().SCurve();
 					var fade = ((dT*255).RoundToInt());
 
 					DrawBuilding(bidConstruction,fade,zBase: zCities,layer: spot.LayerConstruction(),buildC: spot,lerpC:(-0.375f,0.5f,0.625f,1.5f) ); //  bspot,lerpC0: 0.25f,lerpC1: 0.75f,wantShadow: true);
@@ -543,7 +544,7 @@ namespace CnV
 				if(lastBuiltOp.isNotNop )
 				{
 					var spot = lastBuiltOp.bspot;
-					var dT = (animationT -lastBuildCompleteTime).SaturateToFloat();
+					var dT = ((animationT -lastBuildCompleteTime)*0.5f).SaturateToFloat().SCurve();
 					if(dT >= 1.0f)
 					{
 						// over

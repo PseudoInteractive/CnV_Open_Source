@@ -99,7 +99,7 @@ namespace CnV
         public Supporter supporter;
         public int type;
 
-        public BitmapImage icon => ImageHelper.FromImages($"Icons/troops{type}.png");
+        public BitmapImage icon => ImageHelper.Get($"Icons/troops{type}.png");
         public string troopType => Troops.ttNameWithCaps[type];
         public int send { get => supporter.tSend.GetCount(type); set => Set(ref supporter.tSend,new TroopTypeCount( type,value) ); }
         public int home { get => supporter.city.troopsHome.GetCount(type); }

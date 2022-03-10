@@ -11,7 +11,7 @@
 				<!--<ResourceDictionary >
 					<FontFamily x:Key="CnVFont">ms-appx:///Assets/CnVFont-VF.ttf#CnVFont,Segoe Fluent Icons"</FontFamily>
 				</ResourceDictionary>-->
-				<ColorPaletteResources Accent="#FF361F70" 
+				<ColorPaletteResources Accent="#FF4C20BB" 
 									   BaseHigh="#FFFFFFFF" BaseLow="#FF380E0E" BaseMedium="#FFA68484" BaseMediumHigh="#FFC1A2A2" BaseMediumLow="#FF6F4949" ChromeAltLow="#FFC1A2A2" ChromeBlackHigh="#FF505050" ChromeBlackLow="#FFC1A2A2" ChromeBlackMedium="#FF303030" ChromeBlackMediumLow="#FF202020" ChromeDisabledHigh="#FF380E0E" ChromeDisabledLow="#FFA68484" ChromeGray="#FF8A6767" ChromeHigh="#FF8A6767" ChromeLow="#FF2A0303" ChromeMedium="#FF2D0606" ChromeMediumLow="#FF340B0B" ChromeWhite="#FFFFFFFF" ListLow="#FF2D0606" ListMedium="#FF380E0E" 					
 					AltHigh="#80200040" AltLow="#80003000" AltMedium="#80110030" AltMediumHigh="#80102010" AltMediumLow="#80051505"		 />
 				<ResourceDictionary>
@@ -24,19 +24,19 @@
 					<Color x:Key="SystemAccentColorLight1">#FF503B84</Color>
 					<Color x:Key="SystemAccentColorLight2">#FF695798</Color>
 					<Color x:Key="SystemAccentColorLight3">#FF8372AC</Color>
-					<Color x:Key="SystemAccentColorDark1">#FF2B1A66</Color>
-					<Color x:Key="SystemAccentColorDark2">#FF21145B</Color>
-					<Color x:Key="SystemAccentColorDark3">#FF160F51</Color>
+					<Color x:Key="SystemAccentColorDark1">#FF290E90</Color>
+					<Color x:Key="SystemAccentColorDark2">#FF2E117A</Color>
+					<Color x:Key="SystemAccentColorDark3">#FF38157D</Color>
 					<Color x:Key="RegionColor">#FF153A35</Color>
 					<SolidColorBrush x:Key="RegionBrush" Color="#FF153A35" />
 				</ResourceDictionary>
 
 				<!--<ResourceDictionary Source="Styles/Theme.xaml"  />-->
-				<ResourceDictionary Source="Styles/FontSizes.xaml"  />
-				<ResourceDictionary Source="Styles/TextBlock.xaml" />
-				<ResourceDictionary Source="Styles/Page.xaml" />
-				<ResourceDictionary Source="Styles/ScrollBarHack.xaml" />
-				<ResourceDictionary Source="Styles/BattleReport.xaml" />
+				<ResourceDictionary Source="ms-appx:///Styles/FontSizes.xaml"  />
+				<ResourceDictionary Source="ms-appx:///Styles/TextBlock.xaml" />
+				<ResourceDictionary Source="ms-appx:///Styles/Page.xaml" />
+				<ResourceDictionary Source="ms-appx:///Styles/ScrollBarHack.xaml" />
+				<ResourceDictionary Source="ms-appx:///Styles/BattleReport.xaml" />
 				<!--<ResourceDictionary Source="/Styles/SharedResources.xaml" />-->
 
 
