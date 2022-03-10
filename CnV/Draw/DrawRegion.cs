@@ -276,7 +276,7 @@ internal partial class GameClient
 
 			baseFontScale = (Settings.fontScale*0.75f).DipToWorld();//.Min(0.5f);
 			regionFontScale =  MathF.Sqrt(64 / viewW.Z) *Settings.regionLabelScale* baseFontScale;//.Min(0.5f);
-			fontCullScaleW = (Settings.fontCullScale*2).DipToWorld();
+			fontCullScaleW = (Settings.fontCullScale*0.5f).DipToWorld();
 
 			clampedScaleInverse = (64 * pixelScaleInverse).Min(4.0f);
 			shapeSizeGain = MathF.Sqrt(pixelScale * (1.50f / 64.0f)).DipToWorld();

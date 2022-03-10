@@ -193,7 +193,7 @@ namespace CnV
 					}
 				}
 
-				var cityFontScale = (MathF.Sqrt(8 / viewW.Z) *Settings.buildingLabelScale* baseFontScale).Min(baseFontScale*1.5f); // perspective attenuation with distance
+				var cityFontScale = MathF.Sqrt(6.0f / viewW.Z.Clamp(0.5f,6.0f)) *Settings.buildingLabelScale* baseFontScale; // perspective attenuation with distance
 				for(var cy = span0;cy <= span1;++cy)
 				{
 					for(var cx = span0;cx <= span1;++cx)
@@ -534,7 +534,7 @@ namespace CnV
 				if(buildOp.isNotNop)
 				{
 					var spot = buildOp.c;
-					var dT = (animationT -currentBuildStartTime).SaturateToFloat();
+					var dT = ((animationT -currentBuildStartTime)*1.5f).SaturateToFloat().SCurve();
 					var fade = ((dT*255).RoundToInt());
 
 					DrawBuilding(bidConstruction,fade,zBase: zCities,layer: spot.LayerConstruction(),buildC: spot,lerpC:(-0.375f,0.5f,0.625f,1.5f) ); //  bspot,lerpC0: 0.25f,lerpC1: 0.75f,wantShadow: true);
@@ -542,7 +542,7 @@ namespace CnV
 				if(lastBuiltOp.isNotNop )
 				{
 					var spot = lastBuiltOp.bspot;
-					var dT = (animationT -lastBuildCompleteTime).SaturateToFloat();
+					var dT = (animationT -lastBuildCompleteTime).SaturateToFloat().SCurve();
 					if(dT >= 1.0f)
 					{
 						// over
