@@ -415,12 +415,14 @@ internal partial class GameClient
 					if((Settings.lighting == Lighting.local))
 						t = (float)DateTimeOffset.Now.TimeOfDay.TotalDays; // day t= night
 					else if((Settings.lighting == Lighting.strobe))
-						t = t*1024;
-					else
-						t = t*64;
+						t = t*256;
+//					else
+//						t = t*64;
 
 					t -= MathF.Floor(t);
-				//	t = t.Bezier(0f,0.3f,0.43f,0.57f,0.70f,1.0f);
+					//	t = t.Bezier(0f,0.3f,0.43f,0.57f,0.70f,1.0f);
+					t = t.Bezier(0f,0.375f,0.625f,1.0f);
+				//	t = t.Bezier(0f,0.5f,0.5f,1.0f);
 					var isDay = (t >= 0.25f) & (t <= 0.75f);
 					var t1 = (t-0.25f); // 0..1 is Morning to evening, -1..1 is evening until morning 
 					t1 -= t1.Floor();
@@ -432,7 +434,7 @@ internal partial class GameClient
 					Vector2 wc = new Vector2(MathF.Sin(t*MathF.Tau).SNormLerp(worldSpan0,worldSpan1),
 						(csTau).SNormLerp(worldSpan0,worldSpan1));
 
-					var Z = (csTau * (isDay ? -1.0f : 0.0f) + 1.0f)*World.span;
+					var Z = (csTau * (isDay ? -1.0f : 0.75f) + 1.0f)*World.span;
 					var cc = (wc.WorldToCamera()*shrink);
 					//var sc = cc.CameraToScreen();
 					Assert(Z> 0);
@@ -442,12 +444,12 @@ internal partial class GameClient
 					lightCWParam.SetValue(lightC.CameraToWorld());
 					viewCWParam.SetValue(viewW);
 					//	ToolTips.debugTip = $"{XVector3.Normalize(lightCC).ToNumerics().Format()} {AUtil.Format(lightCC.ToNumerics())}";
-					var d3 = t.CatmullRomLoop(new Vector3(0.875f,0.25f,1.25f),
+					var d3 = t.CatmullRomLoop(new Vector3(0.75f,0.5f,1.125f),
 												new Vector3(0.5f,0.5f,1.5f),
 												new Vector3(1.0f,1.0f,1.0f),
 												new Vector3(1.25f,0.5f,0.125f)
 																		)*0.75f * Settings.lightD;
-					var a3 = t.CatmullRomLoop(new Vector3(0.50f,0.0f,0.5f),
+					var a3 = t.CatmullRomLoop(new Vector3(0.3750f,0.125f,0.375f),
 												new Vector3(0.5f,0.5f,1.25f),
 												new Vector3(1.0f,1.0f,1.0f),
 												new Vector3(1.25f,0.5f,0.25f)
