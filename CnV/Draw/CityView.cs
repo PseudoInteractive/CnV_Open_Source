@@ -193,7 +193,7 @@ namespace CnV
 					}
 				}
 
-				var cityFontScale = (MathF.Sqrt(8 / viewW.Z) *Settings.buildingLabelScale* baseFontScale).Min(baseFontScale*1.5f); // perspective attenuation with distance
+				var cityFontScale = MathF.Sqrt(6.0f / viewW.Z.Clamp(0.5f,6.0f)) *Settings.buildingLabelScale* baseFontScale; // perspective attenuation with distance
 				for(var cy = span0;cy <= span1;++cy)
 				{
 					for(var cx = span0;cx <= span1;++cx)
