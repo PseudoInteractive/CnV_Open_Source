@@ -1,0 +1,55 @@
+﻿<TeachingTip
+    x:Class="CnV.ArtifactDialogue"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:cnv="using:CnV"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	ActionButtonClick="TeachingTip_ActionButtonClick"
+	ActionButtonContent="Go"
+	CloseButtonContent="Cancel"
+	PreferredPlacement="Center"
+	ShouldConstrainToRootBounds="true"
+	IsTabStop="True"
+	ActionButtonStyle="{StaticResource ButtonRevealStyle}"
+	AllowFocusOnInteraction="True"
+	IsLightDismissEnabled="True"
+    mc:Ignorable="d"
+	
+	>
+
+	<TeachingTip.HeroContent >
+		<Grid  Height="Auto" Margin="2,2" Width="370" >
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width ="80"  />
+				<ColumnDefinition Width ="80" />
+				<ColumnDefinition Width ="*" />
+			</Grid.ColumnDefinitions>
+			<Grid.RowDefinitions>
+				<RowDefinition Height="64"/>
+				<RowDefinition Height="48"/>
+			</Grid.RowDefinitions>
+			<Image Grid.Column="0" Source="{x:Bind a.image}" Margin="2"  />
+			<TextBlock Grid.Column="1" Text="{x:Bind a.name}" Margin="2" Style="{StaticResource TextBlockMedium}" TextWrapping="WrapWholeWords" TextAlignment="Center" MaxLines="3"  VerticalAlignment="Center" />
+			<TextBlock Grid.Column="2" Text="{x:Bind a.description}"  Margin="0" Style="{StaticResource TextBlockSmall}" TextWrapping="WrapWholeWords"  MaxLines="5" TextAlignment="Center" VerticalAlignment="Center" />
+			<cnv:IconText x:Name="zirc"  Grid.Row="1" Width="74"
+					  Image="{x:Bind cnv:ImageHelper.GetPhysical('zirconia.png',28) }"
+					  Text="{x:Bind a.zirconia, Mode=OneWay}" />
+
+			<cnv:IconText Grid.Column="1" Grid.Row="2" Width="74"
+							  Image="{x:Bind cnv:ImageHelper.GetPhysical('mana.png',28) }"
+					  Text="{x:Bind a.mana, Mode=OneWay}" 
+					 />
+			<StackPanel Grid.Row="1" Grid.Column="2" Orientation="Horizontal" Margin="8,0,0,0" >
+				<TextBlock Text="{x:Bind a.ownedStr,Mode=OneWay}" Style="{StaticResource TextBlockMedium}"  Margin="3" VerticalAlignment="Center"  TextAlignment="Center" />
+				<NumberBox  x:Name="count" Style="{StaticResource NumberBoxSmall}"   Margin="8,2" Width="70" />
+				<TextBlock Text="{x:Bind priceStr,Mode=OneWay}" Style="{StaticResource TextBlockMedium}"  Margin="3" VerticalAlignment="Center"  TextAlignment="Center" />
+				
+				
+			</StackPanel>
+
+		</Grid>
+	</TeachingTip.HeroContent>
+	
+	
+</TeachingTip>

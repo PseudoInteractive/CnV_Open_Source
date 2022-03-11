@@ -42,7 +42,7 @@ namespace CnV
 				instance.OnPropertyChanged(member);
 		}
 
-		public string zirconiaS => $"{(Player.me?.zirconia??0).Format()} Ziconnia";
+		public string zirconiaS => Player.me.zirconia.Format();
 		public string manaS => Player.me.mana.Format();
 		public string goldS => (Player.me?.gold ?? 0).Format();
 		public string RefineS(int id) => Player.me.data.refines[id].Format();
@@ -51,5 +51,13 @@ namespace CnV
 
 		internal static void ZirconiaChanged() => Changed(nameof(zirconiaS));
 		internal static void RefinesChanged() => Changed(nameof(RefineS));
+
+		
+
+		private void WoodTapped(object sender,TappedRoutedEventArgs e)=> Artifact.Show( Artifact.ArtifactType.saw, sender);
+		private void StoneTapped(object sender,TappedRoutedEventArgs e)=> Artifact.Show( Artifact.ArtifactType.chisel, sender);
+		private void IronTapped(object sender,TappedRoutedEventArgs e)=> Artifact.Show( Artifact.ArtifactType.crucible, sender);
+		private void FoodTapped(object sender,TappedRoutedEventArgs e)=> Artifact.Show( Artifact.ArtifactType.Hoe, sender);
+		private void GoldTapped(object sender,TappedRoutedEventArgs e)=> Artifact.Show( Artifact.ArtifactType.chest, sender);
 	}
 }

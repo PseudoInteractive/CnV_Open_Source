@@ -9,7 +9,7 @@
       "authenticationMode": "Windows",
       "doNotLaunchApp": false,
       "remoteDebugMachine": "",
-      "nativeDebugging": true
+      "nativeDebugging": false
     }
   }
 }

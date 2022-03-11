@@ -177,7 +177,7 @@ namespace CnV
 
 		}
 
-		internal DebounceA cityQueueChangeDebounce = new(UpdateBuildQueue) { runOnUiThread=true,debounceDelay=100 };
+		internal DebounceA cityQueueChangeDebounce = new(UpdateBuildQueue) { runOnUiThread=true,debounceDelay=50 };
 
 
 
@@ -528,6 +528,12 @@ namespace CnV
 			CityView.selectedBuildingIds = buildingCountGrid.SelectedItems.Select(a => ((BuildingCountAndBrush)a).bid).ToArray();
 			CityView.selectedBuildingIdsChangeTime = AGame.animationT;
 		}
+
+		private void WoodTap(object sender,TappedRoutedEventArgs e)=> Artifact.Show( Artifact.ArtifactType.axe, sender);
+		private void StoneTap(object sender,TappedRoutedEventArgs e)=> Artifact.Show( Artifact.ArtifactType.hammer, sender);
+		private void IronTap(object sender,TappedRoutedEventArgs e)=> Artifact.Show( Artifact.ArtifactType.pike, sender);
+		private void FoodTap(object sender,TappedRoutedEventArgs e)=> Artifact.Show( Artifact.ArtifactType.sickle, sender);
+		private void GoldTap(object sender,TappedRoutedEventArgs e)=> Artifact.Show( Artifact.ArtifactType.chest, sender);
 	}
 	public class BuildingCountAndBrush:INotifyPropertyChanged
 	{

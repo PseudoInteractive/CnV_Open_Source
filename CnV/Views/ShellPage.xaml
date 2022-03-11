@@ -22,7 +22,7 @@
 		
 >
 	<UserControl.Resources>
-		<ResourceDictionary>
+		
 			<!--<ResourceDictionary.MergedDictionaries>
 				<ResourceDictionary Source="ms-appx:///Microsoft.UI.Xaml/DensityStyles/Compact.xaml" />
 			</ResourceDictionary.MergedDictionaries>-->
@@ -34,8 +34,9 @@
 				<Setter Property="VerticalAlignment" Value="Stretch"/>
 				<Setter Property="HorizontalAlignment" Value="Stretch"/>
 			</Style>
-			
-		</ResourceDictionary>
+
+		
+
 
 
 	</UserControl.Resources>

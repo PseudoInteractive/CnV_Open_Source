@@ -6,30 +6,39 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 	xmlns:tk="using:CommunityToolkit.WinUI.UI.Controls"
+	IsTabStop="True"
+	IsTapEnabled="True"
     mc:Ignorable="d">
 
-    <tk:WrapPanel Orientation="Horizontal" HorizontalSpacing="4" VerticalSpacing="4" >
+    <tk:WrapPanel Orientation="Horizontal" HorizontalSpacing="4" VerticalSpacing="4" IsTabStop="True" IsTapEnabled="true" >
 		<cnv:IconText x:Name="zirc" 
 					  Image="{x:Bind cnv:ImageHelper.GetPhysical('zirconia.png',28) }"
 					  Text="{x:Bind zirconiaS, Mode=OneWay}" 
+					  
+					  
 					 />
-		<cnv:IconText Image="{x:Bind cnv:ImageHelper.GetPhysical('UI/icons/Icon_mana.png',24) }"
+		<cnv:IconText Image="{x:Bind cnv:ImageHelper.GetPhysical('mana.png',28) }"
 					  Text="{x:Bind manaS, Mode=OneWay}" 
 					 />
 		<cnv:IconText Image="{x:Bind cnv:ImageHelper.GetPhysical('UI/icons_ressource_gold.png',28) }"
-					  Text="{x:Bind goldS, Mode=OneWay}" 
+					  Text="{x:Bind goldS, Mode=OneWay}"  
+					  Tapped="GoldTapped"
 					 />
 		<cnv:IconText Image="{x:Bind cnv:ImageHelper.GetPhysical('UI/icons_ressource_wood.png',28) }"
 					  Text="{x:Bind RefineS(0), Mode=OneWay}" 
+					  Tapped="WoodTapped"
 					 />
 		<cnv:IconText Image="{x:Bind cnv:ImageHelper.GetPhysical('UI/icons_ressource_stone.png',28) }"
 					  Text="{x:Bind RefineS(1), Mode=OneWay}" 
+					  Tapped="StoneTapped"
 					 />
 		<cnv:IconText Image="{x:Bind cnv:ImageHelper.GetPhysical('UI/icons_ressource_iron.png',28) }"
 					  Text="{x:Bind RefineS(2), Mode=OneWay}" 
+					   Tapped="IronTapped"
 					 />
 		<cnv:IconText Image="{x:Bind cnv:ImageHelper.GetPhysical('UI/icons_ressource_grain.png',28) }"
 					  Text="{x:Bind RefineS(3), Mode=OneWay}" 
+					   Tapped="FoodTapped"
 					 />
 
 	</tk:WrapPanel>

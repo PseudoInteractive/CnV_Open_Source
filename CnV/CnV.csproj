@@ -126,6 +126,7 @@
     <Compile Include="Draw\StatsView.cs" />
     <Compile Include="Draw\ViewStep.cs" />
     <Compile Include="FormatParameterObject.cs" />
+    <Compile Include="GameUI\ArtifactDialogue.xaml.cs" />
     <Compile Include="GameUI\Artifacts.xaml.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Services\CnVSignin.cs" />
@@ -353,6 +354,9 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Page Include="GameUI\ArtifactDialogue.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="GameUI\Artifacts.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -541,6 +545,7 @@
   <ItemGroup>
 	<None Remove="Assets\cnvIcon.ico" />
 	<None Remove="cnvCover.png" />
+	<None Remove="GameUI\ArtifactDialogue.xaml" />
 	<None Remove="GameUI\Artifacts.xaml" />
     <None Remove="Resources\CnVFont-VF.ttf" />
     <None Remove="Resources\Icon1.ico" />

@@ -1,6 +1,7 @@
 ﻿<Application x:Class="CnV.App"
 	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+		  xmlns:cnv="using:CnV"
 	      RequestedTheme="Dark"   
 	>
 	<Application.Resources>
@@ -15,20 +16,24 @@
 									   BaseHigh="#FFFFFFFF" BaseLow="#FF380E0E" BaseMedium="#FFA68484" BaseMediumHigh="#FFC1A2A2" BaseMediumLow="#FF6F4949" ChromeAltLow="#FFC1A2A2" ChromeBlackHigh="#FF505050" ChromeBlackLow="#FFC1A2A2" ChromeBlackMedium="#FF303030" ChromeBlackMediumLow="#FF202020" ChromeDisabledHigh="#FF380E0E" ChromeDisabledLow="#FFA68484" ChromeGray="#FF8A6767" ChromeHigh="#FF8A6767" ChromeLow="#FF2A0303" ChromeMedium="#FF2D0606" ChromeMediumLow="#FF340B0B" ChromeWhite="#FFFFFFFF" ListLow="#FF2D0606" ListMedium="#FF380E0E" 					
 					AltHigh="#80200040" AltLow="#80003000" AltMedium="#80110030" AltMediumHigh="#80102010" AltMediumLow="#80051505"		 />
 				<ResourceDictionary>
-					<Color x:Key="SystemChromeAltMediumHighColor">#8C051A05</Color>
+					<Color x:Key="SystemChromeMediumColor">#FF183E0E</Color>
+					<Color x:Key="SystemChromeAltMediumHighColor">#BC051005</Color>
 					<Color x:Key="SystemChromeAltHighColor">#FF183E0E</Color>
 					<Color x:Key="SystemRevealListLowColor">#FF2D0606</Color>
 					<Color x:Key="SystemRevealListMediumColor">#FF380E0E</Color>
-					
-					 <!--Override system generated accent colors--> 
+					<AcrylicBrush x:Key="SystemControlAcrylicWindowBrush"  TintColor="{ThemeResource SystemChromeAltHighColor}" TintOpacity="0.8" FallbackColor="{ThemeResource SystemChromeMediumColor}" />
+
+					<!--Override system generated accent colors--> 
 					<Color x:Key="SystemAccentColorLight1">#FF503B84</Color>
 					<Color x:Key="SystemAccentColorLight2">#FF695798</Color>
 					<Color x:Key="SystemAccentColorLight3">#FF8372AC</Color>
-					<Color x:Key="SystemAccentColorDark1">#FF290E90</Color>
-					<Color x:Key="SystemAccentColorDark2">#FF2E117A</Color>
-					<Color x:Key="SystemAccentColorDark3">#FF38157D</Color>
+					<Color x:Key="SystemAccentColorDark1">#FF411AA5</Color>
+					<Color x:Key="SystemAccentColorDark2">#FF321285</Color>
+					<Color x:Key="SystemAccentColorDark3">#FF351377</Color>
 					<Color x:Key="RegionColor">#FF153A35</Color>
-					<SolidColorBrush x:Key="RegionBrush" Color="#FF153A35" />
+					<SolidColorBrush x:Key="RegionBrush" Color="{StaticResource RegionColor}" />
+
+					
 				</ResourceDictionary>
 
 				<!--<ResourceDictionary Source="Styles/Theme.xaml"  />-->

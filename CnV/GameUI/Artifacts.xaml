@@ -15,10 +15,10 @@
 	>
 	<Page.Resources>
 		<DataTemplate x:Key="ArtifactItem" x:DataType="cnv:Artifact"  >
-			<Grid  Background="{x:Null}" Height="Auto" Margin="4,1"  >
+			<Grid  Height="Auto" Margin="2,2"  >
 				<Grid.ColumnDefinitions>
 					<ColumnDefinition Width ="80"  />
-					<ColumnDefinition Width ="110" />
+					<ColumnDefinition Width ="80" />
 					<ColumnDefinition Width ="*" />
 				</Grid.ColumnDefinitions>
 				<Grid.RowDefinitions>
@@ -26,30 +26,30 @@
 					<RowDefinition Height="48"/>
 				</Grid.RowDefinitions>
 				<Image Grid.Column="0" Source="{x:Bind image}" Margin="3"  />
-				<TextBlock Grid.Column="1" Text="{x:Bind name}" Margin="3" Style="{StaticResource TextBlockMedium}" TextWrapping="WrapWholeWords" TextAlignment="Center" MaxLines="3" />
-				<TextBlock Grid.Column="2" Text="{x:Bind description}"  Margin="3" Style="{StaticResource TextBlockSmall}" TextWrapping="WrapWholeWords"  MaxLines="4" TextAlignment="Center" />
-				<Grid Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" >
-					<Image Source="{x:Bind cnv:Artifact.imageDiamondsSmall}"  Margin="2"  HorizontalAlignment="Center" VerticalAlignment="Top" Stretch="None" />
-					<TextBlock Text="{x:Bind zirconia}" Style="{StaticResource TextBlockMedium}"  Margin="2" TextAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Bottom" />
-				</Grid>
-				<Grid Grid.Row="1" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" >
-					<Image Source="{x:Bind cnv:Artifact.imageManaSmall}"   Margin="2" HorizontalAlignment="Center" Stretch="None" VerticalAlignment="Top" />
-					<TextBlock Text="{x:Bind mana}" Style="{StaticResource TextBlockMedium}"  Margin="2" TextAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Bottom" />
-				</Grid>
-				<StackPanel Grid.Row="1" Grid.Column="2" Orientation="Horizontal"  >
-					<TextBlock Text="{x:Bind ownedStr,Mode=OneWay}" Style="{StaticResource TextBlockMedium}"  Margin="2" VerticalAlignment="Center" />
+				<TextBlock Grid.Column="1" Text="{x:Bind name}" Margin="3" Style="{StaticResource TextBlockMedium}" TextWrapping="WrapWholeWords" TextAlignment="Center" MaxLines="3"  VerticalAlignment="Center" />
+				<TextBlock Grid.Column="2" Text="{x:Bind description}"  Margin="3" Style="{StaticResource TextBlockSmall}" TextWrapping="WrapWholeWords"  MaxLines="4" TextAlignment="Center"   VerticalAlignment="Center" />
+				<cnv:IconText x:Name="zirc"  Grid.Row="1" Width="74"
+					  Image="{x:Bind cnv:ImageHelper.GetPhysical('zirconia.png',28) }"
+					  Text="{x:Bind zirconia, Mode=OneWay}" />
+
+				<cnv:IconText Grid.Column="1" Grid.Row="2" Width="74"
+							  Image="{x:Bind cnv:ImageHelper.GetPhysical('mana.png',28) }"
+					  Text="{x:Bind mana, Mode=OneWay}" 
+					 />
+				<StackPanel Grid.Row="1" Grid.Column="2" Orientation="Horizontal"  Margin="8,0,0,0" >
+					<TextBlock Text="{x:Bind ownedStr,Mode=OneWay}" Style="{StaticResource TextBlockMedium}"  Margin="3" VerticalAlignment="Center"  TextAlignment="Center" />
 					<NumberBox  Style="{StaticResource NumberBoxSmall}" Value="{x:Bind nbEnterUse,Mode=TwoWay}"  Margin="8,2" Width="70" />
-					<Button Content ="Use"  Margin="2,1,6,1" Click="{x:Bind UseClick}" />
-					<TextBlock Text="{x:Bind priceStr,Mode=OneWay}" Style="{StaticResource TextBlockMedium}"  Margin="2" VerticalAlignment="Center" />
+					<Button Content ="Use"  Margin="2,1,6,1" Click="{x:Bind UseClick}" Style="{StaticResource ButtonSmall}" />
+					<TextBlock Text="{x:Bind priceStr,Mode=OneWay}" Style="{StaticResource TextBlockMedium}"  Margin="3" VerticalAlignment="Center" TextAlignment="Center" />
 					<NumberBox Style="{StaticResource NumberBoxSmall}" Value="{x:Bind nbEnterBuy,Mode=TwoWay}"  Margin="8,2" Width="70" />
-					<Button Content ="Buy"  Margin="2,1,6,1" Click="{x:Bind BuyClick}" />
+					<Button Content ="Buy"  Margin="2,1,6,1" Click="{x:Bind BuyClick}" Style="{StaticResource ButtonSmall}" />
 				</StackPanel>
 
 			</Grid>
-
 		</DataTemplate>
+
 	</Page.Resources>
-    <Grid  >
+	<Grid  >
 		<Grid.RowDefinitions>
 			<RowDefinition Height="auto"/>
 			<RowDefinition Height="auto"/>

@@ -219,10 +219,10 @@ namespace CnV.Views
 					   SetCheckboxesFromTags(city.remarks);
 					   //Bindings.Update();
 					   OnPropertyChanged();
-
-					   var result = await this.ShowAsync2();
-					   if(result==true)
+					   var rv = await this.ShowAsync2();
+					   if(rv==1)
 					   {
+						   
 						   var setTags = TagsBlade.IsOpen;
 						   var setTrade = TradeBlade.IsOpen;
 						   var setName = NameBlade.IsOpen;
@@ -297,7 +297,7 @@ namespace CnV.Views
 
 							}
 					   }
-					   return result;
+					   return false;
 				   }
 				   catch(Exception ex)
 				   {
