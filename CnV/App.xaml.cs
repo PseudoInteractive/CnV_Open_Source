@@ -1399,7 +1399,22 @@ namespace CnV
 			return rv;
 		}
 
-
+		private static void Show(this MenuFlyout flyout,UIElement sender,ContextRequestedEventArgs args)
+		{
+			if(args.TryGetPosition(sender,out var c))
+			{
+				flyout.ShowAt(sender,c);
+			}
+			else if(args.TryGetPosition(ShellPage.rootGrid,out var c2))
+			{
+				flyout.ShowAt(ShellPage.rootGrid,c2);
+			}
+			else
+			{
+				flyout.ShowAt(ShellPage.rootGrid,ShellPage.mousePosition.AsPoint());
+				Assert(false);
+			}
+		}
 
 		public static MenuFlyoutItem AddItem(this MenuFlyout menu,string text,Symbol symbol,Action command) => AddItem(menu,text,new SymbolIcon(symbol),command);
 		public static MenuFlyoutItem AddItem(this MenuFlyout menu,string text,Symbol symbol,UIColor iconColor,Action command) => AddItem(menu,text,new SymbolIcon(symbol) { Foreground=AppS.Brush(iconColor) },command);

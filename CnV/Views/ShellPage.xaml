@@ -75,22 +75,16 @@
 			<!-- Overlay grid for sizing -->
 
 
-			<winui:CommandBar Grid.ColumnSpan="3" IsSticky="True" IsTabStop="True"   x:Name="commandBar" x:FieldModifier="public"  >
-				<winui:CommandBar.Content>
-					<Grid>
-						<Grid.ColumnDefinitions>
-							<ColumnDefinition Width ="Auto"/>
-							<ColumnDefinition Width ="Auto"/>
-							<ColumnDefinition  Width ="Auto"/>
-							<ColumnDefinition  Width ="Auto"/>
-							<ColumnDefinition  Width ="Auto"/>
-						</Grid.ColumnDefinitions>
+			<CommandBar Grid.ColumnSpan="3" IsSticky="True" IsTabStop="True"   x:Name="commandBar" x:FieldModifier="public"  >
+				<CommandBar.Content>
+					<StackPanel Orientation="Horizontal" Spacing="4">
+						
 						<ProgressRing x:Name="progress" IsActive="False" />
-						<TextBlock Grid.Column="1" x:Name="work" x:FieldModifier="public" Margin="6" VerticalAlignment="Center" Width="255" />
-						<TextBox Grid.Column="2" x:Name="coords" Margin="4" Width="100" TextAlignment="Center"  Text="000:000" HorizontalAlignment="Center" x:FieldModifier="public" KeyDown="coords_KeyDown"/>
-						<ComboBox Grid.Column="3" x:Name="windowLayout" SelectedIndex="{x:Bind layout, Mode=TwoWay}"  VerticalAlignment="Center" Margin="4"
+						<TextBlock  x:Name="work" x:FieldModifier="public" Margin="6" VerticalAlignment="Center" Width="255" />
+						<TextBox  x:Name="coords" Margin="4" Width="100" TextAlignment="Center"  Text="000:000" HorizontalAlignment="Center" x:FieldModifier="public" KeyDown="coords_KeyDown"/>
+						<ComboBox x:Name="windowLayout" SelectedIndex="{x:Bind layout, Mode=TwoWay}"  VerticalAlignment="Center" Margin="4"
 						          ToolTipService.ToolTip="Select a view layout"  ItemsSource="{x:Bind layoutOptions}"  />
-						<winui:ComboBox Grid.Column="4" x:Name="cityBox" x:FieldModifier="public" 
+						<ComboBox  x:Name="cityBox" x:FieldModifier="public" 
 					                Width="200"
 					                IsEditable="True"
 					                TextSubmitted="CitySubmitted"
@@ -98,20 +92,32 @@
                  
 					                VerticalAlignment="Center" ToolTipService.ToolTip="'Build City'- the city that you would build if you were building a city"
 					                Margin="4" >
-							<winui:ComboBox.ItemTemplate>
+							<ComboBox.ItemTemplate>
 								<DataTemplate x:Name="SingleLineDataTemplate" x:DataType="cnv:City">
 									<StackPanel Orientation="Horizontal" Height="32" >
 										<Image Source="{x:Bind icon}" Height="32" Width="32" Stretch="Fill" VerticalAlignment="Center"/>
 										<TextBlock Text="{x:Bind nameAndRemarks}" VerticalAlignment="Center" />
 									</StackPanel>
 								</DataTemplate>
-							</winui:ComboBox.ItemTemplate>
-						</winui:ComboBox>
-					</Grid>
-				</winui:CommandBar.Content>
-				<winui:CommandBar.PrimaryCommands  >
-					
-					<winui:AppBarToggleButton x:Name="artifactsButton" Click="ArtifactsClicked" Icon="AddFriend" Label="Artifact"  IsChecked="False" 
+							</ComboBox.ItemTemplate>
+						</ComboBox>
+						
+						<ComboBox x:Name="cityListBox" x:FieldModifier="public"
+                     IsEditable="True"
+					TextSubmitted="CityListSubmitted"
+                      Width="120"
+                      SelectedValuePath="id"
+                      DisplayMemberPath="name"
+                      ItemsSource="{x:Bind game:CityList.selections, Mode=OneTime}"
+                      VerticalAlignment="Center" ToolTipService.ToolTip="Active City List"
+							  
+                      Margin="4" />
+						
+					</StackPanel>
+				</CommandBar.Content>
+				<CommandBar.PrimaryCommands  >
+
+					<AppBarToggleButton x:Name="artifactsButton" Click="ArtifactsClicked" Icon="OutlineStar" Label="Artifact"  IsChecked="False" 
                            ToolTipService.ToolTip="This will hid or show the artifacts window" />
 
 					<AppBarButton x:Name="ContinentFilter"  x:FieldModifier="public"
@@ -129,7 +135,7 @@
 					              AccessKey="H" 
 					>
 						<!--<Button.Resources>
-							<winui:TeachingTip x:Key="HomeButtonTip" Title="Home Button" x:FieldModifier="public"
+							<TeachingTip x:Key="HomeButtonTip" Title="Home Button" x:FieldModifier="public"
                                    IsLightDismissEnabled="True" PreferredPlacement="Right" 
                                     Subtitle="Click to toggle between city and world view, and to focus on the current city" />
 						</Button.Resources>-->
@@ -152,28 +158,17 @@
                             ToolTipService.ToolTip="Spot with Focus.&#x0a;Click to re-center or swith to this city&#x0a;Right clck for menu" Visibility="Collapsed"/>
 
 
-					<winui:AppBarElementContainer Width="120">
-						<ComboBox x:Name="cityListBox" x:FieldModifier="public"
-                     IsEditable="True"
-					TextSubmitted="CityListSubmitted"
-                      Width="120"
-                      SelectedValuePath="id"
-                      DisplayMemberPath="name"
-                      ItemsSource="{x:Bind game:CityList.selections, Mode=OneTime}"
-                      VerticalAlignment="Center" ToolTipService.ToolTip="Active City List"
-							  
-                      Margin="4" />
-					</winui:AppBarElementContainer>
 
 
-					<winui:AppBarButton Click="{x:Bind cnv:NavStack.BackClick}"  Icon="Back" Label="Back" RightTapped="BackRightTapped" 
+
+					<AppBarButton Click="{x:Bind cnv:NavStack.BackClick}"  Icon="Back" Label="Back" RightTapped="BackRightTapped" 
                           ToolTipService.ToolTip="Switch to most recently visited city&#x0a;Right click to view history"  AccessKey=","/>
-					<winui:AppBarButton Click="{x:Bind cnv:NavStack.ForwardClick}" Icon="Forward" Label="Forward"  RightTapped="ForwardRightTapped" 
+					<AppBarButton Click="{x:Bind cnv:NavStack.ForwardClick}" Icon="Forward" Label="Forward"  RightTapped="ForwardRightTapped" 
                            ToolTipService.ToolTip="Move forward in city history&#x0a;This is only useful after you have pressed 'Back'&#x0a;Right click to view forward history" AccessKey="." />
 
-					
 
-					<winui:AppBarButton x:Name="Fresh"
+
+					<AppBarButton x:Name="Fresh"
                               Label="Fresh"
                               Click="Refresh"
                           RightTapped="RefreshX"
@@ -183,25 +178,23 @@
                               Icon="RepeatAll">
 
 						<!--<AppBarButton.Resources>
-						<winui:TeachingTip x:Key="RefreshTip"
+						<TeachingTip x:Key="RefreshTip"
                                 IsLightDismissEnabled="True" 
                                 Title="Refresh"
 	                          x:FieldModifier="public"
                                 
                                 Subtitle="If something is not updated or missing, try this button, use right click to refresh many things">
 							<TextBlock Text="Right click will refresh all World data (castles, cities, bosses etc)" />
-						</winui:TeachingTip>
+						</TeachingTip>
 					</AppBarButton.Resources>-->
-					</winui:AppBarButton>
+					</AppBarButton>
 					<AppBarSeparator/>
-						
-					</winui:CommandBar.PrimaryCommands>
-				
-				<CommandBar.SecondaryCommands >
+
+
 					<AppBarButton Label="Settings" Icon="Setting"  Click="ShowSettings" />
 
-				</CommandBar.SecondaryCommands>
-			</winui:CommandBar>
+				</CommandBar.PrimaryCommands>
+			</CommandBar>
 
 			<cnv:CityStats 
 				x:Name="cityStats"
@@ -262,8 +255,8 @@
 					<RowDefinition Height="3*"  x:Name="rowTabTop"  />
 					<RowDefinition Height="*"/>
 				</Grid.RowDefinitions>
-				<winui:Frame x:Name="rightTabs"   IsNavigationStackEnabled="False" x:FieldModifier="public" />
-				<winui:Frame x:Name="spotTabs"  Grid.Row="1" IsNavigationStackEnabled="False" x:FieldModifier="public" />
+				<Frame x:Name="rightTabs"   IsNavigationStackEnabled="False" x:FieldModifier="public" />
+				<Frame x:Name="spotTabs"  Grid.Row="1" IsNavigationStackEnabled="False" x:FieldModifier="public" />
 				<tk:GridSplitter
 				IsTabStop="True"
 				CursorBehavior="ChangeOnSplitterHover"
@@ -367,11 +360,11 @@
 					<!-- The ItemsStackPanel must be edited to update the following two properties -->
 					<!-- These properties allow the list to grow from the bottom -->
 					<ListView.ItemsPanel>
-						<winui:ItemsPanelTemplate>
+						<ItemsPanelTemplate>
 							<ItemsStackPanel ItemsUpdatingScrollMode="KeepLastItemInView" 
 									
                             VerticalAlignment="Center"/>
-						</winui:ItemsPanelTemplate>
+						</ItemsPanelTemplate>
 					</ListView.ItemsPanel>
 					<!-- This setter property is created so ListViewItems correctly align to the left or right. -->
 					<ListView.ItemContainerStyle>
@@ -425,7 +418,7 @@
 				</StackPanel>
 			</Expander>
 
-			<!--<winui:InfoBar x:Name="infoBar"
+			<!--<InfoBar x:Name="infoBar"
                                   Grid.Row="1"
                                   Grid.Column="1"
 					   x:FieldModifier="public"
@@ -435,7 +428,7 @@
 			-->
 			<!--<tk:MarkdownTextBlock x:Name="infoMD" x:FieldModifier="public" Text="TBA" Background="{x:Null}"/>-->
 			<!--
-		</winui:InfoBar>-->
+		</InfoBar>-->
 
 			<tk:GridSplitter
                         Background="{x:Null}"

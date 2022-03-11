@@ -75,7 +75,7 @@
 				<Expander.Header   >
 					
 					<Border Background="{StaticResource ExpanderBrushHeader}" BorderThickness="0" Padding="3" CornerRadius="{StaticResource baseCR}" >
-						<TextBlock x:Name="queueText"  Text ="Queue" Margin="0"  Style="{StaticResource TextBlockMedium}"   />
+						<TextBlock x:Name="queueText" RightTapped="QueueRightTapped" Text ="Queue" Margin="0"  Style="{StaticResource BodyTextBlockStyle}"   />
 					</Border>
 				</Expander.Header>
 				<ListView x:Name="buildQueueListView" x:FieldModifier="public"  

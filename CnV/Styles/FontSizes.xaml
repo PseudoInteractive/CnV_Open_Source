@@ -47,7 +47,8 @@
 			</Style>
 			<Style x:Key="BaseTextBlockStyleWrap" TargetType="TextBlock" BasedOn="{StaticResource BaseTextBlockStyle}">
 				<Setter Property="TextWrapping" Value="Wrap" />
-			</Style>
+				<Setter Property="MaxLines" Value="3" />
+		</Style>
 
 			<Style x:Key="PageTitleStyle" TargetType="TextBlock" BasedOn="{StaticResource BaseTextBlockStyleWrap}" >
 				<Setter Property="VerticalAlignment" Value="Center" />

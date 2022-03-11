@@ -30,13 +30,25 @@ using static CnV.CityStats;
 
 namespace CnV
 {
-	public sealed partial class CityStats:UserControl
+	public sealed partial class CityStats:UserControl,INotifyPropertyChanged
 	{
 		public static CityStats instance;
 		public CityStats()
 		{
 			this.InitializeComponent();
 			buildQueue.CollectionChanged+=BuildQueue_CollectionChanged;
+		}
+		
+		public event PropertyChangedEventHandler? PropertyChanged;
+		public void OnPropertyChanged(string? member = null)
+		{
+			if (this.PropertyChanged is not null) 
+				AppS.DispatchOnUIThread(() => PropertyChanged?.Invoke(this,new(member)));
+		}
+		public static void Changed(string? member = null)
+		{
+			if(instance is not null)
+				instance.OnPropertyChanged(member);
 		}
 
 		private static void BuildQueue_CollectionChanged(object? sender,NotifyCollectionChangedEventArgs e)
@@ -232,6 +244,7 @@ namespace CnV
 #else
 						ShellPage.instance.timeDisplay.Text = t.FormatWithYear();
 #endif
+						if(!hasBeenDisplayed)
 						{
 							ResToolTip.Content=
 								$"Storage:\n{city.stats.storage.Format("\n")}";
@@ -279,7 +292,8 @@ namespace CnV
 						{
 							var txt = (expBuildings.Header as DependencyObject).Child<TextBlock>(1);
 							txt.UpdateLazy($"Buildings: [{bdd.buildingCount}/{bdd.townHallLevel*10}]");
-							queueText.UpdateLazy($"Queue cs:{city.stats.cs:N0}"); 
+							var hasHammerTime = city.hammerTime > 0;
+							queueText.UpdateLazy($"Queue cs:{city.stats.cs:N0}{ (hasHammerTime ? " +" +city.hammerTime.Format() : "" )}", hasHammerTime ? Colors.GreenYellow : Colors.White); 
 						
 							var bd = new List<BuildingCountAndBrush>();
 							foreach(var i in bdd.counts)
@@ -534,6 +548,9 @@ namespace CnV
 		private void IronTap(object sender,TappedRoutedEventArgs e)=> Artifact.Show( Artifact.ArtifactType.pike, sender);
 		private void FoodTap(object sender,TappedRoutedEventArgs e)=> Artifact.Show( Artifact.ArtifactType.sickle, sender);
 		private void GoldTap(object sender,TappedRoutedEventArgs e)=> Artifact.Show( Artifact.ArtifactType.chest, sender);
+
+		private void QueueRightTapped(object sender,RightTappedRoutedEventArgs e)=>	Artifact.Show( Artifact.ArtifactType.medallion, sender);
+		
 	}
 	public class BuildingCountAndBrush:INotifyPropertyChanged
 	{
@@ -591,7 +608,7 @@ namespace CnV
 		{
 			args.Handled    = true;
 			var flyout = new MenuFlyout();
-			flyout.SetXamlRoot();
+			flyout.SetXamlRoot(sender);
 			
 
 			flyout.AddItem(StandardUICommandKind.Delete.Create( () =>
@@ -630,6 +647,10 @@ namespace CnV
 				if(index != -1)
 					city.AttemptMove(index,city.buildQueue.Length-1,lastSynchronizedQueue);
 			});
+			flyout.AddItem("Medallion..",Symbol.OutlineStar,() =>
+			{
+				Artifact.Show( Artifact.ArtifactType.medallion, sender);
+			});
 			// Todo: Sort
 
 			if(args.TryGetPosition(sender,out var c))
@@ -642,7 +663,7 @@ namespace CnV
 			}
 			else
 			{
-				flyout.ShowAt(CityStats.instance,new());
+				flyout.ShowAt(sender,new());
 				Assert(false); 
 			}
 			//VisualTreeHelper.GetParent(args.OriginalSource

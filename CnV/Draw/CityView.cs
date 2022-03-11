@@ -358,8 +358,10 @@ namespace CnV
 								{
 									//blendMat = decalSelectBuilding;
 									bid = next.bid;
-									Assert(next.bl == 1);
-									bl = 0;// next.bl;
+									if(next.bl == 1)
+										bl = 0;
+									else
+										bl = next.bl;
 									alpha *= (dtF.Saturate().Bezier(0f,0.4375f,0.4375f));
 								}
 

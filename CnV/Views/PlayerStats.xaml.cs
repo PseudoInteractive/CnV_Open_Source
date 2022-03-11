@@ -59,5 +59,30 @@ namespace CnV
 		private void IronTapped(object sender,TappedRoutedEventArgs e)=> Artifact.Show( Artifact.ArtifactType.crucible, sender);
 		private void FoodTapped(object sender,TappedRoutedEventArgs e)=> Artifact.Show( Artifact.ArtifactType.Hoe, sender);
 		private void GoldTapped(object sender,TappedRoutedEventArgs e)=> Artifact.Show( Artifact.ArtifactType.chest, sender);
+		private void ResContextRequest(UIElement sender,ContextRequestedEventArgs args, Artifact.ArtifactType artifactType )
+		{
+			args.Handled    = true;
+			var flyout = new MenuFlyout();
+			flyout.SetXamlRoot(sender);
+
+			flyout.AddItem("Refine..",Symbol.Trim,() =>
+			{
+				Artifact.Show(artifactType,sender);
+			});
+
+			flyout.AddItem("Artifact..",Symbol.OutlineStar,() =>
+			{
+				Artifact.Show(artifactType,sender);
+			});
+
+			flyout.Show(sender,args);
+		}
+
+		
+
+		private void WoodContextRequest(UIElement sender,ContextRequestedEventArgs args)
+		{
+
+		}
 	}
 }

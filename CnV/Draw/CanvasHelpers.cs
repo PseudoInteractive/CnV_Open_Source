@@ -233,7 +233,10 @@ using static GameClient;
 	//	return ((c - AGame.halfSpan) * paralaxGain + AGame.halfSpan).ToPoint();
 
 	//}
-
+	public static Windows.Foundation.Point AsPoint(this Vector2 c)
+	{
+		return new(c.X,c.Y);
+	}
 	public static Vector2 WorldToCamera(this Vector2 c)
 	{
 		return (c - View.viewW2) ;
