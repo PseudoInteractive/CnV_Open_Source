@@ -128,6 +128,7 @@
     <Compile Include="FormatParameterObject.cs" />
     <Compile Include="GameUI\ArtifactDialogue.xaml.cs" />
     <Compile Include="GameUI\Artifacts.xaml.cs" />
+    <Compile Include="GameUI\DialogG.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Services\CnVSignin.cs" />
     <Compile Include="Views\CanvasMouse.cs" />

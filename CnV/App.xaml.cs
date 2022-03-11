@@ -1399,7 +1399,7 @@ namespace CnV
 			return rv;
 		}
 
-		private static void Show(this MenuFlyout flyout,UIElement sender,ContextRequestedEventArgs args)
+		internal static void Show(this MenuFlyout flyout,UIElement sender,ContextRequestedEventArgs args)
 		{
 			if(args.TryGetPosition(sender,out var c))
 			{

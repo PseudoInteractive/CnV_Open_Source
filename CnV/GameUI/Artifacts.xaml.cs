@@ -23,7 +23,7 @@ namespace CnV
 	/// <summary>
 	/// An empty page that can be used on its own or navigated to within a Frame.
 	/// </summary>
-	public sealed partial class Artifacts:Page
+	public sealed partial class Artifacts: DialogG
 	{
 		public static Artifacts? instance;
 		public Artifacts()
@@ -31,9 +31,17 @@ namespace CnV
 			this.InitializeComponent();
 			Assert(instance == null);
 			instance =this;
-
+			Loaded+=Artifacts_Loaded;
 		}
-		
+
+		private void Artifacts_Loaded(object sender,RoutedEventArgs e)
+		{
+			Canvas.SetLeft(this,64);
+			Assert(Player.me is not null);
+			Log(Player.me.title);
+			titleComboBox.SelectedIndex = ( Player.me.title.rank-1).Max(0);
+		}
+
 		private void titleComboBox_SelectionChanged(object sender,SelectionChangedEventArgs e)
 		{
 			var sel = titleComboBox.SelectedIndex+2 ;
@@ -46,12 +54,7 @@ namespace CnV
 			overviewList.ItemsSource = Artifact.all.Where(a => a.owned > 0).ToList();
 		}
 
-		private void Page_Loading(FrameworkElement sender,object args)
-		{
-			Assert(Player.me is not null);
-			Log(Player.me.title);
-			titleComboBox.SelectedIndex = ( Player.me.title.rank-1).Max(0);
-		}
+		
 
 		
 
@@ -59,5 +62,12 @@ namespace CnV
 		{
 			(new CnVEventPurchaseArtifacts() {  artifact = (ushort)Artifact.ArtifactType.denari, count = 1}).Execute();
 		}
+
+		
+
+		
+
+
+		
 	}
 }

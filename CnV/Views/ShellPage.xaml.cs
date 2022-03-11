@@ -42,6 +42,8 @@ namespace CnV.Views
 
 	using Microsoft.Graphics.DirectX;
 	using Microsoft.UI;
+	using Microsoft.UI.Dispatching;
+	using Microsoft.UI.Windowing;
 	using Microsoft.UI.Xaml.Data;
 	// using PInvoke
 	using Services;
@@ -294,7 +296,7 @@ namespace CnV.Views
 		//}
 
 		public static bool isHitTestVisible => !ShellPage.isOverPopup && !forceAllowWebFocus && canvasVisible;
-		internal static Frame gameUIFrame;
+		internal static Canvas gameUIFrame;
 		//public static bool _isHitTestVisible;
 		public static bool canvasVisible = true;
 		//public static bool isFocused => isHitTestVisible && AppS.isForeground;
@@ -1459,12 +1461,17 @@ namespace CnV.Views
 			//	artifactsButton.IsChecked = !artifactsButton.IsChecked;
 			if(artifactsButton.IsChecked.GetValueOrDefault())
 			{
+				var isNew = Artifacts.instance == null;
+				var art = Artifacts.instance ?? new Artifacts();
+				art.Show();
 			
-				gameUIFrame.Navigate(typeof(Artifacts));
+			
 			}
 			else
-				gameUIFrame.Navigate(typeof(Page));
-
+			{
+				if(Artifacts.instance is not null)
+					Artifacts.instance.Hide();
+			}
 		}
 
 		//private void FriendListSubmitted(ComboBox sender, ComboBoxTextSubmittedEventArgs args)

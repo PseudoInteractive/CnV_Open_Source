@@ -23,11 +23,13 @@ using Microsoft.UI.Dispatching;
 using Microsoft.UI.Xaml.Input;
 
 using System.Numerics;
+	using Microsoft.UI.Composition.Interactions;
 
 partial class ShellPage
 {
 //	static GestureRecognizer gestureRecognizer;
-	
+			public static InputPointerSource coreInputSource;
+
 	public static void SetupNonCoreInput()
 	{
 		canvas.ManipulationMode = ManipulationModes.None;
@@ -50,6 +52,7 @@ partial class ShellPage
 		
 		
 	}
+	public static int pointerPressedCount;
 
 	internal static DispatcherQueueController inputQueueController;
 	static GestureRecognizer recognizer;
@@ -70,9 +73,22 @@ partial class ShellPage
 					{
 						GestureSettings= GestureSettings.Tap|GestureSettings.RightTap|
 					GestureSettings.ManipulationTranslateX|GestureSettings.ManipulationTranslateY|GestureSettings.ManipulationScale
-					|GestureSettings.ManipulationMultipleFingerPanning
-				|GestureSettings.Hold
+				//	|GestureSettings.ManipulationMultipleFingerPanning
+				//|GestureSettings.Hold
 					};
+
+					//var interactionSource = VisualInteractionSource.CreateFromIVisualElement(canvas);
+					//interactionSource.PositionXSourceMode = InteractionSourceMode.EnabledWithoutInertia;
+					//interactionSource.PositionYSourceMode = InteractionSourceMode.EnabledWithoutInertia;
+					//interactionSource.ScaleSourceMode = InteractionSourceMode.EnabledWithoutInertia;
+
+					//// Modify the pointer wheel configuration to disable X and Y.
+					//interactionSource.PointerWheelConfig.PositionXSourceMode =
+					//	InteractionSourceRedirectionMode.Disabled;
+					//interactionSource.PointerWheelConfig.PositionYSourceMode =
+					//	InteractionSourceRedirectionMode.Disabled;
+					//interactionSource.PointerWheelConfig.ScaleSourceMode =
+					//		InteractionSourceRedirectionMode.Enabled;
 
 					recognizer.AutoProcessInertia = false;
 					recognizer.ManipulationCompleted+=Recognizer_ManipulationCompleted;
@@ -90,7 +106,7 @@ partial class ShellPage
 					coreInputSource.PointerEntered+=CoreInputSource_PointerEntered; ;
 					coreInputSource.PointerExited+=CoreInputSource_PointerExited; ;
 					//coreInputSource.PointerCaptureLost += CoreInputSource_PointerCaptureLost;
-
+					coreInputSource.PointerRoutedTo+=CoreInputSource_PointerRoutedTo;
 					coreInputSource.PointerWheelChanged+=CoreInputSource_PointerWheelChanged;
 
 				}
@@ -101,6 +117,13 @@ partial class ShellPage
 
 				//	Thread.Sleep(-1);
 			});
+	}
+
+	private static void CoreInputSource_PointerRoutedTo(InputPointerSource sender,PointerEventArgs args)
+	{
+		args.KeyModifiers.UpdateKeyModifiers();
+
+		Canvas_PointerEntered(args.CurrentPoint.Position);
 	}
 
 	private static void Recognizer_Holding(GestureRecognizer sender,HoldingEventArgs args) {
@@ -164,8 +187,8 @@ partial class ShellPage
 			View.SetViewTargetInstant(View.viewW2 - dr);
 		}
 		var scale = args.Cumulative.Scale;
-		if(scale != 1.0f)
-			Note.Show($"Scale: {scale}");
+		//if(scale != 1.0f)
+		//	Note.Show($"Scale: {scale}");
 		var exp = args.Delta.Expansion;
 		if(exp != 0.0f
 			//&&
@@ -207,6 +230,7 @@ partial class ShellPage
 
 	private static void CoreInputSource_PointerReleased(InputPointerSource sender,PointerEventArgs args)
 	{
+		--pointerPressedCount;
 		recognizer.ProcessUpEvent(args.CurrentPoint);
 
 		args.KeyModifiers.UpdateKeyModifiers();
@@ -218,6 +242,7 @@ partial class ShellPage
 	//		public static PointerUpdateKind GetPointerUpdateKind()
 	private static void CoreInputSource_PointerPressed(InputPointerSource sender,PointerEventArgs args)
 	{
+		++pointerPressedCount;
 		View.EndCoasting();
 		//View.isCoasting = false;
 		AppS.InputRecieved();

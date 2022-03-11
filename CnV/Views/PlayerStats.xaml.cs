@@ -82,7 +82,7 @@ namespace CnV
 
 		private void WoodContextRequest(UIElement sender,ContextRequestedEventArgs args)
 		{
-
+			ResContextRequest(sender,args, Artifact.ArtifactType.saw);
 		}
 	}
 }

@@ -244,8 +244,8 @@
 								   Padding="0"
 			                      Canvas.ZIndex="12" />
 
-			<Frame  x:Name="_gameUIFrame"  Canvas.ZIndex="13"  Grid.Column="1"
-								   Grid.ColumnSpan="2" Grid.Row="2" Grid.RowSpan="2" />
+			<Canvas  x:Name="_gameUIFrame"  Canvas.ZIndex="43"  Grid.Column="0"
+								   Grid.ColumnSpan="4" Grid.Row="2" Grid.RowSpan="2" />
 
 
 

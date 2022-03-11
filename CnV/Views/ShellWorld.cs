@@ -46,7 +46,6 @@ namespace CnV.Views
 
 	public partial class ShellPage
 	{
-		public static InputPointerSource coreInputSource;
 
 		public static Vector2 mousePosition;
 		//public static Vector2 mousePositionC; // in camera space
@@ -61,7 +60,7 @@ namespace CnV.Views
 		//public static DateTimeOffset lastMousePressTime;
 
 		public static bool mouseOverCanvas;
-		static Thread inputWorker;
+	//	static Thread inputWorker;
 
 		public float eventTimeOffset;
 		public static ref string? toolTip => ref ToolTips.toolTip;

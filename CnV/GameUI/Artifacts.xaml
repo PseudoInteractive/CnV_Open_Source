@@ -1,55 +1,57 @@
-﻿<Page
+﻿<cnv:DialogG
     x:Class="CnV.Artifacts"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:cnv="using:CnV"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    mc:Ignorable="d"
+	mc:Ignorable="d"
 	MaxWidth="600"
 	HorizontalAlignment="Left"
 	HorizontalContentAlignment="Left"
-	Loading="Page_Loading"
-	NavigationCacheMode="Required"
-	Background="{StaticResource ApplicationPageBackgroundThemeBrush}"
+	
+	
+
 	>
-	<Page.Resources>
-		<DataTemplate x:Key="ArtifactItem" x:DataType="cnv:Artifact"  >
-			<Grid  Height="Auto" Margin="2,2"  >
-				<Grid.ColumnDefinitions>
-					<ColumnDefinition Width ="80"  />
-					<ColumnDefinition Width ="80" />
-					<ColumnDefinition Width ="*" />
-				</Grid.ColumnDefinitions>
-				<Grid.RowDefinitions>
-					<RowDefinition Height="64"/>
-					<RowDefinition Height="48"/>
-				</Grid.RowDefinitions>
-				<Image Grid.Column="0" Source="{x:Bind image}" Margin="3"  />
-				<TextBlock Grid.Column="1" Text="{x:Bind name}" Margin="3" Style="{StaticResource TextBlockMedium}" TextWrapping="WrapWholeWords" TextAlignment="Center" MaxLines="3"  VerticalAlignment="Center" />
-				<TextBlock Grid.Column="2" Text="{x:Bind description}"  Margin="3" Style="{StaticResource TextBlockSmall}" TextWrapping="WrapWholeWords"  MaxLines="4" TextAlignment="Center"   VerticalAlignment="Center" />
-				<cnv:IconText x:Name="zirc"  Grid.Row="1" Width="74"
+	<ScrollViewer x:Name="scroll" Background="{StaticResource ApplicationPageBackgroundThemeBrush}" ZoomMode="Enabled"  >
+	<Grid  >
+		<Grid.Resources>
+			<DataTemplate x:Key="ArtifactItem" x:DataType="cnv:Artifact"  >
+				<Grid  Height="Auto" Margin="2,2"  >
+					<Grid.ColumnDefinitions>
+						<ColumnDefinition Width ="80"  />
+						<ColumnDefinition Width ="80" />
+						<ColumnDefinition Width ="*" />
+					</Grid.ColumnDefinitions>
+					<Grid.RowDefinitions>
+						<RowDefinition Height="64"/>
+						<RowDefinition Height="48"/>
+					</Grid.RowDefinitions>
+					<Image Grid.Column="0" Source="{x:Bind image}" Margin="3"  />
+					<TextBlock Grid.Column="1" Text="{x:Bind name}" Margin="3" Style="{StaticResource TextBlockMedium}" TextWrapping="WrapWholeWords" TextAlignment="Center" MaxLines="3"  VerticalAlignment="Center" />
+					<TextBlock Grid.Column="2" Text="{x:Bind description}"  Margin="3" Style="{StaticResource TextBlockSmall}" TextWrapping="WrapWholeWords"  MaxLines="4" TextAlignment="Center"   VerticalAlignment="Center" />
+					<cnv:IconText x:Name="zirc"  Grid.Row="1" Width="74"
 					  Image="{x:Bind cnv:ImageHelper.GetPhysical('zirconia.png',28) }"
 					  Text="{x:Bind zirconia, Mode=OneWay}" />
 
-				<cnv:IconText Grid.Column="1" Grid.Row="2" Width="74"
+					<cnv:IconText Grid.Column="1" Grid.Row="2" Width="74"
 							  Image="{x:Bind cnv:ImageHelper.GetPhysical('mana.png',28) }"
 					  Text="{x:Bind mana, Mode=OneWay}" 
 					 />
-				<StackPanel Grid.Row="1" Grid.Column="2" Orientation="Horizontal"  Margin="8,0,0,0" >
-					<TextBlock Text="{x:Bind ownedStr,Mode=OneWay}" Style="{StaticResource TextBlockMedium}"  Margin="3" VerticalAlignment="Center"  TextAlignment="Center" />
-					<NumberBox  Style="{StaticResource NumberBoxSmall}" Value="{x:Bind nbEnterUse,Mode=TwoWay}"  Margin="8,2" Width="70" />
-					<Button Content ="Use"  Margin="2,1,6,1" Click="{x:Bind UseClick}" Style="{StaticResource ButtonSmall}" />
-					<TextBlock Text="{x:Bind priceStr,Mode=OneWay}" Style="{StaticResource TextBlockMedium}"  Margin="3" VerticalAlignment="Center" TextAlignment="Center" />
-					<NumberBox Style="{StaticResource NumberBoxSmall}" Value="{x:Bind nbEnterBuy,Mode=TwoWay}"  Margin="8,2" Width="70" />
-					<Button Content ="Buy"  Margin="2,1,6,1" Click="{x:Bind BuyClick}" Style="{StaticResource ButtonSmall}" />
-				</StackPanel>
+					<StackPanel Grid.Row="1" Grid.Column="2" Orientation="Horizontal"  Margin="8,0,0,0" >
+						<TextBlock Text="{x:Bind ownedStr,Mode=OneWay}" Style="{StaticResource TextBlockMedium}"  Margin="3" VerticalAlignment="Center"  TextAlignment="Center" />
+						<NumberBox  Style="{StaticResource NumberBoxSmall}" Value="{x:Bind nbEnterUse,Mode=TwoWay}"  Margin="8,2" Width="70" />
+						<Button Content ="Use"  Margin="2,1,6,1" Click="{x:Bind UseClick}" Style="{StaticResource ButtonSmall}" />
+						<TextBlock Text="{x:Bind priceStr,Mode=OneWay}" Style="{StaticResource TextBlockMedium}"  Margin="3" VerticalAlignment="Center" TextAlignment="Center" />
+						<NumberBox Style="{StaticResource NumberBoxSmall}" Value="{x:Bind nbEnterBuy,Mode=TwoWay}"  Margin="8,2" Width="70" />
+						<Button Content ="Buy"  Margin="2,1,6,1" Click="{x:Bind BuyClick}" Style="{StaticResource ButtonSmall}" />
+					</StackPanel>
 
-			</Grid>
-		</DataTemplate>
+				</Grid>
+			</DataTemplate>
 
-	</Page.Resources>
-	<Grid  >
+		</Grid.Resources>
+		
 		<Grid.RowDefinitions>
 			<RowDefinition Height="auto"/>
 			<RowDefinition Height="auto"/>
@@ -84,4 +86,5 @@
 			</TabView.TabItems>
 		</TabView>
 	</Grid>
-</Page>
+	</ScrollViewer>
+</cnv:DialogG>
