@@ -13,7 +13,7 @@ public static partial class CityUI
 	public static void UpdateFocusText()
 	{
 		ShellPage.instance.focus.Content = Spot.GetOrAdd(focus).nameAndRemarks;
-		ShellPage.instance.coords.Text   = focus.CidToString();
+		ShellPage.instance.coords.Text   = focus.ToString();
 	}
 
 	
@@ -28,7 +28,7 @@ public static partial class CityUI
 			spot.SelectMe(false, AppS.keyModifiers, scrollintoView);
 		if(changed)
 		{
-			focus = cid;
+			focus = (WorldC)cid;
 			AppS.QueueOnUIThread(UpdateFocusText);
 		}
 		if(bringIntoView)

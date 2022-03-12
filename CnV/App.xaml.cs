@@ -245,11 +245,20 @@ namespace CnV
 			try
 			{ 
 			Log($"Switch to Background (was foreground: {isForeground})");
+			if(state >= State.closed)
+				{
+					Assert(false);
+					return;
+				}
 			while(AppS.windowState == AppS.WindowState.switching)
 			{
 				await Task.Delay(100);
 			}
-
+			if(state >= State.closed)
+				{
+					Assert(false);
+					return;
+				}
 			if(AppS.windowState == AppS.WindowState.foreground)
 			{
 				AppS.windowState = AppS.WindowState.switching;
@@ -287,8 +296,8 @@ namespace CnV
 		{
 			var t0 = BuildQueue.SaveAll(true, false);
 			var t1 = AttackTab.SaveAttacksBlock();
-			Settings.SaveAll();
-			return Task.WhenAll(t0, t1);
+			var t2 = Settings.SaveAll();
+			return Task.WhenAll(t0, t1,t2);
 		}
 
 
@@ -333,7 +342,7 @@ namespace CnV
 		//}
 	
 
-		private async void SwitchToForeground()
+		private static async void SwitchToForeground()
 		{
 			Log("Foreground");
 			while(AppS.windowState == AppS.WindowState.switching)
@@ -524,7 +533,7 @@ namespace CnV
 
 		//}
 
-		private void Window_Closed(object sender, WindowEventArgs args)
+		private static void Window_Closed(object sender, WindowEventArgs args)
 		{
 
 			Log($"WindowClosed!  {isForeground} {args.Handled}");
@@ -630,10 +639,11 @@ namespace CnV
 					var t4 = Title.Init();
 					var t5 = Artifact.Init();
 					var t6 = CnV.Data.Boss.Init();
+					var t7 = TA.Init();
 					Settings.Initialize(); // this is the long one
 
 
-					await Task.WhenAll(t2,t3,t4,t5,t6);
+					await Task.WhenAll(t2,t3,t4,t5,t6, t7);
 				}
 				const bool isInteractive = true;
 
@@ -768,12 +778,13 @@ namespace CnV
 		{
 			try
 			{
+				sender.Closing -= AppWindow_Closing;
 				Log($"Closing!!: {AppS.state}  {AppS.windowState}");
 
 				if(AppS.state <  AppS.State.closing)
 				{
 					AppS.SetState(  AppS.State.closing );
-
+					window.VisibilityChanged -= Window_VisibilityChanged;
 					args.Cancel = true;
 					// Cancel sim thread
 					CnVServer.simCancelTokenSource.Cancel();
@@ -816,9 +827,17 @@ namespace CnV
 		////	SwitchToForeground();
 		//}
 
-		private async void Window_VisibilityChanged(object sender, WindowVisibilityChangedEventArgs args)
+		private static async void Window_VisibilityChanged(object sender, WindowVisibilityChangedEventArgs args)
+
 		{
+			if(state >= State.closed)
+				{
+					Assert(false);
+					return;
+				}
+
 			Log($"Visibility!!: {args.Visible}  {AppS.windowState}");
+			AppS.windowState = AppS.WindowState.background;
 			if (!args.Visible)
 			{
 				await SwitchToBackground();

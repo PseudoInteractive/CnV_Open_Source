@@ -6,10 +6,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using CommunityToolkit.WinUI.UI.Helpers;
+using CommunityToolkit.WinUI.Helpers;
+using CommunityToolkit.WinUI.UI.Controls;
+using CommunityToolkit.WinUI.UI;
+using Microsoft.UI.Xaml;
 
 namespace CnV
 {
-    public class DialogG : UserControl
+	public class DialogG : UserControl
     {
 
 		public DialogG()
@@ -17,8 +22,11 @@ namespace CnV
 			ManipulationMode = ManipulationModes.TranslateX|ManipulationModes.TranslateY;
 			Loaded+=(_,_) =>
 			{
-				Canvas.SetLeft(this,64);
+				Canvas.SetLeft(this,260);
 				this.ManipulationDelta+=this.OnManipulationDelta;
+				
+
+
 			};
 		}
 
@@ -30,16 +38,22 @@ namespace CnV
 
 			if(e.Delta.Translation.Y != 0)
 				Canvas.SetTop(this, (Canvas.GetTop(this) + e.Delta.Translation.Y).Max(0) );
-
+			e.Handled=true;
 			
 		}
 		public void Show()
 		{
+			
 			ShellPage.gameUIFrame.Children.Add(this);
 		}
 		public void Hide()
 		{
 			ShellPage.gameUIFrame.Children.Remove(this);
+		}
+
+		internal void Hide(object sender,RoutedEventArgs e)
+		{
+			Hide();
 		}
 
     }

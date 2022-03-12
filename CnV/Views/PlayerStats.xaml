@@ -23,6 +23,7 @@
 		<cnv:IconText Image="{x:Bind cnv:ImageHelper.GetPhysical('UI/icons_ressource_gold.png',28) }"
 					  Text="{x:Bind goldS, Mode=OneWay}"  
 					  Tapped="GoldTapped"
+					  
 					 />
 		<cnv:IconText Image="{x:Bind cnv:ImageHelper.GetPhysical('UI/icons_ressource_wood.png',28) }"
 					  Text="{x:Bind RefineS(0), Mode=OneWay}" 

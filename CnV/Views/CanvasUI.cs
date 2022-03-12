@@ -79,8 +79,8 @@ using Game;
 							//	var b = build.GetBuiding(cc);
 							//var d = b.def;
 							//	contToolTip = $"({cc.x},{cc.y})\n{d.Bn} {b.bl}";
-							Spot.viewHover = 0;
-							Player.viewHover = 0;
+							Spot.viewHover = default;
+							Player.viewHover = default;
 							toolTip = null;
 							CityView.hovered = cc;
 						}
@@ -103,7 +103,7 @@ using Game;
 						if(lastCanvasC != cid)
 						{
 
-							Spot.viewHover = 0;
+							Spot.viewHover = default;
 							Player.viewHover = 0;
 							toolTip = null;
 
@@ -116,7 +116,7 @@ using Game;
 							{
 								case World.TileType.city:
 									{
-										Spot.viewHover = cid;
+										Spot.viewHover = (WorldC)cid;
 										var city = City.GetOrAddCity(cid);
 										if(city != null)
 										{

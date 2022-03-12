@@ -377,7 +377,7 @@ namespace CnV.Views
 
 		private void ShareStringClick(object sender, RoutedEventArgs e)
 		{
-			ShareString.Show(City.build);
+			ShareString.Show(City.build.cid);
 
 		}
 		public void Rotate(City city,bool center, bool outer)

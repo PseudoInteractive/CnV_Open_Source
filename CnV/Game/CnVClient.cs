@@ -1186,7 +1186,7 @@ namespace CnV
 
 												break;
 										}
-										Spot.build.BringCidIntoWorldView(false);
+										Spot.build.BringIntoWorldView(false);
 										View.AutoSwitchViewMode();
 									}
 

@@ -67,7 +67,7 @@ namespace CnV
 
 			flyout.AddItem("Refine..",Symbol.Trim,() =>
 			{
-				Artifact.Show(artifactType,sender);
+				RefineDialogue.ShowInstance();
 			});
 
 			flyout.AddItem("Artifact..",Symbol.OutlineStar,() =>

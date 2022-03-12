@@ -28,7 +28,7 @@ public sealed class IconText:Control
 
 	public static readonly DependencyProperty ImageProperty = DependencyProperty.Register(
 		"Image",
-		typeof(BitmapImage),
+		typeof(ImageSource),
 		typeof(IconText),
 		new PropertyMetadata(null));
 	//public static readonly DependencyProperty ImageUriProperty = DependencyProperty.Register(
@@ -44,31 +44,31 @@ public sealed class IconText:Control
 	//	var c = (IconText)d;
 	//	if(e.NewValue is string s)
 	//		c.ImageUri = s;
-	//	else if(e.NewValue is BitmapImage src)
+	//	else if(e.NewValue is ImageSource src)
 	//		c.Image= src;
 	//	else
 	//		Assert(false);
 
 	//}
 
-	public double decodeHeight => Image?.DecodePixelHeight ?? double.NaN;
+	//public double decodeHeight => Image?.DecodePixelHeight ?? double.NaN;
 
 	public static readonly DependencyProperty TextProperty = DependencyProperty.Register(
 			"Text",
 			typeof(string),
 			typeof(IconText),
 			new PropertyMetadata(null));
-	public static readonly DependencyProperty ImageUri = DependencyProperty.Register(
-			"ImageUri",
-			typeof(string),
-			typeof(IconText),
-			new PropertyMetadata(null,uriChanged));
+	//public static readonly DependencyProperty ImageUri = DependencyProperty.Register(
+	//		"ImageUri",
+	//		typeof(string),
+	//		typeof(IconText),
+	//		new PropertyMetadata(null,uriChanged));
 
-	private static void uriChanged(DependencyObject _d,DependencyPropertyChangedEventArgs e)
-	{
-		var d = _d as IconText;
-		d.Image = CnV.ImageHelper.GetPhysical(e.NewValue as string,d.Height.RoundToInt());
-	}
+	//private static void uriChanged(DependencyObject _d,DependencyPropertyChangedEventArgs e)
+	//{
+	//	var d = _d as IconText;
+	//	d.Image = CnV.ImageHelper.GetPhysical(e.NewValue as string,d.Height.RoundToInt());
+	//}
 	/// <summary>
 	/// Identifies the <see cref="Orientation"/> dependency property.
 	/// </summary>
@@ -93,7 +93,7 @@ public sealed class IconText:Control
 	/// <summary>
 	/// Gets or sets the data used for the header of each control.
 	/// </summary>
-	//public BitmapImage Image
+	//public ImageSource Image
 	//{
 
 	//    set {  XamlImage.Source = value; }
@@ -103,10 +103,10 @@ public sealed class IconText:Control
 		get { return(string) GetValue(TextProperty);}
 		set { SetValue(TextProperty,value); }
 	}
-	public BitmapImage Image
+	public ImageSource Image
         {
 
-	get { return(BitmapImage) GetValue(ImageProperty);}
+	get { return(ImageSource) GetValue(ImageProperty);}
 		set { SetValue(ImageProperty,value); }
       }
 		//public string ImageUri
@@ -119,10 +119,10 @@ public sealed class IconText:Control
   //          get { return (string)GetValue(TextProperty); }
   //          set { SetValue(TextProperty, value); }
   //      }
-		//public BitmapImage imageSource
+		//public ImageSource imageSource
   //      {
            
-  //          get { return GetValue(ImageProperty) as BitmapImage ?? ImageHelper.FromImages(GetValue(ImageUriProperty) as string ) ; }
+  //          get { return GetValue(ImageProperty) as ImageSource ?? ImageHelper.FromImages(GetValue(ImageUriProperty) as string ) ; }
   //      }
         /// <inheritdoc/>
         protected override void OnApplyTemplate()

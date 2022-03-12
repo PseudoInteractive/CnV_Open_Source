@@ -1370,12 +1370,12 @@ internal partial class GameClient
 						if(Spot.focus != 0)
 						{
 							var cid = Spot.focus;
-							DrawAccent(cid,-1.125f,focusColor);
+							DrawAccent(cid.cid,-1.125f,focusColor);
 						}
 						if(Spot.viewHover != 0)
 						{
 							var cid = Spot.viewHover;
-							DrawAccent(cid,1.25f,hoverColor);
+							DrawAccent(cid.cid,1.25f,hoverColor);
 						}
 
 						if(Player.viewHover != 0)

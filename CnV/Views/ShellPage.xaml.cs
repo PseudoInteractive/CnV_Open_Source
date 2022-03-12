@@ -1300,7 +1300,7 @@ namespace CnV.Views
 				return;
 			}
 
-			if(Spot.focus.BringCidIntoWorldView(false) && City.IsBuild(Spot.focus)) // first just focus
+			if(Spot.focus.BringIntoWorldView(false) && City.IsBuild(Spot.focus)) // first just focus
 			{
 				return;
 			}

@@ -36,7 +36,7 @@ namespace CnV
 
 		private void Artifacts_Loaded(object sender,RoutedEventArgs e)
 		{
-			Canvas.SetLeft(this,64);
+			Canvas.SetLeft(this,220);
 			Assert(Player.me is not null);
 			Log(Player.me.title);
 			titleComboBox.SelectedIndex = ( Player.me.title.rank-1).Max(0);
@@ -63,11 +63,14 @@ namespace CnV
 			(new CnVEventPurchaseArtifacts() {  artifact = (ushort)Artifact.ArtifactType.denari, count = 1}).Execute();
 		}
 
-		
-
-		
-
-
-		
+		//private void OnViewChanging(object sender,ScrollViewerViewChangingEventArgs e)
+		//{
+		//	var zoom = e.FinalView.ZoomFactor.Min(1);
+		//	Debounce.Q(runOnUIThread: true,debounceT: 50,action:() =>
+		//	 {
+		//		 scroll.MaxWidth = 592/zoom;
+		//		 scroll.ChangeView(0,0,null);
+		//	 });
+		//}
 	}
 }

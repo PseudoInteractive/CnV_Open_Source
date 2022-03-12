@@ -13,10 +13,14 @@
 	
 
 	>
-	<ScrollViewer x:Name="scroll" Background="{StaticResource ApplicationPageBackgroundThemeBrush}" ZoomMode="Enabled"  >
-	<Grid  >
-		<Grid.Resources>
-			<DataTemplate x:Key="ArtifactItem" x:DataType="cnv:Artifact"  >
+	<!--<ScrollViewer x:Name="scroll" Background="{StaticResource ApplicationPageBackgroundThemeBrush}" ZoomMode="Enabled" 
+				  Margin="4" CornerRadius="4" ViewChanging="OnViewChanging"
+				  BorderThickness="1" BorderBrush="{StaticResource SystemAccentColorDark3}" MaxWidth="592" >-->
+	<Grid Background="{StaticResource SystemAccentColorDark3}" >
+		
+			<Grid.Resources>
+
+				<DataTemplate x:Key="ArtifactItem" x:DataType="cnv:Artifact"  >
 				<Grid  Height="Auto" Margin="2,2"  >
 					<Grid.ColumnDefinitions>
 						<ColumnDefinition Width ="80"  />
@@ -57,14 +61,20 @@
 			<RowDefinition Height="auto"/>
 		</Grid.RowDefinitions>
 		
-		<StackPanel Orientation="Horizontal">
+		<Grid >
 			<ComboBox x:Name="titleComboBox" SelectedIndex="0" ItemsSource="{x:Bind cnv:Title.artifactTitleNames}"  SelectionChanged="titleComboBox_SelectionChanged" />
-			<Button Content="Get Zirconia" Click="GetZirconiaClick" />
-		</StackPanel>
+			<Button Content="Get Zirconia" Click="GetZirconiaClick" HorizontalAlignment="Center" />
+			<Button Content="X" Click="Hide" HorizontalAlignment="Right" />
+		</Grid>
 		<TabView x:Name="tabView" Grid.Row="1"  >
 			<TabView.TabItems>
 				<TabViewItem Header="Relics">
 					<ListView x:Name="relicsList" ItemTemplate="{StaticResource ArtifactItem}">
+						<ListView.Transitions>
+							<TransitionCollection>
+								<EntranceThemeTransition IsStaggeringEnabled="True"  />
+							</TransitionCollection>
+						</ListView.Transitions>
 					</ListView>
 				</TabViewItem>
 				<TabViewItem Header="Enhancements">
@@ -86,5 +96,5 @@
 			</TabView.TabItems>
 		</TabView>
 	</Grid>
-	</ScrollViewer>
+
 </cnv:DialogG>
