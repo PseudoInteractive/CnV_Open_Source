@@ -59,7 +59,7 @@ namespace CnV
 		private void IronTapped(object sender,TappedRoutedEventArgs e)=> Artifact.Show( Artifact.ArtifactType.crucible, sender);
 		private void FoodTapped(object sender,TappedRoutedEventArgs e)=> Artifact.Show( Artifact.ArtifactType.Hoe, sender);
 		private void GoldTapped(object sender,TappedRoutedEventArgs e)=> Artifact.Show( Artifact.ArtifactType.chest, sender);
-		private void TitleTapped(object sender,TappedRoutedEventArgs e)=> ResearchPurchase.ShowInstance( TA.all[(Player.me.TALevel+1).Min(TA.all.Length-1)] );
+		private void TitleTapped(object sender,TappedRoutedEventArgs e)=> ResearchPurchase.ShowInstance( ResearchItems.GetTA(Player.me.TALevel+1) );
 		private void ResContextRequest(UIElement sender,ContextRequestedEventArgs args, Artifact.ArtifactType artifactType )
 		{
 			args.Handled    = true;

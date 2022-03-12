@@ -66,33 +66,48 @@
 			<Button Content="Get Zirconia" Click="GetZirconiaClick" HorizontalAlignment="Center" />
 			<Button Content="X" Click="Hide" HorizontalAlignment="Right" />
 		</Grid>
-		<TabView x:Name="tabView" Grid.Row="1"  SelectedIndex="{x:Bind SelectedTab,Mode=TwoWay}"  >
+		<TabView x:Name="tabView" Grid.Row="1"  SelectedIndex="{x:Bind SelectedTab,Mode=TwoWay}" SelectionChanged="tabView_SelectionChanged" >
+			<TabView.Transitions>
+				<TransitionCollection>
+				</TransitionCollection>
+			</TabView.Transitions>
 			<TabView.TabItems>
 				<TabViewItem Header="Relics">
-					<ListView x:Name="relicsList" ItemTemplate="{StaticResource ArtifactItem}" ItemsSource="items" >
+					<ListView x:Name="relicsList" ItemTemplate="{StaticResource ArtifactItem}" ItemsSource="{x:Bind items,Mode=OneWay}">
 						<ListView.Transitions>
 							<TransitionCollection>
-								<EntranceThemeTransition IsStaggeringEnabled="True"  />
+								<EntranceThemeTransition IsStaggeringEnabled="True" />
 							</TransitionCollection>
 						</ListView.Transitions>
 					</ListView>
 				</TabViewItem>
 				<TabViewItem Header="Enhancements">
-					<ListView x:Name="enhancementsList" ItemTemplate="{StaticResource ArtifactItem}"  ItemsSource="items" >
+					<ListView x:Name="enhancementsList" ItemTemplate="{StaticResource ArtifactItem}"  ItemsSource="{x:Bind items,Mode=OneWay}" >
 						<ListView.Transitions>
 							<TransitionCollection>
-								<EntranceThemeTransition IsStaggeringEnabled="True"  />
+								<EntranceThemeTransition IsStaggeringEnabled="True" />
 							</TransitionCollection>
 						</ListView.Transitions>
 					</ListView>
 				</TabViewItem>
 				<TabViewItem Header="Special">
-					<ListView x:Name="specialList" ItemTemplate="{StaticResource ArtifactItem}"  ItemsSource="items">
+					<ListView x:Name="specialList" ItemTemplate="{StaticResource ArtifactItem}"  ItemsSource="{x:Bind items,Mode=OneWay}">
+						<ListView.Transitions>
+						<TransitionCollection>
+							<AddDeleteThemeTransition />
+								<EntranceThemeTransition IsStaggeringEnabled="True" />
+							</TransitionCollection>
+						</ListView.Transitions>
 					</ListView>
 				</TabViewItem>
 
 				<TabViewItem Header="Overview">
-					<ListView x:Name="overviewList" ItemTemplate="{StaticResource ArtifactItem}"  ItemsSource="items">
+					<ListView x:Name="overviewList" ItemTemplate="{StaticResource ArtifactItem}"  ItemsSource="{x:Bind items,Mode=OneWay}">
+						<ListView.Transitions>
+							<TransitionCollection>
+								<EntranceThemeTransition IsStaggeringEnabled="True" />
+							</TransitionCollection>
+						</ListView.Transitions>
 					</ListView>
 				</TabViewItem>
 				<TabViewItem Header="History">

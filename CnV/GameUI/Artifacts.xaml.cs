@@ -24,7 +24,7 @@ namespace CnV
 	/// <summary>
 	/// An empty page that can be used on its own or navigated to within a Frame.
 	/// </summary>
-	public sealed partial class Artifacts: DialogG
+	public sealed partial class Artifacts:DialogG
 	{
 		public static Artifacts? instance;
 		public Artifacts()
@@ -33,17 +33,18 @@ namespace CnV
 			Assert(instance == null);
 			instance =this;
 			Canvas.SetLeft(this,220);
-			titleComboBox.SelectedIndex = ( Player.me.title.rank-1).Max(0);
+			selectedTitle= (Player.me.title.rank-2).Max(0);
 		}
 
-		ObservableCollection<Artifact> items  = new();
+		ObservableCollection<Artifact> items = new();
 
 		int selectedTab;
 		int SelectedTab
 		{
 			get => selectedTab;
 			set {
-				if(value != selectedTab)
+				Log($"Sel Tab Changed {selectedTab} => {value}");
+				if(value != selectedTab && value != -1)
 				{
 					selectedTab=value;
 					UpdateItems();
@@ -57,7 +58,7 @@ namespace CnV
 		{
 			get => selectedTitle;
 			set {
-				if(value != selectedTitle)
+				if(value != selectedTitle && value != -1)
 				{
 					selectedTitle=value;
 					UpdateItems();
@@ -66,32 +67,54 @@ namespace CnV
 			}
 		}
 
-		
-
-		internal void UpdateItems()
+		async Task AddItemsOverTime<T>(IEnumerable<T> a) where T : Artifact
 		{
-			var sel = selectedTitle+2;
-			//			if(sel >= 1)
-			//				++sel;
-			// Do we need to call property changes on each artifact?
-			items.Clear();
-			switch(selectedTab)
+			int count = a.Count();
+			int countPer = count.DivideRoundUp(8);
+			var iter = a.GetEnumerator();
+			
+			for(;;)
 			{
-				case 0:
-					items.AddRange(Artifact.all.Where(a => a.level == sel && a.column == 1));
-					break;
-
-				case 1:
-					items.AddRange( Artifact.all.Where(a => a.level == sel && (a.column == 2)));
-					break;
-				case 2:
-					items.AddRange(Artifact.all.Where(a => a.level == sel && a.column == 3));
-
-					break;
-				case 3:
-					items.AddRange( Artifact.all.Where(a => a.owned > 0));
-					break;
+				for(int j = 0;j<countPer;j++)
+				{
+					if(!iter.MoveNext())
+					{
+						return;
+					}
+					items.Add(iter.Current);
+				}
+				await Task.Delay(100);
 			}
+		}
+
+		internal async Task UpdateItems()
+		{
+			try
+			{
+				var sel = selectedTitle+2;
+				//			if(sel >= 1)
+				//				++sel;
+				// Do we need to call property changes on each artifact?
+				items.Clear();
+				await Task.Delay(100);
+				Assert(items.IsNullOrEmpty());
+				var i = selectedTab switch
+				{
+					0 => Artifact.all.Where(a => a.level == sel && a.column == 1),
+					1 => Artifact.all.Where(a => a.level == sel && (a.column == 2)),
+					2 => Artifact.all.Where(a => a.level == sel && a.column == 3),
+					3 => Artifact.all.Where(a => a.owned > 0),
+					_ => Array.Empty<Artifact>()
+				};
+				items.AddRange(i);
+				
+			}
+			catch(Exception ex)
+			{
+
+				LogEx(ex);
+			}
+			
 		}
 
 
@@ -99,22 +122,34 @@ namespace CnV
 
 		private void GetZirconiaClick(object sender,RoutedEventArgs e)
 		{
-			(new CnVEventPurchaseArtifacts() {  artifact = (ushort)Artifact.ArtifactType.denari, count = 1}).Execute();
+			(new CnVEventPurchaseArtifacts() { artifact = (ushort)Artifact.ArtifactType.denari,count = 1 }).Execute();
 		}
 
-		
+
 
 		internal static void ShowInstance()
 		{
 			var art = Artifacts.instance ?? new Artifacts();
 			art.items.Clear();
 			art.Show();
-			art.UpdateItems();
-			
+
+
 		}
 
+		protected override Task Opening()
+		{
+			return UpdateItems();
+		}
+		protected override Task Closing()
+		{
+			items.Clear();
+			return Task.Delay(200);
+		}
 
-
+		private void tabView_SelectionChanged(object sender,SelectionChangedEventArgs e)
+		{
+			Log($"Sel Changed added {e.AddedItems?.Format()} removed {e.RemovedItems?.Format()}" );
+		}
 		//private void OnViewChanging(object sender,ScrollViewerViewChangingEventArgs e)
 		//{
 		//	var zoom = e.FinalView.ZoomFactor.Min(1);

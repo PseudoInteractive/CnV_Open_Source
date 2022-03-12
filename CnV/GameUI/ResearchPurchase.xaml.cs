@@ -24,13 +24,13 @@ namespace CnV
 	public sealed partial class ResearchPurchase:DialogG, INotifyPropertyChanged
 	{
 		public static ResearchPurchase? instance;
-		public IResearchItem r;
+		internal TechTreeStep r;
 		public ResearchPurchase()
 		{
 			this.InitializeComponent();
 			instance=this;
 		}
-		public static void ShowInstance(IResearchItem r)
+		internal static void ShowInstance(TechTreeStep r)
 		{
 			var rv = instance ?? new ResearchPurchase();
 			rv.r = r;
@@ -41,7 +41,7 @@ namespace CnV
 		private string Req(int r)
 		{
 			var have = Player.me.RefinesOrGold(r);
-			return $"{have.Format()}, require {this.r[r].Format()}";
+			return $"{have.Format()}, require {this.r.R(r).Format()}";
 		}
 
 			public event PropertyChangedEventHandler? PropertyChanged;
@@ -59,14 +59,16 @@ namespace CnV
 		bool hasEnough { get {
 				for(int r=0;r<5;++r)
 				{
-					if(Player.me.RefinesOrGold(r) < this.r[r])
+					if(Player.me.RefinesOrGold(r) < this.r.R(r) )
 						return false;
 				}
 				return true;
 			} }
 		private void DoResarch(object sender,RoutedEventArgs e)
 		{
-			
+			Assert(hasEnough);
+			new CnVEventResearch(r.id).Execute();
+			Hide();
 		}
 	}
 }

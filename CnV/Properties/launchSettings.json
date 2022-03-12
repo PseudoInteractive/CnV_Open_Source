@@ -3,13 +3,13 @@
     "MyApp": {
       "commandName": "MsixPackage",
       "alwaysReinstallApp": false,
-      "hotReloadEnabled": false,
+      "hotReloadEnabled": true,
       "remoteDebugEnabled": false,
       "allowLocalNetworkLoopbackProperty": true,
       "authenticationMode": "Windows",
       "doNotLaunchApp": false,
       "remoteDebugMachine": "",
-      "nativeDebugging": true
+      "nativeDebugging": false
     }
   }
 }

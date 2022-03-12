@@ -179,6 +179,7 @@ internal partial class GameClient
 	static float pitch;
 	internal const float targetStepsPerSecond = 256;
 	public static int drawCounter;
+	public static float fadeCounter = 1;
 	protected override void Draw(GameTime gameTime)
 	{
 		if(faulted)
@@ -1573,6 +1574,12 @@ internal partial class GameClient
 #if DEBUG
 				//	DrawRectOutlineShadow(Layer.effects,new Vector2(16,16).ScreenToWorld(),clientSpan.ScreenToWorld() - new Vector2(16f.ScreenToWorld()),Color.Yellow,4,0);
 #endif
+				if(fadeCounter > 0)
+				{
+
+					fadeCounter = (float)(fadeCounter - (timeSinceLastFrame*0.125f) ).Max(0.0);
+					DrawRect(Layer.overlay-1,new Vector2(-4,-4).ScreenToWorld(),(clientSpan+new Vector2(4f)).ScreenToWorld(), new Color(byte.MinValue,default,default,fadeCounter.SCurve().UNormToByte() ),  0);
+				}
 
 		
 			//if (popups.Length > 0)
@@ -2324,7 +2331,12 @@ internal partial class GameClient
 			return false;
 		if(!AGame.contentLoadingComplete)
 			return false;
+		if(!AppS.isStateActive)
+			return false;
 		World.UpdateTileDatas();
+		if(Sim.simTime < IServerTime.NowToServerSeconds() - 3)
+			return false;
+
 		return base.BeginDraw();
 	}
 

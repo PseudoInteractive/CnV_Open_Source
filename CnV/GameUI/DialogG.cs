@@ -40,14 +40,48 @@ namespace CnV
 			e.Handled=true;
 			
 		}
-		public void Show()
+		virtual protected Task Opening() => Task.CompletedTask;
+		virtual protected Task Closing() => Task.CompletedTask;
+		
+		bool isAnimating;
+		public async void Show()
 		{
-			ShellPage.gameUIFrame.Children.Remove(this);
-			ShellPage.gameUIFrame.Children.Add(this);
+			try
+			{
+				while(isAnimating)
+				{
+					await Task.Delay(100);
+				}
+
+				ShellPage.gameUIFrame.Children.Remove(this);
+				ShellPage.gameUIFrame.Children.Add(this);
+				isAnimating=true;
+				await Opening();
+				isAnimating=false;
+			}
+			catch(Exception ex)
+			{
+				LogEx(ex);
+			}
+
 		}
-		public void Hide()
+		public async void Hide()
 		{
-			ShellPage.gameUIFrame.Children.Remove(this);
+			try
+			{
+				while(isAnimating)
+				{
+					await Task.Delay(100);
+				}
+				isAnimating=true;
+				await Closing();
+				isAnimating=false;
+				ShellPage.gameUIFrame.Children.Remove(this);
+			}
+			catch(Exception ex)
+			{
+				LogEx(ex);
+			}
 		}
 
 		internal void Hide(object sender,RoutedEventArgs e)

@@ -500,7 +500,7 @@ namespace CnV
 					}
 					AppS.MessageBox(title:"Signed in",text:$"Welcome {Player.ToShortName(name) }.", 
 
-						//hero: "UI/menues/fortune_teller/background.jpeg",
+						hero: "UI/menues/mentor/bgr_mentorframe_full.png",
 						placement:TeachingTipPlacementMode.Center);
 
 					//Debug.Log(TokenInfoText.Text);
