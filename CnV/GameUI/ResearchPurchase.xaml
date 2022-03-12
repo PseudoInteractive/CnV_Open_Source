@@ -1,0 +1,32 @@
+﻿<cnv:DialogG
+    x:Class="CnV.ResearchPurchase"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:cnv="using:CnV"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+	<Grid Background="{StaticResource SystemAccentColorDark3}"  Padding="4" >
+		<Grid.Resources>
+
+		</Grid.Resources>
+		<Grid.RowDefinitions>
+			<RowDefinition Height="auto"/>
+			<RowDefinition Height="auto"/>
+		</Grid.RowDefinitions>
+		<Grid >
+			<TextBlock Text="{x:Bind r.title}" Style="{StaticResource TextBlockMedium}" />
+			<Button Content="X" Click="Hide" HorizontalAlignment="Right" />
+		</Grid>
+		<StackPanel Grid.Row="1" Orientation="Vertical">
+			<cnv:IconText Text="{x:Bind Req(0), Mode=OneWay}" Image="{x:Bind cnv:ImageHelper.GetPhysical('UI/icons_ressource_wood.png',28) }" Width="200" />
+			<cnv:IconText Text="{x:Bind Req(1), Mode=OneWay }" Image="{x:Bind cnv:ImageHelper.GetPhysical('UI/icons_ressource_stone.png',28) }" Width="200" />
+			<cnv:IconText Text="{x:Bind Req(2), Mode=OneWay }" Image="{x:Bind cnv:ImageHelper.GetPhysical('UI/icons_ressource_iron.png',28) }" Width="200" />
+			<cnv:IconText Text="{x:Bind Req(3), Mode=OneWay }" Image="{x:Bind cnv:ImageHelper.GetPhysical('UI/icons_ressource_grain.png',28) }" Width="200" />
+			<cnv:IconText Text="{x:Bind Req(4), Mode=OneWay }" Image="{x:Bind cnv:ImageHelper.GetPhysical('UI/icons_ressource_gold.png',28) }" Width="200" />
+			<Button Content="Research" IsEnabled="{x:Bind hasEnough, Mode=OneWay}" Click="DoResarch" HorizontalAlignment="Right"/>
+
+		</StackPanel>
+	</Grid>
+</cnv:DialogG>

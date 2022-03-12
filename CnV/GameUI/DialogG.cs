@@ -20,14 +20,13 @@ namespace CnV
 		public DialogG()
 		{
 			ManipulationMode = ManipulationModes.TranslateX|ManipulationModes.TranslateY;
-			Loaded+=(_,_) =>
-			{
-				Canvas.SetLeft(this,260);
-				this.ManipulationDelta+=this.OnManipulationDelta;
+			
+			Canvas.SetLeft(this,260);
+			this.ManipulationDelta+=this.OnManipulationDelta;
 				
 
 
-			};
+			
 		}
 
 
@@ -43,7 +42,7 @@ namespace CnV
 		}
 		public void Show()
 		{
-			
+			ShellPage.gameUIFrame.Children.Remove(this);
 			ShellPage.gameUIFrame.Children.Add(this);
 		}
 		public void Hide()

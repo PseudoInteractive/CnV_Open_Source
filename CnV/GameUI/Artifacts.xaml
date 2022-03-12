@@ -62,14 +62,14 @@
 		</Grid.RowDefinitions>
 		
 		<Grid >
-			<ComboBox x:Name="titleComboBox" SelectedIndex="0" ItemsSource="{x:Bind cnv:Title.artifactTitleNames}"  SelectionChanged="titleComboBox_SelectionChanged" />
+			<ComboBox x:Name="titleComboBox" SelectedIndex="{x:Bind SselectedTitle,Mode=TwoWay}" ItemsSource="{x:Bind cnv:Title.artifactTitleNames}"   />
 			<Button Content="Get Zirconia" Click="GetZirconiaClick" HorizontalAlignment="Center" />
 			<Button Content="X" Click="Hide" HorizontalAlignment="Right" />
 		</Grid>
-		<TabView x:Name="tabView" Grid.Row="1"  >
+		<TabView x:Name="tabView" Grid.Row="1"  SelectedIndex="{x:Bind SelectedTab,Mode=TwoWay}"  >
 			<TabView.TabItems>
 				<TabViewItem Header="Relics">
-					<ListView x:Name="relicsList" ItemTemplate="{StaticResource ArtifactItem}">
+					<ListView x:Name="relicsList" ItemTemplate="{StaticResource ArtifactItem}" ItemsSource="items" >
 						<ListView.Transitions>
 							<TransitionCollection>
 								<EntranceThemeTransition IsStaggeringEnabled="True"  />
@@ -78,16 +78,21 @@
 					</ListView>
 				</TabViewItem>
 				<TabViewItem Header="Enhancements">
-					<ListView x:Name="enhancementsList" ItemTemplate="{StaticResource ArtifactItem}">
+					<ListView x:Name="enhancementsList" ItemTemplate="{StaticResource ArtifactItem}"  ItemsSource="items" >
+						<ListView.Transitions>
+							<TransitionCollection>
+								<EntranceThemeTransition IsStaggeringEnabled="True"  />
+							</TransitionCollection>
+						</ListView.Transitions>
 					</ListView>
 				</TabViewItem>
 				<TabViewItem Header="Special">
-					<ListView x:Name="specialList" ItemTemplate="{StaticResource ArtifactItem}">
+					<ListView x:Name="specialList" ItemTemplate="{StaticResource ArtifactItem}"  ItemsSource="items">
 					</ListView>
 				</TabViewItem>
 
 				<TabViewItem Header="Overview">
-					<ListView x:Name="overviewList" ItemTemplate="{StaticResource ArtifactItem}">
+					<ListView x:Name="overviewList" ItemTemplate="{StaticResource ArtifactItem}"  ItemsSource="items">
 					</ListView>
 				</TabViewItem>
 				<TabViewItem Header="History">

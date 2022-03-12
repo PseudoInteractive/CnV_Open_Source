@@ -151,6 +151,11 @@
 						  
 						  SelectionChanged="buildingCountGrid_SelectionChanged"
 						  Background="{x:Null}" ItemsSource="{x:Bind buildingCounts}" >
+					<GridView.ItemContainerStyle>
+						<Style TargetType="GridViewItem">
+							<Setter Property="Margin" Value="1, 1, 1, 1"/>
+						</Style>
+					</GridView.ItemContainerStyle>
 					<GridView.ItemTemplate>
 						<DataTemplate x:DataType="cnv:BuildingCountAndBrush">
 							<Grid Background="{StaticResource ExpanderBrushContentAlt}" Padding="1" Margin="0"  CornerRadius="{StaticResource baseCR}"  >
@@ -170,7 +175,8 @@
 					<GridView.ItemsPanel>
 						<ItemsPanelTemplate>
 							<ItemsWrapGrid 
-							
+							Margin="1"
+								GroupPadding="1"
                                                        Orientation="Horizontal" />
 						</ItemsPanelTemplate>
 					</GridView.ItemsPanel>

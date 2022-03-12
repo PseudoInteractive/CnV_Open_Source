@@ -1462,8 +1462,9 @@ namespace CnV.Views
 			if(artifactsButton.IsChecked.GetValueOrDefault())
 			{
 				var isNew = Artifacts.instance == null;
-				var art = Artifacts.instance ?? new Artifacts();
-				art.Show();
+				
+				
+				Artifacts.ShowInstance();
 			
 			
 			}

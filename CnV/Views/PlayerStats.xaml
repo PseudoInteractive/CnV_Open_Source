@@ -43,5 +43,10 @@
 					   Tapped="FoodTapped"
 					 />
 
+		<cnv:IconText Image="{x:Bind cnv:ImageHelper.GetPhysical('UI/Menues/mentor/img_mentor.png',28) }"
+					  Text="{x:Bind title, Mode=OneWay}" Width="170"
+					   Tapped="TitleTapped"
+					 />
+
 	</tk:WrapPanel>
 </UserControl>

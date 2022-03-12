@@ -130,6 +130,7 @@
     <Compile Include="GameUI\Artifacts.xaml.cs" />
     <Compile Include="GameUI\DialogG.cs" />
     <Compile Include="GameUI\RefineDialogue.xaml.cs" />
+    <Compile Include="GameUI\ResearchPurchase.xaml.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Services\CnVSignin.cs" />
     <Compile Include="Views\CanvasMouse.cs" />
@@ -365,6 +366,9 @@
     <Page Include="GameUI\RefineDialogue.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="GameUI\ResearchPurchase.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Styles\BattleReport.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -553,6 +557,7 @@
 	<None Remove="GameUI\ArtifactDialogue.xaml" />
 	<None Remove="GameUI\Artifacts.xaml" />
 	<None Remove="GameUI\RefineDialogue.xaml" />
+	<None Remove="GameUI\ResearchPurchase.xaml" />
     <None Remove="Resources\CnVFont-VF.ttf" />
     <None Remove="Resources\Icon1.ico" />
     <None Remove="Strings\en-us\Resources.resw" />

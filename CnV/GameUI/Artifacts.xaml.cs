@@ -8,6 +8,7 @@ using Microsoft.UI.Xaml.Navigation;
 
 using System;
 using System.Collections.Generic;
+
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
@@ -31,37 +32,88 @@ namespace CnV
 			this.InitializeComponent();
 			Assert(instance == null);
 			instance =this;
-			Loaded+=Artifacts_Loaded;
-		}
-
-		private void Artifacts_Loaded(object sender,RoutedEventArgs e)
-		{
 			Canvas.SetLeft(this,220);
-			Assert(Player.me is not null);
-			Log(Player.me.title);
 			titleComboBox.SelectedIndex = ( Player.me.title.rank-1).Max(0);
 		}
 
-		private void titleComboBox_SelectionChanged(object sender,SelectionChangedEventArgs e)
+		ObservableCollection<Artifact> items  = new();
+
+		int selectedTab;
+		int SelectedTab
 		{
-			var sel = titleComboBox.SelectedIndex+2 ;
-//			if(sel >= 1)
-//				++sel;
-			// Do we need to call property changes on each artifact?
-			relicsList.ItemsSource = Artifact.all.Where(a => a.level == sel && a.column == 1).ToList();
-			enhancementsList.ItemsSource = Artifact.all.Where(a => a.level == sel && (a.column == 2) ).ToList();
-			specialList.ItemsSource = Artifact.all.Where( a => a.level == sel && a.column == 3).ToList();
-			overviewList.ItemsSource = Artifact.all.Where(a => a.owned > 0).ToList();
+			get => selectedTab;
+			set {
+				if(value != selectedTab)
+				{
+					selectedTab=value;
+					UpdateItems();
+				}
+
+			}
+		}
+
+		int selectedTitle;
+		int SselectedTitle
+		{
+			get => selectedTitle;
+			set {
+				if(value != selectedTitle)
+				{
+					selectedTitle=value;
+					UpdateItems();
+				}
+
+			}
 		}
 
 		
 
-		
+		internal void UpdateItems()
+		{
+			var sel = selectedTitle+2;
+			//			if(sel >= 1)
+			//				++sel;
+			// Do we need to call property changes on each artifact?
+			items.Clear();
+			switch(selectedTab)
+			{
+				case 0:
+					items.AddRange(Artifact.all.Where(a => a.level == sel && a.column == 1));
+					break;
+
+				case 1:
+					items.AddRange( Artifact.all.Where(a => a.level == sel && (a.column == 2)));
+					break;
+				case 2:
+					items.AddRange(Artifact.all.Where(a => a.level == sel && a.column == 3));
+
+					break;
+				case 3:
+					items.AddRange( Artifact.all.Where(a => a.owned > 0));
+					break;
+			}
+		}
+
+
+
 
 		private void GetZirconiaClick(object sender,RoutedEventArgs e)
 		{
 			(new CnVEventPurchaseArtifacts() {  artifact = (ushort)Artifact.ArtifactType.denari, count = 1}).Execute();
 		}
+
+		
+
+		internal static void ShowInstance()
+		{
+			var art = Artifacts.instance ?? new Artifacts();
+			art.items.Clear();
+			art.Show();
+			art.UpdateItems();
+			
+		}
+
+
 
 		//private void OnViewChanging(object sender,ScrollViewerViewChangingEventArgs e)
 		//{
