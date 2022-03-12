@@ -40,25 +40,23 @@
 
 	
 	<x:Double x:Key="ContentDialogMaxWidth">1024</x:Double>
-			<x:Double x:Key="FlyoutMaxWidth">1920</x:Double>
-			<x:Double x:Key="GridViewMaxWidth">1440</x:Double>
+			<x:Double x:Key="FlyoutMaxWidth">1024</x:Double>
+			<x:Double x:Key="GridViewMaxWidth">1024</x:Double>
 
-			<x:Double x:Key="ContentDialogMaxHeight">800</x:Double>
-			<x:Double x:Key="TeachingTipMaxHeight">1800</x:Double>
-			<x:Double x:Key="TeachingTipMaxWidth">1680</x:Double>
+			<x:Double x:Key="ContentDialogMaxHeight">768</x:Double>
+			<x:Double x:Key="TeachingTipMaxHeight">768</x:Double>
+			<x:Double x:Key="TeachingTipMaxWidth">1024</x:Double>
 			<SolidColorBrush x:Key="HyperLinkBrush" Color="#FF7060FF" />
 
 
 
 
-			<Style TargetType="HyperlinkButton" >
+			<Style TargetType="HyperlinkButton" BasedOn="{StaticResource BaseControlStyle}" >
 				<Setter Property="Foreground" Value="{StaticResource HyperLinkBrush}" />
 				<Setter Property="FontFamily" Value="XamlAutoFontFamily"/>
 				<Setter Property="FontSize" Value="{StaticResource MediumFontSize}" />
 			</Style>
-			<Style TargetType="tk:MarkdownTextBlock">
-				<Setter Property="LinkForeground" Value="{StaticResource HyperLinkBrush}" />
-			</Style>
+			
 
 			<Style TargetType="Button" BasedOn="{StaticResource ButtonRevealStyle}">
 				<Setter Property="VerticalAlignment" Value="Stretch"/>

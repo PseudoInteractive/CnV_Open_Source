@@ -33,12 +33,12 @@ namespace CnV
 			Assert(instance == null);
 			instance =this;
 			Canvas.SetLeft(this,220);
-			selectedTitle= (Player.me.title.rank-2).Max(0);
+			
 		}
 
 		ObservableCollection<Artifact> items = new();
 
-		int selectedTab;
+		int selectedTab=0;
 		int SelectedTab
 		{
 			get => selectedTab;
@@ -53,11 +53,12 @@ namespace CnV
 			}
 		}
 
-		int selectedTitle;
+		int selectedTitle=-1;
 		int SselectedTitle
 		{
 			get => selectedTitle;
 			set {
+				Log($"Sel title Changed {selectedTab} => {value}");
 				if(value != selectedTitle && value != -1)
 				{
 					selectedTitle=value;
@@ -95,18 +96,25 @@ namespace CnV
 				//			if(sel >= 1)
 				//				++sel;
 				// Do we need to call property changes on each artifact?
-				items.Clear();
-				await Task.Delay(100);
+				//items.Clear();
+				//await Task.Delay(100);
 				Assert(items.IsNullOrEmpty());
-				var i = selectedTab switch
+				switch ( selectedTab)
 				{
-					0 => Artifact.all.Where(a => a.level == sel && a.column == 1),
-					1 => Artifact.all.Where(a => a.level == sel && (a.column == 2)),
-					2 => Artifact.all.Where(a => a.level == sel && a.column == 3),
-					3 => Artifact.all.Where(a => a.owned > 0),
-					_ => Array.Empty<Artifact>()
+					case 0:
+					relicsList.ItemsSource= Artifact.all.Where(a => a.level == sel && a.column == 1).ToArray();
+						break;
+					case 1:
+						enhancementsList.ItemsSource = Artifact.all.Where(a => a.level == sel && (a.column == 2)).ToArray();
+							break;
+					case 2:
+						specialList.ItemsSource = Artifact.all.Where(a => a.level == sel && a.column == 3).ToArray();
+						break;
+					case 3:
+						overviewList.ItemsSource = Artifact.all.Where(a => a.owned > 0).ToArray();
+						break;
 				};
-				items.AddRange(i);
+				//items.AddRange(i);
 				
 			}
 			catch(Exception ex)
@@ -130,21 +138,24 @@ namespace CnV
 		internal static void ShowInstance()
 		{
 			var art = Artifacts.instance ?? new Artifacts();
-			art.items.Clear();
+			if(art.selectedTitle == -1)
+			{
+				art.selectedTitle = (Player.me.title.rank-2).Max(0);
+				art.UpdateItems();
+			}
 			art.Show();
 
-
 		}
 
-		protected override Task Opening()
-		{
-			return UpdateItems();
-		}
-		protected override Task Closing()
-		{
-			items.Clear();
-			return Task.Delay(200);
-		}
+		//protected override Task Opening()
+		//{
+		////	return UpdateItems();
+		//}
+		//protected override Task Closing()
+		//{
+		//	//items.Clear();
+		//	//return Task.Delay(200);
+		//}
 
 		private void tabView_SelectionChanged(object sender,SelectionChangedEventArgs e)
 		{

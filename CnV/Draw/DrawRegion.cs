@@ -2334,7 +2334,7 @@ internal partial class GameClient
 		if(!AppS.isStateActive)
 			return false;
 		World.UpdateTileDatas();
-		if(Sim.simTime < IServerTime.NowToServerSeconds() - 3)
+		if(Sim.isWarmup )
 			return false;
 
 		return base.BeginDraw();
