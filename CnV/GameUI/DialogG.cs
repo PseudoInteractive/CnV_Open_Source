@@ -18,29 +18,32 @@ namespace CnV
 	{
 		protected virtual string title => "Title";
 		protected Grid headerGrid;
+		internal static List<DialogG> all = new();
 		public DialogG()
 		{
 			ManipulationMode = ManipulationModes.TranslateX|ManipulationModes.TranslateY;
 			IsExpanded=true;
+			
 			var brush = AppS.Brush(0xFF150030u);
 			Background = brush;
 			Width=600;
-			MaxHeight = 1024;
-			var grid = new Grid() {  };
+			MaxHeight = Settings.canvasHeight;
+			var grid = new Grid() {Padding=new(),Margin=new()  };
 			headerGrid = grid;
 			
 			grid.Children.Add(new TextBlock() { Text=title, 
-				Style = App.instance.Resources["TextBlockLarge"]  as Style,
+				Style = App.instance.Resources["TextBlockMedium"]  as Style,
 				VerticalAlignment=VerticalAlignment.Center,
-				
+				Padding = new(),
 				Margin = new(4,0,0,0) });
 			var button = new Button() {
 				
 				Content="X", 
 				HorizontalAlignment=HorizontalAlignment.Right,
-				Style = (Style)App.instance.Resources["ButtonMedium"],Margin=new(1) };
+				Style = (Style)App.instance.Resources["ButtonMedium"],Margin=new(1),Padding=new() };
 			button.Click += Hide;
-			var headerB = new Button() { HorizontalContentAlignment=HorizontalAlignment.Stretch,VerticalContentAlignment=VerticalAlignment.Stretch,CornerRadius=new(4) };
+			var headerB = new Button() { HorizontalContentAlignment=HorizontalAlignment.Stretch,
+				VerticalContentAlignment=VerticalAlignment.Stretch,CornerRadius=new(3),Margin=new(),Padding=new()};
 			headerB.Content = grid;
 			grid.Children.Add(button);
 			base.Header =headerB;
@@ -52,8 +55,12 @@ namespace CnV
 			this.ManipulationDelta+=this.OnManipulationDelta;
 			headerB.ManipulationMode= ManipulationModes.TranslateX|ManipulationModes.TranslateY;
 			headerB.ManipulationDelta+=this.OnManipulationDelta;
+			lock(all)
+			{
 
-			
+
+				all.Add(this);
+			}
 		}
 
 		private void Grid_Tapped(object sender,TappedRoutedEventArgs e)

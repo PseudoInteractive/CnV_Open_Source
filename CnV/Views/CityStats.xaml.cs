@@ -375,8 +375,16 @@ namespace CnV
 		}
 		internal void ProcessScrollSizeChanged()
 		{
-			  var baseSize = ((scroll.ActualWidth)/scroll.ZoomFactor).Max(0);
-			  stackPanel.Width = (baseSize -8).Max(0);
+			try
+			{
+				var baseSize = ((scroll.ActualWidth)/scroll.ZoomFactor).Max(0);
+				stackPanel.Width = (baseSize -8).Max(0);
+			}
+			catch(Exception ex)
+			{
+
+				LogEx(ex);
+			}
 				//var expanderWidth = (baseSize -14).Max(0);
 				//foreach(var ch in stackPanel.Children<Expander>())
 				//{

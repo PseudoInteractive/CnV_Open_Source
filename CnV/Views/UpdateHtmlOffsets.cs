@@ -48,13 +48,14 @@ namespace CnV.Views
 
 			Task F()
 			{
-				if (canvas is null || instance?.grid is null)
-					return Task.CompletedTask;
-				var _updateLayout = this.updateLayout;
-				this.updateLayout = false;
+				
 
 				try
 				{
+					if(canvas is null || instance?.grid is null)
+						return Task.CompletedTask;
+					var _updateLayout = this.updateLayout;
+					this.updateLayout = false;
 					lastUpdateTick = Environment.TickCount64;
 
 				var c = Settings.layoutOffsets[Settings.layout];
