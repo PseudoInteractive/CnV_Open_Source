@@ -601,7 +601,7 @@ namespace CnV
 				if(!wasRunning)
 				{
 					var t2 = BuildingDef.Init();
-					var t3 = CnV.Data.TroopInfo.Init();
+					var t3 = TroopInfo.Init();
 					var t4 = Title.Init();
 					var t5 = Artifact.Init();
 					var t6 = CnV.Data.Boss.Init();

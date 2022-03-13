@@ -550,7 +550,11 @@ namespace CnV
 		private void GoldTap(object sender,TappedRoutedEventArgs e)=> Artifact.Show( Artifact.ArtifactType.chest, sender);
 
 		private void QueueRightTapped(object sender,RightTappedRoutedEventArgs e)=>	Artifact.Show( Artifact.ArtifactType.medallion, sender);
-		
+
+		private void EnlistmentContextRequested(UIElement sender,ContextRequestedEventArgs args)
+		{
+			RecruitDialog.ShowInstance(City.GetBuild());
+		}
 	}
 	public class BuildingCountAndBrush:INotifyPropertyChanged
 	{

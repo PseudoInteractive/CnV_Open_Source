@@ -16,7 +16,7 @@ using System.Runtime.InteropServices.WindowsRuntime;
 
 namespace CnV;
 
-public sealed class IconText:Control
+public class IconText:Control
 {
 	public IconText()
 	{
@@ -149,4 +149,55 @@ public sealed class IconText:Control
 
             VisualStateManager.GoToState(this, orientation, true);
         }
+}
+public abstract class IconTextSized:IconText
+{
+	protected abstract string uri {  get; }
+
+	public static readonly DependencyProperty ImageHeightProperty = DependencyProperty.Register(
+		"ImageHeight",
+		typeof(int),
+		typeof(IconTextSized),
+		new PropertyMetadata(28,ImageHeightChanged));
+	public int ImageHeight
+	{
+		get { return(int) GetValue(ImageHeightProperty);}
+		set { SetValue(ImageHeightProperty,value); }
+	}
+	private static void ImageHeightChanged(DependencyObject d,DependencyPropertyChangedEventArgs e)
+	{
+		IconTextSized me = (IconTextSized)d;
+		me.Image = ImageHelper.GetPhysical(me.uri,(int)e.NewValue);
+	}
+	protected override void OnApplyTemplate()
+     {
+            base.OnApplyTemplate();
+			if(Image == null)
+				Image = ImageHelper.GetPhysical(uri,ImageHeight);
+     }
+
+}
+public class WoodText:IconTextSized
+{
+	protected override string uri => "UI/icons_ressource_wood.png";
+
+}public class IronText:IconTextSized
+{
+	protected override string uri => "UI/icons_ressource_iron.png";
+
+}
+public class GoldText:IconTextSized
+{
+	protected override string uri => "UI/icons_ressource_gold.png";
+
+}
+public class StoneText:IconTextSized
+{
+	protected override string uri => "UI/icons_ressource_stone.png";
+
+}
+public class FoodText:IconTextSized
+{
+	protected override string uri => "UI/icons_ressource_grain.png";
+
 }

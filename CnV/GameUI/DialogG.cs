@@ -14,21 +14,52 @@ using Microsoft.UI.Xaml;
 
 namespace CnV
 {
-	public class DialogG : UserControl
-    {
-
+	public class DialogG :Microsoft.UI.Xaml.Controls.Expander
+	{
+		protected virtual string title => "Title";
+		protected Grid headerGrid;
 		public DialogG()
 		{
 			ManipulationMode = ManipulationModes.TranslateX|ManipulationModes.TranslateY;
+			IsExpanded=true;
+			var brush = AppS.Brush(0xFF150030u);
+			Background = brush;
+			Width=600;
+			MaxHeight = 1024;
+			var grid = new Grid() {  };
+			headerGrid = grid;
+			
+			grid.Children.Add(new TextBlock() { Text=title, 
+				Style = App.instance.Resources["TextBlockLarge"]  as Style,
+				VerticalAlignment=VerticalAlignment.Center,
+				
+				Margin = new(4,0,0,0) });
+			var button = new Button() {
+				
+				Content="X", 
+				HorizontalAlignment=HorizontalAlignment.Right,
+				Style = (Style)App.instance.Resources["ButtonMedium"],Margin=new(1) };
+			button.Click += Hide;
+			var headerB = new Button() { HorizontalContentAlignment=HorizontalAlignment.Stretch,VerticalContentAlignment=VerticalAlignment.Stretch,CornerRadius=new(4) };
+			headerB.Content = grid;
+			grid.Children.Add(button);
+			base.Header =headerB;
+			//grid.IsTapEnabled=true;
+			//grid.Tapped +=Grid_Tapped;
+			
 			
 			Canvas.SetLeft(this,260);
 			this.ManipulationDelta+=this.OnManipulationDelta;
-				
-
+			headerB.ManipulationMode= ManipulationModes.TranslateX|ManipulationModes.TranslateY;
+			headerB.ManipulationDelta+=this.OnManipulationDelta;
 
 			
 		}
 
+		private void Grid_Tapped(object sender,TappedRoutedEventArgs e)
+		{
+			Note.Show("Tapped");
+		}
 
 		private void OnManipulationDelta(object sender,ManipulationDeltaRoutedEventArgs e)
 		{
