@@ -1,23 +1,6 @@
-﻿using CnV.Game;
-using CnV.Helpers;
-
-using CnV.Services;
-
-using Cysharp.Text;
-
-using DiscordCnV;
-
-using CommunityToolkit.WinUI;
-using System.Numerics;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Threading.Tasks;
+﻿using System.Runtime.CompilerServices;
 
 using Windows.Foundation;
-using Windows.Graphics.Display;
 using Windows.System;
 //using Windows.UI.Core;
 //using Windows.UI.Core.Preview;
@@ -25,28 +8,13 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
 using Microsoft.UI.Xaml.Input;
-using System.Net.Http;
-using Microsoft.UI.Xaml.Media;
 
 using WinUI = Microsoft.UI.Xaml.Controls;
-using CommunityToolkit.WinUI.UI.Controls;
-using System.Reflection;
 using CommunityToolkit.WinUI.Helpers;
-using System.Collections.ObjectModel;
-using CnV;
 namespace CnV.Views
 {
-	using Game;
-
-	using Helpers;
-
-	using Microsoft.Graphics.DirectX;
-	using Microsoft.UI;
-	using Microsoft.UI.Dispatching;
-	using Microsoft.UI.Windowing;
 	using Microsoft.UI.Xaml.Data;
 	// using PInvoke
-	using Services;
 
 	//	using System.Diagnostics;
 	using static CnV.Debug;
@@ -60,7 +28,7 @@ namespace CnV.Views
 	//    public LogEntryStruct(string _t) { t =_t; }
 	//}
 	// TODO WTS: Change the icons and titles for all NavigationViewItems in ShellPage.xaml.
-	public sealed partial class ShellPage:UserControl, INotifyPropertyChanged
+	public sealed partial class ShellPage:NavigationView, INotifyPropertyChanged
 	{
 		public const int canvasZDefault = 11;
 		public const int canvasZBack = 0;
@@ -89,7 +57,7 @@ namespace CnV.Views
 		{
 			get => IServerTime.timeScale;
 			set {
-				IServerTime.SetTimeScale(value.Clamp(minTimeScale, maxTimeScale));
+				IServerTime.SetTimeScale(value.Clamp(minTimeScale,maxTimeScale));
 				OnPropertyChanged("timeScaleSlider");
 			}
 
@@ -111,25 +79,25 @@ namespace CnV.Views
 
 		}
 		// slider ranges from or 0..10, 2^(x-2) 1/4 .. 256
-		static double SliderToTimeScale(double v) => v<= 0 ? 0 : Math.Pow(2, v-2);
-		static double TimeScaleToSlider(double v) => v <= 0 ? 0 : (Math.Log2(v) + 2).Clamp(0, 10);
+		static double SliderToTimeScale(double v) => v<= 0 ? 0 : Math.Pow(2,v-2);
+		static double TimeScaleToSlider(double v) => v <= 0 ? 0 : (Math.Log2(v) + 2).Clamp(0,10);
 
 		static internal Grid rootGrid;
 		class TimeScaleToolTipConverter:IValueConverter
 		{
 
 
-			public object Convert(object value, Type targetType, object parameter, string language) => SliderToTimeScale((double)value).ToString();
+			public object Convert(object value,Type targetType,object parameter,string language) => SliderToTimeScale((double)value).ToString();
 
-			public object ConvertBack(object value, Type targetType, object parameter, string language)
+			public object ConvertBack(object value,Type targetType,object parameter,string language)
 			{
 				{ LogEx(new NotImplementedException("Convert")); return null; }
 			}
 		}
 		TimeScaleToolTipConverter timeScaleToolTipConverter = new TimeScaleToolTipConverter();
-		private void TimeScalueSliderValueChanged(object sender, RangeBaseValueChangedEventArgs e)
+		private void TimeScalueSliderValueChanged(object sender,RangeBaseValueChangedEventArgs e)
 		{
-			if(!e.OldValue.AlmostEquals(e.NewValue, 1.0f/2.0f))
+			if(!e.OldValue.AlmostEquals(e.NewValue,1.0f/2.0f))
 			{
 				var v = SliderToTimeScale(e.NewValue);
 				IServerTime.SetTimeScale((float)v);
@@ -139,27 +107,27 @@ namespace CnV.Views
 		}
 		internal void TimeScaleChangeNotify()
 		{
-			Debounce.Q(50, runOnUIThread: true, action: () =>
-				{
-					var v = IServerTime.timeScale;
-					if(!timeScaleNumberBox.Value.IsEqualTo(v, 1.0f/8.0f))
-					{
-						timeScaleNumberBox.Value = v;
-					}
-					var sliderValue = TimeScaleToSlider(v);
-					if(!timeScaleSlider.Value.AlmostEquals(sliderValue, 0.25f))
-					{
-						timeScaleSlider.Value = sliderValue;
-					}
-					var symbol = v == 0 ? Symbol.Play : Symbol.Stop;
-					var icon = timeTogglePlayIcon;
-					if(icon.Symbol != symbol )
-						icon.Symbol = symbol;  
-				});
+			Debounce.Q(50,runOnUIThread: true,action: () =>
+			  {
+				  var v = IServerTime.timeScale;
+				  if(!timeScaleNumberBox.Value.IsEqualTo(v,1.0f/8.0f))
+				  {
+					  timeScaleNumberBox.Value = v;
+				  }
+				  var sliderValue = TimeScaleToSlider(v);
+				  if(!timeScaleSlider.Value.AlmostEquals(sliderValue,0.25f))
+				  {
+					  timeScaleSlider.Value = sliderValue;
+				  }
+				  var symbol = v == 0 ? Symbol.Play : Symbol.Stop;
+				  var icon = timeTogglePlayIcon;
+				  if(icon.Symbol != symbol)
+					  icon.Symbol = symbol;
+			  });
 		}
-		internal void TimeScaleValueChanged(NumberBox sender, NumberBoxValueChangedEventArgs e)
+		internal void TimeScaleValueChanged(NumberBox sender,NumberBoxValueChangedEventArgs e)
 		{
-			if(!e.OldValue.IsEqualTo(e.NewValue, 1.0f/4.0f))
+			if(!e.OldValue.IsEqualTo(e.NewValue,1.0f/4.0f))
 			{
 				IServerTime.SetTimeScale((float)e.NewValue);
 			}
@@ -176,7 +144,7 @@ namespace CnV.Views
 		//	}
 
 		//}
-		string[] layoutOptions = System.Linq.Enumerable.Range(0, Settings.layoutOffsets.Length)
+		string[] layoutOptions = System.Linq.Enumerable.Range(0,Settings.layoutOffsets.Length)
 			.Select(a => $"Layout {a}").ToArray();
 
 		//private readonly KeyboardAccelerator _altLeftKeyboardAccelerator = BuildKeyboardAccelerator(VirtualKey.Left, VirtualKeyModifiers.Menu);
@@ -194,7 +162,7 @@ namespace CnV.Views
 		public static float webZoomLast; // for lazy setting of HTML zoom
 		public static TextBlock gridTip;
 
-		int GridRowIndex(RowDefinition row, int offset)
+		int GridRowIndex(RowDefinition row,int offset)
 		{
 			return grid.RowDefinitions.IndexOf(row)+offset;
 		}
@@ -301,7 +269,7 @@ namespace CnV.Views
 		public static bool canvasVisible = true;
 		//public static bool isFocused => isHitTestVisible && AppS.isForeground;
 
-		private async void OnLoaded(object sender, RoutedEventArgs e)
+		private async void OnLoaded(object sender,RoutedEventArgs e)
 		{
 			try
 			{
@@ -345,7 +313,7 @@ namespace CnV.Views
 
 				GameClient.canvas    = _canvas;
 
-				var signinTask =CnVSignin.Go();
+				var signinTask = CnVSignin.Go();
 				//				App.window.titleImage.Source = new Microsoft.UI.Xaml.Media.Imaging.BitmapImage(new Uri($"ms-appx:///Assets/AppIcon24.png"));
 				Note.Init();
 				CityUI.Init();
@@ -359,10 +327,10 @@ namespace CnV.Views
 				//var signinTask = await CnVSignin.Go();// Task.Run(CnVSignin.Go);
 				CityBuild.Initialize();
 				// Grid.SetColumn(webView, 0);
-				Grid.SetRow(CityBuild.instance, 1);
-				Grid.SetRowSpan(CityBuild.instance, 5);
-				Grid.SetColumnSpan(CityBuild.instance, 1);
-				Canvas.SetZIndex(CityBuild.instance, 13);
+				Grid.SetRow(CityBuild.instance,1);
+				Grid.SetRowSpan(CityBuild.instance,5);
+				Grid.SetColumnSpan(CityBuild.instance,1);
+				Canvas.SetZIndex(CityBuild.instance,13);
 				var c = CreateCanvasControl();
 
 				var cachePlayerTask = Task.Run(PlayerGameEntity.UpdateCache);
@@ -498,7 +466,7 @@ namespace CnV.Views
 
 
 
-				TabPage.mainTabs.SizeChanged += ((o, args) => ShellPage.updateHtmlOffsets.SizeChanged());
+				TabPage.mainTabs.SizeChanged += ((o,args) => ShellPage.updateHtmlOffsets.SizeChanged());
 				chatTabs.SizeChanged+=((o,args) => ShellPage.updateHtmlOffsets.SizeChanged());
 
 				var okay = await signinTask;
@@ -507,7 +475,7 @@ namespace CnV.Views
 					// don't await
 
 
-					await PlayerTables.InitializeAndUpdateCurrentPlayer(cachePlayerTask, azureId: CnVSignin.azureId, discordId: CnVSignin.discordId, discordUserName: CnVSignin.name, avatarUrlHash: CnVSignin.avatarUrlHash);
+					await PlayerTables.InitializeAndUpdateCurrentPlayer(cachePlayerTask,azureId: CnVSignin.azureId,discordId: CnVSignin.discordId,discordUserName: CnVSignin.name,avatarUrlHash: CnVSignin.avatarUrlHash);
 					//if (okay2)
 					try
 					{
@@ -545,7 +513,7 @@ namespace CnV.Views
 				}
 
 				await CnVClient.InitializeGame();
-				
+
 				KeyboardAccelerators.Add(BuildKeyboardAccelerator(VirtualKey.Left,NavStack.BackInvoked,
 																VirtualKeyModifiers.Menu));
 				// KeyboardAccelerators.Add(BuildKeyboardAccelerator(VirtualKey.GoBack,NavStack.BackInvoked));
@@ -561,13 +529,13 @@ namespace CnV.Views
 																		VirtualKeyModifiers.Control));
 				}
 
-				KeyboardAccelerators.Add(BuildKeyboardAccelerator(key:VirtualKey.Enter,modifiers:
+				KeyboardAccelerators.Add(BuildKeyboardAccelerator(key: VirtualKey.Enter,modifiers:
 																VirtualKeyModifiers.Menu,OnKeyboardAcceleratorInvoked: (_,a) =>
 																{
 																	a.Handled=true;
-																Settings.fullScreen = !Settings.fullScreen.GetValueOrDefault();
-																AppS.appWindow.SetPresenter(Settings.fullScreen.GetValueOrDefault() ? Microsoft.UI.Windowing.AppWindowPresenterKind.FullScreen : Microsoft.UI.Windowing.AppWindowPresenterKind.Overlapped);
-																} ));
+																	Settings.fullScreen = !Settings.fullScreen.GetValueOrDefault();
+																	AppS.appWindow.SetPresenter(Settings.fullScreen.GetValueOrDefault() ? Microsoft.UI.Windowing.AppWindowPresenterKind.FullScreen : Microsoft.UI.Windowing.AppWindowPresenterKind.Overlapped);
+																}));
 
 
 				//AppS.SetState(AppS.State.active);
@@ -583,7 +551,7 @@ namespace CnV.Views
 			//});
 		}
 
-		
+
 		//public static void AdjustLayout(int delta)
 		//{
 		//	Settings.layout+=delta;
@@ -705,7 +673,7 @@ namespace CnV.Views
 		//	//e.Handled = true;
 		//}
 
-		private void Refresh_Invoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
+		private void Refresh_Invoked(KeyboardAccelerator sender,KeyboardAcceleratorInvokedEventArgs args)
 		{
 			WorkStart("Refresh");
 			sender.Modifiers.UpdateKeyModifiers();
@@ -716,7 +684,7 @@ namespace CnV.Views
 			// args.Handled = true;
 		}
 
-		private void LayoutAccelerator_Invoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
+		private void LayoutAccelerator_Invoked(KeyboardAccelerator sender,KeyboardAcceleratorInvokedEventArgs args)
 		{
 			sender.Modifiers.UpdateKeyModifiers();
 			Log($"Accel: {sender.Key} {sender.ScopeOwner}");
@@ -845,7 +813,7 @@ namespace CnV.Views
 
 		//}
 
-		public void Refresh(object o, RoutedEventArgs e)
+		public void Refresh(object o,RoutedEventArgs e)
 		{
 			Refresh();
 		}
@@ -889,7 +857,7 @@ namespace CnV.Views
 
 		}
 
-		public void RefreshX(object sender, RightTappedRoutedEventArgs e)
+		public void RefreshX(object sender,RightTappedRoutedEventArgs e)
 		{
 			RefreshX();
 		}
@@ -944,11 +912,11 @@ namespace CnV.Views
 		public event PropertyChangedEventHandler PropertyChanged;
 
 		private void OnPropertyChanged(string propertyName) =>
-				PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+				PropertyChanged?.Invoke(this,new PropertyChangedEventArgs(propertyName));
 
-		private void Set<T>(ref T storage, T value, [CallerMemberName] string propertyName = null)
+		private void Set<T>(ref T storage,T value,[CallerMemberName] string propertyName = null)
 		{
-			if(Equals(storage, value))
+			if(Equals(storage,value))
 			{
 				return;
 			}
@@ -1007,7 +975,7 @@ namespace CnV.Views
 		//{
 		//}
 
-		private void FlyoutClosing(FlyoutBase sender, FlyoutBaseClosingEventArgs args)
+		private void FlyoutClosing(FlyoutBase sender,FlyoutBaseClosingEventArgs args)
 		{
 			// Log("Why is this closing?");
 		}
@@ -1067,12 +1035,12 @@ namespace CnV.Views
 		//    }
 		//}
 
-		private void TipTest(object sender, RoutedEventArgs e)
+		private void TipTest(object sender,RoutedEventArgs e)
 		{
 			ShowTipRefresh();
 		}
 
-		private void ShowSettings(object sender, RoutedEventArgs e)
+		private void ShowSettings(object sender,RoutedEventArgs e)
 		{
 			Settings.Show();
 		}
@@ -1080,7 +1048,7 @@ namespace CnV.Views
 		public static ComboBox CityListBox => instance.cityListBox;
 
 		// private DumbCollection<CityList> cityListSelections => CityList.selections;
-		private void CityListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+		private void CityListBox_SelectionChanged(object sender,SelectionChangedEventArgs e)
 		{
 			if(e.AddedItems.Any())
 			{
@@ -1095,12 +1063,12 @@ namespace CnV.Views
 		}
 
 
-		private void CityBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+		private void CityBox_SelectionChanged(object sender,SelectionChangedEventArgs e)
 		{
 			var sel = cityBox.SelectedItem as City;
 			if(sel != null && sel.cid != City.build)
 			{
-				CnVClient.CitySwitch(sel.cid, false);
+				CnVClient.CitySwitch(sel.cid,false);
 				NavStack.Push(sel.cid);
 			}
 		}
@@ -1120,7 +1088,7 @@ namespace CnV.Views
 			}
 			else
 			{
-				int id = Array.IndexOf(items, City.GetBuild()) + delta;
+				int id = Array.IndexOf(items,City.GetBuild()) + delta;
 				if(id < 0)
 				{
 					id += items.Length;
@@ -1135,26 +1103,26 @@ namespace CnV.Views
 			}
 
 			//newSel.SetBuild(true);
-			CnVClient.CitySwitch(newSel.cid, false);
+			CnVClient.CitySwitch(newSel.cid,false);
 			// ElementSoundPlayer.Play(delta > 0 ? ElementSoundKind.MoveNext : ElementSoundKind.MovePrevious);
 			NavStack.Push(newSel.cid);
 		}
 
-		private void PriorCityClick(object sender, RoutedEventArgs e)
+		private void PriorCityClick(object sender,RoutedEventArgs e)
 		{
 			ChangeCityClick(-1);
 		}
 
-		private void NextCityClick(object sender, RoutedEventArgs e)
+		private void NextCityClick(object sender,RoutedEventArgs e)
 		{
 			ChangeCityClick(+1);
 		}
 
-		private void BackRightTapped(object sender, RightTappedRoutedEventArgs e)
+		private void BackRightTapped(object sender,RightTappedRoutedEventArgs e)
 		{
 			var menu = new MenuFlyout();
 			bool any = false;
-			for(int i = 1; i < 25; ++i)
+			for(int i = 1;i < 25;++i)
 			{
 				var str = NavStack.GetSpotName(-i);
 				if(str == null)
@@ -1163,23 +1131,23 @@ namespace CnV.Views
 				}
 
 				any = true;
-				menu.Items.Add(AApp.CreateMenuItem(str, NavStack.instance, -i));
+				menu.Items.Add(AApp.CreateMenuItem(str,NavStack.instance,-i));
 			}
 
 			if(!any)
 			{
-				menu.Items.Add(AApp.CreateMenuItem("no more :(", () => { }));
+				menu.Items.Add(AApp.CreateMenuItem("no more :(",() => { }));
 			}
 
 			menu.ShowAt(sender as FrameworkElement);
 		}
 
-		private void ForwardRightTapped(object sender, RightTappedRoutedEventArgs e)
+		private void ForwardRightTapped(object sender,RightTappedRoutedEventArgs e)
 		{
 			var menu = new MenuFlyout();
 			menu.SetXamlRoot();
 			bool any = false;
-			for(int i = 1; i < 25; ++i)
+			for(int i = 1;i < 25;++i)
 			{
 				var str = NavStack.GetSpotName(i);
 				if(str == null)
@@ -1188,18 +1156,18 @@ namespace CnV.Views
 				}
 
 				any = true;
-				menu.Items.Add(AApp.CreateMenuItem(str, NavStack.instance, i));
+				menu.Items.Add(AApp.CreateMenuItem(str,NavStack.instance,i));
 			}
 
 			if(!any)
 			{
-				menu.Items.Add(AApp.CreateMenuItem("this is the most recent :(", () => { }));
+				menu.Items.Add(AApp.CreateMenuItem("this is the most recent :(",() => { }));
 			}
 
 			menu.ShowAt(sender as FrameworkElement);
 		}
 
-		private void coords_KeyDown(object sender, KeyRoutedEventArgs e)
+		private void coords_KeyDown(object sender,KeyRoutedEventArgs e)
 		{
 			var str = sender as TextBox;
 			Assert(str != null);
@@ -1211,14 +1179,14 @@ namespace CnV.Views
 					if(cid > 0)
 					{
 						NavStack.Push(cid);
-						SpotTab.TouchSpot(cid, AppS.keyModifiers);
-						CnVClient.CitySwitch(cid, false);
+						SpotTab.TouchSpot(cid,AppS.keyModifiers);
+						CnVClient.CitySwitch(cid,false);
 					}
 				}
 			}
 		}
 
-		public static void ContinentFilterClick(object sender, RoutedEventArgs e)
+		public static void ContinentFilterClick(object sender,RoutedEventArgs e)
 		{
 			ContinentTagFilter.Show();
 			/*
@@ -1294,7 +1262,7 @@ namespace CnV.Views
 		//	}
 		//}
 
-		private void HomeClick(object sender, RoutedEventArgs e)
+		private void HomeClick(object sender,RoutedEventArgs e)
 		{
 			if(Spot.focus == 0)
 			{
@@ -1306,32 +1274,32 @@ namespace CnV.Views
 				return;
 			}
 
-			Spot.ProcessCoordClick(Spot.focus, false, AppS.keyModifiers, true); // then normal click
+			Spot.ProcessCoordClick(Spot.focus,false,AppS.keyModifiers,true); // then normal click
 		}
 
-		private void HomeRightTapped(object sender, RightTappedRoutedEventArgs e)
+		private void HomeRightTapped(object sender,RightTappedRoutedEventArgs e)
 		{
 			var ui = sender as UIElement;
-			Spot.GetFocus()?.ShowContextMenu(ui, e.GetPosition(ui));
+			Spot.GetFocus()?.ShowContextMenu(ui,e.GetPosition(ui));
 		}
 
-		private void BuildHomeClick(object sender, RoutedEventArgs e)
+		private void BuildHomeClick(object sender,RoutedEventArgs e)
 		{
 			if(City.build == 0)
 			{
 				return;
 			}
 
-			Spot.ProcessCoordClick(City.build, false, AppS.keyModifiers, true); // then normal click
+			Spot.ProcessCoordClick(City.build,false,AppS.keyModifiers,true); // then normal click
 		}
 
-		private void BuildHomeRightTapped(object sender, RightTappedRoutedEventArgs e)
+		private void BuildHomeRightTapped(object sender,RightTappedRoutedEventArgs e)
 		{
 			var ui = sender as UIElement;
-			City.GetBuild()?.ShowContextMenu(ui, e.GetPosition(ui));
+			City.GetBuild()?.ShowContextMenu(ui,e.GetPosition(ui));
 		}
 
-		private void CityListSubmitted(ComboBox sender, ComboBoxTextSubmittedEventArgs args)
+		private void CityListSubmitted(ComboBox sender,ComboBoxTextSubmittedEventArgs args)
 		{
 			var text = args.Text.ToLower();
 			var items = CityList.selections;
@@ -1367,7 +1335,7 @@ namespace CnV.Views
 			// todo!
 		}
 
-		private void CitySubmitted(ComboBox sender, ComboBoxTextSubmittedEventArgs args)
+		private void CitySubmitted(ComboBox sender,ComboBoxTextSubmittedEventArgs args)
 		{
 			var text = args.Text.ToLower();
 
@@ -1440,7 +1408,7 @@ namespace CnV.Views
 		//public static ref int popupLeftMargin => ref View.popupLeftMargin;
 		//public static ref int popupTopMargin => ref View.popupTopMargin;
 
-		public static void UpdateWebViewOffsets(int leftOffset, int topOffset)
+		public static void UpdateWebViewOffsets(int leftOffset,int topOffset)
 		{
 			if(popupLeftOffset != leftOffset ||
 				popupTopOffset  != topOffset)
@@ -1463,11 +1431,11 @@ namespace CnV.Views
 			if(artifactsButton.IsChecked.GetValueOrDefault())
 			{
 				var isNew = Artifacts.instance == null;
-				
-				
+
+
 				Artifacts.ShowInstance();
-			
-			
+
+
 			}
 			else
 			{
@@ -1490,27 +1458,27 @@ namespace CnV.Views
 		//	}
 		//}
 
-		private void chatResizeTapped(object sender, TappedRoutedEventArgs e)
+		private void chatResizeTapped(object sender,TappedRoutedEventArgs e)
 		{
 			//			var height = new( chatGrid.RowDefinitions[0].Height.Value switch { 1=>2,2=>3,3=>4,4=>5,_=>1});
 			var flyout = new MenuFlyout();
 			flyout.SetXamlRoot();
-			flyout.AddItem("Tall", () =>
-									{
-										chatGrid.RowDefinitions[0].Height = new GridLength(1, GridUnitType.Star);
-										chatGrid.RowDefinitions[1].Height = new GridLength(5, GridUnitType.Star);
-									});
-			flyout.AddItem("Medium", () =>
-									{
-										chatGrid.RowDefinitions[0].Height = new GridLength(4, GridUnitType.Star);
-										chatGrid.RowDefinitions[1].Height = new GridLength(2, GridUnitType.Star);
-									});
-			flyout.AddItem("Small", () =>
-									{
-										chatGrid.RowDefinitions[0].Height = new GridLength(5, GridUnitType.Star);
-										chatGrid.RowDefinitions[1].Height = new GridLength(1, GridUnitType.Star);
-									});
-			flyout.ShowAt(chatGrid, e.GetPosition(chatGrid));
+			flyout.AddItem("Tall",() =>
+								   {
+									   chatGrid.RowDefinitions[0].Height = new GridLength(1,GridUnitType.Star);
+									   chatGrid.RowDefinitions[1].Height = new GridLength(5,GridUnitType.Star);
+								   });
+			flyout.AddItem("Medium",() =>
+								   {
+									   chatGrid.RowDefinitions[0].Height = new GridLength(4,GridUnitType.Star);
+									   chatGrid.RowDefinitions[1].Height = new GridLength(2,GridUnitType.Star);
+								   });
+			flyout.AddItem("Small",() =>
+								   {
+									   chatGrid.RowDefinitions[0].Height = new GridLength(5,GridUnitType.Star);
+									   chatGrid.RowDefinitions[1].Height = new GridLength(1,GridUnitType.Star);
+								   });
+			flyout.ShowAt(chatGrid,e.GetPosition(chatGrid));
 		}
 
 
@@ -1568,29 +1536,29 @@ namespace CnV.Views
 		//			}
 		//		}
 
-		private void FilterRightTapped(object sender, RightTappedRoutedEventArgs e)
+		private void FilterRightTapped(object sender,RightTappedRoutedEventArgs e)
 		{
 			ContinentTagFilter.Show(true);
 		}
 
-		private void GridSpliterOnPointerReleased(object sender, PointerRoutedEventArgs e)
+		private void GridSpliterOnPointerReleased(object sender,PointerRoutedEventArgs e)
 		{
 			//	updateHtmlOffsets.Go(true);
 		}
 
-		private void TimeBackClick(object sender, RoutedEventArgs e)
+		private void TimeBackClick(object sender,RoutedEventArgs e)
 		{
 			Sim.ResetSim();
 		}
 
-		
 
-		private void TimeForwardClick(object sender, RoutedEventArgs e)
+
+		private void TimeForwardClick(object sender,RoutedEventArgs e)
 		{
-			CnVServer.GoToTime(CnVServer.simTime + TimeSpanS.FromMinutes( (IServerTime.timeScale*5.0f).Min(24.0f*60) ));
+			CnVServer.GoToTime(CnVServer.simTime + TimeSpanS.FromMinutes((IServerTime.timeScale*5.0f).Min(24.0f*60)));
 		}
 
-		private void TimeTogglePlay(object sender, RoutedEventArgs e)
+		private void TimeTogglePlay(object sender,RoutedEventArgs e)
 		{
 			if(IServerTime.timeScale == 0)
 			{
@@ -1602,7 +1570,7 @@ namespace CnV.Views
 			}
 		}
 
-		
+
 
 
 
@@ -1644,7 +1612,7 @@ namespace CnV.Views
 										var filtered = new List<City>();
 										foreach(var cid in cityList.cities)
 										{
-											if(City.TryGet(cid, out var c))
+											if(City.TryGet(cid,out var c))
 											{
 												filtered.Add(c);
 											}
@@ -1654,9 +1622,9 @@ namespace CnV.Views
 									}
 
 									l = l.Where(a => a.testContinentAndTagFilter)
-										.OrderBy((a) => a, new CityList.CityComparer()).ToArray();
+										.OrderBy((a) => a,new CityList.CityComparer()).ToArray();
 									ShellPage.instance.cityBox.ItemsSource = l;
-									City.gridCitySource.Set(l, true, itemsChanged);
+									City.gridCitySource.Set(l,true,itemsChanged);
 									// todo change this
 									Spot.selected = Spot.selected.Where(cid => City.TestContinentAndFlagFilter(cid))
 										.ToHashSet(); // filter selected

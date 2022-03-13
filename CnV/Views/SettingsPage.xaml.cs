@@ -41,6 +41,7 @@ namespace CnV
 	// TODO WTS: Change the URL for your privacy policy in the Resource File, currently set to https://YourPrivacyUrlGoesHere
 	public sealed partial class Settings : ContentDialog, INotifyPropertyChanged
 	{
+		public static double canvasHeight => AGame.clientSpan.Y;
 		private const double largeFontSizeBase = 20.0;
 		private const double mediumFontSizeBase = 14.0;
 		private const double smallFontSizeBase = 12.0;
@@ -354,8 +355,11 @@ namespace CnV
 
 		public static void UpdateZoom(object sender = null, Microsoft.UI.Xaml.Controls.Primitives.RangeBaseValueChangedEventArgs e = null)
 		{
+			UpdateXamlConstants();
+			//			<x:Double x:Key="TextControlThemeMinHeight">24</x:Double>
+			//		<x:Double x:Key="ListViewItemMinHeight">32</x:Double>
 			var _chatZoom = chatZoom.Squared() + 0.75f;
-			var _tabZoom  = tabZoom.Squared()  + 0.75f;
+			var _tabZoom = tabZoom.Squared()  + 0.75f;
 			Log($"FontZoom {_tabZoom} Chat: {_chatZoom} Med:{mediumFontSize}");
 			double AsDouble(object d) => (double)d;
 			double RoundDouble(double d) => Math.Round(d);
@@ -363,21 +367,39 @@ namespace CnV
 			smallFontSize = AsDouble(App.instance.Resources["SmallFontSize"] = RoundDouble(_tabZoom * smallFontSizeBase));
 			largeFontSize = AsDouble(App.instance.Resources["LargeFontSize"] = RoundDouble(_tabZoom * largeFontSizeBase));
 			mediumFontSize = AsDouble(App.instance.Resources["MediumFontSize"] = mfont);
-			
+
 			largeGridRowHeight = AsDouble(App.instance.Resources["LargeGridRowHeight"] = RoundDouble(_tabZoom * largeGridRowHeightBase));
 			mediumGridRowHeight = AsDouble(App.instance.Resources["MediumGridRowHeight"] = RoundDouble(_tabZoom * mediumGridRowHeightBase));
 			shortGridRowHeight = AsDouble(App.instance.Resources["ShortGridRowHeight"] = RoundDouble(_tabZoom * smallGridRowHeightBase));
 
 			App.instance.Resources["ControlContentThemeFontSize"] =mfont;
 			App.instance.Resources["ContentControlFontSize"] = mfont;
-		
-//			<x:Double x:Key="TextControlThemeMinHeight">24</x:Double>
-//		<x:Double x:Key="ListViewItemMinHeight">32</x:Double>
-
+			App.instance.Resources["ContentControlFontSize"] = mfont;
 		}
 
 
-		
+		static bool updatinghConstants;
+		internal static void UpdateXamlConstants()
+		{
+			if(updatinghConstants)
+				return;
+			updatinghConstants=true;
+			AppS.DispatchOnUIThreadLow(()=>{
+			
+				App.instance.Resources["canvasHeight"] = Settings.canvasHeight;
+				App.instance.Resources["ContentDialogMaxHeight"] = Settings.canvasHeight;
+				lock(DialogG.all)
+				{
+					foreach(var a in DialogG.all)
+						a.MaxHeight =  Settings.canvasHeight;
+				}
+				updatinghConstants=false;
+
+			})
+			;
+		}
+
+
 
 		public bool isLightTheme
 		{

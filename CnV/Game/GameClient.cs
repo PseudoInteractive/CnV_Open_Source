@@ -259,7 +259,7 @@ namespace CnV
 
 			clip.c0 = default;
 			clip.c1 = clientSpan;
-
+			Settings.UpdateXamlConstants();
 		}
 		public static Material CreateFromBytes<T>(T[] pixels, int x, int y, SurfaceFormat format, EffectPass effect ) where T: struct
 		{
