@@ -10,25 +10,11 @@
 	>
 
 	<Grid Background="{StaticResource SystemAccentColorDark3}" Padding="6" CornerRadius="2" >
-		<Grid.Resources>
-
-			<DataTemplate x:Key="RefineItem" x:DataType="cnv:RefineItem"  >
-				<Grid  Height="Auto" Margin="2,2"  >
-				</Grid>
-			</DataTemplate>
-		</Grid.Resources>
-
-
-
+		
 		<Grid.RowDefinitions>
-			<RowDefinition Height="auto"/>
 			<RowDefinition Height="auto"/>
 		</Grid.RowDefinitions>
 
-		<Grid >
-			<TextBlock Text="Refine" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="4,2,4,2" />
-			<Button Content="X" Click="Hide" HorizontalAlignment="Right" />
-		</Grid>
 		<tk:WrapPanel Orientation="Vertical" Grid.Row="1">
 			<StackPanel Orientation="Horizontal">
 				<NumberBox Value="{x:Bind items[0].count, Mode=TwoWay}" Style="{StaticResource NumberBoxMedium}"  />

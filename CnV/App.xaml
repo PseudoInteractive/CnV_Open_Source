@@ -12,22 +12,87 @@
 				<!--<ResourceDictionary >
 					<FontFamily x:Key="CnVFont">ms-appx:///Assets/CnVFont-VF.ttf#CnVFont,Segoe Fluent Icons"</FontFamily>
 				</ResourceDictionary>-->
-               
-                <ResourceDictionary>
-                    <!--<Color x:Key="SystemAltHighColor">#FF000000</Color>
-                    <Color x:Key="SystemAltLowColor">#E13330D6</Color>
+				<ResourceDictionary >
+
+					<Color x:Key="SystemAltHighColor">#FF000000</Color>
+					<Color x:Key="SystemAltLowColor">#E1220050</Color>
+					<Color x:Key="SystemAltMediumColor">#99000000</Color>
+					<Color x:Key="SystemAltMediumHighColor">#CC000000</Color>
+					<Color x:Key="SystemAltMediumLowColor">#F1000000</Color>
+					<Color x:Key="SystemBaseHighColor">#FFFFFFFF</Color>
+					<Color x:Key="SystemBaseLowColor">#A33B851F</Color>
+					<Color x:Key="SystemBaseMediumColor">#99FFFFFF</Color>
+					<Color x:Key="SystemBaseMediumHighColor">#CCFFFFFF</Color>
+					<Color x:Key="SystemBaseMediumLowColor">#F6FFFFFF</Color>
+					<Color x:Key="SystemChromeAltLowColor">#FFF2F2F2</Color>
+					<Color x:Key="SystemChromeBlackHighColor">#FF000000</Color>
+					<Color x:Key="SystemChromeBlackLowColor">#EE240050</Color>
+					<Color x:Key="SystemChromeBlackMediumLowColor">#F6000000</Color>
+					<Color x:Key="SystemChromeBlackMediumColor">#CC000000</Color>
+					<Color x:Key="SystemChromeDisabledHighColor">#FF333333</Color>
+					<Color x:Key="SystemChromeDisabledLowColor">#FF858585</Color>
+					<Color x:Key="SystemChromeHighColor">#FF767676</Color>
+					<Color x:Key="SystemChromeLowColor">#FF171717</Color>
+
+					<Color x:Key="SystemChromeMediumLowColor">#FF2B2B2B</Color>
+					<Color x:Key="SystemChromeWhiteColor">#FFFFFFFF</Color>
+					<Color x:Key="SystemChromeGrayColor">#FF767676</Color>
+					<Color x:Key="SystemListLowColor">#59FFFFFF</Color>
+					<Color x:Key="SystemListMediumColor">#53FFFFFF</Color>
+					<Color x:Key="SystemErrorTextColor">#FFF000</Color>
+
+					<Color x:Key="SystemChromeMediumColor">#FF183E0E</Color>
+					<Color x:Key="SystemChromeAltMediumHighColor">#BC051005</Color>
+					<Color x:Key="SystemChromeAltHighColor">#FF183E0E</Color>
+					<Color x:Key="SystemRevealListLowColor">#FF2D0606</Color>
+					<Color x:Key="SystemRevealListMediumColor">#FF380E0E</Color>
+					<AcrylicBrush x:Key="SystemControlAcrylicWindowBrush"  TintColor="{ThemeResource SystemChromeAltHighColor}" TintOpacity="0.8" FallbackColor="{ThemeResource SystemChromeMediumColor}" />
+
+					<!--Override system generated accent colors-->
+					<Color x:Key="SystemAccentColorLight1">#FF503B84</Color>
+					<Color x:Key="SystemAccentColorLight2">#FF695798</Color>
+					<Color x:Key="SystemAccentColorLight3">#FF8372AC</Color>
+					<Color x:Key="SystemAccentColorDark1">#FF290050</Color>
+					<Color x:Key="SystemAccentColorDark2">#FF220040</Color>
+					<Color x:Key="SystemAccentColorDark3">#FF150030</Color>
+					<Color x:Key="RegionColor">#FF153A35</Color>
+					<SolidColorBrush x:Key="RegionBrush" Color="{StaticResource RegionColor}" />
+
+
+
+				</ResourceDictionary>
+				<ColorPaletteResources Accent="#FF220040" 
+									   BaseHigh="#FFFFFFFF" BaseLow="#FF380E0E" BaseMedium="#FF720F0F" BaseMediumHigh="#FF980F0F"
+                                       BaseMediumLow="#FF6F495F" ChromeAltLow="#FFB393A1" ChromeBlackHigh="#FF512A2A" ChromeBlackLow="#FF391B1B" 
+                                       ChromeBlackMedium="#FF303030" ChromeBlackMediumLow="#FF202020" ChromeDisabledHigh="#FF380E0E" 
+                                       ChromeDisabledLow="#FFABA9A7" ChromeGray="#FF927B89" ChromeHigh="#FF8A7B67" ChromeLow="#FF2A0303" 
+                                       ChromeMedium="#FF2D0606" ChromeMediumLow="#FF340B0B" ChromeWhite="#FFFFC190" ListLow="#FF2D0606" ListMedium="#FF380E0E" 					
+					AltHigh="#80004017" AltLow="#80003000" AltMedium="#80043000" AltMediumHigh="#80163416" AltMediumLow="#80051505"		 />
+				<ResourceDictionary Source="ms-appx:///Styles/FontSizes.xaml"  />
+				<ResourceDictionary Source="ms-appx:///Styles/TextBlock.xaml" />
+				<ResourceDictionary Source="ms-appx:///Styles/Page.xaml" />
+				<ResourceDictionary Source="ms-appx:///Styles/ScrollBarHack.xaml" />
+				<ResourceDictionary Source="ms-appx:///Styles/BattleReport.xaml" />
+				
+			</ResourceDictionary.MergedDictionaries>
+			<ResourceDictionary.ThemeDictionaries>
+
+				<ResourceDictionary x:Key="Default">
+
+					<Color x:Key="SystemAltHighColor">#FF000000</Color>
+                    <Color x:Key="SystemAltLowColor">#E1220050</Color>
                     <Color x:Key="SystemAltMediumColor">#99000000</Color>
                     <Color x:Key="SystemAltMediumHighColor">#CC000000</Color>
-                    <Color x:Key="SystemAltMediumLowColor">#66000000</Color>
+                    <Color x:Key="SystemAltMediumLowColor">#F1000000</Color>
                     <Color x:Key="SystemBaseHighColor">#FFFFFFFF</Color>
                     <Color x:Key="SystemBaseLowColor">#A33B851F</Color>
                     <Color x:Key="SystemBaseMediumColor">#99FFFFFF</Color>
                     <Color x:Key="SystemBaseMediumHighColor">#CCFFFFFF</Color>
-                    <Color x:Key="SystemBaseMediumLowColor">#66FFFFFF</Color>
+                    <Color x:Key="SystemBaseMediumLowColor">#F6FFFFFF</Color>
                     <Color x:Key="SystemChromeAltLowColor">#FFF2F2F2</Color>
                     <Color x:Key="SystemChromeBlackHighColor">#FF000000</Color>
-                    <Color x:Key="SystemChromeBlackLowColor">#EE144280</Color>
-                    <Color x:Key="SystemChromeBlackMediumLowColor">#66000000</Color>
+                    <Color x:Key="SystemChromeBlackLowColor">#EE240050</Color>
+                    <Color x:Key="SystemChromeBlackMediumLowColor">#F6000000</Color>
                     <Color x:Key="SystemChromeBlackMediumColor">#CC000000</Color>
                     <Color x:Key="SystemChromeDisabledHighColor">#FF333333</Color>
                     <Color x:Key="SystemChromeDisabledLowColor">#FF858585</Color>
@@ -37,52 +102,46 @@
                     <Color x:Key="SystemChromeMediumLowColor">#FF2B2B2B</Color>
                     <Color x:Key="SystemChromeWhiteColor">#FFFFFFFF</Color>
                     <Color x:Key="SystemChromeGrayColor">#FF767676</Color>
-                    <Color x:Key="SystemListLowColor">#19FFFFFF</Color>
-                    <Color x:Key="SystemListMediumColor">#33FFFFFF</Color>
-                    <Color x:Key="SystemErrorTextColor">#FFF000</Color>-->
-                    
-                    <Color x:Key="SystemChromeMediumColor">#FF183E0E</Color>
-                    <Color x:Key="SystemChromeAltMediumHighColor">#BC051005</Color>
-                    <Color x:Key="SystemChromeAltHighColor">#FF183E0E</Color>
-                    <Color x:Key="SystemRevealListLowColor">#FF2D0606</Color>
-                    <Color x:Key="SystemRevealListMediumColor">#FF380E0E</Color>
-                    <AcrylicBrush x:Key="SystemControlAcrylicWindowBrush"  TintColor="{ThemeResource SystemChromeAltHighColor}" TintOpacity="0.8" FallbackColor="{ThemeResource SystemChromeMediumColor}" />
+                    <Color x:Key="SystemListLowColor">#59FFFFFF</Color>
+                    <Color x:Key="SystemListMediumColor">#53FFFFFF</Color>
+					<Color x:Key="SystemErrorTextColor">#FFF000</Color>
 
-                    <!--Override system generated accent colors-->
-                    <Color x:Key="SystemAccentColorLight1">#FF503B84</Color>
-                    <Color x:Key="SystemAccentColorLight2">#FF695798</Color>
-                    <Color x:Key="SystemAccentColorLight3">#FF8372AC</Color>
-                    <Color x:Key="SystemAccentColorDark1">#FF290050</Color>
-                    <Color x:Key="SystemAccentColorDark2">#FF220040</Color>
-                    <Color x:Key="SystemAccentColorDark3">#FF150030</Color>
-                    <Color x:Key="RegionColor">#FF153A35</Color>
-                    <SolidColorBrush x:Key="RegionBrush" Color="{StaticResource RegionColor}" />
+					<Color x:Key="SystemChromeMediumColor">#FF183E0E</Color>
+					<Color x:Key="SystemChromeAltMediumHighColor">#BC051005</Color>
+					<Color x:Key="SystemChromeAltHighColor">#FF183E0E</Color>
+					<Color x:Key="SystemRevealListLowColor">#FF2D0606</Color>
+					<Color x:Key="SystemRevealListMediumColor">#FF380E0E</Color>
+					<AcrylicBrush x:Key="SystemControlAcrylicWindowBrush"  TintColor="{ThemeResource SystemChromeAltHighColor}" TintOpacity="0.8" FallbackColor="{ThemeResource SystemChromeMediumColor}" />
+
+					<!--Override system generated accent colors-->
+					<Color x:Key="SystemAccentColorLight1">#FF503B84</Color>
+					<Color x:Key="SystemAccentColorLight2">#FF695798</Color>
+					<Color x:Key="SystemAccentColorLight3">#FF8372AC</Color>
+					<Color x:Key="SystemAccentColorDark1">#FF290050</Color>
+					<Color x:Key="SystemAccentColorDark2">#FF220040</Color>
+					<Color x:Key="SystemAccentColorDark3">#FF150030</Color>
+					<Color x:Key="RegionColor">#FF153A35</Color>
+					<SolidColorBrush x:Key="RegionBrush" Color="{StaticResource RegionColor}" />
+					
 
 
-
-                </ResourceDictionary>
-                <ColorPaletteResources Accent="#FF4C20BB" 
+				</ResourceDictionary>
+				<ColorPaletteResources x:Key="Dark" Accent="#FF220040" 
 									   BaseHigh="#FFFFFFFF" BaseLow="#FF380E0E" BaseMedium="#FFA68484" BaseMediumHigh="#FFC1A2A2"
                                        BaseMediumLow="#FF6F4949" ChromeAltLow="#FFC1A2A2" ChromeBlackHigh="#FF505050" ChromeBlackLow="#FFC1A2A2" 
                                        ChromeBlackMedium="#FF303030" ChromeBlackMediumLow="#FF202020" ChromeDisabledHigh="#FF380E0E" 
                                        ChromeDisabledLow="#FFA68484" ChromeGray="#FF8A6767" ChromeHigh="#FF8A6767" ChromeLow="#FF2A0303" 
                                        ChromeMedium="#FF2D0606" ChromeMediumLow="#FF340B0B" ChromeWhite="#FFFFFFFF" ListLow="#FF2D0606" ListMedium="#FF380E0E" 					
 					AltHigh="#80200040" AltLow="#80003000" AltMedium="#80110030" AltMediumHigh="#80102010" AltMediumLow="#80051505"		 />
+
+
 				
-
-				<!--<ResourceDictionary Source="Styles/Theme.xaml"  />-->
-				<ResourceDictionary Source="ms-appx:///Styles/FontSizes.xaml"  />
-				<ResourceDictionary Source="ms-appx:///Styles/TextBlock.xaml" />
-				<ResourceDictionary Source="ms-appx:///Styles/Page.xaml" />
-				<ResourceDictionary Source="ms-appx:///Styles/ScrollBarHack.xaml" />
-				<ResourceDictionary Source="ms-appx:///Styles/BattleReport.xaml" />
-				<!--<ResourceDictionary Source="/Styles/SharedResources.xaml" />-->
-
-
-			</ResourceDictionary.MergedDictionaries>
-
-
+			</ResourceDictionary.ThemeDictionaries>
+			<!--<ResourceDictionary Source="Styles/Theme.xaml"  />-->
+			
+			<!--<ResourceDictionary Source="/Styles/SharedResources.xaml" />-->
 		</ResourceDictionary>
+		
 	</Application.Resources>
 
 </Application>

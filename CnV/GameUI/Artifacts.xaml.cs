@@ -27,6 +27,7 @@ namespace CnV
 	public sealed partial class Artifacts:DialogG
 	{
 		public static Artifacts? instance;
+		protected override string title => "Artifacts";
 		public Artifacts()
 		{
 			this.InitializeComponent();
@@ -143,7 +144,7 @@ namespace CnV
 				art.selectedTitle = (Player.me.title.rank-2).Max(0);
 				art.UpdateItems();
 			}
-			art.Show();
+			art.Show(false);
 
 		}
 

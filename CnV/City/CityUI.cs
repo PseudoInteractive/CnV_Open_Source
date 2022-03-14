@@ -29,9 +29,9 @@ public static partial class CityUI
 		AppS.QueueOnUIThread(() =>
 							{
 								var _build = City.GetBuild();
-								if(_build != ShellPage.instance.cityBox.SelectedItem)
+								if(!object.ReferenceEquals(_build, CityStats.instance.cityBox.SelectedItem))
 								{
-									ShellPage.instance.cityBox.SelectedItem = _build;
+									CityStats.instance.cityBox.SelectedItem = _build;
 								}
 							});
 	}

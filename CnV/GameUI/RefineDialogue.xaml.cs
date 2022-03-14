@@ -19,10 +19,12 @@ using Microsoft.UI.Xaml.Navigation;
 
 namespace CnV
 {
-    public sealed partial class RefineDialogue : DialogG, INotifyPropertyChanged
-    {
+	public sealed partial class RefineDialogue:DialogG, INotifyPropertyChanged
+	{
 		public static RefineDialogue? instance;
-        public RefineDialogue()
+
+		protected override string title => "Refine";
+		public RefineDialogue()
         {
             this.InitializeComponent();
 			instance=this;
@@ -37,7 +39,7 @@ namespace CnV
 		{
 			var rv = instance ?? new RefineDialogue();
 			rv.ResetItems();
-			rv.Show();
+			rv.Show(true);
 			
 		}
 		public void DoRefine(int id)

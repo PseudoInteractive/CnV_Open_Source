@@ -50,7 +50,52 @@ namespace CnV
 			if(instance is not null)
 				instance.OnPropertyChanged(member);
 		}
+		private void CityBox_SelectionChanged(object sender,SelectionChangedEventArgs e)
+		{
+			var sel = cityBox.SelectedItem as City;
+			if(sel != null && sel.cid != City.build)
+			{
+				City.ProcessCoordClick(sel.cid,false,AppS.keyModifiers);
+			}
+		}
+		
 
+		private void CitySubmitted(ComboBox sender,ComboBoxTextSubmittedEventArgs args)
+		{
+			var text = args.Text.ToLower();
+
+			var items = City.gridCitySource;
+			foreach(var it in items)
+			{
+				// its good
+				if(it.nameAndRemarks == text)
+				{
+					return;
+				}
+			}
+
+			args.Handled = true;
+			//foreach (var it in items)
+			//{
+			//	if (it.nameAndRemarks.ToLower().StartsWith(text))
+			//	{
+			//		sender.Text = it.nameAndRemarks;
+			//		sender.SelectedItem = it;
+			//		return;
+			//	}
+			//}
+			// try contains
+			foreach(var it in items)
+			{
+				if(it.nameAndRemarks.ToLower().Contains(text))
+				{
+					sender.Text         = it.nameAndRemarks;
+					sender.SelectedItem = it;
+					return;
+				}
+			}
+			// todo!
+		}
 		private static void BuildQueue_CollectionChanged(object? sender,NotifyCollectionChangedEventArgs e)
 		{
 			// invalidate
@@ -562,6 +607,16 @@ namespace CnV
 		private void EnlistmentContextRequested(UIElement sender,ContextRequestedEventArgs args)
 		{
 			RecruitDialog.ShowInstance(City.GetBuild());
+		}
+
+		private void CityIconTapped(object sender,TappedRoutedEventArgs e)
+		{
+			var city= (sender as FrameworkElement)?.DataContext as City;
+			if(city is not null)
+			{
+				e.Handled=true;
+				city.DoClick();
+			}
 		}
 	}
 	public class BuildingCountAndBrush:INotifyPropertyChanged

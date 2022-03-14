@@ -23,8 +23,10 @@ namespace CnV
 	
 	public sealed partial class ResearchPurchase:DialogG, INotifyPropertyChanged
 	{
+		
 		public static ResearchPurchase? instance;
 		internal TechTreeStep r;
+		protected override string title => r.title;
 		public ResearchPurchase()
 		{
 			this.InitializeComponent();
@@ -35,7 +37,7 @@ namespace CnV
 			var rv = instance ?? new ResearchPurchase();
 			rv.r = r;
 			rv.OnPropertyChanged();
-			rv.Show();
+			rv.Show(true);
 			
 		}
 		private string Req(int r)

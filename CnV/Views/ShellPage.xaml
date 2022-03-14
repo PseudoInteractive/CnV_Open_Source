@@ -13,56 +13,65 @@
       x:Name="shellPage"
 		RequestedTheme="Dark"   
 	  Loaded="OnLoaded"
-                PaneDisplayMode="Left"
     
 	  Background="{x:Null}"
 	  Margin="0"
       mc:Ignorable="d"	
-				AlwaysShowHeader="True"
-			CompactPaneLength="80"
 			IsTabStop="false"
-		SelectionChanged="shellPage_SelectionChanged"
+		
 		>
 
 
 
-	<NavigationView.MenuItems>
-		
-		
-		<NavigationViewItem Icon="Favorite" Content="Artifacts" x:Name="artifactsButton" 
-                           ToolTipService.ToolTip="This will hid or show the artifacts window" />
-		
-		
-		
+	<Grid x:Name="_rootGrid" Canvas.ZIndex="33">
+		<views:ShareString  x:Name="citySetup" HeroContentPlacement="Top"  x:FieldModifier="public" 
+							ShouldConstrainToRootBounds="False" PreferredPlacement="Center"  />
+		<Grid  Margin="0" x:Name="grid"  x:FieldModifier="public"  >
+			<Grid.Resources>
+				<Style x:Key="TimeFlyoutStyle"
+               TargetType="FlyoutPresenter">
+					<Setter Property="HorizontalContentAlignment"
+                    Value="Stretch" />
+					<Setter Property="VerticalContentAlignment"
+                    Value="Stretch" />
+				</Style>
+			</Grid.Resources>
+			<Grid.RowDefinitions>
+				<RowDefinition Height="auto" x:Name="rowHeader" />
+				<RowDefinition Height="auto" x:Name="stats" />
+				<RowDefinition x:Name="CanvasStart" />
+				<RowDefinition x:Name="rowChatBase" />
+				<RowDefinition Height="auto"  x:Name="rowFooter" />
+			</Grid.RowDefinitions>
+			<Grid.ColumnDefinitions>
+				<!-- 0 HTML column -->
+				<ColumnDefinition Width="420" x:Name="columnHtml" />
+				<!-- 1 black space for popups -->
+				<ColumnDefinition Width="0"  x:Name="columnPopup" />
+				<!-- 2 Render View -->
+				<ColumnDefinition Width="*"  x:Name="columnRender" />
+				<!-- 3 Tab View -->
+				<ColumnDefinition Width="1*" x:Name="columnTabs" />
+			</Grid.ColumnDefinitions>
+			<!-- Overlay grid for sizing -->
 
-		<NavigationViewItem Icon="DockBottom">
-			<ComboBox x:Name="windowLayout" SelectedIndex="{x:Bind layout, Mode=TwoWay}" 
+
+
+			<CommandBar Grid.ColumnSpan="3" IsDynamicOverflowEnabled="False"  DefaultLabelPosition="Collapsed" IsSticky="True" IsTabStop="True"   x:Name="commandBar" x:FieldModifier="public"  >
+		<CommandBar.Content>
+			<StackPanel Orientation="Horizontal" Spacing="4">
+
+				<ProgressRing x:Name="progress" IsActive="False" />
+			<TextBlock  x:Name="work" x:FieldModifier="public" Margin="6,0,6,0" VerticalAlignment="Center" Width="255" />
+				<TextBox  x:Name="coords" Margin="4,0,4,0" Width="100" TextAlignment="Center"  Text="000:000" HorizontalAlignment="Center" x:FieldModifier="public" KeyDown="coords_KeyDown"/>
+				<ComboBox x:Name="windowLayout" SelectedIndex="{x:Bind layout, Mode=TwoWay}"  VerticalAlignment="Center" Margin="4,0,4,0"
 						          ToolTipService.ToolTip="Select a view layout"  ItemsSource="{x:Bind layoutOptions}"  />
-		</NavigationViewItem>
-
-		<NavigationViewItem Icon="Filter" x:Name="ContinentFilter"  x:FieldModifier="public"
-					              Content="Cont/Tags"
-					              Margin="2"
-					              FontSize="{StaticResource MediumFontSize}"
-					              FontFamily="XamlAutoFontFamily"
-					              RightTapped="FilterRightTapped"
-					              Tapped="ContinentFilterTapped"
-					              AccessKey="F"
-					              ToolTipService.ToolTip="Yet another Continent filter.  Uncheck all to show everything"  />
-		
-	</NavigationView.MenuItems> 
 
 
-	<NavigationView.PaneFooter >
-		<StackPanel Orientation="Vertical">
-			<ProgressRing x:Name="progress" IsActive="False" />
-			<TextBlock  x:Name="work" x:FieldModifier="public" Margin="6" VerticalAlignment="Center" Width="255" />
 
-			
-			
-			
 
-			<ComboBox x:Name="cityListBox" x:FieldModifier="public"
+
+				<ComboBox x:Name="cityListBox" x:FieldModifier="public"
                      IsEditable="True"
 					TextSubmitted="CityListSubmitted"
                       Width="120"
@@ -71,39 +80,53 @@
                       ItemsSource="{x:Bind game:CityList.selections, Mode=OneTime}"
                       VerticalAlignment="Center" ToolTipService.ToolTip="Active City List"
 							  
-                      Margin="4" />
+                      Margin="4,0,4,0" />
+				
+				</StackPanel>
+		</CommandBar.Content>
+		<CommandBar.PrimaryCommands  >
+			<AppBarToggleButton x:Name="artifactsButton" Click="ArtifactsClicked" Icon="OutlineStar" Label="Artifact"  IsChecked="False" 
+                           ToolTipService.ToolTip="This will hid or show the artifacts window" />
 
+			<AppBarButton x:Name="ContinentFilter"  x:FieldModifier="public"
+					              Content="Cont/Tags"
+					             
+					              FontSize="{StaticResource MediumFontSize}"
+					              FontFamily="XamlAutoFontFamily"
+					              RightTapped="FilterRightTapped"
+					              Click="{x:Bind views:ShellPage.ContinentFilterClick}"
+					              AccessKey="F"
+					              ToolTipService.ToolTip="Yet another Continent filter.  Uncheck all to show everything"  />
 
-			<AppBarButton x:Name="focus" Margin="4" Width="140"  VerticalAlignment="Center" x:FieldModifier="public" LabelPosition="Default"
-                            Style="{ThemeResource ButtonRevealStyle}" Click="HomeClick" RightTapped="{x:Bind views:ShellPage.CityRightTapped}" FontFamily="XamlAutoFontFamily"
+					<AppBarButton x:Name="HomeButton" Click="{x:Bind views:ShellPage.BuildHomeClick}" 
+								  RightTapped="{x:Bind views:ShellPage.BuildHomeRightTapped}"  Style="{ThemeResource ButtonRevealStyle}"
+					              ToolTipService.ToolTip="&#x0a;Click to switch between region view and city view&#x0a;Right clck for menu"
+					              AccessKey="H" Icon="Home" />
+				
+			
+			
+					<AppBarButton Click="PriorCityClick"  
+					              ToolTipService.ToolTip="Switch to prior city in the current city list"
+					              AccessKey="Left" Icon="Previous"/>
+					<AppBarButton Click="NextCityClick"  
+
+					              ToolTipService.ToolTip="Switch to next city in the current city list" 
+							             AccessKey="Right" Icon="Next"/>
+					<AppBarButton x:Name="focus" Margin="4,0,4,0" Width="140"  VerticalAlignment="Center" x:FieldModifier="public"
+                            Style="{ThemeResource ButtonRevealStyle}" Click="FocusClick" RightTapped="{x:Bind views:ShellPage.CityRightTapped}" FontFamily="XamlAutoFontFamily"
                             ToolTipService.ToolTip="Spot with Focus.&#x0a;Click to re-center or swith to this city&#x0a;Right clck for menu" Visibility="Collapsed"/>
 
 
-			<TextBox  x:Name="coords"  TextAlignment="Center"  Text="000:000" HorizontalAlignment="Stretch" x:FieldModifier="public" KeyDown="coords_KeyDown"/>
-
-			<CommandBar DefaultLabelPosition="Right">
-				<AppBarButton Click="PriorCityClick"
-					              ToolTipService.ToolTip="Switch to prior city in the current city list"
-					              AccessKey="Left"
-							Icon="Previous" Label="Prior" />
-
-				<AppBarButton Click="NextCityClick"  Label="Next"
-					              ToolTipService.ToolTip="Switch to next city in the current city list" 
-					              AccessKey="Right" Icon="Next"  />
-			</CommandBar>
 
 
 
+			<AppBarButton Click="{x:Bind cnv:NavStack.BackClick}"  Icon="Back" Label="Back" RightTapped="BackRightTapped" 
+                          ToolTipService.ToolTip="Switch to most recently visited city&#x0a;Right click to view history"  AccessKey=","/>
 
 
-			<CommandBar DefaultLabelPosition="Right">
-
-				<AppBarButton Click="{x:Bind cnv:NavStack.BackClick}"  Icon="Back" Label="Back" RightTapped="BackRightTapped" IsCompact="false" 
-                          ToolTipService.ToolTip="Switch to most recently visited city&#x0a;Right click to view history" />
 				<AppBarButton Click="{x:Bind cnv:NavStack.ForwardClick}" Icon="Forward" Label="Forward"  RightTapped="ForwardRightTapped" 
-                           ToolTipService.ToolTip="Move forward in city history&#x0a;This is only useful after you have pressed 'Back'&#x0a;Right click to view forward history"  />
+                           ToolTipService.ToolTip="Move forward in city history&#x0a;This is only useful after you have pressed 'Back'&#x0a;Right click to view forward history" AccessKey="." />
 
-			</CommandBar>
 
 			<AppBarButton x:Name="Fresh"
                               Label="Refresh"
@@ -125,56 +148,35 @@
 						</TeachingTip>
 					</AppBarButton.Resources>-->
 				</AppBarButton>
+			<AppBarSeparator/>
+
+					<AppBarButton Label="Settings" Icon="Setting"  Click="ShowSettings" />
+
+		</CommandBar.PrimaryCommands>
+	</CommandBar>
 
 
-			
 
-		</StackPanel>
-
-	</NavigationView.PaneFooter>
-
-	<Grid x:Name="_rootGrid" Canvas.ZIndex="33">
-		<views:ShareString  x:Name="citySetup" HeroContentPlacement="Top"  x:FieldModifier="public" 
-							ShouldConstrainToRootBounds="False" PreferredPlacement="Center"  />
-		<Grid  Margin="0" x:Name="grid"  x:FieldModifier="public"  >
-			<Grid.Resources>
-				<Style x:Key="TimeFlyoutStyle"
-               TargetType="FlyoutPresenter">
-					<Setter Property="HorizontalContentAlignment"
-                    Value="Stretch" />
-					<Setter Property="VerticalContentAlignment"
-                    Value="Stretch" />
-				</Style>
-			</Grid.Resources>
-			<Grid.RowDefinitions>
-				<RowDefinition Height="40" x:Name="rowHeader" />
-				<RowDefinition Height="auto" x:Name="stats" />
-				<RowDefinition x:Name="CanvasStart" />
-				<RowDefinition x:Name="rowChatBase" />
-				<RowDefinition Height="auto"  x:Name="rowFooter" />
-			</Grid.RowDefinitions>
-			<Grid.ColumnDefinitions>
-				<!-- 0 HTML column -->
-				<ColumnDefinition Width="420" x:Name="columnHtml" />
-				<!-- 1 black space for popups -->
-				<ColumnDefinition Width="0"  x:Name="columnPopup" />
-				<!-- 2 Render View -->
-				<ColumnDefinition Width="*"  x:Name="columnRender" />
-				<!-- 3 Tab View -->
-				<ColumnDefinition Width="1*" x:Name="columnTabs" />
-			</Grid.ColumnDefinitions>
-			<!-- Overlay grid for sizing -->
-
-
-			
-
-			<cnv:CityStats 
+	<cnv:CityStats 
 				x:Name="cityStats"
 				Grid.Row="2" 
 				Grid.ColumnSpan="1"
 				Grid.RowSpan="2" 				
 				
 				Canvas.ZIndex="14" 
+				
+				/>
+			<cnv:PlayerStats 
+				x:Name="playerStats"
+				Grid.Row="1" 
+				x:Load="False"
+				Margin="0"
+				Padding="0"
+				Height="32"
+			
+				Grid.Column="0"
+				Grid.ColumnSpan="3"
+				Canvas.ZIndex="46" 
 				
 				/>
 			<tk:GridSplitter

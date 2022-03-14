@@ -1,0 +1,28 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<CodeSnippets xmlns="http://schemas.microsoft.com/VisualStudio/2005/CodeSnippet">
+  <CodeSnippet Format="1.0.0">
+    <Header>
+      <SnippetTypes>
+        <SnippetType>Expansion</SnippetType>
+        <SnippetType>SurroundsWith</SnippetType>
+      </SnippetTypes>
+      <Title>tryl</Title>
+      <Author>Microsoft Corporation</Author>
+      <Description>Code snippet for try finally</Description>
+      <HelpUrl>
+      </HelpUrl>
+      <Shortcut>tryl</Shortcut>
+    </Header>
+    <Snippet>
+      <Code Language="csharp" Delimiter="$"><![CDATA[try 
+	    {	        
+		    $selected$
+	    }
+	    catch(Exception _ex)
+	    {
+            LogEx(_ex);
+		    $end$
+	    }]]></Code>
+    </Snippet>
+  </CodeSnippet>
+</CodeSnippets>

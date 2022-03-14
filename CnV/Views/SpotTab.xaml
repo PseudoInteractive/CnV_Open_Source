@@ -26,7 +26,7 @@
         <sf:SfDataGrid x:Name="selectedGrid"
 						x:FieldModifier="public"
                         Grid.Row="1"
-						TabFocusNavigation="Once"
+						
 						AutoGenerateColumns="False"
                         
 

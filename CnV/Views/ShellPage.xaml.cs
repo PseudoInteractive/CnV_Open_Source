@@ -28,7 +28,7 @@ namespace CnV.Views
 	//    public LogEntryStruct(string _t) { t =_t; }
 	//}
 	// TODO WTS: Change the icons and titles for all NavigationViewItems in ShellPage.xaml.
-	public sealed partial class ShellPage:NavigationView, INotifyPropertyChanged
+	public sealed partial class ShellPage:UserControl, INotifyPropertyChanged
 	{
 		public const int canvasZDefault = 11;
 		public const int canvasZBack = 0;
@@ -276,6 +276,10 @@ namespace CnV.Views
 				gameUIFrame = _gameUIFrame;
 				rootGrid = _rootGrid;
 				instance = this;
+
+				//var ps = new PlayerStats();
+				//Header = ps;
+
 				//{
 				//	var sw = new Stopwatch();
 				//	sw.Start();
@@ -428,7 +432,7 @@ namespace CnV.Views
 				// testMenu.Items.Add(MenuAction(MainPage.ShowTipRaiding3, "TipRaiding3"));
 				cityListBox.SelectedIndex    =  0; // reset
 				cityListBox.SelectionChanged += CityListBox_SelectionChanged;
-				cityBox.SelectionChanged     += CityBox_SelectionChanged;
+				//cityBox.SelectionChanged     += CityBox_SelectionChanged;
 
 				//SystemNavigationManager.GetForCurrentView().BackRequested += ShellPage_BackRequested;
 				// PointerPressed+= PointerPressedCB; HomeButtonTip.IsOpen = true;
@@ -485,6 +489,7 @@ namespace CnV.Views
 						{
 							AppS.UpdateAppTitle();
 							FindName(nameof(playerStats));
+
 							//							AppS.appWindow.SetIcon(new IconId(0));
 							//	AppS.MessageBox($"Welcome {Player.me.shortName}.");
 						});
@@ -845,15 +850,23 @@ namespace CnV.Views
 
 		public static async Task RefreshX()
 		{
-			using var work = new WorkScope("Refresh All");
-			var t = RefreshWorldData();
+			try
+			{
+				using var work = new WorkScope("Refresh All");
+				var t = RefreshWorldData();
 
-			foreach(var city in City.allSpots)
-				city.Value.OnPropertyChanged();
-			NotifyCollectionBase.ResetAll(true);
+				foreach(var city in City.allSpots)
+					city.Value.OnPropertyChanged();
+				NotifyCollectionBase.ResetAll(true);
 
-			RefreshTabs.Go();
-			await t;
+				RefreshTabs.Go();
+				await t;
+			}
+			catch(Exception _ex)
+			{
+				LogEx(_ex);
+
+			}
 
 		}
 
@@ -902,11 +915,19 @@ namespace CnV.Views
 
 		private static void Refresh()
 		{
-			using var s = new WorkScope("Refresh...");
-			foreach(var city in City.myCities)
-				city.OnPropertyChanged();
-			NotifyCollectionBase.ResetAll(false);
-			RefreshTabs.Go();
+			try
+			{
+				using var s = new WorkScope("Refresh...");
+				foreach(var city in City.myCities)
+					city.OnPropertyChanged();
+				NotifyCollectionBase.ResetAll(false);
+				RefreshTabs.Go();
+			}
+			catch(Exception _ex)
+			{
+				LogEx(_ex);
+
+			}
 		}
 
 		public event PropertyChangedEventHandler PropertyChanged;
@@ -1050,62 +1071,77 @@ namespace CnV.Views
 		// private DumbCollection<CityList> cityListSelections => CityList.selections;
 		private void CityListBox_SelectionChanged(object sender,SelectionChangedEventArgs e)
 		{
-			if(e.AddedItems.Any())
+			try
 			{
-				var newSel = e.AddedItems?.FirstOrDefault();
-				var priorSel = e.RemovedItems?.FirstOrDefault();
-				if(newSel != priorSel && priorSel != null)
+				if(e.AddedItems.Any())
 				{
-					// Log("City Sel changed");
-					CityListNotifyChange(false);
+					var newSel = e.AddedItems?.FirstOrDefault();
+					var priorSel = e.RemovedItems?.FirstOrDefault();
+					if(newSel != priorSel && priorSel != null)
+					{
+						// Log("City Sel changed");
+						CityListNotifyChange(false);
+					}
 				}
 			}
-		}
-
-
-		private void CityBox_SelectionChanged(object sender,SelectionChangedEventArgs e)
-		{
-			var sel = cityBox.SelectedItem as City;
-			if(sel != null && sel.cid != City.build)
+			catch(Exception _ex)
 			{
-				CnVClient.CitySwitch(sel.cid,false);
-				NavStack.Push(sel.cid);
+				LogEx(_ex);
+
 			}
 		}
+
+
 
 		public void ChangeCityClick(int delta)
 		{
-			var items = ShellPage.instance.cityBox.ItemsSource as City[];
-			City newSel;
-			if(items.Length <= 1)
+			try
 			{
-				if(items.Length == 0)
+				var items = City.gridCitySource.c;
+				City newSel;
+				if(items.Length <= 1)
 				{
-					return;
+					if(items.Length == 0)
+					{
+						return;
+					}
+
+					newSel = items.First();
+				}
+				else
+				{
+					int id = items.IndexOf(City.GetBuild());
+					if(id == -1)
+					{
+						id = 0;
+					}
+					else
+					{
+						id += delta;
+						if(id < 0)
+						{
+							id += items.Length;
+						}
+
+						if(id >= items.Length)
+						{
+							id -= items.Length;
+						}
+
+					}
+					newSel = items[id];
 				}
 
-				newSel = items.First();
+				//newSel.SetBuild(true);
+				CnVClient.CitySwitch(newSel.cid,false);
+				// ElementSoundPlayer.Play(delta > 0 ? ElementSoundKind.MoveNext : ElementSoundKind.MovePrevious);
+				NavStack.Push(newSel.cid);
 			}
-			else
+			catch(Exception _ex)
 			{
-				int id = Array.IndexOf(items,City.GetBuild()) + delta;
-				if(id < 0)
-				{
-					id += items.Length;
-				}
+				LogEx(_ex);
 
-				if(id >= items.Length)
-				{
-					id -= items.Length;
-				}
-
-				newSel = items[id];
 			}
-
-			//newSel.SetBuild(true);
-			CnVClient.CitySwitch(newSel.cid,false);
-			// ElementSoundPlayer.Play(delta > 0 ? ElementSoundKind.MoveNext : ElementSoundKind.MovePrevious);
-			NavStack.Push(newSel.cid);
 		}
 
 		private void PriorCityClick(object sender,RoutedEventArgs e)
@@ -1120,96 +1156,124 @@ namespace CnV.Views
 
 		private void BackRightTapped(object sender,RightTappedRoutedEventArgs e)
 		{
-			var menu = new MenuFlyout();
-			bool any = false;
-			for(int i = 1;i < 25;++i)
+			try
 			{
-				var str = NavStack.GetSpotName(-i);
-				if(str == null)
+				var menu = new MenuFlyout();
+				bool any = false;
+				for(int i = 1;i < 25;++i)
 				{
-					break;
+					var str = NavStack.GetSpotName(-i);
+					if(str == null)
+					{
+						break;
+					}
+
+					any = true;
+					menu.Items.Add(AApp.CreateMenuItem(str,NavStack.instance,-i));
 				}
 
-				any = true;
-				menu.Items.Add(AApp.CreateMenuItem(str,NavStack.instance,-i));
-			}
+				if(!any)
+				{
+					menu.Items.Add(AApp.CreateMenuItem("no more :(",() => { }));
+				}
 
-			if(!any)
+				menu.ShowAt(sender as FrameworkElement);
+			}
+			catch(Exception _ex)
 			{
-				menu.Items.Add(AApp.CreateMenuItem("no more :(",() => { }));
-			}
+				LogEx(_ex);
 
-			menu.ShowAt(sender as FrameworkElement);
+			}
 		}
 
 		private void ForwardRightTapped(object sender,RightTappedRoutedEventArgs e)
 		{
-			var menu = new MenuFlyout();
-			menu.SetXamlRoot();
-			bool any = false;
-			for(int i = 1;i < 25;++i)
+			try
 			{
-				var str = NavStack.GetSpotName(i);
-				if(str == null)
+				var menu = new MenuFlyout();
+				menu.SetXamlRoot();
+				bool any = false;
+				for(int i = 1;i < 25;++i)
 				{
-					break;
+					var str = NavStack.GetSpotName(i);
+					if(str == null)
+					{
+						break;
+					}
+
+					any = true;
+					menu.Items.Add(AApp.CreateMenuItem(str,NavStack.instance,i));
 				}
 
-				any = true;
-				menu.Items.Add(AApp.CreateMenuItem(str,NavStack.instance,i));
-			}
+				if(!any)
+				{
+					menu.Items.Add(AApp.CreateMenuItem("this is the most recent :(",() => { }));
+				}
 
-			if(!any)
+				menu.ShowAt(sender as FrameworkElement);
+			}
+			catch(Exception _ex)
 			{
-				menu.Items.Add(AApp.CreateMenuItem("this is the most recent :(",() => { }));
-			}
+				LogEx(_ex);
 
-			menu.ShowAt(sender as FrameworkElement);
+			}
 		}
 
 		private void coords_KeyDown(object sender,KeyRoutedEventArgs e)
 		{
-			var str = sender as TextBox;
-			Assert(str != null);
-			if(str != null)
+			try
 			{
-				if(e.Key == Windows.System.VirtualKey.Enter)
+				var str = sender as TextBox;
+				Assert(str != null);
+				if(str != null)
 				{
-					var cid = str.Text.FromCoordinate();
-					if(cid > 0)
+					if(e.Key == Windows.System.VirtualKey.Enter)
 					{
-						NavStack.Push(cid);
-						SpotTab.TouchSpot(cid,AppS.keyModifiers);
-						CnVClient.CitySwitch(cid,false);
+						var cid = str.Text.FromCoordinate();
+						if(cid > 0)
+						{
+							//NavStack.Push(cid);
+							//SpotTab.TouchSpot(cid,AppS.keyModifiers);
+							City.ProcessCoordClick(cid,true,AppS.keyModifiers);
+						}
 					}
 				}
 			}
+			catch(Exception _ex)
+			{
+				LogEx(_ex);
+
+			}
 		}
 
+		//private void ContinentFilterTapped(object sender,TappedRoutedEventArgs e)
+		//{
+		//	ContinentTagFilter.Show();
+		//}
 		public static void ContinentFilterClick(object sender,RoutedEventArgs e)
 		{
 			ContinentTagFilter.Show();
-			/*
+		//	/*
 
-			var button = sender as Microsoft.UI.Xaml.Controls.DropDownButton;
-			var flyout = new MenuFlyout();
+		//	var button = sender as Microsoft.UI.Xaml.Controls.DropDownButton;
+		//	var flyout = new MenuFlyout();
 
-			var isAll = Spot.isContinentFilterAll;
-			for (int id = 0; id < World.continentCount; ++id)
-			{
-				var xy = World.PackedContinentToXY(id);
-				var but = new ToggleMenuFlyoutItem() { IsChecked = !isAll && Spot.TestContinentFilterPacked(id), Text = ZString.Format("{0}{1}", xy.y, xy.x) };
-				but.FontSize = button.FontSize;
-				but.FontFamily = button.FontFamily;
-				but.Margin = new Thickness(2.0f);
-				flyout.Items.Add(but);
-			}
-
-			flyout.CopyXamlRoomFrom(button);
-			flyout.Closing += ContinentFilterClosing;
-			flyout.ShowAt(button);
-			*/
+		//	var isAll = Spot.isContinentFilterAll;
+		//	for (int id = 0; id < World.continentCount; ++id)
+		//	{
+		//		var xy = World.PackedContinentToXY(id);
+		//		var but = new ToggleMenuFlyoutItem() { IsChecked = !isAll && Spot.TestContinentFilterPacked(id), Text = ZString.Format("{0}{1}", xy.y, xy.x) };
+		//		but.FontSize = button.FontSize;
+		//		but.FontFamily = button.FontFamily;
+		//		but.Margin = new Thickness(2.0f);
+		//		flyout.Items.Add(but);
 		}
+
+		//	flyout.CopyXamlRoomFrom(button);
+		//	flyout.Closing += ContinentFilterClosing;
+		//	flyout.ShowAt(button);
+		//	*/
+		//}
 
 		//private static void ContinentFilterClosing(Microsoft.UI.Xaml.Controls.Primitives.FlyoutBase sender, Microsoft.UI.Xaml.Controls.Primitives.FlyoutBaseClosingEventArgs args)
 		//{
@@ -1262,115 +1326,76 @@ namespace CnV.Views
 		//	}
 		//}
 
-		private void HomeClick(object sender,RoutedEventArgs e)
+		private void FocusClick(object sender,RoutedEventArgs e)
 		{
-			if(Spot.focus == 0)
+			try
 			{
-				return;
-			}
-
-			if(Spot.focus.BringIntoWorldView(false) && City.IsBuild(Spot.focus)) // first just focus
-			{
-				return;
-			}
-
-			Spot.ProcessCoordClick(Spot.focus,false,AppS.keyModifiers,true); // then normal click
-		}
-
-		private void HomeRightTapped(object sender,RightTappedRoutedEventArgs e)
-		{
-			var ui = sender as UIElement;
-			Spot.GetFocus()?.ShowContextMenu(ui,e.GetPosition(ui));
-		}
-
-		private void BuildHomeClick(object sender,RoutedEventArgs e)
-		{
-			if(City.build == 0)
-			{
-				return;
-			}
-
-			Spot.ProcessCoordClick(City.build,false,AppS.keyModifiers,true); // then normal click
-		}
-
-		private void BuildHomeRightTapped(object sender,RightTappedRoutedEventArgs e)
-		{
-			var ui = sender as UIElement;
-			City.GetBuild()?.ShowContextMenu(ui,e.GetPosition(ui));
-		}
-
-		private void CityListSubmitted(ComboBox sender,ComboBoxTextSubmittedEventArgs args)
-		{
-			var text = args.Text.ToLower();
-			var items = CityList.selections;
-			foreach(var it in items)
-			{
-				// its good
-				if(it.name == text)
+				if(Spot.focus == 0)
 				{
 					return;
 				}
-			}
 
-			args.Handled = true;
-			//foreach (var it in items)
-			//{
-			//	if (it.name.ToLower().StartsWith(text))
-			//	{
-			//		sender.Text = it.name;
-			//		sender.SelectedItem = it;
-			//		return;
-			//	}
-			//}
-			// try contains
-			foreach(var it in items)
-			{
-				if(it.name.ToLower().Contains(text))
+				if(Spot.focus.BringIntoWorldView(false) && City.IsBuild(Spot.focus)) // first just focus
 				{
-					sender.Text         = it.name;
-					sender.SelectedItem = it;
 					return;
 				}
+
+				Spot.ProcessCoordClick(Spot.focus,false,AppS.keyModifiers,true); // then normal click
 			}
-			// todo!
+			catch(Exception _ex)
+			{
+				LogEx(_ex);
+
+			}
 		}
 
-		private void CitySubmitted(ComboBox sender,ComboBoxTextSubmittedEventArgs args)
+		internal static void CityRightTapped(object sender,RightTappedRoutedEventArgs e)
 		{
-			var text = args.Text.ToLower();
-
-			var items = City.gridCitySource;
-			foreach(var it in items)
+			try
 			{
-				// its good
-				if(it.nameAndRemarks == text)
-				{
-					return;
-				}
+				var ui = sender as UIElement;
+				Spot.GetFocus()?.ShowContextMenu(ui,e.GetPosition(ui));
 			}
-
-			args.Handled = true;
-			//foreach (var it in items)
-			//{
-			//	if (it.nameAndRemarks.ToLower().StartsWith(text))
-			//	{
-			//		sender.Text = it.nameAndRemarks;
-			//		sender.SelectedItem = it;
-			//		return;
-			//	}
-			//}
-			// try contains
-			foreach(var it in items)
+			catch(Exception _ex)
 			{
-				if(it.nameAndRemarks.ToLower().Contains(text))
-				{
-					sender.Text         = it.nameAndRemarks;
-					sender.SelectedItem = it;
-					return;
-				}
+				LogEx(_ex);
+
 			}
-			// todo!
 		}
+
+		internal static void BuildHomeClick(object sender,RoutedEventArgs e)
+		{
+			try
+			{
+				if(City.build == 0)
+				{
+					return;
+				}
+
+				Spot.ProcessCoordClick(City.build,false,AppS.keyModifiers,true); // then normal click
+			}
+			catch(Exception _ex)
+			{
+				LogEx(_ex);
+
+			}
+		}
+
+		internal static void BuildHomeRightTapped(object sender,RightTappedRoutedEventArgs e)
+		{
+			try
+			{
+				var ui = sender as UIElement;
+				City.GetBuild()?.ShowContextMenu(ui,e.GetPosition(ui));
+			}
+			catch(Exception _ex)
+			{
+				LogEx(_ex);
+
+			}
+		}
+
+		
 
 		//private void windowLayout_SelectionChanged(object sender,SelectionChangedEventArgs e)
 		//{
@@ -1426,21 +1451,29 @@ namespace CnV.Views
 		private void ArtifactsClicked(object sender,RoutedEventArgs e)
 		{
 
-			//var hasFocus = !webviewHasFocus;
-			//	artifactsButton.IsChecked = !artifactsButton.IsChecked;
-			if(artifactsButton.IsChecked.GetValueOrDefault())
+			try
 			{
-				var isNew = Artifacts.instance == null;
+				//var hasFocus = !webviewHasFocus;
+				//	artifactsButton.IsChecked = !artifactsButton.IsChecked;
+				if(artifactsButton.IsChecked.GetValueOrDefault())
+				{
+					//	var isNew = Artifacts.instance == null;
 
 
-				Artifacts.ShowInstance();
+					Artifacts.ShowInstance();
 
 
+				}
+				else
+				{
+					if(Artifacts.instance is not null)
+						Artifacts.instance.Hide();
+				}
 			}
-			else
+			catch(Exception _ex)
 			{
-				if(Artifacts.instance is not null)
-					Artifacts.instance.Hide();
+				LogEx(_ex);
+
 			}
 		}
 
@@ -1570,6 +1603,10 @@ namespace CnV.Views
 			}
 		}
 
+		
+
+		
+
 
 
 
@@ -1623,7 +1660,7 @@ namespace CnV.Views
 
 									l = l.Where(a => a.testContinentAndTagFilter)
 										.OrderBy((a) => a,new CityList.CityComparer()).ToArray();
-									ShellPage.instance.cityBox.ItemsSource = l;
+								//	CityStats.instance.cityBox.ItemsSource = l;
 									City.gridCitySource.Set(l,true,itemsChanged);
 									// todo change this
 									Spot.selected = Spot.selected.Where(cid => City.TestContinentAndFlagFilter(cid))
@@ -1641,6 +1678,42 @@ namespace CnV.Views
 
 
 								});
+		}
+
+		private void CityListSubmitted(ComboBox sender,ComboBoxTextSubmittedEventArgs args)
+		{
+			var text = args.Text.ToLower();
+			var items = CityList.selections;
+			foreach(var it in items)
+			{
+				// its good
+				if(it.name == text)
+				{
+					return;
+				}
+			}
+
+			args.Handled = true;
+			//foreach (var it in items)
+			//{
+			//	if (it.name.ToLower().StartsWith(text))
+			//	{
+			//		sender.Text = it.name;
+			//		sender.SelectedItem = it;
+			//		return;
+			//	}
+			//}
+			// try contains
+			foreach(var it in items)
+			{
+				if(it.name.ToLower().Contains(text))
+				{
+					sender.Text         = it.name;
+					sender.SelectedItem = it;
+					return;
+				}
+			}
+			// todo!
 		}
 	}
 

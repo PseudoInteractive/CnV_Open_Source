@@ -46,7 +46,7 @@ namespace CnV
 			var rv = instance ?? new RecruitDialog();
 			rv.city = city;
 			rv.UpdateTroopItems();
-			rv.Show();
+			rv.Show(true);
 			
 		}
 

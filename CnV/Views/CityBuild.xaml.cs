@@ -1280,7 +1280,13 @@ namespace CnV
 		}
 		public void CityChanged()
 		{
-			AppS.DispatchOnUIThread( ()=> OnPropertyChanged( nameof(buildCity)) );
+			AppS.DispatchOnUIThread(
+				()=>
+				{
+					OnPropertyChanged(nameof(buildCity));
+				//ShellPage.instance.homeCoords.Content = City.GetBuild().c.ToString(); 
+				}
+				);
 		}
 		public event PropertyChangedEventHandler? PropertyChanged;
 		//public static BuildPhase GetBuildPhase()

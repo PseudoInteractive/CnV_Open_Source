@@ -11,13 +11,39 @@ using CommunityToolkit.WinUI.Helpers;
 using CommunityToolkit.WinUI.UI.Controls;
 using CommunityToolkit.WinUI.UI;
 using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Data;
 
 namespace CnV
 {
 	public class DialogG :Microsoft.UI.Xaml.Controls.Expander
 	{
 		protected virtual string title => "Title";
-		protected Grid headerGrid;
+
+		protected TextBlock titleText;
+		public UIElementCollection TitleGrid
+	{
+		get { return(UIElementCollection) GetValue(TitleGridProperty);}
+		set { SetValue(TitleGridProperty,value); }
+	}
+
+		public static readonly DependencyProperty TitleGridProperty = DependencyProperty.Register(
+		"TitleGrid",
+		typeof(UIElementCollection),
+		typeof(DialogG),
+		new PropertyMetadata(null));
+
+		protected override void OnKeyDown(KeyRoutedEventArgs e)
+		{
+			if(e.Key == Windows.System.VirtualKey.Escape || e.Key == Windows.System.VirtualKey.Cancel )
+			{
+				e.Handled=true;
+				Hide();
+			}
+			else
+			{
+				base.OnKeyDown(e);
+			}
+		} 
 		internal static List<DialogG> all = new();
 		public DialogG()
 		{
@@ -26,26 +52,36 @@ namespace CnV
 			
 			var brush = AppS.Brush(0xFF150030u);
 			Background = brush;
-			Width=600;
+			
 			MaxHeight = Settings.canvasHeight;
 			var grid = new Grid() {Padding=new(),Margin=new()  };
-			headerGrid = grid;
-			
-			grid.Children.Add(new TextBlock() { Text=title, 
+			TitleGrid = grid.Children;
+			grid.ColumnDefinitions.Add(new() { Width=GridLength.Auto } );
+			grid.ColumnDefinitions.Add(new() {  Width=new(1,GridUnitType.Star)});
+			grid.ColumnDefinitions.Add(new() { Width=GridLength.Auto});
+			titleText = new TextBlock()
+			{
+				Text=title,
 				Style = App.instance.Resources["TextBlockMedium"]  as Style,
 				VerticalAlignment=VerticalAlignment.Center,
 				Padding = new(),
-				Margin = new(4,0,0,0) });
+				Margin = new(4,0,16,0)
+			};
+			
+			grid.Children.Add(titleText);
 			var button = new Button() {
 				
 				Content="X", 
-				HorizontalAlignment=HorizontalAlignment.Right,
-				Style = (Style)App.instance.Resources["ButtonMedium"],Margin=new(1),Padding=new() };
+				HorizontalAlignment=HorizontalAlignment.Right,Width=40,
+				Style = (Style)App.instance.Resources["ButtonMedium"],Margin=new(16,0,8,0),Padding=new(4,0,4,0) };
 			button.Click += Hide;
 			var headerB = new Button() { HorizontalContentAlignment=HorizontalAlignment.Stretch,
 				VerticalContentAlignment=VerticalAlignment.Stretch,CornerRadius=new(3),Margin=new(),Padding=new()};
 			headerB.Content = grid;
+			Grid.SetColumn(button,2);
+			
 			grid.Children.Add(button);
+			TabFocusNavigation = KeyboardNavigationMode.Cycle;
 			base.Header =headerB;
 			//grid.IsTapEnabled=true;
 			//grid.Tapped +=Grid_Tapped;
@@ -82,7 +118,7 @@ namespace CnV
 		virtual protected Task Closing() => Task.CompletedTask;
 		
 		bool isAnimating;
-		public async void Show()
+		public async void Show(bool toggle)
 		{
 			try
 			{
@@ -91,11 +127,23 @@ namespace CnV
 					await Task.Delay(100);
 				}
 
-				ShellPage.gameUIFrame.Children.Remove(this);
-				ShellPage.gameUIFrame.Children.Add(this);
-				isAnimating=true;
-				await Opening();
-				isAnimating=false;
+				var was = ShellPage.gameUIFrame.Children.Remove(this);
+				if(!(was && toggle))
+				{
+					IsExpanded=true;
+					titleText.Text = title;
+					ShellPage.gameUIFrame.Children.Add(this);
+					var focusItem = FocusManager.FindFirstFocusableElement(Content as DependencyObject);
+					
+					isAnimating=true;
+					await Opening();
+					isAnimating=false;
+					if(focusItem is not null)
+					{
+						await Task.Delay(0);
+						await FocusManager.TryFocusAsync(focusItem,FocusState.Programmatic);
+					}
+				}
 			}
 			catch(Exception ex)
 			{
@@ -103,6 +151,7 @@ namespace CnV
 			}
 
 		}
+		
 		public async void Hide()
 		{
 			try
