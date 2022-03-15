@@ -605,12 +605,12 @@ namespace CnV
 					var t4 = Title.Init();
 					var t5 = Artifact.Init();
 					var t6 = CnV.Data.Boss.Init();
-					var t7 = TA.Init();
+					
 					var t8 = ResearchItems.Init();
 					Settings.Initialize(); // this is the long one
 
 
-					await Task.WhenAll(t2,t3,t4,t5,t6,t7,t8);
+					await Task.WhenAll(t2,t3,t4,t5,t6,t8);
 				}
 				const bool isInteractive = true;
 

@@ -356,7 +356,7 @@ namespace CnV
 					else
 						city._cityName = name;
 					city.type = Spot.typeCity;
-					city._tsTotal = jsCity.GetAsInt("8");
+					//city._tsTotal = jsCity.GetAsInt("8");
 					//city._tsHome = jsCity.GetAsInt("17");
 					//			city.troopsTotal = TroopTypeCount.empty;
 					//				city.troopsHome = TroopTypeCount.empty;

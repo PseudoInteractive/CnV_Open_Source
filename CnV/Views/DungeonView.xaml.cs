@@ -260,7 +260,7 @@ namespace CnV.Views
 		{
 			var button = sender as Microsoft.UI.Xaml.Controls.DropDownButton;
 			var flyout = new MenuFlyout();
-			for (int i = 0; i < ttCount; ++i)
+			for (var i = ttZero; i < ttCount; ++i)
 			{
 				if (IsRaider(i))
 				{
@@ -278,7 +278,7 @@ namespace CnV.Views
 		{
 			var menu = (sender as MenuFlyout);
 			int counter = 0;
-			for (int i = 0; i < ttCount; ++i)
+			for (var  i = ttZero; i < ttCount; ++i)
 			{
 				if (IsRaider(i))
 				{

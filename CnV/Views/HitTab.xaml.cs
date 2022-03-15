@@ -12,8 +12,8 @@ namespace CnV.Views
 		public override TabPage defaultPage => TabPage.secondaryTabs;
 
 		public static bool IsVisible() => instance.isFocused;
-        public Army[] history { get; set; } = Army.empty;
-        public void SetHistory(Army[] _history)
+        public ArmyArray history { get; set; } = Army.EmptyArray;
+        public void SetHistory(ArmyArray _history)
         {
 			//{
 			//	StringBuilder sb = new StringBuilder();

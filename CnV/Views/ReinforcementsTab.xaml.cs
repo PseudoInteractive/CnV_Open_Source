@@ -126,7 +126,7 @@ namespace CnV.Views
 			var _cid = targetCid;
 			var showAll = _cid == 0;
 			using var work = new WorkScope("Checking reinforcements..");
-			await ReinforcementsOverview.instance.Post();
+			//await ReinforcementsOverview.instance.Post();
 			await refreshTask;
 			
 			var _spot = _cid == 0 ? null : Spot.GetOrAdd(_cid);

@@ -155,7 +155,20 @@ namespace CnV
 				instance.cityQueueChangeDebounce.Go();
 			}
 		}
+		internal static void NotifyRecruitQueueChange()
+		{
+//			if(City.GetBuild().buildQueue != displayQueue || force)
+			{
+//				Log("Debuounce");
+				instance.cityRecruitQueueChangeDebounce.Go();
+			}
+		}
+
 		internal static BuildQueueType lastSynchronizedQueue = BuildQueueType.Empty;
+		static void UpdateRecruitQueue()
+		{
+			// Todo
+		}
 
 		static void UpdateBuildQueue()
 		{
@@ -235,6 +248,7 @@ namespace CnV
 		}
 
 		internal DebounceA cityQueueChangeDebounce = new(UpdateBuildQueue) { runOnUiThread=true,debounceDelay=50 };
+		internal DebounceA cityRecruitQueueChangeDebounce = new(UpdateRecruitQueue) { runOnUiThread=true,debounceDelay=50 };
 
 
 
@@ -253,6 +267,15 @@ namespace CnV
 			if(_city.isBuild)
 			{
 				CityStats.NotifyBuildQueueChange();
+			}
+		}
+		public static void CityRecruitChange(City _city)
+		{
+			if(_city == lastDisplayed)
+				lastDisplayed = null;
+			if(_city.isBuild)
+			{
+				CityStats.NotifyRecruitQueueChange();
 			}
 		}
 		//public void OnPropertyChanged() =>

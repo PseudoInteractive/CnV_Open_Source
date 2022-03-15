@@ -15,7 +15,7 @@ using static GameClient;
 	{
 		if(!city.incoming.Any())
 			return string.Empty;
-		var ts = 0;
+		var ts = 0u;
 		var sieged = false;
 		var hasSen = false;
 		var hasArt = false;

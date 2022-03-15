@@ -5,9 +5,7 @@ using System.Linq;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Text;
-using TroopTypeCounts = CnV.TroopTypeCounts;
 //COTG.DArray<COTG.TroopTypeCount>;
-using TroopTypeCountsRef = CnV.TroopTypeCounts;
 using static CnV.TroopTypeCountHelper;
 //COTG.DArrayRef<COTG.TroopTypeCount>;
 

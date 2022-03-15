@@ -204,11 +204,11 @@ public static partial class CityUI
 		}
 
 //		aMisc.AddItem("Notify on Decay", ()=>DecayQuery(cid));
-		if (Raid.test)
-		{
-			aMisc.AddItem("Settle whenever water", (_, _) => Spot.TrySettle(City.build, cid, true));
-			aMisc.AddItem("Settle whenever land",  (_, _) => Spot.TrySettle(City.build, cid, false));
-		}
+		//if (Raid.test)
+		//{
+		//	aMisc.AddItem("Settle whenever water", (_, _) => Spot.TrySettle(City.build, cid, true));
+		//	aMisc.AddItem("Settle whenever land",  (_, _) => Spot.TrySettle(City.build, cid, false));
+		//}
 
 		aMisc.AddItem("Distance",       (_, _) => me.ShowDistanceTo());
 		aMisc.AddItem("Select",         (_, _) => me.SelectMe(true, AppS.keyModifiers));

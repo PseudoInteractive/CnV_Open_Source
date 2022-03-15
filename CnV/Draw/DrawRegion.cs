@@ -1074,7 +1074,7 @@ internal partial class GameClient
 											if(IsSquareCulledWC(c1,cullSlopSpace))  // this is in pixel space - Should be normalized for screen resolution or world space (1 continent?)
 												continue;
 											var incAttacks = 0;
-											var incTs = 0;
+											var incTs = 0u;
 											var sieged = false;
 											var hasSen = false;
 											var hasArt = false;
@@ -1144,7 +1144,7 @@ internal partial class GameClient
 												DrawRectOutlineShadow(Layer.effects - 1,targetCid,assaultColor,null,1,-10f);
 											if(sieged)
 												DrawRectOutlineShadow(Layer.effects-1,targetCid,siegeColor,null,1,-12f);
-											if(city.outGoing!=City.OutGoing.none)
+											if(city.outGoingStatus!=City.OutgoingStatus.none)
 												DrawRectOutlineShadow(Layer.effects - 1,targetCid,attackColor,null,1,-8f);
 
 											if(!IsCulledWC(c1) && (wantDetails || showAll || Spot.IsSelectedOrHovered(targetCid,noneIsAll)))
@@ -1349,8 +1349,8 @@ internal partial class GameClient
 										{
 											var ct = raid.target.CidToWorld();
 											var (c0, c1) = !raid.isReturning ? (wc, ct) : (ct, wc);
-											DrawAction((float)(raid.time - serverNow).TotalMinutes,
-												raid.GetOneWayTripTimeMinutes(city),
+											DrawAction((float)(raid.time - serverNow).TotalSeconds,
+												raid.GetOneWayTripTime(city),
 												r,c0.ToVector(),c1.ToVector(),raidColor,troopImages[raid.troopType],false,null,highlight: Spot.IsSelectedOrHovered(city.cid));
 
 										}
@@ -1440,14 +1440,14 @@ internal partial class GameClient
 												(hasIncoming ?
 													(spot.underSiege ? myNameColorSieged
 																	: myNameColorIncoming)
-																	: spot.outGoing != 0 ? nameColorOutgoing
+																	: spot.outGoingStatus != 0 ? nameColorOutgoing
 																		: myNameColor) :
 											(hasIncoming ?
 												(hovered ?
 													(spot.underSiege ? nameColorSiegedHover : nameColorIncomingHover)
 												   : (spot.underSiege ? nameColorSieged : nameColorIncoming))
 												   : hovered ? nameColorHover
-												   : spot.outGoing != 0 ? nameColorOutgoing
+												   : spot.outGoingStatus != 0 ? nameColorOutgoing
 												   : nameColor);
 
 											DrawTextBox(name,drawC,nameTextFormat,wantDarkText ? color.A.AlphaToBlack() : color,
@@ -1456,54 +1456,54 @@ internal partial class GameClient
 											//									, Layer.tileText, z,PlanetDepth);
 
 										}
-									if(false)
-									{
-										if(spot != null && !focusOnCity && !(Settings.troopsVisible.HasValue && Settings.troopsVisible.Value == false))
-										{
-											if(!spot.troopsTotal.Any() && spot.isNotClassified && spot.canVisit && Settings.troopsVisible.GetValueOrDefault())
-												spot.TouchClassification();
-											if(spot.troopsTotal.Any() || spot.isClassified)
-											{
-												var c1 = (cx, cy);
-												var rand = spot.cid.CidToRandom();
-												var t = (tick * rand.Lerp(1.5f / 512.0f,1.75f / 512f)) + 0.25f;
+									//if(false)
+									//{
+									//	if(spot != null && !focusOnCity && !(Settings.troopsVisible.HasValue && Settings.troopsVisible.Value == false))
+									//	{
+									//		if(!spot.troopsTotal.Any() && spot.isNotClassified && spot.canVisit && Settings.troopsVisible.GetValueOrDefault())
+									//			spot.TouchClassification();
+									//		if(spot.troopsTotal.Any() || spot.isClassified)
+									//		{
+									//			var c1 = (cx, cy);
+									//			var rand = spot.cid.CidToRandom();
+									//			var t = (tick * rand.Lerp(1.5f / 512.0f,1.75f / 512f)) + 0.25f;
 
-												int type;
-												float typeBlend;
-												float alpha = 1;// (t * rand.Lerp(0.7f, 0.8f)).Wave() * 0.20f + 0.70f;
+									//			int type;
+									//			float typeBlend;
+									//			float alpha = 1;// (t * rand.Lerp(0.7f, 0.8f)).Wave() * 0.20f + 0.70f;
 
-												if(spot.troopsTotal.Any())
-												{
-													var ta = GetTroopBlend(t,spot.troopsTotal.Length);
-													alpha = ta.alpha;
+									//			if(spot.troopsTotal.Any())
+									//			{
+									//				var ta = GetTroopBlend(t,spot.troopsTotal.Length);
+									//				alpha = ta.alpha;
 
-													type = spot.troopsTotal.GetIndexType(ta.iType);
-												}
-												else
-												{
-													type = spot.TroopType;
-													typeBlend = 1;
-													switch(spot.classification)
-													{
-														case Spot.Classification.misc:
-														case Spot.Classification.unknown:
-														case Spot.Classification.pending:
-														case Spot.Classification.missing:
-															goto dontDraw;
-													}
+									//				type = spot.troopsTotal.GetIndexType(ta.iType);
+									//			}
+									//			else
+									//			{
+									//				type = spot.TroopType;
+									//				typeBlend = 1;
+									//				switch(spot.classification)
+									//				{
+									//					case Spot.Classification.misc:
+									//					case Spot.Classification.unknown:
+									//					case Spot.Classification.pending:
+									//					case Spot.Classification.missing:
+									//						goto dontDraw;
+									//				}
 
-												}
-												var r = t.Ramp();
-												var spriteSize = new Vector2(spriteSizeGain);
-												var _c0 = c1.ToVector() - spriteSize;
-												var _c1 = c1.ToVector() + spriteSize;
+									//			}
+									//			var r = t.Ramp();
+									//			var spriteSize = new Vector2(spriteSizeGain);
+									//			var _c0 = c1.ToVector() - spriteSize;
+									//			var _c1 = c1.ToVector() + spriteSize;
 
-												draw.AddQuadWithShadow(Layer.effects,Layer.effectShadow,troopImages[type],_c0,_c1,HSLToRGB.ToRGBA(rectSpan,0.3f,0.825f,alpha,alpha + 0.125f),ShadowColor(alpha),
-													zCities);
-											}
-											dontDraw:;
-										}
-									}
+									//			draw.AddQuadWithShadow(Layer.effects,Layer.effectShadow,troopImages[type],_c0,_c1,HSLToRGB.ToRGBA(rectSpan,0.3f,0.825f,alpha,alpha + 0.125f),ShadowColor(alpha),
+									//				zCities);
+									//		}
+									//		dontDraw:;
+									//	}
+									//}
 									}
 								}
 							}

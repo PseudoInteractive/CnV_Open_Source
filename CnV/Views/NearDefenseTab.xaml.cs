@@ -126,7 +126,7 @@ namespace CnV.Views
 							if (ttGalleys.count > 0 )
 							{
 								var galleys = ttGalleys.count;
-								var landTroops = troops.TS( (tt) => IsLandRaider(tt.type) );
+								var landTroops = troops.TS( (tt) => IsLandRaider(tt) );
 								var requiredGalleys = (landTroops + 499) / 500;
 								var sendGain = 1.0;
 								if (galleys >= requiredGalleys)
@@ -137,29 +137,29 @@ namespace CnV.Views
 								{
 									sendGain = galleys * 500.0 / landTroops;
 								}
-								Set(ref supporter.tSend, new TroopTypeCount(ttGalley, galleys));
-								foreach (var tt in troops.Enumerate())
+								supporter.tSend = new(new TroopTypeCount(ttGalley, galleys));
+								foreach (var tt in troops)
 								{
 									if (tt.type == ttStinger)
 									{
-										Add( ref supporter.tSend ,  tt);
+										supporter.tSend += tt;
 									}
 									else
 									{
 										if (!IsLandRaider(tt.type) || !Include(tt))
 											continue;
-										Add(ref supporter.tSend ,new TroopTypeCount(tt.type, (int)(sendGain * tt.count))); // round down
+										supporter.tSend += new TroopTypeCount(tt.type, (uint)(sendGain * tt.count)); // round down
 									}
 								}
 							}
 							else
 							{
-								Add( ref supporter.tSend, troops, (tt) => tt.type == ttStinger ); // take stingers
+								supporter.tSend += troops.Where( (tt) => tt.type == ttStinger ); // take stingers
 							}
 						}
 						else
 						{
-							Add(ref supporter.tSend,  troops, tt => (includeOffense || tt.isDef) && (canTravelViaWater||!tt.isNaval) ); // clone array
+							supporter.tSend += troops.Where( tt => (includeOffense || tt.isDef) && (canTravelViaWater||!tt.isNaval) );
 						}
 						supporter.travel = TimeSpanS.FromHours(hours);  // penality for targtes that we cannot make it to
 					}
@@ -247,7 +247,7 @@ namespace CnV.Views
             if( sel is Supporter support )
             {
                 var stt = new List<SupportByTroopType>();
-                foreach (var i in support.city.troopsTotal.Enumerate())
+                foreach (var i in support.city.troopsTotal)
                 {
                     if(Include(i))
                        stt.Add(new SupportByTroopType() { type = i.type, supporter = support });
@@ -367,7 +367,7 @@ namespace CnV.Views
 			var def = FindValidDefendants(sendViaWater && defendants.Any(d => d.isOnWater),  onlyHome, city, ref hours);
 			foreach (var d in def)
 			{
-				var ts = supporter.tSend.DividedBy(def.Count);
+				var ts = supporter.tSend +  (def.Count);
 				var cid = d.cid;
 				await Post.SendRein(supporter.cid, cid, ts, departAt, _arriveAt, hours, supporter.split, text);
 				Trace($"Sent {ts} from {supporter.cid.AsCity()} to {cid.AsCity()} @{_arriveAt.ToString()}");

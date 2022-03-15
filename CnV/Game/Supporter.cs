@@ -1,8 +1,6 @@
 ﻿using System.ComponentModel;
 using Microsoft.UI.Xaml.Media.Imaging;
 
-//COTG.DArray<COTG.TroopTypeCount>;
-using TroopTypeCountsRef = CnV.TroopTypeCounts;
 using static CnV.TroopTypeCountHelper;
 
 //COTG.DArrayRef<COTG.TroopTypeCount>;
@@ -20,14 +18,14 @@ namespace CnV
         public Microsoft.UI.Xaml.Media.Imaging.BitmapImage icon => city.icon;
         public int cid => city.cid;
         public string raidReturn => city.raidReturn;
-        public int tsHome => NearDefenseTab.includeOffense ? city.tsHome : city.tsDefCityHome;
-        public int tsTotal => NearDefenseTab.includeOffense ? city.tsTotal : city.tsDefCityTotal;
+        public uint tsHome => NearDefenseTab.includeOffense ? city.tsHome : city.tsDefCityHome;
+        public uint tsTotal => NearDefenseTab.includeOffense ? city.tsTotal : city.tsDefCityTotal;
         public int split { get; set; } = 1; // splits def and sends in batches for wings
 		public TimeSpanS travel;
 		public int validTargets { get; set; }
 		public string travelTime => travel.Format();
 		public TroopTypeCounts tSend = new();
-		public int tsSend
+		public uint tsSend
         {
             get => tSend.TS();
         }
@@ -53,7 +51,7 @@ namespace CnV
             {
 
                 string rv = "Troops Home/Total";
-                foreach (var ttc in city.troopsTotal.Enumerate())
+                foreach (var ttc in city.troopsTotal)
                 {
                     rv += $"\n{Troops.ttNameWithCaps[ttc.type]}: {city.troopsHome.GetCount(ttc.type),4:N0}/{ttc.count,4:N0}";
                 }
@@ -97,12 +95,12 @@ namespace CnV
     public class SupportByTroopType
 	{
         public Supporter supporter;
-        public int type;
+        public TType type;
 
         public BitmapImage icon => ImageHelper.Get($"Icons/troops{type}.png");
         public string troopType => Troops.ttNameWithCaps[type];
-        public int send { get => supporter.tSend.GetCount(type); set => Set(ref supporter.tSend,new TroopTypeCount( type,value) ); }
-        public int home { get => supporter.city.troopsHome.GetCount(type); }
-        public int total { get => supporter.city.troopsTotal.GetCount(type); }
+        public uint send { get => supporter.tSend.GetCount(type); set => supporter.tSend = new(new TroopTypeCount( type,value)) ; }
+        public uint home { get => supporter.city.troopsHome.GetCount(type); }
+        public uint total { get => supporter.city.troopsTotal.GetCount(type); }
     }
 }

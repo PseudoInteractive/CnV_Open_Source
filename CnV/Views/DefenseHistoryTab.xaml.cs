@@ -11,8 +11,8 @@ namespace CnV.Views
 	public sealed partial class DefenseHistoryTab : UserTab
     {
 		public override  TabPage defaultPage => TabPage.secondaryTabs;
-		public Army[] history { get; set; } = Army.empty;
-        public void SetHistory( Army[] _history)
+		public ArmyArray history { get; set; } = ArmyArray.Empty;
+        public void SetHistory( ArmyArray _history)
         {
             history = _history;
 			var sel = IncomingTab.selected;

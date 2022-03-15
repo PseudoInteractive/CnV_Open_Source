@@ -66,7 +66,7 @@ namespace CnV.Views
 					newSel.SelectInWorldView(false);
                 var waterValid = false;
 				var groundValid = false;
-				foreach (var i in newSel.troopsHome.Enumerate())
+				foreach (var i in newSel.troopsHome)
 				{
 					if (i.attack > 50 * 1000)
 					{

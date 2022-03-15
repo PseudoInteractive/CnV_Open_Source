@@ -151,7 +151,7 @@ using Game;
 														{
 
 															var incAttacks = 0;
-															var incTs = 0;
+															var incTs = 0u;
 															foreach(var i in city.incoming)
 															{
 																if(i.isAttack)
@@ -182,11 +182,11 @@ using Game;
 															sb.AppendLine(city.GetDefString("\n"));
 
 														}
-														if(city.outGoing!=0)
+														if(city.outGoingStatus!=0)
 														{
-															if(city.outGoing.HasFlag(City.OutGoing.sieging))
+															if(city.outGoingStatus.HasFlag(City.OutgoingStatus.sieging))
 																sb.Append("Sieging\n");
-															else if(city.outGoing.HasFlag(City.OutGoing.scheduled))
+															else if(city.outGoingStatus.HasFlag(City.OutgoingStatus.scheduled))
 																sb.Append("Attack Scheduled\n");
 															else
 																sb.Append("Attack Sent\n");

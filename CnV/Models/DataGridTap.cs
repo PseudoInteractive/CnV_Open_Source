@@ -73,9 +73,9 @@ namespace CnV;
 						{
 							switch (e.Column.HeaderText)
 							{
-								case nameof(i.Type):
-									if (i.reportId != null)
-										CnVServer.ShowReport(i.reportId);
+								case nameof(i.typeS):
+									if (i.id != 0ul)
+										CnVServer.ShowReport(i.id);
 									else
 										Note.Show("This attack is in the future, there is no report yet");
 									break;

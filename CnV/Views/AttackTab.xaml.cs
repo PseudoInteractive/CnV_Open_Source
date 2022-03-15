@@ -1305,12 +1305,12 @@ namespace CnV.Views
 				Assert(isValid);
 				// Todo: Ram attacks
 				var tt = (attacker.attackType == AttackType.senator) ? ttSenator: attacker.troopType;
-				var t = (float)tt.TravelTimeMinutes(attacker.cid, real.cid);
+				var t = tt.TravelTime(attacker.cid, real.cid);
 				foreach (var f in fakes)
 				{
-					t = t.Max((float)tt.TravelTimeMinutes(attacker.cid, f.cid));
+					t = t.Max(tt.TravelTime(attacker.cid, f.cid,attacker.player));
 				}
-				return t /(60); // minutes to hours
+				return t /TimeSpan.TicksPerHour; // minutes to hours
 			}
 			public bool FakesValid()
 			{

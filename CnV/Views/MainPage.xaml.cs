@@ -324,9 +324,9 @@ namespace CnV.Views
 		}
 		private async void ReturnRaids(bool fast, bool onlyNeeded)
         {
-            await RaidOverview.Send();
-            await RestAPI.troopsOverview.Post();
-			await RaidOverview.Send();
+   //         await RaidOverview.Send();
+   //         await RestAPI.troopsOverview.Post();
+			//await RaidOverview.Send();
 
 			if (cityGrid.SelectedItems.Count <= 1)
 			{
@@ -378,7 +378,7 @@ namespace CnV.Views
 				for (int pass=0;pass<8;++pass)
 				{
 
-					await Task.WhenAll(Raiding.UpdateTS(true), RaidOverview.Send() );
+					await Task.WhenAll(Raiding.UpdateTS(true) );
 					int counter = 0;
 					int processed = 0;
 					int max = sel.Count;

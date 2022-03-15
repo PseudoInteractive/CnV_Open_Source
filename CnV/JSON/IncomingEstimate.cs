@@ -77,8 +77,8 @@ namespace CnV
 
 
 
-			TroopTypeCountHelper.Set(ref army.troops, new TroopTypeCount(source.TroopType, -1));
-			Debug.Assert(army.troops.count == 1);
+		//	TroopTypeCountHelper.Set(ref army.troops, new TroopTypeCount(source.TroopType, -1));
+			Debug.Assert(army.troops.Length == 1);
 
 			if (army.miscInfo.Length == 0)
 			{
@@ -151,7 +151,7 @@ namespace CnV
 				//              time_4 = time_4 + mdiff_;
 				//              /** @type {number} */
 				//              time_4 = time_4 + sdiff_ / 60;
-				var journeyTime = army.journeyTimeMinutes; // want minutes
+				var journeyTime = army.journeyTime.TotalMinutes; // want minutes
 				var dist_ = army.distD;
 				float landSpeed = RoundTo6Bits(journeyTime / dist_);
 

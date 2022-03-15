@@ -55,19 +55,29 @@ namespace CnV.Views
 			public Style? plunderStyle { get; set; }
 
 
-			protected override Style? SelectStyleCore(object item, DependencyObject container)
+			protected override Style? SelectStyleCore(object item,DependencyObject container)
 			{
-				var report = (item as Army);
-				if (report is null)
-					return null;
-				return report.type switch
+				try
 				{
-					reportAssault => assaultStyle,
-					reportSiege => siegeStyle,
-					reportSieging => siegingStyle,
-					reportPlunder => plunderStyle,
-					_ => scoutStyle
-				};
+					var report = (item as ArmyReport);
+					if(report is null)
+						return null;
+					return report.type switch
+					{
+
+						ArmyType.assault => assaultStyle,
+						ArmyType.siegeRepeat => siegingStyle,
+						ArmyType.siegeFirst => siegeStyle,
+						ArmyType.plunder => plunderStyle,
+						ArmyType.scout => scoutStyle
+
+					};
+				}
+				catch(Exception _ex)
+				{
+					LogEx(_ex);
+					return scoutStyle;
+				}
 			}
 		}
 
