@@ -1305,7 +1305,7 @@ namespace CnV.Views
 				Assert(isValid);
 				// Todo: Ram attacks
 				var tt = (attacker.attackType == AttackType.senator) ? ttSenator: attacker.troopType;
-				var t = tt.TravelTime(attacker.cid, real.cid);
+				var t = tt.TravelTime(attacker.cid,real.cid,attacker.player) ;
 				foreach (var f in fakes)
 				{
 					t = t.Max(tt.TravelTime(attacker.cid, f.cid,attacker.player));

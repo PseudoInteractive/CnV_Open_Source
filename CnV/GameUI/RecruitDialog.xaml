@@ -5,7 +5,7 @@
     xmlns:cnv="using:CnV"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-	
+	Width="550"
 	
     mc:Ignorable="d">
 	
@@ -31,7 +31,7 @@
 						</Grid.RowDefinitions>
 						<Grid.ColumnDefinitions>
 							<ColumnDefinition Width="75"  />
-							<ColumnDefinition />
+							<ColumnDefinition Width="* "/>
 						</Grid.ColumnDefinitions>
 						<TextBlock Grid.Column="0" Text="{x:Bind info.tn}" Margin="3" Style="{StaticResource TextBlockMedium}" TextWrapping="WrapWholeWords" TextAlignment="Center" MaxLines="3"  VerticalAlignment="Center" />
 						<TextBlock Grid.Column="1" Text="{x:Bind info.dsc}"  Margin="3" Style="{StaticResource TextBlockSmall}" TextWrapping="WrapWholeWords"  MaxLines="4" TextAlignment="Center"   VerticalAlignment="Center" />
@@ -39,8 +39,8 @@
 							<StackPanel Orientation="Horizontal">
 								<cnv:IronText   Text="{x:Bind info.ironRequiredS, Mode=OneWay}" HorizontalAlignment="Left" Width="Auto"	Visibility="{x:Bind info.ironVisibility}" />
 								<cnv:WoodText   Text="{x:Bind info.woodRequiredS, Mode=OneWay}" HorizontalAlignment="Left" Width="Auto"		Visibility="{x:Bind info.woodVisibility}"/>
-								<cnv:StoneText   Text="{x:Bind info.stoneRequiredS, Mode=OneWay}" HorizontalAlignment="Left" Width="Auto"	/>
-								<cnv:GoldText   Text="{x:Bind info.goldRequiredS, Mode=OneWay}" HorizontalAlignment="Left" Width="Auto"	/>
+								<cnv:StoneText   Text="{x:Bind info.stoneRequiredS, Mode=OneWay}" HorizontalAlignment="Left" Width="Auto"	Visibility="{x:Bind info.stoneVisibility}" />
+								<cnv:GoldText   Text="{x:Bind info.goldRequiredS, Mode=OneWay}" HorizontalAlignment="Left" Width="Auto"	Visibility="{x:Bind info.goldVisibility}" />
 							</StackPanel>
 							<Grid   HorizontalAlignment="Right" >
 

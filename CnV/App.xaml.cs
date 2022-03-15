@@ -574,7 +574,7 @@ namespace CnV
 
 #if DEBUG
 				//				this.DebugSettings.FailFastOnErrors = false;
-				//		this.DebugSettings.FailFastOnErrors                      = true;
+				//this.DebugSettings.FailFastOnErrors                      = true;
 				this.DebugSettings.EnableFrameRateCounter                = false;
 				this.DebugSettings.IsTextPerformanceVisualizationEnabled = false;
 				//this.DebugSettings.FailFastOnErrors = false;

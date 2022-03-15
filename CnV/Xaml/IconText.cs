@@ -1,15 +1,6 @@
 ﻿using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Data;
-using Microsoft.UI.Xaml.Documents;
-using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
-using Microsoft.UI.Xaml.Media.Imaging;
-
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -100,59 +91,59 @@ public class IconText:Control
 	//}
 	public string Text
 	{
-		get { return(string) GetValue(TextProperty);}
+		get { return (string)GetValue(TextProperty); }
 		set { SetValue(TextProperty,value); }
 	}
 	public ImageSource Image
-        {
+	{
 
-	get { return(ImageSource) GetValue(ImageProperty);}
+		get { return (ImageSource)GetValue(ImageProperty); }
 		set { SetValue(ImageProperty,value); }
-      }
-		//public string ImageUri
-  //      {
-           
-  //          set { XamlImage.Source = ImageHelper.FromImages(value) ; }
-  //      }
-		//public string Text
-  //      {
-  //          get { return (string)GetValue(TextProperty); }
-  //          set { SetValue(TextProperty, value); }
-  //      }
-		//public ImageSource imageSource
-  //      {
-           
-  //          get { return GetValue(ImageProperty) as ImageSource ?? ImageHelper.FromImages(GetValue(ImageUriProperty) as string ) ; }
-  //      }
-        /// <inheritdoc/>
-        protected override void OnApplyTemplate()
-        {
-            base.OnApplyTemplate();
-            SetOrientation();
-        }
+	}
+	//public string ImageUri
+	//      {
 
-        
+	//          set { XamlImage.Source = ImageHelper.FromImages(value) ; }
+	//      }
+	//public string Text
+	//      {
+	//          get { return (string)GetValue(TextProperty); }
+	//          set { SetValue(TextProperty, value); }
+	//      }
+	//public ImageSource imageSource
+	//      {
 
-        private static void OnOrientationChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-            var control = (IconText)d;
-            control.SetOrientation();
-        }
+	//          get { return GetValue(ImageProperty) as ImageSource ?? ImageHelper.FromImages(GetValue(ImageUriProperty) as string ) ; }
+	//      }
+	/// <inheritdoc/>
+	protected override void OnApplyTemplate()
+	{
+		base.OnApplyTemplate();
+		SetOrientation();
+	}
 
-  
 
-        private void SetOrientation()
-        {
-            var orientation = this.Orientation == Orientation.Vertical
-                ? nameof(Orientation.Vertical)
-                : nameof(Orientation.Horizontal);
 
-            VisualStateManager.GoToState(this, orientation, true);
-        }
+	private static void OnOrientationChanged(DependencyObject d,DependencyPropertyChangedEventArgs e)
+	{
+		var control = (IconText)d;
+		control.SetOrientation();
+	}
+
+
+
+	private void SetOrientation()
+	{
+		var orientation = this.Orientation == Orientation.Vertical
+			? nameof(Orientation.Vertical)
+			: nameof(Orientation.Horizontal);
+
+		VisualStateManager.GoToState(this,orientation,true);
+	}
 }
 public abstract class IconTextSized:IconText
 {
-	protected abstract string uri {  get; }
+	protected abstract string uri { get; }
 
 	public static readonly DependencyProperty ImageHeightProperty = DependencyProperty.Register(
 		"ImageHeight",
@@ -161,36 +152,33 @@ public abstract class IconTextSized:IconText
 		new PropertyMetadata(28,ImageHeightChanged));
 	public int ImageHeight
 	{
-		get { return(int) GetValue(ImageHeightProperty);}
+		get { return (int)GetValue(ImageHeightProperty); }
 		set { SetValue(ImageHeightProperty,value); }
 	}
 	private static void ImageHeightChanged(DependencyObject d,DependencyPropertyChangedEventArgs e)
 	{
 		IconTextSized me = (IconTextSized)d;
-		me.Image = ImageHelper.GetPhysical(me.uri,(int)e.NewValue);
+		me.Image = ImageHelper.Get(me.uri,(int)e.NewValue);
 	}
 	protected override void OnApplyTemplate()
-     {
-            base.OnApplyTemplate();
-			if(Image == null)
-				Image = ImageHelper.GetPhysical(uri,ImageHeight);
-     }
+	{
+		base.OnApplyTemplate();
+		if(Image == null)
+			Image = ImageHelper.Get(uri,ImageHeight);
+	}
 
 }
 public class WoodText:IconTextSized
 {
 	protected override string uri => "UI/icons_ressource_wood.png";
 
-}public class IronText:IconTextSized
+}
+public class IronText:IconTextSized
 {
 	protected override string uri => "UI/icons_ressource_iron.png";
 
 }
-public class GoldText:IconTextSized
-{
-	protected override string uri => "UI/icons_ressource_gold.png";
 
-}
 public class StoneText:IconTextSized
 {
 	protected override string uri => "UI/icons_ressource_stone.png";
@@ -201,3 +189,17 @@ public class FoodText:IconTextSized
 	protected override string uri => "UI/icons_ressource_grain.png";
 
 }
+
+public class GoldText:IconTextSized
+{
+	protected override string uri => "UI/icons_ressource_gold.png";
+}
+public class ZirconiaText:IconTextSized
+{
+	protected override string uri => "zirconia.png";
+}
+public class ManaText:IconTextSized
+{
+	protected override string uri => "mana.png";
+}
+

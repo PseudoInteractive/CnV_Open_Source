@@ -39,7 +39,7 @@ namespace CnV
 
 			
 			for(int i = 0;i<Troops.ttCount;++i)
-				troopItems[i] = new() { city = city,tt =i };
+				troopItems[i] = new() { city = city,tt =(byte)i };
 		}
 		public static void ShowInstance(City city)
 		{
@@ -58,13 +58,13 @@ namespace CnV
 	{
 		
 		internal City city; // convienience
-		internal int tt;
+		internal TType tt;
 		internal int count;
 		internal ImageSource image => Troops.Image(tt);
 		internal TroopInfo info => TroopInfo.all[tt];
 		internal void Recruit(object sender,RoutedEventArgs e)
 		{
-
+			AppS.MessageBox("recruit",info.ToString());
 			Note.Show("Recruit");
 			count =0;
 			OnPropertyChanged();

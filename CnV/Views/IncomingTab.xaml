@@ -150,7 +150,7 @@
                         AllowFocusOnInteraction="True"
 						IsTabStop="True"
 						
-                                    ItemsSource="{x:Bind game:Army.empty}"
+                                    ItemsSource="{x:Bind game:Army.EmptyArray, Mode=OneWay}"
                                     
 
 						

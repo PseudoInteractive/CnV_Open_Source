@@ -54,7 +54,7 @@
 					<Color x:Key="SystemAccentColorLight3">#FF8372AC</Color>
 					<Color x:Key="SystemAccentColorDark1">#FF290050</Color>
 					<Color x:Key="SystemAccentColorDark2">#FF220040</Color>
-					<Color x:Key="SystemAccentColorDark3">#FF150030</Color>
+					<Color x:Key="SystemAccentColorDark3">#FF050010</Color>
 					<Color x:Key="RegionColor">#FF153A35</Color>
 					<SolidColorBrush x:Key="RegionBrush" Color="{StaticResource RegionColor}" />
 
@@ -119,7 +119,7 @@
 					<Color x:Key="SystemAccentColorLight3">#FF8372AC</Color>
 					<Color x:Key="SystemAccentColorDark1">#FF290050</Color>
 					<Color x:Key="SystemAccentColorDark2">#FF220040</Color>
-					<Color x:Key="SystemAccentColorDark3">#FF150030</Color>
+					<Color x:Key="SystemAccentColorDark3">#FF050010</Color>
 					<Color x:Key="RegionColor">#FF153A35</Color>
 					<SolidColorBrush x:Key="RegionBrush" Color="{StaticResource RegionColor}" />
 					

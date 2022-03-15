@@ -765,6 +765,77 @@ namespace CnV
 
 		public event PropertyChangedEventHandler? PropertyChanged;
 	}
+	public class RecruitItem:INotifyPropertyChanged
+	{
+		public const int size = 32;
+		public BitmapImage image { get; set; }
+		public string opText { get; set; }
+		public string timeText { get; set; }
+		public TroopTypeCount op;
 
+		internal City city;
+		public RecruitItem(TroopTypeCount item, City city)
+		{
+			this.city = city;
+			op = item;
+			image = Troops.Image(op.t);
+			///var u = op.unpack;
+			//opText = u.isMove ? "Move" : u.isDemo ? "Destroy" : u.isBuild ? $"Build{(u.pa==false ? " p" : "") }" : u.isDowngrade ? $"Down to {u.elvl}" : $"Up to {u.elvl}";
+			UpdateText();
+		}
+		public void UpdateText()
+		{
+			try
+			{
+				////var q = city.buildQueue;
+				////TimeSpanS dt;
+				////if(q.Any() && q[0]== op && city.buildItemEndsAt.isNotZero)
+				////	dt = city.buildItemEndsAt - CnVServer.simTime;
+				////else
+				////	dt = new(op.TimeRequired(city));
+				////var text = dt.ToString();
+				//if(text != timeText)
+				//{
+				//	timeText = text;// + BuildingDef.FromId(item.bid).Bn;
+				//	OnPropertyChanged(nameof(this.timeText));
+				//}
+			}
+			catch(Exception ex)
+			{
+				LogEx(ex);
+			}
+
+		}
+		public void ContextRequested(UIElement sender,ContextRequestedEventArgs args)
+		{
+			args.Handled    = true;
+			var flyout = new MenuFlyout();
+			flyout.SetXamlRoot(sender);
+			
+
+			// Todo: Sort
+
+			if(args.TryGetPosition(sender,out var c))
+			{
+				flyout.ShowAt(sender,c);
+			}
+			else if(args.TryGetPosition(CityStats.instance,out var c2))
+			{
+				flyout.ShowAt(CityStats.instance,c2);
+			}
+			else
+			{
+				flyout.ShowAt(sender,new());
+				Assert(false); 
+			}
+			//VisualTreeHelper.GetParent(args.OriginalSource
+			//LogJson(args);
+			//Log(args.OriginalSource);
+			//LogJson(sender);
+		}
+		public void OnPropertyChanged(string members = null) => PropertyChanged?.Invoke(this,new(members));
+
+		public event PropertyChangedEventHandler? PropertyChanged;
+	}
 
 }

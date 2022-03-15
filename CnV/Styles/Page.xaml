@@ -24,7 +24,7 @@
 	<!-- Header -->
     <Thickness x:Key="ExpanderHeaderPadding">0,0,0,0</Thickness>
     <Thickness x:Key="ExpanderChevronMargin">0,0,0,0</Thickness>
-	<!--<Style TargetType="Expander" BasedOn="{StaticResource DefaultExpanderStyle}" >
+	<Style TargetType="Expander"  >
 		<Setter Property="MinHeight" Value="12" />
 		<Setter Property="HorizontalAlignment" Value="Stretch" />
 		<Setter Property="HorizontalContentAlignment" Value="Stretch" />
@@ -32,8 +32,16 @@
 		<Setter Property="Margin" Value="0" />
 		<Setter Property="BorderThickness" Value="0" />
 		<Setter Property="Padding" Value="0" />
-	</Style>-->
+	</Style>
+	<Style TargetType="FlyoutPresenter"  >
+		<Setter Property="MaxWidth" Value="800" />
+		<Setter Property="MaxHeight" Value="720" />
+		<Setter Property="IsTabStop" Value="True" />
+		<Setter Property="TabFocusNavigation" Value="Cycle" />
+	</Style>
+	
 
+	<x:Double x:Key="FlyoutMaxWidth">1024</x:Double>
 	<!-- Content -->
     <Thickness x:Key="ExpanderContentPadding">0</Thickness>
 	<Thickness x:Key="ExpanderContentDownBorderThickness">1,1,1,1</Thickness>
@@ -46,8 +54,8 @@
     <x:Double x:Key="ContentDialogMaxHeight">720</x:Double>
 
     <x:Double x:Key="ContentDialogMaxWidth">1024</x:Double>
-			<x:Double x:Key="TeachingTipMaxHeight">720</x:Double>
-			<x:Double x:Key="TeachingTipMaxWidth">720</x:Double>
+			<x:Double x:Key="TeachingTipMaxHeight">640</x:Double>
+	<x:Double x:Key="TeachingTipMaxWidth">640</x:Double>
 			<SolidColorBrush x:Key="HyperLinkBrush" Color="#FF7060FF" />
 
 

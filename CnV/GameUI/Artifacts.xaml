@@ -45,12 +45,10 @@
 							<Image Grid.Column="0" Source="{x:Bind image}" Margin="3"  />
 							<TextBlock Grid.Column="1" Text="{x:Bind name}" Margin="3" Style="{StaticResource TextBlockMedium}" TextWrapping="WrapWholeWords" TextAlignment="Center" MaxLines="3"  VerticalAlignment="Center" />
 							<TextBlock Grid.Column="2" Text="{x:Bind description}"  Margin="3" Style="{StaticResource TextBlockSmall}" TextWrapping="WrapWholeWords"  MaxLines="4" TextAlignment="Center"   VerticalAlignment="Center" />
-							<cnv:IconText x:Name="zirc"  Grid.Row="1" Width="74"
-					  Image="{x:Bind cnv:ImageHelper.GetPhysical('zirconia.png',28) }"
+							<cnv:ZirconiaText x:Name="zirc"  Grid.Row="1" Width="74"
 					  Text="{x:Bind zirconia, Mode=OneWay}" />
 
-							<cnv:IconText Grid.Column="1" Grid.Row="2" Width="74"
-							  Image="{x:Bind cnv:ImageHelper.GetPhysical('mana.png',28) }"
+							<cnv:ManaText Grid.Column="1" Grid.Row="2" Width="74"
 					  Text="{x:Bind mana, Mode=OneWay}" 
 					 />
 							<StackPanel Grid.Row="1" Grid.Column="2" Orientation="Horizontal"  Margin="8,0,0,0" >

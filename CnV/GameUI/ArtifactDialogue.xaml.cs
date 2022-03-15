@@ -20,23 +20,25 @@ using Windows.Foundation.Collections;
 
 namespace CnV
 {
-	public sealed partial class ArtifactDialogue:TeachingTip
+	public sealed partial class ArtifactDialogue:DialogG
 	{
+		protected override string title => "Artifact";
 		public Artifact a;
 		public ArtifactDialogue(Artifact artifact, FrameworkElement target) 
 		{
 			this.InitializeComponent();
 			a = artifact;
 			
-			if(target is not null)
-				Target=target;
+			//if(target is not null)
+			//	Target=target;
 		}
-		public static async void Show(Artifact artifact, FrameworkElement target=null)
+		public static void ShowInstance(Artifact artifact, FrameworkElement target=null)
 		{
 			var rv = new ArtifactDialogue(artifact,target);
 		//	rv.HeroContent.Focus(FocusState.Programmatic);
 			rv.count.Value = artifact.owned. Max(1);
-			await AppS.ShowAsync2(rv);
+			
+			rv.Show(false);
 			
 		}
 	
@@ -44,17 +46,16 @@ namespace CnV
 		
 		
 
-		private void TeachingTip_ActionButtonClick(TeachingTip sender,object args)
+
+		private void Button_Click(object sender,RoutedEventArgs e)
 		{
-			
 			var wanted = count.Value.RoundToInt();
 			int have = a.owned;
 			if(wanted > have)
 				(new CnVEventPurchaseArtifacts() { artifact = (ushort)a.id,count = (ushort)(wanted-have) }).Execute();
 			if( wanted > 0 )
 				(new CnVEventUseArtifacts(City.build) { artifact = (ushort)a.id,count = (ushort)wanted,aux=0 }).EnqueueAsap();
-			IsOpen=false;
-
+			Hide();
 		}
 	}
 }

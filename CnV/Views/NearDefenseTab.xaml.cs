@@ -75,10 +75,10 @@ namespace CnV.Views
 
 					var onlyHome = this.onlyHome;
 					// Dispatch both and then wait for results in parallel
-					var task0 = RestAPI.troopsOverview.Post().ConfigureAwait(false);
-					var task1 = RaidOverview.Send().ConfigureAwait(false);
-					var result0 = await task0;
-					var result1 = await task1;
+					//var task0 = RestAPI.troopsOverview.Post().ConfigureAwait(false);
+					//var task1 = RaidOverview.Send().ConfigureAwait(false);
+					//var result0 = await task0;
+					//var result1 = await task1;
 					// should we abort on failure?
 					var s = new List<Supporter>();
 					//                supportGrid.ItemsSource = null;
@@ -269,19 +269,19 @@ namespace CnV.Views
             AApp.AddItem(flyout, "Troops Home", (_, _) =>
             {
                 var supporter = stt.supporter;
-                Set( ref supporter.tSend, stt.type, stt.supporter.city.troopsHome.GetCount(stt.type));
+                supporter.tSend = new(stt.type, stt.supporter.city.troopsHome.GetCount(stt.type));
                 supporter.NotifyChange();
             });
             AApp.AddItem(flyout, "Total Troops", (_, _) =>
             {
                 var supporter = stt.supporter;
-                Set( ref supporter.tSend,stt.type, stt.supporter.city.troopsTotal.GetCount(stt.type));
+                supporter.tSend = new(stt.type, stt.supporter.city.troopsTotal.GetCount(stt.type));
                 supporter.NotifyChange();
             });
             AApp.AddItem(flyout, "None", (_, _) =>
             {
                 var supporter = stt.supporter;
-                Set( ref supporter.tSend, stt.type, 0);
+                supporter.tSend = new(stt.type, 0);
                 supporter.NotifyChange();
             });
 
@@ -307,7 +307,7 @@ namespace CnV.Views
             });
             AApp.AddItem(flyout, "None", (_, _) =>
             {
-                Clear(ref supporter.tSend);
+				supporter.tSend.Clear();
                 supporter.NotifyChange();
             });
 
@@ -329,7 +329,7 @@ namespace CnV.Views
             var _arriveAt = arriveAt;
             if(waitReturn && !supporter.city.troopsHome.IsSuperSetOf(supporter.tSend))
             {
-				RaidOverview.SendMaybe();
+				//RaidOverview.SendMaybe();
 
 				if (city.MightRaidsRepeat())
                 {
@@ -367,7 +367,7 @@ namespace CnV.Views
 			var def = FindValidDefendants(sendViaWater && defendants.Any(d => d.isOnWater),  onlyHome, city, ref hours);
 			foreach (var d in def)
 			{
-				var ts = supporter.tSend +  (def.Count);
+				var ts = supporter.tSend /  (def.Count);
 				var cid = d.cid;
 				await Post.SendRein(supporter.cid, cid, ts, departAt, _arriveAt, hours, supporter.split, text);
 				Trace($"Sent {ts} from {supporter.cid.AsCity()} to {cid.AsCity()} @{_arriveAt.ToString()}");

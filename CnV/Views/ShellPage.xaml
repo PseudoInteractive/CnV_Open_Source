@@ -26,7 +26,7 @@
 	<Grid x:Name="_rootGrid" Canvas.ZIndex="33">
 		<views:ShareString  x:Name="citySetup" HeroContentPlacement="Top"  x:FieldModifier="public" 
 							ShouldConstrainToRootBounds="False" PreferredPlacement="Center"  />
-		<Grid  Margin="0" x:Name="grid"  x:FieldModifier="public"  >
+		<Grid  Margin="0" x:Name="grid"  x:FieldModifier="public"  ColumnSpacing="0" RowSpacing="0" >
 			<Grid.Resources>
 				<Style x:Key="TimeFlyoutStyle"
                TargetType="FlyoutPresenter">
@@ -57,7 +57,8 @@
 
 
 
-			<CommandBar Grid.ColumnSpan="3" IsDynamicOverflowEnabled="False"  DefaultLabelPosition="Collapsed" IsSticky="True" IsTabStop="True"   x:Name="commandBar" x:FieldModifier="public"  >
+			<CommandBar Grid.ColumnSpan="3" IsDynamicOverflowEnabled="False"  DefaultLabelPosition="Collapsed" IsSticky="True" IsTabStop="True" Margin="0" Padding="0" MinHeight="22"  
+						x:Name="commandBar" x:FieldModifier="public"  >
 		<CommandBar.Content>
 			<StackPanel Orientation="Horizontal" Spacing="4">
 
@@ -99,7 +100,7 @@
 					              ToolTipService.ToolTip="Yet another Continent filter.  Uncheck all to show everything"  />
 
 					<AppBarButton x:Name="HomeButton" Click="{x:Bind views:ShellPage.BuildHomeClick}" 
-								  RightTapped="{x:Bind views:ShellPage.BuildHomeRightTapped}"  Style="{ThemeResource ButtonRevealStyle}"
+								  RightTapped="{x:Bind views:ShellPage.BuildHomeRightTapped}" 
 					              ToolTipService.ToolTip="&#x0a;Click to switch between region view and city view&#x0a;Right clck for menu"
 					              AccessKey="H" Icon="Home" />
 				
@@ -113,7 +114,7 @@
 					              ToolTipService.ToolTip="Switch to next city in the current city list" 
 							             AccessKey="Right" Icon="Next"/>
 					<AppBarButton x:Name="focus" Margin="4,0,4,0" Width="140"  VerticalAlignment="Center" x:FieldModifier="public"
-                            Style="{ThemeResource ButtonRevealStyle}" Click="FocusClick" RightTapped="{x:Bind views:ShellPage.CityRightTapped}" FontFamily="XamlAutoFontFamily"
+                            Click="FocusClick" RightTapped="{x:Bind views:ShellPage.CityRightTapped}" FontFamily="XamlAutoFontFamily"
                             ToolTipService.ToolTip="Spot with Focus.&#x0a;Click to re-center or swith to this city&#x0a;Right clck for menu" Visibility="Collapsed"/>
 
 

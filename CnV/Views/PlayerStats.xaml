@@ -13,39 +13,34 @@
     mc:Ignorable="d">
 
     <tk:WrapPanel Orientation="Horizontal" HorizontalSpacing="4" Margin="0" Padding="0" IsTabStop="True" IsTapEnabled="true" >
-		<cnv:IconText x:Name="zirc" 
-					  Image="{x:Bind cnv:ImageHelper.GetPhysical('zirconia.png',28) }"
+		<cnv:ZirconiaText x:Name="zirc" 
+					
 					  Text="{x:Bind zirconiaS, Mode=OneWay}" 
 					  
 					  
 					 />
-		<cnv:IconText Image="{x:Bind cnv:ImageHelper.GetPhysical('mana.png',28) }"
-					  Text="{x:Bind manaS, Mode=OneWay}" 
+		<cnv:ManaText Text="{x:Bind manaS, Mode=OneWay}" 
 					 />
-		<cnv:IconText Image="{x:Bind cnv:ImageHelper.GetPhysical('UI/icons_ressource_gold.png',28) }"
+		<cnv:GoldText 
 					  Text="{x:Bind goldS, Mode=OneWay}"  
 					  Tapped="GoldTapped"
 					  
 					 />
-		<cnv:IconText Image="{x:Bind cnv:ImageHelper.GetPhysical('UI/icons_ressource_wood.png',28) }"
-					  Text="{x:Bind RefineS(0), Mode=OneWay}" 
+		<cnv:WoodText Text="{x:Bind RefineS(0), Mode=OneWay}" 
 					  Tapped="WoodTapped"
 					  ContextRequested="WoodContextRequest"
 					 />
-		<cnv:IconText Image="{x:Bind cnv:ImageHelper.GetPhysical('UI/icons_ressource_stone.png',28) }"
-					  Text="{x:Bind RefineS(1), Mode=OneWay}" 
+		<cnv:StoneText Text="{x:Bind RefineS(1), Mode=OneWay}" 
 					  Tapped="StoneTapped"
 					 />
-		<cnv:IconText Image="{x:Bind cnv:ImageHelper.GetPhysical('UI/icons_ressource_iron.png',28) }"
-					  Text="{x:Bind RefineS(2), Mode=OneWay}" 
+		<cnv:IronText Text="{x:Bind RefineS(2), Mode=OneWay}" 
 					   Tapped="IronTapped"
 					 />
-		<cnv:IconText Image="{x:Bind cnv:ImageHelper.GetPhysical('UI/icons_ressource_grain.png',28) }"
-					  Text="{x:Bind RefineS(3), Mode=OneWay}" 
+		<cnv:FoodText Text="{x:Bind RefineS(3), Mode=OneWay}" 
 					   Tapped="FoodTapped"
 					 />
 
-		<cnv:IconText Image="{x:Bind cnv:ImageHelper.GetPhysical('UI/Menues/mentor/img_mentor28.png',28) }"
+		<cnv:IconText Image="{x:Bind cnv:ImageHelper.Get('UI/Menues/mentor/img_mentor28.png',28) }"
 					  Text="{x:Bind title, Mode=OneWay}" Width="170"
 					   Tapped="TitleTapped"
 					 />

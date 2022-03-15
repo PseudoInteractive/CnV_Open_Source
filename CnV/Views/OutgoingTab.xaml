@@ -98,7 +98,7 @@ ItemsSource="{x:Bind attackerSource,Mode=OneWay}"
             </sf:SfDataGrid.Columns>
         </sf:SfDataGrid>
         <sf:SfDataGrid x:Name="armyGrid"
-                                    ItemsSource="{x:Bind game:Army.empty, Mode=OneTime}"
+                                    ItemsSource="{x:Bind game:Army.EmptyArray, Mode=OneTime}"
 IsTabStop="True"
                                     Grid.Row="2"
                                     FontSize="{StaticResource MediumFontSize}"
