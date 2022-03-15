@@ -10,42 +10,50 @@
  >
 	
 	<!--"Expander"-->
-	<SolidColorBrush x:Key="ExpanderBrushContent">#B0150030</SolidColorBrush>
-	<SolidColorBrush x:Key="ExpanderBrushHeader" >#B0150030</SolidColorBrush>
+	<SolidColorBrush x:Key="ExpanderBrushContent" Color="{StaticResource SystemAccentColorDark3}" />
+	<SolidColorBrush x:Key="ExpanderBrushHeader" Color="{StaticResource SystemAccentColorDark3}" />
 	<SolidColorBrush x:Key="ExpanderBrushContentAlt">#B200</SolidColorBrush>
-	<!--<CornerRadius x:Key="ControlCornerRadius">2</CornerRadius>-->
-
+	<CornerRadius x:Key="ControlCornerRadius">2</CornerRadius>
+	<CornerRadius x:Key="baseCR">2,2,2,2</CornerRadius>
+	<!-- Override system shape defaults -->
+	<!--<CornerRadius x:Key="ControlCornerRadius">2,2,2,2</CornerRadius>-->
+	<CornerRadius x:Key="OverlayCornerRadius">2,2,2,2</CornerRadius>
 	<x:Double x:Key="canvasHeight">758</x:Double>
     <!--Overrides-->
 
 	<!--"Expander"-->
 	<x:Double x:Key="ExpanderMinHeight">12</x:Double>
-
+	<x:Double x:Key="ExpanderPopinVerticalOffset">0</x:Double>
 	<!-- Header -->
     <Thickness x:Key="ExpanderHeaderPadding">0,0,0,0</Thickness>
     <Thickness x:Key="ExpanderChevronMargin">0,0,0,0</Thickness>
-	<Style TargetType="Expander"  >
+	<SolidColorBrush x:Key="ExpanderHeaderBackground" Color="{StaticResource SystemAccentColorDark3}" />
+	<Style TargetType="Expander"   >
 		<Setter Property="MinHeight" Value="12" />
 		<Setter Property="HorizontalAlignment" Value="Stretch" />
 		<Setter Property="HorizontalContentAlignment" Value="Stretch" />
-        <Setter Property="Background" Value="{StaticResource ExpanderBrushHeader}" />
+        <Setter Property="Background" Value="{x:Null}"/>
 		<Setter Property="Margin" Value="0" />
 		<Setter Property="BorderThickness" Value="0" />
 		<Setter Property="Padding" Value="0" />
+		<Setter Property="IsTabStop" Value="True" />
+		<Setter Property="TabFocusNavigation" Value="Cycle" />
 	</Style>
 	<Style TargetType="FlyoutPresenter"  >
+		<Setter Property="IsDefaultShadowEnabled" Value="True" />
 		<Setter Property="MaxWidth" Value="800" />
 		<Setter Property="MaxHeight" Value="720" />
 		<Setter Property="IsTabStop" Value="True" />
 		<Setter Property="TabFocusNavigation" Value="Cycle" />
 	</Style>
-	
+
 
 	<x:Double x:Key="FlyoutMaxWidth">1024</x:Double>
 	<!-- Content -->
     <Thickness x:Key="ExpanderContentPadding">0</Thickness>
-	<Thickness x:Key="ExpanderContentDownBorderThickness">1,1,1,1</Thickness>
-	<Thickness x:Key="ExpanderContentUpBorderThickness">1,1,1,1</Thickness>
+	<Thickness x:Key="ExpanderContentMargin">0</Thickness>
+	<Thickness x:Key="ExpanderContentDownBorderThickness">0</Thickness>
+	<Thickness x:Key="ExpanderContentUpBorderThickness">0</Thickness>
 
 
 

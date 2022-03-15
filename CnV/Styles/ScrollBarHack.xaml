@@ -55,7 +55,7 @@
 							<Border x:Name="ScrollBarSeparator" 
               Grid.Row="1" 
               Grid.Column="1" 
-              Background="{ThemeResource SystemControlPageBackgroundChromeLowBrush}" />
+              />
 						</Grid>
 					</Border>
 				</ControlTemplate>

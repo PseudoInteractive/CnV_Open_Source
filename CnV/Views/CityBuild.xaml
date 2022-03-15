@@ -83,7 +83,7 @@
 					<DataTemplate x:DataType="views:BuildMenuItem">
 						<StackPanel Orientation="Vertical" ToolTipService.ToolTip="{x:Bind toolTip}" AccessKey="{x:Bind accessKey}" >
 						<Image  Width="64" Height="64" Source="{x:Bind image}" Opacity="{x:Bind opacity, Mode=OneTime}" />
-						<TextBlock Text="{x:Bind header}"  Style="{StaticResource TextBlockSmallCenter}" VerticalAlignment="Bottom" TextWrapping="WrapWholeWords" />
+						<TextBlock Text="{x:Bind header}"  Style="{StaticResource TextBlockSmallCenter}" VerticalAlignment="Bottom" TextWrapping="Wrap" />
 						</StackPanel>
 					</DataTemplate>
 				</GridView.ItemTemplate>

@@ -5,10 +5,12 @@
     xmlns:local="using:CnV"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-
+IsTabStop="True"
+	
+	TabFocusNavigation="Cycle"
     mc:Ignorable="d">
 
-    <Grid  MinWidth="200">
+    <Grid  MinWidth="200" TabFocusNavigation="Cycle" IsTabStop="True" >
 		<Grid.RowDefinitions >
 			<RowDefinition />
 			<RowDefinition MinHeight="60 "/>
@@ -18,12 +20,12 @@
 		<Image x:Name="image" Grid.Row="1"  x:FieldModifier="internal"
 			   Stretch="None" Margin="2,16,2,16" />
 		<Border Grid.Row="1"  
-				Background="#9000"
+				Background="#6000"
 				BorderBrush="{StaticResource SystemControlHighlightAccentRevealBorderBrush}" BorderThickness="1" Padding="4" HorizontalAlignment="Center" VerticalAlignment="Center"> 
 		
 			<TextBlock x:Name="message"  Style="{StaticResource TextBlockMedium}"  x:FieldModifier="internal" TextWrapping="Wrap" MaxLines="8" />
 		</Border>
 		
-		<Button x:Name ="button" Content ="Okay" Grid.Row="2" HorizontalAlignment="Right" VerticalAlignment="Center" Style="{StaticResource ButtonMedium}"  x:FieldModifier="internal" />
+		<Button x:Name ="button" TabIndex="0" Content ="Okay" Grid.Row="2" HorizontalAlignment="Right" VerticalAlignment="Center" Style="{StaticResource ButtonMedium}"  x:FieldModifier="internal" />
 	</Grid>
 </UserControl>

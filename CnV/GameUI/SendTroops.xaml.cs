@@ -20,13 +20,14 @@ using Windows.Foundation.Collections;
 
 namespace CnV
 {
-	public sealed partial class RecruitDialog:DialogG
+	public sealed partial class SendTroops:DialogG
 	{
-		protected override string title => "Recruit"; 
-		internal static RecruitDialog? instance;
+		
+		protected override string title => "Send"; 
+		internal static SendTroops? instance;
 		internal City city;
-
-		public RecruitDialog()
+		internal City target;
+		public SendTroops()
 		{
 			this.InitializeComponent();
 			instance = this;
@@ -35,45 +36,60 @@ namespace CnV
 
 		private void UpdateTroopItems()
 		{
-			troopItems = new RecruitTroopItem[Troops.ttCount];
+			troopItems = new SendTroopItem[Troops.ttCount];
 
-			
+
 			for(int i = 0;i<Troops.ttCount;++i)
-				troopItems[i] = new() { city = city,type=(byte)i,count=1 };
+				troopItems[i] = new(target:target, city:city,type:(byte)i) ;
 		}
-		public static void ShowInstance(City city)
+		public static void ShowInstance(City city,City target)
 		{
-			var rv = instance ?? new RecruitDialog();
+			var rv = instance ?? new SendTroops();
 			rv.city = city;
+			rv.target = target;
 			rv.UpdateTroopItems();
 			rv.Show(true);
 			
 		}
 
-		internal RecruitTroopItem [] troopItems;
+		internal SendTroopItem [] troopItems;
+
+		private void SendTroopsClick(object sender,RoutedEventArgs e)
+		{
+			Hide();
+		}
 	}
 
 
-	internal class RecruitTroopItem: INotifyPropertyChanged
+	internal class SendTroopItem: INotifyPropertyChanged
 	{
 		
 		internal City city; // convienience
+				internal City target;
+
 		internal TType type;
 		internal uint count;
+
+		public SendTroopItem(City city,City target,byte type)
+		{
+			this.city=city;
+			this.target=target;
+			this.type=type;
+			count = city.troopsHome.GetCount(type);
+		}
+
 		internal TroopTypeCount tt => new(type,count);
 		internal ImageSource image => Troops.Image(type);
 		internal TroopInfo info => TroopInfo.all[type];
-		internal bool isEnabled => city.CanRecruit(type);
 		internal void Recruit(object sender,RoutedEventArgs e)
 		{
-			
-			AppS.MessageBox("recruit",info.ToString());
-			Note.Show("Recruit");
-			new CnVEventRecruit(city.c,tt).Execute();
+			//AppS.MessageBox("Send",info.ToString());
+			//Note.Show("Send");
+			//new CnVEventRecruit(city.c,tt).Execute();
 			count =0;
 			OnPropertyChanged();
 		}
-		public string recruitTime => city.CanRecruit(type) ? tt.RecruitTimeRequired(city).Format() : string.Empty;
+		public string troopsHome => city.troopsHome.GetCount(type).Format();
 		public event PropertyChangedEventHandler? PropertyChanged;
 		public void OnPropertyChanged(string? member = null)
 		{
@@ -83,3 +99,4 @@ namespace CnV
 
 	}
 }
+

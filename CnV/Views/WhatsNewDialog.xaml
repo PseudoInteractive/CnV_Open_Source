@@ -15,7 +15,7 @@
 	<Border Style="{StaticResource BorderReveal}" Margin="16" Padding="8" >
 		<ScrollViewer x:Name="scrollView" x:FieldModifier="public" >
 		        <controls:MarkdownTextBlock x:Name="fixesText" x:FieldModifier="public" WrapCodeBlock="True"
-                                  Margin="6" Background="{x:Null}" TextWrapping="WrapWholeWords"
+                                  Margin="6" Background="{x:Null}" TextWrapping="Wrap"
 											LinkClicked="{x:Bind cnv:Note.MarkDownLinkClicked}"
                                    />
 		

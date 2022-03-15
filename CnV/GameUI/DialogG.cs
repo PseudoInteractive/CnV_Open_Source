@@ -73,14 +73,17 @@ namespace CnV
 				
 				Content="X", 
 				HorizontalAlignment=HorizontalAlignment.Right,Width=40,
+				
 				Style = (Style)App.instance.Resources["ButtonMedium"],Margin=new(16,0,8,0),Padding=new(4,0,4,0) };
 			button.Click += Hide;
 			var headerB = new Button() { HorizontalContentAlignment=HorizontalAlignment.Stretch,
-				VerticalContentAlignment=VerticalAlignment.Stretch,CornerRadius=new(3),Margin=new(),Padding=new()};
+				VerticalContentAlignment=VerticalAlignment.Stretch,CornerRadius=new(2),Margin=new(),Padding=new(),
+				Background=AppS.Brush(0xff000000u) };
 			headerB.Content = grid;
 			Grid.SetColumn(button,2);
 			
 			grid.Children.Add(button);
+			IsTabStop=true;
 			TabFocusNavigation = KeyboardNavigationMode.Cycle;
 			base.Header =headerB;
 			//grid.IsTapEnabled=true;

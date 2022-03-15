@@ -133,6 +133,7 @@
     <Compile Include="GameUI\RecruitDialog.xaml.cs" />
     <Compile Include="GameUI\RefineDialogue.xaml.cs" />
     <Compile Include="GameUI\ResearchPurchase.xaml.cs" />
+    <Compile Include="GameUI\SendTroops.xaml.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Services\CnVSignin.cs" />
     <Compile Include="Views\CanvasMouse.cs" />
@@ -377,6 +378,9 @@
     <Page Include="GameUI\ResearchPurchase.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="GameUI\SendTroops.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Styles\BattleReport.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -568,6 +572,7 @@
 	<None Remove="GameUI\RecruitDialog.xaml" />
 	<None Remove="GameUI\RefineDialogue.xaml" />
 	<None Remove="GameUI\ResearchPurchase.xaml" />
+	<None Remove="GameUI\SendTroops.xaml" />
     <None Remove="Resources\CnVFont-VF.ttf" />
     <None Remove="Resources\Icon1.ico" />
     <None Remove="Strings\en-us\Resources.resw" />
@@ -644,14 +649,14 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <Optimize>False</Optimize>
     <WarningLevel>4</WarningLevel>
-    <DefineConstants>$(DefineConstants);CNV;CNVCLIENT;DISABLE_XAML_GENERATED_MAIN</DefineConstants>
+    <DefineConstants>$(DefineConstants);CNV;CNVCLIENT</DefineConstants>
     <Deterministic>True</Deterministic>
     <FileAlignment>4096</FileAlignment>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <Optimize>True</Optimize>
     <WarningLevel>4</WarningLevel>
-    <DefineConstants>$(DefineConstants);CNV;CNVCLIENT;DISABLE_XAML_GENERATED_MAIN</DefineConstants>
+    <DefineConstants>$(DefineConstants);CNV;CNVCLIENT</DefineConstants>
     <Deterministic>True</Deterministic>
     <FileAlignment>4096</FileAlignment>
     <LayoutDir />

@@ -19,10 +19,7 @@
 			<FontFamily x:Key="KeyTipFontFamily">"XamlAutoFontFamily"</FontFamily>
 
 
-			<CornerRadius x:Key="baseCR">2,2,2,2</CornerRadius>
-			<!-- Override system shape defaults -->
-			<CornerRadius x:Key="ControlCornerRadius">2,2,2,2</CornerRadius>
-			<CornerRadius x:Key="OverlayCornerRadius">2,2,2,2</CornerRadius>
+			
 
 			<Style x:Key="BaseControlStyle" TargetType="Control">
 				<Setter Property="FontFamily" Value="XamlAutoFontFamily" />
@@ -41,7 +38,7 @@
 				<Setter Property="FontStretch" Value="SemiCondensed" />
 				<Setter Property="FontSize" Value="{StaticResource MediumFontSize}" />
 				<Setter Property="TextTrimming" Value="CharacterEllipsis" />
-				<Setter Property="TextWrapping" Value="NoWrap" />
+				<Setter Property="TextWrapping" Value="Wrap" />
 				<Setter Property="LineStackingStrategy" Value="MaxHeight" />
 				<Setter Property="TextLineBounds" Value="Full" />
 			</Style>

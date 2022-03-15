@@ -27,7 +27,7 @@
 				  BorderThickness="1" BorderBrush="{StaticResource SystemAccentColorDark3}" MaxWidth="592" >-->
 
 
-		<TabView x:Name="tabView" Grid.Row="1"  SelectedIndex="{x:Bind SelectedTab,Mode=TwoWay}" SelectionChanged="tabView_SelectionChanged" Background="{StaticResource SystemAccentColorDark3}" >
+		<TabView x:Name="tabView" Grid.Row="1"  SelectedIndex="{x:Bind SelectedTab,Mode=TwoWay}" SelectionChanged="tabView_SelectionChanged"  >
 			<TabView.Resources>
 			
 
@@ -43,8 +43,8 @@
 								<RowDefinition Height="48"/>
 							</Grid.RowDefinitions>
 							<Image Grid.Column="0" Source="{x:Bind image}" Margin="3"  />
-							<TextBlock Grid.Column="1" Text="{x:Bind name}" Margin="3" Style="{StaticResource TextBlockMedium}" TextWrapping="WrapWholeWords" TextAlignment="Center" MaxLines="3"  VerticalAlignment="Center" />
-							<TextBlock Grid.Column="2" Text="{x:Bind description}"  Margin="3" Style="{StaticResource TextBlockSmall}" TextWrapping="WrapWholeWords"  MaxLines="4" TextAlignment="Center"   VerticalAlignment="Center" />
+							<TextBlock Grid.Column="1" Text="{x:Bind name}" Margin="3" Style="{StaticResource TextBlockMedium}" TextWrapping="Wrap" TextAlignment="Center" MaxLines="3"  VerticalAlignment="Center" />
+							<TextBlock Grid.Column="2" Text="{x:Bind description}"  Margin="3" Style="{StaticResource TextBlockSmall}" TextWrapping="Wrap"  MaxLines="4" TextAlignment="Center"   VerticalAlignment="Center" />
 							<cnv:ZirconiaText x:Name="zirc"  Grid.Row="1" Width="74"
 					  Text="{x:Bind zirconia, Mode=OneWay}" />
 
@@ -71,7 +71,7 @@
 			</TabView.Transitions>
 			<TabView.TabItems>
 				<TabViewItem Header="Relics">
-					<ListView x:Name="relicsList" ItemTemplate="{StaticResource ArtifactItem}" ItemsSource="{x:Bind items,Mode=OneWay}">
+					<ListView x:Name="relicsList" ItemTemplate="{StaticResource ArtifactItem}" >
 						<ListView.Transitions>
 							<TransitionCollection>
 								<EntranceThemeTransition IsStaggeringEnabled="True" />
@@ -80,7 +80,7 @@
 					</ListView>
 				</TabViewItem>
 				<TabViewItem Header="Enhancements">
-					<ListView x:Name="enhancementsList" ItemTemplate="{StaticResource ArtifactItem}"  ItemsSource="{x:Bind items,Mode=OneWay}" >
+					<ListView x:Name="enhancementsList" ItemTemplate="{StaticResource ArtifactItem}"   >
 						<ListView.Transitions>
 							<TransitionCollection>
 								<EntranceThemeTransition IsStaggeringEnabled="True" />
@@ -89,7 +89,7 @@
 					</ListView>
 				</TabViewItem>
 				<TabViewItem Header="Special">
-					<ListView x:Name="specialList" ItemTemplate="{StaticResource ArtifactItem}"  ItemsSource="{x:Bind items,Mode=OneWay}">
+					<ListView x:Name="specialList" ItemTemplate="{StaticResource ArtifactItem}"  >
 						<ListView.Transitions>
 						<TransitionCollection>
 							<AddDeleteThemeTransition />
@@ -100,7 +100,7 @@
 				</TabViewItem>
 
 				<TabViewItem Header="Overview">
-					<ListView x:Name="overviewList" ItemTemplate="{StaticResource ArtifactItem}"  ItemsSource="{x:Bind items,Mode=OneWay}">
+					<ListView x:Name="overviewList" ItemTemplate="{StaticResource ArtifactItem}"  >
 						<ListView.Transitions>
 							<TransitionCollection>
 								<EntranceThemeTransition IsStaggeringEnabled="True" />

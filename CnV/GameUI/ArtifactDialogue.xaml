@@ -23,8 +23,8 @@
 				<RowDefinition Height="48"/>
 		</Grid.RowDefinitions>
 			<Image Grid.Column="0" Source="{x:Bind a.image}" Margin="2"  />
-			<TextBlock Grid.Column="1" Text="{x:Bind a.name}" Margin="2" Style="{StaticResource TextBlockMedium}" TextWrapping="WrapWholeWords" TextAlignment="Center" MaxLines="3"  VerticalAlignment="Center" />
-			<TextBlock Grid.Column="2" Text="{x:Bind a.description}"  Margin="0" Style="{StaticResource TextBlockSmall}" TextWrapping="WrapWholeWords"  MaxLines="5" TextAlignment="Center" VerticalAlignment="Center" />
+			<TextBlock Grid.Column="1" Text="{x:Bind a.name}" Margin="2" Style="{StaticResource TextBlockMedium}" TextWrapping="Wrap" TextAlignment="Center" MaxLines="3"  VerticalAlignment="Center" />
+			<TextBlock Grid.Column="2" Text="{x:Bind a.description}"  Margin="0" Style="{StaticResource TextBlockSmall}" TextWrapping="Wrap"  MaxLines="5" TextAlignment="Center" VerticalAlignment="Center" />
 			<cnv:ZirconiaText x:Name="zirc"  Grid.Row="1" Width="74"
 					
 					  Text="{x:Bind a.zirconia, Mode=OneWay}" />

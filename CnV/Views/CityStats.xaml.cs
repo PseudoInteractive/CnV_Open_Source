@@ -165,10 +165,8 @@ namespace CnV
 		}
 
 		internal static BuildQueueType lastSynchronizedQueue = BuildQueueType.Empty;
-		static void UpdateRecruitQueue()
-		{
-			// Todo
-		}
+		internal static RecruitQueueType lastSynchronizedRecruitQueue = RecruitQueueType.Empty;
+		
 
 		static void UpdateBuildQueue()
 		{
@@ -244,6 +242,81 @@ namespace CnV
 			}
 			// restore callback
 			instance.buildQueue.CollectionChanged += BuildQueue_CollectionChanged;
+
+		}
+		static void UpdateRecruitQueue()
+		{
+			// Don't notify whole we are doing stuff
+			try
+			{
+				
+				//var firstVisible = instance.buildQueueListView.vis
+				var anyRemoved = false;
+				var city = City.GetBuild();
+				var displayQueue = city.recruitQueue;
+				lastSynchronizedRecruitQueue = displayQueue;
+				int lg = displayQueue.Length;
+				var bq = instance.recruitQueue;
+				//for(int i = bq.Count;--i>= 0;)
+				//{
+				//	var op = bq[i].op;
+				//	if(!displayQueue.Any(a => a == op))
+				//	{
+				//		bq.RemoveAt(i);
+				//	}
+				//}
+
+				// Add or update
+				for(int i = 0;i<lg;++i)
+				{
+					var op = displayQueue[i];
+					int cur = -1;
+					for(int j = i;j<bq.Count;++j)
+					{
+						if(bq[j].op == op)
+						{
+							cur = j;
+							break;
+						}
+					}
+					if(cur == -1)
+					{
+						var bi = new RecruitItem(op,city);
+						bq.Insert(i,bi);
+					}
+					else
+					{
+						if(cur != i)
+						{
+							bq.Move(cur,i);
+
+						}
+
+					}
+				}
+				// sequence is done, remove extras if any
+				for(var i = bq.Count;--i>= lg;)
+				{
+					anyRemoved=true;
+					bq.RemoveAt(i);
+				}
+
+				Assert(bq.Count == lg);
+				for(int i=0;i<lg;++i)
+				{
+					Assert(bq[i].op == displayQueue[i]);
+				}
+				// keep first in view
+				if(anyRemoved && bq.Any() )
+				{
+					instance.RecruitQueueListView.ScrollIntoView(bq.First());
+				}
+			}
+			catch ( Exception ex)
+			{
+				LogEx(ex);
+			}
+			// restore callback
 
 		}
 
@@ -351,6 +424,13 @@ namespace CnV
 						if(expBuildQueue.IsExpanded)
 						{
 							foreach(var b in buildQueue)
+							{
+								b.UpdateText();
+							}
+						}
+						if(expEnlistment.IsExpanded)
+						{
+							foreach(var b in recruitQueue)
 							{
 								b.UpdateText();
 							}
@@ -514,6 +594,7 @@ namespace CnV
 		ObservableCollection<BuildingCountAndBrush> buildingCounts = new();
 
 		internal ObservableCollection<BuildItem> buildQueue = new();
+		internal ObservableCollection<RecruitItem> recruitQueue = new();
 
 		private void UserControl_Loaded(object sender,RoutedEventArgs e)
 		{
@@ -629,7 +710,49 @@ namespace CnV
 
 		private void EnlistmentContextRequested(UIElement sender,ContextRequestedEventArgs args)
 		{
-			RecruitDialog.ShowInstance(City.GetBuild());
+			args.Handled    = true;
+			var flyout = new MenuFlyout();
+			flyout.SetXamlRoot(sender);
+			
+			flyout.AddItem("Amulet..",Symbol.OutlineStar,() =>
+			{
+				Artifact.Show( Artifact.ArtifactType.amulet, sender);
+			});
+
+			if(instance.RecruitQueueListView.SelectedItems.Any())
+			{
+				flyout.AddItem("Cancel Selected",Symbol.Remove,() =>
+				{
+					var sel = instance.RecruitQueueListView.SelectedItems;
+					if(sel.Any())
+						city.RemoveFromRecruit(new(sel.Select(x => instance.recruitQueue.IndexOf(x as RecruitItem))),lastSynchronizedRecruitQueue);
+				});
+			}
+			if(city.recruitQueue.Any())
+			{
+				flyout.AddItem("Cancel all",Symbol.Cut,() =>
+				{
+					city.RemoveFromRecruit( Enumerable.Range(0,city.recruitQueue.Length).ToList(), lastSynchronizedRecruitQueue);
+					var sel = instance.buildQueueListView.SelectedItems;
+					new CnVEventCancelBuildQueue(city.worldC).Execute();
+				});
+			}
+			// Todo: Sort
+
+			if(args.TryGetPosition(sender,out var c))
+			{
+				flyout.ShowAt(sender,c);
+			}
+			else if(args.TryGetPosition(CityStats.instance,out var c2))
+			{
+				flyout.ShowAt(CityStats.instance,c2);
+			}
+			else
+			{
+				flyout.ShowAt(sender,new());
+				Assert(false); 
+			}
+			
 		}
 
 		private void CityIconTapped(object sender,TappedRoutedEventArgs e)
@@ -640,6 +763,11 @@ namespace CnV
 				e.Handled=true;
 				city.DoClick();
 			}
+		}
+
+		private void EnlistmentClick(object sender,RoutedEventArgs e)
+		{
+			RecruitDialog.ShowInstance(City.GetBuild());
 		}
 	}
 	public class BuildingCountAndBrush:INotifyPropertyChanged
@@ -700,7 +828,10 @@ namespace CnV
 			var flyout = new MenuFlyout();
 			flyout.SetXamlRoot(sender);
 			
-
+			flyout.AddItem("Medallion..",Symbol.OutlineStar,() =>
+			{
+				Artifact.Show( Artifact.ArtifactType.medallion, sender);
+			});
 			flyout.AddItem(StandardUICommandKind.Delete.Create( () =>
 			{
 				var index = instance.buildQueue.IndexOf(this);
@@ -737,10 +868,7 @@ namespace CnV
 				if(index != -1)
 					city.AttemptMove(index,city.buildQueue.Length-1,lastSynchronizedQueue);
 			});
-			flyout.AddItem("Medallion..",Symbol.OutlineStar,() =>
-			{
-				Artifact.Show( Artifact.ArtifactType.medallion, sender);
-			});
+			
 			// Todo: Sort
 
 			if(args.TryGetPosition(sender,out var c))
@@ -769,7 +897,7 @@ namespace CnV
 	{
 		public const int size = 32;
 		public BitmapImage image { get; set; }
-		public string opText { get; set; }
+		public string count { get; set; }
 		public string timeText { get; set; }
 		public TroopTypeCount op;
 
@@ -779,6 +907,7 @@ namespace CnV
 			this.city = city;
 			op = item;
 			image = Troops.Image(op.t);
+			count = item.c.Format();
 			///var u = op.unpack;
 			//opText = u.isMove ? "Move" : u.isDemo ? "Destroy" : u.isBuild ? $"Build{(u.pa==false ? " p" : "") }" : u.isDowngrade ? $"Down to {u.elvl}" : $"Up to {u.elvl}";
 			UpdateText();
@@ -787,18 +916,18 @@ namespace CnV
 		{
 			try
 			{
-				////var q = city.buildQueue;
-				////TimeSpanS dt;
-				////if(q.Any() && q[0]== op && city.buildItemEndsAt.isNotZero)
-				////	dt = city.buildItemEndsAt - CnVServer.simTime;
-				////else
-				////	dt = new(op.TimeRequired(city));
-				////var text = dt.ToString();
-				//if(text != timeText)
-				//{
-				//	timeText = text;// + BuildingDef.FromId(item.bid).Bn;
-				//	OnPropertyChanged(nameof(this.timeText));
-				//}
+				var q = city.recruitQueue;
+				TimeSpanS dt;
+				if(q.Any() && q[0]== op && city.recruitItemEndsAt.isNotZero)
+					dt = city.recruitItemEndsAt - CnVServer.simTime;
+				else
+					dt = new(op.RecruitTimeRequired(city));
+				var text = dt.ToString();
+				if(text != timeText)
+				{
+					timeText = text;// + BuildingDef.FromId(item.bid).Bn;
+					OnPropertyChanged(nameof(this.timeText));
+				}
 			}
 			catch(Exception ex)
 			{
@@ -806,33 +935,7 @@ namespace CnV
 			}
 
 		}
-		public void ContextRequested(UIElement sender,ContextRequestedEventArgs args)
-		{
-			args.Handled    = true;
-			var flyout = new MenuFlyout();
-			flyout.SetXamlRoot(sender);
-			
-
-			// Todo: Sort
-
-			if(args.TryGetPosition(sender,out var c))
-			{
-				flyout.ShowAt(sender,c);
-			}
-			else if(args.TryGetPosition(CityStats.instance,out var c2))
-			{
-				flyout.ShowAt(CityStats.instance,c2);
-			}
-			else
-			{
-				flyout.ShowAt(sender,new());
-				Assert(false); 
-			}
-			//VisualTreeHelper.GetParent(args.OriginalSource
-			//LogJson(args);
-			//Log(args.OriginalSource);
-			//LogJson(sender);
-		}
+		
 		public void OnPropertyChanged(string members = null) => PropertyChanged?.Invoke(this,new(members));
 
 		public event PropertyChangedEventHandler? PropertyChanged;

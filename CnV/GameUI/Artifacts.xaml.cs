@@ -24,7 +24,7 @@ namespace CnV
 	/// <summary>
 	/// An empty page that can be used on its own or navigated to within a Frame.
 	/// </summary>
-	public sealed partial class Artifacts:DialogG
+	public sealed partial class Artifacts:DialogG,INotifyPropertyChanged
 	{
 		public static Artifacts? instance;
 		protected override string title => "Artifacts";
@@ -36,8 +36,18 @@ namespace CnV
 			Canvas.SetLeft(this,220);
 			
 		}
-
-		ObservableCollection<Artifact> items = new();
+		public event PropertyChangedEventHandler? PropertyChanged;
+		public void OnPropertyChanged(string? member = null)
+		{
+			if (this.PropertyChanged is not null) 
+				AppS.DispatchOnUIThread(() => PropertyChanged?.Invoke(this,new(member)));
+		}
+		public static void Changed(string? member = null)
+		{
+			if(instance is not null)
+				instance.OnPropertyChanged(member);
+		}
+		//ObservableCollection<Artifact> items = new();
 
 		int selectedTab=0;
 		int SelectedTab
@@ -69,25 +79,25 @@ namespace CnV
 			}
 		}
 
-		async Task AddItemsOverTime<T>(IEnumerable<T> a) where T : Artifact
-		{
-			int count = a.Count();
-			int countPer = count.DivideRoundUp(8);
-			var iter = a.GetEnumerator();
+		//async Task AddItemsOverTime<T>(IEnumerable<T> a) where T : Artifact
+		//{
+		//	int count = a.Count();
+		//	int countPer = count.DivideRoundUp(8);
+		//	var iter = a.GetEnumerator();
 			
-			for(;;)
-			{
-				for(int j = 0;j<countPer;j++)
-				{
-					if(!iter.MoveNext())
-					{
-						return;
-					}
-					items.Add(iter.Current);
-				}
-				await Task.Delay(100);
-			}
-		}
+		//	for(;;)
+		//	{
+		//		for(int j = 0;j<countPer;j++)
+		//		{
+		//			if(!iter.MoveNext())
+		//			{
+		//				return;
+		//			}
+		//			items.Add(iter.Current);
+		//		}
+		//		await Task.Delay(100);
+		//	}
+		//}
 
 		internal async Task UpdateItems()
 		{
@@ -99,7 +109,7 @@ namespace CnV
 				// Do we need to call property changes on each artifact?
 				//items.Clear();
 				//await Task.Delay(100);
-				Assert(items.IsNullOrEmpty());
+				//Assert(items.IsNullOrEmpty());
 				switch ( selectedTab)
 				{
 					case 0:
@@ -142,9 +152,10 @@ namespace CnV
 			if(art.selectedTitle == -1)
 			{
 				art.selectedTitle = (Player.me.title.rank-2).Max(0);
-				art.UpdateItems();
 			}
 			art.Show(false);
+			art.UpdateItems();
+			
 
 		}
 

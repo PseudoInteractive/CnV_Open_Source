@@ -21,10 +21,10 @@ namespace CnV
 	using System.Threading;
 	using Microsoft.UI.Dispatching;
 	using Microsoft.UI.Xaml;
-
+	#if DISABLE_XAML_GENERATED_MAIN
 	public static class Program
 	{
-#if DISABLE_XAML_GENERATED_MAIN
+
 
 		[global::System.Runtime.InteropServices.DllImport("Microsoft.ui.xaml.dll")]
 		private static extern void XamlCheckProcessRequirements();
@@ -57,7 +57,7 @@ namespace CnV
 			}
 		}
 
-#endif
+
 
 		//public static IHostBuilder CreateHostBuilder(string[] args) =>
 		//	Host.CreateDefaultBuilder(args)
@@ -66,4 +66,5 @@ namespace CnV
 		//			services.AddHostedService<Worker>();
 		//		});
 	}
+	#endif
 }

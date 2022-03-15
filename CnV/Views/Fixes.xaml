@@ -19,7 +19,7 @@
 		ZoomMode="Enabled"
                   VerticalScrollBarVisibility="Visible">
 			<controls:MarkdownTextBlock x:Name="fixesText" x:FieldModifier="public" WrapCodeBlock="True"
-                                  Margin="6" Background="{x:Null}" TextWrapping="WrapWholeWords"
+                                  Margin="6" Background="{x:Null}" TextWrapping="Wrap"
                                    />
 		</ScrollViewer>
 	</Grid>

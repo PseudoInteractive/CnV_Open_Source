@@ -197,12 +197,13 @@ public static partial class CityUI
 			AApp.AddItem(flyout, "Raid", (_, _) => Spot.JSRaid(cid));
 
 		}
-		else if (me.isEmpty && DGame.isValidForIncomingNotes)
+		else if (me.isEmpty )
 		{
+			AApp.AddItem(flyout, "Settle", (_,_)=> City.GetBuild().Settle(WorldC.FromCid(cid) ) );
 			AApp.AddItem(flyout, "Claim", (_,_)=> CityUI.DiscordClaim(WorldC.FromCid(cid) ) );
 
 		}
-
+		
 //		aMisc.AddItem("Notify on Decay", ()=>DecayQuery(cid));
 		//if (Raid.test)
 		//{
@@ -644,6 +645,11 @@ public partial class City
 		SpotTab.TouchSpot(cid, mod, true);
 
 
+	}
+
+	internal void Settle(WorldC worldC)
+	{
+		SendTroops.ShowInstance(this,City.Get(worldC));
 	}
 }
 
