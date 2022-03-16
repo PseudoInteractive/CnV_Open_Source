@@ -257,7 +257,8 @@ namespace CnV
 							CnVServer.ShowAlliance(paths[2]);
 							break;
 						case "r": // Report
-							CnVServer.ShowReport(paths[2].ParseUlong().GetValueOrDefault());
+							Assert(false);
+							CnVServer.ShowReport(paths[2].ParseBigInteger().GetValueOrDefault());
 							break;
 					}
 				}

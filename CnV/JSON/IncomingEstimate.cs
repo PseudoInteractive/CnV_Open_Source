@@ -458,7 +458,8 @@ namespace CnV
 						}
 					}
 				}
-				army.miscInfo = $"{rv}, Speed: {(sameContinent?landSpeed : navySpeed)}, {army.journeyTimeString}";
+				Assert(false);
+				//army.miscInfo = $"{rv}, Speed: {(sameContinent?landSpeed : navySpeed)}, {army.journeyTimeString}";
 				
 			}
         }

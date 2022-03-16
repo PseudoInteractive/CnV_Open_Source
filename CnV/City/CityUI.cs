@@ -649,7 +649,7 @@ public partial class City
 
 	internal void Settle(WorldC worldC)
 	{
-		SendTroops.ShowInstance(this,City.Get(worldC));
+		SendTroops.ShowInstance(this,City.Get(worldC), ArmyType.settleLand);
 	}
 }
 

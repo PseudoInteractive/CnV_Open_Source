@@ -74,9 +74,10 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="Microsoft.Extensions.Hosting.WindowsServices" Version="7.0.0-preview.2.22152.2" />
     <PackageReference Include="Microsoft.Extensions.ObjectPool" Version="6.0.1" />
-    <PackageReference Include="Microsoft.Extensions.Primitives" Version="7.0.0-preview.1.22076.8" />
-    <PackageReference Include="Microsoft.Identity.Client" Version="4.42.0" />
+    <PackageReference Include="Microsoft.Extensions.Primitives" Version="7.0.0-preview.2.22152.2" />
+    <PackageReference Include="Microsoft.Identity.Client" Version="4.42.1" />
     <PackageReference Include="Microsoft.Identity.Client.Extensions.Msal" Version="2.19.6" />
     <PackageReference Include="Microsoft.Toolkit" Version="7.1.2" />
     <PackageReference Include="Microsoft.Toolkit.Diagnostics" Version="7.1.2" />
@@ -85,10 +86,10 @@
     <PackageReference Include="Azure.Storage.Blobs" Version="12.11.0" />
     <PackageReference Include="CommunityToolkit.WinUI.Notifications" Version="7.1.2" />
     <PackageReference Include="CommunityToolkit.WinUI.UI.Controls" Version="7.1.2" />
-    <PackageReference Include="DSharpPlus" Version="4.2.0-nightly-01087" />
-    <PackageReference Include="DSharpPlus.CommandsNext" Version="4.2.0-nightly-01087" />
-    <PackageReference Include="DSharpPlus.Interactivity" Version="4.2.0-nightly-01087" />
-    <PackageReference Include="DSharpPlus.SlashCommands" Version="4.2.0-nightly-01087" />
+    <PackageReference Include="DSharpPlus" Version="4.2.0-nightly-01088" />
+    <PackageReference Include="DSharpPlus.CommandsNext" Version="4.2.0-nightly-01088" />
+    <PackageReference Include="DSharpPlus.Interactivity" Version="4.2.0-nightly-01088" />
+    <PackageReference Include="DSharpPlus.SlashCommands" Version="4.2.0-nightly-01088" />
     <PackageReference Include="Enums.NET" Version="4.0.0" />
     <PackageReference Include="Grpc.Net.Client" Version="2.41.0-pre1" />
     <PackageReference Include="Grpc.Net.Client" Version="2.44.0-pre1" />
@@ -96,7 +97,7 @@
     <PackageReference Include="MessagePack" Version="2.4.14-alpha" />
     <PackageReference Include="MessagePack.Experimental" Version="2.4.14-alpha" />
     <PackageReference Include="MagicOnion.Client" Version="4.4.0" />
-    <PackageReference Include="Microsoft.Extensions.ObjectPool" Version="7.0.0-preview.1.22109.13" />
+    <PackageReference Include="Microsoft.Extensions.ObjectPool" Version="6.0.3" />
     <PackageReference Include="Microsoft.Toolkit" Version="7.1.2" />
     <PackageReference Include="Microsoft.Toolkit.Diagnostics" Version="7.1.2" />
     <PackageReference Include="Microsoft.Toolkit.HighPerformance" Version="7.1.2" />
@@ -104,18 +105,19 @@
     <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.0.0" />
 	<PackageReference Include="Nito.AsyncEx.Coordination" Version="5.1.2" />
     <PackageReference Include="PlayFabAllSDK" Version="1.108.220118" />
-    <PackageReference Include="Syncfusion.Grid.WinUI" Version="19.4.0.55" />
-    <PackageReference Include="Syncfusion.Licensing" Version="19.4.0.55" />
+    <PackageReference Include="Syncfusion.Grid.WinUI" Version="19.4.0.56" />
+    <PackageReference Include="Syncfusion.Licensing" Version="19.4.0.56" />
 	<PackageReference Include="SharpDX" Version="4.2.0" />
     <PackageReference Include="SharpDX.D3DCompiler" Version="4.2.0" />
     <PackageReference Include="SharpDX.Direct3D11" Version="4.2.0" />
     <PackageReference Include="SharpDX.DXGI" Version="4.2.0" />
     <PackageReference Include="SharpDX.MediaFoundation" Version="4.2.0" />
     <PackageReference Include="SharpGen.Runtime.COM" Version="2.0.0-beta.10" />
-    <PackageReference Include="System.Collections.Immutable" Version="7.0.0-preview.1.22076.8" />
-    <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="7.0.0-preview.1.22076.8" />
+    <PackageReference Include="System.Collections.Immutable" Version="7.0.0-preview.2.22152.2" />
+    <PackageReference Include="System.Composition" Version="7.0.0-preview.2.22152.2" />
+    <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="7.0.0-preview.2.22152.2" />
     <PackageReference Include="System.Runtime.Experimental" Version="6.0.2-mauipre.1.22102.15" />
-    <PackageReference Include="System.Text.Json" Version="7.0.0-preview.1.22076.8" />
+    <PackageReference Include="System.Text.Json" Version="7.0.0-preview.2.22152.2" />
 	<PackageReference Include="ZString" Version="2.4.4" />
   </ItemGroup>
   <ItemGroup>

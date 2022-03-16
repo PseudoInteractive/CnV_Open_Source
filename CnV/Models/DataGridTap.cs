@@ -74,10 +74,9 @@ namespace CnV;
 							switch (e.Column.HeaderText)
 							{
 								case nameof(i.typeS):
-									if (i.id != 0ul)
+									
 										CnVServer.ShowReport(i.id);
-									else
-										Note.Show("This attack is in the future, there is no report yet");
+									
 									break;
 								case "dXY":
 									Spot.ProcessCoordClick(i.targetCid, false, AppS.keyModifiers, false);

@@ -124,7 +124,7 @@ namespace CnV.Views
 						{
 							if (city == target)
 								continue;
-							TimeSpan dt;
+							TimeSpanS dt;
 							var ti = city.tradeInfo;
 							if (viaWater)
 							{
