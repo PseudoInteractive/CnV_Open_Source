@@ -41,7 +41,7 @@ namespace CnV
 	// TODO WTS: Change the URL for your privacy policy in the Resource File, currently set to https://YourPrivacyUrlGoesHere
 	public sealed partial class Settings : ContentDialog, INotifyPropertyChanged
 	{
-		public static double canvasHeight => AGame.clientSpan.Y;
+		public static double canvasHeight => AGame.clientSpan.Y-16;
 		private const double largeFontSizeBase = 20.0;
 		private const double mediumFontSizeBase = 14.0;
 		private const double smallFontSizeBase = 12.0;

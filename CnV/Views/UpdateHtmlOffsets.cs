@@ -156,7 +156,7 @@ namespace CnV.Views
 						}
 					//	instance.webView.Margin= new(htmlShift, 0, 0, 0);
 					TabPage.LayoutChanged();
-					AppS.QueueOnUIThread( CityStats.instance.ProcessScrollSizeChanged );
+			///		AppS.QueueOnUIThread( CityStats.instance.ProcessScrollSizeChanged );
 				//	GameClient.wantFastRefresh = true;
 				}
 					catch (Exception ex)

@@ -55,6 +55,7 @@ namespace CnV.Views
 		{
 			mousePosition = c;
 			mousePositionW = c.ScreenToWorld();
+			
 		}
 		//public static Vector2 lastMousePressPosition;
 		//public static DateTimeOffset lastMousePressTime;
@@ -90,24 +91,24 @@ namespace CnV.Views
 		//	//	Note.Show($"New focus: {e.NewFocusedElement} { (e.NewFocusedElement as FrameworkElement)?.Name}");
 		//}
 
-		private static void KeyboardProxy_PointerExited(object sender,PointerRoutedEventArgs e)
-		{
-			e.KeyModifiers.UpdateKeyModifiers();
-			//	Note.Show($"Pointer exit {mouseOverCanvas}");
-			//	Assert(mouseOverCanvas== true);
-			mouseOverCanvas = false;
-			//	instance.mouseOverCanvasBox.IsChecked = mouseOverCanvas;
+		//private static void KeyboardProxy_PointerExited(object sender,PointerRoutedEventArgs e)
+		//{
+		//	e.KeyModifiers.UpdateKeyModifiers();
+		//	//	Note.Show($"Pointer exit {mouseOverCanvas}");
+		//	//	Assert(mouseOverCanvas== true);
+		//	mouseOverCanvas = false;
+		//	//	instance.mouseOverCanvasBox.IsChecked = mouseOverCanvas;
 
-			var point = e.GetCurrentPoint(canvas);
-			Canvas_PointerExited(point.Position,point.PointerId);
-		}
+		//	var point = e.GetCurrentPoint(canvas);
+		//	Canvas_PointerExited(point.Position,point.PointerId);
+		//}
 
-		private static void KeyboardProxy_PointerEntered(object sender,PointerRoutedEventArgs e)
-		{
-			e.KeyModifiers.UpdateKeyModifiers();
+		//private static void KeyboardProxy_PointerEntered(object sender,PointerRoutedEventArgs e)
+		//{
+		//	e.KeyModifiers.UpdateKeyModifiers();
 
-			Canvas_PointerEntered(e.GetCurrentPoint(canvas).Position);
-		}
+		//	Canvas_PointerEntered(e.GetCurrentPoint(canvas).Position);
+		//}
 
 		//private static void KeyboardProxy_PointerReleased(object sender,PointerRoutedEventArgs e)
 		//{
@@ -409,9 +410,10 @@ namespace CnV.Views
 				mouseOverCanvas = true;
 				//	instance.mouseOverCanvasBox.IsChecked = mouseOverCanvas;
 
-				//				Trace("MouseEnterred");
+				//Note.Show("MouseEnterred");
 			}
 			UpdateMousePosition(args);
+		//	Debug.Log($"Mouse pos: {mousePositionW}");
 			TakeFocus();
 
 			//			Log($"!Focus11: {hasKeyboardFocus} w{webviewHasFocus} w2{webviewHasFocus2}");
@@ -479,6 +481,7 @@ namespace CnV.Views
 		private static void Canvas_PointerExited(Windows.Foundation.Point Point,uint PointerId)
 		{
 			UpdateMousePosition(Point);
+			mouseOverCanvas = false;
 			//			e.KeyModifiers.UpdateKeyModifiers();
 			//Gesture.ProcessPointerExited(PointerId);
 			//	PointerInfo(e);
@@ -829,24 +832,24 @@ namespace CnV.Views
 			DoZoom(scroll);
 			return false;
 		}
-		public static void UpdateMousePosition(PointerEventArgs e)
-		{
-			UpdateMousePosition(e.CurrentPoint.Position);
-		}
-		public static void UpdateMousePosition(PointerEventArgs e,UIElement source)
-		{
-			var pt0 = e.CurrentPoint.Position;
-			var pt = pt0.TransformPoint(source,canvas);
+		//public static void UpdateMousePosition(PointerEventArgs e)
+		//{
+		//	UpdateMousePosition(e.CurrentPoint.Position);
+		//}
+		//public static void UpdateMousePosition(PointerEventArgs e,UIElement source)
+		//{
+		//	var pt0 = e.CurrentPoint.Position;
+		//	var pt = pt0.TransformPoint(source,canvas);
 
-			UpdateMousePosition(pt);
-		}
+		//	UpdateMousePosition(pt);
+		//}
 
 
 
-		public static void UpdateMousePosition(PointerRoutedEventArgs e)
-		{
-			UpdateMousePosition(e.GetCurrentPoint(canvas).Position);
-		}
+		//public static void UpdateMousePosition(PointerRoutedEventArgs e)
+		//{
+		//	UpdateMousePosition(e.GetCurrentPoint(canvas).Position);
+		//}
 		public static void UpdateMousePosition(Windows.Foundation.Point point)
 		{
 			SetMousePosition( point.ToVector2() );

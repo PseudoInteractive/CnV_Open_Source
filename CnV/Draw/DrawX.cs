@@ -41,17 +41,21 @@ static partial class View
 				Material.litCityEffect              = EffectPass("LitCity");
 				Material.unlitCityEffect   = EffectPass("UnlitCity");
 
-				Material.litCityOpaqueEffect = EffectPassOpaque(Material.litCityEffect, blendAlphaAdd);
-				Material.unlitCityOpaqueEffect = EffectPassOpaque(Material.unlitCityEffect, blendAlphaAdd);
+				Material.litCityOpaqueEffect = EffectPassOpaque(Material.litCityEffect, blendAlphaAdd,true);
+				Material.unlitCityOpaqueEffect = EffectPassOpaque(Material.unlitCityEffect, blendAlphaAdd,true);
 		
-				Material.litRegionEffect              = EffectPassOpaque("LitRegion", blendAlphaAdd);
-				Material.litAnimatedEffect              = EffectPass("LitAnimated");
+				Material.litRegionEffect              = EffectPassOpaque("LitRegion", blendAlphaAdd,false);
+				Material.unlitRegionEffect   = EffectPassOpaque("UnlitRegion", blendAlphaAdd,false);
+				Material.litRegionOpaqueEffect = EffectPassOpaque(Material.litRegionEffect,blendAlphaAdd,true);
+				Material.unlitRegionOpaqueEffect = EffectPassOpaque(Material.unlitRegionEffect,blendAlphaAdd,true);
+				
+			Material.litAnimatedEffect              = EffectPass("LitAnimated");
 				Material.unlitAnimatedEffect              = EffectPass("UnlitAnimated");
 				Material.shadowAnimatedEffect              = EffectPass("ShadowAnimated");
-				Material.unlitRegionEffect   = EffectPassOpaque("UnlitRegion", blendAlphaAdd);
+				
 				Material.shadowEffect   = EffectPass("Shadow");
-				World.tileEffect =EffectPassOpaque("LitTile", blendReplace);
-				World.unlitTileEffect =EffectPassOpaque("UnLitTile",blendReplace);
+				World.tileEffect =EffectPassOpaque("LitTile", blendReplace,false);
+				World.unlitTileEffect =EffectPassOpaque("UnLitTile",blendReplace,false);
 				animatedSpriteEffect   = EffectPass("SpriteAnim");
 				sdfEffect              = EffectPass("SDF");
 				noTextureEffect        = EffectPass("NoTexture");
@@ -79,7 +83,7 @@ static partial class View
 				viewCWParam = avaEffect.Parameters["viewCW"];
 			//pixelScaleParameter = avaEffect.Parameters["pixelScale"];
 
-				fontTexture = CreateFromDDS(AppS.AppFileName("runtime\\font.dds"),false);
+				fontTexture = CreateFromDDS(AppS.AppFileName("runtime/font.dds"),false);
 
 				fontMaterial = new Material(fontTexture,fontEffect);
 				darkFontMaterial = new Material(fontTexture, darkFontEffect);
@@ -225,7 +229,7 @@ static partial class View
 
 	internal static DepthStencilState depthWrite = new() { DepthBufferEnable=false, DepthBufferFunction=CompareFunction.Always };
 	internal static DepthStencilState depthRead = new() { DepthBufferEnable=true,DepthBufferFunction=CompareFunction.LessEqual,DepthBufferWriteEnable=false  };
-	internal static DepthStencilState depthOpaque = new() { DepthBufferEnable=true,DepthBufferWriteEnable=true, DepthBufferFunction=CompareFunction.LessEqual };
+	internal static DepthStencilState depthOpaque = new() { DepthBufferEnable=true,DepthBufferFunction=CompareFunction.LessEqual,DepthBufferWriteEnable=true  };
 
 	internal static RasterizerState rasterizationState = new() { CullMode = CullMode.None,DepthClipEnable=false,MultiSampleAntiAlias=false };
 
@@ -244,8 +248,8 @@ static partial class View
 		{
 			return  new EffectPass(basedOn._effect,basedOn,blend,depth);
 		}
-		public static EffectPass EffectPassOpaque(string name,BlendState blendState) => EffectPass(name,blendState,depthOpaque);
-		public static EffectPass EffectPassOpaque(EffectPass basedOn, BlendState blendState) => EffectPass(basedOn,blendState,depthOpaque);
+		public static EffectPass EffectPassOpaque(string name,BlendState blendState, bool writeZ) => EffectPass(name,blendState,writeZ ? depthOpaque:depthRead);
+		public static EffectPass EffectPassOpaque(EffectPass basedOn, BlendState blendState, bool writeZ) => EffectPass(basedOn,blendState,writeZ ? depthOpaque:depthRead);
 		public static EffectPass EffectPassAlpha(string name) => EffectPass(name,blendAlphaAdd,depthRead);
 		public static EffectPass EffectPass(string name) =>EffectPassAlpha(name);
 	

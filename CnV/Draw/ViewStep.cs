@@ -12,12 +12,12 @@ using static GameClient;
 	internal const float viewHoverElevationFreq = 12.0f;
 
 	internal const float cameraControlFrequencyTight = 30.0f;
-	internal const float cameraControlFrequencyNormal = 12.0f;
+	internal const float cameraControlFrequencyNormal = 8.0f;
 	internal const float cameraControlDampingTight = 1.125f;
-	internal const float cameraControlDampingNormal = 1.125f;
+	internal const float cameraControlDampingNormal = 1.0f;
 	internal static float panV1 = 0.125f;
 	internal static float panV0 = panV1*0.75f;
-	static float panSlowdown = 0.25f;
+	static float panSlowdown = 1.0f;
 	const float viewControlTightnessDecay = 4;
 	// Velocity
 	// public static Vector3 viewVW = default;

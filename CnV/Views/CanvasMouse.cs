@@ -124,6 +124,7 @@ partial class ShellPage
 		args.KeyModifiers.UpdateKeyModifiers();
 
 		Canvas_PointerEntered(args.CurrentPoint.Position);
+	//	Debug.Log($"Mouse pos: {mousePositionW}");
 	}
 
 	private static void Recognizer_Holding(GestureRecognizer sender,HoldingEventArgs args) {
@@ -283,16 +284,19 @@ partial class ShellPage
 
 	public static void CoreInputSource_PointerMoved(InputPointerSource sender,PointerEventArgs e)
 	{
+		var points = e.GetIntermediatePoints();
+		var point = points.Last();
+		var pointC = point.Position;
+		recognizer.ProcessMoveEvents(points);
 		
-		recognizer.ProcessMoveEvents(e.GetIntermediatePoints());
-		var point = e.CurrentPoint;
+
 		if(point.PointerDeviceType == PointerDeviceType.Touchpad)
 			Note.Show("Touchpad");
 
 		if(point.Properties.ContactRect._width> 1)
 			Note.Show(point.Properties.ContactRect.ToString());
 		e.KeyModifiers.UpdateKeyModifiers();
-		Canvas_PointerMoved((point.Position, point.PointerId, point.IsInContact, point.Timestamp, point.Properties.PointerUpdateKind));
+		Canvas_PointerMoved((pointC, point.PointerId, point.IsInContact, point.Timestamp, point.Properties.PointerUpdateKind));
 		e.Handled=true;
 	}
 	private static void CoreInputSource_PointerWheelChanged(InputPointerSource sender,PointerEventArgs e)

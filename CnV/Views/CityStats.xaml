@@ -15,7 +15,7 @@
 	Loaded="UserControl_Loaded"
     mc:Ignorable="d">
 
-	<ScrollViewer  x:Name="scroll"
+	<!--<ScrollViewer  x:Name="scroll"
 					Background="{x:Null}"  
 				   HorizontalScrollMode="Disabled"
 				   VerticalScrollMode="Auto" 
@@ -29,7 +29,7 @@
 				   VerticalScrollBarVisibility="Auto"
 				  HorizontalContentAlignment="Stretch"
 				   
-				>
+				>-->
 		<StackPanel x:Name="stackPanel"  Margin="2" Padding="2" Background="{x:Null}"   CornerRadius="0" >
 			<ComboBox  x:Name="cityBox" x:FieldModifier="public" 
 					                Width="200"
@@ -277,5 +277,5 @@
 			</Expander>
 
 		</StackPanel>
-	</ScrollViewer>
+	<!--</ScrollViewer>-->
 </UserControl>

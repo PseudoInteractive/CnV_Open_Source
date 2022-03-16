@@ -428,11 +428,13 @@ namespace CnV
 		public static Material LoadMaterial(string filename)
 		{
 			var rv = instance.Content.Load<Texture2D>(filename);
+			Assert(rv!=null);
 			return new Material(rv);
 		}
 		public static Material LoadMaterialAdditive(string filename)
 		{
 			var rv = instance.Content.Load<Texture2D>(filename);
+			Assert(rv!=null);
 			return new Material(rv, alphaAddEffect);
 		}
 
