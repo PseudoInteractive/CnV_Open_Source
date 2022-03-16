@@ -74,7 +74,6 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.Extensions.Hosting.WindowsServices" Version="7.0.0-preview.2.22152.2" />
     <PackageReference Include="Microsoft.Extensions.ObjectPool" Version="6.0.1" />
     <PackageReference Include="Microsoft.Extensions.Primitives" Version="7.0.0-preview.2.22152.2" />
     <PackageReference Include="Microsoft.Identity.Client" Version="4.42.1" />
@@ -114,7 +113,6 @@
     <PackageReference Include="SharpDX.MediaFoundation" Version="4.2.0" />
     <PackageReference Include="SharpGen.Runtime.COM" Version="2.0.0-beta.10" />
     <PackageReference Include="System.Collections.Immutable" Version="7.0.0-preview.2.22152.2" />
-    <PackageReference Include="System.Composition" Version="7.0.0-preview.2.22152.2" />
     <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="7.0.0-preview.2.22152.2" />
     <PackageReference Include="System.Runtime.Experimental" Version="6.0.2-mauipre.1.22102.15" />
     <PackageReference Include="System.Text.Json" Version="7.0.0-preview.2.22152.2" />
