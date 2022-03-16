@@ -65,7 +65,7 @@ namespace CnV
 				Style = App.instance.Resources["TextBlockMedium"]  as Style,
 				VerticalAlignment=VerticalAlignment.Center,
 				Padding = new(),
-				Margin = new(4,0,16,0)
+				Margin = new(8,0,16,0)
 			};
 			
 			grid.Children.Add(titleText);

@@ -20,7 +20,7 @@ using Windows.Foundation.Collections;
 
 namespace CnV
 {
-	public sealed partial class SendTroops:DialogG
+	public sealed partial class SendTroops:DialogG,INotifyPropertyChanged
 	{
 		
 		protected override string title => type.ToString(); 
@@ -42,6 +42,8 @@ namespace CnV
 
 			for(int i = 0;i<Troops.ttCount;++i)
 				troopItems[i] = new(target:target, city:city,type:(byte)i) ;
+
+			OnPropertyChanged();
 		}
 		public static void ShowInstance(City city,City target, ArmyType type)
 		{
@@ -67,6 +69,7 @@ namespace CnV
 				if(i.count > 0)
 				{
 					ts += i.tt;
+					
 				}
 			}
 			if(ts.Any())
@@ -80,6 +83,21 @@ namespace CnV
 				//new CnVEventRecruit(city.c,tt).Execute();
 				Hide();
 			}
+			else
+			{
+				AppS.MessageBox("Please select troops to send");
+			}
+		}
+		public event PropertyChangedEventHandler? PropertyChanged;
+		public void OnPropertyChanged(string? member = null)
+		{
+			if (this.PropertyChanged is not null) 
+				AppS.DispatchOnUIThread(() => PropertyChanged?.Invoke(this,new(member)));
+		}
+		public static void Changed(string? member = null)
+		{
+			if(instance is not null)
+				instance.OnPropertyChanged(member);
 		}
 	}
 
@@ -98,13 +116,17 @@ namespace CnV
 			this.city=city;
 			this.target=target;
 			this.type=type;
-			count = city.troopsHome.GetCount(type);
+			count = 0;// city.troopsHome.GetCount(type);
 		}
 
 		internal TroopTypeCount tt => new(type,count);
 		internal ImageSource image => Troops.Image(type);
 		internal TroopInfo info => TroopInfo.all[type];
-		
+		internal void MaxClick(object sender,RoutedEventArgs e)
+		{
+			count = city.troopsHome.GetCount(type);
+			OnPropertyChanged(nameof(count));
+		}
 		public string troopsHome => city.troopsHome.GetCount(type).Format();
 		public event PropertyChangedEventHandler? PropertyChanged;
 		public void OnPropertyChanged(string? member = null)

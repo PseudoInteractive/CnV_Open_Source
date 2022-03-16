@@ -41,17 +41,17 @@
 					<Color x:Key="SystemListMediumColor">#53FFFFFF</Color>
 					<Color x:Key="SystemErrorTextColor">#FFF000</Color>
 
-					<Color x:Key="SystemChromeMediumColor">#FF183E0E</Color>
+					<Color x:Key="SystemChromeMediumColor">#FF0E3E1C</Color>
 					<Color x:Key="SystemChromeAltMediumHighColor">#BC051005</Color>
-					<Color x:Key="SystemChromeAltHighColor">#FF183E0E</Color>
+					<Color x:Key="SystemChromeAltHighColor">#FF176237</Color>
 					<Color x:Key="SystemRevealListLowColor">#FF2D0606</Color>
 					<Color x:Key="SystemRevealListMediumColor">#FF380E0E</Color>
 					<AcrylicBrush x:Key="SystemControlAcrylicWindowBrush"  TintColor="{ThemeResource SystemChromeAltHighColor}" TintOpacity="0.8" FallbackColor="{ThemeResource SystemChromeMediumColor}" />
 
 					<!--Override system generated accent colors-->
-					<Color x:Key="SystemAccentColorLight1">#FF3B8455</Color>
-					<Color x:Key="SystemAccentColorLight2">#FF579866</Color>
-					<Color x:Key="SystemAccentColorLight3">#FF72AC74</Color>
+					<Color x:Key="SystemAccentColorLight1">#FF244F39</Color>
+					<Color x:Key="SystemAccentColorLight2">#FF306A4C</Color>
+					<Color x:Key="SystemAccentColorLight3">#FF346F51</Color>
 					<Color x:Key="SystemAccentColorDark1">#FF290050</Color>
 					<Color x:Key="SystemAccentColorDark2">#FF220040</Color>
 					<Color x:Key="SystemAccentColorDark3">#FF120020</Color>
@@ -61,13 +61,13 @@
 
 
 				</ResourceDictionary>
-				<ColorPaletteResources Accent="#FF120020" 
+				<ColorPaletteResources Accent="#FF120021" 
 									   BaseHigh="#FFFFFFFF" BaseLow="#FF380E0E" BaseMedium="#FF720F0F" BaseMediumHigh="#FF980F0F"
                                        BaseMediumLow="#FF6F495F" ChromeAltLow="#FFB393A1" ChromeBlackHigh="#FF512A2A" ChromeBlackLow="#FF391B1B" 
                                        ChromeBlackMedium="#FF303030" ChromeBlackMediumLow="#FF202020" ChromeDisabledHigh="#FF380E0E" 
                                        ChromeDisabledLow="#FFABA9A7" ChromeGray="#FF927B89" ChromeHigh="#FF8A7B67" ChromeLow="#FF2A0303" 
                                        ChromeMedium="#FF2D0606" ChromeMediumLow="#FF340B0B" ChromeWhite="#FFFFC190" ListLow="#FF2D0606" ListMedium="#FF380E0E" 					
-					AltHigh="#80004017" AltLow="#80003000" AltMedium="#80043000" AltMediumHigh="#80163416" AltMediumLow="#80051505"		 />
+					AltHigh="#801500f0" AltLow="#80003000" AltMedium="#800430F0" AltMediumHigh="#80163416" AltMediumLow="#800515F5"		 />
 				<ResourceDictionary Source="ms-appx:///Styles/FontSizes.xaml"  />
 				<ResourceDictionary Source="ms-appx:///Styles/TextBlock.xaml" />
 				<ResourceDictionary Source="ms-appx:///Styles/Page.xaml" />
@@ -75,7 +75,7 @@
 				<ResourceDictionary Source="ms-appx:///Styles/BattleReport.xaml" />
 				
 			</ResourceDictionary.MergedDictionaries>
-			<ResourceDictionary.ThemeDictionaries>
+			<!--<ResourceDictionary.ThemeDictionaries>
 
 				<ResourceDictionary x:Key="Default">
 
@@ -113,10 +113,10 @@
 					<Color x:Key="SystemRevealListMediumColor">#FF380E0E</Color>
 					<AcrylicBrush x:Key="SystemControlAcrylicWindowBrush"  TintColor="{ThemeResource SystemChromeAltHighColor}" TintOpacity="0.8" FallbackColor="{ThemeResource SystemChromeMediumColor}" />
 
-					<!--Override system generated accent colors-->
-					<Color x:Key="SystemAccentColorLight1">#FF84813B</Color>
-					<Color x:Key="SystemAccentColorLight2">#FF988D57</Color>
-					<Color x:Key="SystemAccentColorLight3">#FFAC9372</Color>
+					--><!--Override system generated accent colors--><!--
+					<Color x:Key="SystemAccentColorLight1">#FF244F39</Color>
+					<Color x:Key="SystemAccentColorLight2">#FF306A4C</Color>
+					<Color x:Key="SystemAccentColorLight3">#FF346F51</Color>
 					<Color x:Key="SystemAccentColorDark1">#FF290050</Color>
 					<Color x:Key="SystemAccentColorDark2">#FF220040</Color>
 					<Color x:Key="SystemAccentColorDark3">#FF120020</Color>
@@ -126,17 +126,17 @@
 
 
 				</ResourceDictionary>
-				<ColorPaletteResources x:Key="Dark" Accent="#FF120020" 
+				--><!--<ColorPaletteResources x:Key="Dark" Accent="#FF120021" 
 									   BaseHigh="#FFFFFFFF" BaseLow="#FF380E0E" BaseMedium="#FFA68484" BaseMediumHigh="#FFC1A2A2"
                                        BaseMediumLow="#FF6F4949" ChromeAltLow="#FFC1A2A2" ChromeBlackHigh="#FF505050" ChromeBlackLow="#FFC1A2A2" 
                                        ChromeBlackMedium="#FF303030" ChromeBlackMediumLow="#FF202020" ChromeDisabledHigh="#FF380E0E" 
                                        ChromeDisabledLow="#FFA68484" ChromeGray="#FF8A6767" ChromeHigh="#FF8A6767" ChromeLow="#FF2A0303" 
                                        ChromeMedium="#FF2D0606" ChromeMediumLow="#FF340B0B" ChromeWhite="#FFFFFFFF" ListLow="#FF2D0606" ListMedium="#FF380E0E" 					
-					AltHigh="#80150030" AltLow="#80003000" AltMedium="#80110030" AltMediumHigh="#80102010" AltMediumLow="#80051505"		 />
+					AltHigh="#801500f0" AltLow="#80003000" AltMedium="#80110030" AltMediumHigh="#80102010" AltMediumLow="#80051505"		 />--><!--
 
 
 				
-			</ResourceDictionary.ThemeDictionaries>
+			</ResourceDictionary.ThemeDictionaries>-->
 			<!--<ResourceDictionary Source="Styles/Theme.xaml"  />-->
 			
 			<!--<ResourceDictionary Source="/Styles/SharedResources.xaml" />-->

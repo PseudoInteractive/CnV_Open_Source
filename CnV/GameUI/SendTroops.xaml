@@ -4,22 +4,24 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:cnv="using:CnV"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-	Width="620"
+	Width="650"
+
 	xmlns:tk="using:CommunityToolkit.WinUI.UI.Controls"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
 	<Grid>
 		<Grid.RowDefinitions>
 			<RowDefinition  />
-			<RowDefinition />
+			<RowDefinition Height="auto" />
 		</Grid.RowDefinitions>
 		<Button Grid.Row="1" Style="{StaticResource ButtonMedium}" Content="Send" Click="SendTroopsClick" HorizontalAlignment="Right"/>
 
 
-		<ListView x:Name="troopList"  Grid.Row="0"  ItemsSource="{x:Bind troopItems,Mode=OneWay}">
-		<ListView.ItemTemplate >
+		<GridView x:Name="troopList"  Grid.Row="0" VerticalAlignment="Stretch"  ItemsSource="{x:Bind troopItems,Mode=OneWay}" >
+			
+			<GridView.ItemTemplate >
 			<DataTemplate  x:DataType="cnv:SendTroopItem" >
-				<Grid  Height="Auto" Margin="1"  HorizontalAlignment="Stretch" >
+				<Grid  Height="Auto" Margin="1"  Width="310" >
 
 					<Grid.ColumnDefinitions>
 						<ColumnDefinition Width ="auto"  />
@@ -34,32 +36,27 @@
 							<RowDefinition />
 						</Grid.RowDefinitions>
 						<Grid.ColumnDefinitions>
-							<ColumnDefinition Width="80"  />
+							<ColumnDefinition Width="88"  />
 							<ColumnDefinition Width="* "/>
 						</Grid.ColumnDefinitions>
 						<TextBlock Grid.Column="0" Text="{x:Bind info.tn}" Margin="8,0,8,0" Style="{StaticResource TextBlockMedium}" TextWrapping="Wrap" TextAlignment="Center" MaxLines="3"  VerticalAlignment="Center" />
-						<TextBlock Grid.Column="1" Text="{x:Bind info.dsc}"  Margin="8,0,2,0" Style="{StaticResource TextBlockSmall}" TextWrapping="Wrap"  MaxLines="4" TextAlignment="Center"   VerticalAlignment="Center" />
-						<Grid Grid.Row="1" Grid.ColumnSpan="2">
-							<Grid.ColumnDefinitions>
-								<ColumnDefinition Width="*"  />
-								<ColumnDefinition Width="auto "/>
-								<ColumnDefinition Width="auto "/>
-							</Grid.ColumnDefinitions>
-							
-							<TextBlock Grid.Column="1" Text="{x:Bind troopsHome,Mode=OneWay}" Style="{StaticResource TextBlockMedium}" VerticalAlignment="Center"/>
-							<StackPanel Orientation="Horizontal"   Grid.Column="2"  >
-								<NumberBox  Style="{StaticResource NumberBoxMedium}" Value="{x:Bind count,Mode=TwoWay}" Width="120"   Margin="8,0,8,0" VerticalAlignment="Center" />
+
+							<Button  Grid.Column="1"  Style="{StaticResource ButtonMedium}" HorizontalAlignment="Right" Content="Max" Click="{x:Bind MaxClick}" />
+
+							<TextBlock  Grid.Row="1" 
+										HorizontalTextAlignment="Right"
+										Text="{x:Bind troopsHome,Mode=OneWay}" Style="{StaticResource TextBlockMedium}" VerticalAlignment="Center"  Margin="8,0,8,0"/>
+							<NumberBox  Grid.Column="1"  Grid.Row="1" Style="{StaticResource NumberBoxMedium}" Value="{x:Bind count,Mode=TwoWay}" Width="120"   Margin="8,0,8,0" VerticalAlignment="Center" HorizontalAlignment="Right" />
 								
 
-							</StackPanel>
-						</Grid>
+						
 
 					</Grid>
 				</Grid>
 
 
 			</DataTemplate>
-		</ListView.ItemTemplate>
-	</ListView>
+		</GridView.ItemTemplate>
+	</GridView>
 	</Grid>
 </cnv:DialogG>

@@ -81,7 +81,7 @@
 				<Setter Property="HorizontalAlignment" Value="Stretch"/>
 				<Setter Property="FontFamily" Value="XamlAutoFontFamily"/>
 				<Setter Property="FontStretch" Value="Condensed" />
-				<Setter Property="FontWeight" Value="Light" />
+				<Setter Property="FontWeight" Value="Normal" />
 
 				<Setter Property="FontSize" Value="{StaticResource MediumFontSize}" />
 			</Style>
@@ -92,7 +92,7 @@
 				<Setter Property="HorizontalAlignment" Value="Center"/>
 				<Setter Property="FontFamily" Value="XamlAutoFontFamily"/>
 				<Setter Property="FontStretch" Value="Condensed" />
-				<Setter Property="FontWeight" Value="Light" />
+				<Setter Property="FontWeight" Value="Normal" />
 				<Setter Property="FontSize" Value="{StaticResource MediumFontSize}" />
 			</Style>
 
@@ -121,7 +121,7 @@
 
 			<Style x:Key="ToggleButtonCondensed" TargetType="ToggleButton" BasedOn="{StaticResource ToggleButton}" >
 				<Setter Property="FontStretch" Value="Condensed" />
-				<Setter Property="FontWeight" Value="Light" />
+				<Setter Property="FontWeight" Value="Normal" />
 
 			</Style>
 
@@ -139,7 +139,7 @@
 				<Setter Property="FontFamily" Value="XamlAutoFontFamily"/>
 				<Setter Property="FontSize" Value="{StaticResource SmallFontSize}" />
 				<Setter Property="FontStretch" Value="Condensed" />
-				<Setter Property="FontWeight" Value="Light" />
+				<Setter Property="FontWeight" Value="Normal" />
 
 			</Style>
 			<Style  TargetType="sf:GridCell" BasedOn="{StaticResource SfTextCell}"/>

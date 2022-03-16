@@ -20,7 +20,7 @@ using Windows.Foundation.Collections;
 
 namespace CnV
 {
-	public sealed partial class RecruitDialog:DialogG
+	public sealed partial class RecruitDialog:DialogG,INotifyPropertyChanged
 	{
 		protected override string title => "Recruit"; 
 		internal static RecruitDialog? instance;
@@ -40,6 +40,9 @@ namespace CnV
 			
 			for(int i = 0;i<Troops.ttCount;++i)
 				troopItems[i] = new() { city = city,type=(byte)i,count=1 };
+					
+			OnPropertyChanged();
+
 		}
 		public static void ShowInstance(City city)
 		{
@@ -51,6 +54,17 @@ namespace CnV
 		}
 
 		internal RecruitTroopItem [] troopItems;
+		public event PropertyChangedEventHandler? PropertyChanged;
+		public void OnPropertyChanged(string? member = null)
+		{
+			if (this.PropertyChanged is not null) 
+				AppS.DispatchOnUIThread(() => PropertyChanged?.Invoke(this,new(member)));
+		}
+		public static void Changed(string? member = null)
+		{
+			if(instance is not null)
+				instance.OnPropertyChanged(member);
+		}
 	}
 
 

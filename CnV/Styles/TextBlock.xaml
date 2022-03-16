@@ -17,7 +17,7 @@
 
 			<Style TargetType="TextBlock" x:Key="TextBlockCondensed" BasedOn="{StaticResource BaseTextBlockStyle}" >
 				<Setter Property="FontStretch" Value="Condensed"/>
-				<Setter Property="FontWeight" Value="Light" />
+				<Setter Property="FontWeight" Value="Normal" />
 
 			</Style>
 
@@ -115,14 +115,14 @@
 			<Style x:Key="BaseNumberBox" TargetType="NumberBox" >
 				<Setter Property="FontSize" Value="{StaticResource MediumFontSize}" />
 				<Setter Property="FontFamily" Value="XamlAutoFontFamily"/>
-				<Setter Property="FontWeight" Value="Light"/>
+				<Setter Property="FontWeight" Value="Normal"/>
 				<Setter Property="FontStretch" Value="SemiCondensed" />
 				<Setter Property="SpinButtonPlacementMode" Value="Compact"/>
 				<Setter Property="SmallChange" Value="1"/>
 				<Setter Property="LargeChange" Value="10"/>
 				<Setter Property="BorderThickness" Value="1" />
 				<Setter Property="BorderBrush" Value="{ThemeResource SystemControlBackgroundAccentRevealBorderBrush}"/>
-				<Setter Property="AcceptsExpression" Value="True" />
+				<!--<Setter Property="AcceptsExpression" Value="True" />-->
 				<Setter Property="VerticalAlignment" Value="Center" />
 				<Setter Property="Margin" Value="2" />
 				<Setter Property="HorizontalAlignment" Value="Stretch" />
