@@ -311,8 +311,8 @@ internal partial class GameClient
 
 			//var wantFade = wantImage; // world to region fade
 			var regionAlpha = 1;// wantFade ? (deltaZoom / detailsZoomFade).Saturate().Sqrt() : 1.0f;
-			var intAlpha = (byte)(regionAlpha * 255.0f).RoundToInt();
-
+			var intAlpha =byte.MaxValue;
+			
 			var zoomT = viewZoomLag / detailsZoomThreshold;
 			bulgeGain = (((MathF.Log(MathF.Max(1.0f,zoomT)))));
 			bulgeGain = bulgeGain.Min(0.4f);// Eval(bulgeGain);
@@ -596,7 +596,7 @@ internal partial class GameClient
 					//            ds.DrawLine( SC(0.25f,.125f),SC(0.lineThickness,0.9f), raidBrush, lineThickness,defaultStrokeStyle);
 					//           ds.DrawLine(SC(0.25f, .125f), SC(0.9f, 0.lineThickness), shadowBrush, lineThickness, defaultStrokeStyle);
 					// if (IsPageDefense())
-					var wantDarkText = isWinter;
+					var wantDarkText = false;
 
 
 
@@ -620,12 +620,12 @@ internal partial class GameClient
 					//}
 					//else
 					{
-						nameColor = new Color() { A = intAlpha,G = 220,B = 220,R = 220 };
+						nameColor = new Color() { A = 162,G = 0,B = 0,R = 0 };
 						nameColorOutgoing = new Color() { A = intAlpha,G = 80,B = 142,R = 222 };
-						nameColorHover = new Color() { A = intAlpha,G = 255,B = 255,R = 255 };
-						myNameColor = new Color() { A = intAlpha,G = 120,B = 255,R = 20 };
-						nameColorIncoming = new Color() { A = intAlpha,G = 100,B = 190,R = 255 };
-						nameColorSieged = new Color() { A = intAlpha,G = 100,B = 160,R = 255 };
+						nameColorHover = new Color() { A = 162,G = 20,B = 0,R = 20 };
+						myNameColor = new Color() { A = 162,G = 0,B = 30,R = 15 };
+						nameColorIncoming = new Color() { A = intAlpha,G = 0,B = 12,R = 6 };
+						nameColorSieged = new Color() { A = intAlpha,G = 10,B = 16,R = 25 };
 						nameColorIncomingHover = new Color() { A = intAlpha,G = 100,B = 170,R = 255 };
 						nameColorSiegedHover = new Color() { A = intAlpha,G = 100,B = 140,R = 255 };
 						myNameColorIncoming = new Color() { A = intAlpha,G = 120,B = 120,R = 255 };
@@ -645,8 +645,9 @@ internal partial class GameClient
 						// 1 == shadows
 						// 2 == features
 						//foreach(var layer in td.layers)
-						var layer = TileLayer.bonus;
+						if(false)
 						{
+						var layer = TileLayer.bonus;
 							var isBonus = Object.ReferenceEquals(layer,TileLayer.bonus);
 							//if(!wantDetails && !isBonus)
 							//	continue;
@@ -1379,7 +1380,7 @@ internal partial class GameClient
 							DrawAccent(cid.cid,1.25f,hoverColor);
 						}
 
-						if(Player.viewHover != 0)
+						if(Player.viewHover != PlayerId.MaxValue)
 						{
 							if(Player.TryGetValue(Player.viewHover,out var p))
 							{
@@ -1450,8 +1451,9 @@ internal partial class GameClient
 												   : spot.outGoingStatus != 0 ? nameColorOutgoing
 												   : nameColor);
 
-											DrawTextBox(name,drawC,nameTextFormat,wantDarkText ? color.A.AlphaToBlack() : color,
-														wantDarkText ? new Color(color.R,color.G,color.B,(byte)128) : 128.AlphaToBlack(),Layer.tileText,2,0,PlanetDepth,z,scale);
+											DrawTextBox(name,drawC,nameTextFormat,wantDarkText ? color.A.AlphaToBlack() : Color.White,
+														color,Layer.
+														tileText,4,4,PlanetDepth,z,scale);
 											//										layout.Draw(drawC,
 											//									, Layer.tileText, z,PlanetDepth);
 

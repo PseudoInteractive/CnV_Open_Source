@@ -23,8 +23,8 @@
 
 
 
-	<Grid x:Name="_rootGrid" Canvas.ZIndex="33">
-		<views:ShareString  x:Name="citySetup" HeroContentPlacement="Top"  x:FieldModifier="public" 
+    <Grid x:Name="_rootGrid" Canvas.ZIndex="33" Background="{x:Null}" >
+        <views:ShareString  x:Name="citySetup" HeroContentPlacement="Top"  x:FieldModifier="public" 
 							ShouldConstrainToRootBounds="False" PreferredPlacement="Center"  />
 		<Grid  Margin="0" x:Name="grid"  x:FieldModifier="public"  ColumnSpacing="0" RowSpacing="0" >
 			<Grid.Resources>
@@ -163,7 +163,7 @@
 				Grid.Row="2" 
 				Grid.ColumnSpan="1"
 				Grid.RowSpan="2" 				
-				
+				 Background="{x:Null}"
 				Canvas.ZIndex="14" 
 				
 				/>

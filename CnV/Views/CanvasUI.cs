@@ -80,7 +80,7 @@ using Game;
 							//var d = b.def;
 							//	contToolTip = $"({cc.x},{cc.y})\n{d.Bn} {b.bl}";
 							Spot.viewHover = default;
-							Player.viewHover = default;
+							Player.viewHover = PlayerId.MaxValue;
 							toolTip = null;
 							CityView.hovered = cc;
 						}
@@ -104,7 +104,7 @@ using Game;
 						{
 
 							Spot.viewHover = default;
-							Player.viewHover = 0;
+							Player.viewHover = PlayerId.MaxValue;
 							toolTip = null;
 
 
