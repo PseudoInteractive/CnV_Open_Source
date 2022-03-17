@@ -80,8 +80,8 @@ namespace CnV
 				using(var __lock = Sim.eventQLock.Enter)
 				{
 					var t = Army.FromNow(city,target.cid,transport,type,ts,(sbyte)(transport==ArmyTransport.carts||transport==ArmyTransport.ports ? 100 : 0));
-					Assert(!t.departed);
-					Assert(t.isSchedueledNotSent);
+				//	Assert(!t.departed);
+				//	Assert(t.isSchedueledNotSent);
 					new CnVEventSendTroops(t).EnqueueAlreadyLocked();
 					//AppS.MessageBox("Send",info.ToString());
 					//Note.Show("Send");
