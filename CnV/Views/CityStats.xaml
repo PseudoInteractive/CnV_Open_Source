@@ -269,9 +269,24 @@
 			<Expander Header="Commands" IsExpanded="True"  Expanding="Expander_Expanding" x:Name="expCommands"   >
 			
 			</Expander>
-			<Expander Header="Reinforcements" Expanding="Expander_Expanding" x:Name="expReinforcements"  >
-
-			</Expander>
+			<Expander  IsExpanded="True" Expanding="Expander_Expanding" x:Name="expReinforcements"  >
+			<Expander.Header   >
+				<Border  BorderThickness="1"  CornerRadius="{StaticResource baseCR}" >
+					<TextBlock x:Name="troopsHeaderText"  Text ="Troops" Margin="0"  Style="{StaticResource TextBlockMedium}"   />
+				</Border>
+			</Expander.Header>
+			<StackPanel>
+				<tk:HeaderedContentControl Header="Owned">
+					<TextBlock Text="{x:Bind TroopsOwnedS, Mode=OneWay}" />
+				</tk:HeaderedContentControl>
+				<tk:HeaderedContentControl Header="Home">
+					<TextBlock Text="{x:Bind TroopsHomeS, Mode=OneWay}" />
+				</tk:HeaderedContentControl>
+				<tk:HeaderedContentControl Header="Incoming">
+					<TextBlock Text="Test" />
+				</tk:HeaderedContentControl>
+			</StackPanel>
+		</Expander>
 			<Expander Header="Trades" Expanding="Expander_Expanding" x:Name="expTrades" Background="{x:Null}"  >
 
 			</Expander>

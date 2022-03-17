@@ -323,7 +323,8 @@ namespace CnV
 		internal DebounceA cityQueueChangeDebounce = new(UpdateBuildQueue) { runOnUiThread=true,debounceDelay=50 };
 		internal DebounceA cityRecruitQueueChangeDebounce = new(UpdateRecruitQueue) { runOnUiThread=true,debounceDelay=50 };
 
-
+		internal string TroopsHomeS => city?.troopsHomeWithDefense.Format(separator: '\n');
+		internal string TroopsOwnedS => city?.troopsOwned.Format(separator: '\n');
 
 
 		//public SolidColorBrush ResourceForeground(int resId) => new SolidColorBrush(Windows.UI.Color.FromArgb(255,(byte)(31+64*resId),128,128) );

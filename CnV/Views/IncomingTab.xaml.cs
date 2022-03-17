@@ -66,8 +66,8 @@ namespace CnV.Views
 					{
 
 						ArmyType.assault => assaultStyle,
-						ArmyType.siegeRepeat => siegingStyle,
-						ArmyType.siegeFirst => siegeStyle,
+						ArmyType.siege when report.isSieging => siegingStyle,
+						ArmyType.siege => siegeStyle,
 						ArmyType.plunder => plunderStyle,
 						ArmyType.scout => scoutStyle
 

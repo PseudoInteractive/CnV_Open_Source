@@ -3,7 +3,7 @@
 
 
 			<x:Double x:Key="AppBarExpandButtonThemeWidth">24</x:Double>
-			<x:String x:Key="Font">"XamlAutoFontFamily"</x:String>
+			<x:String x:Key="Font">CnVIcons</x:String>
 			<x:Double x:Key="LargeGridRowHeight">34</x:Double>
 			<x:Double x:Key="MediumGridRowHeight">32</x:Double>
 			<x:Double x:Key="ShortGridRowHeight">28</x:Double>
@@ -14,15 +14,15 @@
 			<x:Double x:Key="ChatImageHeight">32</x:Double>
 
 	
-			<FontFamily x:Key="ContentControlThemeFontFamily">"XamlAutoFontFamily"</FontFamily>
-			<FontFamily x:Key="MTCMediaFontFamily">"XamlAutoFontFamily"</FontFamily>
-			<FontFamily x:Key="KeyTipFontFamily">"XamlAutoFontFamily"</FontFamily>
+			<FontFamily x:Key="ContentControlThemeFontFamily">"{StaticResource CnvIcons}"</FontFamily>
+			<FontFamily x:Key="MTCMediaFontFamily">"{StaticResource CnvIcons}"</FontFamily>
+			<FontFamily x:Key="KeyTipFontFamily">"{StaticResource CnvIcons}"</FontFamily>
 
 
 			
 
 			<Style x:Key="BaseControlStyle" TargetType="Control">
-				<Setter Property="FontFamily" Value="XamlAutoFontFamily" />
+				<Setter Property="FontFamily" Value="{StaticResource CnvIcons}" />
 				<Setter Property="FontWeight" Value="Normal" />
 				<Setter Property="FontStretch" Value="Condensed" />
 				<Setter Property="FontSize" Value="{StaticResource MediumFontSize}" />
@@ -33,7 +33,7 @@
 
 			<!-- FRAMEWORK STYLES -->
 			<Style x:Key="BaseTextBlockStyle" TargetType="TextBlock" >
-				<Setter Property="FontFamily" Value="XamlAutoFontFamily" />
+				<Setter Property="FontFamily" Value="{StaticResource CnvIcons}" />
 				
 				<Setter Property="FontStretch" Value="Condensed" />
 				<Setter Property="FontSize" Value="{StaticResource MediumFontSize}" />
@@ -82,7 +82,7 @@
 				<Setter Property="FontStretch" Value="Condensed"/>
 			</Style>
 			<Style x:Key="BaseRichTextBlockStyle" TargetType="RichTextBlock">
-				<Setter Property="FontFamily" Value="XamlAutoFontFamily" />
+				<Setter Property="FontFamily" Value="{StaticResource CnvIcons}" />
 				<Setter Property="FontWeight" Value="Normal" />
 				<Setter Property="FontSize" Value="{StaticResource MediumFontSize}"  />
 				<Setter Property="TextTrimming" Value="None" />

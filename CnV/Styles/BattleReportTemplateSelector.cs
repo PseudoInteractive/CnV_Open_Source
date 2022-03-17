@@ -67,8 +67,8 @@ namespace CnV.Styles
 				case ArmyType.assault: return assaultStyle;
 					case ArmyType.plunder: return plunderStyle;
 					case ArmyType.scout: return scoutStyle;
-					case ArmyType.siegeFirst	: return siegeStyle;
-					case ArmyType.siegeRepeat : return siegingStyle;
+					case ArmyType.siege	 when !report.isSieging: return siegeStyle;
+					case ArmyType.siege  : return siegingStyle;
 				default: Assert(false); return scoutStyle;
 					
 			}

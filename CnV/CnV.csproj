@@ -565,6 +565,7 @@
   </ItemGroup>
   <ItemGroup>
 	<None Remove="Assets\cnvIcon.ico" />
+	<None Remove="Assets\CnvIcons.ttf" />
 	<None Remove="cnvCover.png" />
 	<None Remove="GameUI\ArtifactDialogue.xaml" />
 	<None Remove="GameUI\Artifacts.xaml" />

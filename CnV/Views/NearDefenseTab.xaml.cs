@@ -114,7 +114,7 @@ namespace CnV.Views
 						{
 							supporter = new Supporter() { city = city };
 						}
-						var troops = (onlyHome ? city.troopsHome : city.troopsTotal);
+						var troops = (onlyHome ? city.troopsHome : city.troopsOwned);
 						s.Add(supporter);
 						supporter.tSend.Clear();
 
@@ -247,7 +247,7 @@ namespace CnV.Views
             if( sel is Supporter support )
             {
                 var stt = new List<SupportByTroopType>();
-                foreach (var i in support.city.troopsTotal)
+                foreach (var i in support.city.troopsOwned)
                 {
                     if(Include(i))
                        stt.Add(new SupportByTroopType() { type = i.type, supporter = support });
@@ -275,7 +275,7 @@ namespace CnV.Views
             AApp.AddItem(flyout, "Total Troops", (_, _) =>
             {
                 var supporter = stt.supporter;
-                supporter.tSend = new(stt.type, stt.supporter.city.troopsTotal.GetCount(stt.type));
+                supporter.tSend = new(stt.type, stt.supporter.city.troopsOwned.GetCount(stt.type));
                 supporter.NotifyChange();
             });
             AApp.AddItem(flyout, "None", (_, _) =>
@@ -302,7 +302,7 @@ namespace CnV.Views
             });
             AApp.AddItem(flyout, "Total Troops", (_, _) =>
             {
-				supporter.tSend = supporter.city.troopsTotal;
+				supporter.tSend = supporter.city.troopsOwned;
                 supporter.NotifyChange();
             });
             AApp.AddItem(flyout, "None", (_, _) =>

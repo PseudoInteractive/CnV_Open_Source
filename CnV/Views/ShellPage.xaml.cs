@@ -823,18 +823,18 @@ namespace CnV.Views
 			Refresh();
 		}
 
-		private async static Task RefreshWorldData()
-		{
-			//World.lastUpdatedContinent = -1;
-			//using var work  = new WorkScope("Refresh..");
-			//var       task0 = TileData.Ctor(false);
-			//if (World.completed)
-			//{
-			//	await GetWorldInfo.Send();
-			//}
+		//private async static Task RefreshWorldData()
+		//{
+		//	//World.lastUpdatedContinent = -1;
+		//	//using var work  = new WorkScope("Refresh..");
+		//	//var       task0 = TileData.Ctor(false);
+		//	//if (World.completed)
+		//	//{
+		//	//	await GetWorldInfo.Send();
+		//	//}
 
-			//await task0;
-		}
+		//	//await task0;
+		//}
 
 		public static void RefreshAndReloadWorldData()
 		{
@@ -853,14 +853,15 @@ namespace CnV.Views
 			try
 			{
 				using var work = new WorkScope("Refresh All");
-				var t = RefreshWorldData();
-
+			//	var t = RefreshWorldData();
+				City.CitiesChanged();
+				ShellPage.CityListNotifyChange(true);
 				foreach(var city in City.allSpots)
 					city.Value.OnPropertyChanged();
 				NotifyCollectionBase.ResetAll(true);
 
 				RefreshTabs.Go();
-				await t;
+				//await t;
 			}
 			catch(Exception _ex)
 			{
@@ -917,11 +918,12 @@ namespace CnV.Views
 		{
 			try
 			{
-				using var s = new WorkScope("Refresh...");
-				foreach(var city in City.myCities)
-					city.OnPropertyChanged();
-				NotifyCollectionBase.ResetAll(false);
-				RefreshTabs.Go();
+				RefreshX();
+				//using var s = new WorkScope("Refresh...");
+				//foreach(var city in City.myCities)
+				//	city.OnPropertyChanged();
+				//NotifyCollectionBase.ResetAll(false);
+				//RefreshTabs.Go();
 			}
 			catch(Exception _ex)
 			{

@@ -397,7 +397,7 @@ namespace CnV
 				Assert(AppS.state == AppS.State.loading);
 				AppS.SetState(AppS.State.init);
 
-				//	CnVFont = new FontFamily("XamlAutoFontFamily");
+				//	CnVFont = new FontFamily("{StaticResource CnvIcons}");
 
 				//	Windows.UI.ViewManagement.ApplicationView.PreferredLaunchWindowingMode =Windows.UI.ViewManagement.ApplicationViewWindowingMode.Maximized;// new Size(bounds.Width, bounds.Height);
 				//				Windows.UI.ViewManagement.ApplicationView.GetForCurrentView().TryEnterViewModeAsync(Windows.UI.ViewManagement.ApplicationViewMode.CompactOverlay);

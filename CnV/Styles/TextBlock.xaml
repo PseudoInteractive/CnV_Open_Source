@@ -90,7 +90,7 @@
 			<!--Text Box-->
 
 			<Style TargetType="TextBox" x:Key="TextBox" BasedOn="{StaticResource DefaultTextBoxStyle}">
-				<Setter Property="FontFamily" Value="XamlAutoFontFamily"/>
+				<Setter Property="FontFamily" Value="{StaticResource CnvIcons}"/>
 				<Setter Property="FontWeight" Value="Normal" />
 				<Setter Property="FontSize" Value="{StaticResource MediumFontSize}" />
 			</Style>
@@ -114,7 +114,7 @@
 
 			<Style x:Key="BaseNumberBox" TargetType="NumberBox" >
 				<Setter Property="FontSize" Value="{StaticResource MediumFontSize}" />
-				<Setter Property="FontFamily" Value="XamlAutoFontFamily"/>
+				<Setter Property="FontFamily" Value="{StaticResource CnvIcons}"/>
 				<Setter Property="FontWeight" Value="Normal"/>
 				<Setter Property="FontStretch" Value="SemiCondensed" />
 				<Setter Property="SpinButtonPlacementMode" Value="Compact"/>
@@ -191,7 +191,7 @@
 			<Style
 		x:Key="CellTextStyle"
 		TargetType="tk:DataGridCell">
-				<Setter Property="FontFamily" Value="XamlAutoFontFamily"/>
+				<Setter Property="FontFamily" Value="{StaticResource CnvIcons}"/>
 				<Setter Property="FontSize" Value="{StaticResource SmallFontSize}" />
 				<Setter Property="Height" Value="{StaticResource ShortGridRowHeight}" />
 				<Setter Property="MinHeight" Value="{StaticResource ShortGridRowHeight}" />
@@ -203,7 +203,7 @@
 		x:Key="DataGridRowStyle"
 		TargetType="tk:DataGridRow">
 				<Setter Property="Padding" Value="0,0,0,0"/>
-				<Setter Property="FontFamily" Value="XamlAutoFontFamily"/>
+				<Setter Property="FontFamily" Value="{StaticResource CnvIcons}"/>
 				<Setter Property="FontSize" Value="{StaticResource SmallFontSize}" />
 				<Setter Property="Height" Value="{StaticResource ShortGridRowHeight}" />
 				<Setter Property="MinHeight" Value="{StaticResource ShortGridRowHeight}" />
@@ -219,7 +219,7 @@
 			</Style>
 			<Style
 		TargetType="tk:DataGridCell">
-				<Setter Property="FontFamily" Value="XamlAutoFontFamily"/>
+				<Setter Property="FontFamily" Value="{StaticResource CnvIcons}"/>
 				<Setter Property="FontSize" Value="{StaticResource SmallFontSize}" />
 				<Setter Property="FontStretch" Value="Condensed" />
 

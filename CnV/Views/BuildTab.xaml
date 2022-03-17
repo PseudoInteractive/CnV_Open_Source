@@ -11,7 +11,7 @@
 			  mc:Ignorable="d"
 			  Tag="Build"
 			  FontStretch="Condensed"		             
-			  FontFamily="XamlAutoFontFamily">
+			  FontFamily="{StaticResource CnvIcons}">
 	<Grid x:Name="cityBaseGrid">
 		<Grid.RowDefinitions>
 			<RowDefinition Height="Auto" />

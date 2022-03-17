@@ -71,7 +71,7 @@
 
 			<Style TargetType="HyperlinkButton" BasedOn="{StaticResource BaseControlStyle}" >
 				<Setter Property="Foreground" Value="{StaticResource HyperLinkBrush}" />
-				<Setter Property="FontFamily" Value="XamlAutoFontFamily"/>
+				<Setter Property="FontFamily" Value="{StaticResource CnvIcons}"/>
 				<Setter Property="FontSize" Value="{StaticResource MediumFontSize}" />
 			</Style>
 			
@@ -79,7 +79,7 @@
 			<Style TargetType="Button" BasedOn="{StaticResource ButtonRevealStyle}">
 				<Setter Property="VerticalAlignment" Value="Stretch"/>
 				<Setter Property="HorizontalAlignment" Value="Stretch"/>
-				<Setter Property="FontFamily" Value="XamlAutoFontFamily"/>
+				<Setter Property="FontFamily" Value="{StaticResource CnvIcons}"/>
 				<Setter Property="FontStretch" Value="Condensed" />
 				<Setter Property="FontWeight" Value="Normal" />
 
@@ -90,8 +90,8 @@
 				<Setter Property="Margin" Value="2"/>
 				<Setter Property="VerticalAlignment" Value="Center"/>
 				<Setter Property="HorizontalAlignment" Value="Center"/>
-				<Setter Property="FontFamily" Value="XamlAutoFontFamily"/>
-				<Setter Property="FontStretch" Value="Condensed" />
+				<Setter Property="FontFamily" Value="{StaticResource CnvIcons}"/>
+				<Setter Property="FontStretch" Value="{StaticResource CnvIcons}" />
 				<Setter Property="FontWeight" Value="Normal" />
 				<Setter Property="FontSize" Value="{StaticResource MediumFontSize}" />
 			</Style>
@@ -112,7 +112,7 @@
 
 			<!--Toggle Button-->
 			<Style x:Key="ToggleButton" TargetType="ToggleButton" BasedOn="{StaticResource ToggleButtonRevealStyle}" >
-				<Setter Property="FontFamily" Value="XamlAutoFontFamily"/>
+				<Setter Property="FontFamily" Value="{StaticResource CnvIcons}"/>
 				<Setter Property="FontSize" Value="{StaticResource MediumFontSize}" />
 				<Setter Property="FontWeight" Value="Normal" />
 				<Setter Property="Margin" Value="2" />
@@ -136,7 +136,7 @@
 			<!--Syncfusion text-->
 
 			<Style x:Key="SfTextCell" TargetType="sf:GridCell">
-				<Setter Property="FontFamily" Value="XamlAutoFontFamily"/>
+				<Setter Property="FontFamily" Value="{StaticResource CnvIcons}"/>
 				<Setter Property="FontSize" Value="{StaticResource SmallFontSize}" />
 				<Setter Property="FontStretch" Value="Condensed" />
 				<Setter Property="FontWeight" Value="Normal" />
@@ -216,12 +216,12 @@
 
 
 			<Style TargetType="CheckBox" BasedOn="{StaticResource DefaultCheckBoxStyle}">
-				<Setter Property="FontFamily" Value="XamlAutoFontFamily"/>
+				<Setter Property="FontFamily" Value="{StaticResource CnvIcons}"/>
 				<Setter Property="FontSize" Value="{StaticResource MediumFontSize}" />
 			</Style>
 
 			<Style TargetType="RadioButtons" >
-				<Setter Property="FontFamily" Value="XamlAutoFontFamily"/>
+				<Setter Property="FontFamily" Value="{StaticResource CnvIcons}"/>
 				<Setter Property="FontSize" Value="{StaticResource MediumFontSize}" />
 			</Style>
 

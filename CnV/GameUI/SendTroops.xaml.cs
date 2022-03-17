@@ -28,6 +28,7 @@ namespace CnV
 		internal City city;
 		internal City target;
 		internal ArmyType type;
+		internal ArmyTransport transport;
 		public SendTroops()
 		{
 			this.InitializeComponent();
@@ -45,11 +46,12 @@ namespace CnV
 
 			OnPropertyChanged();
 		}
-		public static void ShowInstance(City city,City target, ArmyType type)
+		public static void ShowInstance(City city,City target, ArmyType type, ArmyTransport transport)
 		{
 			var rv = instance ?? new SendTroops();
 			rv.city = city;
 			rv.target = target;
+			rv.transport = transport;
 			rv.type = type;
 			rv.UpdateTroopItems();
 			rv.Show(true);
@@ -74,10 +76,12 @@ namespace CnV
 			}
 			if(ts.Any())
 			{
-				var time = Sim.simTime + Army.JourneyTime(city,target.cid,type,ts);
-				var t = new Army(time,city.cid,target.cid,type);
-				t.troops = ts;
-				new CnVEventSendTroops(t).Execute();
+				var journeyTime = Army.JourneyTime(city,target.cid,transport,ts);
+				var time = Sim.simTime + journeyTime+ 2;// s forward in time in case we are switching
+				var t = new Army(time,Sim.simTime+1,city.cid,target.cid,transport,type,ts);
+				Assert(!t.departed);
+				Assert(t.isSchedueledNotSent);
+				new CnVEventSendTroops(t).Enqueue();
 				//AppS.MessageBox("Send",info.ToString());
 				//Note.Show("Send");
 				//new CnVEventRecruit(city.c,tt).Execute();

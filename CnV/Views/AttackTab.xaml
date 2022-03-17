@@ -270,7 +270,7 @@
                      AutoGenerateColumns="False"
                      ItemsSource="{x:Bind view:AttackTab.attacksUI, Mode=OneWay}"
                      RowHeight="{StaticResource ShortGridRowHeight}"
-                     FontFamily="XamlAutoFontFamily"
+                     FontFamily="{StaticResource CnvIcons}"
 					 FontStretch="Condensed"
 		             FontSize = "{StaticResource SmallFontSize}"
 				      RowStyle="{StaticResource DataGridRowStyle}"
@@ -341,7 +341,7 @@
 									   Tag="name"
 									   IsReadOnly="True"
 									   FontSize="{StaticResource SmallFontSize}"
-		   							   FontFamily="XamlAutoFontFamily"
+		   							   FontFamily="{StaticResource CnvIcons}"
 
                                        Binding="{Binding nameAndRemarks, Mode=OneTime}" />
 
@@ -349,12 +349,12 @@
 				<tk:DataGridTextColumn Header="ts"
 
                                        FontSize="{StaticResource SmallFontSize}"
-		   							   FontFamily="XamlAutoFontFamily"
+		   							   FontFamily="{StaticResource CnvIcons}"
                                        Binding="{Binding tsTotal, Mode=OneTime}" />
 
 				<tk:DataGridComboBoxColumn Header="Intel"
 									   FontSize="{StaticResource SmallFontSize}"
-		   							   FontFamily="XamlAutoFontFamily"
+		   							   FontFamily="{StaticResource CnvIcons}"
                                        Binding="{Binding TroopType, Mode=TwoWay}"
 									   ItemsSource="{x:Bind view:TroopTypeItemSource.all, Mode=OneTime}"
 										   DisplayMemberPath="name"
@@ -366,7 +366,7 @@
 
 				<tk:DataGridTextColumn Header="Sen"
 									   FontSize="{StaticResource SmallFontSize}"
-		   							   FontFamily="XamlAutoFontFamily"
+		   							   FontFamily="{StaticResource CnvIcons}"
                                        Binding="{Binding senForAttack, Mode=OneWay}" />
 
 				<tk:DataGridTemplateColumn Header="Remove">
@@ -383,12 +383,12 @@
 				<tk:DataGridTextColumn Header="Alliance"
 													   IsReadOnly="True"
                                        FontSize="{StaticResource SmallFontSize}"
-		   							   FontFamily="XamlAutoFontFamily"
+		   							   FontFamily="{StaticResource CnvIcons}"
 
 									   Binding="{Binding alliance, Mode=OneTime}" />
 				<tk:DataGridTextColumn Header="Points"
 									   FontSize="{StaticResource SmallFontSize}"
-		   							   FontFamily="XamlAutoFontFamily"
+		   							   FontFamily="{StaticResource CnvIcons}"
 
                                        Binding="{Binding points, Mode=OneTime}" IsReadOnly="True" />
 			</tk:DataGrid.Columns>
@@ -505,7 +505,7 @@
 					RowStyle="{StaticResource DataGridRowStyle}"
                      AutoGenerateColumns="False"
 					 CanUserSortColumns="True"
-                      FontFamily="XamlAutoFontFamily"
+                      FontFamily="{StaticResource CnvIcons}"
 		             FontSize = "{StaticResource SmallFontSize}"
 			       FontStretch="Condensed"
 			 IsTextScaleFactorEnabled="False"

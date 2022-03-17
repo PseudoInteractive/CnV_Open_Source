@@ -51,7 +51,7 @@ namespace CnV
             {
 
                 string rv = "Troops Home/Total";
-                foreach (var ttc in city.troopsTotal)
+                foreach (var ttc in city.troopsOwned)
                 {
                     rv += $"\n{Troops.ttNameWithCaps[ttc.type]}: {city.troopsHome.GetCount(ttc.type),4:N0}/{ttc.count,4:N0}";
                 }
@@ -101,6 +101,6 @@ namespace CnV
         public string troopType => Troops.ttNameWithCaps[type];
         public uint send { get => supporter.tSend.GetCount(type); set => supporter.tSend = new(new TroopTypeCount( type,value)) ; }
         public uint home { get => supporter.city.troopsHome.GetCount(type); }
-        public uint total { get => supporter.city.troopsTotal.GetCount(type); }
+        public uint total { get => supporter.city.troopsOwned.GetCount(type); }
     }
 }

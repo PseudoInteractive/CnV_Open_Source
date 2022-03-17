@@ -498,7 +498,7 @@ namespace CnV
 						}
 
 					}
-					AppS.MessageBox(title:"Signed in",text:$"Welcome {Player.ToShortName(name) }.", 
+					AppS.MessageBox(title:"Signed in",text:$"Welcome {Player.ToShortName(name) }. \uA000 \uA001 \uA002 {(char)0xA003}", 
 
 						hero: "UI/menues/mentor/bgr_mentorframe_full.png");
 

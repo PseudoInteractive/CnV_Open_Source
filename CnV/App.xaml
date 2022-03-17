@@ -13,22 +13,22 @@
 					<FontFamily x:Key="CnVFont">ms-appx:///Assets/CnVFont-VF.ttf#CnVFont,Segoe Fluent Icons"</FontFamily>
 				</ResourceDictionary>-->
 				<ResourceDictionary >
-
-					<Color x:Key="SystemAltHighColor">#FF000000</Color>
+					<FontFamily x:Key="CnvIcons" >ms-appx:///Assets/CnvIcons.ttf#CnvIcons,Segoe UI*</FontFamily>
+					<Color x:Key="SystemAltHighColor">#FFFF0000</Color>
 					<Color x:Key="SystemAltLowColor">#E1220030</Color>
-					<Color x:Key="SystemAltMediumColor">#99000000</Color>
-					<Color x:Key="SystemAltMediumHighColor">#CC000000</Color>
-					<Color x:Key="SystemAltMediumLowColor">#F1000000</Color>
+					<Color x:Key="SystemAltMediumColor">#99ff0000</Color>
+					<Color x:Key="SystemAltMediumHighColor">#CCff0000</Color>
+					<Color x:Key="SystemAltMediumLowColor">#F1ff0000</Color>
 					<Color x:Key="SystemBaseHighColor">#FFFFFFFF</Color>
 					<Color x:Key="SystemBaseLowColor">#A33B851F</Color>
 					<Color x:Key="SystemBaseMediumColor">#99FFFFFF</Color>
 					<Color x:Key="SystemBaseMediumHighColor">#CCFFFFFF</Color>
 					<Color x:Key="SystemBaseMediumLowColor">#F6FFFFFF</Color>
 					<Color x:Key="SystemChromeAltLowColor">#FFF2F2F2</Color>
-					<Color x:Key="SystemChromeBlackHighColor">#FF000000</Color>
+					<Color x:Key="SystemChromeBlackHighColor">#FFff0000</Color>
 					<Color x:Key="SystemChromeBlackLowColor">#EE150030</Color>
 					<Color x:Key="SystemChromeBlackMediumLowColor">#F6000000</Color>
-					<Color x:Key="SystemChromeBlackMediumColor">#CC000000</Color>
+					<Color x:Key="SystemChromeBlackMediumColor">#CC00ff00</Color>
 					<Color x:Key="SystemChromeDisabledHighColor">#FF333333</Color>
 					<Color x:Key="SystemChromeDisabledLowColor">#FF858585</Color>
 					<Color x:Key="SystemChromeHighColor">#FF767676</Color>
