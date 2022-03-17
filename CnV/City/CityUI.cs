@@ -41,6 +41,11 @@ public static partial class CityUI
 		World.worldFirstLoadedActions += CityUI.LoadFromPriorSession;
 	}
 
+	internal static void Refresh()
+	{
+		CityStats.Invalidate();
+		PlayerStats.Changed();
+	}
 	public static  void AddToFlyout(this City me, MenuFlyout flyout, bool useSelected = false)
 	{
 		var cid     = me.cid;

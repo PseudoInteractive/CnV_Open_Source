@@ -859,7 +859,7 @@ namespace CnV.Views
 				foreach(var city in City.allSpots)
 					city.Value.OnPropertyChanged();
 				NotifyCollectionBase.ResetAll(true);
-
+				CityUI.Refresh();
 				RefreshTabs.Go();
 				//await t;
 			}

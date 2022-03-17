@@ -247,14 +247,14 @@ partial class ShellPage
 		View.EndCoasting();
 		//View.isCoasting = false;
 		AppS.InputRecieved();
-		recognizer.ProcessDownEvent(args.CurrentPoint);
 
 		var point = args.CurrentPoint;
 		args.KeyModifiers.UpdateKeyModifiers();
 		UpdateMousePosition(point.Position);
-		if(!recognizer.IsActive)
+		var prop = point.Properties;
+		//if(!prop.IsPrimary && !prop.IsRightButtonPressed )
 		{
-			if(point.Properties.IsXButton1Pressed)
+			if(prop.IsXButton1Pressed)
 			{
 
 				NavStack.Back(true);
@@ -262,7 +262,7 @@ partial class ShellPage
 				args.Handled=true;
 				return;
 			}
-			if(point.Properties.IsXButton2Pressed)
+			if(prop.IsXButton2Pressed)
 			{
 
 				NavStack.Forward(true);
@@ -271,6 +271,8 @@ partial class ShellPage
 				return;
 			}
 		}
+		recognizer.ProcessDownEvent(args.CurrentPoint);
+
 		if(IsCityView())
 		{
 			(var c, var cc) = ToWorldAndCityC(mousePositionW);

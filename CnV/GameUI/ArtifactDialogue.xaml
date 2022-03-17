@@ -11,7 +11,7 @@
 
 	>
 
-		<Grid  Height="Auto" Margin="2,2" Width="370" >
+		<Grid  Height="Auto" Margin="2,2" Width="500" >
 			<Grid.ColumnDefinitions>
 				<ColumnDefinition Width ="80"  />
 				<ColumnDefinition Width ="80" />

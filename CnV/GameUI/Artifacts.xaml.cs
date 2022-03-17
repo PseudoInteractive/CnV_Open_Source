@@ -171,7 +171,7 @@ namespace CnV
 
 		private void tabView_SelectionChanged(object sender,SelectionChangedEventArgs e)
 		{
-			Log($"Sel Changed added {e.AddedItems?.Format()} removed {e.RemovedItems?.Format()}" );
+			Log($"Sel Changed added {e.AddedItems?.CollectionToString()} removed {e.RemovedItems?.CollectionToString()}" );
 		}
 		//private void OnViewChanging(object sender,ScrollViewerViewChangingEventArgs e)
 		//{

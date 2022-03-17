@@ -76,15 +76,17 @@ namespace CnV
 			}
 			if(ts.Any())
 			{
-				var journeyTime = Army.JourneyTime(city,target.cid,transport,ts);
-				var time = Sim.simTime + journeyTime+ 2;// s forward in time in case we are switching
-				var t = new Army(time,Sim.simTime+1,city.cid,target.cid,transport,type,ts);
-				Assert(!t.departed);
-				Assert(t.isSchedueledNotSent);
-				new CnVEventSendTroops(t).Enqueue();
-				//AppS.MessageBox("Send",info.ToString());
-				//Note.Show("Send");
-				//new CnVEventRecruit(city.c,tt).Execute();
+
+				using(var __lock = Sim.eventQLock.Enter)
+				{
+					var t = Army.FromNow(city,target.cid,transport,type,ts,(sbyte)(transport==ArmyTransport.carts||transport==ArmyTransport.ports ? 100 : 0));
+					Assert(!t.departed);
+					Assert(t.isSchedueledNotSent);
+					new CnVEventSendTroops(t).EnqueueAlreadyLocked();
+					//AppS.MessageBox("Send",info.ToString());
+					//Note.Show("Send");
+					//new CnVEventRecruit(city.c,tt).Execute();
+				}
 				Hide();
 			}
 			else

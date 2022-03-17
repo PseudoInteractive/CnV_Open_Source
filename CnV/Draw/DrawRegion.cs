@@ -125,7 +125,7 @@ internal partial class GameClient
 
 	const float actionAnimationGain = 64.0f;
 	const float drawActionLength = 32;
-	const float lineAnimationGain = 2.0f;
+	const float lineAnimationRate = 0.5f;
 
 	class IncomingCounts
 	{
@@ -1084,7 +1084,10 @@ internal partial class GameClient
 											Color c;
 											if(i.isSettle)
 											{
-												c = Color.White;
+												if(i.arrived )
+													c = Color.Green;
+												else
+													c = Color.White;
 											}
 											else if(i.isReturn)
 											{
@@ -1138,7 +1141,7 @@ internal partial class GameClient
 
 												(int iType, float alpha) = GetTroopBlend(t,nSprite);
 												(int x, int y) _c0, _c1;
-												if(wantDef)
+												if(wantDef ^ i.isReturn)
 												{
 													_c0 = c0; _c1 = c1;
 												}
@@ -1831,11 +1834,13 @@ internal partial class GameClient
 	{
 		if(IsSegmentCulledWC(c0,c1))
 			return;
+		var lineRate = lineAnimationRate;
 		float progress;
 		if(timeToArrival <= 0.0f)
 		{
 			progress = 1.0f;
 			timeToArrival = 0;
+			lineRate *= 1.0f/8.0f;
 		}
 		else
 		{
@@ -1875,9 +1880,9 @@ internal partial class GameClient
 			lineThickness *= 1.25f;
 		var shadowColor = ShadowColor(alpha,highlight);
 		if(wantShadow)
-			DrawLine(Layer.effectShadow,c0,c1,GetLineUs(c0,c1,lineThickness),shadowColor,zEffectShadow,thickness: lineThickness);
+			DrawLine(Layer.effectShadow,c0,c1,GetLineUs(c0,c1,lineThickness,lineRate),shadowColor,zEffectShadow,thickness: lineThickness);
 
-		DrawLine(Layer.action + 2,c0,c1,GetLineUs(c0,c1,lineThickness),color,zEffects,thickness: lineThickness);
+		DrawLine(Layer.action + 2,c0,c1,GetLineUs(c0,c1,lineThickness,lineRate),color,zEffects,thickness: lineThickness);
 		//if(applyStopDistance)
 		//{
 		//	DrawSquare(Layer.action + 3,c0,color,zEffects);
@@ -2001,9 +2006,9 @@ internal partial class GameClient
 		}
 	}
 
-	static (float u, float v) GetLineUs(Vector2 c0,Vector2 c1,float thickness)
+	static (float u, float v) GetLineUs(Vector2 c0,Vector2 c1,float thickness, float animationSpeed = lineAnimationRate)
 	{
-		float offset = (lineAnimationGain * (animationTWrap)) % 1;
+		var offset = (animationSpeed * animationT) .Wrap01();
 		return (offset, offset-(c0 - c1).Length()* lineWToUs/thickness);
 
 	}

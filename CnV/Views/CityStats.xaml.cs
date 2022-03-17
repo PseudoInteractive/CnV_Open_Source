@@ -320,12 +320,89 @@ namespace CnV
 
 		}
 
+		static void UpdateCommandItems()
+		{
+			// Don't notify whole we are doing stuff
+			try
+			{
+				
+				//var firstVisible = instance.buildQueueListView.vis
+				var anyRemoved = false;
+				var city = City.GetBuild();
+				var displayQueue = city.outgoing;
+				int lg = displayQueue.Length;
+				var bq = instance.commandItems;
+				//for(int i = bq.Count;--i>= 0;)
+				//{
+				//	var op = bq[i].op;
+				//	if(!displayQueue.Any(a => a == op))
+				//	{
+				//		bq.RemoveAt(i);
+				//	}
+				//}
+
+				// Add or update
+				for(int i = 0;i<lg;++i)
+				{
+					var op = displayQueue[i];
+					int cur = -1;
+					for(int j = i;j<bq.Count;++j)
+					{
+						if(bq[j].army == op )
+						{
+							cur = j;
+							break;
+						}
+					}
+					if(cur == -1)
+					{
+						var bi = new CommandItem(op);
+						bq.Insert(i,bi);
+					}
+					else
+					{
+						if(cur != i)
+						{
+							bq.Move(cur,i);
+
+						}
+
+					}
+				}
+				// sequence is done, remove extras if any
+				for(var i = bq.Count;--i>= lg;)
+				{
+					anyRemoved=true;
+					bq.RemoveAt(i);
+				}
+
+				Assert(bq.Count == lg);
+				for(int i=0;i<lg;++i)
+				{
+					Assert(bq[i].army == displayQueue[i]);
+				}
+				// keep first in view
+				if(anyRemoved && bq.Any() )
+				{
+					instance.CommandsListView.ScrollIntoView(bq.First());
+				}
+			}
+			catch ( Exception ex)
+			{
+				LogEx(ex);
+			}
+			// restore callback
+
+		}
+
 		internal DebounceA cityQueueChangeDebounce = new(UpdateBuildQueue) { runOnUiThread=true,debounceDelay=50 };
 		internal DebounceA cityRecruitQueueChangeDebounce = new(UpdateRecruitQueue) { runOnUiThread=true,debounceDelay=50 };
+		internal DebounceA CommandItemsChangeDebounce = new(UpdateCommandItems) { runOnUiThread=true,debounceDelay=50 };
 
-		internal string TroopsHomeS => city?.troopsHomeWithDefense.Format(separator: '\n');
-		internal string TroopsOwnedS => city?.troopsOwned.Format(separator: '\n');
+		internal string TroopsHomeS => city?.troopsHere.Format(separator: ',');
+		internal string TroopsOwnedS => city?.troopsOwned.Format(separator: ',');
 
+		public string commandsTitle => $"Commands {commandItems.Count}";
 
 		//public SolidColorBrush ResourceForeground(int resId) => new SolidColorBrush(Windows.UI.Color.FromArgb(255,(byte)(31+64*resId),128,128) );
 		//public string ResourceStr(int resId) => $"{city?.resources[resId]:N0}";
@@ -334,10 +411,18 @@ namespace CnV
 
 		// invalidate the cache
 		private static City lastDisplayed;
+		static void  ClearLastDisplayed()
+		{
+			if(lastDisplayed is not null)
+			{
+				lastDisplayed.PropertyChanged -= City_PropertyChanged;
+				lastDisplayed=null;
+			}
+		}
 		public static void CityBuildingsChange(City _city)
 		{
 			if(_city == lastDisplayed)
-				lastDisplayed = null;
+				ClearLastDisplayed();
 			if(_city.isBuild)
 			{
 				CityStats.NotifyBuildQueueChange();
@@ -346,7 +431,7 @@ namespace CnV
 		public static void CityRecruitChange(City _city)
 		{
 			if(_city == lastDisplayed)
-				lastDisplayed = null;
+				ClearLastDisplayed();
 			if(_city.isBuild)
 			{
 				CityStats.NotifyRecruitQueueChange();
@@ -378,7 +463,11 @@ namespace CnV
 						var city = this.city;
 						var hasBeenDisplayed = lastDisplayed == city;
 						if(!hasBeenDisplayed)
+						{
 							lastDisplayed = city;
+							city.PropertyChanged+=City_PropertyChanged;
+							Changed();
+						}
 						var bdd = !hasBeenDisplayed ? GetBuildingCounts(city) : default;
 						var t = CnVServer.simTime;
 #if DEBUG
@@ -390,6 +479,8 @@ namespace CnV
 						{
 							ResToolTip.Content=
 								$"Storage:\n{city.stats.storage.Format("\n")}";
+
+							
 						}
 						if(expResource.IsExpanded)
 						{
@@ -506,9 +597,15 @@ namespace CnV
 				LogEx(e,report: false);
 			}
 		}
+
+		private static  void City_PropertyChanged(object? sender,PropertyChangedEventArgs e)
+		{
+			Invalidate();
+		}
+	
 		private void Expander_Expanding(Microsoft.UI.Xaml.Controls.Expander sender,ExpanderExpandingEventArgs args)
 		{
-			UpdateUI();
+			Invalidate();
 		}
 
 		private void scroll_SizeChanged(object sender,ScrollViewerViewChangedEventArgs e)
@@ -542,10 +639,12 @@ namespace CnV
 		//}
 
 
-		private void Expander_Expanded(object sender,EventArgs e)
+		internal static void Invalidate()
 		{
-			UpdateUI();
-
+			Changed();
+			City.buildCityChanged?.Invoke();
+			ClearLastDisplayed();
+			instance?.UpdateUI();
 		}
 
 		private (int buildingCount, int towerCount, int townHallLevel, Dictionary<BuildingId,int> counts) GetBuildingCounts(City build)
@@ -596,12 +695,14 @@ namespace CnV
 
 		internal ObservableCollection<BuildItem> buildQueue = new();
 		internal ObservableCollection<RecruitItem> recruitQueue = new();
-
+		internal ObservableCollection<CommandItem> commandItems= new();
 		private void UserControl_Loaded(object sender,RoutedEventArgs e)
 		{
 			Assert(instance is null);
 			instance = this;
 			City.buildCityChanged += NotifyBuildQueueChange;
+			City.buildCityChanged += NotifyRecruitQueueChange;
+			City.buildCityChanged += CommandItemsChangeDebounce.Go;
 
 		}
 
@@ -937,6 +1038,78 @@ namespace CnV
 
 		}
 		
+		public void OnPropertyChanged(string members = null) => PropertyChanged?.Invoke(this,new(members));
+
+		public event PropertyChangedEventHandler? PropertyChanged;
+	}
+	public class CommandItem:INotifyPropertyChanged
+	{
+		internal Army army;
+		
+		public BitmapImage action { get; set; }
+		public string sourceCoords=> army.sourceCity.nameAndRemarksAndPlayer;
+		public string targetCoords=> army.targetCity.nameAndRemarksAndPlayer;
+
+		internal void SourceClick(object sender,RoutedEventArgs e)
+		{
+			CityUI.ShowCity(army.sourceCid,false);
+		}
+		internal void TargetClick(object sender,RoutedEventArgs e)
+		{
+			CityUI.ShowCity(army.targetCid,false);
+		}
+
+
+		internal string toolTip => army.troops.Format(separator:',');
+
+		public CommandItem(Army army)
+		{
+			this.army = army;
+			
+			action =  ImageHelper.Get( army.type switch { ArmyType.returning => "UI/icons/icon_trade_info_returnhome.png"  ,  _ => "UI/icons/icon_command_slots.png" });
+			
+		}
+		
+		public void ContextRequested(UIElement sender,ContextRequestedEventArgs args)
+		{
+			args.Handled    = true;
+			var flyout = new MenuFlyout();
+			flyout.SetXamlRoot(sender);
+			
+			
+			flyout.AddItem("Return",Symbol.Undo,() =>
+			{
+				new CnVEventReturnTroops(army).EnqueueAsap();
+				
+			});
+			
+			flyout.AddItem("Cancel Selected",Symbol.Cut,() =>
+			{
+			});
+			flyout.AddItem("Cancel all",Symbol.Clear,() =>
+			{
+			});
+			
+			// Todo: Sort
+
+			if(args.TryGetPosition(sender,out var c))
+			{
+				flyout.ShowAt(sender,c);
+			}
+			else if(args.TryGetPosition(CityStats.instance,out var c2))
+			{
+				flyout.ShowAt(CityStats.instance,c2);
+			}
+			else
+			{
+				flyout.ShowAt(sender,new());
+				Assert(false); 
+			}
+			//VisualTreeHelper.GetParent(args.OriginalSource
+			//LogJson(args);
+			//Log(args.OriginalSource);
+			//LogJson(sender);
+		}
 		public void OnPropertyChanged(string members = null) => PropertyChanged?.Invoke(this,new(members));
 
 		public event PropertyChangedEventHandler? PropertyChanged;

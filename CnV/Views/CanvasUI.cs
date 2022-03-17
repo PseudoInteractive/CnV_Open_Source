@@ -197,7 +197,7 @@ using Game;
 															int counter = 0;
 															foreach(var i in city.reinforcementsIn)
 															{
-																sb.AppendLine(i.troops.Format($"From {City.GetOrAddCity(i.sourceCid).nameAndRemarks}:",'\n','\n'));
+																sb.AppendLine(i.troops.Format(header:$"From {City.GetOrAddCity(i.sourceCid).nameAndRemarks}:",firstSeparater:'\n'));
 																if(++counter >= 4)
 																{
 																	sb.AppendLine("...");

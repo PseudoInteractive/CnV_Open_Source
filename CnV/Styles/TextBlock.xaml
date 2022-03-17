@@ -92,6 +92,7 @@
 			<Style TargetType="TextBox" x:Key="TextBox" BasedOn="{StaticResource DefaultTextBoxStyle}">
 				<Setter Property="FontFamily" Value="{StaticResource CnvIcons}"/>
 				<Setter Property="FontWeight" Value="Normal" />
+				<Setter Property="FontStretch" Value="Condensed" />
 				<Setter Property="FontSize" Value="{StaticResource MediumFontSize}" />
 			</Style>
 
@@ -116,7 +117,7 @@
 				<Setter Property="FontSize" Value="{StaticResource MediumFontSize}" />
 				<Setter Property="FontFamily" Value="{StaticResource CnvIcons}"/>
 				<Setter Property="FontWeight" Value="Normal"/>
-				<Setter Property="FontStretch" Value="SemiCondensed" />
+				<Setter Property="FontStretch" Value="Condensed" />
 				<Setter Property="SpinButtonPlacementMode" Value="Compact"/>
 				<Setter Property="SmallChange" Value="1"/>
 				<Setter Property="LargeChange" Value="10"/>

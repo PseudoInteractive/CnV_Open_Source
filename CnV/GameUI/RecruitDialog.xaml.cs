@@ -81,9 +81,8 @@ namespace CnV
 		internal void Recruit(object sender,RoutedEventArgs e)
 		{
 			
-			AppS.MessageBox("recruit",info.ToString());
 			Note.Show("Recruit");
-			new CnVEventRecruit(city.c,tt).Execute();
+			new CnVEventRecruit(city.c,tt).EnqueueAsap();
 			count =0;
 			OnPropertyChanged();
 		}

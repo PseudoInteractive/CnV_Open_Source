@@ -258,7 +258,7 @@ namespace CnV
 							break;
 						case "r": // Report
 							Assert(false);
-							CnVServer.ShowReport(paths[2].ParseBigInteger().GetValueOrDefault());
+							CnVServer.ShowReport(paths[2].ParseUInt().GetValueOrDefault());
 							break;
 					}
 				}

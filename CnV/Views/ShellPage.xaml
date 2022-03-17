@@ -318,6 +318,7 @@
 												   ParagraphLineHeight="18"
 											  FontSize="{StaticResource SmallFontSize}"
 											 FontFamily="{StaticResource CnvIcons}"
+												   FontStretch="Condensed"
                                               TextWrapping="Wrap" 
 											   LinkClicked="{x:Bind cnv:Note.MarkDownLinkClicked}"  Background="Transparent"  />
 
