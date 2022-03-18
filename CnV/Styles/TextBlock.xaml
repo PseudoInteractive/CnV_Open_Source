@@ -126,11 +126,13 @@
 				<Setter Property="AcceptsExpression" Value="True" />
 				<Setter Property="PlaceholderText" Value="Number.." />
 				
-				<Setter Property="VerticalAlignment" Value="Stretch" />
-				<Setter Property="Margin" Value="2" />
-				<Setter Property="HorizontalAlignment" Value="Stretch" />
-				<Setter Property="HorizontalContentAlignment" Value="Right" />
-				<Setter Property="VerticalContentAlignment" Value="Center" />
+				<Setter Property="VerticalAlignment" Value="Center" />
+				<Setter Property="Margin" Value="1" />
+        <Setter Property="Padding" Value="3" />
+
+        <!--<Setter Property="HorizontalAlignment" Value="Stretch" />-->
+				<!--<Setter Property="HorizontalContentAlignment" Value="Center" />-->
+				<!--<Setter Property="VerticalContentAlignment" Value="Center" />-->
 
 			</Style>
 

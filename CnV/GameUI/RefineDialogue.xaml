@@ -17,26 +17,26 @@
 
 		<tk:WrapPanel Orientation="Vertical" Grid.Row="1">
 			<StackPanel Orientation="Horizontal">
-				<NumberBox Value="{x:Bind items[0].count, Mode=TwoWay}" Style="{StaticResource NumberBoxMedium}"  />
+                <NumberBox Value="{x:Bind items[0].count, Mode=TwoWay}" Style="{StaticResource NumberBoxMedium}"  ValueChanged="FilterNans" />
 				<cnv:WoodText ImageHeight="28"
 					  Text="{x:Bind items[0].resS, Mode=OneWay}" 		 />
 				<Button Style="{StaticResource ButtonSmall}" Content="Refine" Click="WoodClick" />
 			</StackPanel>
 
 			<StackPanel Orientation="Horizontal">
-				<NumberBox Value="{x:Bind items[1].count, Mode=TwoWay}" Style="{StaticResource NumberBoxMedium}" />
+                <NumberBox Value="{x:Bind items[1].count, Mode=TwoWay}" Style="{StaticResource NumberBoxMedium}"  ValueChanged="FilterNans" />
 				<cnv:StoneText 
 					  Text="{x:Bind items[1].resS, Mode=OneWay}" 		 />
 				<Button Style="{StaticResource ButtonSmall}" Content="Refine" Click="StoneClick" />
 			</StackPanel>
 			<StackPanel Orientation="Horizontal">
-				<NumberBox Value="{x:Bind items[2].count, Mode=TwoWay}" Style="{StaticResource NumberBoxMedium}" />
+                <NumberBox Value="{x:Bind items[2].count, Mode=TwoWay}" Style="{StaticResource NumberBoxMedium}"  ValueChanged="FilterNans" />
 				<cnv:IronText 
 					  Text="{x:Bind items[2].resS, Mode=OneWay}" 		 />
 				<Button Style="{StaticResource ButtonSmall}" Content="Refine" Click="IronClick" />
 			</StackPanel>
 			<StackPanel Orientation="Horizontal">
-				<NumberBox Value="{x:Bind items[3].count, Mode=TwoWay}" Style="{StaticResource NumberBoxMedium}" />
+                <NumberBox Value="{x:Bind items[3].count, Mode=TwoWay}" Style="{StaticResource NumberBoxMedium}"  ValueChanged="FilterNans" />
 				<cnv:FoodText 
 					  Text="{x:Bind items[3].resS, Mode=OneWay}" 		 />
 				<Button Style="{StaticResource ButtonSmall}" Content="Refine" Click="FoodClick" />

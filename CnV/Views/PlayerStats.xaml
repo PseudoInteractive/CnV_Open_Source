@@ -28,16 +28,19 @@
 					 />
 		<cnv:WoodText Text="{x:Bind RefineS(0), Mode=OneWay}" 
 					  Tapped="WoodTapped"
-					  ContextRequested="WoodContextRequest"
+					  ContextRequested="ResContextRequest"
 					 />
 		<cnv:StoneText Text="{x:Bind RefineS(1), Mode=OneWay}" 
 					  Tapped="StoneTapped"
+                       ContextRequested="ResContextRequest"
 					 />
 		<cnv:IronText Text="{x:Bind RefineS(2), Mode=OneWay}" 
 					   Tapped="IronTapped"
+                      ContextRequested="ResContextRequest"
 					 />
 		<cnv:FoodText Text="{x:Bind RefineS(3), Mode=OneWay}" 
 					   Tapped="FoodTapped"
+                      ContextRequested="ResContextRequest"
 					 />
 
 		<cnv:IconText Image="{x:Bind cnv:ImageHelper.Get('UI/Menues/mentor/img_mentor28.png',28) }"

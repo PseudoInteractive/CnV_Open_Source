@@ -46,7 +46,10 @@
 							<TextBlock  Grid.Row="1" 
 										HorizontalTextAlignment="Right"
 										Text="{x:Bind troopsHome,Mode=OneWay}" Style="{StaticResource TextBlockMedium}" VerticalAlignment="Center"  Margin="8,0,8,0"/>
-							<NumberBox  Grid.Column="1"  Grid.Row="1" Style="{StaticResource NumberBoxMedium}" Value="{x:Bind count,Mode=TwoWay}" Width="120"   Margin="8,0,8,0" VerticalAlignment="Center" HorizontalAlignment="Right" />
+							<NumberBox  Grid.Column="1"  Grid.Row="1" Style="{StaticResource NumberBoxMedium}" 
+                                         ValueChanged="FilterNans"
+                                        Value="{x:Bind count,Mode=TwoWay}" Width="120"   Margin="8,0,8,0" VerticalAlignment="Center" 
+                                        HorizontalAlignment="Right" />
 								
 
 						

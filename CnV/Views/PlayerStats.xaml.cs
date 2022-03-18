@@ -60,7 +60,7 @@ namespace CnV
 		private void FoodTapped(object sender,TappedRoutedEventArgs e)=> Artifact.Show( Artifact.ArtifactType.Hoe, sender);
 		private void GoldTapped(object sender,TappedRoutedEventArgs e)=> Artifact.Show( Artifact.ArtifactType.chest, sender);
 		private void TitleTapped(object sender,TappedRoutedEventArgs e)=> ResearchPurchase.ShowInstance( ResearchItems.GetTA(Player.me.TALevel+1) );
-		private void ResContextRequest(UIElement sender,ContextRequestedEventArgs args, Artifact.ArtifactType artifactType )
+		private void ResContextRequest(UIElement sender,ContextRequestedEventArgs args )
 		{
 			args.Handled    = true;
 			var flyout = new MenuFlyout();
@@ -71,19 +71,27 @@ namespace CnV
 				RefineDialogue.ShowInstance();
 			});
 
-			flyout.AddItem("Artifact..",Symbol.OutlineStar,() =>
+			flyout.AddItem("Saw..",Symbol.OutlineStar,() =>
 			{
-				Artifact.Show(artifactType,sender);
+				Artifact.Show(Artifact.ArtifactType.saw,sender);
 			});
-
+			flyout.AddItem("Chisel..",Symbol.OutlineStar,() =>
+			{
+				Artifact.Show(Artifact.ArtifactType.chisel,sender);
+			});
+			flyout.AddItem("Crucible..",Symbol.OutlineStar,() =>
+			{
+				Artifact.Show(Artifact.ArtifactType.crucible,sender);
+			}); 
+			flyout.AddItem("Hoe..",Symbol.OutlineStar,() =>
+			{
+				Artifact.Show(Artifact.ArtifactType.Hoe,sender);
+			});
 			flyout.Show(sender,args);
 		}
 
 		
 
-		private void WoodContextRequest(UIElement sender,ContextRequestedEventArgs args)
-		{
-			ResContextRequest(sender,args, Artifact.ArtifactType.saw);
-		}
+		
 	}
 }

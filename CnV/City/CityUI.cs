@@ -24,16 +24,27 @@ public static partial class CityUI
 {
 	public static Action<City[]> cityListChanged;
 
-	public static void SyncCityBox()
+	public static async void SyncCityBox()
 	{
-		AppS.QueueOnUIThread(() =>
-							{
-								var _build = City.GetBuild();
-								if(!object.ReferenceEquals(_build, CityStats.instance.cityBox.SelectedItem))
+		try
+		{
+			while(City.GetBuild().IsInvalid() || City.gridCitySource is null)
+			{
+				await Task.Delay(1000).ConfigureAwait(false);
+			};
+			AppS.QueueOnUIThread(() =>
 								{
-									CityStats.instance.cityBox.SelectedItem = _build;
-								}
-							});
+									var _build = City.GetBuild();
+									if(!object.ReferenceEquals(_build,CityStats.instance.cityBox.SelectedItem))
+									{
+										CityStats.instance.cityBox.SelectedItem = _build;
+									}
+								});
+		}
+		catch(Exception ex)
+		{
+			LogEx(ex);
+		}
 	}
 
 	public static void Init()

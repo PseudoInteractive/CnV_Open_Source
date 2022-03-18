@@ -1182,27 +1182,27 @@ internal partial class GameClient
 								}
 							}
 						}
-						if(incomingVisible)
-						{
-							foreach(var city in City.myCities)
-							{
-								if(!city.testContinentFilter)
-									continue;
-								Assert(city is City);
-								if(!city.incoming.Any())
-								{
-									var targetCid = city.cid;
-									var c1 = targetCid.CidToWorld();
-									if(IsCulledWC(c1))  // this is in pixel space - Should be normalized for screen resolution or world space (1 continent?)
-										continue;
-									if(wantDetails || Spot.IsSelectedOrHovered(targetCid,true))
-									{
-										DrawTextBox($"{(city.tsDefMax.Max(city.tsHome) + 999) / 1000 }k Ts (#:{city.reinforcementsIn.CountNullable()})",c1.ToVector(),tipTextFormatCentered,Color.Cyan,textBackgroundOpacity,Layer.tileText);
-									}
+						//if(incomingVisible)
+						//{
+						//	foreach(var city in City.myCities)
+						//	{
+						//		if(!city.testContinentFilter)
+						//			continue;
+						//		Assert(city is City);
+						//		if(!city.incoming.Any())
+						//		{
+						//			var targetCid = city.cid;
+						//			var c1 = targetCid.CidToWorld();
+						//			if(IsCulledWC(c1))  // this is in pixel space - Should be normalized for screen resolution or world space (1 continent?)
+						//				continue;
+						//			if(wantDetails || Spot.IsSelectedOrHovered(targetCid,true))
+						//			{
+						//				DrawTextBox($"{(city.tsDefMax.Max(city.tsHome) + 999) / 1000 }k Ts (#:{city.reinforcementsIn.CountNullable()})",c1.ToVector(),tipTextFormatCentered,Color.Cyan,textBackgroundOpacity,Layer.tileText);
+						//			}
 
-								}
-							}
-						}
+						//		}
+						//	}
+						//}
 
 
 						if(NearRes.IsVisible())
