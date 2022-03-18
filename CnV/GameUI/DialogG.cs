@@ -102,6 +102,16 @@ namespace CnV
 			}
 		}
 
+		protected void FilterNans(NumberBox sender,NumberBoxValueChangedEventArgs args)
+		{
+			if(Double.IsNaN(sender.Value) || Double.IsNaN(args.NewValue) )
+			{
+				Log($"{args.NewValue} <= {args.OldValue} v: {sender.Value}");
+				
+				sender.Value =0;
+			}
+		}
+
 		private void Grid_Tapped(object sender,TappedRoutedEventArgs e)
 		{
 			Note.Show("Tapped");

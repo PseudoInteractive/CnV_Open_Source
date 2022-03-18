@@ -39,7 +39,7 @@ namespace CnV
 		{
 			var rv = instance ?? new RefineDialogue();
 			rv.ResetItems();
-			rv.Show(true);
+			rv.Show(false);
 			
 		}
 		public void DoRefine(int id)

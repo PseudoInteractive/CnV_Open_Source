@@ -187,8 +187,8 @@ namespace CnV.Views
 						city.OnPropertyChanged();
 					}
 
-					city.wood = ci[8].GetAsInt();
-					city.stone = ci[9].GetAsInt();
+					//city.wood = ci[8].GetAsInt();
+					//city.stone = ci[9].GetAsInt();
 					city.bcBuildings = ci[6].GetAsInt() == 0;
 					city.bcTowers = ci[7].GetAsInt() == 0;
 					//	city.bcConvert = (ci[5].GetAsFloat() > 0);

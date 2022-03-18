@@ -22,8 +22,8 @@ namespace CnV
 {
 	public sealed partial class SendTroops:DialogG,INotifyPropertyChanged
 	{
-		
-		protected override string title => type.ToString(); 
+
+		protected override string title => $"{type.ToString()} {target}"; 
 		internal static SendTroops? instance;
 		internal City city;
 		internal City target;
@@ -54,7 +54,7 @@ namespace CnV
 			rv.transport = transport;
 			rv.type = type;
 			rv.UpdateTroopItems();
-			rv.Show(true);
+			rv.Show(false);
 			
 		}
 

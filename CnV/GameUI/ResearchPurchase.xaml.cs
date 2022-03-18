@@ -37,7 +37,7 @@ namespace CnV
 			var rv = instance ?? new ResearchPurchase();
 			rv.r = r;
 			rv.OnPropertyChanged();
-			rv.Show(true);
+			rv.Show(false);
 			
 		}
 		private string Req(int r)

@@ -22,8 +22,7 @@
 				   VerticalScrollMode="Enabled"
 				 VerticalAlignment="Top"
 				   ZoomMode="Disabled" 
-				  ViewChanged="scroll_SizeChanged"
-				   SizeChanged="scroll_SizeChanged4"
+				
 				   HorizontalScrollBarVisibility="Disabled"
 				
 				   HorizontalAlignment="Stretch"

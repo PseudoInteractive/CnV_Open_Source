@@ -214,7 +214,7 @@ namespace CnV
 								stone = (int) (stone * ratio);
 							}
 
-							sender.shipsHome -= (ushort) ((wood + stone + 9999) / 10000);
+						//	sender.shipsHome -= (ushort) ((wood + stone + 9999) / 10000);
 
 						}
 						else
@@ -260,11 +260,11 @@ namespace CnV
 								}
 							}
 
-							sender.cartsHome -= (ushort) ((wood + stone + 999) / 1000);
+						//	sender.cartsHome -= (ushort) ((wood + stone + 999) / 1000);
 						}
 
-						sender.wood -= wood;
-						sender.stone -= stone;
+						//sender.wood -= wood;
+						//sender.stone -= stone;
 						BlessedCity.SendDonation(sender.cid, i.cid, wood, stone, useShips);
 						i.wood -= wood;
 						i.stone -= stone;
