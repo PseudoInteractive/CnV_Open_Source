@@ -10,27 +10,29 @@
 	Margin="0"
 	HorizontalAlignment="Stretch"
 	HorizontalContentAlignment="Stretch"
-	VerticalAlignment="Stretch"
+			 VerticalAlignment="Top"
+	
 	Background="{x:Null}"
 	Loaded="UserControl_Loaded"
     mc:Ignorable="d">
 
-	<!--<ScrollViewer  x:Name="scroll"
+	<ScrollViewer  x:Name="scroll"
 					Background="{x:Null}"  
 				   HorizontalScrollMode="Disabled"
-				   VerticalScrollMode="Auto" 
-				  MinZoomFactor="0.5" MaxZoomFactor="2" 
-				   ZoomMode="Enabled" 
+				   VerticalScrollMode="Enabled"
+				 VerticalAlignment="Top"
+				   ZoomMode="Disabled" 
 				  ViewChanged="scroll_SizeChanged"
 				   SizeChanged="scroll_SizeChanged4"
 				   HorizontalScrollBarVisibility="Disabled"
 				
 				   HorizontalAlignment="Stretch"
 				   VerticalScrollBarVisibility="Auto"
-				  HorizontalContentAlignment="Stretch"
-				   
-				>-->
-		<StackPanel x:Name="stackPanel"  Margin="2" Padding="2" Background="{x:Null}"   CornerRadius="0" >
+				  HorizontalContentAlignment="Stretch">
+
+
+
+		<StackPanel x:Name="stackPanel"  Margin="2" Padding="2" Background="{x:Null}"   CornerRadius="0" VerticalAlignment="Top" >
 			<ComboBox  x:Name="cityBox" x:FieldModifier="public" 
 					                Width="200"
 					                IsEditable="True"
@@ -355,5 +357,5 @@
 			</Expander>
 
 		</StackPanel>
-	<!--</ScrollViewer>-->
+	</ScrollViewer>
 </UserControl>
