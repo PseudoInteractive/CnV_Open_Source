@@ -113,7 +113,7 @@ using static GameClient;
 	
 	public static float PlanetDepth(float x, float y, float zBase)
 	{
-		return new Vector2(x, y).CToDepth(zBase);
+		return zBase; //  new Vector2(x, y).CToDepth(zBase);
 	}
 	
 	public static float ConstantDepth(float x, float y, float zBase)

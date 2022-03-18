@@ -341,7 +341,7 @@ namespace CnV
 							var iWidth = image.Width;
 							rv.SetDataRaw(image.Pixels,
 											mip,
-											image.RowPitch,iWidth,(image.Height),arraySlice,(int)0);
+											image.RowPitch,iWidth,(image.Height),arraySlice,(int)image.SlicePitch);
 
 					}
 					catch(Exception ex)
@@ -373,7 +373,7 @@ namespace CnV
 						for(int m = 0;m<mips;++m)
 						{
 							var image = scratch.GetImage(m,arraySlice,0);
-							rv.SetDataRaw(image.Pixels,m,image.RowPitch,(image.Width),(image.Height),arraySlice,0);
+							rv.SetDataRaw(image.Pixels,m,image.RowPitch,(image.Width),(image.Height),arraySlice,(int)image.SlicePitch);
 
 						}
 					}

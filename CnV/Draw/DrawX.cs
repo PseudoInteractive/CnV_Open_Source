@@ -86,7 +86,7 @@ static partial class View
 				fontTexture = CreateFromDDS(AppS.AppFileName("runtime/font.dds"),false);
 
 				fontMaterial = new Material(fontTexture,fontEffect);
-				darkFontMaterial = new Material(fontTexture, darkFontEffect);
+			//	darkFontMaterial = new Material(fontTexture, darkFontEffect);
 
 
 				fontMaterial.effect = fontEffect;

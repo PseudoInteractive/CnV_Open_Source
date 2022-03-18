@@ -250,7 +250,7 @@ namespace CnV
 									{
 
 										// bump
-										var t0 = (2*dtF).Wave().Lerp(1.0f,0.95f);
+										var t0 = (2*dt).Wave().Lerp(1.0f,0.95f);
 										bumpOffset = t0;
 										Assert(t0 >=0.5f);
 										Assert(t0 <=1.0f);
@@ -340,14 +340,14 @@ namespace CnV
 									alpha *= (dtF.Saturate().Bezier(1f,0.625f,0.625f));
 									
 									var cs = CityPointToQuad(bspot,1.2f);
-									float z1 = zCityOverlay*bumpOffset;
+									//float z1 = zCityOverlay*bumpOffset;
 									if(bspot != buildOp.c)
 									{
 										bl = cur.bl;
 										var blendMat = decalBuildingInvalid;
 										float blendOp = (dt*(1.0f/3.0f)).Wave()*0.5f;
 
-										draw.AddQuad(bspot.LayerEffect(),blendMat,cs.c0,cs.c1,(new Color(iAlpha,iAlpha,iAlpha,iAlpha)).Scale(blendOp),depth: z1);
+										draw.AddQuad(bspot.LayerEffect(),blendMat,cs.c0,cs.c1,(new Color(iAlpha,iAlpha,iAlpha,iAlpha)).Scale(blendOp),depth: 0);
 									}
 									else
 									{

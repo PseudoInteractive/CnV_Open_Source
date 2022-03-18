@@ -119,7 +119,7 @@ internal partial class GameClient
 	};
 
 	public static Material fontMaterial;
-	public static Material darkFontMaterial;
+	//public static Material darkFontMaterial;
 	public static BitmapFont.BitmapFont bfont;
 
 
@@ -1676,7 +1676,7 @@ internal partial class GameClient
 
 
 
-	public static void DrawTextBox(string text,Vector2 at,TextFormat format,Color color,byte backgroundAlpha,int layer = Layer.tileText,float _expandX = 2.0f,float _expandY = 0,DepthFunction depth = null,float zBias = -1,float scale = 0)
+	public static void DrawTextBox(string text,Vector2 at,TextFormat format,Color color,byte backgroundAlpha,int layer = Layer.tileText,float _expandX = 2.0f,float _expandY = 0f,DepthFunction depth = null,float zBias = -1,float scale = 0)
 	{
 		DrawTextBox(text,at,format,color,backgroundAlpha == 0 ? new Color() : color.IsDark() ? new Color(byte.MaxValue,byte.MaxValue,byte.MaxValue,backgroundAlpha) : new Color((byte)(byte)0,(byte)0,(byte)0,backgroundAlpha),layer,_expandX,_expandY,depth,zBias,scale);
 	}
@@ -1867,7 +1867,7 @@ internal partial class GameClient
 		if(army is not null)
 		{
 			(var distance, _) = ShellPage.mousePositionW.DistanceToSegment(c0,c1);
-			ToolTips.debugTip = distance.ToString("N0");
+			//ToolTips.debugTip = distance.ToString("N0");
 			if(distance < bestUnderMouseScore)
 			{
 				bestUnderMouseScore = distance;

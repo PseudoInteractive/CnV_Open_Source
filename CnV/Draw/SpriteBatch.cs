@@ -669,27 +669,24 @@ namespace CnV.Draw
 
 		public unsafe void DrawString(BitmapFont.BitmapFont me, string text, Vector2 position, float scale, Color color, int layer, float z, DepthFunction depthFunction, float maxWidth = -1f)
 		{
-			var   isDark      = color.IsDark();
+			//var   isDark      = color.IsDark();
 			var   material    =  GameClient.fontMaterial;
 			var   texture     = GameClient.fontTexture;
 			float texelWidth  = texture.TexelWidth;
 			float texelHeight = texture.TexelHeight;
-			var   drawY       = 0f;
+			var   drawY       = 0;
 			if (!string.IsNullOrEmpty(text))
 			{
-				char previousCharacter;
-				int drawX;
-				int length;
+				char previousCharacter = ' ';
+				int drawX=0;
+				int length= text.Length;;
 
-				length = text.Length;
-				previousCharacter = ' ';
-				drawX = 0;
+				
 				
 				for (int i = 0; i < length; i++)
 				{
-					char character;
 
-					character = text[i];
+					var character = text[i];
 
 					if (character == '\n' || character == '\r')
 					{
@@ -701,12 +698,11 @@ namespace CnV.Draw
 					}
 					else
 					{
-						BitmapFont.Character data;
-						int width;
+						
 
-						data = me[character];
+						var data = me[character];
 						var kern = me.GetKerning(previousCharacter, character);
-						width = data.XAdvance + kern;
+						var width = data.XAdvance + kern;
 
 						if (maxWidth != BitmapFont.BitmapFont.NoMaxWidth && drawX + width >= maxWidth)
 						{

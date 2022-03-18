@@ -89,28 +89,28 @@ namespace CnV
 		{
 			me.vertexTL.Position.X = x0;
 			me.vertexTL.Position.Y = y0;
-			me.vertexTL.Position.Z = depth(x0, y0, depthBase);
+			me.vertexTL.Position.Z = depthBase;
 			me.vertexTL.Color = color;
 			me.vertexTL.TextureCoordinate.X = texCoordTL.X;
 			me.vertexTL.TextureCoordinate.Y = texCoordTL.Y;
 
 			me.vertexTR.Position.X = x1;
 			me.vertexTR.Position.Y = y0;
-			me.vertexTR.Position.Z = depth(x1, y0, depthBase);
+			me.vertexTR.Position.Z = depthBase;
 			me.vertexTR.Color = color;
 			me.vertexTR.TextureCoordinate.X = texCoordBR.X;
 			me.vertexTR.TextureCoordinate.Y = texCoordTL.Y;
 
 			me.vertexBL.Position.X = x0;
 			me.vertexBL.Position.Y = y1;
-			me.vertexBL.Position.Z = depth(x0, y1, depthBase);
+			me.vertexBL.Position.Z = depthBase;
 			me.vertexBL.Color = color;
 			me.vertexBL.TextureCoordinate.X = texCoordTL.X;
 			me.vertexBL.TextureCoordinate.Y = texCoordBR.Y;
 
 			me.vertexBR.Position.X = x1;
 			me.vertexBR.Position.Y = y1;
-			me.vertexBR.Position.Z = depth(x1, y1, depthBase);
+			me.vertexBR.Position.Z = depthBase;
 			me.vertexBR.Color = color;
 			me.vertexBR.TextureCoordinate.X = texCoordBR.X;
 			me.vertexBR.TextureCoordinate.Y = texCoordBR.Y;

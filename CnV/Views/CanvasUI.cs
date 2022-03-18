@@ -336,7 +336,7 @@ using Game;
 								StringBuilder sb = new(toolTip);
 								var info = TileData.instance.GetSpotinfo(c.x,c.y,sb);
 								sb.Append($"\nOnWater:{data.isOnWater}\nShoreline:{info.shoreline}\nOcean:{info.isOcean}");
-								Assert(data.type == info.type);
+							//	Assert(data.type == info.type);
 
 								toolTip = sb.ToString();
 							}
