@@ -32,8 +32,8 @@ namespace CnV
 
 		static readonly Color attackColor = Color.White;
 		static Color ShadowColor(float alpha, bool highlight = false) => new Color(highlight ? 16 : 0, highlight ? 0 : 0, highlight ? 0 : 8, (int)(220 * alpha));
-		static readonly Color defenseColor = new Color(255, 20, 160, 160);
-		static readonly Color defenseArrivedColor = new Color(255, 20, 255, 160);
+		static readonly Color defenseColor = new Color(60, 0, 255, 255);
+		static readonly Color defenseArrivedColor = new Color(60, 30, 255, 255);
 		static readonly Color artColor = Color.DarkBlue;
 		static readonly Color senatorColor = Color.OrangeRed;
 		static readonly Color attackingColor = Color.PaleVioletRed;

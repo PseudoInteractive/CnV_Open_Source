@@ -1133,7 +1133,6 @@ internal partial class GameClient
 												continue;
 												//       c.A = (byte)((int)c.A * 3 / 8); // reduce alpha if not selected
 											}
-											if(i.troops.Any())
 											{
 												var t = (tick * i.sourceCid.CidToRandom().Lerp(1.5f / 512.0f,2.0f / 512f)) + 0.25f;
 												var r = t.Ramp();
@@ -1151,12 +1150,8 @@ internal partial class GameClient
 												}
 												DrawAction(i.TimeToArrival(serverNow),i.journeyTime,r,
 													_c0.ToVector(),
-												_c1.ToVector(),c,troopImages[i.troops.GetIndexType(iType)],
+												_c1.ToVector(),c,i.troops.Any() ? troopImages[i.troops.GetIndexType(iType)] : null,
 												true,i,alpha: alpha,lineThickness: lineThickness,highlight:sel);
-											}
-											else
-											{
-												Assert(false);
 											}
 										}
 										if(wantDef)
@@ -1840,7 +1835,7 @@ internal partial class GameClient
 		{
 			progress = 1.0f;
 			timeToArrival = 0;
-			lineRate *= 1.0f/8.0f;
+			lineRate = (animationT/8.0f) .Wave().Lerp(-lineAnimationRate,lineAnimationRate)*(1f/64.0f);
 		}
 		else
 		{

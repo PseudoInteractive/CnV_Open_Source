@@ -25,6 +25,7 @@ namespace CnV
 		internal static SendResDialogue? instance;
 		protected override string title => $"Send from {source} to {destination}"; 
 		internal Resources res;
+		
 		internal City source;
 		internal City destination;
 
@@ -91,7 +92,7 @@ namespace CnV
 
 		private void SendClick(object sender,RoutedEventArgs e)
 		{
-
+		
 		}
 
 		private void transport_SelectionChange(object sender,SelectionChangedEventArgs e)

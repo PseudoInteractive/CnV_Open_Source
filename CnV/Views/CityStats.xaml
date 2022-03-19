@@ -44,16 +44,16 @@
 					   Background="{StaticResource ExpanderBrushHeader}"
 					   RightTapped="{x:Bind views:ShellPage.BuildHomeRightTapped}"
 					   >
-			<ComboBox.ItemTemplate>
-				<DataTemplate x:Name="SingleLineDataTemplate" x:DataType="cnv:City">
-					<StackPanel Orientation="Horizontal" Height="32" >
-						<Image Source="{x:Bind icon}" Height="32" Width="32" Stretch="Fill" VerticalAlignment="Center" IsTapEnabled="True" Tapped="CityIconTapped"/>
-						<TextBlock Text="{x:Bind nameAndRemarks}" VerticalAlignment="Center" />
-					</StackPanel>
-				</DataTemplate>
-			</ComboBox.ItemTemplate>
+				<ComboBox.ItemTemplate>
+					<DataTemplate x:Name="SingleLineDataTemplate" x:DataType="cnv:City">
+						<StackPanel Orientation="Horizontal" Height="32" >
+							<Image Source="{x:Bind icon}" Height="32" Width="32" Stretch="Fill" VerticalAlignment="Center" IsTapEnabled="True" Tapped="CityIconTapped"/>
+							<TextBlock Text="{x:Bind nameAndRemarks}" VerticalAlignment="Center" />
+						</StackPanel>
+					</DataTemplate>
+				</ComboBox.ItemTemplate>
 			</ComboBox>
-		
+
 			<Expander Header="Incoming" Expanding="Expander_Expanding"  Visibility="Collapsed" x:Name="expIncoming" HorizontalAlignment="Stretch" >
 			</Expander>
 			<Expander  Expanding="Expander_Expanding" IsExpanded="True"   x:Name="expResource" HorizontalAlignment="Stretch"  >
@@ -62,11 +62,11 @@
 				</ToolTipService.ToolTip>
 				<Expander.Header   >
 					<Border Background="{StaticResource ExpanderBrushHeader}" BorderThickness="0" Padding="3" CornerRadius="{StaticResource baseCR}" >
-						
+
 						<TextBlock Text ="Resources" Margin="0"   Style="{StaticResource TextBlockMedium}"    />
 					</Border>
 				</Expander.Header>
-				
+
 				<tk:WrapPanel Orientation="Horizontal" Background="{x:Null}" HorizontalSpacing="4" VerticalSpacing="4" >
 					<StackPanel CornerRadius="{StaticResource baseCR}" Orientation="Vertical"  Padding="2"   Width="90" Background="{StaticResource ExpanderBrushContent}"
 								Tapped="WoodTap">
@@ -92,13 +92,13 @@
 					</StackPanel>
 				</tk:WrapPanel>
 			</Expander>
-			
+
 			<!--Build Queue-->
 
 			<Expander  Expanding="Expander_Expanding" IsExpanded="True" x:Name="expBuildQueue" Background="{x:Null}"   >
-				
+
 				<Expander.Header   >
-					
+
 					<Border Background="{StaticResource ExpanderBrushHeader}" BorderThickness="1" Padding="3" CornerRadius="{StaticResource baseCR}" >
 						<TextBlock x:Name="queueText" RightTapped="QueueRightTapped" Text ="Queue" Margin="0"  Style="{StaticResource BodyTextBlockStyle}"   />
 					</Border>
@@ -121,21 +121,21 @@
 						  MaxHeight="200"  >
 					<ListView.ItemTemplate>
 						<DataTemplate x:DataType="cnv:BuildItem">
-								<Grid  Padding="1" ContextRequested="{x:Bind ContextRequested}" >
+							<Grid  Padding="1" ContextRequested="{x:Bind ContextRequested}" >
 								<Grid.ColumnDefinitions>
 									<ColumnDefinition Width="*"/>
 								</Grid.ColumnDefinitions>
 								<Image Source="{x:Bind image}" Width="32" Height="32" HorizontalAlignment="Left" />
-									<TextBlock Text="{x:Bind opText}" Margin="36,0,0,0"  	/>
-									<TextBlock Text="{x:Bind timeText,Mode=OneWay}" HorizontalAlignment="Right" Margin="0,0,4,0"	/>
+								<TextBlock Text="{x:Bind opText}" Margin="36,0,0,0"  	/>
+								<TextBlock Text="{x:Bind timeText,Mode=OneWay}" HorizontalAlignment="Right" Margin="0,0,4,0"	/>
 							</Grid>
 						</DataTemplate>
-						
-						
+
+
 					</ListView.ItemTemplate>
 					<ListView.ItemContainerTransitions>
 						<TransitionCollection>
-					 <!--  Remove all -->
+							<!--  Remove all -->
 						</TransitionCollection>
 					</ListView.ItemContainerTransitions>
 
@@ -159,12 +159,12 @@
 							<Setter Property="Background" Value="#8020"/>
 						</Style>
 					</ListView.ItemContainerStyle>-->
-					
+
 				</ListView>
 			</Expander>
 
 			<!--Buildings-->
-			
+
 			<Expander    Expanding="Expander_Expanding" x:Name="expBuildings" IsExpanded="True" >
 				<Expander.Header   >
 					<Border Background="{StaticResource ExpanderBrushHeader}" BorderThickness="1" Padding="3" CornerRadius="{StaticResource baseCR}" >
@@ -207,7 +207,7 @@
 					</GridView.ItemsPanel>
 				</GridView>
 			</Expander>
-			
+
 			<!--Enlistmesh-->
 
 			<Expander  IsExpanded="True" Expanding="Expander_Expanding" x:Name="expEnlistment" ContextRequested="EnlistmentContextRequested"  >
@@ -236,11 +236,6 @@
 
 
 					</ListView.ItemTemplate>
-					<ListView.ItemContainerTransitions>
-						<TransitionCollection>
-							<!--  Remove all -->
-						</TransitionCollection>
-					</ListView.ItemContainerTransitions>
 
 					<!-- The ItemsStackPanel must be edited to update the following two properties -->
 					<!-- These properties allow the list to grow from the bottom -->
@@ -266,16 +261,20 @@
 				</ListView>
 
 			</Expander>
+
+
+			<!--Commands-->
+
 			<Expander  IsExpanded="True" Expanding="Expander_Expanding" x:Name="expCommands"  >
 				<Expander.Header>
 					<TextBlock Text="{x:Bind commandsTitle, Mode=OneWay}" Style="{StaticResource TextBlockMedium}"  />
 				</Expander.Header>
-				
+
 				<ListView x:Name="CommandsListView" x:FieldModifier="public"  
 						  SelectionMode="Extended"  Background="{StaticResource ExpanderBrushContentAlt}"
 						  Margin="0" Padding="0" HorizontalAlignment="Stretch" 
 						
-						
+						HorizontalContentAlignment="Stretch"
 						 
 						ItemsSource="{x:Bind commandItems,Mode=OneWay}"
 						  MaxHeight="200"  >
@@ -283,16 +282,11 @@
 						<DataTemplate x:DataType="cnv:CommandItem">
 							<StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch" ToolTipService.ToolTip="{x:Bind toolTip}" ContextRequested="{x:Bind ContextRequested}"   >
 								<Image Source="{x:Bind action}"  />
-								
-								<HyperlinkButton Content="{x:Bind targetCoords}" Click="{x:Bind TargetClick}" />
+
+								<HyperlinkButton Content="{x:Bind info}" Click="{x:Bind TargetClick}" />
 							</StackPanel>
 						</DataTemplate>
 					</ListView.ItemTemplate>
-					<ListView.ItemContainerTransitions>
-						<TransitionCollection>
-							<!--  Remove all -->
-						</TransitionCollection>
-					</ListView.ItemContainerTransitions>
 
 					<!-- The ItemsStackPanel must be edited to update the following two properties -->
 					<!-- These properties allow the list to grow from the bottom -->
@@ -316,43 +310,92 @@
 					</ListView.ItemContainerStyle>-->
 
 				</ListView>
-				
+
 			</Expander>
 			<Expander  IsExpanded="True" Expanding="Expander_Expanding" x:Name="expReinforcements"  >
-			<Expander.Header   >
-				<Border   CornerRadius="{StaticResource baseCR}" >
-					<TextBlock x:Name="troopsHeaderText"  Text ="Troops" Margin="0"  Style="{StaticResource TextBlockMedium}"   />
-				</Border>
-			</Expander.Header>
-			<StackPanel>
-				<Border   CornerRadius="4" Margin="0" Padding="4" Background="{StaticResource ExpanderBrushHeader}" >
-					
+				<Expander.Header   >
+					<Border   CornerRadius="{StaticResource baseCR}" >
+						<TextBlock x:Name="troopsHeaderText"  Text ="Troops" Margin="0"  Style="{StaticResource TextBlockMedium}"   />
+					</Border>
+				</Expander.Header>
+				<StackPanel>
+					<Border   CornerRadius="4" Margin="0" Padding="4" Background="{StaticResource ExpanderBrushHeader}" >
+
 						<StackPanel>
 							<TextBlock Text="Owned" Style="{StaticResource TextBlockMedium}" Margin="4" />
 							<TextBlock Text="{x:Bind TroopsOwnedS, Mode=OneWay}"  Style="{StaticResource TextBlockMedium}"  
 									   TextWrapping="Wrap" FontSize="16" MaxLines="8" Margin="8,2,2,2" />
 						</StackPanel>
-				</Border>
-				<Border   CornerRadius="4" Margin="0" Padding="4" Background="{StaticResource ExpanderBrushHeader}" >
+					</Border>
+					<Border   CornerRadius="4" Margin="0" Padding="4" Background="{StaticResource ExpanderBrushHeader}" >
 
-					<StackPanel>
-						<TextBlock Text="Here" Style="{StaticResource TextBlockMedium}" Margin="4" />
-						<TextBlock Text="{x:Bind TroopsHomeS, Mode=OneWay}"  Style="{StaticResource TextBlockMedium}"  
+						<StackPanel>
+							<TextBlock Text="Here" Style="{StaticResource TextBlockMedium}" Margin="4" />
+							<TextBlock Text="{x:Bind TroopsHomeS, Mode=OneWay}"  Style="{StaticResource TextBlockMedium}"  
 									   TextWrapping="Wrap" FontSize="16" MaxLines="8" Margin="8,2,2,2" />
-					</StackPanel>
-				</Border>
-				<Border   CornerRadius="4" Margin="0" Padding="4" Background="{StaticResource ExpanderBrushHeader}" >
+						</StackPanel>
+					</Border>
+					<Border   CornerRadius="4" Margin="0" Padding="4" Background="{StaticResource ExpanderBrushHeader}" >
 
-					<StackPanel>
-						<TextBlock Text="Incoming" Style="{StaticResource TextBlockMedium}" Margin="4" />
-						<TextBlock Text="{x:Bind IncomingReinforcements, Mode=OneWay}"  Style="{StaticResource TextBlockMedium}"  
+						<StackPanel>
+							<TextBlock Text="Incoming" Style="{StaticResource TextBlockMedium}" Margin="4" />
+							<TextBlock Text="{x:Bind IncomingReinforcements, Mode=OneWay}"  Style="{StaticResource TextBlockMedium}"  
 									   TextWrapping="Wrap" FontSize="16" MaxLines="8" Margin="8,2,2,2" />
-					</StackPanel>
-				</Border>
-			</StackPanel>
-		</Expander>
-			<Expander Header="Trades" Expanding="Expander_Expanding" x:Name="expTrades" Background="{x:Null}"  >
+						</StackPanel>
+					</Border>
+				</StackPanel>
+			</Expander>
 
+
+			<!--Trades-->
+
+			<Expander Expanding="Expander_Expanding" x:Name="expTrades"  >
+				<Expander.Header>
+					<TextBlock Text="{x:Bind tradesTitle, Mode=OneWay}" Style="{StaticResource TextBlockMedium}"  />
+				</Expander.Header>
+
+				<ListView x:Name="TradesListView" x:FieldModifier="public"  
+						  SelectionMode="Extended"  Background="{StaticResource ExpanderBrushContentAlt}"
+						  Margin="0" Padding="0" HorizontalAlignment="Stretch" 
+						
+						HorizontalContentAlignment="Stretch"
+						 
+						ItemsSource="{x:Bind tradeItems,Mode=OneWay}"
+						  MaxHeight="200"  >
+					<ListView.ItemTemplate>
+						<DataTemplate x:DataType="cnv:TradeItem">
+							<StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch"
+										 ToolTipService.ToolTip="{x:Bind toolTip}" ContextRequested="{x:Bind ContextRequested}"   >
+								<Image Source="{x:Bind action}"  />
+
+								<HyperlinkButton Content="{x:Bind info}" Click="{x:Bind TargetClick}" />
+							</StackPanel>
+						</DataTemplate>
+					</ListView.ItemTemplate>
+
+
+					<!-- The ItemsStackPanel must be edited to update the following two properties -->
+					<!-- These properties allow the list to grow from the bottom -->
+					<ListView.ItemsPanel>
+						<ItemsPanelTemplate>
+							<ItemsStackPanel 
+								ItemsUpdatingScrollMode="KeepItemsInView" 
+								
+                            VerticalAlignment="Center"/>
+						</ItemsPanelTemplate>
+					</ListView.ItemsPanel>
+					<!-- This setter property is created so ListViewItems correctly align to the left or right. -->
+					<!--<ListView.ItemContainerStyle>
+						<Style TargetType="ListViewItem">
+							<Setter Property="Margin" Value="1" />
+							<Setter Property="Padding" Value="0" />
+							<Setter Property="VerticalAlignment" Value="Center"/>
+							<Setter Property="VerticalContentAlignment" Value="Center"/>
+							<Setter Property="Background" Value="#8020"/>
+						</Style>
+					</ListView.ItemContainerStyle>-->
+
+				</ListView>
 			</Expander>
 
 		</StackPanel>

@@ -43,7 +43,7 @@ namespace CnV
 
 
 			for(int i = 0;i<Troops.ttCount;++i)
-				troopItems[i] = new(target:target, city:city,type:(byte)i,wantMax:true) ;
+				troopItems[i] = new(target:target, city:city,type:(byte)i,wantMax:false) ;
 
 			OnPropertyChanged();
 		}
@@ -56,6 +56,9 @@ namespace CnV
 			rv.viaWater = viaWater;
 			rv.type = type;
 			rv.UpdateTroopItems();
+			if(isSettle)
+				rv.troopItems[Troops.ttMagistra].count = 1;
+
 			rv.Show(false);
 			
 		}
@@ -93,6 +96,19 @@ namespace CnV
 
 
 		internal SendTroopItem [] troopItems;
+		private void ClearClick(object sender,RoutedEventArgs e)
+		{
+			for(int i = 0;i<Troops.ttCount;++i)
+				troopItems[i].count = 0;
+			Changed();
+		}
+		private void MaxClick(object sender,RoutedEventArgs e)
+		{
+			for(var i = Troops.ttZero;i<Troops.ttCount;++i)
+				troopItems[i].count = city.troopsOwned.GetCount(i);
+			Changed();
+		}
+
 
 		private void SendTroopsClick(object sender,RoutedEventArgs e)
 		{
@@ -138,7 +154,11 @@ namespace CnV
 		public static void Changed(string? member = null)
 		{
 			if(instance is not null)
+			{
 				instance.OnPropertyChanged(member);
+				foreach(var i in instance.troopItems)
+					i.OnPropertyChanged(member);
+			}
 		}
 	}
 
@@ -168,7 +188,8 @@ namespace CnV
 			count = city.troopsHome.GetCount(type);
 			OnPropertyChanged(nameof(count));
 		}
-		public string troopsHome => city.troopsHome.GetCount(type).Format();
+		public string troopsHome => $"{city.troopsHome.GetCount(type).Format()}/{city.troopsOwned.GetCount(type).Format()}";
+
 		public event PropertyChangedEventHandler? PropertyChanged;
 		public void OnPropertyChanged(string? member = null)
 		{

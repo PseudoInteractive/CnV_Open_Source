@@ -404,6 +404,7 @@ namespace CnV
 		internal string IncomingReinforcements => city?.incomingReinforcements.Format(separator: ',');
 
 		public string commandsTitle => $"Commands {commandItems.Count}";
+		public string tradesTitle => $"Trades {tradeItems.Count}";
 
 		//public SolidColorBrush ResourceForeground(int resId) => new SolidColorBrush(Windows.UI.Color.FromArgb(255,(byte)(31+64*resId),128,128) );
 		//public string ResourceStr(int resId) => $"{city?.resources[resId]:N0}";
@@ -697,6 +698,7 @@ namespace CnV
 		internal ObservableCollection<BuildItem> buildQueue = new();
 		internal ObservableCollection<RecruitItem> recruitQueue = new();
 		internal ObservableCollection<CommandItem> commandItems= new();
+		internal ObservableCollection<TradeItem> tradeItems= new();
 		private void UserControl_Loaded(object sender,RoutedEventArgs e)
 		{
 			Assert(instance is null);
@@ -1048,8 +1050,9 @@ namespace CnV
 		internal Army army;
 		
 		public BitmapImage action { get; set; }
-		public string sourceCoords=> army.sourceCity.nameAndRemarksAndPlayer;
-		public string targetCoords=> army.targetCity.nameAndRemarksAndPlayer;
+	//	public string sourceCoords=> army.sourceCity.nameAndRemarksAndPlayer;
+	//	public string targetCoords=> army.targetCity.nameAndRemarksAndPlayer;
+		public string info => $"{army.time.Format()} to {army.targetPlayer}";
 
 		internal void SourceClick(object sender,RoutedEventArgs e)
 		{
@@ -1119,4 +1122,80 @@ namespace CnV
 		public event PropertyChangedEventHandler? PropertyChanged;
 	}
 
+	public class TradeItem:INotifyPropertyChanged
+	{
+		internal Army army;
+		
+		public BitmapImage action { get; set; }
+	//	public string sourceCoords=> army.sourceCity.nameAndRemarksAndPlayer;
+	//	public string targetCoords=> army.targetCity.nameAndRemarksAndPlayer;
+		public string info => $"{army.time.Format()} to {army.targetPlayer}";
+
+		internal void SourceClick(object sender,RoutedEventArgs e)
+		{
+			CityUI.ShowCity(army.sourceCid,false);
+		}
+		internal void TargetClick(object sender,RoutedEventArgs e)
+		{
+			CityUI.ShowCity(army.targetCid,false);
+		}
+
+
+		internal string toolTip => army.troops.Format(separator:',');
+
+		public TradeItem(Army army)
+		{
+			this.army = army;
+			
+			action =  ImageHelper.Get(  army.isReturn? "Region/UI/icon_player_own_troops_ret.png"  : 
+								army.isSettle ? "Region/UI/icon_player_own_settlement.png" : 
+								army.isDefense ? "Region/UI/icon_player_own_support_inc.png" :
+								"Region/UI/icon_player_own_attack.png");
+			
+		}
+		
+		public void ContextRequested(UIElement sender,ContextRequestedEventArgs args)
+		{
+			args.Handled    = true;
+			var flyout = new MenuFlyout();
+			flyout.SetXamlRoot(sender);
+			
+			
+			flyout.AddItem("Return",Symbol.Undo,() =>
+			{
+				new CnVEventReturnTroops(army).EnqueueAsap();
+				
+			});
+			
+			flyout.AddItem("Cancel Selected",Symbol.Cut,() =>
+			{
+			});
+			flyout.AddItem("Cancel all",Symbol.Clear,() =>
+			{
+			});
+			
+			// Todo: Sort
+
+			if(args.TryGetPosition(sender,out var c))
+			{
+				flyout.ShowAt(sender,c);
+			}
+			else if(args.TryGetPosition(CityStats.instance,out var c2))
+			{
+				flyout.ShowAt(CityStats.instance,c2);
+			}
+			else
+			{
+				flyout.ShowAt(sender,new());
+				Assert(false); 
+			}
+			//VisualTreeHelper.GetParent(args.OriginalSource
+			//LogJson(args);
+			//Log(args.OriginalSource);
+			//LogJson(sender);
+		}
+		public void OnPropertyChanged(string members = null) => PropertyChanged?.Invoke(this,new(members));
+
+		public event PropertyChangedEventHandler? PropertyChanged;
+	}
 }
