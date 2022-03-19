@@ -20,6 +20,7 @@ namespace CnV
 		protected virtual string title => "Title";
 
 		protected TextBlock titleText;
+		protected Button closeButton;
 		public UIElementCollection TitleGrid
 	{
 		get { return(UIElementCollection) GetValue(TitleGridProperty);}
@@ -47,7 +48,8 @@ namespace CnV
 		internal static List<DialogG> all = new();
 		public DialogG()
 		{
-			ManipulationMode = ManipulationModes.TranslateX|ManipulationModes.TranslateY;
+			IsTabStop=true;
+		//	ManipulationMode = ManipulationModes.TranslateX|ManipulationModes.TranslateY;
 			IsExpanded=true;
 			
 			var brush = AppS.Brush(0xFF150030u);
@@ -69,29 +71,29 @@ namespace CnV
 			};
 			
 			grid.Children.Add(titleText);
-			var button = new Button() {
+			closeButton = new Button() {
 				
 				Content="X", 
 				HorizontalAlignment=HorizontalAlignment.Right,Width=40,
 				
 				Style = (Style)App.instance.Resources["ButtonMedium"],Margin=new(16,0,8,0),Padding=new(4,0,4,0) };
-			button.Click += Hide;
+			closeButton.Click += Hide;
 			var headerB = new Button() { HorizontalContentAlignment=HorizontalAlignment.Stretch,
 				VerticalContentAlignment=VerticalAlignment.Stretch,CornerRadius=new(2),Margin=new(),Padding=new(),
 				Background=AppS.Brush(0xff000000u) };
 			headerB.Content = grid;
-			Grid.SetColumn(button,2);
+			Grid.SetColumn(closeButton,2);
 			
-			grid.Children.Add(button);
-			IsTabStop=true;
-			TabFocusNavigation = KeyboardNavigationMode.Cycle;
+			grid.Children.Add(closeButton);
+		//	IsTabStop=true;
+		//	TabFocusNavigation = KeyboardNavigationMode.Cycle;
 			base.Header =headerB;
 			//grid.IsTapEnabled=true;
 			//grid.Tapped +=Grid_Tapped;
 			
 			
 			Canvas.SetLeft(this,260);
-			this.ManipulationDelta+=this.OnManipulationDelta;
+		//	this.ManipulationDelta+=this.OnManipulationDelta;
 			headerB.ManipulationMode= ManipulationModes.TranslateX|ManipulationModes.TranslateY;
 			headerB.ManipulationDelta+=this.OnManipulationDelta;
 			lock(all)
@@ -146,14 +148,14 @@ namespace CnV
 					IsExpanded=true;
 					titleText.Text = title;
 					ShellPage.gameUIFrame.Children.Add(this);
-					var focusItem = FocusManager.FindFirstFocusableElement(Content as DependencyObject);
+					var focusItem = closeButton; 
 					
 					isAnimating=true;
 					await Opening();
 					isAnimating=false;
 					if(focusItem is not null)
 					{
-						await Task.Delay(0);
+						await Task.Delay(100);
 						await FocusManager.TryFocusAsync(focusItem,FocusState.Programmatic);
 					}
 				}

@@ -53,7 +53,7 @@ namespace CnV
                 string rv = "Troops Home/Total";
                 foreach (var ttc in city.troopsOwned)
                 {
-                    rv += $"\n{Troops.ttNameWithCaps[ttc.type]}: {city.troopsHome.GetCount(ttc.type),4:N0}/{ttc.count,4:N0}";
+                    rv += $"\n{Troops.ttNames[ttc.type]}: {city.troopsHome.GetCount(ttc.type),4:N0}/{ttc.count,4:N0}";
                 }
                 return rv;
             }
@@ -98,7 +98,7 @@ namespace CnV
         public TType type;
 
         public BitmapImage icon => ImageHelper.Get($"Icons/troops{type}.png");
-        public string troopType => Troops.ttNameWithCaps[type];
+        public string troopType => Troops.ttNames[type];
         public uint send { get => supporter.tSend.GetCount(type); set => supporter.tSend = new(new TroopTypeCount( type,value)) ; }
         public uint home { get => supporter.city.troopsHome.GetCount(type); }
         public uint total { get => supporter.city.troopsOwned.GetCount(type); }

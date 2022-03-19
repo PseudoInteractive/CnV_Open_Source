@@ -65,7 +65,7 @@ namespace CnV
 			internal int targetCid => firstArmy.targetCid;
 			internal int sourceCid => firstArmy.sourceCid;
 
-			public string intel => $"{firstArmy.miscInfo}, {ttNameWithCaps[firstArmy.troops.GetPrimaryTroopType()]}";
+			public string intel => $"{firstArmy.miscInfo}, {ttNames[firstArmy.troops.GetPrimaryTroopType()]}";
 			public string note => $"{Player.IdToName(targetCid.CidToPid())} attacker: {Player.IdToName(sourceCid.CidToPid())} to {targetCid.CidToContinentDigits()} {first.Format()} first: {intel}) to {City.Get(targetCid).nameAndRemarks} at {first.Format()}{( count>1?$" and {count-1} others":"")}";
 		}
 

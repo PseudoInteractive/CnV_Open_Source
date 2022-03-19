@@ -687,8 +687,8 @@ internal partial class GameClient
 									var cc1 = wc + shift;
 									var sy = off / tile.columns;
 									var sx = off - sy * tile.columns;
-									var uv0 = new System.Numerics.Vector2((float)(sx * tile.scaleXToU),(float)(sy * tile.scaleYToV));
-									var uv1 = new System.Numerics.Vector2((float)((sx + 1) * tile.scaleXToU),(float)((sy + 1) * tile.scaleYToV));
+									var uv0 = new System.Numerics.Vector2((float)(sx / tile.scaleUToX),(float)(sy /tile.scaleVToY));
+									var uv1 = new System.Numerics.Vector2((float)((sx + 1) / tile.scaleUToX),(float)((sy + 1) / tile.scaleVToY));
 									Assert(uv0.X.IsInRange(0,1));
 									Assert(uv0.Y.IsInRange(0,1));
 									Assert(uv1.X.IsInRange(0,1));

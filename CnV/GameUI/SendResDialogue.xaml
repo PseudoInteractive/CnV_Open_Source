@@ -70,7 +70,7 @@
 			<RadioButton Content="{x:Bind shipsStr, Mode=OneWay}" />
 
 		</RadioButtons>
-		<Button Grid.Row="1" HorizontalAlignment="Right" Content="Send" Click="SetClick" />
+		<Button Grid.Row="1" HorizontalAlignment="Right" Content="Send" Click="SendClick" />
 		
 	</Grid>
 </cnv:DialogG>

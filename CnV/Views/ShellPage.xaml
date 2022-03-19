@@ -370,18 +370,28 @@
 							HorizontalAlignment="Stretch"
 							 Orientation="Horizontal" Minimum="0" Maximum="10" SmallChange="1" 
 							 StepFrequency="1"  Margin="2,4"  />
-					<StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch" Spacing="8"  >
-						<Button Content="{tkui:SymbolIcon Symbol=Previous}" Click="TimeBackClick" ToolTipService.ToolTip="Rewind to start of server to replay [for test], not that building while building is playing back can cause your queue to get stuck.  If stuck, remove queued items"/>
+					
+					<tk:WrapPanel Orientation="Horizontal" HorizontalAlignment="Stretch" HorizontalSpacing="3" VerticalAlignment="3" Margin="2"  >
+						<Button Content="{tkui:SymbolIcon Symbol=Undo}" Click="TimeResetClick" ToolTipService.ToolTip="Rewind to start of server to replay [for test], not that building while building is playing back can cause your queue to get stuck.  If stuck, remove queued items"/>
+						<Button Click="TimeToggleClearFuture" ToolTipService.ToolTip="Clear/Undo any events that take place in the future.  If you go back in time and you would like to resume editing from a point earlier only press this before doing anything to prevent prior events from playing back over top new events" >
+							<Button.Content>
+								<SymbolIcon x:Name ="timeTogglePlayIcon" Symbol="Remote" />
+							</Button.Content>
+						</Button>
+					</tk:WrapPanel>
+					<tk:WrapPanel Orientation="Horizontal" HorizontalAlignment="Stretch" HorizontalSpacing="3" VerticalAlignment="3" Margin="2"  >
+						<Button Content="{tkui:SymbolIcon Symbol=Previous}" Click="TimeBackClick" ToolTipService.ToolTip="Go back in time 5 minutes * (multiplied by timescale) this may be slow"/>
 						<Button Click="TimeTogglePlay" ToolTipService.ToolTip="Pause/Resume server" >
 							<Button.Content>
-								<SymbolIcon x:Name ="timeTogglePlayIcon" Symbol="Pause" />
+								<SymbolIcon  Symbol="Pause" />
 							</Button.Content>
+							
 						</Button>
 						<Button Content="{tkui:SymbolIcon Symbol=Next}" Click="TimeForwardClick" ToolTipService.ToolTip="Move forward in time by 5 minutes * (multiplied by timescale)" />
 
 
-					</StackPanel>
-					
+					</tk:WrapPanel>
+					<NumberBox x:Name="gotoTimeOffset" Value ="5" Description="Step time offset (minutes)"  />
 				</StackPanel>
 			</Expander>
 

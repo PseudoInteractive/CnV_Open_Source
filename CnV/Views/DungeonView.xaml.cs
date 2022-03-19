@@ -264,7 +264,7 @@ namespace CnV.Views
 			{
 				if (IsRaider(i))
 				{
-					var but = new ToggleMenuFlyoutItem() { IsChecked = Settings.includeRaiders[i], DataContext = (object)i, Text = ttNameWithCaps[i] };
+					var but = new ToggleMenuFlyoutItem() { IsChecked = Settings.includeRaiders[i], DataContext = (object)i, Text = ttNames[i] };
 					flyout.Items.Add(but);
 				}
 			}

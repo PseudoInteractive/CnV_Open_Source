@@ -1583,14 +1583,20 @@ namespace CnV.Views
 
 		private void TimeBackClick(object sender,RoutedEventArgs e)
 		{
-			Sim.ResetSim();
+		
+			Sim.ResetSim(CnVServer.simTime - TimeSpanS.FromMinutes(gotoTimeOffset.Value));
 		}
 
-
+		private async void TimeResetClick(object sender,RoutedEventArgs e)
+		{
+			if (await AppS.DoYesNoBox("Rewind","This takes you back to the start, are you sure?").ConfigureAwait(false) != 1)
+			return;
+			Sim.ResetSim(null);
+		}
 
 		private void TimeForwardClick(object sender,RoutedEventArgs e)
 		{
-			CnVServer.GoToTime(CnVServer.simTime + TimeSpanS.FromMinutes((IServerTime.timeScale*5.0f).Min(24.0f*60)));
+			CnVServer.GoToTime(CnVServer.simTime + TimeSpanS.FromMinutes(gotoTimeOffset.Value));
 		}
 
 		private void TimeTogglePlay(object sender,RoutedEventArgs e)
@@ -1605,7 +1611,10 @@ namespace CnV.Views
 			}
 		}
 
-		
+		private void TimeToggleClearFuture(object sender,RoutedEventArgs e)
+		{
+			CnVServer.ClearFutureEvents();
+		}
 
 		
 
@@ -1667,8 +1676,8 @@ namespace CnV.Views
 									// todo change this
 									Spot.selected = Spot.selected.Where(cid => City.TestContinentAndFlagFilter(cid))
 										.ToHashSet(); // filter selected
-									CityUI.SyncCityBox();
 									CityUI.cityListChanged?.Invoke(l);
+									CityUI.SyncCityBox();
 									//   if (MainPage.IsVisible())
 
 
@@ -1681,6 +1690,13 @@ namespace CnV.Views
 
 								});
 		}
+
+		//private void GotoTimeOffset(object sender,RoutedEventArgs e)
+		//{
+		//	var dt = TimeSpanS.FromMinutes( gotoTimeOffset.Value );
+		//	gotoTimeFlyout.Hide();
+		//	CnVServer.GoToTime(CnVServer.simTime + dt);
+		//}
 
 		private void CityListSubmitted(ComboBox sender,ComboBoxTextSubmittedEventArgs args)
 		{

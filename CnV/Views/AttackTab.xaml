@@ -28,7 +28,7 @@
 				<winui:NumberBox Header="Max travel hours Sen"
                              Style="{StaticResource NumberBoxSmall}"
                              Value="{x:Bind game:AttackPlan.plan.attackMaxTravelHoursSen, Mode=TwoWay}"
-                             ToolTipService.ToolTip="Senator targets that require longer travel times are ignored"
+                             ToolTipService.ToolTip="Magistra targets that require longer travel times are ignored"
                              NumberFormatter="{x:Bind cnv:App.formatter2Digit,Mode=OneTime}"
                              SmallChange="0.25" />
 				<winui:NumberBox Header="Max travel hours SE"
@@ -204,7 +204,7 @@
                            Content="Sen Arrival..."
 	    	               Click="ArrivalSenTapped"
                             Style="{StaticResource ButtonSmall}"
-                           ToolTipService.ToolTip="Time at which Senator sieges arrive." />
+                           ToolTipService.ToolTip="Time at which Magistra sieges arrive." />
 				<Button x:Name="arrivalSE"
                            Content="SE Arrival..."
     		               Click="ArrivalSETapped"

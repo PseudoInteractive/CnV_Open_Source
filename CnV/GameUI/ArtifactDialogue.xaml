@@ -34,7 +34,7 @@
 					 />
 			<StackPanel Grid.Row="1" Grid.Column="2" Orientation="Horizontal" Margin="8,0,0,0" >
 				<TextBlock Text="{x:Bind a.ownedStr,Mode=OneWay}" Style="{StaticResource TextBlockMedium}"  Margin="3" VerticalAlignment="Center"  TextAlignment="Center" />
-				<NumberBox  x:Name="count" Style="{StaticResource NumberBoxSmall}"   Margin="8,2" Width="70" />
+			<NumberBox  x:Name="count" Style="{StaticResource NumberBoxSmall}"   Margin="8,2,2,2" Width="100" ValueChanged="FilterNans" />
 				<TextBlock Text="{x:Bind priceStr,Mode=OneWay}" Style="{StaticResource TextBlockMedium}"  Margin="3" VerticalAlignment="Center"  TextAlignment="Center" />
 				
 				

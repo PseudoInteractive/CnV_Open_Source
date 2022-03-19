@@ -827,10 +827,10 @@ namespace CnV.Views
 		{
 			var combo = new RadioButtons() { Header = "Type" };
 			combo.Items.Add("SE");
-			combo.Items.Add("Senator");
+			combo.Items.Add(sMagistra);
 			combo.Items.Add("Assault");
 			combo.Items.Add("Fake SE");
-			combo.Items.Add("Fake Senator");
+			combo.Items.Add("Fake Magistra");
 			combo.Items.Add("Fake Assault");
 			combo.Items.Add("None");
 			//	combo.SelectedIndex. = Settings.chooseAttackTypeUpdate;
@@ -2231,7 +2231,7 @@ namespace CnV.Views
 
 		public override string ToString() => name;
 
-		public static TroopTypeItemSource[] all = Troops.ttNameWithCaps.Select( (a,i) => new TroopTypeItemSource() { name = a, TroopType = (byte)i} ).ToArray();
+		public static TroopTypeItemSource[] all = Troops.ttNames.Select( (a,i) => new TroopTypeItemSource() { name = a, TroopType = (byte)i} ).ToArray();
 	}
 
 }

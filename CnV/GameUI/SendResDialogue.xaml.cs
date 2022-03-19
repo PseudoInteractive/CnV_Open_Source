@@ -89,7 +89,7 @@ namespace CnV
 		private void SetMax2(object sender,RoutedEventArgs e) => SetMax(2);
 		private void SetMax3(object sender,RoutedEventArgs e) => SetMax(3);
 
-		private void SetClick(object sender,RoutedEventArgs e)
+		private void SendClick(object sender,RoutedEventArgs e)
 		{
 
 		}

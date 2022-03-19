@@ -212,7 +212,7 @@
 
 			<Expander  IsExpanded="True" Expanding="Expander_Expanding" x:Name="expEnlistment" ContextRequested="EnlistmentContextRequested"  >
 				<Expander.Header>
-					<Button Content="Enlistment" Style="{StaticResource ButtonMedium}" Click="EnlistmentClick" />
+					<Button Content="Enlistment" Style="{StaticResource ButtonMedium}" Margin="4,1,4,1" Click="EnlistmentClick" Padding="8,2" />
 				</Expander.Header>
 				<ListView x:Name="RecruitQueueListView" x:FieldModifier="public"  
 						  SelectionMode="Extended"  Background="{StaticResource ExpanderBrushContentAlt}"
@@ -345,7 +345,7 @@
 
 					<StackPanel>
 						<TextBlock Text="Incoming" Style="{StaticResource TextBlockMedium}" Margin="4" />
-						<TextBlock Text="{x:Bind TroopsHomeS, Mode=OneWay}"  Style="{StaticResource TextBlockMedium}"  
+						<TextBlock Text="{x:Bind IncomingReinforcements, Mode=OneWay}"  Style="{StaticResource TextBlockMedium}"  
 									   TextWrapping="Wrap" FontSize="16" MaxLines="8" Margin="8,2,2,2" />
 					</StackPanel>
 				</Border>

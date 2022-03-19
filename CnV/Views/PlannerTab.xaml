@@ -51,7 +51,7 @@
 					<TextBox x:Name="rsBlessed" Header="Recruit Blessed"  Style="{StaticResource RightAlignBox}"  />
 					<TextBox x:Name="rtPriestess" Header="Priestess"  Style="{StaticResource RightAlignBox}"  />
 					<TextBox x:Name="rtPrae" Header="Praetor"  Style="{StaticResource RightAlignBox}"  />
-					<TextBox x:Name="rtSen" Header="Senator"  Style="{StaticResource RightAlignBox}"  />
+					<TextBox x:Name="rtSen" Header="Magistra"  Style="{StaticResource RightAlignBox}"  />
 				</tk:WrapPanel>
 			</Border>
 			<Border Style="{StaticResource BorderReveal}">

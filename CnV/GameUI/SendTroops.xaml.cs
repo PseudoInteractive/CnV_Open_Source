@@ -22,13 +22,14 @@ namespace CnV
 {
 	public sealed partial class SendTroops:DialogG,INotifyPropertyChanged
 	{
-
-		protected override string title => $"{type.ToString()} {target}"; 
+		internal bool viaWater;
+		internal bool isSettle;
+		protected override string title => $"{(isSettle? "Setting" : Army.typeStrings[(int)type] )} => {target}"; 
 		internal static SendTroops? instance;
 		internal City city;
 		internal City target;
 		internal ArmyType type;
-		internal ArmyTransport transport;
+		internal ArmyTransport transport => isSettle ? (viaWater ? ArmyTransport.ports : ArmyTransport.carts) : (viaWater ? ArmyTransport.water : ArmyTransport.land);
 		public SendTroops()
 		{
 			this.InitializeComponent();
@@ -42,27 +43,61 @@ namespace CnV
 
 
 			for(int i = 0;i<Troops.ttCount;++i)
-				troopItems[i] = new(target:target, city:city,type:(byte)i) ;
+				troopItems[i] = new(target:target, city:city,type:(byte)i,wantMax:true) ;
 
 			OnPropertyChanged();
 		}
-		public static void ShowInstance(City city,City target, ArmyType type, ArmyTransport transport)
+		public static void ShowInstance(City city,City target,bool isSettle,bool viaWater=false, ArmyType type = ArmyType.defense)
 		{
 			var rv = instance ?? new SendTroops();
 			rv.city = city;
 			rv.target = target;
-			rv.transport = transport;
+			rv.isSettle = isSettle;
+			rv.viaWater = viaWater;
 			rv.type = type;
 			rv.UpdateTroopItems();
 			rv.Show(false);
 			
 		}
 
+		internal bool IsValid(bool verbose)
+		{
+			if(isSettle)
+			{
+				if(!troopItems.Any(a => a.type == Troops.ttSenator && a.count > 0))
+				{
+					if(verbose)
+						AppS.MessageBox($"Need a Magistra to settle");
+					return false;
+				}
+			}
+			if(transport == ArmyTransport.carts && city.cartsHome < 250)
+			{
+				if(verbose) AppS.MessageBox($"Need 250 carts.  Have {city.cartsHome} home of {city.carts} ");
+				return false;
+			}
+			if(transport == ArmyTransport.ports && city.shipsHome < 25)
+			{
+				if(verbose) AppS.MessageBox($"Need 25 trading ships.  Have {city.shipsHome} home of {city.ships} ");
+				return false;
+			}
+			if(!troopItems.Any(a => a.count > 0))
+			{
+				if(verbose) AppS.MessageBox($"Please send something");
+				return false;
+			}
+			return true;
+		}
+
+		//private bool isSettle => (transport == ArmyTransport.carts || transport==ArmyTransport.ports);
+
+
 		internal SendTroopItem [] troopItems;
 
 		private void SendTroopsClick(object sender,RoutedEventArgs e)
 		{
-		
+			if(!IsValid(true))
+				return;
 			
 			
 			var ts = new TroopTypeCounts();
@@ -79,7 +114,7 @@ namespace CnV
 
 				using(var __lock = Sim.eventQLock.Enter)
 				{
-					var t = Army.FromNow(city,target.cid,transport,type,ts,(sbyte)(transport==ArmyTransport.carts||transport==ArmyTransport.ports ? 100 : 0));
+					var t = Army.FromNow(city,target.cid,transport,type,ts,false);
 				//	Assert(!t.departed);
 				//	Assert(t.isSchedueledNotSent);
 					new CnVEventSendTroops(t).EnqueueAlreadyLocked();
@@ -117,12 +152,12 @@ namespace CnV
 		internal TType type;
 		internal uint count;
 
-		public SendTroopItem(City city,City target,byte type)
+		public SendTroopItem(City city,City target,byte type, bool wantMax)
 		{
 			this.city=city;
 			this.target=target;
 			this.type=type;
-			count = 0;// city.troopsHome.GetCount(type);
+			this.count =wantMax ?city.troopsHome.GetCount(type) : 0;
 		}
 
 		internal TroopTypeCount tt => new(type,count);

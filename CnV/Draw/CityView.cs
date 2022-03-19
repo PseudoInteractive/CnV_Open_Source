@@ -386,7 +386,7 @@ namespace CnV
 									var startT = currentBuildStartTime;
 									var required = buildEnd-startT;
 										var gain = ((buildEnd - simTime)/required).SaturateToFloat();
-									Assert(buildEnd >= simTime - 1.0f);
+								//	Assert(buildEnd >= simTime - 1.0f);
 									Assert(buildEnd - simTime <= required + 1.0f);
 									if(buildOp.isBuild|buildOp.isDemo)
 									{

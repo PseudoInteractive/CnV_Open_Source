@@ -34,10 +34,19 @@ public static partial class CityUI
 			};
 			AppS.QueueOnUIThread(() =>
 								{
-									var _build = City.GetBuild();
-									if(!object.ReferenceEquals(_build,CityStats.instance.cityBox.SelectedItem))
+									try
 									{
-										CityStats.instance.cityBox.SelectedItem = _build;
+										var _build = City.GetBuild();
+										if(!object.ReferenceEquals(_build,CityStats.instance.cityBox.SelectedItem))
+										{
+											var id = City.gridCitySource.IndexOf(_build);
+											CityStats.instance.cityBox.SelectedIndex = id;
+										}
+									}
+									catch(Exception _ex)
+									{
+										LogEx(_ex);
+
 									}
 								});
 		}
@@ -665,7 +674,7 @@ public partial class City
 
 	internal void Settle(WorldC worldC)
 	{
-		SendTroops.ShowInstance(this,City.Get(worldC), ArmyType.defense,transport:ArmyTransport.carts);
+		SendTroops.ShowInstance(this,City.Get(worldC), isSettle:true);
 	}
 }
 

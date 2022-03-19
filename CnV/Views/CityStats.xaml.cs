@@ -401,6 +401,7 @@ namespace CnV
 
 		internal string TroopsHomeS => city?.troopsHere.Format(separator: ',');
 		internal string TroopsOwnedS => city?.troopsOwned.Format(separator: ',');
+		internal string IncomingReinforcements => city?.incomingReinforcements.Format(separator: ',');
 
 		public string commandsTitle => $"Commands {commandItems.Count}";
 
@@ -1066,7 +1067,10 @@ namespace CnV
 		{
 			this.army = army;
 			
-			action =  ImageHelper.Get( army.type switch { ArmyType.returning => "UI/icons/icon_trade_info_returnhome.png"  ,  _ => "UI/icons/icon_command_slots.png" });
+			action =  ImageHelper.Get(  army.isReturn? "Region/UI/icon_player_own_troops_ret.png"  : 
+								army.isSettle ? "Region/UI/icon_player_own_settlement.png" : 
+								army.isDefense ? "Region/UI/icon_player_own_support_inc.png" :
+								"Region/UI/icon_player_own_attack.png");
 			
 		}
 		

@@ -53,7 +53,7 @@ namespace CnV
 				await t1.ConfigureAwait(false);
 
 				// World cannot load until tiles are loaded
-				await World.LoadWorldData().ConfigureAwait(false);
+				
 				await t2.ConfigureAwait(false); ; // city custom can end here
 
 				AppS.SetState( AppS.State.active );
