@@ -100,7 +100,7 @@ namespace CnV
 		{
 			// invalidate
 		
-			NotifyBuildQueueChange();
+			instance?.cityQueueChangeDebounce.Go();
 //			displayQueue = BuildQueueType.Empty;
 			//Log(e.Action);
 			//LogJson(e);
@@ -147,26 +147,26 @@ namespace CnV
 		}
 
 		public City city => City.GetBuild();
-		internal static void NotifyBuildQueueChange()
-		{
-//			if(City.GetBuild().buildQueue != displayQueue || force)
-			{
-//				Log("Debuounce");
-				instance.cityQueueChangeDebounce.Go();
-			}
-		}
-		internal static void NotifyRecruitQueueChange()
-		{
-//			if(City.GetBuild().buildQueue != displayQueue || force)
-			{
-//				Log("Debuounce");
-				instance.cityRecruitQueueChangeDebounce.Go();
-			}
-		}
+		//internal void NotifyBuildCityChange()
+		//{
+		//	var prior = city;
+		//	prior.PropertyChanged -= City_PropertyChanged;
+		//	city = City.GetBuild();
+		//	city.PropertyChanged += City_PropertyChanged;
+		//	Invalidate();
+
+		//}
+		
 
 		internal static BuildQueueType lastSynchronizedQueue = BuildQueueType.Empty;
 		internal static RecruitQueueType lastSynchronizedRecruitQueue = RecruitQueueType.Empty;
-		
+		static void UpdateAllQueues()
+		{
+			UpdateBuildQueue();
+			UpdateCommandItems();
+			UpdateRecruitQueue();
+			UpdateTradeItems();
+		}
 
 		static void UpdateBuildQueue()
 		{
@@ -176,7 +176,7 @@ namespace CnV
 				instance.buildQueue.CollectionChanged -= BuildQueue_CollectionChanged;
 				//var firstVisible = instance.buildQueueListView.vis
 				var anyRemoved = false;
-				var city = City.GetBuild();
+				var city = instance.city;
 				var displayQueue = city.buildQueue;
 				lastSynchronizedQueue = displayQueue;
 				int lg = displayQueue.Length;
@@ -252,7 +252,7 @@ namespace CnV
 				
 				//var firstVisible = instance.buildQueueListView.vis
 				var anyRemoved = false;
-				var city = City.GetBuild();
+				var city = instance.city;
 				var displayQueue = city.recruitQueue;
 				lastSynchronizedRecruitQueue = displayQueue;
 				int lg = displayQueue.Length;
@@ -328,18 +328,11 @@ namespace CnV
 				
 				//var firstVisible = instance.buildQueueListView.vis
 				var anyRemoved = false;
-				var city = City.GetBuild();
+				var city = instance.city;
 				var displayQueue = city.outgoing;
 				int lg = displayQueue.Length;
 				var bq = instance.commandItems;
-				//for(int i = bq.Count;--i>= 0;)
-				//{
-				//	var op = bq[i].op;
-				//	if(!displayQueue.Any(a => a == op))
-				//	{
-				//		bq.RemoveAt(i);
-				//	}
-				//}
+			
 
 				// Add or update
 				for(int i = 0;i<lg;++i)
@@ -394,10 +387,74 @@ namespace CnV
 			// restore callback
 
 		}
+		static void UpdateTradeItems()
+		{
+			// Don't notify whole we are doing stuff
+			try
+			{
+				
+				//var firstVisible = instance.buildQueueListView.vis
+				var anyRemoved = false;
+				var city = instance.city;
+				var displayQueue = city.tradesOut;
+				int lg = displayQueue.Length;
+				var bq = instance.tradeItems;
+			
 
-		internal DebounceA cityQueueChangeDebounce = new(UpdateBuildQueue) { runOnUiThread=true,debounceDelay=50 };
-		internal DebounceA cityRecruitQueueChangeDebounce = new(UpdateRecruitQueue) { runOnUiThread=true,debounceDelay=50 };
-		internal DebounceA CommandItemsChangeDebounce = new(UpdateCommandItems) { runOnUiThread=true,debounceDelay=50 };
+				// Add or update
+				for(int i = 0;i<lg;++i)
+				{
+					var op = displayQueue[i];
+					int cur = -1;
+					for(int j = i;j<bq.Count;++j)
+					{
+						if(bq[j].army == op )
+						{
+							cur = j;
+							break;
+						}
+					}
+					if(cur == -1)
+					{
+						var bi = new TradeItem(op);
+						bq.Insert(i,bi);
+					}
+					else
+					{
+						if(cur != i)
+						{
+							bq.Move(cur,i);
+
+						}
+
+					}
+				}
+				// sequence is done, remove extras if any
+				for(var i = bq.Count;--i>= lg;)
+				{
+					anyRemoved=true;
+					bq.RemoveAt(i);
+				}
+
+				Assert(bq.Count == lg);
+				for(int i=0;i<lg;++i)
+				{
+					Assert(bq[i].army == displayQueue[i]);
+				}
+				// keep first in view
+				if(anyRemoved && bq.Any() )
+				{
+					instance.TradesListView.ScrollIntoView(bq.First());
+				}
+			}
+			catch ( Exception ex)
+			{
+				LogEx(ex);
+			}
+			// restore callback
+
+		}
+		internal DebounceA cityQueueChangeDebounce = new(UpdateAllQueues) { runOnUiThread=true,debounceDelay=50 };
 
 		internal string TroopsHomeS => city?.troopsHere.Format(separator: ',');
 		internal string TroopsOwnedS => city?.troopsOwned.Format(separator: ',');
@@ -427,7 +484,7 @@ namespace CnV
 				ClearLastDisplayed();
 			if(_city.isBuild)
 			{
-				CityStats.NotifyBuildQueueChange();
+				Invalidate();
 			}
 		}
 		public static void CityRecruitChange(City _city)
@@ -436,7 +493,7 @@ namespace CnV
 				ClearLastDisplayed();
 			if(_city.isBuild)
 			{
-				CityStats.NotifyRecruitQueueChange();
+				Invalidate();
 			}
 		}
 		//public void OnPropertyChanged() =>
@@ -448,7 +505,7 @@ namespace CnV
 			{
 				//	var i = CityStats.instance;
 				
-				if(city.IsInvalid())
+				if(City.GetBuild().IsInvalid())
 					return;
 				// building counts
 
@@ -462,7 +519,7 @@ namespace CnV
 
 					try
 					{
-						var city = this.city;
+						var city = City.GetBuild();
 						var hasBeenDisplayed = lastDisplayed == city;
 						if(!hasBeenDisplayed)
 						{
@@ -644,8 +701,10 @@ namespace CnV
 		internal static void Invalidate()
 		{
 			Changed();
-			City.buildCityChanged?.Invoke();
 			ClearLastDisplayed();
+			instance?.cityQueueChangeDebounce.Go();
+		
+
 			instance?.UpdateUI();
 		}
 
@@ -703,9 +762,8 @@ namespace CnV
 		{
 			Assert(instance is null);
 			instance = this;
-			City.buildCityChanged += NotifyBuildQueueChange;
-			City.buildCityChanged += NotifyRecruitQueueChange;
-			City.buildCityChanged += CommandItemsChangeDebounce.Go;
+			City.buildCityChanged+=Invalidate;
+			
 
 		}
 
@@ -872,7 +930,7 @@ namespace CnV
 
 		private void EnlistmentClick(object sender,RoutedEventArgs e)
 		{
-			RecruitDialog.ShowInstance(City.GetBuild());
+			RecruitDialog.ShowInstance(city);
 		}
 	}
 	public class BuildingCountAndBrush:INotifyPropertyChanged
@@ -1124,7 +1182,7 @@ namespace CnV
 
 	public class TradeItem:INotifyPropertyChanged
 	{
-		internal Army army;
+		internal TradeOrder army;
 		
 		public BitmapImage action { get; set; }
 	//	public string sourceCoords=> army.sourceCity.nameAndRemarksAndPlayer;
@@ -1141,16 +1199,13 @@ namespace CnV
 		}
 
 
-		internal string toolTip => army.troops.Format(separator:',');
+		internal string toolTip => army.resources.Format(separator:",");
 
-		public TradeItem(Army army)
+		internal TradeItem(TradeOrder army)
 		{
 			this.army = army;
 			
-			action =  ImageHelper.Get(  army.isReturn? "Region/UI/icon_player_own_troops_ret.png"  : 
-								army.isSettle ? "Region/UI/icon_player_own_settlement.png" : 
-								army.isDefense ? "Region/UI/icon_player_own_support_inc.png" :
-								"Region/UI/icon_player_own_attack.png");
+			action =  ImageHelper.Get(   "Region/UI/icon_player_resource_outgoing.png"  );
 			
 		}
 		
@@ -1161,11 +1216,11 @@ namespace CnV
 			flyout.SetXamlRoot(sender);
 			
 			
-			flyout.AddItem("Return",Symbol.Undo,() =>
-			{
-				new CnVEventReturnTroops(army).EnqueueAsap();
+			//flyout.AddItem("Return",Symbol.Undo,() =>
+			//{
+			//	new CnVEventReturnTroops(army).EnqueueAsap();
 				
-			});
+			//});
 			
 			flyout.AddItem("Cancel Selected",Symbol.Cut,() =>
 			{

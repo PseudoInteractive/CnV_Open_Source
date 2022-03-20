@@ -27,7 +27,7 @@ namespace CnV;
 
 		public static void UpdateStatsUI()
 		{
-			CityStats.instance.UpdateUI();
+			CityStats.instance?.UpdateUI();
 
 		
 		}

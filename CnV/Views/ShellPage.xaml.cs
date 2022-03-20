@@ -488,7 +488,7 @@ namespace CnV.Views
 						AppS.QueueOnUIThread(() =>
 						{
 							AppS.UpdateAppTitle();
-							FindName(nameof(playerStats));
+							
 
 							//							AppS.appWindow.SetIcon(new IconId(0));
 							//	AppS.MessageBox($"Welcome {Player.me.shortName}.");
@@ -519,6 +519,8 @@ namespace CnV.Views
 
 				await CnVClient.InitializeGame();
 
+				FindName(nameof(playerStats));
+				FindName(nameof(cityStats));
 				KeyboardAccelerators.Add(BuildKeyboardAccelerator(VirtualKey.Left,NavStack.BackInvoked,
 																VirtualKeyModifiers.Menu));
 				// KeyboardAccelerators.Add(BuildKeyboardAccelerator(VirtualKey.GoBack,NavStack.BackInvoked));

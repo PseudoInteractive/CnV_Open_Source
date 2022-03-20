@@ -162,7 +162,8 @@
 				x:Name="cityStats"
 				Grid.Row="2" 
 				Grid.ColumnSpan="1"
-				Grid.RowSpan="2" 				
+				Grid.RowSpan="2" 	
+				x:Load="False"
 				 Background="{x:Null}"
 				Canvas.ZIndex="14" 
 				

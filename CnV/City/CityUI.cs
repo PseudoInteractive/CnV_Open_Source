@@ -28,7 +28,7 @@ public static partial class CityUI
 	{
 		try
 		{
-			while(City.GetBuild().IsInvalid() || City.gridCitySource is null)
+			while(City.GetBuild().IsInvalid() || City.gridCitySource is null || CityStats.instance is null)
 			{
 				await Task.Delay(1000).ConfigureAwait(false);
 			};
