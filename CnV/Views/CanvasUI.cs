@@ -114,7 +114,7 @@ using Game;
 							var data = World.GetInfoFromWorldId(World.rawPrior1!=null ? World.rawPrior1 : World.tileData,packedId);
 							switch(data.type)
 							{
-								case World.TileType.city:
+								case World.TileType.typeCity:
 									{
 										Spot.viewHover = (WorldC)cid;
 										var city = City.GetOrAddCity(cid);
@@ -236,11 +236,11 @@ using Game;
 										}
 										break;
 									}
-								case World.TileType.shrine:
+								case World.TileType.typeShrine:
 									if(WorldViewSettings.shrines.isOn)
 										toolTip = $"Shrine\n{(data.data == 255 ? "Unlit" : ((Faith)data.data-1).AsString())}";
 									break;
-								case World.TileType.portal:
+								case World.TileType.typePortal:
 									toolTip = $"Portal\n{(data.data == 0 ? "Inactive" : "Active")}";
 									break;
 							default:
@@ -261,8 +261,8 @@ using Game;
 								{
 									switch(data.type)
 									{
-										case World.TileType.city:
-											if(pData.type == World.TileType.city)
+										case World.TileType.typeCity:
+											if(pData.type == World.TileType.typeCity)
 											{
 												if(pData.player != data.player)
 												{
@@ -309,10 +309,10 @@ using Game;
 												toolTip += "\nWas founded";
 											}
 											break;
-										case World.TileType.shrine:
+										case World.TileType.typeShrine:
 											toolTip += "\nWas unlit";
 											break;
-										case World.TileType.portal:
+										case World.TileType.typePortal:
 											if(data.player == 0)
 												toolTip += "\nWas active";
 											else

@@ -166,7 +166,9 @@ internal partial class GameClient
 	//   public static Vector2 cameraMid;
 	public static float eventTimeOffsetLag; // smoothed version of event time offset
 											//public static float eventTimeEnd;
-	static public Color nameColor, nameColorHover, myNameColor, nameColorOutgoing, nameColorIncoming, nameColorSieged, nameColorIncomingHover, nameColorSiegedHover, myNameColorIncoming, myNameColorSieged;
+	static public Color nameColor, nameColorHover, myNameColor, nameColorOutgoing, nameColorIncoming, nameColorSieged,
+			nameColorIncomingHover, nameColorSiegedHover, myNameColorIncoming, myNameColorSieged,
+		nameColorDungeon;
 	//static float specularGain = 0.5f;
 	static long ticksAtDraw;
 	public static Matrix projection;
@@ -625,6 +627,7 @@ internal partial class GameClient
 				nameColorSiegedHover = new Color() { A = nameAlpha,G = 10,B = 14,R = 25 };
 				myNameColorIncoming = new Color() { A = nameAlpha,G = 12,B = 12,R = 25 };
 				myNameColorSieged = new Color() { A = nameAlpha,G = 10,B = 12,R = 25 };
+				nameColorDungeon = new Color() { A = nameAlpha,G = 0,B = 15,R = 0 };
 			}
 			//			shadowColor = new Color() { A = 128 };
 
@@ -1447,8 +1450,17 @@ internal partial class GameClient
 										var cid = (cx, cy).WorldToCid();
 
 										var drawC = (new System.Numerics.Vector2(cx,cy));
-										drawC.Y += span *  7.625f / 16.0f;
-										var z = zCities;
+										
+										if(spot is null)
+										{
+											drawC.X += 0.30f;
+											drawC.Y += 0.30f;
+										}
+										else
+										{
+											drawC.Y += span *  7.5f / 16.0f;
+										}
+											var z = zCities;
 										var scale = regionFontScale;
 
 
@@ -1459,7 +1471,7 @@ internal partial class GameClient
 										}
 										//	drawC = drawC.Project(zLabels);
 										var layout = GetTextLayout(name,nameTextFormat);
-										var color = spot ==null? nameColor
+										var color = spot ==null? nameColorDungeon
 											:
 											(isMine ?
 											(hasIncoming ?
@@ -2365,10 +2377,11 @@ internal partial class GameClient
 			return false;
 		if(!AppS.isStateActive)
 			return false;
-		World.UpdateTileDatas();
+		
 		if(Sim.isWarmup)
 			return false;
-
+		if(TilesReady())
+			World.UpdateTileDatas();
 		return base.BeginDraw();
 	}
 

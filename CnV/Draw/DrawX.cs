@@ -214,7 +214,7 @@ static partial class View
 				CityView.LoadContent();
 
 				await imageLoad;
-				World.BuldRenderTileMesh();
+				
 
 
 				contentStage = ContentStage.loaded;

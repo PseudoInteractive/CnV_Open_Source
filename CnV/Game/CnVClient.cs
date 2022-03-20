@@ -8,6 +8,7 @@ using static CnV.Troops;
 using static CnV.City;
 
 using static CnV.ClientView;
+using static CnV.World;
 
 namespace CnV
 {
@@ -302,95 +303,95 @@ namespace CnV
 
 
 			// extract cities
-			if(jse.TryGetProperty("c", out var cProp))
-			{
-				int citySwitch = 0;
-				if(updateBuildCity)
-				{
-					if(jse.TryGetProperty("lcit", out var lcit))
-					{
-						citySwitch= lcit.GetAsInt();
-					}
-				}
+			//if(jse.TryGetProperty("c", out var cProp))
+			//{
+			//	int citySwitch = 0;
+			//	if(updateBuildCity)
+			//	{
+			//		if(jse.TryGetProperty("lcit", out var lcit))
+			//		{
+			//			citySwitch= lcit.GetAsInt();
+			//		}
+			//	}
 
-				if(!World.initialized)
-				{
-					// using would lose this otherwise maybe?
-					cProp = cProp.Clone();
+			//	if(!World.initialized)
+			//	{
+			//		// using would lose this otherwise maybe?
+			//		cProp = cProp.Clone();
 					
-					while(!World.initialized)
-						await Task.Delay(1000);
-				}
+			//		while(!World.initialized)
+			//			await Task.Delay(1000);
+			//	}
 
-				var now = DateTimeOffset.UtcNow;
-				foreach(var jsCity in cProp.EnumerateArray())
-				{
-					//                    Log(jsCity.ToString());
-					var cid = jsCity.GetProperty("1").GetInt32();
-					Assert(thisPid != 0);
-					if(pruneCities)
-						if(World.GetInfoFromCid(cid).player != thisPid)
-						{
+			//	var now = DateTimeOffset.UtcNow;
+			//	foreach(var jsCity in cProp.EnumerateArray())
+			//	{
+			//		//                    Log(jsCity.ToString());
+			//		var cid = jsCity.GetProperty("1").GetInt32();
+			//		Assert(thisPid != 0);
+			//		if(pruneCities)
+			//			if(World.GetInfoFromCid(cid).player != thisPid)
+			//			{
 
-							Note.Show($"Invalid City, was it lost? {cid.CidToString()}");
-							ChangeCityJS(cid);
+			//				Note.Show($"Invalid City, was it lost? {cid.CidToString()}");
+			//				ChangeCityJS(cid);
 
-							await Task.Delay(2000);
-							continue;
+			//				await Task.Delay(2000);
+			//				continue;
 
-						}
-
-
-					var city = City.GetOrAddCity(cid);
-					city.type = Spot.typeCity;
-					if(thisPid != 0)
-						city.pid = thisPid;
-					var name = jsCity.GetProperty("2").GetString();
-					var i = name.LastIndexOf('-');
-					if(i != -1 && i+2 < name.Length)
-					{
-						city.remarks = name.Substring(i + 2);
-						city._cityName = name.Substring(0, i - 1);
-						city.UpdateTags();
-					}
-					else
-						city._cityName = name;
-					city.type = Spot.typeCity;
-					//city._tsTotal = jsCity.GetAsInt("8");
-					//city._tsHome = jsCity.GetAsInt("17");
-					//			city.troopsTotal = TroopTypeCount.empty;
-					//				city.troopsHome = TroopTypeCount.empty;
-
-					//			Trace($"TS Home {city._tsHome}");
-
-					//   city.tsRaid = city.tsHome;
-					//city.isCastle = jsCity.GetAsInt("12") > 0;
-					city.points = (ushort)jsCity.GetAsInt("4");
-
-					city.isOnWater |= jsCity.GetAsInt("16") > 0;  // Use Or in case the data is imcomplete or missing, in which case we get it from world data, if that is not incomplete or missing ;)
-					city.isTemple = jsCity.GetAsInt("15") > 0;
-					//	city.pid = Player.myId;
-					//  Log($"Temple:{jsCity.GetAsInt("15")}:{jsCity.ToString()}");
+			//			}
 
 
-				}
-				if(citySwitch != 0)
-					CitySwitch(citySwitch, true);
+			//		var city = City.GetOrAddCity(cid);
+			//		city.type = typeCity;
+			//		if(thisPid != 0)
+			//			city.pid = thisPid;
+			//		var name = jsCity.GetProperty("2").GetString();
+			//		var i = name.LastIndexOf('-');
+			//		if(i != -1 && i+2 < name.Length)
+			//		{
+			//			city.remarks = name.Substring(i + 2);
+			//			city._cityName = name.Substring(0, i - 1);
+			//			city.UpdateTags();
+			//		}
+			//		else
+			//			city._cityName = name;
+			//		city.type = TileType.typeCity;
+			//		//city._tsTotal = jsCity.GetAsInt("8");
+			//		//city._tsHome = jsCity.GetAsInt("17");
+			//		//			city.troopsTotal = TroopTypeCount.empty;
+			//		//				city.troopsHome = TroopTypeCount.empty;
+
+			//		//			Trace($"TS Home {city._tsHome}");
+
+			//		//   city.tsRaid = city.tsHome;
+			//		//city.isCastle = jsCity.GetAsInt("12") > 0;
+			//		city.points = (ushort)jsCity.GetAsInt("4");
+
+			//		city.isOnWater |= jsCity.GetAsInt("16") > 0;  // Use Or in case the data is imcomplete or missing, in which case we get it from world data, if that is not incomplete or missing ;)
+			//		city.isTemple = jsCity.GetAsInt("15") > 0;
+			//		//	city.pid = Player.myId;
+			//		//  Log($"Temple:{jsCity.GetAsInt("15")}:{jsCity.ToString()}");
+
+
+			//	}
+			//	if(citySwitch != 0)
+			//		CitySwitch(citySwitch, true);
 				
 
-				if(!ppdtInitialized)
-				{
+			//	if(!ppdtInitialized)
+			//	{
 
-				// todo:	ppdtInitialized = true;
+			//	// todo:	ppdtInitialized = true;
 
-					//Task.Delay(500).ContinueWith( _ => App.DispatchOnUIThreadSneakyLow( MainPage.instance.Refresh));
+			//		//Task.Delay(500).ContinueWith( _ => App.DispatchOnUIThreadSneakyLow( MainPage.instance.Refresh));
 					
-				}
+			//	}
 
-				//    Log(City.all.ToString());
-				//   Log(City.all.Count());
+			//	//    Log(City.all.ToString());
+			//	//   Log(City.all.Count());
 
-			}
+			//}
 			MainPage.CheckTipRaiding();
 			City.CitiesChanged();
 			// Log($"PPDT: c:{cUpdated}, clc:{clChanged}");
@@ -950,47 +951,47 @@ namespace CnV
 							//		//  var nodes = (nodeCount+30)/(nodeCount+30+2+ plainsCount)*80 + 2+ plainsCount;
 							//		break;
 							//	}
-							case "cityclick":
-								{
-									var jso = jsp.Value;
-									var cid = jso.GetAsInt("cid");
-									{
-										var pid = Player.NameToId(jso.GetAsString("player"));
-										var city = Spot.GetOrAdd(cid);
-										var name = jso.GetString("name");
-										city.pid = pid; // todo: this shoule be an int playerId
-										city.type = jso.GetAsByte("type");
-										city.remarks = jso.GetAsString("notes");                //Assert(city.pid > 0);
-										city.UpdateTags();
-										city.stats.points = (ushort)jso.GetAsInt("score");
-										//   city.allianceId = jso.GetString("alliance"); // todo:  this should be an into alliance id
-										//       city.lastAccessed = DateTimeOffset.UtcNow;
-										// city.isCastle = jso.GetAsInt("castle") == 1;
-										var blessed = city.pid > 0 ? jso.GetAsInt("bless") > 0 : false;
-										if(blessed != city.isBlessed)
-										{
-											city.isBlessed = blessed;
-											city.OnPropertyChanged(nameof(City.icon));
-										}
-										city.isOnWater |= jso.GetAsInt("water") != 0;  // Use Or in case the data is imcomplete or missing, in which case we get it from world data, if that is not incomplete or missing ;)
-										city.isTemple = jso.GetAsInt("plvl") != 0;
+							//case "cityclick":
+							//	{
+							//		var jso = jsp.Value;
+							//		var cid = jso.GetAsInt("cid");
+							//		{
+							//			var pid = Player.NameToId(jso.GetAsString("player"));
+							//			var city = Spot.GetOrAdd(cid);
+							//			var name = jso.GetString("name");
+							//			city.pid = pid; // todo: this shoule be an int playerId
+							//			city.type = jso.GetAsByte("type");
+							//			city.remarks = jso.GetAsString("notes");                //Assert(city.pid > 0);
+							//			city.UpdateTags();
+							//			city.stats.points = (ushort)jso.GetAsInt("score");
+							//			//   city.allianceId = jso.GetString("alliance"); // todo:  this should be an into alliance id
+							//			//       city.lastAccessed = DateTimeOffset.UtcNow;
+							//			// city.isCastle = jso.GetAsInt("castle") == 1;
+							//			var blessed = city.pid > 0 ? jso.GetAsInt("bless") > 0 : false;
+							//			if(blessed != city.isBlessed)
+							//			{
+							//				city.isBlessed = blessed;
+							//				city.OnPropertyChanged(nameof(City.icon));
+							//			}
+							//			city.isOnWater |= jso.GetAsInt("water") != 0;  // Use Or in case the data is imcomplete or missing, in which case we get it from world data, if that is not incomplete or missing ;)
+							//			city.isTemple = jso.GetAsInt("plvl") != 0;
 
-										//if(City.focus != cid)
-										// cid.BringCidIntoWorldView(true,false);
-										if(city._cityName != name)
-										{
-											city._cityName = name;
-											if(cid == Spot.focus)
-												AppS.DispatchOnUIThreadLow(() => ShellPage.instance.focus.Content = city.nameAndRemarks);
-										}
-										if(Spot.focus != cid)
-											city.SetFocus(true);
-										//
-									}
+							//			//if(City.focus != cid)
+							//			// cid.BringCidIntoWorldView(true,false);
+							//			if(city._cityName != name)
+							//			{
+							//				city._cityName = name;
+							//				if(cid == Spot.focus)
+							//					AppS.DispatchOnUIThreadLow(() => ShellPage.instance.focus.Content = city.nameAndRemarks);
+							//			}
+							//			if(Spot.focus != cid)
+							//				city.SetFocus(true);
+							//			//
+							//		}
 
-									break;
+							//		break;
 
-								}
+							//	}
 
 
 							case "ext":
