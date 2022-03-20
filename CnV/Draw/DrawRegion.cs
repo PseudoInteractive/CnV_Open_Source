@@ -1099,7 +1099,7 @@ internal partial class GameClient
 												//if(i.sourceCid == cityCid)
 												//	continue;
 
-												c = i.time <= serverNow ? defenseArrivedColor : defenseColor;
+												c = i.arrival <= serverNow ? defenseArrivedColor : defenseColor;
 											}
 											else if(i.isAttack)
 											{
@@ -1352,32 +1352,32 @@ internal partial class GameClient
 							//		DrawTextBox($"Sen:  {recruiting}`{idle}`{active}",wc.ToVector(),tipTextFormatCentered,Color.White,textBackgroundOpacity,Layer.tileText);
 
 							//}
-							if(city.isMine)
-							{
-								if(!IsCulledWC(wc))
-								{
-									if(!city.isSelected || city.cid == City.build)
-										DrawFlag(city.cid,city.cid == City.build ? SpriteAnim.flagHome : SpriteAnim.flagRed,new System.Numerics.Vector2(4,4));
-								}
-								if((MainPage.IsVisible() && Settings.raidsVisible != 0) || Settings.raidsVisible == 1)
-								{
-									if(IsSquareCulledWC(wc,raidCullSlopSpace))
-										continue;
-									//var c = wc.WorldToCamera();
-									var t = (tick * city.cid.CidToRandom().Lerp(1.375f / 512.0f,1.75f / 512f));
-									var r = t.Ramp();
-									//ds.DrawRoundedSquareWithShadow(c,r, raidBrush);
-									foreach(var raid in city.raids)
-									{
-										var ct = raid.target.CidToWorld();
-										var (c0, c1) = !raid.isReturning ? (wc, ct) : (ct, wc);
-										DrawAction((float)(raid.time - serverNow).TotalSeconds,
-											raid.GetOneWayTripTime(city),
-											r,c0.ToVector(),c1.ToVector(),raidColor,troopImages[raid.troopType],false,null,highlight: Spot.IsSelectedOrHovered(city.cid));
+							//if(city.isMine)
+							//{
+							//	if(!IsCulledWC(wc))
+							//	{
+							//		if(!city.isSelected || city.cid == City.build)
+							//			DrawFlag(city.cid,city.cid == City.build ? SpriteAnim.flagHome : SpriteAnim.flagRed,new System.Numerics.Vector2(4,4));
+							//	}
+							//	if((MainPage.IsVisible() && Settings.raidsVisible != 0) || Settings.raidsVisible == 1)
+							//	{
+							//		if(IsSquareCulledWC(wc,raidCullSlopSpace))
+							//			continue;
+							//		//var c = wc.WorldToCamera();
+							//		var t = (tick * city.cid.CidToRandom().Lerp(1.375f / 512.0f,1.75f / 512f));
+							//		var r = t.Ramp();
+							//		//ds.DrawRoundedSquareWithShadow(c,r, raidBrush);
+							//		foreach(var raid in city.raids)
+							//		{
+							//			var ct = raid.target.CidToWorld();
+							//			var (c0, c1) = !raid.isReturning ? (wc, ct) : (ct, wc);
+							//			DrawAction((float)(raid.arrival - serverNow).TotalSeconds,
+							//				raid.GetOneWayTripTime(city),
+							//				r,c0.ToVector(),c1.ToVector(),raidColor,troopImages[raid.troopType],false,null,highlight: Spot.IsSelectedOrHovered(city.cid));
 
-									}
-								}
-							}
+							//		}
+							//	}
+							//}
 						}
 					}
 
@@ -1419,6 +1419,7 @@ internal partial class GameClient
 
 						}
 					}
+					
 
 				}
 
@@ -1458,7 +1459,9 @@ internal partial class GameClient
 										}
 										//	drawC = drawC.Project(zLabels);
 										var layout = GetTextLayout(name,nameTextFormat);
-										var color = isMine ?
+										var color = spot ==null? nameColor
+											:
+											(isMine ?
 											(hasIncoming ?
 												(spot.underSiege ? myNameColorSieged
 																: myNameColorIncoming)
@@ -1470,7 +1473,7 @@ internal partial class GameClient
 											   : (spot.underSiege ? nameColorSieged : nameColorIncoming))
 											   : hovered ? nameColorHover
 											   : spot.outGoingStatus != 0 ? nameColorOutgoing
-											   : nameColor);
+											   : nameColor));
 
 										DrawTextBox(name,drawC,nameTextFormat,wantDarkText ? color.A.AlphaToBlack() : Color.White,
 													color,Layer.

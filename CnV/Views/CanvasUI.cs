@@ -240,16 +240,12 @@ using Game;
 									if(WorldViewSettings.shrines.isOn)
 										toolTip = $"Shrine\n{(data.data == 255 ? "Unlit" : ((Faith)data.data-1).AsString())}";
 									break;
-								case World.TileType.boss:
-									if(WorldViewSettings.bosses.isOn)
-										toolTip = $"Boss\nLevel:{data.data}"; // \ntype:{data >> 4}";
-									break;
-								case World.TileType.dungeon:
-									if(WorldViewSettings.caverns.isOn)
-										toolTip = $"Dungeon\nLevel:{data.data}"; // \ntype:{data >> 4}";
-									break;
 								case World.TileType.portal:
 									toolTip = $"Portal\n{(data.data == 0 ? "Inactive" : "Active")}";
+									break;
+							default:
+								if(data.data == World.typeResFlagDungeon)
+										toolTip = $"Dungeon\nLevel:{data.data}"; // \ntype:{data >> 4}";
 									break;
 							}
 

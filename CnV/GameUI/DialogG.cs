@@ -78,7 +78,9 @@ namespace CnV
 				
 				Style = (Style)App.instance.Resources["ButtonMedium"],Margin=new(16,0,8,0),Padding=new(4,0,4,0) };
 			closeButton.Click += Hide;
-			var headerB = new Button() { HorizontalContentAlignment=HorizontalAlignment.Stretch,
+			var headerB = new Button() { 
+				HorizontalAlignment=HorizontalAlignment.Stretch,
+				HorizontalContentAlignment=HorizontalAlignment.Stretch,
 				VerticalContentAlignment=VerticalAlignment.Stretch,CornerRadius=new(2),Margin=new(),Padding=new(),
 				Background=AppS.Brush(0xff000000u) };
 			headerB.Content = grid;

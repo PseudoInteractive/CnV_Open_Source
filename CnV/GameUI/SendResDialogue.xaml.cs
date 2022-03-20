@@ -92,12 +92,17 @@ namespace CnV
 
 		private void SendClick(object sender,RoutedEventArgs e)
 		{
+			Hide();
 			var viaWater = this.viaWater; // fetch before lock
-			using var locker = Sim.eventQLock.Enter;
-			var trade = new TradeOrder(source:source.c,target:destination.c,departure:Sim.simTime,viaWater:viaWater,isTempleTrade:false,resources:res);
+			using(var locker = Sim.eventQLock.Enter)
+			{
+				var trade = new TradeOrder(source: source.c,target: destination.c,departure: Sim.simTime,viaWater: viaWater,isTempleTrade: false,resources: res);
 
-			new CnVEventTrade(source.c,trade: trade).EnqueueAlreadyLocked();
-			CityStats.Changed();
+				new CnVEventTrade(source.c,trade: trade).EnqueueAlreadyLocked();
+			}
+
+			
+			
 		}
 
 		private void transport_SelectionChange(object sender,SelectionChangedEventArgs e)
@@ -106,5 +111,10 @@ namespace CnV
 				SetDefault();
 		}
 
+		private void ClearClick(object sender,RoutedEventArgs e)
+		{
+			res = default;
+			Changed();
+		}
 	}
 }

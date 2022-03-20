@@ -13,7 +13,7 @@
 					<FontFamily x:Key="CnVFont">ms-appx:///Assets/CnVFont-VF.ttf#CnVFont,Segoe Fluent Icons"</FontFamily>
 				</ResourceDictionary>-->
 				<ResourceDictionary >
-					<FontFamily x:Key="CnvIcons" >ms-appx:///Assets/CnvIcons.ttf#CnvIcons,Segoe UI*</FontFamily>
+					<FontFamily x:Key="CnvIcons" >ms-appx:///Content/CnvIcons-Regular-SVG.ttf#CnvIcons,Segoe UI*</FontFamily>
 					<Color x:Key="SystemAltHighColor">#FFFF0000</Color>
 					<Color x:Key="SystemAltLowColor">#E1220030</Color>
 					<Color x:Key="SystemAltMediumColor">#99ff0000</Color>

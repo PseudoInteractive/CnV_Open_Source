@@ -349,7 +349,7 @@
 
 			<!--Trades-->
 
-			<Expander Expanding="Expander_Expanding" x:Name="expTrades"  >
+			<Expander Expanding="Expander_Expanding" x:Name="expTrades" IsExpanded="True"  >
 				<Expander.Header>
 					<TextBlock Text="{x:Bind tradesTitle, Mode=OneWay}" Style="{StaticResource TextBlockMedium}"  />
 				</Expander.Header>
@@ -368,11 +368,15 @@
 										 ToolTipService.ToolTip="{x:Bind toolTip}" ContextRequested="{x:Bind ContextRequested}"   >
 								<Image Source="{x:Bind action}"  />
 
-								<HyperlinkButton Content="{x:Bind info}" Click="{x:Bind TargetClick}" />
+								<HyperlinkButton Content="{x:Bind info}" Click="{x:Bind InfoClick}" />
 							</StackPanel>
 						</DataTemplate>
 					</ListView.ItemTemplate>
-
+					<ListView.ItemContainerTransitions>
+						<TransitionCollection>
+							<!--  Remove all -->
+						</TransitionCollection>
+					</ListView.ItemContainerTransitions>
 
 					<!-- The ItemsStackPanel must be edited to update the following two properties -->
 					<!-- These properties allow the list to grow from the bottom -->

@@ -166,6 +166,12 @@ namespace CnV
 			UpdateCommandItems();
 			UpdateRecruitQueue();
 			UpdateTradeItems();
+			
+			ClearLastDisplayed();
+			Changed();
+			
+			
+
 		}
 
 		static void UpdateBuildQueue()
@@ -389,63 +395,27 @@ namespace CnV
 		}
 		static void UpdateTradeItems()
 		{
-			// Don't notify whole we are doing stuff
+			// Don't notify while we are doing stuff
 			try
 			{
 				
 				//var firstVisible = instance.buildQueueListView.vis
-				var anyRemoved = false;
+				
 				var city = instance.city;
-				var displayQueue = city.tradesOut;
+				var displayQueue = city.tradesOut.Concat(city.tradesIn).OrderBy(a=>a.isReturning ? a.returnTime : a.arrival).ToArray();
 				int lg = displayQueue.Length;
 				var bq = instance.tradeItems;
-			
+				bq.Clear();
 
 				// Add or update
 				for(int i = 0;i<lg;++i)
 				{
-					var op = displayQueue[i];
-					int cur = -1;
-					for(int j = i;j<bq.Count;++j)
-					{
-						if(bq[j].army == op )
-						{
-							cur = j;
-							break;
-						}
-					}
-					if(cur == -1)
-					{
-						var bi = new TradeItem(op);
-						bq.Insert(i,bi);
-					}
-					else
-					{
-						if(cur != i)
-						{
-							bq.Move(cur,i);
+					
+					var bi = new TradeItem(displayQueue[i]);
+					bq.Add(bi);
+				}
+				
 
-						}
-
-					}
-				}
-				// sequence is done, remove extras if any
-				for(var i = bq.Count;--i>= lg;)
-				{
-					anyRemoved=true;
-					bq.RemoveAt(i);
-				}
-
-				Assert(bq.Count == lg);
-				for(int i=0;i<lg;++i)
-				{
-					Assert(bq[i].army == displayQueue[i]);
-				}
-				// keep first in view
-				if(anyRemoved && bq.Any() )
-				{
-					instance.TradesListView.ScrollIntoView(bq.First());
-				}
 			}
 			catch ( Exception ex)
 			{
@@ -454,13 +424,13 @@ namespace CnV
 			// restore callback
 
 		}
-		internal DebounceA cityQueueChangeDebounce = new(UpdateAllQueues) { runOnUiThread=true,debounceDelay=50 };
+		internal DebounceA cityQueueChangeDebounce = new(UpdateAllQueues) { runOnUiThread=true,debounceDelay=100 };
 
 		internal string TroopsHomeS => city?.troopsHere.Format(separator: ',');
 		internal string TroopsOwnedS => city?.troopsOwned.Format(separator: ',');
 		internal string IncomingReinforcements => city?.incomingReinforcements.Format(separator: ',');
 
-		public string commandsTitle => $"Commands {commandItems.Count}";
+		public string commandsTitle => $"Commands {commandItems.Count}/{city.commandSlots}";
 		public string tradesTitle => $"Trades {tradeItems.Count}";
 
 		//public SolidColorBrush ResourceForeground(int resId) => new SolidColorBrush(Windows.UI.Color.FromArgb(255,(byte)(31+64*resId),128,128) );
@@ -700,12 +670,10 @@ namespace CnV
 
 		internal static void Invalidate()
 		{
-			Changed();
-			ClearLastDisplayed();
+			
 			instance?.cityQueueChangeDebounce.Go();
 		
-
-			instance?.UpdateUI();
+			
 		}
 
 		private (int buildingCount, int towerCount, int townHallLevel, Dictionary<BuildingId,int> counts) GetBuildingCounts(City build)
@@ -1110,7 +1078,7 @@ namespace CnV
 		public BitmapImage action { get; set; }
 	//	public string sourceCoords=> army.sourceCity.nameAndRemarksAndPlayer;
 	//	public string targetCoords=> army.targetCity.nameAndRemarksAndPlayer;
-		public string info => $"{army.time.Format()} to {army.targetPlayer}";
+		public string info => $"{army.arrival.Format()} to {army.targetPlayer}";
 
 		internal void SourceClick(object sender,RoutedEventArgs e)
 		{
@@ -1182,30 +1150,29 @@ namespace CnV
 
 	public class TradeItem:INotifyPropertyChanged
 	{
-		internal TradeOrder army;
+		internal TradeOrder trade;
 		
 		public BitmapImage action { get; set; }
 	//	public string sourceCoords=> army.sourceCity.nameAndRemarksAndPlayer;
 	//	public string targetCoords=> army.targetCity.nameAndRemarksAndPlayer;
-		public string info => $"{army.time.Format()} to {army.targetPlayer}";
+		public string info =>  $"{(trade.isReturning ? trade.returnTime.Format(): trade.time.Format())} { (!isIncoming ? trade.targetCity : trade.sourceCity) }";
 
-		internal void SourceClick(object sender,RoutedEventArgs e)
+		
+		internal void InfoClick(object sender,RoutedEventArgs e)
 		{
-			CityUI.ShowCity(army.sourceCid,false);
-		}
-		internal void TargetClick(object sender,RoutedEventArgs e)
-		{
-			CityUI.ShowCity(army.targetCid,false);
+			CityUI.ShowCity(!isIncoming ? trade.targetCid : trade.sourceCid,false);
 		}
 
 
-		internal string toolTip => army.resources.Format(separator:",");
-
+		internal string toolTip => trade.resources.Format(separator:",");
+		internal bool isIncoming => trade.targetCid == City.build;
+		internal bool isOutgoing => !isIncoming;
 		internal TradeItem(TradeOrder army)
 		{
-			this.army = army;
+			this.trade = army;
 			
-			action =  ImageHelper.Get(   "Region/UI/icon_player_resource_outgoing.png"  );
+			action =  ImageHelper.Get( trade.isReturning ?  "Region/UI/icon_player_own_troops_ret.png" : 
+				isIncoming ?  "Region/UI/icon_player_resource_inc.png" : "Region/UI/icon_player_resource_outgoing.png"  );
 			
 		}
 		

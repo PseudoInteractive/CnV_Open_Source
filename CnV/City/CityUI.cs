@@ -219,7 +219,7 @@ public static partial class CityUI
 		}
 		else if (me.isDungeon || me.isBoss)
 		{
-			AApp.AddItem(flyout, "Raid", (_, _) => Spot.JSRaid(cid));
+			AApp.AddItem(flyout, "Raid", (_, _) => City.GetBuild().Raid(WorldC.FromCid(cid) ));
 
 		}
 		else if (me.isEmpty )
@@ -675,6 +675,10 @@ public partial class City
 	internal void Settle(WorldC worldC)
 	{
 		SendTroops.ShowInstance(this,City.Get(worldC), isSettle:true);
+	}
+	internal void Raid(WorldC worldC)
+	{
+		SendTroops.ShowInstance(this,City.Get(worldC),isSettle: false,viaWater:false, type:ArmyType.raid) ;
 	}
 }
 

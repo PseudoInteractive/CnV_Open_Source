@@ -13,8 +13,8 @@
 			<x:Double x:Key="ChatFontSize">14</x:Double>
 			<x:Double x:Key="ChatImageHeight">32</x:Double>
 
-	
-			<FontFamily x:Key="ContentControlThemeFontFamily">ms-appx:///Assets/CnvIcons.ttf#CnvIcons,Segoe UI*</FontFamily>
+
+	<FontFamily x:Key="ContentControlThemeFontFamily">ms-appx:///Content/CnvIcons-Regular-SVG.ttf#CnvIcons,Segoe UI*</FontFamily>
 			<FontFamily x:Key="KeyTipFontFamily" >ms-appx:///Assets/CnvIcons.ttf#CnvIcons,Segoe UI*</FontFamily>
 
 

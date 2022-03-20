@@ -33,7 +33,7 @@
 						   ValueChanged="FilterNans" Width="150" SmallChange="10000" LargeChange="100000"/>
 				<Button Grid.Row="1" HorizontalAlignment="Left" Content="Max" Click="SetMax0" />
 			</Grid>
-			<Grid Grid.Row="1">
+			<Grid Grid.Column="1">
 				<Grid.RowDefinitions>
 					<RowDefinition  />
 					<RowDefinition/>
@@ -43,7 +43,7 @@
 						   ValueChanged="FilterNans"  Width="150"  SmallChange="10000" LargeChange="100000" />
 				<Button Grid.Row="1" HorizontalAlignment="Left" Content="Max" Click="SetMax1" />
 			</Grid>
-			<Grid Grid.Row="0" Grid.Column="1">
+			<Grid Grid.Row="1" Grid.Column="0">
 				<Grid.RowDefinitions>
 					<RowDefinition  />
 					<RowDefinition/>
@@ -65,12 +65,13 @@
 				<Button Grid.Row="1" HorizontalAlignment="Left" Content="Max" Click="SetMax3" />
 			</Grid>
 		</Grid>
-		<RadioButtons Grid.Row="1" x:Name="transport" SelectedIndex="0" SelectionChanged="transport_SelectionChange" Header="Transport" MaxColumns="2" Margin="16"  >
+		<RadioButtons Grid.Row="1" x:Name="transport" SelectedIndex="0" SelectionChanged="transport_SelectionChange" HorizontalAlignment="Center" MaxColumns="2" Margin="16"  >
 			<RadioButton Content="{x:Bind cartsStr, Mode=OneWay}" />
 			<RadioButton Content="{x:Bind shipsStr, Mode=OneWay}" />
 
 		</RadioButtons>
-		<Button Grid.Row="1" HorizontalAlignment="Right" Content="Send" Click="SendClick" />
+		<Button Grid.Row="1" HorizontalAlignment="Left" Content="Clear" Click="ClearClick"  Style="{StaticResource ButtonMedium}"/>
+		<Button Grid.Row="1" HorizontalAlignment="Right" Content="Send" Click="SendClick"  Style="{StaticResource ButtonMedium}"/>
 		
 	</Grid>
 </cnv:DialogG>

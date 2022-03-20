@@ -364,7 +364,7 @@ namespace CnV
 					//			Trace($"TS Home {city._tsHome}");
 
 					//   city.tsRaid = city.tsHome;
-					city.isCastle = jsCity.GetAsInt("12") > 0;
+					//city.isCastle = jsCity.GetAsInt("12") > 0;
 					city.points = (ushort)jsCity.GetAsInt("4");
 
 					city.isOnWater |= jsCity.GetAsInt("16") > 0;  // Use Or in case the data is imcomplete or missing, in which case we get it from world data, if that is not incomplete or missing ;)
