@@ -55,7 +55,15 @@ public static partial class CityUI
 			LogEx(ex);
 		}
 	}
-
+	public  static void Show(this Artifact.ArtifactType type, object sender)
+		{
+			var level = Player.me.title.rank;
+			var art = Artifact.all.FirstOrDefault(a => a.level == level&& a.type == type);
+			if(art is not null)
+				ArtifactDialogue.ShowInstance(art,sender as FrameworkElement);
+			else
+				AppS.MessageBox("No artifact type for your rank");
+		}
 	public static void Init()
 	{
 		World.worldFirstLoadedActions += CityUI.LoadFromPriorSession;

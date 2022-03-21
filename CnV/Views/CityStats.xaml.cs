@@ -829,13 +829,13 @@ namespace CnV
 			CityView.selectedBuildingIdsChangeTime = AGame.animationT;
 		}
 
-		private void WoodTap(object sender,TappedRoutedEventArgs e)=> Artifact.Show( Artifact.ArtifactType.axe, sender);
-		private void StoneTap(object sender,TappedRoutedEventArgs e)=> Artifact.Show( Artifact.ArtifactType.hammer, sender);
-		private void IronTap(object sender,TappedRoutedEventArgs e)=> Artifact.Show( Artifact.ArtifactType.pike, sender);
-		private void FoodTap(object sender,TappedRoutedEventArgs e)=> Artifact.Show( Artifact.ArtifactType.sickle, sender);
-		private void GoldTap(object sender,TappedRoutedEventArgs e)=> Artifact.Show( Artifact.ArtifactType.chest, sender);
+		private void WoodTap(object sender,TappedRoutedEventArgs e)=> CityUI.Show( Artifact.ArtifactType.axe, sender);
+		private void StoneTap(object sender,TappedRoutedEventArgs e)=> CityUI.Show( Artifact.ArtifactType.hammer, sender);
+		private void IronTap(object sender,TappedRoutedEventArgs e)=> CityUI.Show( Artifact.ArtifactType.pike, sender);
+		private void FoodTap(object sender,TappedRoutedEventArgs e)=> CityUI.Show( Artifact.ArtifactType.sickle, sender);
+		private void GoldTap(object sender,TappedRoutedEventArgs e)=> CityUI.Show( Artifact.ArtifactType.chest, sender);
 
-		private void QueueRightTapped(object sender,RightTappedRoutedEventArgs e)=>	Artifact.Show( Artifact.ArtifactType.medallion, sender);
+		private void QueueRightTapped(object sender,RightTappedRoutedEventArgs e)=>	CityUI.Show( Artifact.ArtifactType.medallion, sender);
 
 		private void EnlistmentContextRequested(UIElement sender,ContextRequestedEventArgs args)
 		{
@@ -845,7 +845,7 @@ namespace CnV
 			
 			flyout.AddItem("Amulet..",Symbol.OutlineStar,() =>
 			{
-				Artifact.Show( Artifact.ArtifactType.amulet, sender);
+				CityUI.Show( Artifact.ArtifactType.amulet, sender);
 			});
 
 			if(instance.RecruitQueueListView.SelectedItems.Any())
@@ -959,7 +959,7 @@ namespace CnV
 			
 			flyout.AddItem("Medallion..",Symbol.OutlineStar,() =>
 			{
-				Artifact.Show( Artifact.ArtifactType.medallion, sender);
+				CityUI.Show( Artifact.ArtifactType.medallion, sender);
 			});
 			flyout.AddItem(StandardUICommandKind.Delete.Create( () =>
 			{

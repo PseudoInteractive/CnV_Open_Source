@@ -55,11 +55,11 @@ namespace CnV
 
 		public string title => Title.TADesc(Player.me.TALevel);
 
-		private void WoodTapped(object sender,TappedRoutedEventArgs e)=> Artifact.Show( Artifact.ArtifactType.saw, sender);
-		private void StoneTapped(object sender,TappedRoutedEventArgs e)=> Artifact.Show( Artifact.ArtifactType.chisel, sender);
-		private void IronTapped(object sender,TappedRoutedEventArgs e)=> Artifact.Show( Artifact.ArtifactType.crucible, sender);
-		private void FoodTapped(object sender,TappedRoutedEventArgs e)=> Artifact.Show( Artifact.ArtifactType.Hoe, sender);
-		private void GoldTapped(object sender,TappedRoutedEventArgs e)=> Artifact.Show( Artifact.ArtifactType.chest, sender);
+		private void WoodTapped(object sender,TappedRoutedEventArgs e)=> CityUI.Show( Artifact.ArtifactType.saw, sender);
+		private void StoneTapped(object sender,TappedRoutedEventArgs e)=> CityUI.Show( Artifact.ArtifactType.chisel, sender);
+		private void IronTapped(object sender,TappedRoutedEventArgs e)=> CityUI.Show( Artifact.ArtifactType.crucible, sender);
+		private void FoodTapped(object sender,TappedRoutedEventArgs e)=> CityUI.Show( Artifact.ArtifactType.Hoe, sender);
+		private void GoldTapped(object sender,TappedRoutedEventArgs e)=> CityUI.Show( Artifact.ArtifactType.chest, sender);
 		private void TitleTapped(object sender,TappedRoutedEventArgs e)=> ResearchPurchase.ShowInstance( ResearchItems.GetTA(Player.me.TALevel+1) );
 		private void ResContextRequest(UIElement sender,ContextRequestedEventArgs args )
 		{
@@ -74,19 +74,19 @@ namespace CnV
 
 			flyout.AddItem("Saw..",Symbol.OutlineStar,() =>
 			{
-				Artifact.Show(Artifact.ArtifactType.saw,sender);
+				CityUI.Show(Artifact.ArtifactType.saw,sender);
 			});
 			flyout.AddItem("Chisel..",Symbol.OutlineStar,() =>
 			{
-				Artifact.Show(Artifact.ArtifactType.chisel,sender);
+				CityUI.Show(Artifact.ArtifactType.chisel,sender);
 			});
 			flyout.AddItem("Crucible..",Symbol.OutlineStar,() =>
 			{
-				Artifact.Show(Artifact.ArtifactType.crucible,sender);
+				CityUI.Show(Artifact.ArtifactType.crucible,sender);
 			}); 
 			flyout.AddItem("Hoe..",Symbol.OutlineStar,() =>
 			{
-				Artifact.Show(Artifact.ArtifactType.Hoe,sender);
+				CityUI.Show(Artifact.ArtifactType.Hoe,sender);
 			});
 			flyout.Show(sender,args);
 		}
