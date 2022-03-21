@@ -1078,7 +1078,7 @@ namespace CnV
 		public BitmapImage action { get; set; }
 	//	public string sourceCoords=> army.sourceCity.nameAndRemarksAndPlayer;
 	//	public string targetCoords=> army.targetCity.nameAndRemarksAndPlayer;
-		public string info => $"{army.arrival.Format()} to {army.targetPlayer}";
+		public string info => $"{army.arrival.Format()} {(army.isReturn ? "from" : "to")} {army.targetCity}";
 
 		internal void SourceClick(object sender,RoutedEventArgs e)
 		{
@@ -1096,9 +1096,15 @@ namespace CnV
 		{
 			this.army = army;
 			
-			action =  ImageHelper.Get(  army.isReturn? "Region/UI/icon_player_own_troops_ret.png"  : 
+			action =  ImageHelper.Get(  
+								army.isRaid ? (
+												army.isScheduledToReturn ? "UI/Icons/icon_cmmnds_raid_datetime.png" :
+												army.isRepeating ? "UI/Icons/icon_cmmnds_raid_loop.png" : 
+												"UI/Icons/icon_cmmnds_raid_once.png" ):
+								army.isReturn? "Region/UI/icon_player_own_troops_ret.png"  : 
 								army.isSettle ? "Region/UI/icon_player_own_settlement.png" : 
 								army.isDefense ? "Region/UI/icon_player_own_support_inc.png" :
+								
 								"Region/UI/icon_player_own_attack.png");
 			
 		}

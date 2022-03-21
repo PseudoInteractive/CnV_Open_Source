@@ -130,7 +130,8 @@ namespace CnV
 
 				using(var __lock = Sim.eventQLock.Enter)
 				{
-					var t = Army.FromNow(city,target.cid,transport,type,ts,false);
+					var t = Army.FromNow(city,target.cid,transport,type,ts,isReturn:false,
+						flags:type==ArmyType.raid ? Army.flagRepeating : Army.flagNone);
 				//	Assert(!t.departed);
 				//	Assert(t.isSchedueledNotSent);
 					new CnVEventSendTroops(t).EnqueueAlreadyLocked();

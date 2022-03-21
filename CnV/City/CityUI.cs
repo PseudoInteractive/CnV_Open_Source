@@ -203,8 +203,8 @@ public static partial class CityUI
 				aWar.AddItem("Incoming", me.ShowIncoming);
 
 			//	if (Raid.test)
+			aWar.AddItem("Send Defence",            (_, _) => City.GetBuild().SendDefence(WorldC.FromCid(cid) ));
 			aWar.AddItem("Recruit Sen",             (_, _) => Recruit.Send(cid, ttSenator, 1, true));
-			aWar.AddItem("Send Defence",            (_, _) => Spot.JSDefend(cid));
 			aWar.AddItem("Show Reinforcements",     (_, _) => ReinforcementsTab.ShowReinforcements(cid, null));
 			aWar.AddItem("Show All Reinforcements", (_, _) => ReinforcementsTab.ShowReinforcements(0,   null));
 			aExport.AddItem("Defense Sheet", me.ExportToDefenseSheet);
@@ -679,6 +679,10 @@ public partial class City
 	internal void Raid(WorldC worldC)
 	{
 		SendTroops.ShowInstance(this,City.Get(worldC),isSettle: false,viaWater:false, type:ArmyType.raid) ;
+	}
+	internal void SendDefence(WorldC worldC)
+	{
+		SendTroops.ShowInstance(this,City.Get(worldC),isSettle: false,viaWater:false, type:ArmyType.defense) ;
 	}
 }
 

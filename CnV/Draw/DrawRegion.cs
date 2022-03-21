@@ -1838,7 +1838,7 @@ internal partial class GameClient
 	//          ds.DrawRoundedSquare(midS, rectSpan, color, 2.0f) ;
 	//      }
 
-	const float actionStopDistance = 1.0f;
+	const float actionStopDistance = 0.5f;
 	private static void DrawAction(float timeToArrival,float journeyTime,float wave,Vector2 c0,Vector2 c1,Color color,
 	Material bitmap,bool applyStopDistance,Army? army,float alpha = 1,float lineThickness = GameClient.lineThickness,bool highlight = false)
 	{
@@ -1861,15 +1861,15 @@ internal partial class GameClient
 		}
 		if(applyStopDistance)
 		{
-			progress = progress.Min(1.0f -  (actionStopDistance / Vector2.Distance(c0,c1)).Min(0.25f) ).Max(0);
-			//      var dc01 = c0 - c1;
-			//       c1 += dc01 *( actionStopDistance / dc01.Length());
+			progress *= (1.0f -  (actionStopDistance / Vector2.Distance(c0,c1)).Min(0.25f) );
+			
+			//c1  = c0 + (c1 - c0)* stop;
 		}
 
 		var gain = 1.0f;
 		if(timeToArrival < postAttackDisplayTime && timeToArrival > 0 )
 			gain = 1.0f + (1.0f - timeToArrival / postAttackDisplayTime) * 0.25f;
-		var mid = progress.Lerp(c0,c1);
+		
 
 
 		float spriteSize = spriteSizeGain;
@@ -1902,6 +1902,7 @@ internal partial class GameClient
 		//var dc = new Vector2(spriteSize, spriteSize);
 		if(bitmap != null)
 		{
+			var mid = progress.Lerp(c0,c1);
 			var _c0 = new Vector2(mid.X - spriteSize,mid.Y - spriteSize);
 			var _c1 = new Vector2(mid.X + spriteSize,mid.Y + spriteSize);
 			draw.AddQuadWithShadow(Layer.action + 4,Layer.effectShadow,bitmap,_c0,_c1,HSLToRGB.ToRGBA(wave,0.3f,0.825f,alpha,gain * 1.1875f),shadowColor,zEffects);

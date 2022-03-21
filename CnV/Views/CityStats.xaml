@@ -212,7 +212,7 @@
 
 			<Expander  IsExpanded="True" Expanding="Expander_Expanding" x:Name="expEnlistment" ContextRequested="EnlistmentContextRequested"  >
 				<Expander.Header>
-					<Button Content="Recruit" Style="{StaticResource ButtonMedium}" Margin="4,1,4,1" Click="EnlistmentClick" Padding="8,2" />
+					<Button Content="Recruit" Style="{StaticResource ButtonMedium}" Margin="4,1,4,1" Click="EnlistmentClick" Padding="8,2" HorizontalAlignment="Stretch" />
 				</Expander.Header>
 				<ListView x:Name="RecruitQueueListView" x:FieldModifier="public"  
 						  SelectionMode="Extended"  Background="{StaticResource ExpanderBrushContentAlt}"
