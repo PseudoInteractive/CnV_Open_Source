@@ -44,7 +44,7 @@ namespace CnV
 		}
 
 		public string zirconiaS => Player.me.zirconia.Format();
-		public string manaS => Player.me.mana.Format();
+		public string manaS => Player.me.sampleMana.Format();
 		public string goldS => (Player.me?.gold ?? 0).Format();
 		public string RefineS(int id) => Player.me.data.refines[id].Format();
 		internal static void GoldChanged()	=> Changed(nameof(goldS));

@@ -335,7 +335,7 @@ namespace CnV
 				//var firstVisible = instance.buildQueueListView.vis
 				var anyRemoved = false;
 				var city = instance.city;
-				var displayQueue = city.outgoing;
+				var displayQueue = city.outgoing.OrderBy(a => a.arrival).ToArray();
 				int lg = displayQueue.Length;
 				var bq = instance.commandItems;
 			
@@ -1117,15 +1117,9 @@ namespace CnV
 			flyout.AddItem("Return",Symbol.Undo,() =>
 			{
 				new CnVEventReturnTroops(army).EnqueueAsap();
-				
+				instance.commandItems.Remove(this);
 			});
 			
-			flyout.AddItem("Cancel Selected",Symbol.Cut,() =>
-			{
-			});
-			flyout.AddItem("Cancel all",Symbol.Clear,() =>
-			{
-			});
 			
 			// Todo: Sort
 

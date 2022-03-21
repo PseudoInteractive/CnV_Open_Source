@@ -6,11 +6,13 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 IsTabStop="True"
-	
+
 	TabFocusNavigation="Cycle"
     mc:Ignorable="d">
 
-    <Grid  MinWidth="200" TabFocusNavigation="Cycle" IsTabStop="True" >
+    <Grid  MinWidth="200" TabFocusNavigation="Cycle" IsTabStop="True" BorderThickness="1" Padding="4" 
+		   Background="{StaticResource ApplicationPageBackgroundThemeBrush}"
+		   CornerRadius="4">
 		<Grid.RowDefinitions >
 			<RowDefinition />
 			<RowDefinition MinHeight="60 "/>
