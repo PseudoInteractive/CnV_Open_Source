@@ -67,7 +67,7 @@ private void FoodClick(object sender,RoutedEventArgs e) => DoRefine(3);
 	public void OnPropertyChanged(string? member = null)
 	{
 		if (this.PropertyChanged is not null) 
-			AppS.DispatchOnUIThread(() => PropertyChanged?.Invoke(this,new(member)));
+			AppS.QueueOnUIThread(() => PropertyChanged?.Invoke(this,new(member)));
 	}
 		public static void Changed(string? member = null)
 		{

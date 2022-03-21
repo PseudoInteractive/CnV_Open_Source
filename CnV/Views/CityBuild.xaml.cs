@@ -1280,7 +1280,7 @@ namespace CnV
 		}
 		public void CityChanged()
 		{
-			AppS.DispatchOnUIThread(
+			AppS.QueueOnUIThread(
 				()=>
 				{
 					OnPropertyChanged(nameof(buildCity));

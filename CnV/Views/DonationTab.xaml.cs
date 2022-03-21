@@ -76,7 +76,7 @@ namespace CnV.Views
 
 
 				CityList.NotifyChange(true);
-				AppS.DispatchOnUIThread(() =>
+				AppS.QueueOnUIThread(() =>
 					{
 						blessedGrid.ItemsSource = BlessedCity.GetForCity(null);
 

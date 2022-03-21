@@ -127,6 +127,11 @@ namespace CnV.Views
 		}
 		internal void TimeScaleValueChanged(NumberBox sender,NumberBoxValueChangedEventArgs e)
 		{
+			if(e.NewValue.IsNaN())
+			{
+				App.FilterNans(sender,e);
+				return;
+			}
 			if(!e.OldValue.IsEqualTo(e.NewValue,1.0f/4.0f))
 			{
 				IServerTime.SetTimeScale((float)e.NewValue);

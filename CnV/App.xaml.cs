@@ -74,7 +74,15 @@ namespace CnV
 			get { return _activationService.Value; }
 		}
 
+		internal static void FilterNans(NumberBox sender,NumberBoxValueChangedEventArgs args)
+		{
+			if(Double.IsNaN(sender.Value) || Double.IsNaN(args.NewValue))
+			{
+				Log($"{args.NewValue} <= {args.OldValue} v: {sender.Value}");
 
+				sender.Value =0;
+			}
+		}
 		public static App instance;
 		public static string appLink = "cnv";
 

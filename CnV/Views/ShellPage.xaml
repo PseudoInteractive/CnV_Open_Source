@@ -361,7 +361,7 @@
 				<StackPanel Orientation="Vertical"  Padding="4" CornerRadius="{StaticResource baseCR}" Margin="0" Background="{StaticResource ExpanderBrushContent}" HorizontalAlignment="Center">
 					<NumberBox  x:Name="timeScaleNumberBox" Header="TimeScale:"  Value="1" ValueChanged="TimeScaleValueChanged" Margin="2,4"  HorizontalContentAlignment="Right" VerticalContentAlignment="Center" VerticalAlignment="Center" HorizontalAlignment="Center"  
 								ToolTipService.ToolTip="Speeds up or slows down the server clock rate [for test]"
-								Minimum="0.0" 
+								Minimum="0.0"  
 								
 						Maximum="256" >
 						
@@ -392,7 +392,9 @@
 
 
 					</tk:WrapPanel>
-					<NumberBox x:Name="gotoTimeOffset" Value ="5" Description="Step time offset (minutes)"  />
+                    <NumberBox x:Name="gotoTimeOffset" Value ="5" Description="Step time offset" 
+                               ToolTipService.ToolTip="Minutes added when forward or back is pressed"
+                               ValueChanged="{x:Bind cnv:App.FilterNans}" />
 				</StackPanel>
 			</Expander>
 

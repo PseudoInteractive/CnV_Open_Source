@@ -43,7 +43,7 @@ namespace CnV
 		public void OnPropertyChanged(string? member = null)
 		{
 			if (this.PropertyChanged is not null) 
-				AppS.DispatchOnUIThread(() => PropertyChanged?.Invoke(this,new(member)));
+				AppS.QueueOnUIThread(() => PropertyChanged?.Invoke(this,new(member)));
 		}
 		public static void Changed(string? member = null)
 		{
@@ -468,7 +468,7 @@ namespace CnV
 		}
 		//public void OnPropertyChanged() =>
 		//		PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(null));
-		static bool updateInProgress;
+
 		public void UpdateUI()
 		{
 			try
@@ -479,9 +479,7 @@ namespace CnV
 					return;
 				// building counts
 
-				if(updateInProgress)
-					return;
-				updateInProgress = true;
+		
 
 				AppS.DispatchOnUIThreadIdle(() =>
 				{
@@ -615,7 +613,7 @@ namespace CnV
 					}
 					finally
 					{
-						updateInProgress = false;
+						
 
 					}
 				});
