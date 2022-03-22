@@ -6,12 +6,12 @@
     xmlns:cnv="using:CnV"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-	MaxWidth="640"
+
 
     mc:Ignorable="d">
 
     
-		<SemanticZoom Width="600" Height="600" IsZoomedInViewActive="False" x:Name="semanticZoom" >
+		<SemanticZoom Width="400" Height="600" IsZoomedInViewActive="False" x:Name="semanticZoom" >
 		<SemanticZoom.Resources>
 			<CollectionViewSource x:Name="cvsGroups" IsSourceGrouped="True" ItemsPath="quests"
                              />
@@ -23,13 +23,17 @@
 		</SemanticZoom.Resources>
 			<SemanticZoom.ZoomedInView>
 				<!-- Put the GridView for the zoomed in view here. -->
-			<ListView x:Name="questItems"  GotFocus="List_GotFocus" ItemsSource="{x:Bind cvsGroups.View}" >
+			<ListView x:Name="questItems"  GotFocus="List_GotFocus" ItemsSource="{x:Bind cvsGroups.View}" HorizontalAlignment="Stretch" >
 				<ListView.ItemTemplate>
 					<DataTemplate x:DataType="cnv:Quest"  >
-						<StackPanel Orientation="Horizontal">
-							<CheckBox IsChecked="{x:Bind unlocked}" MinWidth="32" MaxWidth="64" VerticalAlignment="Center"/>
-							<TextBlock Text="{x:Bind n}" Style="{StaticResource BodyTextBlockStyle}" VerticalAlignment="Center"/>
-						</StackPanel>
+						<Grid>
+							<Grid.ColumnDefinitions>
+								<ColumnDefinition Width="auto" />
+								<ColumnDefinition Width="*" />
+							</Grid.ColumnDefinitions>
+							<CheckBox IsChecked="{x:Bind unlocked}" MinWidth="32"  VerticalAlignment="Center" IsEnabled="False" />
+							<TextBlock Grid.Column="1"  Text="{x:Bind nOrSd}" Style="{StaticResource TextBlockMedium}" VerticalAlignment="Center" TextWrapping="Wrap" MaxLines="4"/>
+						</Grid>
 					</DataTemplate>
 				</ListView.ItemTemplate>
 				<ListView.GroupStyle>

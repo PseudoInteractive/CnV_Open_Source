@@ -47,7 +47,7 @@
 					  Text="{x:Bind title, Mode=OneWay}" Width="170"
 					   Tapped="TitleTapped"
 					 />
-		<Image Source="{x:Bind cnv:ImageHelper.Get('UI/icons/quests/icon_quest_3.png')}" Stretch="None" VerticalAlignment="Center" Tapped="QuestsTapped" />
+		<Image Source="{x:Bind cnv:ImageHelper.Get('UI/icons/quests/icon_quest_3.png')}" VerticalAlignment="Center" Tapped="QuestsTapped" />
 
 	</tk:WrapPanel>
 </UserControl>

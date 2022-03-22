@@ -31,8 +31,8 @@ namespace CnV
 		{
 			Quests.UpdateUnlockData();
 			var art = instance ?? new QuestList();
-			art.cvsGroups.Source=QuestGroup.all; 	
-			art.questItems.ItemsSource = art.cvsGroups.View; // reset
+			art.cvsGroups.Source=QuestGroup.all.Skip(1); 	
+			//art.questItems.ItemsSource = art.cvsGroups.View; // reset
 			art.Show(true);
 			
 
