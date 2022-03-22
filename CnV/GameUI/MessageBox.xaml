@@ -10,7 +10,7 @@ IsTabStop="True"
 	TabFocusNavigation="Cycle"
     mc:Ignorable="d">
 
-    <Grid  MinWidth="200" TabFocusNavigation="Cycle" IsTabStop="True" BorderThickness="1" Padding="4" 
+	<Grid  MinWidth="200" TabFocusNavigation="Cycle" IsTabStop="True"  Padding="4" Margin="1" 
 		   Background="{StaticResource ApplicationPageBackgroundThemeBrush}"
 		   CornerRadius="4">
 		<Grid.RowDefinitions >
@@ -19,7 +19,7 @@ IsTabStop="True"
 			<RowDefinition />
 			<RowDefinition />
 		</Grid.RowDefinitions>
-		<TextBlock x:Name="title" Style="{StaticResource TextBlockMedium}" x:FieldModifier="internal" />
+		<TextBlock x:Name="title" Style="{StaticResource TextBlockMedium}" x:FieldModifier="internal" Margin="4" />
 		<Image x:Name="image" Grid.Row="1"  x:FieldModifier="internal"
 			   Stretch="None" Margin="4,8,4,8" />
 		<Border Grid.Row="1"  
@@ -28,7 +28,7 @@ IsTabStop="True"
 		
 			<TextBlock x:Name="message"  Style="{StaticResource TextBlockMedium}"  x:FieldModifier="internal" TextWrapping="Wrap" MaxLines="8" />
 		</Border>
-		<TextBlock x:Name="footer" Grid.Row="2"  Style="{StaticResource TextBlockMedium}"  x:FieldModifier="internal" TextWrapping="Wrap" MaxLines="8" />
+		<TextBlock x:Name="footer" Grid.Row="2"  Style="{StaticResource TextBlockMedium}"  x:FieldModifier="internal" TextWrapping="Wrap" MaxLines="8" Margin="8,0,0,0"/>
 		<Button x:Name ="button" TabIndex="1" IsTabStop="True"  Grid.Row="3" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="2" Style="{StaticResource ButtonMedium}"  x:FieldModifier="internal" />
 	</Grid>
 </UserControl>

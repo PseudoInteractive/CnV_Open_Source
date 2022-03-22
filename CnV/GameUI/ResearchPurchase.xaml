@@ -18,7 +18,10 @@
 			<cnv:IronText Text="{x:Bind Req(2), Mode=OneWay }" Width="200" />
 			<cnv:FoodText Text="{x:Bind Req(3), Mode=OneWay }"  Width="200" />
 			<cnv:GoldText Text="{x:Bind Req(4), Mode=OneWay }"  Width="200" />
-			<Button Content="Research" IsEnabled="{x:Bind hasEnough, Mode=OneWay}" Click="DoResarch" HorizontalAlignment="Right"/>
+			<Grid>
+				<Button Content="Refine"  Click="Refine" HorizontalAlignment="Left"/>
+				<Button Content="Research" IsEnabled="{x:Bind hasEnough, Mode=OneWay}" Click="DoResarch" HorizontalAlignment="Right"/>
+			</Grid>
 
 		</StackPanel>
 	</Grid>

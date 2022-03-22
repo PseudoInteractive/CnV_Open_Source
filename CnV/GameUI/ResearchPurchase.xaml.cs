@@ -72,5 +72,10 @@ namespace CnV
 			new CnVEventResearch(r.id).Execute();
 			Hide();
 		}
+
+		private void Refine(object sender,RoutedEventArgs e)
+		{
+			RefineDialogue.ShowInstance();
+		}
 	}
 }

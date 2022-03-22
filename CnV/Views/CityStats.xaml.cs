@@ -430,9 +430,15 @@ namespace CnV
 		internal string TroopsOwnedS => city?.troopsOwned.Format(separator: ',');
 		internal string IncomingReinforcements => city?.incomingReinforcements.Format(separator: ',');
 
+		internal Visibility TroopsHomeVisible => city?.troopsOwned != new TroopTypeCounts(city.troopsHere) ? Visibility.Visible : Visibility.Collapsed;
+
+		internal Visibility IncomingReinforcementsVisible => city.incomingReinforcements.Any()==true? Visibility.Visible : Visibility.Collapsed;
+
 		public string commandsTitle => $"Commands {commandItems.Count}/{city.commandSlots}";
 		public string tradesTitle => $"Trades {tradeItems.Count}";
+		public string troopsTitle => $"Troops {city?.tsTotal}/{city?.stats.maxTs}";
 
+		public string recruitTitle => city?.amuletTime > 0 ? $"Recruit {city?.amuletTime}" : "Recruit";
 		//public SolidColorBrush ResourceForeground(int resId) => new SolidColorBrush(Windows.UI.Color.FromArgb(255,(byte)(31+64*resId),128,128) );
 		//public string ResourceStr(int resId) => $"{city?.resources[resId]:N0}";
 

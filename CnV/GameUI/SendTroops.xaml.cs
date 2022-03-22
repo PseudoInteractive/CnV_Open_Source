@@ -29,6 +29,9 @@ namespace CnV
 		internal City city;
 		internal City target;
 		internal ArmyType type;
+		
+		internal readonly int[] splitsItems = Enumerable.Range(1,16).ToArray();
+
 		internal ArmyTransport transport => isSettle ? (viaWater ? ArmyTransport.ports : ArmyTransport.carts) : (viaWater ? ArmyTransport.water : ArmyTransport.land);
 		public SendTroops()
 		{
@@ -47,6 +50,8 @@ namespace CnV
 
 			OnPropertyChanged();
 		}
+
+		bool isRaid => type==ArmyType.raid; 
 		public static void ShowInstance(City city,City target,bool isSettle,bool viaWater=false, ArmyType type = ArmyType.defense)
 		{
 			var rv = instance ?? new SendTroops();
@@ -58,6 +63,8 @@ namespace CnV
 			rv.UpdateTroopItems();
 			if(isSettle)
 				rv.troopItems[Troops.ttMagistra].count = 1;
+
+			rv.raidPanel.Visibility = rv.isRaid ? Visibility.Visible : Visibility.Collapsed; 
 
 			rv.Show(false);
 			
@@ -104,11 +111,22 @@ namespace CnV
 		}
 		private void MaxClick(object sender,RoutedEventArgs e)
 		{
+			var t = city.troopsOwned;
 			for(var i = Troops.ttZero;i<Troops.ttCount;++i)
-				troopItems[i].count = city.troopsOwned.GetCount(i);
+				troopItems[i].count = t.GetCount(i);
+			foreach(var i in CityStats.instance.recruitQueue)
+			{
+				troopItems[i.op.t].count += i.op.count; 
+			}	
 			Changed();
 		}
-
+		private void HomeClick(object sender,RoutedEventArgs e)
+		{
+			var t = city.troopsHome;
+			for(var i = Troops.ttZero;i<Troops.ttCount;++i)
+				troopItems[i].count = t.GetCount(i);
+			Changed();
+		}
 
 		private void SendTroopsClick(object sender,RoutedEventArgs e)
 		{
@@ -130,8 +148,10 @@ namespace CnV
 
 				using(var __lock = Sim.eventQLock.Enter)
 				{
-					var t = Army.FromNow(city,target.cid,transport,type,ts,isReturn:false,
-						flags:type==ArmyType.raid ? Army.flagRepeating : Army.flagNone);
+					var t = Army.FromNow(city,target.cid,transport,type,ts,isReturn: false,
+						flags: (byte)(isRaid? (repeatCheckBox.IsChecked.Value ? Army.flagRepeating : Army.flagNone) 
+									: Army.flagNone 
+									| Army.FlagSplits((int)splitsCombo.SelectedItem))); ;
 				//	Assert(!t.departed);
 				//	Assert(t.isSchedueledNotSent);
 					new CnVEventSendTroops(t).EnqueueAlreadyLocked();

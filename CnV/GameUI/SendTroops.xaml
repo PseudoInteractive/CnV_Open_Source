@@ -14,10 +14,17 @@
 			<RowDefinition  />
 			<RowDefinition Height="auto" />
 		</Grid.RowDefinitions>
-		<Button Grid.Row="1" Style="{StaticResource ButtonMedium}" Content="Send" Click="SendTroopsClick" HorizontalAlignment="Right"/>
-		<Button Grid.Row="1" Style="{StaticResource ButtonMedium}" Content="Max" Click="MaxClick" HorizontalAlignment="Left"/>
-		<Button Grid.Row="1" Style="{StaticResource ButtonMedium}" Content="Zero" Click="ClearClick" HorizontalAlignment="Center"/>
-
+		<Button Grid.Row="1" Style="{StaticResource ButtonMedium}" Content="Send" Click="SendTroopsClick" HorizontalAlignment="Right" Margin="8,2"/>
+		<StackPanel Grid.Row="1" Orientation="Horizontal" Padding="4">
+			<Button Style="{StaticResource ButtonMedium}" Content="Total" Click="MaxClick" Margin="0,2,8,2" />
+			<Button Style="{StaticResource ButtonMedium}" Content="Home" Click="HomeClick" Margin="8,2" />
+			<Button Style="{StaticResource ButtonMedium}" Content="Zero" Click="ClearClick" Margin="8,2"  />
+			<StackPanel Orientation="Horizontal" Padding="0" x:Name="raidPanel" >
+				<TextBlock Text="Splits" Margin="12,2,0,2" VerticalAlignment="Center" />
+				<ComboBox x:Name="splitsCombo" ItemsSource="{x:Bind splitsItems}" SelectedIndex="0" Margin="12,2" VerticalAlignment="Center" />
+				<CheckBox x:Name="repeatCheckBox" Content="Repeat" IsChecked="True" Margin="8,2" />
+			</StackPanel>
+		</StackPanel>
 
 		<GridView x:Name="troopList"  Grid.Row="0" VerticalAlignment="Stretch"  ItemsSource="{x:Bind troopItems,Mode=OneWay}" >
 			

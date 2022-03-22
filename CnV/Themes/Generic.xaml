@@ -14,8 +14,9 @@
 			<Setter Property="Template">
 				<Setter.Value>
 					<ControlTemplate TargetType="cnv:IconText" >
-					<Grid BorderThickness="1" BorderBrush="{StaticResource SystemAccentColorDark1}"  MaxWidth="{TemplateBinding MaxWidth}" 
-							  Width="{TemplateBinding Width}"  Background="Black" CornerRadius="2"     VerticalAlignment="Center" >
+					<Grid BorderThickness="{TemplateBinding BorderThickness}" 
+						  BorderBrush="{TemplateBinding BorderBrush}"   MaxWidth="{TemplateBinding MaxWidth}" 
+							  Width="{TemplateBinding Width}"  Background="{TemplateBinding Background}"     VerticalAlignment="Center" >
 							<Grid.ColumnDefinitions>
 								<ColumnDefinition Width="Auto"/>
 								<ColumnDefinition Width="Auto"/>

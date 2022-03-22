@@ -24,7 +24,8 @@
 				   ZoomMode="Disabled" 
 				
 				   HorizontalScrollBarVisibility="Disabled"
-				
+				   Margin="0,0,0,42" 
+					
 				   HorizontalAlignment="Stretch"
 				   VerticalScrollBarVisibility="Auto"
 				  HorizontalContentAlignment="Stretch">
@@ -212,7 +213,7 @@
 
 			<Expander  IsExpanded="True" Expanding="Expander_Expanding" x:Name="expEnlistment" ContextRequested="EnlistmentContextRequested"  >
 				<Expander.Header>
-					<Button Content="Recruit" Style="{StaticResource ButtonMedium}" Margin="4,1,4,1" Click="EnlistmentClick" Padding="8,2" HorizontalAlignment="Stretch" />
+					<Button Content="{x:Bind recruitTitle, Mode=OneWay}" Style="{StaticResource ButtonMedium}" Margin="4,1,4,1" Click="EnlistmentClick" Padding="8,2" HorizontalAlignment="Stretch" />
 				</Expander.Header>
 				<ListView x:Name="RecruitQueueListView" x:FieldModifier="public"  
 						  SelectionMode="Extended"  Background="{StaticResource ExpanderBrushContentAlt}"
@@ -315,19 +316,20 @@
 			<Expander  IsExpanded="True" Expanding="Expander_Expanding" x:Name="expReinforcements"  >
 				<Expander.Header   >
 					<Border   CornerRadius="{StaticResource baseCR}" >
-						<TextBlock x:Name="troopsHeaderText"  Text ="Troops" Margin="0"  Style="{StaticResource TextBlockMedium}"   />
+						<TextBlock x:Name="troopsHeaderText"  Text ="{x:Bind troopsTitle, Mode=OneWay}" Margin="0"  Style="{StaticResource TextBlockMedium}"   />
 					</Border>
 				</Expander.Header>
 				<StackPanel>
 					<Border   CornerRadius="4" Margin="0" Padding="4" Background="{StaticResource ExpanderBrushHeader}" >
 
 						<StackPanel>
-							<TextBlock Text="Owned" Style="{StaticResource TextBlockMedium}" Margin="4" />
+							<TextBlock Text="Owned" Style="{StaticResource TextBlockMedium}" Margin="4"  Visibility="{x:Bind TroopsHomeVisible,Mode=OneWay}" />
 							<TextBlock Text="{x:Bind TroopsOwnedS, Mode=OneWay}"  Style="{StaticResource TextBlockMedium}"  
 									   TextWrapping="Wrap" FontSize="16" MaxLines="8" Margin="8,2,2,2" />
 						</StackPanel>
 					</Border>
-					<Border   CornerRadius="4" Margin="0" Padding="4" Background="{StaticResource ExpanderBrushHeader}" >
+					<Border   CornerRadius="4" Margin="0" Padding="4" Background="{StaticResource ExpanderBrushHeader}" 
+							  Visibility="{x:Bind TroopsHomeVisible,Mode=OneWay}">
 
 						<StackPanel>
 							<TextBlock Text="Here" Style="{StaticResource TextBlockMedium}" Margin="4" />
@@ -335,7 +337,8 @@
 									   TextWrapping="Wrap" FontSize="16" MaxLines="8" Margin="8,2,2,2" />
 						</StackPanel>
 					</Border>
-					<Border   CornerRadius="4" Margin="0" Padding="4" Background="{StaticResource ExpanderBrushHeader}" >
+					<Border   CornerRadius="4" Margin="0" Padding="4" Background="{StaticResource ExpanderBrushHeader}" 
+							  Visibility="{x:Bind IncomingReinforcementsVisible,Mode=OneTime}">
 
 						<StackPanel>
 							<TextBlock Text="Incoming" Style="{StaticResource TextBlockMedium}" Margin="4" />
