@@ -214,9 +214,9 @@ internal partial class GameClient
 			if(timeSinceLastFrame > 0.25)
 			{
 #if DEBUG
-				Note.Show($"\nVery Slow {timeSinceLastFrame}");
+		///		Note.Show($"\nVery Slow {timeSinceLastFrame}");
 #endif
-				timeSinceLastFrame  = 0.125;
+				timeSinceLastFrame  = 0.25;
 			}
 			View.StepViewToPresent();
 			//cameraZoomLag += (cameraZoom - cameraZoomLag) * gain;
