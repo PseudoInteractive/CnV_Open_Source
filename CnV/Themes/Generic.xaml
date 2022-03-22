@@ -8,7 +8,8 @@
 	>
 	
 		<Style TargetType="cnv:IconText" >
-			<Setter Property="Width" Value="120"/>
+		<Setter Property="Width" Value="120"/>
+		<Setter Property="FontSize" Value="{StaticResource MediumFontSize}" />
 		<Setter Property="MaxWidth" Value="180"/>
 		<Setter Property="HorizontalContentAlignment" Value="Right"/>
 			<Setter Property="Template">
@@ -37,6 +38,7 @@
 
 							<TextBlock x:Name="textBlock"
                                           Text="{TemplateBinding Text}"
+											FontSize="{TemplateBinding FontSize}"
 											Style="{StaticResource TextBlockMedium}" 
 											MaxLines="3"
 									   Margin="2"

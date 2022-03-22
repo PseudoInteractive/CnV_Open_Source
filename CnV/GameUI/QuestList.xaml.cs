@@ -18,29 +18,49 @@ using Microsoft.UI.Xaml.Navigation;
 
 namespace CnV
 {
-    public sealed partial class QuestList : DialogG
-    {
+	public sealed partial class QuestList:DialogG, INotifyPropertyChanged
+	{
 		public static QuestList? instance;
-        public QuestList()
-        {
-            this.InitializeComponent();
+		public QuestList()
+		{
+			this.InitializeComponent();
 			instance=this;
-        }
+			
+		}
+		private QuestGroup[] questGroups => QuestGroup.all.Where(a=>a.n is not null).ToArray();
+		private Quest quest => cvsGroups.View.CurrentItem as Quest; 
+
+		public event PropertyChangedEventHandler? PropertyChanged;
 
 		internal static void ShowInstance()
 		{
 			Quests.UpdateUnlockData();
 			var art = instance ?? new QuestList();
-			art.cvsGroups.Source=QuestGroup.all.Skip(1); 	
 			//art.questItems.ItemsSource = art.cvsGroups.View; // reset
 			art.Show(true);
 			
 
 		}
 
+		private  void View_CurrentChanged(object? sender,object e)
+		{
+			PropertyChanged.Invoke(this,new(String.Empty));
+		}
+
 		private void List_GotFocus(object sender,RoutedEventArgs e)
 		{
             semanticZoom.StartBringIntoView();
+		}
+
+
+		bool hasLoaded;
+		private void OnLoaded(object sender,RoutedEventArgs e)
+		{
+			if(!hasLoaded)
+			{
+				hasLoaded=true;
+				cvsGroups.View.CurrentChanged+=View_CurrentChanged;
+			}
 		}
 	}
 }
