@@ -91,8 +91,9 @@ namespace CnV
 			flyout.Show(sender,args);
 		}
 
-		
-
-		
+		private void QuestsTapped(object sender,TappedRoutedEventArgs e)
+		{
+			QuestList.ShowInstance();
+		}
 	}
 }

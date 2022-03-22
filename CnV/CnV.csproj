@@ -130,6 +130,7 @@
     <Compile Include="GameUI\Artifacts.xaml.cs" />
     <Compile Include="GameUI\DialogG.cs" />
     <Compile Include="GameUI\MessageBox.xaml.cs" />
+    <Compile Include="GameUI\QuestList.xaml.cs" />
     <Compile Include="GameUI\RecruitDialog.xaml.cs" />
     <Compile Include="GameUI\RefineDialogue.xaml.cs" />
     <Compile Include="GameUI\ResearchPurchase.xaml.cs" />
@@ -370,6 +371,9 @@
     <Page Include="GameUI\MessageBox.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="GameUI\QuestList.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="GameUI\RecruitDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -574,6 +578,7 @@
 	<None Remove="GameUI\ArtifactDialogue.xaml" />
 	<None Remove="GameUI\Artifacts.xaml" />
 	<None Remove="GameUI\MessageBox.xaml" />
+	<None Remove="GameUI\QuestList.xaml" />
 	<None Remove="GameUI\RecruitDialog.xaml" />
 	<None Remove="GameUI\RefineDialogue.xaml" />
 	<None Remove="GameUI\ResearchPurchase.xaml" />

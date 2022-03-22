@@ -608,17 +608,17 @@ namespace CnV
 
 				if(!wasRunning)
 				{
+					var t7 = Quests.Init();
 					var t2 = BuildingDef.Init();
 					var t3 = TroopInfo.Init();
 					var t4 = Title.Init();
 					var t5 = Artifact.Init();
 					var t6 = CnV.Data.Boss.Init();
-					
 					var t8 = ResearchItems.Init();
 					Settings.Initialize(); // this is the long one
 
 
-					await Task.WhenAll(t2,t3,t4,t5,t6,t8);
+					await Task.WhenAll(t2,t3,t4,t5,t6,t8,t7);
 				}
 				const bool isInteractive = true;
 

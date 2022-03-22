@@ -460,20 +460,38 @@ internal partial class GameClient
 					lightCWParam.SetValue(lightC.CameraToWorld());
 					viewCWParam.SetValue(viewW);
 					//	ToolTips.debugTip = $"{XVector3.Normalize(lightCC).ToNumerics().Format()} {AUtil.Format(lightCC.ToNumerics())}";
-					var d3 = t.CatmullRomLoop(new Vector3(0.75f,0.5f,1.125f),
-												new Vector3(0.5f,0.5f,1.5f),
-												new Vector3(1.0f,1.0f,1.0f),
-												new Vector3(1.25f,0.65f,0.35f)
-																		)*0.75f * Settings.lightD;
-					var a3 = t.CatmullRomLoop(new Vector3(0.3750f,0.125f,0.375f),
-												new Vector3(0.5f,0.5f,1.25f),
-												new Vector3(1.0f,1.0f,1.0f),
-												new Vector3(1.25f,0.5f,0.25f)
-																		)*0.375f* Settings.lightA;
+					var sat = Settings.lightSat;
+					// Hue night
+					var c0 = new Vector3(5.0f/6.0f,sat*0.75f,0.625f);
+					// Morning
+					var c1 = new Vector3(4.0f/6.0f,sat,0.75f);
+					// noon
+					var c2 = new Vector3(2.0f/6.0f,sat*0.375f,0.875f); 
+					// evening
+					var c3 = new Vector3(0.0f,sat,0.75f); 
+					var cp = new Vector3(c3.X+1.0f,c3.Y,c3.Z);
+					var c4 = new Vector3(c0.X-1.0f,c0.Y,c0.Z);
+					var c5 = new Vector3(c1.X-1.0f,c1.Y,c1.Z);
+					var c_ = t.CatmullRom(cp,c0,c1,c2,c3,c4,c5);
+					var d3 = new Vector3(c_.X,c_.Y,c_.Z*Settings.lightD).RGBFromHSL();
+					var a3 = new Vector3(c_.X,c_.Y,c_.Z*Settings.lightA).RGBFromHSL();
+					var s3 = new Vector3(c_.X,c_.Y*0.5f,c_.Z.Lerp(0.25f,0.75f)*Settings.lightS).RGBFromHSL();
+					
+
+					//var d3 = t.CatmullRomLoop(new Vector3(0.75f,0.5f,1.125f),
+					//							new Vector3(0.5f,0.5f,1.5f),
+					//							new Vector3(1.0f,1.0f,1.0f),
+					//							new Vector3(1.25f,0.65f,0.35f)
+					//													)*0.75f * Settings.lightD;
+					//var a3 = t.CatmullRomLoop(new Vector3(0.3750f,0.125f,0.375f),
+					//							new Vector3(0.5f,0.5f,1.25f),
+					//							new Vector3(1.0f,1.0f,1.0f),
+					//							new Vector3(1.25f,0.5f,0.25f)
+					//													)*0.375f* Settings.lightA;
 					// this will do for specular
 
 
-					var s3 = 0.375f.Lerp(d3.Normalized(),new Vector3(0.5f,0.5f,0.5f))*(t.CatmullRomLoop(1.125f,1.0f,0.875f,1.0f)* Settings.lightS);
+					//var s3 = 0.375f.Lerp(d3.Normalized(),new Vector3(0.5f,0.5f,0.5f))*(t.CatmullRomLoop(1.125f,1.0f,0.875f,1.0f)* Settings.lightS);
 
 					//var hue = 0.6667f - t1;
 					//hue -= hue.Floor();
@@ -1905,7 +1923,7 @@ internal partial class GameClient
 			var mid = progress.Lerp(c0,c1);
 			var _c0 = new Vector2(mid.X - spriteSize,mid.Y - spriteSize);
 			var _c1 = new Vector2(mid.X + spriteSize,mid.Y + spriteSize);
-			draw.AddQuadWithShadow(Layer.action + 4,Layer.effectShadow,bitmap,_c0,_c1,HSLToRGB.ToRGBA(wave,0.3f,0.825f,alpha,gain * 1.1875f),shadowColor,zEffects);
+			draw.AddQuadWithShadow(Layer.action + 4,Layer.effectShadow,bitmap,_c0,_c1,HSLToRGB.ToRGBA(wave,0.3f,gain * 1.1875f,alpha),shadowColor,zEffects);
 		}
 		//            ds.DrawRoundedSquare(midS, rectSpan, color, 2.0f);
 

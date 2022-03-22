@@ -82,6 +82,11 @@
 									 Maximum="2"
 							/>
 				<Slider Style="{StaticResource VerticalSlider}" 
+									Header="Saturation" 
+									 Value="{x:Bind cnv:Settings.lightSat,Mode=TwoWay}"
+									 
+							/>
+				<Slider Style="{StaticResource VerticalSlider}" 
 									Header="Smoothness" 
 									 Value="{x:Bind cnv:Settings.lightM,Mode=TwoWay}"
 						SmallChange="0.015625"
