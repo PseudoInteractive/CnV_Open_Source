@@ -35,7 +35,7 @@
 					<ColumnDefinition Width="2*" />
 					<ColumnDefinition Width="*" />
 				</Grid.ColumnDefinitions>
-				<TextBlock Text="{x:Bind quest.progress,Mode=OneWay}" HorizontalAlignment="Center" VerticalAlignment="Center" />
+				<TextBlock Text="{x:Bind cnv:AUtil.FormatPercentClamp(quest.progress),Mode=OneWay}" HorizontalAlignment="Center" VerticalAlignment="Center" />
 				<Slider Grid.Column="1" Value="{x:Bind quest.progress,Mode=OneWay}" VerticalAlignment="Center"   />
 				<Button Grid.Column="2" HorizontalAlignment="Right" Content="Claim" Click="Claim"
 						Style="{StaticResource ButtonMedium}" IsEnabled="{x:Bind quest.canClaim,Mode=OneWay}" />

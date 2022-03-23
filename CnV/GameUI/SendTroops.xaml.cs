@@ -149,9 +149,9 @@ namespace CnV
 				using(var __lock = Sim.eventQLock.Enter)
 				{
 					var t = Army.FromNow(city,target.cid,transport,type,ts,isReturn: false,
-						flags: (byte)(isRaid? (repeatCheckBox.IsChecked.Value ? Army.flagRepeating : Army.flagNone) 
-									: Army.flagNone 
-									| Army.FlagSplits((int)splitsCombo.SelectedItem))); ;
+						flags: (byte)(isRaid? ((repeatCheckBox.IsChecked.Value ? Army.flagRepeating : Army.flagNone) 
+									) 
+									| Army.FlagSplits((int)splitsCombo.SelectedItem): Army.flagNone ));
 				//	Assert(!t.departed);
 				//	Assert(t.isSchedueledNotSent);
 					new CnVEventSendTroops(t).EnqueueAlreadyLocked();
