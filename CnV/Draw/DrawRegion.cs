@@ -1064,8 +1064,8 @@ internal partial class GameClient
 							var cullSlopSpace = (32 * pixelScale).RoundToInt();
 							for(int iOrO = 0;iOrO < 2;++iOrO)
 							{
-								var wantDef = (iOrO == 0);
-								if(wantDef)
+								var isIncoming = (iOrO == 0);
+								if(isIncoming)
 								{
 									if(!incomingVisible)
 										continue;
@@ -1077,13 +1077,13 @@ internal partial class GameClient
 								}
 								var list = City.myCities; //defenders ? Spot.defendersI : Spot.defendersO;
 								bool noneIsAll = list.Length <= Settings.showAttacksLimit;
-								bool showAll = list.Length <= Settings.showAttacksLimit0 ||(wantDef ? Settings.incomingAlwaysVisible : Settings.attacksAlwaysVisible);
+								bool showAll = list.Length <= Settings.showAttacksLimit0 ||(isIncoming ? Settings.incomingAlwaysVisible : Settings.attacksAlwaysVisible);
 								foreach(var city in list)
 								{
 									if(!city.testContinentFilter)
 										continue;
 
-									if((wantDef&&city.incoming.Any())||(!wantDef&&city.outgoing.Any()))
+									if((isIncoming&&city.incoming.Any())||(!isIncoming&&city.outgoing.Any()))
 									{
 
 										var cityCid = city.cid;
@@ -1096,9 +1096,9 @@ internal partial class GameClient
 										var hasSen = false;
 										var hasArt = false;
 										var hasAssault = false;
-										foreach(var i in wantDef ? city.incoming : city.outgoing)
+										foreach(var i in isIncoming ? city.incoming : city.outgoing)
 										{
-											var c0 = wantDef ? i.sourceCid.CidToWorld() : i.targetCid.CidToWorld();
+											var c0 = isIncoming ? i.sourceCid.CidToWorld() : i.targetCid.CidToWorld();
 											if(IsSegmentCulledWC(c0,c1))
 												continue;
 
@@ -1106,7 +1106,7 @@ internal partial class GameClient
 											if(i.isSettle)
 											{
 												if(i.arrived )
-													c = Color.Green;
+													c = Color.Green;  // returning carts
 												else
 													c = Color.White;
 											}
@@ -1120,9 +1120,9 @@ internal partial class GameClient
 											}
 											else if(i.isDefense)
 											{
-
-												//if(i.sourceCid == cityCid)
-												//	continue;
+												// don't double draw
+												if(i.sourceCid == cityCid && outgoingVisible)
+													continue;
 
 												c = i.arrival <= serverNow ? defenseArrivedColor : defenseColor;
 											}
@@ -1165,7 +1165,7 @@ internal partial class GameClient
 
 												(int iType, float alpha) = GetTroopBlend(t,nSprite);
 												(int x, int y) _c0, _c1;
-												if(wantDef ^ i.isReturn)
+												if(isIncoming ^ i.isReturn)
 												{
 													_c0 = c0; _c1 = c1;
 												}
@@ -1179,7 +1179,7 @@ internal partial class GameClient
 												true,i,alpha: alpha,lineThickness: lineThickness,highlight:sel);
 											}
 										}
-										if(wantDef)
+										if(isIncoming)
 										{
 											if(hasArt)
 												DrawRectOutlineShadow(Layer.effects - 1,cityCid,artColor,null,1,-2f);

@@ -665,9 +665,12 @@ namespace CnV
 					}
 
 					var title = AppS.appWindow.TitleBar;
-					var c= Windows.UI.Color.FromArgb(0xFF,0x34,0x0B,0x0B);
-					title.BackgroundColor = c;
-					title.ButtonBackgroundColor = Windows.UI.Color.FromArgb(0xFF,0x24,0x0B,0x0B);;
+					if(title is not null)
+					{
+						var c = Windows.UI.Color.FromArgb(0xFF,0x34,0x0B,0x0B);
+						title.BackgroundColor = c;
+						title.ButtonBackgroundColor = Windows.UI.Color.FromArgb(0xFF,0x24,0x0B,0x0B); ;
+					}
 					// Ensure the current window is active
 					//await Task.Delay(500);
 					Log("Activate!");
