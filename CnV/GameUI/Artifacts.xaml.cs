@@ -141,7 +141,7 @@ namespace CnV
 
 		private void GetZirconiaClick(object sender,RoutedEventArgs e)
 		{
-			(new CnVEventPurchaseArtifacts() { artifact = (ushort)Artifact.ArtifactType.denari,count = 1 }).Execute();
+			(new CnVEventPurchaseArtifacts() { artifact = (ushort)Artifact.ArtifactType.denari,count = 1 }).EnqueueAsap();
 		}
 
 

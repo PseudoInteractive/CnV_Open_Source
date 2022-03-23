@@ -51,7 +51,7 @@ namespace CnV
 		{
 			var res = new Resources();
 			res[id] = items[id].count;
-			new CnVEventRefine(City.build,res).Execute();
+			new CnVEventRefine(City.build,res).EnqueueAsap();
 			items[id].count = 0;
 			OnPropertyChanged();
 			

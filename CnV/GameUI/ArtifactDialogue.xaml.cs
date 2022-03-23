@@ -52,7 +52,7 @@ namespace CnV
 			var wanted = count.Value.RoundToInt();
 			int have = a.owned;
 			if(wanted > have)
-				(new CnVEventPurchaseArtifacts() { artifact = (ushort)a.id,count = (ushort)(wanted-have) }).Execute();
+				(new CnVEventPurchaseArtifacts() { artifact = (ushort)a.id,count = (ushort)(wanted-have) }).EnqueueAsap();
 			if( wanted > 0 )
 				(new CnVEventUseArtifacts(City.build) { artifact = (ushort)a.id,count = (ushort)wanted,aux=0 }).EnqueueAsap();
 			Hide();

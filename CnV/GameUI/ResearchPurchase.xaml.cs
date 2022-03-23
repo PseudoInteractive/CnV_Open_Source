@@ -69,7 +69,7 @@ namespace CnV
 		private void DoResarch(object sender,RoutedEventArgs e)
 		{
 			Assert(hasEnough);
-			new CnVEventResearch(r.id).Execute();
+			new CnVEventResearch(r.id).EnqueueAsap();
 			Hide();
 		}
 
