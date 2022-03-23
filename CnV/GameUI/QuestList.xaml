@@ -11,7 +11,8 @@
     mc:Ignorable="d">
 	<Grid>
 		<Grid.Resources>
-			<CollectionViewSource x:Name="cvsGroups" IsSourceGrouped="True" ItemsPath="quests" Source="{x:Bind questGroups}" />
+			<CollectionViewSource x:Name="cvsGroups" IsSourceGrouped="True" ItemsPath="quests" 
+						Source="{x:Bind questGroups}"		   />
 		</Grid.Resources>
 		<Grid.ColumnDefinitions>
 			<ColumnDefinition Width="400" />
@@ -36,7 +37,8 @@
 				</Grid.ColumnDefinitions>
 				<TextBlock Text="{x:Bind quest.progress,Mode=OneWay}" HorizontalAlignment="Center" VerticalAlignment="Center" />
 				<Slider Grid.Column="1" Value="{x:Bind quest.progress,Mode=OneWay}" VerticalAlignment="Center"   />
-				<Button Grid.Column="2" HorizontalAlignment="Right" Content="Claim" Style="{StaticResource ButtonMedium}" IsEnabled="{x:Bind quest.unlocked,Mode=OneWay}" />
+				<Button Grid.Column="2" HorizontalAlignment="Right" Content="Claim" Click="Claim"
+						Style="{StaticResource ButtonMedium}" IsEnabled="{x:Bind quest.canClaim,Mode=OneWay}" />
 			</Grid>
 			
 		</Grid>
@@ -52,7 +54,7 @@
 		</SemanticZoom.Resources>
 			<SemanticZoom.ZoomedInView>
 				<!-- Put the GridView for the zoomed in view here. -->
-			<ListView x:Name="questItems"  GotFocus="List_GotFocus" ItemsSource="{x:Bind cvsGroups.View}" HorizontalAlignment="Stretch" >
+			<ListView x:Name="questItems"  GotFocus="List_GotFocus" ItemsSource="{x:Bind cvsGroups.View,Mode=OneWay}" HorizontalAlignment="Stretch" >
 				<ListView.ItemTemplate>
 					<DataTemplate x:DataType="cnv:Quest"  >
 						<Grid>
@@ -73,7 +75,7 @@
 
 			<SemanticZoom.ZoomedOutView>
 				<!-- Put the ListView for the zoomed out view here. -->
-			<ListView ItemsSource="{x:Bind cvsGroups.View.CollectionGroups}" HorizontalAlignment="Stretch"
+			<ListView ItemsSource="{x:Bind cvsGroups.View.CollectionGroups,Mode=OneWay}" HorizontalAlignment="Stretch"
                   SelectionMode="None"  GotFocus="List_GotFocus" >
 				<ListView.ItemTemplate>
 					<DataTemplate x:DataType="wuxdata:ICollectionViewGroup"  >
