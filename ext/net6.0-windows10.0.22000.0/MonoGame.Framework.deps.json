@@ -8,7 +8,7 @@
     ".NETCoreApp,Version=v6.0": {
       "MonoGame.Framework/1.0.0": {
         "dependencies": {
-          "Microsoft.WindowsAppSDK": "1.0.0",
+          "Microsoft.WindowsAppSDK": "1.0.1",
           "SharpDX": "4.2.0",
           "SharpDX.DXGI": "4.2.0",
           "SharpDX.Direct3D11": "4.2.0",
@@ -18,21 +18,21 @@
           "SharpGen.Runtime.COM": "2.0.0-beta.10",
           "StbImageSharp": "2.27.8",
           "StbImageWriteSharp": "1.13.5",
-          "runtimepack.Microsoft.Windows.SDK.NET.Ref": "10.0.22000.23"
+          "runtimepack.Microsoft.Windows.SDK.NET.Ref": "10.0.22000.22"
         },
         "runtime": {
           "MonoGame.Framework.dll": {}
         }
       },
-      "runtimepack.Microsoft.Windows.SDK.NET.Ref/10.0.22000.23": {
+      "runtimepack.Microsoft.Windows.SDK.NET.Ref/10.0.22000.22": {
         "runtime": {
           "Microsoft.Windows.SDK.NET.dll": {
-            "assemblyVersion": "10.0.22000.23",
-            "fileVersion": "10.0.22000.23"
+            "assemblyVersion": "10.0.22000.22",
+            "fileVersion": "10.0.22000.22"
           },
           "WinRT.Runtime.dll": {
-            "assemblyVersion": "1.5.0.0",
-            "fileVersion": "1.5.0.38015"
+            "assemblyVersion": "1.4.0.0",
+            "fileVersion": "1.4.0.37231"
           }
         }
       },
@@ -46,18 +46,18 @@
         }
       },
       "Microsoft.Windows.SDK.BuildTools/10.0.22000.194": {},
-      "Microsoft.WindowsAppSDK/1.0.0": {
+      "Microsoft.WindowsAppSDK/1.0.1": {
         "dependencies": {
           "Microsoft.Windows.SDK.BuildTools": "10.0.22000.194"
         },
         "runtime": {
           "lib/net5.0-windows10.0.18362.0/Microsoft.InteractiveExperiences.Projection.dll": {
             "assemblyVersion": "10.0.0.0",
-            "fileVersion": "10.0.22467.1012"
+            "fileVersion": "10.0.22467.1020"
           },
           "lib/net5.0-windows10.0.18362.0/Microsoft.WinUI.dll": {
             "assemblyVersion": "3.0.0.0",
-            "fileVersion": "3.0.0.2111"
+            "fileVersion": "3.0.0.2203"
           },
           "lib/net5.0-windows10.0.18362.0/Microsoft.Windows.AppLifecycle.Projection.dll": {
             "assemblyVersion": "1.0.0.0",
@@ -875,7 +875,7 @@
       "serviceable": false,
       "sha512": ""
     },
-    "runtimepack.Microsoft.Windows.SDK.NET.Ref/10.0.22000.23": {
+    "runtimepack.Microsoft.Windows.SDK.NET.Ref/10.0.22000.22": {
       "type": "runtimepack",
       "serviceable": false,
       "sha512": ""
@@ -908,12 +908,12 @@
       "path": "microsoft.windows.sdk.buildtools/10.0.22000.194",
       "hashPath": "microsoft.windows.sdk.buildtools.10.0.22000.194.nupkg.sha512"
     },
-    "Microsoft.WindowsAppSDK/1.0.0": {
+    "Microsoft.WindowsAppSDK/1.0.1": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-nQRK4KuaRDWk9YX78k4Vn1D9w2Z07ki1mTmuT+4oCIEJNM01c40A7DUC6GiBdTjmHJbBq4hm7EyFQUb+kBSW8A==",
-      "path": "microsoft.windowsappsdk/1.0.0",
-      "hashPath": "microsoft.windowsappsdk.1.0.0.nupkg.sha512"
+      "sha512": "sha512-JpGOsTzW6jQ29DZxxGyelgZ/8GvLdhbh/KKgAbIofZvRWIA/h/eMxhUdlYA5QJJyzOVN/MmBueiJF8GTS5+HhQ==",
+      "path": "microsoft.windowsappsdk/1.0.1",
+      "hashPath": "microsoft.windowsappsdk.1.0.1.nupkg.sha512"
     },
     "NETStandard.Library/1.6.1": {
       "type": "package",
