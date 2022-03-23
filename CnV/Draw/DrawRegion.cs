@@ -1110,6 +1110,10 @@ internal partial class GameClient
 												else
 													c = Color.White;
 											}
+											else if(i.isRaid)
+											{
+												c = Color.DarkGray;
+											}
 											else if(i.isReturn)
 											{
 												c = Color.Blue;

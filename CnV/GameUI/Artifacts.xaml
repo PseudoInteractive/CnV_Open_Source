@@ -27,7 +27,7 @@
 				  BorderThickness="1" BorderBrush="{StaticResource SystemAccentColorDark3}" MaxWidth="592" >-->
 
 
-		<TabView x:Name="tabView" Grid.Row="1"  SelectedIndex="{x:Bind SelectedTab,Mode=TwoWay}" SelectionChanged="tabView_SelectionChanged"  >
+		<TabView x:Name="tabView" Grid.Row="1"  SelectedIndex="{x:Bind SelectedTab,Mode=TwoWay}" SelectionChanged="tabView_SelectionChanged"  AllowDrop="False"  IsAddTabButtonVisible="False"  >
 			<TabView.Resources>
 			
 
@@ -65,50 +65,26 @@
 
 				
 			</TabView.Resources>
-			<TabView.Transitions>
-				<TransitionCollection>
-				</TransitionCollection>
-			</TabView.Transitions>
+			
 			<TabView.TabItems>
-				<TabViewItem Header="Relics">
+				<TabViewItem Header="Relics" IsClosable="False">
 					<ListView x:Name="relicsList" ItemTemplate="{StaticResource ArtifactItem}" >
-						<ListView.Transitions>
-							<TransitionCollection>
-								<EntranceThemeTransition IsStaggeringEnabled="True" />
-							</TransitionCollection>
-						</ListView.Transitions>
 					</ListView>
 				</TabViewItem>
-				<TabViewItem Header="Enhancements">
+			<TabViewItem Header="Enhancements"  IsClosable="False">
 					<ListView x:Name="enhancementsList" ItemTemplate="{StaticResource ArtifactItem}"   >
-						<ListView.Transitions>
-							<TransitionCollection>
-								<EntranceThemeTransition IsStaggeringEnabled="True" />
-							</TransitionCollection>
-						</ListView.Transitions>
 					</ListView>
 				</TabViewItem>
-				<TabViewItem Header="Special">
+			<TabViewItem Header="Special"  IsClosable="False">
 					<ListView x:Name="specialList" ItemTemplate="{StaticResource ArtifactItem}"  >
-						<ListView.Transitions>
-						<TransitionCollection>
-							<AddDeleteThemeTransition />
-								<EntranceThemeTransition IsStaggeringEnabled="True" />
-							</TransitionCollection>
-						</ListView.Transitions>
 					</ListView>
 				</TabViewItem>
 
-				<TabViewItem Header="Overview">
+			<TabViewItem Header="Overview"  IsClosable="False">
 					<ListView x:Name="overviewList" ItemTemplate="{StaticResource ArtifactItem}"  >
-						<ListView.Transitions>
-							<TransitionCollection>
-								<EntranceThemeTransition IsStaggeringEnabled="True" />
-							</TransitionCollection>
-						</ListView.Transitions>
 					</ListView>
 				</TabViewItem>
-				<TabViewItem Header="History">
+			<TabViewItem Header="History"  IsClosable="False">
 					<TextBlock>Test1</TextBlock>
 				</TabViewItem>
 			</TabView.TabItems>

@@ -537,7 +537,7 @@ namespace CnV
 									Colors.LightGray : Colors.LightGreen));
 
 								var p = city.stats.production[r];
-								prod.UpdateLazy($"{CnV.Resources.names[r]}/h:{p:+#,#;-#,#;' --'}",(p switch
+								prod.UpdateLazy($"{CnV.Resources.ResGlyph(r)}{p:+#,#;-#,#;' --'}/h",(p switch
 								{
 									> 0 => Colors.White,
 									< 0 => Colors.Yellow,

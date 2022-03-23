@@ -68,27 +68,27 @@
 					</Border>
 				</Expander.Header>
 
-				<tk:WrapPanel Orientation="Horizontal" Background="{x:Null}" HorizontalSpacing="4" VerticalSpacing="4" >
-					<StackPanel CornerRadius="{StaticResource baseCR}" Orientation="Vertical"  Padding="2"   Width="90" Background="{StaticResource ExpanderBrushContent}"
+				<tk:WrapPanel Orientation="Horizontal" Background="{x:Null}" HorizontalSpacing="0" VerticalSpacing="0" >
+					<StackPanel CornerRadius="{StaticResource baseCR}" Orientation="Vertical"  Padding="2"   MinWidth="90" Background="{StaticResource ExpanderBrushContent}"
 								Tapped="WoodTap">
-						<TextBlock  x:Name="res0" x:FieldModifier="public" HorizontalTextAlignment="Right" Style="{StaticResource TextBlockMedium}" />
+						<TextBlock  HorizontalTextAlignment="Right" Style="{StaticResource TextBlockMedium}" Margin="0,0,2,0" />
 						<TextBlock Grid.Row="1" x:Name="prod0" x:FieldModifier="public"  HorizontalTextAlignment="Right" Style="{StaticResource TextBlockSmall}" />
 					</StackPanel>
-					<StackPanel CornerRadius="{StaticResource baseCR}"  Margin="0" Padding="2" Width="90" 
+					<StackPanel CornerRadius="{StaticResource baseCR}"  Margin="0" Padding="1" MinWidth="90" 
 								Tapped="StoneTap"
 								Background="{StaticResource ExpanderBrushContent}" >
-						<TextBlock  HorizontalTextAlignment="Right"  Style="{StaticResource TextBlockMedium}"  />
+						<TextBlock  HorizontalTextAlignment="Right"  Style="{StaticResource TextBlockMedium}" Margin="0,0,2,0" />
 						<TextBlock Grid.Row="1"   HorizontalTextAlignment="Right" Style="{StaticResource TextBlockSmall}" />
 					</StackPanel>
-					<StackPanel CornerRadius="{StaticResource baseCR}"  Margin="0" Padding="2" Width="90"
+					<StackPanel CornerRadius="{StaticResource baseCR}"  Margin="0" Padding="1" MinWidth="90"
 								Tapped="IronTap" Background="{StaticResource ExpanderBrushContent}"  >
-						<TextBlock  HorizontalTextAlignment="Right" Style="{StaticResource TextBlockMedium}" />
+						<TextBlock  HorizontalTextAlignment="Right" Style="{StaticResource TextBlockMedium}" Margin="0,0,2,0" />
 						<TextBlock   Grid.Row="1" HorizontalTextAlignment="Right" Style="{StaticResource TextBlockSmall}"/>
 					</StackPanel>
-					<StackPanel CornerRadius="{StaticResource baseCR}"   Margin="0" Padding="2" Width="90"
+					<StackPanel CornerRadius="{StaticResource baseCR}"  Margin="0" Padding="1" MinWidth="90"
 					
 								Tapped="FoodTap"  Background="{StaticResource ExpanderBrushContent}"  >
-						<TextBlock   HorizontalTextAlignment="Right" Style="{StaticResource TextBlockMedium}" />
+						<TextBlock   HorizontalTextAlignment="Right" Style="{StaticResource TextBlockMedium}" Margin="0,0,2,0"/>
 						<TextBlock   Grid.Row="1" HorizontalTextAlignment="Right" Style="{StaticResource TextBlockSmall}" />
 					</StackPanel>
 				</tk:WrapPanel>
