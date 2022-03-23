@@ -869,7 +869,7 @@ namespace CnV
 				{
 					city.RemoveFromRecruit( Enumerable.Range(0,city.recruitQueue.Length).ToList(), lastSynchronizedRecruitQueue);
 					var sel = instance.buildQueueListView.SelectedItems;
-					new CnVEventCancelBuildQueue(city.worldC).Execute();
+					new CnVEventCancelBuildQueue(city.worldC).EnqueueAsap();
 				});
 			}
 			// Todo: Sort
@@ -984,12 +984,12 @@ namespace CnV
 			flyout.AddItem("Cancel all",Symbol.Cut,() =>
 			{
 				var sel = instance.buildQueueListView.SelectedItems;
-				new CnVEventCancelBuildQueue(city.worldC).Execute();
+				new CnVEventCancelBuildQueue(city.worldC).EnqueueAsap();
 			});
 			flyout.AddItem("Sort",Symbol.Sort,() =>
 			{
 				var sel = instance.buildQueueListView.SelectedItems;
-				new CnVEventSortBuildQueue(city.worldC).Execute();
+				new CnVEventSortBuildQueue(city.worldC).EnqueueAsap();
 			});
 			flyout.AddItem("Move To Front",Symbol.Up,() =>
 			{

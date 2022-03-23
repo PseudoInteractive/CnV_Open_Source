@@ -96,14 +96,14 @@ namespace CnV
 			}
 		}
 
-		private void Claim(object sender,RoutedEventArgs e)
+		private async void Claim(object sender,RoutedEventArgs e)
 		{
-			new CnVEventClaimQuest(City.GetBuild().c,(ushort)quest.id).Execute();
+			new CnVEventClaimQuest(City.GetBuild().c,(ushort)quest.id).EnqueueAsap();
 			
 			var b = sender as Button;
-			//		if(b is not null)
-			//			b.IsEnabled=false;
-
+			if(b is not null)
+				b.IsEnabled=false;
+			await Task.Delay(1000); // wait 1s for event to execut
 			foreach(var i in questGroups)
 				i.OnPropertyChanged();
 			PropertyChanged?.Invoke(this,new(String.Empty));
