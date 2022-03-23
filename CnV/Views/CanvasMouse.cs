@@ -75,8 +75,10 @@ partial class ShellPage
 					GestureSettings.ManipulationTranslateX|GestureSettings.ManipulationTranslateY|GestureSettings.ManipulationScale
 				//	|GestureSettings.ManipulationMultipleFingerPanning
 				//|GestureSettings.Hold
+				,AutoProcessInertia=false
 					};
 
+					
 					//var interactionSource = VisualInteractionSource.CreateFromIVisualElement(canvas);
 					//interactionSource.PositionXSourceMode = InteractionSourceMode.EnabledWithoutInertia;
 					//interactionSource.PositionYSourceMode = InteractionSourceMode.EnabledWithoutInertia;
