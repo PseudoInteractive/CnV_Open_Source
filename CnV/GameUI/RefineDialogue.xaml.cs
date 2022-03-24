@@ -44,6 +44,7 @@ namespace CnV
 			}
 			var rv = instance ?? new RefineDialogue();
 			rv.ResetItems();
+			rv.OnPropertyChanged();
 			rv.Show(false);
 			
 		}

@@ -40,7 +40,7 @@
 					<ColumnDefinition Width="auto" />
 					<ColumnDefinition Width="auto" />
 				</Grid.ColumnDefinitions>
-				<TextBlock Text="{x:Bind quest.n,Mode=OneWay}" Style="{StaticResource TextBlockMedium}" VerticalAlignment="Center" />
+				<TextBlock Text="{x:Bind quest.step.title,Mode=OneWay}" Style="{StaticResource TextBlockMedium}" VerticalAlignment="Center" />
 				<!--<Slider Grid.Column="1" Value="{x:Bind quest.progressRatio,Mode=OneWay}" VerticalAlignment="Center"   />-->
 				<Button Grid.Column="1"  Content="Refine" Click="{x:Bind cnv:RefineDialogue.ShowInstanceClick}"
 						Style="{StaticResource ButtonMedium}" />
