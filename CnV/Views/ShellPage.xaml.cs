@@ -1698,6 +1698,35 @@ namespace CnV.Views
 								});
 		}
 
+		private void TechTreeClicked(object sender,RoutedEventArgs e)
+		{
+			try
+			{
+				//var hasFocus = !webviewHasFocus;
+				//	artifactsButton.IsChecked = !artifactsButton.IsChecked;
+				if(techTreeButton.IsChecked.GetValueOrDefault())
+				{
+					//	var isNew = Artifacts.instance == null;
+
+
+					ResearchList.ShowInstance();
+
+
+				}
+				else
+				{
+					if(ResearchList.instance is not null)
+						ResearchList.instance.Hide();
+				}
+			}
+			catch(Exception _ex)
+			{
+				LogEx(_ex);
+
+			}
+
+		}
+
 		//private void GotoTimeOffset(object sender,RoutedEventArgs e)
 		//{
 		//	var dt = TimeSpanS.FromMinutes( gotoTimeOffset.Value );

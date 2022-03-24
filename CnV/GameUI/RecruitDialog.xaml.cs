@@ -49,7 +49,7 @@ namespace CnV
 			var rv = instance ?? new RecruitDialog();
 			rv.city = city;
 			rv.UpdateTroopItems();
-			rv.Show(true);
+			rv.Show(false) ;
 			
 		}
 
@@ -65,12 +65,14 @@ namespace CnV
 			if(instance is not null)
 				instance.OnPropertyChanged(member);
 		}
+
+		
 	}
 
 
-	internal class RecruitTroopItem: INotifyPropertyChanged
+	internal class RecruitTroopItem:INotifyPropertyChanged
 	{
-		
+
 		internal City city; // convienience
 		internal TType type;
 		internal uint count;
@@ -80,18 +82,46 @@ namespace CnV
 		internal bool isEnabled => city.CanRecruit(type);
 		internal void Recruit(object sender,RoutedEventArgs e)
 		{
-			
+
 			Note.Show("Recruit");
 			new CnVEventRecruit(city.c,tt).EnqueueAsap();
 			count =0;
 			OnPropertyChanged();
 		}
+
+		internal string ResRequiredS(int id)
+		{
+			return ((int)(count.Max(1)*info.resResquired[id])).Format();
+		}
+		internal void SetMax(object sender,RoutedEventArgs e)
+		{
+			var res = city.SampleResources();
+			var m = 1<<24;
+			var req = info.resResquired;
+			for(int i=0;i<4;++i)
+			{
+				if(req.r[i] > 0)
+					m = m.Min(res[i] / req.r[i]);
+			}
+			if(req.gold > 0)
+					m = m.Min(city.player.gold / req.gold);
+
+			count = (uint)m;
+			OnPropertyChanged();
+		}
+
 		public string recruitTime => city.CanRecruit(type) ? tt.RecruitTimeRequired(city).Format() : string.Empty;
 		public event PropertyChangedEventHandler? PropertyChanged;
 		public void OnPropertyChanged(string? member = null)
 		{
 			if (this.PropertyChanged is not null) 
 				AppS.QueueOnUIThread(() => PropertyChanged?.Invoke(this,new(member)));
+		}
+
+		internal void CountChanged(NumberBox sender,NumberBoxValueChangedEventArgs args)
+		{
+			App.FilterNans(sender,args);
+			OnPropertyChanged();
 		}
 
 	}

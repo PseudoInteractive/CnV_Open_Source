@@ -181,7 +181,7 @@ namespace CnV
 			{
 				instance.buildQueue.CollectionChanged -= BuildQueue_CollectionChanged;
 				//var firstVisible = instance.buildQueueListView.vis
-				var anyRemoved = false;
+				
 				var city = instance.city;
 				var displayQueue = city.buildQueue;
 				lastSynchronizedQueue = displayQueue;
@@ -195,47 +195,8 @@ namespace CnV
 				//		bq.RemoveAt(i);
 				//	}
 				//}
+				var anyRemoved=SyncLists(displayQueue,bq,(rt,city)=>new BuildItem(rt,city),(a,b)=>a == b.op );
 
-				// Add or update
-				for(int i = 0;i<lg;++i)
-				{
-					var op = displayQueue[i];
-					int cur = -1;
-					for(int j = i;j<bq.Count;++j)
-					{
-						if(bq[j].op == op)
-						{
-							cur = j;
-							break;
-						}
-					}
-					if(cur == -1)
-					{
-						var bi = new BuildItem(op,city);
-						bq.Insert(i,bi);
-					}
-					else
-					{
-						if(cur != i)
-						{
-							bq.Move(cur,i);
-
-						}
-
-					}
-				}
-				// sequence is done, remove extras if any
-				for(var i = bq.Count;--i>= lg;)
-				{
-					anyRemoved=true;
-					bq.RemoveAt(i);
-				}
-
-				Assert(bq.Count == lg);
-				for(int i=0;i<lg;++i)
-				{
-					Assert(bq[i].op == displayQueue[i]);
-				}
 				// keep first in view
 				if(anyRemoved && bq.Any() )
 				{
@@ -255,9 +216,8 @@ namespace CnV
 			// Don't notify whole we are doing stuff
 			try
 			{
-				
+
 				//var firstVisible = instance.buildQueueListView.vis
-				var anyRemoved = false;
 				var city = instance.city;
 				var displayQueue = city.recruitQueue;
 				lastSynchronizedRecruitQueue = displayQueue;
@@ -273,47 +233,15 @@ namespace CnV
 				//}
 
 				// Add or update
-				for(int i = 0;i<lg;++i)
-				{
-					var op = displayQueue[i];
-					int cur = -1;
-					for(int j = i;j<bq.Count;++j)
-					{
-						if(bq[j].op == op)
-						{
-							cur = j;
-							break;
-						}
-					}
-					if(cur == -1)
-					{
-						var bi = new RecruitItem(op,city);
-						bq.Insert(i,bi);
-					}
-					else
-					{
-						if(cur != i)
-						{
-							bq.Move(cur,i);
-
-						}
-
-					}
-				}
-				// sequence is done, remove extras if any
-				for(var i = bq.Count;--i>= lg;)
-				{
-					anyRemoved=true;
-					bq.RemoveAt(i);
-				}
+				bool anyRemoved=SyncLists(displayQueue,bq,(rt,city)=>new RecruitItem(rt,city),(a,b)=>a == b.op );
 
 				Assert(bq.Count == lg);
-				for(int i=0;i<lg;++i)
+				for(int i = 0;i<lg;++i)
 				{
 					Assert(bq[i].op == displayQueue[i]);
 				}
 				// keep first in view
-				if(anyRemoved && bq.Any() )
+				if(anyRemoved && bq.Any())
 				{
 					instance.RecruitQueueListView.ScrollIntoView(bq.First());
 				}
@@ -326,6 +254,48 @@ namespace CnV
 
 		}
 
+		private static bool SyncLists<TR,TX>(IList<TR> rtQ,ObservableCollection<TX> xQ, Func<TR,City,TX> factory, Func<TR,TX,bool> equals )
+		{
+			var city = instance.city;
+			var lg = rtQ.Count;
+			for(int i = 0;i<lg;++i)
+			{
+				var op = rtQ[i];
+				int cur = -1;
+				for(int j = i;j<xQ.Count;++j)
+				{
+					if(equals(op,xQ[j]) )
+					{
+						cur = j;
+						break;
+					}
+				}
+				if(cur == -1)
+				{
+					var bi = factory(op,city);
+					xQ.Insert(i,bi);
+				}
+				else
+				{
+					if(cur != i)
+					{
+						xQ.Move(cur,i);
+
+					}
+
+				}
+			}
+			// sequence is done, remove extras if any, they will always be at the end
+			var anyRemoved = xQ.Count > lg;
+
+			for(var i = xQ.Count;--i>= lg;)
+			{
+				xQ.RemoveAt(i);
+			}
+
+			return anyRemoved;
+		}
+
 		static void UpdateCommandItems()
 		{
 			// Don't notify whole we are doing stuff
@@ -333,53 +303,14 @@ namespace CnV
 			{
 				
 				//var firstVisible = instance.buildQueueListView.vis
-				var anyRemoved = false;
+				
 				var city = instance.city;
 				var displayQueue = city.outgoing.OrderBy(a => a.arrival).ToArray();
 				int lg = displayQueue.Length;
 				var bq = instance.commandItems;
 			
-
-				// Add or update
-				for(int i = 0;i<lg;++i)
-				{
-					var op = displayQueue[i];
-					int cur = -1;
-					for(int j = i;j<bq.Count;++j)
-					{
-						if(bq[j].army == op )
-						{
-							cur = j;
-							break;
-						}
-					}
-					if(cur == -1)
-					{
-						var bi = new CommandItem(op);
-						bq.Insert(i,bi);
-					}
-					else
-					{
-						if(cur != i)
-						{
-							bq.Move(cur,i);
-
-						}
-
-					}
-				}
-				// sequence is done, remove extras if any
-				for(var i = bq.Count;--i>= lg;)
-				{
-					anyRemoved=true;
-					bq.RemoveAt(i);
-				}
-
-				Assert(bq.Count == lg);
-				for(int i=0;i<lg;++i)
-				{
-					Assert(bq[i].army == displayQueue[i]);
-				}
+				var anyRemoved=SyncLists(displayQueue,bq,(rt,city)=>new CommandItem(rt),(a,b)=>a == b.army );
+				
 				// keep first in view
 				if(anyRemoved && bq.Any() )
 				{
@@ -405,15 +336,10 @@ namespace CnV
 				var displayQueue = city.tradesOut.Concat(city.tradesIn).OrderBy(a=>a.isReturning ? a.returnTime : a.arrival).ToArray();
 				int lg = displayQueue.Length;
 				var bq = instance.tradeItems;
-				bq.Clear();
 
-				// Add or update
-				for(int i = 0;i<lg;++i)
-				{
-					
-					var bi = new TradeItem(displayQueue[i]);
-					bq.Add(bi);
-				}
+				var anyRemoved=SyncLists(displayQueue,bq,(rt,city)=>new TradeItem(rt),(a,b)=>a == b.trade );
+
+				
 				
 
 			}
@@ -438,7 +364,7 @@ namespace CnV
 		public string tradesTitle => $"Trades {tradeItems.Count}";
 		public string troopsTitle => $"Troops {city?.tsTotal}/{city?.stats.maxTs}";
 
-		public string recruitTitle => city?.amuletTime > 0 ? $"Recruit {city?.amuletTime}" : "Recruit";
+		public string recruitTitle => city?.amuletTime > 0 ? $"Recruit +{city.amuletTime}" : "Recruit";
 		//public SolidColorBrush ResourceForeground(int resId) => new SolidColorBrush(Windows.UI.Color.FromArgb(255,(byte)(31+64*resId),128,128) );
 		//public string ResourceStr(int resId) => $"{city?.resources[resId]:N0}";
 
@@ -566,7 +492,7 @@ namespace CnV
 							var txt = (expBuildings.Header as DependencyObject).Child<TextBlock>(1);
 							txt.UpdateLazy($"Buildings: [{bdd.buildingCount}/{bdd.townHallLevel*10}]");
 							var hasHammerTime = city.hammerTime > 0;
-							queueText.UpdateLazy($"Queue cs:{city.stats.cs:N0}{ (hasHammerTime ? " +" +city.hammerTime.Format() : "" )}", hasHammerTime ? Colors.GreenYellow : Colors.White); 
+							queueText.UpdateLazy($"CS:{city.stats.cs:N0}{ (hasHammerTime ? " +" +city.hammerTime.Format() : "" )}%", hasHammerTime ? Colors.GreenYellow : Colors.White); 
 						
 							var bd = new List<BuildingCountAndBrush>();
 							foreach(var i in bdd.counts)

@@ -52,7 +52,7 @@ namespace CnV
 		//	ManipulationMode = ManipulationModes.TranslateX|ManipulationModes.TranslateY;
 			IsExpanded=true;
 			
-			var brush = AppS.Brush(0xFF150030u);
+			var brush =   AppS.Brush( (Windows.UI.Color)App.instance.Resources["SystemAccentColorDark3"]);
 			Background = brush;
 			
 			MaxHeight = Settings.canvasHeight;

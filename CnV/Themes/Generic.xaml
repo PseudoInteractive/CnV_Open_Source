@@ -40,7 +40,6 @@
                                           Text="{TemplateBinding Text}"
 											FontSize="{TemplateBinding FontSize}"
 											Style="{StaticResource TextBlockMedium}" 
-											MaxLines="3"
 									   Margin="2"
                                           Grid.Column="1"
                                           HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"

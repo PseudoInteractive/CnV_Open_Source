@@ -100,8 +100,9 @@
 
 				<Expander.Header   >
 
-					<Border Background="{StaticResource ExpanderBrushHeader}" BorderThickness="1" Padding="3" CornerRadius="{StaticResource baseCR}" >
-						<TextBlock x:Name="queueText" RightTapped="QueueRightTapped" Text ="Queue" Margin="0"  Style="{StaticResource BodyTextBlockStyle}"   />
+					<Border Background="{x:Bind cnv:ImageHelper.GetAsBrush('UI/menues/main_menu/bgr_quickuse_buildqueue.png') }"  BorderThickness="0" Padding="0" Margin="2,0,2,0" CornerRadius="0" 
+							ToolTipService.ToolTip="Build Queue construction speed" >
+						<TextBlock x:Name="queueText" TextAlignment="Right" VerticalAlignment="Center" RightTapped="QueueRightTapped" Text ="Queue" Margin="0"  Style="{StaticResource BodyTextBlockStyle}"   />
 					</Border>
 				</Expander.Header>
 				<ListView x:Name="buildQueueListView" x:FieldModifier="public"  
@@ -213,7 +214,9 @@
 
 			<Expander  IsExpanded="True" Expanding="Expander_Expanding" x:Name="expEnlistment" ContextRequested="EnlistmentContextRequested"  >
 				<Expander.Header>
-					<Button Content="{x:Bind recruitTitle, Mode=OneWay}" Style="{StaticResource ButtonMedium}" Margin="4,1,4,1" Click="EnlistmentClick" Padding="8,2" HorizontalAlignment="Stretch" />
+					<Button  HorizontalContentAlignment="Right" 
+							ToolTipService.ToolTip="Recruit Queue, click to recruit"
+								Content="{x:Bind recruitTitle, Mode=OneWay}"  Style="{StaticResource ButtonMedium}" Margin="2,0,2,0" Click="EnlistmentClick" Padding="8,2" HorizontalAlignment="Stretch" />
 				</Expander.Header>
 				<ListView x:Name="RecruitQueueListView" x:FieldModifier="public"  
 						  SelectionMode="Extended"  Background="{StaticResource ExpanderBrushContentAlt}"
@@ -268,7 +271,10 @@
 
 			<Expander  IsExpanded="True" Expanding="Expander_Expanding" x:Name="expCommands"  >
 				<Expander.Header>
-					<TextBlock Text="{x:Bind commandsTitle, Mode=OneWay}" Style="{StaticResource TextBlockMedium}"  />
+					<Border Background="{x:Bind cnv:ImageHelper.GetAsBrush('UI/menues/main_menu/bgr_quickuse_research.png') }"  BorderThickness="0" Padding="0" Margin="2,0,2,0"  
+							 >
+						<TextBlock  Text="{x:Bind commandsTitle, Mode=OneWay}" TextAlignment="Right"  Style="{StaticResource TextBlockMedium}"  />
+					</Border>
 				</Expander.Header>
 
 				<ListView x:Name="CommandsListView" x:FieldModifier="public"  
@@ -315,8 +321,9 @@
 			</Expander>
 			<Expander  IsExpanded="True" Expanding="Expander_Expanding" x:Name="expReinforcements"  >
 				<Expander.Header   >
-					<Border   CornerRadius="{StaticResource baseCR}" >
-						<TextBlock x:Name="troopsHeaderText"  Text ="{x:Bind troopsTitle, Mode=OneWay}" Margin="0"  Style="{StaticResource TextBlockMedium}"   />
+					<Border Background="{x:Bind cnv:ImageHelper.GetAsBrush('UI/menues/main_menu/bgr_quickuse_recruitmentqueue.png') }"  BorderThickness="0" Padding="0" Margin="2,0,2,0"  
+							>
+						<TextBlock x:Name="troopsHeaderText"  Text ="{x:Bind troopsTitle, Mode=OneWay}" Margin="0" TextAlignment="Right" Style="{StaticResource TextBlockMedium}"   />
 					</Border>
 				</Expander.Header>
 				<StackPanel>

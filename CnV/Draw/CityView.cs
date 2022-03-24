@@ -345,7 +345,7 @@ namespace CnV
 									{
 										bl = cur.bl;
 										var blendMat = decalBuildingInvalid;
-										float blendOp = (dt*(1.0f/3.0f)).Wave()*0.5f;
+										float blendOp = (dt*(1.0f/3.0f)).Wave().Lerp(0.3125f,0.625f);
 
 										draw.AddQuad(bspot.LayerEffect(),blendMat,cs.c0,cs.c1,(new Color(iAlpha,iAlpha,iAlpha,iAlpha)).Scale(blendOp),depth: 0);
 									}

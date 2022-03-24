@@ -5,7 +5,7 @@
     xmlns:cnv="using:CnV"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-	Width="620"
+	Width="660"
 	xmlns:tk="using:CommunityToolkit.WinUI.UI.Controls"
     mc:Ignorable="d">
 	
@@ -42,16 +42,17 @@
 								<ColumnDefinition Width="auto "/>
 							</Grid.ColumnDefinitions>
 							<tk:WrapPanel Orientation="Horizontal">
-								<cnv:IronText   Text="{x:Bind info.ironRequiredS, Mode=OneWay}" HorizontalAlignment="Left" Width="Auto"	Visibility="{x:Bind info.ironVisibility}" />
-								<cnv:WoodText   Text="{x:Bind info.woodRequiredS, Mode=OneWay}" HorizontalAlignment="Left" Width="Auto"		Visibility="{x:Bind info.woodVisibility}"/>
-								<cnv:StoneText   Text="{x:Bind info.stoneRequiredS, Mode=OneWay}" HorizontalAlignment="Left" Width="Auto"	Visibility="{x:Bind info.stoneVisibility}" />
-								<cnv:GoldText   Text="{x:Bind info.goldRequiredS, Mode=OneWay}" HorizontalAlignment="Left" Width="Auto"	Visibility="{x:Bind info.goldVisibility}" />
+								<cnv:WoodText   Text="{x:Bind ResRequiredS(0), Mode=OneWay}" HorizontalAlignment="Left" Width="Auto"		Visibility="{x:Bind info.woodVisibility}"/>
+								<cnv:StoneText   Text="{x:Bind ResRequiredS(1), Mode=OneWay}" HorizontalAlignment="Left" Width="Auto"	Visibility="{x:Bind info.stoneVisibility}" />
+								<cnv:IronText   Text="{x:Bind ResRequiredS(2), Mode=OneWay}" HorizontalAlignment="Left" Width="Auto"	Visibility="{x:Bind info.ironVisibility}" />
+								<cnv:GoldText   Text="{x:Bind ResRequiredS(4), Mode=OneWay}" HorizontalAlignment="Left" Width="Auto"	Visibility="{x:Bind info.goldVisibility}" />
 								
 							</tk:WrapPanel>
 							<TextBlock Grid.Column="1" Text="{x:Bind recruitTime,Mode=OneWay}" Style="{StaticResource TextBlockSmall}" VerticalAlignment="Center"/>
 							<StackPanel Orientation="Horizontal"   Grid.Column="2"  >
-                                <NumberBox  Style="{StaticResource NumberBoxMedium}" Value="{x:Bind count,Mode=TwoWay}" Width="120"  ValueChanged="FilterNans"
+								<NumberBox  Style="{StaticResource NumberBoxMedium}" Value="{x:Bind count,Mode=TwoWay}" Width="120"  ValueChanged="{x:Bind CountChanged}" 
                                             Margin="8,0,8,0" VerticalAlignment="Center" IsEnabled="{x:Bind isEnabled}"/>
+								<Button Content ="Max"  Margin="2,1,2,1" Click="{x:Bind SetMax}" Style="{StaticResource ButtonSmall}"   />
 								<Button Content ="Recruit"  Margin="2,1,4,1" Click="{x:Bind Recruit}" Style="{StaticResource ButtonSmall}"  IsEnabled="{x:Bind isEnabled}"  />
 
 							</StackPanel>

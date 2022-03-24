@@ -47,6 +47,7 @@ namespace CnV
 			rv.Show(false);
 			
 		}
+		public static void ShowInstanceClick(object sender,RoutedEventArgs e) => ShowInstance();
 		public void DoRefine(int id)
 		{
 			var res = new Resources();

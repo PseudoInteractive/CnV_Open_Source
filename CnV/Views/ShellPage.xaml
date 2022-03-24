@@ -87,9 +87,12 @@
 		</CommandBar.Content>
 		<CommandBar.PrimaryCommands  >
 			<AppBarToggleButton x:Name="artifactsButton" Click="ArtifactsClicked" Icon="OutlineStar" Label="Artifact"  IsChecked="False" 
-                           ToolTipService.ToolTip="This will hid or show the artifacts window" />
+                           ToolTipService.ToolTip="Artifacts" />
 
-			<AppBarButton x:Name="ContinentFilter"  x:FieldModifier="public"
+					<AppBarToggleButton x:Name="techTreeButton" Click="TechTreeClicked" Icon="Up" Label="Research"  IsChecked="False" 
+                           ToolTipService.ToolTip="Research" />
+
+					<AppBarButton x:Name="ContinentFilter"  x:FieldModifier="public"
 					              Content="Cont/Tags"
 					             
 					              FontSize="{StaticResource MediumFontSize}"

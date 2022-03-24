@@ -181,7 +181,6 @@
 		x:Key="ListItemStyle"
 		BasedOn="{StaticResource BodyTextBlockStyle}"
 		TargetType="TextBlock">
-				<Setter Property="MaxLines" Value="4" />
 				<Setter Property="LineStackingStrategy" Value="MaxHeight" />
 
 			</Style>

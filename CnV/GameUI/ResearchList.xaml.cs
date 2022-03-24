@@ -19,26 +19,27 @@ namespace CnV
 {
 	
 
-	public sealed partial class QuestList:DialogG, INotifyPropertyChanged
+	public sealed partial class ResearchList:DialogG, INotifyPropertyChanged
 	{
-		public static QuestList? instance;
-		public QuestList()
+		public static ResearchList? instance;
+		public ResearchList()
 		{
 			this.InitializeComponent();
 			instance=this;
 			
 		}
 
-		NotifyList<QuestGroup> questGroups = new(QuestGroup.all.Where(a => a.n is not null));
+		NotifyList<TechTreeHeadLine> questGroups = new(ResearchItems.v.TechTreeHeadLines.Where(a => a.n is not null));
 
 	
-		private Quest quest => cvsGroups.View.CurrentItem as Quest; 
+		private TechTree quest => cvsGroups.View.CurrentItem as TechTree; 
 
 		public void InvalidateQuestGroups()
 		{
 	//		cvsGroups.Source  = questGroups;
 			questGroups.NotifyReset();
-			questGroups.NotifyItemsChanged();
+			foreach(var i in questGroups)
+				i.OnPropertyChanged();
 			PropertyChanged?.Invoke(this,new(String.Empty));
 		}
 		public event PropertyChangedEventHandler? PropertyChanged;
@@ -46,7 +47,7 @@ namespace CnV
 		internal static void ShowInstance()
 		{
 			Quests.UpdateUnlockData();
-			var art = instance ?? new QuestList();
+			var art = instance ?? new ResearchList();
 			art.InvalidateQuestGroups();
 			//art.questItems.ItemsSource = art.cvsGroups.View; // reset
 			art.Show(true);
@@ -75,18 +76,24 @@ namespace CnV
 			}
 		}
 
-		private async void Claim(object sender,RoutedEventArgs e)
+		private void Claim(object sender,RoutedEventArgs e)
 		{
-			new CnVEventClaimQuest(City.GetBuild().c,(ushort)quest.id).EnqueueAsap();
-			
-			var b = sender as Button;
-			if(b is not null)
-				b.IsEnabled=false;
-			await Task.Delay(1000); // wait 1s for event to execut
-			foreach(var i in questGroups)
-				i.OnPropertyChanged();
-			PropertyChanged?.Invoke(this,new(String.Empty));
-			
+			//new CnVEventClaimQuest(City.GetBuild().c,(ushort)quest.id).EnqueueAsap();
+
+			//var b = sender as Button;
+			//if(b is not null)
+			//	b.IsEnabled=false;
+			//await Task.Delay(1000); // wait 1s for event to execut
+			//foreach(var i in questGroups)
+			//	i.OnPropertyChanged();
+			//PropertyChanged?.Invoke(this,new(String.Empty));
+			var t = quest;
+			var s = t.step;
+			Assert(t.canClaim);
+			new CnVEventResearch(s.id).EnqueueAsap();
+			Hide();
 		}
+
+		
 	}
 }

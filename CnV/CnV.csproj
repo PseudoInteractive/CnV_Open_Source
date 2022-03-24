@@ -133,6 +133,7 @@
     <Compile Include="GameUI\QuestList.xaml.cs" />
     <Compile Include="GameUI\RecruitDialog.xaml.cs" />
     <Compile Include="GameUI\RefineDialogue.xaml.cs" />
+    <Compile Include="GameUI\ResearchList.xaml.cs" />
     <Compile Include="GameUI\ResearchPurchase.xaml.cs" />
     <Compile Include="GameUI\SendResDialogue.xaml.cs" />
     <Compile Include="GameUI\SendTroops.xaml.cs" />
@@ -380,6 +381,9 @@
     <Page Include="GameUI\RefineDialogue.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="GameUI\ResearchList.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="GameUI\ResearchPurchase.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -580,6 +584,7 @@
 	<None Remove="GameUI\QuestList.xaml" />
 	<None Remove="GameUI\RecruitDialog.xaml" />
 	<None Remove="GameUI\RefineDialogue.xaml" />
+	<None Remove="GameUI\ResearchList.xaml" />
 	<None Remove="GameUI\ResearchPurchase.xaml" />
 	<None Remove="GameUI\SendResDialogue.xaml" />
 	<None Remove="GameUI\SendTroops.xaml" />
