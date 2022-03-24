@@ -6,9 +6,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 	xmlns:tk="using:CommunityToolkit.WinUI.UI.Controls"
-	Height="50"
-	MaxHeight="50"
-	Width="1400"
+
 	
     mc:Ignorable="d">
 
@@ -21,33 +19,15 @@
 					 />
 		<cnv:ManaText Text="{x:Bind manaS, Mode=OneWay}" 
 					 />
-		<cnv:GoldText 
-					  Text="{x:Bind goldS, Mode=OneWay}"  
-					  Tapped="GoldTapped"
-					  
-					 />
-		<cnv:WoodText Text="{x:Bind RefineS(0), Mode=OneWay}" 
-					  Tapped="WoodTapped"
-					  ContextRequested="ResContextRequest"
-					 />
-		<cnv:StoneText Text="{x:Bind RefineS(1), Mode=OneWay}" 
-					  Tapped="StoneTapped"
-                       ContextRequested="ResContextRequest"
-					 />
-		<cnv:IronText Text="{x:Bind RefineS(2), Mode=OneWay}" 
-					   Tapped="IronTapped"
-                      ContextRequested="ResContextRequest"
-					 />
-		<cnv:FoodText Text="{x:Bind RefineS(3), Mode=OneWay}" 
-					   Tapped="FoodTapped"
-                      ContextRequested="ResContextRequest"
+
+		<Image Source="{x:Bind cnv:ImageHelper.Get('UI/icons_ressource_all.png')}" VerticalAlignment="Center"
+					  Tapped="AllTapped"
+					  ContextRequested="ResContextRequest" 
+			   ToolTipService.ToolTip="{x:Bind cnv:Player.me.refinesAndGoldS,Mode=OneWay}"
 					 />
 
-		<cnv:IconText Image="{x:Bind cnv:ImageHelper.Get('UI/Menues/mentor/img_mentor28.png',28) }"
-					  Text="{x:Bind title, Mode=OneWay}" Width="170"
-					   Tapped="TitleTapped"
-					 />
-		<Image Source="{x:Bind cnv:ImageHelper.Get('UI/icons/quests/icon_quest_3.png')}" VerticalAlignment="Center" Tapped="QuestsTapped" />
+		<Image Source="{x:Bind cnv:ImageHelper.Get('UI/icons/quests/icon_quest_3.png')}" VerticalAlignment="Center" Margin="8,0,0,0" Tapped="QuestsTapped"
+			   ToolTipService.ToolTip="Quests" />
 
 	</tk:WrapPanel>
 </UserControl>

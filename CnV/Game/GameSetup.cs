@@ -162,7 +162,7 @@ namespace CnV
 			
 				
 
-				ShellPage.updateHtmlOffsets.Go(true);
+				ShellPage.updateHtmlOffsets.SystemUpdated();
 
 				//	await Task.Delay(1000);
 

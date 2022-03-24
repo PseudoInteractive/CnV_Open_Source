@@ -55,15 +55,19 @@ namespace CnV
 
 		public string title => Title.TADesc(Player.me.TALevel);
 
+		private void AllTapped(object sender,TappedRoutedEventArgs e) =>
+			ResContextRequest(sender as UIElement,null);
+
 		private void WoodTapped(object sender,TappedRoutedEventArgs e)=> CityUI.Show( Artifact.ArtifactType.saw, sender);
 		private void StoneTapped(object sender,TappedRoutedEventArgs e)=> CityUI.Show( Artifact.ArtifactType.chisel, sender);
 		private void IronTapped(object sender,TappedRoutedEventArgs e)=> CityUI.Show( Artifact.ArtifactType.crucible, sender);
 		private void FoodTapped(object sender,TappedRoutedEventArgs e)=> CityUI.Show( Artifact.ArtifactType.Hoe, sender);
 		private void GoldTapped(object sender,TappedRoutedEventArgs e)=> CityUI.Show( Artifact.ArtifactType.chest, sender);
 		private void TitleTapped(object sender,TappedRoutedEventArgs e)=> ResearchPurchase.ShowInstance( ResearchItems.GetTA(Player.me.TALevel-1) );
-		private void ResContextRequest(UIElement sender,ContextRequestedEventArgs args )
+		private void ResContextRequest(UIElement sender,ContextRequestedEventArgs? args )
 		{
-			args.Handled    = true;
+			if(args is  not null)
+				args.Handled    = true;
 			var flyout = new MenuFlyout();
 			flyout.SetXamlRoot(sender);
 
@@ -71,7 +75,14 @@ namespace CnV
 			{
 				RefineDialogue.ShowInstance();
 			});
-
+			flyout.AddItem("Toolkit..",Symbol.OutlineStar,() =>
+			{
+				CityUI.Show(Artifact.ArtifactType.toolkit,sender);
+			});
+			flyout.AddItem("Chest..",Symbol.OutlineStar,() =>
+			{
+				CityUI.Show(Artifact.ArtifactType.chest,sender);
+			});
 			flyout.AddItem("Saw..",Symbol.OutlineStar,() =>
 			{
 				CityUI.Show(Artifact.ArtifactType.saw,sender);

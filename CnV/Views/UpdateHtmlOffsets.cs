@@ -21,30 +21,30 @@ namespace CnV.Views
 				base.func = F;
 			}
 
-			public void Go(bool _updateLayout)
+			public void UserUpdated()
 			{
-				if (!_updateLayout && lastUpdateTick == 0) // not initialized
-				{
-					return;
-				}
-				this.updateLayout |= _updateLayout;
+				userUpdated = true;
 				base.Go();
 			}
+			public void SystemUpdated()
+			{
+				base.Go();
+			}
+			
 			public void SizeChanged()
 			{
 				// Throttle
 				if (Environment.TickCount64 - lastUpdateTick > 100 )
 				{
-					Go(false);
+					base.Go();
 				}
 
 			}
 			public void PopupsChanged()
 			{
-				Go(false);
 			}
 
-			public bool updateLayout;
+			public bool userUpdated;
 
 			Task F()
 			{
@@ -54,8 +54,8 @@ namespace CnV.Views
 				{
 					if(canvas is null || instance?.grid is null)
 						return Task.CompletedTask;
-					var _updateLayout = this.updateLayout;
-					this.updateLayout = false;
+					var userUpdated = this.userUpdated;
+					this.userUpdated = false;
 					lastUpdateTick = Environment.TickCount64;
 
 				var c = Settings.layoutOffsets[Settings.layout];
@@ -66,7 +66,7 @@ namespace CnV.Views
 				float tabWidth = (float)instance.columnTabs.ActualWidth;
 				float topTabHeight = (float) instance.rightTabs.ActualHeight;
 				int webWidth;
-				if (!_updateLayout )
+				if (userUpdated )
 				{
 					webWidth =instance.columnHtml.ActualWidth.RoundToInt();
 					c.htmlScale = ( (float)webWidth / htmlBaseWidth);
@@ -112,7 +112,7 @@ namespace CnV.Views
 				//		return;
 					//				return AppS.DispatchOnUIThreadLow( ()	=>
 
-						if(_updateLayout)
+						if(!userUpdated)
 						{
 							// has it not been modified
 
@@ -136,7 +136,7 @@ namespace CnV.Views
 
 							//instance.columnPopup.Width = new(popupLeftMargin);
 							
-								if (_updateLayout)
+								if (!userUpdated)
 								{
 									tabWidth = (gridSize.X * c.tabWidth);
 									topTabHeight = gridSize.Y * c.tabTopHeight.Clamp(1.0f/8.0f,7.0f/8.0f);

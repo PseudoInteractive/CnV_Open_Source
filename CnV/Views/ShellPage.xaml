@@ -282,7 +282,7 @@
 				<!--Chat Width resizer-->
 				<tk:GridSplitter
                         Background="{x:Null}"
-                    Grid.Row="1"
+                    Grid.Row="1" ManipulationCompleted="GridSplitter_ManipulationCompleted"
 											IsTabStop="True"
 			 				
 				CursorBehavior="ChangeOnSplitterHover"
@@ -302,6 +302,7 @@
                     Grid.Row="1"
                      Tapped="chatResizeTapped"
 												IsTabStop="True"
+					ManipulationCompleted="GridSplitter_ManipulationCompleted"
 		 				 Background="{x:Null}"
 				CursorBehavior="ChangeOnSplitterHover"
 				GripperCursor="SizeAll"

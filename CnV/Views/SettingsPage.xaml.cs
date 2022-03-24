@@ -288,7 +288,7 @@ namespace CnV
 
 				
 
-				ShellPage.updateHtmlOffsets.Go(true);
+				ShellPage.updateHtmlOffsets.SystemUpdated();
 				//	DungeonView.Initialize();
 				//layoutOffsets = new LayoutOffsets[]
 				//{

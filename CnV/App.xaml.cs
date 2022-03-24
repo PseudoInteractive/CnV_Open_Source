@@ -1403,20 +1403,20 @@ namespace CnV
 			return rv;
 		}
 
-		internal static void Show(this MenuFlyout flyout,UIElement sender,ContextRequestedEventArgs args)
+		internal static void Show(this MenuFlyout flyout,UIElement sender,ContextRequestedEventArgs? args)
 		{
-			if(args.TryGetPosition(sender,out var c))
+			if(args is not null && args.TryGetPosition(sender,out var c))
 			{
 				flyout.ShowAt(sender,c);
 			}
-			else if(args.TryGetPosition(ShellPage.rootGrid,out var c2))
+			else if(args is not null && args.TryGetPosition(ShellPage.rootGrid,out var c2))
 			{
 				flyout.ShowAt(ShellPage.rootGrid,c2);
 			}
 			else
 			{
-				flyout.ShowAt(ShellPage.rootGrid,ShellPage.mousePosition.AsPoint());
-				Assert(false);
+				flyout.ShowAt(sender,(sender.ActualSize*0.5f).AsPoint() );
+				
 			}
 		}
 

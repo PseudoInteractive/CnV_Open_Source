@@ -13,8 +13,16 @@
 		
 		<Grid.RowDefinitions>
 			<RowDefinition Height="auto"/>
+			<RowDefinition Height="auto"/>
 		</Grid.RowDefinitions>
-
+		<Grid>
+			<Grid.RowDefinitions>
+				<RowDefinition Height="auto"/>
+				<RowDefinition Height="auto"/>
+			</Grid.RowDefinitions>
+			<TextBlock Grid.Row="0" Text="Existing Refines:"  />
+			<TextBlock Grid.Row="1" Text="{x:Bind cnv:Player.me.refinesAndGold.ToString(), Mode=OneWay}" />
+		</Grid>
 		<tk:WrapPanel Orientation="Vertical" Grid.Row="1">
 			<StackPanel Orientation="Horizontal">
                 <NumberBox Value="{x:Bind items[0].count, Mode=TwoWay}" Style="{StaticResource NumberBoxMedium}"  ValueChanged="FilterNans" />

@@ -567,17 +567,17 @@ namespace CnV
 			Invalidate();
 		}
 
-		private void scroll_SizeChanged(object sender,ScrollViewerViewChangedEventArgs e)
-		{
-			if(e.IsIntermediate)
-				return;
-			ShellPage.updateHtmlOffsets.SizeChanged();
-		}
-		private void scroll_SizeChanged4(object sender,SizeChangedEventArgs e)
-		{
-			ShellPage.updateHtmlOffsets.SizeChanged();
+		//private void scroll_SizeChanged(object sender,ScrollViewerViewChangedEventArgs e)
+		//{
+		//	if(e.IsIntermediate)
+		//		return;
+		//	ShellPage.updateHtmlOffsets.SizeChanged();
+		//}
+		//private void scroll_SizeChanged4(object sender,SizeChangedEventArgs e)
+		//{
+		//	ShellPage.updateHtmlOffsets.SizeChanged();
 
-		}
+		//}
 		//internal void ProcessScrollSizeChanged()
 		//{
 		//	try

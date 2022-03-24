@@ -40,7 +40,7 @@ namespace CnV.Views
 				if(Settings.layout != value)
 				{
 					Settings.layout = value;
-					updateHtmlOffsets.Go(true);
+					updateHtmlOffsets.SystemUpdated();
 				}
 			}
 		}
@@ -475,8 +475,8 @@ namespace CnV.Views
 
 
 
-				TabPage.mainTabs.SizeChanged += ((o,args) => ShellPage.updateHtmlOffsets.SizeChanged());
-				chatTabs.SizeChanged+=((o,args) => ShellPage.updateHtmlOffsets.SizeChanged());
+		//		TabPage.mainTabs.SizeChanged += ((o,args) => ShellPage.updateHtmlOffsets.SizeChanged());
+		//		chatTabs.SizeChanged+=((o,args) => ShellPage.updateHtmlOffsets.SizeChanged());
 
 				var okay = await signinTask;
 				if(okay)
@@ -1449,7 +1449,7 @@ namespace CnV.Views
 			{
 				popupLeftOffset = leftOffset;
 				popupTopOffset  = topOffset;
-				updateHtmlOffsets.PopupsChanged();
+			
 			}
 
 		}
@@ -1725,6 +1725,11 @@ namespace CnV.Views
 
 			}
 
+		}
+
+		private void GridSplitter_ManipulationCompleted(object sender,ManipulationCompletedRoutedEventArgs e)
+		{
+			Note.Show("ManipulationCompleted");
 		}
 
 		//private void GotoTimeOffset(object sender,RoutedEventArgs e)
