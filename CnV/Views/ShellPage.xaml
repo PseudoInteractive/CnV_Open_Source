@@ -57,10 +57,21 @@
 
 
 
-			<CommandBar Grid.ColumnSpan="3" IsDynamicOverflowEnabled="False"  DefaultLabelPosition="Collapsed" IsSticky="True" IsTabStop="True" Margin="0" Padding="0" MinHeight="22"  
+		<CommandBar Grid.ColumnSpan="3"   DefaultLabelPosition="Collapsed" IsSticky="True" IsTabStop="True" Margin="0" Padding="0" MinHeight="22"  
 						x:Name="commandBar" x:FieldModifier="public"  >
 		<CommandBar.Content>
-			<StackPanel Orientation="Horizontal" Spacing="4">
+					<cnv:PlayerStats 
+				x:Name="playerStats"
+				VerticalAlignment="Center"
+				x:Load="False"
+				Margin="0"
+				Padding="0"	/>
+				
+				</CommandBar.Content>
+				
+			
+
+					<!--<StackPanel Orientation="Horizontal" Spacing="4">
 
 				<ProgressRing x:Name="progress" IsActive="False" />
 			<TextBlock  x:Name="work" x:FieldModifier="public" Margin="6,0,6,0" VerticalAlignment="Center" Width="255" />
@@ -83,10 +94,36 @@
 							  
                       Margin="4,0,4,0" />
 				
-				</StackPanel>
-		</CommandBar.Content>
+				</StackPanel>-->
+	
 		<CommandBar.PrimaryCommands  >
-			<AppBarToggleButton x:Name="artifactsButton" Click="ArtifactsClicked" Icon="OutlineStar" Label="Artifact"  IsChecked="False" 
+					<AppBarElementContainer  Visibility="Collapsed" VerticalAlignment="Center">
+						<ProgressRing x:Name="progress" IsActive="False" />
+					</AppBarElementContainer>
+					<AppBarElementContainer Visibility="Collapsed">
+						<TextBlock  x:Name="work" x:FieldModifier="public" Margin="6,0,6,0" VerticalAlignment="Center" Width="255" />
+					</AppBarElementContainer>
+					<AppBarElementContainer VerticalAlignment="Center" >
+						<TextBox  x:Name="coords" Margin="4,0,4,0" Width="100" TextAlignment="Center"  Text="000:000" HorizontalAlignment="Center"  x:FieldModifier="public" KeyDown="coords_KeyDown"/>
+					</AppBarElementContainer>
+					<AppBarElementContainer VerticalAlignment="Center">
+				<ComboBox x:Name="windowLayout" SelectedIndex="{x:Bind layout, Mode=TwoWay}"  VerticalAlignment="Center" Margin="4,0,4,0"
+						          ToolTipService.ToolTip="Select a view layout"  ItemsSource="{x:Bind layoutOptions}"  />
+					</AppBarElementContainer>
+					<AppBarElementContainer  Visibility="Collapsed">
+						<ComboBox x:Name="cityListBox" x:FieldModifier="public"
+                     IsEditable="True"
+					TextSubmitted="CityListSubmitted"
+                      Width="120"
+                      SelectedValuePath="id"
+                      DisplayMemberPath="name"
+                      ItemsSource="{x:Bind game:CityList.selections, Mode=OneTime}"
+                      VerticalAlignment="Center" ToolTipService.ToolTip="Active City List"
+							  
+                      Margin="4,0,4,0" />
+					</AppBarElementContainer>
+			
+					<AppBarToggleButton x:Name="artifactsButton" Click="ArtifactsClicked" Icon="OutlineStar" Label="Artifact"  IsChecked="False" 
                            ToolTipService.ToolTip="Artifacts" />
 
 					<AppBarToggleButton x:Name="techTreeButton" Click="TechTreeClicked" Icon="Up" Label="Research"  IsChecked="False" 
@@ -171,19 +208,7 @@
 				Canvas.ZIndex="14" 
 				
 				/>
-			<cnv:PlayerStats 
-				x:Name="playerStats"
-				Grid.Row="1" 
-				x:Load="False"
-				Margin="0"
-				Padding="0"
-				Height="32"
 			
-				Grid.Column="0"
-				Grid.ColumnSpan="3"
-				Canvas.ZIndex="46" 
-				
-				/>
 			<tk:GridSplitter
 				IsTabStop="True"
 				PointerMoved="GridSpliterOnPointerReleased"
