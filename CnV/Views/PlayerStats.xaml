@@ -13,11 +13,11 @@
     <tk:WrapPanel Orientation="Horizontal" HorizontalSpacing="4" Margin="0" Padding="0" IsTabStop="True" IsTapEnabled="true" >
 		<cnv:ZirconiaText x:Name="zirc" 
 					
-					  Text="{x:Bind zirconiaS, Mode=OneWay}" 
+					  Text="{x:Bind zirconiaS, Mode=OneWay}" Width="90"
 					  
 					  
 					 />
-		<cnv:ManaText Text="{x:Bind manaS, Mode=OneWay}" 
+		<cnv:ManaText Text="{x:Bind manaS, Mode=OneWay}" MaxWidth="90" 
 					 />
 
 		<Image Source="{x:Bind cnv:ImageHelper.Get('UI/icons_ressource_all.png')}" VerticalAlignment="Center"

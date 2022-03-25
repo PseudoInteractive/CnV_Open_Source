@@ -186,7 +186,10 @@
 						  
 							   ToolTipService.ToolTip="If checked, each city with trrops will draw a troop overlay in region view"
 							   />
-
+				<CheckBox  Content="Trades Visible" IsThreeState="True" IsChecked="{x:Bind cnv:Settings.tradesVisible, Mode=TwoWay}" 
+							   Margin="4"
+						     ToolTipService.ToolTip="If checked, trades are shown on the map, if neutral they are only show when a trade window is open"
+							   />
 				<NumberBox Header="Reset Raids Carry %"
 									 Value="{x:Bind cnv:Settings.resetRaidsCarry,Mode=TwoWay}"
 									 SmallChange="1" ToolTipService.ToolTip="When resetting raids, if [Min(carry%)] &lt;= [Reset Raids Carry %] raids are reset"

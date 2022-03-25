@@ -59,7 +59,7 @@
 
 		<CommandBar Grid.ColumnSpan="3"   DefaultLabelPosition="Collapsed" IsSticky="True" IsTabStop="True" Margin="0" Padding="0" MinHeight="22"  
 						x:Name="commandBar" x:FieldModifier="public"  >
-		<CommandBar.Content>
+		<CommandBar.Content >
 					<cnv:PlayerStats 
 				x:Name="playerStats"
 				VerticalAlignment="Center"

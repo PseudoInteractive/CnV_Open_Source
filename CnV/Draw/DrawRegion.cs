@@ -214,7 +214,7 @@ internal partial class GameClient
 			if(timeSinceLastFrame > 0.25)
 			{
 #if DEBUG
-		///		Note.Show($"\nVery Slow {timeSinceLastFrame}");
+				///		Note.Show($"\nVery Slow {timeSinceLastFrame}");
 #endif
 				timeSinceLastFrame  = 0.25;
 			}
@@ -466,9 +466,9 @@ internal partial class GameClient
 					// Morning
 					var c1 = new Vector3(4.0f/6.0f,sat,0.75f);
 					// noon
-					var c2 = new Vector3(2.0f/6.0f,sat*0.375f,0.875f); 
+					var c2 = new Vector3(2.0f/6.0f,sat*0.375f,0.875f);
 					// evening
-					var c3 = new Vector3(0.0f,sat,0.75f); 
+					var c3 = new Vector3(0.0f,sat,0.75f);
 					var cp = new Vector3(c3.X+1.0f,c3.Y,c3.Z);
 					var c4 = new Vector3(c0.X-1.0f,c0.Y,c0.Z);
 					var c5 = new Vector3(c1.X-1.0f,c1.Y,c1.Z);
@@ -476,7 +476,7 @@ internal partial class GameClient
 					var d3 = new Vector3(c_.X,c_.Y,c_.Z*Settings.lightD).RGBFromHSL();
 					var a3 = new Vector3(c_.X,c_.Y,c_.Z*Settings.lightA).RGBFromHSL();
 					var s3 = new Vector3(c_.X,c_.Y*0.5f,c_.Z.Lerp(0.25f,0.75f)*Settings.lightS).RGBFromHSL();
-					
+
 
 					//var d3 = t.CatmullRomLoop(new Vector3(0.75f,0.5f,1.125f),
 					//							new Vector3(0.5f,0.5f,1.5f),
@@ -1105,7 +1105,7 @@ internal partial class GameClient
 											Color c;
 											if(i.isSettle)
 											{
-												if(i.arrived )
+												if(i.arrived)
 													c = Color.Green;  // returning carts
 												else
 													c = Color.White;
@@ -1176,7 +1176,7 @@ internal partial class GameClient
 												DrawAction(i.TimeToArrival(serverNow),i.journeyTime,r,
 													_c0.ToVector(),
 												_c1.ToVector(),c,i.troops.Any() ? troopImages[i.troops.GetIndexType(iType)] : null,
-												true,i,alpha: alpha,lineThickness: lineThickness,highlight:sel);
+												true,i,alpha: alpha,lineThickness: lineThickness,highlight: sel);
 											}
 										}
 										if(isIncoming)
@@ -1223,7 +1223,67 @@ internal partial class GameClient
 						//		}
 						//	}
 						//}
+						var tradesVisible = Settings.tradesVisible != false;
+						var tradePartlyVisible = Settings.tradesVisible == null;
+						if(tradesVisible)
+						{
+							var cullSlopSpace = (32 * pixelScale).RoundToInt();
+							for(int iOrO = 0;iOrO < 2;++iOrO)
+							{
+								var isIncoming = (iOrO == 0);
+								
+								var list = City.myCities; //defenders ? Spot.defendersI : Spot.defendersO;
+								bool showAll = !tradePartlyVisible;
+								foreach(var city in list)
+								{
+									if(!city.testContinentFilter) // || !(showAll || Spot.IsSelectedOrHovered(city.cid) ))
+										continue;
 
+									
+									{
+
+										var cityCid = city.cid;
+										var c1 = cityCid.CidToWorld();
+										if(IsSquareCulledWC(c1,cullSlopSpace))  // this is in pixel space - Should be normalized for screen resolution or world space (1 continent?)
+											continue;
+
+
+										foreach(var i in isIncoming ? city.tradesIn : city.tradesOut)
+										{
+											var c0 = isIncoming ? i.sourceCid.CidToWorld() : i.targetCid.CidToWorld();
+											if(IsSegmentCulledWC(c0,c1))
+												continue;
+
+											Color c;
+											c = Color.Green;  // returning carts
+											if(!(showAll || Spot.IsSelectedOrHovered(i.sourceCid, i.targetCid) ))
+											{
+												continue;
+											}
+											// don't double up
+											{
+												var t = (tick * i.sourceCid.CidToRandom().Lerp(1.5f / 512.0f,2.0f / 512f)) + 0.25f;
+												var r = t.Ramp();
+												(int x, int y) _c0, _c1;
+												if(isIncoming ^ i.isReturning)
+												{
+													_c0 = c0; _c1 = c1;
+												}
+												else
+												{
+													_c0 = c1; _c1 = c0;
+												}
+												DrawAction( (i.isReturning ? i.returnTime : i.arrival) - Sim.simTime,i.travelTime,r,
+													_c0.ToVector(),
+												_c1.ToVector(),c, troopImages[0] ,
+												true,null,alpha: 255,lineThickness: lineThickness,highlight: false);
+											}
+										}
+										
+									}
+								}
+							}
+						}
 
 						if(NearRes.IsVisible())
 						{
@@ -1444,7 +1504,7 @@ internal partial class GameClient
 
 						}
 					}
-					
+
 
 				}
 
@@ -1472,7 +1532,7 @@ internal partial class GameClient
 										var cid = (cx, cy).WorldToCid();
 
 										var drawC = (new System.Numerics.Vector2(cx,cy));
-										
+
 										if(spot is null)
 										{
 											drawC.X += 0.30f;
@@ -1482,7 +1542,7 @@ internal partial class GameClient
 										{
 											drawC.Y += span *  7.5f / 16.0f;
 										}
-											var z = zCities;
+										var z = zCities;
 										var scale = regionFontScale;
 
 
@@ -1493,7 +1553,7 @@ internal partial class GameClient
 										}
 										//	drawC = drawC.Project(zLabels);
 										var layout = GetTextLayout(name,nameTextFormat);
-										var color = spot ==null? nameColorDungeon
+										var color = spot ==null ? nameColorDungeon
 											:
 											(isMine ?
 											(hasIncoming ?
@@ -1872,7 +1932,7 @@ internal partial class GameClient
 		{
 			progress = 1.0f;
 			timeToArrival = 0;
-			lineRate = (animationT/8.0f) .Wave().Lerp(-lineAnimationRate,lineAnimationRate)*(1f/64.0f);
+			lineRate = (animationT/8.0f).Wave().Lerp(-lineAnimationRate,lineAnimationRate)*(1f/64.0f);
 		}
 		else
 		{
@@ -1883,15 +1943,15 @@ internal partial class GameClient
 		}
 		if(applyStopDistance)
 		{
-			progress *= (1.0f -  (actionStopDistance / Vector2.Distance(c0,c1)).Min(0.25f) );
-			
+			progress *= (1.0f -  (actionStopDistance / Vector2.Distance(c0,c1)).Min(0.25f));
+
 			//c1  = c0 + (c1 - c0)* stop;
 		}
 
 		var gain = 1.0f;
-		if(timeToArrival < postAttackDisplayTime && timeToArrival > 0 )
+		if(timeToArrival < postAttackDisplayTime && timeToArrival > 0)
 			gain = 1.0f + (1.0f - timeToArrival / postAttackDisplayTime) * 0.25f;
-		
+
 
 
 		float spriteSize = spriteSizeGain;
@@ -2039,9 +2099,9 @@ internal partial class GameClient
 		}
 	}
 
-	static (float u, float v) GetLineUs(Vector2 c0,Vector2 c1,float thickness, float animationSpeed = lineAnimationRate)
+	static (float u, float v) GetLineUs(Vector2 c0,Vector2 c1,float thickness,float animationSpeed = lineAnimationRate)
 	{
-		var offset = (animationSpeed * animationT) .Wrap01();
+		var offset = (animationSpeed * animationT).Wrap01();
 		return (offset, offset-(c0 - c1).Length()* lineWToUs/thickness);
 
 	}
@@ -2400,7 +2460,7 @@ internal partial class GameClient
 			return false;
 		if(!AppS.isStateActive)
 			return false;
-		
+
 		if(Sim.isWarmup)
 			return false;
 		if(TilesReady())

@@ -34,7 +34,7 @@
 
 		<StackPanel x:Name="stackPanel"  Margin="2" Padding="2" Background="{x:Null}"   CornerRadius="0" VerticalAlignment="Top" >
 			<ComboBox  x:Name="cityBox" x:FieldModifier="public" 
-					                Width="200"
+					               HorizontalAlignment="Stretch"
 					                IsEditable="True"
 					   
 					   ItemsSource="{x:Bind cnv:City.gridCitySource, Mode=OneWay}"
@@ -55,9 +55,9 @@
 				</ComboBox.ItemTemplate>
 			</ComboBox>
 
-			<Expander Header="Incoming" Expanding="Expander_Expanding"  Visibility="Collapsed" x:Name="expIncoming" HorizontalAlignment="Stretch" >
+			<Expander Header="Incoming" Expanding="Expander_Expanding"  Visibility="Collapsed" x:Name="expIncoming" HorizontalAlignment="Stretch"  >
 			</Expander>
-			<Expander  Expanding="Expander_Expanding" IsExpanded="True"   x:Name="expResource" HorizontalAlignment="Stretch"  >
+			<Expander Background="{StaticResource ExpanderBrushContent}" Expanding="Expander_Expanding" IsExpanded="True"   x:Name="expResource" HorizontalAlignment="Stretch"  >
 				<ToolTipService.ToolTip >
 					<ToolTip x:Name="ResToolTip" Content="Resources" />
 				</ToolTipService.ToolTip>
@@ -96,7 +96,7 @@
 
 			<!--Build Queue-->
 
-			<Expander  Expanding="Expander_Expanding" IsExpanded="True" x:Name="expBuildQueue" Background="{x:Null}"   >
+			<Expander  Expanding="Expander_Expanding" IsExpanded="True" x:Name="expBuildQueue" Background="{StaticResource ExpanderBrushContent}"  >
 
 				<Expander.Header   >
 
@@ -106,7 +106,7 @@
 					</Border>
 				</Expander.Header>
 				<ListView x:Name="buildQueueListView" x:FieldModifier="public"  
-						  SelectionMode="Extended"  Background="{StaticResource ExpanderBrushContentAlt}"
+						  SelectionMode="Extended" 
 						  Margin="0" Padding="0" HorizontalAlignment="Stretch" 
 						  AllowDrop="True"
 						  CanDragItems="True"
@@ -175,9 +175,9 @@
 				</Expander.Header>
 				<GridView x:Name="buildingCountGrid"  HorizontalAlignment="Stretch" SelectionMode="Multiple" 
 						  IsMultiSelectCheckBoxEnabled="False" 
-						  
+						  Background="{StaticResource ExpanderBrushContent}"
 						  SelectionChanged="buildingCountGrid_SelectionChanged"
-						  Background="{x:Null}" ItemsSource="{x:Bind buildingCounts,Mode=OneWay}" >
+						   ItemsSource="{x:Bind buildingCounts,Mode=OneWay}" >
 					<GridView.ItemContainerStyle>
 						<Style TargetType="GridViewItem">
 							<Setter Property="Margin" Value="1, 1, 1, 1"/>
@@ -212,14 +212,14 @@
 
 			<!--Enlistment-->
 
-			<Expander  IsExpanded="True" Expanding="Expander_Expanding" x:Name="expEnlistment" ContextRequested="EnlistmentContextRequested"  >
+			<Expander  IsExpanded="True" Expanding="Expander_Expanding" x:Name="expEnlistment" ContextRequested="EnlistmentContextRequested" Background="{StaticResource ExpanderBrushContent}" >
 				<Expander.Header>
 					<Button  HorizontalContentAlignment="Right" 
 							ToolTipService.ToolTip="Recruit Queue, click to recruit"
 								Content="{x:Bind recruitTitle, Mode=OneWay}"  Style="{StaticResource ButtonMedium}" Margin="2,0,2,0" Click="EnlistmentClick" Padding="8,2" HorizontalAlignment="Stretch" />
 				</Expander.Header>
 				<ListView x:Name="RecruitQueueListView" x:FieldModifier="public"  
-						  SelectionMode="Extended"  Background="{StaticResource ExpanderBrushContentAlt}"
+						  SelectionMode="Extended"  
 						  Margin="0" Padding="0" HorizontalAlignment="Stretch" 
 						  AllowDrop="True"
 						  CanDragItems="True"
@@ -269,7 +269,7 @@
 
 			<!--Commands-->
 
-			<Expander  IsExpanded="True" Expanding="Expander_Expanding" x:Name="expCommands"  >
+			<Expander  IsExpanded="True" Expanding="Expander_Expanding" x:Name="expCommands" Background="{StaticResource ExpanderBrushContent}" >
 				<Expander.Header>
 					<Border Background="{x:Bind cnv:ImageHelper.GetAsBrush('UI/menues/main_menu/bgr_quickuse_research.png') }"  BorderThickness="0" Padding="0" Margin="2,0,2,0"  
 							 >
@@ -278,7 +278,7 @@
 				</Expander.Header>
 
 				<ListView x:Name="CommandsListView" x:FieldModifier="public"  
-						  SelectionMode="Extended"  Background="{StaticResource ExpanderBrushContentAlt}"
+						  SelectionMode="Extended"  
 						  Margin="0" Padding="0" HorizontalAlignment="Stretch" 
 						
 						HorizontalContentAlignment="Stretch"
@@ -319,7 +319,7 @@
 				</ListView>
 
 			</Expander>
-			<Expander  IsExpanded="True" Expanding="Expander_Expanding" x:Name="expReinforcements"  >
+			<Expander  IsExpanded="True" Expanding="Expander_Expanding" x:Name="expReinforcements" Background="{StaticResource ExpanderBrushContent}" >
 				<Expander.Header   >
 					<Border Background="{x:Bind cnv:ImageHelper.GetAsBrush('UI/menues/main_menu/bgr_quickuse_recruitmentqueue.png') }"  BorderThickness="0" Padding="0" Margin="2,0,2,0"  
 							>
@@ -327,7 +327,7 @@
 					</Border>
 				</Expander.Header>
 				<StackPanel>
-					<Border   CornerRadius="4" Margin="0" Padding="4" Background="{StaticResource ExpanderBrushHeader}" >
+					<Border   CornerRadius="4" Margin="0" Padding="4"  >
 
 						<StackPanel>
 							<TextBlock Text="Owned" Style="{StaticResource TextBlockMedium}" Margin="4"  Visibility="{x:Bind TroopsHomeVisible,Mode=OneWay}" />
@@ -335,7 +335,7 @@
 									   TextWrapping="Wrap" FontSize="16" MaxLines="8" Margin="8,2,2,2" />
 						</StackPanel>
 					</Border>
-					<Border   CornerRadius="4" Margin="0" Padding="4" Background="{StaticResource ExpanderBrushHeader}" 
+					<Border   CornerRadius="4" Margin="0" Padding="4"  
 							  Visibility="{x:Bind TroopsHomeVisible,Mode=OneWay}">
 
 						<StackPanel>
@@ -344,7 +344,7 @@
 									   TextWrapping="Wrap" FontSize="16" MaxLines="8" Margin="8,2,2,2" />
 						</StackPanel>
 					</Border>
-					<Border   CornerRadius="4" Margin="0" Padding="4" Background="{StaticResource ExpanderBrushHeader}" 
+					<Border   CornerRadius="4" Margin="0" Padding="4" 
 							  Visibility="{x:Bind IncomingReinforcementsVisible,Mode=OneTime}">
 
 						<StackPanel>
@@ -359,13 +359,13 @@
 
 			<!--Trades-->
 
-			<Expander Expanding="Expander_Expanding" x:Name="expTrades" IsExpanded="True"  >
+			<Expander Expanding="Expander_Expanding" x:Name="expTrades" IsExpanded="True" Background="{StaticResource ExpanderBrushContent}" >
 				<Expander.Header>
 					<TextBlock Text="{x:Bind tradesTitle, Mode=OneWay}" Style="{StaticResource TextBlockMedium}"  />
 				</Expander.Header>
 
 				<ListView x:Name="TradesListView" x:FieldModifier="public"  
-						  SelectionMode="Extended"  Background="{StaticResource ExpanderBrushContentAlt}"
+						  SelectionMode="Extended"  
 						  Margin="0" Padding="0" HorizontalAlignment="Stretch" 
 						
 						HorizontalContentAlignment="Stretch"
