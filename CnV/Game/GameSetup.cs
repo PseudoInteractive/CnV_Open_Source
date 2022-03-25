@@ -47,7 +47,7 @@ namespace CnV
 				Player.myIds.Add(Player.myId);
 
 				var t1 = Task.Run(() => TileData.Ctor(false));
-				Alliance.UpdateAll();
+				
 				var t2 = CityCustom.Load();
 				BuildQueue.Initialize();
 				await t1.ConfigureAwait(false);

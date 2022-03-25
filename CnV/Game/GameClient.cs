@@ -32,6 +32,7 @@ namespace CnV
 
 		static readonly Color attackColor = Color.White;
 		static Color ShadowColor(float alpha, bool highlight = false) => new Color(highlight ? 16 : 0, highlight ? 0 : 0, highlight ? 0 : 8, (int)(220 * alpha));
+		static readonly Color returnColor = new Color(60, 30, 200, 255);
 		static readonly Color defenseColor = new Color(60, 0, 255, 255);
 		static readonly Color defenseArrivedColor = new Color(60, 30, 255, 255);
 		static readonly Color artColor = Color.DarkBlue;
@@ -55,7 +56,8 @@ namespace CnV
 		static readonly Color      pinnedColor = Color.Teal;
 		internal static readonly Color      black0Alpha = new Color() { A = 0, R = 0, G = 0, B = 0 };
 		public static   Material[] troopImages = new Material[Troops.ttCount];
-		internal static          Vector2    troopImageOriginOffset;
+		public static   Material[] tradeImages = new Material[2]; 
+		//internal static          Vector2    troopImageOriginOffset;
 		internal const           int        maxTextLayouts = 1024;
 
 		public static      EffectPass      alphaAddEffect;

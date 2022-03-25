@@ -166,11 +166,15 @@ static partial class View
 				{
 
 					troopImages[i] = LoadMaterial($"Art/icons/troops{i}");
-					if(i == 0)
-					{
-						troopImageOriginOffset.X = (float)troopImages[i].Width * 0.5f;
-						troopImageOriginOffset.Y = (float)troopImages[i].Height * 0.5f;
-					}
+					//if(i == 0)
+					//{
+					//	troopImageOriginOffset.X = (float)troopImages[i].Width * 0.5f;
+					//	troopImageOriginOffset.Y = (float)troopImages[i].Height * 0.5f;
+					//}
+				}
+				for(int i = 0;i < tradeImages.Length;++i)
+				{
+					tradeImages[i] = LoadMaterial($"Art/icons/trade{i}");
 				}
 				//// create a full screen rendertarget
 				//RemakeRenderTarget();

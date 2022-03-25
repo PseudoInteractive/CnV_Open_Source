@@ -177,6 +177,9 @@ internal partial class GameClient
 	internal const float targetStepsPerSecond = 256;
 	public static int drawCounter;
 	public static float fadeCounter = 1;
+	internal static HashSet<int> drawTradesHash = new();
+	internal static HashSet<int> drawArmyHash = new();
+
 	protected override void Draw(GameTime gameTime)
 	{
 		if(faulted)
@@ -1106,24 +1109,20 @@ internal partial class GameClient
 											if(i.isSettle)
 											{
 												if(i.arrived)
-													c = Color.Green;  // returning carts
+													c = returnColor;  // returning carts
 												else
 													c = Color.White;
 											}
 											else if(i.isRaid)
 											{
-												c = Color.DarkGray;
+												c = Color.DarkOrange;
 											}
 											else if(i.isReturn)
 											{
-												c = Color.Blue;
+												c = returnColor;
 											}
 											else if(i.isDefense)
 											{
-												// don't double draw
-												if(i.sourceCid == cityCid && outgoingVisible)
-													continue;
-
 												c = i.arrival <= serverNow ? defenseArrivedColor : defenseColor;
 											}
 											else if(i.isAttack)
@@ -1158,6 +1157,8 @@ internal partial class GameClient
 												continue;
 												//       c.A = (byte)((int)c.A * 3 / 8); // reduce alpha if not selected
 											}
+											// don't double draw
+											if(drawArmyHash.Add(i.GetHashCode()))
 											{
 												var t = (tick * i.sourceCid.CidToRandom().Lerp(1.5f / 512.0f,2.0f / 512f)) + 0.25f;
 												var r = t.Ramp();
@@ -1201,6 +1202,7 @@ internal partial class GameClient
 									}
 								}
 							}
+							drawArmyHash.Clear();
 						}
 						//if(incomingVisible)
 						//{
@@ -1227,6 +1229,8 @@ internal partial class GameClient
 						var tradePartlyVisible = Settings.tradesVisible == null;
 						if(tradesVisible)
 						{
+							
+	
 							var cullSlopSpace = (32 * pixelScale).RoundToInt();
 							for(int iOrO = 0;iOrO < 2;++iOrO)
 							{
@@ -1254,13 +1258,13 @@ internal partial class GameClient
 											if(IsSegmentCulledWC(c0,c1))
 												continue;
 
-											Color c;
-											c = Color.Green;  // returning carts
+											var c = i.isReturning ? returnColor :  Color.Green;  
 											if(!(showAll || Spot.IsSelectedOrHovered(i.sourceCid, i.targetCid) ))
 											{
 												continue;
 											}
 											// don't double up
+											if(drawTradesHash.Add(i.GetHashCode()))
 											{
 												var t = (tick * i.sourceCid.CidToRandom().Lerp(1.5f / 512.0f,2.0f / 512f)) + 0.25f;
 												var r = t.Ramp();
@@ -1275,7 +1279,7 @@ internal partial class GameClient
 												}
 												DrawAction( (i.isReturning ? i.returnTime : i.arrival) - Sim.simTime,i.travelTime,r,
 													_c0.ToVector(),
-												_c1.ToVector(),c, troopImages[0] ,
+												_c1.ToVector(),c,tradeImages[i.viaWater.Switch(0,1)] ,
 												true,null,alpha: 255,lineThickness: lineThickness,highlight: false);
 											}
 										}
@@ -1283,6 +1287,7 @@ internal partial class GameClient
 									}
 								}
 							}
+							drawTradesHash.Clear();
 						}
 
 						if(NearRes.IsVisible())
