@@ -91,7 +91,7 @@ namespace CnV
 			var s = t.step;
 			Assert(t.canClaim);
 			new CnVEventResearch(s.id).EnqueueAsap();
-			Hide();
+			Done();
 		}
 
 		

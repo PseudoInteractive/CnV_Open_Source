@@ -100,7 +100,7 @@ namespace CnV
 		{
 			// invalidate
 		
-			instance?.cityQueueChangeDebounce.Go();
+			instance?.buildCityChangeDebounce.Go();
 //			displayQueue = BuildQueueType.Empty;
 			//Log(e.Action);
 			//LogJson(e);
@@ -160,7 +160,7 @@ namespace CnV
 
 		internal static BuildQueueType lastSynchronizedQueue = BuildQueueType.Empty;
 		internal static RecruitQueueType lastSynchronizedRecruitQueue = RecruitQueueType.Empty;
-		static void UpdateAllQueues()
+		static void BuildCityChanged()
 		{
 			UpdateBuildQueue();
 			UpdateCommandItems();
@@ -258,6 +258,24 @@ namespace CnV
 		{
 			var city = instance.city;
 			var lg = rtQ.Count;
+			var anyRemoved = false;
+
+			// first remove
+			{
+			__restartRemove:
+				int i = 0;
+				foreach(var x in xQ)
+				{
+					if(!rtQ.Any(a => equals(a,x)))
+					{
+						xQ.RemoveAt(i);
+						anyRemoved=true;
+						goto __restartRemove;
+					}
+					++i;
+				}
+			}
+
 			for(int i = 0;i<lg;++i)
 			{
 				var op = rtQ[i];
@@ -285,13 +303,7 @@ namespace CnV
 
 				}
 			}
-			// sequence is done, remove extras if any, they will always be at the end
-			var anyRemoved = xQ.Count > lg;
-
-			for(var i = xQ.Count;--i>= lg;)
-			{
-				xQ.RemoveAt(i);
-			}
+			
 
 			return anyRemoved;
 		}
@@ -350,7 +362,7 @@ namespace CnV
 			// restore callback
 
 		}
-		internal DebounceA cityQueueChangeDebounce = new(UpdateAllQueues) { runOnUiThread=true,debounceDelay=100 };
+		internal DebounceA buildCityChangeDebounce = new(BuildCityChanged) { runOnUiThread=true,debounceDelay=100 };
 
 		internal string TroopsHomeS => city?.troopsHere.Format(separator: ',');
 		internal string TroopsOwnedS => city?.troopsOwned.Format(separator: ',');
@@ -601,7 +613,7 @@ namespace CnV
 		internal static void Invalidate()
 		{
 			
-			instance?.cityQueueChangeDebounce.Go();
+			instance?.buildCityChangeDebounce.Go();
 		
 			
 		}
@@ -1113,18 +1125,14 @@ namespace CnV
 			flyout.SetXamlRoot(sender);
 			
 			
-			//flyout.AddItem("Return",Symbol.Undo,() =>
-			//{
-			//	new CnVEventReturnTroops(army).EnqueueAsap();
+			flyout.AddItem("Return",Symbol.Undo,() =>
+			{
+
+				new CnVEventCancelTrade(trade.sourceC,trade).EnqueueAsap();
 				
-			//});
+			});
 			
-			flyout.AddItem("Cancel Selected",Symbol.Cut,() =>
-			{
-			});
-			flyout.AddItem("Cancel all",Symbol.Clear,() =>
-			{
-			});
+			
 			
 			// Todo: Sort
 

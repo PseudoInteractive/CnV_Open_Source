@@ -92,7 +92,7 @@ namespace CnV
 
 		private void SendClick(object sender,RoutedEventArgs e)
 		{
-			Hide();
+			Done();
 			var viaWater = this.viaWater; // fetch before lock
 			using(var locker = Sim.eventQLock.Enter)
 			{

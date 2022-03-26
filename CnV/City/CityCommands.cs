@@ -69,7 +69,10 @@ public static partial class CityUI
 
 public partial class City
 {
-	
+	internal void Show(object sender,RoutedEventArgs e)
+	{
+		CityUI.ShowCity(cid,false);
+	}
 
 	public void ReturnAt(object sender, RoutedEventArgs e)
 	{

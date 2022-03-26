@@ -1,120 +1,123 @@
-﻿<winui:TeachingTip
+﻿<cnv:DialogG
     x:Class="CnV.Views.ShareString"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:CnV.Views"
+  
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:tk="using:CommunityToolkit.WinUI.UI.Controls"
 	xmlns:winui="using:Microsoft.UI.Xaml.Controls"
     mc:Ignorable="d"
 	 xmlns:cnv="using:CnV"
-	  xmlns:game="using:CnV"
 	 xmlns:views="using:CnV.Views"
-	HeroContentPlacement ="Top"
-	
-	ActionButtonContent="Apply"
-	CloseButtonContent="Cancel"
+
 		>
-	<TeachingTip.Resources>
-		<DataTemplate x:Key="ShareItemTemplate" x:DataType="views:ShareStringItem" >
-			<winui:TreeViewItem ItemsSource="{x:Bind children}" >
-				<StackPanel Orientation="Horizontal" Margin="4" Padding="4">
-					<TextBlock Text="{x:Bind label}"/>
-				</StackPanel>
-			</winui:TreeViewItem>
-		</DataTemplate>
-	</TeachingTip.Resources>
-	<TeachingTip.HeroContent>
-		<Grid x:Name="HeroGrid" 
-	 >
-			<Grid.ColumnDefinitions>
-				<ColumnDefinition Width="Auto" />
-				<ColumnDefinition Width="*" />
-			</Grid.ColumnDefinitions>
-			<StackPanel Margin="8" >
-				
-				<ToggleSwitch x:Name="toggleLayout"
+
+	<Grid x:Name="HeroGrid" >
+		<Grid.Resources>
+			<DataTemplate x:Key="ShareItemTemplate" x:DataType="views:ShareStringItem" >
+				<TreeViewItem ItemsSource="{x:Bind children}" >
+					<StackPanel Orientation="Horizontal" Margin="4" Padding="4">
+						<TextBlock Text="{x:Bind label}"/>
+					</StackPanel>
+				</TreeViewItem>
+			</DataTemplate>
+		</Grid.Resources>
+
+
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition Width="Auto" />
+			<ColumnDefinition Width="*" />
+		</Grid.ColumnDefinitions>
+		<Grid>
+		<StackPanel Margin="8" >
+
+			<ToggleSwitch x:Name="toggleLayout"
 					Header="Layout"
 					IsOn="{Binding IsOpen, Mode=TwoWay, ElementName=LayoutBlade}"
 					OnContent="Update"
 							Toggled="toggle_Toggled"
 					OffContent="Skip" />
-				<ToggleSwitch x:Name="toggleName"
+			<ToggleSwitch x:Name="toggleName"
 					Header="Name"
 					IsOn="{Binding IsOpen, Mode=TwoWay, ElementName=NameBlade}"
 					OnContent="Update"
 							Toggled="toggleName_Toggled"
 					OffContent="Skip" />
-				<ToggleSwitch x:Name="toggleAutobuild"
+			<ToggleSwitch x:Name="toggleAutobuild"
 					Header="Autobuild"
 					IsOn="{Binding IsOpen, Mode=TwoWay, ElementName=AutobuildBlade}"
 					OnContent="Build"
 					OffContent="Skip" />
-				<ToggleSwitch x:Name="toggleTrade"
+			<ToggleSwitch x:Name="toggleTrade"
 					Header="Trade"
 					IsOn="{Binding IsOpen, Mode=TwoWay, ElementName=TradeBlade }"
 					 Toggled="toggleTrade_Toggled"	
 					OnContent="Update"
 							
 					OffContent="Skip" />
-				<ToggleSwitch x:Name="toggleTags"
+			<ToggleSwitch x:Name="toggleTags"
 					Header="Tags"
 					IsOn="{Binding IsOpen, Mode=TwoWay, ElementName=TagsBlade}"
 							Toggled="toggle_Toggled"
 					OnContent="Update"
 					OffContent="Skip" />
+			
 			</StackPanel>
-			<tk:BladeView Grid.Column="1"   x:Name="bladeView"   >
-				<tk:BladeItem x:Name="NameBlade" Header="Name" IsOpen="False" VisibilityChanged="NameBlade_VisibilityChanged"	  >
-						<Border Grid.Row="0" Style="{StaticResource BorderReveal}">
-							<StackPanel  >
-								<TextBox  x:Name="suggested" Header="Suggested" x:FieldModifier="public" />
-								<TextBox  x:Name="current" Header="Prior" x:FieldModifier="public"   />
-							<TextBlock Style="{StaticResource BodyTextBlockStyle}" MaxLines="8" MaxHeight="256"  TextWrapping="Wrap" >
+			<Button Click="Done" Style="{StaticResource ButtonMedium}" Content="Done" VerticalAlignment="Bottom" HorizontalAlignment="Left" />
+
+		</Grid>
+		
+		<tk:BladeView Grid.Column="1"   x:Name="bladeView"   >
+			<tk:BladeItem x:Name="NameBlade" Header="Name" IsOpen="False" VisibilityChanged="NameBlade_VisibilityChanged"	  >
+				<Border Grid.Row="0" Style="{StaticResource BorderReveal}">
+					<StackPanel  >
+						<TextBox  x:Name="suggested" Header="Suggested" x:FieldModifier="public" />
+						<TextBox  x:Name="current" Header="Prior" x:FieldModifier="public"   />
+						<TextBlock Style="{StaticResource BodyTextBlockStyle}" MaxLines="8" MaxHeight="256"  TextWrapping="Wrap" >
 				Try to avoid '-'<LineBreak/>		
 				If you name hubs 22 001, 22 004... cites will wind up like 22 1003, 22 4005... where 1 and 4 are hub cluster #'s (the # of the closest hub)
 				cities will sort in order of continents, hubs, then clusters of cities for each hub.<LineBreak/>
 				A hub cluster # is chosen based on the closest hub and offered as the suggestion.<LineBreak/></TextBlock>
-								<ToggleSwitch  x:Name="useSuggested" OnContent="Suggested" OffContent="Prior"/>
-								<winui:RadioButtons Header="City Name Type" x:Name="cityType" Grid.Row="2" MaxColumns="4" VerticalAlignment="Top"  >
-									<x:String>Normal</x:String>
-									<x:String>Hub</x:String>
-									<x:String>Storage</x:String>
-								</winui:RadioButtons>
-							</StackPanel>
-						</Border>
-						</tk:BladeItem>
-				<tk:BladeItem x:Name="AutobuildBlade" Header="Autobuild" IsOpen="False"  >
-							<winui:Border Grid.Row="1" Style="{StaticResource BorderReveal}">
-							<tk:WrapPanel>
-							<winui:NumberBox Header="Cottage Level"
+						<ToggleSwitch  x:Name="useSuggested" OnContent="Suggested" OffContent="Prior"/>
+						<RadioButtons Header="City Name Type" x:Name="cityType" Grid.Row="2" MaxColumns="4" VerticalAlignment="Top"  >
+							<x:String>Normal</x:String>
+							<x:String>Hub</x:String>
+							<x:String>Storage</x:String>
+						</RadioButtons>
+					</StackPanel>
+				</Border>
+			</tk:BladeItem>
+			<tk:BladeItem x:Name="AutobuildBlade" Header="Autobuild" IsOpen="False"  >
+				<Border Grid.Row="1" Style="{StaticResource BorderReveal}">
+					<tk:WrapPanel>
+						<NumberBox Header="Cottage Level"
 										Value="{x:Bind cnv:Settings.cottageLevel, Mode=TwoWay}"
 										Width="100"
 										Style="{StaticResource NumberBoxSmall}"
 										SmallChange="1" />
-							<CheckBox Content="Autobuild"
+						<CheckBox Content="Autobuild"
 							  Margin="4"
 							  IsThreeState="True"
 					  ToolTipService.ToolTip="Checked: Turn on autobuild, Unchecked; Turn off autobuild, Kind of checked: Leave it"
 							  IsChecked="{x:Bind cnv:Settings.autoBuildOn, Mode=TwoWay}" />
-							<ToggleSwitch Header="Clear Res" IsOn="{x:Bind cnv:Settings.clearRes, Mode=TwoWay}" OnContent="Clear" OffContent="Leave" />
-							<ToggleSwitch Header="Place Cabins" IsOn="{x:Bind cnv:Settings.autoBuildCabins, Mode=TwoWay}" OnContent="Build" OffContent="Skip" ToolTipService.ToolTip="If set, cabins will be places when setup is complete" />
-							<winui:NumberBox Header="Cabins" Value="{x:Bind cnv:Settings.startCabinCount,Mode=TwoWay}" Style="{StaticResource NumberBoxSmall}" ToolTipService.ToolTip="The number of cabins to place if PlaceCabins is set" />
-							<winui:NumberBox Header="TS Castle" Value="{x:Bind cnv:Settings.tsForCastle, Mode=TwoWay}" Style="{StaticResource NumberBoxSmall}" ToolTipService.ToolTip="When a city has this many TS or more, it will start its castle" />
-							<winui:NumberBox Header="TS Sorc Tower" Value="{x:Bind cnv:Settings.tsForSorcTower, Mode=TwoWay}" Style="{StaticResource NumberBoxSmall}" ToolTipService.ToolTip="When a city has this many TS or more, the sorc tower will be raised to level 10" />
-							<winui:NumberBox Header="WallLevel" Value="{x:Bind cnv:Settings.autoWallLevel, Mode=TwoWay}" Style="{StaticResource NumberBoxSmall}" ToolTipService.ToolTip="How high to automatically build the wall during 'do the stuff'. The wall is built right before the clastle.  If set to 10, autobuild is turned on.  Values other than 1 or 10 are not guaranteed"/>
-							<winui:NumberBox Header="TowerLevel" Value="{x:Bind cnv:Settings.autoTowerLevel,Mode=TwoWay}" Style="{StaticResource NumberBoxSmall}" ToolTipService.ToolTip="How high to automatically build towers during 'do the stuff'.  Towers are placed right before the clastle.  If set to 10, autobuild is turned on. Values other than 1 or 10 are not guaranteed" />
-							<winui:NumberBox Header="Scout Towers" Value="{x:Bind cnv:Settings.scoutpostCount,Mode=TwoWay}" Style="{StaticResource NumberBoxSmall}" ToolTipService.ToolTip="The number of scout towers to place.  They are placed with the castle  during 'do the stuff'" />
-							<winui:NumberBox Header="Storehouses" Value="{x:Bind cnv:Settings.intialStorehouses,Mode=TwoWay}" Style="{StaticResource NumberBoxSmall}" ToolTipService.ToolTip="The number of storehouses to start a city with" />
-							<winui:NumberBox Header="Markets" Value="{x:Bind cnv:Settings.intialMarkets,Mode=TwoWay}" Style="{StaticResource NumberBoxSmall}" ToolTipService.ToolTip="The number of markets to start a city with" />
-						</tk:WrapPanel>
-						</winui:Border>
-					
-				</tk:BladeItem>
-				<tk:BladeItem x:Name="LayoutBlade" Header="ShareString" IsOpen="False"  >
-					<ScrollViewer HorizontalScrollMode="Disabled" VerticalScrollMode="Enabled" >
-						<StackPanel Orientation="Vertical">
+						<ToggleSwitch Header="Clear Res" IsOn="{x:Bind cnv:Settings.clearRes, Mode=TwoWay}" OnContent="Clear" OffContent="Leave" />
+						<ToggleSwitch Header="Place Cabins" IsOn="{x:Bind cnv:Settings.autoBuildCabins, Mode=TwoWay}" OnContent="Build" OffContent="Skip" ToolTipService.ToolTip="If set, cabins will be places when setup is complete" />
+						<NumberBox Header="Cabins" Value="{x:Bind cnv:Settings.startCabinCount,Mode=TwoWay}" Style="{StaticResource NumberBoxSmall}" ToolTipService.ToolTip="The number of cabins to place if PlaceCabins is set" />
+						<NumberBox  Header="TS Castle" Value="{x:Bind cnv:Settings.tsForCastle, Mode=TwoWay}" Style="{StaticResource NumberBoxSmall}" ToolTipService.ToolTip="When a city has this many TS or more, it will start its castle" />
+						<NumberBox Header="TS Sorc Tower" Value="{x:Bind cnv:Settings.tsForSorcTower, Mode=TwoWay}" Style="{StaticResource NumberBoxSmall}" ToolTipService.ToolTip="When a city has this many TS or more, the sorc tower will be raised to level 10" />
+						<NumberBox Header="WallLevel" Value="{x:Bind cnv:Settings.autoWallLevel, Mode=TwoWay}" Style="{StaticResource NumberBoxSmall}" ToolTipService.ToolTip="How high to automatically build the wall during 'do the stuff'. The wall is built right before the clastle.  If set to 10, autobuild is turned on.  Values other than 1 or 10 are not guaranteed"/>
+						<NumberBox Header="TowerLevel" Value="{x:Bind cnv:Settings.autoTowerLevel,Mode=TwoWay}" Style="{StaticResource NumberBoxSmall}" ToolTipService.ToolTip="How high to automatically build towers during 'do the stuff'.  Towers are placed right before the clastle.  If set to 10, autobuild is turned on. Values other than 1 or 10 are not guaranteed" />
+						<NumberBox Header="Scout Towers" Value="{x:Bind cnv:Settings.scoutpostCount,Mode=TwoWay}" Style="{StaticResource NumberBoxSmall}" ToolTipService.ToolTip="The number of scout towers to place.  They are placed with the castle  during 'do the stuff'" />
+						<NumberBox Header="Storehouses" Value="{x:Bind cnv:Settings.intialStorehouses,Mode=TwoWay}" Style="{StaticResource NumberBoxSmall}" ToolTipService.ToolTip="The number of storehouses to start a city with" />
+						<NumberBox Header="Markets" Value="{x:Bind cnv:Settings.intialMarkets,Mode=TwoWay}" Style="{StaticResource NumberBoxSmall}" ToolTipService.ToolTip="The number of markets to start a city with" />
+					</tk:WrapPanel>
+				</Border>
+
+			</tk:BladeItem>
+			<tk:BladeItem x:Name="LayoutBlade" Header="ShareString" IsOpen="False"  >
+				<ScrollViewer HorizontalScrollMode="Disabled" VerticalScrollMode="Enabled" >
+					<StackPanel Orientation="Vertical">
 						<TextBox x:Name="shareString" Header="ShareString" TextWrapping="Wrap" AcceptsReturn="False" IsSpellCheckEnabled="False" MinWidth="500" />
 						<Border  Style="{StaticResource BorderReveal}">
 							<tk:WrapPanel  Orientation="Horizontal">
@@ -134,30 +137,30 @@
 							</tk:WrapPanel>
 						</Border>
 						<Border  Style="{StaticResource BorderReveal}">
-							<winui:TreeView x:Name="shareStrings" SelectionMode="Single" IsTabStop="True" BorderThickness="1" 
+							<TreeView x:Name="shareStrings" SelectionMode="Single" IsTabStop="True" BorderThickness="1" 
 							BorderBrush="{ThemeResource SystemControlBackgroundAccentRevealBorderBrush}"
 						TabNavigation="Once" CanDragItems="False" AllowDrop="False" ItemTemplate="{StaticResource ShareItemTemplate}"
 						ItemsSource="{x:Bind views:ShareStringItem.all}" ItemInvoked="ShareItemInvoked"
-						></winui:TreeView>
+						></TreeView>
 						</Border>
 					</StackPanel>
-					</ScrollViewer>
-				</tk:BladeItem>
-				<tk:BladeItem x:Name="TradeBlade" Header="Trade Settings" IsOpen="False"   >
-					<views:ResSettings x:Name="res" />
-				</tk:BladeItem>
-				<tk:BladeItem x:Name="TagsBlade" Header="Tags" IsOpen="False">
-					<StackPanel>
-						<StackPanel Orientation="Horizontal">
-							<ToggleSwitch x:Name="setRecruit" Header="Set Recruit" OffContent="Leave" OnContent="From Tags" ToolTipService.ToolTip="If set, the city will be set to recruit troops based on the tags" IsOn="{x:Bind cnv:Settings.setRecruit}"  />
-							<TextBox 
+				</ScrollViewer>
+			</tk:BladeItem>
+			<tk:BladeItem x:Name="TradeBlade" Header="Trade Settings" IsOpen="False"   >
+				<views:ResSettings x:Name="res" />
+			</tk:BladeItem>
+			<tk:BladeItem x:Name="TagsBlade" Header="Tags" IsOpen="False">
+				<StackPanel>
+					<StackPanel Orientation="Horizontal">
+						<ToggleSwitch x:Name="setRecruit" Header="Set Recruit" OffContent="Leave" OnContent="From Tags" ToolTipService.ToolTip="If set, the city will be set to recruit troops based on the tags" IsOn="{x:Bind cnv:Settings.setRecruit}"  />
+						<TextBox 
 						 Text="{x:Bind cnv:Settings.VRTRatio, Mode=TwoWay}"
 						 Header="V/R/T Ratio (if applicable)" />
-						</StackPanel>
-						<tk:WrapPanel x:Name="tagsPanel" x:FieldModifier="public"></tk:WrapPanel>
 					</StackPanel>
-				</tk:BladeItem>
+					<tk:WrapPanel x:Name="tagsPanel" x:FieldModifier="public"></tk:WrapPanel>
+				</StackPanel>
+			</tk:BladeItem>
 		</tk:BladeView>
-		</Grid>
-	</TeachingTip.HeroContent>
-</winui:TeachingTip>
+	</Grid>
+
+</cnv:DialogG>

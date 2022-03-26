@@ -36,7 +36,7 @@ namespace CnV.Views
 
 	}
 
-	public sealed partial class ShareString:TeachingTip, IANotifyPropertyChanged
+	public sealed partial class ShareString:DialogG, IANotifyPropertyChanged
 	{
 
 		#region PropertyChanged
@@ -50,6 +50,8 @@ namespace CnV.Views
 		}
 		public event PropertyChangedEventHandler PropertyChanged;
 		#endregion
+
+		protected override string title => City.GetOrAdd(cid).nameAndRemarks;
 
 		public static bool loadedLayouts;
 		static public ShareString instance;
@@ -66,7 +68,7 @@ namespace CnV.Views
 			if(instance is not null)
 				return instance;
 
-			instance = ShellPage.instance.citySetup;
+			 instance= new();
 
 
 			Reload();
@@ -161,7 +163,7 @@ namespace CnV.Views
 			);
 		}
 		//		public static Nito.AsyncEx.AsyncLock showLock = new ();
-		public static Task<bool> ShowNoLock(int cid,SetupFlags flags = SetupFlags.all)
+		public static Task ShowNoLock(int cid,SetupFlags flags = SetupFlags.all)
 		{
 			Log("enter2");
 			Assert(AppS.uiSema.CurrentCount == 0);
@@ -215,38 +217,44 @@ namespace CnV.Views
 					   SetFromSS(city.shareString,false,false);
 					   res.sendFilter = ResourceFilter._true;
 					   res.reqFilter = ResourceFilter._true;
-					   Title = city.nameAndRemarks;
-					   SetCheckboxesFromTags(city.remarks);
+					   SetCheckboxesFromTags(city.tags);
 					   //Bindings.Update();
 					   OnPropertyChanged();
-					   var rv = await this.ShowAsync2();
-					   if(rv==1)
+					   var rv = await base.Show(false);
+					   if(rv)
 					   {
 						   
 						   var setTags = TagsBlade.IsOpen;
 						   var setTrade = TradeBlade.IsOpen;
 						   var setName = NameBlade.IsOpen;
 						   var autobuild = AutobuildBlade.IsOpen;
+						   var wantInfoUpdate = false;
 						   if(setTags)
 						   {
 							   await SetCityTags(cid);
+							   wantInfoUpdate=true;
 							   //await CitySettings.SetCitySettings(City.build, setRecruit: true);
 						   }
 						   if(NameBlade.IsOpen)
 						   {
 							   if(useSuggested.IsOn)
 							   {
-								   city._cityName = suggested.Text;
+								   city.info.name = suggested.Text;
 							   }
 							   else
 							   {
-								   city._cityName = current.Text;
+								   city.info.name = current.Text;
 							   }
 
 							   city.OnPropertyChanged();
-							   city.BuildStageDirty();
-							   await Post.Get("includes/nnch.php",$"a={HttpUtility.UrlEncode(city._cityName,Encoding.UTF8)}&cid={cid}",World.CidToPlayerOrMe(cid));
+							   //city.BuildStageDirty();
+							   //await Post.Get("includes/nnch.php",$"a={HttpUtility.UrlEncode(city._cityName,Encoding.UTF8)}&cid={cid}",World.CidToPlayerOrMe(cid));
 							   Note.Show($"Set name to {city._cityName}");
+							   wantInfoUpdate=true;
+						   }
+						   if(wantInfoUpdate)
+						   {
+							   city.SaveInfo();
 						   }
 
 						   //var req = new Resources((int)reqWood.Value, (int)reqStone.Value, (int)reqIron.Value, (int)reqFood.Value);
@@ -320,7 +328,9 @@ namespace CnV.Views
 		{
 			return await AppS.DispatchOnUIThreadTask(async () =>
 		   {
-			   var meta = new ShareStringMeta() { notes = TagHelper.ApplyTags(await TagsFromCheckboxes(),string.Empty),desc = description.Text,path = path.Text };
+			   var meta = new ShareStringMeta() 
+			   { tags = (long)await TagsFromCheckboxes(),
+				   desc = description.Text,path = path.Text };
 			   if(Settings.embedTradeInShareStrings)
 			   {
 				   meta.reqWood = res.req.wood;
@@ -361,11 +371,10 @@ namespace CnV.Views
 		private void UseBuildingsClick(object sender,RoutedEventArgs e)
 		{
 			var s = City.GetBuild();
-			shareString.Text=City.BuildingsToShareString(s.postQueueBuildings,s.isOnWater);
+			shareString.Text=City.LayoutToShareString(City.LayoutFromBuildings(s.postQueueBuildings,false),s.isOnWater);
 		}
-		public void SetCheckboxesFromTags(string remarks)
+		public void SetCheckboxesFromTags(Tags tags)
 		{
-			var tags = TagHelper.Get(remarks);
 			foreach(var tag in TagHelper.tagsWithoutAliases)
 			{
 				var check = tagsPanel.Children.FirstOrDefault((a) => a is ToggleButton b && b.Content as string == tag.s) as ToggleButton;
@@ -401,7 +410,7 @@ namespace CnV.Views
 
 			var path = DecomposePath(meta.path);
 			this.shareString.Text = s.ss ?? string.Empty;
-			var tags = meta.notes ?? string.Empty;
+			var tags = (Tags)meta.tags;
 
 			description.Text = meta.desc ?? string.Empty;
 			shareTitle.Text = path.title;
@@ -479,6 +488,7 @@ namespace CnV.Views
 						path.Text = i.path;
 						shareTitle.Text = i.label;
 						SetCheckboxesFromTags(i.tags);
+						TagsBlade.IsOpen=true;
 					}
 				}
 			}
@@ -550,12 +560,11 @@ namespace CnV.Views
 		public async Task SetCityTags(int cid)
 		{
 			City city = City.GetOrAddCity(cid);
-			await GetCity.Post(cid).ConfigureAwait(false); // need to fetch notes
 			var tags = await TagsFromCheckboxes();
-			city.tags = tags;
-			city.remarks = TagHelper.ApplyTags(tags,city.remarks);
+			city.info.tags = tags;
+			//city.remarks = TagHelper.ApplyTags(tags,city.remarks);
 			//		Post.Send("includes/sNte.php", $"a={HttpUtility.UrlEncode(tags, Encoding.UTF8)}&b=&cid={cid}");
-			await Post.Get("includes/sNte.php",$"a={HttpUtility.UrlEncode(city.remarks,Encoding.UTF8)}&b={HttpUtility.UrlEncode(city.notes,Encoding.UTF8)}&cid={cid}",World.CidToPlayerOrMe(cid)).ConfigureAwait(false);
+		//	await Post.Get("includes/sNte.php",$"a={HttpUtility.UrlEncode(city.remarks,Encoding.UTF8)}&b={HttpUtility.UrlEncode(city.notes,Encoding.UTF8)}&cid={cid}",World.CidToPlayerOrMe(cid)).ConfigureAwait(false);
 		}
 
 		private void CollapsedDisable(object sender,EventArgs e)
@@ -724,7 +733,7 @@ namespace CnV.Views
 	{
 		public string path { get; set; }
 		public string desc { get; set; }
-		public string notes { get; set; }
+		public long tags { get; set; }
 
 		public int? reqWood { get; set; }
 		public int? reqStone { get; set; }
@@ -761,7 +770,7 @@ namespace CnV.Views
 			}
 		}
 		public string desc { get; set; }
-		public string tags { get; set; }
+		public Tags tags { get; set; }
 
 		public string shareStringWithJson;
 		[JsonIgnore]
@@ -804,7 +813,7 @@ namespace CnV.Views
 				//}
 				var meta = JsonSerializer.Deserialize<ShareStringMeta>(json,JSON.jsonSerializerOptions);
 				//	var path = ShareString.DecomposePath(meta.path);
-				Ctor(meta.path,meta.notes ?? string.Empty,meta.desc ?? string.Empty,s.ss ?? string.Empty,shareString);
+				Ctor(meta.path,(Tags)meta.tags, meta.desc ?? string.Empty,s.ss ?? string.Empty,shareString);
 			}
 			catch(Exception ex)
 			{
@@ -814,10 +823,10 @@ namespace CnV.Views
 
 		public ShareStringItem(string path,string _tags,string _desc,string _share)
 		{
-			Ctor(path,_tags,_desc,_share,null);
+			Ctor(path,TagHelper.Get(_tags),_desc,_share,null);
 		}
 
-		public void Ctor(string path,string _tags,string _desc,string _share,string _shareStringWithJson)
+		public void Ctor(string path,Tags _tags,string _desc,string _share,string _shareStringWithJson)
 		{
 			this.path = path;
 			shareStringWithJson = _shareStringWithJson;

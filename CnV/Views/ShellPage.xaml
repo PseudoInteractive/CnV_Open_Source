@@ -24,8 +24,7 @@
 
 
     <Grid x:Name="_rootGrid" Canvas.ZIndex="33" Background="{x:Null}" >
-        <views:ShareString  x:Name="citySetup" HeroContentPlacement="Top"  x:FieldModifier="public" 
-							ShouldConstrainToRootBounds="False" PreferredPlacement="Center"  />
+    
 		<Grid  Margin="0" x:Name="grid"  x:FieldModifier="public"  ColumnSpacing="0" RowSpacing="0" >
 			<Grid.Resources>
 				<Style x:Key="TimeFlyoutStyle"
@@ -123,10 +122,10 @@
                       Margin="4,0,4,0" />
 					</AppBarElementContainer>
 			
-					<AppBarToggleButton x:Name="artifactsButton" Click="ArtifactsClicked" Icon="OutlineStar" Label="Artifact"  IsChecked="False" 
+					<AppBarButton x:Name="artifactsButton" Click="ArtifactsClicked" Icon="OutlineStar" Label="Artifact"  
                            ToolTipService.ToolTip="Artifacts" />
 
-					<AppBarToggleButton x:Name="techTreeButton" Click="TechTreeClicked" Icon="Up" Label="Research"  IsChecked="False" 
+					<AppBarButton x:Name="techTreeButton" Click="TechTreeClicked" Icon="Up" Label="Research"  
                            ToolTipService.ToolTip="Research" />
 
 					<AppBarButton x:Name="ContinentFilter"  x:FieldModifier="public"

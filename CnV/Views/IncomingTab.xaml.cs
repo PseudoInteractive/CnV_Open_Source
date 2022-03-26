@@ -136,46 +136,56 @@ namespace CnV.Views
 		{
 			if(IncomingTab.IsVisible())
 			{
-				try
+
+				//					lastSelected = sel;
+
+
+
+				AppS.QueueOnUIThreadIdle(() =>
 				{
-					//					lastSelected = sel;
-
-					defenderGrid.ItemsSource = Spot.defendersI.Where(w => w.testContinentFilter
-													&& (includeInternal||w.hasEnemyIncoming)
-													&&(typeFilter == 2 ? w.pid == Player.myId
-													: typeFilter == 1 ? Settings.incomingWatch.Contains(w.playerName)|| w.pid == Player.myId
-													: true)).OrderBy(w => w.firstIncoming).ToArray();
-					var sel = defenderGrid.SelectedItems.ToArray();
-					if(sel.Length > 0)
+					try
 					{
-						AppS.DispatchOnUIThreadIdle(() =>
-						{
-							++SpotTab.silenceSelectionChanges;
-							try
-							{
-								defenderGrid.ClearSelections(false);
-								foreach(var i in sel)
-								{
-									defenderGrid.SelectedItems.Add(i);
-								}
 
-								if(sel.Length >= 1)
-								{
-									defenderGrid.ScrollItemIntoView(sel[0]);
-								}
-							}
-							finally
+						var newItems = City.allianceCities.Where(w => w.testContinentFilter
+														&& (includeInternal||w.hasEnemyIncoming)
+														&&(typeFilter == 2 ? w.pid == Player.myId
+														: typeFilter == 1 ? Settings.incomingWatch.Contains(w.playerName)|| w.pid == Player.myId
+														: true)).OrderBy(w => w.firstIncoming).ToArray();
+						var sel = defenderGrid.SelectedItems.ToArray();
+						++SpotTab.silenceSelectionChanges;
+							
+					    // remove selections that are gone
+						foreach(var i in sel)
+						{
+							var c = i as City;
+							if(!newItems.Contains(c)  )
 							{
-								--SpotTab.silenceSelectionChanges;
+								defenderGrid.SelectedItems.Remove(i);
 							}
-						});
+						}
+
+						defenderGrid.ItemsSource = newItems;
+						if(defenderGrid.SelectedItems.Count > 0)
+						{
+
+
+							defenderGrid.ScrollItemIntoView(defenderGrid.SelectedItems[0]);
+							
+						};
 
 					}
-				}
+
+			
 				catch(Exception e)
 				{
 					LogEx(e);
-				}
+				} 
+				finally
+					{
+						--SpotTab.silenceSelectionChanges; 
+
+					}
+			});
 			}
 		}
 

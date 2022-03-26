@@ -213,7 +213,7 @@ namespace CnV
 			//}
 			menuType = _menuType;
 			var city = City.GetBuild();
-			var townHallLevel = isPlanner ? 10 : city.townHallLevel;
+			var townHallLevel = isPlanner ? 10 : city.townHallLevelPending;
 
 			instance.TogglePlanner.Label = isPlanner ? "Build" : "Planner";
 
@@ -239,7 +239,7 @@ namespace CnV
 					commands.items.Add(amDemo);
 					commands.items.Add(amDowngrade);
 					commands.items.Add(amLayout);
-					if(city.postQueueBuildings[bspot].bl == 0)
+					if(city.GetBuildingOrLayout(bspot).bl == 0)
 						commands.items.Add(amBuild);
 					else
 						commands.items.Add(amUpgrade);
@@ -253,7 +253,7 @@ namespace CnV
 
 					break;
 				case MenuType.wall:
-					if(city.postQueueBuildings[bspotWall].bl == 0)
+					if(city.GetBuildingOrLayout(bspotWall).bl == 0)
 					{
 						items.items.Add(bmWall);
 					}
@@ -389,6 +389,7 @@ namespace CnV
 			s.Setters.Add(new Setter(MinHeightProperty, "300"));
 			s.Setters.Add(new Setter(MinWidthProperty, "400"));
 			s.Setters.Add(new Setter(MaxWidthProperty, "800"));
+			s.Setters.Add(new Setter(MaxHeightProperty, Settings.canvasHeight.ToString() ));
 			buildFlyout.FlyoutPresenterStyle = s;
 			//			{
 
@@ -535,7 +536,8 @@ namespace CnV
 			{
 				var b = City.GetBuild();
 				//b.BuildingsCacheToShareString();
-				//await b.SaveShareStringFromLayout();
+				// Todo: Check has for changes
+				b.SaveLayout();
 
 				//await GetCity.Post(City.build);
 
@@ -544,7 +546,7 @@ namespace CnV
 				{
 					await AppS.DispatchOnUIThreadTask(() =>
 				   {
-					   if(PlannerTab.instance.isFocused)
+					   if(PlannerTab.IsVisible())
 					   {
 						   PlannerTab.instance.Close();
 					   }
@@ -904,8 +906,8 @@ namespace CnV
 
 			contextMenuResultSelected = false;
 			//int bspot = XYToId(cc);
-			var b = city.postQueueBuildings[cc];
-
+			var b = city.GetBuildingOrLayout(cc);
+			
 			if(!isRight)
 			{
 				//if(IsWaterSpot(bspot) && !testFlag)
@@ -914,11 +916,11 @@ namespace CnV
 				//	return;
 				//}
 				isSingleClickAction = true;
-				if(CityBuild.IsWallSpot(cc))
+				if(CityBuild.IsWallSpot(cc) )
 				{
 					//..var bspot = bspotWall;
 					cc = bspotWall;
-					b =city.postQueueBuildings[bspotWall];
+					b =city.GetBuildingOrLayout(bspotWall);
 
 				}
 			}
@@ -1156,26 +1158,29 @@ namespace CnV
 		{
 			//var xy = CityView.hovered;
 			//	var spot = City.XYToId(xy);
-			if(CityBuild.IsTowerSpot(xy) && city.postQueueBuildings[xy].bl == 0)
+			if(!isPlanner)
 			{
-				var bid = number switch
+				if(CityBuild.IsTowerSpot(xy) &&  city.postQueueBuildings[xy].bl == 0)
 				{
-					1 => Building.bidSentinelPost,
-					2 => bidRangerPost,
-					3 => bidTriariPost,
-					4 => bidPriestessPost,
-					5 => bidBallistaPost,
-					6 => bidSnagBarricade,
-					7 => bidEquineBarricade,
-					8 => bidRuneBarricade,
-					_ => bidVeiledBarricade
-				};
+					var bid = number switch
+					{
+						1 => Building.bidSentinelPost,
+						2 => bidRangerPost,
+						3 => bidTriariPost,
+						4 => bidPriestessPost,
+						5 => bidBallistaPost,
+						6 => bidSnagBarricade,
+						7 => bidEquineBarricade,
+						8 => bidRuneBarricade,
+						_ => bidVeiledBarricade
+					};
 
-				ShortBuild(bid, city,xy);
-			}
-			else
-			{
-				city.UpgradeToLevel(number, xy);
+					ShortBuild(bid,city,xy);
+				}
+				else
+				{
+					city.UpgradeToLevel(number,xy);
+				}
 			}
 		}
 

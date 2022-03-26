@@ -82,7 +82,7 @@ namespace CnV.Views
 				child0.AddText(nameof(Reinforcement._Troops), "Troops",
 					widthMode: ColumnWidthMode.Star );
 				{
-					var details = new GridViewDefinition() { RelationalColumn=isOutgoing?nameof(City.reinforcementsOutProp) : nameof(City.reinforcementsInProp) , DataGrid=child0 } ;
+					var details = new GridViewDefinition() { RelationalColumn=isOutgoing?nameof(City.reinforcementsOut) : nameof(City.reinforcementsIn) , DataGrid=child0 } ;
 					grid.DetailsViewDefinition.Add(details);
 				}
 				{

@@ -38,7 +38,7 @@ namespace CnV
 			if(e.Key == Windows.System.VirtualKey.Escape || e.Key == Windows.System.VirtualKey.Cancel )
 			{
 				e.Handled=true;
-				Hide();
+				Cancel();
 			}
 			else
 			{
@@ -77,7 +77,7 @@ namespace CnV
 				HorizontalAlignment=HorizontalAlignment.Right,Width=40,
 				
 				Style = (Style)App.instance.Resources["ButtonMedium"],Margin=new(16,0,8,0),Padding=new(4,0,4,0) };
-			closeButton.Click += Hide;
+			closeButton.Click += Cancel;
 			var headerB = new Button() { 
 				HorizontalAlignment=HorizontalAlignment.Stretch,
 				HorizontalContentAlignment=HorizontalAlignment.Stretch,
@@ -106,6 +106,8 @@ namespace CnV
 			}
 		}
 
+
+		
 		protected void FilterNans(NumberBox sender,NumberBoxValueChangedEventArgs args)
 		{
 			App.FilterNans(sender,args);
@@ -126,67 +128,63 @@ namespace CnV
 			e.Handled=true;
 			
 		}
-		virtual protected Task Opening() => Task.CompletedTask;
-		virtual protected Task Closing() => Task.CompletedTask;
 		
-		bool isAnimating;
-		public async void Show(bool toggle)
+		TaskCompletionSource<bool> showTask;
+
+		public Task<bool> Show(bool toggle)
 		{
 			try
 			{
-				while(isAnimating)
-				{
-					await Task.Delay(100);
-				}
+				
 
-				var was = ShellPage.gameUIFrame.Children.Remove(this);
+				var was = Hide(false);
+
 				if(!(was && toggle))
 				{
+
 					IsExpanded=true;
 					titleText.Text = title;
+					showTask = new TaskCompletionSource<bool>();
 					ShellPage.gameUIFrame.Children.Add(this);
 					var focusItem = closeButton; 
 					
-					isAnimating=true;
-					await Opening();
-					isAnimating=false;
 					if(focusItem is not null)
 					{
-						await Task.Delay(100);
-						await FocusManager.TryFocusAsync(focusItem,FocusState.Programmatic);
+						FocusManager.TryFocusAsync(focusItem,FocusState.Programmatic);
 					}
+					return showTask.Task;
 				}
 			}
 			catch(Exception ex)
 			{
 				LogEx(ex);
 			}
+			return Task.FromResult(false);
 
 		}
 		
-		public async void Hide()
+		public bool Hide(bool result)
 		{
 			try
 			{
-				while(isAnimating)
+				if( ShellPage.gameUIFrame.Children.Contains(this) )
 				{
-					await Task.Delay(100);
+					ShellPage.gameUIFrame.Children.Remove(this);
+					showTask.SetResult(result);
+					return true;
 				}
-				isAnimating=true;
-				await Closing();
-				isAnimating=false;
-				ShellPage.gameUIFrame.Children.Remove(this);
+				
 			}
 			catch(Exception ex)
 			{
 				LogEx(ex);
 			}
+			return false;
 		}
-
-		internal void Hide(object sender,RoutedEventArgs e)
-		{
-			Hide();
-		}
+		public void Cancel() => Hide(false);
+		public void Done() => Hide(true);
+		internal void Cancel(object sender,RoutedEventArgs e) => Cancel();
+		internal void Done(object sender,RoutedEventArgs e) => Done();
 
     }
 }

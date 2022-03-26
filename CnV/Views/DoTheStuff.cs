@@ -560,7 +560,7 @@ public static class DoTheStuff
 
 			}
 			city.NotifyChange();
-			BuildTab.GetBuildInfo();
+		//	BuildTab.GetBuildInfo();
 			if(Settings.clearRes && !city.leaveMe)
 			{
 				await city.ClearResUI();

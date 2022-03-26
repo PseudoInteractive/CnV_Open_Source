@@ -502,14 +502,11 @@ namespace CnV
 
 								//	var wasPlanner = CityBuild.isPlanner;
 
-								//if (CityBuild.isPlanner)
-								//{
-								//	//	var b = City.GetBuild();
-								//	//	b.BuildingsCacheToShareString();
-								//	//		await b.SaveLayout();
-								//	//					CityBuild.isPlanner = false;
-								//	await CityBuild._IsPlanner(false, true);
-								//}
+								if (CityBuild.isPlanner)
+								{
+									var prior = City.GetBuild();
+									prior.SaveLayout(); // Todo check hash etc
+								}
 
 								//	Assert(pid == Player.myId);
 								//Cosmos.PublishPlayerInfo(CnVServer.jsBase.pid, City.build, CnVServer.jsBase.token, CnVServer.jsBase.cookies); // broadcast change
@@ -522,7 +519,7 @@ namespace CnV
 								//	}
 								//}
 
-								city.SetAsBuildCity();
+								City.RegisterBuildCity(cid);
 								//if (wasPlanner)
 								//{
 								//	await GetCity.Post(cid);
@@ -1001,59 +998,59 @@ namespace CnV
 								}
 
 
-							case "citydata":
-								{
-									try
-									{
-										var jse = jsp.Value;
-										// var priorCid = cid;
-										var cid = jse.GetInt("cid");
-										//if (!ShellPage.IsWorldView())
-										// AGame.viewCW = cid.CidToWorldV();
-										var isFromTs = jse.TryGetProperty("ts", out _);
-										//Note.L("citydata=" + cid.CidToString());
-										var city = GetOrAddCity(cid);
-										city.LoadCityData(jse);
+							//case "citydata":
+							//	{
+							//		try
+							//		{
+							//			var jse = jsp.Value;
+							//			// var priorCid = cid;
+							//			var cid = jse.GetInt("cid");
+							//			//if (!ShellPage.IsWorldView())
+							//			// AGame.viewCW = cid.CidToWorldV();
+							//			var isFromTs = jse.TryGetProperty("ts", out _);
+							//			//Note.L("citydata=" + cid.CidToString());
+							//			var city = GetOrAddCity(cid);
+							//			city.LoadCityData(jse);
 
-										// If it does not include TS it is from a call to chcity
-										// Otherwise is is from a change in TS
+							//			// If it does not include TS it is from a call to chcity
+							//			// Otherwise is is from a change in TS
 
-										if(!isFromTs)
-										{
-											//		if (cid != City.build)
-											//		   city.SetBuild(false);
-										}
-										if(isFromTs && cid == DungeonView.openCity && DungeonView.IsVisible())
-											//   if (jse.TryGetProperty("ts", out _))
-											//  {
-											ScanDungeons.Post(cid, city.commandSlots == 0, false);  // if command slots is 0, something was not send correctly
-										NavStack.Push(cid);
-										if(waitingOnCityData.Length > 0)
-										{
-											var allDone = true;
-											foreach(var i in waitingOnCityData)
-											{
-												if(i.cid == cid)
-													i.Done();
-												allDone &= i.isDone;
-											}
-											if(allDone)
-												waitingOnCityData = Array.Empty<WaitOnCityDataData>();
-										}
-									}
-									catch(Exception ex)
-									{
-										LogEx(ex);
-									}
-									finally
-									{
+							//			if(!isFromTs)
+							//			{
+							//				//		if (cid != City.build)
+							//				//		   city.SetBuild(false);
+							//			}
+							//			if(isFromTs && cid == DungeonView.openCity && DungeonView.IsVisible())
+							//				//   if (jse.TryGetProperty("ts", out _))
+							//				//  {
+							//				ScanDungeons.Post(cid, city.commandSlots == 0, false);  // if command slots is 0, something was not send correctly
+							//			NavStack.Push(cid);
+							//			if(waitingOnCityData.Length > 0)
+							//			{
+							//				var allDone = true;
+							//				foreach(var i in waitingOnCityData)
+							//				{
+							//					if(i.cid == cid)
+							//						i.Done();
+							//					allDone &= i.isDone;
+							//				}
+							//				if(allDone)
+							//					waitingOnCityData = Array.Empty<WaitOnCityDataData>();
+							//			}
+							//		}
+							//		catch(Exception ex)
+							//		{
+							//			LogEx(ex);
+							//		}
+							//		finally
+							//		{
 
-									}
+							//		}
 
 
-									break;
+							//		break;
 
-								}
+							//	}
 							case "OGA":
 								{
 									Log("OGA" + eValue.ToString());

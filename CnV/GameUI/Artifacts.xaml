@@ -85,8 +85,34 @@
 					</ListView>
 				</TabViewItem>
 			<TabViewItem Header="History"  IsClosable="False">
-					<TextBlock>Test1</TextBlock>
-				</TabViewItem>
+				<ListView x:Name="historyList">
+					<ListView.ItemTemplate>
+						<DataTemplate  x:DataType="cnv:CnVEventUseArtifacts"  >
+							<Grid  Margin="1" Padding="2" ColumnSpacing="16">
+								<Grid.ColumnDefinitions>
+									<ColumnDefinition Width ="auto"  />
+									<ColumnDefinition Width ="100"  />
+									<ColumnDefinition Width ="*" />
+								</Grid.ColumnDefinitions>
+								<Image Grid.Column="0" Source="{x:Bind artifact.image}" Stretch="None"   />
+								<TextBlock Grid.Column="1" Text="{x:Bind artifact.name}" Margin="3" Style="{StaticResource TextBlockMedium}" TextWrapping="Wrap" TextAlignment="Center" MaxLines="3"  VerticalAlignment="Center" />
+								<StackPanel Grid.Column="2" HorizontalAlignment="Stretch">
+
+									<TextBlock Text="{x:Bind timeS}" />
+									<HyperlinkButton Content="{x:Bind city.nameAndRemarks}" Click="{x:Bind city.Show}" />
+
+
+								</StackPanel>
+							</Grid>
+						</DataTemplate>
+					</ListView.ItemTemplate>
+					<ListView.ItemsPanel>
+						<ItemsPanelTemplate>
+							<ItemsStackPanel ItemsUpdatingScrollMode="KeepLastItemInView"  />
+						</ItemsPanelTemplate>
+					</ListView.ItemsPanel>
+				</ListView>
+			</TabViewItem>
 			</TabView.TabItems>
 		</TabView>
 	

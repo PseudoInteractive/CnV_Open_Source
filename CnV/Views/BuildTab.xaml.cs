@@ -128,118 +128,118 @@ namespace CnV.Views
 		//  build info requested => [-1,0] => 1
 		//  ] => 2
 		//  on refresh complete 2 => -1
-		static int getBuildState;
-		static public async Task GetBuildInfo()
-		{
-			// Refreshing
-			if(getBuildState == 1 || getBuildState == 2)
-			{
-				getBuildState = 2;
-				return;
-			}
-			var firstTime = false;
+//		static int getBuildState;
+//		static public async Task GetBuildInfo()
+//		{
+//			// Refreshing
+//			if(getBuildState == 1 || getBuildState == 2)
+//			{
+//				getBuildState = 2;
+//				return;
+//			}
+//			var firstTime = false;
 
-			if(getBuildState == 0)
-			{
-				firstTime = true;
-				ShellPage.WorkStart(workStr);
+//			if(getBuildState == 0)
+//			{
+//				firstTime = true;
+//				ShellPage.WorkStart(workStr);
 
-			}
-			for(;;)
-			{
-				getBuildState = 1;
-				using var js = await Post.SendForJson("overview/bcounc.php").ConfigureAwait(false);
-				//var changes = new List<int>();
-				//var getCities = new List<Task>();
-				foreach(var ci in js.RootElement.EnumerateArray())
-				{
-					var cid = ci[0].GetAsInt();
-					var city = City.GetOrAddCity(cid);
-					var filter = city.testContinentAndTagFilter;
-					if(!filter)
-						continue;
+//			}
+//			for(;;)
+//			{
+//				getBuildState = 1;
+//				using var js = await Post.SendForJson("overview/bcounc.php").ConfigureAwait(false);
+//				//var changes = new List<int>();
+//				//var getCities = new List<Task>();
+//				foreach(var ci in js.RootElement.EnumerateArray())
+//				{
+//					var cid = ci[0].GetAsInt();
+//					var city = City.GetOrAddCity(cid);
+//					var filter = city.testContinentAndTagFilter;
+//					if(!filter)
+//						continue;
 
-					if(!city.buildingsLoaded)
-					{
-						await GetCity.Post(cid).ConfigureAwait(false);
+//					if(!city.buildingsLoaded)
+//					{
+//						await GetCity.Post(cid).ConfigureAwait(false);
 
 
-						city.OnPropertyChanged();
-					}
-					city.UpdateBuildStage();
+//						city.OnPropertyChanged();
+//					}
+//					city.UpdateBuildStage();
 
-					city.stats.points = (ushort)ci[2].GetAsInt();
-					var isBuilding = (ci[4].GetAsFloat() != 0) || (city.buildStage == City.BuildStage.complete)||
-					(false)
-								|| (city.buildStage == City.BuildStage.leave);
-					//if (ci[3].GetAsFloat() != 0)
-					//{
-					//	//	Log($"3!: {city.nameAndRemarks}");
-					//}
+//					city.stats.points = (ushort)ci[2].GetAsInt();
+//					var isBuilding = (ci[4].GetAsFloat() != 0) || (city.buildStage == City.BuildStage.complete)||
+//					(false)
+//								|| (city.buildStage == City.BuildStage.leave);
+//					//if (ci[3].GetAsFloat() != 0)
+//					//{
+//					//	//	Log($"3!: {city.nameAndRemarks}");
+//					//}
 
-					//if(ci[5].GetAsFloat() != 0)
-					//{
-					//	//	Log($"5!: {city.nameAndRemarks}");
-					//}
-					if(isBuilding != city.isBuilding)
-					{
-						city.isBuilding = isBuilding;
-						city.OnPropertyChanged();
-					}
+//					//if(ci[5].GetAsFloat() != 0)
+//					//{
+//					//	//	Log($"5!: {city.nameAndRemarks}");
+//					//}
+//					if(isBuilding != city.isBuilding)
+//					{
+//						city.isBuilding = isBuilding;
+//						city.OnPropertyChanged();
+//					}
 
-					//city.wood = ci[8].GetAsInt();
-					//city.stone = ci[9].GetAsInt();
-					city.bcBuildings = ci[6].GetAsInt() == 0;
-					city.bcTowers = ci[7].GetAsInt() == 0;
-					//	city.bcConvert = (ci[5].GetAsFloat() > 0);
-					//	city.bcFill = ci[12].GetAsInt() > 0 && ci[13].GetAsInt() > 0;
+//					//city.wood = ci[8].GetAsInt();
+//					//city.stone = ci[9].GetAsInt();
+//					city.bcBuildings = ci[6].GetAsInt() == 0;
+//					city.bcTowers = ci[7].GetAsInt() == 0;
+//					//	city.bcConvert = (ci[5].GetAsFloat() > 0);
+//					//	city.bcFill = ci[12].GetAsInt() > 0 && ci[13].GetAsInt() > 0;
 
-					//city.b12 = ci[12].GetAsInt();
-					//city.b13 = ci[13].GetAsInt();
-					var _blocked = (ci[15].GetAsInt() == 1) &&
-										 ((ci[14].GetAsInt() == 1 && ci[16].GetAsInt() == 1) ||
-										  (ci[3].GetAsFloat() == 0 && ci[5].GetAsFloat() == 0));
+//					//city.b12 = ci[12].GetAsInt();
+//					//city.b13 = ci[13].GetAsInt();
+//					var _blocked = (ci[15].GetAsInt() == 1) &&
+//										 ((ci[14].GetAsInt() == 1 && ci[16].GetAsInt() == 1) ||
+//										  (ci[3].GetAsFloat() == 0 && ci[5].GetAsFloat() == 0));
 
-					if(city.bcBlocked != _blocked)
-					{
-						city.bcBlocked = _blocked;
-						city.OnPropertyChanged();
-					}
+//					if(city.bcBlocked != _blocked)
+//					{
+//						city.bcBlocked = _blocked;
+//						city.OnPropertyChanged();
+//					}
 
-				}
+//				}
 
-				if(firstTime==true)
-				{
-					firstTime = false;
-					ShellPage.WorkEnd(workStr);
+//				if(firstTime==true)
+//				{
+//					firstTime = false;
+//					ShellPage.WorkEnd(workStr);
 
-				}
+//				}
 
-				if(getBuildState != 2)
-					break;
-			}
-			getBuildState = -1;
-			/*
-0:		 17236203,  // cid
-1:		"22+1001+-+Vanq",
-2:		8808, // score
-3:		0.00027777777777778,   ??
-4:		0.5, // queue length (hours)
-0,
-1,  // has buildings
-0,  // has towers
-460411, // stone
-460549,
-1,
-1,
-1,
-1,
-1,
-0,
-0
-		 */
-			//	City.AllCityDataDirty();
-		}
+//				if(getBuildState != 2)
+//					break;
+//			}
+//			getBuildState = -1;
+//			/*
+//0:		 17236203,  // cid
+//1:		"22+1001+-+Vanq",
+//2:		8808, // score
+//3:		0.00027777777777778,   ??
+//4:		0.5, // queue length (hours)
+//0,
+//1,  // has buildings
+//0,  // has towers
+//460411, // stone
+//460549,
+//1,
+//1,
+//1,
+//1,
+//1,
+//0,
+//0
+//		 */
+//			//	City.AllCityDataDirty();
+//		}
 
 
 		override public async Task VisibilityChanged(bool visible,bool longTerm)
@@ -261,15 +261,15 @@ namespace CnV.Views
 
 				}
 
-				Task.Run(GetBuildInfo).ContinueWith(async (_) =>
-			   {
-				   foreach(var c in City.myCities)
-				   {
-					   if(c.testContinentAndTagFilter)
-						   c.OnPropertyChanged();
-				   }
-				   City.gridCitySource.NotifyReset(true,true);
-			   });
+				//Task.Run(GetBuildInfo).ContinueWith(async (_) =>
+			 //  {
+				//   foreach(var c in City.myCities)
+				//   {
+				//	   if(c.testContinentAndTagFilter)
+				//		   c.OnPropertyChanged();
+				//   }
+				//   City.gridCitySource.NotifyReset(true,true);
+			 //  });
 				//  if (cityGrid.ItemsSource == App.emptyCityList )
 				//     cityGrid.ItemsSource = City.gridCitySource;
 			}

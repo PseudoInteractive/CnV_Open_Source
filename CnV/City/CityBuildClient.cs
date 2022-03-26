@@ -130,7 +130,9 @@ namespace CnV
 
 							if(CityBuild.isPlanner)
 							{
-								Status("You are in layout mode, exit to use the layout tool", dryRun);
+								// In layout mode, layout button paints from current buildings to layout
+								//	Status("You are in layout mode, exit to use the layout tool", dryRun);
+								await build.SmartBuild(cc,build.postQueueBuildings[cc].bid,dryRun: dryRun,searchForSpare: false,wantDemoUI: null);
 							}
 							else if(!build.isLayoutCustom)
 							{

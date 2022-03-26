@@ -182,22 +182,27 @@ using Game;
 															sb.AppendLine(city.GetDefString("\n"));
 
 														}
-														if(city.outGoingStatus!=0)
+													{
+														var outgoingStatus = city.outgoingStatus;
+														if(!outgoingStatus.IsNone())
 														{
-															if(city.outGoingStatus.HasFlag(City.OutgoingStatus.sieging))
+															if(outgoingStatus.IsSeiging())
 																sb.Append("Sieging\n");
-															else if(city.outGoingStatus.HasFlag(City.OutgoingStatus.scheduled))
-																sb.Append("Attack Scheduled\n");
-															else
+															else if(outgoingStatus.IsSending())
 																sb.Append("Attack Sent\n");
+															else
+																sb.Append("Attack Scheduled\n");
 														}
-														else if(city.reinforcementsIn.AnyNullable())
+													}
+													{
+														var reinf = city.reinforcementsIn;
+														if(reinf.Any())
 														{
 															sb.AppendFormat("{0} def\n",city.tsDefMax);
 															int counter = 0;
-															foreach(var i in city.reinforcementsIn)
+															foreach(var i in reinf)
 															{
-																sb.AppendLine(i.troops.Format(header:$"From {City.GetOrAddCity(i.sourceCid).nameAndRemarks}:",firstSeparater:'\n'));
+																sb.AppendLine(i.troops.Format(header: $"From {City.GetOrAddCity(i.sourceCid).nameAndRemarks}:",firstSeparater: '\n'));
 																if(++counter >= 4)
 																{
 																	sb.AppendLine("...");
@@ -206,6 +211,7 @@ using Game;
 															}
 
 														}
+													}
 														if(!city.remarks.IsNullOrEmpty())
 															sb.AppendLine(city.remarks.AsSpan().Wrap(20));
 														if(city.hasAcademy.GetValueOrDefault())

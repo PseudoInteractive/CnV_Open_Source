@@ -461,7 +461,7 @@ namespace CnV.Views
 				// Links will not work until after the game is set up
 				try
 				{
-					//if(SystemInformation.Instance.IsAppUpdated && !CnVServer.isSub)
+					if(SystemInformation.Instance.IsAppUpdated && !CnVServer.isSub)
 					{
 						AppS.DispatchOnUIThread(Settings.ShowWhatsNew);
 					}
@@ -1462,22 +1462,9 @@ namespace CnV.Views
 
 			try
 			{
-				//var hasFocus = !webviewHasFocus;
-				//	artifactsButton.IsChecked = !artifactsButton.IsChecked;
-				if(artifactsButton.IsChecked.GetValueOrDefault())
-				{
-					//	var isNew = Artifacts.instance == null;
-
-
+				
 					Artifacts.ShowInstance();
 
-
-				}
-				else
-				{
-					if(Artifacts.instance is not null)
-						Artifacts.instance.Hide();
-				}
 			}
 			catch(Exception _ex)
 			{
@@ -1702,22 +1689,7 @@ namespace CnV.Views
 		{
 			try
 			{
-				//var hasFocus = !webviewHasFocus;
-				//	artifactsButton.IsChecked = !artifactsButton.IsChecked;
-				if(techTreeButton.IsChecked.GetValueOrDefault())
-				{
-					//	var isNew = Artifacts.instance == null;
-
-
-					ResearchList.ShowInstance();
-
-
-				}
-				else
-				{
-					if(ResearchList.instance is not null)
-						ResearchList.instance.Hide();
-				}
+				ResearchList.ShowInstance();
 			}
 			catch(Exception _ex)
 			{

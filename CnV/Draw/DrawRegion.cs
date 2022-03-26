@@ -161,7 +161,7 @@ internal partial class GameClient
 	//	const float dashLength = (dashD0 + dashD1) * lineThickness;
 	public static Draw.SpriteBatch draw;
 
-	static Army underMouse;
+	static Army underMouse; // could also be a trade?
 	static float bestUnderMouseScore;
 	//   public static Vector2 cameraMid;
 	public static float eventTimeOffsetLag; // smoothed version of event time offset
@@ -1190,14 +1190,18 @@ internal partial class GameClient
 												DrawRectOutlineShadow(Layer.effects - 1,cityCid,assaultColor,null,1,-10f);
 											if(sieged)
 												DrawRectOutlineShadow(Layer.effects-1,cityCid,siegeColor,null,1,-12f);
-											if(city.outGoingStatus!=City.OutgoingStatus.none)
-												DrawRectOutlineShadow(Layer.effects - 1,cityCid,attackColor,null,1,-8f);
+											
 
 											if(!IsCulledWC(c1) && (wantDetails || showAll || Spot.IsSelectedOrHovered(cityCid,noneIsAll)))
 											{
 												DrawTextBox($"{incAttacks}{city.IncomingInfo()}\n{ (city.tsDefMax + 999) / 1000 }k",
 														c1.ToVector(),tipTextFormatCentered,incAttacks != 0 ? Color.White : Color.Cyan,textBackgroundOpacity,Layer.tileText);
 											}
+										}
+										else
+										{
+											if(city.hasOutgoingAttacks)
+												DrawRectOutlineShadow(Layer.effects - 1,cityCid,attackColor,null,1,-8f);
 										}
 									}
 								}
@@ -1295,7 +1299,7 @@ internal partial class GameClient
 							var sendOffset = new Vector2(0.125f);//  new System.Numerics.Vector2(0.125f *pixelScale,0.125f *pixelScale);
 							var viewHover = Spot.viewHover;
 							var hasHover = viewHover != 0;
-							foreach(var city in City.friendCities)
+							foreach(var city in City.subCities)
 							{
 								var needsHover = (hasHover && !city.isHover);
 								//	if(!city.testContinentFilter)
@@ -1404,7 +1408,7 @@ internal partial class GameClient
 
 						}
 						const int raidCullSlopSpace = 4;
-						foreach(var city in City.friendCities)
+						foreach(var city in City.subCities)
 						{
 							if(!city.testContinentFilter)
 								continue;
@@ -1527,7 +1531,7 @@ internal partial class GameClient
 							{
 								for(var cx = cx0;cx < cx1;++cx)
 								{
-									(var name, var isMine, var hasIncoming, var hovered, var spot) = World.GetLabel((cx, cy));
+									(var name, var isMine, var incomingStatus, var hovered, var spot) = World.GetLabel((cx, cy));
 									//var zScale = CanvasHelpers.ParallaxScale(TileData.zCities);
 
 									if(name != null)
@@ -1561,17 +1565,17 @@ internal partial class GameClient
 										var color = spot ==null ? nameColorDungeon
 											:
 											(isMine ?
-											(hasIncoming ?
-												(spot.underSiege ? myNameColorSieged
+											(incomingStatus.IsAny() ?
+												(incomingStatus.IsUnderSiege() ? myNameColorSieged
 																: myNameColorIncoming)
-																: spot.outGoingStatus != 0 ? nameColorOutgoing
+																: spot.hasOutgoingAttacks ? nameColorOutgoing
 																	: myNameColor) :
-										(hasIncoming ?
+										(incomingStatus.IsAny() ?
 											(hovered ?
-												(spot.underSiege ? nameColorSiegedHover : nameColorIncomingHover)
-											   : (spot.underSiege ? nameColorSieged : nameColorIncoming))
+												(incomingStatus.IsUnderSiege() ? nameColorSiegedHover : nameColorIncomingHover)
+											   : (incomingStatus.IsUnderSiege() ? nameColorSieged : nameColorIncoming))
 											   : hovered ? nameColorHover
-											   : spot.outGoingStatus != 0 ? nameColorOutgoing
+											   : spot.hasOutgoingAttacks  ? nameColorOutgoing
 											   : nameColor));
 
 										DrawTextBox(name,drawC,nameTextFormat,wantDarkText ? color.A.AlphaToBlack() : Color.White,

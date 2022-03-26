@@ -70,7 +70,7 @@ namespace CnV
 		{
 			Assert(hasEnough);
 			new CnVEventResearch(r.id).EnqueueAsap();
-			Hide();
+			Done();
 		}
 
 		private void Refine(object sender,RoutedEventArgs e)

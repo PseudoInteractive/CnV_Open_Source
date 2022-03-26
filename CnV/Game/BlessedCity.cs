@@ -56,8 +56,8 @@ namespace CnV
 					var cid = city[10].GetInt32();
 
 					bc.spot = Spot.GetOrAdd(cid);
-					bc.spot._cityName = city[0].GetString();
-					bc.spot.pid = Player.NameToId(city[2].GetString());
+				//	bc.spot._cityName = city[0].GetString();
+			//		bc.spot.pid = Player.NameToId(city[2].GetString());
 					bc.virtue = city[3].GetString();
 					bc.level = city[4].GetAsInt();
 					bc.blessedUntil = city[5].GetString().ParseDateTime(true);

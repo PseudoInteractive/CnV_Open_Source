@@ -447,13 +447,14 @@ namespace CnV.Views
 			} while (counter > OutgoingOverview.outgoingCounter);
 					
 			int cities = 0;
-			foreach(var city in Spot.allianceCitiesWithOutgoing)
+			foreach(var city in Spot.subCities)
 			{
-				if (!city.isMine)
-					continue;
-				await city.ShowReturnAt(false);
-				await Task.Delay(200);
-				++cities;
+				if(city.hasOutgoingAttacks)
+				{
+					await city.ShowReturnAt(false);
+					await Task.Delay(200);
+					++cities;
+				}
 			}
 			Note.Show($"{cities} returned cities with outgoing");
 

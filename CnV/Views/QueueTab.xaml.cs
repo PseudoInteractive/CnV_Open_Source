@@ -441,7 +441,8 @@ namespace CnV.Views
 					{
 						if ((x == -r || x == r) || (y == -r || y == r))
 						{
-							var c = (x, y);// (int x, int y) c = RandCitySpot();
+							var c = new BuildC(x, y);// (int x, int y) c = RandCitySpot();
+							
 							if ((city.GetLayoutBid(c) == bid) && (city.postQueueBuildings[City.XYToId(c)].bid != bid))
 							{
 								rv.Add(c);

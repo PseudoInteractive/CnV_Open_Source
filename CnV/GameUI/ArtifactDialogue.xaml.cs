@@ -54,8 +54,8 @@ namespace CnV
 			if(wanted > have)
 				(new CnVEventPurchaseArtifacts() { artifact = (ushort)a.id,count = (ushort)(wanted-have) }).EnqueueAsap();
 			if( wanted > 0 )
-				(new CnVEventUseArtifacts(City.build) { artifact = (ushort)a.id,count = (ushort)wanted,aux=0 }).EnqueueAsap();
-			Hide();
+				(new CnVEventUseArtifacts(City.build) { artifactId = (ushort)a.id,count = (ushort)wanted,aux=0 }).EnqueueAsap();
+			Done();
 		}
 	}
 }

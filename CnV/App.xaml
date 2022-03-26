@@ -15,7 +15,7 @@
 				<ResourceDictionary >
 					<FontFamily x:Key="CnvIcons" >ms-appx:///Content/CnvIcons-Regular-SVG.ttf#CnvIcons,Segoe UI*</FontFamily>
 					<Color x:Key="SystemAltHighColor">#FFFF0000</Color>
-					<Color x:Key="SystemAltLowColor">#E1120020</Color>
+					<Color x:Key="SystemAltLowColor">#A1A200F0</Color>
 					<Color x:Key="SystemAltMediumColor">#99ff0000</Color>
 					<Color x:Key="SystemAltMediumHighColor">#CCff0000</Color>
 					<Color x:Key="SystemAltMediumLowColor">#F1ff0000</Color>
@@ -26,7 +26,7 @@
 					<Color x:Key="SystemBaseMediumLowColor">#F6FFFFFF</Color>
 					<Color x:Key="SystemChromeAltLowColor">#FFF2F2F2</Color>
 					<Color x:Key="SystemChromeBlackHighColor">#FFff0000</Color>
-					<Color x:Key="SystemChromeBlackLowColor">#EE150030</Color>
+					<Color x:Key="SystemChromeBlackLowColor">#AE50030</Color>
 					<Color x:Key="SystemChromeBlackMediumLowColor">#F6ff0000</Color>
 					<Color x:Key="SystemChromeBlackMediumColor">#CC00ff00</Color>
 					<Color x:Key="SystemChromeDisabledHighColor">#FF333333</Color>
@@ -46,7 +46,7 @@
 					<Color x:Key="SystemChromeAltHighColor">#FF176237</Color>
 					<Color x:Key="SystemRevealListLowColor">#FF2D0606</Color>
 					<Color x:Key="SystemRevealListMediumColor">#FF380E0E</Color>
-					<AcrylicBrush x:Key="SystemControlAcrylicWindowBrush"  TintColor="{ThemeResource SystemChromeAltHighColor}" TintOpacity="0.8" FallbackColor="{ThemeResource SystemChromeMediumColor}" />
+					<AcrylicBrush x:Key="SystemControlAcrylicWindowBrush"  TintColor="{StaticResource SystemChromeAltHighColor}" TintOpacity="0.8" FallbackColor="{StaticResource SystemChromeMediumColor}" />
 
 					<!--Override system generated accent colors-->
 					<Color x:Key="SystemAccentColorLight1">#FF244F39</Color>
@@ -61,7 +61,7 @@
 
 
 				</ResourceDictionary>
-				<ColorPaletteResources  Accent="#FF080014" 
+				<ColorPaletteResources  Accent="#AA6830FF" 
 									   BaseHigh="#FFFFFFFF" BaseLow="#FF380E0E" BaseMedium="#FF720F0F" BaseMediumHigh="#FF980F0F"
                                        BaseMediumLow="#FF6F495F" ChromeAltLow="#FFB393A1" ChromeBlackHigh="#FF512A2A" ChromeBlackLow="#FF391B1B" 
                                        ChromeBlackMedium="#FF303030" ChromeBlackMediumLow="#FF202020" ChromeDisabledHigh="#FF380E0E" 

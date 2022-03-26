@@ -43,7 +43,7 @@
 	<Style TargetType="FlyoutPresenter"  >
 		<Setter Property="IsDefaultShadowEnabled" Value="True" />
 		<Setter Property="MaxWidth" Value="800" />
-		<Setter Property="MaxHeight" Value="720" />
+		<Setter Property="MaxHeight" Value="750" />
 		<Setter Property="IsTabStop" Value="True" />
 		<Setter Property="TabFocusNavigation" Value="Cycle" />
 	</Style>
@@ -60,7 +60,7 @@
 
 	
 	<!--<x:Double x:Key="ContentDialogMaxWidth">1024</x:Double>-->
-    <x:Double x:Key="ContentDialogMaxHeight">720</x:Double>
+	<x:Double x:Key="ContentDialogMaxHeight">680</x:Double>
 
     <x:Double x:Key="ContentDialogMaxWidth">1024</x:Double>
 			<x:Double x:Key="TeachingTipMaxHeight">640</x:Double>

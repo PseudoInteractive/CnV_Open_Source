@@ -159,7 +159,7 @@ namespace CnV
 					//Note.Show("Send");
 					//new CnVEventRecruit(city.c,tt).Execute();
 				}
-				Hide();
+				Done();
 			}
 			else
 			{
