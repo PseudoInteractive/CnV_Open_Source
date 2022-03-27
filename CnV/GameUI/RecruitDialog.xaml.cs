@@ -96,8 +96,9 @@ namespace CnV
 		internal void SetMax(object sender,RoutedEventArgs e)
 		{
 			var res = city.SampleResources();
-			var m = 1<<24;
 			var req = info.resResquired;
+			var m = 1<<24;
+			
 			for(int i=0;i<4;++i)
 			{
 				if(req.r[i] > 0)

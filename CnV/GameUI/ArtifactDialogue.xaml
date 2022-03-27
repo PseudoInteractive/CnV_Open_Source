@@ -19,8 +19,8 @@
 			</Grid.ColumnDefinitions>
 			<Grid.RowDefinitions>
 				<RowDefinition Height="64"/>
-				<RowDefinition Height="48"/>
-				<RowDefinition Height="48"/>
+				<RowDefinition Height="54"/>
+				<RowDefinition />
 		</Grid.RowDefinitions>
 			<Image Grid.Column="0" Source="{x:Bind a.image}" Margin="2"  />
 			<TextBlock Grid.Column="1" Text="{x:Bind a.name}" Margin="2" Style="{StaticResource TextBlockMedium}" TextWrapping="Wrap" TextAlignment="Center" MaxLines="3"  VerticalAlignment="Center" />
@@ -33,13 +33,13 @@
 					  Text="{x:Bind a.mana, Mode=OneWay}" 
 					 />
 			<StackPanel Grid.Row="1" Grid.Column="2" Orientation="Horizontal" Margin="8,0,0,0" >
-				<TextBlock Text="{x:Bind a.ownedStr,Mode=OneWay}" Style="{StaticResource TextBlockMedium}"  Margin="3" VerticalAlignment="Center"  TextAlignment="Center" />
-			<NumberBox  x:Name="count" Style="{StaticResource NumberBoxSmall}"   Margin="8,2,2,2" Width="100" ValueChanged="FilterNans" />
-				<TextBlock Text="{x:Bind priceStr,Mode=OneWay}" Style="{StaticResource TextBlockMedium}"  Margin="3" VerticalAlignment="Center"  TextAlignment="Center" />
+				<TextBlock Text="{x:Bind a.ownedStr,Mode=OneWay}" Style="{StaticResource TextBlockMedium}"  Margin="4,0,4,0" VerticalAlignment="Center"  TextAlignment="Center" TextWrapping="Wrap" />
+			<NumberBox  x:Name="count" Style="{StaticResource NumberBoxSmall}"   Margin="16,2,4,2" Width="100" ValueChanged="CountChanged" />
+				<TextBlock Text="{x:Bind priceStr,Mode=OneWay}" Style="{StaticResource TextBlockMedium}"  Margin="8,0,4,0" VerticalAlignment="Center"  TextAlignment="Center" />
 				
 				
 			</StackPanel>
-		<Button Grid.Row="2" Grid.Column="2" Style="{StaticResource ButtonMedium}" Click="Button_Click" Content="Purchase" HorizontalAlignment="Right" />
+		<Button Grid.Row="2" Grid.Column="2" Style="{StaticResource ButtonMedium}" Click="Button_Click" Content="Purchase and Use" HorizontalAlignment="Right" />
 
 	</Grid>
 	

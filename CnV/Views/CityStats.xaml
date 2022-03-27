@@ -216,7 +216,15 @@
 				<Expander.Header>
 					<Button  HorizontalContentAlignment="Right" 
 							ToolTipService.ToolTip="Recruit Queue, click to recruit"
-								Content="{x:Bind recruitTitle, Mode=OneWay}"  Style="{StaticResource ButtonMedium}" Margin="2,0,2,0" Click="EnlistmentClick" Padding="8,2" HorizontalAlignment="Stretch" />
+								Content="{x:Bind recruitTitle, Mode=OneWay}"  Style="{StaticResource ButtonMedium}" Margin="2,0,2,0" Padding="8,2" HorizontalAlignment="Stretch" >
+						<Button.Flyout>
+							<MenuFlyout>
+								<MenuFlyoutItem Text="Recruit.." Click="EnlistmentClick" />
+								<MenuFlyoutItem Text="Auto Recruit.." Click="RecruitTargetsClick" />
+								<MenuFlyoutItem Text="Amulet.." Click="AmuletClick" />
+							</MenuFlyout>
+						</Button.Flyout>
+					</Button>
 				</Expander.Header>
 				<ListView x:Name="RecruitQueueListView" x:FieldModifier="public"  
 						  SelectionMode="Extended"  

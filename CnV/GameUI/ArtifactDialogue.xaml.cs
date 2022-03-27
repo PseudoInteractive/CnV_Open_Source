@@ -20,29 +20,31 @@ using Windows.Foundation.Collections;
 
 namespace CnV
 {
-	public sealed partial class ArtifactDialogue:DialogG
+	public sealed partial class ArtifactDialogue:DialogG,INotifyPropertyChanged
 	{
-		protected override string title => "Artifact";
+		static ArtifactDialogue instance;
+		protected override string title => "Use/Purchase Artifact";
 		public Artifact a;
-		public ArtifactDialogue(Artifact artifact, FrameworkElement target) 
+		public ArtifactDialogue() 
 		{
 			this.InitializeComponent();
-			a = artifact;
+			instance =this;
 			
 			//if(target is not null)
 			//	Target=target;
 		}
 		public static void ShowInstance(Artifact artifact, FrameworkElement target=null)
 		{
-			var rv = new ArtifactDialogue(artifact,target);
+			var rv = instance ?? new ArtifactDialogue();
+			rv.a = artifact;
 		//	rv.HeroContent.Focus(FocusState.Programmatic);
 			rv.count.Value = artifact.owned. Max(1);
-			
+			rv.OnPropertyChanged();
 			rv.Show(false);
 			
 		}
-	
-		public string priceStr=> ((count.Value.RoundToInt()-a.owned).Max(0)*a.zirconia).Format();
+
+		public string priceStr => $"{CnV.Resources.zirconiaGlyph} {((count.Value.RoundToInt()-a.owned).Max(0)*a.zirconia).Format()}";
 		
 		
 
@@ -56,6 +58,18 @@ namespace CnV
 			if( wanted > 0 )
 				(new CnVEventUseArtifacts(City.build) { artifactId = (ushort)a.id,count = (ushort)wanted,aux=0 }).EnqueueAsap();
 			Done();
+		}
+
+		private void CountChanged(NumberBox sender,NumberBoxValueChangedEventArgs args)
+		{
+			base.FilterNans(sender,args);
+			OnPropertyChanged();
+		}
+		public event PropertyChangedEventHandler? PropertyChanged;
+		public void OnPropertyChanged(string? member = null)
+		{
+			if (this.PropertyChanged is not null) 
+				AppS.QueueOnUIThread(() => PropertyChanged?.Invoke(this,new(member)));
 		}
 	}
 }

@@ -842,6 +842,16 @@ namespace CnV
 		{
 			RecruitDialog.ShowInstance(city);
 		}
+
+		private void RecruitTargetsClick(object sender,RoutedEventArgs e)
+		{
+			RecruitTargetDialog.ShowInstance(city);
+		}
+
+		private void AmuletClick(object sender,RoutedEventArgs e)
+		{
+			CityUI.Show( Artifact.ArtifactType.amulet, sender);
+		}
 	}
 	public class BuildingCountAndBrush:INotifyPropertyChanged
 	{
