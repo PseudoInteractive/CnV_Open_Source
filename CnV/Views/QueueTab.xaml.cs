@@ -318,7 +318,7 @@ namespace CnV.Views
 						{
 							var c = new BuildC(x, y);
 							//var id = XYToId(c);
-							if (!city.IsBuildingSpot(c))
+							if (!city.IsBuildingSpotIncludingShore(c))
 								continue;
 
 							var bid = city.GetLayoutBid(c);
@@ -348,7 +348,7 @@ namespace CnV.Views
 				{
 					var c = (x, y);
 					var id = XYToId(c);
-					if (!city.IsBuildingSpot(id))
+					if (!city.IsBuildingSpotIncludingShore(id))
 						continue;
 					var pb = city.postQueueBuildings[id];
 					var pbid = (!pb.isBuilding || pb.isCabin) ? 0 : pb.bid;

@@ -234,6 +234,11 @@ namespace CnV.Views
 							   await SetCityTags(cid);
 							   wantInfoUpdate=true;
 							   //await CitySettings.SetCitySettings(City.build, setRecruit: true);
+							   if( Settings.setRecruit )
+							   {
+								   CitySettings.SetRecruitFromTags(city);
+							   }
+
 						   }
 						   if(NameBlade.IsOpen)
 						   {
@@ -410,7 +415,7 @@ namespace CnV.Views
 
 			var path = DecomposePath(meta.path);
 			this.shareString.Text = s.ss ?? string.Empty;
-			var tags = (Tags)meta.tags;
+			var tags = (Tags)meta.tags | TagHelper.Get(meta.notes);
 
 			description.Text = meta.desc ?? string.Empty;
 			shareTitle.Text = path.title;
@@ -734,7 +739,7 @@ namespace CnV.Views
 		public string path { get; set; }
 		public string desc { get; set; }
 		public long tags { get; set; }
-
+		public string notes { get; set; }
 		public int? reqWood { get; set; }
 		public int? reqStone { get; set; }
 		public int? reqIron { get; set; }
