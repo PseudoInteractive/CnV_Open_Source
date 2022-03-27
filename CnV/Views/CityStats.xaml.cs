@@ -852,6 +852,12 @@ namespace CnV
 		{
 			CityUI.Show( Artifact.ArtifactType.amulet, sender);
 		}
+
+		private void AutobuildTapped(object sender,TappedRoutedEventArgs e)
+		{
+			AutobuildDialog.ShowInstance();
+			e.Handled=true;
+		}
 	}
 	public class BuildingCountAndBrush:INotifyPropertyChanged
 	{
@@ -911,6 +917,10 @@ namespace CnV
 			var flyout = new MenuFlyout();
 			flyout.SetXamlRoot(sender);
 			
+			//flyout.AddItem("Autobuild..",Symbol.Setting,() =>
+			//{
+			//	AutobuildDialog.ShowInstance();
+			//});
 			flyout.AddItem("Medallion..",Symbol.OutlineStar,() =>
 			{
 				CityUI.Show( Artifact.ArtifactType.medallion, sender);

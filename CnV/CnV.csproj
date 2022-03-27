@@ -128,6 +128,7 @@
     <Compile Include="FormatParameterObject.cs" />
     <Compile Include="GameUI\ArtifactDialogue.xaml.cs" />
     <Compile Include="GameUI\Artifacts.xaml.cs" />
+    <Compile Include="GameUI\AutobuildDialog.xaml.cs" />
     <Compile Include="GameUI\DialogG.cs" />
     <Compile Include="GameUI\MessageBox.xaml.cs" />
     <Compile Include="GameUI\QuestList.xaml.cs" />
@@ -370,6 +371,9 @@
     <Page Include="GameUI\Artifacts.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="GameUI\AutobuildDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="GameUI\MessageBox.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -584,6 +588,7 @@
 	<None Remove="cnvCover.png" />
 	<None Remove="GameUI\ArtifactDialogue.xaml" />
 	<None Remove="GameUI\Artifacts.xaml" />
+	<None Remove="GameUI\AutobuildDialog.xaml" />
 	<None Remove="GameUI\MessageBox.xaml" />
 	<None Remove="GameUI\QuestList.xaml" />
 	<None Remove="GameUI\RecruitDialog.xaml" />

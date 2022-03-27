@@ -64,28 +64,28 @@
 				<Expander.Header   >
 					<Border Background="{StaticResource ExpanderBrushHeader}" BorderThickness="0" Padding="3" CornerRadius="{StaticResource baseCR}" >
 
-						<TextBlock Text ="Resources" Margin="0"   Style="{StaticResource TextBlockMedium}"    />
+						<TextBlock Text ="Resources" Margin="0"   Style="{StaticResource TextBlockMedium}"  HorizontalAlignment="Right"  />
 					</Border>
 				</Expander.Header>
 
-				<tk:WrapPanel Orientation="Horizontal" Background="{x:Null}" HorizontalSpacing="0" VerticalSpacing="0" >
-					<StackPanel CornerRadius="{StaticResource baseCR}" Orientation="Vertical"  Padding="2"   MinWidth="90" Background="{StaticResource ExpanderBrushContent}"
+				<tk:WrapPanel Orientation="Horizontal" Background="{x:Null}" HorizontalSpacing="1" VerticalSpacing="1" >
+					<StackPanel CornerRadius="{StaticResource baseCR}"  Padding="3"  BorderThickness="1" BorderBrush="{StaticResource ButtonDisabledBorderThemeBrush}" MinWidth="90"  Background="{StaticResource ExpanderBrushContent}"
 								Tapped="WoodTap">
 						<TextBlock  HorizontalTextAlignment="Right" Style="{StaticResource TextBlockMedium}" Margin="0,0,2,0" />
 						<TextBlock Grid.Row="1" x:Name="prod0" x:FieldModifier="public"  HorizontalTextAlignment="Right" Style="{StaticResource TextBlockSmall}" />
 					</StackPanel>
-					<StackPanel CornerRadius="{StaticResource baseCR}"  Margin="0" Padding="1" MinWidth="90" 
+					<StackPanel CornerRadius="{StaticResource baseCR}"  Margin="0" Padding="3" MinWidth="90" BorderThickness="1" BorderBrush="{StaticResource ButtonDisabledBorderThemeBrush}"
 								Tapped="StoneTap"
 								Background="{StaticResource ExpanderBrushContent}" >
 						<TextBlock  HorizontalTextAlignment="Right"  Style="{StaticResource TextBlockMedium}" Margin="0,0,2,0" />
 						<TextBlock Grid.Row="1"   HorizontalTextAlignment="Right" Style="{StaticResource TextBlockSmall}" />
 					</StackPanel>
-					<StackPanel CornerRadius="{StaticResource baseCR}"  Margin="0" Padding="1" MinWidth="90"
+					<StackPanel CornerRadius="{StaticResource baseCR}"  Margin="0" Padding="3" MinWidth="90" BorderThickness="1" BorderBrush="{StaticResource ButtonDisabledBorderThemeBrush}"
 								Tapped="IronTap" Background="{StaticResource ExpanderBrushContent}"  >
 						<TextBlock  HorizontalTextAlignment="Right" Style="{StaticResource TextBlockMedium}" Margin="0,0,2,0" />
 						<TextBlock   Grid.Row="1" HorizontalTextAlignment="Right" Style="{StaticResource TextBlockSmall}"/>
 					</StackPanel>
-					<StackPanel CornerRadius="{StaticResource baseCR}"  Margin="0" Padding="1" MinWidth="90"
+					<StackPanel CornerRadius="{StaticResource baseCR}"  Margin="0" Padding="3" MinWidth="90" BorderThickness="1" BorderBrush="{StaticResource ButtonDisabledBorderThemeBrush}"
 					
 								Tapped="FoodTap"  Background="{StaticResource ExpanderBrushContent}"  >
 						<TextBlock   HorizontalTextAlignment="Right" Style="{StaticResource TextBlockMedium}" Margin="0,0,2,0"/>
@@ -101,6 +101,7 @@
 				<Expander.Header   >
 
 					<Border Background="{x:Bind cnv:ImageHelper.GetAsBrush('UI/menues/main_menu/bgr_quickuse_buildqueue.png') }"  BorderThickness="0" Padding="0" Margin="2,0,2,0" CornerRadius="0" 
+							
 							ToolTipService.ToolTip="Build Queue construction speed" >
 						<TextBlock x:Name="queueText" TextAlignment="Right" VerticalAlignment="Center" RightTapped="QueueRightTapped" Text ="Queue" Margin="0"  Style="{StaticResource BodyTextBlockStyle}"   />
 					</Border>
@@ -167,30 +168,29 @@
 
 			<!--Buildings-->
 
-			<Expander    Expanding="Expander_Expanding" x:Name="expBuildings" IsExpanded="True" >
+			<Expander    Expanding="Expander_Expanding" x:Name="expBuildings" IsExpanded="True" Background="{StaticResource ExpanderBrushContent}" >
 				<Expander.Header   >
-					<Border Background="{StaticResource ExpanderBrushHeader}" BorderThickness="1" Padding="3" CornerRadius="{StaticResource baseCR}" >
-						<TextBlock Text ="Buildings" Margin="0"  Style="{StaticResource TextBlockMedium}"   />
+					<Border Background="{x:Bind cnv:ImageHelper.GetAsBrush('UI/menues/main_menu/bgr_quickuse_buildqueue.png') }"
+							Tapped="AutobuildTapped"
+							ToolTipService.ToolTip="Click to set autobuild settings"
+							BorderThickness="0" Padding="1" CornerRadius="{StaticResource baseCR}" >
+						<TextBlock Text ="Buildings" Margin="0"  Style="{StaticResource TextBlockMedium}" VerticalAlignment="Center"  HorizontalAlignment="Right"  />
 					</Border>
 				</Expander.Header>
-				<GridView x:Name="buildingCountGrid"  HorizontalAlignment="Stretch" SelectionMode="Multiple" 
+				<GridView x:Name="buildingCountGrid"  HorizontalAlignment="Stretch" SelectionMode="Extended" 
 						  IsMultiSelectCheckBoxEnabled="False" 
-						  Background="{StaticResource ExpanderBrushContent}"
+						  
 						  SelectionChanged="buildingCountGrid_SelectionChanged"
 						   ItemsSource="{x:Bind buildingCounts,Mode=OneWay}" >
-					<GridView.ItemContainerStyle>
-						<Style TargetType="GridViewItem">
-							<Setter Property="Margin" Value="1, 1, 1, 1"/>
-						</Style>
-					</GridView.ItemContainerStyle>
+					
 					<GridView.ItemTemplate>
 						<DataTemplate x:DataType="cnv:BuildingCountAndBrush">
-							<Grid Background="{StaticResource ExpanderBrushContentAlt}" Padding="1" Margin="0"  CornerRadius="{StaticResource baseCR}"  >
+							<Grid Padding="1" Margin="1"   >
 								<Grid.RowDefinitions>
 									<RowDefinition Height="auto" />
 									<RowDefinition  />
 								</Grid.RowDefinitions>
-								<Image Stretch="None" Source="{x:Bind image, Mode=OneTime}"
+								<Image Stretch="None" Source="{x:Bind image, Mode=OneTime}" Width="32" Height="32"
                                                     />
 								<TextBlock Grid.Row="1"
                                                        HorizontalAlignment="Center"
@@ -202,8 +202,8 @@
 					<GridView.ItemsPanel>
 						<ItemsPanelTemplate>
 							<ItemsWrapGrid 
-							Margin="1"
-								GroupPadding="1"
+							Margin="2"
+								GroupPadding="0"
                                                        Orientation="Horizontal" />
 						</ItemsPanelTemplate>
 					</GridView.ItemsPanel>
@@ -369,7 +369,7 @@
 
 			<Expander Expanding="Expander_Expanding" x:Name="expTrades" IsExpanded="True" Background="{StaticResource ExpanderBrushContent}" >
 				<Expander.Header>
-					<TextBlock Text="{x:Bind tradesTitle, Mode=OneWay}" Style="{StaticResource TextBlockMedium}"  />
+					<TextBlock Text="{x:Bind tradesTitle, Mode=OneWay}" Style="{StaticResource TextBlockMedium}" HorizontalAlignment="Right"  />
 				</Expander.Header>
 
 				<ListView x:Name="TradesListView" x:FieldModifier="public"  

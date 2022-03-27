@@ -37,8 +37,8 @@ namespace CnV
 		public void InvalidateQuestGroups()
 		{
 	//		cvsGroups.Source  = questGroups;
-			questGroups.NotifyReset();
-			questGroups.NotifyItemsChanged();
+			questGroups.OnReset();
+			questGroups.OnItemsChanged();
 			PropertyChanged?.Invoke(this,new(String.Empty));
 		}
 		public event PropertyChangedEventHandler? PropertyChanged;

@@ -20,25 +20,25 @@
 					<Color x:Key="SystemAltMediumHighColor">#CCff0000</Color>
 					<Color x:Key="SystemAltMediumLowColor">#F1ff0000</Color>
 					<Color x:Key="SystemBaseHighColor">#FFFFFFFF</Color>
-					<Color x:Key="SystemBaseLowColor">#A33B851F</Color>
-					<Color x:Key="SystemBaseMediumColor">#99FFFFFF</Color>
+					<Color x:Key="SystemBaseLowColor">#A31B851F</Color>
+					<Color x:Key="SystemBaseMediumColor">#99BBFFBB</Color>
 					<Color x:Key="SystemBaseMediumHighColor">#CCFFFFFF</Color>
 					<Color x:Key="SystemBaseMediumLowColor">#F6FFFFFF</Color>
 					<Color x:Key="SystemChromeAltLowColor">#FFF2F2F2</Color>
 					<Color x:Key="SystemChromeBlackHighColor">#FFff0000</Color>
-					<Color x:Key="SystemChromeBlackLowColor">#AE50030</Color>
+					<Color x:Key="SystemChromeBlackLowColor">#AE50F0F0</Color>
 					<Color x:Key="SystemChromeBlackMediumLowColor">#F6ff0000</Color>
-					<Color x:Key="SystemChromeBlackMediumColor">#CC00ff00</Color>
+					<Color x:Key="SystemChromeBlackMediumColor">#CC00BBCC</Color>
 					<Color x:Key="SystemChromeDisabledHighColor">#FF333333</Color>
 					<Color x:Key="SystemChromeDisabledLowColor">#FF858585</Color>
-					<Color x:Key="SystemChromeHighColor">#FF767676</Color>
+					<Color x:Key="SystemChromeHighColor">#FF76FF76</Color>
 					<Color x:Key="SystemChromeLowColor">#FFf71717</Color>
 
 					<Color x:Key="SystemChromeMediumLowColor">#FFfB2B2B</Color>
 					<Color x:Key="SystemChromeWhiteColor">#FFFFFFFF</Color>
 					<Color x:Key="SystemChromeGrayColor">#FF767676</Color>
-					<Color x:Key="SystemListLowColor">#59FFFFFF</Color>
-					<Color x:Key="SystemListMediumColor">#53FFFFFF</Color>
+					<Color x:Key="SystemListLowColor">#A9AAAAFF</Color>
+					<Color x:Key="SystemListMediumColor">#B3BBAAFF</Color>
 					<Color x:Key="SystemErrorTextColor">#FFF000</Color>
 
 					<Color x:Key="SystemChromeMediumColor">#FF0E3E1C</Color>
@@ -49,9 +49,9 @@
 					<AcrylicBrush x:Key="SystemControlAcrylicWindowBrush"  TintColor="{StaticResource SystemChromeAltHighColor}" TintOpacity="0.8" FallbackColor="{StaticResource SystemChromeMediumColor}" />
 
 					<!--Override system generated accent colors-->
-					<Color x:Key="SystemAccentColorLight1">#FF244F39</Color>
-					<Color x:Key="SystemAccentColorLight2">#FF306A4C</Color>
-					<Color x:Key="SystemAccentColorLight3">#FF346F51</Color>
+					<Color x:Key="SystemAccentColorLight1">#FF144929</Color>
+					<Color x:Key="SystemAccentColorLight2">#FF105A2C</Color>
+					<Color x:Key="SystemAccentColorLight3">#FF146F21</Color>
 					<Color x:Key="SystemAccentColorDark1">#FF180030</Color>
 					<Color x:Key="SystemAccentColorDark2">#FF120020</Color>
 					<Color x:Key="SystemAccentColorDark3">#FF080014</Color>
@@ -63,8 +63,8 @@
 				</ResourceDictionary>
 				<ColorPaletteResources  Accent="#AA6830FF" 
 									   BaseHigh="#FFFFFFFF" BaseLow="#FF380E0E" BaseMedium="#FF720F0F" BaseMediumHigh="#FF980F0F"
-                                       BaseMediumLow="#FF6F495F" ChromeAltLow="#FFB393A1" ChromeBlackHigh="#FF512A2A" ChromeBlackLow="#FF391B1B" 
-                                       ChromeBlackMedium="#FF303030" ChromeBlackMediumLow="#FF202020" ChromeDisabledHigh="#FF380E0E" 
+                                       BaseMediumLow="#FF6F495F" ChromeAltLow="#FFB393A1" ChromeBlackHigh="#FF21DA2A" ChromeBlackLow="#FF391B1B" 
+                                       ChromeBlackMedium="#FF30A0F0" ChromeBlackMediumLow="#FF20F0D0" ChromeDisabledHigh="#FF380E0E" 
                                        ChromeDisabledLow="#FFABA9A7" ChromeGray="#FF927B89" ChromeHigh="#FF8A7B67" ChromeLow="#FF2A0303" 
                                        ChromeMedium="#FF2D0606" ChromeMediumLow="#FF340B0B" ChromeWhite="#FFFFC190" ListLow="#FF2D0606" ListMedium="#FF380E0E" 					
 					AltHigh="#801500f0" AltLow="#80003000" AltMedium="#800430F0" AltMediumHigh="#80163416" AltMediumLow="#800515F5"		 />
