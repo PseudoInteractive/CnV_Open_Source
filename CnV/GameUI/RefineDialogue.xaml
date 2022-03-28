@@ -26,7 +26,7 @@
 		<tk:WrapPanel Orientation="Vertical" Grid.Row="1">
 			<StackPanel Orientation="Horizontal">
                 <NumberBox Value="{x:Bind items[0].count, Mode=TwoWay}" Style="{StaticResource NumberBoxMedium}"  ValueChanged="FilterNans" />
-				<cnv:WoodText ImageHeight="28"
+				<cnv:WoodText 
 					  Text="{x:Bind items[0].resS, Mode=OneWay}" 		 />
 				<Button Style="{StaticResource ButtonSmall}" Content="Refine" Click="WoodClick" />
 			</StackPanel>

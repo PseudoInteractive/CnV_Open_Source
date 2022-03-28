@@ -71,8 +71,9 @@ public static partial class CityUI
 
 	internal static void Refresh()
 	{
+		Player.me.OnPropertyChanged();
 		CityStats.Invalidate();
-		PlayerStats.Changed();
+		//PlayerStats.Changed();
 	}
 	public static  void AddToFlyout(this City me, MenuFlyout flyout, bool useSelected = false)
 	{
@@ -497,7 +498,7 @@ public static partial class CityUI
 	
 	public static async void InfoClick(int _intialCid)
 	{
-		var cids = MainPage.GetContextCids(_intialCid);
+		var cids =Spot.GetSelectedForContextMenu(_intialCid);
 		foreach(var cid in cids)
 		{
 			var _cid = cid;

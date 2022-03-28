@@ -39,13 +39,16 @@ namespace CnV
 	}
 		public static void Changed(string? member = null)
 		{
-			if(instance is not null)
-				instance.OnPropertyChanged(member);
+			if(!Sim.isPastWarmup)
+			{
+				if(instance is not null)
+					instance.OnPropertyChanged(member);
+			}
 		}
 
 		public string zirconiaS => Player.me.zirconia.Format();
 		public string manaS => Player.me.sampleMana.Format();
-		public string goldS => (Player.me?.gold ?? 0).Format();
+		public string goldS => Player.me.SampleGold().Format();
 		public string RefineS(int id) => Player.me.data.refines[id].Format();
 		internal static void GoldChanged()	=> Changed(nameof(goldS));
 		internal static void ManaChanged()	=> Changed(nameof(manaS));

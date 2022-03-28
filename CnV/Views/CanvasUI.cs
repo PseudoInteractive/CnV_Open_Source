@@ -103,150 +103,29 @@ using Game;
 						if(lastCanvasC != cid)
 						{
 
+							lastCanvasC = cid;
 							Spot.viewHover = default;
 							Player.viewHover = PlayerId.MaxValue;
-							toolTip = null;
+	//						toolTip = null;
 
 
 
-							lastCanvasC = cid;
 							var packedId = World.GetWorldId(c);
 							var data = World.GetInfoFromWorldId(World.rawPrior1!=null ? World.rawPrior1 : World.tileData,packedId);
 							switch(data.type)
 							{
 								case World.TileType.typeCity:
-									{
-										Spot.viewHover = (WorldC)cid;
-										var city = City.GetOrAddCity(cid);
-										if(city != null)
-										{
-											if(data.player == 0)
-											{
-												toolTip = $"Lawless\n{c.y / 100}{c.x / 100} ({c.x}:{c.y})\nPoints {city.points}";
-											}
-											else
-											{
-												Player.viewHover = data.player;
-
-												var player = Player.GetValueOrDefault(data.player,Player._default);
-												//	if (Player.IsFriend(data.player))
-												{
-													//if (spot is City city)
-													{
-														using var sb = ZString.CreateUtf8StringBuilder();
-														//	var notes = city.remarks.IsNullOrEmpty() ? "" : city.remarks.Substring(0, city.remarks.Length.Min(40)) + "\n";
-														sb.AppendLine(player.name);
-														sb.AppendLine(city.cityName);
-														sb.AppendFormat("pts:{0:N0}\n",city.points);
-														if(player.allianceId!= 0)
-															sb.AppendLine(Alliance.IdToName(player.allianceId));
-														if(Player.IsSubOrMe(data.player))
-															sb.AppendLine(city.GetTroopsString("\n"));
-
-														if(city.senatorInfo.Length != 0)
-														{
-															sb.AppendLine(city.GetSenatorInfo());
-														}
-														if(city.incoming.Any())
-														{
-
-															var incAttacks = 0;
-															var incTs = 0u;
-															foreach(var i in city.incoming)
-															{
-																if(i.isAttack)
-																{
-																	++incAttacks;
-																	incTs += i.ts;
-																	if(incAttacks<=3)
-																	{
-																		sb.AppendLine(i.troopInfo); // only show first two
-																	}
-																	else if(incAttacks ==4)
-																	{
-																		sb.AppendLine("..");
-																	}
-																}
-															}
-															sb.AppendFormat("{0} incoming attacks",incAttacks);
-															if(incTs > 0)
-																sb.AppendFormat(" ({0} total TS)\n",incTs);
-															else
-																sb.Append('\n');
-
-															if(city.claim != 0)
-																sb.AppendFormat("{0}% Claim\n",city.claim);
-
-															sb.AppendFormat("{0} total def\n",city.tsDefMax);
-
-															sb.AppendLine(city.GetDefString("\n"));
-
-														}
-													{
-														var outgoingStatus = city.outgoingStatus;
-														if(!outgoingStatus.IsNone())
-														{
-															if(outgoingStatus.IsSeiging())
-																sb.Append("Sieging\n");
-															else if(outgoingStatus.IsSending())
-																sb.Append("Attack Sent\n");
-															else
-																sb.Append("Attack Scheduled\n");
-														}
-													}
-													{
-														var reinf = city.reinforcementsIn;
-														if(reinf.Any())
-														{
-															sb.AppendFormat("{0} def\n",city.tsDefMax);
-															int counter = 0;
-															foreach(var i in reinf)
-															{
-																sb.AppendLine(i.troops.Format(header: $"From {City.GetOrAddCity(i.sourceCid).nameAndRemarks}:",firstSeparater: '\n'));
-																if(++counter >= 4)
-																{
-																	sb.AppendLine("...");
-																	break;
-																}
-															}
-
-														}
-													}
-														if(!city.remarks.IsNullOrEmpty())
-															sb.AppendLine(city.remarks.AsSpan().Wrap(20));
-														if(city.hasAcademy.GetValueOrDefault())
-															sb.AppendLine("Has Academy");
-														if(NearRes.instance.isFocused)
-														{
-															sb.AppendLine($"Carts:{AUtil.FormaRatio((city.cartsHome, city.carts))}");
-															if(city.ships > 0)
-																sb.AppendLine($"Ships:{AUtil.FormatRatio(city.shipsHome,city.ships)}");
-															sb.AppendLine($"Wood:{city.resources[0].Format()}, Stone:{ city.resources[1].DivideRound(1000):4,N0}k");
-															sb.AppendLine($"Iron:{city.resources[2].Format()}, Food:{ city.resources[3].FormatWithSign()}k");
-														}
-														sb.Append($"{c.y / 100}{c.x / 100} ({c.x}:{c.y})");
-
-														toolTip = sb.ToString();
-
-													}
-
-												}
-												//else
-												//{
-												//	var info = spot != null ?
-												//		$"{spot.cityName}\n{spot.points}\n"
-												//	 : "";
-												//	toolTip = $"{player.name}\n{Alliance.IdToName(player.allianceId)}\n{info}{c.y / 100}{c.x / 100} ({c.x}:{c.y})\ncities:{player.cities.Count}\npts:{player.pointsH * 100}";
-												//}
-											}
-										}
-										break;
-									}
-								case World.TileType.typeShrine:
+								{
+									Spot.viewHover = (WorldC)cid;
+									var city = City.GetOrAddCity(cid);
+									ToolTips.underMouse = city;
+									break;
+								}
+							case World.TileType.typeShrine:
 									if(WorldViewSettings.shrines.isOn)
 										toolTip = $"Shrine\n{(data.data == 255 ? "Unlit" : ((Faith)data.data-1).AsString())}";
 									break;
-								case World.TileType.typePortal:
+							case World.TileType.typePortal:
 									toolTip = $"Portal\n{(data.data == 0 ? "Inactive" : "Active")}";
 									break;
 							default:
@@ -334,14 +213,14 @@ using Game;
 									}
 								}
 							}
-							{
-								StringBuilder sb = new(toolTip);
-								var info = TileData.instance.GetSpotinfo(c.x,c.y,sb);
-								sb.Append($"\nOnWater:{data.isOnWater}\nShoreline:{info.shoreline}\nOcean:{info.isOcean}");
-							//	Assert(data.type == info.type);
+							//{
+							//	StringBuilder sb = new(toolTip);
+							//	var info = TileData.instance.GetSpotinfo(c.x,c.y,sb);
+							//	sb.Append($"\nOnWater:{data.isOnWater}\nShoreline:{info.shoreline}\nOcean:{info.isOcean}");
+							////	Assert(data.type == info.type);
 
-								toolTip = sb.ToString();
-							}
+							//	toolTip = sb.ToString();
+							//}
 						}
 					}
 				}
@@ -378,7 +257,6 @@ using Game;
 			}
 		}
 
-
-
+	
 }
 

@@ -36,7 +36,7 @@ namespace CnV
 		public CityStats()
 		{
 			this.InitializeComponent();
-			buildQueue.CollectionChanged+=BuildQueue_CollectionChanged;
+			//buildQueue.CollectionChanged+=BuildQueue_CollectionChanged;
 		}
 		
 		public event PropertyChangedEventHandler? PropertyChanged;
@@ -96,55 +96,55 @@ namespace CnV
 			}
 			// todo!
 		}
-		private static void BuildQueue_CollectionChanged(object? sender,NotifyCollectionChangedEventArgs e)
-		{
-			// invalidate
+//		private static void BuildQueue_CollectionChanged(object? sender,NotifyCollectionChangedEventArgs e)
+//		{
+//			// invalidate
 		
-			instance?.buildCityChangeDebounce.Go();
-//			displayQueue = BuildQueueType.Empty;
-			//Log(e.Action);
-			//LogJson(e);
-			// This is coming from the UI to us
-			// Validate that the queue is still valid
+//			instance?.buildCityChangeDebounce.Go();
+////			displayQueue = BuildQueueType.Empty;
+//			//Log(e.Action);
+//			//LogJson(e);
+//			// This is coming from the UI to us
+//			// Validate that the queue is still valid
 
-			//switch(e.Action)
-			//{
-			//	case NotifyCollectionChangedAction.Move:
-			//		{
+//			//switch(e.Action)
+//			//{
+//			//	case NotifyCollectionChangedAction.Move:
+//			//		{
 						
-			//			var city = instance.city;
-			//			if(city.AttempMove(e.OldStartingIndex,e.NewStartingIndex))
-			//			{
-			//			}
-			//			NotifyBuildQueueChange();
-			//			break;
-			//		}
-			//	case NotifyCollectionChangedAction.Remove:
-			//		{
-			//			return;
-			//			var city = instance.city;
-			//			if(city.AttempRemove(e.OldStartingIndex))
-			//			{
-			//			}
-			//			NotifyBuildQueueChange();
-			//			break;
-			//		}
-			//	case NotifyCollectionChangedAction.Add:
-			//		{
+//			//			var city = instance.city;
+//			//			if(city.AttempMove(e.OldStartingIndex,e.NewStartingIndex))
+//			//			{
+//			//			}
+//			//			NotifyBuildQueueChange();
+//			//			break;
+//			//		}
+//			//	case NotifyCollectionChangedAction.Remove:
+//			//		{
+//			//			return;
+//			//			var city = instance.city;
+//			//			if(city.AttempRemove(e.OldStartingIndex))
+//			//			{
+//			//			}
+//			//			NotifyBuildQueueChange();
+//			//			break;
+//			//		}
+//			//	case NotifyCollectionChangedAction.Add:
+//			//		{
 
-			//			return;
-			//			var city = instance.city;
-			//			if(city.AttemptAdd(e.NewStartingIndex, e.NewItems.Cast<BuildItem>().Select( a => a.op ).ToArray() ))
-			//			{
-			//			}
-			//			NotifyBuildQueueChange();
-			//			break;
-			//		}
-			//	default:
-			//		Assert(false);
-			//		break;
-			//}
-		}
+//			//			return;
+//			//			var city = instance.city;
+//			//			if(city.AttemptAdd(e.NewStartingIndex, e.NewItems.Cast<BuildItem>().Select( a => a.op ).ToArray() ))
+//			//			{
+//			//			}
+//			//			NotifyBuildQueueChange();
+//			//			break;
+//			//		}
+//			//	default:
+//			//		Assert(false);
+//			//		break;
+//			//}
+//		}
 
 		public City city => City.GetBuild();
 		//internal void NotifyBuildCityChange()
@@ -179,7 +179,7 @@ namespace CnV
 			// Don't notify whole we are doing stuff
 			try
 			{
-				instance.buildQueue.CollectionChanged -= BuildQueue_CollectionChanged;
+			//	instance.buildQueue.CollectionChanged -= BuildQueue_CollectionChanged;
 				//var firstVisible = instance.buildQueueListView.vis
 				
 				var city = instance.city;
@@ -208,7 +208,7 @@ namespace CnV
 				LogEx(ex);
 			}
 			// restore callback
-			instance.buildQueue.CollectionChanged += BuildQueue_CollectionChanged;
+		//	instance.buildQueue.CollectionChanged += BuildQueue_CollectionChanged;
 
 		}
 		static void UpdateRecruitQueue()
@@ -449,39 +449,65 @@ namespace CnV
 						if(!hasBeenDisplayed)
 						{
 							ResToolTip.Content=
-								$"Storage:\n{city.stats.storage.Format("\n")}";
+								$"{CnV.Resources.goldGlyph} {Player.me.gold.Format()}\n    +{city.stats.goldProduction.Format()}/h\nStorage:\n{city.stats.storage.Format("\n")}";
 
 							
 						}
 						if(expResource.IsExpanded)
 						{
 							var resources = city.SampleResources();
-							var panels = expResource.Child<CommunityToolkit.WinUI.UI.Controls.WrapPanel>().Children<StackPanel>();
+							//var panels = expResource.Child<CommunityToolkit.WinUI.UI.Controls.WrapPanel>().Children<StackPanel>();
+							var prod = city.stats.production;
+							var incoming = new CnV.Resources();
+							var store = city.stats.storage;
+							foreach(var trade in city.tradesIn)
+							{
+								incoming += trade.resources;
+							}
+							foreach(var o in city.outgoing)
+							{
+								if(o.isReturn)
+									incoming += o.resources;
+							}
 							for(var r = 0;r< CnV.Resources.idCount;r++)
 							{
-								var ch = panels.ElementAt(r).Children<TextBlock>();
-								Assert(ch.Count==2);
-								var txt = ch.ElementAt(0);
-								var prod = ch.ElementAt(1);
+								var rr = resourceItems[r];
 
-								//				var txt = r switch { 0 => res0, 1 => res1, 2 => res2, _ => res3 };
-								//				var prod = r switch { 0 => prod0, 1 => prod1, 2 => prod2, _ => prod3 };
-
-								var res = resources[r];
-								var storage = city.stats.storage[r];
-								txt.UpdateLazy($"{res:N0}",(res >= storage ?
-									Colors.Red : res >= storage*3/4 ?
-									Colors.Orange : res == 0 ?
-									Colors.LightGray : Colors.LightGreen));
-
-								var p = city.stats.production[r];
-								prod.UpdateLazy($"{CnV.Resources.ResGlyph(r)}{p:+#,#;-#,#;' --'}/h",(p switch
+								if(incoming[r] > 0)
+								{
+									rr.incoming = $"{CnV.Resources.cartGlyph} {incoming[r].Format()}";
+									var balance = store[r] - resources[r] - incoming[r];
+									rr.incomingBrush = AppS.Brush(balance>= 0 ? Colors.Green : Colors.Orange);
+								}
+								else
+								{
+									rr.incoming = null;
+								
+								}
+								var p = prod[r];
+								rr.production =$"{p:+#,#;-#,#;' --'}/h";
+								rr.productionBrush = AppS.Brush((p switch
 								{
 									> 0 => Colors.White,
 									< 0 => Colors.Yellow,
 									_ => Colors.LightGray
 
 								}));
+
+								//				var txt = r switch { 0 => res0, 1 => res1, 2 => res2, _ => res3 };
+								//				var prod = r switch { 0 => prod0, 1 => prod1, 2 => prod2, _ => prod3 };
+
+								var res = resources[r];
+								var storage = store[r];
+								rr.here = res.Format();
+								rr.storage =  storage.Format(); 
+								rr.hereBrush = AppS.Brush( (res >= storage ?
+									Colors.Red : res >= storage*3/4 ?
+									Colors.Orange : res == 0 ?
+									Colors.LightGray : Colors.LightBlue));
+
+
+								rr.OnPropertyChanged();
 							}
 						}
 						if(expBuildQueue.IsExpanded)
@@ -504,7 +530,7 @@ namespace CnV
 							var txt = (expBuildings.Header as DependencyObject).Child<TextBlock>(1);
 							txt.UpdateLazy($"Buildings: [{bdd.buildingCount}/{bdd.townHallLevel*10}]");
 							var hasHammerTime = city.hammerTime > 0;
-							queueText.UpdateLazy($"CS:{city.stats.cs:N0}{ (hasHammerTime ? " +" +city.hammerTime.Format() : "" )}%", hasHammerTime ? Colors.GreenYellow : Colors.White); 
+							queueText.UpdateLazy($"CS:{city.stats.cs:N0}%{ (hasHammerTime ? " +" +city.hammerTime.Format() : "" )}", hasHammerTime ? Colors.GreenYellow : Colors.White); 
 						
 							var bd = new List<BuildingCountAndBrush>();
 							foreach(var i in bdd.counts)
@@ -612,8 +638,8 @@ namespace CnV
 
 		internal static void Invalidate()
 		{
-			
-			instance?.buildCityChangeDebounce.Go();
+			if(Sim.isPastWarmup)
+				instance?.buildCityChangeDebounce.Go();
 		
 			
 		}
@@ -668,11 +694,13 @@ namespace CnV
 		internal ObservableCollection<RecruitItem> recruitQueue = new();
 		internal ObservableCollection<CommandItem> commandItems= new();
 		internal ObservableCollection<TradeItem> tradeItems= new();
+		internal ResourceItem[] resourceItems = new[] { new ResourceItem() {r= 0},new ResourceItem() {r= 1},new ResourceItem() {r= 2},new ResourceItem() {r= 3}  };
 		private void UserControl_Loaded(object sender,RoutedEventArgs e)
 		{
 			Assert(instance is null);
 			instance = this;
 			City.buildCityChanged+=Invalidate;
+			
 			
 
 		}
@@ -1110,7 +1138,32 @@ namespace CnV
 		public event PropertyChangedEventHandler? PropertyChanged;
 	}
 
-	public class TradeItem:INotifyPropertyChanged
+	public class ResourceItem:COnPropertyChanged
+	{
+		internal int r;
+		internal void Tapped(object sender,TappedRoutedEventArgs e) => CityUI.Show(
+			r switch { 0=>Artifact.ArtifactType.axe,1=>Artifact.ArtifactType.hammer,2=>Artifact.ArtifactType.pike,_=>Artifact.ArtifactType.sickle}, 
+			sender);
+		internal string incoming;
+		internal Brush incomingBrush;
+
+		internal string here;
+		internal Brush hereBrush;
+
+		internal string storage;
+
+		internal string production;
+		internal Brush productionBrush;
+		internal const int height = 28;
+		internal ImageSource resIcon => ImageHelper.Get(r switch {
+			0=> WoodText.path,
+			1=> StoneText.path,
+			2=> IronText.path,
+			_=> FoodText.path,
+			},height
+		 );
+	}
+	public class TradeItem:COnPropertyChanged
 	{
 		internal TradeOrder trade;
 		
@@ -1174,8 +1227,6 @@ namespace CnV
 			//Log(args.OriginalSource);
 			//LogJson(sender);
 		}
-		public void OnPropertyChanged(string members = null) => PropertyChanged?.Invoke(this,new(members));
-
-		public event PropertyChangedEventHandler? PropertyChanged;
+		
 	}
 }

@@ -68,30 +68,26 @@
 					</Border>
 				</Expander.Header>
 
-				<tk:WrapPanel Orientation="Horizontal" Background="{x:Null}" HorizontalSpacing="1" VerticalSpacing="1" >
-					<StackPanel CornerRadius="{StaticResource baseCR}"  Padding="3"  BorderThickness="1" BorderBrush="{StaticResource ButtonDisabledBorderThemeBrush}" MinWidth="90"  Background="{StaticResource ExpanderBrushContent}"
-								Tapped="WoodTap">
-						<TextBlock  HorizontalTextAlignment="Right" Style="{StaticResource TextBlockMedium}" Margin="0,0,2,0" />
-						<TextBlock Grid.Row="1" x:Name="prod0" x:FieldModifier="public"  HorizontalTextAlignment="Right" Style="{StaticResource TextBlockSmall}" />
-					</StackPanel>
-					<StackPanel CornerRadius="{StaticResource baseCR}"  Margin="0" Padding="3" MinWidth="90" BorderThickness="1" BorderBrush="{StaticResource ButtonDisabledBorderThemeBrush}"
-								Tapped="StoneTap"
-								Background="{StaticResource ExpanderBrushContent}" >
-						<TextBlock  HorizontalTextAlignment="Right"  Style="{StaticResource TextBlockMedium}" Margin="0,0,2,0" />
-						<TextBlock Grid.Row="1"   HorizontalTextAlignment="Right" Style="{StaticResource TextBlockSmall}" />
-					</StackPanel>
-					<StackPanel CornerRadius="{StaticResource baseCR}"  Margin="0" Padding="3" MinWidth="90" BorderThickness="1" BorderBrush="{StaticResource ButtonDisabledBorderThemeBrush}"
-								Tapped="IronTap" Background="{StaticResource ExpanderBrushContent}"  >
-						<TextBlock  HorizontalTextAlignment="Right" Style="{StaticResource TextBlockMedium}" Margin="0,0,2,0" />
-						<TextBlock   Grid.Row="1" HorizontalTextAlignment="Right" Style="{StaticResource TextBlockSmall}"/>
-					</StackPanel>
-					<StackPanel CornerRadius="{StaticResource baseCR}"  Margin="0" Padding="3" MinWidth="90" BorderThickness="1" BorderBrush="{StaticResource ButtonDisabledBorderThemeBrush}"
+				<GridView  Background="{x:Null}" ItemsSource="{x:Bind resourceItems}" Padding="4,4,0,0" >
+					<GridView.ItemTemplate>
+						
+						<DataTemplate x:DataType="cnv:ResourceItem">
+							<Grid MinWidth="90" BorderThickness="1" BorderBrush="{StaticResource SystemControlBackgroundAccentRevealBorderBrush}" CornerRadius="4" >
+							<StackPanel CornerRadius="{StaticResource baseCR}"  Padding="3" MinHeight="60" MinWidth="40"  HorizontalAlignment="Stretch"  
+								Tapped="{x:Bind Tapped}">
+								<TextBlock Text="{x:Bind incoming,Mode=OneWay}" Foreground="{x:Bind incomingBrush,Mode=OneWay}" HorizontalTextAlignment="Right" Style="{StaticResource TextBlockSmall}" Margin="0,0,2,0" />
+								<TextBlock Text="{x:Bind here,Mode=OneWay}" Foreground="{x:Bind hereBrush,Mode=OneWay}" HorizontalTextAlignment="Right" Style="{StaticResource TextBlockMedium}" Margin="0,0,2,0"  />
+								<TextBlock Text="{x:Bind storage,Mode=OneWay}" FontStyle="Italic" Foreground="LightBlue" HorizontalTextAlignment="Right" Style="{StaticResource TextBlockSmall}" Margin="0,0,2,0"  />
+								<TextBlock Text="{x:Bind production,Mode=OneWay}" Foreground="{x:Bind productionBrush,Mode=OneWay}" HorizontalTextAlignment="Right" Style="{StaticResource TextBlockSmall}" Margin="0,0,2,0" />
+							</StackPanel>
+								<Image  Stretch="None" Source="{x:Bind resIcon}" HorizontalAlignment="Left" VerticalAlignment="Center" />
+							</Grid>
+							
+						</DataTemplate>
+					</GridView.ItemTemplate>
+
 					
-								Tapped="FoodTap"  Background="{StaticResource ExpanderBrushContent}"  >
-						<TextBlock   HorizontalTextAlignment="Right" Style="{StaticResource TextBlockMedium}" Margin="0,0,2,0"/>
-						<TextBlock   Grid.Row="1" HorizontalTextAlignment="Right" Style="{StaticResource TextBlockSmall}" />
-					</StackPanel>
-				</tk:WrapPanel>
+				</GridView>
 			</Expander>
 
 			<!--Build Queue-->

@@ -15,6 +15,9 @@ namespace CnV.Views
 {
 	using Game;
 	using Helpers;
+
+	using Microsoft.UI.Xaml.Controls;
+
 	using Services;
 	using ContentDialog = Microsoft.UI.Xaml.Controls.ContentDialog;
 	using ContentDialogButtonClickEventArgs = Microsoft.UI.Xaml.Controls.ContentDialogButtonClickEventArgs;
@@ -194,8 +197,8 @@ namespace CnV.Views
 					   TagsBlade.IsOpen=false;
 					   TradeBlade.IsOpen=false;
 					   AutobuildBlade.IsOpen=false;
-					   HeroGrid.Width = (ShellPage.instance.grid.ActualWidth-256).Min(1200);
-					   HeroGrid.Height = (ShellPage.instance.grid.ActualHeight - 200).Min(1000);
+					   HeroGrid.Width = (ShellPage.instance.grid.ActualWidth-128).Min(Settings.canvasWidth);
+					   HeroGrid.Height = (ShellPage.instance.grid.ActualHeight - 200).Min(Settings.canvasHeight);
 					   //			onComplete.IsOn = CityBuild.isPlanner;
 					   shareStrings.SelectedItem = null;
 					   // remove them all
@@ -240,16 +243,12 @@ namespace CnV.Views
 							   }
 
 						   }
+						   var nameWasNull = city.info.name.IsNullOrEmpty();
 						   if(NameBlade.IsOpen)
 						   {
-							   if(useSuggested.IsOn)
-							   {
-								   city.info.name = suggested.Text;
-							   }
-							   else
-							   {
-								   city.info.name = current.Text;
-							   }
+							   city.info.name = cityName.Text;
+							   city.info.notes = cityNotes.Text;
+							   city.info.remarks = cityRemarks.Text;
 
 							   city.OnPropertyChanged();
 							   //city.BuildStageDirty();
@@ -302,7 +301,7 @@ namespace CnV.Views
 						   city.BuildStageDirty();
 
 						   city.OnPropertyChanged();
-						   if(autobuild)
+						   if(autobuild && LayoutBlade.IsOpen && city.isLayoutCustom && nameWasNull )
 							   await DoTheStuff.Go(city,false,false);
 							if(cid == City.build)
 							{
@@ -626,18 +625,22 @@ namespace CnV.Views
 			}
 		}
 		static Regex regexCityName = new Regex(@"([^\d]*)(\d+)([^\d]+)([1-9]?)(0*)(\d+)(.*)",RegexOptions.CultureInvariant | RegexOptions.Compiled);
-		
-		void ChooseName(object sender,SelectionChangedEventArgs e)
+			
+		private void SuggetNameClick(object sender,RoutedEventArgs e)
 		{
+			var item = sender as MenuFlyoutItem;
+
 			var city = City.Get(cid);
 			string name0 = $"{city.cont:00} 1";
 			string name1 = ""; // default
 			var format = (int a) => a.ToString("D3");
-			var type = cityType.SelectedIndex;
-			switch(type)
+			var isStorage = item.Text == "Storage";
+			var isHub = item.Text == "Hub";
+			var isNormal = item.Text == "Normal";
+			
+			//var type = cityType.SelectedIndex;
 			{
-				case 0:
-				case 2:
+				if(isNormal || isStorage)
 					{
 						var closestScore = float.MaxValue;
 
@@ -667,9 +670,9 @@ namespace CnV.Views
 
 										//								if(num.StartsWith("0"))
 
-										format = type == 0 ? (int a) => a.ToString("D3") : (a) => AUtil.BeyondHex(a).ToString();
+										format = isNormal ? (int a) => a.ToString("D3") : (a) => AUtil.BeyondHex(a).ToString();
 										closestScore = score;
-										name0 = pre + city.cont.ToString("00") + mid + (type==2 ? "0" : "") + num;
+										name0 = pre + city.cont.ToString("00") + mid + (isStorage ? "0" : "") + num;
 										name1 = post;
 									}
 								}
@@ -679,21 +682,22 @@ namespace CnV.Views
 								//	Assert(false);
 							}
 						}
-						break; // normal
 					}
-				default:
-					// hub
-					name0 = $"{city.cont:00} 00";
-					name1 = ""; // default
-					format = (a) => AUtil.BeyondHex(a).ToString();
-					break;
+					else if(isHub)
+					{
+						// hub
+						name0 = $"{city.cont:00} 00";
+						name1 = ""; // default
+						format = (a) => AUtil.BeyondHex(a).ToString();
+					}
+					
 			}
 			for(int uid = 1;;++uid)
 			{
 				var name = name0 + format(uid) + name1;
 				if(!City.myCities.Any((v) => v._cityName == name && v != city))
 				{
-					suggested.Text = name;
+					cityName.Text = name;
 					break;
 				}
 			} // u
@@ -702,25 +706,18 @@ namespace CnV.Views
 
 		private async void toggleName_Toggled(object sender,RoutedEventArgs e)
 		{
+			// Pull name settings from City
 			if(toggleName.IsOn)
 			{
 				var city = City.Get(cid);
 				var tags = await TagsFromCheckboxes();
-				cityType.SelectionChanged-= ChooseName;
 				
-				if(tags.HasFlag(Tags.Hub) )
-					cityType.SelectedIndex = 1;
-				else if(tags.HasFlag(Tags.Storage))
-					cityType.SelectedIndex = 2;
-				else
-					cityType.SelectedIndex =0;
 				bool isNew = TagHelper.IsNewOrCaptured(city)||city._cityName.IsNullOrEmpty();
-				useSuggested.IsOn = isNew;
-				current.Text = city._cityName;
+				
+				cityName.Text = city.info.name;
 				// is this needed?
-
-				ChooseName(null,null);	
-				cityType.SelectionChanged+= ChooseName;
+				cityNotes.Text = city.info.notes;
+				cityRemarks.Text = city.info.remarks;
 
 			}
 		}
@@ -729,6 +726,10 @@ namespace CnV.Views
 		{
 			//ChooseName(_,_);
 		}
+
+	
+
+		
 	}
 
 

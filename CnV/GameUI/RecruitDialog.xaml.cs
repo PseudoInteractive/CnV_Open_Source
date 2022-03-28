@@ -105,7 +105,7 @@ namespace CnV
 					m = m.Min(res[i] / req.r[i]);
 			}
 			if(req.gold > 0)
-					m = m.Min(city.player.gold / req.gold);
+				m = m.Min(city.player.gold / req.gold);
 
 			count = (uint)m;
 			OnPropertyChanged();

@@ -161,7 +161,7 @@ internal partial class GameClient
 	//	const float dashLength = (dashD0 + dashD1) * lineThickness;
 	public static Draw.SpriteBatch draw;
 
-	static Army underMouse; // could also be a trade?
+//	static IToolTip underMouse; // could also be a trade?
 	static float bestUnderMouseScore;
 	//   public static Vector2 cameraMid;
 	public static float eventTimeOffsetLag; // smoothed version of event time offset
@@ -187,8 +187,8 @@ internal partial class GameClient
 		if(!AppS.isForeground)
 			return;
 		++renderFrame;
-		underMouse = null;
-		bestUnderMouseScore = 0.25f;
+		
+		bestUnderMouseScore = 0.125f;
 		++drawCounter;
 #if DEBUG
 		if(gameTime.IsRunningSlowly)
@@ -1284,7 +1284,7 @@ internal partial class GameClient
 												DrawAction( (i.isReturning ? i.returnTime : i.arrival) - Sim.simTime,i.travelTime,r,
 													_c0.ToVector(),
 												_c1.ToVector(),c,tradeImages[i.viaWater.Switch(0,1)] ,
-												true,null,alpha: 255,lineThickness: lineThickness,highlight: false);
+												true,i,alpha: 255,lineThickness: lineThickness,highlight: false);
 											}
 										}
 										
@@ -1658,12 +1658,16 @@ internal partial class GameClient
 			//}
 
 			// show selected
-			var _toolTip = ShellPage.toolTip;
-			if(underMouse != null)
+			
+			if(ToolTips.underMouse != ToolTips.lastUnderMouse)
 			{
+				ToolTips.lastUnderMouse = ToolTips.underMouse;
 				//         Spot.viewHover = 0; // clear
-				_toolTip = underMouse.GetToopTip();
+				
+				ShellPage.toolTip = ToolTips.underMouse?.WorldToolTip();
+				
 			}
+			var _toolTip = ShellPage.toolTip;
 			if(_toolTip != null)
 			{
 				//	TextLayout textLayout = GetTextLayout( _toolTip, tipTextFormat);
@@ -1929,9 +1933,9 @@ internal partial class GameClient
 	//          ds.DrawRoundedSquare(midS, rectSpan, color, 2.0f) ;
 	//      }
 
-	const float actionStopDistance = 0.5f;
+	const float actionStopDistance = 0.375f;
 	private static void DrawAction(float timeToArrival,float journeyTime,float wave,Vector2 c0,Vector2 c1,Color color,
-	Material bitmap,bool applyStopDistance,Army? army,float alpha = 1,float lineThickness = GameClient.lineThickness,bool highlight = false)
+	Material bitmap,bool applyStopDistance,IToolTip? army,float alpha = 1,float lineThickness = GameClient.lineThickness,bool highlight = false)
 	{
 		if(IsSegmentCulledWC(c0,c1))
 			return;
@@ -1952,8 +1956,12 @@ internal partial class GameClient
 		}
 		if(applyStopDistance)
 		{
-			progress *= (1.0f -  (actionStopDistance / Vector2.Distance(c0,c1)).Min(0.25f));
-
+			var dr = c1 - c0;
+			var _c0 = c0;
+			var clip = (actionStopDistance / dr.Length()).Min(0.25f);
+			//progress *= (1.0f -  (actionStopDistance / Vector2.Distance(c0,c1)).Min(0.25f));
+			c0 = _c0 + dr*clip;
+			c1 = _c0 + dr*(1f-clip);
 			//c1  = c0 + (c1 - c0)* stop;
 		}
 
@@ -1972,7 +1980,7 @@ internal partial class GameClient
 			if(distance < bestUnderMouseScore)
 			{
 				bestUnderMouseScore = distance;
-				underMouse = army;
+				ToolTips.underMouse = army;
 				highlight = true;
 				spriteSize *= 1.25f;
 			}

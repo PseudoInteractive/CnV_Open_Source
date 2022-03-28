@@ -144,7 +144,7 @@ namespace CnV
 						//}
 						//if (!useInfoBar)
 						{
-							try
+							//try
 							{
 								//	var textBlock = markDownText;
 								//if(ShellPage.instance.inAppNotes.Contains(s))
@@ -175,10 +175,10 @@ namespace CnV
 								//}
 
 							}
-							catch(Exception __ex)
-							{
-								Debug.LogEx(__ex);
-							}
+							//catch(Exception __ex)
+							//{
+							//	Debug.LogEx(__ex);
+							//}
 
 							//ShellPage.instance.infoBar.IsOpen = false;
 						}

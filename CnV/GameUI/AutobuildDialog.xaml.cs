@@ -28,15 +28,24 @@ public sealed partial class AutobuildDialog:DialogG,INotifyPropertyChanged
 		items.Clear();
 		for(var bid = bidAutobuildStart;bid<=bidAutobuildLast;++bid)
 		{
-			if(IsBidRes(bid))
+			var refBid = bid;
+			if( refBid == bidAutobuildWall )
+			{
+				refBid = bidWall;
+			}
+			else if( refBid == bidAutobuildTower)
+			{
+				refBid = bidSentinelPost;
+			}
+			else if(IsBidRes(refBid))
 			{
 				continue;
 			}
-			var bdef = BuildingDef.FromId(bid);
+			var bdef = BuildingDef.FromId(refBid);
 			if(bdef.dimg is null)
 				continue;
 			var setting = mo.autoBuildLevels[bid];
-			var item = new AutobuildItem() { bid = bid, on = setting > 0,level = setting.Abs() };
+			var item = new AutobuildItem() { bid = bid,refBid=refBid, on = setting > 0,level = setting.Abs() };
 			items.Add(item);
 		}
 		items.OnReset();
@@ -66,18 +75,19 @@ public sealed partial class AutobuildDialog:DialogG,INotifyPropertyChanged
 		{
 			mo.autoBuildLevels[i.bid] = (sbyte)(i.on ? i.level : -i.level);
 		}
-		(new CnVEventCityAutobuild(city.c) { autobuildOn = mo.autobuildOn,autoBuildLevels=mo.autoBuildLevels }).EnqueueAsap();
+		new CnVEventCityAutobuild(city.c, mo.autobuildOn,mo.autoBuildLevels ).EnqueueAsap();
 		Done();
 	}
 }
 internal class AutobuildItem
 {
 	internal BuildingId bid;
+	internal BuildingId refBid;
 	internal bool on = true;
 	internal int level = 10;
-	internal BuildingDef def => BuildingDef.FromId(bid);
+	internal BuildingDef def => BuildingDef.FromId(refBid);
 	internal const int imageSize = 32;
-	internal ImageSource image => CityBuild.GetBuildingImage(bid,imageSize);
+	internal ImageSource image => CityBuild.GetBuildingImage(refBid,imageSize);
 	internal string name => def.Bn;
 
 }

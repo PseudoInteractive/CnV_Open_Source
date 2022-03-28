@@ -317,6 +317,8 @@ namespace CnV.Views
 						if ((x == -r || x == r) || (y == -r || y == r))
 						{
 							var c = new BuildC(x, y);
+							if(!c.isInCity)
+								continue;
 							//var id = XYToId(c);
 							if (!city.IsBuildingSpotIncludingShore(c))
 								continue;
@@ -442,7 +444,8 @@ namespace CnV.Views
 						if ((x == -r || x == r) || (y == -r || y == r))
 						{
 							var c = new BuildC(x, y);// (int x, int y) c = RandCitySpot();
-							
+							if(!c.isInCity)
+								continue;
 							if ((city.GetLayoutBid(c) == bid) && (city.postQueueBuildings[City.XYToId(c)].bid != bid))
 							{
 								rv.Add(c);

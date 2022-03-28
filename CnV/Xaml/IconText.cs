@@ -170,33 +170,45 @@ public abstract class IconTextSized:IconText
 }
 public class WoodText:IconTextSized
 {
-	protected override string uri => "UI/icons_ressource_wood.png";
+	internal const string path  = "UI/icons_ressource_wood.png";
+
+	protected override string uri => path;
 
 }
 public class IronText:IconTextSized
 {
-	protected override string uri => "UI/icons_ressource_iron.png";
+	internal const string path  = "UI/icons_ressource_iron.png";
+
+	protected override string uri => path;
 
 }
 
 public class StoneText:IconTextSized
 {
-	protected override string uri => "UI/icons_ressource_stone.png";
+	internal const string path  = "UI/icons_ressource_stone.png";
+
+	protected override string uri => path;
 
 }
 public class FoodText:IconTextSized
 {
-	protected override string uri => "UI/icons_ressource_grain.png";
+	internal const string path  = "UI/icons_ressource_grain.png";
+
+	protected override string uri => path;
 
 }
 
 public class GoldText:IconTextSized
 {
-	protected override string uri => "UI/icons_ressource_gold.png";
+	internal const string path  = "UI/icons_ressource_gold.png";
+
+	protected override string uri => path;
 }
 public class ZirconiaText:IconTextSized
 {
-	protected override string uri => "zirconia.png";
+	internal const string path  = "zirconia.png";
+
+	protected override string uri => path;
 }
 public class ManaText:IconTextSized
 {
