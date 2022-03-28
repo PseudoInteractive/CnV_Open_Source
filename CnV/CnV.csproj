@@ -139,6 +139,7 @@
     <Compile Include="GameUI\ResearchPurchase.xaml.cs" />
     <Compile Include="GameUI\SendResDialogue.xaml.cs" />
     <Compile Include="GameUI\SendTroops.xaml.cs" />
+    <Compile Include="GameUI\ToolTipWindow.xaml.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Services\CnVSignin.cs" />
     <Compile Include="Views\CanvasMouse.cs" />
@@ -401,6 +402,9 @@
     <Page Include="GameUI\SendTroops.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="GameUI\ToolTipWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Styles\BattleReport.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -598,6 +602,7 @@
 	<None Remove="GameUI\ResearchPurchase.xaml" />
 	<None Remove="GameUI\SendResDialogue.xaml" />
 	<None Remove="GameUI\SendTroops.xaml" />
+	<None Remove="GameUI\ToolTipWindow.xaml" />
     <None Remove="Resources\CnVFont-VF.ttf" />
     <None Remove="Resources\Icon1.ico" />
     <None Remove="Strings\en-us\Resources.resw" />

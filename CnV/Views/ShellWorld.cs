@@ -64,7 +64,6 @@ namespace CnV.Views
 	//	static Thread inputWorker;
 
 		public float eventTimeOffset;
-		public static ref string? toolTip => ref ToolTips.toolTip;
 		public static ref string? contToolTip => ref ToolTips.contToolTip;
 		//	public static DispatcherQueueController _queuecontroller;
 		///ivate static InputPointerSource _inputPointerSource;

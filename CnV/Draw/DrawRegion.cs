@@ -161,7 +161,7 @@ internal partial class GameClient
 	//	const float dashLength = (dashD0 + dashD1) * lineThickness;
 	public static Draw.SpriteBatch draw;
 
-//	static IToolTip underMouse; // could also be a trade?
+	static IToolTip underMouse; // could also be a trade?
 	static float bestUnderMouseScore;
 	//   public static Vector2 cameraMid;
 	public static float eventTimeOffsetLag; // smoothed version of event time offset
@@ -187,7 +187,8 @@ internal partial class GameClient
 		if(!AppS.isForeground)
 			return;
 		++renderFrame;
-		
+		var priorUnderMouse = underMouse;
+		underMouse = null;
 		bestUnderMouseScore = 0.125f;
 		++drawCounter;
 #if DEBUG
@@ -1659,15 +1660,15 @@ internal partial class GameClient
 
 			// show selected
 			
-			if(ToolTips.underMouse != ToolTips.lastUnderMouse)
+			if(underMouse!= priorUnderMouse)
 			{
-				ToolTips.lastUnderMouse = ToolTips.underMouse;
 				//         Spot.viewHover = 0; // clear
-				
-				ShellPage.toolTip = ToolTips.underMouse?.WorldToolTip();
-				
+				ToolTips.actionToolTip = underMouse?.WorldToolTip();
+				ToolTipWindow.TipChanged();
 			}
-			var _toolTip = ShellPage.toolTip;
+			Assert(underMouse is null == ToolTips.actionToolTip is null);
+
+			var _toolTip = ToolTips.toolTip;
 			if(_toolTip != null)
 			{
 				//	TextLayout textLayout = GetTextLayout( _toolTip, tipTextFormat);
@@ -1980,7 +1981,7 @@ internal partial class GameClient
 			if(distance < bestUnderMouseScore)
 			{
 				bestUnderMouseScore = distance;
-				ToolTips.underMouse = army;
+				underMouse = army;
 				highlight = true;
 				spriteSize *= 1.25f;
 			}
