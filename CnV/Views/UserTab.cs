@@ -347,6 +347,7 @@ namespace CnV.Views;
 			var tt = ToolTipService.GetToolTip(e.Column) as string;
 			if(tt != null)
 				e.ToolTip.Content = tt;
+			
 		}
 
 		public static Type GetContainerType(object container)

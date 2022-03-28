@@ -415,7 +415,7 @@
 					<CheckBox Content="Autobuild"
 							  Margin="4"
 							  IsThreeState="True"
-							  IsChecked="{x:Bind cnv:Settings.autoBuildOn, Mode=TwoWay}" />
+							  IsChecked="{x:Bind cnv:Settings.autobuildOn, Mode=TwoWay}" />
 			
 					<CheckBox Content="Building Overlays"
 							  Margin="4"

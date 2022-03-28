@@ -398,71 +398,71 @@ namespace CnV
 
 			// Log(ppdt.ToString());
 		}
-		class WaitOnCityDataData
-		{
-			public int                        cid;
-			public TaskCompletionSource<bool> t;
+//		class WaitOnCityDataData
+//		{
+//			public int                        cid;
+//			public TaskCompletionSource<bool> t;
 
-			public WaitOnCityDataData(int cid)
-			{
-				this.cid = cid;
-				t        = new TaskCompletionSource<bool>();
-			}
+//			public WaitOnCityDataData(int cid)
+//			{
+//				this.cid = cid;
+//				t        = new TaskCompletionSource<bool>();
+//			}
 
-			public void Done()
-			{
-				try
-				{
-					cid = 0;
-					var _t = t;
-					t = null;
-					if(_t != null)
-						_t.SetResult(true);
+//			public void Done()
+//			{
+//				try
+//				{
+//					cid = 0;
+//					var _t = t;
+//					t = null;
+//					if(_t != null)
+//						_t.SetResult(true);
 
-				}
-				catch(Exception ex)
-				{
+//				}
+//				catch(Exception ex)
+//				{
 
-					LogEx(ex);
-				}
-			}
-			public void Abort()
-			{
-				try
-				{
-					cid = 0;
-					var _t = t;
-					t = null;
-					if(_t != null)
-						_t.SetResult(false);
+//					LogEx(ex);
+//				}
+//			}
+//			public void Abort()
+//			{
+//				try
+//				{
+//					cid = 0;
+//					var _t = t;
+//					t = null;
+//					if(_t != null)
+//						_t.SetResult(false);
 
-				}
-				catch(Exception ex)
-				{
+//				}
+//				catch(Exception ex)
+//				{
 
-					LogEx(ex);
-				}
-			}
-			public bool isDone => t == null;
-		}
+//					LogEx(ex);
+//				}
+//			}
+//			public bool isDone => t == null;
+//		}
 
 
-		static WaitOnCityDataData[] waitingOnCityData = Array.Empty<WaitOnCityDataData>();
+////		static WaitOnCityDataData[] waitingOnCityData = Array.Empty<WaitOnCityDataData>();
 
-		static async Task<bool> ChangeCityJSWait(int cityId)
-		{
-			Log($"Wait {Spot.GetOrAdd(cityId).nameAndRemarks}");
-			var i = new WaitOnCityDataData(cityId);
-			waitingOnCityData =  waitingOnCityData.ArrayAppend(i);
-			ChangeCityJS(cityId);
-			var t = i.t.Task;
-			var xx = await Task.WhenAny(t, Task.Delay(10000)) == t;
-			Assert(xx);
-			Log($"WaitComplete {xx} {Spot.GetOrAdd(cityId).nameAndRemarks}");
-			if(!xx)
-				i.Abort();
-			return xx;
-		}
+		//static async Task<bool> ChangeCityJSWait(int cityId)
+		//{
+		//	Log($"Wait {Spot.GetOrAdd(cityId).nameAndRemarks}");
+		//	var i = new WaitOnCityDataData(cityId);
+		//	waitingOnCityData =  waitingOnCityData.ArrayAppend(i);
+		//	ChangeCityJS(cityId);
+		//	var t = i.t.Task;
+		//	var xx = await Task.WhenAny(t, Task.Delay(10000)) == t;
+		//	Assert(xx);
+		//	Log($"WaitComplete {xx} {Spot.GetOrAdd(cityId).nameAndRemarks}");
+		//	if(!xx)
+		//		i.Abort();
+		//	return xx;
+		//}
 		public static async Task<bool> CitySwitch(int cid, bool lazyMove = false, bool select = true, bool scrollIntoUI = true, bool isLocked = false, bool waitOnChange = false)
 		{
 			// Make sure we don't ignore the exception
@@ -540,18 +540,18 @@ namespace CnV
 
 						if(changed)
 						{
-							if(isLocked || waitOnChange)
-							{
-								if(await ChangeCityJSWait(cid) == false)
-								{
-									Note.Show("Somethings wrong, please try again");
-									return false;
-								}
-							}
-							else
-							{
-								ChangeCityJS(cid);
-							}
+							//if(isLocked || waitOnChange)
+							//{
+							//	if(await ChangeCityJSWait(cid) == false)
+							//	{
+							//		Note.Show("Somethings wrong, please try again");
+							//		return false;
+							//	}
+							//}
+							//else
+							//{
+							//	ChangeCityJS(cid);
+							//}
 						}
 
 					}

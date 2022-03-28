@@ -1701,7 +1701,8 @@ namespace CnV.Views
 
 		private void GridSplitter_ManipulationCompleted(object sender,ManipulationCompletedRoutedEventArgs e)
 		{
-			Note.Show("ManipulationCompleted");
+			//Note.Show("ManipulationCompleted");
+			updateHtmlOffsets.UserUpdated();
 		}
 
 		//private void GotoTimeOffset(object sender,RoutedEventArgs e)

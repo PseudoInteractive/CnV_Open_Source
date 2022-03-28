@@ -1668,16 +1668,16 @@ internal partial class GameClient
 			}
 			Assert(underMouse is null == ToolTips.actionToolTip is null);
 
-			var _toolTip = ToolTips.toolTip;
-			if(_toolTip != null)
-			{
-				//	TextLayout textLayout = GetTextLayout( _toolTip, tipTextFormat);
-				//	var bounds = textLayout.span;
-				//System.Numerics.Vector2 c = ShellPage.mousePositionC + new System.Numerics.Vector2(16, 16);
-				System.Numerics.Vector2 c = new System.Numerics.Vector2(clientSpan.X-2,2).ScreenToWorld();
-				DrawTextBox(_toolTip,c,tipTextFormatRight,Color.White,192,Layer.overlay,4,4,ConstantDepth,0,scale: baseFontScale);
-			}
-			var _contTip = ShellPage.contToolTip;
+			//var _toolTip = ToolTips.toolTip;
+			//if(_toolTip != null)
+			//{
+			//	//	TextLayout textLayout = GetTextLayout( _toolTip, tipTextFormat);
+			//	//	var bounds = textLayout.span;
+			//	//System.Numerics.Vector2 c = ShellPage.mousePositionC + new System.Numerics.Vector2(16, 16);
+			//	System.Numerics.Vector2 c = new System.Numerics.Vector2(clientSpan.X-2,2).ScreenToWorld();
+			//	DrawTextBox(_toolTip,c,tipTextFormatRight,Color.White,192,Layer.overlay,4,4,ConstantDepth,0,scale: baseFontScale);
+			//}
+			var _contTip = ToolTips.contToolTip;
 			if(_contTip != null)
 			{
 				var alpha = pixelScale.SmoothStep(cityZoomThreshold - 128,cityZoomThreshold + 128).

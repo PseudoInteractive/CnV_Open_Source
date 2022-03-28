@@ -697,8 +697,8 @@ public partial class City
 
 public partial class City
 {
-	
 
+	public int constructionSpeed => stats.cs;
 	public void CityRowClick(GridCellTappedEventArgs e)
 	{
 		var modifiers  = AppS.keyModifiers;
@@ -722,6 +722,11 @@ public partial class City
 					Raiding.UpdateTS(true, true);
 				}
 				break;
+			case nameof(City.autobuild):
+				autobuild  = !autobuild;
+				wantSelect = false;
+
+				return;
 			case nameof(City.AutoWalls):
 				AutoWalls  = !autoWalls;
 				wantSelect = false;

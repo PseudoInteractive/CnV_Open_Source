@@ -50,7 +50,7 @@ public partial class CityUI
 				reqFilter    = settings.reqFilter;
 				targetFilter = settings.sendFilter;
 				// does this change threads?
-				await SetCitySettings(cid, reqHub: settings.ReqHub, settings.SendHub, req: settings.req, max: settings.max,
+				City.Get(cid).SetTradeSettings( reqHub: settings.ReqHub, settings.SendHub, req: settings.req, max: settings.max,
 									cartReserve: settings.cartReserve,
 									shipReserve: settings.shipReserve,
 									reqFilter: settings.reqFilter,

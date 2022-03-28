@@ -810,8 +810,9 @@ namespace CnV
 		}
 		public static void SetLastQuickBuildActionSpot(BuildC c)
 		{
-			lastQuickBuildActionSpotValidUntil = SmallTime.now+3;
-			lastQuickBuildActionBSpot = c;
+		//	lastQuickBuildActionSpotValidUntil = SmallTime.now+3;
+		//	lastQuickBuildActionBSpot = c;
+			ClearBuildToolTip(true);
 		}
 		public static void UpdateHovered((int x, int y) cc)
 		{
@@ -966,8 +967,8 @@ namespace CnV
 		{
 			contextMenuResultSelected = true;
 			var bi = e.ClickedItem as BuildMenuItem;
-			lastQuickBuildActionBSpot = BuildC.Nan; // reset
-			lastBuildToolTipSpot=BuildC.Nan;
+		//	lastQuickBuildActionBSpot = BuildC.Nan; // reset
+		//	lastBuildToolTipSpot=BuildC.Nan;
 			var city = City.GetBuild();
 			if(bi != null)
 			{
@@ -1184,17 +1185,17 @@ namespace CnV
 			}
 		}
 
-		private async void DoTheStuff_ExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
+		private async void DoTheStuff_ExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs _args)
 		{
-			Assert(object.ReferenceEquals(args.Parameter, City.GetBuild()));
+			//Assert(object.ReferenceEquals(args.Parameter, City.GetBuild()));
 
 			buildFlyout.Hide();
 			await City.GetBuild().DoTheStuff().ConfigureAwait(false);
 		}
 
-		private async void TogglePlanner_ExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
+		private async void TogglePlanner_ExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs _args)
 		{
-			Assert(object.ReferenceEquals(args.Parameter, City.GetBuild()));
+			//Assert(object.ReferenceEquals(args.Parameter, City.GetBuild()));
 
 			buildFlyout.Hide();
 
@@ -1229,18 +1230,18 @@ namespace CnV
 			return true;
 		}
 
-		private async void Settings_ExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
+		private async void Settings_ExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs _args)
 		{
-			Assert(object.ReferenceEquals(args.Parameter, City.GetBuild()));
+		//	Assert(object.ReferenceEquals(args.Parameter, City.GetBuild()));
 
 			buildFlyout.Hide();
 			await ShareString.Show(City.build).ConfigureAwait(false);
 		}
 
 
-		private async void Abandon_ExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
+		private async void Abandon_ExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs _args)
 		{
-			Assert(object.ReferenceEquals(args.Parameter, City.GetBuild()));
+		//	Assert(object.ReferenceEquals(args.Parameter, City.GetBuild()));
 
 
 			buildFlyout.Hide();
@@ -1273,10 +1274,10 @@ namespace CnV
 
 		}
 
-		private void CancelQueue_ExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
+		private void CancelQueue_ExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs _args)
 		{
 			buildFlyout.Hide();
-			Assert(object.ReferenceEquals(args.Parameter,City.GetBuild()));
+			//Assert(object.ReferenceEquals(args.Parameter,City.GetBuild()));
 			ClearQueue();
 		}
 		public void OnPropertyChanged(string member = null)

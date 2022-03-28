@@ -146,7 +146,7 @@ namespace CnV
 		{
 			Assert(isDrawing == false);
 			isDrawing = true;
-			ToolTips.contToolTip = null;
+		//	ToolTips.contToolTip = null;
 
 			var build = City.GetBuild();
 			if(build == null)
@@ -566,7 +566,19 @@ namespace CnV
 
 					CityView.DrawHoverMarker(selBc,new Color(255,64,0,255));
 				}
-				PreviewBuildAction();
+				if(quickBuildOverlay != 0)
+				{
+					CityView.DrawBuildingOverlay(lastToolTipSpot,CityView.cityDrawAlpha,quickBuildOverlay);
+				}
+				if(quickBuildOverlaySprite!= null)
+				{
+					CityView.DrawSprite(lastToolTipSpot,quickBuildOverlaySprite); 
+				}
+				if(quickBuildSelectedSprite!= null)
+				{
+					CityView.DrawSprite(selectedPoint,quickBuildSelectedSprite); 
+				}
+			//	PreviewBuildAction();
 				
 			}
 			catch(Exception __ex)

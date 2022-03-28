@@ -249,17 +249,21 @@ namespace CnV.Views
 
 			if(visible)
 			{
-				if(CnVServer.ppdtInitialized)
+				foreach(var c in City.gridCitySource)
 				{
-					//	await Raiding.UpdateTS(true, false);
-					//	await RaidOverview.Send();
-					if(City.build != 0)
-						await GetCity.Post(City.build);
-
-
-					//	City.gridCitySource.NotifyReset();
-
+					c.UpdateBuildStage();
 				}
+				//if(CnVServer.ppdtInitialized)
+				//{
+				//	//	await Raiding.UpdateTS(true, false);
+				//	//	await RaidOverview.Send();
+				//	if(City.build != 0)
+				//		await GetCity.Post(City.build);
+
+
+				//	//	City.gridCitySource.NotifyReset();
+
+				//}
 
 				//Task.Run(GetBuildInfo).ContinueWith(async (_) =>
 			 //  {

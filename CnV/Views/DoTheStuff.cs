@@ -122,7 +122,7 @@ public static class DoTheStuff
 				bc = city.UpdateBuildStage();
 				//bc.wallLevel = 1;
 				if(city.is7Point)
-					await CitySettings.SetCitySettings(city.cid,autoBuildOn: false);
+					city.SetAutobuild(false,false,false);
 
 				if(city.is7Point && bc.hasCastle)
 				{

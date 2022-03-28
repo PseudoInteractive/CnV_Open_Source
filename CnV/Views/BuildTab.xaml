@@ -94,15 +94,29 @@
 
 				<sf:GridCheckBoxColumn MappingName="isBuilding"
 										   ShowHeaderToolTip="True"
-											winui:ToolTipService.ToolTip="If checked, this city is either complete or it is building.  Otherwise it is idle and possibly not complete"
+											winui:ToolTipService.ToolTip="True if anything is currently building, false if stalled or complete"
+										   TextAlignment="Center"
+										  Width="32"
+										    />
+				<sf:GridCheckBoxColumn MappingName="stalled"
+										   ShowHeaderToolTip="True"
+											winui:ToolTipService.ToolTip="True building is stalled on resources or rougue build ops (i.e. towers but no wall, too many buildings)"
+										   TextAlignment="Center"
+										  Width="32"
+										    />
+				<sf:GridCheckBoxColumn MappingName="autobuild"
+										   ShowHeaderToolTip="True"
+											winui:ToolTipService.ToolTip="Whether or not anything is set to autobuild"
 										   TextAlignment="Center"
 										  Width="32"
 										    />
 				<sf:GridCheckBoxColumn MappingName="AutoTowers"
+									    ShowHeaderToolTip="True"
 										   winui:ToolTipService.ToolTip="Towers are set to autobuild?"
 										  Width="32"
 										    />
 				<sf:GridCheckBoxColumn MappingName="AutoWalls"
+									    ShowHeaderToolTip="True"
 										   winui:ToolTipService.ToolTip="Walls are set to autobuild?"
 										  Width="32"
 										    />
@@ -153,12 +167,8 @@
 											  IsHidden="True"
 											  ColumnWidthMode="Auto"
 											   />
-				<sf:GridCheckBoxColumn MappingName="bcBlocked"
-										  winui:ToolTipService.ToolTip="Buildings that can't build, maybe?"
-										   ColumnWidthMode="Auto"
-											HeaderText="??" />
-				<sf:GridCheckBoxColumn MappingName="bcTowers"
-										  winui:ToolTipService.ToolTip="Buildings has towers"
+				<sf:GridNumericColumn MappingName="bcTowers"
+										  winui:ToolTipService.ToolTip="Towers count"
 										   ColumnWidthMode="Auto"
 											HeaderText="twr" />
 				<sf:GridCheckBoxColumn MappingName="ministersOn"

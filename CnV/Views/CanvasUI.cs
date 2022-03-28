@@ -81,8 +81,10 @@ using Game;
 							//	contToolTip = $"({cc.x},{cc.y})\n{d.Bn} {b.bl}";
 							Spot.viewHover = default;
 							Player.viewHover = PlayerId.MaxValue;
-							ToolTips.spotToolTip = null;
+							//ToolTips.spotToolTip = null;
 							CityView.hovered = cc;
+							CityBuild.PreviewBuildAction();
+
 						}
 					}
 					else
@@ -93,8 +95,8 @@ using Game;
 							lastCont = cont;
 							if(!IsCityView())
 							{
-								ref var cn = ref Continent.all[cont];
-								contToolTip = $"{World.UnpackContinent(cont)}\nSettled {cn.settled}\nFree {cn.unsettled}\nCities {cn.cities}\nCastles {cn.castles}\nTemples {cn.temples}\nDungeons {cn.dungeons}";
+								//ref var cn = ref Continent.all[cont];
+								//contToolTip = $"{World.UnpackContinent(cont)}\nSettled {cn.settled}\nFree {cn.unsettled}\nCities {cn.cities}\nCastles {cn.castles}\nTemples {cn.temples}\nDungeons {cn.dungeons}";
 
 							}
 						}
@@ -111,7 +113,7 @@ using Game;
 
 							lastCanvasC = cid;
 							var packedId = World.GetWorldId(c);
-							var data = World.GetInfoFromWorldId(World.rawPrior1!=null ? World.rawPrior1 : World.tileData,packedId);
+							var data = World.GetTile(World.rawPrior1!=null ? World.rawPrior1 : World.tileData,packedId);
 							switch(data.type)
 							{
 								case World.TileType.typeCity:
@@ -223,10 +225,10 @@ using Game;
 															sb.AppendLine($"Wood:{city.resources[0].Format()}, Stone:{ city.resources[1].DivideRound(1000):4,N0}k");
 															sb.AppendLine($"Iron:{city.resources[2].Format()}, Food:{ city.resources[3].FormatWithSign()}k");
 														}
-														sb.Append($"{c.y / 100}{c.x / 100} ({c.x}:{c.y})");
+														sb.Append($"{c.y / 100}{c.x / 100} ({c.x}:{c.y})\n");
 
 														if(Player.IsSubOrMe(data.player))
-															sb.AppendLine(city.GetTroopsString("\n"));
+															sb.Append(city.GetTroopsString("\n"));
 
 														toolTip = sb.ToString();
 
@@ -252,15 +254,18 @@ using Game;
 									toolTip = $"Portal\n{(data.data == 0 ? "Inactive" : "Active")}";
 									break;
 							default:
-								if(data.data == World.typeResFlagDungeon)
-										toolTip = $"Dungeon\nLevel:{data.data}"; // \ntype:{data >> 4}";
-									break;
+								if(data.isDungeon)
+								{
+									var cavern = Cavern.Get(cid);
+									toolTip = $"{cavern.tileType.String()} L{cavern.level}\n{cavern.progress:P}"; // \ntype:{data >> 4}";
+								}
+								break;
 							}
 
 							if(World.rawPrior0 != null)
 							{
-								var pData = World.GetInfoFromWorldId(World.rawPrior0,packedId);
-								if(pData.all == data.all)
+								var pData = World.GetTile(World.rawPrior0,packedId);
+								if(pData.data == data.data)
 								{
 									// no change
 

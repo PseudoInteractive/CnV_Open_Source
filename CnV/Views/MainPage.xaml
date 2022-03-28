@@ -54,8 +54,10 @@
 											winui:ToolTipService.ToolTip="Click to switch to this city"
 											 />
 					<sf:GridTextColumn MappingName="nameAndRemarks"
-										   winui:ToolTipService.ToolTip="Click to raid from this city without switching cities (fast)"
+										 
 										   HeaderText="Name"
+									   Width="220"
+									   ColumnWidthMode="None"
 										   TextAlignment="Left"
 										    />
 					<sf:GridHyperlinkColumn MappingName="xy"

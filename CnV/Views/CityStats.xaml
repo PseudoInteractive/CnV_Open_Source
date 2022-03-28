@@ -68,12 +68,12 @@
 					</Border>
 				</Expander.Header>
 
-				<GridView  Background="{x:Null}" ItemsSource="{x:Bind resourceItems}" Padding="4,4,0,0" >
+				<GridView  Background="{x:Null}" ItemsSource="{x:Bind resourceItems}" Padding="0,4,0,0"  >
 					<GridView.ItemTemplate>
 						
 						<DataTemplate x:DataType="cnv:ResourceItem">
 							<Grid MinWidth="90" BorderThickness="1" BorderBrush="{StaticResource SystemControlBackgroundAccentRevealBorderBrush}" CornerRadius="4" >
-							<StackPanel CornerRadius="{StaticResource baseCR}"  Padding="3" MinHeight="60" MinWidth="40"  HorizontalAlignment="Stretch"  
+							<StackPanel CornerRadius="{StaticResource baseCR}"  Padding="2" MinHeight="60" MinWidth="40"  HorizontalAlignment="Stretch"  
 								Tapped="{x:Bind Tapped}">
 								<TextBlock Text="{x:Bind incoming,Mode=OneWay}" Foreground="{x:Bind incomingBrush,Mode=OneWay}" HorizontalTextAlignment="Right" Style="{StaticResource TextBlockSmall}" Margin="0,0,2,0" />
 								<TextBlock Text="{x:Bind here,Mode=OneWay}" Foreground="{x:Bind hereBrush,Mode=OneWay}" HorizontalTextAlignment="Right" Style="{StaticResource TextBlockMedium}" Margin="0,0,2,0"  />

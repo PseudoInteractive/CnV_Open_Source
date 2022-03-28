@@ -44,7 +44,7 @@ public sealed partial class AutobuildDialog:DialogG,INotifyPropertyChanged
 			var bdef = BuildingDef.FromId(refBid);
 			if(bdef.dimg is null)
 				continue;
-			var setting = mo.autoBuildLevels[bid];
+			var setting = mo.autobuildLevels[bid];
 			var item = new AutobuildItem() { bid = bid,refBid=refBid, on = setting > 0,level = setting.Abs() };
 			items.Add(item);
 		}
@@ -73,9 +73,9 @@ public sealed partial class AutobuildDialog:DialogG,INotifyPropertyChanged
 		mo.autobuildOn = autobuildOn.IsChecked.GetValueOrDefault();
 		foreach(var i in items)
 		{
-			mo.autoBuildLevels[i.bid] = (sbyte)(i.on ? i.level : -i.level);
+			mo.autobuildLevels[i.bid] = (sbyte)(i.on ? i.level : -i.level);
 		}
-		new CnVEventCityAutobuild(city.c, mo.autobuildOn,mo.autoBuildLevels ).EnqueueAsap();
+		new CnVEventCityAutobuild(city.c, mo.autobuildOn,mo.autobuildLevels ).EnqueueAsap();
 		Done();
 	}
 }

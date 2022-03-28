@@ -215,6 +215,7 @@
 				GripperCursor="SizeNorthSouth"
 				VerticalAlignment="Stretch"
 				HorizontalAlignment="Right"
+				ManipulationCompleted="GridSplitter_ManipulationCompleted"
 				Height="11"
 				Grid.Column="{x:Bind grid.ColumnDefinitions.IndexOf(columnHtml) }"
 				Grid.Row="0"
@@ -255,6 +256,7 @@
 				IsTabStop="True"
 				CursorBehavior="ChangeOnSplitterHover"
 				GripperCursor="SizeWestEast"
+					ManipulationCompleted="GridSplitter_ManipulationCompleted"
                         VerticalAlignment="Top"
                         HorizontalAlignment="Stretch"
                         Height="11"
@@ -441,6 +443,7 @@
 			<tk:GridSplitter
                         Background="{x:Null}"
                     Grid.RowSpan="3"
+				ManipulationCompleted="GridSplitter_ManipulationCompleted"
 										IsTabStop="True"
 			 				
 			CursorBehavior="ChangeOnSplitterHover"
