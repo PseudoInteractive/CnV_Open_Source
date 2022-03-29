@@ -154,7 +154,7 @@
 				<Setter Property="HorizontalContentAlignment" Value="Right" />
 			</Style>
 			<Style x:Key="NumberBoxRes" BasedOn="{StaticResource RightAlignNumberBox}" TargetType="NumberBox">
-				<Setter Property="SmallChange" Value="25000"/>
+				<Setter Property="SmallChange" Value="10000"/>
 				<Setter Property="Width" Value="140"/>
 				<Setter Property="LargeChange" Value="100000"/>
 			</Style>

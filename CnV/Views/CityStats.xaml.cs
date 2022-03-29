@@ -64,6 +64,8 @@ namespace CnV
 		{
 			var text = args.Text.ToLower();
 
+			Log($"Summitted {text}");
+
 			var items = City.gridCitySource;
 			foreach(var it in items)
 			{
@@ -74,23 +76,27 @@ namespace CnV
 				}
 			}
 
-			args.Handled = true;
-			//foreach (var it in items)
-			//{
-			//	if (it.nameAndRemarks.ToLower().StartsWith(text))
-			//	{
-			//		sender.Text = it.nameAndRemarks;
-			//		sender.SelectedItem = it;
-			//		return;
-			//	}
-			//}
+
+			foreach(var it in items)
+			{
+				if(it.nameAndRemarks.ToLower().StartsWith(text))
+				{
+					sender.Text = it.nameAndRemarks;
+					sender.SelectedItem = it;
+					args.Handled = true;
+					return;
+				}
+			}
 			// try contains
 			foreach(var it in items)
 			{
 				if(it.nameAndRemarks.ToLower().Contains(text))
 				{
+					Log($"Contains {it}");
+
 					sender.Text         = it.nameAndRemarks;
 					sender.SelectedItem = it;
+					args.Handled = true;
 					return;
 				}
 			}
@@ -862,7 +868,7 @@ namespace CnV
 			if(city is not null)
 			{
 				e.Handled=true;
-				city.DoClick();
+				city.Focus();
 			}
 		}
 
@@ -885,6 +891,12 @@ namespace CnV
 		{
 			AutobuildDialog.ShowInstance();
 			e.Handled=true;
+		}
+
+		private void TradesClick(object sender,RoutedEventArgs e)
+		{
+			TradeSettingsDialog.ShowInstance();
+			
 		}
 	}
 	public class BuildingCountAndBrush:INotifyPropertyChanged

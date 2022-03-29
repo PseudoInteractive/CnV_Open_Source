@@ -42,13 +42,14 @@ namespace CnV.Views
 		{
 			if (args.Reason == AutoSuggestionBoxTextChangeReason.UserInput)
 			{
-				var items = new List<string>();
+				
 				var txt = sender.Text.ToLower();
 				if (txt.Length == 0)
 				{
-					
+					sender.ItemsSource = options;
 					return;
 				}
+				var items = new List<string>();
 				var startsWith = txt.Length <= 1;
 				foreach (var p in options)
 				{

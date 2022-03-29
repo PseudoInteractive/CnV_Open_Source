@@ -70,12 +70,17 @@ public sealed partial class AutobuildDialog:DialogG,INotifyPropertyChanged
 	{
 		var city = this.city ;
 		var mo =  city.GetMOForWrite();
+		var priorHash = mo.autobuildHashCode;
+		
 		mo.autobuildOn = autobuildOn.IsChecked.GetValueOrDefault();
 		foreach(var i in items)
 		{
 			mo.autobuildLevels[i.bid] = (sbyte)(i.on ? i.level : -i.level);
 		}
-		new CnVEventCityAutobuild(city.c, mo.autobuildOn,mo.autobuildLevels ).EnqueueAsap();
+		if(priorHash != mo.autobuildHashCode)
+		{
+			new CnVEventCityAutobuild(city.c,mo.autobuildOn,mo.autobuildLevels).EnqueueAsap();
+		}
 		Done();
 	}
 }

@@ -40,10 +40,27 @@ namespace CnV.Views
 		}
 		public event PropertyChangedEventHandler PropertyChanged;
 		#endregion
-
-		public City city;
+		public City _city;
+		public City city
+		{
+			get => _city;
+			set {
+				if(_city != value)
+				{
+					_city= value;
+					OnPropertyChanged(nameof(city));
+				}
+			}
+		}
+		public int cid => _city is not  null ? _city.cid : 0;
 		public BitmapImage icon => city?.icon;
-		public string name => city != null ? city.nameAndRemarks : "None";
+		public string name
+		{
+			get => city != null ? city.nameAndRemarks : "None";
+			set {
+				Note.Show(value);
+			}
+		}
 		public CityControl()
 		{
 			this.InitializeComponent();
@@ -68,61 +85,230 @@ namespace CnV.Views
 
 		private void TextBlock_Tapped(object sender, TappedRoutedEventArgs e)
 		{
-			var image = sender as FrameworkElement;
-			var cc = image.FindParent<CityControl>();
-			if (cc?.city != null)
-				CityUI.ShowCity(cc.city.cid, false, false, false);
+			try
+			{
+				var image = sender as FrameworkElement;
+				var cc = image.FindParent<CityControl>();
+				if(cc?.city != null)
+					CityUI.ShowCity(cc.city.cid,false,false,false);
+			}
+			catch(Exception _ex)
+			{
+				LogEx(_ex);
+
+			}
 
 		}
 
 		private void Image_Tapped(object sender, TappedRoutedEventArgs e)
 		{
-			var image = sender as FrameworkElement;
-			var cc = image.FindParent<CityControl>();
-			if( cc?.city!=null)
-				Spot.ProcessCoordClick(cc.city.cid, false, AppS.keyModifiers, false);
+			try
+			{
+				var image = sender as FrameworkElement;
+				var cc = image.FindParent<CityControl>();
+				if(cc?.city!=null)
+					Spot.ProcessCoordClick(cc.city.cid,false,AppS.keyModifiers,false);
+			}
+			catch(Exception _ex)
+			{
+				LogEx(_ex);
+
+			}
 
 		}
 
 		private void Image_RightTapped(object sender, RightTappedRoutedEventArgs e)
 		{
-			var image = sender as FrameworkElement;
-			var cc = image.FindParent<CityControl>();
-			if (cc?.city != null)
-				cc.city.ShowContextMenu(image, e.GetPosition(image));
-		}
+			try
+			{
+				var image = sender as FrameworkElement;
+				var cc = image.FindParent<CityControl>();
+				if(cc?.city != null)
+					cc.city.ShowContextMenu(image,e.GetPosition(image));
+			}
+			catch(Exception _ex)
+			{
+				LogEx(_ex);
 
+			}
+		}
+		private void TextSubmitted(ComboBox sender,ComboBoxTextSubmittedEventArgs args)
+		{
+			try
+			{
+				var text = args.Text.ToLower();
+
+				Log($"Summitted {text}");
+
+				var items = sender.ItemsSource as IEnumerable<City>;
+				Assert(items is not null);
+				foreach(var it in items)
+				{
+					// its good
+					if(it.nameAndRemarks == text)
+					{
+						return;
+					}
+				}
+
+
+				foreach(var it in items)
+				{
+					if(it.nameAndRemarks.ToLower().StartsWith(text))
+					{
+						sender.Text = it.nameAndRemarks;
+						sender.SelectedItem = it;
+						args.Handled = true;
+						return;
+					}
+				}
+				// try contains
+				foreach(var it in items)
+				{
+					if(it.nameAndRemarks.ToLower().Contains(text))
+					{
+						Log($"Contains {it}");
+
+						sender.Text         = it.nameAndRemarks;
+						sender.SelectedItem = it;
+						args.Handled = true;
+						return;
+					}
+				}
+			}
+			catch(Exception _ex)
+			{
+				LogEx(_ex);
+
+			}
+			// todo!
+		}
 		
 		private void CityName_SuggestionChosen(AutoSuggestBox sender,AutoSuggestBoxSuggestionChosenEventArgs args)
 		{
-			
-			if(Spot.TryGet(args.SelectedItem as string,!onlyMine.IsChecked.GetValueOrDefault(),out var _city))
+			try
 			{
-				this.city = _city;
-				OnPropertyChanged();
-		
+				Log($" chosen {args.SelectedItem}");
+
+				if(args.SelectedItem is City _city)
+				{
+					this.city = _city;
+					OnPropertyChanged();
+
+				}
+				else
+				{
+					this.city = null;
+					//				sender.Text = string.Empty;
+					OnPropertyChanged();
+
+				}
 			}
-			else
+			catch(Exception _ex)
 			{
-				this.city = null;
-				sender.Text = string.Empty;
-				OnPropertyChanged();
+				LogEx(_ex);
 
 			}
 		}
 
 		private void suggestBox_QuerySubmitted(AutoSuggestBox sender,AutoSuggestBoxQuerySubmittedEventArgs args)
 		{
-				if(args.ChosenSuggestion != null)
+			try
+			{
+				Log($" submitted {args.ChosenSuggestion}");
+				if(args.ChosenSuggestion is City c)
 				{
+					//	this.city = c;
+					//	OnPropertyChanged();
 				}
 				else
+				{
+					//	this.city = null;
+					//	sender.Text = string.Empty; 
+					//	OnPropertyChanged();
+
+				}
+			}
+			catch(Exception _ex)
 			{
-				this.city = null;
-				sender.Text = string.Empty; 
-				OnPropertyChanged();
+				LogEx(_ex);
 
 			}
+		}
+
+		//private void SuggestTextChanged(AutoSuggestBox sender,AutoSuggestBoxTextChangedEventArgs args)
+		//{
+		//	try
+		//	{
+		//		Log($"Text Change {args.Reason} {sender.Text}");
+		//		if(args.Reason == AutoSuggestionBoxTextChangeReason.UserInput)
+		//		{
+
+		//			var txt = sender.Text.ToLower();
+		//			if(txt.Length == 0)
+		//			{
+		//				sender.ItemsSource = City.gridCitySource;
+		//				return;
+		//			}
+		//			var items = new List<City>();
+		//			var startsWith = txt.Length <= 1;
+		//			foreach(var c in City.gridCitySource)
+		//			{
+		//				var p = c.nameAndRemarks;
+		//				if(startsWith ? p.StartsWith(txt,StringComparison.InvariantCultureIgnoreCase) : p.Contains(txt,StringComparison.InvariantCultureIgnoreCase))
+		//				{
+		//					items.Add(c);
+		//				}
+		//			}
+		//			if(items.Count > 0)
+		//				sender.ItemsSource = items.ToArray();
+		//			else
+		//				sender.ItemsSource = new City[] { City.invalid };
+		//		}
+		//	}
+		//	catch(Exception _ex)
+		//	{
+		//		LogEx(_ex);
+
+		//	}
+		
+		//}
+
+		private void SelectionChanged(object sender,SelectionChangedEventArgs e)
+		{
+			try
+			{
+				var box = sender as ComboBox;
+				this.city = box.SelectedItem as City;
+				OnPropertyChanged(nameof(this.city));
+			}
+			catch(Exception _ex)
+			{
+				LogEx(_ex);
+
+			}
+		}
+
+		private void CityIconTapped(object sender,TappedRoutedEventArgs e)
+		{
+			e.Handled=true;
+			city?.Focus();
+		}
+
+		private void RightTappedX(object sender,RightTappedRoutedEventArgs e)
+		{
+			
+			try
+			{
+				var ui = sender as UIElement;
+				city?.ShowContextMenu(ui,e.GetPosition(ui));
+			}
+			catch(Exception _ex)
+			{
+				LogEx(_ex);
+
+			}
+		
 		}
 
 		//private void AutoSuggestBox_CharacterReceived(UIElement sender,CharacterReceivedRoutedEventArgs args)

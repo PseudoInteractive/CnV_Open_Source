@@ -36,7 +36,7 @@
 			<ComboBox  x:Name="cityBox" x:FieldModifier="public" 
 					               HorizontalAlignment="Stretch"
 					                IsEditable="True"
-					   
+					   IsTextSearchEnabled="True"
 					   ItemsSource="{x:Bind cnv:City.gridCitySource, Mode=OneWay}"
 					                TextSubmitted="CitySubmitted"			
 							SelectionChanged="CityBox_SelectionChanged"
@@ -365,7 +365,7 @@
 
 			<Expander Expanding="Expander_Expanding" x:Name="expTrades" IsExpanded="True" Background="{StaticResource ExpanderBrushContent}" >
 				<Expander.Header>
-					<TextBlock Text="{x:Bind tradesTitle, Mode=OneWay}" Style="{StaticResource TextBlockMedium}" HorizontalAlignment="Right"  />
+					<Button Content="{x:Bind tradesTitle, Mode=OneWay}" Style="{StaticResource ButtonMedium}" HorizontalAlignment="Right" Click="TradesClick"  />
 				</Expander.Header>
 
 				<ListView x:Name="TradesListView" x:FieldModifier="public"  
