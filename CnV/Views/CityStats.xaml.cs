@@ -898,6 +898,12 @@ namespace CnV
 			TradeSettingsDialog.ShowInstance();
 			
 		}
+		internal string tradesToolTip
+		{
+			get {
+				return $"{CnV.Resources.cartGlyph} {city.cartsHome.Format()}/{city.carts.Format()}\n{CnV.Resources.shipGlyph} {city.shipsHome.Format()}/{city.ships.Format()}";
+			}
+		}
 	}
 	public class BuildingCountAndBrush:INotifyPropertyChanged
 	{
@@ -1191,7 +1197,7 @@ namespace CnV
 		}
 
 
-		internal string toolTip => trade.resources.Format(separator:",");
+		internal string toolTip => trade.Format("\n");
 		internal bool isIncoming => trade.targetCid == City.build;
 		internal bool isOutgoing => !isIncoming;
 		internal TradeItem(TradeOrder army)

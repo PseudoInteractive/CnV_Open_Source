@@ -16,10 +16,10 @@
 	>
 
 	<StackPanel HorizontalAlignment="Stretch" Margin="8" >
-		<StackPanel HorizontalAlignment="Stretch" >
-			<views:CityControl x:Name="reqHub" Label="Request" x:FieldModifier="public"
+		<StackPanel HorizontalAlignment="Stretch"  Spacing="6" >
+			<views:CityControl x:Name="reqHub" Label="Request" x:FieldModifier="public" LabelWidth="110"
 						   ToolTipService.ToolTip="If req boxes below are checked, this hub will be set as the source hub" />
-			<views:CityControl x:Name="sendHub" Label="Send To" x:FieldModifier="public"
+			<views:CityControl x:Name="sendHub" Label="Send To" x:FieldModifier="public" LabelWidth="110"
 						   ToolTipService.ToolTip="If export boxes below are checked, this hub will be set as the target hub" />
 
 		</StackPanel>

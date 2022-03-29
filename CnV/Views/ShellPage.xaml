@@ -325,33 +325,31 @@
 					  VerticalAlignment="Bottom"
 					  HorizontalAlignment="Left"
 					  FontSize="{StaticResource MediumFontSize}"
-		              FontFamily="{StaticResource CnvIcons}"
+		              
 					  Grid.Row="{x:Bind GridRowIndex(rowFooter,-1)}"
 					  Grid.RowSpan="2" 
 					  Margin="0"
 					  Padding="0"
-					  Width="300"
+					  Width="240"
 						MinHeight="20"
 					  ExpandDirection="Up"
 					  Canvas.ZIndex="35"   >
 				<Expander.Header   >
-					<TextBlock Text="Info" FontSize="{StaticResource MediumFontSize}" Height="24" Margin="0" Padding="0"
+					<TextBlock Text="Info" FontSize="{StaticResource MediumFontSize}"  Margin="0" Padding="0"
 		              FontFamily="{StaticResource CnvIcons}"  HorizontalAlignment="Right" />
 				</Expander.Header>
 				<ListView x:Name="InAppNote" x:FieldModifier="public"  Margin="0" Padding="0"
-                   ItemsSource="{x:Bind inAppNotes,Mode=OneWay}"  MaxHeight="200"  >
+						  Background="#aa140030"
+                   ItemsSource="{x:Bind inAppNotes,Mode=OneWay}"  MaxHeight="100"  >
 					<ListView.ItemTemplate>
 						<DataTemplate  x:DataType="x:String"  >
-							<tk:MarkdownTextBlock  x:Name="message" Text="{x:Bind }"  Margin="1"  Padding="0,0,0,0"    
+							<TextBlock  x:Name="message" Text="{x:Bind }"  Margin="1"  Padding="0,0,0,0"    
                                                IsTextSelectionEnabled="True"
-												   MinHeight="22"
-												   ParagraphMargin="0"
-												   ParagraphLineHeight="18"
+												  
 											  FontSize="{StaticResource SmallFontSize}"
-											 FontFamily="{StaticResource CnvIcons}"
+											
 												   FontStretch="Condensed"
-                                              TextWrapping="Wrap" 
-											   LinkClicked="{x:Bind cnv:Note.MarkDownLinkClicked}"  Background="Transparent"  />
+                                              TextWrapping="Wrap"  />
 
 						</DataTemplate>
 					</ListView.ItemTemplate>
@@ -365,7 +363,7 @@
 						</ItemsPanelTemplate>
 					</ListView.ItemsPanel>
 					<!-- This setter property is created so ListViewItems correctly align to the left or right. -->
-					<ListView.ItemContainerStyle>
+					<!--<ListView.ItemContainerStyle>
 						<Style TargetType="ListViewItem">
 							<Setter Property="Margin" Value="1" />
 							<Setter Property="Padding" Value="0" />
@@ -373,7 +371,7 @@
 							<Setter Property="VerticalContentAlignment" Value="Center"/>
 							<Setter Property="Background" Value="#58003000"/>
 						</Style>
-					</ListView.ItemContainerStyle>
+					</ListView.ItemContainerStyle>-->
 				</ListView>
 			</Expander>
 			<Expander  Grid.Row="{x:Bind GridRowIndex(rowFooter,-1)}"

@@ -36,7 +36,7 @@ namespace CnV.Views
 		}
 		public void OnPropertyChanged(string member = null)
 		{
-			if(PropertyChanged is not null) ((IANotifyPropertyChanged)this).IOnPropertyChanged();
+			if(PropertyChanged is not null) ((IANotifyPropertyChanged)this).IOnPropertyChanged(member);
 		}
 		public event PropertyChangedEventHandler PropertyChanged;
 		#endregion

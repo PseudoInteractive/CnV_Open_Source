@@ -22,7 +22,7 @@ using static CnV.CityUI;
 
 public static partial class CityUI
 {
-	public static Action<City[]> cityListChanged;
+//	public static Action<City[]> cityListChanged;
 
 	public static async void SyncCityBox()
 	{

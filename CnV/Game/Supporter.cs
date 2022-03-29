@@ -61,7 +61,7 @@ namespace CnV
         }
 		public void OnPropertyChanged(string member = null)
 		{
-			if(PropertyChanged is not null) ((IANotifyPropertyChanged)this).IOnPropertyChanged();
+			if(PropertyChanged is not null) ((IANotifyPropertyChanged)this).IOnPropertyChanged(member);
 		}
 		public virtual event PropertyChangedEventHandler PropertyChanged;
 		public void CallPropertyChanged(string members = null)

@@ -1667,10 +1667,11 @@ namespace CnV.Views
 										.OrderBy((a) => a,new CityList.CityComparer()).ToArray();
 								//	CityStats.instance.cityBox.ItemsSource = l;
 									City.gridCitySource.Set(l,true,itemsChanged);
+									City.gridCitySourceWithNone.Set( l.Prepend(City.invalid) );
 									// todo change this
 									Spot.selected = Spot.selected.Where(cid => City.TestContinentAndFlagFilter(cid))
 										.ToHashSet(); // filter selected
-									CityUI.cityListChanged?.Invoke(l);
+								//	CityUI.cityListChanged?.Invoke(l);
 									CityUI.SyncCityBox();
 									//   if (MainPage.IsVisible())
 

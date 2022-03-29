@@ -66,8 +66,8 @@
                                        BaseMediumLow="#FF6F495F" ChromeAltLow="#FFB393A1" ChromeBlackHigh="#FF21DA2A" ChromeBlackLow="#FF391B1B" 
                                        ChromeBlackMedium="#FF30A0F0" ChromeBlackMediumLow="#FF20F0D0" ChromeDisabledHigh="#FF380E0E" 
                                        ChromeDisabledLow="#FFABA9A7" ChromeGray="#FF927B89" ChromeHigh="#FF8A7B67" ChromeLow="#FF2A0303" 
-                                       ChromeMedium="#FF2D0606" ChromeMediumLow="#FF340B0B" ChromeWhite="#FFFFC190" ListLow="#FF2D0606" ListMedium="#FF380E0E" 					
-					AltHigh="#801500f0" AltLow="#80003000" AltMedium="#800430F0" AltMediumHigh="#80163416" AltMediumLow="#800515F5"		 />
+                                       ChromeMedium="#FF2D0606" ChromeMediumLow="#FF340B0B" ChromeWhite="#FFFFC190" ListLow="#FFFD0606" ListMedium="#FF380E0E" 					
+					AltHigh="#80F500f0" AltLow="#8000F000" AltMedium="#800430F0" AltMediumHigh="#80163416" AltMediumLow="#800515F5"		 />
 				<ResourceDictionary Source="ms-appx:///Styles/FontSizes.xaml"  />
 				<ResourceDictionary Source="ms-appx:///Styles/TextBlock.xaml" />
 				<ResourceDictionary Source="ms-appx:///Styles/Page.xaml" />

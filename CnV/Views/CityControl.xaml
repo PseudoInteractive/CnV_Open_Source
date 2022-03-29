@@ -17,7 +17,7 @@
 			<ColumnDefinition Width="Auto" />
 		</Grid.ColumnDefinitions>
 
-		<TextBlock Text="{x:Bind Label, Mode=OneWay}" Style="{StaticResource TextBlockMedium}" />
+		<TextBlock Text="{x:Bind Label, Mode=OneWay}" Style="{StaticResource TextBlockMedium}" Width="{x:Bind LabelWidth}" />
 
 
 
@@ -25,7 +25,7 @@
 					               HorizontalAlignment="Stretch"
 					                IsEditable="True"
 					   IsTextSearchEnabled="True"
-					   ItemsSource="{x:Bind cnv:City.gridCitySource, Mode=OneWay}"
+					   ItemsSource="{x:Bind cnv:City.gridCitySourceWithNone, Mode=OneWay}"
 					                TextSubmitted="TextSubmitted"			
 							SelectionChanged="SelectionChanged"
 					    SelectedItem="{x:Bind city, Mode=TwoWay}"       

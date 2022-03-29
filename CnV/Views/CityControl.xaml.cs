@@ -36,7 +36,7 @@ namespace CnV.Views
 		}
 		public void OnPropertyChanged(string member = null)
 		{
-			if(PropertyChanged is not null) ((IANotifyPropertyChanged)this).IOnPropertyChanged();
+			if(PropertyChanged is not null) ((IANotifyPropertyChanged)this).IOnPropertyChanged(member);
 		}
 		public event PropertyChangedEventHandler PropertyChanged;
 		#endregion
@@ -65,6 +65,7 @@ namespace CnV.Views
 		{
 			this.InitializeComponent();
 		}
+
 		public static readonly DependencyProperty LabelProperty = DependencyProperty.Register(
   "Label",
   typeof(string),
@@ -80,7 +81,20 @@ namespace CnV.Views
 			set { SetValue(LabelProperty,value); }
 		}
 
+				public static readonly DependencyProperty LabelWidthProperty = DependencyProperty.Register(
+  "LabelWidth",
+  typeof(double),
+  typeof(CityControl),
+  new PropertyMetadata(double.NaN)
+);
+
 		
+
+		public double LabelWidth
+		{
+			get { return (double)GetValue(LabelWidthProperty); }
+			set { SetValue(LabelWidthProperty,value); }
+		}
 
 
 		private void TextBlock_Tapped(object sender, TappedRoutedEventArgs e)
@@ -184,57 +198,57 @@ namespace CnV.Views
 			// todo!
 		}
 		
-		private void CityName_SuggestionChosen(AutoSuggestBox sender,AutoSuggestBoxSuggestionChosenEventArgs args)
-		{
-			try
-			{
-				Log($" chosen {args.SelectedItem}");
+		//private void CityName_SuggestionChosen(AutoSuggestBox sender,AutoSuggestBoxSuggestionChosenEventArgs args)
+		//{
+		//	try
+		//	{
+		//		Log($" chosen {args.SelectedItem}");
 
-				if(args.SelectedItem is City _city)
-				{
-					this.city = _city;
-					OnPropertyChanged();
+		//		if(args.SelectedItem is City _city)
+		//		{
+		//			this.city = _city;
+		//			OnPropertyChanged();
 
-				}
-				else
-				{
-					this.city = null;
-					//				sender.Text = string.Empty;
-					OnPropertyChanged();
+		//		}
+		//		else
+		//		{
+		//			this.city = null;
+		//			//				sender.Text = string.Empty;
+		//			OnPropertyChanged();
 
-				}
-			}
-			catch(Exception _ex)
-			{
-				LogEx(_ex);
+		//		}
+		//	}
+		//	catch(Exception _ex)
+		//	{
+		//		LogEx(_ex);
 
-			}
-		}
+		//	}
+		//}
 
-		private void suggestBox_QuerySubmitted(AutoSuggestBox sender,AutoSuggestBoxQuerySubmittedEventArgs args)
-		{
-			try
-			{
-				Log($" submitted {args.ChosenSuggestion}");
-				if(args.ChosenSuggestion is City c)
-				{
-					//	this.city = c;
-					//	OnPropertyChanged();
-				}
-				else
-				{
-					//	this.city = null;
-					//	sender.Text = string.Empty; 
-					//	OnPropertyChanged();
+		//private void suggestBox_QuerySubmitted(AutoSuggestBox sender,AutoSuggestBoxQuerySubmittedEventArgs args)
+		//{
+		//	try
+		//	{
+		//		Log($" submitted {args.ChosenSuggestion}");
+		//		if(args.ChosenSuggestion is City c)
+		//		{
+		//			//	this.city = c;
+		//			//	OnPropertyChanged();
+		//		}
+		//		else
+		//		{
+		//			//	this.city = null;
+		//			//	sender.Text = string.Empty; 
+		//			//	OnPropertyChanged();
 
-				}
-			}
-			catch(Exception _ex)
-			{
-				LogEx(_ex);
+		//		}
+		//	}
+		//	catch(Exception _ex)
+		//	{
+		//		LogEx(_ex);
 
-			}
-		}
+		//	}
+		//}
 
 		//private void SuggestTextChanged(AutoSuggestBox sender,AutoSuggestBoxTextChangedEventArgs args)
 		//{

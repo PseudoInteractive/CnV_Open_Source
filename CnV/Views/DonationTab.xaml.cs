@@ -29,7 +29,7 @@ namespace CnV.Views
 			this.InitializeComponent();
 		
 			//	spotGrids.Add(donationGrid);
-			CityUI.cityListChanged += CityListChanged;
+		//	CityUI.cityListChanged += CityListChanged;
 		}
 
 		private static void CityListChanged(IEnumerable<City> l)
