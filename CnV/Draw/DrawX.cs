@@ -162,7 +162,8 @@ static partial class View
 				//				quadTexture = new Material(Content.Load<Texture2D>("Art/quad"), sdfEffect);
 				quadTexture = new Material(null, sdfEffect);
 				whiteMaterial = new Material(null, noTextureEffect);
-				for(int i = 0; i < CnV.Troops.ttCount; ++i)
+				shadowMaterial =new Material(null,noTextureEffect); // todo
+			for(int i = 0; i < CnV.Troops.ttCount; ++i)
 				{
 
 					troopImages[i] = LoadMaterial($"Art/icons/troops{i}");

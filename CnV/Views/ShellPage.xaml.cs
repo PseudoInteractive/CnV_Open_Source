@@ -13,6 +13,7 @@ using WinUI = Microsoft.UI.Xaml.Controls;
 using CommunityToolkit.WinUI.Helpers;
 namespace CnV.Views
 {
+	using Microsoft.AppCenter;
 	using Microsoft.UI.Xaml.Data;
 	// using PInvoke
 
@@ -482,7 +483,18 @@ namespace CnV.Views
 				if(okay)
 				{
 					// don't await
+#if APPCENTER
 
+					{
+						AppCenter.SetUserId(CnVSignin.name);
+						//AppCenter.Analytics.Properties.put("UserId", "your user Id");
+						//	CustomProperties properties = new CustomProperties();
+						//	properties.Set("alliance",Alliance.myId).Set("allianceName",Alliance.my.name).Set("world",CnVServer.world).Set("sub",CnVServer.isSub).Set("playerId",Player.myId).Set("UserId",Player.myName);
+						//	AppCenter.SetCustomProperties(properties);
+						AAnalytics.Track("GotCreds",new Dictionary<string,string>() { { "World",World.id.ToString() },{ "UserId",CnVSignin.name } });
+						//ShellPage.UpdateFocus();
+					}
+#endif
 
 					await PlayerTables.InitializeAndUpdateCurrentPlayer(cachePlayerTask,azureId: CnVSignin.azureId,discordId: CnVSignin.discordId,discordUserName: CnVSignin.name,avatarUrlHash: CnVSignin.avatarUrlHash);
 					//if (okay2)
@@ -490,14 +502,7 @@ namespace CnV.Views
 					{
 						var okay3 = await APlayFab.Init();
 						Assert(okay3);
-						AppS.QueueOnUIThread(() =>
-						{
-							AppS.UpdateAppTitle();
-							
-
-							//							AppS.appWindow.SetIcon(new IconId(0));
-							//	AppS.MessageBox($"Welcome {Player.me.shortName}.");
-						});
+						
 
 
 					}
@@ -527,6 +532,14 @@ namespace CnV.Views
 				{
 					await Task.Delay(250);
 				}
+				AppS.QueueOnUIThread(() =>
+				{
+					AppS.UpdateAppTitle();
+
+
+					//							AppS.appWindow.SetIcon(new IconId(0));
+					//	AppS.MessageBox($"Welcome {Player.me.shortName}.");
+				});
 				FindName(nameof(playerStats));
 				FindName(nameof(cityStats));
 				KeyboardAccelerators.Add(BuildKeyboardAccelerator(VirtualKey.Left,NavStack.BackInvoked,

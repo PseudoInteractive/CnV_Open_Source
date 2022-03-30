@@ -99,14 +99,11 @@ namespace CnV
 			//	// The storageTask.Result is false when the size cannot be honored.
 			//});
 
-			AppCenter.Configure("0b4c4039-3680-41bf-b7d7-685eb68e21d2");
+			AppCenter.Start("0b4c4039-3680-41bf-b7d7-685eb68e21d2",typeof(Analytics)
+					   ,typeof(Crashes));
 			//	AppCenter.LogLevel = System.Diagnostics.Debugger.IsAttached ? Microsoft.AppCenter.LogLevel.Warn : Microsoft.AppCenter.LogLevel.None;
-			AppCenter.Start(
-			   typeof(Analytics)
-					   ,typeof(Crashes)
-
-			   );
-
+		
+		
 			AAnalytics.initialized = true;
 			//await Task.WhenAll(
 			Analytics.SetEnabledAsync(true);

@@ -257,7 +257,7 @@ using Game;
 								if(data.isDungeon)
 								{
 									var cavern = Cavern.Get(cid);
-									toolTip = $"{cavern.tileType.String()} L{cavern.level}\n{cavern.progress:P}"; // \ntype:{data >> 4}";
+									toolTip = cavern.ToString(); // \ntype:{data >> 4}";
 								}
 								break;
 							}

@@ -85,7 +85,7 @@ namespace CnV
 		public static      Material        quadTexture;
 		public static      Material        whiteMaterial;
 		public static      Material        shadowMaterial; // no texture
-		public static      Material        sky;
+//		public static      Material        sky;
 		public GameClient()
 		{
 

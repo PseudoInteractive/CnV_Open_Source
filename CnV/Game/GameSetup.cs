@@ -139,18 +139,7 @@ namespace CnV
 				//    //var now = DateTime.UtcNow;
 				//    //if (now.Day <= 28 && now.Month==11)
 				//    {
-#if APPCENTER
 
-			{
-				AppCenter.SetUserId(Player.myName);
-				//AppCenter.Analytics.Properties.put("UserId", "your user Id");
-			//	CustomProperties properties = new CustomProperties();
-			//	properties.Set("alliance",Alliance.myId).Set("allianceName",Alliance.my.name).Set("world",CnVServer.world).Set("sub",CnVServer.isSub).Set("playerId",Player.myId).Set("UserId",Player.myName);
-			//	AppCenter.SetCustomProperties(properties);
-				AAnalytics.Track("GotCreds",new Dictionary<string,string>() { { "World",World.id.ToString() },{ "sub",CnVServer.isSub.ToString() },{ "UserId",Player.myName } });
-				//ShellPage.UpdateFocus();
-			}
-#endif
 				// 
 				// Friend.LoadAll();
 
