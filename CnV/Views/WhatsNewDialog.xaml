@@ -7,18 +7,18 @@
 	xmlns:controls="using:CommunityToolkit.WinUI.UI.Controls"
 	xmlns:cnv="using:CnV"
     Title="Whats New"
+    MaxHeight="700"
 	Opened="ContentDialog_Opened"
     PrimaryButtonText="Done"
 	
 	 mc:Ignorable="d">
 
-	<Border Style="{StaticResource BorderReveal}" Margin="16" Padding="8" >
-		<ScrollViewer x:Name="scrollView" x:FieldModifier="public" >
-		        <controls:MarkdownTextBlock x:Name="fixesText" x:FieldModifier="public" WrapCodeBlock="True"
+		<ScrollViewer x:Name="scrollView" x:FieldModifier="public" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" >
+        <controls:MarkdownTextBlock x:Name="fixesText" MaxWidth="700" x:FieldModifier="public" WrapCodeBlock="True"
                                   Margin="6" Background="{x:Null}" TextWrapping="Wrap"
 											LinkClicked="{x:Bind cnv:Note.MarkDownLinkClicked}"
                                    />
 		
 	</ScrollViewer>
-	</Border>
+
 </ContentDialog>
