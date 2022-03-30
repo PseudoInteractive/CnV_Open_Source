@@ -217,7 +217,7 @@ using Game;
 															sb.AppendLine(city.remarks.AsSpan().Wrap(20));
 														if(city.hasAcademy.GetValueOrDefault())
 															sb.AppendLine("Has Academy");
-														if(NearRes.instance.isFocused)
+														if(NearRes.IsVisible())
 														{
 															sb.AppendLine($"Carts:{AUtil.FormaRatio((city.cartsHome, city.carts))}");
 															if(city.ships > 0)

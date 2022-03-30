@@ -28,7 +28,7 @@ public static partial class CityUI
 	{
 		try
 		{
-			while( City.gridCitySourceWithNone.Count==0 || CityStats.instance is null || City.GetBuild().IsInvalid())
+			while( City.gridCitySource.Count==0 || CityStats.instance is null || City.GetBuild().IsInvalid())
 			{
 				await Task.Delay(1000).ConfigureAwait(false);
 			};
@@ -80,8 +80,8 @@ public static partial class CityUI
 		var cid     = me.cid;
 		var aSetup  = AApp.AddSubMenu(flyout, "Setup..");
 		var aMisc   = flyout.AddSubMenu("Misc..");
-		var aExport = flyout.AddSubMenu("Import/Export..");
-		var aWar    = AApp.AddSubMenu(flyout, "War..");
+		var aExport = new MenuFlyoutSubItem();// flyout.AddSubMenu("Import/Export..");
+		var aWar    = new MenuFlyoutSubItem();//AApp.AddSubMenu(flyout, "War..");
 		if (me.isCityOrCastle)
 		{
 			// Look - its my city!
@@ -128,7 +128,7 @@ public static partial class CityUI
 				aSetup.AddItem("Setup...",    (_, _) => CityUI.InfoClick(cid));
 				aSetup.AddItem("Find Hub",    (_, _) => CityUI.SetClosestHub(cid));
 				aSetup.AddItem("Set Recruit", (_, _) => CitySettings.SetRecruitFromTag(cid));
-				aSetup.AddItem("Change...",   (_, _) => ShareString.Show(cid, default));
+				//aSetup.AddItem("Change...",   (_, _) => ShareString.Show(cid, default));
 				aSetup.AddItem("Move Stuff",  (_, _) => me.MoveStuffLocked());
 				//aSetup.AddItem("Remove Castle", (_, _) => 
 				//{
@@ -539,6 +539,9 @@ public static partial class CityUI
 	}
 	public static async void ShowIncoming(this City me)
 	{
+		Assert(false);
+		return;
+
 		// Todo:  use IsAlly?
 		if(Alliance.IsAlly(me.allianceId) )
 		{

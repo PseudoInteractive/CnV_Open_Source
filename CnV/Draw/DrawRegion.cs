@@ -1316,7 +1316,7 @@ internal partial class GameClient
 											var xT0 = (r + 0.5f) / 4.0f;
 											var xT1 = (r + 1.375f) / 4.0f;
 											var yt0 = 0.0f;
-											var yt1 = (city.resources[r] * (1.0f / (512 * 128))).Min(1.0f);
+											var yt1 = MathF.Sqrt(MathF.Sqrt(city.resources[r]  * (1.0f / (1024 * 1024)))).Min(1.0f); // 0 .. 1M
 											var color = r switch
 											{
 												0 => new Color(150,75,0,255),
@@ -1330,11 +1330,12 @@ internal partial class GameClient
 												color = new Color(255,0,0,255);
 											}
 
-											var c0 = new System.Numerics.Vector2(wc.y + (xT0 * 0.8f - 0.5f) * pixelScale,
-																		wc.y   + (0.25f - yt1 * 0.5f) * pixelScale);
-											var c1 = new System.Numerics.Vector2(wc.x + (xT1 * 0.8f - 0.5f) * pixelScale,
-																		wc.x   + 0.25f               * pixelScale);
+											var c0 = new System.Numerics.Vector2(wc.x + (xT0 * 0.8f - 0.5f) ,
+																		wc.y   + (0.25f - yt1 * 0.5f) );
+											var c1 = new System.Numerics.Vector2(wc.x + (xT1 * 0.8f - 0.5f) ,
+																		wc.y   + 0.25f               );
 											DrawRect(Layer.actionOverlay,c0,c1,color,zEffects);
+											// shadow TODO
 											DrawRect(Layer.action,c0,c1,CColor(a: 192),0);
 
 										}

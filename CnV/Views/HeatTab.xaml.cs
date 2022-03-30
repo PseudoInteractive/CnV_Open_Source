@@ -81,7 +81,8 @@ namespace CnV.Views
 				if (!listLoaded)
 				{
 					listLoaded = true;
-					await HeatMap.LoadList();
+				
+						await HeatMap.LoadList();
 					//	zoom.Focus(FocusState.Programmatic);
 				}
 				await ResetAllChangeDescriptions();

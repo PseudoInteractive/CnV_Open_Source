@@ -16,7 +16,7 @@ namespace CnV.Views
 	public sealed partial class NearRes : UserTab
 	{
 		public static NearRes instance;
-		public static bool IsVisible() => instance.isFocused;
+		public static bool IsVisible() => instance is not null && instance.isFocused;
 		bool _viaWater;
 		public bool viaWater { get =>_viaWater;
 			set {
@@ -24,7 +24,7 @@ namespace CnV.Views
 				DoRefresh(true);
 			} }
 		public bool templeDonation;
-		public City target;
+		public City target = City.GetBuild();
 		public float filterTime = 6;
 		public float _filterTime { get => filterTime; set { filterTime = value; DoRefresh(); } }  // defenders outside of this window are not included
 		public int filterResHome { get; set; } = 1000;
@@ -208,12 +208,12 @@ namespace CnV.Views
 
 		public override Task VisibilityChanged(bool visible, bool longTerm)
 		{
-			if (target == null)
+			if (target.IsInvalid() )
 				target = City.GetBuild();
 			if (visible)
 			{
-				if (target == null)
-					target = Spot.GetFocus();
+			//	if (target == null)
+		//			target = Spot.GetFocus();
 
 				DoRefresh(true);
 				
@@ -313,52 +313,60 @@ namespace CnV.Views
 
 		private async void SendClick(object sender, RoutedEventArgs e)
 		{
-			AppS.UpdateKeyStates();
+			try
+			{
+				AppS.UpdateKeyStates();
 
-			var text = sender as FrameworkElement;
-			var s = text.DataContext as ResSource;
-			var city = s.city;
-			var pid = city.pid;
-			var cid = city.cid;
-			var secret = $"JJx452Tdd{pid}sRAssa";
-			var reqF = $"{{\"a\":{s.res.wood},\"b\":{s.res.stone},\"c\":{s.res.iron},\"d\":{s.res.food},\"cid\":{s.city.cid},\"rcid\":{target.cid},\"t\":\"{(viaWater?2:1)}\"}}"; // t==1 is land, t==2 is water
-			int count = AppS.IsKeyPressedShiftAndControl() ? 8 : 1;
-			Trace(count.ToString());
-			string res = string.Empty;
-			var asDonation = this.SendAsDontation.IsOn;
-			if(asDonation)
-			{
-				await BlessedCity.SendDonation(s.city.cid, target.cid, s.res.wood, s.res.stone, viaWater );
-			}
-			else
-			{
-				for (int j = 0; j < count; ++j)
+				var text = sender as FrameworkElement;
+				var s = text.DataContext as ResSource;
+				var city = s.city;
+				var pid = city.pid;
+				var cid = city.cid;
+				var secret = $"JJx452Tdd{pid}sRAssa";
+				var reqF = $"{{\"a\":{s.res.wood},\"b\":{s.res.stone},\"c\":{s.res.iron},\"d\":{s.res.food},\"cid\":{s.city.cid},\"rcid\":{target.cid},\"t\":\"{(viaWater ? 2 : 1)}\"}}"; // t==1 is land, t==2 is water
+				int count = AppS.IsKeyPressedShiftAndControl() ? 8 : 1;
+				Trace(count.ToString());
+				string res = string.Empty;
+				var asDonation = this.SendAsDontation.IsOn;
+				if(asDonation)
 				{
-
-					res = await Post.SendForText("includes/sndTr.php",
-						$"cid={cid}&f=" + HttpUtility.UrlEncode(Aes.Encode(reqF, secret), Encoding.UTF8), pid);
-					if (int.TryParse(res.Trim(), out var i) && i == 10)
-					{
-						Note.Show($"Sent {s.res.Format()}");
-					}
-					else
-					{
-						Note.Show($"Something changed, please refresh and try again");
-					}
-
-					if (count == 1)
-						break;
-					await Task.Delay(450);
+					await BlessedCity.SendDonation(s.city.cid,target.cid,s.res.wood,s.res.stone,viaWater);
 				}
-			}
+				else
+				{
+					for(int j = 0;j < count;++j)
+					{
 
-			s.res = default;
-			s.OnPropertyChanged();
-			AppS.DispatchOnUIThreadIdle(() =>
+						res = await Post.SendForText("includes/sndTr.php",
+							$"cid={cid}&f=" + HttpUtility.UrlEncode(Aes.Encode(reqF,secret),Encoding.UTF8),pid);
+						if(int.TryParse(res.Trim(),out var i) && i == 10)
+						{
+							Note.Show($"Sent {s.res.Format()}");
+						}
+						else
+						{
+							Note.Show($"Something changed, please refresh and try again");
+						}
+
+						if(count == 1)
+							break;
+						await Task.Delay(450);
+					}
+				}
+
+				s.res = default;
+				s.OnPropertyChanged();
+				AppS.DispatchOnUIThreadIdle(() =>
+				{
+					s.NotifyChange();
+					DoRefresh();
+				});
+			}
+			catch(Exception _ex)
 			{
-				s.NotifyChange();
-				DoRefresh();
-			});
+				LogEx(_ex);
+
+			}
 	//		Analytics.TrackEvent("NearResSend");
 
 		}
@@ -439,34 +447,42 @@ namespace CnV.Views
 
 		private void MaxResClick(int id)
 		{
-			selected.res[id] = selected.ResMax(id);
-			//var viaWater = NearRes.instance.viaWater;
-			var info = selected.info;
-			var transport = GetTransport(selected.city);
-			if (viaWater)
-				transport -= (selected.res[id] + 9999) / 10000 * 10000;
-			else
-				transport -= (selected.res[id] + 999) / 1000 * 1000;
-			var sumOther = 0;
-			for(int i=0;i<4;++i)
+			try
 			{
-				if (i == id)
-					continue;
-				sumOther += selected.res[i];
-			}
-			if( sumOther > transport )
-			{
-				var scale = transport / (double)sumOther.Max(1);
-				for (int i = 0; i < 4; ++i)
+				selected.res[id] = selected.ResMax(id);
+				//var viaWater = NearRes.instance.viaWater;
+				var info = selected.info;
+				var transport = GetTransport(selected.city);
+				if(viaWater)
+					transport -= (selected.res[id] + 9999) / 10000 * 10000;
+				else
+					transport -= (selected.res[id] + 999) / 1000 * 1000;
+				var sumOther = 0;
+				for(int i = 0;i<4;++i)
 				{
-					if (i == id)
+					if(i == id)
 						continue;
-					selected.res[i] = (int)( selected.res[i] * scale);
+					sumOther += selected.res[i];
 				}
+				if(sumOther > transport)
+				{
+					var scale = transport / (double)sumOther.Max(1);
+					for(int i = 0;i < 4;++i)
+					{
+						if(i == id)
+							continue;
+						selected.res[i] = (int)(selected.res[i] * scale);
+					}
+
+				}
+				selected.NotifyChange();
+				RefreshSupportByRes();
+			}
+			catch(Exception _ex)
+			{
+				LogEx(_ex);
 
 			}
-			selected.NotifyChange();
-			RefreshSupportByRes();
 		}
 		int sendWood
 		{

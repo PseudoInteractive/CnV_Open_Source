@@ -14,12 +14,12 @@
 				</ResourceDictionary>-->
 				<ResourceDictionary >
 					<FontFamily x:Key="CnvIcons" >ms-appx:///Content/CnvIcons-Regular-SVG.ttf#CnvIcons,Segoe UI*</FontFamily>
-					<Color x:Key="SystemAltHighColor">#FFFF0000</Color>
+					<!--<Color x:Key="SystemAltHighColor">#FF0FFA00</Color>
 					<Color x:Key="SystemAltLowColor">#A1A200F0</Color>
 					<Color x:Key="SystemAltMediumColor">#99ff0000</Color>
 					<Color x:Key="SystemAltMediumHighColor">#CCff0000</Color>
 					<Color x:Key="SystemAltMediumLowColor">#F1ff0000</Color>
-					<Color x:Key="SystemBaseHighColor">#FFFFFFFF</Color>
+					<Color x:Key="SystemBaseHighColor">#AABBFFFF</Color>
 					<Color x:Key="SystemBaseLowColor">#A31B851F</Color>
 					<Color x:Key="SystemBaseMediumColor">#99BBFFBB</Color>
 					<Color x:Key="SystemBaseMediumHighColor">#CCFFFFFF</Color>
@@ -44,9 +44,9 @@
 					<Color x:Key="SystemChromeMediumColor">#FF0E3E1C</Color>
 					<Color x:Key="SystemChromeAltMediumHighColor">#BC052005</Color>
 					<Color x:Key="SystemChromeAltHighColor">#FF176237</Color>
-					<Color x:Key="SystemRevealListLowColor">#FF2D0606</Color>
-					<Color x:Key="SystemRevealListMediumColor">#FF380E0E</Color>
-					<AcrylicBrush x:Key="SystemControlAcrylicWindowBrush"  TintColor="{StaticResource SystemChromeAltHighColor}" TintOpacity="0.8" FallbackColor="{StaticResource SystemChromeMediumColor}" />
+					<Color x:Key="SystemRevealListLowColor">#FF2D06F6</Color>
+					<Color x:Key="SystemRevealListMediumColor">#FF380EFE</Color>-->
+					<!--<AcrylicBrush x:Key="SystemControlAcrylicWindowBrush"  TintColor="{StaticResource SystemChromeAltHighColor}" TintOpacity="0.8" FallbackColor="{StaticResource SystemChromeMediumColor}" />-->
 
 					<!--Override system generated accent colors-->
 					<Color x:Key="SystemAccentColorLight1">#FF144929</Color>
@@ -62,12 +62,12 @@
 
 				</ResourceDictionary>
 				<ColorPaletteResources  Accent="#AA6830FF" 
-									   BaseHigh="#FFFFFFFF" BaseLow="#FF380E0E" BaseMedium="#FF720F0F" BaseMediumHigh="#FF980F0F"
-                                       BaseMediumLow="#FF6F495F" ChromeAltLow="#FFB393A1" ChromeBlackHigh="#FF21DA2A" ChromeBlackLow="#FF391B1B" 
+									   BaseHigh="#FFFFFFFF" BaseLow="#FF380E0E" BaseMedium="#BBF83F41" BaseMediumHigh="#BBA80F0F"
+                                       BaseMediumLow="#FF6F495F" ChromeAltLow="#FFB393A1" ChromeBlackHigh="#FF21DA2A" ChromeBlackLow="#AA39008B" 
                                        ChromeBlackMedium="#FF30A0F0" ChromeBlackMediumLow="#FF20F0D0" ChromeDisabledHigh="#FF380E0E" 
-                                       ChromeDisabledLow="#FFABA9A7" ChromeGray="#FF927B89" ChromeHigh="#FF8A7B67" ChromeLow="#FF2A0303" 
-                                       ChromeMedium="#FF2D0606" ChromeMediumLow="#FF340B0B" ChromeWhite="#FFFFC190" ListLow="#FFFD0606" ListMedium="#FF380E0E" 					
-					AltHigh="#80F500f0" AltLow="#8000F000" AltMedium="#800430F0" AltMediumHigh="#80163416" AltMediumLow="#800515F5"		 />
+                                       ChromeDisabledLow="#FFABA9A7" ChromeGray="#FF927B89" ChromeHigh="#FF8A7B67" ChromeLow="#DD6A0343" 
+                                       ChromeMedium="#FF2DF606" ChromeMediumLow="#CC14003B" ChromeWhite="#FFFFC190" ListLow="#AA6D0646" ListMedium="#AA380E0E" 					
+					AltHigh="#80555080" AltLow="#8000F000" AltMedium="#800430F0" AltMediumHigh="#80163416" AltMediumLow="#800515F5"		 />
 				<ResourceDictionary Source="ms-appx:///Styles/FontSizes.xaml"  />
 				<ResourceDictionary Source="ms-appx:///Styles/TextBlock.xaml" />
 				<ResourceDictionary Source="ms-appx:///Styles/Page.xaml" />
