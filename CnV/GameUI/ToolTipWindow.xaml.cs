@@ -23,7 +23,7 @@ namespace CnV
 	public sealed partial class ToolTipWindow:DialogG
 	{
 		protected override string title => "tmi";
-
+		public static ToolTip tooltip;
 		public static ToolTipWindow instance;
 		
 		public ToolTipWindow()
@@ -43,13 +43,25 @@ namespace CnV
 		{
 			AppS.QueueOnUIThread( () =>
 			{
-				if(instance == null)
-					ShowInstance();
-
-				if(instance.IsExpanded)
+				if(tooltip == null)
 				{
-					instance.tip.Text = ToolTips.toolTip;
+					tooltip = new ToolTip();
+					ToolTipService.SetToolTip(ShellPage.gameUIFrame,tooltip);
+					tooltip.PlacementTarget = null;// ShellPage.canvas;
+					tooltip.Placement = PlacementMode.Mouse;
+
 				}
+				var str = ToolTips.toolTip;
+				tooltip.IsOpen = false;
+				if(!str.IsNullOrEmpty())
+				{
+					tooltip.Content = str;
+					//tooltip.Placement = PlacementMode.Mouse;
+					
+					tooltip.IsOpen=true;
+
+				}
+
 			});
 
 		}

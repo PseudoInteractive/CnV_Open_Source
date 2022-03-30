@@ -656,40 +656,7 @@ internal partial class GameClient
 
 			if(hideSceneCounter <= 0)
 			{
-				if(Spot.myCities.Length > 0)
-				{
-					var id =  (int) (Sim.simTime/2)%512;
-					var rnd = new Random(id);
-					// pick a city
-					var spot = Spot.myCities[rnd.Next(Spot.myCities.Length)];
-
-					for(int i=1;;++i)
-					{
-						var c = spot.c + SquareMarch.Offset(i);
-						var info = World.GetTile(c);
-
-						if(!(info.type.IsRes() || info.isDungeon || info.isBoss))
-							continue;
-						if(rnd.NextSingle() >= 1.0f/16.0f)
-							continue;
-						var ts = spot.tsTotal;
-						int level;
-						
-						if(ts > 5)
-						{
-							var off = (rnd.NextSingle())*2-1;
-							level = (int)((MathF.Log2(ts/655360_000f + 1.0f)*10f + (off*off.Pow2())*4f)+1);
-						}
-						else
-							level = ((rnd.NextSingle()).Pow4()*10).RoundToInt();
-
-						
-						DrawDiamondShadow(Layer.effects,c,Color.Magenta,$"L {level}",8f);
-						// TS to level
-						break;
-					}
-
-				}
+				
 				//Assert(City.build != 0);
 				if(false)
 				{

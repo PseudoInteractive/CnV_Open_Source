@@ -161,8 +161,9 @@ static partial class View
 				//				roundedRect = new Material(Content.Load<Texture2D>("Art/Icons/roundRect"),alphaAddEffect);
 				//				quadTexture = new Material(Content.Load<Texture2D>("Art/quad"), sdfEffect);
 				quadTexture = new Material(null, sdfEffect);
-				whiteMaterial = new Material(null, noTextureEffect);
-				shadowMaterial =new Material(null,noTextureEffect); // todo
+			whiteMaterial =  new Material(null,noTextureEffect);// new Material(Content.Load<Texture2D>("Art/quad"),defaultEffect); //Content.Load<Texture2D>("Art/quad")
+																								  //quadTexture = whiteMaterial;
+				shadowMaterial =whiteMaterial;// new Material(whiteMaterial.texture,noTextureEffect); // todo
 			for(int i = 0; i < CnV.Troops.ttCount; ++i)
 				{
 

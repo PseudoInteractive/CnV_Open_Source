@@ -1105,7 +1105,7 @@ namespace CnV
 		}
 
 
-		internal string toolTip => army.troops.Format(separator:',');
+		internal string toolTip => army.WorldToolTip();
 
 		public CommandItem(Army army)
 		{
