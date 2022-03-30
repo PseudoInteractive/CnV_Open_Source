@@ -37,7 +37,7 @@
 					               HorizontalAlignment="Stretch"
 					                IsEditable="True"
 					   IsTextSearchEnabled="True"
-					   ItemsSource="{x:Bind cnv:City.gridCitySource, Mode=OneWay}"
+					   ItemsSource="{x:Bind cnv:City.gridCitySourceWithNone, Mode=OneWay}"
 					                TextSubmitted="CitySubmitted"			
 							SelectionChanged="CityBox_SelectionChanged"
 					                 ToolTipService.ToolTip="Right tap for menu"

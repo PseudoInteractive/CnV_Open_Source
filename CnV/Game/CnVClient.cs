@@ -899,9 +899,9 @@ namespace CnV
 									var str = jsp.ToString();
 									AppS.CopyTextToClipboard(str);
 									Note.Show(str);
-									foreach(var o in jsp.Value.EnumerateObject())
-										foreach(var st in o.Value.EnumerateArray())
-											TileData.UpdateTile(st.GetAsString());
+									//foreach(var o in jsp.Value.EnumerateObject())
+									//	foreach(var st in o.Value.EnumerateArray())
+									//		TileData.UpdateTile(st.GetAsString());
 									break;
 								}
 

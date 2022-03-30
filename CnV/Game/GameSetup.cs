@@ -158,7 +158,7 @@ namespace CnV
 			//  System.GC.Collect(2,GCCollectionMode.Default,true);
 
 			// give some time for initial pressure to come down
-			TabPage.ShowTabs();
+			
 			
 				
 
@@ -174,8 +174,8 @@ namespace CnV
 				CnVServer.isInitialized      = true;
 
 				AppS.DispatchOnUIThread( ShellPage.SetupNonCoreInput );
-
-				
+			
+		
 			}
 		catch(Exception ex)
 		{

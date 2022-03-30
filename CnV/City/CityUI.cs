@@ -28,7 +28,7 @@ public static partial class CityUI
 	{
 		try
 		{
-			while(City.GetBuild().IsInvalid() || City.gridCitySource is null || CityStats.instance is null)
+			while( City.gridCitySourceWithNone.Count==0 || CityStats.instance is null || City.GetBuild().IsInvalid())
 			{
 				await Task.Delay(1000).ConfigureAwait(false);
 			};
@@ -39,8 +39,8 @@ public static partial class CityUI
 										var _build = City.GetBuild();
 										if(!object.ReferenceEquals(_build,CityStats.instance.cityBox.SelectedItem))
 										{
-											var id = City.gridCitySource.IndexOf(_build);
-											CityStats.instance.cityBox.SelectedIndex = id;
+//											var id = City.gridCitySource.IndexOf(_build);
+											CityStats.instance.cityBox.SelectedItem = _build;
 										}
 									}
 									catch(Exception _ex)
@@ -78,9 +78,9 @@ public static partial class CityUI
 	public static  void AddToFlyout(this City me, MenuFlyout flyout, bool useSelected = false)
 	{
 		var cid     = me.cid;
+		var aSetup  = AApp.AddSubMenu(flyout, "Setup..");
 		var aMisc   = flyout.AddSubMenu("Misc..");
 		var aExport = flyout.AddSubMenu("Import/Export..");
-		var aSetup  = AApp.AddSubMenu(flyout, "Setup..");
 		var aWar    = AApp.AddSubMenu(flyout, "War..");
 		if (me.isCityOrCastle)
 		{
@@ -101,27 +101,28 @@ public static partial class CityUI
 				//	}
 				//}
 				// This one has multi select
-				var aRaid = AApp.AddSubMenu(flyout, "Raid..");
-				aRaid.AddItem($"Raid ..", () => ScanDungeons.Post(cid, true, false));
-
+				
 				int count = 1;
 				if (useSelected)
 				{
 					count = MainPage.GetContextCidCount(cid);
 				}
 
-				if (count > 1)
-				{
-					aRaid.AddItem($"End Raids x{count} selected", MainPage.ReturnSlowClick, cid);
-					aRaid.AddItem($"Return At...x{count}",        ()=> ReturnAtBatch(cid) );
+				//var aRaid = AApp.AddSubMenu(flyout, "Raid..");
+				//aRaid.AddItem($"Raid ..", () => ScanDungeons.Post(cid, true, false));
 
-				}
-				else
-				{
+				//if (count > 1)
+				//{
+				//	aRaid.AddItem($"End Raids x{count} selected", MainPage.ReturnSlowClick, cid);
+				//	aRaid.AddItem($"Return At...x{count}",        ()=> ReturnAtBatch(cid) );
 
-					aRaid.AddItem("End Raids",    me.ReturnSlowClick);
-					aRaid.AddItem("Return At...", me.ReturnAt);
-				}
+				//}
+				//else
+				//{
+
+				//	aRaid.AddItem("End Raids",    me.ReturnSlowClick);
+				//	aRaid.AddItem("Return At...", me.ReturnAt);
+				//}
 
 
 				aSetup.AddItem("Setup...",    (_, _) => CityUI.InfoClick(cid));
@@ -223,7 +224,7 @@ public static partial class CityUI
 			{
 				AApp.AddItem(flyout, "Do the stuff",  (_, _) => me.DoTheStuff());
 				AApp.AddItem(flyout, "Food Warnings", (_, _) => CitySettings.SetFoodWarnings(cid));
-				flyout.AddItem("Ministers", me.ministersOn, (me as City).SetMinistersOn);
+			//	flyout.AddItem("Ministers", me.ministersOn, (me as City).SetMinistersOn);
 			}
 		}
 		else if (me.isDungeon || me.isBoss)
@@ -234,7 +235,7 @@ public static partial class CityUI
 		else if (me.isEmpty )
 		{
 			AApp.AddItem(flyout, "Settle", (_,_)=> City.GetBuild().Settle(WorldC.FromCid(cid) ) );
-			AApp.AddItem(flyout, "Claim", (_,_)=> CityUI.DiscordClaim(WorldC.FromCid(cid) ) );
+		//	AApp.AddItem(flyout, "Claim", (_,_)=> CityUI.DiscordClaim(WorldC.FromCid(cid) ) );
 
 		}
 		

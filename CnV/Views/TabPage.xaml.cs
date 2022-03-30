@@ -248,7 +248,7 @@ namespace CnV.Views
 		{
 			AppS.DispatchOnUIThreadIdle(()=>
 			{
-				MainPage.instance.ShowOrAdd(true);
+				BuildTab.instance.ShowOrAdd(true);
 				SpotTab.instance.ShowOrAdd(true);
 				ChatTab.tabPage.AddChatTabs();
 			});

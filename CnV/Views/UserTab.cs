@@ -61,6 +61,7 @@ namespace CnV.Views;
 		{
 
 			userTabs = new UserTab[] {
+				new BuildTab(),
 				new MainPage(),
 				new IncomingTab(),
 				new DonationTab(),
@@ -69,8 +70,6 @@ namespace CnV.Views;
 				new HeatTab(),
 				new AttackTab(),
 				new PlannerTab(),
-				new QueueTab(),
-				new BuildTab(),
 				new SpotTab(),
 				new ReinforcementsTab(),
 				new OutgoingTab(),

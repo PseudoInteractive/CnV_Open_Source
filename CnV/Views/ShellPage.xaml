@@ -122,11 +122,6 @@
                       Margin="4,0,4,0" />
 					</AppBarElementContainer>
 			
-					<AppBarButton x:Name="artifactsButton" Click="ArtifactsClicked" Icon="OutlineStar" Label="Artifact"  
-                           ToolTipService.ToolTip="Artifacts" />
-
-					<AppBarButton x:Name="techTreeButton" Click="TechTreeClicked" Icon="Up" Label="Research"  
-                           ToolTipService.ToolTip="Research" />
 
 					<AppBarButton x:Name="ContinentFilter"  x:FieldModifier="public"
 					              Content="Cont/Tags"

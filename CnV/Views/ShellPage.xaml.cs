@@ -523,7 +523,10 @@ namespace CnV.Views
 				}
 
 				await CnVClient.InitializeGame();
-
+				while(!Sim.isPastWarmup)
+				{
+					await Task.Delay(250);
+				}
 				FindName(nameof(playerStats));
 				FindName(nameof(cityStats));
 				KeyboardAccelerators.Add(BuildKeyboardAccelerator(VirtualKey.Left,NavStack.BackInvoked,
@@ -551,6 +554,8 @@ namespace CnV.Views
 
 
 				//AppS.SetState(AppS.State.active);
+				
+				TabPage.ShowTabs();
 			}
 			catch(Exception ex)
 			{
@@ -1457,21 +1462,7 @@ namespace CnV.Views
 
 
 
-		private void ArtifactsClicked(object sender,RoutedEventArgs e)
-		{
-
-			try
-			{
-				
-					Artifacts.ShowInstance();
-
-			}
-			catch(Exception _ex)
-			{
-				LogEx(_ex);
-
-			}
-		}
+	
 
 		//private void FriendListSubmitted(ComboBox sender, ComboBoxTextSubmittedEventArgs args)
 		//{
@@ -1686,19 +1677,7 @@ namespace CnV.Views
 								});
 		}
 
-		private void TechTreeClicked(object sender,RoutedEventArgs e)
-		{
-			try
-			{
-				ResearchList.ShowInstance();
-			}
-			catch(Exception _ex)
-			{
-				LogEx(_ex);
-
-			}
-
-		}
+	
 
 		private void GridSplitter_ManipulationCompleted(object sender,ManipulationCompletedRoutedEventArgs e)
 		{

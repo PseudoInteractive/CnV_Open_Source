@@ -42,7 +42,7 @@
 				<view:BuildCustomDataBindingCompleteCommand />
 				<model:CityGridToggleColumnVisibilityCommand />
 			</sf:SfDataGrid.Commands>-->
-			<sf:SfDataGrid.TableSummaryRows>
+			<!--<sf:SfDataGrid.TableSummaryRows>
 				<sf:GridTableSummaryRow ShowSummaryInRow="False" TitleColumnCount="2" Position="Bottom"
 				                              Title=" {Building} cities of {Cities} are building">
 					<sf:GridSummaryRow.SummaryColumns>
@@ -56,7 +56,7 @@
 						                            SummaryType="CountAggregate" />
 					</sf:GridSummaryRow.SummaryColumns>
 				</sf:GridTableSummaryRow>
-			</sf:SfDataGrid.TableSummaryRows>
+			</sf:SfDataGrid.TableSummaryRows>-->
 
 			<sf:SfDataGrid.Columns >
 
@@ -72,7 +72,7 @@
 										   winui:ToolTipService.ToolTip="Click to raid from this city without switching cities (fast)"
 										   HeaderText="Name"
 										   TextAlignment="Left"
-										   Width="125"
+										   Width="200"
 										    />
 				<sf:GridHyperlinkColumn MappingName="bStage"
 									HeaderText="stage"	 
@@ -132,13 +132,13 @@
 										    />
 				<sf:GridNumericColumn MappingName="points"
 												winui:ToolTipService.ToolTip="City score"
-											Width="56"
+											Width="64"
 												DisplayNumberFormat="N0"
 												TextAlignment="Right"
 												 />
 				<sf:GridNumericColumn MappingName="constructionSpeed"
 											HeaderText="cs"
-											Width="56"
+											Width="64"
 													winui:ToolTipService.ToolTip="Construction Speed"
 												TextAlignment="Right"
 											DisplayNumberFormat="N0"

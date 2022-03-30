@@ -26,8 +26,24 @@
 			   ToolTipService.ToolTip="{x:Bind cnv:Player.me.refinesAndGoldS,Mode=OneWay}"
 					 />
 
-		<Image Source="{x:Bind cnv:ImageHelper.Get('UI/icons/quests/icon_quest_3.png')}" VerticalAlignment="Center" Margin="8,0,0,0" Tapped="QuestsTapped"
-			   ToolTipService.ToolTip="Quests" />
+		<Button  VerticalAlignment="Center" Margin="8,1,1,1" Click="QuestsTapped" Padding="1"
+			   ToolTipService.ToolTip="Quests">
+			<Button.Content>
+				<Image Source="{x:Bind cnv:ImageHelper.Get('UI/icons/quests/icon_quest_3.png',34)}" />
+			</Button.Content>
+		</Button>
 
+		<Button  VerticalAlignment="Center" Margin="8,1,1,1" Click="ResearchTapped" Padding="1"
+			   ToolTipService.ToolTip="Research">
+			<Button.Content>
+				<Image Source="{x:Bind cnv:ImageHelper.Get('UI/icons/quests/icon_quest_1.png',34)}" />
+			</Button.Content>
+		</Button>
+		<Button  VerticalAlignment="Center" Margin="8,1,1,1" Click="ArtifactsTapped" Padding="1"
+			   ToolTipService.ToolTip="Artifacts">
+			<Button.Content>
+				<Image Source="{x:Bind cnv:ImageHelper.Get('UI/icons/shop_items/shop_items_gold_hourglass.jpg',34)}" />
+			</Button.Content>
+		</Button>
 	</tk:WrapPanel>
 </UserControl>

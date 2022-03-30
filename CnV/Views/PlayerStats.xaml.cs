@@ -105,9 +105,19 @@ namespace CnV
 			flyout.Show(sender,args);
 		}
 
-		private void QuestsTapped(object sender,TappedRoutedEventArgs e)
+		private void QuestsTapped(object sender,RoutedEventArgs e)
 		{
 			QuestList.ShowInstance();
+		}
+
+		private void ResearchTapped(object sender,RoutedEventArgs e)
+		{
+			ResearchList.ShowInstance();
+		}
+
+		private void ArtifactsTapped(object sender,RoutedEventArgs e)
+		{
+			Artifacts.ShowInstance();
 		}
 	}
 }

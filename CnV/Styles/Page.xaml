@@ -145,11 +145,13 @@
 				<Setter Property="FontFamily" Value="{StaticResource CnvIcons}"/>
 				<Setter Property="FontSize" Value="{StaticResource SmallFontSize}" />
 				<Setter Property="FontStretch" Value="Condensed" />
+				
 				<Setter Property="FontWeight" Value="Normal" />
 
 			</Style>
 			<Style  TargetType="sf:GridCell" BasedOn="{StaticResource SfTextCell}"/>
 	<Style  TargetType="sf:GridTextColumn" BasedOn="{StaticResource SfTextCell}">
+		<Setter Property="ShowHeaderToolTip" Value="True"/>
 	
 	</Style>
 
@@ -171,12 +173,13 @@
 			</Style>
 			<Style  TargetType="sf:GridNumericColumn" BasedOn="{StaticResource SfGridColumnBase}">
 			</Style>
+	<Style  TargetType="sf:GridCheckBoxColumn" BasedOn="{StaticResource SfGridColumnBase}">
+	</Style>
 
 
 
 
-
-			<Style  x:Key="SfLink"
+	<Style  x:Key="SfLink"
 	        BasedOn="{StaticResource SfTextCell }"
 	        TargetType="sf:GridCell">
 				<Setter Property="Foreground" Value="{StaticResource HyperLinkBrush}"/>
