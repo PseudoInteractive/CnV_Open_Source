@@ -97,6 +97,7 @@ namespace CnV
 				while(!City.myCities.Any())
 				{
 					await Task.Delay(500);
+					ShellPage.RefreshX();
 				}
 				//UpdatePPDT();
 				var cid = City.myCities.First().cid;
@@ -172,7 +173,7 @@ namespace CnV
 			//	reinforcementsTask = new(interval:64.0f,()=> ReinforcementsOverview.instance.Post(),initialDelay:4.0f );
 			//	senInfoTask        = new( interval: 68f, City.UpdateSenatorInfo, 3.0f);
 				CnVServer.isInitialized      = true;
-
+				
 				AppS.DispatchOnUIThread( ShellPage.SetupNonCoreInput );
 			
 		

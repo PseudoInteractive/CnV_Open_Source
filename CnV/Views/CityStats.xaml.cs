@@ -975,9 +975,12 @@ namespace CnV
 			{
 				var index = instance.buildQueue.IndexOf(this);
 				if(index != -1)
-					city.RemoveWithDependencies(new(new[]{ index } ),lastSynchronizedQueue);
+					city.RemoveWithDependencies(new(new[] { index }),lastSynchronizedQueue);
 				else
+				{
 					Note.Show("Something changed");
+					Invalidate();
+				}
 			}));
 			flyout.AddItem("Cancel Selected",Symbol.Remove,() =>
 			{
@@ -1000,12 +1003,16 @@ namespace CnV
 				var index = instance.buildQueue.IndexOf(this);
 				if(index != -1)
 					city.AttemptMove(index,0,lastSynchronizedQueue);
+				else
+					Invalidate();
 			}); 
 			flyout.AddItem("Move To End",Symbol.Back,() =>
 			{
 				var index = instance.buildQueue.IndexOf(this);
 				if(index != -1)
 					city.AttemptMove(index,city.buildQueue.Length-1,lastSynchronizedQueue);
+				else
+					Invalidate();
 			});
 			
 			// Todo: Sort

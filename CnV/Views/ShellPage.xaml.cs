@@ -556,6 +556,9 @@ namespace CnV.Views
 				//AppS.SetState(AppS.State.active);
 				
 				TabPage.ShowTabs();
+
+				await Task.Delay(500);
+				ShellPage.RefreshX();
 			}
 			catch(Exception ex)
 			{
@@ -866,7 +869,7 @@ namespace CnV.Views
 			{
 				using var work = new WorkScope("Refresh All");
 			//	var t = RefreshWorldData();
-				City.CitiesChanged();
+				World.InvalidateCities();
 				ShellPage.CityListNotifyChange(true);
 				foreach(var city in City.allSpots)
 					city.Value.OnPropertyChanged();
