@@ -74,6 +74,8 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="Microsoft.AppCenter.Analytics" Version="4.5.0" />
+    <PackageReference Include="Microsoft.AppCenter.Crashes" Version="4.5.0" />
     <PackageReference Include="Microsoft.Extensions.ObjectPool" Version="6.0.1" />
     <PackageReference Include="Microsoft.Extensions.Primitives" Version="7.0.0-preview.2.22152.2" />
     <PackageReference Include="Microsoft.Identity.Client" Version="4.42.1" />
@@ -684,14 +686,14 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <Optimize>False</Optimize>
     <WarningLevel>4</WarningLevel>
-    <DefineConstants>$(DefineConstants);CNV;CNVCLIENT</DefineConstants>
+    <DefineConstants>$(DefineConstants);CNV;CNVCLIENT;APPCENTER</DefineConstants>
     <Deterministic>True</Deterministic>
     <FileAlignment>4096</FileAlignment>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <Optimize>True</Optimize>
     <WarningLevel>4</WarningLevel>
-    <DefineConstants>$(DefineConstants);CNV;CNVCLIENT</DefineConstants>
+    <DefineConstants>$(DefineConstants);CNV;CNVCLIENT;APPCENTER</DefineConstants>
     <Deterministic>True</Deterministic>
     <FileAlignment>4096</FileAlignment>
     <LayoutDir />

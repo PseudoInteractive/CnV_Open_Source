@@ -1,11 +1,11 @@
 ﻿using CommunityToolkit.WinUI.Helpers;
-#if AppCenter
+#if APPCENTER
 
 using Microsoft.AppCenter;
 using Microsoft.AppCenter.Analytics;
 
 #endif
-#if CRASHES
+#if APPCENTER
 using Microsoft.AppCenter.Crashes;
 #endif
 
@@ -86,63 +86,63 @@ namespace CnV
 		public static App instance;
 		public static string appLink = "cnv";
 
-		//		public static async Task EnsureBrowserInstalledAsync()
-		//		{
-		//#if AppCenter
+		public static void InitAppCenter()
+		{
+#if APPCENTER
+			if(AAnalytics.initialized)
+				return;
+			if(AppCenter.Configured)
+			{
+				return;
+			}
+			//AppCenter.SetMaxStorageSizeAsync(16 * 1024 * 1024).ContinueWith((storageTask) => {
+			//	// The storageTask.Result is false when the size cannot be honored.
+			//});
 
-		//			if(AppCenter.Configured)
-		//			{
-		//				return;
-		//			}
-		//			//AppCenter.SetMaxStorageSizeAsync(16 * 1024 * 1024).ContinueWith((storageTask) => {
-		//			//	// The storageTask.Result is false when the size cannot be honored.
-		//			//});
+			AppCenter.Configure("0b4c4039-3680-41bf-b7d7-685eb68e21d2");
+			//	AppCenter.LogLevel = System.Diagnostics.Debugger.IsAttached ? Microsoft.AppCenter.LogLevel.Warn : Microsoft.AppCenter.LogLevel.None;
+			AppCenter.Start(
+			   typeof(Analytics)
+					   ,typeof(Crashes)
 
-		//			AppCenter.Configure("0b4c4039-3680-41bf-b7d7-685eb68e21d2");
-		//		//	AppCenter.LogLevel = System.Diagnostics.Debugger.IsAttached ? Microsoft.AppCenter.LogLevel.Warn : Microsoft.AppCenter.LogLevel.None;
-		//			AppCenter.Start(
-		//			   typeof(Analytics)
-		//#if CRASHES
-		//			   , typeof(Crashes)
-		//#endif
-		//			   );
+			   );
 
-		//			AAnalytics.initialized = true;
-		//			await Task.WhenAll(
-		//#if CRASHES
-		//					Crashes.SetEnabledAsync(true),
-		//#endif
-		//								Analytics.SetEnabledAsync(true));
+			AAnalytics.initialized = true;
+			//await Task.WhenAll(
+			Analytics.SetEnabledAsync(true);
+			Crashes.SetEnabledAsync(true);
 
-		//#endif
+								
+
+#endif
 
 
-		//			//try
-		//			//{
-		//			//	var str = CoreWebView2Environment.GetAvailableBrowserVersionString();
-		//			//	Log(str);
-		//			//	//			createWebEnvironmentTask =  CoreWebView2Environment.CreateAsync();
-		//			//	AAnalytics.Track("WebView",
-		//			//					new Dictionary<string, string>(new []
-		//			//					{
-		//			//							new KeyValuePair<string, string>("Version", str)
-		//			//					} ));
-		//			//}
-		//			//catch (Exception ex)
-		//			//{
-		//			//	await Windows.System.Launcher.LaunchUriAsync(new("https://go.microsoft.com/fwlink/p/?LinkId=2124703",
-		//			//													UriKind.Absolute));
-		//			//	LogEx(ex);
-		//			//}
-		//			//#if CRASHES
-		//			//			bool didAppCrash = await Crashes.HasCrashedInLastSessionAsync();
-		//			//			if (didAppCrash)
-		//			//			{
-		//			//				ErrorReport crashReport = await Crashes.GetLastSessionCrashReportAsync();
-		//			//				Log(crashReport);
-		//			//			}
-		//			//#endif
-		//		}
+			//try
+			//{
+			//	var str = CoreWebView2Environment.GetAvailableBrowserVersionString();
+			//	Log(str);
+			//	//			createWebEnvironmentTask =  CoreWebView2Environment.CreateAsync();
+			//	AAnalytics.Track("WebView",
+			//					new Dictionary<string, string>(new []
+			//					{
+			//							new KeyValuePair<string, string>("Version", str)
+			//					} ));
+			//}
+			//catch (Exception ex)
+			//{
+			//	await Windows.System.Launcher.LaunchUriAsync(new("https://go.microsoft.com/fwlink/p/?LinkId=2124703",
+			//													UriKind.Absolute));
+			//	LogEx(ex);
+			//}
+			//#if CRASHES
+			//			bool didAppCrash = await Crashes.HasCrashedInLastSessionAsync();
+			//			if (didAppCrash)
+			//			{
+			//				ErrorReport crashReport = await Crashes.GetLastSessionCrashReportAsync();
+			//				Log(crashReport);
+			//			}
+			//#endif
+		}
 
 
 		public App()
@@ -354,7 +354,7 @@ namespace CnV
 
 				if(AppS.RegisterException(e.Message))
 				{
-#if CRASHES
+#if APPCENTER
 
 					Crashes.TrackError(e.Exception);
 #endif
@@ -608,6 +608,7 @@ namespace CnV
 
 				if(!wasRunning)
 				{
+					InitAppCenter();
 					var t7 = Quests.Init();
 					var t2 = BuildingDef.Init();
 					var t3 = TroopInfo.Init();
@@ -615,6 +616,7 @@ namespace CnV
 					var t5 = Artifact.Init();
 					var t6 = CnV.Data.Boss.Init();
 					var t8 = ResearchItems.Init();
+					
 					Settings.Initialize(); // this is the long one
 
 

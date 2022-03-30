@@ -7,7 +7,7 @@ using CnV.Activation;
 using CnV.Services;
 using CnV.Views;
 
-#if AppCenter
+#if APPCENTER
 
 using Microsoft.AppCenter;
 using Microsoft.AppCenter.Analytics;
