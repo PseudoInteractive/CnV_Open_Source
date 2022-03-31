@@ -57,8 +57,8 @@ public static partial class CityUI
 	}
 	public  static void Show(this Artifact.ArtifactType type, object sender)
 		{
-			var level = Player.me.title.rank;
-			var art = Artifact.all.FirstOrDefault(a => a.level == level&& a.type == type);
+			//var level = Player.me.title.rank;
+			var art = Artifact.GetForPlayerRank(type);
 			if(art is not null)
 				ArtifactDialogue.ShowInstance(art,sender as FrameworkElement);
 			else

@@ -47,17 +47,17 @@ namespace CnV
 				{
 					tooltip = new ToolTip();
 					
-					ToolTipService.SetToolTip(ShellPage.instance.commandBar,tooltip);
+					ToolTipService.SetToolTip(ShellPage.instance.toolTipHolder,tooltip);
 					tooltip.Placement = PlacementMode.Bottom;
 				//	tooltip.Placement = PlacementMode.Mouse;
 				//	tooltip.VerticalOffset =32;
 			//		tooltip.HorizontalOffset =-32;
 				}
 				var str = ToolTips.toolTip;
-				tooltip.IsOpen = false;
+				tooltip.Content = str;
 				if(!str.IsNullOrEmpty())
 				{
-					tooltip.Content = str;
+					
 					//tooltip.PlacementTarget =ShellPage.instance.commandBar;
 					//tooltip.Placement = PlacementMode.Mouse;
 					
@@ -66,6 +66,10 @@ namespace CnV
 
 					tooltip.IsOpen=true;
 
+				}
+				else
+				{
+					tooltip.IsOpen = false;
 				}
 
 			});

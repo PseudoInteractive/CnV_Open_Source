@@ -929,9 +929,9 @@ namespace CnV
 		{
 			this.city = city;
 			op = item;
-			image = CityBuild.GetBuildingImage(item.isMove ? Building.bidMove : item.bid,size);
+			image = CityBuild.GetBuildingImage( item.bid,size);
 			var u = op.unpack;
-			opText = u.isMove ? "Move" : u.isDemo ? "Destroy" : u.isBuild ? $"Build{(u.pa==false ? " p" : "") }" : u.isDowngrade ? $"Down to {u.elvl}" : $"Up to {u.elvl}";
+			opText = u.isMove ? "Move" : u.isDemo ? "Destroy" : u.isBuild ? $"Build{(u.pa==false ? " p" : "") }" : $"{u.slvl} to {u.elvl}";
 			UpdateText();
 		}
 		public void UpdateText()
@@ -1229,7 +1229,41 @@ namespace CnV
 				new CnVEventCancelTrade(trade.sourceC,trade).EnqueueAsap();
 				
 			});
-			
+			flyout.AddItem("Speedup",Symbol.Forward,() =>
+			{
+				try
+				{
+					var aType = trade.viaLand ? Artifact.ArtifactType.Wheel : Artifact.ArtifactType.Anchor;
+					var art = Artifact.GetForPlayerRank(aType);
+					if(art is null)
+					{
+						Assert(false);
+						return;
+					}
+					var artifact = art.id;
+					
+					
+					var city = trade.sourceCity;
+					var id = city.tradesOut.IndexOf(trade);
+					Assert(id != -1);
+					if(id >= 0)
+					{
+						const int toUse = 1;
+						var needed = toUse- Player.me.ArtifactCount(artifact);
+						if(needed > 0)
+						{
+							(new CnVEventPurchaseArtifacts() { artifact =(ushort)artifact,count = (ushort)needed }).EnqueueAsap();
+						}
+
+						(new CnVEventUseArtifacts(city.c) { artifactId = (ushort)artifact,count = toUse,aux=id }).EnqueueAsap();
+					}
+				}
+				catch(Exception _ex)
+				{
+					LogEx(_ex);
+
+				}
+			});
 			
 			
 			// Todo: Sort

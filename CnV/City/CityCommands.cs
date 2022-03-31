@@ -39,6 +39,12 @@ public static partial class CityUI
 			//				ShellPage.SetViewModeWorld();
 
 			// if (City.IsMine(cityId))
+			// don't change build
+			if(cityId != City.build )
+			{
+				ShellPage.SetViewModeRegion();
+
+			}
 			{
 				CityUI.SetFocus(cityId, scrollToInUI, select, true, lazyMove);
 			}
