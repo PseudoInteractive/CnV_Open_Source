@@ -170,15 +170,17 @@
 
 			<ToggleSwitch     Header="Off dungeons" Width="90"
 								  FontSize="{StaticResource MediumFontSize}"
-								  IsOn="{x:Bind cnv:Settings.raidOffDungeons,Mode=TwoWay}"
+								  IsOn="{x:Bind raidOffDungeons,Mode=TwoWay}"
 								  OnContent="Include"
 								  OffContent="Exclude"
+							
 							  ToolTipService.ToolTip="Whether to include dungeons that do not match your troop type (i.e. mountains for infantry)"
 								  Margin="6,2,6,2" />
 			<winui:NumberBox Header="Penalty for wrong Dungeon Type"
 									 Value="{x:Bind cnv:Settings.penaltyForWrongDungeonType,Mode=TwoWay}"
 									 SmallChange="0.5"
 									 LargeChange="2"
+							 ValueChanged="SomethingChanged"
 							ToolTipService.ToolTip="For dungeons that do not match your troop type (i.e. mountains for infantry), this makes them less likely to be chosen"
 									 Style="{StaticResource NumberBoxSmall}" />
 			<ToggleSwitch     Header="# to Send" Width="90"

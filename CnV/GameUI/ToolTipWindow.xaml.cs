@@ -46,18 +46,24 @@ namespace CnV
 				if(tooltip == null)
 				{
 					tooltip = new ToolTip();
-					ToolTipService.SetToolTip(ShellPage.gameUIFrame,tooltip);
-					tooltip.PlacementTarget = null;// ShellPage.canvas;
-					tooltip.Placement = PlacementMode.Mouse;
-
+					
+					ToolTipService.SetToolTip(ShellPage.instance.commandBar,tooltip);
+					tooltip.Placement = PlacementMode.Bottom;
+				//	tooltip.Placement = PlacementMode.Mouse;
+				//	tooltip.VerticalOffset =32;
+			//		tooltip.HorizontalOffset =-32;
 				}
 				var str = ToolTips.toolTip;
 				tooltip.IsOpen = false;
 				if(!str.IsNullOrEmpty())
 				{
 					tooltip.Content = str;
+					//tooltip.PlacementTarget =ShellPage.instance.commandBar;
 					//tooltip.Placement = PlacementMode.Mouse;
 					
+				//	tooltip.VerticalOffset =32;
+				//	tooltip.HorizontalOffset =-32;
+
 					tooltip.IsOpen=true;
 
 				}

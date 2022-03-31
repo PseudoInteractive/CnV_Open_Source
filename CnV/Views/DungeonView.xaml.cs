@@ -115,9 +115,20 @@ namespace CnV.Views
 			}
 		}
 
+		internal bool raidOffDungeons
+		{
+			get => Settings.raidOffDungeons;
+			set {
+				if(value != Settings.raidOffDungeons)
+				{
+					Settings.raidOffDungeons = value;
+					UpdateRaidPlans.Go(); // refresh dungeon list
+				}	
+			}
+		}
 		private void SomethingChanged(Microsoft.UI.Xaml.Controls.NumberBox sender, Microsoft.UI.Xaml.Controls.NumberBoxValueChangedEventArgs args)
 		{
-			UpdateRaidPlans();
+			UpdateRaidPlans.Go();
 
 		}
 
@@ -178,7 +189,7 @@ namespace CnV.Views
 		//	}
 		//	else
 		//	{
-				
+
 		//		Assert(false);
 		//	}
 		//}
@@ -196,12 +207,12 @@ namespace CnV.Views
 
 		//}
 
-		public static async Task UpdateRaidPlans()
-		{
+		static DebounceA UpdateRaidPlans = new(()=>
+			{
 			if(openCity!=0)
-			 await City.GetOrAddCity(openCity).ShowDungeons();
-			// tell UI that list data has changed
+				City.GetOrAddCity(openCity).ShowDungeons(); 
 		}
+		);
 		//private static bool SetCarry(ref float val, int src, int id, bool sourceUpdated)
 		//{
 		//	bool rv=sourceUpdated;
@@ -292,7 +303,7 @@ namespace CnV.Views
 
 		private void RaidCarrySelChanged(Microsoft.UI.Xaml.Controls.NumberBox sender,Microsoft.UI.Xaml.Controls.NumberBoxValueChangedEventArgs args)
 		{
-			UpdateRaidPlans();
+			UpdateRaidPlans.Go();
 		}
 
 		private void DataGridLoaded(object sender, RoutedEventArgs e)
@@ -361,5 +372,7 @@ namespace CnV.Views
 				return true;
 			}
 		}
+
+		
 	}
 }

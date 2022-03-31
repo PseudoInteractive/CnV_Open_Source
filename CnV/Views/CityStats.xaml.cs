@@ -1093,7 +1093,7 @@ namespace CnV
 		public BitmapImage action { get; set; }
 	//	public string sourceCoords=> army.sourceCity.nameAndRemarksAndPlayer;
 	//	public string targetCoords=> army.targetCity.nameAndRemarksAndPlayer;
-		public string info => $"{army.arrival.Format()} {army.splitsS}{(army.isReturn ? "from" : "to")} {army.targetCity}";
+		public string info => $"{army.nextStopTime.Format()} {army.splitsS}{(army.isReturn ? "from" : "to")} {army.targetCity}";
 
 		internal void SourceClick(object sender,RoutedEventArgs e)
 		{
