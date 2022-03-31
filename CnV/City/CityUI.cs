@@ -109,7 +109,7 @@ public static partial class CityUI
 				}
 
 				//var aRaid = AApp.AddSubMenu(flyout, "Raid..");
-				//aRaid.AddItem($"Raid ..", () => ScanDungeons.Post(cid, true, false));
+				flyout.AddItem($"Raid ..", () => ScanDungeons.Post(cid, true, false));
 
 				//if (count > 1)
 				//{

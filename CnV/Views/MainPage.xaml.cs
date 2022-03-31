@@ -393,7 +393,7 @@ namespace CnV.Views
 						var city = Spot.GetOrAdd(cid);
 						if(city.raidIdle >= minRaidIdle )
 						{
-							if( await ScanDungeons.Post(cid, city.commandSlots == 0, true) )
+							if( await DungeonView.ShowDungeonList(city, true) )
 							{
 								++processed;
 								++totalSent;

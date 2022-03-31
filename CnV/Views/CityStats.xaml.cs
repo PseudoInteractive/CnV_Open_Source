@@ -378,7 +378,7 @@ namespace CnV
 
 		internal Visibility IncomingReinforcementsVisible => city.incomingReinforcements.Any()==true? Visibility.Visible : Visibility.Collapsed;
 
-		public string commandsTitle => $"Commands {commandItems.Count}/{city.commandSlots}";
+		public string commandsTitle => $"Commands {city.activeCommands}/{city.commandSlots}";
 		public string tradesTitle => $"Trades {tradeItems.Count}";
 		public string troopsTitle => $"Troops {city?.tsTotal}/{city?.stats.maxTs}";
 

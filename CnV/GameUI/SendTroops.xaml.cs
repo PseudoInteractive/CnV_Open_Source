@@ -145,20 +145,10 @@ namespace CnV
 			}
 			if(ts.Any())
 			{
-
-				using(var __lock = Sim.eventQLock.Enter)
-				{
-					var t = Army.FromNow(city,target.cid,transport,type,ts,isReturn: false,
-						flags: (byte)(isRaid? ((repeatCheckBox.IsChecked.Value ? Army.flagRepeating : Army.flagNone) 
-									) 
-									| Army.FlagSplits((int)splitsCombo.SelectedItem): Army.flagNone ));
-				//	Assert(!t.departed);
-				//	Assert(t.isSchedueledNotSent);
-					new CnVEventSendTroops(t).EnqueueAlreadyLocked();
-					//AppS.MessageBox("Send",info.ToString());
-					//Note.Show("Send");
-					//new CnVEventRecruit(city.c,tt).Execute();
-				}
+				var flags = (byte)(isRaid ? ((repeatCheckBox.IsChecked.Value ? Army.flagRepeating : Army.flagNone)
+									)
+									| Army.FlagSplits((int)splitsCombo.SelectedItem) : Army.flagNone);
+				Dungeon.ArmySend(ts,flags,city,target.cid,type,transport);
 				Done();
 			}
 			else
@@ -166,6 +156,23 @@ namespace CnV
 				AppS.MessageBox("Please select troops to send");
 			}
 		}
+
+		//private static void ArmySend(TroopTypeCounts ts,byte flags, City city, SpotId targetCid,ArmyType type,ArmyTransport transport)
+		//{
+		//	using(var __lock = Sim.eventQLock.Enter)
+		//	{
+		//		var t = Army.FromNow(city,targetCid,transport,type,ts,isReturn: false,
+		//			flags: flags);
+		//		//	Assert(!t.departed);
+		//		//	Assert(t.isSchedueledNotSent);
+		//		new CnVEventSendTroops(t).EnqueueAlreadyLocked();
+		//		//AppS.MessageBox("Send",info.ToString());
+		//		//Note.Show("Send");
+		//		//new CnVEventRecruit(city.c,tt).Execute();
+		//	}
+		//}
+		
+
 		public event PropertyChangedEventHandler? PropertyChanged;
 		public void OnPropertyChanged(string? member = null)
 		{

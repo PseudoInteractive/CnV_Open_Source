@@ -300,26 +300,18 @@ namespace CnV.Views
 			var dataGrid = (xDataGrid)sender;
 			using var __ = ADataGrid.SetupDataGrid(null, dataGrid, false,typeof(Dungeon));
 		}
-		public static async Task<bool> ShowDungeonList(City city, JsonElement jse, bool autoRaid)
+		public static async Task<bool> ShowDungeonList(City city,  bool autoRaid)
 		{
 			var rv = new List<Dungeon>();
 			//	rv.Clear();
 			var idealType = city.GetIdealDungeonType();
-			foreach(var dung in jse.EnumerateArray())
+			foreach(var _dung in Cavern.all)
 			{
-				var type = dung.GetAsByte("t");
-				if(Settings.raidOffDungeons || (type == idealType) || type == (byte)Troops.DungeonType.water)
+				var dung = _dung.Value;
+				var type = dung.tileType;
+				if(Settings.raidOffDungeons || (type == idealType) || type == World.TileType.typeWater)
 				{
-					var d = new Dungeon()
-					{
-							city       = city,
-							cid        = dung.GetAsInt("c"),
-							type       = type,
-							level      = dung.GetAsByte("l"),
-							completion = dung.GetAsFloat("p"),
-							distance   = dung.GetAsFloat("d")
-
-					};
+					var d = new Dungeon(city,Cavern.Get(dung.c));
 					var r = Raiding.ComputeIdealReps(d, city);
 					d.isValid = r.isValid;
 					d.carry   = r.averageCarry;
@@ -345,11 +337,11 @@ namespace CnV.Views
 						var i       = _i;
 						int counter = 0;
 
-						var good = await Raiding.SendRaids(i);
-						if(!good)
-						{
-							Note.Show($"Raid send failed for {city.nameMarkdown}, will try again");
-						}
+						Raiding.SendRaids(i);
+						//if(!good)
+						//{
+						//	Note.Show($"Raid send failed for {city.nameMarkdown}, will try again");
+						//}
 						sent = true;
 						break;
 					}

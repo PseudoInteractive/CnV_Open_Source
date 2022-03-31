@@ -106,7 +106,7 @@ namespace CnV;
 
 					case  Dungeon d:
 					{
-						var cid = d.cid;
+						var cid = d.target;
 						//    Log(context.Column.Header);
 						switch (e.Column.MappingName)
 						{
