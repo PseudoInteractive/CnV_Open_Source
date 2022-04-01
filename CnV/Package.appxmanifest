@@ -15,12 +15,12 @@
   <Identity
     Name="33626dsw.15864FAB9E7D2"
     Publisher="CN=BE72B2C5-14F0-4AD5-84D4-EAA91D8D0812"
-    Version="1.1.37.0" />
+    Version="1.1.47.0" />
 
 
   <Properties>
     <DisplayName>Conquest and Virtue</DisplayName>
-    <PublisherDisplayName>Pseudo Interactive</PublisherDisplayName>
+    <PublisherDisplayName>Alliances</PublisherDisplayName>
     <Logo>Assets\StoreLogo.png</Logo>
   </Properties>
 
@@ -67,9 +67,9 @@
   </Applications>
 
   <Capabilities>
-    <rescap:Capability Name="runFullTrust" />
     <Capability Name="internetClientServer"/>
   </Capabilities>
+
 
  
 </Package>

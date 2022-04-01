@@ -39,7 +39,7 @@ namespace CnV
 	}
 		public static void Changed(string? member = null)
 		{
-			if(!Sim.isPastWarmup)
+			if(Sim.isPastWarmup)
 			{
 				if(instance is not null)
 					instance.OnPropertyChanged(member);

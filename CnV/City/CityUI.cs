@@ -73,7 +73,7 @@ public static partial class CityUI
 	{
 		Player.me.OnPropertyChanged();
 		CityStats.Invalidate();
-		//PlayerStats.Changed();
+		PlayerStats.Changed();
 	}
 	public static  void AddToFlyout(this City me, MenuFlyout flyout, bool useSelected = false)
 	{
