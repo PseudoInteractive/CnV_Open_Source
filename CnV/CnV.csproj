@@ -101,8 +101,7 @@
     <PackageReference Include="Microsoft.Extensions.ObjectPool" Version="6.0.3" />
     <PackageReference Include="Microsoft.Toolkit" Version="7.1.2" />
     <PackageReference Include="Microsoft.Toolkit.Diagnostics" Version="7.1.2" />
-    <PackageReference Include="Microsoft.Toolkit.HighPerformance" Version="7.1.2" />
-    <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.22000.197" />	  
+    <PackageReference Include="Microsoft.Toolkit.HighPerformance" Version="7.1.2" />	  
     <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.0.1" />
 	<PackageReference Include="Nito.AsyncEx.Coordination" Version="5.1.2" />
     <PackageReference Include="PlayFabAllSDK" Version="1.108.220118" />
@@ -682,6 +681,7 @@
     <PackageCertificateKeyFile>CnV_TemporaryKey.pfx</PackageCertificateKeyFile>
     <AppxAutoIncrementPackageRevision>True</AppxAutoIncrementPackageRevision>
     <GenerateTestArtifacts>True</GenerateTestArtifacts>
+    <AppxPackageDir>S:\Source\cnv\appx\</AppxPackageDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <Optimize>False</Optimize>

@@ -36,7 +36,7 @@
     <PackageCertificateKeyFile>CnVPackage_TemporaryKey.pfx</PackageCertificateKeyFile>
     <AssetTargetFallback>net6.0-windows$(TargetPlatformVersion);$(AssetTargetFallback)</AssetTargetFallback>
     <EntryPointProjectUniqueName>..\CnV\CnV.csproj</EntryPointProjectUniqueName>
-    <PackageCertificateThumbprint>3D1210090289047B9A3CC9E2E626FB56E28B5EF6</PackageCertificateThumbprint>
+    <PackageCertificateThumbprint>202952D71706C061FDF84832AA8ED0677E99CB8D</PackageCertificateThumbprint>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <AppxBundle>Always</AppxBundle>
@@ -61,8 +61,8 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.22563-preview" />
-    <PackageReference Include="Microsoft.WindowsAppSDK" Version="[1.0.0]">
+    <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.22000.197" />
+    <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.0.1">
       <IncludeAssets>build</IncludeAssets>
     </PackageReference>
   </ItemGroup>
