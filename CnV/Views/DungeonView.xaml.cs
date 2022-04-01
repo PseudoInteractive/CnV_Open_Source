@@ -83,10 +83,11 @@ namespace CnV.Views
 			{
 				await AppS.DispatchOnUIThreadTask(async () =>
 			   {
-				   if (city != null)
+				   if(city != null)
 				   {
 					   openCity = city.CidOr0();
-					   instance.Title = city.nameAndRemarks;
+					   instance.Title = new TextBlock() { Text= city.nameAndRemarks, FontSize=largeFontSize };
+					  
 					   instance.items.Set(dungeons,true);
 					   instance.dungeonGrid.Visibility = Visibility.Visible;
 				   }

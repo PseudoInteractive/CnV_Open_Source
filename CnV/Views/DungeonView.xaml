@@ -16,7 +16,7 @@
     CloseButtonText="Close"
 	IsPrimaryButtonEnabled="False"
 	IsSecondaryButtonEnabled="False"
-	
+	FontSize="44"	
    >
 
 	<StackPanel  >

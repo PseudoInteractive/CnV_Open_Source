@@ -929,7 +929,7 @@ namespace CnV
 		{
 			this.city = city;
 			op = item;
-			image = CityBuild.GetBuildingImage( item.bid,size);
+			image = CityBuild.GetBuildingImage( item.isMove ? Building.bidMove :  item.bid,size);
 			var u = op.unpack;
 			opText = u.isMove ? "Move" : u.isDemo ? "Destroy" : u.isBuild ? $"Build{(u.pa==false ? " p" : "") }" : $"{u.slvl} to {u.elvl}";
 			UpdateText();

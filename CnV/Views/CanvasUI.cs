@@ -138,7 +138,7 @@ using Game;
 														using var sb = ZString.CreateUtf8StringBuilder();
 														//	var notes = city.remarks.IsNullOrEmpty() ? "" : city.remarks.Substring(0, city.remarks.Length.Min(40)) + "\n";
 														sb.AppendLine(player.shortName);
-														sb.AppendLine(city.cityName);
+														sb.AppendLine(city.nameAndRemarks);
 														sb.AppendFormat("pts:{0:N0}\n",city.points);
 														if(player.allianceId!= 0)
 															sb.AppendLine(Alliance.IdToName(player.allianceId));
