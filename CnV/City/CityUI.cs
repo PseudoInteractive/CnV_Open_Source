@@ -24,13 +24,13 @@ public static partial class CityUI
 {
 //	public static Action<City[]> cityListChanged;
 
-	public static async void SyncCityBox()
+	public static void SyncCityBox()
 	{
 		try
 		{
-			while( City.gridCitySource.Count==0 || CityStats.instance is null || City.GetBuild().IsInvalid())
+			if( City.gridCitySource.Count==0 || CityStats.instance is null || City.GetBuild().IsInvalid())
 			{
-				await Task.Delay(1000).ConfigureAwait(false);
+				return;// await Task.Delay(1000).ConfigureAwait(false);
 			};
 			AppS.QueueOnUIThread(() =>
 								{
