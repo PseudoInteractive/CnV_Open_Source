@@ -47,7 +47,7 @@ namespace CnVDiscord
 
 		public async Task<bool> Initialize()
 		{
-			return false;
+			return false; // TODO DON"T check this in
 #if CNV
 			try
 			{
@@ -56,9 +56,9 @@ namespace CnVDiscord
 				// NOTE: Currently, CompositeResolver doesn't work on Unity IL2CPP build. Use StaticCompositeResolver instead of it.
 
 
-				var resolver = CompositeResolver.Create(StandardResolver.Instance
-					//		,GeneratedResolver.Instance);
-				);
+				//var resolver = CompositeResolver.Create(StandardResolver.Instance
+				//	//		,GeneratedResolver.Instance);
+				//);
 				
 			//	MessagePackSerializer.DefaultOptions = MessagePackSerializer.DefaultOptions.WithResolver(resolver);
 			var handler = new SocketsHttpHandler
@@ -78,7 +78,7 @@ namespace CnVDiscord
 				if(connection == null)
 					return false;
 				await Alliance.alliancesFetchedTask.WaitAsync(false);
-				var channels = await connection.JoinAsync(new(){ playerId=Player.myId,world=CnVServer.worldId,alliance=Alliance.myId,allianceTitle=AllianceTitle.newbie}); // Todo store role somewhere
+				var channels = await connection.JoinAsync(new(){ playerId=Player.myPid,world=CnVServer.worldId,alliance=Alliance.myId,allianceTitle=AllianceTitle.newbie}); // Todo store role somewhere
 				Log("Got Channels " + channels.Length);
 				AppS.DispatchOnUIThread(async () =>
 				{
