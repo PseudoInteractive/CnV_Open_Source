@@ -140,7 +140,7 @@ namespace CnV.Views
 
 					ShellPage.instance.ContinentFilter.Content = label;
 					//	ExportCastles.instance.ContinentFilter.Content = label;
-					CityList.NotifyChange(false);
+					ShellPage.CityListNotifyChange(true);
 					ShellPage.RefreshTabs.Go();
 
 				}

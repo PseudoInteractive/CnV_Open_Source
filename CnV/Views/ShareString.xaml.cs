@@ -275,7 +275,7 @@ namespace CnV.Views
 					   if(autobuild)
 					   {
 						   city.SetAutobuild(Settings.autobuildOn,autoTowers: Settings.autobuildTowers,
-								autoWalls: Settings.autobuildWalls) ;
+								autoWalls: Settings.autobuildWalls, cabinLevel: (sbyte)Settings.cottageLevel ) ;
 						}
 
 						   if(setTrade)
