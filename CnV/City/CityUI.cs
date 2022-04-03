@@ -108,21 +108,26 @@ public static partial class CityUI
 					count = MainPage.GetContextCidCount(cid);
 				}
 
-				//var aRaid = AApp.AddSubMenu(flyout, "Raid..");
-				flyout.AddItem($"Raid ..", () => ScanDungeons.Post(cid, true, false));
+				var aRaid = AApp.AddSubMenu(flyout, "Raid..");
+				aRaid.AddItem($"Raid ..", () => ScanDungeons.Post(cid, true, false));
 
-				//if (count > 1)
-				//{
-				//	aRaid.AddItem($"End Raids x{count} selected", MainPage.ReturnSlowClick, cid);
+				if (count > 1)
+				{
+					aRaid.AddItem($"End Raids x{count} selected", MainPage.ReturnSlowClick, cid)
+						.SetToolTip("Returns raids when they are done (stops them from repeating");
+					aRaid.AddItem($"Stop Raids x{count} selected", MainPage.ReturnFastClick, cid)
+						.SetToolTip("Stops raids and returns them immediately");
 				//	aRaid.AddItem($"Return At...x{count}",        ()=> ReturnAtBatch(cid) );
 
-				//}
-				//else
-				//{
+				}
+				else
+				{
 
-				//	aRaid.AddItem("End Raids",    me.ReturnSlowClick);
+					aRaid.AddItem("End Raids",    me.ReturnSlowClick)
+						.SetToolTip("Returns raids when they are done (stops them from repeating");
+					aRaid.AddItem("Stop Raids",    me.ReturnFastClick).SetToolTip("Stops raids and returns them immediately");;
 				//	aRaid.AddItem("Return At...", me.ReturnAt);
-				//}
+				}
 
 
 				aSetup.AddItem("Setup...",    (_, _) => CityUI.InfoClick(cid));
@@ -743,7 +748,7 @@ public partial class City
 			case nameof(City.raidCarry):
 				if(City.CanVisit(cid))
 				{
-					Raiding.ReturnSlow(cid, true);
+					Raiding.Return(cid, true,fast:false);
 				}
 				break;
 			case nameof(nameAndRemarks):

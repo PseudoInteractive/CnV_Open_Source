@@ -204,10 +204,10 @@ namespace CnV
 				var anyRemoved=SyncLists(displayQueue,bq,(rt,city)=>new BuildItem(rt,city),(a,b)=>a == b.op );
 
 				// keep first in view
-				if(anyRemoved && bq.Any() )
-				{
-					instance.buildQueueListView.ScrollIntoView(bq.First());
-				}
+				//if(anyRemoved && bq.Any() )
+				//{
+				//	instance.buildQueueListView.ScrollIntoView(bq.First());
+				//}
 			}
 			catch ( Exception ex)
 			{
@@ -247,10 +247,10 @@ namespace CnV
 					Assert(bq[i].op == displayQueue[i]);
 				}
 				// keep first in view
-				if(anyRemoved && bq.Any())
-				{
-					instance.RecruitQueueListView.ScrollIntoView(bq.First());
-				}
+				//if(anyRemoved && bq.Any())
+				//{
+				//	instance.RecruitQueueListView.ScrollIntoView(bq.First());
+				//}
 			}
 			catch ( Exception ex)
 			{
@@ -328,12 +328,20 @@ namespace CnV
 				var bq = instance.commandItems;
 			
 				var anyRemoved=SyncLists(displayQueue,bq,(rt,city)=>new CommandItem(rt),(a,b)=>a == b.army );
-				
-				// keep first in view
-				if(anyRemoved && bq.Any() )
+				if(commandsDirty)
 				{
-					instance.CommandsListView.ScrollIntoView(bq.First());
+					foreach(var i in bq)
+					{
+						i.UpdateAction();
+						i.OnPropertyChanged();
+					}
+					commandsDirty=false;
 				}
+				// keep first in view
+				//if(anyRemoved && bq.Any() )
+				//{
+				//	instance.CommandsListView.ScrollIntoView(bq.First());
+				//}
 			}
 			catch ( Exception ex)
 			{
@@ -641,6 +649,14 @@ namespace CnV
 		//		//}
 		//}
 
+		static bool commandsDirty;
+
+		internal static void InvalidateCommands()
+		{
+			commandsDirty =true;
+			Invalidate();
+		}
+
 
 		internal static void Invalidate()
 		{
@@ -904,6 +920,11 @@ namespace CnV
 				return $"{CnV.Resources.cartGlyph} {city.cartsHome.Format()}/{city.carts.Format()}\n{CnV.Resources.shipGlyph} {city.shipsHome.Format()}/{city.ships.Format()}";
 			}
 		}
+
+		private void CombatCalc(object sender,RoutedEventArgs e)
+		{
+			CombatCalcDialog.ShowInstance();
+		}
 	}
 	public class BuildingCountAndBrush:INotifyPropertyChanged
 	{
@@ -1110,7 +1131,12 @@ namespace CnV
 		public CommandItem(Army army)
 		{
 			this.army = army;
+			UpdateAction();
 			
+			
+		}
+		public void UpdateAction()
+		{
 			action =  ImageHelper.Get(  
 								army.isRaid ? (
 												army.isScheduledToReturn ? "UI/Icons/icon_cmmnds_raid_datetime.png" :
@@ -1121,7 +1147,6 @@ namespace CnV
 								army.isDefense ? "Region/UI/icon_player_own_support_inc.png" :
 								
 								"Region/UI/icon_player_own_attack.png");
-			
 		}
 		
 		public void ContextRequested(UIElement sender,ContextRequestedEventArgs args)
@@ -1134,7 +1159,7 @@ namespace CnV
 			flyout.AddItem("Return",Symbol.Undo,() =>
 			{
 				new CnVEventReturnTroops(army).EnqueueAsap();
-				instance.commandItems.Remove(this);
+			//	instance.commandItems.Remove(this);
 			});
 			
 			

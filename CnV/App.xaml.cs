@@ -1332,6 +1332,7 @@ namespace CnV
 			rv.DataContext = context;
 			if(command != null)
 				rv.Click += command;
+			
 			return rv;
 		}
 		public static MenuFlyoutItem CreateMenuItem(string text,bool isChecked,Action<bool> command)

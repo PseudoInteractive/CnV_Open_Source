@@ -86,7 +86,8 @@ public partial class City
 	}
 	public async Task ShowReturnAt( bool wantDialog)
 	{
-
+		AppS.MessageBox("Not yet supported");
+		return;
 
 
 
