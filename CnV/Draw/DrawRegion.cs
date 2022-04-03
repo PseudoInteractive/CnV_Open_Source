@@ -1311,12 +1311,13 @@ internal partial class GameClient
 								{
 									if(!IsCulledWC(wc))
 									{
+										var res = city.sampleResources;
 										for(int r = 0;r < 4;++r)
 										{
 											var xT0 = (r + 0.5f) / 4.0f;
 											var xT1 = (r + 1.375f) / 4.0f;
 											var yt0 = 0.0f;
-											var yt1 = MathF.Sqrt(MathF.Sqrt(city.resources[r]  * (1.0f / (1024 * 1024)))).Min(1.0f); // 0 .. 1M
+											var yt1 = MathF.Sqrt(MathF.Sqrt(res[r]  * (1.0f / (1024 * 1024)))).Min(1.0f); // 0 .. 1M
 											var color = r switch
 											{
 												0 => new Color(150,75,0,255),
@@ -1342,14 +1343,15 @@ internal partial class GameClient
 									}
 								}
 
-								var ti = city.tradeInfo;
-								if(ti == null)
+								var mo = city.MO;
+
+								if(mo.isNone)
 									continue;
 								var cityHover = city.isHover;
 								try
 								{
 
-									foreach(var toCid in ti.resDest)
+									foreach(var toCid in mo.sendCities)
 									{
 										if(needsHover && (toCid!=City.viewHover))
 											continue;
@@ -1359,7 +1361,7 @@ internal partial class GameClient
 										var hover = cityHover;// | Spot.IsHover(toCid);
 										DrawAction(wc.ToVector() - sendOffset,c1- sendOffset,hover ? tradeColorHover : tradeColor,lineThickness,hover);
 									}
-									foreach(var toCid in ti.resSource)
+									foreach(var toCid in mo.requestCities )
 									{
 										if(needsHover && (toCid!=City.viewHover))
 											continue;

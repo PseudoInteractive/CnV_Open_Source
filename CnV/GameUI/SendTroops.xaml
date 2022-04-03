@@ -38,17 +38,16 @@
 						<ColumnDefinition Width ="*" />
 					</Grid.ColumnDefinitions>
 
-					<Image Grid.Column="0" Source="{x:Bind image}" Margin="1"  />
+						<Image Grid.Column="0" Source="{x:Bind image}" Margin="1" ToolTipService.ToolTip="{x:Bind info.desc}"  />
 					<Grid  Grid.Column="1" >
 						<Grid.RowDefinitions>
 							<RowDefinition Height = "40" />
 							<RowDefinition />
 						</Grid.RowDefinitions>
 						<Grid.ColumnDefinitions>
-							<ColumnDefinition Width="88"  />
+							<ColumnDefinition Width="auto"  />
 							<ColumnDefinition Width="* "/>
 						</Grid.ColumnDefinitions>
-						<TextBlock Grid.Column="0" Text="{x:Bind info.tn}" Margin="8,0,8,0" Style="{StaticResource TextBlockMedium}" TextWrapping="Wrap" TextAlignment="Center" MaxLines="3"  VerticalAlignment="Center" />
 
 							<Button  Grid.Column="1"  Style="{StaticResource ButtonMedium}" HorizontalAlignment="Right" Content="Max" Click="{x:Bind MaxClick}" />
 

@@ -38,7 +38,7 @@ namespace CnV.Views
 		public static bool useRatio => Settings.nearResAsRatio;
 
 		public Resources des = new Resources() { wood = 100000, stone = 100000, food = 100000, iron = 100000 };
-		public Resources willHave => target.resources.Add(target.tradeInfo.inc);
+		public Resources willHave => target.sampleResources + (target.incomingRes);
 		
 
 		public ResSource selected = ResSource.dummy;
@@ -125,15 +125,15 @@ namespace CnV.Views
 							if (city == target)
 								continue;
 							TimeSpanS dt;
-							var ti = city.tradeInfo;
+						//	var ti = city.tradeInfo;
 							if (viaWater)
 							{
-								if (!city.ComputeShipTravelTime(target.cid, out dt) || dt.TotalHours > filterTime || city.shipsHome < filterShipsHome + shipReserve|| city.resources.Sub(reserve).sum < filterResHome)
+								if (!city.ComputeShipTravelTime(target.cid, out dt) || dt.TotalHours > filterTime || city.shipsHome < filterShipsHome + shipReserve|| city.sampleResources.Sub(reserve).sum < filterResHome)
 									continue;
 							}
 							else
 							{
-								if (!city.ComputeCartTravelTime(target.cid, out dt) || dt.TotalHours > filterTime || city.cartsHome < filterCartsHome + cartReserve  || city.resources.Sub(reserve).sum < filterResHome)
+								if (!city.ComputeCartTravelTime(target.cid, out dt) || dt.TotalHours > filterTime || city.cartsHome < filterCartsHome + cartReserve  || city.sampleResources.Sub(reserve).sum < filterResHome)
 									continue;
 
 							}
@@ -146,7 +146,7 @@ namespace CnV.Views
 								supporter = new ResSource() { city = city };
 							}
 							
-							supporter.info = city.tradeInfo;
+							//supporter.info = city.tradeInfo;
 							s.Add(supporter);
 
 
@@ -158,7 +158,7 @@ namespace CnV.Views
 					{
 						if (!sup.initialized)
 						{
-							var info = sup.info;
+							//var info = sup.info;
 							var city = sup.city;
 							var shipping = GetTransport( city);//, viaWater ? (city.shipsHome - shipReserve).Max0() * 10000 : (city.cartsHome - cartReserve).Max0() * 1000;
 							var send = r;
@@ -166,7 +166,7 @@ namespace CnV.Views
 							{
 								send *= (shipping / (double)r.sum.Max(1));
 							}
-							send = send.Min(sup.city.resources.SubSat(Settings.nearResReserve));
+							send = send.Min(sup.city.sampleResources.SubSat(Settings.nearResReserve));
 							Assert( send.sum <= shipping);
 	
 
@@ -289,9 +289,9 @@ namespace CnV.Views
 
 		private void MaxClicked(ResSource supporter)
 		{
-			var info = supporter.info;
+			//var info = supporter.info;
 			var city = supporter.city;
-			var res = supporter.city.resources.Sub(reserve).Max(0);
+			var res = supporter.city.sampleResources.Sub(reserve).Max(0);
 		//	var viaWater = NearRes.instance.viaWater;
 			var shipping = GetTransport(city);//viaWater ? (city.shipsHome - Settings.nearResShipReserve).Max0() * 10000 : (city.cartsHome - Settings.nearResCartReserve).Max0() * 1000;
 			if (shipping > res.sum)
@@ -451,7 +451,7 @@ namespace CnV.Views
 			{
 				selected.res[id] = selected.ResMax(id);
 				//var viaWater = NearRes.instance.viaWater;
-				var info = selected.info;
+			//	var info = selected.info;
 				var transport = GetTransport(selected.city);
 				if(viaWater)
 					transport -= (selected.res[id] + 9999) / 10000 * 10000;

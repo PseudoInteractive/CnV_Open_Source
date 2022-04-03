@@ -460,13 +460,6 @@ namespace CnV
 #else
 						ShellPage.instance.timeDisplay.Text = t.FormatWithYear();
 #endif
-						if(!hasBeenDisplayed)
-						{
-							ResToolTip.Content=
-								$"{CnV.Resources.goldGlyph} {Player.me.gold.Format()}\n    +{city.stats.goldProduction.Format()}/h\nStorage:\n{city.stats.storage.Format("\n")}";
-
-							
-						}
 						if(expResource.IsExpanded)
 						{
 							var resources = city.SampleResources();
@@ -617,6 +610,23 @@ namespace CnV
 		private void Expander_Expanding(Microsoft.UI.Xaml.Controls.Expander sender,ExpanderExpandingEventArgs args)
 		{
 			Invalidate();
+		}
+		public string ResToolTip
+		{
+			get {
+				using var sb = new PooledStringBuilder();
+				sb.s.Append(  $"{CnV.Resources.goldGlyph} {Player.me.gold.Format()}\n  +{city.stats.goldProduction.Format()}/h\nRes+Incomming:" );
+				var peakRes = city.sampleResources+city.incomingRes;
+				var store = city.stats.storage;
+				for(int i=0;i<4;++i)
+				{
+					sb.s.Append('\n').Append(CnV.Resources.ResGlyphC(i)).Append(' ')
+						.Append(peakRes[i].Format()).Append('/').Append(store[i].Format());
+				}
+
+
+				return sb.s.ToString();
+			}
 		}
 
 		//private void scroll_SizeChanged(object sender,ScrollViewerViewChangedEventArgs e)

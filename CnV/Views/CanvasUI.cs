@@ -222,8 +222,9 @@ using Game;
 															sb.AppendLine($"Carts:{AUtil.FormaRatio((city.cartsHome, city.carts))}");
 															if(city.ships > 0)
 																sb.AppendLine($"Ships:{AUtil.FormatRatio(city.shipsHome,city.ships)}");
-															sb.AppendLine($"Wood:{city.resources[0].Format()}, Stone:{ city.resources[1].DivideRound(1000):4,N0}k");
-															sb.AppendLine($"Iron:{city.resources[2].Format()}, Food:{ city.resources[3].FormatWithSign()}k");
+														var res = city.sampleResources;
+															sb.AppendLine($"Wood:{res[0].Format()}, Stone:{ res[1].Format()}");
+															sb.AppendLine($"Iron:{res[2].Format()}, Food:{ res[3].Format()}");
 														}
 														sb.Append($"{c.y / 100}{c.x / 100} ({c.x}:{c.y})\n");
 

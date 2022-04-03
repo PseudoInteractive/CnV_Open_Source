@@ -59,7 +59,7 @@
 			</Expander>
 			<Expander Background="{StaticResource ExpanderBrushContent}" Expanding="Expander_Expanding" IsExpanded="True"   x:Name="expResource" HorizontalAlignment="Stretch"  >
 				<ToolTipService.ToolTip >
-					<ToolTip x:Name="ResToolTip" Content="Resources" />
+					<ToolTip  Content="{x:Bind ResToolTip, Mode=OneWay}" />
 				</ToolTipService.ToolTip>
 				<Expander.Header   >
 					<Border Background="{StaticResource ExpanderBrushHeader}" BorderThickness="0" Padding="3" CornerRadius="{StaticResource baseCR}" >

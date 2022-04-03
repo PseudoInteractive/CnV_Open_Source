@@ -260,7 +260,7 @@ namespace CnV
 							}
 							var alpha = cityAlpha*bumpOffset;
 							var fontAlpha = alpha;
-
+							var wantDemoImage = false;
 
 							// Is building changing
 							if(cur.id==next.id || ((next.bl==cur.bl)&&(!cur.isRes)))
@@ -294,7 +294,7 @@ namespace CnV
 									{
 										var t = (blendT4 -2); // fade in new number
 										blendOp = t.SCurve(0,1);
-													// fade in last number
+										// fade in last number
 										bl = next.bl;
 										fontAlpha*= t.SCurve(0,1);
 									}
@@ -302,7 +302,7 @@ namespace CnV
 									{
 										// fade in number
 										var t = (blendT4 - 3); // fade in new number
-																		 // fade out number
+															   // fade out number
 										blendOp =t.SCurve(1,0);
 										bl = next.bl;
 										fontAlpha *= t.SCurve(1,0);// prior number out	
@@ -326,28 +326,26 @@ namespace CnV
 							{
 								// build or destroy
 
-							//	float blendOp;
-							//	Material blendMat;
+								//	float blendOp;
+								//	Material blendMat;
 								// destroy
+								// building going out
 								if(next.id == 0)
 								{
 									// Draw an X
+								//	wantDemoImage = true;
 
-									
 
 									bid = cur.bid;
-									
+
 									alpha *= (dtF.Saturate().Bezier(1f,0.625f,0.625f));
-									
-									var cs = CityPointToQuad(bspot,1.2f);
+
+
 									//float z1 = zCityOverlay*bumpOffset;
 									if(bspot != buildOp.c)
 									{
 										bl = cur.bl;
-										var blendMat = decalBuildingInvalid;
-										float blendOp = (dt*(1.0f/3.0f)).Wave().Lerp(0.3125f,0.625f);
 
-										draw.AddQuad(bspot.LayerEffect(),blendMat,cs.c0,cs.c1,(new Color(iAlpha,iAlpha,iAlpha,iAlpha)).Scale(blendOp),depth: 0);
 									}
 									else
 									{
@@ -362,8 +360,34 @@ namespace CnV
 										bl = 0;
 									else
 										bl = next.bl;
-									alpha *= (dtF.Saturate().Bezier(0f,0.4375f,0.4375f));
+									alpha *= (dtF.Saturate().Bezier(0f,0.4375f,0.4375f)); // building coming in
 								}
+								if(bspot != buildOp.c)
+								{
+									if(cur.id != 0)
+									{
+										// demo only
+										if(next.id == 0)
+										{
+											var blendMat = decalBuildingInvalid;
+											float blendOp = (dt*(1.0f/3.0f)).Wave().Lerp(0.3125f,0.625f);
+											var cs = CityPointToQuad(bspot,1.2f);
+											draw.AddQuad(bspot.LayerEffect(),blendMat,cs.c0,cs.c1,(new Color(iAlpha,iAlpha,iAlpha,iAlpha)).Scale(blendOp),depth: 0);
+										}
+										// build new
+										else
+										{
+											if(cur.isRes)
+												DrawBuilding(cur.bid,iAlpha,zBase: 0,layer: bspot.LayerBuilding()-1,buildC: bspot,wantDemo:true);
+										}
+										
+										//var blendMat = decalBuildingInvalid;
+										//float blendOp = (dt*(1.0f/3.0f)).Wave().Lerp(0.3125f,0.625f);
+										//var cs = CityPointToQuad(bspot,1.2f);
+										//draw.AddQuad(bspot.LayerEffect(),blendMat,cs.c0,cs.c1,(new Color(iAlpha,iAlpha,iAlpha,iAlpha)).Scale(blendOp),depth: 0);
+									}
+								}
+							
 
 								// Don't draw the build overlay is this is a construction as the crane is drawing
 								//if(next.id == 0 || bspot != constructionSpot)
@@ -435,7 +459,7 @@ namespace CnV
 									}
 								}
 
-							DrawBuilding(bid,iAlpha: alpha.UNormToByte(),zBase: 0,layer: bspot.LayerBuilding(),buildC: bspot,fontScale: cityFontScale,fontAlpha: fontAlpha.UNormToByte(),buildingLevel: bl);
+							DrawBuilding(bid,iAlpha: alpha.UNormToByte(),zBase: 0,layer: bspot.LayerBuilding(),buildC: bspot,fontScale: cityFontScale,fontAlpha: fontAlpha.UNormToByte(),buildingLevel: bl,wantDemo:wantDemoImage);
 							if(selectedBuildingIds.Contains(bid))
 							{
 								//var t = ((animationT - selectedBuildingIdsChangeTime)*2).Saturate().Wave()*2.0f;
@@ -592,7 +616,7 @@ namespace CnV
 		}
 
 
-		private static void DrawBuilding(BuildingId bid,int iAlpha,float zBase,int layer,BuildC buildC,float fontScale = 0,int fontAlpha = -1,int buildingLevel = -1,(float x0,float y0, float x1, float y1) lerpC = default,bool wantShadow=false )
+		private static void DrawBuilding(BuildingId bid,int iAlpha,float zBase,int layer,BuildC buildC,float fontScale = 0,int fontAlpha = -1,int buildingLevel = -1,(float x0,float y0, float x1, float y1) lerpC = default,bool wantShadow=false,bool wantDemo=false )
 		{
 			Assert(isDrawing);
 			if( bid == 0)
@@ -602,16 +626,23 @@ namespace CnV
 			{
 				// building
 				int iconId = 0;
-				var altCount = materials.altCount;
-				if(altCount > 0)
+				if(wantDemo && materials.destroyed.m is not null)
 				{
-					iconId = buildC.ToRandom(altCount+1);
+					iconId = -1;
+				}
+				else
+				{
+					var altCount = materials.altCount;
+					if(altCount > 0)
+					{
+						iconId = buildC.ToRandom(altCount+1);
+					}
 				}
 				var _cs = CityPointToQuad(buildC,materials,lerpC);
 			//	var bdi = BuildingDef.FromId(bid);
 				var m = materials.main;
 				var frameCount = materials.frameCount;
-				if(frameCount > 1)
+				if(frameCount > 1 && iconId >= 0)
 				{
 					var frames = frameCount;
 				//	var du = 1.0/frames;

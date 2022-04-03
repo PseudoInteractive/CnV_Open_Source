@@ -605,8 +605,8 @@ namespace CnV.Views
 				var tags = await TagsFromCheckboxes();
 				var isHubOrStorage = tags.HasFlag(Tags.Hub) | tags.HasFlag(Tags.Storage);
 
-				var bestReqHub = await city.AnyHub(true);
-				var bestSendHub = await city.AnyHub(false);
+				var bestReqHub =  city.AnyHub(true);
+				var bestSendHub =  city.AnyHub(false);
 				var hasAnyHubs = (bestReqHub!=0)||(bestSendHub!=0);
 				if(!hasAnyHubs)
 				{

@@ -26,8 +26,8 @@ public partial class CityUI
 			if(cid == sourceHub || cid == targetHub)
 				continue;
 
-			var _sourceHub = sourceHub is not null ? sourceHub.Value : await city.AnyHub(true);
-			var _targetHub = targetHub is not null ? targetHub.Value : await city.AnyHub(false);
+			var _sourceHub = sourceHub is not null ? sourceHub.Value :  city.AnyHub(true);
+			var _targetHub = targetHub is not null ? targetHub.Value :  city.AnyHub(false);
 
 
 			var settings = new ResSettings();

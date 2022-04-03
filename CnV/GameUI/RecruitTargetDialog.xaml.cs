@@ -50,7 +50,7 @@ namespace CnV
 		{
 			for(int i = 0;i<Troops.ttCount;++i)
 				troopItems[i].count=0;
-			if(city.MO is not null)
+			//if(city.MO is not null)
 			{
 				foreach(var tt in city.MO.troopTargets)
 				{

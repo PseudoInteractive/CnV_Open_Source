@@ -30,6 +30,7 @@ namespace CnV
 		internal float winRatio;
 		internal string winRatioS => $"Attack Ratio: {winRatio}";
 		internal int wallLevel;
+		internal float nightProtection;
 		internal int attackType = (int)ArmyType.assault;
 		internal City city => City.GetBuild();
 
@@ -84,7 +85,7 @@ namespace CnV
 			var rv = CombatCalc.Go((ArmyType)attackType,new(attackers.Where(i => i.count > 0).Select(i => new TroopTypeCount(i.type,i.count))),
 new(defenders.Where(i => i.count > 0).Select(i => new TroopTypeCount(i.type,i.count))),
 			defenders.Select(a => (ushort)a.towerSlots).ToArray(),
-			wallLevel:(byte)wallLevel,0,0,0,0);
+			wallLevel:(byte)wallLevel,(uint)City.GetBuild().cid, nightProtectionAttenuator:1.0f - nightProtection*0.01f);
 			for(var  i = ttZero;i<Troops.ttCount;++i)
 			{
 				attackers[i].surviving=rv.survivingOff.GetCount(i);

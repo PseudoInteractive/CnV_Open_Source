@@ -61,8 +61,8 @@
 
 
 				</ResourceDictionary>
-				<ColorPaletteResources  Accent="#AA6830FF" 
-									   BaseHigh="#FFFFFFFF" BaseLow="#FF380E0E" BaseMedium="#BBF83F41" BaseMediumHigh="#BBA80F0F"
+				<ColorPaletteResources  Accent="#BB7A57D6" 
+									   BaseHigh="#FFFFFFFF" BaseLow="#FF380E0E" BaseMedium="#CC7963B6" BaseMediumHigh="#BBA80F0F"
                                        BaseMediumLow="#FF6F495F" ChromeAltLow="#FFB393A1" ChromeBlackHigh="#FF21DA2A" ChromeBlackLow="#AA39008B" 
                                        ChromeBlackMedium="#FF30A0F0" ChromeBlackMediumLow="#FF20F0D0" ChromeDisabledHigh="#FF380E0E" 
                                        ChromeDisabledLow="#FFABA9A7" ChromeGray="#FF927B89" ChromeHigh="#FF8A7B67" ChromeLow="#DD6A0343" 
