@@ -781,7 +781,7 @@ public partial class City
 			case nameof(City.raidReturn):
 				if(City.CanVisit(cid))
 				{
-					Raiding.ReturnFast(cid, true);
+					Raiding.Return(cid,updateUI: true,fast: true);
 				}
 				break;
 			case nameof(pinned):

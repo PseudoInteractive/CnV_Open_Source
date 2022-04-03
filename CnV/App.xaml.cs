@@ -471,7 +471,7 @@ namespace CnV
 				//if (uwpArgs.Kind == Windows.ApplicationModel.Activation.ActivationKind.Launch)
 				//{
 				//	// do this asynchronously
-				//	Services.StoreHelper.instance.DownloadAndInstallAllUpdatesAsync();
+				
 				//}
 
 
@@ -479,6 +479,8 @@ namespace CnV
 				// if (!args.PrelaunchActivated)
 
 				await OnLaunchedOrActivated(args.UWPLaunchActivatedEventArgs);
+				if(uwpArgs.Kind == Windows.ApplicationModel.Activation.ActivationKind.Launch)
+						AppS.QueueOnUIThread(Services.StoreHelper.instance.DownloadAndInstallAllUpdatesAsync);
 			}
 			catch(Exception e)
 			{

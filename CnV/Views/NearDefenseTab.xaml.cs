@@ -333,7 +333,7 @@ namespace CnV.Views
 
 				if (city.MightRaidsRepeat())
                 {
-                    await Raiding.ReturnFast(city.cid, false);
+                    Raiding.Return(city.cid, false,true);
                 }
 
                 departAt = city.GetRaidReturnTime() + TimeSpan.FromSeconds(15);

@@ -89,10 +89,10 @@ namespace CnV.Views
         public static void ReturnSlowClick(object sender, RoutedEventArgs e)
         {
             var cids = GetContextCids(sender);
-            if (cids.Count == 1)
-                Raiding.ReturnSlow(cids[0], true);
-            else
-                Raiding.ReturnSlowBatch(cids);
+			if(cids.Count == 1)
+				Raiding.Return(cids[0],true,fast: false);
+			else
+				Raiding.ReturnBatch(cids,fast: false); ;
         }
 
 		
@@ -101,9 +101,9 @@ namespace CnV.Views
         {
             var cids = GetContextCids(sender);
             if (cids.Count == 1)
-                Raiding.ReturnFast(cids[0], true);
+                Raiding.Return(cids[0], true,fast:true);
             else
-                Raiding.ReturnFastBatch(cids);
+                Raiding.ReturnBatch(cids,fast:true);
         }
 
 
@@ -348,10 +348,7 @@ namespace CnV.Views
             }
 			if (await AppS.DoYesNoBox("Reset Raids?", $"Will return {ret.Count}, best to only reset if you will be around to send returners out again", "Do it", "Maybe Not") == 1)
 			{
-				if(fast)
-					Raiding.ReturnFastBatch(ret);
-				else
-					Raiding.ReturnSlowBatch(ret);
+				Raiding.ReturnBatch(ret,fast);
 			}
 
 		}
